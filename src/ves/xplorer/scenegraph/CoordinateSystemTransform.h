@@ -31,8 +31,8 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
-#ifndef LOCAL_TO_WORLD_TRANSFORM_H
-#define LOCAL_TO_WORLD_TRANSFORM_H
+#ifndef COORDINATE_SYSTEM_TRANSFORM_H
+#define COORDINATE_SYSTEM_TRANSFORM_H
 
 // --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
@@ -41,6 +41,7 @@
 #include <osg/ref_ptr>
 #include <osg/NodeVisitor>
 
+// --- VR Juggler Includes --- //
 #include <gmtl/Matrix.h>
 
 namespace ves
@@ -49,49 +50,62 @@ namespace xplorer
 {
 namespace scenegraph
 {
-/*!\file LocalToWorldTransform.h
- */
 
-/*!\class LocalToWorldTransform
+/*!\file CoordinateSystemTransform.h
  *
  */
-class VE_SCENEGRAPH_EXPORTS LocalToWorldTransform : public osg::NodeVisitor
+
+/*!\class CoordinateSystemTransform
+ *
+ */
+
+class VE_SCENEGRAPH_EXPORTS CoordinateSystemTransform : public osg::NodeVisitor
 {
 public:
+
     ///Constructor
     ///\param stopNode The node with coordinate system to transform to
     ///\param startNode The local node to transform
-    LocalToWorldTransform( osg::Node* stopNode, osg::Node* startNode );
+    ///\param includeCameraTransform Specifies transformation into eye space
+    CoordinateSystemTransform(
+        osg::Node* stopNode,
+        osg::Node* startNode,
+        bool includeCameraTransform = false );
 
-    ///
+    ///Apply this NodeVisitor to a node
+    ///\param node The node to run the traversal on
     virtual void apply( osg::Node& node );
 
-    ///Return by reference
-    ///\param includeLocalTransform Specifies if the local transform
-    /// should be included in the transformation matrix
-    ///\return Get the desired transformation matrix
-    const gmtl::Matrix44d& GetLocalToWorldTransform(
+    ///Get the desired transformation matrix
+    ///\param includeLocalTransform Specifies inclusion of local transform
+    ///\return The coordinate transformation matrix
+    const gmtl::Matrix44d& GetTransformationMatrix(
         bool includeLocalTransform = true ) const;
 
 protected:
+
     ///Destructor
-    virtual ~LocalToWorldTransform();
+    virtual ~CoordinateSystemTransform();
 
 private:
-    ///
+
+    ///Do we want to transform into eye space
+    bool mIncludeCameraTransform;
+
+    ///The node to stop traversal at
     osg::ref_ptr< osg::Node > mStopNode;
 
-    ///Matrix containing the cummulative transforms from local to world space
+    ///Matrix containing the cummulative transforms
     ///This matrix includes the local transform
-    gmtl::Matrix44d mLocalToWorldMatrix;
-    ///Matrix containing the cummulative transforms from local to world space
+    gmtl::Matrix44d mStartToStopMatrix;
+
+    ///Matrix containing the cummulative transforms
     ///This matrix does not include the local transform
-    gmtl::Matrix44d mLocalParentToWorldMatrix;
-    
+    gmtl::Matrix44d mStartToStopMatrixWithoutLocal;
 
 };
 } //end scenegraph
 } //end xplorer
 } //end ves
 
-#endif //LOCAL_TO_WORLD_TRANSFORM_H
+#endif //COORDINATE_SYSTEM_TRANSFORM_H

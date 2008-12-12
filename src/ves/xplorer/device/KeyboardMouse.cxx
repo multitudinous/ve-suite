@@ -43,7 +43,7 @@
 #include <ves/xplorer/DeviceHandler.h>
 #include <ves/xplorer/environment/NavigationAnimationEngine.h>
 
-#include <ves/xplorer/scenegraph/LocalToWorldTransform.h>
+#include <ves/xplorer/scenegraph/CoordinateSystemTransform.h>
 #include <ves/xplorer/scenegraph/SetStateOnNURBSNodeVisitor.h>
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/FindParentsVisitor.h>
@@ -237,6 +237,15 @@ void KeyboardMouse::SetStartEndPoint(
               << endPointGMTL[ 0 ] << " "
               << endPointGMTL[ 1 ] << " "
               << endPointGMTL[ 2 ] << std::endl;*/
+
+    //Need to negate the the camera transform that is multiplied into the view
+    ves::xplorer::scenegraph::DCS* worldDCS =
+        ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS();
+    osg::Matrixd inverseCameraTransform =
+        osg::Matrixd( gmtl::invert( worldDCS->GetMat() ).getData() );
+    
+    *startPoint = *startPoint * inverseCameraTransform;
+    *endPoint = *endPoint * inverseCameraTransform;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::DrawLine( osg::Vec3d startPoint, osg::Vec3d endPoint )
@@ -439,27 +448,29 @@ void KeyboardMouse::ProcessNavigationEvents()
     
     ves::xplorer::scenegraph::DCS* const activeDCS =
         ves::xplorer::DeviceHandler::instance()->GetActiveDCS();
-    ves::xplorer::scenegraph::DCS* activeSwitchNode =
+    osg::Group* activeSwitchNode =
+        ves::xplorer::scenegraph::SceneManager::instance()->
+            GetActiveSwitchNode();
+    ves::xplorer::scenegraph::DCS* cameraDCS =
         ves::xplorer::scenegraph::SceneManager::instance()->
             GetWorldDCS();
 
-    osg::ref_ptr< ves::xplorer::scenegraph::LocalToWorldTransform >
-        localToWorldTransform;
+    osg::ref_ptr< ves::xplorer::scenegraph::CoordinateSystemTransform >
+        coordinateSystemTransform;
 
-    //Test if we are manipulating the world dcs or a local dcs
-    std::string name = activeSwitchNode->GetName();
-    if( activeDCS->GetName() !=  name )
+    //Test if we are manipulating the camera dcs or a model dcs
+    if( activeDCS->GetName() != cameraDCS->GetName() )
     {
-        //If local dcs, transform to world space
-        localToWorldTransform =
-            new ves::xplorer::scenegraph::LocalToWorldTransform(
-                activeSwitchNode, activeDCS );
+        //If local dcs, transform to camera space
+        coordinateSystemTransform =
+            new ves::xplorer::scenegraph::CoordinateSystemTransform(
+                activeSwitchNode, activeDCS, true );
 
-        currentTransform = localToWorldTransform->GetLocalToWorldTransform();
+        currentTransform = coordinateSystemTransform->GetTransformationMatrix();
     }
     else
     {
-        //If world dcs, no transformations are needed
+        //If manipulating camera, no transformations are needed
         currentTransform = activeDCS->GetMat();
     }
 
@@ -503,12 +514,13 @@ void KeyboardMouse::ProcessNavigationEvents()
     newTransform = posCenterPointMatrix * newTransform;
 
     //Convert matrix back to local space after delta transform has been applied
-    if( activeDCS->GetName() != name )
+    if( activeDCS->GetName() != cameraDCS->GetName() )
     {
         //Remove local matrix from currentTransform
         //We are multiplying by a new transformed local matrix
         currentTransform =
-            localToWorldTransform->GetLocalToWorldTransform( false );
+            coordinateSystemTransform->GetTransformationMatrix( false );
+
         newTransform = gmtl::invert( currentTransform ) * newTransform;
     }
 
@@ -631,7 +643,7 @@ void KeyboardMouse::FrameAll()
     //activeSwitchDCS->SetTranslationArray( position );
     osg::BoundingSphere bs = 
         ves::xplorer::scenegraph::SceneManager::instance()->
-        GetActiveSwitchNode()->computeBound();
+            GetActiveSwitchNode()->computeBound();
     
     //Bring the center of the geometry to the vj head position
     matrix.mData[ 12 ] -= bs.center().x();
@@ -667,11 +679,12 @@ void KeyboardMouse::FrameAll()
     //Set the current switch node's matrix w/ the new "frame all" transform 
     worldDCS->SetMat( matrix );
 
-    //Get the new center of the bounding sphere
-    bs = ves::xplorer::scenegraph::SceneManager::instance()->
-        GetActiveSwitchNode()->computeBound();
-    //Set the center point of rotation to the new center of the bounding sphere
-    mCenterPoint->set( bs.center().x(), bs.center().y(), bs.center().z() );
+    //Get the new center of the bounding sphere in camera space
+    osg::Vec3d center =
+        ves::xplorer::scenegraph::SceneManager::instance()->
+        GetActiveSwitchNode()->computeBound().center() *
+        osg::Matrixd( worldDCS->GetMat().getData() );
+    mCenterPoint->set( center.x(), center.y(), center.z() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::FrameSelection()
@@ -858,12 +871,12 @@ void KeyboardMouse::SkyCamTo()
     osgOrigPosition[ 2 ] = sbs.center( ).z( );
 
     //Move the center point to the center of the selected object
-    osg::ref_ptr< ves::xplorer::scenegraph::LocalToWorldTransform > ltwt =
-        new ves::xplorer::scenegraph::LocalToWorldTransform(
+    osg::ref_ptr< ves::xplorer::scenegraph::CoordinateSystemTransform > cst =
+        new ves::xplorer::scenegraph::CoordinateSystemTransform(
             ves::xplorer::scenegraph::SceneManager::instance()->
-                GetActiveSwitchNode(), selectedDCS.get() );
+                GetActiveSwitchNode(), selectedDCS.get(), true );
     gmtl::Matrix44d localToWorldMatrix =
-        ltwt->GetLocalToWorldTransform( false );
+        cst->GetTransformationMatrix( false );
 
     //Remove the local matrix from localToWorldMatrix
     //gmtl::Matrix44d activeMatrix = selectedDCS->GetMat();
@@ -1300,7 +1313,6 @@ void KeyboardMouse::ProcessNURBSSelectionEvents()
                  nurbs->SetSelectedControlPoint( closestControlPoint.primitiveIndex );
              }
          }
-         
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -1385,12 +1397,12 @@ void KeyboardMouse::ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits )
     ves::xplorer::DeviceHandler::instance()->SetSelectedDCS( newSelectedDCS );
 
     //Move the center point to the center of the selected object
-    osg::ref_ptr< ves::xplorer::scenegraph::LocalToWorldTransform > ltwt =
-        new ves::xplorer::scenegraph::LocalToWorldTransform(
+    osg::ref_ptr< ves::xplorer::scenegraph::CoordinateSystemTransform > cst =
+        new ves::xplorer::scenegraph::CoordinateSystemTransform(
             ves::xplorer::scenegraph::SceneManager::instance()->
-                GetActiveSwitchNode(), newSelectedDCS );
+                GetActiveSwitchNode(), newSelectedDCS, true );
     gmtl::Matrix44d localToWorldMatrix =
-        ltwt->GetLocalToWorldTransform( false );
+        cst->GetTransformationMatrix( false );
 
     //Multiplying by the new local matrix (mCenterPoint)
     osg::Matrixd tempMatrix;

@@ -32,8 +32,9 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
 // --- VE-Suite Includes --- //
-#include <ves/xplorer/scenegraph/LocalToWorldTransform.h>
+#include <ves/xplorer/scenegraph/CoordinateSystemTransform.h>
 #include <ves/xplorer/scenegraph/DCS.h>
+#include <ves/xplorer/scenegraph/SceneManager.h>
 
 // --- VR Juggler Includes --- //
 #include <gmtl/Xforms.h>
@@ -44,24 +45,27 @@
 using namespace ves::xplorer::scenegraph;
 
 ////////////////////////////////////////////////////////////////////////////////
-LocalToWorldTransform::LocalToWorldTransform( osg::Node* stopNode,
-                                              osg::Node* startNode )
+CoordinateSystemTransform::CoordinateSystemTransform(
+    osg::Node* stopNode,
+    osg::Node* startNode,
+    bool includeCameraTransform )
     :
     NodeVisitor( TRAVERSE_PARENTS ),
-    mStopNode( stopNode )
+    mStopNode( stopNode ),
+    mIncludeCameraTransform( includeCameraTransform )
 {
-    gmtl::identity( mLocalToWorldMatrix );
-    gmtl::identity( mLocalParentToWorldMatrix );
+    gmtl::identity( mStartToStopMatrix );
+    gmtl::identity( mStartToStopMatrixWithoutLocal );
 
     startNode->accept( *this );
 }
 ////////////////////////////////////////////////////////////////////////////////
-LocalToWorldTransform::~LocalToWorldTransform()
+CoordinateSystemTransform::~CoordinateSystemTransform()
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void LocalToWorldTransform::apply( osg::Node& node )
+void CoordinateSystemTransform::apply( osg::Node& node )
 {
     if( &node == mStopNode.get() )
     {
@@ -70,7 +74,14 @@ void LocalToWorldTransform::apply( osg::Node& node )
                 _nodePath.at( _nodePath.size() - 1 ) );
         if( localDCS )
         {
-            mLocalToWorldMatrix *= localDCS->GetMat();
+            mStartToStopMatrix *= localDCS->GetMat();
+        }
+
+        if( mIncludeCameraTransform )
+        {
+            mStartToStopMatrixWithoutLocal *=
+                ves::xplorer::scenegraph::SceneManager::instance()->
+                    GetWorldDCS()->GetMat();
         }
 
         for( size_t i = 0; i < _nodePath.size() - 1; ++i )
@@ -80,11 +91,12 @@ void LocalToWorldTransform::apply( osg::Node& node )
                     _nodePath.at( i ) );
             if( dcs )
             {
-                mLocalParentToWorldMatrix *= dcs->GetMat();
+                mStartToStopMatrixWithoutLocal *= dcs->GetMat();
             }
         }
 
-        mLocalToWorldMatrix = mLocalParentToWorldMatrix * mLocalToWorldMatrix;
+        mStartToStopMatrix =
+            mStartToStopMatrixWithoutLocal * mStartToStopMatrix;
 
         return;
     }
@@ -92,14 +104,14 @@ void LocalToWorldTransform::apply( osg::Node& node )
     osg::NodeVisitor::apply( node );
 }
 ////////////////////////////////////////////////////////////////////////////////
-const gmtl::Matrix44d& LocalToWorldTransform::GetLocalToWorldTransform(
+const gmtl::Matrix44d& CoordinateSystemTransform::GetTransformationMatrix(
     bool includeLocalTransform ) const
 {
     if( includeLocalTransform )
     {
-        return mLocalToWorldMatrix;
+        return mStartToStopMatrix;
     }
 
-    return mLocalParentToWorldMatrix;
+    return mStartToStopMatrixWithoutLocal;
 }
 ////////////////////////////////////////////////////////////////////////////////

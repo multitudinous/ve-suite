@@ -35,7 +35,6 @@
 #include <ves/xplorer/environment/cfdEnum.h>
 #include <ves/xplorer/Debug.h>
 #include <ves/xplorer/device/KeyboardMouse.h>
-#include <ves/xplorer/scenegraph/LocalToWorldTransform.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
 
