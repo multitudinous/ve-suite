@@ -103,7 +103,6 @@ void cfdExecutive::Initialize( CosNaming::NamingContext* inputNameContext,
         return;
     }
 
-    //This should be used. Not sure why it is not being used
     mExecutiveNode = new ves::xplorer::scenegraph::Group();
     mExecutiveNode->SetName( "cfdExecutive_Node" );
     ves::xplorer::scenegraph::SceneManager::instance()->GetModelRoot()->

@@ -191,7 +191,7 @@ private:
     ///The raw xml network data from ce
     std::string veNetwork;
 
-    osg::ref_ptr< ves::xplorer::scenegraph::Group > _masterNode;
+    osg::ref_ptr< ves::xplorer::scenegraph::Group > mExecutiveNode;
 
     ///_name_map : maps a module id to it's module name.
     std::map< std::string, std::string> _id_map;
