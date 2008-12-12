@@ -40,7 +40,6 @@
 #include <ves/xplorer/CommandHandler.h>
 #include <ves/xplorer/EnvironmentHandler.h>
 #include <ves/xplorer/Model.h>
-//#include <ves/xplorer/DefaultGraphicalPlugin/DefaultGraphicalPlugin.h>
 #include <ves/xplorer/network/NetworkSystemView.h>
 
 #include <ves/open/xml/XMLObject.h>
@@ -105,10 +104,10 @@ void cfdExecutive::Initialize( CosNaming::NamingContext* inputNameContext,
     }
 
     //This should be used. Not sure why it is not being used
-    _masterNode = new ves::xplorer::scenegraph::Group();
-    _masterNode->SetName( "cfdExecutive_Node" );
+    mExecutiveNode = new ves::xplorer::scenegraph::Group();
+    mExecutiveNode->SetName( "cfdExecutive_Node" );
     ves::xplorer::scenegraph::SceneManager::instance()->GetModelRoot()->
-        addChild( this->_masterNode.get() );
+        addChild( mExecutiveNode.get() );
 
     mAvailableModules = new cfdVEAvailModules();
 
@@ -289,8 +288,7 @@ void cfdExecutive::GetNetwork( void )
     mTopSystemID = tempSystem->GetID();
     //Construct map of systems
     //Loop over all systems and get all models on the map
-    ParseSystem( tempSystem, true, 
-        ves::xplorer::scenegraph::SceneManager::instance()->GetModelRoot() );
+    ParseSystem( tempSystem, true, mExecutiveNode.get() );
 
     //create network system view
     netSystemView = new NetworkSystemView( veNetwork );
@@ -611,8 +609,6 @@ void cfdExecutive::ParseSystem( ves::open::xml::model::SystemPtr system,
             if( temp == 0 )
             {
                 //load the default plugin
-                //temp = new ves::xplorer::DefaultGraphicalPlugin::
-                //    DefaultGraphicalPlugin();
                 temp = static_cast< ves::xplorer::plugin::PluginBase* >( 
                     mAvailableModules->GetLoader()->
                     CreateObject( "DefaultPlugin" ) );
