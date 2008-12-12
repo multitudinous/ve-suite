@@ -239,13 +239,16 @@ void KeyboardMouse::SetStartEndPoint(
               << endPointGMTL[ 2 ] << std::endl;*/
 
     //Need to negate the the camera transform that is multiplied into the view
-    ves::xplorer::scenegraph::DCS* worldDCS =
-        ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS();
-    osg::Matrixd inverseCameraTransform =
-        osg::Matrixd( gmtl::invert( worldDCS->GetMat() ).getData() );
-    
-    *startPoint = *startPoint * inverseCameraTransform;
-    *endPoint = *endPoint * inverseCameraTransform;
+    {
+        ves::xplorer::scenegraph::DCS* worldDCS =
+            ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS();
+        gmtl::Matrix44d tempCamera = worldDCS->GetMat();
+        osg::Matrixd inverseCameraTransform =
+            osg::Matrixd( gmtl::invert( tempCamera ).getData() );
+        
+        *startPoint = *startPoint * inverseCameraTransform;
+        *endPoint = *endPoint * inverseCameraTransform;
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::DrawLine( osg::Vec3d startPoint, osg::Vec3d endPoint )
