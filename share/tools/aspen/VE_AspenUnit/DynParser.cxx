@@ -1603,43 +1603,125 @@ void DynParser::ReadFlowsheetComponents( std::ifstream &file )
             ;
         }
 
+        //control signals
+        else if( temp.compare( temp.size() - 14, 14, "ControlSignal;", 0, 14 ) == 0 )
+        {
+            ;
+        }
+
         //ports
         else if( temp.compare(0, 8, "  Connect", 0, 8) == 0 )
-        {
+        {   
+            //for some reason there are 2 types of entries for blocks
+            //Ex. "Blocks("test") as PetroFrac;"
+            //or  ""test" as Mult;"
+            //not sure why and with no docs probably will never know
             //get the stream name
-            int streamStart = temp.find("with") + 5;
-            std::string temp_stream =
-                temp.substr( streamStart, temp.size() - streamStart - 1 );
-        
-            //reset tokenizer
-            std::stringstream portTokenizer(temp);
-            std::string portToken;
-            while( portTokenizer >> portToken )
+            if( temp.compare( 0, 17, "  Connect Blocks(", 0, 17 ) == 0 ||
+                temp.compare( 0, 17, "  Connect BLOCKS(", 0, 17 ) == 0 )
             {
-                if( portToken.find( "." ) != std::string::npos )
-                {
-                    int  period_pos = portToken.find_first_of(".");
-                    std::string inputOutput =
-                        portToken.substr(period_pos+1, portToken.size() - 1);
+                std::stringstream portTokenizer(temp);
+                std::string portToken;
+                std::string tempStream;
 
-                    std::string blockName = portToken.substr( 0, period_pos );
-                    
-                    if(inputOutput.find("In_") != std::string::npos )
+                while( portTokenizer >> portToken )
+                {
+                    if(portToken.compare(0, 7, "STREAMS", 0, 7)== 0)
                     {
-                        inLinkToModel[currentLevelName][temp_stream] = blockName;
+                    //parse out temp stream
+                    int  startpos = portToken.find_first_of("\"");
+                    int  endpos = portToken.find_last_of("\"");
+	                tempStream =
+                        portToken.substr( startpos +1,
+                        endpos - startpos - 1 ); 
                     }
-                    else if (inputOutput.find("Out_") != std::string::npos )
-                    {                    
-                        outLinkToModel[currentLevelName][temp_stream] = blockName;
+                }
+
+                //reset tokenizer
+                portTokenizer.clear();
+                portTokenizer.str(temp);
+                while( portTokenizer >> portToken )
+                {
+                    if( portToken.compare(0, 6, "BLOCKS", 0, 6)
+                        == 0 )
+                    {
+                        int  startpos = portToken.find_first_of(".");
+                        std::string inputOutput =
+                            portToken.substr(startpos, portToken.size() - 1);
+                        std::string blockName;
+                        if(inputOutput.find("In_") != std::string::npos )
+                        {
+                            int  startpos = portToken.find_first_of("\"");
+                            int  endpos = portToken.find_last_of("\"");
+		                    blockName = portToken.substr( startpos +1,
+                                endpos - startpos - 1 );
+                            inLinkToModel["_main_sheet"][ tempStream ] =
+                                blockName;
+                        }
+                        else if (inputOutput.find("Out_") !=
+                            std::string::npos )
+                        {                    
+                            int  startpos = portToken.find_first_of("\"");
+                            int  endpos = portToken.find_last_of("\"");
+		                    blockName = portToken.substr( startpos +1,
+                                endpos - startpos - 1 );
+                            outLinkToModel["_main_sheet"][ tempStream ] =
+                                blockName;
+                        }
+                    }
+                }
+            }
+            else 
+            {            
+                int streamStart = temp.find("with") + 5;
+                std::string temp_stream =
+                    temp.substr( streamStart, temp.size() - streamStart - 1 );
+            
+                //reset tokenizer
+                std::stringstream portTokenizer(temp);
+                std::string portToken;
+                while( portTokenizer >> portToken )
+                {
+                    if( portToken.find( "." ) != std::string::npos )
+                    {
+                        int  period_pos = portToken.find_first_of(".");
+                        std::string inputOutput =
+                            portToken.substr(period_pos+1,
+                            portToken.size() - 1);
+
+                        std::string blockName =
+                            portToken.substr( 0, period_pos );
+                        
+                        if(inputOutput.find("In_") !=
+                            std::string::npos )
+                        {
+                            inLinkToModel[currentLevelName][temp_stream] =
+                                blockName;
+                        }
+                        else if (inputOutput.find("Out_") !=
+                            std::string::npos )
+                        {                    
+                            outLinkToModel[currentLevelName][temp_stream] =
+                                blockName;
+                        }
                     }
                 }
             }
         }
         
         //skip FLOWSHEET entry
-        else if( temp.compare( 0, 8, "FLOWSHEET", 0, 8 ) == 0 )
+        else if( temp.compare( 0, 9, "FLOWSHEET", 0, 9 ) == 0 )
         {
             ;
+        }
+
+        else if( temp.compare( 0, 18, "StructureContainer", 0, 18 ) == 0 )
+        {
+            //loop to "end"
+            while( temp.compare( 0, 3, "End", 0, 3 ) != 0 )
+            {
+                std::getline( file, temp );
+            }
         }
         
         //handle block entries
@@ -1649,7 +1731,8 @@ void DynParser::ReadFlowsheetComponents( std::ifstream &file )
             //Ex. "Blocks("test") as PetroFrac;"
             //or  ""test" as Mult;"
             //not sure why and with no docs probably will never know
-            if( temp.compare(0, 7, "Blocks(", 0, 7) == 0 )
+            if( temp.compare(0, 9, "  Blocks(", 0, 9) == 0 ||
+                temp.compare(0, 9, "  BLOCKS(", 0, 9) == 0 )
             {        std::stringstream tokenizer(temp);
                 std::string blockname;
                 std::string tempHolder;
