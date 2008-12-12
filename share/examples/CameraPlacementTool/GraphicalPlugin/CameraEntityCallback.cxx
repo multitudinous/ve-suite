@@ -39,7 +39,7 @@
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/DCS.h>
 #include <ves/xplorer/scenegraph/Group.h>
-#include <ves/xplorer/scenegraph/LocalToWorldTransform.h>
+#include <ves/xplorer/scenegraph/CoordinateSystemTransform.h>
 
 // --- vrJuggler Includes --- //
 #include <gmtl/Xforms.h>
@@ -80,13 +80,13 @@ void CameraEntityCallback::operator()( osg::Node* node, osg::NodeVisitor* nv )
 
     if( cameraEntity.valid() )
     {
-        osg::ref_ptr< ves::xplorer::scenegraph::LocalToWorldTransform >
-            localToWorldTransform =
-                new ves::xplorer::scenegraph::LocalToWorldTransform(
+        osg::ref_ptr< ves::xplorer::scenegraph::CoordinateSystemTransform >
+            coordinateSystemTransform =
+                new ves::xplorer::scenegraph::CoordinateSystemTransform(
                     cameraEntity->GetPluginDCS(), cameraEntity->GetDCS() );
 
         gmtl::Matrix44d localToWorldMatrix =
-            localToWorldTransform->GetLocalToWorldTransform();
+            coordinateSystemTransform->GetTransformationMatrix();
 
         osg::Matrixd tempMatrix( localToWorldMatrix.getData() );
         tempMatrix = osg::Matrix::inverse( tempMatrix ) *

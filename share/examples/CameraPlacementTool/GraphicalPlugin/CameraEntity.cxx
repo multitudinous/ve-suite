@@ -44,7 +44,6 @@
 #include <ves/xplorer/scenegraph/DCS.h>
 #include <ves/xplorer/scenegraph/Group.h>
 #include <ves/xplorer/scenegraph/ResourceManager.h>
-#include <ves/xplorer/scenegraph/LocalToWorldTransform.h>
 
 // --- vrJuggler Includes --- //
 #include <gmtl/Xforms.h>
