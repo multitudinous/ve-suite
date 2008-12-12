@@ -105,8 +105,12 @@
           <xs:element maxOccurs="1" minOccurs="0" name="modelAttributes" type="vecommand"/>
           <xs:element maxOccurs="1" minOccurs="0" name="modelSubSytem" type="veSystem"/>
         </xs:sequence>
+        <!-- The vendorID classifies how made the unit that this object represents (e.g. AspenTech, Adapco, FLUENT-->
         <xs:attribute name="vendorID" type="xs:string" use="required"/>
-        <xs:attribute name="name" type="xs:string" use="required"/>
+        <!--The plugin name is what is rendered in conductor on the design canvas-->
+        <xs:attribute name="pluginname" type="xs:string" use="required"/>
+        <!--The plugin type tells ves software what kind of plugin to load (e.g.Aspen Dynamics, Default-->
+        <xs:attribute name="plugintype" type="xs:string" use="required"/>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
@@ -122,8 +126,12 @@
           <xs:element name="modelDataFile" type="xs:string"/>
           <xs:element maxOccurs="1" minOccurs="0" name="subSystem" type="veSystem"/>
         </xs:sequence>
+        <!-- The vendorID classifies how made the unit that this object represents (e.g. AspenTech, Adapco, FLUENT-->
         <xs:attribute name="vendorID" type="xs:string" use="required"/>
-        <xs:attribute name="name" type="xs:string" use="required"/>
+        <!--The plugin name is what is rendered in conductor on the design canvas-->
+        <xs:attribute name="pluginname" type="xs:string" use="required"/>
+        <!--The plugin type tells ves software what kind of plugin to load (e.g.Aspen Dynamics, Default-->
+        <xs:attribute name="plugintype" type="xs:string" use="required"/>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
