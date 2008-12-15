@@ -1,4 +1,5 @@
 #include "Int_Stove_Econ_UI_Dialog.h"
+#include <wx/wx.h>
 
 BEGIN_EVENT_TABLE(Int_Stove_Econ_UI_Dialog, UIDialog)
 	 EVT_BUTTON			(CLOSE_EXCEL,			        Int_Stove_Econ_UI_Dialog::_onCloseExcel)

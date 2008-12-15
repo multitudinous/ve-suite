@@ -232,7 +232,7 @@
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/Zm800"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(VE_SUITE_HOME)&quot;;&quot;$(VTK_HOME)/include/vtk-5.1&quot;;&quot;$(VJ_BASE_DIR)/include&quot;;&quot;$(OSGHOME)/include&quot;;&quot;$(XERCESCROOT)/src&quot;;&quot;$(BULLET_HOME)/src&quot;;&quot;$(VE_SUITE_HOME)/include&quot;;&quot;$(VE_SUITE_HOME)/external/loki-0.1.6/include&quot;;&quot;$(VE_SUITE_HOME)/external/osgOQ/include&quot;"
+				AdditionalIncludeDirectories="&quot;$(VE_SUITE_HOME)\install\include&quot;;&quot;$(VTK_HOME)/include/vtk-5.1&quot;;&quot;$(VJ_BASE_DIR)/include&quot;;&quot;$(OSGHOME)/include&quot;;&quot;$(XERCESCROOT)/src&quot;;&quot;$(BULLET_HOME)/src&quot;;&quot;$(VE_SUITE_HOME)/include&quot;;&quot;$(VE_SUITE_HOME)/external/loki-0.1.6/include&quot;;&quot;$(VE_SUITE_HOME)/external/osgOQ/include&quot;"
 				PreprocessorDefinitions="_DEBUG;_OSG;VTK44;WIN32;_CONSOLE;_WIN32;_WINDOWS;__WXDEBUG__;WXUSINGDLL;_TAO;VE_USER_PLUGIN_LIBRARY;BOOST_ALL_DYN_LINK;CPPDOM_DYN_LINK;JUGGLER_DEBUG;LOKI_DLL;LOKI_FUNCTOR_IS_NOT_A_SMALLOBJECT;LOKI_OBJECT_LEVEL_THREADING"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"

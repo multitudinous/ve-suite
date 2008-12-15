@@ -1,19 +1,19 @@
 #ifndef Int_Stove_Econ_H
 #define Int_Stove_Econ_H
 
-#include "VE_Conductor/GUIPlugin/UIPluginBase.h"
+#include <ves/conductor/UIPluginBase.h>
 #include <wx/image.h>
 
 #include <vector>
 using namespace std;
 
-class Int_Stove_Econ : public UIPluginBase
+class Int_Stove_Econ : public ves::conductor::UIPluginBase
 {
    DECLARE_DYNAMIC_CLASS(Int_Stove_Econ)
 
 public:
    Int_Stove_Econ();
-   ~Int_Stove_Econ();
+   virtual ~Int_Stove_Econ();
 
    virtual double GetVersion();
    //Return the version number of the module
@@ -26,7 +26,7 @@ public:
 
    virtual int GetNumPoly();
 
-   virtual UIDialog* UI(wxWindow* parent);
+   virtual ves::conductor::UIDialog* UI(wxWindow* parent);
    //This returns the UI dialog of the module
 
    virtual wxString GetName();

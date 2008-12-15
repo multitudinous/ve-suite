@@ -44,7 +44,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(VE_SUITE_HOME)&quot;;&quot;$(VE_DEPS_DIR)\include&quot;;&quot;$(VE_DEPS_DIR)\include\wx\mswd&quot;;&quot;$(VJ_BASE_DIR)\include&quot;;&quot;$(VJ_DEPS_DIR)\include&quot;;&quot;$(XERCESCROOT)\src&quot;;&quot;$(WX_HOME)\include&quot;;&quot;$(WX_HOME)\include\msvc&quot;;&quot;$(TAO_ROOT)\orbsvcs&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)&quot;;&quot;$(LOKI_HOME)\include&quot;;$(NOINHERIT)"
+				AdditionalIncludeDirectories="&quot;$(VE_SUITE_HOME)\install\include&quot;;&quot;$(VE_DEPS_DIR)\include&quot;;&quot;$(VE_DEPS_DIR)\include\wx\mswd&quot;;&quot;$(VJ_BASE_DIR)\include&quot;;&quot;$(VJ_DEPS_DIR)\include&quot;;&quot;$(XERCESCROOT)\include&quot;;&quot;$(WX_HOME)\include&quot;;&quot;$(WX_HOME)\include\msvc&quot;;&quot;$(TAO_ROOT)\orbsvcs&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)&quot;;$(NOINHERIT)"
 				PreprocessorDefinitions="WIN32;_WINDOWS;_DEBUG;LOKI_DLL;LOKI_FUNCTOR_IS_NOT_A_SMALLOBJECT;LOKI_OBJECT_LEVEL_THREADING"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"

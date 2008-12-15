@@ -2,8 +2,8 @@
 
 #include "Int_Stove_EconUnit_i.h"
 
-#include "VE_Open/skel/moduleS.h"
-#include "VE_Conductor/Network/string_ops.h"
+#include <buildwin/src/ves/open/moduleS.h>  //"VE_Open/skel/moduleS.h"
+// no longet using this cag 12-15-08 #include "VE_Conductor/Network/string_ops.h"
 
 #include <iostream>
 

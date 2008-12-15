@@ -1,9 +1,10 @@
 #ifndef Int_Stove_Econ_UI_DIALOG_H
 #define Int_Stove_Econ_UI_DIALOG_H
-#include "VE_Conductor/GUIPlugin/UIDialog.h"
+#include <ves/conductor/UIDialog.h>
 #include <vector>
-#include <string>
-#include <wx/wx.h>
+
+class wxButton;
+class wxTextCtrl;
 
 using namespace std;
 
@@ -11,7 +12,7 @@ enum {
 	CLOSE_EXCEL
 };
 
-class Int_Stove_Econ_UI_Dialog : public UIDialog
+class Int_Stove_Econ_UI_Dialog : public ves::conductor::UIDialog
 {
 	DECLARE_DYNAMIC_CLASS(Int_Stove_Econ_UI_Dialog);
    public:

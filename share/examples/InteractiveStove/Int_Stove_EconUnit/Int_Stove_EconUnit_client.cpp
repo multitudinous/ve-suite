@@ -3,7 +3,7 @@
 #include "Int_Stove_EconUnit_client.h"
 #include "Int_Stove_EconUnit_i.h"
 
-#include "VE_Open/skel/moduleC.h"
+#include <buildwin/src/ves/open/moduleC.h> //"VE_Open/skel/moduleC.h"
 #include <orbsvcs/CosNamingC.h>
 
 #include <iostream>

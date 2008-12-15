@@ -1,3 +1,4 @@
+
 // Machine generated IDispatch wrapper class(es) created with Add Class from Typelib Wizard
 
 // CApplication wrapper class

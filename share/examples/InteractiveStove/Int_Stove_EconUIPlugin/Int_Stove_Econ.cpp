@@ -1,7 +1,7 @@
 #include "Int_Stove_Econ.h"
 #include "Int_Stove_Econ_UI_Dialog.h"
 
-IMPLEMENT_DYNAMIC_CLASS(Int_Stove_Econ, UIDialog)
+IMPLEMENT_DYNAMIC_CLASS(Int_Stove_Econ, ves::conductor::UIDialog)
 
 /////////////////////////////////////////////////////////////////////////////
 Int_Stove_Econ
@@ -88,7 +88,7 @@ void Int_Stove_Econ::DrawIcon(wxDC* dc)
 }
 
 /////////////////////////////////////////////////////////////////////////////
-UIDialog* Int_Stove_Econ::UI(wxWindow* parent)
+ves::conductor::UIDialog* Int_Stove_Econ::UI(wxWindow* parent)
 {
   if (dlg!=NULL)
     return dlg;
