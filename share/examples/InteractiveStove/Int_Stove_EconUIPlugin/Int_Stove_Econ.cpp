@@ -1,7 +1,7 @@
 #include "Int_Stove_Econ.h"
 #include "Int_Stove_Econ_UI_Dialog.h"
 
-IMPLEMENT_DYNAMIC_CLASS(Int_Stove_Econ, ves::conductor::UIDialog)
+IMPLEMENT_DYNAMIC_CLASS(Int_Stove_Econ, ves::conductor::UIPluginBase)
 
 /////////////////////////////////////////////////////////////////////////////
 Int_Stove_Econ
@@ -10,7 +10,7 @@ Int_Stove_Econ
   RegistVar("cost_array", &cost_array);
   RegistVar("closesheets", &closesheets);
 
-  wxString icon_file="Icons/dollar.gif";
+  wxString icon_file=_T("Icons/dollar.gif");
   wxImage my_img(icon_file, wxBITMAP_TYPE_GIF);
   icon_w = my_img.GetWidth();
   icon_h = my_img.GetHeight();
@@ -23,7 +23,7 @@ Int_Stove_Econ
   poly[2]=wxPoint(icon_w,icon_h);
   poly[3]=wxPoint(0,icon_h);
 
-    name = "IntStoveEcon";
+    mPluginName = _T("IntStoveEcon");
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -103,14 +103,14 @@ ves::conductor::UIDialog* Int_Stove_Econ::UI(wxWindow* parent)
 /////////////////////////////////////////////////////////////////////////////
 wxString Int_Stove_Econ::GetName()
 {
-  wxString result="IntStoveEcon"; //your name
+  wxString result=_T("IntStoveEcon"); //your name
   return result;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 wxString Int_Stove_Econ::GetDesc()
 {
-  wxString result="IntStoveEcon"; //your description
+  wxString result=_T("IntStoveEcon"); //your description
 
   return result;
 }

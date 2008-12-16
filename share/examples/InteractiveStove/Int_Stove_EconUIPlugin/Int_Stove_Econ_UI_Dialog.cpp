@@ -13,7 +13,7 @@ Int_Stove_Econ_UI_Dialog
 (wxWindow* parent, int id,
   std::vector< double >* cost_array,
   long* closesheets)
-: UIDialog((wxWindow *) parent, id, "IntStoveEcon"),
+: UIDialog( parent, id, _("IntStoveEcon") ),
   p_cost_array(cost_array),
   p_closesheets(closesheets)
 {
@@ -21,7 +21,7 @@ Int_Stove_Econ_UI_Dialog
 	(*p_closesheets) = 0;
 	closeSheets = 0;
 
-	wxStaticBox* listBox = new wxStaticBox(this, -1, "Use the text controls to enter the input values", wxDefaultPosition,wxDefaultSize,wxCAPTION);
+	wxStaticBox* listBox = new wxStaticBox(this, -1, _("Use the text controls to enter the input values"), wxDefaultPosition,wxDefaultSize,wxCAPTION);
 
    wxStaticText* _base_mat_cost_Label = new wxStaticText(this, -1, wxT("Enter The Base Stove Material Cost "));
    _base_mat_cost_entry = new wxTextCtrl(this, -1, wxT("100"),wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER, wxDefaultValidator);
@@ -77,13 +77,13 @@ bool Int_Stove_Econ_UI_Dialog::TransferDataFromWindow()
    wxString txt;
 
 	txt  = _base_mat_cost_entry->GetValue();
-	(*p_cost_array).push_back(atof(txt.c_str()));
+	(*p_cost_array).push_back(atof( ConvertUnicode( txt.c_str() ).c_str() ) );
 
 	txt  = _base_const_cost_entry->GetValue();
-	(*p_cost_array).push_back(atof(txt.c_str()));
+	(*p_cost_array).push_back(atof( ConvertUnicode( txt.c_str() ).c_str() ) );
 
 	txt  = _baffle_mat_cost_entry->GetValue();
-	(*p_cost_array).push_back(atof(txt.c_str()));
+	(*p_cost_array).push_back(atof( ConvertUnicode( txt.c_str() ).c_str() ) );
 
    (*p_closesheets) = closeSheets;
    closeSheets = 0;

@@ -34,6 +34,7 @@ InteractiveStoveSubdirs = Split("""
     IntStoveModel
     IntStovePlugin
     IntStoveUnit
+    Int_Stove_EconUIPlugin
 """)
 
 ##Run SConscript files in all of these folders.
