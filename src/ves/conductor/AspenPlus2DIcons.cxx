@@ -49,7 +49,7 @@
 #include <ves/conductor/xpm/AspenPlus2DIcons/decanter_decanter_h_drum.xpm>                                              
 #include <ves/conductor/xpm/AspenPlus2DIcons/decanter_decanter_v_drum.xpm>                                              
 #include <ves/conductor/xpm/AspenPlus2DIcons/deltap_deltap_dp.xpm>                                                      
-//#include <ves/conductor/xpm/AspenPlus2DIcons/dicretize_discretize_icon1.xpm>                                            
+#include <ves/conductor/xpm/AspenPlus2DIcons/discretize_discretize_icon1.xpm>                                            
 #include <ves/conductor/xpm/AspenPlus2DIcons/distl_distl_block.xpm>                                                     
 #include <ves/conductor/xpm/AspenPlus2DIcons/distl_distl_icon1.xpm>                                                     
 #include <ves/conductor/xpm/AspenPlus2DIcons/distl_distl_icon2.xpm>                                                     
@@ -633,7 +633,7 @@ std::map< std::string, char** > GetAspenPlusIconMap()
     tempIconMap[ "decanter_decanter_h_drum.xpm"] =                            decanter_decanter_h_drum;                  
     tempIconMap[ "decanter_decanter_v_drum.xpm"] =                            decanter_decanter_v_drum;                  
     tempIconMap[ "deltap_deltap_dp.xpm"] =                                    deltap_deltap_dp;                          
-    //tempIconMap[ "dicretize_discretize_icon1.xpm"] =                          dicretize_discretize_icon1;                
+    tempIconMap[ "discretize_discretize_icon1.xpm"] =                         discretize_discretize_icon1;                
     tempIconMap[ "distl_distl_block.xpm"] =                                   distl_distl_block;                         
     tempIconMap[ "distl_distl_icon1.xpm"] =                                   distl_distl_icon1;                         
     tempIconMap[ "distl_distl_icon2.xpm"] =                                   distl_distl_icon2;                         
