@@ -231,7 +231,7 @@ void PhysicsSimulator::InitializePhysicsSimulation()
 
     //mDynamicsWorld->setDebugDrawer( &debugDrawer );
     
-    CreateGroundPlane();
+    //CreateGroundPlane();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsSimulator::UpdatePhysics( float dt )
