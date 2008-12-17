@@ -35,9 +35,12 @@
 
 #include <ves/xplorer/scenegraph/CADEntityHelper.h>
 #include <ves/xplorer/scenegraph/SceneNode.h>
+#include <ves/xplorer/scenegraph/SceneManager.h>
 
 #include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
 #include <ves/xplorer/scenegraph/physics/PhysicsRigidBody.h>
+
+#include <ves/xplorer/scenegraph/LocalToWorldNodePath.h>
 
 #include <ves/xplorer/Debug.h>
 
@@ -66,38 +69,6 @@
 #include <cassert>
 
 using namespace ves::xplorer::scenegraph;
-
-class FindNamedNode : public osg::NodeVisitor
-{
-public:
-    FindNamedNode( std::string name )
-    : osg::NodeVisitor( osg::NodeVisitor::TRAVERSE_ALL_CHILDREN ),
-    _name( name )
-    {}
-    
-    typedef std::pair< osg::Node*, osg::NodePath > NodeAndPath;
-    typedef std::vector< NodeAndPath > NodeAndPathList;
-    NodeAndPathList _napl;
-    
-    void reset()
-    {
-        _napl.clear();
-    }
-    
-    void apply( osg::Node& node )
-    {
-        if( node.getName() == _name )
-        {
-            NodeAndPath nap( &node, getNodePath() );
-            _napl.push_back( nap );
-        }
-        traverse( node );
-    }
-    
-protected:
-    std::string _name;
-};
-
 
 ////////////////////////////////////////////////////////////////////////////////
 CADEntity::CADEntity( std::string geomFile,
@@ -138,8 +109,16 @@ CADEntity::CADEntity( osg::Node* node,
     //Leave some code here no more FILEInfo
     mDCS = new ves::xplorer::scenegraph::DCS();
     mCADEntityHelper = new ves::xplorer::scenegraph::CADEntityHelper();
-
-    mCADEntityHelper->SetNode( node );
+    if( !dynamic_cast< osg::Group* >( node ) )
+    {
+        osg::ref_ptr< osg::Group > tempGroup = new osg::Group();
+        tempGroup->addChild( node );
+        mCADEntityHelper->SetNode( tempGroup.get() );
+    }
+    else
+    {
+        mCADEntityHelper->SetNode( node );
+    }
     mFileName.assign( "" );
     mDCS->SetName( "CADEntityDCS" );
     mDCS->addChild( mCADEntityHelper->GetNode() );
@@ -175,7 +154,11 @@ CADEntity::~CADEntity()
     {
         if( mPhysicsSimulator )
         {
-            mPhysicsSimulator->GetDynamicsWorld()->removeRigidBody( mPhysicsRigidBody );
+            if( mPhysicsRigidBody->GetbtRigidBody() )
+            {
+                mPhysicsSimulator->GetDynamicsWorld()->
+                    removeRigidBody( mPhysicsRigidBody->GetbtRigidBody() );
+            }
         }
         delete mPhysicsRigidBody;
     }
@@ -186,47 +169,11 @@ void CADEntity::InitPhysics()
     if( !mPhysicsRigidBody )
     {
         mPhysicsRigidBody = new ves::xplorer::scenegraph::PhysicsRigidBody(
-                                 mDCS.get(), mPhysicsSimulator );
-        mDCS->SetPhysicsRigidBody( mPhysicsRigidBody );
+                                 mCADEntityHelper->GetNode(), mPhysicsSimulator );
+        //mDCS->SetPhysicsRigidBody( mPhysicsRigidBody );
     }
     
     return;
-
-    FindNamedNode fnn( "" );
-    mDCS->accept( fnn );
-    osg::Node* subgraph = fnn._napl[ 0 ].first;
-    osg::NodePath& np = fnn._napl[ 0 ].second;
-
-    osgBullet::OSGToCollada converter( 
-        subgraph, BOX_SHAPE_PROXYTYPE, 1.0, "", 1.0, false );
-
-    osg::ref_ptr< osgBullet::AbsoluteModelTransform > amt = new osgBullet::AbsoluteModelTransform();
-    amt->setDataVariance( osg::Object::DYNAMIC );
-    amt->addChild( subgraph );
-    osg::Group* parent = subgraph->getParent( 0 );
-    parent->addChild( amt.get() );
-    parent->removeChild( subgraph );
-
-    btRigidBody* rb = converter.getRigidBody();
-    osgBullet::MotionState* motion = new osgBullet::MotionState;
-    motion->setTransform( amt.get() );
-    osg::BoundingSphere bs = subgraph->getBound();
-
-    // Add visual rep of Bullet Collision shape.
-    /*osg::Node* visNode = osgBullet::osgNodeFromBtCollisionShape( rb->getCollisionShape() );
-    if( visNode != NULL )
-    {
-        osgBullet::AbsoluteModelTransform* dmt = new osgBullet::AbsoluteModelTransform;
-        dmt->addChild( visNode );
-        motion->setDebugTransform( dmt );
-        _debugBullet.addDynamic( dmt );
-    }*/
-
-    osg::Matrix m = osg::computeLocalToWorld( np );
-    motion->setParentTransform( m );
-    motion->setCenterOfMass( bs.center() );
-    rb->setMotionState( motion );
-    //bulletWorld->addRigidBody( rb );
 }
 ////////////////////////////////////////////////////////////////////////////////
 ves::xplorer::scenegraph::CADEntityHelper* CADEntity::GetNode()
@@ -241,6 +188,13 @@ ves::xplorer::scenegraph::DCS* CADEntity::GetDCS()
 ////////////////////////////////////////////////////////////////////////////////
 ves::xplorer::scenegraph::PhysicsRigidBody* CADEntity::GetPhysicsRigidBody()
 {
+    if( !mPhysicsRigidBody )
+    {
+        mPhysicsRigidBody = new ves::xplorer::scenegraph::PhysicsRigidBody(
+            mCADEntityHelper->GetNode(), mPhysicsSimulator );
+        //mDCS->SetPhysicsRigidBody( mPhysicsRigidBody );
+    }
+
     return mPhysicsRigidBody;
 }
 ////////////////////////////////////////////////////////////////////////////////

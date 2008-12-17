@@ -42,10 +42,17 @@
 // --- OSG Includes --- //
 #include <osg/Geode>
 #include <osg/Geometry>
+#include <osg/MatrixTransform>
+#include <osg/ShapeDrawable>
 
 // --- Bullet Includes --- //
 #include <btBulletDynamicsCommon.h>
 #include <btBulletCollisionCommon.h>
+
+#include <osgBullet/RigidBody.h>
+#include <osgBullet/OSGToCollada.h>
+#include <osgBullet/MotionState.h>
+#include <osgBullet/Utils.h>
 
 // --- C/C++ Libraries --- //
 #include <sstream>
@@ -76,7 +83,8 @@ PhysicsSimulator::PhysicsSimulator()
     mDebugMode( 0 ),
     mIdle( true ),
     mCollisionInformation( false ),
-    shoot_speed( 50.0f )
+    shoot_speed( 50.0f ),
+    mCreatedGroundPlane( false )
 {
     head.init( "VJHead" );
 
@@ -222,53 +230,73 @@ void PhysicsSimulator::InitializePhysicsSimulation()
     mDynamicsWorld->setGravity( btVector3( 0, 0, -10 ) );
 
     //mDynamicsWorld->setDebugDrawer( &debugDrawer );
+    
+    CreateGroundPlane();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsSimulator::UpdatePhysics( float dt )
 {
-    if( mDynamicsWorld && !mIdle )
+    if( !mDynamicsWorld && mIdle )
     {
-        mDynamicsWorld->stepSimulation( dt );
+        return;
+    }
+    
+    mDynamicsWorld->stepSimulation( dt );
 
-        if( mCollisionInformation )
+    if( !mCollisionInformation )
+    {
+        return;
+    }
+
+    for( int i = 0; i < mDynamicsWorld->getNumCollisionObjects(); ++i )
+    {
+        void* tempUserData = mDynamicsWorld->getCollisionObjectArray()[ i ]->getUserPointer();
+        if( tempUserData )
         {
-            for( int i = 0; i < mDynamicsWorld->getNumCollisionObjects(); ++i )
+            PhysicsRigidBody* obj = static_cast< PhysicsRigidBody* >( tempUserData );
+            obj->ClearCollisions();
+        }
+    }
+
+    int numManifolds = mDispatcher->getNumManifolds();
+    for( int i = 0; i < numManifolds; ++i )
+    {
+        btPersistentManifold* contactManifold =
+            mDispatcher->getManifoldByIndexInternal( i );
+        //contactManifold->refreshContactPoints(
+            //bodyA->getWorldTransform(), bodyB->getWorldTransform() );
+
+        int numContacts = contactManifold->getNumContacts();
+        for( int j = 0; j < numContacts; ++j )
+        {
+            btManifoldPoint& pt = contactManifold->getContactPoint( j );
+            PhysicsRigidBody* bodyA = 0;
+            PhysicsRigidBody* bodyB = 0;
+            
+            void* tempBodyA = static_cast< btRigidBody* >( 
+                contactManifold->getBody0() )->getUserPointer();
+            if( tempBodyA )
             {
-                PhysicsRigidBody* obj = static_cast< PhysicsRigidBody* >(
-                    mDynamicsWorld->getCollisionObjectArray()[ i ] );
-                obj->ClearCollisions();
+                bodyA = static_cast< PhysicsRigidBody* >( tempBodyA );
+                continue;
             }
 
-            int numManifolds = mDispatcher->getNumManifolds();
-            for( int i = 0; i < numManifolds; ++i )
+            void* tempBodyB = static_cast< btRigidBody* >( 
+                contactManifold->getBody1() )->getUserPointer();
+            if( tempBodyB )
             {
-                btPersistentManifold* contactManifold =
-                    mDispatcher->getManifoldByIndexInternal( i );
-                //contactManifold->refreshContactPoints(
-                    //bodyA->getWorldTransform(), bodyB->getWorldTransform() );
-
-                int numContacts = contactManifold->getNumContacts();
-                for( int j = 0; j < numContacts; ++j )
-                {
-                    btManifoldPoint& pt = contactManifold->getContactPoint( j );
-
-                    PhysicsRigidBody* bodyA = static_cast< PhysicsRigidBody* >(
-                        contactManifold->getBody0() );
-                    PhysicsRigidBody* bodyB = static_cast< PhysicsRigidBody* >(
-                        contactManifold->getBody1() );
-
-                    if( bodyA->IsStoringCollisions() )
-                    {
-                        btVector3 ptA = pt.getPositionWorldOnA();
-                        bodyA->PushBackCollision( bodyB, ptA );
-                    }
-
-                    if( bodyB->IsStoringCollisions() )
-                    {
-                        btVector3 ptB = pt.getPositionWorldOnB();
-                        bodyB->PushBackCollision( bodyA, ptB );
-                    }
-                }
+                bodyB = static_cast< PhysicsRigidBody* >( tempBodyB );
+                continue;
+            }
+            if( bodyA->IsStoringCollisions() )
+            {
+                btVector3 ptA = pt.getPositionWorldOnA();
+                bodyA->PushBackCollision( bodyB, ptA );
+            }
+            if( bodyB->IsStoringCollisions() )
+            {
+                btVector3 ptB = pt.getPositionWorldOnB();
+                bodyB->PushBackCollision( bodyA, ptB );
             }
         }
     }
@@ -419,7 +447,7 @@ void PhysicsSimulator::ShootBox( const btVector3& destination )
         //boxEntity->GetDCS()->setName(  );
         //boxEntity->GetDCS()->SetTranslationArray(  );
         boxEntity->InitPhysics();
-        boxEntity->GetPhysicsRigidBody()->setFriction( 1.0 );
+        boxEntity->GetPhysicsRigidBody()->GetbtRigidBody()->setFriction( 1.0 );
         boxEntity->GetPhysicsRigidBody()->BoundingBoxShape();
 
         mBoxVector.push_back( boxEntity );
@@ -483,5 +511,63 @@ btRigidBody* PhysicsSimulator::CreateRigidBody(
 btDynamicsWorld* PhysicsSimulator::GetDynamicsWorld()
 {
     return mDynamicsWorld;
+}
+////////////////////////////////////////////////////////////////////////////////
+void PhysicsSimulator::CreateGroundPlane()
+{
+    if( mCreatedGroundPlane )
+    {
+        return;
+    }
+    mCreatedGroundPlane = true;
+    // Compute a reasonable ground plane size based on the bounding sphere radius.
+    //float dim = loadedModel->getBound()._radius * 1.5;
+    //osg::Vec3 cen = loadedModel->getBound()._center;
+    float dim = 150;
+    osg::Vec3 cen( 0,0,0);
+    //cen[ 2 ] -= dim;
+    cen[ 2 ] -= 1.5;
+    osg::ref_ptr< osg::Node > ground = CreateGround( dim, dim, cen );
+    ves::xplorer::scenegraph::SceneManager::instance()->GetModelRoot()->addChild( ground.get() );
+    osgBullet::RigidBody* body = dynamic_cast< osgBullet::RigidBody* >( ground->getUserData() );
+    mDynamicsWorld->addRigidBody( body->getRigidBody() );    
+}
+////////////////////////////////////////////////////////////////////////////////
+osg::Transform* PhysicsSimulator::CreateOSGBox( osg::Vec3 size )
+{
+    osg::Box* box = new osg::Box();
+    box->setHalfLengths( size );
+    
+    osg::ShapeDrawable* shape = new osg::ShapeDrawable( box );
+    shape->setColor( osg::Vec4( 1., 1., 1., 1. ) );
+    osg::Geode* geode = new osg::Geode();
+    geode->addDrawable( shape );
+    
+    osg::MatrixTransform* mt = new osg::MatrixTransform();
+    mt->addChild( geode );
+    
+    return( mt );
+}
+////////////////////////////////////////////////////////////////////////////////
+osg::Node* PhysicsSimulator::CreateGround( float w, float h, const osg::Vec3& center )
+{
+    osg::Transform* ground = CreateOSGBox( osg::Vec3( w, h, 1.01 ) );
+    
+    //TRIANGLE_MESH_SHAPE_PROXYTYPE
+    osgBullet::OSGToCollada converter( ground, BOX_SHAPE_PROXYTYPE, 0.f );
+    
+    btRigidBody* body = converter.getRigidBody();
+    
+    // OSGToCollada flattens transformation to transform all
+    // verts, but that doesn't work with ShapeDrawables, so we must
+    // transform the box explicitly.
+    osgBullet::MotionState* motion = dynamic_cast< osgBullet::MotionState* >( body->getMotionState() );
+    osg::Matrix m( osg::Matrix::translate( center ) );
+    motion->setParentTransform( m );
+    body->setWorldTransform( osgBullet::asBtTransform( m ) );
+    
+    ground->setUserData( new osgBullet::RigidBody( body ) );
+    
+    return ground;
 }
 ////////////////////////////////////////////////////////////////////////////////

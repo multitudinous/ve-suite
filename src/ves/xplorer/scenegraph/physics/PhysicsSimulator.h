@@ -54,7 +54,13 @@ class CADEntity;
 
 // --- OSG Includes --- //
 #include <osg/ref_ptr>
+#include <osg/Vec3>
 
+namespace osg
+{
+class Transform;
+class Node;
+}
 // --- Bullet Includes --- //
 #include <LinearMath/btTransform.h>
 
@@ -131,6 +137,9 @@ public:
 
     ///Returns the dynamics world
     btDynamicsWorld* GetDynamicsWorld();
+    
+    ///Create flat ground plane for the world
+    void CreateGroundPlane();
 
 private:
     ///Base constructor
@@ -145,13 +154,28 @@ private:
     ///Sets up the dynamics, collision algorithms, and solvers
     void InitializePhysicsSimulation();
 
+    ///Create OSG rep for the ground
+    ///\param size Size of the ground x, y, z
+    ///\return The transform node for this ground
+    osg::Transform* CreateOSGBox( osg::Vec3 size );
+
+    ///Create the ground plane osg rep
+    ///\param w Width of the plane
+    ///\param h Hieght of the plane
+    ///\param center x,y,z center of the plane
+    ///\return OSG node for the plane
+    osg::Node* CreateGround( float w, float h, const osg::Vec3& center );
+    
     int mDebugMode;///<The debug level for bullet physics
 
-    bool mIdle;///<Determines whether the physics simulation is idle or not
+    ///Determines whether the physics simulation is idle or not
+    bool mIdle;
     bool mCollisionInformation;
-
-    float shoot_speed;///<
-
+    ///Speed of shooting boxes
+    float shoot_speed;
+    ///Is the ground plane created
+    bool mCreatedGroundPlane;
+    
     gadget::PositionInterface head;///<The head in vr juggler
 
     std::vector< ves::xplorer::scenegraph::CADEntity* > mBoxVector;///<

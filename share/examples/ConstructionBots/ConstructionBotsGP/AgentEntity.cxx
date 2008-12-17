@@ -157,6 +157,9 @@ void AgentEntity::Initialize()
         new bots::PerimeterSensor( this ) );
     mSiteSensor = bots::SiteSensorPtr(
         new bots::SiteSensor( this ) );
+    
+    InitPhysics();
+    mPhysicsRigidBody->BoundingBoxShape();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AgentEntity::CommunicatingBlocksAlgorithm()
@@ -238,9 +241,9 @@ void AgentEntity::AvoidObstacle()
     btVector3 linearVelocity =
         mObstacleSensor->GetNormalizedResultantForceVector() * *speed;
     //Keep gravity in velocity
-    linearVelocity.setZ( mPhysicsRigidBody->getLinearVelocity().getZ() );
+    linearVelocity.setZ( mPhysicsRigidBody->GetbtRigidBody()->getLinearVelocity().getZ() );
 
-    mPhysicsRigidBody->setLinearVelocity( linearVelocity );
+    mPhysicsRigidBody->GetbtRigidBody()->setLinearVelocity( linearVelocity );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AgentEntity::Build()
@@ -255,7 +258,7 @@ void AgentEntity::Build()
         mHeldBlock->GetDCS();
 
     //Get the velocity before mPhysicsRigidBody is destroyed
-    btVector3 velocity = mPhysicsRigidBody->getLinearVelocity();
+    btVector3 velocity = mPhysicsRigidBody->GetbtRigidBody()->getLinearVelocity();
 
     //Get the block close to the attach site
     double* position = mDCS->GetVETranslationArray();
@@ -317,9 +320,9 @@ void AgentEntity::FollowPerimeter()
     btVector3 linearVelocity =
         mPerimeterSensor->GetNormalizedResultantForceVector() * mPerimeterSpeed;
     //Keep gravity in velocity
-    linearVelocity.setZ( mPhysicsRigidBody->getLinearVelocity().getZ() );
+    linearVelocity.setZ( mPhysicsRigidBody->GetbtRigidBody()->getLinearVelocity().getZ() );
 
-    mPhysicsRigidBody->setLinearVelocity( linearVelocity );
+    mPhysicsRigidBody->GetbtRigidBody()->setLinearVelocity( linearVelocity );
 }
 ////////////////////////////////////////////////////////////////////////////////
 /*
@@ -463,8 +466,8 @@ void AgentEntity::SetConstraints( int gridSize )
     trans.setOrigin( btVector3( 0.0, 0.0, 0.5 ) );
 
     //Must disable deactivation so constraint is always applied
-    mPhysicsRigidBody->setActivationState( DISABLE_DEACTIVATION );
     btRigidBody* fixedBody = mPhysicsSimulator->CreateRigidBody( 0, trans, 0 );
+    mPhysicsRigidBody->GetbtRigidBody()->setActivationState( DISABLE_DEACTIVATION );
 
     btTransform frameInA, frameInB;
     frameInA = btTransform::getIdentity();
@@ -472,7 +475,7 @@ void AgentEntity::SetConstraints( int gridSize )
 
 #if ( BULLET_MAJOR_VERSION >= 2 ) && ( BULLET_MINOR_VERSION > 61 )
     mConstraint = new btGeneric6DofConstraint(
-        *mPhysicsRigidBody, *fixedBody, frameInA, frameInB, false );
+        *mPhysicsRigidBody->GetbtRigidBody(), *fixedBody, frameInA, frameInB, false );
 #else
     mConstraint = new btGeneric6DofConstraint(
         *mPhysicsRigidBody, *fixedBody, frameInA, frameInB );

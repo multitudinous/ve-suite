@@ -80,7 +80,7 @@ void TransferPhysicsDataCallback::operator()( osg::Node* node, osg::NodeVisitor*
 
     if( dcs.valid() && mPhysicsRigidBody )
     {
-        ves::xplorer::scenegraph::vesMotionState* motionState =
+        /*ves::xplorer::scenegraph::vesMotionState* motionState =
             static_cast< vesMotionState* >( mPhysicsRigidBody->getMotionState() );
         btTransform transform;
         if( motionState )
@@ -92,7 +92,7 @@ void TransferPhysicsDataCallback::operator()( osg::Node* node, osg::NodeVisitor*
         dcs->setAttitude( osg::Quat( quat[ 0 ], quat[ 1 ], quat[ 2 ], quat[ 3 ] ) );
 
         btVector3 position = transform.getOrigin();
-        dcs->setPosition( osg::Vec3d( position[ 0 ], position[ 1 ], position[ 2 ] ) );
+        dcs->setPosition( osg::Vec3d( position[ 0 ], position[ 1 ], position[ 2 ] ) );*/
     }
 
     traverse( node, nv );

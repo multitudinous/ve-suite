@@ -259,7 +259,7 @@ void ConstructionWorld::InitializeFramework()
             grid.get(), mPluginDCS.get(), mPhysicsSimulator );
         mGrid->SetNameAndDescriptions();
         mGrid->InitPhysics();
-        mGrid->GetPhysicsRigidBody()->setFriction( 0.5 );
+        mGrid->GetPhysicsRigidBody()->SetFriction( 0.5 );
         mGrid->GetPhysicsRigidBody()->StaticConcaveShape();
     }
 
@@ -272,7 +272,7 @@ void ConstructionWorld::InitializeFramework()
 
         //Set physics properties for start block
         mStartBlock->InitPhysics();
-        mStartBlock->GetPhysicsRigidBody()->setFriction( 0.5 );
+        mStartBlock->GetPhysicsRigidBody()->SetFriction( 0.5 );
         mStartBlock->GetPhysicsRigidBody()->StaticConcaveShape();
 
         //Set D6 constraint for start block
@@ -298,8 +298,8 @@ void ConstructionWorld::InitializeFramework()
 
         //Set physics properties for blocks
         blockEntity->InitPhysics();
-        blockEntity->GetPhysicsRigidBody()->setFriction( 0.5 );
-
+        blockEntity->GetPhysicsRigidBody()->SetFriction( 0.5 );
+        blockEntity->GetPhysicsRigidBody()->BoundingBoxShape();
         //Set D6 constraint for blocks
         blockEntity->SetConstraints( mGridSize );
 
@@ -375,7 +375,7 @@ void ConstructionWorld::CreateAgentEntity()
 
     //Set physics properties for blocks
     agentEntity->InitPhysics();
-    agentEntity->GetPhysicsRigidBody()->setFriction( 0.5 );
+    agentEntity->GetPhysicsRigidBody()->SetFriction( 0.5 );
     agentEntity->GetPhysicsRigidBody()->UserDefinedShape(
         agent->CreateCompoundShape() );
     agentEntity->SetBlockEntityMap( mBlockEntities );

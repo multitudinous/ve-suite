@@ -122,9 +122,9 @@ void CoinFunnelWorld::Initialize()
     mFunnelEntity->SetNameAndDescriptions( "funnel_physics" );
     mFunnelEntity->InitPhysics();
     mFunnelEntity->GetPhysicsRigidBody()->SetMass( 0.0 );
-    mFunnelEntity->GetPhysicsRigidBody()->setFriction( 0.5 );
-    mFunnelEntity->GetPhysicsRigidBody()->setRestitution( 0.0 );
     mFunnelEntity->GetPhysicsRigidBody()->StaticConcaveShape();
+    mFunnelEntity->GetPhysicsRigidBody()->GetbtRigidBody()->setFriction( 0.5 );
+    mFunnelEntity->GetPhysicsRigidBody()->GetbtRigidBody()->setRestitution( 0.0 );
 
     mMarbleEntity = new funnel::MarbleEntity( "Models/IVEs/marble_physics.ive",
                                               mPluginDCS.get(),
@@ -141,9 +141,9 @@ void CoinFunnelWorld::Initialize()
     mMarbleEntity->InitPhysics();
     mMarbleEntity->GetPhysicsRigidBody()->SetStoreCollisions( true );
     mMarbleEntity->GetPhysicsRigidBody()->SetMass( 1.0 );
-    mMarbleEntity->GetPhysicsRigidBody()->setFriction( 0.5 );
-    mMarbleEntity->GetPhysicsRigidBody()->setRestitution( 0.0 );
     mMarbleEntity->GetPhysicsRigidBody()->SphereShape( 0.06 );
+    mMarbleEntity->GetPhysicsRigidBody()->GetbtRigidBody()->setFriction( 0.5 );
+    mMarbleEntity->GetPhysicsRigidBody()->GetbtRigidBody()->setRestitution( 0.0 );
 
     mRailingEntity =
         new funnel::RailingEntity( "Models/IVEs/railing_physics.ive",
@@ -153,9 +153,9 @@ void CoinFunnelWorld::Initialize()
     mRailingEntity->SetNameAndDescriptions( "railing_physics" );
     mRailingEntity->InitPhysics();
     mRailingEntity->GetPhysicsRigidBody()->SetMass( 0.0 );
-    mRailingEntity->GetPhysicsRigidBody()->setFriction( 0.5 );
-    mRailingEntity->GetPhysicsRigidBody()->setRestitution( 0.0 );
     mRailingEntity->GetPhysicsRigidBody()->StaticConcaveShape();
+    mRailingEntity->GetPhysicsRigidBody()->GetbtRigidBody()->setFriction( 0.5 );
+    mRailingEntity->GetPhysicsRigidBody()->GetbtRigidBody()->setRestitution( 0.0 );
 
     mSlideEntity = new funnel::SlideEntity( "Models/IVEs/slide_physics.ive",
                                             mPluginDCS.get(),
@@ -164,9 +164,9 @@ void CoinFunnelWorld::Initialize()
     mSlideEntity->SetNameAndDescriptions( "slide_physics" );
     mSlideEntity->InitPhysics();
     mSlideEntity->GetPhysicsRigidBody()->SetMass( 0.0 );
-    mSlideEntity->GetPhysicsRigidBody()->setFriction( 0.5 );
-    mSlideEntity->GetPhysicsRigidBody()->setRestitution( 0.0 );
     mSlideEntity->GetPhysicsRigidBody()->StaticConcaveShape();
+    mSlideEntity->GetPhysicsRigidBody()->GetbtRigidBody()->setFriction( 0.5 );
+    mSlideEntity->GetPhysicsRigidBody()->GetbtRigidBody()->setRestitution( 0.0 );
 
     mWaterEntity = new funnel::WaterEntity( "Models/IVEs/water.ive",
                                             mPluginDCS.get(),

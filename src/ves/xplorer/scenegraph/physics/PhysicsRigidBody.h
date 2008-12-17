@@ -36,23 +36,29 @@
 // --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
 
-#include <ves/xplorer/scenegraph/physics/osgToBullet.h>
+//#include <ves/xplorer/scenegraph/physics/osgToBullet.h>
 
 // --- OSG Includes --- //
 #include <osg/ref_ptr>
+#include <osg/Node>
 
 namespace osg
 {
-class Node;
+//class Node;
 class Geode;
 }
 
 // --- Bullet Includes --- //
 #include <BulletDynamics/Dynamics/btRigidBody.h>
+#include <BulletCollision/BroadphaseCollision/btBroadphaseProxy.h>
 
 class btCompoundShape;
 class btCollisionShape;
 
+namespace osgBullet
+{
+class MotionState;
+}
 // --- C/C++ Libraries --- //
 #include <map>
 
@@ -63,7 +69,7 @@ namespace xplorer
 namespace scenegraph
 {
 class PhysicsSimulator;
-class vesMotionState;
+//class vesMotionState;
 class osgToBullet;
 
 /*!\file PhysicsRigidBody.h
@@ -75,7 +81,7 @@ class osgToBullet;
 /*!\namespace ves::xplorer::scenegraph
  *
  */
-class VE_SCENEGRAPH_EXPORTS PhysicsRigidBody : public btRigidBody
+class VE_SCENEGRAPH_EXPORTS PhysicsRigidBody // : public btRigidBody
 {
 public:
     ///Constructor
@@ -85,7 +91,7 @@ public:
                       PhysicsSimulator* physicsSimulator );
 
     ///Destructor
-    virtual ~PhysicsRigidBody();
+    ~PhysicsRigidBody();
 
     ///Creates a box shape from the osg::BoundingBox of the mesh shape
     void BoundingBoxShape();
@@ -103,7 +109,18 @@ public:
     ///Set the mass for the rigid body
     ///\param mass The mass value
     void SetMass( float mass );
-
+    ///Set the mass for the rigid body
+    ///\param mass The mass value
+    void SetFriction( float friction );
+    ///Set the mass for the rigid body
+    ///\param mass The mass value
+    void SetRestitution( float restitution );
+    ///Create a rigid body with new enums
+    ///\param lod Can be Overall or Compound
+    ///\param motion Can be Dynamic or Static
+    ///\param mesh Cane be Box, Sphere, Cylinder, Mesh
+    void CreateRigidBody( const std::string& lod, const std::string& motion, const std::string& mesh );
+    
     void SetStoreCollisions( bool storeCollisions );
 
     ///Creates a sphere shape from the osg::BoundingSphere of the mesh shape
@@ -114,24 +131,37 @@ public:
 
     void UserDefinedShape( btCollisionShape* collisionShape );
 
+    btRigidBody* GetbtRigidBody();
+    
 private:
     friend class PhysicsSimulator;
 
     void ClearCollisions();
 
     void PushBackCollision( PhysicsRigidBody* physicsRigidBody, btVector3 location );
-
+    ///Modify the mass, friction, restitution, and inertia for the rigidbody
     void SetMassProps( bool dynamic = true );
+    ///Create a btRigidBody with different shape types
+    void CustomShape( const BroadphaseNativeTypes shapeType, const bool overall );
+    ///Register the rigid body with the ves engine and perform other uniform
+    ///operations on the rigidbody
+    ///\param rigidBody The btRigidBody to register with ves
+    void RegisterRigidBody( btRigidBody* rigidBody );
+    ///Store bodies currently in collision with this body, yes or no
+    bool mStoreCollisions;
+    ///The mass of the rigid body
+    float mMass;
+    ///The mass of the rigid body
+    float mFriction;
+    ///The mass of the rigid body
+    float mRestitution;
+    ///A pointer to the PhysicsSimulator singleton
+    PhysicsSimulator* mPhysicsSimulator;
+    
+    //
+    btRigidBody* mRB;
 
-    bool mStoreCollisions;///<Store bodies currently in collision with this body, yes or no
-
-    float mMass;///<The mass of the rigid body
-
-    PhysicsSimulator* mPhysicsSimulator;///<A pointer to the PhysicsSimulator singleton
-
-    vesMotionState* mVESMotionState;
-
-    osg::ref_ptr< osgToBullet > mOSGToBullet;
+    osg::ref_ptr< osg::Node > mOSGToBullet;
 
     std::multimap< PhysicsRigidBody*, btVector3 > mCollisions;
 

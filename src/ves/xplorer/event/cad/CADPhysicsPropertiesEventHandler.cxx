@@ -99,12 +99,12 @@ void CADPhysicsPropertiesEventHandler::_operateOnNode( XMLObjectPtr xmlObject )
             else if( command->GetDataValuePair( "Friction" ) )
             {
                 command->GetDataValuePair( "Friction" )->GetData( physicsPropertyValue );
-                m_cadHandler->GetPart( nodeID->GetDataString() )->GetPhysicsRigidBody()->setFriction( physicsPropertyValue );
+                m_cadHandler->GetPart( nodeID->GetDataString() )->GetPhysicsRigidBody()->SetFriction( physicsPropertyValue );
             }
             else if( command->GetDataValuePair( "Restitution" ) )
             {
                 command->GetDataValuePair( "Restitution" )->GetData( physicsPropertyValue );
-                m_cadHandler->GetPart( nodeID->GetDataString() )->GetPhysicsRigidBody()->setRestitution( physicsPropertyValue );
+                m_cadHandler->GetPart( nodeID->GetDataString() )->GetPhysicsRigidBody()->SetRestitution( physicsPropertyValue );
             }
 
             std::cout << "Changed Physics Property: " << m_cadHandler->GetPart( nodeID->GetDataString() )->GetFilename() << std::endl;

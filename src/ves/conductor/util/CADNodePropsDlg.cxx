@@ -108,28 +108,26 @@ END_EVENT_TABLE()
 ////////////////////////////////////////////////////
 CADNodePropertiesDlg::CADNodePropertiesDlg( wxWindow* parent,
                                             int id, CADNodePtr activeNode )
-
-        : wxDialog(( wxWindow * ) parent, id, _( "CAD Properties" ), wxDefaultPosition, wxDefaultSize,
-                   ( wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxMAXIMIZE_BOX | wxMINIMIZE_BOX ), _( "CADTree Properties" ) )
+: 
+wxDialog( parent, id, _( "CAD Properties" ), wxDefaultPosition, wxDefaultSize,
+    ( wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxMAXIMIZE_BOX | wxMINIMIZE_BOX ), _( "CADTree Properties" ) ),
+_propertyTabs( 0 ),
+_transformPanel( 0 ),
+_attributePanel( 0 ),
+_physicsPanel( 0 ),
+_animationPanel( 0 ),
+_attributeType( 0 ),
+_attributeSelection( 0 ),
+_addAttributeButton( 0 ),
+_editAttributeButton( 0 ),
+_addAnimationButton( 0 ),
+_restoreDefaultAttributeButton( 0 ),
+_nShaders( 0 ),
+_nMaterials( 0 )
 {
     _cadNode = activeNode;
 
-    _propertyTabs = 0;
-    _transformPanel = 0;
-    _attributePanel = 0;
-    _physicsPanel = 0;
-    _animationPanel = 0;
-
-    _attributeType = 0;
-    _attributeSelection = 0;
-    _addAttributeButton = 0;
-    _editAttributeButton = 0;
-
-    _addAnimationButton = 0;
-    _restoreDefaultAttributeButton = 0;
     //_associateWithDataCheck = 0;
-    _nShaders = 0;
-    _nMaterials = 0;
 
     tempX = 1.0;
     tempY = 1.0;
@@ -155,7 +153,8 @@ void CADNodePropertiesDlg::_buildGUI()
 
     mainSizer->Add( notebookSizer, 3, wxEXPAND | wxALIGN_CENTER_HORIZONTAL );
 
-    bottomRow->Add( new wxButton( this, wxID_OK, _( "OK" ) ), 0, wxALIGN_CENTER );
+    bottomRow->Add( new wxButton( this, wxID_OK, _( "OK" ) ), 0, 
+                   wxALIGN_CENTER | wxALL, 5 );
 
     mainSizer->Add( bottomRow, 0, wxALIGN_CENTER );
     //set this flag and let wx handle alignment
@@ -452,26 +451,42 @@ void CADNodePropertiesDlg::_buildPhysicsPanel()
     frictionSizer->Add( _physicsFrictionCtrl, 1, wxALIGN_CENTER );
     restitutionSizer->Add( _physicsRestitutionCtrl, 1, wxALIGN_CENTER );
 
-    physicsPropSizer->Add( massSizer, 1, wxALIGN_CENTER_HORIZONTAL );
-    physicsPropSizer->Add( frictionSizer, 1, wxALIGN_CENTER_HORIZONTAL );
-    physicsPropSizer->Add( restitutionSizer, 1, wxALIGN_CENTER_HORIZONTAL );
+    physicsPropSizer->Add( massSizer, 1, wxALIGN_CENTER_HORIZONTAL | wxALL, 5 );
+    physicsPropSizer->Add( frictionSizer, 1, wxALIGN_CENTER_HORIZONTAL | wxALL, 5 );
+    physicsPropSizer->Add( restitutionSizer, 1, wxALIGN_CENTER_HORIZONTAL | wxALL, 5 );
 
-    wxString meshStrings[] = { _T( "Bounding Box" ), _T( "Convex" ), _T( "Static Concave" ) };
-    meshProperties = new wxRadioBox( _physicsPanel, PHYSICS_MESH_ID, wxT( "Physics Mesh Type" ),
-                                     wxDefaultPosition, wxDefaultSize, 3,
+    
+    wxBoxSizer* physicsMeshSizer = new wxBoxSizer( wxHORIZONTAL );
+
+    wxString motionStrings[] = { _T( "None" ),_T( "Static" ), _T( "Dynamic" ) };
+    mMotionProperties = new wxRadioBox( _physicsPanel, PHYSICS_MESH_ID, wxT( "Motion Type" ),
+                                       wxDefaultPosition, wxDefaultSize, 3,
+                                       motionStrings, 0, wxRA_SPECIFY_ROWS );
+    physicsMeshSizer->Add( mMotionProperties, 1, wxALIGN_CENTER | wxALL, 5 );
+    
+    wxString lodStrings[] = { _T( "None" ),_T( "Overall" ), _T( "Compound" ) };
+    mLODProperties = new wxRadioBox( _physicsPanel, PHYSICS_MESH_ID, wxT( "LOD Type" ),
+                                    wxDefaultPosition, wxDefaultSize, 3,
+                                    lodStrings, 0, wxRA_SPECIFY_ROWS );
+    physicsMeshSizer->Add( mLODProperties, 1, wxALIGN_CENTER | wxALL, 5 );
+    
+    wxString meshStrings[] = { _T( "None" ),_T( "Box" ), _T( "Sphere" ), _T( "Cylinder" ), _T( "Mesh" ) };
+    mMeshProperties = new wxRadioBox( _physicsPanel, PHYSICS_MESH_ID, wxT( "Mesh Type" ),
+                                     wxDefaultPosition, wxDefaultSize, 5,
                                      meshStrings, 0, wxRA_SPECIFY_ROWS );
-
+    physicsMeshSizer->Add( mMeshProperties, 1, wxALIGN_CENTER | wxALL, 5 );
+    
     if( _cadNode )
     {
         _physicsMassCtrl->SetValue( _cadNode->GetMass() );
         _physicsFrictionCtrl->SetValue( _cadNode->GetFriction() );
         _physicsRestitutionCtrl->SetValue( _cadNode->GetRestitution() );
 
-        meshProperties->SetStringSelection( wxString( _cadNode->GetPhysicsMesh().c_str(), wxConvUTF8 ) );
+        mMeshProperties->SetStringSelection( wxString( _cadNode->GetPhysicsMesh().c_str(), wxConvUTF8 ) );
     }
 
-    physicsPanelSizer->Add( physicsPropSizer, 1, wxEXPAND | wxALIGN_CENTER );
-    physicsPanelSizer->Add( meshProperties, 1, wxEXPAND | wxALIGN_CENTER );
+    physicsPanelSizer->Add( physicsPropSizer, 1, wxALIGN_CENTER );
+    physicsPanelSizer->Add( physicsMeshSizer, 1, wxALIGN_CENTER );
 
     _physicsPanel->SetAutoLayout( true );
     _physicsPanel->SetSizer( physicsPanelSizer );
@@ -1077,31 +1092,62 @@ void CADNodePropertiesDlg::_updatePhysicsProperties( wxSpinEvent& event )
 ///////////////////////////////////////////////////////////////////////////////
 void CADNodePropertiesDlg::_updatePhysicsMesh( wxCommandEvent& event )
 {
-    if( _cadNode )
+    if( !_cadNode )
     {
-        _commandName = std::string( "PHYSICS_MESH" );
-
-        ves::open::xml::DataValuePairPtr nodeID( new ves::open::xml::DataValuePair() );
-        nodeID->SetDataType( "STRING" );
-        nodeID->SetData( std::string( "Node ID" ), _cadNode->GetID() );
-        _instructions.push_back( nodeID );
-
-        ves::open::xml::DataValuePairPtr nodeType( new ves::open::xml::DataValuePair() );
-        nodeType->SetDataType( "STRING" );
-        nodeType->SetDataName( std::string( "Node Type" ) );
-        nodeType->SetDataString( _cadNode->GetNodeType() );
-        _instructions.push_back( nodeType );
-
-        ves::open::xml::DataValuePairPtr meshType( new ves::open::xml::DataValuePair() );
-        meshType->SetDataType( "STRING" );
-        meshType->SetDataName( std::string( "Mesh Type" ) );
-        meshType->SetDataString( ConvertUnicode( meshProperties->GetStringSelection() ) );
-        _cadNode->SetPhysicsMesh( ConvertUnicode( meshProperties->GetStringSelection() ) );
-        _instructions.push_back( meshType );
-
-        _sendCommandsToXplorer();
-        ClearInstructions();
+        return;
     }
+    
+    if( mMeshProperties->GetSelection() == 0 )
+    {
+        return;
+    }
+    
+    if( mMotionProperties->GetSelection() == 0 )
+    {
+        return;
+    }
+    
+    if( mLODProperties->GetSelection() == 0 )
+    {
+        return;
+    }
+    
+    _commandName = std::string( "PHYSICS_MESH" );
+
+    ves::open::xml::DataValuePairPtr nodeID( new ves::open::xml::DataValuePair() );
+    nodeID->SetDataType( "STRING" );
+    nodeID->SetData( std::string( "Node ID" ), _cadNode->GetID() );
+    _instructions.push_back( nodeID );
+
+    ves::open::xml::DataValuePairPtr nodeType( new ves::open::xml::DataValuePair() );
+    nodeType->SetDataType( "STRING" );
+    nodeType->SetDataName( std::string( "Node Type" ) );
+    nodeType->SetDataString( _cadNode->GetNodeType() );
+    _instructions.push_back( nodeType );
+
+    ves::open::xml::DataValuePairPtr meshType( new ves::open::xml::DataValuePair() );
+    meshType->SetDataType( "STRING" );
+    meshType->SetDataName( std::string( "Mesh Type" ) );
+    meshType->SetDataString( ConvertUnicode( mMeshProperties->GetStringSelection() ) );
+    _cadNode->SetPhysicsMesh( ConvertUnicode( mMeshProperties->GetStringSelection() ) );
+    _instructions.push_back( meshType );
+
+    ves::open::xml::DataValuePairPtr lodType( new ves::open::xml::DataValuePair() );
+    lodType->SetDataType( "STRING" );
+    lodType->SetDataName( std::string( "LOD Type" ) );
+    lodType->SetDataString( ConvertUnicode( mLODProperties->GetStringSelection() ) );
+    //_cadNode->SetPhysicsMesh( ConvertUnicode( mLODProperties->GetStringSelection() ) );
+    _instructions.push_back( lodType );
+
+    ves::open::xml::DataValuePairPtr motionType( new ves::open::xml::DataValuePair() );
+    motionType->SetDataType( "STRING" );
+    motionType->SetDataName( std::string( "Motion Type" ) );
+    motionType->SetDataString( ConvertUnicode( mMotionProperties->GetStringSelection() ) );
+    //_cadNode->SetPhysicsMesh( ConvertUnicode( mMotionProperties->GetStringSelection() ) );
+    _instructions.push_back( motionType );
+
+    _sendCommandsToXplorer();
+    ClearInstructions();
 }
 ///////////////////////////////////////////////////////////////////////////////
 void CADNodePropertiesDlg::UpdateUniformScale( wxCommandEvent& WXUNUSED( event ) )

@@ -84,6 +84,8 @@ public:
         PHYSICS_MASS_ID,///<The physics mass property ID.
         PHYSICS_FRICTION_ID,///<The physics friction property ID.
         PHYSICS_RESTITUTION_ID,///<The physics restitution property ID.
+        PHYSICS_LOD_ID,///<The physics mesh ID.
+        PHYSICS_MOTION_ID,///<The physics mesh ID.
         PHYSICS_MESH_ID,///<The physics mesh ID.
         EDIT_ATTRIBUTE,///<The edit attribute ID.
         REMOVE_ATTRIBUTE,///<The remove attribute ID.
@@ -270,10 +272,18 @@ protected:
     wxArrayString _availableMaterials;///<The material names.
 
     ///Physics panel controls
-    wxSpinCtrlDbl* _physicsMassCtrl;///<Mass control
-    wxSpinCtrlDbl* _physicsFrictionCtrl;///<Friction control
-    wxSpinCtrlDbl* _physicsRestitutionCtrl;///<Restitution control
-    wxRadioBox* meshProperties;///<Mesh type control
+    ///Mass control
+    wxSpinCtrlDbl* _physicsMassCtrl;
+    ///Friction control
+    wxSpinCtrlDbl* _physicsFrictionCtrl;
+    ///Restitution control
+    wxSpinCtrlDbl* _physicsRestitutionCtrl;
+    ///Mesh type control
+    wxRadioBox* mMeshProperties;
+    ///Motion type control
+    wxRadioBox* mMotionProperties;
+    ///LOD control
+    wxRadioBox* mLODProperties;
 
     ///Animation panel controls
     wxArrayString _animationFiles;///<The animation file names.

@@ -320,7 +320,7 @@ OSGToCollada::createRigidBody( btScalar mass,
     if( (shape == NULL) || (node == NULL) )
         return NULL;
 
-    btTransform startTransform; startTransform.setIdentity();
+    //btTransform startTransform; startTransform.setIdentity();
 
 	btVector3 localInertia( 0, 0, 0 );
 	const bool isDynamic = (mass != 0.f);

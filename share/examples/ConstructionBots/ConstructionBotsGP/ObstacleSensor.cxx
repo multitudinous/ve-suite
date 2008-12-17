@@ -266,7 +266,7 @@ const btVector3& ObstacleSensor::GetNormalizedResultantForceVector()
     {
         //Drive straight
         targetForce =
-            mAgentEntity->GetPhysicsRigidBody()->getLinearVelocity();
+            mAgentEntity->GetPhysicsRigidBody()->GetbtRigidBody()->getLinearVelocity();
     }
 
     if( targetForce.length() != 0.0 )
@@ -288,7 +288,7 @@ const btVector3& ObstacleSensor::GetNormalizedResultantForceVector()
     else
     {
         currentForce =
-            &mAgentEntity->GetPhysicsRigidBody()->getLinearVelocity();
+            &mAgentEntity->GetPhysicsRigidBody()->GetbtRigidBody()->getLinearVelocity();
     }
 
     //Code to find angle between two vectors sharing origin

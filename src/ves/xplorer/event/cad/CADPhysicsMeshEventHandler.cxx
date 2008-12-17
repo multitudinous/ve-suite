@@ -87,10 +87,15 @@ void CADPhysicsMeshEventHandler::_operateOnNode( XMLObjectPtr xmlObject )
         DataValuePairPtr nodeID = command->GetDataValuePair( "Node ID" );
         DataValuePairPtr nodeType = command->GetDataValuePair( "Node Type" );
         DataValuePairPtr meshType = command->GetDataValuePair( "Mesh Type" );
-
-        if( nodeType->GetDataString() == std::string( "Part" ) )
+        DataValuePairPtr lodType = command->GetDataValuePair( "LOD Type" );
+        DataValuePairPtr motionType = command->GetDataValuePair( "Motion Type" );
+        const std::string mesh = meshType->GetDataString();
+        const std::string lod = lodType->GetDataString();
+        const std::string motion = motionType->GetDataString();
+        
+        //if( nodeType->GetDataString() == std::string( "Part" ) )
         {
-            if( meshType->GetDataString() == std::string( "Bounding Box" ) )
+            /*if( meshType->GetDataString() == std::string( "Bounding Box" ) )
             {
                 m_cadHandler->GetPart( nodeID->GetDataString() )->GetPhysicsRigidBody()->BoundingBoxShape();
             }
@@ -101,7 +106,9 @@ void CADPhysicsMeshEventHandler::_operateOnNode( XMLObjectPtr xmlObject )
             else if( meshType->GetDataString() == std::string( "Static Concave" ) )
             {
                 m_cadHandler->GetPart( nodeID->GetDataString() )->GetPhysicsRigidBody()->StaticConcaveShape();
-            }
+            }*/
+
+            m_cadHandler->GetPart( nodeID->GetDataString() )->GetPhysicsRigidBody()->CreateRigidBody( lod, motion, mesh );
 
             std::cout << "Changed Physics Mesh: " << m_cadHandler->GetPart( nodeID->GetDataString() )->GetFilename() << std::endl;
         }

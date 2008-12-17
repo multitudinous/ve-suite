@@ -66,6 +66,10 @@
 #include <osg/LightModel>
 #include <osg/BlendColor>
 
+#include <osg/io_utils>
+#include <osg/ComputeBoundsVisitor>
+#include <osg/BoundingBox>
+
 #include <osgUtil/SmoothingVisitor>
 #include <osgUtil/Optimizer>
 
@@ -372,6 +376,17 @@ void CADEntityHelper::LoadFile( const std::string& filename,
                            osgUtil::Optimizer::MERGE_GEODES |
                            osgUtil::Optimizer::STATIC_OBJECT_DETECTION );
     }
+    
+    {
+        osg::ComputeBoundsVisitor cbbv( osg::NodeVisitor::TRAVERSE_ALL_CHILDREN );
+        tempCADNode->accept(cbbv);
+        osg::BoundingBox bb = cbbv.getBoundingBox();
+        std::cout << "BB Info" << std::endl;
+        std::cout << bb.center() << std::endl;
+        std::cout << bb.radius() << std::endl;
+        std::cout << bb._min << std::endl;
+        std::cout << bb._max << std::endl;        
+    }
 
 #if ((OSG_VERSION_MAJOR>=2) && (OSG_VERSION_MINOR>=4))
     osg::ref_ptr< osg::OcclusionQueryNode > root;
@@ -434,6 +449,17 @@ void CADEntityHelper::LoadFile( const std::string& filename,
     //Set per vertex lighting on all files that are loaded
     //osgUtil::SmoothingVisitor smoother;
     //m_cadNode->accept( smoother );
+    
+    {
+        osg::ComputeBoundsVisitor cbbv( osg::NodeVisitor::TRAVERSE_ALL_CHILDREN );
+        m_cadNode->accept(cbbv);
+        osg::BoundingBox bb = cbbv.getBoundingBox();
+        std::cout << "BB Info" << std::endl;
+        std::cout << bb.center() << std::endl;
+        std::cout << bb.radius() << std::endl;
+        std::cout << bb._min << std::endl;
+        std::cout << bb._max << std::endl;        
+    }    
 }
 ////////////////////////////////////////////////////////////////////////////////
 std::string CADEntityHelper::

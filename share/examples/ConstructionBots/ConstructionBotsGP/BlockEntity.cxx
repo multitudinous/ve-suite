@@ -525,7 +525,7 @@ void BlockEntity::Reset()
 
     //Reset the linear velocity to zero
     btVector3 zeroVelocity( 0.0, 0.0, 0.0 );
-    GetPhysicsRigidBody()->setLinearVelocity( zeroVelocity );
+    GetPhysicsRigidBody()->GetbtRigidBody()->setLinearVelocity( zeroVelocity );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void BlockEntity::SetBlockConnection(
@@ -547,8 +547,8 @@ void BlockEntity::SetConstraints( int gridSize )
     trans.setOrigin( btVector3( 0.0, 0.0, 0.5 ) );
 
     //Must disable deactivation so constraint is always applied
-    mPhysicsRigidBody->setActivationState( DISABLE_DEACTIVATION );
     btRigidBody* fixedBody = mPhysicsSimulator->CreateRigidBody( 0, trans, 0 );
+    mPhysicsRigidBody->GetbtRigidBody()->setActivationState( DISABLE_DEACTIVATION );
 
     btTransform frameInA, frameInB;
     frameInA = btTransform::getIdentity();
@@ -556,7 +556,7 @@ void BlockEntity::SetConstraints( int gridSize )
 
 #if( BULLET_MAJOR_VERSION >= 2 ) && ( BULLET_MINOR_VERSION > 61 )
     mConstraint = new btGeneric6DofConstraint(
-        *mPhysicsRigidBody, *fixedBody, frameInA, frameInB, false );
+        *mPhysicsRigidBody->GetbtRigidBody(), *fixedBody, frameInA, frameInB, false );
 #else
     mConstraint = new btGeneric6DofConstraint(
         *mPhysicsRigidBody, *fixedBody, frameInA, frameInB );

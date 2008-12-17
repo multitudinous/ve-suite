@@ -97,9 +97,9 @@ DCS::DCS()
     //_scale is defined in the inherited class osg::PositionAttitudeTransform
     _scale[0] = 1;
 
-    m_udcb = new TransferPhysicsDataCallback();
+    /*m_udcb = new TransferPhysicsDataCallback();
     m_udcb->SetPhysicsRigidBody( mPhysicsRigidBody );
-    setUpdateCallback( m_udcb.get() );
+    setUpdateCallback( m_udcb.get() );*/
 
     AddTechnique( "Select", new ves::xplorer::scenegraph::SelectTechnique
                   ( new osg::StateSet( *getOrCreateStateSet() ) ) );
@@ -113,9 +113,9 @@ DCS::DCS( double* scale, double* trans, double* rot )
     SetRotationArray( rot );
     SetScaleArray( scale );
 
-    m_udcb = new TransferPhysicsDataCallback();
+    /*m_udcb = new TransferPhysicsDataCallback();
     m_udcb->SetPhysicsRigidBody( mPhysicsRigidBody );
-    setUpdateCallback( m_udcb.get() );
+    setUpdateCallback( m_udcb.get() );*/
 
     AddTechnique( "Select", new ves::xplorer::scenegraph::SelectTechnique
                   ( new osg::StateSet( *getOrCreateStateSet() ) ) );
@@ -126,9 +126,9 @@ DCS::DCS( const DCS& dcs, const osg::CopyOp& copyop )
         osg::PositionAttitudeTransform( dcs, copyop ),
         mPhysicsRigidBody( 0 )
 {
-    m_udcb = new TransferPhysicsDataCallback();
+    /*m_udcb = new TransferPhysicsDataCallback();
     m_udcb->SetPhysicsRigidBody( mPhysicsRigidBody );
-    setUpdateCallback( m_udcb.get() );
+    setUpdateCallback( m_udcb.get() );*/
 
     AddTechnique( "Select", new ves::xplorer::scenegraph::SelectTechnique
                   ( new osg::StateSet( *getOrCreateStateSet() ) ) );
@@ -483,7 +483,7 @@ void DCS::ToggleDisplay( std::string onOff )
 ////////////////////////////////////////////////////////////////////////////////
 void DCS::UpdatePhysicsTransform()
 {
-    if( !mPhysicsRigidBody )
+    /*if( !mPhysicsRigidBody )
     {
         return;
     }
@@ -517,15 +517,15 @@ void DCS::UpdatePhysicsTransform()
         mPhysicsRigidBody->setLinearVelocity( btVector3( 0, 0, 0 ) );
         mPhysicsRigidBody->setAngularVelocity( btVector3( 0, 0, 0 ) );
     }
-
+*/
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DCS::SetPhysicsRigidBody( PhysicsRigidBody* physicsRigidBody )
 {
-    mPhysicsRigidBody = physicsRigidBody;
+    /*mPhysicsRigidBody = physicsRigidBody;
     m_udcb->SetPhysicsRigidBody( mPhysicsRigidBody );
 
-    UpdatePhysicsTransform();
+    UpdatePhysicsTransform();*/
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DCS::traverse( osg::NodeVisitor& nv )

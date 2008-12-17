@@ -59,6 +59,11 @@ void LocalToWorldNodePath::apply( osg::Node& node )
     if( &node == mStopNode.get() )
     {
         osg::NodePath nodePath = getNodePath();
+        if( nodePath.size() == 0 )
+        {
+            std::cerr << "No nodes" << std::endl;
+            return;
+        }
         NodeAndPath nap( &node, nodePath );
         mNaplIncludeLocal.push_back( nap );
         for( size_t i = 0; i < nodePath.size(); ++i )

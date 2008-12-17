@@ -112,11 +112,17 @@ void PluginBase::InitializeNode( osg::Group* veworldDCS )
     mDCS = new ves::xplorer::scenegraph::DCS();
     mDCS->SetName( "PluginBase" );
     mWorldDCS = veworldDCS;
+    AddSelfToSG();
     mModel = new Model( mDCS.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PluginBase::AddSelfToSG()
 {
+    if( mOnSceneGraph )
+    {
+        return;
+    }
+    
     mOnSceneGraph = true;
     mWorldDCS->addChild( mDCS.get() );
 }
