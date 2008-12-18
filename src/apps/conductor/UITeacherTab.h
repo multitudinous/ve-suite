@@ -30,12 +30,12 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#ifndef _VE_UI_TEACHER_TAB_H_
-#define _VE_UI_TEACHER_TAB_H_
-/*!\file UI_TeacherTab.h
-UI_TeacherTab API
+#ifndef _VE_UITEACHERTAB_H_
+#define _VE_UITEACHERTAB_H_
+/*!\file UITeacherTab.h
+UITeacherTab API
 */
-/*!\class UI_TeacherTab
+/*!\class UITeacherTab
 *
 */
 #include <wx/dialog.h>
@@ -47,11 +47,11 @@ class wxSizer;
 class wxRadioBox;
 class wxBoxSizer;
 
-class UI_TeacherTab : public wxDialog
+class UITeacherTab : public wxDialog
 {
 public:
-    UI_TeacherTab( wxWindow* tControl );
-    virtual ~UI_TeacherTab( void )
+    UITeacherTab( wxWindow* tControl );
+    virtual ~UITeacherTab( void )
     {
         ;
     }
@@ -70,4 +70,4 @@ protected:
 
     DECLARE_EVENT_TABLE()
 };
-#endif //_VE_UI_TEACHER_TAB_H_
+#endif //_VE_UITEACHERTAB_H_

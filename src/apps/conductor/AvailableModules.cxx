@@ -31,7 +31,7 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/conductor/util/CORBAServiceList.h>
-#include "Avail_Modules.h"
+#include "AvailableModules.h"
 #include "AppFrame.h"
 #include "HierarchyTree.h"
 #include "PluginLoader.h"
@@ -61,15 +61,15 @@ using namespace ves::conductor;
 using namespace ves::conductor::util;
 using namespace ves::open::xml;
 
-BEGIN_EVENT_TABLE( Avail_Modules, wxTreeCtrl )
-    EVT_TREE_ITEM_RIGHT_CLICK( AVAILABLEMODULES_TREE_CTRL, Avail_Modules::OnItemRightClick )
-    EVT_TREE_SEL_CHANGED( AVAILABLEMODULES_TREE_CTRL, Avail_Modules::OnSelChanged )
-    EVT_MENU( AVAILABLEMODULES_DESC, Avail_Modules::ShowDesc )
-    EVT_MENU( AVAILABLEMODULES_HELP, Avail_Modules::ShowHelp )
-    EVT_TREE_ITEM_ACTIVATED( AVAILABLEMODULES_TREE_CTRL, Avail_Modules::Instantiate )
+BEGIN_EVENT_TABLE( AvailableModules, wxTreeCtrl )
+    EVT_TREE_ITEM_RIGHT_CLICK( AVAILABLEMODULES_TREE_CTRL, AvailableModules::OnItemRightClick )
+    EVT_TREE_SEL_CHANGED( AVAILABLEMODULES_TREE_CTRL, AvailableModules::OnSelChanged )
+    EVT_MENU( AVAILABLEMODULES_DESC, AvailableModules::ShowDesc )
+    EVT_MENU( AVAILABLEMODULES_HELP, AvailableModules::ShowHelp )
+    EVT_TREE_ITEM_ACTIVATED( AVAILABLEMODULES_TREE_CTRL, AvailableModules::Instantiate )
 END_EVENT_TABLE()
 
-Avail_Modules::Avail_Modules( wxWindow *parent, const wxWindowID id, 
+AvailableModules::AvailableModules( wxWindow *parent, const wxWindowID id, 
                              const wxPoint& pos, const wxSize& size,
                              long style )
     :
@@ -90,12 +90,12 @@ Avail_Modules::Avail_Modules( wxWindow *parent, const wxWindowID id,
     LoadModules();
 }
 ////////////////////////////////////////////////////////////////////////////////
-Avail_Modules::~Avail_Modules()
+AvailableModules::~AvailableModules()
 {
     delete pl_loader;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Avail_Modules::AddModule( UIPluginBase* plugin, wxClassInfo* clsi )
+void AvailableModules::AddModule( UIPluginBase* plugin, wxClassInfo* clsi )
 {
     std::vector<wxString> lnames;
     wxTreeItemIdValue cookie;
@@ -148,7 +148,7 @@ void Avail_Modules::AddModule( UIPluginBase* plugin, wxClassInfo* clsi )
     //SetItemBold( id );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Avail_Modules::OnItemRightClick( wxTreeEvent& event )
+void AvailableModules::OnItemRightClick( wxTreeEvent& event )
 {
     ReiTreeItemData* item_data;
 
@@ -169,7 +169,7 @@ void Avail_Modules::OnItemRightClick( wxTreeEvent& event )
     ShowMenu( selection, event.GetPoint() );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Avail_Modules::Instantiate( wxTreeEvent& WXUNUSED( event ) ) //Double click
+void AvailableModules::Instantiate( wxTreeEvent& WXUNUSED( event ) ) //Double click
 {
     selection = GetSelection();
     if( !selection )
@@ -209,7 +209,7 @@ void Avail_Modules::Instantiate( wxTreeEvent& WXUNUSED( event ) ) //Double click
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Avail_Modules::ShowMenu( wxTreeItemId id, const wxPoint& pt )
+void AvailableModules::ShowMenu( wxTreeItemId id, const wxPoint& pt )
 {
     wxString title;
     if( id.IsOk() )
@@ -228,7 +228,7 @@ void Avail_Modules::ShowMenu( wxTreeItemId id, const wxPoint& pt )
     PopupMenu( &menu, pt );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Avail_Modules::getLeveledName( wxString name,
+void AvailableModules::getLeveledName( wxString name,
                                    std::vector<wxString> & lnames )
 {
     char * s;
@@ -244,7 +244,7 @@ void Avail_Modules::getLeveledName( wxString name,
 
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Avail_Modules::CreateImageList( int size )
+void AvailableModules::CreateImageList( int size )
 {
     if( size == -1 )
     {
@@ -286,12 +286,12 @@ void Avail_Modules::CreateImageList( int size )
     AssignImageList( images );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Avail_Modules::OnSelChanged( wxTreeEvent& WXUNUSED( event ) )
+void AvailableModules::OnSelChanged( wxTreeEvent& WXUNUSED( event ) )
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool Avail_Modules::LoadModules()
+bool AvailableModules::LoadModules()
 {
     pl_loader->LoadPlugins( _( "Plugins/UI" ) );
     for( size_t i = 0; i < pl_loader->GetNumberOfPlugins(); i++ )
@@ -305,7 +305,7 @@ bool Avail_Modules::LoadModules()
     return true;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Avail_Modules::ShowDesc( wxCommandEvent& WXUNUSED( event ) )
+void AvailableModules::ShowDesc( wxCommandEvent& WXUNUSED( event ) )
 {
     ReiTreeItemData* item_data;
     UIPluginBase* pl;
@@ -331,7 +331,7 @@ void Avail_Modules::ShowDesc( wxCommandEvent& WXUNUSED( event ) )
     wxMessageDialog( this, desc, title ).ShowModal();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Avail_Modules::ShowHelp( wxCommandEvent& WXUNUSED( event ) )
+void AvailableModules::ShowHelp( wxCommandEvent& WXUNUSED( event ) )
 {
     UIPluginBase* pl;
     wxString help;
@@ -365,7 +365,7 @@ void Avail_Modules::ShowHelp( wxCommandEvent& WXUNUSED( event ) )
     */
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Avail_Modules::ResetPluginTree()
+void AvailableModules::ResetPluginTree()
 {
     //Destroy the old tree
     DeleteAllItems();

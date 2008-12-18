@@ -39,16 +39,16 @@
 #include <wx/msgdlg.h>
 #include <wx/filename.h>
 
-#include "UI_TeacherTab.h"
+#include "UITeacherTab.h"
 #include "ConductorAppEnums.h"
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>
 
 #include <iostream>
 
-BEGIN_EVENT_TABLE( UI_TeacherTab, wxDialog )
-    EVT_RADIOBOX( UITEACHERTAB_RBOX, UI_TeacherTab::_onTeacher )
-    EVT_BUTTON( UITEACHERTAB_RECORD_SCENE, UI_TeacherTab::_onClear )
+BEGIN_EVENT_TABLE( UITeacherTab, wxDialog )
+    EVT_RADIOBOX( UITEACHERTAB_RBOX, UITeacherTab::_onTeacher )
+    EVT_BUTTON( UITEACHERTAB_RECORD_SCENE, UITeacherTab::_onClear )
 END_EVENT_TABLE()
 
 using namespace ves::open::xml;
@@ -57,7 +57,7 @@ using namespace ves::conductor::util;
 ///////////////
 //Constructor//
 ///////////////
-UI_TeacherTab::UI_TeacherTab( wxWindow* tControl )
+UITeacherTab::UITeacherTab( wxWindow* tControl )
         : wxDialog( tControl, -1, _( "Stored Scenes" ),
                     wxDefaultPosition, wxDefaultSize,
                     ( wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxMAXIMIZE_BOX | wxMINIMIZE_BOX ) & ~ wxSTAY_ON_TOP )
@@ -95,7 +95,7 @@ UI_TeacherTab::UI_TeacherTab( wxWindow* tControl )
 //////////////////////////////
 //build the sound tab       //
 //////////////////////////////
-void UI_TeacherTab::_buildPage()
+void UITeacherTab::_buildPage()
 {
     //the radio box
     // add one for defualt button for no pfbs loaded
@@ -141,7 +141,7 @@ void UI_TeacherTab::_buildPage()
 ///////////////////
 
 //////////////////////////////////////////////////
-void UI_TeacherTab::_onTeacher( wxCommandEvent& WXUNUSED( event ) )
+void UITeacherTab::_onTeacher( wxCommandEvent& WXUNUSED( event ) )
 {
     std::string dataValueName;
     if( _teacherRBox->GetSelection() == 0 )
@@ -178,7 +178,7 @@ void UI_TeacherTab::_onTeacher( wxCommandEvent& WXUNUSED( event ) )
     }
 }
 
-void UI_TeacherTab::_onClear( wxCommandEvent& event )
+void UITeacherTab::_onClear( wxCommandEvent& event )
 {
     CommandPtr veCommand( new Command() );
 

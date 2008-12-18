@@ -60,9 +60,9 @@ class CORBAServiceList;
 class Splitter;
 class ViewLocPane;
 class MainToolBar;
-class Avail_Modules;
+class AvailableModules;
 class HierarchyTree;
-class UI_TeacherTab;
+class UITeacherTab;
 class NavigationPane;
 class UserPreferences;
 class DeviceProperties;
@@ -139,7 +139,7 @@ public:
     wxMenuBar* menubar;
     MainToolBar* mainToolBar;///<The main toolbar
 
-    Avail_Modules* av_modules;
+    AvailableModules* av_modules;
     HierarchyTree* hierarchyTree;
     wxNotebook* side_pane;
     ves::conductor::Canvas* canvas;
@@ -321,7 +321,7 @@ private:
     NavigationPane* navPane;
     DeviceProperties* deviceProperties;
     ViewLocPane* viewlocPane;
-    UI_TeacherTab* recordScenes;
+    UITeacherTab* recordScenes;
 
     wxDialog* _treeView;
 

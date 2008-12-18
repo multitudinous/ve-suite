@@ -30,12 +30,12 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#ifndef AVAIL_MODULES_H
-#define AVAIL_MODULES_H
-/*!\file Avail_Modules.h
-Avail_Modules API
+#ifndef AVAILABLEMODULES_H
+#define AVAILABLEMODULES_H
+/*!\file AvailableModules.h
+AvailableModules API
 */
-/*!\class Avail_Modules
+/*!\class AvailableModules
 *
 */
 #include <vector>
@@ -55,22 +55,22 @@ namespace ves
 class AppFrame;
 class PluginLoader;
 
-class Avail_Modules : public wxTreeCtrl
+class AvailableModules : public wxTreeCtrl
 {
 public:
 
     ///Default constructor
-    Avail_Modules()
+    AvailableModules()
     {
         ;
     }
     
     ///Normal constructor
-    Avail_Modules( wxWindow *parent, const wxWindowID id, const wxPoint& pos,
+    AvailableModules( wxWindow *parent, const wxWindowID id, const wxPoint& pos,
         const wxSize& size, long style );
     
     ///Destructor
-    virtual ~Avail_Modules();
+    virtual ~AvailableModules();
     
     ///right click event
     void OnItemRightClick( wxTreeEvent& event );

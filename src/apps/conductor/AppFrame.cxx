@@ -63,9 +63,9 @@
 
 #include "ConductorApp.h"
 #include "UserPreferences.h"
-#include "Avail_Modules.h"
+#include "AvailableModules.h"
 #include "HierarchyTree.h"
-#include "UI_TeacherTab.h"
+#include "UITeacherTab.h"
 #include "DeviceProperties.h"
 #include "NavigationPane.h"
 #include "Splitter.h"
@@ -405,7 +405,7 @@ void AppFrame::_createTreeAndLogWindow( wxWindow* parent )
 
     //create module page
     wxPanel* modPage = new wxPanel( side_pane, -1, wxDefaultPosition, wxDefaultSize );
-    av_modules = new Avail_Modules( modPage, AVAILABLEMODULES_TREE_CTRL,
+    av_modules = new AvailableModules( modPage, AVAILABLEMODULES_TREE_CTRL,
                                     wxDefaultPosition, wxDefaultSize, wxTR_HAS_BUTTONS );
 
     //make module panel fill the notebook page
@@ -2219,7 +2219,7 @@ void AppFrame::LaunchRecordScenes( wxCommandEvent& WXUNUSED( event ) )
     if( recordScenes == 0 )
     {
         // create pane and set appropriate vars
-        recordScenes = new UI_TeacherTab( this );
+        recordScenes = new UITeacherTab( this );
     }
 
     // now show it
