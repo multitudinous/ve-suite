@@ -142,14 +142,6 @@ void OPPD::GetOPorts(POLY &oports)
 {
   oports[0]=wxPoint(icon_w*43/52,icon_h*74/98);   
 }
-
-/////////////////////////////////////////////////////////////////////////////
-void OPPD::DrawIcon(wxDC* dc)
-{
-  //Your implementation
-	dc->DrawBitmap(*my_icon,pos.x, pos.y);
-}
-
 /////////////////////////////////////////////////////////////////////////////
 UIDialog* OPPD::UI(wxWindow* parent)
 {

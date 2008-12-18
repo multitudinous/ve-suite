@@ -116,11 +116,6 @@ void IntStoves::GetOPorts( POLY &oports )
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void IntStoves::DrawIcon( wxDC* dc )
-{
-    dc->DrawBitmap( *my_icon, pos.x, pos.y );
-}
-////////////////////////////////////////////////////////////////////////////////
 ves::conductor::UIDialog* IntStoves::UI( wxWindow* parent )
 {
     if( dlg != NULL )

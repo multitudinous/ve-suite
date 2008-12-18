@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "GLCanvasSample.h"
 #include "GLCanvasSample_UI_Dialog.h"
@@ -115,14 +113,6 @@ void GLCanvasSample::GetOPorts(POLY &oports)
 {
     
 }
-
-/////////////////////////////////////////////////////////////////////////////
-void GLCanvasSample::DrawIcon(wxDC* dc)
-{
-  //Your implementation
-	dc->DrawBitmap(*my_icon,pos.x, pos.y);
-}
-
 /////////////////////////////////////////////////////////////////////////////
 UIDialog* GLCanvasSample::UI(wxWindow* parent)
 {

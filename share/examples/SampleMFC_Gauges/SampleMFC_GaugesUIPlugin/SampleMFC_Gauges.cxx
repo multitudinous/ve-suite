@@ -117,14 +117,6 @@ void SampleMFC_Gauges::GetOPorts(POLY &oports)
 {
     
 }
-
-/////////////////////////////////////////////////////////////////////////////
-void SampleMFC_Gauges::DrawIcon(wxDC* dc)
-{
-  //Your implementation
-		dc->DrawBitmap(*my_icon,pos.x, pos.y);
-}
-
 /////////////////////////////////////////////////////////////////////////////
 UIDialog* SampleMFC_Gauges::UI(wxWindow* parent)
 {

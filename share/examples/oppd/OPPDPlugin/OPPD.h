@@ -18,13 +18,10 @@ class OPPD : public REI_Plugin
  public:
 
   OPPD();
-  ~OPPD();
+  virtual ~OPPD();
 
   virtual double GetVersion();
   //Return the version number of the module
-
-  virtual void DrawIcon(wxDC* dc);
-  //This call return a window to be displayed on the framework
   
   //To Get around the Memory allocation problem of windows dll
   //Add the calls for the size. So the main program can preallocate memory for it

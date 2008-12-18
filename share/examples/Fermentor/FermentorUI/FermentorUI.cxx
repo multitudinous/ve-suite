@@ -121,12 +121,6 @@ void FermentorUI::GetOPorts( POLY &oports )
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void FermentorUI::DrawIcon( wxDC* dc )
-{
-    //Your implementation
-    dc->DrawBitmap( *my_icon, pos.x, pos.y );
-}
-////////////////////////////////////////////////////////////////////////////////
 ves::conductor::UIDialog* FermentorUI::UI( wxWindow* parent )
 {
     if( dlg )

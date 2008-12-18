@@ -108,11 +108,6 @@ void ConstructionBotsUI::GetOPorts( POLY &oports )
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void ConstructionBotsUI::DrawIcon( wxDC* dc )
-{
-    dc->DrawBitmap( *my_icon, pos.x, pos.y );
-}
-////////////////////////////////////////////////////////////////////////////////
 ves::conductor::UIDialog* ConstructionBotsUI::UI( wxWindow* parent )
 {
     if( dlg != NULL )

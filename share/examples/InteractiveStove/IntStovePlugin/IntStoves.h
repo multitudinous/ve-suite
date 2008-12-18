@@ -55,8 +55,6 @@ public:
 
     virtual double GetVersion();
 
-    virtual void DrawIcon( wxDC* dc );
-
     virtual int GetNumPoly();
 
     virtual ves::conductor::UIDialog* UI( wxWindow* parent );

@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "GLCanvasSampleApp.h"
 #include "GLCanvasSampleApp_UI_Dialog.h"
@@ -123,13 +121,6 @@ void GLCanvasSampleApp::GetOPorts(POLY &oports)
 {
     
 }
-
-/////////////////////////////////////////////////////////////////////////////
-void GLCanvasSampleApp::DrawIcon(wxDC* dc)
-{
-  //Your implementation
-}
-
 /////////////////////////////////////////////////////////////////////////////
 UIDialog* GLCanvasSampleApp::UI(wxWindow* parent)
 {

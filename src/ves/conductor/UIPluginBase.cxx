@@ -482,7 +482,7 @@ void UIPluginBase::DrawIcon( wxDC* dc )
     //wxCoord xoff = pos.x;
     //wxCoord yoff = pos.y;
     //dc->DrawPolygon(n_pts, poly, xoff, yoff);
-    dc->DrawBitmap( *my_icon, pos.x, pos.y );
+    dc->DrawBitmap( *my_icon, pos.x, pos.y, true );
 }
 
 /////////////////////////////////////////////////////////////////////////////

@@ -105,11 +105,6 @@ void CameraPlacementToolUI::GetOPorts( POLY &oports )
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CameraPlacementToolUI::DrawIcon( wxDC* dc )
-{
-    dc->DrawBitmap( *my_icon, pos.x, pos.y );
-}
-////////////////////////////////////////////////////////////////////////////////
 ves::conductor::UIDialog* CameraPlacementToolUI::UI( wxWindow* parent )
 {
     if( dlg != NULL )

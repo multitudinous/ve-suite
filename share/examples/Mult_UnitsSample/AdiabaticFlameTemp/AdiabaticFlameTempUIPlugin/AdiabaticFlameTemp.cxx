@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "AdiabaticFlameTemp.h"
 #include "AdiabaticFlameTemp_UI_Dialog.h"
@@ -115,14 +113,6 @@ void AdiabaticFlameTemp::GetOPorts(POLY &oports)
 {
     
 }
-
-/////////////////////////////////////////////////////////////////////////////
-void AdiabaticFlameTemp::DrawIcon(wxDC* dc)
-{
-  //Your implementation
-  dc->DrawBitmap(*my_icon,pos.x, pos.y);
-}
-
 /////////////////////////////////////////////////////////////////////////////
 UIDialog* AdiabaticFlameTemp::UI(wxWindow* parent)
 {

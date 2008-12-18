@@ -105,7 +105,7 @@ public:
         PARAVIEW,
         SHOW_DESC,
         USER_DIALOG,
-        SHOW_FINANCIAL, /* EPRI TAG */
+        SHOW_FINANCIAL,
         //SHOW_ASPEN_NAME,
         //QUERY_INPUTS,
         //QUERY_OUTPUTS,

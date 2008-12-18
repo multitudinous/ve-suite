@@ -105,11 +105,6 @@ void WarrantyToolUI::GetOPorts( POLY &oports )
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void WarrantyToolUI::DrawIcon( wxDC* dc )
-{
-    dc->DrawBitmap( *my_icon, pos.x, pos.y );
-}
-////////////////////////////////////////////////////////////////////////////////
 ves::conductor::UIDialog* WarrantyToolUI::UI( wxWindow* parent )
 {
     if( dlg != NULL )

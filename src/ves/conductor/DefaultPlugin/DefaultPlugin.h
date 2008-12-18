@@ -50,20 +50,16 @@ class VE_GUIPLUGINS_EXPORTS DefaultPlugin : public ves::conductor::UIPluginBase
     DECLARE_DYNAMIC_CLASS( DefaultPlugin )
 
 public:
+    ///Constructor
     DefaultPlugin();
+    ///Destructor
     virtual ~DefaultPlugin();
-
+    ///Return the version number of the module
     virtual double GetVersion();
-    //Return the version number of the module
-    //virtual void DrawIcon(wxDC* dc);
-    //This call return a window to be displayed on the framework
-    //virtual ves::conductor::UIDialog* UI( wxWindow* parent );
-    //This returns the UI dialog of the module
-    virtual wxString GetConductorName();
     ///This returns the name of the module
-
+    virtual wxString GetConductorName();
+    ///This returns the description of the module, This should be a short description
     virtual wxString GetDesc();
-    //This returns the description of the module, This should be a short description
 
 public:
     long int height;

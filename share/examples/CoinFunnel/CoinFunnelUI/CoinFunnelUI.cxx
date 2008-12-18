@@ -105,11 +105,6 @@ void CoinFunnelUI::GetOPorts( POLY &oports )
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CoinFunnelUI::DrawIcon( wxDC* dc )
-{
-    dc->DrawBitmap( *my_icon, pos.x, pos.y );
-}
-////////////////////////////////////////////////////////////////////////////////
 ves::conductor::UIDialog* CoinFunnelUI::UI( wxWindow* parent )
 {
     if( dlg != NULL )

@@ -65,11 +65,6 @@ void NetworkTwo::GetOPorts(POLY &oports)
 	oports[0]=wxPoint(icon_w*43/52,icon_h*74/98);    
 }
 ///////////////////////////////////////////////////////////////////////////////
-void NetworkTwo::DrawIcon(wxDC* dc)
-{
-	dc->DrawBitmap(*my_icon,pos.x, pos.y);
-}
-///////////////////////////////////////////////////////////////////////////////
 ves::conductor::UIDialog* NetworkTwo::UI(wxWindow* parent)
 {
 	if (dlg!=NULL)

@@ -105,11 +105,6 @@ void HyperLabUI::GetOPorts( POLY &oports )
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void HyperLabUI::DrawIcon( wxDC* dc )
-{
-    dc->DrawBitmap( *my_icon, pos.x, pos.y );
-}
-////////////////////////////////////////////////////////////////////////////////
 ves::conductor::UIDialog* HyperLabUI::UI( wxWindow* parent )
 {
     if( dlg != NULL )

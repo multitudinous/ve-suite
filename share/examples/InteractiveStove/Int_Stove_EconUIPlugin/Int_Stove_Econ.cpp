@@ -79,14 +79,6 @@ void Int_Stove_Econ::GetOPorts(POLY &oports)
 {
     
 }
-
-/////////////////////////////////////////////////////////////////////////////
-void Int_Stove_Econ::DrawIcon(wxDC* dc)
-{
-  //Your implementation
-	dc->DrawBitmap(*my_icon,pos.x, pos.y);
-}
-
 /////////////////////////////////////////////////////////////////////////////
 ves::conductor::UIDialog* Int_Stove_Econ::UI(wxWindow* parent)
 {

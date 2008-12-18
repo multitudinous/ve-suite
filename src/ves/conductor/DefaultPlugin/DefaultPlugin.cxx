@@ -123,22 +123,6 @@ double DefaultPlugin::GetVersion()
     return result;
 }
 /////////////////////////////////////////////////////////////////////////////
-//void DefaultPlugin::DrawIcon(wxDC* dc)
-//{
-//  //Your implementation
-// dc->DrawBitmap(*my_icon,pos.x, pos.y);
-//}
-/////////////////////////////////////////////////////////////////////////////
-//ves::conductor::UIDialog* DefaultPlugin::UI( wxWindow* parent )
-//{
-//    if( dlg != NULL )
-//        return dlg;
-
-    //dlg = new DefaultPlugin_UI_Dialog(parent, wxID_ANY, &height );
-
-//    return dlg;
-//}
-/////////////////////////////////////////////////////////////////////////////
 wxString DefaultPlugin::GetConductorName()
 {
     wxString result = _( "DefaultPlugin" );

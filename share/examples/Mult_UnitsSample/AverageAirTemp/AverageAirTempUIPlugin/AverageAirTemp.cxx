@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "AverageAirTemp.h"
 #include "AverageAirTemp_UI_Dialog.h"
@@ -123,14 +121,6 @@ void AverageAirTemp::GetOPorts(POLY &oports)
 {
   oports[0]=wxPoint(icon_w*40/43,icon_h*21/41); 
 }
-
-/////////////////////////////////////////////////////////////////////////////
-void AverageAirTemp::DrawIcon(wxDC* dc)
-{
-  //Your implementation
-  dc->DrawBitmap(*my_icon,pos.x, pos.y);
-}
-
 /////////////////////////////////////////////////////////////////////////////
 UIDialog* AverageAirTemp::UI(wxWindow* parent)
 {
