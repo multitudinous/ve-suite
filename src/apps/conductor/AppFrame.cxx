@@ -35,6 +35,7 @@
 
 #include "AppFrame.h"
 #include "ConductorAppEnums.h"
+#include <ves/conductor/ConductorLibEnums.h>
 
 #include <wx/imaglist.h>
 #include <wx/artprov.h>
@@ -186,16 +187,16 @@ BEGIN_EVENT_TABLE( AppFrame, wxFrame )
     
     EVT_MENU( EXPORTMENU_SCREEN_SHOT, ExportMenu::OnScreenShot )
     EVT_MENU( EXPORTMENU_DOT_FILE, ExportMenu::OnDOTFile )
-    EVT_MENU( UIPluginBase::DEL_MOD, AppFrame::OnDelMod )
-    EVT_MENU( UIPluginBase::MAKE_HIER, AppFrame::OnMakeIntoHierarchy )
-    EVT_MENU( UIPluginBase::SET_UI_PLUGIN_NAME, AppFrame::SetTreeItemName )
-	EVT_MENU( UIPluginBase::SHOW_ICON_CHOOSER, AppFrame::OnShowIconChooser )
+    EVT_MENU( UIPLUGINBASE_DEL_MOD, AppFrame::OnDelMod )
+    EVT_MENU( UIPLUGINBASE_MAKE_HIER, AppFrame::OnMakeIntoHierarchy )
+    EVT_MENU( UIPLUGINBASE_SET_UI_PLUGIN_NAME, AppFrame::SetTreeItemName )
+	EVT_MENU( UIPLUGINBASE_SHOW_ICON_CHOOSER, AppFrame::OnShowIconChooser )
 	
     EVT_MENU( APPFRAME_UPDATE_HIER_TREE, AppFrame::UpdateHierarchyTree )
 
     EVT_WINDOW_CREATE( AppFrame::OnChildCreate ) 
-	EVT_BUTTON( IconChooser::OK, AppFrame::OnChangeIcon )
-    EVT_UPDATE_UI( Canvas::UPDATE_NETWORK_DATA, AppFrame::LoadNewNetwork )
+	EVT_BUTTON( ICONCHOOSER_OK, AppFrame::OnChangeIcon )
+    EVT_UPDATE_UI( CANVAS_UPDATE_NETWORK_DATA, AppFrame::LoadNewNetwork )
 END_EVENT_TABLE()
 
 ////////////////////////////////////////////////////////////////////////////////

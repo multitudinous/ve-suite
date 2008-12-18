@@ -1,12 +1,17 @@
+//http://docs.wxwidgets.org/stable/wx_eventhandlingoverview.html#eventhandlingoverview
 #ifndef CONDUCTORAPPENUMS_H
 #define CONDUCTORAPPENUMS_H
     
 enum
 {
+    //for updating hierarchy tree
+    APPFRAME_UPDATE_HIER_TREE = 9999,
+    APP_BEGIN_INDEX = 1000,
+
     //
     //AppFrame.h
     //
-    APPFRAME_V21ID_CONNECT = 1000,
+    APPFRAME_V21ID_CONNECT,
     APPFRAME_V21ID_CONNECT_VE,
     APPFRAME_V21ID_SUBMIT,
     APPFRAME_V21ID_LOAD,
@@ -80,8 +85,6 @@ enum
     //change working dir
     APPFRAME_CHANGE_WORKING_DIRECTORY,
     APPFRAME_TIMER_ID,
-    //for updating hierarchy tree
-    APPFRAME_UPDATE_HIER_TREE,
 
 
     //
