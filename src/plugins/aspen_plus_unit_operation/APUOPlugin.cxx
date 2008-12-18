@@ -34,6 +34,7 @@
 
 #include "APUOPlugin.h"
 #include "APUOVarDialog.h"
+#include "../ConductorPluginEnums.h"
 
 #include <ves/conductor/xpm/square.xpm>
 #include <ves/conductor/util/ParamsDlg.h>
@@ -58,9 +59,9 @@ using namespace ves::conductor::util;
 #define edge_size 10
 
 BEGIN_EVENT_TABLE( APUOPlugin, UIPluginBase )
-    EVT_MENU( SHOW_ASPEN_NAME, APUOPlugin::OnShowAspenName )
-    EVT_MENU( QUERY_INPUTS, APUOPlugin::OnQueryInputs )
-    EVT_MENU( QUERY_OUTPUTS, APUOPlugin::OnQueryOutputs )
+    EVT_MENU( APUOPLUGIN_SHOW_ASPEN_NAME, APUOPlugin::OnShowAspenName )
+    EVT_MENU( APUOPLUGIN_QUERY_INPUTS, APUOPlugin::OnQueryInputs )
+    EVT_MENU( APUOPLUGIN_QUERY_OUTPUTS, APUOPlugin::OnQueryOutputs )
 END_EVENT_TABLE()
 
 IMPLEMENT_DYNAMIC_CLASS( APUOPlugin, UIPluginBase )
@@ -87,17 +88,17 @@ APUOPlugin::APUOPlugin() :
 
     //Aspen Menu
     wxMenu * aspen_menu = new wxMenu();
-    aspen_menu->Append( SHOW_ASPEN_NAME, _( "Aspen Name" ) );
-    aspen_menu->Enable( SHOW_ASPEN_NAME, true );
-    aspen_menu->Append( QUERY_INPUTS, _( "Query Inputs" ) );
-    aspen_menu->Enable( QUERY_INPUTS, true );
-    aspen_menu->Append( QUERY_OUTPUTS, _( "Query Outputs" ) );
-    aspen_menu->Enable( QUERY_OUTPUTS, true );
-    aspen_menu->Append( REINIT_BLOCK, _( "Reinitialize" ) );
-    aspen_menu->Enable( REINIT_BLOCK, true );
-    mPopMenu->Insert( 0, ASPEN_MENU,   _( "Aspen" ), aspen_menu,
+    aspen_menu->Append( APUOPLUGIN_SHOW_ASPEN_NAME, _( "Aspen Name" ) );
+    aspen_menu->Enable( APUOPLUGIN_SHOW_ASPEN_NAME, true );
+    aspen_menu->Append( APUOPLUGIN_QUERY_INPUTS, _( "Query Inputs" ) );
+    aspen_menu->Enable( APUOPLUGIN_QUERY_INPUTS, true );
+    aspen_menu->Append( APUOPLUGIN_QUERY_OUTPUTS, _( "Query Outputs" ) );
+    aspen_menu->Enable( APUOPLUGIN_QUERY_OUTPUTS, true );
+    aspen_menu->Append( APUOPLUGIN_REINIT_BLOCK, _( "Reinitialize" ) );
+    aspen_menu->Enable( APUOPLUGIN_REINIT_BLOCK, true );
+    mPopMenu->Insert( 0, APUOPLUGIN_ASPEN_MENU,   _( "Aspen" ), aspen_menu,
                      _( "Used in conjunction with Aspen" ) );
-    mPopMenu->Enable( ASPEN_MENU, true );
+    mPopMenu->Enable( APUOPLUGIN_ASPEN_MENU, true );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -146,14 +147,14 @@ void  APUOPlugin::OnQueryInputs( wxCommandEvent& event )
     compName = "Data.Blocks." + compName;
 
     //generate hierarchical name if necessary
-    ves::open::xml::model::ModelPtr parentTraverser = parentModel.lock();
+    ves::open::xml::model::ModelPtr parentTraverser = GetVEModel();//parentModel.lock();
     if( parentTraverser != NULL )
     {
         while( parentTraverser->GetParentModel() != NULL )
         {
             //compName = parentTraverser->GetModelName() +".Data.Blocks." + compName;
-            compName = "Data.Blocks." + parentTraverser->GetPluginName() + "." + compName;
             parentTraverser = parentTraverser->GetParentModel();
+            compName = "Data.Blocks." + parentTraverser->GetPluginName() + "." + compName;
         }
     }
 

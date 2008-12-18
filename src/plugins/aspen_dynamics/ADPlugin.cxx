@@ -33,7 +33,9 @@
 #include <ves/conductor/util/CORBAServiceList.h>
 
 #include "ADPlugin.h"
+#include "../ConductorPluginEnums.h"
 
+#include <ves/conductor/ConductorLibEnums.h>
 #include <ves/conductor/UserPreferencesDataBuffer.h>
 #include <ves/conductor/xpm/AspenPlus2DIcons/dynamics.xpm>
 #include <ves/conductor/XMLDataBufferEngine.h>
@@ -61,15 +63,15 @@ using namespace ves::conductor::util;
 #define edge_size 10
 
 BEGIN_EVENT_TABLE( ADPlugin, UIPluginBase )
-    EVT_MENU( OPEN_SIM, ADPlugin::OnOpen )
-    EVT_MENU( SHOW_ASPEN_SIMULATION, ADPlugin::ShowAspenSimulation )
-    EVT_MENU( HIDE_ASPEN_SIMULATION, ADPlugin::HideAspenSimulation )
-    EVT_MENU( CLOSE_ASPEN_SIMULATION, ADPlugin::OnCloseAspenSimulation )
-    EVT_MENU( RUN_ASPEN_NETWORK, ADPlugin::RunAspenNetwork )
-    EVT_MENU( REINITIALIZE_ASPEN_SIMULATION, ADPlugin::ReinitializeAspenSimulation )
-    EVT_MENU( STEP_ASPEN_NETWORK, ADPlugin::StepAspenNetwork )
-    EVT_MENU( SAVE_SIMULATION, ADPlugin::SaveSimulation )
-    EVT_MENU( SAVEAS_SIMULATION, ADPlugin::SaveAsSimulation )
+    EVT_MENU( ADPLUGIN_OPEN_SIM, ADPlugin::OnOpen )
+    EVT_MENU( ADPLUGIN_SHOW_ASPEN_SIMULATION, ADPlugin::ShowAspenSimulation )
+    EVT_MENU( ADPLUGIN_HIDE_ASPEN_SIMULATION, ADPlugin::HideAspenSimulation )
+    EVT_MENU( ADPLUGIN_CLOSE_ASPEN_SIMULATION, ADPlugin::OnCloseAspenSimulation )
+    EVT_MENU( ADPLUGIN_RUN_ASPEN_NETWORK, ADPlugin::RunAspenNetwork )
+    EVT_MENU( ADPLUGIN_REINITIALIZE_ASPEN_SIMULATION, ADPlugin::ReinitializeAspenSimulation )
+    EVT_MENU( ADPLUGIN_STEP_ASPEN_NETWORK, ADPlugin::StepAspenNetwork )
+    EVT_MENU( ADPLUGIN_SAVE_SIMULATION, ADPlugin::SaveSimulation )
+    EVT_MENU( ADPLUGIN_SAVEAS_SIMULATION, ADPlugin::SaveAsSimulation )
 END_EVENT_TABLE()
 
 IMPLEMENT_DYNAMIC_CLASS( ADPlugin, UIPluginBase )
@@ -96,27 +98,27 @@ ADPlugin::ADPlugin() :
     poly[3] = wxPoint( 0, icon_h - 1 );
 
     wxMenu * aspen_menu = new wxMenu();
-    aspen_menu->Append( OPEN_SIM, _( "Open" ) );
-    aspen_menu->Enable( OPEN_SIM, true );
-    aspen_menu->Append( SHOW_ASPEN_SIMULATION, _( "Show Simulation" ) );
-    aspen_menu->Enable( SHOW_ASPEN_SIMULATION, true );
-    aspen_menu->Append( HIDE_ASPEN_SIMULATION, _( "Hide Simulation" ) );
-    aspen_menu->Enable( HIDE_ASPEN_SIMULATION, true );
-    aspen_menu->Append( CLOSE_ASPEN_SIMULATION, _( "Close Simulation" ) );
-    aspen_menu->Enable( CLOSE_ASPEN_SIMULATION, true );
-    aspen_menu->Append( RUN_ASPEN_NETWORK, _( "Run" ) );
-    aspen_menu->Enable( RUN_ASPEN_NETWORK, true );
-	aspen_menu->Append( REINITIALIZE_ASPEN_SIMULATION, _( "Reinitialize" ) );
-	aspen_menu->Enable( REINITIALIZE_ASPEN_SIMULATION, true );
-    aspen_menu->Append( STEP_ASPEN_NETWORK, _( "Step" ) );
-    aspen_menu->Enable( STEP_ASPEN_NETWORK, true );
-    aspen_menu->Append( SAVE_SIMULATION, _( "Save Simulation" ) );
-    aspen_menu->Enable( SAVE_SIMULATION, true );
-    aspen_menu->Append( SAVEAS_SIMULATION, _( "SaveAs Simulation" ) );
-    aspen_menu->Enable( SAVEAS_SIMULATION, true );
-    mPopMenu->Insert( 0, ASPEN_MENU,   _( "Aspen" ), aspen_menu,
+    aspen_menu->Append( ADPLUGIN_OPEN_SIM, _( "Open" ) );
+    aspen_menu->Enable( ADPLUGIN_OPEN_SIM, true );
+    aspen_menu->Append( ADPLUGIN_SHOW_ASPEN_SIMULATION, _( "Show Simulation" ) );
+    aspen_menu->Enable( ADPLUGIN_SHOW_ASPEN_SIMULATION, true );
+    aspen_menu->Append( ADPLUGIN_HIDE_ASPEN_SIMULATION, _( "Hide Simulation" ) );
+    aspen_menu->Enable( ADPLUGIN_HIDE_ASPEN_SIMULATION, true );
+    aspen_menu->Append( ADPLUGIN_CLOSE_ASPEN_SIMULATION, _( "Close Simulation" ) );
+    aspen_menu->Enable( ADPLUGIN_CLOSE_ASPEN_SIMULATION, true );
+    aspen_menu->Append( ADPLUGIN_RUN_ASPEN_NETWORK, _( "Run" ) );
+    aspen_menu->Enable( ADPLUGIN_RUN_ASPEN_NETWORK, true );
+	aspen_menu->Append( ADPLUGIN_REINITIALIZE_ASPEN_SIMULATION, _( "Reinitialize" ) );
+	aspen_menu->Enable( ADPLUGIN_REINITIALIZE_ASPEN_SIMULATION, true );
+    aspen_menu->Append( ADPLUGIN_STEP_ASPEN_NETWORK, _( "Step" ) );
+    aspen_menu->Enable( ADPLUGIN_STEP_ASPEN_NETWORK, true );
+    aspen_menu->Append( ADPLUGIN_SAVE_SIMULATION, _( "Save Simulation" ) );
+    aspen_menu->Enable( ADPLUGIN_SAVE_SIMULATION, true );
+    aspen_menu->Append( ADPLUGIN_SAVEAS_SIMULATION, _( "SaveAs Simulation" ) );
+    aspen_menu->Enable( ADPLUGIN_SAVEAS_SIMULATION, true );
+    mPopMenu->Insert( 0, ADPLUGIN_ASPEN_MENU,   _( "Aspen" ), aspen_menu,
                      _( "Used in conjunction with Aspen" ) );
-    mPopMenu->Enable( ASPEN_MENU, true );
+    mPopMenu->Enable( ADPLUGIN_ASPEN_MENU, true );
 }
 ////////////////////////////////////////////////////////////////////////////////
 ADPlugin::~ADPlugin()
@@ -214,6 +216,11 @@ void ADPlugin::OnOpen( wxCommandEvent& event )
     aspenDynFile->AddDataValuePair( data );
     UserPreferencesDataBuffer::instance()->
     SetCommand( "Aspen_Dynamics_Preferences", aspenDynFile );
+
+    SetName( fd.GetFilename() );
+    event.SetId( UIPLUGINBASE_SET_UI_PLUGIN_NAME );
+    GlobalNameUpdate( event );
+
     ///Submit job to xplorer
     //wxCommandEvent event;
     //SubmitToServer( event );

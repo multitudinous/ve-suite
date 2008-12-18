@@ -44,17 +44,11 @@ namespace conductor
 class ADUOPlugin : public UIPluginBase
 {
     DECLARE_DYNAMIC_CLASS( ADUOPlugin )
+
 public:
-    enum PLUGIN_ENUMS
-    {
-        BEGIN_MENU_ID = 3600, //this ids and the END_MENU_ID are used for
-        SHOW_ASPEN_NAME,
-        QUERY_DYNAMICS
-    };
     ///Defualt constructor
     ADUOPlugin();
     virtual ~ADUOPlugin();
-public:
     void OnShowAspenName( wxCommandEvent& event );
     void OnQueryDynamics( wxCommandEvent& event );
     wxString GetConductorName();

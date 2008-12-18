@@ -44,25 +44,13 @@ namespace conductor
 class ADPlugin : public UIPluginBase
 {
     DECLARE_DYNAMIC_CLASS( ADPlugin )
+
 public:
-    enum PLUGIN_ENUMS
-    {
-        OPEN_SIM = 3600,
-        SHOW_ASPEN_SIMULATION,
-        HIDE_ASPEN_SIMULATION,
-        CLOSE_ASPEN_SIMULATION,
-        RUN_ASPEN_NETWORK,
-	    REINITIALIZE_ASPEN_SIMULATION,
-        STEP_ASPEN_NETWORK,
-        SAVE_SIMULATION,
-        SAVEAS_SIMULATION,
-        UPDATE_HIER_TREE = 9999
-    };
     ///Defualt constructor
     ADPlugin();
     virtual ~ADPlugin();
-public:
     wxString GetConductorName();
+
 protected:
     void OnOpen( wxCommandEvent& event );
     void ShowAspenSimulation( wxCommandEvent& event );

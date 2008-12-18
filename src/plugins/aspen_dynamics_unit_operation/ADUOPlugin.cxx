@@ -30,10 +30,11 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#include "ADUOVarDialog.h"
+#include <ves/conductor/util/CORBAServiceList.h>
 
 #include "ADUOPlugin.h"
-
+#include "../ConductorPluginEnums.h"
+#include "ADUOVarDialog.h"
 
 #include <ves/conductor/xpm/square.xpm>
 
@@ -47,8 +48,8 @@ using namespace ves::conductor::util;
 #define edge_size 10
 
 BEGIN_EVENT_TABLE( ADUOPlugin, UIPluginBase )
-    EVT_MENU( SHOW_ASPEN_NAME, ADUOPlugin::OnShowAspenName )
-    EVT_MENU( QUERY_DYNAMICS, ADUOPlugin::OnQueryDynamics )
+    EVT_MENU( ADUOPLUGIN_SHOW_ASPEN_NAME, ADUOPlugin::OnShowAspenName )
+    EVT_MENU( ADUOPLUGIN_QUERY_DYNAMICS, ADUOPlugin::OnQueryDynamics )
 END_EVENT_TABLE()
 
 IMPLEMENT_DYNAMIC_CLASS( ADUOPlugin, UIPluginBase )
@@ -75,13 +76,13 @@ ADUOPlugin::ADUOPlugin() :
 
     //Aspen Menu
     wxMenu * aspen_menu = new wxMenu();
-    aspen_menu->Append( SHOW_ASPEN_NAME, _( "Aspen Name" ) );
-    aspen_menu->Enable( SHOW_ASPEN_NAME, true );
-    aspen_menu->Append( QUERY_DYNAMICS, _( "Query Dynamics" ) );
-    aspen_menu->Enable( QUERY_DYNAMICS, true );
-    mPopMenu->Insert( 0, ASPEN_MENU,   _( "Aspen" ), aspen_menu,
+    aspen_menu->Append( ADUOPLUGIN_SHOW_ASPEN_NAME, _( "Aspen Name" ) );
+    aspen_menu->Enable( ADUOPLUGIN_SHOW_ASPEN_NAME, true );
+    aspen_menu->Append( ADUOPLUGIN_QUERY_DYNAMICS, _( "Query Dynamics" ) );
+    aspen_menu->Enable( ADUOPLUGIN_QUERY_DYNAMICS, true );
+    mPopMenu->Insert( 0, ADUOPLUGIN_ASPEN_MENU,   _( "Aspen" ), aspen_menu,
                      _( "Used in conjunction with Aspen" ) );
-    mPopMenu->Enable( ASPEN_MENU, true );
+    mPopMenu->Enable( ADUOPLUGIN_ASPEN_MENU, true );
 }
 ////////////////////////////////////////////////////////////////////////////////
 ADUOPlugin::~ADUOPlugin()
