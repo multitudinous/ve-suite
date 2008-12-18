@@ -32,6 +32,7 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/conductor/util/CORBAServiceList.h>
 #include <ves/conductor/Network.h>
+#include <ves/conductor/ConductorLibEnums.h>
 
 #include <ves/conductor/PortDialog.h>
 #include <ves/conductor/UserPreferencesDataBuffer.h>
@@ -97,13 +98,13 @@ BEGIN_EVENT_TABLE( Network, wxEvtHandler )
     //brings up the design canvas menu on a specfic module
     EVT_RIGHT_DOWN( Network::OnMRightDown )
     // The following are rightclick menu options
-    EVT_MENU( ADD_TAG, Network::OnAddTag )
-    EVT_MENU( EDIT_TAG, Network::OnEditTag )
-    EVT_MENU( DEL_TAG, Network::OnDelTag )
-    EVT_MENU( UIPluginBase::DEL_MOD, Network::OnDelMod )
-    EVT_MENU( UIPluginBase::DELETE_PORT, Network::OnDelPort )
+    EVT_MENU( NETWORK_ADD_TAG, Network::OnAddTag )
+    EVT_MENU( NETWORK_EDIT_TAG, Network::OnEditTag )
+    EVT_MENU( NETWORK_DEL_TAG, Network::OnDelTag )
+    EVT_MENU( UIPLUGINBASE_DEL_MOD, Network::OnDelMod )
+    EVT_MENU( UIPLUGINBASE_DELETE_PORT, Network::OnDelPort )
     EVT_MENU( Link::DEL_LINK, Network::OnDelLink )
-    EVT_UPDATE_UI( UIPluginBase::DIALOG_PLUGIN_UPDATE, Network::OnDeletePlugins )
+    EVT_UPDATE_UI( UIPLUGINBASE_DIALOG_PLUGIN_UPDATE, Network::OnDeletePlugins )
 END_EVENT_TABLE()
 ////////////////////////////////////////////////////////////////////////////////
 Network::Network( wxWindow* parent ):
@@ -142,7 +143,7 @@ Network::Network( wxWindow* parent ):
     //SetBackgroundStyle(wxBG_STYLE_CUSTOM);
     systemPtr = XMLDataBufferEngine::instance()->GetXMLSystemDataObject(
                     XMLDataBufferEngine::instance()->GetTopSystemId() );
-    networkDeleteEvent.SetId( DELETE_NETWORK );
+    networkDeleteEvent.SetId( NETWORK_DELETE_NETWORK );
 }
 ////////////////////////////////////////////////////////////////////////////////
 Network::~Network()
@@ -500,19 +501,19 @@ void Network::OnMRightDown( wxMouseEvent& event )
     /////////////////////////////////////////////////
 
     wxMenu the_pop_menu( _( "Action" ) );
-    the_pop_menu.Append( ADD_TAG, _( "Add Tag" ) ); //This will always be enable
-    the_pop_menu.Append( EDIT_TAG, _( "Edit Tag" ) );
-    the_pop_menu.Append( DEL_TAG, _( "Delete Tag" ) );
+    the_pop_menu.Append( NETWORK_ADD_TAG, _( "Add Tag" ) ); //This will always be enable
+    the_pop_menu.Append( NETWORK_EDIT_TAG, _( "Edit Tag" ) );
+    the_pop_menu.Append( NETWORK_DEL_TAG, _( "Delete Tag" ) );
 
     if( m_selTag >= 0 )
     {
-        the_pop_menu.Enable( EDIT_TAG, true );
-        the_pop_menu.Enable( DEL_TAG, true );
+        the_pop_menu.Enable( NETWORK_EDIT_TAG, true );
+        the_pop_menu.Enable( NETWORK_DEL_TAG, true );
     }
     else
     {
-        the_pop_menu.Enable( EDIT_TAG, false );
-        the_pop_menu.Enable( DEL_TAG, false );
+        the_pop_menu.Enable( NETWORK_EDIT_TAG, false );
+        the_pop_menu.Enable( NETWORK_DEL_TAG, false );
     }
 
     action_point = event.GetLogicalPosition( dc );

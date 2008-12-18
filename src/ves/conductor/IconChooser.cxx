@@ -31,6 +31,7 @@
  *
  *************** <auto-copyright.rb END do not edit this line> **************/
 #include <ves/conductor/IconChooser.h>
+#include <ves/conductor/ConductorLibEnums.h>
 
 #include <wx/dir.h>
 #include <wx/image.h>
@@ -56,9 +57,9 @@ using namespace ves::conductor;
 
 BEGIN_EVENT_TABLE( IconChooser, wxFrame )
     //EVT_CLOSE( IconChooser::OnClose )
-	EVT_BUTTON( OK, IconChooser::okButtonClick )
-    EVT_BUTTON( CANCEL, IconChooser::cancelButtonClick )
-    EVT_MENU( CLICK, IconChooser::IconDirectoryClick )
+	EVT_BUTTON( ICONCHOOSER_OK, IconChooser::okButtonClick )
+    EVT_BUTTON( ICONCHOOSER_CANCEL, IconChooser::cancelButtonClick )
+    EVT_MENU( ICONCHOOSER_CLICK, IconChooser::IconDirectoryClick )
 END_EVENT_TABLE()
 ////////////////////////////////////////////////////////////////////////////////
 IconChooser::IconChooser( wxScrolledWindow *parent, /*std::string path,*/ wxWindowID id, const wxString &title, const wxPoint &position, const wxSize& size, long style )
@@ -89,15 +90,15 @@ void IconChooser::CreateGUIControls()
     WxChoice->Select( 0 );
 
     WxEdit->SetEditable( false );
-    okButton = new wxButton( WxPanel, OK, wxT( "OK" ), wxPoint( 450, 463 ) );
-    cancelButton = new wxButton( WxPanel, CANCEL, wxT( "Cancel" ), wxPoint( 535, 463 ) );
+    okButton = new wxButton( WxPanel, ICONCHOOSER_OK, wxT( "OK" ), wxPoint( 450, 463 ) );
+    cancelButton = new wxButton( WxPanel, ICONCHOOSER_CANCEL, wxT( "Cancel" ), wxPoint( 535, 463 ) );
     //WxChoice = new wxChoice(WxPanel, 1003, wxPoint(220,3), wxSize(200,21), componentList, 0, wxDefaultValidator, wxT("Components"));
     //WxChoice->SetSelection(-1);
 
     {
         WxMenuBar1 = new wxMenuBar();
         wxMenu * AddMenu = new wxMenu( 0 );
-        AddMenu->Append( CLICK, wxT( "Icon Directory" ), wxT( "" ), wxITEM_NORMAL );
+        AddMenu->Append( ICONCHOOSER_CLICK, wxT( "Icon Directory" ), wxT( "" ), wxITEM_NORMAL );
         WxMenuBar1->Append( AddMenu, wxT( "Add" ) );
         SetMenuBar( WxMenuBar1 );
 

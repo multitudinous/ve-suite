@@ -31,6 +31,7 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/conductor/advancedcontours.h>
+#include <ves/conductor/ConductorLibEnums.h>
 
 #include <wx/sizer.h>
 #include <wx/slider.h>
@@ -131,7 +132,7 @@ void AdvancedContours::CreateControls()
     wxStaticText* itemStaticText9 = new wxStaticText( itemDialog1, wxID_STATIC, _T( "Warped Contour Scale" ), wxDefaultPosition, wxDefaultSize, 0 );
     itemStaticBoxSizer3->Add( itemStaticText9, 0, wxALIGN_LEFT | wxLEFT | wxRIGHT | wxTOP | wxADJUST_MINSIZE, 5 );
 
-    _warpedScaleSlider = new wxSlider( itemDialog1, WARPED_SCALE_SLIDER, 50, 0, 100, wxDefaultPosition, wxSize( 300, -1 ), wxSL_HORIZONTAL | wxSL_LABELS );
+    _warpedScaleSlider = new wxSlider( itemDialog1, ADVANCEDCONTOURS_WARPED_SCALE_SLIDER, 50, 0, 100, wxDefaultPosition, wxSize( 300, -1 ), wxSL_HORIZONTAL | wxSL_LABELS );
     itemStaticBoxSizer3->Add( _warpedScaleSlider, 0, wxGROW | wxLEFT | wxRIGHT, 5 );
 
     wxBoxSizer* itemBoxSizer11 = new wxBoxSizer( wxHORIZONTAL );
@@ -146,7 +147,7 @@ void AdvancedContours::CreateControls()
     wxStaticText* itemStaticText14 = new wxStaticText( itemDialog1, wxID_STATIC, _T( "Contour LOD" ), wxDefaultPosition, wxDefaultSize, 0 );
     itemStaticBoxSizer3->Add( itemStaticText14, 0, wxALIGN_LEFT | wxLEFT | wxRIGHT | wxTOP | wxADJUST_MINSIZE, 5 );
 
-    _LODSlider = new wxSlider( itemDialog1, LOD_SLIDER, 0, 0, 100, wxDefaultPosition, wxSize( 300, -1 ), wxSL_HORIZONTAL | wxSL_LABELS );
+    _LODSlider = new wxSlider( itemDialog1, ADVANCEDCONTOURS_LOD_SLIDER, 0, 0, 100, wxDefaultPosition, wxSize( 300, -1 ), wxSL_HORIZONTAL | wxSL_LABELS );
     itemStaticBoxSizer3->Add( _LODSlider, 0, wxGROW | wxLEFT | wxRIGHT, 5 );
 
     wxBoxSizer* itemBoxSizer16 = new wxBoxSizer( wxHORIZONTAL );
@@ -166,8 +167,8 @@ void AdvancedContours::CreateControls()
 
     wxBoxSizer* _misc = new wxBoxSizer( wxHORIZONTAL );
 
-    _contourTypeRBox = new wxRadioBox( itemDialog1, CONTOUR_TYPE_RBOX, _T( "Contour Type" ), wxDefaultPosition, wxDefaultSize, 3, itemRadioBox6Strings, 1, wxRA_SPECIFY_ROWS );
-    _warpOptionCBox = new wxCheckBox( itemDialog1, WARP_OPTION_CHK, _T( "Warp Option" ), wxDefaultPosition, wxDefaultSize, 0 );
+    _contourTypeRBox = new wxRadioBox( itemDialog1, ADVANCEDCONTOURS_CONTOUR_TYPE_RBOX, _T( "Contour Type" ), wxDefaultPosition, wxDefaultSize, 3, itemRadioBox6Strings, 1, wxRA_SPECIFY_ROWS );
+    _warpOptionCBox = new wxCheckBox( itemDialog1, ADVANCEDCONTOURS_WARP_OPTION_CHK, _T( "Warp Option" ), wxDefaultPosition, wxDefaultSize, 0 );
     _warpOptionCBox->SetValue( false );
 
     _misc->Add( _contourTypeRBox, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );

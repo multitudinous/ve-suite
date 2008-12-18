@@ -78,15 +78,6 @@ public:
               const wxSize& size = SYMBOL_POLYDATA_SIZE,
               long style = SYMBOL_POLYDATA_STYLE );
 
-    enum POLYDATA_IDS
-    {
-        POLYDATA_RBUTTON,
-        WARPED_SURFACE_CHK,
-        POLYDATA_PLANE_SLIDER,
-        ADD_POLYDATA_BUTTON,
-        ADVANCED_POLYDATA_BUTTON
-    };
-
     void SendCommandsToXplorer( void );
     /// Creation
     bool Create( wxWindow* parent,

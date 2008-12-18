@@ -85,17 +85,6 @@ public:
                  long style = SYMBOL_ISOSURFACES_STYLE );
     virtual ~Isosurfaces();
 
-    enum ISOSURFACE_IDS
-    {
-        ISOSURFACE_RBUTTON,
-        PRECOMPUTED_ISO_CHK,
-        ISOSURFACE_PLANE_SLIDER,
-        ADD_ISOSURFACE_BUTTON,
-        ADVANCED_ISOSURFACE_BUTTON,
-        ISOSURFACE_SPINCTRL,
-        SCALAR_SPINCTRL
-    };
-
     void SendCommandsToXplorer( void );
     /// Creation
     bool Create( wxWindow* parent,

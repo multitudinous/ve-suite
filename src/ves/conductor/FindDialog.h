@@ -62,16 +62,6 @@ public:
     FindDialog( wxWindow *parent, wxWindowID id = 1, const wxString &title = wxT( "Untitled1" ), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = FindDialog_STYLE );
     virtual ~FindDialog();
 
-    enum
-    {
-        ID_STREAMLABEL = 1007,
-        ID_WXCHOICE2 = 1006,
-        ID_UNITLABEL = 1005,
-        ID_WXCHOICE1 = 1004,
-        ID_FINDBUTTON = 1001,
-        ID_DUMMY_VALUE_ //don't remove this value unless you have other enum values
-    };
-
     void SetModuleList( std::vector< std::string > );
     void SetStreamList( std::vector< std::string > );
     const char * GetSelectedModule();

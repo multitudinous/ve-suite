@@ -31,6 +31,7 @@
 *
 *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/conductor/FindDialog.h>
+#include <ves/conductor/ConductorLibEnums.h>
 
 #include <wx/stattext.h>
 #include <wx/choice.h>
@@ -39,9 +40,9 @@
 using namespace ves::conductor;
 
 BEGIN_EVENT_TABLE( FindDialog, wxDialog )
-    EVT_BUTTON( ID_FINDBUTTON, FindDialog::FindButtonClick )
-    EVT_CHOICE( ID_WXCHOICE1, FindDialog::GetChoice )
-    EVT_CHOICE( ID_WXCHOICE2, FindDialog::GetChoice )
+    EVT_BUTTON( FINDDIALOG_FINDBUTTON, FindDialog::FindButtonClick )
+    EVT_CHOICE( FINDDIALOG_WXCHOICE1, FindDialog::GetChoice )
+    EVT_CHOICE( FINDDIALOG_WXCHOICE2, FindDialog::GetChoice )
 END_EVENT_TABLE()
 
 FindDialog::FindDialog( wxWindow *parent, wxWindowID id, const wxString &title, const wxPoint &position, const wxSize& size, long style )
@@ -60,23 +61,23 @@ void FindDialog::CreateGUIControls()
     SetSize( 8, 8, 261, 144 );
     Center();
 
-    UnitLabel = new wxStaticText( this, ID_UNITLABEL, wxT( "Unit Operations" ), wxPoint( 4, 22 ), wxDefaultSize, 0, wxT( "UnitLabel" ) );
+    UnitLabel = new wxStaticText( this, FINDDIALOG_UNITLABEL, wxT( "Unit Operations" ), wxPoint( 4, 22 ), wxDefaultSize, 0, wxT( "UnitLabel" ) );
     UnitLabel->SetFont( wxFont( 10, wxSWISS, wxNORMAL, wxBOLD, FALSE, wxT( "Times New Roman" ) ) );
 
-    StreamLabel = new wxStaticText( this, ID_STREAMLABEL, wxT( "Streams" ), wxPoint( 4, 45 ), wxDefaultSize, 0, wxT( "StreamLabel" ) );
+    StreamLabel = new wxStaticText( this, FINDDIALOG_STREAMLABEL, wxT( "Streams" ), wxPoint( 4, 45 ), wxDefaultSize, 0, wxT( "StreamLabel" ) );
     StreamLabel->SetFont( wxFont( 10, wxSWISS, wxNORMAL, wxBOLD, FALSE, wxT( "Times New Roman" ) ) );
 
     wxArrayString arrayStringFor_WxChoice1;
-    WxChoice1 = new wxChoice( this, ID_WXCHOICE1, wxPoint( 96, 19 ), wxSize( 145, 21 ), arrayStringFor_WxChoice1, 0, wxDefaultValidator, wxT( "WxChoice1" ) );
+    WxChoice1 = new wxChoice( this, FINDDIALOG_WXCHOICE1, wxPoint( 96, 19 ), wxSize( 145, 21 ), arrayStringFor_WxChoice1, 0, wxDefaultValidator, wxT( "WxChoice1" ) );
     WxChoice1->SetSelection( -1 );
 
     wxArrayString arrayStringFor_WxChoice2;
-    WxChoice2 = new wxChoice( this, ID_WXCHOICE2, wxPoint( 96, 42 ), wxSize( 145, 21 ), arrayStringFor_WxChoice2, 0, wxDefaultValidator, wxT( "WxChoice2" ) );
+    WxChoice2 = new wxChoice( this, FINDDIALOG_WXCHOICE2, wxPoint( 96, 42 ), wxSize( 145, 21 ), arrayStringFor_WxChoice2, 0, wxDefaultValidator, wxT( "WxChoice2" ) );
     WxChoice2->SetSelection( -1 );
 
     CancelButton = new wxButton( this, wxID_CANCEL, wxT( "Cancel" ), wxPoint( 165, 67 ), wxSize( 75, 25 ), 0, wxDefaultValidator, wxT( "CancelButton" ) );
 
-    FindButton = new wxButton( this, ID_FINDBUTTON, wxT( "Find" ), wxPoint( 86, 67 ), wxSize( 75, 25 ), 0, wxDefaultValidator, wxT( "FindButton" ) );
+    FindButton = new wxButton( this, FINDDIALOG_FINDBUTTON, wxT( "Find" ), wxPoint( 86, 67 ), wxSize( 75, 25 ), 0, wxDefaultValidator, wxT( "FindButton" ) );
     
     //initialize member variables
     selectedModulePos = wxNOT_FOUND;
@@ -87,13 +88,13 @@ void FindDialog::CreateGUIControls()
 
 void FindDialog::FindButtonClick( wxCommandEvent& event )
 {
-    if ( mLastChoice == ID_WXCHOICE1 )
+    if ( mLastChoice == FINDDIALOG_WXCHOICE1 )
     {
         selectedModule = WxChoice1->GetString( WxChoice1->GetSelection() );
         selectedModulePos = WxChoice1->GetSelection();
         type = 0;
     }
-    else if( mLastChoice == ID_WXCHOICE2 )
+    else if( mLastChoice == FINDDIALOG_WXCHOICE2 )
     {
         selectedModule = WxChoice2->GetString( WxChoice2->GetSelection() );
         selectedModulePos = WxChoice2->GetSelection();

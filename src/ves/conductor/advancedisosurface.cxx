@@ -42,18 +42,19 @@
 #include <wx/msgdlg.h>
 
 #include <ves/conductor/advancedisosurface.h>
+#include <ves/conductor/ConductorLibEnums.h>
 
 using namespace ves::conductor;
 using namespace ves::conductor::util;
 
 BEGIN_EVENT_TABLE( AdvancedIsosurface, wxDialog )
-    EVT_LISTBOX( SELECT_SCALAR,   AdvancedIsosurface::OnScalarSelection )
-    EVT_COMMAND_SCROLL( MIN_SPINCTRL,    AdvancedIsosurface::OnMinSpinCtrl )
-    EVT_COMMAND_SCROLL( MAX_SPINCTRL,    AdvancedIsosurface::OnMaxSpinCtrl )
-    EVT_COMMAND_SCROLL( MIN_SLIDER,      AdvancedIsosurface::OnMinSlider )
-    EVT_COMMAND_SCROLL( MAX_SLIDER,      AdvancedIsosurface::OnMaxSlider )
-    EVT_TEXT_ENTER( MIN_SPINCTRL,    AdvancedIsosurface::UpdateMinSlider )
-    EVT_TEXT_ENTER( MAX_SPINCTRL,    AdvancedIsosurface::UpdateMaxSlider )
+    EVT_LISTBOX( ADVANCEDISOSURFACE_SELECT_SCALAR,   AdvancedIsosurface::OnScalarSelection )
+    EVT_COMMAND_SCROLL( ADVANCEDISOSURFACE_MIN_SPINCTRL,    AdvancedIsosurface::OnMinSpinCtrl )
+    EVT_COMMAND_SCROLL( ADVANCEDISOSURFACE_MAX_SPINCTRL,    AdvancedIsosurface::OnMaxSpinCtrl )
+    EVT_COMMAND_SCROLL( ADVANCEDISOSURFACE_MIN_SLIDER,      AdvancedIsosurface::OnMinSlider )
+    EVT_COMMAND_SCROLL( ADVANCEDISOSURFACE_MAX_SLIDER,      AdvancedIsosurface::OnMaxSlider )
+    EVT_TEXT_ENTER( ADVANCEDISOSURFACE_MIN_SPINCTRL,    AdvancedIsosurface::UpdateMinSlider )
+    EVT_TEXT_ENTER( ADVANCEDISOSURFACE_MAX_SPINCTRL,    AdvancedIsosurface::UpdateMaxSlider )
 END_EVENT_TABLE()
 
 AdvancedIsosurface::AdvancedIsosurface( )
@@ -115,7 +116,7 @@ void AdvancedIsosurface::CreateControls()
     selectScalarSizer->Add( itemStaticText4, 0, wxALIGN_LEFT | wxALL | wxADJUST_MINSIZE, 5 );
 
 // _vectorSelection = new wxListBox( itemDialog1, ID_LISTBOX1, wxDefaultPosition, wxSize(125, 75), _availableSolutions["MESH_VECTORS"], wxLB_SINGLE|wxLB_NEEDED_SB );
-    scalarSelection = new wxListBox( itemDialog1, SELECT_SCALAR, wxDefaultPosition, wxDefaultSize, _availableSolutions["MESH_SCALARS"], wxLB_SINGLE | wxLB_NEEDED_SB );
+    scalarSelection = new wxListBox( itemDialog1, ADVANCEDISOSURFACE_SELECT_SCALAR, wxDefaultPosition, wxDefaultSize, _availableSolutions["MESH_SCALARS"], wxLB_SINGLE | wxLB_NEEDED_SB );
     scalarSelection->SetSelection( 0 );
     selectScalarSizer->Add( scalarSelection, 0, wxALIGN_CENTER_HORIZONTAL | wxALL | wxEXPAND, 5 );
 
@@ -128,11 +129,11 @@ void AdvancedIsosurface::CreateControls()
     wxBoxSizer* minSizer = new wxBoxSizer( wxHORIZONTAL );
     wxBoxSizer* maxSizer = new wxBoxSizer( wxHORIZONTAL );
 
-    _minSpinner = new wxSpinCtrlDbl( *itemDialog1, MIN_SPINCTRL, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 100, 0, 0.1, -1, wxEmptyString );
-    _minSlider = new wxSlider( itemDialog1, MIN_SLIDER, 0, 0, 100, wxDefaultPosition, wxSize( 300, -1 ), wxSL_HORIZONTAL | wxSL_LABELS );
+    _minSpinner = new wxSpinCtrlDbl( *itemDialog1, ADVANCEDISOSURFACE_MIN_SPINCTRL, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 100, 0, 0.1, -1, wxEmptyString );
+    _minSlider = new wxSlider( itemDialog1, ADVANCEDISOSURFACE_MIN_SLIDER, 0, 0, 100, wxDefaultPosition, wxSize( 300, -1 ), wxSL_HORIZONTAL | wxSL_LABELS );
 
-    _maxSpinner = new wxSpinCtrlDbl( *itemDialog1, MAX_SPINCTRL, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 100, 100, 0.1, -1, wxEmptyString );
-    _maxSlider = new wxSlider( itemDialog1, MAX_SLIDER, 100, 0, 100, wxDefaultPosition, wxSize( 300, -1 ), wxSL_HORIZONTAL | wxSL_LABELS );
+    _maxSpinner = new wxSpinCtrlDbl( *itemDialog1, ADVANCEDISOSURFACE_MAX_SPINCTRL, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 100, 100, 0.1, -1, wxEmptyString );
+    _maxSlider = new wxSlider( itemDialog1, ADVANCEDISOSURFACE_MAX_SLIDER, 100, 0, 100, wxDefaultPosition, wxSize( 300, -1 ), wxSL_HORIZONTAL | wxSL_LABELS );
 
     wxStaticText* _min = new wxStaticText( itemDialog1, wxID_STATIC, _T( "Min" ), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT );
     wxStaticText* _max = new wxStaticText( itemDialog1, wxID_STATIC, _T( "Max" ), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT );
@@ -261,7 +262,7 @@ void AdvancedIsosurface::OnMinSlider( wxScrollEvent& WXUNUSED( event ) )
 
     if( _minSlider->GetValue() >= _maxSlider->GetValue() ) // && _minSlider->GetValue() < 100 )
     {
-        _ensureSliders( MIN_SLIDER );
+        _ensureSliders( ADVANCEDISOSURFACE_MIN_SLIDER );
     }
 
     _minSpinner->SetValue( range *( double )_minSlider->GetValue() / 100  + _colorScalarRange.at( 0 ) );
@@ -282,7 +283,7 @@ void AdvancedIsosurface::OnMaxSlider( wxScrollEvent& WXUNUSED( event ) )
 
     if( _maxSlider->GetValue() <= _minSlider->GetValue() ) //&& _maxSlider->GetValue() > 0 )
     {
-        _ensureSliders( MAX_SLIDER );
+        _ensureSliders( ADVANCEDISOSURFACE_MAX_SLIDER );
     }
 
     _minSpinner->SetValue(( range *( double )_minSlider->GetValue() ) / 100 + _colorScalarRange.at( 0 ) );
@@ -305,12 +306,12 @@ bool AdvancedIsosurface::_ensureSliders( int activeSliderID )
             _maxSlider->SetValue( 0 + 1 );
         }
 
-        if( activeSliderID == MIN_SLIDER )
+        if( activeSliderID == ADVANCEDISOSURFACE_MIN_SLIDER )
         {
             _maxSlider->SetValue( _minSlider->GetValue() + 1 );
             return true;
         }
-        else if( activeSliderID == MAX_SLIDER )
+        else if( activeSliderID == ADVANCEDISOSURFACE_MAX_SLIDER )
         {
             _minSlider->SetValue( _maxSlider->GetValue() - 1 );
             return true;

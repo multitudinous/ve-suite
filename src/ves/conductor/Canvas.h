@@ -62,11 +62,7 @@ class Network;
 class VE_GUIPLUGINS_EXPORTS Canvas : public wxScrolledWindow
 {
 public:
-    enum CANVAS_ENUMS
-    {
-        UPDATE_NETWORK_DATA = 3700
-    };
-    
+
     ///Default canvas
     Canvas();
     ///Constructor

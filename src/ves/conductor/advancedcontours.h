@@ -100,15 +100,6 @@ public:
                       const wxSize& size = SYMBOL_ADVANCEDCONTOURS_SIZE,
                       long style = SYMBOL_ADVANCEDCONTOURS_STYLE );
 
-    enum ADVANCED_CONTOUR_IDS
-    {
-        OPACITY_SLIDER,
-        WARPED_SCALE_SLIDER,
-        LOD_SLIDER,
-        CONTOUR_TYPE_RBOX,
-        WARP_OPTION_CHK
-    };
-
     void SendCommandsToXplorer( void );
     /// Creation
     bool Create( wxWindow* parent,

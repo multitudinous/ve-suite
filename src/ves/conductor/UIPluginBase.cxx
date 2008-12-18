@@ -33,6 +33,7 @@
 #include <ves/conductor/util/CORBAServiceList.h>
 
 #include <ves/conductor/UIPluginBase.h>
+#include <ves/conductor/ConductorLibEnums.h>
 #include <ves/conductor/util/DataSetLoaderUI.h>
 
 #include <iostream>
@@ -98,34 +99,34 @@ using namespace ves::conductor::util;
 BEGIN_EVENT_TABLE( UIPluginBase, wxEvtHandler )
     EVT_LEFT_DCLICK( UIPluginBase::OnDClick )
     EVT_RIGHT_DOWN( UIPluginBase::OnMRightDown )
-    EVT_MENU( SHOW_RESULT, UIPluginBase::OnShowResult )
-    EVT_MENU( PARAVIEW, UIPluginBase::OnParaView )
-    EVT_MENU( SHOW_DESC, UIPluginBase::OnShowDesc )
-    EVT_MENU( USER_DIALOG, UIPluginBase::OnShowUserDialog )
-    EVT_MENU( SHOW_FINANCIAL, UIPluginBase::OnShowFinancial ) /* EPRI TAG */
+    EVT_MENU( UIPLUGINBASE_SHOW_RESULT, UIPluginBase::OnShowResult )
+    EVT_MENU( UIPLUGINBASE_PARAVIEW, UIPluginBase::OnParaView )
+    EVT_MENU( UIPLUGINBASE_SHOW_DESC, UIPluginBase::OnShowDesc )
+    EVT_MENU( UIPLUGINBASE_USER_DIALOG, UIPluginBase::OnShowUserDialog )
+    EVT_MENU( UIPLUGINBASE_SHOW_FINANCIAL, UIPluginBase::OnShowFinancial ) /* EPRI TAG */
     //EVT_MENU( SHOW_ASPEN_NAME, UIPluginBase::OnShowAspenName )
     //EVT_MENU( QUERY_DYNAMICS, UIPluginBase::OnQueryDynamics )
     //EVT_MENU( QUERY_INPUTS, UIPluginBase::OnQueryInputs )
     //EVT_MENU( QUERY_OUTPUTS, UIPluginBase::OnQueryOutputs )
     //EVT_MENU( REINIT_BLOCK, UIPluginBase::OnReinitBlocks )
-    EVT_MENU( SHOW_ICON_CHOOSER, UIPluginBase::OnShowIconChooser )
-    EVT_MENU( GEOMETRY, UIPluginBase::OnGeometry )
-    EVT_MENU( NAVTO, UIPluginBase::OnNavigateTo )
-    EVT_MENU( DATASET, UIPluginBase::OnDataSet )
-    EVT_MENU( MODEL_INPUTS, UIPluginBase::OnInputsWindow ) /* EPRI TAG */
-    EVT_MENU( MODEL_RESULTS, UIPluginBase::OnResultsWindow ) /* EPRI TAG */
-    EVT_MENU( VISUALIZATION, UIPluginBase::OnVisualization )
-    EVT_MENU( SET_UI_PLUGIN_NAME, UIPluginBase::OnSetUIPluginName )
-    EVT_MENU( SET_ACTIVE_MODEL, UIPluginBase::OnSetActiveXplorerModel )
-    EVT_MENU( ACTIVE_MODEL_SOUNDS, UIPluginBase::OnModelSounds )
-    EVT_MENU( DEL_MOD, UIPluginBase::OnDelMod )
-    EVT_MENU( MAKE_HIER, UIPluginBase::OnMakeIntoHierarchy )
-    EVT_MENU( ADD_INPUT_PORT, UIPluginBase::AddPort )
-    EVT_MENU( ADD_OUTPUT_PORT, UIPluginBase::AddPort )
-    EVT_MENU( DELETE_PORT, UIPluginBase::DeletePort )
-    EVT_MENU( PLUGIN_TOGGLE_ALL_ON, UIPluginBase::TogglePlugin )
-    EVT_MENU( PLUGIN_TOGGLE_PLUGIN_ON, UIPluginBase::TogglePlugin )
-    EVT_UPDATE_UI( SET_ACTIVE_PLUGIN, UIPluginBase::OnSetActivePluginID )
+    EVT_MENU( UIPLUGINBASE_SHOW_ICON_CHOOSER, UIPluginBase::OnShowIconChooser )
+    EVT_MENU( UIPLUGINBASE_GEOMETRY, UIPluginBase::OnGeometry )
+    EVT_MENU( UIPLUGINBASE_NAVTO, UIPluginBase::OnNavigateTo )
+    EVT_MENU( UIPLUGINBASE_DATASET, UIPluginBase::OnDataSet )
+    EVT_MENU( UIPLUGINBASE_MODEL_INPUTS, UIPluginBase::OnInputsWindow ) /* EPRI TAG */
+    EVT_MENU( UIPLUGINBASE_MODEL_RESULTS, UIPluginBase::OnResultsWindow ) /* EPRI TAG */
+    EVT_MENU( UIPLUGINBASE_VISUALIZATION, UIPluginBase::OnVisualization )
+    EVT_MENU( UIPLUGINBASE_SET_UI_PLUGIN_NAME, UIPluginBase::OnSetUIPluginName )
+    EVT_MENU( UIPLUGINBASE_SET_ACTIVE_MODEL, UIPluginBase::OnSetActiveXplorerModel )
+    EVT_MENU( UIPLUGINBASE_ACTIVE_MODEL_SOUNDS, UIPluginBase::OnModelSounds )
+    EVT_MENU( UIPLUGINBASE_DEL_MOD, UIPluginBase::OnDelMod )
+    EVT_MENU( UIPLUGINBASE_MAKE_HIER, UIPluginBase::OnMakeIntoHierarchy )
+    EVT_MENU( UIPLUGINBASE_ADD_INPUT_PORT, UIPluginBase::AddPort )
+    EVT_MENU( UIPLUGINBASE_ADD_OUTPUT_PORT, UIPluginBase::AddPort )
+    EVT_MENU( UIPLUGINBASE_DELETE_PORT, UIPluginBase::DeletePort )
+    EVT_MENU( UIPLUGINBASE_TOGGLE_ALL_ON, UIPluginBase::TogglePlugin )
+    EVT_MENU( UIPLUGINBASE_TOGGLE_PLUGIN_ON, UIPluginBase::TogglePlugin )
+    EVT_UPDATE_UI( UIPLUGINBASE_SET_ACTIVE_PLUGIN, UIPluginBase::OnSetActivePluginID )
 END_EVENT_TABLE()
 
 IMPLEMENT_DYNAMIC_CLASS( UIPluginBase, wxEvtHandler )
@@ -183,103 +184,85 @@ UIPluginBase::UIPluginBase() :
     defaultIconMap[ "vector.xpm" ] = wxImage( vector_xpm );
     defaultIconMap[ "vectortb.xpm" ] = wxImage( vectortb_xpm );
     
-    pluginDeleteEvent.SetId( DIALOG_PLUGIN_UPDATE );
+    pluginDeleteEvent.SetId( UIPLUGINBASE_DIALOG_PLUGIN_UPDATE );
 
     //create the menu
     mPopMenu = new wxMenu();
-    mPopMenu->Append( SHOW_DESC, _( "Show Module Description" ) );
-    mPopMenu->Enable( SHOW_DESC, true );
-    mPopMenu->Append( USER_DIALOG, _( "User Dialog" ) );
-    mPopMenu->Enable( USER_DIALOG, true );
-    mPopMenu->Append( SHOW_RESULT, _( "Show Module Result" ) );
+    mPopMenu->Append( UIPLUGINBASE_SHOW_DESC, _( "Show Module Description" ) );
+    mPopMenu->Enable( UIPLUGINBASE_SHOW_DESC, true );
+    mPopMenu->Append( UIPLUGINBASE_USER_DIALOG, _( "User Dialog" ) );
+    mPopMenu->Enable( UIPLUGINBASE_USER_DIALOG, true );
+    mPopMenu->Append( UIPLUGINBASE_SHOW_RESULT, _( "Show Module Result" ) );
     //mPopMenu->Enable( SHOW_RESULT, true);
-    mPopMenu->Enable( SHOW_RESULT, false );
-    mPopMenu->Append( PARAVIEW, _( "ParaView 3D Result" ) );
-    mPopMenu->Enable( PARAVIEW, false );
+    mPopMenu->Enable( UIPLUGINBASE_SHOW_RESULT, false );
+    mPopMenu->Append( UIPLUGINBASE_PARAVIEW, _( "ParaView 3D Result" ) );
+    mPopMenu->Enable( UIPLUGINBASE_PARAVIEW, false );
     if( Has3Ddata() )
     {
-        mPopMenu->Enable( PARAVIEW, true );
+        mPopMenu->Enable( UIPLUGINBASE_PARAVIEW, true );
     }
-    mPopMenu->Append( SHOW_FINANCIAL, _( "Financial Data" ) );
-    mPopMenu->Enable( SHOW_FINANCIAL, true );
+    mPopMenu->Append( UIPLUGINBASE_SHOW_FINANCIAL, _( "Financial Data" ) );
+    mPopMenu->Enable( UIPLUGINBASE_SHOW_FINANCIAL, true );
 
     //Toggle Plugin Menu
     wxMenu* pluginMenu = new wxMenu();
-    pluginMenu->Append( PLUGIN_TOGGLE_ALL_ON, _( "Toggle All On" ) );
-    pluginMenu->Enable( PLUGIN_TOGGLE_ALL_ON, true );
-    pluginMenu->Append( PLUGIN_TOGGLE_PLUGIN_ON, _( "Toggle Plugin On" ) );
-    pluginMenu->Enable( PLUGIN_TOGGLE_PLUGIN_ON, true );
-    mPopMenu->Append( PLUGIN_TOGGLE_MENU, _( "Toggle Plugin" ), pluginMenu,
+    pluginMenu->Append( UIPLUGINBASE_TOGGLE_ALL_ON, _( "Toggle All On" ) );
+    pluginMenu->Enable( UIPLUGINBASE_TOGGLE_ALL_ON, true );
+    pluginMenu->Append( UIPLUGINBASE_TOGGLE_PLUGIN_ON, _( "Toggle Plugin On" ) );
+    pluginMenu->Enable( UIPLUGINBASE_TOGGLE_PLUGIN_ON, true );
+    mPopMenu->Append( UIPLUGINBASE_TOGGLE_MENU, _( "Toggle Plugin" ), pluginMenu,
                     _( "Used to toggle plugin" ) );
-    mPopMenu->Enable( PLUGIN_TOGGLE_MENU, true );
-
-    /*
-    //Aspen Menu
-    wxMenu * aspen_menu = new wxMenu();
-    aspen_menu->Append( SHOW_ASPEN_NAME, _( "Aspen Name" ) );
-    aspen_menu->Enable( SHOW_ASPEN_NAME, true );
-    aspen_menu->Append( QUERY_INPUTS, _( "Query Inputs" ) );
-    aspen_menu->Enable( QUERY_INPUTS, true );
-    aspen_menu->Append( QUERY_OUTPUTS, _( "Query Outputs" ) );
-    aspen_menu->Enable( QUERY_OUTPUTS, true );
-    aspen_menu->Append( QUERY_DYNAMICS, _( "Query Dynamics" ) );
-    aspen_menu->Enable( QUERY_DYNAMICS, true );
-    aspen_menu->Append( REINIT_BLOCK, _( "Reinitialize" ) );
-    aspen_menu->Enable( REINIT_BLOCK, true );
-    mPopMenu->Append( ASPEN_MENU,   _( "Aspen" ), aspen_menu,
-                     _( "Used in conjunction with Aspen" ) );
-    mPopMenu->Enable( ASPEN_MENU, true );
-    */
+    mPopMenu->Enable( UIPLUGINBASE_TOGGLE_MENU, true );
 
     //Port Menu
     wxMenu * port_menu = new wxMenu();
-    port_menu->Append( ADD_INPUT_PORT, _( "Add Input Port" ) );
-    port_menu->Enable( ADD_INPUT_PORT, true );
-    port_menu->Append( ADD_OUTPUT_PORT, _( "Add Output Port" ) );
-    port_menu->Enable( ADD_OUTPUT_PORT, true );
-    port_menu->Append( DELETE_PORT, _( "Delete Port" ) );
-    port_menu->Enable( DELETE_PORT, true );
+    port_menu->Append( UIPLUGINBASE_ADD_INPUT_PORT, _( "Add Input Port" ) );
+    port_menu->Enable( UIPLUGINBASE_ADD_INPUT_PORT, true );
+    port_menu->Append( UIPLUGINBASE_ADD_OUTPUT_PORT, _( "Add Output Port" ) );
+    port_menu->Enable( UIPLUGINBASE_ADD_OUTPUT_PORT, true );
+    port_menu->Append( UIPLUGINBASE_DELETE_PORT, _( "Delete Port" ) );
+    port_menu->Enable( UIPLUGINBASE_DELETE_PORT, true );
     mPopMenu->Append( ::wxNewId(), _( "Ports" ), port_menu,
                      _( "Used to manipulate ports" ) );
 
     //Icon Menu
     wxMenu * icon_menu = new wxMenu();
-    icon_menu->Append( SHOW_ICON_CHOOSER, _( "Icon Chooser" ) );
-    icon_menu->Enable( SHOW_ICON_CHOOSER, true );
-    mPopMenu->Append( ICON_MENU,   _( "Icon" ), icon_menu,
+    icon_menu->Append( UIPLUGINBASE_SHOW_ICON_CHOOSER, _( "Icon Chooser" ) );
+    icon_menu->Enable( UIPLUGINBASE_SHOW_ICON_CHOOSER, true );
+    mPopMenu->Append( UIPLUGINBASE_ICON_MENU,   _( "Icon" ), icon_menu,
                      _( "Controls for icon images" ) );
-    mPopMenu->Enable( ICON_MENU, true );
+    mPopMenu->Enable( UIPLUGINBASE_ICON_MENU, true );
     
-    mPopMenu->Append( NAVTO, _( "Navigate To" ) );
-    mPopMenu->Enable( NAVTO, true );
+    mPopMenu->Append( UIPLUGINBASE_NAVTO, _( "Navigate To" ) );
+    mPopMenu->Enable( UIPLUGINBASE_NAVTO, true );
     // GUI to configure geometry for graphical env
-    mPopMenu->Append( GEOMETRY, _( "Geometry Config" ) );
-    mPopMenu->Enable( GEOMETRY, true );
+    mPopMenu->Append( UIPLUGINBASE_GEOMETRY, _( "Geometry Config" ) );
+    mPopMenu->Enable( UIPLUGINBASE_GEOMETRY, true );
     // GUI to configure dataset for graphical env
-    mPopMenu->Append( DATASET, _( "Data Set Config" ) );
-    mPopMenu->Enable( DATASET, true );
+    mPopMenu->Append( UIPLUGINBASE_DATASET, _( "Data Set Config" ) );
+    mPopMenu->Enable( UIPLUGINBASE_DATASET, true );
     //UI for input variables
-    mPopMenu->Append( MODEL_INPUTS, _( "Input Variables" ) );
-    mPopMenu->Enable( MODEL_INPUTS, true );
+    mPopMenu->Append( UIPLUGINBASE_MODEL_INPUTS, _( "Input Variables" ) );
+    mPopMenu->Enable( UIPLUGINBASE_MODEL_INPUTS, true );
     //UI for results variables
-    mPopMenu->Append( MODEL_RESULTS, _( "Result Variables" ) );
-    mPopMenu->Enable( MODEL_RESULTS, true );
+    mPopMenu->Append( UIPLUGINBASE_MODEL_RESULTS, _( "Result Variables" ) );
+    mPopMenu->Enable( UIPLUGINBASE_MODEL_RESULTS, true );
     //UI for vis variables
-    mPopMenu->Append( VISUALIZATION, _( "Visualization" ) );
-    mPopMenu->Enable( VISUALIZATION, true );
+    mPopMenu->Append( UIPLUGINBASE_VISUALIZATION, _( "Visualization" ) );
+    mPopMenu->Enable( UIPLUGINBASE_VISUALIZATION, true );
     //Sounds dialog
-    mPopMenu->Append( ACTIVE_MODEL_SOUNDS, _( "Model Sounds" ) );
-    mPopMenu->Enable( ACTIVE_MODEL_SOUNDS, true );
+    mPopMenu->Append( UIPLUGINBASE_ACTIVE_MODEL_SOUNDS, _( "Model Sounds" ) );
+    mPopMenu->Enable( UIPLUGINBASE_ACTIVE_MODEL_SOUNDS, true );
     //Make a specific plusing active in xplorer
-    mPopMenu->Append( SET_ACTIVE_MODEL, _( "Set Active Xplorer Model" ) );
-    mPopMenu->Enable( SET_ACTIVE_MODEL, true );
+    mPopMenu->Append( UIPLUGINBASE_SET_ACTIVE_MODEL, _( "Set Active Xplorer Model" ) );
+    mPopMenu->Enable( UIPLUGINBASE_SET_ACTIVE_MODEL, true );
     //Set the plugin name for a model
-    mPopMenu->Append( SET_UI_PLUGIN_NAME, _( "Set UI Plugin Name" ) );
-    mPopMenu->Enable( SET_UI_PLUGIN_NAME, true );
-    mPopMenu->Append( DEL_MOD, _( "Del Module" ) );
-    mPopMenu->Enable( DEL_MOD, true );
-    mPopMenu->Append( MAKE_HIER, _( "Make Into Hierarchy" ) );
-    mPopMenu->Enable( MAKE_HIER, true );
+    mPopMenu->Append( UIPLUGINBASE_SET_UI_PLUGIN_NAME, _( "Set UI Plugin Name" ) );
+    mPopMenu->Enable( UIPLUGINBASE_SET_UI_PLUGIN_NAME, true );
+    mPopMenu->Append( UIPLUGINBASE_DEL_MOD, _( "Del Module" ) );
+    mPopMenu->Enable( UIPLUGINBASE_DEL_MOD, true );
+    mPopMenu->Append( UIPLUGINBASE_MAKE_HIER, _( "Make Into Hierarchy" ) );
+    mPopMenu->Enable( UIPLUGINBASE_MAKE_HIER, true );
 
     //mPopMenu->SetClientData( &id );
 }
@@ -2014,7 +1997,7 @@ void UIPluginBase::OnMakeIntoHierarchy( wxCommandEvent& event )
 ////////////////////////////////////////////////////////////////////////////////
 void UIPluginBase::SetAsHierarchy( )
 {
-    mPopMenu->Enable( MAKE_HIER, false );
+    mPopMenu->Enable( UIPLUGINBASE_MAKE_HIER, false );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIPluginBase::SetDCScale( std::pair< double, double >* scale )
@@ -2163,12 +2146,12 @@ void UIPluginBase::AddPort( wxCommandEvent& event )
     port->SetPluginName( ConvertUnicode( mPluginName.c_str() ) );
     //add the port to the model
     //add the port to the internal plugin structure
-    if( event.GetId() == UIPluginBase::ADD_INPUT_PORT )
+    if( event.GetId() == UIPLUGINBASE_ADD_INPUT_PORT )
     {
         port->SetDataFlowDirection( "input" );
         inputPort.push_back( port );
     }
-    else if( event.GetId() == UIPluginBase::ADD_OUTPUT_PORT )
+    else if( event.GetId() == UIPLUGINBASE_ADD_OUTPUT_PORT )
     {
         port->SetDataFlowDirection( "output" );
         outputPort.push_back( port );
@@ -2349,7 +2332,7 @@ bool UIPluginBase::GetNameFlag()
 void UIPluginBase::TogglePlugin( wxCommandEvent& event )
 {
     UIPLUGIN_CHECKID( event )
-    if( event.GetId() == UIPluginBase::PLUGIN_TOGGLE_ALL_ON )
+    if( event.GetId() == UIPLUGINBASE_TOGGLE_ALL_ON )
     {
         ves::open::xml::DataValuePairPtr dataValuePair( 
             new ves::open::xml::DataValuePair() );
@@ -2360,7 +2343,7 @@ void UIPluginBase::TogglePlugin( wxCommandEvent& event )
         veCommand->AddDataValuePair( dataValuePair );
         bool connected = serviceList->SendCommandStringToXplorer( veCommand );
     }
-    else if( event.GetId() == UIPluginBase::PLUGIN_TOGGLE_PLUGIN_ON )
+    else if( event.GetId() == UIPLUGINBASE_TOGGLE_PLUGIN_ON )
     {
         ves::open::xml::DataValuePairPtr dataValuePair( 
             new ves::open::xml::DataValuePair() );
@@ -2381,8 +2364,8 @@ wxMenu* UIPluginBase::GetPopupMenu()
 void UIPluginBase::SendActiveId()
 {
     //send the active id so that each plugin knows what to do
-    wxUpdateUIEvent setActivePluginId( SET_ACTIVE_PLUGIN );
+    wxUpdateUIEvent setActivePluginId( UIPLUGINBASE_SET_ACTIVE_PLUGIN );
     setActivePluginId.SetClientData( &id );
-    setActivePluginId.SetId( SET_ACTIVE_PLUGIN );
+    setActivePluginId.SetId( UIPLUGINBASE_SET_ACTIVE_PLUGIN );
     m_canvas->GetEventHandler()->ProcessEvent( setActivePluginId );
 }

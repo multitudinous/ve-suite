@@ -32,6 +32,7 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
 #include <ves/conductor/advancedvectors.h>
+#include <ves/conductor/ConductorLibEnums.h>
 
 #include <wx/sizer.h>
 #include <wx/slider.h>
@@ -107,7 +108,7 @@ void AdvancedVectors::CreateControls()
     wxStaticText* itemStaticText9 = new wxStaticText( itemDialog1, wxID_STATIC, _T( "Vector Scale" ), wxDefaultPosition, wxDefaultSize, 0 );
     itemStaticBoxSizer3->Add( itemStaticText9, 0, wxALIGN_LEFT | wxLEFT | wxRIGHT | wxTOP | wxADJUST_MINSIZE, 5 );
 
-    _vectorScaleSlider = new wxSlider( itemDialog1, VECTOR_SCALE_SLIDER, 1, 1, 200, wxDefaultPosition, wxSize( 300, -1 ), wxSL_HORIZONTAL | wxSL_LABELS );
+    _vectorScaleSlider = new wxSlider( itemDialog1, ADVANCEDVECTORS_SCALE_SLIDER, 1, 1, 200, wxDefaultPosition, wxSize( 300, -1 ), wxSL_HORIZONTAL | wxSL_LABELS );
     itemStaticBoxSizer3->Add( _vectorScaleSlider, 0, wxGROW | wxALL, 5 );
 
     wxBoxSizer* itemBoxSizer11 = new wxBoxSizer( wxHORIZONTAL );
@@ -122,7 +123,7 @@ void AdvancedVectors::CreateControls()
     wxStaticText* itemStaticText14 = new wxStaticText( itemDialog1, wxID_STATIC, _T( "Vector Ratio" ), wxDefaultPosition, wxDefaultSize, 0 );
     itemStaticBoxSizer3->Add( itemStaticText14, 0, wxALIGN_LEFT | wxLEFT | wxRIGHT | wxTOP | wxADJUST_MINSIZE, 5 );
 
-    _vectorRatioSlider = new wxSlider( itemDialog1, VECTOR_RATIO_SLIDER, 1, 1, 100, wxDefaultPosition, wxSize( 300, -1 ), wxSL_HORIZONTAL | wxSL_LABELS );
+    _vectorRatioSlider = new wxSlider( itemDialog1, ADVANCEDVECTORS_RATIO_SLIDER, 1, 1, 100, wxDefaultPosition, wxSize( 300, -1 ), wxSL_HORIZONTAL | wxSL_LABELS );
     itemStaticBoxSizer3->Add( _vectorRatioSlider, 0, wxGROW | wxALL, 5 );
 
     wxBoxSizer* itemBoxSizer16 = new wxBoxSizer( wxHORIZONTAL );
@@ -134,7 +135,7 @@ void AdvancedVectors::CreateControls()
     wxStaticText* itemStaticText18 = new wxStaticText( itemDialog1, wxID_STATIC, _T( "Sparse" ), wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT );
     itemBoxSizer16->Add( itemStaticText18, 1, wxALIGN_TOP | wxLEFT | wxRIGHT | wxBOTTOM | wxADJUST_MINSIZE, 5 );
 
-    _scaleByMagCheck = new wxCheckBox( itemDialog1, SCALAR_BY_VECTOR_CHK, _T( "Scalar by Vector Magnitude" ), wxDefaultPosition, wxDefaultSize, 0 );
+    _scaleByMagCheck = new wxCheckBox( itemDialog1, ADVANCEDVECTORS_SCALAR_BY_VECTOR_CHK, _T( "Scalar by Vector Magnitude" ), wxDefaultPosition, wxDefaultSize, 0 );
     _scaleByMagCheck->SetValue( false );
     itemStaticBoxSizer3->Add( _scaleByMagCheck, 0, wxALIGN_LEFT | wxALL, 5 );
 

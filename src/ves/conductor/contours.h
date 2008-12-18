@@ -93,18 +93,6 @@ public:
 
     virtual ~Contours();
 
-    enum CONTOUR_IDS
-    {
-        CONTOUR_DIR_RBOX,
-        MULTIPLE_PRECONTOUR_RBUTTON,
-        MULTIPLE_PRECONTOUR_CHK,
-        SINGLE_PRECONTOUR_RBUTTON,
-        SINGLE_PRECONTOUR_CHK,
-        CONTOUR_PLANE_SLIDER,
-        ADD_CONTOUR_PLANE_BUTTON,
-        ADVANCED_CONTOUR_BUTTON
-    };
-
     /// Creation
     bool Create( wxWindow* parent, wxWindowID id = SYMBOL_CONTOURS_IDNAME, const wxString& caption = SYMBOL_CONTOURS_TITLE, const wxPoint& pos = SYMBOL_CONTOURS_POSITION, const wxSize& size = SYMBOL_CONTOURS_SIZE, long style = SYMBOL_CONTOURS_STYLE );
 

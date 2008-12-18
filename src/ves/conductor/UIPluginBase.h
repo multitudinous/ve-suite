@@ -96,47 +96,7 @@ class IconChooser;
 
 class VE_GUIPLUGINS_EXPORTS UIPluginBase : public wxEvtHandler
 {
-public:
-    enum PLUGIN_ENUMS
-    {
-        BEGIN_MENU_ID = 3500, //this ids and the END_MENU_ID are used for
-                              //posting events using EVT_MENU_RANGE
-        SHOW_RESULT,
-        PARAVIEW,
-        SHOW_DESC,
-        USER_DIALOG,
-        SHOW_FINANCIAL,
-        //SHOW_ASPEN_NAME,
-        //QUERY_INPUTS,
-        //QUERY_OUTPUTS,
-        //QUERY_DYNAMICS,
-        //REINIT_BLOCK,
-        SHOW_ICON_CHOOSER,
-        GEOMETRY,
-        NAVTO,
-        DATASET,
-        MODEL_INPUTS,
-        MODEL_RESULTS,
-        VISUALIZATION,
-        SET_UI_PLUGIN_NAME,
-        SET_ACTIVE_MODEL,
-        ACTIVE_MODEL_SOUNDS,
-        DEL_MOD,
-        ADD_INPUT_PORT,
-        ADD_OUTPUT_PORT,
-        DELETE_PORT,
-        PLUGIN_TOGGLE_ALL_ON,
-        PLUGIN_TOGGLE_PLUGIN_ON,
-        MAKE_HIER,
-        DIALOG_PLUGIN_UPDATE,
-        PLUGIN_TOGGLE_MENU,
-        ASPEN_MENU,
-        ASPEN_ICON,
-        ICON_MENU,
-        SET_ACTIVE_PLUGIN,
 
-        END_MENU_ID
-    };
 protected:
     ///Defualt constructor
     UIPluginBase();

@@ -91,20 +91,6 @@ public:
                          const wxSize& size = SYMBOL_ADVANCEDSTREAMLINES_SIZE,
                          long style = SYMBOL_ADVANCEDSTREAMLINES_STYLE );
 
-    enum ADVANCED_STREAMLINE_IDS
-    {
-        PARTICLE_TRACKING_BUTTON,
-        USE_SEED_POINT_CHK,
-        PROPOGATION_SLIDER,
-        INTEGRATION_STEP_SLIDER,
-        ARROWS_CHK,
-        SPHERE_SIZE_SLIDER,
-        LINE_DIAMETER_SLIDER,
-        GLOW_SLIDER,
-        PARTICLE_TRACKING,
-        PARTICLE_TRACKING_DIALOG
-    };
-
     void SendCommandsToXplorer();
     /// Creation
     bool Create( wxWindow* parent,

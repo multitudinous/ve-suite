@@ -36,6 +36,7 @@
 #include <ves/conductor/advancedstreamlines.h>
 
 #include <ves/conductor/streamlines.h>
+#include <ves/conductor/ConductorLibEnums.h>
 #include <ves/conductor/vistab.h>
 #include <ves/conductor/util/WPDialog.h>
 
@@ -60,14 +61,14 @@
 using namespace ves::conductor;
 
 BEGIN_EVENT_TABLE( Streamlines, wxDialog )
-    EVT_RADIOBOX( CURSOR_RBOX, Streamlines::_onCursorSelect )
-    EVT_RADIOBOX( DIRECTION_RBOX, Streamlines::_onDirection )
-    EVT_RADIOBOX( INTEGRATION_DIR_RBOX, Streamlines::_onIntegrateDir )
-    EVT_COMMAND_SCROLL( NUMBER_PTS_SLIDER, Streamlines::_onPointsSlider )
-    EVT_COMMAND_SCROLL( PLANE_SIZE_SLIDER, Streamlines::_onSizeSlider )
-    EVT_BUTTON( ADVANCED_STREAMLINE_BUTTON, Streamlines::_onAdvanced )
-    EVT_BUTTON( COMPUTE_STREAMLINE_BUTTON, Streamlines::_onCompute )
-    EVT_BUTTON( SET_SEED_POINTS_BUTTON, Streamlines::SetSeedPoints )
+    EVT_RADIOBOX( STREAMLINES_CURSOR_RBOX, Streamlines::_onCursorSelect )
+    EVT_RADIOBOX( STREAMLINES_DIRECTION_RBOX, Streamlines::_onDirection )
+    EVT_RADIOBOX( STREAMLINES_INTEGRATION_DIR_RBOX, Streamlines::_onIntegrateDir )
+    EVT_COMMAND_SCROLL( STREAMLINES_NUMBER_PTS_SLIDER, Streamlines::_onPointsSlider )
+    EVT_COMMAND_SCROLL( STREAMLINES_PLANE_SIZE_SLIDER, Streamlines::_onSizeSlider )
+    EVT_BUTTON( STREAMLINES_ADVANCED_STREAMLINE_BUTTON, Streamlines::_onAdvanced )
+    EVT_BUTTON( STREAMLINES_COMPUTE_STREAMLINE_BUTTON, Streamlines::_onCompute )
+    EVT_BUTTON( STREAMLINES_SET_SEED_POINTS_BUTTON, Streamlines::SetSeedPoints )
     EVT_BUTTON( wxID_OK, Streamlines::OnClose )
 END_EVENT_TABLE()
 
@@ -167,7 +168,7 @@ void Streamlines::CreateControls()
                                         _T( "both directions" ) };
 
     _integrationRBox = new wxRadioBox( itemDialog1,
-                                       INTEGRATION_DIR_RBOX, _T( "Integration Direction" ),
+                                       STREAMLINES_INTEGRATION_DIR_RBOX, _T( "Integration Direction" ),
                                        wxDefaultPosition,
                                        wxDefaultSize,
                                        3,
@@ -193,13 +194,13 @@ void Streamlines::CreateControls()
     wxBoxSizer* itemBoxSizer12 = new wxBoxSizer( wxHORIZONTAL );
     itemStaticBoxSizer3->Add( itemBoxSizer12, 0, wxALIGN_CENTER_HORIZONTAL | wxALL, 5 );
 
-    wxButton* itemButton13 = new wxButton( itemDialog1, COMPUTE_STREAMLINE_BUTTON, _T( "Compute Streamline" ), wxDefaultPosition, wxDefaultSize, 0 );
+    wxButton* itemButton13 = new wxButton( itemDialog1, STREAMLINES_COMPUTE_STREAMLINE_BUTTON, _T( "Compute Streamline" ), wxDefaultPosition, wxDefaultSize, 0 );
     itemBoxSizer12->Add( itemButton13, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
-    wxButton* seedPointsbutton = new wxButton( itemDialog1, SET_SEED_POINTS_BUTTON, _T( "Seed Points" ), wxDefaultPosition, wxDefaultSize, 0 );
+    wxButton* seedPointsbutton = new wxButton( itemDialog1, STREAMLINES_SET_SEED_POINTS_BUTTON, _T( "Seed Points" ), wxDefaultPosition, wxDefaultSize, 0 );
     itemBoxSizer12->Add( seedPointsbutton, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
-    wxButton* itemButton14 = new wxButton( itemDialog1, ADVANCED_STREAMLINE_BUTTON, _T( "Advanced..." ), wxDefaultPosition, wxDefaultSize, 0 );
+    wxButton* itemButton14 = new wxButton( itemDialog1, STREAMLINES_ADVANCED_STREAMLINE_BUTTON, _T( "Advanced..." ), wxDefaultPosition, wxDefaultSize, 0 );
     itemBoxSizer12->Add( itemButton14, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
     wxButton* _closeButton = new wxButton( itemDialog1, wxID_OK, _T( "Close" ), wxDefaultPosition, wxDefaultSize, 0 );

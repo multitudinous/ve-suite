@@ -86,18 +86,6 @@ public:
 
     virtual ~Streamlines();
 
-    enum STREAMLINE_IDS
-    {
-        CURSOR_RBOX,
-        DIRECTION_RBOX,
-        INTEGRATION_DIR_RBOX,
-        PLANE_SIZE_SLIDER,
-        NUMBER_PTS_SLIDER,
-        ADVANCED_STREAMLINE_BUTTON,
-        COMPUTE_STREAMLINE_BUTTON,
-        SET_SEED_POINTS_BUTTON
-    };
-
     void SendCommandsToXplorer();
 
     ///Creation

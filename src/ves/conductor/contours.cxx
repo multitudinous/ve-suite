@@ -32,6 +32,7 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/conductor/vistab.h>
 #include <ves/conductor/contours.h>
+#include <ves/conductor/ConductorLibEnums.h>
 #include <ves/conductor/advancedcontours.h>
 #include <ves/conductor/advancedvectors.h>
 
@@ -58,15 +59,15 @@ using namespace ves::conductor;
 
 BEGIN_EVENT_TABLE( Contours, wxDialog )
     ////@begin Contours event table entries
-    EVT_RADIOBOX( CONTOUR_DIR_RBOX,            Contours::_onDirection )
+    EVT_RADIOBOX( CONTOURS_DIR_RBOX,            Contours::_onDirection )
     //EVT_RADIOBOX      (CONTOUR_TYPE_RBOX,           Contours::_onContourType)
-    EVT_RADIOBUTTON( MULTIPLE_PRECONTOUR_RBUTTON, Contours::_onMultiplePlanes )
-    EVT_CHECKBOX( MULTIPLE_PRECONTOUR_CHK,     Contours::_onCyclePlanes )
-    EVT_RADIOBUTTON( SINGLE_PRECONTOUR_RBUTTON,   Contours::_onSinglePlane )
-    EVT_CHECKBOX( SINGLE_PRECONTOUR_CHK,       Contours::_onPrecomputedPlane )
-    EVT_SLIDER( CONTOUR_PLANE_SLIDER,        Contours::_onPlane )
-    EVT_BUTTON( ADD_CONTOUR_PLANE_BUTTON,    Contours::_onAddPlane )
-    EVT_BUTTON( ADVANCED_CONTOUR_BUTTON,     Contours::_onAdvanced )
+    EVT_RADIOBUTTON( CONTOURS_MULTIPLE_PRECONTOUR_RBUTTON, Contours::_onMultiplePlanes )
+    EVT_CHECKBOX( CONTOURS_MULTIPLE_PRECONTOUR_CHK,     Contours::_onCyclePlanes )
+    EVT_RADIOBUTTON( CONTOURS_SINGLE_PRECONTOUR_RBUTTON,   Contours::_onSinglePlane )
+    EVT_CHECKBOX( CONTOURS_SINGLE_PRECONTOUR_CHK,       Contours::_onPrecomputedPlane )
+    EVT_SLIDER( CONTOURS_PLANE_SLIDER,        Contours::_onPlane )
+    EVT_BUTTON( CONTOURS_ADD_CONTOUR_PLANE_BUTTON,    Contours::_onAddPlane )
+    EVT_BUTTON( CONTOURS_ADVANCED_CONTOUR_BUTTON,     Contours::_onAdvanced )
     ////@end Contours event table entries
 END_EVENT_TABLE()
 //////////////////////////////////////////////////////////////////////
@@ -152,7 +153,7 @@ void Contours::CreateControls()
             _T( "z" ),
             _T( "By Wand" )
         };
-        _directionRBox = new wxRadioBox( itemDialog1, CONTOUR_DIR_RBOX, 
+        _directionRBox = new wxRadioBox( itemDialog1, CONTOURS_DIR_RBOX, 
             _T( "Direction" ), wxDefaultPosition, wxDefaultSize, 4, 
             itemRadioBox5Strings, 1, wxRA_SPECIFY_COLS );
     }
@@ -165,7 +166,7 @@ void Contours::CreateControls()
             _T( "By Wand" ),
             _T( "All" )
         };
-        _directionRBox = new wxRadioBox( itemDialog1, CONTOUR_DIR_RBOX, 
+        _directionRBox = new wxRadioBox( itemDialog1, CONTOURS_DIR_RBOX, 
             _T( "Direction" ), wxDefaultPosition, wxDefaultSize, 5, 
             itemRadioBox5Strings, 1, wxRA_SPECIFY_COLS );
     }
@@ -175,11 +176,11 @@ void Contours::CreateControls()
     wxStaticBoxSizer* itemStaticBoxSizer7 = new wxStaticBoxSizer( itemStaticBoxSizer7Static, wxVERTICAL );
     itemStaticBoxSizer3->Add( itemStaticBoxSizer7, 0, wxGROW | wxALL, 5 );
 
-    _allPrecomputedRButton = new wxRadioButton( itemDialog1, MULTIPLE_PRECONTOUR_RBUTTON, _T( "All Precomputed Surfaces" ), wxDefaultPosition, wxDefaultSize, 0 );
+    _allPrecomputedRButton = new wxRadioButton( itemDialog1, CONTOURS_MULTIPLE_PRECONTOUR_RBUTTON, _T( "All Precomputed Surfaces" ), wxDefaultPosition, wxDefaultSize, 0 );
     _allPrecomputedRButton->SetValue( false );
     itemStaticBoxSizer7->Add( _allPrecomputedRButton, 0, wxALIGN_LEFT | wxALL, 5 );
 
-    _cyclePrecomputedCBox = new wxCheckBox( itemDialog1, MULTIPLE_PRECONTOUR_CHK, _T( "Cycle Precomputed Surfaces" ), wxDefaultPosition, wxDefaultSize, 0 );
+    _cyclePrecomputedCBox = new wxCheckBox( itemDialog1, CONTOURS_MULTIPLE_PRECONTOUR_CHK, _T( "Cycle Precomputed Surfaces" ), wxDefaultPosition, wxDefaultSize, 0 );
     _cyclePrecomputedCBox->SetValue( false );
     _cyclePrecomputedCBox->Enable( false );
     itemStaticBoxSizer7->Add( _cyclePrecomputedCBox, 0, wxALIGN_LEFT | wxALL, 5 );
@@ -188,27 +189,27 @@ void Contours::CreateControls()
     wxStaticBoxSizer* itemStaticBoxSizer10 = new wxStaticBoxSizer( itemStaticBoxSizer10Static, wxVERTICAL );
     itemStaticBoxSizer3->Add( itemStaticBoxSizer10, 0, wxGROW | wxALL, 5 );
 
-    _singlePlaneRButton = new wxRadioButton( itemDialog1, SINGLE_PRECONTOUR_RBUTTON, _T( "Specify a Single Plane" ), wxDefaultPosition, wxDefaultSize, 0 );
+    _singlePlaneRButton = new wxRadioButton( itemDialog1, CONTOURS_SINGLE_PRECONTOUR_RBUTTON, _T( "Specify a Single Plane" ), wxDefaultPosition, wxDefaultSize, 0 );
     _singlePlaneRButton->SetValue( true );
     itemStaticBoxSizer10->Add( _singlePlaneRButton, 0, wxALIGN_LEFT | wxALL, 5 );
 
-    _nearestPrecomputedCBox = new wxCheckBox( itemDialog1, SINGLE_PRECONTOUR_CHK, _T( "Use Nearest Precomputed Plane" ), wxDefaultPosition, wxDefaultSize, 0 );
+    _nearestPrecomputedCBox = new wxCheckBox( itemDialog1, CONTOURS_SINGLE_PRECONTOUR_CHK, _T( "Use Nearest Precomputed Plane" ), wxDefaultPosition, wxDefaultSize, 0 );
     _nearestPrecomputedCBox->SetValue( false );
     itemStaticBoxSizer10->Add( _nearestPrecomputedCBox, 0, wxALIGN_LEFT | wxALL, 5 );
 
     wxStaticText* itemStaticText13 = new wxStaticText( itemDialog1, wxID_STATIC, _T( "Plane" ), wxDefaultPosition, wxDefaultSize, 0 );
     itemStaticBoxSizer3->Add( itemStaticText13, 0, wxALIGN_LEFT | wxLEFT | wxRIGHT | wxTOP | wxADJUST_MINSIZE, 5 );
 
-    _planePositonSlider = new wxSlider( itemDialog1, CONTOUR_PLANE_SLIDER, 0, 0, 100, wxDefaultPosition, wxSize( 300, -1 ), wxSL_HORIZONTAL | wxSL_LABELS );
+    _planePositonSlider = new wxSlider( itemDialog1, CONTOURS_PLANE_SLIDER, 0, 0, 100, wxDefaultPosition, wxSize( 300, -1 ), wxSL_HORIZONTAL | wxSL_LABELS );
     itemStaticBoxSizer3->Add( _planePositonSlider, 0, wxGROW | wxLEFT | wxRIGHT | wxBOTTOM, 5 );
 
     wxBoxSizer* itemBoxSizer15 = new wxBoxSizer( wxHORIZONTAL );
     itemStaticBoxSizer3->Add( itemBoxSizer15, 0, wxALIGN_CENTER_HORIZONTAL | wxALL, 5 );
 
-    wxButton* itemButton16 = new wxButton( itemDialog1, ADD_CONTOUR_PLANE_BUTTON, _T( "Add Plane" ), wxDefaultPosition, wxDefaultSize, 0 );
+    wxButton* itemButton16 = new wxButton( itemDialog1, CONTOURS_ADD_CONTOUR_PLANE_BUTTON, _T( "Add Plane" ), wxDefaultPosition, wxDefaultSize, 0 );
     itemBoxSizer15->Add( itemButton16, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
-    wxButton* itemButton17 = new wxButton( itemDialog1, ADVANCED_CONTOUR_BUTTON, _T( "Advanced..." ), wxDefaultPosition, wxDefaultSize, 0 );
+    wxButton* itemButton17 = new wxButton( itemDialog1, CONTOURS_ADVANCED_CONTOUR_BUTTON, _T( "Advanced..." ), wxDefaultPosition, wxDefaultSize, 0 );
     itemBoxSizer15->Add( itemButton17, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
     wxButton* _closeButton = new wxButton( itemDialog1, wxID_OK, _T( "Close" ), wxDefaultPosition, wxDefaultSize, 0 );

@@ -32,6 +32,7 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/conductor/vistab.h>
 #include <ves/conductor/isosurfaces.h>
+#include <ves/conductor/ConductorLibEnums.h>
 #include <ves/conductor/advancedisosurface.h>
 
 #include <ves/open/xml/Command.h>
@@ -60,13 +61,13 @@ using namespace ves::conductor::util;
 ///////////////////////////
 BEGIN_EVENT_TABLE( Isosurfaces, wxDialog )
     ////@begin Isosurfaces event table entries
-    EVT_RADIOBUTTON( ISOSURFACE_RBUTTON,          Isosurfaces::_onIsosurface )
-    EVT_CHECKBOX( PRECOMPUTED_ISO_CHK,         Isosurfaces::_onPrecomputedIsosurface )
-    EVT_SLIDER( ISOSURFACE_PLANE_SLIDER,     Isosurfaces::_onIsosurfacePlane )
-    EVT_BUTTON( ADD_ISOSURFACE_BUTTON,       Isosurfaces::_onAddIsosurface )
-    EVT_BUTTON( ADVANCED_ISOSURFACE_BUTTON,  Isosurfaces::_onAdvanced )
-    EVT_COMMAND_SCROLL( ISOSURFACE_SPINCTRL,         Isosurfaces::_onSpinner )
-    EVT_TEXT_ENTER( ISOSURFACE_SPINCTRL,        Isosurfaces::UpdateSlider )
+    EVT_RADIOBUTTON( ISOSURFACES_RBUTTON,          Isosurfaces::_onIsosurface )
+    EVT_CHECKBOX( ISOSURFACES_PRECOMPUTED_ISO_CHK,         Isosurfaces::_onPrecomputedIsosurface )
+    EVT_SLIDER( ISOSURFACES_PLANE_SLIDER,     Isosurfaces::_onIsosurfacePlane )
+    EVT_BUTTON( ISOSURFACES_ADD_ISOSURFACE_BUTTON,       Isosurfaces::_onAddIsosurface )
+    EVT_BUTTON( ISOSURFACES_ADVANCED_ISOSURFACE_BUTTON,  Isosurfaces::_onAdvanced )
+    EVT_COMMAND_SCROLL( ISOSURFACES_SPINCTRL,         Isosurfaces::_onSpinner )
+    EVT_TEXT_ENTER( ISOSURFACES_SPINCTRL,        Isosurfaces::UpdateSlider )
     ////@end Isosurfaces event table entries
 END_EVENT_TABLE()
 Isosurfaces::Isosurfaces( )
@@ -134,9 +135,9 @@ void Isosurfaces::CreateControls()
 
     wxBoxSizer* isoSizer = new wxBoxSizer( wxHORIZONTAL );
 
-    _isoSpinner = new wxSpinCtrlDbl( *itemDialog1, ISOSURFACE_SPINCTRL, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 100, 0, 0.1, -1, wxEmptyString );
+    _isoSpinner = new wxSpinCtrlDbl( *itemDialog1, ISOSURFACES_SPINCTRL, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 100, 0, 0.1, -1, wxEmptyString );
 
-    _isoSurfaceSlider = new wxSlider( itemDialog1, ISOSURFACE_PLANE_SLIDER, 0, 0, 100, wxDefaultPosition, wxSize( 300, -1 ), wxSL_HORIZONTAL | wxSL_LABELS );
+    _isoSurfaceSlider = new wxSlider( itemDialog1, ISOSURFACES_PLANE_SLIDER, 0, 0, 100, wxDefaultPosition, wxSize( 300, -1 ), wxSL_HORIZONTAL | wxSL_LABELS );
 //    itemStaticBoxSizer3->Add(_isoSurfaceSlider, 0, wxGROW|wxALL, 5);
 
     isoSizer->Add( _isoSpinner, 0, wxALIGN_LEFT | wxTOP | wxLEFT | wxRIGHT, 5 );
@@ -146,10 +147,10 @@ void Isosurfaces::CreateControls()
     wxBoxSizer* itemBoxSizer8 = new wxBoxSizer( wxHORIZONTAL );
     itemStaticBoxSizer3->Add( itemBoxSizer8, 0, wxALIGN_CENTER_HORIZONTAL | wxALL, 5 );
 
-    _computeButton = new wxButton( itemDialog1, ADD_ISOSURFACE_BUTTON, _T( "Compute Isosurface" ), wxDefaultPosition, wxDefaultSize, 0 );
+    _computeButton = new wxButton( itemDialog1, ISOSURFACES_ADD_ISOSURFACE_BUTTON, _T( "Compute Isosurface" ), wxDefaultPosition, wxDefaultSize, 0 );
     itemBoxSizer8->Add( _computeButton, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
-    _advancedButton = new wxButton( itemDialog1, ADVANCED_ISOSURFACE_BUTTON, _T( "Advanced..." ), wxDefaultPosition, wxDefaultSize, 0 );
+    _advancedButton = new wxButton( itemDialog1, ISOSURFACES_ADVANCED_ISOSURFACE_BUTTON, _T( "Advanced..." ), wxDefaultPosition, wxDefaultSize, 0 );
     itemBoxSizer8->Add( _advancedButton, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
     wxButton* _closeButton = new wxButton( itemDialog1, wxID_OK, _T( "Close" ), wxDefaultPosition, wxDefaultSize, 0 );

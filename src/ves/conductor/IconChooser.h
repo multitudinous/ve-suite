@@ -63,12 +63,6 @@ private:
     DECLARE_EVENT_TABLE();
 
 public:
-    enum
-	{
-       OK = 8888,
-       CANCEL,
-       CLICK
-	};
     IconChooser( wxScrolledWindow *parent, /*std::string path,*/ wxWindowID id = 1,
                  const wxString &title = wxT( "IconChooser" ),
                  const wxPoint& pos = wxDefaultPosition,

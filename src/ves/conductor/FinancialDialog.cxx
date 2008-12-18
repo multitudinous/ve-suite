@@ -31,6 +31,7 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/conductor/FinancialDialog.h>
+#include <ves/conductor/ConductorLibEnums.h>
 
 #include <wx/button.h>
 #include <wx/radiobut.h>
@@ -43,8 +44,8 @@
 using namespace ves::conductor;
 
 BEGIN_EVENT_TABLE( FinancialDialog, wxDialog )
-    EVT_RADIOBUTTON( RADIO_FDA, FinancialDialog::OnChange )
-    EVT_RADIOBUTTON( RADIO_FDB, FinancialDialog::OnChange )
+    EVT_RADIOBUTTON( FINANCIALDIALOG_RADIO_FDA, FinancialDialog::OnChange )
+    EVT_RADIOBUTTON( FINANCIALDIALOG_RADIO_FDB, FinancialDialog::OnChange )
 END_EVENT_TABLE()
 
 FinancialDialog::FinancialDialog( wxWindow *parent, wxWindowID id )
@@ -133,11 +134,11 @@ FinancialDialog::FinancialDialog( wxWindow *parent, wxWindowID id )
 
     // Use Data
 
-    specify_a = new wxRadioButton( this, RADIO_FDA, _T( "Apply Data " ), wxDefaultPosition, wxDefaultSize, wxRB_GROUP );
+    specify_a = new wxRadioButton( this, FINANCIALDIALOG_RADIO_FDA, _T( "Apply Data " ), wxDefaultPosition, wxDefaultSize, wxRB_GROUP );
 
     specify_a->SetValue( false );
 
-    specify_b = new wxRadioButton( this, RADIO_FDB, _T( "Ignore Data " ) );
+    specify_b = new wxRadioButton( this, FINANCIALDIALOG_RADIO_FDB, _T( "Ignore Data " ) );
 
     specify_b->SetValue( true );
 
@@ -147,63 +148,63 @@ FinancialDialog::FinancialDialog( wxWindow *parent, wxWindowID id )
     // Capital Costs
 
     cc_var_lbl[0] = new wxStaticText( this, -1, _T( "Plant Facility Cost" ), wxDefaultPosition, tag_size );
-    _cc00 = new wxTextCtrl( this, CC00, _T( "0.01" ), wxDefaultPosition, entry_size );
+    _cc00 = new wxTextCtrl( this, FINANCIALDIALOG_CC00, _T( "0.01" ), wxDefaultPosition, entry_size );
     cc_var_unt[0] = new wxStaticText( this, -1, _T( "(M$)" ), wxDefaultPosition, wxSize( 50, 17 ) );
     cc_var_sizer[0]->Add( cc_var_lbl[0], 0, wxALIGN_CENTER_HORIZONTAL );
     cc_var_sizer[0]->Add( _cc00, 0, wxALIGN_CENTER_HORIZONTAL );
     cc_var_sizer[0]->Add( cc_var_unt[0], 0, wxALIGN_CENTER_HORIZONTAL );
 
     cc_var_lbl[1] = new wxStaticText( this, -1, _T( "General Facility Cost" ), wxDefaultPosition, tag_size );
-    _cc01 = new wxTextCtrl( this, CC01, _T( "0.01" ), wxDefaultPosition, entry_size );
+    _cc01 = new wxTextCtrl( this, FINANCIALDIALOG_CC01, _T( "0.01" ), wxDefaultPosition, entry_size );
     cc_var_unt[1] = new wxStaticText( this, -1, _T( "(%PFC)" ), wxDefaultPosition,  wxSize( 50, 17 ) );
     cc_var_sizer[1]->Add( cc_var_lbl[1], 0, wxALIGN_CENTER_HORIZONTAL );
     cc_var_sizer[1]->Add( _cc01, 0, wxALIGN_CENTER_HORIZONTAL );
     cc_var_sizer[1]->Add( cc_var_unt[1], 0, wxALIGN_CENTER_HORIZONTAL );
 
     cc_var_lbl[2] = new wxStaticText( this, -1, _T( "Eng. & Home Office Fees" ), wxDefaultPosition, tag_size );
-    _cc02 = new wxTextCtrl( this, CC02, _T( "0.01" ), wxDefaultPosition, entry_size );
+    _cc02 = new wxTextCtrl( this, FINANCIALDIALOG_CC02, _T( "0.01" ), wxDefaultPosition, entry_size );
     cc_var_unt[2] = new wxStaticText( this, -1, _T( "(%PFC)" ), wxDefaultPosition,  wxSize( 50, 17 ) );
     cc_var_sizer[2]->Add( cc_var_lbl[2], 0, wxALIGN_CENTER_HORIZONTAL );
     cc_var_sizer[2]->Add( _cc02, 0, wxALIGN_CENTER_HORIZONTAL );
     cc_var_sizer[2]->Add( cc_var_unt[2], 0, wxALIGN_CENTER_HORIZONTAL );
 
     cc_var_lbl[3] = new wxStaticText( this, -1, _T( "Project Contingency Cost" ), wxDefaultPosition, tag_size );
-    _cc03 = new wxTextCtrl( this, CC03, _T( "0.01" ), wxDefaultPosition, entry_size );
+    _cc03 = new wxTextCtrl( this, FINANCIALDIALOG_CC03, _T( "0.01" ), wxDefaultPosition, entry_size );
     cc_var_unt[3] = new wxStaticText( this, -1, _T( "(%PFC)" ), wxDefaultPosition, wxSize( 50, 17 ) );
     cc_var_sizer[3]->Add( cc_var_lbl[3], 0, wxALIGN_CENTER_HORIZONTAL );
     cc_var_sizer[3]->Add( _cc03, 0, wxALIGN_CENTER_HORIZONTAL );
     cc_var_sizer[3]->Add( cc_var_unt[3], 0, wxALIGN_CENTER_HORIZONTAL );
 
     cc_var_lbl[4] = new wxStaticText( this, -1, _T( "Process Contingency Cost" ), wxDefaultPosition, tag_size );
-    _cc04 = new wxTextCtrl( this, CC04, _T( "0.01" ), wxDefaultPosition, entry_size );
+    _cc04 = new wxTextCtrl( this, FINANCIALDIALOG_CC04, _T( "0.01" ), wxDefaultPosition, entry_size );
     cc_var_unt[4] = new wxStaticText( this, -1, _T( "(%PFC)" ), wxDefaultPosition, wxSize( 50, 17 ) );
     cc_var_sizer[4]->Add( cc_var_lbl[4], 0, wxALIGN_CENTER_HORIZONTAL );
     cc_var_sizer[4]->Add( _cc04, 0, wxALIGN_CENTER_HORIZONTAL );
     cc_var_sizer[4]->Add( cc_var_unt[4], 0, wxALIGN_CENTER_HORIZONTAL );
 
     cc_var_lbl[5] = new wxStaticText( this, -1, _T( "PrePaid Royalties" ), wxDefaultPosition, tag_size );
-    _cc05 = new wxTextCtrl( this, CC05, _T( "0.01" ), wxDefaultPosition, entry_size );
+    _cc05 = new wxTextCtrl( this, FINANCIALDIALOG_CC05, _T( "0.01" ), wxDefaultPosition, entry_size );
     cc_var_unt[5] = new wxStaticText( this, -1, _T( "(%PFC)" ), wxDefaultPosition, wxSize( 50, 17 ) );
     cc_var_sizer[5]->Add( cc_var_lbl[5], 0, wxALIGN_CENTER_HORIZONTAL );
     cc_var_sizer[5]->Add( _cc05, 0, wxALIGN_CENTER_HORIZONTAL );
     cc_var_sizer[5]->Add( cc_var_unt[5], 0, wxALIGN_CENTER_HORIZONTAL );
 
     cc_var_lbl[6] = new wxStaticText( this, -1, _T( "Interest Charges (AFUDC)" ), wxDefaultPosition, tag_size );
-    _cc06 = new wxTextCtrl( this, CC06, _T( "0.01" ), wxDefaultPosition, entry_size );
+    _cc06 = new wxTextCtrl( this, FINANCIALDIALOG_CC06, _T( "0.01" ), wxDefaultPosition, entry_size );
     cc_var_unt[6] = new wxStaticText( this, -1, _T( "(M$)" ), wxDefaultPosition, wxSize( 50, 17 ) );
     cc_var_sizer[6]->Add( cc_var_lbl[6], 0, wxALIGN_CENTER_HORIZONTAL );
     cc_var_sizer[6]->Add( _cc06, 0, wxALIGN_CENTER_HORIZONTAL );
     cc_var_sizer[6]->Add( cc_var_unt[6], 0, wxALIGN_CENTER_HORIZONTAL );
 
     cc_var_lbl[7] = new wxStaticText( this, -1, _T( "PreProduction (Start) Cost" ), wxDefaultPosition, tag_size );
-    _cc07 = new wxTextCtrl( this, CC07, _T( "0.01" ), wxDefaultPosition, entry_size );
+    _cc07 = new wxTextCtrl( this, FINANCIALDIALOG_CC07, _T( "0.01" ), wxDefaultPosition, entry_size );
     cc_var_unt[7] = new wxStaticText( this, -1, _T( "(M$)" ), wxDefaultPosition, wxSize( 50, 17 ) );
     cc_var_sizer[7]->Add( cc_var_lbl[7], 0, wxALIGN_CENTER_HORIZONTAL );
     cc_var_sizer[7]->Add( _cc07, 0, wxALIGN_CENTER_HORIZONTAL );
     cc_var_sizer[7]->Add( cc_var_unt[7], 0, wxALIGN_CENTER_HORIZONTAL );
 
     cc_var_lbl[8] = new wxStaticText( this, -1, _T( "Inventory (Working) Capital" ), wxDefaultPosition, tag_size );
-    _cc08 = new wxTextCtrl( this, CC08, _T( "0.01" ), wxDefaultPosition, entry_size );
+    _cc08 = new wxTextCtrl( this, FINANCIALDIALOG_CC08, _T( "0.01" ), wxDefaultPosition, entry_size );
     cc_var_unt[8] = new wxStaticText( this, -1, _T( "(M$)" ), wxDefaultPosition, wxSize( 50, 17 ) );
     cc_var_sizer[8]->Add( cc_var_lbl[8], 0, wxALIGN_CENTER_HORIZONTAL );
     cc_var_sizer[8]->Add( _cc08, 0, wxALIGN_CENTER_HORIZONTAL );
@@ -212,28 +213,28 @@ FinancialDialog::FinancialDialog( wxWindow *parent, wxWindowID id )
     // O & M Costs
 
     om_var_lbl[0] = new wxStaticText( this, -1, _T( "O and M Variable Costs" ), wxDefaultPosition, tag_size );
-    _om00 = new wxTextCtrl( this, OM00, _T( "0.01" ), wxDefaultPosition, entry_size );
+    _om00 = new wxTextCtrl( this, FINANCIALDIALOG_OM00, _T( "0.01" ), wxDefaultPosition, entry_size );
     om_var_unt[0] = new wxStaticText( this, -1, _T( "(M$)" ), wxDefaultPosition, wxSize( 50, 17 ) );
     om_var_sizer[0]->Add( om_var_lbl[0], 0, wxALIGN_CENTER_HORIZONTAL );
     om_var_sizer[0]->Add( _om00, 0, wxALIGN_CENTER_HORIZONTAL );
     om_var_sizer[0]->Add( om_var_unt[0], 0, wxALIGN_CENTER_HORIZONTAL );
 
     om_var_lbl[1] = new wxStaticText( this, -1, _T( "Total Maintenance Cost" ), wxDefaultPosition, tag_size );
-    _om01 = new wxTextCtrl( this, OM01, _T( "0.01" ), wxDefaultPosition, entry_size );
+    _om01 = new wxTextCtrl( this, FINANCIALDIALOG_OM01, _T( "0.01" ), wxDefaultPosition, entry_size );
     om_var_unt[1] = new wxStaticText( this, -1, _T( "(%TPC)" ), wxDefaultPosition, wxSize( 50, 17 ) );
     om_var_sizer[1]->Add( om_var_lbl[1], 0, wxALIGN_CENTER_HORIZONTAL );
     om_var_sizer[1]->Add( _om01, 0, wxALIGN_CENTER_HORIZONTAL );
     om_var_sizer[1]->Add( om_var_unt[1], 0, wxALIGN_CENTER_HORIZONTAL );
 
     om_var_lbl[2] = new wxStaticText( this, -1, _T( "Operating Labor" ), wxDefaultPosition, tag_size );
-    _om02 = new wxTextCtrl( this, OM02, _T( "0.01" ), wxDefaultPosition, entry_size );
+    _om02 = new wxTextCtrl( this, FINANCIALDIALOG_OM02, _T( "0.01" ), wxDefaultPosition, entry_size );
     om_var_unt[2] = new wxStaticText( this, -1, _T( "(M$)" ), wxDefaultPosition, wxSize( 50, 17 ) );
     om_var_sizer[2]->Add( om_var_lbl[2], 0, wxALIGN_CENTER_HORIZONTAL );
     om_var_sizer[2]->Add( _om02, 0, wxALIGN_CENTER_HORIZONTAL );
     om_var_sizer[2]->Add( om_var_unt[2], 0, wxALIGN_CENTER_HORIZONTAL );
 
     om_var_lbl[3] = new wxStaticText( this, -1, _T( "Adminstrative" ), wxDefaultPosition, tag_size );
-    _om03 = new wxTextCtrl( this, OM03, _T( "0.01" ), wxDefaultPosition, entry_size );
+    _om03 = new wxTextCtrl( this, FINANCIALDIALOG_OM03, _T( "0.01" ), wxDefaultPosition, entry_size );
     om_var_unt[3] = new wxStaticText( this, -1, _T( "(%Total Labor)" ), wxDefaultPosition, wxSize( 50, 17 ) );
     om_var_sizer[3]->Add( om_var_lbl[3], 0, wxALIGN_CENTER_HORIZONTAL );
     om_var_sizer[3]->Add( _om03, 0, wxALIGN_CENTER_HORIZONTAL );

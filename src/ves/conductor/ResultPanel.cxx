@@ -31,6 +31,7 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/conductor/ResultPanel.h>
+#include <ves/conductor/ConductorLibEnums.h>
 #include <wx/combobox.h>
 #include <wx/stattext.h>
 #include <wx/statbox.h>
@@ -129,7 +130,7 @@ ResultPanel_Dialog::ResultPanel_Dialog( wxWindow* parent, int id )
     finance_row->Add( 10, 3, 0 );
 
     wxStaticText * label0 = new wxStaticText( this, -1, _( "    Nominal Plant Output" ), wxDefaultPosition, sz );
-    mw_gross = new wxTextCtrl( this, MW_GROSS, wxT( "9000" ), wxDefaultPosition, wxSize( 80, 20 ) );
+    mw_gross = new wxTextCtrl( this, RESULTPANEL_MW_GROSS, wxT( "9000" ), wxDefaultPosition, wxSize( 80, 20 ) );
     wxStaticText * label1 = new wxStaticText( this, -1, _( " (MW)" ), wxDefaultPosition, wxSize( 80, 20 ), wxTE_READONLY );
 
     cmn_first_row->Add( label0 );
@@ -137,7 +138,7 @@ ResultPanel_Dialog::ResultPanel_Dialog( wxWindow* parent, int id )
     cmn_first_row->Add( label1 );
 
     wxStaticText * label2 = new wxStaticText( this, -1, _( "    Net Electrical Output" ), wxDefaultPosition, sz );
-    mw_net = new wxTextCtrl( this, MW_NET, wxT( "7000" ), wxDefaultPosition, wxSize( 80, 20 ) );
+    mw_net = new wxTextCtrl( this, RESULTPANEL_MW_NET, wxT( "7000" ), wxDefaultPosition, wxSize( 80, 20 ) );
     wxStaticText * label3 = new wxStaticText( this, -1, _( " (MW)" ), wxDefaultPosition, wxSize( 80, 20 ), wxTE_READONLY );
 
     cmn_second_row->Add( label2 );
@@ -145,7 +146,7 @@ ResultPanel_Dialog::ResultPanel_Dialog( wxWindow* parent, int id )
     cmn_second_row->Add( label3 );
 
     wxStaticText * label4 = new wxStaticText( this, -1, _( "    Net Plant Efficiency" ), wxDefaultPosition, sz );
-    net_eff = new wxTextCtrl( this, NET_EFF, wxT( "67" ), wxDefaultPosition, wxSize( 80, 20 ) );
+    net_eff = new wxTextCtrl( this, RESULTPANEL_NET_EFF, wxT( "67" ), wxDefaultPosition, wxSize( 80, 20 ) );
     wxStaticText * label5 = new wxStaticText( this, -1, _( " (%)" ), wxDefaultPosition, wxSize( 80, 20 ), wxTE_READONLY );
 
     cmn_third_row->Add( label4 );
@@ -153,7 +154,7 @@ ResultPanel_Dialog::ResultPanel_Dialog( wxWindow* parent, int id )
     cmn_third_row->Add( label5 );
 
     wxStaticText * label6 = new wxStaticText( this, -1, _( "    Coal In" ), wxDefaultPosition, sz );
-    coal_in = new wxTextCtrl( this, COAL_IN, wxT( "9000" ), wxDefaultPosition, wxSize( 80, 20 ) );
+    coal_in = new wxTextCtrl( this, RESULTPANEL_COAL_IN, wxT( "9000" ), wxDefaultPosition, wxSize( 80, 20 ) );
     wxStaticText * label7 = new wxStaticText( this, -1, _( " (tons/hr)" ), wxDefaultPosition, wxSize( 80, 20 ), wxTE_READONLY );
 
     tex_first_row->Add( label6 );
@@ -161,7 +162,7 @@ ResultPanel_Dialog::ResultPanel_Dialog( wxWindow* parent, int id )
     tex_first_row->Add( label7 );
 
     wxStaticText * label8 = new wxStaticText( this, -1, _( "    Water In" ), wxDefaultPosition, sz );
-    water_in = new wxTextCtrl( this, WATER_IN, wxT( "9000" ), wxDefaultPosition, wxSize( 80, 20 ) );
+    water_in = new wxTextCtrl( this, RESULTPANEL_WATER_IN, wxT( "9000" ), wxDefaultPosition, wxSize( 80, 20 ) );
     wxStaticText * label9 = new wxStaticText( this, -1, _( " (tons/hr)" ), wxDefaultPosition, wxSize( 80, 20 ), wxTE_READONLY );
 
     tex_second_row->Add( label8 );
@@ -169,7 +170,7 @@ ResultPanel_Dialog::ResultPanel_Dialog( wxWindow* parent, int id )
     tex_second_row->Add( label9 );
 
     wxStaticText * label10 = new wxStaticText( this, -1, _( "    Oxidant In" ), wxDefaultPosition, sz );
-    oxid_in = new wxTextCtrl( this, OXID_IN, wxT( "9000" ), wxDefaultPosition, wxSize( 80, 20 ) );
+    oxid_in = new wxTextCtrl( this, RESULTPANEL_OXID_IN, wxT( "9000" ), wxDefaultPosition, wxSize( 80, 20 ) );
     wxStaticText * label11 = new wxStaticText( this, -1, _( " (tons/hr)" ), wxDefaultPosition, wxSize( 80, 20 ), wxTE_READONLY );
 
     tex_third_row->Add( label10 );
@@ -177,7 +178,7 @@ ResultPanel_Dialog::ResultPanel_Dialog( wxWindow* parent, int id )
     tex_third_row->Add( label11 );
 
     wxStaticText * label12 = new wxStaticText( this, -1, _( "    CO2 In" ), wxDefaultPosition, sz );
-    co2_in = new wxTextCtrl( this, CO2_IN, wxT( "9000" ), wxDefaultPosition, wxSize( 80, 20 ) );
+    co2_in = new wxTextCtrl( this, RESULTPANEL_CO2_IN, wxT( "9000" ), wxDefaultPosition, wxSize( 80, 20 ) );
     wxStaticText * label13 = new wxStaticText( this, -1, _( " (tons/hr)" ), wxDefaultPosition, wxSize( 80, 20 ), wxTE_READONLY );
 
     selx_first_row->Add( label12 );
@@ -185,7 +186,7 @@ ResultPanel_Dialog::ResultPanel_Dialog( wxWindow* parent, int id )
     selx_first_row->Add( label13 );
 
     wxStaticText * label14 = new wxStaticText( this, -1, _( "    CO2 Out" ), wxDefaultPosition, sz );
-    co2_out = new wxTextCtrl( this, CO2_OUT, wxT( "9000" ), wxDefaultPosition, wxSize( 80, 20 ) );
+    co2_out = new wxTextCtrl( this, RESULTPANEL_CO2_OUT, wxT( "9000" ), wxDefaultPosition, wxSize( 80, 20 ) );
     wxStaticText * label15 = new wxStaticText( this, -1, _( " (tons/hr)" ), wxDefaultPosition, wxSize( 80, 20 ), wxTE_READONLY );
 
     selx_second_row->Add( label14 );
@@ -193,7 +194,7 @@ ResultPanel_Dialog::ResultPanel_Dialog( wxWindow* parent, int id )
     selx_second_row->Add( label15 );
 
     wxStaticText * label16 = new wxStaticText( this, -1, _( "    CO2 Captured" ), wxDefaultPosition, sz );
-    co2_cap = new wxTextCtrl( this, CO2_CAP, wxT( "9000" ), wxDefaultPosition, wxSize( 80, 20 ) );
+    co2_cap = new wxTextCtrl( this, RESULTPANEL_CO2_CAP, wxT( "9000" ), wxDefaultPosition, wxSize( 80, 20 ) );
     wxStaticText * label17 = new wxStaticText( this, -1, _( " (tons/hr)" ), wxDefaultPosition, wxSize( 80, 20 ), wxTE_READONLY );
 
     selx_third_row->Add( label16 );
@@ -201,7 +202,7 @@ ResultPanel_Dialog::ResultPanel_Dialog( wxWindow* parent, int id )
     selx_third_row->Add( label17 );
 
     wxStaticText * label18 = new wxStaticText( this, -1, _( "    Capital Cost" ), wxDefaultPosition, sz );
-    capital_cst = new wxTextCtrl( this, CAPITAL_CST, wxT( "9000" ), wxDefaultPosition, wxSize( 80, 20 ) );
+    capital_cst = new wxTextCtrl( this, RESULTPANEL_CAPITAL_CST, wxT( "9000" ), wxDefaultPosition, wxSize( 80, 20 ) );
     wxStaticText * label19 = new wxStaticText( this, -1, _( " ($/kWnet)" ), wxDefaultPosition, wxSize( 80, 20 ), wxTE_READONLY );
 
     finance_first_row->Add( label18 );
@@ -209,7 +210,7 @@ ResultPanel_Dialog::ResultPanel_Dialog( wxWindow* parent, int id )
     finance_first_row->Add( label19 );
 
     wxStaticText * label20 = new wxStaticText( this, -1, _( "    Electricity Cost)" ), wxDefaultPosition, sz );
-    elec_cst = new wxTextCtrl( this, ELEC_CST, wxT( "9000" ), wxDefaultPosition, wxSize( 80, 20 ) );
+    elec_cst = new wxTextCtrl( this, RESULTPANEL_ELEC_CST, wxT( "9000" ), wxDefaultPosition, wxSize( 80, 20 ) );
     wxStaticText * label21 = new wxStaticText( this, -1, _( " ($/MWh)" ), wxDefaultPosition, wxSize( 80, 20 ), wxTE_READONLY );
 
     finance_second_row->Add( label20 );

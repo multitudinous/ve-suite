@@ -72,14 +72,6 @@ public:
     Network( wxWindow* parent );
     virtual ~Network();
 
-    enum NETWORK_ENUMS
-    {
-        ADD_TAG = 3250,
-        EDIT_TAG,
-        DEL_TAG,
-        DELETE_NETWORK
-    };
-
     ///Fucntion called during submit job to send the id of all active
     ///modules to the CE
     void SetIDOnAllActiveModules();

@@ -31,6 +31,7 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/conductor/GlobalParamDialog.h>
+#include <ves/conductor/ConductorLibEnums.h>
 
 #include <wx/textctrl.h>
 #include <wx/combobox.h>
@@ -43,8 +44,8 @@
 using namespace ves::conductor;
 
 BEGIN_EVENT_TABLE( GlobalParamDialog, wxDialog )
-    EVT_RADIOBUTTON( RADIO_A, GlobalParamDialog::OnChange )
-    EVT_RADIOBUTTON( RADIO_B, GlobalParamDialog::OnChange )
+    EVT_RADIOBUTTON( GLOBALPARAMDIALOG_RADIO_A, GlobalParamDialog::OnChange )
+    EVT_RADIOBUTTON( GLOBALPARAMDIALOG_RADIO_B, GlobalParamDialog::OnChange )
 END_EVENT_TABLE()
 
 GlobalParamDialog::GlobalParamDialog( wxWindow *parent, wxWindowID id )
@@ -99,16 +100,16 @@ GlobalParamDialog::GlobalParamDialog( wxWindow *parent, wxWindowID id )
     top_sizer->Add( ok_row, 0, wxALIGN_CENTER_HORIZONTAL );
     top_sizer->Add( 5, 10 );
 
-    specify_a = new wxRadioButton( this, RADIO_A, _T( " Specify : " ), wxDefaultPosition, wxDefaultSize, wxRB_GROUP );
+    specify_a = new wxRadioButton( this, GLOBALPARAMDIALOG_RADIO_A, _T( " Specify : " ), wxDefaultPosition, wxDefaultSize, wxRB_GROUP );
 
     specify_a->SetValue( true );
 
-    specify_b = new wxRadioButton( this, RADIO_B, _T( " Specify : " ) );
+    specify_b = new wxRadioButton( this, GLOBALPARAMDIALOG_RADIO_B, _T( " Specify : " ) );
 
     specify_a->SetValue( false );
 
     wxStaticText* label0 = new wxStaticText( this, -1, _T( "Plant Capacity Factor " ) );
-    plant_capacity = new wxTextCtrl( this, PLANT_CAP, wxT( " " ),
+    plant_capacity = new wxTextCtrl( this, GLOBALPARAMDIALOG_PLANT_CAP, wxT( " " ),
                                      wxDefaultPosition, entry_size );
     glb_sizer->Add( label0 );
     glb_sizer->Add( plant_capacity );
@@ -139,7 +140,7 @@ GlobalParamDialog::GlobalParamDialog( wxWindow *parent, wxWindowID id )
                         _( "1987" ), _( "1988" ), _( "1989" ), _( "1990" ), _( "1991" ), _( "1992" ), _( "1993" ), _( "1994" ), _( "1995" ), _( "1996" ),
                         _( "1997" ), _( "1998" ), _( "1999" ), _( "2000" ), _( "2001" ), _( "2002" ), _( "2003" )};
 
-    year_costs = new wxComboBox( this, YEAR_COSTS, _T( "2002" ), wxDefaultPosition, entry_size, 27, years, wxCB_DROPDOWN | wxCB_READONLY );
+    year_costs = new wxComboBox( this, GLOBALPARAMDIALOG_YEAR_COSTS, _T( "2002" ), wxDefaultPosition, entry_size, 27, years, wxCB_DROPDOWN | wxCB_READONLY );
 
     fin_sizer[0]->Add( fin_lbl[0], 0, wxALIGN_CENTER_HORIZONTAL );
     fin_sizer[0]->Add( year_costs, 0, wxALIGN_CENTER_HORIZONTAL );
@@ -147,78 +148,78 @@ GlobalParamDialog::GlobalParamDialog( wxWindow *parent, wxWindowID id )
     wxString dollars[] = {_( "Constant" ), _( "Current" )};
 
     fin_lbl[1] = new wxStaticText( this, -1, _T( "Constant or Current Dollars?" ), wxDefaultPosition, tag_size );
-    cst_cur_dollar = new wxComboBox( this, CST_CUR_DOLLAR, _T( "Constant" ), wxDefaultPosition, entry_size, 2, dollars, wxCB_DROPDOWN | wxCB_READONLY );
+    cst_cur_dollar = new wxComboBox( this, GLOBALPARAMDIALOG_CST_CUR_DOLLAR, _T( "Constant" ), wxDefaultPosition, entry_size, 2, dollars, wxCB_DROPDOWN | wxCB_READONLY );
 
     fin_sizer[1]->Add( fin_lbl[1], 0, wxALIGN_CENTER_HORIZONTAL );
     fin_sizer[1]->Add( cst_cur_dollar, 0, wxALIGN_CENTER_HORIZONTAL );
 
     fin_lbl[2] = new wxStaticText( this, -1, _T( "Fixed Charge Factor" ), wxDefaultPosition, tag_size );
-    fixed_charge = new wxTextCtrl( this, FIXED_CHARGE, _T( "0.1480" ), wxDefaultPosition, entry_size );
+    fixed_charge = new wxTextCtrl( this, GLOBALPARAMDIALOG_FIXED_CHARGE, _T( "0.1480" ), wxDefaultPosition, entry_size );
     fin_sizer[2]->Add( fin_lbl[2], 0, wxALIGN_CENTER_HORIZONTAL );
     fin_sizer[2]->Add( fixed_charge, 0, wxALIGN_CENTER_HORIZONTAL );
 
     fin_lbl[3] = new wxStaticText( this, -1, _T( "Discount Rate (Before Taxes)" ), wxDefaultPosition, tag_size );
-    discnt_rate = new wxTextCtrl( this, DISCNT_RATE, _T( "0.1030" ), wxDefaultPosition, entry_size );
+    discnt_rate = new wxTextCtrl( this, GLOBALPARAMDIALOG_DISCNT_RATE, _T( "0.1030" ), wxDefaultPosition, entry_size );
     fin_sizer[3]->Add( fin_lbl[3], 0, wxALIGN_CENTER_HORIZONTAL );
     fin_sizer[3]->Add( discnt_rate, 0, wxALIGN_CENTER_HORIZONTAL );
 
     fin_lbl[4] = new wxStaticText( this, -1, _T( "Inflation Rate (%/yr)" ), wxDefaultPosition, tag_size );
-    inflation_rate = new wxTextCtrl( this, INFLATION_RATE, _T( "0.0" ), wxDefaultPosition, entry_size );
+    inflation_rate = new wxTextCtrl( this, GLOBALPARAMDIALOG_INFLATION_RATE, _T( "0.0" ), wxDefaultPosition, entry_size );
     fin_sizer[4]->Add( fin_lbl[4], 0, wxALIGN_CENTER_HORIZONTAL );
     fin_sizer[4]->Add( inflation_rate, 0, wxALIGN_CENTER_HORIZONTAL );
 
     fin_lbl[5] = new wxStaticText( this, -1, _T( "Plant or Project Book Life (years)" ), wxDefaultPosition, tag_size );
-    plant_life = new wxTextCtrl( this, PLANT_LIFE, _T( "30.00" ), wxDefaultPosition, entry_size );
+    plant_life = new wxTextCtrl( this, GLOBALPARAMDIALOG_PLANT_LIFE, _T( "30.00" ), wxDefaultPosition, entry_size );
     fin_sizer[5]->Add( fin_lbl[5], 0, wxALIGN_CENTER_HORIZONTAL );
     fin_sizer[5]->Add( plant_life, 0, wxALIGN_CENTER_HORIZONTAL );
 
     fin_lbl[6] = new wxStaticText( this, -1, _T( "Real Bond Interest Rate (%)" ), wxDefaultPosition, tag_size );
-    bond_interest = new wxTextCtrl( this, BOND_INTEREST, _T( "9.000" ), wxDefaultPosition, entry_size );
+    bond_interest = new wxTextCtrl( this, GLOBALPARAMDIALOG_BOND_INTEREST, _T( "9.000" ), wxDefaultPosition, entry_size );
     fin_sizer[6]->Add( fin_lbl[6], 0, wxALIGN_CENTER_HORIZONTAL );
     fin_sizer[6]->Add( bond_interest, 0, wxALIGN_CENTER_HORIZONTAL );
 
     fin_lbl[7] = new wxStaticText( this, -1, _T( "Real Preferred Stock Return (%)" ), wxDefaultPosition, tag_size );
-    preferred_stock_return = new wxTextCtrl( this, PREFERRED_STOCK_RETURN, _T( "8.5000" ), wxDefaultPosition, entry_size );
+    preferred_stock_return = new wxTextCtrl( this, GLOBALPARAMDIALOG_PREFERRED_STOCK_RETURN, _T( "8.5000" ), wxDefaultPosition, entry_size );
     fin_sizer[7]->Add( fin_lbl[7], 0, wxALIGN_CENTER_HORIZONTAL );
     fin_sizer[7]->Add( preferred_stock_return, 0, wxALIGN_CENTER_HORIZONTAL );
 
     fin_lbl[8] = new wxStaticText( this, -1, _T( "Real Common Stock Return (%)" ), wxDefaultPosition, tag_size );
-    common_stock_return = new wxTextCtrl( this, COMMON_STOCK_RETURN, _T( "12.00" ), wxDefaultPosition, entry_size );
+    common_stock_return = new wxTextCtrl( this, GLOBALPARAMDIALOG_COMMON_STOCK_RETURN, _T( "12.00" ), wxDefaultPosition, entry_size );
     fin_sizer[8]->Add( fin_lbl[8], 0, wxALIGN_CENTER_HORIZONTAL );
     fin_sizer[8]->Add( common_stock_return, 0, wxALIGN_CENTER_HORIZONTAL );
 
     fin_lbl[9] = new wxStaticText( this, -1, _T( "Percent Debt (%)" ), wxDefaultPosition, tag_size );
-    percent_debt = new wxTextCtrl( this, PERCENT_DEBT, _T( "45" ), wxDefaultPosition, entry_size );
+    percent_debt = new wxTextCtrl( this, GLOBALPARAMDIALOG_PERCENT_DEBT, _T( "45" ), wxDefaultPosition, entry_size );
     fin_sizer[9]->Add( fin_lbl[9], 0, wxALIGN_CENTER_HORIZONTAL );
     fin_sizer[9]->Add( percent_debt, 0, wxALIGN_CENTER_HORIZONTAL );
 
     fin_lbl[10] = new wxStaticText( this, -1, _T( "Percent Equity (Preferred Stock) (%)" ), wxDefaultPosition, tag_size );
-    percent_p_equity = new wxTextCtrl( this, PERCENT_P_EQUITY, _T( "10.00" ), wxDefaultPosition, entry_size );
+    percent_p_equity = new wxTextCtrl( this, GLOBALPARAMDIALOG_PERCENT_P_EQUITY, _T( "10.00" ), wxDefaultPosition, entry_size );
     fin_sizer[10]->Add( fin_lbl[10], 0, wxALIGN_CENTER_HORIZONTAL );
     fin_sizer[10]->Add( percent_p_equity, 0, wxALIGN_CENTER_HORIZONTAL );
 
     fin_lbl[11] = new wxStaticText( this, -1, _T( "Percent Equity (Common Stock) (%)" ), wxDefaultPosition, tag_size );
-    percent_c_equity = new wxTextCtrl( this, PERCENT_C_EQUITY, _T( "45.00" ), wxDefaultPosition, entry_size );
+    percent_c_equity = new wxTextCtrl( this, GLOBALPARAMDIALOG_PERCENT_C_EQUITY, _T( "45.00" ), wxDefaultPosition, entry_size );
     fin_sizer[11]->Add( fin_lbl[11], 0, wxALIGN_CENTER_HORIZONTAL );
     fin_sizer[11]->Add( percent_c_equity, 0, wxALIGN_CENTER_HORIZONTAL );
 
     fin_lbl[12] = new wxStaticText( this, -1, _T( "Federal Tax Rate (%)" ), wxDefaultPosition, tag_size );
-    fed_tax = new wxTextCtrl( this, FED_TAX, _T( "35" ), wxDefaultPosition, entry_size );
+    fed_tax = new wxTextCtrl( this, GLOBALPARAMDIALOG_FED_TAX, _T( "35" ), wxDefaultPosition, entry_size );
     fin_sizer[12]->Add( fin_lbl[12], 0, wxALIGN_CENTER_HORIZONTAL );
     fin_sizer[12]->Add( fed_tax, 0, wxALIGN_CENTER_HORIZONTAL );
 
     fin_lbl[13] = new wxStaticText( this, -1, _T( "State Tax Rate (%)" ), wxDefaultPosition, tag_size );
-    state_tax = new wxTextCtrl( this, STATE_TAX, _T( "4" ), wxDefaultPosition, entry_size );
+    state_tax = new wxTextCtrl( this, GLOBALPARAMDIALOG_STATE_TAX, _T( "4" ), wxDefaultPosition, entry_size );
     fin_sizer[13]->Add( fin_lbl[13], 0, wxALIGN_CENTER_HORIZONTAL );
     fin_sizer[13]->Add( state_tax, 0, wxALIGN_CENTER_HORIZONTAL );
 
     fin_lbl[14] = new wxStaticText( this, -1, _T( "Property Tax Rate (%)" ), wxDefaultPosition, tag_size );
-    property_tax = new wxTextCtrl( this, PROPERTY_TAX, _T( "2.000" ), wxDefaultPosition, entry_size );
+    property_tax = new wxTextCtrl( this, GLOBALPARAMDIALOG_PROPERTY_TAX, _T( "2.000" ), wxDefaultPosition, entry_size );
     fin_sizer[14]->Add( fin_lbl[14], 0, wxALIGN_CENTER_HORIZONTAL );
     fin_sizer[14]->Add( property_tax, 0, wxALIGN_CENTER_HORIZONTAL );
 
     fin_lbl[15] = new wxStaticText( this, -1, _T( "Investment Tax Credit" ), wxDefaultPosition, tag_size );
-    invest_tax_credit = new wxTextCtrl( this, INVEST_TAX_CREDIT, _T( "0.0" ), wxDefaultPosition, entry_size );
+    invest_tax_credit = new wxTextCtrl( this, GLOBALPARAMDIALOG_INVEST_TAX_CREDIT, _T( "0.0" ), wxDefaultPosition, entry_size );
     fin_sizer[15]->Add( fin_lbl[15], 0, wxALIGN_CENTER_HORIZONTAL );
     fin_sizer[15]->Add( invest_tax_credit, 0, wxALIGN_CENTER_HORIZONTAL );
 

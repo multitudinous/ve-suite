@@ -61,22 +61,6 @@ public:
     ResultPanel_Dialog( wxWindow* parent, int id );
     virtual ~ResultPanel_Dialog();
 
-    enum
-    {
-        MW_GROSS,
-        MW_NET,
-        NET_EFF,
-        COAL_IN,
-        WATER_IN,
-        OXID_IN,
-        NOX_CONS,
-        CO2_IN,
-        CO2_OUT,
-        CO2_CAP,
-        CAPITAL_CST,
-        ELEC_CST,
-    };
-
     virtual bool TransferDataToWindow();
 
     double mw_gross_;

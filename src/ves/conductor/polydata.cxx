@@ -32,6 +32,7 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/conductor/vistab.h>
 #include <ves/conductor/polydata.h>
+#include <ves/conductor/ConductorLibEnums.h>
 
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>
@@ -54,10 +55,10 @@ using namespace ves::conductor;
 BEGIN_EVENT_TABLE( Polydata, wxDialog )
     ////@begin polydata event table entries
     EVT_RADIOBUTTON( POLYDATA_RBUTTON,          Polydata::_onPolydata )
-    EVT_CHECKBOX( WARPED_SURFACE_CHK,        Polydata::_onWarpedSurface )
+    EVT_CHECKBOX( POLYDATA_WARPED_SURFACE_CHK,        Polydata::_onWarpedSurface )
     EVT_SLIDER( POLYDATA_PLANE_SLIDER,     Polydata::_onPolydataPlane )
-    EVT_BUTTON( ADD_POLYDATA_BUTTON,       Polydata::_onAddPolydata )
-    EVT_BUTTON( ADVANCED_POLYDATA_BUTTON,  Polydata::_onAdvanced )
+    EVT_BUTTON( POLYDATA_ADD_POLYDATA_BUTTON,       Polydata::_onAddPolydata )
+    EVT_BUTTON( POLYDATA_ADVANCED_POLYDATA_BUTTON,  Polydata::_onAdvanced )
     ////@end polydata event table entries
 END_EVENT_TABLE()
 Polydata::Polydata( )
@@ -109,7 +110,7 @@ void Polydata::CreateControls()
     wxStaticBoxSizer* itemStaticBoxSizer3 = new wxStaticBoxSizer( itemStaticBoxSizer3Static, wxVERTICAL );
     itemBoxSizer2->Add( itemStaticBoxSizer3, 0, wxGROW | wxALL, 5 );
 
-    _useWarpedSurfaceCheckBox = new wxCheckBox( itemDialog1, WARPED_SURFACE_CHK, _T( "Use Warped Surface" ), wxDefaultPosition, wxDefaultSize, 0 );
+    _useWarpedSurfaceCheckBox = new wxCheckBox( itemDialog1, POLYDATA_WARPED_SURFACE_CHK, _T( "Use Warped Surface" ), wxDefaultPosition, wxDefaultSize, 0 );
     _useWarpedSurfaceCheckBox->SetValue( false );
     itemStaticBoxSizer3->Add( _useWarpedSurfaceCheckBox, 0, wxGROW | wxALL, 5 );
 
@@ -122,10 +123,10 @@ void Polydata::CreateControls()
     wxBoxSizer* itemBoxSizer8 = new wxBoxSizer( wxHORIZONTAL );
     itemStaticBoxSizer3->Add( itemBoxSizer8, 0, wxALIGN_CENTER_HORIZONTAL | wxALL, 5 );
 
-    _computeButton = new wxButton( itemDialog1, ADD_POLYDATA_BUTTON, _T( "Update" ), wxDefaultPosition, wxDefaultSize, 0 );
+    _computeButton = new wxButton( itemDialog1, POLYDATA_ADD_POLYDATA_BUTTON, _T( "Update" ), wxDefaultPosition, wxDefaultSize, 0 );
     itemBoxSizer8->Add( _computeButton, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
-    _advancedButton = new wxButton( itemDialog1, ADVANCED_POLYDATA_BUTTON, _T( "Advanced..." ), wxDefaultPosition, wxDefaultSize, 0 );
+    _advancedButton = new wxButton( itemDialog1, POLYDATA_ADVANCED_POLYDATA_BUTTON, _T( "Advanced..." ), wxDefaultPosition, wxDefaultSize, 0 );
     itemBoxSizer8->Add( _advancedButton, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
     wxButton* _closeButton = new wxButton( itemDialog1, wxID_OK, _T( "Close" ), wxDefaultPosition, wxDefaultSize, 0 );

@@ -32,6 +32,7 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/conductor/util/CORBAServiceList.h>
 #include <ves/conductor/Canvas.h>
+#include <ves/conductor/ConductorLibEnums.h>
 #include <ves/open/xml/model/Link.h>
 #include <ves/open/xml/model/Model.h>
 #include <ves/open/xml/model/Network.h>
@@ -94,10 +95,10 @@ lrintf( float flt )
 
 BEGIN_EVENT_TABLE( Canvas, wxScrolledWindow )
     EVT_PAINT( Canvas::OnPaint )
-    EVT_MENU( UIPluginBase::DEL_MOD, Canvas::OnDelMod )
-    EVT_MENU( UIPluginBase::MAKE_HIER, Canvas::CreateNewSystem )
-    EVT_MENU( UIPluginBase::SET_UI_PLUGIN_NAME, Canvas::SetTreeItemName )
-    EVT_UPDATE_UI( Network::DELETE_NETWORK, Canvas::OnDelNetwork )
+    EVT_MENU( UIPLUGINBASE_DEL_MOD, Canvas::OnDelMod )
+    EVT_MENU( UIPLUGINBASE_MAKE_HIER, Canvas::CreateNewSystem )
+    EVT_MENU( UIPLUGINBASE_SET_UI_PLUGIN_NAME, Canvas::SetTreeItemName )
+    EVT_UPDATE_UI( NETWORK_DELETE_NETWORK, Canvas::OnDelNetwork )
     EVT_CHAR( Canvas::OnZoom )
 END_EVENT_TABLE()
 
@@ -133,7 +134,7 @@ Canvas::Canvas( wxWindow* parent, int id )
 
     this->parent = parent;
     
-    cleanEvent.SetId( UPDATE_NETWORK_DATA );
+    cleanEvent.SetId( CANVAS_UPDATE_NETWORK_DATA );
     
     Refresh( true );
 }

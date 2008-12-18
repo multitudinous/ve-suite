@@ -90,15 +90,6 @@ public:
         ;
     }
 
-    enum ADVANCEDISO_IDS
-    {
-        MIN_SPINCTRL,
-        MAX_SPINCTRL,
-        MIN_SLIDER,
-        MAX_SLIDER,
-        SELECT_SCALAR
-    };
-
     bool Create( wxWindow* parent,
                  wxWindowID id = SYMBOL_ADVANCEDISOSURFACES_IDNAME,
                  const wxString& caption = SYMBOL_ADVANCEDISOSURFACES_TITLE,

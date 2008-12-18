@@ -49,6 +49,7 @@
 
 #include <ves/open/xml/CommandPtr.h>
 #include <ves/open/xml/DataValuePairPtr.h>
+#include <ves/conductor/ConductorLibEnums.h>
 
 class wxComboBox;
 class wxListBox;
@@ -57,25 +58,11 @@ class wxTextCtrl;
 class wxButton;
 class wxSlider;
 
-#define ID_DIALOG 10000
 #define SYMBOL_VISTAB_STYLE wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX
 #define SYMBOL_VISTAB_TITLE _T("VE-Suite")
-#define SYMBOL_VISTAB_IDNAME ID_DIALOG
+#define SYMBOL_VISTAB_IDNAME VISTAB_DIALOG
 #define SYMBOL_VISTAB_SIZE wxSize(400, 300)
 #define SYMBOL_VISTAB_POSITION wxDefaultPosition
-#define ID_TOOLBAR 10001
-#define ID_TOOL 10002
-#define ID_TOOL1 10003
-#define ID_TOOL2 10004
-#define ID_TOOL3 10005
-#define ID_TOOL4 10006
-#define ID_TOOL5 10007
-#define ID_COMBOBOX 10010
-#define ID_LISTBOX 10011
-#define ID_LISTBOX1 10012
-#define ID_BUTTON 10015
-#define ID_COMBOBOX1 10016
-
 ////@end control identifiers
 
 
@@ -117,34 +104,6 @@ public:
             const wxSize& size = SYMBOL_VISTAB_SIZE,
             long style = SYMBOL_VISTAB_STYLE );
     virtual ~Vistab();
-
-    enum VISTAB_IDS
-    {
-        CONTOUR_DLG,
-        VECTOR_DLG,
-        STREAMLINE_DLG,
-        ISOSURFACE_DLG,
-        TEXTURE_BASED_DLG,
-        POLYDATA_DLG,
-        CONTOUR_BUTTON,
-        VECTOR_BUTTON,
-        STREAMLINE_BUTTON,
-        ISOSURFACE_BUTTON,
-        TEXTURE_BASED_BUTTON,
-        POLYDATA_BUTTON,
-        ID_CLEAR_ALL_BUTTON,
-        MIN_SPINCTRL,
-        MAX_SPINCTRL,
-        MIN_MAX_SLIDERS,
-        MIN_SLIDER,
-        MAX_SLIDER,
-        CLOSE_BUTTON,
-        ID_DATA_WIREFRAME_CB,
-        ID_DATA_BBOX_CB,
-        ID_DATA_AXES_CB,
-        ID_DATA_UPDATE_AXES,
-        ID_DATA_SCALAR_BAR
-    };
 
     void SendCommandsToXplorer( void );
     /// Creation
@@ -418,7 +377,7 @@ protected:
         return tempStr;
     }
 
-    std::map<std::string, VISTAB_IDS> m_vistabButtonMap;///<Mapping of names of buttons to enums.
+    //std::map<std::string, VISTAB_IDS> m_vistabButtonMap;///<Mapping of names of buttons to enums.
     DECLARE_EVENT_TABLE()
 };
 }

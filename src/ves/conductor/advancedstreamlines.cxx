@@ -34,6 +34,7 @@
 #include <ves/conductor/util/CORBAServiceList.h>
 
 #include <ves/conductor/advancedstreamlines.h>
+#include <ves/conductor/ConductorLibEnums.h>
 #include <ves/conductor/util/UI_TransientDialog.h>
 
 #include <ves/open/xml/Command.h>
@@ -51,9 +52,9 @@
 using namespace ves::conductor;
 
 BEGIN_EVENT_TABLE( AdvancedStreamlines, wxDialog )
-    EVT_SLIDER( LINE_DIAMETER_SLIDER, AdvancedStreamlines::_OnLineDiameter )
-    EVT_SLIDER( GLOW_SLIDER, AdvancedStreamlines::_OnGlowStrength )
-    EVT_BUTTON( PARTICLE_TRACKING, AdvancedStreamlines::_OnParticleTracking )
+    EVT_SLIDER( ADVANCEDSTREAMLINES_LINE_DIAMETER_SLIDER, AdvancedStreamlines::_OnLineDiameter )
+    EVT_SLIDER( ADVANCEDSTREAMLINES_GLOW_SLIDER, AdvancedStreamlines::_OnGlowStrength )
+    EVT_BUTTON( ADVANCEDSTREAMLINES_PARTICLE_TRACKING, AdvancedStreamlines::_OnParticleTracking )
 END_EVENT_TABLE()
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -114,7 +115,7 @@ void AdvancedStreamlines::CreateControls()
     wxStaticText* itemStaticText4 = new wxStaticText( itemDialog1, wxID_STATIC, _T( "Propagation (Total) Time" ), wxDefaultPosition, wxDefaultSize, 0 );
     itemStaticBoxSizer3->Add( itemStaticText4, 0, wxALIGN_LEFT | wxLEFT | wxRIGHT | wxTOP | wxADJUST_MINSIZE, 5 );
 
-    _propagationSlider = new wxSlider( itemDialog1, PROPOGATION_SLIDER, 100, 1, 100, wxDefaultPosition, wxSize( 300, -1 ), wxSL_HORIZONTAL | wxSL_LABELS );
+    _propagationSlider = new wxSlider( itemDialog1, ADVANCEDSTREAMLINES_PROPOGATION_SLIDER, 100, 1, 100, wxDefaultPosition, wxSize( 300, -1 ), wxSL_HORIZONTAL | wxSL_LABELS );
     itemStaticBoxSizer3->Add( _propagationSlider, 0, wxGROW | wxLEFT | wxRIGHT, 5 );
 
     wxBoxSizer* itemBoxSizer6 = new wxBoxSizer( wxHORIZONTAL );
@@ -129,7 +130,7 @@ void AdvancedStreamlines::CreateControls()
     wxStaticText* itemStaticText9 = new wxStaticText( itemDialog1, wxID_STATIC, _T( "Integration Step" ), wxDefaultPosition, wxDefaultSize, 0 );
     itemStaticBoxSizer3->Add( itemStaticText9, 0, wxALIGN_LEFT | wxLEFT | wxRIGHT | wxTOP | wxADJUST_MINSIZE, 5 );
 
-    _integrationSlider = new wxSlider( itemDialog1, INTEGRATION_STEP_SLIDER, 1000, 1, 5000, wxDefaultPosition, wxSize( 300, -1 ), wxSL_HORIZONTAL | wxSL_LABELS );
+    _integrationSlider = new wxSlider( itemDialog1, ADVANCEDSTREAMLINES_INTEGRATION_STEP_SLIDER, 1000, 1, 5000, wxDefaultPosition, wxSize( 300, -1 ), wxSL_HORIZONTAL | wxSL_LABELS );
     itemStaticBoxSizer3->Add( _integrationSlider, 0, wxGROW | wxLEFT | wxRIGHT, 5 );
 
     wxBoxSizer* itemBoxSizer11 = new wxBoxSizer( wxHORIZONTAL );
@@ -144,13 +145,13 @@ void AdvancedStreamlines::CreateControls()
     wxStaticText* itemStaticText19 = new wxStaticText( itemDialog1, wxID_STATIC, _T( "Sphere/Arrow/Particle Size(%)" ), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT );
     itemStaticBoxSizer3->Add( itemStaticText19, 0, wxALIGN_LEFT | wxLEFT | wxRIGHT | wxTOP | wxADJUST_MINSIZE, 5 );
 
-    _sphereArrowParticleSlider = new wxSlider( itemDialog1, SPHERE_SIZE_SLIDER, 5, 1, 50, wxDefaultPosition, wxSize( 300, -1 ), wxSL_HORIZONTAL | wxSL_LABELS );
+    _sphereArrowParticleSlider = new wxSlider( itemDialog1, ADVANCEDSTREAMLINES_SPHERE_SIZE_SLIDER, 5, 1, 50, wxDefaultPosition, wxSize( 300, -1 ), wxSL_HORIZONTAL | wxSL_LABELS );
     itemStaticBoxSizer3->Add( _sphereArrowParticleSlider, 0, wxGROW | wxLEFT | wxRIGHT | wxBOTTOM, 5 );
 
     wxStaticText* itemStaticText21 = new wxStaticText( itemDialog1, wxID_STATIC, _T( "Line Diameter" ), wxDefaultPosition, wxDefaultSize, 0 );
     itemStaticBoxSizer3->Add( itemStaticText21, 0, wxALIGN_LEFT | wxLEFT | wxRIGHT | wxTOP | wxADJUST_MINSIZE, 5 );
 
-    _diameterSlider = new wxSlider( itemDialog1, LINE_DIAMETER_SLIDER, -80, -100, 100, wxDefaultPosition, wxSize( 300, -1 ), wxSL_HORIZONTAL | wxSL_LABELS );
+    _diameterSlider = new wxSlider( itemDialog1, ADVANCEDSTREAMLINES_LINE_DIAMETER_SLIDER, -80, -100, 100, wxDefaultPosition, wxSize( 300, -1 ), wxSL_HORIZONTAL | wxSL_LABELS );
     itemStaticBoxSizer3->Add( _diameterSlider, 0, wxGROW | wxLEFT | wxRIGHT, 5 );
 
     wxBoxSizer* itemBoxSizer23 = new wxBoxSizer( wxHORIZONTAL );
@@ -166,7 +167,7 @@ void AdvancedStreamlines::CreateControls()
     wxStaticText* itemStaticText31 = new wxStaticText( itemDialog1, wxID_STATIC, _T( "Glow Strength" ), wxDefaultPosition, wxDefaultSize, 0 );
     itemStaticBoxSizer3->Add( itemStaticText31, 0, wxALIGN_LEFT | wxLEFT | wxRIGHT | wxTOP | wxADJUST_MINSIZE, 5 );
 
-    _glowSlider = new wxSlider( itemDialog1, GLOW_SLIDER, 4, 0, 100, wxDefaultPosition, wxSize( 300, -1 ), wxSL_HORIZONTAL | wxSL_LABELS );
+    _glowSlider = new wxSlider( itemDialog1, ADVANCEDSTREAMLINES_GLOW_SLIDER, 4, 0, 100, wxDefaultPosition, wxSize( 300, -1 ), wxSL_HORIZONTAL | wxSL_LABELS );
     itemStaticBoxSizer3->Add( _glowSlider, 0, wxGROW | wxLEFT | wxRIGHT, 5 );
 
     wxBoxSizer* itemBoxSizer33 = new wxBoxSizer( wxHORIZONTAL );
@@ -182,17 +183,17 @@ void AdvancedStreamlines::CreateControls()
     wxBoxSizer* itemBoxSizer26 = new wxBoxSizer( wxHORIZONTAL );
     itemStaticBoxSizer3->Add( itemBoxSizer26, 0, wxGROW | wxALL, 5 );
 
-    _lastSeedPtCheck = new wxCheckBox( itemDialog1, USE_SEED_POINT_CHK, _T( "Use Last Seed Point" ), wxDefaultPosition, wxDefaultSize, 0 );
+    _lastSeedPtCheck = new wxCheckBox( itemDialog1, ADVANCEDSTREAMLINES_USE_SEED_POINT_CHK, _T( "Use Last Seed Point" ), wxDefaultPosition, wxDefaultSize, 0 );
     _lastSeedPtCheck->SetValue( false );
     itemBoxSizer26->Add( _lastSeedPtCheck, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
-    _streamArrowCheck = new wxCheckBox( itemDialog1, ARROWS_CHK, _T( "Stream Arrows" ), wxDefaultPosition, wxDefaultSize, 0 );
+    _streamArrowCheck = new wxCheckBox( itemDialog1, ADVANCEDSTREAMLINES_ARROWS_CHK, _T( "Stream Arrows" ), wxDefaultPosition, wxDefaultSize, 0 );
     _streamArrowCheck->SetValue( false );
     itemBoxSizer26->Add( _streamArrowCheck, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
     wxBoxSizer* _buttons = new wxBoxSizer( wxHORIZONTAL );
 
-    wxButton* _particleButton = new wxButton( itemDialog1, PARTICLE_TRACKING, _T( "Particle" ), wxDefaultPosition, wxDefaultSize, 0 );
+    wxButton* _particleButton = new wxButton( itemDialog1, ADVANCEDSTREAMLINES_PARTICLE_TRACKING, _T( "Particle" ), wxDefaultPosition, wxDefaultSize, 0 );
     wxButton* _closeButton = new wxButton( itemDialog1, wxID_OK, _T( "Close" ), wxDefaultPosition, wxDefaultSize, 0 );
     _buttons->Add( _particleButton, 0, wxALIGN_CENTER_HORIZONTAL | wxALL, 5 );
     _buttons->Add( _closeButton, 0, wxALIGN_CENTER_HORIZONTAL | wxALL, 5 );
@@ -346,7 +347,7 @@ void AdvancedStreamlines::_OnParticleTracking( wxCommandEvent& WXUNUSED( event )
         particleControls = 0;
     }
 
-    particleControls = new ves::conductor::util::UI_TransientDialog( 19, this, PARTICLE_TRACKING_DIALOG );
+    particleControls = new ves::conductor::util::UI_TransientDialog( 19, this, ADVANCEDSTREAMLINES_PARTICLE_TRACKING_DIALOG );
     particleControls->SetTitle( wxString( "Particle Controls", wxConvUTF8 ) );
 
     particleControls->ShowModal();

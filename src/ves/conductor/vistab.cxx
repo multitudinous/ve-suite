@@ -80,29 +80,29 @@ using namespace ves::conductor;
 using namespace ves::conductor::util;
 
 BEGIN_EVENT_TABLE( Vistab, wxDialog )
-    EVT_TOOL( CONTOUR_BUTTON,       Vistab::_onContour )
-    EVT_TOOL( VECTOR_BUTTON,        Vistab::_onVector )
-    EVT_TOOL( STREAMLINE_BUTTON,    Vistab::_onStreamline )
-    EVT_TOOL( ISOSURFACE_BUTTON,    Vistab::_onIsosurface )
-    EVT_TOOL( TEXTURE_BASED_BUTTON, Vistab::_onTextureBased )
-    EVT_TOOL( POLYDATA_BUTTON,      Vistab::_onPolydata )
-    EVT_COMBOBOX( ID_COMBOBOX,          Vistab::_OnSelectDataset )
-    EVT_LISTBOX( ID_LISTBOX,           Vistab::_OnSelectScalar )
-    EVT_LISTBOX( ID_LISTBOX1,          Vistab::_OnSelectVector )
-    EVT_BUTTON( ID_CLEAR_ALL_BUTTON,  Vistab::OnClearAll )
-    EVT_BUTTON( CLOSE_BUTTON,         Vistab::_onClose )
-    EVT_COMMAND_SCROLL( MIN_SPINCTRL,    Vistab::_onMinSpinCtrl )
-    EVT_COMMAND_SCROLL( MAX_SPINCTRL,    Vistab::_onMaxSpinCtrl )
+    EVT_TOOL( VISTAB_CONTOUR_BUTTON, Vistab::_onContour )
+    EVT_TOOL( VISTAB_VECTOR_BUTTON, Vistab::_onVector )
+    EVT_TOOL( VISTAB_STREAMLINE_BUTTON, Vistab::_onStreamline )
+    EVT_TOOL( VISTAB_ISOSURFACE_BUTTON, Vistab::_onIsosurface )
+    EVT_TOOL( VISTAB_TEXTURE_BASED_BUTTON, Vistab::_onTextureBased )
+    EVT_TOOL( VISTAB_POLYDATA_BUTTON, Vistab::_onPolydata )
+    EVT_COMBOBOX( VISTAB_COMBOBOX, Vistab::_OnSelectDataset )
+    EVT_LISTBOX( VISTAB_LISTBOX, Vistab::_OnSelectScalar )
+    EVT_LISTBOX( VISTAB_LISTBOX1, Vistab::_OnSelectVector )
+    EVT_BUTTON( VISTAB_CLEAR_ALL_BUTTON, Vistab::OnClearAll )
+    EVT_BUTTON( VISTAB_CLOSE_BUTTON, Vistab::_onClose )
+    EVT_COMMAND_SCROLL( VISTAB_MIN_SPINCTRL, Vistab::_onMinSpinCtrl )
+    EVT_COMMAND_SCROLL( VISTAB_MAX_SPINCTRL, Vistab::_onMaxSpinCtrl )
     //EVT_COMMAND_SCROLL( MIN_MAX_SLIDERS, Vistab::_onMinMaxSlider )
-    EVT_COMMAND_SCROLL( MIN_SLIDER,      Vistab::_onMinSlider )
-    EVT_COMMAND_SCROLL( MAX_SLIDER,      Vistab::_onMaxSlider )
-    EVT_TEXT_ENTER( MIN_SPINCTRL,        Vistab::UpdateMinSlider )
-    EVT_TEXT_ENTER( MAX_SPINCTRL,        Vistab::UpdateMaxSlider )
-    EVT_TEXT_ENTER( ID_DATA_UPDATE_AXES, Vistab::UpdateAxesLabels )
-    EVT_CHECKBOX( ID_DATA_BBOX_CB,       Vistab::UpdateBoundingBox )
-    EVT_CHECKBOX( ID_DATA_WIREFRAME_CB,  Vistab::UpdateWireFrame )
-    EVT_CHECKBOX( ID_DATA_AXES_CB,       Vistab::UpdateAxes )
-    EVT_CHECKBOX( ID_DATA_SCALAR_BAR,    Vistab::UpdateScalarBar )
+    EVT_COMMAND_SCROLL( VISTAB_MIN_SLIDER, Vistab::_onMinSlider )
+    EVT_COMMAND_SCROLL( VISTAB_MAX_SLIDER, Vistab::_onMaxSlider )
+    EVT_TEXT_ENTER( VISTAB_MIN_SPINCTRL, Vistab::UpdateMinSlider )
+    EVT_TEXT_ENTER( VISTAB_MAX_SPINCTRL, Vistab::UpdateMaxSlider )
+    EVT_TEXT_ENTER( VISTAB_DATA_UPDATE_AXES, Vistab::UpdateAxesLabels )
+    EVT_CHECKBOX( VISTAB_DATA_BBOX_CB, Vistab::UpdateBoundingBox )
+    EVT_CHECKBOX( VISTAB_DATA_WIREFRAME_CB, Vistab::UpdateWireFrame )
+    EVT_CHECKBOX( VISTAB_DATA_AXES_CB, Vistab::UpdateAxes )
+    EVT_CHECKBOX( VISTAB_DATA_SCALAR_BAR, Vistab::UpdateScalarBar )
 END_EVENT_TABLE()
 
 //////////////////////////////////////////
@@ -130,12 +130,12 @@ Vistab::Vistab( VjObs::Model_var activeModel )
     _availableSolutions["TEXTURE_SCALARS"].Add( _( "" ) );
     _availableSolutions["TEXTURE_VECTORS"].Add( _( "" ) );
     _commandName = "VISUALIZATION_TAB";
-    m_vistabButtonMap["Scalar Contour"] = CONTOUR_BUTTON;
-    m_vistabButtonMap["Vector Contour"] = VECTOR_BUTTON;
-    m_vistabButtonMap["Streamlines"] = STREAMLINE_BUTTON;
-    m_vistabButtonMap["Isosurface"] = ISOSURFACE_BUTTON;
-    m_vistabButtonMap["TBET"] = TEXTURE_BASED_BUTTON;
-    m_vistabButtonMap["Polydata"] = POLYDATA_BUTTON;
+    //m_vistabButtonMap["Scalar Contour"] = CONTOUR_BUTTON;
+    //m_vistabButtonMap["Vector Contour"] = VECTOR_BUTTON;
+    //m_vistabButtonMap["Streamlines"] = STREAMLINE_BUTTON;
+    //m_vistabButtonMap["Isosurface"] = ISOSURFACE_BUTTON;
+    //m_vistabButtonMap["TBET"] = TEXTURE_BASED_BUTTON;
+    //m_vistabButtonMap["Polydata"] = POLYDATA_BUTTON;
     SetActiveModel( activeModel );
     _activeScalarName = ConvertUnicode( _scalarSelection->GetStringSelection() );
     _activeVectorName = ConvertUnicode( _vectorSelection->GetStringSelection() );
@@ -173,12 +173,12 @@ Vistab::Vistab( VjObs::Model_var activeModel,
     _availableSolutions["TEXTURE_SCALARS"].Add( _( "" ) );
     _availableSolutions["TEXTURE_VECTORS"].Add( _( "" ) );
 
-    m_vistabButtonMap["Scalar Contour"] = CONTOUR_BUTTON;
-    m_vistabButtonMap["Vector Contour"] = VECTOR_BUTTON;
-    m_vistabButtonMap["Streamlines"] = STREAMLINE_BUTTON;
-    m_vistabButtonMap["Isosurface"] = ISOSURFACE_BUTTON;
-    m_vistabButtonMap["TBET"] = TEXTURE_BASED_BUTTON;
-    m_vistabButtonMap["Polydata"] = POLYDATA_BUTTON;
+    //m_vistabButtonMap["Scalar Contour"] = CONTOUR_BUTTON;
+    //m_vistabButtonMap["Vector Contour"] = VECTOR_BUTTON;
+    //m_vistabButtonMap["Streamlines"] = STREAMLINE_BUTTON;
+    //m_vistabButtonMap["Isosurface"] = ISOSURFACE_BUTTON;
+    //m_vistabButtonMap["TBET"] = TEXTURE_BASED_BUTTON;
+    //m_vistabButtonMap["Polydata"] = POLYDATA_BUTTON;
 
     SetActiveModel( activeModel );
     Create( parent, id, caption, pos, wxDefaultSize, style );
@@ -227,36 +227,36 @@ void Vistab::CreateControls()
     wxBoxSizer* itemBoxSizer2 = new wxBoxSizer( wxVERTICAL );
     itemDialog1->SetSizer( itemBoxSizer2 );
 
-    itemToolBar3 = new wxToolBar( itemDialog1, ID_TOOLBAR, wxDefaultPosition, wxDefaultSize, wxTB_FLAT | wxTB_HORIZONTAL/*| wxTB_TEXT*/ );
+    itemToolBar3 = new wxToolBar( itemDialog1, VISTAB_TOOLBAR, wxDefaultPosition, wxDefaultSize, wxTB_FLAT | wxTB_HORIZONTAL/*| wxTB_TEXT*/ );
     itemToolBar3->SetToolBitmapSize( wxSize( 32, 32 ) );
 
     wxBitmap itemtool4Bitmap( contour_xpm );
     wxBitmap itemtool4BitmapDisabled;
-    itemToolBar3->AddTool( CONTOUR_BUTTON, _T( "Scalars" ),
+    itemToolBar3->AddTool( VISTAB_CONTOUR_BUTTON, _T( "Scalars" ),
                            itemtool4Bitmap, itemtool4BitmapDisabled,
                            wxITEM_NORMAL/*wxITEM_RADIO*/, _T( "Scalar Contours" ), wxEmptyString );
 
     wxBitmap itemtool5Bitmap( new_vector_xpm );
     wxBitmap itemtool5BitmapDisabled;
-    itemToolBar3->AddTool( VECTOR_BUTTON, _T( "Vectors" ),
+    itemToolBar3->AddTool( VISTAB_VECTOR_BUTTON, _T( "Vectors" ),
                            itemtool5Bitmap, itemtool5BitmapDisabled,
                            wxITEM_NORMAL/*wxITEM_RADIO*/, _T( "Vectors" ), wxEmptyString );
 
     wxBitmap itemtool6Bitmap( streamlines_xpm );
     wxBitmap itemtool6BitmapDisabled;
-    itemToolBar3->AddTool( STREAMLINE_BUTTON, _T( "Streamlines" ), itemtool6Bitmap, itemtool6BitmapDisabled, wxITEM_NORMAL/*wxITEM_RADIO*/, _T( "Streamlines" ), wxEmptyString );
+    itemToolBar3->AddTool( VISTAB_STREAMLINE_BUTTON, _T( "Streamlines" ), itemtool6Bitmap, itemtool6BitmapDisabled, wxITEM_NORMAL/*wxITEM_RADIO*/, _T( "Streamlines" ), wxEmptyString );
 
     wxBitmap itemtool7Bitmap( isosurface_xpm );
     wxBitmap itemtool7BitmapDisabled;
-    itemToolBar3->AddTool( ISOSURFACE_BUTTON, _T( "Isosurfaces" ), itemtool7Bitmap, itemtool7BitmapDisabled, wxITEM_NORMAL/*wxITEM_RADIO*/, _T( "Isosurfaces" ), wxEmptyString );
+    itemToolBar3->AddTool( VISTAB_ISOSURFACE_BUTTON, _T( "Isosurfaces" ), itemtool7Bitmap, itemtool7BitmapDisabled, wxITEM_NORMAL/*wxITEM_RADIO*/, _T( "Isosurfaces" ), wxEmptyString );
 
     wxBitmap itemtool8Bitmap( scalartb_xpm );
     wxBitmap itemtool8BitmapDisabled;
-    itemToolBar3->AddTool( TEXTURE_BASED_BUTTON, _T( "Texture-Based" ), itemtool8Bitmap, itemtool8BitmapDisabled, wxITEM_NORMAL/*wxITEM_RADIO*/, _T( "Texture Based" ), wxEmptyString );
+    itemToolBar3->AddTool( VISTAB_TEXTURE_BASED_BUTTON, _T( "Texture-Based" ), itemtool8Bitmap, itemtool8BitmapDisabled, wxITEM_NORMAL/*wxITEM_RADIO*/, _T( "Texture Based" ), wxEmptyString );
 
     wxBitmap itemtool9Bitmap( isosurface_xpm );
     wxBitmap itemtool9BitmapDisabled;
-    itemToolBar3->AddTool( POLYDATA_BUTTON, _T( "Polydata" ), itemtool9Bitmap, itemtool8BitmapDisabled, wxITEM_NORMAL/*wxITEM_RADIO*/, _T( "Polydata" ), wxEmptyString );
+    itemToolBar3->AddTool( VISTAB_POLYDATA_BUTTON, _T( "Polydata" ), itemtool9Bitmap, itemtool8BitmapDisabled, wxITEM_NORMAL/*wxITEM_RADIO*/, _T( "Polydata" ), wxEmptyString );
 
     itemToolBar3->Realize();
     itemBoxSizer2->Add( itemToolBar3, 0, wxALIGN_CENTER_HORIZONTAL | wxALL, 5 );
@@ -268,7 +268,7 @@ void Vistab::CreateControls()
         wxStaticBoxSizer* dataSetSBSizer = new wxStaticBoxSizer( dataSetStaticBox, wxVERTICAL );
         itemBoxSizer2->Add( dataSetSBSizer, 0, wxGROW | wxALL, 5 );
 
-        _datasetSelection = new wxComboBox( itemDialog1, ID_COMBOBOX, _T( "" ), wxDefaultPosition, wxDefaultSize, _availableDatasets, wxCB_DROPDOWN );
+        _datasetSelection = new wxComboBox( itemDialog1, VISTAB_COMBOBOX, _T( "" ), wxDefaultPosition, wxDefaultSize, _availableDatasets, wxCB_DROPDOWN );
 
         if( ShowToolTips() )
             _datasetSelection->SetToolTip( _T( "Data Sets" ) );
@@ -278,19 +278,19 @@ void Vistab::CreateControls()
         wxBoxSizer* itemBoxSizer10 = new wxBoxSizer( wxHORIZONTAL );
         dataSetSBSizer->Add( itemBoxSizer10, 0, wxGROW | wxALL, 5 );
 
-        wireFrameCB = new wxCheckBox( itemDialog1, ID_DATA_WIREFRAME_CB,
+        wireFrameCB = new wxCheckBox( itemDialog1, VISTAB_DATA_WIREFRAME_CB,
                                       _( "Surface Wrap" ), wxDefaultPosition, wxDefaultSize, wxCHK_2STATE );
         itemBoxSizer10->Add( wireFrameCB, 1, wxALIGN_CENTER_VERTICAL );
-        bboxCB = new wxCheckBox( itemDialog1, ID_DATA_BBOX_CB,
+        bboxCB = new wxCheckBox( itemDialog1, VISTAB_DATA_BBOX_CB,
                                  _( "Bounding Box" ), wxDefaultPosition, wxDefaultSize, wxCHK_2STATE );
         itemBoxSizer10->Add( bboxCB, 1, wxALIGN_CENTER_VERTICAL );
 
-        scalarBarCB = new wxCheckBox( itemDialog1, ID_DATA_SCALAR_BAR,
+        scalarBarCB = new wxCheckBox( itemDialog1, VISTAB_DATA_SCALAR_BAR,
                                       _( "Scalar Bar" ), wxDefaultPosition, wxDefaultSize, wxCHK_2STATE );
         itemBoxSizer10->Add( scalarBarCB, 1, wxALIGN_CENTER_VERTICAL );
         //wxBoxSizer* axesBS = new wxBoxSizer(wxHORIZONTAL);
         //dataSetSBSizer->Add( axesBS, 0, wxGROW|wxALL, 5);
-        axesCB = new wxCheckBox( itemDialog1, ID_DATA_AXES_CB,
+        axesCB = new wxCheckBox( itemDialog1, VISTAB_DATA_AXES_CB,
                                  _( "Axes" ), wxDefaultPosition, wxDefaultSize, wxCHK_2STATE );
         itemBoxSizer10->Add( axesCB, 1, wxALIGN_CENTER_VERTICAL );
         //updateAxes = new wxButton( itemDialog1, ID_DATA_UPDATE_AXES, _T("Axes"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -299,17 +299,17 @@ void Vistab::CreateControls()
         // add text input for axes
         wxBoxSizer* axesTextBS = new wxBoxSizer( wxHORIZONTAL );
         dataSetSBSizer->Add( axesTextBS, 0, wxGROW );
-        xAxisEntry = new wxTextCtrl( itemDialog1, ID_DATA_UPDATE_AXES,
+        xAxisEntry = new wxTextCtrl( itemDialog1, VISTAB_DATA_UPDATE_AXES,
                                      _( "X Axis" ), wxDefaultPosition,
                                      wxDefaultSize, wxHSCROLL | wxTE_PROCESS_ENTER );
         xAxisEntry->Disable();
         axesTextBS->Add( xAxisEntry, 1, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
-        yAxisEntry = new wxTextCtrl( itemDialog1, ID_DATA_UPDATE_AXES,
+        yAxisEntry = new wxTextCtrl( itemDialog1, VISTAB_DATA_UPDATE_AXES,
                                      _( "Y Axis" ), wxDefaultPosition,
                                      wxDefaultSize, wxHSCROLL | wxTE_PROCESS_ENTER );
         yAxisEntry->Disable();
         axesTextBS->Add( yAxisEntry, 1, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
-        zAxisEntry = new wxTextCtrl( itemDialog1, ID_DATA_UPDATE_AXES,
+        zAxisEntry = new wxTextCtrl( itemDialog1, VISTAB_DATA_UPDATE_AXES,
                                      _( "Z Axis" ), wxDefaultPosition,
                                      wxDefaultSize, wxHSCROLL | wxTE_PROCESS_ENTER );
         axesTextBS->Add( zAxisEntry, 1, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
@@ -324,7 +324,7 @@ void Vistab::CreateControls()
     wxStaticBoxSizer* itemStaticBoxSizer12 = new wxStaticBoxSizer( itemStaticBoxSizer12Static, wxHORIZONTAL );
     itemBoxSizer11->Add( itemStaticBoxSizer12, 1, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
-    _scalarSelection = new wxListBox( itemDialog1, ID_LISTBOX, wxDefaultPosition, wxSize( 125, 75 ), _availableSolutions["MESH_SCALARS"] , wxLB_SINGLE | wxLB_NEEDED_SB );
+    _scalarSelection = new wxListBox( itemDialog1, VISTAB_LISTBOX, wxDefaultPosition, wxSize( 125, 75 ), _availableSolutions["MESH_SCALARS"] , wxLB_SINGLE | wxLB_NEEDED_SB );
     _scalarSelection->SetSelection( 0 );
     itemStaticBoxSizer12->Add( _scalarSelection, 1, wxGROW | wxALL, 5 );
 
@@ -332,7 +332,7 @@ void Vistab::CreateControls()
     wxStaticBoxSizer* itemStaticBoxSizer14 = new wxStaticBoxSizer( itemStaticBoxSizer14Static, wxHORIZONTAL );
     itemBoxSizer11->Add( itemStaticBoxSizer14, 1, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
-    _vectorSelection = new wxListBox( itemDialog1, ID_LISTBOX1, wxDefaultPosition, wxSize( 125, 75 ), _availableSolutions["MESH_VECTORS"], wxLB_SINGLE | wxLB_NEEDED_SB );
+    _vectorSelection = new wxListBox( itemDialog1, VISTAB_LISTBOX1, wxDefaultPosition, wxSize( 125, 75 ), _availableSolutions["MESH_VECTORS"], wxLB_SINGLE | wxLB_NEEDED_SB );
     _vectorSelection->SetSelection( 0 );
     itemStaticBoxSizer14->Add( _vectorSelection, 1, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
@@ -343,11 +343,11 @@ void Vistab::CreateControls()
     wxBoxSizer* minSizer = new wxBoxSizer( wxHORIZONTAL );
     wxBoxSizer* maxSizer = new wxBoxSizer( wxHORIZONTAL );
 
-    _minSpinner = new wxSpinCtrlDbl( *itemDialog1, MIN_SPINCTRL, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 100, 0, 0.1, -1, wxEmptyString );
-    _minSlider = new wxSlider( itemDialog1, MIN_SLIDER, 0, 0, 100, wxDefaultPosition, wxSize( 300, -1 ), wxSL_HORIZONTAL | wxSL_LABELS );
+    _minSpinner = new wxSpinCtrlDbl( *itemDialog1, VISTAB_MIN_SPINCTRL, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 100, 0, 0.1, -1, wxEmptyString );
+    _minSlider = new wxSlider( itemDialog1, VISTAB_MIN_SLIDER, 0, 0, 100, wxDefaultPosition, wxSize( 300, -1 ), wxSL_HORIZONTAL | wxSL_LABELS );
 
-    _maxSpinner = new wxSpinCtrlDbl( *itemDialog1, MAX_SPINCTRL, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 100, 100, 0.1, -1, wxEmptyString );
-    _maxSlider = new wxSlider( itemDialog1, MAX_SLIDER, 100, 0, 100, wxDefaultPosition, wxSize( 300, -1 ), wxSL_HORIZONTAL | wxSL_LABELS );
+    _maxSpinner = new wxSpinCtrlDbl( *itemDialog1, VISTAB_MAX_SPINCTRL, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 100, 100, 0.1, -1, wxEmptyString );
+    _maxSlider = new wxSlider( itemDialog1, VISTAB_MAX_SLIDER, 100, 0, 100, wxDefaultPosition, wxSize( 300, -1 ), wxSL_HORIZONTAL | wxSL_LABELS );
 
     wxStaticText* _min = new wxStaticText( itemDialog1, wxID_STATIC, _T( "Min" ), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT );
     wxStaticText* _max = new wxStaticText( itemDialog1, wxID_STATIC, _T( "Max" ), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT );
@@ -372,7 +372,7 @@ void Vistab::CreateControls()
     //wxButton* itemButton20 = new wxButton( itemDialog1, ID_BUTTON, _T("Advanced..."), wxDefaultPosition, wxDefaultSize, 0 );
     //lastRowButtons->Add( itemButton20, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    clearAllButton = new wxButton( itemDialog1, ID_CLEAR_ALL_BUTTON, _T( "Clear All" ), wxDefaultPosition, wxDefaultSize, 0 );
+    clearAllButton = new wxButton( itemDialog1, VISTAB_CLEAR_ALL_BUTTON, _T( "Clear All" ), wxDefaultPosition, wxDefaultSize, 0 );
     lastRowButtons->Add( clearAllButton, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
     wxButton* _closeButton = new wxButton( itemDialog1, wxID_OK, _T( "Close" ), wxDefaultPosition, wxDefaultSize, 0 );
@@ -1104,7 +1104,7 @@ void Vistab::_onMinSlider( wxScrollEvent& WXUNUSED( event ) )
 
     if( _minSlider->GetValue() >= _maxSlider->GetValue() ) // && _minSlider->GetValue() < 100 )
     {
-        _ensureSliders( MIN_SLIDER );
+        _ensureSliders( VISTAB_MIN_SLIDER );
     }
 
     _minSpinner->SetValue( range *( double )_minSlider->GetValue() / 100  + _activeScalarRange.at( 0 ) );
@@ -1125,7 +1125,7 @@ void Vistab::_onMaxSlider( wxScrollEvent& WXUNUSED( event ) )
 
     if( _maxSlider->GetValue() <= _minSlider->GetValue() ) //&& _maxSlider->GetValue() > 0 )
     {
-        _ensureSliders( MAX_SLIDER );
+        _ensureSliders( VISTAB_MAX_SLIDER );
     }
 
     _minSpinner->SetValue(( range *( double )_minSlider->GetValue() ) / 100 + _activeScalarRange.at( 0 ) );
@@ -1149,12 +1149,12 @@ bool Vistab::_ensureSliders( int activeSliderID )
             _maxSlider->SetValue( 0 + 1 );
         }
 
-        if( activeSliderID == MIN_SLIDER )
+        if( activeSliderID == VISTAB_MIN_SLIDER )
         {
             _maxSlider->SetValue( _minSlider->GetValue() + 1 );
             return true;
         }
-        else if( activeSliderID == MAX_SLIDER )
+        else if( activeSliderID == VISTAB_MAX_SLIDER )
         {
             _minSlider->SetValue( _maxSlider->GetValue() - 1 );
             return true;
@@ -1397,41 +1397,54 @@ void Vistab::UpdateSpinControls()
 ////////////////////////////////////////////////////////////////
 void Vistab::SetButtonStatus( std::string buttonName, bool onOff )
 {
-    std::map<std::string, VISTAB_IDS>::iterator buttonIterator;
+    //std::map<std::string, VISTAB_IDS>::iterator buttonIterator;
     //check for "All"
     if( buttonName == "All" )
     {
-        for( buttonIterator = m_vistabButtonMap.begin();
-                buttonIterator != m_vistabButtonMap.end();
-                ++buttonIterator )
-        {
-            itemToolBar3->EnableTool( buttonIterator->second, onOff );
-        }
+        //for( buttonIterator = m_vistabButtonMap.begin();
+        //        buttonIterator != m_vistabButtonMap.end();
+        //        ++buttonIterator )
+        //{
+        //    itemToolBar3->EnableTool( buttonIterator->second, onOff );
+        //}
+        itemToolBar3->EnableTool( VISTAB_CONTOUR_BUTTON, onOff );
+        itemToolBar3->EnableTool( VISTAB_VECTOR_BUTTON, onOff );
+        itemToolBar3->EnableTool( VISTAB_STREAMLINE_BUTTON, onOff );
+        itemToolBar3->EnableTool( VISTAB_ISOSURFACE_BUTTON, onOff );
+        itemToolBar3->EnableTool( VISTAB_TEXTURE_BASED_BUTTON, onOff );
+        itemToolBar3->EnableTool( VISTAB_POLYDATA_BUTTON, onOff );
     }
     else if( buttonName == "All Scalar Operations" )
     {
-        itemToolBar3->EnableTool( m_vistabButtonMap["Scalar Contour"], onOff );
-        itemToolBar3->EnableTool( m_vistabButtonMap["Isosurface"], onOff );
+        //itemToolBar3->EnableTool( m_vistabButtonMap["Scalar Contour"], onOff );
+        //itemToolBar3->EnableTool( m_vistabButtonMap["Isosurface"], onOff );
         ///Is polydata really scalar dependent?
-        itemToolBar3->EnableTool( m_vistabButtonMap["Polydata"], onOff );
+        //itemToolBar3->EnableTool( m_vistabButtonMap["Polydata"], onOff );
+
+        itemToolBar3->EnableTool( VISTAB_CONTOUR_BUTTON, onOff );
+        itemToolBar3->EnableTool( VISTAB_ISOSURFACE_BUTTON, onOff );
+        ///Is polydata really scalar dependent?
+        itemToolBar3->EnableTool( VISTAB_POLYDATA_BUTTON, onOff );
     }
     else if( buttonName == "All Vector Operations" )
     {
-        itemToolBar3->EnableTool( m_vistabButtonMap["Vector Contour"], onOff );
-        itemToolBar3->EnableTool( m_vistabButtonMap["Streamlines"], onOff );
-    }
-    else
-    {
-        buttonIterator = m_vistabButtonMap.find( buttonName );
-        if( buttonIterator != m_vistabButtonMap.end() )
-        {
-            itemToolBar3->EnableTool( buttonIterator->second, onOff );
-        }
-        else
-        {
-            wxMessageBox( _( "Invalid button specified!" ), _( "Button failure!" ),
-                          wxOK | wxICON_ERROR );
+        //itemToolBar3->EnableTool( m_vistabButtonMap["Vector Contour"], onOff );
+        //itemToolBar3->EnableTool( m_vistabButtonMap["Streamlines"], onOff );
 
-        }
+        itemToolBar3->EnableTool( VISTAB_VECTOR_BUTTON, onOff );
+        itemToolBar3->EnableTool( VISTAB_STREAMLINE_BUTTON, onOff );
     }
+    //else
+    //{
+    //    buttonIterator = m_vistabButtonMap.find( buttonName );
+    //    if( buttonIterator != m_vistabButtonMap.end() )
+    //    {
+    //        itemToolBar3->EnableTool( buttonIterator->second, onOff );
+    //    }
+    //    else
+    //    {
+    //        wxMessageBox( _( "Invalid button specified!" ), _( "Button failure!" ),
+    //                      wxOK | wxICON_ERROR );
+    //    }
+    //}
 }
