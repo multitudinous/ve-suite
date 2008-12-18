@@ -1204,7 +1204,6 @@ void UIPluginBase::SetImageIcon( std::string path, float rotation, int mirror, f
         image.LoadFile( wxString( fullPath.c_str(), wxConvUTF8 ), wxBITMAP_TYPE_JPEG );
     }
     iconFilename = path;
-    image.SetMaskColour( 255, 255, 255 );
 
     if( mirror == 1 )
     {
@@ -1846,7 +1845,11 @@ void UIPluginBase::OnSetUIPluginName( wxCommandEvent& event )
     UIPLUGIN_CHECKID( event )
     // Here we launch a dialog for a specific plugins input values
     SetPluginNameDialog();
-    
+    GlobalNameUpdate( event );
+}
+///////////////////////////////////////////////////////////////////////////////
+void UIPluginBase::GlobalNameUpdate( wxCommandEvent& event )
+{
     //pass event up to hierarchy tree
     event.SetClientData( &id );
     event.SetString( mPluginName );

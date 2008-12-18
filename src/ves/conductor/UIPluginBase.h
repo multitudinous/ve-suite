@@ -277,6 +277,7 @@ public:
     void OnResultsWindow( wxCommandEvent& event );
     void OnVisualization( wxCommandEvent& event );
     void OnSetUIPluginName( wxCommandEvent& event );
+    void GlobalNameUpdate( wxCommandEvent& event );
     void OnSetActiveXplorerModel( wxCommandEvent& event );
     void OnSetActivePluginID( wxUpdateUIEvent& event );
     void OnDelMod( wxCommandEvent& event );

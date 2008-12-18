@@ -1743,11 +1743,6 @@ void Network::AddtoNetwork( UIPluginBase *cur_module, std::string cls_name )
 //void Network::ReDraw(wxDC &dc)
 void Network::DrawNetwork( wxDC &dc )
 {
-    // this function redraws the design canvas
-    dc.SetPen( *wxBLACK_PEN );
-    dc.SetBrush( *wxWHITE_BRUSH );
-    dc.SetBackground( *wxWHITE_BRUSH );
-
     // redraw all the active plugins
     for( std::map<int, Module>::iterator iter = modules.begin();
             iter != modules.end(); iter++ )

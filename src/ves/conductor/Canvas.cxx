@@ -267,6 +267,12 @@ void Canvas::OnPaint( wxPaintEvent& paintEvent )
     dc.SetUserScale( userScale.first, userScale.second );
     dc.SetFont( GetFont() );
     dc.Clear();
+
+    //initialize
+    dc.SetPen( *wxBLACK_PEN );
+    dc.SetBrush( *wxWHITE_BRUSH );
+    dc.SetBackground( *wxWHITE_BRUSH );
+    dc.SetBackgroundMode( wxTRANSPARENT );
     
     if( activeId != "NULL" )
     {
