@@ -56,12 +56,6 @@ public:
         ;
     }
 
-    enum TEACHER_TAB_IDS
-    {
-        TEACHER_RBOX,
-        TEACHER_CLEAR_BUTTON,
-        RECORD_SCENE
-    };
     void _buildPage();
 protected:
 

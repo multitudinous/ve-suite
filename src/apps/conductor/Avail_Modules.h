@@ -71,19 +71,6 @@ public:
     
     ///Destructor
     virtual ~Avail_Modules();
-
-    enum
-    {
-        TreeCtrlIcon_File,
-        TreeCtrlIcon_FileSelected,
-        TreeCtrlIcon_Folder,
-        TreeCtrlIcon_FolderSelected,
-        TreeCtrlIcon_FolderOpened,
-        Module_Desc,
-        Module_Help,
-        Module_Add,
-        TREE_CTRL = 1000
-    };
     
     ///right click event
     void OnItemRightClick( wxTreeEvent& event );

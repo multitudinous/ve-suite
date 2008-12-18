@@ -33,6 +33,7 @@
 #include <ves/conductor/util/CORBAServiceList.h>
 
 #include "NavigationPane.h"
+#include "ConductorAppEnums.h"
 
 #include <ves/conductor/UserPreferencesDataBuffer.h>
 
@@ -79,15 +80,15 @@ using namespace ves::conductor;
 
 BEGIN_EVENT_TABLE( NavigationPane, wxDialog )
     EVT_MOUSE_EVENTS( NavigationPane::onMouse )
-    EVT_COMMAND_SCROLL( TRANS_STEP_SLIDER, NavigationPane::OnTransStepSlider )
-    EVT_COMMAND_SCROLL( ROT_STEP_SLIDER, NavigationPane::OnRotStepSlider )
-    EVT_BUTTON( STORE_START_POSITION, NavigationPane::OnStoreStartPosition )
-    EVT_BUTTON( RESET_NAV_POSITION, NavigationPane::OnResetNavPosition )
-    EVT_CHECKBOX( HEAD_ROTATE_CHK,      NavigationPane::OnHeadCheck )
-    EVT_CHECKBOX( SUB_ZERO_CHK,         NavigationPane::OnSubZeroCheck )
+    EVT_COMMAND_SCROLL( NAVIGATIONPANE_TRANS_STEP_SLIDER, NavigationPane::OnTransStepSlider )
+    EVT_COMMAND_SCROLL( NAVIGATIONPANE_ROT_STEP_SLIDER, NavigationPane::OnRotStepSlider )
+    EVT_BUTTON( NAVIGATIONPANE_STORE_START_POSITION, NavigationPane::OnStoreStartPosition )
+    EVT_BUTTON( NAVIGATIONPANE_RESET_NAV_POSITION, NavigationPane::OnResetNavPosition )
+    EVT_CHECKBOX( NAVIGATIONPANE_HEAD_ROTATE_CHK,      NavigationPane::OnHeadCheck )
+    EVT_CHECKBOX( NAVIGATIONPANE_SUB_ZERO_CHK,         NavigationPane::OnSubZeroCheck )
     //EVT_LEFT_UP(NavigationPane::onMouse)
     //EVT_IDLE( NavigationPane::OnIdle )
-    EVT_TIMER( UPDATE_TIMER_ID, NavigationPane::OnTimer )
+    EVT_TIMER( NAVIGATIONPANE_UPDATE_TIMER_ID, NavigationPane::OnTimer )
 END_EVENT_TABLE()
 
 BEGIN_EVENT_TABLE( UI_NavButton, wxButton )
@@ -102,7 +103,7 @@ NavigationPane::NavigationPane( wxWindow* parent )
         wxDialog( parent, -1, _( "Navigation Pane" ),
                     wxDefaultPosition, wxDefaultSize,
                     ( wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxMAXIMIZE_BOX | wxMINIMIZE_BOX ) & ~ wxSTAY_ON_TOP ),
-        mTimer( this, UPDATE_TIMER_ID )
+        mTimer( this, NAVIGATIONPANE_UPDATE_TIMER_ID )
 {
     _activeButton = NONE;
 
@@ -431,11 +432,11 @@ void NavigationPane::BuildPane( void )
 
     // add step size sliders
     // See notes in cfdNavigate to see what the scalar bars actually map to
-    translationStepSize = new wxSlider( scrollWindow, TRANS_STEP_SLIDER, 20, 1, 100,
+    translationStepSize = new wxSlider( scrollWindow, NAVIGATIONPANE_TRANS_STEP_SLIDER, 20, 1, 100,
                                         wxDefaultPosition, wxDefaultSize,
                                         wxSL_HORIZONTAL |
                                         wxSL_AUTOTICKS );
-    rotationStepSize = new wxSlider( scrollWindow, ROT_STEP_SLIDER, 25, 1, 50,
+    rotationStepSize = new wxSlider( scrollWindow, NAVIGATIONPANE_ROT_STEP_SLIDER, 25, 1, 50,
                                      wxDefaultPosition, wxDefaultSize,
                                      wxSL_HORIZONTAL |
                                      wxSL_AUTOTICKS );
@@ -452,19 +453,19 @@ void NavigationPane::BuildPane( void )
 
     // Misc buttons and check boxes
     wxBoxSizer* miscGroup = new wxBoxSizer( wxHORIZONTAL );
-    headRotationChk = new wxCheckBox( scrollWindow, HEAD_ROTATE_CHK,
+    headRotationChk = new wxCheckBox( scrollWindow, NAVIGATIONPANE_HEAD_ROTATE_CHK,
                                       wxT( "Rotate About Users Head" ) );
     headRotationChk->SetValue( true );
     miscGroup->Add( headRotationChk, 1, wxALL | wxALIGN_LEFT, 5 );
     ///Reset nav position button
-    resetNavPosition = new wxButton( scrollWindow, RESET_NAV_POSITION,
+    resetNavPosition = new wxButton( scrollWindow, NAVIGATIONPANE_RESET_NAV_POSITION,
                                      wxT( "Reset Nav Position" ) );
     miscGroup->Add( resetNavPosition, 1, wxALL | wxALIGN_LEFT, 5 );
 
     miscGroup->Add( picSizer, 1, wxALIGN_RIGHT );
 
     wxBoxSizer* miscGroup2 = new wxBoxSizer( wxHORIZONTAL );
-    subZeroChk = new wxCheckBox( scrollWindow, SUB_ZERO_CHK, wxT( "Lower Limit ( z = 0 )" ) );
+    subZeroChk = new wxCheckBox( scrollWindow, NAVIGATIONPANE_SUB_ZERO_CHK, wxT( "Lower Limit ( z = 0 )" ) );
 
     wxString key = wxString( "UserPreferences", wxConvUTF8 );
     bool zLock = false;
@@ -473,7 +474,7 @@ void NavigationPane::BuildPane( void )
     subZeroChk->SetValue( zLock );
     miscGroup2->Add( subZeroChk, 0, wxALL | wxALIGN_LEFT, 5 );
     ///Store start position
-    wxButton* startButton = new wxButton( scrollWindow, STORE_START_POSITION,
+    wxButton* startButton = new wxButton( scrollWindow, NAVIGATIONPANE_STORE_START_POSITION,
                                           wxT( "Store Start Position" ) );
     miscGroup2->Add( startButton, 1, wxALL | wxALIGN_LEFT, 5 );
 

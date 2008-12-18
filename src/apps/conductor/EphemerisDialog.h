@@ -206,40 +206,6 @@ private:
     int m_lastMinute;///<The last value of the minutes;
 
     std::map<std::string, ves::open::xml::CommandPtr> m_storedLocations;///<The saved locations
-private:
-    //Note: if you receive any error with these enum IDs, then you need to
-    //change your old form code that are based on the #define control IDs.
-    //#defines may replace a numeric value for the enum names.
-    //Try copy and pasting the below block in your old form header files.
-    enum
-    {
-        ////GUI Enum Control ID Start
-        ID_M_AMPM = 1038,
-        ID_M_LONHEMISPHERE = 1034,
-        ID_M_LONMINUTESSYMBOL = 1033,
-        ID_M_LONGITUDEMINUTES = 1032,
-        ID_M_DEGREELONSYMBOL = 1031,
-        ID_M_LONGITUDEDEGREE = 1030,
-        ID_M_LATHEMISPHERE = 1028,
-        ID_M_MINUTESSYMBOL = 1026,
-        ID_M_LATITUDEMINUTES = 1025,
-        ID_M_DEGREESYMBOL = 1024,
-        ID_M_LATDEGREES = 1023,
-        ID_M_MINUTES = 1018,
-        ID_M_HOURCOLON = 1017,
-        ID_M_HOUR = 1016,
-        ID_M_CALENDAR = 1009,
-        ID_M_LATITUDELONGITUDE = 1004,
-        ID_M_DATETIME = 1003,
-        ID_M_DATAENTRYPAGES = 1002,
-        ID_AUTO_DATE_TIME = 1234,
-        ID_M_SAVE_LOCATION_BUTTON = 1235,
-        ID_M_LOAD_LOCATION_BUTTON = 1236,
-        ID_M_LOAD_HEIGHT_MAP = 1237,
-        ID_M_TOGGLE_EPHEMERIS = 1237,
-        ////GUI Enum Control ID End
-        ID_DUMMY_VALUE_ //don't remove this value unless you have other enum values
-    };
 
 private:
     //void OnClose( wxCloseEvent& event );

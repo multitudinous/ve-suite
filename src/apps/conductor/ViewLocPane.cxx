@@ -32,6 +32,7 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/conductor/util/CORBAServiceList.h>
 #include "ViewLocPane.h"
+#include "ConductorAppEnums.h"
 #include <ves/open/xml/DataValuePair.h>
 #include <ves/open/xml/Command.h>
 
@@ -45,25 +46,25 @@ using namespace ves::open::xml;
 using namespace ves::conductor::util;
 
 BEGIN_EVENT_TABLE( ViewLocPane, wxDialog )
-    EVT_BUTTON( VIEWLOC_LOAD_BUTTON, ViewLocPane::_onLoad )
-    EVT_BUTTON( REMOVE_VIEW_PT_BUTTON, ViewLocPane::_onRemoveVP )
-    EVT_BUTTON( VIEWLOC_ACCEPTNEWVPNAME_BUTTON, ViewLocPane::_onAcceptNewVPName )
-    EVT_BUTTON( VIEWLOC_CANCELNEWVPNAME_BUTTON, ViewLocPane::_onCancelNewVPName )
-    EVT_COMBOBOX( VIEWLOC_MOVETOVP_COMBOBOX, ViewLocPane::_onMoveToVP )
-    EVT_BUTTON( VIEWLOC_NEWFLY_BUTTON, ViewLocPane::_onBuildNewFlyButton )
-    EVT_BUTTON( VIEWLOC_ACCEPTNEWFLYNAME_BUTTON, ViewLocPane::_onAcceptNewFlyName )
-    EVT_BUTTON( VIEWLOC_CANCELNEWFLYNAME_BUTTON, ViewLocPane::_onCancelNewFlyName )
-    EVT_COMBOBOX( VIEWLOC_ACTIVEFLYSEL_COMBOBOX, ViewLocPane::_onActiveFlySel )
-    EVT_COMBOBOX( VIEWLOC_ADDVPTOFLYSEL_COMBOBOX, ViewLocPane::_onAddVPtoFlySel )
-    EVT_COMBOBOX( VIEWLOC_INSERTVPINFLYSEL_COMBOBOX, ViewLocPane::_onInsertVPinFlySel )
-    EVT_COMBOBOX( VIEWLOC_REMOVEVPFROMFLYSEL_COMBOBOX, ViewLocPane::_onRemoveVPfromFlySel )
-    EVT_COMBOBOX( VIEWLOC_DELETEFLYSEL_COMBOBOX, ViewLocPane::_onDeleteFlySel )
-    EVT_BUTTON( VIEWLOC_RUNFLY_BUTTON, ViewLocPane::_onStartActiveFly )
-    EVT_BUTTON( VIEWLOC_LOAD_FILE, ViewLocPane::_onLoadStoredPointsFile )
-    EVT_BUTTON( VIEWLOC_SAVE_FILE, ViewLocPane::_onSaveStoredPointsFile )
-    EVT_BUTTON( VIEWLOC_STOPFLY_BUTTON, ViewLocPane::_onStopFly )
-    EVT_LISTBOX( VIEWLOC_FLYBUILDER_LISTBOX, ViewLocPane::_onFlyBuilderListBox )
-    EVT_SPINCTRL( VIEWLOC_SPEED_CONTROL_SPIN, ViewLocPane::_onSpeedChange )
+    EVT_BUTTON( VIEWLOCPANE_LOAD_BUTTON, ViewLocPane::_onLoad )
+    EVT_BUTTON( VIEWLOCPANE_REMOVE_VIEW_PT_BUTTON, ViewLocPane::_onRemoveVP )
+    EVT_BUTTON( VIEWLOCPANE_ACCEPTNEWVPNAME_BUTTON, ViewLocPane::_onAcceptNewVPName )
+    EVT_BUTTON( VIEWLOCPANE_CANCELNEWVPNAME_BUTTON, ViewLocPane::_onCancelNewVPName )
+    EVT_COMBOBOX( VIEWLOCPANE_MOVETOVP_COMBOBOX, ViewLocPane::_onMoveToVP )
+    EVT_BUTTON( VIEWLOCPANE_NEWFLY_BUTTON, ViewLocPane::_onBuildNewFlyButton )
+    EVT_BUTTON( VIEWLOCPANE_ACCEPTNEWFLYNAME_BUTTON, ViewLocPane::_onAcceptNewFlyName )
+    EVT_BUTTON( VIEWLOCPANE_CANCELNEWFLYNAME_BUTTON, ViewLocPane::_onCancelNewFlyName )
+    EVT_COMBOBOX( VIEWLOCPANE_ACTIVEFLYSEL_COMBOBOX, ViewLocPane::_onActiveFlySel )
+    EVT_COMBOBOX( VIEWLOCPANE_ADDVPTOFLYSEL_COMBOBOX, ViewLocPane::_onAddVPtoFlySel )
+    EVT_COMBOBOX( VIEWLOCPANE_INSERTVPINFLYSEL_COMBOBOX, ViewLocPane::_onInsertVPinFlySel )
+    EVT_COMBOBOX( VIEWLOCPANE_REMOVEVPFROMFLYSEL_COMBOBOX, ViewLocPane::_onRemoveVPfromFlySel )
+    EVT_COMBOBOX( VIEWLOCPANE_DELETEFLYSEL_COMBOBOX, ViewLocPane::_onDeleteFlySel )
+    EVT_BUTTON( VIEWLOCPANE_RUNFLY_BUTTON, ViewLocPane::_onStartActiveFly )
+    EVT_BUTTON( VIEWLOCPANE_LOAD_FILE, ViewLocPane::_onLoadStoredPointsFile )
+    EVT_BUTTON( VIEWLOCPANE_SAVE_FILE, ViewLocPane::_onSaveStoredPointsFile )
+    EVT_BUTTON( VIEWLOCPANE_STOPFLY_BUTTON, ViewLocPane::_onStopFly )
+    EVT_LISTBOX( VIEWLOCPANE_FLYBUILDER_LISTBOX, ViewLocPane::_onFlyBuilderListBox )
+    EVT_SPINCTRL( VIEWLOCPANE_SPEED_CONTROL_SPIN, ViewLocPane::_onSpeedChange )
     EVT_IDLE( ViewLocPane::_refreshGUIFromXplorerData )
 END_EVENT_TABLE()
 
@@ -190,14 +191,14 @@ void ViewLocPane::_buildPage()
 
 
     wxStaticText* _loadLabel = new wxStaticText( this, -1, wxT( "Load Viewpoints from File" ) );
-    wxButton* _loadViewLocationButton = new wxButton( this, VIEWLOC_LOAD_FILE, _( "Load" ) );
+    wxButton* _loadViewLocationButton = new wxButton( this, VIEWLOCPANE_LOAD_FILE, _( "Load" ) );
 
 
     wxStaticText* _addvwptLabel = new wxStaticText( this, -1, wxT( "Add Current Location as Viewpoint" ) );
-    wxButton* _addnewviewptButton = new wxButton( this, VIEWLOC_LOAD_BUTTON, wxT( "Add Location" ) );
+    wxButton* _addnewviewptButton = new wxButton( this, VIEWLOCPANE_LOAD_BUTTON, wxT( "Add Location" ) );
 
     wxStaticText* _removevwptLabel = new wxStaticText( this, -1, wxT( "Select Viewpoint(s) for Removal" ) );
-    wxButton* _removeViewPointButton = new wxButton( this, REMOVE_VIEW_PT_BUTTON, wxT( "Delete Location(s)" ) );
+    wxButton* _removeViewPointButton = new wxButton( this, VIEWLOCPANE_REMOVE_VIEW_PT_BUTTON, wxT( "Delete Location(s)" ) );
 
     wxBoxSizer* _viewpointLoadControlsSizer = new wxBoxSizer( wxVERTICAL );
     _viewpointLoadControlsSizer->Add( _loadLabel, 0, wxALIGN_LEFT );
@@ -223,7 +224,7 @@ void ViewLocPane::_buildPage()
     wxBoxSizer* _moveToViewpointSizer = new wxBoxSizer( wxVERTICAL );
 
     wxStaticText* _movetovwptLabel = new wxStaticText( this, -1, wxT( "Move to a Viewpoint " ) );
-    _movetovwptSel = new wxComboBox( this, VIEWLOC_MOVETOVP_COMBOBOX, wxT( "Select a Viewpoint" ), wxDefaultPosition,
+    _movetovwptSel = new wxComboBox( this, VIEWLOCPANE_MOVETOVP_COMBOBOX, wxT( "Select a Viewpoint" ), wxDefaultPosition,
                                      wxDefaultSize, 1,
                                      choices, wxCB_READONLY );
 
@@ -234,8 +235,8 @@ void ViewLocPane::_buildPage()
 
     wxBoxSizer* _speedButtonsSizer = new wxBoxSizer( wxVERTICAL );
 
-    wxButton* _startFlythrough = new wxButton( this, VIEWLOC_RUNFLY_BUTTON, wxT( "Start" ) );
-    wxButton* _stopFlythrough = new wxButton( this, VIEWLOC_STOPFLY_BUTTON, wxT( "Stop" ) );
+    wxButton* _startFlythrough = new wxButton( this, VIEWLOCPANE_RUNFLY_BUTTON, wxT( "Start" ) );
+    wxButton* _stopFlythrough = new wxButton( this, VIEWLOCPANE_STOPFLY_BUTTON, wxT( "Stop" ) );
 
 
     _speedButtonsSizer->Add( _startFlythrough, 1, wxALIGN_LEFT | wxBOTTOM, 2 );
@@ -247,7 +248,7 @@ void ViewLocPane::_buildPage()
 
     _spinSpeedControls = new wxSpinCtrlDbl();
     _spinSpeedControls->Create( this,
-                                VIEWLOC_SPEED_CONTROL_SPIN,
+                                VIEWLOCPANE_SPEED_CONTROL_SPIN,
                                 wxEmptyString,
                                 wxDefaultPosition,
                                 wxDefaultSize,
@@ -596,7 +597,7 @@ void ViewLocPane::SendCommandsToXplorer()
     {
         _dataValuePairList.clear();
 
-        _commandName = "ViewLoc_Data";
+        _commandName = "VIEWLOCPANE_Data";
         // Create the command and data value pairs
         DataValuePairPtr dataValuePair( new DataValuePair() );
         dataValuePair->SetData( dataValueName, commandInputs );

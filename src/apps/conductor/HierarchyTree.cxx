@@ -33,6 +33,7 @@
 #include <ves/conductor/util/CORBAServiceList.h>
 
 #include "HierarchyTree.h"
+#include "ConductorAppEnums.h"
 
 #include <ves/conductor/Network.h>
 #include <ves/conductor/Canvas.h>
@@ -69,12 +70,11 @@ using namespace ves::conductor::util;
 using namespace ves::conductor;
 
 BEGIN_EVENT_TABLE( HierarchyTree, wxTreeCtrl )
-    EVT_TREE_SEL_CHANGED( TREE_CTRL, HierarchyTree::OnSelChanged )
-    EVT_TREE_ITEM_EXPANDING( TREE_CTRL, HierarchyTree::OnExpanded )
-    EVT_TREE_ITEM_ACTIVATED( TREE_CTRL, HierarchyTree::OnDoubleClick )
-    EVT_TREE_ITEM_RIGHT_CLICK( TREE_CTRL, HierarchyTree::OnRightClick )
-    //EVT_MENU_RANGE( UIPluginBase::BEGIN_MENU_ID, UIPluginBase::END_MENU_ID,
-    //    HierarchyTree::ProcessRightClickMenuEvents )
+    EVT_TREE_SEL_CHANGED( HIERARCHYTREE_CTRL, HierarchyTree::OnSelChanged )
+    EVT_TREE_ITEM_EXPANDING( HIERARCHYTREE_CTRL, HierarchyTree::OnExpanded )
+    EVT_TREE_ITEM_ACTIVATED( HIERARCHYTREE_CTRL, HierarchyTree::OnDoubleClick )
+    EVT_TREE_ITEM_RIGHT_CLICK( HIERARCHYTREE_CTRL, HierarchyTree::OnRightClick )
+
 END_EVENT_TABLE()
 
 HierarchyTree::HierarchyTree( wxWindow *parent, const wxWindowID id,

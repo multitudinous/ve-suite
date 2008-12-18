@@ -34,6 +34,7 @@
 #include <ves/conductor/util/CORBAServiceList.h>
 
 #include "AppFrame.h"
+#include "ConductorAppEnums.h"
 
 #include <wx/imaglist.h>
 #include <wx/artprov.h>
@@ -121,84 +122,78 @@ using namespace ves::open::xml::shader;
 
 
 BEGIN_EVENT_TABLE( AppFrame, wxFrame )
-    EVT_TIMER( TIMER_ID, AppFrame::OnTimer )
+    EVT_TIMER( APPFRAME_TIMER_ID, AppFrame::OnTimer )
     //EVT_CLOSE( AppFrame::OnFrameClose )
-    EVT_MENU( v21ID_ZOOMIN, AppFrame::ZoomIn )
-    EVT_MENU( v21ID_ZOOMOUT, AppFrame::ZoomOut )
+    EVT_MENU( APPFRAME_V21ID_ZOOMIN, AppFrame::ZoomIn )
+    EVT_MENU( APPFRAME_V21ID_ZOOMOUT, AppFrame::ZoomOut )
     EVT_CHAR( AppFrame::OnKeyPress )
     EVT_MENU( wxID_SAVE, AppFrame::Save )
     EVT_MENU( wxID_SAVEAS, AppFrame::SaveAs )
     EVT_MENU( wxID_NEW, AppFrame::NewCanvas )
     //This is probably a bug and needs to be fixed
     EVT_MENU( wxID_EXIT, AppFrame::FrameClose )
-    EVT_MENU( ID_PREFERENCES, AppFrame::OnPreferences )
-    EVT_MENU( CLEAR_RECENT_FILES, AppFrame::OnClearRecentFiles )
+    EVT_MENU( APPFRAME_PREFERENCES, AppFrame::OnPreferences )
+    EVT_MENU( APPFRAME_CLEAR_RECENT_FILES, AppFrame::OnClearRecentFiles )
     EVT_MENU( wxID_OPEN, AppFrame::Open )
-    EVT_MENU( CHANGE_WORKING_DIRECTORY, AppFrame::OnChangeWorkingDirectory )
+    EVT_MENU( APPFRAME_CHANGE_WORKING_DIRECTORY, AppFrame::OnChangeWorkingDirectory )
 
     EVT_MENU_RANGE( wxID_FILE1, wxID_FILE9  , AppFrame::OpenRecentFile )
 
-    EVT_MENU( v21ID_LOAD, AppFrame::LoadFromServer )
-    EVT_MENU( QUERY_FROM_SERVER, AppFrame::QueryFromServer )
-    EVT_MENU( v21ID_SUBMIT, AppFrame::SubmitToServer )
-    //EVT_MENU( v21ID_CONNECT, AppFrame::ConExeServer )
-    EVT_MENU( v21ID_DISCONNECT, AppFrame::DisConExeServer )
-    EVT_MENU( v21ID_DISCONNECT_VE, AppFrame::DisConVEServer )
-    //EVT_MENU( v21ID_CONNECT_VE, AppFrame::ConVEServer )
-    EVT_MENU( v21ID_START_CALC, AppFrame::StartCalc )
-    EVT_MENU( v21ID_STOP_CALC, AppFrame::StopCalc )
-    EVT_MENU( v21ID_PAUSE_CALC, AppFrame::PauseCalc )
-    EVT_MENU( v21ID_RESUME_CALC, AppFrame::ResumeCalc )
+    EVT_MENU( APPFRAME_V21ID_LOAD, AppFrame::LoadFromServer )
+    EVT_MENU( APPFRAME_QUERY_FROM_SERVER, AppFrame::QueryFromServer )
+    EVT_MENU( APPFRAME_V21ID_SUBMIT, AppFrame::SubmitToServer )
+    //EVT_MENU( APPFRAME_V21ID_CONNECT, AppFrame::ConExeServer )
+    EVT_MENU( APPFRAME_V21ID_DISCONNECT, AppFrame::DisConExeServer )
+    EVT_MENU( APPFRAME_V21ID_DISCONNECT_VE, AppFrame::DisConVEServer )
+    //EVT_MENU( APPFRAME_V21ID_CONNECT_VE, AppFrame::ConVEServer )
+    EVT_MENU( APPFRAME_V21ID_START_CALC, AppFrame::StartCalc )
+    EVT_MENU( APPFRAME_V21ID_STOP_CALC, AppFrame::StopCalc )
+    EVT_MENU( APPFRAME_V21ID_PAUSE_CALC, AppFrame::PauseCalc )
+    EVT_MENU( APPFRAME_V21ID_RESUME_CALC, AppFrame::ResumeCalc )
 
-    EVT_MENU( v21ID_HELP, AppFrame::ViewHelp )
-    EVT_MENU( v21ID_ABOUT, AppFrame::ViewAbout )
-    EVT_MENU( v21ID_REVISION, AppFrame::ViewRevision )
-    EVT_MENU( v21ID_CONTACTS, AppFrame::ViewContacts )
-    EVT_MENU( v21ID_PLATFORM, AppFrame::ViewPlatformInfo )
+    EVT_MENU( APPFRAME_V21ID_HELP, AppFrame::ViewHelp )
+    EVT_MENU( APPFRAME_V21ID_ABOUT, AppFrame::ViewAbout )
+    EVT_MENU( APPFRAME_V21ID_REVISION, AppFrame::ViewRevision )
+    EVT_MENU( APPFRAME_V21ID_CONTACTS, AppFrame::ViewContacts )
+    EVT_MENU( APPFRAME_V21ID_PLATFORM, AppFrame::ViewPlatformInfo )
 
-    EVT_MENU( v21ID_VIEW_RESULT, AppFrame::ViewResult )
+    EVT_MENU( APPFRAME_V21ID_VIEW_RESULT, AppFrame::ViewResult )
 
-    EVT_MENU( WAND, AppFrame::ChangeDevice )
-    EVT_MENU( KEYBOARD_MOUSE, AppFrame::ChangeDevice )
+    EVT_MENU( APPFRAME_WAND, AppFrame::ChangeDevice )
+    EVT_MENU( APPFRAME_KEYBOARD_MOUSE, AppFrame::ChangeDevice )
 
-    EVT_MENU( DEVICE_PROPERTIES, AppFrame::LaunchDeviceProperties )
+    EVT_MENU( APPFRAME_DEVICE_PROPERTIES, AppFrame::LaunchDeviceProperties )
 
-    EVT_MENU( FRAME_RATE, AppFrame::DisplaySelection )
-    EVT_MENU( COORDINATE_SYSTEM, AppFrame::DisplaySelection )
+    EVT_MENU( APPFRAME_FRAME_RATE, AppFrame::DisplaySelection )
+    EVT_MENU( APPFRAME_COORDINATE_SYSTEM, AppFrame::DisplaySelection )
 
-    EVT_MENU( FRAME_ALL, AppFrame::ViewSelection )
-    EVT_MENU( FRAME_SELECTION, AppFrame::ViewSelection )
-    EVT_MENU( RESET, AppFrame::ViewSelection )
+    EVT_MENU( APPFRAME_FRAME_ALL, AppFrame::ViewSelection )
+    EVT_MENU( APPFRAME_FRAME_SELECTION, AppFrame::ViewSelection )
+    EVT_MENU( APPFRAME_RESET, AppFrame::ViewSelection )
 
-    EVT_MENU( XPLORER_NAVIGATION, AppFrame::LaunchNavigationPane )
-    EVT_MENU( XPLORER_VIEWPOINTS, AppFrame::LaunchViewpointsPane )
-    EVT_MENU( XPLORER_SCENES, AppFrame::LaunchRecordScenes )
-    EVT_MENU( XPLORER_COLOR, AppFrame::SetBackgroundColor )
-    EVT_MENU( XPLORER_EPHEMERIS, AppFrame::SetEphemerisData )
-    EVT_MENU( XPLORER_EXIT, AppFrame::OnExitXplorer )
-    EVT_MENU( JUGGLER_STEREO, AppFrame::JugglerSettings )
-    EVT_MENU( JUGGLER_MONO, AppFrame::JugglerSettings )
-    //EVT_MENU( QUERY_NETWORK, AppFrame::QueryNetwork )
-    //EVT_MENU( SAVE_SIMULATION, AppFrame::SaveSimulation )
-    //EVT_MENU( SAVEAS_SIMULATION, AppFrame::SaveAsSimulation )
-    //EVT_MENU( RUN_ASPEN_NETWORK, AppFrame::RunAspenNetwork )
-    //EVT_MENU( STEP_ASPEN_NETWORK, AppFrame::StepAspenNetwork )
-    //EVT_MENU( SHOW_ASPEN_SIMULATION, AppFrame::ShowAspenSimulation )
-    //EVT_MENU( HIDE_ASPEN_SIMULATION, AppFrame::HideAspenSimulation )
-    //EVT_MENU( CLOSE_ASPEN_SIMULATION, AppFrame::OnCloseAspenSimulation )
-	//EVT_MENU( REINITIALIZE_ASPEN_SIMULATION, AppFrame::ReinitializeAspenSimulation )
-    EVT_MENU( CONDUCTOR_FIND, AppFrame::FindBlocks )
-    EVT_MENU( CHANGE_XPLORER_VIEW_NETWORK, AppFrame::ChangeXplorerViewSettings )
-    EVT_MENU( CHANGE_XPLORER_VIEW_CAD, AppFrame::ChangeXplorerViewSettings )
-    EVT_MENU( CHANGE_XPLORER_VIEW_LOGO, AppFrame::ChangeXplorerViewSettings )
-    EVT_MENU( ExportMenu::EXPORT_SCREEN_SHOT, ExportMenu::OnScreenShot )
-    EVT_MENU( ExportMenu::EXPORT_DOT_FILE, ExportMenu::OnDOTFile )
+    EVT_MENU( APPFRAME_XPLORER_NAVIGATION, AppFrame::LaunchNavigationPane )
+    EVT_MENU( APPFRAME_XPLORER_VIEWPOINTS, AppFrame::LaunchViewpointsPane )
+    EVT_MENU( APPFRAME_XPLORER_SCENES, AppFrame::LaunchRecordScenes )
+    EVT_MENU( APPFRAME_XPLORER_COLOR, AppFrame::SetBackgroundColor )
+    EVT_MENU( APPFRAME_XPLORER_EPHEMERIS, AppFrame::SetEphemerisData )
+    EVT_MENU( APPFRAME_XPLORER_EXIT, AppFrame::OnExitXplorer )
+    EVT_MENU( APPFRAME_JUGGLER_STEREO, AppFrame::JugglerSettings )
+    EVT_MENU( APPFRAME_JUGGLER_MONO, AppFrame::JugglerSettings )
+    EVT_MENU( APPFRAME_CONDUCTOR_FIND, AppFrame::FindBlocks )
+    EVT_MENU( APPFRAME_CHANGE_XPLORER_VIEW_NETWORK, AppFrame::ChangeXplorerViewSettings )
+    EVT_MENU( APPFRAME_CHANGE_XPLORER_VIEW_CAD, AppFrame::ChangeXplorerViewSettings )
+    EVT_MENU( APPFRAME_CHANGE_XPLORER_VIEW_LOGO, AppFrame::ChangeXplorerViewSettings )
+    
+    EVT_MENU( EXPORTMENU_SCREEN_SHOT, ExportMenu::OnScreenShot )
+    EVT_MENU( EXPORTMENU_DOT_FILE, ExportMenu::OnDOTFile )
     EVT_MENU( UIPluginBase::DEL_MOD, AppFrame::OnDelMod )
     EVT_MENU( UIPluginBase::MAKE_HIER, AppFrame::OnMakeIntoHierarchy )
     EVT_MENU( UIPluginBase::SET_UI_PLUGIN_NAME, AppFrame::SetTreeItemName )
 	EVT_MENU( UIPluginBase::SHOW_ICON_CHOOSER, AppFrame::OnShowIconChooser )
-	EVT_MENU( UPDATE_HIER_TREE, AppFrame::UpdateHierarchyTree )
-    EVT_WINDOW_CREATE(AppFrame::OnChildCreate) 
+	
+    EVT_MENU( APPFRAME_UPDATE_HIER_TREE, AppFrame::UpdateHierarchyTree )
+
+    EVT_WINDOW_CREATE( AppFrame::OnChildCreate ) 
 	EVT_BUTTON( IconChooser::OK, AppFrame::OnChangeIcon )
     EVT_UPDATE_UI( Canvas::UPDATE_NETWORK_DATA, AppFrame::LoadNewNetwork )
 END_EVENT_TABLE()
@@ -227,7 +222,7 @@ AppFrame::AppFrame( wxWindow * parent, wxWindowID id, const wxString& title )
         mainToolBar( 0 ),
         serviceList( CORBAServiceList::instance() ),
         newCanvas( false ),
-        mTimer( this, TIMER_ID ),
+        mTimer( this, APPFRAME_TIMER_ID ),
         mDestoryFrame( false )
 {
     char** tempArray = new char*[ ::wxGetApp().argc ];
@@ -392,13 +387,13 @@ void AppFrame::_createTreeAndLogWindow( wxWindow* parent )
     {
         wx_log_splitter = new Splitter( parent, -1 );
         wx_log_splitter->SetMinimumPaneSize( 40 );
-        serviceList->GetMessageLog()->Create( wx_log_splitter, MYLOG, _( "" ),
+        serviceList->GetMessageLog()->Create( wx_log_splitter, APPFRAME_MYLOG, _( "" ),
                                               wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE | wxTE_READONLY );
         wx_nw_splitter = new Splitter( wx_log_splitter, -1 );
     }
     else
     {
-        serviceList->GetMessageLog()->Create( this, MYLOG, _( "" ),
+        serviceList->GetMessageLog()->Create( this, APPFRAME_MYLOG, _( "" ),
                                               wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE | wxTE_READONLY );
         wx_nw_splitter = new Splitter( parent, -1 );
     }
@@ -410,7 +405,7 @@ void AppFrame::_createTreeAndLogWindow( wxWindow* parent )
 
     //create module page
     wxPanel* modPage = new wxPanel( side_pane, -1, wxDefaultPosition, wxDefaultSize );
-    av_modules = new Avail_Modules( modPage, Avail_Modules::TREE_CTRL,
+    av_modules = new Avail_Modules( modPage, AVAILABLEMODULES_TREE_CTRL,
                                     wxDefaultPosition, wxDefaultSize, wxTR_HAS_BUTTONS );
 
     //make module panel fill the notebook page
@@ -424,7 +419,7 @@ void AppFrame::_createTreeAndLogWindow( wxWindow* parent )
     //create hierarchy page
     wxPanel * hierPage = new wxPanel( side_pane, -1, wxDefaultPosition,
         wxDefaultSize );
-    hierarchyTree = new HierarchyTree( hierPage, HierarchyTree::TREE_CTRL,
+    hierarchyTree = new HierarchyTree( hierPage, HIERARCHYTREE_CTRL,
         wxDefaultPosition, wxDefaultSize, wxTR_HAS_BUTTONS );
 
     //make hierarchy panel fill the notebook page
@@ -685,10 +680,10 @@ void AppFrame::CreateMenu()
     file_menu->Append( wxID_SAVE, _( "&Save\tCtrl+S" ) );
     file_menu->Append( wxID_SAVEAS, _( "Save &as ..\tCtrl+Shift+S" ) );
     file_menu->AppendSeparator();
-    file_menu->Append( EXPORT_MENU_OPT, _( "Export" ),
+    file_menu->Append( APPFRAME_EXPORT_MENU_OPT, _( "Export" ),
                        new ExportMenu(), _( "Options" ) );
     file_menu->AppendSeparator();
-    file_menu->Append( CHANGE_WORKING_DIRECTORY, _( "Change Working Directory" ) );
+    file_menu->Append( APPFRAME_CHANGE_WORKING_DIRECTORY, _( "Change Working Directory" ) );
     file_menu->AppendSeparator();
     /*file_menu->Append( wxID_PRINT_SETUP, _( "Print Set&up .." ) );
     file_menu->Append( wxID_PREVIEW, _( "Print Pre&view\tCtrl+Shift+P" ) );
@@ -697,18 +692,18 @@ void AppFrame::CreateMenu()
     file_menu->Enable( wxID_PREVIEW, false ); 
     file_menu->Enable( wxID_PRINT, false );
     file_menu->AppendSeparator();*/
-    file_menu->Append( ID_PREFERENCES, _( "Preferences" ) );
+    file_menu->Append( APPFRAME_PREFERENCES, _( "Preferences" ) );
     file_menu->AppendSeparator();
-    file_menu->Append( CLEAR_RECENT_FILES, _( "&Clear File History" ) );
+    file_menu->Append( APPFRAME_CLEAR_RECENT_FILES, _( "&Clear File History" ) );
 
     file_menu->AppendSeparator();
     file_menu->Append( wxID_EXIT, _( "&Quit\tCtrl+Q" ) );
 
-    //con_menu->Append(v21ID_CONNECT, _("&Connect to Executive\tCtrl+C"));
-    //con_menu->Append(v21ID_CONNECT_VE, _("Connect to VE"));
+    //con_menu->Append(V21ID_CONNECT, _("&Connect to Executive\tCtrl+C"));
+    //con_menu->Append(V21ID_CONNECT_VE, _("Connect to VE"));
     //con_menu->AppendSeparator();
-    con_menu->Append( v21ID_SUBMIT, _( "Sub&mit Job\tCtrl+M" ) );
-    con_menu->Append( v21ID_LOAD, _( "&Load Job\tCtrl+L" ) );
+    con_menu->Append( APPFRAME_V21ID_SUBMIT, _( "Sub&mit Job\tCtrl+M" ) );
+    con_menu->Append( APPFRAME_V21ID_LOAD, _( "&Load Job\tCtrl+L" ) );
 
     //con_menu->Append(QUERY_FROM_SERVER, _("&Query\tCtrl+U"));
     /*wxMenu * aspenMenu = new wxMenu();
@@ -728,55 +723,55 @@ void AppFrame::CreateMenu()
 
 
     con_menu->AppendSeparator();
-    con_menu->Append( v21ID_DISCONNECT, _( "&Disconnect\tCtrl+d" ) );
-    con_menu->Append( v21ID_DISCONNECT_VE, _( "&Disconnect VE" ) );
+    con_menu->Append( APPFRAME_V21ID_DISCONNECT, _( "&Disconnect\tCtrl+d" ) );
+    con_menu->Append( APPFRAME_V21ID_DISCONNECT_VE, _( "&Disconnect VE" ) );
 
-    //con_menu->Enable( v21ID_SUBMIT,false );
-    //con_menu->Enable( v21ID_LOAD, false );
-    con_menu->Enable( v21ID_DISCONNECT, false );
-    con_menu->Enable( v21ID_DISCONNECT_VE, false );
+    //con_menu->Enable( V21ID_SUBMIT,false );
+    //con_menu->Enable( V21ID_LOAD, false );
+    con_menu->Enable( APPFRAME_V21ID_DISCONNECT, false );
+    con_menu->Enable( APPFRAME_V21ID_DISCONNECT_VE, false );
 
 
-    run_menu->Append( v21ID_START_CALC, _( "Start Simulation" ) );
-    run_menu->Append( v21ID_STOP_CALC, _( "Stop Simulation" ) );
-    run_menu->Append( v21ID_PAUSE_CALC, _( "Pause Simulation" ) );
-    run_menu->Append( v21ID_RESUME_CALC, _( "Resume Simulation" ) );
-    run_menu->Append( v21ID_VIEW_RESULT, _( "View Results" ) );
-    // run_menu->Append( v21ID_GLOBAL_PARAM, _("Global Parameters"));
-    // run_menu->Append( v21ID_VIEW_FINANCIAL, _("View Financial Params"));
+    run_menu->Append( APPFRAME_V21ID_START_CALC, _( "Start Simulation" ) );
+    run_menu->Append( APPFRAME_V21ID_STOP_CALC, _( "Stop Simulation" ) );
+    run_menu->Append( APPFRAME_V21ID_PAUSE_CALC, _( "Pause Simulation" ) );
+    run_menu->Append( APPFRAME_V21ID_RESUME_CALC, _( "Resume Simulation" ) );
+    run_menu->Append( APPFRAME_V21ID_VIEW_RESULT, _( "View Results" ) );
+    // run_menu->Append( V21ID_GLOBAL_PARAM, _("Global Parameters"));
+    // run_menu->Append( V21ID_VIEW_FINANCIAL, _("View Financial Params"));
 
-    run_menu->Enable( v21ID_START_CALC, false );
-    run_menu->Enable( v21ID_STOP_CALC, false );
-    run_menu->Enable( v21ID_PAUSE_CALC, false );
-    run_menu->Enable( v21ID_RESUME_CALC, false );
-    // EPRI TAG run_menu->Enable(v21ID_VIEW_RESULT, false);
+    run_menu->Enable( APPFRAME_V21ID_START_CALC, false );
+    run_menu->Enable( APPFRAME_V21ID_STOP_CALC, false );
+    run_menu->Enable( APPFRAME_V21ID_PAUSE_CALC, false );
+    run_menu->Enable( APPFRAME_V21ID_RESUME_CALC, false );
+    // EPRI TAG run_menu->Enable(V21ID_VIEW_RESULT, false);
 
-    //edit_menu->Append(v21ID_UNDO, _("&Undo\tCtrl+U"));
-    //edit_menu->Append(v21ID_REDO, _("&Redo\tCtrl+R"));
+    //edit_menu->Append(V21ID_UNDO, _("&Undo\tCtrl+U"));
+    //edit_menu->Append(V21ID_REDO, _("&Redo\tCtrl+R"));
     //edit_menu->AppendSeparator();
-    edit_menu->Append( v21ID_ZOOMIN, _( "Zoom &In" ) );
-    edit_menu->Append( v21ID_ZOOMOUT, _( "Zoom &Out" ) );
-    edit_menu->Append( CONDUCTOR_FIND, _( "Find" ) );
+    edit_menu->Append( APPFRAME_V21ID_ZOOMIN, _( "Zoom &In" ) );
+    edit_menu->Append( APPFRAME_V21ID_ZOOMOUT, _( "Zoom &Out" ) );
+    edit_menu->Append( APPFRAME_CONDUCTOR_FIND, _( "Find" ) );
     //This is needed because on windows the scale must be 1 for the
     //wxAutoBufferedPaintDC to work properly
 //#ifdef WIN32
-//    edit_menu->Enable( v21ID_ZOOMIN, false );
-//    edit_menu->Enable( v21ID_ZOOMOUT, false );
+//    edit_menu->Enable( V21ID_ZOOMIN, false );
+//    edit_menu->Enable( V21ID_ZOOMOUT, false );
 //#endif
-    //edit_menu->Enable(v21ID_UNDO, false);
-    //edit_menu->Enable(v21ID_REDO, false);
+    //edit_menu->Enable(V21ID_UNDO, false);
+    //edit_menu->Enable(V21ID_REDO, false);
 
     //help_menu->Append(wxID_HELP_CONTENTS, _("&Content\tF1"));
-    help_menu->Append( v21ID_HELP, _( "&VE-Suite Help" ) );
-    help_menu->Append( v21ID_ABOUT, _( "&About" ) );
-    help_menu->Append( v21ID_REVISION, _( "&Revision" ) );
-    help_menu->Append( v21ID_CONTACTS, _( "&Contacts" ) );
-    help_menu->Append( v21ID_PLATFORM, _( "&Platform Info" ) );
+    help_menu->Append( APPFRAME_V21ID_HELP, _( "&VE-Suite Help" ) );
+    help_menu->Append( APPFRAME_V21ID_ABOUT, _( "&About" ) );
+    help_menu->Append( APPFRAME_V21ID_REVISION, _( "&Revision" ) );
+    help_menu->Append( APPFRAME_V21ID_CONTACTS, _( "&Contacts" ) );
+    help_menu->Append( APPFRAME_V21ID_PLATFORM, _( "&Platform Info" ) );
     //help_menu->AppendSeparator();
     //help_menu->Append (wxID_ABOUT, _("&About ..\tShift+F1"));
 
     //help_menu->Enable(wxID_HELP_CONTENTS, false);
-    //help_menu->Enable(v21ID_HELP, false);
+    //help_menu->Enable(V21ID_HELP, false);
     //help_menu->Enable(wxID_ABOUT, true);
 
     xplorerMenu = new wxMenu();
@@ -787,59 +782,59 @@ void AppFrame::CreateMenu()
     xplorerViewMenu = new wxMenu();
     wxMenu* xplorerView = new wxMenu();
 
-    xplorerDeviceMenu->Append( WAND, _( "Wand" ) );
-    xplorerDeviceMenu->Append( KEYBOARD_MOUSE,  _( "Keyboard Mouse" ) );
+    xplorerDeviceMenu->Append( APPFRAME_WAND, _( "Wand" ) );
+    xplorerDeviceMenu->Append( APPFRAME_KEYBOARD_MOUSE,  _( "Keyboard Mouse" ) );
     xplorerDeviceMenu->AppendSeparator();
-    xplorerDeviceMenu->Append( DEVICE_PROPERTIES,    _( "Properties" ) );
+    xplorerDeviceMenu->Append( APPFRAME_DEVICE_PROPERTIES,    _( "Properties" ) );
 
-    xplorerDisplayMenu->AppendCheckItem( FRAME_RATE,        _( "Frame Rate" ) );
-    xplorerDisplayMenu->AppendCheckItem( COORDINATE_SYSTEM, _( "Coord System" ) );
+    xplorerDisplayMenu->AppendCheckItem( APPFRAME_FRAME_RATE,        _( "Frame Rate" ) );
+    xplorerDisplayMenu->AppendCheckItem( APPFRAME_COORDINATE_SYSTEM, _( "Coord System" ) );
 
-    xplorerViewMenu->Append( FRAME_ALL,       _( "Frame All            [f]" ) );
-    xplorerViewMenu->Append( FRAME_SELECTION, _( "Frame Selection" ) );
-    xplorerViewMenu->Append( RESET,           _( "Reset                  [r]" ) );
+    xplorerViewMenu->Append( APPFRAME_FRAME_ALL,       _( "Frame All            [f]" ) );
+    xplorerViewMenu->Append( APPFRAME_FRAME_SELECTION, _( "Frame Selection" ) );
+    xplorerViewMenu->Append( APPFRAME_RESET,           _( "Reset                  [r]" ) );
 
-    xplorerView->Append( CHANGE_XPLORER_VIEW_NETWORK, _( "Network" ) );
-    xplorerView->Append( CHANGE_XPLORER_VIEW_CAD, _( "CAD" ) );
-    xplorerView->Append( CHANGE_XPLORER_VIEW_LOGO, _( "Logo" ) );
+    xplorerView->Append( APPFRAME_CHANGE_XPLORER_VIEW_NETWORK, _( "Network" ) );
+    xplorerView->Append( APPFRAME_CHANGE_XPLORER_VIEW_CAD, _( "CAD" ) );
+    xplorerView->Append( APPFRAME_CHANGE_XPLORER_VIEW_LOGO, _( "Logo" ) );
 
-    xplorerJugglerMenu->Append( JUGGLER_STEREO, _( "Stereo" ) );
-    xplorerJugglerMenu->Append( JUGGLER_MONO, _( "Mono" ) );
-    xplorerJugglerMenu->Enable( JUGGLER_STEREO, true );
-    xplorerJugglerMenu->Enable( JUGGLER_MONO, true );
+    xplorerJugglerMenu->Append( APPFRAME_JUGGLER_STEREO, _( "Stereo" ) );
+    xplorerJugglerMenu->Append( APPFRAME_JUGGLER_MONO, _( "Mono" ) );
+    xplorerJugglerMenu->Enable( APPFRAME_JUGGLER_STEREO, true );
+    xplorerJugglerMenu->Enable( APPFRAME_JUGGLER_MONO, true );
 
-    xplorerMenu->Append( XPLORER_NAVIGATION, _( "Navigation Pane" ) );
-    xplorerMenu->Append( XPLORER_VIEWPOINTS, _( "Viewpoints Pane" ) );
-    xplorerMenu->Append( XPLORER_SCENES,     _( "Record Scenes" ) );
-    xplorerMenu->Append( XPLORER_COLOR,      _( "Background Color" ) );
-    xplorerMenu->Append( XPLORER_EPHEMERIS, _( "Ephemeris Data" ) );
+    xplorerMenu->Append( APPFRAME_XPLORER_NAVIGATION, _( "Navigation Pane" ) );
+    xplorerMenu->Append( APPFRAME_XPLORER_VIEWPOINTS, _( "Viewpoints Pane" ) );
+    xplorerMenu->Append( APPFRAME_XPLORER_SCENES,     _( "Record Scenes" ) );
+    xplorerMenu->Append( APPFRAME_XPLORER_COLOR,      _( "Background Color" ) );
+    xplorerMenu->Append( APPFRAME_XPLORER_EPHEMERIS, _( "Ephemeris Data" ) );
     //xplorerMenu->Append( XPLORER_SOUNDS,     _("Sounds Pane") );
     //xplorerMenu->Append( XPLORER_STREAMLINE, _("Streamline Pane") );
-    xplorerMenu->Append( XPLORER_DEVICE,     _( "Devices" ),
+    xplorerMenu->Append( APPFRAME_XPLORER_DEVICE,     _( "Devices" ),
                          xplorerDeviceMenu,  _( "Used to change device properties" ) );
-    xplorerMenu->Append( JUGGLER_SETTINGS,   _( "Juggler Settings" ),
+    xplorerMenu->Append( APPFRAME_JUGGLER_SETTINGS,   _( "Juggler Settings" ),
                          xplorerJugglerMenu, _( "Used to adjust juggler runtime settings" ) );
-    xplorerMenu->Append( XPLORER_DISPLAY,    _( "Display" ),
+    xplorerMenu->Append( APPFRAME_XPLORER_DISPLAY,    _( "Display" ),
                          xplorerDisplayMenu, _( "Used to change display preferences" ) );
-    xplorerMenu->Append( XPLORER_VIEW,       _( "View" ),
+    xplorerMenu->Append( APPFRAME_XPLORER_VIEW,       _( "View" ),
                          xplorerViewMenu,    _( "Used to change the view" ) );
     //add the view settings
-    xplorerMenu->Append( CHANGE_XPLORER_VIEW, _( "Graphical View" ),
+    xplorerMenu->Append( APPFRAME_CHANGE_XPLORER_VIEW, _( "Graphical View" ),
                          xplorerView,        _( "Used to change the view in xplorer" ) );
     //If the display mode is desktop then we will disconnect when exit is selected
     //and in other modes we will give the user the ability to exit
     if (( GetDisplayMode() != "Desktop" ) &&
             ( preferences->GetMode( "Shut Down Xplorer Option" ) ) )
     {
-        xplorerMenu->Append( XPLORER_EXIT, _( "Shutdown Xplorer" ) );
-        xplorerMenu->Enable( XPLORER_EXIT, true );
+        xplorerMenu->Append( APPFRAME_XPLORER_EXIT, _( "Shutdown Xplorer" ) );
+        xplorerMenu->Enable( APPFRAME_XPLORER_EXIT, true );
     }
 
-    xplorerMenu->Enable( XPLORER_NAVIGATION, true );
-    xplorerMenu->Enable( XPLORER_VIEWPOINTS, true );
+    xplorerMenu->Enable( APPFRAME_XPLORER_NAVIGATION, true );
+    xplorerMenu->Enable( APPFRAME_XPLORER_VIEWPOINTS, true );
     //xplorerMenu->Enable( XPLORER_SOUNDS, true);
-    xplorerMenu->Enable( XPLORER_SCENES, true );
-    xplorerMenu->Enable( JUGGLER_SETTINGS, true );
+    xplorerMenu->Enable( APPFRAME_XPLORER_SCENES, true );
+    xplorerMenu->Enable( APPFRAME_JUGGLER_SETTINGS, true );
 
     menubar->Append( file_menu, _( "&File" ) );
     menubar->Append( edit_menu, _( "&Edit" ) );
@@ -1719,7 +1714,7 @@ void AppFrame::SubmitToServer( wxCommandEvent& WXUNUSED( event ) )
         veCommand->AddDataValuePair( dataValuePair );
         serviceList->SendCommandStringToXplorer( veCommand );
         //enable the menus now
-        run_menu->Enable( v21ID_START_CALC, true );
+        run_menu->Enable( APPFRAME_V21ID_START_CALC, true );
     }
     catch ( CORBA::Exception& )
     {
@@ -2005,18 +2000,18 @@ void AppFrame::Log( const char* msg )
 void AppFrame::DisConExeServer( wxCommandEvent &WXUNUSED( event ) )
 {
     serviceList->DisconnectFromCE();
-    //con_menu->Enable(v21ID_SUBMIT,false);
-    //con_menu->Enable(v21ID_LOAD, false);
-    //con_menu->Enable(v21ID_CONNECT, true);
-    run_menu->Enable( v21ID_START_CALC, false );
-    // EPRI TAG run_menu->Enable(v21ID_VIEW_RESULT, false);
-    con_menu->Enable( v21ID_DISCONNECT, false );
+    //con_menu->Enable(V21ID_SUBMIT,false);
+    //con_menu->Enable(V21ID_LOAD, false);
+    //con_menu->Enable(V21ID_CONNECT, true);
+    run_menu->Enable( APPFRAME_V21ID_START_CALC, false );
+    // EPRI TAG run_menu->Enable(V21ID_VIEW_RESULT, false);
+    con_menu->Enable( APPFRAME_V21ID_DISCONNECT, false );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::DisConVEServer( wxCommandEvent &WXUNUSED( event ) )
 {
     serviceList->DisconnectFromXplorer();
-    con_menu->Enable( v21ID_DISCONNECT_VE, false );
+    con_menu->Enable( APPFRAME_V21ID_DISCONNECT_VE, false );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::ViewHelp( wxCommandEvent& WXUNUSED( event ) )
@@ -2146,12 +2141,12 @@ void AppFrame::ChangeDevice( wxCommandEvent& event )
 
     std::string device;
 
-    if( event.GetId() == WAND )
+    if( event.GetId() == APPFRAME_WAND )
     {
         device = "Wand";
     }
 
-    else if( event.GetId() == KEYBOARD_MOUSE )
+    else if( event.GetId() == APPFRAME_KEYBOARD_MOUSE )
     {
         device = "KeyboardMouse";
     }
@@ -2172,15 +2167,15 @@ void AppFrame::DisplaySelection( wxCommandEvent& event )
 
     unsigned int value;
 
-    if( event.GetId() == FRAME_RATE )
+    if( event.GetId() == APPFRAME_FRAME_RATE )
     {
-        value = xplorerDisplayMenu->IsChecked( FRAME_RATE );
+        value = xplorerDisplayMenu->IsChecked( APPFRAME_FRAME_RATE );
         DVP->SetData( std::string( "FrameRateID" ), value );
     }
 
-    else if( event.GetId() == COORDINATE_SYSTEM )
+    else if( event.GetId() == APPFRAME_COORDINATE_SYSTEM )
     {
-        value = xplorerDisplayMenu->IsChecked( COORDINATE_SYSTEM );
+        value = xplorerDisplayMenu->IsChecked( APPFRAME_COORDINATE_SYSTEM );
         DVP->SetData( std::string( "CoordSysID" ), value );
     }
 
@@ -2198,15 +2193,15 @@ void AppFrame::ViewSelection( wxCommandEvent& event )
 
     std::string view;
 
-    if( event.GetId() == FRAME_ALL )
+    if( event.GetId() == APPFRAME_FRAME_ALL )
     {
         view = "Frame All";
     }
-    else if( event.GetId() == FRAME_SELECTION )
+    else if( event.GetId() == APPFRAME_FRAME_SELECTION )
     {
         view = "Frame Selection";
     }
-    else if( event.GetId() == RESET )
+    else if( event.GetId() == APPFRAME_RESET )
     {
         view = "Reset";
     }
@@ -2247,7 +2242,7 @@ void AppFrame::JugglerSettings( wxCommandEvent& event )
     // Create the command and data value pairs
     DataValuePairPtr dataValuePair( new DataValuePair( std::string( "FLOAT" ) ) );
     dataValuePair->SetDataName( "Stereo" );
-    if( event.GetId() == JUGGLER_STEREO )
+    if( event.GetId() == APPFRAME_JUGGLER_STEREO )
     {
         dataValuePair->SetDataValue( 1.0 );
     }
@@ -2346,11 +2341,11 @@ void AppFrame::EnableCEGUIMenuItems( void )
         return;
     }
 
-    con_menu->Enable( v21ID_SUBMIT, true );
-    con_menu->Enable( v21ID_LOAD, true );
-    //frame_->con_menu->Enable(v21ID_CONNECT, false);
-    run_menu->Enable( v21ID_VIEW_RESULT, true );
-    con_menu->Enable( v21ID_DISCONNECT, true );
+    con_menu->Enable( APPFRAME_V21ID_SUBMIT, true );
+    con_menu->Enable( APPFRAME_V21ID_LOAD, true );
+    //frame_->con_menu->Enable(V21ID_CONNECT, false);
+    run_menu->Enable( APPFRAME_V21ID_VIEW_RESULT, true );
+    con_menu->Enable( APPFRAME_V21ID_DISCONNECT, true );
 }
 ////////////////////////////////////////////////////////////////////////////////
 UserPreferences* AppFrame::GetUserPreferences( void )
@@ -2409,18 +2404,18 @@ void AppFrame::ChangeXplorerViewSettings( wxCommandEvent& event )
     CommandPtr veCommand( new Command() );
     veCommand->SetCommandName( std::string( "CHANGE_XPLORER_VIEW" ) );
 
-    if( event.GetId() == CHANGE_XPLORER_VIEW_NETWORK )
+    if( event.GetId() == APPFRAME_CHANGE_XPLORER_VIEW_NETWORK )
     {
         DataValuePairPtr dataValuePair2( new DataValuePair( std::string( "UNSIGNED INT" ) ) );
 		dataValuePair2->SetData( "SUBNET_ID", canvas->GetActiveNetworkID() );
 		veCommand->AddDataValuePair( dataValuePair2 );
         dataValuePair->SetData( "CHANGE_XPLORER_VIEW", "CHANGE_XPLORER_VIEW_NETWORK" );
     }
-    else if( event.GetId() == CHANGE_XPLORER_VIEW_CAD )
+    else if( event.GetId() == APPFRAME_CHANGE_XPLORER_VIEW_CAD )
     {
         dataValuePair->SetData( "CHANGE_XPLORER_VIEW", "CHANGE_XPLORER_VIEW_CAD" );
     }
-    else if( event.GetId() == CHANGE_XPLORER_VIEW_LOGO )
+    else if( event.GetId() == APPFRAME_CHANGE_XPLORER_VIEW_LOGO )
     {
         dataValuePair->SetData( "CHANGE_XPLORER_VIEW", "CHANGE_XPLORER_VIEW_LOGO" );
     }
@@ -2456,13 +2451,13 @@ void AppFrame::OnTimer( wxTimerEvent& WXUNUSED( event ) )
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::ShutdownXplorerOptionOn()
 {
-    xplorerMenu->Append( XPLORER_EXIT, _( "Shutdown Xplorer" ) );
-    xplorerMenu->Enable( XPLORER_EXIT, true );
+    xplorerMenu->Append( APPFRAME_XPLORER_EXIT, _( "Shutdown Xplorer" ) );
+    xplorerMenu->Enable( APPFRAME_XPLORER_EXIT, true );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::ShutdownXplorerOptionOff()
 {
-    xplorerMenu->Remove( XPLORER_EXIT );
+    xplorerMenu->Remove( APPFRAME_XPLORER_EXIT );
 }
 ////////////////////////////////////////////////////////////////////////////////
 HierarchyTree * AppFrame::GetHierarchyTree()

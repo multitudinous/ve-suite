@@ -66,16 +66,6 @@ public:
 
     virtual ~DeviceProperties();
 
-    enum DEVICE_IDS
-    {
-        DEVICE_SPLITTERWINDOW,
-        DEVICE_LISTBOX,
-        DEVICE_TRACKBALL_PANEL,
-        DEVICE_WAND_PANEL,
-
-        ANIMATE_CHECKBOX,
-    };
-
 protected:
     void BuildGUI();
 

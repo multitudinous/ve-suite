@@ -31,10 +31,11 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/conductor/util/CORBAServiceList.h>
+#include "Avail_Modules.h"
 #include "AppFrame.h"
 #include "HierarchyTree.h"
-#include "Avail_Modules.h"
 #include "PluginLoader.h"
+#include "ConductorAppEnums.h"
 
 #include <ves/conductor/Canvas.h>
 #include <ves/conductor/Network.h>
@@ -61,11 +62,11 @@ using namespace ves::conductor::util;
 using namespace ves::open::xml;
 
 BEGIN_EVENT_TABLE( Avail_Modules, wxTreeCtrl )
-    EVT_TREE_ITEM_RIGHT_CLICK( TREE_CTRL, Avail_Modules::OnItemRightClick )
-    EVT_TREE_SEL_CHANGED( TREE_CTRL, Avail_Modules::OnSelChanged )
-    EVT_MENU( Module_Desc, Avail_Modules::ShowDesc )
-    EVT_MENU( Module_Help, Avail_Modules::ShowHelp )
-    EVT_TREE_ITEM_ACTIVATED( TREE_CTRL, Avail_Modules::Instantiate )
+    EVT_TREE_ITEM_RIGHT_CLICK( AVAILABLEMODULES_TREE_CTRL, Avail_Modules::OnItemRightClick )
+    EVT_TREE_SEL_CHANGED( AVAILABLEMODULES_TREE_CTRL, Avail_Modules::OnSelChanged )
+    EVT_MENU( AVAILABLEMODULES_DESC, Avail_Modules::ShowDesc )
+    EVT_MENU( AVAILABLEMODULES_HELP, Avail_Modules::ShowHelp )
+    EVT_TREE_ITEM_ACTIVATED( AVAILABLEMODULES_TREE_CTRL, Avail_Modules::Instantiate )
 END_EVENT_TABLE()
 
 Avail_Modules::Avail_Modules( wxWindow *parent, const wxWindowID id, 
@@ -75,13 +76,13 @@ Avail_Modules::Avail_Modules( wxWindow *parent, const wxWindowID id,
     wxTreeCtrl( parent, id, pos, size, style ),
     canvas( 0 )
 {
-    int image1 = TreeCtrlIcon_Folder;
-    int image2 = TreeCtrlIcon_FolderSelected;
+    int image1 = AVAILABLEMODULES_FOLDER;
+    int image2 = AVAILABLEMODULES_FOLDERSELECTED;
 
     CreateImageList();
     
     rootId = AddRoot( wxT( "Available Modules" ), image1, -1, NULL );
-    SetItemImage( rootId, TreeCtrlIcon_FolderOpened, wxTreeItemIcon_Expanded );
+    SetItemImage( rootId, AVAILABLEMODULES_FOLDEROPENED, wxTreeItemIcon_Expanded );
     SetItemFont( rootId, *wxNORMAL_FONT );
     
     pl_loader = new PluginLoader();
@@ -105,10 +106,10 @@ void Avail_Modules::AddModule( UIPluginBase* plugin, wxClassInfo* clsi )
     getLeveledName( plname, lnames );
 
     int image1, image2, image3, image4;
-    image1 = TreeCtrlIcon_Folder;
-    image2 = TreeCtrlIcon_FolderSelected;
-    image3 = TreeCtrlIcon_File;
-    image4 = TreeCtrlIcon_FileSelected;
+    image1 = AVAILABLEMODULES_FOLDER;
+    image2 = AVAILABLEMODULES_FOLDERSELECTED;
+    image3 = AVAILABLEMODULES_FILE;
+    image4 = AVAILABLEMODULES_FILESELECTED;
 
     id = rootId;
     lsize = lnames.size();
@@ -125,7 +126,7 @@ void Avail_Modules::AddModule( UIPluginBase* plugin, wxClassInfo* clsi )
             if( !id )
             {
                 id = AppendItem( lastid, lnames[i], image1, image2, NULL );
-                SetItemImage( id, TreeCtrlIcon_FolderOpened,
+                SetItemImage( id, AVAILABLEMODULES_FOLDEROPENED,
                     wxTreeItemIcon_Expanded );
                 SetItemFont( id, *wxNORMAL_FONT );
                 break;
@@ -221,8 +222,8 @@ void Avail_Modules::ShowMenu( wxTreeItemId id, const wxPoint& pt )
     }
 
     wxMenu menu( title );
-    menu.Append( Module_Desc, wxT( "&Description" ) );
-    menu.Append( Module_Help, wxT( "&Help" ) );
+    menu.Append( AVAILABLEMODULES_DESC, wxT( "&Description" ) );
+    menu.Append( AVAILABLEMODULES_HELP, wxT( "&Help" ) );
 
     PopupMenu( &menu, pt );
 }
@@ -368,10 +369,10 @@ void Avail_Modules::ResetPluginTree()
 {
     //Destroy the old tree
     DeleteAllItems();
-    int image1 = TreeCtrlIcon_Folder;
-    int image2 = TreeCtrlIcon_FolderSelected;
+    int image1 = AVAILABLEMODULES_FOLDER;
+    int image2 = AVAILABLEMODULES_FOLDERSELECTED;
     rootId = AddRoot( wxT( "Available Modules" ), image1, image2, NULL );
-    SetItemImage( rootId, TreeCtrlIcon_FolderOpened, wxTreeItemIcon_Expanded );
+    SetItemImage( rootId, AVAILABLEMODULES_FOLDEROPENED, wxTreeItemIcon_Expanded );
     SetItemFont( rootId, *wxITALIC_FONT );
 
     //Remove all the old plugins and create the new one

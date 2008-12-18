@@ -73,11 +73,6 @@ public:
     ///Destructor
     virtual ~HierarchyTree();
 
-    enum
-    {
-        TREE_CTRL = 1000
-    };
-
     ///Populate the tree
     ///\param id The top level system id to use for this tree to populate
     void PopulateTree( );

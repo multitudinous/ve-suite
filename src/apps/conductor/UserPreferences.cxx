@@ -55,6 +55,7 @@
 
 #include <ves/util/icons/ve_icon32x32.xpm>
 #include "UserPreferences.h"
+#include "ConductorAppEnums.h"
 #include <ves/conductor/UserPreferencesDataBuffer.h>
 
 #include <ves/open/xml/Command.h>
@@ -65,11 +66,11 @@ using namespace ves::conductor;
 using namespace ves::open::xml;
 
 BEGIN_EVENT_TABLE( UserPreferences, wxDialog )
-    EVT_CHECKLISTBOX( ID_CONDUCTOR_CHKBX,           UserPreferences::OnConductorCheck )
-    EVT_CHECKBOX( ID_NAVIGATION_CHKBX,          UserPreferences::OnNavigationCheck )
-    EVT_BUTTON( ID_BACKGROUND_COLOR_BUTTON,   UserPreferences::OnSetBackgroundColor )
-    EVT_CHECKBOX( ID_SHUTDOWN_XPLORER,          UserPreferences::OnShutdownXplorer )
-    EVT_COMMAND_SCROLL( ID_GEOMETRY_LOD_SCALE_SLIDER, UserPreferences::OnLODScale )
+    EVT_CHECKLISTBOX( USERPREFENCES_CONDUCTOR_CHKBX, UserPreferences::OnConductorCheck )
+    EVT_CHECKBOX( USERPREFENCES_NAVIGATION_CHKBX, UserPreferences::OnNavigationCheck )
+    EVT_BUTTON( USERPREFENCES_BACKGROUND_COLOR_BUTTON, UserPreferences::OnSetBackgroundColor )
+    EVT_CHECKBOX( USERPREFENCES_SHUTDOWN_XPLORER, UserPreferences::OnShutdownXplorer )
+    EVT_COMMAND_SCROLL( USERPREFENCES_GEOMETRY_LOD_SCALE_SLIDER, UserPreferences::OnLODScale )
 END_EVENT_TABLE()
 ////////////////////////////////////////////////////////////////////////////////
 UserPreferences::UserPreferences( )
@@ -153,7 +154,7 @@ void UserPreferences::CreateControls()
     wxString choices[2];
     choices[ 0 ] = wxString( "Interactive Mode", wxConvUTF8 );
     choices[ 1 ] = wxString( "Save Last Position and Size", wxConvUTF8 );
-    prefChkBx = new wxCheckListBox( panel, ID_CONDUCTOR_CHKBX, wxDefaultPosition, wxDefaultSize, 2, choices, 0, wxDefaultValidator, _( "listBox" ) );
+    prefChkBx = new wxCheckListBox( panel, USERPREFENCES_CONDUCTOR_CHKBX, wxDefaultPosition, wxDefaultSize, 2, choices, 0, wxDefaultValidator, _( "listBox" ) );
     prefChkBx->Check( 1, preferenceMap[ "Save Last Position and Size" ] );
     itemBoxSizer2->Add( prefChkBx, 0, wxALIGN_LEFT | wxALL | wxEXPAND, 5 );
     ///////////////////////////////////////
@@ -162,13 +163,13 @@ void UserPreferences::CreateControls()
     wxBoxSizer* itemBoxSizer3 = new wxBoxSizer( wxVERTICAL );
     panel->SetSizer( itemBoxSizer3 );
     wxBoxSizer* colorSizer = new wxBoxSizer( wxHORIZONTAL );
-    backgroundColorChkBx = new wxCheckBox( panel, ID_NAVIGATION_CHKBX, wxT( "Use Preferred Background Color" ), wxDefaultPosition, wxDefaultSize, wxCHK_2STATE );
-    backgroundColorButton = new wxButton( panel, ID_BACKGROUND_COLOR_BUTTON, _T( "Background Color" ), wxDefaultPosition, wxDefaultSize, 0 );
+    backgroundColorChkBx = new wxCheckBox( panel, USERPREFENCES_NAVIGATION_CHKBX, wxT( "Use Preferred Background Color" ), wxDefaultPosition, wxDefaultSize, wxCHK_2STATE );
+    backgroundColorButton = new wxButton( panel, USERPREFENCES_BACKGROUND_COLOR_BUTTON, _T( "Background Color" ), wxDefaultPosition, wxDefaultSize, 0 );
     colorSizer->Add( backgroundColorChkBx, 1, wxEXPAND | wxALIGN_CENTER_HORIZONTAL );
     colorSizer->Add( backgroundColorButton, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
-    navigationChkBx = new wxCheckBox( panel, ID_NAVIGATION_CHKBX, wxT( "Auto Launch Nav Pane" ), wxDefaultPosition, wxDefaultSize, wxCHK_2STATE );
-    zNavChkBx = new wxCheckBox( panel, ID_NAVIGATION_CHKBX, wxT( "Navigation z=0 Lock" ), wxDefaultPosition, wxDefaultSize, wxCHK_2STATE );
-    shutdownModeChkBx = new wxCheckBox( panel, ID_SHUTDOWN_XPLORER, wxT( "Shut Down Xplorer Option" ), wxDefaultPosition, wxDefaultSize, wxCHK_2STATE );
+    navigationChkBx = new wxCheckBox( panel, USERPREFENCES_NAVIGATION_CHKBX, wxT( "Auto Launch Nav Pane" ), wxDefaultPosition, wxDefaultSize, wxCHK_2STATE );
+    zNavChkBx = new wxCheckBox( panel, USERPREFENCES_NAVIGATION_CHKBX, wxT( "Navigation z=0 Lock" ), wxDefaultPosition, wxDefaultSize, wxCHK_2STATE );
+    shutdownModeChkBx = new wxCheckBox( panel, USERPREFENCES_SHUTDOWN_XPLORER, wxT( "Shut Down Xplorer Option" ), wxDefaultPosition, wxDefaultSize, wxCHK_2STATE );
 
     wxString xplorerChoices[4];
     xplorerChoices[ 0 ] = wxString( "Use Preferred Background Color", wxConvUTF8 );
@@ -185,7 +186,7 @@ void UserPreferences::CreateControls()
     shutdownModeChkBx->SetValue( preferenceMap[ "Shut Down Xplorer Option" ] );
     shutdownModeChkBx->IsChecked();
  
-    m_lodScaleSlider = new wxSlider( panel, ID_GEOMETRY_LOD_SCALE_SLIDER, m_lodScale, 0, 100,
+    m_lodScaleSlider = new wxSlider( panel, USERPREFENCES_GEOMETRY_LOD_SCALE_SLIDER, m_lodScale, 0, 100,
                                     wxDefaultPosition, wxDefaultSize,
                                     wxSL_HORIZONTAL|wxSL_AUTOTICKS|wxSL_LABELS);
 

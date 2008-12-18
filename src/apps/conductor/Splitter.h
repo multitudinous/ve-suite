@@ -46,11 +46,6 @@ public:
         ;
     }
 
-    enum
-    {
-        SPLIT_WINDOW
-    };
-
     void OnDClick( wxSplitterEvent& event );
     void SetPaneSize( void );
 

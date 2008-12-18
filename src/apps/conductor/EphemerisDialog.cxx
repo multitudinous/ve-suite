@@ -32,6 +32,7 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/conductor/util/CORBAServiceList.h>
 #include "EphemerisDialog.h"
+#include "ConductorAppEnums.h"
 
 #include <ves/open/xml/DataValuePair.h>
 #include <ves/open/xml/Command.h>
@@ -59,23 +60,23 @@ BEGIN_EVENT_TABLE( EphemerisDialog, wxDialog )
     ////Manual Code End
 
     //EVT_CLOSE( EphemerisDialog::OnClose )
-    EVT_CHOICE( ID_M_AMPM, EphemerisDialog::OnAmPmSelected )
-    EVT_CHOICE( ID_M_LATHEMISPHERE, EphemerisDialog::OnLatitudeDirection )
-    EVT_SPINCTRL( ID_M_LATDEGREES, EphemerisDialog::OnChangeLatitudeDegrees )
-    EVT_SPINCTRL( ID_M_LATITUDEMINUTES, EphemerisDialog::OnChangeLatitudeMinutes )
+    EVT_CHOICE( EPHEMERISDIALOG_AMPM, EphemerisDialog::OnAmPmSelected )
+    EVT_CHOICE( EPHEMERISDIALOG_LATHEMISPHERE, EphemerisDialog::OnLatitudeDirection )
+    EVT_SPINCTRL( EPHEMERISDIALOG_LATDEGREES, EphemerisDialog::OnChangeLatitudeDegrees )
+    EVT_SPINCTRL( EPHEMERISDIALOG_LATITUDEMINUTES, EphemerisDialog::OnChangeLatitudeMinutes )
 
-    EVT_SPINCTRL( ID_M_LONGITUDEMINUTES, EphemerisDialog::OnChangeLongitudeMinutes )
-    EVT_SPINCTRL( ID_M_LONGITUDEDEGREE, EphemerisDialog::OnChangeLongitudeDegrees )
-    EVT_CHOICE( ID_M_LONHEMISPHERE, EphemerisDialog::OnLongitudeDirection )
-    EVT_TEXT( ID_M_HOUR, EphemerisDialog::OnHourTextUpdated )
-    EVT_TEXT( ID_M_MINUTES, EphemerisDialog::OnMinuteTextUpdated )
+    EVT_SPINCTRL( EPHEMERISDIALOG_LONGITUDEMINUTES, EphemerisDialog::OnChangeLongitudeMinutes )
+    EVT_SPINCTRL( EPHEMERISDIALOG_LONGITUDEDEGREE, EphemerisDialog::OnChangeLongitudeDegrees )
+    EVT_CHOICE( EPHEMERISDIALOG_LONHEMISPHERE, EphemerisDialog::OnLongitudeDirection )
+    EVT_TEXT( EPHEMERISDIALOG_HOUR, EphemerisDialog::OnHourTextUpdated )
+    EVT_TEXT( EPHEMERISDIALOG_MINUTES, EphemerisDialog::OnMinuteTextUpdated )
 
-    EVT_CALENDAR_DAY( ID_M_CALENDAR, EphemerisDialog::OnCalendarDay )
-    EVT_CHECKBOX( ID_AUTO_DATE_TIME, EphemerisDialog::OnAutoDateTime )
-    EVT_BUTTON( ID_M_LOAD_LOCATION_BUTTON, EphemerisDialog::OnLoadLocationInformation )
-    EVT_BUTTON( ID_M_SAVE_LOCATION_BUTTON, EphemerisDialog::OnSaveLocationInformation )
-    EVT_FILEPICKER_CHANGED( ID_M_LOAD_HEIGHT_MAP, EphemerisDialog::OnLoadHeightMap )
-    EVT_CHECKBOX( ID_M_TOGGLE_EPHEMERIS, EphemerisDialog::OnToggleDisplay)
+    EVT_CALENDAR_DAY( EPHEMERISDIALOG_CALENDAR, EphemerisDialog::OnCalendarDay )
+    EVT_CHECKBOX( EPHEMERISDIALOG_AUTO_DATE_TIME, EphemerisDialog::OnAutoDateTime )
+    EVT_BUTTON( EPHEMERISDIALOG_LOAD_LOCATION_BUTTON, EphemerisDialog::OnLoadLocationInformation )
+    EVT_BUTTON( EPHEMERISDIALOG_SAVE_LOCATION_BUTTON, EphemerisDialog::OnSaveLocationInformation )
+    EVT_FILEPICKER_CHANGED( EPHEMERISDIALOG_LOAD_HEIGHT_MAP, EphemerisDialog::OnLoadHeightMap )
+    EVT_CHECKBOX( EPHEMERISDIALOG_TOGGLE_EPHEMERIS, EphemerisDialog::OnToggleDisplay)
 END_EVENT_TABLE()
 ////Event Table End
 /////////////////////////////////////////////////////////////////
@@ -105,16 +106,16 @@ void EphemerisDialog::CreateGUIControls()
     this->SetSizer( m_mainSizer );
     //this->SetAutoLayout(true);
 
-    m_dataEntryPages = new wxNotebook( this, ID_M_DATAENTRYPAGES, wxDefaultPosition, wxDefaultSize );
+    m_dataEntryPages = new wxNotebook( this, EPHEMERISDIALOG_DATAENTRYPAGES, wxDefaultPosition, wxDefaultSize );
     m_dataEntryPages->SetFont( wxFont( 9, wxSWISS, wxNORMAL, wxNORMAL, false, wxT( "Segoe UI" ) ) );
     m_mainSizer->Add( m_dataEntryPages, 1, wxALIGN_CENTER | wxALL, 5 );
 
-    m_dateTime = new wxPanel( m_dataEntryPages, ID_M_DATETIME, wxDefaultPosition, wxDefaultSize );
+    m_dateTime = new wxPanel( m_dataEntryPages, EPHEMERISDIALOG_DATETIME, wxDefaultPosition, wxDefaultSize );
     m_dateTime->SetToolTip( wxT( "Set the date and time" ) );
     m_dateTime->SetFont( wxFont( 9, wxSWISS, wxNORMAL, wxNORMAL, false, wxT( "Segoe UI" ) ) );
     m_dataEntryPages->AddPage( m_dateTime, wxT( "Date and Time" ) );
 
-    m_latitudeLongitude = new wxPanel( m_dataEntryPages, ID_M_LATITUDELONGITUDE, wxDefaultPosition, wxDefaultSize );
+    m_latitudeLongitude = new wxPanel( m_dataEntryPages, EPHEMERISDIALOG_LATITUDELONGITUDE, wxDefaultPosition, wxDefaultSize );
     m_latitudeLongitude->SetFont( wxFont( 9, wxSWISS, wxNORMAL, wxNORMAL, false, wxT( "Segoe UI" ) ) );
     m_dataEntryPages->AddPage( m_latitudeLongitude, wxT( "Latitude and Longitude" ) );
 
@@ -128,7 +129,7 @@ void EphemerisDialog::CreateGUIControls()
 
     wxDateTime dt;
     dt.SetToCurrent();
-    m_calendar = new wxCalendarCtrl( m_dateTime, ID_M_CALENDAR, dt,
+    m_calendar = new wxCalendarCtrl( m_dateTime, EPHEMERISDIALOG_CALENDAR, dt,
                                      wxDefaultPosition, wxDefaultSize,
                                      wxCAL_SUNDAY_FIRST | wxCAL_SHOW_HOLIDAYS | wxCAL_SHOW_SURROUNDING_WEEKS | wxCAL_SEQUENTIAL_MONTH_SELECTION );
     m_calendar->SetFont( wxFont( 9, wxSWISS, wxNORMAL, wxNORMAL, false, wxT( "Segoe UI" ) ) );
@@ -140,19 +141,19 @@ void EphemerisDialog::CreateGUIControls()
 
     wxString hourString;
     hourString << dt.GetHour();
-    m_hour = new wxSpinCtrl( m_dateTime, ID_M_HOUR,
+    m_hour = new wxSpinCtrl( m_dateTime, EPHEMERISDIALOG_HOUR,
                              hourString, wxDefaultPosition,
                              wxDefaultSize, wxSP_ARROW_KEYS | wxSP_WRAP, 0, 23, 12 );
     m_hour->SetFont( wxFont( 9, wxSWISS, wxNORMAL, wxNORMAL, false, wxT( "Segoe UI" ) ) );
     m_timeSizer->Add( m_hour, 1, wxALIGN_CENTER | wxALL, 5 );
 
-    m_hourColon = new wxStaticText( m_dateTime, ID_M_HOURCOLON, wxT( ":" ), wxDefaultPosition, wxDefaultSize, 0 );
+    m_hourColon = new wxStaticText( m_dateTime, EPHEMERISDIALOG_HOURCOLON, wxT( ":" ), wxDefaultPosition, wxDefaultSize, 0 );
     m_hourColon->SetFont( wxFont( 9, wxSWISS, wxNORMAL, wxNORMAL, false, wxT( "Segoe UI" ) ) );
     m_timeSizer->Add( m_hourColon, 0, wxALIGN_CENTER | wxALL, 5 );
 
     wxString minutesString;
     minutesString << dt.GetMinute();
-    m_minutes = new wxSpinCtrl( m_dateTime, ID_M_MINUTES,
+    m_minutes = new wxSpinCtrl( m_dateTime, EPHEMERISDIALOG_MINUTES,
                                 minutesString, wxDefaultPosition,
                                 wxDefaultSize,
                                 wxSP_ARROW_KEYS | wxSP_WRAP, 0, 59, 0 );
@@ -169,22 +170,22 @@ void EphemerisDialog::CreateGUIControls()
     m_latitudeSizer = new wxStaticBoxSizer( m_latitudeSizer_StaticBoxObj, wxHORIZONTAL );
     m_latLongSizer->Add( m_latitudeSizer, 1, wxALIGN_CENTER | wxALL, 5 );
 
-    m_latDegrees = new wxSpinCtrl( m_latitudeLongitude, ID_M_LATDEGREES, wxT( "0" ), wxDefaultPosition, wxDefaultSize,
+    m_latDegrees = new wxSpinCtrl( m_latitudeLongitude, EPHEMERISDIALOG_LATDEGREES, wxT( "0" ), wxDefaultPosition, wxDefaultSize,
                                    wxSP_ARROW_KEYS | wxSP_WRAP, 0, 90, 0 );
     m_latDegrees->SetFont( wxFont( 9, wxSWISS, wxNORMAL, wxNORMAL, false, wxT( "Segoe UI" ) ) );
     m_latitudeSizer->Add( m_latDegrees, 1, wxALIGN_CENTER | wxALL, 5 );
 
-    m_degreeSymbol = new wxStaticText( m_latitudeLongitude, ID_M_DEGREESYMBOL, wxT( "o" ), wxDefaultPosition, wxDefaultSize );
+    m_degreeSymbol = new wxStaticText( m_latitudeLongitude, EPHEMERISDIALOG_DEGREESYMBOL, wxT( "o" ), wxDefaultPosition, wxDefaultSize );
     m_degreeSymbol->SetFont( wxFont( 9, wxSWISS, wxNORMAL, wxNORMAL, false, wxT( "Segoe UI" ) ) );
     m_latitudeSizer->Add( m_degreeSymbol, 0, wxALIGN_CENTER | wxALL, 5 );
 
-    m_latitudeMinutes = new wxSpinCtrl( m_latitudeLongitude, ID_M_LATITUDEMINUTES, wxT( "0" ),
+    m_latitudeMinutes = new wxSpinCtrl( m_latitudeLongitude, EPHEMERISDIALOG_LATITUDEMINUTES, wxT( "0" ),
                                         wxDefaultPosition, wxDefaultSize, wxSP_WRAP | wxSP_ARROW_KEYS,
                                         0, 60, 0 );
     m_latitudeMinutes->SetFont( wxFont( 9, wxSWISS, wxNORMAL, wxNORMAL, false, wxT( "Segoe UI" ) ) );
     m_latitudeSizer->Add( m_latitudeMinutes, 1, wxALIGN_CENTER | wxALL, 5 );
 
-    m_minutesSymbol = new wxStaticText( m_latitudeLongitude, ID_M_MINUTESSYMBOL, wxT( "\"" ),
+    m_minutesSymbol = new wxStaticText( m_latitudeLongitude, EPHEMERISDIALOG_MINUTESSYMBOL, wxT( "\"" ),
                                         wxDefaultPosition, wxDefaultSize );
     m_minutesSymbol->SetFont( wxFont( 9, wxSWISS, wxNORMAL, wxNORMAL, false, wxT( "Segoe UI" ) ) );
     m_latitudeSizer->Add( m_minutesSymbol, 0, wxALIGN_CENTER | wxALL, 5 );
@@ -195,7 +196,7 @@ void EphemerisDialog::CreateGUIControls()
     wxArrayString arrayStringFor_m_latHemisphere;
     arrayStringFor_m_latHemisphere.Add( wxT( "North" ) );
     arrayStringFor_m_latHemisphere.Add( wxT( "South" ) );
-    m_latHemisphere = new wxChoice( m_latitudeLongitude, ID_M_LATHEMISPHERE,
+    m_latHemisphere = new wxChoice( m_latitudeLongitude, EPHEMERISDIALOG_LATHEMISPHERE,
                                     wxDefaultPosition, wxDefaultSize,
                                     arrayStringFor_m_latHemisphere );
     m_latHemisphere->SetFont( wxFont( 9, wxSWISS, wxNORMAL, wxNORMAL, false, wxT( "Segoe UI" ) ) );
@@ -206,24 +207,24 @@ void EphemerisDialog::CreateGUIControls()
     m_longitudeSizer = new wxStaticBoxSizer( m_longitudeSizer_StaticBoxObj, wxHORIZONTAL );
     m_latLongSizer->Add( m_longitudeSizer, 1, wxALIGN_CENTER | wxALL, 5 );
 
-    m_longitudeDegree = new wxSpinCtrl( m_latitudeLongitude, ID_M_LONGITUDEDEGREE, wxT( "0" ),
+    m_longitudeDegree = new wxSpinCtrl( m_latitudeLongitude, EPHEMERISDIALOG_LONGITUDEDEGREE, wxT( "0" ),
                                         wxDefaultPosition, wxDefaultSize,
                                         wxSP_WRAP, 0, 180, 0 );
     m_longitudeDegree->SetFont( wxFont( 9, wxSWISS, wxNORMAL, wxNORMAL, false, wxT( "Segoe UI" ) ) );
     m_longitudeSizer->Add( m_longitudeDegree, 1, wxALIGN_CENTER | wxALL, 5 );
 
-    m_degreeLonSymbol = new wxStaticText( m_latitudeLongitude, ID_M_DEGREELONSYMBOL, wxT( "o" ),
+    m_degreeLonSymbol = new wxStaticText( m_latitudeLongitude, EPHEMERISDIALOG_DEGREELONSYMBOL, wxT( "o" ),
                                           wxDefaultPosition, wxDefaultSize );
     m_degreeLonSymbol->SetFont( wxFont( 9, wxSWISS, wxNORMAL, wxNORMAL, false, wxT( "Segoe UI" ) ) );
     m_longitudeSizer->Add( m_degreeLonSymbol, 0, wxALIGN_CENTER | wxALL, 5 );
 
-    m_longitudeMinutes = new wxSpinCtrl( m_latitudeLongitude, ID_M_LONGITUDEMINUTES, wxT( "0" ),
+    m_longitudeMinutes = new wxSpinCtrl( m_latitudeLongitude, EPHEMERISDIALOG_LONGITUDEMINUTES, wxT( "0" ),
                                          wxDefaultPosition, wxDefaultSize,
                                          wxSP_WRAP, 0, 60, 0 );
     m_longitudeMinutes->SetFont( wxFont( 9, wxSWISS, wxNORMAL, wxNORMAL, false, wxT( "Segoe UI" ) ) );
     m_longitudeSizer->Add( m_longitudeMinutes, 1, wxALIGN_CENTER | wxALL, 5 );
 
-    m_lonMinutesSymbol = new wxStaticText( m_latitudeLongitude, ID_M_LONMINUTESSYMBOL, wxT( "\"" ),
+    m_lonMinutesSymbol = new wxStaticText( m_latitudeLongitude, EPHEMERISDIALOG_LONMINUTESSYMBOL, wxT( "\"" ),
                                            wxDefaultPosition, wxDefaultSize );
 
     m_lonMinutesSymbol->SetFont( wxFont( 9, wxSWISS, wxNORMAL, wxNORMAL, false, wxT( "Segoe UI" ) ) );
@@ -233,18 +234,18 @@ void EphemerisDialog::CreateGUIControls()
     wxStaticBoxSizer* locationButtonSizer = new wxStaticBoxSizer(locationOptions, wxHORIZONTAL);
     m_latLongSizer->Add(locationButtonSizer, 1, wxALIGN_CENTER | wxALL, 5);
     m_saveLocationButton = new wxButton(m_latitudeLongitude, 
-                                            ID_M_SAVE_LOCATION_BUTTON,
+                                            EPHEMERISDIALOG_SAVE_LOCATION_BUTTON,
                                             wxT("Save..."));
     locationButtonSizer->Add(m_saveLocationButton, 1, wxALIGN_CENTER | wxALL, 5);
     m_loadLocationButton = new wxButton(m_latitudeLongitude, 
-                                            ID_M_LOAD_LOCATION_BUTTON,
+                                            EPHEMERISDIALOG_LOAD_LOCATION_BUTTON,
                                             wxT("Load..."));
     locationButtonSizer->Add(m_loadLocationButton, 1, wxALIGN_CENTER | wxALL, 5);
     wxStaticBox* heightFieldFile = new wxStaticBox(m_latitudeLongitude, wxID_ANY, wxT("Terrain Map"));
     wxStaticBoxSizer* heightFieldSizer = new wxStaticBoxSizer(heightFieldFile, wxHORIZONTAL);
     m_latLongSizer->Add(heightFieldSizer, 1, wxALIGN_CENTER | wxALL, 5);
     m_heightMapSelector = new wxFilePickerCtrl( m_latitudeLongitude, 
-                                                      ID_M_LOAD_HEIGHT_MAP,
+                                                      EPHEMERISDIALOG_LOAD_HEIGHT_MAP,
                                                       ::wxGetCwd(),
                                                       wxT("Height Field"),
                                                       wxT("Image Files (*.bmp;*.BMP;.gif;*.GIF;*.jpg;*.JPG;*.jpeg;*.JPEG;*.png;*.PNG;*.rgb;*.RGB)|*.bmp;*.BMP;.gif;*.GIF;*.jpg;*.JPG;*.jpeg;*.JPEG;*.png;*.PNG;*.rgb;*.RGB"));
@@ -252,7 +253,7 @@ void EphemerisDialog::CreateGUIControls()
     wxArrayString arrayStringFor_m_lonHemisphere;
     arrayStringFor_m_lonHemisphere.Add( wxT( "East" ) );
     arrayStringFor_m_lonHemisphere.Add( wxT( "West" ) );
-    m_lonHemisphere = new wxChoice( m_latitudeLongitude, ID_M_LONHEMISPHERE,
+    m_lonHemisphere = new wxChoice( m_latitudeLongitude, EPHEMERISDIALOG_LONHEMISPHERE,
                                     wxDefaultPosition, wxDefaultSize,
                                     arrayStringFor_m_lonHemisphere );
     m_lonHemisphere->SetFont( wxFont( 9, wxSWISS, wxNORMAL, wxNORMAL, false, wxT( "Segoe UI" ) ) );
@@ -262,7 +263,7 @@ void EphemerisDialog::CreateGUIControls()
     m_buttonsSizer = new wxBoxSizer( wxHORIZONTAL );
     m_mainSizer->Add( m_buttonsSizer, 0, wxALIGN_CENTER | wxALL, 5 );
 
-    m_ephemerisToggleCheck = new wxCheckBox( this, ID_M_TOGGLE_EPHEMERIS,
+    m_ephemerisToggleCheck = new wxCheckBox( this, EPHEMERISDIALOG_TOGGLE_EPHEMERIS,
                                              wxT( "Display Ephemeris Data" ) );
 
     m_ephemerisToggleCheck->SetFont( wxFont( 9, wxSWISS, wxNORMAL, 
@@ -286,7 +287,7 @@ void EphemerisDialog::CreateGUIControls()
     /*wxArrayString arrayStringFor_m_amPm;
     arrayStringFor_m_amPm.Add(wxT("AM"));
     arrayStringFor_m_amPm.Add(wxT("PM"));
-    m_amPm = new wxChoice(m_dateTime, ID_M_AMPM,
+    m_amPm = new wxChoice(m_dateTime, EPHEMERISDIALOG_AMPM,
                                  wxDefaultPosition, wxDefaultSize,
                                  arrayStringFor_m_amPm);
     m_amPm->SetToolTip(wxT("AM/PM"));
@@ -294,7 +295,7 @@ void EphemerisDialog::CreateGUIControls()
     m_amPm->SetSelection(0);
     m_timeSizer->Add(m_amPm,2,wxALIGN_CENTER | wxALL,5);
            m_amPm->Enable(false);*/
-    m_autoDateTime = new wxCheckBox( m_dateTime, ID_AUTO_DATE_TIME,
+    m_autoDateTime = new wxCheckBox( m_dateTime, EPHEMERISDIALOG_AUTO_DATE_TIME,
                                      wxT( "Auto Date/Time" ) );
     m_timeSizer->Add( m_autoDateTime, 2, wxALIGN_CENTER | wxALL, 5 );
 

@@ -56,13 +56,6 @@ public:
     ///Destructor
     virtual ~ExportMenu();
 
-    ///\enum The enums for MainToolBar
-    enum
-    {
-        EXPORT_SCREEN_SHOT = 1950,
-        EXPORT_DOT_FILE
-    };
-
     ///Handles event for new
     ///\param event The wxCommand event
     void OnScreenShot( wxCommandEvent& event );

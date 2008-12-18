@@ -57,33 +57,6 @@ public:
     ///Destructor
     virtual ~MainToolBar();
 
-    ///\enum The enums for MainToolBar
-    enum
-    {
-        TOOLBAR_NEW,///<ID for new tool
-        TOOLBAR_OPEN,///<ID for open tool
-        TOOLBAR_SAVE,///<ID for save tool
-
-        TOOLBAR_SELECTION,///<ID for select tool
-        TOOLBAR_WORLD_NAVIGATION,///<ID for world navigation tool
-        TOOLBAR_OBJECT_NAVIGATION,///<ID for object navigation tool
-        TOOLBAR_UNSELECT,///<ID for unselect tool
-
-        TOOLBAR_SMALL_CENTER_POINT_JUMP,///<ID for center point small jump
-        TOOLBAR_MEDIUM_CENTER_POINT_JUMP,///<ID for center point medium jump
-        TOOLBAR_LARGE_CENTER_POINT_JUMP,///<ID for center point large jump
-        TOOLBAR_BB_CENTER_POINT_JUMP,///<ID for center point bounding box jump
-        TOOLBAR_RESET_CENTER_POINT,///<ID for resetting the center point
-
-        TOOLBAR_PHYSICS,///<ID for physics simulation tool
-        TOOLBAR_RESET,///<ID for reset simulation tool
-        TOOLBAR_PAUSE,///<ID for pause simulation tool
-        TOOLBAR_PLAY,///<ID for start simulation tool
-        TOOLBAR_STEP,///<ID for step simulation tool
-
-        TOOLBAR_SUMMIT_JOB///<ID for summit job tool
-    };
-
 private:
     ///Loads and stores the xpm images into a std::map for this toolbar
     void LoadToolBarBitmaps();

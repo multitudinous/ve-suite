@@ -32,10 +32,11 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
 #include "Splitter.h"
+#include "ConductorAppEnums.h"
 #include <iostream>
 
 BEGIN_EVENT_TABLE( Splitter, wxSplitterWindow )
-    EVT_SPLITTER_DCLICK( -1, Splitter::OnDClick )
+    EVT_SPLITTER_DCLICK( SPLITTER_SPLIT_WINDOW, Splitter::OnDClick )
 END_EVENT_TABLE()
 
 Splitter::Splitter( wxWindow* parent, wxWindowID id )

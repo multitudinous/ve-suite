@@ -87,26 +87,6 @@ public:
     NavigationPane( wxWindow* parent );
     virtual ~NavigationPane();
 
-    enum NAV_TAB_IDS
-    {
-        LEFT_B,
-        RIGHT_B,
-        UP_B,
-        DOWN_B,
-        FORWARD_B,
-        BACKWARD_B,
-        CCW_B,
-        CW_B,
-        TRANS_STEP_SLIDER,
-        ROT_STEP_SLIDER,
-        HEAD_ROTATE_CHK,
-        SUB_ZERO_CHK,
-        RESET_NAV_POSITION,
-        STORE_START_POSITION,
-        UPDATE_TIMER_ID
-        //NONE= -1000
-    };
-
     //turn off the navigation flag
     void onLeftMouseUp( wxMouseEvent& event );
     void onLeftDown( wxMouseEvent& event );

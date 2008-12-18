@@ -34,6 +34,7 @@
 //Don't move Frame.h below ExportMenu.h
 #include <ves/conductor/util/CORBAServiceList.h>
 #include "ExportMenu.h"
+#include "ConductorAppEnums.h"
 
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/CommandPtr.h>
@@ -65,8 +66,8 @@ ExportMenu::~ExportMenu()
 ////////////////////////////////////////////////////////////////////////////////
 void ExportMenu::CreateExportMenu()
 {
-    Append( ExportMenu::EXPORT_SCREEN_SHOT, _( "Screen Shot" ) );
-    Append( ExportMenu::EXPORT_DOT_FILE, _( "OSG Graph File" ) );
+    Append( EXPORTMENU_SCREEN_SHOT, _( "Screen Shot" ) );
+    Append( EXPORTMENU_DOT_FILE, _( "OSG Graph File" ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void ExportMenu::OnScreenShot( wxCommandEvent& event )

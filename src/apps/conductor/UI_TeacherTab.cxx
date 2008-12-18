@@ -40,14 +40,15 @@
 #include <wx/filename.h>
 
 #include "UI_TeacherTab.h"
+#include "ConductorAppEnums.h"
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>
 
 #include <iostream>
 
 BEGIN_EVENT_TABLE( UI_TeacherTab, wxDialog )
-    EVT_RADIOBOX( TEACHER_RBOX, UI_TeacherTab::_onTeacher )
-    EVT_BUTTON( RECORD_SCENE, UI_TeacherTab::_onClear )
+    EVT_RADIOBOX( UITEACHERTAB_RBOX, UI_TeacherTab::_onTeacher )
+    EVT_BUTTON( UITEACHERTAB_RECORD_SCENE, UI_TeacherTab::_onClear )
 END_EVENT_TABLE()
 
 using namespace ves::open::xml;
@@ -73,7 +74,7 @@ UI_TeacherTab::UI_TeacherTab( wxWindow* tControl )
     wxButton* _closeButton = new wxButton( this, wxID_OK, _T( "Close" ), wxDefaultPosition, wxDefaultSize, 0 );
     buttonPanelGroup->Add( _closeButton, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
-    wxButton* recordButton = new wxButton( this, RECORD_SCENE, _T( "Record Scene" ), wxDefaultPosition, wxDefaultSize, 0 );
+    wxButton* recordButton = new wxButton( this, UITEACHERTAB_RECORD_SCENE, _T( "Record Scene" ), wxDefaultPosition, wxDefaultSize, 0 );
     buttonPanelGroup->Add( recordButton, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
     teacherPanelGroup->Add( buttonPanelGroup, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
@@ -125,7 +126,7 @@ void UI_TeacherTab::_buildPage()
         _teacherRBox = 0;
     }
 
-    _teacherRBox = new wxRadioBox( this, TEACHER_RBOX, wxT( "Stored Scenes" ),
+    _teacherRBox = new wxRadioBox( this, UITEACHERTAB_RBOX, wxT( "Stored Scenes" ),
                                    wxDefaultPosition, wxDefaultSize, numStoredScenes,
                                    defaultName, 1 , wxRA_SPECIFY_COLS );
     teacherPanelGroup->Insert( 0, _teacherRBox, 6, wxEXPAND | wxALIGN_CENTER_HORIZONTAL );
