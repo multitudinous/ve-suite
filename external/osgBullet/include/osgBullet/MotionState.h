@@ -70,8 +70,9 @@ public:
     void setCenterOfMass( const osg::Vec3& com );
     osg::Vec3 getCenterOfMass() const;
 
-private:
     void resetTransform();
+
+private:
 
     osg::ref_ptr< osg::MatrixTransform > _mt;
     osg::ref_ptr< osgBullet::AbsoluteModelTransform > _amt;

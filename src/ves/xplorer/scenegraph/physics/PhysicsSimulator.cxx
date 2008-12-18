@@ -319,6 +319,8 @@ void PhysicsSimulator::ResetScene()
     #endif
     */
 
+    //This code is take from Bullet in
+    //Demos/OpenGL/DemoApplication.cpp
     if( mDynamicsWorld )
     {
         mDynamicsWorld->stepSimulation( 1.0f / 60.0f, 0 );
@@ -326,22 +328,30 @@ void PhysicsSimulator::ResetScene()
 
     int numObjects = mDynamicsWorld->getNumCollisionObjects();
 
+    btTransform tempTransform;
+    tempTransform.setIdentity();
+
     for( int i = 0; i < numObjects; ++i )
     {
         btCollisionObject* colObj =
             mDynamicsWorld->getCollisionObjectArray()[ i ];
         btRigidBody* body = btRigidBody::upcast( colObj );
 
+        if( body->isStaticObject() )
+        {
+            continue;
+        }
+
         if( body && body->getMotionState() )
         {
-            ves::xplorer::scenegraph::vesMotionState* motionState =
-                static_cast< ves::xplorer::scenegraph::vesMotionState* >(
+            osgBullet::MotionState* motionState =
+                static_cast< osgBullet::MotionState* >(
                     body->getMotionState() );
-            motionState->m_graphicsWorldTrans = motionState->m_startWorldTrans;
+            motionState->resetTransform();
+            motionState->getWorldTransform( tempTransform );
 
-            colObj->setWorldTransform( motionState->m_graphicsWorldTrans );
-            colObj->setInterpolationWorldTransform(
-                motionState->m_startWorldTrans );
+            colObj->setWorldTransform( tempTransform );
+            colObj->setInterpolationWorldTransform( tempTransform );
             colObj->activate();
 
             //Removed cached contact points
@@ -349,26 +359,12 @@ void PhysicsSimulator::ResetScene()
                 cleanProxyFromPairs( colObj->getBroadphaseHandle(),
                                      mDynamicsWorld->getDispatcher() );
 
-            btRigidBody* body = btRigidBody::upcast( colObj );
-
             if( body && !body->isStaticObject() )
             {
-                btRigidBody::upcast( colObj )->setLinearVelocity(
-                    btVector3( 0, 0, 0 ) );
-                btRigidBody::upcast( colObj )->setAngularVelocity(
-                    btVector3( 0, 0, 0 ) );
+                body->setLinearVelocity( btVector3( 0, 0, 0 ) );
+                body->setAngularVelocity( btVector3( 0, 0, 0 ) );
             }
         }
-
-        /*
-        //Quickly search some issue at a certain simulation frame
-        //pressing space to reset
-        int fixed = 18;
-        for( int i = 0; i < fixed; ++i )
-        {
-            getDynamicsWorld()->stepSimulation( 1.0f / 60.0f, 1 );
-        }
-        */
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
