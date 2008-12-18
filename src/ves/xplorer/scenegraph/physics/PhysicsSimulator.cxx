@@ -236,7 +236,7 @@ void PhysicsSimulator::InitializePhysicsSimulation()
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsSimulator::UpdatePhysics( float dt )
 {
-    if( !mDynamicsWorld && mIdle )
+    if( !mDynamicsWorld || mIdle )
     {
         return;
     }
