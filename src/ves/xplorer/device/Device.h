@@ -92,6 +92,9 @@ public:
 
     ///Do not know what this is
     virtual void UpdateCommand();
+    
+    ///Initialize the device if needed
+    virtual void Initialize(){;}
 
     ///Check if the head collides with the rest of the objects in the scene
     ///\param headPositionInWorld The head position in world coordinates

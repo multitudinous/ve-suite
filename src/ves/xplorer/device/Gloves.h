@@ -103,7 +103,7 @@ public:
     virtual ~Gloves();
 
     ///Initialize some variables in the class
-    void Initialize();
+    virtual void Initialize();
 
     ///Update the position in scene
     virtual void UpdateNavigation();

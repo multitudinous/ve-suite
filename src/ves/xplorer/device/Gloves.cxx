@@ -45,6 +45,8 @@
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/FindParentsVisitor.h>
 
+#include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
+
 // --- vrJuggler Includes --- //
 #include <gmtl/Xforms.h>
 #include <gmtl/Generate.h>
@@ -106,12 +108,17 @@ Gloves::Gloves()
     mRightPinkyPIP.init("PinkyPIP");
 
     beamLineSegment = new osg::LineSegment();
-    Initialize();
+    
+    mRootNode = ves::xplorer::scenegraph::SceneManager::instance()->GetRootNode();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Gloves::Initialize()
 {
-    mRootNode = ves::xplorer::scenegraph::SceneManager::instance()->GetRootNode();
+    if( mRootNode->containsNode( mRightHand.get() ) )
+    {
+        mRootNode->removeChild( mRightHand.get() );
+        return;
+    }
 
     for( int i = 0; i < 3; ++i )
     {
@@ -128,9 +135,14 @@ void Gloves::Initialize()
     
     float length = 0.8;
 
-    mRightHand = new osgBullet::HandNode( NULL, osgBullet::HandNode::RIGHT, length );
+    mRightHand = new osgBullet::HandNode( ves::xplorer::scenegraph::PhysicsSimulator::instance()->GetDynamicsWorld(), osgBullet::HandNode::RIGHT, length );
     //mLeftHand = new osgBullet::HandNode( NULL, osgBullet::HandNode::LEFT, length );
 
+    if( !mRightHand.valid() )
+    {
+        std::cerr << "|\tProblems loading hand model for glove tools." << std::endl;
+        return;
+    }
     pos.set( 0, 3, 3 );
     mRightHand->setPosition( pos );
     mRightHand->setAttitude( quat );
@@ -141,6 +153,7 @@ void Gloves::Initialize()
 
     mRootNode->addChild( mRightHand.get() );
     //mRootNode->addChild( mLeftHand.get() );
+    std::cout << "|\tInitialize Gloves" << std::endl;
 }
 ////////////////////////////////////////////////////////////////////////////////
 Gloves::~Gloves()
@@ -150,6 +163,21 @@ Gloves::~Gloves()
 ////////////////////////////////////////////////////////////////////////////////
 void Gloves::UpdateNavigation()
 {
+    if( !mRightHand.valid() )
+    {
+        return;
+    }
+    
+    if( !mRootNode->containsNode( mRightHand.get() ) )
+    {
+        return;
+    }
+
+    if( mRightHandPos->isStupefied() )
+    {
+        return;
+    }
+    
     //Get data from hand joints
         //Get all the VR Juggler data variables
     //Update the hand joints
@@ -1023,4 +1051,5 @@ void Gloves::UpdateHandModel()
      }     
     */
 }
+////////////////////////////////////////////////////////////////////////////////
 #endif

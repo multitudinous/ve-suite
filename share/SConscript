@@ -20,6 +20,7 @@ shareSubdirs = Split("""
     tools
     scripts
     osg-textures
+    osg-data
 """)
 
 if GetPlatform() != 'win32':

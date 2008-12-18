@@ -86,7 +86,7 @@ public:
     virtual ~Tablet();
 
     ///Initialize some variables in the class
-    void Initialize();
+    virtual void Initialize();
 
     ///Update the position in scene
     void UpdateNavigation();

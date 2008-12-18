@@ -162,6 +162,7 @@ BEGIN_EVENT_TABLE( AppFrame, wxFrame )
 
     EVT_MENU( APPFRAME_WAND, AppFrame::ChangeDevice )
     EVT_MENU( APPFRAME_KEYBOARD_MOUSE, AppFrame::ChangeDevice )
+    EVT_MENU( APPFRAME_GLOVES, AppFrame::ChangeDevice )
 
     EVT_MENU( APPFRAME_DEVICE_PROPERTIES, AppFrame::LaunchDeviceProperties )
 
@@ -785,6 +786,7 @@ void AppFrame::CreateMenu()
 
     xplorerDeviceMenu->Append( APPFRAME_WAND, _( "Wand" ) );
     xplorerDeviceMenu->Append( APPFRAME_KEYBOARD_MOUSE,  _( "Keyboard Mouse" ) );
+    xplorerDeviceMenu->Append( APPFRAME_GLOVES,  _( "Gloves" ) );
     xplorerDeviceMenu->AppendSeparator();
     xplorerDeviceMenu->Append( APPFRAME_DEVICE_PROPERTIES,    _( "Properties" ) );
 
@@ -2152,6 +2154,11 @@ void AppFrame::ChangeDevice( wxCommandEvent& event )
         device = "KeyboardMouse";
     }
 
+    else if( event.GetId() == APPFRAME_GLOVES )
+    {
+        device = "Gloves";
+    }
+    
     dvp->SetData( std::string( "Device" ), device );
 
     command->SetCommandName( std::string( "CHANGE_DEVICE" ) );

@@ -79,9 +79,8 @@ DeviceHandler::DeviceHandler()
         new ves::xplorer::Wand();
     mDevices[ "KeyboardMouse" ] =
         new ves::xplorer::KeyboardMouse();
-
-    //mDevices[ "Gloves" ] =
-    //    new ves::xplorer::Gloves();
+    mDevices[ "Gloves" ] =
+        new ves::xplorer::Gloves();
 
     //Set properties in Devices
     std::map< const std::string, ves::xplorer::Device* >::const_iterator itr;
@@ -138,7 +137,7 @@ void DeviceHandler::ExecuteCommands()
             currentEventHandler->second->Execute(
                 ModelHandler::instance()->GetXMLCommand() );
 
-            //Tablet and Wand is always active and need updated...
+            //Tablet and Wand are always active and need updated...
             if( ModelHandler::instance()->GetXMLCommand()->
                 GetCommandName() == "Navigation_Data" )
             {
@@ -207,7 +206,7 @@ void DeviceHandler::ProcessDeviceEvents()
     //Always do this by default
     mDevices.find( "Tablet" )->second->UpdateNavigation();
     //Always do this by default
-    //mDevices.find( "Gloves" )->second->UpdateNavigation();
+    mDevices.find( "Gloves" )->second->UpdateNavigation();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DeviceHandler::ResetCenterPoint()
@@ -227,6 +226,11 @@ void DeviceHandler::SetActiveDevice( const std::string& activeDevice )
     if( itr != mDevices.end() )
     {
         mActiveDevice = itr->second;
+        std::cout << activeDevice << std::endl;
+        if( activeDevice == "Gloves" )
+        {
+            mActiveDevice->Initialize();
+        }
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
