@@ -267,8 +267,11 @@ namespace CASI
 			}
 
 			cnode = ihcol->GetItem(arg[0], arg[1], arg[2], arg[3], arg[4]);
-            cnodename = cnode->GetName(force).GetBSTR();
-			results.push_back(cnodename);
+            if( cnode != NULL )
+            {
+                cnodename = cnode->GetName(force).GetBSTR();
+			    results.push_back(cnodename);
+            }
 		}
 		
 		delete [] rc;
