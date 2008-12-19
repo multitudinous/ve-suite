@@ -30,7 +30,6 @@
 * -----------------------------------------------------------------
 *
 *************** <auto-copyright.rb END do not edit this line> ***************/
-#ifdef GLOVE_WORK
 #ifndef _VES_XPLORER_DEVICE_GLOVES_H
 #define _VES_XPLORER_DEVICE_GLOVES_H
 
@@ -253,4 +252,3 @@ private:
 }
 }
 #endif //GLOVES_H
-#endif

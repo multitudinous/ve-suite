@@ -30,7 +30,6 @@
 * -----------------------------------------------------------------
 *
 *************** <auto-copyright.rb END do not edit this line> ***************/
-#ifdef GLOVE_WORK
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/device/Gloves.h>
 
@@ -1052,4 +1051,3 @@ void Gloves::UpdateHandModel()
     */
 }
 ////////////////////////////////////////////////////////////////////////////////
-#endif
