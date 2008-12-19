@@ -1,5 +1,5 @@
 /* XPM */
-static char * mixer_work_mixer_work_work_xpm[] = {
+static char * mixer_work_mixer_work_work[] = {
 "90 90 17 1",
 " 	c None",
 ".	c #000000",
