@@ -147,7 +147,7 @@ void  APUOPlugin::OnQueryInputs( wxCommandEvent& event )
     compName = "Data.Blocks." + compName;
 
     //generate hierarchical name if necessary
-    ves::open::xml::model::ModelPtr parentTraverser = GetVEModel();//parentModel.lock();
+    ves::open::xml::model::ModelPtr parentTraverser = GetVEModel();
     if( parentTraverser != NULL )
     {
         while( parentTraverser->GetParentModel() != NULL )
@@ -220,14 +220,15 @@ void  APUOPlugin::OnQueryOutputs( wxCommandEvent& event )
     compName = "Data.Blocks." + compName;
 
     //generate hierarchical name if necessary
-    ves::open::xml::model::ModelPtr parentTraverser = parentModel.lock();
+    ves::open::xml::model::ModelPtr parentTraverser = GetVEModel();
     if( parentTraverser != NULL )
     {
         while( parentTraverser->GetParentModel() != NULL )
         {
             //compName = parentTraverser->GetModelName() +".Data.Blocks." + compName;
-            compName = "Data.Blocks." + parentTraverser->GetPluginName() + "." + compName;
             parentTraverser = parentTraverser->GetParentModel();
+            compName = "Data.Blocks." + parentTraverser->GetPluginName() + "." + compName;
+
         }
     }
 
