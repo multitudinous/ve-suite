@@ -131,14 +131,19 @@ void  ADUOPlugin::OnQueryDynamics( wxCommandEvent& event )
     //compName = "Data.Blocks." + compName;
 
     //generate hierarchical name if necessary
-    ves::open::xml::model::ModelPtr parentTraverser = parentModel.lock();
-    //while( parentTraverser != NULL )
-    //while( parentTraverser->GetParentModel() != NULL )
-    //{
-        //compName = parentTraverser->GetModelName() +".Data.Blocks." + compName;
-        //compName = "Data.Blocks." + parentTraverser->GetModelName() + "." + compName;
-    //    parentTraverser = parentTraverser->GetParentModel();
-    //}
+    ves::open::xml::model::ModelPtr parentTraverser = GetVEModel();
+
+    if( parentTraverser != NULL )
+    {
+        while( parentTraverser->GetParentModel() != NULL )
+        {
+            //compName = parentTraverser->GetModelName() +".Data.Blocks." + compName;
+            parentTraverser = parentTraverser->GetParentModel();
+           // std::string tempFormat = "Blocks(\"" + compName + "\")";
+            compName = parentTraverser->GetPluginName() + "." + compName;
+
+        }
+    }
 
     ves::open::xml::CommandPtr returnState( new ves::open::xml::Command() );
     returnState->SetCommandName( "getModuleParamList" );
