@@ -49,7 +49,7 @@ lib_env.Append( CPPPATH = [pj(openDir, 'include' )] )
 lib_env.Append( CPPPATH = [pj(RootDir, 'external','bullet-2.72','src' ) ] )
 lib_env.Append( CPPPATH = [pj(RootDir, 'external','bullet-2.72','Extras') ] )
 lib_env.Append( CPPDEFINES  = ['OSGBULLET_LIBRARY', 'osgBullet_EXPORTS'] )
-lib_env.Append( LIBS = ['bullet','XML','COLLADA_DOM','BulletColladaConverter','osgBullet'] )
+lib_env.Append( LIBS = ['osgBullet','BulletColladaConverter','bullet','COLLADA_DOM','XML'] )
 lib_env.Append( LIBPATH = [pj('#', buildDir,'external', 'bullet-2.72')] )
 lib_env.Append( LIBPATH = [pj('#', buildDir,'external', 'osgBullet')] )
 
