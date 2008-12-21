@@ -17,7 +17,7 @@ class DrawArraysInstanced : public osg::DrawArrays
 {
 public:
     DrawArraysInstanced( GLenum mode=0 );
-    DrawArraysInstanced::DrawArraysInstanced( GLenum mode, GLint first, GLsizei count, int numInstances=1 );
+    DrawArraysInstanced( GLenum mode, GLint first, GLsizei count, int numInstances=1 );
     DrawArraysInstanced( const DrawArraysInstanced& dai, const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY );
 
 

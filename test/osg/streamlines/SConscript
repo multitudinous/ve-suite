@@ -1,6 +1,7 @@
 ##Builds a multitude of utilities
 import os, sys, string
 pj = os.path.join
+import SConsAddons.Util as sca_util
 
 Import('baseEnv RootDir ves_pkg LIBDIR GetPlatform buildDir osg_options')
 
@@ -17,5 +18,5 @@ prog = ves_pkg.createProgram('streamlinesTest' + env["PROGSUFFIX"], env, 'bin')
 #    True,resources,pj( RootDir, 'src', 'apps', 'xplorer','Info.plist'),
 #    pj( RootDir, 'dist', 'darwin', 'PkgInfo'))
 
-prog.addSources( srcs )
+prog.addSources( sources )
 prog.build()
