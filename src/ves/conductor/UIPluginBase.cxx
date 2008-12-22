@@ -1205,8 +1205,8 @@ void UIPluginBase::SetImageIcon( std::string path, float rotation, int mirror, f
     double PI = 3.14159265;
     image = image.Rotate(( rotation * PI ) / 180, wxPoint( 0, 0 ) );
 
-    icon_w = image.GetWidth();
-    icon_h = image.GetHeight();
+    icon_w = image.GetWidth() - 1;
+    icon_h = image.GetHeight() - 1;
 
     //now scale it up or down according to the specified scale
     icon_w = static_cast< int >( icon_w * scale );
