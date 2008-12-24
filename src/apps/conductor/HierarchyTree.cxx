@@ -72,8 +72,8 @@ using namespace ves::conductor;
 BEGIN_EVENT_TABLE( HierarchyTree, wxTreeCtrl )
     EVT_TREE_SEL_CHANGED( HIERARCHYTREE_CTRL, HierarchyTree::OnSelChanged )
     EVT_TREE_ITEM_EXPANDING( HIERARCHYTREE_CTRL, HierarchyTree::OnExpanded )
-    EVT_TREE_ITEM_ACTIVATED( HIERARCHYTREE_CTRL, HierarchyTree::OnDoubleClick )
-    EVT_TREE_ITEM_RIGHT_CLICK( HIERARCHYTREE_CTRL, HierarchyTree::OnRightClick )
+    //EVT_TREE_ITEM_ACTIVATED( HIERARCHYTREE_CTRL, HierarchyTree::OnDoubleClick )
+    //EVT_TREE_ITEM_RIGHT_CLICK( HIERARCHYTREE_CTRL, HierarchyTree::OnRightClick )
 
 END_EVENT_TABLE()
 

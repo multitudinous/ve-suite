@@ -1877,7 +1877,7 @@ void UIPluginBase::OnMRightDown( wxMouseEvent& event )
 
     actionPoint = evtpos;
     highlightFlag = true;
-    m_canvas->Refresh( true );
+    //m_canvas->Refresh( true );
 
     SendActiveId();
     wxString menuName = mPluginName + wxString( " Menu", wxConvUTF8 );
@@ -1892,9 +1892,9 @@ void UIPluginBase::OnMRightDown( wxMouseEvent& event )
     m_selTag = -1;
     m_selTagCon = -1;
     //xold = yold =0;
-    m_canvas->Refresh( true );
+    //m_canvas->Refresh( true );
     //necessary for setting the canvas active to handle keyboard input
-    m_canvas->SetFocus();
+    //m_canvas->SetFocus();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIPluginBase::OnSetActiveXplorerModel( wxCommandEvent& event )

@@ -153,6 +153,9 @@ void cfdVEPluginLoader::ScanAndLoad( void )
         vprDEBUG( vesDBG, 1 ) << ex.what()
         << std::endl
         << vprDEBUG_FLUSH;
+        //This is a hack because somehow the if statement above
+        //is true in some cases on windows.
+        customPlugins = false;
     }
 
     // Load the custon plugin
@@ -175,7 +178,7 @@ void cfdVEPluginLoader::ScanAndLoad( void )
 
         defaultLibs = finder.getLibraries();
         vprDEBUG( vesDBG, 1 )  << "|\tNumber of VE-Suite libs : "
-            << libs.size()
+            << defaultLibs.size()
             << " " << DSO_SUFFIX << std::endl
             << vprDEBUG_FLUSH;
         // Load the default plugin
