@@ -64,6 +64,17 @@ public:
     {
         ;
     }
+
+    //THESE ENUMS ARE NOT EVENT ENUMS
+    //THUS THEY SHOULD NOT BE GLOBAL
+    enum
+    {
+        AVAILABLEMODULES_FILE = 0,
+        AVAILABLEMODULES_FILESELECTED = 1,
+        AVAILABLEMODULES_FOLDER = 2,
+        AVAILABLEMODULES_FOLDERSELECTED = 3,
+        AVAILABLEMODULES_FOLDEROPENED = 4
+    };
     
     ///Normal constructor
     AvailableModules( wxWindow *parent, const wxWindowID id, const wxPoint& pos,
