@@ -34,6 +34,7 @@
 
 #include "APPlugin.h"
 #include "../ConductorPluginEnums.h"
+#include "APOpenDialog.h"
 
 #include <ves/conductor/ConductorLibEnums.h>
 #include <ves/conductor/xpm/AspenPlus2DIcons/aspen.xpm>
@@ -131,12 +132,15 @@ wxString APPlugin::GetConductorName()
 /////////////////////////////////////////////////////////////////////////////
 void APPlugin::OnOpen( wxCommandEvent& event )
 {
-    UIPLUGIN_CHECKID( event )
-    wxString bkpext( "Aspen Plus ASCII files (*.bkp)|*.bkp", wxConvUTF8);
-    wxString apwext( "Aspen Plus Binary files (*.apw)|*.apw", wxConvUTF8);
-    wxString extText = bkpext + _("|") + apwext;
-    wxFileDialog fd( m_canvas, wxT("Choose a file"), wxT(""), wxT(""), 
-        extText, wxOPEN );
+    //UIPLUGIN_CHECKID( event )
+    //wxString bkpext( "Aspen Plus ASCII files (*.bkp)|*.bkp", wxConvUTF8);
+    //wxString apwext( "Aspen Plus Binary files (*.apw)|*.apw", wxConvUTF8);
+    //wxString extText = bkpext + _("|") + apwext;
+    //wxFileDialog fd( m_canvas, wxT("Choose a file"), wxT(""), wxT(""), 
+    //    extText, wxOPEN );
+
+    APOpenDialog fd( m_canvas );
+    fd.SetPopulateFilenames( );
 
     if( fd.ShowModal() != wxID_OK )
     {
@@ -145,7 +149,7 @@ void APPlugin::OnOpen( wxCommandEvent& event )
 
     wxFileName bkpFileName;
     bkpFileName.ClearExt();
-    bkpFileName.SetName( fd.GetFilename() );
+    bkpFileName.SetName( fd.GetFilename() + wxT(".bkp") );
 
     CommandPtr returnState ( new Command() );
     returnState->SetCommandName( "getNetwork" );

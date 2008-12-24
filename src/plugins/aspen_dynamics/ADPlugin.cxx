@@ -33,6 +33,7 @@
 #include <ves/conductor/util/CORBAServiceList.h>
 
 #include "ADPlugin.h"
+#include "ADOpenDialog.h"
 #include "../ConductorPluginEnums.h"
 
 #include <ves/conductor/ConductorLibEnums.h>
@@ -133,11 +134,14 @@ wxString ADPlugin::GetConductorName()
 /////////////////////////////////////////////////////////////////////////////
 void ADPlugin::OnOpen( wxCommandEvent& event )
 {
-    UIPLUGIN_CHECKID( event )
-    wxString dynext( "Aspen Dynamics files (*.dynf)|*.dynf", wxConvUTF8);
-    wxString extText = dynext;
-    wxFileDialog fd( m_canvas, wxT("Choose a file"), wxT(""), wxT(""), 
-        extText, wxOPEN );
+    //UIPLUGIN_CHECKID( event )
+    //wxString dynext( "Aspen Dynamics files (*.dynf)|*.dynf", wxConvUTF8);
+    //wxString extText = dynext;
+    //wxFileDialog fd( m_canvas, wxT("Choose a file"), wxT(""), wxT(""), 
+    //    extText, wxOPEN );
+
+    ADOpenDialog fd( m_canvas );
+    fd.SetPopulateFilenames( );
 
     if( fd.ShowModal() != wxID_OK )
     {
@@ -146,7 +150,7 @@ void ADPlugin::OnOpen( wxCommandEvent& event )
 
     wxFileName dynFileName;
     dynFileName.ClearExt();
-    dynFileName.SetName( fd.GetFilename() );
+    dynFileName.SetName( fd.GetFilename() + wxT(".dynf") );
 
     CommandPtr returnState ( new Command() );
     returnState->SetCommandName( "getNetwork" );

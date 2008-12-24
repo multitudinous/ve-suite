@@ -22,6 +22,13 @@ enum
 
 
     //
+    //ADOpenDialog
+    //
+    ADOPENDIALOG_CANCELBUTTON,
+    ADOPENDIALOG_OKBUTTON,
+
+
+    //
     //APPlugin.h
     //
     APPLUGIN_OPEN_SIM,
@@ -35,6 +42,12 @@ enum
     APPLUGIN_SAVEAS_SIMULATION,
     APPLUGIN_ASPEN_MENU,
 
+
+    //
+    //APOpenDialog
+    //
+    APOPENDIALOG_CANCELBUTTON,
+    APOPENDIALOG_OKBUTTON,
 
     //
     //ADUOPlugin.h
