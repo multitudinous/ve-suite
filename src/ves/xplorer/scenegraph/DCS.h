@@ -59,10 +59,7 @@ class TransferPhysicsDataCallback;
 }
 
 // --- OSG Includes --- //
-#ifdef _OSG
 #include <osg/PositionAttitudeTransform>
-#elif _OPENSG
-#endif
 
 // --- VR Juggler Includes --- //
 #include <gmtl/Matrix.h>
@@ -102,11 +99,7 @@ namespace xplorer
 namespace scenegraph
 {
 class PhysicsRigidBody;
-
-#ifdef _OSG
 class VE_SCENEGRAPH_EXPORTS DCS : public osg::PositionAttitudeTransform, public SceneNode
-#elif _OPENSG
-#endif
 {
 public:
     ///Constructor

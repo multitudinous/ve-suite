@@ -169,7 +169,7 @@ void CADEntity::InitPhysics()
     if( !mPhysicsRigidBody )
     {
         mPhysicsRigidBody = new ves::xplorer::scenegraph::PhysicsRigidBody(
-                                 mCADEntityHelper->GetNode(), mPhysicsSimulator );
+                                 mDCS.get(), mPhysicsSimulator );
         //mDCS->SetPhysicsRigidBody( mPhysicsRigidBody );
     }
     
@@ -188,13 +188,8 @@ ves::xplorer::scenegraph::DCS* CADEntity::GetDCS()
 ////////////////////////////////////////////////////////////////////////////////
 ves::xplorer::scenegraph::PhysicsRigidBody* CADEntity::GetPhysicsRigidBody()
 {
-    if( !mPhysicsRigidBody )
-    {
-        mPhysicsRigidBody = new ves::xplorer::scenegraph::PhysicsRigidBody(
-            mCADEntityHelper->GetNode(), mPhysicsSimulator );
-        //mDCS->SetPhysicsRigidBody( mPhysicsRigidBody );
-    }
-
+    InitPhysics();
+    
     return mPhysicsRigidBody;
 }
 ////////////////////////////////////////////////////////////////////////////////

@@ -135,8 +135,10 @@ public:
     
 private:
     friend class PhysicsSimulator;
-
+    ///Clean up the memory associated with collisions vector
     void ClearCollisions();
+    ///Clean up the memory associated with a btRigidBody
+    void CleanRigidBody();
 
     void PushBackCollision( PhysicsRigidBody* physicsRigidBody, btVector3 location );
     ///Modify the mass, friction, restitution, and inertia for the rigidbody

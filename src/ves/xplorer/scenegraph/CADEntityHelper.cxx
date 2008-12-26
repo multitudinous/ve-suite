@@ -157,31 +157,16 @@ CADEntityHelper& CADEntityHelper::operator=( const CADEntityHelper& input )
 CADEntityHelper::~CADEntityHelper()
 {
     //If neccesary
-#ifdef _OSG
-#elif _OPENSG
-#endif
 }
 ////////////////////////////////////////////////////////////////////////////////
-#ifdef _OSG
 void CADEntityHelper::SetNode( osg::Node* node )
-#elif _OPENSG
-#endif
 {
-#ifdef _OSG
     m_cadNode = node;
-#elif _OPENSG
-#endif
 }
 ////////////////////////////////////////////////////////////////////////////////
-#ifdef _OSG
 osg::Node* CADEntityHelper::GetNode()
-#elif _OPENSG
-#endif
 {
-#ifdef _OSG
     return m_cadNode.get();
-#elif _OPENSG
-#endif
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CADEntityHelper::SetName( const std::string& name )
@@ -208,17 +193,11 @@ void CADEntityHelper::ToggleDisplay( const std::string& onOff )
 
     if( onOff == "ON" )
     {
-#ifdef _OSG
         GetNode()->setNodeMask( 1 );
-#elif _OPENSG
-#endif
     }
     else if( onOff == "OFF" )
     {
-#ifdef _OSG
         GetNode()->setNodeMask( 0 );
-#elif _OPENSG
-#endif
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -361,7 +340,7 @@ void CADEntityHelper::LoadFile( const std::string& filename,
 
     //Run the optimizer to improve performance
     {
-        osgUtil::Optimizer graphOpti;
+        /*osgUtil::Optimizer graphOpti;
         graphOpti.optimize( tempCADNode.get(), 
                            osgUtil::Optimizer::FLATTEN_STATIC_TRANSFORMS |
                            osgUtil::Optimizer::REMOVE_REDUNDANT_NODES |
@@ -374,18 +353,7 @@ void CADEntityHelper::LoadFile( const std::string& filename,
                            osgUtil::Optimizer::SPATIALIZE_GROUPS |
                            osgUtil::Optimizer::OPTIMIZE_TEXTURE_SETTINGS |
                            osgUtil::Optimizer::MERGE_GEODES |
-                           osgUtil::Optimizer::STATIC_OBJECT_DETECTION );
-    }
-    
-    {
-        osg::ComputeBoundsVisitor cbbv( osg::NodeVisitor::TRAVERSE_ALL_CHILDREN );
-        tempCADNode->accept(cbbv);
-        osg::BoundingBox bb = cbbv.getBoundingBox();
-        std::cout << "BB Info" << std::endl;
-        std::cout << bb.center() << std::endl;
-        std::cout << bb.radius() << std::endl;
-        std::cout << bb._min << std::endl;
-        std::cout << bb._max << std::endl;        
+                           osgUtil::Optimizer::STATIC_OBJECT_DETECTION );*/
     }
 
 #if ((OSG_VERSION_MAJOR>=2) && (OSG_VERSION_MINOR>=4))
@@ -454,11 +422,11 @@ void CADEntityHelper::LoadFile( const std::string& filename,
         osg::ComputeBoundsVisitor cbbv( osg::NodeVisitor::TRAVERSE_ALL_CHILDREN );
         m_cadNode->accept(cbbv);
         osg::BoundingBox bb = cbbv.getBoundingBox();
-        std::cout << "BB Info" << std::endl;
-        std::cout << bb.center() << std::endl;
-        std::cout << bb.radius() << std::endl;
-        std::cout << bb._min << std::endl;
-        std::cout << bb._max << std::endl;        
+        std::cout << "|\tBounding Box Info" << std::endl 
+            << "|\tCenter " << bb.center() << std::endl
+            << "|\tRadius " << bb.radius() << std::endl
+            << "|\tMin " << bb._min << std::endl
+            << "|\tMax " << bb._max << std::endl;        
     }    
 }
 ////////////////////////////////////////////////////////////////////////////////

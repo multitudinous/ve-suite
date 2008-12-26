@@ -445,6 +445,9 @@ void CADNodeManagerDlg::_initializePhysics( wxCommandEvent& event )
 
         _sendCommandsToXplorer();
         ClearInstructions();
+        
+        //Launch the physics attributes panel
+        _showPropertiesDialog( event );
     }
 }
 /////////////////////////////////////////////////////////

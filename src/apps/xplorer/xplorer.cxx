@@ -75,10 +75,11 @@ int main( int argc, char* argv[] )
         //Here is the part to contact the naming service and get the reference for the executive
         CORBA::Object_var naming_context_object =
             orb->resolve_initial_references( "NameService" );
-        CORBA::String_var sior1( orb->object_to_string( naming_context_object.in() ) );
+        //orb->perform_work();
+        //CORBA::String_var sior1( orb->object_to_string( naming_context_object.in() ) );
         //std::cout << "|\tIOR of the server side : " << std::endl << sior1 << std::endl;
         CosNaming::NamingContext_var naming_context = CosNaming::NamingContext::_narrow( naming_context_object.in() );
-
+        //orb->perform_work();
         //Here is the code to set up the server
         CORBA::Object_var poa_object = orb->resolve_initial_references( "RootPOA" ); // get the root poa
         PortableServer::POA_var poa = PortableServer::POA::_narrow( poa_object.in() );
@@ -105,7 +106,6 @@ int main( int argc, char* argv[] )
         {
             policies[i]->destroy();
         }
-
         poa_manager->activate();
 
         //Initialize Xplorer CORBA interfaces

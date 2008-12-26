@@ -61,22 +61,22 @@ void LocalToWorldNodePath::apply( osg::Node& node )
         osg::NodePath nodePath = getNodePath();
         if( nodePath.size() == 0 )
         {
-            std::cerr << "No nodes" << std::endl;
+            std::cerr << "LocalToWorldNodePath::apply = No nodes" << std::endl;
             return;
         }
         NodeAndPath nap( &node, nodePath );
         mNaplIncludeLocal.push_back( nap );
-        for( size_t i = 0; i < nodePath.size(); ++i )
+        /*for( size_t i = 0; i < nodePath.size(); ++i )
         {
-            std::cout << "name " << nodePath.at(i)->getName() << std::endl;
-        }
-        nodePath.erase( nodePath.begin() );
+            std::cout << "name " << nodePath.at(i)->getName() << " : " << nodePath.at(i)->className() << std::endl;
+        }*/
+        nodePath.erase( nodePath.end() - 1 );
         NodeAndPath nap2( &node, nodePath );
         mNaplExcludeLocal.push_back( nap2 );
-        for( size_t i = 0; i < nodePath.size(); ++i )
+        /*for( size_t i = 0; i < nodePath.size(); ++i )
         {
-            std::cout << "name " << nodePath.at(i)->getName() << std::endl;
-        }
+            std::cout << "name " << nodePath.at(i)->getName() << " : " << nodePath.at(i)->className() << std::endl;
+        }*/
         return;
     }
     osg::NodeVisitor::traverse( node );
