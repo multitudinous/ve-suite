@@ -15,6 +15,7 @@
 #include <osg/Notify>
 #include <osg/io_utils>
 
+#include <iostream>
 
 using namespace osgBullet;
 
@@ -31,9 +32,11 @@ MotionState::setWorldTransform(const btTransform& worldTrans)
 {
     _transform = worldTrans;
     osg::Matrix dt = osgBullet::asOsgMatrix( _transform );
-
-    osg::Matrix invCom = osg::Matrix::translate( -_com );
-    osg::Matrix t = invCom * dt;
+    //osg::Matrix tempScale = osg::Matrix::scale( _scale );
+    //std::cout << tempScale << dt << std::endl;
+    //tempScale = tempScale * dt;
+    //std::cout << tempScale << dt << std::endl;
+    osg::Matrix t = _invCom * dt;
 
     if( _mt.valid() )
         _mt->setMatrix( t );
@@ -62,7 +65,9 @@ MotionState::setTransform( osg::Transform* transform )
     else if( amt = dynamic_cast< osgBullet::AbsoluteModelTransform* >( transform ) )
         _amt = amt;
     else
-        osg::notify( osg::WARN ) << "MotionState: Unsupported transform type: " << transform->className() << std::endl;
+        osg::notify( osg::WARN ) 
+            << "MotionState::setTransform : Unsupported transform type: " 
+            << transform->className() << std::endl;
 }
 
 osg::Transform*
@@ -98,7 +103,9 @@ MotionState::setDebugTransform( osg::Transform* transform )
     else if( amt = dynamic_cast< osgBullet::AbsoluteModelTransform* >( transform ) )
         _debugAMT = amt;
     else
-        osg::notify( osg::WARN ) << "MotionState: Unsupported transform type: " << transform->className() << std::endl;
+        osg::notify( osg::WARN ) 
+            << "MotionState::setDebugTransform : Unsupported transform type: " 
+            << transform->className() << std::endl;
 }
 
 osg::Transform*
@@ -128,6 +135,7 @@ void
 MotionState::setParentTransform( const osg::Matrix m )
 {
     _parentTransform = m;
+    _scale = _parentTransform.getScale();
     resetTransform();
 }
 
@@ -142,6 +150,7 @@ void
 MotionState::setCenterOfMass( const osg::Vec3& com )
 {
     _com = com;
+    _invCom = osg::Matrix::translate( -_com );
     resetTransform();
 }
 
@@ -156,6 +165,9 @@ void
 MotionState::resetTransform()
 {
     osg::Matrix comM = osg::Matrix::translate( _com );
-    setWorldTransform( osgBullet::asBtTransform( comM * _parentTransform ) );
+    //osg::Matrix tempScale = osg::Matrix::scale( _scale );
+    //tempScale = osg::Matrix::inverse( tempScale );
+    //setWorldTransform( osgBullet::asBtTransform(  comM * tempScale * _parentTransform ) );
+    setWorldTransform( osgBullet::asBtTransform(  comM * _parentTransform ) );
 }
 

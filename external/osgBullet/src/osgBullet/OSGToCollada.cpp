@@ -18,6 +18,7 @@
 
 using namespace osgBullet;
 
+#include <iostream>
 
 
 class ProcessSceneGraph : public osg::NodeVisitor
@@ -96,7 +97,7 @@ protected:
     void createAndAddShape( osg::Node& node )
     {
         osg::notify( osg::DEBUG_INFO ) << "In createAndAddShape" << std::endl;
-
+        //std::cout << " Name 1 " << node.getName() << std::endl;
         btCollisionShape* child = createShape( node );
         if (child)
         {
@@ -108,6 +109,7 @@ protected:
     btCollisionShape* createShape( osg::Node& node )
     {
         osg::notify( osg::DEBUG_INFO ) << "In createShape" << std::endl;
+        //std::cout << " Name 2 " << node.getName() << std::endl;
 
         btCollisionShape* collision( NULL );
         osg::Vec3 center;
@@ -120,20 +122,25 @@ protected:
             node.accept( cbv );
             osg::BoundingBox bb = cbv.getBoundingBox();
             center = bb.center();
+            /*std::cout << "Name " << node.getName() << std::endl;
+            std::cout << bb.center() << std::endl;
+            std::cout << bb.radius() << std::endl;
+            std::cout << bb._min << std::endl;
+            std::cout << bb._max << std::endl;*/
             collision = osgBullet::btBoxCollisionShapeFromOSG( &node, &bb );
             break;
         }
         case SPHERE_SHAPE_PROXYTYPE:
         {
             osg::BoundingSphere bs = node.getBound();
-            osg::Vec3 center = bs.center();
+            center = bs.center();
             collision = osgBullet::btSphereCollisionShapeFromOSG( &node );
             break;
         }
         case CYLINDER_SHAPE_PROXYTYPE:
         {
             osg::BoundingSphere bs = node.getBound();
-            osg::Vec3 center = bs.center();
+            center = bs.center();
             collision = osgBullet::btCylinderCollisionShapeFromOSG( &node, _axis );
             break;
         }
@@ -149,6 +156,7 @@ protected:
             break;
         }
         }
+        //std::cout << " Center " << center << std::endl;
 
         if( collision && (center != osg::Vec3( 0., 0., 0. )) )
         {
@@ -196,6 +204,7 @@ public:
         node.setPosition(osg::Vec3(0.0f,0.0f,0.0f));
         node.setAttitude(osg::Quat());
         node.setPivotPoint(osg::Vec3(0.0f,0.0f,0.0f));
+        node.setScale( osg::Vec3(1.0f,1.0f,1.0f) );
     }
 
     void apply( osg::Geode& node )
@@ -204,6 +213,15 @@ public:
         unsigned int idx;
         for( idx=0; idx<node.getNumDrawables(); idx++ )
             flattenDrawable( node.getDrawable( idx ), l2w );
+            
+        /*osg::ComputeBoundsVisitor cbbv( osg::NodeVisitor::TRAVERSE_ALL_CHILDREN );
+        node.accept(cbbv);
+        osg::BoundingBox bb = cbbv.getBoundingBox();
+        std::cout << "Name " << node.getName() << std::endl;
+        std::cout << bb.center() << std::endl;
+        std::cout << bb.radius() << std::endl;
+        std::cout << bb._min << std::endl;
+        std::cout << bb._max << std::endl;*/
     }
 
 protected:

@@ -80,8 +80,14 @@ private:
     osg::ref_ptr< osg::MatrixTransform > _debugMT;
     osg::ref_ptr< osgBullet::AbsoluteModelTransform > _debugAMT;
 
+    // Contains the whole parent list of transforms
     osg::Matrix _parentTransform;
+    // Is the center of mass of the basics osg objects
     osg::Vec3 _com;
+    // Inverse matrix of the center of mass
+    osg::Matrix _invCom;
+    // The scale from the parent transform
+    osg::Vec3 _scale;
 
     btTransform _transform;
 };
