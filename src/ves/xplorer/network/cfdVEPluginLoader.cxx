@@ -164,7 +164,7 @@ void cfdVEPluginLoader::ScanAndLoad( void )
         vpr::LibraryFinder finder( libDir, DSO_SUFFIX );
 
         libs = finder.getLibraries();
-        vprDEBUG( vesDBG, 1 )  << "|\tNumber of libs : "
+        vprDEBUG( vesDBG, 1 )  << "|\tNumber of user custom libs : "
             << libs.size()
             << " " << DSO_SUFFIX << std::endl
             << vprDEBUG_FLUSH;
@@ -193,7 +193,8 @@ void cfdVEPluginLoader::ScanAndLoad( void )
         try
         {
             libs.at( i )->load();
-            vprDEBUG( vesDBG, 1 ) << "|\tLoaded lib successfully : "
+            vprDEBUG( vesDBG, 1 ) << "|\tLoaded lib "
+                << libs.at( i )->getName() << " successfully."
                 << std::endl << vprDEBUG_FLUSH;
         }
         catch( ... )
