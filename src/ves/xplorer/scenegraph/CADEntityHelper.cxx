@@ -340,7 +340,7 @@ void CADEntityHelper::LoadFile( const std::string& filename,
 
     //Run the optimizer to improve performance
     {
-        /*osgUtil::Optimizer graphOpti;
+        osgUtil::Optimizer graphOpti;
         graphOpti.optimize( tempCADNode.get(), 
                            osgUtil::Optimizer::FLATTEN_STATIC_TRANSFORMS |
                            osgUtil::Optimizer::REMOVE_REDUNDANT_NODES |
@@ -350,10 +350,12 @@ void CADEntityHelper::LoadFile( const std::string& filename,
                            //osgUtil::Optimizer::SHARE_DUPLICATE_STATE |
                            osgUtil::Optimizer::MERGE_GEOMETRY |
                            osgUtil::Optimizer::CHECK_GEOMETRY |
-                           osgUtil::Optimizer::SPATIALIZE_GROUPS |
+                           //This one causes problems when creating physics
+                           //meshes for osgBullet
+                           //osgUtil::Optimizer::SPATIALIZE_GROUPS |
                            osgUtil::Optimizer::OPTIMIZE_TEXTURE_SETTINGS |
                            osgUtil::Optimizer::MERGE_GEODES |
-                           osgUtil::Optimizer::STATIC_OBJECT_DETECTION );*/
+                           osgUtil::Optimizer::STATIC_OBJECT_DETECTION );
     }
 
 #if ((OSG_VERSION_MAJOR>=2) && (OSG_VERSION_MINOR>=4))
