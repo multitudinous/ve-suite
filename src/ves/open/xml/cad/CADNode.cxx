@@ -59,22 +59,19 @@ using namespace ves::open::xml;
 CADNode::CADNode( const std::string& name )
         :
         ves::open::xml::XMLObject(),
-        mMakeTransparentOnVis( true )
+        mMakeTransparentOnVis( true ),
+        m_visibility( true ),
+        m_type( "Node" ),
+        m_physics( false ),
+        m_mass( 1.0f ),
+        m_friction( 1.0f ),
+        m_restitution( 0.0f ),
+        mPhysicsMesh( "Bounding Box" ),
+        mOpacity( 1.f ),
+        m_name( name )
 {
-    m_name = name;
-    m_parent = "";
     m_transform = TransformPtr( new Transform() );
-    m_type = std::string( "Node" );
-    m_visibility = true;
 
-    m_physics = false;
-    m_mass = 1.0f;
-    m_friction = 1.0f;
-    m_restitution = 0.0f;
-    m_physicsMesh = "Bounding Box";
-    mOpacity = 1.f;
-
-    m_activeAttributeName = std::string( "" );
     SetObjectType( "CADNode" );
     SetObjectNamespace( "CAD" );
     //This may need to be somewhere else
@@ -130,7 +127,7 @@ void CADNode::SetOpacity( float alpha )
 {
     mOpacity = alpha;
 }
-////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void CADNode::RemoveAttribute( const std::string& attributeName )
 {
     for( std::vector<CADAttributePtr>::iterator itr = m_attributeList.begin();
@@ -144,77 +141,107 @@ void CADNode::RemoveAttribute( const std::string& attributeName )
         }
     }
 }
-///////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void CADNode::SetActiveAttribute( const std::string& attributeName )
 {
     m_activeAttributeName = attributeName;
 }
-////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 bool CADNode::HasAnimation()
 {
     return ( !m_animations.empty() );
 }
-//////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 bool CADNode::HasPhysics()
 {
     return m_physics;
 }
-//////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void CADNode::EnablePhysics()
 {
     m_physics = true;
 }
-//////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void CADNode::SetMass( double mass )
 {
     m_mass = mass;
 }
-//////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 double CADNode::GetMass()
 {
     return m_mass;
 }
-//////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void CADNode::SetFriction( double friction )
 {
     m_friction = friction;
 }
-//////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 double CADNode::GetFriction()
 {
     return m_friction;
 }
-//////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void CADNode::SetRestitution( double restitution )
 {
     m_restitution = restitution;
 }
-//////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 double CADNode::GetRestitution()
 {
     return m_restitution;
 }
-//////////////////////////////////
-void CADNode::SetPhysicsMesh( const std::string& physicsMesh )
+////////////////////////////////////////////////////////////////////////////////
+/*void CADNode::SetPhysicsMesh( const std::string& physicsMesh )
 {
-    m_physicsMesh = physicsMesh;
+    mPhysicsMesh = physicsMesh;
 }
-//////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 std::string CADNode::GetPhysicsMesh()
 {
-    return m_physicsMesh;
+    return mPhysicsMesh;
+}*/
+////////////////////////////////////////////////////////////////////////////////
+void CADNode::SetPhysicsMotionType( const std::string& physicsMotionType )
+{
+    mPhysicsMotionType = physicsMotionType;
 }
-//////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+const std::string& CADNode::GetPhysicsMotionType()
+{
+    return mPhysicsMotionType;
+}
+////////////////////////////////////////////////////////////////////////////////
+void CADNode::SetPhysicsLODType( const std::string& physicsLODType )
+{
+    mPhysicsLODType = physicsLODType;
+}
+////////////////////////////////////////////////////////////////////////////////
+const std::string& CADNode::GetPhysicsLODType()
+{
+    return mPhysicsLODType;
+}
+////////////////////////////////////////////////////////////////////////////////
+void CADNode::SetPhysicsMeshType( const std::string& physicsMeshType )
+{
+    mPhysicsMeshType = physicsMeshType;
+}
+////////////////////////////////////////////////////////////////////////////////
+const std::string& CADNode::GetPhysicsMeshType()
+{
+    return mPhysicsMeshType;
+}
+////////////////////////////////////////////////////////////////////////////////
 std::string CADNode::GetNodeType()
 {
     return m_type;
 }
-//////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 std::string CADNode::GetNodeName()
 {
     return m_name;
 }
-/////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 std::string CADNode::GetParent()
 {
     return m_parent;
@@ -281,13 +308,21 @@ void CADNode::_updateVEElement( const std::string& input )
     SetAttribute( "id", mUuid );
     SetAttribute( "visibility", m_visibility );
 
+    //Physics variables
     SetAttribute( "physics", m_physics );
-    SetAttribute( "mass", m_mass );
-    SetAttribute( "friction", m_friction );
-    SetAttribute( "restitution", m_restitution );
+    if( m_physics )
+    {
+        SetAttribute( "mass", m_mass );
+        SetAttribute( "friction", m_friction );
+        SetAttribute( "restitution", m_restitution );
+        SetAttribute( "physicsLOD", mPhysicsLODType );
+        SetAttribute( "physicsMotion", mPhysicsMotionType );
+        SetAttribute( "physicsMesh", mPhysicsMeshType );
+        //SetAttribute( "physics mesh", m_physicsMesh );
+    }
+  
     SetAttribute( "opacity", mOpacity );
     SetAttribute( "makeTransparentOnVis", mMakeTransparentOnVis );
-    //SetAttribute( "physics mesh", wxString( m_physicsMesh ) );
 
     SetSubElement( std::string( "parent" ), m_parent );
     if( !m_transform )
@@ -383,55 +418,56 @@ void CADNode::SetObjectFromXMLData( DOMNode* xmlNode )
     {
         m_visibility = true;
     }
+    
+    //Get all of the Physics variables
+    m_physics = false;
+    XMLObject::GetAttribute( currentElement, "physics", m_physics );
 
-    if( currentElement->getAttributeNode(
-        Convert( "physics" ).toXMLString() ) )
+    if( m_physics )
     {
-        XMLObject::GetAttribute( currentElement, "physics", m_physics );
-    }
-    else
-    {
-        m_physics = false;
-    }
+        if( currentElement->getAttributeNode(
+            Convert( "mass" ).toXMLString() ) )
+        {
+            XMLObject::GetAttribute( currentElement, "mass", m_mass );
+        }
+        else
+        {
+            m_mass = 1.0f;
+        }
+        
+        if( currentElement->getAttributeNode(
+            Convert( "friction" ).toXMLString() ) )
+        {
+            XMLObject::GetAttribute( currentElement, "friction", m_friction );
+        }
+        else
+        {
+            m_friction = 1.0f;
+        }
+        
+        if( currentElement->getAttributeNode(
+            Convert( "restitution" ).toXMLString() ) )
+        {
+            XMLObject::GetAttribute( currentElement, "restitution", m_restitution );
+        }
+        else
+        {
+            m_restitution = 0.0f;
+        }
+        
+        XMLObject::GetAttribute( currentElement, "physicsLOD", mPhysicsLODType );
+        XMLObject::GetAttribute( currentElement, "physicsMotion", mPhysicsMotionType );
+        XMLObject::GetAttribute( currentElement, "physicsMesh", mPhysicsMeshType );
 
-    if( currentElement->getAttributeNode(
-        Convert( "mass" ).toXMLString() ) )
-    {
-        XMLObject::GetAttribute( currentElement, "mass", m_mass );
-    }
-    else
-    {
-        m_mass = 1.0f;
-    }
-
-    if( currentElement->getAttributeNode(
-        Convert( "friction" ).toXMLString() ) )
-    {
-        XMLObject::GetAttribute( currentElement, "friction", m_friction );
-    }
-    else
-    {
-        m_friction = 1.0f;
-    }
-
-    if( currentElement->getAttributeNode(
-        Convert( "restitution" ).toXMLString() ) )
-    {
-        XMLObject::GetAttribute( currentElement, "restitution", m_restitution );
-    }
-    else
-    {
-        m_restitution = 0.0f;
-    }
-
-    if( currentElement->getAttributeNode(
-        Convert( "physics mesh" ).toXMLString() ) )
-    {
-        XMLObject::GetAttribute( currentElement, "physics mesh", m_physicsMesh );
-    }
-    else
-    {
-        m_physicsMesh = "Bounding Box";
+        /*if( currentElement->getAttributeNode(
+         Convert( "physics mesh" ).toXMLString() ) )
+         {
+         XMLObject::GetAttribute( currentElement, "physics mesh", m_physicsMesh );
+         }
+         else
+         {
+         m_physicsMesh = "Bounding Box";
+         }*/
     }
 
     //Is there a better way to do this
@@ -595,8 +631,11 @@ CADNode::CADNode( const CADNode& rhs, bool clone )
     m_mass = rhs.m_mass;
     m_friction = rhs.m_friction;
     m_restitution = rhs.m_restitution;
-    m_physicsMesh = rhs.m_physicsMesh;
-
+    mPhysicsMesh = rhs.mPhysicsMesh;
+    mPhysicsMeshType = rhs.mPhysicsMeshType;
+    mPhysicsMotionType = rhs.mPhysicsMotionType;
+    mPhysicsLODType = rhs.mPhysicsLODType;
+    
     //maintain a unique ID
     if( clone )
     {
@@ -638,7 +677,11 @@ CADNode& CADNode::operator=( const CADNode& rhs )
         m_mass = rhs.m_mass;
         m_friction = rhs.m_friction;
         m_restitution = rhs.m_restitution;
-        m_physicsMesh = rhs.m_physicsMesh;
+        mPhysicsMesh = rhs.mPhysicsMesh;
+        mPhysicsMeshType = rhs.mPhysicsMeshType;
+        mPhysicsMotionType = rhs.mPhysicsMotionType;
+        mPhysicsLODType = rhs.mPhysicsLODType;
+
         mMakeTransparentOnVis = rhs.mMakeTransparentOnVis;
         
         //_uID = rhs._uID;

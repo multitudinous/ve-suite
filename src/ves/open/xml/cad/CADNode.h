@@ -136,28 +136,53 @@ public:
     void EnablePhysics();
 
     ///Set the mass of this CAD node.
+    ///\return The mass of the node
     void SetMass( double mass );
 
     ///Get the mass of this CAD node.
+    ///\return The mass of the node
     double GetMass();
 
     ///Set the friction of this CAD node.
+    ///\param friction The friction coeffecient
     void SetFriction( double friction );
 
     ///Get the friction of this CAD node.
+    ///\param The friction coeffecient
     double GetFriction();
 
     ///Set the restitution of this CAD node.
+    ///\param restitution The restitution value
     void SetRestitution( double restitution );
 
     ///Get the restitution of this CAD node.
+    ///\return The restitution value
     double GetRestitution();
 
+    ///Set the physics motion type can be static or dynamic
+    ///\param physicsMotionType The motion type container
+    void SetPhysicsMotionType( const std::string& physicsMotionType );
+    ///Get the physics motion type
+    ///\return The motion type
+    const std::string& GetPhysicsMotionType();
+    ///\Get the LOD type can be overal or compound
+    ///\param physicsLODType The LOD container
+    void SetPhysicsLODType( const std::string& physicsLODType );
+    ///Get the LOD type for the physics mesh
+    ///\return The LOD type string
+    const std::string& GetPhysicsLODType();
+    ///Get the physics mesh type can be box, cylinder, sphere, or mesh
+    ///\param physicsMeshType The mesh type
+    void SetPhysicsMeshType( const std::string& physicsMeshType );
+    ///Get the physics mesh type
+    ///\return The physics mesh type container
+    const std::string& GetPhysicsMeshType();
+    
     ///Set the physics mesh of this CAD node.
-    void SetPhysicsMesh( const std::string& physicsMesh );
+    //void SetPhysicsMesh( const std::string& physicsMesh );
 
     ///Get the physics mesh of this CAD node.
-    std::string GetPhysicsMesh();
+    //std::string GetPhysicsMesh();
 
     ///Get the transform of this CAD node.
     ves::open::xml::TransformPtr GetTransform();
@@ -214,22 +239,42 @@ protected:
     ///Internally update the type of the node in XML.
     void _updateNodeType();
 
-    std::string m_activeAttributeName;///<The name of the active attribute.
-    std::string  m_parent;  ///< Parent node ID.
-    ves::open::xml::TransformPtr m_transform; ///< Transform for the node.
-    std::vector<ves::open::xml::cad::CADAttributePtr> m_attributeList;///<A list of attributes for this node
-    std::vector<ves::open::xml::cad::CADNodeAnimationPtr> m_animations;//<A list of animation path files for this node.
-    std::string m_name;///< The name of this node.
-    std::string m_type;///< The type of node;
-    bool m_visibility;///<Node visibilty.
+    ///The name of the active attribute.
+    std::string m_activeAttributeName;
+    ///Parent node ID.
+    std::string  m_parent;
+    ///Transform for the node.
+    ves::open::xml::TransformPtr m_transform;
+    ///A list of attributes for this node
+    std::vector<ves::open::xml::cad::CADAttributePtr> m_attributeList;
+    ///A list of animation path files for this node.
+    std::vector<ves::open::xml::cad::CADNodeAnimationPtr> m_animations;
+    ///The name of this node.
+    std::string m_name;
+    ///The type of node;
+    std::string m_type;
+    ///Node visibilty.
+    bool m_visibility;
 
-    bool m_physics;///<Node physics.
-    double m_mass;///<Node mass.
-    double m_friction;///<Node friction.
-    double m_restitution;///<Node restitution.
-    std::string m_physicsMesh;///<Node physics mesh.
-
-    float mOpacity;///<Opacity value for this node
+    ///Physics variables
+    ///Node physics.
+    bool m_physics;
+    ///Node mass.
+    double m_mass;
+    ///Node friction.
+    double m_friction;
+    ///Node restitution.
+    double m_restitution;
+    ///Physics Mesh type
+    std::string mPhysicsMeshType;
+    ///Physics LOD type
+    std::string mPhysicsLODType;
+    ///Physics Motion Type
+    std::string mPhysicsMotionType;
+    ///Node physics mesh.
+    std::string mPhysicsMesh;
+    ///Opacity value for this node
+    float mOpacity;
     ///Tells xplorer whether or not to change this node transparent when
     ///vis is selected
     bool mMakeTransparentOnVis;
