@@ -42,6 +42,7 @@
 #include <osg/TexEnv>
 #include <osg/Array>
 #include <osg/BlendFunc>
+#include <osg/MatrixTransform>
 
 // --- C/C++ Libraries --- //
 #include <iostream>
@@ -130,12 +131,16 @@ void NormalizeVisitor::SetupNormalizeForStateSet( osg::StateSet* stateset,
     }
     else
     {
-        //If the scale is not 1 on this node there is no reason we should be
-        //turning of normalization
-        if( (dynamic_cast< osg::PositionAttitudeTransform* >( node )->
-                getScale()[ 0 ] == 1.0f) && 
-           (dynamic_cast< osg::PositionAttitudeTransform* >( 
-                node->getParent( 0 ) )->getScale()[ 0 ] == 1.0f) )
+        //If the node path above this part node contains a scale anywhere then
+        //the resulting matrix will have a scale value other than 1. In this 
+        //case do not turn off normalization
+        osg::NodePath nodePath = getNodePath();
+        osg::Matrix m;
+        if( nodePath.size() > 0 )
+        { 
+            m = osg::computeLocalToWorld( nodePath );
+        }
+        if( (m.getScale()[ 0 ] == 1.0f) && (m.getScale()[ 1 ] == 1.0f) && (m.getScale()[ 2 ] == 1.0f) )
         {
             stateset->setMode( GL_RESCALE_NORMAL, osg::StateAttribute::OFF );
         }
