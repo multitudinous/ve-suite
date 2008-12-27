@@ -326,29 +326,6 @@ void CADEventHandler::_addNodeToNode( std::string parentID,
             partNode->SetOpacityValue( newPart->GetOpacity() );
             partNode->SetTransparencyFlag( newPart->GetTransparentFlag() );
 
-            if( newPart->HasPhysics() )
-            {
-                partNode->InitPhysics();
-
-                partNode->GetPhysicsRigidBody()->SetMass( newPart->GetMass() );
-                partNode->GetPhysicsRigidBody()->SetFriction( newPart->GetFriction() );
-                partNode->GetPhysicsRigidBody()->SetRestitution( newPart->GetRestitution() );
-
-                std::string physicsMesh = newPart->GetPhysicsMesh();
-                if( physicsMesh == "Bounding Box" )
-                {
-                    partNode->GetPhysicsRigidBody()->BoundingBoxShape();
-                }
-                else if( physicsMesh == "Convex" )
-                {
-                    partNode->GetPhysicsRigidBody()->ConvexShape();
-                }
-                else if( physicsMesh == "Static Concave" )
-                {
-                    partNode->GetPhysicsRigidBody()->StaticConcaveShape();
-                }
-            }
-
             vprDEBUG( vesDBG, 1 ) << "|\t---Setting node properties---" 
                 << std::endl << vprDEBUG_FLUSH;
             //set the uuid on the osg node so that we can get back to vexml
@@ -370,6 +347,41 @@ void CADEventHandler::_addNodeToNode( std::string parentID,
             vprDEBUG( vesDBG, 1 ) << "|\t\tOpacity Value = " 
                 << newPart->GetOpacity() << std::endl << vprDEBUG_FLUSH;
             m_cadHandler->UpdateOpacity( newPart->GetID(), newPart->GetOpacity(), true );
+            
+            //Setup the physics properties on the file
+            //must be set AFTER all of the transforms have been applied
+            if( newPart->HasPhysics() )
+            {
+                vprDEBUG( vesDBG, 1 ) 
+                    << "|\t---Set Part Physics Properties---" 
+                    << std::endl << vprDEBUG_FLUSH;
+                partNode->InitPhysics();
+                
+                partNode->GetPhysicsRigidBody()->SetMass( newPart->GetMass() );
+                partNode->GetPhysicsRigidBody()->SetFriction( newPart->GetFriction() );
+                partNode->GetPhysicsRigidBody()->SetRestitution( newPart->GetRestitution() );
+                
+                partNode->GetPhysicsRigidBody()->CreateRigidBody( newPart->GetPhysicsLODType(), newPart->GetPhysicsMotionType(), newPart->GetPhysicsMeshType() );
+                vprDEBUG( vesDBG, 1 ) 
+                    << "|\t---End Part Physics Properties---" 
+                    << std::endl << vprDEBUG_FLUSH;
+                
+                /*
+                 std::string physicsMesh = newPart->GetPhysicsMesh();
+                 if( physicsMesh == "Bounding Box" )
+                 {
+                 partNode->GetPhysicsRigidBody()->BoundingBoxShape();
+                 }
+                 else if( physicsMesh == "Convex" )
+                 {
+                 partNode->GetPhysicsRigidBody()->ConvexShape();
+                 }
+                 else if( physicsMesh == "Static Concave" )
+                 {
+                 partNode->GetPhysicsRigidBody()->StaticConcaveShape();
+                 }
+                 */
+            }
         }
         else
         {

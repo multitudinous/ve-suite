@@ -482,7 +482,9 @@ void CADNodePropertiesDlg::_buildPhysicsPanel()
         _physicsFrictionCtrl->SetValue( _cadNode->GetFriction() );
         _physicsRestitutionCtrl->SetValue( _cadNode->GetRestitution() );
 
-        mMeshProperties->SetStringSelection( wxString( _cadNode->GetPhysicsMesh().c_str(), wxConvUTF8 ) );
+        mMeshProperties->SetStringSelection( wxString( _cadNode->GetPhysicsMeshType().c_str(), wxConvUTF8 ) );
+        mMotionProperties->SetStringSelection( wxString( _cadNode->GetPhysicsMotionType().c_str(), wxConvUTF8 ) );
+        mLODProperties->SetStringSelection( wxString( _cadNode->GetPhysicsLODType().c_str(), wxConvUTF8 ) );
     }
 
     physicsPanelSizer->Add( physicsPropSizer, 1, wxALIGN_CENTER );
@@ -1129,21 +1131,21 @@ void CADNodePropertiesDlg::_updatePhysicsMesh( wxCommandEvent& event )
     meshType->SetDataType( "STRING" );
     meshType->SetDataName( std::string( "Mesh Type" ) );
     meshType->SetDataString( ConvertUnicode( mMeshProperties->GetStringSelection() ) );
-    _cadNode->SetPhysicsMesh( ConvertUnicode( mMeshProperties->GetStringSelection() ) );
+    _cadNode->SetPhysicsMeshType( ConvertUnicode( mMeshProperties->GetStringSelection() ) );
     _instructions.push_back( meshType );
 
     ves::open::xml::DataValuePairPtr lodType( new ves::open::xml::DataValuePair() );
     lodType->SetDataType( "STRING" );
     lodType->SetDataName( std::string( "LOD Type" ) );
     lodType->SetDataString( ConvertUnicode( mLODProperties->GetStringSelection() ) );
-    //_cadNode->SetPhysicsMesh( ConvertUnicode( mLODProperties->GetStringSelection() ) );
+    _cadNode->SetPhysicsLODType( ConvertUnicode( mLODProperties->GetStringSelection() ) );
     _instructions.push_back( lodType );
 
     ves::open::xml::DataValuePairPtr motionType( new ves::open::xml::DataValuePair() );
     motionType->SetDataType( "STRING" );
     motionType->SetDataName( std::string( "Motion Type" ) );
     motionType->SetDataString( ConvertUnicode( mMotionProperties->GetStringSelection() ) );
-    //_cadNode->SetPhysicsMesh( ConvertUnicode( mMotionProperties->GetStringSelection() ) );
+    _cadNode->SetPhysicsMotionType( ConvertUnicode( mMotionProperties->GetStringSelection() ) );
     _instructions.push_back( motionType );
 
     _sendCommandsToXplorer();

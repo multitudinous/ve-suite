@@ -87,7 +87,7 @@ void CADInitializePhysicsEventHandler::_operateOnNode( XMLObjectPtr xmlObject )
 
         if( nodeType->GetDataString() == std::string( "Part" ) )
         {
-            std::cout << "Initialized Physics: " << m_cadHandler->GetPart( nodeID->GetDataString() )->GetFilename() << std::endl;
+            std::cout << "|\tInitialized Physics: " << m_cadHandler->GetPart( nodeID->GetDataString() )->GetFilename() << std::endl;
             m_cadHandler->GetPart( nodeID->GetDataString() )->InitPhysics();
         }
     }

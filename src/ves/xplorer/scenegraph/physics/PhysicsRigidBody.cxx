@@ -494,6 +494,9 @@ void PhysicsRigidBody::CustomShape( const BroadphaseNativeTypes shapeType, const
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsRigidBody::CreateRigidBody( const std::string& lod, const std::string& motion, const std::string& mesh )
 {
+    std::cout << "|\tPhysics parameters : " 
+        << lod << " " << motion << " " << mesh << std::endl;
+
     bool overall = false;
     if( lod == "Overall" )
     {
@@ -504,7 +507,7 @@ void PhysicsRigidBody::CreateRigidBody( const std::string& lod, const std::strin
     {
         mMass = 0.0f;
     }
-    //std::cout << "Mesh " << mesh << " Overall " << overall << std::endl;
+    std::cout << "Mesh " << mesh << " Overall " << overall << std::endl;
     
     if( mesh == "Box" )
     {
