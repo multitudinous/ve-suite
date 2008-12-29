@@ -204,10 +204,12 @@ void APPlugin::OnOpen( wxCommandEvent& event )
     //{
     //network->Load( nw_str, true );
     m_canvas->AddSubNetworks( );
+#if 0
     std::ofstream netdump ("netdump.txt");
     netdump << nw_str;
     netdump.close();
-
+#endif
+    
     event.SetId( UPDATE_HIER_TREE );
     ::wxPostEvent( m_canvas, event );
 
