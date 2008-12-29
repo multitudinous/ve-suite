@@ -365,35 +365,28 @@ wxRect UIPluginBase::GetBBox()
     result.SetX( pos.x );
     result.SetY( pos.y );
 
-    if( n_pts == 0 )
-    {
-        result.SetWidth( edge_size );
-        result.SetHeight( edge_size );
-        return result;
-    }
-
     int left = poly[0].x;
-    int right = poly[0].x;
-    int top = poly[0].y;
-    int bottom = poly[0].y;
+    int right = poly[1].x;
+    int top = poly[1].y;
+    int bottom = poly[2].y;
 
-    for( int i = 1; i < n_pts; i++ )
-    {
-        if( left > poly[i].x )
-            left = poly[i].x;
+    //for( int i = 1; i < n_pts; i++ )
+    //{
+    //    if( left > poly[i].x )
+    //        left = poly[i].x;
 
-        if( right < poly[i].x )
-            right = poly[i].x;
+    //    if( right < poly[i].x )
+    //        right = poly[i].x;
 
-        if( top > poly[i].y )
-            top = poly[i].y;
+    //    if( top > poly[i].y )
+    //        top = poly[i].y;
 
-        if( bottom < poly[i].y )
-            bottom = poly[i].y;
-    }
+    //    if( bottom < poly[i].y )
+    //        bottom = poly[i].y;
+    //}
 
-    result.SetWidth( right - left + edge_size );
-    result.SetHeight( bottom - top + edge_size );
+    result.SetWidth( right - left );
+    result.SetHeight( bottom - top );
     return result;
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -1222,6 +1215,20 @@ void UIPluginBase::SetImageIcon( std::string path, float rotation, int mirror, f
     poly[1] = wxPoint( icon_w - 1, 0 );
     poly[2] = wxPoint( icon_w - 1, icon_h - 1 );
     poly[3] = wxPoint( 0, icon_h - 1 );
+}
+////////////////////////////////////////////////////////////////////////////////
+void UIPluginBase::SetImage( wxImage& image )
+{    
+    icon_w = static_cast< int >( image.GetWidth() );
+    icon_h = static_cast< int >( image.GetHeight() );
+
+    delete my_icon;
+    my_icon = new wxBitmap( image );
+    poly[0] = wxPoint( 0, 0 );
+    poly[1] = wxPoint( icon_w - 1, 0 );
+    poly[2] = wxPoint( icon_w - 1, icon_h - 1 );
+    poly[3] = wxPoint( 0, icon_h - 1 );
+    return;
 }
 ////////////////////////////////////////////////////////////////////////////////
 wxBitmap* UIPluginBase::GetIconImage( )
@@ -2111,8 +2118,8 @@ void UIPluginBase::HighlightSelectedIcon( wxDC* dc )
     wxPoint bport[5];
     wxPoint tempPoint  = pos;
     //minus 10 because the icon size seems to be smaller than the bbox size
-    int tempHeight = GetBBox().GetHeight() - 10;
-    int tempWidth = GetBBox().GetWidth() - 10;
+    int tempHeight = GetBBox().GetHeight();
+    int tempWidth = GetBBox().GetWidth();
     int highlightBoxWidth = tempWidth;// + 10;
     int highlightBoxHeight = tempHeight;// + 10;
 

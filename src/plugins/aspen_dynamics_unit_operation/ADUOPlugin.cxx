@@ -61,19 +61,6 @@ ADUOPlugin::ADUOPlugin() :
     mPluginName = wxString( "AspenDynamicsUO", wxConvUTF8 );
     //GetVEModel()->SetPluginType( "ADUOPlugin" );
 
-    wxImage my_img( square_xpm );
-    icon_w = static_cast< int >( my_img.GetWidth() );//*0.30f );
-    icon_h = static_cast< int >( my_img.GetHeight() );//*0.30f );
-    //my_icon=new wxBitmap(my_img.Scale(icon_w, icon_h));
-    my_icon = new wxBitmap( my_img );
-
-    n_pts = 4;
-    poly = new wxPoint[n_pts];
-    poly[0] = wxPoint( 0, 0 );
-    poly[1] = wxPoint( icon_w - 1, 0 );
-    poly[2] = wxPoint( icon_w - 1, icon_h - 1 );
-    poly[3] = wxPoint( 0, icon_h - 1 );
-
     //Aspen Menu
     wxMenu * aspen_menu = new wxMenu();
     aspen_menu->Append( ADUOPLUGIN_SHOW_ASPEN_NAME, _( "Aspen Name" ) );

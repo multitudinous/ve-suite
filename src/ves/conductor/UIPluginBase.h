@@ -63,7 +63,6 @@ class wxScrolledWindow;
 class wxMenu;
 
 #include <wx/event.h>
-#define edge_size 10
 
 namespace ves
 {
@@ -156,6 +155,8 @@ public:
     ///on subdialogs for plugins
     //allows user to set the image to be displayed on the icon
     void SetImageIcon( std::string path, float rotation = 0.0f, int mirror = 0, float scale = 1.0f );
+    ///allows users creating new plugins and change the icon
+    void SetImage( wxImage& image );
     ///Add port to the plugin
     void AddPort( wxCommandEvent& event );
     ///Delete selected port
@@ -316,10 +317,6 @@ protected:
     ///Name seen by the user and rendered on the canvas
     wxString mPluginName;
 
-    //That's the for default implementation of the DrawIcon. Not part of the general interface
-    wxPoint* poly; //The outline polygon points list;
-    int n_pts; //Number of points
-
     ///Port data info
     //int numberOfInputPorts;
     //int numberOfOutputPorts;
@@ -398,6 +395,11 @@ protected:
     wxUpdateUIEvent pluginDeleteEvent;
     ///The member that stores the right click menu
     wxMenu* mPopMenu;
+
+private:
+    //That's the for default implementation of the DrawIcon. Not part of the general interface
+    wxPoint* poly; //The outline polygon points list;
+    int n_pts; //Number of points
     
     DECLARE_DYNAMIC_CLASS( UIPluginBase )
     DECLARE_EVENT_TABLE()
