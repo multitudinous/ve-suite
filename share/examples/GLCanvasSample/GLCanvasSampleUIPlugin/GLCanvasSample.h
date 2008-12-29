@@ -36,12 +36,6 @@
 #include "VE_Conductor/Framework/Plugin_base.h"
 #include <wx/image.h>
 
-#ifdef WIN32
-   #pragma warning(disable : 4786)
-   #pragma warning(disable : 4101)
-   #pragma warning(disable : 4503)
-#endif
-
 class GLCanvasSample : public REI_Plugin
 {
   DECLARE_DYNAMIC_CLASS(GLCanvasSample)
@@ -54,12 +48,7 @@ class GLCanvasSample : public REI_Plugin
   virtual double GetVersion();
   //Return the version number of the module
   
-  //To Get around the Memory allocation problem of windows dll
-  //Add the calls for the size. So the main program can preallocate memory for it
-
-  virtual int GetNumPoly();
-  
-  virtual UIDialog* UI(wxWindow* parent);
+   virtual UIDialog* UI(wxWindow* parent);
   //This returns the UI dialog of the module
 
   virtual wxString GetName();
@@ -83,11 +72,6 @@ class GLCanvasSample : public REI_Plugin
   double length;
   double width;
   long type;
-  //HERE is the GUI variable passed to the Dialog and Packed
-  protected:
-  wxBitmap *my_icon;
-  int icon_w, icon_h;
-
 };
 
 #endif

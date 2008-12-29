@@ -69,20 +69,8 @@ OPPD
 
   wxString icon_file="Icons/bonfire.gif";
   wxImage my_img(icon_file, wxBITMAP_TYPE_GIF);
-  icon_w = my_img.GetWidth();
-  icon_h = my_img.GetHeight();
-  my_icon=new wxBitmap(my_img.Scale(icon_w, icon_h));
-
-  n_pts = 4;
-
-  poly[0]=wxPoint(0,0);
-  poly[1]=wxPoint(icon_w,0);
-  poly[2]=wxPoint(icon_w,icon_h);
-  poly[3]=wxPoint(0,icon_h);
+  SetImage( my_img );
 }
-
-
-
 /////////////////////////////////////////////////////////////////////////////
 OPPD
 ::~OPPD()
@@ -101,20 +89,6 @@ double OPPD::GetVersion()
 }
 
 /////////////////////////////////////////////////////////////////////////////
-int OPPD::GetNumPoly()
-{
-  int result=0;
-  //Your code
-  return n_pts;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-//void OPPD::GetPoly(POLY &polygon)
-//{
-//  return ;//polygon;
-//}
-
-/////////////////////////////////////////////////////////////////////////////
 int OPPD::GetNumIports()
 {
   int result=1;
@@ -125,7 +99,8 @@ int OPPD::GetNumIports()
 /////////////////////////////////////////////////////////////////////////////
 void OPPD::GetIPorts(POLY &iports)
 {
-  iports[0]=wxPoint(icon_w*10/52, icon_h*26/98);
+  //iports[0]=wxPoint(icon_w*10/52, icon_h*26/98);
+  //This will need fixed
   return;
 }
 

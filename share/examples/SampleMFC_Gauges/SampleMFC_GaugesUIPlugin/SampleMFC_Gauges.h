@@ -36,12 +36,6 @@
 #include "VE_Conductor/Framework/Plugin_base.h"
 #include <wx/image.h>
 
-#ifdef WIN32
-   #pragma warning(disable : 4786)
-   #pragma warning(disable : 4101)
-   #pragma warning(disable : 4503)
-#endif
-
 class SampleMFC_Gauges : public REI_Plugin
 {
   DECLARE_DYNAMIC_CLASS(SampleMFC_Gauges)
@@ -84,10 +78,6 @@ class SampleMFC_Gauges : public REI_Plugin
   long int1;
 	long int2;
 	std::vector<double> dbllist;
-  //HERE is the GUI variable passed to the Dialog and Packed
-	protected:
-  wxBitmap *my_icon;
-  int icon_w, icon_h;
   
 };
 

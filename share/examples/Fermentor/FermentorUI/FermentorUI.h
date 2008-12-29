@@ -54,11 +54,6 @@ public:
     virtual double GetVersion();
     //Return the version number of the module
 
-    //To Get around the Memory allocation problem of windows dll
-    //Add the calls for the size. So the main program can preallocate memory for it
-
-    virtual int GetNumPoly();
-
     virtual ves::conductor::UIDialog* UI( wxWindow* parent );
     //This returns the UI dialog of the module
 

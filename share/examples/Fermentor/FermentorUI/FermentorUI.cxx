@@ -62,22 +62,12 @@ FermentorUI::FermentorUI()
     mPluginName = wxString( _( "Fermentor" ) );
 
     wxImage my_img( _( "Icons/fermentor.jpg" ) );
-    icon_w = static_cast< int >( my_img.GetWidth() * 0.1 );
-    icon_h = static_cast< int >( my_img.GetHeight() * 0.1 );
-    my_icon = new wxBitmap( my_img.Scale( icon_w, icon_h ) );
-
-    n_pts = 4;
-
-    poly = new wxPoint[ n_pts ];
-    poly[0] = wxPoint( 0, 0 );
-    poly[1] = wxPoint( icon_w, 0 );
-    poly[2] = wxPoint( icon_w, icon_h );
-    poly[3] = wxPoint( 0, icon_h );
+    SetImage( my_img );
 }
 ////////////////////////////////////////////////////////////////////////////////
 FermentorUI::~FermentorUI()
 {
-    delete my_icon;
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 double FermentorUI::GetVersion()
@@ -86,14 +76,6 @@ double FermentorUI::GetVersion()
     //Your code
 
     return result;
-}
-////////////////////////////////////////////////////////////////////////////////
-int FermentorUI::GetNumPoly()
-{
-    int result = 0;
-    //Your code
-
-    return n_pts;
 }
 ////////////////////////////////////////////////////////////////////////////////
 int FermentorUI::GetNumIports()

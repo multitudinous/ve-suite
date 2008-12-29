@@ -42,24 +42,14 @@ IMPLEMENT_DYNAMIC_CLASS(SampleMFC_Gauges, REI_Plugin)
 SampleMFC_Gauges
 ::SampleMFC_Gauges()
 {
-  RegistVar("dbl1", &dbl1);
-  RegistVar("dbl2", &dbl2);
-  RegistVar("int1", &int1);
-	RegistVar("int2", &int2);
-  RegistVar("dbllist", &dbllist);
+    RegistVar("dbl1", &dbl1);
+    RegistVar("dbl2", &dbl2);
+    RegistVar("int1", &int1);
+    RegistVar("int2", &int2);
+    RegistVar("dbllist", &dbllist);
 
-  wxImage my_img( samplemfcgauge_xpm );
-  icon_w = my_img.GetWidth();
-  icon_h = my_img.GetHeight();
-  my_icon=new wxBitmap(my_img.Scale(icon_w, icon_h));
-
-  n_pts = 4;
-
-  poly[0]=wxPoint(0,0);
-  poly[1]=wxPoint(icon_w,0);
-  poly[2]=wxPoint(icon_w,icon_h);
-  poly[3]=wxPoint(0,icon_h);
-
+    wxImage my_img( samplemfcgauge_xpm );
+    SetImage( my_img );
 }
 
 
@@ -80,15 +70,6 @@ double SampleMFC_Gauges::GetVersion()
 
   return result;
 }
-
-/////////////////////////////////////////////////////////////////////////////
-int SampleMFC_Gauges::GetNumPoly()
-{
-  int result=0;
-  //Your code
-  return n_pts;
-}
-
 /////////////////////////////////////////////////////////////////////////////
 int SampleMFC_Gauges::GetNumIports()
 {

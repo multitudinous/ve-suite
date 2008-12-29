@@ -111,7 +111,7 @@ DefaultPlugin::DefaultPlugin()
 DefaultPlugin
 ::~DefaultPlugin()
 {
-    delete my_icon;
+    ;
 }
 /////////////////////////////////////////////////////////////////////////////
 double DefaultPlugin::GetVersion()

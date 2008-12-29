@@ -273,7 +273,7 @@ public:
     ///other xplorer events
     void SendActiveId();
     void SetAsHierarchy( );
-    wxBitmap* GetIconImage( );
+    wxBitmap* GetIconImage();
 
 protected:
     void GetDataTables( ves::open::xml::CommandPtr inputCommand,
@@ -335,9 +335,6 @@ protected:
     std::map<std::string, std::vector<std::string>* > _string1D;
 	std::map<std::string, std::vector< std::vector<std::string> >* > _string2D;
 
-    wxBitmap* my_icon;
-    int icon_w, icon_h;
-
     // Dynamic input and results dialogs as well as port dialogs
     //wxDialog* inputsDialog;
     SummaryResultDialog* resultsDialog;
@@ -397,10 +394,17 @@ protected:
     wxMenu* mPopMenu;
 
 private:
-    //That's the for default implementation of the DrawIcon. Not part of the general interface
-    wxPoint* poly; //The outline polygon points list;
-    int n_pts; //Number of points
-    
+    ///That's the for default implementation of the DrawIcon. 
+    ///Not part of the general interface
+    ///The outline polygon points list
+    wxPoint* poly; 
+    ///Number of points in the polygon
+    int n_pts;
+    ///The pointer for the icon that will be rendered in conductor
+    wxBitmap* mMyIcon;
+    ///The width and height of the icon
+    int mIconW, mIconH;
+
     DECLARE_DYNAMIC_CLASS( UIPluginBase )
     DECLARE_EVENT_TABLE()
 };

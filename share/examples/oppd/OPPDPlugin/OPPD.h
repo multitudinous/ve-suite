@@ -22,14 +22,6 @@ class OPPD : public REI_Plugin
 
   virtual double GetVersion();
   //Return the version number of the module
-  
-  //To Get around the Memory allocation problem of windows dll
-  //Add the calls for the size. So the main program can preallocate memory for it
-
-  virtual int GetNumPoly();
-  
-  //virtual void GetPoly(POLY &polygon); 
-  //Return the outline polygon
 
   virtual UIDialog* UI(wxWindow* parent);
   //This returns the UI dialog of the module
@@ -105,10 +97,6 @@ class OPPD : public REI_Plugin
   double fv1thintemp;
   double fv2thintemp;
   double nvthintemp;
-  //HERE is the GUI variable passed to the Dialog and Packed
-  protected:
-  wxBitmap *my_icon;
-  int icon_w, icon_h;
 };
 
 #endif

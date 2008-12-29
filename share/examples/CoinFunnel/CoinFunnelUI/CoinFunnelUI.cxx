@@ -50,16 +50,7 @@ CoinFunnelUI::CoinFunnelUI()
     mPluginName = wxT( "CoinFunnel" );
 
     wxImage my_img( CoinFunnel_xpm );
-    icon_w = static_cast< int >( my_img.GetWidth() );
-    icon_h = static_cast< int >( my_img.GetHeight() );
-    my_icon = new wxBitmap( my_img.Scale( icon_w, icon_h ) );
-
-    n_pts = 4;
-
-    poly[ 0 ] = wxPoint( 0, 0 );
-    poly[ 1 ] = wxPoint( icon_w, 0 );
-    poly[ 2 ] = wxPoint( icon_w, icon_h );
-    poly[ 3 ] = wxPoint( 0, icon_h );
+    SetImage( my_img );
 }
 ////////////////////////////////////////////////////////////////////////////////
 CoinFunnelUI::~CoinFunnelUI()
@@ -72,13 +63,6 @@ double CoinFunnelUI::GetVersion()
     double result = 1.0;
 
     return result;
-}
-////////////////////////////////////////////////////////////////////////////////
-int CoinFunnelUI::GetNumPoly()
-{
-    int result = 0;
-
-    return n_pts;
 }
 ////////////////////////////////////////////////////////////////////////////////
 int CoinFunnelUI::GetNumIports()
