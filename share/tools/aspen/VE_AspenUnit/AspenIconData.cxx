@@ -389,12 +389,12 @@ std::map< std::string, std::pair< unsigned int, unsigned int > > GetAspenIconDat
     mAspenIconData["pipe3_pipe3_v_pipe.xpm"] = std::pair< unsigned int, unsigned int >( 36, 104 );
     mAspenIconData["pipeline_pipeline_block.xpm"] = std::pair< unsigned int, unsigned int >( 95, 95 );
     mAspenIconData["pipeline_pipeline_d_pipe.xpm"] = std::pair< unsigned int, unsigned int >( 110, 48 );
-    mAspenIconData["pipeline_pipeline_hi_pipe.xpm"] = std::pair< unsigned int, unsigned int >( 112, 33 );
+    mAspenIconData["pipeline_pipeline_h_pipe.xpm"] = std::pair< unsigned int, unsigned int >( 112, 33 );
     mAspenIconData["pipeline_pipeline_u_pipe.xpm"] = std::pair< unsigned int, unsigned int >( 110, 48 );
     mAspenIconData["pipeline_pipeline_v_pipe.xpm"] = std::pair< unsigned int, unsigned int >( 37, 110 );
     mAspenIconData["pipe_pipe_block.xpm"] = std::pair< unsigned int, unsigned int >( 95, 95 );
     mAspenIconData["pipe_pipe_d_pipe.xpm"] = std::pair< unsigned int, unsigned int >( 110, 48 );
-    mAspenIconData["pipe_pipe_hi_pipe.xpm"] = std::pair< unsigned int, unsigned int >( 109, 33 );
+    mAspenIconData["pipe_pipe_h_pipe.xpm"] = std::pair< unsigned int, unsigned int >( 109, 33 );
     mAspenIconData["pipe_pipe_u_pipe.xpm"] = std::pair< unsigned int, unsigned int >( 110, 48 );
     mAspenIconData["pipe_pipe_v_pipe.xpm"] = std::pair< unsigned int, unsigned int >( 37, 110 );
     mAspenIconData["polyfrac_polyfrac_block.xpm"] = std::pair< unsigned int, unsigned int >( 90, 89 );

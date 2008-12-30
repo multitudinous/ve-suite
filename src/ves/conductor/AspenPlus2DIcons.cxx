@@ -388,12 +388,12 @@
 #include <ves/conductor/xpm/AspenPlus2DIcons/pipe3_pipe3_v_pipe.xpm>                                                    
 #include <ves/conductor/xpm/AspenPlus2DIcons/pipeline_pipeline_block.xpm>                                               
 #include <ves/conductor/xpm/AspenPlus2DIcons/pipeline_pipeline_d_pipe.xpm>                                              
-#include <ves/conductor/xpm/AspenPlus2DIcons/pipeline_pipeline_hi_pipe.xpm>                                             
+#include <ves/conductor/xpm/AspenPlus2DIcons/pipeline_pipeline_h_pipe.xpm>                                             
 #include <ves/conductor/xpm/AspenPlus2DIcons/pipeline_pipeline_u_pipe.xpm>                                              
 #include <ves/conductor/xpm/AspenPlus2DIcons/pipeline_pipeline_v_pipe.xpm>                                              
 #include <ves/conductor/xpm/AspenPlus2DIcons/pipe_pipe_block.xpm>                                                       
 #include <ves/conductor/xpm/AspenPlus2DIcons/pipe_pipe_d_pipe.xpm>                                                      
-#include <ves/conductor/xpm/AspenPlus2DIcons/pipe_pipe_hi_pipe.xpm>                                                     
+#include <ves/conductor/xpm/AspenPlus2DIcons/pipe_pipe_h_pipe.xpm>                                                     
 #include <ves/conductor/xpm/AspenPlus2DIcons/pipe_pipe_u_pipe.xpm>                                                      
 #include <ves/conductor/xpm/AspenPlus2DIcons/pipe_pipe_v_pipe.xpm>                                                      
 #include <ves/conductor/xpm/AspenPlus2DIcons/polyfrac_polyfrac_block.xpm>                                               
@@ -972,12 +972,12 @@ std::map< std::string, char** > GetAspenPlusIconMap()
     tempIconMap[ "pipe3_pipe3_v_pipe.xpm"] =                                  pipe3_pipe3_v_pipe;                        
     tempIconMap[ "pipeline_pipeline_block.xpm"] =                             pipeline_pipeline_block;                   
     tempIconMap[ "pipeline_pipeline_d_pipe.xpm"] =                            pipeline_pipeline_d_pipe;                  
-    tempIconMap[ "pipeline_pipeline_hi_pipe.xpm"] =                           pipeline_pipeline_hi_pipe;                 
+    tempIconMap[ "pipeline_pipeline_h_pipe.xpm"] =                            pipeline_pipeline_h_pipe;                 
     tempIconMap[ "pipeline_pipeline_u_pipe.xpm"] =                            pipeline_pipeline_u_pipe;                  
     tempIconMap[ "pipeline_pipeline_v_pipe.xpm"] =                            pipeline_pipeline_v_pipe;                  
     tempIconMap[ "pipe_pipe_block.xpm"] =                                     pipe_pipe_block;                           
     tempIconMap[ "pipe_pipe_d_pipe.xpm"] =                                    pipe_pipe_d_pipe;                          
-    tempIconMap[ "pipe_pipe_hi_pipe.xpm"] =                                   pipe_pipe_hi_pipe;                         
+    tempIconMap[ "pipe_pipe_h_pipe.xpm"] =                                    pipe_pipe_h_pipe;                         
     tempIconMap[ "pipe_pipe_u_pipe.xpm"] =                                    pipe_pipe_u_pipe;                          
     tempIconMap[ "pipe_pipe_v_pipe.xpm"] =                                    pipe_pipe_v_pipe;                          
     tempIconMap[ "polyfrac_polyfrac_block.xpm"] =                             polyfrac_polyfrac_block;                   
