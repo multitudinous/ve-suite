@@ -65,16 +65,6 @@ public:
     virtual wxString GetDesc();
     //This returns the description of the module, This should be a short description
 
-
-    //To Get around the Memory allocation problem of windows dll
-    //Add the calls for the size. So the main program can preallocate memory for it
-
-    virtual int GetNumIports();
-    virtual void GetIPorts( POLY& ports );
-
-    virtual int GetNumOports();
-    virtual void GetOPorts( POLY& ports );
-
     double agitation;
     double air_conc;
     double ini_ph;

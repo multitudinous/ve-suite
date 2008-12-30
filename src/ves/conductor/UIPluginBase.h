@@ -175,10 +175,10 @@ public:
     //To Get around the Memory allocation problem of windows dll
     //Add the calls for the size. So the main program can preallocate memory for it
 
-    int GetNumIports();
+    virtual int GetNumIports();
     virtual void GetIPorts( PORT& ports );
 
-    int GetNumOports();
+    virtual int GetNumOports();
     virtual void GetOPorts( PORT& ports );
 
     virtual void Lock( bool lock );
@@ -296,7 +296,6 @@ protected:
     void RemovePluginDialogsFromCanvas();
     ///Remove a specific plugin from the canvas dialog
     void RemoveWindowFromCanvas( wxWindow* window );
-
 
     UIDialog* dlg;
     TextResultDialog* result_dlg;

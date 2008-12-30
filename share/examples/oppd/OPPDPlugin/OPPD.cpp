@@ -99,15 +99,14 @@ int OPPD::GetNumIports()
 /////////////////////////////////////////////////////////////////////////////
 void OPPD::GetIPorts(POLY &iports)
 {
-  //iports[0]=wxPoint(icon_w*10/52, icon_h*26/98);
-  //This will need fixed
+  iports[0]=wxPoint(GetIconImage()->GetWidth()*10/52, GetIconImage()->GetHeight()*26/98);
   return;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 int OPPD::GetNumOports()
 {
-  int result=0;
+  int result=1;
   //Your code
   return result;
 }
@@ -115,7 +114,7 @@ int OPPD::GetNumOports()
 /////////////////////////////////////////////////////////////////////////////
 void OPPD::GetOPorts(POLY &oports)
 {
-  oports[0]=wxPoint(icon_w*43/52,icon_h*74/98);   
+  oports[0]=wxPoint(GetIconImage()->GetWidth()*43/52,GetIconImage()->GetHeight()*74/98);   
 }
 /////////////////////////////////////////////////////////////////////////////
 UIDialog* OPPD::UI(wxWindow* parent)

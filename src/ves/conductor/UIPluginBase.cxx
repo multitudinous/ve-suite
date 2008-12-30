@@ -458,9 +458,6 @@ void UIPluginBase::GetOPorts( PORT& oports )
 /////////////////////////////////////////////////////////////////////////////
 void UIPluginBase::DrawIcon( wxDC* dc )
 {
-    //wxCoord xoff = pos.x;
-    //wxCoord yoff = pos.y;
-    //dc->DrawPolygon(n_pts, poly, xoff, yoff);
     dc->DrawBitmap( *mMyIcon, pos.x, pos.y, true );
 }
 

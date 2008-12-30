@@ -63,12 +63,6 @@ public:
 
     virtual wxString GetDesc();
 
-    virtual int GetNumIports();
-    virtual void GetIPorts( POLY& ports );
-
-    virtual int GetNumOports();
-    virtual void GetOPorts( POLY& ports );
-
     std::string portNumber;
 
 protected:
