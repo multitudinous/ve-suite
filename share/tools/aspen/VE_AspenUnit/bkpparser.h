@@ -63,7 +63,6 @@ private:
 	streamXY xy;
 	streamXY tempXY;
 	std::vector< streamXY > streamCoordList;	                           //coordinate list of a given stream
-	std::vector< std::string > streamIds;                                //vector of stream ids
 
    // link name, model name
    //std::map< std::string, std::string > inLinkToModel;
@@ -81,7 +80,7 @@ private:
    //std::map< std::string, std::pair< float, float > > iconLocations;
    std::map< std::string, std::map< std::string, std::pair< float, float > > > iconLocations;
    // stream name to port ids from and to
-   std::map< std::string, std::pair< int, int > > streamPortIDS;
+   std::map< std::string, std::map< std::string, std::pair< int, int > > > streamPortIDS;
 
    //VE_XML::VE_Model::Network* veNetwork;
    void StripCharacters( std::string& data, std::string character );   

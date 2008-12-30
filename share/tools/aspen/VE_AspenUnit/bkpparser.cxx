@@ -62,7 +62,6 @@ void BKPParser::closeFile()
     tempXY.streamType =  NULL;
     tempXY.value.clear();
     streamCoordList.clear();
-    streamIds.clear();
     inLinkToModel.clear();
     outLinkToModel.clear();
     linkPoints.clear();
@@ -1055,7 +1054,7 @@ void BKPParser::CreateNetworkLinks
             int fromPortId = counter++;
             int toModelId = models[hierName][ iter->second ];
             int fromModelId = models[hierName][ fromModel->second ];
-            streamPortIDS[ iter->first ] =
+            streamPortIDS[hierName][ iter->first ] =
                 std::pair< int, int >( toPortId, fromPortId );
             
             //Now we create a link
@@ -1117,7 +1116,7 @@ void BKPParser::CreateNetworkLinks
             int toModelId = models[hierName][ iter->second ];
             int fromModelId =
                 models[hierName][ iter->first + "_dummy_connection" ];
-            streamPortIDS[ iter->first ] =
+            streamPortIDS[hierName][ iter->first ] =
                 std::pair< int, int >( toPortId, fromPortId );
             
             //Now we create a link
@@ -1217,7 +1216,7 @@ void BKPParser::CreateNetworkLinks
             int toModelId =
                 models[hierName][ iter->first + "_dummy_connection"];
             int fromModelId = models[hierName][ iter->second ];
-            streamPortIDS[ iter->first ] =
+            streamPortIDS[hierName][ iter->first ] =
                 std::pair< int, int >( toPortId, fromPortId );
          
             //Now we create a link
@@ -1353,7 +1352,7 @@ std::string BKPParser::CreateNetwork( void )
                     tempModel->GetPort(-1);
                 // inputs are to ports
                 tempPort->
-                    SetPortNumber( streamPortIDS[ streamIter->first ].first );
+                    SetPortNumber( streamPortIDS["_main_sheet"][ streamIter->first ].first );
                 tempPort->SetPluginName( streamIter->first );
                 tempPort->SetDataFlowDirection( std::string( "input" ) );
                 tempPort->
@@ -1375,7 +1374,7 @@ std::string BKPParser::CreateNetwork( void )
                     tempModel->GetPort(-1);
                 // outputs are from ports
                 tempPort->
-                    SetPortNumber( streamPortIDS[ streamIter->first ].second );
+                    SetPortNumber( streamPortIDS["_main_sheet"][ streamIter->first ].second );
                 tempPort->SetPluginName( streamIter->first );
                 tempPort->SetDataFlowDirection( std::string( "output" ) );
                 tempPort->GetPortLocation()->SetPoint(
@@ -1501,7 +1500,7 @@ void BKPParser::ParseSubSystem( ves::open::xml::model::ModelPtr model,
 
                 // inputs are to ports
                 tempPort->
-                    SetPortNumber( streamPortIDS[ streamIter->first ].first );
+                    SetPortNumber( streamPortIDS[networkName][ streamIter->first ].first );
                 tempPort->SetPluginName( streamIter->first );
                 tempPort->SetDataFlowDirection( std::string( "input" ) );
 
@@ -1524,7 +1523,7 @@ void BKPParser::ParseSubSystem( ves::open::xml::model::ModelPtr model,
                     tempModel->GetPort(-1);
                 // outputs are from ports
                 tempPort->
-                    SetPortNumber( streamPortIDS[ streamIter->first ].second );
+                    SetPortNumber( streamPortIDS[networkName][ streamIter->first ].second );
                 tempPort->SetPluginName( streamIter->first );
                 tempPort->SetDataFlowDirection( std::string( "output" ) );
                 tempPort->GetPortLocation()->SetPoint(
