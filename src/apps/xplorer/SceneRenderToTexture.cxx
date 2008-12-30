@@ -360,7 +360,7 @@ void SceneRenderToTexture::InitProcessor(
         glowDownSample->setInputTextureIndexForViewportReference( -1 );
         //glowDownSample->setViewport( sceneViewCamera->getViewport() );
     }
-    //colorBuffer1->addChild( glowDownSample.get() );
+    colorBuffer1->addChild( glowDownSample.get() );
 
     //Perform horizontal 1D gauss convolution
     *mBlurX = new osgPPU::UnitInOut();
@@ -412,7 +412,7 @@ void SceneRenderToTexture::InitProcessor(
         blurX->setInputTextureIndexForViewportReference( -1 );
         //blurX->setViewport( sceneViewCamera->getViewport() );
     }
-    //glowDownSample->addChild( blurX.get() );
+    glowDownSample->addChild( blurX.get() );
     //colorBuffer1->addChild( blurX.get() );
 
     //Perform vertical 1D gauss convolution
@@ -505,7 +505,7 @@ void SceneRenderToTexture::InitProcessor(
         addedCorrectly = final->setInputToUniform(  colorBuffer0.get(), "baseMap", true );
         //addedCorrectly = final->setInputToUniform( colorBuffer1.get(), "stencilGlowMap", true );
         //std::cout << " added " << addedCorrectly << std::endl;
-        //addedCorrectly = final->setInputToUniform( blurY.get(), "glowMap", true );
+        addedCorrectly = final->setInputToUniform( blurY.get(), "glowMap", true );
         final->setOutputTexture( CreateFBOTexture( screenDims ) );
 
         final->setInputTextureIndexForViewportReference( -1 );
@@ -541,8 +541,8 @@ void SceneRenderToTexture::InitScene( osg::Camera* const sceneViewCamera )
     //Setup cameras, textures, and everything else for rtt
     std::pair< int, int > screenDimsNew = 
         std::make_pair< int, int >( newScreenDimsWidth, newScreenDimsHeight );
-    std::pair< int, int > screenDimsView = 
-        std::make_pair< int, int >( newScreenDimsWidth * 0.5, newScreenDimsHeight );
+    //std::pair< int, int > screenDimsView = 
+    //    std::make_pair< int, int >( newScreenDimsWidth * 0.5, newScreenDimsHeight );
     *mCameraMap = new osg::Camera();
     
     //Create textures, camera, and SA-quad
@@ -664,12 +664,12 @@ osg::Texture2D* const SceneRenderToTexture::GetColorMap()
     return (*mColorMap).get();
 }
 ////////////////////////////////////////////////////////////////////////////////
-osg::MatrixTransform* const SceneRenderToTexture::GetQuad()
+/*osg::MatrixTransform* const SceneRenderToTexture::GetQuad()
 {
     return (*mQuad).get();
-}
+}*/
 ////////////////////////////////////////////////////////////////////////////////
-void SceneRenderToTexture::Update(
+void SceneRenderToTexture::UpdateRTTQuadAndViewportMatrix(
     osgUtil::SceneView* sceneView, osg::Matrixd quadTransform )
 {
     if( !(*mCamerasConfigured) )

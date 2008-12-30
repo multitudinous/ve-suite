@@ -98,13 +98,9 @@ public:
     ///Destructor
     ~SceneRenderToTexture();
 
-    ///
-    osg::Geode* CreateFullScreenTexturedQuad(
-        std::pair< int, int > screenDims, osg::Texture2D* colorTexture );
-
-    ///
-    osg::Texture2D* CreateFBOTexture(
-        std::pair< int, int >& screenDims, float scale = 1.0f );
+    ///Initialize correct screen info for the texture and quad
+    ///NOTE: MUST be called AFTER EnvironmentHandler::InitScene
+    void InitScene( osg::Camera* const sceneViewCamera );
 
     ///Return the camera being used to render the ves scenegraph 
     ///to texture. This is the root node for the scenegraph
@@ -121,16 +117,17 @@ public:
 
     ///
     ///\return
-    osg::MatrixTransform* const GetQuad();
+    //osg::MatrixTransform* const GetQuad();
 
-    ///Initialize correct screen info for the texture and quad
-    ///NOTE: MUST be called AFTER EnvironmentHandler::InitScene
-    void InitScene( osg::Camera* const sceneViewCamera );
+    ///Update something
+    ////NOTE: Must have an active context to call
+    void UpdateRTTQuadAndViewportMatrix( osgUtil::SceneView* sceneView, 
+                                        osg::Matrixd quadTransform );
 
-    ///
-    ///
-    void Update( osgUtil::SceneView* sceneView, osg::Matrixd quadTransform );
-
+    ///Update the projection and viewport information for the rtt's cameras
+    ///NOTE: Must have an active context to call
+    void UpdateRTTProjectionAndViewportMatrix( osgUtil::SceneView* sv ){;}
+    
     ///Take a high resolution screen capture of the render window for SceneView
     ///\param root The osg::Group to be rendered
     ///\param sv The osgUtil::SceneView to provide the context for the render
@@ -141,6 +138,14 @@ public:
 protected:
 
 private:
+    ///
+    osg::Geode* CreateFullScreenTexturedQuad(
+                                             std::pair< int, int > screenDims, osg::Texture2D* colorTexture );
+    
+    ///
+    osg::Texture2D* CreateFBOTexture(
+                                     std::pair< int, int >& screenDims, float scale = 1.0f );
+    
     ///Create the camera with the appropriate settings to render to an FBO
     void InitCamera( std::pair< int, int >& screenDims );
 

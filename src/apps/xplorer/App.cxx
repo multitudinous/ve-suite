@@ -312,16 +312,8 @@ void App::initScene()
     std::cout << "| ***************************************************************** |" << std::endl;
     m_vjobsWrapper->InitCluster();
     // define the rootNode, worldDCS, and lighting
-    /*if( mRTT )
-    {
-        ves::xplorer::scenegraph::SceneManager::instance()->SetRootNode(
-            mSceneRenderToTexture->GetCamera() );
-    }
-    else*/
-    {
-        ves::xplorer::scenegraph::SceneManager::instance()->SetRootNode(
+    ves::xplorer::scenegraph::SceneManager::instance()->SetRootNode(
             mSceneRenderToTexture->GetGroup() );
-    }
     ves::xplorer::scenegraph::SceneManager::instance()->InitScene();
     ves::xplorer::scenegraph::SceneManager::instance()->ViewLogo( true );
     ves::xplorer::scenegraph::SceneManager::instance()->
@@ -636,6 +628,9 @@ void App::draw()
         frustum[ vrj::Frustum::VJ_NEAR ], frustum[ vrj::Frustum::VJ_FAR ] );
                                       
     //Copy the view matrix
+    //gmtl::postMult(
+    //    _vjMatrixLeft, gmtl::makeRot< gmtl::Matrix44f >(
+    //        gmtl::AxisAnglef( gmtl::Math::deg2Rad( -90.0f ), x_axis ) ) );
     gmtl::Matrix44f _vjMatrixLeft( project->getViewMatrix() );
     //Transform into z-up land
     _vjMatrixLeft = _vjMatrixLeft * mZUp * mNavPosition;
@@ -649,7 +644,7 @@ void App::draw()
     if( mRTT )
     {
         VPR_PROFILE_GUARD_HISTORY( "App::draw RTT Camera", 20 );
-        mSceneRenderToTexture->Update(
+        mSceneRenderToTexture->UpdateRTTQuadAndViewportMatrix(
             sv.get(), osg::Matrixd( mNavPosition.mData ) );
     }
 
@@ -676,6 +671,8 @@ void App::draw()
     double _left, _right, _bottom, _top, _near, _far;
     sv->getCamera()->getProjectionMatrixAsFrustum(
         _left, _right, _bottom, _top, _near, _far );
+    //The code below is not thread safe and will result in random results
+    //in multithreaded use cases
     EnvironmentHandler::instance()->SetFrustumValues(
         _left, _right, _bottom, _top, _near, _far );
     
