@@ -59,8 +59,6 @@ using namespace ves::open::xml;
 using namespace ves::conductor;
 using namespace ves::conductor::util;
 
-#define edge_size 10
-
 BEGIN_EVENT_TABLE( APPlugin, UIPluginBase )
     EVT_MENU( APPLUGIN_OPEN_SIM, APPlugin::OnOpen )
     EVT_MENU( APPLUGIN_SHOW_ASPEN_SIMULATION, APPlugin::ShowAspenSimulation )

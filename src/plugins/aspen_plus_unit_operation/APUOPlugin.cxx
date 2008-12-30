@@ -56,8 +56,6 @@ using namespace ves::open::xml;
 using namespace ves::conductor;
 using namespace ves::conductor::util;
 
-#define edge_size 10
-
 BEGIN_EVENT_TABLE( APUOPlugin, UIPluginBase )
     EVT_MENU( APUOPLUGIN_SHOW_ASPEN_NAME, APUOPlugin::OnShowAspenName )
     EVT_MENU( APUOPLUGIN_QUERY_INPUTS, APUOPlugin::OnQueryInputs )
