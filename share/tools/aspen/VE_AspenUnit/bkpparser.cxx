@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include <gdiplus.h>
+//#include <gdiplus.h>
 #include "BKPParser.h"
 #include <iostream>
 #include <fstream>
@@ -19,7 +19,7 @@
 #include "AspenPlusLUT.h"
 #include "AspenIconData.h"
 
-using namespace Gdiplus;
+//using namespace Gdiplus;
 
 ///////////////////////////////////////////////////////////////////////////////
 BKPParser::BKPParser()
@@ -322,7 +322,7 @@ void BKPParser::ParseFile( const char * bkpFile )
     char* buffer = new char [afterNetwork - beforeNetwork];
     // read data as a block:
     inFile.read( buffer, (afterNetwork - beforeNetwork) );
-    std::ofstream tester4 ("tester4.txt");
+    //std::ofstream tester4 ("tester4.txt");
     //tester4<<buffer<<std::endl;
     //tester4.close();
     std::string networkData( buffer );
@@ -543,9 +543,13 @@ void BKPParser::ParseFile( const char * bkpFile )
                 "_"+BlockInfoList[sheetIter->first][tempBlockId].type+
                 "_"+BlockInfoList[sheetIter->first][tempBlockId].icon+
                 ".xpm"].second;
-            tester4<<BlockInfoList[sheetIter->first][tempBlockId].type+"_"+
-                BlockInfoList[sheetIter->first][tempBlockId].icon+".xpm"
-                <<": "<<width<<" "<<height<<std::endl;
+
+            BlockInfoList[sheetIter->first][tempBlockId].width = width;
+            BlockInfoList[sheetIter->first][tempBlockId].height = height;
+
+            //tester4<<BlockInfoList[sheetIter->first][tempBlockId].type+"_"+
+            //    BlockInfoList[sheetIter->first][tempBlockId].icon+".xpm"
+            //    <<": "<<width<<" "<<height<<std::endl;
             iconLocations[sheetIter->first][ tempBlockId ] =
                 std::pair< float, float >( scaledXCoords -
                 ( width * widthOffset * 
@@ -800,7 +804,7 @@ void BKPParser::ParseFile( const char * bkpFile )
             count = 0;
         }
     }
-    tester4.close();
+    //tester4.close();
     std::cout<<"Parsing Completed!"<<std::endl;
     inFile.close();
     outFile.close();
@@ -1337,8 +1341,12 @@ std::string BKPParser::CreateNetwork( void )
             SetIconHiddenFlag( BlockInfoList["_main_sheet"][blockIter->first].
             iconHidden );
 
-        double minX = iconLocations["_main_sheet"][ blockIter->first ].first;
-        double minY = iconLocations["_main_sheet"][ blockIter->first ].second;
+        double iOriginX = iconLocations["_main_sheet"][ blockIter->first ].first;
+        double iOriginY = iconLocations["_main_sheet"][ blockIter->first ].second;
+        double iWidth = BlockInfoList["_main_sheet"][blockIter->first].width *
+            BlockInfoList["_main_sheet"][blockIter->first].scale;
+        double iHeight = BlockInfoList["_main_sheet"][blockIter->first].height *
+            BlockInfoList["_main_sheet"][blockIter->first].scale;
 
         // input ports
         std::map< std::string, std::string >::iterator streamIter;
@@ -1355,12 +1363,39 @@ std::string BKPParser::CreateNetwork( void )
                     SetPortNumber( streamPortIDS["_main_sheet"][ streamIter->first ].first );
                 tempPort->SetPluginName( streamIter->first );
                 tempPort->SetDataFlowDirection( std::string( "input" ) );
+
+                //PATCH
+                //This code is necessary because some of the captured icons are
+                //NOT properly sized
+                //this will move any ports outside the icon into the icon
+                double portX = 
+                    linkPoints["_main_sheet"][tempPort->GetPluginName()][0].
+                    first - iOriginX;
+                double portY = 
+                    linkPoints["_main_sheet"][tempPort->GetPluginName()][0].
+                    second - iOriginY;
+
+                if( portX < 0 )
+                {
+                    portX = 0;
+                }
+                if( portY < 0 )
+                {
+                    portY = 0;
+                }
+
+                if( portX > iWidth)
+                {
+                    portX = iWidth;
+                }
+                if( portY > iHeight )
+                {
+                    portY = iHeight;
+                }
+                
                 tempPort->
                     GetPortLocation()->SetPoint( std::pair< double, double >
-                    ( (linkPoints["_main_sheet"][tempPort->GetPluginName()][0].
-                    first - minX ), 
-                    (linkPoints["_main_sheet"][tempPort->GetPluginName()][0].
-                    second - minY ) ) );
+                    ( portX, portY ) );
             }
         }
         // output ports
@@ -1377,14 +1412,39 @@ std::string BKPParser::CreateNetwork( void )
                     SetPortNumber( streamPortIDS["_main_sheet"][ streamIter->first ].second );
                 tempPort->SetPluginName( streamIter->first );
                 tempPort->SetDataFlowDirection( std::string( "output" ) );
-                tempPort->GetPortLocation()->SetPoint(
-                    std::pair< double, double >( (
-                    linkPoints["_main_sheet"][tempPort->
+
+                //PATCH
+                //This code is necessary because some of the captured icons are
+                //NOT properly sized
+                //this will move any ports outside the icon into the icon
+                double portX = linkPoints["_main_sheet"][tempPort->
                     GetPluginName()][linkPoints["_main_sheet"][tempPort->
-                    GetPluginName()].size()-1].first - minX ),
-                    (linkPoints["_main_sheet"][tempPort->
+                    GetPluginName()].size()-1].first - iOriginX;
+                double portY = linkPoints["_main_sheet"][tempPort->
                     GetPluginName()][linkPoints["_main_sheet"][tempPort->
-                    GetPluginName()].size()-1].second - minY ) ) );
+                    GetPluginName()].size()-1].second - iOriginY;
+
+                if( portX < 0 )
+                {
+                    portX = 0;
+                }
+                if( portY < 0 )
+                {
+                    portY = 0;
+                }
+
+                if( portX > iWidth)
+                {
+                    portX = iWidth;
+                }
+                if( portY > iHeight )
+                {
+                    portY = iHeight;
+                }
+                
+                tempPort->
+                    GetPortLocation()->SetPoint( std::pair< double, double >
+                    ( portX, portY ) );
             }
         }
 
@@ -1484,8 +1544,12 @@ void BKPParser::ParseSubSystem( ves::open::xml::model::ModelPtr model,
             SetIconHiddenFlag( BlockInfoList[networkName][blockIter->first].
             iconHidden );
 
-        double minX = iconLocations[networkName][ blockIter->first ].first;
-        double minY = iconLocations[networkName][ blockIter->first ].second;
+        double iOriginX = iconLocations[networkName][ blockIter->first ].first;
+        double iOriginY = iconLocations[networkName][ blockIter->first ].second;
+        double iWidth = BlockInfoList[networkName][blockIter->first].width *
+            BlockInfoList[networkName][blockIter->first].scale;
+        double iHeight = BlockInfoList[networkName][blockIter->first].height *
+            BlockInfoList[networkName][blockIter->first].scale;
 
         // input ports
         std::map< std::string, std::string >::iterator streamIter;
@@ -1503,13 +1567,39 @@ void BKPParser::ParseSubSystem( ves::open::xml::model::ModelPtr model,
                     SetPortNumber( streamPortIDS[networkName][ streamIter->first ].first );
                 tempPort->SetPluginName( streamIter->first );
                 tempPort->SetDataFlowDirection( std::string( "input" ) );
+                
+                //PATCH
+                //This code is necessary because some of the captured icons are
+                //NOT properly sized
+                //this will move any ports outside the icon into the icon
+                double portX = 
+                    linkPoints[networkName][tempPort->GetPluginName()][0].
+                    first - iOriginX;
+                double portY = 
+                    linkPoints[networkName][tempPort->GetPluginName()][0].
+                    second - iOriginY;
 
-                tempPort->GetPortLocation()->
-                    SetPoint( std::pair< double, double >
-                    ( ( linkPoints[networkName][tempPort->GetPluginName()][0].
-                    first - minX ),
-                    (linkPoints[networkName][tempPort->GetPluginName()][0].
-                    second - minY ) ) );
+                if( portX < 0 )
+                {
+                    portX = 0;
+                }
+                if( portY < 0 )
+                {
+                    portY = 0;
+                }
+
+                if( portX > iWidth)
+                {
+                    portX = iWidth;
+                }
+                if( portY > iHeight )
+                {
+                    portY = iHeight;
+                }
+                
+                tempPort->
+                    GetPortLocation()->SetPoint( std::pair< double, double >
+                    ( portX, portY ) );
             }
         }
         // output ports
@@ -1526,14 +1616,39 @@ void BKPParser::ParseSubSystem( ves::open::xml::model::ModelPtr model,
                     SetPortNumber( streamPortIDS[networkName][ streamIter->first ].second );
                 tempPort->SetPluginName( streamIter->first );
                 tempPort->SetDataFlowDirection( std::string( "output" ) );
-                tempPort->GetPortLocation()->SetPoint(
-                    std::pair< double, double >( (
-                    linkPoints[networkName][tempPort->
+                
+                //PATCH
+                //This code is necessary because some of the captured icons are
+                //NOT properly sized
+                //this will move any ports outside the icon into the icon
+                double portX = linkPoints[networkName][tempPort->
                     GetPluginName()][linkPoints[networkName][tempPort->
-                    GetPluginName()].size()-1].first - minX ),
-                    (linkPoints[networkName][tempPort->
+                    GetPluginName()].size()-1].first - iOriginX;
+                double portY = linkPoints[networkName][tempPort->
                     GetPluginName()][linkPoints[networkName][tempPort->
-                    GetPluginName()].size()-1].second - minY ) ) );
+                    GetPluginName()].size()-1].second - iOriginY;
+
+                if( portX < 0 )
+                {
+                    portX = 0;
+                }
+                if( portY < 0 )
+                {
+                    portY = 0;
+                }
+
+                if( portX > iWidth)
+                {
+                    portX = iWidth;
+                }
+                if( portY > iHeight )
+                {
+                    portY = iHeight;
+                }
+                
+                tempPort->
+                    GetPortLocation()->SetPoint( std::pair< double, double >
+                    ( portX, portY ) );
             }
         }
 

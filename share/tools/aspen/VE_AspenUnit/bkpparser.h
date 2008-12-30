@@ -43,6 +43,8 @@ private:
 		std::string id;
 		std::string type;
 		std::string icon;
+        float width;
+        float height;
 		float scale;
 		float rotation;
 		int mirror;
