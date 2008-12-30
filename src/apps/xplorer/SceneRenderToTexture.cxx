@@ -45,6 +45,7 @@
 // --- OSG Includes --- //
 #include <osg/Camera>
 #include <osg/Group>
+#include <osg/MatrixTransform>
 #include <osg/ClearNode>
 #include <osg/Texture2D>
 #include <osg/FrameBufferObject>
@@ -55,22 +56,6 @@
 
 #include <osgUtil/SceneView>
 #include <osgUtil/UpdateVisitor>
-
-#include <osgPPU/Processor.h>
-#include <osgPPU/Unit.h>
-#include <osgPPU/UnitInOut.h>
-#include <osgPPU/UnitText.h>
-#include <osgPPU/UnitInResampleOut.h>
-#include <osgPPU/UnitInMipmapOut.h>
-#include <osgPPU/UnitOut.h>
-#include <osgPPU/UnitOutCapture.h>
-#include <osgPPU/UnitBypass.h>
-#include <osgPPU/UnitTexture.h>
-#include <osgPPU/UnitCameraAttachmentBypass.h>
-#include <osgPPU/UnitDepthbufferBypass.h>
-#include <osgDB/ReaderWriter>
-#include <osgDB/ReadFile>
-#include <osgPPU/ShaderAttribute.h>
 
 #include <gmtl/gmtl.h>
 
@@ -214,7 +199,7 @@ void SceneRenderToTexture::InitCamera( std::pair< int, int >& screenDims )
 {
     osg::ref_ptr< osg::Camera > tempCamera = (*mCameraMap).get();
     tempCamera->setReferenceFrame( osg::Camera::RELATIVE_RF );
-    tempCamera->setRenderOrder( osg::Camera::PRE_RENDER, 0 );
+    tempCamera->setRenderOrder( osg::Camera::POST_RENDER, 0 );
     tempCamera->setClearMask( 
         GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );// | GL_STENCIL_BUFFER_BIT );
     tempCamera->setClearColor( osg::Vec4( 0.0, 0.0, 0.0, 1.0 ) );
@@ -311,6 +296,7 @@ void SceneRenderToTexture::InitCamera( std::pair< int, int >& screenDims )
         new osg::Uniform( "glowColor", osg::Vec4( 0.0, 0.0, 0.0, 1.0 ) ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
+/*
 void SceneRenderToTexture::InitProcessor(
     std::pair< int, int >& screenDims, osg::Camera* const sceneViewCamera )
 {
@@ -343,23 +329,22 @@ void SceneRenderToTexture::InitProcessor(
         //colorBuffer1->setViewport( sceneViewCamera->getViewport() );
     }
     (*mProcessor)->addChild( colorBuffer1.get() );
-
-    /*    
-    *mcolor = new osgPPU::UnitTexture( (*mColorMap).get() );
-    osg::ref_ptr< osgPPU::UnitTexture > color = (*mcolor).get();
-    color->setInputTextureIndexForViewportReference( -1 );
-    color->setViewport( sceneViewCamera->getViewport() );
+ 
+    //*mcolor = new osgPPU::UnitTexture( (*mColorMap).get() );
+    //osg::ref_ptr< osgPPU::UnitTexture > color = (*mcolor).get();
+    //color->setInputTextureIndexForViewportReference( -1 );
+    //color->setViewport( sceneViewCamera->getViewport() );
     
-    *mglow = new osgPPU::UnitTexture( (*mGlowMap).get() );
-    osg::ref_ptr< osgPPU::UnitTexture > glow = (*mglow).get();
-    glow->setInputTextureIndexForViewportReference( -1 );
-    glow->setViewport( sceneViewCamera->getViewport() );
+    //*mglow = new osgPPU::UnitTexture( (*mGlowMap).get() );
+    //osg::ref_ptr< osgPPU::UnitTexture > glow = (*mglow).get();
+    //glow->setInputTextureIndexForViewportReference( -1 );
+    //glow->setViewport( sceneViewCamera->getViewport() );
 
     //osg::ref_ptr< osgPPU::UnitTexture > glowStencil =
     //    new osgPPU::UnitTexture( mGlowStencil.get() );
-    (*mProcessor)->addChild( color.get() );
-    (*mProcessor)->addChild( glow.get() );
-    */
+    //(*mProcessor)->addChild( color.get() );
+    //(*mProcessor)->addChild( glow.get() );
+
     //Downsample by 1/2 original size
     osg::Vec2 quadScreenSize( screenDims.first, screenDims.second );
     *mGlowDownSample = new osgPPU::UnitInResampleOut();
@@ -537,6 +522,7 @@ void SceneRenderToTexture::InitProcessor(
     }
     final->addChild( ppuOut.get() );
 }
+*/
 ////////////////////////////////////////////////////////////////////////////////
 void SceneRenderToTexture::InitScene( osg::Camera* const sceneViewCamera )
 {
@@ -558,90 +544,109 @@ void SceneRenderToTexture::InitScene( osg::Camera* const sceneViewCamera )
     std::pair< int, int > screenDimsView = 
         std::make_pair< int, int >( newScreenDimsWidth * 0.5, newScreenDimsHeight );
     *mCameraMap = new osg::Camera();
-    *mProcessor = new osgPPU::Processor();
     
     //Create textures, camera, and SA-quad
     InitTextures( screenDimsNew );
     InitCamera( screenDimsNew );
-    InitProcessor( screenDimsNew, sceneViewCamera );
+    *mQuad = new osg::MatrixTransform( osg::Matrix::identity() );
+    (*mQuad)->addChild(
+        CreateFullScreenTexturedQuad( screenDimsNew, (*mColorMap).get() ) );
 
     //Add nodes to the scenegraph
     (*mCameraMap)->addChild( mRootGroup.get() );
     sceneViewCamera->addChild( (*mCameraMap).get() );
-    sceneViewCamera->addChild( (*mProcessor).get() );
-    //sceneViewCamera->addChild( createFullScreenTexturedQuad( screenDims, (*mColorMap).get() ) );
-    createFullScreenTexturedQuad( screenDimsNew, (*mColorMap).get() );
-
-    (*mProcessor)->setCamera( (*mCameraMap).get() );
-    (*mProcessor)->setName( "Processor" );
-    (*mProcessor)->useHDR( false );
-    (*mProcessor)->dirtyUnitSubgraph();
+    sceneViewCamera->addChild( (*mQuad).get() );
     
     *mCamerasConfigured = true;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void SceneRenderToTexture::UpdateRTTProjectionAndViewportMatrix(
-    osgUtil::SceneView* sv )
+osg::Geode* SceneRenderToTexture::CreateFullScreenTexturedQuad(
+    std::pair< int, int > screenDims, osg::Texture2D* colorTexture )
 {
-    if( !(*mCamerasConfigured) )
+    size_t numViewports =
+        vrj::GlDrawManager::instance()->currentUserData()->
+            getGlWindow()->getDisplay()->getNumViewports();
+    
+    osg::ref_ptr< osg::Vec3Array > quadVertices = new osg::Vec3Array();
+    quadVertices->resize( numViewports * 4 );
+    
+    osg::ref_ptr< osg::Vec2Array > quadTexCoords = new osg::Vec2Array();
+    quadTexCoords->resize( numViewports * 4 );
+
+    float m2ft = 3.2808399;
+    float xOrigin, yOrigin, widthRatio, heightRatio;
+    gmtl::Point3f ll, lr, ur, ul;
+    for( size_t i = 0; i < numViewports; ++i )
     {
-        return;
+#if __VJ_version >= 2003000
+        vrj::ViewportPtr viewport = vrj::GlDrawManager::instance()->
+            currentUserData()->getGlWindow()->getDisplay()->getViewport( i );
+#else
+        vrj::Viewport* viewport = vrj::GlDrawManager::instance()->
+            currentUserData()->getGlWindow()->getDisplay()->getViewport( i );
+#endif
+        ///Get the texture coordinates for the quads
+        viewport->getOriginAndSize( xOrigin, yOrigin, widthRatio, heightRatio );
+        (*quadTexCoords)[ 0 + ( i * 4 ) ].set( xOrigin, yOrigin );
+        (*quadTexCoords)[ 1 + ( i * 4 ) ].set( xOrigin + widthRatio, yOrigin );
+        (*quadTexCoords)[ 2 + ( i * 4 ) ].set( xOrigin + widthRatio, yOrigin + heightRatio );
+        (*quadTexCoords)[ 3 + ( i * 4 ) ].set( xOrigin, yOrigin + heightRatio );
+
+        ///Get the quad coords
+#if __VJ_version >= 2003000
+        vrj::SurfaceViewportPtr tempView = boost::dynamic_pointer_cast< vrj::SurfaceViewport >( viewport );
+#else
+        vrj::SurfaceViewport* tempView = dynamic_cast< vrj::SurfaceViewport* >( viewport );
+#endif
+
+        tempView->getCorners( ll, lr, ur, ul );
+        (*quadVertices)[ 0 + ( i * 4 ) ].set( ll[ 0 ] * m2ft, -ll[ 2 ] * m2ft, ll[ 1 ] * m2ft );
+        (*quadVertices)[ 1 + ( i * 4 ) ].set( lr[ 0 ] * m2ft, -lr[ 2 ] * m2ft, lr[ 1 ] * m2ft );
+        (*quadVertices)[ 2 + ( i * 4 ) ].set( ur[ 0 ] * m2ft, -ur[ 2 ] * m2ft, ur[ 1 ] * m2ft );
+        (*quadVertices)[ 3 + ( i * 4 ) ].set( ul[ 0 ] * m2ft, -ul[ 2 ] * m2ft, ul[ 1 ] * m2ft );
     }
-    
-    osg::Camera* svCamera = sv->getCamera();
-    osg::Viewport* tempViewport = svCamera->getViewport();
 
-    (*mCameraMap)->setViewport( tempViewport );
+    osg::ref_ptr< osg::Geometry > quadGeometry = new osg::Geometry();
+    quadGeometry->setVertexArray( quadVertices.get() );
+    quadGeometry->addPrimitiveSet( new osg::DrawArrays(
+        osg::PrimitiveSet::QUADS, 0, quadVertices->size() ) );
+    quadGeometry->setTexCoordArray( 0, quadTexCoords.get() );
+    quadGeometry->setUseDisplayList( false );
+    //Remove colors from the geometry
+    quadGeometry->setColorBinding( osg::Geometry::BIND_OFF );
 
-    (*mColorBuffer0)->setViewport( tempViewport );
-    (*mColorBuffer1)->setViewport( tempViewport );
-    (*mGlowDownSample)->setViewport( tempViewport );
-    (*mFinal)->setViewport( tempViewport );
-    (*mQuadOut)->setViewport( tempViewport );
-    //tempViewport->width() *= 0.5;
-    //tempViewport->height() *= 0.5;
-    (*mBlurX)->setViewport( tempViewport );
-    (*mBlurY)->setViewport( tempViewport );
-    //(*mglow)->setViewport( tempViewport );
-    //(*mcolor)->setViewport( tempViewport );
+    osg::ref_ptr< osg::StateSet > stateset = new osg::StateSet();
+    //Don't light this quad.
+    stateset->setMode( GL_LIGHTING, osg::StateAttribute::OFF );
+    //Units 0 and 1 correspond to gl_FragData[ 0 or 1 ] respectively
+    stateset->setTextureAttributeAndModes(
+          0, (*mColorMap).get(), osg::StateAttribute::ON );    
+    quadGeometry->setStateSet( stateset.get() );
     
-    //(*mProcessor)->dirtyUnitSubgraph();
-    //(*mColorBuffer0)->dirty();
-    //(*mColorBuffer1)->dirty();
-    /*(*mglow)->dirty();
-    (*mcolor)->dirty();
-    (*mGlowDownSample)->dirty();
-    (*mBlurX)->dirty();
-    (*mBlurY)->dirty();
-    (*mFinal)->dirty();
-    (*mQuadOut)->dirty();*/
-    //UpdateProcessorAndUnits();
+    osg::Geode* quadGeode = new osg::Geode();
+    quadGeode->setCullingActive( false );
+    quadGeode->addDrawable( quadGeometry.get() );
+
+    return quadGeode;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void SceneRenderToTexture::UpdateProcessorAndUnits()
+osg::Texture2D* SceneRenderToTexture::CreateFBOTexture(
+    std::pair< int, int >& screenDims, float scale )
 {
-    if( !(*mCamerasConfigured) )
-    {
-        return;
-    }
-    osg::ref_ptr< osgUtil::UpdateVisitor > update =
-        new osgUtil::UpdateVisitor();
-    //(*mCameraMap)->accept( *(update.get()) );
-    // now force a recompute of the bounding volume while we are still in
-    // the read/write app phase, this should prevent the need to recompute
-    // the bounding volumes from within the cull traversal which may be
-    // multi-threaded.
-    //(*mCameraMap)->getBound();
-    
-    (*mProcessor)->dirtyUnitSubgraph();
-    /*(*mColorBuffer0)->dirty();
-    (*mColorBuffer1)->dirty();
-    (*mGlowDownSample)->dirty();
-    (*mBlurX)->dirty();
-    (*mBlurY)->dirty();
-    (*mFinal)->dirty();
-    (*mQuadOut)->dirty();*/
-    (*mProcessor)->accept( *(update.get()) );
+    osg::Texture2D* tempColorMap = new osg::Texture2D();
+    //GL_RGBA8/GL_UNSIGNED_INT - GL_RGBA16F_ARB/GL_FLOAT 
+    tempColorMap->setInternalFormat( GL_RGBA16F_ARB );
+    tempColorMap->setTextureSize(
+        screenDims.first * mScaleFactor * scale,
+        screenDims.second * mScaleFactor * scale );
+    tempColorMap->setSourceFormat( GL_RGBA );
+    tempColorMap->setSourceType( GL_FLOAT );
+    tempColorMap->setFilter( osg::Texture2D::MIN_FILTER, osg::Texture2D::LINEAR );
+    tempColorMap->setFilter( osg::Texture2D::MAG_FILTER, osg::Texture2D::LINEAR );
+    tempColorMap->setWrap( osg::Texture2D::WRAP_S, osg::Texture2D::CLAMP_TO_EDGE );
+    tempColorMap->setWrap( osg::Texture2D::WRAP_T, osg::Texture2D::CLAMP_TO_EDGE );
+
+    return tempColorMap;
 }
 ////////////////////////////////////////////////////////////////////////////////
 osg::Camera* const SceneRenderToTexture::GetCamera()
@@ -657,6 +662,24 @@ osg::Group* const SceneRenderToTexture::GetGroup() const
 osg::Texture2D* const SceneRenderToTexture::GetColorMap()
 {
     return (*mColorMap).get();
+}
+////////////////////////////////////////////////////////////////////////////////
+osg::MatrixTransform* const SceneRenderToTexture::GetQuad()
+{
+    return (*mQuad).get();
+}
+////////////////////////////////////////////////////////////////////////////////
+void SceneRenderToTexture::Update(
+    osgUtil::SceneView* sceneView, osg::Matrixd quadTransform )
+{
+    if( !(*mCamerasConfigured) )
+    {
+        return;
+    }
+
+    (*mCameraMap)->setViewport( sceneView->getViewport() );
+    //Remove the camera dcs transform from the quad vertices
+    (*mQuad)->setMatrix( osg::Matrix::inverse( quadTransform ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SceneRenderToTexture::WriteImageFileForWeb(
@@ -726,10 +749,10 @@ void SceneRenderToTexture::WriteImageFileForWeb(
     oldcamera->getProjectionMatrixAsFrustum(
         frustum[0], frustum[1], frustum[2], frustum[3], frustum[4], frustum[5] );
     //Create 4 cameras whose frustums tile the original camera frustum
-    double tileFrustum[6] = {0, 0, 0, 0, 0, 0};
+    double tileFrustum[6] = { 0, 0, 0, 0, 0, 0 };
     //z values don't change
-    tileFrustum[4] = frustum[4];
-    tileFrustum[5] = frustum[5];
+    tileFrustum[ 4 ] = frustum[ 4 ];
+    tileFrustum[ 5 ] = frustum[ 5 ];
     
     std::vector< osg::ref_ptr< osg::Texture2D > > textures;
     for( size_t i = 0; i < 4; ++i )
@@ -739,12 +762,12 @@ void SceneRenderToTexture::WriteImageFileForWeb(
         //This gives us more information to fight aliasing by "super-sampling"
         //at the desired resolution 
         rttList.push_back( new osg::Texture2D( ) );
-        rttList.back()->setTextureSize( w*2, h*2 );
-        rttList.back()->setInternalFormat(GL_RGB);
-        rttList.back()->setFilter(osg::Texture2D::MIN_FILTER,osg::Texture2D::LINEAR);
-        rttList.back()->setFilter(osg::Texture2D::MAG_FILTER,osg::Texture2D::LINEAR);
-        rttList.back()->setWrap(osg::Texture::WRAP_S, osg::Texture::CLAMP_TO_EDGE);
-        rttList.back()->setWrap(osg::Texture::WRAP_T, osg::Texture::CLAMP_TO_EDGE);
+        rttList.back()->setTextureSize( w * 2, h * 2 );
+        rttList.back()->setInternalFormat( GL_RGB );
+        rttList.back()->setFilter( osg::Texture2D::MIN_FILTER, osg::Texture2D::LINEAR );
+        rttList.back()->setFilter( osg::Texture2D::MAG_FILTER, osg::Texture2D::LINEAR );
+        rttList.back()->setWrap( osg::Texture::WRAP_S, osg::Texture::CLAMP_TO_EDGE );
+        rttList.back()->setWrap( osg::Texture::WRAP_T, osg::Texture::CLAMP_TO_EDGE );
         
         //Setup the cameras
         rttCameraList.push_back( new osg::Camera );
@@ -770,8 +793,8 @@ void SceneRenderToTexture::WriteImageFileForWeb(
         rttCameraList.back()->setViewport( 0, 0, w*2, h*2 );
         
         ///Attach the camera to the image
-        rttCameraList.back()->attach( osg::Camera::COLOR_BUFFER,
-                                     rttList.back().get() );
+        rttCameraList.back()->attach(
+            osg::Camera::COLOR_BUFFER, rttList.back().get() );
         screenShotRoot->addChild( rttCameraList.back().get() );
     }
     
@@ -781,16 +804,16 @@ void SceneRenderToTexture::WriteImageFileForWeb(
         //setup ll
         activeCamera = rttCameraList.begin();
         //left
-        tileFrustum[0] = frustum[0];
+        tileFrustum[ 0 ] = frustum[ 0 ];
         //right
-        tileFrustum[1] = frustum[0] + ( frustum[1] - frustum[0] ) * .5;
+        tileFrustum[ 1 ] = frustum[ 0 ] + ( frustum[ 1 ] - frustum[ 0 ] ) * .5;
         //bottom
-        tileFrustum[2] = frustum[2];
+        tileFrustum[ 2 ] = frustum[ 2 ];
         //top
         tileFrustum[3] = frustum[3] + ( frustum[2] - frustum[3] ) * .5;
-        ( *activeCamera )->setProjectionMatrixAsFrustum( tileFrustum[0],
-                                                        tileFrustum[1], tileFrustum[2], tileFrustum[3], tileFrustum[4],
-                                                        tileFrustum[5] );
+        (*activeCamera)->setProjectionMatrixAsFrustum(
+            tileFrustum[0], tileFrustum[1], tileFrustum[2],
+            tileFrustum[3], tileFrustum[4], tileFrustum[5] );
     }
     ///
     {
@@ -937,7 +960,7 @@ void SceneRenderToTexture::WriteImageFileForWeb(
         fullScreenQuadCameraList.push_back( new osg::Camera );
         fullScreenQuadCameraList.back()->setClearColor( osg::Vec4( 0, 0, 0, 0) );
         fullScreenQuadCameraList.back()->setClearMask( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
-        fullScreenQuadCameraList.back()->setReferenceFrame( osg::Transform::ABSOLUTE_RF );
+        fullScreenQuadCameraList.back()->setReferenceFrame( osg::Transform::ABSOLUTE_RF_INHERIT_VIEWPOINT );
         fullScreenQuadCameraList.back()->setRenderOrder( osg::Camera::PRE_RENDER );
         fullScreenQuadCameraList.back()->setRenderTargetImplementation(
             osg::Camera::FRAME_BUFFER_OBJECT );
@@ -960,12 +983,11 @@ void SceneRenderToTexture::WriteImageFileForWeb(
     sv->cull();
     sv->draw();
     /*
-     osgDB::writeImageFile( *(ssImageList.at(0)), "ssImage1.jpg" );
-     osgDB::writeImageFile( *(ssImageList.at(1)), "ssImage2.jpg" );
-     osgDB::writeImageFile( *(ssImageList.at(2)), "ssImage3.jpg" );
-     osgDB::writeImageFile( *(ssImageList.at(3)), "ssImage4.jpg" );
-     */
-    
+    osgDB::writeImageFile( *(ssImageList.at( 0 )), "ssImage1.jpg" );
+    osgDB::writeImageFile( *(ssImageList.at( 1 )), "ssImage2.jpg" );
+    osgDB::writeImageFile( *(ssImageList.at( 2 )), "ssImage3.jpg" );
+    osgDB::writeImageFile( *(ssImageList.at( 3 )), "ssImage4.jpg" );
+    */
     
     //remove the screen shot from the graph
     root->removeChild( screenShotRoot.get() );
@@ -988,109 +1010,3 @@ void SceneRenderToTexture::WriteImageFileForWeb(
     osgDB::writeImageFile( *( shot.get() ), filename );
 }
 ////////////////////////////////////////////////////////////////////////////////
-osg::Geode* SceneRenderToTexture::createFullScreenTexturedQuad( std::pair< int, int > screenDims, osg::Texture2D* colorTexture )
-{
-    size_t numViewports = vrj::GlDrawManager::instance()->currentUserData()->
-        getGlWindow()->getDisplay()->getNumViewports();
-    
-    osg::ref_ptr< osg::Vec3Array > mQuadVertices = new osg::Vec3Array();
-    mQuadVertices->resize( numViewports * 4 );
-    
-    osg::ref_ptr< osg::Vec2Array > quadTexCoords = new osg::Vec2Array();
-    quadTexCoords->resize( numViewports * 4 );
-    
-    float xOrigin, yOrigin, widthRatio, heightRatio;
-    gmtl::Point3f ll, lr, ur, ul;
-    float m2ft = 3.2808399;
-
-    for( size_t i = 0; i < numViewports; ++i )
-    {
-#if __VJ_version >= 2003000
-        vrj::ViewportPtr viewport = vrj::GlDrawManager::instance()->
-            currentUserData()->getGlWindow()->getDisplay()->getViewport( i );
-#else
-        vrj::Viewport* viewport = vrj::GlDrawManager::instance()->
-            currentUserData()->getGlWindow()->getDisplay()->getViewport( i );
-#endif
-        ///Get the texture coordinates for the quades
-        viewport->getOriginAndSize( xOrigin, yOrigin, widthRatio, heightRatio );
-        (*quadTexCoords)[ 0 + (i*4) ].set( xOrigin,             yOrigin );
-        (*quadTexCoords)[ 1 + (i*4) ].set( xOrigin+widthRatio,  yOrigin );
-        (*quadTexCoords)[ 2 + (i*4) ].set( xOrigin+widthRatio,  yOrigin+heightRatio );
-        (*quadTexCoords)[ 3 + (i*4) ].set( xOrigin,             yOrigin+heightRatio );
-
-        ///Get the quad coords
-#if __VJ_version >= 2003000
-        vrj::SurfaceViewportPtr tempView = boost::dynamic_pointer_cast< vrj::SurfaceViewport >( viewport );
-#else
-        vrj::SurfaceViewport* tempView = dynamic_cast< vrj::SurfaceViewport* >( viewport );
-#endif
-
-        tempView->getCorners( ll, lr, ur, ul );
-        (*mQuadVertices)[ 0 + (i*4) ].set( ll[ 0 ] * m2ft, -ll[ 2 ] * m2ft, ll[ 1 ] * m2ft );
-        (*mQuadVertices)[ 1 + (i*4) ].set( lr[ 0 ] * m2ft, -lr[ 2 ] * m2ft, lr[ 1 ] * m2ft );
-        (*mQuadVertices)[ 2 + (i*4) ].set( ur[ 0 ] * m2ft, -ur[ 2 ] * m2ft, ur[ 1 ] * m2ft );
-        (*mQuadVertices)[ 3 + (i*4) ].set( ul[ 0 ] * m2ft, -ul[ 2 ] * m2ft, ul[ 1 ] * m2ft );
-    }
-    
-    (*mQuadOut).get()->CreateVESQuad( mQuadVertices.get(), quadTexCoords.get() );
-    (*mBlurX).get()->CreateVESQuad( mQuadVertices.get(), quadTexCoords.get() );
-    (*mBlurY).get()->CreateVESQuad( mQuadVertices.get(), quadTexCoords.get() );
-    (*mFinal).get()->CreateVESQuad( mQuadVertices.get(), quadTexCoords.get() );
-
-    /*osg::Geode* mQuadGeode = new osg::Geode();
-    osg::ref_ptr< osg::Geometry > mQuadGeometry = new osg::Geometry();
-
-    osg::ref_ptr< osg::Vec3Array > mQuadVertices = new osg::Vec3Array();
-    mQuadVertices->resize( 4 );
-    (*mQuadVertices)[ 0 ].set( xMin, -zVal, yMin );
-    (*mQuadVertices)[ 1 ].set( xMax, -zVal, yMin );
-    (*mQuadVertices)[ 2 ].set( xMax, -zVal, yMax );
-    (*mQuadVertices)[ 3 ].set( xMin, -zVal, yMax );
-    mQuadGeometry->setVertexArray( mQuadVertices.get() );
-
-    osg::ref_ptr< osg::Vec2Array > quadTexCoords = new osg::Vec2Array();
-    quadTexCoords->resize( 4 );
-    (*quadTexCoords)[ 0 ].set( 0, 0 );
-    (*quadTexCoords)[ 1 ].set( 1, 0 );
-    (*quadTexCoords)[ 2 ].set( 1, 1 );
-    (*quadTexCoords)[ 3 ].set( 0, 1 );
-    mQuadGeometry->setTexCoordArray( 0, quadTexCoords.get() );
-
-    mQuadGeometry->addPrimitiveSet(
-       new osg::DrawArrays( osg::PrimitiveSet::QUADS, 0, 4 ) );
-    osg::ref_ptr< osg::StateSet > stateset = new osg::StateSet();
-    // Don't light this quad.
-    stateset->setMode( GL_LIGHTING, osg::StateAttribute::OFF );
-    // Units 0 and 1 correspond to gl_FragData[ 0 or 1 ] in the fragment shader used during the RTT pass.
-    stateset->setTextureAttributeAndModes(
-          0, colorTexture, osg::StateAttribute::ON );    
-
-    mQuadGeometry->setStateSet( stateset.get() );
-    mQuadGeode->setCullingActive( false );
-
-    mQuadGeode->addDrawable( mQuadGeometry.get() );
-    
-    return mQuadGeode;*/
-    return 0;
-}
-////////////////////////////////////////////////////////////////////////////////
-osg::Texture2D* SceneRenderToTexture::CreateFBOTexture( std::pair< int, int >& screenDims, float scale )
-{
-    osg::Texture2D* tempColorMap =  new osg::Texture2D();
-    //GL_RGBA8/GL_UNSIGNED_INT - GL_RGBA16F_ARB/GL_FLOAT 
-    tempColorMap->setInternalFormat( GL_RGBA16F_ARB );
-    tempColorMap->setTextureSize(
-        screenDims.first * mScaleFactor * scale , screenDims.second * mScaleFactor * scale );
-    tempColorMap->setSourceFormat( GL_RGBA );
-    tempColorMap->setSourceType( GL_FLOAT );
-    tempColorMap->setFilter(
-                            osg::Texture2D::MIN_FILTER, osg::Texture2D::LINEAR );
-    tempColorMap->setFilter(
-                            osg::Texture2D::MAG_FILTER, osg::Texture2D::LINEAR );
-    tempColorMap->setWrap(
-                          osg::Texture2D::WRAP_S, osg::Texture2D::CLAMP_TO_EDGE );
-    tempColorMap->setWrap(
-                          osg::Texture2D::WRAP_T, osg::Texture2D::CLAMP_TO_EDGE );
-    return tempColorMap;
-}

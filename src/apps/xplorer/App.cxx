@@ -83,6 +83,7 @@
 #include <gmtl/Generate.h>
 #include <gmtl/Coord.h>
 #include <gmtl/Misc/MatrixConvert.h>
+#include <gmtl/Xforms.h>
 
 #include <vrj/Kernel/Kernel.h>
 #include <vrj/Draw/OGL/GlDrawManager.h>
@@ -131,16 +132,19 @@ App::App( int argc, char* argv[] )
     light_model_0 = new osg::LightModel;
 
     light_0->setLightNum( 0 );
-    light_0->setAmbient( osg::Vec4d( 0.36862f, 0.36842f, 0.36842f, 1.0f ) );
-    light_0->setDiffuse( osg::Vec4d( 0.88627f, 0.88500f, 0.88500f, 1.0f ) );
-    light_0->setSpecular( osg::Vec4d( 0.49019f, 0.48872f, 0.48872f, 1.0f ) );
-    light_0->setPosition( osg::Vec4d( 0.0f, -10000.0f, 10000.0f, 0.0f ) );
-    light_0->setDirection( osg::Vec3d( -1, 1, -1 ) );
+    light_0->setAmbient( osg::Vec4d( 0.36862, 0.36842, 0.36842, 1.0 ) );
+    light_0->setDiffuse( osg::Vec4d( 0.88627, 0.88500, 0.88500, 1.0 ) );
+    light_0->setSpecular( osg::Vec4d( 0.49019, 0.48872, 0.48872, 1.0 ) );
+    //ABSOLUTE_RF, so we are not multiplying by the view/projection matrix
+    //We are in openGL space
+    light_0->setPosition( osg::Vec4d( 0.0, 10000.0, 10000.0, 0.0 ) );
+    light_0->setDirection( osg::Vec3d( 0.0, -1.0, -1.0 ) );
 
     light_source_0->setLight( light_0.get() );
     light_source_0->setLocalStateSetModes( osg::StateAttribute::ON );
+    light_source_0->setReferenceFrame( osg::LightSource::ABSOLUTE_RF );
 
-    light_model_0->setAmbientIntensity( osg::Vec4( 0.1f, 0.1f, 0.1f, 1.0f ) );
+    light_model_0->setAmbientIntensity( osg::Vec4( 0.1, 0.1, 0.1, 1.0 ) );
     // get correct specular lighting across pipes
     // see http://www.ds.arch.tue.nl/General/Staff/Joran/osg/osg_specular_problem.htm
     light_model_0->setLocalViewer( true );
@@ -543,7 +547,7 @@ void App::postFrame()
 ////////////////////////////////////////////////////////////////////////////////
 ///Remember that this is called in parrallel in a multiple context situation
 ///so setting variables should not be done here
-void App::contextPreDraw( void )
+void App::contextPreDraw()
 {
     //std::cout << "----------contextPreDraw-----------" << std::endl;
     VPR_PROFILE_GUARD_HISTORY( "App::contextPreDraw", 20 );
@@ -559,7 +563,6 @@ void App::contextPreDraw( void )
                 changed = true;
             }
         }
-        mSceneRenderToTexture->UpdateProcessorAndUnits();
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -628,34 +631,27 @@ void App::draw()
 #endif
     vrj::Frustum frustum = project->getFrustum();
     sv->setProjectionMatrixAsFrustum(
-        frustum[ vrj::Frustum::VJ_LEFT ],   frustum[ vrj::Frustum::VJ_RIGHT ],
-        frustum[ vrj::Frustum::VJ_BOTTOM ], frustum[ vrj::Frustum::VJ_TOP ],
-        frustum[ vrj::Frustum::VJ_NEAR ],   frustum[ vrj::Frustum::VJ_FAR ] );
-                                      
-    //Allow trackball to grab frustum values to calculate FOVy
-    EnvironmentHandler::instance()->SetFrustumValues(
         frustum[ vrj::Frustum::VJ_LEFT ], frustum[ vrj::Frustum::VJ_RIGHT ],
-        frustum[ vrj::Frustum::VJ_TOP ],  frustum[ vrj::Frustum::VJ_BOTTOM ],
+        frustum[ vrj::Frustum::VJ_BOTTOM ], frustum[ vrj::Frustum::VJ_TOP ],
         frustum[ vrj::Frustum::VJ_NEAR ], frustum[ vrj::Frustum::VJ_FAR ] );
-
+                                      
     //Copy the view matrix
     gmtl::Matrix44f _vjMatrixLeft( project->getViewMatrix() );
-    //gmtl::postMult(
-    //    _vjMatrixLeft, gmtl::makeRot< gmtl::Matrix44f >(
-    //        gmtl::AxisAnglef( gmtl::Math::deg2Rad( -90.0f ), x_axis ) ) );
-
+    //Transform into z-up land
     _vjMatrixLeft = _vjMatrixLeft * mZUp * mNavPosition;
-
+    
     //Copy the matrix
     osg::ref_ptr< osg::RefMatrix > osg_proj_xform_mat = new osg::RefMatrix();
     osg_proj_xform_mat->set( _vjMatrixLeft.mData );
     sv->setViewMatrix( *(osg_proj_xform_mat.get()) );
 
     //Setup the render to texture camera
+    if( mRTT )
     {
         VPR_PROFILE_GUARD_HISTORY( "App::draw RTT Camera", 20 );
-        mSceneRenderToTexture->UpdateRTTProjectionAndViewportMatrix( sv.get() );
-    }    
+        mSceneRenderToTexture->Update(
+            sv.get(), osg::Matrixd( mNavPosition.mData ) );
+    }
 
     //Draw the scene
     // NOTE: It is not safe to call osgUtil::SceneView::update() here; it
@@ -675,6 +671,13 @@ void App::draw()
         VPR_PROFILE_GUARD_HISTORY( "App::draw sv->draw", 20 );
         sv->draw();
     }
+
+    //Allow trackball to grab frustum values to calculate FOVy
+    double _left, _right, _bottom, _top, _near, _far;
+    sv->getCamera()->getProjectionMatrixAsFrustum(
+        _left, _right, _bottom, _top, _near, _far );
+    EnvironmentHandler::instance()->SetFrustumValues(
+        _left, _right, _bottom, _top, _near, _far );
     
     //Screen capture code
     if( captureNextFrameForWeb )

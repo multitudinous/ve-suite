@@ -42,6 +42,7 @@
 
 // --- OSG Includes --- //
 #include <osg/ref_ptr>
+#include <osg/Matrixd>
 
 namespace osg
 {
@@ -50,21 +51,12 @@ class Camera;
 class Texture2D;
 class RenderInfo;
 class Geode;
+class MatrixTransform;
 }
 
 namespace osgUtil
 {
 class SceneView;
-}
-
-namespace osgPPU
-{
-class Processor;
-class UnitOut;
-class UnitInOut;
-class UnitInResampleOut;
-class UnitCameraAttachmentBypass;
-class UnitTexture;
 }
 
 // --- C/C++ Libraries --- //
@@ -105,10 +97,14 @@ public:
 
     ///Destructor
     ~SceneRenderToTexture();
-    
-    ///Initialize correct screen info for the texture and quad
-    ///NOTE: MUST be called AFTER EnvironmentHandler::InitScene
-    void InitScene( osg::Camera* const sceneViewCamera );
+
+    ///
+    osg::Geode* CreateFullScreenTexturedQuad(
+        std::pair< int, int > screenDims, osg::Texture2D* colorTexture );
+
+    ///
+    osg::Texture2D* CreateFBOTexture(
+        std::pair< int, int >& screenDims, float scale = 1.0f );
 
     ///Return the camera being used to render the ves scenegraph 
     ///to texture. This is the root node for the scenegraph
@@ -123,6 +119,18 @@ public:
     ///\return The osg::Texture2D for the display
     osg::Texture2D* const GetColorMap();
 
+    ///
+    ///\return
+    osg::MatrixTransform* const GetQuad();
+
+    ///Initialize correct screen info for the texture and quad
+    ///NOTE: MUST be called AFTER EnvironmentHandler::InitScene
+    void InitScene( osg::Camera* const sceneViewCamera );
+
+    ///
+    ///
+    void Update( osgUtil::SceneView* sceneView, osg::Matrixd quadTransform );
+
     ///Take a high resolution screen capture of the render window for SceneView
     ///\param root The osg::Group to be rendered
     ///\param sv The osgUtil::SceneView to provide the context for the render
@@ -130,17 +138,6 @@ public:
     void WriteImageFileForWeb(
         osg::Group* root, osgUtil::SceneView* sv, std::string& filename );
 
-    ///Update the projection and viewport information for the rtt's cameras
-    ///NOTE: Must have an active context to call
-    void UpdateRTTProjectionAndViewportMatrix( osgUtil::SceneView* sv );
-
-    ///Run the UpdateVisitor on all of the osgPPU units and processors
-    ///NOTE: Must have an active context to call
-    void UpdateProcessorAndUnits();
-
-    osg::Geode* createFullScreenTexturedQuad( std::pair< int, int > screenDims, osg::Texture2D* colorTexture );
-
-    osg::Texture2D* CreateFBOTexture( std::pair< int, int >& screenDims, float scale = 1.0f );
 protected:
 
 private:
@@ -149,16 +146,15 @@ private:
 
     ///Create the texture of the appropriate size for the FBO to write to
     void InitTextures( std::pair< int, int >& screenDims );
-
-    ///
-    void InitProcessor( std::pair< int, int >& screenDims, 
-        osg::Camera* const sceneViewCamera );
     
     ///The root group that everything gets added to
     osg::ref_ptr< osg::Group > mRootGroup;
 
     ///Set the number of super samples
     int mScaleFactor;
+
+    ///
+    int mAdjustedScreenRes;
 
     ///Let the object know all cameras are configured
     vrj::GlContextData< bool > mCamerasConfigured;
@@ -181,29 +177,10 @@ private:
     ///A context locked map to hold textures
     vrj::GlContextData< osg::ref_ptr< osg::Texture2D > > mDepthStencilTexture;
 
-    ///A context locked map to hold osgPPU Processors
-    vrj::GlContextData< osg::ref_ptr< osgPPU::Processor > > mProcessor;
+    ///
+    ///
+    vrj::GlContextData< osg::ref_ptr< osg::MatrixTransform > > mQuad;
 
-    vrj::GlContextData< osg::ref_ptr< osgPPU::UnitCameraAttachmentBypass > > mColorBuffer0;
-    
-    vrj::GlContextData< osg::ref_ptr< osgPPU::UnitCameraAttachmentBypass > > mColorBuffer1;
-
-    vrj::GlContextData< osg::ref_ptr< osgPPU::UnitInResampleOut > > mGlowDownSample;
-
-    vrj::GlContextData< osg::ref_ptr< osgPPU::UnitInOut > > mBlurX;
-
-    vrj::GlContextData< osg::ref_ptr< osgPPU::UnitInOut > > mBlurY;
-
-    vrj::GlContextData< osg::ref_ptr< osgPPU::UnitInOut > > mFinal;
-
-    ///The final output of the osgPPU pipeline
-    vrj::GlContextData< osg::ref_ptr< osgPPU::UnitOut > > mQuadOut;
-    
-    vrj::GlContextData< osg::ref_ptr< osgPPU::UnitTexture > > mcolor;
-    vrj::GlContextData< osg::ref_ptr< osgPPU::UnitTexture > > mglow;
-    
-
-    int mAdjustedScreenRes;
 };
 } //end xplorer
 } //end ves
