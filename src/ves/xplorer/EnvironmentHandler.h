@@ -142,7 +142,7 @@ public:
     ///\param _bottom
     ///\param _near
     ///\param _far
-    void SetFrustumValues( float _left, float _right, float _top, float _bottom, float _near, float _far );
+    void SetFrustumValues( float _left, float _right, float _bottom, float _top, float _near, float _far );
 
     ///Get the window width
     unsigned int GetWindowWidth();

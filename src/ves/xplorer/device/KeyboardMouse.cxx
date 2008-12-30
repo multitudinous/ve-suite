@@ -218,25 +218,28 @@ void KeyboardMouse::SetStartEndPoint(
     startPoint->set( jugglerHeadPointTemp[ 0 ],
                      jugglerHeadPointTemp[ 1 ],
                      jugglerHeadPointTemp[ 2 ] );
-  /*std::cout << " start point "
+
+    std::cout << " start point "
               << jugglerHeadPointTemp[ 0 ] << " "
               << jugglerHeadPointTemp[ 1 ] << " "
-              << jugglerHeadPointTemp[ 2 ] << std::endl;*/
+              << jugglerHeadPointTemp[ 2 ] << std::endl;
 
     //Get the vector
-    gmtl::Vec3d vjVec = mousePosition - jugglerHeadPointTemp;
-    gmtl::normalize( vjVec );
+    gmtl::Vec3d vjVecNear = mousePosition - jugglerHeadPointTemp;
+    gmtl::Vec3d vjVecFar = -jugglerHeadPointTemp;
+    vjVecFar.mData[ 1 ] = mFarFrustum + vjVecFar.mData[ 1 ];
 
+    double distance = vjVecFar.mData[ 1 ] / vjVecNear.mData[ 1 ];
     //Set the end point
-    double distance = mFarFrustum;
-    gmtl::Point3d endPointGMTL = vjVec * distance;
-    endPoint->set( endPointGMTL[ 0 ],
-                   endPointGMTL[ 1 ],
-                   endPointGMTL[ 2 ] );
-  /*std::cout << " end point " 
-              << endPointGMTL[ 0 ] << " "
-              << endPointGMTL[ 1 ] << " "
-              << endPointGMTL[ 2 ] << std::endl;*/
+    endPoint->set(
+        jugglerHeadPointTemp.mData[ 0 ] + ( vjVecNear.mData[ 0 ] * distance ),
+        mFarFrustum,
+        jugglerHeadPointTemp.mData[ 2 ] + ( vjVecNear.mData[ 2 ] * distance ) );
+
+    std::cout << " end point " 
+              << endPoint->x() << " "
+              << endPoint->y() << " "
+              << endPoint->z() << std::endl;
 
     //Need to negate the the camera transform that is multiplied into the view
     {
@@ -555,12 +558,12 @@ void KeyboardMouse::SetWindowValues( unsigned int w, unsigned int h )
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::SetFrustumValues(
-    double l, double r, double t, double b, double n, double f )
+    double l, double r, double b, double t, double n, double f )
 {
     mLeftFrustum = l;
     mRightFrustum = r;
-    mTopFrustum = t;
     mBottomFrustum = b;
+    mTopFrustum = t;
     mNearFrustum = n;
     mFarFrustum = f;
 

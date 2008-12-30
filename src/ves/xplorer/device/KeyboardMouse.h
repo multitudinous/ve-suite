@@ -110,7 +110,7 @@ public:
     ///\param n
     ///\param f
     void SetFrustumValues(
-        double l, double r, double t, double b, double n, double f );
+        double l, double r, double b, double t, double n, double f );
 
     ///Fit the world bounding volume into the viewing frustum
     void FrameAll();

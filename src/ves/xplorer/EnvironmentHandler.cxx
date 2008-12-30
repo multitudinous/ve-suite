@@ -362,12 +362,13 @@ void EnvironmentHandler::SetWindowDimensions( unsigned int w, unsigned int h )
     _windowHeight = h;
 }
 
-void EnvironmentHandler::SetFrustumValues( float _left, float _right, float _top, float _bottom, float _near, float _far )
+void EnvironmentHandler::SetFrustumValues(
+    float _left, float _right, float _bottom, float _top, float _near, float _far )
 {
     _frustumLeft = _left;
     _frustumRight = _right;
-    _frustumTop = _top;
     _frustumBottom = _bottom;
+    _frustumTop = _top;
     _frustumNear = _near;
     _frustumFar = _far;
 }
@@ -397,8 +398,8 @@ void EnvironmentHandler::PostFrameUpdate()
     //Update the values in trackball
     static_cast< ves::xplorer::KeyboardMouse* >(
         ves::xplorer::DeviceHandler::instance()->GetDevice( "KeyboardMouse" ) )->
-    SetFrustumValues( _frustumLeft, _frustumRight, _frustumTop,
-                      _frustumBottom, _frustumNear, _frustumFar );
+    SetFrustumValues( _frustumLeft, _frustumRight, _frustumBottom, _frustumTop,
+                       _frustumNear, _frustumFar );
 }
 ////////////////////////////////////////////////////////////////////////////////
 ves::xplorer::SeedPoints* EnvironmentHandler::GetSeedPoints()

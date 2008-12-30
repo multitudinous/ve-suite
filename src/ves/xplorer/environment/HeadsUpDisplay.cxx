@@ -52,15 +52,15 @@ using namespace ves::xplorer;
 ////////////////////////////////////////////////////////////////////////////////
 HeadsUpDisplay::HeadsUpDisplay(
     std::pair< unsigned int, unsigned int > windowResolution )
-        :
-        mWindowResolution( windowResolution ),
-        mCamera( 0 ),
-        mFramerateTextGeode( 0 ),
-        mGeometryWCS( 0 ),
-        mFramerateText( 0 ),
-        mWCSxText( 0 ),
-        mWCSyText( 0 ),
-        mWCSzText( 0 )
+    :
+    mWindowResolution( windowResolution ),
+    mCamera( 0 ),
+    mFramerateTextGeode( 0 ),
+    mGeometryWCS( 0 ),
+    mFramerateText( 0 ),
+    mWCSxText( 0 ),
+    mWCSyText( 0 ),
+    mWCSzText( 0 )
 {
     Initialize();
 }
