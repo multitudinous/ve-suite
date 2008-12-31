@@ -158,7 +158,9 @@ UIPluginBase::UIPluginBase() :
         serviceList( 0 ),
         m_veModel( new Model() ),
         m_dataSetLoaderDlg( 0 ),
-        m_iconChooser( 0 )
+        m_iconChooser( 0 ),
+        mUserPrefBuffer( 0 ),
+        mDataBufferEngine( 0 )
 {
     pos = wxPoint( 0, 0 ); //default position
 
@@ -1127,6 +1129,11 @@ void UIPluginBase::SetXMLDataBufferEngine( ves::conductor::XMLDataBufferEngine* 
 {
     mDataBufferEngine = bufferEngine;
 }
+////////////////////////////////////////////////////////////////////////////////
+void UIPluginBase::SetUserPreferencesDataBuffer( ves::conductor::UserPreferencesDataBuffer* prefBuffer )
+{
+    mUserPrefBuffer = prefBuffer;
+}
 /////////////////////////////////////////////////////////////////////////////
 void UIPluginBase::SetImageIcon( std::string path, float rotation, int mirror, float scale )
 {
@@ -1984,7 +1991,7 @@ void UIPluginBase::OnMakeIntoHierarchy( wxCommandEvent& event )
     GetVEModel()->SetSubSystem( system );
 
     //add system to system list
-    XMLDataBufferEngine::instance()->AddSubSystem( system );
+    mDataBufferEngine->AddSubSystem( system );
     
     //disables menu entry for make hierarchy
     SetAsHierarchy( );

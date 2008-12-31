@@ -107,10 +107,16 @@ BEGIN_EVENT_TABLE( Network, wxEvtHandler )
     EVT_UPDATE_UI( UIPLUGINBASE_DIALOG_PLUGIN_UPDATE, Network::OnDeletePlugins )
 END_EVENT_TABLE()
 ////////////////////////////////////////////////////////////////////////////////
-Network::Network( wxWindow* parent ):
+Network::Network( wxWindow* parent, 
+                 ves::conductor::util::CORBAServiceList* serviceList,
+                 ves::conductor::XMLDataBufferEngine* dataBufferEngine,
+                 ves::conductor::UserPreferencesDataBuffer* userPrefBuffer ):
         wxEvtHandler(),
         tryingLink( false ),
-        isLoading( false )
+        isLoading( false ),
+        mServiceList( serviceList ),
+        mDataBufferEngine( dataBufferEngine ),
+        mUserPrefBuffer( userPrefBuffer )
 {
     modules.clear();
     links.clear();
@@ -141,8 +147,8 @@ Network::Network( wxWindow* parent ):
     //SetBackgroundColour(*wxWHITE);
     //This is for the paint buffer
     //SetBackgroundStyle(wxBG_STYLE_CUSTOM);
-    systemPtr = XMLDataBufferEngine::instance()->GetXMLSystemDataObject(
-                    XMLDataBufferEngine::instance()->GetTopSystemId() );
+    systemPtr = mDataBufferEngine->GetXMLSystemDataObject(
+                    mDataBufferEngine->GetTopSystemId() );
     networkDeleteEvent.SetId( NETWORK_DELETE_NETWORK );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -1724,8 +1730,9 @@ void Network::AddtoNetwork( UIPluginBase *cur_module, std::string cls_name )
 
     modules[id].GetPlugin()->SetName( wxString( cls_name.c_str(), wxConvUTF8 ) );
     modules[id].GetPlugin()->SetID( id );
-    modules[id].GetPlugin()->SetCORBAService( CORBAServiceList::instance() );
-    modules[id].GetPlugin()->SetXMLDataBufferEngine( XMLDataBufferEngine::instance() );
+    modules[id].GetPlugin()->SetCORBAService( mServiceList );
+    modules[id].GetPlugin()->SetXMLDataBufferEngine( mDataBufferEngine );
+    modules[id].GetPlugin()->SetUserPreferencesDataBuffer( mUserPrefBuffer );
     modules[id].GetPlugin()->SetDialogSize( parent->GetAppropriateSubDialogSize() );
 
     ///Add the plugin model pointer to the respective system
@@ -1888,8 +1895,9 @@ void Network::LoadSystem( model::SystemPtr system, Canvas* parent )
         ///Add event handler for the plugins
 //        PushEventHandler( tempPlugin );
         tempPlugin->SetName( wxString( model->GetPluginName().c_str(), wxConvUTF8 ) );
-        tempPlugin->SetCORBAService( CORBAServiceList::instance() );
-        tempPlugin->SetXMLDataBufferEngine( XMLDataBufferEngine::instance() );
+        tempPlugin->SetCORBAService( mServiceList );
+        tempPlugin->SetXMLDataBufferEngine( mDataBufferEngine );
+        tempPlugin->SetUserPreferencesDataBuffer( mUserPrefBuffer );
         tempPlugin->SetDialogSize( parent->GetAppropriateSubDialogSize() );
         if(  model->GetPluginName() != "DefaultPlugin" )
         {
@@ -1961,8 +1969,9 @@ void Network::CreateSystem( Canvas* parent, unsigned int id )
     tempPlugin->SetCanvas( parent );
     tempPlugin->SetDCScale( &userScale );
     tempPlugin->SetName( _( "DefaultPlugin" ) );
-    tempPlugin->SetCORBAService( CORBAServiceList::instance() );
-    tempPlugin->SetXMLDataBufferEngine( XMLDataBufferEngine::instance() );
+    tempPlugin->SetCORBAService( mServiceList );
+    tempPlugin->SetXMLDataBufferEngine( mDataBufferEngine );
+    tempPlugin->SetUserPreferencesDataBuffer( mUserPrefBuffer );
     tempPlugin->SetDialogSize( parent->GetAppropriateSubDialogSize() );
     
     Module mod;
@@ -2045,8 +2054,7 @@ wxPoint Network::GetPointForSelectedPlugin( unsigned long moduleID, unsigned int
         {
             std::ostringstream msg;
             msg << "Could not find port " << portNumber << " in module " << moduleID << std::endl;
-            CORBAServiceList* serviceList = CORBAServiceList::instance();
-            serviceList->GetMessageLog()->SetMessage( msg.str().c_str() );
+            mServiceList->GetMessageLog()->SetMessage( msg.str().c_str() );
             index = 0;
         }
 
@@ -2063,14 +2071,12 @@ wxPoint Network::GetPointForSelectedPlugin( unsigned long moduleID, unsigned int
 ////////////////////////////////////////////////////////////////////////////////
 void Network::SetIDOnAllActiveModules( void )
 {
-    CORBAServiceList* serviceList = CORBAServiceList::instance();
-
     std::map< int, Module >::iterator iter;
     for( iter = modules.begin(); iter != modules.end(); ++iter )
     {
         std::string moduleName = ConvertUnicode( iter->second.GetPlugin()->GetName().c_str() );
         int moduleId = iter->first;
-        serviceList->SetID( moduleId, moduleName );
+        mServiceList->SetID( moduleId, moduleName );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -2198,7 +2204,7 @@ void Network::ClearXplorer()
         CommandPtr veCommand( new Command() );
         veCommand->SetCommandName( std::string( "DELETE_OBJECT_FROM_NETWORK" ) );
         veCommand->AddDataValuePair( dataValuePair );
-        bool connected = CORBAServiceList::instance()->
+        bool connected = mServiceList->
                          SendCommandStringToXplorer( veCommand );
     }
 }

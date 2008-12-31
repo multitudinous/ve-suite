@@ -69,6 +69,7 @@ namespace ves
 namespace conductor
 {
 class XMLDataBufferEngine;
+class UserPreferencesDataBuffer;;
 
 namespace util
 {
@@ -204,6 +205,8 @@ public:
     void SetCORBAService( ves::conductor::util::CORBAServiceList* serviceList );
     ///Set the databuffer engine so that memory is handled properly on windows
     void SetXMLDataBufferEngine( ves::conductor::XMLDataBufferEngine* bufferEngine );
+    ///Set the databuffer engine so that memory is handled properly on windows
+    void SetUserPreferencesDataBuffer( ves::conductor::UserPreferencesDataBuffer* prefBuffer );
     ///Set the user scale to enable working with the dc
     void SetDCScale( std::pair< double, double >* scale );
     ///See if this plugin is selected
@@ -346,7 +349,8 @@ protected:
 
     ves::conductor::util::CORBAServiceList* serviceList;
     ves::conductor::XMLDataBufferEngine* mDataBufferEngine;
-
+    ves::conductor::UserPreferencesDataBuffer* mUserPrefBuffer;
+    
     std::string ConvertUnicode( const wxChar* data )
     {
         std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( data ) ) );

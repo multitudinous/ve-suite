@@ -59,6 +59,19 @@ Network API
 
 class AppFrame;
 class wxProgressDialog;
+namespace ves
+{
+namespace conductor
+{
+class XMLDataBufferEngine;
+class UserPreferencesDataBuffer;;
+
+namespace util
+{
+class CORBAServiceList;
+}
+}
+}            
 
 namespace ves
 {
@@ -69,7 +82,14 @@ class Canvas;
 class VE_GUIPLUGINS_EXPORTS Network : public wxEvtHandler
 {
 public:
-    Network( wxWindow* parent );
+    ///Constructor
+    Network( 
+            wxWindow* parent, 
+            ves::conductor::util::CORBAServiceList* serviceList,
+            ves::conductor::XMLDataBufferEngine* dataBufferEngine,
+            ves::conductor::UserPreferencesDataBuffer* userPrefBuffer
+            );
+
     virtual ~Network();
 
     ///Fucntion called during submit job to send the id of all active
@@ -207,7 +227,10 @@ private:
     wxUpdateUIEvent networkDeleteEvent;
     
     unsigned int pluginID;
-
+    ves::conductor::util::CORBAServiceList* mServiceList;
+    ves::conductor::XMLDataBufferEngine* mDataBufferEngine;
+    ves::conductor::UserPreferencesDataBuffer* mUserPrefBuffer;
+    
     std::string tempXMLNetworkData;
     //start up bounding box; used by GetFreePos to calc start module location
     std::vector< wxRect > sbboxes;

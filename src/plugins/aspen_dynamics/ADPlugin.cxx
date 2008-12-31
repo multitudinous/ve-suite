@@ -208,8 +208,7 @@ void ADPlugin::OnOpen( wxCommandEvent& event )
     data->SetData( "DYNFileName",
         ConvertUnicode( dynFileName.GetFullName().c_str() ) );
     aspenDynFile->AddDataValuePair( data );
-    UserPreferencesDataBuffer::instance()->
-    SetCommand( "Aspen_Dynamics_Preferences", aspenDynFile );
+    mUserPrefBuffer->SetCommand( "Aspen_Dynamics_Preferences", aspenDynFile );
 
     SetName( fd.GetFilename() );
     event.SetId( UIPLUGINBASE_SET_UI_PLUGIN_NAME );
@@ -431,6 +430,5 @@ void ADPlugin::SaveAsSimulation( wxCommandEvent& event )
     data->SetData( "BKPFileName",
                    ConvertUnicode( saveFileName.GetFullName().c_str() ) );
     aspenAPWFile->AddDataValuePair( data );
-    UserPreferencesDataBuffer::instance()->
-    SetCommand( "Aspen_Plus_Preferences", aspenAPWFile );
+    mUserPrefBuffer->SetCommand( "Aspen_Plus_Preferences", aspenAPWFile );
 }

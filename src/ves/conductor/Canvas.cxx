@@ -91,7 +91,6 @@ lrintf( float flt )
     return intgr ;
 }
 #endif
-//using namespace VE_Conductor;
 
 BEGIN_EVENT_TABLE( Canvas, wxScrolledWindow )
     EVT_PAINT( Canvas::OnPaint )
@@ -108,7 +107,9 @@ Canvas::Canvas( wxWindow* parent, int id )
                             wxHSCROLL | wxVSCROLL | wxFULL_REPAINT_ON_RESIZE ),
         previousId( "-1" ),
         m_treeView( 0 ),
-        mDataBufferEngine( XMLDataBufferEngine::instance() )
+        mDataBufferEngine( XMLDataBufferEngine::instance() ),
+        mUserPrefBuffer( UserPreferencesDataBuffer::instance() ),
+        mServiceList( CORBAServiceList::instance() )
 {
     std::pair< long int, long int > numPix;
     numPix.first = 1;
@@ -186,7 +187,7 @@ void Canvas::PopulateNetworks( std::string xmlNetwork, bool clearXplorer )
     for( std::map< std::string, model::SystemPtr>::const_iterator
             iter = systems.begin(); iter != systems.end(); iter++ )
     {
-        Network* tempNetwork = new Network( this );
+        Network* tempNetwork = new Network( this, mServiceList, mDataBufferEngine, mUserPrefBuffer );
         tempNetwork->LoadSystem( iter->second, this );
         networks[iter->first] = tempNetwork;
         tempNetwork->SetNetworkID( iter->first );
@@ -212,20 +213,20 @@ void Canvas::PopulateNetworks( std::string xmlNetwork, bool clearXplorer )
         CommandPtr veCommand( new Command() );
         veCommand->SetCommandName( std::string( "CHANGE_BACKGROUND_COLOR" ) );
         veCommand->AddDataValuePair( dataValuePair );
-        UserPreferencesDataBuffer::instance()->
+        mUserPrefBuffer->
             SetCommand( std::string( "CHANGE_BACKGROUND_COLOR" ), veCommand );
     }
     // Create the command and data value pairs
-    CommandPtr tempCommand = UserPreferencesDataBuffer::instance()->
+    CommandPtr tempCommand = mUserPrefBuffer->
         GetCommand( "CHANGE_BACKGROUND_COLOR" );
     
-    CORBAServiceList::instance()->SendCommandStringToXplorer( tempCommand );
+    mServiceList->SendCommandStringToXplorer( tempCommand );
     
     // Create the command and data value pairs
     tempCommand = 
-        UserPreferencesDataBuffer::instance()->GetCommand( "Navigation_Data" );
+        mUserPrefBuffer->GetCommand( "Navigation_Data" );
 
-    CORBAServiceList::instance()->SendCommandStringToXplorer( tempCommand );
+    mServiceList->SendCommandStringToXplorer( tempCommand );
     
     //Finally tell the canvas to redraw
     Refresh( true );
@@ -243,7 +244,7 @@ void Canvas::AddSubNetworks( )
     {
         if( networks.find( iter->first ) == networks.end() )
         {
-            Network* tempNetwork = new Network( this );
+            Network* tempNetwork = new Network( this, mServiceList, mDataBufferEngine, mUserPrefBuffer );
             tempNetwork->LoadSystem( iter->second, this );
             networks[iter->first] = tempNetwork;
             tempNetwork->SetNetworkID( iter->first );
@@ -385,8 +386,7 @@ void Canvas::New( bool promptClearXplorer )
     CommandPtr veCommand( new Command() );
     veCommand->SetCommandName( std::string( "DELETE_NETWORK_SYSTEM_VIEW" ) );
     veCommand->AddDataValuePair( dataValuePair );
-    bool connected = CORBAServiceList::instance()->
-        SendCommandStringToXplorer( veCommand );
+    bool connected = mServiceList->SendCommandStringToXplorer( veCommand );
 
     CleanUpNetworks();
 }
@@ -466,7 +466,7 @@ void Canvas::CreateDefaultNetwork()
     ///Set the default network
     activeId = "NULL";
     std::string tempUUID = mDataBufferEngine->GetTopSystemId();
-    networks[ tempUUID ] = new Network( this );
+    networks[ tempUUID ] = new Network( this, mServiceList, mDataBufferEngine, mUserPrefBuffer );
     networks[ tempUUID ]->SetNetworkID( tempUUID );
     ///Now set it active
     this->SetActiveNetwork( tempUUID );
@@ -515,7 +515,7 @@ void Canvas::CreateNewSystem( wxCommandEvent& event )
     std::string sId = ssId.str();
 
     //create conductor graphics
-    Network* tempNetwork = new Network( this );
+    Network* tempNetwork = new Network( this, mServiceList, mDataBufferEngine, mUserPrefBuffer );
     //tempNetwork->CreateSystem( system, this );
     std::string name = ConvertUnicode( event.GetString().c_str() );
     model::SystemPtr system = mDataBufferEngine->GetXMLSystemDataObject( name );
