@@ -107,7 +107,8 @@ Canvas::Canvas( wxWindow* parent, int id )
         : wxScrolledWindow( parent, id, wxDefaultPosition, wxDefaultSize,
                             wxHSCROLL | wxVSCROLL | wxFULL_REPAINT_ON_RESIZE ),
         previousId( "-1" ),
-        m_treeView( 0 )
+        m_treeView( 0 ),
+        mDataBufferEngine( XMLDataBufferEngine::instance() )
 {
     std::pair< long int, long int > numPix;
     numPix.first = 1;
@@ -135,8 +136,6 @@ Canvas::Canvas( wxWindow* parent, int id )
     this->parent = parent;
     
     cleanEvent.SetId( CANVAS_UPDATE_NETWORK_DATA );
-    
-    mDataBufferEngine = XMLDataBufferEngine::instance();
     
     Refresh( true );
 }

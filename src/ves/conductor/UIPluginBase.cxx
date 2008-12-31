@@ -368,25 +368,15 @@ wxRect UIPluginBase::GetBBox()
     result.SetX( pos.x );
     result.SetY( pos.y );
 
+    if( n_pts != 4 )
+    {
+        std::cout << "Could have a problem in icon code." << std::endl;
+    }
+
     int left = poly[0].x;
     int right = poly[1].x;
     int top = poly[1].y;
     int bottom = poly[2].y;
-
-    //for( int i = 1; i < n_pts; i++ )
-    //{
-    //    if( left > poly[i].x )
-    //        left = poly[i].x;
-
-    //    if( right < poly[i].x )
-    //        right = poly[i].x;
-
-    //    if( top > poly[i].y )
-    //        top = poly[i].y;
-
-    //    if( bottom < poly[i].y )
-    //        bottom = poly[i].y;
-    //}
 
     result.SetWidth( right - left );
     result.SetHeight( bottom - top );
