@@ -1132,7 +1132,11 @@ void UIPluginBase::SetCORBAService( ves::conductor::util::CORBAServiceList* serv
 {
     this->serviceList = serviceList;
 }
-
+////////////////////////////////////////////////////////////////////////////////
+void UIPluginBase::SetXMLDataBufferEngine( ves::conductor::XMLDataBufferEngine* bufferEngine )
+{
+    mDataBufferEngine = bufferEngine;
+}
 /////////////////////////////////////////////////////////////////////////////
 void UIPluginBase::SetImageIcon( std::string path, float rotation, int mirror, float scale )
 {

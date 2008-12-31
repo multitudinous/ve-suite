@@ -68,6 +68,8 @@ namespace ves
 {
 namespace conductor
 {
+class XMLDataBufferEngine;
+
 namespace util
 {
 class CORBAServiceList;
@@ -200,6 +202,8 @@ public:
     ///Set the corba servicelist so that the plugin can talk with the graphical
     ///engine
     void SetCORBAService( ves::conductor::util::CORBAServiceList* serviceList );
+    ///Set the databuffer engine so that memory is handled properly on windows
+    void SetXMLDataBufferEngine( ves::conductor::XMLDataBufferEngine* bufferEngine );
     ///Set the user scale to enable working with the dc
     void SetDCScale( std::pair< double, double >* scale );
     ///See if this plugin is selected
@@ -341,6 +345,7 @@ protected:
     SummaryResultDialog* inputsDialog;
 
     ves::conductor::util::CORBAServiceList* serviceList;
+    ves::conductor::XMLDataBufferEngine* mDataBufferEngine;
 
     std::string ConvertUnicode( const wxChar* data )
     {

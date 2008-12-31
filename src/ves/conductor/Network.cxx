@@ -1725,6 +1725,7 @@ void Network::AddtoNetwork( UIPluginBase *cur_module, std::string cls_name )
     modules[id].GetPlugin()->SetName( wxString( cls_name.c_str(), wxConvUTF8 ) );
     modules[id].GetPlugin()->SetID( id );
     modules[id].GetPlugin()->SetCORBAService( CORBAServiceList::instance() );
+    modules[id].GetPlugin()->SetXMLDataBufferEngine( XMLDataBufferEngine::instance() );
     modules[id].GetPlugin()->SetDialogSize( parent->GetAppropriateSubDialogSize() );
 
     ///Add the plugin model pointer to the respective system
@@ -1888,6 +1889,7 @@ void Network::LoadSystem( model::SystemPtr system, Canvas* parent )
 //        PushEventHandler( tempPlugin );
         tempPlugin->SetName( wxString( model->GetPluginName().c_str(), wxConvUTF8 ) );
         tempPlugin->SetCORBAService( CORBAServiceList::instance() );
+        tempPlugin->SetXMLDataBufferEngine( XMLDataBufferEngine::instance() );
         tempPlugin->SetDialogSize( parent->GetAppropriateSubDialogSize() );
         if(  model->GetPluginName() != "DefaultPlugin" )
         {
@@ -1960,6 +1962,7 @@ void Network::CreateSystem( Canvas* parent, unsigned int id )
     tempPlugin->SetDCScale( &userScale );
     tempPlugin->SetName( _( "DefaultPlugin" ) );
     tempPlugin->SetCORBAService( CORBAServiceList::instance() );
+    tempPlugin->SetXMLDataBufferEngine( XMLDataBufferEngine::instance() );
     tempPlugin->SetDialogSize( parent->GetAppropriateSubDialogSize() );
     
     Module mod;

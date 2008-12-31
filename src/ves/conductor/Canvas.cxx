@@ -136,6 +136,8 @@ Canvas::Canvas( wxWindow* parent, int id )
     
     cleanEvent.SetId( CANVAS_UPDATE_NETWORK_DATA );
     
+    mDataBufferEngine = XMLDataBufferEngine::instance();
+    
     Refresh( true );
 }
 ///////////////////////////////////////////////////////////////////////////////
@@ -175,11 +177,11 @@ void Canvas::PopulateNetworks( std::string xmlNetwork, bool clearXplorer )
     }
 
     //load
-    XMLDataBufferEngine::instance()->LoadVESData( xmlNetwork );
+    mDataBufferEngine->LoadVESData( xmlNetwork );
 
     //get the map count
     const std::map< std::string, model::SystemPtr> systems =
-        XMLDataBufferEngine::instance()->GetXMLSystemDataMap();
+        mDataBufferEngine->GetXMLSystemDataMap();
 
     // iterate through the systems
     for( std::map< std::string, model::SystemPtr>::const_iterator
@@ -191,11 +193,10 @@ void Canvas::PopulateNetworks( std::string xmlNetwork, bool clearXplorer )
         tempNetwork->SetNetworkID( iter->first );
     }
     
-    SetActiveNetwork( XMLDataBufferEngine::instance()->GetTopSystemId() );
+    SetActiveNetwork( mDataBufferEngine->GetTopSystemId() );
     
     //Now manage the data that is user specific to this ves file
-    UserPtr userInfo = XMLDataBufferEngine::instance()->
-    GetXMLUserDataObject( "Network" );
+    UserPtr userInfo = mDataBufferEngine->GetXMLUserDataObject( "Network" );
     
     if( !userInfo->GetUserStateInfo() )
     {
@@ -233,12 +234,9 @@ void Canvas::PopulateNetworks( std::string xmlNetwork, bool clearXplorer )
 ///////////////////////////////////////////////////////////////////////////////
 void Canvas::AddSubNetworks( )
 {
-    //load
-    //XMLDataBufferEngine::instance()->LoadVESData( xmlNetwork );
-
     //get the map count
     const std::map< std::string, model::SystemPtr> systems =
-        XMLDataBufferEngine::instance()->GetXMLSystemDataMap();
+        mDataBufferEngine->GetXMLSystemDataMap();
 
     // iterate through the systems
     for( std::map< std::string, model::SystemPtr>::const_iterator
@@ -252,8 +250,6 @@ void Canvas::AddSubNetworks( )
             tempNetwork->SetNetworkID( iter->first );
         }
     }
-    
-    //SetActiveNetwork( XMLDataBufferEngine::instance()->GetTopSystemId() );
 
     //Finally tell the canvas to redraw
     Refresh( true );
@@ -461,17 +457,16 @@ void Canvas::CleanUpNetworks()
 ////////////////////////////////////////////////////////////////////////////////
 void Canvas::CreateDefaultNetwork()
 {
-    XMLDataBufferEngine::instance()->NewVESData( true );
+    mDataBufferEngine->NewVESData( true );
     ///Initialize tope level network
     model::NetworkPtr tempNetwork( new model::Network() );
 
-    XMLDataBufferEngine::instance()->GetXMLSystemDataObject(
-        XMLDataBufferEngine::instance()->GetTopSystemId() )->
-    AddNetwork( tempNetwork );
+    mDataBufferEngine->GetXMLSystemDataObject( 
+        mDataBufferEngine->GetTopSystemId() )->AddNetwork( tempNetwork );
 
     ///Set the default network
     activeId = "NULL";
-    std::string tempUUID = XMLDataBufferEngine::instance()->GetTopSystemId();
+    std::string tempUUID = mDataBufferEngine->GetTopSystemId();
     networks[ tempUUID ] = new Network( this );
     networks[ tempUUID ]->SetNetworkID( tempUUID );
     ///Now set it active
@@ -524,8 +519,7 @@ void Canvas::CreateNewSystem( wxCommandEvent& event )
     Network* tempNetwork = new Network( this );
     //tempNetwork->CreateSystem( system, this );
     std::string name = ConvertUnicode( event.GetString().c_str() );
-    model::SystemPtr system = 
-        XMLDataBufferEngine::instance()->GetXMLSystemDataObject( name );
+    model::SystemPtr system = mDataBufferEngine->GetXMLSystemDataObject( name );
     tempNetwork->SetSystem( system );
     tempNetwork->CreateSystem( this, id );
     tempNetwork->SetNetworkID( system->GetID() );

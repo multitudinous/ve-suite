@@ -234,7 +234,9 @@ AppFrame::AppFrame( wxWindow * parent, wxWindowID id, const wxString& title )
         strcpy( tempArray[ i ], ConvertUnicode( ::wxGetApp().argv[ i ] ).c_str() );
     }
     serviceList->SetArgcArgv( ::wxGetApp().argc, tempArray );
-
+    delete [] tempArray;
+    tempArray = 0;
+    
     this->SetIcon( ve_icon32x32_xpm );
     //Initialize recent files menu
     m_recentVESFiles = new wxFileHistory();
@@ -2284,7 +2286,7 @@ void AppFrame::OnExitXplorer( wxCommandEvent& WXUNUSED( event ) )
 void AppFrame::ProcessCommandLineArgs( void )
 {
     int argc = ::wxGetApp().argc;
-    char** argv = new char*[ argc ];
+    //char** argv = new char*[ argc ];
     std::string vesFile;
     for( int i = 0; i < argc; ++ i )
     {

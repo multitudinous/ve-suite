@@ -173,7 +173,7 @@ void ADPlugin::OnOpen( wxCommandEvent& event )
 
     tempSystem = boost::dynamic_pointer_cast<ves::open::xml::model::System>( objectVector.at( 0 ) );
     GetVEModel()->SetSubSystem( tempSystem );
-    XMLDataBufferEngine::instance()->ParseSystem( tempSystem );
+    mDataBufferEngine->ParseSystem( tempSystem );
 
     // If there is nothing on the CE
     if( nw_str.compare("DYNDNE") == 0 )
@@ -198,7 +198,7 @@ void ADPlugin::OnOpen( wxCommandEvent& event )
 
     //create hierarchy page
     //hierarchyTree->PopulateTree( 
-    //    XMLDataBufferEngine::instance()->GetTopSystemId() );
+    //    mDataBufferEngine->GetTopSystemId() );
 
     //Log( "Simulation Opened.\n" );
     ///

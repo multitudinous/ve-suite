@@ -58,6 +58,7 @@ namespace ves
 namespace conductor
 {
 class Network;
+class XMLDataBufferEngine;
 
 class VE_GUIPLUGINS_EXPORTS Canvas : public wxScrolledWindow
 {
@@ -131,6 +132,8 @@ private:
     wxWindow* mainFrame;
     std::pair< unsigned int, unsigned int > ids;
 
+    ves::conductor::XMLDataBufferEngine* mDataBufferEngine;
+    
     std::string ConvertUnicode( const wxChar* data )
     {
         std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( data ) ) );

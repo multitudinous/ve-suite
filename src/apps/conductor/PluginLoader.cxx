@@ -106,7 +106,7 @@ bool PluginLoader::LoadPlugins( wxString lib_dir )
                      _( " is present but cannot be opened." ) );
         //wxMessageBox( msg, _( "Plugin Loader Failure" ),
         //             wxOK | wxICON_INFORMATION );
-        wxLogDebug( _( "Loading error [%s]\n" ), msg.c_str() );
+        //wxLogDebug( _( "Loading error [%s]\n" ), msg.c_str() );
         // deal with the error here - wxDir would already log an error
         // message explaining the exact reason of the failure
         //return FALSE;
@@ -126,7 +126,7 @@ bool PluginLoader::LoadPlugins( wxString lib_dir )
             wxPluginLibrary *lib = wxPluginManager::LoadLibrary( libn );
             if( lib )
             {
-                wxLogDebug( _( "Loaded [ %s ]\n" ), filename.c_str() );
+                //wxLogDebug( _( "Loaded [ %s ]\n" ), filename.c_str() );
                 //std::cout << "Loaded " << ConvertUnicode( libn.c_str() )
                 //    << std::endl;
                 mPluginLibs.push_back( lib );
@@ -138,12 +138,13 @@ bool PluginLoader::LoadPlugins( wxString lib_dir )
 
     // Load the default plugin no matter what
     wxString hostType;
-    ::wxGetEnv( wxString( "CFDHOSTTYPE", wxConvUTF8 ), &hostType );
+    wxString hostEnv( "CFDHOSTTYPE", wxConvUTF8 );
+    ::wxGetEnv( hostEnv, &hostType );
 
     // Try to laod custom plugins
     lib_dir.Append( _( "/" ) );
     lib_dir.Append( hostType );
-    wxLogDebug( _( "Loading plugins from [%s]\n" ), lib_dir.c_str() );
+    //wxLogDebug( _( "Loading plugins from [%s]\n" ), lib_dir.c_str() );
     //std::cout << "Loading plugins from "
     //    << ConvertUnicode( lib_dir.c_str() ) << std::endl;
     // Create a directory object we can scan for plugins
@@ -179,7 +180,7 @@ bool PluginLoader::LoadPlugins( wxString lib_dir )
             wxPluginLibrary *lib = wxPluginManager::LoadLibrary( libn );
             if( lib )
             {
-                wxLogDebug( _( "Loaded [ %s ]\n" ), filename.c_str() );
+                //wxLogDebug( _( "Loaded [ %s ]\n" ), filename.c_str() );
                 //std::cout << "Loaded " << ConvertUnicode( libn.c_str() )
                 //    << std::endl;
                 mPluginLibs.push_back( lib );
