@@ -1891,7 +1891,7 @@ void UIPluginBase::OnMRightDown( wxMouseEvent& event )
     wxString menuName = mPluginName + wxString( " Menu", wxConvUTF8 );
     mPopMenu->SetTitle( menuName );
 
-    m_canvas->PopupMenu( mPopMenu, event.GetPosition() );
+    m_canvas->PopupMenu( mPopMenu );
 
     m_selFrPort = -1;
     m_selToPort = -1;
