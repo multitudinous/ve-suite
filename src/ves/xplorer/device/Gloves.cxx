@@ -82,29 +82,29 @@ Gloves::Gloves()
     wand.init( "VJWand" );
     head.init( "VJHead" );
 
-    mRightHandPos.init( "RightHand" );
+    mRightHandPos.init( "GloveB-RightHand" );
 
-    mRightThumbMCP.init("ThumbMCP");
-    mRightThumbPIP.init("ThumbPIP");
+    mRightThumbMCP.init("GloveB-ThumbMCP");
+    mRightThumbPIP.init("GloveB-ThumbPIP");
 
-    mRightThumbIndexAbduction.init("ThumbIndexAbduction");
+    mRightThumbIndexAbduction.init("GloveB-ThumbIndexAbduction");
 
-    mRightIndexMCP.init("IndexMCP");
-    mRightIndexPIP.init("IndexPIP");
+    mRightIndexMCP.init("GloveB-IndexMCP");
+    mRightIndexPIP.init("GloveB-IndexPIP");
 
-    mRightIndexMiddleAbduction.init("IndexMiddleAbduction");
+    mRightIndexMiddleAbduction.init("GloveB-IndexMiddleAbduction");
 
-    mRightMiddleMCP.init("MiddleMCP");
-    mRightMiddlePIP.init("MiddlePIP");
-    mRightMiddleRingAbduction.init("MiddleRingAbduction");
+    mRightMiddleMCP.init("GloveB-MiddleMCP");
+    mRightMiddlePIP.init("GloveB-MiddlePIP");
+    mRightMiddleRingAbduction.init("GloveB-MiddleRingAbduction");
 
-    mRightRingMCP.init("RingMCP");
-    mRightRingPIP.init("RingPIP");
+    mRightRingMCP.init("GloveB-RingMCP");
+    mRightRingPIP.init("GloveB-RingPIP");
 
-    mRightRingPinkyAbduction.init("RingPinkyAbduction");
+    mRightRingPinkyAbduction.init("GloveB-RingPinkyAbduction");
 
-    mRightPinkyMCP.init("PinkyMCP");
-    mRightPinkyPIP.init("PinkyPIP");
+    mRightPinkyMCP.init("GloveB-PinkyMCP");
+    mRightPinkyPIP.init("GloveB-PinkyPIP");
 
     beamLineSegment = new osg::LineSegment();
     
@@ -145,7 +145,7 @@ void Gloves::Initialize()
     pos.set( 0, 3, 3 );
     mRightHand->setPosition( pos );
     mRightHand->setAttitude( quat );
-
+    //mRightHand->setReferenceFrame( osg::Transform::ABSOLUTE_RF );
     //pos.set( -3, 3, 3 );
     //mLeftHand->setPosition( pos );
     //mLeftHand->setAttitude( quat );
@@ -215,39 +215,43 @@ void Gloves::UpdateNavigation()
 
     //Get data from the trackers
     gmtl::Matrix44f hand_pos_rot = mRightHandPos->getData();
-    mRightHand->setPosition( osg::Vec3( hand_pos_rot[0][3], - hand_pos_rot[2][3], hand_pos_rot[1][3] ) );
+    mRightHand->setPosition( osg::Vec3( hand_pos_rot[0][3], -hand_pos_rot[2][3], hand_pos_rot[1][3] ) );
 
     gmtl::Matrix44d vrjRHandMat = convertTo< double >( hand_pos_rot );
+    gmtl::Vec3d x_axis( 1.0f, 0.0f, 0.0f );
+    gmtl::postMult(
+        vrjRHandMat, gmtl::makeRot< gmtl::Matrix44d >(
+          gmtl::AxisAngled( gmtl::Math::deg2Rad( -90.0f ), x_axis ) ) );
     gmtl::Quatd rhandQuat = gmtl::make< gmtl::Quatd >( vrjRHandMat );
     //std::cout << " 1 = " << rhandQuat << std::endl;
     //gmtl::normalize( rhandQuat );
     //std::cout << " 2 = " << rhandQuat << std::endl;
-    static int counter = 0;
+    /*static int counter = 0;
     static float angle = 0;
     static int angleCounter = 0;
     counter += 1;
     if( counter > 60 )
     {
     angle += osg::DegreesToRadians( 45.0 );
-    std::cout << " angle " << angle << " " << angleCounter << std::endl;
+    //std::cout << " angle " << angle << " " << angleCounter << std::endl;
     //gmtl::Quatd convQuat( 0, 1, 0, angle  );
     //gmtl::normalize( convQuat );
     gmtl::AxisAngled axisAngle( angle, 0, 1, 0 );
-    std::cout << "  1 " << axisAngle << std::endl;
+    //std::cout << "  1 " << axisAngle << std::endl;
     
     gmtl::Quatd quatAxisAngle = gmtl::make< gmtl::Quatd >( axisAngle );
-    std::cout << quatAxisAngle << std::endl;
+    //std::cout << quatAxisAngle << std::endl;
 
     //osg::Vec3d tempVec( rhandQuat[0], -rhandQuat[2], rhandQuat[ 1 ] );
-    osg::Vec3d tempVec( quatAxisAngle[0], quatAxisAngle[1], quatAxisAngle[ 2 ] );
-    mRightHand->setAttitude( osg::Quat( quatAxisAngle[3], tempVec ) );
-    counter = 0;
+    osg::Vec3d tempVec( quatAxisAngle[0], quatAxisAngle[1], quatAxisAngle[ 2 ] );*/
+    mRightHand->setAttitude( osg::Quat(rhandQuat[0], rhandQuat[1], rhandQuat[2], rhandQuat[3]  ) );//osg::Quat( quatAxisAngle[3], tempVec ) );
+    /*counter = 0;
     angleCounter += 1;
     if( angleCounter > 8 )
     {
         angle = 0;
         angleCounter = 0;
-    }
+    }*/
 /*
     osg::Vec3d pitch( 1, 0, 0 );
     osg::Vec3d roll( 0, 1, 0 );
@@ -263,8 +267,8 @@ void Gloves::UpdateNavigation()
     setAttitude( quat );
     setPivotPoint( osg::Vec3d( 0, 0, 0 ) );
 
-*/
-    }
+
+    }*/
     //Get data from the trackers
     //mLeftHand->setPosition( pos );
     //mLeftHand->setAttitude( quat );
