@@ -628,6 +628,7 @@ void App::draw()
         frustum[ vrj::Frustum::VJ_NEAR ], frustum[ vrj::Frustum::VJ_FAR ] );
                                       
     //Copy the view matrix
+    //    gmtl::Vec3f x_axis( 1.0f, 0.0f, 0.0f );
     //gmtl::postMult(
     //    _vjMatrixLeft, gmtl::makeRot< gmtl::Matrix44f >(
     //        gmtl::AxisAnglef( gmtl::Math::deg2Rad( -90.0f ), x_axis ) ) );
