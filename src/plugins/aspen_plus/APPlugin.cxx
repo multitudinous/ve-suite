@@ -33,8 +33,9 @@
 #include <ves/conductor/util/CORBAServiceList.h>
 
 #include "APPlugin.h"
-#include "../ConductorPluginEnums.h"
 #include "APOpenDialog.h"
+
+#include <plugins/ConductorPluginEnums.h>
 
 #include <ves/conductor/ConductorLibEnums.h>
 #include <ves/conductor/xpm/AspenPlus2DIcons/aspen.xpm>

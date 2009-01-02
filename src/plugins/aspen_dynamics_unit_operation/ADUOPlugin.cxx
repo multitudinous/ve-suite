@@ -33,7 +33,7 @@
 #include <ves/conductor/util/CORBAServiceList.h>
 
 #include "ADUOPlugin.h"
-#include "../ConductorPluginEnums.h"
+#include <plugins/ConductorPluginEnums.h>
 #include "ADUOVarDialog.h"
 
 #include <ves/conductor/xpm/square.xpm>

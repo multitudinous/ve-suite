@@ -34,7 +34,7 @@
 
 #include "ADPlugin.h"
 #include "ADOpenDialog.h"
-#include "../ConductorPluginEnums.h"
+#include <plugins/ConductorPluginEnums.h>
 
 #include <ves/conductor/ConductorLibEnums.h>
 #include <ves/conductor/UserPreferencesDataBuffer.h>

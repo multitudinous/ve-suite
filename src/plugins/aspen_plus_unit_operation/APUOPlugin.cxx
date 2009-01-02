@@ -34,7 +34,7 @@
 
 #include "APUOPlugin.h"
 #include "APUOVarDialog.h"
-#include "../ConductorPluginEnums.h"
+#include <plugins/ConductorPluginEnums.h>
 
 #include <ves/conductor/xpm/square.xpm>
 #include <ves/conductor/util/ParamsDlg.h>
