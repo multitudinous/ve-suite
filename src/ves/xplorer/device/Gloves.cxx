@@ -130,7 +130,7 @@ void Gloves::Initialize()
     // LEft HandNode: -2 6 -3 0 1 0 6.12323e-017 2.9 0
     osg::Vec3 pos;
     osg::Quat quat;
-    quat.set( 0, 1, 0, 6.12323e-017 );
+    //quat.set( 0, 1, 0, 6.12323e-017 );
     
     float length = 0.8;
 
@@ -219,9 +219,25 @@ void Gloves::UpdateNavigation()
 
     gmtl::Matrix44d vrjRHandMat = convertTo< double >( hand_pos_rot );
     gmtl::Vec3d x_axis( 1.0f, 0.0f, 0.0f );
-    gmtl::postMult(
-        vrjRHandMat, gmtl::makeRot< gmtl::Matrix44d >(
-          gmtl::AxisAngled( gmtl::Math::deg2Rad( -90.0f ), x_axis ) ) );
+    gmtl::Matrix44d rhRot = gmtl::makeRot< gmtl::Matrix44d >(
+        gmtl::AxisAngled( gmtl::Math::deg2Rad( -90.0f ), x_axis ) );
+    osg::Vec3d pitch( 1, 0, 0 );
+    osg::Vec3d roll( 0, 1, 0 );
+    osg::Vec3d yaw( 0, 0, 1 );
+
+    osg::Matrixd rotateMat;
+    rotateMat.makeRotate( osg::DegreesToRadians( 180.0 ), yaw,
+                         osg::DegreesToRadians( -90.0 ), pitch,
+                         osg::DegreesToRadians( 0.0 ), roll );
+    
+    gmtl::Matrix44d naVRot;
+    naVRot.set( rotateMat.ptr() );
+   /*osg::Quat quat;
+    quat = rotateMat.getRotate();*/
+    //vrjRHandMat = vrjRHandMat * rhRot;
+    vrjRHandMat = vrjRHandMat * rhRot * naVRot;
+    //gmtl::postMult(
+    //    vrjRHandMat,  );
     gmtl::Quatd rhandQuat = gmtl::make< gmtl::Quatd >( vrjRHandMat );
     //std::cout << " 1 = " << rhandQuat << std::endl;
     //gmtl::normalize( rhandQuat );
@@ -244,7 +260,7 @@ void Gloves::UpdateNavigation()
 
     //osg::Vec3d tempVec( rhandQuat[0], -rhandQuat[2], rhandQuat[ 1 ] );
     osg::Vec3d tempVec( quatAxisAngle[0], quatAxisAngle[1], quatAxisAngle[ 2 ] );*/
-    mRightHand->setAttitude( osg::Quat(rhandQuat[0], rhandQuat[1], rhandQuat[2], rhandQuat[3]  ) );//osg::Quat( quatAxisAngle[3], tempVec ) );
+    mRightHand->setAttitude( osg::Quat(rhandQuat[0], -rhandQuat[2], rhandQuat[1], rhandQuat[3]  ) );//osg::Quat( quatAxisAngle[3], tempVec ) );
     /*counter = 0;
     angleCounter += 1;
     if( angleCounter > 8 )
