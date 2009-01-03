@@ -105,9 +105,10 @@ APPlugin::APPlugin() :
     aspen_menu->Enable( APPLUGIN_SAVE_SIMULATION, true );
     aspen_menu->Append( APPLUGIN_SAVEAS_SIMULATION, _( "SaveAs Simulation" ) );
     aspen_menu->Enable( APPLUGIN_SAVEAS_SIMULATION, true );
-    mPopMenu->Insert( 0, APPLUGIN_ASPEN_MENU,   _( "Aspen" ), aspen_menu,
+    wxMenu* popMenu = GetPopupMenu();
+    popMenu->Insert( 0, APPLUGIN_ASPEN_MENU,   _( "Aspen" ), aspen_menu,
                      _( "Used in conjunction with Aspen" ) );
-    mPopMenu->Enable( APPLUGIN_ASPEN_MENU, true );
+    popMenu->Enable( APPLUGIN_ASPEN_MENU, true );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

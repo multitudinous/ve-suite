@@ -105,9 +105,10 @@ ADPlugin::ADPlugin() :
     aspen_menu->Enable( ADPLUGIN_SAVE_SIMULATION, true );
     aspen_menu->Append( ADPLUGIN_SAVEAS_SIMULATION, _( "SaveAs Simulation" ) );
     aspen_menu->Enable( ADPLUGIN_SAVEAS_SIMULATION, true );
-    mPopMenu->Insert( 0, ADPLUGIN_ASPEN_MENU,   _( "Aspen" ), aspen_menu,
+    wxMenu* popMenu = GetPopupMenu();
+    popMenu->Insert( 0, ADPLUGIN_ASPEN_MENU,   _( "Aspen" ), aspen_menu,
                      _( "Used in conjunction with Aspen" ) );
-    mPopMenu->Enable( ADPLUGIN_ASPEN_MENU, true );
+    popMenu->Enable( ADPLUGIN_ASPEN_MENU, true );
 }
 ////////////////////////////////////////////////////////////////////////////////
 ADPlugin::~ADPlugin()

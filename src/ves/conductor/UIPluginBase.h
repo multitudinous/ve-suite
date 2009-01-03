@@ -398,8 +398,6 @@ protected:
     std::pair< unsigned int, size_t > pluginDialogPair;
     ///THe plugin delete event
     wxUpdateUIEvent pluginDeleteEvent;
-    ///The member that stores the right click menu
-    wxMenu* mPopMenu;
 
 private:
     ///That's the for default implementation of the DrawIcon. 
@@ -412,6 +410,8 @@ private:
     wxBitmap* mMyIcon;
     ///The width and height of the icon
     int mIconW, mIconH;
+    ///The member that stores the right click menu
+    wxMenu* mPopMenu;
 
     DECLARE_DYNAMIC_CLASS( UIPluginBase )
     DECLARE_EVENT_TABLE()

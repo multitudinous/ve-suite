@@ -65,9 +65,10 @@ ADUOPlugin::ADUOPlugin() :
     aspen_menu->Enable( ADUOPLUGIN_SHOW_ASPEN_NAME, true );
     aspen_menu->Append( ADUOPLUGIN_QUERY_DYNAMICS, _( "Query Dynamics" ) );
     aspen_menu->Enable( ADUOPLUGIN_QUERY_DYNAMICS, true );
-    mPopMenu->Insert( 0, ADUOPLUGIN_ASPEN_MENU,   _( "Aspen" ), aspen_menu,
+    wxMenu* popMenu = GetPopupMenu();
+    popMenu->Insert( 0, ADUOPLUGIN_ASPEN_MENU,   _( "Aspen" ), aspen_menu,
                      _( "Used in conjunction with Aspen" ) );
-    mPopMenu->Enable( ADUOPLUGIN_ASPEN_MENU, true );
+    popMenu->Enable( ADUOPLUGIN_ASPEN_MENU, true );
 }
 ////////////////////////////////////////////////////////////////////////////////
 ADUOPlugin::~ADUOPlugin()

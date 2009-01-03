@@ -160,7 +160,8 @@ UIPluginBase::UIPluginBase() :
         m_dataSetLoaderDlg( 0 ),
         m_iconChooser( 0 ),
         mUserPrefBuffer( 0 ),
-        mDataBufferEngine( 0 )
+        mDataBufferEngine( 0 ),
+        mPopMenu( 0 )
 {
     pos = wxPoint( 0, 0 ); //default position
 
@@ -187,86 +188,6 @@ UIPluginBase::UIPluginBase() :
     defaultIconMap[ "vectortb.xpm" ] = wxImage( vectortb_xpm );
     
     pluginDeleteEvent.SetId( UIPLUGINBASE_DIALOG_PLUGIN_UPDATE );
-
-    //create the menu
-    mPopMenu = new wxMenu();
-    mPopMenu->Append( UIPLUGINBASE_SHOW_DESC, _( "Show Module Description" ) );
-    mPopMenu->Enable( UIPLUGINBASE_SHOW_DESC, true );
-    mPopMenu->Append( UIPLUGINBASE_USER_DIALOG, _( "User Dialog" ) );
-    mPopMenu->Enable( UIPLUGINBASE_USER_DIALOG, true );
-    mPopMenu->Append( UIPLUGINBASE_SHOW_RESULT, _( "Show Module Result" ) );
-    //mPopMenu->Enable( SHOW_RESULT, true);
-    mPopMenu->Enable( UIPLUGINBASE_SHOW_RESULT, false );
-    mPopMenu->Append( UIPLUGINBASE_PARAVIEW, _( "ParaView 3D Result" ) );
-    mPopMenu->Enable( UIPLUGINBASE_PARAVIEW, false );
-    if( Has3Ddata() )
-    {
-        mPopMenu->Enable( UIPLUGINBASE_PARAVIEW, true );
-    }
-    mPopMenu->Append( UIPLUGINBASE_SHOW_FINANCIAL, _( "Financial Data" ) );
-    mPopMenu->Enable( UIPLUGINBASE_SHOW_FINANCIAL, true );
-
-    //Toggle Plugin Menu
-    wxMenu* pluginMenu = new wxMenu();
-    pluginMenu->Append( UIPLUGINBASE_TOGGLE_ALL_ON, _( "Toggle All On" ) );
-    pluginMenu->Enable( UIPLUGINBASE_TOGGLE_ALL_ON, true );
-    pluginMenu->Append( UIPLUGINBASE_TOGGLE_PLUGIN_ON, _( "Toggle Plugin On" ) );
-    pluginMenu->Enable( UIPLUGINBASE_TOGGLE_PLUGIN_ON, true );
-    mPopMenu->Append( UIPLUGINBASE_TOGGLE_MENU, _( "Toggle Plugin" ), pluginMenu,
-                    _( "Used to toggle plugin" ) );
-    mPopMenu->Enable( UIPLUGINBASE_TOGGLE_MENU, true );
-
-    //Port Menu
-    wxMenu * port_menu = new wxMenu();
-    port_menu->Append( UIPLUGINBASE_ADD_INPUT_PORT, _( "Add Input Port" ) );
-    port_menu->Enable( UIPLUGINBASE_ADD_INPUT_PORT, true );
-    port_menu->Append( UIPLUGINBASE_ADD_OUTPUT_PORT, _( "Add Output Port" ) );
-    port_menu->Enable( UIPLUGINBASE_ADD_OUTPUT_PORT, true );
-    port_menu->Append( UIPLUGINBASE_DELETE_PORT, _( "Delete Port" ) );
-    port_menu->Enable( UIPLUGINBASE_DELETE_PORT, true );
-    mPopMenu->Append( ::wxNewId(), _( "Ports" ), port_menu,
-                     _( "Used to manipulate ports" ) );
-
-    //Icon Menu
-    wxMenu * icon_menu = new wxMenu();
-    icon_menu->Append( UIPLUGINBASE_SHOW_ICON_CHOOSER, _( "Icon Chooser" ) );
-    icon_menu->Enable( UIPLUGINBASE_SHOW_ICON_CHOOSER, true );
-    mPopMenu->Append( UIPLUGINBASE_ICON_MENU,   _( "Icon" ), icon_menu,
-                     _( "Controls for icon images" ) );
-    mPopMenu->Enable( UIPLUGINBASE_ICON_MENU, true );
-    
-    mPopMenu->Append( UIPLUGINBASE_NAVTO, _( "Navigate To" ) );
-    mPopMenu->Enable( UIPLUGINBASE_NAVTO, true );
-    // GUI to configure geometry for graphical env
-    mPopMenu->Append( UIPLUGINBASE_GEOMETRY, _( "Geometry Config" ) );
-    mPopMenu->Enable( UIPLUGINBASE_GEOMETRY, true );
-    // GUI to configure dataset for graphical env
-    mPopMenu->Append( UIPLUGINBASE_DATASET, _( "Data Set Config" ) );
-    mPopMenu->Enable( UIPLUGINBASE_DATASET, true );
-    //UI for input variables
-    mPopMenu->Append( UIPLUGINBASE_MODEL_INPUTS, _( "Input Variables" ) );
-    mPopMenu->Enable( UIPLUGINBASE_MODEL_INPUTS, true );
-    //UI for results variables
-    mPopMenu->Append( UIPLUGINBASE_MODEL_RESULTS, _( "Result Variables" ) );
-    mPopMenu->Enable( UIPLUGINBASE_MODEL_RESULTS, true );
-    //UI for vis variables
-    mPopMenu->Append( UIPLUGINBASE_VISUALIZATION, _( "Visualization" ) );
-    mPopMenu->Enable( UIPLUGINBASE_VISUALIZATION, true );
-    //Sounds dialog
-    mPopMenu->Append( UIPLUGINBASE_ACTIVE_MODEL_SOUNDS, _( "Model Sounds" ) );
-    mPopMenu->Enable( UIPLUGINBASE_ACTIVE_MODEL_SOUNDS, true );
-    //Make a specific plusing active in xplorer
-    mPopMenu->Append( UIPLUGINBASE_SET_ACTIVE_MODEL, _( "Set Active Xplorer Model" ) );
-    mPopMenu->Enable( UIPLUGINBASE_SET_ACTIVE_MODEL, true );
-    //Set the plugin name for a model
-    mPopMenu->Append( UIPLUGINBASE_SET_UI_PLUGIN_NAME, _( "Set UI Plugin Name" ) );
-    mPopMenu->Enable( UIPLUGINBASE_SET_UI_PLUGIN_NAME, true );
-    mPopMenu->Append( UIPLUGINBASE_DEL_MOD, _( "Del Module" ) );
-    mPopMenu->Enable( UIPLUGINBASE_DEL_MOD, true );
-    mPopMenu->Append( UIPLUGINBASE_MAKE_HIER, _( "Make Into Hierarchy" ) );
-    mPopMenu->Enable( UIPLUGINBASE_MAKE_HIER, true );
-
-    //mPopMenu->SetClientData( &id );
 }
 ////////////////////////////////////////////////////////////////////////////////
 UIPluginBase::~UIPluginBase()
@@ -348,6 +269,11 @@ void UIPluginBase::SetID( int id )
 void UIPluginBase::SetName( wxString pluginName )
 {
     mPluginName = pluginName;
+    if( mPopMenu )
+    {    
+        wxString menuName = mPluginName + wxString( " Menu", wxConvUTF8 );
+        mPopMenu->SetTitle( menuName );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIPluginBase::SetPos( wxPoint pt )
@@ -769,7 +695,7 @@ void UIPluginBase::SetVEModel( ves::open::xml::model::ModelWeakPtr tempModel )
     m_veModel = tempModel.lock();
 
     //veModel->SetObjectFromXMLData( modelElement );
-    mPluginName = wxString( m_veModel->GetPluginName().c_str(), wxConvUTF8 );
+    SetName( wxString( m_veModel->GetPluginName().c_str(), wxConvUTF8 ) );
     id = m_veModel->GetModelID();
     parentModel = m_veModel->GetParentModel();
     std::string tempFilename = m_veModel->GetIconFilename();
@@ -1116,7 +1042,7 @@ void UIPluginBase::SetPluginNameDialog( void )
 
     if( newPluginName.ShowModal() == wxID_OK )
     {
-        mPluginName = newPluginName.GetValue();
+        SetName( newPluginName.GetValue() );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -1888,10 +1814,8 @@ void UIPluginBase::OnMRightDown( wxMouseEvent& event )
     //m_canvas->Refresh( true );
 
     SendActiveId();
-    wxString menuName = mPluginName + wxString( " Menu", wxConvUTF8 );
-    mPopMenu->SetTitle( menuName );
 
-    m_canvas->PopupMenu( mPopMenu );
+    m_canvas->PopupMenu( GetPopupMenu() );
 
     m_selFrPort = -1;
     m_selToPort = -1;
@@ -2005,7 +1929,10 @@ void UIPluginBase::OnMakeIntoHierarchy( wxCommandEvent& event )
 ////////////////////////////////////////////////////////////////////////////////
 void UIPluginBase::SetAsHierarchy( )
 {
-    mPopMenu->Enable( UIPLUGINBASE_MAKE_HIER, false );
+    if( mPopMenu )
+    {
+        mPopMenu->Enable( UIPLUGINBASE_MAKE_HIER, false );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIPluginBase::SetDCScale( std::pair< double, double >* scale )
@@ -2366,6 +2293,92 @@ void UIPluginBase::TogglePlugin( wxCommandEvent& event )
 ////////////////////////////////////////////////////////////////////////////////
 wxMenu* UIPluginBase::GetPopupMenu()
 {
+        //create the menu
+    if( mPopMenu )
+    {
+        return mPopMenu;
+    }
+    mPopMenu = new wxMenu();
+    wxString menuName = mPluginName + wxString( " Menu", wxConvUTF8 );
+    mPopMenu->SetTitle( menuName );
+    mPopMenu->Append( UIPLUGINBASE_SHOW_DESC, _( "Show Module Description" ) );
+    mPopMenu->Enable( UIPLUGINBASE_SHOW_DESC, true );
+    mPopMenu->Append( UIPLUGINBASE_USER_DIALOG, _( "User Dialog" ) );
+    mPopMenu->Enable( UIPLUGINBASE_USER_DIALOG, true );
+    mPopMenu->Append( UIPLUGINBASE_SHOW_RESULT, _( "Show Module Result" ) );
+    //mPopMenu->Enable( SHOW_RESULT, true);
+    mPopMenu->Enable( UIPLUGINBASE_SHOW_RESULT, false );
+    mPopMenu->Append( UIPLUGINBASE_PARAVIEW, _( "ParaView 3D Result" ) );
+    mPopMenu->Enable( UIPLUGINBASE_PARAVIEW, false );
+    if( Has3Ddata() )
+    {
+        mPopMenu->Enable( UIPLUGINBASE_PARAVIEW, true );
+    }
+    mPopMenu->Append( UIPLUGINBASE_SHOW_FINANCIAL, _( "Financial Data" ) );
+    mPopMenu->Enable( UIPLUGINBASE_SHOW_FINANCIAL, true );
+
+    //Toggle Plugin Menu
+    wxMenu* pluginMenu = new wxMenu();
+    pluginMenu->Append( UIPLUGINBASE_TOGGLE_ALL_ON, _( "Toggle All On" ) );
+    pluginMenu->Enable( UIPLUGINBASE_TOGGLE_ALL_ON, true );
+    pluginMenu->Append( UIPLUGINBASE_TOGGLE_PLUGIN_ON, _( "Toggle Plugin On" ) );
+    pluginMenu->Enable( UIPLUGINBASE_TOGGLE_PLUGIN_ON, true );
+    mPopMenu->Append( UIPLUGINBASE_TOGGLE_MENU, _( "Toggle Plugin" ), pluginMenu,
+                    _( "Used to toggle plugin" ) );
+    mPopMenu->Enable( UIPLUGINBASE_TOGGLE_MENU, true );
+
+    //Port Menu
+    wxMenu * port_menu = new wxMenu();
+    port_menu->Append( UIPLUGINBASE_ADD_INPUT_PORT, _( "Add Input Port" ) );
+    port_menu->Enable( UIPLUGINBASE_ADD_INPUT_PORT, true );
+    port_menu->Append( UIPLUGINBASE_ADD_OUTPUT_PORT, _( "Add Output Port" ) );
+    port_menu->Enable( UIPLUGINBASE_ADD_OUTPUT_PORT, true );
+    port_menu->Append( UIPLUGINBASE_DELETE_PORT, _( "Delete Port" ) );
+    port_menu->Enable( UIPLUGINBASE_DELETE_PORT, true );
+    mPopMenu->Append( ::wxNewId(), _( "Ports" ), port_menu,
+                     _( "Used to manipulate ports" ) );
+
+    //Icon Menu
+    wxMenu * icon_menu = new wxMenu();
+    icon_menu->Append( UIPLUGINBASE_SHOW_ICON_CHOOSER, _( "Icon Chooser" ) );
+    icon_menu->Enable( UIPLUGINBASE_SHOW_ICON_CHOOSER, true );
+    mPopMenu->Append( UIPLUGINBASE_ICON_MENU,   _( "Icon" ), icon_menu,
+                     _( "Controls for icon images" ) );
+    mPopMenu->Enable( UIPLUGINBASE_ICON_MENU, true );
+    
+    mPopMenu->Append( UIPLUGINBASE_NAVTO, _( "Navigate To" ) );
+    mPopMenu->Enable( UIPLUGINBASE_NAVTO, true );
+    // GUI to configure geometry for graphical env
+    mPopMenu->Append( UIPLUGINBASE_GEOMETRY, _( "Geometry Config" ) );
+    mPopMenu->Enable( UIPLUGINBASE_GEOMETRY, true );
+    // GUI to configure dataset for graphical env
+    mPopMenu->Append( UIPLUGINBASE_DATASET, _( "Data Set Config" ) );
+    mPopMenu->Enable( UIPLUGINBASE_DATASET, true );
+    //UI for input variables
+    mPopMenu->Append( UIPLUGINBASE_MODEL_INPUTS, _( "Input Variables" ) );
+    mPopMenu->Enable( UIPLUGINBASE_MODEL_INPUTS, true );
+    //UI for results variables
+    mPopMenu->Append( UIPLUGINBASE_MODEL_RESULTS, _( "Result Variables" ) );
+    mPopMenu->Enable( UIPLUGINBASE_MODEL_RESULTS, true );
+    //UI for vis variables
+    mPopMenu->Append( UIPLUGINBASE_VISUALIZATION, _( "Visualization" ) );
+    mPopMenu->Enable( UIPLUGINBASE_VISUALIZATION, true );
+    //Sounds dialog
+    mPopMenu->Append( UIPLUGINBASE_ACTIVE_MODEL_SOUNDS, _( "Model Sounds" ) );
+    mPopMenu->Enable( UIPLUGINBASE_ACTIVE_MODEL_SOUNDS, true );
+    //Make a specific plusing active in xplorer
+    mPopMenu->Append( UIPLUGINBASE_SET_ACTIVE_MODEL, _( "Set Active Xplorer Model" ) );
+    mPopMenu->Enable( UIPLUGINBASE_SET_ACTIVE_MODEL, true );
+    //Set the plugin name for a model
+    mPopMenu->Append( UIPLUGINBASE_SET_UI_PLUGIN_NAME, _( "Set UI Plugin Name" ) );
+    mPopMenu->Enable( UIPLUGINBASE_SET_UI_PLUGIN_NAME, true );
+    mPopMenu->Append( UIPLUGINBASE_DEL_MOD, _( "Del Module" ) );
+    mPopMenu->Enable( UIPLUGINBASE_DEL_MOD, true );
+    mPopMenu->Append( UIPLUGINBASE_MAKE_HIER, _( "Make Into Hierarchy" ) );
+    mPopMenu->Enable( UIPLUGINBASE_MAKE_HIER, true );
+
+    //mPopMenu->SetClientData( &id );
+
     return mPopMenu;
 }
 ////////////////////////////////////////////////////////////////////////////////

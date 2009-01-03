@@ -81,9 +81,10 @@ APUOPlugin::APUOPlugin() :
     aspen_menu->Enable( APUOPLUGIN_QUERY_OUTPUTS, true );
     aspen_menu->Append( APUOPLUGIN_REINIT_BLOCK, _( "Reinitialize" ) );
     aspen_menu->Enable( APUOPLUGIN_REINIT_BLOCK, true );
-    mPopMenu->Insert( 0, APUOPLUGIN_ASPEN_MENU,   _( "Aspen" ), aspen_menu,
+    wxMenu* popMenu = GetPopupMenu();
+    popMenu->Insert( 0, APUOPLUGIN_ASPEN_MENU,   _( "Aspen" ), aspen_menu,
                      _( "Used in conjunction with Aspen" ) );
-    mPopMenu->Enable( APUOPLUGIN_ASPEN_MENU, true );
+    popMenu->Enable( APUOPLUGIN_ASPEN_MENU, true );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
