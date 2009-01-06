@@ -21,6 +21,7 @@ xerces_options.apply( lib_env )
 wxwidgets_options.apply( lib_env )
 vpr_options.apply( lib_env )
 lib_env.Append( CPPDEFINES = ['VE_GUIPLUGINS_LIBRARY','VE_CONDUCTOR_UTILS_LIBRARY'])
+lib_env.Append( CXXFLAGS = [ '/bigobj' ] )
    
 if baseEnv['StaticLibs'] == "yes":
    lib = ves_pkg.createStaticAndSharedLibrary('ves_conductor_plugin',
