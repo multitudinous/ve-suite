@@ -77,7 +77,8 @@ IMPLEMENT_DYNAMIC_CLASS( ADPlugin, UIPluginBase )
 
 /////////////////////////////////////////////////////////////////////////////
 ADPlugin::ADPlugin() :
-    UIPluginBase()
+    UIPluginBase(),
+    mAspenMenu( 0 )
 {
     mPluginName = wxString( "AspenDynamics", wxConvUTF8 );
     //GetVEModel()->SetPluginType( "ADPlugin" );
@@ -85,30 +86,6 @@ ADPlugin::ADPlugin() :
     iconFilename = "dynamics";
     wxImage my_img( dynamics );
     SetImage( my_img );
-
-    wxMenu * aspen_menu = new wxMenu();
-    aspen_menu->Append( ADPLUGIN_OPEN_SIM, _( "Open" ) );
-    aspen_menu->Enable( ADPLUGIN_OPEN_SIM, true );
-    aspen_menu->Append( ADPLUGIN_SHOW_ASPEN_SIMULATION, _( "Show Simulation" ) );
-    aspen_menu->Enable( ADPLUGIN_SHOW_ASPEN_SIMULATION, true );
-    aspen_menu->Append( ADPLUGIN_HIDE_ASPEN_SIMULATION, _( "Hide Simulation" ) );
-    aspen_menu->Enable( ADPLUGIN_HIDE_ASPEN_SIMULATION, true );
-    aspen_menu->Append( ADPLUGIN_CLOSE_ASPEN_SIMULATION, _( "Close Simulation" ) );
-    aspen_menu->Enable( ADPLUGIN_CLOSE_ASPEN_SIMULATION, true );
-    aspen_menu->Append( ADPLUGIN_RUN_ASPEN_NETWORK, _( "Run" ) );
-    aspen_menu->Enable( ADPLUGIN_RUN_ASPEN_NETWORK, true );
-	aspen_menu->Append( ADPLUGIN_REINITIALIZE_ASPEN_SIMULATION, _( "Reinitialize" ) );
-	aspen_menu->Enable( ADPLUGIN_REINITIALIZE_ASPEN_SIMULATION, true );
-    aspen_menu->Append( ADPLUGIN_STEP_ASPEN_NETWORK, _( "Step" ) );
-    aspen_menu->Enable( ADPLUGIN_STEP_ASPEN_NETWORK, true );
-    aspen_menu->Append( ADPLUGIN_SAVE_SIMULATION, _( "Save Simulation" ) );
-    aspen_menu->Enable( ADPLUGIN_SAVE_SIMULATION, true );
-    aspen_menu->Append( ADPLUGIN_SAVEAS_SIMULATION, _( "SaveAs Simulation" ) );
-    aspen_menu->Enable( ADPLUGIN_SAVEAS_SIMULATION, true );
-    wxMenu* popMenu = GetPopupMenu();
-    popMenu->Insert( 0, ADPLUGIN_ASPEN_MENU,   _( "Aspen" ), aspen_menu,
-                     _( "Used in conjunction with Aspen" ) );
-    popMenu->Enable( ADPLUGIN_ASPEN_MENU, true );
 }
 ////////////////////////////////////////////////////////////////////////////////
 ADPlugin::~ADPlugin()
@@ -432,4 +409,37 @@ void ADPlugin::SaveAsSimulation( wxCommandEvent& event )
                    ConvertUnicode( saveFileName.GetFullName().c_str() ) );
     aspenAPWFile->AddDataValuePair( data );
     mUserPrefBuffer->SetCommand( "Aspen_Plus_Preferences", aspenAPWFile );
+}
+////////////////////////////////////////////////////////////////////////////////
+wxMenu* ADPlugin::GetPluginPopupMenu( wxMenu* baseMenu )
+{
+    if( mAspenMenu )
+    {
+        return baseMenu;
+    }
+
+    mAspenMenu = new wxMenu();
+    mAspenMenu->Append( ADPLUGIN_OPEN_SIM, _( "Open" ) );
+    mAspenMenu->Enable( ADPLUGIN_OPEN_SIM, true );
+    mAspenMenu->Append( ADPLUGIN_SHOW_ASPEN_SIMULATION, _( "Show Simulation" ) );
+    mAspenMenu->Enable( ADPLUGIN_SHOW_ASPEN_SIMULATION, true );
+    mAspenMenu->Append( ADPLUGIN_HIDE_ASPEN_SIMULATION, _( "Hide Simulation" ) );
+    mAspenMenu->Enable( ADPLUGIN_HIDE_ASPEN_SIMULATION, true );
+    mAspenMenu->Append( ADPLUGIN_CLOSE_ASPEN_SIMULATION, _( "Close Simulation" ) );
+    mAspenMenu->Enable( ADPLUGIN_CLOSE_ASPEN_SIMULATION, true );
+    mAspenMenu->Append( ADPLUGIN_RUN_ASPEN_NETWORK, _( "Run" ) );
+    mAspenMenu->Enable( ADPLUGIN_RUN_ASPEN_NETWORK, true );
+	mAspenMenu->Append( ADPLUGIN_REINITIALIZE_ASPEN_SIMULATION, _( "Reinitialize" ) );
+	mAspenMenu->Enable( ADPLUGIN_REINITIALIZE_ASPEN_SIMULATION, true );
+    mAspenMenu->Append( ADPLUGIN_STEP_ASPEN_NETWORK, _( "Step" ) );
+    mAspenMenu->Enable( ADPLUGIN_STEP_ASPEN_NETWORK, true );
+    mAspenMenu->Append( ADPLUGIN_SAVE_SIMULATION, _( "Save Simulation" ) );
+    mAspenMenu->Enable( ADPLUGIN_SAVE_SIMULATION, true );
+    mAspenMenu->Append( ADPLUGIN_SAVEAS_SIMULATION, _( "SaveAs Simulation" ) );
+    mAspenMenu->Enable( ADPLUGIN_SAVEAS_SIMULATION, true );
+
+    baseMenu->Insert( 0, ADPLUGIN_ASPEN_MENU,   _( "Aspen" ), mAspenMenu,
+                    _( "Used in conjunction with Aspen" ) );
+    baseMenu->Enable( ADPLUGIN_ASPEN_MENU, true );
+    return baseMenu;
 }

@@ -66,25 +66,11 @@ IMPLEMENT_DYNAMIC_CLASS( APUOPlugin, UIPluginBase )
 
 /////////////////////////////////////////////////////////////////////////////
 APUOPlugin::APUOPlugin() :
-    UIPluginBase()
+    UIPluginBase(),
+    mAspenMenu( 0 )
 {
     mPluginName = wxString( "AspenPlusUO", wxConvUTF8 );
     //GetVEModel()->SetPluginType( "APUOPlugin" );
-
-    //Aspen Menu
-    wxMenu * aspen_menu = new wxMenu();
-    aspen_menu->Append( APUOPLUGIN_SHOW_ASPEN_NAME, _( "Aspen Name" ) );
-    aspen_menu->Enable( APUOPLUGIN_SHOW_ASPEN_NAME, true );
-    aspen_menu->Append( APUOPLUGIN_QUERY_INPUTS, _( "Query Inputs" ) );
-    aspen_menu->Enable( APUOPLUGIN_QUERY_INPUTS, true );
-    aspen_menu->Append( APUOPLUGIN_QUERY_OUTPUTS, _( "Query Outputs" ) );
-    aspen_menu->Enable( APUOPLUGIN_QUERY_OUTPUTS, true );
-    aspen_menu->Append( APUOPLUGIN_REINIT_BLOCK, _( "Reinitialize" ) );
-    aspen_menu->Enable( APUOPLUGIN_REINIT_BLOCK, true );
-    wxMenu* popMenu = GetPopupMenu();
-    popMenu->Insert( 0, APUOPLUGIN_ASPEN_MENU,   _( "Aspen" ), aspen_menu,
-                     _( "Used in conjunction with Aspen" ) );
-    popMenu->Enable( APUOPLUGIN_ASPEN_MENU, true );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -295,3 +281,26 @@ void  APUOPlugin::OnQueryOutputs( wxCommandEvent& event )
     //Get results
     serviceList->Query( status );
 }*/
+////////////////////////////////////////////////////////////////////////////////
+wxMenu* APUOPlugin::GetPluginPopupMenu( wxMenu* baseMenu )
+{
+    if( mAspenMenu )
+    {
+        return baseMenu;
+    }
+    
+    mAspenMenu = new wxMenu();
+    mAspenMenu->Append( APUOPLUGIN_SHOW_ASPEN_NAME, _( "Aspen Name" ) );
+    mAspenMenu->Enable( APUOPLUGIN_SHOW_ASPEN_NAME, true );
+    mAspenMenu->Append( APUOPLUGIN_QUERY_INPUTS, _( "Query Inputs" ) );
+    mAspenMenu->Enable( APUOPLUGIN_QUERY_INPUTS, true );
+    mAspenMenu->Append( APUOPLUGIN_QUERY_OUTPUTS, _( "Query Outputs" ) );
+    mAspenMenu->Enable( APUOPLUGIN_QUERY_OUTPUTS, true );
+    mAspenMenu->Append( APUOPLUGIN_REINIT_BLOCK, _( "Reinitialize" ) );
+    mAspenMenu->Enable( APUOPLUGIN_REINIT_BLOCK, true );
+    
+    baseMenu->Insert( 0, APUOPLUGIN_ASPEN_MENU,   _( "Aspen" ), mAspenMenu,
+                    _( "Used in conjunction with Aspen" ) );
+    baseMenu->Enable( APUOPLUGIN_ASPEN_MENU, true );
+    return baseMenu;
+}

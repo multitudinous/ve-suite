@@ -37,6 +37,8 @@
 
 #include <wx/event.h>
 
+class wxMenu;
+
 namespace ves
 {
 namespace conductor
@@ -52,6 +54,8 @@ public:
     wxString GetConductorName();
 
 protected:
+    virtual wxMenu* GetPluginPopupMenu( wxMenu* baseMenu );
+
     void OnOpen( wxCommandEvent& event );
     void ShowAspenSimulation( wxCommandEvent& event );
     void HideAspenSimulation( wxCommandEvent& event );
@@ -62,6 +66,8 @@ protected:
     void SaveSimulation( wxCommandEvent& event );
     void SaveAsSimulation( wxCommandEvent& event );
     void OnCloseAspenSimulation( wxCommandEvent& event );
+    
+    wxMenu* mAspenMenu;
 
     DECLARE_EVENT_TABLE()
 };

@@ -54,21 +54,12 @@ IMPLEMENT_DYNAMIC_CLASS( ADUOPlugin, UIPluginBase )
 
 /////////////////////////////////////////////////////////////////////////////
 ADUOPlugin::ADUOPlugin() :
-    UIPluginBase()
+    UIPluginBase(),
+    mAspenMenu( 0 )
 {
     mPluginName = wxString( "AspenDynamicsUO", wxConvUTF8 );
     //GetVEModel()->SetPluginType( "ADUOPlugin" );
 
-    //Aspen Menu
-    wxMenu * aspen_menu = new wxMenu();
-    aspen_menu->Append( ADUOPLUGIN_SHOW_ASPEN_NAME, _( "Aspen Name" ) );
-    aspen_menu->Enable( ADUOPLUGIN_SHOW_ASPEN_NAME, true );
-    aspen_menu->Append( ADUOPLUGIN_QUERY_DYNAMICS, _( "Query Dynamics" ) );
-    aspen_menu->Enable( ADUOPLUGIN_QUERY_DYNAMICS, true );
-    wxMenu* popMenu = GetPopupMenu();
-    popMenu->Insert( 0, ADUOPLUGIN_ASPEN_MENU,   _( "Aspen" ), aspen_menu,
-                     _( "Used in conjunction with Aspen" ) );
-    popMenu->Enable( ADUOPLUGIN_ASPEN_MENU, true );
 }
 ////////////////////////////////////////////////////////////////////////////////
 ADUOPlugin::~ADUOPlugin()
@@ -110,7 +101,7 @@ void  ADUOPlugin::OnShowAspenName( wxCommandEvent& event )
 //}
 
 ////////////////////////////////////////////////////////////////////////////////
-void  ADUOPlugin::OnQueryDynamics( wxCommandEvent& event )
+void ADUOPlugin::OnQueryDynamics( wxCommandEvent& event )
 {
     UIPLUGIN_CHECKID( event )
     std::string compName = GetVEModel()->GetPluginName();
@@ -173,4 +164,22 @@ void  ADUOPlugin::OnQueryDynamics( wxCommandEvent& event )
     params->UpdateSizes();
     params->ShowModal();
     params->Destroy();
+}
+////////////////////////////////////////////////////////////////////////////////
+wxMenu* ADUOPlugin::GetPluginPopupMenu( wxMenu* baseMenu )
+{
+    if( mAspenMenu )
+    {
+        return baseMenu;
+    }
+    
+    mAspenMenu = new wxMenu();
+    mAspenMenu->Append( ADUOPLUGIN_SHOW_ASPEN_NAME, _( "Aspen Name" ) );
+    mAspenMenu->Enable( ADUOPLUGIN_SHOW_ASPEN_NAME, true );
+    mAspenMenu->Append( ADUOPLUGIN_QUERY_DYNAMICS, _( "Query Dynamics" ) );
+    mAspenMenu->Enable( ADUOPLUGIN_QUERY_DYNAMICS, true );
+    baseMenu->Insert( 0, ADUOPLUGIN_ASPEN_MENU,   _( "Aspen" ), mAspenMenu,
+                    _( "Used in conjunction with Aspen" ) );
+    baseMenu->Enable( ADUOPLUGIN_ASPEN_MENU, true );
+    return baseMenu;
 }

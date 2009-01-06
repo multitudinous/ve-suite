@@ -281,8 +281,10 @@ public:
     void SendActiveId();
     void SetAsHierarchy( );
     wxBitmap* GetIconImage();
-
+    
 protected:
+    virtual wxMenu* GetPluginPopupMenu( wxMenu* baseMenu );
+
     void GetDataTables( ves::open::xml::CommandPtr inputCommand,
                         std::vector< wxString >& tagNames,
                         std::vector< wxString >& values );

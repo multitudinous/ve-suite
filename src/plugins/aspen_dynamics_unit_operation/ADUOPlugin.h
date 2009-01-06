@@ -37,6 +37,8 @@
 
 #include <wx/event.h>
 
+class wxMenu;
+
 namespace ves
 {
 namespace conductor
@@ -52,7 +54,9 @@ public:
     void OnShowAspenName( wxCommandEvent& event );
     void OnQueryDynamics( wxCommandEvent& event );
     wxString GetConductorName();
-    
+    virtual wxMenu* GetPluginPopupMenu( wxMenu* baseMenu );
+
+    wxMenu* mAspenMenu;
     DECLARE_EVENT_TABLE()
 };
 }

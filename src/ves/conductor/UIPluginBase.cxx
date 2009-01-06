@@ -1814,8 +1814,10 @@ void UIPluginBase::OnMRightDown( wxMouseEvent& event )
     //m_canvas->Refresh( true );
 
     SendActiveId();
-
-    m_canvas->PopupMenu( GetPopupMenu() );
+    
+    wxMenu* baseMenu = GetPopupMenu();
+    wxMenu* completeMenu = GetPluginPopupMenu( baseMenu );
+    m_canvas->PopupMenu( completeMenu );
 
     m_selFrPort = -1;
     m_selToPort = -1;
@@ -2389,4 +2391,9 @@ void UIPluginBase::SendActiveId()
     setActivePluginId.SetClientData( &id );
     setActivePluginId.SetId( UIPLUGINBASE_SET_ACTIVE_PLUGIN );
     m_canvas->GetEventHandler()->ProcessEvent( setActivePluginId );
+}
+////////////////////////////////////////////////////////////////////////////////
+wxMenu* UIPluginBase::GetPluginPopupMenu( wxMenu* baseMenu )
+{
+    return baseMenu;
 }
