@@ -199,7 +199,7 @@
 #include <ves/conductor/xpm/AspenPlus2DIcons/hetran_hetran_k_ht_1.xpm>                                                  
 #include <ves/conductor/xpm/AspenPlus2DIcons/hetran_hetran_k_ht_2.xpm>                                                  
 #include <ves/conductor/xpm/AspenPlus2DIcons/hetran_hetran_simp_hs.xpm>                                                 
-#include <ves/conductor/xpm/AspenPlus2DIcons/hetran_hetran_smp_ht.xpm>                                                  
+#include <ves/conductor/xpm/AspenPlus2DIcons/hetran_hetran_simp_ht.xpm>                                                  
 #include <ves/conductor/xpm/AspenPlus2DIcons/hetran_hetran_x_hs_1.xpm>                                                  
 #include <ves/conductor/xpm/AspenPlus2DIcons/hetran_hetran_x_hs_2.xpm>                                                  
 #include <ves/conductor/xpm/AspenPlus2DIcons/hetran_hetran_x_ht_1.xpm>                                                  
@@ -236,7 +236,7 @@
 #include <ves/conductor/xpm/AspenPlus2DIcons/htrixist_htrixist_k_ht_1.xpm>                                              
 #include <ves/conductor/xpm/AspenPlus2DIcons/htrixist_htrixist_k_ht_2.xpm>                                              
 #include <ves/conductor/xpm/AspenPlus2DIcons/htrixist_htrixist_simp_hs.xpm>                                             
-#include <ves/conductor/xpm/AspenPlus2DIcons/htrixist_htrixist_smp_ht.xpm>                                              
+#include <ves/conductor/xpm/AspenPlus2DIcons/htrixist_htrixist_simp_ht.xpm>                                              
 #include <ves/conductor/xpm/AspenPlus2DIcons/htrixist_htrixist_x_hs_1.xpm>                                              
 #include <ves/conductor/xpm/AspenPlus2DIcons/htrixist_htrixist_x_hs_2.xpm>                                              
 #include <ves/conductor/xpm/AspenPlus2DIcons/htrixist_htrixist_x_ht_1.xpm>                                              
@@ -260,7 +260,7 @@
 #include <ves/conductor/xpm/AspenPlus2DIcons/measurement_measurement_findictr.xpm>                                      
 #include <ves/conductor/xpm/AspenPlus2DIcons/measurement_measurement_lcontlr.xpm>                                       
 #include <ves/conductor/xpm/AspenPlus2DIcons/measurement_measurement_lindictr.xpm>                                      
-#include <ves/conductor/xpm/AspenPlus2DIcons/measurement_measurement_measure1.xpm>                                      
+#include <ves/conductor/xpm/AspenPlus2DIcons/measurement_measurement_measure.xpm>                                      
 #include <ves/conductor/xpm/AspenPlus2DIcons/measurement_measurement_measure2.xpm>                                      
 #include <ves/conductor/xpm/AspenPlus2DIcons/measurement_measurement_measure3.xpm>                                      
 #include <ves/conductor/xpm/AspenPlus2DIcons/measurement_measurement_measure4.xpm>                                      
@@ -783,7 +783,7 @@ std::map< std::string, char** > GetAspenPlusIconMap()
     tempIconMap[ "hetran_hetran_k_ht_1.xpm"] =                                hetran_hetran_k_ht_1;                      
     tempIconMap[ "hetran_hetran_k_ht_2.xpm"] =                                hetran_hetran_k_ht_2;                      
     tempIconMap[ "hetran_hetran_simp_hs.xpm"] =                               hetran_hetran_simp_hs;                     
-    tempIconMap[ "hetran_hetran_smp_ht.xpm"] =                                hetran_hetran_smp_ht;                      
+    tempIconMap[ "hetran_hetran_simp_ht.xpm"] =                               hetran_hetran_simp_ht;                      
     tempIconMap[ "hetran_hetran_x_hs_1.xpm"] =                                hetran_hetran_x_hs_1;                      
     tempIconMap[ "hetran_hetran_x_hs_2.xpm"] =                                hetran_hetran_x_hs_2;                      
     tempIconMap[ "hetran_hetran_x_ht_1.xpm"] =                                hetran_hetran_x_ht_1;                      
@@ -820,7 +820,7 @@ std::map< std::string, char** > GetAspenPlusIconMap()
     tempIconMap[ "htrixist_htrixist_k_ht_1.xpm"] =                            htrixist_htrixist_k_ht_1;                  
     tempIconMap[ "htrixist_htrixist_k_ht_2.xpm"] =                            htrixist_htrixist_k_ht_2;                  
     tempIconMap[ "htrixist_htrixist_simp_hs.xpm"] =                           htrixist_htrixist_simp_hs;                 
-    tempIconMap[ "htrixist_htrixist_smp_ht.xpm"] =                            htrixist_htrixist_smp_ht;                  
+    tempIconMap[ "htrixist_htrixist_simp_ht.xpm"] =                           htrixist_htrixist_simp_ht;                  
     tempIconMap[ "htrixist_htrixist_x_hs_1.xpm"] =                            htrixist_htrixist_x_hs_1;                  
     tempIconMap[ "htrixist_htrixist_x_hs_2.xpm"] =                            htrixist_htrixist_x_hs_2;                  
     tempIconMap[ "htrixist_htrixist_x_ht_1.xpm"] =                            htrixist_htrixist_x_ht_1;                  
@@ -844,7 +844,7 @@ std::map< std::string, char** > GetAspenPlusIconMap()
     tempIconMap[ "measurement_measurement_findictr.xpm"] =                    measurement_measurement_findictr;          
     tempIconMap[ "measurement_measurement_lcontlr.xpm"] =                     measurement_measurement_lcontlr;           
     tempIconMap[ "measurement_measurement_lindictr.xpm"] =                    measurement_measurement_lindictr;          
-    tempIconMap[ "measurement_measurement_measure1.xpm"] =                    measurement_measurement_measure1;          
+    tempIconMap[ "measurement_measurement_measure.xpm"] =                     measurement_measurement_measure;          
     tempIconMap[ "measurement_measurement_measure2.xpm"] =                    measurement_measurement_measure2;          
     tempIconMap[ "measurement_measurement_measure3.xpm"] =                    measurement_measurement_measure3;          
     tempIconMap[ "measurement_measurement_measure4.xpm"] =                    measurement_measurement_measure4;          
