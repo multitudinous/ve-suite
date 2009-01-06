@@ -67,6 +67,14 @@ namespace ves
 {
 namespace xplorer
 {
+namespace rtt
+{
+class Processor;
+class UnitCameraAttachmentBypass;
+class UnitInOut;
+class UnitOut;
+}
+
 /*!\file SceneRenderToTexture.h
  */
 
@@ -121,8 +129,8 @@ public:
 
     ///Update something
     ////NOTE: Must have an active context to call
-    void UpdateRTTQuadAndViewportMatrix( osgUtil::SceneView* sceneView, 
-                                        osg::Matrixd quadTransform );
+    void UpdateRTTQuadAndViewportMatrix(
+        osgUtil::SceneView* sceneView, osg::Matrixd quadTransform );
 
     ///Update the projection and viewport information for the rtt's cameras
     ///NOTE: Must have an active context to call
@@ -140,17 +148,20 @@ protected:
 private:
     ///
     osg::Geode* CreateFullScreenTexturedQuad(
-                                             std::pair< int, int > screenDims, osg::Texture2D* colorTexture );
+        std::pair< int, int > screenDims, osg::Texture2D* colorTexture );
     
     ///
     osg::Texture2D* CreateFBOTexture(
-                                     std::pair< int, int >& screenDims, float scale = 1.0f );
+        std::pair< int, int >& screenDims, float scale = 1.0f );
     
     ///Create the camera with the appropriate settings to render to an FBO
     void InitCamera( std::pair< int, int >& screenDims );
 
     ///Create the texture of the appropriate size for the FBO to write to
     void InitTextures( std::pair< int, int >& screenDims );
+
+    void InitRTTPipeline(
+        std::pair< int, int >& screenDims, osg::Camera* const sceneViewCamera );
     
     ///The root group that everything gets added to
     osg::ref_ptr< osg::Group > mRootGroup;
@@ -183,8 +194,31 @@ private:
     vrj::GlContextData< osg::ref_ptr< osg::Texture2D > > mDepthStencilTexture;
 
     ///
-    ///
     vrj::GlContextData< osg::ref_ptr< osg::MatrixTransform > > mQuad;
+
+    ///
+    vrj::GlContextData< osg::ref_ptr< rtt::Processor > >
+        mProcessor;
+
+    ///
+    vrj::GlContextData< osg::ref_ptr< rtt::UnitCameraAttachmentBypass > >
+        mColorBuffer0;
+
+    ///
+    vrj::GlContextData< osg::ref_ptr< rtt::UnitCameraAttachmentBypass > >
+        mColorBuffer1;
+
+    ///
+    vrj::GlContextData< osg::ref_ptr< rtt::UnitInOut > > mBlurX;
+
+    ///
+    vrj::GlContextData< osg::ref_ptr< rtt::UnitInOut > > mBlurY;
+
+    ///
+    vrj::GlContextData< osg::ref_ptr< rtt::UnitInOut > > mFinal;
+
+    ///
+    vrj::GlContextData< osg::ref_ptr< rtt::UnitOut > > mQuadOut;
 
 };
 } //end xplorer

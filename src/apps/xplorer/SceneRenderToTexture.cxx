@@ -32,7 +32,12 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
 // --- VE-Suite Includes --- //
-#include "SceneRenderToTexture.h"
+#include <apps/xplorer/SceneRenderToTexture.h>
+
+#include <apps/xplorer/rtt/Processor.h>
+#include <apps/xplorer/rtt/UnitCameraAttachmentBypass.h>
+#include <apps/xplorer/rtt/UnitInOut.h>
+#include <apps/xplorer/rtt/UnitOut.h>
 
 #include <ves/xplorer/EnvironmentHandler.h>
 #include <ves/xplorer/environment/cfdDisplaySettings.h>
@@ -296,6 +301,248 @@ void SceneRenderToTexture::InitCamera( std::pair< int, int >& screenDims )
         new osg::Uniform( "glowColor", osg::Vec4( 0.0, 0.0, 0.0, 1.0 ) ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
+void SceneRenderToTexture::InitRTTPipeline(
+    std::pair< int, int >& screenDims, osg::Camera* const sceneViewCamera )
+{
+    //This is the code for the glow pipeline
+    osg::ref_ptr< osgDB::ReaderWriter::Options > vertexOptions =
+        new osgDB::ReaderWriter::Options( "vertex" );
+    osg::ref_ptr< osgDB::ReaderWriter::Options > fragmentOptions =
+        new osgDB::ReaderWriter::Options( "fragment" );
+
+    //Processor
+    *mProcessor = new rtt::Processor();
+
+    //COLOR_BUFFER0 bypass
+    *mColorBuffer0 = new rtt::UnitCameraAttachmentBypass();
+    osg::ref_ptr< rtt::UnitCameraAttachmentBypass > colorBuffer0 =
+        (*mColorBuffer0).get();
+    {
+        colorBuffer0->setName( "ColorBuffer0Bypass" );
+        colorBuffer0->SetBufferComponent( osg::Camera::COLOR_BUFFER0 );
+        //colorBuffer0->setInputTextureIndexForViewportReference( -1 );
+        //colorBuffer0->setViewport( sceneViewCamera->getViewport() );
+    }
+    (*mProcessor)->addChild( colorBuffer0.get() );
+
+    //COLOR_BUFFER1 bypass
+    *mColorBuffer1 = new rtt::UnitCameraAttachmentBypass();
+    osg::ref_ptr< rtt::UnitCameraAttachmentBypass > colorBuffer1 =
+         (*mColorBuffer1).get();
+    {
+        colorBuffer1->setName( "ColorBuffer1Bypass" );
+        colorBuffer1->SetBufferComponent( osg::Camera::COLOR_BUFFER1 );
+        //colorBuffer1->setInputTextureIndexForViewportReference( -1 );
+        //colorBuffer1->setViewport( sceneViewCamera->getViewport() );
+    }
+    (*mProcessor)->addChild( colorBuffer1.get() );
+
+    //Downsample by 1/2 original size
+    osg::Vec2 quadScreenSize( screenDims.first, screenDims.second );
+    /*
+    *mGlowDownSample = new rtt::UnitInResampleOut();
+    osg::ref_ptr< rtt::UnitInResampleOut > glowDownSample =
+        new osgPPU::UnitInResampleOut();
+    {
+        float downsample = 1.0;
+        quadScreenSize *= downsample;
+        
+        glowDownSample->setName( "GlowDownSample" );
+        glowDownSample->setFactorX( downsample );
+        glowDownSample->setFactorY( downsample );
+        glowDownSample->setInputTextureIndexForViewportReference( -1 );
+        //glowDownSample->setViewport( sceneViewCamera->getViewport() );
+    }
+    colorBuffer1->addChild( glowDownSample.get() );
+    */
+
+    //Perform horizontal 1D gauss convolution
+    *mBlurX = new rtt::UnitInOut();
+    osg::ref_ptr< rtt::UnitInOut > blurX = new rtt::UnitInOut();
+    {
+        //Set name and indicies
+        blurX->setName( "BlurHorizontal" );
+
+        osg::ref_ptr< osg::Program > gaussX = new osg::Program();
+        osg::ref_ptr< osg::Shader > vhShader, fhShader;
+        try
+        {
+            vhShader = osgDB::readShaderFile(
+                "glsl/gauss_convolution_1Dx_vp.glsl",
+                vertexOptions.get() );
+            fhShader = osgDB::readShaderFile(
+                "glsl/gauss_convolution_1Dx_fp.glsl",
+                fragmentOptions.get() );
+        }
+        catch( ... )
+        {
+            std::cerr << "Could not load shader files!" << std::endl;
+        }
+
+        //Setup horizontal blur shaders
+        gaussX->addShader( vhShader.get() );
+        gaussX->addShader( fhShader.get() );
+        gaussX->setName( "BlurHorizontalShader" );
+
+        osg::ref_ptr< osg::Uniform > quadScreenSizeUniform =
+            new osg::Uniform( "quadScreenSize", quadScreenSize );
+        osg::ref_ptr< osg::Uniform > wt9_0_Uniform =
+            new osg::Uniform( "WT9_0", static_cast< float >( 0.5 ) );
+        osg::ref_ptr< osg::Uniform > wt9_1_Uniform =
+            new osg::Uniform( "WT9_1", static_cast< float >( 0.4 ) );
+        osg::ref_ptr< osg::Uniform > wt9_2_Uniform =
+            new osg::Uniform( "WT9_2", static_cast< float >( 0.3 ) );
+        osg::ref_ptr< osg::Uniform > wt9_3_Uniform =
+            new osg::Uniform( "WT9_3", static_cast< float >( 0.2 ) );
+        osg::ref_ptr< osg::Uniform > wt9_4_Uniform =
+            new osg::Uniform( "WT9_4", static_cast< float >( 0.1 ) );
+        osg::ref_ptr< osg::Uniform > glowMapUniform =
+            new osg::Uniform( "glowMap", 0 );
+
+        osg::StateSet* ss = blurX->getOrCreateStateSet();
+        ss->setAttribute( gaussX.get(), osg::StateAttribute::ON );
+        ss->setTextureAttributeAndModes(
+            0, blurX->GetInputTexture( 0 ), osg::StateAttribute::ON );
+        ss->addUniform( quadScreenSizeUniform.get() );
+        ss->addUniform( wt9_0_Uniform.get() );
+        ss->addUniform( wt9_1_Uniform.get() );
+        ss->addUniform( wt9_2_Uniform.get() );
+        ss->addUniform( wt9_3_Uniform.get() );
+        ss->addUniform( wt9_4_Uniform.get() );
+        ss->addUniform( glowMapUniform.get() );
+        blurX->SetOutputTexture( CreateFBOTexture( screenDims ) );
+        //blurX->setInputTextureIndexForViewportReference( -1 );
+        //blurX->setViewport( sceneViewCamera->getViewport() );
+    }
+    //glowDownSample->addChild( blurX.get() );
+    colorBuffer1->addChild( blurX.get() );
+
+    //Perform vertical 1D gauss convolution
+    *mBlurY = new rtt::UnitInOut();
+    osg::ref_ptr< rtt::UnitInOut > blurY = new rtt::UnitInOut();
+    {
+        //Set name and indicies
+        blurY->setName( "BlurVertical" );
+
+        osg::ref_ptr< osg::Program > gaussY = new osg::Program();
+        osg::ref_ptr< osg::Shader > vvShader, fvShader;
+        try
+        {
+            vvShader = osgDB::readShaderFile(
+                "glsl/gauss_convolution_1Dy_vp.glsl",
+                vertexOptions.get() );
+            fvShader = osgDB::readShaderFile(
+                "glsl/gauss_convolution_1Dy_fp.glsl",
+                fragmentOptions.get() );
+        }
+        catch( ...  )
+        {
+            std::cerr << "Could not load shader files!" << std::endl;
+        }
+
+        //Setup vertical blur shaders
+        gaussY->addShader( vvShader.get() );
+        gaussY->addShader( fvShader.get() );
+        gaussY->setName( "BlurVerticalShader" );
+
+        osg::ref_ptr< osg::Uniform > quadScreenSizeUniform =
+            new osg::Uniform( "quadScreenSize", quadScreenSize );
+        osg::ref_ptr< osg::Uniform > wt9_0_Uniform =
+            new osg::Uniform( "WT9_0", static_cast< float >( 0.5 ) );
+        osg::ref_ptr< osg::Uniform > wt9_1_Uniform =
+            new osg::Uniform( "WT9_1", static_cast< float >( 0.4 ) );
+        osg::ref_ptr< osg::Uniform > wt9_2_Uniform =
+            new osg::Uniform( "WT9_2", static_cast< float >( 0.3 ) );
+        osg::ref_ptr< osg::Uniform > wt9_3_Uniform =
+            new osg::Uniform( "WT9_3", static_cast< float >( 0.2 ) );
+        osg::ref_ptr< osg::Uniform > wt9_4_Uniform =
+            new osg::Uniform( "WT9_4", static_cast< float >( 0.1 ) );
+        osg::ref_ptr< osg::Uniform > glowMapUniform =
+            new osg::Uniform( "glowMap", 0 );
+
+        osg::StateSet* ss = blurY->getOrCreateStateSet();
+        ss->setAttribute( gaussY.get(), osg::StateAttribute::ON );
+        ss->setTextureAttributeAndModes(
+            0, blurY->GetInputTexture( 0 ), osg::StateAttribute::ON );
+        ss->addUniform( quadScreenSizeUniform.get() );
+        ss->addUniform( wt9_0_Uniform.get() );
+        ss->addUniform( wt9_1_Uniform.get() );
+        ss->addUniform( wt9_2_Uniform.get() );
+        ss->addUniform( wt9_3_Uniform.get() );
+        ss->addUniform( wt9_4_Uniform.get() );
+        ss->addUniform( glowMapUniform.get() );
+        blurY->SetOutputTexture( CreateFBOTexture( screenDims ) );
+        //blurY->setInputTextureIndexForViewportReference( -1 );
+        //blurY->setViewport( sceneViewCamera->getViewport() );
+    }
+    blurX->addChild( blurY.get() );
+
+    //Perform final color operations and blends
+    *mFinal = new rtt::UnitInOut();
+    osg::ref_ptr< rtt::UnitInOut > final = (*mFinal).get();
+    colorBuffer0->addChild( final.get() );
+    blurY->addChild( final.get() );
+    {
+        //Set name and indicies
+        final->setName( "Final" );
+
+        osg::ref_ptr< osg::Program > finalShader = new osg::Program();
+        osg::ref_ptr< osg::Shader > vShader;
+        try
+        {
+            vShader = osgDB::readShaderFile(
+                "glsl/final_fp.glsl", fragmentOptions.get() );
+        }
+        catch( ... )
+        {
+            std::cerr << "Could not load shader files!" << std::endl;
+        }
+
+        //Setup vertical blur shaders
+        finalShader->addShader( vShader.get() );
+        finalShader->setName( "FinalShader" );
+
+        osg::ref_ptr< osg::Uniform > quadScreenSizeUniform =
+            new osg::Uniform( "glowStrength", static_cast< float >( 4.0 ) );
+        osg::ref_ptr< osg::Uniform > glowColorUniform =
+            new osg::Uniform( "glowColor", osg::Vec4( 0.57255, 1.0, 0.34118, 1.0 ) );
+        osg::ref_ptr< osg::Uniform > baseMapUniform =
+            new osg::Uniform( "baseMap", 0 );
+        osg::ref_ptr< osg::Uniform > glowMapUniform =
+            new osg::Uniform( "glowMap", 1 );
+
+        osg::StateSet* ss = final->getOrCreateStateSet();
+        ss->setAttribute( finalShader.get(), osg::StateAttribute::ON );
+        ss->setTextureAttributeAndModes(
+            0, final->GetInputTexture( 0 ), osg::StateAttribute::ON );
+        ss->setTextureAttributeAndModes(
+            1, final->GetInputTexture( 1 ), osg::StateAttribute::ON );
+        ss->addUniform( quadScreenSizeUniform.get() );
+        ss->addUniform( glowColorUniform.get() );
+        ss->addUniform( baseMapUniform.get() );
+        ss->addUniform( glowMapUniform.get() );
+        final->SetOutputTexture( CreateFBOTexture( screenDims ) );
+
+        //bool addedCorrectly = false;
+        //addedCorrectly = final->setInputToUniform( color.get(), "baseMap", true );
+        //addedCorrectly = final->setInputToUniform(  colorBuffer0.get(), "baseMap", true );
+        //addedCorrectly = final->setInputToUniform( colorBuffer1.get(), "stencilGlowMap", true );
+        //std::cout << " added " << addedCorrectly << std::endl;
+        //addedCorrectly = final->setInputToUniform( blurY.get(), "glowMap", true );
+        //final->setInputTextureIndexForViewportReference( -1 );
+        //final->setViewport( sceneViewCamera->getViewport() );
+   }
+
+    //Render to the Frame Buffer
+    *mQuadOut = new rtt::UnitOut();
+    osg::ref_ptr< rtt::UnitOut > ppuOut = (*mQuadOut).get();
+    {
+        ppuOut->setName( "PipelineResult" );
+        //ppuOut->setInputTextureIndexForViewportReference( -1 );
+        //ppuOut->setViewport( sceneViewCamera->getViewport() );
+    }
+    final->addChild( ppuOut.get() );
+}
 /*
 void SceneRenderToTexture::InitProcessor(
     std::pair< int, int >& screenDims, osg::Camera* const sceneViewCamera )
