@@ -81,7 +81,7 @@ Gloves::Gloves()
     command = ves::open::xml::CommandPtr();
     wand.init( "VJWand" );
     head.init( "VJHead" );
-
+    {
     mRightHandPos.init( "GloveB-RightHand" );
 
     mRightThumbMCP.init("GloveB-ThumbMCP");
@@ -105,7 +105,32 @@ Gloves::Gloves()
 
     mRightPinkyMCP.init("GloveB-PinkyMCP");
     mRightPinkyPIP.init("GloveB-PinkyPIP");
+    }
+    {
+    mLeftHandPos.init( "GloveA-LeftHand" );
 
+    mLeftThumbMCP.init("GloveA-ThumbMCP");
+    mLeftThumbPIP.init("GloveA-ThumbPIP");
+
+    mLeftThumbIndexAbduction.init("GloveA-ThumbIndexAbduction");
+
+    mLeftIndexMCP.init("GloveA-IndexMCP");
+    mLeftIndexPIP.init("GloveA-IndexPIP");
+
+    mLeftIndexMiddleAbduction.init("GloveA-IndexMiddleAbduction");
+
+    mLeftMiddleMCP.init("GloveA-MiddleMCP");
+    mLeftMiddlePIP.init("GloveA-MiddlePIP");
+    mLeftMiddleRingAbduction.init("GloveA-MiddleRingAbduction");
+
+    mLeftRingMCP.init("GloveA-RingMCP");
+    mLeftRingPIP.init("GloveA-RingPIP");
+
+    mLeftRingPinkyAbduction.init("GloveA-RingPinkyAbduction");
+
+    mLeftPinkyMCP.init("GloveA-PinkyMCP");
+    mLeftPinkyPIP.init("GloveA-PinkyPIP");
+    }
     beamLineSegment = new osg::LineSegment();
     
     mRootNode = ves::xplorer::scenegraph::SceneManager::instance()->GetRootNode();
@@ -119,6 +144,12 @@ void Gloves::Initialize()
         return;
     }
 
+    if( mRootNode->containsNode( mLeftHand.get() ) )
+    {
+        mRootNode->removeChild( mLeftHand.get() );
+        return;
+    }
+
     for( int i = 0; i < 3; ++i )
     {
         cursorLoc[ i ] = 0;
@@ -126,32 +157,33 @@ void Gloves::Initialize()
         objLoc[ i ] = cursorLoc[ i ];
     }
     
-    // Right HandNode: -2 6 -3 0 1 0 6.12323e-017 2.9 1
-    // LEft HandNode: -2 6 -3 0 1 0 6.12323e-017 2.9 0
     osg::Vec3 pos;
     osg::Quat quat;
-    //quat.set( 0, 1, 0, 6.12323e-017 );
     
     float length = 0.8;
 
     mRightHand = new osgBullet::HandNode( ves::xplorer::scenegraph::PhysicsSimulator::instance()->GetDynamicsWorld(), osgBullet::HandNode::RIGHT, length );
-    //mLeftHand = new osgBullet::HandNode( NULL, osgBullet::HandNode::LEFT, length );
 
     if( !mRightHand.valid() )
     {
-        std::cerr << "|\tProblems loading hand model for glove tools." << std::endl;
+        std::cerr << "|\tProblems loading right hand model for glove tools." << std::endl;
         return;
     }
     pos.set( 0, 3, 3 );
     mRightHand->setPosition( pos );
     mRightHand->setAttitude( quat );
-    //mRightHand->setReferenceFrame( osg::Transform::ABSOLUTE_RF );
-    //pos.set( -3, 3, 3 );
-    //mLeftHand->setPosition( pos );
-    //mLeftHand->setAttitude( quat );
-
     mRootNode->addChild( mRightHand.get() );
-    //mRootNode->addChild( mLeftHand.get() );
+
+    mLeftHand = new osgBullet::HandNode( ves::xplorer::scenegraph::PhysicsSimulator::instance()->GetDynamicsWorld(), osgBullet::HandNode::LEFT, length );
+
+    if( !mLeftHand.valid() )
+    {
+        std::cerr << "|\tProblems loading left hand model for glove tools." << std::endl;
+        return;
+    }
+    mLeftHand->setPosition( pos );
+    mLeftHand->setAttitude( quat );
+    mRootNode->addChild( mLeftHand.get() );
     std::cout << "|\tInitialize Gloves" << std::endl;
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -162,134 +194,9 @@ Gloves::~Gloves()
 ////////////////////////////////////////////////////////////////////////////////
 void Gloves::UpdateNavigation()
 {
-    if( !mRightHand.valid() )
-    {
-        return;
-    }
-    
-    if( !mRootNode->containsNode( mRightHand.get() ) )
-    {
-        return;
-    }
+    UpdateRightHandGlove();
+    UpdateLeftHandGlove();
 
-    if( mRightHandPos->isStupefied() )
-    {
-        return;
-    }
-    
-    //Get data from hand joints
-        //Get all the VR Juggler data variables
-    //Update the hand joints
-
-    float pi_over_2 = 3.14 / 180.0;
-    float mcp_scale = 80.f * pi_over_2;
-    float pip_scale = 110.f * pi_over_2;
-    mRightHand->setArticulation( osgBullet::HandNode::FINGER_0_ROTATE_INNER, mRightThumbMCP->getData() * mcp_scale );
-    mRightHand->setArticulation( osgBullet::HandNode::FINGER_1_ROTATE_INNER, mRightIndexMCP->getData() * mcp_scale );
-    mRightHand->setArticulation( osgBullet::HandNode::FINGER_2_ROTATE_INNER, mRightMiddleMCP->getData() * mcp_scale );
-    mRightHand->setArticulation( osgBullet::HandNode::FINGER_3_ROTATE_INNER, mRightRingMCP->getData() * mcp_scale );
-    mRightHand->setArticulation( osgBullet::HandNode::FINGER_4_ROTATE_INNER, mRightPinkyMCP->getData() * mcp_scale );
-
-    mRightHand->setArticulation( osgBullet::HandNode::FINGER_0_ROTATE_OUTER, mRightThumbPIP->getData() * pip_scale );
-    mRightHand->setArticulation( osgBullet::HandNode::FINGER_1_ROTATE_OUTER, mRightIndexPIP->getData() * pip_scale );
-    mRightHand->setArticulation( osgBullet::HandNode::FINGER_2_ROTATE_OUTER, mRightMiddlePIP->getData() * pip_scale );
-    mRightHand->setArticulation( osgBullet::HandNode::FINGER_3_ROTATE_OUTER, mRightRingPIP->getData() * pip_scale );
-    mRightHand->setArticulation( osgBullet::HandNode::FINGER_4_ROTATE_OUTER, mRightPinkyPIP->getData() * pip_scale );
-
-    //float thumb_scale = 60.f * pi_over_2;
-    //float abduction_scale = 30.f * pi_over_2;
-    //float angle1 = mRightThumbIndexAbduction->getData() * thumb_scale;
-    //float angle2 = mRightIndexMiddleAbduction->getData() * abduction_scale;
-    //float angle3 = 0.0f;//mRightMiddleRingAbduction->getData() * abduction_scale + angle2 ;
-    //float angle4 = mRightMiddleRingAbduction->getData() * abduction_scale;
-    //float angle5 = mRightRingPinkyAbduction->getData() * abduction_scale;
-
-    //mRightHand->setArticulation( osgBullet::HandNode::FINGER_0_TRANSLATE, angle1 );
-    //mRightHand->setArticulation( osgBullet::HandNode::FINGER_1_TRANSLATE, angle2 );
-    //mRightHand->setArticulation( osgBullet::HandNode::FINGER_2_TRANSLATE, angle3 );
-    //mRightHand->setArticulation( osgBullet::HandNode::FINGER_3_TRANSLATE, -angle4 );
-    //mRightHand->setArticulation( osgBullet::HandNode::FINGER_4_TRANSLATE, -angle5 );
-
-    //mRightHand->setArticulation( _mode, mRightHand->getArticulation( _mode ) + 0.1 );
-    //mLeftHand->setArticulation( _mode, mLeftHand->getArticulation( _mode ) + 0.1 );
-
-    //Get data from the trackers
-    gmtl::Matrix44f hand_pos_rot = mRightHandPos->getData();
-    mRightHand->setPosition( osg::Vec3( hand_pos_rot[0][3], -hand_pos_rot[2][3], hand_pos_rot[1][3] ) );
-
-    gmtl::Matrix44d vrjRHandMat = convertTo< double >( hand_pos_rot );
-    gmtl::Vec3d x_axis( 1.0f, 0.0f, 0.0f );
-    gmtl::Matrix44d rhRot = gmtl::makeRot< gmtl::Matrix44d >(
-        gmtl::AxisAngled( gmtl::Math::deg2Rad( -90.0f ), x_axis ) );
-    osg::Vec3d pitch( 1, 0, 0 );
-    osg::Vec3d roll( 0, 1, 0 );
-    osg::Vec3d yaw( 0, 0, 1 );
-
-    osg::Matrixd rotateMat;
-    rotateMat.makeRotate( osg::DegreesToRadians( 180.0 ), yaw,
-                         osg::DegreesToRadians( -90.0 ), pitch,
-                         osg::DegreesToRadians( 0.0 ), roll );
-    
-    gmtl::Matrix44d naVRot;
-    naVRot.set( rotateMat.ptr() );
-   /*osg::Quat quat;
-    quat = rotateMat.getRotate();*/
-    //vrjRHandMat = vrjRHandMat * rhRot;
-    vrjRHandMat = vrjRHandMat * rhRot * naVRot;
-    //gmtl::postMult(
-    //    vrjRHandMat,  );
-    gmtl::Quatd rhandQuat = gmtl::make< gmtl::Quatd >( vrjRHandMat );
-    //std::cout << " 1 = " << rhandQuat << std::endl;
-    //gmtl::normalize( rhandQuat );
-    //std::cout << " 2 = " << rhandQuat << std::endl;
-    /*static int counter = 0;
-    static float angle = 0;
-    static int angleCounter = 0;
-    counter += 1;
-    if( counter > 60 )
-    {
-    angle += osg::DegreesToRadians( 45.0 );
-    //std::cout << " angle " << angle << " " << angleCounter << std::endl;
-    //gmtl::Quatd convQuat( 0, 1, 0, angle  );
-    //gmtl::normalize( convQuat );
-    gmtl::AxisAngled axisAngle( angle, 0, 1, 0 );
-    //std::cout << "  1 " << axisAngle << std::endl;
-    
-    gmtl::Quatd quatAxisAngle = gmtl::make< gmtl::Quatd >( axisAngle );
-    //std::cout << quatAxisAngle << std::endl;
-
-    //osg::Vec3d tempVec( rhandQuat[0], -rhandQuat[2], rhandQuat[ 1 ] );
-    osg::Vec3d tempVec( quatAxisAngle[0], quatAxisAngle[1], quatAxisAngle[ 2 ] );*/
-    mRightHand->setAttitude( osg::Quat(rhandQuat[0], -rhandQuat[2], rhandQuat[1], rhandQuat[3]  ) );//osg::Quat( quatAxisAngle[3], tempVec ) );
-    /*counter = 0;
-    angleCounter += 1;
-    if( angleCounter > 8 )
-    {
-        angle = 0;
-        angleCounter = 0;
-    }*/
-/*
-    osg::Vec3d pitch( 1, 0, 0 );
-    osg::Vec3d roll( 0, 1, 0 );
-    osg::Vec3d yaw( 0, 0, 1 );
-
-    osg::Matrixd rotateMat;
-    rotateMat.makeRotate( osg::DegreesToRadians( rotArray[0] ), yaw,
-                         osg::DegreesToRadians( rotArray[1] ), pitch,
-                         osg::DegreesToRadians( rotArray[2] ), roll );
-    
-    osg::Quat quat;
-    quat = rotateMat.getRotate();
-    setAttitude( quat );
-    setPivotPoint( osg::Vec3d( 0, 0, 0 ) );
-
-
-    }*/
-    //Get data from the trackers
-    //mLeftHand->setPosition( pos );
-    //mLeftHand->setAttitude( quat );
-
-    //See if we need to do any nav
     
     //This is the old nav code for the wand. I think we can use this for the
     //glove to use hand gestures that are in VR Juggler.
@@ -1071,3 +978,158 @@ void Gloves::UpdateHandModel()
     */
 }
 ////////////////////////////////////////////////////////////////////////////////
+void Gloves::UpdateRightHandGlove()
+{
+    if( !mRightHand.valid() )
+    {
+        return;
+    }
+    
+    if( !mRootNode->containsNode( mRightHand.get() ) )
+    {
+        return;
+    }
+
+    if( mRightHandPos->isStupefied() )
+    {
+        return;
+    }
+    
+    //Get data from hand joints
+        //Get all the VR Juggler data variables
+    //Update the hand joints
+
+    float pi_over_2 = 3.14 / 180.0;
+    float mcp_scale = 80.f * pi_over_2;
+    float pip_scale = 110.f * pi_over_2;
+    mRightHand->setArticulation( osgBullet::HandNode::FINGER_0_ROTATE_INNER, mRightThumbMCP->getData() * mcp_scale );
+    mRightHand->setArticulation( osgBullet::HandNode::FINGER_1_ROTATE_INNER, mRightIndexMCP->getData() * mcp_scale );
+    mRightHand->setArticulation( osgBullet::HandNode::FINGER_2_ROTATE_INNER, mRightMiddleMCP->getData() * mcp_scale );
+    mRightHand->setArticulation( osgBullet::HandNode::FINGER_3_ROTATE_INNER, mRightRingMCP->getData() * mcp_scale );
+    mRightHand->setArticulation( osgBullet::HandNode::FINGER_4_ROTATE_INNER, mRightPinkyMCP->getData() * mcp_scale );
+
+    mRightHand->setArticulation( osgBullet::HandNode::FINGER_0_ROTATE_OUTER, mRightThumbPIP->getData() * pip_scale );
+    mRightHand->setArticulation( osgBullet::HandNode::FINGER_1_ROTATE_OUTER, mRightIndexPIP->getData() * pip_scale );
+    mRightHand->setArticulation( osgBullet::HandNode::FINGER_2_ROTATE_OUTER, mRightMiddlePIP->getData() * pip_scale );
+    mRightHand->setArticulation( osgBullet::HandNode::FINGER_3_ROTATE_OUTER, mRightRingPIP->getData() * pip_scale );
+    mRightHand->setArticulation( osgBullet::HandNode::FINGER_4_ROTATE_OUTER, mRightPinkyPIP->getData() * pip_scale );
+
+    //float thumb_scale = 60.f * pi_over_2;
+    //float abduction_scale = 30.f * pi_over_2;
+    //float angle1 = mRightThumbIndexAbduction->getData() * thumb_scale;
+    //float angle2 = mRightIndexMiddleAbduction->getData() * abduction_scale;
+    //float angle3 = 0.0f;//mRightMiddleRingAbduction->getData() * abduction_scale + angle2 ;
+    //float angle4 = mRightMiddleRingAbduction->getData() * abduction_scale;
+    //float angle5 = mRightRingPinkyAbduction->getData() * abduction_scale;
+
+    //mRightHand->setArticulation( osgBullet::HandNode::FINGER_0_TRANSLATE, angle1 );
+    //mRightHand->setArticulation( osgBullet::HandNode::FINGER_1_TRANSLATE, angle2 );
+    //mRightHand->setArticulation( osgBullet::HandNode::FINGER_2_TRANSLATE, angle3 );
+    //mRightHand->setArticulation( osgBullet::HandNode::FINGER_3_TRANSLATE, -angle4 );
+    //mRightHand->setArticulation( osgBullet::HandNode::FINGER_4_TRANSLATE, -angle5 );
+
+    //mRightHand->setArticulation( _mode, mRightHand->getArticulation( _mode ) + 0.1 );
+    //mLeftHand->setArticulation( _mode, mLeftHand->getArticulation( _mode ) + 0.1 );
+
+    //Get data from the trackers
+    gmtl::Matrix44f hand_pos_rot = mRightHandPos->getData();
+    mRightHand->setPosition( osg::Vec3( hand_pos_rot[0][3], -hand_pos_rot[2][3], hand_pos_rot[1][3] ) );
+
+    gmtl::Matrix44d vrjRHandMat = convertTo< double >( hand_pos_rot );
+    gmtl::Vec3d x_axis( 1.0f, 0.0f, 0.0f );
+    gmtl::Matrix44d rhRot = gmtl::makeRot< gmtl::Matrix44d >(
+        gmtl::AxisAngled( gmtl::Math::deg2Rad( -90.0f ), x_axis ) );
+    osg::Vec3d pitch( 1, 0, 0 );
+    osg::Vec3d roll( 0, 1, 0 );
+    osg::Vec3d yaw( 0, 0, 1 );
+
+    osg::Matrixd rotateMat;
+    rotateMat.makeRotate( osg::DegreesToRadians( 180.0 ), yaw,
+                         osg::DegreesToRadians( -90.0 ), pitch,
+                         osg::DegreesToRadians( 0.0 ), roll );
+    
+    gmtl::Matrix44d naVRot;
+    naVRot.set( rotateMat.ptr() );
+    vrjRHandMat = vrjRHandMat * rhRot * naVRot;
+    gmtl::Quatd rhandQuat = gmtl::make< gmtl::Quatd >( vrjRHandMat );
+
+    mRightHand->setAttitude( osg::Quat(rhandQuat[0], -rhandQuat[2], rhandQuat[1], rhandQuat[3]  ) );
+}
+////////////////////////////////////////////////////////////////////////////////
+void Gloves::UpdateLeftHandGlove()
+{
+    if( !mLeftHand.valid() )
+    {
+        return;
+    }
+    
+    if( !mRootNode->containsNode( mLeftHand.get() ) )
+    {
+        return;
+    }
+
+    if( mLeftHandPos->isStupefied() )
+    {
+        return;
+    }
+    
+    //Get data from hand joints
+        //Get all the VR Juggler data variables
+    //Update the hand joints
+
+    float pi_over_2 = 3.14 / 180.0;
+    float mcp_scale = 80.f * pi_over_2;
+    float pip_scale = 110.f * pi_over_2;
+    mLeftHand->setArticulation( osgBullet::HandNode::FINGER_0_ROTATE_INNER, mLeftThumbMCP->getData() * mcp_scale );
+    mLeftHand->setArticulation( osgBullet::HandNode::FINGER_1_ROTATE_INNER, mLeftIndexMCP->getData() * mcp_scale );
+    mLeftHand->setArticulation( osgBullet::HandNode::FINGER_2_ROTATE_INNER, mLeftMiddleMCP->getData() * mcp_scale );
+    mLeftHand->setArticulation( osgBullet::HandNode::FINGER_3_ROTATE_INNER, mLeftRingMCP->getData() * mcp_scale );
+    mLeftHand->setArticulation( osgBullet::HandNode::FINGER_4_ROTATE_INNER, mLeftPinkyMCP->getData() * mcp_scale );
+
+    mLeftHand->setArticulation( osgBullet::HandNode::FINGER_0_ROTATE_OUTER, mLeftThumbPIP->getData() * pip_scale );
+    mLeftHand->setArticulation( osgBullet::HandNode::FINGER_1_ROTATE_OUTER, mRightIndexPIP->getData() * pip_scale );
+    mLeftHand->setArticulation( osgBullet::HandNode::FINGER_2_ROTATE_OUTER, mRightMiddlePIP->getData() * pip_scale );
+    mLeftHand->setArticulation( osgBullet::HandNode::FINGER_3_ROTATE_OUTER, mRightRingPIP->getData() * pip_scale );
+    mLeftHand->setArticulation( osgBullet::HandNode::FINGER_4_ROTATE_OUTER, mRightPinkyPIP->getData() * pip_scale );
+
+    //float thumb_scale = 60.f * pi_over_2;
+    //float abduction_scale = 30.f * pi_over_2;
+    //float angle1 = mRightThumbIndexAbduction->getData() * thumb_scale;
+    //float angle2 = mRightIndexMiddleAbduction->getData() * abduction_scale;
+    //float angle3 = 0.0f;//mRightMiddleRingAbduction->getData() * abduction_scale + angle2 ;
+    //float angle4 = mRightMiddleRingAbduction->getData() * abduction_scale;
+    //float angle5 = mRightRingPinkyAbduction->getData() * abduction_scale;
+
+    //mRightHand->setArticulation( osgBullet::HandNode::FINGER_0_TRANSLATE, angle1 );
+    //mRightHand->setArticulation( osgBullet::HandNode::FINGER_1_TRANSLATE, angle2 );
+    //mRightHand->setArticulation( osgBullet::HandNode::FINGER_2_TRANSLATE, angle3 );
+    //mRightHand->setArticulation( osgBullet::HandNode::FINGER_3_TRANSLATE, -angle4 );
+    //mRightHand->setArticulation( osgBullet::HandNode::FINGER_4_TRANSLATE, -angle5 );
+
+    //mRightHand->setArticulation( _mode, mRightHand->getArticulation( _mode ) + 0.1 );
+    //mLeftHand->setArticulation( _mode, mLeftHand->getArticulation( _mode ) + 0.1 );
+
+    //Get data from the trackers
+    gmtl::Matrix44f hand_pos_rot = mLeftHandPos->getData();
+    mLeftHand->setPosition( osg::Vec3( hand_pos_rot[0][3], -hand_pos_rot[2][3], hand_pos_rot[1][3] ) );
+
+    gmtl::Matrix44d vrjRHandMat = convertTo< double >( hand_pos_rot );
+    gmtl::Vec3d x_axis( 1.0f, 0.0f, 0.0f );
+    gmtl::Matrix44d rhRot = gmtl::makeRot< gmtl::Matrix44d >(
+        gmtl::AxisAngled( gmtl::Math::deg2Rad( -90.0f ), x_axis ) );
+    osg::Vec3d pitch( 1, 0, 0 );
+    osg::Vec3d roll( 0, 1, 0 );
+    osg::Vec3d yaw( 0, 0, 1 );
+
+    osg::Matrixd rotateMat;
+    rotateMat.makeRotate( osg::DegreesToRadians( 180.0 ), yaw,
+                         osg::DegreesToRadians( -90.0 ), pitch,
+                         osg::DegreesToRadians( 0.0 ), roll );
+    
+    gmtl::Matrix44d naVRot;
+    naVRot.set( rotateMat.ptr() );
+    vrjRHandMat = vrjRHandMat * rhRot * naVRot;
+    gmtl::Quatd rhandQuat = gmtl::make< gmtl::Quatd >( vrjRHandMat );
+
+    mLeftHand->setAttitude( osg::Quat(rhandQuat[0], -rhandQuat[2], rhandQuat[1], rhandQuat[3]  ) );
+}

@@ -176,6 +176,9 @@ protected:
     ///Update the hand model with data from VR Juggler
     void UpdateHandModel();
     
+    void UpdateRightHandGlove();
+    void UpdateLeftHandGlove();
+
 private:
     gadget::DigitalInterface digital[ 6 ]; ///Array handling button controls on wand
     int buttonData[ 6 ]; ///<do not know what this does
@@ -185,6 +188,7 @@ private:
     gadget::PositionInterface wand; ///<VRJuggler's wand positional interface
     gadget::PositionInterface head; ///<VRJuggler's head positional interface
     gadget::PositionInterface mRightHandPos;
+    gadget::PositionInterface mLeftHandPos;
 
     gmtl::Matrix44d vjHeadMat; ///<Contains current head position matrix
 
@@ -248,6 +252,28 @@ private:
     gadget::AnalogInterface      mRightPinkyPIP;
 
 
+    gadget::AnalogInterface      mLeftThumbMCP;
+    gadget::AnalogInterface      mLeftThumbPIP;
+
+    gadget::AnalogInterface      mLeftThumbIndexAbduction;
+
+    gadget::AnalogInterface      mLeftIndexMCP;
+    gadget::AnalogInterface      mLeftIndexPIP;
+
+    gadget::AnalogInterface      mLeftIndexMiddleAbduction;
+
+    gadget::AnalogInterface      mLeftMiddleMCP;
+    gadget::AnalogInterface      mLeftMiddlePIP;
+
+    gadget::AnalogInterface      mLeftMiddleRingAbduction;
+
+    gadget::AnalogInterface      mLeftRingMCP;
+    gadget::AnalogInterface      mLeftRingPIP;
+
+    gadget::AnalogInterface      mLeftRingPinkyAbduction;
+
+    gadget::AnalogInterface      mLeftPinkyMCP;
+    gadget::AnalogInterface      mLeftPinkyPIP;
 };
 }
 }

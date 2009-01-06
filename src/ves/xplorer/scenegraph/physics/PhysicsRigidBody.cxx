@@ -437,7 +437,8 @@ void PhysicsRigidBody::CustomShape( const BroadphaseNativeTypes shapeType, const
     
     mRB->setRestitution( mRestitution );
     mRB->setFriction( mFriction );
-
+    mRB->setActivationState( DISABLE_DEACTIVATION );
+    
     osgBullet::MotionState* motion = new osgBullet::MotionState();
     //osgBullet::MotionState* motion = dynamic_cast< osgBullet::MotionState* >( mRB->getMotionState() );
     motion->setTransform( amt.get() );
