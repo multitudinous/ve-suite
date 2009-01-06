@@ -17,7 +17,6 @@
 #include <osg/AlphaFunc>
 #include "PrimitiveSetInstanced.h"
 
-
 // Allows you to change the animation play rate:
 //   '+' speed up
 //   '-' slow down
@@ -114,7 +113,7 @@ const float dX( .25f );
 // reaches full intensity white. Alpha is modulated with the
 // point sprint texture alpha, so the value here is a maximum
 // for the "densist" part of the point sprint texture.
-const osg::Vec4 slColor( .8, 1., 1., 1. );
+const osg::Vec4 slColor( .7, .7, 1., 1. );
 
 
 void
@@ -131,7 +130,7 @@ createSLPoint( osg::Geometry& geom, int nInstances )
     c->resize( 1 );
     geom.setColorArray( c );
     geom.setColorBinding( osg::Geometry::BIND_OVERALL );
-    (*c)[ 0 ] = osg::Vec4( .95, 1., 1., 1. );
+    (*c)[ 0 ] = slColor;
 
     geom.addPrimitiveSet( new osg::DrawArraysInstanced( GL_POINTS, 0, 1, nInstances ) );
 
@@ -224,8 +223,11 @@ createInstanced( const int m, const int n )
             // Create orthonormal basis to position and orient this instance.
             "vec4 pos = texture2D( texPos, tC ); \n"
             "pos.x *= 2.; \n" // Huh? x seems to be half the value I expect...
-            "vec4 v = gl_Vertex + pos; \n"
-            "gl_Position = ( gl_ModelViewProjectionMatrix * v ); \n"
+            "vec4 v = gl_ModelViewMatrix * ( gl_Vertex + pos ); \n"
+            "gl_Position = gl_ProjectionMatrix * v; \n"
+
+            // TBD. Need to make this configurable from a uniform.
+            "gl_PointSize = -2000. / v.z; \n"
 
             // Compute a time offset from the InstanceID to
             // emulate motion.
@@ -253,6 +255,12 @@ createInstanced( const int m, const int n )
     // with an order independent blend. This means we need to draw the streamlines last
     // (so use bin # 10) but we don't need the depth sort, so use bin name "RenderBin".
     ss->setRenderBinDetails( 10, "RenderBin" );
+
+    // Note:
+    // When using a vertex shader, point size is taken from glPointSize and _not_
+    // distance-attenuated. However, set the following mode ON, and then our vertex
+    // shader can do its own distance attenuation and emit gl_PointSize.
+    ss->setMode( GL_VERTEX_PROGRAM_POINT_SIZE, osg::StateAttribute::ON );
 
     // Tells the shader the dimensions of our texture: m x n.
     // Required to compute correct texture coordinates from the instance ID.
