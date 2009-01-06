@@ -173,11 +173,18 @@ void VjObsWrapper::init( CosNaming::NamingContext* input,
             //the one without the domain name
             if (( tempHostname == masterhost ) || ( toks[0] == masterhost ) )
             {
-                std::cout << "This is the master!" << std::endl;
+                std::cout << "*** This is the master node. ***" << std::endl;
                 isMaster = true;
                 break;
             }
         }
+        
+        if( !isMaster )
+        {
+            std::cout << "*** This is a remote graphics node. *** " 
+                << std::endl;
+        }
+        
     }
     else
     {
