@@ -54,6 +54,9 @@ public:
     inline void setAttitude( const osg::Quat& quat ) { _attitude = quat; dirtyBound(); updateTransform(); }
     inline const osg::Quat& getAttitude() const { return _attitude; }
 
+    inline void setTraverseHand( const bool traverse ) { _traverseHand = traverse; }
+    inline bool getTraverseHand() const { return _traverseHand; }
+
     // Set right or left hand.
     // Set this in the constructor for maximum efficiency.
     void setHandedness( const HandNode::Handedness rightOrLeft );
@@ -190,6 +193,8 @@ protected:
     btDynamicsWorld* _bulletWorld;
     btRigidBody* _body;
     btCompoundShape* _shape;
+
+    bool _traverseHand;
 
 
     // Support for debugging the Bullet rep.

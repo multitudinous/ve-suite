@@ -6,6 +6,7 @@
 
 #include <osgBullet/Export.h>
 #include <osg/Node>
+#include <osg/BoundingBox>
 
 #include <btBulletCollisionCommon.h>
 

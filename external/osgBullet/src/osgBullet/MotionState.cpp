@@ -15,7 +15,6 @@
 #include <osg/Notify>
 #include <osg/io_utils>
 
-#include <iostream>
 
 using namespace osgBullet;
 
@@ -27,16 +26,37 @@ MotionState::MotionState( const osg::Matrix& parentTransform,
     _transform.setIdentity();
 }
 
+// Sets both the transformation of the collision shape / rigid body in the
+// physics simulation, as well as the matrix of the subgraph's parent
+// Transform node for the OSG visual representation.
+//
+// Called by resetTransform() with the concatenation of the center of mass
+// translation and the parent transform. Apps typically call setCenterOfMass()
+// and setParentTransform during initialization; these routines then call
+// resetTransform(), which calls here. This results in setting the initial position
+// of both the rigid body and the visual representation.
+//
+// Bullet calls this method during the physics simulation to position
+// collision shapes / rigid bodies.
+//
+// Note that the transformation of the collision shape is not the same as the
+// transformation for the visual representation. MotionState supports off-origin visual
+// representations, and thus subtracts out the center of mass before setting the
+// transformation of the visual representation.
 void
 MotionState::setWorldTransform(const btTransform& worldTrans)
 {
+    // _transform is the model-to-world transformation used to place collision shapes
+    // in the physics simulation. Bullet queries this with getWorldTransform().
     _transform = worldTrans;
+    // This OSG matrix will be used to transform OSG debug geometry, if enabled.
     osg::Matrix dt = osgBullet::asOsgMatrix( _transform );
-    //osg::Matrix tempScale = osg::Matrix::scale( _scale );
-    //std::cout << tempScale << dt << std::endl;
-    //tempScale = tempScale * dt;
-    //std::cout << tempScale << dt << std::endl;
-    osg::Matrix t = _invCom * dt;
+
+    // Compute the transformation of the OSG visual representation. This is
+    // already off-origin, so multiply out the center of mass that is present
+    // in dt (_transform).
+    osg::Matrix invCom = osg::Matrix::translate( -_com );
+    osg::Matrix t = invCom * dt;
 
     if( _mt.valid() )
         _mt->setMatrix( t );
@@ -65,9 +85,7 @@ MotionState::setTransform( osg::Transform* transform )
     else if( amt = dynamic_cast< osgBullet::AbsoluteModelTransform* >( transform ) )
         _amt = amt;
     else
-        osg::notify( osg::WARN ) 
-            << "MotionState::setTransform : Unsupported transform type: " 
-            << transform->className() << std::endl;
+        osg::notify( osg::WARN ) << "MotionState: Unsupported transform type: " << transform->className() << std::endl;
 }
 
 osg::Transform*
@@ -103,9 +121,7 @@ MotionState::setDebugTransform( osg::Transform* transform )
     else if( amt = dynamic_cast< osgBullet::AbsoluteModelTransform* >( transform ) )
         _debugAMT = amt;
     else
-        osg::notify( osg::WARN ) 
-            << "MotionState::setDebugTransform : Unsupported transform type: " 
-            << transform->className() << std::endl;
+        osg::notify( osg::WARN ) << "MotionState: Unsupported transform type: " << transform->className() << std::endl;
 }
 
 osg::Transform*
@@ -135,7 +151,6 @@ void
 MotionState::setParentTransform( const osg::Matrix m )
 {
     _parentTransform = m;
-    _scale = _parentTransform.getScale();
     resetTransform();
 }
 
@@ -150,7 +165,6 @@ void
 MotionState::setCenterOfMass( const osg::Vec3& com )
 {
     _com = com;
-    _invCom = osg::Matrix::translate( -_com );
     resetTransform();
 }
 
@@ -164,10 +178,10 @@ MotionState::getCenterOfMass() const
 void
 MotionState::resetTransform()
 {
+    // Concatenate the center of mass and parent transforms, then call setWorldTransform.
+    // This creates the initial model-to-world transform for both the collision shape /
+    // rigid body and the OSG visual representation.
     osg::Matrix comM = osg::Matrix::translate( _com );
-    //osg::Matrix tempScale = osg::Matrix::scale( _scale );
-    //tempScale = osg::Matrix::inverse( tempScale );
-    //setWorldTransform( osgBullet::asBtTransform(  comM * tempScale * _parentTransform ) );
-    setWorldTransform( osgBullet::asBtTransform(  comM * _parentTransform ) );
+    setWorldTransform( osgBullet::asBtTransform( comM * _parentTransform ) );
 }
 

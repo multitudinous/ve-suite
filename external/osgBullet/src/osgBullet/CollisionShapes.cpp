@@ -114,7 +114,7 @@ btTriangleMeshShape* osgBullet::btTriMeshCollisionShapeFromOSG( osg::Node* node 
         return( NULL );
     }
 
-    btTriangleMesh* mesh = new btTriangleMesh( true, false );
+    btTriangleMesh* mesh = new btTriangleMesh;
     for( size_t i = 0; i + 3 < vertices->size(); i += 3 )
     {
         osg::Vec3& p1 = ( *vertices )[ i ];

@@ -41,6 +41,7 @@ public:
 
 
     // Bullet interface routines. To be used by Bullet only.
+    // Note that setWorldTransform is called by resetTransform.
     virtual void	setWorldTransform(const btTransform& worldTrans);
     virtual void	getWorldTransform(btTransform& worldTrans ) const;
 
@@ -70,25 +71,34 @@ public:
     void setCenterOfMass( const osg::Vec3& com );
     osg::Vec3 getCenterOfMass() const;
 
+    // This is a convenience routine that calls setWorldTransform with
+    // the concatenation of the center of mass and parent transform.
+    // It is called by setCenterOfMass and setParentTransform to set the
+    // initial world transformation. See setWorldTransformation for more
+    // details.
+    // Apps can call this method directly to invoke setWorldTransform() with
+    // the concatentation of the center of mass and parent transforms.
     void resetTransform();
 
 private:
-
+    // One or the other of these will be valid, depending on whether the
+    // MotionState is associated with an AbsoluteModelTransform or a
+    // plain old MatrixTransform.
     osg::ref_ptr< osg::MatrixTransform > _mt;
     osg::ref_ptr< osgBullet::AbsoluteModelTransform > _amt;
 
     osg::ref_ptr< osg::MatrixTransform > _debugMT;
     osg::ref_ptr< osgBullet::AbsoluteModelTransform > _debugAMT;
 
-    // Contains the whole parent list of transforms
+    // This is the accumulated model-to-world matrix of parent Transform nodes
+    // in the scene graph.
     osg::Matrix _parentTransform;
-    // Is the center of mass of the basics osg objects
+    // _com is used to align the origin-centered collision shape with
+    // an off-origin OSG visual representation.
     osg::Vec3 _com;
-    // Inverse matrix of the center of mass
-    osg::Matrix _invCom;
-    // The scale from the parent transform
-    osg::Vec3 _scale;
 
+    // This is the transformation of the collision shape / rigid body within the Bullet physics simulation.
+    // See setWorldTransformation for more details.
     btTransform _transform;
 };
 

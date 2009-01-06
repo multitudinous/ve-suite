@@ -399,6 +399,7 @@ HandNode::HandNode()
     _bulletWorld( NULL ),
     _body( NULL ),
     _shape( NULL ),
+    _traverseHand( true ),
     _debug( false )
 {
     setName( "HandNode" );
@@ -410,6 +411,7 @@ HandNode::HandNode( btDynamicsWorld* bulletWorld, const HandNode::Handedness rig
     _bulletWorld( bulletWorld ),
     _body( NULL ),
     _shape( NULL ),
+    _traverseHand( true ),
     _debug( false )
 {
     setName( "HandNode" );
@@ -423,6 +425,7 @@ HandNode::HandNode( const HandNode& rhs, const osg::CopyOp& copyop )
     _bulletWorld( rhs._bulletWorld ),
     _body( NULL ),
     _shape( NULL ),
+    _traverseHand( rhs._traverseHand ),
     _debug( rhs._debug )
 {
     setName( rhs.getName() );
@@ -466,7 +469,7 @@ void HandNode::traverse( osg::NodeVisitor& nv )
     Transform::traverse( nv );
 
     // Traverse the hand, if it's valid (it should be valid; see init() ).
-    if (_hand.valid())
+    if (_traverseHand && _hand.valid())
         _hand->accept( nv );
 
     // Render the wireframe if debugging is on.
