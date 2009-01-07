@@ -16,6 +16,7 @@ exampleSubdirs = Split("""
     golf_game
     SimpleNetwork
     WarrantyTool
+    simple_physics
 """)
 
 ##Run SConscript files in all of those folders.
