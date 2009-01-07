@@ -140,7 +140,11 @@ CADEntity::CADEntity( ves::xplorer::scenegraph::CADEntityHelper* nodeToCopy,
     mDCS = new ves::xplorer::scenegraph::DCS();
     mCADEntityHelper = new ves::xplorer::scenegraph::CADEntityHelper( *nodeToCopy );
 
-    mFileName = mCADEntityHelper->GetNode()->getName();
+    if( mCADEntityHelper->GetNode() )
+    {
+        mFileName = mCADEntityHelper->GetNode()->getName();
+    }
+    
     mDCS->SetName( "CADEntityDCS" );
     mDCS->addChild( mCADEntityHelper->GetNode() );
     parentDCS->AddChild( mDCS.get() );
