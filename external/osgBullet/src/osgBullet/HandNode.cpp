@@ -649,7 +649,9 @@ void HandNode::init()
 	    _body = new btRigidBody( rbInfo );
         _body->setCollisionFlags( _body->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT );
         _body->setActivationState( DISABLE_DEACTIVATION );
-
+        _body->setCcdMotionThreshold( _length*0.2 );
+        _body->setCcdSweptSphereRadius( 0.1*_length );
+        
 	    _bulletWorld->addRigidBody( _body );
     }
 

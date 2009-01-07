@@ -200,7 +200,10 @@ void customNearCallback( btBroadphasePair& collisionPair,
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsSimulator::InitializePhysicsSimulation()
 {
+	///collision configuration contains default setup for memory, collision setup
     mCollisionConfiguration = new btDefaultCollisionConfiguration();
+	///use the default collision dispatcher. For parallel processing 
+    ///you can use a diffent dispatcher (see Extras/BulletMultiThreaded)
     mDispatcher = new btCollisionDispatcher( mCollisionConfiguration );
 
 #ifdef USE_CUSTOM_NEAR_CALLBACK
@@ -208,10 +211,11 @@ void PhysicsSimulator::InitializePhysicsSimulation()
 #else
 #endif
 
-    btVector3 worldAabbMin( -10000, -10000, -10000 );
-    btVector3 worldAabbMax( 10000, 10000, 10000 );
+    //btVector3 worldAabbMin( -10000, -10000, -10000 );
+    //btVector3 worldAabbMax( 10000, 10000, 10000 );
 
-    mBroadphase = new btAxisSweep3( worldAabbMin, worldAabbMax, maxProxies );
+    //mBroadphase = new btAxisSweep3( worldAabbMin, worldAabbMax, maxProxies );
+    mBroadphase = new btDbvtBroadphase();
 
 #ifdef REGISTER_CUSTOM_COLLISION_ALGORITHM
 #else
@@ -227,7 +231,7 @@ void PhysicsSimulator::InitializePhysicsSimulation()
         mDispatcher, mBroadphase, mSolver );
 #endif
     //mDynamicsWorld->getDispatchInfo().m_enableSPU = true;
-    mDynamicsWorld->setGravity( btVector3( 0, 0, -10 ) );
+    mDynamicsWorld->setGravity( btVector3( 0, 0, -33 ) );
 
     //mDynamicsWorld->setDebugDrawer( &debugDrawer );
     
