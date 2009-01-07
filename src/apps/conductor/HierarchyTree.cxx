@@ -61,6 +61,9 @@
 #include <ves/conductor/xpm/vector.xpm>
 #include <ves/conductor/xpm/vectortb.xpm>
 
+#include <iostream>
+#include <fstream>
+
 #ifdef WIN32
 #include <shellapi.h>
 #endif
