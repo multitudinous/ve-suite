@@ -8,7 +8,9 @@ Import('ves_pkg')
 launcherBundle = ves_pkg.createFileBundle( pj('share','vesuite','examples','simple_physics') )
 osgFile = sca_util.getFilesRecursiveByExt( '.', ['.ive'] )
 vesFile = sca_util.getFilesRecursiveByExt( '.', ['.ves'] )
+stlFile = sca_util.getFilesRecursiveByExt( '.', ['.stl'] )
 launcherBundle.addFiles( osgFile )
 launcherBundle.addFiles( vesFile )
+launcherBundle.addFiles( stlFile )
 
 
