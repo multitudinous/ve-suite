@@ -214,11 +214,11 @@ void PhysicsSimulator::InitializePhysicsSimulation()
 #else
 #endif
 
-    //btVector3 worldAabbMin( -10000, -10000, -10000 );
-    //btVector3 worldAabbMax( 10000, 10000, 10000 );
+    btVector3 worldAabbMin( -10000, -10000, -10000 );
+    btVector3 worldAabbMax( 10000, 10000, 10000 );
 
-    //mBroadphase = new btAxisSweep3( worldAabbMin, worldAabbMax, maxProxies );
-    mBroadphase = new btDbvtBroadphase();
+    mBroadphase = new btAxisSweep3( worldAabbMin, worldAabbMax, maxProxies );
+    //mBroadphase = new btDbvtBroadphase();
 
 #ifdef REGISTER_CUSTOM_COLLISION_ALGORITHM
 #else

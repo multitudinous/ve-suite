@@ -1002,12 +1002,6 @@ void Gloves::UpdateRightHandGlove()
     {
         return;
     }
-    ves::xplorer::scenegraph::DCS* worldDCS =
-    ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS();
-    gmtl::Matrix44d tempCamera = worldDCS->GetMat();
-    gmtl::Vec4d tempHandPos( 0, 3, 3, 1.0 );
-    tempHandPos = tempCamera * tempHandPos;
-    mRightHand->setPosition( osg::Vec3( tempHandPos[0], tempHandPos[1], tempHandPos[2] ) );
     
     if( mRightHandPos->isStupefied() )
     {
@@ -1055,8 +1049,14 @@ void Gloves::UpdateRightHandGlove()
     //ves::xplorer::scenegraph::DCS* worldDCS =
     //    ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS();
     //gmtl::Matrix44d tempCamera = worldDCS->GetMat();
-    //gmtl::Vec4d tempHandPos( hand_pos_rot[0][3], -hand_pos_rot[2][3], hand_pos_rot[1][3], 1.0 );
     //tempHandPos = tempCamera * tempHandPos;
+    ves::xplorer::scenegraph::DCS* worldDCS =
+        ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS();
+    gmtl::Matrix44d tempCamera = worldDCS->GetMat();
+    tempCamera = gmtl::invert( tempCamera );
+    //gmtl::Vec4d tempHandPos( 0, 3, 3, 1.0 );
+    gmtl::Vec4d tempHandPos( hand_pos_rot[0][3], -hand_pos_rot[2][3], hand_pos_rot[1][3], 1.0 );
+    tempHandPos = tempCamera * tempHandPos;
     mRightHand->setPosition( osg::Vec3( tempHandPos[0], tempHandPos[1], tempHandPos[2] ) );
 
     gmtl::Matrix44d vrjRHandMat = convertTo< double >( hand_pos_rot );
