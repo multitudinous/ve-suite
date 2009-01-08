@@ -173,7 +173,20 @@ void Gloves::Initialize()
     mRightHand->setPosition( pos );
     mRightHand->setAttitude( quat );
     mRootNode->addChild( mRightHand.get() );
+    mRightHand->setDebug( true );
 
+    //Setup debug display
+    // Add visual rep of Bullet Collision shape.
+    /*osg::Node* visNode = osgBullet::osgNodeFromBtCollisionShape( rigidBody->getCollisionShape() );
+    if( visNode != NULL )
+    {
+        osgBullet::AbsoluteModelTransform* dmt = new osgBullet::AbsoluteModelTransform();
+        dmt->addChild( visNode );
+        osgBullet::MotionState* motion = static_cast< osgBullet::MotionState* >( rigidBody->getMotionState() );
+        motion->setDebugTransform( dmt );
+        mPhysicsSimulator->GetDebugBullet()->addDynamic( dmt );
+    }*/
+    
     mLeftHand = new osgBullet::HandNode( ves::xplorer::scenegraph::PhysicsSimulator::instance()->GetDynamicsWorld(), osgBullet::HandNode::LEFT, length );
 
     if( !mLeftHand.valid() )
@@ -989,7 +1002,13 @@ void Gloves::UpdateRightHandGlove()
     {
         return;
     }
-
+    ves::xplorer::scenegraph::DCS* worldDCS =
+    ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS();
+    gmtl::Matrix44d tempCamera = worldDCS->GetMat();
+    gmtl::Vec4d tempHandPos( 0, 3, 3, 1.0 );
+    tempHandPos = tempCamera * tempHandPos;
+    mRightHand->setPosition( osg::Vec3( tempHandPos[0], tempHandPos[1], tempHandPos[2] ) );
+    
     if( mRightHandPos->isStupefied() )
     {
         return;
@@ -1033,7 +1052,12 @@ void Gloves::UpdateRightHandGlove()
 
     //Get data from the trackers
     gmtl::Matrix44f hand_pos_rot = mRightHandPos->getData();
-    mRightHand->setPosition( osg::Vec3( hand_pos_rot[0][3], -hand_pos_rot[2][3], hand_pos_rot[1][3] ) );
+    //ves::xplorer::scenegraph::DCS* worldDCS =
+    //    ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS();
+    //gmtl::Matrix44d tempCamera = worldDCS->GetMat();
+    //gmtl::Vec4d tempHandPos( hand_pos_rot[0][3], -hand_pos_rot[2][3], hand_pos_rot[1][3], 1.0 );
+    //tempHandPos = tempCamera * tempHandPos;
+    mRightHand->setPosition( osg::Vec3( tempHandPos[0], tempHandPos[1], tempHandPos[2] ) );
 
     gmtl::Matrix44d vrjRHandMat = convertTo< double >( hand_pos_rot );
     gmtl::Vec3d x_axis( 1.0f, 0.0f, 0.0f );

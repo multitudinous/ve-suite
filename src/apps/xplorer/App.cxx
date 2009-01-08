@@ -319,7 +319,8 @@ void App::initScene()
     ves::xplorer::scenegraph::SceneManager::instance()->
         SetFrameStamp( mFrameStamp.get() );
 
-    this->getScene()->addChild( light_source_0.get() );
+    getScene()->addChild( light_source_0.get() );
+    getScene()->getOrCreateStateSet()->setAttributeAndModes( light_model_0.get(), osg::StateAttribute::ON );
 
     // modelHandler stores the arrow and holds all data and geometry
     ModelHandler::instance()->SetXMLCommand( m_vjobsWrapper->GetXMLCommand() );

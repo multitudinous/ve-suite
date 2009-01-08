@@ -53,6 +53,7 @@
 #include <osgBullet/OSGToCollada.h>
 #include <osgBullet/MotionState.h>
 #include <osgBullet/Utils.h>
+#include <osgBullet/DebugBullet.h>
 
 // --- C/C++ Libraries --- //
 #include <sstream>
@@ -84,16 +85,18 @@ PhysicsSimulator::PhysicsSimulator()
     mIdle( true ),
     mCollisionInformation( false ),
     shoot_speed( 50.0f ),
-    mCreatedGroundPlane( false )
+    mCreatedGroundPlane( false ),
+    mDebugBullet( new osgBullet::DebugBullet )
 {
     head.init( "VJHead" );
 
     InitializePhysicsSimulation();
+    SceneManager::instance()->GetRootNode()->addChild( mDebugBullet->getRoot() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 PhysicsSimulator::~PhysicsSimulator()
 {
-    ;
+    delete mDebugBullet;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsSimulator::ExitPhysics()
@@ -221,6 +224,7 @@ void PhysicsSimulator::InitializePhysicsSimulation()
 #else
     //Default constraint solver
     mSolver = new btSequentialImpulseConstraintSolver();
+    mSolver->setRandSeed( 20090108 );
 #endif
 
 #if (BULLET_MAJOR_VERSION >= 2) && (BULLET_MINOR_VERSION > 63)
@@ -571,3 +575,7 @@ osg::Node* PhysicsSimulator::CreateGround( float w, float h, const osg::Vec3& ce
     return ground;
 }
 ////////////////////////////////////////////////////////////////////////////////
+osgBullet::DebugBullet* PhysicsSimulator::GetDebugBullet()
+{
+    return mDebugBullet;
+}

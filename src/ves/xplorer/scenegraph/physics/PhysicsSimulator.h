@@ -61,6 +61,12 @@ namespace osg
 class Transform;
 class Node;
 }
+
+namespace osgBullet
+{
+class DebugBullet;
+}
+
 // --- Bullet Includes --- //
 #include <LinearMath/btTransform.h>
 
@@ -141,6 +147,8 @@ public:
     ///Create flat ground plane for the world
     void CreateGroundPlane();
 
+    osgBullet::DebugBullet* GetDebugBullet();
+
 private:
     ///Base constructor
     PhysicsSimulator();
@@ -186,6 +194,8 @@ private:
     btCollisionDispatcher* mDispatcher;///<Creates/Registers default collision algorithms, for convex, compound and concave shape support
     btBroadphaseInterface* mBroadphase;///<Maintains objects with overlapping AABB
     btSequentialImpulseConstraintSolver* mSolver;///<A physics solver which sequentially applies impulses
+    
+    osgBullet::DebugBullet* mDebugBullet;
 };
 }
 }

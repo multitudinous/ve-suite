@@ -346,7 +346,19 @@ void PhysicsRigidBody::RegisterRigidBody( btRigidBody* rigidBody )
     
     rigidBody->setActivationState( DISABLE_DEACTIVATION );
 
-    mPhysicsSimulator->GetDynamicsWorld()->addRigidBody( rigidBody );    
+    mPhysicsSimulator->GetDynamicsWorld()->addRigidBody( rigidBody );
+    
+    //Setup debug display
+    // Add visual rep of Bullet Collision shape.
+    osg::Node* visNode = osgBullet::osgNodeFromBtCollisionShape( rigidBody->getCollisionShape() );
+    if( visNode != NULL )
+    {
+        osgBullet::AbsoluteModelTransform* dmt = new osgBullet::AbsoluteModelTransform();
+        dmt->addChild( visNode );
+        osgBullet::MotionState* motion = static_cast< osgBullet::MotionState* >( rigidBody->getMotionState() );
+        motion->setDebugTransform( dmt );
+        mPhysicsSimulator->GetDebugBullet()->addDynamic( dmt );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsRigidBody::StaticConcaveShape()
