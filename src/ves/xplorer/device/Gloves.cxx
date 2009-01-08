@@ -1003,10 +1003,10 @@ void Gloves::UpdateRightHandGlove()
         return;
     }
     
-    if( mRightHandPos->isStupefied() )
+    /*if( mRightHandPos->isStupefied() )
     {
         return;
-    }
+    }*/
     
     //Get data from hand joints
         //Get all the VR Juggler data variables
@@ -1092,10 +1092,10 @@ void Gloves::UpdateLeftHandGlove()
         return;
     }
 
-    if( mLeftHandPos->isStupefied() )
+    /*if( mLeftHandPos->isStupefied() )
     {
         return;
-    }
+    }*/
     
     //Get data from hand joints
         //Get all the VR Juggler data variables
@@ -1111,10 +1111,10 @@ void Gloves::UpdateLeftHandGlove()
     mLeftHand->setArticulation( osgBullet::HandNode::FINGER_4_ROTATE_INNER, mLeftPinkyMCP->getData() * mcp_scale );
 
     mLeftHand->setArticulation( osgBullet::HandNode::FINGER_0_ROTATE_OUTER, mLeftThumbPIP->getData() * pip_scale );
-    mLeftHand->setArticulation( osgBullet::HandNode::FINGER_1_ROTATE_OUTER, mRightIndexPIP->getData() * pip_scale );
-    mLeftHand->setArticulation( osgBullet::HandNode::FINGER_2_ROTATE_OUTER, mRightMiddlePIP->getData() * pip_scale );
-    mLeftHand->setArticulation( osgBullet::HandNode::FINGER_3_ROTATE_OUTER, mRightRingPIP->getData() * pip_scale );
-    mLeftHand->setArticulation( osgBullet::HandNode::FINGER_4_ROTATE_OUTER, mRightPinkyPIP->getData() * pip_scale );
+    mLeftHand->setArticulation( osgBullet::HandNode::FINGER_1_ROTATE_OUTER, mLeftIndexPIP->getData() * pip_scale );
+    mLeftHand->setArticulation( osgBullet::HandNode::FINGER_2_ROTATE_OUTER, mLeftMiddlePIP->getData() * pip_scale );
+    mLeftHand->setArticulation( osgBullet::HandNode::FINGER_3_ROTATE_OUTER, mLeftRingPIP->getData() * pip_scale );
+    mLeftHand->setArticulation( osgBullet::HandNode::FINGER_4_ROTATE_OUTER, mLeftPinkyPIP->getData() * pip_scale );
 
     //float thumb_scale = 60.f * pi_over_2;
     //float abduction_scale = 30.f * pi_over_2;
