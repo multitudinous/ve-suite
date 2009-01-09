@@ -135,14 +135,15 @@ App::App( int argc, char* argv[] )
     light_0->setAmbient( osg::Vec4d( 0.36862, 0.36842, 0.36842, 1.0 ) );
     light_0->setDiffuse( osg::Vec4d( 0.88627, 0.88500, 0.88500, 1.0 ) );
     light_0->setSpecular( osg::Vec4d( 0.49019, 0.48872, 0.48872, 1.0 ) );
-    //ABSOLUTE_RF, so we are not multiplying by the view/projection matrix
     //We are in openGL space
-    light_0->setPosition( osg::Vec4d( 0.0, 10000.0, 10000.0, 0.0 ) );
-    light_0->setDirection( osg::Vec3d( 0.0, -1.0, -1.0 ) );
+    light_0->setPosition( osg::Vec4d( 0.0, -10000.0, 10000.0, 0.0 ) );
+    light_0->setDirection( osg::Vec3d( 0.0, 1.0, -1.0 ) );
 
     light_source_0->setLight( light_0.get() );
     light_source_0->setLocalStateSetModes( osg::StateAttribute::ON );
-    light_source_0->setReferenceFrame( osg::LightSource::ABSOLUTE_RF );
+    // See the opengl docs on what the difference 
+    // is between ABSOLUTE and RELATIVE
+    light_source_0->setReferenceFrame( osg::LightSource::RELATIVE_RF );
 
     light_model_0->setAmbientIntensity( osg::Vec4( 0.1, 0.1, 0.1, 1.0 ) );
     // get correct specular lighting across pipes
@@ -465,6 +466,13 @@ void App::latePreFrame( void )
     {
         VPR_PROFILE_GUARD_HISTORY( "App::latePreFrame SceneManager", 20 );
         ves::xplorer::scenegraph::SceneManager::instance()->PreFrameUpdate();
+        gmtl::Matrix44d tempNavMatrix = 
+            ves::xplorer::scenegraph::SceneManager::instance()->
+                GetInvertedWorldDCS();
+        gmtl::Vec4d tempVec( 0.0, -10000.0, 10000.0, 0.0 );
+        tempVec = tempNavMatrix * tempVec;
+        light_0->setPosition( 
+            osg::Vec4d( tempVec[ 0 ], tempVec[ 1 ], tempVec[ 2 ], 0 ) );
     }
     ///////////////////////
     {

@@ -74,6 +74,8 @@
 // --- VR Juggler Includes --- //
 #include <jccl/RTRC/ConfigManager.h>
 
+#include <gmtl/gmtl.h>
+
 // --- C/C++ Libraries --- //
 #include <iostream>
 #include <string>
@@ -242,6 +244,11 @@ ves::xplorer::scenegraph::DCS* SceneManager::GetWorldDCS()
     return worldDCS.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
+const gmtl::Matrix44d& SceneManager::GetInvertedWorldDCS()
+{
+    return mInvertedWorldDCS;
+}
+////////////////////////////////////////////////////////////////////////////////
 osg::Group* SceneManager::GetNetworkDCS()
 {
     return mNetworkDCS.get();
@@ -355,7 +362,8 @@ void SceneManager::SetActiveSwitchNode( int activeNode )
 ////////////////////////////////////////////////////////////////////////////////
 void SceneManager::PreFrameUpdate()
 {
-    ;
+    mInvertedWorldDCS = worldDCS->GetMat();
+    mInvertedWorldDCS = gmtl::invert( mInvertedWorldDCS );
 }
 ////////////////////////////////////////////////////////////////////////////////
 osg::Group* SceneManager::GetActiveSwitchNode()

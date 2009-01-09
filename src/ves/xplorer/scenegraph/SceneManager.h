@@ -48,6 +48,8 @@
 // --- VR Juggler Includes --- //
 #include <vpr/Util/Singleton.h>
 
+#include <gmtl/Matrix.h>
+
 namespace ves
 {
 namespace xplorer
@@ -89,8 +91,13 @@ public:
     osg::Group* GetRootNode();
 
     ///Return the world DCS of the scenegraph
+    ///\return The world DCS
     ves::xplorer::scenegraph::DCS* GetWorldDCS();
 
+    ///Get the inverted world DCS matrix
+    ///\return The inverted matrix
+    const gmtl::Matrix44d& GetInvertedWorldDCS();
+    
     ///Return the network DCS of the scenegraph
     osg::Group* GetNetworkDCS();
 
@@ -158,6 +165,8 @@ private:
     ///Node to hold a network view of the system under investigation
     //osg::ref_ptr< ves::xplorer::scenegraph::DCS > networkDCS;
     osg::ref_ptr< osg::Group > mNetworkDCS;
+    ///Inverteded world dcs values
+    gmtl::Matrix44d mInvertedWorldDCS;
 
 #ifdef VE_SOUND
     ves::xplorer::scenegraph::Sound* m_sound;
