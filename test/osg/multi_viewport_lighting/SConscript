@@ -1,0 +1,22 @@
+##Builds a multitude of utilities
+import os, sys, string
+pj = os.path.join
+import SConsAddons.Util as sca_util
+
+Import('baseEnv RootDir ves_pkg LIBDIR GetPlatform buildDir osg_options')
+
+srcDir = os.path.abspath( pj(RootDir, 'test', 'osg', 'multi_viewport_lighting' ) )
+sources = sca_util.getSourcesRecursive( srcDir )
+headers = sca_util.getHeadersRecursive( srcDir )
+
+env = ves_pkg.getEnv().Copy()
+#env = baseEnv.Copy()
+osg_options.apply( env )
+
+prog = ves_pkg.createProgram('lightingTest' + env["PROGSUFFIX"], env, 'bin')
+#prog = ves_pkg.createProgram('ves_xplorer' + env["PROGSUFFIX"], env, 'bin',
+#    True,resources,pj( RootDir, 'src', 'apps', 'xplorer','Info.plist'),
+#    pj( RootDir, 'dist', 'darwin', 'PkgInfo'))
+
+prog.addSources( sources )
+prog.build()
