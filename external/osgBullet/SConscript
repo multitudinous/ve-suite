@@ -1,5 +1,4 @@
 ##Builds osgBullet
-#!python
 import os, sys, string
 pj = os.path.join
 import SConsAddons.Util as sca_util
@@ -17,7 +16,8 @@ lib_env = ves_pkg.getEnv().Copy()
 lib_env.Append( CPPPATH = [pj(openDir, 'include' )] )
 lib_env.Append( CPPPATH = [pj(RootDir, 'external','bullet-2.72','src' ) ] )
 lib_env.Append( CPPPATH = [pj(RootDir, 'external','bullet-2.72','Extras') ] )
-lib_env.Append( CPPDEFINES  = ['OSGBULLET_LIBRARY', 'osgBullet_EXPORTS'] )
+lib_env.Append( CPPDEFINES  = ['OSGBULLET_LIBRARY'] )
+#lib_env.Append( CPPDEFINES  = ['OSG_LIBRARY_STATIC' ] )
 lib_env.Append( LIBS = ['bullet','XML','COLLADA_DOM','BulletColladaConverter'] )
 lib_env.Append( LIBPATH = [pj('#', buildDir,'external', 'bullet-2.72')] )
 
@@ -26,11 +26,7 @@ osg_options.apply( lib_env )
 if GetPlatform() == 'linux':
     lib_env.Append( CXXFLAGS=['-fPIC'])
 
-if GetPlatform() == 'win32':
-   lib_env['no_import_lib'] = 1
-   lib_env['WINDOWS_INSERT_MANIFEST'] = False
-
-lib = ves_pkg.createStaticLibrary('osgBullet', lib_env,
+lib = ves_pkg.createSharedLibrary('osgBullet', lib_env,
                                                installPrefix = LIBDIR)
    
 lib.addSources(sources)
@@ -39,25 +35,24 @@ lib.build()
 
 
 ###############################################################
-##Builds libXML
+##Builds osgbpp
 openDir = os.path.abspath( pj(RootDir, 'external', 'osgBullet') )
-sources = sca_util.getSourcesRecursive( pj( openDir, 'applications','osgbpp' ) )
-sources = map(lambda s: pj('applications','osgbpp', s), sources)
+sources2 = sca_util.getSourcesRecursive( pj( openDir, 'applications','osgbpp' ) )
+sources2 = map(lambda s: pj('applications','osgbpp', s), sources2)
 
-lib_env = ves_pkg.getEnv().Copy()
-lib_env.Append( CPPPATH = [pj(openDir, 'include' )] )
-lib_env.Append( CPPPATH = [pj(RootDir, 'external','bullet-2.72','src' ) ] )
-lib_env.Append( CPPPATH = [pj(RootDir, 'external','bullet-2.72','Extras') ] )
-lib_env.Append( CPPDEFINES  = ['OSGBULLET_LIBRARY', 'osgBullet_EXPORTS'] )
-lib_env.Append( LIBS = ['osgBullet','BulletColladaConverter','bullet','COLLADA_DOM','XML'] )
-lib_env.Append( LIBPATH = [pj('#', buildDir,'external', 'bullet-2.72')] )
-lib_env.Append( LIBPATH = [pj('#', buildDir,'external', 'osgBullet')] )
+lib_env2 = ves_pkg.getEnv().Copy()
+lib_env2.Append( CPPPATH = [pj(openDir, 'include' )] )
+lib_env2.Append( CPPPATH = [pj(RootDir, 'external','bullet-2.72','src' ) ] )
+lib_env2.Append( CPPPATH = [pj(RootDir, 'external','bullet-2.72','Extras') ] )
+lib_env2.Append( LIBS = ['osgBullet','BulletColladaConverter','bullet','COLLADA_DOM','XML'] )
+lib_env2.Append( LIBPATH = [pj('#', buildDir,'external', 'bullet-2.72')] )
+lib_env2.Append( LIBPATH = [pj('#', buildDir,'external', 'osgBullet')] )
 
-osg_options.apply( lib_env )
+osg_options.apply( lib_env2 )
 
 if GetPlatform() == 'linux':
-    lib_env.Append( CXXFLAGS=['-fPIC'])
+    lib_env2.Append( CXXFLAGS=['-fPIC'])
 
-multiblock = ves_pkg.createProgram('osgbpp' + lib_env["PROGSUFFIX"], lib_env, 'bin')
-multiblock.addSources(sources)
+multiblock = ves_pkg.createProgram('osgbpp' + lib_env["PROGSUFFIX"], lib_env2, 'bin')
+multiblock.addSources(sources2)
 multiblock.build()
