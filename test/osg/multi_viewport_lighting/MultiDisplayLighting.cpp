@@ -94,6 +94,22 @@ public:
                         handled = true;
                     }
                     break;
+                    case 'r':
+                    {
+                        if( _ls->getReferenceFrame() == osg::LightSource::RELATIVE_RF )
+                        {
+                            osg::notify( osg::ALWAYS ) << "Setting reference frame ABSOLUTE_RF." << std::endl;
+                            _ls->setReferenceFrame( osg::LightSource::ABSOLUTE_RF );
+                        }
+                        else
+                        {
+                            osg::notify( osg::ALWAYS ) << "Setting reference frame RELATIVE_RF." << std::endl;
+                            _ls->setReferenceFrame( osg::LightSource::RELATIVE_RF );
+                        }
+
+                        handled = true;
+                    }
+                    break;
                     case 'd':
                     {
                         bool lsEnabled = ( _ls->getNodeMask() != 0x0 );

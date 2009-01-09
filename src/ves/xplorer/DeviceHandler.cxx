@@ -226,7 +226,7 @@ void DeviceHandler::SetActiveDevice( const std::string& activeDevice )
     if( itr != mDevices.end() )
     {
         mActiveDevice = itr->second;
-        std::cout << activeDevice << std::endl;
+        //std::cout << "|\tDeviceHandler::SetActiveDevice = " << activeDevice << std::endl;
         if( activeDevice == "Gloves" )
         {
             mActiveDevice->Initialize();
