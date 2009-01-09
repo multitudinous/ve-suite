@@ -141,13 +141,13 @@ void Gloves::Initialize()
     if( mRootNode->containsNode( mRightHand.get() ) )
     {
         mRootNode->removeChild( mRightHand.get() );
-        return;
+        //return;
     }
 
     if( mRootNode->containsNode( mLeftHand.get() ) )
     {
         mRootNode->removeChild( mLeftHand.get() );
-        return;
+        //return;
     }
 
     for( int i = 0; i < 3; ++i )
@@ -173,19 +173,7 @@ void Gloves::Initialize()
     mRightHand->setPosition( pos );
     mRightHand->setAttitude( quat );
     mRootNode->addChild( mRightHand.get() );
-    mRightHand->setDebug( true );
-
-    //Setup debug display
-    // Add visual rep of Bullet Collision shape.
-    /*osg::Node* visNode = osgBullet::osgNodeFromBtCollisionShape( rigidBody->getCollisionShape() );
-    if( visNode != NULL )
-    {
-        osgBullet::AbsoluteModelTransform* dmt = new osgBullet::AbsoluteModelTransform();
-        dmt->addChild( visNode );
-        osgBullet::MotionState* motion = static_cast< osgBullet::MotionState* >( rigidBody->getMotionState() );
-        motion->setDebugTransform( dmt );
-        mPhysicsSimulator->GetDebugBullet()->addDynamic( dmt );
-    }*/
+    //mRightHand->setDebug( true );
     
     mLeftHand = new osgBullet::HandNode( ves::xplorer::scenegraph::PhysicsSimulator::instance()->GetDynamicsWorld(), osgBullet::HandNode::LEFT, length );
 
@@ -197,6 +185,8 @@ void Gloves::Initialize()
     mLeftHand->setPosition( pos );
     mLeftHand->setAttitude( quat );
     mRootNode->addChild( mLeftHand.get() );
+    //mLeftHand->setDebug( true );
+
     std::cout << "|\tInitialize Gloves" << std::endl;
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -1003,10 +993,16 @@ void Gloves::UpdateRightHandGlove()
         return;
     }
     
-    /*if( mRightHandPos->isStupefied() )
+    gmtl::Matrix44d hand_pos_rot;
+    hand_pos_rot[0][3] = 0;
+    hand_pos_rot[1][3] = 3;
+    hand_pos_rot[2][3] = -3;
+    if( !mRightHandPos->isStupefied() )
     {
-        return;
-    }*/
+        //Get data from the trackers
+        gmtl::Matrix44f tempHand = mRightHandPos->getData();
+        hand_pos_rot = convertTo< double >( tempHand );
+    }
     
     //Get data from hand joints
         //Get all the VR Juggler data variables
@@ -1044,25 +1040,15 @@ void Gloves::UpdateRightHandGlove()
     //mRightHand->setArticulation( _mode, mRightHand->getArticulation( _mode ) + 0.1 );
     //mLeftHand->setArticulation( _mode, mLeftHand->getArticulation( _mode ) + 0.1 );
 
-    //Get data from the trackers
-    gmtl::Matrix44f hand_pos_rot = mRightHandPos->getData();
-    //ves::xplorer::scenegraph::DCS* worldDCS =
-    //    ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS();
-    //gmtl::Matrix44d tempCamera = worldDCS->GetMat();
-    //tempHandPos = tempCamera * tempHandPos;
-    ves::xplorer::scenegraph::DCS* worldDCS =
-        ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS();
-    gmtl::Matrix44d tempCamera = worldDCS->GetMat();
-    tempCamera = gmtl::invert( tempCamera );
-    //gmtl::Vec4d tempHandPos( 0, 3, 3, 1.0 );
-    gmtl::Vec4d tempHandPos( hand_pos_rot[0][3], -hand_pos_rot[2][3], hand_pos_rot[1][3], 1.0 );
-    tempHandPos = tempCamera * tempHandPos;
-    mRightHand->setPosition( osg::Vec3( tempHandPos[0], tempHandPos[1], tempHandPos[2] ) );
-
-    gmtl::Matrix44d vrjRHandMat = convertTo< double >( hand_pos_rot );
     gmtl::Vec3d x_axis( 1.0f, 0.0f, 0.0f );
     gmtl::Matrix44d rhRot = gmtl::makeRot< gmtl::Matrix44d >(
-        gmtl::AxisAngled( gmtl::Math::deg2Rad( -90.0f ), x_axis ) );
+        gmtl::AxisAngled( gmtl::Math::deg2Rad( 90.0f ), x_axis ) );
+    gmtl::Matrix44d tempCamera = 
+        ves::xplorer::scenegraph::SceneManager::instance()->GetInvertedWorldDCS();
+    hand_pos_rot = tempCamera * rhRot * hand_pos_rot;
+    mRightHand->setPosition( osg::Vec3( hand_pos_rot[0][3], hand_pos_rot[1][3], hand_pos_rot[2][3] ) );
+
+    //gmtl::Matrix44d vrjRHandMat = convertTo< double >( hand_pos_rot );
     osg::Vec3d pitch( 1, 0, 0 );
     osg::Vec3d roll( 0, 1, 0 );
     osg::Vec3d yaw( 0, 0, 1 );
@@ -1074,10 +1060,10 @@ void Gloves::UpdateRightHandGlove()
     
     gmtl::Matrix44d naVRot;
     naVRot.set( rotateMat.ptr() );
-    vrjRHandMat = vrjRHandMat * rhRot * naVRot;
-    gmtl::Quatd rhandQuat = gmtl::make< gmtl::Quatd >( vrjRHandMat );
+    hand_pos_rot = hand_pos_rot * naVRot;
+    gmtl::Quatd rhandQuat = gmtl::make< gmtl::Quatd >( hand_pos_rot );
 
-    mRightHand->setAttitude( osg::Quat(rhandQuat[0], -rhandQuat[2], rhandQuat[1], rhandQuat[3]  ) );
+    mRightHand->setAttitude( osg::Quat(rhandQuat[0], rhandQuat[1], rhandQuat[2], rhandQuat[3]  ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Gloves::UpdateLeftHandGlove()
@@ -1092,10 +1078,16 @@ void Gloves::UpdateLeftHandGlove()
         return;
     }
 
-    /*if( mLeftHandPos->isStupefied() )
+    gmtl::Matrix44d hand_pos_rot;
+    hand_pos_rot[0][3] = 0;
+    hand_pos_rot[1][3] = 3;
+    hand_pos_rot[2][3] = -3;
+    if( !mLeftHandPos->isStupefied() )
     {
-        return;
-    }*/
+        //Get data from the trackers
+        gmtl::Matrix44f tempHand = mLeftHandPos->getData();
+        hand_pos_rot = convertTo< double >( tempHand );
+    }
     
     //Get data from hand joints
         //Get all the VR Juggler data variables
@@ -1133,8 +1125,6 @@ void Gloves::UpdateLeftHandGlove()
     //mRightHand->setArticulation( _mode, mRightHand->getArticulation( _mode ) + 0.1 );
     //mLeftHand->setArticulation( _mode, mLeftHand->getArticulation( _mode ) + 0.1 );
 
-    //Get data from the trackers
-    gmtl::Matrix44f hand_pos_rot = mLeftHandPos->getData();
     mLeftHand->setPosition( osg::Vec3( hand_pos_rot[0][3], -hand_pos_rot[2][3], hand_pos_rot[1][3] ) );
 
     gmtl::Matrix44d vrjRHandMat = convertTo< double >( hand_pos_rot );

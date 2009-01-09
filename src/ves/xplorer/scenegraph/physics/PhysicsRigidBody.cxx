@@ -218,6 +218,19 @@ void PhysicsRigidBody::CleanRigidBody()
         //remove the rigidbodies from the dynamics world and delete them
         dw->removeRigidBody( mRB );
         
+        /*{
+            osgBullet::MotionState* motion = 
+                static_cast< osgBullet::MotionState* >( mRB->getMotionState() );
+            osg::ref_ptr< osg::Transform > dbgNode = 
+                motion->getDebugTransform();
+            if( dbgNode.valid() )
+            {
+                std::cout << " remove old wire " << std::endl;
+                mPhysicsSimulator->GetDebugBullet()->
+                        remove( dbgNode.get() );
+            }
+        }*/
+        
         {
             btCollisionShape* tempShape = mRB->getCollisionShape();
             delete tempShape;
@@ -350,15 +363,19 @@ void PhysicsRigidBody::RegisterRigidBody( btRigidBody* rigidBody )
     
     //Setup debug display
     // Add visual rep of Bullet Collision shape.
-    osg::Node* visNode = osgBullet::osgNodeFromBtCollisionShape( rigidBody->getCollisionShape() );
+    /*osg::Node* visNode = 
+        osgBullet::osgNodeFromBtCollisionShape( rigidBody->getCollisionShape() );
     if( visNode != NULL )
     {
-        osgBullet::AbsoluteModelTransform* dmt = new osgBullet::AbsoluteModelTransform();
+        osgBullet::MotionState* motion = 
+            static_cast< osgBullet::MotionState* >( rigidBody->getMotionState() );
+        osgBullet::AbsoluteModelTransform* dmt = 
+            new osgBullet::AbsoluteModelTransform();
         dmt->addChild( visNode );
-        osgBullet::MotionState* motion = static_cast< osgBullet::MotionState* >( rigidBody->getMotionState() );
         motion->setDebugTransform( dmt );
         mPhysicsSimulator->GetDebugBullet()->addDynamic( dmt );
-    }
+        motion->resetTransform();
+    }*/
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsRigidBody::StaticConcaveShape()
@@ -465,14 +482,16 @@ void PhysicsRigidBody::CustomShape( const BroadphaseNativeTypes shapeType, const
     //osgBullet::MotionState* motion = dynamic_cast< osgBullet::MotionState* >( mRB->getMotionState() );
     motion->setTransform( amt.get() );
 
-    //osg::BoundingSphere bs = subgraph->getBound();
-    osg::ComputeBoundsVisitor cbbv( osg::NodeVisitor::TRAVERSE_ALL_CHILDREN );
+    osg::BoundingSphere bs = mOSGToBullet->getBound();
+    /*osg::ComputeBoundsVisitor cbbv( osg::NodeVisitor::TRAVERSE_ALL_CHILDREN );
     mOSGToBullet->accept(cbbv);
     osg::BoundingBox bb = cbbv.getBoundingBox();
-    /*std::cout << bb.center() << std::endl;
+    std::cout << bb.center() << std::endl;
     std::cout << bb.radius() << std::endl;
     std::cout << bb._min << std::endl;
-    std::cout << bb._max << std::endl;*/
+    std::cout << bb._max << std::endl;
+    std::cout << bs.center() << std::endl;
+    std::cout << bs.radius() << std::endl;*/
     // Add visual rep of Bullet Collision shape.
     /*osg::Node* visNode = osgBullet::osgNodeFromBtCollisionShape( rb->getCollisionShape() );
     if( visNode != NULL )
@@ -491,7 +510,7 @@ void PhysicsRigidBody::CustomShape( const BroadphaseNativeTypes shapeType, const
     //std::cout << "|\tParent Transform " << m << std::endl;
     //osg::Vec3d tempScale = m.getScale();
     motion->setParentTransform( m );
-    motion->setCenterOfMass( bb.center() );
+    motion->setCenterOfMass( bs.center() );
     osgBullet::MotionState* tempMS = dynamic_cast< osgBullet::MotionState* >( mRB->getMotionState() );
     if( tempMS )
     {
