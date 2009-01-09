@@ -625,7 +625,10 @@ void AppFrame::StoreFrameSize( wxRect rect )
 {
     // store size
     wxConfig* cfg = static_cast<wxConfig*>( wxConfig::Get() );
-
+    if( !cfg )
+    {
+        return;
+    }
     wxString key = LOCATION + wxString::Format( _( "%d" ), 0 );
     cfg->Write( key + _T( "/" ) + LOCATION_X, rect.x );
     cfg->Write( key + _T( "/" ) + LOCATION_Y, rect.y );
@@ -637,7 +640,10 @@ void AppFrame::StoreConfig()
 {
     //store config
     wxConfig* cfg = static_cast<wxConfig*>( wxConfig::Get() );
-
+    if( !cfg )
+    {
+        return;
+    }
     wxString key = FEATURE;
     cfg->Write( key + _T( "/" ) + F_FINANCIAL, f_financial );
     cfg->Write( key + _T( "/" ) + F_GEOMETRY, f_geometry );
@@ -648,7 +654,10 @@ void AppFrame::StoreRecentFile()
 {
     //store recent menus in config
     wxConfig* cfg = static_cast<wxConfig*>( wxConfig::Get() );
-
+    if( !cfg )
+    {
+        return;
+    }
     m_recentVESFiles->Save( *cfg );
 }
 ////////////////////////////////////////////////////////////////////////////////
