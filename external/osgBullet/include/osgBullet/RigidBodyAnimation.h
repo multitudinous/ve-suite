@@ -25,7 +25,7 @@ public:
     virtual void operator()( osg::Node* node, osg::NodeVisitor* nv );
 
 protected:
-    ~RigidBodyAnimation() { }
+    virtual ~RigidBodyAnimation() { }
 };
 
 } // end namespace osgBullet

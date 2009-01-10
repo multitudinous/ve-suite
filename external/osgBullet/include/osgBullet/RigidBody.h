@@ -37,7 +37,7 @@ public:
     }
 
 protected:
-    ~RigidBody( void );
+    virtual ~RigidBody( void );
 
     btRigidBody* _rigidBody;
 };

@@ -135,7 +135,7 @@ public:
     {
     public:
         DebugBullet();
-        ~DebugBullet();
+        virtual ~DebugBullet();
 
         unsigned int addStatic( osg::Node* node );
         void setTransform( unsigned int idx, const osg::Matrix& m );
@@ -174,7 +174,7 @@ public:
 protected:
     void init();
 
-    ~HandNode();
+    virtual ~HandNode();
     void cleanup();
 
     // Incorporate transformation changes into the Bullet collision shapes.

@@ -37,7 +37,7 @@ class OSGBULLET_EXPORT MotionState : public btMotionState
 public:
     MotionState( const osg::Matrix& parentTransform = osg::Matrix::identity(),
         const osg::Vec3& centerOfMass = osg::Vec3( 0., 0., 0. ) );
-    ~MotionState( void ) { }
+    virtual ~MotionState( void ) { }
 
 
     // Bullet interface routines. To be used by Bullet only.

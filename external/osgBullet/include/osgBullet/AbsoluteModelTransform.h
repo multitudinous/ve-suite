@@ -43,7 +43,7 @@ public:
 
 
 protected:
-    ~AbsoluteModelTransform();
+    virtual ~AbsoluteModelTransform();
 
     osg::Matrix _matrix;
 };

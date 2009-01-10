@@ -37,7 +37,7 @@ public:
     }
 
 protected:
-    ~CollisionShape( void );
+    virtual ~CollisionShape( void );
 
     btCollisionShape* _collisionShape;
 };
