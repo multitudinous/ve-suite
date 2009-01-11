@@ -65,6 +65,9 @@ public:
     ///Get camera used for this pipeline
     osg::Camera* GetCamera();
 
+    ///Set the camera used for this pipeline
+    void SetCamera( osg::Camera* camera );
+
 protected:
     ///Destructor
     virtual ~Processor();

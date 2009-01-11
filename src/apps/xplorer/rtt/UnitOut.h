@@ -59,6 +59,9 @@ public:
     ///
     META_Node( rtt, UnitOut );
 
+    ///
+    void CreateVESQuad( osg::Vec3Array* quadVerts, osg::Vec2Array* texCoords );
+
 protected:
     ///Destructor
     virtual ~UnitOut();

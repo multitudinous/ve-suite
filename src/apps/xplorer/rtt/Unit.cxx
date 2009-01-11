@@ -50,6 +50,44 @@
 using namespace ves::xplorer::rtt;
 
 ////////////////////////////////////////////////////////////////////////////////
+Unit::DrawCallback::DrawCallback()
+    :
+    osg::Drawable::DrawCallback(),
+    mUnit( NULL )
+{
+    ;
+}
+////////////////////////////////////////////////////////////////////////////////
+Unit::DrawCallback::DrawCallback( Unit* unit )
+    :
+    osg::Drawable::DrawCallback(),
+    mUnit( unit )
+{
+    ;
+}
+////////////////////////////////////////////////////////////////////////////////
+Unit::DrawCallback::DrawCallback(
+    const Unit::DrawCallback& drawCallback, const osg::CopyOp& copyop )
+    :
+    osg::Drawable::DrawCallback( drawCallback, copyop ),
+    mUnit( drawCallback.mUnit )
+{
+    ;
+}
+////////////////////////////////////////////////////////////////////////////////
+Unit::DrawCallback::~DrawCallback()
+{
+    ;
+}
+////////////////////////////////////////////////////////////////////////////////
+void Unit::DrawCallback::drawImplementation(
+    osg::RenderInfo& ri, const osg::Drawable* dr ) const
+{
+    //Set matricies used for the unit
+    ri.getState()->applyProjectionMatrix( mUnit->mProjectionMatrix.get() );
+    ri.getState()->applyModelViewMatrix( mUnit->mModelViewMatrix.get() );
+}
+////////////////////////////////////////////////////////////////////////////////
 Unit::Unit()
     :
     osg::Group(),
@@ -57,7 +95,10 @@ Unit::Unit()
     mShader( NULL ),
     mDrawable( NULL ),
     mViewport( NULL ),
-    mGeode( NULL )
+    mGeode( NULL ),
+    mProjectionMatrix( new osg::RefMatrix(
+        osg::Matrix::ortho( 0.0, 1.0, 0.0, 1.0, 0.0, 1.0 ) ) ),
+    mModelViewMatrix( new osg::RefMatrix( osg::Matrix::identity() ) )
 {
     //Set default name
     setName( "Unit" );
@@ -77,7 +118,7 @@ Unit::Unit( const Unit& unit, const osg::CopyOp& copyop )
     mViewport( unit.mViewport ),
     mGeode( unit.mGeode )
 {
-
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 Unit::~Unit()
@@ -87,6 +128,89 @@ Unit::~Unit()
 ////////////////////////////////////////////////////////////////////////////////
 osg::Texture* const Unit::GetInputTexture( int inputIndex ) const
 {
-    return mInputTextures.find( inputIndex )->second.get();
+    TextureMap::const_iterator itr = mInputTextures.find( inputIndex );
+    if( itr != mInputTextures.end() )
+    {
+        return itr->second.get();
+    }
+    
+    return NULL;
+}
+////////////////////////////////////////////////////////////////////////////////
+osg::Texture* const Unit::GetOutputTexture( int mrt ) const
+{
+    TextureMap::const_iterator itr = mOutputTextures.find( mrt );
+    if( itr != mOutputTextures.end() )
+    {
+        return itr->second.get();
+    }
+
+    return NULL;
+}
+////////////////////////////////////////////////////////////////////////////////
+const Unit::TextureMap& Unit::GetOutputTextureMap() const
+{
+    return mOutputTextures;
+}
+////////////////////////////////////////////////////////////////////////////////
+void Unit::Initialize()
+{
+    // collect all inputs from the units above
+    SetInputTexturesFromParents();
+
+    /*
+    // check if we have input reference size
+    if( getInputTextureIndexForViewportReference() >= 0 &&
+         getInputTexture( getInputTextureIndexForViewportReference() ) )
+    {
+        // if no viewport, so create it
+        if (!mViewport.valid())
+            mViewport = new osg::Viewport(0,0,0,0);
+
+        // change viewport sizes
+        mViewport->width() = getInputTexture(getInputTextureIndexForViewportReference())->getTextureWidth();
+        mViewport->height() = getInputTexture(getInputTextureIndexForViewportReference())->getTextureHeight();
+
+        // just notice that the viewport size is changed
+        noticeChangeViewport();
+    }
+
+    // reassign input and shaders
+    assignInputTexture();
+    assignShader();
+    assignViewport();
+    */
+}
+////////////////////////////////////////////////////////////////////////////////
+void Unit::SetInputTexturesFromParents()
+{
+    //Scan all parents and look for units
+    rtt::Unit* unit( NULL );
+    for( unsigned int i = 0; i < getNumParents(); ++i )
+    {
+        unit = dynamic_cast< rtt::Unit* >( getParent( i ) );
+        if( unit )
+        {
+            //Add each found texture as input
+            const Unit::TextureMap& textureMap = unit->GetOutputTextureMap();
+            Unit::TextureMap::const_iterator itr = textureMap.begin();
+            for( itr; itr != textureMap.end(); ++itr )
+            {
+                osg::Texture* texture = itr->second.get();
+                if( texture )
+                {
+                    mInputTextures[ mInputTextures.size() ] = itr->second.get();
+                }
+                else
+                {
+                    osg::notify( osg::WARN )
+                        << "rtt::Unit::SetInputTexturesFromParents(): "
+                        << unit->getName()
+                        << " has invalid output texture!"
+                        << std::endl;
+                }
+            }
+        }
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////

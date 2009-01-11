@@ -607,6 +607,7 @@ void App::draw()
 #endif
 
     // Set the up the viewport (since OSG clears it out)
+    vrj::Viewport* vrjViewport = user_data->getViewport();
     float vp_ox, vp_oy, vp_sx, vp_sy;   // The float vrj sizes of the view ports
     int w_ox, w_oy, w_width, w_height;  // Origin and size of the window
     user_data->getViewport()->getOriginAndSize( vp_ox, vp_oy, vp_sx, vp_sy );
@@ -614,15 +615,15 @@ void App::draw()
 
     // compute unsigned versions of the viewport info (for passing to glViewport)
     const unsigned int ll_x =
-        static_cast<unsigned int>( vp_ox * static_cast<float>( w_width ) );
+        static_cast< unsigned int >( vp_ox * static_cast< float >( w_width ) );
     const unsigned int ll_y =
-        static_cast<unsigned int>( vp_oy * static_cast<float>( w_height ) );
+        static_cast< unsigned int >( vp_oy * static_cast< float >( w_height ) );
     const unsigned int x_size =
-        static_cast<unsigned int>( vp_sx * static_cast<float>( w_width ) );
+        static_cast< unsigned int >( vp_sx * static_cast< float >( w_width ) );
     const unsigned int y_size =
-        static_cast<unsigned int>( vp_sy * static_cast<float>( w_height ) );
+        static_cast< unsigned int >( vp_sy * static_cast< float >( w_height ) );
 
-    sv->setViewport( ll_x, ll_y, x_size, y_size );
+    sv->setViewport(  ll_x, ll_y, x_size, y_size  );
 
     //Get the frustrum
 #if __VJ_version >= 2003000
@@ -650,12 +651,12 @@ void App::draw()
     osg_proj_xform_mat->set( _vjMatrixLeft.mData );
     sv->setViewMatrix( *(osg_proj_xform_mat.get()) );
 
-    //Setup the render to texture camera
+    //Setup render to texture and post-processing pipeline
     if( mRTT )
     {
         VPR_PROFILE_GUARD_HISTORY( "App::draw RTT Camera", 20 );
-        mSceneRenderToTexture->UpdateRTTQuadAndViewportMatrix(
-            sv.get(), osg::Matrixd( mNavPosition.mData ) );
+        mSceneRenderToTexture->UpdateRTTQuadAndViewport(
+            osg::Matrixd( mNavPosition.mData ), vrjViewport );
     }
 
     //Draw the scene

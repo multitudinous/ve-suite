@@ -43,14 +43,15 @@
 // --- OSG Includes --- //
 #include <osg/ref_ptr>
 #include <osg/Matrixd>
+#include <osg/Texture2D>
 
 namespace osg
 {
 class Group;
-class Camera;
-class Texture2D;
-class RenderInfo;
 class Geode;
+class Switch;
+class Camera;
+//class Texture2D;
 class MatrixTransform;
 }
 
@@ -67,6 +68,7 @@ namespace ves
 {
 namespace xplorer
 {
+
 namespace rtt
 {
 class Processor;
@@ -86,17 +88,6 @@ class UnitOut;
  *
  */
 
-/*
-struct StencilImage : public osg::Camera::DrawCallback
-{
-    StencilImage();
-
-    virtual void operator () ( osg::RenderInfo& renderInfo ) const;
-
-    osg::ref_ptr< osg::Image > _image;
-};
-*/
-
 class SceneRenderToTexture
 {
 public:
@@ -110,31 +101,14 @@ public:
     ///NOTE: MUST be called AFTER EnvironmentHandler::InitScene
     void InitScene( osg::Camera* const sceneViewCamera );
 
-    ///Return the camera being used to render the ves scenegraph 
-    ///to texture. This is the root node for the scenegraph
-    ///\return The osg::Camera being used to render to the FBO
-    osg::Camera* const GetCamera();
-
     ///Get the root node for all children in the scene to be added to
     ///\return The root osg::Group node
     osg::Group* const GetGroup() const;
 
-    ///Return the texture that is being rendered for the desktop display
-    ///\return The osg::Texture2D for the display
-    osg::Texture2D* const GetColorMap();
-
-    ///
-    ///\return
-    //osg::MatrixTransform* const GetQuad();
-
     ///Update something
-    ////NOTE: Must have an active context to call
-    void UpdateRTTQuadAndViewportMatrix(
-        osgUtil::SceneView* sceneView, osg::Matrixd quadTransform );
-
-    ///Update the projection and viewport information for the rtt's cameras
     ///NOTE: Must have an active context to call
-    void UpdateRTTProjectionAndViewportMatrix( osgUtil::SceneView* sv ){;}
+    void UpdateRTTQuadAndViewport(
+        osg::Matrixd quadTransform, vrj::Viewport* viewport );
     
     ///Take a high resolution screen capture of the render window for SceneView
     ///\param root The osg::Group to be rendered
@@ -147,24 +121,24 @@ protected:
 
 private:
     ///
-    osg::Geode* CreateFullScreenTexturedQuad(
-        std::pair< int, int > screenDims, osg::Texture2D* colorTexture );
+    osg::Switch* CreatePipelineSwitch();
+
+    ///
+    osg::Camera* CreatePipelineCamera( osg::Viewport* viewport );
+
+    ///
+    rtt::Processor* CreatePipelineProcessor(
+        vrj::Viewport* viewport, osg::Camera* camera );
     
     ///
-    osg::Texture2D* CreateFBOTexture(
-        std::pair< int, int >& screenDims, float scale = 1.0f );
+    osg::Texture2D* CreateViewportTexture(
+        std::pair< int, int >& viewportDimensions,
+        osg::Texture2D::FilterMode filterMode,
+        osg::Texture2D::WrapMode wrapMode );
     
-    ///Create the camera with the appropriate settings to render to an FBO
-    void InitCamera( std::pair< int, int >& screenDims );
-
-    ///Create the texture of the appropriate size for the FBO to write to
-    void InitTextures( std::pair< int, int >& screenDims );
-
-    void InitRTTPipeline(
-        std::pair< int, int >& screenDims, osg::Camera* const sceneViewCamera );
-    
-    ///The root group that everything gets added to
-    osg::ref_ptr< osg::Group > mRootGroup;
+    ///
+    osg::Geode* CreateTexturedQuad(
+        vrj::Viewport* viewport, osg::Texture2D* texture );
 
     ///Set the number of super samples
     int mScaleFactor;
@@ -175,10 +149,30 @@ private:
     ///Let the object know all cameras are configured
     vrj::GlContextData< bool > mCamerasConfigured;
 
-    ///The render to texture camera
-    ///A context locked map to hold cameras
-    vrj::GlContextData< osg::ref_ptr< osg::Camera > > mCameraMap;
+    ///1
+    ///A switch node that keeps track of the active pipeline being rendered
+    ///A context locked map to hold switch nodes
+    vrj::GlContextData< osg::ref_ptr< osg::Switch > > mPipelineSwitch;
 
+    ///A typedef to make it easier to define iterators
+    typedef std::pair<
+        osg::ref_ptr< osg::Camera >,
+        osg::ref_ptr< rtt::Processor > > PipelinePair;
+
+    ///A typedef
+    typedef std::map< vrj::Viewport*, PipelinePair > PipelineMap;
+
+    ///2
+    ///The render to texture cameras
+    ///A context locked map to hold post-process pipelines for each viewport per context
+    vrj::GlContextData< PipelineMap > mPipelines;
+
+    ///3
+    ///The root group that everything gets added to
+    ///Is the same for all contexts
+    osg::ref_ptr< osg::Group > mRootGroup;
+
+    /*
     ///The texture attached to the color buffer of the camera
     ///A context locked map to hold textures
     vrj::GlContextData< osg::ref_ptr< osg::Texture2D > > mColorMap;
@@ -192,13 +186,11 @@ private:
     ///The texture attached to the depth and stencil buffer of the camera
     ///A context locked map to hold textures
     vrj::GlContextData< osg::ref_ptr< osg::Texture2D > > mDepthStencilTexture;
+    */
 
+    /*
     ///
-    vrj::GlContextData< osg::ref_ptr< osg::MatrixTransform > > mQuad;
-
-    ///
-    vrj::GlContextData< osg::ref_ptr< rtt::Processor > >
-        mProcessor;
+    vrj::GlContextData< osg::ref_ptr< rtt::Processor > > mProcessor;
 
     ///
     vrj::GlContextData< osg::ref_ptr< rtt::UnitCameraAttachmentBypass > >
@@ -219,6 +211,10 @@ private:
 
     ///
     vrj::GlContextData< osg::ref_ptr< rtt::UnitOut > > mQuadOut;
+    */
+
+    ///
+    vrj::GlContextData< osg::ref_ptr< osg::MatrixTransform > > mQuadTransform;
 
 };
 } //end xplorer

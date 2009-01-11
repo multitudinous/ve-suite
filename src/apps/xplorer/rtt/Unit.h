@@ -36,13 +36,13 @@
 
 // --- OSG Includes --- //
 #include <osg/Group>
+#include <osg/Drawable>
 
 namespace osg
 {
 class Geode;
 class Texture;
 class Shader;
-class Drawable;
 class Viewport;
 }
 
@@ -72,14 +72,59 @@ public:
     ///
     META_Node( rtt, Unit );
 
-
-    ///Return an input texture of a certain index
+    ///Return an input texture of a certain mrt index
     ///\param index Index of the input texture (index is equal to the texture unit)
     osg::Texture* const GetInputTexture( int inputIndex ) const;
+
+    ///Return an output texture of a certain mrt index
+    ///NOTE: If you haven't initialized the Unit before calling this method
+    ///it might end up in a NULL as output texture. For this purpose do use
+    ///the getOrCreateOutputTexture()
+    ///\param mrt
+    osg::Texture* const GetOutputTexture( int mrt = 0 ) const;
+
+    ///Return mOutputTextures
+    const Unit::TextureMap& GetOutputTextureMap() const;
+
+    ///Initialze the unit
+    virtual void Initialize();
 
 protected:
     ///Destructor
     virtual ~Unit();
+
+    ///Set the input textures based on the parents
+    virtual void SetInputTexturesFromParents();
+
+    ///This draw callback is used for customized drawing
+    class DrawCallback : public osg::Drawable::DrawCallback
+    {
+    public:
+        ///Default Constructor
+        DrawCallback();
+
+        ///Constructor
+        DrawCallback( Unit* unit );
+
+        ///Copy Constructor
+        DrawCallback(
+            const DrawCallback& drawCallback,
+            const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
+
+        ///Destructor
+        ~DrawCallback();
+
+        ///
+        META_Object( rtt, DrawCallback );
+
+        ///Do customized draw code
+        virtual void drawImplementation(
+            osg::RenderInfo& ri, const osg::Drawable* dr ) const;
+
+    private:
+        ///
+        osg::ref_ptr< Unit > mUnit;
+    };
 
     ///Is the unit active, yes/no
     bool mActive;
@@ -101,6 +146,12 @@ protected:
 
     ///Store the viewport of the camera
     osg::ref_ptr< osg::Viewport > mViewport;
+
+    ///Projection matrix of the ppu (default: 2D ortho view)
+    osg::ref_ptr< osg::RefMatrix > mProjectionMatrix;
+
+    ///Modelview matrix of the ppu (default: identity matrix)
+    osg::ref_ptr< osg::RefMatrix > mModelViewMatrix;
 
 private:
 

@@ -60,6 +60,9 @@ public:
     ///
     META_Node( rtt, UnitCameraAttachmentBypass );
 
+    ///
+    virtual void Initialize();
+
     ///Set the buffer component which has to be bypassed
     void SetBufferComponent( osg::Camera::BufferComponent bufferComponent );
 
@@ -67,7 +70,7 @@ protected:
     ///Destructor
     virtual ~UnitCameraAttachmentBypass();
 
-    ///
+    ///Set the input textures based on the parents
     virtual void SetInputTexturesFromParents();
 
 private:

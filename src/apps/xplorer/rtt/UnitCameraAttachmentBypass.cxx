@@ -57,7 +57,7 @@ UnitCameraAttachmentBypass::UnitCameraAttachmentBypass(
     Unit( unitCameraAttachmentBypass, copyop ),
     mBufferComponent( unitCameraAttachmentBypass.mBufferComponent )
 {
-
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 UnitCameraAttachmentBypass::~UnitCameraAttachmentBypass()
@@ -69,6 +69,11 @@ void UnitCameraAttachmentBypass::SetBufferComponent(
     osg::Camera::BufferComponent bufferComponent )
 {
     mBufferComponent = bufferComponent;
+}
+////////////////////////////////////////////////////////////////////////////////
+void UnitCameraAttachmentBypass::Initialize()
+{
+    Unit::Initialize();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UnitCameraAttachmentBypass::SetInputTexturesFromParents()
