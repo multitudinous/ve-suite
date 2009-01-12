@@ -185,6 +185,7 @@ void cfdVEPluginLoader::ScanAndLoad( void )
          for(size_t i = 0; i < defaultLibs.size(); ++i )
          {
              vpr::LibraryPtr tempPtr = defaultLibs.at( i );
+             Sleep(1000);
              libs.push_back( tempPtr );
          }
     }
