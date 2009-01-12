@@ -39,6 +39,7 @@
 
 // ---  VR Juggler Includes --- //
 #include <vrj/Draw/OGL/GlContextData.h>
+#include <vrj/vrjParam.h>
 
 // --- OSG Includes --- //
 #include <osg/ref_ptr>
