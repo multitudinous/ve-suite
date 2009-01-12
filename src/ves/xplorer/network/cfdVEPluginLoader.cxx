@@ -185,7 +185,14 @@ void cfdVEPluginLoader::ScanAndLoad( void )
          for(size_t i = 0; i < defaultLibs.size(); ++i )
          {
              vpr::LibraryPtr tempPtr = defaultLibs.at( i );
+#ifdef WIN32
+             //This is a hack for windows because without this here
+             //xplorer will crash. I am unsure of why this is the case
+             //and it could not be determined through significant debugging.
+             //If anyone can shed light on the problem a fix here would be
+             //appreciated.
              Sleep(1000);
+#endif
              libs.push_back( tempPtr );
          }
     }
