@@ -6,7 +6,7 @@ pj = os.path.join
 import SConsAddons.Util as sca_util
 
 Import('baseEnv ves_pkg LIBDIR RootDir buildDir osg_options GetPlatform')
-openDir = os.path.abspath( pj(RootDir, 'external', 'bullet-2.72') )
+openDir = os.path.abspath( pj(RootDir, 'external', 'bullet-2.73') )
 sources = sca_util.getSourcesRecursive( pj( openDir, 'src' ) )
 headers = sca_util.getHeadersRecursive( pj( openDir, 'src' )  )
 headers = map(lambda s: pj('src', s), headers)
@@ -42,7 +42,7 @@ libDB_env.Append( CPPPATH = [pj(openDir, 'Extras','COLLADA_DOM','include','1.4')
 libDB_env.Append( CPPPATH = [pj(openDir, 'src' )] )
 #libDB_env.Append( CPPDEFINES  = ['osgdb_ppu_EXPORTS'] )
 libDB_env.Append( LIBS = ['bullet','XML','COLLADA_DOM'] )
-libDB_env.Append( LIBPATH = [pj('#', buildDir,'external', 'bullet-2.72')] )
+libDB_env.Append( LIBPATH = [pj('#', buildDir,'external', 'bullet-2.73')] )
 #osg_options.apply( libDB_env )
 if GetPlatform() == 'linux':
     libDB_env.Append( CCFLAGS=['-fPIC'])
@@ -73,7 +73,7 @@ lib_env.Append( CPPPATH = [pj(openDir, 'Extras','COLLADA_DOM','include' )] )
 lib_env.Append( CPPPATH = [pj(openDir, 'Extras','COLLADA_DOM','include','1.4' )] )
 lib_env.Append( CPPPATH = [pj(openDir, 'Extras','LibXML','include' )] )
 lib_env.Append( LIBS = ['XML'] )
-lib_env.Append( LIBPATH = [pj('#', buildDir,'external', 'bullet-2.72')] )
+lib_env.Append( LIBPATH = [pj('#', buildDir,'external', 'bullet-2.73')] )
 if GetPlatform() == 'linux':
     lib_env.Append( CCFLAGS=['-fPIC'])
 

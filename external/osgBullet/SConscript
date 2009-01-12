@@ -14,12 +14,12 @@ sources = map(lambda s: pj('src', 'osgBullet', s),
 
 lib_env = ves_pkg.getEnv().Copy()
 lib_env.Append( CPPPATH = [pj(openDir, 'include' )] )
-lib_env.Append( CPPPATH = [pj(RootDir, 'external','bullet-2.72','src' ) ] )
-lib_env.Append( CPPPATH = [pj(RootDir, 'external','bullet-2.72','Extras') ] )
+lib_env.Append( CPPPATH = [pj(RootDir, 'external','bullet-2.73','src' ) ] )
+lib_env.Append( CPPPATH = [pj(RootDir, 'external','bullet-2.73','Extras') ] )
 lib_env.Append( CPPDEFINES  = ['OSGBULLET_LIBRARY'] )
 #lib_env.Append( CPPDEFINES  = ['OSG_LIBRARY_STATIC' ] )
 lib_env.Append( LIBS = ['bullet','XML','COLLADA_DOM','BulletColladaConverter'] )
-lib_env.Append( LIBPATH = [pj('#', buildDir,'external', 'bullet-2.72')] )
+lib_env.Append( LIBPATH = [pj('#', buildDir,'external', 'bullet-2.73')] )
 
 osg_options.apply( lib_env )
 
@@ -42,10 +42,10 @@ sources2 = map(lambda s: pj('applications','osgbpp', s), sources2)
 
 lib_env2 = ves_pkg.getEnv().Copy()
 lib_env2.Append( CPPPATH = [pj(openDir, 'include' )] )
-lib_env2.Append( CPPPATH = [pj(RootDir, 'external','bullet-2.72','src' ) ] )
-lib_env2.Append( CPPPATH = [pj(RootDir, 'external','bullet-2.72','Extras') ] )
+lib_env2.Append( CPPPATH = [pj(RootDir, 'external','bullet-2.73','src' ) ] )
+lib_env2.Append( CPPPATH = [pj(RootDir, 'external','bullet-2.73','Extras') ] )
 lib_env2.Append( LIBS = ['osgBullet','BulletColladaConverter','bullet','COLLADA_DOM','XML'] )
-lib_env2.Append( LIBPATH = [pj('#', buildDir,'external', 'bullet-2.72')] )
+lib_env2.Append( LIBPATH = [pj('#', buildDir,'external', 'bullet-2.73')] )
 lib_env2.Append( LIBPATH = [pj('#', buildDir,'external', 'osgBullet')] )
 
 osg_options.apply( lib_env2 )
@@ -54,5 +54,28 @@ if GetPlatform() == 'linux':
     lib_env2.Append( CXXFLAGS=['-fPIC'])
 
 multiblock = ves_pkg.createProgram('osgbpp' + lib_env["PROGSUFFIX"], lib_env2, 'bin')
+multiblock.addSources(sources2)
+multiblock.build()
+
+###############################################################
+##Builds caddemo
+openDir = os.path.abspath( pj(RootDir, 'external', 'osgBullet') )
+sources2 = sca_util.getSourcesRecursive( pj( openDir, 'examples','CadDemo' ) )
+sources2 = map(lambda s: pj('examples','CadDemo', s), sources2)
+
+lib_env2 = ves_pkg.getEnv().Copy()
+lib_env2.Append( CPPPATH = [pj(openDir, 'include' )] )
+lib_env2.Append( CPPPATH = [pj(RootDir, 'external','bullet-2.73','src' ) ] )
+lib_env2.Append( CPPPATH = [pj(RootDir, 'external','bullet-2.73','Extras') ] )
+lib_env2.Append( LIBS = ['osgBullet','BulletColladaConverter','bullet','COLLADA_DOM','XML'] )
+lib_env2.Append( LIBPATH = [pj('#', buildDir,'external', 'bullet-2.73')] )
+lib_env2.Append( LIBPATH = [pj('#', buildDir,'external', 'osgBullet')] )
+
+osg_options.apply( lib_env2 )
+
+if GetPlatform() == 'linux':
+    lib_env2.Append( CXXFLAGS=['-fPIC'])
+
+multiblock = ves_pkg.createProgram('caddemo' + lib_env["PROGSUFFIX"], lib_env2, 'bin')
 multiblock.addSources(sources2)
 multiblock.build()

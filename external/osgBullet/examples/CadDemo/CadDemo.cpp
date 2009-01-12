@@ -31,7 +31,7 @@
 #include <sstream>
 #include <osg/io_utils>
 
-
+#include <iostream>
 
 osgBullet::DebugBullet _debugBullet;
 
@@ -525,6 +525,7 @@ main( int argc,
         osgBullet::MotionState* motion = new osgBullet::MotionState;
         motion->setTransform( amt.get() );
         osg::BoundingSphere bs = subgraph->getBound();
+        rb->setActivationState( DISABLE_DEACTIVATION );
 
         // Add visual rep of Bullet Collision shape.
         osg::Node* visNode = osgBullet::osgNodeFromBtCollisionShape( rb->getCollisionShape() );
@@ -566,6 +567,7 @@ main( int argc,
         osgBullet::MotionState* motion = new osgBullet::MotionState;
         motion->setTransform( amt.get() );
         osg::BoundingSphere bs = subgraph->getBound();
+        rb->setActivationState( DISABLE_DEACTIVATION );
 
         // Add visual rep of Bullet Collision shape.
         osg::Node* visNode = osgBullet::osgNodeFromBtCollisionShape( rb->getCollisionShape() );
@@ -608,6 +610,8 @@ main( int argc,
     {
         currSimTime = viewer.getFrameStamp()->getSimulationTime();
         bulletWorld->stepSimulation( currSimTime - prevSimTime );
+        float dt = currSimTime - prevSimTime;
+        std::cout << dt << std::endl;
         prevSimTime = currSimTime;
         viewer.frame();
     }
