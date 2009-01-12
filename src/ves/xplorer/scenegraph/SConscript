@@ -15,13 +15,13 @@ headers = sca_util.getHeadersRecursive( srcDir )
 lib_env = ves_pkg.getEnv().Copy()
 
 lib_env.Append(CPPPATH = [pj('#','external','osgBullet','include'),
-                          pj('#','external','bullet-2.72','Extras'),
-                          pj('#','external','bullet-2.72','src')])
+                          pj('#','external','bullet-2.73','Extras'),
+                          pj('#','external','bullet-2.73','src')])
 lib_env.Append(LIBS = ['ves_open_xml','ves_xplorer_util','bullet','osgBullet','BulletColladaConverter','COLLADA_DOM','XML'])
 
 lib_env.Append(LIBPATH = [pj('#', buildDir, 'src', 'ves', 'open','xml'),
                           pj('#', buildDir, 'src', 'ves', 'xplorer','util'),
-                          pj('#', buildDir,'external','bullet-2.72'),
+                          pj('#', buildDir,'external','bullet-2.73'),
                           pj('#', buildDir,'external','osgBullet')])
 
 gmtl_options.apply( lib_env )

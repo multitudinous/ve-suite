@@ -22,7 +22,7 @@ lib_env.Append( LIBPATH = [ pj( '#', buildDir, 'src', 'ves', 'open', 'xml' ),
                             pj( '#', buildDir, 'src', 'ves', 'xplorer', 'scenegraph' ) ] )
 #bulletVersion = bullet_options.getVersion()
 lib_env.Append(LIBS = ['bullet'])
-lib_env.Append(LIBPATH = [pj('#',buildDir,'external','bullet-2.72')])
+lib_env.Append(LIBPATH = [pj('#',buildDir,'external','bullet-2.73')])
 lib_env.Append( CPPDEFINES = [ 'VE_USER_PLUGIN_LIBRARY' ] )
 
 gmtl_options.apply( lib_env )

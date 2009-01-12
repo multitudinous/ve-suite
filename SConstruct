@@ -440,7 +440,7 @@ if not SConsAddons.Util.hasHelpFlag():
    baseEnv.AppendUnique( CPPDEFINES = ['BULLET_MAJOR_VERSION=%i' %bulletVersion[ 0 ],
                   'BULLET_MINOR_VERSION=%i' %bulletVersion[ 1 ] ] )  
    baseEnv.AppendUnique(CPPPATH = [pj(RootDir,'external','osgBullet','include')])
-   baseEnv.AppendUnique(CPPPATH = [pj(RootDir,'external','bullet-2.72','src')])
+   baseEnv.AppendUnique(CPPPATH = [pj(RootDir,'external','bullet-2.73','src')])
 
    baseEnv.AppendUnique( CPPPATH = [pj(RootDir,'src'),pj(RootDir,buildDir,'src')] )
    baseEnv.AppendUnique( CPPDEFINES = ['_OSG','VTK44'] )
@@ -540,7 +540,7 @@ if not SConsAddons.Util.hasHelpFlag():
    osgPPUSubdirs = pj( buildDir, 'external', 'osgPPU')
    osgEphemerisSubdirs = pj( buildDir, 'external', 'osgEphemeris')
    osgBulletSubdirs = pj( buildDir, 'external', 'osgBullet')
-   bullet = pj( buildDir, 'external', 'bullet-2.72')
+   bullet = pj( buildDir, 'external', 'bullet-2.73')
    
    ves_dirs = [vesSubdirs, distSubdirs, osgEphemerisSubdirs,
                shareSubdirs, lokiSubdirs, 

@@ -24,7 +24,7 @@ shareSubdirs = Split("""
 """)
 
 if GetPlatform() != 'win32':
-  shareSubdirs.append(pj('fpc'))
+  shareSubdirs.append( pj('fpc') )
 
 ##Set the Sconscript files to build.
 if 'docs' in COMMAND_LINE_TARGETS:

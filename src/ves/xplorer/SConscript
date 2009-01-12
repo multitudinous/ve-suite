@@ -101,9 +101,9 @@ lib_env.Append(LIBPATH = [pj('#',buildDir,'external','osgEphemeris')])
 lib_env.Append(LIBS = ['osgBullet'])
 lib_env.Append(LIBPATH = [pj('#',buildDir,'external','osgBullet')])
 
-#lib_env.Append(CPPPATH = [pj(RootDir,'external','bullet-2.72','src')])
+#lib_env.Append(CPPPATH = [pj(RootDir,'external','bullet-2.73','src')])
 lib_env.Append(LIBS = ['bullet'])
-lib_env.Append(LIBPATH = [pj('#',buildDir,'external','bullet-2.72')])
+lib_env.Append(LIBPATH = [pj('#',buildDir,'external','bullet-2.73')])
 #libBulletColladaConverter.a libCOLLADA_DOM.a libXML.a libbullet.a
 
 if GetPlatform() == 'win32':

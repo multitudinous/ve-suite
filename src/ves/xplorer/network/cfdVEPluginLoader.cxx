@@ -173,10 +173,10 @@ void cfdVEPluginLoader::ScanAndLoad( void )
     //Load ves default plugins
     if( vesuiteHomeDefined )
     {
+        vpr::LibraryFinder::LibraryList defaultLibs;
         vpr::LibraryFinder finder( vesuitePath, DSO_SUFFIX );
-        vpr::LibraryFinder::LibraryList defaultLibs = finder.getLibraries();
-
         defaultLibs = finder.getLibraries();
+
         vprDEBUG( vesDBG, 1 )  << "|\tNumber of VE-Suite libs : "
             << defaultLibs.size()
             << " " << DSO_SUFFIX << std::endl
@@ -184,7 +184,8 @@ void cfdVEPluginLoader::ScanAndLoad( void )
         // Load the default plugin
          for(size_t i = 0; i < defaultLibs.size(); ++i )
          {
-             libs.push_back( defaultLibs.at( i ) );
+             vpr::LibraryPtr tempPtr = defaultLibs.at( i );
+             libs.push_back( tempPtr );
          }
     }
 
