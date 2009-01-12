@@ -135,7 +135,7 @@ void SceneRenderToTexture::InitScene( osg::Camera* const sceneViewCamera )
         std::cout << "|\tViewport " << i << ": " << std::endl;
 
 #if __VJ_version >= 2003000
-        vrj::ViewportPtr viewport = vrj::GlDrawManager::instance()->
+        vrj::ViewportPtr vrjViewport = vrj::GlDrawManager::instance()->
             currentUserData()->getGlWindow()->getDisplay()->getViewport( i );
 #else
         vrj::Viewport* vrjViewport = vrj::GlDrawManager::instance()->
@@ -186,8 +186,13 @@ osg::Switch* SceneRenderToTexture::CreatePipelineSwitch()
     return tempSwitch;
 }
 ////////////////////////////////////////////////////////////////////////////////
-osg::Camera* SceneRenderToTexture::CreatePipelineCamera(
-    osg::Viewport* viewport )
+#if __VJ_version >= 2003000
+rtt::Processor* SceneRenderToTexture::CreatePipelineProcessor(
+    vrj::ViewportPtr viewport, osg::Camera* camera  )
+#else
+rtt::Processor* SceneRenderToTexture::CreatePipelineProcessor(
+    vrj::Viewport* viewport, osg::Camera* camera  )
+#endif
 {
     osg::Camera* tempCamera = new osg::Camera();
     tempCamera->setReferenceFrame( osg::Camera::RELATIVE_RF );
@@ -312,8 +317,13 @@ osg::Camera* SceneRenderToTexture::CreatePipelineCamera(
     return tempCamera;
 }
 ////////////////////////////////////////////////////////////////////////////////
+#if __VJ_version >= 2003000
+rtt::Processor* SceneRenderToTexture::CreatePipelineProcessor(
+    vrj::ViewportPtr viewport, osg::Camera* camera  )
+#else
 rtt::Processor* SceneRenderToTexture::CreatePipelineProcessor(
     vrj::Viewport* viewport, osg::Camera* camera  )
+#endif
 {
     //This is the code for the glow pipeline
     osg::ref_ptr< osgDB::ReaderWriter::Options > vertexOptions =
@@ -876,8 +886,13 @@ osg::Texture2D* SceneRenderToTexture::CreateViewportTexture(
     */
 }
 ////////////////////////////////////////////////////////////////////////////////
+#if __VJ_version >= 2003000
+osg::Geode* SceneRenderToTexture::CreateTexturedQuad(
+    vrj::ViewportPtr viewport, osg::Texture2D* texture )
+#else
 osg::Geode* SceneRenderToTexture::CreateTexturedQuad(
     vrj::Viewport* viewport, osg::Texture2D* texture )
+#endif
 {    
     osg::ref_ptr< osg::Vec3Array > quadVertices = new osg::Vec3Array();
     quadVertices->resize( 4 );

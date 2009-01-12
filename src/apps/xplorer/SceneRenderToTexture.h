@@ -123,11 +123,20 @@ private:
     osg::Switch* CreatePipelineSwitch();
 
     ///
+#if __VJ_version >= 2003000
+    osg::Camera* CreatePipelineCamera( osg::ViewportPtr viewport );
+#else
     osg::Camera* CreatePipelineCamera( osg::Viewport* viewport );
+#endif
 
     ///
+#if __VJ_version >= 2003000
     rtt::Processor* CreatePipelineProcessor(
-        vrj::Viewport* viewport, osg::Camera* camera );
+        vrj::ViewportPtr viewport, osg::Camera* camera  )
+#else
+    rtt::Processor* CreatePipelineProcessor(
+        vrj::Viewport* viewport, osg::Camera* camera  )
+#endif
     
     ///
     osg::Texture2D* CreateViewportTexture(
@@ -136,9 +145,13 @@ private:
         osg::Texture2D::WrapMode wrapMode );
     
     ///
+#if __VJ_version >= 2003000
+    osg::Geode* CreateTexturedQuad(
+        vrj::ViewportPtr viewport, osg::Texture2D* texture );
+#else
     osg::Geode* CreateTexturedQuad(
         vrj::Viewport* viewport, osg::Texture2D* texture );
-
+#endif
     ///Set the number of super samples
     int mScaleFactor;
 
@@ -159,7 +172,11 @@ private:
         osg::ref_ptr< rtt::Processor > > PipelinePair;
 
     ///A typedef
+#if __VJ_version >= 2003000
+    typedef std::map< vrj::ViewportPtr, PipelinePair > PipelineMap;
+#else
     typedef std::map< vrj::Viewport*, PipelinePair > PipelineMap;
+#endif
 
     ///2
     ///The render to texture cameras
