@@ -415,6 +415,8 @@ void App::latePreFrame( void )
 #if ((OSG_VERSION_MAJOR>=1) && (OSG_VERSION_MINOR>2) || (OSG_VERSION_MAJOR>=2))
         mFrameStamp->setSimulationTime( current_time );
 #endif
+        mFrameDT = current_time - mLastFrameTime;
+        mLastFrameTime = current_time;
         //This is a frame rate calculation
         deltaTime = current_time - mLastTime;
         if( deltaTime > 1 )
@@ -460,7 +462,7 @@ void App::latePreFrame( void )
     ///////////////////////
     {
         VPR_PROFILE_GUARD_HISTORY( "App::latePreFrame PhysicsSimulator", 20 );
-        ves::xplorer::scenegraph::PhysicsSimulator::instance()->UpdatePhysics( deltaTime );
+        ves::xplorer::scenegraph::PhysicsSimulator::instance()->UpdatePhysics( mFrameDT );
     }
     ///////////////////////
     {
@@ -607,7 +609,6 @@ void App::draw()
 #endif
 
     // Set the up the viewport (since OSG clears it out)
-    vrj::Viewport* vrjViewport = user_data->getViewport();
     float vp_ox, vp_oy, vp_sx, vp_sy;   // The float vrj sizes of the view ports
     int w_ox, w_oy, w_width, w_height;  // Origin and size of the window
     user_data->getViewport()->getOriginAndSize( vp_ox, vp_oy, vp_sx, vp_sy );
@@ -655,8 +656,7 @@ void App::draw()
     if( mRTT )
     {
         VPR_PROFILE_GUARD_HISTORY( "App::draw RTT Camera", 20 );
-        mSceneRenderToTexture->UpdateRTTQuadAndViewport(
-            osg::Matrixd( mNavPosition.mData ), vrjViewport );
+        mSceneRenderToTexture->UpdateRTTQuadAndViewport();
     }
 
     //Draw the scene

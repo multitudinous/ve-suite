@@ -61,9 +61,9 @@ vrjuggler_options.apply( env )
 #env.Append(LIBS = ['osgBullet'])
 #env.Append(LIBPATH = [pj('#',buildDir,'external','osgBullet')])
 
-#env.Append(CPPPATH = [pj(RootDir,'external','bullet-2.72','src')])
+#env.Append(CPPPATH = [pj(RootDir,'external','bullet-2.73','src')])
 #env.Append(LIBS = ['bullet'])
-#env.Append(LIBPATH = [pj('#',buildDir,'external','bullet-2.72')])
+#env.Append(LIBPATH = [pj('#',buildDir,'external','bullet-2.73')])
 
 resources = [ pj( RootDir, 'dist', 'installerImages', 've_icon128x128.icns'), 
     pj( RootDir, 'src', 'apps', 'xplorer','vrjuggler.plist')]

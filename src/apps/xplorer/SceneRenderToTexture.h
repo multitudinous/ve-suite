@@ -107,8 +107,7 @@ public:
 
     ///Update something
     ///NOTE: Must have an active context to call
-    void UpdateRTTQuadAndViewport(
-        osg::Matrixd quadTransform, vrj::Viewport* viewport );
+    void UpdateRTTQuadAndViewport();
     
     ///Take a high resolution screen capture of the render window for SceneView
     ///\param root The osg::Group to be rendered

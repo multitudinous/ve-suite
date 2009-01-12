@@ -253,7 +253,13 @@ private:
 
     ///Used for framerate calculation as integers only
     float mLastTime;
+    
+    ///Last time from last frame
+    float mLastFrameTime;
 
+    ///The frame delta time
+    float mFrameDT;
+    
     ///Time to start
     double time_since_start;
 

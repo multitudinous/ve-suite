@@ -32,18 +32,18 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
 // --- VE-Suite Includes --- //
-#include <apps/xplorer/SceneRenderToTexture.h>
+#include "SceneRenderToTexture.h"
 
-#include <apps/xplorer/rtt/Processor.h>
-#include <apps/xplorer/rtt/UnitCameraAttachmentBypass.h>
-#include <apps/xplorer/rtt/UnitInOut.h>
-#include <apps/xplorer/rtt/UnitOut.h>
+#include "rtt/Processor.h"
+#include "rtt/UnitCameraAttachmentBypass.h"
+#include "rtt/UnitInOut.h"
+#include "rtt/UnitOut.h"
 
 #include <ves/xplorer/EnvironmentHandler.h>
 
 #include <ves/xplorer/environment/cfdDisplaySettings.h>
 
-//#include <ves/xplorer/scenegraph/SceneManager.h>
+#include <ves/xplorer/scenegraph/SceneManager.h>
 
 // ---  VR Juggler Includes --- //
 #include <vrj/Draw/OGL/GlWindow.h>
@@ -974,8 +974,7 @@ osg::Group* const SceneRenderToTexture::GetGroup() const
     return mRootGroup.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void SceneRenderToTexture::UpdateRTTQuadAndViewport(
-    osg::Matrixd quadTransform,  vrj::Viewport* viewport  )
+void SceneRenderToTexture::UpdateRTTQuadAndViewport()
 {
     if( !(*mCamerasConfigured) )
     {
@@ -983,8 +982,18 @@ void SceneRenderToTexture::UpdateRTTQuadAndViewport(
     }
 
     //Remove the camera dcs transform from the quad vertices
-    (*mQuadTransform)->setMatrix( osg::Matrix::inverse( quadTransform ) );
+    (*mQuadTransform)->setMatrix( osg::Matrixd( 
+        ves::xplorer::scenegraph::SceneManager::instance()->
+        GetInvertedWorldDCS().mData ) );
 
+#if __VJ_version >= 2003000
+    vrj::ViewportPtr viewport = vrj::GlDrawManager::instance()->
+        currentUserData()->getViewport();
+#else
+    vrj::Viewport* viewport = vrj::GlDrawManager::instance()->
+        currentUserData()->getViewport();
+#endif
+    
     PipelineMap::const_iterator itr = (*mPipelines).find( viewport );
     if( itr != (*mPipelines).end() )
     {
