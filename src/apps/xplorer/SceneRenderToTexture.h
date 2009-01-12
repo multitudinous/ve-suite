@@ -123,11 +123,7 @@ private:
     osg::Switch* CreatePipelineSwitch();
 
     ///
-#if __VJ_version >= 2003000
-    osg::Camera* CreatePipelineCamera( osg::ViewportPtr viewport );
-#else
     osg::Camera* CreatePipelineCamera( osg::Viewport* viewport );
-#endif
 
     ///
 #if __VJ_version >= 2003000

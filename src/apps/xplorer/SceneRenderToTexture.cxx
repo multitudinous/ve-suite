@@ -186,13 +186,7 @@ osg::Switch* SceneRenderToTexture::CreatePipelineSwitch()
     return tempSwitch;
 }
 ////////////////////////////////////////////////////////////////////////////////
-#if __VJ_version >= 2003000
-rtt::Processor* SceneRenderToTexture::CreatePipelineProcessor(
-    vrj::ViewportPtr viewport, osg::Camera* camera  )
-#else
-rtt::Processor* SceneRenderToTexture::CreatePipelineProcessor(
-    vrj::Viewport* viewport, osg::Camera* camera  )
-#endif
+osg::Camera* SceneRenderToTexture::CreatePipelineCamera( osg::Viewport* viewport )
 {
     osg::Camera* tempCamera = new osg::Camera();
     tempCamera->setReferenceFrame( osg::Camera::RELATIVE_RF );
