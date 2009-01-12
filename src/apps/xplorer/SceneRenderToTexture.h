@@ -128,10 +128,10 @@ private:
     ///
 #if __VJ_version >= 2003000
     rtt::Processor* CreatePipelineProcessor(
-        vrj::ViewportPtr viewport, osg::Camera* camera  )
+        vrj::ViewportPtr viewport, osg::Camera* camera  );
 #else
     rtt::Processor* CreatePipelineProcessor(
-        vrj::Viewport* viewport, osg::Camera* camera  )
+        vrj::Viewport* viewport, osg::Camera* camera  );
 #endif
     
     ///
