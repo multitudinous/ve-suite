@@ -435,12 +435,17 @@ if not SConsAddons.Util.hasHelpFlag():
    if osgal_options.isAvailable():
       baseEnv.Append( CPPDEFINES = ['VE_SOUND'] )  
 
+   # VTK defines
    baseEnv.AppendUnique( CPPDEFINES = ['VTK_POST_FEB20'] )
    baseEnv.AppendUnique( CPPDEFINES = ['VTK_STREAMS_FWD_ONLY'] )
+   # Bullet defines
    baseEnv.AppendUnique( CPPDEFINES = ['BULLET_MAJOR_VERSION=%i' %bulletVersion[ 0 ],
                   'BULLET_MINOR_VERSION=%i' %bulletVersion[ 1 ] ] )  
    baseEnv.AppendUnique(CPPPATH = [pj(RootDir,'external','osgBullet','include')])
    baseEnv.AppendUnique(CPPPATH = [pj(RootDir,'external','bullet-2.73','src')])
+   if GetArch() == 'x64':
+      baseEnv.AppendUnique( CPPDEFINES = ['USE_ADDR64=1'] )
+
 
    baseEnv.AppendUnique( CPPPATH = [pj(RootDir,'src'),pj(RootDir,buildDir,'src')] )
    baseEnv.AppendUnique( CPPDEFINES = ['_OSG','VTK44'] )
