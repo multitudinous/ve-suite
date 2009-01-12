@@ -199,7 +199,7 @@ void PhysicsRigidBody::SetMassProps( bool dynamic )
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsRigidBody::PushBackCollision(
-    PhysicsRigidBody* physicsRigidBody, btVector3 location )
+    PhysicsRigidBody* physicsRigidBody, const btVector3& location )
 {
     mCollisions.insert( std::make_pair( physicsRigidBody, location ) );
 }

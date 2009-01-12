@@ -140,7 +140,7 @@ private:
     ///Clean up the memory associated with a btRigidBody
     void CleanRigidBody();
 
-    void PushBackCollision( PhysicsRigidBody* physicsRigidBody, btVector3 location );
+    void PushBackCollision( PhysicsRigidBody* physicsRigidBody, const btVector3& location );
     ///Modify the mass, friction, restitution, and inertia for the rigidbody
     void SetMassProps( bool dynamic = true );
     ///Create a btRigidBody with different shape types
