@@ -373,12 +373,17 @@ class LauncherWindow(wx.Frame):
 
     def OpenFile(self, event = None):
         self.UpdateData()
-        types = "VES files (*.ves)|*.ves"
+        types = ""
+        temptypes = "VES files (*.ves)|*.ves"
         if windows:
-            types += "|Batch files (*.bat)|*.bat"
-            types += "|Executable files (*.exe)|*.exe"
+            temptypes += "|Batch files (*.bat)|*.bat"
+            temptypes += "|Executable files (*.exe)|*.exe"
+            types += "All Supported (*.ves;*.bat;*.exe)|*.ves;*.bat;*.exe|"
+            types += temptypes
         elif unix:
-            types += "|Script files (*.sh;*.tsh)|*.sh;*.tsh"
+            temptypes += "|Script files (*.sh;*.tsh)|*.sh;*.tsh"
+            types += "All Supported (*.ves;*.sh;*.tsh)|*.ves;*.sh;*.tsh|"
+            types += temptypes
         dlg = wx.FileDialog(self,
                             "Choose a file.",
                             defaultDir = self.state.GetSurface("Directory"),
