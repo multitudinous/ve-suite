@@ -283,6 +283,7 @@ public:
     wxBitmap* GetIconImage();
     
 protected:
+    wxMenu* SetupPluginBasePopupMenu();
     virtual wxMenu* GetPluginPopupMenu( wxMenu* baseMenu );
 
     void GetDataTables( ves::open::xml::CommandPtr inputCommand,

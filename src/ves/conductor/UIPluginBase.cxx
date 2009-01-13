@@ -1814,10 +1814,8 @@ void UIPluginBase::OnMRightDown( wxMouseEvent& event )
     //m_canvas->Refresh( true );
 
     SendActiveId();
-    
-    wxMenu* baseMenu = GetPopupMenu();
-    wxMenu* completeMenu = GetPluginPopupMenu( baseMenu );
-    m_canvas->PopupMenu( completeMenu );
+
+    m_canvas->PopupMenu( GetPopupMenu() );
 
     m_selFrPort = -1;
     m_selToPort = -1;
@@ -2295,7 +2293,28 @@ void UIPluginBase::TogglePlugin( wxCommandEvent& event )
 ////////////////////////////////////////////////////////////////////////////////
 wxMenu* UIPluginBase::GetPopupMenu()
 {
-        //create the menu
+    wxMenu* baseMenu = SetupPluginBasePopupMenu();
+    wxMenu* completeMenu = GetPluginPopupMenu( baseMenu );
+    return completeMenu;
+}
+////////////////////////////////////////////////////////////////////////////////
+void UIPluginBase::SendActiveId()
+{
+    //send the active id so that each plugin knows what to do
+    wxUpdateUIEvent setActivePluginId( UIPLUGINBASE_SET_ACTIVE_PLUGIN );
+    setActivePluginId.SetClientData( &id );
+    setActivePluginId.SetId( UIPLUGINBASE_SET_ACTIVE_PLUGIN );
+    m_canvas->GetEventHandler()->ProcessEvent( setActivePluginId );
+}
+////////////////////////////////////////////////////////////////////////////////
+wxMenu* UIPluginBase::GetPluginPopupMenu( wxMenu* baseMenu )
+{
+    return baseMenu;
+}
+////////////////////////////////////////////////////////////////////////////////
+wxMenu* UIPluginBase::SetupPluginBasePopupMenu()
+{
+    //create the menu
     if( mPopMenu )
     {
         return mPopMenu;
@@ -2318,7 +2337,7 @@ wxMenu* UIPluginBase::GetPopupMenu()
     }
     mPopMenu->Append( UIPLUGINBASE_SHOW_FINANCIAL, _( "Financial Data" ) );
     mPopMenu->Enable( UIPLUGINBASE_SHOW_FINANCIAL, true );
-
+    
     //Toggle Plugin Menu
     wxMenu* pluginMenu = new wxMenu();
     pluginMenu->Append( UIPLUGINBASE_TOGGLE_ALL_ON, _( "Toggle All On" ) );
@@ -2326,9 +2345,9 @@ wxMenu* UIPluginBase::GetPopupMenu()
     pluginMenu->Append( UIPLUGINBASE_TOGGLE_PLUGIN_ON, _( "Toggle Plugin On" ) );
     pluginMenu->Enable( UIPLUGINBASE_TOGGLE_PLUGIN_ON, true );
     mPopMenu->Append( UIPLUGINBASE_TOGGLE_MENU, _( "Toggle Plugin" ), pluginMenu,
-                    _( "Used to toggle plugin" ) );
+                     _( "Used to toggle plugin" ) );
     mPopMenu->Enable( UIPLUGINBASE_TOGGLE_MENU, true );
-
+    
     //Port Menu
     wxMenu * port_menu = new wxMenu();
     port_menu->Append( UIPLUGINBASE_ADD_INPUT_PORT, _( "Add Input Port" ) );
@@ -2339,7 +2358,7 @@ wxMenu* UIPluginBase::GetPopupMenu()
     port_menu->Enable( UIPLUGINBASE_DELETE_PORT, true );
     mPopMenu->Append( ::wxNewId(), _( "Ports" ), port_menu,
                      _( "Used to manipulate ports" ) );
-
+    
     //Icon Menu
     wxMenu * icon_menu = new wxMenu();
     icon_menu->Append( UIPLUGINBASE_SHOW_ICON_CHOOSER, _( "Icon Chooser" ) );
@@ -2378,22 +2397,8 @@ wxMenu* UIPluginBase::GetPopupMenu()
     mPopMenu->Enable( UIPLUGINBASE_DEL_MOD, true );
     mPopMenu->Append( UIPLUGINBASE_MAKE_HIER, _( "Make Into Hierarchy" ) );
     mPopMenu->Enable( UIPLUGINBASE_MAKE_HIER, true );
-
+    
     //mPopMenu->SetClientData( &id );
-
+    
     return mPopMenu;
-}
-////////////////////////////////////////////////////////////////////////////////
-void UIPluginBase::SendActiveId()
-{
-    //send the active id so that each plugin knows what to do
-    wxUpdateUIEvent setActivePluginId( UIPLUGINBASE_SET_ACTIVE_PLUGIN );
-    setActivePluginId.SetClientData( &id );
-    setActivePluginId.SetId( UIPLUGINBASE_SET_ACTIVE_PLUGIN );
-    m_canvas->GetEventHandler()->ProcessEvent( setActivePluginId );
-}
-////////////////////////////////////////////////////////////////////////////////
-wxMenu* UIPluginBase::GetPluginPopupMenu( wxMenu* baseMenu )
-{
-    return baseMenu;
 }
