@@ -37,7 +37,7 @@ BKPParser::~BKPParser()
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void BKPParser::openFile(const char * file)
+void BKPParser::OpenSimAndParse(const char * file)
 {
     std::string fileName(file);
     std::string bkpExt(".bkp");
@@ -47,6 +47,14 @@ void BKPParser::openFile(const char * file)
     CString filename = file;
     aspendoc->open( ( workingDir + fileName + apwExt ).c_str());
     //aspendoc->open( ( fileName + apwExt ).c_str());
+}
+////////////////////////////////////////////////////////////////////////////////
+void BKPParser::OpenSim(const char * file)
+{
+    std::string fileName(file);
+    std::string apwExt(".apw");
+    CString filename = file;
+    aspendoc->open( ( workingDir + fileName + apwExt ).c_str());
 }
 ///////////////////////////////////////////////////////////////////////////////
 void BKPParser::closeFile()
@@ -1688,6 +1696,7 @@ std::string BKPParser::GetInputModuleParams(std::string modname)
 {
     CASI::CASIObj cur_block =
         aspendoc->getBlockByName( CString( modname.c_str( ) ) );
+    cur_block.processBlockInputs();
     
     ves::open::xml::CommandPtr params( new ves::open::xml::Command() );
     std::vector<std::string> paramList;
@@ -1722,6 +1731,8 @@ std::string BKPParser::GetInputModuleParamProperties(std::string modname,
 {
     CASI::CASIObj cur_block =
         aspendoc->getBlockByName(CString(modname.c_str()));
+    cur_block.processBlockInputs();
+
     std::cout<<modname<<std::endl;
     std::cout<<paramName<<std::endl;
     unsigned int j;
@@ -1835,6 +1846,7 @@ std::string BKPParser::GetOutputModuleParams(std::string modname)
 {
     CASI::CASIObj cur_block =
         aspendoc->getBlockByName(CString(modname.c_str()));
+    cur_block.processBlockOutputs();
     
     ves::open::xml::CommandPtr params( new ves::open::xml::Command() );
     std::vector<std::string> paramList;
@@ -1870,6 +1882,8 @@ std::string BKPParser::GetOutputModuleParamProperties(std::string modname,
 {
     CASI::CASIObj cur_block =
         aspendoc->getBlockByName(CString(modname.c_str()));
+    cur_block.processBlockOutputs();
+
     std::cout<<modname<<std::endl;
     std::cout<<paramName<<std::endl;
     unsigned int j;

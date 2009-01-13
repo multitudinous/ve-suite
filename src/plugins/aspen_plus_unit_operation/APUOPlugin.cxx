@@ -122,7 +122,8 @@ void  APUOPlugin::OnQueryInputs( wxCommandEvent& event )
     ves::open::xml::model::ModelPtr parentTraverser = GetVEModel();
     if( parentTraverser != NULL )
     {
-        while( parentTraverser->GetParentModel() != NULL )
+        while( parentTraverser->GetParentModel() != NULL &&
+            parentTraverser->GetParentModel()->GetPluginType().compare( "APPlugin" ) != 0 )
         {
             //compName = parentTraverser->GetModelName() +".Data.Blocks." + compName;
             parentTraverser = parentTraverser->GetParentModel();
@@ -195,7 +196,8 @@ void  APUOPlugin::OnQueryOutputs( wxCommandEvent& event )
     ves::open::xml::model::ModelPtr parentTraverser = GetVEModel();
     if( parentTraverser != NULL )
     {
-        while( parentTraverser->GetParentModel() != NULL )
+        while( parentTraverser->GetParentModel() != NULL &&
+            parentTraverser->GetParentModel()->GetPluginType().compare( "APPlugin" ) != 0 )
         {
             //compName = parentTraverser->GetModelName() +".Data.Blocks." + compName;
             parentTraverser = parentTraverser->GetParentModel();

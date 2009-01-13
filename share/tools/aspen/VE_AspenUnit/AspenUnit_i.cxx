@@ -625,7 +625,7 @@ char* Body_Unit_i::handleGetNetwork(ves::open::xml::CommandPtr cmd)
 		    //Display->SetWindowText( ( mWorkingDir + filename ).c_str());
 		    Display->SetWindowText( ( filename ).c_str());
             //go through bkp parsing procedure
-		    bkp->openFile( filename.c_str() );
+		    bkp->OpenSimAndParse( filename.c_str() );
             mFileName = filename;
 		    firsttime=false;
 	    }
@@ -694,13 +694,25 @@ char* Body_Unit_i::handleOpenSimulation(ves::open::xml::CommandPtr cmd)
 	//this command has no params
 	std::string filename = cmd->GetDataValuePair(1)->GetDataString();
 	Display->SetWindowText(filename.c_str());
-    if( bkpFlag )
+
+    std::string extension = filename.substr( filename.size() - 4, 4 );
+ 
+    if( extension.find( "bkp" ) != std::string::npos )
     {
-	    bkp->openFile(filename.c_str());
+        bkpFlag = true;
+        dynFlag = false;
+        filename.resize( filename.size() - 4 );
+        bkp = new BKPParser();
+	    bkp->SetWorkingDir( mWorkingDir );
+	    bkp->OpenSim(filename.c_str());
     }
-    
-    if( dynFlag )
-    {
+    else if( extension.find( "dynf" ) != std::string::npos )
+    {   
+        bkpFlag = false;
+        dynFlag = true;
+        filename.resize( filename.size() - 5 );
+        dyn = new DynParser();
+	    dyn->SetWorkingDir( mWorkingDir );
 	    dyn->OpenFile(filename.c_str());
     }
 	return CORBA::string_dup("Simulation Opened.");

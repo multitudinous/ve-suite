@@ -254,7 +254,7 @@ void cfdExecutive::GetNetwork( void )
     //output.close();
     const std::string network = temp;
     veNetwork = network;
-    vprDEBUG( vesDBG, 0 ) << "|\t\tNetwork String : " << network
+    vprDEBUG( vesDBG, 3 ) << "|\t\tNetwork String : " << network
         << std::endl << vprDEBUG_FLUSH;
 
     // Load from the nt file loaded through wx

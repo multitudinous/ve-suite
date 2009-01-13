@@ -95,7 +95,8 @@ public:
 
 	BKPParser();                                                       //constructor
 	~BKPParser();                                                      //deconstrutor
-	void openFile(const char *);                                             //opens the given file
+	void OpenSimAndParse(const char *);                                             //opens the given file
+	void OpenSim(const char *);
 	void closeFile();                                             //close the file
 	void saveFile();  
 	void saveAs(const char *);                
