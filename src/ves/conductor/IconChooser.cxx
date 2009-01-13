@@ -342,7 +342,7 @@ void IconChooser::InitializeAspenIcons()
             iconMapIter != tempIconMap.end(); ++iconMapIter )
     {
         wxStringTokenizer tkz( wxString( iconMapIter->first.c_str(),
-                                         wxConvUTF8 ), wxT( "/" ) );
+                                         wxConvUTF8 ), wxT( "_" ) );
         tempDirectory = tkz.GetNextToken();
         lastDirName = dirname;
         dirname = tkz.GetNextToken();
@@ -360,8 +360,9 @@ void IconChooser::InitializeAspenIcons()
         }
 
         //construct iconPath and place it in the map along with its event id
-        filename = filename.RemoveLast( 4 );
-        wxString iconPath = dirname + wxString( _( "/" ) ) + filename;
+        //filename = filename.RemoveLast( 4 );
+        //wxString iconPath = dirname + wxString( _( "/" ) ) + filename;
+        wxString iconPath = filename;
         iconPaths[ buttonCount ] = ConvertUnicode( iconPath.c_str() );
 
         wxImage jpeg( iconMapIter->second );
@@ -373,7 +374,7 @@ void IconChooser::InitializeAspenIcons()
         //yLoc = 95 * vCount;
         wxBitmapButton * tempButton = new wxBitmapButton( WxNoteBookPage,
                                                           buttonCount, jpeg, wxPoint( xLoc, yLoc ) );
-        tempButton->SetToolTip( filename );
+        //tempButton->SetToolTip( filename );
         Connect( buttonCount, wxEVT_COMMAND_BUTTON_CLICKED,
                  wxCommandEventHandler( IconChooser::WxButtonClick ) );
 
