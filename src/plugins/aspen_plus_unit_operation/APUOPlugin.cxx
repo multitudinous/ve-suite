@@ -70,7 +70,7 @@ APUOPlugin::APUOPlugin() :
     mAspenMenu( 0 )
 {
     mPluginName = wxString( "AspenPlusUO", wxConvUTF8 );
-    //GetVEModel()->SetPluginType( "APUOPlugin" );
+    GetVEModel()->SetPluginType( "APUOPlugin" );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

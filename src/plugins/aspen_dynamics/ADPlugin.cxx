@@ -81,7 +81,7 @@ ADPlugin::ADPlugin() :
     mAspenMenu( 0 )
 {
     mPluginName = wxString( "AspenDynamics", wxConvUTF8 );
-    //GetVEModel()->SetPluginType( "ADPlugin" );
+    GetVEModel()->SetPluginType( "ADPlugin" );
 
     iconFilename = "dynamics";
     wxImage my_img( dynamics );

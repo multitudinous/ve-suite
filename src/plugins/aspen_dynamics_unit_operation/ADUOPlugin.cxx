@@ -58,7 +58,7 @@ ADUOPlugin::ADUOPlugin() :
     mAspenMenu( 0 )
 {
     mPluginName = wxString( "AspenDynamicsUO", wxConvUTF8 );
-    //GetVEModel()->SetPluginType( "ADUOPlugin" );
+    GetVEModel()->SetPluginType( "ADUOPlugin" );
 
 }
 ////////////////////////////////////////////////////////////////////////////////
