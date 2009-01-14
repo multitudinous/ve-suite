@@ -70,6 +70,7 @@ APUOPlugin::APUOPlugin() :
     mAspenMenu( 0 )
 {
     mPluginName = wxString( "AspenPlusUO", wxConvUTF8 );
+    mDescription = wxString( "Aspen Plus Unit Operation Plugin", wxConvUTF8 );
     GetVEModel()->SetPluginType( "APUOPlugin" );
 }
 

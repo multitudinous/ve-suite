@@ -141,7 +141,7 @@ public:
     ///This sets the name of the module
     virtual void SetName( wxString pluginName );
     ///This returns the description of the module, This should be a short description
-    virtual wxString GetDesc();
+    wxString GetDesc();
     ///Return the URL of the online help
     virtual wxString GetHelp();
     ///Get geometry data
@@ -401,6 +401,8 @@ protected:
     std::pair< unsigned int, size_t > pluginDialogPair;
     ///THe plugin delete event
     wxUpdateUIEvent pluginDeleteEvent;
+
+    wxString mDescription;
 
 private:
     ///That's the for default implementation of the DrawIcon. 

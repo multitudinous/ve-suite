@@ -58,6 +58,7 @@ ADUOPlugin::ADUOPlugin() :
     mAspenMenu( 0 )
 {
     mPluginName = wxString( "AspenDynamicsUO", wxConvUTF8 );
+    mDescription = wxString( "Aspen Dynamics Unit Operation Plugin", wxConvUTF8 );
     GetVEModel()->SetPluginType( "ADUOPlugin" );
 
 }

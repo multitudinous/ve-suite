@@ -166,6 +166,7 @@ UIPluginBase::UIPluginBase() :
     pos = wxPoint( 0, 0 ); //default position
 
     mPluginName = wxString( "DefaultPlugin", wxConvUTF8 );
+    mDescription = wxString( "Default Plugin", wxConvUTF8 );
 
     wxImage my_img( square_xpm );
     mIconW = static_cast< int >( my_img.GetWidth() );//*0.30f );
@@ -491,13 +492,11 @@ wxString UIPluginBase::GetHelp()
 {
     return _T( "www.vesuite.org" );
 }
-
 /////////////////////////////////////////////////////////////////////////////
 wxString UIPluginBase::GetDesc()
 {
-    return _T( "This is a default module" );
+    return mDescription;
 }
-
 /////////////////////////////////////////////////////////////////////////////
 void UIPluginBase::Lock( bool lock )
 {
@@ -1522,14 +1521,9 @@ void  UIPluginBase::OnReinitBlocks( wxCommandEvent& event )
 void UIPluginBase::OnShowDesc( wxCommandEvent& event )
 {
     UIPLUGIN_CHECKID( event )
-    wxString desc;
     wxString title;
-
     title << wxT( "Description" );
-
-    desc = GetDesc();
-
-    wxMessageDialog( m_canvas, desc, title ).ShowModal();
+    wxMessageDialog( m_canvas, mDescription, title ).ShowModal();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIPluginBase::OnParaView( wxCommandEvent& WXUNUSED( event ) )
