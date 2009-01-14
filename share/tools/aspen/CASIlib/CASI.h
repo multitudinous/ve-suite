@@ -171,11 +171,13 @@ namespace CASI
 		int getNumDOPort(); //get number of destination/output port
 
 		int getFVNVariables();
+		void processBlockInputs();
+		void processBlockOutputs();
 
 		private:
 		void prepStream();
 		void prepBlock();
-		void processBlocks();
+		//void processBlocks();
 		void prepBlockInputSubs( CString, CString );
 		void prepBlockOutputSubs( CString, CString );
 		std::set< CString > streamComps;
