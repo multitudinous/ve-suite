@@ -126,10 +126,6 @@ void SceneRenderToTexture::InitScene( osg::Camera* const sceneViewCamera )
     (*mQuadTransform)->setName( "QuadTransform" );
     sceneViewCamera->addChild( (*mQuadTransform).get() );
 
-    //Create the pipeline switch node
-    *mPipelineSwitch = CreatePipelineSwitch();
-    sceneViewCamera->addChild( (*mPipelineSwitch).get() );
-
     for( size_t i = 0; i < numViewports; ++i )
     {
         std::cout << "|\tViewport " << i << ": " << std::endl;
@@ -174,16 +170,14 @@ void SceneRenderToTexture::InitScene( osg::Camera* const sceneViewCamera )
         //Each pipeline consists of a osg::Camera and rtt::Processor
         (*mPipelines)[ vrjViewport ] =
             std::make_pair( camera.get(), processor.get() );
+
+        sceneViewCamera->addChild( camera.get() );
+        sceneViewCamera->addChild( processor.get() );
     }
+
+    (*mActivePipeline) = &((*mPipelines).rbegin()->second);
     
     *mCamerasConfigured = true;
-}
-////////////////////////////////////////////////////////////////////////////////
-osg::Switch* SceneRenderToTexture::CreatePipelineSwitch()
-{
-    osg::Switch* tempSwitch = new osg::Switch();
-
-    return tempSwitch;
 }
 ////////////////////////////////////////////////////////////////////////////////
 osg::Camera* SceneRenderToTexture::CreatePipelineCamera( osg::Viewport* viewport )
@@ -305,8 +299,8 @@ osg::Camera* SceneRenderToTexture::CreatePipelineCamera( osg::Viewport* viewport
     //Add the scenegraph to the camera    
     tempCamera->addChild( mRootGroup.get() );
 
-    //Add the pipeline camera to the switch node
-    (*mPipelineSwitch)->addChild( tempCamera );
+    //Turn node off
+    tempCamera->setNodeMask( 0 );
     
     return tempCamera;
 }
@@ -565,9 +559,8 @@ rtt::Processor* SceneRenderToTexture::CreatePipelineProcessor(
     colorBuffer0->addChild( ppuOut.get() );
     */
 
-
-    //Add the pipeline processor to the switch node
-    (*mPipelineSwitch)->addChild( tempProcessor );
+    //Turn node off
+    tempProcessor->setNodeMask( 0 );
 
     return tempProcessor;
 
@@ -1002,15 +995,17 @@ void SceneRenderToTexture::UpdateRTTQuadAndViewport()
     vrj::Viewport* viewport = vrj::GlDrawManager::instance()->
         currentUserData()->getViewport();
 #endif
+
+    //Turn off previous pipeline
+    (*mActivePipeline)->first->setNodeMask( 0 );
+    (*mActivePipeline)->second->setNodeMask( 0 );
     
-    PipelineMap::const_iterator itr = (*mPipelines).find( viewport );
+    PipelineMap::iterator itr = (*mPipelines).find( viewport );
     if( itr != (*mPipelines).end() )
     {
-        PipelinePair pipelinePair = itr->second;
-
-        (*mPipelineSwitch)->setAllChildrenOff();
-        (*mPipelineSwitch)->setChildValue( pipelinePair.first.get(), true );
-        (*mPipelineSwitch)->setChildValue( pipelinePair.second.get(), true );
+        (*mActivePipeline) = &(itr->second);
+        (*mActivePipeline)->first->setNodeMask( 1 );
+        (*mActivePipeline)->second->setNodeMask( 1 );
     }
     else
     {

@@ -121,9 +121,6 @@ protected:
 
 private:
     ///
-    osg::Switch* CreatePipelineSwitch();
-
-    ///
     osg::Camera* CreatePipelineCamera( osg::Viewport* viewport );
 
     ///
@@ -158,11 +155,6 @@ private:
     ///Let the object know all cameras are configured
     vrj::GlContextData< bool > mCamerasConfigured;
 
-    ///1
-    ///A switch node that keeps track of the active pipeline being rendered
-    ///A context locked map to hold switch nodes
-    vrj::GlContextData< osg::ref_ptr< osg::Switch > > mPipelineSwitch;
-
     ///A typedef to make it easier to define iterators
     typedef std::pair<
         osg::ref_ptr< osg::Camera >,
@@ -175,12 +167,14 @@ private:
     typedef std::map< vrj::Viewport*, PipelinePair > PipelineMap;
 #endif
 
-    ///2
+    ///A PipelinePair that keeps track of the active pipeline being rendered
+    ///A context locked map to hold switch nodes
+    vrj::GlContextData< PipelinePair* > mActivePipeline;
+
     ///The render to texture cameras
     ///A context locked map to hold post-process pipelines for each viewport per context
     vrj::GlContextData< PipelineMap > mPipelines;
 
-    ///3
     ///The root group that everything gets added to
     ///Is the same for all contexts
     osg::ref_ptr< osg::Group > mRootGroup;
