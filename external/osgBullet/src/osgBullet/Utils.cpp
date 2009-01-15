@@ -49,3 +49,16 @@ osgBullet::asBtVector3( const osg::Vec3& v )
     return btVector3( v.x(), v.y(), v.z() );
 }
 
+
+osg::Vec4
+osgBullet::asOsgVec4( const btVector4& v )
+{
+    return osg::Vec4( v.x(), v.y(), v.z(), v.w() );
+}
+
+btVector4
+osgBullet::asBtVector4( const osg::Vec4& v )
+{
+    return btVector4( v.x(), v.y(), v.z(), v.w() );
+}
+

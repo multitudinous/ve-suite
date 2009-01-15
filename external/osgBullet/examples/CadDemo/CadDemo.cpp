@@ -41,14 +41,14 @@ void debugDynamicsWorld( btDynamicsWorld* tempWorld )
     for( int i = 0; i < tempWorld->getNumCollisionObjects(); ++i )
     {
         btCollisionObject* temp = tempWorld->getCollisionObjectArray()[ i ];
-        btVector3 bbMin = temp->getBroadphaseHandle()->m_aabbMin;
+        /*btVector3 bbMin = temp->getBroadphaseHandle()->m_aabbMin;
         btVector3 bbMax = temp->getBroadphaseHandle()->m_aabbMax;
         std::cout << "Min = " << bbMin.x() << " " << bbMin.y() << " " << bbMin.z() << std::endl;
         std::cout << "Max = " << bbMax.x() << " " << bbMax.y() << " " << bbMax.z() << std::endl;
         
         temp->getCollisionShape()->getAabb(temp->getWorldTransform(), bbMin,bbMax);
         std::cout << "Min2 = " << bbMin.x() << " " << bbMin.y() << " " << bbMin.z() << std::endl;
-        std::cout << "Max2 = " << bbMax.x() << " " << bbMax.y() << " " << bbMax.z() << std::endl;
+        std::cout << "Max2 = " << bbMax.x() << " " << bbMax.y() << " " << bbMax.z() << std::endl;*/
     }
 
     int numManifolds1 = tempWorld->getDispatcher()->getNumManifolds();
@@ -365,7 +365,6 @@ public:
                 }
                 _hn->setPosition( pos );
                 _hn->setAttitude( quat );
-                _hn->setTraverseHand( false );
             }
             else if( key == std::string( "Model:" ) )
             {
@@ -658,11 +657,11 @@ main( int argc,
     */
     //btIDebugDraw::DBG_MAX_DEBUG_DRAW_MODE
     bulletWorld->getDebugDrawer()->setDebugMode(  
-    btIDebugDraw::DBG_DrawWireframe |
-    //btIDebugDraw::DBG_DrawFeaturesText |
-    //btIDebugDraw::DBG_DrawText |
-    btIDebugDraw::DBG_DrawAabb |
-    btIDebugDraw::DBG_DrawContactPoints
+        btIDebugDraw::DBG_DrawWireframe |
+        //btIDebugDraw::DBG_DrawFeaturesText |
+        //btIDebugDraw::DBG_DrawText |
+        btIDebugDraw::DBG_DrawAabb |
+        btIDebugDraw::DBG_DrawContactPoints
     );
 
     while( /*count-- &&*/ !viewer.done() )

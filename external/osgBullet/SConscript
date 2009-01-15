@@ -3,7 +3,7 @@ import os, sys, string
 pj = os.path.join
 import SConsAddons.Util as sca_util
 
-Import('baseEnv ves_pkg LIBDIR RootDir buildDir osg_options GetPlatform')
+Import('baseEnv ves_pkg LIBDIR RootDir buildDir osg_options GetPlatform bulletBaseVar')
 openDir = os.path.abspath( pj(RootDir, 'external', 'osgBullet') )
 sources = sca_util.getSourcesRecursive( pj( openDir, 'src', 'osgBullet' ) )
 headers = sca_util.getHeadersRecursive( pj( openDir, 'include','osgBullet')  )
@@ -14,12 +14,12 @@ sources = map(lambda s: pj('src', 'osgBullet', s),
 
 lib_env = ves_pkg.getEnv().Copy()
 lib_env.Append( CPPPATH = [pj(openDir, 'include' )] )
-lib_env.Append( CPPPATH = [pj(RootDir, 'external','bullet-2.73','src' ) ] )
-lib_env.Append( CPPPATH = [pj(RootDir, 'external','bullet-2.73','Extras') ] )
+lib_env.Append( CPPPATH = [pj(RootDir, 'external', bulletBaseVar,'src' ) ] )
+lib_env.Append( CPPPATH = [pj(RootDir, 'external', bulletBaseVar,'Extras') ] )
 lib_env.Append( CPPDEFINES  = ['OSGBULLET_LIBRARY'] )
 #lib_env.Append( CPPDEFINES  = ['OSG_LIBRARY_STATIC' ] )
 lib_env.Append( LIBS = ['bullet','XML','COLLADA_DOM','BulletColladaConverter'] )
-lib_env.Append( LIBPATH = [pj('#', buildDir,'external', 'bullet-2.73')] )
+lib_env.Append( LIBPATH = [pj('#', buildDir,'external', bulletBaseVar)] )
 
 osg_options.apply( lib_env )
 
@@ -42,10 +42,10 @@ sources2 = map(lambda s: pj('applications','osgbpp', s), sources2)
 
 lib_env2 = ves_pkg.getEnv().Copy()
 lib_env2.Append( CPPPATH = [pj(openDir, 'include' )] )
-lib_env2.Append( CPPPATH = [pj(RootDir, 'external','bullet-2.73','src' ) ] )
-lib_env2.Append( CPPPATH = [pj(RootDir, 'external','bullet-2.73','Extras') ] )
+lib_env2.Append( CPPPATH = [pj(RootDir, 'external', bulletBaseVar,'src' ) ] )
+lib_env2.Append( CPPPATH = [pj(RootDir, 'external', bulletBaseVar,'Extras') ] )
 lib_env2.Append( LIBS = ['osgBullet','BulletColladaConverter','bullet','COLLADA_DOM','XML'] )
-lib_env2.Append( LIBPATH = [pj('#', buildDir,'external', 'bullet-2.73')] )
+lib_env2.Append( LIBPATH = [pj('#', buildDir,'external', bulletBaseVar)] )
 lib_env2.Append( LIBPATH = [pj('#', buildDir,'external', 'osgBullet')] )
 
 osg_options.apply( lib_env2 )
@@ -65,10 +65,10 @@ sources2 = map(lambda s: pj('examples','CadDemo', s), sources2)
 
 lib_env2 = ves_pkg.getEnv().Copy()
 lib_env2.Append( CPPPATH = [pj(openDir, 'include' )] )
-lib_env2.Append( CPPPATH = [pj(RootDir, 'external','bullet-2.73','src' ) ] )
-lib_env2.Append( CPPPATH = [pj(RootDir, 'external','bullet-2.73','Extras') ] )
+lib_env2.Append( CPPPATH = [pj(RootDir, 'external', bulletBaseVar,'src' ) ] )
+lib_env2.Append( CPPPATH = [pj(RootDir, 'external', bulletBaseVar,'Extras') ] )
 lib_env2.Append( LIBS = ['osgBullet','BulletColladaConverter','bullet','COLLADA_DOM','XML'] )
-lib_env2.Append( LIBPATH = [pj('#', buildDir,'external', 'bullet-2.73')] )
+lib_env2.Append( LIBPATH = [pj('#', buildDir,'external', bulletBaseVar)] )
 lib_env2.Append( LIBPATH = [pj('#', buildDir,'external', 'osgBullet')] )
 
 osg_options.apply( lib_env2 )

@@ -20,6 +20,7 @@ SET( LIB_PUBLIC_HEADERS
     ${HEADER_PATH}/ComputeTriMeshVisitor.h
     ${HEADER_PATH}/DebugBullet.h
     ${HEADER_PATH}/Export.h
+    ${HEADER_PATH}/GLDebugDrawer.h
     ${HEADER_PATH}/HandNode.h
     ${HEADER_PATH}/MotionState.h
     ${HEADER_PATH}/OSGToCollada.h
@@ -40,6 +41,7 @@ SN_ADD_SHARED_LIBRARY( ${LIB_NAME}
     ComputeCylinderVisitor.cpp
     ComputeTriMeshVisitor.cpp
     DebugBullet.cpp
+    GLDebugDrawer.cpp
     HandNode.cpp
     MotionState.cpp
     OSGToCollada.cpp

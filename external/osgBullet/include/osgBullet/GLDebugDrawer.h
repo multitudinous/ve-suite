@@ -3,7 +3,7 @@
 
 #include <LinearMath/btIDebugDraw.h>
 
-#include<osgBullet/Export.h>
+#include <osgBullet/Export.h>
 
 #include <osg/Geometry>
 #include <osg/Geode>
@@ -19,6 +19,7 @@ private:
     osg::ref_ptr< osg::Geometry > mLinesGeom;
     osg::ref_ptr< osg::Vec4Array > mColors;
     osg::ref_ptr< osg::Vec3Array > mVertices;
+    osg::ref_ptr< osg::DrawArrays > mDA;
     
 public:
 

@@ -135,7 +135,7 @@ public:
     {
     public:
         DebugBullet();
-        virtual ~DebugBullet();
+        ~DebugBullet();
 
         unsigned int addStatic( osg::Node* node );
         void setTransform( unsigned int idx, const osg::Matrix& m );
@@ -173,7 +173,7 @@ public:
 
 protected:
     void init();
-
+    // Destructor
     virtual ~HandNode();
     void cleanup();
 
