@@ -10,7 +10,6 @@ fermentorDemoDir = pj( RootDir, 'share', 'examples', 'Fermentor' )
 iveFile = sca_util.getFilesRecursiveByExt( fermentorDemoDir, [ '.ive' ] )
 
 fileBundle.addFiles( iveFile )
-fileBundle.addFiles( [ 'Icons/fermentor.jpg' ] )
 fileBundle.addFiles( [ 'fermentor.ves' ] )
 fermentorSubdirs = Split("""
     FermentorGP
