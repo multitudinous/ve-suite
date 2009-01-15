@@ -1097,13 +1097,14 @@ if __name__ == '__main__':
     else:
         devMode = False
 
+    app = wx.PySimpleApp()
+    
     ##Prepare previous config
     ##Prepare data storage
     previousState = CoveredConfig()
     ##Restore config values from last time.
     LoadConfig(DEFAULT_CONFIG, previousState, loadLastConfig = True)
 
-    app = wx.PySimpleApp()
     if not CommandLine(opts, args, config, previousState).AutoLaunched():
         Launchframe = LauncherWindow(None, -1, 'VE Suite Launcher', args, previousState)
     app.MainLoop()
