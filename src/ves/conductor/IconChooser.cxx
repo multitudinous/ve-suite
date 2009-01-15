@@ -155,7 +155,7 @@ void IconChooser::CreateGUIControls()
         }
     }
 
-    InitializeAspenIcons();
+    //InitializeAspenIcons();
 
     SetTitle( wxT( "VE Icon Chooser" ) );
     SetIcon( wxNullIcon );
