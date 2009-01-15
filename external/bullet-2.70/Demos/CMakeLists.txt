@@ -1,0 +1,2 @@
+SUBDIRS( OpenGL AllBulletDemos ConvexDecompositionDemo Benchmarks HelloWorld MultiThreadedDemo CcdPhysicsDemo ConstraintDemo SliderConstraintDemo GenericJointDemo RagdollDemo BasicDemo BspDemo MovingConcaveDemo VehicleDemo ColladaDemo UserCollisionAlgorithm CharacterDemo SoftDemo )
+
