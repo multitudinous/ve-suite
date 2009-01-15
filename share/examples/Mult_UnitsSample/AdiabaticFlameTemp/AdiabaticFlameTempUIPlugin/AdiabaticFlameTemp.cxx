@@ -47,6 +47,7 @@ AdiabaticFlameTemp
 
    wxImage my_img( Adiab_Flame_Temp_Mod_xpm );
     SetImage( my_img );
+    mDescription = _("Adiabatic Flame Temp Module");
 }
 
 
@@ -117,11 +118,3 @@ wxString AdiabaticFlameTemp::GetName()
 }
 
 /////////////////////////////////////////////////////////////////////////////
-wxString AdiabaticFlameTemp::GetDesc()
-{
-  wxString result="Adiabatic Flame Temp Module"; //your description
-
-  return result;
-}
-
-

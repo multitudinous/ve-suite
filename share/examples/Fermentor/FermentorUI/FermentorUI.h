@@ -62,9 +62,6 @@ public:
     wxString GetName();
     //This returns the name of the module
 
-    virtual wxString GetDesc();
-    //This returns the description of the module, This should be a short description
-
     double agitation;
     double air_conc;
     double ini_ph;

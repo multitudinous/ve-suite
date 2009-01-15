@@ -55,6 +55,7 @@ GLCanvasSampleApp
 
   wxImage my_img( sampleglcanvas_xpm );
     SetImage( my_img );
+    mDescription = _("Sample App using wxWidgets GLCanvas");
 }
 
 
@@ -128,11 +129,3 @@ wxString GLCanvasSampleApp::GetName()
 }
 
 /////////////////////////////////////////////////////////////////////////////
-wxString GLCanvasSampleApp::GetDesc()
-{
-  wxString result="Sample App using wxWidgets GLCanvas"; //your description
-
-  return result;
-}
-
-

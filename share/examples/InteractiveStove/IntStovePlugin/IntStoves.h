@@ -59,7 +59,6 @@ public:
 
     virtual wxString GetConductorName();
     virtual wxString GetName();
-    virtual wxString GetDesc();
 
     virtual int GetNumIports();
     virtual void GetIPorts( POLY& ports );

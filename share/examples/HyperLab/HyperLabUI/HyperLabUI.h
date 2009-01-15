@@ -61,8 +61,6 @@ public:
 
     virtual wxString GetName();
 
-    virtual wxString GetDesc();
-
     std::string portNumber;
 
 protected:

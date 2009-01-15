@@ -15,6 +15,8 @@ Int_Stove_Econ
     SetImage( my_img );
 
     mPluginName = _T("IntStoveEcon");
+    
+    mDescription = _("IntStoveEcon");
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -82,11 +84,3 @@ wxString Int_Stove_Econ::GetName()
 }
 
 /////////////////////////////////////////////////////////////////////////////
-wxString Int_Stove_Econ::GetDesc()
-{
-  wxString result=_T("IntStoveEcon"); //your description
-
-  return result;
-}
-
-

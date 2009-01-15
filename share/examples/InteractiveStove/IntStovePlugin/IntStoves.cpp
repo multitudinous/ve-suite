@@ -135,13 +135,6 @@ wxString IntStoves::GetName()
     return mPluginName;
 }
 ////////////////////////////////////////////////////////////////////////////////
-wxString IntStoves::GetDesc()
-{
-    wxString result = wxT( "None" );
-
-    return result;
-}
-////////////////////////////////////////////////////////////////////////////////
 wxString IntStoves::GetConductorName()
 {         
     wxString result( wxT( "StoveDemo_IntStoves" ) );

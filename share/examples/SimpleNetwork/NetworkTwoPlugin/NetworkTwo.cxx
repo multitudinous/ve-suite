@@ -15,6 +15,8 @@ NetworkTwo::NetworkTwo()
 
 	wxImage my_img( network_xpm );
     SetImage( my_img );
+    
+    mDescription = _("NetworkTwo");
 }
 ///////////////////////////////////////////////////////////////////////////////
 NetworkTwo::~NetworkTwo()
@@ -78,10 +80,3 @@ wxString NetworkTwo::GetConductorName()
 	return result;
 }
 ///////////////////////////////////////////////////////////////////////////////
-wxString NetworkTwo::GetDesc()
-{
-	wxString result(_("NetworkTwo")); //your description
-	return result;
-}
-
-

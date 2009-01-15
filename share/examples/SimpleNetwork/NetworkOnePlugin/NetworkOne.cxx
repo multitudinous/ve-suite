@@ -15,6 +15,7 @@ NetworkOne::NetworkOne()
 
 	wxImage my_img( network_xpm );
     SetImage( my_img );
+    mDescription = _("NetworkOne");
 }
 ///////////////////////////////////////////////////////////////////////////////
 NetworkOne::~NetworkOne()
@@ -78,10 +79,3 @@ wxString NetworkOne::GetConductorName()
 	return result;
 }
 ///////////////////////////////////////////////////////////////////////////////
-wxString NetworkOne::GetDesc()
-{
-	wxString result(_("NetworkOne")); //your description
-	return result;
-}
-
-

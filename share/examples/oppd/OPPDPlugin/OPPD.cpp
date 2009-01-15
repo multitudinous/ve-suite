@@ -176,6 +176,7 @@ UIDialog* OPPD::UI(wxWindow* parent)
      &fv2thintemp,
      &nvthintemp);
       
+    mDescription = "Implementation of FIVE Methodology";
   return dlg;
 }
 
@@ -187,13 +188,6 @@ wxString OPPD::GetName()
 }
 
 /////////////////////////////////////////////////////////////////////////////
-wxString OPPD::GetDesc()
-{
-  wxString result="Implementation of FIVE Methodology"; //your description
-
-  return result;
-}
-
 UIDialog* OPPD::Result(wxWindow* parent)
 {
 	if ( v_value.empty() )

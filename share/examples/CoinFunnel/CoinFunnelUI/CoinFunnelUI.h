@@ -54,7 +54,6 @@ public:
 
     virtual wxString GetConductorName();
     virtual wxString GetName();
-    virtual wxString GetDesc();
 
 protected:
 

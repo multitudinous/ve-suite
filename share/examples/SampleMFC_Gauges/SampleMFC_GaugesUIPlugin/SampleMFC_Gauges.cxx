@@ -50,10 +50,9 @@ SampleMFC_Gauges
 
     wxImage my_img( samplemfcgauge_xpm );
     SetImage( my_img );
+    
+    mDescription = _("Sample With MFC and Gauges");
 }
-
-
-
 /////////////////////////////////////////////////////////////////////////////
 SampleMFC_Gauges
 ::~SampleMFC_Gauges()
@@ -122,11 +121,3 @@ wxString SampleMFC_Gauges::GetName()
 }
 
 /////////////////////////////////////////////////////////////////////////////
-wxString SampleMFC_Gauges::GetDesc()
-{
-  wxString result="Sample With MFC and Gauges"; //your description
-
-  return result;
-}
-
-

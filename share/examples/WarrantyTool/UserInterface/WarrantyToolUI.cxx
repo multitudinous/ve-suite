@@ -51,6 +51,7 @@ WarrantyToolUI::WarrantyToolUI()
 
     wxImage my_img( camera_xpm );
     SetImage( my_img );
+    mDescription = wxT( "The generic tool to display warranty data." );
 }
 ////////////////////////////////////////////////////////////////////////////////
 WarrantyToolUI::~WarrantyToolUI()
@@ -93,12 +94,5 @@ wxString WarrantyToolUI::GetName()
     }
 
     return mPluginName;
-}
-////////////////////////////////////////////////////////////////////////////////
-wxString WarrantyToolUI::GetDesc()
-{
-    wxString result = wxT( "The generic tool to display warranty data." );
-
-    return result;
 }
 ////////////////////////////////////////////////////////////////////////////////

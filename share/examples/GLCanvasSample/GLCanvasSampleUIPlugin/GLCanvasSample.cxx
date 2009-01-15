@@ -47,6 +47,7 @@ GLCanvasSample
 
   wxImage my_img( sampleglcanvas_xpm );
     SetImage( my_img );
+    mDescription = _("Sample App using wxWidgets GLCanvas");
 }
 
 

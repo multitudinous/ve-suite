@@ -15,6 +15,8 @@ NetworkThree::NetworkThree()
 
 	wxImage my_img( network_xpm );
     SetImage( my_img );
+    
+    mDescription = _("NetworkThree");
 }
 ///////////////////////////////////////////////////////////////////////////////
 NetworkThree::~NetworkThree()
@@ -78,10 +80,3 @@ wxString NetworkThree::GetConductorName()
 	return result;
 }
 ///////////////////////////////////////////////////////////////////////////////
-wxString NetworkThree::GetDesc()
-{
-	wxString result(_("NetworkThree")); //your description
-	return result;
-}
-
-

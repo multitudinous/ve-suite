@@ -55,6 +55,8 @@ AverageAirTemp
 
   wxImage my_img( Aver_Air_Temp_Mod_xpm );
     SetImage( my_img );
+    
+    mDescription = _("Average Air Temp Module");
 }
 
 
@@ -128,11 +130,3 @@ wxString AverageAirTemp::GetName()
 }
 
 /////////////////////////////////////////////////////////////////////////////
-wxString AverageAirTemp::GetDesc()
-{
-  wxString result="Average Air Temp Module"; //your description
-
-  return result;
-}
-
-
