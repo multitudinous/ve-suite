@@ -120,6 +120,11 @@ osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( std::string netId )
     {
         ModelPtr model = mainSystem->GetModel( i );
 
+        //rotate/scale/mirror component
+        int mirror = model->GetIconMirror();
+        float rotation = model->GetIconRotation();
+        float iconScale = model->GetIconScale();
+
         if( model->GetIconHiddenFlag() == 0 )
         {
             //add 3d blocks
@@ -128,7 +133,7 @@ osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( std::string netId )
             //try default location first
             osg::ref_ptr<osg::Node> loadedModel = 
                 osgDB::readNodeFile( dataPrefix + "/3DIcons/" + 
-                    model->GetIconFilename() + ".obj.ive" );
+                    model->GetIconFilename() + ".ive" );
 
             //add red block id if block .ive file is not found
             if( !loadedModel.valid() )
@@ -157,10 +162,15 @@ osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( std::string netId )
             loadedModel->getOrCreateStateSet()->setAttributeAndModes(
                 lightModel.get(), osg::StateAttribute::ON );     
 
+            //scale comp correctly
+            osg::ref_ptr<osg::AutoTransform> scaledComp = new osg::AutoTransform();
+		    scaledComp->addChild( loadedModel.get() );
+            scaledComp->setScale( iconScale );
+
             //Rotate the 3d comps 180 degrees around X axis
             //corrects issue with initial model location
             osg::ref_ptr<osg::AutoTransform> rotatedComp = new osg::AutoTransform();
-		    rotatedComp->addChild( loadedModel.get() );
+		    rotatedComp->addChild( scaledComp.get() );
     		
 		    //move pivot point to center
 		    ves::xplorer::scenegraph::util::ComputeBoundsVisitor visitor2;
@@ -171,11 +181,6 @@ osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( std::string netId )
 		    //rotate
             rotatedComp->setRotation( osg::Quat( osg::DegreesToRadians( 180.0 ), 
                 osg::Vec3d( 1.0, 0.0, 0.0 ) ) );
-
-            //rotate/scale/mirror component
-            int mirror = model->GetIconMirror();
-            float rotation = model->GetIconRotation();
-            float iconScale = model->GetIconScale();
 
             //rotate according to iconMirror value
             osg::ref_ptr<osg::AutoTransform> mirrorComp = new osg::AutoTransform();
