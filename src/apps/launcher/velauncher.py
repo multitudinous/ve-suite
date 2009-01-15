@@ -1097,7 +1097,10 @@ if __name__ == '__main__':
     else:
         devMode = False
 
+    ##The wxApp must be initialized BEFORE configurations are extracted from
+    ##the local machines registry
     app = wx.PySimpleApp()
+    ##Now we can do anything with wx
     
     ##Prepare previous config
     ##Prepare data storage
@@ -1110,27 +1113,4 @@ if __name__ == '__main__':
     app.MainLoop()
     ##Command Line Check, then Window Boot (if necessary)
     del app
-    """
-    app = wx.PySimpleApp()
-    if not CommandLine(opts, args, previousState).AutoLaunched():
-        frame = LauncherWindow(None, -1, 'VE Suite Launcher', args, previousState)
-    app.MainLoop()
-    ##Command Line Check, then Window Boot (if necessary)
-    del config
-    """
-    ####Window boot 
-    ##if not (len(args) > 0 and previousState.GetSurface("AutoRunVes")) and \
-    ##   (len(opts) == 0 or (len(opts) == 1 and devMode)):
-    ##    ##Launch the application
-    ##    app = wx.PySimpleApp()
-    ##    frame = LauncherWindow(None, -1, 'VE Suite Launcher', args, previousState)
-    ##    app.MainLoop()
-    ##    ##Delete the config link to avoid memory leakage.
-    ##    del config
-    ####Command line boot
-    ####Takes arguments passed, uses defaults for the rest, launches immediately.
-    ##else:
-    ##    app = wx.PySimpleApp()
-    ##    app.MainLoop()
-    ##    CommandLine(opts, args, previousState)
     # vim:ts=4:sw=4:et:tw=0
