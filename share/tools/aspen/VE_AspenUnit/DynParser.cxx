@@ -178,8 +178,8 @@ void DynParser::NewParseFile(const char * dynFile)
 void DynParser::ParseFile(const char * dynFile)
 {	
 	std::ifstream inFile( dynFile );
-	std::ofstream output("output.txt");
-    std::ofstream outFile("log.txt");
+	//std::ofstream output("output.txt");
+    //std::ofstream outFile("log.txt");
 
     std::string temp;
 
@@ -224,7 +224,7 @@ void DynParser::ParseFile(const char * dynFile)
 		std::string type;
 		
 		tokenizer >> tempHolder;
-		output << tempHolder << std::endl;
+		//output << tempHolder << std::endl;
         int  startpos = tempHolder.find_first_of("\"");
         int  endpos = tempHolder.find_last_of("\"");
 		blockname = tempHolder.substr( startpos +1, endpos - startpos - 1 ); 
@@ -465,8 +465,8 @@ void DynParser::ParseFile(const char * dynFile)
             float left=0, right=0, bottom=0, top=0; //coords
             float widthOffset = 0;
             float heightOffset = 0;
-            output<<BlockInfoList[sheetIter->first][tempBlockId].type+" "+
-                BlockInfoList[sheetIter->first][tempBlockId].icon<<std::endl;
+            //output<<BlockInfoList[sheetIter->first][tempBlockId].type+" "+
+            //    BlockInfoList[sheetIter->first][tempBlockId].icon<<std::endl;
             std::pair< std::string, std::string >
                 blockKey( BlockInfoList[sheetIter->first][tempBlockId].type,
                 BlockInfoList[sheetIter->first][tempBlockId].icon );
@@ -626,7 +626,7 @@ void DynParser::ParseFile(const char * dynFile)
         bool newStream = true, routeOne = false;
         std::pair< float, float > tempCoords;
         int routeCount = 0;
-        std::ofstream tester2 ("tester2.txt"); 
+        //std::ofstream tester2 ("tester2.txt"); 
 
         //contiously read all stream info to the legend or viewport entry
         while( temp.compare( 0, 8, "VIEWPORT", 0, 8 )!= 0 &&
@@ -636,7 +636,7 @@ void DynParser::ParseFile(const char * dynFile)
             if( temp.compare(0, 6, "STREAM", 0, 6)== 0 )//find "STREAM" entry
             {
                 getline( inFile, streamId );
-                tester2<<streamId<<": ";
+                //tester2<<streamId<<": ";
                 getline( inFile, streamVersion );
                 getline( inFile, streamFlag );
                 getline( inFile, streamType );
@@ -733,7 +733,7 @@ void DynParser::ParseFile(const char * dynFile)
                         minX = scaledX;
                     if(scaledY < minY)
                         minY = scaledY;
-                    tester2<<" x: "<<scaledX<<" y: "<<scaledY;
+                    //tester2<<" x: "<<scaledX<<" y: "<<scaledY;
                     linkPoints[sheetIter->first][xy.streamId].push_back(
                         std::pair< float, float >( scaledX, scaledY ) );	
                 }
@@ -747,7 +747,7 @@ void DynParser::ParseFile(const char * dynFile)
             {
                 getline( inFile, temp );
             }
-            tester2 << std::endl;
+            //tester2 << std::endl;
         }
 
         std::cout << "Finished Reading Streams" << std::endl;
@@ -756,10 +756,10 @@ void DynParser::ParseFile(const char * dynFile)
         //NORMALIZE FOR WX
         float normX = minX;
         float normY = minY;
-        tester2 << "NormX: " << normX << " NormY: " << normY << std::endl;
-        tester2.close( );
+        //tester2 << "NormX: " << normX << " NormY: " << normY << std::endl;
+        //tester2.close( );
         //blocks
-        std::ofstream tester3( "tester3.txt" );
+        //std::ofstream tester3( "tester3.txt" );
         for(iter = iconLocations[sheetIter->first].begin( );
             iter != iconLocations[sheetIter->first].end( );
             iter++)
@@ -768,22 +768,22 @@ void DynParser::ParseFile(const char * dynFile)
                 iconLocations[sheetIter->first][iter->first].first - normX;
             iconLocations[sheetIter->first][iter->first].second =
                 iconLocations[sheetIter->first][iter->first].second - normY;
-            tester3 << iter->first << ": x: " <<
-                iconLocations[sheetIter->first][iter->first].first << 
-                " y: " << iconLocations[sheetIter->first][iter->first].second
-                << std::endl;
+            //tester3 << iter->first << ": x: " <<
+            //    iconLocations[sheetIter->first][iter->first].first << 
+            //    " y: " << iconLocations[sheetIter->first][iter->first].second
+            //    << std::endl;
         }
-        tester3.close();
+        //tester3.close();
 
         //streams
-        std::ofstream tester( "tester.txt" );
+        //std::ofstream tester( "tester.txt" );
         std::map< std::string, std::vector< std::pair< float, float > > >::
             iterator iter2;
         for( iter2 = linkPoints[sheetIter->first].begin( );
             iter2 != linkPoints[sheetIter->first].end( );
             iter2++)
         {
-            tester << iter2->first << ":";
+            //tester << iter2->first << ":";
             for( int element = 0;
                 element <
                 (int)linkPoints[sheetIter->first][ iter2->first ].size();
@@ -795,49 +795,49 @@ void DynParser::ParseFile(const char * dynFile)
                 linkPoints[sheetIter->first][ iter2->first ][element].second =
                     linkPoints[sheetIter->first][ iter2->first ][element].
                     second - normY;
-                tester << " x: " <<
-                    linkPoints[sheetIter->first][ iter2->first ][element].
-                    first << " y: " << ( float )
-                    linkPoints[sheetIter->first][ iter2->first ][element].
-                    second;
+                //tester << " x: " <<
+                //    linkPoints[sheetIter->first][ iter2->first ][element].
+                //    first << " y: " << ( float )
+                //    linkPoints[sheetIter->first][ iter2->first ][element].
+                //    second;
             }
-            tester<<std::endl;
+            //tester<<std::endl;
         }
-        tester.close();
+        //tester.close();
 
         //create a log file
-        std::cout<<"Writing log."<<std::endl;
-        count = 0;
-        int streamCount = 0;
-        outFile << BlockInfoList[sheetIter->first].size()<<std::endl;
-        while (count < (int)BlockInfoList[sheetIter->first].size())
-        {
-            outFile << xCoords[count];
-            outFile << "\t";
-            outFile << yCoords[count];
-            outFile << "\n";
-            count ++;
-        }
-        count=0;
-        outFile << streamCoordList.size()<<std::endl;
-        while(streamCount < (int)streamCoordList.size())
-        {
-            outFile<<streamCoordList[streamCount].value.size()<<std::endl;
-            while(count < (int)streamCoordList[streamCount].value.size())
-            {	
-                outFile << streamCoordList[streamCount].value[count].first;
-                outFile << "\t";
-                outFile << streamCoordList[streamCount].value[count].second;
-                outFile << "\n";
-                count++;
-            }
-            streamCount++;
-            count = 0;
-        }
+        //std::cout<<"Writing log."<<std::endl;
+        //count = 0;
+        //int streamCount = 0;
+        //outFile << BlockInfoList[sheetIter->first].size()<<std::endl;
+        //while (count < (int)BlockInfoList[sheetIter->first].size())
+        //{
+        //    outFile << xCoords[count];
+        //    outFile << "\t";
+        //    outFile << yCoords[count];
+        //    outFile << "\n";
+        //    count ++;
+        //}
+        //count=0;
+        //outFile << streamCoordList.size()<<std::endl;
+        //while(streamCount < (int)streamCoordList.size())
+        //{
+        //    outFile<<streamCoordList[streamCount].value.size()<<std::endl;
+        //    while(count < (int)streamCoordList[streamCount].value.size())
+        //    {	
+        //        outFile << streamCoordList[streamCount].value[count].first;
+        //        outFile << "\t";
+        //        outFile << streamCoordList[streamCount].value[count].second;
+        //        outFile << "\n";
+        //        count++;
+        //    }
+        //    streamCount++;
+        //    count = 0;
+        //}
     }
     std::cout<<"Parsing Completed!"<<std::endl;
     inFile.close();
-    outFile.close();
+    //outFile.close();
     
     //std::string network = CreateNetwork();
     //std::ofstream netTest("network.txt");
@@ -1303,9 +1303,9 @@ std::string DynParser::CreateNetwork( void )
     ves::open::xml::XMLReaderWriter netowrkWriter;
     netowrkWriter.UseStandaloneDOMDocumentManager();
     netowrkWriter.WriteXMLDocument( nodes, fileName, "Network" );
-    std::ofstream myfile( "network.txt" );
-    myfile << fileName;
-    myfile.close();
+    //std::ofstream myfile( "network.txt" );
+    //myfile << fileName;
+    //myfile.close();
 
     return fileName;
 }

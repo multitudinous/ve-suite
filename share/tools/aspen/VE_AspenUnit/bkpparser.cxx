@@ -188,7 +188,7 @@ void BKPParser::ParseFile( const char * bkpFile )
     lutVector.resize( 6 );
 
     lutMap = GetAspenPlusLUT();
-    std::ofstream outFile("log.txt");
+    //std::ofstream outFile("log.txt");
     std::string discard;
 
     std::map< std::string, std::pair< unsigned int, unsigned int > > imageData;
@@ -261,7 +261,7 @@ void BKPParser::ParseFile( const char * bkpFile )
     BlockInfo tempBlockInfo;
     std::string hierarchy;
     bool hierFlag = false;
-    std::ofstream hierfile("hierarchy.txt");
+    //std::ofstream hierfile("hierarchy.txt");
     while(count < numComponents)
     {
         getline(inFile, compVer);
@@ -304,7 +304,7 @@ void BKPParser::ParseFile( const char * bkpFile )
         }
         count++;
     }
-    hierfile.close();
+    //hierfile.close();
     std::cout<<BlockInfoList.size()<<std::endl;
     std::cout<<"Aqcuired type/id list"<<std::endl;
 
@@ -445,8 +445,8 @@ void BKPParser::ParseFile( const char * bkpFile )
             float left=0, right=0, bottom=0, top=0; //coords
             float widthOffset = 0;
             float heightOffset = 0;
-            outFile<<BlockInfoList[sheetIter->first][tempBlockId].type+" "+
-                BlockInfoList[sheetIter->first][tempBlockId].icon<<std::endl;
+            //outFile<<BlockInfoList[sheetIter->first][tempBlockId].type+" "+
+            //    BlockInfoList[sheetIter->first][tempBlockId].icon<<std::endl;
             std::pair< std::string, std::string >
                 blockKey( BlockInfoList[sheetIter->first][tempBlockId].type,
                 BlockInfoList[sheetIter->first][tempBlockId].icon );
@@ -597,7 +597,7 @@ void BKPParser::ParseFile( const char * bkpFile )
         bool newStream = true, routeOne = false;;
         std::pair< float, float > tempCoords;
         int routeCount = 0;
-        std::ofstream tester2 ("tester2.txt"); 
+        //std::ofstream tester2 ("tester2.txt"); 
 
         //contiously read all stream info to the legend or viewport entry
         while( temp.compare( 0, 8, "VIEWPORT", 0, 8 )!= 0 &&
@@ -607,7 +607,7 @@ void BKPParser::ParseFile( const char * bkpFile )
             if( temp.compare(0, 6, "STREAM", 0, 6)== 0 )//find "STREAM" entry
             {
                 getline( inFile, streamId );
-                tester2<<streamId<<": ";
+                //tester2<<streamId<<": ";
                 getline( inFile, streamVersion );
                 getline( inFile, streamFlag );
                 getline( inFile, streamType );
@@ -704,7 +704,7 @@ void BKPParser::ParseFile( const char * bkpFile )
                         minX = scaledX;
                     if(scaledY < minY)
                         minY = scaledY;
-                    tester2<<" x: "<<scaledX<<" y: "<<scaledY;
+                    //tester2<<" x: "<<scaledX<<" y: "<<scaledY;
                     linkPoints[sheetIter->first][xy.streamId].push_back(
                         std::pair< float, float >( scaledX, scaledY ) );	
                 }
@@ -718,7 +718,7 @@ void BKPParser::ParseFile( const char * bkpFile )
             {
                 getline( inFile, temp );
             }
-            tester2 << std::endl;
+            //tester2 << std::endl;
         }
 
         std::cout << "Finished Reading Streams" << std::endl;
@@ -728,10 +728,10 @@ void BKPParser::ParseFile( const char * bkpFile )
         //
         float normX = minX;
         float normY = minY;
-        tester2 << "NormX: " << normX << " NormY: " << normY << std::endl;
-        tester2.close( );
+        //tester2 << "NormX: " << normX << " NormY: " << normY << std::endl;
+        //tester2.close( );
         //blocks
-        std::ofstream tester3( "tester3.txt" );
+        //std::ofstream tester3( "tester3.txt" );
         for(iter = iconLocations[sheetIter->first].begin( );
             iter != iconLocations[sheetIter->first].end( );
             iter++)
@@ -740,22 +740,22 @@ void BKPParser::ParseFile( const char * bkpFile )
                 iconLocations[sheetIter->first][iter->first].first - normX;
             iconLocations[sheetIter->first][iter->first].second =
                 iconLocations[sheetIter->first][iter->first].second - normY;
-            tester3 << iter->first << ": x: " <<
-                iconLocations[sheetIter->first][iter->first].first << 
-                " y: " << iconLocations[sheetIter->first][iter->first].second
-                << std::endl;
+            //tester3 << iter->first << ": x: " <<
+            //    iconLocations[sheetIter->first][iter->first].first << 
+            //    " y: " << iconLocations[sheetIter->first][iter->first].second
+            //    << std::endl;
         }
-        tester3.close();
+        //tester3.close();
 
         //streams
-        std::ofstream tester( "tester.txt" );
+        //std::ofstream tester( "tester.txt" );
         std::map< std::string, std::vector< std::pair< float, float > > >::
             iterator iter2;
         for( iter2 = linkPoints[sheetIter->first].begin( );
             iter2 != linkPoints[sheetIter->first].end( );
             iter2++)
         {
-            tester << iter2->first << ":";
+            //tester << iter2->first << ":";
             for( int element = 0;
                 element <
                 (int)linkPoints[sheetIter->first][ iter2->first ].size();
@@ -767,55 +767,54 @@ void BKPParser::ParseFile( const char * bkpFile )
                 linkPoints[sheetIter->first][ iter2->first ][element].second =
                     linkPoints[sheetIter->first][ iter2->first ][element].
                     second - normY;
-                tester << " x: " <<
-                    linkPoints[sheetIter->first][ iter2->first ][element].
-                    first << " y: " << ( float )
-                    linkPoints[sheetIter->first][ iter2->first ][element].
-                    second;
+                //tester << " x: " <<
+                //    linkPoints[sheetIter->first][ iter2->first ][element].
+                //    first << " y: " << ( float )
+                //    linkPoints[sheetIter->first][ iter2->first ][element].
+                //    second;
             }
-            tester<<std::endl;
+            //tester<<std::endl;
         }
-        tester.close();
+        //tester.close();
 
 
         //
         // Log
         //
-
         //create a log file
-        std::cout<<"Writing log."<<std::endl;
-        count = 0;
-        int streamCount = 0;
-        outFile << BlockInfoList[sheetIter->first].size()<<std::endl;
-        while (count < (int)BlockInfoList[sheetIter->first].size())
-        {
-            outFile << xCoords[count];
-            outFile << "\t";
-            outFile << yCoords[count];
-            outFile << "\n";
-            count ++;
-        }
-        count=0;
-        outFile << streamCoordList.size()<<std::endl;
-        while(streamCount < (int)streamCoordList.size())
-        {
-            outFile<<streamCoordList[streamCount].value.size()<<std::endl;
-            while(count < (int)streamCoordList[streamCount].value.size())
-            {	
-                outFile << streamCoordList[streamCount].value[count].first;
-                outFile << "\t";
-                outFile << streamCoordList[streamCount].value[count].second;
-                outFile << "\n";
-                count++;
-            }
-            streamCount++;
-            count = 0;
-        }
+        //std::cout<<"Writing log."<<std::endl;
+        //count = 0;
+        //int streamCount = 0;
+        //outFile << BlockInfoList[sheetIter->first].size()<<std::endl;
+        //while (count < (int)BlockInfoList[sheetIter->first].size())
+        //{
+        //    outFile << xCoords[count];
+        //    outFile << "\t";
+        //    outFile << yCoords[count];
+        //    outFile << "\n";
+        //    count ++;
+        //}
+        //count=0;
+        //outFile << streamCoordList.size()<<std::endl;
+        //while(streamCount < (int)streamCoordList.size())
+        //{
+        //    outFile<<streamCoordList[streamCount].value.size()<<std::endl;
+        //    while(count < (int)streamCoordList[streamCount].value.size())
+        //    {	
+        //        outFile << streamCoordList[streamCount].value[count].first;
+        //        outFile << "\t";
+        //        outFile << streamCoordList[streamCount].value[count].second;
+        //        outFile << "\n";
+        //        count++;
+        //    }
+        //    streamCount++;
+        //    count = 0;
+        //}
     }
     //tester4.close();
     std::cout<<"Parsing Completed!"<<std::endl;
     inFile.close();
-    outFile.close();
+    //outFile.close();
     return;
 }
 ///////////////////////////////////////////////////////////////////////////////
