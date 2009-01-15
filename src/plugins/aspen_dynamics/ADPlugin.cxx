@@ -138,6 +138,19 @@ void ADPlugin::OnOpen( wxCommandEvent& event )
     //Get results
     std::string nw_str = serviceList->Query( status );
 
+    if( nw_str.empty() )
+    {
+        wxMessageDialog md( m_canvas, wxT("No Aspen Unit connected.\nPlease launch Aspen Unit."), wxT("Error"), wxOK);
+        md.ShowModal();
+        return;
+    }
+
+    // If there is nothing on the CE
+    if( nw_str.compare("DYNDNE") == 0 )
+    {
+        return;
+    }    
+    
     ves::open::xml::XMLReaderWriter networkWriter;
     networkWriter.UseStandaloneDOMDocumentManager();
     networkWriter.ReadFromString();
@@ -153,12 +166,6 @@ void ADPlugin::OnOpen( wxCommandEvent& event )
     tempSystem = boost::dynamic_pointer_cast<ves::open::xml::model::System>( objectVector.at( 0 ) );
     GetVEModel()->SetSubSystem( tempSystem );
     mDataBufferEngine->ParseSystem( tempSystem );
-
-    // If there is nothing on the CE
-    if( nw_str.compare("DYNDNE") == 0 )
-    {
-        return;
-    }    
 
     Network * network = m_canvas->GetActiveNetwork();
 
