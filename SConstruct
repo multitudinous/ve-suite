@@ -265,7 +265,8 @@ apu_options = fp_option.FlagPollBasedOption("Apache Portable Runtime Utils",
 #bullet_options = fp_option.FlagPollBasedOption("Bullet Physics SDK",
 #                                               "bullet", "0.1", True, True, helpText=None, compileTest=True,
 #                                               headerToCheck="btBulletCollisionCommon.h")
-bulletVersion = (int(2), int(72))
+bulletVersion = (int(2), int(70))
+bulletBaseVar = 'bullet-2.70'
 
 tao_options = fp_option.FlagPollBasedOption("ACE TAO libraries",
                      "ACE TAO_Valuetype TAO_CosNaming TAO_Svc_Utils TAO_IORTable TAO_Messaging TAO_PortableServer TAO_BiDirGIOP TAO_AnyTypeCode TAO",
@@ -442,7 +443,7 @@ if not SConsAddons.Util.hasHelpFlag():
    baseEnv.AppendUnique( CPPDEFINES = ['BULLET_MAJOR_VERSION=%i' %bulletVersion[ 0 ],
                   'BULLET_MINOR_VERSION=%i' %bulletVersion[ 1 ] ] )  
    baseEnv.AppendUnique(CPPPATH = [pj(RootDir,'external','osgBullet','include')])
-   baseEnv.AppendUnique(CPPPATH = [pj(RootDir,'external','bullet-2.73','src')])
+   baseEnv.AppendUnique(CPPPATH = [pj(RootDir,'external', bulletBaseVar,'src')])
    if GetArch() == 'x64':
       baseEnv.AppendUnique( CPPDEFINES = ['USE_ADDR64=1'] )
 
@@ -502,9 +503,7 @@ if not SConsAddons.Util.hasHelpFlag():
    baseEnv.Append(BUILDERS = builders)
    #setup the build dir
    baseEnv.BuildDir(buildDir, '.', duplicate = 0)
-   Export('baseEnv')
-   Export('buildDir')
-
+   Export('baseEnv buildDir bulletBaseVar')
 
    # Setup file paths
    PREFIX = os.path.abspath(baseEnv['prefix'])
@@ -545,7 +544,7 @@ if not SConsAddons.Util.hasHelpFlag():
    osgPPUSubdirs = pj( buildDir, 'external', 'osgPPU')
    osgEphemerisSubdirs = pj( buildDir, 'external', 'osgEphemeris')
    osgBulletSubdirs = pj( buildDir, 'external', 'osgBullet')
-   bullet = pj( buildDir, 'external', 'bullet-2.73')
+   bullet = pj( buildDir, 'external', bulletBaseVar)
    
    ves_dirs = [vesSubdirs, distSubdirs, osgEphemerisSubdirs,
                shareSubdirs, lokiSubdirs, 

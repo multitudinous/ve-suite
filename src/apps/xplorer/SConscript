@@ -54,19 +54,6 @@ tao_options.apply( env )
 boost_options.apply( env )
 vrjuggler_options.apply( env )
 
-#bulletVersion = (int(2), int(72))
-
-#env.Append( CPPDEFINES = ['BULLET_MAJOR_VERSION=%i' %bulletVersion[ 0 ],
-#                  'BULLET_MINOR_VERSION=%i' %bulletVersion[ 1 ] ] )  
-
-#env.Append(CPPPATH = [pj(RootDir,'external','osgBullet','include')])
-#env.Append(LIBS = ['osgBullet'])
-#env.Append(LIBPATH = [pj('#',buildDir,'external','osgBullet')])
-
-#env.Append(CPPPATH = [pj(RootDir,'external','bullet-2.73','src')])
-#env.Append(LIBS = ['bullet'])
-#env.Append(LIBPATH = [pj('#',buildDir,'external','bullet-2.73')])
-
 resources = [ pj( RootDir, 'dist', 'installerImages', 've_icon128x128.icns'), 
     pj( RootDir, 'src', 'apps', 'xplorer','vrjuggler.plist')]
    

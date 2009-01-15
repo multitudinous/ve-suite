@@ -91,9 +91,15 @@ void MaterialInitializer::apply( osg::Geode& node )
             drawable_stateset->getAttribute( osg::StateAttribute::MATERIAL ) );
 
         //Colors for the stateset
-        osg::ref_ptr< osg::Vec4Array > color_array = 
-            static_cast< osg::Vec4Array* >( node.getDrawable( i )->
-            asGeometry()->getColorArray() );
+        osg::ref_ptr< osg::Vec4Array > color_array;
+        osg::ref_ptr< osg::Geometry > geom = 
+            node.getDrawable( i )->asGeometry();
+        if( geom.valid() )
+        {
+            color_array = 
+                static_cast< osg::Vec4Array* >( geom->getColorArray() );
+        }
+        
         //Texture for the stateset
         osg::StateSet::TextureAttributeList drawable_tal = 
             drawable_stateset->getTextureAttributeList();
