@@ -3,12 +3,14 @@
 
 #include <LinearMath/btIDebugDraw.h>
 
+#include<osgBullet/Export.h>
+
 #include <osg/Geometry>
 #include <osg/Geode>
 #include <osg/Group>
 #include <osg/Array>
 
-class GLDebugDrawer : public btIDebugDraw
+class OSGBULLET_EXPORT GLDebugDrawer : public btIDebugDraw
 {
 private:
 	int mDebugMode;
