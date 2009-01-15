@@ -20,8 +20,7 @@ public:
    Body_Unit_i* GetUnitObject( void );
    void CheckCORBAWork( void );
    BKPParser * CreateParser( void );
-   //DynParser * CreateParser( void );
-   //void CreateParser( void );
+
    bool unit_i_instantiated;
    bool CleanUp( );
 

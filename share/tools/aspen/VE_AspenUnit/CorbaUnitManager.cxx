@@ -17,14 +17,18 @@ XERCES_CPP_NAMESPACE_USE
 
 
 CorbaUnitManager::CorbaUnitManager(CVE_AspenUnitDlg * dialog)
+    :
+    parent( dialog ),
+    unit_i( 0 ),
+    unit_i_instantiated( false )
 {
-   parent = dialog;
-   unit_i_instantiated = false;
 }
+////////////////////////////////////////////////////////////////////////////////
 CorbaUnitManager::~CorbaUnitManager()
 {
     XMLPlatformUtils::Terminate();
 }
+////////////////////////////////////////////////////////////////////////////////
 void CorbaUnitManager::SetComputerNameUnitNameAndPort( CString dir, CString name, CString port, CString uname )
 {
    computerName = name;
