@@ -20,6 +20,7 @@
 #include <osgBullet/DebugBullet.h>
 #include <osgBullet/ColladaUtils.h>
 #include <osgBullet/Utils.h>
+#include <osgBullet/GLDebugDrawer.h>
 
 #include <btBulletDynamicsCommon.h>
 #include <BulletColladaConverter/ColladaConverter.h>
@@ -34,6 +35,44 @@
 #include <iostream>
 
 osgBullet::DebugBullet _debugBullet;
+
+void debugDynamicsWorld( btDynamicsWorld* tempWorld )
+{
+    for( int i = 0; i < tempWorld->getNumCollisionObjects(); ++i )
+    {
+        btCollisionObject* temp = tempWorld->getCollisionObjectArray()[ i ];
+        btVector3 bbMin = temp->getBroadphaseHandle()->m_aabbMin;
+        btVector3 bbMax = temp->getBroadphaseHandle()->m_aabbMax;
+        std::cout << "Min = " << bbMin.x() << " " << bbMin.y() << " " << bbMin.z() << std::endl;
+        std::cout << "Max = " << bbMax.x() << " " << bbMax.y() << " " << bbMax.z() << std::endl;
+        
+        temp->getCollisionShape()->getAabb(temp->getWorldTransform(), bbMin,bbMax);
+        std::cout << "Min2 = " << bbMin.x() << " " << bbMin.y() << " " << bbMin.z() << std::endl;
+        std::cout << "Max2 = " << bbMax.x() << " " << bbMax.y() << " " << bbMax.z() << std::endl;
+    }
+
+    int numManifolds1 = tempWorld->getDispatcher()->getNumManifolds();
+    for( int i = 0; i < numManifolds1; ++i )
+    {
+        btPersistentManifold* contactManifold =
+        tempWorld->getDispatcher()->getManifoldByIndexInternal( i );
+        //contactManifold->refreshContactPoints(
+        //bodyA->getWorldTransform(), bodyB->getWorldTransform() );
+        
+        int numContacts = contactManifold->getNumContacts();
+        for (int p=0;p<contactManifold->getNumContacts();p++)
+        {
+            const btManifoldPoint& pt = contactManifold->getContactPoint(p);
+            
+            btVector3 posWorldB = pt.getPositionWorldOnB();
+            btVector3 posWorldA = pt.m_normalWorldOnB;
+            std::cout << "Position = " << posWorldB.x() << " " << posWorldB.y() << " " << posWorldB.z() << std::endl;
+            std::cout << "Normal = " << posWorldA.x() << " " << posWorldA.y() << " " << posWorldA.z() << std::endl;
+            std::cout << "Distance = " << pt.getDistance() << std::endl;
+            std::cout << "Lifetime = " << pt.getLifeTime() << std::endl;
+        }
+    }
+}
 
 
 btDynamicsWorld* initPhysics()
@@ -326,6 +365,7 @@ public:
                 }
                 _hn->setPosition( pos );
                 _hn->setAttitude( quat );
+                _hn->setTraverseHand( false );
             }
             else if( key == std::string( "Model:" ) )
             {
@@ -455,7 +495,7 @@ main( int argc,
 
     btDynamicsWorld* bulletWorld = initPhysics();
     osg::Group* root = new osg::Group;
-    root->addChild( _debugBullet.getRoot() );
+    //root->addChild( _debugBullet.getRoot() );
 
 
     ConfigReaderWriter* crw = new ConfigReaderWriter( bulletWorld );
@@ -606,13 +646,34 @@ main( int argc,
     double prevSimTime = viewer.getFrameStamp()->getSimulationTime();
     viewer.realize();
     int count( 4 );
+    
+    bulletWorld->setDebugDrawer( new GLDebugDrawer( root ) );
+    /*DBG_DrawWireframe = 1,
+    DBG_DrawAabb=2,
+    DBG_DrawFeaturesText=4,
+    DBG_DrawContactPoints=8,
+    DBG_NoDeactivation=16,
+    DBG_NoHelpText = 32,
+    DBG_DrawText=64,
+    */
+    //btIDebugDraw::DBG_MAX_DEBUG_DRAW_MODE
+    bulletWorld->getDebugDrawer()->setDebugMode(  
+    btIDebugDraw::DBG_DrawWireframe |
+    //btIDebugDraw::DBG_DrawFeaturesText |
+    //btIDebugDraw::DBG_DrawText |
+    btIDebugDraw::DBG_DrawAabb |
+    btIDebugDraw::DBG_DrawContactPoints
+    );
+
     while( /*count-- &&*/ !viewer.done() )
     {
         currSimTime = viewer.getFrameStamp()->getSimulationTime();
         bulletWorld->stepSimulation( currSimTime - prevSimTime );
         float dt = currSimTime - prevSimTime;
-        std::cout << dt << std::endl;
         prevSimTime = currSimTime;
+        dynamic_cast< GLDebugDrawer* >( bulletWorld->getDebugDrawer() )->BeginDraw();
+        bulletWorld->debugDrawWorld();
+        dynamic_cast< GLDebugDrawer* >( bulletWorld->getDebugDrawer() )->EndDraw();
         viewer.frame();
     }
 

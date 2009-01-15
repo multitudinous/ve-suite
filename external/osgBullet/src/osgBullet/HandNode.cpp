@@ -644,12 +644,12 @@ void HandNode::init()
         btTransform xform; xform.setIdentity();
         btDefaultMotionState* myMotionState = new btDefaultMotionState( xform );
 	    btVector3 inertia( 0, 0, 0 );
-	    btRigidBody::btRigidBodyConstructionInfo rbInfo( 0., myMotionState, _shape, inertia );
+	    btRigidBody::btRigidBodyConstructionInfo rbInfo( 3.0, myMotionState, _shape, inertia );
         rbInfo.m_friction = btScalar( 1. );
 	    _body = new btRigidBody( rbInfo );
         _body->setCollisionFlags( _body->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT );
         _body->setActivationState( DISABLE_DEACTIVATION );
-        _body->setCcdMotionThreshold( 0.00001 );
+        //_body->setCcdMotionThreshold( 0.00001 );
         //_body->setCcdSweptSphereRadius( 0.1*_length );
         
 	    _bulletWorld->addRigidBody( _body );
