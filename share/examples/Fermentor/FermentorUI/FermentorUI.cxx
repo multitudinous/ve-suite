@@ -35,8 +35,6 @@
 #include "FermentorUI.h"
 #include "FermentorUIDialog.h"
 
-#include "Icons/fermentor.xpm"
-
 // --- VE-Suite Includes --- //
 //#include <ves/open/xml/DataValuePair.h>
 
@@ -63,7 +61,7 @@ FermentorUI::FermentorUI()
 
     mPluginName = wxString( _( "Fermentor" ) );
 
-    wxImage my_img( fermentor_xpm );
+    wxImage my_img( _( "Icons/fermentor.jpg" ) );
     SetImage( my_img );
 }
 ////////////////////////////////////////////////////////////////////////////////
