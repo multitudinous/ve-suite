@@ -699,6 +699,30 @@ char* Body_Unit_i::handleOpenSimulation(ves::open::xml::CommandPtr cmd)
  
     if( extension.find( "bkp" ) != std::string::npos )
     {
+        //make sure bkp file exists
+        std::ifstream bkpFile( ( mWorkingDir + filename + ".bkp" ).c_str(),
+            std::ios::binary);
+        if( !bkpFile.is_open() )
+        {
+            //no bkp file
+            AspenLog->SetSel(-1, -1);
+            AspenLog->ReplaceSel("BKP File Does NOT exist.\r\n");
+            return CORBA::string_dup( "BKPDNE" );
+        }
+        bkpFile.close();
+
+        //make sure apw file exists
+        std::ifstream apwFile( ( mWorkingDir + filename + ".apw" ).c_str(),
+            std::ios::binary);
+        if( !apwFile.is_open() )
+        {
+            //no apw file
+            AspenLog->SetSel(-1, -1);
+            AspenLog->ReplaceSel("APW File Does NOT exist.\r\n");
+            return CORBA::string_dup( "APWDNE" );
+        }
+        apwFile.close();
+
         bkpFlag = true;
         dynFlag = false;
         filename.resize( filename.size() - 4 );
@@ -708,6 +732,18 @@ char* Body_Unit_i::handleOpenSimulation(ves::open::xml::CommandPtr cmd)
     }
     else if( extension.find( "dynf" ) != std::string::npos )
     {   
+        //make sure dynf file exists
+        std::ifstream dynFile( ( mWorkingDir + filename + ".dynf" ).c_str(),
+            std::ios::binary);
+        if( !dynFile.is_open() )
+        {
+            //no dyn file
+            AspenLog->SetSel(-1, -1);
+            AspenLog->ReplaceSel("Dynf File Does NOT exist.\r\n");
+            return CORBA::string_dup( "DYNDNE" );
+        }
+        dynFile.close();
+        
         bkpFlag = false;
         dynFlag = true;
         filename.resize( filename.size() - 5 );
