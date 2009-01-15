@@ -103,7 +103,7 @@ BEGIN_EVENT_TABLE( Network, wxEvtHandler )
     EVT_MENU( NETWORK_DEL_TAG, Network::OnDelTag )
     EVT_MENU( UIPLUGINBASE_DEL_MOD, Network::OnDelMod )
     EVT_MENU( UIPLUGINBASE_DELETE_PORT, Network::OnDelPort )
-    EVT_MENU( Link::DEL_LINK, Network::OnDelLink )
+    EVT_MENU( LINK_DEL, Network::OnDelLink )
     EVT_UPDATE_UI( UIPLUGINBASE_DIALOG_PLUGIN_UPDATE, Network::OnDeletePlugins )
 END_EVENT_TABLE()
 ////////////////////////////////////////////////////////////////////////////////
@@ -1253,7 +1253,7 @@ void Network::DropLink( int x, int y, int mod, int pt, wxDC &dc, bool flag )
     //std::cout << dest_mod << " " << acutallDestPortNumber << " " << mod << " " << acutallPortNumber << std::endl;
     if( dest_mod >= 0 && acutallDestPortNumber >= 0 && (( dest_mod != mod ) || ( acutallDestPortNumber != acutallPortNumber ) ) )
     {
-        Link ln( parent );
+        Link ln( parent, this );
         if( flag ) // if input port
         {
             ln.SetToModule( mod );
@@ -1845,7 +1845,7 @@ void Network::LoadSystem( model::SystemPtr system, Canvas* parent )
     networkSize.second = 1;
 
     //Setup the links
-    links.assign( veNetwork->GetNumberOfLinks(), Link( parent ) );
+    links.assign( veNetwork->GetNumberOfLinks(), Link( parent, this ) );
     for( size_t i = 0; i < veNetwork->GetNumberOfLinks(); ++i )
     {
         links.at( i ).SetDCScale( &userScale );

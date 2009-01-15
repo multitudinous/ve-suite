@@ -34,6 +34,7 @@
 #include <ves/conductor/util/Link.h>
 #include <ves/conductor/util/OrbThread.h>
 #include <ves/conductor/util/ParamsDlg.h>
+#include <ves/conductor/ConductorLibEnums.h>
 
 #include <ves/open/xml/model/Link.h>
 #include <ves/open/xml/model/Point.h>
@@ -58,19 +59,19 @@ using namespace ves::conductor::util;
 
 BEGIN_EVENT_TABLE( Link, wxEvtHandler )
     EVT_RIGHT_DOWN( Link::OnMRightDown )
-    EVT_MENU( ADD_LINK_CON, Link::OnAddLinkCon )
-    EVT_MENU( DEL_LINK, Link::OnDelLink )
-    EVT_MENU( DEL_LINK_CON, Link::OnDelLinkCon )
-    EVT_MENU( SHOW_LINK_CONT, Link::OnShowLinkContent )
+    EVT_MENU( LINK_ADD_CON, Link::OnAddLinkCon )
+    EVT_MENU( LINK_DEL, Link::OnDelLink )
+    EVT_MENU( LINK_DEL_CON, Link::OnDelLinkCon )
+    EVT_MENU( LINK_SHOW_CONT, Link::OnShowLinkContent )
     //Aspen Menu
-    EVT_MENU( SHOW_LINK_NAME, Link::OnShowAspenName )
+    EVT_MENU( LINK_SHOW_NAME, Link::OnShowAspenName )
     EVT_MENU( LINK_INPUTS, Link::OnQueryStreamInputs )
     EVT_MENU( LINK_OUTPUTS, Link::OnQueryStreamOutputs )
-    EVT_UPDATE_UI( SET_ACTIVE_LINK, Link::OnSetActiveLinkID )
+    EVT_UPDATE_UI( LINK_SET_ACTIVE, Link::OnSetActiveLinkID )
 END_EVENT_TABLE()
 
 ////////////////////////////////////////////////////////////////////////////////
-Link::Link( wxScrolledWindow* designCanvas )
+Link::Link( wxScrolledWindow* designCanvas, wxEvtHandler* handler )
         :
         Fr_mod( 1000000 ),
         To_mod( 1000000 ),
@@ -89,6 +90,7 @@ Link::Link( wxScrolledWindow* designCanvas )
     m_uuid = "notSet";
     highlightFlag = false;
     m_veLink = ves::open::xml::model::LinkPtr( new ves::open::xml::model::Link() );
+    mPostHandler = handler;
 }
 ////////////////////////////////////////////////////////////////////////////////
 Link::~Link( void )
@@ -113,6 +115,7 @@ Link::Link( const Link& input )
     cons = input.cons;
     poly = input.poly;
     networkFrame = input.networkFrame;
+    mPostHandler = input.mPostHandler;
     linkName = input.linkName;
     userScale = input.userScale;
     action_point = input.action_point;
@@ -142,6 +145,7 @@ Link& Link::operator= ( const Link& input )
         cons = input.cons;
         poly = input.poly;
         networkFrame = input.networkFrame;
+        mPostHandler = input.mPostHandler;
         linkName = input.linkName;
         userScale = input.userScale;
         action_point = input.action_point;
@@ -642,7 +646,7 @@ void Link::OnDelLink( wxCommandEvent& event )
     networkFrame->Refresh( true );
     //Post this so that network can delete "this" out of the vector of links
     event.SetClientData( &m_uuid );
-    ::wxPostEvent( networkFrame, event );
+    ::wxPostEvent( mPostHandler, event );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Link::OnAddLinkCon( wxCommandEvent& event )
@@ -709,27 +713,27 @@ void Link::OnMRightDown( wxMouseEvent &event )
     //send the active id so that each plugin knows what to do
     wxUpdateUIEvent setActiveLinkName;
     setActiveLinkName.SetClientData( &m_uuid );
-    setActiveLinkName.SetId( SET_ACTIVE_LINK );
+    setActiveLinkName.SetId( LINK_SET_ACTIVE );
     networkFrame->GetEventHandler()->ProcessEvent( setActiveLinkName );
 
     wxString menuName = linkName + wxString( " Menu", wxConvUTF8 );
     wxMenu the_pop_menu( menuName );
 
-    the_pop_menu.Append( SHOW_LINK_CONT, _( "Show Link Content" ) );
-    the_pop_menu.Append( ADD_LINK_CON, _( "Add Link Connector" ) );
-    the_pop_menu.Append( DEL_LINK_CON, _( "Delete Link Connector" ) );
-    the_pop_menu.Append( DEL_LINK, _( "Delete Link" ) );
+    the_pop_menu.Append( LINK_SHOW_CONT, _( "Show Link Content" ) );
+    the_pop_menu.Append( LINK_ADD_CON, _( "Add Link Connector" ) );
+    the_pop_menu.Append( LINK_DEL_CON, _( "Delete Link Connector" ) );
+    the_pop_menu.Append( LINK_DEL, _( "Delete Link" ) );
 
-    the_pop_menu.Enable( ADD_LINK_CON, false );
-    the_pop_menu.Enable( DEL_LINK_CON, false );
-    the_pop_menu.Enable( DEL_LINK, false );
+    the_pop_menu.Enable( LINK_ADD_CON, false );
+    the_pop_menu.Enable( LINK_DEL_CON, false );
+    the_pop_menu.Enable( LINK_DEL, false );
 
-    the_pop_menu.Enable( SHOW_LINK_CONT, false );
+    the_pop_menu.Enable( LINK_SHOW_CONT, false );
 
     //Aspen Menu
     wxMenu * aspen_menu = new wxMenu();
-    aspen_menu->Append( SHOW_LINK_NAME, _( "Aspen Name" ) );
-    aspen_menu->Enable( SHOW_LINK_NAME, true );
+    aspen_menu->Append( LINK_SHOW_NAME, _( "Aspen Name" ) );
+    aspen_menu->Enable( LINK_SHOW_NAME, true );
     aspen_menu->Append( LINK_INPUTS, _( "Query Inputs" ) );
     aspen_menu->Enable( LINK_INPUTS, true );
     aspen_menu->Append( LINK_OUTPUTS, _( "Query Outputs" ) );
@@ -747,12 +751,12 @@ void Link::OnMRightDown( wxMouseEvent &event )
         }
     }
 
-    the_pop_menu.Enable( DEL_LINK, true );
+    the_pop_menu.Enable( LINK_DEL, true );
     //the_pop_menu.Enable(SHOW_LINK_CONT, true);
     if( m_selLinkCon >= 0 )
-        the_pop_menu.Enable( DEL_LINK_CON, true );
+        the_pop_menu.Enable( LINK_DEL_CON, true );
     else
-        the_pop_menu.Enable( ADD_LINK_CON, true );
+        the_pop_menu.Enable( LINK_ADD_CON, true );
 
     the_pop_menu.Enable( LINK_MENU, true );
     //the_pop_menu.SetClientData( &id );

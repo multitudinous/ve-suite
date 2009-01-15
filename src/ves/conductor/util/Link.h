@@ -63,7 +63,7 @@ class VE_CONDUCTOR_UTILS_EXPORTS Link : public wxEvtHandler
 {
 public:
     ///Constructor
-    Link( wxScrolledWindow* designCanvas );
+    Link( wxScrolledWindow* designCanvas, wxEvtHandler* handler );
     ///Destructor
     ~Link( void );
     ///Copy Constructor
@@ -84,20 +84,6 @@ public:
         }
         return false;
     }
-
-    enum
-    {
-        DEL_LINK = 3000,
-        DEL_LINK_CON,
-        SHOW_LINK_CONT,
-        ADD_LINK_CON,
-        SET_ACTIVE_LINK,
-        //Aspen
-        LINK_MENU,
-        SHOW_LINK_NAME,
-        LINK_INPUTS,
-        LINK_OUTPUTS
-    };
 
     wxPoint* GetPoint( size_t i );
     size_t GetNumberOfPoints( void );
@@ -166,6 +152,7 @@ protected:
 private:
     ///Name of the link, should be unique
     wxString linkName;
+    wxEvtHandler* mPostHandler;
 	//The Type of the link
 	//for aspen material = 0, heat = 1, & work = 2 
     int linkType;
@@ -213,11 +200,13 @@ private:
     ves::open::xml::model::LinkPtr m_veLink;
     ves::open::xml::model::ModelWeakPtr parentModel;
 
+
     std::string ConvertUnicode( const wxChar* data )
     {
         std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( data ) ) );
         return tempStr;
     }
+
 
     DECLARE_EVENT_TABLE()
 };
