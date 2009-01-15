@@ -40,6 +40,7 @@
 #include <ves/conductor/XMLDataBufferEngine.h>
 #include <ves/conductor/AspenPlus2DIcons.h>
 #include <ves/conductor/UIPluginBase.h>
+#include <ves/conductor/ConductorLibEnums.h>
 
 #include <ves/open/xml/DataValuePair.h>
 #include <ves/open/xml/Command.h>
@@ -76,8 +77,8 @@ BEGIN_EVENT_TABLE( HierarchyTree, wxTreeCtrl )
     EVT_TREE_SEL_CHANGED( HIERARCHYTREE_CTRL, HierarchyTree::OnSelChanged )
     EVT_TREE_ITEM_EXPANDING( HIERARCHYTREE_CTRL, HierarchyTree::OnExpanded )
     //EVT_TREE_ITEM_ACTIVATED( HIERARCHYTREE_CTRL, HierarchyTree::OnDoubleClick )
-   EVT_TREE_ITEM_RIGHT_CLICK( HIERARCHYTREE_CTRL, HierarchyTree::OnRightClick )
-
+    EVT_TREE_ITEM_RIGHT_CLICK( HIERARCHYTREE_CTRL, HierarchyTree::OnRightClick )
+    EVT_MENU_RANGE( UIPLUGINBASE_BEGIN_MENU, UIPLUGINBASE_END_MENU, HierarchyTree::ProcessRightClickMenuEvents )
 END_EVENT_TABLE()
 
 HierarchyTree::HierarchyTree( wxWindow *parent, const wxWindowID id,

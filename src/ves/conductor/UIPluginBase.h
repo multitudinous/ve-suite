@@ -402,6 +402,7 @@ protected:
     ///THe plugin delete event
     wxUpdateUIEvent pluginDeleteEvent;
 
+    ///The string used to provide a description of the plugin
     wxString mDescription;
 
 private:
