@@ -81,7 +81,7 @@ AvailableModules::AvailableModules( wxWindow *parent, const wxWindowID id,
 
     CreateImageList();
     
-    rootId = AddRoot( wxT( "Available Modules" ), image1, -1, NULL );
+    rootId = AddRoot( wxT( "Available Plugins" ), image1, -1, NULL );
     SetItemImage( rootId, AVAILABLEMODULES_FOLDEROPENED, wxTreeItemIcon_Expanded );
     SetItemFont( rootId, *wxNORMAL_FONT );
     
@@ -371,7 +371,7 @@ void AvailableModules::ResetPluginTree()
     DeleteAllItems();
     int image1 = AVAILABLEMODULES_FOLDER;
     int image2 = AVAILABLEMODULES_FOLDERSELECTED;
-    rootId = AddRoot( wxT( "Available Modules" ), image1, image2, NULL );
+    rootId = AddRoot( wxT( "Available Plugins" ), image1, image2, NULL );
     SetItemImage( rootId, AVAILABLEMODULES_FOLDEROPENED, wxTreeItemIcon_Expanded );
     SetItemFont( rootId, *wxITALIC_FONT );
 
