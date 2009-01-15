@@ -136,7 +136,30 @@ void APPlugin::OnOpen( wxCommandEvent& event )
     commandWriter.WriteXMLDocument( nodes, status, "Command" );
     //Get results
     std::string nw_str = serviceList->Query( status );
+    
+    if( nw_str.empty() )
+    {
+        wxMessageDialog md( m_canvas, wxT("No Aspen Unit connected.\nPlease launch Aspen Unit."), wxT("Error"), wxOK);
+        md.ShowModal();
+        return;
+    }
 
+    // If there is nothing on the CE
+    if( nw_str.compare("BKPDNE") == 0 )
+    {
+        wxMessageDialog md(m_canvas, wxT("Aspen Unit is unable to find the bkp file.\nDid you select the correct directory in Aspen Unit?" ), wxT("Error"), wxOK );
+        md.ShowModal();
+        //Log( "BKP File Does NOT exist.\n" );
+        return;
+    }    
+    else if( nw_str.compare("APWDNE") == 0 )
+    {
+        wxMessageDialog md( m_canvas, wxT("Aspen Unit is unable to find the apw file.\nDid you select the correct directory in Aspen Unit?" ), wxT("Error"), wxOK);
+        md.ShowModal();
+        //Log( "APW File Does NOT exist.\n" );
+        return;
+    }
+    
     ves::open::xml::XMLReaderWriter networkWriter;
     networkWriter.UseStandaloneDOMDocumentManager();
     networkWriter.ReadFromString();
@@ -147,23 +170,19 @@ void APPlugin::OnOpen( wxCommandEvent& event )
     std::vector< ves::open::xml::XMLObjectPtr >::iterator objectIter;
     std::vector< ves::open::xml::XMLObjectPtr > objectVector =
         networkWriter.GetLoadedXMLObjects();
-    ves::open::xml::model::SystemPtr tempSystem;
 
+    ves::open::xml::model::SystemPtr tempSystem;
     tempSystem = boost::dynamic_pointer_cast<ves::open::xml::model::System>( objectVector.at( 0 ) );
+    ves::open::xml::model::ModelPtr aspenPlusModel;
+    //set parent model on topmost level
+    for( int modelCount = 0; modelCount < tempSystem->GetNumberOfModels(); modelCount++)
+    {
+        tempSystem->GetModel( modelCount )->SetParentModel( aspenPlusModel );
+    }
+
+    //aspenPlusModel->SetSubSystem( tempSystem );
     GetVEModel()->SetSubSystem( tempSystem );
     mDataBufferEngine->ParseSystem( tempSystem );
-
-    // If there is nothing on the CE
-    if( nw_str.compare("BKPDNE") == 0 )
-    {
-        //Log( "BKP File Does NOT exist.\n" );
-        return;
-    }    
-    else if( nw_str.compare("APWDNE") == 0 )
-    {
-        //Log( "APW File Does NOT exist.\n" );
-        return;
-    }
 
     //Network * network = m_canvas->GetActiveNetwork();
 
