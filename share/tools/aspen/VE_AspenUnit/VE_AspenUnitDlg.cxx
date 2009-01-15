@@ -74,8 +74,8 @@ BOOL CVE_AspenUnitDlg::OnInitDialog()
 
 	// TODO: Add extra initialization here	
 	initialized = false;
-    commManager = 0;
-    unitObject = 0;
+    //commManager = 0;
+    //unitObject = 0;
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
 
@@ -180,7 +180,6 @@ void CVE_AspenUnitDlg::OnBnClickedOk()
 {
 	if(!initialized)
 	{
-        GetDlgItem(IDC_OK)->EnableWindow(FALSE);
         // TODO: Add your control notification handler code here
         CEdit *Display;
         Display = reinterpret_cast<CEdit *>(GetDlgItem(IDC_EDIT3));
@@ -201,8 +200,18 @@ void CVE_AspenUnitDlg::OnBnClickedOk()
         if ( !unitObject )
         {
             AfxMessageBox( _T("Unable to connect to VE-CE" ));
+            //delete unitObject;
+            commManager->DestroyORB();
+            delete commManager;
+            commManager = NULL;
+            initialized = false;
+            return;
         }
-		initialized = true;
+        else
+        {
+		    initialized = true;
+            GetDlgItem(IDC_OK)->EnableWindow(FALSE);
+        }
 	}
 }
 
