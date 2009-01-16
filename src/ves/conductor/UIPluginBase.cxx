@@ -2402,7 +2402,7 @@ wxMenu* UIPluginBase::SetupPluginBasePopupMenu()
     mPopMenu->Append( UIPLUGINBASE_VISUALIZATION, _( "Visualization" ) );
     mPopMenu->Enable( UIPLUGINBASE_VISUALIZATION, true );
     //Set the plugin name for a model
-    mPopMenu->Append( -1, _(""), _(""), wxITEM_SEPARATOR );
+    mPopMenu->AppendSeparator();
 
     mPopMenu->Append( UIPLUGINBASE_SHOW_DESC, _( "Description" ) );
     mPopMenu->Enable( UIPLUGINBASE_SHOW_DESC, true );
