@@ -162,8 +162,15 @@ void ADPlugin::OnOpen( wxCommandEvent& event )
     std::vector< ves::open::xml::XMLObjectPtr > objectVector =
         networkWriter.GetLoadedXMLObjects();
     ves::open::xml::model::SystemPtr tempSystem;
-
     tempSystem = boost::dynamic_pointer_cast<ves::open::xml::model::System>( objectVector.at( 0 ) );
+    ves::open::xml::model::ModelPtr aspenPlusModel;
+    //set parent model on topmost level
+    for( int modelCount = 0; modelCount < tempSystem->GetNumberOfModels(); modelCount++)
+    {
+        tempSystem->GetModel( modelCount )->SetParentModel( aspenPlusModel );
+    }
+
+    //aspenPlusModel->SetSubSystem( tempSystem );
     GetVEModel()->SetSubSystem( tempSystem );
     mDataBufferEngine->ParseSystem( tempSystem );
 
