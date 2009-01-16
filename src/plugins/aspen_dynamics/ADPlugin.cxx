@@ -87,11 +87,15 @@ ADPlugin::ADPlugin() :
     iconFilename = "dynamics";
     wxImage my_img( dynamics );
     SetImage( my_img );
+    mIsSimOpen = false;
 }
 ////////////////////////////////////////////////////////////////////////////////
 ADPlugin::~ADPlugin()
 {
-    ;
+    if( mIsSimOpen )
+    {
+        CloseAspenSimulation();
+    }
 }
 /////////////////////////////////////////////////////////////////////////////
 wxString ADPlugin::GetConductorName()
@@ -101,11 +105,27 @@ wxString ADPlugin::GetConductorName()
 /////////////////////////////////////////////////////////////////////////////
 void ADPlugin::OnOpen( wxCommandEvent& event )
 {
-    //UIPLUGIN_CHECKID( event )
+    UIPLUGIN_CHECKID( event )
     //wxString dynext( "Aspen Dynamics files (*.dynf)|*.dynf", wxConvUTF8);
     //wxString extText = dynext;
     //wxFileDialog fd( m_canvas, wxT("Choose a file"), wxT(""), wxT(""), 
     //    extText, wxOPEN );
+
+    if( mIsSimOpen )
+    {
+        wxMessageDialog md( m_canvas, 
+            wxT( "Simulation already open.\nClose it and open another?" ),
+            wxT( "Confirm" ),
+            wxYES_NO);
+        if( md.ShowModal() == wxCANCEL )
+        {
+            return;
+        }
+        else
+        {
+            CloseAspenSimulation();
+        }
+    }
 
     ADOpenDialog fd( m_canvas );
     fd.SetPopulateFilenames( );
@@ -114,6 +134,8 @@ void ADPlugin::OnOpen( wxCommandEvent& event )
     {
         return;
     }
+
+    mIsSimOpen = true;
 
     wxFileName dynFileName;
     dynFileName.ClearExt();
@@ -281,6 +303,11 @@ void ADPlugin::CloseAspenSimulation( void )
     std::string nw_str = serviceList->Query( status ) + "\n";
     //Log( nw_str.c_str() );
 	//AspenSimOpen = false;
+    mIsSimOpen = false;
+    SetName( "ADPlugin" );
+    wxCommandEvent event;
+    event.SetId( UIPLUGINBASE_SET_UI_PLUGIN_NAME );
+    GlobalNameUpdate( event );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void ADPlugin::OnCloseAspenSimulation( wxCommandEvent& event )

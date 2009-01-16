@@ -52,6 +52,7 @@ public:
     ADPlugin();
     virtual ~ADPlugin();
     wxString GetConductorName();
+    bool mIsSimOpen;
 
 protected:
     void OnOpen( wxCommandEvent& event );

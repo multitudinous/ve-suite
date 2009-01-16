@@ -86,10 +86,15 @@ APPlugin::APPlugin() :
     iconFilename = "aspen";
     wxImage my_img( aspen );
     SetImage( my_img );
+    mIsSimOpen = false;
 }
 ////////////////////////////////////////////////////////////////////////////////
 APPlugin::~APPlugin()
 {
+    if( mIsSimOpen )
+    {
+        CloseAspenSimulation();
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 wxString APPlugin::GetConductorName()
@@ -99,12 +104,28 @@ wxString APPlugin::GetConductorName()
 /////////////////////////////////////////////////////////////////////////////
 void APPlugin::OnOpen( wxCommandEvent& event )
 {
-    //UIPLUGIN_CHECKID( event )
+    UIPLUGIN_CHECKID( event )
     //wxString bkpext( "Aspen Plus ASCII files (*.bkp)|*.bkp", wxConvUTF8);
     //wxString apwext( "Aspen Plus Binary files (*.apw)|*.apw", wxConvUTF8);
     //wxString extText = bkpext + _("|") + apwext;
     //wxFileDialog fd( m_canvas, wxT("Choose a file"), wxT(""), wxT(""), 
     //    extText, wxOPEN );
+
+    if( mIsSimOpen )
+    {
+        wxMessageDialog md( m_canvas, 
+            wxT( "Simulation already open.\nClose it and open another?" ),
+            wxT( "Confirm" ),
+            wxYES_NO);
+        if( md.ShowModal() == wxCANCEL )
+        {
+            return;
+        }
+        else
+        {
+            CloseAspenSimulation();
+        }
+    }
 
     APOpenDialog fd( m_canvas );
     fd.SetPopulateFilenames( );
@@ -113,6 +134,8 @@ void APPlugin::OnOpen( wxCommandEvent& event )
     {
         return;
     }
+
+    mIsSimOpen = true;
 
     wxFileName bkpFileName;
     bkpFileName.ClearExt();
@@ -292,6 +315,11 @@ void APPlugin::CloseAspenSimulation( void )
     std::string nw_str = serviceList->Query( status ) + "\n";
     //Log( nw_str.c_str() );
 	//AspenSimOpen = false;
+    mIsSimOpen = false;
+    SetName( "APPlugin" );
+    wxCommandEvent event;
+    event.SetId( UIPLUGINBASE_SET_UI_PLUGIN_NAME );
+    GlobalNameUpdate( event );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void APPlugin::OnCloseAspenSimulation( wxCommandEvent& event )
