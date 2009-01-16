@@ -466,3 +466,41 @@ bool XMLDataBufferEngine::AddSubSystem( ves::open::xml::model::SystemPtr system 
     m_systemMap[ system->GetID() ] = system;
     return true;
 }
+////////////////////////////////////////////////////////////////////////////////
+bool XMLDataBufferEngine::RemoveModelFromSystem( ves::open::xml::model::ModelPtr model )
+{
+    std::map< std::string, ves::open::xml::model::SystemPtr >::const_iterator iter;
+    for( iter = m_systemMap.begin(); iter != m_systemMap.end(); ++iter )
+    {
+        if( iter->second->RemoveModel( model ) )
+        {
+            RemovemSystem( iter->second );
+            return true;
+        }
+    }
+    return false;
+}
+////////////////////////////////////////////////////////////////////////////////
+bool XMLDataBufferEngine::RemovemSystem( ves::open::xml::model::SystemPtr system )
+{
+    std::map< std::string, ves::open::xml::model::SystemPtr >::iterator iter;
+    for( iter = m_systemMap.begin(); iter != m_systemMap.end(); ++iter )
+    {
+        if( iter->second == system )
+        {
+            m_systemMap.erase( iter );
+            std::vector< ModelPtr > tempModels = system->GetModels();
+            for( size_t i = 0; i < tempModels.size(); ++i )
+            {
+                ves::open::xml::model::SystemPtr tempSys = 
+                    tempModels.at( i )->GetSubSystem();
+                if( tempSys )
+                {
+                    RemovemSystem( tempSys ); 
+                }
+            }
+            return true;
+        }
+    }
+    return false;
+}

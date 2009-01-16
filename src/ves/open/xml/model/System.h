@@ -101,11 +101,13 @@ public:
     ///\param xmlInput The input XML data.
     virtual void SetObjectFromXMLData(
         XERCES_CPP_NAMESPACE_QUALIFIER DOMNode* xmlInput );
-
+    ///Set the model that is above this model
     void SetParentModel( ModelPtr parent );
-
-    ModelPtr GetParentModel( );
-
+    ///Get the model that is above this one
+    ModelPtr GetParentModel();
+    ///Remove the model from the system
+    bool RemoveModel( ModelPtr parent );
+ 
 protected:
     ///Internally update the data.
     ///\param tagName The tag name of this element.

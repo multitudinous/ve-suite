@@ -204,3 +204,20 @@ ModelSharedPtr System::GetParentModel( )
 {
     return mParentModel;
 }
+////////////////////////////////////////////////////////////////////////////////
+bool System::RemoveModel( ModelPtr model )
+{
+    std::vector< ModelPtr >::iterator foundModel;
+    foundModel = std::find( mModels.begin(), mModels.end(), model );
+    
+    if( foundModel != mModels.end() )
+    {
+        mModels.erase( foundModel );
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+////////////////////////////////////////////////////////////////////////////////

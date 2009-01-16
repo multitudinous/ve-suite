@@ -114,8 +114,16 @@ public:
     ///Parse system for subsystems
     void ParseSystem( ves::open::xml::model::SystemPtr system );
     ///Add a system so that users can create sub systems on the fly
+    ///\param system The system to add
     bool AddSubSystem( ves::open::xml::model::SystemPtr system );
+    ///Remove the model from the system
+    ///\param model Model to be removed
+    bool RemoveModelFromSystem( ves::open::xml::model::ModelPtr model );
+    ///Recursive function to clean up systems and subsystems 
+    ///\param system The system to be removed
+    bool RemovemSystem( ves::open::xml::model::SystemPtr system );
 
+    
 private:
     ///Map to store the command name and command for easy lookup by the user
     //std::map< std::string, ves::open::xml::CommandPtr > m_commandMap;

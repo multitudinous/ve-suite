@@ -1891,7 +1891,7 @@ void UIPluginBase::OnDelMod( wxCommandEvent& event )
     veCommand->AddDataValuePair( dataValuePair );
     bool connected = serviceList->SendCommandStringToXplorer( veCommand );
     //Clean up memory
-    
+    mDataBufferEngine->RemoveModelFromSystem( m_veModel );
     RemovePluginDialogsFromCanvas();
     
     event.SetClientData( &id );
