@@ -196,6 +196,8 @@ private:
     btSequentialImpulseConstraintSolver* mSolver;///<A physics solver which sequentially applies impulses
     
     osgBullet::DebugBullet* mDebugBullet;
+    ///Debug bullet
+    bool mDebugBulletFlag;
 };
 }
 }
