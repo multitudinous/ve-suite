@@ -693,12 +693,12 @@ char* Body_Unit_i::handleOpenSimulation(ves::open::xml::CommandPtr cmd)
 
 	//this command has no params
 	std::string filename = cmd->GetDataValuePair(1)->GetDataString();
-	Display->SetWindowText(filename.c_str());
 
     std::string extension = filename.substr( filename.size() - 4, 4 );
  
     if( extension.find( "bkp" ) != std::string::npos )
     {
+        filename.resize( filename.size() - 4 );
         //make sure bkp file exists
         std::ifstream bkpFile( ( mWorkingDir + filename + ".bkp" ).c_str(),
             std::ios::binary);
@@ -725,13 +725,14 @@ char* Body_Unit_i::handleOpenSimulation(ves::open::xml::CommandPtr cmd)
 
         bkpFlag = true;
         dynFlag = false;
-        filename.resize( filename.size() - 4 );
+	    Display->SetWindowText(filename.c_str());
         bkp = new BKPParser();
 	    bkp->SetWorkingDir( mWorkingDir );
 	    bkp->OpenSim(filename.c_str());
     }
     else if( extension.find( "dynf" ) != std::string::npos )
     {   
+        filename.resize( filename.size() - 5 );
         //make sure dynf file exists
         std::ifstream dynFile( ( mWorkingDir + filename + ".dynf" ).c_str(),
             std::ios::binary);
@@ -746,7 +747,7 @@ char* Body_Unit_i::handleOpenSimulation(ves::open::xml::CommandPtr cmd)
         
         bkpFlag = false;
         dynFlag = true;
-        filename.resize( filename.size() - 5 );
+	    Display->SetWindowText(filename.c_str());
         dyn = new DynParser();
 	    dyn->SetWorkingDir( mWorkingDir );
 	    dyn->OpenFile(filename.c_str());
