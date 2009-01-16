@@ -186,7 +186,7 @@ public:
     void OnTimer(wxTimerEvent& event);
 
 protected:
-    wxString fname;
+    wxString mVESFileName;
     wxString directory;
 
     void _createTreeAndLogWindow( wxWindow* parent );

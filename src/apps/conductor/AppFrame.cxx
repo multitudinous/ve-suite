@@ -259,7 +259,7 @@ AppFrame::AppFrame( wxWindow * parent, wxWindowID id, const wxString& title )
     //SetAutoLayout(true);
 
     directory = _( "" );
-    fname = _( "" );
+    //mVESFileName = _( "" );
 
     m_recentVESFiles->UseMenu( file_menu );
     m_recentVESFiles->AddFilesToMenu( file_menu );
@@ -927,7 +927,7 @@ void AppFrame::Save( wxCommandEvent& event )
     canvas->Update();
 
     //First time call save will be the same as SaveAs
-    if( fname == wxString( "", wxConvUTF8 ) )
+    if( mVESFileName.IsEmpty() )
     {
         SaveAs( event );
     }
@@ -937,7 +937,7 @@ void AppFrame::Save( wxCommandEvent& event )
         //wrtie to path
         //std::string data = network->Save( );
         std::string nw_str = XMLDataBufferEngine::instance()->
-                             SaveVESData( ConvertUnicode( fname.c_str() ) );
+                             SaveVESData( ConvertUnicode( mVESFileName.c_str() ) );
     }
 }
 
@@ -954,15 +954,28 @@ void AppFrame::SaveAs( wxCommandEvent& WXUNUSED( event ) )
         //Set this here so that after correcting for not replacing the file name
         //we can exit the do while loop
         answer = 0;
-        wxTextEntryDialog newDataSetName( this,
-            _( "Enter the prefix for *.ves filename:" ),
-            _( "Save VES file as..." ),
-            _( "network" ), wxOK | wxCANCEL );
+        wxTextEntryDialog * newDataSetName;
+        
+        if( mVESFileName.IsEmpty() )
+        {
+            newDataSetName = new wxTextEntryDialog( this,
+                _( "Enter the prefix for *.ves filename:" ),
+                _( "Save VES file as..." ),
+                _( "untitled" ), wxOK | wxCANCEL );
+        }
+        else
+        {
+            wxString fileNameNoExt = mVESFileName.Truncate( mVESFileName.size() - 4);
+            newDataSetName = new wxTextEntryDialog( this,
+                _( "Enter the prefix for *.ves filename:" ),
+                _( "Save VES file as..." ),
+                fileNameNoExt, wxOK | wxCANCEL );
+        }
 
-        if( newDataSetName.ShowModal() == wxID_OK )
+        if( newDataSetName->ShowModal() == wxID_OK )
         {
             vesFileName.ClearExt();
-            vesFileName.SetName( newDataSetName.GetValue() );
+            vesFileName.SetName( newDataSetName->GetValue() );
             vesFileName.SetExt( _( "ves" ) );
         }
         else
@@ -981,6 +994,7 @@ void AppFrame::SaveAs( wxCommandEvent& WXUNUSED( event ) )
                 wxDefaultPosition );
             answer = promptDlg.ShowModal();
         }
+        delete newDataSetName;
     }
     while( answer == wxID_NO );
 
@@ -999,9 +1013,9 @@ void AppFrame::SaveAs( wxCommandEvent& WXUNUSED( event ) )
     if( vesFileName.HasName() )
     {
         directory = vesFileName.GetPath();
-        fname = vesFileName.GetFullName();
+        mVESFileName = vesFileName.GetFullName();
         ///now write the file out from domdocument manager
-        std::string nw_str = XMLDataBufferEngine::instance()->SaveVESData( ConvertUnicode( fname.c_str() ) );
+        std::string nw_str = XMLDataBufferEngine::instance()->SaveVESData( ConvertUnicode( mVESFileName.c_str() ) );
         SetTitle( vesFileName.GetFullName() );
         SetRecentFile( vesFileName );
     }
@@ -1015,7 +1029,7 @@ void AppFrame::Open( wxCommandEvent& WXUNUSED( event ) )
         this,
         _T( "Open File dialog" ),
         ::wxGetCwd(),
-        fname,
+        mVESFileName,
         _T( "Network files (*.ves)|*.ves" ),
         wxOPEN | wxFILE_MUST_EXIST
     );
@@ -1045,9 +1059,9 @@ void AppFrame::Open( wxCommandEvent& WXUNUSED( event ) )
     {
         tempDir = "./";
     }
-    //Update recent file and fname variable
+    //Update recent file and mVESFileName variable
     SetRecentFile( wxFileName( dialog.GetPath() ) );
-    fname = dialog.GetFilename();
+    mVESFileName = dialog.GetFilename();
 
     //Send Command to change xplorer working dir
     // Create the command and data value pairs
@@ -1080,7 +1094,7 @@ void AppFrame::Open( wxCommandEvent& WXUNUSED( event ) )
     av_modules->ResetPluginTree();
 
     //Now laod the xml data now that we are in the correct directory
-    canvas->PopulateNetworks( ConvertUnicode( fname.c_str() ) );
+    canvas->PopulateNetworks( ConvertUnicode( mVESFileName.c_str() ) );
 
     //create hierarchy page
     hierarchyTree->PopulateTree( XMLDataBufferEngine::instance()->
@@ -1159,7 +1173,7 @@ void AppFrame::OpenRecentFile( wxCommandEvent& event )
     directory.Replace( _( "\\" ), _( "/" ), true );
 
     // TODO also, make call if file they are trying to call does not exist, call DeleteRecentFile
-    fname = vesFileName.GetFullName();
+    mVESFileName = vesFileName.GetFullName();
 
     std::string tempDir = ConvertUnicode( directory.c_str() );
     if( tempDir.empty() )
@@ -1197,7 +1211,7 @@ void AppFrame::OpenRecentFile( wxCommandEvent& event )
     av_modules->ResetPluginTree();
 
     //Now laod the xml data now that we are in the correct directory
-    canvas->PopulateNetworks( ConvertUnicode( fname.c_str() ) );
+    canvas->PopulateNetworks( ConvertUnicode( mVESFileName.c_str() ) );
 
     //create hierarchy page
     hierarchyTree->PopulateTree( XMLDataBufferEngine::instance()->
@@ -1695,7 +1709,7 @@ void AppFrame::NewCanvas( wxCommandEvent& WXUNUSED( event ) )
 	//	CloseAspenSimulation();
 	//}
 	newCanvas = true;
-    fname.Clear();
+    mVESFileName.Clear();
 
     //clear the old networks so that all the event handlers are removed
     //before cleaning up the rest of the classes
@@ -2341,11 +2355,11 @@ void AppFrame::ProcessCommandLineArgs( void )
     serviceList->SendCommandStringToXplorer( veCommand );
 
     //Now laod the xml data now that we are in the correct directory
-    fname = vesFileName.GetFullName();
+    mVESFileName = vesFileName.GetFullName();
     // we submit after new to make sure that the ce and ge ar cleared
     wxCommandEvent event;
-    //network->Load( ConvertUnicode( fname.c_str() ), true );
-    canvas->PopulateNetworks( ConvertUnicode( fname.c_str() ) );
+    //network->Load( ConvertUnicode( mVESFileName.c_str() ), true );
+    canvas->PopulateNetworks( ConvertUnicode( mVESFileName.c_str() ) );
     //create hierarchy page
     hierarchyTree->PopulateTree(); 
     //XMLDataBufferEngine::instance()->GetTopSystemId() );
@@ -2598,7 +2612,7 @@ void AppFrame::LoadNewNetwork( wxUpdateUIEvent& WXUNUSED( event )  )
     else
     {
         //Now laod the xml data now that we are in the correct directory
-        canvas->PopulateNetworks( ConvertUnicode( fname.c_str() ) );
+        canvas->PopulateNetworks( ConvertUnicode( mVESFileName.c_str() ) );
         
         //create hierarchy page
         hierarchyTree->PopulateTree();
