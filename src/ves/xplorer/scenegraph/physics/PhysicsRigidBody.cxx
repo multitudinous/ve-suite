@@ -351,11 +351,11 @@ void PhysicsRigidBody::RegisterRigidBody( btRigidBody* rigidBody )
     ///Look at CCD demo in Demos/CcdPhysicsDemo/CcdPhysicsDemo.cpp
     ///http://www.bulletphysics.com/mediawiki-1.5.8/index.php?title=Anti_tunneling_by_Motion_Clamping
     // Only do CCD if  motion in one timestep (1.f/60.f) exceeds CUBE_HALF_EXTENTS
-    osg::BoundingSphere bs = mOSGToBullet->getBound();
-    rigidBody->setCcdMotionThreshold( bs.radius()*0.5 );
+    //osg::BoundingSphere bs = mOSGToBullet->getBound();
+    //rigidBody->setCcdMotionThreshold( bs.radius()*0.5 );
 
     //Experimental: better estimation of CCD Time of Impact:
-    rigidBody->setCcdSweptSphereRadius( 0.2*bs.radius() );
+    //rigidBody->setCcdSweptSphereRadius( 0.2*bs.radius() );
     
     rigidBody->setActivationState( DISABLE_DEACTIVATION );
 
