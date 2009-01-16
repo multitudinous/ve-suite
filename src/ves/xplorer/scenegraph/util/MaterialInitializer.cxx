@@ -97,7 +97,7 @@ void MaterialInitializer::apply( osg::Geode& node )
         if( geom.valid() )
         {
             color_array = 
-                static_cast< osg::Vec4Array* >( geom->getColorArray() );
+                dynamic_cast< osg::Vec4Array* >( geom->getColorArray() );
         }
         
         //Texture for the stateset

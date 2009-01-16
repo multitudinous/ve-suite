@@ -43,6 +43,8 @@
 #include <osg/BlendFunc>
 #include <osg/BlendColor>
 
+#include <osg/io_utils>
+
 // --- C/C++ Libraries --- //
 #include <iostream>
 
@@ -88,15 +90,23 @@ void OpacityVisitor::apply( osg::Geode& node )
         //Stateset for the drawable
         osg::ref_ptr< osg::StateSet > drawable_stateset = 
             node.getDrawable( i )->getOrCreateStateSet();
+
         //Material from the stateset
         osg::ref_ptr< osg::Material > drawable_material = 
             static_cast< osg::Material* >( 
                 drawable_stateset->getAttribute( 
                 osg::StateAttribute::MATERIAL ) );
+
         //Colors for the stateset
-        osg::ref_ptr< osg::Vec4Array > color_array = 
-            static_cast< osg::Vec4Array* >( node.getDrawable( i )->
-                asGeometry()->getColorArray() );
+        osg::ref_ptr< osg::Vec4Array > color_array;
+        osg::ref_ptr< osg::Geometry > geom = 
+        node.getDrawable( i )->asGeometry();
+        if( geom.valid() )
+        {
+            color_array = 
+                dynamic_cast< osg::Vec4Array* >( geom->getColorArray() );
+        }
+
         //Texture for the stateset
         osg::StateSet::TextureAttributeList drawable_tal = 
             drawable_stateset->getTextureAttributeList();
@@ -106,6 +116,7 @@ void OpacityVisitor::apply( osg::Geode& node )
         //because otherwise the renderbins end up being nested and cause odd
         //problems.
         SetupBlendingForStateSet( drawable_stateset.get() );
+
         if( mStoreState )
         {
             //The first time we come through here store the original state
@@ -113,11 +124,12 @@ void OpacityVisitor::apply( osg::Geode& node )
             //if we should mess with the opacity
             if( color_array.valid() )
             {
-                node.getDrawable( i )->setUserData( 
-                    new osg::Vec4Array( (*color_array.get()), 
-                    osg::CopyOp::DEEP_COPY_ALL ) );
+                osg::Vec4Array* tempColorArray = 
+                    new osg::Vec4Array( *(color_array.get()), 
+                                   osg::CopyOp::DEEP_COPY_ALL );
+               node.getDrawable( i )->setUserData( tempColorArray );
             }
-            
+
             if( drawable_material.valid() )
             {
                 drawable_stateset->setUserData( 
@@ -125,7 +137,7 @@ void OpacityVisitor::apply( osg::Geode& node )
                     osg::CopyOp::DEEP_COPY_ALL ) );
             }
         }
-        
+
         if( color_array.valid() )
         {
             osg::ref_ptr< osg::Vec4Array > temp_color_array = 
@@ -143,7 +155,7 @@ void OpacityVisitor::apply( osg::Geode& node )
             node.getDrawable( i )->asGeometry()->
                 setColorArray( color_array.get() );
         }
-        
+
         if( drawable_material.valid() )
         {
             osg::ref_ptr< osg::Material > temp_drawable_material = 
