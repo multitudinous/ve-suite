@@ -965,7 +965,7 @@ void AppFrame::SaveAs( wxCommandEvent& WXUNUSED( event ) )
         }
         else
         {
-            wxString fileNameNoExt = mVESFileName.Truncate( mVESFileName.size() - 4);
+            wxString fileNameNoExt = mVESFileName.SubString( 0, mVESFileName.size() - 4);
             newDataSetName = new wxTextEntryDialog( this,
                 _( "Enter the prefix for *.ves filename:" ),
                 _( "Save VES file as..." ),
