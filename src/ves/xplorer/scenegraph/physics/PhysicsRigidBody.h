@@ -51,6 +51,7 @@ class Geode;
 // --- Bullet Includes --- //
 #include <BulletDynamics/Dynamics/btRigidBody.h>
 #include <BulletCollision/BroadphaseCollision/btBroadphaseProxy.h>
+#include <LinearMath/btVector3.h>
 
 class btCompoundShape;
 class btCollisionShape;
@@ -159,8 +160,9 @@ private:
     float mRestitution;
     ///A pointer to the PhysicsSimulator singleton
     PhysicsSimulator* mPhysicsSimulator;
-    
-    //
+    ///Tell wether we need to register osgBullets debug capability
+    bool mDebugBoundaries;
+    ///The holder of all physics data for bullet
     btRigidBody* mRB;
 
     osg::ref_ptr< osg::Node > mOSGToBullet;

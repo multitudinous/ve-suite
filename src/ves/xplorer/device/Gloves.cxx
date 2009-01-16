@@ -173,7 +173,7 @@ void Gloves::Initialize()
     mRightHand->setPosition( pos );
     mRightHand->setAttitude( quat );
     mRootNode->addChild( mRightHand.get() );
-    //mRightHand->setDebug( true );
+    mRightHand->setDebug( true );
     
     mLeftHand = new osgBullet::HandNode( ves::xplorer::scenegraph::PhysicsSimulator::instance()->GetDynamicsWorld(), osgBullet::HandNode::LEFT, length );
 
@@ -182,10 +182,11 @@ void Gloves::Initialize()
         std::cerr << "|\tProblems loading left hand model for glove tools." << std::endl;
         return;
     }
+    pos.set( 3, 3, 3 );
     mLeftHand->setPosition( pos );
     mLeftHand->setAttitude( quat );
     mRootNode->addChild( mLeftHand.get() );
-    //mLeftHand->setDebug( true );
+    mLeftHand->setDebug( true );
 
     std::cout << "|\tInitialize Gloves" << std::endl;
 }
@@ -992,18 +993,7 @@ void Gloves::UpdateRightHandGlove()
     {
         return;
     }
-    
-    gmtl::Matrix44d hand_pos_rot;
-    hand_pos_rot[0][3] = 0;
-    hand_pos_rot[1][3] = 3;
-    hand_pos_rot[2][3] = -3;
-    if( !mRightHandPos->isStupefied() )
-    {
-        //Get data from the trackers
-        gmtl::Matrix44f tempHand = mRightHandPos->getData();
-        hand_pos_rot = convertTo< double >( tempHand );
-    }
-    
+        
     //Get data from hand joints
         //Get all the VR Juggler data variables
     //Update the hand joints
@@ -1039,6 +1029,21 @@ void Gloves::UpdateRightHandGlove()
 
     //mRightHand->setArticulation( _mode, mRightHand->getArticulation( _mode ) + 0.1 );
     //mLeftHand->setArticulation( _mode, mLeftHand->getArticulation( _mode ) + 0.1 );
+
+    gmtl::Matrix44d hand_pos_rot;
+    hand_pos_rot[0][3] = 0;
+    hand_pos_rot[1][3] = 3;
+    hand_pos_rot[2][3] = -3;
+    if( !mRightHandPos->isStupefied() )
+    {
+        //Get data from the trackers
+        gmtl::Matrix44f tempHand = mRightHandPos->getData();
+        hand_pos_rot = convertTo< double >( tempHand );
+    }
+    else
+    {
+        return;
+    }
 
     gmtl::Vec3d x_axis( 1.0f, 0.0f, 0.0f );
     gmtl::Matrix44d rhRot = gmtl::makeRot< gmtl::Matrix44d >(
@@ -1078,17 +1083,6 @@ void Gloves::UpdateLeftHandGlove()
         return;
     }
 
-    gmtl::Matrix44d hand_pos_rot;
-    hand_pos_rot[0][3] = 0;
-    hand_pos_rot[1][3] = 3;
-    hand_pos_rot[2][3] = -3;
-    if( !mLeftHandPos->isStupefied() )
-    {
-        //Get data from the trackers
-        gmtl::Matrix44f tempHand = mLeftHandPos->getData();
-        hand_pos_rot = convertTo< double >( tempHand );
-    }
-    
     //Get data from hand joints
         //Get all the VR Juggler data variables
     //Update the hand joints
@@ -1125,6 +1119,21 @@ void Gloves::UpdateLeftHandGlove()
     //mRightHand->setArticulation( _mode, mRightHand->getArticulation( _mode ) + 0.1 );
     //mLeftHand->setArticulation( _mode, mLeftHand->getArticulation( _mode ) + 0.1 );
 
+    gmtl::Matrix44d hand_pos_rot;
+    hand_pos_rot[0][3] = 0;
+    hand_pos_rot[1][3] = 3;
+    hand_pos_rot[2][3] = -3;
+    if( !mLeftHandPos->isStupefied() )
+    {
+        //Get data from the trackers
+        gmtl::Matrix44f tempHand = mLeftHandPos->getData();
+        hand_pos_rot = convertTo< double >( tempHand );
+    }
+    else
+    {
+        return;
+    }
+    
     mLeftHand->setPosition( osg::Vec3( hand_pos_rot[0][3], -hand_pos_rot[2][3], hand_pos_rot[1][3] ) );
 
     gmtl::Matrix44d vrjRHandMat = convertTo< double >( hand_pos_rot );

@@ -78,7 +78,8 @@ PhysicsRigidBody::PhysicsRigidBody( osg::Node* node,
         mRestitution( 0.5 ),
         mPhysicsSimulator( physicsSimulator ),
         mOSGToBullet( node ),
-        mRB( 0 )
+        mRB( 0 ),
+        mDebugBoundaries( false )
         /*,
 #if ( BULLET_MAJOR_VERSION >= 2 ) && ( BULLET_MINOR_VERSION > 65 )
         btRigidBody( btRigidBody::btRigidBodyConstructionInfo(
@@ -217,19 +218,19 @@ void PhysicsRigidBody::CleanRigidBody()
         btDynamicsWorld* dw = mPhysicsSimulator->GetDynamicsWorld();
         //remove the rigidbodies from the dynamics world and delete them
         dw->removeRigidBody( mRB );
-        
-        /*{
+
+        if( mDebugBoundaries )
+        {
             osgBullet::MotionState* motion = 
                 static_cast< osgBullet::MotionState* >( mRB->getMotionState() );
             osg::ref_ptr< osg::Transform > dbgNode = 
                 motion->getDebugTransform();
             if( dbgNode.valid() )
             {
-                std::cout << " remove old wire " << std::endl;
                 mPhysicsSimulator->GetDebugBullet()->
                         remove( dbgNode.get() );
             }
-        }*/
+        }
         
         {
             btCollisionShape* tempShape = mRB->getCollisionShape();
@@ -361,21 +362,24 @@ void PhysicsRigidBody::RegisterRigidBody( btRigidBody* rigidBody )
 
     mPhysicsSimulator->GetDynamicsWorld()->addRigidBody( rigidBody );
     
-    //Setup debug display
-    // Add visual rep of Bullet Collision shape.
-    /*osg::Node* visNode = 
-        osgBullet::osgNodeFromBtCollisionShape( rigidBody->getCollisionShape() );
-    if( visNode != NULL )
+    if( mDebugBoundaries )
     {
-        osgBullet::MotionState* motion = 
+        //Setup debug display
+        // Add visual rep of Bullet Collision shape.
+        osg::Node* visNode = 
+        osgBullet::osgNodeFromBtCollisionShape( rigidBody->getCollisionShape() );
+        if( visNode != NULL )
+        {
+            osgBullet::MotionState* motion = 
             static_cast< osgBullet::MotionState* >( rigidBody->getMotionState() );
-        osgBullet::AbsoluteModelTransform* dmt = 
+            osgBullet::AbsoluteModelTransform* dmt = 
             new osgBullet::AbsoluteModelTransform();
-        dmt->addChild( visNode );
-        motion->setDebugTransform( dmt );
-        mPhysicsSimulator->GetDebugBullet()->addDynamic( dmt );
-        motion->resetTransform();
-    }*/
+            dmt->addChild( visNode );
+            motion->setDebugTransform( dmt );
+            mPhysicsSimulator->GetDebugBullet()->addDynamic( dmt );
+            motion->resetTransform();
+        }
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsRigidBody::StaticConcaveShape()

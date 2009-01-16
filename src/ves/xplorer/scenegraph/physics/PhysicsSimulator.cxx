@@ -54,6 +54,7 @@
 #include <osgBullet/MotionState.h>
 #include <osgBullet/Utils.h>
 #include <osgBullet/DebugBullet.h>
+#include <osgBullet/GLDebugDrawer.h>
 
 // --- C/C++ Libraries --- //
 #include <sstream>
@@ -86,22 +87,30 @@ PhysicsSimulator::PhysicsSimulator()
     mCollisionInformation( false ),
     shoot_speed( 50.0f ),
     mCreatedGroundPlane( false ),
-    mDebugBullet( new osgBullet::DebugBullet )
+    mDebugBullet( new osgBullet::DebugBullet ),
+    mDebugBulletFlag( false )
 {
     head.init( "VJHead" );
 
     InitializePhysicsSimulation();
-    SceneManager::instance()->GetRootNode()->addChild( mDebugBullet->getRoot() );
+    if( mDebugBulletFlag )
+    {
+        SceneManager::instance()->GetRootNode()->addChild( mDebugBullet->getRoot() );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 PhysicsSimulator::~PhysicsSimulator()
 {
-    delete mDebugBullet;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsSimulator::ExitPhysics()
 {
-
+    if( mDebugBulletFlag )
+    {
+        SceneManager::instance()->GetRootNode()->removeChild( mDebugBullet->getRoot() );
+    }
+    delete mDebugBullet;
+    
     for( size_t i = 0; i < mBoxVector.size(); ++i )
     {
         delete mBoxVector.at( i );
@@ -217,7 +226,7 @@ void PhysicsSimulator::InitializePhysicsSimulation()
     btVector3 worldAabbMin( -10000, -10000, -10000 );
     btVector3 worldAabbMax( 10000, 10000, 10000 );
 
-    mBroadphase = new btAxisSweep3( worldAabbMin, worldAabbMax, maxProxies );
+    mBroadphase = new btAxisSweep3( worldAabbMin, worldAabbMax, 1000 );
     //mBroadphase = new btDbvtBroadphase();
 
 #ifdef REGISTER_CUSTOM_COLLISION_ALGORITHM
@@ -235,10 +244,13 @@ void PhysicsSimulator::InitializePhysicsSimulation()
         mDispatcher, mBroadphase, mSolver );
 #endif
     //mDynamicsWorld->getDispatchInfo().m_enableSPU = true;
-    mDynamicsWorld->setGravity( btVector3( 0, 0, -33 ) );
+    mDynamicsWorld->setGravity( btVector3( 0, 0, -10 ) );
 
-    //mDynamicsWorld->setDebugDrawer( &debugDrawer );
-    
+    if( mDebugBulletFlag )
+    {
+        mDynamicsWorld->setDebugDrawer( new GLDebugDrawer( SceneManager::instance()->GetRootNode() ) );
+        mDynamicsWorld->getDebugDrawer()->setDebugMode( btIDebugDraw::DBG_MAX_DEBUG_DRAW_MODE );
+    }
     //CreateGroundPlane();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -248,8 +260,47 @@ void PhysicsSimulator::UpdatePhysics( float dt )
     {
         return;
     }
-    
+
     mDynamicsWorld->stepSimulation( dt );
+
+    //Sample debug code
+    /*for( int i = 0; i < mDynamicsWorld->getNumCollisionObjects(); ++i )
+    {
+        btCollisionObject* temp = mDynamicsWorld->getCollisionObjectArray()[ i ];
+        btVector3 bbMin = temp->getBroadphaseHandle()->m_aabbMin;
+        btVector3 bbMax = temp->getBroadphaseHandle()->m_aabbMax;
+        std::cout << "Min = " << bbMin.x() << " " << bbMin.y() << " " << bbMin.z() << std::endl;
+        std::cout << "Max = " << bbMax.x() << " " << bbMax.y() << " " << bbMax.z() << std::endl;
+    }
+    
+    int numManifolds1 = mDispatcher->getNumManifolds();
+    for( int i = 0; i < numManifolds1; ++i )
+    {
+        btPersistentManifold* contactManifold =
+        mDispatcher->getManifoldByIndexInternal( i );
+        //contactManifold->refreshContactPoints(
+        //bodyA->getWorldTransform(), bodyB->getWorldTransform() );
+        
+        int numContacts = contactManifold->getNumContacts();
+        for (int p=0;p<contactManifold->getNumContacts();p++)
+        {
+            const btManifoldPoint& pt = contactManifold->getContactPoint(p);
+            
+            btVector3 posWorldB = pt.getPositionWorldOnB();
+            btVector3 posWorldA = pt.m_normalWorldOnB;
+            std::cout << "Position = " << posWorldB.x() << " " << posWorldB.y() << " " << posWorldB.z() << std::endl;
+            std::cout << "Normal = " << posWorldA.x() << " " << posWorldA.y() << " " << posWorldA.z() << std::endl;
+            std::cout << "Distance = " << pt.getDistance() << std::endl;
+            std::cout << "Lifetime = " << pt.getLifeTime() << std::endl;
+        }
+    }*/
+    
+    if( mDebugBulletFlag )
+    {
+        dynamic_cast< GLDebugDrawer* >( mDynamicsWorld->getDebugDrawer() )->BeginDraw();
+        mDynamicsWorld->debugDrawWorld();
+        dynamic_cast< GLDebugDrawer* >( mDynamicsWorld->getDebugDrawer() )->EndDraw();
+    }
 
     if( !mCollisionInformation )
     {
@@ -265,7 +316,7 @@ void PhysicsSimulator::UpdatePhysics( float dt )
             obj->ClearCollisions();
         }
     }
-
+        
     int numManifolds = mDispatcher->getNumManifolds();
     for( int i = 0; i < numManifolds; ++i )
     {
@@ -273,7 +324,7 @@ void PhysicsSimulator::UpdatePhysics( float dt )
             mDispatcher->getManifoldByIndexInternal( i );
         //contactManifold->refreshContactPoints(
             //bodyA->getWorldTransform(), bodyB->getWorldTransform() );
-
+        
         int numContacts = contactManifold->getNumContacts();
         for( int j = 0; j < numContacts; ++j )
         {
