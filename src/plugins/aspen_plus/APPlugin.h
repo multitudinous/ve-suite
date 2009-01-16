@@ -52,7 +52,7 @@ public:
     APPlugin();
     virtual ~APPlugin();
     wxString GetConductorName();
-    bool mIsSimOpen;
+    bool mIsSheetOpen;
 
 protected:
     virtual wxMenu* GetPluginPopupMenu( wxMenu* baseMenu );

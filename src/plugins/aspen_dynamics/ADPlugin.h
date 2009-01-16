@@ -52,7 +52,7 @@ public:
     ADPlugin();
     virtual ~ADPlugin();
     wxString GetConductorName();
-    bool mIsSimOpen;
+    bool mIsSheetOpen;
 
 protected:
     void OnOpen( wxCommandEvent& event );
