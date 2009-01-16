@@ -2392,9 +2392,7 @@ wxMenu* UIPluginBase::SetupPluginBasePopupMenu()
     xplorer_menu->Append( UIPLUGINBASE_ACTIVE_MODEL_SOUNDS, _( "Sounds" ) );
     xplorer_menu->Enable( UIPLUGINBASE_ACTIVE_MODEL_SOUNDS, true );
 
-    mPopMenu->Append( UIPLUGINBASE_SHOW_DESC, _( "Description" ) );
-    mPopMenu->Enable( UIPLUGINBASE_SHOW_DESC, true );
-    // GUI to configure geometry for graphical env
+     // GUI to configure geometry for graphical env
     mPopMenu->Append( UIPLUGINBASE_GEOMETRY, _( "Geometry Config" ) );
     mPopMenu->Enable( UIPLUGINBASE_GEOMETRY, true );
     // GUI to configure dataset for graphical env
@@ -2404,6 +2402,10 @@ wxMenu* UIPluginBase::SetupPluginBasePopupMenu()
     mPopMenu->Append( UIPLUGINBASE_VISUALIZATION, _( "Visualization" ) );
     mPopMenu->Enable( UIPLUGINBASE_VISUALIZATION, true );
     //Set the plugin name for a model
+    mPopMenu->Append( -1, _(""), _(""), wxITEM_SEPARATOR );
+
+    mPopMenu->Append( UIPLUGINBASE_SHOW_DESC, _( "Description" ) );
+    mPopMenu->Enable( UIPLUGINBASE_SHOW_DESC, true );
     mPopMenu->Append( UIPLUGINBASE_SET_UI_PLUGIN_NAME, _( "Rename" ) );
     mPopMenu->Enable( UIPLUGINBASE_SET_UI_PLUGIN_NAME, true );
     mPopMenu->Append( UIPLUGINBASE_DEL_MOD, _( "Delete" ) );
