@@ -1978,13 +1978,10 @@ void UIPluginBase::DrawPorts( bool flag, wxDC* dc )
     // This function draws the input and output ports on a selected module
     // that is on the design canvas
     wxPoint bport[4];
-    wxCoord xoff, yoff;
-
     bport[0] = wxPoint( 0, 0 );
     bport[1] = wxPoint( 10, 0 );
     bport[2] = wxPoint( 10, 10 );
     bport[3] = wxPoint( 0, 10 );
-
 
     wxRect bbox = GetBBox();
 
@@ -1999,6 +1996,7 @@ void UIPluginBase::DrawPorts( bool flag, wxDC* dc )
     int w = 0;
     int h = 0;
 
+    wxCoord xoff, yoff;
     //setup the input ports
     for( size_t i = 0; i < inputPort.size(); i++ )
     {

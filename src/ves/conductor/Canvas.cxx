@@ -270,7 +270,7 @@ void Canvas::OnPaint( wxPaintEvent& paintEvent )
     dc.SetBrush( *wxWHITE_BRUSH );
     dc.SetBackground( *wxWHITE_BRUSH );
     dc.SetBackgroundMode( wxTRANSPARENT );
-    
+
     if( activeId != "NULL" )
     {
         DrawNetwork( dc, this->activeId );
