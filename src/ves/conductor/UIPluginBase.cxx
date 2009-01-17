@@ -1959,7 +1959,6 @@ void UIPluginBase::DrawPlugin( wxDC* dc )
         DrawIcon( dc );
         DrawID( dc );
         DrawName( dc );
-        DrawPorts( true, dc );
     }
 
     //if highlighted
@@ -1969,7 +1968,7 @@ void UIPluginBase::DrawPlugin( wxDC* dc )
         {
             HighlightSelectedIcon( dc );
         }
-        //DrawPorts( true, dc );
+        DrawPorts( true, dc );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
