@@ -264,7 +264,7 @@ public:
     ///Show the sounds available for this model
     void OnModelSounds( wxCommandEvent& event );
     void OnShowIconChooser( wxCommandEvent& event );
-
+    ///Set the max size for this plugins dialog
     void SetDialogSize( wxRect dialogSize );
     ///Tell the plugin whether to render the name of the plugin during draw
     ///\param flag Render the name or not
@@ -275,15 +275,25 @@ public:
     ///return the right click pop up menu for the plugin
     ///\return The wxWidgets wxMenu for the right click menu
     wxMenu* GetPopupMenu();
+    ///Create the dialog for this plugin
     void CreateUserDialog( wxPoint extpos );
     ///Send the id of this plugin to xplorer so that it is active for all 
     ///other xplorer events
     void SendActiveId();
-    void SetAsHierarchy( );
+    ///Make this plugin a hierarchy plugin
+    void SetAsHierarchy();
+    ///Get the icon for this plugin
     wxBitmap* GetIconImage();
     
 protected:
+    ///Add a port to the model
+    ///\param tempPoint The point where to place the port
+    ///\param typePort The type of port either input or output
+    void AddPortToModel( wxPoint& tempPoint, unsigned int typePort );
+    ///Get the UIPluginBase poup menu
+    ///\return The menu for this class
     wxMenu* SetupPluginBasePopupMenu();
+    
     virtual wxMenu* GetPluginPopupMenu( wxMenu* baseMenu );
 
     void GetDataTables( ves::open::xml::CommandPtr inputCommand,
@@ -312,7 +322,7 @@ protected:
     TextResultDialog* port_dlg;
     ///Dataset dialog to load and control dataset
     util::DataSetLoaderUI* m_dataSetLoaderDlg;
-    ///id
+    ///id for the plugin
     unsigned int id;
 
     ///The Position to draw Icon

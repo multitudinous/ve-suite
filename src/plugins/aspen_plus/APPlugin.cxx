@@ -60,7 +60,7 @@ using namespace ves::open::xml;
 using namespace ves::conductor;
 using namespace ves::conductor::util;
 
-BEGIN_EVENT_TABLE( APPlugin, UIPluginBase )
+BEGIN_EVENT_TABLE( APPlugin, ves::conductor::UIPluginBase )
     EVT_MENU( APPLUGIN_OPEN_SIM, APPlugin::OnOpen )
     EVT_MENU( APPLUGIN_SHOW_ASPEN_SIMULATION, APPlugin::ShowAspenSimulation )
     EVT_MENU( APPLUGIN_HIDE_ASPEN_SIMULATION, APPlugin::HideAspenSimulation )
@@ -72,7 +72,7 @@ BEGIN_EVENT_TABLE( APPlugin, UIPluginBase )
     EVT_MENU( APPLUGIN_SAVEAS_SIMULATION, APPlugin::SaveAsSimulation )
 END_EVENT_TABLE()
 
-IMPLEMENT_DYNAMIC_CLASS( APPlugin, UIPluginBase )
+IMPLEMENT_DYNAMIC_CLASS( APPlugin, ves::conductor::UIPluginBase )
 
 /////////////////////////////////////////////////////////////////////////////
 APPlugin::APPlugin() :

@@ -1,5 +1,7 @@
 #include "NetworkTwo.h"
 #include "NetworkTwoUIDialog.h"
+#include <ves/conductor/ConductorLibEnums.h>
+
 #include "network.xpm"
 
 #include <wx/dc.h>
@@ -36,10 +38,15 @@ int NetworkTwo::GetNumIports()
 	return result;
 }
 ///////////////////////////////////////////////////////////////////////////////
-void NetworkTwo::GetIPorts(POLY &iports)
+void NetworkTwo::GetIPorts(PORT& iports)
 {
-	iports[0]=wxPoint(GetIconImage()->GetWidth()*10/52, GetIconImage()->GetHeight()*26/98); 
-	return;
+    if( inputPort.size() == 0 )
+    {
+        wxPoint tempPort(GetIconImage()->GetWidth()*10/52, GetIconImage()->GetHeight()*26/98);
+        AddPortToModel( tempPort, UIPLUGINBASE_ADD_INPUT_PORT );
+    }
+    
+    UIPluginBase::GetIPorts( iports );
 }
 ///////////////////////////////////////////////////////////////////////////////
 int NetworkTwo::GetNumOports()
@@ -48,9 +55,15 @@ int NetworkTwo::GetNumOports()
 	return result;
 }
 ///////////////////////////////////////////////////////////////////////////////
-void NetworkTwo::GetOPorts(POLY &oports)
+void NetworkTwo::GetOPorts(PORT &oports)
 {
-	oports[0]=wxPoint(GetIconImage()->GetWidth()*43/52,GetIconImage()->GetHeight()*74/98);    
+    if( outputPort.size() == 0 )
+    {
+        wxPoint tempPort(GetIconImage()->GetWidth()*43/52,GetIconImage()->GetHeight()*74/98);
+        AddPortToModel( tempPort, UIPLUGINBASE_ADD_OUTPUT_PORT );
+    }
+    
+    UIPluginBase::GetOPorts( oports );
 }
 ///////////////////////////////////////////////////////////////////////////////
 ves::conductor::UIDialog* NetworkTwo::UI(wxWindow* parent)

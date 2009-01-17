@@ -42,7 +42,7 @@
 
 using namespace cpt;
 
-IMPLEMENT_DYNAMIC_CLASS( CameraPlacementToolUI, UIPluginBase )
+IMPLEMENT_DYNAMIC_CLASS( CameraPlacementToolUI, ves::conductor::UIPluginBase )
 
 ////////////////////////////////////////////////////////////////////////////////
 CameraPlacementToolUI::CameraPlacementToolUI()

@@ -21,10 +21,10 @@ public:
     virtual wxString GetName();
 
     virtual int GetNumIports();
-    virtual void GetIPorts( POLY& ports );
+    virtual void GetIPorts( PORT& ports );
 
     virtual int GetNumOports();
-    virtual void GetOPorts( POLY& ports );
+    virtual void GetOPorts( PORT& ports );
 
 	std::string mTextOne;
 

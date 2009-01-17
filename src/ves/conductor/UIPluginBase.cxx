@@ -1959,6 +1959,7 @@ void UIPluginBase::DrawPlugin( wxDC* dc )
         DrawIcon( dc );
         DrawID( dc );
         DrawName( dc );
+        DrawPorts( true, dc );
     }
 
     //if highlighted
@@ -1968,7 +1969,7 @@ void UIPluginBase::DrawPlugin( wxDC* dc )
         {
             HighlightSelectedIcon( dc );
         }
-        DrawPorts( true, dc );
+        //DrawPorts( true, dc );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -2000,9 +2001,6 @@ void UIPluginBase::DrawPorts( bool flag, wxDC* dc )
     //setup the input ports
     for( size_t i = 0; i < inputPort.size(); i++ )
     {
-        //std::stringstream output;
-        //output << ports[i].GetPortLocation()->GetPoint().first<< " "<<ports[i].GetPortLocation()->GetPoint().second<<std::endl;
-        //serviceList->GetMessageLog()->SetMessage(output.str().c_str());
         wxPoint tempPoint( inputPort[i]->GetPortLocation()->GetPoint().first, inputPort[i]->GetPortLocation()->GetPoint().second );
         // I believe this means move the points in from the edge of the icon
         // by 3 pixles
@@ -2019,7 +2017,7 @@ void UIPluginBase::DrawPorts( bool flag, wxDC* dc )
         dc->GetTextExtent( text, &w, &h );
         dc->DrawText( text, xoff - w - 2, yoff );
     }
-
+        
     dc->SetBrush( *wxCYAN_BRUSH );
 
     // do the same thing as we did for the output ports
@@ -2065,13 +2063,21 @@ void UIPluginBase::HighlightSelectedIcon( wxDC* dc )
 void UIPluginBase::AddPort( wxCommandEvent& event )
 {
     UIPLUGIN_CHECKID( event )
+    
+    AddPortToModel( actionPoint, event.GetId() );
+
+    m_canvas->Refresh( true );
+}
+////////////////////////////////////////////////////////////////////////////////
+void UIPluginBase::AddPortToModel( wxPoint& tempPoint, unsigned int typePort )
+{
     //get location
     ves::open::xml::model::PointPtr tempLoc( new ves::open::xml::model::Point() );
     std::pair< unsigned int, unsigned int > newPoint;
     newPoint.first =
-        static_cast< unsigned int >( actionPoint.x / userScale->first - pos.x );
+    static_cast< unsigned int >( tempPoint.x / userScale->first - pos.x );
     newPoint.second =
-        static_cast< unsigned int >( actionPoint.y / userScale->second - pos.y );
+    static_cast< unsigned int >( tempPoint.y / userScale->second - pos.y );
     tempLoc->SetPoint( newPoint );
     //Ask what type of port
     ves::open::xml::model::PortPtr port = m_veModel->GetPort( -1 );
@@ -2080,18 +2086,17 @@ void UIPluginBase::AddPort( wxCommandEvent& event )
     port->SetPluginName( ConvertUnicode( mPluginName.c_str() ) );
     //add the port to the model
     //add the port to the internal plugin structure
-    if( event.GetId() == UIPLUGINBASE_ADD_INPUT_PORT )
+    if( typePort == UIPLUGINBASE_ADD_INPUT_PORT )
     {
         port->SetDataFlowDirection( "input" );
         inputPort.push_back( port );
     }
-    else if( event.GetId() == UIPLUGINBASE_ADD_OUTPUT_PORT )
+    else if( typePort == UIPLUGINBASE_ADD_OUTPUT_PORT )
     {
         port->SetDataFlowDirection( "output" );
         outputPort.push_back( port );
     }
     port->SetPortNumber( outputPort.size() + inputPort.size() );
-    m_canvas->Refresh( true );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIPluginBase::DeletePort( wxCommandEvent& event )
