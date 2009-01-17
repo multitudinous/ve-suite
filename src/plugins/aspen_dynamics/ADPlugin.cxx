@@ -313,7 +313,7 @@ void ADPlugin::CloseAspenSimulation( void )
     //Log( nw_str.c_str() );
 	//AspenSimOpen = false;
     mIsSheetOpen = false;
-    SetName( "ADPlugin" );
+    SetName( _("ADPlugin") );
     wxCommandEvent event;
     event.SetId( UIPLUGINBASE_SET_UI_PLUGIN_NAME );
     GlobalNameUpdate( event );
