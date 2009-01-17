@@ -4,7 +4,7 @@
 
 #include <wx/dc.h>
 
-IMPLEMENT_DYNAMIC_CLASS(NetworkOne, UIPluginBase)
+IMPLEMENT_DYNAMIC_CLASS(NetworkOne, ves::conductor::UIPluginBase)
 
 /////////////////////////////////////////////////////////////////////////////
 NetworkOne::NetworkOne()

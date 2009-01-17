@@ -4,7 +4,7 @@
 
 #include <wx/dc.h>
 
-IMPLEMENT_DYNAMIC_CLASS(NetworkThree, UIPluginBase)
+IMPLEMENT_DYNAMIC_CLASS(NetworkThree, ves::conductor::UIPluginBase)
 
 /////////////////////////////////////////////////////////////////////////////
 NetworkThree::NetworkThree()
@@ -44,7 +44,7 @@ void NetworkThree::GetIPorts(POLY &iports)
 ///////////////////////////////////////////////////////////////////////////////
 int NetworkThree::GetNumOports()
 {
-	int result=0;
+	int result=1;
 	return result;
 }
 ///////////////////////////////////////////////////////////////////////////////
