@@ -45,7 +45,7 @@
 
 using namespace bots;
 
-IMPLEMENT_DYNAMIC_CLASS( ConstructionBotsUI, UIPluginBase )
+IMPLEMENT_DYNAMIC_CLASS( ConstructionBotsUI, ves::conductor::UIPluginBase )
 
 ////////////////////////////////////////////////////////////////////////////////
 ConstructionBotsUI::ConstructionBotsUI()

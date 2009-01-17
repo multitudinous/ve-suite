@@ -43,7 +43,7 @@
 // --- wxWidgets Includes --- //
 #include <wx/wx.h>
 
-IMPLEMENT_DYNAMIC_CLASS( IntStoves, UIPluginBase )
+IMPLEMENT_DYNAMIC_CLASS( IntStoves, ves::conductor::UIPluginBase )
 
 ////////////////////////////////////////////////////////////////////////////////
 IntStoves::IntStoves()

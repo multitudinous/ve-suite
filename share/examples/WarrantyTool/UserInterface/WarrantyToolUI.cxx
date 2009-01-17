@@ -42,7 +42,7 @@
 
 using namespace warrantytool;
 
-IMPLEMENT_DYNAMIC_CLASS( WarrantyToolUI, UIPluginBase )
+IMPLEMENT_DYNAMIC_CLASS( WarrantyToolUI, ves::conductor::UIPluginBase )
 
 ////////////////////////////////////////////////////////////////////////////////
 WarrantyToolUI::WarrantyToolUI()

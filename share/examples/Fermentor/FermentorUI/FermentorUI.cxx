@@ -41,7 +41,7 @@
 // --- wxWidgets Includes --- //
 #include <wx/wx.h>
 
-IMPLEMENT_DYNAMIC_CLASS( FermentorUI, UIPluginBase )
+IMPLEMENT_DYNAMIC_CLASS( FermentorUI, ves::conductor::UIPluginBase )
 
 ////////////////////////////////////////////////////////////////////////////////
 FermentorUI::FermentorUI()

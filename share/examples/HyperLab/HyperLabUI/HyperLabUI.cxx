@@ -40,7 +40,7 @@
 
 using namespace hyperlab;
 
-IMPLEMENT_DYNAMIC_CLASS( HyperLabUI, UIPluginBase )
+IMPLEMENT_DYNAMIC_CLASS( HyperLabUI, ves::conductor::UIPluginBase )
 
 ////////////////////////////////////////////////////////////////////////////////
 HyperLabUI::HyperLabUI()

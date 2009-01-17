@@ -42,7 +42,7 @@
 
 using namespace funnel;
 
-IMPLEMENT_DYNAMIC_CLASS( CoinFunnelUI, UIPluginBase )
+IMPLEMENT_DYNAMIC_CLASS( CoinFunnelUI, ves::conductor::UIPluginBase )
 
 ////////////////////////////////////////////////////////////////////////////////
 CoinFunnelUI::CoinFunnelUI()

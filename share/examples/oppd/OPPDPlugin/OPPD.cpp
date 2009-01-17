@@ -8,7 +8,7 @@
 #include <iostream>
 //#include "string_ops.h"
 
-IMPLEMENT_DYNAMIC_CLASS(OPPD, REI_Plugin)
+IMPLEMENT_DYNAMIC_CLASS(OPPD, ves::conductor::UIPluginBase)
 
 /////////////////////////////////////////////////////////////////////////////
 OPPD

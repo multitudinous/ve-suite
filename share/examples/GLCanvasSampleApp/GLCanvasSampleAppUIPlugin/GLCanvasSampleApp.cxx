@@ -34,7 +34,7 @@
 #include "GLCanvasSampleApp_UI_Dialog.h"
 #include "sampleglcanvas.xpm"
 
-IMPLEMENT_DYNAMIC_CLASS(GLCanvasSampleApp, REI_Plugin)
+IMPLEMENT_DYNAMIC_CLASS(GLCanvasSampleApp, ves::conductor::UIPluginBase)
 
 /////////////////////////////////////////////////////////////////////////////
 GLCanvasSampleApp
