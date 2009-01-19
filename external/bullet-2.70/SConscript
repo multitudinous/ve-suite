@@ -58,6 +58,30 @@ libDB.addSources(sourcesDB)
 #libDB.addHeaders(headersDB, pj('..','include') )
 libDB.build()
 ###############################################################
+### Build the Convex Decomposition tools
+sourcesDB = sca_util.getSourcesRecursive( pj( openDir, 'Extras','ConvexDecomposition') )
+headersDB = sca_util.getHeadersRecursive( pj( openDir, 'Extras','ConvexDecomposition') )
+sourcesDB = map(lambda s: pj('Extras','ConvexDecomposition', s), sourcesDB)
+headersDB = map(lambda s: pj('Extras','ConvexDecomposition', s), headersDB)
+
+libDB_env = ves_pkg.getEnv().Copy()
+#libDB_env.Append( LIBS = ['bullet','XML','COLLADA_DOM'] )
+#libDB_env.Append( LIBPATH = [pj('#', buildDir,'external', bulletBaseVar)] )
+if GetPlatform() == 'linux':
+    libDB_env.Append( CCFLAGS=['-fPIC'])
+
+#if baseEnv['StaticLibs'] == "yes":
+libDB = ves_pkg.createStaticLibrary('ConvexDecomposition', libDB_env,
+                                               installPrefix = LIBDIR )
+#else:
+#   libDB = ves_pkg.createSharedLibrary('ConvexDecomposition', libDB_env,
+#                                     installPrefix = LIBDIR )
+   
+libDB.addSources(sourcesDB)
+#libDB.addHeaders(headersDB, pj('..','include') )
+libDB.build()
+
+###############################################################
 ##Builds libCOLLADA_DOM
 sources = sca_util.getSourcesRecursive( pj( openDir, 'Extras','COLLADA_DOM','src' ) )
 headers = sca_util.getHeadersRecursive( pj( openDir, 'Extras','COLLADA_DOM','src' )  )
