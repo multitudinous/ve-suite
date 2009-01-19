@@ -9,6 +9,7 @@ shareSubdirs = Split("""
    multi_viewport_lighting
    streamlines
    vectors
+   rtt
 """)
 
 ##Run SConscript files in all of those folders.
