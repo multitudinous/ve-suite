@@ -60,16 +60,18 @@ vprSingletonImpLifetime( XMLDataBufferEngine, 1 );
 ////////////////////////////////////////////////////////////////////////////////
 XMLDataBufferEngine::XMLDataBufferEngine( void )
 {
-    /*ves::open::xml::CommandWeakPtr nullCommand( new ves::open::xml::Command() );
-    nullCommand->SetCommandName( "NULL" );
-    m_commandMap[ "NULL" ] = nullCommand;*/
-
     //Setup default system
     ves::open::xml::model::SystemPtr tempSystem(
         new ves::open::xml::model::System());
     m_systemMap[tempSystem->GetID()] = tempSystem;
     //get the main systems id
     topId = tempSystem->GetID();
+    
+    m_userMap[ "Network" ] = 
+        ves::open::xml::UserPtr( new ves::open::xml::User() );
+    m_userMap[ "Network" ]->SetUserId( "User" );
+    m_userMap[ "Network" ]->SetControlStatus( 
+        ves::open::xml::User::VEControlStatus( "MASTER" ) );    
 }
 ////////////////////////////////////////////////////////////////////////////////
 XMLDataBufferEngine::~XMLDataBufferEngine()
@@ -384,16 +386,18 @@ void XMLDataBufferEngine::NewVESData( bool promptClearXplorer )
     //Erase all the maps
     CleanUp();
 
-    /*ves::open::xml::CommandWeakPtr nullCommand( new ves::open::xml::Command() );
-    nullCommand->SetCommandName( "NULL" );
-    m_commandMap[ "NULL" ] = nullCommand;*/
-
     //Setup default system
     ves::open::xml::model::SystemPtr tempSystem(
         new ves::open::xml::model::System() );
     m_systemMap[ tempSystem->GetID()] = tempSystem;
     //get the main systems id
     topId = tempSystem->GetID();
+    
+    m_userMap[ "Network" ] = 
+        ves::open::xml::UserPtr( new ves::open::xml::User() );
+    m_userMap[ "Network" ]->SetUserId( "User" );
+    m_userMap[ "Network" ]->SetControlStatus( 
+        ves::open::xml::User::VEControlStatus( "MASTER" ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 /*ves::open::xml::model::NetworkPtr XMLDataBufferEngine::GetXMLNetworkDataObject(
