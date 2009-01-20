@@ -117,7 +117,7 @@ void APPlugin::OnOpen( wxCommandEvent& event )
             wxT( "Simulation already open.\nClose it and open another?" ),
             wxT( "Confirm" ),
             wxYES_NO);
-        if( md.ShowModal() == wxCANCEL )
+        if( md.ShowModal() == wxID_NO )
         {
             return;
         }
