@@ -29,8 +29,8 @@ BEGIN_MESSAGE_MAP(CVE_AspenUnitDlg, CDialog)
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
 	//}}AFX_MSG_MAP
+	ON_BN_CLICKED(IDOK, &CVE_AspenUnitDlg::OnBnClickedOk)
 	ON_BN_CLICKED(IDCANCEL, &CVE_AspenUnitDlg::OnBnClickedCancel)
-	ON_BN_CLICKED(IDC_OK, &CVE_AspenUnitDlg::OnBnClickedOk)
 	ON_BN_CLICKED(IDC_BUTTON2, &CVE_AspenUnitDlg::OnBnClickedButton2)
 END_MESSAGE_MAP()
 
@@ -151,27 +151,30 @@ LRESULT CVE_AspenUnitDlg::WindowProc(UINT message,
 }
 void CVE_AspenUnitDlg::OnBnClickedCancel()
 {   
-    CEdit *Display;
-    Display = reinterpret_cast<CEdit *>(GetDlgItem(IDC_EDIT5));
-    CString path;
-    Display->GetWindowText( path );
-    AfxGetApp()->WriteProfileString( _T("Aspen"), _T("Path"), path );
-    Display = reinterpret_cast<CEdit *>(GetDlgItem(IDC_EDIT3));
-    CString name;
-    Display->GetWindowText( name );
-    AfxGetApp()->WriteProfileString( _T("Aspen"), _T("Name"), name );
-    Display = reinterpret_cast<CEdit *>(GetDlgItem(IDC_EDIT4));
-    CString port;
-    Display->GetWindowText( port );
-    AfxGetApp()->WriteProfileString( _T("Aspen"), _T("Port"), port );
+    if( initialized )
+    {
+        CEdit *Display;
+        Display = reinterpret_cast<CEdit *>(GetDlgItem(IDC_EDIT5));
+        CString path;
+        Display->GetWindowText( path );
+        AfxGetApp()->WriteProfileString( _T("Aspen"), _T("Path"), path );
+        Display = reinterpret_cast<CEdit *>(GetDlgItem(IDC_EDIT3));
+        CString name;
+        Display->GetWindowText( name );
+        AfxGetApp()->WriteProfileString( _T("Aspen"), _T("Name"), name );
+        Display = reinterpret_cast<CEdit *>(GetDlgItem(IDC_EDIT4));
+        CString port;
+        Display->GetWindowText( port );
+        AfxGetApp()->WriteProfileString( _T("Aspen"), _T("Port"), port );
 
-	if(commManager != NULL)
-	{
-		//delete unitObject;
-		commManager->DestroyORB();
-		delete commManager;
-        commManager = NULL;
-	}
+	    if(commManager != NULL)
+	    {
+		    //delete unitObject;
+		    commManager->DestroyORB();
+		    delete commManager;
+            commManager = NULL;
+	    }
+    }
 	// TODO: Add your control notification handler code here
 	this->OnOK();
 }
@@ -210,7 +213,7 @@ void CVE_AspenUnitDlg::OnBnClickedOk()
         else
         {
 		    initialized = true;
-            GetDlgItem(IDC_OK)->EnableWindow(FALSE);
+            GetDlgItem(IDOK)->EnableWindow(FALSE);
         }
 	}
 }
