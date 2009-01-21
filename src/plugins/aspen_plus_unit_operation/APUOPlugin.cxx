@@ -148,6 +148,13 @@ void  APUOPlugin::OnQueryInputs( wxCommandEvent& event )
 
     //Get results
     std::string nw_str = serviceList->Query( status );
+    if( nw_str.empty() )
+    {
+        wxMessageDialog( m_canvas, wxT( "Aspen Unit Unavailable." ),
+            wxT( "Error" ), wxOK | wxICON_ERROR ).ShowModal();
+        return;
+    }
+
     wxString title( compName.c_str(), wxConvUTF8 );
     //TextResultDialog * results = new TextResultDialog(this, title);
     //QueryInputsDlg * results = new QueryInputsDlg(this);
@@ -223,6 +230,13 @@ void  APUOPlugin::OnQueryOutputs( wxCommandEvent& event )
 
     //Get results
     std::string nw_str = serviceList->Query( status );
+    if( nw_str.empty() )
+    {
+        wxMessageDialog( m_canvas, wxT( "Aspen Unit Unavailable." ),
+            wxT( "Error" ), wxOK | wxICON_ERROR ).ShowModal();
+        return;
+    }
+
     wxString title( compName.c_str(), wxConvUTF8 );
     //QueryInputsDlg * results = new QueryInputsDlg(this);
     APUOVarDialog * params = new APUOVarDialog( m_canvas );
