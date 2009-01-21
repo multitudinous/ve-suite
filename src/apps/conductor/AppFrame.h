@@ -210,6 +210,7 @@ protected:
     void CreateMenu();
     void ZoomIn( wxCommandEvent &event );
     void ZoomOut( wxCommandEvent &event );
+    void ZoomAll( wxCommandEvent &event );
     void SaveAs( wxCommandEvent &event );
     void OnPreferences( wxCommandEvent &event );
 

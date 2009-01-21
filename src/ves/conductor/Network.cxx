@@ -1932,6 +1932,15 @@ void Network::LoadSystem( model::SystemPtr system, Canvas* parent )
         ves::conductor::util::Polygon tempPoly;
         *( tempPoly.GetPolygon() ) = tmpPoly;
         tempPoly.TransPoly( bbox.x, bbox.y, *( modules[ num ].GetPolygon() ) ); //Make the network recognize its polygon
+        
+        if( bbox.x + bbox.width > networkSize.first )
+        {
+            networkSize.first = bbox.x + bbox.width;
+        }
+        if( bbox.y + bbox.height > networkSize.second )
+        {
+            networkSize.second = bbox.y + bbox.height;
+        }
     }
 
     //Reset values

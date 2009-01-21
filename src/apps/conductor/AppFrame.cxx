@@ -127,6 +127,7 @@ BEGIN_EVENT_TABLE( AppFrame, wxFrame )
     //EVT_CLOSE( AppFrame::OnFrameClose )
     EVT_MENU( APPFRAME_V21ID_ZOOMIN, AppFrame::ZoomIn )
     EVT_MENU( APPFRAME_V21ID_ZOOMOUT, AppFrame::ZoomOut )
+    EVT_MENU( APPFRAME_V21ID_ZOOMALL, AppFrame::ZoomAll )
     EVT_CHAR( AppFrame::OnKeyPress )
     EVT_MENU( wxID_SAVE, AppFrame::Save )
     EVT_MENU( wxID_SAVEAS, AppFrame::SaveAs )
@@ -764,6 +765,7 @@ void AppFrame::CreateMenu()
     //edit_menu->AppendSeparator();
     edit_menu->Append( APPFRAME_V21ID_ZOOMIN, _( "Zoom &In" ) );
     edit_menu->Append( APPFRAME_V21ID_ZOOMOUT, _( "Zoom &Out" ) );
+    edit_menu->Append( APPFRAME_V21ID_ZOOMALL, _( "Zoom &All" ) );
     edit_menu->Append( APPFRAME_CONDUCTOR_FIND, _( "Find" ) );
     //This is needed because on windows the scale must be 1 for the
     //wxAutoBufferedPaintDC to work properly
@@ -864,10 +866,10 @@ void AppFrame::ZoomIn( wxCommandEvent& WXUNUSED( event ) )
 {
     Network* network = canvas->GetActiveNetwork();
 
-    if( network->GetUserScale()->first > 4 )
-    {
-        return; // maximum zoom in x3
-    }
+    //if( network->GetUserScale()->first > 4 )
+    //{
+    //    return; // maximum zoom in x3
+    //}
 
     network->GetUserScale()->first += 0.1;
     network->GetUserScale()->second += 0.1;
@@ -875,30 +877,69 @@ void AppFrame::ZoomIn( wxCommandEvent& WXUNUSED( event ) )
     std::pair< int, int > networkSize = network->GetNetworkSize( );
     networkSize.first *= network->GetUserScale()->first;
     networkSize.second *= network->GetUserScale()->second;
-    //networkSize.first *= static_cast< int >( network->GetUserScale()->first );
-    //networkSize.second *= static_cast< int >( network->GetUserScale()->second );
-
-    //int xpos, ypos;
-    //canvas->GetViewStart( &xpos, &ypos );
-    //canvas->SetScrollbars(
-    //    network->GetNumPix()->first, network->GetNumPix()->second,
-    //    network->GetNumUnit()->first, network->GetNumUnit()->second,
-    //    xpos, ypos );
     
     canvas->SetUserScale(network->GetUserScale()->first, 
         network->GetUserScale()->second  );
     canvas->SetVirtualSize( networkSize.first, networkSize.second );
     canvas->Refresh( true );
 }
+
+////////////////////////////////////////////////////////////////////////////////
+void AppFrame::ZoomAll( wxCommandEvent& WXUNUSED( event ) )
+{
+    Network * network = canvas->GetActiveNetwork();
+
+    float netWidth = network->GetNetworkSize().first;
+    float netHeight = network->GetNetworkSize().second;
+    float winWidth = canvas->GetClientSize().GetWidth();
+    float winHeight = canvas->GetClientSize().GetHeight();
+    float shrink = 1;
+
+    //calculate which aspect needs scaled up the least
+    //then uniformly scales the sheet according to that aspect
+    float perWidth = winWidth / netWidth;
+    float perHeight = winHeight / netHeight;
+    if( perWidth > perHeight )
+    {
+        shrink = perHeight;
+    }
+    else
+    {
+        shrink = perWidth;
+    }
+
+    //limits the zoom all level to 1
+    //if test removed it can full screen a single icon
+    if( shrink < 1 )
+    {
+        network->GetUserScale()->first = shrink;
+        network->GetUserScale()->second = shrink;
+    }
+    else
+    {
+        network->GetUserScale()->first = 1;
+        network->GetUserScale()->second = 1;
+    }
+    
+    std::pair< int, int > networkSize = network->GetNetworkSize( );
+    networkSize.first *= network->GetUserScale()->first;
+    networkSize.second *= network->GetUserScale()->second;
+
+    canvas->SetUserScale(network->GetUserScale()->first, 
+        network->GetUserScale()->second  );
+    canvas->SetVirtualSize( networkSize.first, networkSize.second );
+    canvas->Refresh( true );
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::ZoomOut( wxCommandEvent& WXUNUSED( event ) )
 {
     Network * network = canvas->GetActiveNetwork();
 
-    if( network->GetUserScale()->first < 0.2 )
-    {
-        return; //minimum x-5
-    }
+    //if( network->GetUserScale()->first < 0.2 )
+    //{
+    //    return; //minimum x-5
+    //}
 
     network->GetUserScale()->first -= 0.1;
     network->GetUserScale()->second -= 0.1;
@@ -906,15 +947,6 @@ void AppFrame::ZoomOut( wxCommandEvent& WXUNUSED( event ) )
     std::pair< int, int > networkSize = network->GetNetworkSize( );
     networkSize.first *= network->GetUserScale()->first;
     networkSize.second *= network->GetUserScale()->second;
-    //networkSize.first *= static_cast< int >( network->GetUserScale()->first );
-    //networkSize.second *= static_cast< int >( network->GetUserScale()->second );
-
-    //int xpos, ypos;
-    //canvas->GetViewStart( &xpos, &ypos );
-    //canvas->SetScrollbars(
-    //    network->GetNumPix()->first, network->GetNumPix()->second,
-    //    network->GetNumUnit()->first, network->GetNumUnit()->second,
-    //    xpos, ypos );
 
     canvas->SetUserScale(network->GetUserScale()->first, 
         network->GetUserScale()->second  );
@@ -965,7 +997,7 @@ void AppFrame::SaveAs( wxCommandEvent& WXUNUSED( event ) )
         }
         else
         {
-            wxString fileNameNoExt = mVESFileName.SubString( 0, mVESFileName.size() - 4);
+            wxString fileNameNoExt = mVESFileName.Mid( 0, mVESFileName.size() - 4);
             newDataSetName = new wxTextEntryDialog( this,
                 _( "Enter the prefix for *.ves filename:" ),
                 _( "Save VES file as..." ),
