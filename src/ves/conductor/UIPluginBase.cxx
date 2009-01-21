@@ -120,6 +120,7 @@ BEGIN_EVENT_TABLE( UIPluginBase, wxEvtHandler )
     EVT_MENU( UIPLUGINBASE_SET_ACTIVE_MODEL, UIPluginBase::OnSetActiveXplorerModel )
     EVT_MENU( UIPLUGINBASE_ACTIVE_MODEL_SOUNDS, UIPluginBase::OnModelSounds )
     EVT_MENU( UIPLUGINBASE_DEL_MOD, UIPluginBase::OnDelMod )
+    EVT_MENU( UIPLUGINBASE_ZOOM, UIPluginBase::OnZoomSelected )
     EVT_MENU( UIPLUGINBASE_MAKE_HIER, UIPluginBase::OnMakeIntoHierarchy )
     EVT_MENU( UIPLUGINBASE_ADD_INPUT_PORT, UIPluginBase::AddPort )
     EVT_MENU( UIPLUGINBASE_ADD_OUTPUT_PORT, UIPluginBase::AddPort )
@@ -257,7 +258,7 @@ void UIPluginBase::SetCanvas( wxScrolledWindow* canvas )
     m_canvas = dynamic_cast< Canvas * >(canvas);
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UIPluginBase::SetNetwork( wxEvtHandler* network )
+void UIPluginBase::SetNetwork( ves::conductor::Network* network )
 {
     m_network = network;
 }
@@ -1760,6 +1761,23 @@ void UIPluginBase::OnSetUIPluginName( wxCommandEvent& event )
     SetPluginNameDialog();
     GlobalNameUpdate( event );
 }
+////////////////////////////////////////////////////////////////////////////////
+void UIPluginBase::OnZoomSelected( wxCommandEvent& event )
+{
+    m_network->GetUserScale()->first = 1;
+    m_network->GetUserScale()->second = 1;
+
+    std::pair< int, int > networkSize = m_network->GetNetworkSize( );
+    networkSize.first *= m_network->GetUserScale()->first;
+    networkSize.second *= m_network->GetUserScale()->second;
+
+    m_canvas->SetUserScale(m_network->GetUserScale()->first, 
+        m_network->GetUserScale()->second  );
+    m_canvas->SetVirtualSize( networkSize.first, networkSize.second );
+    m_canvas->Scroll( pos.x, pos.y );
+    m_canvas->Refresh( true );
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 void UIPluginBase::GlobalNameUpdate( wxCommandEvent& event )
 {
@@ -2410,6 +2428,8 @@ wxMenu* UIPluginBase::SetupPluginBasePopupMenu()
     mPopMenu->Enable( UIPLUGINBASE_SHOW_DESC, true );
     mPopMenu->Append( UIPLUGINBASE_SET_UI_PLUGIN_NAME, _( "Rename" ) );
     mPopMenu->Enable( UIPLUGINBASE_SET_UI_PLUGIN_NAME, true );
+    mPopMenu->Append( UIPLUGINBASE_ZOOM, _( "Zoom" ) );
+    mPopMenu->Enable( UIPLUGINBASE_ZOOM, true );
     mPopMenu->Append( UIPLUGINBASE_DEL_MOD, _( "Delete" ) );
     mPopMenu->Enable( UIPLUGINBASE_DEL_MOD, true );
     mPopMenu->Append( UIPLUGINBASE_MAKE_HIER, _( "Make Into Hierarchy" ) );

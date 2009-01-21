@@ -40,6 +40,7 @@ UIPluginBase API
 */
 #include <ves/VEConfig.h>
 #include <ves/conductor/Canvas.h>
+#include <ves/conductor/Network.h>
 #include <ves/open/xml/model/Port.h>
 #include <ves/open/xml/model/ModelPtr.h>
 #include <ves/open/xml/CommandPtr.h>
@@ -199,7 +200,7 @@ public:
     ///Set the network wxFrame that this plugin is associated with so that
     ///the plugin can draw and capture the appropriate events
     void SetCanvas( wxScrolledWindow* canvas );
-    void SetNetwork( wxEvtHandler* network );
+    void SetNetwork( Network* network );
     ///Set the corba servicelist so that the plugin can talk with the graphical
     ///engine
     void SetCORBAService( ves::conductor::util::CORBAServiceList* serviceList );
@@ -249,6 +250,7 @@ public:
     void OnSetActiveXplorerModel( wxCommandEvent& event );
     void OnSetActivePluginID( wxUpdateUIEvent& event );
     void OnDelMod( wxCommandEvent& event );
+    void OnZoomSelected( wxCommandEvent& event );
     void OnMakeIntoHierarchy( wxCommandEvent& event );
     // EPRI TAG
     void OnShowFinancial( wxCommandEvent& event );
@@ -377,7 +379,7 @@ protected:
     ///The pointer to the canvas scrolled window
     Canvas* m_canvas;
     ///The network event handler
-    wxEvtHandler* m_network;
+    ves::conductor::Network* m_network;
     ///The sound pane
     util::SoundsPane* _soundsDlg;
     ///The icon chooser dialog
