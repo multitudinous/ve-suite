@@ -2092,9 +2092,9 @@ void UIPluginBase::AddPortToModel( wxPoint& tempPoint, unsigned int typePort )
     ves::open::xml::model::PointPtr tempLoc( new ves::open::xml::model::Point() );
     std::pair< unsigned int, unsigned int > newPoint;
     newPoint.first =
-    static_cast< unsigned int >( tempPoint.x / userScale->first - pos.x );
+    static_cast< unsigned int >( tempPoint.x / userScale->first  );
     newPoint.second =
-    static_cast< unsigned int >( tempPoint.y / userScale->second - pos.y );
+    static_cast< unsigned int >( tempPoint.y / userScale->second  );
     tempLoc->SetPoint( newPoint );
     //Ask what type of port
     ves::open::xml::model::PortPtr port = m_veModel->GetPort( -1 );
