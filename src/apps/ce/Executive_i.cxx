@@ -1037,7 +1037,7 @@ ACE_THROW_SPEC((
     std::string strUnitName( UnitName );
     //delete UnitName;
 
-    std::string message =  std::string( "Going to RegisterUnit " ) + strUnitName + std::string( "\n" );
+    std::string message =  std::string( "Going to register unit " ) + strUnitName + std::string( "\n" );
     ClientMessage( message.c_str() );
 
     _mod_units[ strUnitName ] = Body::Unit::_duplicate( unit );
@@ -1087,6 +1087,7 @@ ACE_THROW_SPEC((
 
     message = std::string( "Successfully registered " ) + strUnitName + std::string( "\n" );
     ClientMessage( message.c_str() );
+
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Body_Executive_i::UnRegisterUI(
@@ -1100,14 +1101,14 @@ ACE_THROW_SPEC((
     std::map<std::string, Body::UI_var>::iterator iter;
     _mutex.acquire();
     // Add your implementation here
-    std::string strUI( UIName );
+    std::string strUI( UIName );    
     //delete UIName;
     iter = uis_.find( strUI );
     if( iter != uis_.end() )
     {
         uis_.erase( iter );
         std::cout << "VE-CE : " << strUI << " Unregistered!\n";
-    }
+    }  
     _mutex.release();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -1123,6 +1124,8 @@ ACE_THROW_SPEC((
 
     std::map<std::string, Execute_Thread*>::iterator iter;
     iter = _exec_thread.find( std::string( UnitName ) );
+    std::string message =  std::string( "Going to unregister unit " ) + UnitName + std::string( "\n" );
+    ClientMessage( message.c_str() );
     if( iter != _exec_thread.end() )
     {
         ACE_Task_Base::cleanup( iter->second, NULL );
@@ -1144,7 +1147,8 @@ ACE_THROW_SPEC((
         queryThreads.erase( iterQuery );
         std::cout << "VE-CE : " << UnitName << " Query Unregistered!\n";
     }
-
+    message = std::string( "Successfully unregistered " ) + UnitName + std::string( "\n" );
+    ClientMessage( message.c_str() );
     _mutex.release();
 
 }
