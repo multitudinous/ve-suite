@@ -36,6 +36,7 @@
 #include "APOpenDialog.h"
 
 #include <plugins/ConductorPluginEnums.h>
+#include <ves/conductor/ConductorLibEnums.h>
 
 #include <ves/conductor/ConductorLibEnums.h>
 #include <ves/conductor/xpm/AspenPlus2DIcons/aspen.xpm>
@@ -488,6 +489,8 @@ wxMenu* APPlugin::GetPluginPopupMenu( wxMenu* baseMenu )
     {
         return baseMenu;
     }
+
+    baseMenu->Enable( UIPLUGINBASE_CONDUCTOR_MENU, false );
 
     mAspenMenu = new wxMenu();
     mAspenMenu->Append( APPLUGIN_OPEN_SIM, _( "Open" ) );

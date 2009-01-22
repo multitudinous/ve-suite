@@ -35,6 +35,7 @@
 #include "APUOPlugin.h"
 #include "APUOVarDialog.h"
 #include <plugins/ConductorPluginEnums.h>
+#include <ves/conductor/ConductorLibEnums.h>
 
 #include <ves/conductor/xpm/square.xpm>
 #include <ves/conductor/util/ParamsDlg.h>
@@ -306,6 +307,8 @@ wxMenu* APUOPlugin::GetPluginPopupMenu( wxMenu* baseMenu )
         return baseMenu;
     }
     
+    baseMenu->Enable( UIPLUGINBASE_CONDUCTOR_MENU, false );
+
     mAspenMenu = new wxMenu();
     mAspenMenu->Append( APUOPLUGIN_SHOW_ASPEN_NAME, _( "Aspen Name" ) );
     mAspenMenu->Enable( APUOPLUGIN_SHOW_ASPEN_NAME, true );

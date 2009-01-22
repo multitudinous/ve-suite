@@ -35,6 +35,7 @@
 #include "ADPlugin.h"
 #include "ADOpenDialog.h"
 #include <plugins/ConductorPluginEnums.h>
+#include <ves/conductor/ConductorLibEnums.h>
 
 #include <ves/conductor/ConductorLibEnums.h>
 #include <ves/conductor/UserPreferencesDataBuffer.h>
@@ -477,6 +478,8 @@ wxMenu* ADPlugin::GetPluginPopupMenu( wxMenu* baseMenu )
     {
         return baseMenu;
     }
+
+    baseMenu->Enable( UIPLUGINBASE_CONDUCTOR_MENU, false );
 
     mAspenMenu = new wxMenu();
     mAspenMenu->Append( ADPLUGIN_OPEN_SIM, _( "Open" ) );

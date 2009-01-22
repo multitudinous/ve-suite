@@ -34,6 +34,7 @@
 
 #include "ADUOPlugin.h"
 #include <plugins/ConductorPluginEnums.h>
+#include <ves/conductor/ConductorLibEnums.h>
 #include "ADUOVarDialog.h"
 
 #include <ves/conductor/xpm/square.xpm>
@@ -174,6 +175,8 @@ wxMenu* ADUOPlugin::GetPluginPopupMenu( wxMenu* baseMenu )
         return baseMenu;
     }
     
+    baseMenu->Enable( UIPLUGINBASE_CONDUCTOR_MENU, false );
+
     mAspenMenu = new wxMenu();
     mAspenMenu->Append( ADUOPLUGIN_SHOW_ASPEN_NAME, _( "Aspen Name" ) );
     mAspenMenu->Enable( ADUOPLUGIN_SHOW_ASPEN_NAME, true );
