@@ -75,6 +75,7 @@ class EphemerisDialog;
 #include <wx/filename.h>
 #include <wx/notebook.h>
 #include <wx/timer.h>
+#include <wx/process.h>
 
 class wxTextCtrl;
 class wxImage;
@@ -171,6 +172,8 @@ public:
     void NewCanvas( wxCommandEvent &event );
     ///Open a VES file with the dialog
     void Open( wxCommandEvent &event );
+    ///Open a exe file with the dialog
+    void Run( wxCommandEvent &event );
     ///Save the VES file
     void Save( wxCommandEvent &event );
     ///Submit the current canvas to the CE
@@ -222,10 +225,8 @@ protected:
 
 protected:
     void LoadFromServer( wxCommandEvent &event );
-
-    void OpenSimulation( wxString simName );
-
     void QueryFromServer( wxCommandEvent& event );
+    void OpenSimulation( wxString simName );
     //void QueryNetwork( wxCommandEvent& event );
     //void RunAspenNetwork( wxCommandEvent& event );
     //void StepAspenNetwork( wxCommandEvent& event );
@@ -339,6 +340,8 @@ private:
     wxFileHistory* m_recentVESFiles;///<The list of recently opened VES files.
     bool mDestoryFrame;
     wxTimer mTimer;
+    std::vector< long > pids;
+    
     DECLARE_EVENT_TABLE()
 };
 

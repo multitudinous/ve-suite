@@ -129,14 +129,15 @@ BEGIN_EVENT_TABLE( AppFrame, wxFrame )
     EVT_MENU( APPFRAME_V21ID_ZOOMOUT, AppFrame::ZoomOut )
     EVT_MENU( APPFRAME_V21ID_ZOOMALL, AppFrame::ZoomAll )
     EVT_CHAR( AppFrame::OnKeyPress )
-    EVT_MENU( wxID_SAVE, AppFrame::Save )
-    EVT_MENU( wxID_SAVEAS, AppFrame::SaveAs )
-    EVT_MENU( wxID_NEW, AppFrame::NewCanvas )
+    EVT_MENU( APPFRAME_SAVE, AppFrame::Save )
+    EVT_MENU( APPFRAME_SAVEAS, AppFrame::SaveAs )
+    EVT_MENU( APPFRAME_NEW, AppFrame::NewCanvas )
     //This is probably a bug and needs to be fixed
     EVT_MENU( wxID_EXIT, AppFrame::FrameClose )
     EVT_MENU( APPFRAME_PREFERENCES, AppFrame::OnPreferences )
     EVT_MENU( APPFRAME_CLEAR_RECENT_FILES, AppFrame::OnClearRecentFiles )
-    EVT_MENU( wxID_OPEN, AppFrame::Open )
+    EVT_MENU( APPFRAME_OPEN, AppFrame::Open )
+    EVT_MENU( APPFRAME_RUN, AppFrame::Run )
     EVT_MENU( APPFRAME_CHANGE_WORKING_DIRECTORY, AppFrame::OnChangeWorkingDirectory )
 
     EVT_MENU_RANGE( wxID_FILE1, wxID_FILE9  , AppFrame::OpenRecentFile )
@@ -314,7 +315,7 @@ AppFrame::AppFrame( wxWindow * parent, wxWindowID id, const wxString& title )
                                  
     //Process command line args to see if ves file needs to be loaded
     ProcessCommandLineArgs();
-	AspenSimOpen = false;
+	//AspenSimOpen = false;
     
     //Setup the orb timer
     mTimer.Start( 500 );
@@ -363,6 +364,10 @@ AppFrame::~AppFrame()
 
     delete m_recentVESFiles;
     m_recentVESFiles = 0;
+    for( int i = 0; i < pids.size(); i++ )
+    {
+        wxProcess::Kill( pids[i] );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 std::string AppFrame::GetDisplayMode()
@@ -686,13 +691,14 @@ void AppFrame::CreateMenu()
     edit_menu = new wxMenu;
     help_menu = new wxMenu;
 
-    file_menu->Append( wxID_NEW, _( "&New\tCtrl+N" ) );
-    file_menu->Append( wxID_OPEN, _( "&Open ..\tCtrl+O" ) );
+    file_menu->Append( APPFRAME_NEW, _( "&New\tCtrl+N" ) );
+    file_menu->Append( APPFRAME_OPEN, _( "&Open ..\tCtrl+O" ) );
+    file_menu->Append( APPFRAME_RUN, _( "&Run ..\tCtrl+R" ) );
 
     file_menu->AppendSeparator();
 
-    file_menu->Append( wxID_SAVE, _( "&Save\tCtrl+S" ) );
-    file_menu->Append( wxID_SAVEAS, _( "Save &as ..\tCtrl+Shift+S" ) );
+    file_menu->Append( APPFRAME_SAVE, _( "&Save\tCtrl+S" ) );
+    file_menu->Append( APPFRAME_SAVEAS, _( "Save &as ..\tCtrl+Shift+S" ) );
     file_menu->AppendSeparator();
     file_menu->Append( APPFRAME_EXPORT_MENU_OPT, _( "Export" ),
                        new ExportMenu(), _( "Options" ) );
@@ -1153,6 +1159,28 @@ void AppFrame::Open( wxCommandEvent& WXUNUSED( event ) )
     }*/
 }
 ////////////////////////////////////////////////////////////////////////////////
+void AppFrame::Run( wxCommandEvent& WXUNUSED( event ) )
+{
+    wxFileDialog dialog
+    (
+        this,
+        wxT( "Open File dialog" ),
+        wxT( "" ),
+        wxT( "" ),
+        wxT( "Exe files (*.exe)|*.exe" ),
+        wxOPEN | wxFILE_MUST_EXIST
+    );
+
+    if( dialog.ShowModal() != wxID_OK )
+    {
+        return;
+    }
+
+    //::wxExecute( dialog.GetPath(), wxEXEC_ASYNC, process );
+    wxProcess * process = wxProcess::Open( dialog.GetPath() );
+    pids.push_back( process->GetPid() );
+}
+////////////////////////////////////////////////////////////////////////////////
 void AppFrame::SetRecentFile( wxFileName vesFileName )
 {
     if( !vesFileName.IsAbsolute() )
@@ -1446,9 +1474,9 @@ void AppFrame::OpenSimulation( wxString simName )
     std::string nw_str = serviceList->Query( status );
     Log( nw_str.c_str() );
 	AspenSimOpen = true;
-}/*
+}
 ////////////////////////////////////////////////////////////////////////////////
-void AppFrame::ShowAspenSimulation( wxCommandEvent& WXUNUSED( event ) )
+/*void AppFrame::ShowAspenSimulation( wxCommandEvent& WXUNUSED( event ) )
 {
     Log( "Show Simulation.\n" );
     CommandPtr returnState( new Command() );
@@ -1742,6 +1770,31 @@ void AppFrame::NewCanvas( wxCommandEvent& WXUNUSED( event ) )
 	//}
 	newCanvas = true;
     mVESFileName.Clear();
+
+    //Reset Xplorer
+    //logo
+    //DataValuePairPtr dataValuePair( new DataValuePair( std::string( "STRING" ) ) );
+    //CommandPtr veCommand( new Command() );
+    //veCommand->SetCommandName( std::string( "CHANGE_XPLORER_VIEW" ) );
+    //dataValuePair->SetData( "CHANGE_XPLORER_VIEW", "CHANGE_XPLORER_VIEW_LOGO" );
+    //veCommand->AddDataValuePair( dataValuePair );
+    //serviceList->SendCommandStringToXplorer( veCommand );
+
+    //color
+    //std::vector< double > xplorerColor;
+    //xplorerColor.push_back( 0.0 );
+    //xplorerColor.push_back( 0.0 );
+    //xplorerColor.push_back( 0.0 );
+    //xplorerColor.push_back( 1.0 );
+
+    // Create the command and data value pairs
+    //DataValuePairPtr dataValuePair2( new DataValuePair( std::string( "STRING" ) ) );
+    //dataValuePair2->SetData( std::string( "Background Color" ), xplorerColor );
+    //CommandPtr veCommand2( new Command() );
+    //veCommand2->SetCommandName( std::string( "CHANGE_BACKGROUND_COLOR" ) );
+    //veCommand2->AddDataValuePair( dataValuePair2 );
+    //serviceList->SendCommandStringToXplorer( veCommand2 );
+    //UserPreferencesDataBuffer::instance()->SetCommand( "CHANGE_BACKGROUND_COLOR", veCommand2 );
 
     //clear the old networks so that all the event handlers are removed
     //before cleaning up the rest of the classes

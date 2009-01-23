@@ -180,7 +180,7 @@ wxMenu* ADUOPlugin::GetPluginPopupMenu( wxMenu* baseMenu )
     mAspenMenu = new wxMenu();
     mAspenMenu->Append( ADUOPLUGIN_SHOW_ASPEN_NAME, _( "Aspen Name" ) );
     mAspenMenu->Enable( ADUOPLUGIN_SHOW_ASPEN_NAME, true );
-    mAspenMenu->Append( ADUOPLUGIN_QUERY_DYNAMICS, _( "Query Dynamics" ) );
+    mAspenMenu->Append( ADUOPLUGIN_QUERY_DYNAMICS, _( "All Variables" ) );
     mAspenMenu->Enable( ADUOPLUGIN_QUERY_DYNAMICS, true );
     baseMenu->Insert( 0, ADUOPLUGIN_ASPEN_MENU,   _( "Aspen" ), mAspenMenu,
                     _( "Used in conjunction with Aspen" ) );

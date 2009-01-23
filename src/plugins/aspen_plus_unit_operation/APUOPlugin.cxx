@@ -312,9 +312,9 @@ wxMenu* APUOPlugin::GetPluginPopupMenu( wxMenu* baseMenu )
     mAspenMenu = new wxMenu();
     mAspenMenu->Append( APUOPLUGIN_SHOW_ASPEN_NAME, _( "Aspen Name" ) );
     mAspenMenu->Enable( APUOPLUGIN_SHOW_ASPEN_NAME, true );
-    mAspenMenu->Append( APUOPLUGIN_QUERY_INPUTS, _( "Query Inputs" ) );
+    mAspenMenu->Append( APUOPLUGIN_QUERY_INPUTS, _( "Inputs" ) );
     mAspenMenu->Enable( APUOPLUGIN_QUERY_INPUTS, true );
-    mAspenMenu->Append( APUOPLUGIN_QUERY_OUTPUTS, _( "Query Outputs" ) );
+    mAspenMenu->Append( APUOPLUGIN_QUERY_OUTPUTS, _( "Results" ) );
     mAspenMenu->Enable( APUOPLUGIN_QUERY_OUTPUTS, true );
     mAspenMenu->Append( APUOPLUGIN_REINIT_BLOCK, _( "Reinitialize" ) );
     mAspenMenu->Enable( APUOPLUGIN_REINIT_BLOCK, true );
