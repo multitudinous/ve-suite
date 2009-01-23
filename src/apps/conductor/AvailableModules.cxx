@@ -373,7 +373,7 @@ void AvailableModules::ResetPluginTree()
     int image2 = AVAILABLEMODULES_FOLDERSELECTED;
     rootId = AddRoot( wxT( "Available Plugins" ), image1, image2, NULL );
     SetItemImage( rootId, AVAILABLEMODULES_FOLDEROPENED, wxTreeItemIcon_Expanded );
-    SetItemFont( rootId, *wxITALIC_FONT );
+    SetItemFont( rootId, *wxNORMAL_FONT );
 
     //Remove all the old plugins and create the new one
     delete pl_loader;

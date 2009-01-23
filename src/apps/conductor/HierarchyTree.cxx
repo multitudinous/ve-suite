@@ -221,6 +221,8 @@ void HierarchyTree::PopulateTree( )
     //set the current selection to the root item
     m_currentLevelId = m_rootId;
     m_selection = m_rootId;
+    
+    Expand( m_rootId );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -426,6 +428,7 @@ void HierarchyTree::AddtoTree( UIPluginBase* cur_module )
                 images->GetImageCount() - 1, -1, modData );
 
     //SetItemBold( leaf );
+    Expand( m_rootId );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void HierarchyTree::RemoveFromTree( unsigned int id )
@@ -462,6 +465,7 @@ void HierarchyTree::AppendToTree( unsigned int parentID, unsigned int id )
         //SetItemBold( leaf );
         //Refresh();
     }
+    Expand( m_rootId );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
