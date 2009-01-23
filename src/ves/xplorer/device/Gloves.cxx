@@ -76,64 +76,68 @@ Gloves::Gloves()
     cursorLen( 1.0f ),
     translationStepSize( 0.75f ),
     rotationStepSize( 1.0f ),
-    m_buttonPushed( false )
+    m_buttonPushed( false ),
+    mDebugInfo( false )
 {
     command = ves::open::xml::CommandPtr();
     wand.init( "VJWand" );
     head.init( "VJHead" );
+    //Setup right hand
     {
-    mRightHandPos.init( "GloveB-RightHand" );
+        mRightHandPos.init( "GloveB-RightHand" );
 
-    mRightThumbMCP.init("GloveB-ThumbMCP");
-    mRightThumbPIP.init("GloveB-ThumbPIP");
+        mRightThumbMCP.init("GloveB-ThumbMCP");
+        mRightThumbPIP.init("GloveB-ThumbPIP");
 
-    mRightThumbIndexAbduction.init("GloveB-ThumbIndexAbduction");
+        mRightThumbIndexAbduction.init("GloveB-ThumbIndexAbduction");
 
-    mRightIndexMCP.init("GloveB-IndexMCP");
-    mRightIndexPIP.init("GloveB-IndexPIP");
+        mRightIndexMCP.init("GloveB-IndexMCP");
+        mRightIndexPIP.init("GloveB-IndexPIP");
 
-    mRightIndexMiddleAbduction.init("GloveB-IndexMiddleAbduction");
+        mRightIndexMiddleAbduction.init("GloveB-IndexMiddleAbduction");
 
-    mRightMiddleMCP.init("GloveB-MiddleMCP");
-    mRightMiddlePIP.init("GloveB-MiddlePIP");
-    mRightMiddleRingAbduction.init("GloveB-MiddleRingAbduction");
+        mRightMiddleMCP.init("GloveB-MiddleMCP");
+        mRightMiddlePIP.init("GloveB-MiddlePIP");
+        mRightMiddleRingAbduction.init("GloveB-MiddleRingAbduction");
 
-    mRightRingMCP.init("GloveB-RingMCP");
-    mRightRingPIP.init("GloveB-RingPIP");
+        mRightRingMCP.init("GloveB-RingMCP");
+        mRightRingPIP.init("GloveB-RingPIP");
 
-    mRightRingPinkyAbduction.init("GloveB-RingPinkyAbduction");
+        mRightRingPinkyAbduction.init("GloveB-RingPinkyAbduction");
 
-    mRightPinkyMCP.init("GloveB-PinkyMCP");
-    mRightPinkyPIP.init("GloveB-PinkyPIP");
+        mRightPinkyMCP.init("GloveB-PinkyMCP");
+        mRightPinkyPIP.init("GloveB-PinkyPIP");
     }
+    //Setup left hand
     {
-    mLeftHandPos.init( "GloveA-LeftHand" );
+        mLeftHandPos.init( "GloveA-LeftHand" );
 
-    mLeftThumbMCP.init("GloveA-ThumbMCP");
-    mLeftThumbPIP.init("GloveA-ThumbPIP");
+        mLeftThumbMCP.init("GloveA-ThumbMCP");
+        mLeftThumbPIP.init("GloveA-ThumbPIP");
 
-    mLeftThumbIndexAbduction.init("GloveA-ThumbIndexAbduction");
+        mLeftThumbIndexAbduction.init("GloveA-ThumbIndexAbduction");
 
-    mLeftIndexMCP.init("GloveA-IndexMCP");
-    mLeftIndexPIP.init("GloveA-IndexPIP");
+        mLeftIndexMCP.init("GloveA-IndexMCP");
+        mLeftIndexPIP.init("GloveA-IndexPIP");
 
-    mLeftIndexMiddleAbduction.init("GloveA-IndexMiddleAbduction");
+        mLeftIndexMiddleAbduction.init("GloveA-IndexMiddleAbduction");
 
-    mLeftMiddleMCP.init("GloveA-MiddleMCP");
-    mLeftMiddlePIP.init("GloveA-MiddlePIP");
-    mLeftMiddleRingAbduction.init("GloveA-MiddleRingAbduction");
+        mLeftMiddleMCP.init("GloveA-MiddleMCP");
+        mLeftMiddlePIP.init("GloveA-MiddlePIP");
+        mLeftMiddleRingAbduction.init("GloveA-MiddleRingAbduction");
 
-    mLeftRingMCP.init("GloveA-RingMCP");
-    mLeftRingPIP.init("GloveA-RingPIP");
+        mLeftRingMCP.init("GloveA-RingMCP");
+        mLeftRingPIP.init("GloveA-RingPIP");
 
-    mLeftRingPinkyAbduction.init("GloveA-RingPinkyAbduction");
+        mLeftRingPinkyAbduction.init("GloveA-RingPinkyAbduction");
 
-    mLeftPinkyMCP.init("GloveA-PinkyMCP");
-    mLeftPinkyPIP.init("GloveA-PinkyPIP");
+        mLeftPinkyMCP.init("GloveA-PinkyMCP");
+        mLeftPinkyPIP.init("GloveA-PinkyPIP");
     }
     beamLineSegment = new osg::LineSegment();
     
-    mRootNode = ves::xplorer::scenegraph::SceneManager::instance()->GetRootNode();
+    mRootNode = 
+        ves::xplorer::scenegraph::SceneManager::instance()->GetRootNode();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Gloves::Initialize()
@@ -173,7 +177,7 @@ void Gloves::Initialize()
     mRightHand->setPosition( pos );
     mRightHand->setAttitude( quat );
     mRootNode->addChild( mRightHand.get() );
-    mRightHand->setDebug( true );
+    mRightHand->setDebug( mDebugInfo );
     
     mLeftHand = new osgBullet::HandNode( ves::xplorer::scenegraph::PhysicsSimulator::instance()->GetDynamicsWorld(), osgBullet::HandNode::LEFT, length );
 
@@ -186,7 +190,7 @@ void Gloves::Initialize()
     mLeftHand->setPosition( pos );
     mLeftHand->setAttitude( quat );
     mRootNode->addChild( mLeftHand.get() );
-    mLeftHand->setDebug( true );
+    mLeftHand->setDebug( mDebugInfo );
 
     std::cout << "|\tInitialize Gloves" << std::endl;
 }
@@ -1134,16 +1138,19 @@ void Gloves::UpdateLeftHandGlove()
         return;
     }
     
-    mLeftHand->setPosition( osg::Vec3( hand_pos_rot[0][3], -hand_pos_rot[2][3], hand_pos_rot[1][3] ) );
-
-    gmtl::Matrix44d vrjRHandMat = convertTo< double >( hand_pos_rot );
     gmtl::Vec3d x_axis( 1.0f, 0.0f, 0.0f );
     gmtl::Matrix44d rhRot = gmtl::makeRot< gmtl::Matrix44d >(
-        gmtl::AxisAngled( gmtl::Math::deg2Rad( -90.0f ), x_axis ) );
+                                                             gmtl::AxisAngled( gmtl::Math::deg2Rad( 90.0f ), x_axis ) );
+    gmtl::Matrix44d tempCamera = 
+    ves::xplorer::scenegraph::SceneManager::instance()->GetInvertedWorldDCS();
+    hand_pos_rot = tempCamera * rhRot * hand_pos_rot;
+    mLeftHand->setPosition( osg::Vec3( hand_pos_rot[0][3], hand_pos_rot[1][3], hand_pos_rot[2][3] ) );
+    
+    //gmtl::Matrix44d vrjRHandMat = convertTo< double >( hand_pos_rot );
     osg::Vec3d pitch( 1, 0, 0 );
     osg::Vec3d roll( 0, 1, 0 );
     osg::Vec3d yaw( 0, 0, 1 );
-
+    
     osg::Matrixd rotateMat;
     rotateMat.makeRotate( osg::DegreesToRadians( 180.0 ), yaw,
                          osg::DegreesToRadians( -90.0 ), pitch,
@@ -1151,8 +1158,8 @@ void Gloves::UpdateLeftHandGlove()
     
     gmtl::Matrix44d naVRot;
     naVRot.set( rotateMat.ptr() );
-    vrjRHandMat = vrjRHandMat * rhRot * naVRot;
-    gmtl::Quatd rhandQuat = gmtl::make< gmtl::Quatd >( vrjRHandMat );
-
-    mLeftHand->setAttitude( osg::Quat(rhandQuat[0], -rhandQuat[2], rhandQuat[1], rhandQuat[3]  ) );
+    hand_pos_rot = hand_pos_rot * naVRot;
+    gmtl::Quatd rhandQuat = gmtl::make< gmtl::Quatd >( hand_pos_rot );
+    
+    mLeftHand->setAttitude( osg::Quat(rhandQuat[0], rhandQuat[1], rhandQuat[2], rhandQuat[3]  ) );
 }

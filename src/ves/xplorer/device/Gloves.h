@@ -224,6 +224,8 @@ private:
     osg::Quat m_rotIncrement;
     ///Array to hold work translation
     double m_worldTrans[ 3 ];
+    ///A flag to control bullet debug info
+    bool mDebugInfo;
     
     osg::ref_ptr< osgBullet::HandNode > mLeftHand;
     osg::ref_ptr< osgBullet::HandNode > mRightHand;

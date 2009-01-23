@@ -121,14 +121,14 @@ void PhysicsSimulator::ExitPhysics()
     if( mDynamicsWorld )
     {
         //Remove the rigidbodies from the dynamics world and delete them
-        for( int i = 0; i < mDynamicsWorld->getNumCollisionObjects(); ++i )
+        /*for( int i = 0; i < mDynamicsWorld->getNumCollisionObjects(); ++i )
         {
             btCollisionObject* obj =
                 mDynamicsWorld->getCollisionObjectArray()[ i ];
             mDynamicsWorld->removeCollisionObject( obj );
 
             delete obj;
-        }
+        }*/
 
         //Delete dynamics world
         delete mDynamicsWorld;
@@ -226,7 +226,7 @@ void PhysicsSimulator::InitializePhysicsSimulation()
     btVector3 worldAabbMin( -10000, -10000, -10000 );
     btVector3 worldAabbMax( 10000, 10000, 10000 );
 
-    mBroadphase = new btAxisSweep3( worldAabbMin, worldAabbMax, 1000 );
+    mBroadphase = new btAxisSweep3( worldAabbMin, worldAabbMax, maxProxies );
     //mBroadphase = new btDbvtBroadphase();
 
 #ifdef REGISTER_CUSTOM_COLLISION_ALGORITHM
@@ -244,7 +244,7 @@ void PhysicsSimulator::InitializePhysicsSimulation()
         mDispatcher, mBroadphase, mSolver );
 #endif
     //mDynamicsWorld->getDispatchInfo().m_enableSPU = true;
-    mDynamicsWorld->setGravity( btVector3( 0, 0, -10 ) );
+    mDynamicsWorld->setGravity( btVector3( 0, 0, -32.2 ) );
 
     if( mDebugBulletFlag )
     {
