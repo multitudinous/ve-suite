@@ -2080,7 +2080,13 @@ void UIPluginBase::HighlightSelectedIcon( wxDC* dc )
 void UIPluginBase::AddPort( wxCommandEvent& event )
 {
     UIPLUGIN_CHECKID( event )
-    
+    //Account for user scale
+    actionPoint.x = actionPoint.x / userScale->first;
+    actionPoint.y = actionPoint.y / userScale->second;
+    //Convert to local space
+    actionPoint.x = actionPoint.x - pos.x;
+    actionPoint.y = actionPoint.y - pos.y;
+    //Now lets add the port
     AddPortToModel( actionPoint, event.GetId() );
 
     m_canvas->Refresh( true );
@@ -2091,10 +2097,8 @@ void UIPluginBase::AddPortToModel( wxPoint& tempPoint, unsigned int typePort )
     //get location
     ves::open::xml::model::PointPtr tempLoc( new ves::open::xml::model::Point() );
     std::pair< unsigned int, unsigned int > newPoint;
-    newPoint.first =
-    static_cast< unsigned int >( tempPoint.x / userScale->first - pos.x );
-    newPoint.second =
-    static_cast< unsigned int >( tempPoint.y / userScale->second - pos.y );
+    newPoint.first = static_cast< unsigned int >( tempPoint.x );
+    newPoint.second = static_cast< unsigned int >( tempPoint.y );
     tempLoc->SetPoint( newPoint );
     //Ask what type of port
     ves::open::xml::model::PortPtr port = m_veModel->GetPort( -1 );

@@ -289,7 +289,8 @@ public:
     
 protected:
     ///Add a port to the model
-    ///\param tempPoint The point where to place the port
+    ///\param tempPoint The point where to place the port. This location
+    ///is in local coordinate space of the icon
     ///\param typePort The type of port either input or output
     void AddPortToModel( wxPoint& tempPoint, unsigned int typePort );
     ///Get the UIPluginBase poup menu
