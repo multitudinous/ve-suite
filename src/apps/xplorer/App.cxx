@@ -511,7 +511,10 @@ void App::latePreFrame( void )
     _frameNumber += 1;
     mProfileCounter += 1;
     ///Grab nav data
-    mNavPosition = gmtl::convertTo< float >( ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS()->GetMat() );
+    mNavPosition = 
+        gmtl::convertTo< float >( 
+            ves::xplorer::scenegraph::SceneManager::instance()->
+            GetActiveNavSwitchNode()->GetMat() );
     vprDEBUG( vesDBG, 3 ) << "|App::End latePreFrame" 
         << std::endl << vprDEBUG_FLUSH;
 }
