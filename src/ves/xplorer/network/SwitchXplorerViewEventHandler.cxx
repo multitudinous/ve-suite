@@ -143,7 +143,7 @@ void SwitchXplorerViewEventHandler::Execute( const ves::open::xml::XMLObjectPtr&
     }
 
     ves::xplorer::DeviceHandler::instance()->SetActiveDCS(
-        ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS() );
+        ves::xplorer::scenegraph::SceneManager::instance()->GetActiveNavSwitchNode() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SwitchXplorerViewEventHandler::UpdateNetworkView( const ves::open::xml::CommandPtr& cmd )

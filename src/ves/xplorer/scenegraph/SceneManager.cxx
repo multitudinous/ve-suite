@@ -180,12 +180,21 @@ void SceneManager::InitScene()
             << std::endl;
     }
 #endif
-
+    mNavSwitch = new ves::xplorer::scenegraph::Switch();
+    mNavSwitch->setName( "Nav Switch" );
+    
     worldDCS = new ves::xplorer::scenegraph::DCS();
     worldDCS->SetName( "World DCS" );
+    //Setup world nav switch
+    mNavSwitch->addChild( worldDCS.get() );
+    
+    //Setup logo nav switch
+    mNavSwitch->addChild( new ves::xplorer::scenegraph::DCS() );
 
     mNetworkDCS  = new osg::Group();
     mNetworkDCS->setName( "Network DCS" );
+    //Setup network nav switch
+    mNavSwitch->addChild( new ves::xplorer::scenegraph::DCS() );
 
     m_clrNode = new osg::ClearNode();
     m_clrNode->setRequiresClear( true );
@@ -208,7 +217,7 @@ void SceneManager::InitScene()
     m_clrNode->addChild( mLogoSwitch.get() );
     //Add the worlddcs here because the nav matrix is pulled out
     //App.cxx and applied to the view matrix
-    mRootNode->addChild( worldDCS.get() );
+    mRootNode->addChild( mNavSwitch.get() );
     ///Try to load the osgPT Polytans plugin to load all
     ///supported PolyTrans file types
 #ifdef _DEBUG
@@ -220,8 +229,10 @@ void SceneManager::InitScene()
     if( !loadedLib )
     {
         vprDEBUG( vesDBG, 2 ) << "Can't load plugin \""
-        << pluginName << "\"." << std::endl << vprDEBUG_FLUSH;
+            << pluginName << "\"." << std::endl << vprDEBUG_FLUSH;
     }
+    
+    //SetActiveSwitchNode( 1 );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SceneManager::SetRootNode( osg::Group* rootNode )
@@ -356,13 +367,15 @@ void SceneManager::SetActiveSwitchNode( int activeNode )
 {
     //GetActiveSwitchNode()->GetMat();
     mLogoSwitch->SetVal( activeNode );
+    mNavSwitch->SetVal( activeNode );
+    mActiveNavDCS = GetActiveNavSwitchNode();
     ///Now reset the dcs back to its former position so that the nav
     ///information is defined on a per node basis.
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SceneManager::PreFrameUpdate()
 {
-    mInvertedWorldDCS = worldDCS->GetMat();
+    mInvertedWorldDCS = mActiveNavDCS->GetMat();
     mInvertedWorldDCS = gmtl::invert( mInvertedWorldDCS );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -375,6 +388,20 @@ osg::Group* SceneManager::GetActiveSwitchNode()
         if( boolList.at( i ) )
         {
             return static_cast< osg::Group* >( mLogoSwitch->getChild( i ) );
+        }
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+ves::xplorer::scenegraph::DCS* SceneManager::GetActiveNavSwitchNode()
+{
+    osg::Switch::ValueList boolList = mNavSwitch->getValueList();
+    
+    for( size_t i = 0; i < boolList.size(); ++i )
+    {
+        if( boolList.at( i ) )
+        {
+            return static_cast< ves::xplorer::scenegraph::DCS* >( 
+                mNavSwitch->getChild( i ) );
         }
     }
 }

@@ -64,7 +64,7 @@ vprSingletonImp( DeviceHandler );
 DeviceHandler::DeviceHandler()
     :
     mActiveDCS(
-        ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS() ),
+        ves::xplorer::scenegraph::SceneManager::instance()->GetActiveNavSwitchNode() ),
     mSelectedDCS( 0 ),
     mDeviceMode( "World Navigation" ),
     mResetCenterPointPosition( 0.0, 0.1, 0.0 ),
@@ -241,7 +241,7 @@ void DeviceHandler::SetDeviceMode( const std::string& deviceMode )
     if( mDeviceMode == "World Navigation" )
     {
         mActiveDCS = 
-            ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS();
+            ves::xplorer::scenegraph::SceneManager::instance()->GetActiveNavSwitchNode();
     }
     else if( mDeviceMode == "Object Navigation" )
     {

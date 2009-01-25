@@ -104,11 +104,12 @@ public:
     ///Return the active switch node of the scenegraph
     osg::Group* GetActiveSwitchNode();
 
+    ///Return the active nav switch node of the scenegraph
+    ///\return The DCS that should be used for nav matrix generation
+    ves::xplorer::scenegraph::DCS* GetActiveNavSwitchNode();
+
     ///Return the model root node of the scenegraph
     osg::Group* GetModelRoot();
-
-    ///Return the active switch node of the scenegraph
-    //osgOQ::OcclusionQueryContext* GetOcclusionQueryContext();
 
     ///Set the node on the switch node that is active
     ///\param activeNode The node to activate
@@ -160,6 +161,10 @@ private:
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > mLogoNode;
     ///Node to switch between the logo and the worldDCS
     osg::ref_ptr< ves::xplorer::scenegraph::Switch > mLogoSwitch;
+    ///Node to switch between the nav dcs for logo, world, and network
+    osg::ref_ptr< ves::xplorer::scenegraph::Switch > mNavSwitch;
+    ///A convenience pointer to help find which node is being used for nav
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > mActiveNavDCS;
     ///Node to control navigation
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > worldDCS;
     ///Node to hold a network view of the system under investigation

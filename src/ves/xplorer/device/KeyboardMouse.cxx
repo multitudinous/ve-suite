@@ -456,10 +456,10 @@ void KeyboardMouse::ProcessNavigationEvents()
         ves::xplorer::DeviceHandler::instance()->GetActiveDCS();
     osg::Group* activeSwitchNode =
         ves::xplorer::scenegraph::SceneManager::instance()->
-            GetActiveSwitchNode();
+            GetActiveNavSwitchNode();
     ves::xplorer::scenegraph::DCS* cameraDCS =
         ves::xplorer::scenegraph::SceneManager::instance()->
-            GetWorldDCS();
+            GetActiveNavSwitchNode();
 
     osg::ref_ptr< ves::xplorer::scenegraph::CoordinateSystemTransform >
         coordinateSystemTransform;
@@ -581,7 +581,7 @@ void KeyboardMouse::FrameAll()
     //all geometry is framed within the current viewing frustum
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > worldDCS =
         ves::xplorer::scenegraph::SceneManager::instance()->
-            GetWorldDCS();
+            GetActiveNavSwitchNode();
     gmtl::Matrix44d matrix = worldDCS->GetMat();
 
     //////////////////////////////////////////////////////////////////////
