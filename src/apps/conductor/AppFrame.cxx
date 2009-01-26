@@ -2651,7 +2651,8 @@ void AppFrame::LoadNewNetwork( wxUpdateUIEvent& WXUNUSED( event )  )
 {
     {
         //Send a new start position for all apps
-        //do this first so in case a file has a start position it will be used
+        //do this before loading the ves data
+        // so in case a file has a start position it will be used
         CommandPtr viewPointGUIData( new Command() );
         viewPointGUIData->SetCommandName( "Navigation_Data" );
         
@@ -2684,6 +2685,7 @@ void AppFrame::LoadNewNetwork( wxUpdateUIEvent& WXUNUSED( event )  )
         centerPointUpdateData->AddDataValuePair( resetDVP );
         serviceList->SendCommandStringToXplorer( centerPointUpdateData );
     }
+
     //Reloading plugins
     av_modules->ResetPluginTree();
     
@@ -2724,6 +2726,17 @@ void AppFrame::LoadNewNetwork( wxUpdateUIEvent& WXUNUSED( event )  )
             recordScenes->_buildPage();
         }
     }
+    
+    //Send the new commands after the new data is loaded not before
+    //Change view to CAD to make sure
+    {
+        DataValuePairPtr dataValuePair( new DataValuePair( std::string( "STRING" ) ) );
+        CommandPtr veCommand( new Command() );
+        veCommand->SetCommandName( std::string( "CHANGE_XPLORER_VIEW" ) );
+        dataValuePair->SetData( "CHANGE_XPLORER_VIEW", "CHANGE_XPLORER_VIEW_CAD" );
+        veCommand->AddDataValuePair( dataValuePair );
+        bool connected = serviceList->SendCommandStringToXplorer( veCommand );
+    }    
     
     newCanvas = false;
 }

@@ -136,6 +136,10 @@ Canvas::Canvas( wxWindow* parent, int id )
 
     this->parent = parent;
     
+    //This event is the key that causes appframe to load a new ves file
+    //This event is sent in OnDelNetwork if everything is empty on the canvas
+    //Essentially before any new ves file or data is loaded the canvas is
+    //cleared therefore we know that afterwards we are loading a new ves file
     cleanEvent.SetId( CANVAS_UPDATE_NETWORK_DATA );
     
     Refresh( true );
@@ -377,17 +381,16 @@ void Canvas::New( bool promptClearXplorer )
         }
     }
 
-    //clear the network system view
-    //DataValuePairPtr dataValuePair( new DataValuePair( "UNSIGNED INT" ) );
-    //dataValuePair->SetDataName( "Object ID" );
-    //dataValuePair->SetDataValue( static_cast< unsigned int >( iter->first ) );
-    DataValuePairPtr dataValuePair( new DataValuePair( "STRING" ) );
-    dataValuePair->SetData( "NETWORK_SYSTEM_VIEW", "DELETE" );
-    CommandPtr veCommand( new Command() );
-    veCommand->SetCommandName( std::string( "DELETE_NETWORK_SYSTEM_VIEW" ) );
-    veCommand->AddDataValuePair( dataValuePair );
-    bool connected = mServiceList->SendCommandStringToXplorer( veCommand );
-
+    //Delete the old network view
+    {
+        DataValuePairPtr dataValuePair( new DataValuePair( "STRING" ) );
+        dataValuePair->SetData( "NETWORK_SYSTEM_VIEW", "DELETE" );
+        CommandPtr veCommand( new Command() );
+        veCommand->SetCommandName( std::string( "DELETE_NETWORK_SYSTEM_VIEW" ) );
+        veCommand->AddDataValuePair( dataValuePair );
+        bool connected = mServiceList->SendCommandStringToXplorer( veCommand );
+    }
+    
     CleanUpNetworks();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -554,9 +557,7 @@ void Canvas::OnDelNetwork( wxUpdateUIEvent& event )
     
     if( networks.empty() )
     {
-        mainFrame->AddPendingEvent( cleanEvent );    
-        
-        //Refresh( true );
+        mainFrame->AddPendingEvent( cleanEvent );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
