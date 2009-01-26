@@ -62,7 +62,7 @@ BEGIN_EVENT_TABLE( IconChooser, wxFrame )
     EVT_MENU( ICONCHOOSER_CLICK, IconChooser::IconDirectoryClick )
 END_EVENT_TABLE()
 ////////////////////////////////////////////////////////////////////////////////
-IconChooser::IconChooser( wxScrolledWindow *parent, /*std::string path,*/ wxWindowID id, const wxString &title, const wxPoint &position, const wxSize& size, long style )
+IconChooser::IconChooser( wxWindow *parent, /*std::string path,*/ wxWindowID id, const wxString &title, const wxPoint &position, const wxSize& size, long style )
         : wxFrame( parent, id, title, position, size, style )
 {
     //directory = wxString(path.c_str(), wxConvUTF8);

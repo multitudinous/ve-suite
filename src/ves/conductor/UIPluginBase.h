@@ -320,6 +320,9 @@ protected:
     ///Remove a specific plugin from the canvas dialog
     void RemoveWindowFromCanvas( wxWindow* window );
 
+    //returns the parent of the plugin
+    wxWindow * GetPluginParent();
+
     UIDialog* dlg;
     TextResultDialog* result_dlg;
     TextResultDialog* port_dlg;

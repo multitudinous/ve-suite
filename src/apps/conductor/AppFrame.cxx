@@ -473,7 +473,7 @@ void AppFrame::_configureDesktop()
     SetTitle( _( "VE-Suite: www.vesuite.org" ) );
     _treeView = new wxDialog();
     _treeView->SetExtraStyle( ~wxWS_EX_BLOCK_EVENTS );
-    _treeView->Create( this, ::wxNewId(), _( "Available Objects" ),
+    _treeView->Create( this, ::wxNewId(), _( "VE-Conductor Network" ),
                               wxDefaultPosition, wxDefaultSize,
                               wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER );
     //wxCAPTION | wxRESIZE_BORDER);//(wxDEFAULT_DIALOG_STYLE&~

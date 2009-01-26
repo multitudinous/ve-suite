@@ -132,6 +132,7 @@ public:
     //void DrawPorts( UIPluginBase* cur_module, bool flag, wxDC &dc);
     bool IsDragging();
     void SetSelectedModule( int mod );
+    void UnSelectMod();
     void HighlightCenter( int modId );
     void SetSelectedLink( int link );
     void HighlightCenterLink( int linkId );
@@ -162,7 +163,7 @@ public:
 protected:
     //Selection functions
     int SelectMod( int x, int y, wxDC& dc );
-    void UnSelectMod();
+    //void UnSelectMod();
     int  SelectLink( int x, int y );
     void UnSelectLink( );
     int SelectTag( int x, int y );

@@ -206,7 +206,7 @@ UIPluginBase::~UIPluginBase()
         DisconnectPluginDialogsDestroyEvent( _soundsDlg );
         DisconnectPluginDialogsDestroyEvent( m_iconChooser );
         DisconnectPluginDialogsDestroyEvent( vistab );
-        //DisconnectPluginDialogsDestroyEvent( cadDialog );
+        DisconnectPluginDialogsDestroyEvent( cadDialog );
     }
 
     delete [] poly;
@@ -949,7 +949,7 @@ void UIPluginBase::ViewInputVariables( void )
     }
 
     inputsDialog =
-        new SummaryResultDialog( NULL, wxT( "Input Variables" ), wxSize( 560, 400 ) );
+        new SummaryResultDialog( GetPluginParent(), wxT( "Input Variables" ), wxSize( 560, 400 ) );
     // Get all the inputs form the model
     for( size_t i = 0; i < numInputs; ++i )
     {
@@ -981,7 +981,7 @@ void UIPluginBase::ViewResultsVariables( void )
         return;
     }
 
-    resultsDialog = new SummaryResultDialog( NULL, wxT( "Results Variables" ), wxSize( 560, 400 ) );
+    resultsDialog = new SummaryResultDialog( GetPluginParent(), wxT( "Results Variables" ), wxSize( 560, 400 ) );
     // Get all the inputs form the model
     for( size_t i = 0; i < resultsVec.size(); ++i )
     {
@@ -1193,7 +1193,7 @@ void UIPluginBase::CreateUserDialog( wxPoint extpos )
     //Clean up memory
 
     // now show the custom dialog with no parent for the wxDialog
-    UIDialog* hello = UI( m_canvas );
+    UIDialog* hello = UI( GetPluginParent() );
     hello->SetCORBAServiceList( serviceList );
     hello->SetUIPluginBase( this );
 
@@ -1282,7 +1282,7 @@ void  UIPluginBase::OnShowIconChooser( wxCommandEvent& event )
     //UIPluginBase* tempPlugin = this;
     //if( m_iconChooser == NULL )
     //{
-        m_iconChooser = new IconChooser( m_canvas );
+        m_iconChooser = new IconChooser( GetPluginParent() );
         m_iconChooser->SetPlugin( this );
     //}
     //m_iconChooser->AddIconsDir( wxString( "2dicons", wxConvUTF8 ) );
@@ -1590,7 +1590,7 @@ void UIPluginBase::OnGeometry( wxCommandEvent& event )
     if( !cadDialog )
     {
         cadDialog = new ves::conductor::util::CADNodeManagerDlg( veModel->AddGeometry(),
-                                                                 m_canvas, ::wxNewId() );
+                                                                 GetPluginParent(), ::wxNewId() );
 
         cadDialog->SetSize( dialogSize );
         //Cannot use this until we are using a non modal dialog
@@ -1622,7 +1622,7 @@ void UIPluginBase::OnDataSet( wxCommandEvent& event )
     {
         ves::open::xml::model::ModelPtr veModel = GetVEModel();
         m_dataSetLoaderDlg = new ves::conductor::util::DataSetLoaderUI(
-                                 m_canvas, ::wxNewId(), SYMBOL_DATASETLOADERUI_TITLE,
+                                 GetPluginParent(), ::wxNewId(), SYMBOL_DATASETLOADERUI_TITLE,
                                  SYMBOL_DATASETLOADERUI_POSITION, SYMBOL_DATASETLOADERUI_SIZE,
                                  SYMBOL_DATASETLOADERUI_STYLE, veModel );
         m_dataSetLoaderDlg->SetSize( dialogSize );
@@ -1667,7 +1667,7 @@ void UIPluginBase::OnVisualization( wxCommandEvent& event )
 
     if( !vistab )
     {
-        vistab = new Vistab( activeCORBAModel, m_canvas,
+        vistab = new Vistab( activeCORBAModel, GetPluginParent(),
                              SYMBOL_VISTAB_IDNAME,
                              wxString( activeXMLModel->GetPluginName().c_str(), wxConvUTF8 ),
                              SYMBOL_VISTAB_POSITION,
@@ -1800,7 +1800,7 @@ void UIPluginBase::OnModelSounds( wxCommandEvent& event )
 
     if( !_soundsDlg )
     {
-        _soundsDlg = new SoundsPane( m_canvas, GetVEModel() );
+        _soundsDlg = new SoundsPane( GetPluginParent(), GetVEModel() );
         _soundsDlg->SetSize( dialogSize );
         ConfigurePluginDialogs( _soundsDlg );
     }
@@ -1822,21 +1822,24 @@ void UIPluginBase::OnMRightDown( wxMouseEvent& event )
         event.Skip();
         return;
     }
-
-    actionPoint = evtpos;
-    highlightFlag = true;
-    //m_canvas->Refresh( true );
+    //int x, y;
+    //m_canvas->GetViewStart( &x, &y );
+    //m_network->SetScrollPosition( x, y );
 
     SendActiveId();
-
+    actionPoint = evtpos;
+    highlightFlag = true;
+    m_network->UnSelectMod();
+    m_network->SetSelectedModule( id );
+    //m_canvas->Refresh( true );
     m_canvas->PopupMenu( GetPopupMenu() );
 
-    m_selFrPort = -1;
-    m_selToPort = -1;
-    m_selLink = -1;
-    m_selLinkCon = -1;
-    m_selTag = -1;
-    m_selTagCon = -1;
+    //m_selFrPort = -1;
+    //m_selToPort = -1;
+    //m_selLink = -1;
+    //m_selLinkCon = -1;
+    //m_selTag = -1;
+    //m_selTagCon = -1;
     //xold = yold =0;
     //m_canvas->Refresh( true );
     //necessary for setting the canvas active to handle keyboard input
@@ -2220,7 +2223,7 @@ void UIPluginBase::RemovePluginDialogsFromCanvas()
     RemoveWindowFromCanvas( _soundsDlg );
     RemoveWindowFromCanvas( m_iconChooser );
     RemoveWindowFromCanvas( vistab );
-    //RemoveWindowFromCanvas( cadDialog );
+    RemoveWindowFromCanvas( cadDialog );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIPluginBase::RemoveWindowFromCanvas( wxWindow* window ) 
@@ -2230,7 +2233,7 @@ void UIPluginBase::RemoveWindowFromCanvas( wxWindow* window )
         return;
     }
     
-    m_canvas->RemoveChild( window );
+    GetPluginParent()->RemoveChild( window );
     //window->DestroyChildren();
     //delete window;
     bool delFlag = window->Destroy();
@@ -2314,6 +2317,13 @@ void UIPluginBase::TogglePlugin( wxCommandEvent& event )
         veCommand->AddDataValuePair( dataValuePair );
         bool connected = serviceList->SendCommandStringToXplorer( veCommand );
     }
+}
+////////////////////////////////////////////////////////////////////////////////
+wxWindow * UIPluginBase::GetPluginParent()
+{
+    //currently this returns the parent of the canvas
+    //corrected an issue with the canvas scrolling when dialogs were created
+    return m_canvas->GetParent();
 }
 ////////////////////////////////////////////////////////////////////////////////
 wxMenu* UIPluginBase::GetPopupMenu()

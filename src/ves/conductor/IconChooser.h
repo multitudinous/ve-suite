@@ -63,7 +63,7 @@ private:
     DECLARE_EVENT_TABLE();
 
 public:
-    IconChooser( wxScrolledWindow *parent, /*std::string path,*/ wxWindowID id = 1,
+    IconChooser( wxWindow *parent, /*std::string path,*/ wxWindowID id = 1,
                  const wxString &title = wxT( "IconChooser" ),
                  const wxPoint& pos = wxDefaultPosition,
                  const wxSize& size = wxDefaultSize, long style = IconChooser_STYLE );
@@ -88,7 +88,7 @@ private:
     wxPanel* WxPanel;
     wxChoice* WxChoice;
     wxArrayString choices;
-	wxScrolledWindow* canvas;
+	wxWindow* canvas;
     //wxArrayString componentList;
     int maxRows;
     std::pair< unsigned int, std::string > iconInfo;

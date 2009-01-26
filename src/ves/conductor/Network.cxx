@@ -2126,9 +2126,10 @@ void Network::HighlightCenter( int modId )
     //recenter the flowsheet around the icon
     //int xPix, yPix;
     //parent->GetScrollPixelsPerUnit( &xPix, &yPix );
-    parent->Scroll( 
+    SetScrollPosition(
         static_cast< int >( modules[modId].GetPlugin()->GetBBox().GetX()*userScale.first ),
         static_cast< int >( modules[modId].GetPlugin()->GetBBox().GetY()*userScale.second ) );
+    parent->Scroll( GetScrollPosition().first, GetScrollPosition().second );
 
     //highlight the selected icon
     SetSelectedModule( modId );
@@ -2137,9 +2138,10 @@ void Network::HighlightCenter( int modId )
 void Network::HighlightCenterLink( int linkId )
 {
     UnSelectLink();
-    parent->Scroll( 
+    SetScrollPosition( 
         static_cast< int >( links[linkId].GetPoints()->at(0).x*userScale.first ),
         static_cast< int >( links[linkId].GetPoints()->at(0).y*userScale.second ) );
+    parent->Scroll( GetScrollPosition().first, GetScrollPosition().second );
 
     //highlight the selected icon
     SetSelectedLink( linkId );
