@@ -148,12 +148,6 @@ UIPluginBase::UIPluginBase() :
         iconFilename( "DefaultPlugin" ),
         _soundsDlg( 0 ),
         cadDialog( 0 ),
-        m_selFrPort( 0 ),
-        m_selToPort( 0 ),
-        m_selLink( 0 ),
-        m_selLinkCon( 0 ),
-        m_selTag( 0 ),
-        m_selTagCon( 0 ),
         highlightFlag( false ),
         nameFlag( true ),
         serviceList( 0 ),
@@ -206,7 +200,7 @@ UIPluginBase::~UIPluginBase()
         DisconnectPluginDialogsDestroyEvent( _soundsDlg );
         DisconnectPluginDialogsDestroyEvent( m_iconChooser );
         DisconnectPluginDialogsDestroyEvent( vistab );
-        DisconnectPluginDialogsDestroyEvent( cadDialog );
+        //DisconnectPluginDialogsDestroyEvent( cadDialog );
     }
 
     delete [] poly;
@@ -1592,7 +1586,10 @@ void UIPluginBase::OnGeometry( wxCommandEvent& event )
         cadDialog = new ves::conductor::util::CADNodeManagerDlg( veModel->AddGeometry(),
                                                                  GetPluginParent(), ::wxNewId() );
 
-        cadDialog->SetSize( dialogSize );
+        //cadDialog->SetSize( dialogSize );
+        cadDialog->SetSize( dialogSize.x, dialogSize.y, dialogSize.width,
+                        dialogSize.height, wxSIZE_AUTO );
+
         //Cannot use this until we are using a non modal dialog
         //ConfigurePluginDialogs( cadDialog );
     }
@@ -1626,6 +1623,8 @@ void UIPluginBase::OnDataSet( wxCommandEvent& event )
                                  SYMBOL_DATASETLOADERUI_POSITION, SYMBOL_DATASETLOADERUI_SIZE,
                                  SYMBOL_DATASETLOADERUI_STYLE, veModel );
         m_dataSetLoaderDlg->SetSize( dialogSize );
+        m_dataSetLoaderDlg->SetSize( dialogSize.x, dialogSize.y, dialogSize.width,
+                        wxDefaultCoord, wxSIZE_AUTO_HEIGHT );
         ConfigurePluginDialogs( m_dataSetLoaderDlg );
     }
 
@@ -1673,16 +1672,16 @@ void UIPluginBase::OnVisualization( wxCommandEvent& event )
                              SYMBOL_VISTAB_POSITION,
                              SYMBOL_VISTAB_SIZE,
                              SYMBOL_VISTAB_STYLE );
-        vistab->SetSize( dialogSize );
+        //vistab->SetSize( dialogSize );
         vistab->SetSize( dialogSize.x, dialogSize.y, dialogSize.width,
-                         wxDefaultCoord, wxSIZE_AUTO );
+                         wxDefaultCoord, wxSIZE_AUTO_HEIGHT );
         ConfigurePluginDialogs( vistab );
     }
     else
     {
         vistab->SetActiveModel( activeCORBAModel );
         vistab->SetSize( dialogSize.x, dialogSize.y, dialogSize.width,
-                         wxDefaultCoord, wxSIZE_AUTO );
+                         wxDefaultCoord, wxSIZE_AUTO_HEIGHT );
     }
 
     size_t nInformationPackets = activeXMLModel->GetNumberOfInformationPackets();
@@ -1801,7 +1800,10 @@ void UIPluginBase::OnModelSounds( wxCommandEvent& event )
     if( !_soundsDlg )
     {
         _soundsDlg = new SoundsPane( GetPluginParent(), GetVEModel() );
-        _soundsDlg->SetSize( dialogSize );
+        //_soundsDlg->SetSize( dialogSize );
+        _soundsDlg->SetSize( dialogSize.x, dialogSize.y, dialogSize.width,
+                        wxDefaultCoord, wxSIZE_AUTO_HEIGHT );
+
         ConfigurePluginDialogs( _soundsDlg );
     }
     _soundsDlg->SetActiveModel( GetVEModel() );
@@ -1822,9 +1824,6 @@ void UIPluginBase::OnMRightDown( wxMouseEvent& event )
         event.Skip();
         return;
     }
-    //int x, y;
-    //m_canvas->GetViewStart( &x, &y );
-    //m_network->SetScrollPosition( x, y );
 
     SendActiveId();
     actionPoint = evtpos;
@@ -1834,14 +1833,6 @@ void UIPluginBase::OnMRightDown( wxMouseEvent& event )
     //m_canvas->Refresh( true );
     m_canvas->PopupMenu( GetPopupMenu() );
 
-    //m_selFrPort = -1;
-    //m_selToPort = -1;
-    //m_selLink = -1;
-    //m_selLinkCon = -1;
-    //m_selTag = -1;
-    //m_selTagCon = -1;
-    //xold = yold =0;
-    //m_canvas->Refresh( true );
     //necessary for setting the canvas active to handle keyboard input
     //m_canvas->SetFocus();
 }
@@ -2223,7 +2214,7 @@ void UIPluginBase::RemovePluginDialogsFromCanvas()
     RemoveWindowFromCanvas( _soundsDlg );
     RemoveWindowFromCanvas( m_iconChooser );
     RemoveWindowFromCanvas( vistab );
-    RemoveWindowFromCanvas( cadDialog );
+    //RemoveWindowFromCanvas( cadDialog );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIPluginBase::RemoveWindowFromCanvas( wxWindow* window ) 
@@ -2319,7 +2310,7 @@ void UIPluginBase::TogglePlugin( wxCommandEvent& event )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-wxWindow * UIPluginBase::GetPluginParent()
+wxWindow* UIPluginBase::GetPluginParent()
 {
     //currently this returns the parent of the canvas
     //corrected an issue with the canvas scrolling when dialogs were created
@@ -2426,6 +2417,7 @@ wxMenu* UIPluginBase::SetupPluginBasePopupMenu()
     xplorer_menu->Append( UIPLUGINBASE_ACTIVE_MODEL_SOUNDS, _( "Sounds" ) );
     xplorer_menu->Enable( UIPLUGINBASE_ACTIVE_MODEL_SOUNDS, true );
 
+    mPopMenu->AppendSeparator();
      // GUI to configure geometry for graphical env
     mPopMenu->Append( UIPLUGINBASE_GEOMETRY, _( "Geometry Config" ) );
     mPopMenu->Enable( UIPLUGINBASE_GEOMETRY, true );
@@ -2435,11 +2427,11 @@ wxMenu* UIPluginBase::SetupPluginBasePopupMenu()
     //UI for vis variables
     mPopMenu->Append( UIPLUGINBASE_VISUALIZATION, _( "Visualization" ) );
     mPopMenu->Enable( UIPLUGINBASE_VISUALIZATION, true );
-    //Set the plugin name for a model
     mPopMenu->AppendSeparator();
 
     mPopMenu->Append( UIPLUGINBASE_SHOW_DESC, _( "Description" ) );
     mPopMenu->Enable( UIPLUGINBASE_SHOW_DESC, true );
+    //Set the plugin name for a model
     mPopMenu->Append( UIPLUGINBASE_SET_UI_PLUGIN_NAME, _( "Rename" ) );
     mPopMenu->Enable( UIPLUGINBASE_SET_UI_PLUGIN_NAME, true );
     mPopMenu->Append( UIPLUGINBASE_ZOOM, _( "Zoom" ) );

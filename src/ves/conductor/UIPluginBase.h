@@ -320,8 +320,8 @@ protected:
     ///Remove a specific plugin from the canvas dialog
     void RemoveWindowFromCanvas( wxWindow* window );
 
-    //returns the parent of the plugin
-    wxWindow * GetPluginParent();
+    ///returns the parent of the plugin
+    wxWindow* GetPluginParent();
 
     UIDialog* dlg;
     TextResultDialog* result_dlg;
@@ -394,13 +394,7 @@ protected:
     ves::conductor::util::CADNodeManagerDlg* cadDialog;
     ///Map to keep track of which dialogs have been created
     std::map< int, bool > mDialogMemoryMap;
-    
-    int m_selFrPort;
-    int m_selToPort;
-    int m_selLink;
-    int m_selLinkCon;
-    int m_selTag;
-    int m_selTagCon;
+
     wxRect dialogSize;
     int activeId;
     ///Determine wether to draw the ports and highlight band
