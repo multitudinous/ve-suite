@@ -49,8 +49,20 @@ TogglePluginVisitor::TogglePluginVisitor( osg::Node* osg_node, bool toggle,
     mNodeID( nodeID ),
     mToggle( toggle )
 {
+    //This enables the visitor to traverse "off" nodes
     setNodeMaskOverride( 1 );
     osg_node->accept( *this );
+    
+    //Because we have hierarchy blocks we now need to enable all the parents
+    //of the found node
+    if( mNodeID != "ALL" )
+    {
+        for( size_t i = 0; i < mNodePath.size(); ++i )
+        {
+            mNodePath.at( i )->setNodeMask( 1 );
+        }
+    }
+    
 }
 ////////////////////////////////////////////////////////////////////////////////
 TogglePluginVisitor::~TogglePluginVisitor()
@@ -79,13 +91,13 @@ void TogglePluginVisitor::apply( osg::Group& node )
             break;
         }
     }
-
     //Only process if it is a plugin
     if( isBasePlugin )
     {
         if( isActiveNode )
         {
             node.setNodeMask( 1 );
+            mNodePath = _nodePath;
         }
         else
         {
@@ -96,6 +108,7 @@ void TogglePluginVisitor::apply( osg::Group& node )
         {
             node.setNodeMask( 1 );
         }
+        //This enables the visitor to traverse "off" nodes
         setNodeMaskOverride( 1 );
     }
 

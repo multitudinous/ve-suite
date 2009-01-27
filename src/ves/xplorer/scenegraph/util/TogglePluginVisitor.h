@@ -65,6 +65,7 @@ public:
 private:
     bool mToggle;
     std::string mNodeID;
+    osg::NodePath mNodePath;
 };
 }
 }

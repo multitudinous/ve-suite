@@ -321,8 +321,8 @@ void PluginBase::SetXMLModel( ves::open::xml::model::ModelPtr& tempModel )
         {
             if( descriptList.at( i ) == "VE_XPLORER_PLUGIN_ID" )
             {
-                descriptList.at( i + 1 ) = mXmlModel->GetID();
-                mDCS->setDescriptions( descriptList );
+                //descriptList.at( i + 1 ) = mXmlModel->GetID();
+                //mDCS->setDescriptions( descriptList );
                 hasID = true;
                 break;
             }
