@@ -367,10 +367,19 @@ void App::preFrame( void )
 {
     VPR_PROFILE_GUARD_HISTORY( "App::preFrame", 20 );
     vprDEBUG( vesDBG, 3 ) << "|App::preFrame" << std::endl << vprDEBUG_FLUSH;
-    //Check and see if the ord has any work to do
-    m_vjobsWrapper->CheckORBWorkLoad();
-    //Sets the worldDCS before it is synced
-    EnvironmentHandler::instance()->PreFrameUpdate();
+    ///////////////////////
+    {
+        //Check and see if the ord has any work to do
+        VPR_PROFILE_GUARD_HISTORY( "App::preFrame CheckORBWorkLoad", 20 );
+        m_vjobsWrapper->CheckORBWorkLoad();
+    }
+    ///////////////////////
+    {
+        VPR_PROFILE_GUARD_HISTORY( "App::preFrame EnvironmentHandler", 20 );
+        //Sets the worldDCS before it is synced
+        EnvironmentHandler::instance()->PreFrameUpdate();
+    }
+    ///////////////////////
 }
 ////////////////////////////////////////////////////////////////////////////////
 void App::latePreFrame( void )

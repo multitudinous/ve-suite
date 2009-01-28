@@ -243,11 +243,9 @@ void KeyboardMouse::SetStartEndPoint(
 
     //Need to negate the the camera transform that is multiplied into the view
     {
-        ves::xplorer::scenegraph::DCS* worldDCS =
-            ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS();
-        gmtl::Matrix44d tempCamera = worldDCS->GetMat();
         osg::Matrixd inverseCameraTransform =
-            osg::Matrixd( gmtl::invert( tempCamera ).getData() );
+            osg::Matrixd( ves::xplorer::scenegraph::SceneManager::instance()->
+            GetInvertedWorldDCS().getData() );
         
         *startPoint = *startPoint * inverseCameraTransform;
         *endPoint = *endPoint * inverseCameraTransform;
@@ -454,10 +452,12 @@ void KeyboardMouse::ProcessNavigationEvents()
     
     ves::xplorer::scenegraph::DCS* const activeDCS =
         ves::xplorer::DeviceHandler::instance()->GetActiveDCS();
-    osg::Group* activeSwitchNode =
+    //Get the node where are all the geometry is handled
+    const osg::Group* activeSwitchNode =
         ves::xplorer::scenegraph::SceneManager::instance()->
-            GetActiveNavSwitchNode();
-    ves::xplorer::scenegraph::DCS* cameraDCS =
+            GetActiveSwitchNode();
+    //Get the node where all the nav matrix's are handled
+    const ves::xplorer::scenegraph::DCS* cameraDCS =
         ves::xplorer::scenegraph::SceneManager::instance()->
             GetActiveNavSwitchNode();
 

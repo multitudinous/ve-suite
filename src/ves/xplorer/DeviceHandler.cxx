@@ -82,6 +82,11 @@ DeviceHandler::DeviceHandler()
     mDevices[ "Gloves" ] =
         new ves::xplorer::Gloves();
 
+    mTabletDevice = mDevices[ "Tablet" ];
+    mGlovesDevice = mDevices[ "Gloves" ];
+    mWandDevice = mDevices[ "Wand" ];
+    mKMDevice = mDevices[ "KeyboardMouse" ];
+    
     //Set properties in Devices
     std::map< const std::string, ves::xplorer::Device* >::const_iterator itr;
     for( itr = mDevices.begin(); itr != mDevices.end(); itr++ )
@@ -126,29 +131,27 @@ void DeviceHandler::ExecuteCommands()
 {
     std::map< std::string, ves::xplorer::event::EventHandler* >::iterator
         currentEventHandler;
-    if( ModelHandler::instance()->GetXMLCommand() )
+    const ves::open::xml::CommandPtr tempCommand = 
+        ModelHandler::instance()->GetXMLCommand();
+    if( tempCommand )
     {
         currentEventHandler = mEventHandlers.find(
-            ModelHandler::instance()->GetXMLCommand()->GetCommandName() );
+            tempCommand->GetCommandName() );
 
         if( currentEventHandler != mEventHandlers.end() )
         {
-            currentEventHandler->second->SetGlobalBaseObject( mActiveDevice );
-            currentEventHandler->second->Execute(
-                ModelHandler::instance()->GetXMLCommand() );
+            ves::xplorer::event::EventHandler* tempEvent = 
+                currentEventHandler->second;
+            tempEvent->SetGlobalBaseObject( mActiveDevice );
+            tempEvent->Execute( tempCommand );
 
             //Tablet and Wand are always active and need updated...
-            if( ModelHandler::instance()->GetXMLCommand()->
-                GetCommandName() == "Navigation_Data" )
+            if( tempCommand->GetCommandName() == "Navigation_Data" )
             {
-                currentEventHandler->second->SetGlobalBaseObject(
-                    mDevices.find( "Tablet" )->second );
-                currentEventHandler->second->Execute(
-                    ModelHandler::instance()->GetXMLCommand() );
-                currentEventHandler->second->SetGlobalBaseObject(
-                    mDevices.find( "Wand" )->second );
-                currentEventHandler->second->Execute(
-                    ModelHandler::instance()->GetXMLCommand() );
+                tempEvent->SetGlobalBaseObject( mTabletDevice );
+                tempEvent->Execute( tempCommand );
+                tempEvent->SetGlobalBaseObject( mWandDevice );
+                tempEvent->Execute( tempCommand );
             }
         }
     }
@@ -193,20 +196,20 @@ void DeviceHandler::ProcessDeviceEvents()
     }
     else
     {
-        mDevices.find( "Wand" )->second->UpdateNavigation();
-        mDevices.find( "KeyboardMouse" )->second->UpdateNavigation();
+        mWandDevice->UpdateNavigation();
+        mKMDevice->UpdateNavigation();
 
-        if( ( mActiveDevice != mDevices.find( "Wand" )->second ) && 
-            ( mActiveDevice != mDevices.find( "KeyboardMouse" )->second ) )
+        if( ( mActiveDevice != mWandDevice ) && 
+            ( mActiveDevice != mKMDevice ) )
         {
             mActiveDevice->UpdateNavigation();
         }
     }
 
     //Always do this by default
-    mDevices.find( "Tablet" )->second->UpdateNavigation();
+    mTabletDevice->UpdateNavigation();
     //Always do this by default
-    mDevices.find( "Gloves" )->second->UpdateNavigation();
+    mGlovesDevice->UpdateNavigation();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DeviceHandler::ResetCenterPoint()

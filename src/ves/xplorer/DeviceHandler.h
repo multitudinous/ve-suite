@@ -177,7 +177,15 @@ private:
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > mActiveDCS;
     ///The current selected DCS
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > mSelectedDCS;
-
+    
+    ///Tablet convenience device pointer
+    ves::xplorer::Device* mTabletDevice;
+    ///Tablet convenience device pointer
+    ves::xplorer::Device* mGlovesDevice;
+    ///Tablet convenience device pointer
+    ves::xplorer::Device* mWandDevice;
+    ///Tablet convenience device pointer
+    ves::xplorer::Device* mKMDevice;
 };
 } //end xplorer
 } //end ves
