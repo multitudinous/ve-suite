@@ -30,52 +30,70 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
+
 #ifndef CFD_APPWRAPPER_H
 #define CFD_APPWRAPPER_H
-/*!\file AppWrapper.h
-AppWrapper API
-*/
 
-/*!\class ves::xplorer::AppWrapper
-*
-*/
+// --- VR Juggler Includes --- //
 #include <vrj/vrjParam.h>
 
 namespace ves
 {
 namespace xplorer
 {
+
 class App;
 class VjObsWrapper;
-}
-}
 
-namespace ves
-{
-namespace xplorer
-{
+/*!\file AppWrapper.h
+ *
+ */
+
+/*!\class ves::xplorer::AppWrapper
+ *
+ */
+
+/*!\namespace ves::xplorer
+ *
+ */
+
 class AppWrapper
 {
 public:
     ///Contructor
-    AppWrapper( int argc,  char* argv[], VjObsWrapper* );
+    AppWrapper( int argc,  char* argv[], VjObsWrapper* input );
+
     ///destructor
-    ~AppWrapper( void );
+    ~AppWrapper();
+
     ///Is juggler running
-    bool JugglerIsRunning( void );
+    bool JugglerIsRunning();
+
     ///Initilize things in a seperate thread
 #if __VJ_version > 2000003
-    void init( void );
+    void init();
 #elif __VJ_version == 2000003
-    void init( void * );
+    void init( void* );
 #endif
+
 private:
-    ves::xplorer::App* m_cfdApp;///< the app that is running
-    bool m_jugglerIsRunning;///< is juggler running
-    ves::xplorer::VjObsWrapper* m_vjObsWrapper;///< points to the wrapper to send to cfdapp
-    int m_argc;///<command line args
-    char** m_argv;///<command line args
+    ///The app that is running
+    ves::xplorer::App* m_cfdApp;
+
+    ///Is juggler running
+    bool m_jugglerIsRunning;
+
+    ///Points to the wrapper to send to cfdapp
+    ves::xplorer::VjObsWrapper* m_vjObsWrapper;
+
+    ///Command line args
+    int m_argc;
+
+    ///Command line args
+    char** m_argv;
+
 };
-}
-}
-#endif
+} //end xplorer
+} //end ves
+
+#endif //CFD_APPWRAPPER_H

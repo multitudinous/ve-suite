@@ -30,26 +30,30 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#include "AppWrapper.h"
 
+// --- VE-Suite Includes --- //
+#include "AppWrapper.h"
 #include "App.h"
 #include "VjObsWrapper.h"
 
+// --- VR Juggler Includes --- //
 #include <vrj/Kernel/Kernel.h>
 
 #include <vpr/System.h>
 
 #include <boost/bind.hpp>
 
+// --- C/C++ Includes --- //
 #include <iostream>
 
 using namespace ves::xplorer;
+
 ////////////////////////////////////////////////////////////////////////////////
 AppWrapper::AppWrapper( int argc,  char* argv[], VjObsWrapper* input ):
-        m_argc( argc ),
-        m_argv( argv ),
-        m_vjObsWrapper( input ),
-        m_jugglerIsRunning( false )
+    m_argc( argc ),
+    m_argv( argv ),
+    m_vjObsWrapper( input ),
+    m_jugglerIsRunning( false )
 {
     //Setup the juggler kernel now
     // block it on another thread
@@ -73,7 +77,7 @@ AppWrapper::AppWrapper( int argc,  char* argv[], VjObsWrapper* input ):
     m_jugglerIsRunning = true;*/
 }
 ////////////////////////////////////////////////////////////////////////////////
-AppWrapper::~AppWrapper( void )
+AppWrapper::~AppWrapper()
 {
     delete m_cfdApp;
     m_cfdApp = NULL;
@@ -83,13 +87,13 @@ AppWrapper::~AppWrapper( void )
     m_jugglerIsRunning = false;
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool AppWrapper::JugglerIsRunning( void )
+bool AppWrapper::JugglerIsRunning()
 {
     return m_jugglerIsRunning;
 }
 ////////////////////////////////////////////////////////////////////////////////
 #if __VJ_version > 2000003
-void AppWrapper::init( void )
+void AppWrapper::init()
 #elif __VJ_version == 2000003
 void AppWrapper::init( void* )
 #endif
