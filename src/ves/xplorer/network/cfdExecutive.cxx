@@ -368,11 +368,11 @@ void cfdExecutive::PreFrameUpdate( void )
     }
 
     //process the current command form the gui
-    if( ModelHandler::instance()->GetXMLCommand()->GetCommandName().compare( "wait" ) )
+    const CommandPtr tempCommand = ModelHandler::instance()->GetXMLCommand();
+    if( tempCommand->GetCommandName().compare( "wait" ) )
     {
         std::map< std::string, ves::xplorer::event::EventHandler* >::iterator
         currentEventHandler;
-        CommandPtr tempCommand = ModelHandler::instance()->GetXMLCommand();
         currentEventHandler = _eventHandlers.find( tempCommand->GetCommandName() );
         if( currentEventHandler != _eventHandlers.end() )
         {
@@ -384,7 +384,7 @@ void cfdExecutive::PreFrameUpdate( void )
     }
 
     ///Load the data from ce
-    std::string tempNetworkCommand = ui_i->GetStatusString();
+    const std::string tempNetworkCommand = ui_i->GetStatusString();
     bool updatePluginResults = false;
     if( tempNetworkCommand.compare( 0, 35, "VE-Suite Network Execution Complete" ) == 0 )
     {
@@ -412,12 +412,10 @@ void cfdExecutive::PreFrameUpdate( void )
            )
         {
             //Process a special plugin command
-            CommandPtr tempCommand =
-                ModelHandler::instance()->GetXMLCommand();
             //if( tempCommand )
             {
-                std::string cmdName = tempCommand->GetCommandName();
-                PluginBase* tempBase = pluginEHMap[ foundPlugin->first ][ cmdName ];
+                const std::string cmdName = tempCommand->GetCommandName();
+                PluginBase* const tempBase = pluginEHMap[ foundPlugin->first ][ cmdName ];
                 if( tempBase )
                 {
                     tempBase->SetCurrentCommand( tempCommand );

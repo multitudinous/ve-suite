@@ -453,11 +453,11 @@ void KeyboardMouse::ProcessNavigationEvents()
     ves::xplorer::scenegraph::DCS* const activeDCS =
         ves::xplorer::DeviceHandler::instance()->GetActiveDCS();
     //Get the node where are all the geometry is handled
-    const osg::Group* activeSwitchNode =
+    osg::Group* const activeSwitchNode =
         ves::xplorer::scenegraph::SceneManager::instance()->
             GetActiveSwitchNode();
     //Get the node where all the nav matrix's are handled
-    const ves::xplorer::scenegraph::DCS* cameraDCS =
+    ves::xplorer::scenegraph::DCS* const cameraDCS =
         ves::xplorer::scenegraph::SceneManager::instance()->
             GetActiveNavSwitchNode();
 
@@ -487,32 +487,6 @@ void KeyboardMouse::ProcessNavigationEvents()
 
     //Apply the delta transform at this new position
     newTransform = mDeltaTransform * newTransform;
-
-    /*
-    Convert head to world space to run intersection tests
-    gmtl::Matrix44d worldDCSInverse;
-    gmtl::invert( worldDCSInverse,
-                  ves::xplorer::scenegraph::SceneManager::instance()->GetActiveSwitchNode()->GetMat() );
-
-    gmtl::Matrix44d vjHeadMat;
-    vjHeadMat = worldDCSInverse*convertTo< double >( mHead->getData() );
-
-    osg::Vec3 headPositionInWorld = osg::Vec3( vjHeadMat[ 0 ][ 3 ] - ( 0.0345 * 3.2808399 ),
-                                               vjHeadMat[ 1 ][ 3 ],
-                                               vjHeadMat[ 2 ][ 3 ] );
-
-    vprDEBUG( vesDBG, 3 ) << "|\tKeyboardMouse::ProcessNavigation Head Position in World Space: "
-                          <<headPositionInWorld.x()<<","
-                          <<headPositionInWorld.y()<<","
-                          <<headPositionInWorld.z()<< std::endl << vprDEBUG_FLUSH;
-
-    if( CheckCollisionsWithHead( headPositionInWorld ) )
-    {
-        mDeltaTransform.mData[ 12 ] = -mDeltaTransform.mData[ 12 ];
-        mDeltaTransform.mData[ 13 ] = -mDeltaTransform.mData[ 13 ];
-        mDeltaTransform.mData[ 14 ] = -mDeltaTransform.mData[ 14 ];
-    }
-    */
 
     //Add back the center point position to the transform
     gmtl::Matrix44d posCenterPointMatrix =
