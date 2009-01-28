@@ -654,7 +654,7 @@ void CASIObj::prepStream() //get the string list of stream component names
         for( int i = 0; i < blockInputs.size(); i++)
         {
             blockInputsWithSubs.push_back( blockInputs[i] );
-            //prepBlockInputSubs( inputVarPath, blockInputs[i] );
+            prepBlockInputSubs( inputVarPath, blockInputs[i] );
 
         }
         return;
@@ -681,7 +681,7 @@ void CASIObj::prepStream() //get the string list of stream component names
         for( int i = 0; i < blockOutputs.size(); i++)
         {
             blockOutputsWithSubs.push_back( blockOutputs[i] );
-            //prepBlockOutputSubs( outputVarPath, blockOutputs[i] );
+            prepBlockOutputSubs( outputVarPath, blockOutputs[i] );
         }
 
 		return;
@@ -717,7 +717,7 @@ void CASIObj::prepStream() //get the string list of stream component names
 		thePath.Insert( slength, block );
         Happ::IHNodePtr node = nodeNav( ihRoot, thePath );
 
-        int size = getNumSubOutputVar( block );
+        int size = getChildNum(node);//getNumSubOutputVar( block );
         std::vector< CString > tempSubs;
         if( size > 0 )
         {
