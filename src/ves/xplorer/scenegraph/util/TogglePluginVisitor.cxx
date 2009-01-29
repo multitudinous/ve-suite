@@ -50,9 +50,10 @@ TogglePluginVisitor::TogglePluginVisitor( osg::Node* osg_node, bool toggle,
     mToggle( toggle )
 {
     //This enables the visitor to traverse "off" nodes
+    mToggle = false;
     setNodeMaskOverride( 1 );
     osg_node->accept( *this );
-    
+
     //Because we have hierarchy blocks we now need to enable all the parents
     //of the found node
     if( mNodeID != "ALL" )
@@ -62,7 +63,6 @@ TogglePluginVisitor::TogglePluginVisitor( osg::Node* osg_node, bool toggle,
             mNodePath.at( i )->setNodeMask( 1 );
         }
     }
-    
 }
 ////////////////////////////////////////////////////////////////////////////////
 TogglePluginVisitor::~TogglePluginVisitor()
@@ -83,6 +83,7 @@ void TogglePluginVisitor::apply( osg::Group& node )
         if( descriptorsList.at( i ) == "VE_XPLORER_PLUGIN_ID" )
         {
             isBasePlugin = true;
+            std::cout << descriptorsList.at( i+1 ) << std::endl;
             //If the id is the plugin we are after
             if( mNodeID ==  descriptorsList.at( i+1 ) )
             {
@@ -98,6 +99,7 @@ void TogglePluginVisitor::apply( osg::Group& node )
         {
             node.setNodeMask( 1 );
             mNodePath = _nodePath;
+            mToggle = true;
         }
         else
         {
@@ -113,5 +115,24 @@ void TogglePluginVisitor::apply( osg::Group& node )
     }
 
     osg::NodeVisitor::traverse( node );
+
+    if( !isBasePlugin )
+    {
+        return;
+    }
+
+    //To enable the objects below a hierarchy block we must know that its
+    //parent is toggled on and toggle this one on as well
+    if( mToggle )
+    {
+        node.setNodeMask( 1 );
+    }
+
+    //Once we reach to the active node on the way back up 
+    //turn the toggle flag false
+    if( isActiveNode )
+    {
+        mToggle = false;
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
