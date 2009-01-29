@@ -111,10 +111,15 @@ NetworkSystemView& NetworkSystemView::operator=( const NetworkSystemView& input 
 }
 
 ////////////////////////////////////////////////////////
-osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( std::string netId )
+osg::Group* NetworkSystemView::DrawNetwork( std::string netId )
 {
-    osg::ref_ptr<osg::Group> loadedModels = new osg::Group();
     SystemPtr mainSystem = systems[netId];
+    if( !mainSystem )
+    {
+        return 0;
+    }
+
+    osg::ref_ptr<osg::Group> loadedModels = new osg::Group();
     // now lets create a list of them
     for( size_t i = 0; i < mainSystem->GetModels().size(); ++i )
     {

@@ -478,7 +478,11 @@ bool XMLDataBufferEngine::RemoveModelFromSystem( ves::open::xml::model::ModelPtr
     {
         if( iter->second->RemoveModel( model ) )
         {
-            RemovemSystem( iter->second );
+            ves::open::xml::model::SystemPtr tempSys = model->GetSubSystem();
+            if( tempSys )
+            {
+                RemovemSystem( tempSys );
+            }
             return true;
         }
     }

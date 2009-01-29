@@ -64,8 +64,8 @@ public:
     {
         ;
     }
-    //osg::ref_ptr< osg::Group > DrawNetwork( void );
-	osg::ref_ptr< osg::Group > DrawNetwork( std::string netId );
+
+	osg::Group* DrawNetwork( std::string netId );
 	void LoadVESData( std::string xmlNetwork );
 	void ParseSystem( ves::open::xml::model::SystemPtr system );
 	std::map< std::string, ves::open::xml::model::SystemPtr > GetSystemsMap( void );

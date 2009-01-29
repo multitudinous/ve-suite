@@ -1701,8 +1701,8 @@ void Network::AddtoNetwork( UIPluginBase *cur_module, std::string cls_name )
     while( 1 )
     {
         id = wxNewId();
-        if( id > 9999 )
-            id = id % 9999;
+        //if( id > 9999 )
+        //    id = id % 9999;
 
         mit = modules.find( id );
         if( mit == modules.end() )

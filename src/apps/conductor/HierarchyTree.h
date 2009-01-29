@@ -175,6 +175,7 @@ class ModuleData : public wxTreeItemData
 {
 public:
     unsigned int modId;
+    std::string modelUUID;
     std::string modName;
     std::string systemId;
     std::string subSystemId;

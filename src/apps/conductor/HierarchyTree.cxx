@@ -176,6 +176,7 @@ void HierarchyTree::PopulateTree( )
             //generate module data
             ModuleData* modData = new ModuleData();
             modData->modId = iter->second->GetModelID();
+            modData->modelUUID = iter->second->GetID();
             modData->modName = iter->second->GetPluginName();
             modData->systemId = id;
             if( iter->second->GetSubSystem() )
@@ -242,6 +243,7 @@ void HierarchyTree::PopulateLevel( wxTreeItemId parentLeaf,
             //generate module data
             ModuleData* modData = new ModuleData();
             modData->modId = models[i]->GetModelID();
+            modData->modelUUID = models[i]->GetID();
             modData->modName = models[i]->GetPluginName();
             modData->systemId = id;
             if( models[i]->GetSubSystem() )
@@ -367,9 +369,13 @@ void HierarchyTree::OnRightClick( wxTreeEvent& event )
     //find selected item
     wxTreeItemId selected = event.GetItem();
     SelectItem( selected );
-    ModuleData* tempModData = static_cast< ModuleData* >( this->
+    ModuleData* tempModData = dynamic_cast< ModuleData* >( this->
         GetItemData( selected ));
 
+    if( !tempModData )
+    {
+        return;
+    }
     //activate correct network
     m_canvas->SetActiveNetwork( tempModData->systemId );
 
