@@ -83,7 +83,6 @@ void TogglePluginVisitor::apply( osg::Group& node )
         if( descriptorsList.at( i ) == "VE_XPLORER_PLUGIN_ID" )
         {
             isBasePlugin = true;
-            std::cout << descriptorsList.at( i+1 ) << std::endl;
             //If the id is the plugin we are after
             if( mNodeID ==  descriptorsList.at( i+1 ) )
             {
