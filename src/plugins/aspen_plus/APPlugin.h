@@ -52,7 +52,6 @@ public:
     APPlugin();
     virtual ~APPlugin();
     wxString GetConductorName();
-    bool mIsSheetOpen;
 
 protected:
     virtual wxMenu* GetPluginPopupMenu( wxMenu* baseMenu );
@@ -67,7 +66,7 @@ protected:
     void SaveSimulation( wxCommandEvent& event );
     void SaveAsSimulation( wxCommandEvent& event );
     void OnCloseAspenSimulation( wxCommandEvent& event );
-    
+    bool IsBKPOpen();
     wxMenu* mAspenMenu;
 
     DECLARE_EVENT_TABLE()

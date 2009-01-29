@@ -87,15 +87,34 @@ APPlugin::APPlugin() :
     iconFilename = "aspen";
     wxImage my_img( aspen );
     SetImage( my_img );
-    mIsSheetOpen = false;
 }
 ////////////////////////////////////////////////////////////////////////////////
 APPlugin::~APPlugin()
 {
-    if( mIsSheetOpen )
+    if( IsBKPOpen() )
     {
         CloseAspenSimulation();
     }
+}
+
+bool APPlugin::IsBKPOpen()
+{
+    if( mUserPrefBuffer )
+    {
+        CommandPtr aspenBKPFile = mUserPrefBuffer->
+            GetCommand( "Aspen_Plus_Preferences" );
+
+        if( aspenBKPFile->GetCommandName() != "NULL" )
+        {
+            DataValuePairPtr bkpPtr =
+            aspenBKPFile->GetDataValuePair( "BKPFileName" );
+            if( bkpPtr )
+            {
+                return true;
+            }
+        }
+    }
+    return false;
 }
 ////////////////////////////////////////////////////////////////////////////////
 wxString APPlugin::GetConductorName()
@@ -112,7 +131,7 @@ void APPlugin::OnOpen( wxCommandEvent& event )
     //wxFileDialog fd( m_canvas, wxT("Choose a file"), wxT(""), wxT(""), 
     //    extText, wxOPEN );
 
-    if( mIsSheetOpen )
+    if( IsBKPOpen() )
     {
         wxMessageDialog md( m_canvas, 
             wxT( "Simulation already open.\nClose it and open another?" ),
@@ -248,8 +267,6 @@ void APPlugin::OnOpen( wxCommandEvent& event )
     mAspenMenu->Enable( APPLUGIN_SAVE_SIMULATION, true );
     mAspenMenu->Enable( APPLUGIN_SAVEAS_SIMULATION, true );
 
-    mIsSheetOpen = true;
-
     ///Submit job to xplorer
     //wxCommandEvent event;
     //SubmitToServer( event );
@@ -329,15 +346,17 @@ void APPlugin::CloseAspenSimulation( void )
     wxCommandEvent event;
     event.SetId( UIPLUGINBASE_SET_UI_PLUGIN_NAME );
     GlobalNameUpdate( event );
-    mAspenMenu->Enable( APPLUGIN_CLOSE_ASPEN_SIMULATION, false );
-    mAspenMenu->Enable( APPLUGIN_SHOW_ASPEN_SIMULATION, false );
-    mAspenMenu->Enable( APPLUGIN_HIDE_ASPEN_SIMULATION, false );
-    mAspenMenu->Enable( APPLUGIN_RUN_ASPEN_NETWORK, false );
-    mAspenMenu->Enable( APPLUGIN_REINITIALIZE_ASPEN_SIMULATION, false );
-    mAspenMenu->Enable( APPLUGIN_STEP_ASPEN_NETWORK, false );
-    mAspenMenu->Enable( APPLUGIN_SAVE_SIMULATION, false );
-    mAspenMenu->Enable( APPLUGIN_SAVEAS_SIMULATION, false );
-    mIsSheetOpen = false;
+    if( mAspenMenu )
+    {
+        mAspenMenu->Enable( APPLUGIN_CLOSE_ASPEN_SIMULATION, false );
+        mAspenMenu->Enable( APPLUGIN_SHOW_ASPEN_SIMULATION, false );
+        mAspenMenu->Enable( APPLUGIN_HIDE_ASPEN_SIMULATION, false );
+        mAspenMenu->Enable( APPLUGIN_RUN_ASPEN_NETWORK, false );
+        mAspenMenu->Enable( APPLUGIN_REINITIALIZE_ASPEN_SIMULATION, false );
+        mAspenMenu->Enable( APPLUGIN_STEP_ASPEN_NETWORK, false );
+        mAspenMenu->Enable( APPLUGIN_SAVE_SIMULATION, false );
+        mAspenMenu->Enable( APPLUGIN_SAVEAS_SIMULATION, false );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void APPlugin::OnCloseAspenSimulation( wxCommandEvent& event )
