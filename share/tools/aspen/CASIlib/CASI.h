@@ -178,8 +178,8 @@ namespace CASI
 		void prepStream();
 		void prepBlock();
 		//void processBlocks();
-		void prepBlockInputSubs( CString, CString );
-		void prepBlockOutputSubs( CString, CString );
+		void prepBlockInputSubs( Happ::IHNodePtr, CString );
+		void prepBlockOutputSubs( Happ::IHNodePtr, CString );
 		std::set< CString > streamComps;
 		std::vector< CString > blockInputs;
 		std::vector< CString > blockOutputs;

@@ -127,7 +127,7 @@ namespace CASI
 
 		::CString NodeName=NodePath;
 		cnode = root;
-		
+
 		do 
 		{
 			len = NodeName.GetLength();

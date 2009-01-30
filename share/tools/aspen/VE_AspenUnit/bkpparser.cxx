@@ -342,6 +342,8 @@ void BKPParser::ParseFile( const char * bkpFile )
     //Loop for Hierarchy
     std::map< std::string,
         std::map< std::string, BlockInfo > >::iterator sheetIter;
+    try
+    {
     for (sheetIter = BlockInfoList.begin();
         sheetIter != BlockInfoList.end();
         ++sheetIter)
@@ -374,14 +376,18 @@ void BKPParser::ParseFile( const char * bkpFile )
         getline(inFile, temp);  //Block
         std::cout<<"Graphical Data Found"<<std::endl;
 
+        if( sheetIter->first == "A400.HV-475" )
+        {
+            std::cout << "tesT" << std::endl;
+        }
         //Read graphic blocks
         count =0;
         std::string id, version, icon, flag, section, at, labelAt, scaleMod;
         std::string annotation;
         while(count < (int)BlockInfoList[sheetIter->first].size())
         {
-            getline(inFile, id);
-            std::cout<<id<<std::endl;
+            std::getline(inFile, id);
+            //std::cout<<id<<std::endl;
             getline(inFile, version);
             getline(inFile, icon);
 
@@ -810,6 +816,13 @@ void BKPParser::ParseFile( const char * bkpFile )
         //    streamCount++;
         //    count = 0;
         //}
+    }
+    }
+    catch(std::exception& e)
+    {
+        std::ofstream exOut("ex_out.txt");
+        exOut << e.what() <<std::endl;
+        exOut.close();
     }
     //tester4.close();
     std::cout<<"Parsing Completed!"<<std::endl;

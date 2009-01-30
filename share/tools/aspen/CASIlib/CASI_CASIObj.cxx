@@ -615,7 +615,7 @@ void CASIObj::prepStream() //get the string list of stream component names
 	//	return getChildNum(node);
 	//}
 
-    int CASIObj::getNumSubOutputVar( CString name ) //get number of out variable
+    /*int CASIObj::getNumSubOutputVar( CString name ) //get number of out variable
 	{
 		CString varnodepath;
 
@@ -631,7 +631,7 @@ void CASIObj::prepStream() //get the string list of stream component names
 		node=nodeNav(ihRoot,  varnodepath);
 
 		return getChildNum(node);
-	}
+	}*/
 
     void CASIObj::processBlockInputs()
 	{
@@ -647,14 +647,14 @@ void CASIObj::prepStream() //get the string list of stream component names
 		blockInputs.clear();
 		getChildNames(node, blockInputs);
 		
-        slength = inputVarPath.GetLength();
-		inputVarPath.Insert(slength,".");
-		slength = inputVarPath.GetLength();
+        //slength = inputVarPath.GetLength();
+		//inputVarPath.Insert(slength,".");
+		//slength = inputVarPath.GetLength();
 
         for( int i = 0; i < blockInputs.size(); i++)
         {
             blockInputsWithSubs.push_back( blockInputs[i] );
-            prepBlockInputSubs( inputVarPath, blockInputs[i] );
+            prepBlockInputSubs( node, /*inputVarPath,*/ blockInputs[i] );
 
         }
         return;
@@ -674,25 +674,25 @@ void CASIObj::prepStream() //get the string list of stream component names
 		blockOutputs.clear();
 		getChildNames(node, blockOutputs);
 
-		slength = outputVarPath.GetLength();
-		outputVarPath.Insert(slength,".");
-		slength = outputVarPath.GetLength();
+		//slength = outputVarPath.GetLength();
+		//outputVarPath.Insert(slength,".");
+		//slength = outputVarPath.GetLength();
 
         for( int i = 0; i < blockOutputs.size(); i++)
         {
             blockOutputsWithSubs.push_back( blockOutputs[i] );
-            prepBlockOutputSubs( outputVarPath, blockOutputs[i] );
+            prepBlockOutputSubs( node, /*outputVarPath,*/ blockOutputs[i] );
         }
 
 		return;
 	}
 
-    void CASIObj::prepBlockInputSubs( CString path, CString block )
+    void CASIObj::prepBlockInputSubs( Happ::IHNodePtr parent, /*CString path,*/ CString block )
     {
-		int slength = path.GetLength();
-        CString thePath = path;
-		thePath.Insert( slength, block );
-        Happ::IHNodePtr node = nodeNav( ihRoot, thePath );
+		//int slength = path.GetLength();
+        //CString thePath = path;
+		//thePath.Insert( slength, block );
+        Happ::IHNodePtr node = nodeNav( parent, block );
 
         int size = getChildNum(node);// getNumSubInputVar( block );
         std::vector< CString > tempSubs;
@@ -704,18 +704,18 @@ void CASIObj::prepStream() //get the string list of stream component names
                 if( tempSubs[i] != "" )
                 {
                     blockInputsWithSubs.push_back( block + _T(".") + tempSubs[i] );
-                    prepBlockInputSubs( path, blockInputsWithSubs.back() );
+                    prepBlockInputSubs( node, /*path,*/ blockInputsWithSubs.back() );
                 }
             }
         }
     }
 
-    void CASIObj::prepBlockOutputSubs( CString path, CString block )
+    void CASIObj::prepBlockOutputSubs( Happ::IHNodePtr parent, /*CString path,*/ CString block )
     {
-		int slength = path.GetLength();
-        CString thePath = path;
-		thePath.Insert( slength, block );
-        Happ::IHNodePtr node = nodeNav( ihRoot, thePath );
+		//int slength = path.GetLength();
+        //CString thePath = path;
+		//thePath.Insert( slength, block );
+        Happ::IHNodePtr node = nodeNav( parent, block );
 
         int size = getChildNum(node);//getNumSubOutputVar( block );
         std::vector< CString > tempSubs;
@@ -727,7 +727,7 @@ void CASIObj::prepStream() //get the string list of stream component names
                 if( tempSubs[i] != "" )
                 {
                     blockOutputsWithSubs.push_back( block + _T(".") + tempSubs[i] );
-                    prepBlockOutputSubs( path, blockOutputsWithSubs.back() );
+                    prepBlockOutputSubs( node, /*path,*/ blockOutputsWithSubs.back() );
                 }
             }
         }
