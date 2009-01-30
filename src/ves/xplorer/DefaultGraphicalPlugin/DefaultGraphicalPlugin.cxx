@@ -53,7 +53,7 @@ DefaultGraphicalPlugin::DefaultGraphicalPlugin( void ) : PluginBase()
 ////////////////////////////////////////////////////////////////////////////////
 DefaultGraphicalPlugin::~DefaultGraphicalPlugin( void )
 {
-    std::cout << "DefaultGraphicalPlugin is deleted" << std::endl;
+    //std::cout << "DefaultGraphicalPlugin is deleted" << std::endl;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DefaultGraphicalPlugin::InitializeNode( ves::xplorer::scenegraph::DCS* veworldDCS )
