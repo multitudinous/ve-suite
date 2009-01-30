@@ -311,11 +311,9 @@ AppFrame::AppFrame( wxWindow * parent, wxWindowID id, const wxString& title )
     
     //create hierarchy page
     hierarchyTree->PopulateTree(); 
-    //XMLDataBufferEngine::instance()->GetTopSystemId() );
                                  
     //Process command line args to see if ves file needs to be loaded
     ProcessCommandLineArgs();
-	//AspenSimOpen = false;
     
     //Setup the orb timer
     mTimer.Start( 500 );
@@ -1318,12 +1316,10 @@ void AppFrame::LoadFromServer( wxCommandEvent& WXUNUSED( event ) )
 {
     std::string nw_str = serviceList->GetNetwork();
     EnableCEGUIMenuItems();
-    //network->Load( nw_str, false );
     canvas->PopulateNetworks( nw_str, false );
 
     //create hierarchy page
-    hierarchyTree->PopulateTree( );
-    //XMLDataBufferEngine::instance()->GetTopSystemId() );
+    hierarchyTree->PopulateTree();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::QueryFromServer( wxCommandEvent& WXUNUSED( event ) )
@@ -1344,12 +1340,10 @@ void AppFrame::QueryFromServer( wxCommandEvent& WXUNUSED( event ) )
     // If there is nothing on the CE
     if( !nw_str.empty() )
     {
-        //network->Load( nw_str, true );
         canvas->PopulateNetworks( nw_str );
 
         //create hierarchy page
         hierarchyTree->PopulateTree(); 
-        //XMLDataBufferEngine::instance()->GetTopSystemId() );
         ///Submit job to xplorer
         wxCommandEvent event;
         SubmitToServer( event );
@@ -1358,96 +1352,7 @@ void AppFrame::QueryFromServer( wxCommandEvent& WXUNUSED( event ) )
     {
         Log( "No ves network available\n" );
     }
-}/*
-////////////////////////////////////////////////////////////////////////////////
-void AppFrame::QueryNetwork( wxCommandEvent& WXUNUSED( event ) )
-{
-    Log( "Opening Simulation...\n" );
-    wxFileName bkpFileName;
-    wxString bkpext( "Aspen Plus ASCII files (*.bkp)|*.bkp", wxConvUTF8);
-    wxString apwext( "Aspen Plus Binary files (*.apw)|*.apw", wxConvUTF8);
-    wxString dynext( "Aspen Dynamics files (*.dynf)|*.dynf", wxConvUTF8);
-    wxString extText = bkpext + _("|") + apwext + _("|") + dynext;
-    wxFileDialog fd( this, wxT("Choose a file"), wxT(""), wxT(""), 
-        extText, wxOPEN );
-    //wxTextEntryDialog newDataSetName( this,
-    //wxString( "Enter the prefix for *.bkp filename:", wxConvUTF8 ),
-    //wxString( "Open BKP Filename", wxConvUTF8 ),
-    //wxString( "", wxConvUTF8 ), wxOK | wxCANCEL );
-
-    //if( newDataSetName.ShowModal() != wxID_OK )
-    if( fd.ShowModal() != wxID_OK )
-    {
-        return;
-    }
-
-    bkpFileName.ClearExt();
-    //bkpFileName.SetName( newDataSetName.GetValue() );
-    bkpFileName.SetName( fd.GetFilename() );
-    //bkpFileName.SetExt( wxString( "bkp", wxConvUTF8 ) );
-
-    CommandPtr returnState ( new Command() );
-    returnState->SetCommandName( "getNetwork" );
-    DataValuePairPtr data( new DataValuePair() );
-    data->SetData( "NetworkQuery", "getNetwork" );
-    returnState->AddDataValuePair( data );
-
-    data = DataValuePairPtr( new DataValuePair() );
-    data->SetData( "BKPFileName",  ConvertUnicode( bkpFileName.GetFullName().c_str() ) );
-    returnState->AddDataValuePair( data );
-
-    std::vector< std::pair< XMLObjectPtr, std::string > > nodes;
-    nodes.push_back( std::pair< XMLObjectPtr, std::string >( returnState, "vecommand" ) );
-    XMLReaderWriter commandWriter;
-    std::string status = "returnString";
-    commandWriter.UseStandaloneDOMDocumentManager();
-    commandWriter.WriteXMLDocument( nodes, status, "Command" );
-    //Get results
-    std::string nw_str = serviceList->Query( status );
-
-    // If there is nothing on the CE
-    if( nw_str.compare("BKPDNE") == 0 )
-    {
-        Log( "BKP File Does NOT exist.\n" );
-        return;
-    }    
-    else if( nw_str.compare("APWDNE") == 0 )
-    {
-        Log( "APW File Does NOT exist.\n" );
-        return;
-    }
-
-    Network * network = canvas->GetActiveNetwork();
-
-    //if( network->modules.empty() )
-    //{
-        //network->Load( nw_str, true );
-        canvas->PopulateNetworks( nw_str );
-
-        //create hierarchy page
-        hierarchyTree->PopulateTree();
-        //XMLDataBufferEngine::instance()->GetTopSystemId() );
-
-        Log( "Simulation Opened.\n" );
-        ///
-        CommandPtr aspenBKPFile( new Command() );
-        aspenBKPFile->SetCommandName( "Aspen_Plus_Preferences" );
-        data = DataValuePairPtr( new DataValuePair() );
-        data->SetData( "BKPFileName",
-                       ConvertUnicode( bkpFileName.GetFullName().c_str() ) );
-        aspenBKPFile->AddDataValuePair( data );
-        UserPreferencesDataBuffer::instance()->
-        SetCommand( "Aspen_Plus_Preferences", aspenBKPFile );
-        ///Submit job to xplorer
-        wxCommandEvent event;
-        SubmitToServer( event );
-		AspenSimOpen = true;
-    //}
-    //else
-    //{
-    //    Log( "Simulation is already open.\n" );
-    //}
-}*/
+}
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::OpenSimulation( wxString simName )
 {
@@ -1764,37 +1669,41 @@ void AppFrame::SaveAsSimulation( wxCommandEvent& WXUNUSED( event ) )
 ///////////////////////////////////////////////////////////////////////////
 void AppFrame::NewCanvas( wxCommandEvent& WXUNUSED( event ) )
 {
-	//if(AspenSimOpen)
-	//{
-	//	CloseAspenSimulation();
-	//}
 	newCanvas = true;
     mVESFileName.Clear();
 
-    //Reset Xplorer
-    //logo
-    //DataValuePairPtr dataValuePair( new DataValuePair( std::string( "STRING" ) ) );
-    //CommandPtr veCommand( new Command() );
-    //veCommand->SetCommandName( std::string( "CHANGE_XPLORER_VIEW" ) );
-    //dataValuePair->SetData( "CHANGE_XPLORER_VIEW", "CHANGE_XPLORER_VIEW_LOGO" );
-    //veCommand->AddDataValuePair( dataValuePair );
-    //serviceList->SendCommandStringToXplorer( veCommand );
+    {
+        //Reset Xplorer logo
+        DataValuePairPtr 
+            dataValuePair( new DataValuePair( std::string( "STRING" ) ) );
+        CommandPtr veCommand( new Command() );
+        veCommand->SetCommandName( std::string( "CHANGE_XPLORER_VIEW" ) );
+        dataValuePair->
+            SetData( "CHANGE_XPLORER_VIEW", "CHANGE_XPLORER_VIEW_LOGO" );
+        veCommand->AddDataValuePair( dataValuePair );
+        serviceList->SendCommandStringToXplorer( veCommand );
+    }
 
-    //color
-    //std::vector< double > xplorerColor;
-    //xplorerColor.push_back( 0.0 );
-    //xplorerColor.push_back( 0.0 );
-    //xplorerColor.push_back( 0.0 );
-    //xplorerColor.push_back( 1.0 );
-
-    // Create the command and data value pairs
-    //DataValuePairPtr dataValuePair2( new DataValuePair( std::string( "STRING" ) ) );
-    //dataValuePair2->SetData( std::string( "Background Color" ), xplorerColor );
-    //CommandPtr veCommand2( new Command() );
-    //veCommand2->SetCommandName( std::string( "CHANGE_BACKGROUND_COLOR" ) );
-    //veCommand2->AddDataValuePair( dataValuePair2 );
-    //serviceList->SendCommandStringToXplorer( veCommand2 );
-    //UserPreferencesDataBuffer::instance()->SetCommand( "CHANGE_BACKGROUND_COLOR", veCommand2 );
+    {
+        //color
+        std::vector< double > xplorerColor;
+        xplorerColor.push_back( 0.0 );
+        xplorerColor.push_back( 0.0 );
+        xplorerColor.push_back( 0.0 );
+        xplorerColor.push_back( 1.0 );
+        
+        // Create the command and data value pairs
+        DataValuePairPtr 
+            dataValuePair2( new DataValuePair( std::string( "STRING" ) ) );
+        dataValuePair2->
+            SetData( std::string( "Background Color" ), xplorerColor );
+        CommandPtr veCommand2( new Command() );
+        veCommand2->SetCommandName( std::string( "CHANGE_BACKGROUND_COLOR" ) );
+        veCommand2->AddDataValuePair( dataValuePair2 );
+        serviceList->SendCommandStringToXplorer( veCommand2 );
+        UserPreferencesDataBuffer::instance()->
+            SetCommand( "CHANGE_BACKGROUND_COLOR", veCommand2 );
+    }
 
     //clear the old networks so that all the event handlers are removed
     //before cleaning up the rest of the classes
@@ -2707,7 +2616,7 @@ void AppFrame::LoadNewNetwork( wxUpdateUIEvent& WXUNUSED( event )  )
 
         ///This code will be moved in the future. It is Aspen specific code.
         CommandPtr aspenBKPFile = UserPreferencesDataBuffer::instance()->
-        GetCommand( "Aspen_Plus_Preferences" );
+            GetCommand( "Aspen_Plus_Preferences" );
         
         if( aspenBKPFile->GetCommandName() != "NULL" )
         {
@@ -2725,6 +2634,45 @@ void AppFrame::LoadNewNetwork( wxUpdateUIEvent& WXUNUSED( event )  )
         {
             recordScenes->_buildPage();
         }
+    }
+    
+    //Now manage the data that is user specific to this ves file
+    UserPtr userInfo = 
+        XMLDataBufferEngine::instance()->GetXMLUserDataObject( "Network" );
+    
+    //If there was no color data in the ves file
+    if( !userInfo->GetUserStateInfo() )
+    {
+        ///Color vector
+        std::vector<double> backgroundColor;
+        backgroundColor.clear();
+        backgroundColor.push_back( 0.0f );
+        backgroundColor.push_back( 0.0f );
+        backgroundColor.push_back( 0.0f );
+        backgroundColor.push_back( 1.0f );
+        
+        DataValuePairPtr dataValuePair( new DataValuePair() );
+        dataValuePair->SetData( std::string( "Background Color" ), backgroundColor );
+        CommandPtr veCommand( new Command() );
+        veCommand->SetCommandName( std::string( "CHANGE_BACKGROUND_COLOR" ) );
+        veCommand->AddDataValuePair( dataValuePair );
+        UserPreferencesDataBuffer::instance()->
+            SetCommand( std::string( "CHANGE_BACKGROUND_COLOR" ), veCommand );
+    }
+   
+    {
+        // Create the command and data value pairs
+        CommandPtr tempCommand = UserPreferencesDataBuffer::instance()->
+            GetCommand( "CHANGE_BACKGROUND_COLOR" );
+        
+        serviceList->SendCommandStringToXplorer( tempCommand );
+        
+        // Create the command and data value pairs
+        tempCommand = 
+            UserPreferencesDataBuffer::instance()->
+            GetCommand( "Navigation_Data" );
+        
+        serviceList->SendCommandStringToXplorer( tempCommand );
     }
     
     //Send the new commands after the new data is loaded not before

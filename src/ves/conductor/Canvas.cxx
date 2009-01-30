@@ -198,40 +198,7 @@ void Canvas::PopulateNetworks( std::string xmlNetwork, bool clearXplorer )
     }
     
     SetActiveNetwork( mDataBufferEngine->GetTopSystemId() );
-    
-    //Now manage the data that is user specific to this ves file
-    UserPtr userInfo = mDataBufferEngine->GetXMLUserDataObject( "Network" );
-    
-    if( !userInfo->GetUserStateInfo() )
-    {
-        ///Color vector
-        std::vector<double> backgroundColor;
-        backgroundColor.clear();
-        backgroundColor.push_back( 0.0f );
-        backgroundColor.push_back( 0.0f );
-        backgroundColor.push_back( 0.0f );
-        backgroundColor.push_back( 1.0f );
-        
-        DataValuePairPtr dataValuePair( new DataValuePair() );
-        dataValuePair->SetData( std::string( "Background Color" ), backgroundColor );
-        CommandPtr veCommand( new Command() );
-        veCommand->SetCommandName( std::string( "CHANGE_BACKGROUND_COLOR" ) );
-        veCommand->AddDataValuePair( dataValuePair );
-        mUserPrefBuffer->
-            SetCommand( std::string( "CHANGE_BACKGROUND_COLOR" ), veCommand );
-    }
-    // Create the command and data value pairs
-    CommandPtr tempCommand = mUserPrefBuffer->
-        GetCommand( "CHANGE_BACKGROUND_COLOR" );
-    
-    mServiceList->SendCommandStringToXplorer( tempCommand );
-    
-    // Create the command and data value pairs
-    tempCommand = 
-        mUserPrefBuffer->GetCommand( "Navigation_Data" );
 
-    mServiceList->SendCommandStringToXplorer( tempCommand );
-    
     //Finally tell the canvas to redraw
     Refresh( true );
 }

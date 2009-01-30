@@ -201,9 +201,9 @@ void MainToolBar::CreateMainToolBar()
     SetToolBitmapSize( wxSize( 32, 32 ) );
     SetToolSeparation( 10 );
 
-    AddTool( wxID_NEW, _( "" ), mToolbarBitmaps[ "newBitmap" ], _( "New" ), wxITEM_NORMAL );
-    AddTool( wxID_OPEN, _( "" ), mToolbarBitmaps[ "openBitmap" ], _( "Open" ), wxITEM_NORMAL );
-    AddTool( wxID_SAVE, _( "" ), mToolbarBitmaps[ "saveBitmap" ], _( "Save" ), wxITEM_NORMAL );
+    AddTool( MAINTOOLBAR_NEW, _( "" ), mToolbarBitmaps[ "newBitmap" ], _( "New" ), wxITEM_NORMAL );
+    AddTool( MAINTOOLBAR_OPEN, _( "" ), mToolbarBitmaps[ "openBitmap" ], _( "Open" ), wxITEM_NORMAL );
+    AddTool( MAINTOOLBAR_SAVE, _( "" ), mToolbarBitmaps[ "saveBitmap" ], _( "Save" ), wxITEM_NORMAL );
     AddSeparator();
 
     AddTool( MAINTOOLBAR_SELECTION, _( "" ), mToolbarBitmaps[ "cursorBitmap" ], _( "Selection" ), wxITEM_RADIO );
