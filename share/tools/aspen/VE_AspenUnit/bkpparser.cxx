@@ -1,5 +1,4 @@
 #include "stdafx.h"
-//#include <gdiplus.h>
 #include "BKPParser.h"
 #include <iostream>
 #include <fstream>
@@ -18,8 +17,6 @@
 
 #include "AspenPlusLUT.h"
 #include "AspenIconData.h"
-
-//using namespace Gdiplus;
 
 ///////////////////////////////////////////////////////////////////////////////
 BKPParser::BKPParser()
@@ -197,12 +194,7 @@ void BKPParser::ParseFile( const char * bkpFile )
     //make sure it is a valid file
     if(!inFile.is_open())
 	{
-        std::cout<<"Error while opening File"<<std::endl;
         return;
-    }
-    else 
-    {
-        std::cout<<"File was opened successfully"<<std::endl;
     }
 	
 	//
@@ -247,13 +239,10 @@ void BKPParser::ParseFile( const char * bkpFile )
     //get number of components/blocks
     getline(inFile, temp);
     int numComponents = atoi(temp.c_str());
-    std::cout<<"Comp#: "<<numComponents<<std::endl;
 
     //
     // Block Info
     //
-
-    std::cout<<"Acquired Graphics Information"<<std::endl;
 
     //Get block id and type
     int count = 0;
@@ -304,26 +293,20 @@ void BKPParser::ParseFile( const char * bkpFile )
         }
         count++;
     }
-    //hierfile.close();
-    std::cout<<BlockInfoList.size()<<std::endl;
-    std::cout<<"Aqcuired type/id list"<<std::endl;
 
     //The following block contains the network data
     std::streampos beforeNetwork;
     beforeNetwork = inFile.tellg();
-    std::cout<<beforeNetwork<<std::endl;
 
     //find the graphics section
     while(temp.compare(0, 16, " GRAPHICS_BACKUP", 0, 16)!= 0 && !inFile.eof())
     {
         getline(inFile, temp);
     }
-    std::cout<<"Found Graphics Section"<<std::endl;
    
     //Now we have passed the network data so record it
     std::streampos afterNetwork;
     afterNetwork = inFile.tellg();
-    std::cout<<afterNetwork<<std::endl;
     //go back to the beginning of the network
     inFile.seekg( beforeNetwork );
     // allocate memory:
@@ -344,7 +327,7 @@ void BKPParser::ParseFile( const char * bkpFile )
         std::map< std::string, BlockInfo > >::iterator sheetIter;
     try
     {
-    for (sheetIter = BlockInfoList.begin();
+    for(sheetIter = BlockInfoList.begin();
         sheetIter != BlockInfoList.end();
         ++sheetIter)
     {
@@ -374,12 +357,7 @@ void BKPParser::ParseFile( const char * bkpFile )
         getline(inFile, temp);  //#PFS Objects
         getline(inFile, temp);  //Size
         getline(inFile, temp);  //Block
-        std::cout<<"Graphical Data Found"<<std::endl;
 
-        if( sheetIter->first == "A400.HV-475" )
-        {
-            std::cout << "tesT" << std::endl;
-        }
         //Read graphic blocks
         count =0;
         std::string id, version, icon, flag, section, at, labelAt, scaleMod;
@@ -387,7 +365,6 @@ void BKPParser::ParseFile( const char * bkpFile )
         while(count < (int)BlockInfoList[sheetIter->first].size())
         {
             std::getline(inFile, id);
-            //std::cout<<id<<std::endl;
             getline(inFile, version);
             getline(inFile, icon);
 
@@ -572,7 +549,6 @@ void BKPParser::ParseFile( const char * bkpFile )
                 BlockInfoList[sheetIter->first][tempBlockId].scale) );
             count++;
         }
-        std::cout<<"Finished Reading Block Info"<<std::endl;
 
         //locate minimum X - used for normalization
         float minX = 10000;
@@ -596,7 +572,6 @@ void BKPParser::ParseFile( const char * bkpFile )
         //Stream Info
         //
 
-        std::cout<<"Begin Reading Streams"<<std::endl;
         //Gather stream information
         std::string streamId, streamVersion, streamFlag, streamType;
         std::string coordinates, tempR, tempR2;
@@ -665,11 +640,7 @@ void BKPParser::ParseFile( const char * bkpFile )
                                     tempXY.value.push_back( tempCoords );
                                 }
                             }
-                            else
-                            {
-                                std::cout << "ERROR: "<<
-                                    routeCount << std::endl;
-                            }
+
                             getline( inFile, temp );
                         }
                     }
@@ -727,8 +698,6 @@ void BKPParser::ParseFile( const char * bkpFile )
             //tester2 << std::endl;
         }
 
-        std::cout << "Finished Reading Streams" << std::endl;
-
         //
         //NORMALIZE FOR WX
         //
@@ -784,38 +753,6 @@ void BKPParser::ParseFile( const char * bkpFile )
         //tester.close();
 
 
-        //
-        // Log
-        //
-        //create a log file
-        //std::cout<<"Writing log."<<std::endl;
-        //count = 0;
-        //int streamCount = 0;
-        //outFile << BlockInfoList[sheetIter->first].size()<<std::endl;
-        //while (count < (int)BlockInfoList[sheetIter->first].size())
-        //{
-        //    outFile << xCoords[count];
-        //    outFile << "\t";
-        //    outFile << yCoords[count];
-        //    outFile << "\n";
-        //    count ++;
-        //}
-        //count=0;
-        //outFile << streamCoordList.size()<<std::endl;
-        //while(streamCount < (int)streamCoordList.size())
-        //{
-        //    outFile<<streamCoordList[streamCount].value.size()<<std::endl;
-        //    while(count < (int)streamCoordList[streamCount].value.size())
-        //    {	
-        //        outFile << streamCoordList[streamCount].value[count].first;
-        //        outFile << "\t";
-        //        outFile << streamCoordList[streamCount].value[count].second;
-        //        outFile << "\n";
-        //        count++;
-        //    }
-        //    streamCount++;
-        //    count = 0;
-        //}
     }
     }
     catch(std::exception& e)
@@ -825,7 +762,6 @@ void BKPParser::ParseFile( const char * bkpFile )
         exOut.close();
     }
     //tester4.close();
-    std::cout<<"Parsing Completed!"<<std::endl;
     inFile.close();
     //outFile.close();
     return;
@@ -1745,14 +1681,11 @@ std::string BKPParser::GetInputModuleParamProperties(std::string modname,
         aspendoc->getBlockByName(CString(modname.c_str()));
     cur_block.processBlockInputs();
 
-    std::cout<<modname<<std::endl;
-    std::cout<<paramName<<std::endl;
     unsigned int j;
 
     ves::open::xml::CommandPtr properties( new ves::open::xml::Command() );
     const int propSize = 24;
     properties->SetCommandName((modname+paramName).c_str());
-    std::cout<<(modname+paramName).c_str()<<std::endl;
 
     ves::open::xml::DataValuePairPtr Props[propSize];
     for (j=0; j<propSize; j++)
@@ -1896,14 +1829,11 @@ std::string BKPParser::GetOutputModuleParamProperties(std::string modname,
         aspendoc->getBlockByName(CString(modname.c_str()));
     cur_block.processBlockOutputs();
 
-    std::cout<<modname<<std::endl;
-    std::cout<<paramName<<std::endl;
     unsigned int j;
 
     ves::open::xml::CommandPtr properties( new ves::open::xml::Command() );
     const int propSize=23;
     properties->SetCommandName((modname+paramName).c_str());
-    std::cout<<(modname+paramName).c_str()<<std::endl;
 
     ves::open::xml::DataValuePairPtr Props[propSize];
     for (j=0; j<propSize; j++)
@@ -2041,14 +1971,11 @@ std::string BKPParser::GetStreamInputModuleParamProperties(
 {
     CASI::CASIObj cur_stream =
         aspendoc->getStreamByName( CString(modname.c_str( ) ) );
-    std::cout<<modname<<std::endl;
-    std::cout<<paramName<<std::endl;
     unsigned int j;
 
     ves::open::xml::CommandPtr properties( new ves::open::xml::Command() );
     const int propSize=23;
     properties->SetCommandName((modname+paramName).c_str());
-    std::cout<<(modname+paramName).c_str()<<std::endl;
 
     ves::open::xml::DataValuePairPtr Props[propSize];
     for (j=0; j<propSize; j++)
@@ -2183,15 +2110,12 @@ std::string BKPParser::GetStreamOutputModuleParamProperties(
 {
     CASI::CASIObj cur_stream =
         aspendoc->getStreamByName( CString(modname.c_str( ) ) );
-    std::cout<<modname<<std::endl;
-    std::cout<<paramName<<std::endl;
     unsigned int j;
 
     ves::open::xml::CommandPtr
         properties( new ves::open::xml::Command() );
     const int propSize=23;
     properties->SetCommandName( ( modname+paramName ).c_str( ) );
-    std::cout<<(modname+paramName).c_str()<<std::endl;
 
     ves::open::xml::DataValuePairPtr Props[propSize];
     for (j = 0; j < propSize; j++)
