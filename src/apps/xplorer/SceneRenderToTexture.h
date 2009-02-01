@@ -110,6 +110,8 @@ public:
     ///NOTE: Must have an active context to call
     void UpdateRTTQuadAndViewport();
     
+    void ConfigureRTTCameras();
+
     ///Take a high resolution screen capture of the render window for SceneView
     ///\param root The osg::Group to be rendered
     ///\param sv The osgUtil::SceneView to provide the context for the render

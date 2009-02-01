@@ -51,6 +51,7 @@
 #include <vrj/Draw/OGL/GlDrawManager.h>
 
 #include <gmtl/gmtl.h>
+#include <gmtl/Misc/MatrixConvert.h>
 
 // --- OSG Includes --- //
 #include <osg/Switch>
@@ -115,7 +116,7 @@ void SceneRenderToTexture::InitScene( osg::Camera* const sceneViewCamera )
               << std::endl;
 
     size_t numViewports =
-        vrj::GlDrawManager::instance()-> currentUserData()->
+        vrj::GlDrawManager::instance()->currentUserData()->
             getGlWindow()->getDisplay()->getNumViewports();
 
     std::cout << "|\tNumber of Viewports: " << numViewports << std::endl;
@@ -183,11 +184,11 @@ void SceneRenderToTexture::InitScene( osg::Camera* const sceneViewCamera )
 osg::Camera* SceneRenderToTexture::CreatePipelineCamera( osg::Viewport* viewport )
 {
     osg::Camera* tempCamera = new osg::Camera();
-    tempCamera->setReferenceFrame( osg::Camera::RELATIVE_RF );
+    tempCamera->setReferenceFrame( osg::Camera::ABSOLUTE_RF );
     tempCamera->setRenderOrder( osg::Camera::PRE_RENDER, 0 );
     tempCamera->setClearMask( 
         GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );// | GL_STENCIL_BUFFER_BIT );
-    tempCamera->setClearColor( osg::Vec4( 0.0, 0.0, 0.0, 1.0 ) );
+    tempCamera->setClearColor( osg::Vec4( 1.0, 0.0, 0.0, 1.0 ) );
     tempCamera->setRenderTargetImplementation(
         osg::Camera::FRAME_BUFFER_OBJECT );
     tempCamera->setViewport( viewport );
@@ -300,7 +301,7 @@ osg::Camera* SceneRenderToTexture::CreatePipelineCamera( osg::Viewport* viewport
     tempCamera->addChild( mRootGroup.get() );
 
     //Turn node off
-    tempCamera->setNodeMask( 0 );
+    tempCamera->setNodeMask( 1 );
     
     return tempCamera;
 }
@@ -560,7 +561,7 @@ rtt::Processor* SceneRenderToTexture::CreatePipelineProcessor(
     */
 
     //Turn node off
-    tempProcessor->setNodeMask( 0 );
+    tempProcessor->setNodeMask( 1 );
 
     return tempProcessor;
 
@@ -984,9 +985,9 @@ void SceneRenderToTexture::UpdateRTTQuadAndViewport()
     }
 
     //Remove the camera dcs transform from the quad vertices
-    (*mQuadTransform)->setMatrix( osg::Matrixd( 
-        ves::xplorer::scenegraph::SceneManager::instance()->
-        GetInvertedWorldDCS().mData ) );
+    //(*mQuadTransform)->setMatrix( osg::Matrixd( 
+    //    ves::xplorer::scenegraph::SceneManager::instance()->
+    //    GetInvertedWorldDCS().mData ) );
 
 #if __VJ_version >= 2003000
     vrj::ViewportPtr viewport = vrj::GlDrawManager::instance()->
@@ -996,16 +997,50 @@ void SceneRenderToTexture::UpdateRTTQuadAndViewport()
         currentUserData()->getViewport();
 #endif
 
+
     //Turn off previous pipeline
-    (*mActivePipeline)->first->setNodeMask( 0 );
-    (*mActivePipeline)->second->setNodeMask( 0 );
+    //(*mActivePipeline)->first->setNodeMask( 1 );
+    //(*mActivePipeline)->second->setNodeMask( 1 );
     
     PipelineMap::iterator itr = (*mPipelines).find( viewport );
     if( itr != (*mPipelines).end() )
     {
         (*mActivePipeline) = &(itr->second);
-        (*mActivePipeline)->first->setNodeMask( 1 );
-        (*mActivePipeline)->second->setNodeMask( 1 );
+        //(*mActivePipeline)->first->setNodeMask( 1 );
+        //(*mActivePipeline)->second->setNodeMask( 1 );
+        //(*mActivePipeline)->first->setViewMatrix( osg::Matrix::identity() );
+        //(*mActivePipeline)->first->setProjectionMatrix( osg::Matrix::identity() );
+        
+        
+        //Get the frustrum
+#if __VJ_version >= 2003000
+        vrj::ProjectionPtr project = vrj::GlDrawManager::instance()->
+            currentUserData()->getProjection();
+#else
+        vrj::Projection* project = vrj::GlDrawManager::instance()->
+            currentUserData()->getProjection();
+#endif
+
+        vrj::Frustum frustum = project->getFrustum();
+        (*mActivePipeline)->first->setProjectionMatrixAsFrustum(
+            frustum[ vrj::Frustum::VJ_LEFT ], frustum[ vrj::Frustum::VJ_RIGHT ],
+            frustum[ vrj::Frustum::VJ_BOTTOM ], frustum[ vrj::Frustum::VJ_TOP ],
+            frustum[ vrj::Frustum::VJ_NEAR ], frustum[ vrj::Frustum::VJ_FAR ] );
+        
+        gmtl::Vec3f x_axis( 1.0f, 0.0f, 0.0f );
+        gmtl::Matrix44f mZUp = gmtl::makeRot< gmtl::Matrix44f >( 
+            gmtl::AxisAnglef( gmtl::Math::deg2Rad( -90.0f ), x_axis ) );
+        gmtl::Matrix44f _vjMatrixLeft( project->getViewMatrix() );
+        gmtl::Matrix44f mNavPosition = 
+        gmtl::convertTo< float >( 
+             ves::xplorer::scenegraph::SceneManager::instance()->
+             GetActiveNavSwitchNode()->GetMat() );
+        
+        //Transform into z-up land
+        _vjMatrixLeft = _vjMatrixLeft * mZUp * mNavPosition;
+        osg::ref_ptr< osg::RefMatrix > osg_proj_xform_mat = new osg::RefMatrix();
+        osg_proj_xform_mat->set( _vjMatrixLeft.mData );
+        (*mActivePipeline)->first->setViewMatrix( *(osg_proj_xform_mat.get()) );
     }
     else
     {
@@ -1342,3 +1377,68 @@ void SceneRenderToTexture::WriteImageFileForWeb(
     osgDB::writeImageFile( *( shot.get() ), filename );
 }
 ////////////////////////////////////////////////////////////////////////////////
+void SceneRenderToTexture::ConfigureRTTCameras()
+{
+    if( !(*mCamerasConfigured) )
+    {
+        return;
+    }
+
+    size_t numViewports =
+    vrj::GlDrawManager::instance()->currentUserData()->
+        getGlWindow()->getDisplay()->getNumViewports();
+
+    vrj::DisplayPtr disp = vrj::GlDrawManager::instance()->
+        currentUserData()->getGlWindow()->getDisplay();
+    
+    vrj::GlWindowPtr win = vrj::GlDrawManager::instance()->
+        currentUserData()->getGlWindow();
+    
+    // --- FOR EACH VIEWPORT -- //
+    for ( size_t i = 0; i < numViewports; ++i )
+    {
+#if __VJ_version >= 2003000
+        vrj::ViewportPtr viewport = disp->getViewport( i );
+#else
+        vrj::Viewport* viewport = disp->getViewport( i );
+#endif
+        
+        // Should viewport be rendered???
+        if( viewport->isActive() )
+        {
+            // The view for the active viewport
+            vrj::Viewport::View  view;                      
+            view = viewport->getView();
+            
+            // Set the glViewport to draw within
+            float vp_ox, vp_oy, vp_sx, vp_sy; // Viewport origin and size
+            viewport->getOriginAndSize(vp_ox, vp_oy, vp_sx, vp_sy);
+            win->setViewport(vp_ox, vp_oy, vp_sx, vp_sy);
+            
+            // Set user information
+            vrj::GlDrawManager::instance()->currentUserData()->setUser(viewport->getUser());       // Set user data
+            vrj::GlDrawManager::instance()->currentUserData()->setViewport(viewport);              // Set the viewport
+            
+            // ---- SURFACE & Simulator --- //
+            {
+                if ((vrj::Viewport::STEREO == view) || (vrj::Viewport::LEFT_EYE == view))      // LEFT EYE
+                {
+                    win->setViewBuffer(vrj::Viewport::LEFT_EYE);
+                    win->setProjection(viewport->getLeftProj());
+                    vrj::GlDrawManager::instance()->currentUserData()->setProjection(viewport->getLeftProj());
+                    
+                    //update rtt camera
+                    UpdateRTTQuadAndViewport();
+                }
+                if ((vrj::Viewport::STEREO == view) || (vrj::Viewport::RIGHT_EYE == view))    // RIGHT EYE
+                {
+                    win->setViewBuffer(vrj::Viewport::RIGHT_EYE);
+                    win->setProjection(viewport->getRightProj());
+                    vrj::GlDrawManager::instance()->currentUserData()->setProjection(viewport->getRightProj());
+                    //update rtt camera
+                    UpdateRTTQuadAndViewport();
+                }
+            }
+        }  // should viewport be rendered
+    }     // for each viewport
+}

@@ -209,6 +209,10 @@ void App::contextInit()
         {
             new_sv->setSceneData( getScene() );
         }
+        else
+        {
+            *mAlreadyRendered = false;
+        }
     }
 
     ( *sceneViewer ) = new_sv;
@@ -578,6 +582,7 @@ void App::contextPreDraw()
                 changed = true;
             }
         }
+        *mAlreadyRendered = false;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -585,6 +590,14 @@ void App::contextPreDraw()
 ///so setting variables should not be done here
 void App::draw()
 {
+    if( mRTT )
+    {
+        if( *mAlreadyRendered )
+        {
+            return;
+        }
+    }
+
     //std::cout << "----------Draw-----------" << std::endl;
     VPR_PROFILE_GUARD_HISTORY( "App::draw", 20 );
     glClear( GL_DEPTH_BUFFER_BIT );
@@ -636,7 +649,14 @@ void App::draw()
     const unsigned int y_size =
         static_cast< unsigned int >( vp_sy * static_cast< float >( w_height ) );
 
-    sv->setViewport(  ll_x, ll_y, x_size, y_size  );
+    if( mRTT )
+    {
+        sv->setViewport(  0, 0, w_width, w_height  );
+    }
+    else
+    {
+        sv->setViewport(  ll_x, ll_y, x_size, y_size  );
+    }
 
     //Get the frustrum
 #if __VJ_version >= 2003000
@@ -644,11 +664,18 @@ void App::draw()
 #else
     vrj::Projection* project = user_data->getProjection();
 #endif
-    vrj::Frustum frustum = project->getFrustum();
-    sv->setProjectionMatrixAsFrustum(
-        frustum[ vrj::Frustum::VJ_LEFT ], frustum[ vrj::Frustum::VJ_RIGHT ],
-        frustum[ vrj::Frustum::VJ_BOTTOM ], frustum[ vrj::Frustum::VJ_TOP ],
-        frustum[ vrj::Frustum::VJ_NEAR ], frustum[ vrj::Frustum::VJ_FAR ] );
+    if( mRTT )
+    {
+        sv->setProjectionMatrix( osg::Matrixd::identity() );
+    }
+    else
+    {
+        vrj::Frustum frustum = project->getFrustum();
+        sv->setProjectionMatrixAsFrustum(
+                                         frustum[ vrj::Frustum::VJ_LEFT ], frustum[ vrj::Frustum::VJ_RIGHT ],
+                                         frustum[ vrj::Frustum::VJ_BOTTOM ], frustum[ vrj::Frustum::VJ_TOP ],
+                                         frustum[ vrj::Frustum::VJ_NEAR ], frustum[ vrj::Frustum::VJ_FAR ] );
+    }
                                       
     //Copy the view matrix
     //    gmtl::Vec3f x_axis( 1.0f, 0.0f, 0.0f );
@@ -660,15 +687,23 @@ void App::draw()
     _vjMatrixLeft = _vjMatrixLeft * mZUp * mNavPosition;
     
     //Copy the matrix
-    osg::ref_ptr< osg::RefMatrix > osg_proj_xform_mat = new osg::RefMatrix();
-    osg_proj_xform_mat->set( _vjMatrixLeft.mData );
-    sv->setViewMatrix( *(osg_proj_xform_mat.get()) );
+    if( mRTT )
+    {
+        sv->setViewMatrix( osg::Matrixd::identity() );
+    }
+    else
+    {
+        osg::ref_ptr< osg::RefMatrix > osg_proj_xform_mat = new osg::RefMatrix();
+        osg_proj_xform_mat->set( _vjMatrixLeft.mData );
+        sv->setViewMatrix( *(osg_proj_xform_mat.get()) );
+    }
 
     //Setup render to texture and post-processing pipeline
     if( mRTT )
     {
         VPR_PROFILE_GUARD_HISTORY( "App::draw RTT Camera", 20 );
-        mSceneRenderToTexture->UpdateRTTQuadAndViewport();
+        //mSceneRenderToTexture->UpdateRTTQuadAndViewport();
+        mSceneRenderToTexture->ConfigureRTTCameras();
     }
 
     //Draw the scene
@@ -717,6 +752,11 @@ void App::draw()
     glPopAttrib();
     glPopAttrib();
     glPopAttrib();
+
+    if( mRTT )
+    {
+        *mAlreadyRendered = true;
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void App::update( void )

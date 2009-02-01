@@ -289,6 +289,8 @@ private:
     ves::xplorer::SceneRenderToTexturePtr mSceneRenderToTexture;
     ///Turn off/on RTT
     bool mRTT;
+    vrj::GlContextData< bool > mAlreadyRendered;
+
 };
 } //end xplorer
 } //end ves
