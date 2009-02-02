@@ -372,7 +372,7 @@ void BKPParser::ParseFile( const char * bkpFile )
         std::string annotation;
         std::map< std::string, std::map< std::string, BlockInfo > >::iterator blockIter = sheetIter; //BlockInfoList.find( sheetIter->first );
         std::map< std::string, BlockInfo >::iterator blockInfoIter;
-        std::map< std::string, std::map< std::string, std::pair< float, float > > >::iterator iconLocationsIter = iconLocations.find( sheetIter->first );
+        
         while(count < (int)blockIter->second.size())
         {
             std::getline(inFile, id);
@@ -455,10 +455,11 @@ void BKPParser::ParseFile( const char * bkpFile )
             }
             else
             {
-                left = 0;
-                right = 0;
-                top = 0;
-                bottom = 0;
+                //defaults to the values for the "BLOCK" icon entries
+                left = -0.45;
+                right = 0.45;
+                top = 0.45;
+                bottom = -0.45;
             }
 
             float iconWidth = right - left;
@@ -549,7 +550,7 @@ void BKPParser::ParseFile( const char * bkpFile )
             blockInfoIter->second.width = width;
             blockInfoIter->second.height = height;
 
-            iconLocationsIter->second[ tempBlockId ] =
+            iconLocations[sheetIter->first][ tempBlockId ] =
                 std::pair< float, float >( scaledXCoords -
                 ( width * widthOffset * 
                 blockInfoIter->second.scale),
@@ -562,6 +563,8 @@ void BKPParser::ParseFile( const char * bkpFile )
         float minX = 10000;
         float minY = 10000;
         std::map< std::string, std::pair< float, float > >::iterator iter;
+        std::map< std::string, std::map< std::string, std::pair< float, float > > >::iterator iconLocationsIter = iconLocations.find( sheetIter->first );
+
         for (iter = iconLocationsIter->second.begin();
             iter != iconLocationsIter->second.end();
             iter++)
