@@ -160,7 +160,7 @@ void SceneRenderToTexture::InitScene( osg::Camera* const sceneViewCamera )
                   << "|\t" << std::endl;
 
         osg::ref_ptr< osg::Viewport > osgViewport = new osg::Viewport();
-        osgViewport->setViewport( ll_x, ll_y, x_size, y_size );
+        osgViewport->setViewport( 0, 0, x_size, y_size );
 
         osg::ref_ptr< osg::Camera > camera =
             CreatePipelineCamera( osgViewport.get() );
@@ -890,7 +890,7 @@ osg::Geode* SceneRenderToTexture::CreateTexturedQuad(
 
     float m2ft = 3.2808399;
     //float xOrigin, yOrigin, widthRatio, heightRatio;
-    gmtl::Point3f ll, lr, ur, ul;
+    //gmtl::Point3f ll, lr, ur, ul;
 
     /*
 #if __VJ_version >= 2003000
@@ -939,12 +939,30 @@ osg::Geode* SceneRenderToTexture::CreateTexturedQuad(
         ul[ 0 ] * m2ft, -ul[ 2 ] * m2ft, ul[ 1 ] * m2ft );
     */
 
-    tempView->getCorners( ll, lr, ur, ul );
-    (*quadVertices)[ 0 ].set( ll[ 0 ] * m2ft, -ll[ 2 ] * m2ft, ll[ 1 ] * m2ft );
+    //tempView->getCorners( ll, lr, ur, ul );
+    
+    float viewportOriginX, viewportOriginY, viewportWidth, viewportHeight;
+    float lx, ly, ux, uy;
+    tempView->getOriginAndSize(
+        viewportOriginX, viewportOriginY, viewportWidth, viewportHeight );
+    std::cout << viewportOriginX << " " << viewportOriginY << " " << viewportWidth << " " << viewportHeight << std::endl;
+
+    lx = ( viewportOriginX * 2 ) - 1;
+    ly = ( viewportOriginY * 2 ) - 1;
+    ux = ( (viewportOriginX + viewportWidth) * 2 ) - 1;
+    uy = ( ( viewportOriginY + viewportHeight )* 2 ) - 1;
+    std::cout << lx << " " << ly << " " << ux << " " << uy << std::endl;
+    //-1 to 1
+    //0 to 1
+    /*(*quadVertices)[ 0 ].set( ll[ 0 ] * m2ft, -ll[ 2 ] * m2ft, ll[ 1 ] * m2ft );
     (*quadVertices)[ 1 ].set( lr[ 0 ] * m2ft, -lr[ 2 ] * m2ft, lr[ 1 ] * m2ft );
     (*quadVertices)[ 2 ].set( ur[ 0 ] * m2ft, -ur[ 2 ] * m2ft, ur[ 1 ] * m2ft );
-    (*quadVertices)[ 3 ].set( ul[ 0 ] * m2ft, -ul[ 2 ] * m2ft, ul[ 1 ] * m2ft );
-
+    (*quadVertices)[ 3 ].set( ul[ 0 ] * m2ft, -ul[ 2 ] * m2ft, ul[ 1 ] * m2ft );*/
+    (*quadVertices)[ 0 ].set( lx, ly, 0 );
+    (*quadVertices)[ 1 ].set( ux,   ly, 0 );
+    (*quadVertices)[ 2 ].set( ux,   uy, 0 );
+    (*quadVertices)[ 3 ].set( lx, uy, 0 );
+    
     osg::ref_ptr< osg::Geometry > quadGeometry = new osg::Geometry();
     quadGeometry->setVertexArray( quadVertices.get() );
     quadGeometry->addPrimitiveSet( new osg::DrawArrays(
