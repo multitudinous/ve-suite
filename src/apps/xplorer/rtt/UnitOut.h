@@ -35,7 +35,7 @@
 #define UNIT_OUT_H
 
 // --- VE-Suite Includes --- //
-#include <apps/xplorer/rtt/Unit.h>
+#include "Unit.h"
 
 // --- OSG Includes --- //
 
@@ -58,6 +58,9 @@ public:
 
     ///
     META_Node( rtt, UnitOut );
+
+    ///
+    virtual void Initialize();
 
     ///
     void CreateVESQuad( osg::Vec3Array* quadVerts, osg::Vec2Array* texCoords );

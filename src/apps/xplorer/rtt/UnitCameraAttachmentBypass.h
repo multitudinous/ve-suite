@@ -35,7 +35,7 @@
 #define UNIT_CAMERA_ATTACHMENT_BYPASS_H
 
 // --- VE-Suite Includes --- //
-#include <apps/xplorer/rtt/Unit.h>
+#include "Unit.h"
 
 // --- OSG Includes --- //
 #include <osg/Camera>

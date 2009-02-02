@@ -32,7 +32,7 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
 // --- VE-Suite Includes --- //
-#include <apps/xplorer/rtt/UnitOut.h>
+#include "UnitOut.h"
 
 // --- OSG Includes --- //
 
@@ -58,6 +58,16 @@ UnitOut::UnitOut( const UnitOut& unitOut, const osg::CopyOp& copyop )
 UnitOut::~UnitOut()
 {
     ;
+}
+////////////////////////////////////////////////////////////////////////////////
+void UnitOut::Initialize()
+{
+    Unit::Initialize();
+
+    //Create a quad geometry
+    //mDrawable = createTexturedQuadDrawable();
+    //mGeode->removeDrawables( 0, mGeode->getNumDrawables() );
+    //mGeode->addDrawable( mDrawable.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UnitOut::CreateVESQuad(

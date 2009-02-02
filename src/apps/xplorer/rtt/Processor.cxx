@@ -32,7 +32,7 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
 // --- VE-Suite Includes --- //
-#include <apps/xplorer/rtt/Processor.h>
+#include "Processor.h"
 
 // --- OSG Includes --- //
 #include <osg/Camera>

@@ -50,10 +50,7 @@ namespace osg
 {
 class Group;
 class Geode;
-class Switch;
 class Camera;
-//class Texture2D;
-class MatrixTransform;
 }
 
 namespace osgUtil
@@ -73,9 +70,6 @@ namespace xplorer
 namespace rtt
 {
 class Processor;
-class UnitCameraAttachmentBypass;
-class UnitInOut;
-class UnitOut;
 }
 
 /*!\file SceneRenderToTexture.h
@@ -105,6 +99,10 @@ public:
     ///Get the root node for all children in the scene to be added to
     ///\return The root osg::Group node
     osg::Group* const GetGroup() const;
+
+    ///Get the camera with specified vrj::Viewport
+    ///\return The camera with specified vrj::Viewport
+    osg::Camera* GetCamera( vrj::Viewport* viewport );
 
     ///Update something
     ///NOTE: Must have an active context to call
@@ -180,50 +178,6 @@ private:
     ///The root group that everything gets added to
     ///Is the same for all contexts
     osg::ref_ptr< osg::Group > mRootGroup;
-
-    /*
-    ///The texture attached to the color buffer of the camera
-    ///A context locked map to hold textures
-    vrj::GlContextData< osg::ref_ptr< osg::Texture2D > > mColorMap;
-
-    ///A context locked map to hold textures
-    vrj::GlContextData< osg::ref_ptr< osg::Texture2D > > mGlowMap;
-
-    ///A context locked map to hold textures
-    vrj::GlContextData< osg::ref_ptr< osg::Texture2D > > mGlowStencil;
-
-    ///The texture attached to the depth and stencil buffer of the camera
-    ///A context locked map to hold textures
-    vrj::GlContextData< osg::ref_ptr< osg::Texture2D > > mDepthStencilTexture;
-    */
-
-    /*
-    ///
-    vrj::GlContextData< osg::ref_ptr< rtt::Processor > > mProcessor;
-
-    ///
-    vrj::GlContextData< osg::ref_ptr< rtt::UnitCameraAttachmentBypass > >
-        mColorBuffer0;
-
-    ///
-    vrj::GlContextData< osg::ref_ptr< rtt::UnitCameraAttachmentBypass > >
-        mColorBuffer1;
-
-    ///
-    vrj::GlContextData< osg::ref_ptr< rtt::UnitInOut > > mBlurX;
-
-    ///
-    vrj::GlContextData< osg::ref_ptr< rtt::UnitInOut > > mBlurY;
-
-    ///
-    vrj::GlContextData< osg::ref_ptr< rtt::UnitInOut > > mFinal;
-
-    ///
-    vrj::GlContextData< osg::ref_ptr< rtt::UnitOut > > mQuadOut;
-    */
-
-    ///
-    vrj::GlContextData< osg::ref_ptr< osg::MatrixTransform > > mQuadTransform;
 
 };
 } //end xplorer

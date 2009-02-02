@@ -35,7 +35,7 @@
 #define UNIT_IN_OUT_H
 
 // --- VE-Suite Includes --- //
-#include <apps/xplorer/rtt/Unit.h>
+#include "Unit.h"
 
 // --- OSG Includes --- //
 namespace osg

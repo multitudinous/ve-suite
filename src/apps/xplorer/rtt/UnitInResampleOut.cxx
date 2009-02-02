@@ -32,46 +32,80 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
 // --- VE-Suite Includes --- //
-#include "UnitInOut.h"
-
-// --- OSG Includes --- //
-#include <osg/FrameBufferObject>
-
-// --- C/C++ Includes --- //
+#include "UnitInResampleOut.h"
 
 using namespace ves::xplorer::rtt;
 
 ////////////////////////////////////////////////////////////////////////////////
-UnitInOut::UnitInOut()
+UnitInResampleOut::UnitInResampleOut()
     :
-    Unit(),
-    mFBO( new osg::FrameBufferObject() )
+    UnitInOut(),
+    mDirtyFactor( true ),
+    mWidthFactor( 1.0 ),
+    mHeightFactor( 1.0 )
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-UnitInOut::UnitInOut( const UnitInOut& unitInOut, const osg::CopyOp& copyop )
+UnitInResampleOut::UnitInResampleOut(
+    const UnitInResampleOut& unitInResampleOut,
+    const osg::CopyOp& copyop )
     :
-    Unit( unitInOut, copyop ),
-    mFBO( unitInOut.mFBO )
+    UnitInOut( unitInResampleOut, copyop ),
+    mWidthFactor( unitInResampleOut.mWidthFactor ),
+    mHeightFactor( unitInResampleOut.mHeightFactor ),
+    mDirtyFactor( unitInResampleOut.mDirtyFactor )
 {
+    ;
+}
+////////////////////////////////////////////////////////////////////////////////
+UnitInResampleOut::~UnitInResampleOut()
+{
+    ;
+}
+////////////////////////////////////////////////////////////////////////////////
+void UnitInResampleOut::Initialize()
+{
+    //Do initialize as usual
+    UnitInOut::Initialize();
 
-}
-////////////////////////////////////////////////////////////////////////////////
-UnitInOut::~UnitInOut()
-{
-    ;
-}
-////////////////////////////////////////////////////////////////////////////////
-void UnitInOut::SetOutputTexture( osg::Texture* outputTexture, int mrt )
-{
-    if( outputTexture )
+    //If we have to reset the resampling factor
+    if( mDirtyFactor )
     {
-        mOutputTextures[ mrt ] = outputTexture;
-    }
-    else
-    {
-        mOutputTextures[ mrt ] = osg::ref_ptr< osg::Texture >( NULL );
+        float width = static_cast< float >( mViewport->width() );
+        float height = static_cast< float >( mViewport->height() );
+
+        mViewport->width() =
+            static_cast< osg::Viewport::value_type >( width * mWidthFactor );
+        mViewport->height() =
+            static_cast< osg::Viewport::value_type >( height * mHeightFactor );
+        mDirtyFactor = false;
+
+        //Notice that we changed the viewport
+        //noticeChangeViewport();
     }
 }
+////////////////////////////////////////////////////////////////////////////////
+float UnitInResampleOut::GetFactorX() const
+{
+    return mWidthFactor;
+}
+////////////////////////////////////////////////////////////////////////////////
+float UnitInResampleOut::GetFactorY() const
+{
+    return mHeightFactor;
+}
+////////////////////////////////////////////////////////////////////////////////
+void UnitInResampleOut::SetFactorX( float xFactor )
+{
+    mWidthFactor = xFactor;
+    mDirtyFactor = true;
+}
+////////////////////////////////////////////////////////////////////////////////
+void UnitInResampleOut::SetFactorY( float yFactor )
+{
+    mHeightFactor = yFactor;
+    mDirtyFactor = true;
+}
+
 ////////////////////////////////////////////////////////////////////////////////

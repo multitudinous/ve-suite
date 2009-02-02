@@ -59,7 +59,10 @@ class Unit : public osg::Group
 {
 public:
     ///
+    typedef std::vector< unsigned int > IgnoreInputList;
     typedef std::map< unsigned int, osg::ref_ptr< osg::Texture > > TextureMap;
+    typedef std::map< osg::ref_ptr< Unit >,
+        std::pair< std::string, unsigned int > > InputToUniformMap;
     
     ///Constructor
     Unit();
@@ -71,6 +74,9 @@ public:
 
     ///
     META_Node( rtt, Unit );
+
+    ///Initialze the unit
+    virtual void Initialize();
 
     ///Return an input texture of a certain mrt index
     ///\param index Index of the input texture (index is equal to the texture unit)
@@ -86,8 +92,31 @@ public:
     ///Return mOutputTextures
     const Unit::TextureMap& GetOutputTextureMap() const;
 
-    ///Initialze the unit
-    virtual void Initialize();
+    ///Remove an assigned parent output uniform. @see assignParentToUniform()
+    ///\param uniform Name of the uniform
+    ///\param del Should this unit be removed from the child list of the parent connected with the given uniform [default=false]
+    void RemoveInputToUniform( const std::string& uniform, bool remove = false );
+
+    /// Remove an assigned parent output uniform. @see assignParentToUniform()
+    ///\param parent Pointer to the parent node
+    ///\param del Should this unit be removed from the child list of this parent [default=false]
+    void RemoveInputToUniform( Unit* parent, bool remove = false );
+
+    /**
+    * Set an input from the given parent to be linked with the given
+    * uniform name. This is required to automatically setup uniforms for
+    * input textures of the assigned shader, which is based on the index
+    * of the given parent unit in the parent list.
+    * The type of the given uniform will be equivalent to the type of the
+    * input texture (e.g. SAMPLER_2D = Texture2D).
+    * @param parent Pointer to the parent which output to use
+    * @param uniform Name of the uniform to use to bind the texture to
+    * @param add if true will add the given parent to the parent list
+    *             (same as calling parent->addChild()) [default=false]
+    * @return true if uniform is set or false otherwise
+    **/
+    bool SetInputToUniform(
+        Unit* parent, const std::string& uniform, bool add = false );
 
 protected:
     ///Destructor
@@ -104,15 +133,12 @@ protected:
         DrawCallback();
 
         ///Constructor
-        DrawCallback( Unit* unit );
+        DrawCallback( Unit* parent );
 
         ///Copy Constructor
         DrawCallback(
             const DrawCallback& drawCallback,
             const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
-
-        ///Destructor
-        ~DrawCallback();
 
         ///
         META_Object( rtt, DrawCallback );
@@ -121,9 +147,13 @@ protected:
         virtual void drawImplementation(
             osg::RenderInfo& ri, const osg::Drawable* dr ) const;
 
+    protected:
+        ///Destructor
+        ~DrawCallback();
+
     private:
         ///
-        osg::ref_ptr< Unit > mUnit;
+        osg::ref_ptr< Unit > mParent;
     };
 
     ///Is the unit active, yes/no
@@ -134,6 +164,9 @@ protected:
 
     ///Output textures
     TextureMap mOutputTextures;
+
+    ///Map of the uniform to parent links
+    InputToUniformMap mInputToUniformMap;
 
     ///Geode used to setup the unit's drawable
     osg::ref_ptr< osg::Geode > mGeode;

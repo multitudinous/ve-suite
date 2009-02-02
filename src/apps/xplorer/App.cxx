@@ -117,7 +117,7 @@ App::App( int argc, char* argv[] )
     mLastFrame( 0 ),
     mLastTime( 0 ),
     mProfileCounter( 0 ),
-    mRTT( false )
+    mRTT( true )
 {
     osg::Referenced::setThreadSafeReferenceCounting( true );
     osg::DisplaySettings::instance()->setMaxNumberOfGraphicsContexts( 20 );
@@ -367,7 +367,7 @@ void App::initScene()
     this->m_vjobsWrapper->GetCfdStateVariables();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void App::preFrame( void )
+void App::preFrame()
 {
     VPR_PROFILE_GUARD_HISTORY( "App::preFrame", 20 );
     vprDEBUG( vesDBG, 3 ) << "|App::preFrame" << std::endl << vprDEBUG_FLUSH;
@@ -386,7 +386,7 @@ void App::preFrame( void )
     ///////////////////////
 }
 ////////////////////////////////////////////////////////////////////////////////
-void App::latePreFrame( void )
+void App::latePreFrame()
 {
     VPR_PROFILE_GUARD_HISTORY( "App::latePreFrame", 20 );
     const std::string tempCommandName = 
@@ -664,17 +664,22 @@ void App::draw()
 #else
     vrj::Projection* project = user_data->getProjection();
 #endif
+
+    vrj::Frustum frustum = project->getFrustum();
+    double _left( frustum[ vrj::Frustum::VJ_LEFT ] );
+    double _right( frustum[ vrj::Frustum::VJ_RIGHT ] );
+    double _bottom( frustum[ vrj::Frustum::VJ_BOTTOM ] );
+    double _top( frustum[ vrj::Frustum::VJ_TOP ] );
+    double _near( frustum[ vrj::Frustum::VJ_NEAR ] );
+    double _far( frustum[ vrj::Frustum::VJ_FAR ] );
     if( mRTT )
     {
         sv->setProjectionMatrix( osg::Matrixd::identity() );
     }
     else
     {
-        vrj::Frustum frustum = project->getFrustum();
         sv->setProjectionMatrixAsFrustum(
-                                         frustum[ vrj::Frustum::VJ_LEFT ], frustum[ vrj::Frustum::VJ_RIGHT ],
-                                         frustum[ vrj::Frustum::VJ_BOTTOM ], frustum[ vrj::Frustum::VJ_TOP ],
-                                         frustum[ vrj::Frustum::VJ_NEAR ], frustum[ vrj::Frustum::VJ_FAR ] );
+            _left, _right, _bottom, _top, _near, _far );
     }
                                       
     //Copy the view matrix
@@ -726,7 +731,6 @@ void App::draw()
     }
 
     //Allow trackball to grab frustum values to calculate FOVy
-    double _left, _right, _bottom, _top, _near, _far;
     sv->getCamera()->getProjectionMatrixAsFrustum(
         _left, _right, _bottom, _top, _near, _far );
     //The code below is not thread safe and will result in random results
@@ -759,7 +763,7 @@ void App::draw()
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void App::update( void )
+void App::update()
 {
     const std::string tempCommandName = 
         m_vjobsWrapper->GetXMLCommand()->GetCommandName();

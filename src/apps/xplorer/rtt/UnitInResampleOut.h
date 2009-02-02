@@ -31,47 +31,75 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
+#ifndef UNIT_IN_RESAMPLE_OUT_H
+#define UNIT_IN_RESAMPLE_OUT_H
+
 // --- VE-Suite Includes --- //
 #include "UnitInOut.h"
 
-// --- OSG Includes --- //
-#include <osg/FrameBufferObject>
-
-// --- C/C++ Includes --- //
-
-using namespace ves::xplorer::rtt;
-
-////////////////////////////////////////////////////////////////////////////////
-UnitInOut::UnitInOut()
-    :
-    Unit(),
-    mFBO( new osg::FrameBufferObject() )
+namespace ves
 {
-    ;
-}
-////////////////////////////////////////////////////////////////////////////////
-UnitInOut::UnitInOut( const UnitInOut& unitInOut, const osg::CopyOp& copyop )
-    :
-    Unit( unitInOut, copyop ),
-    mFBO( unitInOut.mFBO )
+namespace xplorer
+{
+namespace rtt
 {
 
-}
-////////////////////////////////////////////////////////////////////////////////
-UnitInOut::~UnitInOut()
+//! Same as UnitInOut but do resampling inbetween
+/*
+ * Resample the input. This PPU will 
+ * render the input data resampled to the output. Next PPU will work 
+ * on the resampled one. NOTE: You loose information in your data after 
+ * appling this PPU.
+ */
+
+class UnitInResampleOut : public UnitInOut
 {
-    ;
-}
-////////////////////////////////////////////////////////////////////////////////
-void UnitInOut::SetOutputTexture( osg::Texture* outputTexture, int mrt )
-{
-    if( outputTexture )
-    {
-        mOutputTextures[ mrt ] = outputTexture;
-    }
-    else
-    {
-        mOutputTextures[ mrt ] = osg::ref_ptr< osg::Texture >( NULL );
-    }
-}
-////////////////////////////////////////////////////////////////////////////////
+public:
+    ///Constructor
+    //! Create default ppfx
+    UnitInResampleOut();
+
+    ///
+    UnitInResampleOut(
+        const UnitInResampleOut& unitInResampleOut,
+        const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
+
+    ///
+    META_Node( rtt, UnitInResampleOut );
+
+    ///
+    virtual void Initialize();
+
+    ///Get x resampling factor
+    float GetFactorX() const;
+
+    ///Get y resampling factor
+    float GetFactorY() const;
+
+    ///Set x resampling factor
+    void SetFactorX( float xFactor );
+
+    ///Set y resampling factor
+    void SetFactorY( float yFactor );
+
+protected:
+    ///Destructor
+    //! Release it and used memory
+    virtual ~UnitInResampleOut();
+
+private:
+    ///
+    bool mDirtyFactor;
+
+    ///
+    float mWidthFactor;
+
+    ///
+    float mHeightFactor;
+
+};
+} //end rtt
+} //end xplorer
+} //end ves
+
+#endif //UNIT_IN_RESAMPLE_OUT_H

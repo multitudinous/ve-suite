@@ -32,7 +32,7 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
 // --- VE-Suite Includes --- //
-#include <apps/xplorer/rtt/Unit.h>
+#include "Unit.h"
 
 // --- OSG Includes --- //
 #include <osg/Geode>
@@ -53,15 +53,15 @@ using namespace ves::xplorer::rtt;
 Unit::DrawCallback::DrawCallback()
     :
     osg::Drawable::DrawCallback(),
-    mUnit( NULL )
+    mParent( NULL )
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-Unit::DrawCallback::DrawCallback( Unit* unit )
+Unit::DrawCallback::DrawCallback( Unit* parent )
     :
     osg::Drawable::DrawCallback(),
-    mUnit( unit )
+    mParent( parent )
 {
     ;
 }
@@ -70,7 +70,7 @@ Unit::DrawCallback::DrawCallback(
     const Unit::DrawCallback& drawCallback, const osg::CopyOp& copyop )
     :
     osg::Drawable::DrawCallback( drawCallback, copyop ),
-    mUnit( drawCallback.mUnit )
+    mParent( drawCallback.mParent )
 {
     ;
 }
@@ -84,8 +84,8 @@ void Unit::DrawCallback::drawImplementation(
     osg::RenderInfo& ri, const osg::Drawable* dr ) const
 {
     //Set matricies used for the unit
-    ri.getState()->applyProjectionMatrix( mUnit->mProjectionMatrix.get() );
-    ri.getState()->applyModelViewMatrix( mUnit->mModelViewMatrix.get() );
+    ri.getState()->applyProjectionMatrix( mParent->mProjectionMatrix.get() );
+    ri.getState()->applyModelViewMatrix( mParent->mModelViewMatrix.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 Unit::Unit()
@@ -180,6 +180,83 @@ void Unit::Initialize()
     assignShader();
     assignViewport();
     */
+}
+////////////////////////////////////////////////////////////////////////////////
+void Unit::RemoveInputToUniform( const std::string& uniform, bool remove )
+{
+    /*
+    // search for this uniform
+    InputToUniformMap::iterator it = mInputToUniformMap.begin();
+    for( it != mInputToUniformMap.end(); ++it )
+    {
+        if( it->second.first == uniform )
+        {
+            //Remove from the stateset
+            mGeode->getOrCreateStateSet()->removeUniform( uniform );
+
+            //If we have to remove the parent
+            if( remove )
+            {
+                it->first->removeChild( this );
+            }
+
+            //Remove the element from the list
+            mInputToUniformMap.erase( it );
+
+            dirty();
+
+            break;
+        }
+    }
+    */
+}
+////////////////////////////////////////////////////////////////////////////////
+void Unit::RemoveInputToUniform( Unit* parent, bool remove )
+{
+    InputToUniformMap::iterator itr = mInputToUniformMap.find( parent );
+    if( itr != mInputToUniformMap.end() )
+    {
+        RemoveInputToUniform( itr->second.first, remove );
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+bool Unit::SetInputToUniform(
+    Unit* parent, const std::string& uniform, bool add )
+{
+    if( !parent || uniform.length() < 1 ) 
+    {
+        return false;
+    }
+
+    //Add this unit as a child of the parent if required
+    if( add && !parent->containsNode( this ) )
+    {
+        parent->addChild( this );
+    }
+
+    //Check if this is a valid parent of this node
+    unsigned int index = getNumParents();
+    for( unsigned int i = 0; i < getNumParents(); ++i )
+    {
+        if( getParent( i ) == parent )
+        {
+            index = i;
+            break;
+        }
+    }
+
+    if( index == getNumParents() )
+    {
+        return false;
+    }
+
+    //Add the uniform
+    mInputToUniformMap[ parent ] =
+        std::pair< std::string, unsigned int >( uniform, index );
+
+    //dirty();
+
+    return true; 
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Unit::SetInputTexturesFromParents()
