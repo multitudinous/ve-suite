@@ -117,7 +117,7 @@ App::App( int argc, char* argv[] )
     mLastFrame( 0 ),
     mLastTime( 0 ),
     mProfileCounter( 0 ),
-    mRTT( true )
+    mRTT( false )
 {
     osg::Referenced::setThreadSafeReferenceCounting( true );
     osg::DisplaySettings::instance()->setMaxNumberOfGraphicsContexts( 20 );
