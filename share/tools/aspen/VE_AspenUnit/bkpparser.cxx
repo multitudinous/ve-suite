@@ -20,19 +20,17 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 BKPParser::BKPParser()
+    :
+    aspendoc( new CASI::CASIDocument() ),
+    redundantID( 0 )
 {
-    aspendoc = new CASI::CASIDocument();
     workingDir = "";
-    redundantID = 0;
-    //veNetwork = new VE_XML::VE_Model::Network();
 }
-
 ///////////////////////////////////////////////////////////////////////////////
 BKPParser::~BKPParser()
 {
     delete aspendoc;
 }
-
 ///////////////////////////////////////////////////////////////////////////////
 void BKPParser::OpenSimAndParse(const char * file)
 {
@@ -40,10 +38,8 @@ void BKPParser::OpenSimAndParse(const char * file)
     std::string bkpExt(".bkp");
     std::string apwExt(".apw");
     ParseFile( ( workingDir + fileName + bkpExt ).c_str());
-    //ParseFile( ( fileName + bkpExt ).c_str());
     CString filename = file;
     aspendoc->open( ( workingDir + fileName + apwExt ).c_str());
-    //aspendoc->open( ( fileName + apwExt ).c_str());
 }
 ////////////////////////////////////////////////////////////////////////////////
 void BKPParser::OpenSim(const char * file)
@@ -106,8 +102,8 @@ int BKPParser::getNumComponents()
 	return BlockInfoList.size(); //vectors are all same length
 }
 ///////////////////////////////////////////////////////////////////////////////
-std::string BKPParser::getBlockType( std::string blockName,
-                                    std::string flowsheetName )
+std::string BKPParser::getBlockType( const std::string& blockName,
+                                    const std::string& flowsheetName )
 {
     if(flowsheetName == "NULL")
     {
@@ -119,8 +115,8 @@ std::string BKPParser::getBlockType( std::string blockName,
     }
 }
 ///////////////////////////////////////////////////////////////////////////////
-std::string BKPParser::getBlockID( std::string blockName,
-                                  std::string flowsheetName )
+std::string BKPParser::getBlockID( const std::string& blockName,
+                                  const std::string& flowsheetName )
 {
     if(flowsheetName == "NULL")
     {
@@ -162,7 +158,7 @@ int BKPParser::getStreamType( int streamIndex )
     return streamCoordList[streamIndex].streamType;
 }
 ///////////////////////////////////////////////////////////////////////////////
-int BKPParser::getNumStream( )
+int BKPParser::getNumStream()
 {
     return streamCoordList.size();
 }
@@ -178,15 +174,13 @@ void BKPParser::ParseFile( const char * bkpFile )
     std::ifstream inFile(bkpFile, std::ios::binary);
 
     std::map< std::pair< std::string, std::string >,
-        std::vector< double > > lutMap;
-    std::map< std::pair< std::string, std::string >,
         std::vector< double > >::iterator lutMapIter;
     std::vector< double > lutVector;
     lutVector.resize( 6 );
 
+    std::map< std::pair< std::string, std::string >, 
+        std::vector< double > > lutMap;
     lutMap = GetAspenPlusLUT();
-    //std::ofstream outFile("log.txt");
-    std::string discard;
 
     std::map< std::string, std::pair< unsigned int, unsigned int > > imageData;
     imageData = GetAspenIconData();
@@ -201,44 +195,49 @@ void BKPParser::ParseFile( const char * bkpFile )
 	// Begin parsing
 	//
 
+    std::string discard;
     std::string temp;
     while(	temp.compare(0 , 7, "NumLibs", 0, 7))
     {
         getline(inFile, temp);
-        if (inFile.eof())
-	        break;
+        if( inFile.eof() )
+            break;
     }
 
-    std::stringstream numLibToken(temp);
-    numLibToken >> discard;//Dump "NumLibs"
-    numLibToken >> discard;//Dump "="
-    int numLibs;
-    numLibToken >> numLibs;
-    int i=0;
-    while(i<numLibs)
+    ///Do something here...
+    {
+        std::stringstream numLibToken(temp);
+        numLibToken >> discard;//Dump "NumLibs"
+        numLibToken >> discard;//Dump "="
+        int numLibs;
+        numLibToken >> numLibs;
+        int i=0;
+        while(i<numLibs)
+        {
+            getline(inFile, temp);
+            i++;
+        }	
+    }
+
+    ///Do something here...
     {
         getline(inFile, temp);
-        i++;
-	}	
-	
-	getline(inFile, temp);
-	
-    std::stringstream numCatToken(temp);
-    numCatToken >> discard;//Dump "NumLibs"
-    numCatToken >> discard;//Dump "="
-    int numCats;
-    numCatToken >> numCats;
+        std::stringstream numCatToken(temp);
+        numCatToken >> discard;//Dump "NumLibs"
+        numCatToken >> discard;//Dump "="
+        int numCats;
+        numCatToken >> numCats;
+        numCats = numCats*2+2;
+        
+        int i = 0;
+        
+        while( i < numCats )
+        {
+            getline(inFile, temp);
+            i++;
+        }	
+    }
 
-    i = 0;
-    while(i<numCats*2+2)
-    {
-        getline(inFile, temp);
-        i++;
-    }	
-
-    //get number of components/blocks
-    getline(inFile, temp);
-    int numComponents = atoi(temp.c_str());
 
     //
     // Block Info
@@ -250,7 +249,11 @@ void BKPParser::ParseFile( const char * bkpFile )
     BlockInfo tempBlockInfo;
     std::string hierarchy;
     bool hierFlag = false;
-    //std::ofstream hierfile("hierarchy.txt");
+
+    //get number of components/blocks
+    getline(inFile, temp);
+    int numComponents = atoi( temp.c_str() );
+
     while(count < numComponents)
     {
         getline(inFile, compVer);
@@ -294,34 +297,39 @@ void BKPParser::ParseFile( const char * bkpFile )
         count++;
     }
 
-    //The following block contains the network data
-    std::streampos beforeNetwork;
-    beforeNetwork = inFile.tellg();
-
-    //find the graphics section
-    while(temp.compare(0, 16, " GRAPHICS_BACKUP", 0, 16)!= 0 && !inFile.eof())
+    ////////////////////////////////////////////////////////////////////////////
     {
-        getline(inFile, temp);
+        //The following block contains the network data
+        std::streampos beforeNetwork;
+        beforeNetwork = inFile.tellg();
+
+        //find the graphics section
+        while(temp.compare(0, 16, " GRAPHICS_BACKUP", 0, 16)!= 0 && !inFile.eof())
+        {
+            getline(inFile, temp);
+        }
+
+        //Now we have passed the network data so record it
+        std::streampos afterNetwork;
+        afterNetwork = inFile.tellg();
+        //go back to the beginning of the network
+        inFile.seekg( beforeNetwork );
+        // allocate memory:
+        char* buffer = new char [afterNetwork - beforeNetwork];
+        // read data as a block:
+        inFile.read( buffer, (afterNetwork - beforeNetwork) );
+        //std::ofstream tester4 ("tester4.txt");
+        //tester4<<buffer<<std::endl;
+        //tester4.close();
+        std::string networkData( buffer );
+        delete [] buffer;
+        
+        //build network information
+        CreateNetworkInformation( networkData );
     }
-   
-    //Now we have passed the network data so record it
-    std::streampos afterNetwork;
-    afterNetwork = inFile.tellg();
-    //go back to the beginning of the network
-    inFile.seekg( beforeNetwork );
-    // allocate memory:
-    char* buffer = new char [afterNetwork - beforeNetwork];
-    // read data as a block:
-    inFile.read( buffer, (afterNetwork - beforeNetwork) );
-    //std::ofstream tester4 ("tester4.txt");
-    //tester4<<buffer<<std::endl;
-    //tester4.close();
-    std::string networkData( buffer );
-    delete [] buffer;
+    ////////////////////////////////////////////////////////////////////////////
 
-    //build network information
-    CreateNetworkInformation( networkData );
-
+    ////////////////////////////////////////////////////////////////////////////
     //Loop for Hierarchy
     std::map< std::string,
         std::map< std::string, BlockInfo > >::iterator sheetIter;
@@ -347,7 +355,7 @@ void BKPParser::ParseFile( const char * bkpFile )
         }
 
         //locate the PFSVData Entry
-        while(temp.compare( 0, dataHeader.size(), dataHeader, 0, 
+        while( temp.compare( 0, dataHeader.size(), dataHeader, 0, 
             dataHeader.size() )!= 0 && !inFile.eof())
         {
             getline(inFile, temp);
@@ -362,7 +370,10 @@ void BKPParser::ParseFile( const char * bkpFile )
         count =0;
         std::string id, version, icon, flag, section, at, labelAt, scaleMod;
         std::string annotation;
-        while(count < (int)BlockInfoList[sheetIter->first].size())
+        std::map< std::string, std::map< std::string, BlockInfo > >::iterator blockIter = sheetIter; //BlockInfoList.find( sheetIter->first );
+        std::map< std::string, BlockInfo >::iterator blockInfoIter;
+        std::map< std::string, std::map< std::string, std::pair< float, float > > >::iterator iconLocationsIter = iconLocations.find( sheetIter->first );
+        while(count < (int)blockIter->second.size())
         {
             std::getline(inFile, id);
             getline(inFile, version);
@@ -420,19 +431,19 @@ void BKPParser::ParseFile( const char * bkpFile )
                 tempIcon.replace(found, 1, "_");
                 found = tempIcon.find("-");
             }
-
-            BlockInfoList[sheetIter->first][tempBlockId].icon = tempIcon;
-            BlockInfoList[sheetIter->first][tempBlockId].scale = scale;
+            
+            blockInfoIter = blockIter->second.find( tempBlockId );
+            blockInfoIter->second.icon = tempIcon;
+            blockInfoIter->second.scale = scale;
 
             //find offset
             float left=0, right=0, bottom=0, top=0; //coords
             float widthOffset = 0;
             float heightOffset = 0;
-            //outFile<<BlockInfoList[sheetIter->first][tempBlockId].type+" "+
-            //    BlockInfoList[sheetIter->first][tempBlockId].icon<<std::endl;
+
             std::pair< std::string, std::string >
-                blockKey( BlockInfoList[sheetIter->first][tempBlockId].type,
-                BlockInfoList[sheetIter->first][tempBlockId].icon );
+                blockKey(blockInfoIter->second.type,
+                blockInfoIter->second.icon );
             lutMapIter = lutMap.find( blockKey );
             if( lutMapIter != lutMap.end() )
             {
@@ -455,57 +466,57 @@ void BKPParser::ParseFile( const char * bkpFile )
 
             if(modifier == 0)
             {
-                BlockInfoList[sheetIter->first][tempBlockId].rotation = 0.0f;
-                BlockInfoList[sheetIter->first][tempBlockId].mirror = 0;
+                blockInfoIter->second.rotation = 0.0f;
+                blockInfoIter->second.mirror = 0;
                 widthOffset = abs(left/iconWidth);
                 heightOffset = abs(top/iconHeight);
             }
             else if(modifier == 1)
             {
-                BlockInfoList[sheetIter->first][tempBlockId].rotation = 0.0f;
-                BlockInfoList[sheetIter->first][tempBlockId].mirror = 1;
+                blockInfoIter->second.rotation = 0.0f;
+                blockInfoIter->second.mirror = 1;
                 widthOffset = abs(right/iconWidth);
                 heightOffset = abs(top/iconHeight);
             }
             else if(modifier == 2)
             {
-                BlockInfoList[sheetIter->first][tempBlockId].rotation = 0.0f;
-                BlockInfoList[sheetIter->first][tempBlockId].mirror = 2;
+                blockInfoIter->second.rotation = 0.0f;
+                blockInfoIter->second.mirror = 2;
                 widthOffset = abs(left/iconWidth);
                 heightOffset = abs(bottom/iconHeight);
             }
             else if(modifier == 3)
             {
-                BlockInfoList[sheetIter->first][tempBlockId].rotation = 90.0f;
-                BlockInfoList[sheetIter->first][tempBlockId].mirror = 0;
+                blockInfoIter->second.rotation = 90.0f;
+                blockInfoIter->second.mirror = 0;
                 widthOffset = abs(top/iconWidth);
                 heightOffset = abs(right/iconHeight);
             }
             else if(modifier == 4)
             {
-                BlockInfoList[sheetIter->first][tempBlockId].rotation = 270.0f;
-                BlockInfoList[sheetIter->first][tempBlockId].mirror = 0;
+                blockInfoIter->second.rotation = 270.0f;
+                blockInfoIter->second.mirror = 0;
                 widthOffset = abs(bottom/iconWidth);
                 heightOffset = abs(left/iconHeight);
             }
             else if(modifier == 5)
             {
-                BlockInfoList[sheetIter->first][tempBlockId].rotation = 180.0f;
-                BlockInfoList[sheetIter->first][tempBlockId].mirror = 0;
+                blockInfoIter->second.rotation = 180.0f;
+                blockInfoIter->second.mirror = 0;
                 widthOffset = abs(right/iconWidth);
                 heightOffset = abs(bottom/iconHeight);
             }
             else if(modifier == 6)
             {
-                BlockInfoList[sheetIter->first][tempBlockId].rotation = 270.0f;
-                BlockInfoList[sheetIter->first][tempBlockId].mirror = 2;
+                blockInfoIter->second.rotation = 270.0f;
+                blockInfoIter->second.mirror = 2;
                 widthOffset = abs(top/iconWidth);
                 heightOffset = abs(left/iconHeight);
             }
             else if(modifier == 7)
             {
-                BlockInfoList[sheetIter->first][tempBlockId].rotation = 270.0f;
-                BlockInfoList[sheetIter->first][tempBlockId].mirror = 1;
+                blockInfoIter->second.rotation = 270.0f;
+                blockInfoIter->second.mirror = 1;
                 widthOffset = abs(bottom/iconWidth);
                 heightOffset = abs(right/iconHeight);
             }
@@ -525,28 +536,25 @@ void BKPParser::ParseFile( const char * bkpFile )
             float scaledYCoords = -yCoords.back() * 100;
 			
             float width =
-                imageData[BlockInfoList[sheetIter->first][tempBlockId].type+
-                "_"+BlockInfoList[sheetIter->first][tempBlockId].type+
-                "_"+BlockInfoList[sheetIter->first][tempBlockId].icon+
+                imageData[ blockInfoIter->second.type+
+                "_"+blockInfoIter->second.type+
+                "_"+blockInfoIter->second.icon+
                 ".xpm"].first;
             float height = 
-                imageData[BlockInfoList[sheetIter->first][tempBlockId].type+
-                "_"+BlockInfoList[sheetIter->first][tempBlockId].type+
-                "_"+BlockInfoList[sheetIter->first][tempBlockId].icon+
+                imageData[ blockInfoIter->second.type+
+                "_"+blockInfoIter->second.type+
+                "_"+blockInfoIter->second.icon+
                 ".xpm"].second;
 
-            BlockInfoList[sheetIter->first][tempBlockId].width = width;
-            BlockInfoList[sheetIter->first][tempBlockId].height = height;
+            blockInfoIter->second.width = width;
+            blockInfoIter->second.height = height;
 
-            //tester4<<BlockInfoList[sheetIter->first][tempBlockId].type+"_"+
-            //    BlockInfoList[sheetIter->first][tempBlockId].icon+".xpm"
-            //    <<": "<<width<<" "<<height<<std::endl;
-            iconLocations[sheetIter->first][ tempBlockId ] =
+            iconLocationsIter->second[ tempBlockId ] =
                 std::pair< float, float >( scaledXCoords -
                 ( width * widthOffset * 
-                BlockInfoList[sheetIter->first][tempBlockId].scale),
+                blockInfoIter->second.scale),
                 scaledYCoords - ( height * heightOffset * 
-                BlockInfoList[sheetIter->first][tempBlockId].scale) );
+                blockInfoIter->second.scale) );
             count++;
         }
 
@@ -554,16 +562,18 @@ void BKPParser::ParseFile( const char * bkpFile )
         float minX = 10000;
         float minY = 10000;
         std::map< std::string, std::pair< float, float > >::iterator iter;
-        for (iter = iconLocations[sheetIter->first].begin();
-            iter != iconLocations[sheetIter->first].end();
+        for (iter = iconLocationsIter->second.begin();
+            iter != iconLocationsIter->second.end();
             iter++)
         {
             float currentX =
-                iconLocations[sheetIter->first][ iter->first ].first;
+               iconLocationsIter->second[ iter->first ].first;
             float currentY =
-                iconLocations[sheetIter->first][ iter->first ].second;
+                iconLocationsIter->second[ iter->first ].second;
+
             if(currentX < minX)
                 minX = currentX;
+
             if(currentY < minY)
                 minY = currentY;
         }
@@ -578,7 +588,6 @@ void BKPParser::ParseFile( const char * bkpFile )
         bool newStream = true, routeOne = false;;
         std::pair< float, float > tempCoords;
         int routeCount = 0;
-        //std::ofstream tester2 ("tester2.txt"); 
 
         //contiously read all stream info to the legend or viewport entry
         while( temp.compare( 0, 8, "VIEWPORT", 0, 8 )!= 0 &&
@@ -588,7 +597,6 @@ void BKPParser::ParseFile( const char * bkpFile )
             if( temp.compare(0, 6, "STREAM", 0, 6)== 0 )//find "STREAM" entry
             {
                 getline( inFile, streamId );
-                //tester2<<streamId<<": ";
                 getline( inFile, streamVersion );
                 getline( inFile, streamFlag );
                 getline( inFile, streamType );
@@ -677,11 +685,13 @@ void BKPParser::ParseFile( const char * bkpFile )
                     float scaledX = xy.value.at( k ).first * 100;
                     //invert Y axis - flowsheets are inverted
                     float scaledY = -xy.value.at( k ).second * 100;
+
                     if(scaledX < minX)
                         minX = scaledX;
+
                     if(scaledY < minY)
                         minY = scaledY;
-                    //tester2<<" x: "<<scaledX<<" y: "<<scaledY;
+
                     linkPoints[sheetIter->first][xy.streamId].push_back(
                         std::pair< float, float >( scaledX, scaledY ) );	
                 }
@@ -695,7 +705,6 @@ void BKPParser::ParseFile( const char * bkpFile )
             {
                 getline( inFile, temp );
             }
-            //tester2 << std::endl;
         }
 
         //
@@ -703,34 +712,23 @@ void BKPParser::ParseFile( const char * bkpFile )
         //
         float normX = minX;
         float normY = minY;
-        //tester2 << "NormX: " << normX << " NormY: " << normY << std::endl;
-        //tester2.close( );
-        //blocks
-        //std::ofstream tester3( "tester3.txt" );
-        for(iter = iconLocations[sheetIter->first].begin( );
-            iter != iconLocations[sheetIter->first].end( );
+
+        for(iter = iconLocationsIter->second.begin( );
+            iter != iconLocationsIter->second.end( );
             iter++)
         {
-            iconLocations[sheetIter->first][ iter->first ].first =
-                iconLocations[sheetIter->first][iter->first].first - normX;
-            iconLocations[sheetIter->first][iter->first].second =
-                iconLocations[sheetIter->first][iter->first].second - normY;
-            //tester3 << iter->first << ": x: " <<
-            //    iconLocations[sheetIter->first][iter->first].first << 
-            //    " y: " << iconLocations[sheetIter->first][iter->first].second
-            //    << std::endl;
+            iconLocationsIter->second[ iter->first ].first =
+                iconLocationsIter->second[iter->first].first - normX;
+            iconLocationsIter->second[iter->first].second =
+                iconLocationsIter->second[iter->first].second - normY;
         }
-        //tester3.close();
 
-        //streams
-        //std::ofstream tester( "tester.txt" );
         std::map< std::string, std::vector< std::pair< float, float > > >::
             iterator iter2;
         for( iter2 = linkPoints[sheetIter->first].begin( );
             iter2 != linkPoints[sheetIter->first].end( );
             iter2++)
         {
-            //tester << iter2->first << ":";
             for( int element = 0;
                 element <
                 (int)linkPoints[sheetIter->first][ iter2->first ].size();
@@ -742,17 +740,8 @@ void BKPParser::ParseFile( const char * bkpFile )
                 linkPoints[sheetIter->first][ iter2->first ][element].second =
                     linkPoints[sheetIter->first][ iter2->first ][element].
                     second - normY;
-                //tester << " x: " <<
-                //    linkPoints[sheetIter->first][ iter2->first ][element].
-                //    first << " y: " << ( float )
-                //    linkPoints[sheetIter->first][ iter2->first ][element].
-                //    second;
             }
-            //tester<<std::endl;
         }
-        //tester.close();
-
-
     }
     }
     catch(std::exception& e)
@@ -761,13 +750,11 @@ void BKPParser::ParseFile( const char * bkpFile )
         exOut << e.what() <<std::endl;
         exOut.close();
     }
-    //tester4.close();
+
     inFile.close();
-    //outFile.close();
-    return;
 }
 ///////////////////////////////////////////////////////////////////////////////
-void BKPParser::CreateNetworkInformation( std::string networkData )
+void BKPParser::CreateNetworkInformation( std::string& networkData )
 {
     // strip the new line characters
     StripCharacters( networkData, "\n" );
@@ -948,7 +935,7 @@ void BKPParser::CreateNetworkInformation( std::string networkData )
 }
 ///////////////////////////////////////////////////////////////////////////////
 void BKPParser::CreateNetworkLinks
-    ( ves::open::xml::model::NetworkPtr subNetwork, std::string hierName )
+    ( ves::open::xml::model::NetworkPtr subNetwork, const std::string& hierName )
 {
     // remove duplicate points
     std::map< std::string, std::vector< std::pair< float, float > > >::iterator
@@ -1413,40 +1400,8 @@ std::string BKPParser::CreateNetwork( void )
         veSystem->AddModel(tempModel);
     }
 
-    /*ves::open::xml::model::SystemPtr
-        topSystem( new ves::open::xml::model::System() );
-    ves::open::xml::model::ModelPtr
-        topModel( new ves::open::xml::model::Model() );
-    topModel->SetModelName( "Aspen_Flowsheet" );
-    topModel->SetVendorName( "ASPENUNIT" );
-    topModel->SetIconFilename("aspen");
-    topModel->SetIconRotation( 0 );
-    topModel->SetIconScale( 1 );
-    topModel->SetIconMirror( 0 );
-    topModel->SetIconHiddenFlag( 0 );
-    topModel->GetIconLocation()->
-        SetPoint( std::pair< double, double >( 0, 0 ) );
-    topModel->SetSubSystem( veSystem );
-    topSystem->AddModel( topModel );
-    nodes.push_back( std::pair< ves::open::xml::XMLObjectPtr, std::string >
-        ( topSystem, "veSystem" ) );*/
     nodes.push_back( std::pair< ves::open::xml::XMLObjectPtr, std::string >
         ( veSystem, "veSystem" ) );
-
-    /*ves::open::xml::model::NetworkPtr
-        topNetwork( new ves::open::xml::model::Network() );
-    // create default state info section
-    topNetwork->GetDataValuePair( -1 )->SetData( "m_xUserScale", 1.0 );
-    topNetwork->GetDataValuePair( -1 )->SetData( "m_yUserScale", 1.0 );
-    topNetwork->GetDataValuePair( -1 )->
-        SetData( "nPixX", static_cast< long int >( 20 ) );
-    topNetwork->GetDataValuePair( -1 )->
-        SetData( "nPixY", static_cast< long int >( 20 ) );
-    topNetwork->GetDataValuePair( -1 )->
-        SetData( "nUnitX", static_cast< long int >( 200 ) );
-    topNetwork->GetDataValuePair( -1 )->
-        SetData( "nUnitY", static_cast< long int >( 200 ) );
-    topSystem->AddNetwork(topNetwork);*/
 
     std::string fileName( "returnString" );
     ves::open::xml::XMLReaderWriter netowrkWriter;
@@ -1456,7 +1411,7 @@ std::string BKPParser::CreateNetwork( void )
 }
 ///////////////////////////////////////////////////////////////////////////////
 void BKPParser::ParseSubSystem( ves::open::xml::model::ModelPtr model,
-                               std::string networkName)
+                               const std::string& networkName)
 {
     ves::open::xml::model::SystemPtr
         subSystem( new ves::open::xml::model::System() );
@@ -1621,7 +1576,7 @@ void BKPParser::ParseSubSystem( ves::open::xml::model::ModelPtr model,
     model->SetSubSystem(subSystem);
 }
 ///////////////////////////////////////////////////////////////////////////////
-void BKPParser::StripCharacters( std::string& data, std::string character )
+void BKPParser::StripCharacters( std::string& data, const std::string& character )
 {
     for ( size_t index = 0; index < data.length(); )
     {
@@ -1634,13 +1589,13 @@ void BKPParser::StripCharacters( std::string& data, std::string character )
 }
 ///////////////////////////////////////////////////////////////////////////////
 //BLOCKS
-void BKPParser::ReinitBlock(std::string modname)
+void BKPParser::ReinitBlock( const std::string& modname)
 {
     aspendoc->reinitializeBlock( modname.c_str() );
 }
 ///////////////////////////////////////////////////////////////////////////////
 //BLOCKS
-std::string BKPParser::GetInputModuleParams(std::string modname)
+std::string BKPParser::GetInputModuleParams( const std::string& modname)
 {
     CASI::CASIObj cur_block =
         aspendoc->getBlockByName( CString( modname.c_str( ) ) );
@@ -1674,8 +1629,8 @@ std::string BKPParser::GetInputModuleParams(std::string modname)
     return status;
 }
 ///////////////////////////////////////////////////////////////////////////////
-std::string BKPParser::GetInputModuleParamProperties(std::string modname,
-                                                     std::string paramName)
+std::string BKPParser::GetInputModuleParamProperties( const std::string& modname,
+                                                     const std::string& paramName)
 {
     CASI::CASIObj cur_block =
         aspendoc->getBlockByName(CString(modname.c_str()));
@@ -1787,7 +1742,7 @@ std::string BKPParser::GetInputModuleParamProperties(std::string modname,
     return status;
 }
 ///////////////////////////////////////////////////////////////////////////////
-std::string BKPParser::GetOutputModuleParams(std::string modname)
+std::string BKPParser::GetOutputModuleParams( const std::string& modname)
 {
     CASI::CASIObj cur_block =
         aspendoc->getBlockByName(CString(modname.c_str()));
@@ -1822,8 +1777,8 @@ std::string BKPParser::GetOutputModuleParams(std::string modname)
     return status;
 }
 ///////////////////////////////////////////////////////////////////////////////
-std::string BKPParser::GetOutputModuleParamProperties(std::string modname,
-                                                      std::string paramName)
+std::string BKPParser::GetOutputModuleParamProperties(const std::string& modname,
+                                                      const std::string& paramName)
 {
     CASI::CASIObj cur_block =
         aspendoc->getBlockByName(CString(modname.c_str()));
@@ -1932,7 +1887,7 @@ std::string BKPParser::GetOutputModuleParamProperties(std::string modname,
 }
 ///////////////////////////////////////////////////////////////////////////////
 //Streams
-std::string BKPParser::GetStreamInputModuleParams(std::string modname)
+std::string BKPParser::GetStreamInputModuleParams( const std::string& modname)
 {
     CASI::CASIObj cur_stream =
         aspendoc->getStreamByName(CString(modname.c_str()));
@@ -1967,7 +1922,7 @@ std::string BKPParser::GetStreamInputModuleParams(std::string modname)
 }
 ///////////////////////////////////////////////////////////////////////////////
 std::string BKPParser::GetStreamInputModuleParamProperties(
-    std::string modname,std::string paramName )
+    const std::string& modname, const std::string& paramName )
 {
     CASI::CASIObj cur_stream =
         aspendoc->getStreamByName( CString(modname.c_str( ) ) );
@@ -2072,7 +2027,7 @@ std::string BKPParser::GetStreamInputModuleParamProperties(
     return status;
 }
 ///////////////////////////////////////////////////////////////////////////////
-std::string BKPParser::GetStreamOutputModuleParams(std::string modname)
+std::string BKPParser::GetStreamOutputModuleParams( const std::string& modname)
 {
     CASI::CASIObj cur_stream =
         aspendoc->getStreamByName( CString( modname.c_str( ) ) );
@@ -2106,7 +2061,7 @@ std::string BKPParser::GetStreamOutputModuleParams(std::string modname)
 }
 ///////////////////////////////////////////////////////////////////////////////
 std::string BKPParser::GetStreamOutputModuleParamProperties(
-    std::string modname, std::string paramName )
+    const std::string& modname, const std::string& paramName )
 {
     CASI::CASIObj cur_stream =
         aspendoc->getStreamByName( CString(modname.c_str( ) ) );
@@ -2213,7 +2168,7 @@ std::string BKPParser::GetStreamOutputModuleParamProperties(
     return status;
 }
 ///////////////////////////////////////////////////////////////////////////////
-void BKPParser::SetWorkingDir( std::string dir )
+void BKPParser::SetWorkingDir( const std::string& dir )
 {
     workingDir = dir;
 }
