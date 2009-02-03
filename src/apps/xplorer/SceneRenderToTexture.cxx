@@ -58,7 +58,6 @@
 // --- OSG Includes --- //
 #include <osg/Group>
 #include <osg/Camera>
-//#include <osg/ClearNode>
 #include <osg/FrameBufferObject>
 
 #include <osgDB/WriteFile>
@@ -180,7 +179,8 @@ void SceneRenderToTexture::InitScene( osg::Camera* const sceneViewCamera )
     *mCamerasConfigured = true;
 }
 ////////////////////////////////////////////////////////////////////////////////
-osg::Camera* SceneRenderToTexture::CreatePipelineCamera( osg::Viewport* viewport )
+osg::Camera* SceneRenderToTexture::CreatePipelineCamera(
+    osg::Viewport* viewport )
 {
     osg::Camera* tempCamera = new osg::Camera();
     tempCamera->setReferenceFrame( osg::Camera::ABSOLUTE_RF );
@@ -194,16 +194,35 @@ osg::Camera* SceneRenderToTexture::CreatePipelineCamera( osg::Viewport* viewport
     tempCamera->setViewMatrix( osg::Matrix::identity() );
     tempCamera->setProjectionMatrix( osg::Matrix::identity() );
 
-    //Create the texture attachments for the fbo
     std::pair< int, int > viewportDimensions = 
         std::make_pair< int, int >( viewport->width(), viewport->height() );
-    osg::ref_ptr< osg::Texture2D > colorMap =
-        CreateViewportTexture( viewportDimensions,
-            osg::Texture2D::LINEAR, osg::Texture2D::CLAMP_TO_EDGE );
-    osg::ref_ptr< osg::Texture2D > glowMap =
-        CreateViewportTexture( viewportDimensions,
-            osg::Texture2D::LINEAR, osg::Texture2D::REPEAT );
-    
+
+    //Set up the color map
+    osg::ref_ptr< osg::Texture2D > colorMap = CreateViewportTexture(
+        GL_RGBA16F_ARB, GL_RGBA, GL_FLOAT,
+        osg::Texture2D::LINEAR, osg::Texture2D::CLAMP_TO_EDGE,
+        viewportDimensions );
+
+    //Set up the glow map
+    osg::ref_ptr< osg::Texture2D > glowMap = CreateViewportTexture(
+        GL_RGBA16F_ARB, GL_RGBA, GL_FLOAT,
+        osg::Texture2D::LINEAR, osg::Texture2D::REPEAT,
+        viewportDimensions );
+
+    /*
+    //Set up the depth buffer
+    osg::ref_ptr< osg::Texture2D > depthMap = CreateViewportTexture(
+        GL_DEPTH_COMPONENT24, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE,
+        osg::Texture2D::NEAREST, osg::Texture2D::CLAMP_TO_EDGE,
+        viewportDimensions );
+
+    //Set up a depth/stencil buffer
+    depthStencilMap = CreateViewportTexture(
+        GL_DEPTH24_STENCIL8_EXT, GL_DEPTH_STENCIL_EXT, GL_UNSIGNED_INT_24_8_EXT,
+        osg::Texture2D::NEAREST, osg::Texture2D::CLAMP_TO_EDGE,
+        viewportDimensions );
+    */
+
     //Attach a texture and use it as the render target
 #if ( ( OSG_VERSION_MAJOR >= 2 ) && ( OSG_VERSION_MINOR >= 6 ) && ( OSG_VERSION_PATCH >= 0 ) )
     tempCamera->attach(
@@ -213,50 +232,18 @@ osg::Camera* SceneRenderToTexture::CreatePipelineCamera( osg::Viewport* viewport
     //tempCamera->attach(
         //osg::Camera::COLOR_BUFFER2, mGlowStencil.get() );//, 0, 0, false, 8, 8 );
 #else
-    tempCamera->attach( osg::Camera::COLOR_BUFFER0, (*mColorMap).get() );
-    tempCamera->attach( osg::Camera::COLOR_BUFFER1, (*mGlowMap).get() );
+    tempCamera->attach( osg::Camera::COLOR_BUFFER0, colorMap.get() );
+    tempCamera->attach( osg::Camera::COLOR_BUFFER1, glowMap.get() );
     //mCamera->attach( osg::Camera::COLOR_BUFFER2, mGlowStencil.get() );
 #endif
-
-    //Setup a render to texture depth buffer
-    osg::ref_ptr< osg::Texture2D > depthMap = new osg::Texture2D();
-    depthMap->setInternalFormat( GL_DEPTH_COMPONENT24 );
-    depthMap->setTextureSize(
-        viewportDimensions.first, viewportDimensions.second );
-    depthMap->setSourceFormat( GL_DEPTH_COMPONENT );
-    depthMap->setSourceType( GL_UNSIGNED_BYTE );
-    depthMap->setFilter(
-        osg::Texture2D::MIN_FILTER, osg::Texture2D::NEAREST );
-    depthMap->setFilter(
-        osg::Texture2D::MAG_FILTER, osg::Texture2D::NEAREST );
-    depthMap->setWrap(
-        osg::Texture2D::WRAP_S, osg::Texture2D::CLAMP_TO_EDGE );
-    depthMap->setWrap(
-        osg::Texture2D::WRAP_T, osg::Texture2D::CLAMP_TO_EDGE );
 
     //Use an interleaved depth/stencil texture to get a depth and stencil buffer
     //jbkoch: In order to get the stencil buffer to work on my card/driver,
     //jbkoch: the depth and stencil must be attached to the same texture or
     //jbkoch: renderbuffer. I have not found a way to access the renderbuffer
     //jbkoch: for osg::Camera so must create texture for now.
-    tempCamera->attach( osg::Camera::DEPTH_BUFFER, depthMap.get() );
-    //tempCamera->attach( osg::Camera::STENCIL_BUFFER, mDepthStencilTexture.get() );
-
-    //Use renderbuffers to get a depth and stencil buffer
-    //tempCamera->attach( osg::Camera::DEPTH_BUFFER, GL_DEPTH_COMPONENT24 );
-    //tempCamera->attach( osg::Camera::STENCIL_BUFFER, GL_STENCIL_INDEX );
-#if ( ( OSG_VERSION_MAJOR >= 2 ) && ( OSG_VERSION_MINOR >= 6 ) && ( OSG_VERSION_PATCH >= 0 ) )
-    //tempCamera->setClearStencil( 0 );
-    //glStencilMask( 0xFFFFFFFF );
-#endif
-
-    //There seems to be a problem with sceneView overwriting RTT camera's
-    //mask values for GL_STENCIL_BUFFER_BIT
-    //osg::ref_ptr< osg::ClearNode > clearNode = new osg::ClearNode();
-    //clearNode->setClearColor( osg::Vec4( 0.0, 0.0, 0.0, 0.0 ) );
-    //clearNode->setClearMask(
-        //GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT );
-    //tempCamera->addChild( clearNode.get() );
+    //tempCamera->attach( osg::Camera::DEPTH_BUFFER, depthMap.get() );
+    //tempCamera->attach( osg::Camera::STENCIL_BUFFER, depthStencilMap.get() );
 
     //Setup the MRT shader to make glow work correctly
     std::string fragmentSource =
@@ -295,6 +282,30 @@ osg::Camera* SceneRenderToTexture::CreatePipelineCamera( osg::Viewport* viewport
     tempCamera->addChild( mRootGroup.get() );
     
     return tempCamera;
+}
+////////////////////////////////////////////////////////////////////////////////
+osg::Texture2D* SceneRenderToTexture::CreateViewportTexture(
+    GLenum internalFormat,
+    GLenum sourceFormat,
+    GLenum sourceType,
+    osg::Texture2D::FilterMode filterMode,
+    osg::Texture2D::WrapMode wrapMode,
+    std::pair< int, int >& viewportDimensions  )
+{
+    osg::Texture2D* tempTexture = new osg::Texture2D();
+    //GL_RGBA8/GL_UNSIGNED_INT - GL_RGBA16F_ARB/GL_FLOAT 
+    
+    tempTexture->setInternalFormat( GL_RGBA16F_ARB );
+    tempTexture->setSourceFormat( GL_RGBA );
+    tempTexture->setSourceType( GL_FLOAT );
+    tempTexture->setFilter( osg::Texture2D::MIN_FILTER, filterMode );
+    tempTexture->setFilter( osg::Texture2D::MAG_FILTER, filterMode );
+    tempTexture->setWrap( osg::Texture2D::WRAP_S, wrapMode );
+    tempTexture->setWrap( osg::Texture2D::WRAP_T, wrapMode );
+    tempTexture->setTextureSize(
+        viewportDimensions.first, viewportDimensions.second );
+
+    return tempTexture;
 }
 ////////////////////////////////////////////////////////////////////////////////
 #if __VJ_version >= 2003000
@@ -508,90 +519,6 @@ rtt::Processor* SceneRenderToTexture::CreatePipelineProcessor(
         viewport, static_cast< osg::Texture2D* const >( colorBuffer0->GetOutputTexture() ) ) );
 
     return tempProcessor;
-}
-////////////////////////////////////////////////////////////////////////////////
-osg::Texture2D* SceneRenderToTexture::CreateViewportTexture(
-    std::pair< int, int >& viewportDimensions,
-    osg::Texture2D::FilterMode filterMode,
-    osg::Texture2D::WrapMode wrapMode )
-{
-    osg::Texture2D* tempTexture = new osg::Texture2D();
-    //GL_RGBA8/GL_UNSIGNED_INT - GL_RGBA16F_ARB/GL_FLOAT 
-    tempTexture->setInternalFormat( GL_RGBA16F_ARB );
-    tempTexture->setTextureSize(
-        viewportDimensions.first, viewportDimensions.second );
-    tempTexture->setSourceFormat( GL_RGBA );
-    tempTexture->setSourceType( GL_FLOAT );
-    tempTexture->setFilter( osg::Texture2D::MIN_FILTER, filterMode );
-    tempTexture->setFilter( osg::Texture2D::MAG_FILTER, filterMode );
-    tempTexture->setWrap( osg::Texture2D::WRAP_S, wrapMode );
-    tempTexture->setWrap( osg::Texture2D::WRAP_T, wrapMode );
-
-    return tempTexture;
-
-    /*
-    osg::ref_ptr< osg::Texture2D > tempColorMap = (*mColorMap).get();
-    //GL_RGBA8/GL_UNSIGNED_INT - GL_RGBA16F_ARB/GL_FLOAT 
-    tempColorMap->setInternalFormat( GL_RGBA16F_ARB );
-    tempColorMap->setTextureSize(
-        screenDims.first * mScaleFactor, screenDims.second * mScaleFactor );
-    tempColorMap->setSourceFormat( GL_RGBA );
-    tempColorMap->setSourceType( GL_FLOAT );
-    tempColorMap->setFilter(
-        osg::Texture2D::MIN_FILTER, osg::Texture2D::LINEAR );
-    tempColorMap->setFilter(
-        osg::Texture2D::MAG_FILTER, osg::Texture2D::LINEAR );
-    tempColorMap->setWrap(
-        osg::Texture2D::WRAP_S, osg::Texture2D::CLAMP_TO_EDGE );
-    tempColorMap->setWrap(
-        osg::Texture2D::WRAP_T, osg::Texture2D::CLAMP_TO_EDGE );
-
-    osg::ref_ptr< osg::Texture2D > tempGlowMap = (*mGlowMap).get();
-    //GL_RGBA8/GL_UNSIGNED_INT - GL_RGBA16F_ARB/GL_FLOAT 
-    tempGlowMap->setInternalFormat( GL_RGBA16F_ARB );
-    tempGlowMap->setTextureSize(
-        screenDims.first * mScaleFactor, screenDims.second * mScaleFactor );
-    tempGlowMap->setSourceFormat( GL_RGBA );
-    tempGlowMap->setSourceType( GL_FLOAT );
-    tempGlowMap->setFilter(
-        osg::Texture2D::MIN_FILTER, osg::Texture2D::LINEAR );
-    tempGlowMap->setFilter(
-        osg::Texture2D::MAG_FILTER, osg::Texture2D::LINEAR );
-    //We really want REPEAT otherwise the edge gets sampled by the glow shader
-    tempGlowMap->setWrap( osg::Texture2D::WRAP_S, osg::Texture2D::REPEAT );
-    tempGlowMap->setWrap( osg::Texture2D::WRAP_T, osg::Texture2D::REPEAT );
-
-    mGlowStencil = new osg::Texture2D();
-    //GL_RGBA8/GL_UNSIGNED_INT - GL_RGBA16F_ARB/GL_FLOAT 
-    mGlowStencil->setInternalFormat( GL_RGBA8 );
-    mGlowStencil->setTextureSize(
-        screenDims.first * mScaleFactor, screenDims.second * mScaleFactor );
-    mGlowStencil->setSourceFormat( GL_RGBA );
-    mGlowStencil->setSourceType( GL_UNSIGNED_INT );
-    mGlowStencil->setFilter(
-        osg::Texture2D::MIN_FILTER, osg::Texture2D::LINEAR );
-    mGlowStencil->setFilter(
-        osg::Texture2D::MAG_FILTER, osg::Texture2D::LINEAR );
-    mGlowStencil->setWrap(
-        osg::Texture2D::WRAP_S, osg::Texture2D::CLAMP_TO_EDGE );
-    mGlowStencil->setWrap(
-        osg::Texture2D::WRAP_T, osg::Texture2D::CLAMP_TO_EDGE );
-
-    mDepthStencilTexture = new osg::Texture2D();
-    mDepthStencilTexture->setInternalFormat( GL_DEPTH24_STENCIL8_EXT );
-    mDepthStencilTexture->setTextureSize(
-        screenDims.first * mScaleFactor, screenDims.second * mScaleFactor );
-    mDepthStencilTexture->setSourceFormat( GL_DEPTH_STENCIL_EXT );
-    mDepthStencilTexture->setSourceType( GL_UNSIGNED_INT_24_8_EXT );
-    mDepthStencilTexture->setFilter(
-        osg::Texture2D::MIN_FILTER, osg::Texture2D::NEAREST );
-    mDepthStencilTexture->setFilter(
-        osg::Texture2D::MAG_FILTER, osg::Texture2D::NEAREST );
-    mDepthStencilTexture->setWrap(
-        osg::Texture2D::WRAP_S, osg::Texture2D::CLAMP_TO_EDGE );
-    mDepthStencilTexture->setWrap(
-        osg::Texture2D::WRAP_T, osg::Texture2D::CLAMP_TO_EDGE );
-    */
 }
 ////////////////////////////////////////////////////////////////////////////////
 #if __VJ_version >= 2003000

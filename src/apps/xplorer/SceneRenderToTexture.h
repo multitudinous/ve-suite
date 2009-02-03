@@ -134,9 +134,12 @@ private:
     
     ///
     osg::Texture2D* CreateViewportTexture(
-        std::pair< int, int >& viewportDimensions,
+        GLenum internalFormat,
+        GLenum sourceFormat,
+        GLenum sourceType,
         osg::Texture2D::FilterMode filterMode,
-        osg::Texture2D::WrapMode wrapMode );
+        osg::Texture2D::WrapMode wrapMode,
+        std::pair< int, int >& viewportDimensions );
     
     ///
 #if __VJ_version >= 2003000
