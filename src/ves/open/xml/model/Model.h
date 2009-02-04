@@ -150,6 +150,10 @@ public:
     ///\return The icon hidden flag
     int GetIconHiddenFlag( void );
 
+	///Get unique model id
+	//\return the unique model id
+	unsigned int GetUniqueModelID();
+
     ///Get point for the icon location referenced to the upper left hand corner
     ///\return The point for the icon location
     PointPtr GetIconLocation( void );

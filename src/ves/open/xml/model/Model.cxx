@@ -915,6 +915,11 @@ int Model::GetIconMirror( void )
     return mIconMirror;
 }
 ////////////////////////////////////////////////////////////////////////////////
+unsigned int Model::GetUniqueModelID( void )
+{
+    return mUniqueModelID;
+}
+////////////////////////////////////////////////////////////////////////////////
 void Model::SetSubSystem( SystemPtr inputSystem )
 {
     mSubSystem = inputSystem;
