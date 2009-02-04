@@ -540,10 +540,11 @@ osg::Geode* SceneRenderToTexture::CreateTexturedQuad(
     float viewportOriginX, viewportOriginY, viewportWidth, viewportHeight;
     tempView->getOriginAndSize(
         viewportOriginX, viewportOriginY, viewportWidth, viewportHeight );
-    std::cout << viewportOriginX << " "
+
+    /*std::cout << viewportOriginX << " "
               << viewportOriginY << " " 
               << viewportWidth << " "
-              << viewportHeight << std::endl;
+              << viewportHeight << std::endl;*/
 
     //Transform ( 0 to 1 ) space into ( -1 to 1 ) space for identity projection
     float lx, ly, ux, uy;
@@ -551,7 +552,7 @@ osg::Geode* SceneRenderToTexture::CreateTexturedQuad(
     ly = ( viewportOriginY * 2.0 ) - 1.0;
     ux = ( ( viewportOriginX + viewportWidth ) * 2.0 ) - 1.0;
     uy = ( ( viewportOriginY + viewportHeight )* 2.0 ) - 1.0;
-    std::cout << lx << " " << ly << " " << ux << " " << uy << std::endl;
+    //std::cout << lx << " " << ly << " " << ux << " " << uy << std::endl;
 
     //Get the vertex coordinates for the quad
     osg::ref_ptr< osg::Vec3Array > quadVertices = new osg::Vec3Array();
