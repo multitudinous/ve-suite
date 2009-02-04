@@ -86,10 +86,10 @@ Link::Link( wxScrolledWindow* designCanvas, wxEvtHandler* handler )
     cosb = cos( b );
     sina = sin( a );
     cosa = cos( a );
-    linkName = wxString( "Link::Link-noname", wxConvUTF8 );
-    m_uuid = "notSet";
+    linkName = wxString( "untitled", wxConvUTF8 );
     highlightFlag = false;
     m_veLink = ves::open::xml::model::LinkPtr( new ves::open::xml::model::Link() );
+    m_uuid = m_veLink->GetID();
     mPostHandler = handler;
 }
 ////////////////////////////////////////////////////////////////////////////////
