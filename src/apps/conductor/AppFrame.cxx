@@ -1669,6 +1669,16 @@ void AppFrame::SaveAsSimulation( wxCommandEvent& WXUNUSED( event ) )
 ///////////////////////////////////////////////////////////////////////////
 void AppFrame::NewCanvas( wxCommandEvent& WXUNUSED( event ) )
 {
+
+    wxMessageDialog md( this, 
+    wxT( "Would you like to clear VE-Suite?" ),
+    wxT( "Confirm" ),
+    wxYES_NO);
+    if( md.ShowModal() == wxID_NO )
+    {
+        return;
+    }
+
 	newCanvas = true;
     mVESFileName.Clear();
 
