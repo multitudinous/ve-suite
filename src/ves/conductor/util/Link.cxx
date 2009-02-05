@@ -460,23 +460,21 @@ void Link::OnShowLinkContent( wxCommandEvent& event )
     }
 }
 ///////////////////////////////////////////////////////////////////////////////
-void Link::OnSetLinkName( wxCommandEvent& event)
+void Link::OnSetLinkName( wxCommandEvent& event )
 {
 	UILINK_CHECKID( event )
 
-	wxTextEntryDialog* linkNameDlg = new wxTextEntryDialog( networkFrame, 
-		"Set Link Name", "Link Name", GetName(),
+	wxTextEntryDialog linkNameDlg( networkFrame, 
+		_("Set Link Name"), _("Link Name"), GetName(),
 		wxOK|wxCANCEL|wxCENTRE, wxDefaultPosition );
 
-	int showLinkDlg = linkNameDlg->ShowModal();
+	int showLinkDlg = linkNameDlg.ShowModal();
 	if( showLinkDlg != wxID_OK )
 	{
 		return;
 	}
 
-	SetName( linkNameDlg->GetValue() );
-
-	delete linkNameDlg;
+	SetName( linkNameDlg.GetValue() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Link::OnShowAspenName( wxCommandEvent& event )
