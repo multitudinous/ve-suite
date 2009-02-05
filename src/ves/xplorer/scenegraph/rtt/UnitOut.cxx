@@ -65,8 +65,11 @@ void UnitOut::Initialize()
 {
     Unit::Initialize();
 
-    //Create a quad geometry
-    mDrawable = CreateTexturedQuadDrawable();
+    //Setup a geode and the drawable as childs of this unit
+    if( !mDrawable.valid() )
+    {
+        CreateTexturedQuadDrawable();
+    }
     mGeode->removeDrawables( 0, mGeode->getNumDrawables() );
     mGeode->addDrawable( mDrawable.get() );
 }

@@ -66,15 +66,13 @@ namespace rtt
 class VE_SCENEGRAPH_EXPORTS ShaderAttribute : public osg::Program
 {
 public:
-    /** Initialize shader to the fixed function pipeline per default **/
+    ///Constructor
     ShaderAttribute();
 
-    /**
-    * Copy constructor to create a shader object from the other one.
-    * NOTE: copyop is currently ignored. The uniforms will be copied completely,
-    * hence after the copy you will get two uniforms with the same value.
-    **/
-    ShaderAttribute( const ShaderAttribute&, const osg::CopyOp& copyop = osg::CopyOp::DEEP_COPY_ALL );
+    ///Copy Constructor
+    ShaderAttribute(
+        const ShaderAttribute& shaderAttribute,
+        const osg::CopyOp& copyop = osg::CopyOp::DEEP_COPY_ALL );
 
     ///
     META_StateAttribute( rtt, ShaderAttribute, PROGRAM );

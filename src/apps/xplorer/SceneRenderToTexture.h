@@ -148,14 +148,6 @@ private:
         osg::Texture2D::WrapMode wrapMode,
         std::pair< int, int >& viewportDimensions );
     
-    ///
-#if __VJ_version >= 2003000
-    osg::Geode* CreateTexturedQuad(
-        vrj::ViewportPtr viewport, osg::Texture2D* texture );
-#else
-    osg::Geode* CreateTexturedQuad(
-        vrj::Viewport* viewport, osg::Texture2D* texture );
-#endif
     ///Set the number of super samples
     int mScaleFactor;
 

@@ -89,6 +89,9 @@ void Unit::DrawCallback::drawImplementation(
     //Set matricies used for the unit
     ri.getState()->applyProjectionMatrix( mParent->mProjectionMatrix.get() );
     ri.getState()->applyModelViewMatrix( mParent->mModelViewMatrix.get() );
+
+    //Now render the drawable geometry
+    dr->drawImplementation( ri );
 }
 ////////////////////////////////////////////////////////////////////////////////
 Unit::Unit()
@@ -131,9 +134,6 @@ Unit::Unit()
 
     //No culling, because we do not need it
     setCullingActive( false );
-
-    //Set default color attribute
-    //setColorAttribute( new ColorAttribute() )
 }
 ////////////////////////////////////////////////////////////////////////////////
 Unit::Unit( const Unit& unit, const osg::CopyOp& copyop )
@@ -160,65 +160,29 @@ Unit::~Unit()
 ////////////////////////////////////////////////////////////////////////////////
 void Unit::traverse( osg::NodeVisitor& nv )
 {
-    /*
-    //Check if we have to update it
-    if( nv.getVisitorType() == osg::NodeVisitor::UPDATE_VISITOR )
-    {
-        if( mbUpdateTraversed == false )
-        {
-            mbUpdateTraversed = true;
-
-            Update();
-            getStateSet()->runUpdateCallbacks( &nv );
-
-            osg::Group::traverse( nv );
-        }
-    }
-    else if( nv.getVisitorType() == osg::NodeVisitor::CULL_VISITOR )
-    {
-        if( mbCullTraversed == false )
-        {
-            mbCullTraversed = true;
-            osg::Group::traverse( nv );
-        }
-    }
-    else
-    {
-    */
-        osg::Group::traverse( nv );
-    //}
+    osg::Group::traverse( nv );
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool Unit::SetInputToUniform(
-    Unit* parent, const std::string& uniform, bool add )
+    Unit* unit, const std::string& uniform, bool add )
 {
-    if( !parent || uniform.length() < 1 ) 
+    if( uniform.length() < 1 ) 
     {
         return false;
     }
 
-    //Check if this is a valid parent of this node
-    for( unsigned int i = 0; i < getNumParents(); ++i )
+    //Add this unit as a child of the parent if required
+    if( add && !unit->containsNode( this ) )
     {
-        if( parent == getParent( i ) )
-        {            
-            //Add the uniform
-            mInputToUniformMap[ parent ] =
-                std::pair< std::string, unsigned int >( uniform, i );
-
-            //Add this unit as a child of the parent if required
-            if( add && !parent->containsNode( this ) )
-            {
-                parent->addChild( this );
-            }
-
-            //dirty();
-
-            return true;
-        }
+        unit->addChild( this );
     }
 
-    return false;    
+    //Add the uniform
+    mInputToUniformMap[ unit ] =
+        std::pair< std::string, unsigned int >(
+            uniform, mInputToUniformMap.size() );
+
+    return true;  
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Unit::RemoveInputToUniform( Unit* parent, bool remove )
@@ -242,8 +206,6 @@ void Unit::RemoveInputToUniform( Unit* parent, bool remove )
 
             //Remove the element from the list
             mInputToUniformMap.erase( itr );
-
-            //dirty();
         }
         else
         {
@@ -351,20 +313,13 @@ void Unit::Initialize()
     //Reassign input and shaders
     AssignInputTexture();
     AssignViewport();
-    //AssignInputPBO();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Unit::Update()
 {
-    //if( mbDirty )
-    //{
-        Initialize();
+    Initialize();
 
-        //printDebugInfo(NULL);
-
-        UpdateUniforms();
-        //mbDirty = false;
-    //}
+    UpdateUniforms();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Unit::SetViewport( osg::Viewport* viewport )
@@ -379,8 +334,6 @@ void Unit::SetViewport( osg::Viewport* viewport )
     mViewport = new osg::Viewport( *viewport );
 
     AssignViewport();
-
-    //Dirty();
 }
 ////////////////////////////////////////////////////////////////////////////////
 osg::Viewport* const Unit::GetViewport() const
@@ -400,8 +353,6 @@ void Unit::SetInputTextureIndexForViewportReference( int index )
         {
             mInputTextureIndexForViewportReference = index;
         }
-
-        //Dirty();
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -419,6 +370,36 @@ void Unit::SetInputTexturesFromParents()
 {
     //Scan all parents and look for units
     rtt::Unit* unit( NULL );
+    Unit::InputToUniformMap::iterator itumItr = mInputToUniformMap.begin();
+    for( itumItr; itumItr != mInputToUniformMap.end(); ++itumItr )
+    {
+        unit = itumItr->first.get();
+        if( unit )
+        {
+            //Add each found texture as input
+            const Unit::TextureMap& textureMap = unit->GetOutputTextureMap();
+            Unit::TextureMap::const_iterator tmItr = textureMap.begin();
+            for( tmItr; tmItr != textureMap.end(); ++tmItr )
+            {
+                osg::Texture* texture = tmItr->second.get();
+                if( texture )
+                {
+                    mInputTextures[ mInputTextures.size() ] =
+                        tmItr->second.get();
+                }
+                else
+                {
+                    osg::notify( osg::WARN )
+                        << "rtt::Unit::SetInputTexturesFromParents(): "
+                        << unit->getName()
+                        << " has invalid output texture!"
+                        << std::endl;
+                }
+            }
+        }
+    }
+
+    //Scan all parents and look for units
     for( unsigned int i = 0; i < getNumParents(); ++i )
     {
         unit = dynamic_cast< rtt::Unit* >( getParent( i ) );
@@ -445,44 +426,12 @@ void Unit::SetInputTexturesFromParents()
             }
         }
     }
+
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Unit::UpdateUniforms()
 {
     osg::StateSet* stateset = mGeode->getOrCreateStateSet();
-
-    //Viewport specific uniforms
-    if( mViewport.valid() )
-    {
-        osg::Uniform* width = stateset->getOrCreateUniform(
-            OSGPPU_VIEWPORT_WIDTH_UNIFORM, osg::Uniform::FLOAT );
-        osg::Uniform* height = stateset->getOrCreateUniform(
-            OSGPPU_VIEWPORT_HEIGHT_UNIFORM, osg::Uniform::FLOAT );
-        if( width )
-        {
-            width->set( static_cast< float >( mViewport->width() ) );
-        }
-
-        if( height)
-        {
-            height->set( static_cast< float >( mViewport->height() ) );
-        }
-
-        osg::Uniform* inverseWidth = stateset->getOrCreateUniform(
-            OSGPPU_VIEWPORT_INV_WIDTH_UNIFORM, osg::Uniform::FLOAT );
-        osg::Uniform* inverseHeight = stateset->getOrCreateUniform(
-            OSGPPU_VIEWPORT_INV_HEIGHT_UNIFORM, osg::Uniform::FLOAT );
-        if( inverseWidth )
-        {
-            inverseWidth->set(
-                1.0f / static_cast< float >( mViewport->width() ) );
-        }
-        if( inverseHeight )
-        {
-            inverseHeight->set(
-                1.0f / static_cast< float >( mViewport->height() ) );
-        }
-    }
 
     //Setup input texture uniforms
     InputToUniformMap::iterator itr = mInputToUniformMap.begin();
@@ -530,29 +479,51 @@ void Unit::AssignViewport()
     if( mViewport.valid() )
     {
         getOrCreateStateSet()->setAttribute(
-            mViewport.get(), osg::StateAttribute::ON );
+            mViewport.get(),
+            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-osg::Drawable* Unit::CreateTexturedQuadDrawable(
+void Unit::CreateTexturedQuadDrawable(
     const osg::Vec3& corner,
     const osg::Vec3& widthVec,
     const osg::Vec3& heightVec,
     float l, float b, float r, float t )
 {
-    osg::Geometry* geometry = osg::createTexturedQuadGeometry(
-        corner, widthVec, heightVec, l, b, r, t );
+    //Get the vertex coordinates for the quad
+    osg::ref_ptr< osg::Vec3Array > quadVertices = new osg::Vec3Array();
+    quadVertices->resize( 4 );
 
-    //Setup default state set
-    geometry->setStateSet( new osg::StateSet() );
-    geometry->setUseDisplayList( false );
-    //geometry->setDataVariance( osg::Object::DYNAMIC );
-    //geometry->getOrCreateStateSet()->setDataVariance( osg::Object::DYNAMIC );
-    geometry->setDrawCallback( new Unit::DrawCallback( this ) );
+    (*quadVertices)[ 0 ] = corner;
+    (*quadVertices)[ 1 ] = corner + widthVec;
+    (*quadVertices)[ 2 ] = corner + widthVec + heightVec;
+    (*quadVertices)[ 3 ] = corner + heightVec;
 
-    //Remove colors from the geometry
-    geometry->setColorBinding( osg::Geometry::BIND_OFF );
+    //Get the texture coordinates for the quad
+    osg::ref_ptr< osg::Vec2Array > quadTexCoords = new osg::Vec2Array();
+    quadTexCoords->resize( 4 );
 
-    return geometry;
+    (*quadTexCoords)[ 0 ].set( l, b );
+    (*quadTexCoords)[ 1 ].set( r, b );
+    (*quadTexCoords)[ 2 ].set( r, t );
+    (*quadTexCoords)[ 3 ].set( l, t );
+
+    //Create the quad geometry
+    osg::Geometry* quadGeometry = new osg::Geometry();
+    quadGeometry->setVertexArray( quadVertices.get() );
+    quadGeometry->addPrimitiveSet( new osg::DrawArrays(
+        osg::PrimitiveSet::QUADS, 0, quadVertices->size() ) );
+    quadGeometry->setTexCoordArray( 0, quadTexCoords.get() );
+    quadGeometry->setUseDisplayList( false );
+    quadGeometry->setColorBinding( osg::Geometry::BIND_OFF );
+
+    //Set the stateset for the quad
+    osg::ref_ptr< osg::StateSet > stateset =
+        quadGeometry->getOrCreateStateSet();
+    stateset->setMode( GL_LIGHTING, osg::StateAttribute::OFF );
+
+    quadGeometry->setDrawCallback( new Unit::DrawCallback( this ) );
+
+    mDrawable = quadGeometry;
 }
 ////////////////////////////////////////////////////////////////////////////////

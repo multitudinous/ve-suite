@@ -39,8 +39,6 @@
 #include <osg/Geode>
 #include <osg/Image>
 #include <osg/Texture2D>
-//#include <osg/Texture3D>
-//#include <osg/TextureCubeMap>
 #include <osg/GL2Extensions>
 #include <osg/FrameBufferObject>
 
@@ -53,7 +51,7 @@ using namespace ves::xplorer::scenegraph::rtt;
 class Subload2DCallback : public osg::Texture2D::SubloadCallback
 {
 public:
-    //Rill texture with default pixel values
+    //Fill texture with default pixel values
     void load( const osg::Texture2D &texture, osg::State &state ) const
     {
         //Create temporary image which is initialized with 0 values
@@ -91,7 +89,8 @@ UnitInOut::UnitInOut()
     mOutputType( TEXTURE_2D ),
     mOutputInternalFormat( GL_RGBA16F_ARB )
 {
-    ;
+    //Add empty mrt = 0 output texture
+    SetOutputTexture( NULL );
 }
 ////////////////////////////////////////////////////////////////////////////////
 UnitInOut::UnitInOut( const UnitInOut& unitInOut, const osg::CopyOp& copyop )
@@ -115,67 +114,15 @@ void UnitInOut::Initialize()
     Unit::Initialize();
 
     //Setup a geode and the drawable as childs of this unit
-    mDrawable = CreateTexturedQuadDrawable();
+    if( !mDrawable.valid() )
+    {
+        CreateTexturedQuadDrawable();
+    }
     mGeode->removeDrawables( 0, mGeode->getNumDrawables() );
     mGeode->addDrawable( mDrawable.get() );
 
-    /*
-    //Setup uniforms
-    if( mOutputType == TEXTURE_CUBEMAP )
-    {
-        osg::Uniform* faceUniform =
-            mDrawable->getOrCreateStateSet()->getOrCreateUniform(
-                OSGPPU_CUBEMAP_FACE_UNIFORM, osg::Uniform::INT );
-        faceUniform->set( static_cast< int >( mOutputCubemapFace ) );
-    }
-    else if( mOutputType == TEXTURE_3D )
-    {
-        osg::Uniform* sliceCount =
-            mDrawable->getOrCreateStateSet()->getOrCreateUniform(
-                OSGPPU_3D_SLICE_NUMBER, osg::Uniform::INT );
-        sliceCount->set( static_cast< int >( mOutputDepth ) );
-
-        OutputSliceMap::const_iterator itr = GetOutputZSliceMap().begin();
-        for( itr; itr != GetOutputZSliceMap().end(); ++itr )
-        {
-            osg::Uniform* sliceIndex =
-                mDrawable->getOrCreateStateSet()->getOrCreateUniform(
-                    OSGPPU_3D_SLICE_INDEX, osg::Uniform::INT,
-                    getOutputZSliceMap().size() );
-            sliceIndex->setElement(
-                itr->first, static_cast< int >( itr->second ) );
-
-            if( GetOutputZSliceMap().size() <= itr->first )
-            {
-                osg::notify( osg::WARN )
-                    << "rtt::UnitInOut::Initialize(): specified mrt index "
-                    << itr->first << " is not valid - results might be wrong!"
-                    << std::endl;
-            }
-        }
-    }
-
-    //Setup bypassed output if required
-    if( mBypassedInput >= 0 &&
-        mBypassedInput < static_cast< int >( getNumParents() ) )
-    {
-        Unit* input = dynamic_cast< Unit* >( getParent( mBypassedInput ) );
-        if( !input )
-        {
-            osg::notify( osg::WARN )
-                << "rtt::UnitInOut::Initialize(): "
-                << "cannot initialize bypassed input - no input unit found!"
-                << std::endl;
-
-            return;
-        }
-        mOutputTextures[ 0 ] = input->GetOrCreateOutputTexture( 0 );
-    }
-    */
-
     //Setup output textures and fbo
     AssignOutputTexture();
-    //AssignOutputPBO();
     AssignFBO();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -187,8 +134,6 @@ osg::FrameBufferObject* UnitInOut::GetFrameBufferObject()
 void UnitInOut::SetOutputTextureType( UnitInOut::TextureType textureType )
 {
     mOutputType = textureType;
-
-    //Dirty();
 }
 ////////////////////////////////////////////////////////////////////////////////
 UnitInOut::TextureType UnitInOut::GetOutputTextureType() const
@@ -253,32 +198,6 @@ osg::Texture* UnitInOut::GetOrCreateOutputTexture( int mrt )
                 static_cast< int >( mViewport->height() ) );
         }
     }
-    /*
-    else if( mOutputType == TEXTURE_CUBEMAP )
-    {
-        newTexture = new osg::TextureCubeMap();
-        dynamic_cast< osg::TextureCubeMap* >( newTexture )->setSubloadCallback(
-            new SubloadCubeMapCallback() );
-        if( mViewport.valid() )
-        {
-            dynamic_cast< osg::TextureCubeMap* >( newTexture )->setTextureSize(
-                static_cast< int >( mViewport->width() ),
-                static_cast< int >( mViewport->height() ) );
-        }
-    }
-    else if( mOutputType == TEXTURE_3D )
-    {
-        newTexture = new osg::Texture3D();
-        dynamic_cast< osg::Texture3D* >( newTexture )->setSubloadCallback(
-            new Subload3DCallback() );
-        if( mViewport.valid() )
-        {
-            dynamic_cast< osg::Texture3D* >( newTexture )->setTextureSize(
-                static_cast< int >( mViewport->width() ),
-                static_cast< int >( mViewport->height() ), mOutputDepth );
-        }
-    }
-    */
     else
     {
         osg::notify( osg::FATAL )
@@ -315,7 +234,7 @@ osg::Texture* UnitInOut::GetOrCreateOutputTexture( int mrt )
     }
 
     if( GetInputTexture( 0 ) && GetInputTexture( 0 )->getFilter(
-            osg::Texture2D::MAG_FILTER ) == osg::Texture2D::NEAREST)
+            osg::Texture2D::MAG_FILTER ) == osg::Texture2D::NEAREST )
     {
         newTexture->setFilter(
             osg::Texture2D::MAG_FILTER, osg::Texture2D::NEAREST );
@@ -335,7 +254,6 @@ osg::Texture* UnitInOut::GetOrCreateOutputTexture( int mrt )
 void UnitInOut::SetOutputTextureMap( const TextureMap& textureMap )
 {
     mOutputTextures = textureMap;
-    //Dirty();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UnitInOut::NoticeChangeViewport()
@@ -346,7 +264,7 @@ void UnitInOut::NoticeChangeViewport()
     {
         if( itr->second.valid() )
         {
-            //If texture type is a 2d texture
+            //If texture type is a 2D texture
             if( dynamic_cast< osg::Texture2D* >( itr->second.get() ) != NULL )
             {
                 //Change size
@@ -356,19 +274,6 @@ void UnitInOut::NoticeChangeViewport()
                     static_cast< int >( mViewport->width() ),
                     static_cast< int >( mViewport->height() ) );
             }
-            /*
-            //If texture type is a cubemap texture
-            else if( dynamic_cast< osg::TextureCubeMap* >(
-                itr->second.get() ) != NULL )
-            {
-                //Change size
-                osg::TextureCubeMap* texture =
-                    dynamic_cast< osg::TextureCubeMap* >( itr->second.get() );
-                texture->setTextureSize(
-                    static_cast< int >( mViewport->width() ),
-                    static_cast< int >( mViewport->height() ) );
-            }
-            */
         }
     }
 }
@@ -393,7 +298,7 @@ void UnitInOut::AssignOutputTexture()
             if( !mViewport.valid() )
             {
                 osg::notify( osg::FATAL )
-                    << "rtt::UnitInOut::assignOutputTexture(): "
+                    << "rtt::UnitInOut::AssignOutputTexture(): "
                     << getName()
                     << "cannot set output texture size - invalid viewport!"
                     << std::endl;
@@ -413,38 +318,6 @@ void UnitInOut::AssignOutputTexture()
             continue;
         }
 
-        /*
-        //Check if the output texture is a cubemap texture
-        osg::TextureCubeMap* cubemapTexture =
-            dynamic_cast< osg::TextureCubeMap* >( texture );
-        if( cubemapTexture != NULL)
-        {
-            mFBO->setAttachment( osg::Camera::BufferComponent(
-                osg::Camera::COLOR_BUFFER0 + itr->first ),
-                osg::FrameBufferAttachment(
-                    cubemapTexture, mOutputCubemapFace ) );
-
-            continue;
-        }
-
-        //Check whenever the output texture is a 3D texture
-        osg::Texture3D* texture3D = dynamic_cast< osg::Texture3D* >( texture );
-        if( texture3D != NULL )
-        {
-            //For each mrt to slice mapping do
-            OutputSliceMap::const_iterator osmItr =
-                getOutputZSliceMap().begin();
-            for( osmItr; osmItr != GetOutputZSliceMap().end(); ++osmItr )
-            {
-                mFBO->setAttachment( osg::Camera::BufferComponent(
-                    osg::Camera::COLOR_BUFFER0 + osmItr->first ),
-                    osg::FrameBufferAttachment( texture3D, osmItr->second ) );
-            }
-
-            continue;
-        }
-        */
-
         //Output texture type is not supported
         osg::notify( osg::FATAL )
             << "rtt::UnitInOut::assignOutputTexture(): "
@@ -459,6 +332,3 @@ void UnitInOut::AssignFBO()
     getOrCreateStateSet()->setAttribute( mFBO.get(), osg::StateAttribute::ON );
 }
 ////////////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////////////
-

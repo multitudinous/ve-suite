@@ -51,11 +51,6 @@ class Viewport;
 // --- C/C++ Includes --- //
 #include <map>
 
-#define OSGPPU_VIEWPORT_WIDTH_UNIFORM "osgppu_ViewportWidth"
-#define OSGPPU_VIEWPORT_HEIGHT_UNIFORM "osgppu_ViewportHeight"
-#define OSGPPU_VIEWPORT_INV_WIDTH_UNIFORM "osgppu_InvViewportWidth"
-#define OSGPPU_VIEWPORT_INV_HEIGHT_UNIFORM "osgppu_InvViewportHeight"
-
 namespace ves
 {
 namespace xplorer
@@ -68,7 +63,6 @@ class VE_SCENEGRAPH_EXPORTS Unit : public osg::Group
 {
 public:
     ///
-    typedef std::vector< unsigned int > IgnoreInputList;
     typedef std::map< unsigned int, osg::ref_ptr< osg::Texture > > TextureMap;
     typedef std::map< osg::ref_ptr< Unit >,
         std::pair< std::string, unsigned int > > InputToUniformMap;
@@ -87,13 +81,13 @@ public:
     ///Traverse the unit
     virtual void traverse( osg::NodeVisitor& nv );
 
-    ///Set an input from the given parent to be linked with a given uniform name
-    ///\param parent Pointer to the parent which output to use
+    ///Set an input from the given unit to be linked with a given uniform name
+    ///\param unit Pointer to the unit which output to use
     ///\param uniform Name of the uniform to use to bind the texture to
     ///\param add If true will add the given parent to the parent list
     ///\return If uniform was successfully added
     bool SetInputToUniform(
-        Unit* parent, const std::string& uniform, bool add = false );
+        Unit* unit, const std::string& uniform, bool add = false );
 
     ///Remove an assigned parent output uniform
     ///\param parent Pointer to the parent node
@@ -155,6 +149,13 @@ public:
     ///\return
     osg::Geode* const GetGeode() const;
 
+    ///Helper function to create screen sized quads
+    void CreateTexturedQuadDrawable(
+        const osg::Vec3& corner = osg::Vec3( 0, 0, 0 ),
+        const osg::Vec3& widthVec = osg::Vec3( 1, 0, 0 ),
+        const osg::Vec3& heightVec = osg::Vec3( 0, 1, 0 ),
+        float l = 0.0, float b = 0.0, float r = 1.0, float t = 1.0 );
+
 protected:
     ///Destructor
     virtual ~Unit();
@@ -204,13 +205,6 @@ protected:
 
     ///Assign currently choosen viewport to the stateset
     void AssignViewport();
-
-    ///Helper function to create screen sized quads
-    osg::Drawable* CreateTexturedQuadDrawable(
-        const osg::Vec3& corner = osg::Vec3( 0, 0, 0 ),
-        const osg::Vec3& widthVec = osg::Vec3( 1, 0, 0 ),
-        const osg::Vec3& heightVec = osg::Vec3( 0, 1, 0 ),
-        float l = 0.0, float b = 0.0, float r = 1.0, float t = 1.0 );
 
     ///Is the unit active, yes/no
     bool mActive;

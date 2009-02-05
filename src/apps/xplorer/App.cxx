@@ -674,7 +674,12 @@ void App::draw()
     double _far( frustum[ vrj::Frustum::VJ_FAR ] );
     if( mRTT )
     {
-        sv->setProjectionMatrix( osg::Matrixd::identity() );
+        //identity projection matrix is same as -1 to 1 ortho
+        //sv->setProjectionMatrix( osg::Matrixd::identity() );
+        //                   same as
+        //sv->setProjectionMatrix( osg::Matrix::ortho( -1, 1, -1, 1, -1, 1 ) );
+
+        sv->setProjectionMatrix( osg::Matrix::ortho( 0, 1, 0, 1, 0, 1 ) );
     }
     else
     {

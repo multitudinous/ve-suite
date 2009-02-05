@@ -47,23 +47,25 @@ ShaderAttribute::ShaderAttribute()
     mMaxTextureUnits = 8;
 }
 ////////////////////////////////////////////////////////////////////////////////
-ShaderAttribute::ShaderAttribute(const ShaderAttribute& sh, const osg::CopyOp& copyop) :
-    osg::Program(sh, copyop),
-    mTexUnits(sh.mTexUnits),
-    mDirtyTextureBindings(sh.mDirtyTextureBindings),
-    mMaxTextureUnits(sh.mMaxTextureUnits)
+ShaderAttribute::ShaderAttribute(
+    const ShaderAttribute& shaderAttribute, const osg::CopyOp& copyop)
+    :
+    osg::Program( shaderAttribute, copyop ),
+    mTexUnits(shaderAttribute.mTexUnits),
+    mDirtyTextureBindings(shaderAttribute.mDirtyTextureBindings),
+    mMaxTextureUnits(shaderAttribute.mMaxTextureUnits)
 {
-    setName(sh.getName());
+    setName(shaderAttribute.getName());
 
     // copy attributes
-    osg::Program::AttribBindingList::const_iterator it = sh.getAttribBindingList().begin();
-    for (; it != sh.getAttribBindingList().end(); it ++)
+    osg::Program::AttribBindingList::const_iterator it = shaderAttribute.getAttribBindingList().begin();
+    for (; it != shaderAttribute.getAttribBindingList().end(); it ++)
         addBindAttribLocation(it->first, it->second);
 
     // copy uniforms
     mUniforms.clear();
-    osg::StateSet::UniformList::const_iterator jt = sh.mUniforms.begin();
-    for (; jt!= sh.mUniforms.end(); jt++)
+    osg::StateSet::UniformList::const_iterator jt = shaderAttribute.mUniforms.begin();
+    for (; jt!= shaderAttribute.mUniforms.end(); jt++)
     {
         osg::ref_ptr<osg::Uniform> u = new osg::Uniform(
                         jt->second.first->getType(),

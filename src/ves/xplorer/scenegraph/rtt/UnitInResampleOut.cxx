@@ -70,8 +70,8 @@ void UnitInResampleOut::Initialize()
     UnitInOut::Initialize();
 
     //If we have to reset the resampling factor
-    if( mDirtyFactor )
-    {
+    //if( mDirtyFactor )
+    //{
         float width = static_cast< float >( mViewport->width() );
         float height = static_cast< float >( mViewport->height() );
 
@@ -83,7 +83,7 @@ void UnitInResampleOut::Initialize()
 
         //Notice that we changed the viewport
         NoticeChangeViewport();
-    }
+    //}
 }
 ////////////////////////////////////////////////////////////////////////////////
 float UnitInResampleOut::GetFactorX() const
