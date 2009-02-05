@@ -143,6 +143,7 @@ protected:
     void OnAddLinkCon( wxCommandEvent &event );
     void OnDelLink( wxCommandEvent &event );
     void OnDelLinkCon( wxCommandEvent &event );
+	void OnSetLinkName( wxCommandEvent &event );
     void OnMRightDown( wxMouseEvent &event );
     void OnSetActiveLinkID( wxUpdateUIEvent& event );
     bool SelectLink( int x, int y );

@@ -52,6 +52,7 @@
 #include <wx/dcclient.h>
 #include <wx/msgdlg.h>
 #include <wx/scrolwin.h>
+#include <wx/textdlg.h>
 
 #include <iostream>
 
@@ -63,6 +64,7 @@ BEGIN_EVENT_TABLE( Link, wxEvtHandler )
     EVT_MENU( LINK_DEL, Link::OnDelLink )
     EVT_MENU( LINK_DEL_CON, Link::OnDelLinkCon )
     EVT_MENU( LINK_SHOW_CONT, Link::OnShowLinkContent )
+	EVT_MENU( LINK_SET_NAME, Link::OnSetLinkName )
     //Aspen Menu
     EVT_MENU( LINK_SHOW_NAME, Link::OnShowAspenName )
     EVT_MENU( LINK_INPUTS, Link::OnQueryStreamInputs )
@@ -457,6 +459,25 @@ void Link::OnShowLinkContent( wxCommandEvent& event )
         port_dlg->Show();*/
     }
 }
+///////////////////////////////////////////////////////////////////////////////
+void Link::OnSetLinkName( wxCommandEvent& event)
+{
+	UILINK_CHECKID( event )
+
+	wxTextEntryDialog* linkNameDlg = new wxTextEntryDialog( networkFrame, 
+		"Set Link Name", "Link Name", GetName(),
+		wxOK|wxCANCEL|wxCENTRE, wxDefaultPosition );
+
+	int showLinkDlg = linkNameDlg->ShowModal();
+	if( showLinkDlg != wxID_OK )
+	{
+		return;
+	}
+
+	SetName( linkNameDlg->GetValue() );
+
+	delete linkNameDlg;
+}
 ////////////////////////////////////////////////////////////////////////////////
 void Link::OnShowAspenName( wxCommandEvent& event )
 {
@@ -720,6 +741,7 @@ void Link::OnMRightDown( wxMouseEvent &event )
     wxMenu the_pop_menu( menuName );
 
     the_pop_menu.Append( LINK_SHOW_CONT, _( "Show Link Content" ) );
+	the_pop_menu.Append( LINK_SET_NAME, _( "Set Link Name" ) );
     the_pop_menu.Append( LINK_ADD_CON, _( "Add Link Connector" ) );
     the_pop_menu.Append( LINK_DEL_CON, _( "Delete Link Connector" ) );
     the_pop_menu.Append( LINK_DEL, _( "Delete Link" ) );
