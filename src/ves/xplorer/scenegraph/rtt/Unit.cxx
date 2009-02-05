@@ -478,9 +478,9 @@ void Unit::AssignViewport()
 {
     if( mViewport.valid() )
     {
-        getOrCreateStateSet()->setAttribute(
-            mViewport.get(),
-            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+        //getOrCreateStateSet()->setAttribute(
+            //mViewport.get(),
+            //osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
