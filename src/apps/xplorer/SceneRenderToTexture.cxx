@@ -50,7 +50,10 @@
 // ---  VR Juggler Includes --- //
 #include <vrj/Draw/OGL/GlWindow.h>
 #include <vrj/Display/SurfaceViewport.h>
+#include <vrj/Display/Frustum.h>
 #include <vrj/Draw/OGL/GlDrawManager.h>
+#include <vrj/Draw/OGL/GlContextData.h>
+#include <vrj/Display/Projection.h>
 
 #include <gmtl/gmtl.h>
 #include <gmtl/Misc/MatrixConvert.h>
@@ -108,7 +111,8 @@ void SceneRenderToTexture::InitScene( osg::Camera* const sceneViewCamera )
 #if __VJ_version >= 2003000
     vrj::opengl::DrawManager* glDrawManager = vrj::GlDrawManager::instance();
     vrj::opengl::UserData* glUserData = glDrawManager->currentUserData();
-    
+    vrj::opengl::WindowPtr glWindow = glUserData->getGlWindow();
+    vrj::DisplayPtr display = glWindow->getDisplay();
 #else
     vrj::GlDrawManager* glDrawManager = vrj::GlDrawManager::instance();
     vrj::GlUserData* glUserData = glDrawManager->currentUserData();
@@ -598,7 +602,11 @@ osg::Group* const SceneRenderToTexture::GetGroup() const
     return mRootGroup.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
+#if __VJ_version >= 2003000
+osg::Camera* SceneRenderToTexture::GetCamera( vrj::ViewportPtr viewport )
+#else
 osg::Camera* SceneRenderToTexture::GetCamera( vrj::Viewport* viewport )
+#endif
 {
     PipelineMap::iterator itr = (*mPipelines).find( viewport );
     if( itr != (*mPipelines).end() )
@@ -622,7 +630,11 @@ void SceneRenderToTexture::ConfigureRTTCameras()
     }
 
     vrj::GlDrawManager* glDrawManager = vrj::GlDrawManager::instance();
+#if __VJ_version >= 2003000
+    vrj::opengl::UserData* glUserData = glDrawManager->currentUserData();
+#else
     vrj::GlUserData* glUserData = glDrawManager->currentUserData();
+#endif
     vrj::GlWindowPtr glWindow = glUserData->getGlWindow();
     vrj::DisplayPtr display = glWindow->getDisplay();
     size_t numViewports = display->getNumViewports();
