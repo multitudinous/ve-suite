@@ -35,7 +35,9 @@
 #define UNIT_IN_OUT_H
 
 // --- VE-Suite Includes --- //
-#include "Unit.h"
+#include <ves/VEConfig.h>
+
+#include <ves/xplorer/scenegraph/rtt/Unit.h>
 
 // --- OSG Includes --- //
 namespace osg
@@ -48,9 +50,11 @@ namespace ves
 {
 namespace xplorer
 {
+namespace scenegraph
+{
 namespace rtt
 {
-class UnitInOut : public Unit
+class VE_SCENEGRAPH_EXPORTS UnitInOut : public Unit
 {
 public:    
     ///Constructor
@@ -64,21 +68,81 @@ public:
     ///
     META_Node( rtt, UnitInOut );
 
+    ///Initialze the default Processing unit
+    virtual void Initialize();
+
+    ///Get framebuffer object used by this ppu
+    ///\return
+    osg::FrameBufferObject* GetFrameBufferObject();
+
+    ///The types can be used to specify the type of the output texture
+    enum TextureType
+    {
+        //Texture is a osg::Texture2D
+        TEXTURE_2D,
+
+        //Texture is a osg::TextureCubeMap
+        TEXTURE_CUBEMAP,
+
+        //3D texture is used of the output
+        TEXTURE_3D
+    };
+
+    ///Specify the type of the output texture
+    ///\param textureType
+    void SetOutputTextureType( TextureType textureType );
+
+    ///Get the type of the output texture
+    ///\return
+    TextureType GetOutputTextureType() const;
+
+    ///Set internal format which will be used by creating the textures
+    ///\param format
+    void SetOutputInternalFormat( GLenum format );
+
+    ///Get internal format which is used by the output textures
+    ///\return
+    GLenum GetOutputInternalFormat() const;
+
     ///Set an output texture
-    ///\param outTex Texture used as output of this ppu 
+    ///\param outputTexture Texture used as output of this ppu 
     ///\param mrt MRT (multiple rendering target) index of this output
     void SetOutputTexture( osg::Texture* outputTexture, int mrt = 0 );
+
+    ///Return or create output texture for the specified MRT index
+    ///\param mrt
+    ///\return
+    virtual osg::Texture* GetOrCreateOutputTexture( int mrt = 0 );
+
+    ///Set a mrt to texture map for output textures
+    void SetOutputTextureMap( const TextureMap& textureMap );
 
 protected:
     ///Destructor
     virtual ~UnitInOut();
 
+    ///Viewport changed
+    virtual void NoticeChangeViewport();
+
+    ///
+    virtual void AssignOutputTexture();
+
+    ///
+    virtual void AssignFBO();
+
 private:
     ///Framebuffer object where results are written
-    osg::ref_ptr< osg::FrameBufferObject > mFBO;  
+    osg::ref_ptr< osg::FrameBufferObject > mFBO;
+
+    ///Output texture type
+    TextureType mOutputType;
+
+    ///Internal format of the output texture
+    GLenum mOutputInternalFormat;
 
 };
 } //end rtt
+} //end scenegraph
 } //end xplorer
 } //end ves
 

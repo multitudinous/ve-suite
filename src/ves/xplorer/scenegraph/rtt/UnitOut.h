@@ -31,75 +31,54 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
-#ifndef UNIT_IN_RESAMPLE_OUT_H
-#define UNIT_IN_RESAMPLE_OUT_H
+#ifndef UNIT_OUT_H
+#define UNIT_OUT_H
 
 // --- VE-Suite Includes --- //
-#include "UnitInOut.h"
+#include <ves/VEConfig.h>
+
+#include <ves/xplorer/scenegraph/rtt/Unit.h>
+
+// --- OSG Includes --- //
 
 namespace ves
 {
 namespace xplorer
 {
+namespace scenegraph
+{
 namespace rtt
 {
-
-//! Same as UnitInOut but do resampling inbetween
-/*
- * Resample the input. This PPU will 
- * render the input data resampled to the output. Next PPU will work 
- * on the resampled one. NOTE: You loose information in your data after 
- * appling this PPU.
- */
-
-class UnitInResampleOut : public UnitInOut
+class VE_SCENEGRAPH_EXPORTS UnitOut : public Unit
 {
-public:
+public:    
     ///Constructor
-    //! Create default ppfx
-    UnitInResampleOut();
+    UnitOut();
 
-    ///
-    UnitInResampleOut(
-        const UnitInResampleOut& unitInResampleOut,
+    ///Copy Constructor
+    UnitOut(
+        const UnitOut& unitOut,
         const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
 
     ///
-    META_Node( rtt, UnitInResampleOut );
+    META_Node( rtt, UnitOut );
 
     ///
     virtual void Initialize();
 
-    ///Get x resampling factor
-    float GetFactorX() const;
-
-    ///Get y resampling factor
-    float GetFactorY() const;
-
-    ///Set x resampling factor
-    void SetFactorX( float xFactor );
-
-    ///Set y resampling factor
-    void SetFactorY( float yFactor );
+    ///
+    void CreateVESQuad( osg::Vec3Array* quadVerts, osg::Vec2Array* texCoords );
 
 protected:
     ///Destructor
-    //! Release it and used memory
-    virtual ~UnitInResampleOut();
+    virtual ~UnitOut();
 
 private:
-    ///
-    bool mDirtyFactor;
-
-    ///
-    float mWidthFactor;
-
-    ///
-    float mHeightFactor;
 
 };
 } //end rtt
+} //end scenegraph
 } //end xplorer
 } //end ves
 
-#endif //UNIT_IN_RESAMPLE_OUT_H
+#endif //UNIT_OUT_H

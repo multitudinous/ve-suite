@@ -34,18 +34,18 @@
 // --- VE-Suite Includes --- //
 #include "SceneRenderToTexture.h"
 
-#include "rtt/Processor.h"
-#include "rtt/UnitCameraAttachmentBypass.h"
-#include "rtt/UnitInOut.h"
-#include "rtt/UnitInResampleOut.h"
-#include "rtt/UnitOut.h"
-#include "rtt/ShaderAttribute.h"
-
 #include <ves/xplorer/EnvironmentHandler.h>
 
 #include <ves/xplorer/environment/cfdDisplaySettings.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
+
+#include <ves/xplorer/scenegraph/rtt/Processor.h>
+#include <ves/xplorer/scenegraph/rtt/UnitCameraAttachmentBypass.h>
+#include <ves/xplorer/scenegraph/rtt/UnitInOut.h>
+#include <ves/xplorer/scenegraph/rtt/UnitInResampleOut.h>
+#include <ves/xplorer/scenegraph/rtt/UnitOut.h>
+#include <ves/xplorer/scenegraph/rtt/ShaderAttribute.h>
 
 // ---  VR Juggler Includes --- //
 #include <vrj/Draw/OGL/GlWindow.h>
@@ -85,6 +85,8 @@
 #endif
 
 using namespace ves::xplorer;
+
+namespace vxsr = ves::xplorer::scenegraph::rtt;
 
 ////////////////////////////////////////////////////////////////////////////////
 SceneRenderToTexture::SceneRenderToTexture()
@@ -164,11 +166,11 @@ void SceneRenderToTexture::InitScene( osg::Camera* const sceneViewCamera )
 
         osg::ref_ptr< osg::Camera > camera =
             CreatePipelineCamera( osgViewport.get() );
-        osg::ref_ptr< rtt::Processor > processor =
+        osg::ref_ptr< vxsr::Processor > processor =
             CreatePipelineProcessor( viewport, camera.get() );
 
         //Setup a post-processing pipeline for each viewport per context
-        //Each pipeline consists of a osg::Camera and rtt::Processor
+        //Each pipeline consists of a osg::Camera and vxsr::Processor
         (*mPipelines)[ viewport ] =
             std::make_pair( camera.get(), processor.get() );
 
@@ -309,10 +311,10 @@ osg::Texture2D* SceneRenderToTexture::CreateViewportTexture(
 }
 ////////////////////////////////////////////////////////////////////////////////
 #if __VJ_version >= 2003000
-rtt::Processor* SceneRenderToTexture::CreatePipelineProcessor(
+vxsr::Processor* SceneRenderToTexture::CreatePipelineProcessor(
     vrj::ViewportPtr viewport, osg::Camera* camera  )
 #else
-rtt::Processor* SceneRenderToTexture::CreatePipelineProcessor(
+vxsr::Processor* SceneRenderToTexture::CreatePipelineProcessor(
     vrj::Viewport* viewport, osg::Camera* camera  )
 #endif
 {
@@ -322,24 +324,22 @@ rtt::Processor* SceneRenderToTexture::CreatePipelineProcessor(
     osg::ref_ptr< osgDB::ReaderWriter::Options > fragmentOptions =
         new osgDB::ReaderWriter::Options( "fragment" );
 
-    rtt::Processor* tempProcessor = new rtt::Processor();
+    vxsr::Processor* tempProcessor = new vxsr::Processor();
     tempProcessor->SetCamera( camera );
 
     //COLOR_BUFFER0 bypass
-    osg::ref_ptr< rtt::UnitCameraAttachmentBypass > colorBuffer0 =
-        new rtt::UnitCameraAttachmentBypass();
+    osg::ref_ptr< vxsr::UnitCameraAttachmentBypass > colorBuffer0 =
+        new vxsr::UnitCameraAttachmentBypass();
     {
         colorBuffer0->setName( "ColorBuffer0Bypass" );
         colorBuffer0->SetBufferComponent( osg::Camera::COLOR_BUFFER0 );
         //colorBuffer0->setInputTextureIndexForViewportReference( -1 );
     }
     tempProcessor->addChild( colorBuffer0.get() );
-    colorBuffer0->Initialize();
 
-    /*
     //COLOR_BUFFER1 bypass
-    osg::ref_ptr< rtt::UnitCameraAttachmentBypass > colorBuffer1 =
-         new rtt::UnitCameraAttachmentBypass();
+    osg::ref_ptr< vxsr::UnitCameraAttachmentBypass > colorBuffer1 =
+         new vxsr::UnitCameraAttachmentBypass();
     {
         colorBuffer1->setName( "ColorBuffer1Bypass" );
         colorBuffer1->SetBufferComponent( osg::Camera::COLOR_BUFFER1 );
@@ -350,8 +350,8 @@ rtt::Processor* SceneRenderToTexture::CreatePipelineProcessor(
     //Downsample by 1/2 original size
     //osg::Vec2 quadScreenSize( screenDims.first, screenDims.second );
     osg::Vec2 quadScreenSize( 0, 0 );
-    osg::ref_ptr< rtt::UnitInResampleOut > glowDownSample =
-        new rtt::UnitInResampleOut();
+    osg::ref_ptr< vxsr::UnitInResampleOut > glowDownSample =
+        new vxsr::UnitInResampleOut();
     {
         float downsample = 1.0;
         quadScreenSize *= downsample;
@@ -364,13 +364,13 @@ rtt::Processor* SceneRenderToTexture::CreatePipelineProcessor(
     colorBuffer1->addChild( glowDownSample.get() );
 
     //Perform horizontal 1D gauss convolution
-    osg::ref_ptr< rtt::UnitInOut > blurX = new rtt::UnitInOut();
+    osg::ref_ptr< vxsr::UnitInOut > blurX = new vxsr::UnitInOut();
     {
         //Set name and indicies
         blurX->setName( "BlurHorizontal" );
 
-        osg::ref_ptr< rtt::ShaderAttribute > gaussX =
-            new rtt::ShaderAttribute();
+        osg::ref_ptr< vxsr::ShaderAttribute > gaussX =
+            new vxsr::ShaderAttribute();
         osg::ref_ptr< osg::Shader > vhShader, fhShader;
         try
         {
@@ -412,16 +412,15 @@ rtt::Processor* SceneRenderToTexture::CreatePipelineProcessor(
         //blurX->setInputTextureIndexForViewportReference( -1 );
     }
     glowDownSample->addChild( blurX.get() );
-    //colorBuffer1->addChild( blurX.get() );
 
     //Perform vertical 1D gauss convolution
-    osg::ref_ptr< rtt::UnitInOut > blurY = new rtt::UnitInOut();
+    osg::ref_ptr< vxsr::UnitInOut > blurY = new vxsr::UnitInOut();
     {
         //Set name and indicies
         blurY->setName( "BlurVertical" );
 
-        osg::ref_ptr< rtt::ShaderAttribute > gaussY =
-            new rtt::ShaderAttribute();
+        osg::ref_ptr< vxsr::ShaderAttribute > gaussY =
+            new vxsr::ShaderAttribute();
         osg::ref_ptr< osg::Shader > vvShader, fvShader;
         try
         {
@@ -465,13 +464,13 @@ rtt::Processor* SceneRenderToTexture::CreatePipelineProcessor(
     blurX->addChild( blurY.get() );
 
     //Perform final color operations and blends
-    osg::ref_ptr< rtt::UnitInOut > final = new rtt::UnitInOut();
+    osg::ref_ptr< vxsr::UnitInOut > final = new vxsr::UnitInOut();
     {
         //Set name and indicies
         final->setName( "Final" );
 
-        osg::ref_ptr< rtt::ShaderAttribute > finalShader =
-            new rtt::ShaderAttribute();
+        osg::ref_ptr< vxsr::ShaderAttribute > finalShader =
+            new vxsr::ShaderAttribute();
         osg::ref_ptr< osg::Shader > vShader;
         try
         {
@@ -503,20 +502,18 @@ rtt::Processor* SceneRenderToTexture::CreatePipelineProcessor(
         //final->setOutputTexture( CreateFBOTexture( screenDims ) );
         //final->setInputTextureIndexForViewportReference( -1 );
     }
-    */
 
     //Render to the Frame Buffer
-    osg::ref_ptr< rtt::UnitOut > ppuOut = new rtt::UnitOut();
+    osg::ref_ptr< vxsr::UnitOut > ppuOut = new vxsr::UnitOut();
     {
         ppuOut->setName( "PipelineResult" );
         //ppuOut->setInputTextureIndexForViewportReference( -1 );
     }
-    //final->addChild( ppuOut.get() );
-    //colorBuffer0->addChild( ppuOut.get() );
-    //ppuOut->Initialize();
+    final->addChild( ppuOut.get() );
 
-    colorBuffer0->addChild( CreateTexturedQuad(
-        viewport, static_cast< osg::Texture2D* const >( colorBuffer0->GetOutputTexture() ) ) );
+    //CreateTexturedQuad(
+        //viewport, static_cast< osg::Texture2D* const >(
+            //colorBuffer0->GetOutputTexture() )
 
     return tempProcessor;
 }

@@ -34,14 +34,14 @@ if env['VPRProfile'] == 'no':
    env.Append( CPPDEFINES = ['DISABLE_VPR_PROFILE'] )
 env.Append( CPPDEFINES = [ GetSVNVersion( srcDir ) ] )
 #env.Append(CPPPATH = [pj('#','external','osgOQ','include')])
-env.Append(CPPPATH = [pj('#','external','osgPPU','include')])
+#env.Append(CPPPATH = [pj('#','external','osgPPU','include')])
 env.Append(CPPPATH = [pj('#','external','osgEphemeris','include')])
 if GetPlatform() == 'darwin':
     env.Append( CPPDEFINES  = ['_DARWIN'] )
-env.Append(LIBS = ['osgPPU'])
+#env.Append(LIBS = ['osgPPU'])
 env.Append(LIBS = ['osgBullet'])
 env.Append(LIBS = ['osgEphemeris'])
-env.Append(LIBPATH = [pj('#',buildDir,'external','osgPPU')])
+#env.Append(LIBPATH = [pj('#',buildDir,'external','osgPPU')])
 env.Append(LIBPATH = [pj('#',buildDir,'external','osgBullet')])
 env.Append(LIBPATH = [pj('#',buildDir,'external','osgEphemeris')])
 

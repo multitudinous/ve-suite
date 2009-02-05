@@ -31,54 +31,39 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
-#ifndef PROCESSOR_H
-#define PROCESSOR_H
+#ifndef UTILITY_H
+#define UTILITY_H
 
 // --- VE-Suite Includes --- //
+#include <ves/VEConfig.h>
 
 // --- OSG Includes --- //
-#include <osg/Group>
-
-namespace osg
-{
-class Camera;
-}
+#include <osg/Uniform>
+#include <osg/Texture>
 
 namespace ves
 {
 namespace xplorer
 {
+namespace scenegraph
+{
 namespace rtt
 {
-class Processor : public osg::Group
-{
-public:    
-    ///Constructor
-    Processor();
+    ///Utility function to derive source texture format from the internal format
+    VE_SCENEGRAPH_EXPORTS GLenum CreateSourceTextureFormat(
+        GLenum internalFormat );
 
-    ///Copy Constructor
-    Processor( const Processor& processor, const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
+    ///Utility function to derive uniform type based on the given texture
+    VE_SCENEGRAPH_EXPORTS osg::Uniform::Type ConvertTextureToUniformType(
+        osg::Texture* texture );
 
-    ///
-    META_Node( rtt, Processor );
+    ///Compute memory size in bytes, which is allocated by the texture
+    //VE_SCENEGRAPH_EXPORTS unsigned int ComputeTextureSizeInBytes(
+        //osg::Texture* texture );
 
-    ///Get camera used for this pipeline
-    osg::Camera* GetCamera();
+}; //end rtt
+}  //end scenegraph
+}  //end xplorer
+}  //end ves
 
-    ///Set the camera used for this pipeline
-    void SetCamera( osg::Camera* camera );
-
-protected:
-    ///Destructor
-    virtual ~Processor();
-
-private:
-    ///
-    osg::ref_ptr< osg::Camera > mCamera;
-
-};
-} //end rtt
-} //end xplorer
-} //end ves
-
-#endif //PROCESSOR_H
+#endif //UTILITY_H

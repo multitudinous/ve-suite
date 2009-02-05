@@ -32,80 +32,62 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
 // --- VE-Suite Includes --- //
-#include "UnitInResampleOut.h"
+#include <ves/xplorer/scenegraph/rtt/UnitOut.h>
 
-using namespace ves::xplorer::rtt;
+// --- OSG Includes --- //
+#include <osg/Geode>
+
+// --- C/C++ Includes --- //
+
+using namespace ves::xplorer::scenegraph::rtt;
 
 ////////////////////////////////////////////////////////////////////////////////
-UnitInResampleOut::UnitInResampleOut()
+UnitOut::UnitOut()
     :
-    UnitInOut(),
-    mDirtyFactor( true ),
-    mWidthFactor( 1.0 ),
-    mHeightFactor( 1.0 )
+    Unit()
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-UnitInResampleOut::UnitInResampleOut(
-    const UnitInResampleOut& unitInResampleOut,
-    const osg::CopyOp& copyop )
+UnitOut::UnitOut( const UnitOut& unitOut, const osg::CopyOp& copyop )
     :
-    UnitInOut( unitInResampleOut, copyop ),
-    mWidthFactor( unitInResampleOut.mWidthFactor ),
-    mHeightFactor( unitInResampleOut.mHeightFactor ),
-    mDirtyFactor( unitInResampleOut.mDirtyFactor )
+    Unit( unitOut, copyop )
+{
+
+}
+////////////////////////////////////////////////////////////////////////////////
+UnitOut::~UnitOut()
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-UnitInResampleOut::~UnitInResampleOut()
+void UnitOut::Initialize()
 {
-    ;
-}
-////////////////////////////////////////////////////////////////////////////////
-void UnitInResampleOut::Initialize()
-{
-    //Do initialize as usual
-    UnitInOut::Initialize();
+    Unit::Initialize();
 
-    //If we have to reset the resampling factor
-    if( mDirtyFactor )
-    {
-        float width = static_cast< float >( mViewport->width() );
-        float height = static_cast< float >( mViewport->height() );
-
-        mViewport->width() =
-            static_cast< osg::Viewport::value_type >( width * mWidthFactor );
-        mViewport->height() =
-            static_cast< osg::Viewport::value_type >( height * mHeightFactor );
-        mDirtyFactor = false;
-
-        //Notice that we changed the viewport
-        //noticeChangeViewport();
-    }
+    //Create a quad geometry
+    mDrawable = CreateTexturedQuadDrawable();
+    mGeode->removeDrawables( 0, mGeode->getNumDrawables() );
+    mGeode->addDrawable( mDrawable.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
-float UnitInResampleOut::GetFactorX() const
+void UnitOut::CreateVESQuad(
+    osg::Vec3Array* quadVerts, osg::Vec2Array* texCoords )
 {
-    return mWidthFactor;
+    /*
+    osg::Geometry* quadGeom = new osg::Geometry();
+    quadGeom->setVertexArray( quadVerts );
+    quadGeom->addPrimitiveSet( new osg::DrawArrays(
+        osg::PrimitiveSet::QUADS, 0, quadVerts->size() ) );
+    quadGeom->setTexCoordArray( 0, texCoords );
+    quadGeom->setStateSet( new osg::StateSet() );
+    quadGeom->setUseDisplayList( false );
+    quadGeom->setColorBinding( osg::Geometry::BIND_OFF );
+    //quadGeom->setDrawCallback( new Unit::DrawCallback( this ) );
+    mGeode->setCullingActive( false );
+    
+    mDrawable = quadGeom;
+    mGeode->addDrawable( mDrawable.get() );
+    */
 }
-////////////////////////////////////////////////////////////////////////////////
-float UnitInResampleOut::GetFactorY() const
-{
-    return mHeightFactor;
-}
-////////////////////////////////////////////////////////////////////////////////
-void UnitInResampleOut::SetFactorX( float xFactor )
-{
-    mWidthFactor = xFactor;
-    mDirtyFactor = true;
-}
-////////////////////////////////////////////////////////////////////////////////
-void UnitInResampleOut::SetFactorY( float yFactor )
-{
-    mHeightFactor = yFactor;
-    mDirtyFactor = true;
-}
-
 ////////////////////////////////////////////////////////////////////////////////

@@ -32,14 +32,14 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
 // --- VE-Suite Includes --- //
-#include "UnitCameraAttachmentBypass.h"
-#include "Processor.h"
+#include <ves/xplorer/scenegraph/rtt/UnitCameraAttachmentBypass.h>
+#include <ves/xplorer/scenegraph/rtt/Processor.h>
 
 // --- OSG Includes --- //
 
 // --- C/C++ Includes --- //
 
-using namespace ves::xplorer::rtt;
+using namespace ves::xplorer::scenegraph::rtt;
 
 ////////////////////////////////////////////////////////////////////////////////
 UnitCameraAttachmentBypass::UnitCameraAttachmentBypass()
@@ -69,6 +69,8 @@ void UnitCameraAttachmentBypass::SetBufferComponent(
     osg::Camera::BufferComponent bufferComponent )
 {
     mBufferComponent = bufferComponent;
+
+    //Dirty();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UnitCameraAttachmentBypass::Initialize()

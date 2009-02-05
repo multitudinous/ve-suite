@@ -1,0 +1,558 @@
+/*************** <auto-copyright.rb BEGIN do not edit this line> **************
+ *
+ * VE-Suite is (C) Copyright 1998-2009 by Iowa State University
+ *
+ * Original Development Team:
+ *   - ISU's Thermal Systems Virtual Engineering Group,
+ *     Headed by Kenneth Mark Bryden, Ph.D., www.vrac.iastate.edu/~kmbryden
+ *   - Reaction Engineering International, www.reaction-eng.com
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ *
+ * -----------------------------------------------------------------
+ * Date modified: $Date$
+ * Version:       $Rev$
+ * Author:        $Author$
+ * Id:            $Id$
+ * -----------------------------------------------------------------
+ *
+ *************** <auto-copyright.rb END do not edit this line> ***************/
+
+// --- VE-Suite Includes --- //
+#include <ves/xplorer/scenegraph/rtt/Unit.h>
+#include <ves/xplorer/scenegraph/rtt/Utility.h>
+
+// --- OSG Includes --- //
+#include <osg/Geode>
+#include <osg/Geometry>
+#include <osg/Image>
+#include <osg/Program>
+#include <osg/Texture2D>
+#include <osg/FrameBufferObject>
+
+//#include <osgDB/WriteFile>
+//#include <osgDB/Registry>
+
+// --- C/C++ Includes --- //
+#include <cmath>
+#include <iostream>
+
+using namespace ves::xplorer::scenegraph::rtt;
+
+////////////////////////////////////////////////////////////////////////////////
+Unit::DrawCallback::DrawCallback()
+    :
+    osg::Drawable::DrawCallback(),
+    mParent( NULL )
+{
+    ;
+}
+////////////////////////////////////////////////////////////////////////////////
+Unit::DrawCallback::DrawCallback( Unit* parent )
+    :
+    osg::Drawable::DrawCallback(),
+    mParent( parent )
+{
+    ;
+}
+////////////////////////////////////////////////////////////////////////////////
+Unit::DrawCallback::DrawCallback(
+    const Unit::DrawCallback& drawCallback, const osg::CopyOp& copyop )
+    :
+    osg::Drawable::DrawCallback( drawCallback, copyop ),
+    mParent( drawCallback.mParent )
+{
+    ;
+}
+////////////////////////////////////////////////////////////////////////////////
+Unit::DrawCallback::~DrawCallback()
+{
+    ;
+}
+////////////////////////////////////////////////////////////////////////////////
+void Unit::DrawCallback::drawImplementation(
+    osg::RenderInfo& ri, const osg::Drawable* dr ) const
+{
+    //Set matricies used for the unit
+    ri.getState()->applyProjectionMatrix( mParent->mProjectionMatrix.get() );
+    ri.getState()->applyModelViewMatrix( mParent->mModelViewMatrix.get() );
+}
+////////////////////////////////////////////////////////////////////////////////
+Unit::Unit()
+    :
+    osg::Group(),
+    mActive( true ),
+    mInputTextureIndexForViewportReference( 0 ),
+    mGeode( NULL ),
+    mDrawable( NULL ),
+    mViewport( NULL ),
+    mProjectionMatrix( NULL ),
+    mModelViewMatrix( NULL )
+{
+    //Set default name
+    setName( "__Nameless_PPU_" );
+
+    //Create default geode
+    mGeode = new osg::Geode();
+    mGeode->setCullingActive( false );
+    addChild( mGeode.get() );
+
+    //Initialze projection matrix
+    mProjectionMatrix =
+        new osg::RefMatrix( osg::Matrix::ortho( 0, 1, 0, 1, 0, 1 ) );
+
+    //Setup default modelview matrix
+    mModelViewMatrix = new osg::RefMatrix( osg::Matrixd::identity() );
+
+    //Setup default empty fbo and program, so we do not use any fbo or program
+    getOrCreateStateSet()->setAttribute(
+        new osg::Program(), osg::StateAttribute::ON );
+    getOrCreateStateSet()->setAttribute(
+        new osg::FrameBufferObject(), osg::StateAttribute::ON );
+
+    //Setup empty textures so that this unit does not get any undefined textures
+    for( unsigned int i = 0; i < 16; ++i )
+    {
+        getOrCreateStateSet()->setTextureAttribute( i, new osg::Texture2D() );
+    }
+
+    //No culling, because we do not need it
+    setCullingActive( false );
+
+    //Set default color attribute
+    //setColorAttribute( new ColorAttribute() )
+}
+////////////////////////////////////////////////////////////////////////////////
+Unit::Unit( const Unit& unit, const osg::CopyOp& copyop )
+    :
+    osg::Group( unit, copyop ),
+    mActive( unit.mActive ),
+    mInputTextureIndexForViewportReference(
+        unit.mInputTextureIndexForViewportReference ),
+    mInputTextures( unit.mInputTextures ),
+    mOutputTextures( unit.mOutputTextures ),
+    mGeode( unit.mGeode ),
+    mDrawable( unit.mDrawable ),
+    mViewport( unit.mViewport ),
+    mProjectionMatrix( unit.mProjectionMatrix ),
+    mModelViewMatrix( unit.mModelViewMatrix )
+{
+    ;
+}
+////////////////////////////////////////////////////////////////////////////////
+Unit::~Unit()
+{
+    ;
+}
+////////////////////////////////////////////////////////////////////////////////
+void Unit::traverse( osg::NodeVisitor& nv )
+{
+    /*
+    //Check if we have to update it
+    if( nv.getVisitorType() == osg::NodeVisitor::UPDATE_VISITOR )
+    {
+        if( mbUpdateTraversed == false )
+        {
+            mbUpdateTraversed = true;
+
+            Update();
+            getStateSet()->runUpdateCallbacks( &nv );
+
+            osg::Group::traverse( nv );
+        }
+    }
+    else if( nv.getVisitorType() == osg::NodeVisitor::CULL_VISITOR )
+    {
+        if( mbCullTraversed == false )
+        {
+            mbCullTraversed = true;
+            osg::Group::traverse( nv );
+        }
+    }
+    else
+    {
+    */
+        osg::Group::traverse( nv );
+    //}
+}
+////////////////////////////////////////////////////////////////////////////////
+bool Unit::SetInputToUniform(
+    Unit* parent, const std::string& uniform, bool add )
+{
+    if( !parent || uniform.length() < 1 ) 
+    {
+        return false;
+    }
+
+    //Check if this is a valid parent of this node
+    for( unsigned int i = 0; i < getNumParents(); ++i )
+    {
+        if( parent == getParent( i ) )
+        {            
+            //Add the uniform
+            mInputToUniformMap[ parent ] =
+                std::pair< std::string, unsigned int >( uniform, i );
+
+            //Add this unit as a child of the parent if required
+            if( add && !parent->containsNode( this ) )
+            {
+                parent->addChild( this );
+            }
+
+            //dirty();
+
+            return true;
+        }
+    }
+
+    return false;    
+}
+////////////////////////////////////////////////////////////////////////////////
+void Unit::RemoveInputToUniform( Unit* parent, bool remove )
+{
+    InputToUniformMap::iterator itr = mInputToUniformMap.find( parent );
+    if( itr != mInputToUniformMap.end() )
+    {
+        const std::string& uniform = itr->second.first;
+
+        osg::StateSet* stateset = mGeode->getOrCreateStateSet();
+        if( stateset->getUniform( uniform ) )
+        {
+            //Remove from the stateset
+            stateset->removeUniform( uniform );
+
+            //If we have to remove the parent
+            if( remove )
+            {
+                itr->first->removeChild( this );
+            }
+
+            //Remove the element from the list
+            mInputToUniformMap.erase( itr );
+
+            //dirty();
+        }
+        else
+        {
+            std::cout << "Unit::RemoveInputToUniform: "
+                      << uniform
+                      << " not found in stateset!" << std::endl;
+        }
+    }
+    else
+    {
+        std::cout << "Unit::RemoveInputToUniform: "
+                  << parent->getName()
+                  << " not found in mInputToUniformMap!" << std::endl;
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+const Unit::InputToUniformMap& Unit::GetInputToUniformMap() const
+{
+    return mInputToUniformMap;
+}
+////////////////////////////////////////////////////////////////////////////////
+osg::Texture* const Unit::GetInputTexture( int inputIndex ) const
+{
+    TextureMap::const_iterator itr = mInputTextures.find( inputIndex );
+    if( itr != mInputTextures.end() )
+    {
+        return itr->second.get();
+    }
+    
+    std::cout << "Unit::GetInputTexture: "
+              << "texture " << inputIndex
+              << " not found in mInputTextures!"
+              << std::endl;
+
+    return NULL;
+}
+////////////////////////////////////////////////////////////////////////////////
+const Unit::TextureMap& Unit::GetInputTextureMap() const
+{
+    return mInputTextures;
+}
+////////////////////////////////////////////////////////////////////////////////
+osg::Texture* const Unit::GetOutputTexture( int mrt ) const
+{
+    TextureMap::const_iterator itr = mOutputTextures.find( mrt );
+    if( itr != mOutputTextures.end() )
+    {
+        return itr->second.get();
+    }
+
+    std::cout << "Unit::GetOutputTexture: "
+              << "texture " << mrt
+              << " not found in mOutputTextures!"
+              << std::endl;
+
+    return NULL;
+}
+////////////////////////////////////////////////////////////////////////////////
+osg::Texture* Unit::GetOrCreateOutputTexture( int mrt )
+{
+    TextureMap::const_iterator itr = mOutputTextures.find( mrt );
+    if( itr != mOutputTextures.end() )
+    {
+        return itr->second.get();
+    }
+
+    std::cout << "Unit::GetOutputTexture: "
+              << "texture " << mrt
+              << " not found in mOutputTextures!"
+              << std::endl;
+
+    return NULL;
+}
+////////////////////////////////////////////////////////////////////////////////
+const Unit::TextureMap& Unit::GetOutputTextureMap() const
+{
+    return mOutputTextures;
+}
+////////////////////////////////////////////////////////////////////////////////
+void Unit::Initialize()
+{
+    //Collect all inputs from the units above
+    SetInputTexturesFromParents();
+
+    //Check if we have input reference size
+    if( GetInputTextureIndexForViewportReference() >= 0 &&
+        GetInputTexture( GetInputTextureIndexForViewportReference() ) )
+    {
+        //If no viewport, so create it
+        if( !mViewport.valid() )
+        {
+            mViewport = new osg::Viewport( 0, 0, 0, 0 );
+        }
+
+        //Change viewport sizes
+        mViewport->width() = GetInputTexture(
+            GetInputTextureIndexForViewportReference() )->getTextureWidth();
+        mViewport->height() = GetInputTexture(
+            GetInputTextureIndexForViewportReference() )->getTextureHeight();
+
+        //Just notice that the viewport size is changed
+        NoticeChangeViewport();
+    }
+
+    //Reassign input and shaders
+    AssignInputTexture();
+    AssignViewport();
+    //AssignInputPBO();
+}
+////////////////////////////////////////////////////////////////////////////////
+void Unit::Update()
+{
+    //if( mbDirty )
+    //{
+        Initialize();
+
+        //printDebugInfo(NULL);
+
+        UpdateUniforms();
+        //mbDirty = false;
+    //}
+}
+////////////////////////////////////////////////////////////////////////////////
+void Unit::SetViewport( osg::Viewport* viewport )
+{
+    //If viewport is valid and we have to ignore new settings
+    if( viewport == NULL )
+    {
+        return;
+    }
+
+    //Otherwise setup new viewport
+    mViewport = new osg::Viewport( *viewport );
+
+    AssignViewport();
+
+    //Dirty();
+}
+////////////////////////////////////////////////////////////////////////////////
+osg::Viewport* const Unit::GetViewport() const
+{
+    return mViewport.get();
+}
+////////////////////////////////////////////////////////////////////////////////
+void Unit::SetInputTextureIndexForViewportReference( int index )
+{
+    if( index != mInputTextureIndexForViewportReference )
+    {
+        if( index < 0 )
+        {
+            mInputTextureIndexForViewportReference = -1;
+        }
+        else
+        {
+            mInputTextureIndexForViewportReference = index;
+        }
+
+        //Dirty();
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+const int Unit::GetInputTextureIndexForViewportReference() const
+{
+    return mInputTextureIndexForViewportReference;
+}
+////////////////////////////////////////////////////////////////////////////////
+osg::Geode* const Unit::GetGeode() const
+{
+    return mGeode.get();
+}
+////////////////////////////////////////////////////////////////////////////////
+void Unit::SetInputTexturesFromParents()
+{
+    //Scan all parents and look for units
+    rtt::Unit* unit( NULL );
+    for( unsigned int i = 0; i < getNumParents(); ++i )
+    {
+        unit = dynamic_cast< rtt::Unit* >( getParent( i ) );
+        if( unit )
+        {
+            //Add each found texture as input
+            const Unit::TextureMap& textureMap = unit->GetOutputTextureMap();
+            Unit::TextureMap::const_iterator itr = textureMap.begin();
+            for( itr; itr != textureMap.end(); ++itr )
+            {
+                osg::Texture* texture = itr->second.get();
+                if( texture )
+                {
+                    mInputTextures[ mInputTextures.size() ] = itr->second.get();
+                }
+                else
+                {
+                    osg::notify( osg::WARN )
+                        << "rtt::Unit::SetInputTexturesFromParents(): "
+                        << unit->getName()
+                        << " has invalid output texture!"
+                        << std::endl;
+                }
+            }
+        }
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void Unit::UpdateUniforms()
+{
+    osg::StateSet* stateset = mGeode->getOrCreateStateSet();
+
+    //Viewport specific uniforms
+    if( mViewport.valid() )
+    {
+        osg::Uniform* width = stateset->getOrCreateUniform(
+            OSGPPU_VIEWPORT_WIDTH_UNIFORM, osg::Uniform::FLOAT );
+        osg::Uniform* height = stateset->getOrCreateUniform(
+            OSGPPU_VIEWPORT_HEIGHT_UNIFORM, osg::Uniform::FLOAT );
+        if( width )
+        {
+            width->set( static_cast< float >( mViewport->width() ) );
+        }
+
+        if( height)
+        {
+            height->set( static_cast< float >( mViewport->height() ) );
+        }
+
+        osg::Uniform* inverseWidth = stateset->getOrCreateUniform(
+            OSGPPU_VIEWPORT_INV_WIDTH_UNIFORM, osg::Uniform::FLOAT );
+        osg::Uniform* inverseHeight = stateset->getOrCreateUniform(
+            OSGPPU_VIEWPORT_INV_HEIGHT_UNIFORM, osg::Uniform::FLOAT );
+        if( inverseWidth )
+        {
+            inverseWidth->set(
+                1.0f / static_cast< float >( mViewport->width() ) );
+        }
+        if( inverseHeight )
+        {
+            inverseHeight->set(
+                1.0f / static_cast< float >( mViewport->height() ) );
+        }
+    }
+
+    //Setup input texture uniforms
+    InputToUniformMap::iterator itr = mInputToUniformMap.begin();
+    for( itr; itr != mInputToUniformMap.end(); ++itr )
+    {
+        //Only valid inputs
+        if( itr->first.valid() )
+        {
+            //Setup uniform
+            osg::Uniform* texture = stateset->getOrCreateUniform(
+                itr->second.first,
+                rtt::ConvertTextureToUniformType(
+                    itr->first->GetOutputTexture( 0 ) ) );
+
+            texture->set( static_cast< int >( itr->second.second ) );
+        }
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void Unit::NoticeChangeViewport()
+{
+    ;
+}
+////////////////////////////////////////////////////////////////////////////////
+void Unit::AssignInputTexture()
+{
+    //Here the textures will be applied
+    osg::StateSet* stateset = getOrCreateStateSet();
+
+    //For all entries
+    TextureMap::iterator itr = mInputTextures.begin();
+    for( itr; itr != mInputTextures.end(); ++itr )
+    {
+        //Set texture if it is valid
+        if( itr->second.valid() )
+        {
+            stateset->setTextureAttributeAndModes(
+                itr->first, itr->second.get(), osg::StateAttribute::ON );
+        }
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void Unit::AssignViewport()
+{
+    if( mViewport.valid() )
+    {
+        getOrCreateStateSet()->setAttribute(
+            mViewport.get(), osg::StateAttribute::ON );
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+osg::Drawable* Unit::CreateTexturedQuadDrawable(
+    const osg::Vec3& corner,
+    const osg::Vec3& widthVec,
+    const osg::Vec3& heightVec,
+    float l, float b, float r, float t )
+{
+    osg::Geometry* geometry = osg::createTexturedQuadGeometry(
+        corner, widthVec, heightVec, l, b, r, t );
+
+    //Setup default state set
+    geometry->setStateSet( new osg::StateSet() );
+    geometry->setUseDisplayList( false );
+    //geometry->setDataVariance( osg::Object::DYNAMIC );
+    //geometry->getOrCreateStateSet()->setDataVariance( osg::Object::DYNAMIC );
+    geometry->setDrawCallback( new Unit::DrawCallback( this ) );
+
+    //Remove colors from the geometry
+    geometry->setColorBinding( osg::Geometry::BIND_OFF );
+
+    return geometry;
+}
+////////////////////////////////////////////////////////////////////////////////

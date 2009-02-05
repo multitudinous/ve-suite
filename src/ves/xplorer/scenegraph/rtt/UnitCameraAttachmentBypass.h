@@ -31,49 +31,60 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
-#ifndef UNIT_OUT_H
-#define UNIT_OUT_H
+#ifndef UNIT_CAMERA_ATTACHMENT_BYPASS_H
+#define UNIT_CAMERA_ATTACHMENT_BYPASS_H
 
 // --- VE-Suite Includes --- //
-#include "Unit.h"
+#include <ves/VEConfig.h>
+
+#include <ves/xplorer/scenegraph/rtt/Unit.h>
 
 // --- OSG Includes --- //
+#include <osg/Camera>
 
 namespace ves
 {
 namespace xplorer
 {
+namespace scenegraph
+{
 namespace rtt
 {
-class UnitOut : public Unit
+class VE_SCENEGRAPH_EXPORTS UnitCameraAttachmentBypass : public Unit
 {
 public:    
     ///Constructor
-    UnitOut();
+    UnitCameraAttachmentBypass();
 
     ///Copy Constructor
-    UnitOut(
-        const UnitOut& unitOut,
+    UnitCameraAttachmentBypass(
+        const UnitCameraAttachmentBypass& unitCameraAttachmentBypass,
         const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
 
     ///
-    META_Node( rtt, UnitOut );
+    META_Node( rtt, UnitCameraAttachmentBypass );
 
     ///
     virtual void Initialize();
 
-    ///
-    void CreateVESQuad( osg::Vec3Array* quadVerts, osg::Vec2Array* texCoords );
+    ///Set the buffer component which has to be bypassed
+    void SetBufferComponent( osg::Camera::BufferComponent bufferComponent );
 
 protected:
     ///Destructor
-    virtual ~UnitOut();
+    virtual ~UnitCameraAttachmentBypass();
+
+    ///Set the input textures based on the parents
+    virtual void SetInputTexturesFromParents();
 
 private:
+    ///
+    osg::Camera::BufferComponent mBufferComponent;
 
 };
 } //end rtt
+} //end scenegraph
 } //end xplorer
 } //end ves
 
-#endif //UNIT_OUT_H
+#endif //UNIT_CAMERA_ATTACHMENT_BYPASS_H

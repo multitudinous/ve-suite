@@ -67,9 +67,13 @@ namespace ves
 namespace xplorer
 {
 
+// --- VE-Suite Includes --- //
+namespace scenegraph
+{
 namespace rtt
 {
 class Processor;
+}
 }
 
 /*!\file SceneRenderToTexture.h
@@ -128,7 +132,7 @@ private:
     rtt::Processor* CreatePipelineProcessor(
         vrj::ViewportPtr viewport, osg::Camera* camera  );
 #else
-    rtt::Processor* CreatePipelineProcessor(
+    scenegraph::rtt::Processor* CreatePipelineProcessor(
         vrj::Viewport* viewport, osg::Camera* camera  );
 #endif
     
@@ -161,7 +165,7 @@ private:
     ///A typedef to make it easier to define iterators
     typedef std::pair<
         osg::ref_ptr< osg::Camera >,
-        osg::ref_ptr< rtt::Processor > > PipelinePair;
+        osg::ref_ptr< scenegraph::rtt::Processor > > PipelinePair;
 
     ///A typedef
 #if __VJ_version >= 2003000

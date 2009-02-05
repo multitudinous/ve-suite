@@ -31,55 +31,80 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
-#ifndef UNIT_CAMERA_ATTACHMENT_BYPASS_H
-#define UNIT_CAMERA_ATTACHMENT_BYPASS_H
+#ifndef UNIT_IN_RESAMPLE_OUT_H
+#define UNIT_IN_RESAMPLE_OUT_H
 
 // --- VE-Suite Includes --- //
-#include "Unit.h"
+#include <ves/VEConfig.h>
 
-// --- OSG Includes --- //
-#include <osg/Camera>
+#include <ves/xplorer/scenegraph/rtt/UnitInOut.h>
 
 namespace ves
 {
 namespace xplorer
 {
+namespace scenegraph
+{
 namespace rtt
 {
-class UnitCameraAttachmentBypass : public Unit
-{
-public:    
-    ///Constructor
-    UnitCameraAttachmentBypass();
 
-    ///Copy Constructor
-    UnitCameraAttachmentBypass(
-        const UnitCameraAttachmentBypass& unitCameraAttachmentBypass,
+//! Same as UnitInOut but do resampling inbetween
+/*
+ * Resample the input. This PPU will 
+ * render the input data resampled to the output. Next PPU will work 
+ * on the resampled one. NOTE: You loose information in your data after 
+ * appling this PPU.
+ */
+
+class VE_SCENEGRAPH_EXPORTS UnitInResampleOut : public UnitInOut
+{
+public:
+    ///Constructor
+    //! Create default ppfx
+    UnitInResampleOut();
+
+    ///
+    UnitInResampleOut(
+        const UnitInResampleOut& unitInResampleOut,
         const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
 
     ///
-    META_Node( rtt, UnitCameraAttachmentBypass );
+    META_Node( rtt, UnitInResampleOut );
 
     ///
     virtual void Initialize();
 
-    ///Set the buffer component which has to be bypassed
-    void SetBufferComponent( osg::Camera::BufferComponent bufferComponent );
+    ///Get x resampling factor
+    float GetFactorX() const;
+
+    ///Get y resampling factor
+    float GetFactorY() const;
+
+    ///Set x resampling factor
+    void SetFactorX( float xFactor );
+
+    ///Set y resampling factor
+    void SetFactorY( float yFactor );
 
 protected:
     ///Destructor
-    virtual ~UnitCameraAttachmentBypass();
-
-    ///Set the input textures based on the parents
-    virtual void SetInputTexturesFromParents();
+    //! Release it and used memory
+    virtual ~UnitInResampleOut();
 
 private:
     ///
-    osg::Camera::BufferComponent mBufferComponent;
+    bool mDirtyFactor;
+
+    ///
+    float mWidthFactor;
+
+    ///
+    float mHeightFactor;
 
 };
 } //end rtt
+} //end scenegraph
 } //end xplorer
 } //end ves
 
-#endif //UNIT_CAMERA_ATTACHMENT_BYPASS_H
+#endif //UNIT_IN_RESAMPLE_OUT_H

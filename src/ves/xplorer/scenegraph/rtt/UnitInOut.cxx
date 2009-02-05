@@ -1,0 +1,464 @@
+/*************** <auto-copyright.rb BEGIN do not edit this line> **************
+ *
+ * VE-Suite is (C) Copyright 1998-2009 by Iowa State University
+ *
+ * Original Development Team:
+ *   - ISU's Thermal Systems Virtual Engineering Group,
+ *     Headed by Kenneth Mark Bryden, Ph.D., www.vrac.iastate.edu/~kmbryden
+ *   - Reaction Engineering International, www.reaction-eng.com
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ *
+ * -----------------------------------------------------------------
+ * Date modified: $Date$
+ * Version:       $Rev$
+ * Author:        $Author$
+ * Id:            $Id$
+ * -----------------------------------------------------------------
+ *
+ *************** <auto-copyright.rb END do not edit this line> ***************/
+
+// --- VE-Suite Includes --- //
+#include <ves/xplorer/scenegraph/rtt/UnitInOut.h>
+#include <ves/xplorer/scenegraph/rtt/Utility.h>
+
+// --- OSG Includes --- //
+#include <osg/Geode>
+#include <osg/Image>
+#include <osg/Texture2D>
+//#include <osg/Texture3D>
+//#include <osg/TextureCubeMap>
+#include <osg/GL2Extensions>
+#include <osg/FrameBufferObject>
+
+// --- C/C++ Includes --- //
+
+using namespace ves::xplorer::scenegraph::rtt;
+
+////////////////////////////////////////////////////////////////////////////////
+//Helper class for filling the generated texture with default pixel values
+class Subload2DCallback : public osg::Texture2D::SubloadCallback
+{
+public:
+    //Rill texture with default pixel values
+    void load( const osg::Texture2D &texture, osg::State &state ) const
+    {
+        //Create temporary image which is initialized with 0 values
+        osg::ref_ptr< osg::Image > image = new osg::Image();
+        image->allocateImage(
+            texture.getTextureWidth() ? texture.getTextureWidth() : 1,
+            texture.getTextureHeight() ? texture.getTextureHeight() : 1,
+            1,
+            texture.getSourceFormat() ? texture.getSourceFormat() : texture.getInternalFormat(),
+            texture.getSourceType() ? texture.getSourceType() : GL_UNSIGNED_BYTE );
+
+        //Fill the image with 0 values
+        memset( image->data(), 0, image->getTotalSizeInBytesIncludingMipmaps() * sizeof( unsigned char ) );
+
+        //Create the texture in usual OpenGL way
+        glTexImage2D( GL_TEXTURE_2D, 0, texture.getInternalFormat(),
+            texture.getTextureWidth(), texture.getTextureHeight(), texture.getBorderWidth(),
+            texture.getSourceFormat() ? texture.getSourceFormat() : texture.getInternalFormat(),
+            texture.getSourceType() ? texture.getSourceType() : GL_UNSIGNED_BYTE,
+            image->data() );
+    }
+
+    //No subload because while we want to subload the texture should be already valid
+    void subload( const osg::Texture2D &texture, osg::State &state ) const
+    {
+        ;
+    }
+};
+
+////////////////////////////////////////////////////////////////////////////////
+UnitInOut::UnitInOut()
+    :
+    Unit(),
+    mFBO( new osg::FrameBufferObject() ),
+    mOutputType( TEXTURE_2D ),
+    mOutputInternalFormat( GL_RGBA16F_ARB )
+{
+    ;
+}
+////////////////////////////////////////////////////////////////////////////////
+UnitInOut::UnitInOut( const UnitInOut& unitInOut, const osg::CopyOp& copyop )
+    :
+    Unit( unitInOut, copyop ),
+    mFBO( unitInOut.mFBO ),
+    mOutputType( unitInOut.mOutputType ),
+    mOutputInternalFormat( unitInOut.mOutputInternalFormat )
+{
+
+}
+////////////////////////////////////////////////////////////////////////////////
+UnitInOut::~UnitInOut()
+{
+    ;
+}
+////////////////////////////////////////////////////////////////////////////////
+void UnitInOut::Initialize()
+{
+    //Initialize default
+    Unit::Initialize();
+
+    //Setup a geode and the drawable as childs of this unit
+    mDrawable = CreateTexturedQuadDrawable();
+    mGeode->removeDrawables( 0, mGeode->getNumDrawables() );
+    mGeode->addDrawable( mDrawable.get() );
+
+    /*
+    //Setup uniforms
+    if( mOutputType == TEXTURE_CUBEMAP )
+    {
+        osg::Uniform* faceUniform =
+            mDrawable->getOrCreateStateSet()->getOrCreateUniform(
+                OSGPPU_CUBEMAP_FACE_UNIFORM, osg::Uniform::INT );
+        faceUniform->set( static_cast< int >( mOutputCubemapFace ) );
+    }
+    else if( mOutputType == TEXTURE_3D )
+    {
+        osg::Uniform* sliceCount =
+            mDrawable->getOrCreateStateSet()->getOrCreateUniform(
+                OSGPPU_3D_SLICE_NUMBER, osg::Uniform::INT );
+        sliceCount->set( static_cast< int >( mOutputDepth ) );
+
+        OutputSliceMap::const_iterator itr = GetOutputZSliceMap().begin();
+        for( itr; itr != GetOutputZSliceMap().end(); ++itr )
+        {
+            osg::Uniform* sliceIndex =
+                mDrawable->getOrCreateStateSet()->getOrCreateUniform(
+                    OSGPPU_3D_SLICE_INDEX, osg::Uniform::INT,
+                    getOutputZSliceMap().size() );
+            sliceIndex->setElement(
+                itr->first, static_cast< int >( itr->second ) );
+
+            if( GetOutputZSliceMap().size() <= itr->first )
+            {
+                osg::notify( osg::WARN )
+                    << "rtt::UnitInOut::Initialize(): specified mrt index "
+                    << itr->first << " is not valid - results might be wrong!"
+                    << std::endl;
+            }
+        }
+    }
+
+    //Setup bypassed output if required
+    if( mBypassedInput >= 0 &&
+        mBypassedInput < static_cast< int >( getNumParents() ) )
+    {
+        Unit* input = dynamic_cast< Unit* >( getParent( mBypassedInput ) );
+        if( !input )
+        {
+            osg::notify( osg::WARN )
+                << "rtt::UnitInOut::Initialize(): "
+                << "cannot initialize bypassed input - no input unit found!"
+                << std::endl;
+
+            return;
+        }
+        mOutputTextures[ 0 ] = input->GetOrCreateOutputTexture( 0 );
+    }
+    */
+
+    //Setup output textures and fbo
+    AssignOutputTexture();
+    //AssignOutputPBO();
+    AssignFBO();
+}
+////////////////////////////////////////////////////////////////////////////////
+osg::FrameBufferObject* UnitInOut::GetFrameBufferObject()
+{
+    return mFBO.get();
+}
+////////////////////////////////////////////////////////////////////////////////
+void UnitInOut::SetOutputTextureType( UnitInOut::TextureType textureType )
+{
+    mOutputType = textureType;
+
+    //Dirty();
+}
+////////////////////////////////////////////////////////////////////////////////
+UnitInOut::TextureType UnitInOut::GetOutputTextureType() const
+{
+    return mOutputType;
+}
+////////////////////////////////////////////////////////////////////////////////
+void UnitInOut::SetOutputInternalFormat( GLenum format )
+{
+    mOutputInternalFormat = format;
+
+    //Now generate output texture's and assign them to fbo
+    TextureMap::iterator itr = mOutputTextures.begin();
+    for( itr; itr != mOutputTextures.end(); ++itr )
+    {
+        if( itr->second.valid() )
+        {
+            itr->second->setInternalFormat( mOutputInternalFormat );
+            itr->second->setSourceFormat(
+                CreateSourceTextureFormat( mOutputInternalFormat ) );
+        }
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+GLenum UnitInOut::GetOutputInternalFormat() const
+{
+    return mOutputInternalFormat;
+}
+////////////////////////////////////////////////////////////////////////////////
+void UnitInOut::SetOutputTexture( osg::Texture* outputTexture, int mrt )
+{
+    if( outputTexture )
+    {
+        mOutputTextures[ mrt ] = outputTexture;
+    }
+    else
+    {
+        mOutputTextures[ mrt ] = osg::ref_ptr< osg::Texture >( NULL );
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+osg::Texture* UnitInOut::GetOrCreateOutputTexture( int mrt )
+{
+    //If already exists, then return back
+    osg::Texture* texture = mOutputTextures[ mrt ].get();
+    if( texture )
+    {
+        return texture;
+    }
+
+    //If not exists, then do allocate it
+    osg::Texture* newTexture = NULL;
+    if( mOutputType == TEXTURE_2D )
+    {
+        newTexture = new osg::Texture2D();
+        dynamic_cast< osg::Texture2D* >( newTexture )->setSubloadCallback(
+            new Subload2DCallback() );
+        if( mViewport.valid() )
+        {
+            dynamic_cast< osg::Texture2D* >( newTexture )->setTextureSize(
+                static_cast< int >( mViewport->width() ),
+                static_cast< int >( mViewport->height() ) );
+        }
+    }
+    /*
+    else if( mOutputType == TEXTURE_CUBEMAP )
+    {
+        newTexture = new osg::TextureCubeMap();
+        dynamic_cast< osg::TextureCubeMap* >( newTexture )->setSubloadCallback(
+            new SubloadCubeMapCallback() );
+        if( mViewport.valid() )
+        {
+            dynamic_cast< osg::TextureCubeMap* >( newTexture )->setTextureSize(
+                static_cast< int >( mViewport->width() ),
+                static_cast< int >( mViewport->height() ) );
+        }
+    }
+    else if( mOutputType == TEXTURE_3D )
+    {
+        newTexture = new osg::Texture3D();
+        dynamic_cast< osg::Texture3D* >( newTexture )->setSubloadCallback(
+            new Subload3DCallback() );
+        if( mViewport.valid() )
+        {
+            dynamic_cast< osg::Texture3D* >( newTexture )->setTextureSize(
+                static_cast< int >( mViewport->width() ),
+                static_cast< int >( mViewport->height() ), mOutputDepth );
+        }
+    }
+    */
+    else
+    {
+        osg::notify( osg::FATAL )
+            << "rtt::UnitInOut::getOrCreateOutputTexture() - "
+            << getName() << " non-supported texture type specified!"
+            << std::endl;
+
+        return NULL;
+    }
+
+    //Setup texture parameters
+    newTexture->setResizeNonPowerOfTwoHint( false );
+    newTexture->setWrap( osg::Texture::WRAP_S, osg::Texture::CLAMP_TO_EDGE );
+    newTexture->setWrap( osg::Texture::WRAP_T, osg::Texture::CLAMP_TO_EDGE );
+    newTexture->setWrap( osg::Texture::WRAP_R, osg::Texture::CLAMP_TO_EDGE );
+    newTexture->setBorderColor( osg::Vec4( 0, 0, 0, 0 ) );
+    newTexture->setInternalFormat( GetOutputInternalFormat() );
+    newTexture->setSourceFormat(
+        CreateSourceTextureFormat( GetOutputInternalFormat() ) );
+    //newTexture->setSourceType(
+        //osg::Image::computeFormatDataType( GetOutputInternalFormat() ) );
+
+    //Check if the input texture was in nearest mode
+    if( GetInputTexture( 0 ) && GetInputTexture( 0 )->getFilter(
+            osg::Texture2D::MIN_FILTER ) == osg::Texture2D::NEAREST )
+    {
+        newTexture->setFilter(
+            osg::Texture2D::MIN_FILTER, osg::Texture2D::NEAREST );
+    }
+    else
+    {
+        newTexture->setFilter(
+            osg::Texture2D::MIN_FILTER, osg::Texture2D::LINEAR );
+    }
+
+    if( GetInputTexture( 0 ) && GetInputTexture( 0 )->getFilter(
+            osg::Texture2D::MAG_FILTER ) == osg::Texture2D::NEAREST)
+    {
+        newTexture->setFilter(
+            osg::Texture2D::MAG_FILTER, osg::Texture2D::NEAREST );
+    }
+    else
+    {
+        newTexture->setFilter(
+            osg::Texture2D::MAG_FILTER, osg::Texture2D::LINEAR );
+    }
+
+    //Set new texture
+    mOutputTextures[ mrt ] = newTexture;
+
+    return newTexture;
+}
+////////////////////////////////////////////////////////////////////////////////
+void UnitInOut::SetOutputTextureMap( const TextureMap& textureMap )
+{
+    mOutputTextures = textureMap;
+    //Dirty();
+}
+////////////////////////////////////////////////////////////////////////////////
+void UnitInOut::NoticeChangeViewport()
+{
+    //Change size of the result texture according to the viewport
+    TextureMap::iterator itr = mOutputTextures.begin();
+    for( itr; itr != mOutputTextures.end(); ++itr )
+    {
+        if( itr->second.valid() )
+        {
+            //If texture type is a 2d texture
+            if( dynamic_cast< osg::Texture2D* >( itr->second.get() ) != NULL )
+            {
+                //Change size
+                osg::Texture2D* texture =
+                    dynamic_cast< osg::Texture2D* >( itr->second.get() );
+                texture->setTextureSize(
+                    static_cast< int >( mViewport->width() ),
+                    static_cast< int >( mViewport->height() ) );
+            }
+            /*
+            //If texture type is a cubemap texture
+            else if( dynamic_cast< osg::TextureCubeMap* >(
+                itr->second.get() ) != NULL )
+            {
+                //Change size
+                osg::TextureCubeMap* texture =
+                    dynamic_cast< osg::TextureCubeMap* >( itr->second.get() );
+                texture->setTextureSize(
+                    static_cast< int >( mViewport->width() ),
+                    static_cast< int >( mViewport->height() ) );
+            }
+            */
+        }
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void UnitInOut::AssignOutputTexture()
+{
+    //Now generate output texture's and assign them to fbo
+    Unit::TextureMap::iterator itr = mOutputTextures.begin();
+    for( int i = 0; itr != mOutputTextures.end(); ++itr, ++i )
+    {
+        //Get output texture
+        osg::Texture* texture = itr->second.get();
+
+        //If the output texture is NULL, hence generate one
+        if( texture == NULL )
+        {
+            //Preallocate the texture
+            texture = GetOrCreateOutputTexture( itr->first );
+
+            //Check that the viewport must be valid at this time
+            //Check it to set the size if texture is fresh
+            if( !mViewport.valid() )
+            {
+                osg::notify( osg::FATAL )
+                    << "rtt::UnitInOut::assignOutputTexture(): "
+                    << getName()
+                    << "cannot set output texture size - invalid viewport!"
+                    << std::endl;
+
+                continue;
+            }
+        }
+
+        //Check whenever the output texture is a 2D texture
+        osg::Texture2D* texture2D = dynamic_cast< osg::Texture2D* >( texture );
+        if( texture2D != NULL )
+        {
+            mFBO->setAttachment( osg::Camera::BufferComponent(
+                osg::Camera::COLOR_BUFFER0 + itr->first ),
+                osg::FrameBufferAttachment( texture2D ) );
+
+            continue;
+        }
+
+        /*
+        //Check if the output texture is a cubemap texture
+        osg::TextureCubeMap* cubemapTexture =
+            dynamic_cast< osg::TextureCubeMap* >( texture );
+        if( cubemapTexture != NULL)
+        {
+            mFBO->setAttachment( osg::Camera::BufferComponent(
+                osg::Camera::COLOR_BUFFER0 + itr->first ),
+                osg::FrameBufferAttachment(
+                    cubemapTexture, mOutputCubemapFace ) );
+
+            continue;
+        }
+
+        //Check whenever the output texture is a 3D texture
+        osg::Texture3D* texture3D = dynamic_cast< osg::Texture3D* >( texture );
+        if( texture3D != NULL )
+        {
+            //For each mrt to slice mapping do
+            OutputSliceMap::const_iterator osmItr =
+                getOutputZSliceMap().begin();
+            for( osmItr; osmItr != GetOutputZSliceMap().end(); ++osmItr )
+            {
+                mFBO->setAttachment( osg::Camera::BufferComponent(
+                    osg::Camera::COLOR_BUFFER0 + osmItr->first ),
+                    osg::FrameBufferAttachment( texture3D, osmItr->second ) );
+            }
+
+            continue;
+        }
+        */
+
+        //Output texture type is not supported
+        osg::notify( osg::FATAL )
+            << "rtt::UnitInOut::assignOutputTexture(): "
+            << getName()
+            << "cannot attach output texture to FBO!"
+            << std::endl;
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void UnitInOut::AssignFBO()
+{
+    getOrCreateStateSet()->setAttribute( mFBO.get(), osg::StateAttribute::ON );
+}
+////////////////////////////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////////////////////////
+

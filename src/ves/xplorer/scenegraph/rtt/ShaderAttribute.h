@@ -34,6 +34,9 @@
 #ifndef SHADER_ATTRIBUTE_H
 #define SHADER_ATTRIBUTE_H
 
+// --- VE-Suite Includes --- //
+#include <ves/VEConfig.h>
+
 // --- OSG Includes --- //
 #include <osg/Program>
 #include <osg/StateSet>
@@ -41,6 +44,8 @@
 namespace ves
 {
 namespace xplorer
+{
+namespace scenegraph
 {
 namespace rtt
 {
@@ -58,54 +63,44 @@ namespace rtt
  * according StateSet. This wrapper is just a simpler version of osg's uniform handlings.
  */
 
-class ShaderAttribute : public osg::Program
+class VE_SCENEGRAPH_EXPORTS ShaderAttribute : public osg::Program
 {
 public:
-    ///Constructor
-    ///Initialize shader to the fixed function pipeline per default
+    /** Initialize shader to the fixed function pipeline per default **/
     ShaderAttribute();
 
-    ///Copy Constructor
-    ///Copy constructor to create a shader object from the other one.
-    ///NOTE: copyop is currently ignored. The uniforms will be copied completely,
-    ///hence after the copy you will get two uniforms with the same value.
-    ShaderAttribute(
-        const ShaderAttribute& shaderAttribute,
-        const osg::CopyOp& copyop = osg::CopyOp::DEEP_COPY_ALL );
+    /**
+    * Copy constructor to create a shader object from the other one.
+    * NOTE: copyop is currently ignored. The uniforms will be copied completely,
+    * hence after the copy you will get two uniforms with the same value.
+    **/
+    ShaderAttribute( const ShaderAttribute&, const osg::CopyOp& copyop = osg::CopyOp::DEEP_COPY_ALL );
 
     ///
-    META_StateAttribute( rtt, ShaderAttribute, osg::StateAttribute::PROGRAM );
+    META_StateAttribute( rtt, ShaderAttribute, PROGRAM );
 
-    ///Add new uniform. The uniform can also represent an array.
-    ///The uniform will be applied in the apply method. Unfortunately
-    ///only the StateAttribute mode ON/OFF is checked.
-    ///Hence PROTECTED and OVERRIDE are currently not supported.
-    ///\param name Name of the uniform
-    ///\param type Type of the uniform
-    ///\param elementCount Number of elements if you add an array, otherwise 1
-    ///\param mode
-    void add(
-        const std::string& name,
-        osg::Uniform::Type type,
-        unsigned int elementCount = 1,
-        osg::StateAttribute::OverrideValue mode = osg::StateAttribute::ON );
+    /**
+    * Add new uniform. The uniform can also represent an array.
+    * The uniform will be applied in the apply method. Unfortunately
+    * only the StateAttribute mode ON/OFF is checked. Hence PROTECTED and OVERRIDE are
+    * currently not supported.
+    * @param name Name of the uniform
+    * @param type Type of the uniform
+    * @param elementCount Number of elements if you add an array, otherwise 1
+    **/
+    void add( const std::string& name, osg::Uniform::Type type, unsigned int elementCount = 1, osg::StateAttribute::OverrideValue mode = osg::StateAttribute::ON);
 
-    ///
     /**
     * Add new uniform. The uniform value will be copied.
     **/
-    void add(
-        osg::Uniform* uniform,
-        osg::StateAttribute::OverrideValue mode = osg::StateAttribute::ON );
-
-    ///
-    void add( osg::StateSet::RefUniformPair uniform );
+    void add(osg::Uniform* uniform, osg::StateAttribute::OverrideValue mode = osg::StateAttribute::ON);
+    void add(osg::StateSet::RefUniformPair uniform);
 
     /**
     * Delete uniform. Uniforms which are deleted are removed from the parental StateSets too.
     * @param name Name of the uniform
     **/
-    void del(const std::string& name);
+    void del( const std::string& name);
 
     /**
     * Set uniform value.
@@ -156,6 +151,7 @@ public:
     bool set( unsigned int index, const std::string& name, const osg::Matrix3& m);
     bool set( unsigned int index, const std::string& name, const osg::Matrixf& m);
 
+
     /**
     * Bind a texture to the specified uniform. This method do siplify your life ;-)
     * @param index If uniform is an array element, then specify the index here
@@ -166,7 +162,7 @@ public:
     bool bindTexture(unsigned int index, const std::string& name, osg::Texture* tex, int unit = -1);
 
     //! @copydoc bindTexture()
-    bool bindTexture(const std::string& name, osg::Texture* tex, int unit = -1) {return bindTexture(0, name, tex, unit);}
+    bool bindTexture( const std::string& name, osg::Texture* tex, int unit = -1) {return bindTexture(0, name, tex, unit);}
 
     /**
     * Bind a vertex attribute to a uniform. You have to take care to deliver correct
@@ -175,12 +171,12 @@ public:
     * @param name Name of the uniform variable
     * @param index Attribute index which to bound
     **/
-    bool bindAttribute(const std::string& name, unsigned int index);
+    bool bindAttribute( const std::string& name, unsigned int index);
 
     /**
     * For shader model 4.0 hardwares you can specify the frag data to bound
     **/
-    bool bindFragData(const std::string& name, unsigned int index);
+    bool bindFragData( const std::string& name, unsigned int index);
 
     /**
     * Apply the shader attribute to the given state. This will bind the shader program
@@ -190,7 +186,7 @@ public:
     virtual void apply (osg::State &state) const;
 
     /** @copydoc osg::StateAttribute::compare() **/
-    virtual int compare(const osg::StateAttribute& sa) const
+    virtual int compare( const osg::StateAttribute& sa) const
     {
         // Check for equal types, then create the rhs variable
         // used by the COMPARE_StateAttribute_Paramter macros below.
@@ -209,12 +205,12 @@ public:
     * Get uniform by a its name. If uniform was previously added or created this method will return it.
     * @param name Name of the uniform
     **/
-    osg::Uniform* get(const std::string& name);
+    osg::Uniform* get( const std::string& name);
 
     /**
     * Set uniform list.
     **/
-    void setUniformList(const osg::StateSet::UniformList& list);
+    void setUniformList( const osg::StateSet::UniformList& list);
 
     /**
     * Get correpsonding uniform list.
@@ -238,19 +234,17 @@ public:
     **/
     void dirty() { mDirtyTextureBindings = true; }
 
-    struct TexUnit{
-    osg::ref_ptr<osg::Texture> t;
-    int unit;
-    unsigned int element;
-    std::string name;
-
-};
+    struct TexUnit
+    {
+        osg::ref_ptr<osg::Texture> t;
+        int unit;
+        unsigned int element;
+        std::string name;
+    };
 
 protected:
     /** Release used memory and close all used shader programs **/
-    ///Destructor
     virtual ~ShaderAttribute();
-
 
     typedef std::map<std::string, std::map<int,TexUnit> > TexUnitDb;
 
@@ -269,7 +263,7 @@ protected:
     /**
     * Set parameters as uniform values.
     **/
-    void addParameter(const std::string& name, osg::Uniform* param, osg::StateAttribute::OverrideValue mode);
+    void addParameter( const std::string& name, osg::Uniform* param, osg::StateAttribute::OverrideValue mode);
 
     /**
     * Reset texture bindings. Call this if you have rebound textures and want to force
@@ -279,10 +273,11 @@ protected:
     void resetTextureUniforms();
 
     //! Convert string type name into type
-    osg::Uniform::Type convertToUniformType(const std::string& name);
+    osg::Uniform::Type convertToUniformType( const std::string& name);
 
 };
 } //end rtt
+} //end scenegraph
 } //end xplorer
 } //end ves
 

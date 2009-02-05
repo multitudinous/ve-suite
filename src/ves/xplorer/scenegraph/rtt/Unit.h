@@ -34,6 +34,9 @@
 #ifndef UNIT_H
 #define UNIT_H
 
+// --- VE-Suite Includes --- //
+#include <ves/VEConfig.h>
+
 // --- OSG Includes --- //
 #include <osg/Group>
 #include <osg/Drawable>
@@ -42,20 +45,26 @@ namespace osg
 {
 class Geode;
 class Texture;
-class Shader;
 class Viewport;
 }
 
 // --- C/C++ Includes --- //
 #include <map>
 
+#define OSGPPU_VIEWPORT_WIDTH_UNIFORM "osgppu_ViewportWidth"
+#define OSGPPU_VIEWPORT_HEIGHT_UNIFORM "osgppu_ViewportHeight"
+#define OSGPPU_VIEWPORT_INV_WIDTH_UNIFORM "osgppu_InvViewportWidth"
+#define OSGPPU_VIEWPORT_INV_HEIGHT_UNIFORM "osgppu_InvViewportHeight"
+
 namespace ves
 {
 namespace xplorer
 {
+namespace scenegraph
+{
 namespace rtt
 {
-class Unit : public osg::Group
+class VE_SCENEGRAPH_EXPORTS Unit : public osg::Group
 {
 public:
     ///
@@ -75,55 +84,80 @@ public:
     ///
     META_Node( rtt, Unit );
 
+    ///Traverse the unit
+    virtual void traverse( osg::NodeVisitor& nv );
+
+    ///Set an input from the given parent to be linked with a given uniform name
+    ///\param parent Pointer to the parent which output to use
+    ///\param uniform Name of the uniform to use to bind the texture to
+    ///\param add If true will add the given parent to the parent list
+    ///\return If uniform was successfully added
+    bool SetInputToUniform(
+        Unit* parent, const std::string& uniform, bool add = false );
+
+    ///Remove an assigned parent output uniform
+    ///\param parent Pointer to the parent node
+    ///\param remove Should this unit be removed from parent
+    void RemoveInputToUniform( Unit* parent, bool remove = false );
+
+    ///Get the map which maps uniform to input units
+    ///\return
+    const InputToUniformMap& GetInputToUniformMap() const;
+
+    ///Return an input texture of a certain mrt index
+    ///\param inputIndex Index of the input texture
+    ///\return
+    osg::Texture* const GetInputTexture( int inputIndex ) const;
+
+    ///Return complete index to texture mapping
+    ///\return
+    const TextureMap& GetInputTextureMap() const;
+
+    ///Return an output texture of a certain mrt index
+    ///\param mrt
+    ///\return
+    osg::Texture* const GetOutputTexture( int mrt = 0 ) const;
+
+    ///Return an output texture of a certain mrt index
+    ///If there is no output texture for that index is specified, then
+    ///it will be allocated. The method should be overwriten by the derived
+    ///Units if they use any Output texture. Otherwise the result is always
+    ///the same as from getOutputTexture()
+    virtual osg::Texture* GetOrCreateOutputTexture( int mrt = 0 );
+
+    ///Return mOutputTextures
+    ///\return
+    const TextureMap& GetOutputTextureMap() const;
+
     ///Initialze the unit
     virtual void Initialize();
 
-    ///Return an input texture of a certain mrt index
-    ///\param index Index of the input texture (index is equal to the texture unit)
-    osg::Texture* const GetInputTexture( int inputIndex ) const;
+    ///Update the unit
+    virtual void Update();
 
-    ///Return an output texture of a certain mrt index
-    ///NOTE: If you haven't initialized the Unit before calling this method
-    ///it might end up in a NULL as output texture. For this purpose do use
-    ///the getOrCreateOutputTexture()
-    ///\param mrt
-    osg::Texture* const GetOutputTexture( int mrt = 0 ) const;
+    ///Set viewport which is used for this Unit while rendering
+    ///\param
+    void SetViewport( osg::Viewport* viewport );
 
-    ///Return mOutputTextures
-    const Unit::TextureMap& GetOutputTextureMap() const;
+    ///Get viewport of this unit
+    ///\return
+    osg::Viewport* const GetViewport() const;
 
-    ///Remove an assigned parent output uniform. @see assignParentToUniform()
-    ///\param uniform Name of the uniform
-    ///\param del Should this unit be removed from the child list of the parent connected with the given uniform [default=false]
-    void RemoveInputToUniform( const std::string& uniform, bool remove = false );
+    ///Set the input texture to use as a reference for the viewport size
+    ///\param index
+    void SetInputTextureIndexForViewportReference( int index );
 
-    /// Remove an assigned parent output uniform. @see assignParentToUniform()
-    ///\param parent Pointer to the parent node
-    ///\param del Should this unit be removed from the child list of this parent [default=false]
-    void RemoveInputToUniform( Unit* parent, bool remove = false );
+    ///Get the input texture with dimenstions used for setting up the viewport
+    ///\return
+    const int GetInputTextureIndexForViewportReference() const;
 
-    /**
-    * Set an input from the given parent to be linked with the given
-    * uniform name. This is required to automatically setup uniforms for
-    * input textures of the assigned shader, which is based on the index
-    * of the given parent unit in the parent list.
-    * The type of the given uniform will be equivalent to the type of the
-    * input texture (e.g. SAMPLER_2D = Texture2D).
-    * @param parent Pointer to the parent which output to use
-    * @param uniform Name of the uniform to use to bind the texture to
-    * @param add if true will add the given parent to the parent list
-    *             (same as calling parent->addChild()) [default=false]
-    * @return true if uniform is set or false otherwise
-    **/
-    bool SetInputToUniform(
-        Unit* parent, const std::string& uniform, bool add = false );
+    ///Get geode to which the unit's drawables are attached
+    ///\return
+    osg::Geode* const GetGeode() const;
 
 protected:
     ///Destructor
     virtual ~Unit();
-
-    ///Set the input textures based on the parents
-    virtual void SetInputTexturesFromParents();
 
     ///This draw callback is used for customized drawing
     class DrawCallback : public osg::Drawable::DrawCallback
@@ -156,8 +190,33 @@ protected:
         osg::ref_ptr< Unit > mParent;
     };
 
+    ///Use this method in derived classes to implement unit specific uniforms
+    virtual void UpdateUniforms();
+
+    ///Set the input textures based on the parents
+    virtual void SetInputTexturesFromParents();
+
+    ///Notice underlying classes, that viewport size is changed
+    virtual void NoticeChangeViewport();
+
+    ///Assign the input texture to the quad object
+    void AssignInputTexture();
+
+    ///Assign currently choosen viewport to the stateset
+    void AssignViewport();
+
+    ///Helper function to create screen sized quads
+    osg::Drawable* CreateTexturedQuadDrawable(
+        const osg::Vec3& corner = osg::Vec3( 0, 0, 0 ),
+        const osg::Vec3& widthVec = osg::Vec3( 1, 0, 0 ),
+        const osg::Vec3& heightVec = osg::Vec3( 0, 1, 0 ),
+        float l = 0.0, float b = 0.0, float r = 1.0, float t = 1.0 );
+
     ///Is the unit active, yes/no
     bool mActive;
+
+    ///Index of the input texture which size is used as viewport
+    int mInputTextureIndexForViewportReference;
 
     ///Input textures
     TextureMap mInputTextures;
@@ -170,9 +229,6 @@ protected:
 
     ///Geode used to setup the unit's drawable
     osg::ref_ptr< osg::Geode > mGeode;
-
-    ///Shader which will be used for rendering
-    osg::ref_ptr< osg::Shader > mShader;
 
     ///Store a screen sized quad so it can be used for rendering
     osg::ref_ptr< osg::Drawable > mDrawable;
@@ -190,6 +246,7 @@ private:
 
 };
 } //end rtt
+} //end scenegraph
 } //end xplorer
 } //end ves
 
