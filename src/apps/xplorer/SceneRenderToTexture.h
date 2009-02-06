@@ -132,7 +132,7 @@ private:
 
     ///
 #if __VJ_version >= 2003000
-    rtt::Processor* CreatePipelineProcessor(
+    scenegraph::rtt::Processor* CreatePipelineProcessor(
         vrj::ViewportPtr viewport, osg::Camera* camera  );
 #else
     scenegraph::rtt::Processor* CreatePipelineProcessor(
