@@ -150,7 +150,7 @@ void ADUOPlugin::OnQueryDynamics( wxCommandEvent& event )
     networkReader.ReadXMLData( nw_str, "Command", "vecommand" );
     std::vector< ves::open::xml::XMLObjectPtr > objectVector = networkReader.GetLoadedXMLObjects();
     ves::open::xml::CommandPtr cmd = boost::dynamic_pointer_cast<Command>( objectVector.at( 0 ) );
-    ADUOVarDialog* params = new ADUOVarDialog( m_canvas );
+    ADUOVarDialog* params = new ADUOVarDialog( GetPluginParent() );
     params->SetComponentName( wxString( compName.c_str(), wxConvUTF8 ) );
     params->SetServiceList( serviceList );
     int numdvps = cmd->GetNumberOfDataValuePairs();
@@ -178,7 +178,7 @@ wxMenu* ADUOPlugin::GetPluginPopupMenu( wxMenu* baseMenu )
     baseMenu->Enable( UIPLUGINBASE_CONDUCTOR_MENU, false );
 
     mAspenMenu = new wxMenu();
-    mAspenMenu->Append( ADUOPLUGIN_SHOW_ASPEN_NAME, _( "Aspen Name" ) );
+    mAspenMenu->Append( ADUOPLUGIN_SHOW_ASPEN_NAME, _( "Name" ) );
     mAspenMenu->Enable( ADUOPLUGIN_SHOW_ASPEN_NAME, true );
     mAspenMenu->Append( ADUOPLUGIN_QUERY_DYNAMICS, _( "All Variables" ) );
     mAspenMenu->Enable( ADUOPLUGIN_QUERY_DYNAMICS, true );

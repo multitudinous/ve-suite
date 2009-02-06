@@ -498,17 +498,6 @@ wxMenu* ADPlugin::GetPluginPopupMenu( wxMenu* baseMenu )
 
     if( GetVEModel()->GetSubSystem() != NULL )
     {
-        mAspenMenu->Enable( ADPLUGIN_CLOSE_ASPEN_SIMULATION, false );
-        mAspenMenu->Enable( ADPLUGIN_SHOW_ASPEN_SIMULATION, false );
-        mAspenMenu->Enable( ADPLUGIN_HIDE_ASPEN_SIMULATION, false );
-        mAspenMenu->Enable( ADPLUGIN_RUN_ASPEN_NETWORK, false );
-	    mAspenMenu->Enable( ADPLUGIN_REINITIALIZE_ASPEN_SIMULATION, false );
-        mAspenMenu->Enable( ADPLUGIN_STEP_ASPEN_NETWORK, false );
-        mAspenMenu->Enable( ADPLUGIN_SAVE_SIMULATION, false );
-        mAspenMenu->Enable( ADPLUGIN_SAVEAS_SIMULATION, false );
-    }
-    else
-    {
         mAspenMenu->Enable( ADPLUGIN_CLOSE_ASPEN_SIMULATION, true );
         mAspenMenu->Enable( ADPLUGIN_SHOW_ASPEN_SIMULATION, true );
         mAspenMenu->Enable( ADPLUGIN_HIDE_ASPEN_SIMULATION, true );
@@ -517,6 +506,17 @@ wxMenu* ADPlugin::GetPluginPopupMenu( wxMenu* baseMenu )
         mAspenMenu->Enable( ADPLUGIN_STEP_ASPEN_NETWORK, true );
         mAspenMenu->Enable( ADPLUGIN_SAVE_SIMULATION, true );
         mAspenMenu->Enable( ADPLUGIN_SAVEAS_SIMULATION, true );
+    }
+    else
+    {
+        mAspenMenu->Enable( ADPLUGIN_CLOSE_ASPEN_SIMULATION, false );
+        mAspenMenu->Enable( ADPLUGIN_SHOW_ASPEN_SIMULATION, false );
+        mAspenMenu->Enable( ADPLUGIN_HIDE_ASPEN_SIMULATION, false );
+        mAspenMenu->Enable( ADPLUGIN_RUN_ASPEN_NETWORK, false );
+	    mAspenMenu->Enable( ADPLUGIN_REINITIALIZE_ASPEN_SIMULATION, false );
+        mAspenMenu->Enable( ADPLUGIN_STEP_ASPEN_NETWORK, false );
+        mAspenMenu->Enable( ADPLUGIN_SAVE_SIMULATION, false );
+        mAspenMenu->Enable( ADPLUGIN_SAVEAS_SIMULATION, false );
     }
 
     return baseMenu;

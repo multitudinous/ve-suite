@@ -38,7 +38,6 @@
 #include <plugins/ConductorPluginEnums.h>
 #include <ves/conductor/ConductorLibEnums.h>
 
-#include <ves/conductor/ConductorLibEnums.h>
 #include <ves/conductor/xpm/AspenPlus2DIcons/aspen.xpm>
 #include <ves/conductor/UserPreferencesDataBuffer.h>
 #include <ves/conductor/XMLDataBufferEngine.h>
@@ -66,6 +65,7 @@ BEGIN_EVENT_TABLE( APPlugin, ves::conductor::UIPluginBase )
     EVT_MENU( APPLUGIN_SHOW_ASPEN_SIMULATION, APPlugin::ShowAspenSimulation )
     EVT_MENU( APPLUGIN_HIDE_ASPEN_SIMULATION, APPlugin::HideAspenSimulation )
     EVT_MENU( APPLUGIN_CLOSE_ASPEN_SIMULATION, APPlugin::OnCloseAspenSimulation )
+    EVT_MENU( APPLUGIN_DISCONNECT_ASPEN_SIMULATION, APPlugin::OnDisconnectAspenSimulation )
     EVT_MENU( APPLUGIN_RUN_ASPEN_NETWORK, APPlugin::RunAspenNetwork )
     EVT_MENU( APPLUGIN_REINITIALIZE_ASPEN_SIMULATION, APPlugin::ReinitializeAspenSimulation )
     EVT_MENU( APPLUGIN_STEP_ASPEN_NETWORK, APPlugin::StepAspenNetwork )
@@ -93,6 +93,7 @@ APPlugin::~APPlugin()
 {
     if( IsBKPOpen() )
     {
+        DisconnectAspenSimulation();
         CloseAspenSimulation();
     }
 }
@@ -143,6 +144,7 @@ void APPlugin::OnOpen( wxCommandEvent& event )
         }
         else
         {
+            DisconnectAspenSimulation();
             CloseAspenSimulation();
         }
     }
@@ -258,7 +260,8 @@ void APPlugin::OnOpen( wxCommandEvent& event )
     event.SetId( UIPLUGINBASE_SET_UI_PLUGIN_NAME );
     GlobalNameUpdate( event );
 
-    mAspenMenu->Enable( APPLUGIN_CLOSE_ASPEN_SIMULATION, true );
+    //mAspenMenu->Enable( APPLUGIN_CLOSE_ASPEN_SIMULATION, true );
+    mAspenMenu->Enable( APPLUGIN_DISCONNECT_ASPEN_SIMULATION, true );
     mAspenMenu->Enable( APPLUGIN_SHOW_ASPEN_SIMULATION, true );
     mAspenMenu->Enable( APPLUGIN_HIDE_ASPEN_SIMULATION, true );
     mAspenMenu->Enable( APPLUGIN_RUN_ASPEN_NETWORK, true );
@@ -322,7 +325,7 @@ void APPlugin::HideAspenSimulation( wxCommandEvent& event )
     //Log( nw_str.c_str() );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void APPlugin::CloseAspenSimulation( void )
+void APPlugin::DisconnectAspenSimulation( void )
 {    
 	//Log( "Close Simulation.\n" );
     CommandPtr returnState( new Command() );
@@ -342,13 +345,18 @@ void APPlugin::CloseAspenSimulation( void )
     std::string nw_str = serviceList->Query( status ) + "\n";
     //Log( nw_str.c_str() );
 	//AspenSimOpen = false;
+}
+////////////////////////////////////////////////////////////////////////////////////
+void APPlugin::CloseAspenSimulation( void )
+{ 
     SetName( _("APPlugin") );
     wxCommandEvent event;
     event.SetId( UIPLUGINBASE_SET_UI_PLUGIN_NAME );
     GlobalNameUpdate( event );
     if( mAspenMenu )
     {
-        mAspenMenu->Enable( APPLUGIN_CLOSE_ASPEN_SIMULATION, false );
+        //mAspenMenu->Enable( APPLUGIN_CLOSE_ASPEN_SIMULATION, false );
+        mAspenMenu->Enable( APPLUGIN_DISCONNECT_ASPEN_SIMULATION, false );
         mAspenMenu->Enable( APPLUGIN_SHOW_ASPEN_SIMULATION, false );
         mAspenMenu->Enable( APPLUGIN_HIDE_ASPEN_SIMULATION, false );
         mAspenMenu->Enable( APPLUGIN_RUN_ASPEN_NETWORK, false );
@@ -362,7 +370,14 @@ void APPlugin::CloseAspenSimulation( void )
 void APPlugin::OnCloseAspenSimulation( wxCommandEvent& event )
 {
     UIPLUGIN_CHECKID( event )
+    DisconnectAspenSimulation();
     CloseAspenSimulation();
+}
+////////////////////////////////////////////////////////////////////////////////
+void APPlugin::OnDisconnectAspenSimulation( wxCommandEvent& event )
+{
+    UIPLUGIN_CHECKID( event )
+    DisconnectAspenSimulation();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void APPlugin::RunAspenNetwork( wxCommandEvent& event )
@@ -514,7 +529,8 @@ wxMenu* APPlugin::GetPluginPopupMenu( wxMenu* baseMenu )
     mAspenMenu = new wxMenu();
     mAspenMenu->Append( APPLUGIN_OPEN_SIM, _( "Open" ) );
         mAspenMenu->Enable( APPLUGIN_OPEN_SIM, true );
-    mAspenMenu->Append( APPLUGIN_CLOSE_ASPEN_SIMULATION, _( "Close" ) );
+    //mAspenMenu->Append( APPLUGIN_CLOSE_ASPEN_SIMULATION, _( "Close" ) );
+    mAspenMenu->Append( APPLUGIN_DISCONNECT_ASPEN_SIMULATION, _( "Disconnect" ) );
     mAspenMenu->Append( APPLUGIN_SHOW_ASPEN_SIMULATION, _( "Show" ) );
     mAspenMenu->Append( APPLUGIN_HIDE_ASPEN_SIMULATION, _( "Hide" ) );
     mAspenMenu->Append( APPLUGIN_RUN_ASPEN_NETWORK, _( "Run" ) );
@@ -529,7 +545,8 @@ wxMenu* APPlugin::GetPluginPopupMenu( wxMenu* baseMenu )
 
     if( GetVEModel()->GetSubSystem() != NULL )
     {
-        mAspenMenu->Enable( APPLUGIN_CLOSE_ASPEN_SIMULATION, true );
+        //mAspenMenu->Enable( APPLUGIN_CLOSE_ASPEN_SIMULATION, true );
+        mAspenMenu->Enable( APPLUGIN_DISCONNECT_ASPEN_SIMULATION, true );
         mAspenMenu->Enable( APPLUGIN_SHOW_ASPEN_SIMULATION, true );
         mAspenMenu->Enable( APPLUGIN_HIDE_ASPEN_SIMULATION, true );
         mAspenMenu->Enable( APPLUGIN_RUN_ASPEN_NETWORK, true );
@@ -540,7 +557,8 @@ wxMenu* APPlugin::GetPluginPopupMenu( wxMenu* baseMenu )
     }
     else
     {
-        mAspenMenu->Enable( APPLUGIN_CLOSE_ASPEN_SIMULATION, false );
+        //mAspenMenu->Enable( APPLUGIN_CLOSE_ASPEN_SIMULATION, false );
+        mAspenMenu->Enable( APPLUGIN_DISCONNECT_ASPEN_SIMULATION, false );
         mAspenMenu->Enable( APPLUGIN_SHOW_ASPEN_SIMULATION, false );
         mAspenMenu->Enable( APPLUGIN_HIDE_ASPEN_SIMULATION, false );
         mAspenMenu->Enable( APPLUGIN_RUN_ASPEN_NETWORK, false );

@@ -60,12 +60,14 @@ protected:
     void ShowAspenSimulation( wxCommandEvent& event );
     void HideAspenSimulation( wxCommandEvent& event );
     void CloseAspenSimulation( void );
+    void DisconnectAspenSimulation( void );
     void RunAspenNetwork( wxCommandEvent& event );
     void ReinitializeAspenSimulation( wxCommandEvent& event );
     void StepAspenNetwork( wxCommandEvent& event );
     void SaveSimulation( wxCommandEvent& event );
     void SaveAsSimulation( wxCommandEvent& event );
     void OnCloseAspenSimulation( wxCommandEvent& event );
+    void OnDisconnectAspenSimulation( wxCommandEvent& event );
     bool IsBKPOpen();
     wxMenu* mAspenMenu;
 

@@ -310,7 +310,7 @@ wxMenu* APUOPlugin::GetPluginPopupMenu( wxMenu* baseMenu )
     baseMenu->Enable( UIPLUGINBASE_CONDUCTOR_MENU, false );
 
     mAspenMenu = new wxMenu();
-    mAspenMenu->Append( APUOPLUGIN_SHOW_ASPEN_NAME, _( "Aspen Name" ) );
+    mAspenMenu->Append( APUOPLUGIN_SHOW_ASPEN_NAME, _( "Name" ) );
     mAspenMenu->Enable( APUOPLUGIN_SHOW_ASPEN_NAME, true );
     mAspenMenu->Append( APUOPLUGIN_QUERY_INPUTS, _( "Inputs" ) );
     mAspenMenu->Enable( APUOPLUGIN_QUERY_INPUTS, true );

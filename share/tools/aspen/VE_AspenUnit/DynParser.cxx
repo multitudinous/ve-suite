@@ -1619,7 +1619,8 @@ void DynParser::ReadFlowsheetComponents( std::ifstream &file )
         {
             //streams
             //check last 7 characters for "Stream;"
-            if( tokens[2].compare( "Stream;") == 0 )
+            int streamTest = tokens[2].size() - 7;
+            if( tokens[2].compare( streamTest, 7,  "Stream;", 0, 7 ) == 0 )
             {
                 ;
             }
@@ -1631,7 +1632,7 @@ void DynParser::ReadFlowsheetComponents( std::ifstream &file )
             }
 
             //ports
-            else if( tokens[2].compare( "Connect" ) == 0 )
+            else if( tokens[0].compare( "Connect" ) == 0 )
             {   
                 //for some reason there are 2 types of entries for blocks
                 //Ex. "Blocks("test") as PetroFrac;"
