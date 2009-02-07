@@ -382,7 +382,7 @@ vxsr::Processor* SceneRenderToTexture::CreatePipelineProcessor(
     }
     tempProcessor->addChild( colorBuffer0.get() );
     colorBuffer0->Update();
-
+#if 1
     //COLOR_BUFFER1 bypass
     osg::ref_ptr< vxsr::UnitCameraAttachmentBypass > colorBuffer1 =
          new vxsr::UnitCameraAttachmentBypass();
@@ -561,13 +561,11 @@ vxsr::Processor* SceneRenderToTexture::CreatePipelineProcessor(
     }
     final->addChild( ppuOut.get() );
     ppuOut->Update();
-
-    /*
+#else
     colorBuffer0->addChild( CreateTexturedQuad(
         viewport, static_cast< osg::Texture2D* const >(
             colorBuffer0->GetOutputTexture() ) ) );
-    */
-
+#endif
     return tempProcessor;
 }
 ////////////////////////////////////////////////////////////////////////////////
