@@ -1,4 +1,4 @@
-##Builds AspenUnit
+##Builds VE-PSI
 import os, sys, string
 pj = os.path.join
 
@@ -74,7 +74,7 @@ for res in ves_res:
 xerces_options.apply( env )
 tao_options.apply( env )
 
-prog = ves_pkg.createProgram('AspenUnit' + env["PROGSUFFIX"], env, 'bin')
+prog = ves_pkg.createProgram('ves_psi' + env["PROGSUFFIX"], env, 'bin')
 prog.addSources( srcs )
 prog.addHeaders( headers )
 prog.build()
