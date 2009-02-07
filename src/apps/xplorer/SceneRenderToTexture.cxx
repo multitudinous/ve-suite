@@ -322,6 +322,47 @@ vxsr::Processor* SceneRenderToTexture::CreatePipelineProcessor(
     vrj::Viewport* viewport, osg::Camera* camera  )
 #endif
 {
+#if __VJ_version >= 2003000
+    vrj::SurfaceViewportPtr tempView =
+        boost::dynamic_pointer_cast< vrj::SurfaceViewport >( viewport );
+#else
+    vrj::SurfaceViewport* tempView =
+        dynamic_cast< vrj::SurfaceViewport* >( viewport );
+#endif
+    
+    float viewportOriginX, viewportOriginY, viewportWidth, viewportHeight;
+    tempView->getOriginAndSize(
+        viewportOriginX, viewportOriginY, viewportWidth, viewportHeight );
+
+    /*
+    std::cout << viewportOriginX << " "
+              << viewportOriginY << " " 
+              << viewportWidth << " "
+              << viewportHeight << std::endl;
+    */
+
+    float lx, ly, ux, uy;
+
+    //Straight mapping from ( 0 to 1 ) viewport space to
+    //                      ( 0 to 1 ) ortho projection space
+    //lx = viewportOriginX;
+    //ly = viewportOriginY;
+    //ux = viewportOriginX + viewportWidth;
+    //uy = viewportOriginY + viewportHeight;
+
+    //Transform ( 0 to 1 ) viewport space into
+    //          ( -1 to 1 ) identity projection space
+    //lx = ( viewportOriginX * 2.0 ) - 1.0;
+    //ly = ( viewportOriginY * 2.0 ) - 1.0;
+    //ux = ( ( viewportOriginX + viewportWidth ) * 2.0 ) - 1.0;
+    //uy = ( ( viewportOriginY + viewportHeight )* 2.0 ) - 1.0;
+
+    //std::cout << lx << " " << ly << " " << ux << " " << uy << std::endl;
+
+    osg::Vec3 corner( viewportOriginX, viewportOriginY, 0.0 );
+    osg::Vec3 widthVec( viewportWidth, 0.0, 0.0 );
+    osg::Vec3 heightVec( 0.0, viewportHeight, 0.0 );
+
     //This is the code for the glow pipeline
     osg::ref_ptr< osgDB::ReaderWriter::Options > vertexOptions =
         new osgDB::ReaderWriter::Options( "vertex" );
@@ -342,7 +383,6 @@ vxsr::Processor* SceneRenderToTexture::CreatePipelineProcessor(
     tempProcessor->addChild( colorBuffer0.get() );
     colorBuffer0->Update();
 
-    /*
     //COLOR_BUFFER1 bypass
     osg::ref_ptr< vxsr::UnitCameraAttachmentBypass > colorBuffer1 =
          new vxsr::UnitCameraAttachmentBypass();
@@ -521,11 +561,12 @@ vxsr::Processor* SceneRenderToTexture::CreatePipelineProcessor(
     }
     final->addChild( ppuOut.get() );
     ppuOut->Update();
-    */
 
+    /*
     colorBuffer0->addChild( CreateTexturedQuad(
         viewport, static_cast< osg::Texture2D* const >(
             colorBuffer0->GetOutputTexture() ) ) );
+    */
 
     return tempProcessor;
 }
