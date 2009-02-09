@@ -53,7 +53,7 @@ BOOL CVE_AspenUnitApp::InitInstance()
     }
     AfxEnableControlContainer();
 
-	SetRegistryKey(_T("Aspen Unit"));
+	SetRegistryKey(_T("VE-PSI"));
 
 	CVE_AspenUnitDlg dlg;
 	m_pMainWnd = &dlg;
