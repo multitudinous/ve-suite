@@ -334,10 +334,7 @@ void AspenDynamicsInterface::Close()
 //Close the file, clear up
 void AspenDynamicsInterface::Quit() 
 {
-	if (simOpened)
-    {
-        ADApplication->Quit();
-    }
+    ADApplication->Quit();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
