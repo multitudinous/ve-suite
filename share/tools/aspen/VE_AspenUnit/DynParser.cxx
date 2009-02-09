@@ -1619,8 +1619,7 @@ void DynParser::ReadFlowsheetComponents( std::ifstream &file )
         {
             //streams
             //check last 7 characters for "Stream;"
-            int streamTest = tokens[2].size() - 7;
-            if( tokens[2].compare( streamTest, 7,  "Stream;", 0, 7 ) == 0 )
+            if( tokens[2].find( "Stream;" ) != std::string::npos )
             {
                 ;
             }
