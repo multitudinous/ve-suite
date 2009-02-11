@@ -609,7 +609,10 @@ osg::Node* PhysicsSimulator::CreateGround( float w, float h, const osg::Vec3& ce
     osg::Transform* ground = CreateOSGBox( osg::Vec3( w, h, 1.01 ) );
     
     //TRIANGLE_MESH_SHAPE_PROXYTYPE
-    osgBullet::OSGToCollada converter( ground, BOX_SHAPE_PROXYTYPE, 0.f );
+    osgBullet::OSGToCollada converter;
+    converter.setSceneGraph( ground );
+    converter.setShapeType( BOX_SHAPE_PROXYTYPE );
+    converter.setMass( 0.f );
     
     btRigidBody* body = converter.getRigidBody();
     

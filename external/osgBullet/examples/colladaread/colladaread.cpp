@@ -136,7 +136,11 @@ createGround( float w, float h, const osg::Vec3& center )
 {
     osg::MatrixTransform* ground = createOSGBox( osg::Vec3( w, h, .1 ));
 
-    osgBullet::OSGToCollada converter( ground, BOX_SHAPE_PROXYTYPE, 0.f );
+    osgBullet::OSGToCollada converter;
+    converter.setSceneGraph( ground );
+    converter.setShapeType( BOX_SHAPE_PROXYTYPE );
+    converter.setMass( 0.f );
+    converter.convert();
 
     btRigidBody* body = converter.getRigidBody();
 

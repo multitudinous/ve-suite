@@ -24,7 +24,6 @@
 
 #include <btBulletDynamicsCommon.h>
 #include <BulletColladaConverter/ColladaConverter.h>
-#include <BulletColladaConverter/ColladaConverter.h>
 
 #include <list>
 #include <map>
@@ -33,6 +32,13 @@
 #include <osg/io_utils>
 
 #include <iostream>
+
+
+//#define DBG_DUMP 1
+#ifdef DBG_DUMP
+#include <BulletColladaConverter/ColladaConverter.h>
+#endif
+
 
 osgBullet::DebugBullet _debugBullet;
 
@@ -75,7 +81,7 @@ void debugDynamicsWorld( btDynamicsWorld* tempWorld )
 }
 
 
-btDynamicsWorld* initPhysics()
+btDynamicsWorld* initPhysics( osg::Vec3 gravity = osg::Vec3( 0, 0, -1 ) )
 {
     btDefaultCollisionConfiguration * collisionConfiguration = new btDefaultCollisionConfiguration();
     btCollisionDispatcher * dispatcher = new btCollisionDispatcher( collisionConfiguration );
@@ -85,9 +91,9 @@ btDynamicsWorld* initPhysics()
     btVector3 worldAabbMax( 10000, 10000, 10000 );
     btBroadphaseInterface * inter = new btAxisSweep3( worldAabbMin, worldAabbMax, 1000 );
 
-    btDynamicsWorld * dynamicsWorld = new btDiscreteDynamicsWorld( dispatcher, inter, solver, collisionConfiguration );
+    btDynamicsWorld* dynamicsWorld = new btDiscreteDynamicsWorld( dispatcher, inter, solver, collisionConfiguration );
 
-    dynamicsWorld->setGravity( btVector3( 0, 0, 9.8 ) );
+    dynamicsWorld->setGravity( osgBullet::asBtVector3( gravity * 9.8 ) );
 
     return( dynamicsWorld );
 }
@@ -319,7 +325,8 @@ class ConfigReaderWriter : public osg::Referenced
 {
 public:
     ConfigReaderWriter( btDynamicsWorld* dw )
-      : _dw( dw )
+      : _dw( dw ),
+      _up( osg::Vec3( 0, 0, -1 ) )
     {}
 
     bool read( const std::string& fileName )
@@ -350,7 +357,11 @@ public:
                 continue;
             }
             std::istringstream istr( buf.substr( spacePos ) );
-            if( key == std::string( "HandNode:" ) )
+            if( key == std::string( "Up:" ) )
+            {
+                istr >> _up;
+            }
+            else if( key == std::string( "HandNode:" ) )
             {
                 osg::Vec3 pos;
                 osg::Quat quat;
@@ -428,6 +439,7 @@ public:
     typedef std::vector< std::string > NodeCreateList;
     NodeCreateList _nodeCreateList;
     NodeCreateList _nodeCreateTMList;
+    osg::Vec3 _up;
 
 protected:
     ~ConfigReaderWriter() {}
@@ -500,6 +512,9 @@ main( int argc,
     ConfigReaderWriter* crw = new ConfigReaderWriter( bulletWorld );
     crw->read( std::string( argv[ 1 ] ) );
 
+    osg::Vec3& up( crw->_up );
+    bulletWorld->setGravity( osgBullet::asBtVector3( up * -9.8 ) );
+
     //osg::Quat q( osg::PI, osg::Vec3f( 0, 1, 0 ) );
     //crw->_hn->setAttitude( q );
     //crw->_hn->setPosition( osg::Vec3( -2, 6, -3 ) );
@@ -511,8 +526,7 @@ main( int argc,
 
 
     osg::ref_ptr< osg::Node > model = osgDB::readNodeFile( crw->_model );
-    osg::Matrix m( /*osg::Matrix::rotate( osg::PI, osg::Vec3( 1,0,0 ) ) * */
-        osg::Matrix::translate( osg::Vec3( 0, 0, -7 ) ) );
+    osg::Matrix m( osg::Matrix::translate( osg::Vec3( 0, 0, 7*up[2] ) ) );
     osg::ref_ptr< osg::MatrixTransform > orient = new osg::MatrixTransform( m );
     orient->addChild( model.get() );
     root->addChild( orient.get() );
@@ -540,7 +554,8 @@ main( int argc,
         }
     }
 
-    osg::notify( osg::ALWAYS ) << "Must create physics data..." << std::endl;
+    if( crw->_nodeCreateList.size() > 0 )
+        osg::notify( osg::ALWAYS ) << "Must create physics data..." << std::endl;
     ConfigReaderWriter::NodeCreateList::const_iterator vitr;
     for( vitr = crw->_nodeCreateList.begin(); vitr != crw->_nodeCreateList.end(); vitr++ )
     {
@@ -550,8 +565,12 @@ main( int argc,
         osg::Node* subgraph = fnn._napl[ 0 ].first;
         osg::NodePath& np = fnn._napl[ 0 ].second;
 
-        osgBullet::OSGToCollada converter( 
-            subgraph, BOX_SHAPE_PROXYTYPE, 1.0, "", 1.0, false );
+        osgBullet::OSGToCollada converter;
+        converter.setSceneGraph( subgraph );
+        converter.setShapeType( BOX_SHAPE_PROXYTYPE );
+        converter.setMass( 1.0 );
+        converter.setOverall( false );
+        converter.convert();
 
         osg::ref_ptr< osgBullet::AbsoluteModelTransform > amt = new osgBullet::AbsoluteModelTransform();
         amt->setDataVariance( osg::Object::DYNAMIC );
@@ -583,7 +602,8 @@ main( int argc,
         bulletWorld->addRigidBody( rb );
     }
 
-    osg::notify( osg::ALWAYS ) << "Must create TM physics data..." << std::endl;
+    if( crw->_nodeCreateTMList.size() > 0 )
+        osg::notify( osg::ALWAYS ) << "Must create TM physics data..." << std::endl;
     for( vitr = crw->_nodeCreateTMList.begin(); vitr != crw->_nodeCreateTMList.end(); vitr++ )
     {
         osg::notify( osg::ALWAYS ) << "  Creating TM physics data for: " << *vitr << std::endl;
@@ -592,8 +612,12 @@ main( int argc,
         osg::Node* subgraph = fnn._napl[ 0 ].first;
         osg::NodePath& np = fnn._napl[ 0 ].second;
 
-        osgBullet::OSGToCollada converter( 
-            subgraph, TRIANGLE_MESH_SHAPE_PROXYTYPE, 1.0, "", 1.0, false );
+        osgBullet::OSGToCollada converter;
+        converter.setSceneGraph( subgraph );
+        converter.setShapeType( TRIANGLE_MESH_SHAPE_PROXYTYPE );
+        converter.setMass( 1.0 );
+        converter.setOverall( false );
+        converter.convert();
 
         osg::ref_ptr< osgBullet::AbsoluteModelTransform > amt = new osgBullet::AbsoluteModelTransform();
         amt->setDataVariance( osg::Object::DYNAMIC );
@@ -629,15 +653,14 @@ main( int argc,
     float thin = .1;
     osg::MatrixTransform* ground = createOSGBox( osg::Vec3( 10, 10, thin ) );
     root->addChild( ground );
-    btRigidBody* groundBody = createBTBox( ground, osg::Vec3( 0, 0, -thin ) );
+    btRigidBody* groundBody = createBTBox( ground, osg::Vec3( 0, 0, -1*up[2]*thin ) );
     bulletWorld->addRigidBody( groundBody );
 
 
     osgViewer::Viewer viewer;
-    viewer.setUpViewOnSingleScreen( 0 );
     viewer.setSceneData( root );
     osgGA::TrackballManipulator* tb = new osgGA::TrackballManipulator;
-    tb->setHomePosition( osg::Vec3( 0, 35, 0 ), osg::Vec3( 0, 0, 0 ), osg::Vec3( 0,0,-1) );
+    tb->setHomePosition( osg::Vec3( 0, 35, 0 ), osg::Vec3( 0, 0, 0 ), up );
     viewer.setCameraManipulator( tb );
     viewer.addEventHandler( new HandManipulator( hn.get() ) );
 
@@ -664,6 +687,10 @@ main( int argc,
         btIDebugDraw::DBG_DrawContactPoints
     );
 
+#ifdef DBG_DUMP
+    bool first( true );
+#endif
+
     while( /*count-- &&*/ !viewer.done() )
     {
         currSimTime = viewer.getFrameStamp()->getSimulationTime();
@@ -674,6 +701,19 @@ main( int argc,
         bulletWorld->debugDrawWorld();
         dynamic_cast< GLDebugDrawer* >( bulletWorld->getDebugDrawer() )->EndDraw();
         viewer.frame();
+
+#ifdef DBG_DUMP
+        if( first )
+        {
+            first = false;
+
+            osg::notify( osg::ALWAYS ) << "DBG_DUMP: Writing to .dae" << std::endl;
+            ColladaConverter* cc = new ColladaConverter( bulletWorld );
+            cc->save( "dump.dae" );
+            delete cc;
+            osg::notify( osg::ALWAYS ) << "DBG_DUMP: Success" << std::endl;
+        }
+#endif
     }
 
     return( 0 );

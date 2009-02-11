@@ -1,0 +1,82 @@
+Polygon Decimator high level design
+
+You'll create a new class called Decimator and put it in the osgBullet
+library for now. You'll create a header file:
+  osgBullet/include/osgBullet/Decimator.h
+And a source file:
+  osgBullet/src/osgBullet/Decimator.h
+
+Derive a class from NodeVisitor and override the apply(Geode&) method.
+Add a method process() that takes an osg::Geometry as a parameter.
+Add a method to allow the calling code to specify removal criteria.
+
+class Decimator : public osg::NodeVisitor
+{
+public:
+    Decimator();
+    ~Decimator();
+
+    virtual void apply( osg::Geode& geode );
+
+    void criteria(); /* TBD */
+
+protected:
+    void process( osg::Geometry& geom );
+};
+
+The apply() method will just loop over all Drawables and call process()
+for every Geometry-type of Drawable that it finds.
+
+Obviously, the bulk of the work will be done in process().
+In pseudocode, process() will look something like this:
+
+    If the Geometry has DataVariance DYNAMIC, do nothing and return.
+    Check to see if this Geometry shares any vertex data
+        (vertices, normals, texcoords) with another Geometry.
+        If so, do a copy of the data.
+    You'll need to create some type of data structure so that,
+        for every vertex, you can access shared edges and triangles
+        and their component vertices. Look at how Simplifier does this
+        to get ideas.
+    Loop over every vertex
+    {
+        Perform a classification operation
+            as in the VTK mesh decimator we found on the web.
+        If the vertex is a candidate for removal AND
+            it exceeds the criteria for removal,
+        {
+            Remove that vertex.
+            Triangulate the remaining neighbor vertices.
+        }
+    }
+
+Note that when you remove a vertex, you must remove its associated normal,
+color, texcoord, etc. Again, take a look at the Simplifier to see
+how it does this.
+
+This code must collect and display statistical information. This will
+be a useful feedback and debugging aid.
+ * vertex count before process().
+ * vertex count after process().
+ * Number of vertices in each classification category.
+ * Number of vertices removed from each classification category.
+
+The other main part of the code will be computing the vertex error,
+to be compared against the decimation criteria. You'll need a small mathematical
+library for this. OSG might already have what you need and you can call
+existing code or you can cut and paste if you need to. Also, see the
+"Graphics Gems" books for lots of great geometric math techniques.
+
+Open issues, as I see them:
+* What is the criteria for decimation? How does the calling code specify the
+  criteria -- in what units, using what specific methods?
+* What type of data structure to use in the main loop of the process()
+  method? Does OSG already provide a good data structure, or do we have to
+  cook our own?
+* When we remove a vertex, do we want to immediately triangulate, or
+  do we want to process all vertices at once and perform a single
+  triangulation at the end? Triangulation is expensive. Need to do the
+  least amount of work possible.
+* Do we need to call process() multiple times to perform a full
+  decimation? If so, it should return the number of vertices removed,
+  and Decimator can call it in a loop until it returns zero, for example.

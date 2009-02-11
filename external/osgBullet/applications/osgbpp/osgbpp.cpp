@@ -16,6 +16,7 @@
 
 #include <osg/io_utils>
 #include <iostream>
+#include <sstream>
 
 #include <osgBullet/AbsoluteModelTransform.h>
 #include <osgBullet/MotionState.h>
@@ -67,7 +68,11 @@ createGround( float w, float h, const osg::Vec3& center )
 {
     osg::Transform* ground = createOSGBox( osg::Vec3( w, h, .01 ) );
 
-    osgBullet::OSGToCollada converter( ground, BOX_SHAPE_PROXYTYPE, 0.f );
+    osgBullet::OSGToCollada converter;
+    converter.setSceneGraph( ground );
+    converter.setShapeType( BOX_SHAPE_PROXYTYPE );
+    converter.setMass( 0.f );
+    converter.convert();
 
     btRigidBody* body = converter.getRigidBody();
 
@@ -93,6 +98,7 @@ int main( int argc,
     arguments.getApplicationUsage()->setDescription( arguments.getApplicationName() + " creates physics data for model files and stores that data to COLLADA files." );
     arguments.getApplicationUsage()->setCommandLineUsage( arguments.getApplicationName() + " [options] filename ..." );
 
+    arguments.getApplicationUsage()->addCommandLineOption( "--com <x>,<y>,<z>", "Specifies the center of mass. If not specifies, osgbpp uses the center of the OSG bounding sphere." );
     arguments.getApplicationUsage()->addCommandLineOption( "--box", "Creates a box collision shape." );
     arguments.getApplicationUsage()->addCommandLineOption( "--sphere", "Creates a sphere collision shape." );
     arguments.getApplicationUsage()->addCommandLineOption( "--cylinder", "Creates a cylinder collision shape." );
@@ -229,6 +235,17 @@ int main( int argc,
     }
     osg::notify( osg::INFO ) << "osgbpp: Using output file name: " << outputFileName << std::endl;
 
+    bool comSpecified;
+    std::string comStr;
+    osg::Vec3 com;
+    if( comSpecified = arguments.read( "--com", comStr ) )
+    {
+        char comma;
+        std::istringstream oStr( comStr );
+        oStr >> com[ 0 ] >> comma >> com[ 1 ] >> comma >> com[ 2 ];
+        osg::notify( osg::INFO ) << "osgbpp: Using center of mass: " << com << std::endl;
+    }
+
     const bool display( arguments.read( "--display" ) );
     if (display)
         osg::notify( osg::INFO ) << "osgbpp: Display" << std::endl;
@@ -244,15 +261,18 @@ int main( int argc,
     osg::notify( osg::INFO ) << "osgbpp: Loaded model(s)." << std::endl;
 
 
-    osgBullet::OSGToCollada converter( 
-        model.get(),
-        shapeType,
-        mass,
-        outputFileName,
-        simplifyPercent,
-        overall,
-        nodeName,
-        axis );
+    osgBullet::OSGToCollada converter;
+    if( comSpecified )
+        converter.setCenterOfMass( com );
+    converter.setSceneGraph( model.get() );
+    converter.setShapeType( shapeType );
+    converter.setMass( mass );
+    converter.setSimplifyPercent( simplifyPercent );
+    converter.setOverall( overall );
+    converter.setNodeName( nodeName );
+    converter.setAxis( axis );
+
+    converter.convert( outputFileName );
     osg::notify( osg::INFO ) << "osgbpp: Completed Collada conversion." << std::endl;
 
     // TBD we can deallocate 'model' here, but don't want to deallocate 'converter' yet...
@@ -290,7 +310,10 @@ int main( int argc,
         _debugBullet.addDynamic( dmt );
     }
 
-    motion->setCenterOfMass( bs.center() );
+    if( comSpecified )
+        motion->setCenterOfMass( com );
+    else
+        motion->setCenterOfMass( bs.center() );
     rb->setMotionState( motion );
 
 

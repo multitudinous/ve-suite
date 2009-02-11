@@ -225,36 +225,57 @@ protected:
 };
 
 
-OSGToCollada::OSGToCollada( 
-        osg::Node* sg,
-        const BroadphaseNativeTypes shapeType,
-        const float mass,
-        const std::string& outputFileName,
-        const float simplifyPercent,
-        const bool overall,
-        const std::string& nodeName,
-        const AXIS axis )
+OSGToCollada::OSGToCollada()
+  : _sg( NULL ),
+    _com( osg::Vec3( 0., 0., 0. ) ),
+    _comSet( false ),
+    _shapeType( TRIANGLE_MESH_SHAPE_PROXYTYPE ),
+    _mass( 1.f ),
+    _simplifyPercent( 1.f ),
+    _overall( true ),
+    _nodeName( std::string( "" ) ),
+    _axis( osgBullet::Z )
 {
+}
+
+bool OSGToCollada::convert( const std::string& outputFileName )
+{
+    osg::BoundingSphere bs = _sg->getBound();
+
     // Bullet collision shapes must be centered on the origin for correct
     // center of mass behavior. (TBD: In the future, we could allow the
     // calling app to specify a center of mass, then we would translate
     // to that pount instead of to the origin.)
     // Translate this subgraph so it is centered on the origin.
-    osg::BoundingSphere bs = sg->getBound();
-    osg::Matrix m( osg::Matrix::translate( -bs.center() ) );
+    osg::Vec3 com;
+    osg::notify( osg::INFO ) << "OSGToCollada: ";
+    if( getAutoComputeCenterOfMass() )
+    {
+        // Compute from bounding sphere.
+        com = bs.center();
+        osg::notify( osg::INFO ) << "Bounding sphere ";
+    }
+    else
+    {
+        // Use user-specified center of mass.
+        com = _com;
+        osg::notify( osg::INFO ) << "User-defined ";
+    }
+    osg::notify( osg::INFO ) << "center of mass: " << com << std::endl;
+    osg::Matrix m( osg::Matrix::translate( -com ) );
     osg::ref_ptr< osg::MatrixTransform > root = new osg::MatrixTransform( m );
     root->setDataVariance( osg::Object::STATIC );
     root->setName( "CenterOfMassOffset" );
-    root->addChild( sg );
+    root->addChild( _sg.get() );
 
     // Run the simplifier, if requested. Note we might develop a new
     // polygon decimator in the future, as the simplifier isn't really
     // cutting the mustard for us.
-    if ( simplifyPercent != 1.f )
+    if ( _simplifyPercent != 1.f )
     {
         osg::notify( osg::INFO ) << "OSGToCollada: Running Simplifier." << std::endl;
         osgUtil::Simplifier simple;
-        simple.setSampleRatio( simplifyPercent );
+        simple.setSampleRatio( _simplifyPercent );
         root->accept( simple );
     }
 
@@ -268,17 +289,23 @@ OSGToCollada::OSGToCollada(
 
 
     osg::notify( osg::INFO ) << "OSGToCollada: ProcessSceneGraph." << std::endl;
-    ProcessSceneGraph psg( overall, nodeName, shapeType, axis );
+    ProcessSceneGraph psg( _overall, _nodeName, _shapeType, _axis );
     root->accept( psg );
 
-    _rigidBody = createRigidBody( mass, psg.getShape(),
-        bs.center(), sg );
+    _rigidBody = createRigidBody( _mass, psg.getShape(),
+        com, _sg.get() );
 
 
     if (!_rigidBody)
+    {
         osg::notify( osg::FATAL ) << "OSGToCollada: Unable to create physics data." << std::endl;
+        return false;
+    }
     else if (outputFileName.empty())
+    {
         osg::notify( osg::INFO ) << "OSGToCollada: No output file name, not writing DAE." << std::endl;
+        return true;
+    }
     else
     {
         btDynamicsWorld* dynamicsWorld = initPhysics();
@@ -286,6 +313,18 @@ OSGToCollada::OSGToCollada(
 
         ColladaConverter* cc = new ColladaConverter( dynamicsWorld );
         cc->save( outputFileName.c_str() );
+
+        // clean up.
+        delete cc;
+
+        dynamicsWorld->removeRigidBody( _rigidBody );
+
+        delete dynamicsWorld->getBroadphase();
+        delete dynamicsWorld->getConstraintSolver();
+        delete dynamicsWorld->getDispatcher();
+        delete dynamicsWorld;
+
+        return true;
     }
 }
 
@@ -293,6 +332,105 @@ btRigidBody*
 OSGToCollada::getRigidBody()
 {
     return( _rigidBody );
+}
+
+void
+OSGToCollada::setSceneGraph( osg::Node* sg )
+{
+    _sg = sg;
+}
+osg::Node*
+OSGToCollada::getSceneGraph() const
+{
+    return( _sg.get() );
+}
+
+void
+OSGToCollada::setCenterOfMass( osg::Vec3& com )
+{
+    _com = com;
+    setAutoComputeCenterOfMass( false );
+}
+const osg::Vec3&
+OSGToCollada::getCenterOfMass() const
+{
+    return( _com );
+}
+void
+OSGToCollada::setAutoComputeCenterOfMass( bool compute )
+{
+    _comSet = !compute;
+}
+bool
+OSGToCollada::getAutoComputeCenterOfMass() const
+{
+    return( !_comSet );
+}
+
+void
+OSGToCollada::setShapeType( const BroadphaseNativeTypes shapeType )
+{
+    _shapeType = shapeType;
+}
+BroadphaseNativeTypes
+OSGToCollada::getShapeType() const
+{
+    return( _shapeType );
+}
+
+void
+OSGToCollada::setMass( float mass )
+{
+    _mass = mass;
+}
+float
+OSGToCollada::getMass() const
+{
+    return( _mass );
+}
+
+void
+OSGToCollada::setSimplifyPercent( float simplifyPercent )
+{
+    _simplifyPercent = simplifyPercent;
+}
+float
+OSGToCollada::getSimplifyPercent() const
+{
+    return( _simplifyPercent );
+}
+
+void
+OSGToCollada::setOverall( bool overall )
+{
+    _overall = overall;
+}
+bool
+OSGToCollada::getOverall() const
+{
+    return( _overall );
+}
+
+void
+OSGToCollada::setNodeName( const std::string& nodeName )
+{
+    _nodeName = nodeName;
+}
+const std::string&
+OSGToCollada::getNodeName() const
+{
+    return( _nodeName );
+}
+
+void
+OSGToCollada::setAxis( osgBullet::AXIS axis )
+{
+    _axis = axis;
+}
+osgBullet::AXIS
+OSGToCollada::getAxis() const
+{
+    return( _axis );
 }
 
 

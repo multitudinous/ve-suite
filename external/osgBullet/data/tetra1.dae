@@ -2,7 +2,7 @@
 <COLLADA xmlns="http://www.collada.org/2005/11/COLLADASchema" version="1.4.1">
     <asset>
         <contributor>
-            <authoring_tool>Bullet Physics SDK 270 Snapshot(BulletColladaConverter) http://bulletphysics.com</authoring_tool>
+            <authoring_tool>Bullet Physics SDK 273 Snapshot(BulletColladaConverter) http://bulletphysics.com</authoring_tool>
         </contributor>
         <created>2008-02-12T15:28:54.891550</created>
         <modified>2008-02-12T15:28:54.891550</modified>
@@ -40,9 +40,9 @@
         <geometry id="BulletUnnamed-0-Geometry" name="BulletUnnamed-0-Geometry">
             <mesh>
                 <source id="BulletUnnamed-0-Geometry-position">
-                    <float_array id="BulletUnnamed-0-Geometry-position-array" count="27">1 -1 1 -1 1 1 -1 -1 -1 -1 1 1 1 -1 1 1 1 -1 -1 -1 -1 1 1 -1 1 -1 1</float_array>
+                    <float_array id="BulletUnnamed-0-Geometry-position-array" count="36">1 -1 1 -1 1 1 -1 -1 -1 -1 1 1 1 -1 1 1 1 -1 -1 -1 -1 1 1 -1 1 -1 1 1 1 -1 -1 -1 -1 -1 1 1</float_array>
                     <technique_common>
-                        <accessor count="9" source="#BulletUnnamed-0-Geometry-position-array" stride="3">
+                        <accessor count="12" source="#BulletUnnamed-0-Geometry-position-array" stride="3">
                             <param name="X" type="float"/>
                             <param name="Y" type="float"/>
                             <param name="Z" type="float"/>
@@ -52,9 +52,9 @@
                 <vertices id="BulletUnnamed-0-Geometry-vertex">
                     <input semantic="POSITION" source="#BulletUnnamed-0-Geometry-position"/>
                 </vertices>
-                <triangles count="3">
+                <triangles count="4">
                     <input offset="0" semantic="VERTEX" source="#BulletUnnamed-0-Geometry-vertex"/>
-                    <p>0 1 2 3 4 5 6 7 8</p>
+                    <p>0 1 2 3 4 5 6 7 8 9 10 11</p>
                 </triangles>
             </mesh>
         </geometry>

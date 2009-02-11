@@ -227,7 +227,7 @@ public:
         _palm._debugBullet = _debugBullet;
         _palm._dependent = NULL;
 
-        CreateNodePath cnp( _hn );
+        CreateNodePath cnp( /*_hn*/NULL );
         node.accept( cnp );
         _palm._l2wNodePath = cnp.getNodePath();
 
@@ -293,7 +293,7 @@ public:
 
         // Get the NodePath, this allows the ArticulationInfo to accumulate
         //   parent transformations to create the absolute transform matrix.
-        CreateNodePath cnp( _hn );
+        CreateNodePath cnp( /*_hn*/NULL );
         node.accept( cnp );
         ai._l2wNodePath = cnp.getNodePath();
 
@@ -399,6 +399,7 @@ HandNode::HandNode()
     _bulletWorld( NULL ),
     _body( NULL ),
     _shape( NULL ),
+    _motion( NULL ),
     _traverseHand( true ),
     _debug( false )
 {
@@ -411,6 +412,7 @@ HandNode::HandNode( btDynamicsWorld* bulletWorld, const HandNode::Handedness rig
     _bulletWorld( bulletWorld ),
     _body( NULL ),
     _shape( NULL ),
+    _motion( NULL ),
     _traverseHand( true ),
     _debug( false )
 {
@@ -425,6 +427,7 @@ HandNode::HandNode( const HandNode& rhs, const osg::CopyOp& copyop )
     _bulletWorld( rhs._bulletWorld ),
     _body( NULL ),
     _shape( NULL ),
+    _motion( NULL ),
     _traverseHand( rhs._traverseHand ),
     _debug( rhs._debug )
 {
@@ -457,6 +460,11 @@ void HandNode::cleanup()
         // TBD possible memory leak, do we need to delete child shapes?
         delete _shape;
         _shape = NULL;
+    }
+    if( _motion != NULL )
+    {
+        delete _motion;
+        _motion = NULL;
     }
 }
 
@@ -573,6 +581,19 @@ void HandNode::updateTransform()
     computeWorldToLocalMatrix( m, NULL );
     _debugBullet->getRoot()->setMatrix( m );
 
+    {
+        osg::Matrix m2;
+        computeLocalToWorldMatrix( m2, NULL );
+        btTransform btm( osgBullet::asBtTransform( m2 ) );
+        if( _motion != NULL )
+        {
+            // _motion is NULL if there is no Bullet simulation.
+            _motion->setWorldTransform( btm );
+            // This is John's recommen ded fix, but it appears to be unnecessary.
+            _body->setCenterOfMassTransform( btm );
+        }
+    }
+
     // Update the Bullet transform for all component collision shapes.
     int idx;
     for( idx=0; idx<MAX_ARTICULATIONS; idx++ )
@@ -622,7 +643,11 @@ void HandNode::init()
 
     // FindArticulations created a compund collision shape for us;
     // save the address.
+#ifdef USE_SIMPLE_BOX
+    _shape = new btBoxShape( btVector3( .5, .5, .5 ) );
+#else
     _shape = fa.getCollisionShape();
+#endif
     _palm = fa.getPalm();
 
     if (_rightOrLeft == LEFT)
@@ -642,24 +667,29 @@ void HandNode::init()
     {
         // Create rigid body and add to bullet world.
         btTransform xform; xform.setIdentity();
-        btDefaultMotionState* myMotionState = new btDefaultMotionState( xform );
+        _motion = new btDefaultMotionState( xform );
 	    btVector3 inertia( 0, 0, 0 );
-	    btRigidBody::btRigidBodyConstructionInfo rbInfo( 0., myMotionState, _shape, inertia );
+	    btRigidBody::btRigidBodyConstructionInfo rbInfo( 0., _motion, _shape, inertia );
         rbInfo.m_friction = btScalar( 1. );
 	    _body = new btRigidBody( rbInfo );
         _body->setCollisionFlags( _body->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT );
         _body->setActivationState( DISABLE_DEACTIVATION );
 
-	    _bulletWorld->addRigidBody( _body );
+        _bulletWorld->addRigidBody( _body );
     }
 
     // Set the initial Bullet transformation matrices.
     updateTransform();
 
+#ifdef USE_SIMPLE_BOX
+    return;
+#else
     // Let Bullet know the size of the new Aabb.
     if (_bulletWorld != NULL)
         _shape->recalculateLocalAabb();
+#endif
 }
+
 
 void HandNode::setHandedness( const HandNode::Handedness rightOrLeft )
 {
@@ -845,6 +875,23 @@ HandNode::ArticulationInfo::~ArticulationInfo()
 {
 }
 
+void HandNode::ArticulationInfo::dump()
+{
+    osg::notify( osg::ALWAYS ) <<
+        "  _btChildIdx: " << _btChildIdx <<
+        //"\t_debugIdx: " << _debugIdx <<
+        //"\t_angle: " << _angle <<
+        //"\t_negate: " << _negate <<
+        "\t_dependent: " << _dependent <<
+        "\t_cs: " << _cs <<
+        "\t_dof: " << _dof.get() <<
+        "\t_bt2osg: " << _bt2osg <<
+        std::endl;
+    osg::Matrix m;
+    m = osg::computeLocalToWorld( _l2wNodePath );
+    osg::notify( osg::ALWAYS ) << m << std::endl;
+}
+
 void HandNode::ArticulationInfo::setAngle( float angle )
 {
     if( _negate )
@@ -886,8 +933,9 @@ void HandNode::ArticulationInfo::setBulletTransform()
         osg::Matrix l2w = osg::computeLocalToWorld( _l2wNodePath );
         osg::Matrix bt2osg = osg::Matrix::translate( _bt2osg );
         osg::Matrix btm = bt2osg * l2w;
-        _cs->getChildList()[ _btChildIdx ].m_transform
-            = osgBullet::asBtTransform( btm );
+        // This line of code is the fix for the hand interactions we've been seeing.
+        // Apparently a Bullet interface change sometime between 2.70 and 2.72.
+        _cs->updateChildTransform( _btChildIdx, osgBullet::asBtTransform( btm ) );
 
         // Update the debug rep.
         if( _debugIdx >= 0 )

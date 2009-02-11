@@ -2,7 +2,7 @@
 <COLLADA xmlns="http://www.collada.org/2005/11/COLLADASchema" version="1.4.1">
     <asset>
         <contributor>
-            <authoring_tool>Bullet Physics SDK 270 Snapshot(BulletColladaConverter) http://bulletphysics.com</authoring_tool>
+            <authoring_tool>Bullet Physics SDK 273 Snapshot(BulletColladaConverter) http://bulletphysics.com</authoring_tool>
         </contributor>
         <created>2008-02-12T15:28:54.891550</created>
         <modified>2008-02-12T15:28:54.891550</modified>

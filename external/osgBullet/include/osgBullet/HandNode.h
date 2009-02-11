@@ -14,9 +14,19 @@
 #include <string>
 
 
+// Uncomment to replace the hand btCompoundShape with a btBoxShape.
+// This is a debugging aid to track down problems with hand penetration
+// caused by use of btCompoundShape.
+//#define USE_SIMPLE_BOX
+
+
 class btDynamicsWorld;
 class btRigidBody;
+struct btDefaultMotionState;
 class btCompoundShape;
+#ifdef USE_SIMPLE_BOX
+class btBoxShape;
+#endif
 
 
 namespace osgBullet {
@@ -130,7 +140,7 @@ public:
     // Made public for the benefit of helper NodeVisitors.
     //
 
-    // Class to manage vuewing the hand's component collision shapes.
+    // Class to manage viewing the hand's component collision shapes.
     class DebugBullet : public osg::Referenced
     {
     public:
@@ -168,6 +178,8 @@ public:
         btCompoundShape* _cs;
 
         osg::ref_ptr< HandNode::DebugBullet > _debugBullet;
+
+        void dump();
     };
     typedef std::vector< ArticulationInfo > ArticulationInfoList;
 
@@ -192,7 +204,12 @@ protected:
 
     btDynamicsWorld* _bulletWorld;
     btRigidBody* _body;
+    btDefaultMotionState* _motion;
+#ifdef USE_SIMPLE_BOX
+    btBoxShape* _shape;
+#else
     btCompoundShape* _shape;
+#endif
 
     bool _traverseHand;
 

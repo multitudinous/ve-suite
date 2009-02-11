@@ -115,7 +115,7 @@ btTriangleMeshShape* osgBullet::btTriMeshCollisionShapeFromOSG( osg::Node* node 
     }
 
     btTriangleMesh* mesh = new btTriangleMesh;
-    for( size_t i = 0; i + 3 < vertices->size(); i += 3 )
+    for( size_t i = 0; i + 2 < vertices->size(); i += 3 )
     {
         osg::Vec3& p1 = ( *vertices )[ i ];
         osg::Vec3& p2 = ( *vertices )[ i + 1 ];
@@ -138,7 +138,7 @@ btConvexTriangleMeshShape* osgBullet::btConvexTriMeshCollisionShapeFromOSG( osg:
 
     btTriangleMesh* mesh = new btTriangleMesh;
     osg::Vec3 p1, p2, p3;
-    for( size_t i = 0; i < vertices->size(); i += 3 )
+    for( size_t i = 0; i + 2 < vertices->size(); i += 3 )
     {
         p1 = vertices->at( i );
         p2 = vertices->at( i + 1 );
@@ -235,7 +235,7 @@ osg::Node * osgBullet::osgNodeFromBtCollisionShape( const btSphereShape * btSphe
     sphere->setRadius( btSphere->getRadius() );
 
     osg::TessellationHints* hints = new osg::TessellationHints();
-    hints->setDetailRatio( .2 );
+    hints->setDetailRatio( .2f );
 
     osg::ShapeDrawable* shape = new osg::ShapeDrawable( sphere, hints );
     shape->setColor( osg::Vec4( 1., 1., 1., 1. ) );
@@ -279,7 +279,7 @@ osg::Node * osgBullet::osgNodeFromBtCollisionShape( const btCylinderShape * btCy
     }
 
     osg::TessellationHints* hints = new osg::TessellationHints();
-    hints->setDetailRatio( .2 );
+    hints->setDetailRatio( .2f );
 
     osg::ShapeDrawable* shape = new osg::ShapeDrawable( cylinder, hints );
     shape->setColor( osg::Vec4( 1., 1., 1., 1. ) );

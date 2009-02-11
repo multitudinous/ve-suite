@@ -277,7 +277,7 @@ int
 main( int argc,
       char ** argv )
 {
-    osg::setNotifyLevel( osg::WARN   );
+    osg::setNotifyLevel( osg::WARN );
 
 
     // Prepare a suitable StateSet.
@@ -337,11 +337,12 @@ main( int argc,
     hpp.findAndChangeName( "thumb_lft_j_02", "f0k0" );
     hpp.findAndChangeName( "thumb_lft_j_trans", "f0trans" );
 
-    osg::setNotifyLevel( osg::INFO );
     osgUtil::Optimizer optimizer;
 
     osg::ref_ptr< osgDB::ReaderWriter::Options > opt = new osgDB::ReaderWriter::Options;
-    opt->setOptionString( "noTexturesInIVEFile" );
+    // Bug logged in mantis. Doug does not want separate texture file.
+    // Leave this option out; by default the .ive plugin will include the texture.
+    //opt->setOptionString( "noTexturesInIVEFile" );
 
     std::string fileName( "handL.flt" );
     osg::notify( osg::ALWAYS ) << std::endl << "Processing " << fileName << std::endl;

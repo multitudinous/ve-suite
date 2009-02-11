@@ -1,7 +1,6 @@
 HandNode: -2 6 -3 0 1 0 6.12323e-017 2.9 1
 Model: concavesg.osg
 
-CreateDAE-tm: Concave
-# Node: Concave
-# DAE: concave0.dae
-
+Node: Concave
+DAE: concave1.dae
+# CreateDAE-tm: Concave

@@ -9,6 +9,7 @@
 #include <btBulletDynamicsCommon.h>
 #include <osgBullet/CollisionShapes.h>
 #include <osgBullet/Export.h>
+//#include <osgBullet/CollisionShapes.h>
 #include <string>
 
 namespace osgBullet {
@@ -34,18 +35,40 @@ public:
     //    false    empty     Collision shapes are created for all Geodes in 'sg' and assembled into a compound collision shape.
     //    false   non-empty  'sg' is searched until a node with name 'nodeName' is found, then collision shapes are created for all Geodes below that node and assembled into a compound collision shape.
     // Typical expected usage is 'overall' false and 'nodeName' empty.
-    OSGToCollada( 
-        osg::Node* sg,
-        const BroadphaseNativeTypes shapeType,
-        const float mass = 1.f,
-        const std::string& outputFileName = std::string( "" ),
-        const float simplifyPercent = 1.f,
-        const bool overall = true,
-        const std::string& nodeName = std::string( "" ),
-        const osgBullet::AXIS axis = osgBullet::Z // for cylinder alignment only, ignored otherwise.
-        );
+    OSGToCollada();
+
+    bool convert( const std::string& outputFileName = std::string( "" ) );
+
 
     btRigidBody* getRigidBody();
+
+    void setSceneGraph( osg::Node* sg );
+    osg::Node* getSceneGraph() const;
+
+    // Specifying the center of mass automatically disables auto-compute center of mass.
+    void setCenterOfMass( osg::Vec3& com );
+    const osg::Vec3& getCenterOfMass() const;
+    void setAutoComputeCenterOfMass( bool compute );
+    bool getAutoComputeCenterOfMass() const;
+
+    void setShapeType( const BroadphaseNativeTypes shapeType );
+    BroadphaseNativeTypes getShapeType() const;
+
+    void setMass( float mass );
+    float getMass() const;
+
+    void setSimplifyPercent( float simplifyPercent );
+    float getSimplifyPercent() const;
+
+    void setOverall( bool overall );
+    bool getOverall() const;
+
+    void setNodeName( const std::string& nodeName );
+    const std::string& getNodeName() const;
+
+    // for cylinder alignment only, ignored otherwise.
+    void setAxis( osgBullet::AXIS axis );
+    osgBullet::AXIS getAxis() const;
 
 protected:
     btDynamicsWorld* initPhysics();
@@ -54,8 +77,17 @@ protected:
 
 
     btRigidBody* _rigidBody;
-};
 
+    osg::ref_ptr< osg::Node > _sg;
+    osg::Vec3 _com;
+    bool _comSet;
+    BroadphaseNativeTypes _shapeType;
+    float _mass;
+    float _simplifyPercent;
+    bool _overall;
+    std::string _nodeName;
+    osgBullet::AXIS _axis;
+};
 
 }
 
