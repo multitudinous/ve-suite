@@ -72,8 +72,8 @@ const int maxProxies = 32766;
 
 using namespace ves::xplorer::scenegraph;
 
-vprSingletonImp( PhysicsSimulator );
-
+//vprSingletonImp( PhysicsSimulator );
+vprSingletonImpLifetime( PhysicsSimulator, 25 );
 ////////////////////////////////////////////////////////////////////////////////
 PhysicsSimulator::PhysicsSimulator()
     :
