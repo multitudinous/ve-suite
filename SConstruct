@@ -41,11 +41,6 @@ if None == flagpoll_cmd:
 else:
     sys.stdout.write("Found flagpoll %s\n" % flagpoll_cmd )
 
-# Set FLAGPOLL_PATH to the local flagpoll if necessary.
-#if not os.environ.has_key('FLAGPOLL_PATH'):
-#   os.environ['FLAGPOLL_PATH'] = pj(os.getcwd(), 'Tools', 'flagpoll')
-# determine the svn version of the local vesuite build
-# pass in the real src directory not the scons build dir
 def GetSVNVersion( dir = ''):
     cwd = os.getcwd()
     os.chdir( dir )
@@ -265,8 +260,8 @@ apu_options = fp_option.FlagPollBasedOption("Apache Portable Runtime Utils",
 #bullet_options = fp_option.FlagPollBasedOption("Bullet Physics SDK",
 #                                               "bullet", "0.1", True, True, helpText=None, compileTest=True,
 #                                               headerToCheck="btBulletCollisionCommon.h")
-bulletVersion = (int(2), int(70))
-bulletBaseVar = 'bullet-2.70'
+bulletVersion = (int(2), int(74))
+bulletBaseVar = 'bullet-1610'
 
 tao_options = fp_option.FlagPollBasedOption("ACE TAO libraries",
                      "ACE TAO_Valuetype TAO_CosNaming TAO_Svc_Utils TAO_IORTable TAO_Messaging TAO_PortableServer TAO_BiDirGIOP TAO_AnyTypeCode TAO",
@@ -545,7 +540,8 @@ if not SConsAddons.Util.hasHelpFlag():
    osgEphemerisSubdirs = pj( buildDir, 'external', 'osgEphemeris')
    osgBulletSubdirs = pj( buildDir, 'external', 'osgBullet')
    bullet = pj( buildDir, 'external', bulletBaseVar)
-   
+   test = pj( buildDir, 'test', 'osg')
+
    ves_dirs = [vesSubdirs, distSubdirs, osgEphemerisSubdirs,
                shareSubdirs, lokiSubdirs, 
                osgPPUSubdirs, osgBulletSubdirs, bullet ]
