@@ -79,7 +79,7 @@ void AspenDynamicsInterface::Open(CString filename)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-std::vector< std::vector< std::string > > AspenDynamicsInterface::GetVariableList( CString itemName )
+std::vector< std::vector< std::string > > AspenDynamicsInterface::GetVariableList( CString itemName, bool block )
 {
     std::vector< std::vector < std::string > > blocks;
 
@@ -90,10 +90,20 @@ std::vector< std::vector< std::string > > AspenDynamicsInterface::GetVariableLis
     vDisp = ADDocument->GetFlowsheet();
     IDispatch* pDispFlow = vDisp.pdispVal;
 
-    // Get the dispatch ID for the Blocks property
-    DISPID dispid;
-    OLECHAR* szName = OLESTR("Blocks");
-    pDispFlow->GetIDsOfNames(IID_NULL, &szName, 1, ::GetUserDefaultLCID(), &dispid);
+    OLECHAR* szName;
+        DISPID dispid;
+    if( block )
+    {
+        // Get the dispatch ID for the Blocks property
+        szName = OLESTR("Blocks");
+        pDispFlow->GetIDsOfNames(IID_NULL, &szName, 1, ::GetUserDefaultLCID(), &dispid);
+    }
+    else
+    {
+        // Get the dispatch ID for the Streams property
+        szName = OLESTR("Streams");
+        pDispFlow->GetIDsOfNames(IID_NULL, &szName, 1, ::GetUserDefaultLCID(), &dispid);
+    }
 
     // Call Blocks to get collection of blocks
     DISPPARAMS params = {NULL, NULL, 0, 0};

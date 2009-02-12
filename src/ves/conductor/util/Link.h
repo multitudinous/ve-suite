@@ -147,6 +147,8 @@ protected:
     void OnMRightDown( wxMouseEvent &event );
     void OnSetActiveLinkID( wxUpdateUIEvent& event );
     bool SelectLink( int x, int y );
+    void OnShowAspenDynName( wxCommandEvent& event );
+    void OnQueryStreamAllVars( wxCommandEvent &event );
     ///Check the active id against the plugin id
     bool CheckID();
 

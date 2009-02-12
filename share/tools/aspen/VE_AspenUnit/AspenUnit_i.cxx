@@ -88,6 +88,7 @@ Body_Unit_i::Body_Unit_i( std::string name, CVE_AspenUnitDlg * dialog,
     mQueryCommandNames.insert( "getInputModuleProperties");
     mQueryCommandNames.insert( "getOutputModuleParamList");
     mQueryCommandNames.insert( "getOutputModuleProperties");
+    mQueryCommandNames.insert( "getStreamModuleParamList");
     mQueryCommandNames.insert( "getStreamInputModuleParamList");
     mQueryCommandNames.insert( "getStreamInputModuleProperties");
     mQueryCommandNames.insert( "getStreamOutputModuleParamList");
@@ -530,6 +531,13 @@ char * Body_Unit_i::Query ( const char * query_str
 	}
 
 	//Streams
+	else if ( cmdname == "getStreamModuleParamList" )
+	{
+		//executive_->SetModuleMessage(cur_id_,"Querying inputs...\n");
+		returnValue = handleGetStreamModuleParamList( cmd );
+		//executive_->SetModuleMessage(cur_id_,"Querying completed.\n");
+		return returnValue;
+	}
 	else if ( cmdname == "getStreamInputModuleParamList" )
 	{
 		//executive_->SetModuleMessage(cur_id_,"Querying link inputs...\n");
@@ -806,7 +814,7 @@ char* Body_Unit_i::handleGetModuleParamList(ves::open::xml::CommandPtr cmd)
 	//There shouldn't be two intances of an Dynamics framework. so discard the 
     //moduleId
 	//the returned string will be a well formated XML within "vecommand" element
-	std::string netPak = dyn->GetModuleParams(modname);
+	std::string netPak = dyn->GetModuleParams( modname, true );
 
     return CORBA::string_dup(netPak.c_str());
 }
@@ -909,6 +917,34 @@ char* Body_Unit_i::handleGetOutputModuleProperties(ves::open::xml::CommandPtr cm
 	std::string netPak = bkp->GetOutputModuleParamProperties(modname, paramName);
 	return CORBA::string_dup(netPak.c_str());
 
+}
+////////////////////////////////////////////////////////////////////////////////
+char* Body_Unit_i::handleGetStreamModuleParamList(ves::open::xml::CommandPtr cmd)
+{	
+    size_t num = cmd->GetNumberOfDataValuePairs();
+	std::string modname;
+	unsigned int modId;
+
+	for( size_t i=0; i < num; i++)
+	{
+		ves::open::xml::DataValuePairPtr curPair= cmd->GetDataValuePair(i);
+		
+		if (curPair->GetDataName()=="ModuleName")
+        {
+			modname=curPair->GetDataString();
+        }
+		else if (curPair->GetDataName()=="ModuleId")
+        {
+            curPair->GetData(modId);
+        }
+	}
+
+	//There shouldn't be two intances of an Dynamics framework. so discard the 
+    //moduleId
+	//the returned string will be a well formated XML within "vecommand" element
+	std::string netPak = dyn->GetModuleParams( modname, false );
+
+	return CORBA::string_dup(netPak.c_str());
 }
 ////////////////////////////////////////////////////////////////////////////////
 char* Body_Unit_i::handleGetStreamInputModuleParamList(ves::open::xml::CommandPtr cmd)

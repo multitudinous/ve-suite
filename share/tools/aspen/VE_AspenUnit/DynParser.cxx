@@ -1430,14 +1430,14 @@ void DynParser::SetWorkingDir( std::string dir )
 
 ///////////////////////////////////////////////////////////////////////////////
 //BLOCKS
-std::string DynParser::GetModuleParams(std::string modname)
+std::string DynParser::GetModuleParams( std::string modname, bool block )
 {
     ves::open::xml::CommandPtr params( new ves::open::xml::Command() );
     //input variables;
     params->SetCommandName((modname+"InputParams").c_str());
 
     std::vector< std::vector < std::string > > variables =
-        dyndoc->GetVariableList( modname.c_str() );
+        dyndoc->GetVariableList( modname.c_str(), block );
 
     for(int i = 0; i < variables.size(); i++)
     {

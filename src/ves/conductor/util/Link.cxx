@@ -33,8 +33,10 @@
 #include <ves/conductor/util/CORBAServiceList.h>
 #include <ves/conductor/util/Link.h>
 #include <ves/conductor/util/OrbThread.h>
-#include <ves/conductor/util/ParamsDlg.h>
 #include <ves/conductor/ConductorLibEnums.h>
+
+#include <ves/conductor/util/ParamsDlg.h>
+#include <ves/conductor/util/VarDialog.h>
 
 #include <ves/open/xml/model/Link.h>
 #include <ves/open/xml/model/Point.h>
@@ -66,9 +68,11 @@ BEGIN_EVENT_TABLE( Link, wxEvtHandler )
     EVT_MENU( LINK_SHOW_CONT, Link::OnShowLinkContent )
 	EVT_MENU( LINK_SET_NAME, Link::OnSetLinkName )
     //Aspen Menu
-    EVT_MENU( LINK_SHOW_NAME, Link::OnShowAspenName )
-    EVT_MENU( LINK_INPUTS, Link::OnQueryStreamInputs )
-    EVT_MENU( LINK_OUTPUTS, Link::OnQueryStreamOutputs )
+    EVT_MENU( LINK_ASPEN_PLUS_SHOW_NAME, Link::OnShowAspenName )
+    EVT_MENU( LINK_ASPEN_PLUS_INPUTS, Link::OnQueryStreamInputs )
+    EVT_MENU( LINK_ASPEN_PLUS_RESULTS, Link::OnQueryStreamOutputs )
+    EVT_MENU( LINK_ASPEN_DYN_SHOW_NAME, Link::OnShowAspenDynName )
+    EVT_MENU( LINK_ASPEN_DYN_ALL_VARS, Link::OnQueryStreamAllVars )
     EVT_UPDATE_UI( LINK_SET_ACTIVE, Link::OnSetActiveLinkID )
 END_EVENT_TABLE()
 
@@ -508,7 +512,7 @@ void Link::OnQueryStreamInputs( wxCommandEvent& event )
     while( parentTraverser->GetParentModel() != NULL )
     {
         //compName = parentTraverser->GetPluginName() +".Data.Blocks." + compName;
-        compName = "Data.Blocks." + parentTraverser->GetPluginName() + "." + compName;
+        compName = "Data.Streams." + parentTraverser->GetPluginName() + "." + compName;
         parentTraverser = parentTraverser->GetParentModel();
     }
 
@@ -574,7 +578,7 @@ void Link::OnQueryStreamOutputs( wxCommandEvent& event )
     while( parentTraverser->GetParentModel() != NULL )
     {
         //compName = parentTraverser->GetPluginName() +".Data.Blocks." + compName;
-        compName = "Data.Blocks." + parentTraverser->GetPluginName() + "." + compName;
+        compName = "Data.Streams." + parentTraverser->GetPluginName() + "." + compName;
         parentTraverser = parentTraverser->GetParentModel();
     }
 
@@ -615,6 +619,82 @@ void Link::OnQueryStreamOutputs( wxCommandEvent& event )
     for( size_t i = 0; i < temp_vector.size(); i++ )
         params->AppendList( temp_vector[i].c_str() );
     params->ShowModal();
+}
+////////////////////////////////////////////////////////////////////////////////
+void Link::OnShowAspenDynName( wxCommandEvent& event )
+{
+    UILINK_CHECKID( event )
+    wxString title;
+    title << wxT( "Aspen Name" );
+    wxString desc( GetName().c_str(), wxConvUTF8 );
+    wxMessageDialog( networkFrame, desc, title ).ShowModal();
+}
+////////////////////////////////////////////////////////////////////////////////
+void Link::OnQueryStreamAllVars( wxCommandEvent &event )
+{
+    UILINK_CHECKID( event )
+        
+    CORBAServiceList* serviceList = ves::conductor::util::CORBAServiceList::instance();
+    std::string compName = ConvertUnicode( GetName().c_str() );
+    //compName = "Data.Streams." + compName;
+   
+    //generate hierarchical name if necessary
+    ves::open::xml::model::ModelPtr parentTraverser = parentModel.lock();
+
+    if( parentTraverser != NULL )
+    {
+        while( parentTraverser->GetParentModel() != NULL )
+        {
+            //compName = parentTraverser->GetModelName() +".Data.Blocks." + compName;
+            parentTraverser = parentTraverser->GetParentModel();
+           // std::string tempFormat = "Blocks(\"" + compName + "\")";
+            compName = parentTraverser->GetPluginName() + "." + compName;
+
+        }
+    }
+
+    ves::open::xml::CommandPtr returnState( new ves::open::xml::Command() );
+    returnState->SetCommandName( "getStreamModuleParamList" );
+    ves::open::xml::DataValuePairPtr data( new ves::open::xml::DataValuePair() );
+    data->SetData( std::string( "ModuleName" ), compName );
+    returnState->AddDataValuePair( data );
+
+    std::vector< std::pair< ves::open::xml::XMLObjectPtr, std::string > > nodes;
+    nodes.push_back( std::pair< ves::open::xml::XMLObjectPtr, std::string >( returnState, "vecommand" ) );
+
+    ves::open::xml::XMLReaderWriter commandWriter;
+    std::string status = "returnString";
+    commandWriter.UseStandaloneDOMDocumentManager();
+    commandWriter.WriteXMLDocument( nodes, status, "Command" );
+
+    //Get results
+    std::string nw_str = serviceList->Query( status );
+    //std::ofstream packet("packet.txt");
+    //packet<<nw_str;
+    //packet.close();
+    wxString title( compName.c_str(), wxConvUTF8 );
+    ves::open::xml::XMLReaderWriter networkReader;
+    networkReader.UseStandaloneDOMDocumentManager();
+    networkReader.ReadFromString();
+    networkReader.ReadXMLData( nw_str, "Command", "vecommand" );
+    std::vector< ves::open::xml::XMLObjectPtr > objectVector = networkReader.GetLoadedXMLObjects();
+    ves::open::xml::CommandPtr cmd = boost::dynamic_pointer_cast<ves::open::xml::Command>( objectVector.at( 0 ) );
+    VarDialog* params = new VarDialog( networkFrame );
+    params->SetComponentName( wxString( compName.c_str(), wxConvUTF8 ) );
+    params->SetServiceList( serviceList );
+    int numdvps = cmd->GetNumberOfDataValuePairs();
+    for( size_t i = 0; i < numdvps; i++ )
+    {
+        ves::open::xml::DataValuePairPtr pair = cmd->GetDataValuePair( i );
+        std::vector< std::string > temp_vector;
+        pair->GetData( temp_vector );
+        params->SetData( wxString( temp_vector[0].c_str(), wxConvUTF8 ), wxString( temp_vector[1].c_str(), wxConvUTF8 ),
+            wxString( temp_vector[2].c_str(), wxConvUTF8 ), wxString( temp_vector[3].c_str(), wxConvUTF8 ) );
+        //params->SetData( wxString( temp_vector[0].c_str(), wxConvUTF8 ) );
+    }
+    params->UpdateSizes();
+    params->ShowModal();
+    params->Destroy();
 }
 /////////////////////////////////////////////////////
 void Link::OnDelLinkCon( wxCommandEvent& event )
@@ -751,14 +831,23 @@ void Link::OnMRightDown( wxMouseEvent &event )
     the_pop_menu.Enable( LINK_SHOW_CONT, false );
 
     //Aspen Menu
-    wxMenu * aspen_menu = new wxMenu();
-    aspen_menu->Append( LINK_SHOW_NAME, _( "Aspen Name" ) );
-    aspen_menu->Enable( LINK_SHOW_NAME, true );
-    aspen_menu->Append( LINK_INPUTS, _( "Query Inputs" ) );
-    aspen_menu->Enable( LINK_INPUTS, true );
-    aspen_menu->Append( LINK_OUTPUTS, _( "Query Outputs" ) );
-    aspen_menu->Enable( LINK_OUTPUTS, true );
-    the_pop_menu.Append( LINK_MENU,   _( "Aspen" ), aspen_menu, _( "Used in conjunction with Aspen" ) );
+    wxMenu * aspen_plus_menu = new wxMenu();
+    aspen_plus_menu->Append( LINK_ASPEN_PLUS_SHOW_NAME, _( "Aspen Name" ) );
+    aspen_plus_menu->Enable( LINK_ASPEN_PLUS_SHOW_NAME, true );
+    aspen_plus_menu->Append( LINK_ASPEN_PLUS_INPUTS, _( "Inputs" ) );
+    aspen_plus_menu->Enable( LINK_ASPEN_PLUS_INPUTS, true );
+    aspen_plus_menu->Append( LINK_ASPEN_PLUS_RESULTS, _( "Results" ) );
+    aspen_plus_menu->Enable( LINK_ASPEN_PLUS_RESULTS, true );
+    the_pop_menu.Append( LINK_MENU,   _( "Aspen Plus" ), aspen_plus_menu, _( "Used in conjunction with Aspen Plus" ) );
+    the_pop_menu.Enable( LINK_MENU, false );
+
+    //Aspen Menu
+    wxMenu * aspen_dyn_menu = new wxMenu();
+    aspen_dyn_menu->Append( LINK_ASPEN_DYN_SHOW_NAME, _( "Aspen Name" ) );
+    aspen_dyn_menu->Enable( LINK_ASPEN_DYN_SHOW_NAME, true );
+    aspen_dyn_menu->Append( LINK_ASPEN_DYN_ALL_VARS, _( "All Variables" ) );
+    aspen_dyn_menu->Enable( LINK_ASPEN_DYN_ALL_VARS, true );
+    the_pop_menu.Append( LINK_MENU,   _( "Aspen Dynamics" ), aspen_dyn_menu, _( "Used in conjunction with Aspen Dynamics" ) );
     the_pop_menu.Enable( LINK_MENU, false );
 
     m_selLinkCon = -1;

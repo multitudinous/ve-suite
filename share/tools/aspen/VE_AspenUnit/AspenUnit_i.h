@@ -218,6 +218,7 @@ public:
   char* handleGetInputModuleProperties(ves::open::xml::CommandPtr cmd);
   char* handleGetOutputModuleParamList(ves::open::xml::CommandPtr cmd);
   char* handleGetOutputModuleProperties(ves::open::xml::CommandPtr cmd);
+  char* handleGetStreamModuleParamList(ves::open::xml::CommandPtr cmd);
   char* handleGetStreamInputModuleParamList(ves::open::xml::CommandPtr cmd);
   char* handleGetStreamInputModuleProperties(ves::open::xml::CommandPtr cmd);
   char* handleGetStreamOutputModuleParamList(ves::open::xml::CommandPtr cmd);
