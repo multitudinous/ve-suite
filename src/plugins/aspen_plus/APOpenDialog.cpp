@@ -42,7 +42,10 @@ void APOpenDialog::OnClose( wxCloseEvent& )
 
 void APOpenDialog::OKButtonClick( wxCommandEvent& event )
 {
-    EndModal( wxID_OK );
+    if( ComboBox->GetCurrentSelection() != wxNOT_FOUND )
+    {
+        EndModal( wxID_OK );
+    }
 }
 
 void APOpenDialog::CancelButtonClick( wxCommandEvent& event )
@@ -90,7 +93,7 @@ void APOpenDialog::SetPopulateFilenames( )
     }
 
     // construct combo box
-	ComboBox = new wxComboBox(this, -1, wxT(""), wxPoint(149,13), wxSize(208,27), arrayStringFor_ComboBox, 0, wxDefaultValidator, wxT("ComboBox"));
+	ComboBox = new wxComboBox(this, -1, wxT(""), wxPoint(149,13), wxSize(208,27), arrayStringFor_ComboBox, wxCB_READONLY, wxDefaultValidator, wxT("ComboBox"));
 	ComboBox->SetFont(wxFont(12, wxSWISS, wxNORMAL,wxNORMAL, false, wxT("Tahoma")));
 }
 
