@@ -94,6 +94,7 @@ Body_Unit_i::Body_Unit_i( std::string name, CVE_AspenUnitDlg * dialog,
     mQueryCommandNames.insert( "getStreamOutputModuleParamList");
     mQueryCommandNames.insert( "getStreamOutputModuleProperties");
     mQueryCommandNames.insert( "setParam");
+    mQueryCommandNames.insert( "setLinkParam");
 
     dynFlag = false;
     bkpFlag = false;
@@ -567,6 +568,11 @@ char * Body_Unit_i::Query ( const char * query_str
 	else if ( cmdname == "setParam" )
 	{
 		SetParam( cmd );
+		return CORBA::string_dup( "Param Set" );
+	}
+	else if ( cmdname == "setLinkParam" )
+	{
+		SetLinkParam( cmd );
 		return CORBA::string_dup( "Param Set" );
 	}
 	else
@@ -1127,8 +1133,25 @@ void Body_Unit_i::SetParam (ves::open::xml::CommandPtr cmd)
             std::vector< std::string > temp_vector;
             pair->GetData( temp_vector );
             dyn->SetValue( temp_vector[0].c_str(), temp_vector[1].c_str(),
-                temp_vector[2].c_str() );
+                temp_vector[2].c_str(), true );
 	    }
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
+void Body_Unit_i::SetLinkParam( ves::open::xml::CommandPtr cmd )
+{
+	size_t num = cmd->GetNumberOfDataValuePairs();
+	std::string modname,paramName, paramValue;
+
+    if( dynFlag )
+    {
+	    for( size_t i = 0; i < num; i++)
+	    {
+            ves::open::xml::DataValuePairPtr pair = cmd->GetDataValuePair( i );
+            std::vector< std::string > temp_vector;
+            pair->GetData( temp_vector );
+            dyn->SetValue( temp_vector[0].c_str(), temp_vector[1].c_str(),
+                temp_vector[2].c_str(), false );
+	    }
+    }
+}

@@ -82,7 +82,8 @@ public:
     void SetVisibility( bool show );
     void ReinitDynamics();
     std::string GetModuleParams( std::string modname, bool block );
-    void SetValue( std::string modname, std::string paramname, std::string value );
+    void SetValue( std::string modname, std::string paramname,
+        std::string value, bool block );
     AspenDynamicsInterface::AspenDynamicsInterface * dyndoc;
 };
 

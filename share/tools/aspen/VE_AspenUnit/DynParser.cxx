@@ -1476,11 +1476,12 @@ std::string DynParser::GetModuleParams( std::string modname, bool block )
 
 ///////////////////////////////////////////////////////////////////////////////
 void DynParser::SetValue( std::string modname, std::string paramname,
-                         std::string value )
+                         std::string value, bool block )
 {
     dyndoc->SetVariableValue( modname.c_str(), paramname.c_str(),
-        value.c_str()  );
-}///////////////////////////////////////////////////////////////////////////////
+        value.c_str(), block  );
+}
+///////////////////////////////////////////////////////////////////////////////
 void DynParser::ReadHeader( std::ifstream &file )
 {
     //version

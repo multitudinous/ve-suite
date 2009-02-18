@@ -43,9 +43,9 @@ namespace AspenDynamicsInterface
 		void SetVisibility( bool status );
         void RunSolver( );
         void ResetSimulation( );
-        std::vector< std::vector< std::string > > GetVariableList( CString itemName, bool block );
-        void SetVariableValue( CString itemName, CString variableName,
-            CString Value );
+        std::vector< std::vector< std::string > > GetVariableList( CString itemPath, bool block );
+        void SetVariableValue( CString itemPath, CString variableName,
+            CString Value, bool block );
 
 
         private:

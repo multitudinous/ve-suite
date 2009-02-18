@@ -640,17 +640,10 @@ void Link::OnQueryStreamAllVars( wxCommandEvent &event )
    
     //generate hierarchical name if necessary
     ves::open::xml::model::ModelPtr parentTraverser = parentModel.lock();
-
-    if( parentTraverser != NULL )
+    while( parentTraverser != NULL )
     {
-        while( parentTraverser->GetParentModel() != NULL )
-        {
-            //compName = parentTraverser->GetModelName() +".Data.Blocks." + compName;
-            parentTraverser = parentTraverser->GetParentModel();
-           // std::string tempFormat = "Blocks(\"" + compName + "\")";
-            compName = parentTraverser->GetPluginName() + "." + compName;
-
-        }
+        compName = parentTraverser->GetPluginName() + "." + compName;
+        parentTraverser = parentTraverser->GetParentModel();
     }
 
     ves::open::xml::CommandPtr returnState( new ves::open::xml::Command() );

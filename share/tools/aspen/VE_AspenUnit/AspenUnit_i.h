@@ -224,6 +224,7 @@ public:
   char* handleGetStreamOutputModuleParamList(ves::open::xml::CommandPtr cmd);
   char* handleGetStreamOutputModuleProperties(ves::open::xml::CommandPtr cmd);
   void SetParam(ves::open::xml::CommandPtr cmd);
+  void SetLinkParam( ves::open::xml::CommandPtr cmd );
 
 private:
   bool bkpFlag;

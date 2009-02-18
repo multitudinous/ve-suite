@@ -117,7 +117,7 @@ void VarDialog::SetButtonClick(wxCommandEvent& event)
 {  
     ves::open::xml::CommandPtr params( new ves::open::xml::Command() );
     //input variables;
-    params->SetCommandName( "setParam" );
+    params->SetCommandName( "setLinkParam" );
 
     int numOfChanges = rowsChanged.size();
     for(int i = 0; i < numOfChanges; i++)
