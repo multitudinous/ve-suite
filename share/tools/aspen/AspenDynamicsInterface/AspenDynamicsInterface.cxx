@@ -233,7 +233,14 @@ std::vector< std::vector< std::string > > AspenDynamicsInterface::GetVariableLis
         ::VariantInit(&result);
         pDispVariable->Invoke(dispid, IID_NULL, ::GetUserDefaultLCID(), DISPATCH_PROPERTYGET, &params, &result, NULL, NULL);
         //listbox->InsertString(i, OLE2T(result.bstrVal));
-        temp.Format(_T("%f"), result.dblVal);
+        if( result.vt == VT_BSTR )
+        {
+            temp = result.bstrVal;
+        }
+        else 
+        {
+            temp.Format(_T("%f"), result.dblVal);
+        }
         ctemp = temp.GetBuffer();
         if( temp.IsEmpty() )
         {
