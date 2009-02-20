@@ -35,6 +35,9 @@
 #include <ves/xplorer/network/cfdExecutive.h>
 
 #include <ves/xplorer/Debug.h>
+#include <ves/xplorer/DeviceHandler.h>
+
+#include <ves/xplorer/scenegraph/SceneManager.h>
 
 #include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/model/Model.h>
@@ -94,4 +97,7 @@ void UpdateNetworkEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xml
         cfdExecutive::instance()->GetCORBAInterface()->GetNetworkFromCE();
         cfdExecutive::instance()->LoadDataFromCE();
     }
+
+    ves::xplorer::DeviceHandler::instance()->SetActiveDCS(
+        ves::xplorer::scenegraph::SceneManager::instance()->GetActiveNavSwitchNode() );
 }
