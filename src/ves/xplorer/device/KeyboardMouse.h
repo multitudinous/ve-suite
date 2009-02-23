@@ -117,6 +117,8 @@ public:
 
     ///Fit the world bounding volume into the viewing frustum
     void SkyCam( );
+
+    ///
     void SkyCamTo( );
 
     ///Fit the selected objects bounding volume into the viewing frustum
@@ -158,23 +160,29 @@ private:
     ///\param listOfHits A vector containing CAD hit in selection process
     void ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits );
 
-    ///Navigation functions called using the keyboard
-    void NavKeyboard();
+    ///Navigation functions called on keyboard press events
+    void NavOnKeyboardPress();
 
-    ///Obtains mouse positions upon mouse presses and releases
-    void NavMouse();
+    ///Navigation functions called on mouse press events
+    void NavOnMousePress();
+
+    ///Navigation functions called on mouse release events
+    void NavOnMouseRelease();
 
     ///Navigation using the mouse
-    void NavMotion( std::pair< double, double > delta );
+    void NavOnMouseMotion( std::pair< double, double > delta );
 
     ///Currently this does nothing
-    void SelKeyboard();
+    void SelOnKeyboardPress();
 
-    ///Calls ProcessSelectionEvents if valid
-    void SelMouse();
+    ///Selection functions called on mouse press events
+    void SelOnMousePress();
+
+    ///Selection functions called on mouse release events
+    void SelOnMouseRelease();
 
     ///Currently this does nothing
-    void SelMotion( std::pair< double, double > delta );
+    void SelOnMouseMotion( std::pair< double, double > delta );
 
     ///Do not know how to describe this
     ///\param dx The change in the x direction
@@ -204,36 +212,78 @@ private:
     ///\param angle
     void Rotate( double x, double y, double z, double angle );
 
-    bool mAnimate;///<Determines whether in animation mode
+    ///Determines whether in animation mode
+    bool mAnimate;
 
-    unsigned int mWidth;///<Width of the window
-    unsigned int mHeight;///<Height of the window
+    ///Width of the window
+    unsigned int mWidth;
 
-    int mKey;///<Holds the value of the key being used
-    int mButton;///<Holds the value of the mouse button being used
-    int mState;///<Determines if mouse button is pressed or released
-    int mX;///<x position of the mouse
-    int mY;///<y position of the mouse
+    ///Height of the window
+    unsigned int mHeight;
 
-    double mAspectRatio;///<Aspect ratio of window
-    double mFoVY;///<Field of view in the y direction
-    double mLeftFrustum;///<The left frustum value
-    double mRightFrustum;///<The right frustum value
-    double mTopFrustum;///<The top frustum value
-    double mBottomFrustum;///<The bottom frustum value
-    double mNearFrustum;///<The near frustum value
-    double mFarFrustum;///<The far frustum value
-    double mMagnitude;///<The magnitude of the mouse movement
-    double mSensitivity;///<
+    ///Holds the value of the key being used
+    int mKey;
 
-    double mXMinScreen;///<The minimum x position of the screen
-    double mXMaxScreen;///<The maximum x position of the screen
-    double mYMinScreen;///<The minimum y position of the screen
-    double mYMaxScreen;///<The maximum y position of the screen
-    double mZValScreen;///<The z position of the screen
+    ///Holds the value of the mouse button being used
+    int mButton;
+
+    ///Determines if mouse button is pressed or released
+    int mState;
+
+    ///x position of the mouse
+    int mX;
+
+    ///y position of the mouse
+    int mY;
+
+    ///Aspect ratio of window
+    double mAspectRatio;
+
+    ///Field of view in the y direction
+    double mFoVY;
+
+    ///The left frustum value
+    double mLeftFrustum;
+
+    ///The right frustum value
+    double mRightFrustum;
+
+    ///The top frustum value
+    double mTopFrustum;
+
+    ///The bottom frustum value
+    double mBottomFrustum;
+
+    ///The near frustum value
+    double mNearFrustum;
+
+    ///The far frustum value
+    double mFarFrustum;
+
+    ///The magnitude of the mouse movement
+    double mMagnitude;
+
+    ///
+    double mSensitivity;
+
+    ///The minimum x position of the screen
+    double mXMinScreen;
+
+    ///The maximum x position of the screen
+    double mXMaxScreen;
+
+    ///The minimum y position of the screen
+    double mYMinScreen;
+
+    ///The maximum y position of the screen
+    double mYMaxScreen;
+
+    ///The z position of the screen
+    double mZValScreen;
 
     ///The current mouse position
     std::pair< double, double > mCurrPos;
+
     ///The previous mouse position
     std::pair< double, double > mPrevPos;
 
@@ -251,13 +301,16 @@ private:
 
     ///
     osg::ref_ptr< osg::Geode > mBeamGeode;
+
     ///The geometry being selected
     osg::ref_ptr< osg::Geode > mSelectedGeometry;
+
     ///
     osg::ref_ptr< osg::LineSegment > mBeamLineSegment;
 
     ///VRJuggler's keyboard/mouse positional interface
     gadget::KeyboardMouseInterface mKeyboard;
+
     ///VRJuggler's head positional interface
     gadget::PositionInterface mHead;
 

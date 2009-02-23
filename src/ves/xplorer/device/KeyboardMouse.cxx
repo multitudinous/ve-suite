@@ -96,6 +96,8 @@
 
 using namespace ves::xplorer;
 
+namespace vxs = ves::xplorer::scenegraph;
+
 const double OneEightyDivPI = 57.29577951;
 const double PIDivOneEighty = 0.0174532925;
 
@@ -244,7 +246,7 @@ void KeyboardMouse::SetStartEndPoint(
     //Need to negate the the camera transform that is multiplied into the view
     {
         osg::Matrixd inverseCameraTransform =
-            osg::Matrixd( ves::xplorer::scenegraph::SceneManager::instance()->
+            osg::Matrixd( vxs::SceneManager::instance()->
             GetInvertedWorldDCS().getData() );
         
         *startPoint = *startPoint * inverseCameraTransform;
@@ -255,7 +257,7 @@ void KeyboardMouse::SetStartEndPoint(
 void KeyboardMouse::DrawLine( osg::Vec3d startPoint, osg::Vec3d endPoint )
 {   
     osg::Group* rootNode =
-        ves::xplorer::scenegraph::SceneManager::instance()->GetRootNode();
+        vxs::SceneManager::instance()->GetRootNode();
 
     if( mBeamGeode.valid() )
     {
@@ -315,107 +317,45 @@ void KeyboardMouse::ProcessKBEvents( int mode )
     {
         const gadget::EventType type = ( *i )->type();
 
-        if( type == gadget::KeyPressEvent )
+        switch( type )
         {
-            gadget::KeyEventPtr keyEvt =
-                boost::dynamic_pointer_cast< gadget::KeyEvent >( *i );
-            mKey = keyEvt->getKey();
-
-            //Navigation mode
-            if( mode == 0 )
+            case gadget::KeyPressEvent:
             {
-                NavKeyboard();
-            }
-            //Selection mode
-            else if( mode == 1 )
-            {
-                SelKeyboard();
-            }
-        }
-        /*
-        //Use this call if you want to hold a mKey for it to be active
-        else if( type == gadget::KeyReleaseEvent )
-        {
-            mKey = -1;
-        }
-        */
-        else if( type == gadget::MouseButtonPressEvent )
-        {
-            gadget::MouseEventPtr mouse_evt =
-                boost::dynamic_pointer_cast< gadget::MouseEvent >( *i );
-            mButton = mouse_evt->getButton();
-            mState = 1;
-            mX = mouse_evt->getX();
-            mY = mouse_evt->getY();
-            mCurrPos.first =
-                static_cast< double >( mX ) / static_cast< double >( mWidth );
-            mCurrPos.second =
-                static_cast< double >( mY ) / static_cast< double >( mHeight );
-            mPrevPos.first = mCurrPos.first;
-            mPrevPos.second = mCurrPos.second;
+                gadget::KeyEventPtr keyEvt =
+                    boost::dynamic_pointer_cast< gadget::KeyEvent >( *i );
 
-            //Navigation mode
-            if( mode == 0 )
-            {
-                NavMouse();
+                mKey = keyEvt->getKey();
 
-                //If animation mode, stop the animation with mouse press event
-                if( mAnimate )
+                //Navigation mode
+                if( mode == 0 )
                 {
-                    gmtl::identity( mDeltaTransform );
-                    mDeltaTransform.mData[ 12 ] =
-                    mDeltaTransform.mData[ 13 ] =
-                    mDeltaTransform.mData[ 14 ] = 0.0f;
+                    NavOnKeyboardPress();
                 }
-            }
-            //Selection mode
-            else if( mode == 1 )
-            {
-                SelMouse();
-            }
-        }
-        else if( type == gadget::MouseButtonReleaseEvent )
-        {
-            gadget::MouseEventPtr mouse_evt =
-                boost::dynamic_pointer_cast< gadget::MouseEvent >( *i );
+                //Selection mode
+                else if( mode == 1 )
+                {
+                    SelOnKeyboardPress();
+                }
 
-            mButton = mouse_evt->getButton();
-            mState = 0;
-            mX = mouse_evt->getX();
-            mY = mouse_evt->getY();
-            mCurrPos.first =
-                static_cast< double >( mX ) / static_cast< double >( mWidth );
-            mCurrPos.second =
-                static_cast< double >( mY ) / static_cast< double >( mHeight );
-
-            //Navigation mode
-            if( mode == 0 )
-            {
-                NavMouse();
+                break;
             }
-            //Selection mode
-            else if( mode == 1   )
+            case gadget::KeyReleaseEvent:
             {
-                //We process selection on the release of the left button because
-                //in the future we would like to be able to select with a 
-                //rubber band rectangle which would mean the mouse down would be
-                //the first point of the rectangle and the mouse up would be the
-                //second point
-                SelMouse();
+                //Use this call if you want to hold a mKey for it to be active
+                mKey = -1;
+
+                break;
             }
-
-            mPrevPos.first = mCurrPos.first;
-            mPrevPos.second = mCurrPos.second;
-        }
-        else if( type == gadget::MouseMoveEvent )
-        {
-            gadget::MouseEventPtr mouse_evt =
-                boost::dynamic_pointer_cast< gadget::MouseEvent >( *i );
-            mX = mouse_evt->getX();
-            mY = mouse_evt->getY();
-
-            if( mState == 1 )
+            case gadget::MouseButtonPressEvent:
             {
+                gadget::MouseEventPtr mouse_evt =
+                    boost::dynamic_pointer_cast< gadget::MouseEvent >( *i );
+
+                mButton = mouse_evt->getButton();
+                mState = 1;
+                mX = mouse_evt->getX();
+                mY = mouse_evt->getY();
+
                 mCurrPos.first =
                     static_cast< double >( mX ) /
                     static_cast< double >( mWidth );
@@ -423,23 +363,106 @@ void KeyboardMouse::ProcessKBEvents( int mode )
                     static_cast< double >( mY ) /
                     static_cast< double >( mHeight );
 
-                std::pair< double, double > delta;
-                delta.first = mCurrPos.first - mPrevPos.first;
-                delta.second = mCurrPos.second - mPrevPos.second;
-
                 //Navigation mode
                 if( mode == 0 )
                 {
-                    NavMotion( delta );
+                    NavOnMousePress();
+
+                    //If animation mode, stop the animation with mouse press
+                    if( mAnimate )
+                    {
+                        gmtl::identity( mDeltaTransform );
+                        mDeltaTransform.mData[ 12 ] =
+                        mDeltaTransform.mData[ 13 ] =
+                        mDeltaTransform.mData[ 14 ] = 0.0f;
+                    }
                 }
                 //Selection mode
                 else if( mode == 1 )
                 {
-                    SelMotion( delta );
+                    SelOnMousePress();
                 }
 
                 mPrevPos.first = mCurrPos.first;
                 mPrevPos.second = mCurrPos.second;
+
+                break;
+            }
+            case gadget::MouseButtonReleaseEvent:
+            {
+                gadget::MouseEventPtr mouse_evt =
+                    boost::dynamic_pointer_cast< gadget::MouseEvent >( *i );
+
+                mButton = mouse_evt->getButton();
+                mState = 0;
+                mX = mouse_evt->getX();
+                mY = mouse_evt->getY();
+
+                mCurrPos.first =
+                    static_cast< double >( mX ) /
+                    static_cast< double >( mWidth );
+                mCurrPos.second =
+                    static_cast< double >( mY ) /
+                    static_cast< double >( mHeight );
+
+                //Navigation mode
+                if( mode == 0 )
+                {
+                    NavOnMouseRelease();
+                }
+                //Selection mode
+                else if( mode == 1 )
+                {
+                    //We process selection on the release of the left button
+                    //because in the future we would like to be able to select
+                    //with a rubber band rectangle which would mean the mouse
+                    //down would be the first point of the rectangle and the
+                    //mouse up would be the second point
+                    SelOnMouseRelease();
+                }
+
+                mPrevPos.first = mCurrPos.first;
+                mPrevPos.second = mCurrPos.second;
+
+                break;
+            }
+            case gadget::MouseMoveEvent:
+            {
+                gadget::MouseEventPtr mouse_evt =
+                    boost::dynamic_pointer_cast< gadget::MouseEvent >( *i );
+
+                mX = mouse_evt->getX();
+                mY = mouse_evt->getY();
+
+                if( mState == 1 )
+                {
+                    mCurrPos.first =
+                        static_cast< double >( mX ) /
+                        static_cast< double >( mWidth );
+                    mCurrPos.second =
+                        static_cast< double >( mY ) /
+                        static_cast< double >( mHeight );
+
+                    std::pair< double, double > delta;
+                    delta.first = mCurrPos.first - mPrevPos.first;
+                    delta.second = mCurrPos.second - mPrevPos.second;
+
+                    //Navigation mode
+                    if( mode == 0 )
+                    {
+                        NavOnMouseMotion( delta );
+                    }
+                    //Selection mode
+                    else if( mode == 1 )
+                    {
+                        SelOnMouseMotion( delta );
+                    }
+
+                    mPrevPos.first = mCurrPos.first;
+                    mPrevPos.second = mCurrPos.second;
+                }
+
+                break;
             }
         }
     }
@@ -450,27 +473,24 @@ void KeyboardMouse::ProcessNavigationEvents()
     gmtl::Matrix44d newTransform;
     gmtl::Matrix44d currentTransform;
     
-    ves::xplorer::scenegraph::DCS* const activeDCS =
+    vxs::DCS* const activeDCS =
         ves::xplorer::DeviceHandler::instance()->GetActiveDCS();
     //Get the node where are all the geometry is handled
     osg::Group* const activeSwitchNode =
-        ves::xplorer::scenegraph::SceneManager::instance()->
-            GetActiveSwitchNode();
+        vxs::SceneManager::instance()->GetActiveSwitchNode();
     //Get the node where all the nav matrix's are handled
-    ves::xplorer::scenegraph::DCS* const cameraDCS =
-        ves::xplorer::scenegraph::SceneManager::instance()->
-            GetActiveNavSwitchNode();
+    vxs::DCS* const cameraDCS =
+        vxs::SceneManager::instance()->GetActiveNavSwitchNode();
 
-    osg::ref_ptr< ves::xplorer::scenegraph::CoordinateSystemTransform >
+    osg::ref_ptr< vxs::CoordinateSystemTransform >
         coordinateSystemTransform;
 
     //Test if we are manipulating the camera dcs or a model dcs
     if( activeDCS->GetName() != cameraDCS->GetName() )
     {
         //If local dcs, transform to camera space
-        coordinateSystemTransform =
-            new ves::xplorer::scenegraph::CoordinateSystemTransform(
-                activeSwitchNode, activeDCS, true );
+        coordinateSystemTransform = new vxs::CoordinateSystemTransform(
+            activeSwitchNode, activeDCS, true );
 
         currentTransform = coordinateSystemTransform->GetTransformationMatrix();
     }
@@ -553,9 +573,8 @@ void KeyboardMouse::FrameAll()
     //Grab the current switch node's matrix from SceneManager
     //We want to manipulate the translation of the matrix until
     //all geometry is framed within the current viewing frustum
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > worldDCS =
-        ves::xplorer::scenegraph::SceneManager::instance()->
-            GetActiveNavSwitchNode();
+    osg::ref_ptr< vxs::DCS > worldDCS =
+        vxs::SceneManager::instance()->GetActiveNavSwitchNode();
     gmtl::Matrix44d matrix = worldDCS->GetMat();
 
     //////////////////////////////////////////////////////////////////////
@@ -622,8 +641,7 @@ void KeyboardMouse::FrameAll()
     //double position[ 3 ] = { 0, 0, 0 };
     //activeSwitchDCS->SetTranslationArray( position );
     osg::BoundingSphere bs = 
-        ves::xplorer::scenegraph::SceneManager::instance()->
-            GetActiveSwitchNode()->computeBound();
+        vxs::SceneManager::instance()->GetActiveSwitchNode()->computeBound();
     
     //Bring the center of the geometry to the vj head position
     matrix.mData[ 12 ] -= bs.center().x();
@@ -661,9 +679,8 @@ void KeyboardMouse::FrameAll()
 
     //Get the new center of the bounding sphere in camera space
     osg::Vec3d center =
-        ves::xplorer::scenegraph::SceneManager::instance()->
-        GetActiveSwitchNode()->computeBound().center() *
-        osg::Matrixd( worldDCS->GetMat().getData() );
+        vxs::SceneManager::instance()->GetActiveSwitchNode()->
+        computeBound().center() * osg::Matrixd( worldDCS->GetMat().getData() );
     mCenterPoint->set( center.x(), center.y(), center.z() );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -671,7 +688,7 @@ void KeyboardMouse::FrameSelection()
 {
     /*
     //Grab the selected DCS
-    ves::xplorer::scenegraph::DCS* const selectedDCS =
+    vxs::DCS* const selectedDCS =
         ves::xplorer::DeviceHandler::instance()->GetSelectedDCS();
 
     if( !selectedDCS )
@@ -680,14 +697,12 @@ void KeyboardMouse::FrameSelection()
         return;
     }
 
-    ves::xplorer::scenegraph::DCS* activeSwitchDCS =
-        ves::xplorer::scenegraph::SceneManager::instance()->
-            GetActiveSwitchNode();
+    vxs::DCS* activeSwitchDCS =
+        vxs::SceneManager::instance()->GetActiveSwitchNode();
 
     //Convert the selected matrix to world space
-    osg::ref_ptr< ves::xplorer::scenegraph::LocalToWorldTransform > ltwt = 
-        new ves::xplorer::scenegraph::LocalToWorldTransform(
-            activeSwitchDCS, selectedDCS );
+    osg::ref_ptr< vxs::LocalToWorldTransform > ltwt = 
+        new vxs::LocalToWorldTransform( activeSwitchDCS, selectedDCS );
     gmtl::Matrix44d matrix = ltwt->GetLocalToWorldTransform();
 
     //activeSwitchDCS->SetMat( matrix );
@@ -699,7 +714,7 @@ void KeyboardMouse::FrameSelection()
     //Grab the bound and corresponding center values of the current matrix
     osg::BoundingSphere bs = selectedDCS->computeBound();
 
-    //Calculate the distance needed to fit current bounding sphere inside viewing frustum
+    //Calculate distance to fit current bounding sphere inside viewing frustum
     double distance;
     double theta = ( mFoVY * 0.5f ) * PIDivOneEighty;
 
@@ -771,18 +786,16 @@ void KeyboardMouse::SkyCam()
 
     //gmtl::Matrix44d matrix;
     //mCenterPoint->mData[ 1 ] = matrix[ 1 ][ 3 ] = *mCenterPointThreshold;
-    //ves::xplorer::scenegraph::SceneManager::instance()->GetActiveSwitchNode()->SetMat( matrix );
+    //vxs::SceneManager::instance()->GetActiveSwitchNode()->SetMat( matrix );
     
     //reset view
-    ves::xplorer::scenegraph::SceneManager::instance()->
-        GetWorldDCS()->SetQuat( *mResetAxis );
-    ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS()->
-        SetTranslationArray( *mResetPosition );
+    vxs::SceneManager::instance()->GetWorldDCS()->SetQuat( *mResetAxis );
+    vxs::SceneManager::instance()->GetWorldDCS()->SetTranslationArray(
+        *mResetPosition );
     
     //Grab the current matrix
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > activeSwitchDCS =
-        ves::xplorer::scenegraph::SceneManager::instance()->
-            GetWorldDCS();
+    osg::ref_ptr< vxs::DCS > activeSwitchDCS =
+        vxs::SceneManager::instance()->GetWorldDCS();
 
     osg::BoundingSphere bs = activeSwitchDCS->computeBound();
 
@@ -791,9 +804,9 @@ void KeyboardMouse::SkyCam()
 
     //move the cad
     double osgTransformedPosition[ 3 ];
-    osgTransformedPosition[ 0 ] = - bs.center( ).x( );
-    osgTransformedPosition[ 1 ] = - bs.center( ).y( ) + distance;
-    osgTransformedPosition[ 2 ] = - bs.center( ).z( );
+    osgTransformedPosition[ 0 ] = -bs.center( ).x( );
+    osgTransformedPosition[ 1 ] = -bs.center( ).y( ) + distance;
+    osgTransformedPosition[ 2 ] = -bs.center( ).z( );
     activeSwitchDCS->SetTranslationArray( osgTransformedPosition );
 
     //Get the new center of the bounding sphere
@@ -812,6 +825,7 @@ void KeyboardMouse::SkyCamTo()
     {
         return;
     }
+
     //To make this work we must:
     //1. get current state of world dcs
     //2. set dcs back to zero.
@@ -825,16 +839,16 @@ void KeyboardMouse::SkyCamTo()
 
     //get the selected plugins cad
     //highlight it.
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS >selectedDCS =
-        ModelHandler::instance()->GetActiveModel()->GetDCS();
+    osg::ref_ptr< vxs::DCS >selectedDCS =
+        ves::xplorer::ModelHandler::instance()->GetActiveModel()->GetDCS();
     selectedDCS->SetTechnique("Select");
-    ves::xplorer::DeviceHandler::instance()->SetSelectedDCS( selectedDCS.get() );
+    ves::xplorer::DeviceHandler::instance()->SetSelectedDCS(
+        selectedDCS.get() );
     osg::BoundingSphere sbs = selectedDCS->getBound();
     
     //Grab the current matrix
-    //osg::ref_ptr< ves::xplorer::scenegraph::DCS > activeSwitchDCS =
-    //    ves::xplorer::scenegraph::SceneManager::instance()->
-    //        GetActiveSwitchNode();
+    //osg::ref_ptr< vxs::DCS > activeSwitchDCS =
+    //    vxs::SceneManager::instance()->GetActiveSwitchNode();
 
     //Calculate the offset distance
     double distance = 2 * sbs.radius();
@@ -851,12 +865,11 @@ void KeyboardMouse::SkyCamTo()
     osgOrigPosition[ 2 ] = sbs.center( ).z( );
 
     //Move the center point to the center of the selected object
-    osg::ref_ptr< ves::xplorer::scenegraph::CoordinateSystemTransform > cst =
-        new ves::xplorer::scenegraph::CoordinateSystemTransform(
-            ves::xplorer::scenegraph::SceneManager::instance()->
-                GetActiveSwitchNode(), selectedDCS.get(), true );
-    gmtl::Matrix44d localToWorldMatrix =
-        cst->GetTransformationMatrix( false );
+    osg::ref_ptr< vxs::CoordinateSystemTransform > cst =
+        new vxs::CoordinateSystemTransform(
+            vxs::SceneManager::instance()->GetActiveSwitchNode(),
+            selectedDCS.get(), true );
+    gmtl::Matrix44d localToWorldMatrix = cst->GetTransformationMatrix( false );
 
     //Remove the local matrix from localToWorldMatrix
     //gmtl::Matrix44d activeMatrix = selectedDCS->GetMat();
@@ -869,7 +882,7 @@ void KeyboardMouse::SkyCamTo()
     tempTrans = gmtl::makeTrans< gmtl::Matrix44d >( tempTransPoint );
     //gmtl::Matrix44d invertTransMat = tempTrans;
     //gmtl::invert( invertTransMat );
-    //std::cout << ves::xplorer::scenegraph::SceneManager::instance()->
+    //std::cout << vxs::SceneManager::instance()->
     //GetActiveSwitchNode()->GetMat() << std::endl;
     //double tempRotRad = osg::DegreesToRadians( 90.0 );
     double tempRotRad2 = PIDivOneEighty * 0;
@@ -890,13 +903,13 @@ void KeyboardMouse::SkyCamTo()
     osgOrigPosition = combineMat * osgOrigPosition;
     //osgOrigPosition[ 1 ] = osgOrigPosition[ 1 ] + distance;
     //osgOrigPosition[ 2 ] = osgOrigPosition[ 2 ] + distance;
-   // osgOrigPosition[ 1 ] = osgOrigPosition[ 1 ] - sbs.radius();
-   // osgOrigPosition[ 2 ] = osgOrigPosition[ 2 ] + sbs.radius();
+    //osgOrigPosition[ 1 ] = osgOrigPosition[ 1 ] - sbs.radius();
+    //osgOrigPosition[ 2 ] = osgOrigPosition[ 2 ] + sbs.radius();
     //osgTransformedPosition =   tempTrans * tempRot * osgTransformedPosition;
     //std::cout << osgTransformedPosition << " " << osgOrigPosition << std::endl;
     ///Since the math implies we are doing a delta translation
     ///we need to go grab where we previously were
-    double* temp = ves::xplorer::scenegraph::SceneManager::instance()->
+    double* temp = vxs::SceneManager::instance()->
         GetWorldDCS()->GetVETranslationArray();
     ///Add our distance and previous position back in and get our new end point
     gmtl::Vec4d pos;
@@ -911,11 +924,12 @@ void KeyboardMouse::SkyCamTo()
     pos2[ 2 ] = pos[ 2 ];
 
     ///Set the center point to the new location
-    mCenterPoint->set( -osgOrigPosition[ 0 ], -osgOrigPosition[1], -osgOrigPosition[2] );
+    mCenterPoint->set(
+        -osgOrigPosition[ 0 ], -osgOrigPosition[1], -osgOrigPosition[2] );
 
     ///Hand the node we are interested in off to the animation engine
     ves::xplorer::NavigationAnimationEngine::instance()->SetDCS(
-        ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS() );
+        vxs::SceneManager::instance()->GetWorldDCS() );
     ///Hand our created end points off to the animation engine
     ves::xplorer::NavigationAnimationEngine::instance()->SetAnimationEndPoints(
         pos2, quatAxisAngle );
@@ -932,94 +946,158 @@ void KeyboardMouse::SkyCamTo()
     //ProcessNavigationEvents();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::NavKeyboard()
+void KeyboardMouse::NavOnKeyboardPress()
 {
     switch( mKey )
     {
         case gadget::KEY_R:
         {
             ResetTransforms();
+
             break;
         }
         case gadget::KEY_F:
         {
             FrameAll();
+
             break;
         }
-        case gadget::KEY_C:
+
+        //keystrokes for 1st person mode
+        //STRAFE LEFT
+        case gadget::KEY_A:
         {
-            FrameSelection();
+            Pan( -0.05, 0.0 );
+            ProcessNavigationEvents();
+
             break;
         }
+        //BACKWARD
         case gadget::KEY_S:
         {
-            ves::xplorer::scenegraph::PhysicsSimulator::instance()->
-                StepSimulation();
+            Zoom( -0.05 );
+            ProcessNavigationEvents();
+
             break;
         }
+        //STRAFE RIGHT
+        case gadget::KEY_D:
+        {
+            Pan( 0.05, 0.0 );
+            ProcessNavigationEvents();
+
+            break;
+        }
+        //FORWARD
+        case gadget::KEY_W:
+        {
+            Zoom( 0.05 );
+            ProcessNavigationEvents();
+
+            break;
+        }
+        //JUMP or UP if no physics
         case gadget::KEY_SPACE:
         {
-            ves::xplorer::scenegraph::PhysicsSimulator::instance()->
-                ResetScene();
+            Pan( 0.0, 0.5 );
+            ProcessNavigationEvents();
+
             break;
         }
-        case gadget::KEY_K:
+        //DOWN if no physics
+        case gadget::KEY_C:
         {
-            SkyCam();
+            Pan( 0.0, -0.5 );
+            ProcessNavigationEvents();
+
             break;
         }
 
         //keystrokes for skycam mode
+        case gadget::KEY_K:
+        {
+            SkyCam();
+
+            break;
+        }
+
         case gadget::KEY_UP:
         {
             Zoom45( 0.05 );
             ProcessNavigationEvents();
+
             break;
         }
         case gadget::KEY_DOWN: 
         {
             Zoom45( -0.05 );
             ProcessNavigationEvents();
+
             break;
         }
         case gadget::KEY_LEFT:
         {
             Pan( 0.05, 0 );
             ProcessNavigationEvents();
+
             break;
         }
         case gadget::KEY_RIGHT:
         {
             Pan( -0.05, 0 );
             ProcessNavigationEvents();
+
             break;
         }
     }
-
-    //Reset mKey
-    mKey = -1;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::NavMouse()
+void KeyboardMouse::NavOnMousePress()
 {
+    //Nothing implemented yet
     return;
 
     //Would be cool to change mouse cursor for nav events here
-    if( mButton == gadget::MBUTTON1 )
+    switch( mButton )
     {
-        ;
-    }
-    else if( mButton == gadget::MBUTTON2 )
-    {
-        ;
-    }
-    else if( mButton == gadget::MBUTTON3 )
-    {
-        ;
+        case gadget::MBUTTON1:
+        {
+            break;
+        }
+        case gadget::MBUTTON2:
+        {
+            break;
+        }
+        case gadget::MBUTTON3:
+        {
+            break;
+        }
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::NavMotion( std::pair< double, double > delta )
+void KeyboardMouse::NavOnMouseRelease()
+{
+    //Nothing implemented yet
+    return;
+
+    switch( mButton )
+    {
+        case gadget::MBUTTON1:
+        {
+            break;
+        }
+        case gadget::MBUTTON2:
+        {
+            break;
+        }
+        case gadget::MBUTTON3:
+        {
+            break;
+        }
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void KeyboardMouse::NavOnMouseMotion( std::pair< double, double > delta )
 {
     mMagnitude =
         sqrtf( delta.first * delta.first + delta.second * delta.second );
@@ -1029,63 +1107,112 @@ void KeyboardMouse::NavMotion( std::pair< double, double > delta )
         return;
     }
 
-    if( mButton == gadget::MBUTTON1
-            && ( mX > 0.1f * mWidth )
-            && ( mX < 0.9f * mWidth )
-            && ( mY > 0.1f * mHeight )
-            && ( mY < 0.9f * mHeight ) )
+    switch( mButton )
     {
-        RotateView( delta.first, delta.second );
-    }
-    else if( mButton == gadget::MBUTTON3 )
-    {
-        Zoom( delta.second );
-    }
-    else if( mButton == gadget::MBUTTON2 )
-    {
-        Pan( delta.first, delta.second );
-    }
-    else if( mButton == gadget::MBUTTON1 )
-    {
-        Twist();
+        case gadget::MBUTTON1:
+        {
+            if( ( mX > 0.1f * mWidth ) && ( mX < 0.9f * mWidth ) &&
+                ( mY > 0.1f * mHeight ) && ( mY < 0.9f * mHeight ) )
+            {
+                RotateView( delta.first, delta.second );
+            }
+            else
+            {
+                Twist();
+            }
+
+            break;
+        }
+        case gadget::MBUTTON2:
+        {
+            Pan( delta.first, delta.second );
+            break;
+        }
+        case gadget::MBUTTON3:
+        {
+            Zoom( delta.second );
+            break;
+        }
     }
 
     ProcessNavigationEvents();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::SelKeyboard()
+void KeyboardMouse::SelOnKeyboardPress()
 {
     return;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::SelMouse()
+void KeyboardMouse::SelOnMousePress()
 {
     UpdateSelectionLine();
 
-    if( mState == 1 && mButton == gadget::MBUTTON1 )
+    switch( mButton )
     {
-        ProcessNURBSSelectionEvents();
+        case gadget::MBUTTON1:
+        {
+            ProcessNURBSSelectionEvents();
 
-        return;
-    }
-    else if( mState == 0 && mButton == gadget::MBUTTON1 )
-    {
-        ves::xplorer::scenegraph::SetStateOnNURBSNodeVisitor(
-            ves::xplorer::scenegraph::SceneManager::instance()->
-                GetActiveSwitchNode(), false, false, mCurrPos,
-                std::pair< double, double >( 0.0, 0.0 ) );
-
-        ProcessSelectionEvents();
+            break;
+        }
+        case gadget::MBUTTON2:
+        {
+            break;
+        }
+        case gadget::MBUTTON3:
+        {
+            break;
+        }
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::SelMotion( std::pair< double, double > delta )
+void KeyboardMouse::SelOnMouseRelease()
 {
-    if( mButton == gadget::MBUTTON1 )
+    UpdateSelectionLine();
+
+    switch( mButton )
     {
-        ves::xplorer::scenegraph::SetStateOnNURBSNodeVisitor(
-            ves::xplorer::scenegraph::SceneManager::instance()->
-            GetActiveSwitchNode(), true, true, mCurrPos, delta );
+        case gadget::MBUTTON1:
+        {
+            vxs::SetStateOnNURBSNodeVisitor(
+                vxs::SceneManager::instance()->GetActiveSwitchNode(), false,
+                false, mCurrPos, std::pair< double, double >( 0.0, 0.0 ) );
+
+            break;
+        }
+        case gadget::MBUTTON2:
+        {
+            break;
+        }
+        case gadget::MBUTTON3:
+        {
+            break;
+        }
+    }
+
+    ProcessSelectionEvents();
+}
+////////////////////////////////////////////////////////////////////////////////
+void KeyboardMouse::SelOnMouseMotion( std::pair< double, double > delta )
+{
+    switch( mButton )
+    {
+        case gadget::MBUTTON1:
+        {
+            vxs::SetStateOnNURBSNodeVisitor(
+                vxs::SceneManager::instance()->GetActiveSwitchNode(),
+                true, true, mCurrPos, delta );
+
+            break;
+        }
+        case gadget::MBUTTON2:
+        {
+            break;
+        }
+        case gadget::MBUTTON3:
+        {
+            break;
+        }
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -1095,13 +1222,12 @@ void KeyboardMouse::ResetTransforms()
 
     gmtl::Matrix44d matrix;
     gmtl::identity( matrix );
-    ves::xplorer::scenegraph::SceneManager::instance()->
+    vxs::SceneManager::instance()->
         GetWorldDCS()->SetMat( matrix );
     
-    ves::xplorer::scenegraph::SceneManager::instance()->
-        GetWorldDCS()->SetQuat( *mResetAxis );
-    ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS()->
-        SetTranslationArray( *mResetPosition );
+    vxs::SceneManager::instance()->GetWorldDCS()->SetQuat( *mResetAxis );
+    vxs::SceneManager::instance()->GetWorldDCS()->SetTranslationArray(
+        *mResetPosition );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::RotateView( double dx, double dy )
@@ -1141,7 +1267,7 @@ void KeyboardMouse::Zoom( double dy )
     //Test if center point has breached our specified threshold
     if( mCenterPoint->mData[ 1 ] < *mCenterPointThreshold )
     {
-        ves::xplorer::scenegraph::DCS* const selectedDCS =
+        vxs::DCS* const selectedDCS =
             ves::xplorer::DeviceHandler::instance()->GetSelectedDCS();
         //Only jump center point for the worldDCS
         if( !selectedDCS )
@@ -1172,7 +1298,7 @@ void KeyboardMouse::Zoom45( double dy )
     //Test if center point has breached our specified threshold
     if( mCenterPoint->mData[ 1 ] < *mCenterPointThreshold )
     {
-        ves::xplorer::scenegraph::DCS* const selectedDCS =
+        vxs::DCS* const selectedDCS =
             ves::xplorer::DeviceHandler::instance()->GetSelectedDCS();
         //Only jump center point for the worldDCS
         if( !selectedDCS )
@@ -1215,6 +1341,7 @@ void KeyboardMouse::Rotate( double x, double y, double z, double angle )
         y *= tempRatio;
         z *= tempRatio;
     }
+
     /*
     double rad = angle * PIDivOneEighty;
     double cosAng = cos( rad );
@@ -1241,6 +1368,7 @@ void KeyboardMouse::Rotate( double x, double y, double z, double angle )
                                   ( cosAng * ( 1 - ( z * z ) ) );
     mDeltaTransform.mData[ 15 ] = 1.0f;
     */
+
     double rad2 = angle * PIDivOneEighty;
     gmtl::AxisAngled axisAngle( rad2, x, y, z );
     mDeltaTransform = gmtl::makeRot< gmtl::Matrix44d >( axisAngle );
@@ -1260,8 +1388,8 @@ void KeyboardMouse::ProcessNURBSSelectionEvents()
 {
     osg::ref_ptr< osgUtil::IntersectorGroup > intersectorGroup =
         new osgUtil::IntersectorGroup();
-    osg::ref_ptr< ves::xplorer::scenegraph::nurbs::PointLineSegmentIntersector > intersector =
-        new ves::xplorer::scenegraph::nurbs::PointLineSegmentIntersector(
+    osg::ref_ptr< vxs::nurbs::PointLineSegmentIntersector > intersector =
+        new vxs::nurbs::PointLineSegmentIntersector(
             mBeamLineSegment->start(), mBeamLineSegment->end() );
     intersectorGroup->addIntersector( intersector.get() );
 
@@ -1271,26 +1399,28 @@ void KeyboardMouse::ProcessNURBSSelectionEvents()
 
     //Add the IntersectVisitor to the root Node so that all geometry will be
     //checked and no transforms are done to the line segement
-    ves::xplorer::scenegraph::SceneManager::instance()->GetRootNode()->accept(
+    vxs::SceneManager::instance()->GetRootNode()->accept(
         controlMeshPointIntersectVisitor );
 
     if( intersectorGroup->containsIntersections() )
     {
          //std::cout<<"Found intersections "<<std::endl;
          ///only want the first one
-         ves::xplorer::scenegraph::nurbs::PointLineSegmentIntersector::Intersections& intersections  =
-                                                  intersector->getIntersections();
-         ves::xplorer::scenegraph::nurbs::PointLineSegmentIntersector::Intersection closestControlPoint = 
-                            (*intersections.begin());
-         osg::ref_ptr<ves::xplorer::scenegraph::nurbs::NURBSControlMesh> ctMesh =
-            dynamic_cast<ves::xplorer::scenegraph::nurbs::NURBSControlMesh*>( closestControlPoint.drawable.get() );
+         vxs::nurbs::PointLineSegmentIntersector::Intersections& intersections =
+             intersector->getIntersections();
+         vxs::nurbs::PointLineSegmentIntersector::Intersection closestControlPoint =
+             (*intersections.begin());
+         osg::ref_ptr<vxs::nurbs::NURBSControlMesh> ctMesh =
+            dynamic_cast< vxs::nurbs::NURBSControlMesh* >(
+                closestControlPoint.drawable.get() );
          if( ctMesh.valid() )
          {
-             osg::ref_ptr<ves::xplorer::scenegraph::nurbs::NURBS> nurbs = 
-                dynamic_cast<ves::xplorer::scenegraph::nurbs::NURBS*>( ctMesh->getParent( 0 ) );
+             osg::ref_ptr<vxs::nurbs::NURBS> nurbs = 
+                dynamic_cast<vxs::nurbs::NURBS*>( ctMesh->getParent( 0 ) );
              if( nurbs.valid() )
              {
-                 nurbs->SetSelectedControlPoint( closestControlPoint.primitiveIndex );
+                 nurbs->SetSelectedControlPoint(
+                     closestControlPoint.primitiveIndex );
              }
          }
     }
@@ -1303,7 +1433,7 @@ void KeyboardMouse::ProcessSelectionEvents()
 
     //Add the IntersectVisitor to the root Node so that all geometry will be
     //checked and no transforms are done to the line segement
-    ves::xplorer::scenegraph::SceneManager::instance()->GetRootNode()->accept(
+    vxs::SceneManager::instance()->GetRootNode()->accept(
         objectBeamIntersectVisitor );
 
     osgUtil::IntersectVisitor::HitList beamHitList;
@@ -1351,7 +1481,7 @@ void KeyboardMouse::ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits )
     }
 
     //Now find the id for the cad
-    ves::xplorer::scenegraph::FindParentsVisitor parentVisitor(
+    vxs::FindParentsVisitor parentVisitor(
         objectHit._geode.get() );
     osg::ref_ptr< osg::Node > parentNode = parentVisitor.GetParentNode();
     if( !parentNode.valid() )
@@ -1371,20 +1501,20 @@ void KeyboardMouse::ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits )
                           << parentNode->getDescriptions().at( 1 )
                           << std::endl << vprDEBUG_FLUSH;
 
-    ves::xplorer::scenegraph::DCS* newSelectedDCS =
-        static_cast< ves::xplorer::scenegraph::DCS* >( parentNode.get() );
+    vxs::DCS* newSelectedDCS =
+        static_cast< vxs::DCS* >( parentNode.get() );
     newSelectedDCS->SetTechnique( "Select" );
     ves::xplorer::DeviceHandler::instance()->SetSelectedDCS( newSelectedDCS );
 
     //Move the center point to the center of the selected object
-    osg::ref_ptr< ves::xplorer::scenegraph::CoordinateSystemTransform > cst =
-        new ves::xplorer::scenegraph::CoordinateSystemTransform(
-            ves::xplorer::scenegraph::SceneManager::instance()->
-                GetActiveSwitchNode(), newSelectedDCS, true );
+    osg::ref_ptr< vxs::CoordinateSystemTransform > cst =
+        new vxs::CoordinateSystemTransform(
+            vxs::SceneManager::instance()->GetActiveSwitchNode(),
+            newSelectedDCS, true );
     gmtl::Matrix44d localToWorldMatrix =
         cst->GetTransformationMatrix( false );
 
-    //Multiplying by the new local matrix (mCenterPoint)
+    //Multiplying by the new local matrix mCenterPoint
     osg::Matrixd tempMatrix;
     tempMatrix.set( localToWorldMatrix.getData() );
     osg::Vec3d center = newSelectedDCS->getBound().center() * tempMatrix;
