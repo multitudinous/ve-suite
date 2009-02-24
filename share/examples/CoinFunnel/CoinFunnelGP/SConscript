@@ -8,25 +8,33 @@ pj = os.path.join
 
 host_type = distutils.util.get_platform()
 
-Import( 'baseEnv ves_pkg buildDir RootDir gmtl_options vrjuggler_options osg_options osgal_options xerces_options vtk_options GetPlatform' )
+Import( 'baseEnv ves_pkg buildDir RootDir GetPlatform bulletBaseVar' )
+Import( 'xerces_options vtk_options gmtl_options vrjuggler_options osg_options osgal_options' )
 openDir = os.path.abspath( pj( RootDir, 'share', 'examples', 'CoinFunnel', 'CoinFunnelGP' ) )
 sources = sca_util.getSourcesRecursive( openDir )
 headers = sca_util.getHeadersRecursive( openDir )
 
 lib_env = ves_pkg.getEnv().Copy()
 lib_env.Append( LIBS = [ 'ves_xplorer',
-                         'ves_xplorer_scenegraph' ] )
-lib_env.Append( LIBPATH = [ pj('#', buildDir, 'src','ves','xplorer'),
-		            pj('#', buildDir, 'src','ves','xplorer','scenegraph') ] )
+                         'ves_xplorer_scenegraph',
+                         'bullet',
+                         'osgBullet' ] )
+lib_env.Append( LIBPATH = [ pj( '#', buildDir, 'src', 'ves', 'xplorer' ),
+		            pj( '#', buildDir, 'src', 'ves', 'xplorer', 'scenegraph' ),
+                            pj( '#', buildDir, 'external', bulletBaseVar ),
+                            pj( '#', buildDir, 'external', 'osgBullet' ) ] )
+lib_env.Append( CPPPATH = [ pj( '#', 'external', 'osgBullet', 'include' ),
+                            pj( '#', 'external', bulletBaseVar, 'Extras' ),
+                            pj( '#', 'external', bulletBaseVar, 'src' ) ] )
 lib_env.Append( CPPDEFINES = [ 'VE_USER_PLUGIN_LIBRARY' ] )
 
+xerces_options.apply( lib_env )
+vtk_options.apply( lib_env )
 gmtl_options.apply( lib_env )
 vrjuggler_options.apply( lib_env )
 osg_options.apply( lib_env )
 if osgal_options.isAvailable():
    osgal_options.apply( lib_env )
-xerces_options.apply( lib_env )
-vtk_options.apply( lib_env )
 
 if GetPlatform() == 'win32':
    lib_env['no_import_lib'] = 1

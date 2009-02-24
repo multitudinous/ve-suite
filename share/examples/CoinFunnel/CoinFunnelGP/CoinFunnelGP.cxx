@@ -70,6 +70,7 @@ CoinFunnelGP::~CoinFunnelGP()
     {
         return;
     }
+
     mResourceManager->remove( "NoiseVolume" );
 
     mResourceManager->remove( "CubeMap" );

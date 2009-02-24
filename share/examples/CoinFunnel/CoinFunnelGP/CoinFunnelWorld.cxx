@@ -42,6 +42,7 @@
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/ResourceManager.h>
 #include <ves/xplorer/scenegraph/CADEntity.h>
+#include <ves/xplorer/scenegraph/CADEntityHelper.h>
 #include <ves/xplorer/scenegraph/Sound.h>
 
 #include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
@@ -52,6 +53,13 @@
 #include <osg/TextureCubeMap>
 
 #include <osgDB/ReadFile>
+
+// --- Bullet Includes --- //
+#include <btBulletDynamicsCommon.h>
+
+// --- osgBullet Includes --- //
+#include <osgBullet/MotionState.h>
+#include <osgBullet/CollisionShapes.h>
 
 using namespace funnel;
 
@@ -111,76 +119,184 @@ CoinFunnelWorld::~CoinFunnelWorld()
 ////////////////////////////////////////////////////////////////////////////////
 void CoinFunnelWorld::Initialize()
 {
-    mPhysicsSimulator->SetCollisionInformation( true );
+    //mPhysicsSimulator->SetCollisionInformation( true );
 
     CreateRoom( 150.0 );
 
-    mFunnelEntity = new funnel::FunnelEntity( "Models/IVEs/funnel_physics.ive",
-                                              mPluginDCS.get(),
-                                              mPhysicsSimulator,
-                                              mResourceManager );
-    mFunnelEntity->SetNameAndDescriptions( "funnel_physics" );
-    mFunnelEntity->InitPhysics();
-    mFunnelEntity->GetPhysicsRigidBody()->SetMass( 0.0 );
-    mFunnelEntity->GetPhysicsRigidBody()->StaticConcaveShape();
-    mFunnelEntity->GetPhysicsRigidBody()->GetbtRigidBody()->setFriction( 0.5 );
-    mFunnelEntity->GetPhysicsRigidBody()->GetbtRigidBody()->setRestitution( 0.0 );
+    {
+        mFunnelEntity = new funnel::FunnelEntity(
+            "Models/IVEs/funnel_physics.ive",
+            mPluginDCS.get(),
+            mPhysicsSimulator,
+            mResourceManager );
+        mFunnelEntity->SetNameAndDescriptions( "funnel_physics" );
 
-    mMarbleEntity = new funnel::MarbleEntity( "Models/IVEs/marble_physics.ive",
-                                              mPluginDCS.get(),
-                                             mPhysicsSimulator,
-                                             mResourceManager
+        btCollisionShape* collisionShape =
+            osgBullet::btTriMeshCollisionShapeFromOSG(
+                mFunnelEntity->GetDCS() );
+
+        osgBullet::MotionState* motionState = new osgBullet::MotionState();
+        motionState->setTransform( mFunnelEntity->GetDCS() );
+        motionState->setParentTransform( osg::Matrix::identity() );
+
+        btScalar mass( 0.0 );
+        btVector3 inertia( 0.0, 0.0, 0.0 );
+        btRigidBody::btRigidBodyConstructionInfo rbci(
+            mass, motionState, collisionShape, inertia );
+        btRigidBody* rigidBody = new btRigidBody( rbci );
+
+        rigidBody->setFriction( 0.5 );
+        rigidBody->setRestitution( 0.0 );
+
+        mPhysicsSimulator->GetDynamicsWorld()->addRigidBody( rigidBody );
+
+        /*
+        mFunnelEntity->InitPhysics();
+        mFunnelEntity->GetPhysicsRigidBody()->SetMass( 0.0 );
+        mFunnelEntity->GetPhysicsRigidBody()->StaticConcaveShape();
+        mFunnelEntity->GetPhysicsRigidBody()->GetbtRigidBody()->setFriction( 0.5 );
+        mFunnelEntity->GetPhysicsRigidBody()->GetbtRigidBody()->setRestitution( 0.0 );
+        */
+    }
+
+    {
+        mMarbleEntity = new funnel::MarbleEntity(
+            "Models/IVEs/marble_physics.ive",
+            mPluginDCS.get(),
+            mPhysicsSimulator,
+            mResourceManager
 #ifdef VE_SOUND
-                                              ,
-                                              mSoundManager
+            ,
+            mSoundManager
 #endif
-                                              );
-    mMarbleEntity->SetNameAndDescriptions( "marble_physics" );
-    double marblePosition[ 3 ] = { 4.85, 2.5, 5.75 };
-    mMarbleEntity->GetDCS()->SetTranslationArray( marblePosition );
-    mMarbleEntity->InitPhysics();
-    mMarbleEntity->GetPhysicsRigidBody()->SetStoreCollisions( true );
-    mMarbleEntity->GetPhysicsRigidBody()->SetMass( 1.0 );
-    mMarbleEntity->GetPhysicsRigidBody()->SphereShape( 0.06 );
-    mMarbleEntity->GetPhysicsRigidBody()->GetbtRigidBody()->setFriction( 0.5 );
-    mMarbleEntity->GetPhysicsRigidBody()->GetbtRigidBody()->setRestitution( 0.0 );
+            );
+        mMarbleEntity->SetNameAndDescriptions( "marble_physics" );
 
-    mRailingEntity =
-        new funnel::RailingEntity( "Models/IVEs/railing_physics.ive",
-                                   mPluginDCS.get(),
-                                  mPhysicsSimulator,
-                                  mResourceManager );
-    mRailingEntity->SetNameAndDescriptions( "railing_physics" );
-    mRailingEntity->InitPhysics();
-    mRailingEntity->GetPhysicsRigidBody()->SetMass( 0.0 );
-    mRailingEntity->GetPhysicsRigidBody()->StaticConcaveShape();
-    mRailingEntity->GetPhysicsRigidBody()->GetbtRigidBody()->setFriction( 0.5 );
-    mRailingEntity->GetPhysicsRigidBody()->GetbtRigidBody()->setRestitution( 0.0 );
+        btCollisionShape* collisionShape =
+            osgBullet::btSphereCollisionShapeFromOSG(
+                mMarbleEntity->GetDCS() );
 
-    mSlideEntity = new funnel::SlideEntity( "Models/IVEs/slide_physics.ive",
-                                            mPluginDCS.get(),
-                                           mPhysicsSimulator,
-                                           mResourceManager );
-    mSlideEntity->SetNameAndDescriptions( "slide_physics" );
-    mSlideEntity->InitPhysics();
-    mSlideEntity->GetPhysicsRigidBody()->SetMass( 0.0 );
-    mSlideEntity->GetPhysicsRigidBody()->StaticConcaveShape();
-    mSlideEntity->GetPhysicsRigidBody()->GetbtRigidBody()->setFriction( 0.5 );
-    mSlideEntity->GetPhysicsRigidBody()->GetbtRigidBody()->setRestitution( 0.0 );
+        osgBullet::MotionState* motionState = new osgBullet::MotionState();
+        motionState->setTransform( mMarbleEntity->GetDCS() );
+        motionState->setParentTransform(
+            osg::Matrix::translate( 4.85, 2.5, 5.75 ) );
 
-    mWaterEntity = new funnel::WaterEntity( "Models/IVEs/water.ive",
-                                            mPluginDCS.get(),
-                                            mResourceManager
+        btScalar mass( 1.0 );
+        btVector3 inertia( 0.0, 0.0, 0.0 );
+        collisionShape->calculateLocalInertia( mass, inertia );
+
+        btRigidBody::btRigidBodyConstructionInfo rbci(
+            mass, motionState, collisionShape, inertia );
+        btRigidBody* rigidBody = new btRigidBody( rbci );
+
+        rigidBody->setFriction( 0.5 );
+        rigidBody->setRestitution( 0.0 );
+
+        mPhysicsSimulator->GetDynamicsWorld()->addRigidBody( rigidBody );
+
+        /*
+        double marblePosition[ 3 ] = { 4.85, 2.5, 5.75 };
+        mMarbleEntity->GetDCS()->SetTranslationArray( marblePosition );
+        mMarbleEntity->InitPhysics();
+        mMarbleEntity->GetPhysicsRigidBody()->SetStoreCollisions( true );
+        mMarbleEntity->GetPhysicsRigidBody()->SetMass( 1.0 );
+        mMarbleEntity->GetPhysicsRigidBody()->SphereShape( 0.06 );
+        mMarbleEntity->GetPhysicsRigidBody()->GetbtRigidBody()->setFriction( 0.5 );
+        mMarbleEntity->GetPhysicsRigidBody()->GetbtRigidBody()->setRestitution( 0.0 );
+        */
+        
+    }
+
+    {
+        mRailingEntity =
+            new funnel::RailingEntity(
+                "Models/IVEs/railing_physics.ive",
+                mPluginDCS.get(),
+                mPhysicsSimulator,
+                mResourceManager );
+        mRailingEntity->SetNameAndDescriptions( "railing_physics" );
+
+        btCollisionShape* collisionShape =
+            osgBullet::btTriMeshCollisionShapeFromOSG(
+                mRailingEntity->GetDCS() );
+
+        osgBullet::MotionState* motionState = new osgBullet::MotionState();
+        motionState->setTransform( mRailingEntity->GetDCS() );
+        motionState->setParentTransform( osg::Matrix::identity() );
+
+        btScalar mass( 0.0 );
+        btVector3 inertia( 0.0, 0.0, 0.0 );
+        btRigidBody::btRigidBodyConstructionInfo rbci(
+            mass, motionState, collisionShape, inertia );
+        btRigidBody* rigidBody = new btRigidBody( rbci );
+
+        rigidBody->setFriction( 0.5 );
+        rigidBody->setRestitution( 0.0 );
+
+        mPhysicsSimulator->GetDynamicsWorld()->addRigidBody( rigidBody );
+
+        /*
+        mRailingEntity->InitPhysics();
+        mRailingEntity->GetPhysicsRigidBody()->SetMass( 0.0 );
+        mRailingEntity->GetPhysicsRigidBody()->StaticConcaveShape();
+        mRailingEntity->GetPhysicsRigidBody()->GetbtRigidBody()->setFriction( 0.5 );
+        mRailingEntity->GetPhysicsRigidBody()->GetbtRigidBody()->setRestitution( 0.0 );
+        */
+    }
+
+    {
+        mSlideEntity = new funnel::SlideEntity(
+            "Models/IVEs/slide_physics.ive",
+            mPluginDCS.get(),
+            mPhysicsSimulator,
+            mResourceManager );
+        mSlideEntity->SetNameAndDescriptions( "slide_physics" );
+
+        btCollisionShape* collisionShape =
+            osgBullet::btTriMeshCollisionShapeFromOSG(
+                mSlideEntity->GetDCS() );
+
+        osgBullet::MotionState* motionState = new osgBullet::MotionState();
+        motionState->setTransform( mSlideEntity->GetDCS() );
+        motionState->setParentTransform( osg::Matrix::identity() );
+
+        btScalar mass( 0.0 );
+        btVector3 inertia( 0.0, 0.0, 0.0 );
+        btRigidBody::btRigidBodyConstructionInfo rbci(
+            mass, motionState, collisionShape, inertia );
+        btRigidBody* rigidBody = new btRigidBody( rbci );
+
+        rigidBody->setFriction( 0.5 );
+        rigidBody->setRestitution( 0.0 );
+
+        mPhysicsSimulator->GetDynamicsWorld()->addRigidBody( rigidBody );
+
+        /*
+        mSlideEntity->InitPhysics();
+        mSlideEntity->GetPhysicsRigidBody()->SetMass( 0.0 );
+        mSlideEntity->GetPhysicsRigidBody()->StaticConcaveShape();
+        mSlideEntity->GetPhysicsRigidBody()->GetbtRigidBody()->setFriction( 0.5 );
+        mSlideEntity->GetPhysicsRigidBody()->GetbtRigidBody()->setRestitution( 0.0 );
+        */
+    }
+
+    {
+        mWaterEntity = new funnel::WaterEntity(
+            "Models/IVEs/water.ive",
+            mPluginDCS.get(),
+            mResourceManager
 #ifdef VE_SOUND
-                                            ,
-                                            mSoundManager
+            ,
+            mSoundManager
 #endif 
-                                            );
-    mWaterEntity->SetNameAndDescriptions( "water" );
+            );
+        mWaterEntity->SetNameAndDescriptions( "water" );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CoinFunnelWorld::PreFrameUpdate()
 {
+    /*
     if( !mPhysicsSimulator->GetIdle() )
     {
 #ifdef VE_SOUND
@@ -201,6 +317,7 @@ void CoinFunnelWorld::PreFrameUpdate()
         }
 #endif
     }
+    */
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CoinFunnelWorld::CreateRoom( float width )
