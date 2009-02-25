@@ -171,7 +171,7 @@ void SceneRenderToTexture::InitScene( osg::Camera* const sceneViewCamera )
         osg::ref_ptr< osg::Camera > camera =
             CreatePipelineCamera( osgViewport.get() );
         osg::ref_ptr< vxsr::Processor > processor =
-            CreatePipelineProcessor( viewport, camera.get() );
+            CreatePipelineProcessor( viewport, camera.get(), sceneViewCamera );
 
         //Setup a post-processing pipeline for each viewport per context
         //Each pipeline consists of a osg::Camera and vxsr::Processor
@@ -179,7 +179,9 @@ void SceneRenderToTexture::InitScene( osg::Camera* const sceneViewCamera )
             std::make_pair( camera.get(), processor.get() );
 
         sceneViewCamera->addChild( camera.get() );
-        sceneViewCamera->addChild( processor.get() );
+        //Add the scenegraph to the camera    
+        camera->addChild( mRootGroup.get() );
+        camera->addChild( processor.get() );
     }
     
     *mCamerasConfigured = true;
@@ -283,9 +285,6 @@ osg::Camera* SceneRenderToTexture::CreatePipelineCamera(
     //Default glow color for any children that don't explicitly set it.
     stateset->addUniform(
         new osg::Uniform( "glowColor", osg::Vec4( 0.0, 0.0, 0.0, 1.0 ) ) );
-
-    //Add the scenegraph to the camera    
-    tempCamera->addChild( mRootGroup.get() );
     
     return tempCamera;
 }
@@ -316,54 +315,13 @@ osg::Texture2D* SceneRenderToTexture::CreateViewportTexture(
 ////////////////////////////////////////////////////////////////////////////////
 #if __VJ_version >= 2003000
 vxsr::Processor* SceneRenderToTexture::CreatePipelineProcessor(
-    vrj::ViewportPtr viewport, osg::Camera* camera  )
+    vrj::ViewportPtr viewport, osg::Camera* camera, osg::Camera* svCamera    )
 #else
 vxsr::Processor* SceneRenderToTexture::CreatePipelineProcessor(
-    vrj::Viewport* viewport, osg::Camera* camera  )
+    vrj::Viewport* viewport, osg::Camera* camera, osg::Camera* svCamera    )
 #endif
 {
-#if __VJ_version >= 2003000
-    vrj::SurfaceViewportPtr tempView =
-        boost::dynamic_pointer_cast< vrj::SurfaceViewport >( viewport );
-#else
-    vrj::SurfaceViewport* tempView =
-        dynamic_cast< vrj::SurfaceViewport* >( viewport );
-#endif
-    
-    float viewportOriginX, viewportOriginY, viewportWidth, viewportHeight;
-    tempView->getOriginAndSize(
-        viewportOriginX, viewportOriginY, viewportWidth, viewportHeight );
-
-    /*
-    std::cout << viewportOriginX << " "
-              << viewportOriginY << " " 
-              << viewportWidth << " "
-              << viewportHeight << std::endl;
-    */
-
-    float lx, ly, ux, uy;
-
-    //Straight mapping from ( 0 to 1 ) viewport space to
-    //                      ( 0 to 1 ) ortho projection space
-    //lx = viewportOriginX;
-    //ly = viewportOriginY;
-    //ux = viewportOriginX + viewportWidth;
-    //uy = viewportOriginY + viewportHeight;
-
-    //Transform ( 0 to 1 ) viewport space into
-    //          ( -1 to 1 ) identity projection space
-    //lx = ( viewportOriginX * 2.0 ) - 1.0;
-    //ly = ( viewportOriginY * 2.0 ) - 1.0;
-    //ux = ( ( viewportOriginX + viewportWidth ) * 2.0 ) - 1.0;
-    //uy = ( ( viewportOriginY + viewportHeight )* 2.0 ) - 1.0;
-
-    //std::cout << lx << " " << ly << " " << ux << " " << uy << std::endl;
-
-    osg::Vec3 corner( viewportOriginX, viewportOriginY, 0.0 );
-    osg::Vec3 widthVec( viewportWidth, 0.0, 0.0 );
-    osg::Vec3 heightVec( 0.0, viewportHeight, 0.0 );
-
-    //This is the code for the glow pipeline
+    //This is the code for the post-processing pipeline
     osg::ref_ptr< osgDB::ReaderWriter::Options > vertexOptions =
         new osgDB::ReaderWriter::Options( "vertex" );
     osg::ref_ptr< osgDB::ReaderWriter::Options > fragmentOptions =
@@ -382,7 +340,7 @@ vxsr::Processor* SceneRenderToTexture::CreatePipelineProcessor(
     }
     tempProcessor->addChild( colorBuffer0.get() );
     colorBuffer0->Update();
-#if 1
+
     //COLOR_BUFFER1 bypass
     osg::ref_ptr< vxsr::UnitCameraAttachmentBypass > colorBuffer1 =
          new vxsr::UnitCameraAttachmentBypass();
@@ -407,7 +365,6 @@ vxsr::Processor* SceneRenderToTexture::CreatePipelineProcessor(
         glowDownSample->SetFactorX( downsample );
         glowDownSample->SetFactorY( downsample );
         //glowDownSample->SetInputTextureIndexForViewportReference( 0 );
-        glowDownSample->CreateTexturedQuadDrawable( corner, widthVec, heightVec );
     }
     colorBuffer1->addChild( glowDownSample.get() );
     glowDownSample->Update();
@@ -458,7 +415,6 @@ vxsr::Processor* SceneRenderToTexture::CreatePipelineProcessor(
 
         blurX->getOrCreateStateSet()->setAttributeAndModes( gaussX.get() );
         blurX->SetInputTextureIndexForViewportReference( 0 );
-        blurX->CreateTexturedQuadDrawable( corner, widthVec, heightVec );
     }
     glowDownSample->addChild( blurX.get() );
     blurX->Update();
@@ -509,7 +465,6 @@ vxsr::Processor* SceneRenderToTexture::CreatePipelineProcessor(
 
         blurY->getOrCreateStateSet()->setAttributeAndModes( gaussY.get() );
         blurY->SetInputTextureIndexForViewportReference( 0 );
-        blurY->CreateTexturedQuadDrawable( corner, widthVec, heightVec );
     }
     blurX->addChild( blurY.get() );
     blurY->Update();
@@ -537,35 +492,25 @@ vxsr::Processor* SceneRenderToTexture::CreatePipelineProcessor(
         finalShader->addShader( vShader.get() );
         finalShader->setName( "FinalShader" );
 
-        finalShader->add( "glowStrength", osg::Uniform::FLOAT );
-        finalShader->add( "glowColor", osg::Uniform::FLOAT_VEC4 );
+        finalShader->add( "gloStrength", osg::Uniform::FLOAT );
+        finalShader->add( "gloColor", osg::Uniform::FLOAT_VEC4 );
 
-        finalShader->set( "glowStrength", static_cast< float >( 4.0 ) );
-        finalShader->set( "glowColor", osg::Vec4( 0.57255, 1.0, 0.34118, 1.0 ) );
+        finalShader->set( "gloStrength", static_cast< float >( 4.0 ) );
+        finalShader->set( "gloColor", osg::Vec4( 0.57255, 1.0, 0.34118, 1.0 ) );
 
         final->getOrCreateStateSet()->setAttributeAndModes( finalShader.get() );
         final->SetInputToUniform( colorBuffer0.get(), "baseMap", false );
         final->SetInputToUniform( colorBuffer1.get(), "stencilGlowMap", false );
         final->SetInputToUniform( blurY.get(), "glowMap", true );
         final->SetInputTextureIndexForViewportReference( 0 );
-        final->CreateTexturedQuadDrawable( corner, widthVec, heightVec );
     }
     final->Update();
 
     //Render to the Frame Buffer
-    osg::ref_ptr< vxsr::UnitOut > ppuOut = new vxsr::UnitOut();
-    {
-        ppuOut->setName( "PipelineResult" );
-        ppuOut->SetInputTextureIndexForViewportReference( 0 );
-        ppuOut->CreateTexturedQuadDrawable( corner, widthVec, heightVec );
-    }
-    final->addChild( ppuOut.get() );
-    ppuOut->Update();
-#else
-    colorBuffer0->addChild( CreateTexturedQuad(
+    svCamera->addChild( CreateTexturedQuad(
         viewport, static_cast< osg::Texture2D* const >(
-            colorBuffer0->GetOutputTexture() ) ) );
-#endif
+            final->GetOutputTexture() ) ) );
+
     return tempProcessor;
 }
 ////////////////////////////////////////////////////////////////////////////////
