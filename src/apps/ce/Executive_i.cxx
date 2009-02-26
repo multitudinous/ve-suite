@@ -901,7 +901,7 @@ ACE_THROW_SPEC(( CORBA::SystemException, Error::EUnknown ) )
 
     std::string moduleName;
     std::string vendorUnit;
-    unsigned int moduleId = 0;
+    long int moduleId;
     CommandPtr tempCommand =  boost::dynamic_pointer_cast<ves::open::xml::Command>( objectVector.at( 0 ) );
     CommandPtr passCommand( new Command() );
     passCommand->SetCommandName( tempCommand->GetCommandName() );
