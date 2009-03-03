@@ -34,6 +34,44 @@
 
 namespace osgEphemeris {
 
+    class TimeCallback : public osg::Uniform::Callback
+    {
+    public:
+        ///Constructor
+        TimeCallback()
+        {
+            ;
+        }
+
+        ///Copy constructor
+        TimeCallback( const TimeCallback& input )
+            :
+            osg::Object( input ),
+            osg::Uniform::Callback( input )
+        {
+            ;
+        }
+
+        virtual void operator()( osg::Uniform* uniform, osg::NodeVisitor* nv )
+        {
+            if( uniform )
+            {
+                const osg::FrameStamp* frameStamp = nv->getFrameStamp();
+                double simulationTime = frameStamp->getSimulationTime();
+
+                uniform->set( static_cast< float >( simulationTime ) );
+            }
+        }
+
+    protected:
+        ///Destructor
+        virtual ~TimeCallback()
+        {
+            ;
+        }
+
+    };
+
     /** \class SkyDome
         \brief A Geometric sphere which defines the color of the sky and serves
                as a surface for projecting the sun texture - Used internally.

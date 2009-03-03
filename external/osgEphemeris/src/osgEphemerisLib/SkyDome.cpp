@@ -329,6 +329,111 @@ void SkyDome::_buildStateSet()
 
         sset->setTextureAttributeAndModes( _sunTextureUnit, new osg::TexEnv( osg::TexEnv::DECAL ));
     }
+
+    //
+    osg::ref_ptr< osgDB::ReaderWriter::Options > vertexOptions =
+        new osgDB::ReaderWriter::Options( "vertex" );
+    osg::ref_ptr< osgDB::ReaderWriter::Options > fragmentOptions =
+        new osgDB::ReaderWriter::Options( "fragment" );
+
+    //Create vertex shader
+    osg::ref_ptr< osg::Shader > vertexShader =
+        osgDB::readShaderFile( "glsl/sky_vp.glsl", vertexOptions.get() );
+
+    //Create fragment shader
+    osg::ref_ptr< osg::Shader > fragmentShader =
+        osgDB::readShaderFile( "glsl/sky_fp.glsl", fragmentOptions.get() );
+
+    //Create program and add shaders
+    osg::ref_ptr< osg::Program > program = new osg::Program();
+    program->addShader( vertexShader.get() );
+    program->addShader( fragmentShader.get() );
+    sset->setAttributeAndModes( program.get(), osg::StateAttribute::ON );
+
+    //Set the uniforms
+    osg::ref_ptr< osg::Uniform > timeUniform =
+        new osg::Uniform( "time", static_cast< float >( 0.0 ) );
+    osg::ref_ptr< TimeCallback > timeCallback = new TimeCallback();
+    timeUniform->setUpdateCallback( timeCallback.get() );
+    sset->addUniform( timeUniform.get() );
+
+    /*
+    osg::ref_ptr< osg::Texture3D > noiseVolumeTexture = new osg::Texture3D();
+    noiseVolumeTexture->setFilter(
+        osg::Texture3D::MIN_FILTER, osg::Texture3D::LINEAR );
+    noiseVolumeTexture->setFilter(
+        osg::Texture3D::MAG_FILTER, osg::Texture3D::LINEAR );
+    noiseVolumeTexture->setWrap(
+        osg::Texture3D::WRAP_S, osg::Texture3D::REPEAT );
+    noiseVolumeTexture->setWrap(
+        osg::Texture3D::WRAP_T, osg::Texture3D::REPEAT );
+    noiseVolumeTexture->setWrap(
+        osg::Texture3D::WRAP_R, osg::Texture3D::REPEAT );
+    noiseVolumeTexture->setImage(
+        osgDB::readImageFile( "SolarSystem/NoiseVolume.dds" ) );
+
+    sset->setTextureAttributeAndModes(
+        2, noiseVolumeTexture.get(), osg::StateAttribute::ON );
+    osg::ref_ptr< osg::Uniform > noiseUniform =
+        new osg::Uniform( "noiseMap", 2 );
+    sset->addUniform( noiseUniform.get() );
+    */
+
+    osg::ref_ptr< osg::Uniform > skyMapUniform =
+        new osg::Uniform( "skyMap", 0 );
+    sset->addUniform( skyMapUniform.get() );
+
+    osg::ref_ptr< osg::Uniform > sunMapUniform =
+        new osg::Uniform( "sunMap", 1 );
+    sset->addUniform( sunMapUniform.get() );
+
+    osg::ref_ptr< osg::Texture2D > texture = new osg::Texture2D();
+    try
+    {
+        texture->setFilter(
+            osg::Texture2D::MIN_FILTER, osg::Texture2D::LINEAR_MIPMAP_LINEAR );
+        texture->setFilter(
+            osg::Texture2D::MAG_FILTER, osg::Texture2D::LINEAR );
+        texture->setWrap(
+            osg::Texture2D::WRAP_S, osg::Texture2D::REPEAT );
+        texture->setWrap(
+            osg::Texture2D::WRAP_T, osg::Texture2D::REPEAT );
+        texture->setImage( osgDB::readImageFile( "SolarSystem/sky1.jpg" ) );
+    }
+    catch( ... )
+    {
+        std::cerr << "Could not load sky1.jpg!" << std::endl;
+    }
+
+    osg::ref_ptr< osg::Texture2D > texture1 = new osg::Texture2D();
+    try
+    {
+        texture1->setFilter(
+            osg::Texture2D::MIN_FILTER, osg::Texture2D::LINEAR_MIPMAP_LINEAR );
+        texture1->setFilter(
+            osg::Texture2D::MAG_FILTER, osg::Texture2D::LINEAR );
+        texture1->setWrap(
+            osg::Texture2D::WRAP_S, osg::Texture2D::REPEAT );
+        texture1->setWrap(
+            osg::Texture2D::WRAP_T, osg::Texture2D::REPEAT );
+        texture1->setImage( osgDB::readImageFile( "SolarSystem/sky_normal.jpg" ) );
+    }
+    catch( ... )
+    {   
+        std::cerr << "Could not load sky_normal.jpg!" << std::endl;
+    }
+
+    sset->setTextureAttributeAndModes(
+        2, texture.get(), osg::StateAttribute::ON );
+    osg::ref_ptr< osg::Uniform > colorMapUniform =
+        new osg::Uniform( "colorMap", 2 );
+    sset->addUniform( colorMapUniform.get() );
+
+    sset->setTextureAttributeAndModes(
+        3, texture1.get(), osg::StateAttribute::ON );
+    osg::ref_ptr< osg::Uniform > bumpMapUniform =
+        new osg::Uniform( "bumpMap", 3 );
+    sset->addUniform( bumpMapUniform.get() );
 }
 
 SkyDome::SectorUpdateCallback::SectorUpdateCallback( double &sunAz, double min, double max, unsigned int sunTextureUnit ):
@@ -598,6 +703,11 @@ void SkyDome::_computeSkyTexture()
         if(_current_tex_row >= SKY_DOME_Y_SIZE)
             _current_tex_row = 0;
         
-        _skyTexture->setImage( image );
+#if (OSG_VERSION_MAJOR >= 2) && (OSG_VERSION_MINOR >= 6 )
+        image->dirty();
+#else
+        //_skyTexture->setImage( image );
+        image->dirty();
+#endif
     }
 }
