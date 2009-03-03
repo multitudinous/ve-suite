@@ -72,7 +72,13 @@ cfdVEPluginLoader::~cfdVEPluginLoader()
     {
         if( libs.at( i )->isLoaded() )
         {
-            libs.at( i )->unload();
+            try
+            {
+                libs.at( i )->unload();
+            }
+            catch(...)
+            {
+            }
         }
     }
     libs.clear();
