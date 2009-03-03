@@ -26,7 +26,7 @@ public:
     virtual int GetNumOports();
     virtual void GetOPorts( PORT& ports );
 
-	std::string mTextThree;
+    std::vector< std::string > mNetworkThreeInputs;
 
 protected:
 

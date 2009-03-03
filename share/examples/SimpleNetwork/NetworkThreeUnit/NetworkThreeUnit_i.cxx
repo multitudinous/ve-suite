@@ -39,8 +39,9 @@ void Body_Unit_i::StartCalc (ACE_ENV_SINGLE_ARG_DECL )
     std::cout<<UnitName_<<" : Starting Calculations"<<std::endl;
     std::ostringstream strm;
     strm << activeId;
-    xmlModelMap[ strm.str() ]->GetInput( "mTextThree" )->
-		GetDataValuePair( "mTextThree" )->GetData( mTextThree );
+    xmlModelMap[ strm.str() ]->GetInput( "mNetworkThreeInputs" )->
+		GetDataValuePair( "mNetworkThreeInputs" )->
+        GetData( mNetworkThreeInputs );
 
     const std::vector< CommandPtr > inputsVec = 
 		xmlModelMap[ strm.str() ]->GetInputs();
@@ -55,16 +56,27 @@ void Body_Unit_i::StartCalc (ACE_ENV_SINGLE_ARG_DECL )
         size_t tempValue = inputsVec.at( i )->GetNumberOfDataValuePairs();
         for( size_t j=0; j<tempValue; ++j )
         {
+            /*boost::dynamic_pointer_cast< Command >( 
+                inputsVec.at( i )->GetDataValuePair( "mNetworkThreeInputs" )->
+                GetDataXMLObject() )->GetDataValuePair( "mNetworkThreeInputs" )->
+                GetData( mNetworkThreeInputs );*/
+
+            for( size_t k=0; k<mNetworkThreeInputs.size(); ++k )
+            {
+                std::cout << "Unit Three Input " << k << ": " << mNetworkThreeInputs.at( k ) << std::endl; 
+            }
+            /*
             std::string tempString;
 			tempString = inputsVec.at( i )->
 				GetDataValuePair( j )->GetDataString();
             std::cout << "DataValuePair j = " << j << " = " 
 				<< tempString << std::endl;
+                */
         }
     }
 
 	DataValuePairPtr dvp( new DataValuePair() );
-	dvp->SetData( "UNIT 3 STRING TEST", "this is test data from unit three" );
+	dvp->SetData( "UNIT 3 VECTOR TEST", mNetworkThreeInputs );
 
     ves::open::xml::CommandPtr command( new ves::open::xml::Command() );
 

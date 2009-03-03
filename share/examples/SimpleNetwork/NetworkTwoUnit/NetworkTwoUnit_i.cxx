@@ -61,18 +61,25 @@ ACE_THROW_SPEC (( CORBA::SystemException, Error::EUnknown ))
             if( boost::dynamic_pointer_cast< Command >( inputsVec.at( i )->
 				GetDataValuePair( j )->GetDataXMLObject() ) )
             {
-				tempString = boost::dynamic_pointer_cast< Command >( 
-					inputsVec.at( i )->GetDataValuePair( j )->
-					GetDataXMLObject() )->GetDataValuePair( j )->
-					GetDataString();
+				boost::dynamic_pointer_cast< Command >( 
+					inputsVec.at( i )->GetDataValuePair( "SimpleNetworkTest-Three Unit" )->
+					GetDataXMLObject() )->GetDataValuePair( "UNIT 3 VECTOR TEST" )->
+                    GetData( mUnitThreeInputs );
+
+                for( size_t k=0; k<mUnitThreeInputs.size(); ++k )
+                {
+                    std::cout << "Inputs from Unit Three " << k << ": " 
+                        << mUnitThreeInputs.at( k ) << std::endl;
+                }
             }
 			else
 			{
 				tempString = inputsVec.at( i )->
 					GetDataValuePair( j )->GetDataString();
+
+                std::cout << "DataValuePair j = " << j << " = " 
+                    << tempString << std::endl;
 			}
-            std::cout << "DataValuePair j = " << j << " = " 
-				<< tempString << std::endl;
         }
     }
 

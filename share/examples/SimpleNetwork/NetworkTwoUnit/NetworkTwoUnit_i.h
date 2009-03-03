@@ -39,6 +39,7 @@ protected:
 	void warning(std::string msg);
 
 	std::string mTextTwo;
+    std::vector< std::string > mUnitThreeInputs;
 
 public:
 	virtual void StartCalc( ACE_ENV_SINGLE_ARG_DECL )

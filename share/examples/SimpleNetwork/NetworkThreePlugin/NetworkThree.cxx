@@ -13,7 +13,7 @@ NetworkThree::NetworkThree()
 {
 	mPluginName = wxT("NetworkThree");
 	
-	RegistVar("mTextThree", &mTextThree);
+	RegistVar("mNetworkThreeInputs", &mNetworkThreeInputs);
 
 	wxImage my_img( network_xpm );
     SetImage( my_img );
@@ -42,7 +42,8 @@ void NetworkThree::GetIPorts(PORT& iports)
 {
     if( inputPort.size() == 0 )
     {
-        wxPoint tempPort(GetIconImage()->GetWidth()*10/52, GetIconImage()->GetHeight()*26/98);
+        wxPoint tempPort(GetIconImage()->GetWidth()*10/52, 
+            GetIconImage()->GetHeight()*26/98);
         AddPortToModel( tempPort, UIPLUGINBASE_ADD_INPUT_PORT );
     }
     
@@ -59,7 +60,8 @@ void NetworkThree::GetOPorts(PORT& oports)
 {
     if( outputPort.size() == 0 )
     {
-        wxPoint tempPort(GetIconImage()->GetWidth()*43/52,GetIconImage()->GetHeight()*74/98);
+        wxPoint tempPort(GetIconImage()->GetWidth()*43/52,
+            GetIconImage()->GetHeight()*74/98);
         AddPortToModel( tempPort, UIPLUGINBASE_ADD_OUTPUT_PORT );
     }
     
@@ -74,7 +76,7 @@ ves::conductor::UIDialog* NetworkThree::UI(wxWindow* parent)
 	}
   
 	dlg = new NetworkThreeUIDialog(parent, -1, serviceList,
-		&mTextThree);
+		&mNetworkThreeInputs);
       
 	dlg->CenterOnScreen(wxBOTH);
 
