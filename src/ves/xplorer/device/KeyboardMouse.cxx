@@ -48,6 +48,7 @@
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/FindParentsVisitor.h>
 #include <ves/xplorer/scenegraph/Group.h>
+#include <ves/xplorer/scenegraph/CADEntity.h>
 
 #include <ves/xplorer/scenegraph/nurbs/PointLineSegmentIntersector.h>
 #include <ves/xplorer/scenegraph/nurbs/NURBS.h>
@@ -55,9 +56,24 @@
 #include <ves/xplorer/scenegraph/nurbs/ControlPoint.h>
 
 #include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
+#include <ves/xplorer/scenegraph/physics/PhysicsRigidBody.h>
 
 // --- Bullet Includes --- //
 #include <LinearMath/btVector3.h>
+#include <btBulletDynamicsCommon.h>
+#include <btBulletCollisionCommon.h>
+//picking
+#include <BulletDynamics/ConstraintSolver/btPoint2PointConstraint.h>
+
+// --- osgBullet Includes --- //
+#include <osgBullet/CollisionShape.h>
+#include <osgBullet/CollisionShapes.h>
+#include <osgBullet/MotionState.h>
+#include <osgBullet/AbsoluteModelTransform.h>
+#include <osgBullet/OSGToCollada.h>
+#include <osgBullet/DebugBullet.h>
+#include <osgBullet/ColladaUtils.h>
+#include <osgBullet/Utils.h>
 
 // --- vrJuggler Includes --- //
 #include <gadget/Type/KeyboardMouse/KeyEvent.h>
@@ -96,7 +112,8 @@
 
 using namespace ves::xplorer;
 
-namespace vxs = ves::xplorer::scenegraph;
+namespace vx = ves::xplorer;
+namespace vxs = vx::scenegraph;
 
 const double OneEightyDivPI = 57.29577951;
 const double PIDivOneEighty = 0.0174532925;
@@ -142,6 +159,9 @@ KeyboardMouse::KeyboardMouse()
     mHead.init( "VJHead" );
 
     gmtl::identity( mDeltaTransform );
+
+    mPhysicsSimulator = vxs::PhysicsSimulator::instance();
+    mDynamicsWorld = mPhysicsSimulator->GetDynamicsWorld();
 }
 ////////////////////////////////////////////////////////////////////////////////
 KeyboardMouse::~KeyboardMouse()
@@ -470,11 +490,39 @@ void KeyboardMouse::ProcessKBEvents( int mode )
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::ProcessNavigationEvents()
 {
+    //if( !vxs::PhysicsSimulator::instance()->GetIdle() )
+    {
+        /*
+        osg::Node::DescriptionList descriptorsList;
+        descriptorsList =
+            vx::DeviceHandler::instance()->GetSelectedDCS()->getDescriptions();
+
+        vxs::CADEntity* cadEntity =
+            vx::ModelHandler::instance()->GetActiveModel()->
+                GetModelCADHandler()->GetPart( descriptorsList.at( 1 ) );
+
+        osgBullet::MotionState* motionState =
+            dynamic_cast< osgBullet::MotionState* >(
+                cadEntity->GetPhysicsRigidBody()->GetbtRigidBody()->getMotionState() );
+
+        osg::Matrixd newTransform;
+        osg::Matrixd currentTransform;
+
+        currentTransform = motionState->getParentTransform();
+
+        osg::Matrixd deltaTransform( mDeltaTransform.getData() );
+        newTransform = currentTransform * deltaTransform;
+
+        motionState->setParentTransform( newTransform );
+        */
+    }
+    //else
+    {
     gmtl::Matrix44d newTransform;
     gmtl::Matrix44d currentTransform;
     
     vxs::DCS* const activeDCS =
-        ves::xplorer::DeviceHandler::instance()->GetActiveDCS();
+        vx::DeviceHandler::instance()->GetActiveDCS();
     //Get the node where are all the geometry is handled
     osg::Group* const activeSwitchNode =
         vxs::SceneManager::instance()->GetActiveSwitchNode();
@@ -534,6 +582,7 @@ void KeyboardMouse::ProcessNavigationEvents()
         mDeltaTransform.mData[ 12 ] =
         mDeltaTransform.mData[ 13 ] =
         mDeltaTransform.mData[ 14 ] = 0.0f;
+    }
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -1054,14 +1103,66 @@ void KeyboardMouse::NavOnKeyboardPress()
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::NavOnMousePress()
 {
-    //Nothing implemented yet
-    return;
-
     //Would be cool to change mouse cursor for nav events here
     switch( mButton )
     {
         case gadget::MBUTTON1:
         {
+            //Add a point to point constraint for picking
+            if( !mPhysicsSimulator->GetIdle() && mDynamicsWorld )
+            {
+                osg::Vec3d startPoint, endPoint;
+                SetStartEndPoint( &startPoint, &endPoint );
+
+                btVector3 rayFromWorld, rayToWorld;
+                rayFromWorld.setValue(
+                    startPoint.x(), startPoint.y(), startPoint.z() );
+                rayToWorld.setValue(
+                    endPoint.x(), endPoint.y(), endPoint.z() );
+
+                btCollisionWorld::ClosestRayResultCallback rayCallback(
+                    rayFromWorld, rayToWorld );
+                mDynamicsWorld->rayTest(
+                    rayFromWorld, rayToWorld, rayCallback );
+                if( rayCallback.hasHit() )
+                {
+                    btRigidBody* body =
+                        btRigidBody::upcast( rayCallback.m_collisionObject );
+                    if( body )
+                    {
+                        //Other exclusions
+                        if( !( body->isStaticObject() ||
+                               body->isKinematicObject() ) )
+                        {
+                            mPickedBody = body;
+                            mPickedBody->setActivationState(
+                                DISABLE_DEACTIVATION );
+
+                            btVector3 pickPos = rayCallback.m_hitPointWorld;
+
+                            btVector3 localPivot =
+                                body->getCenterOfMassTransform().inverse() *
+                                pickPos;
+
+                            btPoint2PointConstraint* p2p =
+                                new btPoint2PointConstraint(
+                                    *body, localPivot );
+                            mDynamicsWorld->addConstraint( p2p );
+                            mPickConstraint = p2p;
+
+                            //Save mouse position for dragging
+                            //gOldPickingPos = rayToWorld;
+
+                            gOldPickingDist =
+                                ( pickPos - rayFromWorld ).length();
+
+                            //Very weak constraint for picking
+                            p2p->m_setting.m_tau = 0.1;
+                        }
+                    }
+                }
+            }
+
             break;
         }
         case gadget::MBUTTON2:
@@ -1077,13 +1178,21 @@ void KeyboardMouse::NavOnMousePress()
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::NavOnMouseRelease()
 {
-    //Nothing implemented yet
-    return;
-
     switch( mButton )
     {
         case gadget::MBUTTON1:
         {
+            if( !mPhysicsSimulator->GetIdle() && mPickConstraint && mDynamicsWorld )
+            {
+                mDynamicsWorld->removeConstraint( mPickConstraint );
+                delete mPickConstraint;
+                mPickConstraint = NULL;
+
+                mPickedBody->forceActivationState( ACTIVE_TAG );
+                mPickedBody->setDeactivationTime( 0.0 );
+                mPickedBody = NULL;
+            }
+
             break;
         }
         case gadget::MBUTTON2:
@@ -1111,14 +1220,42 @@ void KeyboardMouse::NavOnMouseMotion( std::pair< double, double > delta )
     {
         case gadget::MBUTTON1:
         {
-            if( ( mX > 0.1f * mWidth ) && ( mX < 0.9f * mWidth ) &&
-                ( mY > 0.1f * mHeight ) && ( mY < 0.9f * mHeight ) )
+            if( !mPhysicsSimulator->GetIdle() && mPickConstraint )
             {
-                RotateView( delta.first, delta.second );
+                //Move the constraint pivot
+                btPoint2PointConstraint* p2p =
+                    static_cast< btPoint2PointConstraint* >( mPickConstraint );
+                if( p2p )
+                {
+                    osg::Vec3d startPoint, endPoint;
+                    SetStartEndPoint( &startPoint, &endPoint );
+
+                    btVector3 rayFromWorld, rayToWorld;
+                    rayFromWorld.setValue(
+                        startPoint.x(), startPoint.y(), startPoint.z() );
+                    rayToWorld.setValue(
+                        endPoint.x(), endPoint.y(), endPoint.z() );
+
+                    //Keep it at the same picking distance
+                    btVector3 dir = rayToWorld - rayFromWorld;
+                    dir.normalize();
+                    dir *= gOldPickingDist;
+
+                    btVector3 newPos = rayFromWorld + dir;
+                    p2p->setPivotB( newPos );
+                }
             }
             else
             {
-                Twist();
+                if( ( mX > 0.1f * mWidth ) && ( mX < 0.9f * mWidth ) &&
+                    ( mY > 0.1f * mHeight ) && ( mY < 0.9f * mHeight ) )
+                {
+                    RotateView( delta.first, delta.second );
+                }
+                else
+                {
+                    Twist();
+                }
             }
 
             break;

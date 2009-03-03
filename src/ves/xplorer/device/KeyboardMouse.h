@@ -40,20 +40,17 @@
 #include <ves/xplorer/device/Device.h>
 
 // --- vrJuggler Includes --- //
-#include <gadget/Type/KeyboardMouseInterface.h>
-#include <gadget/Type/PositionInterface.h>
+#include <gmtl/Matrix.h>
 
 #include <boost/shared_ptr.hpp>
 
-#include <gmtl/Matrix.h>
+#include <gadget/Type/KeyboardMouseInterface.h>
+#include <gadget/Type/PositionInterface.h>
 
 // --- OSG Includes --- //
 #include <osg/Geometry>
 
 #include <osgUtil/IntersectVisitor>
-
-// --- C/C++ Libraries --- //
-#include <utility>
 
 namespace osg
 {
@@ -64,10 +61,24 @@ class Vec3d;
 class LineSegment;
 }
 
+// --- Bullet Includes --- //
+class btDynamicsWorld;
+class btRigidBody;
+class btTypedConstraint;
+
+// --- C/C++ Libraries --- //
+#include <utility>
+
 namespace ves
 {
 namespace xplorer
 {
+
+namespace scenegraph
+{
+class PhysicsSimulator;
+}
+
 /*!\file KeyboardMouse.h
  *
  */
@@ -313,6 +324,20 @@ private:
 
     ///VRJuggler's head positional interface
     gadget::PositionInterface mHead;
+
+    ///Pointer to the physics simulator singleton
+    ves::xplorer::scenegraph::PhysicsSimulator* mPhysicsSimulator;
+
+    ///The rigid body that has been selected during physics mouse picking
+    btRigidBody* mPickedBody;
+
+    ///Pointer to physics dynamics world
+    btDynamicsWorld* mDynamicsWorld;
+
+    ///Bullet constraint used for physics mouse picking
+    btTypedConstraint* mPickConstraint;
+
+    float gOldPickingDist;
 
 };
 } //end xplorer
