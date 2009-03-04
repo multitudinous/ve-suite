@@ -116,7 +116,8 @@ Network::Network( wxWindow* parent,
         isLoading( false ),
         mServiceList( serviceList ),
         mDataBufferEngine( dataBufferEngine ),
-        mUserPrefBuffer( userPrefBuffer )
+        mUserPrefBuffer( userPrefBuffer ),
+        mMouseOverPlugin( -1 )
 {
     modules.clear();
     links.clear();
@@ -779,7 +780,8 @@ int Network::SelectMod( int x, int y, wxDC &dc )
     for( std::map< int, Module >::iterator iter = modules.begin();
             iter != modules.end(); iter++ )
     {
-        if( iter->second.GetPolygon()->inside( temp ) )
+        //if( iter->second.GetPlugin()->GetPolygon()->inside( temp ) )
+        if( iter->second.GetPlugin()->SelectMod( x, y ) )
         {
             // now we are officially selected
             m_selMod = iter->first;
@@ -1065,12 +1067,12 @@ void Network::DropModule( int ix, int iy, int mod )
 
     //num = cur_module->GetNumPoly();
     //tmppoly.resize(num);
-    ves::conductor::util::Polygon tmppoly;
+    /*ves::conductor::util::Polygon tmppoly;
     POLY oldPoly;
     oldPoly.resize( cur_module->GetNumPoly() );
     cur_module->GetPoly( oldPoly );
-    *( tmppoly.GetPolygon() ) = oldPoly;
-    tmppoly.TransPoly( x - relative_pt.x, y - relative_pt.y, *( modules[mod].GetPolygon() ) );
+    *( tmppoly.GetPolygon() ) = oldPoly;*/
+    //tmppoly.TransPoly( x - relative_pt.x, y - relative_pt.y, *( modules[mod].GetPlugin()->GetPolygon() ) );
 
     //Recalc links poly as well for a particular module
     for( size_t i = 0; i < links.size(); ++i )
@@ -1084,7 +1086,10 @@ void Network::TryLink( int x, int y, int mod, int pt, wxDC& dc, bool flag )
 {
     PORT ports;
     wxRect bbox;
-    int dest_mod = -1;
+    //int dest_mod = -1;
+    //Reset back to -1 so that we can loop over and 
+    //find if we are over a new plugin
+    mMouseOverPlugin = -1;
     //This loop causes a tremendous perfomance decrease
     wxPoint temp;
     //must remove the scale because the points are scaled in the draw function
@@ -1095,10 +1100,11 @@ void Network::TryLink( int x, int y, int mod, int pt, wxDC& dc, bool flag )
     for( std::map< int, Module >::iterator iter = 
         modules.begin(); iter != modules.end(); iter++ )
     {
-        if( iter->second.GetPolygon()->inside( temp ) && dest_mod != mod )
+        //if( iter->second.GetPlugin()->GetPolygon()->inside( temp ) ) //&& mMouseOverPlugin != mod )
+        if( iter->second.GetPlugin()->SelectMod( x, y ) )
         {
-            dest_mod = iter->first;
-            modules[dest_mod].GetPlugin()->SetHighlightFlag( true );
+            mMouseOverPlugin = iter->first;
+            modules[ mMouseOverPlugin ].GetPlugin()->SetHighlightFlag( true );
             break;
         }
     }
@@ -1170,7 +1176,8 @@ void Network::DropLink( int x, int y, int mod, int pt, wxDC &dc, bool flag )
 
     for( iter = modules.begin(); iter != modules.end(); iter++ )
     {
-        if( modules[ iter->first ].GetPolygon()->inside( temp ) )
+        //if( modules[ iter->first ].GetPlugin()->GetPolygon()->inside( temp ) )
+        if( iter->second.GetPlugin()->SelectMod( x, y ) )
         {
             dest_mod = iter->first;
             bbox = modules[dest_mod].GetPlugin()->GetBBox();
@@ -1720,13 +1727,13 @@ void Network::AddtoNetwork( UIPluginBase *cur_module, std::string cls_name )
     bbox = cur_module->GetBBox();
     modules[id].SetPlugin( cur_module );
 
-    num = cur_module->GetNumPoly();
+    /*num = cur_module->GetNumPoly();
     tmpPoly.resize( num );
     cur_module->GetPoly( tmpPoly );
     ves::conductor::util::Polygon newPolygon;
-    *( newPolygon.GetPolygon() ) = tmpPoly;
+    *( newPolygon.GetPolygon() ) = tmpPoly;*/
 
-    newPolygon.TransPoly( bbox.x, bbox.y, *( modules[id].GetPolygon() ) ); //Make the network recognize its polygon
+    //newPolygon.TransPoly( bbox.x, bbox.y, *( modules[id].GetPlugin()->GetPolygon() ) ); //Make the network recognize its polygon
 
     modules[id].GetPlugin()->SetName( wxString( cls_name.c_str(), wxConvUTF8 ) );
     modules[id].GetPlugin()->SetID( id );
@@ -1758,7 +1765,7 @@ void Network::DrawNetwork( wxDC &dc )
     {
         iter->second.GetPlugin()->DrawPlugin( &dc );
         ///Set everything back to false for next loop
-        if( iter->first != m_selMod )
+        if( ( iter->first != m_selMod ) && ( iter->first != mMouseOverPlugin ) )
         {
             iter->second.GetPlugin()->SetHighlightFlag( false );
         }
@@ -1925,13 +1932,13 @@ void Network::LoadSystem( model::SystemPtr system, Canvas* parent )
         }
         //Second, calculate the polyes
         wxRect bbox = modules[ num ].GetPlugin()->GetBBox();
-        int polynum = modules[ num ].GetPlugin()->GetNumPoly();
+        /*int polynum = modules[ num ].GetPlugin()->GetNumPoly();
         POLY tmpPoly;
         tmpPoly.resize( polynum );
         modules[ num ].GetPlugin()->GetPoly( tmpPoly );
         ves::conductor::util::Polygon tempPoly;
-        *( tempPoly.GetPolygon() ) = tmpPoly;
-        tempPoly.TransPoly( bbox.x, bbox.y, *( modules[ num ].GetPolygon() ) ); //Make the network recognize its polygon
+        *( tempPoly.GetPolygon() ) = tmpPoly;*/
+        //tempPoly.TransPoly( bbox.x, bbox.y, *( modules[ num ].GetPlugin()->GetPolygon() ) ); //Make the network recognize its polygon
         
         if( bbox.x + bbox.width > networkSize.first )
         {
@@ -1988,16 +1995,16 @@ void Network::CreateSystem( Canvas* parent, unsigned int id )
     modules[ id ].SetPlugin( tempPlugin );
     modules[ id ].GetPlugin()->SetID( id );
 
-    int num = tempPlugin->GetNumPoly();
+    /*int num = tempPlugin->GetNumPoly();
     POLY tmpPoly;
     tmpPoly.resize( num );
     tempPlugin->GetPoly( tmpPoly );
     ves::conductor::util::Polygon newPolygon;
-    *( newPolygon.GetPolygon() ) = tmpPoly;
+    *( newPolygon.GetPolygon() ) = tmpPoly;*/
     //Get the Boundoing box of the modul
     wxRect bbox = tempPlugin->GetBBox(); 
     //Make the network recognize its polygon
-    newPolygon.TransPoly( bbox.x, bbox.y, *( modules[id].GetPolygon() ) ); 
+    //newPolygon.TransPoly( bbox.x, bbox.y, *( modules[id].GetPlugin()->GetPolygon() ) ); 
 
     //modules[ 0 ].GetPlugin()->SetVEModel( model );
     systemPtr->AddModel( modules[id].GetPlugin()->GetVEModel() );

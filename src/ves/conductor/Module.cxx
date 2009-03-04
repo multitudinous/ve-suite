@@ -58,7 +58,7 @@ Module::~Module( void )
 Module::Module( const Module& input )
 {
     pl_mod = 0;
-    poly = input.poly;
+    //poly = input.poly;
     //cls_name = input.cls_name;
     canvas = input.canvas;
     //links = input.links;
@@ -69,7 +69,7 @@ Module& Module::operator= ( const Module& input )
     if( this != &input )
     {
         pl_mod = 0;
-        poly = input.poly;
+        //poly = input.poly;
         //cls_name = input.cls_name;
         canvas = input.canvas;
         // we can do this because it is a vector of actual instances
@@ -118,10 +118,10 @@ void Module::RemoveLink( size_t i )
    return cls_name;
 }*/
 ////////////////////////////////////////////////
-util::Polygon* Module::GetPolygon( void )
+/*util::Polygon* Module::GetPolygon( void )
 {
     return &( poly );
-}
+}*/
 /*////////////////////////////////////////////////
 void Module::SetClassName( std::string newClassname )
 {

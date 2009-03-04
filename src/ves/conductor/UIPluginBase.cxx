@@ -312,13 +312,10 @@ int UIPluginBase::GetNumPoly( void )
     return n_pts;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UIPluginBase::GetPoly( POLY& polygon )
+/*ves::conductor::util::Polygon* UIPluginBase::GetPolygon( void )
 {
-    for( int i = 0; i < n_pts; i++ )
-    {
-        polygon[i] = poly[i];
-    }
-}
+    return &( poly );
+}*/
 ////////////////////////////////////////////////////////////////////////////////
 int UIPluginBase::GetNumIports()
 {

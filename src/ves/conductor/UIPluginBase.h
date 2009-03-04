@@ -123,7 +123,8 @@ public:
     /// memory for it
     int GetNumPoly( void );
     ///Return the outline polygon
-    void GetPoly( POLY &polygon );
+    //void GetPoly( POLY &polygon );
+    //ves::conductor::util::Polygon* GetPolygon( void );
     ///This returns the UI dialog of the module
     virtual ves::conductor::UIDialog* UI( wxWindow* parent );
     

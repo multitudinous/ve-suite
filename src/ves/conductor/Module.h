@@ -73,7 +73,7 @@ public:
     //size_t GetNumberOfLinks( void );
     //std::string GetClassName( void );
     ///void SetClassName( std::string newClassname );
-    util::Polygon* GetPolygon( void );
+    //util::Polygon* GetPolygon( void );
     UIPluginBase* GetPlugin( void );
     void SetPlugin( UIPluginBase* newPlugin );
 protected:
@@ -81,7 +81,7 @@ protected:
 
 private:
     UIPluginBase* pl_mod;
-    util::Polygon poly; //Poly is the current poly on the canvas
+    //util::Polygon poly; //Poly is the current poly on the canvas
     //std::vector< Link > links; //links connected with me
     wxWindow* canvas;
 };

@@ -222,6 +222,8 @@ private:
     wxBitmap * bitmapBuffer;
     wxPoint point1;
     wxPoint point2;
+    int mMouseOverPlugin;
+
     ///UUID for this network
     std::string networkID;
     ///Event to delete networks
