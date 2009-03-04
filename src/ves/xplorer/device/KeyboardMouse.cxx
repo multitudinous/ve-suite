@@ -130,22 +130,23 @@ KeyboardMouse::KeyboardMouse()
     mWidth( 1 ),
     mHeight( 1 ),
 
-    mAspectRatio( 0.0f ),
-    mFoVY( 0.0f ),
-    mLeftFrustum( 0.0f ),
-    mRightFrustum( 0.0f ),
-    mTopFrustum( 0.0f ),
-    mBottomFrustum( 0.0f ),
-    mNearFrustum( 0.0f ),
-    mFarFrustum( 0.0f ),
+    mAspectRatio( 0.0 ),
+    mFoVY( 0.0 ),
+    mLeftFrustum( 0.0 ),
+    mRightFrustum( 0.0 ),
+    mTopFrustum( 0.0 ),
+    mBottomFrustum( 0.0 ),
+    mNearFrustum( 0.0 ),
+    mFarFrustum( 0.0 ),
 
-    mXMinScreen( 0.0f ),
-    mXMaxScreen( 0.0f ),
-    mYMinScreen( 0.0f ),
-    mYMaxScreen( 0.0f ),
-    mZValScreen( 0.0f ),
+    mXMinScreen( 0.0 ),
+    mXMaxScreen( 0.0 ),
+    mYMinScreen( 0.0 ),
+    mYMaxScreen( 0.0 ),
+    mZValScreen( 0.0 ),
+    mPrevPhysicsRayPos( 0.0 ),
 
-    mMagnitude( 0.0f ),
+    mMagnitude( 0.0 ),
     mSensitivity( 1.0e-06 ),
 
     mCurrPos( 0, 0 ),
@@ -153,15 +154,16 @@ KeyboardMouse::KeyboardMouse()
 
     mAnimate( false ),
 
-    mBeamLineSegment( new osg::LineSegment )
+    mBeamLineSegment( new osg::LineSegment ),
+
+    mPhysicsSimulator( vxs::PhysicsSimulator::instance() ),
+    mDynamicsWorld( mPhysicsSimulator->GetDynamicsWorld() ),
+    mPickConstraint( NULL )
 {
     mKeyboard.init( "VJKeyboard" );
     mHead.init( "VJHead" );
 
     gmtl::identity( mDeltaTransform );
-
-    mPhysicsSimulator = vxs::PhysicsSimulator::instance();
-    mDynamicsWorld = mPhysicsSimulator->GetDynamicsWorld();
 }
 ////////////////////////////////////////////////////////////////////////////////
 KeyboardMouse::~KeyboardMouse()
@@ -283,12 +285,12 @@ void KeyboardMouse::DrawLine( osg::Vec3d startPoint, osg::Vec3d endPoint )
     vertices->push_back( endPoint );
     line->setVertexArray( vertices.get() );
 
-    colors->push_back( osg::Vec4( 1.0f, 0.0f, 0.0f, 1.0f ) );
+    colors->push_back( osg::Vec4( 1.0, 0.0, 0.0, 1.0 ) );
     line->setColorArray( colors.get() );
     line->setColorBinding( osg::Geometry::BIND_OVERALL );
 
     osg::ref_ptr< osg::LineWidth > line_width = new osg::LineWidth();
-    line_width->setWidth( 2.0f );
+    line_width->setWidth( 2.0 );
     m_stateset->setAttribute( line_width.get() );
     line->setStateSet( m_stateset.get() );
 
@@ -381,7 +383,7 @@ void KeyboardMouse::ProcessKBEvents( int mode )
                         gmtl::identity( mDeltaTransform );
                         mDeltaTransform.mData[ 12 ] =
                         mDeltaTransform.mData[ 13 ] =
-                        mDeltaTransform.mData[ 14 ] = 0.0f;
+                        mDeltaTransform.mData[ 14 ] = 0.0;
                     }
                 }
                 //Selection mode
@@ -568,7 +570,7 @@ void KeyboardMouse::ProcessNavigationEvents()
         gmtl::identity( mDeltaTransform );
         mDeltaTransform.mData[ 12 ] =
         mDeltaTransform.mData[ 13 ] =
-        mDeltaTransform.mData[ 14 ] = 0.0f;
+        mDeltaTransform.mData[ 14 ] = 0.0;
     }
     }
 }
@@ -690,7 +692,7 @@ void KeyboardMouse::FrameAll()
     //////////////////////////////////////////////////////////////////////
     //Calculate the distance
     double distance;
-    double theta = ( mFoVY * 0.5f ) * PIDivOneEighty;
+    double theta = ( mFoVY * 0.5 ) * PIDivOneEighty;
     distance = ( bs.radius() / tan( theta ) );
     /*
     //This calculation assumes our screen width >= screen height
@@ -752,9 +754,9 @@ void KeyboardMouse::FrameSelection()
 
     //Calculate distance to fit current bounding sphere inside viewing frustum
     double distance;
-    double theta = ( mFoVY * 0.5f ) * PIDivOneEighty;
+    double theta = ( mFoVY * 0.5 ) * PIDivOneEighty;
 
-    //if( mAspectRatio <= 1.0f )
+    //if( mAspectRatio <= 1.0 )
     //{
         distance = ( bs.radius() / tan( theta ) ) * mAspectRatio;
     //}
@@ -1137,10 +1139,7 @@ void KeyboardMouse::NavOnMousePress()
                             mDynamicsWorld->addConstraint( p2p );
                             mPickConstraint = p2p;
 
-                            //Save mouse position for dragging
-                            //gOldPickingPos = rayToWorld;
-
-                            gOldPickingDist =
+                            mPrevPhysicsRayPos =
                                 ( pickPos - rayFromWorld ).length();
 
                             //Very weak constraint for picking
@@ -1226,7 +1225,7 @@ void KeyboardMouse::NavOnMouseMotion( std::pair< double, double > delta )
                     //Keep it at the same picking distance
                     btVector3 dir = rayToWorld - rayFromWorld;
                     dir.normalize();
-                    dir *= gOldPickingDist;
+                    dir *= mPrevPhysicsRayPos;
 
                     btVector3 newPos = rayFromWorld + dir;
                     p2p->setPivotB( newPos );
@@ -1234,8 +1233,8 @@ void KeyboardMouse::NavOnMouseMotion( std::pair< double, double > delta )
             }
             else
             {
-                if( ( mX > 0.1f * mWidth ) && ( mX < 0.9f * mWidth ) &&
-                    ( mY > 0.1f * mHeight ) && ( mY < 0.9f * mHeight ) )
+                if( ( mX > 0.1 * mWidth ) && ( mX < 0.9 * mWidth ) &&
+                    ( mY > 0.1 * mHeight ) && ( mY < 0.9 * mHeight ) )
                 {
                     RotateView( delta.first, delta.second );
                 }
@@ -1357,7 +1356,7 @@ void KeyboardMouse::ResetTransforms()
 void KeyboardMouse::RotateView( double dx, double dy )
 {
     double tb_axis[ 3 ];
-    double angle = mMagnitude * 400.0f;
+    double angle = mMagnitude * 400.0;
 
     gmtl::Matrix44d matrix;
     gmtl::identity( matrix );
@@ -1442,7 +1441,7 @@ void KeyboardMouse::Zoom45( double dy )
 void KeyboardMouse::Pan( double dx, double dy )
 {
     double d = mCenterPoint->mData[ 1 ];
-    double theta = ( mFoVY * 0.5f ) * ( PIDivOneEighty );
+    double theta = ( mFoVY * 0.5 ) * ( PIDivOneEighty );
     double b = 2 * d * tan( theta );
     double dwx = dx * b * mAspectRatio;
     double dwy = -dy * b;
@@ -1458,7 +1457,7 @@ void KeyboardMouse::Rotate( double x, double y, double z, double angle )
 {
     
     double temp = ::sqrtf( x * x + y * y + z * z );
-    if( temp != 0.0f )
+    if( temp != 0.0 )
     {
         double tempRatio = 1 / temp;
         x *= tempRatio;
@@ -1490,7 +1489,7 @@ void KeyboardMouse::Rotate( double x, double y, double z, double angle )
                                   ( cosAng * ( y * z ) ) - ( sinAng * x );
     mDeltaTransform.mData[ 10 ] = ( z * z ) +
                                   ( cosAng * ( 1 - ( z * z ) ) );
-    mDeltaTransform.mData[ 15 ] = 1.0f;
+    mDeltaTransform.mData[ 15 ] = 1.0;
     */
 
     double rad2 = angle * PIDivOneEighty;

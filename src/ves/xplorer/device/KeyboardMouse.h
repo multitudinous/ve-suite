@@ -292,6 +292,10 @@ private:
     ///The z position of the screen
     double mZValScreen;
 
+    ///The distance from the head position to the picked btRigidBody point
+    ///Used to calculate point to point constraints for physics picking
+    double mPrevPhysicsRayPos;
+
     ///The current mouse position
     std::pair< double, double > mCurrPos;
 
@@ -337,7 +341,7 @@ private:
     ///Bullet constraint used for physics mouse picking
     btTypedConstraint* mPickConstraint;
 
-    float gOldPickingDist;
+
 
 };
 } //end xplorer
