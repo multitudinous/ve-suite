@@ -415,13 +415,16 @@ void Body_Executive_i::execute_next_mod( long module_id )
         return;
     }
 
-    //rt counts down from n to -1 where -1 is the last module to be exectued.
+    //rt is the module to be executed next
+    //rt goes from 0 = no module to execute to
+    //1 -> n where 1 is the first module executed and so on
+
     //rt is the next module index which is why -1 is subtracted
     int rt = _scheduler->execute( _network->GetModule( moduleIndex ) ) - 1;
     std::cout << "VE-CE::execute_next_mod rt " 
         << rt << " module id " << module_id << std::endl;
     //This onyl works for serial exectuion and for units with 1 input and output port
-    int previousModuleIndex = rt + 1;
+    int previousModuleIndex = rt - 1;
     if( rt < 0 )
     {
         ClientMessage( "VE-Suite Network Execution Complete\n" );
@@ -442,6 +445,11 @@ void Body_Executive_i::execute_next_mod( long module_id )
         return;
     }
 
+    std::vector< std::pair< XMLObjectPtr, std::string > > nodes;
+    std::string unitResultsData = "NULL";
+    std::string fileName( "returnString" );
+    if( previousModuleIndex >= 0 )
+    {
     //call query on previous module with "Get XML Model Results"
     CommandPtr resultsCommand( new Command() );
     resultsCommand->SetCommandName( "Get XML Model Results" );
@@ -456,14 +464,15 @@ void Body_Executive_i::execute_next_mod( long module_id )
         _network->GetModule( previousModuleIndex )->get_id() ) );
     resultsCommand->AddDataValuePair( moduleIdData );
     //Then parse command
-    std::vector< std::pair< XMLObjectPtr, std::string > > nodes;
+
     nodes.push_back( std::pair< CommandPtr, std::string  >(
         resultsCommand, std::string( "vecommand" ) ) );
-    std::string fileName( "returnString" );
+
     networkWriter.UseStandaloneDOMDocumentManager();
     networkWriter.WriteXMLDocument( nodes, fileName, "Command" );
     //Now query the unit for data
-    std::string unitResultsData = Query( fileName.c_str() );
+    unitResultsData = Query( fileName.c_str() );
+    }
     //std::cout << " results test = " << std::endl << unitResultsData << std::endl;
     nodes.clear();
     if( unitResultsData != "NULL" )

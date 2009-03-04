@@ -186,6 +186,7 @@ void node_loop::print_mods()
 
 int node_loop::execute_mods( int mod, bool running )
 {
+    //R is the execution order of the modules
     int r;
 
     for( int i = 0; i < ( int )_nodes.size() - 1; i++ )
