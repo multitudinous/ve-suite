@@ -182,92 +182,79 @@ void KeyboardMouse::UpdateSelection()
 void KeyboardMouse::SetStartEndPoint(
     osg::Vec3d* startPoint, osg::Vec3d* endPoint )
 {
-    //Be sure mWidth and mHeight are set before calling this function
-    double wc_x_trans_ratio = ( mXMaxScreen - mXMinScreen ) /
-                              static_cast< double >( mWidth );
-    double wc_y_trans_ratio = ( mYMaxScreen - mYMinScreen ) /
-                              static_cast< double >( mHeight );
+    //Meters to feet conversion
+    double m2ft = 3.2808399;
 
-    std::pair< double, double > screenRatios =
-        std::pair< double, double >( wc_x_trans_ratio, wc_y_trans_ratio );
+    //Set the start point to be the head position in osg space
+    {
+        //Note: for osg we are in z up land
+        gmtl::Matrix44d vjHeadMat =
+            gmtl::convertTo< double >( mHead->getData() );
+        gmtl::Point3d jugglerHeadPoint =
+            gmtl::makeTrans< gmtl::Point3d >( vjHeadMat );
 
-    //Get the mouse position in juggler world coordinates
-    gmtl::Point3d transformedPosition;
-    transformedPosition[ 0 ] = mXMinScreen + ( mX * screenRatios.first );
-    transformedPosition[ 1 ] = mYMaxScreen - ( mY * screenRatios.second );
-    transformedPosition[ 2 ] = mZValScreen;
-    //Convert meters to feet
-    transformedPosition *= 3.2808399;
+        //We have to offset negative mX because the
+        //view and frustum are drawn for the left eye
+        startPoint->set( jugglerHeadPoint[ 0 ] - ( 0.0345 * m2ft ),
+                        -jugglerHeadPoint[ 2 ],
+                         jugglerHeadPoint[ 1 ] );
 
-    //Get the mouse position in osg world coordinates
-    gmtl::Point3d mousePosition;
-    mousePosition[ 0 ] =  transformedPosition[ 0 ];
-    mousePosition[ 1 ] = -transformedPosition[ 2 ];
-    mousePosition[ 2 ] =  transformedPosition[ 1 ];
+        /*
+        std::cout << "startPoint: "
+                  << "( " << startPoint[ 0 ]
+                  << ", " << startPoint[ 1 ]
+                  << ", " << startPoint[ 2 ]
+                  << " )" << std::endl;
+        */
+    }
 
-  /*std::cout << " mX location = " << mX << std::endl 
-              << " mY location = " << mY << std::endl 
-              << " location = " << osgTransformedPosition[ 0 ]
-              << " " << osgTransformedPosition[ 1 ] << " "
-              << osgTransformedPosition[ 2 ] << std::endl
-              << " ratio = " << screenRatios.first << " "
-              << screenRatios.second << std::endl
-              << " screen values = " << mXMinScreen << " "
-              << mYMinScreen << " " << mZValScreen << std::endl
-              << std::endl;
-
-    std::cout << " mX " << mXMinScreen << " " << mXMaxScreen 
-              << " mY " << mYMinScreen << " " << mYMaxScreen 
-              << " z " << mZValScreen 
-              << " mWidth " << mWidth << " mHeight "
-              << mHeight << std::endl;*/
-
-    //Get juggler Matrix of worldDCS
-    //Note:: for pf we are in juggler land
-    //       for osg we are in z up land
-    gmtl::Matrix44d vjHeadMat = gmtl::convertTo< double >( mHead->getData() );
-    gmtl::Point3d jugglerHeadPoint =
-        gmtl::makeTrans< gmtl::Point3d >( vjHeadMat );
-
-    //We have to offset negative mX because
-    //the view and frustum are drawn for the left eye
-    gmtl::Point3d jugglerHeadPointTemp;
-    jugglerHeadPointTemp[ 0 ] =  jugglerHeadPoint[ 0 ] - ( 0.0345 * 3.2808399 );
-    jugglerHeadPointTemp[ 1 ] = -jugglerHeadPoint[ 2 ];
-    jugglerHeadPointTemp[ 2 ] =  jugglerHeadPoint[ 1 ];
-
-    //Set the start point
-    startPoint->set( jugglerHeadPointTemp[ 0 ],
-                     jugglerHeadPointTemp[ 1 ],
-                     jugglerHeadPointTemp[ 2 ] );
-
-    std::cout << " start point "
-              << jugglerHeadPointTemp[ 0 ] << " "
-              << jugglerHeadPointTemp[ 1 ] << " "
-              << jugglerHeadPointTemp[ 2 ] << std::endl;
-
-    //Get the vector
-    gmtl::Vec3d vjVecNear = mousePosition - jugglerHeadPointTemp;
-    gmtl::Vec3d vjVecFar = -jugglerHeadPointTemp;
-    vjVecFar.mData[ 1 ] = mFarFrustum + vjVecFar.mData[ 1 ];
-
-    double distance = vjVecFar.mData[ 1 ] / vjVecNear.mData[ 1 ];
     //Set the end point
-    endPoint->set(
-        jugglerHeadPointTemp.mData[ 0 ] + ( vjVecNear.mData[ 0 ] * distance ),
-        mFarFrustum,
-        jugglerHeadPointTemp.mData[ 2 ] + ( vjVecNear.mData[ 2 ] * distance ) );
+    {
+        //Be sure mWidth and mHeight are set before calling this function
+        double xScreenRatio =
+            ( mXMaxScreen - mXMinScreen ) / static_cast< double >( mWidth );
+        double yScreenRatio =
+            ( mYMaxScreen - mYMinScreen ) / static_cast< double >( mHeight );
 
-    std::cout << " end point " 
-              << endPoint->x() << " "
-              << endPoint->y() << " "
-              << endPoint->z() << std::endl;
+        //Get the mouse position in juggler world coordinates
+        osg::Vec3d jugglerMousePosition;
+        jugglerMousePosition[ 0 ] = mXMinScreen + ( mX * xScreenRatio );
+        jugglerMousePosition[ 1 ] = mYMaxScreen - ( mY * yScreenRatio );
+        jugglerMousePosition[ 2 ] = mZValScreen;
+
+        //Convert meters to feet
+        jugglerMousePosition *= m2ft;
+
+        //Get the mouse position in osg world coordinates
+        osg::Vec3d mousePosition;
+        mousePosition[ 0 ] =  jugglerMousePosition[ 0 ];
+        mousePosition[ 1 ] = -jugglerMousePosition[ 2 ];
+        mousePosition[ 2 ] =  jugglerMousePosition[ 1 ];
+
+        //Find where the end point lands on the far plane
+        osg::Vec3d vecNear = mousePosition - *startPoint;
+        osg::Vec3d vecFar = -(*startPoint);
+        vecFar[ 1 ] = mFarFrustum + vecFar[ 1 ];
+
+        double distance = vecFar[ 1 ] / vecNear[ 1 ];
+        endPoint->set(
+            (*startPoint)[ 0 ] + ( vecNear[ 0 ] * distance ),
+            mFarFrustum,
+            (*startPoint)[ 2 ] + ( vecNear[ 2 ] * distance ) );
+
+        /*
+        std::cout << "endPoint: "
+                  << "( " << endPoint[ 0 ]
+                  << ", " << endPoint[ 1 ]
+                  << ", " << endPoint[ 2 ]
+                  << " )" << std::endl;
+        */
+    }
 
     //Need to negate the the camera transform that is multiplied into the view
     {
-        osg::Matrixd inverseCameraTransform =
-            osg::Matrixd( vxs::SceneManager::instance()->
-            GetInvertedWorldDCS().getData() );
+        osg::Matrixd inverseCameraTransform(
+            vxs::SceneManager::instance()->GetInvertedWorldDCS().getData() );
         
         *startPoint = *startPoint * inverseCameraTransform;
         *endPoint = *endPoint * inverseCameraTransform;
