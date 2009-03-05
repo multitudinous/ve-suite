@@ -74,6 +74,8 @@ void NetworkThreeUIDialog::BuildPage()
 ///////////////////////////////////////////////////////////////////////////////
 void NetworkThreeUIDialog::SetText( wxCommandEvent &event )
 {		
+    (*p_mNetworkThreeInputs).clear();
+
 	(*p_mNetworkThreeInputs).push_back( ConvertUnicode( 
         mTextCtrlOne->GetValue() ) );
     (*p_mNetworkThreeInputs).push_back( ConvertUnicode( 
