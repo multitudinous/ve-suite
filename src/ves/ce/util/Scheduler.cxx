@@ -498,11 +498,12 @@ void Scheduler::print_schedule()
 
     for( int k = 1; k <= _net->nmodules() ; k++ )
     {
-        Module *m = _net->GetModule( k - 1 );
-        std::cout << k << " = " << m->get_id() << std::endl;
+        Module* m = _net->GetModule( k - 1 );
+        std::cout << k << " = " << m->get_id() 
+            << " Unit Name: " << m->GetModuleName() << std::endl;
     }
 
-    std::cout << std::endl;
+    std::cout << std::endl << "Unit Execution Schedule" << std::endl;
     _schedule_nodes.print_mods();
     std::cout << std::endl;
     std::cout << "===========" << std::endl;
