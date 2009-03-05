@@ -182,11 +182,13 @@ public:
     ///\param partID The part ID to search for.
     bool PartExists( std::string partID );
 
+    ///Check to see if the assembly already exists and is loaded
     ///\param assemblyID The assembly ID to search for.
     bool AssemblyExists( std::string assemblyID );
+
     ///The current graph
     std::string GetRootCADNodeID();
-
+    
     ///Set the clip plane equation
     ///\param a X coefficient
     ///\param b Y coefficient
@@ -221,12 +223,10 @@ protected:
     std::string m_rootCADNodeID;
     ///Attribute list mapping for all CAD
     std::map<std::string, osg::ref_ptr< osg::StateSet> > m_globalAttributeList;
-#ifdef _OSG
     ///The map of node attributes.
     std::map < std::string, std::vector <
     std::pair< std::string, osg::ref_ptr< osg::StateSet > > >
     > m_nodeAttributes;
-#endif
 };
 }
 }

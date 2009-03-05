@@ -46,6 +46,8 @@
 #include <ves/xplorer/scenegraph/nurbs/NURBS.h>
 #include <ves/xplorer/scenegraph/nurbs/util/OCCNURBSFileReader.h>
 
+#include <ves/xplorer/scenegraph/util/RescaleTextureVisitor.h>
+
 // --- OSG Includes --- //
 #include <osg/Fog>
 #include <osg/Group>
@@ -357,6 +359,9 @@ void CADEntityHelper::LoadFile( const std::string& filename,
                            osgUtil::Optimizer::MERGE_GEODES |
                            osgUtil::Optimizer::STATIC_OBJECT_DETECTION );
     }
+
+    //ves::xplorer::scenegraph::util::RescaleTextureVisitor 
+    //    textureVisitor( tempCADNode.get() );
 
 #if ((OSG_VERSION_MAJOR>=2) && (OSG_VERSION_MINOR>=4))
     osg::ref_ptr< osg::OcclusionQueryNode > root;

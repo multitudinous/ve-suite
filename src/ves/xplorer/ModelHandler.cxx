@@ -40,6 +40,8 @@
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/CADEntity.h>
 
+#include <ves/xplorer/scenegraph/util/RescaleTextureVisitor.h>
+
 #include <ves/xplorer/DataSet.h>
 #include <ves/xplorer/Model.h>
 #include <ves/xplorer/event/viz/cfdVectorBase.h>
@@ -117,15 +119,15 @@ using namespace ves::xplorer::scenegraph;
 using namespace ves::xplorer::util;
 
 ModelHandler::ModelHandler( void )
+    :
+    m_rescaleCADEntityTextures( false )
 {
     vprDEBUG( vesDBG, 2 ) << "ModelHandler constructor"
     << std::endl << vprDEBUG_FLUSH;
-    _param.erase();//_param = 0;
+    _param.erase();
 
     activeDataset  = 0;
-    //_scalarBar     = 0;
     arrow          = 0;
-    //_readParam     = 0;
     _activeModel   = 0;
     activeCommand  = ves::open::xml::CommandPtr();
 
@@ -497,10 +499,10 @@ void ModelHandler::InitScene( void )
         // set first scalar active
         activeDataset->SetActiveScalar( 0 );
 
-        oldDatasetName.assign( activeDataset->GetFileName() );//strcpy( oldDatasetName, activeDataset->GetFileName() );
+        //oldDatasetName.assign( activeDataset->GetFileName() );
         vprDEBUG( vesDBG, 1 ) << "ModelHandler: Setting active dataset to "
-        << activeDataset->GetFileName() << " , "
-        << oldDatasetName << std::endl << vprDEBUG_FLUSH;
+        << activeDataset->GetFileName() << std::endl << vprDEBUG_FLUSH;//<< " , "
+        //<< oldDatasetName << std::endl << vprDEBUG_FLUSH;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -544,6 +546,7 @@ void ModelHandler::RegisterCADFile( ves::xplorer::scenegraph::CADEntity* tempEnt
     m_filenameToCADMap.insert(
         std::pair< std::string, ves::xplorer::scenegraph::CADEntity* >(
             tempEntity->GetFilename(), tempEntity ) );
+    m_rescaleCADEntityTextures = true;
 }
 ////////////////////////////////////////////////////////////////////////////////
 ves::xplorer::scenegraph::CADEntity* ModelHandler::IsCADFileLoaded( std::string filename )
@@ -570,3 +573,18 @@ void ModelHandler::UnregisterCADFile( ves::xplorer::scenegraph::CADEntity* tempE
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
+void ModelHandler::ContextPreDrawUpdate()
+{
+    if( m_rescaleCADEntityTextures )
+    {
+        std::multimap< std::string, ves::xplorer::scenegraph::CADEntity* >::iterator iter;
+        for( iter = m_filenameToCADMap.begin(); iter != m_filenameToCADMap.end(); ++iter )
+        {
+            ves::xplorer::scenegraph::util::RescaleTextureVisitor 
+            textureVisitor( iter->second->GetDCS() );
+        }
+        m_rescaleCADEntityTextures = false;
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+

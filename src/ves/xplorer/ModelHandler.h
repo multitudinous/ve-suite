@@ -103,7 +103,8 @@ public:
     //void CleanUp( void );
     void InitScene( void );
     void PreFrameUpdate( void );
-
+    ///This is called in context predraw when there is a valid context available
+    void ContextPreDrawUpdate();
     ///Set the active xml command
     ///\param inputCommand input xml command
     void SetXMLCommand( const ves::open::xml::CommandPtr& inputCommand );
@@ -156,8 +157,11 @@ private:
     vtkPolyData* arrow;
     std::vector< Model* > _modelList;
     // Used to store data for multi-dataset functions
-    std::string oldDatasetName;//[256];
-
+    //std::string oldDatasetName;
+    ///This flag tells the cad handler to rescale the textures of the files
+    ///that are loaded.
+    bool m_rescaleCADEntityTextures;
+    
     ///The event handler for commands.
     std::map< std::string, ves::xplorer::event::EventHandler*> _eventHandlers;
     ///This map connects filenames to GUIDs so that we can
