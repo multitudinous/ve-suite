@@ -420,7 +420,7 @@ void Body_Executive_i::execute_next_mod( long module_id )
     //rt goes from 0 = no module to execute to
     //1 -> n where 1 is the first module executed and so on
 
-    //rt is the next module index which is why -1 is subtracted
+    //rt is the next module index and -1 is subtracted to make the number 0 based
     int rt = _scheduler->execute( _network->GetModule( moduleIndex ) ) - 1;
     std::cout << "VE-CE::execute_next_mod rt " 
         << rt << " module id " << module_id << std::endl;
@@ -449,30 +449,32 @@ void Body_Executive_i::execute_next_mod( long module_id )
     std::vector< std::pair< XMLObjectPtr, std::string > > nodes;
     std::string unitResultsData = "NULL";
     std::string fileName( "returnString" );
+    //THis code needs to get ALL upstream modules for this particular module.
+    //We can do this through the module interface with the port class in ce
     if( previousModuleIndex >= 0 )
     {
-    //call query on previous module with "Get XML Model Results"
-    CommandPtr resultsCommand( new Command() );
-    resultsCommand->SetCommandName( "Get XML Model Results" );
-    //Get module id and unit name
-    //gets tagged as vendorUnit (module name) and moduleId (number id not uuid)
-    DataValuePairPtr vendorData( new DataValuePair() );
-    vendorData->SetData( "vendorUnit", _network->
-        GetModule( previousModuleIndex )->GetModuleName() );
-    resultsCommand->AddDataValuePair( vendorData );
-    DataValuePairPtr moduleIdData( new DataValuePair() );
-    moduleIdData->SetData( "moduleId", static_cast< long int >( 
-        _network->GetModule( previousModuleIndex )->get_id() ) );
-    resultsCommand->AddDataValuePair( moduleIdData );
-    //Then parse command
+        //call query on previous module with "Get XML Model Results"
+        CommandPtr resultsCommand( new Command() );
+        resultsCommand->SetCommandName( "Get XML Model Results" );
+        //Get module id and unit name
+        //gets tagged as vendorUnit (module name) and moduleId (number id not uuid)
+        DataValuePairPtr vendorData( new DataValuePair() );
+        vendorData->SetData( "vendorUnit", _network->
+            GetModule( previousModuleIndex )->GetModuleName() );
+        resultsCommand->AddDataValuePair( vendorData );
+        DataValuePairPtr moduleIdData( new DataValuePair() );
+        moduleIdData->SetData( "moduleId", static_cast< long int >( 
+            _network->GetModule( previousModuleIndex )->get_id() ) );
+        resultsCommand->AddDataValuePair( moduleIdData );
+        //Then parse command
 
-    nodes.push_back( std::pair< CommandPtr, std::string  >(
-        resultsCommand, std::string( "vecommand" ) ) );
+        nodes.push_back( std::pair< CommandPtr, std::string  >(
+            resultsCommand, std::string( "vecommand" ) ) );
 
-    networkWriter.UseStandaloneDOMDocumentManager();
-    networkWriter.WriteXMLDocument( nodes, fileName, "Command" );
-    //Now query the unit for data
-    unitResultsData = Query( fileName.c_str() );
+        networkWriter.UseStandaloneDOMDocumentManager();
+        networkWriter.WriteXMLDocument( nodes, fileName, "Command" );
+        //Now query the unit for data
+        unitResultsData = Query( fileName.c_str() );
     }
     //std::cout << " results test = " << std::endl << unitResultsData << std::endl;
     nodes.clear();
