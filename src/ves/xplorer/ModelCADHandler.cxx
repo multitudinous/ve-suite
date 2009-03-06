@@ -46,7 +46,6 @@
 #include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
 
 #include <ves/xplorer/scenegraph/util/OpacityVisitor.h>
-#include <ves/xplorer/scenegraph/util/RescaleTextureVisitor.h>
 
 #include <ves/open/xml/cad/CADNode.h>
 #include <ves/open/xml/cad/CADAttribute.h>

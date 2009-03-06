@@ -235,30 +235,19 @@ int Scheduler::schedule( Module* mod )
 ////////////////////////////////////////////////////////////////////////////////
 int Scheduler::execute( Module* mod )
 {
-    static bool running = true;
-
-    int m;
     if( mod )
     {
-        m = _net->GetModuleIndex( mod ) + 1;
+        //Not sure what this if statement does
         if( mod->_return_state == 1 )
         {
             mod->_return_state = 0;
             mod->_need_execute = true;
-            running = false;
             return 0;
         }
     }
-    else
-        m = -2;
 
-    int st;
-    st = _schedule_nodes.execute_mods( m, running );
-
-    if( st > 0 )
-        running = true;
-    else
-        running = false;
+    //st is the module that was just executed
+    int st = _schedule_nodes.execute_mods();
 
     return st;
 }
@@ -347,7 +336,8 @@ int Scheduler::breakdown( std::vector<int> S,
         visit_val[S[i]] = 0;
 
     for( k = 1; k <= nmodules; k++ )
-        if( !visit_val[k] ) visit( k, connid_ignore, sccs );
+        if( !visit_val[k] ) 
+            visit( k, connid_ignore, sccs );
 
     if (( int )sccs.size() == 2 &&
             ((( int )sccs[0].size() == 1 && ( int )sccs[1].size() != 1 && _net->GetModule( sccs[0][0] - 1 )->_is_feedback ) ||

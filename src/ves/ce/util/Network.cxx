@@ -144,6 +144,7 @@ int Network::nmodules()
 ////////////////////////////////////////////////////////////////////////////////
 int Network::GetModuleIndex( Module* mod )
 {
+    //Find the 0 based number of where the module is in the vector
     for( size_t i = 0; i < _module_ptrs.size(); ++i )
     {
         if( mod->get_id() == _module_ptrs[i]->get_id() )
@@ -154,6 +155,7 @@ int Network::GetModuleIndex( Module* mod )
 ////////////////////////////////////////////////////////////////////////////////
 Module* Network::GetModule( int idx )
 {
+    //Return the module based on the index accessor for the vector
     try
     {
         return _module_ptrs.at( idx );

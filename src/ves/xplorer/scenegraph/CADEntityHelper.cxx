@@ -46,8 +46,6 @@
 #include <ves/xplorer/scenegraph/nurbs/NURBS.h>
 #include <ves/xplorer/scenegraph/nurbs/util/OCCNURBSFileReader.h>
 
-#include <ves/xplorer/scenegraph/util/RescaleTextureVisitor.h>
-
 // --- OSG Includes --- //
 #include <osg/Fog>
 #include <osg/Group>

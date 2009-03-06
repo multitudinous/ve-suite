@@ -289,7 +289,8 @@ void App::configSceneView( osgUtil::SceneView* newSceneViewer )
     //newSceneViewer->setComputeNearFarMode(
     //    osgUtil::CullVisitor::DO_NOT_COMPUTE_NEAR_FAR );
     newSceneViewer->setComputeNearFarMode(
-        osgUtil::CullVisitor::COMPUTE_NEAR_FAR_USING_BOUNDING_VOLUMES );    
+        osgUtil::CullVisitor::COMPUTE_NEAR_FAR_USING_BOUNDING_VOLUMES );
+    //newSceneViewer->setNearFarRatio(0.000005);
 }
 ////////////////////////////////////////////////////////////////////////////////
 ///Remember that this is called in parrallel in a multiple context situation
@@ -354,11 +355,9 @@ void App::initScene()
     SteadyStateVizHandler::instance()->InitScene();
 
     //create the volume viz handler
-#ifdef _OSG
     _start_tick = _timer.tick();
     _tbvHandler = ves::xplorer::TextureBasedVizHandler::instance();
     _tbvHandler->SetMasterNode( m_vjobsWrapper->IsMaster() );
-#endif
 
     std::cout << "|  2. Initializing.................................... cfdExecutive |" << std::endl;
     cfdExecutive::instance()->Initialize( m_vjobsWrapper->naming_context, m_vjobsWrapper->child_poa );
@@ -584,6 +583,9 @@ void App::contextPreDraw()
         }
         *mAlreadyRendered = false;
     }
+    
+    ///Context specific updates for models that are loaded
+    ves::xplorer::ModelHandler::instance()->ContextPreDrawUpdate();
 }
 ////////////////////////////////////////////////////////////////////////////////
 ///Remember that this is called in parrallel in a multiple context situation
@@ -674,11 +676,7 @@ void App::draw()
     double _far( frustum[ vrj::Frustum::VJ_FAR ] );
     if( mRTT )
     {
-        //identity projection matrix is same as -1 to 1 ortho
-        //sv->setProjectionMatrix( osg::Matrixd::identity() );
-        //                   same as
-        //sv->setProjectionMatrix( osg::Matrix::ortho( -1, 1, -1, 1, -1, 1 ) );
-
+        //These are in device coordinates
         sv->setProjectionMatrix( osg::Matrix::ortho( 0, 1, 0, 1, 0, 1 ) );
     }
     else

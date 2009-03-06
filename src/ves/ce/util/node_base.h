@@ -57,7 +57,7 @@ public:
     virtual void get_ins( std::set<int> &, std::set<int> connid_ignore ) = 0;
     virtual void get_outs( std::set<int> &, std::set<int> connid_ignore ) = 0;
     virtual void print_mods() = 0;
-    virtual int  execute_mods( int, bool ) = 0;
+    virtual int  execute_mods() = 0;
     virtual void need_execute() = 0;
     virtual void clear_out_to( std::set<int> ) = 0;
 

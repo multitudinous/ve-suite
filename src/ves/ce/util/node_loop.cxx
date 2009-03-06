@@ -184,19 +184,19 @@ void node_loop::print_mods()
 
 /////////////
 
-int node_loop::execute_mods( int mod, bool running )
+int node_loop::execute_mods()
 {
     //R is the execution order of the modules
     int r;
 
     for( int i = 0; i < ( int )_nodes.size() - 1; i++ )
     {
-        r = _nodes[i]->execute_mods( mod, running );
+        r = _nodes[i]->execute_mods();
         if( r > 0 )
             return r;
     }
 
-    r = _nodes[( int )_nodes.size()-1]->execute_mods( mod, running );
+    r = _nodes[( int )_nodes.size()-1]->execute_mods();
 
     bool is_fb = false;
     if( _nodes[0]->_type == 0 )

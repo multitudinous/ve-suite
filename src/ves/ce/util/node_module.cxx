@@ -130,15 +130,19 @@ void node_module::print_mods()
 
 /////////////
 
-int node_module::execute_mods( int mod, bool running )
+int node_module::execute_mods()
 {
     Module *module = _net->GetModule( _module - 1 );
     if( module->_need_execute )
     {
         // EXECUTING THIS MODULE
         module->_need_execute = false;
+        ///This is the module that was just executed in the schedule
+        ///It is a 1 based number referring to the order that this module 
+        ///is executed in relation to the other modules
         return _module;
     }
+    ///Return 0 if this module does not need executed
     return 0;
 }
 

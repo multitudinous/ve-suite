@@ -365,7 +365,6 @@ void SceneManager::_createLogo()
 ////////////////////////////////////////////////////////////////////////////////
 void SceneManager::SetActiveSwitchNode( int activeNode )
 {
-    //GetActiveSwitchNode()->GetMat();
     mLogoSwitch->SetVal( activeNode );
     mNavSwitch->SetVal( activeNode );
     mActiveNavDCS = GetActiveNavSwitchNode();

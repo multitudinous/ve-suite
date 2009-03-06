@@ -345,6 +345,7 @@ ACE_THROW_SPEC((
 /////////////////////////////////////////////////////////////////////////////
 void Body_Executive_i::execute_next_mod( long module_id )
 {
+    ///This is the 0 based number of the index for the module_id
     int moduleIndex = _network->moduleIdx( module_id );
     if( moduleIndex < 0 )
     {
