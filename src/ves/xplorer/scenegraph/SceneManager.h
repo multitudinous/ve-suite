@@ -64,6 +64,9 @@ class CADEntity;
 class Sound;
 #endif
 
+class CharacterController;
+
+
 /*!\file SceneManager.h
 */
 
@@ -138,6 +141,13 @@ public:
     ///\return The osg::FrameStamp for the osg::SceneView
     osg::FrameStamp* GetFrameStamp();
 
+    ///
+    ves::xplorer::scenegraph::CharacterController* const GetCharacterController() const;
+
+protected:
+    ///Create the model for the logo
+    void _createLogo();
+
 private:
     //Required so that vpr::Singleton can instantiate this class
     //Friend class vpr::Singleton< SceneManager >;
@@ -170,6 +180,7 @@ private:
     ///Node to hold a network view of the system under investigation
     //osg::ref_ptr< ves::xplorer::scenegraph::DCS > networkDCS;
     osg::ref_ptr< osg::Group > mNetworkDCS;
+
     ///Inverteded world dcs values
     gmtl::Matrix44d mInvertedWorldDCS;
 
@@ -177,7 +188,7 @@ private:
     ves::xplorer::scenegraph::Sound* m_sound;
 #endif
 
-    //The logo
+    ///The logo
     ves::xplorer::scenegraph::CADEntity* m_blueArrow;
     ves::xplorer::scenegraph::CADEntity* m_greyArrow;
     ves::xplorer::scenegraph::CADEntity* m_orangeArrow;
@@ -186,12 +197,13 @@ private:
 
     ///Clear node to control the background color
     osg::ref_ptr< osg::ClearNode > m_clrNode;
+
     ///FrameStamp to control sequence nodes and other osg animations
     osg::ref_ptr< osg::FrameStamp > mFrameStamp;
 
-protected:
-    ///Create the model for the logo
-    void _createLogo();
+    ///
+    ves::xplorer::scenegraph::CharacterController* mCharacterController;
+
 };
 }
 }

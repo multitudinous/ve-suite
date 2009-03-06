@@ -50,6 +50,8 @@
 #include <ves/xplorer/scenegraph/logo/VE.h>
 #include <ves/xplorer/scenegraph/logo/Suite.h>
 
+#include <ves/xplorer/scenegraph/physics/CharacterController.h>
+
 #include <ves/xplorer/Debug.h>
 
 // --- OSG Includes --- //
@@ -82,24 +84,33 @@
 #include <istream>
 #include <sstream>
 
-namespace ves
-{
-namespace xplorer
-{
-namespace scenegraph
-{
+using namespace ves::xplorer::scenegraph;
+namespace vxs = ves::xplorer::scenegraph;
+
 vprSingletonImpLifetime( SceneManager, 20 );
 
+////////////////////////////////////////////////////////////////////////////////
 SceneManager::SceneManager()
-        :
+    :
+    mRootNode( NULL ),
+    mModelRoot( NULL ),
+    mLogoNode( NULL ),
+    mLogoSwitch( NULL ),
+    mNavSwitch( NULL ),
+    mActiveNavDCS( NULL ),
+    worldDCS( NULL ),
+    mNetworkDCS( NULL ),
 #ifdef VE_SOUND
-        m_sound( 0 ),
+    m_sound( NULL ),
 #endif
-        m_blueArrow( 0 ),
-        m_greyArrow( 0 ),
-        m_orangeArrow( 0 ),
-        m_veText( 0 ),
-        m_suiteText( 0 )
+    m_blueArrow( NULL ),
+    m_greyArrow( NULL ),
+    m_orangeArrow( NULL ),
+    m_veText( NULL ),
+    m_suiteText( NULL ),
+    m_clrNode( NULL ),
+    mFrameStamp( NULL ),
+    mCharacterController( NULL )
 {
     ;
 }
@@ -233,6 +244,9 @@ void SceneManager::InitScene()
     }
     
     //SetActiveSwitchNode( 1 );
+
+    //Create the character controller
+    mCharacterController = new vxs::CharacterController();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SceneManager::SetRootNode( osg::Group* rootNode )
@@ -427,6 +441,8 @@ osg::FrameStamp* SceneManager::GetFrameStamp()
     return mFrameStamp.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
-} // end scenegraph
-} // end xplorer
-} // end ves
+vxs::CharacterController* const SceneManager::GetCharacterController() const
+{
+    return mCharacterController;
+}
+////////////////////////////////////////////////////////////////////////////////

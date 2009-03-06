@@ -68,6 +68,7 @@ class EventHandler;
 /*!\file DeviceHandler.h
  * DeviceHandler API
  */
+
 /*!\class ves::xplorer::DeviceHandler
  *
  */
@@ -147,6 +148,7 @@ public:
 private:
     ///Triggers a center point jump after this distance has been breached
     double mCenterPointThreshold;
+
     ///The distance the center point jumps along the +y axis
     double mCenterPointJump;
 
@@ -170,22 +172,28 @@ private:
 
     ///A map of all the devices
     std::map< const std::string, ves::xplorer::Device* > mDevices;
+
     ///A map of all the event handlers
     std::map< std::string, ves::xplorer::event::EventHandler* > mEventHandlers;
 
     ///The current active DCS
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > mActiveDCS;
+
     ///The current selected DCS
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > mSelectedDCS;
     
     ///Tablet convenience device pointer
     ves::xplorer::Device* mTabletDevice;
+
     ///Tablet convenience device pointer
     ves::xplorer::Device* mGlovesDevice;
+
     ///Tablet convenience device pointer
     ves::xplorer::Device* mWandDevice;
+
     ///Tablet convenience device pointer
     ves::xplorer::Device* mKMDevice;
+
 };
 } //end xplorer
 } //end ves

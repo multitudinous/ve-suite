@@ -52,6 +52,9 @@ namespace osg
 class Vec3d;
 }
 
+// --- Bullet Includes --- //
+class btDynamicsWorld;
+
 namespace ves
 {
 
@@ -65,6 +68,14 @@ class Command;
 
 namespace xplorer
 {
+
+namespace scenegraph
+{
+class PhysicsSimulator;
+class CharacterController;
+}
+
+
 /*!\file Device.h
  * Device API
  */
@@ -113,6 +124,17 @@ public:
     ///Set the reset position for the world
     void SetResetWorldPosition( osg::Quat* quat, std::vector< double >* pos );
 
+    ///
+    void SetPhysicsSimulator(
+        ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator );
+
+    ///
+    void SetDynamicsWorld( btDynamicsWorld* dynamicsWorld );
+        
+    ///Set the character controller
+    void SetCharacterController(
+        ves::xplorer::scenegraph::CharacterController* characterController );
+
 protected:
     ///Process the selection of a piece of geometry
     virtual void ProcessSelection();
@@ -141,6 +163,16 @@ protected:
 
     ///The reset axis for the world
     osg::Quat* mResetAxis;
+
+    ///Pointer to the physics simulator singleton
+    ves::xplorer::scenegraph::PhysicsSimulator* mPhysicsSimulator;
+
+    ///Pointer to physics dynamics world
+    btDynamicsWorld* mDynamicsWorld;
+
+    ///
+    ///Do not allocate memory 'new' for this pointer
+    ves::xplorer::scenegraph::CharacterController* mCharacterController;
     
 };
 } //end xplorer

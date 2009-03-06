@@ -43,10 +43,16 @@
 #include <ves/xplorer/Debug.h>
 
 #include <ves/xplorer/util/fileIO.h>
+
 #include <ves/xplorer/scenegraph/SceneManager.h>
+
+#include <ves/xplorer/scenegraph/physics/CharacterController.h>
 #include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
+
 #include <ves/xplorer/environment/cfdQuatCamHandler.h>
+
 #include <ves/xplorer/network/cfdExecutive.h>
+
 #include <ves/xplorer/volume/cfdPBufferManager.h>
 
 #include <ves/open/xml/XMLObjectFactory.h>
@@ -102,6 +108,8 @@ using namespace ves::xplorer::util;
 using namespace ves::xplorer::volume;
 using namespace ves::open::xml;
 using namespace ves::xplorer::network;
+namespace vx = ves::xplorer;
+namespace vxs = ves::xplorer::scenegraph;
 
 ////////////////////////////////////////////////////////////////////////////////
 App::App( int argc, char* argv[] )
@@ -471,10 +479,20 @@ void App::latePreFrame()
                 setFrameNumber( mFrameStamp->getFrameNumber() );
         }        
     }
+    vxs::PhysicsSimulator* physicsSimulator = vxs::PhysicsSimulator::instance();
+    ///////////////////////
+    /*
+    if( !physicsSimulator->GetIdle() )
+    {
+        VPR_PROFILE_GUARD_HISTORY( "App::latePreFrame CharacterController", 20 );
+        vxs::SceneManager::instance()->GetCharacterController()->
+            UpdateCharacter( physicsSimulator->GetDynamicsWorld(), mFrameDT );
+    }
+    */
     ///////////////////////
     {
         VPR_PROFILE_GUARD_HISTORY( "App::latePreFrame PhysicsSimulator", 20 );
-        ves::xplorer::scenegraph::PhysicsSimulator::instance()->UpdatePhysics( mFrameDT );
+        physicsSimulator->UpdatePhysics( mFrameDT );
     }
     ///////////////////////
     {

@@ -57,12 +57,13 @@
 
 #include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
 #include <ves/xplorer/scenegraph/physics/PhysicsRigidBody.h>
+#include <ves/xplorer/scenegraph/physics/CharacterController.h>
 
 // --- Bullet Includes --- //
 #include <LinearMath/btVector3.h>
 #include <btBulletDynamicsCommon.h>
 #include <btBulletCollisionCommon.h>
-//picking
+
 #include <BulletDynamics/ConstraintSolver/btPoint2PointConstraint.h>
 
 // --- osgBullet Includes --- //
@@ -156,8 +157,7 @@ KeyboardMouse::KeyboardMouse()
 
     mBeamLineSegment( new osg::LineSegment ),
 
-    mPhysicsSimulator( vxs::PhysicsSimulator::instance() ),
-    mDynamicsWorld( mPhysicsSimulator->GetDynamicsWorld() ),
+    mPickedBody( NULL ),
     mPickConstraint( NULL )
 {
     mKeyboard.init( "VJKeyboard" );
@@ -727,7 +727,7 @@ void KeyboardMouse::FrameSelection()
     /*
     //Grab the selected DCS
     vxs::DCS* const selectedDCS =
-        ves::xplorer::DeviceHandler::instance()->GetSelectedDCS();
+        vx::DeviceHandler::instance()->GetSelectedDCS();
 
     if( !selectedDCS )
     {
@@ -820,7 +820,7 @@ void KeyboardMouse::FrameSelection()
 void KeyboardMouse::SkyCam()
 {
     //Unselect the previous selected DCS
-    ves::xplorer::DeviceHandler::instance()->UnselectObjects();
+    vx::DeviceHandler::instance()->UnselectObjects();
 
     //gmtl::Matrix44d matrix;
     //mCenterPoint->mData[ 1 ] = matrix[ 1 ][ 3 ] = *mCenterPointThreshold;
@@ -873,14 +873,14 @@ void KeyboardMouse::SkyCamTo()
     //6. hand of to nav animation engine
     //7. reset the world dcs back to original state
     //Unselect the previous selected DCS
-    ves::xplorer::DeviceHandler::instance()->UnselectObjects();
+    vx::DeviceHandler::instance()->UnselectObjects();
 
     //get the selected plugins cad
     //highlight it.
     osg::ref_ptr< vxs::DCS >selectedDCS =
-        ves::xplorer::ModelHandler::instance()->GetActiveModel()->GetDCS();
+        vx::ModelHandler::instance()->GetActiveModel()->GetDCS();
     selectedDCS->SetTechnique("Select");
-    ves::xplorer::DeviceHandler::instance()->SetSelectedDCS(
+    vx::DeviceHandler::instance()->SetSelectedDCS(
         selectedDCS.get() );
     osg::BoundingSphere sbs = selectedDCS->getBound();
     
@@ -966,10 +966,10 @@ void KeyboardMouse::SkyCamTo()
         -osgOrigPosition[ 0 ], -osgOrigPosition[1], -osgOrigPosition[2] );
 
     ///Hand the node we are interested in off to the animation engine
-    ves::xplorer::NavigationAnimationEngine::instance()->SetDCS(
+    vx::NavigationAnimationEngine::instance()->SetDCS(
         vxs::SceneManager::instance()->GetWorldDCS() );
     ///Hand our created end points off to the animation engine
-    ves::xplorer::NavigationAnimationEngine::instance()->SetAnimationEndPoints(
+    vx::NavigationAnimationEngine::instance()->SetAnimationEndPoints(
         pos2, quatAxisAngle );
     //This code needs to go in the animation engine
     /*
@@ -1005,48 +1005,60 @@ void KeyboardMouse::NavOnKeyboardPress()
         //STRAFE LEFT
         case gadget::KEY_A:
         {
-            Pan( -0.05, 0.0 );
-            ProcessNavigationEvents();
+            if( !mPhysicsSimulator->GetIdle() )
+            {
+
+            }
 
             break;
         }
         //BACKWARD
         case gadget::KEY_S:
         {
-            Zoom( -0.05 );
-            ProcessNavigationEvents();
+            if( !mPhysicsSimulator->GetIdle() )
+            {
+                mCharacterController->StepBackward();
+            }
 
             break;
         }
         //STRAFE RIGHT
         case gadget::KEY_D:
         {
-            Pan( 0.05, 0.0 );
-            ProcessNavigationEvents();
+            if( !mPhysicsSimulator->GetIdle() )
+            {
+
+            }
 
             break;
         }
         //FORWARD
         case gadget::KEY_W:
         {
-            Zoom( 0.05 );
-            ProcessNavigationEvents();
+            if( !mPhysicsSimulator->GetIdle() )
+            {
+                mCharacterController->StepForward();
+            }
 
             break;
         }
         //JUMP or UP if no physics
         case gadget::KEY_SPACE:
         {
-            Pan( 0.0, 0.5 );
-            ProcessNavigationEvents();
+            if( !mPhysicsSimulator->GetIdle() )
+            {
+                mCharacterController->Jump();
+            }
 
             break;
         }
         //DOWN if no physics
         case gadget::KEY_C:
         {
-            Pan( 0.0, -0.5 );
-            ProcessNavigationEvents();
+            if( !mPhysicsSimulator->GetIdle() )
+            {
+
+            }
 
             break;
         }
@@ -1249,11 +1261,13 @@ void KeyboardMouse::NavOnMouseMotion( std::pair< double, double > delta )
         case gadget::MBUTTON2:
         {
             Pan( delta.first, delta.second );
+
             break;
         }
         case gadget::MBUTTON3:
         {
             Zoom( delta.second );
+
             break;
         }
     }
@@ -1341,7 +1355,7 @@ void KeyboardMouse::SelOnMouseMotion( std::pair< double, double > delta )
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::ResetTransforms()
 {
-    ves::xplorer::DeviceHandler::instance()->ResetCenterPoint();
+    vx::DeviceHandler::instance()->ResetCenterPoint();
 
     gmtl::Matrix44d matrix;
     gmtl::identity( matrix );
@@ -1391,7 +1405,7 @@ void KeyboardMouse::Zoom( double dy )
     if( mCenterPoint->mData[ 1 ] < *mCenterPointThreshold )
     {
         vxs::DCS* const selectedDCS =
-            ves::xplorer::DeviceHandler::instance()->GetSelectedDCS();
+            vx::DeviceHandler::instance()->GetSelectedDCS();
         //Only jump center point for the worldDCS
         if( !selectedDCS )
         {
@@ -1422,7 +1436,7 @@ void KeyboardMouse::Zoom45( double dy )
     if( mCenterPoint->mData[ 1 ] < *mCenterPointThreshold )
     {
         vxs::DCS* const selectedDCS =
-            ves::xplorer::DeviceHandler::instance()->GetSelectedDCS();
+            vx::DeviceHandler::instance()->GetSelectedDCS();
         //Only jump center point for the worldDCS
         if( !selectedDCS )
         {
@@ -1569,7 +1583,7 @@ void KeyboardMouse::ProcessSelectionEvents()
 void KeyboardMouse::ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits )
 {
     //Unselect the previous selected DCS
-    ves::xplorer::DeviceHandler::instance()->UnselectObjects();
+    vx::DeviceHandler::instance()->UnselectObjects();
 
     //Now find the new selected DCS
     if( listOfHits.empty() )
@@ -1627,7 +1641,7 @@ void KeyboardMouse::ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits )
     vxs::DCS* newSelectedDCS =
         static_cast< vxs::DCS* >( parentNode.get() );
     newSelectedDCS->SetTechnique( "Select" );
-    ves::xplorer::DeviceHandler::instance()->SetSelectedDCS( newSelectedDCS );
+    vx::DeviceHandler::instance()->SetSelectedDCS( newSelectedDCS );
 
     //Move the center point to the center of the selected object
     osg::ref_ptr< vxs::CoordinateSystemTransform > cst =

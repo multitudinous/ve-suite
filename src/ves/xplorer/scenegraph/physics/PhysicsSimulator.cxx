@@ -71,9 +71,12 @@ const int maxProxies = 32766;
 //#define REGISTER_CUSTOM_COLLISION_ALGORITHM 1
 
 using namespace ves::xplorer::scenegraph;
+namespace vx = ves::xplorer;
+namespace vxs = ves::xplorer::scenegraph;
 
 //vprSingletonImp( PhysicsSimulator );
 vprSingletonImpLifetime( PhysicsSimulator, 25 );
+
 ////////////////////////////////////////////////////////////////////////////////
 PhysicsSimulator::PhysicsSimulator()
     :

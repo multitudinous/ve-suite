@@ -62,7 +62,6 @@ class LineSegment;
 }
 
 // --- Bullet Includes --- //
-class btDynamicsWorld;
 class btRigidBody;
 class btTypedConstraint;
 
@@ -73,11 +72,6 @@ namespace ves
 {
 namespace xplorer
 {
-
-namespace scenegraph
-{
-class PhysicsSimulator;
-}
 
 /*!\file KeyboardMouse.h
  *
@@ -329,19 +323,11 @@ private:
     ///VRJuggler's head positional interface
     gadget::PositionInterface mHead;
 
-    ///Pointer to the physics simulator singleton
-    ves::xplorer::scenegraph::PhysicsSimulator* mPhysicsSimulator;
-
     ///The rigid body that has been selected during physics mouse picking
     btRigidBody* mPickedBody;
 
-    ///Pointer to physics dynamics world
-    btDynamicsWorld* mDynamicsWorld;
-
     ///Bullet constraint used for physics mouse picking
     btTypedConstraint* mPickConstraint;
-
-
 
 };
 } //end xplorer
