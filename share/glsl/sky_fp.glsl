@@ -57,8 +57,8 @@ void main()
     skyColor = mix( grey, skyColor, haze );
 
     //Get _sunTexture using projection texture coordinates
-    gl_TexCoord[ 1 ].stp = gl_TexCoord[ 1 ].stp / gl_TexCoord[ 1 ].q;
-    vec4 sunColor = texture2DProj( sunMap, gl_TexCoord[ 1 ].stp );
+    vec3 sunTexCoords = gl_TexCoord[ 1 ].stp / gl_TexCoord[ 1 ].q;
+    vec4 sunColor = texture2DProj( sunMap, sunTexCoords );
 
     //Compute sun light
     vec4 sunlight =
