@@ -35,6 +35,14 @@
 #include <ves/xplorer/scenegraph/physics/CharacterController.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
+#include <ves/xplorer/scenegraph/CADEntity.h>
+
+#include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
+#include <ves/xplorer/scenegraph/physics/PhysicsRigidBody.h>
+
+// --- OSG Includes --- //
+#include <osg/Geode>
+#include <osg/ShapeDrawable>
 
 // --- Bullet Includes --- //
 #include <BulletCollision/CollisionShapes/btMultiSphereShape.h>
@@ -55,11 +63,11 @@ CharacterController::CharacterController()
     :
     mHalfHeight( 1.0 ),
     mTurnAngle( 0.0 ),
-    mMaxLinearVelocity( 10.0 ),
+    mMaxLinearVelocity( 100.0 ),
     //m/s
-    mWalkVelocity( 8.0 ),
+    mWalkVelocity( 50.0 ),
     //rad/s
-    mTurnVelocity( 1.0 ),
+    mTurnVelocity( 10.0 ),
     mShape( NULL ),
     mRigidBody( NULL )
 {
@@ -75,6 +83,38 @@ CharacterController::~CharacterController()
 void CharacterController::Setup(
     btDynamicsWorld* dynamicsWorld, btScalar height, btScalar width )
 {
+    //
+    osg::ref_ptr< osg::Geode > geode = new osg::Geode();
+    osg::ref_ptr< osg::Cylinder > cylinder =
+        new osg::Cylinder( 
+            osg::Vec3( width / btScalar( 2.0 ), 0.0, height / btScalar( 2.0 ) ),
+            width,
+            height );
+    osg::ref_ptr< osg::TessellationHints > hints = new osg::TessellationHints();
+    osg::ref_ptr< osg::ShapeDrawable > shapeDrawable =
+        new osg::ShapeDrawable( cylinder.get(), hints.get() );
+
+    hints->setDetailRatio( 1.0 );
+    shapeDrawable->setColor( osg::Vec4( 1.0, 1.0, 0.0, 1.0 ) );
+    geode->addDrawable( shapeDrawable.get() );
+
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > dcs =
+        new ves::xplorer::scenegraph::DCS();
+    ves::xplorer::scenegraph::SceneManager::instance()->GetModelRoot()->addChild( dcs.get() );
+    ves::xplorer::scenegraph::CADEntity* cadEntity =
+        new ves::xplorer::scenegraph::CADEntity(
+            geode.get(),
+            dcs.get(),
+            ves::xplorer::scenegraph::PhysicsSimulator::instance() );
+
+    std::string name = "CharacterController";
+    osg::Node::DescriptionList descriptorsList;
+    descriptorsList.push_back( "VE_XML_ID" );
+    descriptorsList.push_back( "" );
+    cadEntity->GetDCS()->setDescriptions( descriptorsList );
+    cadEntity->GetDCS()->setName( name );
+
+    cadEntity->InitPhysics();
     btVector3 spherePositions[ 2 ];
     btScalar sphereRadii[ 2 ];
 
@@ -90,18 +130,15 @@ void CharacterController::Setup(
     mShape = new btMultiSphereShape(
         btVector3( width / btScalar( 2.0 ), height / btScalar( 2.0 ), width / btScalar( 2.0 ) ),
         &spherePositions[ 0 ], &sphereRadii[ 0 ], 2 );
+    cadEntity->GetPhysicsRigidBody()->UserDefinedShape( mShape );
+    //cadEntity->GetPhysicsRigidBody()->CreateRigidBody(
+        //"Overall", "Dynamic", "Cylinder" );
 
-    btTransform startTransform;
-    startTransform.setIdentity();
-    startTransform.setOrigin( btVector3( 0.0, 2.0, 0.0 ) );
-    btDefaultMotionState* myMotionState = new btDefaultMotionState( startTransform );
-    btRigidBody::btRigidBodyConstructionInfo cInfo( 1.0, myMotionState, mShape );
-    mRigidBody = new btRigidBody( cInfo );
-    //kinematic vs. static doesn't work
-    //mRigidBody->setCollisionFlags( mRigidBody->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT );
+    mRigidBody = cadEntity->GetPhysicsRigidBody()->GetbtRigidBody();
     mRigidBody->setSleepingThresholds( 0.0, 0.0 );
     mRigidBody->setAngularFactor( 0.0 );
-    dynamicsWorld->addRigidBody( mRigidBody );
+    mRigidBody->setFriction( 0.5 );
+    mRigidBody->setRestitution( 1.0 );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CharacterController::Destroy( btDynamicsWorld* dynamicsWorld )
@@ -128,10 +165,21 @@ void CharacterController::PreStep( btDynamicsWorld* dynamicsWorld )
 {
     btTransform xform;
     mRigidBody->getMotionState()->getWorldTransform( xform );
-    btVector3 down = -xform.getBasis()[ 1 ];
-    btVector3 forward = xform.getBasis()[ 2 ];
+    btVector3 down = -xform.getBasis()[ 2 ];
+    btVector3 forward = xform.getBasis()[ 1 ];
     down.normalize();
     forward.normalize();
+    std::cout << "down: "
+              << "( " << down[ 0 ]
+              << ", " << down[ 1 ]
+              << ", " << down[ 2 ]
+              << " )" << std::endl;
+
+    std::cout << "forward: "
+              << "( " << forward[ 0 ]
+              << ", " << forward[ 1 ]
+              << ", " << forward[ 2 ]
+              << " )" << std::endl;
 
     mRaySource[ 0 ] = xform.getOrigin();
     mRaySource[ 1 ] = xform.getOrigin();
@@ -197,22 +245,20 @@ void CharacterController::PlayerStep( btScalar dt )
     if( mTurnLeft )
     {
         mTurnAngle -= dt * mTurnVelocity;
-        mTurnLeft = false;
     }
 
     if( mTurnRight )
     {
         mTurnAngle += dt * mTurnVelocity;
-        mTurnRight = false;
     }
 
     xform.setRotation(
-        btQuaternion( btVector3( 0.0, 1.0, 0.0 ), mTurnAngle ) );
+        btQuaternion( btVector3( 0.0, 0.0, 1.0 ), mTurnAngle ) );
 
     btVector3 linearVelocity = mRigidBody->getLinearVelocity();
     btScalar speed = mRigidBody->getLinearVelocity().length();
 
-    btVector3 forwardDir = xform.getBasis()[ 2 ];
+    btVector3 forwardDir = xform.getBasis()[ 1 ];
     forwardDir.normalize();
     btVector3 walkDirection = btVector3( 0.0, 0.0, 0.0 );
     btScalar walkSpeed = mWalkVelocity * dt;
@@ -220,13 +266,11 @@ void CharacterController::PlayerStep( btScalar dt )
     if( mStepForward )
     {
         walkDirection += forwardDir;
-        mStepForward = false;
     }
 
     if( mStepBackward )
     {
         walkDirection -= forwardDir;
-        mStepBackward = false;
     }
 
     if( !mStepForward && !mStepBackward && OnGround() )
@@ -246,6 +290,11 @@ void CharacterController::PlayerStep( btScalar dt )
 
     mRigidBody->getMotionState()->setWorldTransform( xform );
     mRigidBody->setCenterOfMassTransform( xform );
+
+    mStepForward = false;
+    mStepBackward = false;
+    mTurnRight = false;
+    mTurnLeft = false;
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool CharacterController::CanJump() const
@@ -255,15 +304,20 @@ bool CharacterController::CanJump() const
 ////////////////////////////////////////////////////////////////////////////////
 void CharacterController::Jump()
 {
-    if( !CanJump() )
-    {
-        return;
-    }
+    //if( !CanJump() )
+    //{
+        //return;
+    //}
 
     btTransform xform;
     mRigidBody->getMotionState()->getWorldTransform( xform );
-    btVector3 up = xform.getBasis()[ 1 ];
+    btVector3 up = xform.getBasis()[ 2 ];
     up.normalize();
+    std::cout << "up: "
+              << "( " << up[ 0 ]
+              << ", " << up[ 1 ]
+              << ", " << up[ 2 ]
+              << " )" << std::endl;
     btScalar magnitude =
         ( btScalar( 1.0 ) / mRigidBody->getInvMass() ) * btScalar( 8.0 );
     mRigidBody->applyCentralImpulse( up * magnitude );
@@ -302,51 +356,61 @@ void CharacterController::UpdateCharacter(
         mJump = false;
     }
 
-    UpdateCamera();
+    //UpdateCamera();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CharacterController::UpdateCamera()
 {
+    //Get the current camera matrix
+    ves::xplorer::scenegraph::DCS* const cameraDCS =
+        vxs::SceneManager::instance()->GetActiveNavSwitchNode();
+
     //Look at the character
     btTransform characterWorldTrans;
     mRigidBody->getMotionState()->getWorldTransform( characterWorldTrans );
-    btVector3 upChar = characterWorldTrans.getBasis()[ 1 ];
-    btVector3 backward = -characterWorldTrans.getBasis()[ 2 ];
-    upChar.normalize();
-    backward.normalize();
 
-    btVector3 eye, center, up;
-    center = characterWorldTrans.getOrigin();
-    eye = center + upChar * 5.0 + backward * 5.0;
-    up.setValue( 0.0, 1.0, 0.0 );
+    osg::Vec3d eye( cameraDCS->getPosition() );
+    btVector3 tempCenter = characterWorldTrans.getOrigin();
+    osg::Vec3d center( tempCenter.x(), tempCenter.y(), tempCenter.z() );
+    btVector3 tempUp = characterWorldTrans.getBasis()[ 2 ];
+	//btVector3 backward = -characterWorldTrans.getBasis()[ 1 ];
+    osg::Vec3d up( tempUp.x(), tempUp.y(), tempUp.z() );
+    //osg::Vec3d up( 0.0, 1.0, 0.0 );
+    up.normalize();
 
-    btVector3 fVector = center - eye;
-    fVector = fVector / fVector.length();
-    btVector3 sVector = fVector.cross( up );
-    btVector3 uVector = sVector.cross( fVector );
+    osg::Vec3d fVector = center - eye;
+    fVector.normalize();
+    osg::Vec3d sVector( fVector ^ up );
+    sVector.normalize();
+    osg::Vec3d uVector( sVector ^ fVector );
+    uVector.normalize();
 
-    gmtl::Matrix44d matrix;
+    gmtl::Matrix44d matrix = cameraDCS->GetMat();
+    //Camera Rotation
     matrix.mData[ 0 ]  =  sVector[ 0 ];
     matrix.mData[ 1 ]  =  uVector[ 0 ];
     matrix.mData[ 2 ]  = -fVector[ 0 ];
-    matrix.mData[ 3 ]  =  0.0;
+
     matrix.mData[ 4 ]  =  sVector[ 1 ];
     matrix.mData[ 5 ]  =  uVector[ 1 ];
     matrix.mData[ 6 ]  = -fVector[ 1 ];
-    matrix.mData[ 7 ]  =  0.0;
+    
     matrix.mData[ 8 ]  =  sVector[ 2 ];
     matrix.mData[ 9 ]  =  uVector[ 2 ];
     matrix.mData[ 10 ] = -fVector[ 2 ];
+
+    //Camera Position
+    matrix.mData[ 12 ] =  -eye[ 0 ];
+    matrix.mData[ 13 ] =  -eye[ 1 ];
+    matrix.mData[ 14 ] =  -eye[ 2 ];
+
+    //
+    matrix.mData[ 3 ]  =  0.0;
+    matrix.mData[ 7 ]  =  0.0;
     matrix.mData[ 11 ] =  0.0;
-    matrix.mData[ 12 ] =  0.0;
-    matrix.mData[ 13 ] =  0.0;
-    matrix.mData[ 14 ] =  0.0;
     matrix.mData[ 15 ] =  1.0;
 
-    vxs::DCS* const cameraDCS =
-        vxs::SceneManager::instance()->GetActiveNavSwitchNode();
     cameraDCS->SetMat( matrix );
-    
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool CharacterController::OnGround() const

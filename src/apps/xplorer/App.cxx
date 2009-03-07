@@ -481,18 +481,22 @@ void App::latePreFrame()
     }
     vxs::PhysicsSimulator* physicsSimulator = vxs::PhysicsSimulator::instance();
     ///////////////////////
-    /*
     if( !physicsSimulator->GetIdle() )
     {
-        VPR_PROFILE_GUARD_HISTORY( "App::latePreFrame CharacterController", 20 );
-        vxs::SceneManager::instance()->GetCharacterController()->
-            UpdateCharacter( physicsSimulator->GetDynamicsWorld(), mFrameDT );
+        //VPR_PROFILE_GUARD_HISTORY( "App::latePreFrame CharacterController", 20 );
+        //vxs::SceneManager::instance()->GetCharacterController()->
+            //UpdateCharacter( physicsSimulator->GetDynamicsWorld(), mFrameDT );
     }
-    */
     ///////////////////////
     {
         VPR_PROFILE_GUARD_HISTORY( "App::latePreFrame PhysicsSimulator", 20 );
         physicsSimulator->UpdatePhysics( mFrameDT );
+    }
+    ///////////////////////
+    if( !physicsSimulator->GetIdle() )
+    {
+        //VPR_PROFILE_GUARD_HISTORY( "App::latePreFrame CharacterController", 20 );
+        //vxs::SceneManager::instance()->GetCharacterController()->UpdateCamera();
     }
     ///////////////////////
     {

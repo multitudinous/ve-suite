@@ -1007,7 +1007,7 @@ void KeyboardMouse::NavOnKeyboardPress()
         {
             if( !mPhysicsSimulator->GetIdle() )
             {
-
+                mCharacterController->TurnLeft();
             }
 
             break;
@@ -1027,7 +1027,7 @@ void KeyboardMouse::NavOnKeyboardPress()
         {
             if( !mPhysicsSimulator->GetIdle() )
             {
-
+                mCharacterController->TurnRight();
             }
 
             break;
