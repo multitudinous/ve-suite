@@ -228,12 +228,6 @@ UIPluginBase::~UIPluginBase()
         financial_dlg = 0;
     }
 
-    if( inputsDialog )
-    {
-        inputsDialog->Destroy();
-        inputsDialog = 0;
-    }
-
     if( resultsDialog )
     {
         resultsDialog->Destroy();
@@ -943,6 +937,8 @@ void UIPluginBase::ViewInputVariables( void )
 
     inputsDialog =
         new SummaryResultDialog( GetPluginParent(), wxT( "Input Variables" ), wxSize( 560, 400 ) );
+    ConfigurePluginDialogs( inputsDialog );
+
     // Get all the inputs form the model
     for( size_t i = 0; i < numInputs; ++i )
     {
@@ -2257,6 +2253,7 @@ void UIPluginBase::DisconnectPluginDialogsDestroyEvent( wxWindow* window )
     }
     
     delete window;
+    window = 0;
     //window->Disconnect( wxEVT_DESTROY, 
     //    wxWindowDestroyEventHandler(UIPluginBase::OnChildDestroy), NULL, this );
 }

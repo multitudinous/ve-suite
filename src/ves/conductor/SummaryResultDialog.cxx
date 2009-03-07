@@ -45,7 +45,7 @@ using namespace ves::conductor;
 //BEGIN_EVENT_TABLE(SummaryResultDialog, wxDialog)
 //EVT_BUTTON(wxID_OK, SummaryResultDialog::OnOK)
 //END_EVENT_TABLE()
-
+////////////////////////////////////////////////////////////////////////////////
 SummaryResultDialog::SummaryResultDialog( wxWindow * parent, const wxString& title, wxSize tabsize )
         : UIDialog(( wxWindow * )parent, -1, title )
 {
@@ -84,8 +84,12 @@ SummaryResultDialog::SummaryResultDialog( wxWindow * parent, const wxString& tit
     SetAutoLayout( TRUE );
     toptop->Fit( this );
 }
-
-
+////////////////////////////////////////////////////////////////////////////////
+SummaryResultDialog::~SummaryResultDialog()
+{
+    ;
+}
+////////////////////////////////////////////////////////////////////////////////
 void SummaryResultDialog::Set2Cols( const std::vector<wxString>& col1, const std::vector<wxString>& col2 )
 {
     if( syngas == NULL )
@@ -102,10 +106,7 @@ void SummaryResultDialog::Set2Cols( const std::vector<wxString>& col1, const std
         syngas->AddRow( row );
     }
 }
-
-SummaryResultDialog::~SummaryResultDialog()
-{}
-
+////////////////////////////////////////////////////////////////////////////////
 void SummaryResultDialog::TabTitle( const wxString& title )
 {
     size_t i = tabs->GetPageCount();
@@ -115,7 +116,7 @@ void SummaryResultDialog::TabTitle( const wxString& title )
 
     tabs->SetPageText( i - 1, title );
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void SummaryResultDialog::NewTab( const wxString& title )
 {
     if( first_tab )
@@ -133,3 +134,4 @@ void SummaryResultDialog::NewTab( const wxString& title )
         tabs->AddPage( panel, title );
     }
 }
+////////////////////////////////////////////////////////////////////////////////
