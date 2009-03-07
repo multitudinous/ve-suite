@@ -173,15 +173,21 @@ void SceneRenderToTexture::InitScene( osg::Camera* const sceneViewCamera )
         osg::ref_ptr< vxsr::Processor > processor =
             CreatePipelineProcessor( viewport, camera.get(), sceneViewCamera );
 
+        //Set the bin # to be a large number
+        //This allows the transparent geometry to be rendered first
+        processor->getOrCreateStateSet()->setRenderBinDetails(
+            100, std::string( "RenderBin" ) );
+
+        //Add the scenegraph to the camera    
+        camera->addChild( mRootGroup.get() );
+        camera->addChild( processor.get() );
+
         //Setup a post-processing pipeline for each viewport per context
         //Each pipeline consists of a osg::Camera and vxsr::Processor
         (*mPipelines)[ viewport ] =
             std::make_pair( camera.get(), processor.get() );
 
         sceneViewCamera->addChild( camera.get() );
-        //Add the scenegraph to the camera    
-        camera->addChild( mRootGroup.get() );
-        camera->addChild( processor.get() );
     }
     
     *mCamerasConfigured = true;
