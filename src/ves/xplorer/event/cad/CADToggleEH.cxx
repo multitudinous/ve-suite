@@ -75,34 +75,28 @@ CADToggleEventHandler& CADToggleEventHandler::operator=( const CADToggleEventHan
 //////////////////////////////////////////////////////////////////////////
 void CADToggleEventHandler::_operateOnNode( XMLObjectPtr xmlObject )
 {
-    try
-    {
-        CommandPtr command( boost::dynamic_pointer_cast<ves::open::xml::Command>( xmlObject ) );
-        DataValuePairPtr toggleValue = command->GetDataValuePair( "Toggle Value" );
-        DataValuePairPtr nodeID = command->GetDataValuePair( "Node ID" );
-        DataValuePairPtr nodeType = command->GetDataValuePair( "Node Type" );
+    CommandPtr command( boost::dynamic_pointer_cast<ves::open::xml::Command>( xmlObject ) );
+    DataValuePairPtr toggleValue = command->GetDataValuePair( "Toggle Value" );
+    DataValuePairPtr nodeID = command->GetDataValuePair( "Node ID" );
+    DataValuePairPtr nodeType = command->GetDataValuePair( "Node Type" );
 
-        //This assumes the part/assembly is there already
-        if( nodeType->GetDataString() == std::string( "Assembly" ) )
+    if( nodeType->GetDataString() == std::string( "Assembly" ) )
+    {
+        if( m_cadHandler->AssemblyExists( nodeID->GetDataString() ) )
         {
-            m_cadHandler->GetAssembly( nodeID->GetDataString() )->ToggleDisplay( toggleValue->GetDataString() );
-        }
-        else if( nodeType->GetDataString() == std::string( "Part" ) )
-        {
-            std::cout << "---Toggle part---" << std::endl;
-            std::cout << "---" << toggleValue->GetDataString() << "---" << std::endl;
-            m_cadHandler->GetPart( nodeID->GetDataString() )->GetDCS()->ToggleDisplay( toggleValue->GetDataString() );
-            std::cout << "---Toggled part---" << std::endl;
-        }
-        //else if( nodeType->GetDataString() == std::string( "Clone" ) )
-        else
-        {
-            std::cout << "Error!!" << std::endl;
-            std::cout << "---Invalid node specified to toggle!---" << std::endl;
-            //m_cadHandler->GetClone( nodeID->GetDataString() )->GetClonedGraph()->ToggleDisplay( toggleValue->GetDataString() );
+            m_cadHandler->GetAssembly( nodeID->GetDataString() )->
+                ToggleDisplay( toggleValue->GetDataString() );
         }
     }
-    catch ( ... )
+    else if( nodeType->GetDataString() == std::string( "Part" ) )
+    {
+        std::cout << "---Toggle part---" << std::endl;
+        std::cout << "---" << toggleValue->GetDataString() << "---" << std::endl;
+        m_cadHandler->GetPart( nodeID->GetDataString() )->GetDCS()->
+            ToggleDisplay( toggleValue->GetDataString() );
+        std::cout << "---Toggled part---" << std::endl;
+    }
+    else
     {
         std::cout << "Error!!" << std::endl;
         std::cout << "---Invalid node specified to toggle!---" << std::endl;

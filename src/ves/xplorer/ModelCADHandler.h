@@ -166,25 +166,25 @@ public:
 
     ///Get a specific part.
     ///\param partID The ID of the part to search form
-    ves::xplorer::scenegraph::CADEntity* GetPart( std::string partID );
+    ves::xplorer::scenegraph::CADEntity* GetPart( const std::string& partID );
 
     ///Get a specific assembly.
     ///\param assemblyID The ID of the assembly to search form
-    ves::xplorer::scenegraph::DCS* GetAssembly( std::string assemblyID );
+    ves::xplorer::scenegraph::DCS* GetAssembly( const std::string& assemblyID );
 
     ///Get a specific assembly.
     ///\param assemblyID The ID of the assembly to search form
-    ves::xplorer::scenegraph::Clone* GetClone( std::string cloneID );
+    ves::xplorer::scenegraph::Clone* GetClone( const std::string& cloneID );
 
     ///\param cloneID The part ID to search for.
-    bool CloneExists( std::string clone );
+    bool CloneExists( const std::string& clone );
 
     ///\param partID The part ID to search for.
-    bool PartExists( std::string partID );
+    bool PartExists( const std::string& partID );
 
     ///Check to see if the assembly already exists and is loaded
     ///\param assemblyID The assembly ID to search for.
-    bool AssemblyExists( std::string assemblyID );
+    bool AssemblyExists( const std::string& assemblyID );
 
     ///The current graph
     std::string GetRootCADNodeID();

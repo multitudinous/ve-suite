@@ -143,17 +143,21 @@ wxString TexTable::padding( wxString str, int col_id )
 bool TexTable::ChooseFixedFont( int size )
 {
     wxFontEnumerator fontEnumerator;
-    wxArrayString * faces;
 #ifndef WIN32
     fontEnumerator.EnumerateFacenames( wxFONTENCODING_KOI8, TRUE );
 #else
     fontEnumerator.EnumerateFacenames( wxFONTENCODING_CP1250, TRUE );
 #endif
+    wxArrayString faces;
+    faces = fontEnumerator.GetFacenames();
+    if( faces.GetCount() == 0 )
+    {
+        return FALSE;
+    }
+
     wxString facename;
     // choose the first
-    faces = &fontEnumerator.GetFacenames();
-
-    facename = faces->Item( 0 );
+    facename = faces.Item( 0 );
     //  std::cout<<facename<<" : A Font"<<std::endl;
     if( !facename.IsEmpty() )
     {

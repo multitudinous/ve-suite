@@ -884,6 +884,8 @@ void UIPluginBase::ViewInputVariables( void )
         SetMessage( "Model contains no input variables\n" );
         ///The code below is not robust so...
         return;
+        
+
         ///Query for the inputs
         std::string compName = GetVEModel()->GetPluginName();
 
