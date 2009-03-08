@@ -119,7 +119,7 @@ void WarrantyToolUIDialog::BuildGUI()
     //wxBoxSizer* axesTextBS = new wxBoxSizer( wxHORIZONTAL );
     //dataSetSBSizer->Add( axesTextBS, 0, wxGROW );
     mPartNumberEntry = new wxTextCtrl( this, wxID_ANY,//ID_DATA_UPDATE_AXES,
-                                _( "X Axis" ), wxDefaultPosition,
+                                _( "Part Number" ), wxDefaultPosition,
                                 wxDefaultSize, wxHSCROLL | wxTE_PROCESS_ENTER );
     projectionEffectOpacitySizer->Add( mPartNumberEntry, 1, wxALL, 5 );
     //xAxisEntry->Raise();
