@@ -2692,6 +2692,15 @@ void AppFrame::LoadNewNetwork( wxUpdateUIEvent& WXUNUSED( event )  )
         {
             serviceList->SendCommandStringToXplorer( tempCommand );
         }
+        
+        // Create the command and data value pairs
+        tempCommand = 
+            UserPreferencesDataBuffer::instance()->
+            GetCommand( "SET_GEOMETRY_LOD_SCALE" );
+        if( tempCommand->GetCommandName().compare( "NULL" ) )
+        {
+            serviceList->SendCommandStringToXplorer( tempCommand );
+        }
     }
     
     //Send the new commands after the new data is loaded not before
