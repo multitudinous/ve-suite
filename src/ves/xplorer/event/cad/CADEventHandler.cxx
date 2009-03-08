@@ -360,27 +360,14 @@ void CADEventHandler::_addNodeToNode( std::string parentID,
                 partNode->GetPhysicsRigidBody()->SetMass( newPart->GetMass() );
                 partNode->GetPhysicsRigidBody()->SetFriction( newPart->GetFriction() );
                 partNode->GetPhysicsRigidBody()->SetRestitution( newPart->GetRestitution() );
-                
-                partNode->GetPhysicsRigidBody()->CreateRigidBody( newPart->GetPhysicsLODType(), newPart->GetPhysicsMotionType(), newPart->GetPhysicsMeshType() );
+                partNode->GetPhysicsRigidBody()->CreateRigidBody( 
+                    newPart->GetPhysicsLODType(), 
+                    newPart->GetPhysicsMotionType(), 
+                    newPart->GetPhysicsMeshType() );
+
                 vprDEBUG( vesDBG, 1 ) 
                     << "|\t---End Part Physics Properties---" 
                     << std::endl << vprDEBUG_FLUSH;
-                
-                /*
-                 std::string physicsMesh = newPart->GetPhysicsMesh();
-                 if( physicsMesh == "Bounding Box" )
-                 {
-                 partNode->GetPhysicsRigidBody()->BoundingBoxShape();
-                 }
-                 else if( physicsMesh == "Convex" )
-                 {
-                 partNode->GetPhysicsRigidBody()->ConvexShape();
-                 }
-                 else if( physicsMesh == "Static Concave" )
-                 {
-                 partNode->GetPhysicsRigidBody()->StaticConcaveShape();
-                 }
-                 */
             }
         }
         else

@@ -111,11 +111,39 @@ void OpacityVisitor::apply( osg::Geode& node )
         osg::StateSet::TextureAttributeList drawable_tal = 
             drawable_stateset->getTextureAttributeList();
 
+        //See if this drawable had a texture with opacity. If so then do not 
+        //change the render bin information
+        bool transparentTexture = false;
+        for( size_t k = 0; k < drawable_tal.size(); k++ )
+        {
+            osg::ref_ptr< osg::Texture > texture = 
+            static_cast< osg::Texture* >( drawable_stateset->
+                getTextureAttribute( k, osg::StateAttribute::TEXTURE ) );
+            
+            for( unsigned int j=0; j<texture->getNumImages(); ++j )
+            {
+                transparentTexture = 
+                    texture->getImage( j )->isImageTranslucent();
+                if( transparentTexture )
+                {
+                    break;
+                }
+            }
+            
+            if( transparentTexture )
+            {
+                break;
+            }
+        }
+        
         //The stateset only needs set at the part level in VE-Suite.
         //The alpha an material information can be set at the higher level
         //because otherwise the renderbins end up being nested and cause odd
         //problems.
-        SetupBlendingForStateSet( drawable_stateset.get() );
+        if( !transparentTexture )
+        {
+            SetupBlendingForStateSet( drawable_stateset.get() );
+        }
 
         if( mStoreState )
         {

@@ -314,36 +314,27 @@ void ModelCADHandler::SetActiveAttributeOnNode( std::string nodeID,
 ////////////////////////////////////////////////////////////////////////
 void ModelCADHandler::UpdateOpacity( std::string nodeID, float opacity, bool storeState )
 {
-    try
+    bool transparent = true;
+    if( opacity == 1.f )
     {
-        bool transparent = true;
-        if( opacity == 1.f )
-        {
-            transparent = false;
-        }
-        if( AssemblyExists(nodeID) )
-        {
-            ves::xplorer::scenegraph::util::OpacityVisitor
-            opacity_visitor( m_assemblyList[nodeID].get(), storeState, transparent, opacity );
-        }
-        else if( PartExists( nodeID ) )
-        {
-            ves::xplorer::scenegraph::util::OpacityVisitor
-            opacity_visitor( m_partList[nodeID]->GetDCS(), storeState, transparent, opacity );
-        }
-        else
-        {
-            vprDEBUG( vesDBG, 1 ) << "|\t CADNode not found : " << nodeID 
-                << std::endl << vprDEBUG_FLUSH;
-            vprDEBUG( vesDBG, 1 ) << "|\tModelCADHandler::UpdateOpacity()---"
-                << std::endl << vprDEBUG_FLUSH;        }
+        transparent = false;
     }
-    catch ( ... )
+    if( AssemblyExists(nodeID) )
     {
-        vprDEBUG( vesDBG, 1 ) << "|\t CADNode not found : " << nodeID
+        ves::xplorer::scenegraph::util::OpacityVisitor
+        opacity_visitor( m_assemblyList[nodeID].get(), storeState, transparent, opacity );
+    }
+    else if( PartExists( nodeID ) )
+    {
+        ves::xplorer::scenegraph::util::OpacityVisitor
+        opacity_visitor( m_partList[nodeID]->GetDCS(), storeState, transparent, opacity );
+    }
+    else
+    {
+        vprDEBUG( vesDBG, 1 ) << "|\t CADNode not found : " << nodeID 
             << std::endl << vprDEBUG_FLUSH;
         vprDEBUG( vesDBG, 1 ) << "|\tModelCADHandler::UpdateOpacity()---"
-            << std::endl << vprDEBUG_FLUSH;
+            << std::endl << vprDEBUG_FLUSH;        
     }
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
