@@ -354,7 +354,7 @@ void UserPreferences::OnLODScale( wxScrollEvent& event )
     serviceList = CORBAServiceList::instance();
     serviceList->SendCommandStringToXplorer( veCommand );
 
-    UserPreferencesDataBuffer::instance()->SetCommand( "SET_GEOMETRY_LOD_SCALE", veCommand );
+    UserPreferencesDataBuffer::instance()->SetCommand( "Update LOD Scale", veCommand );
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool UserPreferences::GetMode( std::string mode )

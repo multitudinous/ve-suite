@@ -2696,7 +2696,7 @@ void AppFrame::LoadNewNetwork( wxUpdateUIEvent& WXUNUSED( event )  )
         // Create the command and data value pairs
         tempCommand = 
             UserPreferencesDataBuffer::instance()->
-            GetCommand( "SET_GEOMETRY_LOD_SCALE" );
+            GetCommand( "Update LOD Scale" );
         if( tempCommand->GetCommandName().compare( "NULL" ) )
         {
             serviceList->SendCommandStringToXplorer( tempCommand );
