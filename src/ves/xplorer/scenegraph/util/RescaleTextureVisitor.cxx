@@ -61,7 +61,7 @@ void RescaleTextureVisitor::apply(osg::Node& node)
 {
     
     osg::StateSet* ss = node.getStateSet();
-    if (ss )
+    if( ss )
     {
         apply(*ss);
     }
@@ -73,18 +73,18 @@ void RescaleTextureVisitor::apply(osg::Geode& geode)
 {    
     osg::StateSet* ss = geode.getStateSet();
     
-    if (ss )
+    if( ss )
     {
         apply(*ss);
     }
     
-    for(unsigned int i=0;i<geode.getNumDrawables();++i)
+    for( unsigned int i=0;i<geode.getNumDrawables();++i)
     {
         osg::Drawable* drawable = geode.getDrawable(i);
-        if (drawable)
+        if( drawable )
         {
             ss = drawable->getStateSet();
-            if (ss )
+            if( ss )
             {
                 apply(*ss);
             }
@@ -94,11 +94,11 @@ void RescaleTextureVisitor::apply(osg::Geode& geode)
 ////////////////////////////////////////////////////////////////////////////////
 void RescaleTextureVisitor::apply(osg::StateSet& stateset)
 {
-    for(unsigned int i=0;i<stateset.getTextureAttributeList().size();++i)
+    for( size_t i=0; i < stateset.getTextureAttributeList().size(); ++i )
     {
         osg::StateAttribute* sa = stateset.getTextureAttribute(i,osg::StateAttribute::TEXTURE);
         osg::Texture* texture = dynamic_cast<osg::Texture*>(sa);
-        if (texture )
+        if( texture )
         {
             apply(*texture);
         }
@@ -107,7 +107,7 @@ void RescaleTextureVisitor::apply(osg::StateSet& stateset)
 ////////////////////////////////////////////////////////////////////////////////
 void RescaleTextureVisitor::apply(osg::Texture& texture)
 {
-        for (unsigned int i=0; i<texture.getNumImages(); ++i)
+        for( unsigned int i=0; i<texture.getNumImages(); ++i)
         {
             texture.getImage(i)->ensureValidSizeForTexturing( 134217728 );
         }

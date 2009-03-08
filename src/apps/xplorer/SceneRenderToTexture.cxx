@@ -809,10 +809,6 @@ void SceneRenderToTexture::WriteImageFileForWeb(
     
     //osg::ref_ptr<osgUtil::SceneView> sv;
     //sv = ( *sceneViewer );  // Get context specific scene viewer
-    /* this doesn't seem like the right place for this but
-     sceneview isn't exposed anywhere else
-     sv->setLODScale( EnvironmentHandler::instance()->GetGlobalLODScale() );
-     */
     osg::ref_ptr<osg::Camera> oldcamera = sv->getCamera();
     //Copy the settings from sceneView-camera to
     //get exactly the view the user sees at the moment:

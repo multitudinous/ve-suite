@@ -292,9 +292,9 @@ void CADEventHandler::_addNodeToNode( std::string parentID,
         vprDEBUG( vesDBG, 2 )<<"|\t---Set Assembly Attributes---"
             <<std::endl<< vprDEBUG_FLUSH;
         
-        m_cadHandler->GetAssembly( newAssembly->GetID() )->ToggleDisplay( newAssembly->GetVisibility() );
-        //Set a default material on nodes that have no initial material
-        //ves::xplorer::scenegraph::util::MaterialInitializer material_initializer( m_cadHandler->GetAssembly( newAssembly->GetID() ) );
+        m_cadHandler->GetAssembly( newAssembly->GetID() )->
+            ToggleDisplay( newAssembly->GetVisibility() );
+
         vprDEBUG( vesDBG, 1 ) << "|\t---Set Assembly Opacity---" << std::endl << vprDEBUG_FLUSH;
         vprDEBUG( vesDBG, 1 ) << "|\t\t" << newAssembly->GetOpacity() << std::endl << vprDEBUG_FLUSH;
         m_cadHandler->UpdateOpacity( newAssembly->GetID(), newAssembly->GetOpacity(), true );

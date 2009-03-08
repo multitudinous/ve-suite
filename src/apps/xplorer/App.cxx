@@ -298,7 +298,6 @@ void App::configSceneView( osgUtil::SceneView* newSceneViewer )
     //    osgUtil::CullVisitor::DO_NOT_COMPUTE_NEAR_FAR );
     newSceneViewer->setComputeNearFarMode(
         osgUtil::CullVisitor::COMPUTE_NEAR_FAR_USING_BOUNDING_VOLUMES );
-    //newSceneViewer->setNearFarRatio(0.000005);
 }
 ////////////////////////////////////////////////////////////////////////////////
 ///Remember that this is called in parrallel in a multiple context situation
@@ -608,6 +607,17 @@ void App::contextPreDraw()
     
     ///Context specific updates for models that are loaded
     ves::xplorer::ModelHandler::instance()->ContextPreDrawUpdate();
+    
+    ///Adjust settings on the SceneView
+    const std::string tempCommandName = 
+        m_vjobsWrapper->GetXMLCommand()->GetCommandName();
+    if( !tempCommandName.compare( "CHANGE_NEAR_FAR_RATIO" ) )
+    {
+        double nearFar;
+        m_vjobsWrapper->GetXMLCommand()->GetDataValuePair( "Near Far Ratio" )->GetData( nearFar );
+        (*sceneViewer)->setNearFarRatio( nearFar );
+    }
+    
 }
 ////////////////////////////////////////////////////////////////////////////////
 ///Remember that this is called in parrallel in a multiple context situation
@@ -642,6 +652,8 @@ void App::draw()
     osg::ref_ptr< osgUtil::SceneView > sv;
     sv = ( *sceneViewer );  // Get context specific scene viewer
     vprASSERT( sv.get() != NULL );
+
+    sv->setLODScale( EnvironmentHandler::instance()->GetGlobalLODScale() );
 
     // The OpenGL Draw Manager that we are rendering for.
     //Get the view matrix and the frustrum form the draw manager

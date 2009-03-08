@@ -71,10 +71,15 @@ BEGIN_EVENT_TABLE( UserPreferences, wxDialog )
     EVT_BUTTON( USERPREFENCES_BACKGROUND_COLOR_BUTTON, UserPreferences::OnSetBackgroundColor )
     EVT_CHECKBOX( USERPREFENCES_SHUTDOWN_XPLORER, UserPreferences::OnShutdownXplorer )
     EVT_COMMAND_SCROLL( USERPREFENCES_GEOMETRY_LOD_SCALE_SLIDER, UserPreferences::OnLODScale )
+    EVT_CHECKBOX( USERPREFENCES_NEAR_FAR_CHKBX, UserPreferences::OnNearFarCheck )
+    EVT_TEXT_ENTER( USERPREFENCES_NEAR_FAR_RATIO, UserPreferences::OnNearFarRatio )
 END_EVENT_TABLE()
 ////////////////////////////////////////////////////////////////////////////////
 UserPreferences::UserPreferences( )
-:m_lodScale( 1 )
+    :
+    m_lodScale( 1 ),
+    m_nearFarEntry( 0 ),
+    m_nearFar( 0.000005 )
 {
     xplorerColor.push_back( 0.0f );
     xplorerColor.push_back( 0.0f );
@@ -95,7 +100,10 @@ UserPreferences::UserPreferences( wxWindow* parent,
                                   const wxPoint& pos,
                                   const wxSize& size,
                                   long style )
-:m_lodScale( 1 )
+    :
+    m_lodScale( 1 ),
+    m_nearFarEntry( 0 ),
+    m_nearFar( 0.000005 )
 {
     Create( parent, id, caption, pos, size, style );
 }
@@ -113,6 +121,7 @@ bool UserPreferences::Create( wxWindow* parent, wxWindowID id, const wxString& c
     preferenceMap[ "Shut Down Xplorer Option" ] = false;
     preferenceMap[ "Navigation z=0 Lock" ] = false;
     preferenceMap[ "Geometry LOD Scale" ] = true;
+    preferenceMap[ "Set Near-Far Ratio" ] = false;
 
     ///Read from wxConfig
     ReadConfiguration();
@@ -170,13 +179,14 @@ void UserPreferences::CreateControls()
     navigationChkBx = new wxCheckBox( panel, USERPREFENCES_NAVIGATION_CHKBX, wxT( "Auto Launch Nav Pane" ), wxDefaultPosition, wxDefaultSize, wxCHK_2STATE );
     zNavChkBx = new wxCheckBox( panel, USERPREFENCES_NAVIGATION_CHKBX, wxT( "Navigation z=0 Lock" ), wxDefaultPosition, wxDefaultSize, wxCHK_2STATE );
     shutdownModeChkBx = new wxCheckBox( panel, USERPREFENCES_SHUTDOWN_XPLORER, wxT( "Shut Down Xplorer Option" ), wxDefaultPosition, wxDefaultSize, wxCHK_2STATE );
-
-    wxString xplorerChoices[4];
-    xplorerChoices[ 0 ] = wxString( "Use Preferred Background Color", wxConvUTF8 );
-    xplorerChoices[ 1 ] = wxString( "Auto Launch Nav Pane", wxConvUTF8 );
-    xplorerChoices[ 2 ] = wxString( "Shut Down Xplorer Option", wxConvUTF8 );
-    xplorerChoices[ 3 ] = wxString( "Navigation z=0 Lock", wxConvUTF8 );
-
+    wxBoxSizer* nearFarSizer = new wxBoxSizer( wxHORIZONTAL );
+    wxCheckBox* nearFarChkBx = new wxCheckBox( panel, USERPREFENCES_NEAR_FAR_CHKBX, wxT( "Set Near-Far Ratio" ), wxDefaultPosition, wxDefaultSize, wxCHK_2STATE );
+    m_nearFarEntry = new wxTextCtrl( panel, USERPREFENCES_NEAR_FAR_RATIO,
+                                      _( "0.000005" ), wxDefaultPosition,
+                                      wxDefaultSize, wxHSCROLL | wxTE_PROCESS_ENTER );
+    nearFarSizer->Add( nearFarChkBx, 1, wxEXPAND | wxALIGN_CENTER_HORIZONTAL );
+    nearFarSizer->Add( m_nearFarEntry, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
+     
     backgroundColorChkBx->SetValue( preferenceMap[ "Use Preferred Background Color" ] );
     backgroundColorChkBx->IsChecked();
     navigationChkBx->SetValue( preferenceMap[ "Auto Launch Nav Pane" ] );
@@ -185,7 +195,14 @@ void UserPreferences::CreateControls()
     zNavChkBx->IsChecked();
     shutdownModeChkBx->SetValue( preferenceMap[ "Shut Down Xplorer Option" ] );
     shutdownModeChkBx->IsChecked();
- 
+    nearFarChkBx->SetValue( preferenceMap[ "Set Near-Far Ratio" ] );
+    nearFarChkBx->IsChecked();
+    if( !preferenceMap[ "Set Near-Far Ratio" ] )
+    {
+        m_nearFarEntry->Disable();
+    }
+    
+    
     m_lodScaleSlider = new wxSlider( panel, USERPREFENCES_GEOMETRY_LOD_SCALE_SLIDER, m_lodScale, 0, 100,
                                     wxDefaultPosition, wxDefaultSize,
                                     wxSL_HORIZONTAL|wxSL_AUTOTICKS|wxSL_LABELS);
@@ -194,6 +211,7 @@ void UserPreferences::CreateControls()
     itemBoxSizer3->Add( navigationChkBx, 0, wxALIGN_LEFT | wxALL | wxEXPAND, 5 );
     itemBoxSizer3->Add( shutdownModeChkBx, 0, wxALIGN_LEFT | wxALL | wxEXPAND, 5 );
     itemBoxSizer3->Add( zNavChkBx, 0, wxALIGN_LEFT | wxALL | wxEXPAND, 5 );
+    itemBoxSizer3->Add( nearFarSizer, 0, wxALIGN_LEFT | wxALL | wxEXPAND, 5 );
     itemBoxSizer3->Add( m_lodScaleSlider, 0, wxALIGN_CENTER | wxALL | wxEXPAND, 5 );
 
     ///////////////////////////////////////
@@ -208,6 +226,50 @@ void UserPreferences::OnNavigationCheck( wxCommandEvent& event )
 {
     wxString mode = dynamic_cast< wxControl* >( event.GetEventObject() )->GetLabelText();
     preferenceMap[ ConvertUnicode( mode.c_str() )] = event.IsChecked();
+}
+////////////////////////////////////////////////////////////////////////////////
+void UserPreferences::OnNearFarCheck( wxCommandEvent& event )
+{
+    wxString mode = dynamic_cast< wxControl* >( event.GetEventObject() )->GetLabelText();
+    preferenceMap[ ConvertUnicode( mode.c_str() ) ] = event.IsChecked();
+    
+    if( event.IsChecked() )
+    {
+        m_nearFarEntry->Enable();
+        m_nearFarEntry->GetValue().ToDouble( &m_nearFar );
+    }
+    else
+    {
+        m_nearFar = 0.0005;
+        m_nearFarEntry->Disable();
+    }
+    
+    // Create the command and data value pairs
+    DataValuePairPtr dataValuePair( new DataValuePair() );
+    dataValuePair->SetData( std::string( "Near Far Ratio" ), m_nearFar );
+    CommandPtr veCommand( new Command() );
+    veCommand->SetCommandName( std::string( "CHANGE_NEAR_FAR_RATIO" ) );
+    veCommand->AddDataValuePair( dataValuePair );
+    
+    CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
+
+    UserPreferencesDataBuffer::instance()->SetCommand( "CHANGE_NEAR_FAR_RATIO", veCommand );
+}
+////////////////////////////////////////////////////////////////////////////////
+void UserPreferences::OnNearFarRatio( wxCommandEvent& event )
+{
+    m_nearFarEntry->GetValue().ToDouble( &m_nearFar );
+    
+    // Create the command and data value pairs
+    DataValuePairPtr dataValuePair( new DataValuePair() );
+    dataValuePair->SetData( std::string( "Near Far Ratio" ), m_nearFar );
+    CommandPtr veCommand( new Command() );
+    veCommand->SetCommandName( std::string( "CHANGE_NEAR_FAR_RATIO" ) );
+    veCommand->AddDataValuePair( dataValuePair );
+    
+    CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
+    
+    UserPreferencesDataBuffer::instance()->SetCommand( "CHANGE_NEAR_FAR_RATIO", veCommand );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UserPreferences::OnConductorCheck( wxCommandEvent& event )
@@ -319,16 +381,6 @@ void UserPreferences::ReadConfiguration( void )
     std::map< std::string, bool >::iterator iter;
     for( iter = preferenceMap.begin(); iter != preferenceMap.end(); ++iter )
     {
-        //std::cout<<"Reading: "<<iter->first<<std::endl;
-        if( iter->first == "Geometry LOD Scale" )
-        {
-            cfg->Read( key +
-                       _T( "/" ) +
-                       _T( "GeometryLODScale" ) ,
-                       &m_lodScale );
-        }
-        else 
-        {
             bool exists = cfg->Read( key +
                                      _T( "/" ) +
                                      wxString( iter->first.c_str(), wxConvUTF8 ),
@@ -368,7 +420,24 @@ void UserPreferences::ReadConfiguration( void )
                            &backgroundColor[ "Alpha" ] );
                 xplorerColor.push_back( backgroundColor[ "Alpha" ] );
             }
-        }
+            else if( iter->first == "Geometry LOD Scale" )
+            {
+                cfg->Read( key +
+                          _T( "/" ) +
+                          _T( "GeometryLODScale" ) +
+                          _T( "/" ) +
+                          _T( "LOD" ),
+                          &m_lodScale );
+            }            
+            else if( iter->first == "Set Near-Far Ratio" )
+            {
+                cfg->Read( key +
+                          _T( "/" ) +
+                          _T( "NearFar" ) +
+                          _T( "/" ) +
+                          _T( "NearFarRatio" ),
+                          &m_nearFar );
+            }            
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -379,17 +448,6 @@ void UserPreferences::WriteConfiguration( void )
     std::map< std::string, bool >::iterator iter;
     for( iter = preferenceMap.begin(); iter != preferenceMap.end(); ++iter )
     {
-
-        //std::cout<<"Writing: "<<iter->first<<std::endl;
-        if( iter->first == "Geometry LOD Scale" )
-        {
-            cfg->Write( key +
-                       _T( "/" ) +
-                       _T( "GeometryLODScale" ) ,
-                       m_lodScale );
-        }
-        else
-        {
             cfg->Write( key +
                     _T( "/" ) +
                     wxString( iter->first.c_str(), wxConvUTF8 ),
@@ -421,7 +479,24 @@ void UserPreferences::WriteConfiguration( void )
                             wxString( "Alpha", wxConvUTF8 ),
                             backgroundColor[ "Alpha" ] );
             }
-       }
+            else if( iter->first == "Geometry LOD Scale" )
+            {
+                cfg->Write( key +
+                           _T( "/" ) +
+                           _T( "GeometryLODScale" ) +
+                           _T( "/" ) +
+                           _T( "LOD" ),
+                           m_lodScale );
+            }
+            else if( iter->first == "Set Near-Far Ratio" )
+            {
+                cfg->Write( key +
+                          _T( "/" ) +
+                          _T( "NearFar" ) +
+                          _T( "/" ) +
+                          _T( "NearFarRatio" ),
+                          m_nearFar );
+            }            
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -429,3 +504,4 @@ std::vector< double > UserPreferences::GetBackgroundColor()
 {
     return xplorerColor;
 }
+////////////////////////////////////////////////////////////////////////////////

@@ -2683,6 +2683,15 @@ void AppFrame::LoadNewNetwork( wxUpdateUIEvent& WXUNUSED( event )  )
             GetCommand( "Navigation_Data" );
         
         serviceList->SendCommandStringToXplorer( tempCommand );
+
+        // Create the command and data value pairs
+        tempCommand = 
+            UserPreferencesDataBuffer::instance()->
+            GetCommand( "CHANGE_NEAR_FAR_RATIO" );
+        if( tempCommand->GetCommandName().compare( "NULL" ) )
+        {
+            serviceList->SendCommandStringToXplorer( tempCommand );
+        }
     }
     
     //Send the new commands after the new data is loaded not before

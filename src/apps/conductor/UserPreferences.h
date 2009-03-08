@@ -137,7 +137,8 @@ public:
     bool GetMode( std::string mode );
     void ReadConfiguration( void );
     void WriteConfiguration( void );
-
+    void OnNearFarCheck( wxCommandEvent& event );
+    void OnNearFarRatio( wxCommandEvent& event );
     /// Should we show tooltips?
     static bool ShowToolTips();
 
@@ -152,8 +153,9 @@ private:
     wxButton* backgroundColorButton;///<To choose background color
 
     wxColourData* xplorerWxColor;
+    wxTextCtrl* m_nearFarEntry;
     std::vector<double> xplorerColor;
-    //wxColour* colour;
+    double m_nearFar;
 
     wxSlider* m_lodScaleSlider;///<Slider for the global Geometry LOD scale
     ves::conductor::util::CORBAServiceList* serviceList;
