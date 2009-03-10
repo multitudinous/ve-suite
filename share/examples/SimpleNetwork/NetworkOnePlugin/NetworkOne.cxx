@@ -33,7 +33,7 @@ double NetworkOne::GetVersion()
 ///////////////////////////////////////////////////////////////////////////////
 int NetworkOne::GetNumIports()
 {
-	int result=1;
+	int result=2;
 	return result;
 }
 ///////////////////////////////////////////////////////////////////////////////
@@ -41,8 +41,13 @@ void NetworkOne::GetIPorts(PORT& iports)
 {
     if( inputPort.size() == 0 )
     {
-        wxPoint tempPort(GetIconImage()->GetWidth()*10/52, GetIconImage()->GetHeight()*26/98); 
-        AddPortToModel( tempPort, UIPLUGINBASE_ADD_INPUT_PORT );
+        wxPoint tempPort1(GetIconImage()->GetWidth()*10/52, 
+            GetIconImage()->GetHeight()*26/98); 
+        AddPortToModel( tempPort1, UIPLUGINBASE_ADD_INPUT_PORT );
+
+        wxPoint tempPort2(GetIconImage()->GetWidth()*10/52, 
+            GetIconImage()->GetHeight()*74/98); 
+        AddPortToModel( tempPort2, UIPLUGINBASE_ADD_INPUT_PORT );
     }
     
     UIPluginBase::GetIPorts( iports );
@@ -50,7 +55,7 @@ void NetworkOne::GetIPorts(PORT& iports)
 ///////////////////////////////////////////////////////////////////////////////
 int NetworkOne::GetNumOports()
 {
-	int result=1;
+	int result=2;
 	return result;
 }
 ///////////////////////////////////////////////////////////////////////////////
@@ -58,8 +63,13 @@ void NetworkOne::GetOPorts(PORT &oports)
 {
     if( outputPort.size() == 0 )
     {
-        wxPoint tempPort(GetIconImage()->GetWidth()*43/52,GetIconImage()->GetHeight()*74/98);
-        AddPortToModel( tempPort, UIPLUGINBASE_ADD_OUTPUT_PORT );
+        wxPoint tempPort1(GetIconImage()->GetWidth()*43/52,
+            GetIconImage()->GetHeight()*26/98);
+        AddPortToModel( tempPort1, UIPLUGINBASE_ADD_OUTPUT_PORT );
+
+        wxPoint tempPort2(GetIconImage()->GetWidth()*43/52,
+            GetIconImage()->GetHeight()*74/98);
+        AddPortToModel( tempPort2, UIPLUGINBASE_ADD_OUTPUT_PORT );
     }
     
     UIPluginBase::GetOPorts( oports );
