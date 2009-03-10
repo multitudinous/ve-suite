@@ -399,7 +399,7 @@ void PhysicsSimulator::ResetScene()
             mDynamicsWorld->getCollisionObjectArray()[ i ];
         btRigidBody* body = btRigidBody::upcast( colObj );
 
-        if( body->isStaticObject() )
+        if( body && body->isStaticObject() )
         {
             continue;
         }
@@ -566,7 +566,7 @@ btRigidBody* PhysicsSimulator::CreateRigidBody(
     return body;
 }
 ////////////////////////////////////////////////////////////////////////////////
-btDynamicsWorld* PhysicsSimulator::GetDynamicsWorld()
+btDynamicsWorld* const PhysicsSimulator::GetDynamicsWorld() const
 {
     return mDynamicsWorld;
 }

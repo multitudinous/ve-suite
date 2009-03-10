@@ -346,11 +346,23 @@ void KeyboardMouse::ProcessKBEvents( int mode )
                     SelOnKeyboardPress();
                 }
 
+                //mKey = -1;
+
                 break;
             }
             case gadget::KeyReleaseEvent:
             {
-                //Use this call if you want to hold a mKey for it to be active
+                gadget::KeyEventPtr keyEvt =
+                    boost::dynamic_pointer_cast< gadget::KeyEvent >( *i );
+
+                mKey = keyEvt->getKey();
+
+                //Navigation mode
+                if( mode == 0 )
+                {
+                    NavOnKeyboardRelease();
+                }
+                
                 mKey = -1;
 
                 break;
@@ -1007,7 +1019,7 @@ void KeyboardMouse::NavOnKeyboardPress()
         {
             if( !mPhysicsSimulator->GetIdle() )
             {
-                mCharacterController->TurnLeft();
+                mCharacterController->StrafeLeft( true );
             }
 
             break;
@@ -1017,7 +1029,7 @@ void KeyboardMouse::NavOnKeyboardPress()
         {
             if( !mPhysicsSimulator->GetIdle() )
             {
-                mCharacterController->StepBackward();
+                mCharacterController->StepBackward( true );
             }
 
             break;
@@ -1027,7 +1039,7 @@ void KeyboardMouse::NavOnKeyboardPress()
         {
             if( !mPhysicsSimulator->GetIdle() )
             {
-                mCharacterController->TurnRight();
+                mCharacterController->StrafeRight( true );
             }
 
             break;
@@ -1037,12 +1049,12 @@ void KeyboardMouse::NavOnKeyboardPress()
         {
             if( !mPhysicsSimulator->GetIdle() )
             {
-                mCharacterController->StepForward();
+                mCharacterController->StepForward( true );
             }
 
             break;
         }
-        //JUMP or UP if no physics
+        //JUMP
         case gadget::KEY_SPACE:
         {
             if( !mPhysicsSimulator->GetIdle() )
@@ -1052,12 +1064,12 @@ void KeyboardMouse::NavOnKeyboardPress()
 
             break;
         }
-        //DOWN if no physics
+        //DOWN
         case gadget::KEY_C:
         {
             if( !mPhysicsSimulator->GetIdle() )
             {
-
+                //mCharacterController
             }
 
             break;
@@ -1096,6 +1108,73 @@ void KeyboardMouse::NavOnKeyboardPress()
         {
             Pan( -0.05, 0 );
             ProcessNavigationEvents();
+
+            break;
+        }
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void KeyboardMouse::NavOnKeyboardRelease()
+{
+    switch( mKey )
+    {
+        //STRAFE LEFT
+        case gadget::KEY_A:
+        {
+            if( !mPhysicsSimulator->GetIdle() )
+            {
+                mCharacterController->StrafeLeft( false );
+            }
+
+            break;
+        }
+        //BACKWARD
+        case gadget::KEY_S:
+        {
+            if( !mPhysicsSimulator->GetIdle() )
+            {
+                mCharacterController->StepBackward( false );
+            }
+
+            break;
+        }
+        //STRAFE RIGHT
+        case gadget::KEY_D:
+        {
+            if( !mPhysicsSimulator->GetIdle() )
+            {
+                mCharacterController->StrafeRight( false );
+            }
+
+            break;
+        }
+        //FORWARD
+        case gadget::KEY_W:
+        {
+            if( !mPhysicsSimulator->GetIdle() )
+            {
+                mCharacterController->StepForward( false );
+            }
+
+            break;
+        }
+        //JUMP
+        case gadget::KEY_SPACE:
+        {
+            if( !mPhysicsSimulator->GetIdle() )
+            {
+                //mCharacterController->Jump();
+            }
+
+            break;
+        }
+        //DOWN
+        case gadget::KEY_C:
+        {
+            if( !mPhysicsSimulator->GetIdle() )
+            {
+                //mCharacterController
+            }
 
             break;
         }

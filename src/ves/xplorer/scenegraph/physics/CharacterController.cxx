@@ -38,19 +38,25 @@
 #include <ves/xplorer/scenegraph/CADEntity.h>
 
 #include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
-#include <ves/xplorer/scenegraph/physics/PhysicsRigidBody.h>
+//#include <ves/xplorer/scenegraph/physics/PhysicsRigidBody.h>
 
 // --- OSG Includes --- //
 #include <osg/Geode>
+#include <osg/MatrixTransform>
 #include <osg/ShapeDrawable>
 
 // --- Bullet Includes --- //
-#include <BulletCollision/CollisionShapes/btMultiSphereShape.h>
-
-#include <BulletDynamics/Dynamics/btRigidBody.h>
+#include <btBulletDynamicsCommon.h>
 #include <BulletDynamics/Dynamics/btDynamicsWorld.h>
 
-#include <LinearMath/btDefaultMotionState.h>
+#include <BulletDynamics/Character/btKinematicCharacterController.h>
+
+#include <BulletCollision/CollisionDispatch/btGhostObject.h>
+
+#include <BulletCollision/CollisionShapes/btCapsuleShape.h>
+
+// --- osgBullet Includes --- //
+#include <osgBullet/MotionState.h>
 
 // --- C/C++ Libraries --- //
 #include <iostream>
@@ -61,18 +67,20 @@ namespace vxs = ves::xplorer::scenegraph;
 ////////////////////////////////////////////////////////////////////////////////
 CharacterController::CharacterController()
     :
-    mHalfHeight( 1.0 ),
-    mTurnAngle( 0.0 ),
-    mMaxLinearVelocity( 100.0 ),
-    //m/s
-    mWalkVelocity( 50.0 ),
-    //rad/s
-    mTurnVelocity( 10.0 ),
-    mShape( NULL ),
-    mRigidBody( NULL )
+    mStepForward( false ),
+    mStepBackward( false ),
+    mStrafeLeft( false ),
+    mStrafeRight( false ),
+    mTurnLeft( false ),
+    mTurnRight( false ),
+    mJump( false ),
+    mCameraHeight( 4.0 ),
+    mMinCameraDistance( 3.0 ),
+    mMaxCameraDistance( 10.0 ),
+    mCharacter( NULL ),
+    mGhostObject( NULL )
 {
-    mRayLambda[ 0 ] = 1.0;
-    mRayLambda[ 1 ] = 1.0;
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 CharacterController::~CharacterController()
@@ -80,283 +88,185 @@ CharacterController::~CharacterController()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CharacterController::Setup(
-    btDynamicsWorld* dynamicsWorld, btScalar height, btScalar width )
+void CharacterController::Initialize( btDynamicsWorld* dynamicsWorld )
 {
-    //
+    btScalar characterHeight = 1.75;
+    btScalar characterWidth = 1.75;
+
     osg::ref_ptr< osg::Geode > geode = new osg::Geode();
-    osg::ref_ptr< osg::Cylinder > cylinder =
-        new osg::Cylinder( 
-            osg::Vec3( width / btScalar( 2.0 ), 0.0, height / btScalar( 2.0 ) ),
-            width,
-            height );
+    osg::ref_ptr< osg::Capsule > capsule =
+        new osg::Capsule(
+            osg::Vec3( 0.0, 0.0, 0.0 ),
+            characterWidth, characterHeight );
     osg::ref_ptr< osg::TessellationHints > hints = new osg::TessellationHints();
     osg::ref_ptr< osg::ShapeDrawable > shapeDrawable =
-        new osg::ShapeDrawable( cylinder.get(), hints.get() );
+        new osg::ShapeDrawable( capsule.get(), hints.get() );
 
     hints->setDetailRatio( 1.0 );
     shapeDrawable->setColor( osg::Vec4( 1.0, 1.0, 0.0, 1.0 ) );
     geode->addDrawable( shapeDrawable.get() );
 
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > dcs =
-        new ves::xplorer::scenegraph::DCS();
-    ves::xplorer::scenegraph::SceneManager::instance()->GetModelRoot()->addChild( dcs.get() );
-    ves::xplorer::scenegraph::CADEntity* cadEntity =
-        new ves::xplorer::scenegraph::CADEntity(
-            geode.get(),
-            dcs.get(),
-            ves::xplorer::scenegraph::PhysicsSimulator::instance() );
+    vxs::SceneManager::instance()->GetModelRoot()->addChild( geode.get() );
 
-    std::string name = "CharacterController";
-    osg::Node::DescriptionList descriptorsList;
-    descriptorsList.push_back( "VE_XML_ID" );
-    descriptorsList.push_back( "" );
-    cadEntity->GetDCS()->setDescriptions( descriptorsList );
-    cadEntity->GetDCS()->setName( name );
+    btBroadphaseInterface* broadphase = dynamicsWorld->getBroadphase();
+    broadphase->getOverlappingPairCache()->setInternalGhostPairCallback(
+        new btGhostPairCallback() );
 
-    cadEntity->InitPhysics();
-    btVector3 spherePositions[ 2 ];
-    btScalar sphereRadii[ 2 ];
+    osgBullet::MotionState* motionState = new osgBullet::MotionState();
+    motionState->setTransform( new osg::MatrixTransform() );
+    //motionState->setParentTransform(
+        //osg::Matrix::translate( 4.85, 2.5, 5.75 ) );
 
-    sphereRadii[ 0 ] = width;
-    sphereRadii[ 1 ] = width;
-    spherePositions[ 0 ] =
-        btVector3( 0.0, ( height / btScalar( 2.0 ) - width ), 0.0 );
-    spherePositions[ 1 ] =
-        btVector3( 0.0, ( -height / btScalar( 2.0 ) + width ), 0.0 );
+    //btScalar mass( 1.0 );
+    //btVector3 inertia( 0.0, 0.0, 0.0 );
+    //collisionShape->calculateLocalInertia( mass, inertia );
 
-    mHalfHeight = height / btScalar( 2.0 );
+    //btRigidBody::btRigidBodyConstructionInfo rbci(
+        //mass, motionState, collisionShape, inertia );
+    //btRigidBody* rigidBody = new btRigidBody( rbci );
 
-    mShape = new btMultiSphereShape(
-        btVector3( width / btScalar( 2.0 ), height / btScalar( 2.0 ), width / btScalar( 2.0 ) ),
-        &spherePositions[ 0 ], &sphereRadii[ 0 ], 2 );
-    cadEntity->GetPhysicsRigidBody()->UserDefinedShape( mShape );
-    //cadEntity->GetPhysicsRigidBody()->CreateRigidBody(
-        //"Overall", "Dynamic", "Cylinder" );
+    //rigidBody->setFriction( 0.5 );
+    //rigidBody->setRestitution( 0.0 );
 
-    mRigidBody = cadEntity->GetPhysicsRigidBody()->GetbtRigidBody();
-    mRigidBody->setSleepingThresholds( 0.0, 0.0 );
-    mRigidBody->setAngularFactor( 0.0 );
-    mRigidBody->setFriction( 0.5 );
-    mRigidBody->setRestitution( 1.0 );
+    //mPhysicsSimulator->GetDynamicsWorld()->addRigidBody( rigidBody );
+
+    btTransform startTransform;
+    startTransform.setIdentity();
+    //startTransform.setOrigin( btVector3( 0.0, 4.0, 0.0 ) );
+
+    mGhostObject = new btPairCachingGhostObject();
+    mGhostObject->setWorldTransform( startTransform );
+
+    btConvexShape* capsuleShape =
+        new btCapsuleShape( characterWidth, characterHeight );
+    mGhostObject->setCollisionShape( capsuleShape );
+    mGhostObject->setCollisionFlags( btCollisionObject::CF_CHARACTER_OBJECT );
+
+    btScalar stepHeight = btScalar( 0.35 );
+    mCharacter =
+        new btKinematicCharacterController(
+            mGhostObject, capsuleShape, stepHeight );
+
+    dynamicsWorld->addCollisionObject(
+        mGhostObject, btBroadphaseProxy::CharacterFilter,
+        btBroadphaseProxy::StaticFilter | btBroadphaseProxy::DefaultFilter );
+
+    dynamicsWorld->addCharacter( mCharacter );
+
+    Reset( dynamicsWorld );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CharacterController::Destroy( btDynamicsWorld* dynamicsWorld )
 {
-    if( mShape )
-    {
-        delete mShape;
-    }
-
-    if( mRigidBody )
-    {
-        dynamicsWorld->removeRigidBody( mRigidBody );
-
-        delete mRigidBody;
-    }
-}
-////////////////////////////////////////////////////////////////////////////////
-btRigidBody* CharacterController::GetRigidBody()
-{
-    return mRigidBody;
-}
-////////////////////////////////////////////////////////////////////////////////
-void CharacterController::PreStep( btDynamicsWorld* dynamicsWorld )
-{
-    btTransform xform;
-    mRigidBody->getMotionState()->getWorldTransform( xform );
-    btVector3 down = -xform.getBasis()[ 2 ];
-    btVector3 forward = xform.getBasis()[ 1 ];
-    down.normalize();
-    forward.normalize();
-    std::cout << "down: "
-              << "( " << down[ 0 ]
-              << ", " << down[ 1 ]
-              << ", " << down[ 2 ]
-              << " )" << std::endl;
-
-    std::cout << "forward: "
-              << "( " << forward[ 0 ]
-              << ", " << forward[ 1 ]
-              << ", " << forward[ 2 ]
-              << " )" << std::endl;
-
-    mRaySource[ 0 ] = xform.getOrigin();
-    mRaySource[ 1 ] = xform.getOrigin();
-
-    mRayTarget[ 0 ] =
-        mRaySource[ 0 ] + down * mHalfHeight * btScalar( 1.1 );
-    mRayTarget[ 1 ] =
-        mRaySource[ 1 ] + forward * mHalfHeight * btScalar( 1.1 );
-
-    class ClosestNotMe : public btCollisionWorld::ClosestRayResultCallback
-    {
-    public:
-        ClosestNotMe( btRigidBody* me )
-            :
-            btCollisionWorld::ClosestRayResultCallback(
-                btVector3( 0.0, 0.0, 0.0 ), btVector3( 0.0, 0.0, 0.0 ) )
-        {
-            m_me = me;
-        }
-
-        virtual btScalar AddSingleResult(
-            btCollisionWorld::LocalRayResult& rayResult,
-            bool normalInWorldSpace )
-        {
-            if( rayResult.m_collisionObject == m_me )
-            {
-                return 1.0;
-            }
-
-            return ClosestRayResultCallback::addSingleResult(
-                rayResult, normalInWorldSpace );
-        }
-    protected:
-        btRigidBody* m_me;
-
-    };
-
-    ClosestNotMe rayCallback( mRigidBody );
-
-    int i = 0;
-    for( i = 0; i < 2; ++i )
-    {
-        rayCallback.m_closestHitFraction = 1.0;
-        dynamicsWorld->rayTest(
-            mRaySource[ i ], mRayTarget[ i ], rayCallback );
-        if( rayCallback.hasHit() )
-        {
-            mRayLambda[ i ] = rayCallback.m_closestHitFraction;
-        }
-        else
-        {
-            mRayLambda[ i ] = 1.0;
-        }
-    }
-}
-////////////////////////////////////////////////////////////////////////////////
-void CharacterController::PlayerStep( btScalar dt )
-{
-    btTransform xform;
-    mRigidBody->getMotionState()->getWorldTransform( xform );
-
-    //Handle turning
-    if( mTurnLeft )
-    {
-        mTurnAngle -= dt * mTurnVelocity;
-    }
-
-    if( mTurnRight )
-    {
-        mTurnAngle += dt * mTurnVelocity;
-    }
-
-    xform.setRotation(
-        btQuaternion( btVector3( 0.0, 0.0, 1.0 ), mTurnAngle ) );
-
-    btVector3 linearVelocity = mRigidBody->getLinearVelocity();
-    btScalar speed = mRigidBody->getLinearVelocity().length();
-
-    btVector3 forwardDir = xform.getBasis()[ 1 ];
-    forwardDir.normalize();
-    btVector3 walkDirection = btVector3( 0.0, 0.0, 0.0 );
-    btScalar walkSpeed = mWalkVelocity * dt;
-
-    if( mStepForward )
-    {
-        walkDirection += forwardDir;
-    }
-
-    if( mStepBackward )
-    {
-        walkDirection -= forwardDir;
-    }
-
-    if( !mStepForward && !mStepBackward && OnGround() )
-    {
-        //Dampen when on the ground and not being moved by the player
-        linearVelocity *= 0.2;
-        mRigidBody->setLinearVelocity( linearVelocity );
-    }
-    else
-    {
-        if( speed < mMaxLinearVelocity )
-        {
-            btVector3 velocity = linearVelocity + walkDirection * walkSpeed;
-            mRigidBody->setLinearVelocity( velocity );
-        }
-    }
-
-    mRigidBody->getMotionState()->setWorldTransform( xform );
-    mRigidBody->setCenterOfMassTransform( xform );
-
-    mStepForward = false;
-    mStepBackward = false;
-    mTurnRight = false;
-    mTurnLeft = false;
-}
-////////////////////////////////////////////////////////////////////////////////
-bool CharacterController::CanJump() const
-{
-    return OnGround();
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CharacterController::Jump()
 {
-    //if( !CanJump() )
-    //{
-        //return;
-    //}
+    /*
+    if( !CanJump() )
+    {
+        return;
+    }
 
     btTransform xform;
     mRigidBody->getMotionState()->getWorldTransform( xform );
     btVector3 up = xform.getBasis()[ 2 ];
     up.normalize();
-    std::cout << "up: "
-              << "( " << up[ 0 ]
-              << ", " << up[ 1 ]
-              << ", " << up[ 2 ]
-              << " )" << std::endl;
+
     btScalar magnitude =
         ( btScalar( 1.0 ) / mRigidBody->getInvMass() ) * btScalar( 8.0 );
     mRigidBody->applyCentralImpulse( up * magnitude );
+    */
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CharacterController::StepForward()
+void CharacterController::Reset( btDynamicsWorld* dynamicsWorld )
 {
-    mStepForward = true;
+    btDispatcher* dispatcher = dynamicsWorld->getDispatcher();
+    btBroadphaseInterface* broadphase = dynamicsWorld->getBroadphase();
+    broadphase->getOverlappingPairCache()->cleanProxyFromPairs(
+        mGhostObject->getBroadphaseHandle(), dispatcher );
+
+    mCharacter->reset();
+
+    mCharacter->warp( btVector3( 0, -2.0, 0.0 ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CharacterController::StepBackward()
+void CharacterController::StepForward( bool onOff )
 {
-    mStepBackward = true;
+    mStepForward = onOff;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CharacterController::TurnLeft()
+void CharacterController::StepBackward( bool onOff )
 {
-    mTurnLeft = true;
+    mStepBackward = onOff;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CharacterController::TurnRight()
+void CharacterController::StrafeLeft( bool onOff )
 {
-    mTurnRight = true;
+    mStrafeLeft = onOff;
+}
+////////////////////////////////////////////////////////////////////////////////
+void CharacterController::StrafeRight( bool onOff )
+{
+    mStrafeRight = onOff;
+}
+////////////////////////////////////////////////////////////////////////////////
+void CharacterController::TurnLeft( bool onOff )
+{
+    mTurnLeft = onOff;
+}
+////////////////////////////////////////////////////////////////////////////////
+void CharacterController::TurnRight( bool onOff )
+{
+    mTurnRight = onOff;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CharacterController::UpdateCharacter(
     btDynamicsWorld* dynamicsWorld, btScalar dt )
 {
-    PreStep( dynamicsWorld );
-
-    PlayerStep( dt );
-
-    if( mJump )
+    if( dynamicsWorld )
     {
-        Jump();
-        mJump = false;
-    }
+        //Set walkDirection for character
+        btTransform xform;
+        xform = mGhostObject->getWorldTransform();
 
-    //UpdateCamera();
+        btVector3 forwardDir = xform.getBasis()[ 1 ];
+        forwardDir.normalize();
+
+        btVector3 upDir = xform.getBasis()[ 2 ];
+        upDir.normalize();
+
+        btVector3 strafeDir = xform.getBasis()[ 0 ];
+        strafeDir.normalize();
+
+        btVector3 walkDirection = btVector3( 0.0, 0.0, 0.0 );
+        //4 km/h -> 1.1 m/s
+        btScalar walkVelocity = btScalar( 1.1 ) * 4.0;
+        btScalar walkSpeed = walkVelocity * dt;
+
+        if( mStrafeLeft )
+        {
+            walkDirection += strafeDir;
+        }
+
+        if( mStrafeRight )
+        {
+            walkDirection -= strafeDir;
+        }
+
+        if( mStepForward )
+        {
+            walkDirection += forwardDir;
+        }
+
+        if( mStepBackward )
+        {
+            walkDirection -= forwardDir;
+        }
+
+        mCharacter->setWalkDirection( walkDirection * walkSpeed );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CharacterController::UpdateCamera()
@@ -366,17 +276,24 @@ void CharacterController::UpdateCamera()
         vxs::SceneManager::instance()->GetActiveNavSwitchNode();
 
     //Look at the character
-    btTransform characterWorldTrans;
-    mRigidBody->getMotionState()->getWorldTransform( characterWorldTrans );
+    btTransform characterWorldTrans = mGhostObject->getWorldTransform();
 
-    osg::Vec3d eye( cameraDCS->getPosition() );
+    btVector3 tempUp = characterWorldTrans.getBasis()[ 2 ];
+    osg::Vec3d up( tempUp.x(), tempUp.y(), tempUp.z() );
+    up.normalize();
+    
+	btVector3 tempBackward = -characterWorldTrans.getBasis()[ 1 ];
+    osg::Vec3d backward( tempBackward.x(), tempBackward.y(), tempBackward.z() );
+    backward.normalize();
+
     btVector3 tempCenter = characterWorldTrans.getOrigin();
     osg::Vec3d center( tempCenter.x(), tempCenter.y(), tempCenter.z() );
-    btVector3 tempUp = characterWorldTrans.getBasis()[ 2 ];
-	//btVector3 backward = -characterWorldTrans.getBasis()[ 1 ];
-    osg::Vec3d up( tempUp.x(), tempUp.y(), tempUp.z() );
-    //osg::Vec3d up( 0.0, 1.0, 0.0 );
-    up.normalize();
+    center.normalize();
+
+    btVector3 tempEye = tempCenter + tempUp * 2.0 + tempBackward * 12.0;
+    osg::Vec3d eye( tempEye.x(), tempEye.y(), tempEye.z() );
+    //osg::Vec3d eye( cameraDCS->getPosition() );
+    eye.normalize();
 
     osg::Vec3d fVector = center - eye;
     fVector.normalize();
@@ -400,9 +317,9 @@ void CharacterController::UpdateCamera()
     matrix.mData[ 10 ] = -fVector[ 2 ];
 
     //Camera Position
-    matrix.mData[ 12 ] =  -eye[ 0 ];
-    matrix.mData[ 13 ] =  -eye[ 1 ];
-    matrix.mData[ 14 ] =  -eye[ 2 ];
+    //matrix.mData[ 12 ] =  eye[ 0 ];
+    //matrix.mData[ 13 ] =  eye[ 1 ];
+    //matrix.mData[ 14 ] =  eye[ 2 ];
 
     //
     matrix.mData[ 3 ]  =  0.0;
@@ -411,10 +328,5 @@ void CharacterController::UpdateCamera()
     matrix.mData[ 15 ] =  1.0;
 
     cameraDCS->SetMat( matrix );
-}
-////////////////////////////////////////////////////////////////////////////////
-bool CharacterController::OnGround() const
-{
-    return mRayLambda[ 0 ] < btScalar( 1.0 );
 }
 ////////////////////////////////////////////////////////////////////////////////

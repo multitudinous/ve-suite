@@ -30,22 +30,12 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
+
 #ifndef VE_PHYSICS_SIMULATOR_H
 #define VE_PHYSICS_SIMULATOR_H
 
 // --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
-
-namespace ves
-{
-namespace xplorer
-{
-namespace scenegraph
-{
-class CADEntity;
-}
-}
-}
 
 // --- VR Juggler Includes --- //
 #include <vpr/Util/Singleton.h>
@@ -62,11 +52,6 @@ class Transform;
 class Node;
 }
 
-namespace osgBullet
-{
-class DebugBullet;
-}
-
 // --- Bullet Includes --- //
 #include <LinearMath/btTransform.h>
 
@@ -78,6 +63,12 @@ class btSequentialImpulseConstraintSolver;
 class btRigidBody;
 class btCollisionShape;
 
+// --- osgBullet Includes --- //
+namespace osgBullet
+{
+class DebugBullet;
+}
+
 // --- C/C++ Libraries --- //
 #include <vector>
 
@@ -87,6 +78,9 @@ namespace xplorer
 {
 namespace scenegraph
 {
+
+class CADEntity;
+
 /*!\file PhysicsSimulator.h
  *
  */
@@ -133,20 +127,25 @@ public:
     ///Get whether physics is idle or not
     bool GetIdle();
 
+    ///
     int GetDebugMode();
 
     ///Adds a rigid body to the physics simulator
     ///\param mass The mass of the rigid body
     ///\param startTransform The initial transform of the rigid body
     ///\param shape The collision shape of the rigid body
-    btRigidBody* CreateRigidBody( float mass, const btTransform& startTransform, btCollisionShape* shape );
+    btRigidBody* CreateRigidBody(
+        float mass,
+        const btTransform& startTransform,
+        btCollisionShape* shape );
 
     ///Returns the dynamics world
-    btDynamicsWorld* GetDynamicsWorld();
+    btDynamicsWorld* const GetDynamicsWorld() const;
     
     ///Create flat ground plane for the world
     void CreateGroundPlane();
 
+    ///
     osgBullet::DebugBullet* GetDebugBullet();
 
 private:
@@ -174,34 +173,52 @@ private:
     ///\return OSG node for the plane
     osg::Node* CreateGround( float w, float h, const osg::Vec3& center );
     
-    int mDebugMode;///<The debug level for bullet physics
+    ///The debug level for bullet physics
+    int mDebugMode;
 
     ///Determines whether the physics simulation is idle or not
     bool mIdle;
+
+    ///
     bool mCollisionInformation;
+
     ///Speed of shooting boxes
     float shoot_speed;
+
     ///Is the ground plane created
     bool mCreatedGroundPlane;
     
-    gadget::PositionInterface head;///<The head in vr juggler
+    ///The head in vr juggler
+    gadget::PositionInterface head;
 
-    std::vector< ves::xplorer::scenegraph::CADEntity* > mBoxVector;///<
+    ///
+    std::vector< ves::xplorer::scenegraph::CADEntity* > mBoxVector;
 
-    btDynamicsWorld* mDynamicsWorld;///<Implements dynamics - basic, discrete, parallel, and continuous
+    ///Implements dynamics - basic, discrete, parallel, and continuous
+    btDynamicsWorld* mDynamicsWorld;
 
+    ///
     btDefaultCollisionConfiguration* mCollisionConfiguration;
-    btCollisionDispatcher* mDispatcher;///<Creates/Registers default collision algorithms, for convex, compound and concave shape support
-    btBroadphaseInterface* mBroadphase;///<Maintains objects with overlapping AABB
-    btSequentialImpulseConstraintSolver* mSolver;///<A physics solver which sequentially applies impulses
+
+    ///Creates/Registers default collision algorithms
+    ///for convex, compound and concave shape support
+    btCollisionDispatcher* mDispatcher;
+
+    ///Maintains objects with overlapping AABB
+    btBroadphaseInterface* mBroadphase;
+
+    ///A physics solver which sequentially applies impulses
+    btSequentialImpulseConstraintSolver* mSolver;
     
+    ///
     osgBullet::DebugBullet* mDebugBullet;
+
     ///Debug bullet
     bool mDebugBulletFlag;
+
 };
 }
 }
 }
 
-#endif //PHYSICS_SIMULATOR_H
-
+#endif //VE_PHYSICS_SIMULATOR_H

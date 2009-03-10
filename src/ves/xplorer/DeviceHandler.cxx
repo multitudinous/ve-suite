@@ -93,7 +93,7 @@ DeviceHandler::DeviceHandler()
     vxs::PhysicsSimulator* physicsSimulator = vxs::PhysicsSimulator::instance();
     vxs::CharacterController* characterController =
         vxs::SceneManager::instance()->GetCharacterController();
-    //characterController->Setup( physicsSimulator->GetDynamicsWorld() );
+    characterController->Initialize( physicsSimulator->GetDynamicsWorld() );
     std::map< const std::string, vx::Device* >::const_iterator itr;
     for( itr = mDevices.begin(); itr != mDevices.end(); ++itr )
     {

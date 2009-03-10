@@ -168,6 +168,9 @@ private:
     ///Navigation functions called on keyboard press events
     void NavOnKeyboardPress();
 
+    ///Navigation functions called on keyboard release events
+    void NavOnKeyboardRelease();
+
     ///Navigation functions called on mouse press events
     void NavOnMousePress();
 

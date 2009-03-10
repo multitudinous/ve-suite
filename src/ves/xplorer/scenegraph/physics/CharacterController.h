@@ -50,8 +50,8 @@ namespace osg
 #include <LinearMath/btVector3.h>
 
 class btDynamicsWorld;
-class btRigidBody;
-class btCollisionShape;
+class btKinematicCharacterController;
+class btPairCachingGhostObject;
 
 // --- C/C++ Libraries --- //
 
@@ -62,7 +62,6 @@ namespace xplorer
 {
 namespace scenegraph
 {
-
 
 /*!\file CharacterController.h
  *
@@ -83,33 +82,34 @@ public:
     ~CharacterController();
 
     ///
-    void Setup(
-        btDynamicsWorld* dynamicsWorld,
-        btScalar height = 2.0,
-        btScalar width = 0.25 );
+    void Initialize( btDynamicsWorld* dynamicsWorld );
 
     ///
     void Destroy( btDynamicsWorld* dynamicsWorld );
 
     ///
-    btRigidBody* GetRigidBody();
+    void StepForward( bool onOff );
 
     ///
-    void PreStep( btDynamicsWorld* dynamicsWorld );
+    void StepBackward( bool onOff );
 
     ///
-    void PlayerStep( btScalar dt );
+    void StrafeLeft( bool onOff );
 
     ///
-    bool CanJump() const;
+    void StrafeRight( bool onOff );
 
+    ///
+    void TurnLeft( bool onOff );
+
+    ///
+    void TurnRight( bool onOff );
+    
     ///
     void Jump();
 
-    void StepForward();
-    void StepBackward();
-    void TurnLeft();
-    void TurnRight();
+    ///
+    void Reset( btDynamicsWorld* dynamicsWorld );
 
     ///
     void UpdateCamera();
@@ -117,35 +117,45 @@ public:
     ///
     void UpdateCharacter( btDynamicsWorld* dynamicsWorld, btScalar dt );
 
-    ///
-    bool OnGround() const;
-
 protected:
 
 private:
+    ///
     bool mStepForward;
+
+    ///
     bool mStepBackward;
+
+    ///
     bool mStrafeLeft;
+
+    ///
     bool mStrafeRight;
+
+    ///
     bool mTurnLeft;
+
+    ///
     bool mTurnRight;
+
+    ///
     bool mJump;
 
-    btScalar mTurnAngle;
-    btScalar mMaxLinearVelocity;
-    btScalar mWalkVelocity;
-    btScalar mTurnVelocity;
-    btScalar mHalfHeight;
+    ///
+    double mCameraHeight;
 
-    btScalar mRayLambda[ 2 ];
+    ///
+    double mMinCameraDistance;
 
-    btVector3 mRaySource[ 2 ];
-    btVector3 mRayTarget[ 2 ];
-    btVector3 mRayNormal[ 2 ];
+    ///
+    double mMaxCameraDistance;
 
-    btRigidBody* mRigidBody;
+    ///
+    btKinematicCharacterController* mCharacter;
 
-    btCollisionShape* mShape;
+    ///
+    btPairCachingGhostObject* mGhostObject;
+
 };
 
 } // end scenegraph
