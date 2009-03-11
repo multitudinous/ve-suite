@@ -46,7 +46,6 @@
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
 
-#include <ves/xplorer/scenegraph/physics/CharacterController.h>
 #include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
 
 #include <ves/xplorer/environment/cfdQuatCamHandler.h>
@@ -478,24 +477,10 @@ void App::latePreFrame()
                 setFrameNumber( mFrameStamp->getFrameNumber() );
         }        
     }
-    vxs::PhysicsSimulator* physicsSimulator = vxs::PhysicsSimulator::instance();
-    ///////////////////////
-    if( !physicsSimulator->GetIdle() )
-    {
-        //VPR_PROFILE_GUARD_HISTORY( "App::latePreFrame CharacterController", 20 );
-        //vxs::SceneManager::instance()->GetCharacterController()->
-            //UpdateCharacter( physicsSimulator->GetDynamicsWorld(), mFrameDT );
-    }
     ///////////////////////
     {
         VPR_PROFILE_GUARD_HISTORY( "App::latePreFrame PhysicsSimulator", 20 );
-        physicsSimulator->UpdatePhysics( mFrameDT );
-    }
-    ///////////////////////
-    if( !physicsSimulator->GetIdle() )
-    {
-        //VPR_PROFILE_GUARD_HISTORY( "App::latePreFrame CharacterController", 20 );
-        //vxs::SceneManager::instance()->GetCharacterController()->UpdateCamera();
+        vxs::PhysicsSimulator::instance()->UpdatePhysics( mFrameDT );
     }
     ///////////////////////
     {
@@ -540,14 +525,17 @@ void App::latePreFrame()
         VPR_PROFILE_GUARD_HISTORY( "App::latePreFrame update", 20 );
         this->update();
     }
+
     ///Increment framenumber now that we are done using it everywhere
     _frameNumber += 1;
     mProfileCounter += 1;
+
     ///Grab nav data
     mNavPosition = 
         gmtl::convertTo< float >( 
             ves::xplorer::scenegraph::SceneManager::instance()->
             GetActiveNavSwitchNode()->GetMat() );
+
     vprDEBUG( vesDBG, 3 ) << "|App::End latePreFrame" 
         << std::endl << vprDEBUG_FLUSH;
 }

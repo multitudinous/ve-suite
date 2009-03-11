@@ -34,6 +34,7 @@
 #include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
 #include <ves/xplorer/scenegraph/physics/vesMotionState.h>
 #include <ves/xplorer/scenegraph/physics/PhysicsRigidBody.h>
+#include <ves/xplorer/scenegraph/physics/CharacterController.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/CADEntity.h>
@@ -264,7 +265,19 @@ void PhysicsSimulator::UpdatePhysics( float dt )
         return;
     }
 
+    vxs::CharacterController* characterController =
+        vxs::SceneManager::instance()->GetCharacterController();
+    if( characterController )
+    {
+        //characterController->UpdateCharacter( mDynamicsWorld, dt );
+    }
+
     mDynamicsWorld->stepSimulation( dt );
+
+    if( characterController )
+    {
+        //characterController->UpdateCamera();
+    }
 
     //Sample debug code
     /*for( int i = 0; i < mDynamicsWorld->getNumCollisionObjects(); ++i )

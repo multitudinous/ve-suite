@@ -111,11 +111,11 @@ void CharacterController::Initialize( btDynamicsWorld* dynamicsWorld )
 
     mCharacter->setUpAxis( 2 );
 
-    dynamicsWorld->addCollisionObject(
-        mGhostObject, btBroadphaseProxy::CharacterFilter,
-        btBroadphaseProxy::StaticFilter | btBroadphaseProxy::DefaultFilter );
+    //dynamicsWorld->addCollisionObject(
+        //mGhostObject, btBroadphaseProxy::CharacterFilter,
+        //btBroadphaseProxy::StaticFilter | btBroadphaseProxy::DefaultFilter );
 
-    dynamicsWorld->addCharacter( mCharacter );
+    //dynamicsWorld->addCharacter( mCharacter );
 
     Reset( dynamicsWorld );
 
@@ -135,9 +135,9 @@ void CharacterController::Initialize( btDynamicsWorld* dynamicsWorld )
 
     osg::ref_ptr< osg::MatrixTransform > mt = new osg::MatrixTransform();
     mt->addChild( geode.get() );
-    vxs::SceneManager::instance()->GetModelRoot()->addChild( mt.get() );
+    //vxs::SceneManager::instance()->GetModelRoot()->addChild( mt.get() );
 
-    mt->setUpdateCallback( new CharacterTransformCallback( mGhostObject ) );
+    //mt->setUpdateCallback( new CharacterTransformCallback( mGhostObject ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CharacterController::Destroy( btDynamicsWorld* dynamicsWorld )
@@ -255,65 +255,50 @@ void CharacterController::UpdateCharacter(
 ////////////////////////////////////////////////////////////////////////////////
 void CharacterController::UpdateCamera()
 {
-    /*
-    //Get the current camera matrix
+    btTransform characterWorldTrans = mGhostObject->getWorldTransform();
+
+    btVector3 up = characterWorldTrans.getBasis()[ 2 ];
+    up.normalize();
+    
+	btVector3 backward = -characterWorldTrans.getBasis()[ 1 ];
+    backward.normalize();
+
+    btVector3 center = characterWorldTrans.getOrigin();
+    btVector3 eye = center + up * 2.0 + backward * 12.0;
+
+    btVector3 zVector = eye - center;
+    zVector.normalize();
+    btVector3 xVector( up.cross( zVector ) );
+    xVector.normalize();
+    btVector3 yVector( zVector.cross( xVector ) );
+    yVector.normalize();
+
+    //"Look at" character matrix
     ves::xplorer::scenegraph::DCS* const cameraDCS =
         vxs::SceneManager::instance()->GetActiveNavSwitchNode();
 
-    //Look at the character
-    btTransform characterWorldTrans = mGhostObject->getWorldTransform();
-
-    btVector3 tempUp = characterWorldTrans.getBasis()[ 2 ];
-    osg::Vec3d up( tempUp.x(), tempUp.y(), tempUp.z() );
-    up.normalize();
-    
-	btVector3 tempBackward = -characterWorldTrans.getBasis()[ 1 ];
-    osg::Vec3d backward( tempBackward.x(), tempBackward.y(), tempBackward.z() );
-    backward.normalize();
-
-    btVector3 tempCenter = characterWorldTrans.getOrigin();
-    osg::Vec3d center( tempCenter.x(), tempCenter.y(), tempCenter.z() );
-    center.normalize();
-
-    btVector3 tempEye = tempCenter + tempUp * 2.0 + tempBackward * 12.0;
-    osg::Vec3d eye( tempEye.x(), tempEye.y(), tempEye.z() );
-    //osg::Vec3d eye( cameraDCS->getPosition() );
-    eye.normalize();
-
-    osg::Vec3d fVector = center - eye;
-    fVector.normalize();
-    osg::Vec3d sVector( fVector ^ up );
-    sVector.normalize();
-    osg::Vec3d uVector( sVector ^ fVector );
-    uVector.normalize();
-
     gmtl::Matrix44d matrix = cameraDCS->GetMat();
-    //Camera Rotation
-    matrix.mData[ 0 ]  =  sVector[ 0 ];
-    matrix.mData[ 1 ]  =  uVector[ 0 ];
-    matrix.mData[ 2 ]  = -fVector[ 0 ];
+    matrix.mData[ 0 ]  = xVector[ 0 ];
+    matrix.mData[ 1 ]  = xVector[ 1 ];
+    matrix.mData[ 2 ]  = xVector[ 2 ];
+    matrix.mData[ 3 ]  = 0.0;
 
-    matrix.mData[ 4 ]  =  sVector[ 1 ];
-    matrix.mData[ 5 ]  =  uVector[ 1 ];
-    matrix.mData[ 6 ]  = -fVector[ 1 ];
-    
-    matrix.mData[ 8 ]  =  sVector[ 2 ];
-    matrix.mData[ 9 ]  =  uVector[ 2 ];
-    matrix.mData[ 10 ] = -fVector[ 2 ];
+    matrix.mData[ 4 ]  = zVector[ 0 ];
+    matrix.mData[ 5 ]  = zVector[ 1 ];
+    matrix.mData[ 6 ]  = zVector[ 2 ];
+    matrix.mData[ 7 ]  = 0.0;
 
-    //Camera Position
-    //matrix.mData[ 12 ] =  -eye[ 0 ];
-    //matrix.mData[ 13 ] =  -eye[ 1 ];
-    //matrix.mData[ 14 ] =  -eye[ 2 ];
+    matrix.mData[ 8 ]  = yVector[ 0 ];
+    matrix.mData[ 9 ]  = yVector[ 1 ];
+    matrix.mData[ 10 ] = yVector[ 2 ];
+    matrix.mData[ 11 ] = 0.0;
 
-    //
-    matrix.mData[ 3 ]  =  0.0;
-    matrix.mData[ 7 ]  =  0.0;
-    matrix.mData[ 11 ] =  0.0;
-    matrix.mData[ 15 ] =  1.0;
+    matrix.mData[ 12 ] = -eye[ 0 ];
+    matrix.mData[ 13 ] = -eye[ 1 ];
+    matrix.mData[ 14 ] = -eye[ 2 ];
+    matrix.mData[ 15 ] = 1.0;
 
     cameraDCS->SetMat( matrix );
-    */
 }
 ////////////////////////////////////////////////////////////////////////////////
 CharacterController::CharacterTransformCallback::CharacterTransformCallback(
