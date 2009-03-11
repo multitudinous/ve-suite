@@ -419,101 +419,29 @@ void Body_Executive_i::execute_next_mod( long module_id )
     //rt is the module to be executed next
     //rt goes from 0 = no module to execute to
     //1 -> n where 1 is the first module executed and so on
-
     //rt is the next module index and -1 is subtracted to make the number 0 based
+    //to be able to index into the vector of modules stored in the network class
     int rt = _scheduler->execute( _network->GetModule( moduleIndex ) ) - 1;
-    std::cout << "VE-CE::execute_next_mod rt " 
-        << rt << " module id " << module_id << std::endl;
-    //This onyl works for serial exectuion and for units with 1 input and output port
-    int previousModuleIndex = rt - 1;
+    std::cout << "VE-CE::execute_next_mod Vector id of next module to execute " 
+        << rt << " Just executed module ID " << module_id << std::endl;
     if( rt < 0 )
     {
         ClientMessage( "VE-Suite Network Execution Complete\n" );
         return;
     }
-    
-    if( _mod_units.find( _network->GetModule( rt )->GetModuleName() ) == 
-       _mod_units.end() )
-    {
-        std::cerr <<  "VE-CE : Cannot find running unit " 
-            << _network->GetModule( rt )->GetModuleName() << std::endl
-            << "The units that are registerd are " << std::endl;
-        for( std::map< std::string, Body::Unit_var >::const_iterator iter = 
-            _mod_units.begin(); iter != _mod_units.end(); ++iter )
-        {
-            std::cout << "Unit name = " << iter->first << std::endl;
-        }
-        return;
-    }
 
-    std::vector< std::pair< XMLObjectPtr, std::string > > nodes;
-    std::string unitResultsData = "NULL";
-    std::string fileName( "returnString" );
-    //THis code needs to get ALL upstream modules for this particular module.
-    //We can do this through the module interface with the port class in ce
-    if( previousModuleIndex >= 0 )
-    {
-        //call query on previous module with "Get XML Model Results"
-        CommandPtr resultsCommand( new Command() );
-        resultsCommand->SetCommandName( "Get XML Model Results" );
-        //Get module id and unit name
-        //gets tagged as vendorUnit (module name) and moduleId (number id not uuid)
-        DataValuePairPtr vendorData( new DataValuePair() );
-        vendorData->SetData( "vendorUnit", _network->
-            GetModule( previousModuleIndex )->GetModuleName() );
-        resultsCommand->AddDataValuePair( vendorData );
-        DataValuePairPtr moduleIdData( new DataValuePair() );
-        moduleIdData->SetData( "moduleId", static_cast< long int >( 
-            _network->GetModule( previousModuleIndex )->get_id() ) );
-        resultsCommand->AddDataValuePair( moduleIdData );
-        //Then parse command
+    const std::string resultsData = GetResults( rt );
 
-        nodes.push_back( std::pair< CommandPtr, std::string  >(
-            resultsCommand, std::string( "vecommand" ) ) );
-
-        networkWriter.UseStandaloneDOMDocumentManager();
-        networkWriter.WriteXMLDocument( nodes, fileName, "Command" );
-        //Now query the unit for data
-        unitResultsData = Query( fileName.c_str() );
-    }
-    //std::cout << " results test = " << std::endl << unitResultsData << std::endl;
-    nodes.clear();
-    if( unitResultsData != "NULL" )
-    {
-        XMLReaderWriter networkReader;
-        networkReader.UseStandaloneDOMDocumentManager();
-        networkReader.ReadFromString();
-        networkReader.ReadXMLData( unitResultsData, "Command", "vecommand" );
-        objectVector = networkReader.GetLoadedXMLObjects();
-    
-        //Then set inputs on next module
-        nodes.push_back( std::pair< CommandPtr, std::string  >(
-            boost::dynamic_pointer_cast< ves::open::xml::Command >( 
-            objectVector.at( 0 ) ), std::string( "vecommand" ) ) );
-    }
-    //Now get the input data for the current model
-    const std::vector< CommandPtr > inputList = 
-        _network->GetModule( rt )->GetVEModel()->GetInputs();
-    for( size_t k = 0; k < inputList.size(); ++k )
-    {
-        nodes.push_back( std::pair< CommandPtr, std::string  >(
-            inputList.at( k ), std::string( "vecommand" ) ) );
-    }
-    
-    fileName.assign( "returnString" );
-    networkWriter.UseStandaloneDOMDocumentManager();
-    networkWriter.WriteXMLDocument( nodes, fileName, "Command" );
-    //std::cout << fileName << std::endl;
     try
     {
         long int tempID = 
             static_cast< long int >( _network->GetModule( rt )->get_id() );
         _mod_units[ _network->GetModule( rt )->GetModuleName() ]->
             SetCurID( tempID );
-        if( fileName != "NULL" )
+        if( resultsData != "NULL" )
         {
             _mod_units[ _network->GetModule( rt )->GetModuleName()]->
-                SetParams( tempID, fileName.c_str() );
+                SetParams( tempID, resultsData.c_str() );
         }
         execute( _network->GetModule( rt )->GetModuleName() );
     }
@@ -521,6 +449,109 @@ void Body_Executive_i::execute_next_mod( long module_id )
     {
         std::cerr << "VE-CE : Cannot contact Module " << module_id << std::endl;
     }
+}
+////////////////////////////////////////////////////////////////////////////
+std::string Body_Executive_i::GetResults( int rt )
+{
+     //This onyl works for serial exectuion and for units with 1 input and output port
+    Module* nextModule = _network->GetModule( rt );
+    if( _mod_units.find( nextModule->GetModuleName() ) == 
+       _mod_units.end() )
+    {
+        std::cerr <<  "VE-CE : Cannot find running unit " 
+            << nextModule->GetModuleName() << std::endl
+            << "The units that are registerd are " << std::endl;
+        for( std::map< std::string, Body::Unit_var >::const_iterator iter = 
+            _mod_units.begin(); iter != _mod_units.end(); ++iter )
+        {
+            std::cout << "Unit name = " << iter->first << std::endl;
+        }
+        return "return";
+    }
+
+    XMLReaderWriter networkWriter;
+    std::vector< std::pair< XMLObjectPtr, std::string > > previousModuleResultsCommands;
+    CommandPtr modelResults( new Command() );
+    modelResults->SetCommandName( "Upstream Model Results" );
+    // Now, look upstream for results data...
+    int numInputPorts = nextModule->numIPorts();
+    for( size_t i = 0;i < numInputPorts; ++i )
+    {
+        IPort* iport = nextModule->getIPort( i );
+        int numConnections = iport->nconnections();
+        for( size_t j=0; j<numConnections; ++j )
+        {
+            Connection* conn = iport->connection( j );
+            OPort* oport = conn->get_oport();
+            Module* m = oport->get_module();
+            std::cout << "Upstream Module Name: " << m->GetModuleName() 
+                << " and ID " << m->get_id() << std::endl;
+            //previousModuleIndex = _network->moduleIdx( m->get_id() );
+            {
+                std::string unitResultsData = "NULL";
+                //THis code needs to get ALL upstream modules for this particular module.
+                //We can do this through the module interface with the port class in ce
+                //call query on previous module with "Get XML Model Results"
+                CommandPtr resultsCommand( new Command() );
+                resultsCommand->SetCommandName( "Get XML Model Results" );
+                //Get module id and unit name
+                //gets tagged as vendorUnit (module name) and moduleId (number id not uuid)
+                DataValuePairPtr vendorData( new DataValuePair() );
+                vendorData->SetData( "vendorUnit", m->GetModuleName() );
+                resultsCommand->AddDataValuePair( vendorData );
+                DataValuePairPtr moduleIdData( new DataValuePair() );
+                moduleIdData->SetData( "moduleId", static_cast< long int >( 
+                    m->get_id() ) );
+                resultsCommand->AddDataValuePair( moduleIdData );
+
+                //Then parse command
+                std::vector< std::pair< XMLObjectPtr, std::string > > nodes;
+                std::string upstreamResultsData( "returnString" );
+                nodes.push_back( std::pair< CommandPtr, std::string  >(
+                    resultsCommand, std::string( "vecommand" ) ) );
+
+                networkWriter.UseStandaloneDOMDocumentManager();
+                networkWriter.WriteXMLDocument( nodes, upstreamResultsData, "Command" );
+                //Now query the unit for data
+                unitResultsData = Query( upstreamResultsData.c_str() );
+
+                if( unitResultsData != "NULL" )
+                {
+                    XMLReaderWriter networkReader;
+                    networkReader.UseStandaloneDOMDocumentManager();
+                    networkReader.ReadFromString();
+                    networkReader.ReadXMLData( unitResultsData, "Command", "vecommand" );
+                    std::vector< XMLObjectPtr > objectVector = networkReader.GetLoadedXMLObjects();
+                    CommandPtr tempResult =  boost::dynamic_pointer_cast<ves::open::xml::Command>( objectVector.at( 0 ) );
+                    size_t numDVPResults = tempResult->GetNumberOfDataValuePairs();
+                    for( size_t k = 0; k < numDVPResults; ++k )
+                    {
+                        DataValuePairPtr tempDVP = tempResult->GetDataValuePair( k );
+                        modelResults->AddDataValuePair( tempDVP );
+                    }
+                }
+            }
+        }
+    }
+    //Then set inputs on next module
+    previousModuleResultsCommands.push_back( std::pair< CommandPtr, std::string  >(
+        modelResults, std::string( "vecommand" ) ) );
+
+
+    //Now get the input data for the current model
+    const std::vector< CommandPtr > inputList = 
+        nextModule->GetVEModel()->GetInputs();
+    for( size_t k = 0; k < inputList.size(); ++k )
+    {
+        previousModuleResultsCommands.push_back( std::pair< CommandPtr, std::string  >(
+            inputList.at( k ), std::string( "vecommand" ) ) );
+    }
+    std::string resultsData;
+    resultsData.assign( "returnString" );
+    networkWriter.UseStandaloneDOMDocumentManager();
+    networkWriter.WriteXMLDocument( previousModuleResultsCommands, resultsData, "Command" );
+
+    return resultsData;
 }
 ////////////////////////////////////////////////////////////////////////////
 void Body_Executive_i::SetModuleMessage(

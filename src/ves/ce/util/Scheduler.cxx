@@ -162,8 +162,11 @@ void Scheduler::sweep( Module* exclude )
             for( i = 0;i < ni;i++ )
             {
                 IPort* iport = module->getIPort( i );
-                if( iport->nconnections() )
+                int numIPorts = iport->nconnections();
+                if( numIPorts )
                 {
+                    //for( size_t j=0; j<numIPorts; ++j )
+                    {
                     Connection* conn = iport->connection( 0 );
                     OPort* oport = conn->get_oport();
                     Module* m = oport->get_module();
@@ -183,6 +186,7 @@ void Scheduler::sweep( Module* exclude )
                                 needexecute.push( m );
                             }
                         }
+                    }
                     }
                 }
             }// end upstream for

@@ -241,7 +241,8 @@ void Link::SetObjectFromXMLData( DOMNode* element )
 
         // for link points
         {
-            unsigned int numberOfPortData = currentElement->getElementsByTagName(                     Convert( "linkPoints" ).toXMLString() )->getLength();
+            unsigned int numberOfPortData = currentElement->getElementsByTagName(  
+                Convert( "linkPoints" ).toXMLString() )->getLength();
 
             for( unsigned int i = 0; i < numberOfPortData; ++i )
             {

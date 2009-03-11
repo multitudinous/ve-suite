@@ -72,6 +72,7 @@ public:
     virtual ~Body_Executive_i( void );
 
     void execute_next_mod( long module_id );
+    std::string GetResults( int rt );
 
 protected:
 

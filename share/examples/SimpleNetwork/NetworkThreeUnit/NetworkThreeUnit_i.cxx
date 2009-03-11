@@ -56,22 +56,10 @@ void Body_Unit_i::StartCalc (ACE_ENV_SINGLE_ARG_DECL )
         size_t tempValue = inputsVec.at( i )->GetNumberOfDataValuePairs();
         for( size_t j=0; j<tempValue; ++j )
         {
-            /*boost::dynamic_pointer_cast< Command >( 
-                inputsVec.at( i )->GetDataValuePair( "mNetworkThreeInputs" )->
-                GetDataXMLObject() )->GetDataValuePair( "mNetworkThreeInputs" )->
-                GetData( mNetworkThreeInputs );*/
-
             for( size_t k=0; k<mNetworkThreeInputs.size(); ++k )
             {
                 std::cout << "Unit Three Input " << k << ": " << mNetworkThreeInputs.at( k ) << std::endl; 
             }
-            /*
-            std::string tempString;
-			tempString = inputsVec.at( i )->
-				GetDataValuePair( j )->GetDataString();
-            std::cout << "DataValuePair j = " << j << " = " 
-				<< tempString << std::endl;
-                */
         }
     }
 
@@ -82,6 +70,11 @@ void Body_Unit_i::StartCalc (ACE_ENV_SINGLE_ARG_DECL )
 
     command->SetCommandName( "SimpleNetworkTest-Three Unit" );
 	command->AddDataValuePair( dvp );
+
+    double temp = 3.0;
+    DataValuePairPtr dvpNum( new DataValuePair() );
+	dvpNum->SetData( "UNIT 3 ORDER TEST", temp );
+	command->AddDataValuePair( dvpNum );
 
     xmlModelMap[ strm.str() ]->SetResult( command );
 

@@ -46,6 +46,10 @@ void Body_Unit_i::StartCalc (ACE_ENV_SINGLE_ARG_DECL )
     std::cout << "Active ID = " << activeId << std::endl;
     std::cout << " model " << std::endl 
 		<< xmlModelMap[ strm.str() ] << std::endl;
+
+    double inputOne;
+    double inputTwo;
+
     for( size_t i = 0; i < inputsVec.size(); ++i )
     {
         std::cout << "Input i = " << i << " = " 
@@ -55,21 +59,35 @@ void Body_Unit_i::StartCalc (ACE_ENV_SINGLE_ARG_DECL )
         for( size_t j=0; j<tempValue; ++j )
         {
             std::string tempString;
+       
             if( boost::dynamic_pointer_cast< Command >( inputsVec.at( i )->
 				GetDataValuePair( j )->GetDataXMLObject() ) )
             {
-				tempString = boost::dynamic_pointer_cast< Command >( 
-					inputsVec.at( i )->GetDataValuePair( j )->
-					GetDataXMLObject() )->GetDataValuePair( j )->
-					GetDataString();
+                size_t tempValue2 = boost::dynamic_pointer_cast< Command >( 
+					inputsVec.at( i )->GetDataValuePair( j )->GetDataXMLObject())->
+                    GetNumberOfDataValuePairs();
+                for( size_t k=0; k<tempValue2; ++k )
+                {
+                    inputOne = boost::dynamic_pointer_cast< Command >( 
+                        inputsVec.at( i )->GetDataValuePair( j )->
+                        GetDataXMLObject() )->GetDataValuePair( k )->GetDataValue();
+
+                    tempString = boost::dynamic_pointer_cast< Command >( 
+                        inputsVec.at( i )->GetDataValuePair( j )->
+                        GetDataXMLObject() )->GetDataValuePair( k )->GetDataString();
+                    
+                    std::cout << "Order test value " << inputOne 
+                        << " " << tempString << std::endl;
+                }
             }
 			else
 			{
 				tempString = inputsVec.at( i )->
 					GetDataValuePair( j )->GetDataString();
+
+                std::cout << "DataValuePair j = " << j << " = " 
+                    << tempString << std::endl;
 			}
-            std::cout << "DataValuePair j = " << j << " = " 
-				<< tempString << std::endl;
         }
     }
 
