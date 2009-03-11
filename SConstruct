@@ -402,6 +402,16 @@ help_text += opts.GenerateHelpText(baseEnv)
 baseEnv.Help(help_text)
 
 if not SConsAddons.Util.hasHelpFlag():
+   # setup initial windows build environment before the options are processed
+   # it will be setup again below for the environment that the user sees
+   if GetPlatform() == 'win32':
+      baseEnv[ 'MSVS_VERSION' ] = "8.0"
+      baseEnv[ 'MSVS_ARCH' ] = "x86"
+      print "Visual Studio Versions Available %s" %baseEnv[ 'MSVS' ]['VERSIONS']
+      baseEnv[ 'MSVS_USE_MFC_DIRS' ] = 1
+      baseEnv.Tool('msvc')
+      baseEnv.AppendUnique( CXXFLAGS = ['/EHsc'] )
+
    # now lets process everything
    opts.Process(baseEnv)                   # Update the options
 
@@ -458,16 +468,21 @@ if not SConsAddons.Util.hasHelpFlag():
    #baseEnv.Append( LIBPATH = [pj(RootDir, buildDir,'external', 'loki-0.1.6')] )
 
    if GetPlatform() == 'win32':
-      baseEnv[ 'MSVS']['VERSION' ] = 8.0
+      #baseEnv[ 'MSVS']['VERSION' ] = 8.0
+      baseEnv[ 'MSVS_VERSION' ] = "8.0"
+      #baseEnv[ 'MSVS_ARCH' ] = "x86"
+      #print baseEnv[ 'MSVS_ARCH' ]
+      print "Visual Studio Versions Available %s" %baseEnv[ 'MSVS' ]['VERSIONS']
       baseEnv[ 'MSVS_USE_MFC_DIRS' ] = 1
-      ms = Tool('msvc')
-      ms( baseEnv )
+      baseEnv.Tool('msvc')
+      #ms = Tool('msvc')
+      #ms( baseEnv )
       baseEnv.AppendUnique( CPPDEFINES = ['WIN32_LEAN_AND_MEAN'] )
-      #baseEnv.AppendUnique( CXXFLAGS = ['/wd4005'] )
+      #baseEnv.AppendUnique( CXXFLAGS = ['/wd4005'] /EHsc )
       # for more information on WIN32_LEAN_AND_MEAN see:
       # http://support.microsoft.com/kb/166474
-      baseEnv.Append( ARFLAGS = '/MACHINE:X86', LINKFLAGS = '/MACHINE:X86' )
-      baseEnv.Append( WINDOWS_INSERT_MANIFEST = True )
+      baseEnv.Append( ARFLAGS = ['/MACHINE:X86'], LINKFLAGS = ['/MACHINE:X86'] )
+      baseEnv.Append( WINDOWS_INSERT_MANIFEST = ['True'] )
       # As noted below WINVER will be defined as 0x0502
       # http://msdn.microsoft.com/en-us/library/aa383745(VS.85).aspx
       baseEnv.AppendUnique( CPPDEFINES = ['WINVER=0x0502'] )

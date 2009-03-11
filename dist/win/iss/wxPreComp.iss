@@ -32,7 +32,7 @@ WizardImageStretch=false
 OutputDir={#INSTALLERINSTALLLOCATION}
 AppVersion={#WXVERSION}_{#VEVERSION}
 PrivilegesRequired=none
-
+UsePreviousGroup=false
 [Languages]
 Name: eng; MessagesFile: compiler:Default.isl
 

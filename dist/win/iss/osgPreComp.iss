@@ -36,7 +36,7 @@ SetupIconFile={#VEDEVHOME}\dist\installerImages\Ve_icon.ico
 EnableDirDoesntExistWarning=true
 PrivilegesRequired=none
 RestartIfNeededByRun=false
-
+UsePreviousGroup=false
 [Languages]
 Name: eng; MessagesFile: compiler:Default.isl
 

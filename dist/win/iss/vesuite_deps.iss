@@ -30,7 +30,7 @@ BackColor=$a16502
 BackColor2=$1b84f7
 SetupIconFile={#VEINSTALLHOME}\bin\installerImages\Ve_icon.ico
 PrivilegesRequired=none
-
+UsePreviousGroup=false
 [Languages]
 Name: eng; MessagesFile: compiler:Default.isl
 [Types]

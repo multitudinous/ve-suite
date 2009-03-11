@@ -30,7 +30,7 @@ WizardSmallImageFile={#VEDEVHOME}\dist\installerImages\ve_icon.bmp
 WizardImageStretch=false
 OutputDir={#INSTALLERINSTALLLOCATION}
 PrivilegesRequired=none
-
+UsePreviousGroup=false
 [Languages]
 Name: eng; MessagesFile: compiler:Default.isl
 

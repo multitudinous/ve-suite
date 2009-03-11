@@ -38,7 +38,7 @@ RestartIfNeededByRun=false
 UsePreviousGroup=true
 AppendDefaultGroupName=true
 TimeStampsInUTC=true
-
+UsePreviousGroup=false
 [Languages]
 Name: english; MessagesFile: compiler:Default.isl
 

@@ -5,6 +5,8 @@
 #define MyAppVerName "VRJuggler_{#JUGGLERVERSION} Pre-Compile_vc{#MSVCVERSION} "
 #define MyAppPublisher "VERG"
 #define MyAppURL "www.vesuite.org"
+#define VRJUGGLER_INST_LOCATION "C:\dev\ves_deps\vrjuggler-2.3"
+#define VRJUGGLER_DEPS_INST_LOCATION "C:\dev\ves_deps\vrjuggler-2.3-deps"
 
 [Setup]
 AppName={#MyAppName}
@@ -29,15 +31,32 @@ WizardSmallImageFile={#VEDEVHOME}\dist\installerImages\ve_icon.bmp
 WizardImageStretch=false
 OutputDir={#INSTALLERINSTALLLOCATION}
 PrivilegesRequired=none
-
+UsePreviousGroup=false
 [Languages]
 Name: eng; MessagesFile: compiler:Default.isl
 
 [Files]
-Source: {#DEPENDSINSTALLHOME}\{#JUGGLERINSTHOME}\include\*; DestDir: {app}\include; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: {#DEPENDSINSTALLHOME}\{#JUGGLERINSTHOME}\lib\*; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: {#DEPENDSINSTALLHOME}\{#JUGGLERINSTHOME}\bin\*; DestDir: {app}\bin; Flags: ignoreversion recursesubdirs createallsubdirs skipifsourcedoesntexist
-Source: {#DEPENDSINSTALLHOME}\{#JUGGLERINSTHOME}\share\*; DestDir: {app}\share; Flags: ignoreversion recursesubdirs createallsubdirs skipifsourcedoesntexist
+;Get all of VR Juggler
+Source: {#VRJUGGLER_INST_LOCATION}\include\*.h; DestDir: {app}\include; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: {#VRJUGGLER_INST_LOCATION}\include\*.hpp; DestDir: {app}\include; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: {#VRJUGGLER_INST_LOCATION}\lib\*.dll; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: {#VRJUGGLER_INST_LOCATION}\lib\*.lib; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: {#VRJUGGLER_INST_LOCATION}\lib\*.fpc; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: {#VRJUGGLER_INST_LOCATION}\lib\*.exp; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: {#VRJUGGLER_INST_LOCATION}\bin\*; DestDir: {app}\bin; Flags: ignoreversion recursesubdirs createallsubdirs skipifsourcedoesntexist
+Source: {#VRJUGGLER_INST_LOCATION}\share\*; DestDir: {app}\share; Flags: ignoreversion recursesubdirs createallsubdirs skipifsourcedoesntexist
+
+;Get all of VR Juggler Deps
+Source: {#VRJUGGLER_DEPS_INST_LOCATION}\include\*.h; DestDir: {app}\include; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: {#VRJUGGLER_DEPS_INST_LOCATION}\include\*.hpp; DestDir: {app}\include; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: {#VRJUGGLER_DEPS_INST_LOCATION}\lib\*.lib; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: {#VRJUGGLER_DEPS_INST_LOCATION}\lib\*.dll; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: {#VRJUGGLER_DEPS_INST_LOCATION}\lib\*.fpc; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: {#VRJUGGLER_DEPS_INST_LOCATION}\lib\*.exp; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: {#VRJUGGLER_DEPS_INST_LOCATION}\bin\*; DestDir: {app}\bin; Flags: ignoreversion recursesubdirs createallsubdirs skipifsourcedoesntexist
+Source: {#VRJUGGLER_DEPS_INST_LOCATION}\share\*; DestDir: {app}\share; Flags: ignoreversion recursesubdirs createallsubdirs skipifsourcedoesntexist
+Source: {#VRJUGGLER_DEPS_INST_LOCATION}\share\*.fpc; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs skipifsourcedoesntexist
+
 
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
