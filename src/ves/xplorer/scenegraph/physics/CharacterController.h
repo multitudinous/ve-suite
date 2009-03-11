@@ -37,14 +37,9 @@
 // --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
 
-
 // --- OSG Includes --- //
 #include <osg/ref_ptr>
-
-namespace osg
-{
-
-}
+#include <osg/NodeCallback>
 
 // --- Bullet Includes --- //
 #include <LinearMath/btVector3.h>
@@ -52,9 +47,7 @@ namespace osg
 class btDynamicsWorld;
 class btKinematicCharacterController;
 class btPairCachingGhostObject;
-
-// --- C/C++ Libraries --- //
-
+class btCollisionObject;
 
 namespace ves
 {
@@ -155,6 +148,25 @@ private:
 
     ///
     btPairCachingGhostObject* mGhostObject;
+
+    ///
+    class CharacterTransformCallback : public osg::NodeCallback
+    {
+    public:
+        CharacterTransformCallback( btCollisionObject* collisionObject );
+
+        CharacterTransformCallback( const CharacterTransformCallback& ctc );
+        
+        virtual ~CharacterTransformCallback();
+
+        virtual void operator()( osg::Node* node, osg::NodeVisitor* nv );
+
+    protected:
+
+    private:
+        btCollisionObject* mCollisionObject;
+
+    };
 
 };
 

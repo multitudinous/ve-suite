@@ -35,10 +35,8 @@
 #include <ves/xplorer/scenegraph/physics/CharacterController.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
-#include <ves/xplorer/scenegraph/CADEntity.h>
 
 #include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
-//#include <ves/xplorer/scenegraph/physics/PhysicsRigidBody.h>
 
 // --- OSG Includes --- //
 #include <osg/Geode>
@@ -54,9 +52,6 @@
 #include <BulletCollision/CollisionDispatch/btGhostObject.h>
 
 #include <BulletCollision/CollisionShapes/btCapsuleShape.h>
-
-// --- osgBullet Includes --- //
-#include <osgBullet/MotionState.h>
 
 // --- C/C++ Libraries --- //
 #include <iostream>
@@ -90,49 +85,16 @@ CharacterController::~CharacterController()
 ////////////////////////////////////////////////////////////////////////////////
 void CharacterController::Initialize( btDynamicsWorld* dynamicsWorld )
 {
+    //Create physics mesh representation
     btScalar characterHeight = 1.75;
     btScalar characterWidth = 1.75;
-
-    osg::ref_ptr< osg::Geode > geode = new osg::Geode();
-    osg::ref_ptr< osg::Capsule > capsule =
-        new osg::Capsule(
-            osg::Vec3( 0.0, 0.0, 0.0 ),
-            characterWidth, characterHeight );
-    osg::ref_ptr< osg::TessellationHints > hints = new osg::TessellationHints();
-    osg::ref_ptr< osg::ShapeDrawable > shapeDrawable =
-        new osg::ShapeDrawable( capsule.get(), hints.get() );
-
-    hints->setDetailRatio( 1.0 );
-    shapeDrawable->setColor( osg::Vec4( 1.0, 1.0, 0.0, 1.0 ) );
-    geode->addDrawable( shapeDrawable.get() );
-
-    vxs::SceneManager::instance()->GetModelRoot()->addChild( geode.get() );
 
     btBroadphaseInterface* broadphase = dynamicsWorld->getBroadphase();
     broadphase->getOverlappingPairCache()->setInternalGhostPairCallback(
         new btGhostPairCallback() );
 
-    osgBullet::MotionState* motionState = new osgBullet::MotionState();
-    motionState->setTransform( new osg::MatrixTransform() );
-    //motionState->setParentTransform(
-        //osg::Matrix::translate( 4.85, 2.5, 5.75 ) );
-
-    //btScalar mass( 1.0 );
-    //btVector3 inertia( 0.0, 0.0, 0.0 );
-    //collisionShape->calculateLocalInertia( mass, inertia );
-
-    //btRigidBody::btRigidBodyConstructionInfo rbci(
-        //mass, motionState, collisionShape, inertia );
-    //btRigidBody* rigidBody = new btRigidBody( rbci );
-
-    //rigidBody->setFriction( 0.5 );
-    //rigidBody->setRestitution( 0.0 );
-
-    //mPhysicsSimulator->GetDynamicsWorld()->addRigidBody( rigidBody );
-
     btTransform startTransform;
     startTransform.setIdentity();
-    //startTransform.setOrigin( btVector3( 0.0, 4.0, 0.0 ) );
 
     mGhostObject = new btPairCachingGhostObject();
     mGhostObject->setWorldTransform( startTransform );
@@ -147,6 +109,8 @@ void CharacterController::Initialize( btDynamicsWorld* dynamicsWorld )
         new btKinematicCharacterController(
             mGhostObject, capsuleShape, stepHeight );
 
+    mCharacter->setUpAxis( 2 );
+
     dynamicsWorld->addCollisionObject(
         mGhostObject, btBroadphaseProxy::CharacterFilter,
         btBroadphaseProxy::StaticFilter | btBroadphaseProxy::DefaultFilter );
@@ -154,6 +118,26 @@ void CharacterController::Initialize( btDynamicsWorld* dynamicsWorld )
     dynamicsWorld->addCharacter( mCharacter );
 
     Reset( dynamicsWorld );
+
+    //Create graphics mesh representation
+    osg::ref_ptr< osg::Geode > geode = new osg::Geode();
+    osg::ref_ptr< osg::Capsule > capsule =
+        new osg::Capsule(
+            osg::Vec3( 0.0, 0.0, 0.0 ),
+            characterWidth, characterHeight );
+    osg::ref_ptr< osg::TessellationHints > hints = new osg::TessellationHints();
+    osg::ref_ptr< osg::ShapeDrawable > shapeDrawable =
+        new osg::ShapeDrawable( capsule.get(), hints.get() );
+
+    hints->setDetailRatio( 1.0 );
+    shapeDrawable->setColor( osg::Vec4( 1.0, 1.0, 0.0, 1.0 ) );
+    geode->addDrawable( shapeDrawable.get() );
+
+    osg::ref_ptr< osg::MatrixTransform > mt = new osg::MatrixTransform();
+    mt->addChild( geode.get() );
+    vxs::SceneManager::instance()->GetModelRoot()->addChild( mt.get() );
+
+    mt->setUpdateCallback( new CharacterTransformCallback( mGhostObject ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CharacterController::Destroy( btDynamicsWorld* dynamicsWorld )
@@ -189,7 +173,7 @@ void CharacterController::Reset( btDynamicsWorld* dynamicsWorld )
 
     mCharacter->reset();
 
-    mCharacter->warp( btVector3( 0, -2.0, 0.0 ) );
+    //mCharacter->warp( btVector3( 0, -2.0, 0.0 ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CharacterController::StepForward( bool onOff )
@@ -247,12 +231,12 @@ void CharacterController::UpdateCharacter(
 
         if( mStrafeLeft )
         {
-            walkDirection += strafeDir;
+            walkDirection -= strafeDir;
         }
 
         if( mStrafeRight )
         {
-            walkDirection -= strafeDir;
+            walkDirection += strafeDir;
         }
 
         if( mStepForward )
@@ -271,6 +255,7 @@ void CharacterController::UpdateCharacter(
 ////////////////////////////////////////////////////////////////////////////////
 void CharacterController::UpdateCamera()
 {
+    /*
     //Get the current camera matrix
     ves::xplorer::scenegraph::DCS* const cameraDCS =
         vxs::SceneManager::instance()->GetActiveNavSwitchNode();
@@ -317,9 +302,9 @@ void CharacterController::UpdateCamera()
     matrix.mData[ 10 ] = -fVector[ 2 ];
 
     //Camera Position
-    //matrix.mData[ 12 ] =  eye[ 0 ];
-    //matrix.mData[ 13 ] =  eye[ 1 ];
-    //matrix.mData[ 14 ] =  eye[ 2 ];
+    //matrix.mData[ 12 ] =  -eye[ 0 ];
+    //matrix.mData[ 13 ] =  -eye[ 1 ];
+    //matrix.mData[ 14 ] =  -eye[ 2 ];
 
     //
     matrix.mData[ 3 ]  =  0.0;
@@ -328,5 +313,45 @@ void CharacterController::UpdateCamera()
     matrix.mData[ 15 ] =  1.0;
 
     cameraDCS->SetMat( matrix );
+    */
+}
+////////////////////////////////////////////////////////////////////////////////
+CharacterController::CharacterTransformCallback::CharacterTransformCallback(
+    btCollisionObject* collisionObject )
+    :
+    mCollisionObject( collisionObject )
+{
+    ;
+}
+////////////////////////////////////////////////////////////////////////////////
+CharacterController::CharacterTransformCallback::CharacterTransformCallback(
+    const CharacterTransformCallback& ctc )
+    :
+    osg::Object( ctc ),
+    osg::NodeCallback( ctc ),
+    mCollisionObject( ctc.mCollisionObject )
+{
+    ;
+}
+////////////////////////////////////////////////////////////////////////////////
+CharacterController::CharacterTransformCallback::~CharacterTransformCallback()
+{
+    ;
+}
+////////////////////////////////////////////////////////////////////////////////
+void CharacterController::CharacterTransformCallback::operator()(
+    osg::Node* node, osg::NodeVisitor* nv )
+{
+    osg::ref_ptr< osg::MatrixTransform > mt =
+        static_cast< osg::MatrixTransform* >( node );
+
+    if( mt.valid() && mCollisionObject )
+    {
+        btScalar ogl[ 16 ];
+        mCollisionObject->getWorldTransform().getOpenGLMatrix( ogl );
+        mt->setMatrix( osg::Matrixd( ogl ) );
+    }
+
+    traverse( node, nv );
 }
 ////////////////////////////////////////////////////////////////////////////////
