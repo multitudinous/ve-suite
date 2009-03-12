@@ -12,7 +12,7 @@ headers = map(lambda s: pj('include','osgPPU', s),
 sources = map(lambda s: pj('src', 'osgPPU', s), 
                 sources)
 
-lib_env = ves_pkg.getEnv().Copy()
+lib_env = ves_pkg.getEnv().Clone()
 lib_env.Append( CPPPATH = [pj(openDir, 'include' )] )
 lib_env.Append( CPPDEFINES  = ['OSGPPU_LIBRARY','osgPPU_EXPORTS'] )
 
@@ -38,7 +38,7 @@ lib.build()
 sourcesDB = sca_util.getSourcesRecursive( pj( openDir, 'src','osgPlugins','osgPPU') )
 sourcesDB = map(lambda s: pj('src','osgPlugins','osgPPU', s), sourcesDB)
 
-libDB_env = ves_pkg.getEnv().Copy()
+libDB_env = ves_pkg.getEnv().Clone()
 libDB_env.Append( CPPPATH = [pj(openDir, 'include' )] )
 libDB_env.Append( CPPDEFINES  = ['osgdb_ppu_EXPORTS'] )
 libDB_env.Append( LIBS = ['osgPPU'] )

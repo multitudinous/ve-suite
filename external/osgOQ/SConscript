@@ -12,7 +12,7 @@ headers = map(lambda s: pj('include','osgOQ', s),
 sources = map(lambda s: pj('src', 'osgOQ', s), 
                 sources)
 
-lib_env = ves_pkg.getEnv().Copy()
+lib_env = ves_pkg.getEnv().Clone()
 lib_env.Append( CPPPATH = [pj(openDir, 'include' )] )
 lib_env.Append( CPPDEFINES  = ['OSGOQ_EXPORTS'] )
 
@@ -33,7 +33,7 @@ lib.build()
 sourcesDB = sca_util.getSourcesRecursive( pj( openDir, 'src','osgdb_osgOQ') )
 sourcesDB = map(lambda s: pj('src', 'osgdb_osgOQ', s), sourcesDB)
 
-libDB_env = ves_pkg.getEnv().Copy()
+libDB_env = ves_pkg.getEnv().Clone()
 libDB_env.Append( CPPPATH = [pj(openDir, 'include' )] )
 libDB_env.Append( CPPDEFINES  = ['OSGOQ_EXPORTS'] )
 libDB_env.Append( LIBS = ['osgOQ'] )

@@ -16,7 +16,7 @@ headers = Split("""
    NetworkOneGP.h
 """)
 
-lib_env = ves_pkg.getEnv().Copy()
+lib_env = ves_pkg.getEnv().Clone()
 lib_env. AppendUnique( LIBS = [ 'ves_xplorer', 'ves_open_xml', 'ves_xplorer_util', 'ves_xplorer_scenegraph' ] )
 lib_env.AppendUnique( LIBPATH = [ pj('#', buildDir, 'src','ves','xplorer'),
 		            	    pj('#', buildDir, 'src','ves','xplorer','scenegraph'),

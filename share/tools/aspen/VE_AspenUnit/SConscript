@@ -28,7 +28,7 @@ headers = Split("""
    AspenIconData.h
 """)
 
-env = ves_pkg.getEnv().Copy()
+env = ves_pkg.getEnv().Clone()
 #env['MSVS_IGNORE_IDE_PATHS'] = 1
 env['MSVS_USE_MFC_DIRS'] = 1
 

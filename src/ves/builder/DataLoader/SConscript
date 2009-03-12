@@ -40,7 +40,7 @@ headers = Split("""
 
 ##srcs = map(lambda s: pj('#', 'VE_Builder', 'Translator', 'DataLoader', s), srcs)
 
-lib_env = ves_pkg.getEnv().Copy()
+lib_env = ves_pkg.getEnv().Clone()
 lib_env.Append(LIBPATH = [pj('#', buildDir,'src','ves','xplorer','util'),
                           pj('#', buildDir, 'src','ves','builder','cfdTranslatorToVTK') ],
                LIBS = ['ves_xplorer_util', 'ves_builder_translator_base'])
@@ -70,7 +70,7 @@ srcs = Split("""
 """)
 #srcs = map(lambda s: pj('#', buildDir, 'src', 'ves', 'builder', 'DataLoader', s), srcs)
 
-env = ves_pkg.getEnv().Copy()
+env = ves_pkg.getEnv().Clone()
 env.Append(LIBPATH = [pj('#', buildDir, 'src','ves','xplorer','util'),
                       pj('#', buildDir, 'src','ves','builder','cfdTranslatorToVTK'),
                       pj('#', buildDir, 'src','ves','builder','DataLoader') ],

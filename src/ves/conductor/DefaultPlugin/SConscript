@@ -16,7 +16,7 @@ headers = Split("""
     DefaultPlugin_UI_Dialog.h
 """)
 
-lib_env = ves_pkg.getEnv().Copy()
+lib_env = ves_pkg.getEnv().Clone()
 lib_env.Append(LIBS = ['VE_ConductorLib', 'VE_XML','GUIPluginLib',
                    'VE_OpenModuleLib'])
 lib_env.Append(LIBPATH = [pj('#', buildDir, 'VE_Conductor','Network'),

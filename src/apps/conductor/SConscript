@@ -12,7 +12,7 @@ headers = sca_util.getHeadersRecursive( srcDir )
 #srcs += [pj( '..', '..', 'ves','conductor', 'DefaultPlugin', 'DefaultPlugin.cxx' )]
 #srcs += [pj( '..', '..', 'ves','conductor', 'DefaultPlugin', 'DefaultPlugin_UI_Dialog.cxx' )]
 
-env = ves_pkg.getEnv().Copy()
+env = ves_pkg.getEnv().Clone()
 env.Append( CPPDEFINES = [ GetSVNVersion( srcDir ) ] )
 env.Append(LIBS = ['ves_conductor_plugin', 'ves_open_xml',
                    'ves_open_module'])

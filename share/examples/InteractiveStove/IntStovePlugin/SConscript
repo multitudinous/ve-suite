@@ -6,7 +6,7 @@ pj = os.path.join
 
 host_type = distutils.util.get_platform()
 
-Import('ves_pkg buildDir GetPlatform wxwidgets_options vpr_options tao_options  xerces_options')
+Import('ves_pkg buildDir GetPlatform wxwidgets_options vpr_options tao_options  xerces_options osg_options')
 
 srcs = Split("""
    IntStoves_UI_Dialog.cpp
@@ -22,7 +22,7 @@ headers = Split("""
    GLCanvasWrapper.h
 """)
 
-lib_env = ves_pkg.getEnv().Copy()
+lib_env = ves_pkg.getEnv().Clone()
 
 lib_env.AppendUnique( LIBS = ['ves_conductor_plugin',
                         'ves_open_xml' ] )
@@ -36,6 +36,10 @@ vpr_options.apply( lib_env )
 wxwidgets_options.apply( lib_env )
 tao_options.apply( lib_env )
 xerces_options.apply( lib_env )
+osg_options.apply( lib_env )
+
+#print osg_options.getSettings()
+#self.flagpoll_parser = sca_util.FlagPollParser(self.moduleName, self.fpcFile)
 
 if GetPlatform() == 'win32':
    lib_env['no_import_lib'] = 1

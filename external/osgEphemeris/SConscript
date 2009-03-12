@@ -12,7 +12,7 @@ headers = map(lambda s: pj('include','osgEphemeris', s),
 sources = map(lambda s: pj('src', 'osgEphemerisLib', s), 
                 sources)
 
-lib_env = ves_pkg.getEnv().Copy()
+lib_env = ves_pkg.getEnv().Clone()
 lib_env.Append( CPPPATH = [pj(openDir, 'include' )] )
 lib_env.Append( CPPDEFINES  = ['OSGEPHEMERIS_LIBRARY'] )
 

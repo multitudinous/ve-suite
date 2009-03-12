@@ -4,7 +4,7 @@ pj = os.path.join
 
 Import('baseEnv buildDir GetPlatform')
 
-env = baseEnv.Copy()
+env = baseEnv.Clone()
 ##env.Append(CPPPATH = [os.getcwd()])
 ##env.Append(CPPPATH = ['idl'])
 

@@ -12,7 +12,7 @@ headers = sca_util.getHeadersRecursive( srcDir )
 
 ##srcs = map(lambda s: pj('#', 'VE_Xplorer', 'SceneGraph', s), srcs)
 
-lib_env = ves_pkg.getEnv().Copy()
+lib_env = ves_pkg.getEnv().Clone()
 
 lib_env.Append(CPPPATH = [pj('#','external','osgBullet','include'),
                           pj('#','external', bulletBaseVar,'Extras'),

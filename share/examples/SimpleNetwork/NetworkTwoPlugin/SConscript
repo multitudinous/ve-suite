@@ -18,7 +18,7 @@ headers = Split("""
    	NetworkTwo.h
 """)
 
-lib_env = ves_pkg.getEnv().Copy()
+lib_env = ves_pkg.getEnv().Clone()
 
 lib_env.AppendUnique( LIBS = ['ves_conductor_plugin', 'ves_open_xml' ] )
 lib_env.AppendUnique( LIBPATH = [ pj('#', buildDir, 'src','ves','conductor' ),

@@ -4,7 +4,7 @@ pj = os.path.join
 import SConsAddons.Util as sca_util
 
 Import('ves_pkg', 'RootDir', 'buildDir')
-env = ves_pkg.getEnv().Copy()
+env = ves_pkg.getEnv().Clone()
 
 
 ##Freezing Launcher Code

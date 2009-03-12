@@ -17,7 +17,7 @@ headers = Split("""
    QueryThread.h
 """)
 
-env = ves_pkg.getEnv().Copy()
+env = ves_pkg.getEnv().Clone()
 env.Append(LIBS = ['ves_open_xml', 'ves_ce_util', 'ves_open_module'])
 env.Append(LIBPATH = [
                         pj('#', buildDir, 'src','ves','ce','util'),

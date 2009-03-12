@@ -15,7 +15,7 @@ headers  = glob.glob(pj(RootDir, buildDir, 'src','ves','open','*.cpp'))
 headers += glob.glob(pj(RootDir, buildDir, 'src','ves','open','*.h'))
 headers += glob.glob(pj(RootDir, buildDir, 'src','ves','open','*.inl'))
 
-lib_env = ves_pkg.getEnv().Copy()
+lib_env = ves_pkg.getEnv().Clone()
 
 tao_options.apply( lib_env )
 

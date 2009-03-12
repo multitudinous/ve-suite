@@ -12,7 +12,7 @@ headers = sca_util.getHeadersRecursive( pj( openDir, 'src' )  )
 headers = map(lambda s: pj('src', s), headers)
 sources = map(lambda s: pj('src', s), sources)
 
-lib_env = ves_pkg.getEnv().Copy()
+lib_env = ves_pkg.getEnv().Clone()
 lib_env.Append( CPPPATH = [pj(openDir, 'src' ), 
     pj(openDir, 'src','BulletMultiThreaded','vectormath','scalar','cpp')] )
 
@@ -36,7 +36,7 @@ headersDB = sca_util.getHeadersRecursive( pj( openDir, 'Extras','BulletColladaCo
 sourcesDB = map(lambda s: pj('Extras','BulletColladaConverter', s), sourcesDB)
 headersDB = map(lambda s: pj('Extras','BulletColladaConverter', s), headersDB)
 
-libDB_env = ves_pkg.getEnv().Copy()
+libDB_env = ves_pkg.getEnv().Clone()
 libDB_env.Append( CPPPATH = [pj(openDir, 'Extras' )] )
 libDB_env.Append( CPPPATH = [pj(openDir, 'Extras','COLLADA_DOM','include')] )
 libDB_env.Append( CPPPATH = [pj(openDir, 'Extras','COLLADA_DOM','include','1.4')] )
@@ -64,7 +64,7 @@ headersDB = sca_util.getHeadersRecursive( pj( openDir, 'Extras','ConvexDecomposi
 sourcesDB = map(lambda s: pj('Extras','ConvexDecomposition', s), sourcesDB)
 headersDB = map(lambda s: pj('Extras','ConvexDecomposition', s), headersDB)
 
-libDB_env = ves_pkg.getEnv().Copy()
+libDB_env = ves_pkg.getEnv().Clone()
 #libDB_env.Append( LIBS = ['bullet','XML','COLLADA_DOM'] )
 #libDB_env.Append( LIBPATH = [pj('#', buildDir,'external', bulletBaseVar)] )
 if GetPlatform() == 'linux':
@@ -88,7 +88,7 @@ headers = sca_util.getHeadersRecursive( pj( openDir, 'Extras','COLLADA_DOM','src
 headers = map(lambda s: pj('Extras','COLLADA_DOM','include', s), headers)
 sources = map(lambda s: pj('Extras','COLLADA_DOM','src', s), sources)
 
-lib_env = ves_pkg.getEnv().Copy()
+lib_env = ves_pkg.getEnv().Clone()
 lib_env.Append( CPPPATH = [pj(openDir, 'Extras','COLLADA_DOM','include' )] )
 lib_env.Append( CPPPATH = [pj(openDir, 'Extras','COLLADA_DOM','include','1.4' )] )
 lib_env.Append( CPPPATH = [pj(openDir, 'Extras','LibXML','include' )] )
@@ -114,7 +114,7 @@ headers = sca_util.getHeadersRecursive( pj( openDir, 'Extras','LibXML','include'
 headers = map(lambda s: pj('Extras','LibXML','include', s), headers)
 sources = map(lambda s: pj('Extras','LibXML', s), sources)
 
-lib_env = ves_pkg.getEnv().Copy()
+lib_env = ves_pkg.getEnv().Clone()
 #lib_env.Append( CPPPATH = [pj(openDir, 'Extras','COLLADA_DOM','include' )] )
 #lib_env.Append( CPPPATH = [pj(openDir, 'Extras','COLLADA_DOM','include','1.4' )] )
 lib_env.Append( CPPPATH = [pj(openDir, 'Extras','LibXML','include' )] )

@@ -9,8 +9,8 @@ srcDir = os.path.abspath( pj(RootDir, 'test', 'osg', 'rtt' ) )
 sources = sca_util.getSourcesRecursive( srcDir )
 headers = sca_util.getHeadersRecursive( srcDir )
 
-env = ves_pkg.getEnv().Copy()
-#env = baseEnv.Copy()
+env = ves_pkg.getEnv().Clone()
+#env = baseEnv.Clone()
 osg_options.apply( env )
 
 prog = ves_pkg.createProgram('rttsupersample' + env["PROGSUFFIX"], env, 'bin')

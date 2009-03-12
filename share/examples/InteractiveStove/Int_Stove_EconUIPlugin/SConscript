@@ -12,7 +12,7 @@ srcDir = os.path.abspath( pj(RootDir, 'share', 'examples', 'InteractiveStove','I
 srcs = sca_util.getSourcesRecursive( srcDir )
 headers = sca_util.getHeadersRecursive( srcDir )
 
-lib_env = ves_pkg.getEnv().Copy()
+lib_env = ves_pkg.getEnv().Clone()
 
 lib_env.AppendUnique( LIBS = ['ves_conductor_plugin',
                         'ves_open_xml' ] )

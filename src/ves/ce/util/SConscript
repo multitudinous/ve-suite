@@ -9,8 +9,8 @@ srcDir = os.path.abspath( pj(RootDir, 'src', 'ves', 'ce', 'util') )
 sources = sca_util.getSourcesRecursive( srcDir )
 headers = sca_util.getHeadersRecursive( srcDir )
 
-lib_env = ves_pkg.getEnv().Copy()
-##env = baseEnv.Copy()
+lib_env = ves_pkg.getEnv().Clone()
+##env = baseEnv.Clone()
 lib_env.Append(LIBS = ['ves_open_xml', 'ves_open_module'])
 lib_env.Append(LIBPATH = [ pj('#', buildDir, 'src', 'ves', 'open'),
                         pj('#', buildDir, 'src', 'ves', 'open','xml') ] )

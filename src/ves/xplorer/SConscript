@@ -62,7 +62,7 @@ base_header_srcs = sca_util.getHeadersRecursive( srcDir )
 sources += map(lambda s: pj('plugin', s), base_plugin_srcs)
 headers += map(lambda s: pj('plugin', s), base_header_srcs)
 
-lib_env = ves_pkg.getEnv().Copy()
+lib_env = ves_pkg.getEnv().Clone()
 lib_env.Append(LIBS = ['ves_open_xml',
                    'ves_xplorer_scenegraph',
                    'ves_xplorer_util',

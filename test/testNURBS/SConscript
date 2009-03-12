@@ -9,7 +9,7 @@ srcs = Split("""
 """)
 
 
-env = ves_pkg.getEnv().Copy()
+env = ves_pkg.getEnv().Clone()
 env.Append(LIBS = ['ves_xplorer_util'])
 env.Append(LIBS = ['ves_xplorer_scenegraph'])
 env.Append(LIBS = ['ves_open_xml'])

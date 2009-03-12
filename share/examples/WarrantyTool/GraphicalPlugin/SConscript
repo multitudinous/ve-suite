@@ -14,7 +14,7 @@ headers = sca_util.getHeadersRecursive( openDir )
 
 #bulletVersion = bullet_options.getVersion()
 
-lib_env = ves_pkg.getEnv().Copy()
+lib_env = ves_pkg.getEnv().Clone()
 lib_env.Append( LIBS = [ 'ves_open_xml',
                          'ves_xplorer',
                          'ves_xplorer_scenegraph' ] )

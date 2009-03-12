@@ -14,7 +14,7 @@ openDir = os.path.abspath( pj( RootDir, 'share', 'examples', 'CoinFunnel', 'Coin
 sources = sca_util.getSourcesRecursive( openDir )
 headers = sca_util.getHeadersRecursive( openDir )
 
-lib_env = ves_pkg.getEnv().Copy()
+lib_env = ves_pkg.getEnv().Clone()
 lib_env.Append( LIBS = [ 'ves_xplorer',
                          'ves_xplorer_scenegraph',
                          'bullet',

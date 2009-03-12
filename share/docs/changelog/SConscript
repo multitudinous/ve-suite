@@ -5,7 +5,7 @@ from SCons.Util import WhereIs
 pj = os.path.join
 
 Import('ves_pkg', 'baseEnv', 'buildDir', 'RootDir')
-env = ves_pkg.getEnv().Copy()
+env = ves_pkg.getEnv().Clone()
 
 ##Base parameters.
 relativeDir = pj('share', 'docs', 'changelog')

@@ -30,7 +30,7 @@ headers.pop(index)
 index = headers.index(pj('ScalarData.h') )
 headers.pop(index)
 
-lib_env = ves_pkg.getEnv().Copy()
+lib_env = ves_pkg.getEnv().Clone()
 lib_env.Append(LIBS = 'ves_xplorer_util')
 lib_env.Append(LIBPATH = [pj('#', buildDir, 'src', 'ves', 'xplorer', 'util')])
 

@@ -9,7 +9,7 @@ srcDir = os.path.abspath( pj(RootDir, 'share', 'tools', 'builder','hexgridgen') 
 srcs = sca_util.getSourcesRecursive( srcDir )
 headers = sca_util.getHeadersRecursive( srcDir )
 
-env = ves_pkg.getEnv().Copy()
+env = ves_pkg.getEnv().Clone()
 #env.Append( LIBPATH = [pj('#', buildDir, 'src','ves','xplorer','util')],
 #            LIBS = ['ves_xplorer_util'])
 

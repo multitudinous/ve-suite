@@ -14,7 +14,7 @@ headers = Split("""
 
 ##srcs = map(lambda s: pj('#', 'VE_Xplorer', 'GraphicalPlugin', s), srcs)
 
-lib_env = ves_pkg.getEnv().Copy()
+lib_env = ves_pkg.getEnv().Clone()
 lib_env.Append(LIBS = ['VE_SceneGraph%s' %(execOsgPatTag),
                    'VE_XplorerLib%s' %(execOsgPatTag),
                    'VE_TextureBasedLib%s' %(execOsgPatTag),

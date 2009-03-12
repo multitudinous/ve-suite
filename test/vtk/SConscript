@@ -9,8 +9,8 @@ srcs = Split("""
 """)
 
 
-#env = ves_pkg.getEnv().Copy()
-env = baseEnv.Copy()
+#env = ves_pkg.getEnv().Clone()
+env = baseEnv.Clone()
 vtk_options.apply( env )
 
 multiblock = ves_pkg.createProgram('multiblockTest' + env["PROGSUFFIX"], env, 'bin')

@@ -17,7 +17,7 @@ headers = Split("""
 	NetworkOneUnit_i.h
 """)
 
-lib_env = ves_pkg.getEnv().Copy()
+lib_env = ves_pkg.getEnv().Clone()
 lib_env.Append(LIBS = ['ves_open_xml', 'ves_ce_unitwrapper', 'ves_open_module'])
 lib_env.Append(LIBPATH = [pj(RootDir, buildDir, 'src', 'ves', 'open'),
 			                 pj(RootDir, buildDir, 'src', 'ves', 'open', 'xml'),

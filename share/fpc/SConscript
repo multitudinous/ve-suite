@@ -5,7 +5,7 @@ import SConsAddons.Util as sca_util
 
 Import('ves_pkg baseEnv GetArch osg_options VE_SUITE_VERSION vtk_options xerces_options')
 
-lib_env = ves_pkg.getEnv().Copy()
+lib_env = ves_pkg.getEnv().Clone()
 fpcFile = []
 # Build up the provides vars for the .fpc files
 provides = "osg"

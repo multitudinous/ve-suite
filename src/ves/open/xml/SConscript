@@ -9,7 +9,7 @@ openDir = os.path.abspath( pj(RootDir, 'src', 'ves', 'open', 'xml') )
 sources = sca_util.getSourcesRecursive( openDir )
 headers = sca_util.getHeadersRecursive( openDir )
 
-lib_env = ves_pkg.getEnv().Copy()
+lib_env = ves_pkg.getEnv().Clone()
 
 xerces_options.apply( lib_env )
 apr_options.apply( lib_env )

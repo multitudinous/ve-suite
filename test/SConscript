@@ -5,7 +5,7 @@ pj = os.path.join
 Import("baseEnv buildDir RootDir vrjuggler_options tao_options xerces_options")
 Import("wxwidgets_options")
 
-env = baseEnv.Copy()
+env = baseEnv.Clone()
 
 # Make an action for generating the test files.
 cxx_test_flags = '--error-printer --have-eh --abort-on-fail'

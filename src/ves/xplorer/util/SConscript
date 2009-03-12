@@ -18,7 +18,7 @@ sources.pop(index)
 
 ##srcs = map(lambda s: pj('#', 'VE_Xplorer', 'Utilities', s), util_srcs)
 
-lib_env = ves_pkg.getEnv().Copy()
+lib_env = ves_pkg.getEnv().Clone()
 
 vtk_options.apply( lib_env )
 boost_options.apply( lib_env )

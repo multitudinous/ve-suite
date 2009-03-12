@@ -11,7 +11,7 @@ openDir = os.path.abspath( pj( RootDir, 'share', 'examples', 'HyperLab', 'HyperL
 sources = sca_util.getSourcesRecursive( openDir )
 headers = sca_util.getHeadersRecursive( openDir )
 
-lib_env = ves_pkg.getEnv().Copy()
+lib_env = ves_pkg.getEnv().Clone()
 lib_env[ 'MSVS_USE_MFC_DIRS' ] = 1
 lib_env.Clone( WINDOWS_INSERT_DEF = 1 )
 lib_env.Append( LINKFLAGS = [ '/SUBSYSTEM:WINDOWS' ] )

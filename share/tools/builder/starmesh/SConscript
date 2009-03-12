@@ -8,7 +8,7 @@ sources = Split("""
    StarCDTransient.cxx
    StarCDTransientApp.cxx
 """)
-env = baseEnv.Copy()
+env = baseEnv.Clone()
 env.Append(CPPPATH = [os.getcwd()])
 
 wxwidgets_options.apply( env )

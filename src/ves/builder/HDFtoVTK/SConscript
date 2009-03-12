@@ -10,7 +10,7 @@ srcs = Split("""
    viewCells.cxx 
 """)
 
-env = ves_pkg.getEnv().Copy()
+env = ves_pkg.getEnv().Clone()
 env.Append(LIBPATH = [pj('#', buildDir, 'VE_Xplorer','Utilities')],
             LIBS = ['VE_UtilLib'])
 

@@ -12,7 +12,7 @@ headers = Split("""
    AspenDynamicsInterface.h
 """)
 
-lib_env = ves_pkg.getEnv().Copy()
+lib_env = ves_pkg.getEnv().Clone()
 lib_env['MSVS_USE_MFC_DIRS'] = 1
 
 lib_env.Append( CPPDEFINES = ['_AFXDLL'])

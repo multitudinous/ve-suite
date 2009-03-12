@@ -19,7 +19,7 @@ headers = Split("""
 
 programName = 'vtkTo3DTexture'
 
-env = ves_pkg.getEnv().Copy()
+env = ves_pkg.getEnv().Clone()
 
 if env[ 'UseMPI' ] == 'yes':
     baseEnv.Append( CPPDEFINES = ['USE_MPI'] )

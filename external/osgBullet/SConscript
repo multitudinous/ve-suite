@@ -12,7 +12,7 @@ headers = map(lambda s: pj('include','osgBullet', s),
 sources = map(lambda s: pj('src', 'osgBullet', s), 
                 sources)
 
-lib_env = ves_pkg.getEnv().Copy()
+lib_env = ves_pkg.getEnv().Clone()
 lib_env.Append( CPPPATH = [pj(openDir, 'include' )] )
 lib_env.Append( CPPPATH = [pj(RootDir, 'external', bulletBaseVar,'src' ) ] )
 lib_env.Append( CPPPATH = [pj(RootDir, 'external', bulletBaseVar,'Extras') ] )
@@ -40,7 +40,7 @@ openDir = os.path.abspath( pj(RootDir, 'external', 'osgBullet') )
 sources2 = sca_util.getSourcesRecursive( pj( openDir, 'applications','osgbpp' ) )
 sources2 = map(lambda s: pj('applications','osgbpp', s), sources2)
 
-lib_env2 = ves_pkg.getEnv().Copy()
+lib_env2 = ves_pkg.getEnv().Clone()
 lib_env2.Append( CPPPATH = [pj(openDir, 'include' )] )
 lib_env2.Append( CPPPATH = [pj(RootDir, 'external', bulletBaseVar,'src' ) ] )
 lib_env2.Append( CPPPATH = [pj(RootDir, 'external', bulletBaseVar,'Extras') ] )
@@ -63,7 +63,7 @@ openDir = os.path.abspath( pj(RootDir, 'external', 'osgBullet') )
 sources2 = sca_util.getSourcesRecursive( pj( openDir, 'examples','CadDemo' ) )
 sources2 = map(lambda s: pj('examples','CadDemo', s), sources2)
 
-lib_env2 = ves_pkg.getEnv().Copy()
+lib_env2 = ves_pkg.getEnv().Clone()
 lib_env2.Append( CPPPATH = [pj(openDir, 'include' )] )
 lib_env2.Append( CPPPATH = [pj(RootDir, 'external', bulletBaseVar,'src' ) ] )
 lib_env2.Append( CPPPATH = [pj(RootDir, 'external', bulletBaseVar,'Extras') ] )

@@ -16,7 +16,7 @@ headers = Split("""
     DefaultGraphicalPlugin.h
 """)
 
-lib_env = ves_pkg.getEnv().Copy()
+lib_env = ves_pkg.getEnv().Clone()
 lib_env.Append( LIBS = [ 'ves_xplorer',
                          'ves_xplorer_scenegraph' ] )
 lib_env.Append( LIBPATH = [ pj('#', buildDir, 'src','ves','xplorer'),

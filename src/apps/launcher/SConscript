@@ -4,7 +4,7 @@ pj = os.path.join
 import SConsAddons.Util as sca_util
 
 Import('ves_pkg', 'RootDir')
-#env = ves_pkg.getEnv().Copy()
+#env = ves_pkg.getEnv().Clone()
 
 launcherBundle = ves_pkg.createFileBundle( 'bin' )
 pyFile = sca_util.getFilesRecursiveByExt( '.', ['.py'] )

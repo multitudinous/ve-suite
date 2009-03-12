@@ -9,7 +9,7 @@ srcDir = os.path.abspath( pj(RootDir, 'src', 'ves', 'util') )
 sources = sca_util.getSourcesRecursive( srcDir )
 headers = sca_util.getHeadersRecursive( srcDir )
 
-lib_env = ves_pkg.getEnv().Copy()
+lib_env = ves_pkg.getEnv().Clone()
 
 if baseEnv['StaticLibs'] == "yes":
    lib = ves_pkg.createStaticAndSharedLibrary('ves_util',
