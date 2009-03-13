@@ -94,8 +94,6 @@ SummaryResultDialog::SummaryResultDialog( wxWindow * parent,
     SetAutoLayout( TRUE );
     toptop->Fit( this );
 
-    //mCommand = command;
-
     size_t numInputs = command.size();
     for( size_t i = 0; i < numInputs; ++i )
     {

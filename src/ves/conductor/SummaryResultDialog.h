@@ -58,11 +58,6 @@ namespace conductor
 class VE_GUIPLUGINS_EXPORTS SummaryResultDialog : public UIDialog
 {
 public:
-   /* SummaryResultDialog( wxWindow* parent,
-        const wxString& title = wxT( "Result Dialog" ),
-        wxSize tabsize = wxSize( 477, 300 ),
-        const std::vector< ves::open::xml::CommandPtr > command=( const std::vector< ves::open::xml::Command() >));
-*/
     SummaryResultDialog( wxWindow* parent,
         const wxString& title,
         wxSize tabsize,
