@@ -107,7 +107,7 @@ class App : public vrj::OsgApp
 {
 public:
     ///Contructor
-    App( int argc, char* argv[] );
+    App( int argc, char* argv[], bool enableRTT );
 
     ///Destructor
     virtual ~App();

@@ -56,7 +56,8 @@ class PrefWindow(wx.Dialog):
         ##Build displays.
         self.isAutoShutdown = self.state.GetSurface("AutoShutDown")
         self.isEnableVSync = self.state.GetSurface("EnableVSync")
-        
+        self.isEnableRTT = self.state.GetSurface("RTT")
+
         self.sbLableDirectory = wx.StaticBox( self, -1, "Default Working Directory" )
         #Text box and Browse button
         self.txDirectory = wx.TextCtrl( self, 800, 
@@ -70,6 +71,7 @@ class PrefWindow(wx.Dialog):
         self.cbDefaultDir = wx.CheckBox( self, 801, "Use Default Working Directory", wx.DefaultPosition, wx.DefaultSize, 0 )
         self.cbAutoShutdown = wx.CheckBox( self, 802, "Auto Shutdown", wx.DefaultPosition, wx.DefaultSize, 0 )
         self.cbEnableVSync = wx.CheckBox( self, 803, "Enable VSync", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.cbEnableRTT = wx.CheckBox( self, 804, "Enable RTT", wx.DefaultPosition, wx.DefaultSize, 0 )
 
         #OK and Cancel button
         if windows:
@@ -102,6 +104,7 @@ class PrefWindow(wx.Dialog):
         sbSizerB.Add( self.cbAutoShutdown, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
         ##Add "Enable VSync" on Only PURE POSIX MODE
         sbSizerB.Add( self.cbEnableVSync, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+        sbSizerB.Add( self.cbEnableRTT, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
         boxSizerA.Add( sbSizerB, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
         boxSizerB = wx.BoxSizer( wx.HORIZONTAL )
 
@@ -149,6 +152,9 @@ class PrefWindow(wx.Dialog):
         ##AutoShutDown
         if self.cbAutoShutdown.IsEnabled():
             self.state.Edit("AutoShutDown", self.cbAutoShutdown.GetValue())
+        ##RTT
+        if self.cbEnableRTT.IsEnabled():
+            self.state.Edit("RTT", self.cbEnableRTT.GetValue())
         ##Use Default Working Directory
         if self.cbDefaultDir.IsEnabled():
             self.state.Edit("EnableDefWorkingDir", self.cbDefaultDir.GetValue())
@@ -179,6 +185,10 @@ class PrefWindow(wx.Dialog):
         ##AutoShutDown menu.
         confCheck = self.state.GetSurface("AutoShutDown")
         self.cbAutoShutdown.SetValue(confCheck)
+
+        ##RTT menu.
+        confCheck = self.state.GetSurface("RTT")
+        self.cbEnableRTT.SetValue(confCheck)
 
         ##Use Default Working Directory
         useDefDir = self.state.GetSurface("EnableDefWorkingDir")

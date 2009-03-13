@@ -111,7 +111,7 @@ namespace vx = ves::xplorer;
 namespace vxs = ves::xplorer::scenegraph;
 
 ////////////////////////////////////////////////////////////////////////////////
-App::App( int argc, char* argv[] )
+App::App( int argc, char* argv[], bool enableRTT )
 #if __VJ_version >= 2003000
     : vrj::osg::App( vrj::Kernel::instance() ),
 #else
@@ -124,7 +124,7 @@ App::App( int argc, char* argv[] )
     mLastFrame( 0 ),
     mLastTime( 0 ),
     mProfileCounter( 0 ),
-    mRTT( false )
+    mRTT( enableRTT )
 {
     osg::Referenced::setThreadSafeReferenceCounting( true );
     osg::DisplaySettings::instance()->setMaxNumberOfGraphicsContexts( 20 );

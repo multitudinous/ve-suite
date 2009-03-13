@@ -103,6 +103,7 @@ BASE_CONFIG = {"DependenciesDir": None,
                "DesktopMode": False,
                "AutoShutDown": False,
                "EnableVSync": False,
+               "RTT": False,
                "EnableDefWorkingDir": False,
                "Mode": 0,
                "AddMode": 0, ##Adding computer name mode in cluster mode

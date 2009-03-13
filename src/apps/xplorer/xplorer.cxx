@@ -130,6 +130,10 @@ int main( int argc, char* argv[] )
                 //Skip the master computer name
                 i = i + 1;
             }
+            else if( std::string( argv[ i ] ) == std::string( "-VESRTT" ) )
+            {
+                //Skip the rtt flag
+            }
             else
             {
                 kernel->loadConfigFile( argv[i] );

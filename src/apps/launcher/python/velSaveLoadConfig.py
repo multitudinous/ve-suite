@@ -66,6 +66,7 @@ def SaveConfig(name, state, saveLastConfig = False):
                  "ExtraVariables",
                  "AutoShutDown",
                  "EnableVSync",
+                 "RTT",
                  "CurrentConfig",
                  "EnableDefWorkingDir",
                  "DefaultWorkingDir",
@@ -146,6 +147,7 @@ def LoadConfig(name, state, loadLastConfig = False):
                  "DesktopMode": None,
                  "AutoShutDown": None,
                  "EnableVSync": None,
+                 "RTT": None,
                  "EnableDefWorkingDir": None,
                  "RunDebugPrograms": None}
     ##Load these if it's loading the initial configuration.

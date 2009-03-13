@@ -460,6 +460,10 @@ class Launch:
         if self.settings["XplorerType"] == "OSG-VEPC": ##OSG VEPC selection
             s += ["-VESCluster"]
             s += [ self.settings["ClusterMaster"].split('.')[0] ]
+        
+        if self.settings["RTT"]:
+            s += ["-VESRTT"]
+
         s[len(s):] = desktop
         ##Special arguments added for master, slave, and solo computer Xplorer calls.
         if computerType.lower() == "master":
@@ -468,6 +472,7 @@ class Launch:
             s += []
         else:
             s += []
+        print s
         return s
 
 
