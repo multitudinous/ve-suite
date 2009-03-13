@@ -394,7 +394,7 @@ base_bldr.addOptions( opts )
 
 baseEnv = base_bldr.buildEnvironment(ENV = os.environ)
 # add in once we are using 0.98
-# baseEnv.Decider('MD5-timestamp')
+baseEnv.Decider('MD5-timestamp')
 # Add doxygen builder to the base environment
 doxygen.generate(baseEnv)
 
@@ -433,7 +433,7 @@ if not SConsAddons.Util.hasHelpFlag():
 
    if baseEnv['default_debug_level'] != EnvironmentBuilder.NONE:
       base_bldr.enableDebug()
-      base_bldr.setMsvcRuntime(EnvironmentBuilder. MSVC_MT_DLL_RT)
+      base_bldr.setMsvcRuntime(EnvironmentBuilder.MSVC_MT_DLL_RT)
    else:
       base_bldr.enableOpt()
       base_bldr.setMsvcRuntime(EnvironmentBuilder.MSVC_MT_DLL_RT)
@@ -492,7 +492,7 @@ if not SConsAddons.Util.hasHelpFlag():
       #baseEnv.AppendUnique( LIBPATH = os.environ['LIB'].split(os.pathsep) ) 
       #baseEnv.AppendUnique( LIBPATH = os.environ['LIBPATH'].split(os.pathsep) ) 
 
-   baseEnv = base_bldr.applyToEnvironment( baseEnv.Copy() )
+   baseEnv = base_bldr.applyToEnvironment( baseEnv.Clone() )
 
    # Apply boost include path to whole build
    tmpBoostEnv = base_bldr.buildEnvironment()
@@ -513,6 +513,8 @@ if not SConsAddons.Util.hasHelpFlag():
    baseEnv.Append(BUILDERS = builders)
    #setup the build dir
    baseEnv.BuildDir(buildDir, '.', duplicate = 0)
+   # Test code to print what the environment is when debugging windows build issues
+   #print baseEnv['ENV']
    Export('baseEnv buildDir bulletBaseVar')
 
    # Setup file paths
@@ -576,7 +578,7 @@ if not SConsAddons.Util.hasHelpFlag():
    if 'testsuite' in COMMAND_LINE_TARGETS:
       ves_dirs.append(pj('#', 'test'))
       baseEnv.Alias('testsuite', pj('#', 'test'))
-
+   
    ##Run SConscript files in all of those folders.
    for d in ves_dirs:
       SConscript( dirs = d )
