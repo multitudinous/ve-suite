@@ -185,7 +185,6 @@ protected:
     double computenorm( wxPoint pt1, wxPoint pt2 );
 
     //Misc functions
-    void CleanRect( wxRect box, wxDC& dc ); // for wipeout a rectangular area
     wxPoint GetFreePos( wxRect bbox ); // for finding a free start location for a new module
 
     ///Get the point for a port or connector for a selected plugin

@@ -181,17 +181,11 @@ void Network::OnMLeftDown( wxMouseEvent& event )
         return;
     }
 
-    wxRect bbox;
-    wxPoint pos, temp;
-    std::map< int, Module >::iterator iter;
-    PORT ports;
-
     wxClientDC dc( parent );
     parent->PrepareDC( dc );
     dc.SetUserScale( userScale.first, userScale.second );
 
     wxPoint evtpos = event.GetLogicalPosition( dc );
-
     long x = evtpos.x;
     long y = evtpos.y;
 
@@ -205,17 +199,23 @@ void Network::OnMLeftDown( wxMouseEvent& event )
 
     //Select Mod/Link/Tag
     SelectMod( x, y, dc );
+
     if( m_selMod >= 0 )
     {
-        modules[m_selMod].GetPlugin()->SetHighlightFlag( true );
+        std::map< int, Module >::iterator iter;
+        iter = modules.find( m_selMod );
+        iter->second.GetPlugin()->SetHighlightFlag( true );
         //Select the ports for a plugin
-        bbox = modules[m_selMod].GetPlugin()->GetBBox();
+        wxRect bbox;
+        bbox = iter->second.GetPlugin()->GetBBox();
+        wxPoint temp;
         temp.x = x - bbox.x;
         temp.y = y - bbox.y;
 
         relative_pt = temp;
-        ports.resize( modules[m_selMod].GetPlugin()->GetNumIports() );
-        modules[m_selMod].GetPlugin()->GetIPorts( ports );
+        PORT ports;
+        ports.resize( iter->second.GetPlugin()->GetNumIports() );
+        iter->second.GetPlugin()->GetIPorts( ports );
 
         for( unsigned int i = 0; i < ports.size(); i++ )
         {
@@ -227,8 +227,8 @@ void Network::OnMLeftDown( wxMouseEvent& event )
             }
         }
 
-        ports.resize( modules[m_selMod].GetPlugin()->GetNumOports() );
-        modules[m_selMod].GetPlugin()->GetOPorts( ports );
+        ports.resize( iter->second.GetPlugin()->GetNumOports() );
+        iter->second.GetPlugin()->GetOPorts( ports );
         for( unsigned int i = 0; i < ports.size(); i++ )
         {
             wxPoint tempPoint( ports[i].GetPortLocation()->GetPoint().first, ports[i].GetPortLocation()->GetPoint().second );
@@ -855,14 +855,6 @@ void Network::UnSelectTag( wxDC &dc )
 ////////////////////////////////////////////////////////////////////////////////
 /////////////// Misc Functions //////////////////
 ////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////
-void Network::CleanRect( wxRect box, wxDC &dc )
-{
-    wxRect windowRect( wxPoint( 0, 0 ), parent->GetClientSize() );
-    //parent->CalcUnscrolledPosition( windowRect.x, windowRect.y,
-    //                                &windowRect.x, &windowRect.y );
-    dc.DrawRectangle( windowRect );
-}
 /////////////////////////////////////////////////
 wxPoint Network::GetFreePos( wxRect bbox )
 {
@@ -1720,20 +1712,11 @@ void Network::AddtoNetwork( UIPluginBase *cur_module, std::string cls_name )
     modules[id] = mod;
 
     wxRect bbox; //Bounding box
-
     bbox = cur_module->GetBBox(); //Get the Boundoing box of the modul
 
     cur_module->SetPos( GetFreePos( bbox ) ); //Set the new modules position to be a free space allocated by the network according to its bounding box
     bbox = cur_module->GetBBox();
     modules[id].SetPlugin( cur_module );
-
-    /*num = cur_module->GetNumPoly();
-    tmpPoly.resize( num );
-    cur_module->GetPoly( tmpPoly );
-    ves::conductor::util::Polygon newPolygon;
-    *( newPolygon.GetPolygon() ) = tmpPoly;*/
-
-    //newPolygon.TransPoly( bbox.x, bbox.y, *( modules[id].GetPlugin()->GetPolygon() ) ); //Make the network recognize its polygon
 
     modules[id].GetPlugin()->SetName( wxString( cls_name.c_str(), wxConvUTF8 ) );
     modules[id].GetPlugin()->SetID( id );
@@ -1741,7 +1724,13 @@ void Network::AddtoNetwork( UIPluginBase *cur_module, std::string cls_name )
     modules[id].GetPlugin()->SetXMLDataBufferEngine( mDataBufferEngine );
     modules[id].GetPlugin()->SetUserPreferencesDataBuffer( mUserPrefBuffer );
     modules[id].GetPlugin()->SetDialogSize( parent->GetAppropriateSubDialogSize() );
-
+    //Initialize ports
+    PORT ports;
+    ports.resize( modules[id].GetPlugin()->GetNumIports() );
+    modules[id].GetPlugin()->GetIPorts( ports );
+    ports.resize( modules[id].GetPlugin()->GetNumOports() );
+    modules[id].GetPlugin()->GetOPorts( ports );
+    
     ///Add the plugin model pointer to the respective system
     systemPtr->AddModel( modules[id].GetPlugin()->GetVEModel() );
 

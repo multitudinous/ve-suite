@@ -52,9 +52,6 @@ using namespace ves::xplorer::scenegraph;
 
 cfdAnimatedStreamlineCone::cfdAnimatedStreamlineCone( void )
 {
-    vprDEBUG( vesDBG, 2 ) << "cfdAnimatedStreamlineCone constructor"
-    << std::endl << vprDEBUG_FLUSH;
-
     this->mapper   = vtkPolyDataMapper::New();
     this->polydata = vtkPolyData::New();
     this->polyData = vtkPolyData::New();
@@ -68,17 +65,11 @@ cfdAnimatedStreamlineCone::cfdAnimatedStreamlineCone( void )
 
 cfdAnimatedStreamlineCone::~cfdAnimatedStreamlineCone()
 {
-    //vprDEBUG(vesDBG,2) << "cfdAnimatedStreamlineCone destructor"
-    //                       << std::endl << vprDEBUG_FLUSH;
-
     this->mapper->Delete();
     this->polydata->Delete();
     this->polyData->Delete();
     this->glyph->Delete();
     this->sphere->Delete();
-
-    //this->_sequence->ClearSequence();
-    //delete this->_sequence;
 }
 
 void cfdAnimatedStreamlineCone::SetPolyDataSource( vtkPolyData *input )

@@ -58,9 +58,6 @@ using namespace ves::xplorer::scenegraph;
 
 cfdPolyData::cfdPolyData( float op_val )
 {
-    vprDEBUG( vesDBG, 2 ) << "cfdPolyData constructor"
-    << std::endl << vprDEBUG_FLUSH;
-
     this->map = vtkPolyDataMapper::New();
     this->map->SetColorModeToMapScalars();
     warper = vtkWarpVector::New();
