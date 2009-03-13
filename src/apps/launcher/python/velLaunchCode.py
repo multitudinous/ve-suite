@@ -448,15 +448,15 @@ class Launch:
             exe += self.windowsSuffix
         ##Construct the call
         #support for vrj 3.0
-        #if computerType.lower() == "master":
-        #    s = [exe, "--vrjmaster", "%s" %self.settings["JconfPath"], "-ORBInitRef", self.ServiceArg() ]
-        #elif computerType.lower() == "slave":
-        #    s = [exe, "--vrjslave", "-ORBInitRef", self.ServiceArg() ]
-        #else:
+        if computerType.lower() == "master":
+            s = [exe, "--vrjmaster", "%s" %self.settings["JconfPath"], "-ORBInitRef", self.ServiceArg() ]
+        elif computerType.lower() == "slave":
+            s = [exe, "--vrjslave", "-ORBInitRef", self.ServiceArg() ]
+        else:
             # running in desktop mode or have an error in cluster mode
-        #    s = [exe, "-ORBInitRef", self.ServiceArg(), "%s" %self.settings["JconfPath"]]
-
-        s = [exe, "-ORBInitRef", self.ServiceArg(), "%s" %self.settings["JconfPath"]]
+            s = [exe, "-ORBInitRef", self.ServiceArg(), "%s" %self.settings["JconfPath"]]
+        ##Comment this out for vrj 3.0 support
+        #s = [exe, "-ORBInitRef", self.ServiceArg(), "%s" %self.settings["JconfPath"]]
         if self.settings["XplorerType"] == "OSG-VEPC": ##OSG VEPC selection
             s += ["-VESCluster"]
             s += [ self.settings["ClusterMaster"].split('.')[0] ]
