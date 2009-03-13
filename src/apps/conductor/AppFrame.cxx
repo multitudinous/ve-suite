@@ -1839,11 +1839,16 @@ void AppFrame::ViewResult( wxCommandEvent& WXUNUSED( event ) )
         result_dlg->Destroy();
         result_dlg = 0;
     }
+
+    //how results are viewed has changed to be on a per model basis
+    //minor updates are needed to get this working for an entire network
+    /*
     result_dlg = new SummaryResultDialog( NULL, wxT( "Result Summary - All Modules" ), wxSize( 560, 400 ) );
     result_dlg->syngas->Clear();
     result_dlg->syngas->SetNumofCols( 2 );
     result_dlg->syngas->SetColTitles( titles );
     result_dlg->syngas->SetColAlignments( alignments );
+    */
 
     try
     {
@@ -2381,7 +2386,7 @@ void AppFrame::EnableCEGUIMenuItems( void )
     con_menu->Enable( APPFRAME_V21ID_SUBMIT, true );
     con_menu->Enable( APPFRAME_V21ID_LOAD, true );
     //frame_->con_menu->Enable(V21ID_CONNECT, false);
-    run_menu->Enable( APPFRAME_V21ID_VIEW_RESULT, true );
+    run_menu->Enable( APPFRAME_V21ID_VIEW_RESULT, false );
     con_menu->Enable( APPFRAME_V21ID_DISCONNECT, true );
 }
 ////////////////////////////////////////////////////////////////////////////////

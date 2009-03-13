@@ -42,6 +42,8 @@ SummaryResultDialog API
 #include <ves/conductor/TexTable.h>
 #include <ves/VEConfig.h>
 
+#include <ves/open/xml/CommandPtr.h>
+
 class wxButton;
 class wxNotebook;
 class wxBoxSizer;
@@ -56,19 +58,34 @@ namespace conductor
 class VE_GUIPLUGINS_EXPORTS SummaryResultDialog : public UIDialog
 {
 public:
-    SummaryResultDialog( wxWindow*parent, const wxString& title = wxT( "Result Dialog" ), wxSize tabsize = wxSize( 477, 300 ) );
-    virtual ~SummaryResultDialog();
+   /* SummaryResultDialog( wxWindow* parent,
+        const wxString& title = wxT( "Result Dialog" ),
+        wxSize tabsize = wxSize( 477, 300 ),
+        const std::vector< ves::open::xml::CommandPtr > command=( const std::vector< ves::open::xml::Command() >));
+*/
+    SummaryResultDialog( wxWindow* parent,
+        const wxString& title,
+        wxSize tabsize,
+        const std::vector< ves::open::xml::CommandPtr > command);
 
+    virtual ~SummaryResultDialog();
+ 
     void TabTitle( const wxString& title );
     void NewTab( const wxString& title = wxT( "Results" ) );
     void Set2Cols( const std::vector<wxString>& col1, const std::vector<wxString>& col2 );
+    void GetDataTables( ves::open::xml::CommandPtr inputCommand, 
+        std::vector< wxString >& tagNames, std::vector< wxString >& values );
     TexTable* syngas;
+
+    ves::open::xml::CommandPtr mCommand;
+
 
 private:
     wxNotebook* tabs;
     wxButton* ok;
     wxSize tsize;
     int first_tab;
+
 
     //DECLARE_EVENT_TABLE()
 };

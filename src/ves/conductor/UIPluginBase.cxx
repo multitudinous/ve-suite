@@ -62,6 +62,7 @@
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/ParameterBlock.h>
 #include <ves/open/xml/XMLReaderWriter.h>
+#include <ves/open/xml/OneDStringArray.h>
 #include <ves/open/xml/cad/CADAssembly.h>
 #include <ves/open/xml/model/SystemPtr.h>
 #include <ves/open/xml/model/System.h>
@@ -935,21 +936,10 @@ void UIPluginBase::ViewInputVariables( void )
         params->ShowModal();*/
     }
 
-    inputsDialog =
-        new SummaryResultDialog( GetPluginParent(), wxT( "Input Variables" ), wxSize( 560, 400 ) );
+    inputsDialog = new SummaryResultDialog( GetPluginParent(), 
+        wxT( "Input Variables" ), wxSize( 560, 400 ), inputsVec );
     ConfigurePluginDialogs( inputsDialog );
 
-    // Get all the inputs form the model
-    for( size_t i = 0; i < numInputs; ++i )
-    {
-        std::vector< wxString > tagNames;
-        std::vector< wxString > values;
-        ves::open::xml::CommandPtr inputCommand = inputsVec.at( i );
-        GetDataTables( inputCommand, tagNames, values );
-        std::string inputParamter = inputCommand->GetCommandName();
-        inputsDialog->NewTab( wxString( inputParamter.c_str(), wxConvUTF8 ) );
-        inputsDialog->Set2Cols( tagNames, values );
-    }
     // Get all the results form the model
     inputsDialog->Show();
 }
@@ -970,56 +960,11 @@ void UIPluginBase::ViewResultsVariables( void )
         return;
     }
 
-    resultsDialog = new SummaryResultDialog( GetPluginParent(), wxT( "Results Variables" ), wxSize( 560, 400 ) );
+    resultsDialog = new SummaryResultDialog( GetPluginParent(), 
+        wxT( "Results Variables" ), wxSize( 560, 400 ), resultsVec );
     // Get all the inputs form the model
-    for( size_t i = 0; i < resultsVec.size(); ++i )
-    {
-        std::vector< wxString > tagNames;
-        std::vector< wxString > values;
-        ves::open::xml::CommandPtr inputCommand = resultsVec.at( i );
-        GetDataTables( inputCommand, tagNames, values );
-        std::string inputParamter = inputCommand->GetCommandName();
-        resultsDialog->NewTab( wxString( inputParamter.c_str(), wxConvUTF8 ) );
-        resultsDialog->Set2Cols( tagNames, values );
-    }
-    resultsDialog->Show();
-}
-///////////////////////////////////////////////
-void UIPluginBase::GetDataTables( ves::open::xml::CommandPtr inputCommand, std::vector< wxString >& tagNames, std::vector< wxString >& values )
-{
-    for( size_t j = 0; j < inputCommand->GetNumberOfDataValuePairs(); ++j )
-    {
-        ves::open::xml::DataValuePairPtr tempDVP = inputCommand->GetDataValuePair( j );
-        std::string dataType = tempDVP->GetDataType();
-        std::string dataName = tempDVP->GetDataName();
-        std::string stringData = "empty";
 
-        if( dataType == std::string( "FLOAT" ) )
-        {
-            double doubleData;
-            tempDVP->GetData( doubleData );
-            stringData =  boost::lexical_cast<std::string>( doubleData );
-        }
-        else if( dataType == std::string( "UNSIGNED INT" ) )
-        {
-            unsigned int intData;
-            tempDVP->GetData( intData );
-            stringData = boost::lexical_cast<std::string>( intData );
-        }
-        else if( dataType == std::string( "LONG" ) )
-        {
-            long longData;
-            tempDVP->GetData( longData );
-            stringData = boost::lexical_cast<std::string>( longData ) ;
-        }
-        else if( dataType == std::string( "STRING" ) )
-        {
-            tempDVP->GetData( stringData );
-        }
-        // vectors of data to be displayed
-        tagNames.push_back( wxString( dataName.c_str(), wxConvUTF8 ) );
-        values.push_back( wxString( stringData.c_str(), wxConvUTF8 ) );
-    }
+    resultsDialog->Show();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIPluginBase::SetPluginNameDialog( void )

@@ -300,10 +300,6 @@ protected:
     
     virtual wxMenu* GetPluginPopupMenu( wxMenu* baseMenu );
 
-    void GetDataTables( ves::open::xml::CommandPtr inputCommand,
-                        std::vector< wxString >& tagNames,
-                        std::vector< wxString >& values );
-
     void RegistVar( std::string vname, long* var );
     void RegistVar( std::string vname, double* var );
     void RegistVar( std::string vname, std::string* var );

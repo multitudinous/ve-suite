@@ -31,6 +31,12 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/conductor/SummaryResultDialog.h>
+
+#include <ves/open/xml/Command.h>
+#include <ves/open/xml/OneDStringArray.h>
+
+#include <boost/lexical_cast.hpp>
+
 #include <iostream>
 
 #include <wx/stattext.h>
@@ -46,8 +52,12 @@ using namespace ves::conductor;
 //EVT_BUTTON(wxID_OK, SummaryResultDialog::OnOK)
 //END_EVENT_TABLE()
 ////////////////////////////////////////////////////////////////////////////////
-SummaryResultDialog::SummaryResultDialog( wxWindow * parent, const wxString& title, wxSize tabsize )
-        : UIDialog(( wxWindow * )parent, -1, title )
+SummaryResultDialog::SummaryResultDialog( wxWindow * parent, 
+                                         const wxString& title,
+                                         wxSize tabsize,
+                                         const std::vector< 
+                                         ves::open::xml::CommandPtr > command)
+: UIDialog(( wxWindow * )parent, -1, title )
 {
     wxSize syn;
     wxBoxSizer* toptop = new wxBoxSizer( wxHORIZONTAL );
@@ -83,6 +93,20 @@ SummaryResultDialog::SummaryResultDialog( wxWindow * parent, const wxString& tit
     SetSizer( toptop );
     SetAutoLayout( TRUE );
     toptop->Fit( this );
+
+    //mCommand = command;
+
+    size_t numInputs = command.size();
+    for( size_t i = 0; i < numInputs; ++i )
+    {
+        std::vector< wxString > tagNames;
+        std::vector< wxString > values;
+        ves::open::xml::CommandPtr inputCommand = command.at( i );
+        GetDataTables( inputCommand, tagNames, values );
+        std::string inputParamter = inputCommand->GetCommandName();
+        NewTab( wxString( inputParamter.c_str(), wxConvUTF8 ) );
+        Set2Cols( tagNames, values );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 SummaryResultDialog::~SummaryResultDialog()
@@ -90,7 +114,8 @@ SummaryResultDialog::~SummaryResultDialog()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void SummaryResultDialog::Set2Cols( const std::vector<wxString>& col1, const std::vector<wxString>& col2 )
+void SummaryResultDialog::Set2Cols( const std::vector<wxString>& col1, 
+                                   const std::vector<wxString>& col2 )
 {
     if( syngas == NULL )
         return;
@@ -135,3 +160,60 @@ void SummaryResultDialog::NewTab( const wxString& title )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
+void SummaryResultDialog::GetDataTables( ves::open::xml::CommandPtr inputCommand,
+                                        std::vector< wxString >& tagNames, 
+                                        std::vector< wxString >& values )
+{
+    for( size_t j = 0; j < inputCommand->GetNumberOfDataValuePairs(); ++j )
+    {
+        ves::open::xml::DataValuePairPtr tempDVP = 
+            inputCommand->GetDataValuePair( j );
+        std::string dataType = tempDVP->GetDataType();
+        std::string dataName = tempDVP->GetDataName();
+        std::string stringData = "empty";
+
+        if( dataType == std::string( "FLOAT" ) )
+        {
+            double doubleData;
+            tempDVP->GetData( doubleData );
+            stringData =  boost::lexical_cast<std::string>( doubleData );
+        }
+        else if( dataType == std::string( "UNSIGNED INT" ) )
+        {
+            unsigned int intData;
+            tempDVP->GetData( intData );
+            stringData = boost::lexical_cast<std::string>( intData );
+        }
+        else if( dataType == std::string( "LONG" ) )
+        {
+            long longData;
+            tempDVP->GetData( longData );
+            stringData = boost::lexical_cast<std::string>( longData ) ;
+        }
+        else if( dataType == std::string( "STRING" ) )
+        {
+            tempDVP->GetData( stringData );
+        }
+        else if( dataType == std::string( "XMLOBJECT" ) )
+        {
+            std::vector< std::string > tempStringArray = 
+                boost::dynamic_pointer_cast< 
+                ves::open::xml::OneDStringArray >(inputCommand->
+                GetDataValuePair( 0 )->GetDataXMLObject())->GetArray();
+
+            for( size_t i=0; i<tempStringArray.size(); ++i )
+            {
+                values.push_back( wxString( 
+                    tempStringArray.at( i ).c_str(), wxConvUTF8 ) );
+                tagNames.push_back( wxString( dataName.c_str(), wxConvUTF8 ) );
+            }
+        }
+        
+        // vectors of data to be displayed
+        if( dataType != std::string( "XMLOBJECT" ) )
+        {
+            tagNames.push_back( wxString( dataName.c_str(), wxConvUTF8 ) );
+            values.push_back( wxString( stringData.c_str(), wxConvUTF8 ) );
+        }
+    }
+}
