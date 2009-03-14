@@ -1,5 +1,5 @@
 #!python
-EnsureSConsVersion(0,96)
+EnsureSConsVersion(0,98)
 SConsignFile()
 
 ###
@@ -267,14 +267,14 @@ tao_options = fp_option.FlagPollBasedOption("ACE TAO libraries",
                      "ACE TAO_Valuetype TAO_CosNaming TAO_Svc_Utils TAO_IORTable TAO_Messaging TAO_PortableServer TAO_BiDirGIOP TAO_AnyTypeCode TAO",
                                                "1.5", True, True, helpText=None, compileTest=True,
                                                headerToCheck="ace/ACE.h")
-if GetPlatform() != 'win32':
-    boost_options = SConsAddons.Options.Boost.Boost("boost", "1.32.0",
-                                                libs = ['filesystem'],
-                                                required = True,
-                                                useVersion = True,
-                                                autoLink = True)
-else:
-    boost_options = fp_option.FlagPollBasedOption("Boost Libraries",
+#if GetPlatform() != 'win32':
+#    boost_options = SConsAddons.Options.Boost.Boost("boost", "1.32.0",
+#                                                libs = ['filesystem','system'],
+#                                                required = True,
+#                                                useVersion = True,
+#                                                autoLink = True)
+#else:
+boost_options = fp_option.FlagPollBasedOption("Boost Libraries",
         "Boost.Filesystem", "1.33.1", True, True, helpText=None, compileTest=True)
 
 gmtl_options = fp_option.FlagPollBasedOption("Generic Math Template Library",
