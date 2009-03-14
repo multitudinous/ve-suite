@@ -597,6 +597,18 @@ void App::contextPreDraw()
     ves::xplorer::ModelHandler::instance()->ContextPreDrawUpdate();
     
     ///Adjust settings on the SceneView
+    ///Info from Paul Martz below:
+    ///OSG automatically computes near and far values to obtain the largest
+    ///near/far ratio possible in order to maximize depth buffer precision. It
+    ///performs this computation by first calculating the near and far values based
+    ///on bounding spheres (or bounding boxes of Drawables). Note that if your
+    ///eyepoint is in the scene, the computed near value might be negative - behind
+    ///the eye! Then OSG computes another near plane value using a default near/far
+    ///ration of 0.0005. In other words, it multiplies the computed far plane value
+    ///by 0.0005. Then it uses the max of the two near values as the actual near
+    ///plane. (This gets around the "negative" problem.) The bottom line: The
+    ///computed near plane is always at least as big as the computed far multiplied
+    ///by OSG's near/far ratio (which defaults to 0.0005).
     const std::string tempCommandName = 
         m_vjobsWrapper->GetXMLCommand()->GetCommandName();
     if( !tempCommandName.compare( "CHANGE_NEAR_FAR_RATIO" ) )
