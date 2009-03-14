@@ -396,7 +396,7 @@ void CADEntityHelper::LoadFile( const std::string& filename,
         //   visible pixels is greater than this value, render the
         //   child geometry. Otherwise, don't render and continue to
         //   test for visibility in future frames.
-        osgOQ::VisibilityThresholdVisitor visibilityThresholdVisitor( 250 );
+        osgOQ::VisibilityThresholdVisitor visibilityThresholdVisitor( 500 );
         tempGroup->accept( visibilityThresholdVisitor );
 
         m_cadNode = tempGroup.get();
