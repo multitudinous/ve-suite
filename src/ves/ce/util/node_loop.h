@@ -49,7 +49,7 @@ public:
 
     node_loop( VE_CE::Utilities::Network * );
     node_loop( const node_loop& );
-    ~node_loop();
+    virtual ~node_loop();
 
     virtual int  mod_count()
     {

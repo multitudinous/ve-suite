@@ -71,10 +71,12 @@ public:
     //Destructor
     virtual ~Body_Executive_i( void );
 
-    void execute_next_mod( long module_id );
     std::string GetResults( int rt );
 
+    void execute_next_mod( long module_id );
+
 protected:
+
 
     void execute( std::string );
 
@@ -84,9 +86,6 @@ protected:
 
     CosNaming::NamingContext_var naming_context_;
     std::map<std::string, Body::UI_var> uis_;
-
-    //Interface _network_intf;
-    //Interface _global_intf;
 
     VE_CE::Utilities::Network*   _network;
     VE_CE::Utilities::Scheduler* _scheduler;

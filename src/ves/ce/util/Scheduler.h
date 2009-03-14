@@ -62,9 +62,6 @@ public:
     void reset();
     ///??
     void set_net( Network* );
-
-    ///??
-    void sweep( Module* );
     ///??
     int  schedule( Module* );
     ///??
@@ -78,10 +75,13 @@ public:
 
     ///Printthe schedule to verify the correct network has been recreated
     void print_schedule();
+private:
     ///Raw Network
     Network* _net;
+    
+    ///??
+    void sweep( Module* );
 
-private:
     int visit( int k, std::set<int> connid_ignore,
                    std::vector<std::vector<int> > & sccs );
     void visit( std::vector<std::vector<int> > adj,

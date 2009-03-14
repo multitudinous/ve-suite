@@ -94,11 +94,9 @@ public:
     int setPortProfile( int, const Types::Profile* );
 
     ///Accessors for input data
-    //std::vector< ves::open::xml::CommandPtr > GetInputData( void );
     void SetInputData( std::vector< ves::open::xml::XMLObjectPtr > inputData );
 
     ///Accessors for input data
-    //std::vector< ves::open::xml::CommandPtr > GetResultsData( void );
     void SetResultsData( std::vector< ves::open::xml::XMLObjectPtr > resultsData );
 
     ///Get the ID for the module

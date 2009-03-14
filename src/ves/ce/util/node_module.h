@@ -47,7 +47,7 @@ class VE_CE_UTILS_EXPORTS node_module : public node_base
 public:
     node_module( Network *, int );
     node_module( const node_module& );
-    ~node_module();
+    virtual ~node_module();
 
     virtual int  mod_count()
     {

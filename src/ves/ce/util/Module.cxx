@@ -306,16 +306,6 @@ void Module::SetVEModel( model::ModelPtr mod )
    //Probably now need to set port data pointers on the port vectors
 }
 ////////////////////////////////////////////////////////////////////////////////
-/*std::vector< CommandPtr > Module::GetInputData( void )
-{
-   inputs.clear();
-   for( size_t i = 0; i < veModel->GetNumberOfInputs(); ++i )
-   {
-       inputs.push_back( veModel->GetInput( i ) );
-   }
-   return inputs;
-}*/
-////////////////////////////////////////////////////////////////////////////////
 void Module::SetInputData( std::vector< XMLObjectPtr > inputData )
 {
    for( size_t i = 0; i < inputData.size(); ++i )
@@ -324,16 +314,6 @@ void Module::SetInputData( std::vector< XMLObjectPtr > inputData )
        veModel->SetInput( tempCommand );
    }
 }
-////////////////////////////////////////////////////////////////////////////////
-/*std::vector< CommandPtr > Module::GetResultsData( void )
-{
-   results.clear();
-   for( size_t i = 0; i < veModel->GetNumberOfResults(); ++i )
-   {
-       results.push_back( veModel->GetResult( i ) );
-   }
-   return results;
-}*/
 ////////////////////////////////////////////////////////////////////////////////
 void Module::SetResultsData( std::vector< XMLObjectPtr > resultsData )
 {
