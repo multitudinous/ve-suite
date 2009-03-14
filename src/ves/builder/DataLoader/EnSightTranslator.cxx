@@ -43,6 +43,8 @@
 #include <vtkAppendFilter.h>
 #include <vtkDataArrayCollection.h>
 #include <vtkDataArray.h>
+#include <vtkCompositeDataIterator.h>
+#include <vtkCharArray.h>
 
 #include <ves/xplorer/util/cfdVTKFileHandler.h>
 #include <vtkMultiBlockDataSet.h>
@@ -128,6 +130,7 @@ void EnSightTranslator::EnSightTranslateCbk::Translate( vtkDataObject*& outputDa
             outputDataset->ShallowCopy( reader->GetOutput() );
         }
         outputDataset->Update();
+    
         //tmpDSet->Delete();
         //AddScalarsFromVectors( outputDataset );
     }
@@ -202,6 +205,31 @@ void EnSightTranslator::EnSightTranslateCbk::Translate( vtkDataObject*& outputDa
             }
         }
     }
+    /*
+    vtkCompositeDataSet* mgd = dynamic_cast<vtkCompositeDataSet*>( outputDataset );
+    //unsigned int nGroups = mgd->GetNumberOfGroups();
+    unsigned int nDatasetsInGroup = 0;
+    vtkCompositeDataIterator* mgdIterator = vtkCompositeDataIterator::New();
+    mgdIterator->SetDataSet( mgd );
+    ///For traversal of nested multigroupdatasets
+    mgdIterator->VisitOnlyLeavesOn();
+    mgdIterator->GoToFirstItem();
+    
+    while( !mgdIterator->IsDoneWithTraversal() )
+    {
+        vtkDataSet* currentDataset = dynamic_cast<vtkDataSet*>( mgdIterator->GetCurrentDataObject() );
+        
+        vtkCharArray* tempChar = dynamic_cast< vtkCharArray* >( currentDataset->GetFieldData()->GetArray( "Name" ) );
+        std::cout << "test out " << tempChar->WritePointer( 0, 0 ) << std::endl;
+        
+        mgdIterator->GoToNextItem();
+    }
+    //if( mgdIterator )
+    {
+        mgdIterator->Delete();
+        mgdIterator = 0;
+    }
+    */
     reader->Delete();
 }
 ////////////////////////////////////////////////////////////////////////////////
