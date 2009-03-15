@@ -87,11 +87,6 @@ from velDepsArray import *
 from velDepsWindow import *
 from velLaunchSplash import *
 
-##Set up the master config file
-config = wx.Config(CONFIG_FILE)
-config.SetPath(DEFAULT_CONFIG)
-wx.Config.Set(config)
-
 ##TESTERS
 ##print "Path: ", sys.path[0]
 ##print "Executable: ", sys.executable
@@ -323,7 +318,7 @@ class LauncherWindow(wx.Frame):
 ##            self.Launch()
         ##Check the dependencies.
         if windows and not devMode:
-            dependenciesDir = config.Read("DependenciesDir", ":::")
+            dependenciesDir = wx.Config.Get().Read("DependenciesDir", ":::")
             if dependenciesDir == ":::":
                 dlg = wx.MessageDialog(None,
                                        "Welcome to VE Suite!\n" +
@@ -340,7 +335,7 @@ class LauncherWindow(wx.Frame):
                 legitDeps = velDependencies.Check(dependenciesDir)
                 if not legitDeps:
                     self.DependenciesChange("")
-            self.dependencies = config.Read("DependenciesDir", ":::")
+            self.dependencies = wx.Config.Get().Read("DependenciesDir", ":::")
         elif unix and not devMode:
             if len(self.state.GetSurface("Dependencies").GetNames()) == 0 \
                and self.state.GetSurface("JugglerDep") == None and \
@@ -435,7 +430,7 @@ class LauncherWindow(wx.Frame):
         if windows:
             newDeps = velDependencies.Change(self)
             if newDeps != None:
-                config.Write("DependenciesDir", newDeps)
+                wx.Config.Get().Write("DependenciesDir", newDeps)
                 self.UpdateData(depDir = newDeps)
         else:
             depWindow = DepsWindow(self, self.state)
@@ -691,13 +686,13 @@ class LauncherWindow(wx.Frame):
         """Lets the user choose a configuration to load."""
         message = "Please choose a configuration to load."
         choices = []
-        config.SetPath("..")
-        configEntry = config.GetFirstGroup()
+        wx.Config.Get().SetPath("..")
+        configEntry = wx.Config.Get().GetFirstGroup()
         while (configEntry[0]):
             if configEntry[1] != DEFAULT_CONFIG:
                 choices.append(configEntry[1])
-            configEntry = config.GetNextGroup(configEntry[2])
-        config.SetPath(DEFAULT_CONFIG)
+            configEntry = wx.Config.Get().GetNextGroup(configEntry[2])
+        wx.Config.Get().SetPath(DEFAULT_CONFIG)
         ##Return if no configurations are saved.
         if len(choices) <= 0:
             dlg = wx.MessageDialog(self,
@@ -729,13 +724,13 @@ class LauncherWindow(wx.Frame):
         """Lets the user choose a confiuration to delete."""
         message = "Choose a configuration to delete."
         choices = []
-        config.SetPath("..")
-        configEntry = config.GetFirstGroup()
+        wx.Config.Get().SetPath("..")
+        configEntry = wx.Config.Get().GetFirstGroup()
         while (configEntry[0]):
             if configEntry[1] != DEFAULT_CONFIG:
                 choices.append(configEntry[1])
-            configEntry = config.GetNextGroup(configEntry[2])
-        config.SetPath(DEFAULT_CONFIG)
+            configEntry = wx.Config.Get().GetNextGroup(configEntry[2])
+        wx.Config.Get().SetPath(DEFAULT_CONFIG)
         ##Return if no configurations are saved.
         if len(choices) <= 0:
             dlg = wx.MessageDialog(self,
@@ -759,9 +754,9 @@ class LauncherWindow(wx.Frame):
                                        wx.YES_NO | wx.NO_DEFAULT)
             ##Delete the config if confirmed.
             if confirm.ShowModal() == wx.ID_YES:
-                config.SetPath("..")
-                config.DeleteGroup(choice)
-                config.SetPath(DEFAULT_CONFIG)
+                wx.Config.Get().SetPath("..")
+                wx.Config.Get().DeleteGroup(choice)
+                wx.Config.Get().SetPath(DEFAULT_CONFIG)
             confirm.Destroy()
         dlg.Destroy()
 
@@ -1101,7 +1096,11 @@ if __name__ == '__main__':
     ##the local machines registry
     app = wx.PySimpleApp()
     ##Now we can do anything with wx
-    
+    ##Set up the master config file
+    config = wx.Config(CONFIG_FILE)
+    config.SetPath(DEFAULT_CONFIG)
+    wx.Config.Set(config)
+
     ##Prepare previous config
     ##Prepare data storage
     previousState = CoveredConfig()
