@@ -122,9 +122,12 @@ DataSet API
 class VE_XPLORER_EXPORTS DataSet
 {
 public:
-    DataSet();    // Construct vtkUnstructuredGrid and vtkLookupTable objects.
+    // Construct vtkUnstructuredGrid and vtkLookupTable objects.
+    DataSet();    
+    // Destruct vtkUnstructuredGrid and vtkLookupTable objects.
+    ~DataSet();   
 
-    ~DataSet();   // Destruct vtkUnstructuredGrid and vtkLookupTable objects.
+    void CreateCompositeDataSets();
 
     // Initialize the number of data to load and parallel process.
     // By default, use the octree table.

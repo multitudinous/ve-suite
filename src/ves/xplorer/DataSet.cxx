@@ -118,7 +118,8 @@ DataSet::DataSet( ) :
         arrow( 0 ),
         lut( vtkLookupTable::New() ),
         maxTime( 1000 ),
-        bbDiagonal( 10 )
+        bbDiagonal( 10 ),
+        isNewlyActivated( 0 )
 {
     this->range = new double [ 2 ];
     this->range[ 0 ] = 0.0f;
@@ -126,7 +127,6 @@ DataSet::DataSet( ) :
     this->definedRange = new double [ 2 ];
     this->definedRange[ 0 ] = 0.0f;
     this->definedRange[ 0 ] = 1.0f;
-    this->isNewlyActivated = 0;
     // precomputed data that descends from a flowdata.vtk should
     // automatically have the same color mapping as the "parent"
     // By default, the dataset is assumed to have no parent, that is,
@@ -1770,6 +1770,13 @@ std::string DataSet::GetActiveVectorName()
 {
     return GetVectorName( GetActiveVector() );
 }    
-    
+////////////////////////////////////////////////////////////////////////////////
+void DataSet::CreateCompositeDataSets()
+{
+    ///Loop over all datasets
+    ///Load datasets
+    ///Register with model
+}    
+////////////////////////////////////////////////////////////////////////////////
 } // end xplorer
 } // end ves
