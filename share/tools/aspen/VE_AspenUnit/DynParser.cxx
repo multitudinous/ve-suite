@@ -125,7 +125,8 @@ void DynParser::NewParseFile(const char * dynFile)
     //Global
     ReadHeader( inFile );
     FindNextEntry( inFile );
-    ReadEncrypted( inFile );
+    //ReadEncrypted( inFile );
+    FindSystemData( inFile );
     FindNextEntry( inFile );
     ReadSystemData( inFile );
     FindNextEntry( inFile );
@@ -1494,7 +1495,7 @@ void DynParser::ReadHeader( std::ifstream &file )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void DynParser::ReadEncrypted( std::ifstream &file )
+/*void DynParser::ReadEncrypted( std::ifstream &file )
 {
     std::vector< std::string > entry;
     std::string temp;
@@ -1523,6 +1524,21 @@ void DynParser::ReadEncrypted( std::ifstream &file )
         //!END ENCRYPTED!
         std::getline( file, temp );
     }
+}*/
+
+///////////////////////////////////////////////////////////////////////////////
+void DynParser::FindSystemData( std::ifstream &file )
+{
+    std::string temp;
+    std::streampos temppos;
+
+    while( temp.compare( 0, 10, "SystemData", 0, 10) != 0 )
+    {
+        temppos = file.tellg();
+        std::getline( file, temp );
+    }
+    //move file pointer back
+    file.seekg(temppos);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1530,15 +1546,15 @@ void DynParser::ReadSystemData( std::ifstream &file )
 {
     std::string entry;
     std::string temp;
-    while( temp.compare(0, 6, "EndText", 0, 6) != 0 )
+    while( temp.compare(0, 7, "EndText", 0, 7) != 0 )
     {
         std::getline( file, temp );
 
         //throw out comments
-        if( temp.compare( 0, 1, "//", 0, 1 ) != 0 )
-        {
-            entry.append( temp );
-        }
+        //if( temp.compare( 0, 1, "//", 0, 1 ) != 0 )
+        //{
+        //    entry.append( temp );
+        //}
     }
 }
 
@@ -1657,6 +1673,13 @@ void DynParser::ReadFlowsheetComponents( std::ifstream &file )
                             portToken.substr( startpos +1,
                             endpos - startpos - 1 ); 
                         }
+                    }
+
+                    if( tempStream.empty() )
+                    {
+                        int streamStart = temp.find("with") + 5;
+                        tempStream = 
+                            temp.substr( streamStart, temp.size() - streamStart - 1 );
                     }
 
                     //reset tokenizer

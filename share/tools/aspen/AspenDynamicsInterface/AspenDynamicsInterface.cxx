@@ -157,11 +157,32 @@ std::vector< std::vector< std::string > > AspenDynamicsInterface::GetVariableLis
 
     //get All Variables
     szName = OLESTR("FindMatchingVariables");
-    pDispFlow->GetIDsOfNames(IID_NULL, &szName, 1, ::GetUserDefaultLCID(), &dispid);
-    params.cArgs = 0;
-    params.rgvarg = NULL;
+    pDispFlow->GetIDsOfNames(IID_NULL, &szName, 1, ::GetUserDefaultLCID(), &dispid);  
+    
+    DISPPARAMS dispparams;
+    memset(&dispparams, 0, 2);//sizeof dispparams);
+    dispparams.cArgs      = 2; //arraySize;
+    dispparams.rgvarg     = new VARIANT[dispparams.cArgs];
+    dispparams.cNamedArgs = 0;
+
+    //for( int i = 0; i < arraySize; i++)
+    //{
+        CComBSTR bstr = L"~";//paramArray.GetAt(arraySize - 1 - i); // back reading
+        bstr.CopyTo(&dispparams.rgvarg[0].bstrVal);
+        dispparams.rgvarg[0].vt = VT_BSTR;
+        CComBSTR bstr2 = L"fixed";
+        bstr.CopyTo(&dispparams.rgvarg[1].bstrVal);
+        dispparams.rgvarg[1].vt = VT_BSTR;
+    //}
+
+    params.cArgs = 1;
+    //::VariantInit(&index);
+    index.vt = VT_BSTR;
+    // get next block in collection
+    index.bstrVal = L"nc";
+    params.rgvarg = &index;
     ::VariantInit(&result);
-    pDispFlow->Invoke(dispid, IID_NULL, ::GetUserDefaultLCID(), DISPATCH_PROPERTYGET, &params, &result, NULL, NULL);
+    pDispFlow->Invoke(dispid, IID_NULL, ::GetUserDefaultLCID(), DISPATCH_PROPERTYGET, &dispparams, &result, NULL, NULL);
     IDispatch* pDispVariables = result.pdispVal;
 
     szName = OLESTR("Count");

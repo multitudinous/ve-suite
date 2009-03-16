@@ -61,6 +61,7 @@ private:
     void NewParseFile(const char * dynFile);
     void ReadHeader( std::ifstream &file );
     void ReadEncrypted( std::ifstream &file );
+    void FindSystemData( std::ifstream &file );
     void ReadSystemData( std::ifstream &file );
     void ReadFlowsheetComponents( std::ifstream &file );
     void ReadConstraints( std::ifstream &file );
