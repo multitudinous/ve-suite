@@ -221,7 +221,7 @@ void KeyboardMouse::SetStartEndPoint(
         //Get the mouse position in juggler world coordinates
         osg::Vec3d jugglerMousePosition;
         jugglerMousePosition[ 0 ] = mXMinScreen + ( mX * xScreenRatio );
-        jugglerMousePosition[ 1 ] = mYMaxScreen - ( mY * yScreenRatio );
+        jugglerMousePosition[ 1 ] = mYMinScreen + ( mY * yScreenRatio );
         jugglerMousePosition[ 2 ] = mZValScreen;
 
         //Convert meters to feet
@@ -381,7 +381,7 @@ void KeyboardMouse::ProcessKBEvents( int mode )
                     static_cast< double >( mX ) /
                     static_cast< double >( mWidth );
                 mCurrPos.second =
-                    static_cast< double >( mHeight - mY ) /
+                    static_cast< double >( mY ) /
                     static_cast< double >( mHeight );
 
                 //Navigation mode
@@ -423,7 +423,7 @@ void KeyboardMouse::ProcessKBEvents( int mode )
                     static_cast< double >( mX ) /
                     static_cast< double >( mWidth );
                 mCurrPos.second =
-                    static_cast< double >( mHeight - mY ) /
+                    static_cast< double >( mY ) /
                     static_cast< double >( mHeight );
 
                 //Navigation mode
@@ -461,7 +461,7 @@ void KeyboardMouse::ProcessKBEvents( int mode )
                         static_cast< double >( mX ) /
                         static_cast< double >( mWidth );
                     mCurrPos.second =
-                        static_cast< double >( mHeight - mY ) /
+                        static_cast< double >( mY ) /
                         static_cast< double >( mHeight );
 
                     std::pair< double, double > delta;
@@ -662,6 +662,7 @@ void KeyboardMouse::FrameAll()
         ( mXMaxScreen - mXMinScreen ) / static_cast< double >( mWidth );
     double wc_y_trans_ratio =
         ( mYMaxScreen - mYMinScreen ) / static_cast< double >( mHeight );
+
     std::pair< double, double > screenRatios =
         std::pair< double, double >( wc_x_trans_ratio, wc_y_trans_ratio );
 
@@ -1454,9 +1455,11 @@ void KeyboardMouse::RotateView( double dx, double dy )
     gmtl::Matrix44d matrix;
     gmtl::identity( matrix );
 
-    tb_axis[ 0 ] = matrix[ 0 ][ 0 ] * dy + matrix[ 2 ][ 0 ] * dx;
-    tb_axis[ 1 ] = matrix[ 0 ][ 1 ] * dy + matrix[ 2 ][ 1 ] * dx;
-    tb_axis[ 2 ] = matrix[ 0 ][ 2 ] * dy + matrix[ 2 ][ 2 ] * dx;
+    //Negative dy mouse movement(down motion) represents positive angle rotation
+    dy *= -1.0;
+    tb_axis[ 0 ] = matrix.mData[ 0 ] * dy + matrix.mData[  2 ] * dx;
+    tb_axis[ 1 ] = matrix.mData[ 4 ] * dy + matrix.mData[  6 ] * dx;
+    tb_axis[ 2 ] = matrix.mData[ 8 ] * dy + matrix.mData[ 10 ] * dx;
 
     Rotate( tb_axis[ 0 ], tb_axis[ 1 ], tb_axis[ 2 ], angle );
 }
@@ -1465,7 +1468,7 @@ void KeyboardMouse::Twist()
 {
     double theta = atan2f( mPrevPos.first - 0.5, mPrevPos.second - 0.5 );
     double newTheta = atan2f( mCurrPos.first - 0.5, mCurrPos.second - 0.5 );
-    double angle = ( OneEightyDivPI ) * ( theta - newTheta );
+    double angle = ( OneEightyDivPI ) * ( newTheta - theta );
 
     //The axis to twist about
     osg::Vec3 twist( 0, 1, 0 );
@@ -1475,7 +1478,7 @@ void KeyboardMouse::Twist()
 void KeyboardMouse::Zoom( double dy )
 {
     double viewlength = mCenterPoint->mData[ 1 ];
-    double d = ( viewlength * ( 1 / ( 1 + dy * 2 ) ) ) - viewlength;
+    double d = ( viewlength * ( 1 / ( 1 - dy * 2 ) ) ) - viewlength;
 
     mDeltaTransform.mData[ 13 ] = d;
     mCenterPoint->mData[ 1 ] += d;
@@ -1504,7 +1507,7 @@ void KeyboardMouse::Zoom45( double dy )
 {
     //needed for sky cam control
     double viewlength = mCenterPoint->mData[ 1 ];
-    double d = ( viewlength * ( 1 / ( 1 + dy * 2 ) ) ) - viewlength;
+    double d = ( viewlength * ( 1 / ( 1 - dy * 2 ) ) ) - viewlength;
 
     mDeltaTransform.mData[ 13 ] = d;
     mDeltaTransform.mData[ 14 ] = d;
@@ -1537,7 +1540,7 @@ void KeyboardMouse::Pan( double dx, double dy )
     double theta = ( mFoVY * 0.5 ) * ( PIDivOneEighty );
     double b = 2 * d * tan( theta );
     double dwx = dx * b * mAspectRatio;
-    double dwy = -dy * b;
+    double dwy = dy * b;
 
     mDeltaTransform.mData[ 12 ] = dwx;
     mDeltaTransform.mData[ 14 ] = dwy;

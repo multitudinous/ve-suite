@@ -767,7 +767,10 @@ void App::draw()
         sv->draw();
     }
 
-    //Allow trackball to grab frustum values to calculate FOVy
+    //Get the frustum planes based on the current bounding volume of the scene
+    sv->getCamera()->getProjectionMatrixAsFrustum(
+        _left, _right, _bottom, _top, _near, _far );
+
     //The code below is not thread safe and will result in random results
     //in multithreaded use cases
     EnvironmentHandler::instance()->SetFrustumValues(
