@@ -129,7 +129,7 @@
 .\" ========================================================================
 .\"
 .IX Title "UPX 1"
-.TH UPX 1 "2007-07-31" "upx 3.01" " "
+.TH UPX 1 "2008-04-27" "upx 3.03" " "
 .SH "NAME"
 upx \- compress or expand executable files
 .SH "SYNOPSIS"
@@ -139,7 +139,7 @@ upx \- compress or expand executable files
 .IX Header "ABSTRACT"
 .Vb 3
 \&                    The Ultimate Packer for eXecutables
-\&   Copyright (c) 1996-2007 Markus Oberhumer, Laszlo Molnar & John Reiser
+\&   Copyright (c) 1996-2008 Markus Oberhumer, Laszlo Molnar & John Reiser
 \&                        http://upx.sourceforge.net
 .Ve
 .PP
@@ -174,8 +174,8 @@ Please report all problems or suggestions to the authors. Thanks.
 .Ve
 .PP
 .Vb 2
-\&  - very fast decompression: about 10 MB/sec on an ancient Pentium 133,
-\&      about 200 MB/sec on an Athlon XP 2000+.
+\&  - very fast decompression: about 10 MiB/sec on an ancient Pentium 133,
+\&      about 200 MiB/sec on an Athlon XP 2000+.
 .Ve
 .PP
 .Vb 2
@@ -277,7 +277,7 @@ as compared to the first decompressed version.]
 .IX Header "COMPRESSION LEVELS & TUNING"
 \&\fB\s-1UPX\s0\fR offers ten different compression levels from \fB\-1\fR to \fB\-9\fR,
 and \fB\-\-best\fR.  The default compression level is \fB\-8\fR for files
-smaller than 512 kB, and \fB\-7\fR otherwise.
+smaller than 512 KiB, and \fB\-7\fR otherwise.
 .IP "\(bu" 4
 Compression levels 1, 2 and 3 are pretty fast.
 .IP "\(bu" 4
@@ -455,7 +455,7 @@ Extra options available for this executable format:
 First of all, it is recommended to use \fB\s-1UPX\s0\fR *instead* of \fBstrip\fR. strip has
 the very bad habit of replacing your stub with its own (outdated) version.
 Additionally \fB\s-1UPX\s0\fR corrects a bug/feature in strip v2.8.x: it
-will fix the 4 KByte alignment of the stub.
+will fix the 4 KiB alignment of the stub.
 .PP
 \&\fB\s-1UPX\s0\fR includes the full functionality of stubify. This means it will
 automatically stubify your \s-1COFF\s0 files. Use the option \fB\-\-coff\fR to
@@ -835,8 +835,8 @@ Specific drawbacks:
 .Vb 4
 \&  - Because of temporary decompression to disk the decompression speed
 \&    is not as fast as with the other executable formats. Still, I can see
-\&    no noticeable delay when starting programs like my ~3 MB emacs (which
-\&    is less than 1 MB when compressed :-).
+\&    no noticeable delay when starting programs like my ~3 MiB emacs (which
+\&    is less than 1 MiB when compressed :-).
 .Ve
 .PP
 Extra options available for this executable format:
@@ -856,7 +856,7 @@ nostalgic feelings of one of the authors.
 Packed programs will be byte-identical to the original after uncompression,
 until further notice.
 .PP
-Maximum uncompressed size: ~1.89 / ~7.60 Mbytes.
+Maximum uncompressed size: ~1.89 / ~7.60 MiB.
 .PP
 Notes:
 .PP
@@ -892,7 +892,7 @@ Extra options available for this executable format:
 .Ve
 .PP
 .Vb 1
-\&  --8mb-ram           PSone has 8 MB ram available [default: 2 MB]
+\&  --8mib-ram          PSone has 8 MiB ram available [default: 2 MiB]
 .Ve
 .PP
 .Vb 4
@@ -1032,7 +1032,7 @@ must end with \*(L".scr\*(R" (as screensavers are handled slightly different
 than normal exe files).
 .PP
 \&\s-1UPX\s0 compressed \s-1PE\s0 files have some minor memory overhead (usually in the
-10 \- 30 kbytes range) which can be seen by specifying the \*(L"\-i\*(R" command
+10 \- 30 KiB range) which can be seen by specifying the \*(L"\-i\*(R" command
 line switch during compression.
 .PP
 Extra options available for this executable format:
@@ -1143,13 +1143,13 @@ Please report all bugs immediately to the authors.
 .Ve
 .SH "COPYRIGHT"
 .IX Header "COPYRIGHT"
-Copyright (C) 1996\-2007 Markus Franz Xaver Johannes Oberhumer
+Copyright (C) 1996\-2008 Markus Franz Xaver Johannes Oberhumer
 .PP
-Copyright (C) 1996\-2007 Laszlo Molnar
+Copyright (C) 1996\-2008 Laszlo Molnar
 .PP
-Copyright (C) 2000\-2007 John F. Reiser
+Copyright (C) 2000\-2008 John F. Reiser
 .PP
-Copyright (C) 2002\-2007 Jens Medoch
+Copyright (C) 2002\-2008 Jens Medoch
 .PP
 This program may be used freely, and you are welcome to
 redistribute it under certain conditions.
