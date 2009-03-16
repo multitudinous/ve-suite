@@ -46,7 +46,7 @@ if GetPlatform() == 'win32':
    lib_env['WINDOWS_INSERT_MANIFEST'] = False
    lib_env.AppendUnique( LIBS = ['glut32'])
 elif GetPlatform() == 'darwin':
-   lib_env.AppendUnique( LINKFLAGS = ['-framework','GLUT','-framework','OpenGL'])
+   lib_env.AppendUnique( FRAMEWORKS = Split('GLUT OpenGL') )
 else:
    lib_env.AppendUnique( LIBS = ['glut'])
 
