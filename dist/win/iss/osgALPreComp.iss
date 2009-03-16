@@ -10,6 +10,7 @@
 #define OPENALHOME "C:\dev\ves_deps\osgAL_Test"
 #define OSGALHOME "C:\dev\ves_deps\osgAL_Test\osgal"
 #define ALUTSRCINSTALL "C:\dev\ves_deps\osgAL_Test\freealut-1.1.0-bin\freealut-1.1.0-bin"
+
 [Setup]
 AppName={#MyAppName}
 AppVerName=osgAL_{#OSGALVERSION} Pre-Compile_vc{#MSVCVERSION}
@@ -18,7 +19,8 @@ AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
 DefaultDirName=C:\osgAL_{#OSGALVERSION}_Pre-Compile_vc{#MSVCVERSION}
-DefaultGroupName={#VESGROUPNAME}
+DefaultGroupName={#VESGROUPNAME}\Uninstallers
+AllowNoIcons=true
 OutputBaseFilename=osgAL_{#OSGALVERSION}-precompile_{#MSVCVERSION}
 Compression=lzma
 SolidCompression=true
@@ -35,10 +37,11 @@ SetupIconFile={#VEDEVHOME}\dist\installerImages\ve_icon.ico
 EnableDirDoesntExistWarning=true
 PrivilegesRequired=none
 RestartIfNeededByRun=false
-UsePreviousGroup=true
+UsePreviousGroup=false
 AppendDefaultGroupName=true
 TimeStampsInUTC=true
-UsePreviousGroup=false
+DisableProgramGroupPage=false
+Uninstallable=true
 [Languages]
 Name: english; MessagesFile: compiler:Default.isl
 
@@ -71,8 +74,10 @@ Source: {#LIBVORBISHOME}\win32\Vorbis_Dynamic_Release\*.dll; DestDir: {app}\lib;
 Source: {#LIBVORBISHOME}\win32\VorbisEnc_Dynamic_Release\*.dll; DestDir: {app}\lib; Flags: ignoreversion
 ;Source: {#LIBVORBISHOME}\win32\VorbisFile_Dynamic_Debug\*.dll; DestDir: {app}\lib; Flags: ignoreversion
 Source: {#LIBVORBISHOME}\win32\VorbisFile_Dynamic_Release\*.dll; DestDir: {app}\lib; Flags: ignoreversion
-;Source: {#OPENALHOME}\lib\*.dll; DestDir: {app}\lib; Flags: ignoreversion
+Source: {#OPENALHOME}\libs\win32\*.dll; DestDir: {app}\lib; Flags: ignoreversion
 Source: {#OSGALHOME}\bin\*.dll; DestDir: {app}\lib; Flags: ignoreversion
 Source: {#ALUTSRCINSTALL}\lib\*.dll; DestDir: {app}\lib; Flags: ignoreversion
 ;FPC file integration
 Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\osgAL.fpc.in; DestDir: {app}\lib\flagpoll; DestName: osgAL.fpc; Languages: ; Flags: ignoreversion
+[Icons]
+Name: {group}\{cm:UninstallProgram,{#MyAppName}}; Filename: {uninstallexe}

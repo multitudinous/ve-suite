@@ -16,7 +16,7 @@ AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
 DefaultDirName=C:\VRJuggler_Pre-Compile_{#JUGGLERVERSION}
-DefaultGroupName={#VESGROUPNAME}
+DefaultGroupName={#VESGROUPNAME}\Uninstallers
 AllowNoIcons=true
 OutputBaseFilename=vrjugglerPreCompile_{#JUGGLERVERSION}_{#MSVCVERSION}
 SetupIconFile={#VEDEVHOME}\dist\installerImages\Ve_icon.ico
@@ -32,6 +32,7 @@ WizardImageStretch=false
 OutputDir={#INSTALLERINSTALLLOCATION}
 PrivilegesRequired=none
 UsePreviousGroup=false
+AppendDefaultGroupName=true
 [Languages]
 Name: eng; MessagesFile: compiler:Default.isl
 
@@ -61,4 +62,4 @@ Source: {#VRJUGGLER_DEPS_INST_LOCATION}\share\*.fpc; DestDir: {app}\lib; Flags: 
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
-Name: {group}\{cm:UninstallProgram,{#MyAppName}}; Filename: {uninstallexe}
+Name: {group}\{cm:UninstallProgram,{#MyAppName}}; Filename: {uninstallexe}; Languages: 
