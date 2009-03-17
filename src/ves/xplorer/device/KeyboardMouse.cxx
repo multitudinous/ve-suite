@@ -1346,7 +1346,14 @@ void KeyboardMouse::NavOnMouseMotion( std::pair< double, double > delta )
         }
         case gadget::MBUTTON3:
         {
-            Zoom( delta.second );
+            if( !mPhysicsSimulator->GetIdle() )
+            {
+                mCharacterController->Turn( delta.first );
+            }
+            else
+            {
+                Zoom( delta.second );
+            }
 
             break;
         }

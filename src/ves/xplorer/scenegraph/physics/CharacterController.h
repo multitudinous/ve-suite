@@ -93,10 +93,7 @@ public:
     void StrafeRight( bool onOff );
 
     ///
-    void TurnLeft( bool onOff );
-
-    ///
-    void TurnRight( bool onOff );
+    void Turn( double dx );
     
     ///
     void Jump();
@@ -126,22 +123,25 @@ private:
     bool mStrafeRight;
 
     ///
-    bool mTurnLeft;
-
-    ///
-    bool mTurnRight;
-
-    ///
     bool mJump;
 
     ///
     double mCameraHeight;
 
     ///
+    double mCameraDistance;
+
+    ///
     double mMinCameraDistance;
 
     ///
     double mMaxCameraDistance;
+
+    ///
+    double mTurnAngle;
+
+    ///
+    double mTurnVelocity;
 
     ///
     btKinematicCharacterController* mCharacter;

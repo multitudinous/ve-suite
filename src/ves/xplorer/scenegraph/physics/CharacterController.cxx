@@ -38,6 +38,9 @@
 
 #include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
 
+// --- vrJuggler Includes --- //
+#include <gmtl/Generate.h>
+
 // --- OSG Includes --- //
 #include <osg/Geode>
 #include <osg/MatrixTransform>
@@ -66,12 +69,13 @@ CharacterController::CharacterController()
     mStepBackward( false ),
     mStrafeLeft( false ),
     mStrafeRight( false ),
-    mTurnLeft( false ),
-    mTurnRight( false ),
     mJump( false ),
-    mCameraHeight( 4.0 ),
-    mMinCameraDistance( 3.0 ),
-    mMaxCameraDistance( 10.0 ),
+    mCameraHeight( 2.0 ),
+    mCameraDistance( 12.0 ),
+    mMinCameraDistance( 0.5 ),
+    mMaxCameraDistance( 100.0 ),
+    mTurnAngle( 0.0 ),
+    mTurnVelocity( 2.0 ),
     mCharacter( NULL ),
     mGhostObject( NULL )
 {
@@ -196,14 +200,13 @@ void CharacterController::StrafeRight( bool onOff )
     mStrafeRight = onOff;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CharacterController::TurnLeft( bool onOff )
+void CharacterController::Turn( double dx )
 {
-    mTurnLeft = onOff;
-}
-////////////////////////////////////////////////////////////////////////////////
-void CharacterController::TurnRight( bool onOff )
-{
-    mTurnRight = onOff;
+    mTurnAngle += dx * mTurnVelocity;
+
+    btTransform xform = mGhostObject->getWorldTransform();
+    xform.setRotation( btQuaternion( btVector3( 0.0, 0.0, 1.0 ), mTurnAngle ) );
+    mGhostObject->setWorldTransform( xform );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CharacterController::UpdateCharacter(
@@ -212,8 +215,7 @@ void CharacterController::UpdateCharacter(
     if( dynamicsWorld )
     {
         //Set walkDirection for character
-        btTransform xform;
-        xform = mGhostObject->getWorldTransform();
+        btTransform xform = mGhostObject->getWorldTransform();
 
         btVector3 forwardDir = xform.getBasis()[ 1 ];
         forwardDir.normalize();
@@ -264,39 +266,40 @@ void CharacterController::UpdateCamera()
     backward.normalize();
 
     btVector3 center = characterWorldTrans.getOrigin();
-    btVector3 eye = center + up * 2.0 + backward * 12.0;
+    btVector3 eye = center + up * mCameraHeight + backward * mCameraDistance;
 
-    btVector3 zVector = eye - center;
-    zVector.normalize();
-    btVector3 xVector( up.cross( zVector ) );
-    xVector.normalize();
-    btVector3 yVector( zVector.cross( xVector ) );
-    yVector.normalize();
+    btVector3 vVector = eye - center;
+    vVector.normalize();
+    btVector3 rVector( up.cross( vVector ) );
+    rVector.normalize();
+    btVector3 uVector( vVector.cross( rVector ) );
+    //u is already a unit vector since r & v are unit vectors
+    uVector.normalize();
 
     //"Look at" character matrix
     ves::xplorer::scenegraph::DCS* const cameraDCS =
         vxs::SceneManager::instance()->GetActiveNavSwitchNode();
 
     gmtl::Matrix44d matrix = cameraDCS->GetMat();
-    matrix.mData[ 0 ]  = xVector[ 0 ];
-    matrix.mData[ 1 ]  = xVector[ 1 ];
-    matrix.mData[ 2 ]  = xVector[ 2 ];
-    matrix.mData[ 3 ]  = 0.0;
+    matrix.mData[ 0 ]  =  rVector[ 0 ];
+    matrix.mData[ 1 ]  = -vVector[ 0 ];
+    matrix.mData[ 2 ]  =  uVector[ 0 ];
+    matrix.mData[ 3 ]  =  0.0;
 
-    matrix.mData[ 4 ]  = zVector[ 0 ];
-    matrix.mData[ 5 ]  = zVector[ 1 ];
-    matrix.mData[ 6 ]  = zVector[ 2 ];
-    matrix.mData[ 7 ]  = 0.0;
+    matrix.mData[ 4 ]  =  rVector[ 1 ];
+    matrix.mData[ 5 ]  = -vVector[ 1 ];
+    matrix.mData[ 6 ]  =  uVector[ 1 ];
+    matrix.mData[ 7 ]  =  0.0;
 
-    matrix.mData[ 8 ]  = yVector[ 0 ];
-    matrix.mData[ 9 ]  = yVector[ 1 ];
-    matrix.mData[ 10 ] = yVector[ 2 ];
-    matrix.mData[ 11 ] = 0.0;
+    matrix.mData[ 8 ]  =  rVector[ 2 ];
+    matrix.mData[ 9 ]  = -vVector[ 2 ];
+    matrix.mData[ 10 ] =  uVector[ 2 ];
+    matrix.mData[ 11 ] =  0.0;
 
-    matrix.mData[ 12 ] = -eye[ 0 ];
-    matrix.mData[ 13 ] = -eye[ 1 ];
-    matrix.mData[ 14 ] = -eye[ 2 ];
-    matrix.mData[ 15 ] = 1.0;
+    matrix.mData[ 12 ] = -rVector.dot( eye );
+    matrix.mData[ 13 ] =  vVector.dot( eye );
+    matrix.mData[ 14 ] = -uVector.dot( eye );
+    matrix.mData[ 15 ] =  1.0;
 
     cameraDCS->SetMat( matrix );
 }
