@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no" ?>
+<network name="Network" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="veshader.xsd">
+
+  <veSystem id="a7839642-c3d3-2b44-9c14-f4949de709ad">
+    <network>
+      <conductorState dataName="m_xUserScale" id="69785427-4ce8-eb42-a1e7-47a52d8146b3">
+        <dataValue type="xs:double">1</dataValue>
+      </conductorState>
+      <conductorState dataName="m_yUserScale" id="c81bccd2-32bb-844c-b3dd-cd00526052f7">
+        <dataValue type="xs:double">1</dataValue>
+      </conductorState>
+      <conductorState dataName="nPixX" id="fa95df41-d778-8d4e-9012-df87dac6f5d4">
+        <dataValue type="xs:integer">1</dataValue>
+      </conductorState>
+      <conductorState dataName="nPixY" id="a8427b2e-1699-a349-8f90-4be4941a097a">
+        <dataValue type="xs:integer">1</dataValue>
+      </conductorState>
+      <conductorState dataName="nUnitX" id="4c47a329-f658-e147-82d2-d6fd2931122e">
+        <dataValue type="xs:integer">1</dataValue>
+      </conductorState>
+      <conductorState dataName="nUnitY" id="0838d83c-80fc-a446-a454-0e9de502fac3">
+        <dataValue type="xs:integer">1</dataValue>
+      </conductorState>
+    </network>
+    <model ID="103" id="107d95b5-90ac-e04e-bec9-cc944d5e6de7" name="DefaultPlugin" plugintype="DefaultPlugin" vendorUnit="DefaultPlugin">
+      <icon iconHidden="0" iconMirror="0" iconRotation="0" iconScale="1" type="xs:string">DefaultPlugin</icon>
+      <iconLocation xLocation="48" yLocation="21"/>
+      <geometry associatedDataset="NONE" id="f1d2e583-da70-ce47-bd77-a5c3c5ca3729" makeTransparentOnVis="true" opacity="1" physics="false" visibility="true">
+        <type>Assembly</type>
+        <name>Model_Geometry</name>
+        <parent type="xs:string"></parent>
+        <transform>
+          <translation>
+            <value>0</value>
+            <value>0</value>
+            <value>0</value>
+          </translation>
+          <scale>
+            <value>1</value>
+            <value>1</value>
+            <value>1</value>
+          </scale>
+          <rotation>
+            <value>0</value>
+            <value>0</value>
+            <value>0</value>
+          </rotation>
+        </transform>
+        <children>
+          <child friction="1" id="4fec63ca-c22e-2641-b058-52a9eb17266f" makeTransparentOnVis="true" mass="1" opacity="1" physics="true" physicsLOD="Overall" physicsMesh="Mesh" physicsMotion="Static" restitution="0" visibility="true">
+            <type>Part</type>
+            <name>terrain</name>
+            <parent type="xs:string">f1d2e583-da70-ce47-bd77-a5c3c5ca3729</parent>
+            <transform>
+              <translation>
+                <value>-100</value>
+                <value>100</value>
+                <value>-10</value>
+              </translation>
+              <scale>
+                <value>20</value>
+                <value>20</value>
+                <value>20</value>
+              </scale>
+              <rotation>
+                <value>0</value>
+                <value>0</value>
+                <value>0</value>
+              </rotation>
+            </transform>
+            <attribute>
+              <type type="xs:string">Program</type>
+              <blending type="xs:boolean">false</blending>
+              <program>
+                <name>Concrete</name>
+                <vertexShader>
+                  <type>Vertex</type>
+                  <uniform>
+                    <name>Scale</name>
+                    <type>Float</type>
+                    <size>1</size>
+                    <textureUnit>0</textureUnit>
+                    <value>1</value>
+                  </uniform>
+                  <shaderCode>
+          varying vec3 lightPos;
+          varying vec3 eyePos;
+          varying vec3 normal;
+          varying float LightIntensity;
+          varying vec3  MCposition;
+          uniform float Scale;
+
+          void main()
+          {
+              vec3 ECposition = vec3(gl_ModelViewMatrix * gl_Vertex);
+              MCposition      = vec3(gl_Vertex) * Scale;
+              normal      = normalize(vec3(gl_NormalMatrix * gl_Normal));
+	      eyePos=vec3(gl_ModelViewMatrix*gl_Vertex);
+              lightPos = gl_LightSource[0].position.xyz;
+              LightIntensity  = dot(normalize(lightPos - ECposition), normal);
+              LightIntensity *= 1.5;
+              gl_FrontSecondaryColor=vec4(1.0);
+              gl_BackSecondaryColor=vec4(0.0);
+              gl_Position     = ftransform();
+          }
+      </shaderCode>
+                </vertexShader>
+                <fragmentShader>
+                  <type>Fragment</type>
+                  <textureImage>
+                    <textureDescriptionData commandName="Texture Image Data">
+                      <parameter dataName="Dimension" id="0180d9f7-0bea-4443-84c6-d1688f6ac224">
+                        <dataValue type="xs:unsignedInt">3</dataValue>
+                      </parameter>
+                      <parameter dataName="Unit" id="ba25effc-1708-4ed1-a20d-f58b95e5ce51">
+                        <dataValue type="xs:unsignedInt">0</dataValue>
+                      </parameter>
+                      <parameter dataName="Type" id="463e86b8-d051-4dc7-bf98-a59e22199a60">
+                        <dataValue type="xs:string">Perlin Noise</dataValue>
+                      </parameter>
+                      <parameter dataName="Minification" id="d5596672-146b-429f-a1d5-76bb0e6566b5">
+                        <dataValue type="xs:string">Linear</dataValue>
+                      </parameter>
+                      <parameter dataName="Magnification" id="97f0f174-1603-4856-bf60-5ed975fd65df">
+                        <dataValue type="xs:string">Linear</dataValue>
+                      </parameter>
+                      <parameter dataName="Wrap S" id="a17c8c5f-b8c3-4ed3-a2d0-4ff5eed6044d">
+                        <dataValue type="xs:string">Repeat</dataValue>
+                      </parameter>
+                      <parameter dataName="Wrap T" id="27d5b8dd-adfb-462b-84c6-cd3ce082c4ed">
+                        <dataValue type="xs:string">Repeat</dataValue>
+                      </parameter>
+                      <parameter dataName="Wrap R" id="1607d172-163f-4524-b0e8-358967918268">
+                        <dataValue type="xs:string">Repeat</dataValue>
+                      </parameter>
+                    </textureDescriptionData>
+                  </textureImage>
+                  <uniform>
+                    <name>Noise</name>
+                    <type>Sampler</type>
+                    <size>1</size>
+                    <textureUnit>0</textureUnit>
+                  </uniform>
+                  <uniform>
+                    <name>NoiseScale</name>
+                    <type>Float</type>
+                    <size>1</size>
+                    <textureUnit>0</textureUnit>
+                    <value>1</value>
+                  </uniform>
+                  <shaderCode>
+        varying vec3 lightPos;
+        varying vec3 eyePos;
+        varying vec3 normal;
+        varying float LightIntensity; 
+        varying vec3  MCposition;
+
+        uniform sampler3D Noise;
+        uniform float NoiseScale;
+
+        void main()
+        {
+	    float specularPower = 10.0;
+            vec4  noisevec  = texture3D(Noise, NoiseScale * MCposition);
+            float intensity = min(1.0, noisevec[3] * 18.0);
+	    vec3 graniteColor = vec3(intensity * LightIntensity);
+
+           vec3 N=(step(gl_SecondaryColor.r,.5)== 1.0 )?-normalize(normal):normalize(normal);
+	  
+          vec3 L=normalize(lightPos);
+          float NDotL=max(dot(N,L),0.0);
+
+          vec3 V=normalize(eyePos);
+          vec3 R=reflect(V,N);
+          float RDotL=max(dot(R,L),0.0);
+
+          vec3 TotalAmbient=gl_LightSource[0].ambient.rgb*graniteColor;
+          vec3 TotalDiffuse=gl_LightSource[0].diffuse.rgb*graniteColor*NDotL;
+          vec3 TotalSpecular=gl_LightSource[0].specular.rgb*vec3(.1,.1,.1)*pow(RDotL,specularPower);
+	  gl_FragColor    = vec4(TotalAmbient+TotalDiffuse+TotalSpecular, 1.0);
+         }
+     </shaderCode>
+                </fragmentShader>
+              </program>
+            </attribute>
+            <activeAttributeName type="xs:string">Concrete</activeAttributeName>
+            <fileName>terrain.ive</fileName>
+          </child>
+        </children>
+      </geometry>
+    </model>
+  </veSystem>
+
+  <User id="b4167d53-d638-9546-aa1c-f361e55064a9" userID="User" veControlStatus="MASTER">
+    <stateInfo>
+      <Command commandName="CHANGE_BACKGROUND_COLOR">
+        <parameter dataName="Background Color" id="2841e9a5-b25d-0142-83d4-c91a2a54f718">
+          <genericObject objectType="OneDDoubleArray">
+            <data>0</data>
+            <data>0</data>
+            <data>0</data>
+            <data>1</data>
+          </genericObject>
+        </parameter>
+      </Command>
+    </stateInfo>
+  </User>
+
+</network>
