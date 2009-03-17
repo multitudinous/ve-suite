@@ -195,7 +195,7 @@ private:
     ///Do not know how to describe this
     ///\param dx The change in the x direction
     ///\param dy The change in the y direction
-    void RotateView( double dx, double dy );
+    //void RotateView( double dx, double dy );
 
     ///Do not know how to describe this
     void Twist();

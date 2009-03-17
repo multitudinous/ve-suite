@@ -93,7 +93,7 @@ public:
     void StrafeRight( bool onOff );
 
     ///
-    void Turn( double dx );
+    void Turn( double dx, double dy );
     
     ///
     void Jump();
@@ -106,6 +106,9 @@ public:
 
     ///
     void UpdateCharacter( btDynamicsWorld* dynamicsWorld, btScalar dt );
+
+    ///
+    void Zoom( bool inOut );
 
 protected:
 
@@ -138,10 +141,25 @@ private:
     double mMaxCameraDistance;
 
     ///
-    double mTurnAngle;
+    double mDeltaZoom;
 
     ///
-    double mTurnVelocity;
+    double mSpeed;
+
+    ///
+    double mMinSpeed;
+
+    ///
+    double mMaxSpeed;
+
+    ///
+    double mTurnAngleX;
+
+    ///
+    double mTurnAngleZ;
+
+    ///
+    double mTurnSpeed;
 
     ///
     btKinematicCharacterController* mCharacter;

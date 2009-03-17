@@ -1251,6 +1251,26 @@ void KeyboardMouse::NavOnMousePress()
         {
             break;
         }
+        //Scroll wheel up
+        case gadget::MBUTTON4:
+        {
+            if( !mPhysicsSimulator->GetIdle() )
+            {
+                mCharacterController->Zoom( true );
+            }
+
+            break;
+        }
+        //Scroll wheel down
+        case gadget::MBUTTON5:
+        {
+            if( !mPhysicsSimulator->GetIdle() )
+            {
+                mCharacterController->Zoom( false );
+            }
+
+            break;
+        }
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -1328,7 +1348,8 @@ void KeyboardMouse::NavOnMouseMotion( std::pair< double, double > delta )
                 if( ( mX > 0.1 * mWidth ) && ( mX < 0.9 * mWidth ) &&
                     ( mY > 0.1 * mHeight ) && ( mY < 0.9 * mHeight ) )
                 {
-                    RotateView( delta.first, delta.second );
+                    double angle = mMagnitude * 400.0;
+                    Rotate( -delta.second, 0.0, delta.first, angle );
                 }
                 else
                 {
@@ -1348,7 +1369,7 @@ void KeyboardMouse::NavOnMouseMotion( std::pair< double, double > delta )
         {
             if( !mPhysicsSimulator->GetIdle() )
             {
-                mCharacterController->Turn( delta.first );
+                mCharacterController->Turn( delta.first, delta.second );
             }
             else
             {
@@ -1454,9 +1475,10 @@ void KeyboardMouse::ResetTransforms()
         *mResetPosition );
 }
 ////////////////////////////////////////////////////////////////////////////////
+/*
 void KeyboardMouse::RotateView( double dx, double dy )
 {
-    double tb_axis[ 3 ];
+    double tbAxis[ 3 ];
     double angle = mMagnitude * 400.0;
 
     gmtl::Matrix44d matrix;
@@ -1464,12 +1486,13 @@ void KeyboardMouse::RotateView( double dx, double dy )
 
     //Negative dy mouse movement(down motion) represents positive angle rotation
     dy *= -1.0;
-    tb_axis[ 0 ] = matrix.mData[ 0 ] * dy + matrix.mData[  2 ] * dx;
-    tb_axis[ 1 ] = matrix.mData[ 4 ] * dy + matrix.mData[  6 ] * dx;
-    tb_axis[ 2 ] = matrix.mData[ 8 ] * dy + matrix.mData[ 10 ] * dx;
+    tbAxis[ 0 ] = matrix.mData[ 0 ] * dy + matrix.mData[  2 ] * dx;
+    tbAxis[ 1 ] = matrix.mData[ 4 ] * dy + matrix.mData[  6 ] * dx;
+    tbAxis[ 2 ] = matrix.mData[ 8 ] * dy + matrix.mData[ 10 ] * dx;
 
-    Rotate( tb_axis[ 0 ], tb_axis[ 1 ], tb_axis[ 2 ], angle );
+    Rotate( tbAxis[ 0 ], tbAxis[ 1 ], tbAxis[ 2 ], angle );
 }
+*/
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::Twist()
 {
@@ -1477,9 +1500,8 @@ void KeyboardMouse::Twist()
     double newTheta = atan2f( mCurrPos.first - 0.5, mCurrPos.second - 0.5 );
     double angle = ( OneEightyDivPI ) * ( newTheta - theta );
 
-    //The axis to twist about
-    osg::Vec3 twist( 0, 1, 0 );
-    Rotate( twist.x(), twist.y(), twist.z(), angle );
+    //Twist about the y-axis: ( 0, 1, 0 )
+    Rotate( 0.0, 1.0, 0.0, angle );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::Zoom( double dy )

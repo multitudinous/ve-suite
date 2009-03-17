@@ -39,7 +39,13 @@
 #include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
 
 // --- vrJuggler Includes --- //
+#include <gmtl/Xforms.h>
 #include <gmtl/Generate.h>
+#include <gmtl/Matrix.h>
+#include <gmtl/Vec.h>
+#include <gmtl/Quat.h>
+#include <gmtl/gmtl.h>
+#include <gmtl/Misc/MatrixConvert.h>
 
 // --- OSG Includes --- //
 #include <osg/Geode>
@@ -62,6 +68,9 @@
 using namespace ves::xplorer::scenegraph;
 namespace vxs = ves::xplorer::scenegraph;
 
+const double OneEightyDivPI = 57.29577951;
+const double PIDivOneEighty = 0.0174532925;
+
 ////////////////////////////////////////////////////////////////////////////////
 CharacterController::CharacterController()
     :
@@ -72,10 +81,17 @@ CharacterController::CharacterController()
     mJump( false ),
     mCameraHeight( 2.0 ),
     mCameraDistance( 12.0 ),
-    mMinCameraDistance( 0.5 ),
+    mMinCameraDistance( 5.0 ),
     mMaxCameraDistance( 100.0 ),
-    mTurnAngle( 0.0 ),
-    mTurnVelocity( 2.0 ),
+    mDeltaZoom( 2.0 ),
+    mSpeed( 10.0 ),
+    //Average walk speed is 5 km/h -> 0.911344415 ft/s
+    mMinSpeed( 1.0 ),
+    //Usain Bolt's top 10m split 10m/0.82s -> 40 ft/s
+    mMaxSpeed( 40.0 ),
+    mTurnAngleX( 0.0 ),
+    mTurnAngleZ( 0.0 ),
+    mTurnSpeed( 1.0 ),
     mCharacter( NULL ),
     mGhostObject( NULL )
 {
@@ -200,12 +216,27 @@ void CharacterController::StrafeRight( bool onOff )
     mStrafeRight = onOff;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CharacterController::Turn( double dx )
+void CharacterController::Turn( double dx, double dy )
 {
-    mTurnAngle += dx * mTurnVelocity;
+    double x = -dy;
+    double z =  dx;
+    double temp = ::sqrtf( x * x + z * z );
+    if( temp != 0.0 )
+    {
+        double tempRatio = 1 / temp;
+        x *= tempRatio;
+        z *= tempRatio;
+    }
+
+    mTurnAngleX += x * mTurnSpeed * PIDivOneEighty;
+    mTurnAngleZ += z * mTurnSpeed * PIDivOneEighty;
+	
+    btQuaternion xRotation( btVector3( 1.0, 0.0, 0.0 ), mTurnAngleX );
+    btQuaternion zRotation( btVector3( 0.0, 0.0, 1.0 ), mTurnAngleZ );
+    btQuaternion rotation = xRotation * zRotation;
 
     btTransform xform = mGhostObject->getWorldTransform();
-    xform.setRotation( btQuaternion( btVector3( 0.0, 0.0, 1.0 ), mTurnAngle ) );
+    xform.setRotation( rotation );
     mGhostObject->setWorldTransform( xform );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -226,32 +257,30 @@ void CharacterController::UpdateCharacter(
         btVector3 strafeDir = xform.getBasis()[ 0 ];
         strafeDir.normalize();
 
-        btVector3 walkDirection = btVector3( 0.0, 0.0, 0.0 );
-        //4 km/h -> 1.1 m/s
-        btScalar walkVelocity = btScalar( 1.1 ) * 4.0;
-        btScalar walkSpeed = walkVelocity * dt;
+        btVector3 direction( 0.0, 0.0, 0.0 );
+        btScalar speed = mSpeed * dt;
 
         if( mStrafeLeft )
         {
-            walkDirection -= strafeDir;
+            direction -= strafeDir;
         }
 
         if( mStrafeRight )
         {
-            walkDirection += strafeDir;
+            direction += strafeDir;
         }
 
         if( mStepForward )
         {
-            walkDirection += forwardDir;
+            direction += forwardDir;
         }
 
         if( mStepBackward )
         {
-            walkDirection -= forwardDir;
+            direction -= forwardDir;
         }
 
-        mCharacter->setWalkDirection( walkDirection * walkSpeed );
+        mCharacter->setWalkDirection( direction * speed );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -271,16 +300,12 @@ void CharacterController::UpdateCamera()
     btVector3 vVector = eye - center;
     vVector.normalize();
     btVector3 rVector( up.cross( vVector ) );
-    rVector.normalize();
+    //r is already a unit vector since up & v are unit vectors
     btVector3 uVector( vVector.cross( rVector ) );
-    //u is already a unit vector since r & v are unit vectors
-    uVector.normalize();
+    //u is already a unit vector since v & r are unit vectors
 
     //"Look at" character matrix
-    ves::xplorer::scenegraph::DCS* const cameraDCS =
-        vxs::SceneManager::instance()->GetActiveNavSwitchNode();
-
-    gmtl::Matrix44d matrix = cameraDCS->GetMat();
+    gmtl::Matrix44d matrix;
     matrix.mData[ 0 ]  =  rVector[ 0 ];
     matrix.mData[ 1 ]  = -vVector[ 0 ];
     matrix.mData[ 2 ]  =  uVector[ 0 ];
@@ -301,7 +326,7 @@ void CharacterController::UpdateCamera()
     matrix.mData[ 14 ] = -uVector.dot( eye );
     matrix.mData[ 15 ] =  1.0;
 
-    cameraDCS->SetMat( matrix );
+    vxs::SceneManager::instance()->GetActiveNavSwitchNode()->SetMat( matrix );
 }
 ////////////////////////////////////////////////////////////////////////////////
 CharacterController::CharacterTransformCallback::CharacterTransformCallback(
@@ -341,5 +366,25 @@ void CharacterController::CharacterTransformCallback::operator()(
     }
 
     traverse( node, nv );
+}
+////////////////////////////////////////////////////////////////////////////////
+void CharacterController::Zoom( bool inOut )
+{
+    if( inOut )
+    {
+        mCameraDistance -= mDeltaZoom;
+        if( mCameraDistance < mMinCameraDistance )
+        {
+            mCameraDistance = mMinCameraDistance;
+        }
+    }
+    else
+    {
+        mCameraDistance += mDeltaZoom;
+        if( mCameraDistance > mMaxCameraDistance )
+        {
+            mCameraDistance = mMaxCameraDistance;
+        }
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
