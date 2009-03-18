@@ -579,3 +579,4 @@ void PhysicsRigidBody::CreateRigidBody( const std::string& lod, const std::strin
         CustomShape( TRIANGLE_MESH_SHAPE_PROXYTYPE, overall );
     }
 }
+////////////////////////////////////////////////////////////////////////////////

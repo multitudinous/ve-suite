@@ -73,7 +73,7 @@ CharacterController::CharacterController()
     mJump( false ),
     mFlying( false ),
     mCameraHeight( 5.0 ),
-    mCameraDistance( 15.0 ),
+    mCameraDistance( 20.0 ),
     mMinCameraDistance( 5.0 ),
     mMaxCameraDistance( 100.0 ),
     mDeltaZoom( 2.0 ),
@@ -84,7 +84,7 @@ CharacterController::CharacterController()
     mMaxSpeed( 40.0 ),
     mTurnAngleX( 0.0 ),
     mTurnAngleZ( 0.0 ),
-    mTurnSpeed( 1.0 ),
+    mTurnSpeed( 2.0 ),
     mCameraRotation(),
     mCharacter( NULL ),
     mGhostObject( NULL ),
@@ -254,6 +254,7 @@ void CharacterController::Turn( double dx, double dy )
     mTurnAngleX += x * mTurnSpeed * PIDivOneEighty;
     mTurnAngleZ += z * mTurnSpeed * PIDivOneEighty;
 	
+    /*
     btQuaternion xRotation( btVector3( 1.0, 0.0, 0.0 ), mTurnAngleX );
     btQuaternion zRotation( btVector3( 0.0, 0.0, 1.0 ), mTurnAngleZ );
     btQuaternion rotation = xRotation * zRotation;
@@ -270,12 +271,27 @@ void CharacterController::Turn( double dx, double dy )
     }
 
     mGhostObject->setWorldTransform( xform );
+    */
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CharacterController::Update( btScalar dt )
 {
-    //Set walkDirection for character
+    btQuaternion xRotation( btVector3( 1.0, 0.0, 0.0 ), mTurnAngleX );
+    btQuaternion zRotation( btVector3( 0.0, 0.0, 1.0 ), mTurnAngleZ );
+    btQuaternion rotation = xRotation * zRotation;
+    mCameraRotation.setRotation( rotation );
+
     btTransform xform = mGhostObject->getWorldTransform();
+    if( mFlying )
+    {
+        xform.setRotation( rotation );
+    }
+    else
+    {
+        xform.setRotation( zRotation );
+    }
+
+    mGhostObject->setWorldTransform( xform );
 
     btVector3 forwardDir = xform.getBasis()[ 1 ];
     forwardDir.normalize();
@@ -329,9 +345,9 @@ void CharacterController::UpdateCamera()
     btVector3 vVector = eye - center;
     vVector.normalize();
     btVector3 rVector( up.cross( vVector ) );
-    //r is already a unit vector since up & v are unit vectors
+    rVector.normalize();
     btVector3 uVector( vVector.cross( rVector ) );
-    //u is already a unit vector since v & r are unit vectors
+    uVector.normalize();
 
     //"Look at" character matrix
     gmtl::Matrix44d matrix;
