@@ -75,7 +75,7 @@ CharacterController::CharacterController()
     mCameraHeight( 5.0 ),
     mCameraDistance( 20.0 ),
     mMinCameraDistance( 5.0 ),
-    mMaxCameraDistance( 100.0 ),
+    mMaxCameraDistance( 200.0 ),
     mDeltaZoom( 2.0 ),
     mSpeed( 10.0 ),
     //Average walk speed is 5 km/h -> 0.911344415 ft/s
@@ -101,8 +101,8 @@ CharacterController::~CharacterController()
 void CharacterController::Initialize( btDynamicsWorld* dynamicsWorld )
 {
     //Create physics mesh representation
-    btScalar characterHeight = 1.75;
-    btScalar characterWidth = 1.75;
+    btScalar characterHeight = 3.83;//5.83;
+    btScalar characterWidth = 1.83;
 
     btBroadphaseInterface* broadphase = dynamicsWorld->getBroadphase();
     broadphase->getOverlappingPairCache()->setInternalGhostPairCallback(
@@ -115,7 +115,7 @@ void CharacterController::Initialize( btDynamicsWorld* dynamicsWorld )
     mGhostObject->setWorldTransform( startTransform );
 
     btConvexShape* capsuleShape =
-        new btCapsuleShape( characterWidth, characterHeight );
+        new btCapsuleShapeZ( characterWidth, characterHeight );
     mGhostObject->setCollisionShape( capsuleShape );
     mGhostObject->setCollisionFlags( btCollisionObject::CF_CHARACTER_OBJECT );
 
