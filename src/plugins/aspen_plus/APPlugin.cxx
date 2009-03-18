@@ -524,7 +524,13 @@ wxMenu* APPlugin::GetPluginPopupMenu( wxMenu* baseMenu )
         return baseMenu;
     }
 
-    baseMenu->Enable( UIPLUGINBASE_CONDUCTOR_MENU, false );
+    baseMenu->Enable( UIPLUGINBASE_CONDUCTOR_MENU, true );
+    (baseMenu->FindItemByPosition( 0 ))->GetSubMenu()->Enable( 
+        UIPLUGINBASE_MODEL_INPUTS, false );
+    (baseMenu->FindItemByPosition( 0 ))->GetSubMenu()->Enable( 
+        UIPLUGINBASE_MODEL_RESULTS, false );
+    (baseMenu->FindItemByPosition( 0 ))->GetSubMenu()->Enable( 
+        UIPLUGINBASE_SHOW_ICON_CHOOSER, false );
 
     mAspenMenu = new wxMenu();
     mAspenMenu->Append( APPLUGIN_OPEN_SIM, _( "Open" ) );
