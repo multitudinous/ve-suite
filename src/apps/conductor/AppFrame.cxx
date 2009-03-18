@@ -459,7 +459,10 @@ void AppFrame::_createTreeAndLogWindow( wxWindow* parent )
 
     if( GetDisplayMode() == "Tablet" )
     {
-        wx_log_splitter->SplitHorizontally( serviceList->GetMessageLog(), wx_nw_splitter, -205 );
+        wxRect tempPos = GetRect();
+        int sashPos = tempPos.GetHeight() - 170;
+        wx_log_splitter->SplitHorizontally( serviceList->GetMessageLog(), 
+            wx_nw_splitter, sashPos );        
     }
 
     //wx_nw_splitter->SplitVertically( side_pane, network, 140 );
