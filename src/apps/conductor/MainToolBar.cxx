@@ -111,11 +111,11 @@ END_EVENT_TABLE()
 
 ////////////////////////////////////////////////////////////////////////////////
 MainToolBar::MainToolBar( wxWindow* parent )
-        :
-        wxToolBar( parent, wxWindowID( -1 ), wxPoint( wxDefaultPosition ),
-                   wxSize( wxDefaultSize ),
-                   long( wxCLIP_CHILDREN | wxTB_HORIZONTAL | wxSUNKEN_BORDER ),
-                   wxString( "toolBar", wxConvUTF8 ) )
+    :
+    wxToolBar( parent, wxWindowID( -1 ), wxPoint( wxDefaultPosition ),
+               wxSize( wxDefaultSize ),
+               long( wxCLIP_CHILDREN | wxTB_HORIZONTAL | wxSUNKEN_BORDER ),
+               wxString( "toolBar", wxConvUTF8 ) )
 {
     LoadToolBarBitmaps();
     CreateMainToolBar();
@@ -271,11 +271,13 @@ void MainToolBar::CreateMainToolBar()
         mToolbarBitmaps[ "physicsBitmap" ],
         wxT( "Physics On/Off" ), wxITEM_CHECK );
 #ifdef WIN32
+    /*
     AddTool(
         MAINTOOLBAR_CHARACTER, wxT( "" ),
         mToolbarBitmaps[ "characterBitmap" ],
         mToolbarBitmaps[ "characterDisabledBitmap" ], wxITEM_CHECK,
         wxT( "Character Controller" ) );
+    */
     AddTool(
         MAINTOOLBAR_RESET, wxT( "" ),
         mToolbarBitmaps[ "resetBitmap" ],
@@ -297,10 +299,12 @@ void MainToolBar::CreateMainToolBar()
         mToolbarBitmaps[ "stepDisabledBitmap" ], wxITEM_NORMAL,
         wxT( "Step Simulation" ) );
 #else
+    /*
     AddTool(
         MAINTOOLBAR_CHARACTER, wxT( "" ),
         mToolbarBitmaps[ "characterBitmap" ],
         wxT( "Character Controller" ), wxITEM_CHECK );
+    */
     AddTool(
         MAINTOOLBAR_RESET, wxT( "" ),
         mToolbarBitmaps[ "resetBitmap" ],
