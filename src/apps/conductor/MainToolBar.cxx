@@ -271,13 +271,13 @@ void MainToolBar::CreateMainToolBar()
         mToolbarBitmaps[ "physicsBitmap" ],
         wxT( "Physics On/Off" ), wxITEM_CHECK );
 #ifdef WIN32
-    /*
+#ifdef CHARACTER_CONTROLLER
     AddTool(
         MAINTOOLBAR_CHARACTER, wxT( "" ),
         mToolbarBitmaps[ "characterBitmap" ],
         mToolbarBitmaps[ "characterDisabledBitmap" ], wxITEM_CHECK,
         wxT( "Character Controller" ) );
-    */
+#endif //CHARACTER_CONTROLLER
     AddTool(
         MAINTOOLBAR_RESET, wxT( "" ),
         mToolbarBitmaps[ "resetBitmap" ],
@@ -299,12 +299,12 @@ void MainToolBar::CreateMainToolBar()
         mToolbarBitmaps[ "stepDisabledBitmap" ], wxITEM_NORMAL,
         wxT( "Step Simulation" ) );
 #else
-    /*
+#ifdef CHARACTER_CONTROLLER
     AddTool(
         MAINTOOLBAR_CHARACTER, wxT( "" ),
         mToolbarBitmaps[ "characterBitmap" ],
         wxT( "Character Controller" ), wxITEM_CHECK );
-    */
+#endif //CHARACTER_CONTROLLER
     AddTool(
         MAINTOOLBAR_RESET, wxT( "" ),
         mToolbarBitmaps[ "resetBitmap" ],
@@ -321,7 +321,7 @@ void MainToolBar::CreateMainToolBar()
         MAINTOOLBAR_STEP, wxT( "" ),
         mToolbarBitmaps[ "stepBitmap" ],
         wxT( "Step Simulation" ), wxITEM_NORMAL );
-#endif
+#endif //WIN32
     AddSeparator();
 
     AddTool(
@@ -336,7 +336,7 @@ void MainToolBar::CreateMainToolBar()
 #ifdef WIN32
     SetToolNormalBitmap(
         MAINTOOLBAR_PAUSE, mToolbarBitmaps[ "pauseDisabledBitmap" ] );
-#endif
+#endif //WIN32
 
     EnableTool( MAINTOOLBAR_CHARACTER, false );
     EnableTool( MAINTOOLBAR_RESET, false );
