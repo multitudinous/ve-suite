@@ -267,16 +267,16 @@ void PhysicsSimulator::UpdatePhysics( float dt )
 
     vxs::CharacterController* characterController =
         vxs::SceneManager::instance()->GetCharacterController();
-    if( characterController )
+    if( characterController->IsActive() )
     {
-        //characterController->UpdateCharacter( mDynamicsWorld, dt );
+        characterController->Update( dt );
     }
 
     mDynamicsWorld->stepSimulation( dt );
 
-    if( characterController )
+    if( characterController->IsActive() )
     {
-        //characterController->UpdateCamera();
+        characterController->UpdateCamera();
     }
 
     //Sample debug code

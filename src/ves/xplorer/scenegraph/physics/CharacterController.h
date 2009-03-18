@@ -41,8 +41,13 @@
 #include <osg/ref_ptr>
 #include <osg/NodeCallback>
 
+namespace osg
+{
+class MatrixTransform;
+}
+
 // --- Bullet Includes --- //
-#include <LinearMath/btVector3.h>
+#include <LinearMath/btTransform.h>
 
 class btDynamicsWorld;
 class btKinematicCharacterController;
@@ -81,6 +86,12 @@ public:
     void Destroy( btDynamicsWorld* dynamicsWorld );
 
     ///
+    void TurnOn();
+
+    ///
+    void TurnOff();
+
+    ///
     void StepForward( bool onOff );
 
     ///
@@ -105,14 +116,20 @@ public:
     void UpdateCamera();
 
     ///
-    void UpdateCharacter( btDynamicsWorld* dynamicsWorld, btScalar dt );
+    void Update( btScalar dt );
 
     ///
     void Zoom( bool inOut );
 
+    ///
+    bool IsActive();
+
 protected:
 
 private:
+    ///
+    bool mActive;
+
     ///
     bool mStepForward;
 
@@ -127,6 +144,9 @@ private:
 
     ///
     bool mJump;
+
+    ///
+    bool mFlying;
 
     ///
     double mCameraHeight;
@@ -162,10 +182,15 @@ private:
     double mTurnSpeed;
 
     ///
+    btTransform mCameraRotation;
+
+    ///
     btKinematicCharacterController* mCharacter;
 
     ///
     btPairCachingGhostObject* mGhostObject;
+
+    osg::ref_ptr< osg::MatrixTransform > mMatrixTransform;
 
     ///
     class CharacterTransformCallback : public osg::NodeCallback

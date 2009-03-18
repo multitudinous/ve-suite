@@ -38,15 +38,6 @@
 
 #include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
 
-// --- vrJuggler Includes --- //
-#include <gmtl/Xforms.h>
-#include <gmtl/Generate.h>
-#include <gmtl/Matrix.h>
-#include <gmtl/Vec.h>
-#include <gmtl/Quat.h>
-#include <gmtl/gmtl.h>
-#include <gmtl/Misc/MatrixConvert.h>
-
 // --- OSG Includes --- //
 #include <osg/Geode>
 #include <osg/MatrixTransform>
@@ -74,13 +65,15 @@ const double PIDivOneEighty = 0.0174532925;
 ////////////////////////////////////////////////////////////////////////////////
 CharacterController::CharacterController()
     :
+    mActive( false ),
     mStepForward( false ),
     mStepBackward( false ),
     mStrafeLeft( false ),
     mStrafeRight( false ),
     mJump( false ),
-    mCameraHeight( 2.0 ),
-    mCameraDistance( 12.0 ),
+    mFlying( false ),
+    mCameraHeight( 5.0 ),
+    mCameraDistance( 15.0 ),
     mMinCameraDistance( 5.0 ),
     mMaxCameraDistance( 100.0 ),
     mDeltaZoom( 2.0 ),
@@ -92,10 +85,12 @@ CharacterController::CharacterController()
     mTurnAngleX( 0.0 ),
     mTurnAngleZ( 0.0 ),
     mTurnSpeed( 1.0 ),
+    mCameraRotation(),
     mCharacter( NULL ),
-    mGhostObject( NULL )
+    mGhostObject( NULL ),
+    mMatrixTransform( NULL )
 {
-    ;
+    mCameraRotation.setIdentity();
 }
 ////////////////////////////////////////////////////////////////////////////////
 CharacterController::~CharacterController()
@@ -131,14 +126,6 @@ void CharacterController::Initialize( btDynamicsWorld* dynamicsWorld )
 
     mCharacter->setUpAxis( 2 );
 
-    //dynamicsWorld->addCollisionObject(
-        //mGhostObject, btBroadphaseProxy::CharacterFilter,
-        //btBroadphaseProxy::StaticFilter | btBroadphaseProxy::DefaultFilter );
-
-    //dynamicsWorld->addCharacter( mCharacter );
-
-    Reset( dynamicsWorld );
-
     //Create graphics mesh representation
     osg::ref_ptr< osg::Geode > geode = new osg::Geode();
     osg::ref_ptr< osg::Capsule > capsule =
@@ -153,16 +140,52 @@ void CharacterController::Initialize( btDynamicsWorld* dynamicsWorld )
     shapeDrawable->setColor( osg::Vec4( 1.0, 1.0, 0.0, 1.0 ) );
     geode->addDrawable( shapeDrawable.get() );
 
-    osg::ref_ptr< osg::MatrixTransform > mt = new osg::MatrixTransform();
-    mt->addChild( geode.get() );
-    //vxs::SceneManager::instance()->GetModelRoot()->addChild( mt.get() );
+    mMatrixTransform = new osg::MatrixTransform();
+    mMatrixTransform->addChild( geode.get() );
+    vxs::SceneManager::instance()->GetModelRoot()->addChild(
+        mMatrixTransform.get() );
 
-    //mt->setUpdateCallback( new CharacterTransformCallback( mGhostObject ) );
+    mMatrixTransform->setUpdateCallback(
+        new CharacterTransformCallback( mGhostObject ) );
+
+    mMatrixTransform->setNodeMask( 0 );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CharacterController::Destroy( btDynamicsWorld* dynamicsWorld )
 {
     ;
+}
+////////////////////////////////////////////////////////////////////////////////
+void CharacterController::TurnOn()
+{
+    mMatrixTransform->setNodeMask( 1 );
+
+    btDynamicsWorld* dynamicsWorld =
+        vxs::PhysicsSimulator::instance()->GetDynamicsWorld();
+
+    dynamicsWorld->addCollisionObject(
+        mGhostObject, btBroadphaseProxy::CharacterFilter,
+        btBroadphaseProxy::StaticFilter | btBroadphaseProxy::DefaultFilter );
+
+    dynamicsWorld->addCharacter( mCharacter );
+
+    Reset( dynamicsWorld );
+
+    mActive = true;
+}
+////////////////////////////////////////////////////////////////////////////////
+void CharacterController::TurnOff()
+{
+    mMatrixTransform->setNodeMask( 0 );
+
+    btDynamicsWorld* dynamicsWorld =
+        vxs::PhysicsSimulator::instance()->GetDynamicsWorld();
+
+    dynamicsWorld->removeCollisionObject( mGhostObject );
+
+    dynamicsWorld->removeCharacter( mCharacter );
+
+    mActive = false;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CharacterController::Jump()
@@ -220,12 +243,12 @@ void CharacterController::Turn( double dx, double dy )
 {
     double x = -dy;
     double z =  dx;
-    double temp = ::sqrtf( x * x + z * z );
-    if( temp != 0.0 )
+    double length = ::sqrtf( x * x + z * z );
+    if( length != 0.0 )
     {
-        double tempRatio = 1 / temp;
-        x *= tempRatio;
-        z *= tempRatio;
+        double lengthRatio = 1 / length;
+        x *= lengthRatio;
+        z *= lengthRatio;
     }
 
     mTurnAngleX += x * mTurnSpeed * PIDivOneEighty;
@@ -234,59 +257,65 @@ void CharacterController::Turn( double dx, double dy )
     btQuaternion xRotation( btVector3( 1.0, 0.0, 0.0 ), mTurnAngleX );
     btQuaternion zRotation( btVector3( 0.0, 0.0, 1.0 ), mTurnAngleZ );
     btQuaternion rotation = xRotation * zRotation;
+    mCameraRotation.setRotation( rotation );
 
     btTransform xform = mGhostObject->getWorldTransform();
-    xform.setRotation( rotation );
+    if( mFlying )
+    {
+        xform.setRotation( rotation );
+    }
+    else
+    {
+        xform.setRotation( zRotation );
+    }
+
     mGhostObject->setWorldTransform( xform );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CharacterController::UpdateCharacter(
-    btDynamicsWorld* dynamicsWorld, btScalar dt )
+void CharacterController::Update( btScalar dt )
 {
-    if( dynamicsWorld )
+    //Set walkDirection for character
+    btTransform xform = mGhostObject->getWorldTransform();
+
+    btVector3 forwardDir = xform.getBasis()[ 1 ];
+    forwardDir.normalize();
+
+    btVector3 upDir = xform.getBasis()[ 2 ];
+    upDir.normalize();
+
+    btVector3 strafeDir = xform.getBasis()[ 0 ];
+    strafeDir.normalize();
+
+    btVector3 direction( 0.0, 0.0, 0.0 );
+    btScalar speed = mSpeed * dt;
+
+    if( mStrafeLeft )
     {
-        //Set walkDirection for character
-        btTransform xform = mGhostObject->getWorldTransform();
-
-        btVector3 forwardDir = xform.getBasis()[ 1 ];
-        forwardDir.normalize();
-
-        btVector3 upDir = xform.getBasis()[ 2 ];
-        upDir.normalize();
-
-        btVector3 strafeDir = xform.getBasis()[ 0 ];
-        strafeDir.normalize();
-
-        btVector3 direction( 0.0, 0.0, 0.0 );
-        btScalar speed = mSpeed * dt;
-
-        if( mStrafeLeft )
-        {
-            direction -= strafeDir;
-        }
-
-        if( mStrafeRight )
-        {
-            direction += strafeDir;
-        }
-
-        if( mStepForward )
-        {
-            direction += forwardDir;
-        }
-
-        if( mStepBackward )
-        {
-            direction -= forwardDir;
-        }
-
-        mCharacter->setWalkDirection( direction * speed );
+        direction -= strafeDir;
     }
+
+    if( mStrafeRight )
+    {
+        direction += strafeDir;
+    }
+
+    if( mStepForward )
+    {
+        direction += forwardDir;
+    }
+
+    if( mStepBackward )
+    {
+        direction -= forwardDir;
+    }
+
+    mCharacter->setWalkDirection( direction * speed );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CharacterController::UpdateCamera()
 {
     btTransform characterWorldTrans = mGhostObject->getWorldTransform();
+    characterWorldTrans.setRotation( mCameraRotation.getRotation() );
 
     btVector3 up = characterWorldTrans.getBasis()[ 2 ];
     up.normalize();
@@ -329,6 +358,31 @@ void CharacterController::UpdateCamera()
     vxs::SceneManager::instance()->GetActiveNavSwitchNode()->SetMat( matrix );
 }
 ////////////////////////////////////////////////////////////////////////////////
+void CharacterController::Zoom( bool inOut )
+{
+    if( inOut )
+    {
+        mCameraDistance -= mDeltaZoom;
+        if( mCameraDistance < mMinCameraDistance )
+        {
+            mCameraDistance = mMinCameraDistance;
+        }
+    }
+    else
+    {
+        mCameraDistance += mDeltaZoom;
+        if( mCameraDistance > mMaxCameraDistance )
+        {
+            mCameraDistance = mMaxCameraDistance;
+        }
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+bool CharacterController::IsActive()
+{
+    return mActive;
+}
+////////////////////////////////////////////////////////////////////////////////
 CharacterController::CharacterTransformCallback::CharacterTransformCallback(
     btCollisionObject* collisionObject )
     :
@@ -366,25 +420,5 @@ void CharacterController::CharacterTransformCallback::operator()(
     }
 
     traverse( node, nv );
-}
-////////////////////////////////////////////////////////////////////////////////
-void CharacterController::Zoom( bool inOut )
-{
-    if( inOut )
-    {
-        mCameraDistance -= mDeltaZoom;
-        if( mCameraDistance < mMinCameraDistance )
-        {
-            mCameraDistance = mMinCameraDistance;
-        }
-    }
-    else
-    {
-        mCameraDistance += mDeltaZoom;
-        if( mCameraDistance > mMaxCameraDistance )
-        {
-            mCameraDistance = mMaxCameraDistance;
-        }
-    }
 }
 ////////////////////////////////////////////////////////////////////////////////

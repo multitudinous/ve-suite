@@ -1122,7 +1122,8 @@ void KeyboardMouse::NavOnKeyboardRelease()
         //STRAFE LEFT
         case gadget::KEY_A:
         {
-            if( !mPhysicsSimulator->GetIdle() )
+            if( !mPhysicsSimulator->GetIdle() &&
+                mCharacterController->IsActive() )
             {
                 mCharacterController->StrafeLeft( false );
             }
@@ -1132,7 +1133,8 @@ void KeyboardMouse::NavOnKeyboardRelease()
         //BACKWARD
         case gadget::KEY_S:
         {
-            if( !mPhysicsSimulator->GetIdle() )
+            if( !mPhysicsSimulator->GetIdle() &&
+                mCharacterController->IsActive() )
             {
                 mCharacterController->StepBackward( false );
             }
@@ -1142,7 +1144,8 @@ void KeyboardMouse::NavOnKeyboardRelease()
         //STRAFE RIGHT
         case gadget::KEY_D:
         {
-            if( !mPhysicsSimulator->GetIdle() )
+            if( !mPhysicsSimulator->GetIdle() &&
+                mCharacterController->IsActive() )
             {
                 mCharacterController->StrafeRight( false );
             }
@@ -1152,7 +1155,8 @@ void KeyboardMouse::NavOnKeyboardRelease()
         //FORWARD
         case gadget::KEY_W:
         {
-            if( !mPhysicsSimulator->GetIdle() )
+            if( !mPhysicsSimulator->GetIdle() &&
+                mCharacterController->IsActive() )
             {
                 mCharacterController->StepForward( false );
             }
@@ -1162,7 +1166,8 @@ void KeyboardMouse::NavOnKeyboardRelease()
         //JUMP
         case gadget::KEY_SPACE:
         {
-            if( !mPhysicsSimulator->GetIdle() )
+            if( !mPhysicsSimulator->GetIdle() &&
+                mCharacterController->IsActive() )
             {
                 //mCharacterController->Jump();
             }
@@ -1172,7 +1177,8 @@ void KeyboardMouse::NavOnKeyboardRelease()
         //DOWN
         case gadget::KEY_C:
         {
-            if( !mPhysicsSimulator->GetIdle() )
+            if( !mPhysicsSimulator->GetIdle() &&
+                mCharacterController->IsActive() )
             {
                 //mCharacterController
             }
@@ -1254,7 +1260,8 @@ void KeyboardMouse::NavOnMousePress()
         //Scroll wheel up
         case gadget::MBUTTON4:
         {
-            if( !mPhysicsSimulator->GetIdle() )
+            if( !mPhysicsSimulator->GetIdle() &&
+                mCharacterController->IsActive() )
             {
                 mCharacterController->Zoom( true );
             }
@@ -1264,7 +1271,8 @@ void KeyboardMouse::NavOnMousePress()
         //Scroll wheel down
         case gadget::MBUTTON5:
         {
-            if( !mPhysicsSimulator->GetIdle() )
+            if( !mPhysicsSimulator->GetIdle() &&
+                mCharacterController->IsActive() )
             {
                 mCharacterController->Zoom( false );
             }
@@ -1367,7 +1375,8 @@ void KeyboardMouse::NavOnMouseMotion( std::pair< double, double > delta )
         }
         case gadget::MBUTTON3:
         {
-            if( !mPhysicsSimulator->GetIdle() )
+            if( !mPhysicsSimulator->GetIdle() &&
+                mCharacterController->IsActive() )
             {
                 mCharacterController->Turn( delta.first, delta.second );
             }

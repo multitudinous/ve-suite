@@ -33,7 +33,10 @@
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/event/environment/PhysicsSimulationEventHandler.h>
 
+#include <ves/xplorer/scenegraph/SceneManager.h>
+
 #include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
+#include <ves/xplorer/scenegraph/physics/CharacterController.h>
 
 #include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/DataValuePair.h>
@@ -52,22 +55,21 @@
 #include <unistd.h>
 #endif
 
-namespace ves
-{
-namespace xplorer
-{
-namespace event
-{
+using namespace ves::xplorer::event;
+namespace vxs = ves::xplorer::scenegraph;
+
+////////////////////////////////////////////////////////////////////////////////
 PhysicsSimulationEventHandler::PhysicsSimulationEventHandler()
-        :
-        ves::xplorer::event::EventHandler()
+    :
+    ves::xplorer::event::EventHandler()
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-PhysicsSimulationEventHandler::PhysicsSimulationEventHandler( const PhysicsSimulationEventHandler& rhs )
-        :
-        ves::xplorer::event::EventHandler()
+PhysicsSimulationEventHandler::PhysicsSimulationEventHandler(
+    const PhysicsSimulationEventHandler& rhs )
+    :
+    ves::xplorer::event::EventHandler()
 {
     ;
 }
@@ -77,7 +79,8 @@ PhysicsSimulationEventHandler::~PhysicsSimulationEventHandler()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-PhysicsSimulationEventHandler& PhysicsSimulationEventHandler::operator=( const PhysicsSimulationEventHandler& rhs )
+PhysicsSimulationEventHandler& PhysicsSimulationEventHandler::operator=(
+    const PhysicsSimulationEventHandler& rhs )
 {
     if( this != &rhs )
     {
@@ -87,35 +90,47 @@ PhysicsSimulationEventHandler& PhysicsSimulationEventHandler::operator=( const P
     return *this;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void PhysicsSimulationEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* modelHandler )
+void PhysicsSimulationEventHandler::SetGlobalBaseObject(
+    ves::xplorer::GlobalBase* modelHandler )
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void PhysicsSimulationEventHandler::Execute( const ves::open::xml::XMLObjectPtr& veXMLObject )
+void PhysicsSimulationEventHandler::Execute(
+    const ves::open::xml::XMLObjectPtr& veXMLObject )
 {
-    ves::open::xml::CommandPtr command = boost::dynamic_pointer_cast<ves::open::xml::Command>( veXMLObject );
+    ves::open::xml::CommandPtr command =
+        boost::dynamic_pointer_cast< ves::open::xml::Command >( veXMLObject );
 
-    if( command->GetDataValuePair( "ResetPhysicsSimulation" ) )
+    if( command->GetDataValuePair( "CharacterControllerOn" ) )
     {
-        ves::xplorer::scenegraph::PhysicsSimulator::instance()->SetIdle( true );
-        ves::xplorer::scenegraph::PhysicsSimulator::instance()->ResetScene();
+        vxs::CharacterController* characterController =
+            vxs::SceneManager::instance()->GetCharacterController();
+        characterController->TurnOn();
+    }
+    else if( command->GetDataValuePair( "CharacterControllerOff" ) )
+    {
+        vxs::CharacterController* characterController =
+            vxs::SceneManager::instance()->GetCharacterController();
+        characterController->TurnOff();
+    }
+    else if( command->GetDataValuePair( "ResetPhysicsSimulation" ) )
+    {
+        vxs::PhysicsSimulator::instance()->SetIdle( true );
+        vxs::PhysicsSimulator::instance()->ResetScene();
     }
     else if( command->GetDataValuePair( "PausePhysicsSimulation" ) )
     {
-        ves::xplorer::scenegraph::PhysicsSimulator::instance()->SetIdle( true );
+        vxs::PhysicsSimulator::instance()->SetIdle( true );
     }
     else if( command->GetDataValuePair( "StartPhysicsSimulation" ) )
     {
-        ves::xplorer::scenegraph::PhysicsSimulator::instance()->SetIdle( false );
+        vxs::PhysicsSimulator::instance()->SetIdle( false );
     }
     else if( command->GetDataValuePair( "StepPhysicsSimulation" ) )
     {
-        ves::xplorer::scenegraph::PhysicsSimulator::instance()->SetIdle( true );
-        ves::xplorer::scenegraph::PhysicsSimulator::instance()->StepSimulation();
+        vxs::PhysicsSimulator::instance()->SetIdle( true );
+        vxs::PhysicsSimulator::instance()->StepSimulation();
     }
 }
-
-} // end event
-} // end xplorer
-} // end ves
+////////////////////////////////////////////////////////////////////////////////
