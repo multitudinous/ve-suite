@@ -5,8 +5,8 @@ import SConsAddons.Util as sca_util
 
 Import('ves_pkg buildDir RootDir GetPlatform')
 
-handBundle = ves_pkg.createFileBundle( pj('share','vesuite') )
-handFile = sca_util.getFilesRecursiveByExt( pj(RootDir, 'share', 'osg-data'), ['.ive'] )
-handFileTex = sca_util.getFilesRecursiveByExt( pj(RootDir, 'share', 'osg-data'), ['.rgb'] )
-handBundle.addFiles( handFile )
-handBundle.addFiles( handFileTex )
+#handBundle = ves_pkg.createFileBundle( pj('share','vesuite') )
+#handFile = sca_util.getFilesRecursiveByExt( pj(RootDir, 'share', 'osg-data'), ['.ive'] )
+#handFileTex = sca_util.getFilesRecursiveByExt( pj(RootDir, 'share', 'osg-data'), ['.rgb'] )
+#handBundle.addFiles( handFile )
+#handBundle.addFiles( handFileTex )

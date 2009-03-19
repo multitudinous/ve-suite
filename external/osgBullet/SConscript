@@ -43,6 +43,10 @@ glslFile = map(lambda s: pj('data', s),
                 glslFile)
 glslBundle.addFiles( glslFile, useRelPath=False )
 
+handFile = ves_pkg.createFileBundle( pj('share','vesuite') )
+handFile.addFiles( pj( openDir, 'data','handL.ive'), useRelPath=False )
+handFile.addFiles( pj( openDir, 'data','handR.ive'), useRelPath=False )
+
 
 ###############################################################
 ##Builds osgbpp
