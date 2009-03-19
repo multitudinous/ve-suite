@@ -427,7 +427,7 @@ void PhysicsRigidBody::ConvexShape()
     }
 
     mPhysicsSimulator->GetDynamicsWorld()->addRigidBody( this );*/
-    CustomShape( TRIANGLE_MESH_SHAPE_PROXYTYPE, false );
+    CustomShape( CONVEX_TRIANGLEMESH_SHAPE_PROXYTYPE, false );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsRigidBody::CustomShape( const BroadphaseNativeTypes shapeType, const bool overall )
@@ -576,7 +576,14 @@ void PhysicsRigidBody::CreateRigidBody( const std::string& lod, const std::strin
     }
     else
     {
-        CustomShape( TRIANGLE_MESH_SHAPE_PROXYTYPE, overall );
+        if( motion == "Static" )
+        {
+            CustomShape( TRIANGLE_MESH_SHAPE_PROXYTYPE, overall );
+        }
+        else
+        {
+            CustomShape( CONVEX_TRIANGLEMESH_SHAPE_PROXYTYPE, overall );
+        }
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
