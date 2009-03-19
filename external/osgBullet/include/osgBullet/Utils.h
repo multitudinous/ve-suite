@@ -20,6 +20,7 @@ OSGBULLET_EXPORT btTransform asBtTransform( const osg::Matrix& m );
 OSGBULLET_EXPORT osg::Vec3 asOsgVec3( const btVector3& v );
 OSGBULLET_EXPORT btVector3 asBtVector3( const osg::Vec3& v );
 
+OSGBULLET_EXPORT osg::Vec4 asOsgVec4( const btVector3& v, const double w );
 OSGBULLET_EXPORT osg::Vec4 asOsgVec4( const btVector4& v );
 OSGBULLET_EXPORT btVector4 asBtVector4( const osg::Vec4& v );
 

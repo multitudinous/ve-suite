@@ -13,6 +13,7 @@ SET( LIB_PUBLIC_HEADERS
     ${HEADER_PATH}/AbsoluteModelTransform.h
     ${HEADER_PATH}/BoundingCone.h
     ${HEADER_PATH}/BoundingCylinder.h
+    ${HEADER_PATH}/Chart.h
     ${HEADER_PATH}/ColladaUtils.h
     ${HEADER_PATH}/CollisionShape.h
     ${HEADER_PATH}/CollisionShapes.h
@@ -35,6 +36,7 @@ SN_ADD_SHARED_LIBRARY( ${LIB_NAME}
     AbsoluteModelTransform.cpp
     BoundingCone.cpp
     BoundingCylinder.cpp
+    Chart.cpp
     ColladaUtils.cpp
     CollisionShape.cpp
     CollisionShapes.cpp
@@ -50,4 +52,4 @@ SN_ADD_SHARED_LIBRARY( ${LIB_NAME}
     Utils.cpp
 )
 
-SN_LINK_LIBRARIES( ${LIB_NAME} osg osgDB osgGA osgSim osgUtil osgViewer OpenThreads ${BULLET_LIBRARIES}  )
+SN_LINK_LIBRARIES( ${LIB_NAME} osgSim osgText osgViewer osgGA osgDB osgUtil osg OpenThreads ${BULLET_LIBRARIES}  )

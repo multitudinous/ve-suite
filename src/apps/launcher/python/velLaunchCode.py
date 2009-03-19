@@ -704,7 +704,7 @@ class Launch:
         TAO_PORT
         VPR_DEBUG_ENABLE
         VPR_DEBUG_NFY_LEVEL
-        OSGNOTIFYLEVEL
+        OSG_NOTIFY_LEVEL
 
         Variables overwritten (when not in dev mode):
         ##NOTE: Change to set if unset, period.
@@ -757,8 +757,6 @@ class Launch:
         ##Set CFDHOSTNAME
         self.EnvFill("CFDHOSTTYPE", CFD_HOST_TYPE)
 
-        ##self.EnvFill("PHSHAREDSIZE", "534773700")
-
         ##Juggler debug output level
         if self.settings["VPRDebug"] < 0:
             self.EnvFill("VPR_DEBUG_ENABLE", "0", overwrite = True)
@@ -767,14 +765,13 @@ class Launch:
         self.EnvFill("VPR_DEBUG_NFY_LEVEL", str(self.settings["VPRDebug"]),
                      overwrite = True)
         if self.settings["OSGNotifyLevel"]:
-            self.EnvFill("OSGNOTIFYLEVEL",
+            self.EnvFill("OSG_NOTIFY_LEVEL",
                          str(self.settings["OSGNotifyLevel"]),
                          overwrite = True)
         else:
-            self.EnvFill("OSGNOTIFYLEVEL", "[Deleted]", overwrite = True)
+            self.EnvFill("OSG_NOTIFY_LEVEL", "[Deleted]", overwrite = True)
         self.EnvFill("NO_PERF_PLUGIN", "TRUE")
         self.EnvFill("NO_RTRC_PLUGIN", "TRUE")
-        self.EnvFill("PFNFYLEVEL", "0")
 
         ##Juggler dependencies
         ##These are currently set relative to VE-Suite's install
@@ -788,21 +785,18 @@ class Launch:
                          os.path.join(os.getenv("JCCL_BASE_DIR"),
                                       "share", "definitions"))
         ##self.EnvFill("VJ_CFG_PATH", os.path.join(vjBaseDir, "definitions")) ##Can get rid of?
-        ##self.EnvFill("NSPR_ROOT", vjBaseDir) ##Can get rid of?
+
         self.EnvFill("SNX_BASE_DIR", vjBaseDir)
         
-        ##Set VexMaster
-        ##Take the partially-qualified name if
-        ##clusterMaster is a fully-qualified name.
-        #if self.settings["ClusterMaster"]:
-        #    self.EnvFill("VEXMASTER",
-        #                 str(self.settings["ClusterMaster"]).split('.')[0],
-        #                 True)
+        ##Append OSG_FILE_PATH
+        self.EnvAppend("OSG_FILE_PATH", [
+            os.path.join(VELAUNCHER_DIR, "..", "share", "vesuite")+
+            os.path.pathsep+
+            os.path.join(VELAUNCHER_DIR, "..", "share", "vesuite","glsl")])
+
 
         ##Update OSG_FILE_PATH & PATH (and the Library Path for Unix)
         if windows:
-            ##Append OSG_FILE_PATH
-            self.EnvAppend("OSG_FILE_PATH", [os.path.join(VELAUNCHER_DIR, "..", "share", "vesuite")], ';')
             pathList = [os.path.join(os.path.join(VELAUNCHER_DIR,"bin")),
                         os.path.join(VELAUNCHER_DIR),
                         os.path.join(os.path.join(VELAUNCHER_DIR,"lib")),
@@ -827,20 +821,18 @@ class Launch:
                 pathList.append(os.path.join(entry, "bin"))
                 pathList.append(os.path.join(entry, libTag))
                 
-            self.EnvAppend("PATH", pathList, ';')
+            self.EnvAppend("PATH", pathList)
 
             #Add pathEnv value for shell launching mode
-            if str(os.getenv("OSG_FILE_PATH")) == "None":
-                self.pathEnv = str(os.getenv("PATH"))
-            else:
-                self.pathEnv = str(os.getenv("OSG_FILE_PATH")) + ";" + str(os.getenv("PATH"))
+            #if str(os.getenv("OSG_FILE_PATH")) == "None":
+            #    self.pathEnv = str(os.getenv("PATH"))
+            #else:
+            #    self.pathEnv = str(os.getenv("OSG_FILE_PATH")) + ";" + str(os.getenv("PATH"))
             #Get dependency base directory
             self.VeDepsDir = os.path.join(str(os.getenv("VE_DEPS_DIR")), "bin")
             self.VeLauncherDir = str(VELAUNCHER_DIR)
             
         elif unix:
-            ##Append OSG_FILE_PATH
-            self.EnvAppend("OSG_FILE_PATH", [os.path.join(VELAUNCHER_DIR, "..", "share", "vesuite")], ':')
             ##Set name of library path
             if darwinPlatform:
                 libraryPath = "DYLD_LIBRARY_PATH"
@@ -885,8 +877,8 @@ class Launch:
                 libList.append(os.path.join(str(os.getenv("VJ_BASE_DIR")), "lib"))
 
             ##Write the libraries & paths.
-            self.EnvAppend("PATH", pathList, ':')
-            self.EnvAppend(libraryPath, libList, ':')
+            self.EnvAppend("PATH", pathList)
+            self.EnvAppend(libraryPath, libList)
             
             self.VeLauncherDir = str(VELAUNCHER_DIR)
             ##print "VeLauncherDir: %s" % self.VeLauncherDir
@@ -902,8 +894,9 @@ class Launch:
                 if os.getenv(var) != None:
                     self.WriteToClusterScript(var)
 
-    def EnvAppend(self, var, appendages, sep):
+    def EnvAppend(self, var, appendages, sep=os.path.pathsep):
         """Appends appendages (list) to var, using sep to separate them."""
+        sep = os.path.pathsep
         originalVar = os.getenv(var, "None")
         ##if not self.settings["DevMode"]:
         modifiedVar = os.getenv(var, None)

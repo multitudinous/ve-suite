@@ -248,13 +248,16 @@ main( int argc,
     viewer.getCamera()->setProjectionMatrixAsPerspective( 40., 1., 1., 50. );
     viewer.addEventHandler( new ShakeManipulator( shakeMotion ) );
 
-    double currSimTime = viewer.getFrameStamp()->getSimulationTime();
-    double prevSimTime = viewer.getFrameStamp()->getSimulationTime();
     viewer.realize();
+    double prevSimTime = 0.;
     while( !viewer.done() )
     {
-        currSimTime = viewer.getFrameStamp()->getSimulationTime();
-        bulletWorld->stepSimulation( currSimTime - prevSimTime );
+        const double currSimTime = viewer.getFrameStamp()->getSimulationTime();
+        double elapsed( currSimTime - prevSimTime );
+        if( viewer.getFrameStamp()->getFrameNumber() < 3 )
+            elapsed = 1./60.;
+        //osg::notify( osg::ALWAYS ) << elapsed / 3. << ", " << 1./180. << std::endl;
+        bulletWorld->stepSimulation( elapsed, 4, elapsed/4. );
         prevSimTime = currSimTime;
         viewer.frame();
     }

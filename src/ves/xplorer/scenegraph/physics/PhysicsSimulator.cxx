@@ -92,7 +92,7 @@ PhysicsSimulator::PhysicsSimulator()
     shoot_speed( 50.0f ),
     mCreatedGroundPlane( false ),
     mDebugBullet( new osgBullet::DebugBullet ),
-    mDebugBulletFlag( false )
+    mDebugBulletFlag( true )
 {
     head.init( "VJHead" );
 
@@ -252,7 +252,7 @@ void PhysicsSimulator::InitializePhysicsSimulation()
 
     if( mDebugBulletFlag )
     {
-        mDynamicsWorld->setDebugDrawer( new GLDebugDrawer( SceneManager::instance()->GetRootNode() ) );
+        mDynamicsWorld->setDebugDrawer( new osgBullet::GLDebugDrawer( SceneManager::instance()->GetRootNode() ) );
         mDynamicsWorld->getDebugDrawer()->setDebugMode( btIDebugDraw::DBG_MAX_DEBUG_DRAW_MODE );
     }
     //CreateGroundPlane();
@@ -263,6 +263,11 @@ void PhysicsSimulator::UpdatePhysics( float dt )
     if( !mDynamicsWorld || mIdle )
     {
         return;
+    }
+
+    if( mDebugBulletFlag )
+    {
+        dynamic_cast< osgBullet::GLDebugDrawer* >( mDynamicsWorld->getDebugDrawer() )->BeginDraw();
     }
 
     vxs::CharacterController* characterController =
@@ -313,9 +318,8 @@ void PhysicsSimulator::UpdatePhysics( float dt )
     
     if( mDebugBulletFlag )
     {
-        dynamic_cast< GLDebugDrawer* >( mDynamicsWorld->getDebugDrawer() )->BeginDraw();
         mDynamicsWorld->debugDrawWorld();
-        dynamic_cast< GLDebugDrawer* >( mDynamicsWorld->getDebugDrawer() )->EndDraw();
+        dynamic_cast< osgBullet::GLDebugDrawer* >( mDynamicsWorld->getDebugDrawer() )->EndDraw();
     }
 
     if( !mCollisionInformation )

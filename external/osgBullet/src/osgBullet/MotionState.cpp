@@ -7,9 +7,7 @@
 
 #include <osgBullet/MotionState.h>
 
-#include <osg/MatrixTransform>
 
-#include <osgBullet/AbsoluteModelTransform.h>
 #include <osgBullet/Utils.h>
 
 #include <osg/Notify>
@@ -60,11 +58,35 @@ MotionState::setWorldTransform(const btTransform& worldTrans)
 
     if( _mt.valid() )
         _mt->setMatrix( t );
+    else if( _pat.valid() )
+    {
+        osg::Vec3 _t, _s;
+        osg::Quat _r, _so;
+        t.decompose( _t, _r, _s, _so );
+        
+        //Not sure how to set pivot point or if it needs set
+        //_pat->setPivotPoint( _so.asVec3() );
+        _pat->setScale( _s );
+        _pat->setAttitude( _r );
+        _pat->setPosition( _t );
+    }
     else if( _amt.valid() )
         _amt->setMatrix( t );
 
     if( _debugMT.valid() )
         _debugMT->setMatrix( dt );
+    else if( _debugPAT.valid() )
+    {
+        osg::Vec3 _t, _s;
+        osg::Quat _r, _so;
+        dt.decompose( _t, _r, _s, _so );
+        
+        //Not sure how to set pivot point
+        //_debugPAT->setPivotPoint( _so.asVec3() );
+        _debugPAT->setScale( _s );
+        _debugPAT->setAttitude( _r );
+        _debugPAT->setPosition( _t );
+    }
     else if( _debugAMT.valid() )
         _debugAMT->setMatrix( dt );
 }
@@ -79,9 +101,12 @@ void
 MotionState::setTransform( osg::Transform* transform )
 {
     osg::MatrixTransform* mt( NULL );
+    osg::PositionAttitudeTransform* pat( NULL );
     osgBullet::AbsoluteModelTransform* amt( NULL );
     if( mt = dynamic_cast< osg::MatrixTransform* >( transform ) )
         _mt = mt;
+    else if( pat = dynamic_cast< osg::PositionAttitudeTransform* >( transform ) )
+        _pat = pat;
     else if( amt = dynamic_cast< osgBullet::AbsoluteModelTransform* >( transform ) )
         _amt = amt;
     else
@@ -93,6 +118,8 @@ MotionState::getTransform()
 {
     if( _mt.valid() )
         return( _mt.get() );
+    else if( _pat.valid() )
+        return( _pat.get() );
     else if( _amt.valid() )
         return( _amt.get() );
     else
@@ -104,6 +131,8 @@ MotionState::getTransform() const
 {
     if( _mt.valid() )
         return( _mt.get() );
+    else if( _pat.valid() )
+        return( _pat.get() );
     else if( _amt.valid() )
         return( _amt.get() );
     else
@@ -115,9 +144,12 @@ void
 MotionState::setDebugTransform( osg::Transform* transform )
 {
     osg::MatrixTransform* mt( NULL );
+    osg::PositionAttitudeTransform* pat( NULL );
     osgBullet::AbsoluteModelTransform* amt( NULL );
     if( mt = dynamic_cast< osg::MatrixTransform* >( transform ) )
         _debugMT = mt;
+    else if( pat = dynamic_cast< osg::PositionAttitudeTransform* >( transform ) )
+        _debugPAT = pat;
     else if( amt = dynamic_cast< osgBullet::AbsoluteModelTransform* >( transform ) )
         _debugAMT = amt;
     else
@@ -129,6 +161,8 @@ MotionState::getDebugTransform()
 {
     if( _debugMT.valid() )
         return( _debugMT.get() );
+    else if( _debugPAT.valid() )
+        return( _debugPAT.get() );
     else if( _debugAMT.valid() )
         return( _debugAMT.get() );
     else
@@ -140,6 +174,8 @@ MotionState::getDebugTransform() const
 {
     if( _debugMT.valid() )
         return( _debugMT.get() );
+    else if( _debugPAT.valid() )
+        return( _debugPAT.get() );
     else if( _debugAMT.valid() )
         return( _debugAMT.get() );
     else

@@ -32,6 +32,16 @@ lib = ves_pkg.createSharedLibrary('osgBullet', lib_env,
 lib.addSources(sources)
 #lib.addHeaders(headers, pj('..') )
 lib.build()
+#####################################
+glslBundle = ves_pkg.createFileBundle( pj('share','vesuite','glsl') )
+glslFile = sca_util.getFilesRecursiveByExt( pj( openDir, 'data' ), ['.vs'] )
+glslFile = map(lambda s: pj('data', s), 
+                glslFile)
+glslBundle.addFiles( glslFile, useRelPath=False )
+glslFile = sca_util.getFilesRecursiveByExt( pj( openDir, 'data' ), ['.fs'] )
+glslFile = map(lambda s: pj('data', s), 
+                glslFile)
+glslBundle.addFiles( glslFile, useRelPath=False )
 
 
 ###############################################################

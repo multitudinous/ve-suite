@@ -1,8 +1,9 @@
-HandNode: 6 -7 -4 -0.0678256 -0 -0.678256 0.731689 3.5 1
+HandNode: 6 -7 -4 -0.0678256 -0 -0.678256 0.731689 2.5 1
 Model: USMC23_4024.ASM.ive.(-2,4,3).trans
 
 # drawer
-CreateDAE: USMC23_4019.ASM
+Node: USMC23_4019.ASM
+DAE: USMC23_4019.ASM1.dae
 # drawer support?
 Node: USMC23_4006.ASM
 DAE: USMC23_4006.ASM.1.dae

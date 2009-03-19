@@ -4,6 +4,7 @@
 #define __OSGBULLET_MOTIONSTATE_H__
 
 #include <osg/MatrixTransform>
+#include <osg/PositionAttitudeTransform>
 #include <osgBullet/AbsoluteModelTransform.h>
 
 
@@ -85,9 +86,11 @@ private:
     // MotionState is associated with an AbsoluteModelTransform or a
     // plain old MatrixTransform.
     osg::ref_ptr< osg::MatrixTransform > _mt;
+    osg::ref_ptr< osg::PositionAttitudeTransform > _pat;
     osg::ref_ptr< osgBullet::AbsoluteModelTransform > _amt;
 
     osg::ref_ptr< osg::MatrixTransform > _debugMT;
+    osg::ref_ptr< osg::PositionAttitudeTransform > _debugPAT;
     osg::ref_ptr< osgBullet::AbsoluteModelTransform > _debugAMT;
 
     // This is the accumulated model-to-world matrix of parent Transform nodes

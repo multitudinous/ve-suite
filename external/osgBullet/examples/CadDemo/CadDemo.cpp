@@ -17,10 +17,8 @@
 #include <osgBullet/AbsoluteModelTransform.h>
 #include <osgBullet/OSGToCollada.h>
 #include <osgBullet/HandNode.h>
-#include <osgBullet/DebugBullet.h>
 #include <osgBullet/ColladaUtils.h>
 #include <osgBullet/Utils.h>
-#include <osgBullet/GLDebugDrawer.h>
 
 #include <btBulletDynamicsCommon.h>
 #include <BulletColladaConverter/ColladaConverter.h>
@@ -34,57 +32,64 @@
 #include <iostream>
 
 
+
+//#define USE_PARALLEL_DISPATCHER
+#ifdef USE_PARALLEL_DISPATCHER
+
+#include "BulletMultiThreaded/SpuGatheringCollisionDispatcher.h"
+
+#ifdef USE_LIBSPE2
+#include "BulletMultiThreaded/SpuLibspe2Support.h"
+#elif defined (WIN32)
+#include "BulletMultiThreaded/Win32ThreadSupport.h"
+#include "BulletMultiThreaded/SpuNarrowPhaseCollisionTask/SpuGatheringCollisionTask.h"
+
+#elif defined (USE_PTHREADS)
+
+#include "BulletMultiThreaded/PosixThreadSupport.h"
+#include "BulletMultiThreaded/SpuNarrowPhaseCollisionTask/SpuGatheringCollisionTask.h"
+
+#else
+//other platforms run the parallel code sequentially (until pthread support or other parallel implementation is added)
+#include "BulletMultiThreaded/SequentialThreadSupport.h"
+#include "BulletMultiThreaded/SpuNarrowPhaseCollisionTask/SpuGatheringCollisionTask.h"
+#endif //USE_LIBSPE2
+
+#endif
+
+
+
+//#define DO_DEBUG_DRAW
+#ifdef DO_DEBUG_DRAW
+#include <osgBullet/GLDebugDrawer.h>
+#endif
+
+
 //#define DBG_DUMP 1
 #ifdef DBG_DUMP
 #include <BulletColladaConverter/ColladaConverter.h>
 #endif
 
 
-osgBullet::DebugBullet _debugBullet;
-
-void debugDynamicsWorld( btDynamicsWorld* tempWorld )
-{
-    for( int i = 0; i < tempWorld->getNumCollisionObjects(); ++i )
-    {
-        btCollisionObject* temp = tempWorld->getCollisionObjectArray()[ i ];
-        /*btVector3 bbMin = temp->getBroadphaseHandle()->m_aabbMin;
-        btVector3 bbMax = temp->getBroadphaseHandle()->m_aabbMax;
-        std::cout << "Min = " << bbMin.x() << " " << bbMin.y() << " " << bbMin.z() << std::endl;
-        std::cout << "Max = " << bbMax.x() << " " << bbMax.y() << " " << bbMax.z() << std::endl;
-        
-        temp->getCollisionShape()->getAabb(temp->getWorldTransform(), bbMin,bbMax);
-        std::cout << "Min2 = " << bbMin.x() << " " << bbMin.y() << " " << bbMin.z() << std::endl;
-        std::cout << "Max2 = " << bbMax.x() << " " << bbMax.y() << " " << bbMax.z() << std::endl;*/
-    }
-
-    int numManifolds1 = tempWorld->getDispatcher()->getNumManifolds();
-    for( int i = 0; i < numManifolds1; ++i )
-    {
-        btPersistentManifold* contactManifold =
-        tempWorld->getDispatcher()->getManifoldByIndexInternal( i );
-        //contactManifold->refreshContactPoints(
-        //bodyA->getWorldTransform(), bodyB->getWorldTransform() );
-        
-        int numContacts = contactManifold->getNumContacts();
-        for (int p=0;p<contactManifold->getNumContacts();p++)
-        {
-            const btManifoldPoint& pt = contactManifold->getContactPoint(p);
-            
-            btVector3 posWorldB = pt.getPositionWorldOnB();
-            btVector3 posWorldA = pt.m_normalWorldOnB;
-            std::cout << "Position = " << posWorldB.x() << " " << posWorldB.y() << " " << posWorldB.z() << std::endl;
-            std::cout << "Normal = " << posWorldA.x() << " " << posWorldA.y() << " " << posWorldA.z() << std::endl;
-            std::cout << "Distance = " << pt.getDistance() << std::endl;
-            std::cout << "Lifetime = " << pt.getLifeTime() << std::endl;
-        }
-    }
-}
 
 
 btDynamicsWorld* initPhysics( osg::Vec3 gravity = osg::Vec3( 0, 0, -1 ) )
 {
     btDefaultCollisionConfiguration * collisionConfiguration = new btDefaultCollisionConfiguration();
-    btCollisionDispatcher * dispatcher = new btCollisionDispatcher( collisionConfiguration );
+
+#ifdef USE_PARALLEL_DISPATCHER
+    btThreadSupportInterface*		threadSupportCollision;
+    threadSupportCollision = new Win32ThreadSupport(Win32ThreadSupport::Win32ThreadConstructionInfo(
+								"collision",
+								processCollisionTask,
+								createCollisionLocalStoreMemory,
+								2));
+    btCollisionDispatcher * dispatcher = new SpuGatheringCollisionDispatcher(
+        threadSupportCollision, 2, collisionConfiguration );
+#else
+    btCollisionDispatcher* dispatcher = new btCollisionDispatcher( collisionConfiguration );
+#endif
+
     btConstraintSolver * solver = new btSequentialImpulseConstraintSolver;
 
     btVector3 worldAabbMin( -10000, -10000, -10000 );
@@ -477,14 +482,6 @@ btRigidBody * createBTBox( osg::MatrixTransform* box,
     btRigidBody::btRigidBodyConstructionInfo rb( mass, motion, collision, inertia );
     btRigidBody * body = new btRigidBody( rb );
 
-    osg::Node* dbgGround = osgBullet::osgNodeFromBtCollisionShape( collision );
-    if( dbgGround )
-    {
-        osg::MatrixTransform* dmt = new osg::MatrixTransform;
-        dmt->addChild( dbgGround );
-        motion->setDebugTransform( dmt );
-        _debugBullet.addDynamic( dmt );
-    }
     motion->setTransform( box );
     osg::Matrix groundTransform( osg::Matrix::translate( center ) );
     motion->setParentTransform( groundTransform );
@@ -506,7 +503,6 @@ main( int argc,
 
     btDynamicsWorld* bulletWorld = initPhysics();
     osg::Group* root = new osg::Group;
-    //root->addChild( _debugBullet.getRoot() );
 
 
     ConfigReaderWriter* crw = new ConfigReaderWriter( bulletWorld );
@@ -550,7 +546,7 @@ main( int argc,
             parent->addChild( amt );
             amt->addChild( subgraph );
             parent->removeChild( subgraph );
-            osgBullet::loadDae( amt, np, itr->second, bulletWorld, &_debugBullet );
+            osgBullet::loadDae( amt, np, itr->second, bulletWorld );
         }
     }
 
@@ -584,16 +580,6 @@ main( int argc,
         motion->setTransform( amt.get() );
         osg::BoundingSphere bs = subgraph->getBound();
         rb->setActivationState( DISABLE_DEACTIVATION );
-
-        // Add visual rep of Bullet Collision shape.
-        osg::Node* visNode = osgBullet::osgNodeFromBtCollisionShape( rb->getCollisionShape() );
-        if( visNode != NULL )
-        {
-            osgBullet::AbsoluteModelTransform* dmt = new osgBullet::AbsoluteModelTransform;
-            dmt->addChild( visNode );
-            motion->setDebugTransform( dmt );
-            _debugBullet.addDynamic( dmt );
-        }
 
         osg::Matrix m = osg::computeLocalToWorld( np );
         motion->setParentTransform( m );
@@ -632,16 +618,6 @@ main( int argc,
         osg::BoundingSphere bs = subgraph->getBound();
         rb->setActivationState( DISABLE_DEACTIVATION );
 
-        // Add visual rep of Bullet Collision shape.
-        osg::Node* visNode = osgBullet::osgNodeFromBtCollisionShape( rb->getCollisionShape() );
-        if( visNode != NULL )
-        {
-            osgBullet::AbsoluteModelTransform* dmt = new osgBullet::AbsoluteModelTransform;
-            dmt->addChild( visNode );
-            motion->setDebugTransform( dmt );
-            _debugBullet.addDynamic( dmt );
-        }
-
         osg::Matrix m = osg::computeLocalToWorld( np );
         motion->setParentTransform( m );
         motion->setCenterOfMass( bs.center() );
@@ -668,24 +644,12 @@ main( int argc,
     double prevSimTime = viewer.getFrameStamp()->getSimulationTime();
     viewer.realize();
     int count( 4 );
-    
-    bulletWorld->setDebugDrawer( new GLDebugDrawer( root ) );
-    /*DBG_DrawWireframe = 1,
-    DBG_DrawAabb=2,
-    DBG_DrawFeaturesText=4,
-    DBG_DrawContactPoints=8,
-    DBG_NoDeactivation=16,
-    DBG_NoHelpText = 32,
-    DBG_DrawText=64,
-    */
-    //btIDebugDraw::DBG_MAX_DEBUG_DRAW_MODE
-    bulletWorld->getDebugDrawer()->setDebugMode(  
-        btIDebugDraw::DBG_DrawWireframe |
-        //btIDebugDraw::DBG_DrawFeaturesText |
-        //btIDebugDraw::DBG_DrawText |
-        btIDebugDraw::DBG_DrawAabb |
-        btIDebugDraw::DBG_DrawContactPoints
-    );
+
+#ifdef DO_DEBUG_DRAW
+    osgBullet::GLDebugDrawer* dbgDraw = new osgBullet::GLDebugDrawer( root );
+    dbgDraw->setDebugMode( ~btIDebugDraw::DBG_DrawText );
+    bulletWorld->setDebugDrawer( dbgDraw );
+#endif
 
 #ifdef DBG_DUMP
     bool first( true );
@@ -693,13 +657,20 @@ main( int argc,
 
     while( /*count-- &&*/ !viewer.done() )
     {
+#ifdef DO_DEBUG_DRAW
+        dbgDraw->BeginDraw();
+#endif
+
         currSimTime = viewer.getFrameStamp()->getSimulationTime();
         bulletWorld->stepSimulation( currSimTime - prevSimTime );
         float dt = currSimTime - prevSimTime;
         prevSimTime = currSimTime;
-        dynamic_cast< GLDebugDrawer* >( bulletWorld->getDebugDrawer() )->BeginDraw();
+
+#ifdef DO_DEBUG_DRAW
         bulletWorld->debugDrawWorld();
-        dynamic_cast< GLDebugDrawer* >( bulletWorld->getDebugDrawer() )->EndDraw();
+        dbgDraw->EndDraw();
+#endif
+
         viewer.frame();
 
 #ifdef DBG_DUMP

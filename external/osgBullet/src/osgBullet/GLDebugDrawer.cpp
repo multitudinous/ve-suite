@@ -1,6 +1,14 @@
-#include "osgBullet/GLDebugDrawer.h"
+//
+// Copyright (c) 2009 Skew Matrix Software LLC.
+// All rights reserved.
+//
 
+#include "osgBullet/GLDebugDrawer.h"
+#include "osgBullet/Chart.h"
+
+#include <osg/Camera>
 #include <osg/Geometry>
+#include <osg/Point>
 #include <osgText/Text>
 
 #include <iostream>
@@ -10,99 +18,197 @@
 #include "osgBullet/Utils.h"
 
 
+namespace osgBullet
+{
+
 ////////////////////////////////////////////////////////////////////////////////
 GLDebugDrawer::GLDebugDrawer( osg::Group* root )
-    :
-    mDebugMode(0)
+  : _enabled( false ),
+    _textStrings( 0 ),
+    _textSize( 1.f ),
+    _frame( 0 ),
+    _contacts( 0 )
 {
-    mDebugBulletGeode = new osg::Geode();
-    mDebugBulletGeode->setName( "Bullet Lines" );
-    mDebugBulletGeode->getOrCreateStateSet()->setMode( GL_LIGHTING, osg::StateAttribute::OFF );
+    setDebugMode( ~0u );
 
-    mLinesGeom = new osg::Geometry();
-    mLinesGeom->setDataVariance( osg::Object::DYNAMIC );
-    mLinesGeom->setUseDisplayList( false );
-    mLinesGeom->setUseVertexBufferObjects( false );
+    _group = new osg::Group();
+    _group->setName( "Bullet Debug" );
+    root->addChild( _group.get() );
 
-    mVertices = new osg::Vec3Array();
-    mVertices->setDataVariance( osg::Object::DYNAMIC );
-    mLinesGeom->setVertexArray( mVertices.get() );
+    _geode = new osg::Geode();
+    _geode->setName( "Bullet pts, lns, tris, and text" );
+    _geode->setDataVariance( osg::Object::DYNAMIC );
+    {
+        osg::StateSet* ss = _geode->getOrCreateStateSet();
+        ss->setMode( GL_LIGHTING, osg::StateAttribute::OFF );
+    }
+    _group->addChild( _geode.get() );
 
-    mColors = new osg::Vec4Array;
-    mColors->setDataVariance( osg::Object::DYNAMIC );
-    mLinesGeom->setColorArray( mColors.get() );
-    mLinesGeom->setColorBinding( osg::Geometry::BIND_PER_VERTEX );
 
-    mDA = new osg::DrawArrays( GL_LINES );
-    mDA->setDataVariance( osg::Object::DYNAMIC );
-    mLinesGeom->addPrimitiveSet( mDA.get() );
+    _ptGeom = new osg::Geometry;
+    _ptGeom->setDataVariance( osg::Object::DYNAMIC );
+    _ptGeom->setUseDisplayList( false );
+    _ptGeom->setUseVertexBufferObjects( false );
+    {
+        osg::StateSet* ss = _geode->getOrCreateStateSet();
+        ss->setMode( GL_POINT_SMOOTH, osg::StateAttribute::ON );
+        osg::Point* point = new osg::Point( 20. );
+        ss->setAttributeAndModes( point, osg::StateAttribute::ON );
+    }
+    _geode->addDrawable( _ptGeom.get() );
 
-    mDebugBulletGeode->addDrawable( mLinesGeom.get() );
+    _ptVerts = new osg::Vec3Array();
+    _ptGeom->setVertexArray( _ptVerts );
+    _ptColors = new osg::Vec4Array();
+    _ptGeom->setColorArray( _ptColors );
+    _ptGeom->setColorBinding( osg::Geometry::BIND_PER_VERTEX );
 
-    root->addChild( mDebugBulletGeode.get() );
+
+    _lnGeom = new osg::Geometry;
+    _lnGeom->setDataVariance( osg::Object::DYNAMIC );
+    _lnGeom->setUseDisplayList( false );
+    _lnGeom->setUseVertexBufferObjects( false );
+    _geode->addDrawable( _lnGeom.get() );
+
+    _lnVerts = new osg::Vec3Array();
+    _lnGeom->setVertexArray( _lnVerts );
+    _lnColors = new osg::Vec4Array();
+    _lnGeom->setColorArray( _lnColors );
+    _lnGeom->setColorBinding( osg::Geometry::BIND_PER_VERTEX );
+
+
+    _triGeom = new osg::Geometry;
+    _triGeom->setDataVariance( osg::Object::DYNAMIC );
+    _triGeom->setUseDisplayList( false );
+    _triGeom->setUseVertexBufferObjects( false );
+    _geode->addDrawable( _triGeom.get() );
+
+    _triVerts = new osg::Vec3Array();
+    _triGeom->setVertexArray( _triVerts );
+    _triColors = new osg::Vec4Array();
+    _triGeom->setColorArray( _triColors );
+    _triGeom->setColorBinding( osg::Geometry::BIND_PER_VERTEX );
+
+
+    // Initialize _textVec to display 10 text strings; resize later if necessary
+    _textVec.resize( 10 );
+    int idx;
+    for( idx=0; idx<10; idx++ )
+        _textVec[ idx ] = initText();
+
+
+    // Set up for HUD
+    _hudCam = new osg::Camera;
+    _hudCam->setRenderOrder( osg::Camera::POST_RENDER );
+    _hudCam->setClearMask( GL_DEPTH_BUFFER_BIT );
+    _hudCam->setReferenceFrame( osg::Transform::ABSOLUTE_RF );
+    _hudCam->setViewMatrix( osg::Matrix::identity() );
+    _hudCam->setProjectionMatrixAsOrtho( 0., 1., 0., 1., -1., 1. );
+    _group->addChild( _hudCam.get() );
+
+    _chart = new osgBullet::Chart;
+    _hudCam->addChild( _chart->get() );
 }
 GLDebugDrawer::~GLDebugDrawer()
 {
-    mDebugBulletGeode->getParent( 0 )->removeChild( mDebugBulletGeode.get() );
+    _geode->getParent( 0 )->removeChild( _geode.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void GLDebugDrawer::drawLine(const btVector3& from,const btVector3& to,const btVector3& color)
 {
-    mColors->push_back( osg::Vec4( color.x(), color.y(), color.z(), 1.0f ) );
-    mColors->push_back( osg::Vec4( color.x(), color.y(), color.z(), 1.0f ) );
+    if( !_enabled )
+    {
+        osg::notify( osg::WARN ) << "GLDebugDrawer: BeginDraw was not called." << std::endl;
+        return;
+    }
 
-    mVertices->push_back( osgBullet::asOsgVec3( from ) );
-    mVertices->push_back( osgBullet::asOsgVec3( to ) );  
+    _lnVerts->push_back( osgBullet::asOsgVec3( from ) );
+    _lnVerts->push_back( osgBullet::asOsgVec3( to ) );  
 
-    //osg::notify( osg::ALWAYS ) << mVertices->size() << std::endl;
+    osg::Vec4 c = osgBullet::asOsgVec4( color, 1. );
+    _lnColors->push_back( c );
+    _lnColors->push_back( c );
 }
+
+void GLDebugDrawer::drawSphere( const btVector3& p, btScalar radius, const btVector3& color )
+{
+    if( !_enabled )
+    {
+        osg::notify( osg::WARN ) << "GLDebugDrawer: BeginDraw was not called." << std::endl;
+        return;
+    }
+
+    osg::notify( osg::ALWAYS ) << "GLDebugDrawer::drawASphere NYI" << std::endl;
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 void GLDebugDrawer::drawTriangle(const btVector3& a,const btVector3& b,const btVector3& c,const btVector3& color,btScalar alpha)
 {
-//	if (m_debugMode > 0)
-	{
-		/*const btVector3	n=cross(b-a,c-a).normalized();
-		glBegin(GL_TRIANGLES);		
-		glColor4f(color.getX(), color.getY(), color.getZ(),alpha);
-		glNormal3d(n.getX(),n.getY(),n.getZ());
-		glVertex3d(a.getX(),a.getY(),a.getZ());
-		glVertex3d(b.getX(),b.getY(),b.getZ());
-		glVertex3d(c.getX(),c.getY(),c.getZ());
-		glEnd();*/
-	}
-    drawLine( a, b, color );
-    drawLine( b, c, color );
-    drawLine( c, a, color );
-    
-}
-////////////////////////////////////////////////////////////////////////////////
-void GLDebugDrawer::setDebugMode(int debugMode)
-{
-	mDebugMode = debugMode;
+    if( !_enabled )
+    {
+        osg::notify( osg::WARN ) << "GLDebugDrawer: BeginDraw was not called." << std::endl;
+        return;
+    }
+
+    _triVerts->push_back( osgBullet::asOsgVec3( a ) );
+    _triVerts->push_back( osgBullet::asOsgVec3( b ) );
+    _triVerts->push_back( osgBullet::asOsgVec3( c ) );
+
+    osg::Vec4 c4 = osgBullet::asOsgVec4( color, alpha );
+    _triColors->push_back( c4 );
+    _triColors->push_back( c4 );
+    _triColors->push_back( c4 );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void GLDebugDrawer::draw3dText(const btVector3& location,const char* textString)
 {
-    /*std::string headsUpDisplayFont( "fonts/arial.ttf" );
-    osg::ref_ptr< osgText::Text > mFramerateText = new osgText::Text();
-    mFramerateText->setFont( headsUpDisplayFont );
-    mFramerateText->setCharacterSize( 5 );
-    mFramerateText->setAxisAlignment( osgText::Text::SCREEN );
-    mFramerateText->setAlignment( osgText::Text::RIGHT_BOTTOM );
-    mFramerateText->setPosition( osg::Vec3( location.x(), location.y(), location.z() ) );
-    mFramerateText->setText( textString );
-    mDebugBulletGeode->addDrawable( mFramerateText.get() );*/
+    if( (_debugMode & btIDebugDraw::DBG_DrawText) == 0 )
+        return;
+
+    if( !_enabled )
+    {
+        osg::notify( osg::WARN ) << "GLDebugDrawer: BeginDraw was not called." << std::endl;
+        return;
+    }
+
+    if( _textStrings == _textVec.size() )
+    {
+        int oldSize( _textVec.size() );
+        int newSize( oldSize * 2 );
+        _textVec.resize( newSize );
+        int idx;
+        for( idx=oldSize; idx<newSize; idx++ )
+            _textVec[ idx ] = initText();
+    }
+    osgText::Text* text = _textVec[ _textStrings ].get();
+    _textStrings++;
+
+    text->setPosition( osgBullet::asOsgVec3( location ) );
+    text->setText( std::string( textString ) );
+
+    _geode->addDrawable( text );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void GLDebugDrawer::reportErrorWarning(const char* warningString)
 {
-	std::cout << warningString << std::endl;
+    osg::notify( osg::WARN ) << warningString << std::endl;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void GLDebugDrawer::drawContactPoint( const btVector3& pointOnB,
     const btVector3& normalOnB, btScalar distance, 
     int lifeTime, const btVector3& color)
 {
+    if( !_enabled )
+    {
+        osg::notify( osg::WARN ) << "GLDebugDrawer: BeginDraw was not called." << std::endl;
+        return;
+    }
+
+    _contacts++;
+
+    _ptVerts->push_back( osgBullet::asOsgVec3( pointOnB ) );
+    _ptColors->push_back( osgBullet::asOsgVec4( color, 1. ) );
+
     btVector3 to=pointOnB+normalOnB*distance;
     const btVector3&from = pointOnB;
 
@@ -114,16 +220,85 @@ void GLDebugDrawer::drawContactPoint( const btVector3& pointOnB,
     draw3dText( from, buf );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void GLDebugDrawer::EndDraw()
-{
-    mDA->setFirst( 0 );
-    mDA->setCount( mVertices->size() );
-}
-////////////////////////////////////////////////////////////////////////////////
 void GLDebugDrawer::BeginDraw()
 {
-	mColors->clear();
-    mVertices->clear();
+    if( _ptVerts->size() > 0 )
+    {
+        _ptGeom->removePrimitiveSet( 0 );
+        _ptVerts->clear();
+        _ptColors->clear();
+    }
+
+    if( _lnVerts->size() > 0 )
+    {
+        _lnGeom->removePrimitiveSet( 0 );
+        _lnVerts->clear();
+        _lnColors->clear();
+    }
+
+    if( _triVerts->size() > 0 )
+    {
+        _triGeom->removePrimitiveSet( 0 );
+        _triVerts->clear();
+        _triColors->clear();
+    }
+
+    if( _geode->getNumDrawables() > 3 )
+        _geode->removeDrawables( 3, _textStrings );
+    _textStrings = 0;
+
+    _contacts = 0;
+
+    _enabled = true;
+}
+////////////////////////////////////////////////////////////////////////////////
+void GLDebugDrawer::EndDraw()
+{
+    _enabled = false;
+
+    if( _ptVerts->size() )
+        _ptGeom->addPrimitiveSet( new osg::DrawArrays( GL_POINTS, 0, _ptVerts->size() ) );
+    if( _lnVerts->size() )
+        _lnGeom->addPrimitiveSet( new osg::DrawArrays( GL_LINES, 0, _lnVerts->size() ) );
+    if( _triVerts->size() )
+        _triGeom->addPrimitiveSet( new osg::DrawArrays( GL_TRIANGLES, 0, _triVerts->size() ) );
+
+    _chart->setValue( _frame, _contacts );
+    _frame++;
 }
 ////////////////////////////////////////////////////////////////////////////////
 
+void GLDebugDrawer::setDebugMode(int debugMode)
+{
+    _debugMode = debugMode;
+}
+int GLDebugDrawer::getDebugMode() const
+{
+    return( _debugMode );
+}
+
+void GLDebugDrawer::setTextSize( const float size )
+{
+    _textSize = size;
+}
+float GLDebugDrawer::getTextSize() const
+{
+    return( _textSize );
+}
+
+osgText::Text*
+GLDebugDrawer::initText()
+{
+    //osg::ref_ptr<osgText::Text> text = new osgText::Text;
+    osgText::Text* text = new osgText::Text;
+    text->setDataVariance( osg::Object::DYNAMIC );
+    text->setFont( "fonts/arial.ttf" );
+    text->setColor( osg::Vec4( 1., 1., 1., 1. ) );
+    text->setCharacterSize( _textSize );
+    text->setAxisAlignment( osgText::Text::SCREEN );
+
+    //return( text.release() );
+    return text;
+}
+
+}

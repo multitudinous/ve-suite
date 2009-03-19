@@ -20,55 +20,11 @@
 #include <osgBullet/Utils.h>
 #include <btBulletDynamicsCommon.h>
 #include <BulletColladaConverter/ColladaConverter.h>
+#include <osgBullet/GLDebugDrawer.h>
 
 #include <iostream>
 #include <osg/io_utils>
 
-
-class DebugBullet
-{
-public:
-    DebugBullet()
-    {
-        _root = new osg::Group;
-
-        osg::StateSet* state = _root->getOrCreateStateSet();
-        osg::PolygonMode* pm = new osg::PolygonMode( osg::PolygonMode::FRONT_AND_BACK, osg::PolygonMode::LINE );
-        state->setAttributeAndModes( pm );
-        osg::PolygonOffset* po = new osg::PolygonOffset( -1, -1 );
-        state->setAttributeAndModes( po );
-        state->setMode( GL_LIGHTING, osg::StateAttribute::OFF );
-    }
-    ~DebugBullet()
-    {
-    }
-
-    unsigned int addDynamic( osg::MatrixTransform* mt )
-    {
-        _root->addChild( mt );
-        return _root->getNumChildren() - 1;
-    }
-    unsigned int addStatic( osg::Node* node )
-    {
-        osg::MatrixTransform* mt = new osg::MatrixTransform;
-        mt->addChild( node );
-        _root->addChild( mt );
-        return _root->getNumChildren() - 1;
-    }
-    void setTransform( unsigned int idx, const osg::Matrix& m )
-    {
-        osg::MatrixTransform* mt = dynamic_cast< osg::MatrixTransform* >( _root->getChild( idx ) );
-        mt->setMatrix( m );
-    }
-    osg::Node* getRoot() const
-    {
-        return _root.get();
-    }
-
-protected:
-    osg::ref_ptr< osg::Group > _root;
-};
-DebugBullet _debugBullet;
 
 
 
@@ -106,11 +62,9 @@ struct Joint
         get = osg::Matrix::translate( _limbBTOffset );
         osg::Matrix btm = get * m * put * l2w;
         if (_btChildIdx >= 0)
-            _artShape->getChildList()[ _btChildIdx ].m_transform
-                = osgBullet::asBtTransform( btm );
-
-        if (_idx >= 0)
-            _debugBullet.setTransform( _idx, btm );
+            _artShape->updateChildTransform( _btChildIdx, osgBullet::asBtTransform( btm ) );
+            //_artShape->getChildList()[ _btChildIdx ].m_transform
+              //  = osgBullet::asBtTransform( btm );
 
         if( _dependent != NULL )
             // Update the subordinate joint's world transform, because it
@@ -393,10 +347,6 @@ public:
         _shape->addChildShape( xform, cs );
         int idx = _shape->getNumChildShapes();
         osg::notify( osg::ALWAYS ) << "  Total children " << idx << std::endl;
-
-        // Debug rep of box base.
-        osg::Node* debugNode = osgBullet::osgNodeFromBtCollisionShape( cs );
-        _debugBullet.addStatic( debugNode );
     }
 
     void apply( osg::MatrixTransform& node )
@@ -442,11 +392,6 @@ public:
         _shape->addChildShape( xform, cs );
         int idx = _shape->getNumChildShapes() - 1;
         j->setBtChildIdx( idx );
-
-        // Debug rep of box base.
-        osg::Node* debugNode = osgBullet::osgNodeFromBtCollisionShape( cs );
-        unsigned int child = _debugBullet.addStatic( debugNode );
-        j->setDebugIdx( child );
     }
 
     void apply( osg::Geode& node )
@@ -605,20 +550,17 @@ createBall( btDynamicsWorld* dynamicsWorld )
     osg::Node* debugNode = osgBullet::osgNodeFromBtCollisionShape( collision );
     mt->addChild( debugNode );
 
-    // Debug rep of the sphere
-    _debugBullet.addDynamic( mt.get() );
-
     btTransform bodyTransform;
     bodyTransform.setIdentity();
     bodyTransform.setOrigin( btVector3( -10, 0, 10 ) );
     motion->setWorldTransform( bodyTransform );
 
     btScalar mass( 1. );
-    btVector3 inertia;
+    btVector3 inertia( 0., 0., 0. );
     collision->calculateLocalInertia( mass, inertia );
     btRigidBody::btRigidBodyConstructionInfo rbinfo( mass, motion, collision, inertia );
     btRigidBody * body = new btRigidBody( rbinfo );
-    body->setLinearVelocity( btVector3( 2, -.1, 0 ) );
+    body->setLinearVelocity( btVector3( 2, 0.1, 0 ) );
     body->setActivationState( DISABLE_DEACTIVATION );
     dynamicsWorld->addRigidBody( body );
 
@@ -635,7 +577,6 @@ main( int argc,
     btDynamicsWorld* dynamicsWorld = initPhysics();
 
     osg::ref_ptr< osg::Group > root = new osg::Group;
-    root->addChild( _debugBullet.getRoot() );
 
     osg::ref_ptr< osg::Group > arm = createArm();
     osgDB::writeNodeFile( *arm, "arm.osg" );
@@ -655,9 +596,6 @@ main( int argc,
     btRigidBody* groundBody = createBTBox( ground, osg::Vec3( 0, 0, -1 ) );
     dynamicsWorld->addRigidBody( groundBody );
 
-    // Debug rep of the ground
-    _debugBullet.addDynamic( ground );
-
     osgViewer::Viewer viewer;
     osgGA::TrackballManipulator * tb = new osgGA::TrackballManipulator();
     tb->setHomePosition( osg::Vec3( 9, -21, 8 ),
@@ -666,15 +604,25 @@ main( int argc,
     viewer.setCameraManipulator( tb );
     viewer.addEventHandler( new ArmManipulator( dynamicsWorld ) );
     viewer.setSceneData( root.get() );
+    viewer.setThreadingModel( osgViewer::ViewerBase::SingleThreaded );
+
+    osgBullet::GLDebugDrawer* dbgDraw = new osgBullet::GLDebugDrawer( root.get() );
+    dynamicsWorld->setDebugDrawer( dbgDraw );
 
     double currSimTime = viewer.getFrameStamp()->getSimulationTime();
     double prevSimTime = viewer.getFrameStamp()->getSimulationTime();
     viewer.realize();
     while( !viewer.done() )
     {
+        dbgDraw->BeginDraw();
+
         currSimTime = viewer.getFrameStamp()->getSimulationTime();
         dynamicsWorld->stepSimulation( currSimTime - prevSimTime );
         prevSimTime = currSimTime;
+
+        dynamicsWorld->debugDrawWorld();
+        dbgDraw->EndDraw();
+
         viewer.frame();
     }
 
