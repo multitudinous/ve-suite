@@ -229,12 +229,6 @@ UIPluginBase::~UIPluginBase()
         financial_dlg = 0;
     }
 
-    if( resultsDialog )
-    {
-        resultsDialog->Destroy();
-        resultsDialog = 0;
-    }
-
     if( portsDialog )
     {
         portsDialog->Destroy();
@@ -953,16 +947,88 @@ void UIPluginBase::ViewResultsVariables( void )
         resultsDialog = 0;
     }
 
-    const std::vector< CommandPtr > resultsVec = m_veModel->GetResults();
+    std::string unitResultsData = "NULL";
+    CommandPtr resultsCommand( new Command() );
+    resultsCommand->SetCommandName( "Get XML Model Results" );
+    //Get model id and unit name
+    //gets tagged as vendorUnit (model name) and modelId (number id not uuid)
+    DataValuePairPtr vendorData( new DataValuePair() );
+    vendorData->SetData( "vendorUnit", m_veModel->GetPluginName() );
+    resultsCommand->AddDataValuePair( vendorData );
+    DataValuePairPtr moduleIdData( new DataValuePair() );
+    moduleIdData->SetData( "moduleId", 
+        static_cast< unsigned int >( m_veModel->GetModelID() ) );
+    resultsCommand->AddDataValuePair( moduleIdData );
+
+    //Then parse command
+    std::vector< std::pair< XMLObjectPtr, std::string > > nodes;
+    std::string resultsData( "returnString" );
+    nodes.push_back( std::pair< CommandPtr, std::string  >(
+        resultsCommand, std::string( "vecommand" ) ) );
+
+    XMLReaderWriter networkWriter;
+    networkWriter.UseStandaloneDOMDocumentManager();
+    networkWriter.WriteXMLDocument( nodes, resultsData, "Command" );
+    //Now query the unit for data
+    CORBAServiceList* serviceList = 
+        ves::conductor::util::CORBAServiceList::instance();
+    unitResultsData = serviceList->Query( resultsData.c_str() );
+    
+    std::vector< CommandPtr > resultsVec;
+
+    if( unitResultsData != "NULL" )
+    {
+        XMLReaderWriter networkReader;
+        networkReader.UseStandaloneDOMDocumentManager();
+        networkReader.ReadFromString();
+        networkReader.ReadXMLData( unitResultsData, "Command", "vecommand" );
+        std::vector< XMLObjectPtr > objectVector = 
+            networkReader.GetLoadedXMLObjects();
+        CommandPtr tempResult =  
+            boost::dynamic_pointer_cast<ves::open::xml::Command>( 
+            objectVector.at( 0 ) );
+        size_t numDVPResults = tempResult->GetNumberOfDataValuePairs();
+        for( size_t i = 0; i < numDVPResults; ++i )
+        {
+            if( boost::dynamic_pointer_cast< Command >( tempResult->
+				            GetDataValuePair( i )->GetDataXMLObject() ) )
+            {
+                size_t numResults = boost::dynamic_pointer_cast< Command >( 
+		            tempResult->GetDataValuePair( i )->GetDataXMLObject())->
+                    GetNumberOfDataValuePairs();
+                
+                for( size_t j=0; j<numResults; ++j )
+                {
+                    DataValuePairPtr tempDVP = 
+                        boost::dynamic_pointer_cast< Command >( 
+                        tempResult->GetDataValuePair( i )->GetDataXMLObject())->
+                        GetDataValuePair( j );
+                    CommandPtr modelResults( new Command() );
+                    modelResults->AddDataValuePair( tempDVP );
+                    modelResults->SetCommandName( tempDVP->GetDataName() );
+                    resultsVec.push_back( modelResults );
+                }
+            }
+            else
+            {
+                DataValuePairPtr tempDVP = tempResult->GetDataValuePair( i );
+                CommandPtr modelResults( new Command() );
+                modelResults->AddDataValuePair( tempDVP );
+                modelResults->SetCommandName( tempDVP->GetDataName() );
+                resultsVec.push_back( modelResults );
+            }
+        }
+    }
+
     if( resultsVec.size() == 0 )
     {
-        serviceList->GetMessageLog()->SetMessage( "Model contains no results variables\n" );
+        serviceList->GetMessageLog()->SetMessage( 
+            "Model contains no results variables\n" );
         return;
     }
 
     resultsDialog = new SummaryResultDialog( GetPluginParent(), 
         wxT( "Results Variables" ), wxSize( 560, 400 ), resultsVec );
-    // Get all the inputs form the model
 
     resultsDialog->Show();
 }
