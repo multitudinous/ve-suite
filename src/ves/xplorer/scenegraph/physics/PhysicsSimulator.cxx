@@ -92,7 +92,7 @@ PhysicsSimulator::PhysicsSimulator()
     shoot_speed( 50.0f ),
     mCreatedGroundPlane( false ),
     mDebugBullet( new osgBullet::DebugBullet ),
-    mDebugBulletFlag( true )
+    mDebugBulletFlag( false )
 {
     head.init( "VJHead" );
 
@@ -253,7 +253,7 @@ void PhysicsSimulator::InitializePhysicsSimulation()
     if( mDebugBulletFlag )
     {
         mDynamicsWorld->setDebugDrawer( new osgBullet::GLDebugDrawer( SceneManager::instance()->GetRootNode() ) );
-        mDynamicsWorld->getDebugDrawer()->setDebugMode( btIDebugDraw::DBG_MAX_DEBUG_DRAW_MODE );
+        //mDynamicsWorld->getDebugDrawer()->setDebugMode( btIDebugDraw::DBG_MAX_DEBUG_DRAW_MODE );
     }
     //CreateGroundPlane();
 }
