@@ -427,7 +427,7 @@ void CADNodePropertiesDlg::_buildPhysicsPanel()
     wxStaticBoxSizer* massSizer = new wxStaticBoxSizer( mass, wxVERTICAL );
     _physicsMassCtrl =  new wxSpinCtrlDbl( _physicsPanel, PHYSICS_MASS_ID );
     _physicsMassCtrl->SetValue( 1.0 );
-    _physicsMassCtrl->SetRange( 0.0, 100.0 );
+    _physicsMassCtrl->SetRange( 0.0, 200000.0 );
     _physicsMassCtrl->SetIncrement( 1.0 );
     _physicsMassCtrl->Raise();
 
