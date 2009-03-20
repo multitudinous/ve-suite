@@ -97,13 +97,13 @@ SummaryResultDialog::SummaryResultDialog( wxWindow * parent,
     size_t numInputs = command.size();
     for( size_t i = 0; i < numInputs; ++i )
     {
-        std::vector< wxString > tagNames;
-        std::vector< wxString > values;
+        mTagNames.clear();
+        mValues.clear();
         ves::open::xml::CommandPtr inputCommand = command.at( i );
-        GetDataTables( inputCommand, tagNames, values );
+        GetDataTables( inputCommand );
         std::string inputParamter = inputCommand->GetCommandName();
         NewTab( wxString( inputParamter.c_str(), wxConvUTF8 ) );
-        Set2Cols( tagNames, values );
+        Set2Cols( mTagNames, mValues );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -158,60 +158,100 @@ void SummaryResultDialog::NewTab( const wxString& title )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void SummaryResultDialog::GetDataTables( ves::open::xml::CommandPtr inputCommand,
-                                        std::vector< wxString >& tagNames, 
-                                        std::vector< wxString >& values )
+void SummaryResultDialog::GetDataTables( ves::open::xml::CommandPtr inputCommand )
 {
-    for( size_t j = 0; j < inputCommand->GetNumberOfDataValuePairs(); ++j )
+    size_t numDVP = inputCommand->GetNumberOfDataValuePairs();
+    for( size_t i=0; i<numDVP ; ++i )
     {
         ves::open::xml::DataValuePairPtr tempDVP = 
-            inputCommand->GetDataValuePair( j );
+            inputCommand->GetDataValuePair( i );
         std::string dataType = tempDVP->GetDataType();
-        std::string dataName = tempDVP->GetDataName();
-        std::string stringData = "empty";
+        mDataName = tempDVP->GetDataName();
+        mStringData = "empty";
 
-        if( dataType == std::string( "FLOAT" ) )
+        if( dataType == std::string( "XMLOBJECT" ) )
         {
-            double doubleData;
-            tempDVP->GetData( doubleData );
-            stringData =  boost::lexical_cast<std::string>( doubleData );
-        }
-        else if( dataType == std::string( "UNSIGNED INT" ) )
-        {
-            unsigned int intData;
-            tempDVP->GetData( intData );
-            stringData = boost::lexical_cast<std::string>( intData );
-        }
-        else if( dataType == std::string( "LONG" ) )
-        {
-            long longData;
-            tempDVP->GetData( longData );
-            stringData = boost::lexical_cast<std::string>( longData ) ;
-        }
-        else if( dataType == std::string( "STRING" ) )
-        {
-            tempDVP->GetData( stringData );
-        }
-        else if( dataType == std::string( "XMLOBJECT" ) )
-        {
-            std::vector< std::string > tempStringArray = 
+            if( inputCommand->GetDataValuePair( i )->
+                GetDataXMLObject()->GetObjectType() == "Command" )
+            {
+                ves::open::xml::CommandPtr tempCommand = 
+                    boost::dynamic_pointer_cast< ves::open::xml::Command >( 
+                    inputCommand->GetDataValuePair( i )->GetDataXMLObject());
+                size_t numDVPs = tempCommand->GetNumberOfDataValuePairs();
+                for( size_t j=0; j<numDVPs; ++j )
+                {
+                    tempDVP = tempCommand->GetDataValuePair( j );
+                    mDataName = tempDVP->GetDataName();
+                    GetDataValue( tempDVP );
+                }            
+            }
+            else if( inputCommand->GetDataValuePair( i )->
+                GetDataXMLObject()->GetObjectType() == "OneDStringArray" ) 
+            {
+                std::vector< std::string > tempStringArray = 
                 boost::dynamic_pointer_cast< 
                 ves::open::xml::OneDStringArray >(inputCommand->
                 GetDataValuePair( 0 )->GetDataXMLObject())->GetArray();
 
-            for( size_t i=0; i<tempStringArray.size(); ++i )
-            {
-                values.push_back( wxString( 
-                    tempStringArray.at( i ).c_str(), wxConvUTF8 ) );
-                tagNames.push_back( wxString( dataName.c_str(), wxConvUTF8 ) );
+                for( size_t j=0; j<tempStringArray.size(); ++j )
+                {
+                    mValues.push_back( wxString( 
+                        tempStringArray.at( j ).c_str(), wxConvUTF8 ) );
+                    mTagNames.push_back( wxString( mDataName.c_str(), wxConvUTF8 ) );
+                }          
             }
         }
-        
-        // vectors of data to be displayed
-        if( dataType != std::string( "XMLOBJECT" ) )
+        else
         {
-            tagNames.push_back( wxString( dataName.c_str(), wxConvUTF8 ) );
-            values.push_back( wxString( stringData.c_str(), wxConvUTF8 ) );
+            GetDataValue( tempDVP );
+        }        
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void SummaryResultDialog::GetDataValue( ves::open::xml::DataValuePairPtr tempDVP )
+{
+    std::string dataType = tempDVP->GetDataType();
+
+    if( dataType == std::string( "FLOAT" ) )
+    {
+        double doubleData;
+        tempDVP->GetData( doubleData );
+        mStringData =  boost::lexical_cast<std::string>( doubleData );
+    }
+    else if( dataType == std::string( "UNSIGNED INT" ) )
+    {
+        unsigned int intData;
+        tempDVP->GetData( intData );
+        mStringData = boost::lexical_cast<std::string>( intData );
+    }
+    else if( dataType == std::string( "LONG" ) )
+    {
+        long longData;
+        tempDVP->GetData( longData );
+        mStringData = boost::lexical_cast<std::string>( longData ) ;
+    }
+    else if( dataType == std::string( "STRING" ) )
+    {
+        tempDVP->GetData( mStringData );
+    }
+    else if( dataType == std::string( "XMLOBJECT" ) )
+    {
+        std::vector< std::string > tempStringArray = 
+            boost::dynamic_pointer_cast< 
+            ves::open::xml::OneDStringArray >(
+            tempDVP->GetDataXMLObject())->GetArray();
+
+        for( size_t i=0; i<tempStringArray.size(); ++i )
+        {
+            mValues.push_back( wxString( 
+                tempStringArray.at( i ).c_str(), wxConvUTF8 ) );
+            mTagNames.push_back( wxString( mDataName.c_str(), wxConvUTF8 ) );
         }
+    }
+    
+    if( dataType != std::string( "XMLOBJECT" ) )
+    {
+        mTagNames.push_back( wxString( mDataName.c_str(), wxConvUTF8 ) );
+        mValues.push_back( wxString( mStringData.c_str(), wxConvUTF8 ) );
     }
 }

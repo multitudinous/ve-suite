@@ -43,6 +43,7 @@ SummaryResultDialog API
 #include <ves/VEConfig.h>
 
 #include <ves/open/xml/CommandPtr.h>
+#include <ves/open/xml/DataValuePairPtr.h>
 
 class wxButton;
 class wxNotebook;
@@ -68,11 +69,15 @@ public:
     void TabTitle( const wxString& title );
     void NewTab( const wxString& title = wxT( "Results" ) );
     void Set2Cols( const std::vector<wxString>& col1, const std::vector<wxString>& col2 );
-    void GetDataTables( ves::open::xml::CommandPtr inputCommand, 
-        std::vector< wxString >& tagNames, std::vector< wxString >& values );
+    void GetDataTables( ves::open::xml::CommandPtr inputCommand );
+    void GetDataValue( ves::open::xml::DataValuePairPtr tempDVP );
     TexTable* syngas;
 
     ves::open::xml::CommandPtr mCommand;
+    std::string mDataName;
+    std::string mStringData;
+    std::vector< wxString > mTagNames;
+    std::vector< wxString > mValues;
 
 
 private:

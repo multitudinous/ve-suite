@@ -937,7 +937,7 @@ void UIPluginBase::ViewInputVariables( void )
     // Get all the results form the model
     inputsDialog->Show();
 }
-///////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void UIPluginBase::ViewResultsVariables( void )
 {
 
@@ -987,36 +987,9 @@ void UIPluginBase::ViewResultsVariables( void )
         CommandPtr tempResult =  
             boost::dynamic_pointer_cast<ves::open::xml::Command>( 
             objectVector.at( 0 ) );
-        size_t numDVPResults = tempResult->GetNumberOfDataValuePairs();
-        for( size_t i = 0; i < numDVPResults; ++i )
+        if( tempResult )
         {
-            if( boost::dynamic_pointer_cast< Command >( tempResult->
-				            GetDataValuePair( i )->GetDataXMLObject() ) )
-            {
-                size_t numResults = boost::dynamic_pointer_cast< Command >( 
-		            tempResult->GetDataValuePair( i )->GetDataXMLObject())->
-                    GetNumberOfDataValuePairs();
-                
-                for( size_t j=0; j<numResults; ++j )
-                {
-                    DataValuePairPtr tempDVP = 
-                        boost::dynamic_pointer_cast< Command >( 
-                        tempResult->GetDataValuePair( i )->GetDataXMLObject())->
-                        GetDataValuePair( j );
-                    CommandPtr modelResults( new Command() );
-                    modelResults->AddDataValuePair( tempDVP );
-                    modelResults->SetCommandName( tempDVP->GetDataName() );
-                    resultsVec.push_back( modelResults );
-                }
-            }
-            else
-            {
-                DataValuePairPtr tempDVP = tempResult->GetDataValuePair( i );
-                CommandPtr modelResults( new Command() );
-                modelResults->AddDataValuePair( tempDVP );
-                modelResults->SetCommandName( tempDVP->GetDataName() );
-                resultsVec.push_back( modelResults );
-            }
+            resultsVec.push_back( tempResult );
         }
     }
 
