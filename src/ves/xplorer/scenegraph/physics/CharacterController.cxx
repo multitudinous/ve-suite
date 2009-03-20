@@ -72,9 +72,9 @@ CharacterController::CharacterController()
     mStrafeRight( false ),
     mJump( false ),
     mFlying( false ),
-    mCameraHeight( 5.0 ),
+    mLookAtOffsetZ( 0.0 ),
     mCameraDistance( 20.0 ),
-    mMinCameraDistance( 5.0 ),
+    mMinCameraDistance( 0.0 ),
     mMaxCameraDistance( 200.0 ),
     mDeltaZoom( 2.0 ),
     mSpeed( 10.0 ),
@@ -103,6 +103,7 @@ void CharacterController::Initialize( btDynamicsWorld* dynamicsWorld )
     //Create physics mesh representation
     btScalar characterHeight = 3.83;//5.83;
     btScalar characterWidth = 1.83;
+    //mLookAtOffsetZ = characterHeight * 2.0;
 
     btBroadphaseInterface* broadphase = dynamicsWorld->getBroadphase();
     broadphase->getOverlappingPairCache()->setInternalGhostPairCallback(
@@ -340,7 +341,7 @@ void CharacterController::UpdateCamera()
     backward.normalize();
 
     btVector3 center = characterWorldTrans.getOrigin();
-    btVector3 eye = center + up * mCameraHeight + backward * mCameraDistance;
+    btVector3 eye = center + /*up * mCameraHeight +*/ backward * mCameraDistance;
 
     btVector3 vVector = eye - center;
     vVector.normalize();

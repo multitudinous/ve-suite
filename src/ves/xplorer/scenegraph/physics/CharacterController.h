@@ -148,10 +148,10 @@ private:
     ///
     bool mFlying;
 
-    ///
-    double mCameraHeight;
+    ///Used to offset the "look at" point from center of the character transform
+    double mLookAtOffsetZ;
 
-    ///
+    ///The distance the camera is from the "look at" point
     double mCameraDistance;
 
     ///
