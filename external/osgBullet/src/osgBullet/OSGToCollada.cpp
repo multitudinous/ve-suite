@@ -139,15 +139,11 @@ protected:
         }
         case TRIANGLE_MESH_SHAPE_PROXYTYPE:
         {
-            osg::BoundingSphere bs = node.getBound();
-            center = bs.center();
             collision = osgBullet::btTriMeshCollisionShapeFromOSG( &node );
             break;
         }
         case CONVEX_TRIANGLEMESH_SHAPE_PROXYTYPE:
         {
-            osg::BoundingSphere bs = node.getBound();
-            center = bs.center();
             collision = osgBullet::btConvexTriMeshCollisionShapeFromOSG( &node );
             break;
         }
