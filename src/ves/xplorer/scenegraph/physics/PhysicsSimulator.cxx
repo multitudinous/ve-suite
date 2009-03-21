@@ -274,7 +274,7 @@ void PhysicsSimulator::UpdatePhysics( float dt )
         vxs::SceneManager::instance()->GetCharacterController();
     if( characterController->IsActive() )
     {
-        characterController->Update( dt );
+        characterController->Advance( dt );
     }
 
     mDynamicsWorld->stepSimulation( dt );

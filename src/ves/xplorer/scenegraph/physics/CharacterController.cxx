@@ -72,6 +72,7 @@ CharacterController::CharacterController()
     mStrafeRight( false ),
     mJump( false ),
     mFlying( false ),
+    mBufferSize( 0 ),
     mCharacterWidth( 1.83 ),
     mCharacterHeight( 3.83/*5.83*/ ),
     mLookAtOffsetZ( mCharacterHeight * 2.0 ),
@@ -88,13 +89,17 @@ CharacterController::CharacterController()
     mTurnAngleZ( 0.0 ),
     mDeltaTurnAngleX( 0.0 ),
     mDeltaTurnAngleZ( 0.0 ),
-    mTurnSpeed( 100.0 ),
+    mTurnSpeed( 400.0 ),
+    mWeightModifier( 0.0 ),
+    mTotalWeight( 0.0 ),
     mCameraRotation(),
     mCharacter( NULL ),
     mGhostObject( NULL ),
     mMatrixTransform( NULL )
 {
     mCameraRotation.setIdentity();
+
+    SetBufferSizeAndWeights( 10, 0.6 );
 }
 ////////////////////////////////////////////////////////////////////////////////
 CharacterController::~CharacterController()
@@ -245,6 +250,7 @@ void CharacterController::Turn( double dx, double dy )
 {
     double x = -dy;
     double z =  dx;
+    /*
     double length = ::sqrtf( x * x + z * z );
     if( length != 0.0 )
     {
@@ -252,73 +258,95 @@ void CharacterController::Turn( double dx, double dy )
         x *= lengthRatio;
         z *= lengthRatio;
     }
+    */
 
     mDeltaTurnAngleX += x * mTurnSpeed * PIDivOneEighty;
     mDeltaTurnAngleZ += z * mTurnSpeed * PIDivOneEighty;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CharacterController::Update( btScalar dt )
+void CharacterController::Advance( btScalar dt )
 {
-    mTurnAngleX += mDeltaTurnAngleX * dt;
-    mTurnAngleZ += mDeltaTurnAngleZ * dt;
-
-    std::cout << mDeltaTurnAngleX << std::endl;
-    std::cout << mDeltaTurnAngleZ << std::endl;
-    std::cout << dt << std::endl;
-    btQuaternion xRotation( btVector3( 1.0, 0.0, 0.0 ), mTurnAngleX );
-    btQuaternion zRotation( btVector3( 0.0, 0.0, 1.0 ), mTurnAngleZ );
-    btQuaternion rotation = xRotation * zRotation;
-
-    mCameraRotation.setRotation( rotation );
-
+    //Get current character transform
     btTransform xform = mGhostObject->getWorldTransform();
-    if( mFlying )
+
+    //Calculate character rotation
     {
-        xform.setRotation( rotation );
-    }
-    else
-    {
-        xform.setRotation( zRotation );
-    }
+        //http://www.flipcode.com/archives/Smooth_Mouse_Filtering.shtml
 
-    mGhostObject->setWorldTransform( xform );
+        //Remove the oldest mouse movement from the history buffer
+        mHistoryBuffer.pop_back();
+        //Put the current mouse movement into the history buffer
+        mHistoryBuffer.push_front(
+            std::make_pair( mDeltaTurnAngleX, mDeltaTurnAngleZ ) );
 
-    mDeltaTurnAngleX = 0.0;
-    mDeltaTurnAngleZ = 0.0;
+        //Use a weighted average for the history buffer contents
+        double totalValueX = 0.0;
+        double totalValueZ = 0.0;
+        for( unsigned int i = 0; i < mBufferSize; ++i )
+        {
+            totalValueX += mHistoryBuffer.at( i ).first * mWeights.at( i );
+            totalValueZ += mHistoryBuffer.at( i ).second * mWeights.at( i );
+        }
 
-    btVector3 forwardDir = xform.getBasis()[ 1 ];
-    forwardDir.normalize();
+        mTurnAngleX += totalValueX / mTotalWeight;
+        mTurnAngleZ += totalValueZ / mTotalWeight;
 
-    btVector3 upDir = xform.getBasis()[ 2 ];
-    upDir.normalize();
+        btQuaternion xRotation( btVector3( 1.0, 0.0, 0.0 ), mTurnAngleX );
+        btQuaternion zRotation( btVector3( 0.0, 0.0, 1.0 ), mTurnAngleZ );
+        btQuaternion rotation = xRotation * zRotation;
+        mCameraRotation.setRotation( rotation );
 
-    btVector3 strafeDir = xform.getBasis()[ 0 ];
-    strafeDir.normalize();
+        if( mFlying )
+        {
+            xform.setRotation( rotation );
+        }
+        else
+        {
+            xform.setRotation( zRotation );
+        }
 
-    btVector3 direction( 0.0, 0.0, 0.0 );
-    btScalar speed = mSpeed * dt;
+        mGhostObject->setWorldTransform( xform );
 
-    if( mStrafeLeft )
-    {
-        direction -= strafeDir;
-    }
-
-    if( mStrafeRight )
-    {
-        direction += strafeDir;
-    }
-
-    if( mStepForward )
-    {
-        direction += forwardDir;
-    }
-
-    if( mStepBackward )
-    {
-        direction -= forwardDir;
+        mDeltaTurnAngleX = 0.0;
+        mDeltaTurnAngleZ = 0.0;
     }
 
-    mCharacter->setWalkDirection( direction * speed );
+    //Calculate character translation
+    {
+        btVector3 forwardDir = xform.getBasis()[ 1 ];
+        forwardDir.normalize();
+
+        btVector3 upDir = xform.getBasis()[ 2 ];
+        upDir.normalize();
+
+        btVector3 strafeDir = xform.getBasis()[ 0 ];
+        strafeDir.normalize();
+
+        btVector3 direction( 0.0, 0.0, 0.0 );
+        btScalar speed = mSpeed * dt;
+
+        if( mStepForward )
+        {
+            direction += forwardDir;
+        }
+
+        if( mStepBackward )
+        {
+            direction -= forwardDir;
+        }
+
+        if( mStrafeLeft )
+        {
+            direction -= strafeDir;
+        }
+
+        if( mStrafeRight )
+        {
+            direction += strafeDir;
+        }
+
+        mCharacter->setWalkDirection( direction * speed );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CharacterController::UpdateCamera()
@@ -333,7 +361,7 @@ void CharacterController::UpdateCamera()
     backward.normalize();
 
     btVector3 center = characterWorldTrans.getOrigin();
-    btVector3 eye = center + /*up * mCameraHeight +*/ backward * mCameraDistance;
+    btVector3 eye = center + /*up * mLookAtOffsetZ +*/ backward * mCameraDistance;
 
     btVector3 vVector = eye - center;
     vVector.normalize();
@@ -393,7 +421,7 @@ bool CharacterController::IsActive()
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CharacterController::QuatSlerp(
-        btQuaternion& from, btQuaternion& to, double t, btQuaternion& result )
+    btQuaternion& from, btQuaternion& to, double t, btQuaternion& result )
 {
     double to1[ 4 ];
     double omega, cosom, sinom, scale0, scale1;
@@ -440,6 +468,26 @@ void CharacterController::QuatSlerp(
     result.setY( scale0 * from.y() + scale1 * to1[ 1 ] );
     result.setZ( scale0 * from.z() + scale1 * to1[ 2 ] );
     result.setW( scale0 * from.w() + scale1 * to1[ 3 ] );
+}
+////////////////////////////////////////////////////////////////////////////////
+void CharacterController::SetBufferSizeAndWeights(
+    size_t bufferSize, double weightModifier )
+{
+    mBufferSize = bufferSize;
+    mWeightModifier = weightModifier;
+    mHistoryBuffer.assign( mBufferSize, std::make_pair( 0.0, 0.0 ) );
+    mWeights.assign( mBufferSize, 0.0 );
+    mTotalWeight = 0.0;
+
+    //First weight is worth 100%
+    mWeights.at( 0 ) = 1.0;
+    mTotalWeight += mWeights.at( 0 );
+    //Assign other weights based off weight modifier
+    for( size_t i = 1; i < mBufferSize; ++i )
+    {
+        mWeights.at( i ) = mWeights.at( i - 1 ) * mWeightModifier;
+        mTotalWeight += mWeights.at( i );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 CharacterController::CharacterTransformCallback::CharacterTransformCallback(

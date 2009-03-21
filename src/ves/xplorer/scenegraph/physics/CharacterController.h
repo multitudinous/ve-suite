@@ -54,6 +54,10 @@ class btKinematicCharacterController;
 class btPairCachingGhostObject;
 class btCollisionObject;
 
+// --- C/C++ Includes --- //
+#include <vector>
+#include <deque>
+
 namespace ves
 {
 namespace xplorer
@@ -79,49 +83,49 @@ public:
     ///Destructor
     ~CharacterController();
 
-    ///
+    ///Initialize the physics and geometric models for the character controller
     void Initialize( btDynamicsWorld* dynamicsWorld );
 
     ///
     void Destroy( btDynamicsWorld* dynamicsWorld );
 
-    ///
+    ///Activate the character controller
     void TurnOn();
 
-    ///
+    ///Deactivate the character controller
     void TurnOff();
 
-    ///
+    ///Move the character forward
     void StepForward( bool onOff );
 
-    ///
+    ///Move the character backward
     void StepBackward( bool onOff );
 
-    ///
+    ///Bank the character to the left
     void StrafeLeft( bool onOff );
 
-    ///
+    ///Bank the character to the right
     void StrafeRight( bool onOff );
 
-    ///
+    ///Turn the character
     void Turn( double dx, double dy );
     
-    ///
+    ///Make the character jump
     void Jump();
 
-    ///
+    ///Reset the character controller
     void Reset( btDynamicsWorld* dynamicsWorld );
 
-    ///
+    ///Position the camera relative to the character
     void UpdateCamera();
 
-    ///
-    void Update( btScalar dt );
+    ///Advance the character in time
+    void Advance( btScalar dt );
 
-    ///
+    ///Zoom the camera in and out from the character position
     void Zoom( bool inOut );
 
-    ///
+    ///Returns if the character controller is active
     bool IsActive();
 
 protected:
@@ -130,6 +134,8 @@ private:
     ///
     void QuatSlerp(
         btQuaternion& from, btQuaternion& to, double t, btQuaternion& result );
+
+    void SetBufferSizeAndWeights( size_t bufferSize, double weightModifier );
 
     ///
     bool mActive;
@@ -198,6 +204,21 @@ private:
     double mTurnSpeed;
 
     ///
+    double mWeightModifier;
+
+    ///
+    double mTotalWeight;
+
+    ///
+    size_t mBufferSize;
+
+    ///
+    std::vector< double > mWeights;
+
+    ///
+    std::deque< std::pair< double, double > > mHistoryBuffer;
+
+    ///
     btTransform mCameraRotation;
 
     ///
@@ -206,6 +227,7 @@ private:
     ///
     btPairCachingGhostObject* mGhostObject;
 
+    ///
     osg::ref_ptr< osg::MatrixTransform > mMatrixTransform;
 
     ///
