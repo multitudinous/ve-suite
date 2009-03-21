@@ -72,9 +72,11 @@ CharacterController::CharacterController()
     mStrafeRight( false ),
     mJump( false ),
     mFlying( false ),
-    mLookAtOffsetZ( 0.0 ),
+    mCharacterWidth( 1.83 ),
+    mCharacterHeight( 3.83/*5.83*/ ),
+    mLookAtOffsetZ( mCharacterHeight * 2.0 ),
     mCameraDistance( 20.0 ),
-    mMinCameraDistance( 0.0 ),
+    mMinCameraDistance( 0.1 ),
     mMaxCameraDistance( 200.0 ),
     mDeltaZoom( 2.0 ),
     mSpeed( 10.0 ),
@@ -84,7 +86,9 @@ CharacterController::CharacterController()
     mMaxSpeed( 40.0 ),
     mTurnAngleX( 0.0 ),
     mTurnAngleZ( 0.0 ),
-    mTurnSpeed( 2.0 ),
+    mDeltaTurnAngleX( 0.0 ),
+    mDeltaTurnAngleZ( 0.0 ),
+    mTurnSpeed( 100.0 ),
     mCameraRotation(),
     mCharacter( NULL ),
     mGhostObject( NULL ),
@@ -101,10 +105,6 @@ CharacterController::~CharacterController()
 void CharacterController::Initialize( btDynamicsWorld* dynamicsWorld )
 {
     //Create physics mesh representation
-    btScalar characterHeight = 3.83;//5.83;
-    btScalar characterWidth = 1.83;
-    //mLookAtOffsetZ = characterHeight * 2.0;
-
     btBroadphaseInterface* broadphase = dynamicsWorld->getBroadphase();
     broadphase->getOverlappingPairCache()->setInternalGhostPairCallback(
         new btGhostPairCallback() );
@@ -116,11 +116,11 @@ void CharacterController::Initialize( btDynamicsWorld* dynamicsWorld )
     mGhostObject->setWorldTransform( startTransform );
 
     btConvexShape* capsuleShape =
-        new btCapsuleShapeZ( characterWidth, characterHeight );
+        new btCapsuleShapeZ( mCharacterWidth, mCharacterHeight );
     mGhostObject->setCollisionShape( capsuleShape );
     mGhostObject->setCollisionFlags( btCollisionObject::CF_CHARACTER_OBJECT );
 
-    btScalar stepHeight = btScalar( 0.35 );
+    btScalar stepHeight = btScalar( 0.4 );
     mCharacter =
         new btKinematicCharacterController(
             mGhostObject, capsuleShape, stepHeight );
@@ -132,7 +132,7 @@ void CharacterController::Initialize( btDynamicsWorld* dynamicsWorld )
     osg::ref_ptr< osg::Capsule > capsule =
         new osg::Capsule(
             osg::Vec3( 0.0, 0.0, 0.0 ),
-            characterWidth, characterHeight );
+            mCharacterWidth, mCharacterHeight );
     osg::ref_ptr< osg::TessellationHints > hints = new osg::TessellationHints();
     osg::ref_ptr< osg::ShapeDrawable > shapeDrawable =
         new osg::ShapeDrawable( capsule.get(), hints.get() );
@@ -217,7 +217,8 @@ void CharacterController::Reset( btDynamicsWorld* dynamicsWorld )
 
     mCharacter->reset();
 
-    //mCharacter->warp( btVector3( 0, -2.0, 0.0 ) );
+    //Move the character so that its entire body is above the zero ground plane
+    mCharacter->warp( btVector3( 0.0, 0.0, mCharacterHeight ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CharacterController::StepForward( bool onOff )
@@ -252,34 +253,22 @@ void CharacterController::Turn( double dx, double dy )
         z *= lengthRatio;
     }
 
-    mTurnAngleX += x * mTurnSpeed * PIDivOneEighty;
-    mTurnAngleZ += z * mTurnSpeed * PIDivOneEighty;
-	
-    /*
-    btQuaternion xRotation( btVector3( 1.0, 0.0, 0.0 ), mTurnAngleX );
-    btQuaternion zRotation( btVector3( 0.0, 0.0, 1.0 ), mTurnAngleZ );
-    btQuaternion rotation = xRotation * zRotation;
-    mCameraRotation.setRotation( rotation );
-
-    btTransform xform = mGhostObject->getWorldTransform();
-    if( mFlying )
-    {
-        xform.setRotation( rotation );
-    }
-    else
-    {
-        xform.setRotation( zRotation );
-    }
-
-    mGhostObject->setWorldTransform( xform );
-    */
+    mDeltaTurnAngleX += x * mTurnSpeed * PIDivOneEighty;
+    mDeltaTurnAngleZ += z * mTurnSpeed * PIDivOneEighty;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CharacterController::Update( btScalar dt )
 {
+    mTurnAngleX += mDeltaTurnAngleX * dt;
+    mTurnAngleZ += mDeltaTurnAngleZ * dt;
+
+    std::cout << mDeltaTurnAngleX << std::endl;
+    std::cout << mDeltaTurnAngleZ << std::endl;
+    std::cout << dt << std::endl;
     btQuaternion xRotation( btVector3( 1.0, 0.0, 0.0 ), mTurnAngleX );
     btQuaternion zRotation( btVector3( 0.0, 0.0, 1.0 ), mTurnAngleZ );
     btQuaternion rotation = xRotation * zRotation;
+
     mCameraRotation.setRotation( rotation );
 
     btTransform xform = mGhostObject->getWorldTransform();
@@ -293,6 +282,9 @@ void CharacterController::Update( btScalar dt )
     }
 
     mGhostObject->setWorldTransform( xform );
+
+    mDeltaTurnAngleX = 0.0;
+    mDeltaTurnAngleZ = 0.0;
 
     btVector3 forwardDir = xform.getBasis()[ 1 ];
     forwardDir.normalize();
@@ -398,6 +390,56 @@ void CharacterController::Zoom( bool inOut )
 bool CharacterController::IsActive()
 {
     return mActive;
+}
+////////////////////////////////////////////////////////////////////////////////
+void CharacterController::QuatSlerp(
+        btQuaternion& from, btQuaternion& to, double t, btQuaternion& result )
+{
+    double to1[ 4 ];
+    double omega, cosom, sinom, scale0, scale1;
+    //Calculate cosine
+    cosom = from.x() * to.x() + from.y() * to.y() + from.z() * to.z() + from.w() * to.w();
+
+    //Adjust signs if necessary
+    if( cosom < 0.0 )
+    {
+        cosom = -cosom;
+        to1[ 0 ] = -to.x();
+        to1[ 1 ] = -to.y();
+        to1[ 2 ] = -to.z();
+        to1[ 3 ] = -to.w();
+    }
+    else 
+    {
+        to1[ 0 ] = to.x();
+        to1[ 1 ] = to.y();
+        to1[ 2 ] = to.z();
+        to1[ 3 ] = to.w();
+    }
+
+    //Calculate coefficients
+    double delta = 0.1;
+    if( ( 1.0 - cosom ) > delta )
+    {
+        //Standard case slerp
+        omega = acos( cosom );
+        sinom = sin( omega );
+        scale0 = sin( ( 1.0 - t ) * omega ) / sinom;
+        scale1 = sin( t * omega ) / sinom;
+    }
+    else
+    {        
+        //"from" and "to" quaternions are very close 
+        //So we can do a linear interpolation
+        scale0 = 1.0 - t;
+        scale1 = t;
+    }
+
+    //Calculate final values
+    result.setX( scale0 * from.x() + scale1 * to1[ 0 ] );
+    result.setY( scale0 * from.y() + scale1 * to1[ 1 ] );
+    result.setZ( scale0 * from.z() + scale1 * to1[ 2 ] );
+    result.setW( scale0 * from.w() + scale1 * to1[ 3 ] );
 }
 ////////////////////////////////////////////////////////////////////////////////
 CharacterController::CharacterTransformCallback::CharacterTransformCallback(

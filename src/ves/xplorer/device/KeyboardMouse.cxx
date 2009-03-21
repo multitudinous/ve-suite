@@ -1375,6 +1375,7 @@ void KeyboardMouse::NavOnMouseMotion( std::pair< double, double > delta )
         }
         case gadget::MBUTTON3:
         {
+            //Turn the character and camera at the same time
             if( !mPhysicsSimulator->GetIdle() &&
                 mCharacterController->IsActive() )
             {

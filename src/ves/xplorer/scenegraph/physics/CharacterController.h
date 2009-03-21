@@ -128,6 +128,10 @@ protected:
 
 private:
     ///
+    void QuatSlerp(
+        btQuaternion& from, btQuaternion& to, double t, btQuaternion& result );
+
+    ///
     bool mActive;
 
     ///
@@ -147,6 +151,12 @@ private:
 
     ///
     bool mFlying;
+
+    ///
+    double mCharacterWidth;
+
+    ///
+    double mCharacterHeight;
 
     ///Used to offset the "look at" point from center of the character transform
     double mLookAtOffsetZ;
@@ -177,6 +187,12 @@ private:
 
     ///
     double mTurnAngleZ;
+
+    ///
+    double mDeltaTurnAngleX;
+
+    ///
+    double mDeltaTurnAngleZ;
 
     ///
     double mTurnSpeed;
