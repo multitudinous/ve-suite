@@ -989,6 +989,7 @@ void UIPluginBase::ViewResultsVariables( void )
             objectVector.at( 0 ) );
         if( tempResult )
         {
+            m_veModel->SetResult( tempResult );
             resultsVec.push_back( tempResult );
         }
     }
