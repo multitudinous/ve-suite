@@ -491,34 +491,6 @@ void KeyboardMouse::ProcessKBEvents( int mode )
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::ProcessNavigationEvents()
 {
-    //if( !vxs::PhysicsSimulator::instance()->GetIdle() )
-    {
-        /*
-        osg::Node::DescriptionList descriptorsList;
-        descriptorsList =
-            vx::DeviceHandler::instance()->GetSelectedDCS()->getDescriptions();
-
-        vxs::CADEntity* cadEntity =
-            vx::ModelHandler::instance()->GetActiveModel()->
-                GetModelCADHandler()->GetPart( descriptorsList.at( 1 ) );
-
-        osgBullet::MotionState* motionState =
-            dynamic_cast< osgBullet::MotionState* >(
-                cadEntity->GetPhysicsRigidBody()->GetbtRigidBody()->getMotionState() );
-
-        osg::Matrixd newTransform;
-        osg::Matrixd currentTransform;
-
-        currentTransform = motionState->getParentTransform();
-
-        osg::Matrixd deltaTransform( mDeltaTransform.getData() );
-        newTransform = currentTransform * deltaTransform;
-
-        motionState->setParentTransform( newTransform );
-        */
-    }
-    //else
-    {
     gmtl::Matrix44d newTransform;
     gmtl::Matrix44d currentTransform;
     
@@ -583,7 +555,6 @@ void KeyboardMouse::ProcessNavigationEvents()
         mDeltaTransform.mData[ 12 ] =
         mDeltaTransform.mData[ 13 ] =
         mDeltaTransform.mData[ 14 ] = 0.0;
-    }
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -1195,6 +1166,13 @@ void KeyboardMouse::NavOnMousePress()
     {
         case gadget::MBUTTON1:
         {
+            //Rotate just the camera "3rd person view:
+            if( !mPhysicsSimulator->GetIdle() &&
+                mCharacterController->IsActive() )
+            {
+                mCharacterController->FirstPersonMode( false );
+            }
+
             //Add a point to point constraint for picking
             if( !mPhysicsSimulator->GetIdle() && mDynamicsWorld )
             {
@@ -1255,6 +1233,12 @@ void KeyboardMouse::NavOnMousePress()
         }
         case gadget::MBUTTON3:
         {
+            if( !mPhysicsSimulator->GetIdle() &&
+                mCharacterController->IsActive() )
+            {
+                mCharacterController->FirstPersonMode( true );
+            }
+
             break;
         }
         //Scroll wheel up
@@ -1288,15 +1272,24 @@ void KeyboardMouse::NavOnMouseRelease()
     {
         case gadget::MBUTTON1:
         {
-            if( !mPhysicsSimulator->GetIdle() && mPickConstraint && mDynamicsWorld )
+            if( !mPhysicsSimulator->GetIdle() )
             {
-                mDynamicsWorld->removeConstraint( mPickConstraint );
-                delete mPickConstraint;
-                mPickConstraint = NULL;
+                if( mCharacterController->IsActive() )
+                {
+                    //set slerp
+                    //StartSlerpAnimation
+                }
 
-                mPickedBody->forceActivationState( ACTIVE_TAG );
-                mPickedBody->setDeactivationTime( 0.0 );
-                mPickedBody = NULL;
+                if( mPickConstraint && mDynamicsWorld )
+                {
+                    mDynamicsWorld->removeConstraint( mPickConstraint );
+                    delete mPickConstraint;
+                    mPickConstraint = NULL;
+
+                    mPickedBody->forceActivationState( ACTIVE_TAG );
+                    mPickedBody->setDeactivationTime( 0.0 );
+                    mPickedBody = NULL;
+                }
             }
 
             break;
@@ -1317,15 +1310,24 @@ void KeyboardMouse::NavOnMouseMotion( std::pair< double, double > delta )
     mMagnitude =
         sqrtf( delta.first * delta.first + delta.second * delta.second );
 
+    /*
     if( mMagnitude < mSensitivity )
     {
         return;
     }
+    */
 
     switch( mButton )
     {
         case gadget::MBUTTON1:
         {
+            //Rotate just the camera "3rd person view:
+            if( !mPhysicsSimulator->GetIdle() &&
+                mCharacterController->IsActive() )
+            {
+                mCharacterController->Rotate( delta.first, delta.second );
+            }
+
             if( !mPhysicsSimulator->GetIdle() && mPickConstraint )
             {
                 //Move the constraint pivot
@@ -1363,6 +1365,8 @@ void KeyboardMouse::NavOnMouseMotion( std::pair< double, double > delta )
                 {
                     Twist();
                 }
+
+                ProcessNavigationEvents();
             }
 
             break;
@@ -1370,27 +1374,27 @@ void KeyboardMouse::NavOnMouseMotion( std::pair< double, double > delta )
         case gadget::MBUTTON2:
         {
             Pan( delta.first, delta.second );
+            ProcessNavigationEvents();
 
             break;
         }
         case gadget::MBUTTON3:
         {
-            //Turn the character and camera at the same time
+            //Rotate the character and camera at the same time
             if( !mPhysicsSimulator->GetIdle() &&
                 mCharacterController->IsActive() )
             {
-                mCharacterController->Turn( delta.first, delta.second );
+                mCharacterController->Rotate( delta.first, delta.second );
             }
             else
             {
                 Zoom( delta.second );
+                ProcessNavigationEvents();
             }
 
             break;
         }
     }
-
-    ProcessNavigationEvents();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::SelOnKeyboardPress()

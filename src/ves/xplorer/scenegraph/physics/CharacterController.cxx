@@ -66,6 +66,7 @@ const double PIDivOneEighty = 0.0174532925;
 CharacterController::CharacterController()
     :
     mActive( false ),
+    m1stPersonMode( false ),
     mStepForward( false ),
     mStepBackward( false ),
     mStrafeLeft( false ),
@@ -97,8 +98,6 @@ CharacterController::CharacterController()
     mGhostObject( NULL ),
     mMatrixTransform( NULL )
 {
-    mCameraRotation.setIdentity();
-
     SetBufferSizeAndWeights( 10, 0.6 );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -160,6 +159,11 @@ void CharacterController::Initialize( btDynamicsWorld* dynamicsWorld )
 void CharacterController::Destroy( btDynamicsWorld* dynamicsWorld )
 {
     ;
+}
+////////////////////////////////////////////////////////////////////////////////
+void CharacterController::FirstPersonMode( bool onOff )
+{
+    m1stPersonMode = onOff;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CharacterController::TurnOn()
@@ -246,7 +250,7 @@ void CharacterController::StrafeRight( bool onOff )
     mStrafeRight = onOff;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CharacterController::Turn( double dx, double dy )
+void CharacterController::Rotate( double dx, double dy )
 {
     double x = -dy;
     double z =  dx;
@@ -293,19 +297,23 @@ void CharacterController::Advance( btScalar dt )
 
         btQuaternion xRotation( btVector3( 1.0, 0.0, 0.0 ), mTurnAngleX );
         btQuaternion zRotation( btVector3( 0.0, 0.0, 1.0 ), mTurnAngleZ );
-        btQuaternion rotation = xRotation * zRotation;
-        mCameraRotation.setRotation( rotation );
+        mCameraRotation = xRotation * zRotation;
 
-        if( mFlying )
-        {
-            xform.setRotation( rotation );
-        }
-        else
-        {
-            xform.setRotation( zRotation );
-        }
+        //QuatSlerp( , xform.getRotation(), dt, result );
 
-        mGhostObject->setWorldTransform( xform );
+        if( m1stPersonMode )
+        {
+            if( mFlying )
+            {
+                xform.setRotation( mCameraRotation );
+            }
+            else
+            {
+                xform.setRotation( zRotation );
+            }
+
+            mGhostObject->setWorldTransform( xform );
+        }
 
         mDeltaTurnAngleX = 0.0;
         mDeltaTurnAngleZ = 0.0;
@@ -352,7 +360,7 @@ void CharacterController::Advance( btScalar dt )
 void CharacterController::UpdateCamera()
 {
     btTransform characterWorldTrans = mGhostObject->getWorldTransform();
-    characterWorldTrans.setRotation( mCameraRotation.getRotation() );
+    characterWorldTrans.setRotation( mCameraRotation );
 
     btVector3 up = characterWorldTrans.getBasis()[ 2 ];
     up.normalize();
@@ -423,15 +431,18 @@ bool CharacterController::IsActive()
 void CharacterController::QuatSlerp(
     btQuaternion& from, btQuaternion& to, double t, btQuaternion& result )
 {
+    //btQuaternion to1;
     double to1[ 4 ];
     double omega, cosom, sinom, scale0, scale1;
-    //Calculate cosine
+    //Calculate cosine from the dot product
+    //cosom = from.dot( to );
     cosom = from.x() * to.x() + from.y() * to.y() + from.z() * to.z() + from.w() * to.w();
 
     //Adjust signs if necessary
     if( cosom < 0.0 )
     {
         cosom = -cosom;
+        //to1 = -to;
         to1[ 0 ] = -to.x();
         to1[ 1 ] = -to.y();
         to1[ 2 ] = -to.z();
@@ -439,6 +450,7 @@ void CharacterController::QuatSlerp(
     }
     else 
     {
+        //to1 = to;
         to1[ 0 ] = to.x();
         to1[ 1 ] = to.y();
         to1[ 2 ] = to.z();
@@ -464,6 +476,9 @@ void CharacterController::QuatSlerp(
     }
 
     //Calculate final values
+    //from *= scale0;
+    //to1 *= scale1;
+    //result = from + to1;
     result.setX( scale0 * from.x() + scale1 * to1[ 0 ] );
     result.setY( scale0 * from.y() + scale1 * to1[ 1 ] );
     result.setZ( scale0 * from.z() + scale1 * to1[ 2 ] );
@@ -473,12 +488,17 @@ void CharacterController::QuatSlerp(
 void CharacterController::SetBufferSizeAndWeights(
     size_t bufferSize, double weightModifier )
 {
+    //Set
     mBufferSize = bufferSize;
     mWeightModifier = weightModifier;
-    mHistoryBuffer.assign( mBufferSize, std::make_pair( 0.0, 0.0 ) );
-    mWeights.assign( mBufferSize, 0.0 );
-    mTotalWeight = 0.0;
 
+    //Reset
+    mTotalWeight = 0.0;
+    mHistoryBuffer.clear();
+    mHistoryBuffer.assign( mBufferSize, std::make_pair( 0.0, 0.0 ) );
+    mWeights.clear();
+    mWeights.assign( mBufferSize, 0.0 );
+    
     //First weight is worth 100%
     mWeights.at( 0 ) = 1.0;
     mTotalWeight += mWeights.at( 0 );

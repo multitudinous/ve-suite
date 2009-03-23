@@ -83,17 +83,26 @@ public:
     ///Destructor
     ~CharacterController();
 
-    ///Initialize the physics and geometric models for the character controller
-    void Initialize( btDynamicsWorld* dynamicsWorld );
+    ///Advance the character in time
+    void Advance( btScalar dt );
 
     ///
     void Destroy( btDynamicsWorld* dynamicsWorld );
 
-    ///Activate the character controller
-    void TurnOn();
+    ///Make the character jump
+    void Jump();
 
-    ///Deactivate the character controller
-    void TurnOff();
+    ///Initialize the physics and geometric models for the character controller
+    void Initialize( btDynamicsWorld* dynamicsWorld );
+
+    ///Returns if the character controller is active
+    bool IsActive();
+
+    ///Reset the character controller
+    void Reset( btDynamicsWorld* dynamicsWorld );
+
+    ///
+    void FirstPersonMode( bool onOff );
 
     ///Move the character forward
     void StepForward( bool onOff );
@@ -107,26 +116,20 @@ public:
     ///Bank the character to the right
     void StrafeRight( bool onOff );
 
-    ///Turn the character
-    void Turn( double dx, double dy );
-    
-    ///Make the character jump
-    void Jump();
+    ///Rotate the character and/or the camera
+    void Rotate( double dx, double dy );
 
-    ///Reset the character controller
-    void Reset( btDynamicsWorld* dynamicsWorld );
+    ///Activate the character controller
+    void TurnOn();
+
+    ///Deactivate the character controller
+    void TurnOff();
 
     ///Position the camera relative to the character
     void UpdateCamera();
 
-    ///Advance the character in time
-    void Advance( btScalar dt );
-
     ///Zoom the camera in and out from the character position
     void Zoom( bool inOut );
-
-    ///Returns if the character controller is active
-    bool IsActive();
 
 protected:
 
@@ -139,6 +142,9 @@ private:
 
     ///
     bool mActive;
+
+    ///
+    bool m1stPersonMode;
 
     ///
     bool mStepForward;
@@ -219,7 +225,7 @@ private:
     std::deque< std::pair< double, double > > mHistoryBuffer;
 
     ///
-    btTransform mCameraRotation;
+    btQuaternion mCameraRotation;
 
     ///
     btKinematicCharacterController* mCharacter;
