@@ -861,16 +861,14 @@ void KeyboardMouse::SkyCamTo()
 
     //get the selected plugins cad
     //highlight it.
-    osg::ref_ptr< vxs::DCS >selectedDCS =
-        vx::ModelHandler::instance()->GetActiveModel()->GetDCS();
+    std::string rootID =  vx::ModelHandler::instance()->GetActiveModel()->
+        GetModelCADHandler()->GetRootCADNodeID();
+    osg::ref_ptr< vxs::DCS >selectedDCS = vx::ModelHandler::instance()->
+        GetActiveModel()->GetModelCADHandler()->GetAssembly( rootID );
     selectedDCS->SetTechnique("Select");
     vx::DeviceHandler::instance()->SetSelectedDCS(
         selectedDCS.get() );
     osg::BoundingSphere sbs = selectedDCS->getBound();
-    
-    //Grab the current matrix
-    //osg::ref_ptr< vxs::DCS > activeSwitchDCS =
-    //    vxs::SceneManager::instance()->GetActiveSwitchNode();
 
     //Calculate the offset distance
     double distance = 2 * sbs.radius();
@@ -893,78 +891,52 @@ void KeyboardMouse::SkyCamTo()
             selectedDCS.get(), true );
     gmtl::Matrix44d localToWorldMatrix = cst->GetTransformationMatrix( false );
 
-    //Remove the local matrix from localToWorldMatrix
-    //gmtl::Matrix44d activeMatrix = selectedDCS->GetMat();
-    //localToWorldMatrix *= gmtl::invert( activeMatrix );
-
     gmtl::Point3d tempTransPoint = 
         gmtl::makeTrans< gmtl::Point3d >( localToWorldMatrix );
+    
     ///Remove the rotation from the transform matrix
     gmtl::Matrix44d tempTrans;
     tempTrans = gmtl::makeTrans< gmtl::Matrix44d >( tempTransPoint );
-    //gmtl::Matrix44d invertTransMat = tempTrans;
-    //gmtl::invert( invertTransMat );
-    //std::cout << vxs::SceneManager::instance()->
-    //GetActiveSwitchNode()->GetMat() << std::endl;
-    //double tempRotRad = osg::DegreesToRadians( 90.0 );
     double tempRotRad2 = PIDivOneEighty * 0;
-    //std::cout << tempRotRad << " " << tempRotRad2 << std::endl;
-    //gmtl::Quatd convQuat( 1, 0, 0, tempRotRad2  );
-    //gmtl::normalize( convQuat );
     gmtl::AxisAngled axisAngle( tempRotRad2, 1, 0, 0 );
     gmtl::Quatd quatAxisAngle = gmtl::make< gmtl::Quatd >( axisAngle );
-    //std::cout << quatAxisAngle << std::endl;
     gmtl::Matrix44d tempRot;
     gmtl::setRot( tempRot, quatAxisAngle );
-    //gmtl::Matrix44d rotateMat = tempTrans * tempRot * invertTransMat;
     gmtl::Matrix44d combineMat = tempTrans;// * tempRot;
     ///Add our end rotation back into the mix
-    //std::cout << osgTransformedPosition << " first " << std::endl;
 
     osgTransformedPosition = combineMat * osgTransformedPosition;
     osgOrigPosition = combineMat * osgOrigPosition;
-    //osgOrigPosition[ 1 ] = osgOrigPosition[ 1 ] + distance;
-    //osgOrigPosition[ 2 ] = osgOrigPosition[ 2 ] + distance;
-    //osgOrigPosition[ 1 ] = osgOrigPosition[ 1 ] - sbs.radius();
-    //osgOrigPosition[ 2 ] = osgOrigPosition[ 2 ] + sbs.radius();
-    //osgTransformedPosition =   tempTrans * tempRot * osgTransformedPosition;
-    //std::cout << osgTransformedPosition << " " << osgOrigPosition << std::endl;
     ///Since the math implies we are doing a delta translation
     ///we need to go grab where we previously were
     double* temp = vxs::SceneManager::instance()->
         GetWorldDCS()->GetVETranslationArray();
     ///Add our distance and previous position back in and get our new end point
-    gmtl::Vec4d pos;
+    gmtl::Vec3d pos;
     pos[ 0 ] = - osgOrigPosition[ 0 ] + temp[ 0 ];
     pos[ 1 ] = - ( osgOrigPosition[ 1 ] - distance ) + temp[ 1 ];
     pos[ 2 ] = - ( osgOrigPosition[ 2 ] ) + temp[ 2 ];
 
-    //std::cout << pos << " " << osgTransformedPosition << std::endl;
-    gmtl::Vec3d pos2;
-    pos2[ 0 ] = pos[ 0 ];
-    pos2[ 1 ] = pos[ 1 ];
-    pos2[ 2 ] = pos[ 2 ];
-
-    ///Set the center point to the new location
-    mCenterPoint->set(
-        -osgOrigPosition[ 0 ], -osgOrigPosition[1], -osgOrigPosition[2] );
+    //gmtl::Vec3d pos2;
+    //pos2[ 0 ] = pos[ 0 ];
+    //pos2[ 1 ] = pos[ 1 ];
+    //pos2[ 2 ] = pos[ 2 ];
 
     ///Hand the node we are interested in off to the animation engine
     vx::NavigationAnimationEngine::instance()->SetDCS(
         vxs::SceneManager::instance()->GetWorldDCS() );
+    
     ///Hand our created end points off to the animation engine
     vx::NavigationAnimationEngine::instance()->SetAnimationEndPoints(
-        pos2, quatAxisAngle );
-    //This code needs to go in the animation engine
-    /*
+        pos, quatAxisAngle );
+
+
     //Multiplying by the new local matrix (mCenterPoint)
     osg::Matrixd tempMatrix;
     tempMatrix.set( localToWorldMatrix.getData() );
     osg::Vec3d center = selectedDCS->getBound().center() * tempMatrix;
-    //osg::Vec3d center = sbs.center() * tempMatrix;
     mCenterPoint->set( center.x(), center.y(), center.z( ) );
-    */
-    
+
     //ProcessNavigationEvents();
 }
 ////////////////////////////////////////////////////////////////////////////////
