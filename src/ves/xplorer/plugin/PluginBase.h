@@ -64,6 +64,7 @@ namespace xplorer
 class cfdCursor;
 class Device;
 class EnvironmentHandler;
+class ModelHandler;
 class Model;
 class CommandHandler;
 
@@ -181,6 +182,10 @@ public:
     ///\param environment The environment handler
     void SetEnvironmentHandler( ves::xplorer::EnvironmentHandler* environmentHandler );
 
+    ///Provide access to the model handler in the plugins
+    ///\param modelHandler The model handler
+    void SetModelHandler( ves::xplorer::ModelHandler* modelHandler );
+
     ///Provide the resource manager instance for plugins
     ///\param resourceManager The resource manager
     void SetResourceManager( ves::xplorer::scenegraph::ResourceManager* resourceManager );
@@ -212,6 +217,8 @@ protected:
     
     ves::xplorer::cfdCursor* mCursor;
     ves::xplorer::Device* mDevice;
+    ///The model handler pointer
+    ves::xplorer::ModelHandler* mModelHandler;
     ///The model for this plugin
     ves::xplorer::Model* mModel;
     ///The scene manager pointer

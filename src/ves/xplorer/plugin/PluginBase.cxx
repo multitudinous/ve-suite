@@ -36,6 +36,7 @@
 #include <ves/xplorer/plugin/PluginBase.h>
 
 #include <ves/xplorer/EnvironmentHandler.h>
+#include <ves/xplorer/ModelHandler.h>
 #include <ves/xplorer/Model.h>
 #include <ves/xplorer/Debug.h>
 
@@ -82,6 +83,7 @@ PluginBase::PluginBase():
         mOnSceneGraph( false ),
         mCursor( 0 ),
         mDevice( 0 ),
+        mModelHandler( 0 ),
         mModel( 0 ),
         mPhysicsSimulator( 0 ),
         mEnvironmentHandler( 0 ),
@@ -219,6 +221,11 @@ void PluginBase::SetEnvironmentHandler(
     ves::xplorer::EnvironmentHandler* environmentHandler )
 {
     mEnvironmentHandler = environmentHandler;
+}
+////////////////////////////////////////////////////////////////////////////////
+void PluginBase::SetModelHandler( ves::xplorer::ModelHandler* modelHandler )
+{
+    mModelHandler = modelHandler;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PluginBase::SetResourceManager(

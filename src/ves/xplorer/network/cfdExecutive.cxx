@@ -619,6 +619,7 @@ void cfdExecutive::ParseSystem( ves::open::xml::model::SystemPtr system,
             temp->SetSoundManager( osgAL::SoundManager::instance() );
 #endif
             temp->SetEnvironmentHandler( EnvironmentHandler::instance() );
+            temp->SetModelHandler( ves::xplorer::ModelHandler::instance() );
             temp->SetSceneManager( ves::xplorer::scenegraph::SceneManager::instance() );
             temp->SetResourceManager( ves::xplorer::scenegraph::ResourceManager::instance() );
             temp->SetCommandHandler( ves::xplorer::CommandHandler::instance() );
