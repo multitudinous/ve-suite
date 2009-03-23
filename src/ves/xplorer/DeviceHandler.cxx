@@ -268,6 +268,11 @@ void DeviceHandler::SetDeviceMode( const std::string& deviceMode )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
+void DeviceHandler::SetCenterPoint( gmtl::Point3d* centerPoint )
+{
+    mCenterPoint = *centerPoint;
+}
+////////////////////////////////////////////////////////////////////////////////
 void DeviceHandler::SetCenterPointJumpMode( const std::string& jumpMode )
 {
     if( jumpMode == "Small" )

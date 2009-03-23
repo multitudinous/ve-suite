@@ -928,14 +928,14 @@ void KeyboardMouse::SkyCamTo()
     
     ///Hand our created end points off to the animation engine
     vx::NavigationAnimationEngine::instance()->SetAnimationEndPoints(
-        pos, quatAxisAngle );
+        pos, quatAxisAngle, true, selectedDCS.get() );
 
 
     //Multiplying by the new local matrix (mCenterPoint)
-    osg::Matrixd tempMatrix;
-    tempMatrix.set( localToWorldMatrix.getData() );
-    osg::Vec3d center = selectedDCS->getBound().center() * tempMatrix;
-    mCenterPoint->set( center.x(), center.y(), center.z( ) );
+    //osg::Matrixd tempMatrix;
+    //tempMatrix.set( localToWorldMatrix.getData() );
+    //osg::Vec3d center = selectedDCS->getBound().center() * tempMatrix;
+    //mCenterPoint->set( center.x(), center.y(), center.z( ) );
 
     //ProcessNavigationEvents();
 }

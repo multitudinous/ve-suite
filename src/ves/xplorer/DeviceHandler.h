@@ -124,6 +124,8 @@ public:
     ///\param activeDevice The active device
     void SetActiveDevice( const std::string& activeDevice );
 
+    void SetCenterPoint( gmtl::Point3d* centerPoint );
+
     ///Set the center point mode
     ///\param jumpMode Do not know what this does
     void SetCenterPointJumpMode( const std::string& jumpMode );

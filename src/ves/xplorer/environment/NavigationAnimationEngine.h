@@ -103,7 +103,9 @@ public:
     void PreFrameUpdate();
     
     ///Set the quaternions and position for the animation
-    void SetAnimationEndPoints( gmtl::Vec3d navToPoint, gmtl::Quatd rotationPoint );
+    void SetAnimationEndPoints( gmtl::Vec3d navToPoint, gmtl::Quatd rotationPoint,
+        bool setCenterPoint = false,
+        ves::xplorer::scenegraph::DCS* centerPointDCS = NULL );
     
     ///Set the quaternions and position for the animation
     void SetAnimationPoints( std::vector< std::pair< gmtl::Vec3d, 
@@ -196,6 +198,10 @@ private:
     gmtl::Quatd mEndQuat;
 
     bool mBeginAnim;
+
+    bool mSetCenterPoint;
+
+    ves::xplorer::scenegraph::DCS* mCenterPointDCS;
 
 };
 } //end xplorer

@@ -35,7 +35,9 @@
 #include <ves/xplorer/CommandHandler.h>    //This needs to be first
 #include <ves/xplorer/Debug.h>
 #include <ves/xplorer/ModelHandler.h>
+#include <ves/xplorer/DeviceHandler.h>
 #include <ves/xplorer/scenegraph/SceneManager.h>
+#include <ves/xplorer/scenegraph/CoordinateSystemTransform.h>
 
 #include <ves/xplorer/util/fileIO.h>
 
@@ -234,6 +236,25 @@ void NavigationAnimationEngine::PreFrameUpdate()
         
         //rotate and translate
         _worldDCS->SetQuat( tempOSGQuat );
+        if( mSetCenterPoint == true && !mBeginAnim )
+        {
+            //Move the center point to the center of the selected object
+            osg::ref_ptr< ves::xplorer::scenegraph::CoordinateSystemTransform > cst =
+                new ves::xplorer::scenegraph::CoordinateSystemTransform(
+                ves::xplorer::scenegraph::SceneManager::instance()->GetActiveSwitchNode(),
+                    mCenterPointDCS, true );
+            gmtl::Matrix44d localToWorldMatrix =
+                cst->GetTransformationMatrix( false );
+
+            //Multiplying by the new local matrix mCenterPoint
+            osg::Matrixd tempMatrix;
+            tempMatrix.set( localToWorldMatrix.getData() );
+            osg::Vec3d center =
+                mCenterPointDCS->getBound().center() * tempMatrix;
+            gmtl::Point3d tempCenter( center.x(), center.y(), center.z() );
+            ves::xplorer::DeviceHandler::instance()->
+                SetCenterPoint( &tempCenter );
+        }
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -276,10 +297,13 @@ double NavigationAnimationEngine::GetQuatCamIncrementor()
 }
 ////////////////////////////////////////////////////////////////////////////////
 void NavigationAnimationEngine::SetAnimationEndPoints(
-    gmtl::Vec3d navToPoint, gmtl::Quatd rotationPoint )
+    gmtl::Vec3d navToPoint, gmtl::Quatd rotationPoint,
+    bool setCenterPoint, ves::xplorer::scenegraph::DCS* centerPointDCS)
 {
     mBeginAnim = true;
     mEndVec = navToPoint;
     mEndQuat = rotationPoint;
     t = 0.0f;
+    mSetCenterPoint = setCenterPoint;
+    mCenterPointDCS = centerPointDCS;
 }
