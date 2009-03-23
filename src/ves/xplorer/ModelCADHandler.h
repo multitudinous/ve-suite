@@ -187,7 +187,7 @@ public:
     bool AssemblyExists( const std::string& assemblyID );
 
     ///The current graph
-    std::string GetRootCADNodeID();
+     const std::string& GetRootCADNodeID();
     
     ///Set the clip plane equation
     ///\param a X coefficient

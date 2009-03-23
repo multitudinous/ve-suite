@@ -154,6 +154,11 @@ void ModelCADHandler::SetRootCADNodeID( std::string rootNodeId )
     m_rootCADNodeID = rootNodeId;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
+const std::string& ModelCADHandler::GetRootCADNodeID( )
+{
+    return m_rootCADNodeID;
+}
+/////////////////////////////////////////////////////////////////////////////////////////////
 void ModelCADHandler::CreateClone( std::string cloneID,
                                    std::string originalID,
                                    std::string originalType )
