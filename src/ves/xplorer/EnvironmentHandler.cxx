@@ -322,7 +322,10 @@ void EnvironmentHandler::InitScene()
 void EnvironmentHandler::PreFrameUpdate()
 {
     //Process all events for active device
-    ves::xplorer::DeviceHandler::instance()->ProcessDeviceEvents();
+    if( !ves::xplorer::NavigationAnimationEngine::instance()->IsActive() )
+    {
+        ves::xplorer::DeviceHandler::instance()->ProcessDeviceEvents();
+    }
 
     ves::xplorer::cfdQuatCamHandler::instance()->PreFrameUpdate();
     ves::xplorer::NavigationAnimationEngine::instance()->PreFrameUpdate();

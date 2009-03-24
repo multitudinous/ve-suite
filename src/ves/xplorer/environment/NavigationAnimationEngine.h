@@ -110,7 +110,8 @@ public:
     ///Set the quaternions and position for the animation
     void SetAnimationPoints( std::vector< std::pair< gmtl::Vec3d, 
         gmtl::Quatd > > animationPoints );
-    
+
+    bool IsActive();
 
 protected:
     ///

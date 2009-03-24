@@ -307,3 +307,8 @@ void NavigationAnimationEngine::SetAnimationEndPoints(
     mSetCenterPoint = setCenterPoint;
     mCenterPointDCS = centerPointDCS;
 }
+///////////////////////////////////////////////////////////////////////////////
+bool NavigationAnimationEngine::IsActive()
+{
+    return mBeginAnim;
+}
