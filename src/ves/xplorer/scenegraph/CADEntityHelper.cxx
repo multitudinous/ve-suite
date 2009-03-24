@@ -35,6 +35,9 @@
 #include <ves/xplorer/scenegraph/Group.h>
 #include <ves/xplorer/scenegraph/Switch.h>
 
+#include <ves/xplorer/scenegraph/util/OptVisitor.h>
+#include <ves/xplorer/scenegraph/util/CountsVisitor.h>
+
 #include <ves/xplorer/Debug.h>
 
 #include <ves/xplorer/util/fileIO.h>
@@ -338,6 +341,38 @@ void CADEntityHelper::LoadFile( const std::string& filename,
         
     }
 
+    //Run the draw array optimization
+    //Notes from Paul Martz about why to use DrawElementsUInt in geometry
+    //These new files use the DrawElementsUInt PrimitiveSet instead of the
+    //DrawArrays PrimitiveSet used by the original files. This is a more efficient
+    //mechanism, as it tells OSG/OpenGL up front how much vertex array data to
+    //download. Also, a single DrawElementsUInt can replace possibly hundreds of
+    //DrawArrays because of the use of indices.
+    
+    //There isn't more vertices in the new files, but they are larger because
+    //DrawElementsUInt requires index data. However, as noted above, the benefits
+    //of using the index data outweigh the cost of additional storage.
+    {
+        CountsVisitor cv;
+        tempCADNode->accept( cv );
+        cv.dump();
+        const float da2Verts( (float)( cv.getDrawArrays() ) / (float)( cv.getVertices() ) );
+        const float ratioThreshold=.05f;
+        if( da2Verts < ratioThreshold )
+        {
+            std::cout << "DrawArrays to vertices ratio too small. No optimization." << std::endl;
+        }
+        else
+        {
+            std::cout << "Converting DrawArrays to DrawElementsUInt." << std::endl;
+            OptVisitor ov;
+            ov.changeDAtoDEUI_ = true;
+            ov.changeDLtoVBO_ = false;
+            ov.changeDynamicToStatic_ = false;
+            tempCADNode->accept( ov );
+            ov.dump( osg::notify( osg::ALWAYS ) );
+        }
+    }
     //Run the optimizer to improve performance
     {
         osgUtil::Optimizer graphOpti;
