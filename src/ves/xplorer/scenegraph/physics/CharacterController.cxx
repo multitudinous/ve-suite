@@ -81,6 +81,7 @@ CharacterController::CharacterController()
     mMinCameraDistance( 0.1 ),
     mMaxCameraDistance( 200.0 ),
     mDeltaZoom( 2.0 ),
+    //This is the speed of the character in ft/s
     mSpeed( 10.0 ),
     //Average walk speed is 5 km/h -> 0.911344415 ft/s
     mMinSpeed( 1.0 ),

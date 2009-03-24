@@ -89,7 +89,7 @@ public:
 
     ///Set the UUID of the root CADNode
     ///\param rootNodeId The uuid of the root CADNode in Conductor
-    void SetRootCADNodeID( std::string rootNodeId );
+    void SetRootCADNodeID( const std::string& rootNodeId );
 
     ///\param CAD goes transparent when dataset vis is active
     void MakeCADRootTransparent();
@@ -101,40 +101,40 @@ public:
     ///\param nodeID The ID of the node to add Attribute to.
     ///\param nodeType The node type.
     ///\param The CADAttribute to add to the node.
-    void AddAttributeToNode( std::string nodeID,
+    void AddAttributeToNode( const std::string& nodeID,
                              ves::open::xml::cad::CADAttributePtr newAttribute );
     ///Add a new attribute to a node
     ///\param nodeID The ID of the node to add Attribute to.
     ///\param nodeType The node type.
     ///\param neAttribute The name of the CADAttribute to remove from the node.
-    void RemoveAttributeFromNode( std::string nodeID,
-                                  std::string nodeType,
-                                  std::string newAttribute );
+    void RemoveAttributeFromNode( const std::string& nodeID,
+                                  const std::string& nodeType,
+                                  const std::string& newAttribute );
     ///Add a new attribute to a node
     ///\param nodeID The ID of the node to add Attribute to.
     ///\param nodeType The node type.
     ///\param attributeName The name of the CADAttribute to activate on the CADNode.
-    void SetActiveAttributeOnNode( std::string nodeID,
-                                   std::string nodeType,
-                                   std::string attributeName );
+    void SetActiveAttributeOnNode( const std::string& nodeID,
+                                   const std::string& nodeType,
+                                   const std::string& attributeName );
     ///Create a new assembly
-    void CreateAssembly( std::string assemblyID );
+    void CreateAssembly( const std::string& assemblyID );
 
     ///Create a new clone
-    void CreateClone( std::string cloneID,
-                      std::string originalID,
-                      std::string orignalType );
+    void CreateClone( const std::string& cloneID,
+                      const std::string& originalID,
+                      const std::string& orignalType );
 
     ///Create a new part
-    void CreatePart( std::string fileName,
-                     std::string partID,
-                     std::string parentID );
+    void CreatePart( const std::string& fileName,
+                     const std::string& partID,
+                     const std::string& parentID );
 
     ///Clear out the associated information for a node
     ///\param nodeID The node id
     ///\param nodeTyp The type of node
-    void RemoveNode( std::string nodeID,
-                     std::string nodeType );
+    void RemoveNode( const std::string& nodeID,
+                     const std::string& nodeType );
 
     ///Get a specified CADAttribute for a specified CADNode
     ///\param nodeID The CADNode
@@ -142,9 +142,10 @@ public:
     ///\param component The name of the CADMaterial component to update.
     ///\param face The face to apply the update to.
     ///\param values The new values.
-    void UpdateMaterialComponent( std::string nodeID,
-                                  std::string attributeName, std::string component,
-                                  std::string face,
+    void UpdateMaterialComponent( const std::string& nodeID,
+                                  const std::string& attributeName, 
+                                  const std::string& component,
+                                  const std::string& face,
                                   std::vector<double> values );
 
     ///Get a specified CADAttribute for a specified CADNode
@@ -152,17 +153,17 @@ public:
     ///\param attributeName The name of the CADAttribute to find.
     ///\param type The type of mode to update.
     ///\param mode The new mode.
-    void UpdateMaterialMode( std::string nodeID,
-                             std::string attributeName,
-                             std::string type,
-                             std::string mode );
+    void UpdateMaterialMode( const std::string& nodeID,
+                             const std::string& attributeName,
+                             const std::string& type,
+                             const std::string& mode );
 
     ///Update the opacity for a specified CADNode
     ///\param nodeID The CADNode
     ///\param opacity The value of the opacity.
     ///\param storeState Tell the opacity visitor wether or not to 
     ///store the original color and material state
-    void UpdateOpacity( std::string nodeID, float opacity, bool storeState );
+    void UpdateOpacity( const std::string& nodeID, float opacity, bool storeState );
 
     ///Get a specific part.
     ///\param partID The ID of the part to search form
@@ -187,7 +188,7 @@ public:
     bool AssemblyExists( const std::string& assemblyID );
 
     ///The current graph
-     const std::string& GetRootCADNodeID();
+    const std::string& GetRootCADNodeID();
     
     ///Set the clip plane equation
     ///\param a X coefficient

@@ -149,7 +149,7 @@ void ModelCADHandler::ToggleClipPlane( bool onOff )
     }
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
-void ModelCADHandler::SetRootCADNodeID( std::string rootNodeId )
+void ModelCADHandler::SetRootCADNodeID( const std::string& rootNodeId )
 {
     m_rootCADNodeID = rootNodeId;
 }
@@ -159,9 +159,9 @@ const std::string& ModelCADHandler::GetRootCADNodeID( )
     return m_rootCADNodeID;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
-void ModelCADHandler::CreateClone( std::string cloneID,
-                                   std::string originalID,
-                                   std::string originalType )
+void ModelCADHandler::CreateClone( const std::string& cloneID,
+                                   const std::string& originalID,
+                                   const std::string& originalType )
 {
     if( originalType == std::string( "Assembly" ) )
     {
@@ -182,13 +182,13 @@ void ModelCADHandler::CreateClone( std::string cloneID,
     }
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
-void ModelCADHandler::CreateAssembly( std::string assemblyID )
+void ModelCADHandler::CreateAssembly( const std::string& assemblyID )
 {
     m_assemblyList[ assemblyID ] = new ves::xplorer::scenegraph::DCS();
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
-void ModelCADHandler::CreatePart( std::string fileName, std::string partID,
-                                  std::string parentID )
+void ModelCADHandler::CreatePart( const std::string& fileName, const std::string& partID,
+                                  const std::string& parentID )
 {
     ves::xplorer::CommandHandler::instance()
         ->SendConductorMessage( "Loading file: " + fileName +".\n" );
@@ -227,8 +227,8 @@ void ModelCADHandler::CreatePart( std::string fileName, std::string partID,
         ->SendConductorMessage( "Loaded file: " + fileName +".\n" );
 }
 /////////////////////////////////////////////////////
-void ModelCADHandler::RemoveNode( std::string nodeID,
-                                  std::string nodeType )
+void ModelCADHandler::RemoveNode( const std::string& nodeID,
+                                  const std::string& nodeType )
 {
     //first remove all the attributes for this node
     std::map < std::string,
@@ -251,9 +251,9 @@ void ModelCADHandler::RemoveNode( std::string nodeID,
     }
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
-void ModelCADHandler::SetActiveAttributeOnNode( std::string nodeID,
-                                                std::string nodeType,
-                                                std::string attributeName )
+void ModelCADHandler::SetActiveAttributeOnNode( const std::string& nodeID,
+                                                const std::string& nodeType,
+                                                const std::string& attributeName )
 {
     std::map < std::string,
     std::vector < std::pair < std::string,
@@ -317,7 +317,7 @@ void ModelCADHandler::SetActiveAttributeOnNode( std::string nodeID,
     }
 }
 ////////////////////////////////////////////////////////////////////////
-void ModelCADHandler::UpdateOpacity( std::string nodeID, float opacity, bool storeState )
+void ModelCADHandler::UpdateOpacity( const std::string& nodeID, float opacity, bool storeState )
 {
     bool transparent = true;
     if( opacity == 1.f )
@@ -381,9 +381,9 @@ void ModelCADHandler::MakeCADRootOpaque()
     }
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
-void ModelCADHandler::RemoveAttributeFromNode( std::string nodeID,
-                                               std::string nodeType,
-                                               std::string attributeName )
+void ModelCADHandler::RemoveAttributeFromNode( const std::string& nodeID,
+                                               const std::string& nodeType,
+                                               const std::string& attributeName )
 {
 #ifdef _OSG
     std::map < std::string,
@@ -433,7 +433,7 @@ void ModelCADHandler::RemoveAttributeFromNode( std::string nodeID,
 #endif
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
-void ModelCADHandler::AddAttributeToNode( std::string nodeID,
+void ModelCADHandler::AddAttributeToNode( const std::string& nodeID,
                                           ves::open::xml::cad::CADAttributePtr
                                           newAttribute )
 {
@@ -482,10 +482,10 @@ void ModelCADHandler::AddAttributeToNode( std::string nodeID,
 #endif
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
-void ModelCADHandler::UpdateMaterialMode( std::string nodeID,
-                                          std::string attributeName,
-                                          std::string type,
-                                          std::string mode )
+void ModelCADHandler::UpdateMaterialMode( const std::string& nodeID,
+                                          const std::string& attributeName,
+                                          const std::string& type,
+                                          const std::string& mode )
 {
 #ifdef _OSG
     std::map< std::string, std::vector< std::pair< std::string, osg::ref_ptr< osg::StateSet > > > >::iterator attributeList;
@@ -520,10 +520,10 @@ void ModelCADHandler::UpdateMaterialMode( std::string nodeID,
 #endif
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
-void ModelCADHandler::UpdateMaterialComponent( std::string nodeID,
-                                               std::string attributeName,
-                                               std::string component,
-                                               std::string face,
+void ModelCADHandler::UpdateMaterialComponent( const std::string& nodeID,
+                                               const std::string& attributeName,
+                                               const std::string& component,
+                                               const std::string& face,
                                                std::vector<double> values )
 {
     std::map < std::string,
