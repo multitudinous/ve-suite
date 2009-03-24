@@ -81,17 +81,17 @@ namespace scenegraph
 
 class CADEntity;
 
-/*!\file PhysicsSimulator.h
- *
+
+/*!\class ves::xplorer::scenegraph::PhysicsSimulator PhysicsSimulator.h ves/xplorer/scenegraph/physics/PhysicsSimulator.h
+ * Runs the bullet simulator
+ * \namespace ves::xplorer::scenegraph
+ * The sg
+ * \namespace ves::xplorer
+ * The sg
+ * \file PhysicsSimulator.h
+ * Runs the bullet simulator 
  */
 
-/*!\class ves::xplorer::scenegraph::PhysicsSimulator
- *
- */
-
-/*!\namespace ves::xplorer::scenegraph
- *
- */
 class VE_SCENEGRAPH_EXPORTS PhysicsSimulator
 {
 public:
@@ -112,12 +112,14 @@ public:
     ///\param destination
     void ShootBox( const btVector3& destination );
 
+    ///Set the debug mode to use with the bullet debugger
     void SetDebugMode( int mode );
 
     ///Set whether physics is idle or not
     ///\param state State on or idle
     void SetIdle( bool state );
 
+    ///Do we store collision information
     void SetCollisionInformation( bool collisionInformation );
 
     ///Set the shoot speed
@@ -127,7 +129,7 @@ public:
     ///Get whether physics is idle or not
     bool GetIdle();
 
-    ///
+    ///Get the bullet debug mode
     int GetDebugMode();
 
     ///Adds a rigid body to the physics simulator
@@ -145,7 +147,7 @@ public:
     ///Create flat ground plane for the world
     void CreateGroundPlane();
 
-    ///
+    ///Get the debug bullet class to add to other tools
     osgBullet::DebugBullet* GetDebugBullet();
 
 private:

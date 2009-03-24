@@ -561,6 +561,7 @@ int PhysicsSimulator::GetDebugMode()
     return mDebugMode;
 }
 ////////////////////////////////////////////////////////////////////////////////
+///Adds a rigid body to the physics simulator
 btRigidBody* PhysicsSimulator::CreateRigidBody(
     float mass, const btTransform& startTransform, btCollisionShape* shape )
 {

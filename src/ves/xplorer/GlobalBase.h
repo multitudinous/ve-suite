@@ -47,7 +47,7 @@ namespace xplorer
 GlobalBase API
 */
 /*!\class ves::xplorer::GlobalBase
-*
+* Global super class
 */
 class VE_XPLORER_EXPORTS GlobalBase
 {
