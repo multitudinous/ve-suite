@@ -453,7 +453,7 @@ void cfdQuatCamHandler::ProcessCommand()
         commandType = "wait";
     }
 
-    if( !commandType.compare( "VIEWLOCPANE_Data" ) )
+    if( !commandType.compare( "ViewLoc_Data" ) )
     {
         ves::open::xml::DataValuePairPtr commandData =
             veCommand->GetDataValuePair( 0 );
