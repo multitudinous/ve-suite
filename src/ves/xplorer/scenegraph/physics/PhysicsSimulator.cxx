@@ -272,28 +272,30 @@ void PhysicsSimulator::UpdatePhysics( float dt )
 
     vxs::CharacterController* characterController =
         vxs::SceneManager::instance()->GetCharacterController();
+    //If the character controller is being used - manipulate the character
+    //by the keyboard, head, or wand first. This should affect the 
+    //character bullet matrix directly
     if( characterController->IsActive() )
     {
         characterController->Advance( dt );
     }
 
+    //Now update the simulation by all bullet objects new positions
     mDynamicsWorld->stepSimulation( dt );
 
+    //Now that the character has been moved AND the simulation has calculated
+    //the new position update the camera matrix with the new view data
+    //based on what the character has done
     if( characterController->IsActive() )
     {
         characterController->UpdateCamera();
     }
+    //Now that we are finished updating the view on the character and controller
+    //the update callback on the character will be called to update the 
+    //OSG rep for the character
 
     //Sample debug code
-    /*for( int i = 0; i < mDynamicsWorld->getNumCollisionObjects(); ++i )
-    {
-        btCollisionObject* temp = mDynamicsWorld->getCollisionObjectArray()[ i ];
-        btVector3 bbMin = temp->getBroadphaseHandle()->m_aabbMin;
-        btVector3 bbMax = temp->getBroadphaseHandle()->m_aabbMax;
-        std::cout << "Min = " << bbMin.x() << " " << bbMin.y() << " " << bbMin.z() << std::endl;
-        std::cout << "Max = " << bbMax.x() << " " << bbMax.y() << " " << bbMax.z() << std::endl;
-    }
-    
+    /*
     int numManifolds1 = mDispatcher->getNumManifolds();
     for( int i = 0; i < numManifolds1; ++i )
     {

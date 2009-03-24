@@ -65,7 +65,7 @@ VjObsWrapper::VjObsWrapper( void )
     mTimer( 0 )
 {
     mTimeZero = new ACE_Time_Value();// ACE_Time_Value::zero );
-    mTimeZero->msec( 50 );
+    mTimeZero->msec( 10 );
     mTimeOutValue = new ACE_Time_Value();
     mTimeOutValue->msec( 1 );
     

@@ -84,6 +84,10 @@ public:
     ~CharacterController();
 
     ///Advance the character in time
+    ///\post Call the bullet simulation step function
+    ///\note This function MUST be called BEFORE the bullet simulation is stepped
+    ///in time so that the new position change requested by the user
+    ///is considered in the respective simulation step.
     void Advance( btScalar dt );
 
     ///
@@ -126,6 +130,10 @@ public:
     void TurnOff();
 
     ///Position the camera relative to the character
+    ///\pre Call the bullet simulation step function
+    ///\note This MUST be called AFTER the bullet simulation has stepped in time
+    ///so that the new position information from the simulation can be
+    ///set on the camera view matrix.
     void UpdateCamera();
 
     ///Zoom the camera in and out from the character position

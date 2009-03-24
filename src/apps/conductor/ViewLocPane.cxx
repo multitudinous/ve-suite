@@ -597,7 +597,7 @@ void ViewLocPane::SendCommandsToXplorer()
     {
         _dataValuePairList.clear();
 
-        _commandName = "VIEWLOCPANE_Data";
+        _commandName = "ViewLoc_Data";
         // Create the command and data value pairs
         DataValuePairPtr dataValuePair( new DataValuePair() );
         dataValuePair->SetData( dataValueName, commandInputs );

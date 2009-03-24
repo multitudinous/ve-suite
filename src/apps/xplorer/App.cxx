@@ -422,10 +422,10 @@ void App::latePreFrame()
             GetDataValuePair( "Filename" )->GetData( m_filename );
     }
     
-    float deltaTime = 0;
     {
         VPR_PROFILE_GUARD_HISTORY( "App::latePreFrame Framerate Calculations", 20 );
         float current_time = this->m_vjobsWrapper->GetSetAppTime( -1 );
+        float deltaTime = 0;
         //This is order dependent
         //don't move above function call
         mFrameStamp->setFrameNumber( _frameNumber );
