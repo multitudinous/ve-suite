@@ -248,7 +248,7 @@ void PhysicsSimulator::InitializePhysicsSimulation()
         mDispatcher, mBroadphase, mSolver );
 #endif
     //mDynamicsWorld->getDispatchInfo().m_enableSPU = true;
-    mDynamicsWorld->setGravity( btVector3( 0, 0, -32.2 ) );
+    mDynamicsWorld->setGravity( btVector3( 0, 0, -32.174 ) );
 
     if( mDebugBulletFlag )
     {

@@ -131,6 +131,9 @@ void CharacterController::Initialize( btDynamicsWorld* dynamicsWorld )
             mGhostObject, capsuleShape, stepHeight );
 
     mCharacter->setUpAxis( 2 );
+    //No gravity by default
+    //This has no effect and has not been implemented in bullet yet
+    mCharacter->setFallSpeed( 0.0 );
 
     //Create graphics mesh representation
     osg::ref_ptr< osg::Geode > geode = new osg::Geode();

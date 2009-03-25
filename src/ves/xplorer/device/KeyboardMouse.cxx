@@ -34,8 +34,6 @@
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/device/KeyboardMouse.h>
 
-#include <ves/open/xml/Command.h>
-
 #include <ves/xplorer/Debug.h>
 #include <ves/xplorer/Model.h>
 #include <ves/xplorer/ModelHandler.h>
@@ -43,17 +41,15 @@
 #include <ves/xplorer/DeviceHandler.h>
 #include <ves/xplorer/environment/NavigationAnimationEngine.h>
 
-#include <ves/xplorer/scenegraph/CoordinateSystemTransform.h>
-#include <ves/xplorer/scenegraph/SetStateOnNURBSNodeVisitor.h>
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/FindParentsVisitor.h>
-#include <ves/xplorer/scenegraph/Group.h>
-#include <ves/xplorer/scenegraph/CADEntity.h>
+#include <ves/xplorer/scenegraph/CoordinateSystemTransform.h>
+#include <ves/xplorer/scenegraph/SetStateOnNURBSNodeVisitor.h>
 
-#include <ves/xplorer/scenegraph/nurbs/PointLineSegmentIntersector.h>
 #include <ves/xplorer/scenegraph/nurbs/NURBS.h>
 #include <ves/xplorer/scenegraph/nurbs/NURBSControlMesh.h>
 #include <ves/xplorer/scenegraph/nurbs/ControlPoint.h>
+#include <ves/xplorer/scenegraph/nurbs/PointLineSegmentIntersector.h>
 
 #include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
 #include <ves/xplorer/scenegraph/physics/PhysicsRigidBody.h>
@@ -61,20 +57,10 @@
 
 // --- Bullet Includes --- //
 #include <LinearMath/btVector3.h>
-#include <btBulletDynamicsCommon.h>
-#include <btBulletCollisionCommon.h>
+
+#include <BulletDynamics/Dynamics/btDynamicsWorld.h>
 
 #include <BulletDynamics/ConstraintSolver/btPoint2PointConstraint.h>
-
-// --- osgBullet Includes --- //
-#include <osgBullet/CollisionShape.h>
-#include <osgBullet/CollisionShapes.h>
-#include <osgBullet/MotionState.h>
-#include <osgBullet/AbsoluteModelTransform.h>
-#include <osgBullet/OSGToCollada.h>
-#include <osgBullet/DebugBullet.h>
-#include <osgBullet/ColladaUtils.h>
-#include <osgBullet/Utils.h>
 
 // --- vrJuggler Includes --- //
 #include <vrj/vrjParam.h>
@@ -82,24 +68,18 @@
 #include <gadget/Type/KeyboardMouse/KeyEvent.h>
 #include <gadget/Type/KeyboardMouse/MouseEvent.h>
 
-#include <gmtl/Xforms.h>
-#include <gmtl/Generate.h>
 #include <gmtl/Matrix.h>
-#include <gmtl/Vec.h>
-#include <gmtl/Quat.h>
-#include <gmtl/gmtl.h>
+#include <gmtl/AxisAngle.h>
+#include <gmtl/Generate.h>
 #include <gmtl/Misc/MatrixConvert.h>
 
 // --- OSG Includes --- //
-#include <osg/Array>
 #include <osg/Matrix>
 #include <osg/Group>
 #include <osg/Geode>
 #include <osg/Geometry>
 #include <osg/LineWidth>
 #include <osg/LineSegment>
-#include <osg/BoundingBox>
-#include <osg/Quat>
 
 //#include <osg/PolygonStipple>
 #include <osgUtil/LineSegmentIntersector>
@@ -150,6 +130,9 @@ KeyboardMouse::KeyboardMouse()
 
     mCurrPos( 0, 0 ),
     mPrevPos( 0, 0 ),
+
+    mDeltaRotation( 0.0, 0.0, 0.0, 1.0 ),
+    mDeltaTranslation( 0.0, 0.0, 0.0, 1.0 ),
 
     mBeamLineSegment( new osg::LineSegment ),
 
@@ -529,12 +512,10 @@ void KeyboardMouse::ProcessNavigationEvents()
     newTransform = negCenterPointMatrix * currentTransform;
 
     //Apply the delta transform at this new position
-    osg::Matrixd deltaTransform;
-    deltaTransform.setRotate( mDeltaRotation );
-    deltaTransform.setTrans( mDeltaTranslation );
-    gmtl::Matrix44d temp;
-    temp.set( deltaTransform.ptr() );
-    newTransform = temp * newTransform;
+    gmtl::Matrix44d deltaTransform;
+    gmtl::setRot( deltaTransform, mDeltaRotation );
+    gmtl::setTrans( deltaTransform, mDeltaTranslation );
+    newTransform = deltaTransform * newTransform;
 
     //Add back the center point position to the transform
     gmtl::Matrix44d posCenterPointMatrix =
@@ -557,7 +538,7 @@ void KeyboardMouse::ProcessNavigationEvents()
 
     //Reset the delta transform
     mDeltaRotation.set( 0.0, 0.0, 0.0, 1.0 );
-    mDeltaTranslation.set( 0.0, 0.0, 0.0 );
+    mDeltaTranslation.set( 0.0, 0.0, 0.0, 1.0 );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::SetWindowValues( unsigned int w, unsigned int h )
@@ -660,7 +641,7 @@ void KeyboardMouse::FrameAll()
             startPoint.z() + ( vecNear.z() * ratio ) );
     }
     
-    //Set the current switch node's matrix w/ the new "frame all" transform 
+    //Set the current switch node's matrix w/ the new "frame all" transform
     activeNavSwitchNode->setPosition( endPoint - bs.center() );
     activeNavSwitchNode->setAttitude( osg::Quat( 0.0, 0.0, 0.0, 1.0 ) );
 
@@ -712,7 +693,7 @@ void KeyboardMouse::SkyCam()
     mCenterPoint->set( bs.center().x(), bs.center().y(), bs.center().z() );
 
     //put it at 45 degrees
-    Rotate( osg::DegreesToRadians( 45.0 ), osg::Vec3d( 1.0, 0.0, 0.0 ) );
+    Rotate( gmtl::Math::deg2Rad( 45.0 ), gmtl::Vec3d( 1.0, 0.0, 0.0 ) );
     ProcessNavigationEvents();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -1192,10 +1173,10 @@ void KeyboardMouse::NavOnMouseMotion( std::pair< double, double > delta )
                     double angle = mMagnitude * 7.0;
 #if __VJ_version >= 2003000
                     Rotate(
-                        angle, osg::Vec3d( -delta.second, 0.0, delta.first ) );
+                        angle, gmtl::Vec3d( -delta.second, 0.0, delta.first ) );
 #else
                     Rotate(
-                        angle, osg::Vec3d(  delta.second, 0.0, delta.first ) );
+                        angle, gmtl::Vec3d(  delta.second, 0.0, delta.first ) );
 #endif
                 }
                 else
@@ -1348,7 +1329,7 @@ void KeyboardMouse::Twist()
 #endif
 
     //Twist about the y-axis
-    Rotate( angle, osg::Vec3d( 0.0, 1.0, 0.0 ) );
+    Rotate( angle, gmtl::Vec3d( 0.0, 1.0, 0.0 ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::Zoom( double dy )
@@ -1360,7 +1341,7 @@ void KeyboardMouse::Zoom( double dy )
     double d = ( viewlength * ( 1 / ( 1 + dy * 2 ) ) ) - viewlength;
 #endif
 
-    mDeltaTranslation.y() = d;
+    mDeltaTranslation.mData[ 1 ] = d;
     mCenterPoint->mData[ 1 ] += d;
 
     //Test if center point has breached our specified threshold
@@ -1377,7 +1358,7 @@ void KeyboardMouse::Zoom( double dy )
         //if we are manipulating a selected object
         else
         {
-            mDeltaTranslation.y() = 0.0;
+            mDeltaTranslation.mData[ 1 ] = 0.0;
             mCenterPoint->mData[ 1 ] -= d;
         }
     }
@@ -1393,8 +1374,8 @@ void KeyboardMouse::Zoom45( double dy )
     double d = ( viewlength * ( 1 / ( 1 + dy * 2 ) ) ) - viewlength;
 #endif
 
-    mDeltaTranslation.y() = d;
-    mDeltaTranslation.z() = d;
+    mDeltaTranslation.mData[ 1 ] = d;
+    mDeltaTranslation.mData[ 2 ] = d;
     mCenterPoint->mData[ 1 ] += d;
     mCenterPoint->mData[ 2 ] += d;
 
@@ -1412,7 +1393,7 @@ void KeyboardMouse::Zoom45( double dy )
         //if we are manipulating a selected object
         else
         {
-            mDeltaTranslation.y() = 0.0;
+            mDeltaTranslation.mData[ 1 ] = 0.0;
             mCenterPoint->mData[ 1 ] -= d;
         }
     }
@@ -1435,21 +1416,18 @@ void KeyboardMouse::Pan( double dx, double dz )
         dwx *= mAspectRatio;
     }
 
-    mDeltaTranslation.x() = dwx;
-    mDeltaTranslation.z() = dwz;
+    mDeltaTranslation.mData[ 0 ] = dwx;
+    mDeltaTranslation.mData[ 2 ] = dwz;
 
     mCenterPoint->mData[ 0 ] += dwx;
     mCenterPoint->mData[ 2 ] += dwz;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::Rotate( double angle, osg::Vec3 axis )
+void KeyboardMouse::Rotate( double angle, gmtl::Vec3d axis )
 {
-    axis.normalize();
-    mDeltaRotation.makeRotate( angle, axis );
-
-    //gmtl::AxisAngled axisAngle;
-    //axisAngle.set( angle, axis.x(), axis.y(), axis.z() );
-    //mDeltaTransform = gmtl::makeRot< gmtl::Matrix44d >( axisAngle );
+    gmtl::normalize( axis );
+    gmtl::AxisAngled axisAngle( angle, axis );
+    mDeltaRotation = gmtl::makeRot< gmtl::Quatd >( axisAngle );
 
     /*
     double temp = ::sqrtf( x * x + y * y + z * z );
@@ -1461,7 +1439,7 @@ void KeyboardMouse::Rotate( double angle, osg::Vec3 axis )
         z *= tempRatio;
     }
 
-    double rad = angle * PIDivOneEighty;
+    double rad = angle;
     double cosAng = cos( rad );
     double sinAng = sin( rad );
 

@@ -40,7 +40,8 @@
 #include <ves/xplorer/device/Device.h>
 
 // --- vrJuggler Includes --- //
-#include <gmtl/Matrix.h>
+#include <gmtl/Vec.h>
+#include <gmtl/Quat.h>
 
 #include <boost/shared_ptr.hpp>
 
@@ -53,7 +54,6 @@
 namespace osg
 {
 class Geode;
-class Vec3d;
 class LineSegment;
 }
 
@@ -204,7 +204,7 @@ private:
     ///\param y
     ///\param z
     ///\param angle
-    void Rotate( double angle, osg::Vec3 axis );
+    void Rotate( double angle, gmtl::Vec3d axis );
 
     ///Width of the window
     unsigned int mWidth;
@@ -292,10 +292,10 @@ private:
     //gmtl::Matrix44d mDeltaTransform;
 
     ///
-    osg::Quat mDeltaRotation;
+    gmtl::Quatd mDeltaRotation;
 
     ///
-    osg::Vec3d mDeltaTranslation;
+    gmtl::Vec4d mDeltaTranslation;
 
     ///
     osg::ref_ptr< osg::Geode > mBeamGeode;
@@ -317,9 +317,6 @@ private:
 
     ///Bullet constraint used for physics mouse picking
     btTypedConstraint* mPickConstraint;
-
-
-
 
     /*
     void RotateView( double dx, double dy )
