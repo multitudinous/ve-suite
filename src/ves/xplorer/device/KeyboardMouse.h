@@ -48,15 +48,11 @@
 #include <gadget/Type/PositionInterface.h>
 
 // --- OSG Includes --- //
-#include <osg/Geometry>
-
 #include <osgUtil/IntersectVisitor>
 
 namespace osg
 {
 class Geode;
-class Group;
-class Vec4d;
 class Vec3d;
 class LineSegment;
 }
@@ -65,8 +61,7 @@ class LineSegment;
 class btRigidBody;
 class btTypedConstraint;
 
-// --- C/C++ Libraries --- //
-#include <utility>
+// --- C/C++ Includes --- //
 
 namespace ves
 {
@@ -97,10 +92,6 @@ public:
     ///Sets the screen corner values
     ///\param values A map of strings to doubles
     void SetScreenCornerValues( std::map< std::string, double > values );
-
-    ///Determines whether or not in animation mode
-    ///\param animate Bool to determine animation mode
-    void Animate( bool animate );
 
     ///Set the window properties
     ///\param w Set the width of the window
@@ -192,12 +183,7 @@ private:
     ///Currently this does nothing
     void SelOnMouseMotion( std::pair< double, double > delta );
 
-    ///Do not know how to describe this
-    ///\param dx The change in the x direction
-    ///\param dy The change in the y direction
-    //void RotateView( double dx, double dy );
-
-    ///Do not know how to describe this
+    ///Rotates an object about the y-axis
     void Twist();
 
     ///Handles movement in and out of the scene
@@ -210,18 +196,15 @@ private:
 
     ///Handles panning movements through the scene
     ///\param dx The change in the x direction
-    ///\param dy The change in the y direction
-    void Pan( double dx, double dy );
+    ///\param dz The change in the yz direction
+    void Pan( double dx, double dz );
 
     ///Handles rotation of the scene
     ///\param x
     ///\param y
     ///\param z
     ///\param angle
-    void Rotate( double x, double y, double z, double angle );
-
-    ///Determines whether in animation mode
-    bool mAnimate;
+    void Rotate( double angle, osg::Vec3 axis );
 
     ///Width of the window
     unsigned int mWidth;
@@ -248,7 +231,7 @@ private:
     double mAspectRatio;
 
     ///Field of view in the y direction
-    double mFoVY;
+    double mFoVZ;
 
     ///The left frustum value
     double mLeftFrustum;
@@ -270,9 +253,6 @@ private:
 
     ///The magnitude of the mouse movement
     double mMagnitude;
-
-    ///
-    double mSensitivity;
 
     ///The minimum x position of the screen
     double mXMinScreen;
@@ -302,14 +282,20 @@ private:
     /*
     Note: osg::Matrix multiplication is reverse of gmtl::Matrix multiplication
     For: gmtl::Matrix
-                    In mData form    In row by column form
+                    In mData form    In [row][col] form
                     [ 0 4  8 12 ]    [ 00 01 02 03 ]
                     [ 1 5  9 13 ]    [ 10 11 12 13 ]
                     [ 2 6 10 14 ]    [ 20 21 22 23 ]
                     [ 3 7 11 15 ]    [ 30 31 32 33 ]
     */
     ///The change to be applied to the current transform
-    gmtl::Matrix44d mDeltaTransform;
+    //gmtl::Matrix44d mDeltaTransform;
+
+    ///
+    osg::Quat mDeltaRotation;
+
+    ///
+    osg::Vec3d mDeltaTranslation;
 
     ///
     osg::ref_ptr< osg::Geode > mBeamGeode;
@@ -321,7 +307,7 @@ private:
     osg::ref_ptr< osg::LineSegment > mBeamLineSegment;
 
     ///VRJuggler's keyboard/mouse positional interface
-    gadget::KeyboardMouseInterface mKeyboard;
+    gadget::KeyboardMouseInterface mKeyboardMouse;
 
     ///VRJuggler's head positional interface
     gadget::PositionInterface mHead;
@@ -331,6 +317,27 @@ private:
 
     ///Bullet constraint used for physics mouse picking
     btTypedConstraint* mPickConstraint;
+
+
+
+
+    /*
+    void RotateView( double dx, double dy )
+    {
+        double tbAxis[ 3 ];
+        double angle = mMagnitude * 400.0;
+
+        gmtl::Matrix44d matrix;
+        gmtl::identity( matrix );
+
+        dy *= -1.0;
+        tbAxis[ 0 ] = matrix.mData[ 0 ] * dy + matrix.mData[  2 ] * dx;
+        tbAxis[ 1 ] = matrix.mData[ 4 ] * dy + matrix.mData[  6 ] * dx;
+        tbAxis[ 2 ] = matrix.mData[ 8 ] * dy + matrix.mData[ 10 ] * dx;
+
+        Rotate( tbAxis[ 0 ], tbAxis[ 1 ], tbAxis[ 2 ], angle );
+    }
+    */
 
 };
 } //end xplorer

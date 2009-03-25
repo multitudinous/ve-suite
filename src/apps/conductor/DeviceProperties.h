@@ -70,13 +70,8 @@ protected:
     void BuildGUI();
 
     wxSplitterWindow* device_splitter;
-    wxCheckBox* animate_check_box;
 
-    void OnAnimate( wxCommandEvent& event );
-
-    bool animate;
-
-    std::vector<ves::open::xml::DataValuePairPtr> instructions;        //The DataValuePairs for the current command
+    std::vector<ves::open::xml::DataValuePairPtr> instructions;
 
     void SendCommandsToXplorer();
     void ClearInstructions();

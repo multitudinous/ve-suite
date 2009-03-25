@@ -53,7 +53,6 @@ using namespace ves::conductor;
 using namespace ves::conductor::util;
 
 BEGIN_EVENT_TABLE( DeviceProperties, wxDialog )
-    EVT_CHECKBOX( DEVICEPROPERTIES_ANIMATE_CHECKBOX, DeviceProperties::OnAnimate )
 END_EVENT_TABLE()
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -62,9 +61,6 @@ DeviceProperties::DeviceProperties( wxWindow* parent )
                     ( wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxMAXIMIZE_BOX | wxMINIMIZE_BOX )&~wxSTAY_ON_TOP )
 {
     device_splitter = NULL;
-    animate_check_box = NULL;
-
-    animate = false;
 
     BuildGUI();
 }
@@ -105,9 +101,6 @@ void DeviceProperties::BuildGUI()
 
     wxBoxSizer* box_sizer_4 = new wxBoxSizer( wxHORIZONTAL );
     box_sizer_3->Add( box_sizer_4, 0, wxALIGN_CENTER_HORIZONTAL | wxALL, 5 );
-    animate_check_box = new wxCheckBox( panel_trackball, DEVICEPROPERTIES_ANIMATE_CHECKBOX, _( "Animate" ), wxDefaultPosition, wxDefaultSize, 0 );
-    animate_check_box->SetValue( false );
-    box_sizer_4->Add( animate_check_box, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
     device_splitter->SplitVertically( list_box_1, panel_trackball, 150 );
     box_sizer_1->Add( device_splitter, 1, wxGROW | wxLEFT | wxRIGHT, 5 );
@@ -120,18 +113,6 @@ void DeviceProperties::BuildGUI()
 
     wxButton* button_cancel = new wxButton( this, wxID_CANCEL, _( "&Cancel" ), wxDefaultPosition, wxDefaultSize, 0 );
     box_sizer_5->Add( button_cancel, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
-}
-////////////////////////////////////////////////////////////////////////////////
-void DeviceProperties::OnAnimate( wxCommandEvent &event )
-{
-    animate = animate_check_box->GetValue();
-
-    DataValuePairPtr animateDVP( new DataValuePair() );
-    animateDVP->SetData( std::string( "AnimateID" ), ( unsigned int )( animate ) );
-    instructions.push_back( animateDVP );
-
-    SendCommandsToXplorer();
-    ClearInstructions();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DeviceProperties::SendCommandsToXplorer()

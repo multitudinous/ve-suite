@@ -30,6 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
+
 #ifndef KEYBOARD_MOUSE_EVENT_HANDLER_H
 #define KEYBOARD_MOUSE_EVENT_HANDLER_H
 
@@ -41,9 +42,11 @@ namespace xplorer
 {
 namespace event
 {
+
 /*!\file KeyboardMouseEH.h
-  KeyboardMouseEventHandler API
-  */
+ * KeyboardMouseEventHandler API
+ */
+
 /*!\class KeyboardMouseEventHandler
  * Class for changing KeyboardMouse properties in xplorer
  */
@@ -77,4 +80,4 @@ protected:
 }
 }
 
-#endif//KEYBOARD_MOUSE_EVENT_HANDLER_H
+#endif //KEYBOARD_MOUSE_EVENT_HANDLER_H
