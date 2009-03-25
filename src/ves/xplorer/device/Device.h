@@ -79,6 +79,7 @@ class CharacterController;
 /*!\file Device.h
  * Device API
  */
+
 /*!\class VE_XPlorer::Device
  *
  */
@@ -152,6 +153,7 @@ protected:
 
     ///Triggers a center point jump after this distance has been breached
     double* mCenterPointThreshold;
+
     ///The distance the center point jumps along the +y axis
     double* mCenterPointJump;
 

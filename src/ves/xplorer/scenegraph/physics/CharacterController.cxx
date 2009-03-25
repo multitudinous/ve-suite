@@ -59,9 +59,6 @@
 using namespace ves::xplorer::scenegraph;
 namespace vxs = ves::xplorer::scenegraph;
 
-const double OneEightyDivPI = 57.29577951;
-const double PIDivOneEighty = 0.0174532925;
-
 ////////////////////////////////////////////////////////////////////////////////
 CharacterController::CharacterController()
     :
@@ -82,7 +79,7 @@ CharacterController::CharacterController()
     mMaxCameraDistance( 200.0 ),
     mDeltaZoom( 2.0 ),
     //This is the speed of the character in ft/s
-    mSpeed( 10.0 ),
+    mSpeed( 15.0 ),
     //Average walk speed is 5 km/h -> 0.911344415 ft/s
     mMinSpeed( 1.0 ),
     //Usain Bolt's top 10m split 10m/0.82s -> 40 ft/s
@@ -91,7 +88,7 @@ CharacterController::CharacterController()
     mTurnAngleZ( 0.0 ),
     mDeltaTurnAngleX( 0.0 ),
     mDeltaTurnAngleZ( 0.0 ),
-    mTurnSpeed( 400.0 ),
+    mTurnSpeed( 7.0 ),
     mWeightModifier( 0.0 ),
     mTotalWeight( 0.0 ),
     mCameraRotation(),
@@ -268,8 +265,8 @@ void CharacterController::Rotate( double dx, double dy )
     }
     */
 
-    mDeltaTurnAngleX += x * mTurnSpeed * PIDivOneEighty;
-    mDeltaTurnAngleZ += z * mTurnSpeed * PIDivOneEighty;
+    mDeltaTurnAngleX += x * mTurnSpeed;
+    mDeltaTurnAngleZ += z * mTurnSpeed;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CharacterController::Advance( btScalar dt )
@@ -297,6 +294,15 @@ void CharacterController::Advance( btScalar dt )
         }
 
         mTurnAngleX += totalValueX / mTotalWeight;
+        //Restrict movement about the x-axis from 0 to 90 degrees
+        if( mTurnAngleX < 0.0 )
+        {
+            mTurnAngleX = 0.0;
+        }
+        else if( mTurnAngleX > gmtl::Math::PI_OVER_2 )
+        {
+            mTurnAngleX = gmtl::Math::PI_OVER_2;
+        }
         mTurnAngleZ += totalValueZ / mTotalWeight;
 
         btQuaternion xRotation( btVector3( 1.0, 0.0, 0.0 ), mTurnAngleX );

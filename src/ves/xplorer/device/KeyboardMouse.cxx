@@ -93,9 +93,6 @@ using namespace ves::xplorer;
 namespace vx = ves::xplorer;
 namespace vxs = vx::scenegraph;
 
-const double OneEightyDivPI = 57.29577951;
-const double PIDivOneEighty = 0.0174532925;
-
 ////////////////////////////////////////////////////////////////////////////////
 KeyboardMouse::KeyboardMouse()
     :
@@ -560,9 +557,9 @@ void KeyboardMouse::SetFrustumValues(
     mNearFrustum = n;
     mFarFrustum = f;
 
-    double topAngle = OneEightyDivPI * atan( mTopFrustum / mNearFrustum );
+    double topAngle = atan( mTopFrustum / mNearFrustum );
     double tempDiv = fabs( mBottomFrustum ) / mNearFrustum;
-    double bottomAngle = OneEightyDivPI * atan( tempDiv );
+    double bottomAngle = atan( tempDiv );
 
     mFoVZ = topAngle + bottomAngle;
 }
@@ -621,7 +618,7 @@ void KeyboardMouse::FrameAll()
 
         //Calculate the distance we need to move along the center vector to fit
         //the bounding sphere of all the geometry inside the viewing frustum
-        double theta = ( mFoVZ * 0.5 ) * PIDivOneEighty;
+        double theta = mFoVZ * 0.5;
         if( mAspectRatio < 1.0 )
         {
             theta *= mAspectRatio;
@@ -753,7 +750,7 @@ void KeyboardMouse::SkyCamTo()
     ///Remove the rotation from the transform matrix
     gmtl::Matrix44d tempTrans;
     tempTrans = gmtl::makeTrans< gmtl::Matrix44d >( tempTransPoint );
-    double tempRotRad2 = PIDivOneEighty * 0;
+    double tempRotRad2 = 0.0;
     gmtl::AxisAngled axisAngle( tempRotRad2, 1, 0, 0 );
     gmtl::Quatd quatAxisAngle = gmtl::make< gmtl::Quatd >( axisAngle );
     gmtl::Matrix44d tempRot;
@@ -1402,7 +1399,7 @@ void KeyboardMouse::Zoom45( double dy )
 void KeyboardMouse::Pan( double dx, double dz )
 {
     double d = mCenterPoint->mData[ 1 ];
-    double theta = ( mFoVZ * 0.5 ) * ( PIDivOneEighty );
+    double theta = mFoVZ * 0.5 ;
     double b = 2.0 * d * tan( theta );
     double dwx = dx * b;
 #if __VJ_version >= 2003000

@@ -36,10 +36,6 @@
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
 
-#include <ves/open/xml/Command.h>
-#include <ves/open/xml/DataValuePair.h>
-#include <ves/open/xml/OneDDoubleArray.h>
-
 // --- OSG Includes --- //
 #include <osg/Polytope>
 #include <osg/LineSegment>
@@ -56,11 +52,11 @@ namespace vxs = vx::scenegraph;
 ////////////////////////////////////////////////////////////////////////////////
 Device::Device()
     :
-    mCenterPoint( 0 ),
-    mCenterPointThreshold( 0 ),
-    mCenterPointJump( 0 ),
-    mResetPosition( 0 ),
-    mResetAxis( 0 ),
+    mCenterPoint( NULL ),
+    mCenterPointThreshold( NULL ),
+    mCenterPointJump( NULL ),
+    mResetPosition( NULL ),
+    mResetAxis( NULL ),
     mPhysicsSimulator( NULL ),
     mDynamicsWorld( NULL ),
     mCharacterController( NULL )
@@ -152,8 +148,8 @@ void Device::ProcessSelection()
         {
             if( !objectHit._geode->getName().empty() )
             {
-                if( /*objectHit._geode->getName() != laserName
-                                                                                                                                          && */objectHit._geode->getName() != "Root Node" )
+                if( /*objectHit._geode->getName() != laserName && */
+                    objectHit._geode->getName() != "Root Node" )
                 {
                     selected_geometry = objectHit._geode;
                     std::cout << objectHit._geode->getName() << std::endl;
