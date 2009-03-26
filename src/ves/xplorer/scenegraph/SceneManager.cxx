@@ -243,7 +243,7 @@ void SceneManager::InitScene()
             << pluginName << "\"." << std::endl << vprDEBUG_FLUSH;
     }
     
-    //SetActiveSwitchNode( 1 );
+    SetActiveSwitchNode( 1 );
 
     //Create the character controller
     mCharacterController = new vxs::CharacterController();
@@ -379,8 +379,8 @@ void SceneManager::_createLogo()
 ////////////////////////////////////////////////////////////////////////////////
 void SceneManager::SetActiveSwitchNode( int activeNode )
 {
-    mLogoSwitch->SetVal( activeNode );
-    mNavSwitch->SetVal( activeNode );
+    mLogoSwitch->setSingleChildOn( activeNode );
+    mNavSwitch->setSingleChildOn( activeNode );
     mActiveNavDCS = GetActiveNavSwitchNode();
     ///Now reset the dcs back to its former position so that the nav
     ///information is defined on a per node basis.
@@ -388,8 +388,16 @@ void SceneManager::SetActiveSwitchNode( int activeNode )
 ////////////////////////////////////////////////////////////////////////////////
 void SceneManager::PreFrameUpdate()
 {
-    mInvertedWorldDCS = mActiveNavDCS->GetMat();
-    mInvertedWorldDCS = gmtl::invert( mInvertedWorldDCS );
+    if( !mNavSwitch->getValue( 1 ) )
+    {
+        mInvertedWorldDCS = mActiveNavDCS->GetMat();
+        mInvertedWorldDCS = gmtl::invert( mInvertedWorldDCS );
+    }
+    else
+    {
+        mInvertedWorldDCS = gmtl::identity( mInvertedWorldDCS );
+        static_cast< ves::xplorer::scenegraph::DCS* >( mNavSwitch->getChild( 1 ) )->SetMat( mInvertedWorldDCS );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 osg::Group* SceneManager::GetActiveSwitchNode()
@@ -403,6 +411,7 @@ osg::Group* SceneManager::GetActiveSwitchNode()
             return static_cast< osg::Group* >( mLogoSwitch->getChild( i ) );
         }
     }
+    return 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
 ves::xplorer::scenegraph::DCS* SceneManager::GetActiveNavSwitchNode()
@@ -417,6 +426,7 @@ ves::xplorer::scenegraph::DCS* SceneManager::GetActiveNavSwitchNode()
                 mNavSwitch->getChild( i ) );
         }
     }
+    return 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SceneManager::SetBackgroundColor( std::vector< double > color )
