@@ -108,7 +108,7 @@ void AdvancedVectors::CreateControls()
     wxStaticText* itemStaticText9 = new wxStaticText( itemDialog1, wxID_STATIC, _T( "Vector Scale" ), wxDefaultPosition, wxDefaultSize, 0 );
     itemStaticBoxSizer3->Add( itemStaticText9, 0, wxALIGN_LEFT | wxLEFT | wxRIGHT | wxTOP | wxADJUST_MINSIZE, 5 );
 
-    _vectorScaleSlider = new wxSlider( itemDialog1, ADVANCEDVECTORS_SCALE_SLIDER, 1, 1, 200, wxDefaultPosition, wxSize( 300, -1 ), wxSL_HORIZONTAL | wxSL_LABELS );
+    _vectorScaleSlider = new wxSlider( itemDialog1, ADVANCEDVECTORS_SCALE_SLIDER, 1, 1, 300, wxDefaultPosition, wxSize( 300, -1 ), wxSL_HORIZONTAL | wxSL_LABELS );
     itemStaticBoxSizer3->Add( _vectorScaleSlider, 0, wxGROW | wxALL, 5 );
 
     wxBoxSizer* itemBoxSizer11 = new wxBoxSizer( wxHORIZONTAL );
