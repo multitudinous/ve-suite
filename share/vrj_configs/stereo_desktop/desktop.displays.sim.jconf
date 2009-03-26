@@ -8,7 +8,7 @@
          <pipes>:0.0</pipes>
          <use_swap_group>false</use_swap_group>
       </display_system>
-      <display_window name="ve-suite / ve-xplorer" version="5">
+      <display_window name="ve-suite / ve-xplorer" version="6">
          <origin>0</origin>
          <origin>0</origin>
          <size>1280</size>
@@ -64,6 +64,7 @@
             </surface_viewport>
          </surface_viewports>
          <keyboard_mouse_device_name>Keyboard KM Dev</keyboard_mouse_device_name>
+         <allow_mouse_locking>false</allow_mouse_locking>
          <lock_key>KEY_NONE</lock_key>
          <start_locked>false</start_locked>
          <sleep_time>23</sleep_time>
