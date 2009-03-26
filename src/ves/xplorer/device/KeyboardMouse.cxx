@@ -570,7 +570,7 @@ void KeyboardMouse::FrameAll()
         vxs::SceneManager::instance()->GetActiveSwitchNode();
     vxs::DCS* activeNavSwitchNode =
         vxs::SceneManager::instance()->GetActiveNavSwitchNode();
-    osg::BoundingSphere& bs = activeSwitchNode->computeBound();
+    osg::BoundingSphere bs = activeSwitchNode->computeBound();
 
     //Meters to feet conversion
     double m2ft = 3.2808399;
