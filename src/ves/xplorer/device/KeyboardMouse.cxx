@@ -360,11 +360,7 @@ void KeyboardMouse::ProcessKBEvents( int mode )
                     static_cast< double >( mX ) /
                     static_cast< double >( mWidth );
                 mCurrPos.second =
-#if __VJ_version >= 2003000
                     static_cast< double >( mY ) /
-#else
-                    static_cast< double >( mHeight - mY ) /
-#endif
                     static_cast< double >( mHeight );
 
                 //Navigation mode
@@ -397,11 +393,7 @@ void KeyboardMouse::ProcessKBEvents( int mode )
                     static_cast< double >( mX ) /
                     static_cast< double >( mWidth );
                 mCurrPos.second =
-#if __VJ_version >= 2003000
                     static_cast< double >( mY ) /
-#else
-                    static_cast< double >( mHeight - mY ) /
-#endif
                     static_cast< double >( mHeight );
 
                 //Navigation mode
@@ -439,11 +431,7 @@ void KeyboardMouse::ProcessKBEvents( int mode )
                         static_cast< double >( mX ) /
                         static_cast< double >( mWidth );
                     mCurrPos.second =
-#if __VJ_version >= 2003000
                         static_cast< double >( mY ) /
-#else
-                        static_cast< double >( mHeight - mY ) /
-#endif
                         static_cast< double >( mHeight );
 
                     std::pair< double, double > delta;
