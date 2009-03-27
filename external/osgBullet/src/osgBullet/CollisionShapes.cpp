@@ -5,9 +5,12 @@
  *
  */
 
+#include "BulletCollision/CollisionShapes/btShapeHull.h"
+
 #include <osgBullet/CollisionShapes.h>
 #include <osgBullet/ComputeTriMeshVisitor.h>
 #include <osgBullet/ComputeCylinderVisitor.h>
+#include <osgBullet/CollectVerticesVisitor.h>
 #include <osgBullet/Utils.h>
 
 #include <osg/ComputeBoundsVisitor>
@@ -16,6 +19,7 @@
 #include <osg/Geode>
 #include <osg/MatrixTransform>
 
+#include <osg/Timer>
 #include <osg/io_utils>
 #include <iostream>
 
@@ -152,6 +156,38 @@ btConvexTriangleMeshShape* osgBullet::btConvexTriMeshCollisionShapeFromOSG( osg:
     return( meshShape );
 }
 
+btConvexHullShape* osgBullet::btConvexHullCollisionShapeFromOSG( osg::Node* node )
+{
+    CollectVerticesVisitor cvv;
+    node->accept( cvv );
+    osg::Vec3Array* v = cvv.getVertices();
+    osg::notify( osg::INFO ) << "CollectVerticesVisitor: " << v->size() << std::endl;
+
+
+    // Convert verts to array of Bullet scalars.
+    btScalar* btverts = new btScalar[ v->size() * 3 ];
+    if( btverts == NULL )
+    {
+        osg::notify( osg::FATAL ) << "NULL btverts" << std::endl;
+        return( NULL );
+    }
+    btScalar* btvp = btverts;
+
+    osg::Vec3Array::const_iterator itr;
+    for( itr = v->begin(); itr != v->end(); itr++ )
+    {
+        const osg::Vec3& s( *itr );
+        *btvp++ = (btScalar)( s[ 0 ] );
+        *btvp++ = (btScalar)( s[ 1 ] );
+        *btvp++ = (btScalar)( s[ 2 ] );
+    }
+    btConvexHullShape* chs = new btConvexHullShape( btverts, v->size(), sizeof( btScalar ) * 3 );
+    delete[] btverts;
+
+
+    return( chs );
+}
+
 osg::Node* osgBullet::osgNodeFromBtCollisionShape( const btCollisionShape* btShape, const btTransform& trans )
 {
     if( btShape->getShapeType() == BOX_SHAPE_PROXYTYPE )
@@ -182,6 +218,13 @@ osg::Node* osgBullet::osgNodeFromBtCollisionShape( const btCollisionShape* btSha
         // Do NOT pass in a transform. Unlike cylinder, sphere, and box,
         // tri meshes are always in absolute space.
         return( osgNodeFromBtCollisionShape( btConvexTriMesh ) );
+    }
+    else if( btShape->getShapeType() == CONVEX_HULL_SHAPE_PROXYTYPE )
+    {
+        const btConvexHullShape* convexHull = dynamic_cast< const btConvexHullShape* >( btShape );
+        // Do NOT pass in a transform. Unlike cylinder, sphere, and box,
+        // tri meshes are always in absolute space.
+        return( osgNodeFromBtCollisionShape( convexHull ) );
     }
     else if( btShape->getShapeType() == COMPOUND_SHAPE_PROXYTYPE )
     {
@@ -325,23 +368,19 @@ osg::Node* osgBullet::osgNodeFromBtCollisionShape( const btTriangleMeshShape* bt
         ( *vec )[ idx ].set( bulletVert.getX(), bulletVert.getY(), bulletVert.getZ() );
     }
 
-    osg::IntArray* index = new osg::IntArray();
-    index->resize( numFaces * 3 );
+    osg::DrawElementsUInt* deui = new osg::DrawElementsUInt( GL_TRIANGLES );
     for( idx = 0; idx < numFaces * 3; idx++ )
-    {
-        ( *index )[ idx ] = indices[ idx ];
-    }
+        deui->push_back( indices[ idx ] );
 
     osg::Vec4Array* color = new osg::Vec4Array();
     color->push_back( osg::Vec4( 1., 1., 1., 1. ) );
 
     osg::Geometry* geom = new osg::Geometry;
     geom->setVertexArray( vec );
-    geom->setVertexIndices( index );
     geom->setColorArray( color );
     geom->setColorBinding( osg::Geometry::BIND_OVERALL );
 
-    geom->addPrimitiveSet( new osg::DrawArrays( osg::PrimitiveSet::TRIANGLES, 0, numVerts ) );
+    geom->addPrimitiveSet( deui );
 
     osg::Geode* geode = new osg::Geode();
     geode->addDrawable( geom );
@@ -360,7 +399,7 @@ osg::Node* osgBullet::osgNodeFromBtCollisionShape( const btTriangleMeshShape* bt
 
 osg::Node* osgBullet::osgNodeFromBtCollisionShape( const btConvexTriangleMeshShape* btTriMesh, const btTransform& trans )
 {
-    const btTriangleMesh* mesh = dynamic_cast< const btTriangleMesh * >( btTriMesh->getMeshInterface() );
+    const btTriangleMesh* mesh = dynamic_cast< const btTriangleMesh* >( btTriMesh->getMeshInterface() );
     if( !mesh )
     {
         osg::notify( osg::FATAL ) << "osgNodeFromBtCollisionShape: No triangle mesh." << std::endl;
@@ -385,23 +424,19 @@ osg::Node* osgBullet::osgNodeFromBtCollisionShape( const btConvexTriangleMeshSha
         ( *vec )[ idx ].set( bulletVert.getX(), bulletVert.getY(), bulletVert.getZ() );
     }
 
-    osg::IntArray* index = new osg::IntArray();
-    index->resize( numFaces * 3 );
+    osg::DrawElementsUInt* deui = new osg::DrawElementsUInt( GL_TRIANGLES );
     for( idx = 0; idx < numFaces * 3; idx++ )
-    {
-        ( *index )[ idx ] = indices[ idx ];
-    }
+        deui->push_back( indices[ idx ] );
 
     osg::Vec4Array* color = new osg::Vec4Array();
     color->push_back( osg::Vec4( 1., 1., 1., 1. ) );
 
     osg::Geometry* geom = new osg::Geometry;
     geom->setVertexArray( vec );
-    geom->setVertexIndices( index );
     geom->setColorArray( color );
     geom->setColorBinding( osg::Geometry::BIND_OVERALL );
 
-    geom->addPrimitiveSet( new osg::DrawArrays( osg::PrimitiveSet::TRIANGLES, 0, numVerts ) );
+    geom->addPrimitiveSet( deui );
 
     osg::Geode* geode = new osg::Geode();
     geode->addDrawable( geom );
@@ -418,3 +453,49 @@ osg::Node* osgBullet::osgNodeFromBtCollisionShape( const btConvexTriangleMeshSha
     }
 }
 
+osg::Node* osgBullet::osgNodeFromBtCollisionShape( const btConvexHullShape* hull, const btTransform& trans )
+{
+    btShapeHull sh( hull );
+    sh.buildHull( 0. );
+	int nVerts( sh.numVertices () );
+	int nIdx( sh.numIndices () );
+    if( (nVerts <= 0) || (nIdx <= 0) )
+        return( NULL );
+
+    const btVector3* bVerts( sh.getVertexPointer() );
+    const unsigned int* bIdx( sh.getIndexPointer() );
+
+    osg::Vec3Array* v = new osg::Vec3Array();
+    v->resize( nVerts );
+    unsigned int idx;
+    for( idx = 0; idx < (unsigned int)nVerts; idx++ )
+        ( *v )[ idx ] = asOsgVec3( bVerts[ idx ] );
+
+    osg::DrawElementsUInt* deui = new osg::DrawElementsUInt( GL_TRIANGLES );
+    for( idx = 0; idx < (unsigned int)nIdx; idx++ )
+        deui->push_back( bIdx[ idx ] );
+
+    osg::Vec4Array* color = new osg::Vec4Array();
+    color->push_back( osg::Vec4( 1., 1., 1., 1. ) );
+
+    osg::Geometry* geom = new osg::Geometry;
+    geom->setVertexArray( v );
+    geom->setColorArray( color );
+    geom->setColorBinding( osg::Geometry::BIND_OVERALL );
+
+    geom->addPrimitiveSet( deui );
+
+    osg::ref_ptr< osg::Geode > geode = new osg::Geode();
+    geode->addDrawable( geom );
+
+    osg::Matrix m = asOsgMatrix( trans );
+    if (m.isIdentity())
+        return( geode.release() );
+    else
+    {
+        osg::ref_ptr< osg::MatrixTransform > mt = new osg::MatrixTransform;
+        mt->setMatrix( m );
+        mt->addChild( geode.get() );
+        return mt.release();
+    }
+}

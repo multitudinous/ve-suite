@@ -103,8 +103,16 @@ int main( int argc,
     arguments.getApplicationUsage()->addCommandLineOption( "--sphere", "Creates a sphere collision shape." );
     arguments.getApplicationUsage()->addCommandLineOption( "--cylinder", "Creates a cylinder collision shape." );
     arguments.getApplicationUsage()->addCommandLineOption( "--axis <x>", "This argument is ignored if --cylinder is not specified. Use this option to specify the cylinder axis X, Y, or Z. Default is Z." );
-    arguments.getApplicationUsage()->addCommandLineOption( "--triMesh", "This is the default. It creates a tri mesh collision shape." );
+    arguments.getApplicationUsage()->addCommandLineOption( "--triMesh", "This is the default. It creates a tri mesh collision shape (suitable for static objects)." );
+    arguments.getApplicationUsage()->addCommandLineOption( "--convexTM", "Creates a convex tri mesh collision shape." );
+    arguments.getApplicationUsage()->addCommandLineOption( "--convexHull", "Creates a convex hull collision shape." );
+
+    arguments.getApplicationUsage()->addCommandLineOption( "--decPercent <n>", "Runs the DecimatorOp on the scene graph before generating the Bullet collision shape. <n> is the target percentage of vertices to remove, and is usually in the range 0.0 to 1.0." );
+    arguments.getApplicationUsage()->addCommandLineOption( "--decMaxError <n>", "Specifies the Decimator maximum error tolerance. Geometry exceeding this tolerance is not reduced. <n> is in the range 0k.0 to FLT_MAX." );
     arguments.getApplicationUsage()->addCommandLineOption( "--simplify <n>", "Runs the osgUtil::Simplifier on the scene graph before generating the Bullet collision shape. <n> is the target simplification percentage, and is usually in the range 0.0 to 1.0." );
+    arguments.getApplicationUsage()->addCommandLineOption( "--aggMaxVerts <n>", "Runs the VertexAggOp on the scene graph before generating the Bullet collision shape. <n> is the maximum number of vertices per aggregation cell and is in the range 1 to MAX_INT." );
+    arguments.getApplicationUsage()->addCommandLineOption( "--aggMinCellSizes <x>,<y>,<z>", "Specifies the VertexAggOp minimum xyz cell size." );
+
     arguments.getApplicationUsage()->addCommandLineOption( "--overall", "Creates a single collision shape for the entire input scene graph or named subgraph (see --name), rather than a collision shape per Geode, which is the default." );
     arguments.getApplicationUsage()->addCommandLineOption( "--name <name>", "Interprets the scene graph from the first occurence of the named node. If not specified, the entire scene graph is processed." );
     arguments.getApplicationUsage()->addCommandLineOption( "--mass <n>", "Specifies the desired rigid body mass value. The default is 1.0." );
@@ -138,6 +146,8 @@ int main( int argc,
     if( arguments.read( "--sphere" ) ) shapeType = SPHERE_SHAPE_PROXYTYPE;
     if( arguments.read( "--cylinder" ) ) shapeType = CYLINDER_SHAPE_PROXYTYPE;
     if( arguments.read( "--triMesh" ) ) shapeType = TRIANGLE_MESH_SHAPE_PROXYTYPE;
+    if( arguments.read( "--convexTM" ) ) shapeType = CONVEX_TRIANGLEMESH_SHAPE_PROXYTYPE;
+    if( arguments.read( "--convexHull" ) ) shapeType = CONVEX_HULL_SHAPE_PROXYTYPE;
 
     switch( shapeType )
     {
@@ -152,6 +162,12 @@ int main( int argc,
         break;
     case TRIANGLE_MESH_SHAPE_PROXYTYPE:
         osg::notify( osg::INFO ) << "osgbpp: TriMesh" << std::endl;
+        break;
+    case CONVEX_TRIANGLEMESH_SHAPE_PROXYTYPE:
+        osg::notify( osg::INFO ) << "osgbpp: ConvexTriMesh" << std::endl;
+        break;
+    case CONVEX_HULL_SHAPE_PROXYTYPE:
+        osg::notify( osg::INFO ) << "osgbpp: ConvexHull" << std::endl;
         break;
     default:
         osg::notify( osg::FATAL ) << "osgbpp: Error, unknown shape type, using tri mesh." << std::endl;
@@ -188,6 +204,28 @@ int main( int argc,
         break;
     }
 
+
+    float decimatorPercent( 1. );
+    float decimatorMaxError( FLT_MAX );
+    if ( arguments.read( "--decPercent", str ) )
+    {
+        if( sscanf( str.c_str(), "%f", &decimatorPercent ) != 1 )
+        {
+            arguments.getApplicationUsage()->write( osg::notify( osg::FATAL ) );
+            return 1;
+        }
+        if ( arguments.read( "--decMaxError", str ) )
+        {
+            if( sscanf( str.c_str(), "%f", &decimatorMaxError ) != 1 )
+            {
+                arguments.getApplicationUsage()->write( osg::notify( osg::FATAL ) );
+                return 1;
+            }
+        }
+    }
+    if (decimatorPercent != 1.f )
+        osg::notify( osg::INFO ) << "osgbpp: DecimatorOp: " << decimatorPercent << ", " << decimatorMaxError << std::endl;
+
     float simplifyPercent = 1.f;
     if ( arguments.read( "--simplify", str ) )
     {
@@ -199,6 +237,27 @@ int main( int argc,
     }
     if (simplifyPercent != 1.f )
         osg::notify( osg::INFO ) << "osgbpp: Simplify: " << simplifyPercent << std::endl;
+
+    unsigned int vertexAggMaxVerts( 0 );
+    osg::Vec3 vertexAggMinCellSize( 0., 0., 0. );
+    if ( arguments.read( "--aggMaxVerts", str ) )
+    {
+        if( sscanf( str.c_str(), "%u", &vertexAggMaxVerts ) != 1 )
+        {
+            arguments.getApplicationUsage()->write( osg::notify( osg::FATAL ) );
+            return 1;
+        }
+        if ( arguments.read( "--aggMinCellSize", str ) )
+        {
+            char comma;
+            std::istringstream oStr( str );
+            oStr >> vertexAggMinCellSize[ 0 ] >> comma >>
+                vertexAggMinCellSize[ 1 ] >> comma >>
+                vertexAggMinCellSize[ 2 ];
+        }
+    }
+    if (vertexAggMaxVerts > 0 )
+        osg::notify( osg::INFO ) << "osgbpp: VertexAggOp: " << vertexAggMaxVerts << ", " << vertexAggMinCellSize << std::endl;
 
     const bool overall( arguments.read( "--overall" ) );
     if (overall)
@@ -267,7 +326,11 @@ int main( int argc,
     converter.setSceneGraph( model.get() );
     converter.setShapeType( shapeType );
     converter.setMass( mass );
+
+    converter.setDecimateParamaters( decimatorPercent, decimatorMaxError );
     converter.setSimplifyPercent( simplifyPercent );
+    converter.setVertexAggParameters( vertexAggMaxVerts, vertexAggMinCellSize );
+
     converter.setOverall( overall );
     converter.setNodeName( nodeName );
     converter.setAxis( axis );

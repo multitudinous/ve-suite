@@ -9,6 +9,7 @@
 #define OSGBULLET_COMPUTECYLINDERVISITOR    1
 
 #include <osg/NodeVisitor>
+#include <osg/Version>
 
 #include <osgBullet/BoundingCylinder.h>
 
@@ -19,8 +20,11 @@ class ComputeCylinderVisitor
     : public osg::NodeVisitor
 {
 public:
-
     ComputeCylinderVisitor( osg::NodeVisitor::TraversalMode traversalMode = TRAVERSE_ALL_CHILDREN );
+
+#if( ( OPENSCENEGRAPH_MAJOR_VERSION >= 2) && (OPENSCENEGRAPH_MINOR_VERSION >= 8) )
+    META_NodeVisitor(osgBullet,ComputeCylinderVisitor)
+#endif
 
     virtual void reset();
 

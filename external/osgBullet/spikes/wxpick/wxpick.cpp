@@ -18,6 +18,7 @@
 #include <osg/Geode>
 #include <osg/Group>
 #include <osg/LOD>
+#include <osgUtil/optimizer>
 #include <osg/AnimationPath>
 #include <osgGA/TrackballManipulator>
 #include <osgDB/ReadFile>
@@ -128,7 +129,10 @@ bool wxOsgApp::OnInit()
     osg::ref_ptr< osg::Group > root = new osg::Group; 
     osg::ref_ptr< osg::Node > loadedModel = osgDB::readNodeFiles( argparser );
     if ( loadedModel.valid() ) root->addChild( loadedModel.get() );
-
+    osgUtil::Optimizer optim;
+    optim.optimize(root.get(), osgUtil::Optimizer::REMOVE_LOADED_PROXY_NODES);
+    optim.optimize(root.get(), osgUtil::Optimizer::MERGE_GEODES);
+    optim.optimize(root.get(), osgUtil::Optimizer::MERGE_GEOMETRY);
     // construct the viewer
     osgViewer::Viewer * viewer = new osgViewer::Viewer;
     viewer->getCamera()->setGraphicsContext( gw );

@@ -35,16 +35,18 @@ OSGBULLET_EXPORT btBoxShape*                btBoxCollisionShapeFromOSG( osg::Nod
 OSGBULLET_EXPORT btCylinderShape*           btCylinderCollisionShapeFromOSG( osg::Node*, AXIS axis = Y );
 OSGBULLET_EXPORT btTriangleMeshShape*       btTriMeshCollisionShapeFromOSG( osg::Node * );
 OSGBULLET_EXPORT btConvexTriangleMeshShape* btConvexTriMeshCollisionShapeFromOSG( osg::Node * );
+OSGBULLET_EXPORT btConvexHullShape*         btConvexHullCollisionShapeFromOSG( osg::Node * );
 
 
 /* Returns an OSG representation of the given bullet collision shape.
 */
-OSGBULLET_EXPORT osg::Node* osgNodeFromBtCollisionShape( const btCollisionShape * btShape, const btTransform& trans = btTransform::getIdentity() );
-OSGBULLET_EXPORT osg::Node* osgNodeFromBtCollisionShape( const btBoxShape * btShape, const btTransform& trans = btTransform::getIdentity() );
-OSGBULLET_EXPORT osg::Node* osgNodeFromBtCollisionShape( const btSphereShape * btShape, const btTransform& trans = btTransform::getIdentity() );
-OSGBULLET_EXPORT osg::Node* osgNodeFromBtCollisionShape( const btCylinderShape * btShape, const btTransform& trans = btTransform::getIdentity() );
-OSGBULLET_EXPORT osg::Node* osgNodeFromBtCollisionShape( const btTriangleMeshShape * btShape, const btTransform& trans = btTransform::getIdentity() );
-OSGBULLET_EXPORT osg::Node* osgNodeFromBtCollisionShape( const btConvexTriangleMeshShape * btShape, const btTransform& trans = btTransform::getIdentity() );
+OSGBULLET_EXPORT osg::Node* osgNodeFromBtCollisionShape( const btCollisionShape* btShape, const btTransform& trans = btTransform::getIdentity() );
+OSGBULLET_EXPORT osg::Node* osgNodeFromBtCollisionShape( const btBoxShape* btShape, const btTransform& trans = btTransform::getIdentity() );
+OSGBULLET_EXPORT osg::Node* osgNodeFromBtCollisionShape( const btSphereShape* btShape, const btTransform& trans = btTransform::getIdentity() );
+OSGBULLET_EXPORT osg::Node* osgNodeFromBtCollisionShape( const btCylinderShape* btShape, const btTransform& trans = btTransform::getIdentity() );
+OSGBULLET_EXPORT osg::Node* osgNodeFromBtCollisionShape( const btTriangleMeshShape* btShape, const btTransform& trans = btTransform::getIdentity() );
+OSGBULLET_EXPORT osg::Node* osgNodeFromBtCollisionShape( const btConvexTriangleMeshShape* btShape, const btTransform& trans = btTransform::getIdentity() );
+OSGBULLET_EXPORT osg::Node* osgNodeFromBtCollisionShape( const btConvexHullShape* btShape, const btTransform& trans = btTransform::getIdentity() );
 
 } // end namespace osgBullet
 

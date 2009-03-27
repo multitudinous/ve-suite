@@ -261,7 +261,7 @@ void GLDebugDrawer::EndDraw()
     if( _lnVerts->size() )
         _lnGeom->addPrimitiveSet( new osg::DrawArrays( GL_LINES, 0, _lnVerts->size() ) );
     if( _triVerts->size() )
-        _triGeom->addPrimitiveSet( new osg::DrawArrays( GL_TRIANGLES, 0, _triVerts->size() ) );
+    _triGeom->addPrimitiveSet( new osg::DrawArrays( GL_TRIANGLES, 0, _triVerts->size() ) );
 
     _chart->setValue( _frame, _contacts );
     _frame++;

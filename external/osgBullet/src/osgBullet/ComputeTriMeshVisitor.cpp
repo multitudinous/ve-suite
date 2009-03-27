@@ -84,10 +84,10 @@ void ComputeTriMeshVisitor::applyDrawable( osg::Drawable * drawable )
     osg::TriangleFunctor< ComputeTriMeshFunc > functor;
     drawable->accept( functor );
 
+    const osg::Matrix& matrix = stack.back();
     for( osg::Vec3Array::iterator iter = functor.vertices->begin();
          iter != functor.vertices->end(); ++iter )
     {
-        osg::Matrix & matrix = stack.back();
         mesh->push_back( *iter * matrix );
     }
 }

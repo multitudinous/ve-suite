@@ -8,12 +8,17 @@
 #include "osgBullet/Utils.h"
 #include "osgBullet/AbsoluteModelTransform.h"
 
+#include <osgBullet/GeometryModifier.h>
+#include <osgBullet/DecimatorOp.h>
+#include <osgBullet/SimplifierOp.h>
+#include <osgBullet/VertexAggOp.h>
+
 #include <osg/NodeVisitor>
 #include <osg/MatrixTransform>
 #include <osg/PositionAttitudeTransform>
 #include <osg/ComputeBoundsVisitor>
-#include <osgUtil/Simplifier>
 #include <osgUtil/TransformAttributeFunctor>
+#include <osg/Version>
 #include <osg/io_utils>
 
 using namespace osgBullet;
@@ -139,12 +144,20 @@ protected:
         }
         case TRIANGLE_MESH_SHAPE_PROXYTYPE:
         {
+            // Do _not_ compute center of bounding sphere for tri meshes.
             collision = osgBullet::btTriMeshCollisionShapeFromOSG( &node );
             break;
         }
         case CONVEX_TRIANGLEMESH_SHAPE_PROXYTYPE:
         {
+            // Do _not_ compute center of bounding sphere for tri meshes.
             collision = osgBullet::btConvexTriMeshCollisionShapeFromOSG( &node );
+            break;
+        }
+        case CONVEX_HULL_SHAPE_PROXYTYPE:
+        {
+            // Do _not_ compute center of bounding sphere for tri meshes.
+            collision = osgBullet::btConvexHullCollisionShapeFromOSG( &node );
             break;
         }
         default:
@@ -208,22 +221,30 @@ public:
         osg::Matrix l2w = osg::computeLocalToWorld( getNodePath() );
         unsigned int idx;
         for( idx=0; idx<node.getNumDrawables(); idx++ )
-            flattenDrawable( node.getDrawable( idx ), l2w );
+        {
+            osg::Drawable* draw( node.getDrawable( idx ) );
+
+            // Requires 2.6.1, the necessary Geometry support didn't exist in 2.6.
+            osg::Geometry* geom( dynamic_cast< osg::Geometry* >( draw ) );
+            if( geom )
+            {
+                if( geom->containsSharedArrays() )
+                    geom->duplicateSharedArrays();
+            }
+
+            flattenDrawable( draw, l2w );
+        }
     }
 
 protected:
     void flattenDrawable( osg::Drawable* drawable, const osg::Matrix& matrix )
     {
-        if (drawable)
+        if( drawable )
         {
-            osg::BoundingBox bb0 = drawable->getBound();
             osgUtil::TransformAttributeFunctor tf(matrix);
             drawable->accept(tf);
             drawable->dirtyBound();
             drawable->dirtyDisplayList();
-            osg::BoundingBox bb1 = drawable->getBound();
-
-            return;
         }
     }
 };
@@ -235,7 +256,13 @@ OSGToCollada::OSGToCollada()
     _comSet( false ),
     _shapeType( TRIANGLE_MESH_SHAPE_PROXYTYPE ),
     _mass( 1.f ),
+
+    _decimatorPercent( 1. ),
+    _decimatorMaxError( FLT_MAX ),
     _simplifyPercent( 1.f ),
+    _vertexAggMaxVerts( 0 ),
+    _vertexAggMinCellSize( osg::Vec3( 0., 0., 0.) ),
+
     _overall( true ),
     _nodeName( std::string( "" ) ),
     _axis( osgBullet::Z )
@@ -272,16 +299,48 @@ bool OSGToCollada::convert( const std::string& outputFileName )
     root->setName( "CenterOfMassOffset" );
     root->addChild( _sg.get() );
 
-    // Run the simplifier, if requested. Note we might develop a new
-    // polygon decimator in the future, as the simplifier isn't really
-    // cutting the mustard for us.
+
+    //
+    // Run all polygon decimation techniques, if requested to do so.
+    // Currently, run them in alphabetical order, though we might need
+    // to provide user control over the order in the future.
+
+    // Run DecimatorOp
+    if ( _decimatorPercent != 1.f )
+    {
+        osg::notify( osg::INFO ) << "OSGToCollada: Running DecimatorOp." << std::endl;
+        osgBullet::DecimatorOp* decimate = new osgBullet::DecimatorOp;
+        decimate->setSampleRatio( _decimatorPercent );
+        decimate->setMaximumError( _decimatorMaxError );
+        decimate->setIgnoreBoundries(true);
+        osgBullet::GeometryModifier gm( decimate );
+        root->accept( gm );
+        gm.displayStatistics( osg::notify( osg::INFO ) );
+    }
+
+    // Run the SimplifierOp
     if ( _simplifyPercent != 1.f )
     {
-        osg::notify( osg::INFO ) << "OSGToCollada: Running Simplifier." << std::endl;
-        osgUtil::Simplifier simple;
-        simple.setSampleRatio( _simplifyPercent );
-        root->accept( simple );
+        osg::notify( osg::INFO ) << "OSGToCollada: Running SimplifierOp." << std::endl;
+        osgBullet::SimplifierOp* simplify = new osgBullet::SimplifierOp;
+        simplify->_simplifier->setSampleRatio( _simplifyPercent );
+        osgBullet::GeometryModifier gm( simplify );
+        root->accept( gm );
+        gm.displayStatistics( osg::notify( osg::INFO ) );
     }
+
+    // Run VertexAggOp
+    if ( _vertexAggMaxVerts > 0 )
+    {
+        osg::notify( osg::INFO ) << "OSGToCollada: Running VertexAggOp." << std::endl;
+        osgBullet::VertexAggOp* aggregate = new osgBullet::VertexAggOp;
+        aggregate->setMaxVertsPerCell( _vertexAggMaxVerts );
+        aggregate->setMinCellSize( _vertexAggMinCellSize );
+        osgBullet::GeometryModifier gm( aggregate );
+        root->accept( gm );
+        gm.displayStatistics( osg::notify( osg::INFO ) );
+    }
+
 
     // Flatten transforms so that we don't need to multiply geometry by the current
     // OSG local to world matrix during traversal.
@@ -394,6 +453,13 @@ OSGToCollada::getMass() const
 }
 
 void
+OSGToCollada::setDecimateParamaters( float decimatePercent, float maxError )
+{
+    _decimatorPercent = decimatePercent;
+    _decimatorMaxError = maxError;
+}
+
+void
 OSGToCollada::setSimplifyPercent( float simplifyPercent )
 {
     _simplifyPercent = simplifyPercent;
@@ -403,6 +469,14 @@ OSGToCollada::getSimplifyPercent() const
 {
     return( _simplifyPercent );
 }
+
+void
+OSGToCollada::setVertexAggParameters( unsigned int maxVertsPerCell, osg::Vec3 minCellSize )
+{
+    _vertexAggMaxVerts = maxVertsPerCell;
+    _vertexAggMinCellSize = minCellSize;
+}
+
 
 void
 OSGToCollada::setOverall( bool overall )

@@ -22,17 +22,19 @@ rem set DISPLAY=
 
 @echo on
 osgbpp %DISPLAY% --box --overall -o tetra0.dae tetra.osg
-osgbpp %DISPLAY% --triMesh --overall -o tetra1.dae tetra.osg
+osgbpp %DISPLAY% --convexHull --overall -o tetra1.dae tetra.osg
 
 osgbpp %DISPLAY% --box --overall -o offcube0.dae offcube.osg
-osgbpp %DISPLAY% --triMesh --overall -o offcube1.dae offcube.osg
+osgbpp %DISPLAY% --convexHull --overall -o offcube1.dae offcube.osg
 
 osgbpp %DISPLAY% --box --overall -o cow0.dae cow.osg
-osgbpp %DISPLAY% --triMesh --simplify .2 --overall -o cow1.dae cow.osg
-osgbpp %DISPLAY% --triMesh --overall -o cow2.dae cow.osg
+osgbpp %DISPLAY% --convexHull --simplify .2 --overall -o cow1.dae cow.osg
+osgbpp %DISPLAY% --convexHull --overall -o cow2.dae cow.osg
 
 osgbpp %DISPLAY% --box --overall --mass 0 -o USMC23_1019.ASM0.dae USMC23_1019.ASM.ive
 osgbpp %DISPLAY% --triMesh --overall --mass 0 -o USMC23_1019.ASM1.dae USMC23_1019.ASM.ive
+osgbpp %DISPLAY% --triMesh --mass 0 -o USMC23_1019.ASM2.dae USMC23_1019.ASM.ive
 
 osgbpp %DISPLAY% --box --overall -o USMC23_1020.ASM0.dae USMC23_1020.ASM.ive
-osgbpp %DISPLAY% --triMesh --overall -o USMC23_1020.ASM1.dae USMC23_1020.ASM.ive
+osgbpp %DISPLAY% --convexHull --overall -o USMC23_1020.ASM1.dae USMC23_1020.ASM.ive
+osgbpp %DISPLAY% --convexHull -o USMC23_1020.ASM2.dae USMC23_1020.ASM.ive

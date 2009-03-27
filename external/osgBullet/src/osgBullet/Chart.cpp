@@ -69,7 +69,7 @@ Chart::Chart()
         _image = new osg::Image;
         _image->setImage( _texW, 1, 1, GL_INTENSITY32F_ARB, GL_RED, GL_FLOAT,
             (unsigned char*) _xValues, osg::Image::USE_NEW_DELETE );
-        osg::Texture1D* texVal = new osg::Texture1D();// _image.get() );
+        osg::Texture1D* texVal = new osg::Texture1D;
         texVal->setImage( _image.get() );
         texVal->setFilter( osg::Texture::MIN_FILTER, osg::Texture::NEAREST );
         texVal->setFilter( osg::Texture::MAG_FILTER, osg::Texture::NEAREST );

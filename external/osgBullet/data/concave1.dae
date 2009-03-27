@@ -1,0 +1,183 @@
+<?xml version="1.0"?>
+<COLLADA xmlns="http://www.collada.org/2005/11/COLLADASchema" version="1.4.1">
+    <asset>
+        <contributor>
+            <authoring_tool>Bullet Physics SDK 274 Snapshot(BulletColladaConverter) http://bulletphysics.com</authoring_tool>
+        </contributor>
+        <created>2008-02-12T15:28:54.891550</created>
+        <modified>2008-02-12T15:28:54.891550</modified>
+        <up_axis>Y_UP</up_axis>
+    </asset>
+    <library_physics_scenes>
+        <physics_scene id="Scene-Physics" name="MyPhysicsScene">
+            <instance_physics_model url="#Bullet-PhysicsModel">
+                <instance_rigid_body body="BulletUnnamed-0-RigidBody" target="#BulletUnnamed-0">
+                    <technique_common>
+                        <angular_velocity>0 0 0</angular_velocity>
+                        <velocity>0 0 0</velocity>
+                    </technique_common>
+                </instance_rigid_body>
+            </instance_physics_model>
+            <technique_common>
+                <gravity>0 0 -9.8</gravity>
+            </technique_common>
+        </physics_scene>
+    </library_physics_scenes>
+    <library_visual_scenes>
+        <visual_scene id="Scene" name="MyScene">
+            <node id="BulletUnnamed-0" name="BulletUnnamed-0">
+                <translate>0 0 0</translate>
+                <rotate>1 0 0 0</rotate>
+                <instance_geometry url="#BulletUnnamed-0-Geometry">
+                    <bind_material>
+                        <technique_common/>
+                    </bind_material>
+                </instance_geometry>
+            </node>
+        </visual_scene>
+    </library_visual_scenes>
+    <library_geometries>
+        <geometry id="RenderMeshBulletUnnamed-0-Geometry-Child0" name="RenderMeshBulletUnnamed-0-Geometry-Child0">
+            <mesh>
+                <source id="RenderMeshBulletUnnamed-0-Geometry-Child0-positions">
+                    <float_array id="RenderMeshBulletUnnamed-0-Geometry-Child0-positions-array" count="126">2.03804 -1.01236 0.5 2.03403 -1 -0.521029 2.03804 2.01236 0.5 0.961958 2.01236 0.5 0.972472 2.02 -0.521029 0.964223 -1 -0.517889 0.976489 2.03236 0.5 1 -1 0.54 2.0065 2.02 0.534026 0.982987 2.01236 0.534026 0.988944 -1.03403 -0.517889 0.993502 -1.02 -0.534026 2.01051 -1.03236 -0.52103 1 -1.04 0.5 0.988944 2.03403 -0.517889 2 2.04 0.5 2.01051 2.03236 -0.52103 2.02894 2.02103 -0.517889 2.01701 2.01236 -0.534026 0.976489 -1.03236 0.5 0.993502 2.02 -0.534026 2 -1 -0.54 0.989485 -1.03236 0.52103 2.02103 -1 0.534026 2.0065 -1.02 0.534026 0.989485 2.03236 0.52103 2.02894 -1.02103 -0.517889 2.02351 -1.03236 0.5 2.01106 2.03403 0.517889 2.02753 -1.02 0.521029 2.01106 -1.03403 0.517889 0.961958 -1.01236 0.5 0.965974 -1 0.521029 2.02753 2.02 0.521029 0.978971 -1 -0.534026 0.982987 -1.01236 0.534026 2.02351 2.03236 0.5 0.971056 2.02103 0.517889 0.971056 -1.02103 0.517889 2.03578 -1 0.517889 0.972472 -1.02 -0.521029 2.01701 -1.01236 -0.534026</float_array>
+                    <technique_common>
+                        <accessor count="42" source="#RenderMeshBulletUnnamed-0-Geometry-Child0-positions-array" stride="3">
+                            <param name="X" type="float"/>
+                            <param name="Y" type="float"/>
+                            <param name="Z" type="float"/>
+                        </accessor>
+                    </technique_common>
+                </source>
+                <vertices id="RenderMeshBulletUnnamed-0-Geometry-Child0-vertices">
+                    <input semantic="POSITION" source="#RenderMeshBulletUnnamed-0-Geometry-Child0-positions"/>
+                </vertices>
+                <triangles count="80">
+                    <input offset="0" semantic="VERTEX" source="#RenderMeshBulletUnnamed-0-Geometry-Child0-vertices"/>
+                    <p>0 1 2 3 4 5 6 4 3 7 8 9 10 11 12 10 12 13 14 6 15 14 15 16 14 4 6 17 18 16 17 1 18 17 2 1 19 10 13 20 16 18 20 14 16 20 4 14 20 18 21 22 19 13 23 8 7 23 7 24 25 15 6 25 9 8 26 0 27 26 27 12 26 1 0 28 15 25 28 25 8 29 23 24 29 27 0 30 27 29 30 29 24 30 24 22 30 22 13 30 13 12 30 12 27 31 32 3 31 3 5 33 28 8 33 8 23 34 5 4 34 4 20 34 21 11 34 20 21 35 24 7 35 22 24 35 9 32 35 7 9 36 28 33 36 33 2 36 2 17 36 17 16 36 16 15 36 15 28 37 9 25 37 25 6 37 6 3 37 32 9 37 3 32 38 22 35 38 35 32 38 32 31 38 31 19 38 19 22 39 2 33 39 33 23 39 23 29 39 29 0 39 0 2 40 5 34 40 34 11 40 19 31 40 31 5 40 10 19 40 11 10 41 1 26 41 26 12 41 18 1 41 21 18 41 12 11 41 11 21</p>
+                </triangles>
+            </mesh>
+        </geometry>
+        <geometry id="BulletUnnamed-0-Geometry-Child0" name="BulletUnnamed-0-Geometry-Child0">
+            <convex_mesh convex_hull_of="#RenderMeshBulletUnnamed-0-Geometry-Child0"/>
+        </geometry>
+        <geometry id="RenderMeshBulletUnnamed-0-Geometry-Child1" name="RenderMeshBulletUnnamed-0-Geometry-Child1">
+            <mesh>
+                <source id="RenderMeshBulletUnnamed-0-Geometry-Child1-positions">
+                    <float_array id="RenderMeshBulletUnnamed-0-Geometry-Child1-positions-array" count="126">-2.03804 0.987639 0.5 -2.03804 2.01236 0.5 -2.03578 1 -0.517889 1 2.04 0.5 -2.01106 2.03403 -0.517889 -2.01051 2.03236 0.52103 1.01051 2.03236 -0.52103 1.02894 0.978971 -0.517889 1.02351 0.967639 0.5 1.01051 0.96764 -0.52103 -2.02753 2.02 -0.521029 -2.03403 2 0.521029 -2.01106 0.965974 -0.517889 -2.0065 0.98 -0.534026 1.01701 0.98764 -0.534026 1.01701 2.01236 -0.534026 1.03403 2 -0.521029 -2.0065 2.02 -0.534026 -2.01701 2.01236 0.534026 -2.01701 0.98764 0.534026 1 1 0.54 1.0065 2.02 0.534026 1.02894 2.02103 -0.517889 1.03804 2.01236 0.5 1.01106 2.03403 0.517889 -2.02351 0.967639 0.5 -2.01051 0.96764 0.52103 -2.02351 2.03236 0.5 1.02753 2.02 0.521029 1.03578 1 0.517889 -2.02103 1 -0.534026 1.02351 2.03236 0.5 1.03804 0.987639 0.5 1 0.96 0.5 1.01106 0.965974 0.517889 1.02103 1 0.534026 -2.02894 0.978971 0.517889 -2.02894 2.02103 0.517889 1 2 -0.54 -2.02753 0.98 -0.521029 1.02753 0.98 0.521029 1.0065 0.98 0.534026</float_array>
+                    <technique_common>
+                        <accessor count="42" source="#RenderMeshBulletUnnamed-0-Geometry-Child1-positions-array" stride="3">
+                            <param name="X" type="float"/>
+                            <param name="Y" type="float"/>
+                            <param name="Z" type="float"/>
+                        </accessor>
+                    </technique_common>
+                </source>
+                <vertices id="RenderMeshBulletUnnamed-0-Geometry-Child1-vertices">
+                    <input semantic="POSITION" source="#RenderMeshBulletUnnamed-0-Geometry-Child1-positions"/>
+                </vertices>
+                <triangles count="80">
+                    <input offset="0" semantic="VERTEX" source="#RenderMeshBulletUnnamed-0-Geometry-Child1-vertices"/>
+                    <p>0 1 2 3 4 5 6 4 3 7 8 9 10 2 1 11 1 0 12 13 9 14 15 16 14 16 7 14 7 9 14 9 13 17 10 4 17 4 6 17 6 15 18 11 19 18 19 20 18 20 21 18 21 5 22 23 16 22 15 6 22 16 15 24 5 21 24 3 5 25 12 26 27 4 10 27 10 1 27 5 4 28 24 21 28 29 23 30 2 10 30 10 17 31 24 28 31 28 23 31 23 22 31 22 6 31 6 3 31 3 24 32 7 16 32 23 29 32 16 23 32 8 7 33 12 9 33 9 8 33 8 34 33 26 12 33 34 26 35 29 28 35 28 21 35 21 20 36 0 25 36 25 26 36 19 11 36 11 0 36 26 19 37 5 27 37 27 1 37 11 18 37 18 5 37 1 11 38 13 30 38 30 17 38 17 15 38 15 14 38 14 13 39 2 30 39 30 13 39 12 25 39 25 0 39 13 12 39 0 2 40 29 35 40 8 32 40 32 29 40 34 8 41 34 40 41 40 35 41 35 20 41 26 34 41 20 19 41 19 26</p>
+                </triangles>
+            </mesh>
+        </geometry>
+        <geometry id="BulletUnnamed-0-Geometry-Child1" name="BulletUnnamed-0-Geometry-Child1">
+            <convex_mesh convex_hull_of="#RenderMeshBulletUnnamed-0-Geometry-Child1"/>
+        </geometry>
+        <geometry id="RenderMeshBulletUnnamed-0-Geometry-Child2" name="RenderMeshBulletUnnamed-0-Geometry-Child2">
+            <mesh>
+                <source id="RenderMeshBulletUnnamed-0-Geometry-Child2-positions">
+                    <float_array id="RenderMeshBulletUnnamed-0-Geometry-Child2-positions-array" count="126">-2.01701 -2.01236 0.534026 -0.993502 -2.02 0.534026 -1 1 0.54 -0.989485 1.03236 -0.52103 -2.01106 1.03403 -0.517889 -1 1.04 0.5 -0.961958 -2.01236 0.5 -0.965974 1 -0.521029 -0.961958 1.01236 0.5 -2 1 -0.54 -0.982987 -2.01236 -0.534026 -2.0065 -2.02 -0.534026 -2.02753 -2.02 -0.521029 -2.03804 -2.01236 0.5 -2.03578 1 -0.517889 -0.989485 -2.03236 -0.52103 -2.01106 -2.03403 -0.517889 -2 -2.04 0.5 -0.971056 -2.02103 -0.517889 -0.976489 -2.03236 0.5 -0.982987 1.01236 -0.534026 -2.01701 1.01236 0.534026 -2.03403 1 0.521029 -2.02351 1.03236 0.5 -2.01051 1.03236 0.52103 -0.993502 1.02 0.534026 -0.971056 1.02103 -0.517889 -2.02894 -2.02103 0.517889 -0.972472 -2.02 0.521029 -0.988944 -2.03403 0.517889 -0.976489 1.03236 0.5 -0.972472 1.02 0.521029 -2.03804 1.01236 0.5 -2.01051 -2.03236 0.52103 -0.978971 1 0.534026 -2.02351 -2.03236 0.5 -0.988944 1.03403 0.517889 -2.02894 1.02103 0.517889 -0.964223 1 0.517889 -2.02103 1 -0.534026 -2.02753 1.02 -0.521029 -2.0065 1.02 -0.534026</float_array>
+                    <technique_common>
+                        <accessor count="42" source="#RenderMeshBulletUnnamed-0-Geometry-Child2-positions-array" stride="3">
+                            <param name="X" type="float"/>
+                            <param name="Y" type="float"/>
+                            <param name="Z" type="float"/>
+                        </accessor>
+                    </technique_common>
+                </source>
+                <vertices id="RenderMeshBulletUnnamed-0-Geometry-Child2-vertices">
+                    <input semantic="POSITION" source="#RenderMeshBulletUnnamed-0-Geometry-Child2-positions"/>
+                </vertices>
+                <triangles count="80">
+                    <input offset="0" semantic="VERTEX" source="#RenderMeshBulletUnnamed-0-Geometry-Child2-vertices"/>
+                    <p>0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 11 10 16 11 15 16 15 17 16 12 11 18 6 19 18 19 15 18 15 10 18 10 7 18 7 6 20 7 10 20 10 9 21 0 2 21 22 0 23 5 4 23 24 5 25 24 21 25 21 2 26 7 20 26 20 3 26 8 7 27 0 22 27 22 13 28 19 6 29 19 28 29 28 1 29 17 15 29 15 19 30 3 5 30 26 3 30 31 8 30 8 26 32 14 13 32 13 22 33 17 29 33 1 0 33 29 1 33 0 27 34 2 1 34 1 28 34 31 25 34 25 2 35 17 33 35 33 27 35 16 17 35 12 16 35 13 12 35 27 13 36 31 30 36 30 5 36 25 31 36 5 24 36 24 25 37 23 32 37 32 22 37 24 23 37 22 21 37 21 24 38 31 34 38 34 28 38 28 6 38 6 8 38 8 31 39 11 12 39 12 14 39 9 11 40 39 14 40 14 32 40 32 23 40 23 4 41 39 40 41 40 4 41 9 39 41 3 20 41 20 9 41 4 3</p>
+                </triangles>
+            </mesh>
+        </geometry>
+        <geometry id="BulletUnnamed-0-Geometry-Child2" name="BulletUnnamed-0-Geometry-Child2">
+            <convex_mesh convex_hull_of="#RenderMeshBulletUnnamed-0-Geometry-Child2"/>
+        </geometry>
+        <geometry id="RenderMeshBulletUnnamed-0-Geometry-Child3" name="RenderMeshBulletUnnamed-0-Geometry-Child3">
+            <mesh>
+                <source id="RenderMeshBulletUnnamed-0-Geometry-Child3-positions">
+                    <float_array id="RenderMeshBulletUnnamed-0-Geometry-Child3-positions-array" count="126">-1.0065 -0.98 -0.534026 2.01701 -0.98764 -0.534026 -1 -2 -0.54 2.0065 -2.02 0.534026 2.0065 -0.98 0.534026 -1 -1 0.54 -1.01701 -2.01236 0.534026 -1 -2.04 0.5 -1.01106 -2.03403 -0.517889 2.01051 -2.03236 -0.52103 2.01051 -0.96764 -0.52103 2.02894 -2.02103 -0.517889 2.02351 -2.03236 0.5 -1.01106 -0.965974 -0.517889 -1.02753 -0.98 -0.521029 -1.02351 -0.967639 0.5 2.01701 -2.01236 -0.534026 2.03403 -1 -0.521029 2.02894 -0.978971 -0.517889 2.02351 -0.967639 0.5 2.03804 -0.987639 0.5 -1.02894 -2.02103 0.517889 -1.03403 -1 0.521029 -1.03804 -2.01236 0.5 2.01106 -2.03403 0.517889 2.01106 -0.965974 0.517889 -1.01051 -0.96764 0.52103 -1.03804 -0.987639 0.5 -1.03578 -2 -0.517889 -1 -0.96 0.5 -1.01051 -2.03236 0.52103 2.02753 -0.98 0.521029 2.03578 -2 0.517889 2.02103 -2 0.534026 -1.01701 -0.98764 0.534026 2.03804 -2.01236 0.5 -1.02351 -2.03236 0.5 -1.02894 -0.978971 0.517889 -1.02103 -2 -0.534026 2.02753 -2.02 0.521029 -1.02753 -2.02 -0.521029 -1.0065 -2.02 -0.534026</float_array>
+                    <technique_common>
+                        <accessor count="42" source="#RenderMeshBulletUnnamed-0-Geometry-Child3-positions-array" stride="3">
+                            <param name="X" type="float"/>
+                            <param name="Y" type="float"/>
+                            <param name="Z" type="float"/>
+                        </accessor>
+                    </technique_common>
+                </source>
+                <vertices id="RenderMeshBulletUnnamed-0-Geometry-Child3-vertices">
+                    <input semantic="POSITION" source="#RenderMeshBulletUnnamed-0-Geometry-Child3-positions"/>
+                </vertices>
+                <triangles count="80">
+                    <input offset="0" semantic="VERTEX" source="#RenderMeshBulletUnnamed-0-Geometry-Child3-vertices"/>
+                    <p>0 1 2 3 4 5 3 5 6 7 8 9 10 1 0 11 12 9 13 10 0 13 0 14 13 14 15 16 1 17 16 17 11 16 11 9 16 2 1 18 10 19 18 19 20 18 20 17 18 1 10 18 17 1 21 6 22 21 22 23 24 9 12 24 7 9 25 26 4 25 19 10 27 15 14 27 28 23 27 23 22 27 14 28 29 13 15 29 10 13 29 25 10 29 15 26 29 26 25 30 7 24 30 3 6 30 24 3 30 6 21 31 20 19 31 19 25 31 25 4 31 32 20 33 32 31 33 31 4 33 4 3 34 5 4 34 4 26 34 6 5 34 22 6 35 11 17 35 20 32 35 17 20 35 12 11 36 7 30 36 30 21 36 21 23 36 8 7 37 22 34 37 34 26 37 15 27 37 27 22 37 26 15 38 28 14 38 14 0 38 0 2 39 12 35 39 35 32 39 32 33 39 33 3 39 3 24 39 24 12 40 28 38 40 8 36 40 36 23 40 23 28 41 8 40 41 40 38 41 38 2 41 2 16 41 16 9 41 9 8</p>
+                </triangles>
+            </mesh>
+        </geometry>
+        <geometry id="BulletUnnamed-0-Geometry-Child3" name="BulletUnnamed-0-Geometry-Child3">
+            <convex_mesh convex_hull_of="#RenderMeshBulletUnnamed-0-Geometry-Child3"/>
+        </geometry>
+    </library_geometries>
+    <library_physics_materials name="Bullet-PhysicsMaterials">
+        <physics_material id="BulletUnnamed-0-PhysicsMaterial" name="BulletUnnamed-0-PhysicsMaterial">
+            <technique_common>
+                <dynamic_friction>1</dynamic_friction>
+                <restitution>0</restitution>
+                <static_friction>1</static_friction>
+            </technique_common>
+        </physics_material>
+    </library_physics_materials>
+    <library_physics_models>
+        <physics_model id="Bullet-PhysicsModel" name="Bullet-PhysicsModel">
+            <rigid_body sid="BulletUnnamed-0-RigidBody" name="BulletUnnamed-0-RigidBody">
+                <technique_common>
+                    <dynamic>true</dynamic>
+                    <mass>1</mass>
+                    <inertia>1.55427 1.55427 2.88427</inertia>
+                    <instance_physics_material url="#BulletUnnamed-0-PhysicsMaterial"/>
+                    <shape/>
+                    <shape>
+                        <instance_geometry url="#BulletUnnamed-0-Geometry-Child0"/>
+                        <translate>0 0 0</translate>
+                        <rotate>1 0 0 0</rotate>
+                    </shape>
+                    <shape>
+                        <instance_geometry url="#BulletUnnamed-0-Geometry-Child1"/>
+                        <translate>0 0 0</translate>
+                        <rotate>1 0 0 0</rotate>
+                    </shape>
+                    <shape>
+                        <instance_geometry url="#BulletUnnamed-0-Geometry-Child2"/>
+                        <translate>0 0 0</translate>
+                        <rotate>1 0 0 0</rotate>
+                    </shape>
+                    <shape>
+                        <instance_geometry url="#BulletUnnamed-0-Geometry-Child3"/>
+                        <translate>0 0 0</translate>
+                        <rotate>1 0 0 0</rotate>
+                    </shape>
+                </technique_common>
+            </rigid_body>
+        </physics_model>
+    </library_physics_models>
+    <scene>
+        <instance_physics_scene url="#Scene-Physics"/>
+        <instance_visual_scene url="#Scene"/>
+    </scene>
+</COLLADA>

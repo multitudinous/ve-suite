@@ -8,8 +8,9 @@
 #ifndef OSGBULLET_COMPUTETRIMESHVISITOR
 #define OSGBULLET_COMPUTETRIMESHVISITOR    1
 
-#include <osg/Array>
 #include <osg/NodeVisitor>
+#include <osg/Array>
+#include <osg/Version>
 
 namespace osgBullet {
 
@@ -18,8 +19,11 @@ class ComputeTriMeshVisitor
     : public osg::NodeVisitor
 {
 public:
-
     ComputeTriMeshVisitor( osg::NodeVisitor::TraversalMode traversalMode = TRAVERSE_ALL_CHILDREN );
+
+#if( ( OPENSCENEGRAPH_MAJOR_VERSION >= 2) && (OPENSCENEGRAPH_MINOR_VERSION >= 8) )
+    META_NodeVisitor(osgBullet,ComputeTriMeshVisitor)
+#endif
 
     virtual void reset();
 

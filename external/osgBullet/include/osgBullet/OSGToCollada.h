@@ -24,7 +24,9 @@ public:
     // NOTR: loadedModel is _not_ const. This _will_ alter your scene graph.
     // It flattens static transforms using the osgUtil::Optimizer.
     // It removes loaded ProxyNodes (again with the Optimizer).
-    // If simplifyPercent is != 1.0, it runs the simplifier.
+    // Polygon reduction is performed if:
+    //   * _simplifiyPercenr or _decimatorPercent are != 1.0
+    //   * _vertexAggMaxVerts is positive.
     //
     // 'overall' and 'nodeName' work together to determine how the Bullet collision
     // shape is created (which is used to create the rigid body that is written to
@@ -57,8 +59,12 @@ public:
     void setMass( float mass );
     float getMass() const;
 
+    void setDecimateParamaters( float decimatePercent, float maxError=FLT_MAX );
+
     void setSimplifyPercent( float simplifyPercent );
     float getSimplifyPercent() const;
+
+    void setVertexAggParameters( unsigned int maxVertsPerCell, osg::Vec3 minCellSize=osg::Vec3(0.,0.,0.) );
 
     void setOverall( bool overall );
     bool getOverall() const;
@@ -83,7 +89,13 @@ protected:
     bool _comSet;
     BroadphaseNativeTypes _shapeType;
     float _mass;
+
+    float _decimatorPercent;
+    float _decimatorMaxError;
     float _simplifyPercent;
+    unsigned int _vertexAggMaxVerts;
+    osg::Vec3 _vertexAggMinCellSize;
+
     bool _overall;
     std::string _nodeName;
     osgBullet::AXIS _axis;
