@@ -8,18 +8,15 @@
 # correspond to the ./configure --prefix=$COLLADA_DIR
 
 FIND_PATH( COLLADA_INCLUDE_DIR dae.h
-        $ENV{COLLADADIR}
+    PATHS
         $ENV{COLLADADIR}
         $ENV{COLLADA_DIR}
-        $ENV{COLLADA_DIR}
-        $ENV{OSGDIR}
-        $ENV{OSGDIR}
-        $ENV{OSG_ROOT}
+        $ENV{BULLET_SOURCE_DIR}/../Extras/COLLADA_DOM
         /usr/local/
         /usr/local//colladadom
         /usr//
         /usr//colladadom
-        /sw # Fink
+        /sw
         /opt/local # DarwinPorts
         /opt/csw # Blastwave
         /opt/
@@ -28,15 +25,14 @@ FIND_PATH( COLLADA_INCLUDE_DIR dae.h
         /Library/Frameworks
     PATH_SUFFIXES
         include
+        .
 )
 
 FIND_LIBRARY( COLLADA_LIBRARY 
-    NAMES collada_dom collada14dom ColladaDom
+    NAMES collada_dom collada14dom ColladaDom LibColladaDom
     PATHS
         $ENV{COLLADA_DIR}
         $ENV{COLLADADIR}
-        $ENV{OSGDIR}
-        $ENV{OSG_ROOT}
         /usr/local
         /usr
         /sw # Fink
@@ -46,6 +42,8 @@ FIND_LIBRARY( COLLADA_LIBRARY
         /usr/freeware
         ~/Library/Frameworks
         /Library/Frameworks
+        $ENV{BULLET_BUILD_DIR}/Extras/COLLADA_DOM
+        $ENV{BULLET_BUILD_DIR}/Extras/COLLADA_DOM/release
     PATH_SUFFIXES
         lib
         lib_dbg
