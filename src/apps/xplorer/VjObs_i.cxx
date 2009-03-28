@@ -107,17 +107,15 @@ void VjObs_i::Cleanup()
 {
     delete m_commandTimer;
     m_commandTimer = 0;
-    std::cout << " here 1 " << std::endl;
     if( m_storeCommands )
     {
-        std::cout << " here 1 " << std::endl;
+        std::cout << "Writing VE movie file." << std::endl;
         std::ofstream commandScriptfile( "scriptFile.vem" );
         for( size_t i = 0; i < m_commandStringRecorder.size(); ++i )
         {
             commandScriptfile << m_commandStringRecorder.at( i ) << std::endl;
         }
         commandScriptfile.close();
-        std::cout << " here 1 " << std::endl;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
