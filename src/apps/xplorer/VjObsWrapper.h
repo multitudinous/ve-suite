@@ -106,6 +106,8 @@ public:
     ///Check to see if the orb needs to work. This ties the orb performance
     /// to the framerate
     void CheckORBWorkLoad();
+    ///Cleanup
+    void Cleanup();
 
     CosNaming::NamingContext* naming_context;///< holds the naming context for tao
     PortableServer::POA* child_poa;///< holds the poa server for tao

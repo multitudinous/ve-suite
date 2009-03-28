@@ -37,7 +37,7 @@ VjObs_i API
 */
 
 /*!\class ves::xplorer::VjObs_i
-*
+* Class for communicating xml commands
 */
 #include <ves/open/VjObsS.h>
 
@@ -62,6 +62,11 @@ VjObs_i API
 #include <ves/xplorer/ModelHandlerPtr.h>
 
 #include <ves/open/xml/CommandPtr.h>
+
+namespace vpr
+{
+class Timer;
+}
 
 namespace ves
 {
@@ -89,8 +94,10 @@ public:
     ///Destructor
     virtual ~VjObs_i()
     {
-        ;
+        //Cleanup();
     }
+    ///Cleanup memory
+    void Cleanup();
     ///Creates the geom info transfered to conductor
     ///may not be needed anymore
     void CreateGeometryInfo( void );
@@ -177,6 +184,14 @@ protected:
     ves::open::xml::DOMDocumentManager* domManager; ///< dom manger should be removed
     std::vector< ves::open::xml::CommandPtr > commandVectorQueue;///< command vector may be a duplicate
     std::vector< std::string > commandStringQueue;///< command queue with raw string data
+    ///Data container for command strings so that we can start recording 
+    ///user commands during running ves
+    std::vector< std::string > m_commandStringRecorder;
+    ///Determine if we can store commands
+    bool m_storeCommands;
+    ///Timer to record when commands are stored
+    vpr::Timer* m_commandTimer;
+    
     // Cluster Stuff for the above state variables
     cluster::UserData< vpr::SerializableObjectMixin< ClusterVariables::StateVariables > >  mStates;
     bool isCluster;///<cluster mode

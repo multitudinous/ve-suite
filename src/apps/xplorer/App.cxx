@@ -414,6 +414,7 @@ void App::latePreFrame()
         VPR_PROFILE_RESULTS();
         // exit App was selected
         vrj::Kernel::instance()->stop(); // Stopping kernel
+        m_vjobsWrapper->Cleanup();
     }
     else if( !tempCommandName.compare( "SCREEN_SHOT" ) )
     {

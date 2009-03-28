@@ -115,6 +115,13 @@ VjObsWrapper::~VjObsWrapper( void )
     {
         std::cerr << "Unknown exception." << std::endl;
     }
+    
+    //delete _vjObs;
+}
+////////////////////////////////////////////////////////////////////////////////
+void VjObsWrapper::Cleanup()
+{
+    _vjObs->Cleanup();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void VjObsWrapper::init( CosNaming::NamingContext* input,

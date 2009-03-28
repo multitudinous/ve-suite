@@ -62,6 +62,7 @@ using namespace ves::xplorer::volume;
 
 #include <vpr/System.h>
 #include <vpr/Util/Debug.h>
+#include <vpr/Util/Timer.h>
 #include <jccl/RTRC/ConfigManager.h>
 #include <vpr/Perf/ProfileManager.h>
 
@@ -71,27 +72,20 @@ using namespace ves::xplorer::volume;
 //vprSingletonImp( ves::xplorer::VjObs_i );
 
 using namespace ves::xplorer;
-//using namespace ves::xplorer::scenegraph;
-//using namespace ves::xplorer::scenegraph;
 using namespace ves::open::xml;
 
 VjObs_i::VjObs_i()
+    :
+    m_storeCommands( false ),
+    isCluster( false ),
+    numOfClientInfo( 0 ),
+    _models( 0 ),
+    frameNumber( 0 ),
+    time_since_start( 0 ),
+    m_commandTimer( new vpr::Timer() )
 {
-    this->numOfClientInfo = 9;
-    isCluster = false;
-    //int temp=0;
-    //this->setClients( 0 );
-
     teacher_name   = new VjObs::scalar_p();
 
-    //dataset_types  = new VjObs::obj_p(50);
-    //dataset_types->length(50);
-    //num_scalars_per_dataset = new VjObs::obj_p(50);
-    //num_scalars_per_dataset->length(50);
-    //num_vectors_per_dataset = new VjObs::obj_p( 50 );
-    //num_vectors_per_dataset->length(50);
-    //vec_name = new VjObs::scalar_p( 50 );
-    //vec_name->length( 50 );
     // This array is used in place of the call backs
     // to the client because the communication didn't
     // seem to work. There are 9 entries becuase that
@@ -101,13 +95,30 @@ VjObs_i::VjObs_i()
     clientInfoObserverDataArray->length( 50 );
     clientInfoObserverDataArray->length( this->numOfClientInfo );
     clientInfoObserverDataArray->length( 50 );
-    //this->_unusedNewData = false;
-    _models = NULL;
-    time_since_start = 0.0f;
-    frameNumber = 0;
+
     bufferCommand =  CommandPtr( new Command() );
     bufferCommand->AddDataValuePair( DataValuePairPtr( new DataValuePair() ) );
     bufferCommand->SetCommandName( "wait" );
+    
+    m_commandTimer->startTiming();
+}
+////////////////////////////////////////////////////////////////////////////////
+void VjObs_i::Cleanup()
+{
+    delete m_commandTimer;
+    m_commandTimer = 0;
+    std::cout << " here 1 " << std::endl;
+    if( m_storeCommands )
+    {
+        std::cout << " here 1 " << std::endl;
+        std::ofstream commandScriptfile( "scriptFile.vem" );
+        for( size_t i = 0; i < m_commandStringRecorder.size(); ++i )
+        {
+            commandScriptfile << m_commandStringRecorder.at( i ) << std::endl;
+        }
+        commandScriptfile.close();
+        std::cout << " here 1 " << std::endl;
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void VjObs_i::SetClusterMode( bool clusterFlag )
@@ -657,8 +668,7 @@ void VjObs_i::GetUpdateClusterStateVariables( void )
     {
         return;
     }
-    //sync up the frames on all nodes in the
-    //cluster
+    //sync up the frames on all nodes in the cluster EXCEPT for the master
     {
         //vpr::Guard<vpr::Mutex> val_guard(mValueLock);
         gmtl::Matrix44d matrix;
@@ -741,9 +751,10 @@ ACE_THROW_SPEC((
         vpr::System::msleep( 50 );  // 50 milli-second delay
     }*/
 
-    std::string commandString( value );
+    const std::string commandString( value );
     if( isCluster )
     {
+        //If we are the master in cluster mode
         if( mStates.isLocal() )
         {
             vpr::Guard<vpr::Mutex> val_guard( mValueLock );
@@ -754,6 +765,22 @@ ACE_THROW_SPEC((
     {
         //commandStringQueue.push_back( commandString );
         CreatCommandVector( commandString );
+    }
+    
+    
+    if( m_storeCommands )
+    {
+        m_commandTimer->stopTiming();
+        
+        std::ostringstream commandtime;
+        commandtime << std::endl << "**time = " 
+            << m_commandTimer->getLastTiming() << " ****" << std::endl;
+        m_commandStringRecorder.push_back( commandtime.str() );
+
+        m_commandStringRecorder.push_back( commandString );
+        
+        m_commandTimer->reset();
+        m_commandTimer->startTiming();
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
