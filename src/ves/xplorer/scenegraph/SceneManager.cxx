@@ -367,10 +367,12 @@ void SceneManager::_createLogo()
         osg::ref_ptr< osg::StateSet > stateset = mLogoNode->getOrCreateStateSet();
         osg::ref_ptr< osg::Program > program = new osg::Program;
 
-        osg::ref_ptr< osg::Shader > vertex_shader = new osg::Shader( osg::Shader::VERTEX, phong_vertex );
+        osg::ref_ptr< osg::Shader > vertex_shader = 
+            new osg::Shader( osg::Shader::VERTEX, phong_vertex );
         program->addShader( vertex_shader.get() );
 
-        osg::ref_ptr< osg::Shader > fragment_shader = new osg::Shader( osg::Shader::FRAGMENT, phong_fragment );
+        osg::ref_ptr< osg::Shader > fragment_shader = 
+            new osg::Shader( osg::Shader::FRAGMENT, phong_fragment );
         program->addShader( fragment_shader.get() );
 
         stateset->setAttribute( program.get() );
@@ -396,7 +398,8 @@ void SceneManager::PreFrameUpdate()
     else
     {
         mInvertedWorldDCS = gmtl::identity( mInvertedWorldDCS );
-        static_cast< ves::xplorer::scenegraph::DCS* >( mNavSwitch->getChild( 1 ) )->SetMat( mInvertedWorldDCS );
+        static_cast< ves::xplorer::scenegraph::DCS* >( 
+            mNavSwitch->getChild( 1 ) )->SetMat( mInvertedWorldDCS );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
