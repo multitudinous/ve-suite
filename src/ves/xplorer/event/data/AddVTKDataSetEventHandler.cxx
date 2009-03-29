@@ -241,8 +241,8 @@ void AddVTKDataSetEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xml
                 std::cout << "|\tLoading data for file "
                     << _activeModel->GetCfdDataSet( i )->GetFileName()
                     << std::endl;
-                lastDataAdded->LoadData();
                 lastDataAdded->SetArrow( ves::xplorer::ModelHandler::instance()->GetArrow() );
+                lastDataAdded->LoadData();
                 if( lastDataAdded->GetParent() == lastDataAdded )
                 {
                     _activeModel->GetDCS()->AddChild( lastDataAdded->GetDCS() );
