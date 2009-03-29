@@ -53,7 +53,6 @@
 #include <vpr/Sync/Mutex.h>
 #include <vpr/Thread/Thread.h>
 
-#ifdef _OSG
 #include <osg/ref_ptr>
 #include <osg/StateSet>
 
@@ -67,7 +66,6 @@ class cfdTextureDataSet;
 }
 }
 }
-#endif
 
 #include <string>
 #include <vector>
@@ -78,6 +76,7 @@ namespace ves
 {
 namespace xplorer
 {
+class ModelDatasetHandler;
 namespace scenegraph
 {
 class DCS;
@@ -187,10 +186,10 @@ public:
 
     ///Set the id for this model
     ///\param id the id of the model to be set
-    void SetID( unsigned int id );
+    void SetID( const std::string& id );
 
     ///Get the id for this model
-    unsigned int GetID( void );
+    const std::string& GetID();
 
     ///Add a new sound to the model
     ///\param soundName The name of the sound
@@ -233,6 +232,9 @@ public:
     ///The current graph
     /*std::string GetRootCADNodeID();*/
 
+    ///Get the dataset handler for this model
+    ves::xplorer::ModelDatasetHandler* GetModelDatasetHandler();
+
 private:
     vpr::Thread *loadDataTh;
     vpr::Mutex mValueLock;
@@ -262,7 +264,7 @@ private:
 
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > mModelDCS;
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > _worldDCS;
-    ves::xplorer::scenegraph::CADEntityHelper* mModelNode;
+    //ves::xplorer::scenegraph::CADEntityHelper* mModelNode;
     DataSet* activeDataSet;
     ves::xplorer::scenegraph::Clone* mirrorNode;
     osg::ref_ptr< ves::xplorer::scenegraph::Group > mirrorGroupNode;
@@ -276,15 +278,16 @@ private:
     bool mMoveOldVTKDataSets;
 
     /*std::string rootCADNodeID;///<ID for root CAD node id*/
-    unsigned int modelID;
+    std::string modelID;
 
 
     std::map<std::string, cfdSound> _availableSounds;///<The available sounds for this model.
-#ifdef _OSG
     std::map< std::string, std::vector< std::pair< std::string, osg::ref_ptr< osg::StateSet > > > > _nodeAttributes;///<The map of node attributes.
-#endif
 
-    ves::xplorer::ModelCADHandler* m_cadHandler;///<The CADHandler for this model.
+    ///The CADHandler for this model.
+    ves::xplorer::ModelCADHandler* m_cadHandler;
+    ///The Dataset Handler for this model.
+    ves::xplorer::ModelDatasetHandler* m_datasetHandler;
 };
 }
 }

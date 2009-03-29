@@ -171,7 +171,7 @@ void VjObs_i::InitCluster( void )
 }
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
-VjObs::Model* VjObs_i::GetModel( CORBA::Long modelID )
+VjObs::Model* VjObs_i::GetModel( const char* modelID )
 ACE_THROW_SPEC((
                    CORBA::SystemException
                ) )
@@ -190,7 +190,7 @@ ACE_THROW_SPEC((
     for( int i = 0; i < numberOfModels; ++i )
     {
         tempCfdModel = ModelHandler::instance()->GetModel( i );
-        if (( CORBA::Long )tempCfdModel->GetID() == modelID )
+        if( tempCfdModel->GetID() == std::string( modelID ) )
         {
             vprDEBUG( vesDBG, 1 ) << "|\tFound model: " 
                 << modelID << std::endl << vprDEBUG_FLUSH;

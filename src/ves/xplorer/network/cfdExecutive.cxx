@@ -626,7 +626,7 @@ void cfdExecutive::ParseSystem( ves::open::xml::model::SystemPtr system,
             temp->InitializeNode( parentNode );
             temp->AddSelfToSG();
             Model* tempCFDModel = temp->GetCFDModel();
-            tempCFDModel->SetID( model->GetModelID() );
+            tempCFDModel->SetID( modelID );
             ModelHandler::instance()->AddModel( tempCFDModel );
             // Give graphical plugins access to wand position, wand buttons,
             //and gui variables

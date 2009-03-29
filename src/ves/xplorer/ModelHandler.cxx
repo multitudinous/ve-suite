@@ -82,11 +82,9 @@
 
 #include <ves/open/xml/Command.h>
 
-#ifdef _OSG
 #include <ves/xplorer/volume/cfdTextureDataSet.h>
 #include <ves/xplorer/volume/cfdTextureManager.h>
 using namespace ves::xplorer::volume;
-#endif
 
 //#include <vtkPolyDataWriter.h>
 #include <vtkPolyDataNormals.h>
@@ -120,22 +118,22 @@ using namespace ves::xplorer::util;
 
 ModelHandler::ModelHandler( void )
     :
-    m_rescaleCADEntityTextures( false )
+    m_rescaleCADEntityTextures( false ),
+    activeDataset( 0 ),
+    arrow( 0 ),
+    _activeModel( 0 ),
+    tbased( false ),
+    _activeTDSet( 0 )
 {
     vprDEBUG( vesDBG, 2 ) << "ModelHandler constructor"
-    << std::endl << vprDEBUG_FLUSH;
-    _param.erase();
+        << std::endl << vprDEBUG_FLUSH;
 
-    activeDataset  = 0;
-    arrow          = 0;
-    _activeModel   = 0;
     activeCommand  = ves::open::xml::CommandPtr();
 
     //create null command to be returned when a command is not active
     nullCommand = ves::open::xml::CommandPtr( new ves::open::xml::Command() );
     nullCommand->SetCommandName( "NULL" );
 
-    tbased = false;
     _eventHandlers[ std::string( "SET_ROOT_CAD_NODE" )] = new ves::xplorer::event::CADSetRootNodeEventHandler();
     _eventHandlers[ std::string( "CAD_TRANSFORM_UPDATE" )] = new ves::xplorer::event::CADTransformEventHandler();
     _eventHandlers[ std::string( "CAD_ADD_NODE" )] = new ves::xplorer::event::CADAddNodeEventHandler();
@@ -164,10 +162,6 @@ ModelHandler::ModelHandler( void )
     _eventHandlers[ std::string( "CAD_OPACITY_UPDATE" )] = new ves::xplorer::event::CADSetOpacityEventHandler();
     _eventHandlers[ std::string( "Xplorer Toggle Plugin Events" )] = new ves::xplorer::event::cad::TogglePluginsEventHandler();
     _eventHandlers[ std::string( "Move to cad" )] = new ves::xplorer::event::cad::NavigateToEventHandler();
-
-#ifdef _OSG
-    _activeTDSet = 0;
-#endif
 }
 ////////////////////////////////////////////////////////////////////////////////
 void ModelHandler::Initialize( std::string param )
@@ -229,19 +223,13 @@ const ves::open::xml::CommandPtr& ModelHandler::GetXMLCommand( void )
 }
 /////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////
-#ifdef _OSG
 cfdTextureDataSet* ModelHandler::GetActiveTextureDataSet()
 {
     return _activeTDSet;
 }
-#endif
 /////////////////////////////////////////////////////
-//cfdScalarBarActor* ModelHandler::GetScalarBar(void)
-//{
-//   return _scalarBar;
-//}
 /////////////////////////////////////////////////////
-void ModelHandler::SetActiveModel( int modelNumber )
+void ModelHandler::SetActiveModel( const std::string& modelNumber )
 {
     _activeModel = 0;
     
@@ -250,8 +238,8 @@ void ModelHandler::SetActiveModel( int modelNumber )
         if( modelNumber == _modelList.at( i )->GetID() )
         {
             vprDEBUG( vesDBG, 1 ) << "|\tModelHandler::SetActiveModel : "
-            << modelNumber
-            << " is set." << std::endl << vprDEBUG_FLUSH;
+                << modelNumber
+                << " is set." << std::endl << vprDEBUG_FLUSH;
             _activeModel = _modelList.at( i );
             break;
         }
@@ -483,13 +471,12 @@ void ModelHandler::InitScene( void )
             activeDataset = _modelList.at( 0 )->GetCfdDataSet( 0 );
             _activeModel->SetActiveDataSet( activeDataset );
         }
-#ifdef _OSG
+
         if( _modelList.at( 0 )->GetNumberOfTextureDataSets() > 0 )
         {
             _activeTDSet = _modelList.at( 0 )->GetTextureDataSet( 0 );
             _activeModel->SetActiveTextureDataSet( _activeTDSet );
         }
-#endif
     }
 
     if( activeDataset != NULL )
@@ -587,4 +574,3 @@ void ModelHandler::ContextPreDrawUpdate()
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-

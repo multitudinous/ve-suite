@@ -1155,17 +1155,8 @@ void UIPluginBase::OnDClick( wxMouseEvent &event )
 ////////////////////////////////////////////////////////////////////////////////
 void UIPluginBase::CreateUserDialog( wxPoint extpos )
 {
-    ves::open::xml::DataValuePairPtr dataValuePair(
-        new ves::open::xml::DataValuePair( std::string( "UNSIGNED INT" ) ) );
-    dataValuePair->SetDataName( "CHANGE_ACTIVE_MODEL" );
-    dataValuePair->SetDataValue( static_cast< unsigned int >( id ) );
-    ves::open::xml::CommandPtr veCommand( new ves::open::xml::Command() );
-    veCommand->SetCommandName( std::string( "CHANGE_ACTIVE_MODEL" ) );
-    veCommand->AddDataValuePair( dataValuePair );
-
-    bool connected = serviceList->SendCommandStringToXplorer( veCommand );
-    //Clean up memory
-
+    SetActiveModel();
+    
     // now show the custom dialog with no parent for the wxDialog
     UIDialog* hello = UI( GetPluginParent() );
     hello->SetCORBAServiceList( serviceList );
@@ -1622,7 +1613,7 @@ void UIPluginBase::OnVisualization( wxCommandEvent& event )
 
     //Get the active model ID from the xml data
     ves::open::xml::model::ModelPtr activeXMLModel = GetVEModel();
-    unsigned int modelID = activeXMLModel->GetModelID();
+    const std::string modelID = activeXMLModel->GetID();
 
     //Get the active model from the CORBA side
     ///Should this be a member variable?
@@ -1630,7 +1621,7 @@ void UIPluginBase::OnVisualization( wxCommandEvent& event )
 
     try
     {
-        activeCORBAModel = serviceList->GetXplorerPointer()->GetModel( modelID );
+        activeCORBAModel = serviceList->GetXplorerPointer()->GetModel( modelID.c_str() );
     }
     catch ( CORBA::Exception& )
     {
@@ -1842,9 +1833,10 @@ bool UIPluginBase::CheckID()
 bool UIPluginBase::SetActiveModel()
 {
     // Create the command and data value pairs
-    ves::open::xml::DataValuePairPtr dataValuePair( new ves::open::xml::DataValuePair( std::string( "UNSIGNED INT" ) ) );
-    dataValuePair->SetDataName( "CHANGE_ACTIVE_MODEL" );
-    dataValuePair->SetDataValue( static_cast< unsigned int >( id ) );
+    ves::open::xml::DataValuePairPtr dataValuePair(
+        new ves::open::xml::DataValuePair() );
+    dataValuePair->SetData( "CHANGE_ACTIVE_MODEL", m_veModel->GetID() );
+
     ves::open::xml::CommandPtr veCommand( new ves::open::xml::Command() );
     veCommand->SetCommandName( std::string( "CHANGE_ACTIVE_MODEL" ) );
     veCommand->AddDataValuePair( dataValuePair );

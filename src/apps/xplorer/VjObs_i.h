@@ -127,7 +127,7 @@ public:
     VjObs::Models* GetModels() throw( CORBA::SystemException );
     ///Get the model with a specific id
     ///\param modelID the model id to get
-    VjObs::Model* GetModel( CORBA::Long modelID ) throw( CORBA::SystemException );
+    VjObs::Model* GetModel( const char* modelID ) throw( CORBA::SystemException );
     ///Get the number of teacher files
     short get_teacher_num() throw( CORBA::SystemException );
     ///Set the client info flag

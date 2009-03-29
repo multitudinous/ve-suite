@@ -36,6 +36,7 @@
 #include <ves/xplorer/Debug.h>
 #include <ves/xplorer/DataSet.h>
 #include <ves/xplorer/ModelCADHandler.h>
+#include <ves/xplorer/ModelDatasetHandler.h>
 
 #include <ves/xplorer/environment/cfdSound.h>
 
@@ -95,12 +96,17 @@ namespace ves
 namespace xplorer
 {
 Model::Model( ves::xplorer::scenegraph::DCS* worldDCS )
+    :
+    m_datasetHandler( 0 ),
+    m_cadHandler( 0 ),
+    activeDataSet( 0 ),
+    mirrorDataFlag( false ),
+    _activeTextureDataSet( 0 )
 {
     vprDEBUG( vesDBG, 1 ) << "|\tNew Model ! "
-    << std::endl << vprDEBUG_FLUSH;
-    this->mModelNode = 0;
-    //this->actor = NULL;
-    //ModelIndex = static_cast<ModelTypeIndex>(value);
+        << std::endl << vprDEBUG_FLUSH;
+    //this->mModelNode = 0;
+
     // Will fix this later so that each model has a dcs
     //mModelDCS = new ves::xplorer::scenegraph::DCS();
     _worldDCS = worldDCS;
@@ -109,10 +115,7 @@ Model::Model( ves::xplorer::scenegraph::DCS* worldDCS )
     //mirrorGroupNode = 0;
 
     //this->animation = 0;
-    this->activeDataSet = 0;
-    mirrorDataFlag = false;
-    _activeTextureDataSet = 0;
-    modelID = 10000000;
+    //modelID = 10000000;
 }
 ////////////////////////////////////////////////////////////////////////////////
 Model::~Model()
@@ -192,10 +195,15 @@ Model::~Model()
         m_cadHandler = 0;
     }
 }
-/////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 ves::xplorer::ModelCADHandler* Model::GetModelCADHandler()
 {
     return m_cadHandler;
+}
+////////////////////////////////////////////////////////////////////////////////
+ves::xplorer::ModelDatasetHandler* Model::GetModelDatasetHandler()
+{
+    return m_datasetHandler;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Model::PreFrameUpdate()
@@ -279,10 +287,10 @@ void Model::setModelType( ModelTypeIndex type )
     this->mModelType = type;
 }
 ////////////////////////////////////////////////////////////////////////////////
-ves::xplorer::scenegraph::CADEntityHelper* Model::GetCfdNode( )
+/*ves::xplorer::scenegraph::CADEntityHelper* Model::GetCfdNode( )
 {
     return this->mModelNode;
-}
+}*/
 ////////////////////////////////////////////////////////////////////////////////
 ves::xplorer::scenegraph::DCS* Model::GetDCS( )
 {
@@ -299,12 +307,12 @@ void Model::SetMirrorDataFlag( bool input )
     mirrorDataFlag = input;
 }
 ////////////////////////////////////////////////////////////////////////////////
-unsigned int Model::GetID( void )
+const std::string& Model::GetID()
 {
     return modelID;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Model::SetID( unsigned int id )
+void Model::SetID( const std::string& id )
 {
     modelID = id;
 }
@@ -335,7 +343,6 @@ unsigned int Model::GetIndexOfDataSet( std::string dataSetName )
     }
     return dataSetIndex;
 }
-#ifdef _OSG
 ////////////////////////////////////////////////////////////////////////////////
 ves::xplorer::volume::cfdTextureDataSet* Model::GetTextureDataSet( unsigned int index )
 {
@@ -363,7 +370,6 @@ unsigned int Model::GetNumberOfTextureDataSets()
 {
     return mTextureDataSets.size();
 }
-#endif
 ////////////////////////////////////////////////////////////////////////////////
 int Model::GetKeyForCfdDataSet( DataSet* input )
 {

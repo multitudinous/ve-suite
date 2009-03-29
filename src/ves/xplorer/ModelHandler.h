@@ -49,8 +49,6 @@
 #include <map>
 #include <utility>
 
-
-
 namespace ves
 {
 namespace xplorer
@@ -62,8 +60,6 @@ class CADEntity;
 }
 }
 
-
-#ifdef _OSG
 namespace ves
 {
 namespace xplorer
@@ -74,7 +70,6 @@ class cfdTextureDataSet;
 }
 }
 }
-#endif
 class vtkPolyData;
 
 
@@ -116,7 +111,7 @@ public:
     void AddModel( Model* );
     void RemoveModel( Model* );
     Model* GetActiveModel( void );
-    void SetActiveModel( int modelNumber );
+    void SetActiveModel( const std::string& modelNumber );
     int GetNumberOfModels( void );
 
     void ReadNNumberOfDataSets( std::string, std::string );
@@ -133,26 +128,19 @@ public:
     ///Reset the map holding cad references
     ///\param tempEntity CAD file to try and remove from the map
     void UnregisterCADFile( ves::xplorer::scenegraph::CADEntity* tempEntity );
-#ifdef _OSG
     //texture manager access
     ///Should this call be in the texture manager singleton not modelhandler
     ves::xplorer::volume::cfdTextureDataSet* GetActiveTextureDataSet( void );
-#endif
     bool GetVisOption();
 protected:
     vtkPolyData* _GetArrowPolyData();
 private:
-    std::string _param;
     DataSet* activeDataset;
     ves::open::xml::CommandPtr activeCommand;
     ves::open::xml::CommandPtr nullCommand;
-    //cfdReadParam* _readParam;
-    //cfdScalarBarActor* _scalarBar;
     Model* _activeModel;
 
-#ifdef _OSG
     ves::xplorer::volume::cfdTextureDataSet* _activeTDSet;
-#endif
     bool tbased;
     vtkPolyData* arrow;
     std::vector< Model* > _modelList;
