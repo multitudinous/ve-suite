@@ -68,6 +68,7 @@ namespace xplorer
 class cfdPlanes;
 class DataSetAxis;
 class DataSetScalarBar;
+class Model;
 }
 }
 
@@ -131,9 +132,15 @@ public:
 
     // Initialize the number of data to load and parallel process.
     // By default, use the octree table.
-    void LoadData( const std::string fileName );
+    //void LoadData( const std::string fileName );
     void LoadData( vtkUnstructuredGrid*, int );
     void LoadData();
+    void LoadData( vtkDataSet* data );
+
+    ///Set the filename for this dataset
+    ///\post Now LoadData can be called
+    void SetFileName( const std::string& filename );
+
     ///Load the precomputed data directory
     void LoadPrecomputedDataSlices();
 
@@ -208,7 +215,6 @@ public:
 
     void ResetScalarBarRange( double min, double max );
 
-    void SetFileName( const std::string filename );
     void SetFileName_OnFly( int );
     std::string GetFileName();
 
@@ -314,7 +320,13 @@ public:
 
     ///Get the number of points
     unsigned int GetNumberOfPoints();
+    ///Set the model for this dataset
+    void SetModel( ves::xplorer::Model* model );
+    
 private:
+    ///Temporary model pointer
+    ves::xplorer::Model* m_tempModel;
+    
     ///Operator callbacks for DataObjectHandler
     std::map<std::string, ves::xplorer::util::DataObjectHandler::DatasetOperatorCallback* > m_dataObjectOps;
     std::map< std::string, std::string > dataSetUUIDMap;
@@ -348,7 +360,7 @@ private:
     ///Lookup table.
     vtkLookupTable* lut;
     ///Original piece of vtk data
-    vtkDataObject* dataSet;   
+    vtkDataObject* m_dataSet;   
     ///holder for new vtk pipeline
     vtkAlgorithm* mDataReader;
     ///used by gui to place in appropriate column

@@ -321,7 +321,8 @@ void cfdExecutive::GetEverything( void )
             if(  ModelHandler::instance()->GetActiveModel() ==
                 foundPlugin->second->GetCFDModel() )
             {
-                ModelHandler::instance()->SetActiveModel( 0 );
+                std::string nullString;
+                ModelHandler::instance()->SetActiveModel( nullString );    
             }
             
             // if a module is on the pugins map but not on the id map
@@ -610,7 +611,7 @@ void cfdExecutive::ParseSystem( ves::open::xml::model::SystemPtr system,
                     mAvailableModules->GetLoader()->
                     CreateObject( "DefaultPlugin" ) );
             }
-            
+
             mPluginsMap[ modelID ] = temp;
             // When we create the _plugin map here we will do the following
             temp->SetPhysicsSimulator( ves::xplorer::scenegraph::

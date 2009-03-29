@@ -33,8 +33,9 @@
 #include <ves/xplorer/CommandHandler.h>
 
 #include <ves/xplorer/DataSet.h>
-
+#include <ves/xplorer/Model.h>
 #include <ves/xplorer/Debug.h>
+
 #include <ves/xplorer/event/viz/cfdPlanes.h>
 
 #include <ves/xplorer/event/data/DataSetAxis.h>
@@ -74,12 +75,11 @@
 #include <vtkActor.h>
 #include <vtkProperty.h>
 #include <vtkGeometryFilter.h>
-#ifdef VTK_POST_FEB20
 #include <vtkCompositeDataGeometryFilter.h>
-#else
-#include <vtkMultiGroupDataGeometryFilter.h>
-#endif
+#include <vtkCompositeDataSet.h>
+#include <vtkCompositeDataIterator.h>
 #include <vtkAlgorithm.h>
+#include <vtkCharArray.h>
 
 #include <iostream>
 #include <sstream>
@@ -95,7 +95,7 @@ namespace xplorer
 
 DataSet::DataSet( ) :
         parent( this ),
-        dataSet( 0 ),
+        m_dataSet( 0 ),
         x_planes( 0 ),
         y_planes( 0 ),
         z_planes( 0 ),
@@ -211,10 +211,15 @@ DataSet::~DataSet()
         this->z_planes = NULL;
     }
 
-    if( this->dataSet != NULL )
+    if( this->m_dataSet != NULL )
     {
-        this->dataSet->Delete();
-        this->dataSet = NULL;
+        //This dataset could be part of a composite dataset which would mean
+        //its memory is handled by another destructor
+        if( m_dataSet->GetReferenceCount() > 0 )
+        {
+            this->m_dataSet->Delete();
+            this->m_dataSet = NULL;
+        }
     }
 
     if( _vtkFHndlr )
@@ -382,12 +387,12 @@ vtkLookupTable * DataSet::GetLookupTable()
 
 vtkUnstructuredGrid * DataSet::GetUnsData()
 {
-    if( ! this->dataSet )
+    if( ! this->m_dataSet )
     {
         return NULL;
     }
 
-    if( ! this->dataSet->IsA( "vtkUnstructuredGrid" ) )
+    if( ! this->m_dataSet->IsA( "vtkUnstructuredGrid" ) )
     {
         vprDEBUG( vesDBG, 0 )
         << "DataSet::GetUnsData - dataset is not an unsGrid !!"
@@ -396,17 +401,17 @@ vtkUnstructuredGrid * DataSet::GetUnsData()
         return NULL;
     }
 
-    return ( vtkUnstructuredGrid* )this->dataSet;
+    return ( vtkUnstructuredGrid* )this->m_dataSet;
 }
 
 vtkPolyData * DataSet::GetPolyData()
 {
-    if( ! this->dataSet )
+    if( ! this->m_dataSet )
     {
         return NULL;
     }
 
-    if( ! this->dataSet->IsA( "vtkPolyData" ) )
+    if( ! this->m_dataSet->IsA( "vtkPolyData" ) )
     {
         vprDEBUG( vesDBG, 0 )
         << "DataSet::GetPolyData - dataset is not a vtkPolyData !!"
@@ -415,12 +420,12 @@ vtkPolyData * DataSet::GetPolyData()
         return NULL;
     }
 
-    return ( vtkPolyData* )this->dataSet;
+    return ( vtkPolyData* )this->m_dataSet;
 }
 
 vtkDataObject* DataSet::GetDataSet()
 {
-    return this->dataSet;
+    return this->m_dataSet;
 }
 
 void DataSet::SetType()
@@ -428,7 +433,7 @@ void DataSet::SetType()
     // this code only needs to be done once for each dataset...
     if( this->datasetType == -1 )
     {
-        int dataObjectType = this->dataSet->GetDataObjectType();
+        int dataObjectType = this->m_dataSet->GetDataObjectType();
         vprDEBUG( vesDBG, 1 ) << "\tdataObjectType: " << dataObjectType
         << std::endl << vprDEBUG_FLUSH;
 
@@ -479,11 +484,11 @@ int DataSet::GetNoOfDataForProcs()
 }
 #endif
 
-void DataSet::LoadData( const std::string filename )
+/*void DataSet::LoadData( const std::string filename )
 {
     SetFileName( filename );
     LoadData();
-}
+}*/
 
 void DataSet::LoadData( vtkUnstructuredGrid* dataset, int datasetindex )
 {
@@ -511,19 +516,19 @@ void DataSet::LoadData( vtkUnstructuredGrid* dataset, int datasetindex )
 ///////////////////////////
 void DataSet::LoadData()
 {
-    if( this->dataSet != NULL )
+    if( this->m_dataSet != NULL )
     {
         vprDEBUG( vesDBG, 1 ) << "|\tAlready have loaded the data for "
         << this->fileName
         << std::endl << vprDEBUG_FLUSH;
         return;
     }
-    else
-    {
-        vprDEBUG( vesDBG, 1 ) << "|\tLoadData: filename = " << this->fileName
-        << std::endl << vprDEBUG_FLUSH;
-    }
     
+    vprDEBUG( vesDBG, 1 ) << "|\tLoadData: filename = " << fileName
+        << std::endl << vprDEBUG_FLUSH;
+    ves::xplorer::CommandHandler::instance()
+        ->SendConductorMessage( "Loading file: " + fileName +".\n" );
+
     std::string extension = ves::xplorer::util::fileIO::getExtension( fileName );
     //What should the extension of the star.param file be?
     //The translator expects ".star" but we have things setup to
@@ -547,7 +552,7 @@ void DataSet::LoadData()
             _vtkFHndlr = new cfdVTKFileHandler();
         }
 
-        this->dataSet = _vtkFHndlr->GetDataSetFromFile( fileName );
+        this->m_dataSet = _vtkFHndlr->GetDataSetFromFile( fileName );
         //mDataReader = _vtkFHndlr->GetAlgorithm();
     }
     else
@@ -578,19 +583,19 @@ void DataSet::LoadData()
         parameters[8] = new char[strlen( "stream" ) + 1];
         strcpy(parameters[8], "stream" );*/
 
-        dataSet = m_externalFileLoader->GetVTKDataSet( nParams, parameters );
+        m_dataSet = m_externalFileLoader->GetVTKDataSet( nParams, parameters );
 
         for( unsigned int i = 0; i < nParams; ++i )
         {
             delete [] parameters[i];
         }
         delete parameters;
-        if( !dataSet )
+        if( !m_dataSet )
         {
             vprDEBUG( vesDBG, 1 ) << "|\tInvalid input file: " << fileName
                 << std::endl << vprDEBUG_FLUSH;
             ves::xplorer::CommandHandler::instance()
-            ->SendConductorMessage( "Invalid input file: " + fileName + ".\n" );
+                ->SendConductorMessage( "Invalid input file: " + fileName + ".\n" );
             return;
         }
     }
@@ -599,7 +604,7 @@ void DataSet::LoadData()
     {
         m_dataObjectHandler = new ves::xplorer::util::DataObjectHandler();
     }
-    m_dataObjectHandler->OperateOnAllDatasetsInObject( dataSet );
+    m_dataObjectHandler->OperateOnAllDatasetsInObject( m_dataSet );
 
     //Need to get number of pda
     this->numPtDataArrays = m_dataObjectHandler->GetNumberOfDataArrays();
@@ -669,7 +674,7 @@ void DataSet::LoadData()
                 dynamic_cast<ves::xplorer::util::ComputeVectorMagnitudeRangeCallback*>
                 ( m_dataObjectOps["Compute Vector Magnitude Range"] );
             m_dataObjectHandler->SetDatasetOperatorCallback( vecMagRangeCbk );
-            m_dataObjectHandler->OperateOnAllDatasetsInObject( this->dataSet );
+            m_dataObjectHandler->OperateOnAllDatasetsInObject( this->m_dataSet );
             vecMagRangeCbk->GetVectorMagnitudeRange( this->vectorMagRange );
         }
     }
@@ -682,7 +687,82 @@ void DataSet::LoadData()
     SetType();
     ves::xplorer::CommandHandler::instance()
         ->SendConductorMessage( "Loaded file: " + fileName +".\n" );
+    //Register this dataset with the modeldatahandler
+    CreateCompositeDataSets();
 }
+///////////////////////////
+void DataSet::LoadData( vtkDataSet* tempDataset )
+{
+    if( this->m_dataSet != NULL )
+    {
+        vprDEBUG( vesDBG, 1 ) << "|\tAlready have loaded the data for "
+            << fileName
+            << std::endl << vprDEBUG_FLUSH;
+        return;
+    }
+    
+    vprDEBUG( vesDBG, 1 ) << "|\tLoadData: filename = " << fileName
+    << std::endl << vprDEBUG_FLUSH;
+    ves::xplorer::CommandHandler::instance()
+        ->SendConductorMessage( "Loading file: " + fileName +".\n" );
+    
+    m_dataSet = tempDataset;
+
+    if( !m_dataObjectHandler )
+    {
+        m_dataObjectHandler = new ves::xplorer::util::DataObjectHandler();
+    }
+    m_dataObjectHandler->OperateOnAllDatasetsInObject( m_dataSet );
+    
+    //Need to get number of pda
+    this->numPtDataArrays = m_dataObjectHandler->GetNumberOfDataArrays();
+    
+    // count the number of scalars and store names and ranges...
+    StoreScalarInfo();
+    
+    // count the number of vectors and store names ...
+    this->numVectors = dynamic_cast<ves::xplorer::util::CountNumberOfParametersCallback*>
+    ( m_dataObjectOps["Count Number Of Vectors And Scalars"] )->GetNumberOfParameters( true );
+    if( this->numVectors )
+    {
+        this->vectorName = dynamic_cast<ves::xplorer::util::CountNumberOfParametersCallback*>
+        ( m_dataObjectOps["Count Number Of Vectors And Scalars"] )->GetParameterNames( true );
+    }
+    
+    // if there are point data, set the first scalar and vector as active...
+    if( this->numPtDataArrays )
+    {
+        // set the first scalar and vector as active
+        if( this->numScalars )
+            this->SetActiveScalar( 0 );
+        
+        if( this->numVectors )
+        {
+            this->SetActiveVector( 0 );
+            if( !this->vectorMagRange )
+            {
+                this->vectorMagRange = new double[2];
+            }
+            ves::xplorer::util::ComputeVectorMagnitudeRangeCallback* vecMagRangeCbk =
+            dynamic_cast<ves::xplorer::util::ComputeVectorMagnitudeRangeCallback*>
+            ( m_dataObjectOps["Compute Vector Magnitude Range"] );
+            m_dataObjectHandler->SetDatasetOperatorCallback( vecMagRangeCbk );
+            m_dataObjectHandler->OperateOnAllDatasetsInObject( this->m_dataSet );
+            vecMagRangeCbk->GetVectorMagnitudeRange( this->vectorMagRange );
+        }
+    }
+    else
+    {
+        vprDEBUG( vesDBG, 0 ) << "\tWARNING: No Point Data"
+        << std::endl << vprDEBUG_FLUSH;
+    }
+    
+    SetType();
+
+    ves::xplorer::CommandHandler::instance()
+        ->SendConductorMessage( "Loaded file: " + fileName +".\n" );
+    //Register this dataset with the modeldatahandler
+}    
 ////////////////////////////////////////////
 unsigned int DataSet::GetNumberOfPoints()
 {
@@ -692,7 +772,7 @@ unsigned int DataSet::GetNumberOfPoints()
             dynamic_cast<ves::xplorer::util::GetNumberOfPointsCallback*>
             ( m_dataObjectOps["Number Of Grid Points"] );
         m_dataObjectHandler->SetDatasetOperatorCallback( numberOfPointsCallback );
-        m_dataObjectHandler->OperateOnAllDatasetsInObject( this->dataSet );
+        m_dataObjectHandler->OperateOnAllDatasetsInObject( this->m_dataSet );
         return numberOfPointsCallback->GetNumberOfPoints();
 
     }
@@ -707,14 +787,13 @@ double* DataSet::GetBounds()
 //////////////////////////////////////////////////////////
 void DataSet::GetBounds( double bounds[6] )
 {
-
     if( m_dataObjectHandler )
     {
         ves::xplorer::util::ComputeDataObjectBoundsCallback* boundsCallback =
             dynamic_cast<ves::xplorer::util::ComputeDataObjectBoundsCallback*>
             ( m_dataObjectOps["Compute Bounds"] );
         m_dataObjectHandler->SetDatasetOperatorCallback( boundsCallback );
-        m_dataObjectHandler->OperateOnAllDatasetsInObject( this->dataSet );
+        m_dataObjectHandler->OperateOnAllDatasetsInObject( this->m_dataSet );
         boundsCallback->GetDataObjectBounds( bounds );
         this->bbDiagonal = boundsCallback->GetDataObjectBoundsDiagonal();
     }
@@ -778,7 +857,7 @@ void DataSet::SetActiveScalar( std::string tempActiveScalar )
         ( m_dataObjectOps["Active Data Information"] );
     activeDataInfoCbk->SetActiveDataName( this->scalarName[ this->activeScalar ] );
     m_dataObjectHandler->SetDatasetOperatorCallback( activeDataInfoCbk );
-    m_dataObjectHandler->OperateOnAllDatasetsInObject( this->dataSet );
+    m_dataObjectHandler->OperateOnAllDatasetsInObject( this->m_dataSet );
 */
     /*for( int i = 0; i < 3; i++ )
     {
@@ -1057,7 +1136,7 @@ void DataSet::SetActiveVector( std::string tempVectorName )
         ( m_dataObjectOps["Active Data Information"] );
     activeDataInfoCbk->SetActiveDataName( this->vectorName[ this->activeVector ], true );
     m_dataObjectHandler->SetDatasetOperatorCallback( activeDataInfoCbk );
-    m_dataObjectHandler->OperateOnAllDatasetsInObject( this->dataSet );
+    m_dataObjectHandler->OperateOnAllDatasetsInObject( this->m_dataSet );
 
     for( int i = 0; i < 3; i++ )
     {
@@ -1144,7 +1223,7 @@ void DataSet::ResetScalarBarRange( double min, double max )
     this->lut->Build();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DataSet::SetFileName( const std::string newName )
+void DataSet::SetFileName( const std::string& newName )
 {
     fileName.assign( newName );
     GetDCS()->SetName( fileName );
@@ -1447,10 +1526,9 @@ ves::xplorer::scenegraph::DCS* DataSet::GetDCS()
     if( !dcs.valid() )
     {
         dcs = new ves::xplorer::scenegraph::DCS();
-        return this->dcs.get();
     }
-    else
-        return this->dcs.get();
+    
+    return this->dcs.get();
 }
 /////////////////////////////////////////////////////////////////////
 void DataSet::SetDCS( ves::xplorer::scenegraph::DCS* myDCS )
@@ -1481,10 +1559,10 @@ void DataSet::StoreScalarInfo()
 {
     //Get the scalar and vector information
     m_dataObjectHandler->SetDatasetOperatorCallback( m_dataObjectOps["Count Number Of Vectors And Scalars"] );
-    m_dataObjectHandler->OperateOnAllDatasetsInObject( this->dataSet );
+    m_dataObjectHandler->OperateOnAllDatasetsInObject( this->m_dataSet );
     /*
     m_dataObjectHandler->SetDatasetOperatorCallback(m_dataObjectOps["Count Number Of Vectors And Scalars"]);
-    m_dataObjectHandler->OperateOnAllDatasetsInObject(this->dataSet);*/
+    m_dataObjectHandler->OperateOnAllDatasetsInObject(this->m_dataSet);*/
 
     // count the number of vectors and store names ...
     this->numScalars = dynamic_cast<ves::xplorer::util::CountNumberOfParametersCallback*>
@@ -1510,7 +1588,7 @@ void DataSet::StoreScalarInfo()
             dynamic_cast<ves::xplorer::util::ProcessScalarRangeCallback*>
             ( m_dataObjectOps["Scalar Range Information"] );
         m_dataObjectHandler->SetDatasetOperatorCallback( processScalarRangeCbk );
-        m_dataObjectHandler->OperateOnAllDatasetsInObject( this->dataSet );
+        m_dataObjectHandler->OperateOnAllDatasetsInObject( this->m_dataSet );
 
         //Add the scalar info to actual scalar range and displayed scalar range
         for( int i = 0; i < this->numScalars; ++i )
@@ -1593,7 +1671,7 @@ void DataSet::CreateBoundingBoxGeode( void )
         ( m_dataObjectOps["Create BBox Actors"] );
 
     m_dataObjectHandler->SetDatasetOperatorCallback( bboxActorsCbk );
-    m_dataObjectHandler->OperateOnAllDatasetsInObject( this->dataSet );
+    m_dataObjectHandler->OperateOnAllDatasetsInObject( this->m_dataSet );
     std::vector< vtkActor* > bboxActors = bboxActorsCbk->GetBBoxActors();
     size_t nBBoxActors = bboxActors.size();
     for( size_t i = 0; i < nBBoxActors; ++i )
@@ -1771,11 +1849,69 @@ std::string DataSet::GetActiveVectorName()
     return GetVectorName( GetActiveVector() );
 }    
 ////////////////////////////////////////////////////////////////////////////////
+void DataSet::SetModel( ves::xplorer::Model* model )
+{
+    m_tempModel = model;
+}    
+////////////////////////////////////////////////////////////////////////////////
 void DataSet::CreateCompositeDataSets()
 {
     ///Loop over all datasets
     ///Load datasets
     ///Register with model
+    //If dataobject is a multi block dataset then load the individual blocks
+    if( m_dataSet->IsA( "vtkCompositeDataSet" ) )
+    {
+        vtkDataSet* currentDataset = 0;
+        vtkCompositeDataSet* mgd = static_cast< vtkCompositeDataSet* >( m_dataSet );
+        vtkCompositeDataIterator* mgdIterator = vtkCompositeDataIterator::New();
+        mgdIterator->SetDataSet( mgd );
+        ///For traversal of nested multigroupdatasets
+        mgdIterator->VisitOnlyLeavesOn();
+        mgdIterator->GoToFirstItem();
+        
+        unsigned int num = 0;
+        while( !mgdIterator->IsDoneWithTraversal() )
+        {
+            currentDataset = 
+                dynamic_cast<vtkDataSet*>( mgdIterator->GetCurrentDataObject() );
+            //Do work
+            //new dataset
+            m_tempModel->CreateCfdDataSet();
+            ves::xplorer::DataSet* tempDataset = 
+                m_tempModel->GetCfdDataSet( -1 );
+            //set dcs
+            tempDataset->SetDCS( this->GetDCS() );
+            //set filename     
+            std::string subfilename;
+                   
+            vtkCharArray* tempChar = 
+                dynamic_cast< vtkCharArray* >( 
+                    currentDataset->GetFieldData()->GetArray( "Name" ) );
+            if( tempChar )
+            {
+                subfilename = tempChar->WritePointer( 0, 0 );
+            }
+            else
+            {
+                std::ostringstream filenameStream;
+                filenameStream << "Subdataset-" << num;
+                subfilename = filenameStream.str();
+            }
+            std::cout << "test out " << subfilename << std::endl;
+            tempDataset->SetFileName( subfilename );
+            //set the vector arrow
+            tempDataset->SetArrow( arrow );
+            //Load Data sort of
+            tempDataset->LoadData( currentDataset );
+            
+            mgdIterator->GoToNextItem();
+            num++;
+        }
+        
+        mgdIterator->Delete();
+        mgdIterator = 0;
+    }    
 }    
 ////////////////////////////////////////////////////////////////////////////////
 } // end xplorer

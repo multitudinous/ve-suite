@@ -65,7 +65,6 @@ DataObjectHandler::~DataObjectHandler()
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 void DataObjectHandler::OperateOnAllDatasetsInObject( vtkDataObject* dataObject )
 {
-    unsigned int numDatasets = 0;
     vtkDataSet* currentDataset = 0;
 #ifdef VTK_POST_FEB20
     if( dataObject->IsA( "vtkCompositeDataSet" ) )
@@ -77,8 +76,6 @@ void DataObjectHandler::OperateOnAllDatasetsInObject( vtkDataObject* dataObject 
         {
 #ifdef VTK_POST_FEB20
             vtkCompositeDataSet* mgd = dynamic_cast<vtkCompositeDataSet*>( dataObject );
-            //unsigned int nGroups = mgd->GetNumberOfGroups();
-            unsigned int nDatasetsInGroup = 0;
             vtkCompositeDataIterator* mgdIterator = vtkCompositeDataIterator::New();
             mgdIterator->SetDataSet( mgd );
             ///For traversal of nested multigroupdatasets
@@ -86,8 +83,6 @@ void DataObjectHandler::OperateOnAllDatasetsInObject( vtkDataObject* dataObject 
             mgdIterator->GoToFirstItem();
 #else
             vtkMultiGroupDataSet* mgd = dynamic_cast<vtkMultiGroupDataSet*>( dataObject );
-            //unsigned int nGroups = mgd->GetNumberOfGroups();
-            unsigned int nDatasetsInGroup = 0;
             vtkMultiGroupDataIterator* mgdIterator = vtkMultiGroupDataIterator::New();
             mgdIterator->SetDataSet( mgd );
             ///For traversal of nested multigroupdatasets

@@ -249,15 +249,9 @@ private:
     typedef std::vector< ves::xplorer::DataSet* > VTKDataSetList;
     VTKDataSetList mVTKDataSets;
 
-    /*std::map< std::string, ves::xplorer::scenegraph::CADEntity* > _partList;///<A list of the current parts.
-    std::map< std::string, ves::xplorer::scenegraph::DCS* > _assemblyList;///A list of the current assemblies.
-    std::map< std::string, ves::xplorer::scenegraph::Clone* > _cloneList;///A list of clones.
-    */
-#ifdef _OSG
     typedef std::vector<ves::xplorer::volume::cfdTextureDataSet*> TextureDataSetList;
     TextureDataSetList mTextureDataSets;
     ves::xplorer::volume::cfdTextureDataSet* _activeTextureDataSet;
-#endif
 
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > mModelDCS;
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > _worldDCS;

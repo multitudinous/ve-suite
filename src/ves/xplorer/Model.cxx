@@ -208,8 +208,8 @@ void Model::PreFrameUpdate()
 void Model::CreateCfdDataSet( void )
 {
     mVTKDataSets.push_back( new DataSet() );
+    mVTKDataSets.back()->SetModel( this );
 }
-
 ////////////////////////////////////////////////////////////////////////////////
 void Model::SetMirrorNode( ves::xplorer::scenegraph::Group* dataNode )
 {

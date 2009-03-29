@@ -110,5 +110,6 @@ void ReloadPluginsEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xml
     modules->ResetPluginLoader();
     //Set active model to null so that if the previous active model is deleted
     //that we don't get errors in our code other places.
-    ModelHandler::instance()->SetActiveModel( 0 );    
+    std::string nullString;
+    ModelHandler::instance()->SetActiveModel( nullString );    
 }
