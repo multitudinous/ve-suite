@@ -105,17 +105,11 @@ Model::Model( ves::xplorer::scenegraph::DCS* worldDCS )
 {
     vprDEBUG( vesDBG, 1 ) << "|\tNew Model ! "
         << std::endl << vprDEBUG_FLUSH;
-    //this->mModelNode = 0;
 
     // Will fix this later so that each model has a dcs
     //mModelDCS = new ves::xplorer::scenegraph::DCS();
     _worldDCS = worldDCS;
     m_cadHandler = new ves::xplorer::ModelCADHandler( _worldDCS.get() );
-    //mirrorNode = 0;
-    //mirrorGroupNode = 0;
-
-    //this->animation = 0;
-    //modelID = 10000000;
 }
 ////////////////////////////////////////////////////////////////////////////////
 Model::~Model()
@@ -286,11 +280,6 @@ void Model::setModelType( ModelTypeIndex type )
 {
     this->mModelType = type;
 }
-////////////////////////////////////////////////////////////////////////////////
-/*ves::xplorer::scenegraph::CADEntityHelper* Model::GetCfdNode( )
-{
-    return this->mModelNode;
-}*/
 ////////////////////////////////////////////////////////////////////////////////
 ves::xplorer::scenegraph::DCS* Model::GetDCS( )
 {

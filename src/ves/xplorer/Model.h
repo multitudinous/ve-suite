@@ -146,7 +146,7 @@ public:
 
     ///in future, multi-threaded apps will make a copy of VjObs_i commandArray
     virtual void UpdateCommand()
-    {}
+    {;}
 
     void setModelNode( ves::xplorer::scenegraph::CADEntityHelper * );
     void setModelType( ModelTypeIndex );//four type models right now (experiment, simulation, design, and geometry)
@@ -175,9 +175,6 @@ public:
     ///of CADNode s
     ///\return ModelCADHandler
     ves::xplorer::ModelCADHandler* GetModelCADHandler();
-
-    ///Get the node for the cfd data set
-    ves::xplorer::scenegraph::CADEntityHelper* GetCfdNode( void );
 
     ///Get the dcs for the CAD and the data viz to be added to
     ///All plugins have only one model and thus have one DCS
@@ -264,7 +261,7 @@ private:
 
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > mModelDCS;
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > _worldDCS;
-    //ves::xplorer::scenegraph::CADEntityHelper* mModelNode;
+
     DataSet* activeDataSet;
     ves::xplorer::scenegraph::Clone* mirrorNode;
     osg::ref_ptr< ves::xplorer::scenegraph::Group > mirrorGroupNode;
