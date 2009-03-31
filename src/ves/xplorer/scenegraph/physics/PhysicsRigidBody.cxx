@@ -358,11 +358,11 @@ void PhysicsRigidBody::RegisterRigidBody( btRigidBody* rigidBody )
     //Experimental: better estimation of CCD Time of Impact:
     //rigidBody->setCcdSweptSphereRadius( 0.2*bs.radius() );
     
-    rigidBody->setActivationState( DISABLE_DEACTIVATION );
+    //rigidBody->setActivationState( DISABLE_DEACTIVATION );
 
     mPhysicsSimulator->GetDynamicsWorld()->addRigidBody( rigidBody );
     
-    if( mDebugBoundaries )
+    /*if( mDebugBoundaries )
     {
         //Setup debug display
         // Add visual rep of Bullet Collision shape.
@@ -379,7 +379,7 @@ void PhysicsRigidBody::RegisterRigidBody( btRigidBody* rigidBody )
             mPhysicsSimulator->GetDebugBullet()->addDynamic( dmt );
             motion->resetTransform();
         }
-    }
+    }*/
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsRigidBody::StaticConcaveShape()
