@@ -199,7 +199,7 @@ osg::Quat DCS::GetQuat( )
 ////////////////////////////////////////////////////////////////////////////////
 void DCS::SetRotationArray( std::vector< double > rotArray )
 {
-    osg::Vec3d pitch( 1, 0, 0 );
+    /*osg::Vec3d pitch( 1, 0, 0 );
     osg::Vec3d roll( 0, 1, 0 );
     osg::Vec3d yaw( 0, 0, 1 );
 
@@ -211,9 +211,9 @@ void DCS::SetRotationArray( std::vector< double > rotArray )
     osg::Quat quat;
     quat = rotateMat.getRotate();
     setAttitude( quat );
-    setPivotPoint( osg::Vec3d( 0, 0, 0 ) );
+    setPivotPoint( osg::Vec3d( 0, 0, 0 ) );*/
 
-    /*
+    
     // We now have h, p, and r angles. Build a Quat to affect these rotatiions.
     // We do this by creating a Matrix that contains correctly-oriented x, y, and
     // z axes. Then we create the Quat from the Matrix.
@@ -221,15 +221,15 @@ void DCS::SetRotationArray( std::vector< double > rotArray )
     // First, create x, y, and z axes that represent the h, p, and r angles.
     //   Rotate x and y axes by the heading.
     osg::Vec3 z( 0., 0., 1. );
-    osg::Quat qHeading( _h, z );
+    osg::Quat qHeading( osg::DegreesToRadians( rotArray[0] ), z );
     osg::Vec3 x = qHeading * osg::Vec3( 1., 0., 0. );
     osg::Vec3 y = qHeading * osg::Vec3( 0., 1., 0. );
     //   Rotate z and y axes by the pitch.
-    osg::Quat qPitch( _p, x );
+    osg::Quat qPitch( osg::DegreesToRadians( rotArray[1] ), x );
     y = qPitch * y;
     z = qPitch * z;
     //   Rotate x and z axes by the roll.
-    osg::Quat qRoll( _r, y );
+    osg::Quat qRoll( osg::DegreesToRadians( rotArray[2] ), y );
     x = qRoll * x;
     z = qRoll * z;
     // Use x, y, and z axes to create an orientation matrix.
@@ -238,9 +238,11 @@ void DCS::SetRotationArray( std::vector< double > rotArray )
                   z[0], z[1], z[2], 0.,
                   0., 0., 0., 1. );
     
-    osg::Quat q;
-    q.set( m );
-    */
+    osg::Quat quat;
+    quat.set( m );
+    setAttitude( quat );
+    setPivotPoint( osg::Vec3d( 0, 0, 0 ) );
+
     UpdatePhysicsTransform();
 }
 ////////////////////////////////////////////////////////////////////////////////
