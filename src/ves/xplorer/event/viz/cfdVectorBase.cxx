@@ -317,9 +317,9 @@ float cfdVectorBase::GetVectorScaleFactor()
     float scaleFactor = exp( this->GetVectorScale() / ( 100.0 / range ) ) * 
     this->GetActiveDataSet()->GetMeanCellLength();
     */
-    // This scale returns a range of ~ 0.103 ->  ~ 181 units
+    // This scale returns a range of ~ 0.0103 ->  ~ 220 units
     float range = 2.5;
-    float scaleFactor = ( exp( this->GetVectorScale() / ( 100.0 / range ) ) ) * 0.10f;
+    float scaleFactor = ( exp( this->GetVectorScale() / ( 100.0 / range ) ) ) * 0.01f;
 
     vprDEBUG( vesDBG, 1 )
     << "|\tcfdVectorBase::GetVectorScaleFactor scaleFactor = "
