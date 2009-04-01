@@ -276,7 +276,7 @@ tao_options = fp_option.FlagPollBasedOption("ACE TAO libraries",
 #                                                autoLink = True)
 #else:
 boost_options = fp_option.FlagPollBasedOption("Boost Libraries",
-        "Boost.Filesystem", "1.33.1", True, True, helpText=None, compileTest=True)
+        "Boost.Filesystem", "1.32.0", True, True, helpText=None, compileTest=True)
 
 gmtl_options = fp_option.FlagPollBasedOption("Generic Math Template Library",
                                              "gmtl", "0.5", True, True,
