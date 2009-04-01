@@ -86,8 +86,18 @@ osg::Geode* ves::xplorer::scenegraph::vtkActorToOSG( vtkActor *actor, osg::Geode
         geode = new osg::Geode();
         //std::cout << " creating a new geode in vtkactortoosg" << std::endl;
     }
-    // get poly data
-    vtkPolyData* polyData = dynamic_cast< vtkPolyData* >( actor->GetMapper()->GetInput() );
+    vtkPolyData* polyData = 0;
+    try
+    {
+        // get poly data
+        polyData = dynamic_cast< vtkPolyData* >( actor->GetMapper()->GetInput() );
+    }
+    catch(...)
+    {
+        std::cerr << "ERROR! Actor must use a vtkPolyDataMapper." << std::endl;
+        std::cerr << "If you are using a vtkDataSetMapper, use vtkGeometryFilter instead." << std::endl;
+        return NULL;
+    }
 
     if( verbose )
     {

@@ -132,6 +132,8 @@ void cfdVectors::Update( void )
             vprDEBUG( vesDBG, 0 ) << "cfdVectors Error: cursor not in cube\n"
             << vprDEBUG_FLUSH;
             this->updateFlag = false;
+            this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz )->GetPlanesData()->Delete();
+            return;
         }
     }
     //make sure that there are planesData and that the cursorType is correct...
@@ -162,6 +164,8 @@ void cfdVectors::Update( void )
     else
     {
         this->updateFlag = false;
+        this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz )->GetPlanesData()->Delete();
+        return;
     }
 
     vtkActor* temp = vtkActor::New();

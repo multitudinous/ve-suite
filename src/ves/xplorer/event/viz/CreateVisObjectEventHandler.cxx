@@ -565,7 +565,7 @@ void CreateVisObjectEventHandler::Execute( const ves::open::xml::XMLObjectPtr& x
     //this->activeObject->SetActiveDataSet( ModelHandler::instance()->GetActiveModel()->GetActiveDataSet() );
     //this->activeObject->SetNormal( EnvironmentHandler::instance()->GetNavigate()->GetDirection() );
     //this->activeObject->SetOrigin( EnvironmentHandler::instance()->GetNavigate()->GetObjLocation() );
-    //this->activeObject->SetCursorType( EnvironmentHandler::instance()->GetCursor()->GetCursorID() );
+    activeObject->SetCursorType( NONE );//EnvironmentHandler::instance()->GetCursor()->GetCursorID() );
     activeObject->SetUpdateFlag( false );
 
     //call back over to ssvishandler to set the flags
