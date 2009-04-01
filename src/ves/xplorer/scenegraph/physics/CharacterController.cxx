@@ -197,7 +197,7 @@ void CharacterController::TurnOn()
 
     dynamicsWorld->addCharacter( mCharacter );
 
-    Reset( dynamicsWorld );
+    Reset();
 
     mActive = true;
 }
@@ -235,8 +235,10 @@ void CharacterController::Jump()
     */
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CharacterController::Reset( btDynamicsWorld* dynamicsWorld )
+void CharacterController::Reset()
 {
+    btDynamicsWorld* dynamicsWorld =
+        vxs::PhysicsSimulator::instance()->GetDynamicsWorld();
     btDispatcher* dispatcher = dynamicsWorld->getDispatcher();
     btBroadphaseInterface* broadphase = dynamicsWorld->getBroadphase();
     broadphase->getOverlappingPairCache()->cleanProxyFromPairs(
@@ -289,8 +291,12 @@ void CharacterController::Advance( btScalar dt )
     if( deltaDeviceInput.first != 0.0 || deltaDeviceInput.second != 0.0 )
     {
         mTurnAngleX += deltaDeviceInput.first;
-        //Prevent movement past 90 degrees about the x-axis
-        if( mTurnAngleX > gmtl::Math::PI_OVER_2 )
+        //Restrict movement about the x-axis from -PI/2 to PI/2
+        if( mTurnAngleX < -gmtl::Math::PI_OVER_2 )
+        {
+            mTurnAngleX = -gmtl::Math::PI_OVER_2;
+        }
+        else if( mTurnAngleX > gmtl::Math::PI_OVER_2 )
         {
             mTurnAngleX = gmtl::Math::PI_OVER_2;
         }
@@ -512,6 +518,15 @@ void CharacterController::EyeToCenterRayTest(
                 mFromCameraDistance = mCameraDistance;
                 mToCameraDistance = osg::Vec3(
                     itr->getWorldIntersectPoint() - startPoint ).length();
+
+                if( mToCameraDistance < mMinCameraDistance )
+                {
+                    mToCameraDistance = mMinCameraDistance;
+                }
+                else if( mToCameraDistance > mMaxCameraDistance )
+                {
+                    mToCameraDistance = mMaxCameraDistance;
+                }
 
                 mCameraLERP = true;
                 mCameraLERPdt = 0.0;

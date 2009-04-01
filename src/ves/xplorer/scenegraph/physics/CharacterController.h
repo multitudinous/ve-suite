@@ -105,7 +105,7 @@ public:
     bool IsActive();
 
     ///Reset the character controller
-    void Reset( btDynamicsWorld* dynamicsWorld );
+    void Reset();
 
     ///
     void FirstPersonMode( bool onOff );
@@ -167,6 +167,7 @@ private:
     void SetBufferSizeAndWeights( size_t bufferSize, double weightModifier );
 
     ///
+    ///\return Returns the delta device input for the frame
     std::pair< double, double > UpdateHistoryBuffer();
 
     ///Tracks the on/off status of the character controller

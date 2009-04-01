@@ -447,6 +447,13 @@ void PhysicsSimulator::ResetScene()
             }
         }
     }
+
+    vxs::CharacterController* characterController =
+        vxs::SceneManager::instance()->GetCharacterController();
+    if( characterController->IsActive() )
+    {
+        characterController->Reset();
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsSimulator::ShootBox( const btVector3& destination )
