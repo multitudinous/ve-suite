@@ -440,8 +440,8 @@ void Vistab::_onContour( wxCommandEvent& WXUNUSED( event ) )
     if( !scalarContour )
     {
         scalarContour = new Contours( this,
-                                      /*SYMBOL_CONTOURS_IDNAME*/ -1,
-                                      SYMBOL_CONTOURS_TITLE,
+                                      -1,
+                                      _("Contours"),
                                       SYMBOL_CONTOURS_POSITION,
                                       SYMBOL_CONTOURS_SIZE,
                                       SYMBOL_CONTOURS_STYLE );
@@ -462,8 +462,8 @@ void Vistab::_onVector( wxCommandEvent& WXUNUSED( event ) )
     else if( !vectorContour )
     {
         vectorContour = new Contours( this,
-                                      /*SYMBOL_CONTOURS_IDNAME*/ -1,
-                                      SYMBOL_CONTOURS_TITLE,
+                                      -1,
+                                      _("Vectors"),
                                       SYMBOL_CONTOURS_POSITION,
                                       SYMBOL_CONTOURS_SIZE,
                                       SYMBOL_CONTOURS_STYLE, "VECTOR" );

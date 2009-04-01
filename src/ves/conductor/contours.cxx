@@ -77,7 +77,6 @@ Contours::Contours( wxWindow* parent, wxWindowID id,
     :
     _dataType( type )
 {
-    SetDataType( type );
     Create( parent, id, caption, pos, size, style );
 }
 /////////////////////////////////////////////////////////////////////////////////
@@ -102,7 +101,7 @@ bool Contours::Create( wxWindow* parent, wxWindowID id, const wxString& caption,
     _lastLOD = 1.0f;
     _lastWarpedScale = 1.0f;
     _lastOpacity = 100.0f;
-    _lastVectorScale = 1.0f;
+    _lastVectorScale = 200.0f;
     _lastVectorRatio = 1.0f;
     _lastScaleByMagnitude = false;
     _lastVectorThreshold.push_back( 1.0f );
@@ -117,6 +116,16 @@ bool Contours::Create( wxWindow* parent, wxWindowID id, const wxString& caption,
     GetSizer()->SetSizeHints( this );
     Centre();
     SetIcon( ve_icon32x32_xpm );
+    
+    /*if( _dataType == "SCALAR" )
+    {
+        SetTitle( _( "Scalar Contour" ) );
+    }
+    else if( _dataType == "VECTOR" )
+    {
+        SetTitle( _( "Vector Contour" ) );
+    }*/
+    
     return true;
 }
 ///////////////////////////////
@@ -227,15 +236,6 @@ Contours::~Contours()
 void Contours::SetDataType( std::string type )
 {
     _dataType = type;
-
-    if( _dataType == "SCALAR" )
-    {
-        SetTitle( _( "Scalar Contour" ) );
-    }
-    else if( _dataType == "VECTOR" )
-    {
-        SetTitle( _( "Vector Contour" ) );
-    }
 }
 /////////////////////////////
 bool Contours::ShowToolTips()

@@ -65,8 +65,6 @@ class wxButton;
 ////@begin control identifiers
 #define ID_DIALOG 10000
 #define SYMBOL_CONTOURS_STYLE wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX
-#define SYMBOL_CONTOURS_TITLE _T("Contours")
-#define SYMBOL_CONTOURS_IDNAME ID_DIALOG
 #define SYMBOL_CONTOURS_SIZE wxSize(400, 300)
 #define SYMBOL_CONTOURS_POSITION wxDefaultPosition
 
@@ -85,16 +83,21 @@ class VE_GUIPLUGINS_EXPORTS Contours: public wxDialog
 public:
     /// Constructors
     Contours( );
-    Contours( wxWindow* parent, wxWindowID id = SYMBOL_CONTOURS_IDNAME,
-              const wxString& caption = SYMBOL_CONTOURS_TITLE,
+    Contours( wxWindow* parent, wxWindowID id = -1,
+              const wxString& caption = _T("Contours"),
               const wxPoint& pos = SYMBOL_CONTOURS_POSITION,
               const wxSize& size = SYMBOL_CONTOURS_SIZE,
-              long style = SYMBOL_CONTOURS_STYLE, std::string type = "SCALAR" );
+              long style = SYMBOL_CONTOURS_STYLE, 
+              std::string type = "SCALAR" );
 
     virtual ~Contours();
 
     /// Creation
-    bool Create( wxWindow* parent, wxWindowID id = SYMBOL_CONTOURS_IDNAME, const wxString& caption = SYMBOL_CONTOURS_TITLE, const wxPoint& pos = SYMBOL_CONTOURS_POSITION, const wxSize& size = SYMBOL_CONTOURS_SIZE, long style = SYMBOL_CONTOURS_STYLE );
+    bool Create( wxWindow* parent, wxWindowID id = -1, 
+                const wxString& caption = _T("Contours"), 
+                const wxPoint& pos = SYMBOL_CONTOURS_POSITION, 
+                const wxSize& size = SYMBOL_CONTOURS_SIZE, 
+                long style = SYMBOL_CONTOURS_STYLE );
 
     /// Creates the controls and sizers
     void CreateControls();
