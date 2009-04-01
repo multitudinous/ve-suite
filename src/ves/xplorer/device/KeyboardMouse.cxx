@@ -79,10 +79,8 @@
 #include <osg/Geode>
 #include <osg/Geometry>
 #include <osg/LineWidth>
-#include <osg/LineSegment>
 
 //#include <osg/PolygonStipple>
-#include <osgUtil/LineSegmentIntersector>
 
 // --- C/C++ Libraries --- //
 #include <iostream>
@@ -131,7 +129,9 @@ KeyboardMouse::KeyboardMouse()
     mDeltaRotation( 0.0, 0.0, 0.0, 1.0 ),
     mDeltaTranslation( 0.0, 0.0, 0.0, 1.0 ),
 
-    mBeamLineSegment( new osg::LineSegment ),
+    mLineSegmentIntersector(
+        new osgUtil::LineSegmentIntersector(
+            osg::Vec3( 0.0, 0.0, 0.0 ), osg::Vec3( 0.0, 0.0, 0.0 ) ) ),
 
     mPickedBody( NULL ),
     mPickConstraint( NULL )
@@ -964,15 +964,8 @@ void KeyboardMouse::NavOnMousePress()
         //Left mouse button
         case gadget::MBUTTON1:
         {
-            //Rotate just the camera "3rd person view:
-            if( !mPhysicsSimulator->GetIdle() &&
-                mCharacterController->IsActive() )
-            {
-                mCharacterController->FirstPersonMode( false );
-            }
-
             //Add a point to point constraint for picking
-            if( !mPhysicsSimulator->GetIdle() && mDynamicsWorld )
+            if( mKey == gadget::KEY_SHIFT && !mPhysicsSimulator->GetIdle() )
             {
                 osg::Vec3d startPoint, endPoint;
                 SetStartEndPoint( &startPoint, &endPoint );
@@ -1021,6 +1014,12 @@ void KeyboardMouse::NavOnMousePress()
                         }
                     }
                 }
+            }
+            //Rotate just the camera "3rd person view:
+            else if( !mPhysicsSimulator->GetIdle() &&
+                     mCharacterController->IsActive() )
+            {
+                mCharacterController->FirstPersonMode( false );
             }
 
             break;
@@ -1081,7 +1080,8 @@ void KeyboardMouse::NavOnMouseRelease()
                     //StartSlerpAnimation
                 }
 
-                if( mPickConstraint && mDynamicsWorld )
+                //Do not require SHIFT button in case user let go already
+                if( mPickConstraint )
                 {
                     mDynamicsWorld->removeConstraint( mPickConstraint );
                     delete mPickConstraint;
@@ -1118,14 +1118,8 @@ void KeyboardMouse::NavOnMouseMotion( std::pair< double, double > delta )
         //Left mouse button
         case gadget::MBUTTON1:
         {
-            //Rotate just the camera "3rd person view:
-            if( !mPhysicsSimulator->GetIdle() &&
-                mCharacterController->IsActive() )
-            {
-                mCharacterController->Rotate( delta.first, delta.second );
-            }
-
-            if( !mPhysicsSimulator->GetIdle() && mPickConstraint )
+            if( mKey == gadget::KEY_SHIFT &&
+                !mPhysicsSimulator->GetIdle() && mPickConstraint )
             {
                 //Move the constraint pivot
                 btPoint2PointConstraint* p2p =
@@ -1149,6 +1143,12 @@ void KeyboardMouse::NavOnMouseMotion( std::pair< double, double > delta )
                     btVector3 newPos = rayFromWorld + dir;
                     p2p->setPivotB( newPos );
                 }
+            }
+            //Rotate just the camera "3rd person view:
+            else if( !mPhysicsSimulator->GetIdle() &&
+                     mCharacterController->IsActive() )
+            {
+                mCharacterController->Rotate( delta.first, delta.second );
             }
             else
             {
@@ -1455,7 +1455,9 @@ void KeyboardMouse::UpdateSelectionLine()
 {
     osg::Vec3d startPoint, endPoint;
     SetStartEndPoint( &startPoint, &endPoint );
-    mBeamLineSegment->set( startPoint, endPoint );
+    mLineSegmentIntersector->reset();
+    mLineSegmentIntersector->setStart( startPoint );
+    mLineSegmentIntersector->setEnd( endPoint );
 
     //Used to debug the selection line
     //If working correctly, the line should show up as 1 red pixel where picked
@@ -1468,7 +1470,8 @@ void KeyboardMouse::ProcessNURBSSelectionEvents()
         new osgUtil::IntersectorGroup();
     osg::ref_ptr< vxs::nurbs::PointLineSegmentIntersector > intersector =
         new vxs::nurbs::PointLineSegmentIntersector(
-            mBeamLineSegment->start(), mBeamLineSegment->end() );
+            mLineSegmentIntersector->getStart(),
+            mLineSegmentIntersector->getEnd() );
     intersectorGroup->addIntersector( intersector.get() );
 
     osgUtil::IntersectionVisitor controlMeshPointIntersectVisitor;
@@ -1506,28 +1509,26 @@ void KeyboardMouse::ProcessNURBSSelectionEvents()
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::ProcessSelectionEvents()
 {
-    osgUtil::IntersectVisitor objectBeamIntersectVisitor;
-    objectBeamIntersectVisitor.addLineSegment( mBeamLineSegment.get() );
+    osgUtil::IntersectionVisitor intersectionVisitor(
+        mLineSegmentIntersector.get() );
 
     //Add the IntersectVisitor to the root Node so that all geometry will be
     //checked and no transforms are done to the line segement
-    vxs::SceneManager::instance()->GetRootNode()->accept(
-        objectBeamIntersectVisitor );
+    vxs::SceneManager::instance()->GetRootNode()->accept( intersectionVisitor );
 
-    osgUtil::IntersectVisitor::HitList beamHitList;
-    beamHitList = objectBeamIntersectVisitor.getHitList(
-        mBeamLineSegment.get() );
-
-    ProcessHit( beamHitList );
+    ProcessHit();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits )
+void KeyboardMouse::ProcessHit()
 {
     //Unselect the previous selected DCS
     vx::DeviceHandler::instance()->UnselectObjects();
 
+    osgUtil::LineSegmentIntersector::Intersections& intersections =
+        mLineSegmentIntersector->getIntersections();
+
     //Now find the new selected DCS
-    if( listOfHits.empty() )
+    if( intersections.empty() )
     {
         vprDEBUG( vesDBG, 1 )
             << "|\tKeyboardMouse::ProcessHit No object selected"
@@ -1537,19 +1538,21 @@ void KeyboardMouse::ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits )
     }
 
     //Search for first item that is not the laser
-    osgUtil::Hit objectHit;
-    for( size_t i = 0; i <  listOfHits.size(); ++i )
+    osg::Node* objectHit( NULL );
+    osgUtil::LineSegmentIntersector::Intersections::iterator itr =
+        intersections.begin();
+    for( itr; itr != intersections.end(); ++itr )
     {
-        objectHit = listOfHits[ i ];
-        if( objectHit._geode->getName() != "Laser" &&
-            objectHit._geode->getName() != "Root Node" )
+        objectHit = *( itr->nodePath.rbegin() );
+        if( objectHit->getName() != "Laser" &&
+            objectHit->getName() != "Root Node" )
         {
             break;
         }
     }
 
     //Make sure it is good
-    if( !objectHit._geode.valid() )
+    if( !objectHit )
     {
         vprDEBUG( vesDBG, 1 )
             << "|\tKeyboardMouse::ProcessHit Invalid object selected"
@@ -1559,14 +1562,13 @@ void KeyboardMouse::ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits )
     }
 
     //Now find the id for the cad
-    vxs::FindParentsVisitor parentVisitor(
-        objectHit._geode.get() );
+    vxs::FindParentsVisitor parentVisitor( objectHit );
     osg::ref_ptr< osg::Node > parentNode = parentVisitor.GetParentNode();
     if( !parentNode.valid() )
     {
         vprDEBUG( vesDBG, 1 )
             << "|\tObject does not have name parent name"
-            << objectHit._geode->getParents().front()->getName()
+            << objectHit->getParents().front()->getName()
             << std::endl << vprDEBUG_FLUSH;
 
         return;

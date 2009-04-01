@@ -49,13 +49,9 @@
 #include <gadget/Type/PositionInterface.h>
 
 // --- OSG Includes --- //
-#include <osgUtil/IntersectVisitor>
+#include <osg/Geode>
 
-namespace osg
-{
-class Geode;
-class LineSegment;
-}
+#include <osgUtil/LineSegmentIntersector>
 
 // --- Bullet Includes --- //
 class btRigidBody;
@@ -154,7 +150,7 @@ private:
 
     ///Process if selection is valid
     ///\param listOfHits A vector containing CAD hit in selection process
-    void ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits );
+    void ProcessHit();
 
     ///Navigation functions called on keyboard press events
     void NavOnKeyboardPress();
@@ -304,7 +300,7 @@ private:
     osg::ref_ptr< osg::Geode > mSelectedGeometry;
 
     ///
-    osg::ref_ptr< osg::LineSegment > mBeamLineSegment;
+    osg::ref_ptr< osgUtil::LineSegmentIntersector > mLineSegmentIntersector;
 
     ///VRJuggler's keyboard/mouse positional interface
     gadget::KeyboardMouseInterface mKeyboardMouse;
