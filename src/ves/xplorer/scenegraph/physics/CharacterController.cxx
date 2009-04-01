@@ -70,19 +70,28 @@ CharacterController::CharacterController()
     mStrafeRight( false ),
     mJump( false ),
     mFlying( false ),
+    mCameraLERP( false ),
+    mCameraSLERP( false ),
     mBufferSize( 0 ),
     mCharacterWidth( 1.83 ),
+    //The average height of a male in the U.S. is 5.83 ft
     mCharacterHeight( 3.83/*5.83*/ ),
     mLookAtOffsetZ( mCharacterHeight * 2.0 ),
     mCameraDistance( 20.0 ),
     mMinCameraDistance( 0.1 ),
     mMaxCameraDistance( 200.0 ),
     mDeltaZoom( 2.0 ),
+    mCameraLERPdt( 0.0 ),
+    mCameraSLERPdt( 0.0 ),
+    mDeltaCameraLERP( 0.1 ),
+    mDeltaCameraSLERP( 0.1 ),
+    mFromCameraDistance( 0.0 ),
+    mToCameraDistance( 0.0 ),
     //This is the speed of the character in ft/s
     mSpeed( 15.0 ),
-    //Average walk speed is 5 km/h -> 0.911344415 ft/s
+    //Slow walk speed is 5 km/h ~ 1.0 ft/s
     mMinSpeed( 1.0 ),
-    //Usain Bolt's top 10m split 10m/0.82s -> 40 ft/s
+    //Usain Bolt's top 10m split 10m/0.82s ~ 40 ft/s
     mMaxSpeed( 40.0 ),
     mTurnAngleX( 0.0 ),
     mTurnAngleZ( 0.0 ),
@@ -91,10 +100,13 @@ CharacterController::CharacterController()
     mTurnSpeed( 7.0 ),
     mWeightModifier( 0.0 ),
     mTotalWeight( 0.0 ),
-    mCameraRotation(),
+    mCameraRotation( 0.0, 0.0, 0.0, 1.0 ),
+    mFromCameraRotation( 0.0, 0.0, 0.0, 1.0 ),
+    mToCameraRotation( 0.0, 0.0, 0.0, 1.0 ),
     mCharacter( NULL ),
     mGhostObject( NULL ),
-    mMatrixTransform( NULL )
+    mMatrixTransform( NULL ),
+    mLineSegmentIntersector( NULL )
 {
     SetBufferSizeAndWeights( 10, 0.6 );
 }
@@ -139,10 +151,10 @@ void CharacterController::Initialize( btDynamicsWorld* dynamicsWorld )
             osg::Vec3( 0.0, 0.0, 0.0 ),
             mCharacterWidth, mCharacterHeight );
     osg::ref_ptr< osg::TessellationHints > hints = new osg::TessellationHints();
+    hints->setDetailRatio( 1.0 );
     osg::ref_ptr< osg::ShapeDrawable > shapeDrawable =
         new osg::ShapeDrawable( capsule.get(), hints.get() );
-
-    hints->setDetailRatio( 1.0 );
+    shapeDrawable->setName( "Character" );
     shapeDrawable->setColor( osg::Vec4( 1.0, 1.0, 0.0, 1.0 ) );
     geode->addDrawable( shapeDrawable.get() );
 
@@ -155,6 +167,11 @@ void CharacterController::Initialize( btDynamicsWorld* dynamicsWorld )
         new CharacterTransformCallback( mGhostObject ) );
 
     mMatrixTransform->setNodeMask( 0 );
+
+    //Used for center to eye occluder test per frame
+    mLineSegmentIntersector =
+        new osgUtil::LineSegmentIntersector(
+            osg::Vec3( 0.0, 0.0, 0.0 ), osg::Vec3( 0.0, 0.0, 0.0 ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CharacterController::Destroy( btDynamicsWorld* dynamicsWorld )
@@ -255,18 +272,9 @@ void CharacterController::Rotate( double dx, double dy )
 {
     double x = -dy;
     double z =  dx;
-    /*
-    double length = ::sqrtf( x * x + z * z );
-    if( length != 0.0 )
-    {
-        double lengthRatio = 1 / length;
-        x *= lengthRatio;
-        z *= lengthRatio;
-    }
-    */
 
-    mDeltaTurnAngleX += x * mTurnSpeed;
-    mDeltaTurnAngleZ += z * mTurnSpeed;
+    mDeltaTurnAngleX += x;
+    mDeltaTurnAngleZ += z;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CharacterController::Advance( btScalar dt )
@@ -274,42 +282,23 @@ void CharacterController::Advance( btScalar dt )
     //Get current character transform
     btTransform xform = mGhostObject->getWorldTransform();
 
+    //Update the device input history buffer
+    std::pair< double, double > deltaDeviceInput = UpdateHistoryBuffer();
+
     //Calculate character rotation
+    if( deltaDeviceInput.first != 0.0 || deltaDeviceInput.second != 0.0 )
     {
-        //http://www.flipcode.com/archives/Smooth_Mouse_Filtering.shtml
-
-        //Remove the oldest mouse movement from the history buffer
-        mHistoryBuffer.pop_back();
-        //Put the current mouse movement into the history buffer
-        mHistoryBuffer.push_front(
-            std::make_pair( mDeltaTurnAngleX, mDeltaTurnAngleZ ) );
-
-        //Use a weighted average for the history buffer contents
-        double totalValueX = 0.0;
-        double totalValueZ = 0.0;
-        for( unsigned int i = 0; i < mBufferSize; ++i )
-        {
-            totalValueX += mHistoryBuffer.at( i ).first * mWeights.at( i );
-            totalValueZ += mHistoryBuffer.at( i ).second * mWeights.at( i );
-        }
-
-        mTurnAngleX += totalValueX / mTotalWeight;
-        //Restrict movement about the x-axis from 0 to 90 degrees
-        if( mTurnAngleX < 0.0 )
-        {
-            mTurnAngleX = 0.0;
-        }
-        else if( mTurnAngleX > gmtl::Math::PI_OVER_2 )
+        mTurnAngleX += deltaDeviceInput.first;
+        //Prevent movement past 90 degrees about the x-axis
+        if( mTurnAngleX > gmtl::Math::PI_OVER_2 )
         {
             mTurnAngleX = gmtl::Math::PI_OVER_2;
         }
-        mTurnAngleZ += totalValueZ / mTotalWeight;
+        mTurnAngleZ += deltaDeviceInput.second;
 
         btQuaternion xRotation( btVector3( 1.0, 0.0, 0.0 ), mTurnAngleX );
         btQuaternion zRotation( btVector3( 0.0, 0.0, 1.0 ), mTurnAngleZ );
         mCameraRotation = xRotation * zRotation;
-
-        //QuatSlerp( , xform.getRotation(), dt, result );
 
         if( m1stPersonMode )
         {
@@ -324,9 +313,6 @@ void CharacterController::Advance( btScalar dt )
 
             mGhostObject->setWorldTransform( xform );
         }
-
-        mDeltaTurnAngleX = 0.0;
-        mDeltaTurnAngleZ = 0.0;
     }
 
     //Calculate character translation
@@ -363,6 +349,12 @@ void CharacterController::Advance( btScalar dt )
             direction += strafeDir;
         }
 
+        //Normalize the movement
+        if( direction.length() > 0.0 )
+        {
+            direction = direction.normalize();
+        }
+
         mCharacter->setWalkDirection( direction * speed );
     }
 }
@@ -379,8 +371,160 @@ void CharacterController::UpdateCamera()
     backward.normalize();
 
     btVector3 center = characterWorldTrans.getOrigin();
-    btVector3 eye = center + /*up * mLookAtOffsetZ +*/ backward * mCameraDistance;
+    btVector3 eye = center + backward * mCameraDistance;
 
+    //Test for occluder between the eye and "look at" point
+    EyeToCenterRayTest( eye, center );
+
+    if( mCameraLERP )
+    {
+        CameraLERP();
+    }
+
+    if( mCameraSLERP )
+    {
+        CameraSLERP();
+    }
+
+    //Move the camera to look at the center of the character
+    LookAt( eye, center, up );
+}
+////////////////////////////////////////////////////////////////////////////////
+void CharacterController::Zoom( bool inOut )
+{
+    mFromCameraDistance = mCameraDistance;
+    if( mCameraLERPdt == 0.0 )
+    {
+        mToCameraDistance = mFromCameraDistance;
+    }
+
+    if( inOut )
+    {
+        mToCameraDistance -= mDeltaZoom;
+        if( mToCameraDistance < mMinCameraDistance )
+        {
+            mToCameraDistance = mMinCameraDistance;
+        }
+    }
+    else
+    {
+        mToCameraDistance += mDeltaZoom;
+        if( mToCameraDistance > mMaxCameraDistance )
+        {
+            mToCameraDistance = mMaxCameraDistance;
+        }
+    }
+
+    mCameraLERP = true;
+    mCameraLERPdt = 0.0;
+}
+////////////////////////////////////////////////////////////////////////////////
+bool CharacterController::IsActive()
+{
+    return mActive;
+}
+////////////////////////////////////////////////////////////////////////////////
+void CharacterController::CameraLERP()
+{
+    if( mCameraLERPdt < ( 1.0 - mDeltaCameraLERP ) )
+    {
+        mCameraLERPdt += mDeltaCameraLERP;
+
+        mCameraDistance =
+            mFromCameraDistance +
+            ( mToCameraDistance - mFromCameraDistance ) * mCameraLERPdt;
+    }
+    //else if( mCameraLERPdt >= ( 1.0 - mDeltaCameraLERP ) )
+    else
+    {
+        mCameraDistance = mToCameraDistance;
+
+        mCameraLERPdt = 0.0;
+        mCameraLERP = false;
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void CharacterController::CameraSLERP()
+{
+    if( mCameraSLERPdt < ( 1.0 - mDeltaCameraSLERP ) )
+    {
+        mCameraSLERPdt += mDeltaCameraSLERP;
+    }
+    else if( mCameraSLERPdt >= ( 1.0 - mDeltaCameraSLERP ) )
+    {
+        mCameraSLERPdt = 1.0;
+        mCameraSLERP = false;
+    }
+
+    mCameraRotation =
+        mFromCameraRotation.slerp( mToCameraRotation, mCameraSLERPdt );
+}
+////////////////////////////////////////////////////////////////////////////////
+void CharacterController::EyeToCenterRayTest(
+    btVector3& eye, btVector3& center )
+{
+    //Bullet implementation: only works for geometry w/ active physics
+    /*
+    btCollisionWorld::RayResultCallback rayCallback( eye, center );
+    btDynamicsWorld* dynamicsWorld =
+        vxs::PhysicsSimulator::instance()->GetDynamicsWorld();
+    dynamicsWorld->rayTest( center, eye, rayCallback );
+    if( rayCallback.hasHit() )
+    {
+        btCollisionObject* collisionObject = rayCallback.m_collisionObject;
+        if( collisionObject != mGhostObject )
+        {
+            mFromCameraDistance = mCameraDistance;
+            mToCameraDistance =
+                btVector3( rayCallback.m_hitPointWorld - center ).length();
+
+            mCameraLERP = true;
+            mCameraLERPdt = 0.0;
+        }
+    }
+    */
+
+    //OSG implementation: works for all geometry regardless
+    osg::Vec3d startPoint( center.x(), center.y(), center.z() );
+    osg::Vec3d endPoint( eye.x(), eye.y(), eye.z() );
+    mLineSegmentIntersector->reset();
+    mLineSegmentIntersector->setStart( startPoint );
+    mLineSegmentIntersector->setEnd( endPoint );
+
+    osgUtil::IntersectionVisitor intersectionVisitor(
+        mLineSegmentIntersector.get() );
+
+    vxs::SceneManager::instance()->GetRootNode()->accept( intersectionVisitor );
+
+    osgUtil::LineSegmentIntersector::Intersections& intersections =
+        mLineSegmentIntersector->getIntersections();
+
+    if( !intersections.empty() )
+    {
+        osg::Drawable* objectHit( NULL );
+        osgUtil::LineSegmentIntersector::Intersections::iterator itr =
+            intersections.begin();
+        for( itr; itr != intersections.end(); ++itr )
+        {
+            objectHit = itr->drawable.get();
+            if( objectHit->getName() != "Character" )
+            {
+                mFromCameraDistance = mCameraDistance;
+                mToCameraDistance = osg::Vec3(
+                    itr->getWorldIntersectPoint() - startPoint ).length();
+
+                mCameraLERP = true;
+                mCameraLERPdt = 0.0;
+
+                break;
+            }
+        }
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void CharacterController::LookAt(
+    btVector3& eye, btVector3& center, btVector3& up )
+{
     btVector3 vVector = eye - center;
     vVector.normalize();
     btVector3 rVector( up.cross( vVector ) );
@@ -388,7 +532,6 @@ void CharacterController::UpdateCamera()
     btVector3 uVector( vVector.cross( rVector ) );
     uVector.normalize();
 
-    //"Look at" character matrix
     gmtl::Matrix44d matrix;
     matrix.mData[ 0 ]  =  rVector[ 0 ];
     matrix.mData[ 1 ]  = -vVector[ 0 ];
@@ -411,88 +554,6 @@ void CharacterController::UpdateCamera()
     matrix.mData[ 15 ] =  1.0;
 
     vxs::SceneManager::instance()->GetActiveNavSwitchNode()->SetMat( matrix );
-}
-////////////////////////////////////////////////////////////////////////////////
-void CharacterController::Zoom( bool inOut )
-{
-    if( inOut )
-    {
-        mCameraDistance -= mDeltaZoom;
-        if( mCameraDistance < mMinCameraDistance )
-        {
-            mCameraDistance = mMinCameraDistance;
-        }
-    }
-    else
-    {
-        mCameraDistance += mDeltaZoom;
-        if( mCameraDistance > mMaxCameraDistance )
-        {
-            mCameraDistance = mMaxCameraDistance;
-        }
-    }
-}
-////////////////////////////////////////////////////////////////////////////////
-bool CharacterController::IsActive()
-{
-    return mActive;
-}
-////////////////////////////////////////////////////////////////////////////////
-void CharacterController::QuatSlerp(
-    btQuaternion& from, btQuaternion& to, double t, btQuaternion& result )
-{
-    //btQuaternion to1;
-    double to1[ 4 ];
-    double omega, cosom, sinom, scale0, scale1;
-    //Calculate cosine from the dot product
-    //cosom = from.dot( to );
-    cosom = from.x() * to.x() + from.y() * to.y() + from.z() * to.z() + from.w() * to.w();
-
-    //Adjust signs if necessary
-    if( cosom < 0.0 )
-    {
-        cosom = -cosom;
-        //to1 = -to;
-        to1[ 0 ] = -to.x();
-        to1[ 1 ] = -to.y();
-        to1[ 2 ] = -to.z();
-        to1[ 3 ] = -to.w();
-    }
-    else 
-    {
-        //to1 = to;
-        to1[ 0 ] = to.x();
-        to1[ 1 ] = to.y();
-        to1[ 2 ] = to.z();
-        to1[ 3 ] = to.w();
-    }
-
-    //Calculate coefficients
-    double delta = 0.1;
-    if( ( 1.0 - cosom ) > delta )
-    {
-        //Standard case slerp
-        omega = acos( cosom );
-        sinom = sin( omega );
-        scale0 = sin( ( 1.0 - t ) * omega ) / sinom;
-        scale1 = sin( t * omega ) / sinom;
-    }
-    else
-    {        
-        //"from" and "to" quaternions are very close 
-        //So we can do a linear interpolation
-        scale0 = 1.0 - t;
-        scale1 = t;
-    }
-
-    //Calculate final values
-    //from *= scale0;
-    //to1 *= scale1;
-    //result = from + to1;
-    result.setX( scale0 * from.x() + scale1 * to1[ 0 ] );
-    result.setY( scale0 * from.y() + scale1 * to1[ 1 ] );
-    result.setZ( scale0 * from.z() + scale1 * to1[ 2 ] );
-    result.setW( scale0 * from.w() + scale1 * to1[ 3 ] );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CharacterController::SetBufferSizeAndWeights(
@@ -518,6 +579,35 @@ void CharacterController::SetBufferSizeAndWeights(
         mWeights.at( i ) = mWeights.at( i - 1 ) * mWeightModifier;
         mTotalWeight += mWeights.at( i );
     }
+}
+////////////////////////////////////////////////////////////////////////////////
+std::pair< double, double > CharacterController::UpdateHistoryBuffer()
+{
+    //http://www.flipcode.com/archives/Smooth_Mouse_Filtering.shtml
+
+    //Remove the oldest device input from the history buffer
+    mHistoryBuffer.pop_back();
+    //Put the current device input into the history buffer
+    mHistoryBuffer.push_front(
+        std::make_pair( mDeltaTurnAngleX, mDeltaTurnAngleZ ) );
+
+    //Reset the device input increment
+    mDeltaTurnAngleX = 0.0;
+    mDeltaTurnAngleZ = 0.0;
+
+    //Use a weighted average for the history buffer contents
+    double totalValueX( 0.0 );
+    double totalValueZ( 0.0 );
+    for( size_t i = 0; i < mBufferSize; ++i )
+    {
+        totalValueX += mHistoryBuffer.at( i ).first * mWeights.at( i );
+        totalValueZ += mHistoryBuffer.at( i ).second * mWeights.at( i );
+    }
+
+    totalValueX *= mTurnSpeed / mTotalWeight;
+    totalValueZ *= mTurnSpeed / mTotalWeight;
+
+    return std::make_pair( totalValueX, totalValueZ );
 }
 ////////////////////////////////////////////////////////////////////////////////
 CharacterController::CharacterTransformCallback::CharacterTransformCallback(

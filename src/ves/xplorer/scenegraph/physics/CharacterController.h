@@ -41,6 +41,8 @@
 #include <osg/ref_ptr>
 #include <osg/NodeCallback>
 
+#include <osgUtil/LineSegmentIntersector>
+
 namespace osg
 {
 class MatrixTransform;
@@ -90,7 +92,7 @@ public:
     ///is considered in the respective simulation step.
     void Advance( btScalar dt );
 
-    ///
+    ///Free memory for CharacterController
     void Destroy( btDynamicsWorld* dynamicsWorld );
 
     ///Make the character jump
@@ -142,16 +144,35 @@ public:
 protected:
 
 private:
-    ///
-    void QuatSlerp(
-        btQuaternion& from, btQuaternion& to, double t, btQuaternion& result );
+    ///Linearly interpolate the camera's distance from the character
+    void CameraLERP();
 
+    ///Spherically interpolate the camera's rotation about the character
+    void CameraSLERP();
+
+    ///Tests if there is an occluder between the camera and character positions
+    ///\param eye The eye vector
+    ///\param center The character vector
+    void EyeToCenterRayTest( btVector3& eye, btVector3& center );
+
+    ///
+    ///\param eye
+    ///\param center
+    ///\param up
+    void LookAt( btVector3& eye, btVector3& center, btVector3& up );
+
+    ///Sets the buffer size & weight modifier to calculate device input damping
+    ///\param bufferSize The size of the history buffer
+    ///\param weightModifier The value of the weight modifier
     void SetBufferSizeAndWeights( size_t bufferSize, double weightModifier );
 
     ///
+    std::pair< double, double > UpdateHistoryBuffer();
+
+    ///Tracks the on/off status of the character controller
     bool mActive;
 
-    ///
+    ///Tracks if the character controller is in 1st person mode
     bool m1stPersonMode;
 
     ///
@@ -173,6 +194,12 @@ private:
     bool mFlying;
 
     ///
+    bool mCameraLERP;
+
+    ///
+    bool mCameraSLERP;
+
+    ///
     double mCharacterWidth;
 
     ///
@@ -192,6 +219,24 @@ private:
 
     ///
     double mDeltaZoom;
+
+    ///
+    double mCameraLERPdt;
+
+    ///
+    double mCameraSLERPdt;
+
+    ///
+    double mDeltaCameraLERP;
+
+    ///
+    double mDeltaCameraSLERP;
+
+    ///
+    double mFromCameraDistance;
+
+    ///
+    double mToCameraDistance;
 
     ///
     double mSpeed;
@@ -236,6 +281,12 @@ private:
     btQuaternion mCameraRotation;
 
     ///
+    btQuaternion mFromCameraRotation;
+
+    ///
+    btQuaternion mToCameraRotation;
+
+    ///
     btKinematicCharacterController* mCharacter;
 
     ///
@@ -245,20 +296,28 @@ private:
     osg::ref_ptr< osg::MatrixTransform > mMatrixTransform;
 
     ///
+    osg::ref_ptr< osgUtil::LineSegmentIntersector > mLineSegmentIntersector;
+
+    ///
     class CharacterTransformCallback : public osg::NodeCallback
     {
     public:
+        ///Constructor
         CharacterTransformCallback( btCollisionObject* collisionObject );
 
+        ///Copy Constructor
         CharacterTransformCallback( const CharacterTransformCallback& ctc );
         
+        ///Destructor
         virtual ~CharacterTransformCallback();
 
+        ///Override operator
         virtual void operator()( osg::Node* node, osg::NodeVisitor* nv );
 
     protected:
 
     private:
+        ///
         btCollisionObject* mCollisionObject;
 
     };
