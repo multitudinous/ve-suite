@@ -12,6 +12,7 @@ shareSubdirs = Split("""
    rtt
    geometry_opt
    geometry_drawarray_conversion
+   warp_surface
 """)
 
 ##Run SConscript files in all of those folders.
