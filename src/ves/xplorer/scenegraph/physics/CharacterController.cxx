@@ -70,23 +70,30 @@ CharacterController::CharacterController()
     mStrafeRight( false ),
     mJump( false ),
     mFlying( false ),
-    mCameraLERP( false ),
-    mCameraSLERP( false ),
+    mCameraDistanceLERP( false ),
+    mCameraDistanceSLERP( false ),
+    mOccludeDistanceLERP( false ),
+    mPreviousOccluder( false ),
     mBufferSize( 0 ),
     mCharacterWidth( 1.83 ),
     //The average height of a male in the U.S. is 5.83 ft
     mCharacterHeight( 3.83/*5.83*/ ),
     mLookAtOffsetZ( mCharacterHeight * 2.0 ),
-    mCameraDistance( 20.0 ),
+    mCameraDistance( 50.0 ),
+    mOccludeDistance( 50.0 ),
     mMinCameraDistance( 0.1 ),
     mMaxCameraDistance( 200.0 ),
     mDeltaZoom( 2.0 ),
-    mCameraLERPdt( 0.0 ),
-    mCameraSLERPdt( 0.0 ),
-    mDeltaCameraLERP( 0.1 ),
-    mDeltaCameraSLERP( 0.1 ),
+    mCameraDistanceLERPdt( 0.0 ),
+    mCameraDistanceSLERPdt( 0.0 ),
+    mOccludeDistanceLERPdt( 0.0 ),
+    mDeltaCameraDistanceLERP( 0.02 ),
+    mDeltaCameraDistanceSLERP( 0.02 ),
+    mDeltaOccludeDistanceLERP( 0.02 ),
     mFromCameraDistance( 0.0 ),
     mToCameraDistance( 0.0 ),
+    mFromOccludeDistance( 0.0 ),
+    mToOccludeDistance( 0.0 ),
     //This is the speed of the character in ft/s
     mSpeed( 15.0 ),
     //Slow walk speed is 5 km/h ~ 1.0 ft/s
@@ -367,29 +374,47 @@ void CharacterController::Advance( btScalar dt )
 ////////////////////////////////////////////////////////////////////////////////
 void CharacterController::UpdateCamera()
 {
+    //lerp mCameraDistance if necessary
+    if( mCameraDistanceLERP )
+    {
+        CameraDistanceLERP();
+    }
+
+    //slerp mCameraRotation if necessary
+    if( mCameraDistanceSLERP )
+    {
+        CameraDistanceSLERP();
+    }
+
+    //Get the current character transform
     btTransform characterWorldTrans = mGhostObject->getWorldTransform();
+    //Set the rotation with the camera's rotation
     characterWorldTrans.setRotation( mCameraRotation );
 
+    //Get the up vector of the camera
     btVector3 up = characterWorldTrans.getBasis()[ 2 ];
     up.normalize();
     
+    //Get the backward direction of the camera
 	btVector3 backward = -characterWorldTrans.getBasis()[ 1 ];
     backward.normalize();
 
+    //Get the center of the character
     btVector3 center = characterWorldTrans.getOrigin();
+    //Calculate where the position of the eye is w/ no occluders
     btVector3 eye = center + backward * mCameraDistance;
 
     //Test for occluder between the eye and "look at" point
     EyeToCenterRayTest( eye, center );
 
-    if( mCameraLERP )
+    //If there is an occluder in front of the eye, move directly to it
+    //If there is an occluder behind the eye, lerp back to it
+    if( mOccludeDistanceLERP )
     {
-        CameraLERP();
-    }
+        OccludeDistanceLERP();
 
-    if( mCameraSLERP )
-    {
-        CameraSLERP();
+        //Calculate where the position of the eye is w/ occluders
+        eye = center + backward * mOccludeDistance;
     }
 
     //Move the camera to look at the center of the character
@@ -399,7 +424,7 @@ void CharacterController::UpdateCamera()
 void CharacterController::Zoom( bool inOut )
 {
     mFromCameraDistance = mCameraDistance;
-    if( mCameraLERPdt == 0.0 )
+    if( mCameraDistanceLERPdt == 0.0 )
     {
         mToCameraDistance = mFromCameraDistance;
     }
@@ -421,8 +446,8 @@ void CharacterController::Zoom( bool inOut )
         }
     }
 
-    mCameraLERP = true;
-    mCameraLERPdt = 0.0;
+    mCameraDistanceLERPdt = 0.0;
+    mCameraDistanceLERP = true;
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool CharacterController::IsActive()
@@ -430,40 +455,46 @@ bool CharacterController::IsActive()
     return mActive;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CharacterController::CameraLERP()
+void CharacterController::CameraDistanceLERP()
 {
-    if( mCameraLERPdt < ( 1.0 - mDeltaCameraLERP ) )
+    if( mCameraDistanceLERPdt < ( 1.0 - mDeltaCameraDistanceLERP ) )
     {
-        mCameraLERPdt += mDeltaCameraLERP;
+        mCameraDistanceLERPdt += mDeltaCameraDistanceLERP;
 
         mCameraDistance =
             mFromCameraDistance +
-            ( mToCameraDistance - mFromCameraDistance ) * mCameraLERPdt;
+            ( mToCameraDistance - mFromCameraDistance ) * mCameraDistanceLERPdt;
     }
-    //else if( mCameraLERPdt >= ( 1.0 - mDeltaCameraLERP ) )
     else
     {
         mCameraDistance = mToCameraDistance;
 
-        mCameraLERPdt = 0.0;
-        mCameraLERP = false;
+        mCameraDistanceLERP = false;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CharacterController::CameraSLERP()
+void CharacterController::CameraDistanceSLERP()
 {
-    if( mCameraSLERPdt < ( 1.0 - mDeltaCameraSLERP ) )
+    ;
+}
+////////////////////////////////////////////////////////////////////////////////
+void CharacterController::OccludeDistanceLERP()
+{
+    if( mOccludeDistanceLERPdt < ( 1.0 - mDeltaOccludeDistanceLERP ) )
     {
-        mCameraSLERPdt += mDeltaCameraSLERP;
-    }
-    else if( mCameraSLERPdt >= ( 1.0 - mDeltaCameraSLERP ) )
-    {
-        mCameraSLERPdt = 1.0;
-        mCameraSLERP = false;
-    }
+        mOccludeDistanceLERPdt += mDeltaOccludeDistanceLERP;
 
-    mCameraRotation =
-        mFromCameraRotation.slerp( mToCameraRotation, mCameraSLERPdt );
+        mOccludeDistance =
+            mFromOccludeDistance +
+            ( mToOccludeDistance - mFromOccludeDistance ) *
+            mOccludeDistanceLERPdt;
+    }
+    else
+    {
+        mOccludeDistance = mToOccludeDistance;
+
+        mOccludeDistanceLERP = false;
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CharacterController::EyeToCenterRayTest(
@@ -480,12 +511,7 @@ void CharacterController::EyeToCenterRayTest(
         btCollisionObject* collisionObject = rayCallback.m_collisionObject;
         if( collisionObject != mGhostObject )
         {
-            mFromCameraDistance = mCameraDistance;
-            mToCameraDistance =
-                btVector3( rayCallback.m_hitPointWorld - center ).length();
-
-            mCameraLERP = true;
-            mCameraLERPdt = 0.0;
+            btVector3( rayCallback.m_hitPointWorld - center ).length();
         }
     }
     */
@@ -505,35 +531,47 @@ void CharacterController::EyeToCenterRayTest(
     osgUtil::LineSegmentIntersector::Intersections& intersections =
         mLineSegmentIntersector->getIntersections();
 
-    if( !intersections.empty() )
+    osg::Drawable* objectHit( NULL );
+    osgUtil::LineSegmentIntersector::Intersections::iterator itr =
+        intersections.begin();
+    for( itr; itr != intersections.end(); ++itr )
     {
-        osg::Drawable* objectHit( NULL );
-        osgUtil::LineSegmentIntersector::Intersections::iterator itr =
-            intersections.begin();
-        for( itr; itr != intersections.end(); ++itr )
+        objectHit = itr->drawable.get();
+        if( objectHit->getName() != "Character" )
         {
-            objectHit = itr->drawable.get();
-            if( objectHit->getName() != "Character" )
+            mToOccludeDistance = osg::Vec3(
+                itr->getWorldIntersectPoint() - startPoint ).length();
+
+            if( mToCameraDistance < mMinCameraDistance )
             {
-                mFromCameraDistance = mCameraDistance;
-                mToCameraDistance = osg::Vec3(
-                    itr->getWorldIntersectPoint() - startPoint ).length();
-
-                if( mToCameraDistance < mMinCameraDistance )
-                {
-                    mToCameraDistance = mMinCameraDistance;
-                }
-                else if( mToCameraDistance > mMaxCameraDistance )
-                {
-                    mToCameraDistance = mMaxCameraDistance;
-                }
-
-                mCameraLERP = true;
-                mCameraLERPdt = 0.0;
-
-                break;
+                mToCameraDistance = mMinCameraDistance;
             }
+
+            if( mToOccludeDistance > mOccludeDistance )
+            {
+                mOccludeDistanceLERPdt = 0.0;
+            }
+            else
+            {
+                mOccludeDistanceLERPdt = 1.0;
+            }
+
+            mFromOccludeDistance = mOccludeDistance;
+
+            mOccludeDistanceLERP = true;
+            mPreviousOccluder = true;
+
+            return;
         }
+    }
+
+    if( mPreviousOccluder )
+    {
+        mToOccludeDistance = mCameraDistance;
+        mFromOccludeDistance = mOccludeDistance;
+        mOccludeDistanceLERPdt = 0.0;
+        mOccludeDistanceLERP = true;
+        mPreviousOccluder = false;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

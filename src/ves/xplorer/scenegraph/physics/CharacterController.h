@@ -145,14 +145,18 @@ protected:
 
 private:
     ///Linearly interpolate the camera's distance from the character
-    void CameraLERP();
+    void CameraDistanceLERP();
 
     ///Spherically interpolate the camera's rotation about the character
-    void CameraSLERP();
+    void CameraDistanceSLERP();
+
+    ///Linearly interpolate the camera from the character
+    void OccludeDistanceLERP();
 
     ///Tests if there is an occluder between the camera and character positions
     ///\param eye The eye vector
     ///\param center The character vector
+    ///\return 
     void EyeToCenterRayTest( btVector3& eye, btVector3& center );
 
     ///
@@ -195,10 +199,16 @@ private:
     bool mFlying;
 
     ///
-    bool mCameraLERP;
+    bool mCameraDistanceLERP;
 
     ///
-    bool mCameraSLERP;
+    bool mCameraDistanceSLERP;
+
+    ///
+    bool mOccludeDistanceLERP;
+
+    ///
+    bool mPreviousOccluder;
 
     ///
     double mCharacterWidth;
@@ -213,6 +223,9 @@ private:
     double mCameraDistance;
 
     ///
+    double mOccludeDistance;
+
+    ///
     double mMinCameraDistance;
 
     ///
@@ -222,22 +235,34 @@ private:
     double mDeltaZoom;
 
     ///
-    double mCameraLERPdt;
+    double mCameraDistanceLERPdt;
 
     ///
-    double mCameraSLERPdt;
+    double mCameraDistanceSLERPdt;
 
     ///
-    double mDeltaCameraLERP;
+    double mOccludeDistanceLERPdt;
 
     ///
-    double mDeltaCameraSLERP;
+    double mDeltaCameraDistanceLERP;
+
+    ///
+    double mDeltaCameraDistanceSLERP;
+
+    ///
+    double mDeltaOccludeDistanceLERP;
 
     ///
     double mFromCameraDistance;
 
     ///
     double mToCameraDistance;
+
+    ///
+    double mFromOccludeDistance;
+
+    ///
+    double mToOccludeDistance;
 
     ///
     double mSpeed;
