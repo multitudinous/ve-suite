@@ -301,9 +301,26 @@ void App::configSceneView( osgUtil::SceneView* newSceneViewer )
 ////////////////////////////////////////////////////////////////////////////////
 ///Remember that this is called in parrallel in a multiple context situation
 ///so setting variables should not be done here
+//Taken from VR Juggler OSG App.h
+//
+// Function that is called once for each frame buffer of an OpenGL context.
+// This function is executed after contextInit() (if needed) but before
+// contextPreDraw().  It is called once per frame buffer (see note).
+//
+// @pre The OpenGL context has been set to the context for drawing.
+// @post The application object has executed any commands that need to be
+//        executed once per context, per buffer, per frame.
+//
+// @note This function is designed to be used when some task must be
+//       performed only once per frame buffer (i.e., once for the left
+//       buffer, once for the right buffer).  For example, the OpenGL clear
+//       color should be defined and glClear(GL_COLOR_BUFFER_BIT) should be
+//       called in this method.
+//
 void App::bufferPreDraw()
 {
-    ;
+    //glClearColor(1.0, 0.0, 0.0, 0.0);
+    //glClear(GL_COLOR_BUFFER_BIT);
 }
 ////////////////////////////////////////////////////////////////////////////////
 void App::SetWrapper( VjObsWrapper* input )

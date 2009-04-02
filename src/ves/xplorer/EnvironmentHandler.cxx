@@ -164,7 +164,7 @@ m_lodScale( 0.01 )
     _eventHandlers[ std::string( "Update LOD Scale" )] =
         new ves::xplorer::event::GeometryLODScaleEventHandler();
     _eventHandlers[ std::string( "Navigation_Data" )] =
-    new ves::xplorer::event::SetResetStartPositionEventHandler();
+        new ves::xplorer::event::SetResetStartPositionEventHandler();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void EnvironmentHandler::Initialize()
@@ -183,22 +183,16 @@ EnvironmentHandler::~EnvironmentHandler()
 
     if( _teacher )
     {
-        //vprDEBUG(vesDBG,2)
-        //  << "|       deleting _teacher" << std::endl << vprDEBUG_FLUSH;
         delete _teacher;
     }
 
     if( displaySettings )
     {
-        //vprDEBUG(vesDBG,2)
-        //  << "|       deleting displaySettings" << std::endl << vprDEBUG_FLUSH;
         delete displaySettings;
     }
 
     if( mHeadsUpDisplay )
     {
-        //vprDEBUG(vesDBG,2)
-        //  << "|       deleting mHeadsUpDisplay" << std::endl << vprDEBUG_FLUSH;
         delete mHeadsUpDisplay;
     }
 }
