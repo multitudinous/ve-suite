@@ -76,4 +76,4 @@ PolyTransPluginPreference igs IGES v5.3
 //   specified in IntermediateFileNameExt. Specify additional extensions for this loader to reject
 //   separated by spaces.
 // Example: Tell the plugin to never attempt to load 3DS and ZIP files:
-RejectExtensions 3ds zip obj flt ttf rgb
+RejectExtensions 3ds zip obj flt ttf rgb osg ive
