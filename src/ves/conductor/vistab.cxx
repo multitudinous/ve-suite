@@ -301,19 +301,23 @@ void Vistab::CreateControls()
         dataSetSBSizer->Add( axesTextBS, 0, wxGROW );
         xAxisEntry = new wxTextCtrl( itemDialog1, VISTAB_DATA_UPDATE_AXES,
                                      _( "X Axis" ), wxDefaultPosition,
-                                     wxDefaultSize, wxHSCROLL | wxTE_PROCESS_ENTER );
+                                     wxDefaultSize, wxTE_PROCESS_ENTER );
         xAxisEntry->Disable();
         axesTextBS->Add( xAxisEntry, 1, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
         yAxisEntry = new wxTextCtrl( itemDialog1, VISTAB_DATA_UPDATE_AXES,
                                      _( "Y Axis" ), wxDefaultPosition,
-                                     wxDefaultSize, wxHSCROLL | wxTE_PROCESS_ENTER );
+                                     wxDefaultSize, wxTE_PROCESS_ENTER );
         yAxisEntry->Disable();
         axesTextBS->Add( yAxisEntry, 1, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
         zAxisEntry = new wxTextCtrl( itemDialog1, VISTAB_DATA_UPDATE_AXES,
                                      _( "Z Axis" ), wxDefaultPosition,
-                                     wxDefaultSize, wxHSCROLL | wxTE_PROCESS_ENTER );
+                                     wxDefaultSize, wxTE_PROCESS_ENTER );
         axesTextBS->Add( zAxisEntry, 1, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
         zAxisEntry->Disable();
+        
+        xAxisEntry->Raise();
+        yAxisEntry->Raise();
+        zAxisEntry->Raise();
     }
 
     //Setup the scalars section

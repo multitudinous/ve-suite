@@ -215,7 +215,8 @@ osg::Camera* SceneRenderToTexture::CreatePipelineCamera(
     tempCamera->setProjectionMatrix( osg::Matrix::identity() );
 
     std::pair< int, int > viewportDimensions = 
-        std::make_pair< int, int >( viewport->width(), viewport->height() );
+        std::make_pair< int, int >( 
+        int(viewport->width()), int(viewport->height()) );
 
     //Set up the color map
     osg::ref_ptr< osg::Texture2D > colorMap = CreateViewportTexture(

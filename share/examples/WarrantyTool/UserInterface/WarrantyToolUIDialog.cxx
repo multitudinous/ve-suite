@@ -120,9 +120,9 @@ void WarrantyToolUIDialog::BuildGUI()
     //dataSetSBSizer->Add( axesTextBS, 0, wxGROW );
     mPartNumberEntry = new wxTextCtrl( this, wxID_ANY,//ID_DATA_UPDATE_AXES,
                                 _( "Part Number" ), wxDefaultPosition,
-                                wxDefaultSize, wxHSCROLL | wxTE_PROCESS_ENTER );
+                                wxDefaultSize, wxTE_PROCESS_ENTER );
     projectionEffectOpacitySizer->Add( mPartNumberEntry, 1, wxALL, 5 );
-    //xAxisEntry->Raise();
+    mPartNumberEntry->Raise();
     
     //Put the buttons on
     //wxStdDialogButtonSizer* stdDialogButtonSizer;
