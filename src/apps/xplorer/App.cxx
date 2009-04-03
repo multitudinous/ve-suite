@@ -91,7 +91,11 @@
 #include <gmtl/Xforms.h>
 
 #include <vrj/Kernel/Kernel.h>
+#if __VJ_version >= 2003000
+#include <vrj/Draw/OpenGL/DrawManager.h>
+#else
 #include <vrj/Draw/OGL/GlDrawManager.h>
+#endif
 #include <vrj/Display/DisplayManager.h>
 
 #include <vpr/Perf/ProfileManager.h>
@@ -199,8 +203,11 @@ void App::contextInit()
     //vrj::OsgApp::contextInit();
 
     const unsigned int unique_context_id =
+#if __VJ_version >= 2003000
+        vrj::opengl::DrawManager::instance()->getCurrentContext();
+#else
         vrj::GlDrawManager::instance()->getCurrentContext();
-
+#endif
     // --- Create new context specific scene viewer -- //
     osg::ref_ptr<osgUtil::SceneView> new_sv( new osgUtil::SceneView );
     this->configSceneView( new_sv.get() );          // Configure the new viewer

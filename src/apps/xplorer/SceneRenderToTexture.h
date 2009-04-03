@@ -38,8 +38,12 @@
 #include "SceneRenderToTexturePtr.h"
 
 // ---  VR Juggler Includes --- //
-#include <vrj/Draw/OGL/GlContextData.h>
 #include <vrj/vrjParam.h>
+#if __VJ_version >= 2003000
+#include <vrj/Draw/OpenGL/ContextData.h>
+#else
+#include <vrj/Draw/OGL/GlContextData.h>
+#endif
 
 // --- OSG Includes --- //
 #include <osg/ref_ptr>
@@ -106,11 +110,11 @@ public:
 
     ///Get the camera with specified vrj::Viewport
     ///\return The camera with specified vrj::Viewport
-#if __VJ_version >= 2003000    
-    osg::Camera* GetCamera( vrj::ViewportPtr viewport );
-#else    
-    osg::Camera* GetCamera( vrj::Viewport* viewport );
-#endif
+//#if __VJ_version >= 2003000    
+//    osg::Camera* GetCamera( vrj::ViewportPtr viewport );
+//#else    
+//    osg::Camera* GetCamera( vrj::Viewport* viewport );
+//#endif
     ///Update something
     ///NOTE: Must have an active context to call
     void UpdateRTTQuadAndViewport();
@@ -160,11 +164,12 @@ private:
     ///Set the number of super samples
     int mScaleFactor;
 
-    ///
-    int mAdjustedScreenRes;
-
     ///Let the object know all cameras are configured
+#if __VJ_version >= 2003000
+    vrj::opengl::ContextData< bool > mCamerasConfigured;
+#else
     vrj::GlContextData< bool > mCamerasConfigured;
+#endif
 
     ///A typedef to make it easier to define iterators
     typedef std::pair<
@@ -180,12 +185,15 @@ private:
 
     ///A PipelinePair that keeps track of the active pipeline being rendered
     ///A context locked map to hold switch nodes
-    vrj::GlContextData< PipelinePair* > mActivePipeline;
+    //vrj::GlContextData< PipelinePair* > mActivePipeline;
 
     ///The render to texture cameras
     ///A context locked map to hold post-process pipelines for each viewport per context
+#if __VJ_version >= 2003000
+    vrj::opengl::ContextData< PipelineMap > mPipelines;
+#else
     vrj::GlContextData< PipelineMap > mPipelines;
-
+#endif
     ///The root group that everything gets added to
     ///Is the same for all contexts
     osg::ref_ptr< osg::Group > mRootGroup;

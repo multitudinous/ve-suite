@@ -48,11 +48,17 @@
 #include <ves/xplorer/scenegraph/rtt/ShaderAttribute.h>
 
 // ---  VR Juggler Includes --- //
+#if __VJ_version >= 2003000
+#include <vrj/Draw/OpenGL/Window.h>
+#include <vrj/Draw/OpenGL/DrawManager.h>
+#include <vrj/Draw/OpenGL/ContextData.h>
+#else
 #include <vrj/Draw/OGL/GlWindow.h>
-#include <vrj/Display/SurfaceViewport.h>
-#include <vrj/Display/Frustum.h>
 #include <vrj/Draw/OGL/GlDrawManager.h>
 #include <vrj/Draw/OGL/GlContextData.h>
+#endif
+#include <vrj/Display/SurfaceViewport.h>
+#include <vrj/Display/Frustum.h>
 #include <vrj/Display/Projection.h>
 
 #include <gmtl/gmtl.h>
@@ -109,7 +115,7 @@ void SceneRenderToTexture::InitScene( osg::Camera* const sceneViewCamera )
 {
     //Get window and viewport information
 #if __VJ_version >= 2003000
-    vrj::opengl::DrawManager* glDrawManager = vrj::GlDrawManager::instance();
+    vrj::opengl::DrawManager* glDrawManager = vrj::opengl::DrawManager::instance();
     vrj::opengl::UserData* glUserData = glDrawManager->currentUserData();
     vrj::opengl::WindowPtr glWindow = glUserData->getGlWindow();
     vrj::DisplayPtr display = glWindow->getDisplay();
@@ -611,7 +617,7 @@ osg::Group* const SceneRenderToTexture::GetGroup() const
     return mRootGroup.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
-#if __VJ_version >= 2003000
+/*#if __VJ_version >= 2003000
 osg::Camera* SceneRenderToTexture::GetCamera( vrj::ViewportPtr viewport )
 #else
 osg::Camera* SceneRenderToTexture::GetCamera( vrj::Viewport* viewport )
@@ -629,7 +635,7 @@ osg::Camera* SceneRenderToTexture::GetCamera( vrj::Viewport* viewport )
 
         return NULL;
     }
-}
+}*/
 ////////////////////////////////////////////////////////////////////////////////
 void SceneRenderToTexture::ConfigureRTTCameras()
 {
@@ -638,13 +644,15 @@ void SceneRenderToTexture::ConfigureRTTCameras()
         return;
     }
 
-    vrj::GlDrawManager* glDrawManager = vrj::GlDrawManager::instance();
 #if __VJ_version >= 2003000
+    vrj::opengl::DrawManager* glDrawManager = vrj::opengl::DrawManager::instance();
     vrj::opengl::UserData* glUserData = glDrawManager->currentUserData();
+    vrj::opengl::WindowPtr glWindow = glUserData->getGlWindow();
 #else
+    vrj::GlDrawManager* glDrawManager = vrj::GlDrawManager::instance();
     vrj::GlUserData* glUserData = glDrawManager->currentUserData();
-#endif
     vrj::GlWindowPtr glWindow = glUserData->getGlWindow();
+#endif
     vrj::DisplayPtr display = glWindow->getDisplay();
     size_t numViewports = display->getNumViewports();
     
@@ -705,7 +713,7 @@ void SceneRenderToTexture::UpdateRTTQuadAndViewport()
 {
 
 #if __VJ_version >= 2003000
-    vrj::ViewportPtr viewport = vrj::GlDrawManager::instance()->
+    vrj::ViewportPtr viewport = vrj::opengl::DrawManager::instance()->
         currentUserData()->getViewport();
 #else
     vrj::Viewport* viewport = vrj::GlDrawManager::instance()->
@@ -715,11 +723,11 @@ void SceneRenderToTexture::UpdateRTTQuadAndViewport()
     PipelineMap::iterator itr = (*mPipelines).find( viewport );
     if( itr != (*mPipelines).end() )
     {
-        (*mActivePipeline) = &(itr->second);
+        PipelinePair* activePipeline = &(itr->second);
         
         //Get the frustrum
 #if __VJ_version >= 2003000
-        vrj::ProjectionPtr project = vrj::GlDrawManager::instance()->
+        vrj::ProjectionPtr project = vrj::opengl::DrawManager::instance()->
             currentUserData()->getProjection();
 #else
         vrj::Projection* project = vrj::GlDrawManager::instance()->
@@ -727,7 +735,7 @@ void SceneRenderToTexture::UpdateRTTQuadAndViewport()
 #endif
 
         vrj::Frustum frustum = project->getFrustum();
-        (*mActivePipeline)->first->setProjectionMatrixAsFrustum(
+        activePipeline->first->setProjectionMatrixAsFrustum(
             frustum[ vrj::Frustum::VJ_LEFT ], frustum[ vrj::Frustum::VJ_RIGHT ],
             frustum[ vrj::Frustum::VJ_BOTTOM ], frustum[ vrj::Frustum::VJ_TOP ],
             frustum[ vrj::Frustum::VJ_NEAR ], frustum[ vrj::Frustum::VJ_FAR ] );
@@ -745,7 +753,7 @@ void SceneRenderToTexture::UpdateRTTQuadAndViewport()
         osg::ref_ptr< osg::RefMatrix > osg_proj_xform_mat =
             new osg::RefMatrix();
         osg_proj_xform_mat->set( _vjMatrixLeft.mData );
-        (*mActivePipeline)->first->setViewMatrix( *(osg_proj_xform_mat.get()) );
+        activePipeline->first->setViewMatrix( *(osg_proj_xform_mat.get()) );
     }
     else
     {

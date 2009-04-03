@@ -41,12 +41,13 @@
 // ---  VR Juggler Includes --- //
 #include <vrj/vrjParam.h>
 #include <vpr/Sync/Mutex.h>
-#include <vrj/Draw/OGL/GlContextData.h>
 
 #if __VJ_version >= 2003000
 #include <vrj/Draw/OSG/App.h>
+#include <vrj/Draw/OpenGL/ContextData.h>
 #else
 #include <vrj/Draw/OSG/OsgApp.h>
+#include <vrj/Draw/OGL/GlContextData.h>
 #endif
 
 // --- OSG Includes --- //
@@ -94,16 +95,11 @@ class cfdPBufferManager;
 /*!\class ves::xplorer::App
  *
  */
-#ifdef _PERFORMER
-class App : public vrj::PfApp
-#elif _OSG
 #if __VJ_version >= 2003000
 class App : public vrj::osg::App
 #else
 class App : public vrj::OsgApp
 #endif
-#elif _OPENSG
-#endif //_PERFORMER _OSG _OPENSG
 {
 public:
     ///Contructor
@@ -118,7 +114,6 @@ public:
     ///Juggler calls before exiting
     virtual void exit();
 
-#ifdef _OSG
     ///Get the raw group node
     virtual osg::Group* getScene();
 
@@ -163,9 +158,6 @@ public:
     ///Override default vrj implementation
     //virtual osgUtil::SceneView::Options getSceneViewDefaults();
 
-#elif _OPENSG
-#endif //_PERFORMER _OSG _OPENSG
-
     ///Function called after pfSync and before pfDraw
     virtual void preFrame();
 
@@ -194,7 +186,6 @@ public:
     ///Update the framestamp and traverse the scenegraph
     void update();
 
-#ifdef _OSG
     ///Update sceneview
     bool svUpdate;
 
@@ -214,7 +205,6 @@ public:
     ///Should be removed since this is a singleton
     ves::xplorer::volume::cfdPBufferManager* _pbuffer;
 #endif //_PBUFFER
-#endif //_OSG
 
     ///The vjobs wrapper
     VjObsWrapper* m_vjobsWrapper;
@@ -291,8 +281,11 @@ private:
     ves::xplorer::SceneRenderToTexturePtr mSceneRenderToTexture;
     ///Turn off/on RTT
     bool mRTT;
+#if __VJ_version >= 2003000
+    vrj::opengl::ContextData< bool > mAlreadyRendered;
+#else
     vrj::GlContextData< bool > mAlreadyRendered;
-
+#endif
 };
 } //end xplorer
 } //end ves
