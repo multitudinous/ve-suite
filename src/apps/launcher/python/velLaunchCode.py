@@ -824,6 +824,7 @@ class Launch:
             self.EnvAppend("PATH", pathList)
 
             #Add pathEnv value for shell launching mode
+            #self.pathEnv = pathList
             #if str(os.getenv("OSG_FILE_PATH")) == "None":
             #    self.pathEnv = str(os.getenv("PATH"))
             #else:
@@ -893,6 +894,9 @@ class Launch:
                         print "%s isn't set." %(var)
                 if os.getenv(var) != None:
                     self.WriteToClusterScript(var)
+        
+        #Add pathEnv value for shell launching mode
+        self.pathEnv = pathList
 
     def EnvAppend(self, var, appendages, sep=os.path.pathsep):
         """Appends appendages (list) to var, using sep to separate them."""
@@ -912,7 +916,7 @@ class Launch:
         self.WriteToClusterScript(var)
         ##Debug printout.
         if self.settings["Debug"]:
-##            print "%s: %s" %(var, os.getenv(var))
+            ##print "%s: %s" %(var, os.getenv(var))
             self.debugOutput.append(["%s: " %(var), "Bold"])
             self.debugOutput.append(["%s" %os.getenv(var), None])
             self.debugOutput.append(["\n", None])
