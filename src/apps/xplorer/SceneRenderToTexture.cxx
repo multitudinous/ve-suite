@@ -654,9 +654,11 @@ void SceneRenderToTexture::ConfigureRTTCameras()
     vrj::GlWindowPtr glWindow = glUserData->getGlWindow();
 #endif
     vrj::DisplayPtr display = glWindow->getDisplay();
-    size_t numViewports = display->getNumViewports();
+    const size_t numViewports = display->getNumViewports();
     
     // --- FOR EACH VIEWPORT -- //
+    vrj::Viewport::View view;                      
+    float vp_ox, vp_oy, vp_sx, vp_sy; //Viewport origin and size
     for( size_t i = 0; i < numViewports; ++i )
     {
 #if __VJ_version >= 2003000
@@ -667,22 +669,19 @@ void SceneRenderToTexture::ConfigureRTTCameras()
         
         //Should viewport be rendered???
         if( viewport->isActive() )
-        {
-            //The view for the active viewport
-            vrj::Viewport::View view;                      
-            view = viewport->getView();
-            
+        {            
             //Set the glViewport to draw within
-            float vp_ox, vp_oy, vp_sx, vp_sy; //Viewport origin and size
             viewport->getOriginAndSize( vp_ox, vp_oy, vp_sx, vp_sy );
             glWindow->setViewport( vp_ox, vp_oy, vp_sx, vp_sy );
             
             //Set user information
             glUserData->setUser( viewport->getUser() );       //Set user data
             glUserData->setViewport( viewport );              //Set the viewport
-            
+            //std::cout << view << std::endl;
             // ---- SURFACE & Simulator --- //
             {
+                //The view for the active viewport
+                view = viewport->getView();
                 if( ( vrj::Viewport::STEREO == view ) ||
                     ( vrj::Viewport::LEFT_EYE == view ) )     //LEFT EYE
                 {
@@ -743,16 +742,16 @@ void SceneRenderToTexture::UpdateRTTQuadAndViewport()
         gmtl::Vec3f x_axis( 1.0f, 0.0f, 0.0f );
         gmtl::Matrix44f mZUp = gmtl::makeRot< gmtl::Matrix44f >( 
             gmtl::AxisAnglef( gmtl::Math::deg2Rad( -90.0f ), x_axis ) );
-        gmtl::Matrix44f _vjMatrixLeft( project->getViewMatrix() );
+        gmtl::Matrix44f vjMatrixLeft( project->getViewMatrix() );
         gmtl::Matrix44f mNavPosition =  gmtl::convertTo< float >( 
             ves::xplorer::scenegraph::SceneManager::instance()->
                 GetActiveNavSwitchNode()->GetMat() );
         
         //Transform into z-up land
-        _vjMatrixLeft = _vjMatrixLeft * mZUp * mNavPosition;
+        vjMatrixLeft = vjMatrixLeft * mZUp * mNavPosition;
         osg::ref_ptr< osg::RefMatrix > osg_proj_xform_mat =
             new osg::RefMatrix();
-        osg_proj_xform_mat->set( _vjMatrixLeft.mData );
+        osg_proj_xform_mat->set( vjMatrixLeft.mData );
         activePipeline->first->setViewMatrix( *(osg_proj_xform_mat.get()) );
     }
     else

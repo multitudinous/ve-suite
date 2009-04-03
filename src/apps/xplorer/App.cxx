@@ -684,13 +684,13 @@ void App::draw()
     //Get the view matrix and the frustrum form the draw manager
 #if __VJ_version >= 2003000
     vrj::opengl::DrawManager* gl_manager =
-        dynamic_cast<vrj::opengl::DrawManager*>( this->getDrawManager() );
-    vprASSERT( gl_manager != NULL );
+        static_cast<vrj::opengl::DrawManager*>( this->getDrawManager() );
+    //vprASSERT( gl_manager != NULL );
     vrj::opengl::UserData* user_data = gl_manager->currentUserData();
 #else
     vrj::GlDrawManager* gl_manager =
-        dynamic_cast< vrj::GlDrawManager* >( this->getDrawManager() );
-    vprASSERT( gl_manager != NULL );
+        static_cast< vrj::GlDrawManager* >( this->getDrawManager() );
+    //vprASSERT( gl_manager != NULL );
     vrj::GlUserData* user_data = gl_manager->currentUserData();
 #endif
 
@@ -770,6 +770,8 @@ void App::draw()
     {
         VPR_PROFILE_GUARD_HISTORY( "App::draw RTT Camera", 20 );
         //mSceneRenderToTexture->UpdateRTTQuadAndViewport();
+        //vpr::Guard<vpr::Mutex> val_guard( mValueLock );
+
         mSceneRenderToTexture->ConfigureRTTCameras();
     }
 
