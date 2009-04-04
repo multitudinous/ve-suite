@@ -804,9 +804,7 @@ class Launch:
                         os.path.join(str(os.getenv("VE_DEPS_DIR")), "share"),
                         os.path.join(str(os.getenv("VE_DEPS_DIR")), "bin"),
                         os.path.join(str(os.getenv("VJ_BASE_DIR")), "lib")]
-            ##Outdated paths.
-            ##pathList += [##os.path.join(str(os.getenv("VJ_DEPS_DIR")), "bin"),
-            ##             os.path.join(VELAUNCHER_DIR, "bin")]
+
             if self.settings["BuilderDir"] != None:
                 pathList.append(os.path.join(str(self.settings["BuilderDir"]), "bin"))
             ##TEST to append 64-bit libraries:
@@ -820,15 +818,13 @@ class Launch:
             for entry in self.settings["Dependencies"].GetNames():
                 pathList.append(os.path.join(entry, "bin"))
                 pathList.append(os.path.join(entry, libTag))
-                
-            self.EnvAppend("PATH", pathList)
 
             #Add pathEnv value for shell launching mode
-            #self.pathEnv = pathList
-            #if str(os.getenv("OSG_FILE_PATH")) == "None":
-            #    self.pathEnv = str(os.getenv("PATH"))
-            #else:
-            #    self.pathEnv = str(os.getenv("OSG_FILE_PATH")) + ";" + str(os.getenv("PATH"))
+            self.EnvAppend("PATH", pathList)
+            self.pathEnv = str(os.getenv("PATH"))
+            for pathItr in pathList:
+                self.pathEnv = pathItr + os.path.pathsep + self.pathEnv 
+
             #Get dependency base directory
             self.VeDepsDir = os.path.join(str(os.getenv("VE_DEPS_DIR")), "bin")
             self.VeLauncherDir = str(VELAUNCHER_DIR)
@@ -894,9 +890,6 @@ class Launch:
                         print "%s isn't set." %(var)
                 if os.getenv(var) != None:
                     self.WriteToClusterScript(var)
-        
-        #Add pathEnv value for shell launching mode
-        self.pathEnv = pathList
 
     def EnvAppend(self, var, appendages, sep=os.path.pathsep):
         """Appends appendages (list) to var, using sep to separate them."""
