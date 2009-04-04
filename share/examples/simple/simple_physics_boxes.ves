@@ -232,6 +232,42 @@
                 <value>0</value>
               </rotation>
             </transform>
+            <attribute>
+              <type type="xs:string">Material</type>
+              <blending type="xs:boolean">false</blending>
+              <material>
+                <kDiffuse>
+                  <value>0.968627451</value>
+                  <value>0.5176470588</value>
+                  <value>0.1019607843</value>
+                  <value>1</value>
+                </kDiffuse>
+                <kEmissive>
+                  <value>0</value>
+                  <value>0</value>
+                  <value>0</value>
+                  <value>1</value>
+                </kEmissive>
+                <kAmbient>
+                  <value>1</value>
+                  <value>1</value>
+                  <value>1</value>
+                  <value>1</value>
+                </kAmbient>
+                <specular>
+                  <value>1</value>
+                  <value>1</value>
+                  <value>1</value>
+                  <value>1</value>
+                </specular>
+                <opacity>1</opacity>
+                <shininess>50</shininess>
+                <materialName>Material4</materialName>
+                <face>Front_and_Back</face>
+                <colorMode>Ambient_and_Diffuse</colorMode>
+              </material>
+            </attribute>
+            <activeAttributeName type="xs:string">Material4</activeAttributeName>
             <fileName>Surface0.75.stl</fileName>
           </child>
           <child id="72bd0eb4-bac9-9f4e-894d-2bb98e5c7bef" makeTransparentOnVis="true" opacity="1" physics="false" visibility="true">
@@ -255,6 +291,42 @@
                 <value>0</value>
               </rotation>
             </transform>
+            <attribute>
+              <type type="xs:string">Material</type>
+              <blending type="xs:boolean">false</blending>
+              <material>
+                <kDiffuse>
+                  <value>0.2</value>
+                  <value>0.2</value>
+                  <value>1</value>
+                  <value>1</value>
+                </kDiffuse>
+                <kEmissive>
+                  <value>0</value>
+                  <value>0</value>
+                  <value>0</value>
+                  <value>1</value>
+                </kEmissive>
+                <kAmbient>
+                  <value>1</value>
+                  <value>1</value>
+                  <value>1</value>
+                  <value>1</value>
+                </kAmbient>
+                <specular>
+                  <value>1</value>
+                  <value>1</value>
+                  <value>1</value>
+                  <value>1</value>
+                </specular>
+                <opacity>1</opacity>
+                <shininess>50</shininess>
+                <materialName>Material2</materialName>
+                <face>Front_and_Back</face>
+                <colorMode>Ambient_and_Diffuse</colorMode>
+              </material>
+            </attribute>
+            <activeAttributeName type="xs:string">Material2</activeAttributeName>
             <fileName>Surface0.75.stl</fileName>
           </child>
           <child friction="1" id="1451dbbb-1f00-4a01-a9d5-7bb1429fa4ec" makeTransparentOnVis="true" mass="1" opacity="1" physics="true" physicsLOD="Overall" physicsMesh="Box" physicsMotion="Dynamic" restitution="0" visibility="true">
@@ -278,6 +350,42 @@
                 <value>0</value>
               </rotation>
             </transform>
+            <attribute>
+              <type type="xs:string">Material</type>
+              <blending type="xs:boolean">false</blending>
+              <material>
+                <kDiffuse>
+                  <value>0.03529411765</value>
+                  <value>1</value>
+                  <value>0</value>
+                  <value>1</value>
+                </kDiffuse>
+                <kEmissive>
+                  <value>0</value>
+                  <value>0</value>
+                  <value>0</value>
+                  <value>1</value>
+                </kEmissive>
+                <kAmbient>
+                  <value>1</value>
+                  <value>1</value>
+                  <value>1</value>
+                  <value>1</value>
+                </kAmbient>
+                <specular>
+                  <value>1</value>
+                  <value>1</value>
+                  <value>1</value>
+                  <value>1</value>
+                </specular>
+                <opacity>1</opacity>
+                <shininess>50</shininess>
+                <materialName>Material5</materialName>
+                <face>Front_and_Back</face>
+                <colorMode>Ambient_and_Diffuse</colorMode>
+              </material>
+            </attribute>
+            <activeAttributeName type="xs:string">Material5</activeAttributeName>
             <fileName>Surface0.75.stl</fileName>
           </child>
         </children>
