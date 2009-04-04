@@ -226,6 +226,7 @@ void App::contextInit()
         else
         {
             *mAlreadyRendered = false;
+            *mRTTChanged = false;
         }
     }
 
@@ -326,8 +327,10 @@ void App::configSceneView( osgUtil::SceneView* newSceneViewer )
 //
 void App::bufferPreDraw()
 {
-    //glClearColor(1.0, 0.0, 0.0, 0.0);
-    //glClear(GL_COLOR_BUFFER_BIT);
+#if 0
+    glClearColor(1.0, 0.0, 0.0, 0.0);
+    glClear(GL_COLOR_BUFFER_BIT);
+#endif
 }
 ////////////////////////////////////////////////////////////////////////////////
 void App::SetWrapper( VjObsWrapper* input )
@@ -605,14 +608,13 @@ void App::contextPreDraw()
     VPR_PROFILE_GUARD_HISTORY( "App::contextPreDraw", 20 );
     if( mRTT )
     {
-        static bool changed = false;
-        if( !changed && (_frameNumber > 10) )
+        if( !(*mRTTChanged) && (_frameNumber > 5) )
         {
             if( jccl::ConfigManager::instance()->isPendingStale() )
             {
                 vpr::Guard<vpr::Mutex> val_guard( mValueLock );
                 mSceneRenderToTexture->InitScene( (*sceneViewer)->getCamera() );
-                changed = true;
+                *mRTTChanged = true;
             }
         }
         *mAlreadyRendered = false;
@@ -781,11 +783,18 @@ void App::draw()
     // osgUtil::SceneView::update() is in vrj::OsgApp::update().
     //profile the cull call
     {
-        //vpr::Guard<vpr::Mutex> sv_guard( mValueLock );
         VPR_PROFILE_GUARD_HISTORY( "App::draw sv->cull", 20 );
         //Not sure if it should be used - came from osgViewer::Renderer::cull/draw
         //sv->inheritCullSettings( *(sv->getCamera()) );
-        sv->cull();
+        if( mRTT )
+        {
+            vpr::Guard<vpr::Mutex> sv_guard( mValueLock );
+            sv->cull();
+        }
+        else
+        {
+            sv->cull();
+        }
     }
     //profile the draw call
     {
@@ -826,6 +835,9 @@ void App::draw()
     {
         *mAlreadyRendered = true;
     }
+    
+    //GLenum errorEnum = glGetError();
+    //std::cout << errorEnum & GL_NO_ERROR << std::endl;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void App::update()

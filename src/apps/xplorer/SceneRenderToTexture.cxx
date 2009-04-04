@@ -93,6 +93,7 @@
 #define GL_TEXTURE_STENCIL_SIZE_EXT 0x88F1
 #endif
 
+//#define VES_SRTT_DEBUG
 using namespace ves::xplorer;
 
 namespace vxsr = ves::xplorer::scenegraph::rtt;
@@ -596,20 +597,30 @@ osg::Geode* SceneRenderToTexture::CreateTexturedQuad(
         osg::PrimitiveSet::QUADS, 0, quadVertices->size() ) );
     quadGeometry->setTexCoordArray( 0, quadTexCoords.get() );
     quadGeometry->setUseDisplayList( false );
+#ifndef VES_SRTT_DEBUG
     quadGeometry->setColorBinding( osg::Geometry::BIND_OFF );
-
+#else
+    osg::ref_ptr< osg::Vec4Array > c = new osg::Vec4Array();
+    c->push_back( osg::Vec4( 1.0, 1.0, 0., 1. ) );
+    quadGeometry->setColorArray( c.get() );
+    quadGeometry->setColorBinding( osg::Geometry::BIND_OVERALL );
+#endif
     //Set the stateset for the quad
     osg::ref_ptr< osg::StateSet > stateset =
         quadGeometry->getOrCreateStateSet();
     stateset->setMode( GL_LIGHTING, osg::StateAttribute::OFF );
     //Units 0 and 1 correspond to gl_FragData[ 0 or 1 ] respectively
+#ifndef VES_SRTT_DEBUG
     stateset->setTextureAttributeAndModes(
           0, texture, osg::StateAttribute::ON );
+#endif
     
     osg::Geode* quadGeode = new osg::Geode();
     quadGeode->setCullingActive( false );
     quadGeode->addDrawable( quadGeometry.get() );
-
+#ifdef VES_SRTT_DEBUG
+    quadGeode->setNodeMask( 0 );
+#endif
     return quadGeode;
 }
 ////////////////////////////////////////////////////////////////////////////////

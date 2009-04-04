@@ -283,8 +283,10 @@ private:
     bool mRTT;
 #if __VJ_version >= 2003000
     vrj::opengl::ContextData< bool > mAlreadyRendered;
+    vrj::opengl::ContextData< bool > mRTTChanged;
 #else
     vrj::GlContextData< bool > mAlreadyRendered;
+    vrj::GlContextData< bool > mRTTChanged;
 #endif
 };
 } //end xplorer
