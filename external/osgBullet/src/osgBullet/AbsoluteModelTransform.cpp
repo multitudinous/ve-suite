@@ -44,9 +44,9 @@ AbsoluteModelTransform::computeLocalToWorldMatrix( osg::Matrix& matrix, osg::Nod
     {
         osg::Matrix view;
         if( !nv )
-            osg::notify( osg::WARN ) << "AbsoluteModelTransform: NULL NodeVisitor; can't get view." << std::endl;
+            osg::notify( osg::INFO ) << "AbsoluteModelTransform: NULL NodeVisitor; can't get view." << std::endl;
         else if( nv->getVisitorType() != osg::NodeVisitor::CULL_VISITOR )
-            osg::notify( osg::WARN ) << "AbsoluteModelTransform: NodeVisitor is not CullVisitor; can't get view." << std::endl;
+            osg::notify( osg::INFO ) << "AbsoluteModelTransform: NodeVisitor is not CullVisitor; can't get view." << std::endl;
         else
         {
             osgUtil::CullVisitor* cv = dynamic_cast< osgUtil::CullVisitor* >( nv );
@@ -70,9 +70,9 @@ AbsoluteModelTransform::computeWorldToLocalMatrix( osg::Matrix& matrix, osg::Nod
     {
         osg::Matrix invView;
         if( !nv )
-            osg::notify( osg::WARN ) << "AbsoluteModelTransform: NULL NodeVisitor; can't get invView." << std::endl;
+            osg::notify( osg::INFO ) << "AbsoluteModelTransform: NULL NodeVisitor; can't get invView." << std::endl;
         else if( nv->getVisitorType() != osg::NodeVisitor::CULL_VISITOR )
-            osg::notify( osg::WARN ) << "AbsoluteModelTransform: NodeVisitor is not CullVisitor; can't get invView." << std::endl;
+            osg::notify( osg::INFO ) << "AbsoluteModelTransform: NodeVisitor is not CullVisitor; can't get invView." << std::endl;
         else
         {
             osgUtil::CullVisitor* cv = dynamic_cast< osgUtil::CullVisitor* >( nv );
