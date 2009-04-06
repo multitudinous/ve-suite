@@ -357,28 +357,6 @@ void SkyDome::_buildStateSet()
     timeUniform->setUpdateCallback( timeCallback.get() );
     sset->addUniform( timeUniform.get() );
 
-    /*
-    osg::ref_ptr< osg::Texture3D > noiseVolumeTexture = new osg::Texture3D();
-    noiseVolumeTexture->setFilter(
-        osg::Texture3D::MIN_FILTER, osg::Texture3D::LINEAR );
-    noiseVolumeTexture->setFilter(
-        osg::Texture3D::MAG_FILTER, osg::Texture3D::LINEAR );
-    noiseVolumeTexture->setWrap(
-        osg::Texture3D::WRAP_S, osg::Texture3D::REPEAT );
-    noiseVolumeTexture->setWrap(
-        osg::Texture3D::WRAP_T, osg::Texture3D::REPEAT );
-    noiseVolumeTexture->setWrap(
-        osg::Texture3D::WRAP_R, osg::Texture3D::REPEAT );
-    noiseVolumeTexture->setImage(
-        osgDB::readImageFile( "SolarSystem/NoiseVolume.dds" ) );
-
-    sset->setTextureAttributeAndModes(
-        2, noiseVolumeTexture.get(), osg::StateAttribute::ON );
-    osg::ref_ptr< osg::Uniform > noiseUniform =
-        new osg::Uniform( "noiseMap", 2 );
-    sset->addUniform( noiseUniform.get() );
-    */
-
     osg::ref_ptr< osg::Uniform > skyMapUniform =
         new osg::Uniform( "skyMap", 0 );
     sset->addUniform( skyMapUniform.get() );

@@ -12,7 +12,7 @@ const vec4 grey = vec4( 0.80, 0.80, 0.80, 0.0 );
 void main()
 {
     //x = Cloud cover percentage, y = Cloud sharpness
-    float cCoverPercentage = 0.34;
+    float cCoverPercentage = 0.36;
     float cSharpness = 0.0006;
 
     //Compute normal (assumes this is a sphere)

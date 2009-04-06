@@ -434,12 +434,13 @@ osgEphemeris::EphemerisModel* EnvironmentHandler::GetEphemerisModel( bool create
         }
         else*/
         {
-            m_ephemerisModel->setSkyDomeRadius( 5000. );
+            m_ephemerisModel->setSkyDomeRadius( 10000.0 );
             m_ephemerisModel->setAutoDateTime( false );
-            m_ephemerisModel->setSkyDomeCenter( osg::Vec3f( 0., 0., 0. ) );
+            m_ephemerisModel->setSkyDomeCenter( osg::Vec3f( 0.0, 0.0, 0.0 ) );
             m_ephemerisModel->setSunLightNum( 0 );
             m_ephemerisModel->setMoveWithEyePoint( false );
-            m_ephemerisModel->setMembers( osgEphemeris::EphemerisModel::ALL_MEMBERS );
+            m_ephemerisModel->setMembers(
+                osgEphemeris::EphemerisModel::DEFAULT_MEMBERS );
         }
         worldDCS->addChild( m_ephemerisModel.get() );
     }
