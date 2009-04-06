@@ -7,12 +7,12 @@ varying vec4 vpos, lpos;
 varying vec2 wave0, wave1, wave2, vTexCoords;
 
 const vec4 white = vec4( 1.00, 1.00, 1.00, 0.0 );
-const vec4 grey = vec4( 0.70, 0.70, 0.70, 0.0 );
+const vec4 grey = vec4( 0.80, 0.80, 0.80, 0.0 );
 
 void main()
 {
     //x = Cloud cover percentage, y = Cloud sharpness
-    float cCoverPercentage = 0.38;
+    float cCoverPercentage = 0.34;
     float cSharpness = 0.0006;
 
     //Compute normal (assumes this is a sphere)
@@ -52,8 +52,8 @@ void main()
     skyColor = mix( skyColor, white * cDiff, cDens );
 
     //Add a horizon haze
-    float haze = pow( gl_FragCoord.z * ( 1.0 + norm.y ), 1.4 );
-    haze = pow( 2.71828, -1.4 * haze );
+    float haze = pow( gl_FragCoord.z * ( 1.0 + norm.y ), 4.0 );
+    haze = pow( 2.71828, -4.0 * haze );
     skyColor = mix( grey, skyColor, haze );
 
     //Get _sunTexture using projection texture coordinates
