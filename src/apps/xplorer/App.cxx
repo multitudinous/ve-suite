@@ -788,7 +788,7 @@ void App::draw()
         //sv->inheritCullSettings( *(sv->getCamera()) );
         if( mRTT )
         {
-            vpr::Guard<vpr::Mutex> sv_guard( mValueLock );
+            //vpr::Guard<vpr::Mutex> sv_guard( mValueLock );
             sv->cull();
         }
         else

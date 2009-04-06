@@ -343,6 +343,7 @@ vxsr::Processor* SceneRenderToTexture::CreatePipelineProcessor(
 
     vxsr::Processor* tempProcessor = new vxsr::Processor();
     tempProcessor->SetCamera( camera );
+    tempProcessor->setCullingActive( false );
 
     //COLOR_BUFFER0 bypass
     osg::ref_ptr< vxsr::UnitCameraAttachmentBypass > colorBuffer0 =
@@ -351,6 +352,7 @@ vxsr::Processor* SceneRenderToTexture::CreatePipelineProcessor(
         colorBuffer0->setName( "ColorBuffer0Bypass" );
         colorBuffer0->SetBufferComponent( osg::Camera::COLOR_BUFFER0 );
         colorBuffer0->SetInputTextureIndexForViewportReference( 0 );
+        colorBuffer0->setCullingActive( false );
     }
     tempProcessor->addChild( colorBuffer0.get() );
     colorBuffer0->Update();
@@ -362,6 +364,7 @@ vxsr::Processor* SceneRenderToTexture::CreatePipelineProcessor(
         colorBuffer1->setName( "ColorBuffer1Bypass" );
         colorBuffer1->SetBufferComponent( osg::Camera::COLOR_BUFFER1 );
         colorBuffer1->SetInputTextureIndexForViewportReference( 0 );
+        colorBuffer1->setCullingActive( false );
     }
     tempProcessor->addChild( colorBuffer1.get() );
     colorBuffer1->Update();
@@ -378,6 +381,7 @@ vxsr::Processor* SceneRenderToTexture::CreatePipelineProcessor(
         glowDownSample->setName( "GlowDownSample" );
         glowDownSample->SetFactorX( downsample );
         glowDownSample->SetFactorY( downsample );
+        glowDownSample->setCullingActive( false );
         //glowDownSample->SetInputTextureIndexForViewportReference( 0 );
     }
     colorBuffer1->addChild( glowDownSample.get() );
@@ -388,6 +392,7 @@ vxsr::Processor* SceneRenderToTexture::CreatePipelineProcessor(
     {
         //Set name and indicies
         blurX->setName( "BlurHorizontal" );
+        blurX->setCullingActive( false );
 
         osg::ref_ptr< vxsr::ShaderAttribute > gaussX =
             new vxsr::ShaderAttribute();
@@ -438,6 +443,7 @@ vxsr::Processor* SceneRenderToTexture::CreatePipelineProcessor(
     {
         //Set name and indicies
         blurY->setName( "BlurVertical" );
+        blurY->setCullingActive( false );
 
         osg::ref_ptr< vxsr::ShaderAttribute > gaussY =
             new vxsr::ShaderAttribute();
@@ -488,6 +494,7 @@ vxsr::Processor* SceneRenderToTexture::CreatePipelineProcessor(
     {
         //Set name and indicies
         final->setName( "Final" );
+        final->setCullingActive( false );
 
         osg::ref_ptr< vxsr::ShaderAttribute > finalShader =
             new vxsr::ShaderAttribute();
