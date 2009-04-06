@@ -37,6 +37,7 @@ BackColor=$a16502
 BackColor2=$1b84f7
 SetupIconFile={#VEDEVHOME}\dist\installerImages\Ve_icon.ico
 PrivilegesRequired=none
+UsePreviousGroup=false
 
 [Types]
 Name: full; Description: Full installation

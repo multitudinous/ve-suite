@@ -69,7 +69,7 @@ Source: {#DEPENDSINSTALLHOME}\{#WXHOME}\lib\vc_dll\*.h; DestDir: {app}\include\w
 
 ; Juggler Files
 Source: {#DEPENDSINSTALLHOME}\{#JUGGLERINSTHOME}\lib\*.dll; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs; Components: juggler
-Source: {#DEPENDSINSTALLHOME}\{#JUGGLERINSTHOME}\bin\*.dll; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs; Components: juggler
+;Source: {#DEPENDSINSTALLHOME}\{#JUGGLERINSTHOME}\bin\*.dll; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs; Components: juggler
 Source: {#DEPENDSINSTALLHOME}\{#JUGGLERINSTHOME}\lib\*.lib; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs; Components: depsbuildenv; Languages: 
 Source: {#DEPENDSINSTALLHOME}\{#JUGGLERINSTHOME}\share\vrjuggler\data\configFiles\*; DestDir: {app}\share\configFiles; Flags: ignoreversion recursesubdirs; Components: juggler
 Source: {#DEPENDSINSTALLHOME}\{#JUGGLERINSTHOME}\share\vrjuggler\data\definitions\*; DestDir: {app}\share\definitions; Flags: ignoreversion recursesubdirs createallsubdirs; Components: juggler

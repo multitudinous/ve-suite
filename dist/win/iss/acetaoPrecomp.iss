@@ -15,7 +15,7 @@ AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
 DefaultDirName=C:\ACETAO_{#ACETAOVERSION}_Pre-Compile_vc{#MSVCVERSION}
-DefaultGroupName={#VESGROUPNAME}
+DefaultGroupName={#VESGROUPNAME}\Uninstallers
 AllowNoIcons=true
 OutputDir={#INSTALLERINSTALLLOCATION}
 OutputBaseFilename=acetao{#ACETAOVERSION}-precompile_{#MSVCVERSION}
@@ -134,3 +134,6 @@ Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\ACEXML.pc.in; DestDir: {app
 Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\ACEXML_Parser.pc.in; DestDir: {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName: ACEXML_Parser.pc
 Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\ACE_TMCast.pc.in; DestDir: {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName: ACE_TMCast.pc
 Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\ACE_HTBP.pc.in; DestDir: {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName: ACE_HTBP.pc
+
+[Icons]
+Name: {group}\{cm:UninstallProgram,{#MyAppName}}; Filename: {uninstallexe}
