@@ -4,10 +4,10 @@ uniform sampler2D colorMap;
 uniform sampler2D bumpMap;
 
 varying vec4 vpos, lpos;
-varying vec2 wave0, wave1, wave2;
+varying vec2 wave0, wave1, wave2, vTexCoords;
 
 const vec4 white = vec4( 1.00, 1.00, 1.00, 0.0 );
-const vec4 grey = vec4( 0.80, 0.80, 0.80, 0.0 );
+const vec4 grey = vec4( 0.70, 0.70, 0.70, 0.0 );
 
 void main()
 {
@@ -52,8 +52,8 @@ void main()
     skyColor = mix( skyColor, white * cDiff, cDens );
 
     //Add a horizon haze
-    float haze = pow( gl_FragCoord.z * ( 1.0 + norm.y ), 2.0 );
-    haze = pow( 2.71828, -5.0 * haze );
+    float haze = pow( gl_FragCoord.z * ( 1.0 + norm.y ), 1.4 );
+    haze = pow( 2.71828, -1.4 * haze );
     skyColor = mix( grey, skyColor, haze );
 
     //Get _sunTexture using projection texture coordinates
@@ -65,4 +65,6 @@ void main()
         vec4( pow( max( 0.0, dot( -sunColor.xyz, norm ) ), 2048.0 ) );
 
     gl_FragColor = skyColor + cCoverPercentage * sunlight;
+
+    //gl_FragColor = vec4( vTexCoords.x, vTexCoords.y, 0.0, 1.0 );
 }
