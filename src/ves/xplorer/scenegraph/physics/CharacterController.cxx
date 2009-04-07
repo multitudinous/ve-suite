@@ -305,115 +305,36 @@ void CharacterController::SetCameraRotationSLERP( bool onOff )
         {
             mFromTurnAngleZ += gmtl::Math::TWO_PI;
         }
-
-        mCameraRotationSLERPdt = 0.0;
     }
+
+    mCameraRotationSLERPdt = 0.0;
+}
+////////////////////////////////////////////////////////////////////////////////
+void CharacterController::SetCharacterRotationFromCamera()
+{
+    //Get current character transform
+    btTransform xform = mGhostObject->getWorldTransform();
+    if( mFlying )
+    {
+        xform.setRotation( mCameraRotation );
+    }
+    else
+    {
+        xform.setRotation( mCameraRotationZ );
+    }
+
+    mGhostObject->setWorldTransform( xform );
+
+    mToTurnAngleZ = mTurnAngleZ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CharacterController::Advance( btScalar dt )
 {
-    //Get current character transform
-    btTransform xform = mGhostObject->getWorldTransform();
+    //Update the character rotation
+    UpdateCharacterRotation();
 
-    //Update the device input history buffer
-    std::pair< double, double > deltaDeviceInput = UpdateHistoryBuffer();
-
-    //Calculate character rotation
-    if( deltaDeviceInput.first != 0.0 || deltaDeviceInput.second != 0.0 )
-    {
-        mTurnAngleX += deltaDeviceInput.first;
-        //Restrict movement about the x-axis from -PI/2 to PI/2
-        if( mTurnAngleX < -gmtl::Math::PI_OVER_2 )
-        {
-            mTurnAngleX = -gmtl::Math::PI_OVER_2;
-        }
-        else if( mTurnAngleX > gmtl::Math::PI_OVER_2 )
-        {
-            mTurnAngleX = gmtl::Math::PI_OVER_2;
-        }
-
-        mTurnAngleZ += deltaDeviceInput.second;
-        //Restrict angles about the z-axis from 0 to 2PI
-        if( mTurnAngleZ >= gmtl::Math::TWO_PI )
-        {
-            mTurnAngleZ -= gmtl::Math::TWO_PI;
-
-        }
-        else if( mTurnAngleZ < 0.0 )
-        {
-            mTurnAngleZ += gmtl::Math::TWO_PI;
-        }
-
-        mCameraRotationX.setX( sin( 0.5 * mTurnAngleX ) );
-        mCameraRotationX.setW( cos( 0.5 * mTurnAngleX ) );
-        mCameraRotationZ.setZ( sin( 0.5 * mTurnAngleZ ) );
-        mCameraRotationZ.setW( cos( 0.5 * mTurnAngleZ ) );
-        mCameraRotation = mCameraRotationX * mCameraRotationZ;
-
-        if( m1stPersonMode )
-        {
-            if( mFlying )
-            {
-                xform.setRotation( mCameraRotation );
-            }
-            else
-            {
-                xform.setRotation( mCameraRotationZ );
-            }
-
-            mToTurnAngleZ = mTurnAngleZ;
-            mGhostObject->setWorldTransform( xform );
-        }
-    }
-
-    //Calculate character translation
-    btVector3 direction( 0.0, 0.0, 0.0 );
-    btScalar speed = mSpeed * dt;
-    if( mStepForward || mStepBackward || mStrafeLeft || mStrafeRight )
-    {
-        btVector3 forwardDir = xform.getBasis()[ 1 ];
-        forwardDir.normalize();
-
-        btVector3 strafeDir = xform.getBasis()[ 0 ];
-        strafeDir.normalize();
-
-        btVector3 upDir = xform.getBasis()[ 2 ];
-        upDir.normalize();
-
-        if( mStepForward )
-        {
-            direction += forwardDir;
-        }
-
-        if( mStepBackward )
-        {
-            direction -= forwardDir;
-        }
-
-        if( mStrafeLeft )
-        {
-            direction -= strafeDir;
-        }
-
-        if( mStrafeRight )
-        {
-            direction += strafeDir;
-        }
-
-        //Normalize the movement
-        if( direction.length() > 0.0 )
-        {
-            direction = direction.normalize();
-        }
-
-        //slerp mCameraRotation if necessary
-        if( mCameraRotationSLERP )
-        {
-            CameraRotationSLERP();
-        }
-    }
-
-    mCharacter->setWalkDirection( direction * speed );
+    //Update the character translation
+    UpdateCharacterTranslation( dt );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CharacterController::UpdateCamera()
@@ -582,7 +503,8 @@ void CharacterController::EyeToCenterRayTest(
     osgUtil::IntersectionVisitor intersectionVisitor(
         mLineSegmentIntersector.get() );
 
-    vxs::SceneManager::instance()->GetModelRoot()->accept( intersectionVisitor );
+    vxs::SceneManager::instance()->GetModelRoot()->accept(
+        intersectionVisitor );
 
     osgUtil::LineSegmentIntersector::Intersections& intersections =
         mLineSegmentIntersector->getIntersections();
@@ -717,6 +639,110 @@ std::pair< double, double > CharacterController::UpdateHistoryBuffer()
     totalValueZ *= mTurnSpeed / mTotalWeight;
 
     return std::make_pair( totalValueX, totalValueZ );
+}
+////////////////////////////////////////////////////////////////////////////////
+void CharacterController::UpdateCharacterRotation()
+{
+    //Update the device input history buffer
+    std::pair< double, double > deltaDeviceInput = UpdateHistoryBuffer();
+
+    //Calculate character rotation
+    if( deltaDeviceInput.first != 0.0 || deltaDeviceInput.second != 0.0 )
+    {
+        mTurnAngleX += deltaDeviceInput.first;
+        //Restrict movement about the x-axis from -PI/2 to PI/2
+        if( mTurnAngleX < -gmtl::Math::PI_OVER_2 )
+        {
+            mTurnAngleX = -gmtl::Math::PI_OVER_2;
+        }
+        else if( mTurnAngleX > gmtl::Math::PI_OVER_2 )
+        {
+            mTurnAngleX = gmtl::Math::PI_OVER_2;
+        }
+
+        mTurnAngleZ += deltaDeviceInput.second;
+        //Restrict angles about the z-axis from 0 to 2PI
+        if( mTurnAngleZ >= gmtl::Math::TWO_PI )
+        {
+            mTurnAngleZ -= gmtl::Math::TWO_PI;
+
+        }
+        else if( mTurnAngleZ < 0.0 )
+        {
+            mTurnAngleZ += gmtl::Math::TWO_PI;
+        }
+
+        //Set the camera rotation about the x-axis
+        mCameraRotationX.setX( sin( 0.5 * mTurnAngleX ) );
+        mCameraRotationX.setW( cos( 0.5 * mTurnAngleX ) );
+
+        //Set the camera rotation about the z-axis
+        mCameraRotationZ.setZ( sin( 0.5 * mTurnAngleZ ) );
+        mCameraRotationZ.setW( cos( 0.5 * mTurnAngleZ ) );
+
+        //Set the total camera rotation
+        mCameraRotation = mCameraRotationX * mCameraRotationZ;
+
+        if( m1stPersonMode )
+        {
+            SetCharacterRotationFromCamera();
+        }
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void CharacterController::UpdateCharacterTranslation( btScalar dt )
+{
+    //Calculate character translation
+    btVector3 direction( 0.0, 0.0, 0.0 );
+    btScalar speed = mSpeed * dt;
+    if( mStepForward || mStepBackward || mStrafeLeft || mStrafeRight )
+    {
+        //Get current character transform
+        btTransform xform = mGhostObject->getWorldTransform();
+
+        btVector3 forwardDir = xform.getBasis()[ 1 ];
+        forwardDir.normalize();
+
+        btVector3 strafeDir = xform.getBasis()[ 0 ];
+        strafeDir.normalize();
+
+        btVector3 upDir = xform.getBasis()[ 2 ];
+        upDir.normalize();
+
+        if( mStepForward )
+        {
+            direction += forwardDir;
+        }
+
+        if( mStepBackward )
+        {
+            direction -= forwardDir;
+        }
+
+        if( mStrafeLeft )
+        {
+            direction -= strafeDir;
+        }
+
+        if( mStrafeRight )
+        {
+            direction += strafeDir;
+        }
+
+        //Normalize the movement
+        if( direction.length() > 0.0 )
+        {
+            direction = direction.normalize();
+        }
+
+        //slerp mCameraRotation if necessary
+        if( mCameraRotationSLERP )
+        {
+            CameraRotationSLERP();
+        }
+    }
+
+    mCharacter->setWalkDirection( direction * speed );
 }
 ////////////////////////////////////////////////////////////////////////////////
 CharacterController::CharacterTransformCallback::CharacterTransformCallback(

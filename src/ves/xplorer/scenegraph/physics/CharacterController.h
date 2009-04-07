@@ -129,6 +129,9 @@ public:
     ///\param onOff
     void SetCameraRotationSLERP( bool onOff );
 
+    ///
+    void SetCharacterRotationFromCamera();
+
     ///Activate the character controller
     void TurnOn();
 
@@ -177,6 +180,12 @@ private:
     ///
     ///\return Returns the delta device input for the frame
     std::pair< double, double > UpdateHistoryBuffer();
+
+    ///
+    void UpdateCharacterRotation();
+    
+    ///
+    void UpdateCharacterTranslation( btScalar dt );
 
     ///Tracks the on/off status of the character controller
     bool mActive;

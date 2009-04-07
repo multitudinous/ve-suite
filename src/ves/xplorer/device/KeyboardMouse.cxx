@@ -982,13 +982,16 @@ void KeyboardMouse::NavOnMousePress()
                  mCharacterController->IsActive() )
             {
                 mCharacterController->FirstPersonMode( false );
-                mCharacterController->SetCameraRotationSLERP( false );
             }
 
             //No modifier key
             if( mKeyNone )
             {
-                ;
+                if( !mPhysicsSimulator->GetIdle() &&
+                     mCharacterController->IsActive() )
+                {
+                    mCharacterController->SetCameraRotationSLERP( false );
+                }
             }
             //Mod key shift
             else if( mKeyShift )
@@ -1060,6 +1063,8 @@ void KeyboardMouse::NavOnMousePress()
                 mCharacterController->IsActive() )
             {
                 mCharacterController->FirstPersonMode( true );
+                mCharacterController->SetCameraRotationSLERP( false );
+                mCharacterController->SetCharacterRotationFromCamera();
             }
 
             break;
@@ -1108,18 +1113,14 @@ void KeyboardMouse::NavOnMouseRelease()
                 mPickedBody = NULL;
             }
 
-            if( !mPhysicsSimulator->GetIdle() )
-            {
-                if( mCharacterController->IsActive() )
-                {
-                    mCharacterController->SetCameraRotationSLERP( true );
-                }
-            }
-
             //No modifier key
             if( mKeyNone )
             {
-                ;
+                if( !mPhysicsSimulator->GetIdle() &&
+                     mCharacterController->IsActive() )
+                {
+                    mCharacterController->SetCameraRotationSLERP( true );
+                }
             }
             //Mod key shift
             else if( mKeyShift )
