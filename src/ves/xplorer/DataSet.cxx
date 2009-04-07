@@ -215,7 +215,7 @@ DataSet::~DataSet()
     {
         //This dataset could be part of a composite dataset which would mean
         //its memory is handled by another destructor
-        if( m_dataSet->GetReferenceCount() > 0 )
+        if( m_dataSet->GetReferenceCount() == 1 )
         {
             this->m_dataSet->Delete();
             this->m_dataSet = NULL;
