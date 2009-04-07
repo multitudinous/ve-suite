@@ -46,9 +46,6 @@ using namespace ves::xplorer::scenegraph::rtt;
 Processor::Processor()
     :
     osg::Group(),
-    mDirty( true ),
-    mDirtyUnitGraph( true ),
-    mUseColorClamp( true ),
     mCamera( NULL )
 {
     ;
@@ -57,9 +54,6 @@ Processor::Processor()
 Processor::Processor( const Processor& processor, const osg::CopyOp& copyop )
     :
     osg::Group( processor, copyop ),
-    mDirty( processor.mDirty ),
-    mDirtyUnitGraph( processor.mDirtyUnitGraph ),
-    mUseColorClamp( processor.mUseColorClamp ),
     mCamera( processor.mCamera )
 {
 
@@ -84,61 +78,13 @@ void Processor::SetCamera( osg::Camera* camera )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Processor::DirtyUnitSubgraph()
-{
-    mDirtyUnitGraph = true;
-}
-////////////////////////////////////////////////////////////////////////////////
-bool Processor::IsDirtyUnitSubgraph() const
-{
-    return mDirtyUnitGraph;
-}
-////////////////////////////////////////////////////////////////////////////////
-void Processor::MarkUnitSubgraphNonDirty()
-{
-    mDirtyUnitGraph = false;
-}
-////////////////////////////////////////////////////////////////////////////////
 Unit* Processor::FindUnit( const std::string& unitName )
 {
-    if( !mDirtyUnitGraph )
-    {
-        //FindUnitVisitor uv( name );
-        //uv.run( this );
-
-        //return uv.getResult();
-    }
-
     return NULL;
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool Processor::RemoveUnit( Unit* unit )
 {
-    if( mDirtyUnitGraph )
-    {
-        osg::notify( osg::INFO )
-            << "osgPPU::Processor::removeUnit(" << unit->getName()
-            << ") - cannot remove unit because the graph is not valid."
-            << std::endl;
-        
-        //return false;
-    }
-
-    //RemoveUnitVisitor uv;
-    //uv.run( unit );
-
     return true;
-}
-////////////////////////////////////////////////////////////////////////////////
-osg::BoundingSphere Processor::ComputeBound() const
-{
-    return osg::BoundingSphere();
-}
-////////////////////////////////////////////////////////////////////////////////
-void Processor::UseColorClamp( bool useColorClamp )
-{
-    mUseColorClamp = useColorClamp;
-
-    mDirty = true;
 }
 ////////////////////////////////////////////////////////////////////////////////

@@ -65,7 +65,9 @@ public:
     Processor();
 
     ///Copy Constructor
-    Processor( const Processor& processor, const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
+    Processor(
+        const Processor& processor,
+        const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
 
     ///
     META_Node( rtt, Processor );
@@ -76,46 +78,17 @@ public:
     ///Set the camera used for this pipeline
     void SetCamera( osg::Camera* camera );
 
-    ///Mark the underlying unit subgraph as dirty
-    void DirtyUnitSubgraph();
-
-    ///Check whenever the subgraph is valid
-    bool IsDirtyUnitSubgraph() const;
-
-    ///Force to mark the subgraph as non-dirty
-    void MarkUnitSubgraphNonDirty();
-
     ///Search in the subgraph for a unit
     Unit* FindUnit( const std::string& unitName );
 
     ///Remove a unit from the processor's subgraph
     bool RemoveUnit( Unit* unit );
 
-    ///Overridden method from osg::Node to allow computation of bounding box
-    ///This is needed to prevent traversal of computation down to all children
-    ///This method do always returns empty bounding sphere
-    osg::BoundingSphere ComputeBound() const;
-
-    ///Set wether or not osg::Clamp should be used in the osgPPU pipelines
-    ///This can be a problem when a graphics driver does not support glClamp
-    ///By default osg::Clamp will be used
-    ///If you do not want osg::Clamp in the pipelines, set to false
-    void UseColorClamp( bool useColorClamp = true );
-
 protected:
     ///Destructor
     virtual ~Processor();
 
 private:
-    ///
-    bool mDirty;
-
-    ///
-    bool mDirtyUnitGraph;
-
-    ///
-    bool mUseColorClamp;
-
     ///
     osg::observer_ptr< osg::Camera > mCamera;
 

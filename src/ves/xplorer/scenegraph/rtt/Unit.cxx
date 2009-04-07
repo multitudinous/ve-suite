@@ -122,14 +122,18 @@ Unit::Unit()
 
     //Setup default empty fbo and program, so we do not use any fbo or program
     getOrCreateStateSet()->setAttribute(
-        new osg::Program(), osg::StateAttribute::ON );
+        new osg::Program(),
+        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
     getOrCreateStateSet()->setAttribute(
-        new osg::FrameBufferObject(), osg::StateAttribute::ON );
+        new osg::FrameBufferObject(),
+        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
 
     //Setup empty textures so that this unit does not get any undefined textures
     for( unsigned int i = 0; i < 16; ++i )
     {
-        getOrCreateStateSet()->setTextureAttribute( i, new osg::Texture2D() );
+        getOrCreateStateSet()->setTextureAttribute(
+            i, new osg::Texture2D(),
+            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
     }
 
     //No culling, because we do not need it
@@ -368,7 +372,7 @@ osg::Geode* const Unit::GetGeode() const
 ////////////////////////////////////////////////////////////////////////////////
 void Unit::SetInputTexturesFromParents()
 {
-    //Scan all parents and look for units
+    //Scan the input to uniform map
     rtt::Unit* unit( NULL );
     Unit::InputToUniformMap::iterator itumItr = mInputToUniformMap.begin();
     for( itumItr; itumItr != mInputToUniformMap.end(); ++itumItr )
@@ -405,28 +409,32 @@ void Unit::SetInputTexturesFromParents()
         unit = dynamic_cast< rtt::Unit* >( getParent( i ) );
         if( unit )
         {
-            //Add each found texture as input
-            const Unit::TextureMap& textureMap = unit->GetOutputTextureMap();
-            Unit::TextureMap::const_iterator itr = textureMap.begin();
-            for( itr; itr != textureMap.end(); ++itr )
+            if( mInputToUniformMap.find( unit ) == mInputToUniformMap.end() )
             {
-                osg::Texture* texture = itr->second.get();
-                if( texture )
+                //Add each found texture as input
+                const Unit::TextureMap& textureMap =
+                    unit->GetOutputTextureMap();
+                Unit::TextureMap::const_iterator itr = textureMap.begin();
+                for( itr; itr != textureMap.end(); ++itr )
                 {
-                    mInputTextures[ mInputTextures.size() ] = itr->second.get();
-                }
-                else
-                {
-                    osg::notify( osg::WARN )
-                        << "rtt::Unit::SetInputTexturesFromParents(): "
-                        << unit->getName()
-                        << " has invalid output texture!"
-                        << std::endl;
+                    osg::Texture* texture = itr->second.get();
+                    if( texture )
+                    {
+                        mInputTextures[ mInputTextures.size() ] =
+                            itr->second.get();
+                    }
+                    else
+                    {
+                        osg::notify( osg::WARN )
+                            << "rtt::Unit::SetInputTexturesFromParents(): "
+                            << unit->getName()
+                            << " has invalid output texture!"
+                            << std::endl;
+                    }
                 }
             }
         }
     }
-
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Unit::UpdateUniforms()
@@ -469,7 +477,8 @@ void Unit::AssignInputTexture()
         if( itr->second.valid() )
         {
             stateset->setTextureAttributeAndModes(
-                itr->first, itr->second.get(), osg::StateAttribute::ON );
+                itr->first, itr->second.get(),
+                osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
         }
     }
 }
@@ -520,7 +529,9 @@ void Unit::CreateTexturedQuadDrawable(
     //Set the stateset for the quad
     osg::ref_ptr< osg::StateSet > stateset =
         quadGeometry->getOrCreateStateSet();
-    stateset->setMode( GL_LIGHTING, osg::StateAttribute::OFF );
+    stateset->setMode(
+        GL_LIGHTING,
+        osg::StateAttribute::OFF | osg::StateAttribute::PROTECTED );
 
     quadGeometry->setDrawCallback( new Unit::DrawCallback( this ) );
 

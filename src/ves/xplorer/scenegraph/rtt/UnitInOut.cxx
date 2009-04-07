@@ -213,7 +213,7 @@ osg::Texture* UnitInOut::GetOrCreateOutputTexture( int mrt )
     newTexture->setWrap( osg::Texture::WRAP_S, osg::Texture::CLAMP_TO_EDGE );
     newTexture->setWrap( osg::Texture::WRAP_T, osg::Texture::CLAMP_TO_EDGE );
     newTexture->setWrap( osg::Texture::WRAP_R, osg::Texture::CLAMP_TO_EDGE );
-    newTexture->setBorderColor( osg::Vec4( 0, 0, 0, 0 ) );
+    newTexture->setBorderColor( osg::Vec4d( 0.0, 0.0, 0.0, 0.0 ) );
     newTexture->setInternalFormat( GetOutputInternalFormat() );
     newTexture->setSourceFormat(
         CreateSourceTextureFormat( GetOutputInternalFormat() ) );
@@ -329,6 +329,8 @@ void UnitInOut::AssignOutputTexture()
 ////////////////////////////////////////////////////////////////////////////////
 void UnitInOut::AssignFBO()
 {
-    getOrCreateStateSet()->setAttribute( mFBO.get(), osg::StateAttribute::ON );
+    getOrCreateStateSet()->setAttribute(
+        mFBO.get(),
+        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
 }
 ////////////////////////////////////////////////////////////////////////////////
