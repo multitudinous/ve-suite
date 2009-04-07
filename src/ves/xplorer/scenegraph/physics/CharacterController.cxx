@@ -71,7 +71,7 @@ CharacterController::CharacterController()
     mJump( false ),
     mFlying( false ),
     mCameraDistanceLERP( false ),
-    mCameraDistanceSLERP( false ),
+    mCameraRotationSLERP( false ),
     mOccludeDistanceLERP( false ),
     mPreviousOccluder( false ),
     mBufferSize( 0 ),
@@ -85,10 +85,10 @@ CharacterController::CharacterController()
     mMaxCameraDistance( 200.0 ),
     mDeltaZoom( 2.0 ),
     mCameraDistanceLERPdt( 0.0 ),
-    mCameraDistanceSLERPdt( 0.0 ),
+    mCameraRotationSLERPdt( 0.0 ),
     mOccludeDistanceLERPdt( 0.0 ),
     mDeltaCameraDistanceLERP( 0.02 ),
-    mDeltaCameraDistanceSLERP( 0.02 ),
+    mDeltaCameraRotationSLERP( 0.02 ),
     mDeltaOccludeDistanceLERP( 0.02 ),
     mFromCameraDistance( 0.0 ),
     mToCameraDistance( 0.0 ),
@@ -104,12 +104,14 @@ CharacterController::CharacterController()
     mTurnAngleZ( 0.0 ),
     mDeltaTurnAngleX( 0.0 ),
     mDeltaTurnAngleZ( 0.0 ),
+    mFromTurnAngleZ( 0.0 ),
+    mToTurnAngleZ( 0.0 ),
     mTurnSpeed( 7.0 ),
     mWeightModifier( 0.0 ),
     mTotalWeight( 0.0 ),
     mCameraRotation( 0.0, 0.0, 0.0, 1.0 ),
-    mFromCameraRotation( 0.0, 0.0, 0.0, 1.0 ),
-    mToCameraRotation( 0.0, 0.0, 0.0, 1.0 ),
+    mCameraRotationX( 1.0, 0.0, 0.0, 1.0 ),
+    mCameraRotationZ( 0.0, 0.0, 1.0, 1.0 ),
     mCharacter( NULL ),
     mGhostObject( NULL ),
     mMatrixTransform( NULL ),
@@ -286,6 +288,28 @@ void CharacterController::Rotate( double dx, double dy )
     mDeltaTurnAngleZ += z;
 }
 ////////////////////////////////////////////////////////////////////////////////
+void CharacterController::SetCameraRotationSLERP( bool onOff )
+{
+    mCameraRotationSLERP = onOff;
+
+    if( mCameraRotationSLERP )
+    {
+        mFromTurnAngleZ = mTurnAngleZ;
+
+        //Take the shortest route back to the character rotation
+        if( ( mFromTurnAngleZ - mToTurnAngleZ ) > gmtl::Math::PI )
+        {
+            mFromTurnAngleZ -= gmtl::Math::TWO_PI;
+        }
+        else if( ( mFromTurnAngleZ - mToTurnAngleZ ) < -gmtl::Math::PI )
+        {
+            mFromTurnAngleZ += gmtl::Math::TWO_PI;
+        }
+
+        mCameraRotationSLERPdt = 0.0;
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
 void CharacterController::Advance( btScalar dt )
 {
     //Get current character transform
@@ -307,11 +331,24 @@ void CharacterController::Advance( btScalar dt )
         {
             mTurnAngleX = gmtl::Math::PI_OVER_2;
         }
-        mTurnAngleZ += deltaDeviceInput.second;
 
-        btQuaternion xRotation( btVector3( 1.0, 0.0, 0.0 ), mTurnAngleX );
-        btQuaternion zRotation( btVector3( 0.0, 0.0, 1.0 ), mTurnAngleZ );
-        mCameraRotation = xRotation * zRotation;
+        mTurnAngleZ += deltaDeviceInput.second;
+        //Restrict angles about the z-axis from 0 to 2PI
+        if( mTurnAngleZ >= gmtl::Math::TWO_PI )
+        {
+            mTurnAngleZ -= gmtl::Math::TWO_PI;
+
+        }
+        else if( mTurnAngleZ < 0.0 )
+        {
+            mTurnAngleZ += gmtl::Math::TWO_PI;
+        }
+
+        mCameraRotationX.setX( sin( 0.5 * mTurnAngleX ) );
+        mCameraRotationX.setW( cos( 0.5 * mTurnAngleX ) );
+        mCameraRotationZ.setZ( sin( 0.5 * mTurnAngleZ ) );
+        mCameraRotationZ.setW( cos( 0.5 * mTurnAngleZ ) );
+        mCameraRotation = mCameraRotationX * mCameraRotationZ;
 
         if( m1stPersonMode )
         {
@@ -321,26 +358,27 @@ void CharacterController::Advance( btScalar dt )
             }
             else
             {
-                xform.setRotation( zRotation );
+                xform.setRotation( mCameraRotationZ );
             }
 
+            mToTurnAngleZ = mTurnAngleZ;
             mGhostObject->setWorldTransform( xform );
         }
     }
 
     //Calculate character translation
+    btVector3 direction( 0.0, 0.0, 0.0 );
+    btScalar speed = mSpeed * dt;
+    if( mStepForward || mStepBackward || mStrafeLeft || mStrafeRight )
     {
         btVector3 forwardDir = xform.getBasis()[ 1 ];
         forwardDir.normalize();
 
-        btVector3 upDir = xform.getBasis()[ 2 ];
-        upDir.normalize();
-
         btVector3 strafeDir = xform.getBasis()[ 0 ];
         strafeDir.normalize();
 
-        btVector3 direction( 0.0, 0.0, 0.0 );
-        btScalar speed = mSpeed * dt;
+        btVector3 upDir = xform.getBasis()[ 2 ];
+        upDir.normalize();
 
         if( mStepForward )
         {
@@ -368,8 +406,14 @@ void CharacterController::Advance( btScalar dt )
             direction = direction.normalize();
         }
 
-        mCharacter->setWalkDirection( direction * speed );
+        //slerp mCameraRotation if necessary
+        if( mCameraRotationSLERP )
+        {
+            CameraRotationSLERP();
+        }
     }
+
+    mCharacter->setWalkDirection( direction * speed );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CharacterController::UpdateCamera()
@@ -378,12 +422,6 @@ void CharacterController::UpdateCamera()
     if( mCameraDistanceLERP )
     {
         CameraDistanceLERP();
-    }
-
-    //slerp mCameraRotation if necessary
-    if( mCameraDistanceSLERP )
-    {
-        CameraDistanceSLERP();
     }
 
     //Get the current character transform
@@ -473,9 +511,27 @@ void CharacterController::CameraDistanceLERP()
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CharacterController::CameraDistanceSLERP()
+void CharacterController::CameraRotationSLERP()
 {
-    ;
+    if( mCameraRotationSLERPdt < ( 1.0 - mDeltaCameraRotationSLERP ) )
+    {
+        mCameraRotationSLERPdt += mDeltaCameraRotationSLERP;
+
+        mTurnAngleZ =
+            mFromTurnAngleZ +
+            ( mToTurnAngleZ - mFromTurnAngleZ ) * mCameraRotationSLERPdt;
+    }
+    else
+    {
+        mTurnAngleZ = mToTurnAngleZ;
+
+        mCameraRotationSLERP = false;
+    }
+
+    //Set the camera rotation
+    mCameraRotationZ.setZ( sin( 0.5 * mTurnAngleZ ) );
+    mCameraRotationZ.setW( cos( 0.5 * mTurnAngleZ ) );
+    mCameraRotation = mCameraRotationX * mCameraRotationZ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CharacterController::OccludeDistanceLERP()
@@ -526,7 +582,7 @@ void CharacterController::EyeToCenterRayTest(
     osgUtil::IntersectionVisitor intersectionVisitor(
         mLineSegmentIntersector.get() );
 
-    vxs::SceneManager::instance()->GetRootNode()->accept( intersectionVisitor );
+    vxs::SceneManager::instance()->GetModelRoot()->accept( intersectionVisitor );
 
     osgUtil::LineSegmentIntersector::Intersections& intersections =
         mLineSegmentIntersector->getIntersections();

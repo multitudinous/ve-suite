@@ -806,7 +806,8 @@ void KeyboardMouse::NavOnKeyboardPress()
         }
         case gadget::KEY_A:
         {
-            if( !mPhysicsSimulator->GetIdle() )
+            if( !mPhysicsSimulator->GetIdle() &&
+                 mCharacterController->IsActive() )
             {
                 mCharacterController->StrafeLeft( true );
             }
@@ -815,45 +816,50 @@ void KeyboardMouse::NavOnKeyboardPress()
         }
         case gadget::KEY_S:
         {
-            if( !mPhysicsSimulator->GetIdle() )
+            if( !mPhysicsSimulator->GetIdle() &&
+                 mCharacterController->IsActive() )
             {
                 mCharacterController->StepBackward( true );
             }
 
             break;
         }
-        case gadget::KEY_D:
-        {
-            if( !mPhysicsSimulator->GetIdle() )
-            {
-                mCharacterController->StrafeRight( true );
-            }
-
-            break;
-        }
         case gadget::KEY_W:
         {
-            if( !mPhysicsSimulator->GetIdle() )
+            if( !mPhysicsSimulator->GetIdle() &&
+                 mCharacterController->IsActive() )
             {
                 mCharacterController->StepForward( true );
             }
 
             break;
         }
-        case gadget::KEY_SPACE:
+        case gadget::KEY_D:
         {
-            if( !mPhysicsSimulator->GetIdle() )
+            if( !mPhysicsSimulator->GetIdle() &&
+                 mCharacterController->IsActive() )
             {
-                mCharacterController->Jump();
+                mCharacterController->StrafeRight( true );
             }
 
             break;
         }
         case gadget::KEY_C:
         {
-            if( !mPhysicsSimulator->GetIdle() )
+            if( !mPhysicsSimulator->GetIdle() &&
+                 mCharacterController->IsActive() )
             {
                 //mCharacterController
+            }
+
+            break;
+        }
+        case gadget::KEY_SPACE:
+        {
+            if( !mPhysicsSimulator->GetIdle() &&
+                 mCharacterController->IsActive() )
+            {
+                mCharacterController->Jump();
             }
 
             break;
@@ -903,7 +909,7 @@ void KeyboardMouse::NavOnKeyboardRelease()
         case gadget::KEY_A:
         {
             if( !mPhysicsSimulator->GetIdle() &&
-                mCharacterController->IsActive() )
+                 mCharacterController->IsActive() )
             {
                 mCharacterController->StrafeLeft( false );
             }
@@ -913,7 +919,7 @@ void KeyboardMouse::NavOnKeyboardRelease()
         case gadget::KEY_S:
         {
             if( !mPhysicsSimulator->GetIdle() &&
-                mCharacterController->IsActive() )
+                 mCharacterController->IsActive() )
             {
                 mCharacterController->StepBackward( false );
             }
@@ -923,7 +929,7 @@ void KeyboardMouse::NavOnKeyboardRelease()
         case gadget::KEY_D:
         {
             if( !mPhysicsSimulator->GetIdle() &&
-                mCharacterController->IsActive() )
+                 mCharacterController->IsActive() )
             {
                 mCharacterController->StrafeRight( false );
             }
@@ -933,7 +939,7 @@ void KeyboardMouse::NavOnKeyboardRelease()
         case gadget::KEY_W:
         {
             if( !mPhysicsSimulator->GetIdle() &&
-                mCharacterController->IsActive() )
+                 mCharacterController->IsActive() )
             {
                 mCharacterController->StepForward( false );
             }
@@ -943,7 +949,7 @@ void KeyboardMouse::NavOnKeyboardRelease()
         case gadget::KEY_SPACE:
         {
             if( !mPhysicsSimulator->GetIdle() &&
-                mCharacterController->IsActive() )
+                 mCharacterController->IsActive() )
             {
                 //mCharacterController->Jump();
             }
@@ -973,9 +979,10 @@ void KeyboardMouse::NavOnMousePress()
         {
             //Rotate just the camera "3rd person view:
             if( !mPhysicsSimulator->GetIdle() &&
-            mCharacterController->IsActive() )
+                 mCharacterController->IsActive() )
             {
                 mCharacterController->FirstPersonMode( false );
+                mCharacterController->SetCameraRotationSLERP( false );
             }
 
             //No modifier key
@@ -1089,7 +1096,7 @@ void KeyboardMouse::NavOnMouseRelease()
         //Left mouse button
         case gadget::MBUTTON1:
         {
-            //Do not require mod key depending on what the used did
+            //Do not require mod key depending on what the user did
             if( mPickConstraint )
             {
                 mDynamicsWorld->removeConstraint( mPickConstraint );
@@ -1105,8 +1112,7 @@ void KeyboardMouse::NavOnMouseRelease()
             {
                 if( mCharacterController->IsActive() )
                 {
-                    //set slerp
-                    //StartSlerpAnimation
+                    mCharacterController->SetCameraRotationSLERP( true );
                 }
             }
 

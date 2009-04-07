@@ -125,6 +125,10 @@ public:
     ///Rotate the character and/or the camera
     void Rotate( double dx, double dy );
 
+    ///
+    ///\param onOff
+    void SetCameraRotationSLERP( bool onOff );
+
     ///Activate the character controller
     void TurnOn();
 
@@ -148,7 +152,7 @@ private:
     void CameraDistanceLERP();
 
     ///Spherically interpolate the camera's rotation about the character
-    void CameraDistanceSLERP();
+    void CameraRotationSLERP();
 
     ///Linearly interpolate the camera from the character
     void OccludeDistanceLERP();
@@ -202,7 +206,7 @@ private:
     bool mCameraDistanceLERP;
 
     ///
-    bool mCameraDistanceSLERP;
+    bool mCameraRotationSLERP;
 
     ///
     bool mOccludeDistanceLERP;
@@ -238,7 +242,7 @@ private:
     double mCameraDistanceLERPdt;
 
     ///
-    double mCameraDistanceSLERPdt;
+    double mCameraRotationSLERPdt;
 
     ///
     double mOccludeDistanceLERPdt;
@@ -247,7 +251,7 @@ private:
     double mDeltaCameraDistanceLERP;
 
     ///
-    double mDeltaCameraDistanceSLERP;
+    double mDeltaCameraRotationSLERP;
 
     ///
     double mDeltaOccludeDistanceLERP;
@@ -286,6 +290,12 @@ private:
     double mDeltaTurnAngleZ;
 
     ///
+    double mFromTurnAngleZ;
+
+    ///
+    double mToTurnAngleZ;
+
+    ///
     double mTurnSpeed;
 
     ///
@@ -307,10 +317,10 @@ private:
     btQuaternion mCameraRotation;
 
     ///
-    btQuaternion mFromCameraRotation;
+    btQuaternion mCameraRotationX;
 
     ///
-    btQuaternion mToCameraRotation;
+    btQuaternion mCameraRotationZ;
 
     ///
     btKinematicCharacterController* mCharacter;
