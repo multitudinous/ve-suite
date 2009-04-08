@@ -70,20 +70,17 @@ void UnitInResampleOut::Initialize()
     UnitInOut::Initialize();
 
     //If we have to reset the resampling factor
-    //if( mDirtyFactor )
-    //{
-        float width = static_cast< float >( mViewport->width() );
-        float height = static_cast< float >( mViewport->height() );
+    float width = static_cast< float >( mViewport->width() );
+    float height = static_cast< float >( mViewport->height() );
 
-        mViewport->width() =
-            static_cast< osg::Viewport::value_type >( width * mWidthFactor );
-        mViewport->height() =
-            static_cast< osg::Viewport::value_type >( height * mHeightFactor );
-        mDirtyFactor = false;
+    mViewport->width() =
+        static_cast< osg::Viewport::value_type >( width * mWidthFactor );
+    mViewport->height() =
+        static_cast< osg::Viewport::value_type >( height * mHeightFactor );
+    mDirtyFactor = false;
 
-        //Notice that we changed the viewport
-        NoticeChangeViewport();
-    //}
+    //Notice that we changed the viewport
+    NoticeChangeViewport();
 }
 ////////////////////////////////////////////////////////////////////////////////
 float UnitInResampleOut::GetFactorX() const

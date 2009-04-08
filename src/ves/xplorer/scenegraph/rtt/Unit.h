@@ -112,13 +112,6 @@ public:
     ///\return
     osg::Texture* const GetOutputTexture( int mrt = 0 ) const;
 
-    ///Return an output texture of a certain mrt index
-    ///If there is no output texture for that index is specified, then
-    ///it will be allocated. The method should be overwriten by the derived
-    ///Units if they use any Output texture. Otherwise the result is always
-    ///the same as from getOutputTexture()
-    virtual osg::Texture* GetOrCreateOutputTexture( int mrt = 0 );
-
     ///Return mOutputTextures
     ///\return
     const TextureMap& GetOutputTextureMap() const;

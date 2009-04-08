@@ -91,8 +91,7 @@ UnitInOut::UnitInOut()
     mOutputType( TEXTURE_2D ),
     mOutputInternalFormat( GL_RGBA16F_ARB )
 {
-    //Add empty mrt = 0 output texture
-    //SetOutputTexture( NULL );
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 UnitInOut::UnitInOut( const UnitInOut& unitInOut, const osg::CopyOp& copyop )
@@ -124,7 +123,6 @@ void UnitInOut::Initialize()
     mGeode->addDrawable( mDrawable.get() );
     mGeode->setCullingActive( false );
     
-    //Setup output textures and fbo
     AssignOutputTexture();
     AssignFBO();
 }
@@ -172,34 +170,20 @@ void UnitInOut::SetOutputTexture( osg::Texture* outputTexture, int mrt )
     {
         mOutputTextures[ mrt ] = outputTexture;
     }
-    /*else
-    {
-        mOutputTextures[ mrt ] = osg::ref_ptr< osg::Texture >( NULL );
-    }*/
 }
 ////////////////////////////////////////////////////////////////////////////////
-osg::Texture* UnitInOut::GetOrCreateOutputTexture( int mrt )
+osg::Texture* UnitInOut::CreateOutputTexture( int mrt )
 {
     //If already exists, then return back
-    /*osg::Texture* texture = mOutputTextures[ mrt ].get();
-    if( texture )
-    {
-        return texture;
-    }*/
-    osg::Texture* texture =  0;
-    //osg::Texture* texture = mOutputTextures.find( mrt );
+    osg::Texture* newTexture( 0 );
     if( mOutputTextures.find( mrt ) !=  mOutputTextures.end() )
     {
-        texture = mOutputTextures[ mrt ].get();
-        return texture;
-    }
-    else
-    {
-        std::cout << "did not find texture going to create a new one" << std::endl;
+        newTexture = mOutputTextures[ mrt ].get();
+
+        return newTexture;
     }
 
     //If not exists, then do allocate it
-    osg::Texture* newTexture = NULL;
     if( mOutputType == TEXTURE_2D )
     {
         newTexture = new osg::Texture2D();
@@ -294,31 +278,21 @@ void UnitInOut::NoticeChangeViewport()
 ////////////////////////////////////////////////////////////////////////////////
 void UnitInOut::AssignOutputTexture()
 {
-    //Now generate output texture's and assign them to fbo
-    Unit::TextureMap::iterator itr = mOutputTextures.begin();
-    for( int i = 0; itr != mOutputTextures.end(); ++itr, ++i )
+    //Get output texture
+    osg::Texture* texture = CreateOutputTexture( 0 );
+
+    //If the output texture is NULL, hence generate one
+    if( texture )
     {
-        //Get output texture
-        osg::Texture* texture = itr->second.get();
-
-        //If the output texture is NULL, hence generate one
-        if( texture == NULL )
+        //Check that the viewport must be valid at this time
+        //Check it to set the size if texture is fresh
+        if( !mViewport.valid() )
         {
-            //Preallocate the texture
-            texture = GetOrCreateOutputTexture( itr->first );
-
-            //Check that the viewport must be valid at this time
-            //Check it to set the size if texture is fresh
-            if( !mViewport.valid() )
-            {
-                osg::notify( osg::FATAL )
-                    << "rtt::UnitInOut::AssignOutputTexture(): "
-                    << getName()
-                    << "cannot set output texture size - invalid viewport!"
-                    << std::endl;
-
-                continue;
-            }
+            osg::notify( osg::FATAL )
+                << "rtt::UnitInOut::AssignOutputTexture(): "
+                << getName()
+                << "cannot set output texture size - invalid viewport!"
+                << std::endl;
         }
 
         //Check whenever the output texture is a 2D texture
@@ -326,10 +300,8 @@ void UnitInOut::AssignOutputTexture()
         if( texture2D != NULL )
         {
             mFBO->setAttachment( osg::Camera::BufferComponent(
-                osg::Camera::COLOR_BUFFER0 + itr->first ),
+                osg::Camera::COLOR_BUFFER0 ),
                 osg::FrameBufferAttachment( texture2D ) );
-
-            continue;
         }
 
         //Output texture type is not supported

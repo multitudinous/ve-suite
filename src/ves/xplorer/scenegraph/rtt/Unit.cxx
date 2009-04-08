@@ -268,22 +268,6 @@ osg::Texture* const Unit::GetOutputTexture( int mrt ) const
     return NULL;
 }
 ////////////////////////////////////////////////////////////////////////////////
-osg::Texture* Unit::GetOrCreateOutputTexture( int mrt )
-{
-    TextureMap::const_iterator itr = mOutputTextures.find( mrt );
-    if( itr != mOutputTextures.end() )
-    {
-        return itr->second.get();
-    }
-
-    std::cout << "Unit::GetOrCreateOutputTexture: "
-              << "texture " << mrt
-              << " not found in mOutputTextures!"
-              << std::endl;
-
-    return NULL;
-}
-////////////////////////////////////////////////////////////////////////////////
 const Unit::TextureMap& Unit::GetOutputTextureMap() const
 {
     return mOutputTextures;

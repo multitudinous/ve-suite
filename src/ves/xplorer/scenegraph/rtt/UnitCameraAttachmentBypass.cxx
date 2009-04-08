@@ -35,10 +35,6 @@
 #include <ves/xplorer/scenegraph/rtt/UnitCameraAttachmentBypass.h>
 #include <ves/xplorer/scenegraph/rtt/Processor.h>
 
-// --- OSG Includes --- //
-
-// --- C/C++ Includes --- //
-
 using namespace ves::xplorer::scenegraph::rtt;
 
 ////////////////////////////////////////////////////////////////////////////////

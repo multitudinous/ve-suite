@@ -109,11 +109,6 @@ public:
     ///\param mrt MRT (multiple rendering target) index of this output
     void SetOutputTexture( osg::Texture* outputTexture, int mrt = 0 );
 
-    ///Return or create output texture for the specified MRT index
-    ///\param mrt
-    ///\return
-    virtual osg::Texture* GetOrCreateOutputTexture( int mrt = 0 );
-
     ///Set a mrt to texture map for output textures
     void SetOutputTextureMap( const TextureMap& textureMap );
 
@@ -129,6 +124,9 @@ protected:
 
     ///
     virtual void AssignFBO();
+
+    ///Create an output texture of a certain mrt index
+    virtual osg::Texture* CreateOutputTexture( int mrt = 0 );
 
 private:
     ///Framebuffer object where results are written
