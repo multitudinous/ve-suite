@@ -276,7 +276,7 @@ osg::Texture* Unit::GetOrCreateOutputTexture( int mrt )
         return itr->second.get();
     }
 
-    std::cout << "Unit::GetOutputTexture: "
+    std::cout << "Unit::GetOrCreateOutputTexture: "
               << "texture " << mrt
               << " not found in mOutputTextures!"
               << std::endl;

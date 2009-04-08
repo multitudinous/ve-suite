@@ -44,6 +44,8 @@
 
 // --- C/C++ Includes --- //
 
+#include <iostream>
+
 using namespace ves::xplorer::scenegraph::rtt;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -90,7 +92,7 @@ UnitInOut::UnitInOut()
     mOutputInternalFormat( GL_RGBA16F_ARB )
 {
     //Add empty mrt = 0 output texture
-    SetOutputTexture( NULL );
+    //SetOutputTexture( NULL );
 }
 ////////////////////////////////////////////////////////////////////////////////
 UnitInOut::UnitInOut( const UnitInOut& unitInOut, const osg::CopyOp& copyop )
@@ -120,7 +122,8 @@ void UnitInOut::Initialize()
     }
     mGeode->removeDrawables( 0, mGeode->getNumDrawables() );
     mGeode->addDrawable( mDrawable.get() );
-
+    mGeode->setCullingActive( false );
+    
     //Setup output textures and fbo
     AssignOutputTexture();
     AssignFBO();
@@ -169,19 +172,30 @@ void UnitInOut::SetOutputTexture( osg::Texture* outputTexture, int mrt )
     {
         mOutputTextures[ mrt ] = outputTexture;
     }
-    else
+    /*else
     {
         mOutputTextures[ mrt ] = osg::ref_ptr< osg::Texture >( NULL );
-    }
+    }*/
 }
 ////////////////////////////////////////////////////////////////////////////////
 osg::Texture* UnitInOut::GetOrCreateOutputTexture( int mrt )
 {
     //If already exists, then return back
-    osg::Texture* texture = mOutputTextures[ mrt ].get();
+    /*osg::Texture* texture = mOutputTextures[ mrt ].get();
     if( texture )
     {
         return texture;
+    }*/
+    osg::Texture* texture =  0;
+    //osg::Texture* texture = mOutputTextures.find( mrt );
+    if( mOutputTextures.find( mrt ) !=  mOutputTextures.end() )
+    {
+        texture = mOutputTextures[ mrt ].get();
+        return texture;
+    }
+    else
+    {
+        std::cout << "did not find texture going to create a new one" << std::endl;
     }
 
     //If not exists, then do allocate it
@@ -322,7 +336,7 @@ void UnitInOut::AssignOutputTexture()
         osg::notify( osg::FATAL )
             << "rtt::UnitInOut::assignOutputTexture(): "
             << getName()
-            << "cannot attach output texture to FBO!"
+            << " cannot attach output texture to FBO!"
             << std::endl;
     }
 }

@@ -46,6 +46,7 @@
 #include <ves/xplorer/scenegraph/rtt/UnitInResampleOut.h>
 #include <ves/xplorer/scenegraph/rtt/UnitOut.h>
 #include <ves/xplorer/scenegraph/rtt/ShaderAttribute.h>
+#include <ves/xplorer/Debug.h>
 
 // ---  VR Juggler Includes --- //
 #if __VJ_version >= 2003000
@@ -185,8 +186,13 @@ void SceneRenderToTexture::InitScene( osg::Camera* const sceneViewCamera )
         processor->getOrCreateStateSet()->setRenderBinDetails(
             100, std::string( "RenderBin" ) );
 
+    osg::ref_ptr< osg::ClearNode > m_clrNode = new osg::ClearNode();
+    m_clrNode->setRequiresClear( true );
+    m_clrNode->setClearColor( osg::Vec4( 0.0f, 1.0f, 0.0f, 1.0f ) );
+    m_clrNode->setName( "Clear Node - Control ClearColor" );
+        m_clrNode->addChild( mRootGroup.get() );
         //Add the scenegraph to the camera    
-        camera->addChild( mRootGroup.get() );
+        camera->addChild( m_clrNode.get() );
         camera->addChild( processor.get() );
 
         //Setup a post-processing pipeline for each viewport per context
@@ -208,12 +214,13 @@ osg::Camera* SceneRenderToTexture::CreatePipelineCamera(
     tempCamera->setRenderOrder( osg::Camera::PRE_RENDER, 0 );
     tempCamera->setClearMask( 
         GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );// | GL_STENCIL_BUFFER_BIT );
-    tempCamera->setClearColor( osg::Vec4( 1.0, 0.0, 0.0, 1.0 ) );
+    tempCamera->setClearColor( osg::Vec4( 0.0, 0.0, 1.0, 1.0 ) );
     tempCamera->setRenderTargetImplementation(
         osg::Camera::FRAME_BUFFER_OBJECT );
     tempCamera->setViewport( viewport );
     tempCamera->setViewMatrix( osg::Matrix::identity() );
     tempCamera->setProjectionMatrix( osg::Matrix::identity() );
+    tempCamera->setCullingActive( false );
 
     std::pair< int, int > viewportDimensions = 
         std::make_pair< int, int >( 
@@ -356,7 +363,7 @@ vxsr::Processor* SceneRenderToTexture::CreatePipelineProcessor(
     }
     tempProcessor->addChild( colorBuffer0.get() );
     colorBuffer0->Update();
-
+/*
     //COLOR_BUFFER1 bypass
     osg::ref_ptr< vxsr::UnitCameraAttachmentBypass > colorBuffer1 =
          new vxsr::UnitCameraAttachmentBypass();
@@ -488,7 +495,7 @@ vxsr::Processor* SceneRenderToTexture::CreatePipelineProcessor(
     }
     blurX->addChild( blurY.get() );
     blurY->Update();
-
+*/
     //Perform final color operations and blends
     osg::ref_ptr< vxsr::UnitInOut > final = new vxsr::UnitInOut();
     {
@@ -520,9 +527,9 @@ vxsr::Processor* SceneRenderToTexture::CreatePipelineProcessor(
         finalShader->set( "gloColor", osg::Vec4( 0.57255, 1.0, 0.34118, 1.0 ) );
 
         final->getOrCreateStateSet()->setAttributeAndModes( finalShader.get() );
-        final->SetInputToUniform( colorBuffer0.get(), "baseMap", false );
-        final->SetInputToUniform( colorBuffer1.get(), "stencilGlowMap", false );
-        final->SetInputToUniform( blurY.get(), "glowMap", true );
+        final->SetInputToUniform( colorBuffer0.get(), "baseMap", true );
+        //final->SetInputToUniform( colorBuffer1.get(), "stencilGlowMap", false );
+        //final->SetInputToUniform( blurY.get(), "glowMap", true );
         final->SetInputTextureIndexForViewportReference( 0 );
     }
     final->Update();
@@ -753,6 +760,7 @@ void SceneRenderToTexture::UpdateRTTQuadAndViewport()
 #endif
 
         vrj::Frustum frustum = project->getFrustum();
+        
         activePipeline->first->setProjectionMatrixAsFrustum(
             frustum[ vrj::Frustum::VJ_LEFT ], frustum[ vrj::Frustum::VJ_RIGHT ],
             frustum[ vrj::Frustum::VJ_BOTTOM ], frustum[ vrj::Frustum::VJ_TOP ],
@@ -772,6 +780,7 @@ void SceneRenderToTexture::UpdateRTTQuadAndViewport()
             new osg::RefMatrix();
         osg_proj_xform_mat->set( vjMatrixLeft.mData );
         activePipeline->first->setViewMatrix( *(osg_proj_xform_mat.get()) );
+        //vprDEBUG( vesDBG, 1 ) << vjMatrixLeft << mZUp << mNavPosition << std::endl << frustum << std::endl << std::endl << vprDEBUG_FLUSH;
     }
     else
     {
