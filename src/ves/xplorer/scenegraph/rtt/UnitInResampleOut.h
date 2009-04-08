@@ -93,9 +93,6 @@ protected:
 
 private:
     ///
-    bool mDirtyFactor;
-
-    ///
     float mWidthFactor;
 
     ///

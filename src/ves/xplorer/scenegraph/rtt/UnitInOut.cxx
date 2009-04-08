@@ -254,28 +254,6 @@ void UnitInOut::SetOutputTextureMap( const TextureMap& textureMap )
     mOutputTextures = textureMap;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UnitInOut::NoticeChangeViewport()
-{
-    //Change size of the result texture according to the viewport
-    TextureMap::iterator itr = mOutputTextures.begin();
-    for( itr; itr != mOutputTextures.end(); ++itr )
-    {
-        if( itr->second.valid() )
-        {
-            //If texture type is a 2D texture
-            if( dynamic_cast< osg::Texture2D* >( itr->second.get() ) != NULL )
-            {
-                //Change size
-                osg::Texture2D* texture =
-                    dynamic_cast< osg::Texture2D* >( itr->second.get() );
-                texture->setTextureSize(
-                    static_cast< int >( mViewport->width() ),
-                    static_cast< int >( mViewport->height() ) );
-            }
-        }
-    }
-}
-////////////////////////////////////////////////////////////////////////////////
 void UnitInOut::AssignOutputTexture()
 {
     //Get output texture

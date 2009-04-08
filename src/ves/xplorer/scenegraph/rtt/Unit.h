@@ -78,9 +78,6 @@ public:
     ///
     META_Node( rtt, Unit );
 
-    ///Traverse the unit
-    virtual void traverse( osg::NodeVisitor& nv );
-
     ///Set an input from the given unit to be linked with a given uniform name
     ///\param unit Pointer to the unit which output to use
     ///\param uniform Name of the uniform to use to bind the texture to
@@ -125,10 +122,6 @@ public:
     ///Set viewport which is used for this Unit while rendering
     ///\param
     void SetViewport( osg::Viewport* viewport );
-
-    ///Get viewport of this unit
-    ///\return
-    osg::Viewport* const GetViewport() const;
 
     ///Set the input texture to use as a reference for the viewport size
     ///\param index
@@ -195,9 +188,6 @@ protected:
 
     ///Assign the input texture to the quad object
     void AssignInputTexture();
-
-    ///Assign currently choosen viewport to the stateset
-    void AssignViewport();
 
     ///Is the unit active, yes/no
     bool mActive;

@@ -106,7 +106,7 @@ Unit::Unit()
     mModelViewMatrix( NULL )
 {
     //Set default name
-    setName( "__Nameless_PPU_" );
+    setName( "Nameless_PPU" );
 
     //Create default geode
     mGeode = new osg::Geode();
@@ -115,29 +115,19 @@ Unit::Unit()
 
     //Initialze projection matrix
     mProjectionMatrix =
-        new osg::RefMatrix( osg::Matrix::ortho( 0, 1, 0, 1, 0, 1 ) );
+        new osg::RefMatrix(
+            osg::Matrix::ortho( 0.0, 1.0, 0.0, 1.0, 0.0, 1.0 ) );
 
     //Setup default modelview matrix
     mModelViewMatrix = new osg::RefMatrix( osg::Matrixd::identity() );
 
-    //Setup default empty fbo and program, so we do not use any fbo or program
+    //No culling, because we do not need it
+    setCullingActive( false );
+
+    //Setup default empty program, so we do not use any program from above
     getOrCreateStateSet()->setAttribute(
         new osg::Program(),
         osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
-    getOrCreateStateSet()->setAttribute(
-        new osg::FrameBufferObject(),
-        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
-
-    //Setup empty textures so that this unit does not get any undefined textures
-    for( unsigned int i = 0; i < 16; ++i )
-    {
-        getOrCreateStateSet()->setTextureAttribute(
-            i, new osg::Texture2D(),
-            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
-    }
-
-    //No culling, because we do not need it
-    setCullingActive( false );
 }
 ////////////////////////////////////////////////////////////////////////////////
 Unit::Unit( const Unit& unit, const osg::CopyOp& copyop )
@@ -160,11 +150,6 @@ Unit::Unit( const Unit& unit, const osg::CopyOp& copyop )
 Unit::~Unit()
 {
     ;
-}
-////////////////////////////////////////////////////////////////////////////////
-void Unit::traverse( osg::NodeVisitor& nv )
-{
-    osg::Group::traverse( nv );
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool Unit::SetInputToUniform(
@@ -300,7 +285,12 @@ void Unit::Initialize()
 
     //Reassign input and shaders
     AssignInputTexture();
-    AssignViewport();
+    if( mViewport.valid() )
+    {
+        getOrCreateStateSet()->setAttribute(
+            mViewport.get(),
+            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Unit::Update()
@@ -321,12 +311,12 @@ void Unit::SetViewport( osg::Viewport* viewport )
     //Otherwise setup new viewport
     mViewport = new osg::Viewport( *viewport );
 
-    AssignViewport();
-}
-////////////////////////////////////////////////////////////////////////////////
-osg::Viewport* const Unit::GetViewport() const
-{
-    return mViewport.get();
+    if( mViewport.valid() )
+    {
+        getOrCreateStateSet()->setAttribute(
+            mViewport.get(),
+            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Unit::SetInputTextureIndexForViewportReference( int index )
@@ -445,7 +435,24 @@ void Unit::UpdateUniforms()
 ////////////////////////////////////////////////////////////////////////////////
 void Unit::NoticeChangeViewport()
 {
-    ;
+    //Change size of the result texture according to the viewport
+    TextureMap::iterator itr = mOutputTextures.begin();
+    for( itr; itr != mOutputTextures.end(); ++itr )
+    {
+        if( itr->second.valid() )
+        {
+            //If texture type is a 2D texture
+            if( dynamic_cast< osg::Texture2D* >( itr->second.get() ) != NULL )
+            {
+                //Change size
+                osg::Texture2D* texture =
+                    dynamic_cast< osg::Texture2D* >( itr->second.get() );
+                texture->setTextureSize(
+                    static_cast< int >( mViewport->width() ),
+                    static_cast< int >( mViewport->height() ) );
+            }
+        }
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Unit::AssignInputTexture()
@@ -464,16 +471,6 @@ void Unit::AssignInputTexture()
                 itr->first, itr->second.get(),
                 osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
         }
-    }
-}
-////////////////////////////////////////////////////////////////////////////////
-void Unit::AssignViewport()
-{
-    if( mViewport.valid() )
-    {
-        getOrCreateStateSet()->setAttribute(
-            mViewport.get(),
-            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

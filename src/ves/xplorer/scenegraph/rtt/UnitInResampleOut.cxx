@@ -40,7 +40,6 @@ using namespace ves::xplorer::scenegraph::rtt;
 UnitInResampleOut::UnitInResampleOut()
     :
     UnitInOut(),
-    mDirtyFactor( true ),
     mWidthFactor( 1.0 ),
     mHeightFactor( 1.0 )
 {
@@ -53,8 +52,7 @@ UnitInResampleOut::UnitInResampleOut(
     :
     UnitInOut( unitInResampleOut, copyop ),
     mWidthFactor( unitInResampleOut.mWidthFactor ),
-    mHeightFactor( unitInResampleOut.mHeightFactor ),
-    mDirtyFactor( unitInResampleOut.mDirtyFactor )
+    mHeightFactor( unitInResampleOut.mHeightFactor )
 {
     ;
 }
@@ -77,7 +75,6 @@ void UnitInResampleOut::Initialize()
         static_cast< osg::Viewport::value_type >( width * mWidthFactor );
     mViewport->height() =
         static_cast< osg::Viewport::value_type >( height * mHeightFactor );
-    mDirtyFactor = false;
 
     //Notice that we changed the viewport
     NoticeChangeViewport();
@@ -96,13 +93,10 @@ float UnitInResampleOut::GetFactorY() const
 void UnitInResampleOut::SetFactorX( float xFactor )
 {
     mWidthFactor = xFactor;
-    mDirtyFactor = true;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UnitInResampleOut::SetFactorY( float yFactor )
 {
     mHeightFactor = yFactor;
-    mDirtyFactor = true;
 }
-
 ////////////////////////////////////////////////////////////////////////////////

@@ -116,9 +116,6 @@ protected:
     ///Destructor
     virtual ~UnitInOut();
 
-    ///Viewport changed
-    virtual void NoticeChangeViewport();
-
     ///
     virtual void AssignOutputTexture();
 
