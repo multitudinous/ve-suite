@@ -282,12 +282,9 @@ double NavigationAnimationEngine::GetQuatCamIncrementor()
     ////////////////////////////////////////////////////////////////////////
     //When in cluster mode this function is only called by the Master Node
     ////////////////////////////////////////////////////////////////////////
-
-    if( t < ( 1.0f - movementIntervalCalc ) )
-    {
-        t += movementIntervalCalc;
-    }
-    else if( t >= ( 1.0f - movementIntervalCalc ) )
+    t += movementIntervalCalc;
+    
+    if( t >= ( 1.0f - movementIntervalCalc ) )
     {
         t = 1.0f;
         mBeginAnim = false;
