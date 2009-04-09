@@ -46,6 +46,7 @@
 namespace osg
 {
 class MatrixTransform;
+class Switch;
 }
 
 // --- Bullet Includes --- //
@@ -342,6 +343,9 @@ private:
 
     ///
     osg::ref_ptr< osgUtil::LineSegmentIntersector > mLineSegmentIntersector;
+
+    /// for character animations
+    //osg::ref_ptr< osg::Switch > mCharacterAnimations;
 
     ///
     class CharacterTransformCallback : public osg::NodeCallback

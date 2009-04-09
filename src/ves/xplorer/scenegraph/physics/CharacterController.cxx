@@ -40,8 +40,11 @@
 
 // --- OSG Includes --- //
 #include <osg/Geode>
+#include <osg/Switch>
 #include <osg/MatrixTransform>
 #include <osg/ShapeDrawable>
+#include <osgDB/ReadFile>
+#include <osg/AutoTransform>
 
 // --- Bullet Includes --- //
 #include <btBulletDynamicsCommon.h>
@@ -153,6 +156,31 @@ void CharacterController::Initialize( btDynamicsWorld* dynamicsWorld )
     //This has no effect and has not been implemented in bullet yet
     mCharacter->setFallSpeed( 0.0 );
 
+    /*
+    //create animated character
+    //walk forward
+    osg::ref_ptr< osg::Node > geode = osgDB::readNodeFile( "osg-data\zombie.wf.osg" );
+    //walk backwards
+    osg::ref_ptr< osg::Node > geode1 = osgDB::readNodeFile( "osg-data\zombie.wf.osg" );
+    //strafe left
+    osg::ref_ptr< osg::Node > geode2 = osgDB::readNodeFile( "osg-data\zombie.sl.osg" );
+    //strafe right
+    osg::ref_ptr< osg::Node > geode3 = osgDB::readNodeFile( "osg-data\zombie.sr.osg" );
+
+    //create switch node
+    mCharacterAnimations = new osg::Switch();
+    mCharacterAnimations->addChild( geode.get() );
+    mCharacterAnimations->addChild( geode1.get() );
+    mCharacterAnimations->addChild( geode2.get() );
+    mCharacterAnimations->addChild( geode3.get() );
+    mCharacterAnimations->setSingleChildOn( 0 );
+
+    //for scaling if necessary
+    osg::ref_ptr< osg::AutoTransform > scaleDown = new osg::AutoTransform(); 
+    scaleDown->addChild( mCharacterAnimations.get() );
+    scaleDown->setScale( 0.25 );
+    */
+
     //Create graphics mesh representation
     osg::ref_ptr< osg::Geode > geode = new osg::Geode();
     osg::ref_ptr< osg::Capsule > capsule =
@@ -168,6 +196,7 @@ void CharacterController::Initialize( btDynamicsWorld* dynamicsWorld )
     geode->addDrawable( shapeDrawable.get() );
 
     mMatrixTransform = new osg::MatrixTransform();
+    //mMatrixTransform->addChild( scaleDown.get() );
     mMatrixTransform->addChild( geode.get() );
     vxs::SceneManager::instance()->GetModelRoot()->addChild(
         mMatrixTransform.get() );
@@ -262,21 +291,25 @@ void CharacterController::Reset()
 void CharacterController::StepForward( bool onOff )
 {
     mStepForward = onOff;
+    //mCharacterAnimations->setSingleChildOn( 0 );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CharacterController::StepBackward( bool onOff )
 {
     mStepBackward = onOff;
+    //mCharacterAnimations->setSingleChildOn( 1 );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CharacterController::StrafeLeft( bool onOff )
 {
     mStrafeLeft = onOff;
+    //mCharacterAnimations->setSingleChildOn( 2 );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CharacterController::StrafeRight( bool onOff )
 {
     mStrafeRight = onOff;
+    //mCharacterAnimations->setSingleChildOn( 3 );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CharacterController::Rotate( double dx, double dy )
