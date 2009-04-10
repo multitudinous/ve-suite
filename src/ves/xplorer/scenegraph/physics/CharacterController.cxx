@@ -35,6 +35,7 @@
 #include <ves/xplorer/scenegraph/physics/CharacterController.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
+#include <ves/xplorer/scenegraph/FindParentWithNameVisitor.h>
 
 #include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
 
@@ -58,6 +59,8 @@
 
 // --- C/C++ Libraries --- //
 #include <iostream>
+
+//#define VES_USE_ANIMATED_CHARACTER 1
 
 using namespace ves::xplorer::scenegraph;
 namespace vxs = ves::xplorer::scenegraph;
@@ -156,31 +159,37 @@ void CharacterController::Initialize( btDynamicsWorld* dynamicsWorld )
     //This has no effect and has not been implemented in bullet yet
     mCharacter->setFallSpeed( 0.0 );
 
-    /*
+    mMatrixTransform = new osg::MatrixTransform();
+#ifdef VES_USE_ANIMATED_CHARACTER
     //create animated character
+    //idle
+    osg::ref_ptr< osg::Node > node = osgDB::readNodeFile( "osg-data/zombie.idle.osg" );
     //walk forward
-    osg::ref_ptr< osg::Node > geode = osgDB::readNodeFile( "osg-data\zombie.wf.osg" );
+    osg::ref_ptr< osg::Node > node1 = osgDB::readNodeFile( "osg-data/zombie.wf.osg" );
     //walk backwards
-    osg::ref_ptr< osg::Node > geode1 = osgDB::readNodeFile( "osg-data\zombie.wf.osg" );
+    osg::ref_ptr< osg::Node > node2 = osgDB::readNodeFile( "osg-data/zombie.wf.osg" );
     //strafe left
-    osg::ref_ptr< osg::Node > geode2 = osgDB::readNodeFile( "osg-data\zombie.sl.osg" );
+    osg::ref_ptr< osg::Node > node3 = osgDB::readNodeFile( "osg-data/zombie.sl.osg" );
     //strafe right
-    osg::ref_ptr< osg::Node > geode3 = osgDB::readNodeFile( "osg-data\zombie.sr.osg" );
+    osg::ref_ptr< osg::Node > node4 = osgDB::readNodeFile( "osg-data/zombie.sr.osg" );
 
     //create switch node
     mCharacterAnimations = new osg::Switch();
-    mCharacterAnimations->addChild( geode.get() );
-    mCharacterAnimations->addChild( geode1.get() );
-    mCharacterAnimations->addChild( geode2.get() );
-    mCharacterAnimations->addChild( geode3.get() );
+    mCharacterAnimations->addChild( node.get() );
+    mCharacterAnimations->addChild( node1.get() );
+    mCharacterAnimations->addChild( node2.get() );
+    mCharacterAnimations->addChild( node3.get() );
+    mCharacterAnimations->addChild( node4.get() );
     mCharacterAnimations->setSingleChildOn( 0 );
+    mCharacterAnimations->setName( "Character" );
 
     //for scaling if necessary
     osg::ref_ptr< osg::AutoTransform > scaleDown = new osg::AutoTransform(); 
     scaleDown->addChild( mCharacterAnimations.get() );
     scaleDown->setScale( 0.25 );
-    */
 
+    mMatrixTransform->addChild( scaleDown.get() );
+#else
     //Create graphics mesh representation
     osg::ref_ptr< osg::Geode > geode = new osg::Geode();
     osg::ref_ptr< osg::Capsule > capsule =
@@ -195,9 +204,8 @@ void CharacterController::Initialize( btDynamicsWorld* dynamicsWorld )
     shapeDrawable->setColor( osg::Vec4( 1.0, 1.0, 0.0, 1.0 ) );
     geode->addDrawable( shapeDrawable.get() );
 
-    mMatrixTransform = new osg::MatrixTransform();
-    //mMatrixTransform->addChild( scaleDown.get() );
     mMatrixTransform->addChild( geode.get() );
+#endif
     vxs::SceneManager::instance()->GetModelRoot()->addChild(
         mMatrixTransform.get() );
 
@@ -291,25 +299,61 @@ void CharacterController::Reset()
 void CharacterController::StepForward( bool onOff )
 {
     mStepForward = onOff;
-    //mCharacterAnimations->setSingleChildOn( 0 );
+#ifdef VES_USE_ANIMATED_CHARACTER
+    if( onOff )
+    {
+        mCharacterAnimations->setSingleChildOn( 1 );
+    }
+    else
+    {
+        mCharacterAnimations->setSingleChildOn( 0 );
+    }
+#endif
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CharacterController::StepBackward( bool onOff )
 {
     mStepBackward = onOff;
-    //mCharacterAnimations->setSingleChildOn( 1 );
+#ifdef VES_USE_ANIMATED_CHARACTER
+    if( onOff )
+    {
+        mCharacterAnimations->setSingleChildOn( 2 );
+    }
+    else
+    {
+        mCharacterAnimations->setSingleChildOn( 0 );
+    }
+#endif
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CharacterController::StrafeLeft( bool onOff )
 {
     mStrafeLeft = onOff;
-    //mCharacterAnimations->setSingleChildOn( 2 );
+#ifdef VES_USE_ANIMATED_CHARACTER
+    if( onOff )
+    {
+        mCharacterAnimations->setSingleChildOn( 3 );
+    }
+    else
+    {
+        mCharacterAnimations->setSingleChildOn( 0 );
+    }
+#endif
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CharacterController::StrafeRight( bool onOff )
 {
     mStrafeRight = onOff;
-    //mCharacterAnimations->setSingleChildOn( 3 );
+#ifdef VES_USE_ANIMATED_CHARACTER
+    if( onOff )
+    {
+        mCharacterAnimations->setSingleChildOn( 4 );
+    }
+    else
+    {
+        mCharacterAnimations->setSingleChildOn( 0 );
+    }
+#endif
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CharacterController::Rotate( double dx, double dy )
@@ -349,11 +393,11 @@ void CharacterController::SetCharacterRotationFromCamera()
     btTransform xform = mGhostObject->getWorldTransform();
     if( mFlying )
     {
-        xform.setRotation( mCameraRotation );
+        xform.setRotation( mCameraRotation.inverse() );
     }
     else
     {
-        xform.setRotation( mCameraRotationZ );
+        xform.setRotation( mCameraRotationZ.inverse() );
     }
 
     mGhostObject->setWorldTransform( xform );
@@ -548,7 +592,25 @@ void CharacterController::EyeToCenterRayTest(
     for( itr; itr != intersections.end(); ++itr )
     {
         objectHit = itr->drawable.get();
+
+        bool notTheCharacter = false;
+#ifndef VES_USE_ANIMATED_CHARACTER 
         if( objectHit->getName() != "Character" )
+        {
+            notTheCharacter = true;
+        }
+#else
+        osg::Node* tempCharacter = objectHit->getParent(0);
+        vxs::FindParentWithNameVisitor findParent(
+            tempCharacter, "Character" );
+        osg::ref_ptr< osg::Node > tempParent = findParent.GetParentNode();
+        if( !tempParent.valid() )
+        {
+            notTheCharacter = true;
+        }
+#endif
+
+        if( notTheCharacter )
         {
             mToOccludeDistance = osg::Vec3(
                 itr->getWorldIntersectPoint() - startPoint ).length();
@@ -733,6 +795,7 @@ void CharacterController::UpdateCharacterTranslation( btScalar dt )
         //Get current character transform
         btTransform xform = mGhostObject->getWorldTransform();
 
+        xform.setRotation( xform.getRotation().inverse() );
         btVector3 forwardDir = xform.getBasis()[ 1 ];
         forwardDir.normalize();
 
