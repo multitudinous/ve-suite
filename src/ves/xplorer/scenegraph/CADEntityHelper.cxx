@@ -3,9 +3,9 @@
  * VE-Suite is (C) Copyright 1998-2009 by Iowa State University
  *
  * Original Development Team:
- *    - ISU's Thermal Systems Virtual Engineering Group,
- *      Headed by Kenneth Mark Bryden, Ph.D., www.vrac.iastate.edu/~kmbryden
- *    - Reaction Engineering International, www.reaction-eng.com
+ *   - ISU's Thermal Systems Virtual Engineering Group,
+ *     Headed by Kenneth Mark Bryden, Ph.D., www.vrac.iastate.edu/~kmbryden
+ *   - Reaction Engineering International, www.reaction-eng.com
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -24,12 +24,13 @@
  *
  * -----------------------------------------------------------------
  * Date modified: $Date$
- * Version:         $Rev$
- * Author:          $Author$
- * Id:                $Id$
+ * Version:       $Rev$
+ * Author:        $Author$
+ * Id:            $Id$
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
+
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/CADEntityHelper.h>
 #include <ves/xplorer/scenegraph/Group.h>
@@ -48,6 +49,10 @@
 #include <ves/xplorer/scenegraph/nurbs/NSurface.h>
 #include <ves/xplorer/scenegraph/nurbs/NURBS.h>
 #include <ves/xplorer/scenegraph/nurbs/util/OCCNURBSFileReader.h>
+
+// --- VR Juggler Includes --- //
+#include <boost/filesystem/operations.hpp>
+#include <boost/filesystem/path.hpp>
 
 // --- OSG Includes --- //
 #include <osg/Fog>
@@ -85,22 +90,20 @@
 #include <osg/Version>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
-#if ((OSG_VERSION_MAJOR>=2) && (OSG_VERSION_MINOR>=4))
+#if( ( OSG_VERSION_MAJOR >= 2 ) && ( OSG_VERSION_MINOR >= 4 ) )
 #include <osg/OcclusionQueryNode>
 #include <ves/xplorer/scenegraph/util/OcclusionQueryVisitor.h>
 #else
 #include <osgOQ/OcclusionQueryNode.h>
 #include <osgOQ/OcclusionQueryVisitor.h>
 #endif
+
 // --- C/C++ Libraries --- //
 #include <cctype>
 #include <sstream>
 #include <istream>
 #include <string>
 #include <cctype>
-
-#include <boost/filesystem/operations.hpp>
-#include <boost/filesystem/path.hpp>
 
 using namespace ves::xplorer::scenegraph;
 
@@ -112,7 +115,7 @@ CADEntityHelper::CADEntityHelper()
 ////////////////////////////////////////////////////////////////////////////////
 CADEntityHelper::CADEntityHelper( const CADEntityHelper& input )
 {
-    if( !input.m_cadNode.valid() )
+    if( !input.mCadNode.valid() )
     {
         std::cerr << "ERROR : CADEntityHelper::CADEntityHelper not a valid node"
         << std::endl;
@@ -121,17 +124,17 @@ CADEntityHelper::CADEntityHelper( const CADEntityHelper& input )
 
     ///We deep copy nodes so that picking is accurate
     ///and so that physics will work properly in the future
-    if( input.m_cadNode->asGroup() )
+    if( input.mCadNode->asGroup() )
     {
-        m_cadNode = new osg::Group( *input.m_cadNode->asGroup(),
+        mCadNode = new osg::Group( *input.mCadNode->asGroup(),
            osg::CopyOp::DEEP_COPY_NODES | 
            osg::CopyOp::DEEP_COPY_STATESETS | 
            osg::CopyOp::DEEP_COPY_STATEATTRIBUTES );
     }
-    else if( dynamic_cast< osg::Geode* >( input.m_cadNode.get() ) )
+    else if( dynamic_cast< osg::Geode* >( input.mCadNode.get() ) )
     {
-        m_cadNode = new osg::Geode( *static_cast< osg::Geode* >(
-                                        input.m_cadNode.get() ),
+        mCadNode = new osg::Geode( *static_cast< osg::Geode* >(
+                                        input.mCadNode.get() ),
            osg::CopyOp::DEEP_COPY_NODES | 
            osg::CopyOp::DEEP_COPY_STATESETS | 
            osg::CopyOp::DEEP_COPY_STATEATTRIBUTES );
@@ -139,7 +142,7 @@ CADEntityHelper::CADEntityHelper( const CADEntityHelper& input )
     else
     {
         std::cout << "ERROR : Cast not present " << std::endl;
-        std::cout << typeid( *input.m_cadNode.get() ).name() << std::endl;
+        std::cout << typeid( *input.mCadNode.get() ).name() << std::endl;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -147,11 +150,8 @@ CADEntityHelper& CADEntityHelper::operator=( const CADEntityHelper& input )
 {
     if( this != &input )
     {
-#ifdef _OSG
         //Recreate the node
-        m_cadNode = input.m_cadNode;
-#elif _OPENSG
-#endif
+        mCadNode = input.mCadNode;
     }
 
     return *this;
@@ -164,12 +164,12 @@ CADEntityHelper::~CADEntityHelper()
 ////////////////////////////////////////////////////////////////////////////////
 void CADEntityHelper::SetNode( osg::Node* node )
 {
-    m_cadNode = node;
+    mCadNode = node;
 }
 ////////////////////////////////////////////////////////////////////////////////
 osg::Node* CADEntityHelper::GetNode()
 {
-    return m_cadNode.get();
+    return mCadNode.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CADEntityHelper::SetName( const std::string& name )
@@ -208,7 +208,7 @@ void CADEntityHelper::LoadFile( const std::string& filename,
                                 const bool isStream, const bool occlude )
 {
     if( strstr( filename.c_str(), ".stl" ) ||
-            strstr( filename.c_str(), ".stla" ) )
+        strstr( filename.c_str(), ".stla" ) )
     {
         mIsSTLFile = true;
     }
@@ -218,13 +218,14 @@ void CADEntityHelper::LoadFile( const std::string& filename,
     {
         if( osgDB::getLowerCaseFileExtension( filename ) == "osg" )
         {
-            osgDB::ReaderWriter *rw = osgDB::Registry::instance()->
-                                      getReaderWriterForExtension(
-                                          osgDB::getLowerCaseFileExtension( filename ) );
+            osgDB::ReaderWriter *rw =
+                osgDB::Registry::instance()->getReaderWriterForExtension(
+                    osgDB::getLowerCaseFileExtension( filename ) );
             if( !rw )
             {
                 std::cerr << "Error: could not find a suitable " 
-                    << "reader/writer to load the specified file" << std::endl;
+                          << "reader/writer to load the specified file"
+                          << std::endl;
                 return;
             }
 
@@ -233,7 +234,7 @@ void CADEntityHelper::LoadFile( const std::string& filename,
             if( !pb->is_open() )
             {
                 std::cerr << "Error: could not open file `"
-                    << filename << "'" << std::endl;
+                          << filename << "'" << std::endl;
                 return;
             }
 
@@ -293,7 +294,8 @@ void CADEntityHelper::LoadFile( const std::string& filename,
             //ext = osgDB::getFileExtension( shortName );
             if( !tempCADNode.valid() )
             {
-                std::string ptFileTest = ComputeIntermediateFileNameAndPath( filename );
+                std::string ptFileTest =
+                    ComputeIntermediateFileNameAndPath( filename );
                 if( !ptFileTest.empty() )
                 {
                     fullPath = ptFileTest;
@@ -434,33 +436,33 @@ void CADEntityHelper::LoadFile( const std::string& filename,
         osgOQ::VisibilityThresholdVisitor visibilityThresholdVisitor( 500 );
         tempGroup->accept( visibilityThresholdVisitor );
 
-        m_cadNode = tempGroup.get();
+        mCadNode = tempGroup.get();
     }
     else
     {
-        m_cadNode = tempCADNode;
+        mCadNode = tempCADNode;
     }
 
     if( !isStream )
     {
-        m_cadNode->setName( filename.c_str() );
+        mCadNode->setName( filename.c_str() );
     }
     else
     {
-        std::string nodeName = m_cadNode->getName();
+        std::string nodeName = mCadNode->getName();
         if( nodeName.empty() )
         {
-            m_cadNode->setName( "NULL_FILENAME" );
+            mCadNode->setName( "NULL_FILENAME" );
         }
     }
     
     //Set per vertex lighting on all files that are loaded
     //osgUtil::SmoothingVisitor smoother;
-    //m_cadNode->accept( smoother );
+    //mCadNode->accept( smoother );
     
     {
         osg::ComputeBoundsVisitor cbbv( osg::NodeVisitor::TRAVERSE_ALL_CHILDREN );
-        m_cadNode->accept(cbbv);
+        mCadNode->accept(cbbv);
         osg::BoundingBox bb = cbbv.getBoundingBox();
         std::cout << "|\tBounding Box Info" << std::endl 
             << "|\tCenter " << bb.center() << std::endl
@@ -526,14 +528,15 @@ osg::Node* CADEntityHelper::parseOCCNURBSFile( const std::string& directory )
 
     for( size_t i = 0; i < nPatches;i++ )
     {
-        ves::xplorer::scenegraph::nurbs::NURBSSurface* surface = patchReader.ReadPatchFile( patchFiles.at( i ) );
+        ves::xplorer::scenegraph::nurbs::NURBSSurface* surface =
+            patchReader.ReadPatchFile( patchFiles.at( i ) );
         if( surface )
         {
             surface->SetInterpolationGridSize( 10, "U" );
             surface->SetInterpolationGridSize( 20, "V" );
             surface->Interpolate();
 
-            osg::ref_ptr<ves::xplorer::scenegraph::nurbs::NURBS> renderablePatch =
+            osg::ref_ptr< ves::xplorer::scenegraph::nurbs::NURBS > renderablePatch =
                 new ves::xplorer::scenegraph::nurbs::NURBS( surface );
             nurbsPatches.push_back( renderablePatch.get() );
         }
@@ -545,14 +548,14 @@ osg::Node* CADEntityHelper::parseOCCNURBSFile( const std::string& directory )
 
     if( nurbsPatches.size() )
     {
-        m_venNode =
-            new osg::PositionAttitudeTransform();
+        mVenNode = new osg::PositionAttitudeTransform();
         for( size_t i = 0; i < nurbsPatches.size(); i++ )
         {
-            m_venNode->addChild( nurbsPatches.at( i ).get() );
+            mVenNode->addChild( nurbsPatches.at( i ).get() );
         }
-        return m_venNode.get();
+        return mVenNode.get();
     }
+
     return 0;
 }
 ////////////////////////////////////////////////////////////////////////////////

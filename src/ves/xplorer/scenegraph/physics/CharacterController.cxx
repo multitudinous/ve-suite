@@ -60,7 +60,7 @@
 // --- C/C++ Libraries --- //
 #include <iostream>
 
-//#define VES_USE_ANIMATED_CHARACTER 1
+#define VES_USE_ANIMATED_CHARACTER 1
 
 using namespace ves::xplorer::scenegraph;
 namespace vxs = ves::xplorer::scenegraph;
@@ -120,6 +120,7 @@ CharacterController::CharacterController()
     mCameraRotationZ( 0.0, 0.0, 1.0, 1.0 ),
     mCharacter( NULL ),
     mGhostObject( NULL ),
+    mCharacterAnimations( NULL ),
     mMatrixTransform( NULL ),
     mLineSegmentIntersector( NULL )
 {
@@ -163,15 +164,20 @@ void CharacterController::Initialize( btDynamicsWorld* dynamicsWorld )
 #ifdef VES_USE_ANIMATED_CHARACTER
     //create animated character
     //idle
-    osg::ref_ptr< osg::Node > node = osgDB::readNodeFile( "osg-data/zombie.idle.osg" );
+    osg::ref_ptr< osg::Node > node =
+        osgDB::readNodeFile( "osg-data/zombie.idle.osg" );
     //walk forward
-    osg::ref_ptr< osg::Node > node1 = osgDB::readNodeFile( "osg-data/zombie.wf.osg" );
+    osg::ref_ptr< osg::Node > node1 =
+        osgDB::readNodeFile( "osg-data/zombie.wf.osg" );
     //walk backwards
-    osg::ref_ptr< osg::Node > node2 = osgDB::readNodeFile( "osg-data/zombie.wf.osg" );
+    osg::ref_ptr< osg::Node > node2 =
+        osgDB::readNodeFile( "osg-data/zombie.wf.osg" );
     //strafe left
-    osg::ref_ptr< osg::Node > node3 = osgDB::readNodeFile( "osg-data/zombie.sl.osg" );
+    osg::ref_ptr< osg::Node > node3 =
+        osgDB::readNodeFile( "osg-data/zombie.sl.osg" );
     //strafe right
-    osg::ref_ptr< osg::Node > node4 = osgDB::readNodeFile( "osg-data/zombie.sr.osg" );
+    osg::ref_ptr< osg::Node > node4 =
+        osgDB::readNodeFile( "osg-data/zombie.sr.osg" );
 
     //create switch node
     mCharacterAnimations = new osg::Switch();
@@ -399,7 +405,6 @@ void CharacterController::SetCharacterRotationFromCamera()
     {
         xform.setRotation( mCameraRotationZ.inverse() );
     }
-
     mGhostObject->setWorldTransform( xform );
 
     mToTurnAngleZ = mTurnAngleZ;
@@ -794,13 +799,13 @@ void CharacterController::UpdateCharacterTranslation( btScalar dt )
     {
         //Get current character transform
         btTransform xform = mGhostObject->getWorldTransform();
-
         xform.setRotation( xform.getRotation().inverse() );
-        btVector3 forwardDir = xform.getBasis()[ 1 ];
-        forwardDir.normalize();
 
         btVector3 strafeDir = xform.getBasis()[ 0 ];
         strafeDir.normalize();
+
+        btVector3 forwardDir = xform.getBasis()[ 1 ];
+        forwardDir.normalize();
 
         btVector3 upDir = xform.getBasis()[ 2 ];
         upDir.normalize();

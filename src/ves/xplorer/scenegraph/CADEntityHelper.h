@@ -24,27 +24,16 @@
  *
  * -----------------------------------------------------------------
  * Date modified: $Date$
- * Version:         $Rev$
- * Author:          $Author$
- * Id:                $Id$
+ * Version:       $Rev$
+ * Author:        $Author$
+ * Id:            $Id$
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #ifndef CAD_ENTITY_HELPER_H
 #define CAD_ENTITY_HELPER_H
 
-/*!\file CADEntityHelper.h
-*/
-
-/*!\class ves::xplorer::scenegraph::CADEntityHelper
-*Class to assist CADEntity
-*/
-
-/*!\namespace ves::xplorer::scenegraph
-*
-*/
-
-// --- C/C++ Libraries --- //
+// --- C/C++ Includes --- //
 #include <iostream>
 #include <fstream>
 #include <memory>
@@ -96,18 +85,15 @@ typedef progress_streambuf< char > progbuf;
 #include <ves/VEConfig.h>
 
 // --- OSG Includes --- //
-#ifdef _OSG
+#include <osg/ref_ptr>
 #include <osg/Node>
 #include <osg/PositionAttitudeTransform>
-#include <osg/ref_ptr>
 
 namespace osg
 {
 class Fog;
 class LightModel;
 }
-#elif _OPENSG
-#endif
 
 namespace ves
 {
@@ -115,6 +101,18 @@ namespace xplorer
 {
 namespace scenegraph
 {
+
+/*!\file CADEntityHelper.h
+ *
+ */
+
+/*!\class ves::xplorer::scenegraph::CADEntityHelper
+ * Class to assist CADEntity
+ */
+
+/*!\namespace ves::xplorer::scenegraph
+ *
+ */
 class VE_SCENEGRAPH_EXPORTS CADEntityHelper
 {
 public:
@@ -145,22 +143,22 @@ public:
     ///\param onOff Turn on/off rendering of this CADEntityHelper
     void ToggleDisplay( const bool onOff );
 
-#ifdef _OSG
     ///Set the node of CADEntityHelper
     ///\param node An osg::Node pointer
     void SetNode( osg::Node* node );
 
     ///Return the node of CADEntityHelper
     osg::Node* GetNode();
-#elif _OPENSG
-#endif
 
     ///Load a geometry file
     ///\param filename The name of the file to be loaded
     ///\param isStream Is the file a stream
     ///\param occlude Occlude the geom with osgOQ if desired
-    void LoadFile( const std::string& filename, const bool isStream = false,
-                   const bool occlude = false );
+    void LoadFile(
+        const std::string& filename,
+        const bool isStream = false,
+        const bool occlude = false );
+
     ///Used for working with PolyTrans
     std::string ComputeIntermediateFileNameAndPath(
         const std::string& srcFile ) const;
@@ -171,13 +169,12 @@ public:
     osg::Node* parseOCCNURBSFile( const std::string& directory );
 
 private:
-#ifdef _OSG
     ///Node representing the loaded in geometry file
-    osg::ref_ptr< osg::Node > m_cadNode;
+    osg::ref_ptr< osg::Node > mCadNode;
+
     ///group node for ven
-    osg::ref_ptr< osg::PositionAttitudeTransform > m_venNode;
-#elif _OPENSG
-#endif
+    osg::ref_ptr< osg::PositionAttitudeTransform > mVenNode;
+
     ///The current state of two sided lighting for the node
     bool mIsSTLFile;
 

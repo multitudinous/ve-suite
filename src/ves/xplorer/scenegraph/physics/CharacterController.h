@@ -338,14 +338,14 @@ private:
     ///
     btPairCachingGhostObject* mGhostObject;
 
+    ///For character animations
+    osg::ref_ptr< osg::Switch > mCharacterAnimations;
+
     ///
     osg::ref_ptr< osg::MatrixTransform > mMatrixTransform;
 
     ///
     osg::ref_ptr< osgUtil::LineSegmentIntersector > mLineSegmentIntersector;
-
-    /// for character animations
-    osg::ref_ptr< osg::Switch > mCharacterAnimations;
 
     ///
     class CharacterTransformCallback : public osg::NodeCallback
