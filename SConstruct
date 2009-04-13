@@ -299,6 +299,9 @@ osgal_options = fp_option.FlagPollBasedOption("osgAL", "osgAL", "0.6.1", False, 
                                               None, 
                                               compileTest=True, headerToCheck="osgAL/SoundNode")
 
+mysqlpp_options = fp_option.FlagPollBasedOption( "MySQLpp", "MySQL++", "3.0.9", False, True, None,
+                                                 compileTest = True, headerToCheck = "mysql++.h" )
+
 opts.AddOption( apr_options )
 opts.AddOption( apu_options )
 #opts.AddOption( bullet_options )
@@ -310,19 +313,21 @@ opts.AddOption( gadgeteer_options )
 # Test VR Juggler after all the rest of its dependencies
 opts.AddOption( vrjuggler_options )
 opts.AddOption( osgal_options )
+opts.AddOption( mysqlpp_options )
 
-Export('opts', 'vtk_options', 'osg_options', 
-         'xerces_options','wxwidgets_options',
-         'hdf5_options',
-         'hdf4_options',
-         'VE_SUITE_VERSION',
-         'apr_options', 'apu_options',
-         #'bullet_options', 
-         'bulletVersion',
-         'tao_options',
-         'vrjuggler_options', 'boost_options',
-         'gmtl_options', 'vpr_options',
-         'gadgeteer_options', 'osgal_options')
+Export( 'opts', 'vtk_options', 'osg_options', 
+        'xerces_options','wxwidgets_options',
+        'hdf5_options',
+        'hdf4_options',
+        'VE_SUITE_VERSION',
+        'apr_options', 'apu_options',
+        #'bullet_options', 
+        'bulletVersion',
+        'tao_options',
+        'vrjuggler_options', 'boost_options',
+        'gmtl_options', 'vpr_options',
+        'gadgeteer_options', 'osgal_options',
+        'mysqlpp_options' )
 
 ##Display some help
 help_text = """--- VE-Suite Build system ---
@@ -440,7 +445,10 @@ if not SConsAddons.Util.hasHelpFlag():
       base_bldr.setMsvcRuntime(EnvironmentBuilder.MSVC_MT_DLL_RT)
 
    if osgal_options.isAvailable():
-      baseEnv.Append( CPPDEFINES = ['VE_SOUND'] )  
+      baseEnv.Append( CPPDEFINES = [ 'VE_SOUND' ] )
+
+   if mysqlpp_options.isAvailable():
+      baseEnv[ 'MakeDBSupport' ] = "yes"
 
    # VTK defines
    baseEnv.AppendUnique( CPPDEFINES = ['VTK_POST_FEB20'] )
