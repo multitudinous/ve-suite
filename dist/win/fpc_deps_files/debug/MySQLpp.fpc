@@ -1,0 +1,14 @@
+prefix=${fp_file_cwd}/../../
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: MySQL++
+Description: MySQL++ release pre-compiled for VES
+Provides: MySQL++ MySQL
+Requires: 
+Version: 3.0.9
+Libs: /libpath:"${libdir}" libmysql.lib mysqlclient.lib mysqlpp.lib mysys.lib regex.lib strings.lib zlib.lib
+Cflags: /I"${includedir}"
+Arch: noarch
+
