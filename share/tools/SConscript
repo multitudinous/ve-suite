@@ -1,4 +1,4 @@
-##Builds VE-Suite Libraries
+#Builds VE-Suite Libraries
 #import os
 #pj = os.path.join
 
@@ -7,16 +7,21 @@ Import( 'GetPlatform baseEnv ves_pkg' )
 toolsSubdirs = Split("""
     builder
     vea
-    
 """)
 
-##Should Aspen support be built
+#Should Aspen support be built
 if GetPlatform() == 'win32':
-    if baseEnv['MakeAspenSupport'] != 'no':
+    if baseEnv[ 'MakeAspenSupport' ] != 'no':
         toolsSubdirs = Split("""
-        aspen
+            aspen
         """)
+
+#Should db support be built
+if baseEnv[ 'MakeDBSupport' ] == 'yes':
+    toolsSubdirs = Split("""
+        db
+    """)
         
-##Run SConscript files in all of those folders.
+#Run SConscript files in all of those folders.
 for d in toolsSubdirs:
-   SConscript( dirs = d )
+    SConscript( dirs = d )
