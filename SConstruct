@@ -447,9 +447,6 @@ if not SConsAddons.Util.hasHelpFlag():
    if osgal_options.isAvailable():
       baseEnv.Append( CPPDEFINES = [ 'VE_SOUND' ] )
 
-   if mysqlpp_options.isAvailable():
-      baseEnv[ 'MakeDBSupport' ] = "yes"
-
    # VTK defines
    baseEnv.AppendUnique( CPPDEFINES = ['VTK_POST_FEB20'] )
    baseEnv.AppendUnique( CPPDEFINES = ['VTK_STREAMS_FWD_ONLY'] )

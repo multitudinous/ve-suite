@@ -2,7 +2,7 @@
 #import os
 #pj = os.path.join
 
-Import( 'GetPlatform baseEnv ves_pkg' )
+Import( 'GetPlatform baseEnv ves_pkg mysqlpp_options' )
 
 toolsSubdirs = Split("""
     builder
@@ -17,7 +17,7 @@ if GetPlatform() == 'win32':
         """)
 
 #Should db support be built
-if baseEnv[ 'MakeDBSupport' ] == 'yes':
+if mysqlpp_options.isAvailable():
     toolsSubdirs = Split("""
         db
     """)
