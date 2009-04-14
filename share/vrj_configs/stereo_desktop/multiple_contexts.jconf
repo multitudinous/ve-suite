@@ -14,8 +14,8 @@
       <display_window name="context1" version="6">
          <origin>0</origin>
          <origin>0</origin>
-         <size>200</size>
-         <size>200</size>
+         <size>1920</size>
+         <size>1200</size>
          <pipe>0</pipe>
          <frame_buffer_config>
             <opengl_frame_buffer_config name="GL Frame Buffer" version="4">
@@ -266,38 +266,38 @@
          <keyboard_mouse_proxy>SimKeyboard Proxy</keyboard_mouse_proxy>
          <key_pair>
             <key_modifier_pair name="Forward" version="1">
-               <modifier_key>NONE</modifier_key>
-               <key>KEY_NONE</key>
+               <modifier_key>CTRL</modifier_key>
+               <key>KEY_W</key>
             </key_modifier_pair>
          </key_pair>
          <key_pair>
             <key_modifier_pair name="Back" version="1">
-               <modifier_key>NONE</modifier_key>
-               <key>KEY_NONE</key>
+               <modifier_key>CTRL</modifier_key>
+               <key>KEY_S</key>
             </key_modifier_pair>
          </key_pair>
          <key_pair>
             <key_modifier_pair name="Left" version="1">
-               <modifier_key>NONE</modifier_key>
-               <key>KEY_NONE</key>
+               <modifier_key>CTRL</modifier_key>
+               <key>KEY_A</key>
             </key_modifier_pair>
          </key_pair>
          <key_pair>
             <key_modifier_pair name="Right" version="1">
-               <modifier_key>NONE</modifier_key>
-               <key>KEY_NONE</key>
+               <modifier_key>CTRL</modifier_key>
+               <key>KEY_D</key>
             </key_modifier_pair>
          </key_pair>
          <key_pair>
             <key_modifier_pair name="Up" version="1">
-               <modifier_key>NONE</modifier_key>
-               <key>KEY_NONE</key>
+               <modifier_key>CTRL</modifier_key>
+               <key>KEY_Z</key>
             </key_modifier_pair>
          </key_pair>
          <key_pair>
             <key_modifier_pair name="Down" version="1">
-               <modifier_key>NONE</modifier_key>
-               <key>KEY_NONE</key>
+               <modifier_key>CTRL</modifier_key>
+               <key>KEY_X</key>
             </key_modifier_pair>
          </key_pair>
          <key_pair>
@@ -342,7 +342,7 @@
          <initial_rotation>0.0</initial_rotation>
          <initial_rotation>0.0</initial_rotation>
          <initial_rotation>0.0</initial_rotation>
-         <translation_delta>0.09</translation_delta>
+         <translation_delta>0.009</translation_delta>
          <rotation_delta>1.0</rotation_delta>
          <translation_coordinate_system>1</translation_coordinate_system>
          <rotation_coordinate_system>1</rotation_coordinate_system>
@@ -443,9 +443,9 @@
       </digital_proxy>
       <display_window name="context2" version="6">
          <origin>0</origin>
-         <origin>200</origin>
-         <size>200</size>
-         <size>200</size>
+         <origin>0</origin>
+         <size>1920</size>
+         <size>1200</size>
          <pipe>1</pipe>
          <frame_buffer_config>
             <opengl_frame_buffer_config name="GL Frame Buffer" version="4">
@@ -539,7 +539,7 @@
          <hide_mouse>false</hide_mouse>
          <full_screen>false</full_screen>
          <always_on_top>false</always_on_top>
-         <active>true</active>
+         <active>false</active>
          <surface_viewports>
             <surface_viewport name="Desktop Display" version="2">
                <origin>0.0</origin>
@@ -604,7 +604,7 @@
          <hide_mouse>false</hide_mouse>
          <full_screen>false</full_screen>
          <always_on_top>false</always_on_top>
-         <active>true</active>
+         <active>false</active>
          <surface_viewports>
             <surface_viewport name="Desktop Display" version="2">
                <origin>0.0</origin>
@@ -669,7 +669,7 @@
          <hide_mouse>false</hide_mouse>
          <full_screen>false</full_screen>
          <always_on_top>false</always_on_top>
-         <active>true</active>
+         <active>false</active>
          <surface_viewports>
             <surface_viewport name="Desktop Display" version="2">
                <origin>0.0</origin>
