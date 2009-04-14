@@ -14,8 +14,8 @@
       <display_window name="context1" version="6">
          <origin>0</origin>
          <origin>0</origin>
-         <size>1920</size>
-         <size>1200</size>
+         <size>200</size>
+         <size>200</size>
          <pipe>0</pipe>
          <frame_buffer_config>
             <opengl_frame_buffer_config name="GL Frame Buffer" version="4">
@@ -342,7 +342,7 @@
          <initial_rotation>0.0</initial_rotation>
          <initial_rotation>0.0</initial_rotation>
          <initial_rotation>0.0</initial_rotation>
-         <translation_delta>0.009</translation_delta>
+         <translation_delta>0.0090</translation_delta>
          <rotation_delta>1.0</rotation_delta>
          <translation_coordinate_system>1</translation_coordinate_system>
          <rotation_coordinate_system>1</rotation_coordinate_system>
@@ -384,7 +384,7 @@
          <unit>0</unit>
       </position_proxy>
       <position_proxy name="SimCamera Proxy" version="1">
-         <device>SimHeadPos</device>
+         <device>SimWindowCamera</device>
          <unit>0</unit>
       </position_proxy>
       <alias name="VJWand" version="1">
@@ -443,9 +443,9 @@
       </digital_proxy>
       <display_window name="context2" version="6">
          <origin>0</origin>
-         <origin>0</origin>
-         <size>1920</size>
-         <size>1200</size>
+         <origin>200</origin>
+         <size>200</size>
+         <size>200</size>
          <pipe>1</pipe>
          <frame_buffer_config>
             <opengl_frame_buffer_config name="GL Frame Buffer" version="4">
@@ -539,7 +539,7 @@
          <hide_mouse>false</hide_mouse>
          <full_screen>false</full_screen>
          <always_on_top>false</always_on_top>
-         <active>false</active>
+         <active>true</active>
          <surface_viewports>
             <surface_viewport name="Desktop Display" version="2">
                <origin>0.0</origin>
@@ -604,7 +604,7 @@
          <hide_mouse>false</hide_mouse>
          <full_screen>false</full_screen>
          <always_on_top>false</always_on_top>
-         <active>false</active>
+         <active>true</active>
          <surface_viewports>
             <surface_viewport name="Desktop Display" version="2">
                <origin>0.0</origin>
@@ -669,7 +669,7 @@
          <hide_mouse>false</hide_mouse>
          <full_screen>false</full_screen>
          <always_on_top>false</always_on_top>
-         <active>false</active>
+         <active>true</active>
          <surface_viewports>
             <surface_viewport name="Desktop Display" version="2">
                <origin>0.0</origin>
@@ -701,6 +701,155 @@
          <start_locked>false</start_locked>
          <sleep_time>25</sleep_time>
       </display_window>
+      <display_window name="SimWindow" version="6">
+         <origin>0</origin>
+         <origin>0</origin>
+         <size>800</size>
+         <size>800</size>
+         <pipe>0</pipe>
+         <frame_buffer_config>
+            <opengl_frame_buffer_config name="frame_buffer_config 0" version="4">
+               <visual_id>-1</visual_id>
+               <red_size>1</red_size>
+               <green_size>1</green_size>
+               <blue_size>1</blue_size>
+               <alpha_size>1</alpha_size>
+               <auxiliary_buffer_count>0</auxiliary_buffer_count>
+               <depth_buffer_size>1</depth_buffer_size>
+               <stencil_buffer_size>1</stencil_buffer_size>
+               <accum_red_size>1</accum_red_size>
+               <accum_green_size>1</accum_green_size>
+               <accum_blue_size>1</accum_blue_size>
+               <accum_alpha_size>1</accum_alpha_size>
+               <num_sample_buffers>1</num_sample_buffers>
+               <num_samples>2</num_samples>
+               <use_create_context_attribs>false</use_create_context_attribs>
+               <gl_context_major_version>3</gl_context_major_version>
+               <gl_context_minor_version>0</gl_context_minor_version>
+               <gl_context_flags>0</gl_context_flags>
+            </opengl_frame_buffer_config>
+         </frame_buffer_config>
+         <stereo>false</stereo>
+         <border>true</border>
+         <hide_mouse>false</hide_mouse>
+         <full_screen>false</full_screen>
+         <always_on_top>false</always_on_top>
+         <active>true</active>
+         <simulator_viewports>
+            <simulator_viewport name="CHANGEME" version="3">
+               <origin>0.0</origin>
+               <origin>0.0</origin>
+               <size>1.0</size>
+               <size>1.0</size>
+               <view>1</view>
+               <user>User1</user>
+               <active>true</active>
+               <vertical_fov>80.0</vertical_fov>
+               <simulator_plugin>
+                  <default_simulator name="CHANGEME" version="3">
+                     <camera_pos>SimCamera Proxy</camera_pos>
+                     <wand_pos />
+                     <draw_projections>true</draw_projections>
+                     <surface_color>1.0</surface_color>
+                     <surface_color>0.0</surface_color>
+                     <surface_color>0.0</surface_color>
+                     <head_model>${VJ_DATA_DIR}/data/models/head.flt</head_model>
+                     <wand_model>${VJ_DATA_DIR}/data/models/wand.flt</wand_model>
+                  </default_simulator>
+               </simulator_plugin>
+            </simulator_viewport>
+         </simulator_viewports>
+         <keyboard_mouse_device_name>Keyboard KM Dev</keyboard_mouse_device_name>
+         <allow_mouse_locking>true</allow_mouse_locking>
+         <lock_key>0</lock_key>
+         <start_locked>false</start_locked>
+         <sleep_time>75</sleep_time>
+      </display_window>
+      <simulated_positional_device name="SimWindowCamera" version="3">
+         <keyboard_mouse_proxy>SimKeyboard Proxy</keyboard_mouse_proxy>
+         <key_pair>
+            <key_modifier_pair name="Forward" version="1">
+               <modifier_key>SHIFT</modifier_key>
+               <key>KEY_W</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Back" version="1">
+               <modifier_key>SHIFT</modifier_key>
+               <key>KEY_S</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Left" version="1">
+               <modifier_key>SHIFT</modifier_key>
+               <key>KEY_A</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Right" version="1">
+               <modifier_key>SHIFT</modifier_key>
+               <key>KEY_D</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Up" version="1">
+               <modifier_key>SHIFT</modifier_key>
+               <key>KEY_Z</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Down" version="1">
+               <modifier_key>SHIFT</modifier_key>
+               <key>KEY_X</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="key_pair 6" version="1">
+               <modifier_key>-1</modifier_key>
+               <key>0</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="key_pair 7" version="1">
+               <modifier_key>-1</modifier_key>
+               <key>0</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="key_pair 8" version="1">
+               <modifier_key>-1</modifier_key>
+               <key>0</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="key_pair 9" version="1">
+               <modifier_key>-1</modifier_key>
+               <key>0</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="key_pair 10" version="1">
+               <modifier_key>-1</modifier_key>
+               <key>0</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="key_pair 11" version="1">
+               <modifier_key>-1</modifier_key>
+               <key>0</key>
+            </key_modifier_pair>
+         </key_pair>
+         <initial_position>0.0</initial_position>
+         <initial_position>1.0668</initial_position>
+         <initial_position>0.0</initial_position>
+         <initial_rotation>0.0</initial_rotation>
+         <initial_rotation>0.0</initial_rotation>
+         <initial_rotation>0.0</initial_rotation>
+         <translation_delta>0.1</translation_delta>
+         <rotation_delta>1.0</rotation_delta>
+         <translation_coordinate_system>0</translation_coordinate_system>
+         <rotation_coordinate_system>0</rotation_coordinate_system>
+      </simulated_positional_device>
    </elements>
 </configuration>
 
