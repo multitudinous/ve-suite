@@ -1,7 +1,7 @@
 
 // --- DB Includes --- //
 #include "CorbaUnitManager.h"
-#include "DBUnit_i.h"
+#include "Body_Unit_i.h"
 
 // --- ACE-TAO Includes --- //
 #include <tao/BiDir_GIOP/BiDirGIOP.h>

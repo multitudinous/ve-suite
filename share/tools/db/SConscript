@@ -7,7 +7,7 @@ pj = os.path.join
 host_type = distutils.util.get_platform()
 
 Import( 'baseEnv ves_pkg LIBDIR RootDir buildDir GetPlatform' )
-Import( 'xerces_options tao_options' )
+Import( 'xerces_options tao_options wxwidgets_options' )
 openDir = os.path.abspath( pj( RootDir, 'share', 'tools', 'db' ) )
 sources = sca_util.getSourcesRecursive( openDir )
 headers = sca_util.getHeadersRecursive( openDir )
@@ -22,6 +22,7 @@ env.Append( LIBPATH = [ pj( '#', buildDir, 'src', 'ves', 'open' ),
   
 xerces_options.apply( env )
 tao_options.apply( env )
+wxwidgets_options.apply( env )
 
 prog = ves_pkg.createProgram( 'ves_db' + env[ "PROGSUFFIX" ], env, 'bin' )
 prog.addSources( sources )

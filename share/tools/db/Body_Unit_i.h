@@ -1,7 +1,7 @@
 
 
-#ifndef UNIT_I_H
-#define UNIT_I_H
+#ifndef BODY_UNIT_I_H
+#define BODY_UNIT_I_H
 
 // --- VE-Suite Includes --- //
 #include <ves/open/moduleS.h>
@@ -62,7 +62,7 @@ public:
         ACE_THROW_SPEC( ( CORBA::SystemException, Error::EUnknown ) );
 
     virtual CORBA::Long GetCurID()
-        ACE_THROW_SPEC( ( CORBA::SystemException, Error::EUnknown ) );  
+        ACE_THROW_SPEC( ( CORBA::SystemException, Error::EUnknown ) );
 
     virtual void SetName( const char* name ACE_ENV_ARG_DECL )
         ACE_THROW_SPEC( ( CORBA::SystemException, Error::EUnknown ) );
@@ -77,4 +77,4 @@ public:
         ACE_THROW_SPEC( ( CORBA::SystemException, Error::EUnknown ) );
 };
 
-#endif //UNIT_I_H
+#endif //BODY_UNIT_I_H
