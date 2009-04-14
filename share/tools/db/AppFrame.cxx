@@ -1,7 +1,9 @@
 
 // --- VE-Suite Includes --- //
 #include "AppFrame.h"
-
+#include "MenuBar.h"
+#include "ToolBar.h"
+#include "ConnectionDialog.h"
 
 // --- wxWidgets Includes --- //
 
@@ -15,14 +17,22 @@ END_EVENT_TABLE()
 ////////////////////////////////////////////////////////////////////////////////
 AppFrame::AppFrame()
     :
-    wxFrame()
+    wxFrame(),
+    m_connectionDialog( NULL )
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-AppFrame::AppFrame( wxWindow * parent, wxWindowID id, const wxString& title )
+AppFrame::AppFrame(
+    wxWindow* parent,
+    wxWindowID id,
+    const wxString& title,
+    const wxPoint& pos,
+    const wxSize& size,
+    long style )
     :
-    wxFrame( parent, id, title, wxDefaultPosition, wxDefaultSize )
+    wxFrame( parent, id, title, pos, size, style ),
+    m_connectionDialog( NULL )
 {
     ;
 }
@@ -30,5 +40,10 @@ AppFrame::AppFrame( wxWindow * parent, wxWindowID id, const wxString& title )
 AppFrame::~AppFrame()
 {
     ;
+}
+////////////////////////////////////////////////////////////////////////////////
+void AppFrame::CreateGUI()
+{
+
 }
 ////////////////////////////////////////////////////////////////////////////////
