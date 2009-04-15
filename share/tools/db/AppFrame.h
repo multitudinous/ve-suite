@@ -10,13 +10,7 @@ class ConnectionDialog;
 // --- wxWidgets Includes --- //
 #include <wx/frame.h>
 
-class wxMenuBar;
-class wxMenu;
-class wxToolBar;
 class wxTreeCtrl;
-class wxNotebook;
-class wxPanel;
-class wxGrid;
 
 // --- C/C++ Includes --- //
 
@@ -31,29 +25,26 @@ class wxGrid;
 class AppFrame : public wxFrame
 {
 public:
-    ///Default Constructor
-    AppFrame();
-
     ///Constructor
-    AppFrame(
-        wxWindow* parent,
-        wxWindowID id = wxID_ANY,
-        const wxString& title = wxT( "VE-DB" ),
-        const wxPoint& pos = wxDefaultPosition,
-        const wxSize& size = wxSize( 693, 595 ),
-        long style = wxDEFAULT_FRAME_STYLE | wxICONIZE | wxTAB_TRAVERSAL );
+    AppFrame( wxWindow* parent, wxWindowID id );
 
     ///Destructor
     virtual ~AppFrame();
 
+    ///
+    void OpenConnectionDialog( wxCommandEvent& event );
+
 protected:
 
 private:
+    ///
     void CreateGUI();
 
     MenuBar* m_menuBar;
     ToolBar* m_toolBar;
     ConnectionDialog* m_connectionDialog;
+
+    wxTreeCtrl* m_connectionsTreeCtrl;
     
     DECLARE_EVENT_TABLE()
 

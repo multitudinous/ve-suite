@@ -18,17 +18,8 @@
 class ToolBar : public wxToolBar
 {
 public:
-    ///Default Constructor
-    ToolBar();
-
     ///Constructor
-    ToolBar(
-        wxWindow* parent,
-        wxWindowID id = wxID_ANY,
-        const wxPoint& pos = wxDefaultPosition,
-        const wxSize& size = wxDefaultSize,
-        long style = wxNO_BORDER | wxTB_HORIZONTAL,
-        const wxString& name = wxT( "ToolBar" ) );
+    ToolBar( wxWindow* parent );
 
     ///Destructor
     virtual ~ToolBar();

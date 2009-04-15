@@ -16,7 +16,7 @@
 class MenuBar : public wxMenuBar
 {
 public:
-    ///Default Constructor
+    ///Constructor
     MenuBar();
 
     ///Destructor
@@ -27,6 +27,9 @@ protected:
 private:
     ///Adds the tools to the toolbar
     void CreateGUI();
+
+    wxMenu* m_fileMenu;
+    wxMenu* m_helpMenu;
 
     DECLARE_EVENT_TABLE()
 };

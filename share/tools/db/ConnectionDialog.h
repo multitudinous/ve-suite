@@ -23,18 +23,8 @@ class wxComboBox;
 class ConnectionDialog : public wxDialog
 {
 public:
-    ///Default Constructor
-    ConnectionDialog();
-
     ///Constructor
-    ConnectionDialog(
-        wxWindow* parent,
-        wxWindowID id = wxID_ANY,
-        const wxString& title = wxT( "Add a Connection" ),
-        const wxPoint& pos = wxDefaultPosition,
-        const wxSize& size = wxSize( -1, -1 ),
-        long style = wxCAPTION | wxCLOSE_BOX | wxMAXIMIZE_BOX | wxMINIMIZE_BOX |
-                     wxRESIZE_BORDER | wxSTAY_ON_TOP | wxSYSTEM_MENU );
+    ConnectionDialog( wxWindow* parent );
 
     ///Destructor
     virtual ~ConnectionDialog();
