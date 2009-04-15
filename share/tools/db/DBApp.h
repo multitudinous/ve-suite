@@ -1,5 +1,4 @@
 
-// --- VE-Suite Includes --- //
 #ifndef DB_APP_H
 #define DB_APP_H
 
@@ -21,16 +20,17 @@ class DBApp : public wxApp
 public:
     ///
     virtual bool OnInit();
-    
+
     ///
     virtual int OnExit();
 
+    ///
     AppFrame* m_appFrame;
 
 protected:
 
 private:
-    
+
 };
 
 DECLARE_APP( DBApp )

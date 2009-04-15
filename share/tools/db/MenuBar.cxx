@@ -5,13 +5,6 @@
 #include "MenuBar.h"
 #include "DBAppEnums.h"
 
-//#include <ves/conductor/xpm/ToolBar/NewDocumentButton.xpm>
-
-//#include <ves/conductor/util/CORBAServiceList.h>
-
-//#include <ves/open/xml/Command.h>
-//#include <ves/open/xml/DataValuePair.h>
-
 BEGIN_EVENT_TABLE( MenuBar, wxMenuBar )
 
 END_EVENT_TABLE()

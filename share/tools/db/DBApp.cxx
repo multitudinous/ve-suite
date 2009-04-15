@@ -2,10 +2,10 @@
 // --- VE-Suite Includes --- //
 #include "DBApp.h"
 #include "AppFrame.h"
-#include "CorbaUnitManager.h"
 
 // --- wxWidgets Includes --- //
 #include <wx/confbase.h>
+
 
 IMPLEMENT_APP( DBApp );
 

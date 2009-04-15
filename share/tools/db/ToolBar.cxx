@@ -7,13 +7,8 @@
 
 #include <ves/conductor/xpm/ToolBar/NewDocumentButton.xpm>
 
-//#include <ves/conductor/util/CORBAServiceList.h>
-
-//#include <ves/open/xml/Command.h>
-//#include <ves/open/xml/DataValuePair.h>
-
 BEGIN_EVENT_TABLE( ToolBar, wxToolBar )
-EVT_MENU( TOOLBAR_OPEN_CONNECTION_DIALOG, AppFrame::OpenConnectionDialog )
+EVT_MENU( TOOLBAR_OPEN_CONNECTION_DIALOG, ToolBar::OpenConnectionDialog )
 END_EVENT_TABLE()
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -55,12 +50,11 @@ void ToolBar::CreateGUI()
 
 	Realize();
 
-    /*
-    EnableTool( MAINTOOLBAR_CHARACTER, false );
-    EnableTool( MAINTOOLBAR_RESET, false );
-    EnableTool( MAINTOOLBAR_PAUSE, false );
-    EnableTool( MAINTOOLBAR_PLAY, false );
-    EnableTool( MAINTOOLBAR_STEP, false );
-    */
+    //EnableTool( MAINTOOLBAR_CHARACTER, false );
+}
+////////////////////////////////////////////////////////////////////////////////
+void ToolBar::OpenConnectionDialog( wxCommandEvent& event )
+{
+    static_cast< AppFrame* >( GetParent() )->OpenConnectionDialog( event );
 }
 ////////////////////////////////////////////////////////////////////////////////

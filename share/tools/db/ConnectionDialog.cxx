@@ -49,7 +49,8 @@ void ConnectionDialog::CreateGUI()
 	
 	wxBoxSizer* mainSizer = new wxBoxSizer( wxVERTICAL );
 	
-	wxStaticBoxSizer* addConnectionSizer = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT( "Add Connection" ) ), wxVERTICAL );
+	wxStaticBoxSizer* addConnectionSizer =
+        new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT( "Add Connection" ) ), wxVERTICAL );
 	
 	wxBoxSizer* connectionNameSizer = new wxBoxSizer( wxHORIZONTAL );
 	
