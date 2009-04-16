@@ -24,12 +24,11 @@ public:
     ///
     virtual int OnExit();
 
-    ///
-    AppFrame* m_appFrame;
-
 protected:
 
 private:
+    ///
+    AppFrame* m_appFrame;
 
 };
 

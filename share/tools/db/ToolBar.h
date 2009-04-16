@@ -33,9 +33,6 @@ private:
     ///Adds the tools to the toolbar
     void CreateGUI();
 
-    ///
-    void OpenConnectionDialog( wxCommandEvent& event );
-
     ///A map that holds the bitmaps for this toolbar
     std::map< std::string, wxBitmap > mToolbarBitmaps;
 

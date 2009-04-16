@@ -32,6 +32,7 @@ public:
 protected:
 
 private:
+    ///
     void CreateGUI();
 
     wxTextCtrl* m_connectionNameTextCtrl;

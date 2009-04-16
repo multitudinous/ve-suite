@@ -3,23 +3,23 @@
 #include "AppFrame.h"
 #include "MenuBar.h"
 #include "ToolBar.h"
+#include "Notebook.h"
 #include "ConnectionDialog.h"
 #include "DBAppEnums.h"
 
-#include <ves/util/icons/ve_icon32x32.xpm>
+#include <ves/util/icons/ve_icon16x16.xpm>
 
 // --- wxWidgets Includes --- //
 #include <wx/icon.h>
 #include <wx/sizer.h>
 #include <wx/statbox.h>
-#include <wx/panel.h>
-#include <wx/notebook.h>
 #include <wx/treectrl.h>
 
 // --- C/C++ Libraries --- //
 
 
 BEGIN_EVENT_TABLE( AppFrame, wxFrame )
+EVT_MENU( TOOLBAR_OPEN_CONNECTION_DIALOG, AppFrame::OpenConnectionDialog )
 END_EVENT_TABLE()
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -30,7 +30,7 @@ AppFrame::AppFrame( wxWindow* parent, wxWindowID id )
         id,
         wxT( "VE-DB" ),
         wxDefaultPosition,
-        wxSize( 693, 595 ),
+        wxSize( 800, 600 ),
         wxDEFAULT_FRAME_STYLE ),
     m_menuBar( NULL ),
     m_toolBar( NULL ),
@@ -49,7 +49,7 @@ void AppFrame::CreateGUI()
 {
     SetSizeHints( wxDefaultSize, wxDefaultSize );
 	SetBackgroundColour( wxColour( 255, 255, 255 ) );
-    SetIcon( ve_icon32x32_xpm );
+    SetIcon( ve_icon16x16_xpm );
 
     //Create the menu bar
     m_menuBar = new MenuBar();
@@ -62,37 +62,21 @@ void AppFrame::CreateGUI()
 	wxBoxSizer* mainSizer = new wxBoxSizer( wxHORIZONTAL );
 	
 	wxStaticBoxSizer* connectionsSizer =
-        new wxStaticBoxSizer(
-            new wxStaticBox( 
-                this, wxID_ANY, wxT( "Connections" ) ), wxHORIZONTAL );
+        new wxStaticBoxSizer( new wxStaticBox(
+            this, wxID_ANY, wxT( "Database Connections" ) ), wxHORIZONTAL );
+    mainSizer->Add( connectionsSizer, 1, wxEXPAND | wxLEFT | wxRIGHT, 5 );
 	
 	m_connectionsTreeCtrl =
         new wxTreeCtrl(
-            this, wxID_ANY, wxDefaultPosition, wxDefaultSize,
-            wxTR_DEFAULT_STYLE | wxHSCROLL | wxNO_BORDER | wxVSCROLL );
+            this, wxID_ANY,
+            wxDefaultPosition, wxDefaultSize,
+            wxTR_DEFAULT_STYLE | wxHSCROLL | wxRAISED_BORDER | wxVSCROLL );
 	m_connectionsTreeCtrl->SetBackgroundColour( wxColour( 255, 255, 255 ) );
+	connectionsSizer->Add( m_connectionsTreeCtrl, 1, wxEXPAND | wxTOP, 5 );
 	
-	connectionsSizer->Add( m_connectionsTreeCtrl, 0, wxALL | wxEXPAND, 5 );
-	
-	mainSizer->Add( connectionsSizer, 0, wxALL | wxEXPAND, 5 );
-	
-	wxBoxSizer* notebookSizer = new wxBoxSizer( wxVERTICAL );
-	
-	wxNotebook* notebook =
-        new wxNotebook( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0 );
-	notebook->SetBackgroundColour( wxColour( 255, 255, 255 ) );
-	
-	wxPanel* tempPanel =
-        new wxPanel(
-            notebook, wxID_ANY, wxDefaultPosition, wxDefaultSize,
-            wxTAB_TRAVERSAL );
-	tempPanel->SetBackgroundColour( wxColour( 255, 255, 255 ) );
-	
-	notebook->AddPage( tempPanel, wxT( "Tab 1" ), true );
-	
-	notebookSizer->Add( notebook, 1, wxEXPAND  |  wxALL, 5 );
-	
-	mainSizer->Add( notebookSizer, 1, wxALL | wxEXPAND, 5 );
+    //Create the notebook
+	m_notebook = new Notebook( this );
+	mainSizer->Add( m_notebook, 3, wxEXPAND | wxLEFT, 5 );
 	
 	SetSizer( mainSizer );
 	Layout();

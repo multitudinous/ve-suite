@@ -5,6 +5,7 @@
 // --- VE-Suite Includes --- //
 class MenuBar;
 class ToolBar;
+class Notebook;
 class ConnectionDialog;
 
 // --- wxWidgets Includes --- //
@@ -31,18 +32,19 @@ public:
     ///Destructor
     virtual ~AppFrame();
 
-    ///
-    void OpenConnectionDialog( wxCommandEvent& event );
-
 protected:
 
 private:
     ///
     void CreateGUI();
 
+    ///
+    void OpenConnectionDialog( wxCommandEvent& event );
+
     MenuBar* m_menuBar;
     ToolBar* m_toolBar;
     ConnectionDialog* m_connectionDialog;
+    Notebook* m_notebook;
 
     wxTreeCtrl* m_connectionsTreeCtrl;
     

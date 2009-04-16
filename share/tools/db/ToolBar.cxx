@@ -1,14 +1,12 @@
 
 // --- VE-Suite Includes --- //
-//Don't move AppFrame.h below ToolBar.h
-#include "AppFrame.h"
 #include "ToolBar.h"
 #include "DBAppEnums.h"
 
-#include <ves/conductor/xpm/ToolBar/NewDocumentButton.xpm>
+#include "xpm/ToolBar/AddConnection.xpm"
 
 BEGIN_EVENT_TABLE( ToolBar, wxToolBar )
-EVT_MENU( TOOLBAR_OPEN_CONNECTION_DIALOG, ToolBar::OpenConnectionDialog )
+
 END_EVENT_TABLE()
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -19,7 +17,7 @@ ToolBar::ToolBar( wxWindow* parent )
         wxID_ANY,
         wxDefaultPosition,
         wxDefaultSize,
-        wxNO_BORDER | wxTB_HORIZONTAL,
+        wxNO_BORDER | wxTB_VERTICAL,
         wxT( "ToolBar" ) )
 {
     LoadToolBarBitmaps();
@@ -33,8 +31,8 @@ ToolBar::~ToolBar()
 ////////////////////////////////////////////////////////////////////////////////
 void ToolBar::LoadToolBarBitmaps()
 {
-    mToolbarBitmaps[ std::string( "newBitmap" )] =
-        wxBitmap( NewDocumentButton_xpm );
+    mToolbarBitmaps[ "addConnectionBitmap" ] =
+        wxBitmap( AddConnection_xpm );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void ToolBar::CreateGUI()
@@ -45,16 +43,11 @@ void ToolBar::CreateGUI()
 
     AddTool(
         TOOLBAR_OPEN_CONNECTION_DIALOG, wxT( "" ),
-        mToolbarBitmaps[ "newBitmap" ],
+        mToolbarBitmaps[ "addConnectionBitmap" ],
         wxT( "Add Connection" ), wxITEM_NORMAL );
 
 	Realize();
 
     //EnableTool( MAINTOOLBAR_CHARACTER, false );
-}
-////////////////////////////////////////////////////////////////////////////////
-void ToolBar::OpenConnectionDialog( wxCommandEvent& event )
-{
-    static_cast< AppFrame* >( GetParent() )->OpenConnectionDialog( event );
 }
 ////////////////////////////////////////////////////////////////////////////////

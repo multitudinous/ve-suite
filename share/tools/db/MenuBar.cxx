@@ -1,7 +1,5 @@
 
 // --- VE-Suite Includes --- //
-//Don't move AppFrame.h below ToolBar.h
-#include "AppFrame.h"
 #include "MenuBar.h"
 #include "DBAppEnums.h"
 
