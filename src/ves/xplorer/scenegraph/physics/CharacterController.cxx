@@ -60,7 +60,7 @@
 // --- C/C++ Libraries --- //
 #include <iostream>
 
-#define VES_USE_ANIMATED_CHARACTER 1
+//#define VES_USE_ANIMATED_CHARACTER 1
 
 using namespace ves::xplorer::scenegraph;
 namespace vxs = ves::xplorer::scenegraph;
