@@ -8,7 +8,7 @@
 #include <wx/dialog.h>
 
 class wxTextCtrl;
-class wxComboBox;
+class wxChoice;
 
 // --- C/C++ Includes --- //
 
@@ -18,7 +18,7 @@ class wxComboBox;
  */
 
 /*!\class ConnectionDialog
- * wx dialog for connecting to a db
+ * wx dialog for connecting to a database
  */
 class ConnectionDialog : public wxDialog
 {
@@ -36,7 +36,7 @@ private:
     void CreateGUI();
 
     wxTextCtrl* m_connectionNameTextCtrl;
-    wxComboBox* m_connectionTypeComboBox;
+    wxChoice* m_connectionTypeChoice;
     wxTextCtrl* m_hostTextCtrl;
     wxTextCtrl* m_portTextCtrl;
     wxTextCtrl* m_usernameTextCtrl;

@@ -1,26 +1,26 @@
 
-#ifndef MENU_BAR_H
-#define MENU_BAR_H
+#ifndef APP_MENU_BAR_H
+#define APP_MENU_BAR_H
 
 // --- wxWidgets Includes --- //
 #include <wx/menu.h>
 
 // --- C/C++ Libraries --- //
 
-/*!\file MenuBar.h
+/*!\file AppMenuBar.h
  */
 
-/*!\class MenuBar
+/*!\class AppMenuBar
  *
  */
-class MenuBar : public wxMenuBar
+class AppMenuBar : public wxMenuBar
 {
 public:
     ///Constructor
-    MenuBar();
+    AppMenuBar();
 
     ///Destructor
-    virtual ~MenuBar();
+    virtual ~AppMenuBar();
 
 protected:
 
@@ -34,4 +34,4 @@ private:
     DECLARE_EVENT_TABLE()
 };
 
-#endif //MENU_BAR_H
+#endif //APP_MENU_BAR_H

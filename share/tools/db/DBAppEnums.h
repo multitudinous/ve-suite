@@ -4,8 +4,18 @@
     
 enum
 {
-    //ToolBar.h
+    //AppFrame.h
+
+    //AppMenuBar.h
+
+    //AppToolBar.h
     TOOLBAR_OPEN_CONNECTION_DIALOG
+
+    //AppTreeCtrl.h
+
+    //AppNotebook.h
+
+    //ConnectionDialog.h
     
 };
 

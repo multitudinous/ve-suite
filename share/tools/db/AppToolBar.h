@@ -1,6 +1,6 @@
 
-#ifndef TOOL_BAR_H
-#define TOOL_BAR_H
+#ifndef APP_TOOL_BAR_H
+#define APP_TOOL_BAR_H
 
 // --- wxWidgets Includes --- //
 #include <wx/toolbar.h>
@@ -9,26 +9,26 @@
 #include <map>
 #include <string>
 
-/*!\file ToolBar.h
+/*!\file AppToolBar.h
  */
 
-/*!\class ToolBar
+/*!\class AppToolBar
  *
  */
-class ToolBar : public wxToolBar
+class AppToolBar : public wxToolBar
 {
 public:
     ///Constructor
-    ToolBar( wxWindow* parent );
+    AppToolBar( wxWindow* parent );
 
     ///Destructor
-    virtual ~ToolBar();
+    virtual ~AppToolBar();
 
 protected:
 
 private:
     ///Loads and stores the xpm images into a std::map for this toolbar
-    void LoadToolBarBitmaps();
+    void LoadBitmaps();
 
     ///Adds the tools to the toolbar
     void CreateGUI();
@@ -39,4 +39,4 @@ private:
     DECLARE_EVENT_TABLE()
 };
 
-#endif //TOOL_BAR_H
+#endif //APP_TOOL_BAR_H

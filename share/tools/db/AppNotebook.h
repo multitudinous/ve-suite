@@ -1,31 +1,34 @@
 
-#ifndef NOTEBOOK_H
-#define NOTEBOOK_H
+#ifndef APP_NOTEBOOK_H
+#define APP_NOTEBOOK_H
 
 // --- wxWidgets Includes --- //
 #include <wx/notebook.h>
 
 class wxPanel;
 
-/*!\file Notebook.h
+/*!\file AppNotebook.h
  *
  */
 
-/*!\class Notebook
+/*!\class AppNotebook
  *
  */
-class Notebook : public wxNotebook
+class AppNotebook : public wxNotebook
 {
 public:
     ///Constructor
-    Notebook( wxWindow* parent );
+    AppNotebook( wxWindow* parent );
 
     ///Destructor
-    virtual ~Notebook();
+    virtual ~AppNotebook();
 
 protected:
 
 private:
+    ///Loads and stores the images for this notebook
+    void LoadImages();
+
     ///Adds the tools to the toolbar
     void CreateGUI();
 
@@ -36,4 +39,4 @@ private:
     DECLARE_EVENT_TABLE()
 };
 
-#endif //NOTEBOOK_H
+#endif //APP_NOTEBOOK_H

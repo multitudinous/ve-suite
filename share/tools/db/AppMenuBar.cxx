@@ -1,14 +1,14 @@
 
 // --- VE-Suite Includes --- //
-#include "MenuBar.h"
+#include "AppMenuBar.h"
 #include "DBAppEnums.h"
 
-BEGIN_EVENT_TABLE( MenuBar, wxMenuBar )
+BEGIN_EVENT_TABLE( AppMenuBar, wxMenuBar )
 
 END_EVENT_TABLE()
 
 ////////////////////////////////////////////////////////////////////////////////
-MenuBar::MenuBar()
+AppMenuBar::AppMenuBar()
     :
     wxMenuBar(),
     m_fileMenu( NULL ),
@@ -17,12 +17,12 @@ MenuBar::MenuBar()
     CreateGUI();
 }
 ////////////////////////////////////////////////////////////////////////////////
-MenuBar::~MenuBar()
+AppMenuBar::~AppMenuBar()
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void MenuBar::CreateGUI()
+void AppMenuBar::CreateGUI()
 {
 	SetBackgroundColour( wxColour( 255, 255, 255 ) );
 	

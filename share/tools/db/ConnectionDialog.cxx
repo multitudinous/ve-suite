@@ -5,11 +5,10 @@
 // --- wxWidgets Includes --- //
 #include <wx/sizer.h>
 #include <wx/textctrl.h>
-#include <wx/combobox.h>
+#include <wx/choice.h>
 #include <wx/statbox.h>
 #include <wx/stattext.h>
 #include <wx/button.h>
-#include <wx/treectrl.h>
 
 // --- C/C++ Libraries --- //
 
@@ -26,10 +25,10 @@ ConnectionDialog::ConnectionDialog( wxWindow* parent )
         wxT( "Add a Connection" ),
         wxDefaultPosition,
         wxSize( -1, -1 ),
-        wxCAPTION | wxCLOSE_BOX | wxMAXIMIZE_BOX |
-        wxMINIMIZE_BOX | wxRESIZE_BORDER | wxSTAY_ON_TOP | wxSYSTEM_MENU ),
+        wxCAPTION | wxCLOSE_BOX |
+        wxMINIMIZE_BOX | wxSTAY_ON_TOP | wxSYSTEM_MENU ),
     m_connectionNameTextCtrl( NULL ),
-    m_connectionTypeComboBox( NULL ),
+    m_connectionTypeChoice( NULL ),
     m_hostTextCtrl( NULL ),
     m_portTextCtrl( NULL ),
     m_usernameTextCtrl( NULL ),
@@ -81,13 +80,16 @@ void ConnectionDialog::CreateGUI()
 	connectionTypeSizer->Add(
         connectionTypeStaticText, 1, wxALL | wxEXPAND, 5 );
 	
-	m_connectionTypeComboBox =
-        new wxComboBox(
-            this, wxID_ANY, wxT( "MySQL" ),
-            wxDefaultPosition, wxDefaultSize, 0, NULL, 0 );
-	m_connectionTypeComboBox->Append( wxT( "MySQL" ) );
-	connectionTypeSizer->Add(
-        m_connectionTypeComboBox, 1, wxALL | wxEXPAND, 5 );
+	wxString m_connectionTypeChoiceChoices[] = { wxT( "MySQL" ) };
+	int m_connectionTypeChoiceNChoices =
+        sizeof( m_connectionTypeChoiceChoices ) / sizeof( wxString );
+	m_connectionTypeChoice =
+        new wxChoice(
+            this, wxID_ANY,
+            wxDefaultPosition, wxDefaultSize,
+            m_connectionTypeChoiceNChoices, m_connectionTypeChoiceChoices, 0 );
+	m_connectionTypeChoice->SetSelection( 0 );
+	connectionTypeSizer->Add( m_connectionTypeChoice, 1, wxALL | wxEXPAND, 5 );
 	
 	addConnectionSizer->Add( connectionTypeSizer, 1, wxALL | wxEXPAND, 5 );
 	

@@ -1,41 +1,41 @@
 
 // --- VE-Suite Includes --- //
-#include "ToolBar.h"
+#include "AppToolBar.h"
 #include "DBAppEnums.h"
 
 #include "xpm/ToolBar/AddConnection.xpm"
 
-BEGIN_EVENT_TABLE( ToolBar, wxToolBar )
+BEGIN_EVENT_TABLE( AppToolBar, wxToolBar )
 
 END_EVENT_TABLE()
 
 ////////////////////////////////////////////////////////////////////////////////
-ToolBar::ToolBar( wxWindow* parent )
+AppToolBar::AppToolBar( wxWindow* parent )
     :
     wxToolBar(
         parent,
         wxID_ANY,
         wxDefaultPosition,
         wxDefaultSize,
-        wxNO_BORDER | wxTB_VERTICAL,
+        wxTB_FLAT | wxTB_NODIVIDER | wxTB_VERTICAL | wxNO_BORDER,
         wxT( "ToolBar" ) )
 {
-    LoadToolBarBitmaps();
+    LoadBitmaps();
     CreateGUI();
 }
 ////////////////////////////////////////////////////////////////////////////////
-ToolBar::~ToolBar()
+AppToolBar::~AppToolBar()
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void ToolBar::LoadToolBarBitmaps()
+void AppToolBar::LoadBitmaps()
 {
     mToolbarBitmaps[ "addConnectionBitmap" ] =
         wxBitmap( AddConnection_xpm );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void ToolBar::CreateGUI()
+void AppToolBar::CreateGUI()
 {
     SetBackgroundColour( wxColour( 255, 255, 255 ) );
     SetToolBitmapSize( wxSize( 32, 32 ) );

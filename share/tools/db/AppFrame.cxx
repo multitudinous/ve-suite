@@ -1,9 +1,10 @@
 
 // --- VE-Suite Includes --- //
 #include "AppFrame.h"
-#include "MenuBar.h"
-#include "ToolBar.h"
-#include "Notebook.h"
+#include "AppMenuBar.h"
+#include "AppToolBar.h"
+#include "AppTreeCtrl.h"
+#include "AppNotebook.h"
 #include "ConnectionDialog.h"
 #include "DBAppEnums.h"
 
@@ -13,10 +14,6 @@
 #include <wx/icon.h>
 #include <wx/sizer.h>
 #include <wx/statbox.h>
-#include <wx/treectrl.h>
-
-// --- C/C++ Libraries --- //
-
 
 BEGIN_EVENT_TABLE( AppFrame, wxFrame )
 EVT_MENU( TOOLBAR_OPEN_CONNECTION_DIALOG, AppFrame::OpenConnectionDialog )
@@ -32,10 +29,11 @@ AppFrame::AppFrame( wxWindow* parent, wxWindowID id )
         wxDefaultPosition,
         wxSize( 800, 600 ),
         wxDEFAULT_FRAME_STYLE ),
-    m_menuBar( NULL ),
-    m_toolBar( NULL ),
-    m_connectionDialog( NULL ),
-    m_connectionsTreeCtrl( NULL )
+    m_appMenuBar( NULL ),
+    m_appToolBar( NULL ),
+    m_appTreeCtrl( NULL ),
+    m_appNotebook( NULL ),
+    m_connectionDialog( NULL )
 {
     CreateGUI();
 }
@@ -51,32 +49,35 @@ void AppFrame::CreateGUI()
 	SetBackgroundColour( wxColour( 255, 255, 255 ) );
     SetIcon( ve_icon16x16_xpm );
 
+    //Create the main sizer
+    wxBoxSizer* mainSizer = new wxBoxSizer( wxHORIZONTAL );
+
     //Create the menu bar
-    m_menuBar = new MenuBar();
-    SetMenuBar( m_menuBar );
+    m_appMenuBar = new AppMenuBar();
+    SetMenuBar( m_appMenuBar );
+
+    //Create a vertical sizer
+    wxBoxSizer* verticalSizer = new wxBoxSizer( wxVERTICAL );
+    mainSizer->Add( verticalSizer, 1, wxALL | wxEXPAND, 5 );
 
     //Create the tool bar
-    m_toolBar = new ToolBar( this );
-    SetToolBar( m_toolBar );
+    m_appToolBar = new AppToolBar( this );
+    //SetToolBar( m_appToolBar );
+    verticalSizer->Add( m_appToolBar, 0, wxEXPAND, 5 );
 
-	wxBoxSizer* mainSizer = new wxBoxSizer( wxHORIZONTAL );
-	
+    //Create the wxStaticBoxSizer and AppTreeCtrl sizer
 	wxStaticBoxSizer* connectionsSizer =
         new wxStaticBoxSizer( new wxStaticBox(
-            this, wxID_ANY, wxT( "Database Connections" ) ), wxHORIZONTAL );
-    mainSizer->Add( connectionsSizer, 1, wxEXPAND | wxLEFT | wxRIGHT, 5 );
+            this, wxID_ANY, wxT( "Database Connections" ) ), wxVERTICAL );
+    verticalSizer->Add( connectionsSizer, 1, wxALL | wxEXPAND, 5 );
 	
-	m_connectionsTreeCtrl =
-        new wxTreeCtrl(
-            this, wxID_ANY,
-            wxDefaultPosition, wxDefaultSize,
-            wxTR_DEFAULT_STYLE | wxHSCROLL | wxRAISED_BORDER | wxVSCROLL );
-	m_connectionsTreeCtrl->SetBackgroundColour( wxColour( 255, 255, 255 ) );
-	connectionsSizer->Add( m_connectionsTreeCtrl, 1, wxEXPAND | wxTOP, 5 );
+    //Create the tree control
+	m_appTreeCtrl = new AppTreeCtrl( this );
+	connectionsSizer->Add( m_appTreeCtrl, 1, wxEXPAND, 5 );
 	
     //Create the notebook
-	m_notebook = new Notebook( this );
-	mainSizer->Add( m_notebook, 3, wxEXPAND | wxLEFT, 5 );
+	m_appNotebook = new AppNotebook( this );
+	mainSizer->Add( m_appNotebook, 3, wxEXPAND, 5 );
 	
 	SetSizer( mainSizer );
 	Layout();

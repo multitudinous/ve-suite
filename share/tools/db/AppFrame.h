@@ -3,17 +3,14 @@
 #define APP_FRAME_H
 
 // --- VE-Suite Includes --- //
-class MenuBar;
-class ToolBar;
-class Notebook;
+class AppMenuBar;
+class AppToolBar;
+class AppTreeCtrl;
+class AppNotebook;
 class ConnectionDialog;
 
 // --- wxWidgets Includes --- //
 #include <wx/frame.h>
-
-class wxTreeCtrl;
-
-// --- C/C++ Includes --- //
 
 
 /*!\file AppFrame.h
@@ -21,7 +18,7 @@ class wxTreeCtrl;
  */
 
 /*!\class AppFrame
- * Main wx frame for db
+ * Main wxFrame for DBApp
  */
 class AppFrame : public wxFrame
 {
@@ -41,12 +38,11 @@ private:
     ///
     void OpenConnectionDialog( wxCommandEvent& event );
 
-    MenuBar* m_menuBar;
-    ToolBar* m_toolBar;
+    AppMenuBar* m_appMenuBar;
+    AppToolBar* m_appToolBar;
+    AppTreeCtrl* m_appTreeCtrl;
+    AppNotebook* m_appNotebook;
     ConnectionDialog* m_connectionDialog;
-    Notebook* m_notebook;
-
-    wxTreeCtrl* m_connectionsTreeCtrl;
     
     DECLARE_EVENT_TABLE()
 
