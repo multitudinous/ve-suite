@@ -262,7 +262,7 @@ apu_options = fp_option.FlagPollBasedOption("Apache Portable Runtime Utils",
 #                                               "bullet", "0.1", True, True, helpText=None, compileTest=True,
 #                                               headerToCheck="btBulletCollisionCommon.h")
 bulletVersion = (int(2), int(74))
-bulletBaseVar = 'bullet-1610'
+bulletBaseVar = 'bullet-2.74'
 
 tao_options = fp_option.FlagPollBasedOption("ACE TAO libraries",
                      "ACE TAO_Valuetype TAO_CosNaming TAO_Svc_Utils TAO_IORTable TAO_Messaging TAO_PortableServer TAO_BiDirGIOP TAO_AnyTypeCode TAO",
@@ -571,7 +571,7 @@ if not SConsAddons.Util.hasHelpFlag():
 
    #build applications in test/ directory
    if baseEnv[ 'buildTests' ] == 'yes':
-      testDir = [ pj(buildDir,'test','testNURBS'),  pj(buildDir,'test','vtk') ]
+      testDir = [test] #[ pj(buildDir,'test','testNURBS'),  pj(buildDir,'test','vtk') ]
       ves_dirs.append( testDir )
 
    # freeze the python code
