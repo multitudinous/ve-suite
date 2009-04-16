@@ -365,7 +365,7 @@ void wxFixWidthImportCtrl::OnPaint(wxPaintEvent& event)
 void wxFixWidthImportCtrl::DrawDelimiter(wxDC* dc, wxCoord x, int modeFunc)
 {
     //Select the appropriate dc
-    wxClientDC *pDC = (wxClientDC*) NULL;
+    wxDC *pDC = NULL;
 
     if ( modeFunc == wxINVERT || modeFunc == wxXOR )
         pDC = wxDynamicCast(dc, wxClientDC);
