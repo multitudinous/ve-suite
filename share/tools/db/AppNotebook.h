@@ -26,9 +26,6 @@ public:
 protected:
 
 private:
-    ///Loads and stores the images for this notebook
-    void LoadImages();
-
     ///Adds the tools to the toolbar
     void CreateGUI();
 

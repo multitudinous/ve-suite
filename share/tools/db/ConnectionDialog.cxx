@@ -25,7 +25,7 @@ ConnectionDialog::ConnectionDialog( wxWindow* parent )
         wxID_ANY,
         wxT( "Add a Connection" ),
         wxDefaultPosition,
-        wxSize( 400, 300 ),
+        wxSize( 500, 300 ),
         wxCAPTION | wxCLOSE_BOX |
         wxMINIMIZE_BOX | wxSTAY_ON_TOP | wxSYSTEM_MENU ),
     m_storedConnectionComboBox( NULL ),

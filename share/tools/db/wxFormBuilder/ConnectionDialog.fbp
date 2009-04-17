@@ -32,7 +32,7 @@
             <property name="minimum_size"></property>
             <property name="name">ConnectionDialog</property>
             <property name="pos"></property>
-            <property name="size">400,300</property>
+            <property name="size">500,300</property>
             <property name="style">wxCAPTION|wxCLOSE_BOX|wxMINIMIZE_BOX|wxSTAY_ON_TOP|wxSYSTEM_MENU</property>
             <property name="subclass"></property>
             <property name="title">Add a Connection</property>

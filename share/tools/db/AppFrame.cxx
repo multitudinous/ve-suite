@@ -56,20 +56,15 @@ void AppFrame::CreateGUI()
     m_appMenuBar = new AppMenuBar();
     SetMenuBar( m_appMenuBar );
 
-    //Create a vertical sizer
-    wxBoxSizer* verticalSizer = new wxBoxSizer( wxVERTICAL );
-    mainSizer->Add( verticalSizer, 1, wxALL | wxEXPAND, 5 );
-
     //Create the tool bar
     m_appToolBar = new AppToolBar( this );
-    //SetToolBar( m_appToolBar );
-    verticalSizer->Add( m_appToolBar, 0, wxEXPAND, 5 );
+    SetToolBar( m_appToolBar );
 
     //Create the wxStaticBoxSizer and AppTreeCtrl sizer
 	wxStaticBoxSizer* connectionsSizer =
         new wxStaticBoxSizer( new wxStaticBox(
             this, wxID_ANY, wxT( "Database Connections" ) ), wxVERTICAL );
-    verticalSizer->Add( connectionsSizer, 1, wxALL | wxEXPAND, 5 );
+    mainSizer->Add( connectionsSizer, 1, wxEXPAND | wxLEFT | wxTOP, 5 );
 	
     //Create the tree control
 	m_appTreeCtrl = new AppTreeCtrl( this );
@@ -77,7 +72,7 @@ void AppFrame::CreateGUI()
 	
     //Create the notebook
 	m_appNotebook = new AppNotebook( this );
-	mainSizer->Add( m_appNotebook, 3, wxEXPAND, 5 );
+	mainSizer->Add( m_appNotebook, 3, wxEXPAND | wxTOP, 12 );
 	
 	SetSizer( mainSizer );
 	Layout();

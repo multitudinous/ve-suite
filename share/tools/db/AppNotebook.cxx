@@ -3,11 +3,8 @@
 #include "AppNotebook.h"
 #include "DBAppEnums.h"
 
-#include "xpm/ToolBar/AddConnection.xpm"
-
 // --- wxWidgets Includes --- //
 #include <wx/panel.h>
-#include <wx/imaglist.h>
 
 BEGIN_EVENT_TABLE( AppNotebook, wxNotebook )
 
@@ -21,9 +18,8 @@ AppNotebook::AppNotebook( wxWindow* parent )
         wxID_ANY,
         wxDefaultPosition,
         wxDefaultSize,
-        wxNB_FIXEDWIDTH | wxNB_TOP )
+        wxNB_FIXEDWIDTH | wxNB_RIGHT )
 {
-    LoadImages();
     CreateGUI();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -32,21 +28,9 @@ AppNotebook::~AppNotebook()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AppNotebook::LoadImages()
-{
-    wxImageList* imageList = new wxImageList( 16, 16 );
-    imageList->Add( wxBitmap( AddConnection_xpm ) );
-    imageList->Add( wxBitmap( AddConnection_xpm ) );
-    imageList->Add( wxBitmap( AddConnection_xpm ) );
-
-    AssignImageList( imageList );
-}
-////////////////////////////////////////////////////////////////////////////////
 void AppNotebook::CreateGUI()
 {
-    //If not called, notebook bg color doesn't work right when switching themes
-    SetBackgroundColour( GetThemeBackgroundColour() );
-    //SetBackgroundColour( wxColour( 255, 255, 255 ) );
+    SetBackgroundColour( wxColour( 255, 255, 255 ) );
 
     m_tableDetailsPanel =
         new wxPanel(
@@ -71,10 +55,5 @@ void AppNotebook::CreateGUI()
             wxTAB_TRAVERSAL );
     m_sqlPanel->SetBackgroundColour( wxColour( 255, 255, 255 ) );
     AddPage( m_sqlPanel, wxT( "SQL" ), false );
-
-    //Add images to the panels
-    SetPageImage( 0, 0 );
-    SetPageImage( 1, 1 );
-    SetPageImage( 2, 2 );
 }
 ////////////////////////////////////////////////////////////////////////////////
