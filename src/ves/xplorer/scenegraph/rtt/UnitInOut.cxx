@@ -122,7 +122,7 @@ void UnitInOut::Initialize()
     mGeode->removeDrawables( 0, mGeode->getNumDrawables() );
     mGeode->addDrawable( mDrawable.get() );
     mGeode->setCullingActive( false );
-    
+    mGeode->setName( "unitinout" );
     AssignOutputTexture();
     AssignFBO();
 }

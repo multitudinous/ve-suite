@@ -40,6 +40,7 @@
 // --- OSG Includes --- //
 #include <osg/Group>
 #include <osg/Drawable>
+#include <osgUtil/CullVisitor>
 
 namespace osg
 {
@@ -175,6 +176,31 @@ protected:
     private:
         ///
         osg::ref_ptr< Unit > mParent;
+    };
+
+
+        ///This draw callback is used for customized drawing
+    class CullCallback : public osg::Drawable::CullCallback
+    {
+    public:
+        ///Default Constructor
+        CullCallback();
+
+        ///Copy Constructor
+        CullCallback(
+            const CullCallback& drawCallback,
+            const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
+
+            virtual bool cull(osg::NodeVisitor*, osg::Drawable*, osg::State*) const;
+        ///
+        META_Object( rtt, CullCallback );
+            virtual bool cull(osg::NodeVisitor* nv, osg::Drawable* drawable, osg::RenderInfo* renderInfo) const;
+
+    protected:
+        ///Destructor
+        virtual ~CullCallback();
+
+    private:
     };
 
     ///Use this method in derived classes to implement unit specific uniforms

@@ -94,6 +94,32 @@ void Unit::DrawCallback::drawImplementation(
     dr->drawImplementation( ri );
 }
 ////////////////////////////////////////////////////////////////////////////////
+Unit::CullCallback::CullCallback()
+{
+    ;
+}
+////////////////////////////////////////////////////////////////////////////////
+Unit::CullCallback::~CullCallback()
+{
+    ;
+}
+////////////////////////////////////////////////////////////////////////////////
+Unit::CullCallback::CullCallback(
+    const Unit::CullCallback& drawCallback, const osg::CopyOp& copyop )
+{
+    ;
+}
+////////////////////////////////////////////////////////////////////////////////
+bool Unit::CullCallback::cull(osg::NodeVisitor*, osg::Drawable*, osg::State*) const 
+{ return false; }
+////////////////////////////////////////////////////////////////////////////////
+bool Unit::CullCallback::cull(osg::NodeVisitor* nv, osg::Drawable* drawable, osg::RenderInfo* renderInfo) const 
+{ 
+    bool testFlag = static_cast< osgUtil::CullVisitor* >( nv )->isCulled( *drawable->getParent( 0 ) );
+    bool cullFalg = cull(nv, drawable, renderInfo? renderInfo->getState():0 );
+    return  cullFalg;
+}
+////////////////////////////////////////////////////////////////////////////////
 Unit::Unit()
     :
     osg::Group(),
