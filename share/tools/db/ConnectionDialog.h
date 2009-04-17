@@ -7,8 +7,9 @@
 // --- wxWidgets Includes --- //
 #include <wx/dialog.h>
 
-class wxTextCtrl;
+class wxComboBox;
 class wxChoice;
+class wxTextCtrl;
 
 // --- C/C++ Includes --- //
 
@@ -35,12 +36,13 @@ private:
     ///
     void CreateGUI();
 
-    wxTextCtrl* m_connectionNameTextCtrl;
+    wxComboBox* m_storedConnectionComboBox;
     wxChoice* m_connectionTypeChoice;
-    wxTextCtrl* m_hostTextCtrl;
+    wxTextCtrl* m_serverHostTextCtrl;
     wxTextCtrl* m_portTextCtrl;
     wxTextCtrl* m_usernameTextCtrl;
     wxTextCtrl* m_passwordTextCtrl;
+    wxTextCtrl* m_defaultSchemaTextCtrl;
 
     DECLARE_EVENT_TABLE();
 

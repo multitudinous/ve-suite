@@ -5,6 +5,7 @@
 // --- wxWidgets Includes --- //
 #include <wx/sizer.h>
 #include <wx/textctrl.h>
+#include <wx/combobox.h>
 #include <wx/choice.h>
 #include <wx/statbox.h>
 #include <wx/stattext.h>
@@ -24,15 +25,16 @@ ConnectionDialog::ConnectionDialog( wxWindow* parent )
         wxID_ANY,
         wxT( "Add a Connection" ),
         wxDefaultPosition,
-        wxSize( -1, -1 ),
+        wxSize( 400, 300 ),
         wxCAPTION | wxCLOSE_BOX |
         wxMINIMIZE_BOX | wxSTAY_ON_TOP | wxSYSTEM_MENU ),
-    m_connectionNameTextCtrl( NULL ),
+    m_storedConnectionComboBox( NULL ),
     m_connectionTypeChoice( NULL ),
-    m_hostTextCtrl( NULL ),
+    m_serverHostTextCtrl( NULL ),
     m_portTextCtrl( NULL ),
     m_usernameTextCtrl( NULL ),
-    m_passwordTextCtrl( NULL )
+    m_passwordTextCtrl( NULL ),
+    m_defaultSchemaTextCtrl( NULL )
 {
     CreateGUI();
 }
@@ -47,125 +49,142 @@ void ConnectionDialog::CreateGUI()
 	SetSizeHints( wxDefaultSize, wxDefaultSize );
 	SetBackgroundColour( wxColour( 255, 255, 255 ) );
 	
-	wxBoxSizer* mainSizer = new wxBoxSizer( wxVERTICAL );
+	wxBoxSizer* mainSizer;
+	mainSizer = new wxBoxSizer( wxVERTICAL );
 	
-	wxStaticBoxSizer* addConnectionSizer =
-        new wxStaticBoxSizer( new wxStaticBox(
-            this, wxID_ANY, wxT( "Add Connection" ) ), wxVERTICAL );
+	wxStaticBoxSizer* addConnectionSizer;
+	addConnectionSizer = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT( "Connect to Server Instance" ) ), wxVERTICAL );
 	
-	wxBoxSizer* connectionNameSizer = new wxBoxSizer( wxHORIZONTAL );
+	wxBoxSizer* storedConnectionSizer;
+	storedConnectionSizer = new wxBoxSizer( wxHORIZONTAL );
 	
-	wxStaticText* connectionNameStaticText =
-        new wxStaticText(
-            this, wxID_ANY, wxT( "Connection Name" ),
-            wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT );
-	connectionNameStaticText->Wrap( -1 );
-	connectionNameSizer->Add(
-        connectionNameStaticText, 1, wxALL | wxEXPAND, 5 );
+	wxStaticText* storedConnectionStaticText;
+	storedConnectionStaticText = new wxStaticText( this, wxID_ANY, wxT( "Stored Connection:" ), wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT );
+	storedConnectionStaticText->Wrap( -1 );
+	storedConnectionSizer->Add( storedConnectionStaticText, 2, wxALIGN_CENTER | wxALL, 5 );
 	
-	m_connectionNameTextCtrl = new wxTextCtrl(
-        this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	connectionNameSizer->Add(
-        m_connectionNameTextCtrl, 1, wxALL | wxEXPAND, 5 );
+	m_storedConnectionComboBox = new wxComboBox( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, NULL, 0 ); 
+	storedConnectionSizer->Add( m_storedConnectionComboBox, 4, wxALIGN_CENTER | wxALL, 5 );
 	
-	addConnectionSizer->Add( connectionNameSizer, 1, wxALL | wxEXPAND, 5 );
 	
-	wxBoxSizer* connectionTypeSizer = new wxBoxSizer( wxHORIZONTAL );
+	storedConnectionSizer->Add( 0, 0, 1, wxEXPAND, 5 );
 	
-	wxStaticText* connectionTypeStaticText =
-        new wxStaticText(
-            this, wxID_ANY, wxT( "Connection Type" ),
-            wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT );
+	addConnectionSizer->Add( storedConnectionSizer, 1, wxALL | wxEXPAND, 5 );
+	
+	wxBoxSizer* connectionTypeSizer;
+	connectionTypeSizer = new wxBoxSizer( wxHORIZONTAL );
+	
+	wxStaticText* connectionTypeStaticText;
+	connectionTypeStaticText = new wxStaticText( this, wxID_ANY, wxT( "Connection Type:" ), wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT );
 	connectionTypeStaticText->Wrap( -1 );
-	connectionTypeSizer->Add(
-        connectionTypeStaticText, 1, wxALL | wxEXPAND, 5 );
+	connectionTypeSizer->Add( connectionTypeStaticText, 2, wxALIGN_CENTER | wxALL, 5 );
 	
-	wxString m_connectionTypeChoiceChoices[] = { wxT( "MySQL" ) };
-	int m_connectionTypeChoiceNChoices =
-        sizeof( m_connectionTypeChoiceChoices ) / sizeof( wxString );
-	m_connectionTypeChoice =
-        new wxChoice(
-            this, wxID_ANY,
-            wxDefaultPosition, wxDefaultSize,
-            m_connectionTypeChoiceNChoices, m_connectionTypeChoiceChoices, 0 );
+	wxString m_connectionTypeChoiceChoices[] = { wxT( "MySQL" ), wxT( "Access" ) };
+	int m_connectionTypeChoiceNChoices = sizeof( m_connectionTypeChoiceChoices ) / sizeof( wxString );
+	m_connectionTypeChoice = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_connectionTypeChoiceNChoices, m_connectionTypeChoiceChoices, 0 );
 	m_connectionTypeChoice->SetSelection( 0 );
-	connectionTypeSizer->Add( m_connectionTypeChoice, 1, wxALL | wxEXPAND, 5 );
+	connectionTypeSizer->Add( m_connectionTypeChoice, 2, wxALIGN_CENTER | wxALL, 5 );
+	
+	
+	connectionTypeSizer->Add( 0, 0, 3, wxEXPAND, 5 );
 	
 	addConnectionSizer->Add( connectionTypeSizer, 1, wxALL | wxEXPAND, 5 );
 	
-	wxBoxSizer* hostSizer = new wxBoxSizer( wxHORIZONTAL );
+	wxBoxSizer* serverHostSizer;
+	serverHostSizer = new wxBoxSizer( wxHORIZONTAL );
 	
-	wxStaticText* hostStaticText =
-        new wxStaticText( this, wxID_ANY, wxT( "Host" ),
-        wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT );
-	hostStaticText->Wrap( -1 );
-	hostSizer->Add( hostStaticText, 1, wxALL | wxEXPAND, 5 );
+	wxStaticText* serverHostStaticText;
+	serverHostStaticText = new wxStaticText( this, wxID_ANY, wxT( "Server Host:" ), wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT );
+	serverHostStaticText->Wrap( -1 );
+	serverHostSizer->Add( serverHostStaticText, 2, wxALIGN_CENTER | wxALL, 5 );
 	
-	m_hostTextCtrl = new wxTextCtrl(
-        this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	hostSizer->Add( m_hostTextCtrl, 1, wxALL | wxEXPAND, 5 );
+	m_serverHostTextCtrl = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	serverHostSizer->Add( m_serverHostTextCtrl, 2, wxALIGN_CENTER | wxALL, 5 );
 	
-	addConnectionSizer->Add( hostSizer, 1, wxALL | wxEXPAND, 5 );
-	
-	wxBoxSizer* portSizer = new wxBoxSizer( wxHORIZONTAL );
-	
-	wxStaticText* portStaticText =
-        new wxStaticText(
-            this, wxID_ANY, wxT( "Port" ),
-            wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT );
+	wxStaticText* portStaticText;
+	portStaticText = new wxStaticText( this, wxID_ANY, wxT( "Port:" ), wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT );
 	portStaticText->Wrap( -1 );
-	portSizer->Add( portStaticText, 1, wxALL | wxEXPAND, 5 );
+	serverHostSizer->Add( portStaticText, 1, wxALIGN_CENTER | wxALL, 5 );
 	
-	m_portTextCtrl = new wxTextCtrl(
-        this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	portSizer->Add( m_portTextCtrl, 1, wxALL | wxEXPAND, 5 );
+	m_portTextCtrl = new wxTextCtrl( this, wxID_ANY, wxT( "3306" ), wxDefaultPosition, wxDefaultSize, 0 );
+	serverHostSizer->Add( m_portTextCtrl, 1, wxALIGN_CENTER | wxALL, 5 );
 	
-	addConnectionSizer->Add( portSizer, 1, wxALL | wxEXPAND, 5 );
 	
-	wxBoxSizer* usernameSizer = new wxBoxSizer( wxHORIZONTAL );
+	serverHostSizer->Add( 0, 0, 1, wxEXPAND, 5 );
 	
-	wxStaticText* usernameStaticText =
-        new wxStaticText(
-            this, wxID_ANY, wxT( "Username" ),
-            wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT );
+	addConnectionSizer->Add( serverHostSizer, 1, wxALL | wxEXPAND, 5 );
+	
+	wxBoxSizer* usernameSizer;
+	usernameSizer = new wxBoxSizer( wxHORIZONTAL );
+	
+	wxStaticText* usernameStaticText;
+	usernameStaticText = new wxStaticText( this, wxID_ANY, wxT( "Username:" ), wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT );
 	usernameStaticText->Wrap( -1 );
-	usernameSizer->Add( usernameStaticText, 1, wxALL | wxEXPAND, 5 );
+	usernameSizer->Add( usernameStaticText, 2, wxALIGN_CENTER | wxALL, 5 );
 	
-	m_usernameTextCtrl = new wxTextCtrl(
-        this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	usernameSizer->Add( m_usernameTextCtrl, 1, wxALL | wxEXPAND, 5 );
+	m_usernameTextCtrl = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	usernameSizer->Add( m_usernameTextCtrl, 2, wxALIGN_CENTER | wxALL, 5 );
+	
+	
+	usernameSizer->Add( 0, 0, 3, wxEXPAND, 5 );
 	
 	addConnectionSizer->Add( usernameSizer, 1, wxALL | wxEXPAND, 5 );
 	
-	wxBoxSizer* passwordSizer = new wxBoxSizer( wxHORIZONTAL );
+	wxBoxSizer* passwordSizer;
+	passwordSizer = new wxBoxSizer( wxHORIZONTAL );
 	
-	wxStaticText* passwordStaticText =
-        new wxStaticText(
-            this, wxID_ANY, wxT( "Password" ),
-            wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT );
+	wxStaticText* passwordStaticText;
+	passwordStaticText = new wxStaticText( this, wxID_ANY, wxT( "Password:" ), wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT );
 	passwordStaticText->Wrap( -1 );
-	passwordSizer->Add( passwordStaticText, 1, wxALL | wxEXPAND, 5 );
+	passwordSizer->Add( passwordStaticText, 2, wxALIGN_CENTER | wxALL, 5 );
 	
-	m_passwordTextCtrl = new wxTextCtrl(
-        this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	passwordSizer->Add( m_passwordTextCtrl, 1, wxALL | wxEXPAND, 5 );
+	m_passwordTextCtrl = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	passwordSizer->Add( m_passwordTextCtrl, 2, wxALIGN_CENTER | wxALL, 5 );
+	
+	
+	passwordSizer->Add( 0, 0, 3, wxEXPAND, 5 );
 	
 	addConnectionSizer->Add( passwordSizer, 1, wxALL | wxEXPAND, 5 );
 	
+	wxBoxSizer* connectionNameSizer;
+	connectionNameSizer = new wxBoxSizer( wxHORIZONTAL );
+	
+	wxStaticText* defaultSchemaStaticText;
+	defaultSchemaStaticText = new wxStaticText( this, wxID_ANY, wxT( "Default Schema:" ), wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT );
+	defaultSchemaStaticText->Wrap( -1 );
+	connectionNameSizer->Add( defaultSchemaStaticText, 2, wxALIGN_CENTER | wxALL, 5 );
+	
+	m_defaultSchemaTextCtrl = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	connectionNameSizer->Add( m_defaultSchemaTextCtrl, 2, wxALIGN_CENTER | wxALL, 5 );
+	
+	
+	connectionNameSizer->Add( 0, 0, 3, wxEXPAND, 5 );
+	
+	addConnectionSizer->Add( connectionNameSizer, 1, wxALL | wxEXPAND, 5 );
+	
 	mainSizer->Add( addConnectionSizer, 1, wxALL | wxEXPAND, 5 );
 	
-	wxStdDialogButtonSizer* stdDialogButtonSizer = new wxStdDialogButtonSizer();
-	wxButton* OK = new wxButton( this, wxID_OK );
-	wxButton* Cancel = new wxButton( this, wxID_CANCEL );
-	wxButton* Help = new wxButton( this, wxID_HELP );
-	stdDialogButtonSizer->AddButton( OK );
-	stdDialogButtonSizer->AddButton( Cancel );
-	stdDialogButtonSizer->AddButton( Help );
-	stdDialogButtonSizer->Realize();
-	mainSizer->Add( stdDialogButtonSizer, 0, wxALL | wxEXPAND, 5 );
+	wxBoxSizer* buttonSizer;
+	buttonSizer = new wxBoxSizer( wxHORIZONTAL );
+	
+	
+	buttonSizer->Add( 0, 0, 1, wxEXPAND, 5 );
+	
+	wxButton* okButton;
+	okButton = new wxButton( this, wxID_OK );
+	buttonSizer->Add( okButton, 0, wxALL, 5 );
+	
+	wxButton* clearButton;
+	clearButton = new wxButton( this, wxID_ANY, wxT( "Clear" ), wxDefaultPosition, wxDefaultSize, 0 );
+	buttonSizer->Add( clearButton, 0, wxALL, 5 );
+	
+	wxButton* cancelButton;
+	cancelButton = new wxButton( this, wxID_CANCEL );
+	buttonSizer->Add( cancelButton, 0, wxALL, 5 );
+	
+	mainSizer->Add( buttonSizer, 0, wxEXPAND, 5 );
 	
 	SetSizer( mainSizer );
 	Layout();
-	mainSizer->Fit( this );
 }
 ////////////////////////////////////////////////////////////////////////////////
