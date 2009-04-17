@@ -504,7 +504,7 @@ void Unit::CreateTexturedQuadDrawable(
     quadGeometry->addPrimitiveSet( new osg::DrawArrays(
         osg::PrimitiveSet::QUADS, 0, quadVertices->size() ) );
     quadGeometry->setTexCoordArray( 0, quadTexCoords.get() );
-    quadGeometry->setUseDisplayList( false );
+    quadGeometry->setUseDisplayList( true );
     quadGeometry->setColorBinding( osg::Geometry::BIND_OFF );
 
     //Set the stateset for the quad
@@ -515,7 +515,13 @@ void Unit::CreateTexturedQuadDrawable(
         osg::StateAttribute::OFF | osg::StateAttribute::PROTECTED );
 
     quadGeometry->setDrawCallback( new Unit::DrawCallback( this ) );
-
+    /*osg::Vec3 maxCorner( corner + widthVec + heightVec );
+    osg::Vec3 minCorner( corner );
+    minCorner[ 2 ] -= 1;
+    maxCorner[ 2 ] += 1;
+    osg::BoundingBox bbox( minCorner,  maxCorner );
+    quadGeometry->setInitialBound( bbox );*/
+    //quadGeometry->setComputeBoundingBoxCallback( ComputeBoundingBoxCallback *callback )
     mDrawable = quadGeometry;
 }
 ////////////////////////////////////////////////////////////////////////////////

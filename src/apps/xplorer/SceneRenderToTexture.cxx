@@ -186,13 +186,8 @@ void SceneRenderToTexture::InitScene( osg::Camera* const sceneViewCamera )
         processor->getOrCreateStateSet()->setRenderBinDetails(
             100, std::string( "RenderBin" ) );
 
-    osg::ref_ptr< osg::ClearNode > m_clrNode = new osg::ClearNode();
-    m_clrNode->setRequiresClear( true );
-    m_clrNode->setClearColor( osg::Vec4( 0.0f, 1.0f, 0.0f, 1.0f ) );
-    m_clrNode->setName( "Clear Node - Control ClearColor" );
-        m_clrNode->addChild( mRootGroup.get() );
         //Add the scenegraph to the camera    
-        camera->addChild( m_clrNode.get() );
+        camera->addChild( mRootGroup.get() );
         camera->addChild( processor.get() );
 
         //Setup a post-processing pipeline for each viewport per context
@@ -220,6 +215,7 @@ osg::Camera* SceneRenderToTexture::CreatePipelineCamera(
     tempCamera->setViewport( viewport );
     tempCamera->setViewMatrix( osg::Matrix::identity() );
     tempCamera->setProjectionMatrix( osg::Matrix::identity() );
+    tempCamera->setComputeNearFarMode( osg::CullSettings::DO_NOT_COMPUTE_NEAR_FAR );
     tempCamera->setCullingActive( false );
 
     std::pair< int, int > viewportDimensions = 
@@ -350,7 +346,6 @@ vxsr::Processor* SceneRenderToTexture::CreatePipelineProcessor(
 
     vxsr::Processor* tempProcessor = new vxsr::Processor();
     tempProcessor->SetCamera( camera );
-    tempProcessor->setCullingActive( false );
 
     //COLOR_BUFFER0 bypass
     osg::ref_ptr< vxsr::UnitCameraAttachmentBypass > colorBuffer0 =
@@ -359,11 +354,10 @@ vxsr::Processor* SceneRenderToTexture::CreatePipelineProcessor(
         colorBuffer0->setName( "ColorBuffer0Bypass" );
         colorBuffer0->SetBufferComponent( osg::Camera::COLOR_BUFFER0 );
         colorBuffer0->SetInputTextureIndexForViewportReference( 0 );
-        colorBuffer0->setCullingActive( false );
     }
     tempProcessor->addChild( colorBuffer0.get() );
     colorBuffer0->Update();
-/*
+
     //COLOR_BUFFER1 bypass
     osg::ref_ptr< vxsr::UnitCameraAttachmentBypass > colorBuffer1 =
          new vxsr::UnitCameraAttachmentBypass();
@@ -371,7 +365,6 @@ vxsr::Processor* SceneRenderToTexture::CreatePipelineProcessor(
         colorBuffer1->setName( "ColorBuffer1Bypass" );
         colorBuffer1->SetBufferComponent( osg::Camera::COLOR_BUFFER1 );
         colorBuffer1->SetInputTextureIndexForViewportReference( 0 );
-        colorBuffer1->setCullingActive( false );
     }
     tempProcessor->addChild( colorBuffer1.get() );
     colorBuffer1->Update();
@@ -388,7 +381,6 @@ vxsr::Processor* SceneRenderToTexture::CreatePipelineProcessor(
         glowDownSample->setName( "GlowDownSample" );
         glowDownSample->SetFactorX( downsample );
         glowDownSample->SetFactorY( downsample );
-        glowDownSample->setCullingActive( false );
         //glowDownSample->SetInputTextureIndexForViewportReference( 0 );
     }
     colorBuffer1->addChild( glowDownSample.get() );
@@ -399,7 +391,6 @@ vxsr::Processor* SceneRenderToTexture::CreatePipelineProcessor(
     {
         //Set name and indicies
         blurX->setName( "BlurHorizontal" );
-        blurX->setCullingActive( false );
 
         osg::ref_ptr< vxsr::ShaderAttribute > gaussX =
             new vxsr::ShaderAttribute();
@@ -450,7 +441,6 @@ vxsr::Processor* SceneRenderToTexture::CreatePipelineProcessor(
     {
         //Set name and indicies
         blurY->setName( "BlurVertical" );
-        blurY->setCullingActive( false );
 
         osg::ref_ptr< vxsr::ShaderAttribute > gaussY =
             new vxsr::ShaderAttribute();
@@ -495,13 +485,12 @@ vxsr::Processor* SceneRenderToTexture::CreatePipelineProcessor(
     }
     blurX->addChild( blurY.get() );
     blurY->Update();
-*/
+
     //Perform final color operations and blends
     osg::ref_ptr< vxsr::UnitInOut > final = new vxsr::UnitInOut();
     {
         //Set name and indicies
         final->setName( "Final" );
-        final->setCullingActive( false );
 
         osg::ref_ptr< vxsr::ShaderAttribute > finalShader =
             new vxsr::ShaderAttribute();
@@ -527,9 +516,9 @@ vxsr::Processor* SceneRenderToTexture::CreatePipelineProcessor(
         finalShader->set( "gloColor", osg::Vec4( 0.57255, 1.0, 0.34118, 1.0 ) );
 
         final->getOrCreateStateSet()->setAttributeAndModes( finalShader.get() );
-        final->SetInputToUniform( colorBuffer0.get(), "baseMap", true );
-        //final->SetInputToUniform( colorBuffer1.get(), "stencilGlowMap", false );
-        //final->SetInputToUniform( blurY.get(), "glowMap", true );
+        final->SetInputToUniform( colorBuffer0.get(), "baseMap", false );
+        final->SetInputToUniform( colorBuffer1.get(), "stencilGlowMap", false );
+        final->SetInputToUniform( blurY.get(), "glowMap", true );
         final->SetInputTextureIndexForViewportReference( 0 );
     }
     final->Update();
@@ -610,7 +599,7 @@ osg::Geode* SceneRenderToTexture::CreateTexturedQuad(
     quadGeometry->addPrimitiveSet( new osg::DrawArrays(
         osg::PrimitiveSet::QUADS, 0, quadVertices->size() ) );
     quadGeometry->setTexCoordArray( 0, quadTexCoords.get() );
-    quadGeometry->setUseDisplayList( false );
+    quadGeometry->setUseDisplayList( true );
 #ifndef VES_SRTT_DEBUG
     quadGeometry->setColorBinding( osg::Geometry::BIND_OFF );
 #else

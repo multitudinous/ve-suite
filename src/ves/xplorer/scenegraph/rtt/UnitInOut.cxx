@@ -280,6 +280,7 @@ void UnitInOut::AssignOutputTexture()
             mFBO->setAttachment( osg::Camera::BufferComponent(
                 osg::Camera::COLOR_BUFFER0 ),
                 osg::FrameBufferAttachment( texture2D ) );
+            return;
         }
 
         //Output texture type is not supported

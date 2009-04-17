@@ -276,7 +276,7 @@ void App::configSceneView( osgUtil::SceneView* newSceneViewer )
     newSceneViewer->setFrameStamp( mFrameStamp.get() );
 
     newSceneViewer->init();
-    newSceneViewer->setClearColor( osg::Vec4( 0.0f, 0.0f, 0.0f, 0.0f ) );
+    newSceneViewer->setClearColor( osg::Vec4( 1.0f, 0.0f, 0.0f, 1.0f ) );
 
     {
         vpr::Guard<vpr::Mutex> val_guard( mValueLock );
@@ -771,9 +771,6 @@ void App::draw()
     if( mRTT )
     {
         VPR_PROFILE_GUARD_HISTORY( "App::draw RTT Camera", 20 );
-        //mSceneRenderToTexture->UpdateRTTQuadAndViewport();
-        //vpr::Guard<vpr::Mutex> val_guard( mValueLock );
-
         mSceneRenderToTexture->ConfigureRTTCameras();
     }
 
@@ -786,19 +783,10 @@ void App::draw()
         VPR_PROFILE_GUARD_HISTORY( "App::draw sv->cull", 20 );
         //Not sure if it should be used - came from osgViewer::Renderer::cull/draw
         //sv->inheritCullSettings( *(sv->getCamera()) );
-        if( mRTT )
-        {
-            //vpr::Guard<vpr::Mutex> sv_guard( mValueLock );
-            sv->cull();
-        }
-        else
-        {
-            sv->cull();
-        }
+        sv->cull();
     }
     //profile the draw call
     {
-        //vpr::Guard<vpr::Mutex> val_guard( mValueLock );
         VPR_PROFILE_GUARD_HISTORY( "App::draw sv->draw", 20 );
         sv->draw();
     }
@@ -837,7 +825,8 @@ void App::draw()
     }
     
     //GLenum errorEnum = glGetError();
-    //std::cout << errorEnum & GL_NO_ERROR << std::endl;
+    //vprDEBUG( vesDBG, 3 ) <<  << errorEnum & GL_NO_ERROR 
+    //    << std::endl << vprDEBUG_FLUSH;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void App::update()
