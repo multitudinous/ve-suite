@@ -1,0 +1,238 @@
+################################################################################
+##Builds osgBullet
+import os, sys, string
+pj = os.path.join
+import SConsAddons.Util as sca_util
+
+Import('baseEnv ves_pkg LIBDIR RootDir buildDir osg_options GetPlatform bulletBaseVar')
+Import('wxwidgets_options')
+openDir = os.path.abspath( pj(RootDir, 'external', 'osgBullet') )
+sources = sca_util.getSourcesRecursive( pj( openDir, 'src', 'osgBullet' ) )
+headers = sca_util.getHeadersRecursive( pj( openDir, 'include','osgBullet')  )
+headers = map(lambda s: pj('include','osgBullet', s), 
+                headers)
+sources = map(lambda s: pj('src', 'osgBullet', s), 
+                sources)
+
+lib_env = ves_pkg.getEnv().Clone()
+lib_env.Append( CPPPATH = [pj(openDir, 'include' )] )
+lib_env.Append( CPPPATH = [pj(RootDir, 'external', bulletBaseVar,'src' ) ] )
+lib_env.Append( CPPPATH = [pj(RootDir, 'external', bulletBaseVar,'Extras') ] )
+lib_env.Append( CPPDEFINES  = ['OSGBULLET_LIBRARY'] )
+#lib_env.Append( CPPDEFINES  = ['OSG_LIBRARY_STATIC' ] )
+lib_env.Append( LIBS = ['bullet','XML','COLLADA_DOM','BulletColladaConverter'] )
+lib_env.Append( LIBPATH = [pj('#', buildDir,'external', bulletBaseVar)] )
+
+osg_options.apply( lib_env )
+
+if GetPlatform() == 'linux':
+    lib_env.Append( CXXFLAGS=['-fPIC'])
+
+lib = ves_pkg.createSharedLibrary('osgBullet', lib_env,
+                                               installPrefix = LIBDIR)
+   
+lib.addSources(sources)
+#lib.addHeaders(headers, pj('..') )
+lib.build()
+################################################################################
+glslBundle = ves_pkg.createFileBundle( pj('share','vesuite','glsl') )
+glslFile = sca_util.getFilesRecursiveByExt( pj( openDir, 'data' ), ['.vs'] )
+glslFile = map(lambda s: pj('data', s), 
+                glslFile)
+glslBundle.addFiles( glslFile, useRelPath=False )
+glslFile = sca_util.getFilesRecursiveByExt( pj( openDir, 'data' ), ['.fs'] )
+glslFile = map(lambda s: pj('data', s), 
+                glslFile)
+glslBundle.addFiles( glslFile, useRelPath=False )
+
+handFile = ves_pkg.createFileBundle( pj('share','vesuite') )
+handFile.addFiles( pj( openDir, 'data','handL.ive'), useRelPath=False )
+handFile.addFiles( pj( openDir, 'data','handR.ive'), useRelPath=False )
+
+
+################################################################################
+##Builds osgbpp
+openDir = os.path.abspath( pj(RootDir, 'external', 'osgBullet') )
+sources2 = sca_util.getSourcesRecursive( pj( openDir, 'applications','osgbpp' ) )
+sources2 = map(lambda s: pj('applications','osgbpp', s), sources2)
+
+lib_env2 = ves_pkg.getEnv().Clone()
+lib_env2.Append( CPPPATH = [pj(openDir, 'include' )] )
+lib_env2.Append( CPPPATH = [pj(RootDir, 'external', bulletBaseVar,'src' ) ] )
+lib_env2.Append( CPPPATH = [pj(RootDir, 'external', bulletBaseVar,'Extras') ] )
+lib_env2.Append( LIBS = ['osgBullet','BulletColladaConverter','bullet','COLLADA_DOM','XML'] )
+lib_env2.Append( LIBPATH = [pj('#', buildDir,'external', bulletBaseVar)] )
+lib_env2.Append( LIBPATH = [pj('#', buildDir,'external', 'osgBullet')] )
+
+osg_options.apply( lib_env2 )
+
+if GetPlatform() == 'linux':
+    lib_env2.Append( CXXFLAGS=['-fPIC'])
+
+multiblock = ves_pkg.createProgram('osgbpp' + lib_env["PROGSUFFIX"], lib_env2, 'bin')
+multiblock.addSources(sources2)
+multiblock.build()
+
+###############################################################
+##Builds caddemo
+openDir = os.path.abspath( pj(RootDir, 'external', 'osgBullet') )
+sources2 = sca_util.getSourcesRecursive( pj( openDir, 'examples','CadDemo' ) )
+sources2 = map(lambda s: pj('examples','CadDemo', s), sources2)
+
+lib_env2 = ves_pkg.getEnv().Clone()
+lib_env2.Append( CPPPATH = [pj(openDir, 'include' )] )
+lib_env2.Append( CPPPATH = [pj(RootDir, 'external', bulletBaseVar,'src' ) ] )
+lib_env2.Append( CPPPATH = [pj(RootDir, 'external', bulletBaseVar,'Extras') ] )
+lib_env2.Append( LIBS = ['osgBullet','BulletColladaConverter','bullet','COLLADA_DOM','XML'] )
+lib_env2.Append( LIBPATH = [pj('#', buildDir,'external', bulletBaseVar)] )
+lib_env2.Append( LIBPATH = [pj('#', buildDir,'external', 'osgBullet')] )
+
+osg_options.apply( lib_env2 )
+
+if GetPlatform() == 'linux':
+    lib_env2.Append( CXXFLAGS=['-fPIC'])
+
+multiblock = ves_pkg.createProgram('caddemo' + lib_env["PROGSUFFIX"], lib_env2, 'bin')
+multiblock.addSources(sources2)
+multiblock.build()
+
+###############################################################
+##Builds solver
+openDir = os.path.abspath( pj(RootDir, 'external', 'osgBullet') )
+sources2 = sca_util.getSourcesRecursive( pj( openDir, 'examples','solver' ) )
+sources2 = map(lambda s: pj('examples','solver', s), sources2)
+
+lib_env2 = ves_pkg.getEnv().Clone()
+lib_env2.Append( CPPPATH = [pj(openDir, 'include' )] )
+lib_env2.Append( CPPPATH = [pj(RootDir, 'external', bulletBaseVar,'src' ) ] )
+lib_env2.Append( CPPPATH = [pj(RootDir, 'external', bulletBaseVar,'Extras') ] )
+lib_env2.Append( LIBS = ['osgBullet','BulletColladaConverter','bullet','COLLADA_DOM','XML'] )
+lib_env2.Append( LIBPATH = [pj('#', buildDir,'external', bulletBaseVar)] )
+lib_env2.Append( LIBPATH = [pj('#', buildDir,'external', 'osgBullet')] )
+
+osg_options.apply( lib_env2 )
+
+if GetPlatform() == 'linux':
+    lib_env2.Append( CXXFLAGS=['-fPIC'])
+
+multiblock = ves_pkg.createProgram('solver-osgBullet' + lib_env["PROGSUFFIX"], lib_env2, 'bin')
+multiblock.addSources(sources2)
+multiblock.build()
+
+###############################################################
+##Builds hinge
+openDir = os.path.abspath( pj(RootDir, 'external', 'osgBullet') )
+sources2 = sca_util.getSourcesRecursive( pj( openDir, 'tests','hinge' ) )
+sources2 = map(lambda s: pj('tests','hinge', s), sources2)
+
+lib_env2 = ves_pkg.getEnv().Clone()
+lib_env2.Append( CPPPATH = [pj(openDir, 'include' )] )
+lib_env2.Append( CPPPATH = [pj(RootDir, 'external', bulletBaseVar,'src' ) ] )
+lib_env2.Append( CPPPATH = [pj(RootDir, 'external', bulletBaseVar,'Extras') ] )
+lib_env2.Append( LIBS = ['osgBullet','BulletColladaConverter','bullet','COLLADA_DOM','XML'] )
+lib_env2.Append( LIBPATH = [pj('#', buildDir,'external', bulletBaseVar)] )
+lib_env2.Append( LIBPATH = [pj('#', buildDir,'external', 'osgBullet')] )
+
+osg_options.apply( lib_env2 )
+
+if GetPlatform() == 'linux':
+    lib_env2.Append( CXXFLAGS=['-fPIC'])
+
+multiblock = ves_pkg.createProgram('hinge' + lib_env["PROGSUFFIX"], lib_env2, 'bin')
+multiblock.addSources(sources2)
+multiblock.build()
+
+###############################################################
+##Builds hinge2
+openDir = os.path.abspath( pj(RootDir, 'external', 'osgBullet') )
+sources2 = sca_util.getSourcesRecursive( pj( openDir, 'tests','hinge2' ) )
+sources2 = map(lambda s: pj('tests','hinge2', s), sources2)
+
+lib_env2 = ves_pkg.getEnv().Clone()
+lib_env2.Append( CPPPATH = [pj(openDir, 'include' )] )
+lib_env2.Append( CPPPATH = [pj(RootDir, 'external', bulletBaseVar,'src' ) ] )
+lib_env2.Append( CPPPATH = [pj(RootDir, 'external', bulletBaseVar,'Extras') ] )
+lib_env2.Append( LIBS = ['osgBullet','BulletColladaConverter','bullet','COLLADA_DOM','XML'] )
+lib_env2.Append( LIBPATH = [pj('#', buildDir,'external', bulletBaseVar)] )
+lib_env2.Append( LIBPATH = [pj('#', buildDir,'external', 'osgBullet')] )
+
+osg_options.apply( lib_env2 )
+
+if GetPlatform() == 'linux':
+    lib_env2.Append( CXXFLAGS=['-fPIC'])
+
+multiblock = ves_pkg.createProgram('hinge2' + lib_env["PROGSUFFIX"], lib_env2, 'bin')
+multiblock.addSources(sources2)
+multiblock.build()
+
+###############################################################
+##Builds slider
+openDir = os.path.abspath( pj(RootDir, 'external', 'osgBullet') )
+sources2 = sca_util.getSourcesRecursive( pj( openDir, 'tests','slider' ) )
+sources2 = map(lambda s: pj('tests','slider', s), sources2)
+
+lib_env2 = ves_pkg.getEnv().Clone()
+lib_env2.Append( CPPPATH = [pj(openDir, 'include' )] )
+lib_env2.Append( CPPPATH = [pj(RootDir, 'external', bulletBaseVar,'src' ) ] )
+lib_env2.Append( CPPPATH = [pj(RootDir, 'external', bulletBaseVar,'Extras') ] )
+lib_env2.Append( LIBS = ['osgBullet','BulletColladaConverter','bullet','COLLADA_DOM','XML'] )
+lib_env2.Append( LIBPATH = [pj('#', buildDir,'external', bulletBaseVar)] )
+lib_env2.Append( LIBPATH = [pj('#', buildDir,'external', 'osgBullet')] )
+
+osg_options.apply( lib_env2 )
+
+if GetPlatform() == 'linux':
+    lib_env2.Append( CXXFLAGS=['-fPIC'])
+
+multiblock = ves_pkg.createProgram('slider' + lib_env["PROGSUFFIX"], lib_env2, 'bin')
+multiblock.addSources(sources2)
+multiblock.build()
+
+###############################################################
+##Builds xform
+openDir = os.path.abspath( pj(RootDir, 'external', 'osgBullet') )
+sources2 = sca_util.getSourcesRecursive( pj( openDir, 'tests','xform' ) )
+sources2 = map(lambda s: pj('tests','xform', s), sources2)
+
+lib_env2 = ves_pkg.getEnv().Clone()
+lib_env2.Append( CPPPATH = [pj(openDir, 'include' )] )
+lib_env2.Append( CPPPATH = [pj(RootDir, 'external', bulletBaseVar,'src' ) ] )
+lib_env2.Append( CPPPATH = [pj(RootDir, 'external', bulletBaseVar,'Extras') ] )
+lib_env2.Append( LIBS = ['osgBullet','BulletColladaConverter','bullet','COLLADA_DOM','XML'] )
+lib_env2.Append( LIBPATH = [pj('#', buildDir,'external', bulletBaseVar)] )
+lib_env2.Append( LIBPATH = [pj('#', buildDir,'external', 'osgBullet')] )
+
+osg_options.apply( lib_env2 )
+
+if GetPlatform() == 'linux':
+    lib_env2.Append( CXXFLAGS=['-fPIC'])
+
+multiblock = ves_pkg.createProgram('xform' + lib_env["PROGSUFFIX"], lib_env2, 'bin')
+multiblock.addSources(sources2)
+multiblock.build()
+
+###############################################################
+##Builds osgWxTree
+sources = sca_util.getSourcesRecursive( pj( openDir, 'src', 'osgWxTree' ) )
+headers = sca_util.getHeadersRecursive( pj( openDir, 'include','osgWxTree')  )
+headers = map(lambda s: pj('include','osgWxTree', s), 
+                headers)
+sources = map(lambda s: pj('src', 'osgWxTree', s), 
+                sources)
+
+lib_env = ves_pkg.getEnv().Clone()
+lib_env.Append( CPPPATH = [pj(openDir, 'include' )] )
+lib_env.Append( CPPDEFINES  = ['OSGWXTREE_LIBRARY'] )
+
+osg_options.apply( lib_env )
+wxwidgets_options.apply( lib_env )
+
+if GetPlatform() == 'linux':
+    lib_env.Append( CXXFLAGS=['-fPIC'])
+
+lib = ves_pkg.createSharedLibrary('osgWxTree', lib_env,
+                                               installPrefix = LIBDIR)
+   
+lib.addSources(sources)
+#lib.addHeaders(headers, pj('..') )
+lib.build()

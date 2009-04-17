@@ -1,0 +1,27 @@
+SET( LIB_NAME osgWxTree )
+
+ADD_DEFINITIONS(-DOSGWXTREE_LIBRARY)
+SET( HEADER_PATH ${PROJECT_SOURCE_DIR}/include/${LIB_NAME} )
+
+SET( LIB_PUBLIC_HEADERS
+    ${HEADER_PATH}/Export.h
+    ${HEADER_PATH}/PickHandler.h
+    ${HEADER_PATH}/TreeControl.h
+    ${HEADER_PATH}/Utils.h
+)
+
+ADD_SHARED_LIBRARY_INTERNAL( ${LIB_NAME}
+    ${LIB_PUBLIC_HEADERS}
+    PickHandler.cpp
+    TreeControl.cpp
+    Utils.cpp
+)
+
+ADD_DEFINITIONS( ${wxWidgets_DEFINITIONS} )
+
+TARGET_LINK_LIBRARIES(
+    ${LIB_NAME}
+    ${wxWidgets_LIBRARIES}
+    ${OSG_LIBRARIES}
+    ${BULLET_LIBRARIES}
+)
