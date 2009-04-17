@@ -9,13 +9,14 @@ enum
     //AppMenuBar.h
 
     //AppToolBar.h
-    TOOLBAR_OPEN_CONNECTION_DIALOG
+    TOOLBAR_OPEN_CONNECTION_DIALOG,
 
     //AppTreeCtrl.h
 
     //AppNotebook.h
 
     //ConnectionDialog.h
+    CONNECTION_DIALOG_OK_BUTTON
     
 };
 

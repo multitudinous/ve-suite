@@ -1,6 +1,7 @@
 
 // --- VE-Suite Includes --- //
 #include "ConnectionDialog.h"
+#include "DBAppEnums.h"
 
 // --- wxWidgets Includes --- //
 #include <wx/sizer.h>
@@ -12,9 +13,13 @@
 #include <wx/button.h>
 
 // --- C/C++ Libraries --- //
+#include <mysql++.h>
+
+#include <iostream>
+#include <iomanip>
 
 BEGIN_EVENT_TABLE( ConnectionDialog, wxDialog )
-
+EVT_BUTTON( CONNECTION_DIALOG_OK_BUTTON, ConnectionDialog::Connect )
 END_EVENT_TABLE()
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -171,7 +176,7 @@ void ConnectionDialog::CreateGUI()
 	buttonSizer->Add( 0, 0, 1, wxEXPAND, 5 );
 	
 	wxButton* okButton;
-	okButton = new wxButton( this, wxID_OK );
+	okButton = new wxButton( this, CONNECTION_DIALOG_OK_BUTTON, wxT( "OK" ), wxDefaultPosition, wxDefaultSize, 0 );
 	buttonSizer->Add( okButton, 0, wxALL, 5 );
 	
 	wxButton* clearButton;
@@ -186,5 +191,51 @@ void ConnectionDialog::CreateGUI()
 	
 	SetSizer( mainSizer );
 	Layout();
+}
+////////////////////////////////////////////////////////////////////////////////
+void ConnectionDialog::Connect( wxCommandEvent& WXUNUSED( event ) )
+{
+	//Get database access parameters from wx
+    wxString db = m_defaultSchemaTextCtrl->GetValue();
+    wxString server = m_serverHostTextCtrl->GetValue();
+    wxString username = m_usernameTextCtrl->GetValue();
+    wxString password = m_passwordTextCtrl->GetValue();
+    unsigned int port = static_cast< unsigned int >(
+        atoi( ConvertUnicode( m_portTextCtrl->GetValue().c_str() ).c_str() ) );
+
+	//Connect to the database
+	mysqlpp::Connection conn( false );
+	if( conn.connect( db.c_str(), server.c_str(), username.c_str(), password.c_str(), port ) )
+    {
+		//Retrieve a subset of the table and display it
+		mysqlpp::Query query = conn.query( "select Name from employees" );
+		if( mysqlpp::StoreQueryResult res = query.store() )
+        {
+			std::cout << "We have:" << std::endl;
+			mysqlpp::StoreQueryResult::const_iterator it;
+			for( it = res.begin(); it != res.end(); ++it )
+            {
+				mysqlpp::Row row = *it;
+				std::cout << '\t' << row[ 0 ] << std::endl;
+			}
+		}
+		else
+        {
+			std::cerr << "Failed to get item list: "
+                      << query.error() << std::endl;
+		}
+	}
+	else
+    {
+        std::cerr << "DB connection failed: " << conn.error() << std::endl;
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+std::string ConnectionDialog::ConvertUnicode( const wxChar* data )
+{
+    std::string tempStr(
+        static_cast< const char* >( wxConvCurrent->cWX2MB( data ) ) );
+
+    return tempStr;
 }
 ////////////////////////////////////////////////////////////////////////////////

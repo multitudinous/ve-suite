@@ -6,13 +6,14 @@
 
 // --- wxWidgets Includes --- //
 #include <wx/dialog.h>
+#include <wx/string.h>
 
 class wxComboBox;
 class wxChoice;
 class wxTextCtrl;
 
 // --- C/C++ Includes --- //
-
+#include <string>
 
 /*!\file ConnectionDialog.h
  *
@@ -35,6 +36,12 @@ protected:
 private:
     ///
     void CreateGUI();
+
+    ///
+    void Connect( wxCommandEvent& event );
+
+    ///
+    std::string ConvertUnicode( const wxChar* data );
 
     wxComboBox* m_storedConnectionComboBox;
     wxChoice* m_connectionTypeChoice;

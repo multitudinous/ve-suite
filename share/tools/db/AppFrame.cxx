@@ -72,7 +72,7 @@ void AppFrame::CreateGUI()
 	
     //Create the notebook
 	m_appNotebook = new AppNotebook( this );
-	mainSizer->Add( m_appNotebook, 3, wxEXPAND | wxTOP, 12 );
+	mainSizer->Add( m_appNotebook, 3, wxEXPAND | wxTOP, 10 );
 	
 	SetSizer( mainSizer );
 	Layout();
