@@ -54,7 +54,7 @@ Source: {#MYSQLHOME}\lib\opt\*.lib; DestDir: {app}\lib; Flags: ignoreversion
 
 ; dlls
 Source: {#MYSQLPPHOME}\lib\*.dll; DestDir: {app}\lib; Flags: ignoreversion
-Source: {#MYSQLHOME}\lib\opt\*.dll; DestDir: {app}\lib; Flags: ignoreversion
+Source: {#MYSQLHOME}\bin\*.dll; DestDir: {app}\lib; Flags: ignoreversion
 
 ;FPC file integration
 Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\MySQLpp.fpc.in; DestDir: {app}\lib\flagpoll; DestName: MySQLpp.fpc; Languages: ; Flags: ignoreversion
