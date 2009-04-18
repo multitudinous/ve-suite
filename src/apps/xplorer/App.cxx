@@ -301,10 +301,17 @@ void App::configSceneView( osgUtil::SceneView* newSceneViewer )
     // for the possible settings for this function.
     //This defaults to setting the near and far plane based on the
     //bounding volume.
-    //newSceneViewer->setComputeNearFarMode(
-    //    osgUtil::CullVisitor::DO_NOT_COMPUTE_NEAR_FAR );
-    newSceneViewer->setComputeNearFarMode(
-        osgUtil::CullVisitor::COMPUTE_NEAR_FAR_USING_BOUNDING_VOLUMES );
+    if( mRTT )
+    {
+        newSceneViewer->setComputeNearFarMode(
+            osgUtil::CullVisitor::DO_NOT_COMPUTE_NEAR_FAR );
+        newSceneViewer->getCamera()->setCullingActive( false );
+    }
+    else
+    {
+        newSceneViewer->setComputeNearFarMode(
+            osgUtil::CullVisitor::COMPUTE_NEAR_FAR_USING_BOUNDING_VOLUMES );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 ///Remember that this is called in parrallel in a multiple context situation

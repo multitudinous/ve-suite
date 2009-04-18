@@ -143,6 +143,10 @@ void SceneRenderToTexture::InitScene( osg::Camera* const sceneViewCamera )
     std::cout << "|\tNumber of Viewports: " << numViewports << std::endl;
     std::cout << "|\t" << std::endl;
 
+    ///The root group that all RTT pipelines are added on
+    osg::ref_ptr< osg::Group > rttPipelines = new osg::Group();
+    rttPipelines->setCullingActive( false );
+
     for( size_t i = 0; i < numViewports; ++i )
     {
         std::cout << "|\tViewport " << i + 1 << ": " << std::endl;
@@ -188,7 +192,7 @@ void SceneRenderToTexture::InitScene( osg::Camera* const sceneViewCamera )
 
         //Add the scenegraph to the camera    
         camera->addChild( mRootGroup.get() );
-        camera->addChild( processor.get() );
+        rttPipelines->addChild( processor.get() );
 
         //Setup a post-processing pipeline for each viewport per context
         //Each pipeline consists of a osg::Camera and vxsr::Processor
@@ -197,6 +201,7 @@ void SceneRenderToTexture::InitScene( osg::Camera* const sceneViewCamera )
 
         sceneViewCamera->addChild( camera.get() );
     }
+    sceneViewCamera->addChild( rttPipelines.get() );
     
     *mCamerasConfigured = true;
 }
@@ -215,7 +220,7 @@ osg::Camera* SceneRenderToTexture::CreatePipelineCamera(
     tempCamera->setViewport( viewport );
     tempCamera->setViewMatrix( osg::Matrix::identity() );
     tempCamera->setProjectionMatrix( osg::Matrix::identity() );
-    tempCamera->setComputeNearFarMode( osg::CullSettings::DO_NOT_COMPUTE_NEAR_FAR );
+    tempCamera->setComputeNearFarMode( osg::CullSettings::COMPUTE_NEAR_FAR_USING_BOUNDING_VOLUMES );
     tempCamera->setCullingActive( false );
 
     std::pair< int, int > viewportDimensions = 
