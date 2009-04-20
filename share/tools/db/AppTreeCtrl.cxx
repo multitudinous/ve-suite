@@ -23,7 +23,7 @@ AppTreeCtrl::AppTreeCtrl( wxWindow* parent )
         wxID_ANY,
         wxDefaultPosition,
         wxDefaultSize,
-        wxTR_DEFAULT_STYLE | wxNO_BORDER | wxHSCROLL | wxVSCROLL )
+        wxTR_DEFAULT_STYLE | wxHSCROLL | wxNO_BORDER | wxVSCROLL )
 {
     SetBackgroundColour( wxColour( 255, 255, 255 ) );
 }

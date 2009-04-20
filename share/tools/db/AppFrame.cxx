@@ -14,6 +14,7 @@
 #include <wx/icon.h>
 #include <wx/sizer.h>
 #include <wx/statbox.h>
+#include <wx/scrolwin.h>
 
 BEGIN_EVENT_TABLE( AppFrame, wxFrame )
 EVT_MENU( TOOLBAR_OPEN_CONNECTION_DIALOG, AppFrame::OpenConnectionDialog )
@@ -60,19 +61,29 @@ void AppFrame::CreateGUI()
     m_appToolBar = new AppToolBar( this );
     SetToolBar( m_appToolBar );
 
-    //Create the wxStaticBoxSizer and AppTreeCtrl sizer
-	wxStaticBoxSizer* connectionsSizer =
-        new wxStaticBoxSizer( new wxStaticBox(
-            this, wxID_ANY, wxT( "Database Connections" ) ), wxVERTICAL );
-    mainSizer->Add( connectionsSizer, 1, wxEXPAND | wxLEFT | wxTOP, 5 );
+    //Create a scrolled window
+    wxScrolledWindow* scrolledWindow;
+	scrolledWindow =
+        new wxScrolledWindow(
+            this, wxID_ANY,
+            wxDefaultPosition, wxDefaultSize,
+            wxALWAYS_SHOW_SB | wxHSCROLL | wxRAISED_BORDER | wxVSCROLL );
+	scrolledWindow->SetScrollRate( 5, 5 );
+    mainSizer->Add( scrolledWindow, 1, wxEXPAND | wxTOP, 5 );
+
+    //Create the tree control sizer
+    wxBoxSizer* treeCtrlSizer = new wxBoxSizer( wxVERTICAL );
+    scrolledWindow->SetSizer( treeCtrlSizer );
+	scrolledWindow->Layout();
+	treeCtrlSizer->Fit( scrolledWindow );
 	
     //Create the tree control
-	m_appTreeCtrl = new AppTreeCtrl( this );
-	connectionsSizer->Add( m_appTreeCtrl, 1, wxEXPAND, 5 );
+	m_appTreeCtrl = new AppTreeCtrl( scrolledWindow );
+	treeCtrlSizer->Add( m_appTreeCtrl, 1, wxALL | wxEXPAND, 10 );
 	
     //Create the notebook
 	m_appNotebook = new AppNotebook( this );
-	mainSizer->Add( m_appNotebook, 3, wxEXPAND | wxTOP, 10 );
+	mainSizer->Add( m_appNotebook, 3, wxEXPAND | wxTOP, 5 );
 	
 	SetSizer( mainSizer );
 	Layout();

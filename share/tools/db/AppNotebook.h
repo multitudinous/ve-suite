@@ -6,6 +6,7 @@
 #include <wx/notebook.h>
 
 class wxPanel;
+class wxGrid;
 
 /*!\file AppNotebook.h
  *
@@ -32,6 +33,8 @@ private:
     wxPanel* m_tableDetailsPanel;
     wxPanel* m_dataPanel;
     wxPanel* m_sqlPanel;
+
+    wxGrid* m_tableDetailsGrid;
 
     DECLARE_EVENT_TABLE()
 };
