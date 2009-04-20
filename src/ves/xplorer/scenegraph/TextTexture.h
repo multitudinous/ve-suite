@@ -50,13 +50,12 @@
 
 // --- OSG Includes --- //
 #include <osg/Version>
-#include <osg/Camera>
 #include <osg/Geode>
 
 namespace osg
 {
+class Drawable;
 class Texture2D;
-class Camera;
 }
 
 namespace osgText
@@ -78,19 +77,18 @@ public:
     ///\param textureResolutionX The X resolution of the output texture in pixels
     ///\param textureResolutionY The Y resolution of the output texture in pixels
     ///\param fontFile The file to load fonts from. See osgText/Font for usage.
-    TextTexture( unsigned int textureResolutionX = 1024,
-                 unsigned int textureResolutionY = 1024,
-                 std::string fontFile = "fonts/arial.ttf" );
+    TextTexture( std::string fontFile = "fonts/arial.ttf" );
 
     ///Copy constructors for osg
     TextTexture( const TextTexture& ttexture,
                  const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
 
+    ///
     META_Node( ves::xplorer::scenegraph, TextTexture );
 
     ///Set the color of the text
     ///\param color Text color
-    void SetTextColor( float color[4] );
+    void SetTextColor( float color[ 4 ] );
 
     ///Set the font
     ///\param fontFile The file containing the font to use
@@ -103,29 +101,33 @@ public:
     ///Get the texture with the text
     osg::Texture2D* GetTexture();
 
-    ///Get the fbo
-    osg::Camera* GetCameraNode();
-
 protected:
     ///Destructor
     virtual ~TextTexture();
 
-    ///Initialize the Frame Buffer Object in the camera node
-    void _initializeFBO();
     ///Load the backgroud texture the text will render over
     void LoadBackgroundTexture();
 
-    bool _fboInitialized;///<Flag for camera node state
-    float _textColor[4];///<The color of the text, default is black
-    unsigned int _textureResolution[2];///<The texture resolution
-    std::string _font;///<The font file
-    osg::ref_ptr<osgText::Text> _text;///<The text
-    osg::ref_ptr<osg::Texture2D> _texture;///<The texture we create
-    ///The texture we create for backgrounds
-    osg::ref_ptr<osg::Group> m_bgTexture;
-    osg::ref_ptr<osg::Camera> _fbo;///<The off screen rendering node
+    ///
+    void CreateTexturedQuad();
 
-    //osg::ref_ptr<TextUpdateCallback> _ttUpdateCallback;///<The update callback
+    ///
+    void CreateText();
+
+    ///The color of the text, default is black
+    float _textColor[ 4 ];
+
+    ///The font file
+    std::string _font;
+
+    ///The text
+    osg::ref_ptr< osgText::Text > _text;
+
+    ///The texture we create
+    osg::ref_ptr< osg::Texture2D > _texture;
+
+    //The update callback
+    //osg::ref_ptr< TextUpdateCallback > _ttUpdateCallback;
 
 };
 }
