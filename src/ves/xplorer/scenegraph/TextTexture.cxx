@@ -198,9 +198,7 @@ void TextTexture::LoadBackgroundTexture()
     rainbowTexture->setImage( osgDB::readImageFile( "Draft2.png" ) );
 
     m_bgTexture = new osg::Group();
-    //osg::ref_ptr< osg::StateSet > ss = m_bgTexture->getOrCreateStateSet();
-    //ss->setTextureAttributeAndModes( 0, rainbowTexture.get(), osg::StateAttribute::ON );
-    
+
     float viewportOriginX, viewportOriginY, viewportWidth, viewportHeight;
     viewportOriginX = 0.0f;
     viewportOriginY = 0.0f;
@@ -254,4 +252,6 @@ void TextTexture::LoadBackgroundTexture()
     quadGeode->setCullingActive( false );
     quadGeode->addDrawable( quadGeometry.get() );
     m_bgTexture->addChild( quadGeode );
+    //osg::ref_ptr< osg::StateSet > ss = m_bgTexture->getOrCreateStateSet();
+    stateset->setTextureAttributeAndModes( 0, rainbowTexture.get(), osg::StateAttribute::ON );
 }
