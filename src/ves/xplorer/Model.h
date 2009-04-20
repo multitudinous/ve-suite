@@ -86,6 +86,7 @@ class CADEntity;
 class CADEntityHelper;
 class Clone;
 class fileInfo;
+class TextTexture;
 }
 }
 }
@@ -201,6 +202,10 @@ public:
     ///\param soundName The name of the sound to stop
     void DeactivateSound( std::string soundName );
 
+    ///Render a display for this model
+    ///\param onOff Tell the model to render its textual display
+    void RenderTextualDisplay( bool onOff );
+
     //////////////////////////
     //texture based interface
     void SetActiveTextureDataSet( ves::xplorer::volume::cfdTextureDataSet* tDS );
@@ -253,7 +258,6 @@ private:
     TextureDataSetList mTextureDataSets;
     ves::xplorer::volume::cfdTextureDataSet* _activeTextureDataSet;
 
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > mModelDCS;
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > _worldDCS;
 
     DataSet* activeDataSet;
@@ -279,6 +283,8 @@ private:
     ves::xplorer::ModelCADHandler* m_cadHandler;
     ///The Dataset Handler for this model.
     ves::xplorer::ModelDatasetHandler* m_datasetHandler;
+    ///Text texture
+    osg::ref_ptr< ves::xplorer::scenegraph::TextTexture > mModelText;
 };
 }
 }

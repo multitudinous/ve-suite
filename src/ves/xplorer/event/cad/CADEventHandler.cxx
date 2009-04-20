@@ -348,6 +348,8 @@ void CADEventHandler::_addNodeToNode( std::string parentID,
                 << newPart->GetOpacity() << std::endl << vprDEBUG_FLUSH;
             m_cadHandler->UpdateOpacity( newPart->GetID(), newPart->GetOpacity(), true );
             
+            //m_activeModel->RenderTextualDisplay( true );
+
             //Setup the physics properties on the file
             //must be set AFTER all of the transforms have been applied
             if( newPart->HasPhysics() )

@@ -44,6 +44,7 @@
 #include <ves/xplorer/scenegraph/Clone.h>
 #include <ves/xplorer/scenegraph/CADEntity.h>
 #include <ves/xplorer/scenegraph/CADEntityHelper.h>
+#include <ves/xplorer/scenegraph/TextTexture.h>
 
 #include <ves/xplorer/scenegraph/util/OpacityVisitor.h>
 
@@ -106,8 +107,6 @@ Model::Model( ves::xplorer::scenegraph::DCS* worldDCS )
     vprDEBUG( vesDBG, 1 ) << "|\tNew Model ! "
         << std::endl << vprDEBUG_FLUSH;
 
-    // Will fix this later so that each model has a dcs
-    //mModelDCS = new ves::xplorer::scenegraph::DCS();
     _worldDCS = worldDCS;
     m_cadHandler = new ves::xplorer::ModelCADHandler( _worldDCS.get() );
 }
@@ -717,6 +716,24 @@ void Model::DeleteDataSet( std::string dataSetName )
             break;
         }
     }
+}
+////////////////////////////////////////////////////////////////////////////////
+void Model::RenderTextualDisplay( bool onOff )
+{
+    //add 3d blocks
+    if( !mModelText.valid() )
+    {
+        mModelText = new ves::xplorer::scenegraph::TextTexture();
+        
+        osg::ref_ptr< ves::xplorer::scenegraph::DCS > textTrans = new ves::xplorer::scenegraph::DCS();
+        textTrans.get()->addChild( mModelText.get() );
+        double bbRad = _worldDCS.get()->getBound().radius();
+        textTrans.get()->setPosition(osg::Vec3d(0.0, -bbRad, bbRad));
+        _worldDCS->addChild( textTrans.get() );
+    }
+    
+    std::string displayString = _worldDCS->getName() + "\n" + GetID();
+    mModelText->UpdateText( displayString );
 }
 ////////////////////////////////////////////////////////////////////////////////
 } // end xplorer

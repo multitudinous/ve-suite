@@ -46,21 +46,17 @@
 */
 
 // --- VE-Suite Includes --- //
-#include <ves/xplorer/scenegraph/Geode.h>
+#include <ves/VEConfig.h>
 
 // --- OSG Includes --- //
-#ifdef _OSG
 #include <osg/Version>
-#if (OSG_VERSION_MAJOR>=2)
 #include <osg/Camera>
-#endif
+#include <osg/Geode>
 
 namespace osg
 {
 class Texture2D;
-#if (OSG_VERSION_MAJOR>=2)
 class Camera;
-#endif
 }
 
 namespace osgText
@@ -75,7 +71,7 @@ namespace xplorer
 {
 namespace scenegraph
 {
-class VE_SCENEGRAPH_EXPORTS TextTexture : public ves::xplorer::scenegraph::Geode
+class VE_SCENEGRAPH_EXPORTS TextTexture : public osg::Geode
 {
 public:
     ///Constructor
@@ -108,11 +104,7 @@ public:
     osg::Texture2D* GetTexture();
 
     ///Get the fbo
-#if (OSG_VERSION_MAJOR>=2)
     osg::Camera* GetCameraNode();
-#else
-    osg::CameraNode* GetCameraNode();
-#endif
 
 protected:
     ///Destructor
@@ -120,6 +112,8 @@ protected:
 
     ///Initialize the Frame Buffer Object in the camera node
     void _initializeFBO();
+    ///Load the backgroud texture the text will render over
+    void LoadBackgroundTexture();
 
     bool _fboInitialized;///<Flag for camera node state
     float _textColor[4];///<The color of the text, default is black
@@ -127,18 +121,14 @@ protected:
     std::string _font;///<The font file
     osg::ref_ptr<osgText::Text> _text;///<The text
     osg::ref_ptr<osg::Texture2D> _texture;///<The texture we create
-#if (OSG_VERSION_MAJOR>=2)
+    ///The texture we create for backgrounds
+    osg::ref_ptr<osg::Group> m_bgTexture;
     osg::ref_ptr<osg::Camera> _fbo;///<The off screen rendering node
-#else
-    osg::ref_ptr<osg::CameraNode> _fbo;///<The off screen rendering node
-#endif
+
     //osg::ref_ptr<TextUpdateCallback> _ttUpdateCallback;///<The update callback
 
 };
 }
 }
 }
-
-#endif//_OSG
-
 #endif //TEXT_TEXTURE_H
