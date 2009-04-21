@@ -107,9 +107,16 @@ void RescaleTextureVisitor::apply(osg::StateSet& stateset)
 ////////////////////////////////////////////////////////////////////////////////
 void RescaleTextureVisitor::apply(osg::Texture& texture)
 {
-        for( unsigned int i=0; i<texture.getNumImages(); ++i)
+    unsigned int numImages = texture.getNumImages();
+    osg::ref_ptr< osg::Image > tempImage;
+    for( unsigned int i=0; i<numImages; ++i)
+    {
+        tempImage = texture.getImage(i);
+        if( !tempImage.valid() )
         {
-            texture.getImage(i)->ensureValidSizeForTexturing( 134217728 );
+            continue;
         }
+        tempImage->ensureValidSizeForTexturing( 134217728 );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////

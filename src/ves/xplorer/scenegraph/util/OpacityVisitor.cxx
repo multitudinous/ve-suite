@@ -114,16 +114,22 @@ void OpacityVisitor::apply( osg::Geode& node )
         //See if this drawable had a texture with opacity. If so then do not 
         //change the render bin information
         bool transparentTexture = false;
+        osg::ref_ptr< osg::Image > tempImage;
         for( size_t k = 0; k < drawable_tal.size(); k++ )
         {
             osg::ref_ptr< osg::Texture > texture = 
             static_cast< osg::Texture* >( drawable_stateset->
                 getTextureAttribute( k, osg::StateAttribute::TEXTURE ) );
-            
-            for( unsigned int j=0; j<texture->getNumImages(); ++j )
+            unsigned int numImages = texture->getNumImages();
+            for( unsigned int j=0; j<numImages; ++j )
             {
+                tempImage = texture->getImage( j );
+                if( !tempImage.valid() )
+                {
+                    continue;
+                }
                 transparentTexture = 
-                    texture->getImage( j )->isImageTranslucent();
+                    tempImage->isImageTranslucent();
                 if( transparentTexture )
                 {
                     break;
