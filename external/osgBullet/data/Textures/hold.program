@@ -1,0 +1,12 @@
+varying vec3 eyePos;
+varying vec3 lightPos;
+varying vec3 normal;
+
+void main() {
+    gl_Position = ftransform();
+
+    gl_TexCoord[ 0 ].xyz = gl_Vertex.xyz * 0.5;
+    eyePos = vec3( gl_ModelViewMatrix * gl_Vertex );
+    lightPos = gl_LightSource[ 0 ].position.xyz;
+    normal = gl_NormalMatrix * gl_Normal;
+}
