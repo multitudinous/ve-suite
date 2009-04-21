@@ -726,9 +726,11 @@ void Model::RenderTextualDisplay( bool onOff )
         mModelText = new ves::xplorer::scenegraph::TextTexture();
         
         osg::ref_ptr< ves::xplorer::scenegraph::DCS > textTrans = new ves::xplorer::scenegraph::DCS();
-        textTrans.get()->addChild( mModelText.get() );
+        textTrans->addChild( mModelText.get() );
         double bbRad = _worldDCS.get()->getBound().radius();
-        textTrans.get()->setPosition(osg::Vec3d(0.0, -bbRad, bbRad));
+        textTrans->setPosition(osg::Vec3d(0.0, -bbRad, bbRad));
+        double rot[ 3 ] = { 0.0, 90.0, 0.0 };
+        textTrans->SetRotationArray( rot );
         _worldDCS->addChild( textTrans.get() );
     }
     

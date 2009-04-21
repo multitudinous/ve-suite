@@ -123,7 +123,7 @@ void TextTexture::LoadBackgroundTexture()
     _texture->setFilter( osg::Texture2D::MAG_FILTER, osg::Texture2D::LINEAR );
     _texture->setWrap( osg::Texture2D::WRAP_S, osg::Texture2D::CLAMP_TO_EDGE );
     _texture->setWrap( osg::Texture2D::WRAP_T, osg::Texture2D::CLAMP_TO_EDGE );
-    _texture->setImage( osgDB::readImageFile( "SolarSystem/sky1.jpg" ) );
+    _texture->setImage( osgDB::readImageFile( "Draft2.png" ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void TextTexture::CreateTexturedQuad()
@@ -178,21 +178,26 @@ void TextTexture::CreateTexturedQuad()
 ////////////////////////////////////////////////////////////////////////////////
 void TextTexture::CreateText()
 {
-    _textColor[ 0 ] = 1.0;
-    _textColor[ 1 ] = 1.0;
+    _textColor[ 0 ] = 0.0;
+    _textColor[ 1 ] = 0.0;
     _textColor[ 2 ] = 1.0;
     _textColor[ 3 ] = 1.0;
 
     _text = new osgText::Text();
-    _text->setAlignment( osgText::Text::CENTER_CENTER );
+    _text->setMaximumHeight( 2.2f );
+    _text->setMaximumWidth( 1.75f );
+    
+    _text->setAlignment( osgText::Text::LEFT_TOP );
+    _text->setPosition(	osg::Vec3( -0.86f, 0.76f, 0.0f ) ); 	
+
     _text->setFont( _font );
     _text->setColor( osg::Vec4( _textColor[ 0 ],
                                 _textColor[ 1 ],
                                 _textColor[ 2 ],
                                 _textColor[ 3 ] ) );
-    _text->setCharacterSize( 0.2 );
+    _text->setCharacterSize( 0.1 );
     _text->setLayout( osgText::Text::LEFT_TO_RIGHT );
-    _text->setAutoRotateToScreen( true );
+    //_text->setAutoRotateToScreen( true );
 
     addDrawable( _text.get() );
 }
