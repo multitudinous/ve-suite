@@ -37,6 +37,7 @@
 // --- OSG Includes --- //
 #include <osg/Geometry>
 #include <osg/Texture2D>
+#include <osg/BlendFunc>
 
 #include <osgText/Text>
 
@@ -123,13 +124,11 @@ void TextTexture::LoadBackgroundTexture()
     _texture->setFilter( osg::Texture2D::MAG_FILTER, osg::Texture2D::LINEAR );
     _texture->setWrap( osg::Texture2D::WRAP_S, osg::Texture2D::CLAMP_TO_EDGE );
     _texture->setWrap( osg::Texture2D::WRAP_T, osg::Texture2D::CLAMP_TO_EDGE );
-    _texture->setImage( osgDB::readImageFile( "Draft2.png" ) );
+    _texture->setImage( osgDB::readImageFile( "Draft2.tga" ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void TextTexture::CreateTexturedQuad()
 {
-    //Still needs to be billboarded!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
     osg::ref_ptr< osg::Vec3Array > quadVertices = new osg::Vec3Array();
     quadVertices->resize( 4 );
 
@@ -159,7 +158,7 @@ void TextTexture::CreateTexturedQuad()
     quadGeometry->setColorBinding( osg::Geometry::BIND_OFF );
 #else
     osg::ref_ptr< osg::Vec4Array > colorArray = new osg::Vec4Array();
-    colorArray->push_back( osg::Vec4( 1.0, 1.0, 0.0, 1.0 ) );
+    colorArray->push_back( osg::Vec4( 0.0, 0.0, 0.0, 1.0 ) );
     quadGeometry->setColorArray( colorArray.get() );
     quadGeometry->setColorBinding( osg::Geometry::BIND_OVERALL );
 #endif
@@ -174,6 +173,15 @@ void TextTexture::CreateTexturedQuad()
 
     setCullingActive( false );
     addDrawable( quadGeometry.get() );
+    /*
+    osg::ref_ptr< osg::BlendFunc > bf = new osg::BlendFunc();
+    bf->setFunction( osg::BlendFunc::SRC_ALPHA, 
+                    osg::BlendFunc::ONE_MINUS_SRC_ALPHA );
+    stateset->setMode( GL_BLEND, osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+    stateset->setAttributeAndModes( bf.get(), osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+    stateset->setRenderBinDetails( 10, std::string( "DepthSortedBin" ) );
+    stateset->setNestRenderBins( false );  
+    */
 }
 ////////////////////////////////////////////////////////////////////////////////
 void TextTexture::CreateText()

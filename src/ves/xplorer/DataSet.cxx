@@ -119,7 +119,8 @@ DataSet::DataSet( ) :
         lut( vtkLookupTable::New() ),
         maxTime( 1000 ),
         bbDiagonal( 10 ),
-        isNewlyActivated( 0 )
+        isNewlyActivated( 0 ),
+        m_isPartOfCompositeDataset( false )
 {
     this->range = new double [ 2 ];
     this->range[ 0 ] = 0.0f;
@@ -215,7 +216,9 @@ DataSet::~DataSet()
     {
         //This dataset could be part of a composite dataset which would mean
         //its memory is handled by another destructor
-        if( m_dataSet->GetReferenceCount() == 1 )
+        //std::cout << m_isPartOfCompositeDataset << " " 
+        //    << m_dataSet->GetReferenceCount() << std::endl;
+        if( !m_isPartOfCompositeDataset )
         {
             this->m_dataSet->Delete();
             this->m_dataSet = NULL;
@@ -691,7 +694,7 @@ void DataSet::LoadData()
     CreateCompositeDataSets();
 }
 ///////////////////////////
-void DataSet::LoadData( vtkDataSet* tempDataset )
+void DataSet::LoadData( vtkDataSet* tempDataset, bool isPartOfCompositeDataset )
 {
     if( this->m_dataSet != NULL )
     {
@@ -700,6 +703,8 @@ void DataSet::LoadData( vtkDataSet* tempDataset )
             << std::endl << vprDEBUG_FLUSH;
         return;
     }
+    
+    m_isPartOfCompositeDataset = isPartOfCompositeDataset;
     
     vprDEBUG( vesDBG, 1 ) << "|\tLoadData: filename = " << fileName
     << std::endl << vprDEBUG_FLUSH;
@@ -1903,7 +1908,7 @@ void DataSet::CreateCompositeDataSets()
             //set the vector arrow
             tempDataset->SetArrow( arrow );
             //Load Data sort of
-            tempDataset->LoadData( currentDataset );
+            tempDataset->LoadData( currentDataset, true );
             
             mgdIterator->GoToNextItem();
             num++;

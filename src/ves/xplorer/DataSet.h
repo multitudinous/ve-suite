@@ -135,7 +135,7 @@ public:
     //void LoadData( const std::string fileName );
     void LoadData( vtkUnstructuredGrid*, int );
     void LoadData();
-    void LoadData( vtkDataSet* data );
+    void LoadData( vtkDataSet* data, bool isPartOfCompositeDataset = false );
 
     ///Set the filename for this dataset
     ///\post Now LoadData can be called
@@ -400,6 +400,8 @@ private:
     int partOfTransientSeries;
     ves::builder::DataLoader::DataLoader* m_externalFileLoader;///<Translator interface
     
+    ///Easy way to tell if this dataset is a child of a composite dataset
+    bool m_isPartOfCompositeDataset;
 #ifdef USE_OMP
     unsigned int noOfData;   // Total no. of octants.
     vtkUnstructuredGridReader *dataReader[MAX_DATA];
