@@ -35,9 +35,11 @@ public:
     void setUseMinCellSize( bool use ) { _useMinCellSize = use; }
     bool getUseMinCellSize() const { return( _useMinCellSize ); }
 
+    void setCreateHullPerGeometry( bool createHull ) { _createHull = createHull; }
+    bool setCreateHullPerGeometry() const { return( _createHull ); }
+
     typedef enum {
         GEOMETRIC_MEAN,
-        GEOMETRIC_CENTER,
         BOUNDING_BOX_CENTER,
     } PointSelectionMethod;
 
@@ -50,10 +52,12 @@ protected:
     void recurseBuild( Octree* cell ) const;
     void gatherVerts( Octree* cell, osg::Vec3Array* verts ) const;
     osg::Vec3 representativeVert( osg::Vec3Array* verts ) const;
+    void createHull( osg::Geometry& geom );
 
     unsigned int _maxVertsPerCell;
     osg::Vec3 _minCellSize;
     bool _useMinCellSize;
+    bool _createHull;
     PointSelectionMethod _psm;
 };
 

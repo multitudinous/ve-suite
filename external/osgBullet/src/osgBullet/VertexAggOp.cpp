@@ -34,6 +34,7 @@ VertexAggOp::VertexAggOp()
   : _maxVertsPerCell( 50 ),
     _minCellSize( osg::Vec3( 0., 0., 0. ) ),
     _useMinCellSize( false ),
+    _createHull( true ),
     _psm( VertexAggOp::GEOMETRIC_MEAN )
 {
 }
@@ -54,36 +55,61 @@ VertexAggOp::operator()( osg::Geometry& geom )
     if( verts != NULL )
     {
         osg::ref_ptr< Octree > oct = new Octree;
-        oct->_bb = geom.getBound();
+        {
+            osg::BoundingBox& bb = oct->_bb;
+            for( unsigned int jdx=0; jdx<verts->size(); jdx++ )
+                bb.expandBy( (*verts)[ jdx ] );
+        }
         oct->_verts = verts;
         recurseBuild( oct.get() );
 
         osg::Vec3Array* newV = new osg::Vec3Array;
         gatherVerts( oct.get(), newV );
 
-        btConvexHullShape* chs = new btConvexHullShape;
-        osg::Vec3Array::const_iterator itr;
-        for( itr = newV->begin(); itr != newV->end(); itr++ )
-            chs->addPoint( osgBullet::asBtVector3( *itr ) );
-
-        osg::ref_ptr< osg::Node > n = osgNodeFromBtCollisionShape( chs );
-        osg::Geode* newGeode = dynamic_cast< osg::Geode* >( n.get() );
-        if( newGeode == NULL )
-            osg::notify( osg::FATAL ) << "Got NULL geode from osgNodeFromBtCollisionShape" << std::endl;
-        osg::Drawable* newDraw = newGeode->getDrawable( 0 );
-        osg::Geometry* newGeom = dynamic_cast< osg::Geometry* >( newDraw );
-        if( newGeom == NULL )
-            osg::notify( osg::FATAL ) << "Got NULL geometry from osgNodeFromBtCollisionShape" << std::endl;
-
-        geom.setVertexArray( newGeom->getVertexArray() );
-        geom.setColorArray( newGeom->getColorArray() );
-        geom.setColorBinding( newGeom->getColorBinding() );
-        geom.removePrimitiveSet( 0, geom.getNumPrimitiveSets() );
-        geom.addPrimitiveSet( newGeom->getPrimitiveSet( 0 ) );
+        if( _createHull )
+        {
+            geom.setVertexArray( newV );
+            createHull( geom );
+        }
+        else
+        {
+            geom.setVertexArray( newV );
+            geom.removePrimitiveSet( 0, geom.getNumPrimitiveSets() );
+            geom.addPrimitiveSet( new osg::DrawArrays( GL_POINTS, 0, newV->size() ) );
+        }
     }
 
     incVerticesOut( geom.getVertexArray()->getNumElements() );
     return( &geom );
+}
+
+void
+VertexAggOp::createHull( osg::Geometry& geom )
+{
+    osg::Vec3Array* oldV = dynamic_cast< osg::Vec3Array* >( geom.getVertexArray() );
+    if( !oldV )
+    {
+        osg::notify( osg::ALWAYS ) << "VertexAggOp: Can't create convex hull." << std::endl;
+    }
+    btConvexHullShape* chs = new btConvexHullShape;
+    osg::Vec3Array::const_iterator itr;
+    for( itr = oldV->begin(); itr != oldV->end(); itr++ )
+        chs->addPoint( osgBullet::asBtVector3( *itr ) );
+
+    osg::ref_ptr< osg::Node > n = osgNodeFromBtCollisionShape( chs );
+    osg::Geode* newGeode = dynamic_cast< osg::Geode* >( n.get() );
+    if( newGeode == NULL )
+        osg::notify( osg::FATAL ) << "Got NULL geode from osgNodeFromBtCollisionShape" << std::endl;
+    osg::Drawable* newDraw = newGeode->getDrawable( 0 );
+    osg::Geometry* newGeom = dynamic_cast< osg::Geometry* >( newDraw );
+    if( newGeom == NULL )
+        osg::notify( osg::FATAL ) << "Got NULL geometry from osgNodeFromBtCollisionShape" << std::endl;
+
+    geom.setVertexArray( newGeom->getVertexArray() );
+    geom.setColorArray( newGeom->getColorArray() );
+    geom.setColorBinding( newGeom->getColorBinding() );
+    geom.removePrimitiveSet( 0, geom.getNumPrimitiveSets() );
+    geom.addPrimitiveSet( newGeom->getPrimitiveSet( 0 ) );
 }
 
 void
@@ -166,10 +192,22 @@ osg::Vec3
 VertexAggOp::representativeVert( osg::Vec3Array* verts ) const
 {
     osg::Vec3 rep( 0., 0., 0. );
-    unsigned int idx;
-    for( idx=0; idx<verts->size(); idx++ )
-        rep += (*verts)[ idx ];
-    rep /= verts->size();
+
+    if( _psm == GEOMETRIC_MEAN )
+    {
+        unsigned int idx;
+        for( idx=0; idx<verts->size(); idx++ )
+            rep += (*verts)[ idx ];
+        rep /= verts->size();
+    }
+    else if( _psm == BOUNDING_BOX_CENTER )
+    {
+        osg::BoundingBox bb;
+        unsigned int idx;
+        for( idx = 0; idx < verts->size(); idx++ )
+            bb.expandBy( (*verts)[ idx ] );
+        rep = bb.center();
+    }
 
     return( rep );
 }
