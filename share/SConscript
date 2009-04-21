@@ -11,6 +11,7 @@ fontBundle.addFiles( fontFile )
 
 ptConfigFile = ves_pkg.createFileBundle( pj('share','vesuite') )
 ptConfigFile.addFiles( ['ptconfigfile.txt'] )
+ptConfigFile.addFiles( ['Draft2.png'] )
 
 shareSubdirs = Split("""
     glsl
