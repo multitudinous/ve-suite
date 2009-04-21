@@ -2,6 +2,9 @@
 #ifndef APP_TREE_CTRL_H
 #define APP_TREE_CTRL_H
 
+// --- VE-Suite Includes --- //
+class AppFrame;
+
 // --- wxWidgets Includes --- //
 #include <wx/treectrl.h>
 
@@ -44,6 +47,8 @@ protected:
     */
 
 private:
+    ///
+    AppFrame* m_appFrame;
 
     DECLARE_EVENT_TABLE();
 

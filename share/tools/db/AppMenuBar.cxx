@@ -1,6 +1,7 @@
 
 // --- VE-Suite Includes --- //
 #include "AppMenuBar.h"
+#include "AppFrame.h"
 #include "DBAppEnums.h"
 
 BEGIN_EVENT_TABLE( AppMenuBar, wxMenuBar )
@@ -8,9 +9,10 @@ BEGIN_EVENT_TABLE( AppMenuBar, wxMenuBar )
 END_EVENT_TABLE()
 
 ////////////////////////////////////////////////////////////////////////////////
-AppMenuBar::AppMenuBar()
+AppMenuBar::AppMenuBar( wxWindow* parent )
     :
     wxMenuBar(),
+    m_appFrame( static_cast< AppFrame* >( parent ) ),
     m_fileMenu( NULL ),
     m_helpMenu( NULL )
 {

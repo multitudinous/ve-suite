@@ -7,7 +7,9 @@ class AppMenuBar;
 class AppToolBar;
 class AppTreeCtrl;
 class AppNotebook;
-class ConnectionDialog;
+class DBConnectionDialog;
+class VESConnectionDialog;
+class CorbaUnitManager;
 
 // --- wxWidgets Includes --- //
 #include <wx/frame.h>
@@ -29,20 +31,25 @@ public:
     ///Destructor
     virtual ~AppFrame();
 
+    ///
+    DBConnectionDialog* const GetDBConnectionDialog() const;
+
+    ///
+    VESConnectionDialog* const GetVESConnectionDialog() const;
+
 protected:
 
 private:
     ///
     void CreateGUI();
 
-    ///
-    void OpenConnectionDialog( wxCommandEvent& event );
-
     AppMenuBar* m_appMenuBar;
     AppToolBar* m_appToolBar;
     AppTreeCtrl* m_appTreeCtrl;
     AppNotebook* m_appNotebook;
-    ConnectionDialog* m_connectionDialog;
+    DBConnectionDialog* m_dbConnectionDialog;
+    VESConnectionDialog* m_vesConnectionDialog;
+    CorbaUnitManager* m_corbaUnitManager;
     
     DECLARE_EVENT_TABLE()
 

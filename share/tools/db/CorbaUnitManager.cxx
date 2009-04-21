@@ -9,17 +9,10 @@
 
 // --- VE-Suite Includes --- //
 #include <ves/open/moduleC.h>
-#include <ves/open/xml/XMLObjectFactory.h>
-#include <ves/open/xml/XMLCreator.h>
-#include <ves/open/xml/cad/CADCreator.h>
-#include <ves/open/xml/shader/ShaderCreator.h>
-#include <ves/open/xml/model/ModelCreator.h>
 
 // --- C/C++ Libraries --- //
 #include <iostream>
 #include <vector>
-
-XERCES_CPP_NAMESPACE_USE
 
 ////////////////////////////////////////////////////////////////////////////////
 CorbaUnitManager::CorbaUnitManager()
@@ -29,7 +22,7 @@ CorbaUnitManager::CorbaUnitManager()
 ////////////////////////////////////////////////////////////////////////////////
 CorbaUnitManager::~CorbaUnitManager()
 {
-    XMLPlatformUtils::Terminate();
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CorbaUnitManager::SetRunORBFlag( bool run )
@@ -39,31 +32,6 @@ void CorbaUnitManager::SetRunORBFlag( bool run )
 ////////////////////////////////////////////////////////////////////////////////
 void CorbaUnitManager::RunORB()
 {
-    try
-    {
-        XMLPlatformUtils::Initialize();
-    }
-    catch( const XMLException& toCatch )
-    {
-        XERCES_STD_QUALIFIER cerr
-            << "Error during Xerces-c Initialization.\n"
-            << "  Exception message:"
-            << XMLString::transcode( toCatch.getMessage() )
-            << XERCES_STD_QUALIFIER endl;
-
-        exit( 1 );
-    }
-
-    //Initialize VE-Open
-    ves::open::xml::XMLObjectFactory::Instance()->RegisterObjectCreator(
-        "XML", new ves::open::xml::XMLCreator() );
-    ves::open::xml::XMLObjectFactory::Instance()->RegisterObjectCreator(
-        "Shader", new ves::open::xml::shader::ShaderCreator() );
-    ves::open::xml::XMLObjectFactory::Instance()->RegisterObjectCreator(
-        "Model", new ves::open::xml::model::ModelCreator() );
-    ves::open::xml::XMLObjectFactory::Instance()->RegisterObjectCreator(
-        "CAD", new ves::open::xml::cad::CADCreator() );
-
     int argc = 5;
     char** argv;
     std::vector< char* > cmdargs;
@@ -83,7 +51,6 @@ void CorbaUnitManager::RunORB()
     cmdargs.push_back( "1" );
 
     argv = new char*[ argc ];
-
     for( int i = 0; i < argc; ++i )
     {
         argv[ i ] = new char[ strlen( cmdargs.at( i ) ) + 1 ];
@@ -200,9 +167,6 @@ void CorbaUnitManager::DestroyORB()
     {
         return;
     }
-
-    //unit_i->CloseAspen();
-    //Sleep( 5000 );
 
     CleanUp();
 }

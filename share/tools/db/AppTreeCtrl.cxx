@@ -1,6 +1,7 @@
 
 // --- VE-Suite Includes --- //
 #include "AppTreeCtrl.h"
+#include "AppFrame.h"
 #include "DBAppEnums.h"
 
 
@@ -23,7 +24,8 @@ AppTreeCtrl::AppTreeCtrl( wxWindow* parent )
         wxID_ANY,
         wxDefaultPosition,
         wxDefaultSize,
-        wxTR_DEFAULT_STYLE | wxHSCROLL | wxNO_BORDER | wxVSCROLL )
+        wxTR_DEFAULT_STYLE | wxHSCROLL | wxNO_BORDER | wxVSCROLL ),
+    m_appFrame( static_cast< AppFrame* >( parent->GetParent() ) )
 {
     SetBackgroundColour( wxColour( 255, 255, 255 ) );
 }

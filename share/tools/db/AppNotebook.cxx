@@ -1,6 +1,7 @@
 
 // --- VE-Suite Includes --- //
 #include "AppNotebook.h"
+#include "AppFrame.h"
 #include "DBAppEnums.h"
 
 // --- wxWidgets Includes --- //
@@ -21,6 +22,7 @@ AppNotebook::AppNotebook( wxWindow* parent )
         wxDefaultPosition,
         wxDefaultSize,
         wxNB_FIXEDWIDTH | wxNB_RIGHT ),
+    m_appFrame( static_cast< AppFrame* >( parent ) ),
     m_tableDetailsPanel( NULL ),
     m_dataPanel( NULL ),
     m_sqlPanel( NULL ),

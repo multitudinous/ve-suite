@@ -2,6 +2,9 @@
 #ifndef APP_NOTEBOOK_H
 #define APP_NOTEBOOK_H
 
+// --- VE-Suite Includes --- //
+class AppFrame;
+
 // --- wxWidgets Includes --- //
 #include <wx/notebook.h>
 
@@ -29,6 +32,9 @@ protected:
 private:
     ///Adds the tools to the toolbar
     void CreateGUI();
+
+    ///
+    AppFrame* m_appFrame;
 
     wxPanel* m_tableDetailsPanel;
     wxPanel* m_dataPanel;

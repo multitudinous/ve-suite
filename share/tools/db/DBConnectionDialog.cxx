@@ -1,6 +1,7 @@
 
 // --- VE-Suite Includes --- //
-#include "ConnectionDialog.h"
+#include "DBConnectionDialog.h"
+#include "AppFrame.h"
 #include "DBAppEnums.h"
 
 // --- wxWidgets Includes --- //
@@ -12,27 +13,30 @@
 #include <wx/stattext.h>
 #include <wx/button.h>
 
-// --- C/C++ Libraries --- //
+// --- MySQL++ Includes --- //
 #include <mysql++.h>
 
+// --- C/C++ Includes --- //
 #include <iostream>
 #include <iomanip>
 
-BEGIN_EVENT_TABLE( ConnectionDialog, wxDialog )
-EVT_BUTTON( CONNECTION_DIALOG_OK_BUTTON, ConnectionDialog::Connect )
+BEGIN_EVENT_TABLE( DBConnectionDialog, wxDialog )
+EVT_BUTTON( CONNECT_DBCD, DBConnectionDialog::Connect )
+EVT_BUTTON( CLEAR_DBCD, DBConnectionDialog::Clear )
 END_EVENT_TABLE()
 
 ////////////////////////////////////////////////////////////////////////////////
-ConnectionDialog::ConnectionDialog( wxWindow* parent )
+DBConnectionDialog::DBConnectionDialog( wxWindow* parent )
     :
     wxDialog(
         parent,
         wxID_ANY,
-        wxT( "Add a Connection" ),
+        wxT( "DB Connection" ),
         wxDefaultPosition,
         wxSize( 500, 300 ),
         wxCAPTION | wxCLOSE_BOX |
         wxMINIMIZE_BOX | wxSTAY_ON_TOP | wxSYSTEM_MENU ),
+    m_appFrame( static_cast< AppFrame* >( parent ) ),
     m_storedConnectionComboBox( NULL ),
     m_connectionTypeChoice( NULL ),
     m_serverHostTextCtrl( NULL ),
@@ -44,12 +48,12 @@ ConnectionDialog::ConnectionDialog( wxWindow* parent )
     CreateGUI();
 }
 ////////////////////////////////////////////////////////////////////////////////
-ConnectionDialog::~ConnectionDialog()
+DBConnectionDialog::~DBConnectionDialog()
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void ConnectionDialog::CreateGUI()
+void DBConnectionDialog::CreateGUI()
 {
 	SetSizeHints( wxDefaultSize, wxDefaultSize );
 	SetBackgroundColour( wxColour( 255, 255, 255 ) );
@@ -175,12 +179,12 @@ void ConnectionDialog::CreateGUI()
 	
 	buttonSizer->Add( 0, 0, 1, wxEXPAND, 5 );
 	
-	wxButton* okButton;
-	okButton = new wxButton( this, CONNECTION_DIALOG_OK_BUTTON, wxT( "OK" ), wxDefaultPosition, wxDefaultSize, 0 );
-	buttonSizer->Add( okButton, 0, wxALL, 5 );
+	wxButton* connectButton;
+	connectButton = new wxButton( this, CONNECT_DBCD, wxT( "Connect" ), wxDefaultPosition, wxDefaultSize, 0 );
+	buttonSizer->Add( connectButton, 0, wxALL, 5 );
 	
 	wxButton* clearButton;
-	clearButton = new wxButton( this, wxID_ANY, wxT( "Clear" ), wxDefaultPosition, wxDefaultSize, 0 );
+	clearButton = new wxButton( this, CLEAR_DBCD, wxT( "Clear" ), wxDefaultPosition, wxDefaultSize, 0 );
 	buttonSizer->Add( clearButton, 0, wxALL, 5 );
 	
 	wxButton* cancelButton;
@@ -193,7 +197,7 @@ void ConnectionDialog::CreateGUI()
 	Layout();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void ConnectionDialog::Connect( wxCommandEvent& WXUNUSED( event ) )
+void DBConnectionDialog::Connect( wxCommandEvent& WXUNUSED( event ) )
 {
 	//Get database access parameters from wx
     wxString db = m_defaultSchemaTextCtrl->GetValue();
@@ -231,7 +235,16 @@ void ConnectionDialog::Connect( wxCommandEvent& WXUNUSED( event ) )
 	}
 }
 ////////////////////////////////////////////////////////////////////////////////
-std::string ConnectionDialog::ConvertUnicode( const wxChar* data )
+void DBConnectionDialog::Clear( wxCommandEvent& WXUNUSED( event ) )
+{
+    m_serverHostTextCtrl->SetValue( wxT( "" ) );
+    m_portTextCtrl->SetValue( wxT( "" ) );
+    m_usernameTextCtrl->SetValue( wxT( "" ) );
+    m_passwordTextCtrl->SetValue( wxT( "" ) );
+    m_defaultSchemaTextCtrl->SetValue( wxT( "" ) );
+}
+////////////////////////////////////////////////////////////////////////////////
+std::string DBConnectionDialog::ConvertUnicode( const wxChar* data )
 {
     std::string tempStr(
         static_cast< const char* >( wxConvCurrent->cWX2MB( data ) ) );

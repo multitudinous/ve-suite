@@ -5,18 +5,29 @@
 enum
 {
     //AppFrame.h
+    //AF
 
     //AppMenuBar.h
+    //AMB
 
     //AppToolBar.h
-    TOOLBAR_OPEN_CONNECTION_DIALOG,
+    SHOW_DB_CONNECTION_DIALOG_ATB,
+    SHOW_VES_CONNECTION_DIALOG_ATB,
 
     //AppTreeCtrl.h
+    //ATC
 
     //AppNotebook.h
+    //AN
 
-    //ConnectionDialog.h
-    CONNECTION_DIALOG_OK_BUTTON
+    //DBConnectionDialog.h
+    CONNECT_DBCD,
+    CLEAR_DBCD,
+
+    //VESConnectionDialog.h
+    CONNECT_VESCD,
+    CLEAR_VESCD
+
     
 };
 

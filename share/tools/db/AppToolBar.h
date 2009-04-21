@@ -2,6 +2,9 @@
 #ifndef APP_TOOL_BAR_H
 #define APP_TOOL_BAR_H
 
+// --- VE-Suite Includes --- //
+class AppFrame;
+
 // --- wxWidgets Includes --- //
 #include <wx/toolbar.h>
 
@@ -32,6 +35,15 @@ private:
 
     ///Adds the tools to the toolbar
     void CreateGUI();
+
+    ///
+    void ShowDBConnectionDialog( wxCommandEvent& event );
+
+    ///
+    void ShowVESConnectionDialog( wxCommandEvent& event );
+
+    ///
+    AppFrame* m_appFrame;
 
     ///A map that holds the bitmaps for this toolbar
     std::map< std::string, wxBitmap > mToolbarBitmaps;

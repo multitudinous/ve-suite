@@ -5,7 +5,9 @@
 #include "AppToolBar.h"
 #include "AppTreeCtrl.h"
 #include "AppNotebook.h"
-#include "ConnectionDialog.h"
+#include "DBConnectionDialog.h"
+#include "VESConnectionDialog.h"
+#include "CorbaUnitManager.h"
 #include "DBAppEnums.h"
 
 #include <ves/util/icons/ve_icon16x16.xpm>
@@ -17,7 +19,7 @@
 #include <wx/scrolwin.h>
 
 BEGIN_EVENT_TABLE( AppFrame, wxFrame )
-EVT_MENU( TOOLBAR_OPEN_CONNECTION_DIALOG, AppFrame::OpenConnectionDialog )
+
 END_EVENT_TABLE()
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -34,7 +36,9 @@ AppFrame::AppFrame( wxWindow* parent, wxWindowID id )
     m_appToolBar( NULL ),
     m_appTreeCtrl( NULL ),
     m_appNotebook( NULL ),
-    m_connectionDialog( NULL )
+    m_dbConnectionDialog( new DBConnectionDialog( this ) ),
+    m_vesConnectionDialog( new VESConnectionDialog( this ) ),
+    m_corbaUnitManager( NULL )
 {
     CreateGUI();
 }
@@ -54,7 +58,7 @@ void AppFrame::CreateGUI()
     wxBoxSizer* mainSizer = new wxBoxSizer( wxHORIZONTAL );
 
     //Create the menu bar
-    m_appMenuBar = new AppMenuBar();
+    m_appMenuBar = new AppMenuBar( this );
     SetMenuBar( m_appMenuBar );
 
     //Create the tool bar
@@ -89,13 +93,13 @@ void AppFrame::CreateGUI()
 	Layout();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AppFrame::OpenConnectionDialog( wxCommandEvent& WXUNUSED( event ) )
+DBConnectionDialog* const AppFrame::GetDBConnectionDialog() const
 {
-    if( m_connectionDialog == NULL )
-    {
-        m_connectionDialog = new ConnectionDialog( this );
-    }
-
-    m_connectionDialog->Show();
+    return m_dbConnectionDialog;
+}
+////////////////////////////////////////////////////////////////////////////////
+VESConnectionDialog* const AppFrame::GetVESConnectionDialog() const
+{
+    return m_vesConnectionDialog;
 }
 ////////////////////////////////////////////////////////////////////////////////
