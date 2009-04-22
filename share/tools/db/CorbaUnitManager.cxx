@@ -1,14 +1,13 @@
 
-// --- DB Includes --- //
+// --- VE-Suite Includes --- //
 #include "CorbaUnitManager.h"
 #include "Body_Unit_i.h"
+
+#include <ves/open/moduleC.h>
 
 // --- ACE-TAO Includes --- //
 #include <tao/BiDir_GIOP/BiDirGIOP.h>
 #include <orbsvcs/CosNamingC.h>
-
-// --- VE-Suite Includes --- //
-#include <ves/open/moduleC.h>
 
 // --- C/C++ Libraries --- //
 #include <iostream>
@@ -30,7 +29,10 @@ void CorbaUnitManager::SetRunORBFlag( bool run )
     ;//runORB = run;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CorbaUnitManager::RunORB()
+bool CorbaUnitManager::RunORB(
+    std::string& workingDirectory,
+    std::string& computerName,
+    std::string& portNumber )
 {
     int argc = 5;
     char** argv;
@@ -39,14 +41,12 @@ void CorbaUnitManager::RunORB()
     cmdargs.push_back( "ves_db.exe" );
     cmdargs.push_back( "-ORBInitRef" );
     std::string orbInfo =
-        std::string( "NameService=corbaloc:htiop:" ) +
+        std::string( "NameService=corbaloc:iiop:" ) +
         computerName +
         std::string( ":" ) + 
         portNumber +
         std::string( "/NameService" );
     cmdargs.push_back( const_cast< char* >( orbInfo.c_str() ) );
-    //cmdargs.push_back( "-ORBSvcConf" );
-    //cmdargs.push_back( "inside.conf" );
     cmdargs.push_back( "-ORBDottedDecimalAddresses" );
     cmdargs.push_back( "1" );
 
@@ -57,8 +57,8 @@ void CorbaUnitManager::RunORB()
         strcpy( argv[ i ], cmdargs.at( i ) );
     }
 
-    //Unit name is "HyperLab"
-    std::string UNITNAME = unitName;
+    //Unit name is "vesDB"
+    std::string unitName = "vesDB";
     std::cout << "Unit name is :" << unitName << std::endl;
 
     try 
@@ -119,15 +119,15 @@ void CorbaUnitManager::RunORB()
         /*
         unit_i =
             new Body_Unit_i(
-                UNITNAME, parent, this, std::string( workingDir ) );
+                unitName, parent, this, std::string( workingDir ) );
         */
-        unit_i = new Body_Unit_i( exec.in(), UNITNAME );
+        unit_i = new Body_Unit_i( exec.in(), unitName );
         unit_i_instantiated = true;
 
         //Activate it to obtain the object reference
         PortableServer::ObjectId_var id =
             PortableServer::string_to_ObjectId(
-                CORBA::string_dup( UNITNAME.c_str() ) );
+                CORBA::string_dup( unitName.c_str() ) );
         child_poa->activate_object_with_id(
             id.in(), unit_i ACE_ENV_ARG_PARAMETER );
 
@@ -139,7 +139,7 @@ void CorbaUnitManager::RunORB()
 
         CosNaming::Name Unitname( 1 );
         Unitname.length( 1 );
-        Unitname[ 0 ].id = CORBA::string_dup( UNITNAME.c_str() );
+        Unitname[ 0 ].id = CORBA::string_dup( unitName.c_str() );
 
         //Bind the object
         try
@@ -150,6 +150,8 @@ void CorbaUnitManager::RunORB()
         {
             naming_context->rebind( Unitname, unit.in() );
             std::cout << ex._info().c_str() << std::endl;
+
+            return false;
         }
 
         //Call the Executive CORBA call to register it to the Executive
@@ -158,7 +160,11 @@ void CorbaUnitManager::RunORB()
     catch( CORBA::Exception& )
     {
         std::cerr << "CORBA exception raised!" << std::endl;
+
+        return false;
     }
+
+    return true;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CorbaUnitManager::DestroyORB()

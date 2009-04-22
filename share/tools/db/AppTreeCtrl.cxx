@@ -4,6 +4,8 @@
 #include "AppFrame.h"
 #include "DBAppEnums.h"
 
+// --- wxWidgets Includes --- //
+
 
 BEGIN_EVENT_TABLE( AppTreeCtrl, wxTreeCtrl )
 /*

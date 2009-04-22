@@ -38,7 +38,7 @@ AppFrame::AppFrame( wxWindow* parent, wxWindowID id )
     m_appNotebook( NULL ),
     m_dbConnectionDialog( new DBConnectionDialog( this ) ),
     m_vesConnectionDialog( new VESConnectionDialog( this ) ),
-    m_corbaUnitManager( NULL )
+    m_corbaUnitManager( new CorbaUnitManager() )
 {
     CreateGUI();
 }
@@ -93,6 +93,26 @@ void AppFrame::CreateGUI()
 	Layout();
 }
 ////////////////////////////////////////////////////////////////////////////////
+AppMenuBar* const AppFrame::GetAppMenuBar() const
+{
+    return m_appMenuBar;
+}
+////////////////////////////////////////////////////////////////////////////////
+AppToolBar* const AppFrame::GetAppToolBar() const
+{
+    return m_appToolBar;
+}
+////////////////////////////////////////////////////////////////////////////////
+AppTreeCtrl* const AppFrame::GetAppTreeCtrl() const
+{
+    return m_appTreeCtrl;
+}
+////////////////////////////////////////////////////////////////////////////////
+AppNotebook const AppFrame::GetAppNotebook() const
+{
+    return m_appNotebook;
+}
+////////////////////////////////////////////////////////////////////////////////
 DBConnectionDialog* const AppFrame::GetDBConnectionDialog() const
 {
     return m_dbConnectionDialog;
@@ -101,5 +121,10 @@ DBConnectionDialog* const AppFrame::GetDBConnectionDialog() const
 VESConnectionDialog* const AppFrame::GetVESConnectionDialog() const
 {
     return m_vesConnectionDialog;
+}
+////////////////////////////////////////////////////////////////////////////////
+CorbaUnitManager* const AppFrame::GetCorbaUnitManager() const
+{
+    return m_corbaUnitManager;
 }
 ////////////////////////////////////////////////////////////////////////////////

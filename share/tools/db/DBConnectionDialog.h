@@ -7,7 +7,6 @@ class AppFrame;
 
 // --- wxWidgets Includes --- //
 #include <wx/dialog.h>
-#include <wx/string.h>
 
 class wxComboBox;
 class wxChoice;
@@ -43,9 +42,6 @@ private:
 
     ///
     void Clear( wxCommandEvent& event );
-
-    ///
-    std::string ConvertUnicode( const wxChar* data );
 
     ///
     AppFrame* m_appFrame;

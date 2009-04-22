@@ -204,8 +204,8 @@ void DBConnectionDialog::Connect( wxCommandEvent& WXUNUSED( event ) )
     wxString server = m_serverHostTextCtrl->GetValue();
     wxString username = m_usernameTextCtrl->GetValue();
     wxString password = m_passwordTextCtrl->GetValue();
-    unsigned int port = static_cast< unsigned int >(
-        atoi( ConvertUnicode( m_portTextCtrl->GetValue().c_str() ).c_str() ) );
+    unsigned int port =
+        static_cast< unsigned int >( wxAtoi( m_portTextCtrl->GetValue() ) );
 
 	//Connect to the database
 	mysqlpp::Connection conn( false );
@@ -242,13 +242,5 @@ void DBConnectionDialog::Clear( wxCommandEvent& WXUNUSED( event ) )
     m_usernameTextCtrl->SetValue( wxT( "" ) );
     m_passwordTextCtrl->SetValue( wxT( "" ) );
     m_defaultSchemaTextCtrl->SetValue( wxT( "" ) );
-}
-////////////////////////////////////////////////////////////////////////////////
-std::string DBConnectionDialog::ConvertUnicode( const wxChar* data )
-{
-    std::string tempStr(
-        static_cast< const char* >( wxConvCurrent->cWX2MB( data ) ) );
-
-    return tempStr;
 }
 ////////////////////////////////////////////////////////////////////////////////

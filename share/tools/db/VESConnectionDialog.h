@@ -7,9 +7,8 @@ class AppFrame;
 
 // --- wxWidgets Includes --- //
 #include <wx/dialog.h>
-#include <wx/string.h>
 
-class wxComboBox;
+class wxDirPickerCtrl;
 class wxTextCtrl;
 
 // --- C/C++ Includes --- //
@@ -44,13 +43,15 @@ private:
     void Clear( wxCommandEvent& event );
 
     ///
-    std::string ConvertUnicode( const wxChar* data );
-
-    ///
     AppFrame* m_appFrame;
 
-	wxComboBox* m_workingDirectoryComboBox;
+    ///
+    wxDirPickerCtrl* m_workingDirPickerCtrl;
+
+    ///
 	wxTextCtrl* m_ceServerHostTextCtrl;
+
+    ///
 	wxTextCtrl* m_cePortTextCtrl;
 
     DECLARE_EVENT_TABLE();

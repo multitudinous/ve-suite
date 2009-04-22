@@ -2,7 +2,9 @@
 // --- VE-Suite Includes --- //
 #include "VESConnectionDialog.h"
 #include "AppFrame.h"
+#include "AppToolBar.h"
 #include "DBAppEnums.h"
+#include "CorbaUnitManager.h"
 
 // --- wxWidgets Includes --- //
 #include <wx/sizer.h>
@@ -13,6 +15,7 @@
 #include <wx/stattext.h>
 #include <wx/button.h>
 #include <wx/filepicker.h>
+#include <wx/msgdlg.h>
 
 // --- C/C++ Libraries --- //
 #include <iostream>
@@ -32,10 +35,9 @@ VESConnectionDialog::VESConnectionDialog( wxWindow* parent )
         wxT( "VES Connection" ),
         wxDefaultPosition,
         wxSize( 500, 200 ),
-        wxCAPTION | wxCLOSE_BOX  | 
+        wxCAPTION | wxCLOSE_BOX |
         wxMINIMIZE_BOX | wxSTAY_ON_TOP | wxSYSTEM_MENU ),
     m_appFrame( static_cast< AppFrame* >( parent ) ),
-    m_workingDirectoryComboBox( NULL ),
     m_ceServerHostTextCtrl( NULL ),
     m_cePortTextCtrl( NULL )
 {
@@ -64,14 +66,10 @@ void VESConnectionDialog::CreateGUI()
 	wxStaticText* workingDirectoryStaticText;
 	workingDirectoryStaticText = new wxStaticText( this, wxID_ANY, wxT( "Working Directory:" ), wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT );
 	workingDirectoryStaticText->Wrap( -1 );
-	workingDirectorySizer->Add( workingDirectoryStaticText, 2, wxALIGN_CENTER | wxALL, 5 );
+	workingDirectorySizer->Add( workingDirectoryStaticText, 1, wxALIGN_CENTER | wxALL, 5 );
 	
-	m_workingDirectoryComboBox = new wxComboBox( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, NULL, 0 ); 
-	workingDirectorySizer->Add( m_workingDirectoryComboBox, 4, wxALIGN_CENTER | wxALL, 5 );
-	
-	wxDirPickerCtrl* workingDirectoryPicker;
-	workingDirectoryPicker = new wxDirPickerCtrl( this, wxID_ANY, wxEmptyString, wxT( "Select a folder" ), wxDefaultPosition, wxDefaultSize, wxDIRP_CHANGE_DIR | wxDIRP_DIR_MUST_EXIST );
-	workingDirectorySizer->Add( workingDirectoryPicker, 1, wxALIGN_CENTER | wxALL, 5 );
+	m_workingDirPickerCtrl = new wxDirPickerCtrl( this, wxID_ANY, wxEmptyString, wxT( "Select a folder" ), wxDefaultPosition, wxDefaultSize, wxDIRP_DEFAULT_STYLE | wxDIRP_USE_TEXTCTRL );
+	workingDirectorySizer->Add( m_workingDirPickerCtrl, 2, wxALIGN_CENTER | wxALL, 5 );
 	
 	connectionSizer->Add( workingDirectorySizer, 1, wxALL | wxEXPAND, 5 );
 	
@@ -94,17 +92,12 @@ void VESConnectionDialog::CreateGUI()
 	m_cePortTextCtrl = new wxTextCtrl( this, wxID_ANY, wxT( "1239" ), wxDefaultPosition, wxDefaultSize, 0 );
 	ceServerHostSizer->Add( m_cePortTextCtrl, 1, wxALIGN_CENTER | wxALL, 5 );
 	
-	
-	ceServerHostSizer->Add( 0, 0, 1, wxEXPAND, 5 );
-	
 	connectionSizer->Add( ceServerHostSizer, 1, wxALL | wxEXPAND, 5 );
 	
 	mainSizer->Add( connectionSizer, 1, wxALL | wxEXPAND, 5 );
 	
 	wxBoxSizer* buttonSizer;
 	buttonSizer = new wxBoxSizer( wxHORIZONTAL );
-	
-	
 	buttonSizer->Add( 0, 0, 1, wxEXPAND, 5 );
 	
 	wxButton* connectButton;
@@ -127,19 +120,39 @@ void VESConnectionDialog::CreateGUI()
 ////////////////////////////////////////////////////////////////////////////////
 void VESConnectionDialog::Connect( wxCommandEvent& WXUNUSED( event ) )
 {
-    wxString workingDirectory = m_workingDirectoryComboBox->GetValue();
-    wxString ceServerHost = m_ceServerHostTextCtrl->GetValue();
-    wxString cePort = m_cePortTextCtrl->GetValue();
+    std::string workingDirectory = m_workingDirPickerCtrl->GetPath().mb_str();
+    std::string ceServerHost = m_ceServerHostTextCtrl->GetValue().mb_str();
+    std::string cePort = m_cePortTextCtrl->GetValue().mb_str();
 
     if( workingDirectory != wxT( "" ) &&
         ceServerHost != wxT( "" ) &&
         cePort != wxT( "" ) )
     {
+        CorbaUnitManager* corbaUnitManager = m_appFrame->GetCorbaUnitManager();
+        if( corbaUnitManager->RunORB( workingDirectory, ceServerHost, cePort ) )
+        {
+            m_appFrame->GetAppToolBar()->DisableVESConnectionDialog();
 
+            Hide();
+
+            wxMessageDialog msgDlg(
+                this, wxT( "Connection successful" ), wxT( "Success" ) );
+            msgDlg.ShowModal();
+        }
+        else
+        {
+            wxMessageDialog wrnDlg(
+                this, wxT( "Unable to connect to VE-CE" ), wxT( "Warning" ),
+                wxOK | wxCENTRE | wxICON_EXCLAMATION );
+            wrnDlg.ShowModal();
+        }
     }
     else
     {
-        
+        wxMessageDialog errorDlg(
+            this, wxT( "Left required field empty" ), wxT( "Error" ),
+            wxOK | wxCENTRE | wxICON_ERROR );
+        errorDlg.ShowModal();
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -147,13 +160,5 @@ void VESConnectionDialog::Clear( wxCommandEvent& WXUNUSED( event ) )
 {
     m_ceServerHostTextCtrl->SetValue( wxT( "" ) );
     m_cePortTextCtrl->SetValue( wxT( "" ) );
-}
-////////////////////////////////////////////////////////////////////////////////
-std::string VESConnectionDialog::ConvertUnicode( const wxChar* data )
-{
-    std::string tempStr(
-        static_cast< const char* >( wxConvCurrent->cWX2MB( data ) ) );
-
-    return tempStr;
 }
 ////////////////////////////////////////////////////////////////////////////////

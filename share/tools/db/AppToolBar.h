@@ -27,6 +27,9 @@ public:
     ///Destructor
     virtual ~AppToolBar();
 
+    ///
+    void DisableVESConnectionDialog();
+
 protected:
 
 private:

@@ -5,8 +5,14 @@
 // --- VE-Suite Includes --- //
 #include <ves/open/moduleS.h>
 
-// --- ACE/TAO Includes --- //
 class Body_Unit_i;
+
+// --- wxWidgets Includes --- //
+#ifdef WIN32
+//windows.h is included from somewhere above causing errors
+//http://www.wxwidgets.org/docs/faqmsw.htm#asuffix
+#include <wx/msw/winundef.h>
+#endif //WIN32
 
 // --- C/C++ Includes --- //
 #include <string>
@@ -24,7 +30,10 @@ public:
     void SetRunORBFlag( bool run );
 
     ///
-    void RunORB();
+    bool RunORB(
+        std::string& workingDirectory,
+        std::string& computerName,
+        std::string& portNumber );
 
     ///
     void CheckCORBAWork();
@@ -43,15 +52,6 @@ protected:
 private:
     ///
     bool unit_i_instantiated;
-
-    ///
-    std::string computerName;
-
-    ///
-    std::string portNumber;
-
-    ///
-    std::string unitName;
 
     ///
     Body_Unit_i* unit_i;

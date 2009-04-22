@@ -32,10 +32,32 @@ public:
     virtual ~AppFrame();
 
     ///
+    ///\return
+    AppMenuBar* const GetAppMenuBar() const;
+
+    ///
+    ///\return
+    AppToolBar* const GetAppToolBar() const;
+
+    ///
+    ///\return
+    AppTreeCtrl* const GetAppTreeCtrl() const;
+
+    ///
+    ///\return
+    AppNotebook const GetAppNotebook() const;
+
+    ///
+    ///\return
     DBConnectionDialog* const GetDBConnectionDialog() const;
 
     ///
+    ///\return
     VESConnectionDialog* const GetVESConnectionDialog() const;
+
+    ///
+    ///\return
+    CorbaUnitManager* const GetCorbaUnitManager() const;
 
 protected:
 
@@ -43,12 +65,25 @@ private:
     ///
     void CreateGUI();
 
+    ///
     AppMenuBar* m_appMenuBar;
+    
+    ///
     AppToolBar* m_appToolBar;
+    
+    ///
     AppTreeCtrl* m_appTreeCtrl;
+    
+    ///
     AppNotebook* m_appNotebook;
+    
+    ///
     DBConnectionDialog* m_dbConnectionDialog;
+    
+    ///
     VESConnectionDialog* m_vesConnectionDialog;
+    
+    ///
     CorbaUnitManager* m_corbaUnitManager;
     
     DECLARE_EVENT_TABLE()
