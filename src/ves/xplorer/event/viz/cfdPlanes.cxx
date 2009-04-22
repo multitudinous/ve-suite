@@ -122,6 +122,12 @@ cfdPlanes::cfdPlanes( const int xyz, const char directory[],
             testPD->ShallowCopy( tempPolyData );
             m_pdSlices.push_back( testPD );
         }
+        else
+        {
+            std::cerr << "|\tFile " << dirString << " was not loaded since "
+                <<"it does not contain any points." << std::endl;
+                
+        }
         tempPolyData->Delete();
     }
     numPlanes = m_pdSlices.size();
