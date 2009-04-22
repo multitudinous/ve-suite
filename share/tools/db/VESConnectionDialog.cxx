@@ -124,16 +124,14 @@ void VESConnectionDialog::Connect( wxCommandEvent& WXUNUSED( event ) )
     std::string ceServerHost = m_ceServerHostTextCtrl->GetValue().mb_str();
     std::string cePort = m_cePortTextCtrl->GetValue().mb_str();
 
-    if( workingDirectory != wxT( "" ) &&
-        ceServerHost != wxT( "" ) &&
-        cePort != wxT( "" ) )
+    if( workingDirectory != "" && ceServerHost != "" && cePort != "" )
     {
         CorbaUnitManager* corbaUnitManager = m_appFrame->GetCorbaUnitManager();
         if( corbaUnitManager->RunORB( workingDirectory, ceServerHost, cePort ) )
         {
-            m_appFrame->GetAppToolBar()->DisableVESConnectionDialog();
-
             Hide();
+
+            m_appFrame->GetAppToolBar()->DisableVESConnectionDialog();
 
             wxMessageDialog msgDlg(
                 this, wxT( "Connection successful" ), wxT( "Success" ) );
