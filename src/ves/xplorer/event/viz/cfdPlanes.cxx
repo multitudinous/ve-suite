@@ -61,9 +61,6 @@ cfdPlanes::cfdPlanes( const int xyz, const char directory[],
     cuttingPlane( NULL ),
     type( xyz )
 {
-    vprDEBUG( vesDBG, 2 ) << " cfdPlanes constructor"
-        << std::endl << vprDEBUG_FLUSH;
-
     if( this->type == 0 ) this->typeLabel = 'X';
     else if( this->type == 1 ) this->typeLabel = 'Y';
     else if( this->type == 2 ) this->typeLabel = 'Z';
@@ -159,7 +156,8 @@ cfdPlanes::~cfdPlanes()
             m_pdSlices[ i ]->Delete();
         }
     }
-
+    m_pdSlices.clear();
+    
     if( this->collectivePolyData != NULL )
     {
         //this->collectivePolyData->Delete();
