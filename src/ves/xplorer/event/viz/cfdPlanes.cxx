@@ -54,17 +54,15 @@ using namespace ves::xplorer::util;
 
 cfdPlanes::cfdPlanes( const int xyz, const char directory[],
                       const double bounds[ 6 ] )
+    :
+    numPlanes( 0 ),
+    isPlaneSelected( NULL ),
+    collectivePolyData( NULL ),
+    cuttingPlane( NULL ),
+    type( xyz )
 {
     vprDEBUG( vesDBG, 2 ) << " cfdPlanes constructor"
-    << std::endl << vprDEBUG_FLUSH;
-    this->numPlanes = 0;
-    this->append = NULL;
-    this->isPlaneSelected = NULL;
-    this->sliceLocation = NULL;
-    this->collectivePolyData = NULL;
-    this->cuttingPlane = NULL;
-
-    this->type = xyz;
+        << std::endl << vprDEBUG_FLUSH;
 
     if( this->type == 0 ) this->typeLabel = 'X';
     else if( this->type == 1 ) this->typeLabel = 'Y';
@@ -75,26 +73,25 @@ cfdPlanes::cfdPlanes( const int xyz, const char directory[],
         exit( 1 );
     }
     vprDEBUG( vesDBG, 1 ) << "this->typeLabel = " << this->typeLabel
-    << std::endl << vprDEBUG_FLUSH;
+        << std::endl << vprDEBUG_FLUSH;
 
     vprDEBUG( vesDBG, 1 ) << "directory: \"" << directory << "\""
-    << std::endl << vprDEBUG_FLUSH;
+        << std::endl << vprDEBUG_FLUSH;
 
     // count the total number of cut planes
     for( int i = 0; 1; i++ )
     {
-        //sprintf( planeFileName, "%s/%c_Cont%d.vtk", directory,
-        //          this->typeLabel, i );
         std::ostringstream dirStringStream;
-        dirStringStream << directory << "/" << this->typeLabel << "_Cont" << i << ".vtk";
+        dirStringStream << directory << "/" 
+            << this->typeLabel << "_Cont" << i << ".vtk";
         std::string dirString = dirStringStream.str();
-        //planeFileName = (char*)dirString.c_str();
-        if( ! fileIO::isFileReadable(( std::string )dirString.c_str() ) )
+
+        if( !fileIO::isFileReadable( dirString ) )
         {
             this->numPlanes = i;
             vprDEBUG( vesDBG, 0 ) << "\t\tFound " << this->numPlanes
-            << " " << this->typeLabel << "-planes"
-            << std::endl << vprDEBUG_FLUSH;
+                << " " << this->typeLabel << "-planes"
+                << std::endl << vprDEBUG_FLUSH;
             break;
         }
     }
@@ -104,35 +101,34 @@ cfdPlanes::cfdPlanes( const int xyz, const char directory[],
         return;
     }
 
-    this->append = new vtkPolyData* [ this->numPlanes ];
-    this->sliceLocation = new float [ this->numPlanes ];
     for( int i = 0; i < this->numPlanes; i++ )
     {
-        //sprintf( planeFileName, "%s/%c_Cont%d.vtk", directory,
-        //         this->typeLabel, i );
         std::ostringstream dirStringStream;
-        dirStringStream << directory << "/" << this->typeLabel << "_Cont" << i << ".vtk";
+        dirStringStream << directory << "/" 
+            << this->typeLabel << "_Cont" << i << ".vtk";
         std::string dirString = dirStringStream.str();
-        //planeFileName = (char*)dirString.c_str();
 
-        //planeReader = vtkPolyDataReader::New();
-        //planeReader->SetFileName( dirString.c_str() );//(char*)dirString.c_str() );
-        //planeReader->Update();
-        vtkPolyData* tempPolyData = vtkPolyData::SafeDownCast( readVtkThing( dirString ) );
-        // look at POINTS to see what coordinate that the plane goes through
-        double vertex [ 3 ];
-        tempPolyData->GetPoints()->GetPoint( 0, vertex );
-        this->sliceLocation[ i ] = ( float )vertex[this->type];
-        vprDEBUG( vesDBG, 1 ) << "\t\tplane[" << i
-            << "] goes through coordinate "
-            << this->sliceLocation[ i ] 
-            << std::endl << vprDEBUG_FLUSH;
-
-        this->append[ i ] = vtkPolyData::New();
-        this->append[ i ]->ShallowCopy( tempPolyData );
+        vtkDataObject* tempobject = readVtkThing( dirString );
+        vtkPolyData* tempPolyData = vtkPolyData::SafeDownCast( tempobject );
+        if( tempPolyData->GetPoints()->GetNumberOfPoints() > 0 )
+        {
+            // look at POINTS to see what coordinate that the plane goes through
+            double vertex[ 3 ];
+            tempPolyData->GetPoints()->GetPoint( 0, vertex );
+            sliceLocation.push_back( vertex[this->type] );
+            vprDEBUG( vesDBG, 1 ) << "\t\tplane[" << i
+                << "] goes through coordinate "
+                << sliceLocation.back() 
+                << std::endl << vprDEBUG_FLUSH;
+            
+            vtkPolyData* testPD = vtkPolyData::New();
+            testPD->ShallowCopy( tempPolyData );
+            m_pdSlices.push_back( testPD );
+        }
         tempPolyData->Delete();
     }
-
+    numPlanes = m_pdSlices.size();
+    
     // allocate space for the array that keeps track of which planes
     // are selected for display...
     this->isPlaneSelected = new int [ this->numPlanes ];
@@ -156,18 +152,12 @@ cfdPlanes::cfdPlanes( const int xyz, const char directory[],
 
 cfdPlanes::~cfdPlanes()
 {
-    //vprDEBUG(vesDBG,2) << " cfdPlanes destructor"
-    //                       << std::endl << vprDEBUG_FLUSH;
-
     if( this->numPlanes > 0 )
     {
         for( int i = 0; i  < this->numPlanes; i++ )
         {
-            this->append[ i ]->Delete();
+            m_pdSlices[ i ]->Delete();
         }
-
-        delete [] this->append;
-        this->append = NULL;
     }
 
     if( this->collectivePolyData != NULL )
@@ -188,11 +178,7 @@ cfdPlanes::~cfdPlanes()
         this->isPlaneSelected = NULL;
     }
 
-    if( this->sliceLocation != NULL )
-    {
-        delete [] this->sliceLocation;
-        this->sliceLocation = NULL;
-    }
+    sliceLocation.clear();
 }
 
 void cfdPlanes::SetAllPlanesSelected( void )
@@ -231,11 +217,11 @@ vtkPolyData * cfdPlanes::GetClosestPlane( const int sliderBarPos )
 
     for( int i = 0; i < this->numPlanes; i++ )
     {
-        float sqDist = ( coordinate - this->sliceLocation[ i ] ) *
-                       ( coordinate - this->sliceLocation[ i ] );
+        float sqDist = ( coordinate - sliceLocation[ i ] ) *
+                       ( coordinate - sliceLocation[ i ] );
         vprDEBUG( vesDBG, 1 )
-        << "plane " << i << ": sliceLocation = " << this->sliceLocation[ i ]
-        << ", sqDist = " << sqDist << std::endl << vprDEBUG_FLUSH;
+            << "plane " << i << ": sliceLocation = " << sliceLocation[ i ]
+            << ", sqDist = " << sqDist << std::endl << vprDEBUG_FLUSH;
 
         if( leastSquaredDistance > sqDist )
         {
@@ -245,7 +231,7 @@ vtkPolyData * cfdPlanes::GetClosestPlane( const int sliderBarPos )
     }
     this->isPlaneSelected[ index ] = 1;
 
-    return this->append[ index ];
+    return m_pdSlices[ index ];
 }
 
 void cfdPlanes::ConcatenateSelectedPlanes( void )
@@ -267,7 +253,7 @@ void cfdPlanes::ConcatenateSelectedPlanes( void )
         {
             continue;
         }
-        collectivePolyData->AddInput( append[ i ] );
+        collectivePolyData->AddInput( m_pdSlices[ i ] );
     }
 
     collectivePolyData->Update();
@@ -288,8 +274,8 @@ int cfdPlanes::GetNumberOfPlanes()
     return this->numPlanes;
 }
 
-vtkPolyData * cfdPlanes::GetPlane( const int i )
+vtkPolyData* cfdPlanes::GetPlane( const int i )
 {
-    return this->append[ i ];
+    return m_pdSlices[ i ];
 }
 

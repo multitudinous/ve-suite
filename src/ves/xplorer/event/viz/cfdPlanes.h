@@ -37,6 +37,8 @@
 
 #include <ves/VEConfig.h>
 
+#include <vector>
+
 class vtkPolyData;
 class vtkAppendPolyData;
 class vtkPolyDataAlgorithm;
@@ -102,15 +104,15 @@ private:
 
 
     cfdCuttingPlane *cuttingPlane;///<Cutting plane for data.
-    //vtkTriangleFilter *tFilter;
-    //vtkDecimatePro *deci;
 
-    vtkPolyData ** append;///<Individual polydata planes of data.
+    ///Individual polydata planes of data.
+    std::vector< vtkPolyData* > m_pdSlices;
 
+    
     int * isPlaneSelected;///<array that keeps track of which planes are selected for display.
-
-    float * sliceLocation;///<array that keeps track of the physical location of a particular plane.
-
+    
+    ///array that keeps track of the physical location of a particular plane.
+    std::vector< float > sliceLocation;
 
     vtkAppendPolyData* collectivePolyData;///<polydata planes of data stored in a single object.
 };
