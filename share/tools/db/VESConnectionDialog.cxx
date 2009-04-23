@@ -134,13 +134,13 @@ void VESConnectionDialog::Connect( wxCommandEvent& WXUNUSED( event ) )
             m_appFrame->GetAppToolBar()->DisableVESConnectionDialog();
 
             wxMessageDialog msgDlg(
-                this, wxT( "Connection successful" ), wxT( "Success" ) );
+                this, wxT( "Connection successful!" ), wxT( "Success" ) );
             msgDlg.ShowModal();
         }
         else
         {
             wxMessageDialog wrnDlg(
-                this, wxT( "Unable to connect to VE-CE" ), wxT( "Warning" ),
+                this, wxT( "Unable to connect to VE-CE!" ), wxT( "Warning" ),
                 wxOK | wxCENTRE | wxICON_EXCLAMATION );
             wrnDlg.ShowModal();
         }
@@ -148,7 +148,7 @@ void VESConnectionDialog::Connect( wxCommandEvent& WXUNUSED( event ) )
     else
     {
         wxMessageDialog errorDlg(
-            this, wxT( "Left required field empty" ), wxT( "Error" ),
+            this, wxT( "Left required field empty!" ), wxT( "Error" ),
             wxOK | wxCENTRE | wxICON_ERROR );
         errorDlg.ShowModal();
     }

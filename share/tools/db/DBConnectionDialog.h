@@ -12,9 +12,6 @@ class wxComboBox;
 class wxChoice;
 class wxTextCtrl;
 
-// --- C/C++ Includes --- //
-#include <string>
-
 /*!\file DBConnectionDialog.h
  *
  */

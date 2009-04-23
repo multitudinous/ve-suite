@@ -15,7 +15,7 @@ enum
     SHOW_VES_CONNECTION_DIALOG_ATB,
 
     //AppTreeCtrl.h
-    //ATC
+    SELECTION_CHANGED_ATC,
 
     //AppNotebook.h
     //AN

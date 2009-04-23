@@ -3,6 +3,7 @@
 #include "DBConnectionDialog.h"
 #include "AppFrame.h"
 #include "DBAppEnums.h"
+#include "MySQLConnection.h"
 
 // --- wxWidgets Includes --- //
 #include <wx/sizer.h>
@@ -12,11 +13,13 @@
 #include <wx/statbox.h>
 #include <wx/stattext.h>
 #include <wx/button.h>
+#include <wx/msgdlg.h>
 
 // --- MySQL++ Includes --- //
-#include <mysql++.h>
+//#include <mysql++.h>
 
 // --- C/C++ Includes --- //
+#include <string>
 #include <iostream>
 #include <iomanip>
 
@@ -200,39 +203,66 @@ void DBConnectionDialog::CreateGUI()
 void DBConnectionDialog::Connect( wxCommandEvent& WXUNUSED( event ) )
 {
 	//Get database access parameters from wx
-    wxString db = m_defaultSchemaTextCtrl->GetValue();
-    wxString server = m_serverHostTextCtrl->GetValue();
-    wxString username = m_usernameTextCtrl->GetValue();
-    wxString password = m_passwordTextCtrl->GetValue();
+    std::string db = m_defaultSchemaTextCtrl->GetValue().mb_str();
+    std::string server = m_serverHostTextCtrl->GetValue().mb_str();
+    std::string username = m_usernameTextCtrl->GetValue().mb_str();
+    std::string password = m_passwordTextCtrl->GetValue().mb_str();
     unsigned int port =
         static_cast< unsigned int >( wxAtoi( m_portTextCtrl->GetValue() ) );
 
-	//Connect to the database
-	mysqlpp::Connection conn( false );
-	if( conn.connect( db.c_str(), server.c_str(), username.c_str(), password.c_str(), port ) )
+    switch( m_connectionTypeChoice->GetSelection() )
     {
-		//Retrieve a subset of the table and display it
-		mysqlpp::Query query = conn.query( "select Name from employees" );
-		if( mysqlpp::StoreQueryResult res = query.store() )
+        //MySQL
+        case 0:
         {
-			std::cout << "We have:" << std::endl;
-			mysqlpp::StoreQueryResult::const_iterator it;
-			for( it = res.begin(); it != res.end(); ++it )
+            if( db != "" && server != "" && username != "" &&
+                password != "" && port != atoi( "" ) )
             {
-				mysqlpp::Row row = *it;
-				std::cout << '\t' << row[ 0 ] << std::endl;
-			}
-		}
-		else
+	            //Connect to the database
+                MySQLConnection* mysqlConnection = new MySQLConnection();
+	            if( mysqlConnection->connect(
+                        db.c_str(), server.c_str(),
+                        username.c_str(), password.c_str(), port ) )
+                {
+                    Hide();
+
+                    wxMessageDialog msgDlg(
+                        this,
+                        wxT( "MySQL connection successful!" ),
+                        wxT( "Success" ) );
+                    msgDlg.ShowModal();
+	            }
+	            else
+                {
+                    wxMessageDialog wrnDlg(
+                        this,
+                        wxT( "Unable to connect to MySQL server!" ),
+                        wxT( "Warning" ),
+                        wxOK | wxCENTRE | wxICON_EXCLAMATION );
+                    wrnDlg.ShowModal();
+
+                    delete mysqlConnection;
+                    mysqlConnection = NULL;
+	            }
+            }
+            else
+            {
+                wxMessageDialog errorDlg(
+                    this,
+                    wxT( "Left required field empty!" ),
+                    wxT( "Error" ),
+                    wxOK | wxCENTRE | wxICON_ERROR );
+                errorDlg.ShowModal();
+            }
+
+            break;
+        }
+        //Access
+        case 1:
         {
-			std::cerr << "Failed to get item list: "
-                      << query.error() << std::endl;
-		}
-	}
-	else
-    {
-        std::cerr << "DB connection failed: " << conn.error() << std::endl;
-	}
+            break;
+        }
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DBConnectionDialog::Clear( wxCommandEvent& WXUNUSED( event ) )

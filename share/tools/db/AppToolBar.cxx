@@ -28,6 +28,7 @@ AppToolBar::AppToolBar( wxWindow* parent )
     m_appFrame( static_cast< AppFrame* >( parent ) )
 {
     LoadBitmaps();
+
     CreateGUI();
 }
 ////////////////////////////////////////////////////////////////////////////////

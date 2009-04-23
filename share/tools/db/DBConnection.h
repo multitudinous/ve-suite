@@ -21,9 +21,22 @@ public:
     ///Destructor
     virtual ~DBConnection();
 
+    ///
+    enum DB
+    {
+        MYSQL = 7,
+        ACCESS = 77
+    };
+
+    ///
+    const unsigned int GetDBType() const;
+
 protected:
+    ///
+    unsigned int m_dbType;
 
 private:
+
 
 
 };

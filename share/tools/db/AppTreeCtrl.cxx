@@ -4,18 +4,18 @@
 #include "AppFrame.h"
 #include "DBAppEnums.h"
 
+#include "xpm/TreeCtrl/MySQLDatabase.xpm"
+#include "xpm/TreeCtrl/AccessDatabase.xpm"
+
 // --- wxWidgets Includes --- //
+#include <wx/imaglist.h>
 
 
 BEGIN_EVENT_TABLE( AppTreeCtrl, wxTreeCtrl )
-/*
-EVT_TREE_SEL_CHANGED( HIERARCHYTREE_CTRL, AppTreeCtrl::OnSelChanged )
-EVT_TREE_ITEM_EXPANDING( HIERARCHYTREE_CTRL, AppTreeCtrl::OnExpanded )
-//EVT_TREE_ITEM_ACTIVATED( HIERARCHYTREE_CTRL, AppTreeCtrl::OnDoubleClick )
-EVT_TREE_ITEM_RIGHT_CLICK( HIERARCHYTREE_CTRL, AppTreeCtrl::OnRightClick )
-EVT_MENU_RANGE( UIPLUGINBASE_BEGIN_MENU, UIPLUGINBASE_END_MENU, AppTreeCtrl::ProcessRightClickMenuEvents )
-EVT_MENU_RANGE( PLUGIN_BEGIN_INDEX, PLUGIN_END_INDEX, AppTreeCtrl::ProcessRightClickMenuEvents )
-*/
+EVT_TREE_SEL_CHANGED( SELECTION_CHANGED_ATC, AppTreeCtrl::SelectionChanged )
+//EVT_TREE_ITEM_EXPANDING( HIERARCHYTREE_CTRL, AppTreeCtrl::Expand )
+//EVT_TREE_ITEM_ACTIVATED( HIERARCHYTREE_CTRL, AppTreeCtrl::DoubleClick )
+//EVT_TREE_ITEM_RIGHT_CLICK( HIERARCHYTREE_CTRL, AppTreeCtrl::RightClick )
 END_EVENT_TABLE()
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -29,7 +29,9 @@ AppTreeCtrl::AppTreeCtrl( wxWindow* parent )
         wxTR_DEFAULT_STYLE | wxHSCROLL | wxNO_BORDER | wxVSCROLL ),
     m_appFrame( static_cast< AppFrame* >( parent->GetParent() ) )
 {
-    SetBackgroundColour( wxColour( 255, 255, 255 ) );
+    LoadBitmaps();
+
+    CreateGUI();
 }
 ////////////////////////////////////////////////////////////////////////////////
 AppTreeCtrl::~AppTreeCtrl()
@@ -37,70 +39,48 @@ AppTreeCtrl::~AppTreeCtrl()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-/*
-void AppTreeCtrl::OnSelChanged( wxTreeEvent& WXUNUSED( event ) )
+void AppTreeCtrl::LoadBitmaps()
 {
-    SelectNetworkPlugin( GetSelection() );
+    ///The list of images
+    wxImageList* imageList = new wxImageList( 32, 32 );
+    imageList->Add( wxBitmap( MySQLDatabase_xpm ) );
+    imageList->Add( wxBitmap( AccessDatabase_xpm ) );
+
+    AssignImageList( imageList );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AppTreeCtrl::OnExpanded( wxTreeEvent& WXUNUSED( event ) )
+void AppTreeCtrl::CreateGUI()
+{
+    SetBackgroundColour( wxColour( 255, 255, 255 ) );
+
+    //Add the root
+    AddRoot( wxT( "Database Connections" ), 0 );
+    //SetItemImage( rootId, AVAILABLEMODULES_FOLDEROPENED, wxTreeItemIcon_Expanded );
+    //SetItemFont( rootId, *wxNORMAL_FONT );
+}
+////////////////////////////////////////////////////////////////////////////////
+void AppTreeCtrl::SelectionChanged( wxTreeEvent& WXUNUSED( event ) )
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AppTreeCtrl::OnRightClick( wxTreeEvent& event )
+void AppTreeCtrl::Expand( wxTreeEvent& WXUNUSED( event ) )
 {
-    //find selected item
-    wxTreeItemId selected = event.GetItem();
-    SelectItem( selected );
-    ModuleData* tempModData = dynamic_cast< ModuleData* >( this->
-        GetItemData( selected ));
-
-    if( !tempModData )
-    {
-        return;
-    }
-    //activate correct network
-    m_canvas->SetActiveNetwork( tempModData->systemId );
-
-    //create popup menu
-    wxMenu* popupMenu = m_canvas->GetActiveNetwork()->
-        modules[tempModData->modId].GetPlugin()->GetPopupMenu();
-    popupMenu->SetTitle( this->GetItemText( selected ) );
-    m_canvas->GetActiveNetwork()->modules[tempModData->modId].
-        GetPlugin()->SendActiveId();
-
-    m_selection = selected;
-    m_currentLevelId = GetItemParent( selected );
-    PopupMenu( popupMenu );
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AppTreeCtrl::OnDoubleClick( wxTreeEvent& event )
+void AppTreeCtrl::RightClick( wxTreeEvent& event )
 {
-    //find selected item
-    wxTreeItemId selected = event.GetItem();
-    SelectItem( selected );
-    
-    if( selected != m_rootId )
-    {
-        ModuleData* tempModData = static_cast< ModuleData* >( this->
-            GetItemData( selected ));
-        m_canvas->SetActiveNetwork( tempModData->systemId );
-        m_canvas->GetActiveNetwork()->modules[tempModData->modId].
-            GetPlugin()->CreateUserDialog( wxPoint(0,0) );
-        m_currentLevelId = GetItemParent( selected );
-    }
-
-    m_selection = selected;
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AppTreeCtrl::ProcessRightClickMenuEvents( wxCommandEvent& event )
+void AppTreeCtrl::DoubleClick( wxTreeEvent& event )
 {
-    ModuleData* tempModData = static_cast< ModuleData* >( this->
-        GetItemData( m_selection ));
-
-    ::wxPostEvent( m_canvas->GetActiveNetwork()->modules[tempModData->modId].
-        GetPlugin(), event );
+    ;
 }
-*/
+///////////////////////////////////////////////////////////////////////////////
+const DBConnection* const ConnectionData::GetDBConnection() const
+{
+    return m_dbConnection;
+}
 ///////////////////////////////////////////////////////////////////////////////

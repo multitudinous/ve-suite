@@ -4,6 +4,7 @@
 
 // --- VE-Suite Includes --- //
 class AppFrame;
+class DBConnection;
 
 // --- wxWidgets Includes --- //
 #include <wx/treectrl.h>
@@ -29,24 +30,25 @@ public:
     virtual ~AppTreeCtrl();
 
 protected:
-    /*
     ///
-    void OnSelChanged( wxTreeEvent& event );
+    void SelectionChanged( wxTreeEvent& event );
     
     ///
-    void OnExpanded( wxTreeEvent& event );
+    void Expand( wxTreeEvent& event );
     
     ///
-    void OnRightClick( wxTreeEvent& event );
+    void RightClick( wxTreeEvent& event );
     
     ///
-    void OnDoubleClick( wxTreeEvent& event );
+    void DoubleClick( wxTreeEvent& event );
     
-    ///
-    void ProcessRightClickMenuEvents( wxCommandEvent& event );
-    */
-
 private:
+    ///Loads and stores the xpm images
+    void LoadBitmaps();
+
+    ///
+    void CreateGUI();
+
     ///
     AppFrame* m_appFrame;
 
@@ -54,16 +56,18 @@ private:
 
 };
 
-/*
-class ModuleData : public wxTreeItemData
+class ConnectionData : public wxTreeItemData
 {
 public:
-    unsigned int modId;
-    std::string modelUUID;
-    std::string modName;
-    std::string systemId;
-    std::string subSystemId;
+    ///
+    const DBConnection* const GetDBConnection() const;
+
+protected:
+
+private:
+    ///
+    DBConnection* m_dbConnection;
+
 };
-*/
 
 #endif //APP_TREE_CTRL_H
