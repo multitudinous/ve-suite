@@ -359,7 +359,7 @@
       </keyboard_mouse_proxy>
       <keyboard_mouse_device name="Keyboard KM Dev" version="2">
          <mouse_sensitivity>1.0</mouse_sensitivity>
-         <scroll_as_buttons>false</scroll_as_buttons>
+         <scroll_as_buttons>true</scroll_as_buttons>
          <scroll_up_button>MOUSE_BUT4</scroll_up_button>
          <scroll_down_button>MOUSE_BUT5</scroll_down_button>
          <scroll_left_button>MOUSE_BUT6</scroll_left_button>
