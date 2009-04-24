@@ -40,6 +40,7 @@ struct ComputeTriMeshFunc
 ComputeTriMeshVisitor::ComputeTriMeshVisitor( osg::NodeVisitor::TraversalMode traversalMode )
     : osg::NodeVisitor( traversalMode )
 {
+    setNodeMaskOverride( 1 );
     stack.push_back( osg::Matrix::identity() );
     mesh = new osg::Vec3Array;
 }

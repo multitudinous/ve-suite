@@ -38,6 +38,8 @@ public:
         _shape( NULL ),
         _process( false )
     {
+        setNodeMaskOverride( 1 );
+
         if (!_overall)
             _shape = new btCompoundShape;
     }
@@ -194,7 +196,9 @@ class FlattenStaticTransforms : public osg::NodeVisitor
 public:
     FlattenStaticTransforms()
       : osg::NodeVisitor( osg::NodeVisitor::TRAVERSE_ALL_CHILDREN )
-    {}
+    {
+        setNodeMaskOverride( 1 );
+    }
 
     void apply( osg::Transform& node )
     {

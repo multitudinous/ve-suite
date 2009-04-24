@@ -315,6 +315,7 @@ struct ComputeCylinderBound
 ComputeCylinderVisitor::ComputeCylinderVisitor( osg::NodeVisitor::TraversalMode traversalMode )
     : osg::NodeVisitor( traversalMode )
 {
+    setNodeMaskOverride( 1 );
 }
 
 void ComputeCylinderVisitor::reset()
