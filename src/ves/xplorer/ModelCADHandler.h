@@ -190,6 +190,9 @@ public:
     ///The current graph
     const std::string& GetRootCADNodeID();
     
+    ///Return the list of CAD file names associated with this model
+    std::vector< std::string > GetCADFilenames();
+    
     ///Set the clip plane equation
     ///\param a X coefficient
     ///\param b Y coefficient

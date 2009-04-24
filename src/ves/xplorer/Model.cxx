@@ -30,7 +30,6 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-
 #include <ves/xplorer/Model.h>
 
 #include <ves/xplorer/Debug.h>
@@ -39,6 +38,8 @@
 #include <ves/xplorer/ModelDatasetHandler.h>
 
 #include <ves/xplorer/environment/cfdSound.h>
+#include <ves/xplorer/environment/HeadPositionCallback.h>
+#include <ves/xplorer/environment/TextTextureCallback.h>
 
 #include <ves/xplorer/scenegraph/util/Attribute.h>
 #include <ves/xplorer/scenegraph/Clone.h>
@@ -70,6 +71,11 @@ using namespace ves::xplorer::volume;
 #include <vpr/IO/Socket/SocketAcceptor.h>
 #include <vpr/System.h>
 //#include <vpr/vprTypes.h>
+#include <gmtl/Matrix.h>
+#include <gmtl/Generate.h>
+#include <gmtl/Misc/MatrixConvert.h>
+#include <gadget/Type/PositionInterface.h>
+
 
 #include <vtkUnstructuredGrid.h>
 #include <vtkDataWriter.h>
@@ -720,21 +726,53 @@ void Model::DeleteDataSet( std::string dataSetName )
 ////////////////////////////////////////////////////////////////////////////////
 void Model::RenderTextualDisplay( bool onOff )
 {
+    gadget::PositionInterface mHead;
+    mHead.init( "VJHead" );
+    //Note: for osg we are in z up land
+    gmtl::Matrix44d vjHeadMat =
+        gmtl::convertTo< double >( mHead->getData() );
+    gmtl::Point3d jugglerHeadPoint =
+        gmtl::makeTrans< gmtl::Point3d >( vjHeadMat );
+    
+    //We have to offset negative mX because the
+    //view and frustum are drawn for the left eye
+    gmtl::Point3d startPoint;
+    startPoint.set(
+                    jugglerHeadPoint.mData[ 0 ],
+                    -jugglerHeadPoint.mData[ 2 ] + 5,
+                    jugglerHeadPoint.mData[ 1 ] );
+    
     //add 3d blocks
     if( !mModelText.valid() )
     {
         mModelText = new ves::xplorer::scenegraph::TextTexture();
         
-        osg::ref_ptr< ves::xplorer::scenegraph::DCS > textTrans = new ves::xplorer::scenegraph::DCS();
+        osg::ref_ptr< ves::xplorer::scenegraph::DCS > textTrans = 
+            new ves::xplorer::scenegraph::DCS();
         textTrans->addChild( mModelText.get() );
-        double bbRad = _worldDCS.get()->getBound().radius();
-        textTrans->setPosition(osg::Vec3d(0.0, -bbRad, bbRad));
-        double rot[ 3 ] = { 0.0, 90.0, 0.0 };
-        textTrans->SetRotationArray( rot );
+
         _worldDCS->addChild( textTrans.get() );
+        
+        mModelText->setUpdateCallback( 
+            new ves::xplorer::environment::TextTextureCallback( mModelText.get() ) );
+        textTrans->setUpdateCallback( 
+            new ves::xplorer::environment::HeadPositionCallback() );
     }
     
+    double bbRad = _worldDCS.get()->getBound().radius();
+    static_cast< osg::PositionAttitudeTransform* >( 
+        mModelText->getParent( 0 ) )->setPosition(
+        osg::Vec3d( startPoint.mData[ 0 ], 
+        startPoint.mData[ 1 ], startPoint.mData[ 2 ] ) );
+
     std::string displayString = _worldDCS->getName() + "\n" + GetID();
+    std::vector< std::string > filenames = 
+        GetModelCADHandler()->GetCADFilenames();
+        
+    for( size_t i = 0; i < filenames.size(); ++i )
+    {
+        displayString = displayString + "\n" + filenames.at( i );
+    }
     mModelText->UpdateText( displayString );
 }
 ////////////////////////////////////////////////////////////////////////////////

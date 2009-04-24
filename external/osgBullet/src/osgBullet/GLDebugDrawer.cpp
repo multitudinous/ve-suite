@@ -107,6 +107,7 @@ GLDebugDrawer::GLDebugDrawer( osg::Group* root )
     _group->addChild( _hudCam.get() );
 
     _chart = new osgBullet::Chart;
+    _chart->createChart();
     _hudCam->addChild( _chart->get() );
 }
 GLDebugDrawer::~GLDebugDrawer()

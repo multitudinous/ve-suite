@@ -30,18 +30,20 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-
-//
 #include <ves/xplorer/scenegraph/TextTexture.h>
 
 // --- OSG Includes --- //
 #include <osg/Geometry>
 #include <osg/Texture2D>
 #include <osg/BlendFunc>
+#include <osg/Depth>
 
 #include <osgText/Text>
 
 #include <osgDB/ReadFile>
+#include <osgDB/FileUtils>
+
+#include <osgBullet/Chart.h>
 
 using namespace ves::xplorer::scenegraph;
 
@@ -50,20 +52,21 @@ using namespace ves::xplorer::scenegraph;
 ////////////////////////////////////////////////////////////////////////////////
 TextTexture::TextTexture( std::string fontFile )
     :
-    osg::Geode()
+    osg::Group()
 {
     _font = fontFile;
 
     LoadBackgroundTexture();
     CreateTexturedQuad();
     CreateText();
+    CreateChart();
 }
 ////////////////////////////////////////////////////////////////////////////////
 TextTexture::TextTexture(
     const TextTexture& ttexture,
     const osg::CopyOp& copyop )
     :
-    osg::Geode( ttexture, copyop )
+    osg::Group( ttexture, copyop )
 {
     _font = ttexture._font;
     //_ttUpdateCallback = ttexture._ttUpdateCallback;
@@ -124,7 +127,7 @@ void TextTexture::LoadBackgroundTexture()
     _texture->setFilter( osg::Texture2D::MAG_FILTER, osg::Texture2D::LINEAR );
     _texture->setWrap( osg::Texture2D::WRAP_S, osg::Texture2D::CLAMP_TO_EDGE );
     _texture->setWrap( osg::Texture2D::WRAP_T, osg::Texture2D::CLAMP_TO_EDGE );
-    _texture->setImage( osgDB::readImageFile( "Draft2.tga" ) );
+    _texture->setImage( osgDB::readImageFile( "Info_Panel.png" ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void TextTexture::CreateTexturedQuad()
@@ -132,10 +135,10 @@ void TextTexture::CreateTexturedQuad()
     osg::ref_ptr< osg::Vec3Array > quadVertices = new osg::Vec3Array();
     quadVertices->resize( 4 );
 
-    (*quadVertices)[ 0 ].set( -1.0, -1.0, -0.01 );
-    (*quadVertices)[ 1 ].set(  1.0, -1.0, -0.01 );
-    (*quadVertices)[ 2 ].set(  1.0,  1.0, -0.01 );
-    (*quadVertices)[ 3 ].set( -1.0,  1.0, -0.01 );
+    (*quadVertices)[ 0 ].set( -1.0,  0.01, -2.0 );
+    (*quadVertices)[ 1 ].set(  1.0,  0.01, -2.0 );
+    (*quadVertices)[ 2 ].set(  1.0,  0.01,  2.0 );
+    (*quadVertices)[ 3 ].set( -1.0,  0.01,  2.0 );
 
     //Get the texture coordinates for the quad
     osg::ref_ptr< osg::Vec2Array > quadTexCoords = new osg::Vec2Array();
@@ -171,17 +174,50 @@ void TextTexture::CreateTexturedQuad()
           0, _texture.get(), osg::StateAttribute::ON );
 #endif
 
-    setCullingActive( false );
-    addDrawable( quadGeometry.get() );
-    /*
     osg::ref_ptr< osg::BlendFunc > bf = new osg::BlendFunc();
     bf->setFunction( osg::BlendFunc::SRC_ALPHA, 
                     osg::BlendFunc::ONE_MINUS_SRC_ALPHA );
-    stateset->setMode( GL_BLEND, osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
-    stateset->setAttributeAndModes( bf.get(), osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
-    stateset->setRenderBinDetails( 10, std::string( "DepthSortedBin" ) );
-    stateset->setNestRenderBins( false );  
-    */
+    stateset->setMode( GL_BLEND, 
+        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+    stateset->setAttributeAndModes( bf.get(), 
+        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+
+    osg::Geode* texttureGeode = new osg::Geode();
+    texttureGeode->setCullingActive( false );
+    texttureGeode->addDrawable( quadGeometry.get() );
+    
+    addChild( texttureGeode );
+    
+    getOrCreateStateSet()->
+        setRenderBinDetails( 21, std::string( "RenderBin" ) );
+    
+    getOrCreateStateSet()->setAttributeAndModes( 
+        new osg::Depth( osg::Depth::ALWAYS ), 
+        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+
+
+    //osg::ref_ptr< osg::Shader > fragmentShader = new osg::Shader();
+    //fragmentShader->setType( osg::Shader::FRAGMENT );
+    //ragmentShader->setShaderSource( fragmentSource );
+    
+    std::string shaderName = osgDB::findDataFile( "opacity.fs" );
+    osg::ref_ptr< osg::Shader > fragShader = 
+        osg::Shader::readShaderFile( osg::Shader::FRAGMENT, shaderName );
+    
+    osg::ref_ptr< osg::Program > program = new osg::Program();
+    program->addShader( fragShader.get() );
+    
+    osg::ref_ptr< osg::StateSet > geodeStateset = 
+        texttureGeode->getOrCreateStateSet();
+    geodeStateset->setAttributeAndModes( program.get(),
+        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+    
+    geodeStateset->addUniform(
+        new osg::Uniform( "opacityVal", 0.70f ) );
+
+    geodeStateset->addUniform( new osg::Uniform( "tex", 0 ) );
+    
+    //getOrCreateStateSet()->setNestRenderBins( true );  
 }
 ////////////////////////////////////////////////////////////////////////////////
 void TextTexture::CreateText()
@@ -192,21 +228,42 @@ void TextTexture::CreateText()
     _textColor[ 3 ] = 1.0;
 
     _text = new osgText::Text();
-    _text->setMaximumHeight( 2.2f );
+    _text->setMaximumHeight( 3.5f );
     _text->setMaximumWidth( 1.75f );
-    
+    _text->setAxisAlignment( osgText::TextBase::XZ_PLANE );
     _text->setAlignment( osgText::Text::LEFT_TOP );
-    _text->setPosition(	osg::Vec3( -0.86f, 0.76f, 0.0f ) ); 	
+    _text->setPosition(	osg::Vec3( -0.86f, 0.0f, 1.5f ) ); 	
 
     _text->setFont( _font );
     _text->setColor( osg::Vec4( _textColor[ 0 ],
                                 _textColor[ 1 ],
                                 _textColor[ 2 ],
                                 _textColor[ 3 ] ) );
-    _text->setCharacterSize( 0.1 );
+    _text->setCharacterSize( 0.13 );
     _text->setLayout( osgText::Text::LEFT_TO_RIGHT );
     //_text->setAutoRotateToScreen( true );
+    
+    osg::Geode* textGeode = new osg::Geode();
+    textGeode->addDrawable( _text.get() );
 
-    addDrawable( _text.get() );
+    addChild( textGeode );
+}
+////////////////////////////////////////////////////////////////////////////////
+void TextTexture::CreateChart()
+{
+    m_chartSurface = new osgBullet::Chart();
+    osg::Vec4 bg( 1.f, 0.f, 0.f, .33f );
+    m_chartSurface->setBackgroundColor( bg );
+    osg::Vec4 fg( 1.f, 1.f, 0.f, .5f );
+    m_chartSurface->setForegroundColor( fg );
+    m_chartSurface->setChartLocationAndSize( 0.045, 0.1, 0.19, 0.1 );
+    //m_chartSurface->setChartLocationAndSize( 0.05, 0.05, 2, 1 );
+    m_chartSurface->createChart();
+    addChild( m_chartSurface->get() );
+}
+////////////////////////////////////////////////////////////////////////////////
+osgBullet::Chart* TextTexture::GetChart()
+{
+    return m_chartSurface;
 }
 ////////////////////////////////////////////////////////////////////////////////

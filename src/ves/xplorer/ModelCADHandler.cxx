@@ -648,5 +648,17 @@ bool ModelCADHandler::CloneExists( const std::string& cloneID )
     return false;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
+std::vector< std::string > ModelCADHandler::GetCADFilenames()
+{
+    std::map< std::string, ves::xplorer::scenegraph::CADEntity* >::iterator iter;
+    std::vector< std::string > filenames;
+
+    for( iter = m_partList.begin(); iter != m_partList.end(); ++iter )
+    {
+        filenames.push_back( iter->second->GetFilename() );
+    }
+    return filenames;
+}
+/////////////////////////////////////////////////////////////////////////////////////////////
 } // end xplorer
 } // end ves

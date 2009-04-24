@@ -51,6 +51,11 @@
 // --- OSG Includes --- //
 #include <osg/Version>
 #include <osg/Geode>
+#include <osg/Group>
+namespace osgBullet
+{
+    class Chart;
+}
 
 namespace osg
 {
@@ -70,7 +75,7 @@ namespace xplorer
 {
 namespace scenegraph
 {
-class VE_SCENEGRAPH_EXPORTS TextTexture : public osg::Geode
+class VE_SCENEGRAPH_EXPORTS TextTexture : public osg::Group
 {
 public:
     ///Constructor
@@ -101,6 +106,12 @@ public:
     ///Get the texture with the text
     osg::Texture2D* GetTexture();
 
+    ///Create the data display chart
+    void CreateChart();
+
+    ///Get the data display chart
+    osgBullet::Chart* GetChart();
+    
 protected:
     ///Destructor
     virtual ~TextTexture();
@@ -128,7 +139,7 @@ protected:
 
     //The update callback
     //osg::ref_ptr< TextUpdateCallback > _ttUpdateCallback;
-
+    osgBullet::Chart* m_chartSurface;
 };
 }
 }
