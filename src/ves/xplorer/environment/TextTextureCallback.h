@@ -68,7 +68,7 @@ namespace environment
  *
  */
 ///
-class VE_SCENEGRAPH_EXPORTS TextTextureCallback : public osg::NodeCallback
+class VE_XPLORER_EXPORTS TextTextureCallback : public osg::NodeCallback
 {
 public:
     TextTextureCallback(){;}

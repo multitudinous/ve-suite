@@ -63,7 +63,7 @@ namespace environment
  *
  */
 ///
-class VE_SCENEGRAPH_EXPORTS HeadPositionCallback : public osg::NodeCallback
+class VE_XPLORER_EXPORTS HeadPositionCallback : public osg::NodeCallback
 {
 public:
     ///Constructor
