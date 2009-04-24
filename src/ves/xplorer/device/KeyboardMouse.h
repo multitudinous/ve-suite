@@ -202,11 +202,14 @@ private:
     ///\param angle
     void Rotate( double angle, gmtl::Vec3d axis );
 
-    ///
+    ///Is no key pushed
     bool mKeyNone;
 
-    ///
+    ///Is shift pushed
     bool mKeyShift;
+
+    ///Is alt pushed
+    bool mKeyAlt;
 
     ///Width of the window
     unsigned int mWidth;

@@ -211,6 +211,9 @@ void CADEventHandler::SetNodeDescriptors( std::string nodeID,
     descriptorsList.push_back( descriptorName );
     descriptorsList.push_back( descriptorValue );
     descriptorsList.push_back( nodeType );
+    descriptorsList.push_back( "VE_XML_MODEL_ID" );
+    descriptorsList.push_back( m_activeModel->GetID() );
+  
     if( inputNodePtr )
     {
         descriptorsList.push_back( "Opacity" );
@@ -315,7 +318,8 @@ void CADEventHandler::_addNodeToNode( std::string parentID,
                                   newPart->GetID(),
                                   parentID );
 
-        ves::xplorer::scenegraph::CADEntity* partNode = m_cadHandler->GetPart( newPart->GetID() );
+        ves::xplorer::scenegraph::CADEntity* partNode = 
+            m_cadHandler->GetPart( newPart->GetID() );
         if( partNode->GetNode()->GetNode() )
         {
             partNode->GetNode()->SetName( newPart->GetNodeName() );
@@ -331,6 +335,7 @@ void CADEventHandler::_addNodeToNode( std::string parentID,
             //set the uuid on the osg node so that we can get back to vexml
             SetNodeDescriptors( newPart->GetID(), "Part", "VE_XML_ID", 
                 newPart->GetID(), newPart );
+                
             //Now that we have tags on the node we can use our visitors
             _setTransformOnNode( newPart );
             vprDEBUG( vesDBG, 1 ) << "|\t---Set Part Transform---" 

@@ -55,6 +55,9 @@
 #include <ves/xplorer/scenegraph/physics/PhysicsRigidBody.h>
 #include <ves/xplorer/scenegraph/physics/CharacterController.h>
 
+#include <ves/xplorer/plugin/PluginBase.h>
+#include <ves/xplorer/network/cfdExecutive.h>
+
 // --- Bullet Includes --- //
 #include <LinearMath/btVector3.h>
 
@@ -96,7 +99,8 @@ KeyboardMouse::KeyboardMouse()
     :
     mKeyNone( false ),
     mKeyShift( false ),
-
+    mKeyAlt( false ),
+    
     mKey( -1 ),
     mButton( -1 ),
     mState( 0 ),
@@ -309,6 +313,7 @@ void KeyboardMouse::ProcessKBEvents( int mode )
     //Get the modifier key values
     mKeyNone = mKeyboardMouse->modifierOnly( gadget::KEY_NONE );
     mKeyShift = mKeyboardMouse->modifierOnly( gadget::KEY_SHIFT );
+    mKeyAlt = mKeyboardMouse->modifierOnly( gadget::KEY_ALT );
 
     //Iterate over the keyboard and mouse events
     gadget::KeyboardMouse::EventQueue::iterator i;
@@ -870,7 +875,7 @@ void KeyboardMouse::NavOnKeyboardPress()
 
             break;
         }
-
+            
         case gadget::KEY_UP:
         {
             Zoom45( 0.05 );
@@ -997,58 +1002,109 @@ void KeyboardMouse::NavOnMousePress()
             else if( mKeyShift )
             {
                 //Add a point to point constraint for picking
-                if( !mPhysicsSimulator->GetIdle() )
+                if( mPhysicsSimulator->GetIdle() )
                 {
-                    osg::Vec3d startPoint, endPoint;
-                    SetStartEndPoint( &startPoint, &endPoint );
+                    break;
+                }
+                
+                osg::Vec3d startPoint, endPoint;
+                SetStartEndPoint( &startPoint, &endPoint );
 
-                    btVector3 rayFromWorld, rayToWorld;
-                    rayFromWorld.setValue(
-                        startPoint.x(), startPoint.y(), startPoint.z() );
-                    rayToWorld.setValue(
-                        endPoint.x(), endPoint.y(), endPoint.z() );
+                btVector3 rayFromWorld, rayToWorld;
+                rayFromWorld.setValue(
+                    startPoint.x(), startPoint.y(), startPoint.z() );
+                rayToWorld.setValue(
+                    endPoint.x(), endPoint.y(), endPoint.z() );
 
-                    btCollisionWorld::ClosestRayResultCallback rayCallback(
-                        rayFromWorld, rayToWorld );
-                    mDynamicsWorld->rayTest(
-                        rayFromWorld, rayToWorld, rayCallback );
-                    if( rayCallback.hasHit() )
-                    {
-                        btRigidBody* body = btRigidBody::upcast(
-                            rayCallback.m_collisionObject );
-                        if( body )
-                        {
-                            //Other exclusions
-                            if( !( body->isStaticObject() ||
-                                   body->isKinematicObject() ) )
-                            {
-                                mPickedBody = body;
-                                mPickedBody->setActivationState(
-                                    DISABLE_DEACTIVATION );
+                btCollisionWorld::ClosestRayResultCallback rayCallback(
+                    rayFromWorld, rayToWorld );
+                mDynamicsWorld->rayTest(
+                    rayFromWorld, rayToWorld, rayCallback );
+                
+                if( !rayCallback.hasHit() )
+                {
+                    break;
+                }
+                
+                btRigidBody* body = btRigidBody::upcast(
+                    rayCallback.m_collisionObject );
+                if( !body )
+                {
+                    break;
+                }
 
-                                btVector3 pickPos = rayCallback.m_hitPointWorld;
+                //Other exclusions
+                if( !( body->isStaticObject() ||
+                       body->isKinematicObject() ) )
+                {
+                    mPickedBody = body;
+                    mPickedBody->setActivationState(
+                        DISABLE_DEACTIVATION );
 
-                                btVector3 localPivot =
-                                    body->getCenterOfMassTransform().inverse() *
-                                    pickPos;
+                    btVector3 pickPos = rayCallback.m_hitPointWorld;
 
-                                btPoint2PointConstraint* p2p =
-                                    new btPoint2PointConstraint(
-                                        *body, localPivot );
-                                mDynamicsWorld->addConstraint( p2p );
-                                mPickConstraint = p2p;
+                    btVector3 localPivot =
+                        body->getCenterOfMassTransform().inverse() *
+                        pickPos;
 
-                                mPrevPhysicsRayPos =
-                                    ( pickPos - rayFromWorld ).length();
+                    btPoint2PointConstraint* p2p =
+                        new btPoint2PointConstraint(
+                            *body, localPivot );
+                    mDynamicsWorld->addConstraint( p2p );
+                    mPickConstraint = p2p;
 
-                                //Very weak constraint for picking
-                                p2p->m_setting.m_tau = 0.1;
-                            }
-                        }
-                    }
+                    mPrevPhysicsRayPos =
+                        ( pickPos - rayFromWorld ).length();
+
+                    //Very weak constraint for picking
+                    p2p->m_setting.m_tau = 0.1;
                 }
             }
-
+            else if( mKeyAlt )
+            {
+                SelOnMouseRelease();
+                vxs::DCS* infoDCS = 
+                    vx::DeviceHandler::instance()->GetSelectedDCS();
+                vx::DeviceHandler::instance()->UnselectObjects();
+                
+                std::map< std::string, ves::xplorer::plugin::PluginBase* >* 
+                    tempPlugins = 
+                        ves::xplorer::network::cfdExecutive::instance()->
+                        GetTheCurrentPlugins();
+                
+                std::map< std::string, 
+                    ves::xplorer::plugin::PluginBase* >::iterator pluginIter;
+                
+                for( pluginIter = tempPlugins->begin(); 
+                    pluginIter != tempPlugins->end(); ++pluginIter )
+                {
+                    pluginIter->second->GetCFDModel()->
+                        RenderTextualDisplay( false );
+                }
+                
+                if( !infoDCS )
+                {
+                    break;
+                }
+                osg::Node::DescriptionList descriptorsList;
+                descriptorsList = infoDCS->getDescriptions();
+                std::string modelIdStr;
+                for( size_t i = 0; i < descriptorsList.size(); ++i )
+                {
+                    //std::cout << descriptorsList.at( i ) << std::endl;
+                    if( descriptorsList.at( i ) == "VE_XML_MODEL_ID" )
+                    {
+                        modelIdStr = descriptorsList.at( i + 1 );                     
+                        break;
+                    }
+                }
+                                
+                pluginIter = tempPlugins->find( modelIdStr );
+                if( pluginIter != tempPlugins->end() )
+                {
+                    pluginIter->second->GetCFDModel()->RenderTextualDisplay( true );
+                }
+            }
             break;
         }
         //Middle mouse button
@@ -1258,7 +1314,10 @@ void KeyboardMouse::SelOnMousePress()
         //Left mouse button
         case gadget::MBUTTON1:
         {
-            ProcessNURBSSelectionEvents();
+            if( mKeyNone )
+            {
+                ProcessNURBSSelectionEvents();
+            }
 
             break;
         }
@@ -1284,9 +1343,12 @@ void KeyboardMouse::SelOnMouseRelease()
         //Left mouse button
         case gadget::MBUTTON1:
         {
-            vxs::SetStateOnNURBSNodeVisitor(
-                vxs::SceneManager::instance()->GetActiveSwitchNode(), false,
-                false, mCurrPos, std::pair< double, double >( 0.0, 0.0 ) );
+            if( mKeyNone )
+            {
+                vxs::SetStateOnNURBSNodeVisitor(
+                    vxs::SceneManager::instance()->GetActiveSwitchNode(), false,
+                    false, mCurrPos, std::pair< double, double >( 0.0, 0.0 ) );
+            }
 
             break;
         }
