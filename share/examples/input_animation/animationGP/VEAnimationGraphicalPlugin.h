@@ -44,6 +44,7 @@ namespace display
 
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/plugin/PluginBase.h>
+#include <osg/Switch>
 
 namespace ves
 {
@@ -83,6 +84,13 @@ private:
     osg::ref_ptr< osg::MatrixTransform > transform_imp;
     osg::ref_ptr< osg::MatrixTransform > transform_tank;
 */
+    osg::ref_ptr< osg::Node > m_idleGeometry;
+    osg::ref_ptr< osg::Node > m_openGeometry;
+    osg::ref_ptr< osg::Node > m_closeGeometry;
+    osg::ref_ptr< osg::Switch > m_valueAnimation;
+    int mButton;
+
+
 };
 
 CREATE_VES_XPLORER_PLUGIN_ENTRY_POINT( VEAnimationGraphicalPlugin )

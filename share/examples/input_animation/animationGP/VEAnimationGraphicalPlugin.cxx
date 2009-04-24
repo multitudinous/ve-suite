@@ -59,6 +59,7 @@
 #include <osgDB/ReadFile>
 
 #include <osgSim/ColorRange>
+#include <osg/Vec3d>
 
 // --- C/C++ Libraries --- //
 
@@ -69,7 +70,7 @@ VEAnimationGraphicalPlugin::VEAnimationGraphicalPlugin()
     PluginBase(),
     m_keyboard( 0 )
 {
-    mObjectName = "input_animation";
+    mObjectName = "Valve";
 }
 ////////////////////////////////////////////////////////////////////////////////
 VEAnimationGraphicalPlugin::~VEAnimationGraphicalPlugin()
@@ -100,20 +101,25 @@ void VEAnimationGraphicalPlugin::InitializeNode( osg::Group* veworldDCS )
 {
     PluginBase::InitializeNode( veworldDCS );
 
-    //Create the gauges
-    osg::ref_ptr< osg::Group > rootNode =
-        ves::xplorer::scenegraph::SceneManager::instance()->GetRootNode();
-
     m_keyboard = 
         dynamic_cast< ves::xplorer::KeyboardMouse* >( mDevice );
-/*    osg::ref_ptr< osg::Node > temp = osgDB::readNodeFile( "Models/fermentor_room.ive" );
-    _roomGeometry->addChild( temp.get() );
-    rootNode->addChild( _roomGeometry.get() );
-    mDCS->addChild( fermentorGroup.get() );
 
-    _fermentorGeometry = osgDB::readNodeFile( "Models/fermentor_noimpeller.ive" );
-    _impellerGeometry = osgDB::readNodeFile( "Models/impeller_fixed.ive" );
-    _tankGeometry = osgDB::readNodeFile( "Models/opaque_tank.ive" );*/
+    m_idleGeometry = osgDB::readNodeFile( "valve/valve.idle.osg" );
+    m_openGeometry = osgDB::readNodeFile( "valve/valve.opening.osg" );
+    m_closeGeometry = osgDB::readNodeFile( "valve/valve.closing.osg" );
+    
+    m_valueAnimation = new osg::Switch();
+    m_valueAnimation->addChild( m_idleGeometry.get() );
+    m_valueAnimation->addChild( m_openGeometry.get() );
+    m_valueAnimation->addChild( m_closeGeometry.get() );
+    m_valueAnimation->setSingleChildOn( 0 );
+    mDCS->addChild( m_valueAnimation.get() );
+    double rot[3] = { 90.0, 0.0, 0.0 };
+    double pos[3] = {-1000.0, -532.0, -10.0 };
+    double scale[3] = { 0.14, 0.14, 0.16 };
+    mDCS->SetTranslationArray( pos );
+    mDCS->SetScaleArray( scale );
+    mDCS->SetRotationArray( rot );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void VEAnimationGraphicalPlugin::PreFrameUpdate()
@@ -147,6 +153,28 @@ void VEAnimationGraphicalPlugin::PreFrameUpdate()
             
             switch( type )
             {
+                case gadget::MouseButtonPressEvent:
+                {
+                    gadget::MouseEventPtr mouse_evt =
+                        boost::dynamic_pointer_cast< gadget::MouseEvent >( *i );
+
+                    mButton = mouse_evt->getButton();
+                    
+                    if( mButton == gadget::MBUTTON1)
+                    {
+                        m_valueAnimation->setSingleChildOn( 1 );
+                    }
+                    else if( mButton == gadget::MBUTTON3)
+                    {
+                        m_valueAnimation->setSingleChildOn( 2 );
+                    }
+                    break;
+                }
+                case gadget::MouseButtonReleaseEvent:
+                {
+                    m_valueAnimation->setSingleChildOn( 0 );
+                    break;
+                }
             }
         }
     }

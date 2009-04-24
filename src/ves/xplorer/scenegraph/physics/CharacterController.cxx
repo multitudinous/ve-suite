@@ -60,7 +60,7 @@
 // --- C/C++ Libraries --- //
 #include <iostream>
 
-//#define VES_USE_ANIMATED_CHARACTER 1
+#define VES_USE_ANIMATED_CHARACTER 1
 
 using namespace ves::xplorer::scenegraph;
 namespace vxs = ves::xplorer::scenegraph;
@@ -83,7 +83,7 @@ CharacterController::CharacterController()
     mBufferSize( 0 ),
     mCharacterWidth( 1.83 ),
     //The average height of a male in the U.S. is 5.83 ft
-    mCharacterHeight( 3.83/*5.83*/ ),
+    mCharacterHeight( 6/*5.83*/ ),
     mLookAtOffsetZ( mCharacterHeight * 2.0 ),
     mCameraDistance( 50.0 ),
     mOccludeDistance( 50.0 ),
@@ -150,7 +150,7 @@ void CharacterController::Initialize( btDynamicsWorld* dynamicsWorld )
     mGhostObject->setCollisionShape( capsuleShape );
     mGhostObject->setCollisionFlags( btCollisionObject::CF_CHARACTER_OBJECT );
 
-    btScalar stepHeight = btScalar( 0.4 );
+    btScalar stepHeight = btScalar( 1.0 );
     mCharacter =
         new btKinematicCharacterController(
             mGhostObject, capsuleShape, stepHeight );
@@ -165,19 +165,19 @@ void CharacterController::Initialize( btDynamicsWorld* dynamicsWorld )
     //create animated character
     //idle
     osg::ref_ptr< osg::Node > node =
-        osgDB::readNodeFile( "osg-data/zombie.idle.osg" );
+        osgDB::readNodeFile( "osg-data/soccer.idle.osg" );
     //walk forward
     osg::ref_ptr< osg::Node > node1 =
-        osgDB::readNodeFile( "osg-data/zombie.wf.osg" );
+        osgDB::readNodeFile( "osg-data/soccer.wf.osg" );
     //walk backwards
     osg::ref_ptr< osg::Node > node2 =
-        osgDB::readNodeFile( "osg-data/zombie.wf.osg" );
+        osgDB::readNodeFile( "osg-data/soccer.wb.osg" );
     //strafe left
     osg::ref_ptr< osg::Node > node3 =
-        osgDB::readNodeFile( "osg-data/zombie.sl.osg" );
+        osgDB::readNodeFile( "osg-data/soccer.idle.osg" );
     //strafe right
     osg::ref_ptr< osg::Node > node4 =
-        osgDB::readNodeFile( "osg-data/zombie.sr.osg" );
+        osgDB::readNodeFile( "osg-data/soccer.idle.osg" );
 
     //create switch node
     mCharacterAnimations = new osg::Switch();
@@ -192,7 +192,8 @@ void CharacterController::Initialize( btDynamicsWorld* dynamicsWorld )
     //for scaling if necessary
     osg::ref_ptr< osg::AutoTransform > scaleDown = new osg::AutoTransform(); 
     scaleDown->addChild( mCharacterAnimations.get() );
-    scaleDown->setScale( 0.25 );
+    scaleDown->setScale( 0.055 );
+    scaleDown->setRotation( osg::Quat( osg::DegreesToRadians( 180.0 ), osg::Vec3f( 0.0, 0.0, 1.0)  ) );
 
     mMatrixTransform->addChild( scaleDown.get() );
 #else
