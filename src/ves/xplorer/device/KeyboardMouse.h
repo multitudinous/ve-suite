@@ -121,6 +121,9 @@ public:
  
     ///Update the start and end points for the line
     void UpdateSelectionLine();
+    
+    ///Get raw vrjuggler keyboardmouse ptr
+    gadget::KeyboardMousePtr GetKeyboardMouseVRJDevice();
 
 protected:
     ///Set the start and end point

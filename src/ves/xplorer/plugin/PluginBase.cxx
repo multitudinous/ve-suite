@@ -198,7 +198,7 @@ bool PluginBase::OnSceneGraph()
     return mOnSceneGraph;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void PluginBase::SetCursor( cfdCursor* cursor )
+/*void PluginBase::SetCursor( cfdCursor* cursor )
 {
     if( cursor != NULL )
     {
@@ -209,7 +209,7 @@ void PluginBase::SetCursor( cfdCursor* cursor )
         std::cerr << " ERROR : PluginBase::SetCursor cursor is NULL "
                   << std::endl;
     }
-}
+}*/
 ////////////////////////////////////////////////////////////////////////////////
 void PluginBase::SetSceneManager(
     ves::xplorer::scenegraph::SceneManager* sceneManager )

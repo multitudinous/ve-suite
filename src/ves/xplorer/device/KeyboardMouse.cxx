@@ -1705,3 +1705,8 @@ void KeyboardMouse::ProcessHit()
     mCenterPoint->set( center.x(), center.y(), center.z() );
 }
 ////////////////////////////////////////////////////////////////////////////////
+gadget::KeyboardMousePtr KeyboardMouse::GetKeyboardMouseVRJDevice()
+{
+    return mKeyboardMouse->getKeyboardMousePtr();
+}
+////////////////////////////////////////////////////////////////////////////////

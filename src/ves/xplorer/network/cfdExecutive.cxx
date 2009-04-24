@@ -54,6 +54,8 @@
 
 #include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
 
+#include <ves/xplorer/DeviceHandler.h>
+
 #include <ves/xplorer/network/DeleteObjectFromNetworkEventHandler.h>
 #include <ves/xplorer/network/DeleteNetworkViewEventHandler.h>
 #include <ves/xplorer/network/SwitchXplorerViewEventHandler.h>
@@ -624,14 +626,13 @@ void cfdExecutive::ParseSystem( ves::open::xml::model::SystemPtr system,
             temp->SetSceneManager( ves::xplorer::scenegraph::SceneManager::instance() );
             temp->SetResourceManager( ves::xplorer::scenegraph::ResourceManager::instance() );
             temp->SetCommandHandler( ves::xplorer::CommandHandler::instance() );
+            temp->SetInteractionDevice( ves::xplorer::DeviceHandler::instance()->GetActiveDevice() );
+            
             temp->InitializeNode( parentNode );
             temp->AddSelfToSG();
             Model* tempCFDModel = temp->GetCFDModel();
             tempCFDModel->SetID( modelID );
             ModelHandler::instance()->AddModel( tempCFDModel );
-            // Give graphical plugins access to wand position, wand buttons,
-            //and gui variables
-            //temp->SetCursor( EnvironmentHandler::instance()->GetCursor() );
             //Need to pass an active device in here or something
             //This needs to be fixed
             //mPluginsMap[ iter->first ]->SetNavigate( 

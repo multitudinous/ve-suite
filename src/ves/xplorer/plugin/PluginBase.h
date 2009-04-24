@@ -154,7 +154,7 @@ public:
     ///Set the pointer to the cursor class so that dynamic
     ///objects can do custom features with the wand input
     ///\param cursor The cursor from xplorer
-    void SetCursor( ves::xplorer::cfdCursor* cursor );
+    //void SetCursor( ves::xplorer::cfdCursor* cursor );
 
     ///Set the pointer to the navigate class so that dynamic
     ///objects can do custom features with the wand buttons
