@@ -545,10 +545,11 @@ void DataSet::LoadData()
         extension = "ens";
     }
 
-    if (( extension.find( "vtk" ) != std::string::npos ) ||
-            ( extension.find( "vtu" ) != std::string::npos ) ||
-            ( extension.find( "vtp" ) != std::string::npos ) ||
-            ( extension.find( "vti" ) != std::string::npos ) )
+    if( ( extension.find( "vtk" ) != std::string::npos ) ||
+        ( extension.find( "vtu" ) != std::string::npos ) ||
+        ( extension.find( "vtp" ) != std::string::npos ) ||
+        ( extension.find( "vtm" ) != std::string::npos ) ||
+        ( extension.find( "vti" ) != std::string::npos ) )
     {
         if( !_vtkFHndlr )
         {
