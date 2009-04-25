@@ -183,7 +183,7 @@ void UserPreferences::CreateControls()
     wxCheckBox* nearFarChkBx = new wxCheckBox( panel, USERPREFENCES_NEAR_FAR_CHKBX, wxT( "Set Near-Far Ratio" ), wxDefaultPosition, wxDefaultSize, wxCHK_2STATE );
     m_nearFarEntry = new wxTextCtrl( panel, USERPREFENCES_NEAR_FAR_RATIO,
                                       _( "0.000005" ), wxDefaultPosition,
-                                      wxDefaultSize, wxHSCROLL | wxTE_PROCESS_ENTER );
+                                      wxDefaultSize, wxTE_PROCESS_ENTER );
     nearFarSizer->Add( nearFarChkBx, 1, wxEXPAND | wxALIGN_CENTER_HORIZONTAL );
     nearFarSizer->Add( m_nearFarEntry, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
      

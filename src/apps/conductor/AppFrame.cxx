@@ -476,7 +476,8 @@ void AppFrame::_configureDesktop()
     _treeView->SetExtraStyle( ~wxWS_EX_BLOCK_EVENTS );
     _treeView->Create( this, ::wxNewId(), _( "VE-Conductor Network" ),
                               wxDefaultPosition, wxDefaultSize,
-                              wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER );
+                              wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER 
+                              & ~wxCLOSE_BOX);
     //wxCAPTION | wxRESIZE_BORDER);//(wxDEFAULT_DIALOG_STYLE&~
     //(wxCLOSE_BOX | wxRESIZE_BORDER | wxRESIZE_BOX | wxMAXIMIZE_BOX)));
     //|wxRESIZE_BORDER|wxMAXIMIZE_BOX|wxMINIMIZE_BOX|wxCLOSE_BOX));

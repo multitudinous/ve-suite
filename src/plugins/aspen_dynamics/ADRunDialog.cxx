@@ -249,11 +249,11 @@ void ADRunDialog::CreateGUIControls()
 	mRunMode->SetFont(wxFont(8, wxSWISS, wxNORMAL,wxNORMAL, false,
         wxT("Tahoma")));
 	
-	mMode->SetValue("Steady State");
+	mMode->SetValue( _("Steady State") );
 	SetMode();
-	mModelUnits->SetValue("Hours");
-	mDisplayTime->SetValue("Hours");
-	mSynchro->SetValue("Full");
+	mModelUnits->SetValue( _("Hours") );
+	mDisplayTime->SetValue( _("Hours") );
+	mSynchro->SetValue( _("Full") );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void ADRunDialog::OnClose(wxCloseEvent& /*event*/)
@@ -280,7 +280,7 @@ void ADRunDialog::mModeSelected(wxCommandEvent& event )
 ////////////////////////////////////////////////////////////////////////////////
 void ADRunDialog::SetMode()
 {
-    if( mMode->GetValue().CompareTo("Steady State") == 0  )
+    if( mMode->GetValue().CompareTo( _("Steady State") ) == 0  )
     {
         mPauseAt->Enable(false);
         mRTS->Enable(false);
@@ -309,7 +309,7 @@ void ADRunDialog::SetMode()
         WxStaticText2->Enable(false);
         mSynchro->Enable(true);
     }
-    else if( mMode->GetValue().CompareTo("Optimization") == 0  )
+    else if( mMode->GetValue().CompareTo( _("Optimization") ) == 0  )
     {
         mPauseAt->Enable(false);
         mRTS->Enable(false);
@@ -338,7 +338,7 @@ void ADRunDialog::SetMode()
         WxStaticText2->Enable(false);
         mSynchro->Enable(false);
     }
-    else if( mMode->GetValue().CompareTo("Estimation") == 0 )
+    else if( mMode->GetValue().CompareTo( _("Estimation") ) == 0 )
     {
         mPauseAt->Enable(false);
         mRTS->Enable(false);
@@ -367,7 +367,7 @@ void ADRunDialog::SetMode()
         WxStaticText2->Enable(false);
         mSynchro->Enable(false);
     }
-    else if( mMode->GetValue().CompareTo("Dynamic") == 0 )
+    else if( mMode->GetValue().CompareTo( _("Dynamic") ) == 0 )
     {
         mPauseAt->Enable(true);
         mRTS->Enable(true);
@@ -396,7 +396,7 @@ void ADRunDialog::SetMode()
         WxStaticText2->Enable(true);
         mSynchro->Enable(true);
     }
-    else if( mMode->GetValue().CompareTo("Initialization") == 0 )
+    else if( mMode->GetValue().CompareTo( _("Initialization") ) == 0 )
     {
         mPauseAt->Enable(false);
         mRTS->Enable(false);
