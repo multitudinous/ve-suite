@@ -964,8 +964,6 @@ void AppFrame::ZoomOut( wxCommandEvent& WXUNUSED( event ) )
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::Save( wxCommandEvent& event )
 {
-    canvas->Update();
-
     //First time call save will be the same as SaveAs
     if( mVESFileName.IsEmpty() )
     {
@@ -973,14 +971,15 @@ void AppFrame::Save( wxCommandEvent& event )
     }
     else
     {
+        canvas->Update();
         ///now write the file out from domdocument manager
         //wrtie to path
         //std::string data = network->Save( );
         std::string nw_str = XMLDataBufferEngine::instance()->
                              SaveVESData( ConvertUnicode( mVESFileName.c_str() ) );
+        Log( "Finished updating ves file.\n" );
     }
 }
-
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::SaveAs( wxCommandEvent& WXUNUSED( event ) )
 {
@@ -1059,8 +1058,8 @@ void AppFrame::SaveAs( wxCommandEvent& WXUNUSED( event ) )
         SetTitle( vesFileName.GetFullName() );
         SetRecentFile( vesFileName );
     }
+    Log( "Finished saving ves file.\n" );
 }
-
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::Open( wxCommandEvent& WXUNUSED( event ) )
 {
