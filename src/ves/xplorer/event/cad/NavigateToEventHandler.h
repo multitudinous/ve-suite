@@ -107,6 +107,8 @@ public:
     void Execute( const ves::open::xml::XMLObjectPtr& command );
 
 private:
+    ///Navigate to the object
+    void SkyCamTo( const std::string& viewData );
 };
 }
 }

@@ -101,6 +101,13 @@ CADNodeMenu::CADNodeMenu()
             _T( "Toggle Node" ),
             toggleNodeSubMenu );
     Enable( GEOM_DISPLAY_TOGGLE, true );
+
+    Append( GEOM_NAVTO,
+           _T( "Navigate To Node" ),
+           _T( "" ),
+           wxITEM_NORMAL );
+    Enable( GEOM_NAVTO, false );
+    
     InsertSeparator( 5 );
 
     Append( GEOM_PROPERTIES,
@@ -108,6 +115,7 @@ CADNodeMenu::CADNodeMenu()
             _T( "" ),
             wxITEM_NORMAL );
     Enable( GEOM_PROPERTIES, false );
+    
     Append( GEOM_OPACITY,
             _T( "Transparency..." ),
             _T( "" ),
@@ -139,6 +147,7 @@ void CADNodeMenu::EnableGlobalMenus( bool onOff )
         Enable( GEOM_OPACITY, true );
         //Enable(GEOM_MENU_MOVE_NODE, true);
         Enable( GEOM_CLONE_ADD, true );
+        Enable( GEOM_NAVTO, true );
     }
     else
     {
@@ -147,6 +156,7 @@ void CADNodeMenu::EnableGlobalMenus( bool onOff )
         Enable( GEOM_OPACITY, false );
         //Enable(GEOM_MENU_MOVE_NODE, false);
         Enable( GEOM_CLONE_ADD, false );
+        Enable( GEOM_NAVTO, false );
     }
 }
 /////////////////////////////////////////////

@@ -77,6 +77,7 @@ BEGIN_EVENT_TABLE( CADNodeManagerDlg, wxDialog )
     EVT_MENU( CADNodeMenu::GEOM_TOGGLE_ON, CADNodeManagerDlg::_toggleNode )
     EVT_MENU( CADNodeMenu::GEOM_TOGGLE_OFF, CADNodeManagerDlg::_toggleNode )
     EVT_MENU( CADNodeMenu::GEOM_INITIALIZE_PHYSICS, CADNodeManagerDlg::_initializePhysics )
+    EVT_MENU( CADNodeMenu::GEOM_NAVTO, CADNodeManagerDlg::NavigateToFile )
 END_EVENT_TABLE()
 
 using namespace ves::conductor::util;
@@ -987,7 +988,7 @@ void CADNodeManagerDlg::_addNodeToParent( ves::open::xml::cad::CADAssemblyPtr pa
     _sendCommandsToXplorer( );
     ClearInstructions( );
 }
-////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void CADNodeManagerDlg::_sendCommandsToXplorer()
 {
     ves::open::xml::CommandPtr cadCommand( new ves::open::xml::Command() );
@@ -1011,8 +1012,23 @@ void CADNodeManagerDlg::_sendCommandsToXplorer()
     //Clean up memory
     ClearInstructions();
 }
-////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 CADAssemblyPtr CADNodeManagerDlg::GetRootCADNode()
 {
     return _rootNode;
 }
+////////////////////////////////////////////////////////////////////////////////
+void CADNodeManagerDlg::NavigateToFile( wxCommandEvent& event )
+{
+    _commandName = "Move to cad";
+    
+    ves::open::xml::DataValuePairPtr dataValuePair( 
+        new ves::open::xml::DataValuePair() );
+    dataValuePair->SetData( "NAVIGATE_TO", _activeCADNode->GetID() );
+
+    _dataValuePairList.push_back( dataValuePair );
+    
+    _sendCommandsToXplorer();
+    ClearInstructions();
+}
+////////////////////////////////////////////////////////////////////////////////

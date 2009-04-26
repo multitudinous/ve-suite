@@ -202,11 +202,18 @@ protected:
     void _moveNodeToNewParent( ves::open::xml::cad::CADNodePtr childToRemove,
                                wxTreeItemId oldParentTreeID,
                                wxTreeItemId newParentTreeID );
+         
+    ///Navigate to the selected file
+    void NavigateToFile( wxCommandEvent& event );
 
-    wxTreeCtrl* _geometryTree;///<The tree control.
-    wxButton* _quitButton;///<The button to close the dialog.
-    wxButton* _saveButton;///<The button to save the current CADHierarchy.
-    wxRect _geomPosition;///<The initial position of the dialog.
+    ///The tree control.
+    wxTreeCtrl* _geometryTree;
+    ///The button to close the dialog.
+    wxButton* _quitButton;
+    ///The button to save the current CADHierarchy.
+    wxButton* _saveButton;
+    ///The initial position of the dialog.
+    wxRect _geomPosition;
 
     ves::conductor::util::CADTreeBuilder::TreeNodeData* _activeTreeNode;///<The active tree item.
 

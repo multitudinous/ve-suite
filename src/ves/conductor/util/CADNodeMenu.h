@@ -67,7 +67,8 @@ public:
         GEOM_TOGGLE_ON,///<Toggle node on, menu ID.
         GEOM_TOGGLE_OFF,///<Toggle node off, menu ID.
         GEOM_DISPLAY_TOGGLE,///<Toggle menu ID.
-        GEOM_OPACITY///<Toggle menu ID.
+        GEOM_OPACITY,///<Toggle menu ID.
+        GEOM_NAVTO///<Navigate to cad file
     };
 
     ///Constructor

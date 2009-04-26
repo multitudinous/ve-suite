@@ -108,10 +108,7 @@ public:
     void FrameAll();
 
     ///Fit the world bounding volume into the viewing frustum
-    void SkyCam( );
-
-    ///
-    void SkyCamTo( );
+    void SkyCam();
 
     ///Fit the selected objects bounding volume into the viewing frustum
     void FrameSelection();
