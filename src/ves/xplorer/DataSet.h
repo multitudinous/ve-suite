@@ -308,7 +308,7 @@ public:
 
     ///Get the bounds of the vtkDataObject contained in the DataSet
     ///\param bounds xmin,xmax,ymin,ymax,zmin,zmax
-    void GetBounds( double bounds[6] );
+    void GetBounds( double* bounds );
 
     ///Get the bounds of the vtkDataObject contained in the DataSet
     ///\param bounds xmin,xmax,ymin,ymax,zmin,zmax

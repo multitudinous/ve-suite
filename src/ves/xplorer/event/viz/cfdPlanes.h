@@ -70,7 +70,7 @@ public:
     ///\param xyz 0 = x plane cuts, 1 = y plane cuts, and 2 = z plane cuts.
     ///\param directory Location of where to store planes.
     ///\param bounds Boundary of cutting planes.
-    cfdPlanes( const int xyz, const char directory[], const double bounds[ 6 ] );
+    cfdPlanes( const int xyz, const char directory[], const double* bounds );
     ///Constructor
     cfdPlanes();
     ///Destructor

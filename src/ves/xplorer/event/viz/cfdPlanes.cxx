@@ -53,7 +53,7 @@ using namespace ves::xplorer;
 using namespace ves::xplorer::util;
 
 cfdPlanes::cfdPlanes( const int xyz, const char directory[],
-                      const double bounds[ 6 ] )
+                      const double* bounds )
     :
     numPlanes( 0 ),
     isPlaneSelected( NULL ),

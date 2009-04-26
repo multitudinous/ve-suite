@@ -791,7 +791,7 @@ double* DataSet::GetBounds()
     return m_bounds;
 }
 //////////////////////////////////////////////////////////
-void DataSet::GetBounds( double bounds[6] )
+void DataSet::GetBounds( double* bounds )
 {
     if( m_dataObjectHandler )
     {
@@ -1257,7 +1257,6 @@ std::string DataSet::GetFileName()
 void DataSet::SetPrecomputedDataSliceDir( const std::string newName )
 {
     precomputedDataSliceDir.assign( newName );
-    LoadPrecomputedDataSlices();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DataSet::LoadPrecomputedDataSlices()
@@ -1281,6 +1280,7 @@ void DataSet::LoadPrecomputedDataSlices()
     {
         double bounds[ 6 ];
         GetBounds( bounds );
+        vprDEBUG( vesDBG, 0 ) << "\tDataset bounds xmin = " << bounds[ 0 ] << " xmax " << bounds[ 1 ] << " ymin " << bounds[ 2 ] << " ymax " << bounds[ 3 ] << " zmin " << bounds[ 4 ] << " zmax " << bounds[ 5 ] << std::endl << vprDEBUG_FLUSH;
         vprDEBUG( vesDBG, 0 ) << "\tLoading precomputed planes from "
             << precomputedDataSliceDir << std::endl << vprDEBUG_FLUSH;
         this->x_planes = new cfdPlanes( 0, this->GetPrecomputedDataSliceDir().c_str(), bounds );

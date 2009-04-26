@@ -119,7 +119,7 @@ void cfdMomentums::Update( void )
             vprDEBUG( vesDBG, 0 ) << "|\tMemory allocation failure : cfdMomentums "
             << std::endl << vprDEBUG_FLUSH;
         }
-        this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz )->GetPlanesData()->Delete();
+        GetActiveDataSet()->GetPrecomputedSlices( this->xyz )->GetPlanesData()->Delete();
         temp->Delete();
     }
     else

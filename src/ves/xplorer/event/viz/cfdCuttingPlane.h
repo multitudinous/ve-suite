@@ -51,12 +51,12 @@ class VE_XPLORER_EXPORTS cfdCuttingPlane
 {
 public:
     ///Constructor
-    cfdCuttingPlane( const double bounds[6], const int xyz,
+    cfdCuttingPlane( const double* bounds, const int xyz,
                      const int numSteps = 10 );
     ///Destructor
-    ~cfdCuttingPlane( );
+    ~cfdCuttingPlane();
 
-    void SetBounds( const double bounds[6] );
+    void SetBounds( const double* bounds );
 
     vtkPlane * GetPlane( );
 
@@ -93,7 +93,7 @@ private:
     ///Used to advance the origin.
     void IncrementOrigin();
 
-    vtkPlane * plane;///<Plane for vtk.
+    vtkPlane* plane;///<Plane for vtk.
 
     double normal[3];///<Normal direction to cut.
 

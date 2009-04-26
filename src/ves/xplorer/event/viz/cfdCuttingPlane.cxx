@@ -39,17 +39,14 @@ using namespace ves::xplorer;
 
 cfdCuttingPlane::cfdCuttingPlane( const double bounds[6], const int xyz,
                                   const int numSteps )
+    :
+    type( xyz )
 {
-    vprDEBUG( vesDBG, 2 ) << "in cfdCuttingPlane constructor"
-    << std::endl << vprDEBUG_FLUSH;
-
     // set the boundary of current data set.
     this->SetBounds( bounds );
 
-    this->type = xyz;
-
-    vprDEBUG( vesDBG, 1 ) << "this->type = " << this->type
-    << std::endl << vprDEBUG_FLUSH;
+    vprDEBUG( vesDBG, 1 ) << "cfdCuttingPlane type = " << this->type
+        << std::endl << vprDEBUG_FLUSH;
 
     // specify the normal to sweep, the step-size, and the origin...
     if( this->type == 0 )
@@ -91,7 +88,7 @@ cfdCuttingPlane::cfdCuttingPlane( const double bounds[6], const int xyz,
         exit( 1 );
     }
 
-    vprDEBUG( vesDBG, 1 ) << "this->origin = " << this->origin[0] << " : "
+    vprDEBUG( vesDBG, 1 ) << "cfdCuttingPlane origin = " << this->origin[0] << " : "
     << this->origin[1] << " : " << this->origin[2]
     << std::endl << vprDEBUG_FLUSH;
     this->plane = vtkPlane::New( );
@@ -110,7 +107,7 @@ cfdCuttingPlane::~cfdCuttingPlane( )
     this->plane->Delete();
 }
 
-void cfdCuttingPlane::SetBounds( const double bounds[6] )
+void cfdCuttingPlane::SetBounds( const double* bounds )
 {
     for( int i = 0; i < 6; i++ )
     {

@@ -179,9 +179,8 @@ void AddVTKDataSetEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xml
             //If not already there lets create a new dataset
             _activeModel->CreateCfdDataSet();
             DataSet* lastDataAdded = _activeModel->GetCfdDataSet( -1 );
-            vprDEBUG( vesDBG, 0 ) << "|\t************************************* "
-                << std::endl << vprDEBUG_FLUSH;
-            vprDEBUG( vesDBG, 0 ) << "|\tvtk DCS parameters:"
+            vprDEBUG( vesDBG, 0 ) 
+                << "|\t*************Now starting to load new data************ "
                 << std::endl << vprDEBUG_FLUSH;
 
             // Pass in -1 to GetCfdDataSet to get the last dataset added
@@ -236,13 +235,15 @@ void AddVTKDataSetEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xml
             }
 
             //Now load up the dataset
-            //for( unsigned int i = 0; i < _activeModel->GetNumberOfCfdDataSets(); i++ )
             {
                 std::cout << "|\tLoading data for file "
                     << _activeModel->GetCfdDataSet( i )->GetFileName()
                     << std::endl;
                 lastDataAdded->SetArrow( ves::xplorer::ModelHandler::instance()->GetArrow() );
                 lastDataAdded->LoadData();
+                std::cout << "|\tData is loaded for file "
+                    << _activeModel->GetCfdDataSet( i )->GetFileName()
+                    << std::endl;
                 if( lastDataAdded->GetParent() == lastDataAdded )
                 {
                     _activeModel->GetDCS()->AddChild( lastDataAdded->GetDCS() );
@@ -258,6 +259,7 @@ void AddVTKDataSetEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xml
         DataSet* tempDataSet = _activeModel->GetCfdDataSet( _activeModel->GetIndexOfDataSet( dataSetName ) );
         tempDataSet->SetUUID( "VTK_PRECOMPUTED_DIR_PATH", tempDVP->GetID() );
         tempDataSet->SetPrecomputedDataSliceDir( precomputedDataSliceDir );
+        tempDataSet->LoadPrecomputedDataSlices();
     }
     else if( command->GetDataValuePair( "ADD_SURFACE_DATA_DIR" ) )
     {

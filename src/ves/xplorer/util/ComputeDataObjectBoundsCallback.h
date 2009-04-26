@@ -67,7 +67,7 @@ public:
     ///Get the bounds
     ///\param  boundsv The bounding box as:\n
     /// min-x, max-x, min-y, max-y, min-z, max-z
-    void GetDataObjectBounds( double bounds[6] );
+    void GetDataObjectBounds( double* bounds );
 
     ///Get the diagonal of the calculated bbox
     double GetDataObjectBoundsDiagonal();

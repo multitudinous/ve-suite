@@ -79,7 +79,7 @@ void ComputeDataObjectBoundsCallback::OperateOnDataset( vtkDataSet* dataset )
 
 }
 //////////////////////////////////////////////////////////////////////////
-void ComputeDataObjectBoundsCallback::GetDataObjectBounds( double bounds[6] )
+void ComputeDataObjectBoundsCallback::GetDataObjectBounds( double* bounds )
 {
 
     bounds[0] = m_bounds[0];
