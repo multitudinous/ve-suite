@@ -37,6 +37,8 @@
 #include <ves/xplorer/scenegraph/CADEntity.h>
 #include <ves/xplorer/scenegraph/Clone.h>
 
+#include <ves/xplorer/scenegraph/util/ToggleNodeVisitor.h>
+
 #include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>
@@ -79,22 +81,37 @@ void CADToggleEventHandler::_operateOnNode( XMLObjectPtr xmlObject )
     DataValuePairPtr toggleValue = command->GetDataValuePair( "Toggle Value" );
     DataValuePairPtr nodeID = command->GetDataValuePair( "Node ID" );
     DataValuePairPtr nodeType = command->GetDataValuePair( "Node Type" );
-
+    
+    bool toggleFlag;
+    if( toggleValue->GetDataString() == "ON" )
+    {
+        toggleFlag = true;
+    }
+    else if( toggleValue->GetDataString() == "OFF" )
+    {
+        toggleFlag = false;
+    }
+    
     if( nodeType->GetDataString() == std::string( "Assembly" ) )
     {
         if( m_cadHandler->AssemblyExists( nodeID->GetDataString() ) )
         {
-            m_cadHandler->GetAssembly( nodeID->GetDataString() )->
-                ToggleDisplay( toggleValue->GetDataString() );
+            //m_cadHandler->GetAssembly( nodeID->GetDataString() )->
+            //    ToggleDisplay( toggleValue->GetDataString() );
+            
+            ves::xplorer::scenegraph::DCS* tempDCS = 
+                m_cadHandler->GetAssembly( nodeID->GetDataString() );
+            
+            //Toggle all children off rather than the assembly
+            ves::xplorer::scenegraph::util::ToggleNodeVisitor 
+                tnv( tempDCS, toggleFlag, "" );
         }
     }
     else if( nodeType->GetDataString() == std::string( "Part" ) )
     {
-        std::cout << "---Toggle part---" << std::endl;
-        std::cout << "---" << toggleValue->GetDataString() << "---" << std::endl;
         m_cadHandler->GetPart( nodeID->GetDataString() )->GetDCS()->
             ToggleDisplay( toggleValue->GetDataString() );
-        std::cout << "---Toggled part---" << std::endl;
+        //Now check to make sure parent is toggled on if this was a toggle on
     }
     else
     {

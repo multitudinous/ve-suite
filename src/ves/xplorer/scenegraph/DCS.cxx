@@ -497,17 +497,11 @@ void DCS::ToggleDisplay( std::string onOff )
 {
     if( onOff == "ON" )
     {
-#ifdef _OSG
         setNodeMask( 1 );
-#elif _OPENSG
-#endif
     }
     else if( onOff == "OFF" )
     {
-#ifdef _OSG
         setNodeMask( 0 );
-#elif _OPENSG
-#endif
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
