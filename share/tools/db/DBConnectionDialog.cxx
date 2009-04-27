@@ -2,6 +2,7 @@
 // --- VE-Suite Includes --- //
 #include "DBConnectionDialog.h"
 #include "AppFrame.h"
+#include "AppTreeCtrl.h"
 #include "DBAppEnums.h"
 #include "MySQLConnection.h"
 
@@ -14,9 +15,6 @@
 #include <wx/stattext.h>
 #include <wx/button.h>
 #include <wx/msgdlg.h>
-
-// --- MySQL++ Includes --- //
-//#include <mysql++.h>
 
 // --- C/C++ Includes --- //
 #include <string>
@@ -219,10 +217,9 @@ void DBConnectionDialog::Connect( wxCommandEvent& WXUNUSED( event ) )
                 password != "" && port != atoi( "" ) )
             {
 	            //Connect to the database
-                MySQLConnection* mysqlConnection = new MySQLConnection();
-	            if( mysqlConnection->connect(
-                        db.c_str(), server.c_str(),
-                        username.c_str(), password.c_str(), port ) )
+                MySQLConnection* mysqlConnection =
+                    new MySQLConnection( db, server, username, password, port );
+	            if( mysqlConnection->connected() )
                 {
                     Hide();
 
@@ -231,6 +228,9 @@ void DBConnectionDialog::Connect( wxCommandEvent& WXUNUSED( event ) )
                         wxT( "MySQL connection successful!" ),
                         wxT( "Success" ) );
                     msgDlg.ShowModal();
+
+                    m_appFrame->GetAppTreeCtrl()->AddDBConnection(
+                        mysqlConnection );
 	            }
 	            else
                 {

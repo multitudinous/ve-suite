@@ -15,6 +15,8 @@
 #include <wx/msw/winundef.h>
 #endif //WIN32
 
+// --- C/C++ Includes --- //
+
 /*!\file MySQLConnection.h
  *
  */
@@ -26,12 +28,19 @@ class MySQLConnection : public DBConnection, public mysqlpp::Connection
 {
 public:
     ///Constructor
-    MySQLConnection();
+    MySQLConnection(
+        std::string& db,
+        std::string& server,
+        std::string& username,
+        std::string& password,
+        unsigned int port );
 
     ///Destructor
     virtual ~MySQLConnection();
 
 protected:
+    ///
+    virtual void QueryTables();
 
 private:
 

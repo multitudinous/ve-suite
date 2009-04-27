@@ -20,28 +20,25 @@ class DBConnection;
 class AppTreeCtrl : public wxTreeCtrl
 {
 public:
-    ///Default Constructor
-    AppTreeCtrl( wxWindow* parent );
-
     ///Constructor
-    //AppTreeCtrl();
+    AppTreeCtrl( wxWindow* parent );
 
     ///Destructor
     virtual ~AppTreeCtrl();
 
+    enum
+    {
+        DATABASE = 0,
+        ACCESS = 1,
+        MYSQL = 2,
+        TABLE = 3
+    };
+
+    ///
+    void AddDBConnection( DBConnection* dbConnection );
+
 protected:
-    ///
-    void SelectionChanged( wxTreeEvent& event );
-    
-    ///
-    void Expand( wxTreeEvent& event );
-    
-    ///
-    void RightClick( wxTreeEvent& event );
-    
-    ///
-    void DoubleClick( wxTreeEvent& event );
-    
+
 private:
     ///Loads and stores the xpm images
     void LoadBitmaps();
@@ -50,24 +47,30 @@ private:
     void CreateGUI();
 
     ///
+    void SelectionChanged( wxTreeEvent& event );
+    
+    ///
+    void RightClick( wxTreeEvent& event );
+    
+    ///
+    void DoubleClick( wxTreeEvent& event );
+
+    ///
     AppFrame* m_appFrame;
+
+    ///
+    wxTreeItemId m_rootID;
+
+    ///
+    wxTreeItemId m_selectionID;
 
     DECLARE_EVENT_TABLE();
 
 };
 
-class ConnectionData : public wxTreeItemData
+struct DBConnectionData : public wxTreeItemData
 {
-public:
-    ///
-    const DBConnection* const GetDBConnection() const;
-
-protected:
-
-private:
-    ///
     DBConnection* m_dbConnection;
-
 };
 
 #endif //APP_TREE_CTRL_H
