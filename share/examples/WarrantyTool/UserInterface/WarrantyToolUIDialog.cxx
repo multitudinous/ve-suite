@@ -36,6 +36,7 @@
 
 // --- My Includes --- //
 #include "WarrantyToolUIDialog.h"
+#include "wxFixWidthImportCtrl.h"
 
 // --- VE-Suite Includes --- //
 #include <ves/conductor/util/spinctld.h>
@@ -160,6 +161,11 @@ void WarrantyToolUIDialog::BuildGUI()
         stdDialogButtonAdd = new wxButton( this, GLOW_ADD, _("Add") );
         buttonSizer->Add( stdDialogButtonAdd, 0, wxALL, 5 );
     }
+    //Warranty file
+    {
+        mTabDialog = new wxFixWidthImportCtrl( this, OPEN_WARRANTY_FILE );
+        buttonSizer->Add( mTabDialog, 0, wxALL, 5 );
+   }
 
     mainSizer->Add( buttonSizer, 0, wxALL | wxEXPAND, 5 );
     
@@ -167,8 +173,10 @@ void WarrantyToolUIDialog::BuildGUI()
         wxCommandEventHandler( WarrantyToolUIDialog::GetTextInput ) );
     Connect( GLOW_CLEAR, wxEVT_COMMAND_BUTTON_CLICKED,
         wxCommandEventHandler( WarrantyToolUIDialog::GetTextInput ) );
+    //Connect( GLOW_ADD, wxEVT_COMMAND_BUTTON_CLICKED,
+    //    wxCommandEventHandler( WarrantyToolUIDialog::GetTextInput ) );
     Connect( GLOW_ADD, wxEVT_COMMAND_BUTTON_CLICKED,
-        wxCommandEventHandler( WarrantyToolUIDialog::GetTextInput ) );
+        wxCommandEventHandler( WarrantyToolUIDialog::OpenWarrantyFile ) );
     ///////////////////////////////////////////////////////////
 
     SetSizer( mainSizer );
@@ -221,4 +229,11 @@ void WarrantyToolUIDialog::GetTextInput( wxCommandEvent& event )
     std::string mCommandName = "CAMERA_GEOMETRY_ON_OFF";
     command->SetCommandName( mCommandName );
     mServiceList->SendCommandStringToXplorer( command );
+}
+////////////////////////////////////////////////////////////////////////////////
+void WarrantyToolUIDialog::OpenWarrantyFile( wxCommandEvent& event )
+{
+    wxString fileName( _("C:/dev/test_data/tab_delimited/0904-RIDesktop.txt") );
+    mTabDialog->SetTabSize( 7 );
+    mTabDialog->LoadFile( fileName );
 }

@@ -19,8 +19,8 @@ cd %VE_SUITE_HOME%
 if "%VE_CONFIGURATION%" == "RELEASE" (GOTO ReleaseBUILD) else (GOTO DebugBUILD)
 
 :ReleaseBUILD
-scons default_debug_level=none prefix=D:\devEnv\VES\install\release options_file=D:\devEnv\VES\options.cache.win32.XP.ia32.release install
-
+scons default_debug_level=none prefix=C:\dev\VE_Suite\install-release  install
+REM options_file=D:\devEnv\VES\options.cache.win32.XP.ia32.release
 :DebugBUILD
 scons default_debug_level=standard prefix=D:\devEnv\VES\install\debug options_file=D:\devEnv\VES\options.cache.win32.XP.ia32.debug install
 cmd

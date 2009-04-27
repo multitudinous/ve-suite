@@ -31,6 +31,7 @@ velauncherDistDir = pj(RootDir,buildDir,'dist','build','freeze')
 installerImages = pj(RootDir,'dist','installerImages')
 
 basePyinstallerDir = pj(RootDir,'external','FreezePython','pyinstaller-1.3')
+configure_py = pj(basePyinstallerDir, 'Configure.py')
 makespec_py = pj(basePyinstallerDir, 'Makespec.py')
 build_py = pj(basePyinstallerDir, 'Build.py')
 

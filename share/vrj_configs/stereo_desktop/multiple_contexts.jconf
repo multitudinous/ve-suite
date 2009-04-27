@@ -739,7 +739,7 @@
          <hide_mouse>false</hide_mouse>
          <full_screen>false</full_screen>
          <always_on_top>false</always_on_top>
-         <active>true</active>
+         <active>false</active>
          <simulator_viewports>
             <simulator_viewport name="CHANGEME" version="3">
                <origin>0.0</origin>

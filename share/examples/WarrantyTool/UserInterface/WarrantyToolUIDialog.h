@@ -56,6 +56,7 @@ class wxRadioBox;
 class wxSlider;
 class wxSpinCtrl;
 class wxTextCtrl;
+class wxFixWidthImportCtrl;
 
 // --- C/C++ Libraries --- //
 #include <vector>
@@ -79,6 +80,7 @@ public:
         GLOW_RESET,
         GLOW_CLEAR,
         GLOW_ADD,
+        OPEN_WARRANTY_FILE
     };
 
 protected:
@@ -90,9 +92,12 @@ private:
 
     void SendCommandsToXplorer();
 
+    void OpenWarrantyFile( wxCommandEvent& event );
+
     ves::conductor::util::CORBAServiceList* mServiceList;
     
     wxTextCtrl* mPartNumberEntry;
+    wxFixWidthImportCtrl* mTabDialog;
     
     std::vector< std::string > mPartNumberList;
     DECLARE_EVENT_TABLE()

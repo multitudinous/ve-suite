@@ -3,7 +3,7 @@
 #define VEVERSION "1.1.7"
 #define SVNVERSION "12407"
 #define MSVCVERSION "8.0_SP1"
-#define JUGGLERVERSION "2.3_SP1"
+#define JUGGLERVERSION "2.3.18_SP1"
 ; Define the group name for all the windows links to be
 ; installed under for the Start Menu
 #define VESGROUPNAME "VE-Suite"
