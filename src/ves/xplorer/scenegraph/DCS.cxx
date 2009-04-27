@@ -314,8 +314,8 @@ gmtl::Matrix44d DCS::GetMat()
     }
     else
     {
-        std::cout << "Invalid matrix!" << std::endl;
-        std::cout << "DCS::GetMat()" << std::endl;
+        std::cout << "Invalid matrix: " << getName() << std::endl
+            << "DCS::GetMat()" << std::endl;
     }
 
     return _vjMatrix;
@@ -323,7 +323,6 @@ gmtl::Matrix44d DCS::GetMat()
 ////////////////////////////////////////////////////////////////////////////////
 void DCS::SetMat( gmtl::Matrix44d& input )
 {
-#ifdef _OSG
     gmtl::Vec3d scaleXVec( input[ 0 ][ 0 ], input[ 1 ][ 0 ], input[ 2 ][ 0 ] );
     gmtl::Vec3d scaleYVec( input[ 0 ][ 1 ], input[ 1 ][ 1 ], input[ 2 ][ 1 ] );
     gmtl::Vec3d scaleZVec( input[ 0 ][ 2 ], input[ 1 ][ 2 ], input[ 2 ][ 2 ] );
@@ -348,10 +347,6 @@ void DCS::SetMat( gmtl::Matrix44d& input )
     inMat.set( input.getData() );
     osg::Vec3d trans = inMat.getTrans();
     setPosition( trans );
-#elif _OPENSG
-    std::cerr << " ERROR: DCS::SetMat is NOT implemented " << std::endl;
-    exit( 1 );
-#endif
 
     UpdatePhysicsTransform();
 }
@@ -363,7 +358,6 @@ void DCS::SetRotationMatrix( gmtl::Matrix44d& input )
     //they will actually get back the current rotation and not and old rotation value
 
     //Need to set rotation to this matrix
-#ifdef _OSG
     //Remove the scale from the rotation
     gmtl::Vec3d scaleVec( input[ 0 ][ 0 ], input[ 1 ][ 0 ], input[ 2 ][ 0 ] );
     double tempScale = 1.0f / gmtl::length( scaleVec );
@@ -375,36 +369,18 @@ void DCS::SetRotationMatrix( gmtl::Matrix44d& input )
     gmtl::Quatd tempQuat = gmtl::make< gmtl::Quatd >( unScaleInput );
     osg::Quat quat( tempQuat[ 0 ], tempQuat[ 1 ], tempQuat[ 2 ], tempQuat[ 3 ] );
     setAttitude( quat );
-#elif _OPENSG
-    std::cerr << " ERROR: DCS::SetRotationMatrix is NOT implemented " << std::endl;
-    exit( 1 );
-#endif
 
     UpdatePhysicsTransform();
 }
 ////////////////////////////////////////////////////////////////////////////////
 int DCS::RemoveChild( SceneNode* child )
 {
-#ifdef _OSG
     return removeChild( dynamic_cast< osg::Node* >( child ) );
-#elif _OPENSG
-    cerr << " ERROR: DCS::ReplaceChild is NOT implemented " << endl;
-    exit( 1 );
-
-    return -1;
-#endif
 }
 ////////////////////////////////////////////////////////////////////////////////
 int DCS::AddChild( SceneNode* child )
 {
-#ifdef _OSG
     return addChild( dynamic_cast< Node* >( child ) );
-#elif _OPENSG
-    cerr << " ERROR: DCS::ReplaceChild is NOT implemented " << endl;
-    exit( 1 );
-
-    return -1;
-#endif
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DCS::InsertChild( int position, SceneNode* child )
