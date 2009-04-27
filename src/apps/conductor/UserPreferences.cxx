@@ -122,6 +122,8 @@ bool UserPreferences::Create( wxWindow* parent, wxWindowID id, const wxString& c
     preferenceMap[ "Navigation z=0 Lock" ] = false;
     preferenceMap[ "Geometry LOD Scale" ] = true;
     preferenceMap[ "Set Near-Far Ratio" ] = false;
+    preferenceMap[ "Physics Debugger" ] = false;
+    preferenceMap[ "Script Logger" ] = false;
 
     ///Read from wxConfig
     ReadConfiguration();
@@ -186,7 +188,10 @@ void UserPreferences::CreateControls()
                                       wxDefaultSize, wxTE_PROCESS_ENTER );
     nearFarSizer->Add( nearFarChkBx, 1, wxEXPAND | wxALIGN_CENTER_HORIZONTAL );
     nearFarSizer->Add( m_nearFarEntry, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
-     
+
+    wxCheckBox* physicsDebuggerChkBx = new wxCheckBox( panel, wxNewId(), wxT( "Physics Debugger" ), wxDefaultPosition, wxDefaultSize, wxCHK_2STATE );
+    wxCheckBox* scriptLoggerChkBx = new wxCheckBox( panel, wxNewId(), wxT( "Script Logger" ), wxDefaultPosition, wxDefaultSize, wxCHK_2STATE );
+
     backgroundColorChkBx->SetValue( preferenceMap[ "Use Preferred Background Color" ] );
     backgroundColorChkBx->IsChecked();
     navigationChkBx->SetValue( preferenceMap[ "Auto Launch Nav Pane" ] );
@@ -201,6 +206,11 @@ void UserPreferences::CreateControls()
     {
         m_nearFarEntry->Disable();
     }
+
+    physicsDebuggerChkBx->SetValue( preferenceMap[ "Physics Debugger" ] );
+    physicsDebuggerChkBx->IsChecked();
+    scriptLoggerChkBx->SetValue( preferenceMap[ "Script Logger" ] );
+    scriptLoggerChkBx->IsChecked();
     
     
     m_lodScaleSlider = new wxSlider( panel, USERPREFENCES_GEOMETRY_LOD_SCALE_SLIDER, m_lodScale, 0, 100,
@@ -212,6 +222,8 @@ void UserPreferences::CreateControls()
     itemBoxSizer3->Add( shutdownModeChkBx, 0, wxALIGN_LEFT | wxALL | wxEXPAND, 5 );
     itemBoxSizer3->Add( zNavChkBx, 0, wxALIGN_LEFT | wxALL | wxEXPAND, 5 );
     itemBoxSizer3->Add( nearFarSizer, 0, wxALIGN_LEFT | wxALL | wxEXPAND, 5 );
+    itemBoxSizer3->Add( physicsDebuggerChkBx, 0, wxALIGN_LEFT | wxALL | wxEXPAND, 5 );
+    itemBoxSizer3->Add( scriptLoggerChkBx, 0, wxALIGN_LEFT | wxALL | wxEXPAND, 5 );
     itemBoxSizer3->Add( m_lodScaleSlider, 0, wxALIGN_CENTER | wxALL | wxEXPAND, 5 );
 
     ///////////////////////////////////////
