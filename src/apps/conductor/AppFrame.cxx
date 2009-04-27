@@ -1740,7 +1740,7 @@ void AppFrame::SubmitToServer( wxCommandEvent& WXUNUSED( event ) )
         network->SetIDOnAllActiveModules();
         //Now that we have an active xml model in all units
         // set the network
-        serviceList->SetNetwork( CORBA::string_dup( nw_str.c_str() ) );
+        serviceList->SetNetwork( nw_str );
         // Tell xplorer to ask ce for the new data
         DataValuePairPtr dataValuePair( new DataValuePair() );
         dataValuePair->SetData( std::string( "Load Data" ), xplorerColor );
