@@ -21,7 +21,7 @@ AppNotebook::AppNotebook( wxWindow* parent )
         wxID_ANY,
         wxDefaultPosition,
         wxDefaultSize,
-        wxNB_FIXEDWIDTH | wxNB_RIGHT ),
+        wxNB_FIXEDWIDTH | wxNB_TOP ),
     m_appFrame( static_cast< AppFrame* >( parent ) ),
     m_tableDetailsPanel( NULL ),
     m_dataPanel( NULL ),

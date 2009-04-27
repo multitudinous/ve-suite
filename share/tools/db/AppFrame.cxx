@@ -17,6 +17,7 @@
 #include <wx/sizer.h>
 #include <wx/statbox.h>
 #include <wx/scrolwin.h>
+#include <wx/statline.h>
 
 BEGIN_EVENT_TABLE( AppFrame, wxFrame )
 
@@ -54,16 +55,26 @@ void AppFrame::CreateGUI()
 	SetBackgroundColour( wxColour( 255, 255, 255 ) );
     SetIcon( ve_icon16x16_xpm );
 
-    //Create the main sizer
-    wxBoxSizer* mainSizer = new wxBoxSizer( wxHORIZONTAL );
-
     //Create the menu bar
     m_appMenuBar = new AppMenuBar( this );
     SetMenuBar( m_appMenuBar );
 
+    //Create the main sizer
+    wxBoxSizer* mainSizer = new wxBoxSizer( wxHORIZONTAL );
+
+    //Create a vertical sizer
+    wxBoxSizer* verticalSizer = new wxBoxSizer( wxVERTICAL );
+	mainSizer->Add( verticalSizer, 1, wxEXPAND, 5 );
+
     //Create the tool bar
     m_appToolBar = new AppToolBar( this );
-    SetToolBar( m_appToolBar );
+    verticalSizer->Add( m_appToolBar, 0, wxEXPAND, 5 );
+
+    //Create a static line
+    wxStaticLine* staticLine =
+        new wxStaticLine(
+            this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
+	verticalSizer->Add( staticLine, 0, wxEXPAND, 5 );
 
     //Create a scrolled window
     wxScrolledWindow* scrolledWindow;
@@ -71,9 +82,9 @@ void AppFrame::CreateGUI()
         new wxScrolledWindow(
             this, wxID_ANY,
             wxDefaultPosition, wxDefaultSize,
-            wxALWAYS_SHOW_SB | wxHSCROLL | wxRAISED_BORDER | wxVSCROLL );
+            wxALWAYS_SHOW_SB | wxHSCROLL | wxNO_BORDER | wxVSCROLL );
 	scrolledWindow->SetScrollRate( 5, 5 );
-    mainSizer->Add( scrolledWindow, 1, wxEXPAND | wxTOP, 5 );
+    verticalSizer->Add( scrolledWindow, 1, wxEXPAND, 5 );
 
     //Create the tree control sizer
     wxBoxSizer* treeCtrlSizer = new wxBoxSizer( wxVERTICAL );
@@ -87,7 +98,7 @@ void AppFrame::CreateGUI()
 	
     //Create the notebook
 	m_appNotebook = new AppNotebook( this );
-	mainSizer->Add( m_appNotebook, 3, wxEXPAND | wxTOP, 5 );
+	mainSizer->Add( m_appNotebook, 3, wxEXPAND, 5 );
 	
 	SetSizer( mainSizer );
 	Layout();

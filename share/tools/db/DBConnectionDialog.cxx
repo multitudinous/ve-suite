@@ -223,14 +223,14 @@ void DBConnectionDialog::Connect( wxCommandEvent& WXUNUSED( event ) )
                 {
                     Hide();
 
+                    m_appFrame->GetAppTreeCtrl()->AddDBConnection(
+                        mysqlConnection );
+
                     wxMessageDialog msgDlg(
                         this,
                         wxT( "MySQL connection successful!" ),
                         wxT( "Success" ) );
                     msgDlg.ShowModal();
-
-                    m_appFrame->GetAppTreeCtrl()->AddDBConnection(
-                        mysqlConnection );
 	            }
 	            else
                 {

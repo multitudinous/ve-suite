@@ -60,8 +60,6 @@ void AppToolBar::CreateGUI()
         mToolbarBitmaps[ "dbConnectionBitmap" ],
         wxT( "DB Connection" ), wxITEM_NORMAL );
 
-    AddSeparator();
-
 #ifdef WIN32
     AddTool(
         SHOW_VES_CONNECTION_DIALOG_ATB, wxT( "" ),

@@ -15,9 +15,9 @@
 
 
 BEGIN_EVENT_TABLE( AppTreeCtrl, wxTreeCtrl )
-EVT_TREE_SEL_CHANGED( SELECTION_CHANGED_ATC, AppTreeCtrl::SelectionChanged )
-//EVT_TREE_ITEM_ACTIVATED( DOUBLE_CLICK_ATC, AppTreeCtrl::DoubleClick )
-//EVT_TREE_ITEM_RIGHT_CLICK( RIGHT_CLICK_ATC, AppTreeCtrl::RightClick )
+EVT_TREE_SEL_CHANGED( APP_TREE_CTRL, AppTreeCtrl::SelectionChanged )
+//EVT_TREE_ITEM_ACTIVATED( APP_TREE_CTRL, AppTreeCtrl::DoubleClick )
+//EVT_TREE_ITEM_RIGHT_CLICK( APP_TREE_CTRL, AppTreeCtrl::RightClick )
 END_EVENT_TABLE()
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -25,7 +25,7 @@ AppTreeCtrl::AppTreeCtrl( wxWindow* parent )
     :
     wxTreeCtrl(
         parent,
-        wxID_ANY,
+        APP_TREE_CTRL,
         wxDefaultPosition,
         wxDefaultSize,
         wxTR_DEFAULT_STYLE | wxHSCROLL | wxNO_BORDER | wxVSCROLL ),
@@ -59,6 +59,8 @@ void AppTreeCtrl::CreateGUI()
 
     //Add the root
     m_rootID = AddRoot( wxT( "Database Connections" ), DATABASE );
+
+    SelectItem( m_rootID );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppTreeCtrl::AddDBConnection( DBConnection* dbConnection )
@@ -83,26 +85,31 @@ void AppTreeCtrl::AddDBConnection( DBConnection* dbConnection )
             dbConnectionData );
     }
 
-    SetItemBold( dbLeaf );
+    SelectItem( dbLeaf );
     Expand( m_rootID );
     Expand( dbLeaf );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppTreeCtrl::SelectionChanged( wxTreeEvent& WXUNUSED( event ) )
 {
-    wxTreeItemId selectedId = GetSelection();
-    if( selectedId == m_rootID || selectedId == m_selectionID )
+    wxTreeItemId selectedID = GetSelection();
+    if( selectedID == m_selectionID )
     {
         return;
     }
 
-    SetItemBold( selectedId );
+    SetItemBold( selectedID );
+    SetItemBold( m_selectionID, false );
+    m_selectionID = selectedID;
+
+    if( selectedID == m_rootID || GetItemParent( selectedID ) == m_rootID )
+    {
+        return;
+    }
 
     DBConnectionData* dbConnectionData =
-        static_cast< DBConnectionData* >( GetItemData( selectedId ) );
+        static_cast< DBConnectionData* >( GetItemData( selectedID ) );
     DBConnection* dbConnection = dbConnectionData->m_dbConnection;
-
-    m_selectionID = selectedId;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppTreeCtrl::RightClick( wxTreeEvent& event )
