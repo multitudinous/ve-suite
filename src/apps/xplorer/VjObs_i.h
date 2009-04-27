@@ -142,7 +142,9 @@ public:
     void GetCfdStateVariables( void );
     ///Create the vector with XML Commands to be used by Xplorer
     void CreatCommandVector( std::string commandString );
-
+    ///Store commands for the data logger
+    void StoreCommands( const std::string& commandString );
+    
     ves::open::xml::CommandPtr bufferCommand;///< Data to hold command data
 
 protected:
@@ -181,8 +183,12 @@ protected:
     short mNumTeacherArrays;///< teacher number
     short mGetClientInfo;///< client info number
 
-    ves::open::xml::DOMDocumentManager* domManager; ///< dom manger should be removed
-    std::vector< ves::open::xml::CommandPtr > commandVectorQueue;///< command vector may be a duplicate
+    ///< dom manger should be removed
+    ves::open::xml::DOMDocumentManager* domManager; 
+    ///< command vector may be a duplicate
+    std::vector< ves::open::xml::CommandPtr > commandVectorQueue;
+    ///< command vector may be a duplicate
+    std::vector< ves::open::xml::CommandPtr > dataLoggerCommandVectorQueue;
     std::vector< std::string > commandStringQueue;///< command queue with raw string data
     ///Data container for command strings so that we can start recording 
     ///user commands during running ves

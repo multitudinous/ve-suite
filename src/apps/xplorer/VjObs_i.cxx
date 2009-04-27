@@ -107,13 +107,30 @@ void VjObs_i::Cleanup()
 {
     delete m_commandTimer;
     m_commandTimer = 0;
+
+    //Now send the data to xplorer
+    ves::open::xml::XMLReaderWriter netowrkWriter;
+    netowrkWriter.UseStandaloneDOMDocumentManager();
+    
+    // New need to destroy document and send it
+    std::vector< std::pair< ves::open::xml::XMLObjectPtr, std::string > > nodes;
+    for( size_t i = 0; i < dataLoggerCommandVectorQueue.size(); ++i )
+    {
+        nodes.push_back( std::pair< ves::open::xml::XMLObjectPtr, std::string >( dataLoggerCommandVectorQueue.at( i ), "vecommand" ) );
+    }
+    
+    std::string xmlDocument( "returnString" );
+    netowrkWriter.WriteXMLDocument( nodes, xmlDocument, "Command" );
+    m_commandStringRecorder.push_back( xmlDocument );
+    
     if( m_storeCommands )
     {
         std::cout << "Writing VE movie file." << std::endl;
         std::ofstream commandScriptfile( "scriptFile.vem" );
-        for( size_t i = 0; i < m_commandStringRecorder.size(); ++i )
+        //for( size_t i = 0; i < m_commandStringRecorder.size(); ++i )
         {
-            commandScriptfile << m_commandStringRecorder.at( i ) << std::endl;
+            //commandScriptfile << m_commandStringRecorder.at( i ) << std::endl;
+            commandScriptfile << xmlDocument << std::endl;
         }
         commandScriptfile.close();
     }
@@ -757,28 +774,20 @@ ACE_THROW_SPEC((
         {
             vpr::Guard<vpr::Mutex> val_guard( mValueLock );
             commandStringQueue.push_back( commandString );
+            if( m_storeCommands )
+            {
+                StoreCommands( commandString );
+            }
         }
     }
     else
     {
         //commandStringQueue.push_back( commandString );
         CreatCommandVector( commandString );
-    }
-    
-    
-    if( m_storeCommands )
-    {
-        m_commandTimer->stopTiming();
-        
-        std::ostringstream commandtime;
-        commandtime << std::endl << "**time = " 
-            << m_commandTimer->getLastTiming() << " ****" << std::endl;
-        m_commandStringRecorder.push_back( commandtime.str() );
-
-        m_commandStringRecorder.push_back( commandString );
-        
-        m_commandTimer->reset();
-        m_commandTimer->startTiming();
+        if( m_storeCommands )
+        {
+            StoreCommands( commandString );
+        }
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -798,6 +807,39 @@ void VjObs_i::CreatCommandVector( std::string commandString )
         commandVectorQueue.push_back(  boost::dynamic_pointer_cast<ves::open::xml::Command>( objectVector.at( i ) ) );
     }
 }
+////////////////////////////////////////////////////////////////////////////////
+void VjObs_i::StoreCommands( const std::string& commandString )
+{
+    m_commandTimer->stopTiming();
+    
+    /*std::ostringstream commandtime;
+     commandtime << std::endl << "**time = " 
+     << m_commandTimer->getLastTiming() << " ****" << std::endl;
+     m_commandStringRecorder.push_back( commandtime.str() );*/
+    // Create the command and data value pairs
+    DataValuePairPtr dataValuePair( new DataValuePair() );
+    dataValuePair->SetData( std::string( "Time" ), m_commandTimer->getLastTiming() );
+    CommandPtr veCommand( new Command() );
+    veCommand->SetCommandName( std::string( "Sleep" ) );
+    veCommand->AddDataValuePair( dataValuePair );
+    
+    dataLoggerCommandVectorQueue.push_back( veCommand );
+    
+    XMLReaderWriter networkWriter;
+    networkWriter.UseStandaloneDOMDocumentManager();
+    networkWriter.ReadFromString();
+    networkWriter.ReadXMLData( commandString, "Command", "vecommand" );
+    std::vector< XMLObjectPtr > objectVector = networkWriter.GetLoadedXMLObjects();    
+    
+    for( size_t i = 0; i < objectVector.size(); ++i )
+    {
+        dataLoggerCommandVectorQueue.push_back(  boost::dynamic_pointer_cast<ves::open::xml::Command>( objectVector.at( i ) ) );
+    }
+    
+    m_commandTimer->reset();
+    m_commandTimer->startTiming();
+}
+////////////////////////////////////////////////////////////////////////////////
 // Frame sync variables used by osg only at this point
 float VjObs_i::GetSetAppTime( float x )
 {
