@@ -664,9 +664,13 @@ void AppFrame::StoreRecentFile()
     wxConfig* cfg = static_cast<wxConfig*>( wxConfig::Get() );
     if( !cfg )
     {
+        std::cout << "There is no longer a wxConfig around" << std::endl;
         return;
     }
     m_recentVESFiles->Save( *cfg );
+    //Write out the Config file as it seems in some cases it is not being
+    //being written during destruction of the frame.
+    cfg->Flush();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::FrameClose( wxCommandEvent& WXUNUSED( event ) )
