@@ -140,6 +140,8 @@ public:
     ///Set the filename for this dataset
     ///\post Now LoadData can be called
     void SetFileName( const std::string& filename );
+    ///Get the filename used for this dataset
+    const std::string& GetFileName();
 
     ///Load the precomputed data directory
     void LoadPrecomputedDataSlices();
@@ -216,7 +218,6 @@ public:
     void ResetScalarBarRange( double min, double max );
 
     void SetFileName_OnFly( int );
-    std::string GetFileName();
 
     void SetPrecomputedDataSliceDir( const std::string newDir );
     std::string GetPrecomputedDataSliceDir();
@@ -402,6 +403,8 @@ private:
     
     ///Easy way to tell if this dataset is a child of a composite dataset
     bool m_isPartOfCompositeDataset;
+    ///List of child datasets for this dataset
+    std::vector< DataSet* > m_childDataSets;
 #ifdef USE_OMP
     unsigned int noOfData;   // Total no. of octants.
     vtkUnstructuredGridReader *dataReader[MAX_DATA];

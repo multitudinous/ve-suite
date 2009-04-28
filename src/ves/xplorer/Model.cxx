@@ -130,22 +130,14 @@ Model::~Model()
         itr->second = 0;
      }
      _eventHandlers.clear();*/
-    // the following block allows the program to get to pfExit
-    /*for ( VTKDataSetList::iterator itr = mVTKDataSets.begin();
-                                   itr != mVTKDataSets.end(); itr++ )
+
+    for( std::vector< DataSet* >::iterator iter = mVTKDataSets.begin(); 
+        iter != mVTKDataSets.end(); )
     {
-       vprDEBUG(vesDBG,2) << "deleting a Model"
-                              << std::endl << vprDEBUG_FLUSH;
-       delete *itr;
-    }*/
-    size_t dataSetSize = mVTKDataSets.size();
-    for( size_t i = 0; i < dataSetSize; i++ )
-    {
-        delete mVTKDataSets.at( i );
+        //std::cout << "Deleteing " << ( *iter )->GetFileName() << std::endl;
+        delete *iter;
+        iter = mVTKDataSets.erase( iter );
     }
-    mVTKDataSets.clear();
-    //vprDEBUG(vesDBG,2) << "deleting mVTKDataSets"
-    //   << std::endl << vprDEBUG_FLUSH;
 
     //texture data cleanup
     /*TextureDataSetList::iterator tDataSet;
@@ -715,11 +707,19 @@ void Model::DeleteDataSet( std::string dataSetName )
     for( std::vector< DataSet* >::iterator iter = mVTKDataSets.begin();
             iter != mVTKDataSets.end(); ++iter )
     {
-        if (( *iter )->GetFileName() == dataSetName )
+        if( (*iter)->GetFileName() == dataSetName )
         {
+            vprDEBUG( vesDBG, 1 ) << "Deleting " << ( *iter )->GetFileName() 
+                << std::endl << vprDEBUG_FLUSH;
             delete *iter;
             mVTKDataSets.erase( iter );
             break;
+        }
+        else
+        {
+            vprDEBUG( vesDBG, 1 ) << (*iter)->GetFileName() 
+                << " is available not " << dataSetName 
+                << std::endl << vprDEBUG_FLUSH;
         }
     }
 }

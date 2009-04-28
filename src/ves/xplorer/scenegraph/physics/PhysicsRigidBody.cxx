@@ -219,7 +219,7 @@ void PhysicsRigidBody::CleanRigidBody()
         //remove the rigidbodies from the dynamics world and delete them
         dw->removeRigidBody( mRB );
 
-        if( mDebugBoundaries )
+        /*if( mDebugBoundaries )
         {
             osgBullet::MotionState* motion = 
                 static_cast< osgBullet::MotionState* >( mRB->getMotionState() );
@@ -230,7 +230,7 @@ void PhysicsRigidBody::CleanRigidBody()
                 mPhysicsSimulator->GetDebugBullet()->
                         remove( dbgNode.get() );
             }
-        }
+        }*/
         
         {
             btCollisionShape* tempShape = mRB->getCollisionShape();

@@ -236,18 +236,30 @@ void AddVTKDataSetEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xml
 
             //Now load up the dataset
             {
+                const std::string tempDataSetFilename = 
+                    _activeModel->GetCfdDataSet( i )->GetFileName();
                 std::cout << "|\tLoading data for file "
-                    << _activeModel->GetCfdDataSet( i )->GetFileName()
+                    << tempDataSetFilename
                     << std::endl;
                 lastDataAdded->SetArrow( ves::xplorer::ModelHandler::instance()->GetArrow() );
                 lastDataAdded->LoadData();
-                std::cout << "|\tData is loaded for file "
-                    << _activeModel->GetCfdDataSet( i )->GetFileName()
-                    << std::endl;
-                if( lastDataAdded->GetParent() == lastDataAdded )
+                //If the data load failed
+                if( !lastDataAdded->GetDataSet() )
                 {
-                    _activeModel->GetDCS()->AddChild( lastDataAdded->GetDCS() );
-                    _activeModel->SetActiveDataSet( 0 );
+                    std::cout << "|\tData failed to load." << std::endl;
+                    _activeModel->DeleteDataSet( tempDataSetFilename );
+                }
+                else
+                {
+                    std::cout << "|\tData is loaded for file "
+                        << tempDataSetFilename
+                        << std::endl;
+                    if( lastDataAdded->GetParent() == lastDataAdded )
+                    {
+                        _activeModel->GetDCS()->
+                            AddChild( lastDataAdded->GetDCS() );
+                        _activeModel->SetActiveDataSet( 0 );
+                    }
                 }
             }
         }

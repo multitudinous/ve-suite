@@ -248,6 +248,17 @@ DataSet::~DataSet()
         mDataReader->Delete();
         mDataReader = 0;
     }
+    
+    for( size_t i = 0; i < m_childDataSets.size(); ++i )
+    {
+        m_tempModel->DeleteDataSet( m_childDataSets.at( i )->GetFileName() );
+    }
+    m_childDataSets.clear();
+    
+    if( dcs.valid() )
+    {
+        dcs->getParent( 0 )->removeChild( dcs.get() );
+    }
 }
 
 void DataSet::SetRange( double * dataRange )
@@ -1249,9 +1260,9 @@ void DataSet::SetFileName_OnFly( int datasetindex )
     this->SetFileName( newName.c_str() );
 }
 ////////////////////////////////////////////////////////////////////////////////
-std::string DataSet::GetFileName()
+const std::string& DataSet::GetFileName()
 {
-    return this->fileName;
+    return fileName;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DataSet::SetPrecomputedDataSliceDir( const std::string newName )
@@ -1866,58 +1877,61 @@ void DataSet::CreateCompositeDataSets()
     ///Load datasets
     ///Register with model
     //If dataobject is a multi block dataset then load the individual blocks
-    if( m_dataSet->IsA( "vtkCompositeDataSet" ) )
+    if( !m_dataSet->IsA( "vtkCompositeDataSet" ) )
     {
-        vtkDataSet* currentDataset = 0;
-        vtkCompositeDataSet* mgd = static_cast< vtkCompositeDataSet* >( m_dataSet );
-        vtkCompositeDataIterator* mgdIterator = vtkCompositeDataIterator::New();
-        mgdIterator->SetDataSet( mgd );
-        ///For traversal of nested multigroupdatasets
-        mgdIterator->VisitOnlyLeavesOn();
-        mgdIterator->GoToFirstItem();
-        
-        unsigned int num = 0;
-        while( !mgdIterator->IsDoneWithTraversal() )
+        return;
+    }
+
+    vtkDataSet* currentDataset = 0;
+    vtkCompositeDataSet* mgd = static_cast< vtkCompositeDataSet* >( m_dataSet );
+    vtkCompositeDataIterator* mgdIterator = vtkCompositeDataIterator::New();
+    mgdIterator->SetDataSet( mgd );
+    ///For traversal of nested multigroupdatasets
+    mgdIterator->VisitOnlyLeavesOn();
+    mgdIterator->GoToFirstItem();
+    
+    unsigned int num = 0;
+    while( !mgdIterator->IsDoneWithTraversal() )
+    {
+        currentDataset = 
+            dynamic_cast<vtkDataSet*>( mgdIterator->GetCurrentDataObject() );
+        //Do work
+        //new dataset
+        m_tempModel->CreateCfdDataSet();
+        ves::xplorer::DataSet* tempDataset = 
+            m_tempModel->GetCfdDataSet( -1 );
+        //set dcs
+        tempDataset->SetDCS( this->GetDCS() );
+        //set filename     
+        std::string subfilename;
+               
+        vtkCharArray* tempChar = 
+            dynamic_cast< vtkCharArray* >( 
+                currentDataset->GetFieldData()->GetArray( "Name" ) );
+        if( tempChar )
         {
-            currentDataset = 
-                dynamic_cast<vtkDataSet*>( mgdIterator->GetCurrentDataObject() );
-            //Do work
-            //new dataset
-            m_tempModel->CreateCfdDataSet();
-            ves::xplorer::DataSet* tempDataset = 
-                m_tempModel->GetCfdDataSet( -1 );
-            //set dcs
-            tempDataset->SetDCS( this->GetDCS() );
-            //set filename     
-            std::string subfilename;
-                   
-            vtkCharArray* tempChar = 
-                dynamic_cast< vtkCharArray* >( 
-                    currentDataset->GetFieldData()->GetArray( "Name" ) );
-            if( tempChar )
-            {
-                subfilename = tempChar->WritePointer( 0, 0 );
-            }
-            else
-            {
-                std::ostringstream filenameStream;
-                filenameStream << "Subdataset-" << num;
-                subfilename = filenameStream.str();
-            }
-            std::cout << "test out " << subfilename << std::endl;
-            tempDataset->SetFileName( subfilename );
-            //set the vector arrow
-            tempDataset->SetArrow( arrow );
-            //Load Data sort of
-            tempDataset->LoadData( currentDataset, true );
-            
-            mgdIterator->GoToNextItem();
-            num++;
+            subfilename = tempChar->WritePointer( 0, 0 );
         }
+        else
+        {
+            std::ostringstream filenameStream;
+            filenameStream << "Subdataset-" << num;
+            subfilename = filenameStream.str();
+        }
+        //std::cout << "test out " << subfilename << std::endl;
+        tempDataset->SetFileName( subfilename );
+        //set the vector arrow
+        tempDataset->SetArrow( arrow );
+        //Load Data sort of
+        tempDataset->LoadData( currentDataset, true );
+        m_childDataSets.push_back( tempDataset );
         
-        mgdIterator->Delete();
-        mgdIterator = 0;
-    }    
+        mgdIterator->GoToNextItem();
+        num++;
+    }
+    
+    mgdIterator->Delete();
+    mgdIterator = 0;
 }    
 ////////////////////////////////////////////////////////////////////////////////
 } // end xplorer
