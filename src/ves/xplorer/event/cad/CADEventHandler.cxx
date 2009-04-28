@@ -172,17 +172,14 @@ void CADEventHandler::_setTransformOnNode( CADNodePtr activeNode )
     std::string nodeID = activeNode->GetID();
     if( activeNode->GetNodeType() == "Assembly" )
     {
-        //std::cout<<"Setting transform on Assembly: "<<nodeID<<std::endl;
         transform = m_cadHandler->GetAssembly( nodeID );
     }
     else if( activeNode->GetNodeType() == "Part" )
     {
-        //std::cout<<"Setting transform on Part: "<<nodeID<<std::endl;
         transform = m_cadHandler->GetPart( nodeID )->GetDCS();
     }
     else if( activeNode->GetNodeType() == "Clone" )
     {
-        //std::cout<<"Setting transform on Clone: "<<nodeID<<std::endl;
         if( m_cadHandler->GetClone( nodeID ) )
         {
             transform = m_cadHandler->GetClone( nodeID )->GetClonedGraph();

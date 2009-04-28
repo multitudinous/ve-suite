@@ -385,14 +385,7 @@ int DCS::AddChild( SceneNode* child )
 ////////////////////////////////////////////////////////////////////////////////
 void DCS::InsertChild( int position, SceneNode* child )
 {
-#ifdef _OSG
     insertChild( position, dynamic_cast< Node* >( child ) );
-#elif _OPENSG
-    cerr << " ERROR: DCS::ReplaceChild is NOT implemented " << endl;
-    exit( 1 );
-
-    return -1;
-#endif
 }
 ////////////////////////////////////////////////////////////////////////////////
 int DCS::GetNumChildren()
@@ -409,57 +402,32 @@ int DCS::GetNumChildren()
 ////////////////////////////////////////////////////////////////////////////////
 const std::string DCS::GetName()
 {
-#ifdef _OSG
     return getName().data();
-#elif _OPENSG
-    return 0;
-#endif
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DCS::SetName( std::string name )
 {
-#ifdef _OSG
     setName( name );
-#elif _OPENSG
-    std::cerr << " ERROR: DCS::SetName is NOT implemented " << std::endl;
-    exit( 1 );
-#endif
 }
 ////////////////////////////////////////////////////////////////////////////////
 int DCS::ReplaceChild( SceneNode* childToBeReplaced, SceneNode* newChild )
 {
-#ifdef _OSG
     return replaceChild( dynamic_cast< Node* >( childToBeReplaced ), dynamic_cast< Node* >( newChild ) );
-#elif _OPENSG
-    cerr << " ERROR: DCS::ReplaceChild is NOT implemented " << endl;
-    exit( 1 );
-
-    return -1;
-#endif
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool DCS::SearchChild( ves::xplorer::scenegraph::SceneNode* searchChild )
 {
-#ifdef _OSG
     return containsNode( dynamic_cast< osg::Node* >( searchChild ) );
-#elif _OPENSG
-#endif
 }
 ////////////////////////////////////////////////////////////////////////////////
 osg::Group* DCS::GetParent( unsigned int position )
 {
-#ifdef _OSG
     return getParent( position );
-#elif _OPENSG
-#endif
 }
 ////////////////////////////////////////////////////////////////////////////////
 osg::Node* DCS::GetChild( unsigned int position )
 {
-#ifdef _OSG
     return getChild( position );
-#elif _OPENSG
-#endif
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DCS::ToggleDisplay( bool onOff )

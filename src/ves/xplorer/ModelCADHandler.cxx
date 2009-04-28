@@ -232,8 +232,9 @@ void ModelCADHandler::RemoveNode( const std::string& nodeID,
 {
     //first remove all the attributes for this node
     std::map < std::string,
-    std::vector < std::pair < std::string,
-    osg::ref_ptr< osg::StateSet > > > >::iterator attributeList;
+        std::vector < std::pair < std::string,
+        osg::ref_ptr< osg::StateSet > > > >::iterator attributeList;
+    
     attributeList = m_nodeAttributes.find( nodeID );
     if( attributeList != m_nodeAttributes.end() )
     {
@@ -247,6 +248,9 @@ void ModelCADHandler::RemoveNode( const std::string& nodeID,
     }
     else if( nodeType == "Part" )
     {
+        ves::xplorer::scenegraph::CADEntity* tempCAD = 
+            m_partList[ nodeID ];
+        delete tempCAD;
         m_partList.erase( nodeID );
     }
 }

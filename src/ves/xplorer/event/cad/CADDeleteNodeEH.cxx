@@ -81,18 +81,29 @@ void CADDeleteNodeEventHandler::_operateOnNode( XMLObjectPtr xmlObject )
         DataValuePairPtr nodeType = command->GetDataValuePair( "Node Type" );
 
         //ves::xplorer::Model* activeModel = dynamic_cast<ves::xplorer::Model*>(_baseObject);
-        std::cout << "---Deleting node---" << std::endl;
+        std::cout << "|\t---Deleting node---" << std::endl;
         ves::xplorer::scenegraph::DCS* parentAssembly = 0;
         parentAssembly = m_cadHandler->GetAssembly( parentID->GetDataString() );
 
         //This assumes the part/assembly isn't there already
         if( nodeType->GetDataString() == std::string( "Assembly" ) )
         {
-            parentAssembly->RemoveChild( m_cadHandler->GetAssembly( nodeID->GetDataString() ) );
+            parentAssembly->RemoveChild( 
+                m_cadHandler->GetAssembly( nodeID->GetDataString() ) );
         }
         else if( nodeType->GetDataString() == std::string( "Part" ) )
         {
-            parentAssembly->RemoveChild( m_cadHandler->GetPart( nodeID->GetDataString() )->GetDCS() );
+            ves::xplorer::scenegraph::CADEntity* tempPart = 
+                m_cadHandler->GetPart( nodeID->GetDataString() );
+            int error = parentAssembly->RemoveChild( tempPart->GetDCS() );
+            ///If this node has physics enabled there is an AMT node
+            ///between the cadentitity and parent which means this 
+            ///has to be removed manually.
+            if( error == 0 )
+            {
+                error = parentAssembly->
+                    removeChild( tempPart->GetDCS()->getParent( 0 ) );
+            }
         }
         else if( nodeType->GetDataString() == std::string( "Clone" ) )
         {

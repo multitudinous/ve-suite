@@ -449,6 +449,9 @@ void cfdExecutive::LoadDataFromCE( void )
 {
     if( CORBA::is_nil( this->_exec ) )
     {
+        std::cerr 
+            << "|\tTried to load data from VE-CE but there is no connection." 
+            << std::endl;
         return;
     }
 

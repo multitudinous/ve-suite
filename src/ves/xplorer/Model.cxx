@@ -443,9 +443,9 @@ void Model::DynamicLoadingGeom( std::string surfacefilename, double* scale,
     std::cout << "[DBG]...the geom file is " << surfacefilename << std::endl;
     this->CreateGeomDataSet( surfacefilename );
     std::cout << "[DBG]...after cfdFile constructor" << std::endl;
-    this->GetGeomDataSet( -1 )->GetDCS()->SetScaleArray( scale );
-    this->GetGeomDataSet( -1 )->GetDCS()->SetTranslationArray( trans );
-    this->GetGeomDataSet( -1 )->GetDCS()->SetRotationArray( rotate );
+    //this->GetGeomDataSet( -1 )->GetDCS()->SetScaleArray( scale );
+    //this->GetGeomDataSet( -1 )->GetDCS()->SetTranslationArray( trans );
+    //this->GetGeomDataSet( -1 )->GetDCS()->SetRotationArray( rotate );
 }
 ////////////////////////////////////////////////////////////////////////////////
 std::vector<vtkDataSet*> Model::GetWaitingDataList()
