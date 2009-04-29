@@ -106,6 +106,7 @@
 #include <wx/colordlg.h>
 #include <wx/docview.h>
 #include <wx/dirdlg.h>
+#include <wx/aboutdlg.h>
 
 #include <ves/util/icons/ve_icon64x64.xpm>
 #include <ves/util/icons/ve_icon32x32.xpm>
@@ -156,7 +157,7 @@ BEGIN_EVENT_TABLE( AppFrame, wxFrame )
 
     EVT_MENU( APPFRAME_V21ID_HELP, AppFrame::ViewHelp )
     EVT_MENU( APPFRAME_V21ID_ABOUT, AppFrame::ViewAbout )
-    EVT_MENU( APPFRAME_V21ID_REVISION, AppFrame::ViewRevision )
+    //EVT_MENU( APPFRAME_V21ID_REVISION, AppFrame::ViewRevision )
     EVT_MENU( APPFRAME_V21ID_CONTACTS, AppFrame::ViewContacts )
     EVT_MENU( APPFRAME_V21ID_PLATFORM, AppFrame::ViewPlatformInfo )
 
@@ -791,7 +792,7 @@ void AppFrame::CreateMenu()
     //help_menu->Append(wxID_HELP_CONTENTS, _("&Content\tF1"));
     help_menu->Append( APPFRAME_V21ID_HELP, _( "&VE-Suite Help" ) );
     help_menu->Append( APPFRAME_V21ID_ABOUT, _( "&About" ) );
-    help_menu->Append( APPFRAME_V21ID_REVISION, _( "&Revision" ) );
+    //help_menu->Append( APPFRAME_V21ID_REVISION, _( "&Revision" ) );
     help_menu->Append( APPFRAME_V21ID_CONTACTS, _( "&Contacts" ) );
     help_menu->Append( APPFRAME_V21ID_PLATFORM, _( "&Platform Info" ) );
     //help_menu->AppendSeparator();
@@ -2066,10 +2067,30 @@ void AppFrame::ViewHelp( wxCommandEvent& WXUNUSED( event ) )
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::ViewAbout( wxCommandEvent& WXUNUSED( event ) )
 {
-    ::wxLaunchDefaultBrowser( wxString( "http://www.vesuite.org", wxConvUTF8 ) );
+    std::ostringstream revNum;
+    revNum << VES_MAJOR_VERSION << "."
+        << VES_MINOR_VERSION << "."
+        << VES_PATCH_VERSION << "."
+        << SVN_VES_REVISION;
+    
+    wxString tempNum = wxString( "Current Revision: ", wxConvUTF8 ) +
+        wxString( revNum.str().c_str(), wxConvUTF8 );
+    
+    wxAboutDialogInfo info;
+    info.SetName( _("VE-Conductor") );
+    info.SetVersion( tempNum );
+    info.SetDescription( _("VE-Conductor is the user interface to VE-Suite") );
+    //info.SetCopyright(_T("(C) 2007 Me <my@email.addre.ss>"));
+    info.SetWebSite( _("www.vesuite.org"), _("VE-Suite") );
+    info.SetIcon( ve_icon32x32_xpm );
+    //info.SetArtists( wxArrayString() );
+    //info.SetDocWriters( wxArrayString() );
+    //info.SetDevelopers( wxArrayString() );
+
+    ::wxAboutBox(info);
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AppFrame::ViewRevision( wxCommandEvent& WXUNUSED( event ) )
+/*void AppFrame::ViewRevision( wxCommandEvent& WXUNUSED( event ) )
 {
     std::ostringstream revNum;
     revNum << VES_MAJOR_VERSION << "."
@@ -2082,7 +2103,7 @@ void AppFrame::ViewRevision( wxCommandEvent& WXUNUSED( event ) )
                        wxString( revNum.str().c_str(), wxConvUTF8 );
 
     wxMessageBox( tempNum, _( "Revision" ), wxOK | wxICON_INFORMATION );
-}
+}*/
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::ViewContacts( wxCommandEvent& WXUNUSED( event ) )
 {

@@ -246,7 +246,7 @@ protected:
 
     void ViewHelp( wxCommandEvent &event );
     void ViewAbout( wxCommandEvent &event );
-    void ViewRevision( wxCommandEvent &event );
+    //void ViewRevision( wxCommandEvent &event );
     void ViewContacts( wxCommandEvent &event );
     void ViewPlatformInfo( wxCommandEvent &event );
 
