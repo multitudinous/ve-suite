@@ -74,10 +74,10 @@ void AppNotebook::CreateGUI()
             m_tableDetailsPanel, wxID_ANY,
             wxDefaultPosition, wxDefaultSize,
             wxALWAYS_SHOW_SB | wxHSCROLL | wxVSCROLL );
-	
-	//Grid
+
+    //Grid
 	m_tableDetailsGrid->CreateGrid( 1, 6 );
-	m_tableDetailsGrid->EnableEditing( true );
+	m_tableDetailsGrid->EnableEditing( false );
 	m_tableDetailsGrid->EnableGridLines( true );
 	m_tableDetailsGrid->EnableDragGridSize( false );
 	m_tableDetailsGrid->SetMargins( 0, 0 );
@@ -96,19 +96,44 @@ void AppNotebook::CreateGUI()
 	m_tableDetailsGrid->SetRowLabelAlignment( wxALIGN_CENTRE, wxALIGN_CENTRE );
 	
 	//Label Appearance
-    m_tableDetailsGrid->SetColLabelValue( 0, wxT( "Name" ) );
+    m_tableDetailsGrid->SetColLabelValue( 0, wxT( "Field" ) );
     m_tableDetailsGrid->SetColLabelValue( 1, wxT( "Type" ) );
-    m_tableDetailsGrid->SetColLabelValue( 2, wxT( "Length" ) );
-    m_tableDetailsGrid->SetColLabelValue( 3, wxT( "Default" ) );
-    m_tableDetailsGrid->SetColLabelValue( 4, wxT( "Null" ) );
-    m_tableDetailsGrid->SetColLabelValue( 5, wxT( "Key" ) );
-	
-	//Cell Defaults
+    m_tableDetailsGrid->SetColLabelValue( 2, wxT( "Null" ) );
+    m_tableDetailsGrid->SetColLabelValue( 3, wxT( "Key" ) );
+    m_tableDetailsGrid->SetColLabelValue( 4, wxT( "Default" ) );
+    m_tableDetailsGrid->SetColLabelValue( 5, wxT( "Extra" ) );
+
+    //Cell Defaults
 	m_tableDetailsGrid->SetDefaultCellAlignment( wxALIGN_LEFT, wxALIGN_TOP );
 	tableDetailsGridSizer->Add( m_tableDetailsGrid, 0, wxEXPAND, 5 );
 	
 	m_tableDetailsPanel->SetSizer( tableDetailsGridSizer );
 	m_tableDetailsPanel->Layout();
 	tableDetailsGridSizer->Fit( m_tableDetailsPanel );
+}
+////////////////////////////////////////////////////////////////////////////////
+void AppNotebook::PopulateTableDetails( const StringArray2D* tableDetails )
+{
+    size_t numRows = (*tableDetails).size();
+    size_t numCols = (*tableDetails)[ 0 ].size();
+
+    int numTableRows = m_tableDetailsGrid->GetNumberRows();
+    if( numTableRows < numRows )
+    {
+        m_tableDetailsGrid->AppendRows( numRows - numTableRows );
+    }
+    else if( numTableRows > numRows )
+    {
+        m_tableDetailsGrid->DeleteRows( numRows, numTableRows - numRows );
+    }
+
+    for( size_t i = 0; i < numRows; ++i )
+    {
+        for( size_t j = 0; j < numCols; ++j )
+        {
+            m_tableDetailsGrid->SetCellValue(
+                i, j, wxT( (*tableDetails)[ i ][ j ].c_str() ) );
+        }
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////

@@ -9,6 +9,9 @@ class DBConnection;
 // --- wxWidgets Includes --- //
 #include <wx/treectrl.h>
 
+// --- C/C++ Includes --- //
+#include <string>
+
 
 /*!\file AppTreeCtrl.h
  * AppTreeCtrl API
@@ -71,6 +74,11 @@ private:
 struct DBConnectionData : public wxTreeItemData
 {
     DBConnection* m_dbConnection;
+};
+
+struct DBTableData : public wxTreeItemData
+{
+    std::string m_dbTableName;
 };
 
 #endif //APP_TREE_CTRL_H

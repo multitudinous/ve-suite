@@ -3,6 +3,7 @@
 #define APP_NOTEBOOK_H
 
 // --- VE-Suite Includes --- //
+#include "DBConnection.h"
 class AppFrame;
 
 // --- wxWidgets Includes --- //
@@ -26,6 +27,9 @@ public:
 
     ///Destructor
     virtual ~AppNotebook();
+
+    ///
+    void PopulateTableDetails( const StringArray2D* tableDetails );
 
 protected:
 

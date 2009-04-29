@@ -7,6 +7,11 @@
 // --- C/C++ Includes --- //
 #include <string>
 #include <vector>
+#include <map>
+
+// --- typedef --- //
+typedef std::vector< std::string > StringArray1D;
+typedef std::vector< std::vector< std::string > > StringArray2D;
 
 /*!\file DBConnection.h
  *
@@ -38,7 +43,11 @@ public:
     const std::string& GetName() const;
 
     ///
-    const std::vector< std::string >& GetTableNames() const;
+    const StringArray1D& GetTableNames() const;
+
+    ///
+    virtual const StringArray2D* const GetTableDetails(
+        std::string& tableName ) = 0;
 
 protected:
     ///
@@ -50,7 +59,11 @@ protected:
     ///
     std::string m_name;
 
-    std::vector< std::string > m_tableNames;
+    ///
+    StringArray1D m_tableNames;
+
+    ///
+    std::map< std::string, StringArray2D > m_tableDetails;
 
 private:
 

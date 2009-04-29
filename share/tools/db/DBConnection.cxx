@@ -28,7 +28,7 @@ const std::string& DBConnection::GetName() const
     return m_name;
 }
 ////////////////////////////////////////////////////////////////////////////////
-const std::vector< std::string >& DBConnection::GetTableNames() const
+const StringArray1D& DBConnection::GetTableNames() const
 {
     return m_tableNames;
 }

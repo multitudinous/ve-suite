@@ -7,6 +7,7 @@
 
 // --- MySQL++ Includes --- //
 #include <connection.h>
+#include <query.h>
 
 // --- wxWidgets Includes --- //
 #ifdef WIN32
@@ -38,12 +39,16 @@ public:
     ///Destructor
     virtual ~MySQLConnection();
 
+    ///
+    virtual const StringArray2D* const GetTableDetails(
+        std::string& tableName );
+
 protected:
     ///
     virtual void QueryTables();
 
 private:
-
+    mysqlpp::Query m_query;
 
 };
 

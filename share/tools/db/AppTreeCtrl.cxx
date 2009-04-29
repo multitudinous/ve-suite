@@ -2,8 +2,9 @@
 // --- VE-Suite Includes --- //
 #include "AppTreeCtrl.h"
 #include "AppFrame.h"
-#include "DBConnection.h"
+#include "AppNotebook.h"
 #include "DBAppEnums.h"
+#include "DBConnection.h"
 
 #include "xpm/TreeCtrl/Database.xpm"
 #include "xpm/TreeCtrl/AccessDatabase.xpm"
@@ -12,7 +13,6 @@
 
 // --- wxWidgets Includes --- //
 #include <wx/imaglist.h>
-
 
 BEGIN_EVENT_TABLE( AppTreeCtrl, wxTreeCtrl )
 EVT_TREE_SEL_CHANGED( APP_TREE_CTRL, AppTreeCtrl::SelectionChanged )
@@ -74,15 +74,17 @@ void AppTreeCtrl::AddDBConnection( DBConnection* dbConnection )
         dbConnection->GetDBType(), -1,
         dbConnectionData );
 
-    const std::vector< std::string >& tableNames =
+    const StringArray1D& tableNames =
         dbConnection->GetTableNames();
     for( size_t i = 0; i < tableNames.size(); ++i )
     {
+        DBTableData* dbTableData = new DBTableData();
+        dbTableData->m_dbTableName = tableNames.at( i );
         AppendItem(
             dbLeaf, 
-            wxString( tableNames.at( i ).c_str(), wxConvUTF8 ), 
+            wxString( dbTableData->m_dbTableName.c_str(), wxConvUTF8 ), 
             TABLE, -1,
-            dbConnectionData );
+            dbTableData );
     }
 
     SelectItem( dbLeaf );
@@ -108,8 +110,19 @@ void AppTreeCtrl::SelectionChanged( wxTreeEvent& WXUNUSED( event ) )
     }
 
     DBConnectionData* dbConnectionData =
-        static_cast< DBConnectionData* >( GetItemData( selectedID ) );
+        static_cast< DBConnectionData* >(
+            GetItemData( GetItemParent( selectedID ) ) );
     DBConnection* dbConnection = dbConnectionData->m_dbConnection;
+
+    DBTableData* dbTableData =
+        static_cast< DBTableData* >( GetItemData( selectedID ) );
+    std::string& dbTableName = dbTableData->m_dbTableName;
+
+    const StringArray2D* dbTableDetails =
+        dbConnection->GetTableDetails( dbTableName );
+
+    AppNotebook* appNotebook = m_appFrame->GetAppNotebook();
+    appNotebook->PopulateTableDetails( dbTableDetails );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppTreeCtrl::RightClick( wxTreeEvent& event )

@@ -119,7 +119,7 @@ AppTreeCtrl* const AppFrame::GetAppTreeCtrl() const
     return m_appTreeCtrl;
 }
 ////////////////////////////////////////////////////////////////////////////////
-AppNotebook const AppFrame::GetAppNotebook() const
+AppNotebook* const AppFrame::GetAppNotebook() const
 {
     return m_appNotebook;
 }

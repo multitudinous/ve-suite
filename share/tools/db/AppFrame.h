@@ -45,7 +45,7 @@ public:
 
     ///
     ///\return
-    AppNotebook const GetAppNotebook() const;
+    AppNotebook* const GetAppNotebook() const;
 
     ///
     ///\return
