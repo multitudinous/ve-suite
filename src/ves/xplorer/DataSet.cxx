@@ -1915,7 +1915,7 @@ void DataSet::CreateCompositeDataSets()
         else
         {
             std::ostringstream filenameStream;
-            filenameStream << "Subdataset-" << num;
+            filenameStream << GetFileName() << "-" << num;
             subfilename = filenameStream.str();
         }
         //std::cout << "test out " << subfilename << std::endl;
