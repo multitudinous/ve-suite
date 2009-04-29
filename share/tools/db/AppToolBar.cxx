@@ -23,7 +23,7 @@ AppToolBar::AppToolBar( wxWindow* parent )
         wxID_ANY,
         wxDefaultPosition,
         wxDefaultSize,
-        wxTB_FLAT | wxTB_NODIVIDER | wxTB_HORIZONTAL | wxNO_BORDER,
+        wxTB_FLAT | wxTB_NODIVIDER | wxTB_VERTICAL | wxNO_BORDER,
         wxT( "ToolBar" ) ),
     m_appFrame( static_cast< AppFrame* >( parent ) )
 {

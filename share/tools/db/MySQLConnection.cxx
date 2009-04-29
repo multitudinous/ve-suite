@@ -57,6 +57,41 @@ void MySQLConnection::QueryTables()
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
+const StringArray1D* const MySQLConnection::GetTableFieldNames(
+    std::string& tableName )
+{
+    std::map< std::string, StringArray1D >::const_iterator itr =
+        m_tableFieldNames.find( tableName );
+    if( itr != m_tableFieldNames.end() )
+    {
+        return &itr->second;
+    }
+
+    //Get the table field names if we have not done so already
+    m_query << "select * from " << tableName;
+    if( mysqlpp::StoreQueryResult res = m_query.store() )
+    {
+        StringArray1D tableFieldNames( res.field_names()->size(), "" );
+        for( size_t i = 0; i < res.field_names()->size(); ++i )
+        {
+            tableFieldNames[ i ] = res.field_name( i );
+        }
+
+        m_tableFieldNames[ tableName ] = tableFieldNames;
+        itr = m_tableFieldNames.find( tableName );
+        if( itr != m_tableFieldNames.end() )
+        {
+            return &itr->second;
+        }
+    }
+
+    std::cerr << "Failed to get table field names: "
+              << m_query.error()
+              << std::endl;
+
+    return NULL;
+}
+////////////////////////////////////////////////////////////////////////////////
 const StringArray2D* const MySQLConnection::GetTableDetails(
     std::string& tableName )
 {
@@ -89,8 +124,46 @@ const StringArray2D* const MySQLConnection::GetTableDetails(
         }
     }
 
-
     std::cerr << "Failed to get table details: "
+              << m_query.error()
+              << std::endl;
+
+    return NULL;
+}
+////////////////////////////////////////////////////////////////////////////////
+const StringArray2D* const MySQLConnection::GetTableData(
+    std::string& tableName )
+{
+    std::map< std::string, StringArray2D >::const_iterator itr =
+        m_tableData.find( tableName );
+    if( itr != m_tableData.end() )
+    {
+        return &itr->second;
+    }
+
+    //Get the table details if we have not done so already
+    m_query << "select * from " << tableName;
+    if( mysqlpp::StoreQueryResult res = m_query.store() )
+    {
+        StringArray2D tableData(
+            res.num_rows(), StringArray1D( res.num_fields(), "" ) );
+        for( size_t j = 0; j < res.num_fields(); ++j )
+        {
+            for( size_t i = 0; i < res.num_rows(); ++i )
+            {
+                tableData[ i ][ j ] = res[ i ][ j ].c_str();
+            }
+        }
+
+        m_tableData[ tableName ] = tableData;
+        itr = m_tableData.find( tableName );
+        if( itr != m_tableData.end() )
+        {
+            return &itr->second;
+        }
+    }
+
+    std::cerr << "Failed to get table data: "
               << m_query.error()
               << std::endl;
 

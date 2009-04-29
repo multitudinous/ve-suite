@@ -28,8 +28,8 @@ AppTreeCtrl::AppTreeCtrl( wxWindow* parent )
         APP_TREE_CTRL,
         wxDefaultPosition,
         wxDefaultSize,
-        wxTR_DEFAULT_STYLE | wxHSCROLL | wxNO_BORDER | wxVSCROLL ),
-    m_appFrame( static_cast< AppFrame* >( parent->GetParent() ) )
+        wxTR_DEFAULT_STYLE | wxNO_BORDER ),
+    m_appFrame( static_cast< AppFrame* >( parent ) )
 {
     LoadBitmaps();
 
@@ -59,8 +59,6 @@ void AppTreeCtrl::CreateGUI()
 
     //Add the root
     m_rootID = AddRoot( wxT( "Database Connections" ), DATABASE );
-
-    SelectItem( m_rootID );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppTreeCtrl::AddDBConnection( DBConnection* dbConnection )
@@ -106,6 +104,10 @@ void AppTreeCtrl::SelectionChanged( wxTreeEvent& WXUNUSED( event ) )
 
     if( selectedID == m_rootID || GetItemParent( selectedID ) == m_rootID )
     {
+        AppNotebook* appNotebook = m_appFrame->GetAppNotebook();
+        appNotebook->ClearTableDetails();
+        appNotebook->ClearTableData();
+
         return;
     }
 
@@ -118,11 +120,16 @@ void AppTreeCtrl::SelectionChanged( wxTreeEvent& WXUNUSED( event ) )
         static_cast< DBTableData* >( GetItemData( selectedID ) );
     std::string& dbTableName = dbTableData->m_dbTableName;
 
-    const StringArray2D* dbTableDetails =
+    const StringArray2D* tableDetails =
         dbConnection->GetTableDetails( dbTableName );
+    const StringArray1D* tableFieldNames =
+        dbConnection->GetTableFieldNames( dbTableName );
+    const StringArray2D* tableData =
+        dbConnection->GetTableData( dbTableName );
 
     AppNotebook* appNotebook = m_appFrame->GetAppNotebook();
-    appNotebook->PopulateTableDetails( dbTableDetails );
+    appNotebook->PopulateTableDetails( tableDetails );
+    appNotebook->PopulateTableData( tableFieldNames, tableData );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppTreeCtrl::RightClick( wxTreeEvent& event )

@@ -46,7 +46,15 @@ public:
     const StringArray1D& GetTableNames() const;
 
     ///
+    virtual const StringArray1D* const GetTableFieldNames(
+        std::string& tableName ) = 0;
+
+    ///
     virtual const StringArray2D* const GetTableDetails(
+        std::string& tableName ) = 0;
+
+    ///
+    virtual const StringArray2D* const GetTableData(
         std::string& tableName ) = 0;
 
 protected:
@@ -63,7 +71,13 @@ protected:
     StringArray1D m_tableNames;
 
     ///
+    std::map< std::string, StringArray1D > m_tableFieldNames;
+
+    ///
     std::map< std::string, StringArray2D > m_tableDetails;
+
+    ///
+    std::map< std::string, StringArray2D > m_tableData;
 
 private:
 

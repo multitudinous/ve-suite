@@ -40,7 +40,15 @@ public:
     virtual ~MySQLConnection();
 
     ///
+    virtual const StringArray1D* const GetTableFieldNames(
+        std::string& tableName );
+
+    ///
     virtual const StringArray2D* const GetTableDetails(
+        std::string& tableName );
+
+    ///
+    virtual const StringArray2D* const GetTableData(
         std::string& tableName );
 
 protected:

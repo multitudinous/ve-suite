@@ -59,46 +59,26 @@ void AppFrame::CreateGUI()
     m_appMenuBar = new AppMenuBar( this );
     SetMenuBar( m_appMenuBar );
 
-    //Create the main sizer
-    wxBoxSizer* mainSizer = new wxBoxSizer( wxHORIZONTAL );
-
-    //Create a vertical sizer
-    wxBoxSizer* verticalSizer = new wxBoxSizer( wxVERTICAL );
-	mainSizer->Add( verticalSizer, 1, wxEXPAND, 5 );
-
     //Create the tool bar
     m_appToolBar = new AppToolBar( this );
-    verticalSizer->Add( m_appToolBar, 0, wxEXPAND, 5 );
+    SetToolBar( m_appToolBar );
+
+    //Create the main sizer
+    wxBoxSizer* mainSizer = new wxBoxSizer( wxHORIZONTAL );
 
     //Create a static line
     wxStaticLine* staticLine =
         new wxStaticLine(
-            this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
-	verticalSizer->Add( staticLine, 0, wxEXPAND, 5 );
-
-    //Create a scrolled window
-    wxScrolledWindow* scrolledWindow;
-	scrolledWindow =
-        new wxScrolledWindow(
-            this, wxID_ANY,
-            wxDefaultPosition, wxDefaultSize,
-            wxALWAYS_SHOW_SB | wxHSCROLL | wxNO_BORDER | wxVSCROLL );
-	scrolledWindow->SetScrollRate( 5, 5 );
-    verticalSizer->Add( scrolledWindow, 1, wxEXPAND, 5 );
-
-    //Create the tree control sizer
-    wxBoxSizer* treeCtrlSizer = new wxBoxSizer( wxVERTICAL );
-    scrolledWindow->SetSizer( treeCtrlSizer );
-	scrolledWindow->Layout();
-	treeCtrlSizer->Fit( scrolledWindow );
+            this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_VERTICAL );
+	mainSizer->Add( staticLine, 0, wxLEFT | wxEXPAND, 5 );
 	
     //Create the tree control
-	m_appTreeCtrl = new AppTreeCtrl( scrolledWindow );
-	treeCtrlSizer->Add( m_appTreeCtrl, 1, wxALL | wxEXPAND, 10 );
+	m_appTreeCtrl = new AppTreeCtrl( this );
+	mainSizer->Add( m_appTreeCtrl, 1, wxTOP | wxEXPAND, 5 );
 	
     //Create the notebook
 	m_appNotebook = new AppNotebook( this );
-	mainSizer->Add( m_appNotebook, 3, wxEXPAND, 5 );
+	mainSizer->Add( m_appNotebook, 2, wxEXPAND, 5 );
 	
 	SetSizer( mainSizer );
 	Layout();

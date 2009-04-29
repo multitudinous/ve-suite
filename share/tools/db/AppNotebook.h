@@ -3,7 +3,6 @@
 #define APP_NOTEBOOK_H
 
 // --- VE-Suite Includes --- //
-#include "DBConnection.h"
 class AppFrame;
 
 // --- wxWidgets Includes --- //
@@ -11,6 +10,14 @@ class AppFrame;
 
 class wxPanel;
 class wxGrid;
+
+// --- C/C++ Includes --- //
+#include <string>
+#include <vector>
+
+// --- typedef --- //
+typedef std::vector< std::string > StringArray1D;
+typedef std::vector< std::vector< std::string > > StringArray2D;
 
 /*!\file AppNotebook.h
  *
@@ -29,7 +36,17 @@ public:
     virtual ~AppNotebook();
 
     ///
+    void ClearTableDetails();
+
+    ///
+    void ClearTableData();
+
+    ///
     void PopulateTableDetails( const StringArray2D* tableDetails );
+
+    ///
+    void PopulateTableData(
+        const StringArray1D* tableFieldNames, const StringArray2D* tableData );
 
 protected:
 
@@ -41,10 +58,11 @@ private:
     AppFrame* m_appFrame;
 
     wxPanel* m_tableDetailsPanel;
-    wxPanel* m_dataPanel;
+    wxPanel* m_tableDataPanel;
     wxPanel* m_sqlPanel;
 
     wxGrid* m_tableDetailsGrid;
+    wxGrid* m_tableDataGrid;
 
     DECLARE_EVENT_TABLE()
 };
