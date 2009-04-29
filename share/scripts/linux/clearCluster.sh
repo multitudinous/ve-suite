@@ -1,8 +1,8 @@
-ssh rockarwkviz4 "killall project_tao_osg_vep"
-ssh rockarwkviz3 "killall project_tao_osg_vep"
-ssh rockarwkviz2 "killall project_tao_osg_vep"
-ssh rockarwkviz1 "killall project_tao_osg_vep"
-killall project_tao_osg_vep
-killall Exe_server
-killall WinClient
+ssh rockarwkviz4 "killall ves_xplorer"
+ssh rockarwkviz3 "killall ves_xplorer"
+ssh rockarwkviz2 "killall ves_xplorer"
+ssh rockarwkviz1 "killall ves_xplorer"
+killall ves_xplorer
+killall ves_ce
+killall ves_conductor
 killall Naming_Service
