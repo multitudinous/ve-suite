@@ -2,10 +2,15 @@
 // --- VE-Suite Includes --- //
 #include "MySQLConnection.h"
 
-// --- MySQL++ Includes --- //
-#include <query.h>
+// --- POCO Includes --- //
+#include <Poco/Data/Session.h>
+#include <Poco/Data/SessionFactory.h>
+//#include <Poco/Data/RecordSet.h>
+#include <Poco/Data/MySQL/Connector.h>
+#include <Poco/Data/MySQL/MySQLException.h>
 
 // --- C/C++ Includes --- //
+#include <iostream>
 
 ////////////////////////////////////////////////////////////////////////////////
 MySQLConnection::MySQLConnection(
@@ -15,18 +20,37 @@ MySQLConnection::MySQLConnection(
     std::string& password,
     unsigned int port )
     :
-    DBConnection( db ),
-    mysqlpp::Connection(
-        db.c_str(), server.c_str(), username.c_str(), password.c_str(), port ),
-    m_query( query() )
+    DBConnection( db )
 {
     m_dbType = MYSQL;
 
-    if( connected() )
+    Poco::Data::MySQL::Connector::registerConnector();
+    std::ostringstream connectionString;
+    connectionString << "host=" << server << ";"
+                     << "port=" << port << ";"
+                     << "user=" << username << ";"
+                     << "password=" << password << ";"
+                     << "db=" << db << ";"
+                     << "compress=true;"
+                     << "auto-reconnect=true";
+    try
     {
-        //Tell MySQL to use the desired database
-        m_query << "use " << m_name;
-        m_query.exec();
+        m_session =
+            new Poco::Data::Session(
+                Poco::Data::SessionFactory::instance().create(
+                    Poco::Data::MySQL::Connector::KEY, connectionString.str() ) );
+    }
+    catch( Poco::Data::MySQL::MySQLException& ex )
+    {
+        std::cout << "!!! WARNING: Connection failed. MySQL tests will fail !!!" << std::endl;
+        std::cout << ex.displayText() << std::endl;
+    }
+
+    if( m_session && m_session->isConnected() )
+    {
+        std::cout << "*** Connected to " << '(' << connectionString.str() << ')' << std::endl;
+
+        m_statement = new Poco::Data::Statement( *m_session );
 
         //Get the list of tables for this database
         QueryTables();
@@ -35,32 +59,26 @@ MySQLConnection::MySQLConnection(
 ////////////////////////////////////////////////////////////////////////////////
 MySQLConnection::~MySQLConnection()
 {
-    ;
+    Poco::Data::MySQL::Connector::unregisterConnector();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void MySQLConnection::QueryTables()
 {
-    m_query << "show tables";
-    if( mysqlpp::StoreQueryResult tables = m_query.store() )
+    std::string tableName;
+    *m_statement << "show tables from " << m_name,
+        Poco::Data::into( tableName ), Poco::Data::range( 0, 1 );
+    while( !m_statement->done() )
     {
-	    mysqlpp::StoreQueryResult::const_iterator itr;
-	    for( itr = tables.begin(); itr != tables.end(); ++itr )
-        {
-		    mysqlpp::Row row = *itr;
-		    m_tableNames.push_back( row[ 0 ].c_str() );
-	    }
-    }
-    else
-    {
-	    std::cerr << "Failed to get table list: "
-                  << m_query.error() << std::endl;
+        m_statement->execute();
+        m_tableNames.push_back( tableName.c_str() );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-const StringArray1D* const MySQLConnection::GetTableFieldNames(
+/*
+const Poco::Data::RecordSet* const MySQLConnection::GetTableFieldNames(
     std::string& tableName )
 {
-    std::map< std::string, StringArray1D >::const_iterator itr =
+    std::map< std::string, StringVector1D >::const_iterator itr =
         m_tableFieldNames.find( tableName );
     if( itr != m_tableFieldNames.end() )
     {
@@ -71,7 +89,7 @@ const StringArray1D* const MySQLConnection::GetTableFieldNames(
     m_query << "select * from " << tableName;
     if( mysqlpp::StoreQueryResult res = m_query.store() )
     {
-        StringArray1D tableFieldNames( res.field_names()->size(), "" );
+        StringVector1D tableFieldNames( res.field_names()->size(), "" );
         for( size_t i = 0; i < res.field_names()->size(); ++i )
         {
             tableFieldNames[ i ] = res.field_name( i );
@@ -91,11 +109,12 @@ const StringArray1D* const MySQLConnection::GetTableFieldNames(
 
     return NULL;
 }
+*/
 ////////////////////////////////////////////////////////////////////////////////
-const StringArray2D* const MySQLConnection::GetTableDetails(
+const StringVector2D* const MySQLConnection::GetTableDetails(
     std::string& tableName )
 {
-    std::map< std::string, StringArray2D >::const_iterator itr =
+    std::map< std::string, StringVector2D >::const_iterator itr =
         m_tableDetails.find( tableName );
     if( itr != m_tableDetails.end() )
     {
@@ -103,11 +122,15 @@ const StringArray2D* const MySQLConnection::GetTableDetails(
     }
 
     //Get the table details if we have not done so already
-    m_query << "describe " << tableName;
-    if( mysqlpp::StoreQueryResult res = m_query.store() )
-    {
-        StringArray2D tableDetails(
-            res.num_rows(), StringArray1D( res.num_fields(), "" ) );
+    StringVector2D tableDetails;
+    *m_statement << "describe " << tableName,
+        Poco::Data::into( tableDetails ), Poco::Data::now;
+    
+
+
+        
+            /*(
+            res.num_rows(), StringVector1D( res.num_fields(), "" ) );
         for( size_t j = 0; j < res.num_fields(); ++j )
         {
             for( size_t i = 0; i < res.num_rows(); ++i )
@@ -122,19 +145,16 @@ const StringArray2D* const MySQLConnection::GetTableDetails(
         {
             return &itr->second;
         }
-    }
-
-    std::cerr << "Failed to get table details: "
-              << m_query.error()
-              << std::endl;
+*/
 
     return NULL;
 }
 ////////////////////////////////////////////////////////////////////////////////
-const StringArray2D* const MySQLConnection::GetTableData(
+/*
+const Poco::Data::RecordSet* const MySQLConnection::GetTableData(
     std::string& tableName )
 {
-    std::map< std::string, StringArray2D >::const_iterator itr =
+    std::map< std::string, StringVector2D >::const_iterator itr =
         m_tableData.find( tableName );
     if( itr != m_tableData.end() )
     {
@@ -145,8 +165,8 @@ const StringArray2D* const MySQLConnection::GetTableData(
     m_query << "select * from " << tableName;
     if( mysqlpp::StoreQueryResult res = m_query.store() )
     {
-        StringArray2D tableData(
-            res.num_rows(), StringArray1D( res.num_fields(), "" ) );
+        StringVector2D tableData(
+            res.num_rows(), StringVector1D( res.num_fields(), "" ) );
         for( size_t j = 0; j < res.num_fields(); ++j )
         {
             for( size_t i = 0; i < res.num_rows(); ++i )
@@ -169,4 +189,5 @@ const StringArray2D* const MySQLConnection::GetTableData(
 
     return NULL;
 }
+*/
 ////////////////////////////////////////////////////////////////////////////////

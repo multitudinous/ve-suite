@@ -3,15 +3,29 @@
 #define DB_CONNECTION_H
 
 // --- VE-Suite Includes --- //
+#include "TypeDefs.h"
+
+// --- POCO Includes --- //
+#include <Poco/SharedPtr.h>
+
+namespace Poco
+{
+namespace Data
+{
+class Session;
+//class RecordSet;
+}
+}
+
+// --- wxWidgets Includes --- //
+#ifdef WIN32
+//windows.h is included from somewhere above causing errors
+//http://www.wxwidgets.org/docs/faqmsw.htm#asuffix
+#include <wx/msw/winundef.h>
+#endif //WIN32
 
 // --- C/C++ Includes --- //
-#include <string>
-#include <vector>
 #include <map>
-
-// --- typedef --- //
-typedef std::vector< std::string > StringArray1D;
-typedef std::vector< std::vector< std::string > > StringArray2D;
 
 /*!\file DBConnection.h
  *
@@ -32,7 +46,7 @@ public:
     ///
     enum
     {
-        ACCESS = 1,
+        MSACCESS = 1,
         MYSQL = 2
     };
 
@@ -43,19 +57,23 @@ public:
     const std::string& GetName() const;
 
     ///
-    const StringArray1D& GetTableNames() const;
+    const StringVector1D& GetTableNames() const;
+
+    /*
+    ///
+    virtual const Poco::Data::RecordSet* const GetTableFieldNames(
+        std::string& tableName ) = 0;
+    */
 
     ///
-    virtual const StringArray1D* const GetTableFieldNames(
+    virtual const StringVector2D* const GetTableDetails(
         std::string& tableName ) = 0;
 
+    /*
     ///
-    virtual const StringArray2D* const GetTableDetails(
+    virtual const Poco::Data::RecordSet* const GetTableData(
         std::string& tableName ) = 0;
-
-    ///
-    virtual const StringArray2D* const GetTableData(
-        std::string& tableName ) = 0;
+    */
 
 protected:
     ///
@@ -68,16 +86,19 @@ protected:
     std::string m_name;
 
     ///
-    StringArray1D m_tableNames;
+    StringVector1D m_tableNames;
 
     ///
-    std::map< std::string, StringArray1D > m_tableFieldNames;
+    //std::map< std::string, Poco::Data::RecordSet > m_tableFieldNames;
 
     ///
-    std::map< std::string, StringArray2D > m_tableDetails;
+    std::map< std::string, StringVector2D > m_tableDetails;
 
     ///
-    std::map< std::string, StringArray2D > m_tableData;
+    //std::map< std::string, Poco::Data::RecordSet > m_tableData;
+
+    ///
+    Poco::SharedPtr< Poco::Data::Session > m_session;
 
 private:
 

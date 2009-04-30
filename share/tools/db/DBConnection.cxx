@@ -2,6 +2,9 @@
 // --- VE-Suite Includes --- //
 #include "DBConnection.h"
 
+// --- POCO Includes --- //
+#include <Poco/Data/Session.h>
+
 // --- C/C++ Includes --- //
 
 
@@ -28,7 +31,7 @@ const std::string& DBConnection::GetName() const
     return m_name;
 }
 ////////////////////////////////////////////////////////////////////////////////
-const StringArray1D& DBConnection::GetTableNames() const
+const StringVector1D& DBConnection::GetTableNames() const
 {
     return m_tableNames;
 }

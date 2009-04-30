@@ -3,6 +3,8 @@
 #define APP_NOTEBOOK_H
 
 // --- VE-Suite Includes --- //
+#include "TypeDefs.h"
+
 class AppFrame;
 
 // --- wxWidgets Includes --- //
@@ -12,12 +14,7 @@ class wxPanel;
 class wxGrid;
 
 // --- C/C++ Includes --- //
-#include <string>
-#include <vector>
 
-// --- typedef --- //
-typedef std::vector< std::string > StringArray1D;
-typedef std::vector< std::vector< std::string > > StringArray2D;
 
 /*!\file AppNotebook.h
  *
@@ -42,11 +39,11 @@ public:
     void ClearTableData();
 
     ///
-    void PopulateTableDetails( const StringArray2D* tableDetails );
+    void PopulateTableDetails( const StringVector2D* tableDetails );
 
     ///
     void PopulateTableData(
-        const StringArray1D* tableFieldNames, const StringArray2D* tableData );
+        const StringVector1D* tableFieldNames, const StringVector2D* tableData );
 
 protected:
 

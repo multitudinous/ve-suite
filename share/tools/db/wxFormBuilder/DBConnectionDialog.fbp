@@ -279,7 +279,7 @@
                                     <property name="proportion">2</property>
                                     <object class="wxChoice" expanded="1">
                                         <property name="bg"></property>
-                                        <property name="choices">&quot;MySQL&quot; &quot;Access&quot;</property>
+                                        <property name="choices">&quot;MySQL&quot; &quot;MS Access&quot;</property>
                                         <property name="context_help"></property>
                                         <property name="enabled">1</property>
                                         <property name="fg"></property>

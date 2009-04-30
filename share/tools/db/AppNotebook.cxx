@@ -162,10 +162,10 @@ void AppNotebook::ClearTableData()
     m_tableDataGrid->Hide();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AppNotebook::PopulateTableDetails( const StringArray2D* tableDetails )
+void AppNotebook::PopulateTableDetails( const StringVector2D* tableDetails )
 {
     size_t numRows = (*tableDetails).size();
-    size_t numCols = (*tableDetails)[ 0 ].size();
+    size_t numCols = (*tableDetails)[ 0 ].length;
 
     //Resize the grid to fit the table details information
     int numTableRows = m_tableDetailsGrid->GetNumberRows();
@@ -183,8 +183,8 @@ void AppNotebook::PopulateTableDetails( const StringArray2D* tableDetails )
     {
         for( size_t j = 0; j < numCols; ++j )
         {
-            m_tableDetailsGrid->SetCellValue(
-                i, j, wxT( (*tableDetails)[ i ][ j ].c_str() ) );
+            //m_tableDetailsGrid->SetCellValue(
+                //i, j, wxT( (*tableDetails)[ i ][ j ].c_str() ) );
         }
     }
 
@@ -195,16 +195,16 @@ void AppNotebook::PopulateTableDetails( const StringArray2D* tableDetails )
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppNotebook::PopulateTableData(
-    const StringArray1D* tableFieldNames, const StringArray2D* tableData )
+    const StringVector1D* tableFieldNames, const StringVector2D* tableData )
 {
     size_t numRows = (*tableData).size();
-    size_t numCols = (*tableData)[ 0 ].size();
+    size_t numCols = (*tableData)[ 0 ].length;
 
     //Fill the column labels with the table field names
     for( size_t i = 0; i < numCols; ++i )
     {
-        m_tableDataGrid->SetColLabelValue(
-            i, wxT( (*tableFieldNames)[ i ].c_str() ) );
+        //m_tableDataGrid->SetColLabelValue(
+            //i, wxT( (*tableFieldNames)[ i ].c_str() ) );
     }
 
     //Resize the grid to fit the table data information
@@ -233,8 +233,8 @@ void AppNotebook::PopulateTableData(
     {
         for( size_t j = 0; j < numCols; ++j )
         {
-            m_tableDataGrid->SetCellValue(
-                i, j, wxT( (*tableData)[ i ][ j ].c_str() ) );
+            //m_tableDataGrid->SetCellValue(
+                //i, j, wxT( (*tableData)[ i ][ j ].c_str() ) );
         }
     }
 

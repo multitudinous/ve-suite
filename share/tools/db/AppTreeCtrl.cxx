@@ -7,7 +7,7 @@
 #include "DBConnection.h"
 
 #include "xpm/TreeCtrl/Database.xpm"
-#include "xpm/TreeCtrl/AccessDatabase.xpm"
+#include "xpm/TreeCtrl/MSAccessDatabase.xpm"
 #include "xpm/TreeCtrl/MySQLDatabase.xpm"
 #include "xpm/TreeCtrl/Table.xpm"
 
@@ -46,7 +46,7 @@ void AppTreeCtrl::LoadBitmaps()
     ///The list of images
     wxImageList* imageList = new wxImageList( 16, 16 );
     imageList->Add( wxBitmap( Database_xpm ) );
-    imageList->Add( wxBitmap( AccessDatabase_xpm ) );
+    imageList->Add( wxBitmap( MSAccessDatabase_xpm ) );
     imageList->Add( wxBitmap( MySQLDatabase_xpm ) );
     imageList->Add( wxBitmap( Table_xpm ) );
 
@@ -72,12 +72,12 @@ void AppTreeCtrl::AddDBConnection( DBConnection* dbConnection )
         dbConnection->GetDBType(), -1,
         dbConnectionData );
 
-    const StringArray1D& tableNames =
+    const StringVector1D& tableNames =
         dbConnection->GetTableNames();
     for( size_t i = 0; i < tableNames.size(); ++i )
     {
         DBTableData* dbTableData = new DBTableData();
-        dbTableData->m_dbTableName = tableNames.at( i );
+        //dbTableData->m_dbTableName = tableNames.at( i );
         AppendItem(
             dbLeaf, 
             wxString( dbTableData->m_dbTableName.c_str(), wxConvUTF8 ), 
@@ -92,6 +92,7 @@ void AppTreeCtrl::AddDBConnection( DBConnection* dbConnection )
 ////////////////////////////////////////////////////////////////////////////////
 void AppTreeCtrl::SelectionChanged( wxTreeEvent& WXUNUSED( event ) )
 {
+    /*
     wxTreeItemId selectedID = GetSelection();
     if( selectedID == m_selectionID )
     {
@@ -120,16 +121,17 @@ void AppTreeCtrl::SelectionChanged( wxTreeEvent& WXUNUSED( event ) )
         static_cast< DBTableData* >( GetItemData( selectedID ) );
     std::string& dbTableName = dbTableData->m_dbTableName;
 
-    const StringArray2D* tableDetails =
+    const StringVector2D* tableDetails =
         dbConnection->GetTableDetails( dbTableName );
-    const StringArray1D* tableFieldNames =
+    const StringVector1D* tableFieldNames =
         dbConnection->GetTableFieldNames( dbTableName );
-    const StringArray2D* tableData =
+    const StringVector2D* tableData =
         dbConnection->GetTableData( dbTableName );
 
     AppNotebook* appNotebook = m_appFrame->GetAppNotebook();
     appNotebook->PopulateTableDetails( tableDetails );
     appNotebook->PopulateTableData( tableFieldNames, tableData );
+    */
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppTreeCtrl::RightClick( wxTreeEvent& event )

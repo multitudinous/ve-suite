@@ -32,7 +32,7 @@ public:
     enum
     {
         DATABASE = 0,
-        ACCESS = 1,
+        MSACCESS = 1,
         MYSQL = 2,
         TABLE = 3
     };

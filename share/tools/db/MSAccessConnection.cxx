@@ -1,0 +1,53 @@
+
+// --- VE-Suite Includes --- //
+#include "MSAccessConnection.h"
+
+// --- POCO Includes --- //
+
+// --- C/C++ Includes --- //
+
+////////////////////////////////////////////////////////////////////////////////
+MSAccessConnection::MSAccessConnection(
+    std::string& db,
+    std::string& server,
+    std::string& username,
+    std::string& password,
+    unsigned int port )
+    :
+    DBConnection( db )
+{
+    m_dbType = MSACCESS;
+}
+////////////////////////////////////////////////////////////////////////////////
+MSAccessConnection::~MSAccessConnection()
+{
+    ;
+}
+////////////////////////////////////////////////////////////////////////////////
+void MSAccessConnection::QueryTables()
+{
+    ;
+}
+////////////////////////////////////////////////////////////////////////////////
+/*
+const Poco::Data::RecordSet* const MSAccessConnection::GetTableFieldNames(
+    std::string& tableName )
+{
+    return NULL;
+}
+*/
+////////////////////////////////////////////////////////////////////////////////
+const StringVector2D* const MSAccessConnection::GetTableDetails(
+    std::string& tableName )
+{
+    return NULL;
+}
+////////////////////////////////////////////////////////////////////////////////
+/*
+const Poco::Data::RecordSet* const MSAccessConnection::GetTableData(
+    std::string& tableName )
+{
+    return NULL;
+}
+*/
+////////////////////////////////////////////////////////////////////////////////

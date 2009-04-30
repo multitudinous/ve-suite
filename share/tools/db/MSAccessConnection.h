@@ -1,35 +1,35 @@
 
-#ifndef MY_SQL_CONNECTION_H
-#define MY_SQL_CONNECTION_H
+#ifndef MS_ACCESS_CONNECTION_H
+#define MS_ACCESS_CONNECTION_H
 
 // --- VE-Suite Includes --- //
 #include "DBConnection.h"
 
 // --- POCO Includes --- //
-#include <Poco/SharedPtr.h>
 
-namespace Poco
-{
-namespace Data
-{
-class Statement;
-}
-}
+// --- wxWidgets Includes --- //
+/*
+#ifdef WIN32
+//windows.h is included from somewhere above causing errors
+//http://www.wxwidgets.org/docs/faqmsw.htm#asuffix
+#include <wx/msw/winundef.h>
+#endif //WIN32
+*/
 
 // --- C/C++ Includes --- //
 
-/*!\file MySQLConnection.h
+/*!\file MSAccessConnection.h
  *
  */
 
-/*!\class MySQLConnection
+/*!\class MSAccessConnection
  * 
  */
-class MySQLConnection : public DBConnection
+class MSAccessConnection : public DBConnection
 {
 public:
     ///Constructor
-    MySQLConnection(
+    MSAccessConnection(
         std::string& db,
         std::string& server,
         std::string& username,
@@ -37,7 +37,7 @@ public:
         unsigned int port );
 
     ///Destructor
-    virtual ~MySQLConnection();
+    virtual ~MSAccessConnection();
 
     /*
     ///
@@ -60,8 +60,7 @@ protected:
     virtual void QueryTables();
 
 private:
-    Poco::SharedPtr< Poco::Data::Statement > m_statement;
 
 };
 
-#endif //MY_SQL_CONNECTION_H
+#endif //MS_ACCESS_CONNECTION_H

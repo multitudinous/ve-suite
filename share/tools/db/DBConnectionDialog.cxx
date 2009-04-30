@@ -89,7 +89,7 @@ void DBConnectionDialog::CreateGUI()
 	connectionTypeStaticText->Wrap( -1 );
 	connectionTypeSizer->Add( connectionTypeStaticText, 2, wxALIGN_CENTER | wxALL, 5 );
 	
-	wxString m_connectionTypeChoiceChoices[] = { wxT( "MySQL" ), wxT( "Access" ) };
+	wxString m_connectionTypeChoiceChoices[] = { wxT( "MySQL" ), wxT( "MS Access" ) };
 	int m_connectionTypeChoiceNChoices = sizeof( m_connectionTypeChoiceChoices ) / sizeof( wxString );
 	m_connectionTypeChoice = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_connectionTypeChoiceNChoices, m_connectionTypeChoiceChoices, 0 );
 	m_connectionTypeChoice->SetSelection( 0 );
@@ -219,7 +219,7 @@ void DBConnectionDialog::Connect( wxCommandEvent& WXUNUSED( event ) )
 	            //Connect to the database
                 MySQLConnection* mysqlConnection =
                     new MySQLConnection( db, server, username, password, port );
-	            if( mysqlConnection->connected() )
+	            //if( mysqlConnection->connected() )
                 {
                     Hide();
 
@@ -232,7 +232,7 @@ void DBConnectionDialog::Connect( wxCommandEvent& WXUNUSED( event ) )
                         wxT( "Success" ) );
                     msgDlg.ShowModal();
 	            }
-	            else
+	            //else
                 {
                     wxMessageDialog wrnDlg(
                         this,
@@ -257,7 +257,7 @@ void DBConnectionDialog::Connect( wxCommandEvent& WXUNUSED( event ) )
 
             break;
         }
-        //Access
+        //MS Access
         case 1:
         {
             break;
