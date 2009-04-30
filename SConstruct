@@ -302,6 +302,9 @@ osgal_options = fp_option.FlagPollBasedOption("osgAL", "osgAL", "0.6.1", False, 
 mysqlpp_options = fp_option.FlagPollBasedOption( "MySQLpp", "MySQL++", "3.0.9", False, True, None,
                                                  compileTest = True, headerToCheck = "mysql++.h" )
 
+poco_options = fp_option.FlagPollBasedOption( "POCO", "POCO", "1.3.4", False, True, None,
+		                              compileTest = True, headerToCheck = "Poco/Poco.h" )
+
 opts.AddOption( apr_options )
 opts.AddOption( apu_options )
 #opts.AddOption( bullet_options )
@@ -314,6 +317,7 @@ opts.AddOption( gadgeteer_options )
 opts.AddOption( vrjuggler_options )
 opts.AddOption( osgal_options )
 opts.AddOption( mysqlpp_options )
+opts.AddOption( poco_options )
 
 Export( 'opts', 'vtk_options', 'osg_options', 
         'xerces_options','wxwidgets_options',
@@ -327,7 +331,7 @@ Export( 'opts', 'vtk_options', 'osg_options',
         'vrjuggler_options', 'boost_options',
         'gmtl_options', 'vpr_options',
         'gadgeteer_options', 'osgal_options',
-        'mysqlpp_options' )
+        'mysqlpp_options', 'poco_options' )
 
 ##Display some help
 help_text = """--- VE-Suite Build system ---
