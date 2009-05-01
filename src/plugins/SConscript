@@ -2,6 +2,7 @@
 openSubdirs = Split("""
     aspen_dynamics
     aspen_plus
+    sim
     aspen_plus_unit_operation
     aspen_dynamics_unit_operation
 """)
