@@ -386,13 +386,6 @@ void EphemerisDialog::SetLatitudeAndLongitudeOnGUI( double latitude,
     latitudeMinutes = 60 * modf( latitude, &latitudeDegrees );
     longitudeMinutes = 60 * modf( longitude, &longitudeDegrees );
 
-    //std::cout<<"Latitude:"<<latitude<<std::endl;
-    //std::cout<<"Latitude degrees:"<<latitudeDegrees<<std::endl;
-    //std::cout<<"Longitude:"<<longitude<<std::endl;
-    //std::cout<<"Longitude degrees:"<<longitudeDegrees<<std::endl;
-    //std::cout<<"Latitude minutes:"<<latitudeMinutes<<std::endl;
-    //std::cout<<"Longitude minutes:"<<longitudeMinutes<<std::endl;
-
     m_latDegrees->SetValue( static_cast<int>( latitudeDegrees ) );
     m_latitudeMinutes->SetValue( static_cast<int>( latitudeMinutes ) );
     m_longitudeDegree->SetValue( static_cast<int>( longitudeDegrees ) );

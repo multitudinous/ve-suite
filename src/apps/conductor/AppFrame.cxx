@@ -560,7 +560,6 @@ bool AppFrame::Show( bool value )
     {
         int displayWidth, displayHeight = 0;
         ::wxDisplaySize( &displayWidth, &displayHeight );
-        //std::cout<<"Width: "<<displayWidth<<" Height: "<<displayHeight<<std::endl;
         wxRect bbox = wxTheApp->GetTopWindow()->GetRect();
 
         wxRect dialogPosition( 2*displayWidth / 3,
@@ -673,7 +672,7 @@ void AppFrame::StoreRecentFile()
     wxConfig* cfg = static_cast<wxConfig*>( wxConfig::Get() );
     if( !cfg )
     {
-        std::cout << "There is no longer a wxConfig around" << std::endl;
+        Log( "There is no longer a wxConfig around" );
         return;
     }
     m_recentVESFiles->Save( *cfg );
@@ -2593,8 +2592,7 @@ void AppFrame::OnChildCreate( wxWindowCreateEvent& event )
     std::cout << ConvertUnicode( event.GetEventObject()->GetClassInfo()->GetClassName() ) << std::endl;*/
     if(w) 
     { 
-        //wxLogMessage( _("Child created") ); 
-        //std::cout << "Child created" << std::endl; 
+        Log( "Child created" ); 
         w->Connect( wxEVT_DESTROY, wxWindowDestroyEventHandler(AppFrame::OnChildDestroy), 
                    NULL, this); 
     } 
@@ -2605,7 +2603,7 @@ void AppFrame::OnChildDestroy( wxWindowDestroyEvent& event )
     wxWindow* w = event.GetWindow(); 
     /*std::cout << ConvertUnicode( event.GetEventObject()->GetClassInfo()->GetClassName() ) << std::endl;
     wxLogMessage( _("destroyed") );
-    std::cout << "destroyed " << std::endl;*/
+   */
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::LoadNewNetwork( wxUpdateUIEvent& WXUNUSED( event )  )
