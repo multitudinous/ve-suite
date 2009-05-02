@@ -1082,7 +1082,7 @@ void AppFrame::Open( wxCommandEvent& WXUNUSED( event ) )
         ::wxGetCwd(),
         mVESFileName,
         _T( "Network files (*.ves)|*.ves" ),
-        wxOPEN | wxFILE_MUST_EXIST
+        wxOPEN | wxFILE_MUST_EXIST | wxFD_PREVIEW
     );
 
     if( dialog.ShowModal() != wxID_OK )
@@ -1181,7 +1181,7 @@ void AppFrame::Run( wxCommandEvent& WXUNUSED( event ) )
         wxT( "" ),
         wxT( "" ),
         wxT( "Exe files (*.exe)|*.exe" ),
-        wxOPEN | wxFILE_MUST_EXIST
+        wxOPEN | wxFILE_MUST_EXIST | wxFD_PREVIEW
     );
 
     if( dialog.ShowModal() != wxID_OK )
@@ -2592,7 +2592,7 @@ void AppFrame::OnChildCreate( wxWindowCreateEvent& event )
     std::cout << ConvertUnicode( event.GetEventObject()->GetClassInfo()->GetClassName() ) << std::endl;*/
     if(w) 
     { 
-        Log( "Child created" ); 
+        ///Log( "Child created" ); 
         w->Connect( wxEVT_DESTROY, wxWindowDestroyEventHandler(AppFrame::OnChildDestroy), 
                    NULL, this); 
     } 
