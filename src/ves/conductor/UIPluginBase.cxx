@@ -2150,19 +2150,19 @@ void UIPluginBase::OnChildDestroy(wxWindowDestroyEvent& event)
     wxWindow* w = event.GetWindow(); 
     //std::cout << ConvertUnicode( event.GetEventObject()->GetClassInfo()->GetClassName() ) << std::endl;
     //wxLogMessage( _("destroyed") );
-    std::cout << "destroyed " << std::endl;
+    //std::cout << "destroyed " << std::endl;
     ///erase the found window
     std::map< int, bool >::iterator iter;
     iter = mDialogMemoryMap.find( w->GetId() );
-    std::cout << "****** " << mDialogMemoryMap.size() << std::endl;
-    std::cout << "deleting ui plugin base " << std::endl;
+    //std::cout << "****** " << mDialogMemoryMap.size() << std::endl;
+    //std::cout << "deleting ui plugin base " << std::endl;
     if( iter != mDialogMemoryMap.end() )
     {
         mDialogMemoryMap.erase( iter );
     }
     else
     {
-        std::cerr << "Problem deleting UIPluginBase dialogs" << std::endl;
+        //std::cerr << "Problem deleting UIPluginBase dialogs" << std::endl;
     }
 
     if( !mDialogMemoryMap.empty() )
