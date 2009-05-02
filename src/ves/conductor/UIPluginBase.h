@@ -177,6 +177,8 @@ public:
     void TogglePlugin( wxCommandEvent& event );
     void OnNavigateTo( wxCommandEvent& event );
 
+    void MessageLog( const char* msg );
+    
     //To Get around the Memory allocation problem of windows dll
     //Add the calls for the size. So the main program can preallocate memory for it
 

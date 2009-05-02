@@ -392,21 +392,29 @@ void AppFrame::_detectDisplay()
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::_createTreeAndLogWindow( wxWindow* parent )
 {
+    wxTextCtrl* textctrl = 0;
     if( GetDisplayMode() == "Tablet" )
     {
         wx_log_splitter = new Splitter( parent, -1 );
         wx_log_splitter->SetMinimumPaneSize( 40 );
-        serviceList->GetMessageLog()->Create( wx_log_splitter, APPFRAME_MYLOG, _( "" ),
-                                              wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE | wxTE_READONLY );
+        textctrl = new wxTextCtrl( wx_log_splitter, 
+            APPFRAME_MYLOG, _( "" ), wxDefaultPosition, wxDefaultSize, 
+            wxTE_MULTILINE | wxTE_READONLY );
+        
         wx_nw_splitter = new Splitter( wx_log_splitter, -1 );
     }
     else
     {
-        serviceList->GetMessageLog()->Create( this, APPFRAME_MYLOG, _( "" ),
-                                              wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE | wxTE_READONLY );
+        textctrl = new wxTextCtrl( this, 
+            APPFRAME_MYLOG, _( "" ), wxDefaultPosition, wxDefaultSize, 
+            wxTE_MULTILINE | wxTE_READONLY );
+
         wx_nw_splitter = new Splitter( parent, -1 );
     }
-
+    // set our text control as the log target
+    wxLogTextCtrl* logWindow = new wxLogTextCtrl( textctrl );
+    delete wxLog::SetActiveTarget( logWindow );
+    
     wx_nw_splitter->SetMinimumPaneSize( 1 );
 
     //create side pane - notebook
@@ -462,7 +470,7 @@ void AppFrame::_createTreeAndLogWindow( wxWindow* parent )
     {
         wxRect tempPos = GetRect();
         int sashPos = tempPos.GetHeight() - 170;
-        wx_log_splitter->SplitHorizontally( serviceList->GetMessageLog(), 
+        wx_log_splitter->SplitHorizontally( textctrl, 
             wx_nw_splitter, sashPos );        
     }
 
@@ -982,7 +990,7 @@ void AppFrame::Save( wxCommandEvent& event )
         //std::string data = network->Save( );
         std::string nw_str = XMLDataBufferEngine::instance()->
                              SaveVESData( ConvertUnicode( mVESFileName.c_str() ) );
-        Log( "Finished updating ves file.\n" );
+        Log( "Finished updating ves file." );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -1063,7 +1071,7 @@ void AppFrame::SaveAs( wxCommandEvent& WXUNUSED( event ) )
         SetTitle( vesFileName.GetFullName() );
         SetRecentFile( vesFileName );
     }
-    Log( "Finished saving ves file.\n" );
+    Log( "Finished saving ves file." );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::Open( wxCommandEvent& WXUNUSED( event ) )
@@ -1342,7 +1350,7 @@ void AppFrame::QueryFromServer( wxCommandEvent& WXUNUSED( event ) )
     }
     catch ( CORBA::Exception& )
     {
-        Log( "No ves network available\n" );
+        Log( "No ves network available." );
     }
 
     // If there is nothing on the CE
@@ -1358,7 +1366,7 @@ void AppFrame::QueryFromServer( wxCommandEvent& WXUNUSED( event ) )
     }
     else
     {
-        Log( "No ves network available\n" );
+        Log( "No ves network available." );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -1758,7 +1766,7 @@ void AppFrame::SubmitToServer( wxCommandEvent& WXUNUSED( event ) )
     }
     catch ( CORBA::Exception& )
     {
-        Log( "no exec found!\n" );
+        Log( "No exec found!" );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -1770,7 +1778,7 @@ void AppFrame::StartCalc( wxCommandEvent& WXUNUSED( event ) )
     }
     catch ( CORBA::Exception& )
     {
-        Log( "no exec found!\n" );
+        Log( "no exec found!" );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -1782,7 +1790,7 @@ void AppFrame::StopCalc( wxCommandEvent& WXUNUSED( event ) )
     }
     catch ( CORBA::Exception& )
     {
-        Log( "no exec found!\n" );
+        Log( "no exec found!" );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -1794,7 +1802,7 @@ void AppFrame::PauseCalc( wxCommandEvent& WXUNUSED( event ) )
     }
     catch ( CORBA::Exception& )
     {
-        Log( "no exec found!\n" );
+        Log( "no exec found!" );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -1806,7 +1814,7 @@ void AppFrame::ResumeCalc( wxCommandEvent& WXUNUSED( event ) )
     }
     catch ( CORBA::Exception& )
     {
-        Log( "no exec found!\n" );
+        Log( "no exec found!" );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -2039,7 +2047,8 @@ void AppFrame::ViewResult( wxCommandEvent& WXUNUSED( event ) )
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::Log( const char* msg )
 {
-    serviceList->GetMessageLog()->SetMessage( msg );
+    ::wxLogMessage(  wxString( msg, wxConvUTF8 ) );
+    //serviceList->GetMessageLog()->SetMessage( msg );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::DisConExeServer( wxCommandEvent &WXUNUSED( event ) )
@@ -2356,7 +2365,7 @@ void AppFrame::ProcessCommandLineArgs( void )
         {
             Log( std::string( std::string( "Loading VES file: " ) + 
                 ConvertUnicode( ::wxGetApp().argv[ i + 1 ] ) ).c_str() );
-            Log( "\n" );
+            //Log( "\n" );
             vesFile.assign( ConvertUnicode( ::wxGetApp().argv[ i + 1 ] ) );
             break;
         }

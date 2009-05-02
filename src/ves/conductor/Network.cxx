@@ -72,6 +72,7 @@
 #include <wx/progdlg.h>
 #include <wx/filename.h>
 #include <wx/msgdlg.h>
+#include <wx/log.h>
 
 #include <sstream>
 #include <iomanip>
@@ -2059,7 +2060,8 @@ wxPoint Network::GetPointForSelectedPlugin( unsigned long moduleID, unsigned int
         {
             std::ostringstream msg;
             msg << "Could not find port " << portNumber << " in module " << moduleID << std::endl;
-            mServiceList->GetMessageLog()->SetMessage( msg.str().c_str() );
+            //mServiceList->GetMessageLog()->SetMessage( msg.str().c_str() );
+            wxLogMessage( wxString( msg.str().c_str(), wxConvUTF8 ) );
             index = 0;
         }
 

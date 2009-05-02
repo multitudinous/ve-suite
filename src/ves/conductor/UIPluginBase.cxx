@@ -869,8 +869,9 @@ void UIPluginBase::ViewInputVariables( void )
     ///First try check and see if there are any local variables
     if( numInputs == 0 )
     {
-        serviceList->GetMessageLog()->
-        SetMessage( "Model contains no input variables\n" );
+        //serviceList->GetMessageLog()->
+        //    SetMessage( "Model contains no input variables\n" );
+        MessageLog( "Model contains no input variables\n" );
         ///The code below is not robust so...
         return;
         
@@ -970,8 +971,6 @@ void UIPluginBase::ViewResultsVariables( void )
     networkWriter.UseStandaloneDOMDocumentManager();
     networkWriter.WriteXMLDocument( nodes, resultsData, "Command" );
     //Now query the unit for data
-    CORBAServiceList* serviceList = 
-        ves::conductor::util::CORBAServiceList::instance();
     unitResultsData = serviceList->Query( resultsData.c_str() );
     
     std::vector< CommandPtr > resultsVec;
@@ -996,8 +995,9 @@ void UIPluginBase::ViewResultsVariables( void )
 
     if( resultsVec.size() == 0 )
     {
-        serviceList->GetMessageLog()->SetMessage( 
-            "Model contains no results variables\n" );
+        //serviceList->GetMessageLog()->SetMessage( 
+        //    "Model contains no results variables\n" );
+        MessageLog( "Model contains no results variables\n" );
         return;
     }
 
@@ -1200,7 +1200,8 @@ void  UIPluginBase::OnShowResult( wxCommandEvent& event )
     }
     catch ( CORBA::Exception & )
     {
-        serviceList->GetMessageLog()->SetMessage( "Maybe Computational Engine is down\n" );
+        //serviceList->GetMessageLog()->SetMessage( "Maybe Computational Engine is down\n" );
+        MessageLog( "Maybe Computational Engine is down\n" );
         return;
     }
 
@@ -1242,7 +1243,6 @@ void  UIPluginBase::OnShowFinancial( wxCommandEvent& WXUNUSED( event ) )
 void  UIPluginBase::OnShowIconChooser( wxCommandEvent& event )
 {
     UIPLUGIN_CHECKID( event )
-    serviceList->GetMessageLog()->SetMessage( "Icon Chooser\n" );
     IconChooser* m_iconChooser;
     //UIPluginBase* tempPlugin = this;
     //if( m_iconChooser == NULL )
@@ -1625,13 +1625,15 @@ void UIPluginBase::OnVisualization( wxCommandEvent& event )
     }
     catch ( CORBA::Exception& )
     {
-        serviceList->GetMessageLog()->SetMessage( "Couldn't find model\n" );//<< modelID<<std::endl;
+        //serviceList->GetMessageLog()->SetMessage( "Couldn't find model\n" );//<< modelID<<std::endl;
+        MessageLog( "Couldn't find model\n" );//<< modelID<<std::endl;
         return;
     }
 
     if( activeCORBAModel->dataVector.length() == 0 )
     {
-        serviceList->GetMessageLog()->SetMessage( "Model contains no datasets\n" );//<< modelID<<std::endl;
+        //serviceList->GetMessageLog()->SetMessage( "Model contains no datasets\n" );//<< modelID<<std::endl;
+        MessageLog( "Model contains no datasets\n" );//<< modelID<<std::endl;
         return;
     }
 
@@ -2417,4 +2419,9 @@ wxMenu* UIPluginBase::SetupPluginBasePopupMenu()
     //mPopMenu->SetClientData( &id );
     
     return mPopMenu;
+}
+
+void UIPluginBase::MessageLog( const char* msg )
+{
+    ::wxLogMessage(  wxString( msg, wxConvUTF8 ) );
 }

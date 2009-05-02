@@ -38,6 +38,8 @@
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/model/Model.h>
 
+#include <wx/log.h>
+
 using namespace ves::conductor::util;
 // Implementation skeleton constructor
 Body_UI_i::Body_UI_i( Body::Executive_ptr exec, std::string name )
@@ -141,7 +143,9 @@ ACE_THROW_SPEC((
     std::string tempString( notification );
     if( !tempString.empty() )
     {
-        logWindow->SetMessage( tempString.c_str() );
+        ::wxLogMessage( wxString( tempString.c_str(), wxConvUTF8 ) );
+
+        //logWindow->SetMessage( tempString.c_str() );
     }
 }
 
@@ -174,7 +178,7 @@ ACE_THROW_SPEC((
         ves::open::xml::CommandPtr temp = boost::dynamic_pointer_cast<ves::open::xml::Command>( xmlObjects.at( 0 ) );
         if( !temp )
         {
-            std::cout << " bad stuff " << std::endl;
+            ::wxLogMessage( wxString( "NULL Command", wxConvUTF8 ) );
         }
         m_commandNameMap[ temp->GetCommandName()] = temp;
         //iter = xmlObjects.erase( iter );

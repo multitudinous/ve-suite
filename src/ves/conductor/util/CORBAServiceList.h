@@ -112,7 +112,7 @@ public:
     ///Return the pointer to the xplorer corba object
     VjObs_ptr GetXplorerPointer( void );
     ///Return log pointer
-    PEThread* GetMessageLog( void );
+    void MessageLog( const char* msg );
 
     ///Get the current commands from xplorer
     const ves::open::xml::CommandPtr GetGUIUpdateCommands( const std::string& commandName );

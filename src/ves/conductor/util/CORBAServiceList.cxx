@@ -46,6 +46,7 @@
 #include <sstream>
 
 #include <wx/utils.h>
+#include <wx/log.h>
 
 using namespace ves::open::xml;
 using namespace ves::conductor::util;
@@ -174,8 +175,10 @@ bool CORBAServiceList::ConnectToCE( void )
     {
         std::string tempMessage =
             "Cannot find VE-CE or VE-Conductor registration problem: CORBA Exception " +
-            std::string( ex._info().c_str() ) + "\n";
-        GetMessageLog()->SetMessage( tempMessage.c_str() );
+            std::string( ex._info().c_str() );
+        //GetMessageLog()->SetMessage( tempMessage.c_str() );
+        MessageLog( tempMessage.c_str() );
+
         return false;
     }
     return true;
@@ -208,14 +211,18 @@ bool CORBAServiceList::ConnectToXplorer( void )
         CORBA::Object_var ve_object = naming_context1->resolve( name );
         vjobs = VjObs::_narrow( ve_object.in() );
 
-        GetMessageLog()->SetMessage( "Connected to VE-Xplorer.\n" );
+        //GetMessageLog()->SetMessage( "Connected to VE-Xplorer.\n" );
+        MessageLog( "Connected to VE-Xplorer." );
+
     }
     catch ( CORBA::Exception& ex )
     {
         std::string tempMessage = 
             "Cannot find VE-Xplorer: CORBA Exception " + 
-            std::string( ex._info().c_str() ) + "\n";
-        GetMessageLog()->SetMessage( tempMessage.c_str() );
+            std::string( ex._info().c_str() );
+        //GetMessageLog()->SetMessage( tempMessage.c_str() );
+        MessageLog( tempMessage.c_str() );
+
         return false;
     }
 
@@ -244,14 +251,16 @@ bool CORBAServiceList::ConnectToXplorer( void )
         CORBA::Object_var ve_object = naming_context1->resolve( xplorerCom );
         m_xplorer = Body::VEXplorer::_narrow( ve_object.in() );
         m_xplorer->RegisterUI( p_ui_i->UIName_.c_str(), m_ui.in() );
-        GetMessageLog()->SetMessage( "Connected to two-way VE-Xplorer.\n" );
+        //GetMessageLog()->SetMessage( "Connected to two-way VE-Xplorer.\n" );
+        MessageLog( "Connected to two-way VE-Xplorer." );
     }
     catch ( CORBA::Exception& ex )
     {
         std::string tempMessage =
             "Cannot find two-way VE-Xplorer: CORBA Exception " +
-            std::string( ex._info().c_str() ) + "\n";
-        GetMessageLog()->SetMessage( tempMessage.c_str() );
+            std::string( ex._info().c_str() );
+        //GetMessageLog()->SetMessage( tempMessage.c_str() );
+        MessageLog( tempMessage.c_str() );
         return false;
     }
     return true;
@@ -302,7 +311,9 @@ bool CORBAServiceList::ConnectToNamingService( void )
         CORBA::Object_var naming_context_object =
             orb->resolve_initial_references( "NameService" );
         naming_context = CosNaming::NamingContext::_narrow( naming_context_object.in() );
-        GetMessageLog()->SetMessage( "Initialized ORB and connection to the Naming Service\n" );
+        //GetMessageLog()->SetMessage( "Initialized ORB and connection to the Naming Service\n" );
+        MessageLog( "Initialized ORB and connection to the Naming Service." );
+
         return true;
     }
     catch ( CORBA::Exception& ex )
@@ -310,8 +321,9 @@ bool CORBAServiceList::ConnectToNamingService( void )
         orb->destroy();
         std::string tempMessage =
             "Cannot init ORB or can't connect to the Naming Service: CORBA Exception " +
-            std::string( ex._info().c_str() ) + "\n";
-        GetMessageLog()->SetMessage( tempMessage.c_str() );
+            std::string( ex._info().c_str() );
+        //GetMessageLog()->SetMessage( tempMessage.c_str() );
+        MessageLog( tempMessage.c_str() );
         return false;
     }
 }
@@ -324,13 +336,16 @@ bool CORBAServiceList::DisconnectFromCE( void )
         {
             veCE->UnRegisterUI( p_ui_i->UIName_.c_str() );
             
-            GetMessageLog()->SetMessage( "Disconnect successful.\n" );            
+            //GetMessageLog()->SetMessage( "Disconnect successful.\n" );            
+            MessageLog( "Disconnect successful." );            
         }
     }
     catch ( CORBA::SystemException& ex )
     {
-        GetMessageLog()->SetMessage( "Disconnect failed.\n" );
-        GetMessageLog()->SetMessage( ex._info().c_str() );
+        //GetMessageLog()->SetMessage( "Disconnect failed.\n" );
+        //GetMessageLog()->SetMessage( ex._info().c_str() );
+        MessageLog( "Disconnect failed." );
+        MessageLog( ex._info().c_str() );
         return false;
     }
 
@@ -340,7 +355,8 @@ bool CORBAServiceList::DisconnectFromCE( void )
 bool CORBAServiceList::DisconnectFromXplorer( void )
 {
     VjObs::_tao_release( vjobs );
-    GetMessageLog()->SetMessage( "Disconnect VE-Xplorer suceeded.\n" );
+    //GetMessageLog()->SetMessage( "Disconnect VE-Xplorer suceeded.\n" );
+    MessageLog( "Disconnect VE-Xplorer suceeded." );
     Body::VEXplorer::_tao_release( m_xplorer );
     return true;
 }
@@ -367,7 +383,8 @@ void CORBAServiceList::CheckORBWorkLoad( void )
         const ves::open::xml::CommandPtr textOutput = GetGUIUpdateCommands( "TEXT_FEEDBACK" );
         if( textOutput->GetCommandName() != "NULL" )
         {
-            GetMessageLog()->SetMessage( textOutput->GetDataValuePair( "TEXT_OUTPUT" )->GetDataString().c_str() );
+            //GetMessageLog()->SetMessage( textOutput->GetDataValuePair( "TEXT_OUTPUT" )->GetDataString().c_str() );
+            MessageLog( textOutput->GetDataValuePair( "TEXT_OUTPUT" )->GetDataString().c_str() );
         }
     }
     catch ( ... )
@@ -397,7 +414,7 @@ void CORBAServiceList::CreateCORBAModule( void )
         {
             p_ui_i = new Body_UI_i( veCE.in(), UINAME );
             //pass the Frame's pointer to the UI corba implementation
-            p_ui_i->SetLogWindow( GetMessageLog() );
+            //p_ui_i->SetLogWindow( GetMessageLog() );
             //Here is the code to set up the ROOT POA
             CORBA::Object_var poa_object = orb->resolve_initial_references( "RootPOA" ); // get the root poa
             poa_root = PortableServer::POA::_narrow( poa_object.in() );
@@ -447,8 +464,9 @@ void CORBAServiceList::CreateCORBAModule( void )
             {
                 std::string tempMessage =
                     "Cannot find VE-CE or VE-Conductor registration problem: CORBA Exception " +
-                    std::string( ex._info().c_str() ) + "\n";
-                GetMessageLog()->SetMessage( tempMessage.c_str() );
+                    std::string( ex._info().c_str() );
+                //GetMessageLog()->SetMessage( tempMessage.c_str() );
+                MessageLog( tempMessage.c_str() );
             }
         }
         else
@@ -467,8 +485,9 @@ void CORBAServiceList::CreateCORBAModule( void )
             {
                 std::string tempMessage =
                     "Cannot find VE-CE or VE-Conductor registration problem: CORBA Exception " +
-                    std::string( ex._info().c_str() ) + "\n";
-                GetMessageLog()->SetMessage( tempMessage.c_str() );
+                    std::string( ex._info().c_str() );
+                //GetMessageLog()->SetMessage( tempMessage.c_str() );
+                MessageLog( tempMessage.c_str() );
             }
         }
     }
@@ -476,8 +495,9 @@ void CORBAServiceList::CreateCORBAModule( void )
     {
         std::string tempMessage =
             "Cannot find VE-CE or VE-Conductor registration problem: CORBA Exception " +
-            std::string( ex._info().c_str() ) + "\n";
-        GetMessageLog()->SetMessage( tempMessage.c_str() );
+            std::string( ex._info().c_str() );
+        //GetMessageLog()->SetMessage( tempMessage.c_str() );
+        MessageLog( tempMessage.c_str() );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -523,8 +543,10 @@ VjObs_ptr CORBAServiceList::GetXplorerPointer( void )
     return vjobs.in();
 }
 ////////////////////////////////////////////////////////////////////////////////
-PEThread* CORBAServiceList::GetMessageLog( void )
+void CORBAServiceList::MessageLog( const char* msg )
 {
+    ::wxLogMessage(  wxString( msg, wxConvUTF8 ) );
+/*
     if( pelog == NULL )
     {
         pelog = new PEThread();
@@ -532,6 +554,7 @@ PEThread* CORBAServiceList::GetMessageLog( void )
     }
 
     return pelog;
+*/
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool CORBAServiceList::SetID( int moduleId, std::string moduleName )

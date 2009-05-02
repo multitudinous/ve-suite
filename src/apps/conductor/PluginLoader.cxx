@@ -67,8 +67,6 @@ PluginLoader::~PluginLoader()
 
     for( size_t i = 0; i < mPluginLibs.size(); ++i )
     {
-        //std::cout << "Loaded " << ConvertUnicode( mPluginNames.at( i ).c_str() )
-        //    << std::endl;
         //wxPluginManager::UnloadLibrary( mPluginNames.at( i ) );
         if( mPluginLibs.at( i )->IsLoaded() )
         {
@@ -106,7 +104,7 @@ bool PluginLoader::LoadPlugins( wxString lib_dir )
                      _( " is present but cannot be opened." ) );
         //wxMessageBox( msg, _( "Plugin Loader Failure" ),
         //             wxOK | wxICON_INFORMATION );
-        //wxLogDebug( _( "Loading error [%s]\n" ), msg.c_str() );
+        wxLogMessage( _( "Loading error [%s]" ), msg.c_str() );
         // deal with the error here - wxDir would already log an error
         // message explaining the exact reason of the failure
         //return FALSE;
@@ -126,9 +124,8 @@ bool PluginLoader::LoadPlugins( wxString lib_dir )
             wxPluginLibrary *lib = wxPluginManager::LoadLibrary( libn );
             if( lib )
             {
-                //wxLogDebug( _( "Loaded [ %s ]\n" ), filename.c_str() );
-                //std::cout << "Loaded " << ConvertUnicode( libn.c_str() )
-                //    << std::endl;
+                wxLogMessage( _( "Loaded [ %s ]" ), libn.c_str() );
+
                 mPluginLibs.push_back( lib );
                 mPluginNames.push_back( libn );
             }
@@ -144,9 +141,8 @@ bool PluginLoader::LoadPlugins( wxString lib_dir )
     // Try to laod custom plugins
     lib_dir.Append( _( "/" ) );
     lib_dir.Append( hostType );
-    //wxLogDebug( _( "Loading plugins from [%s]\n" ), lib_dir.c_str() );
-    //std::cout << "Loading plugins from "
-    //    << ConvertUnicode( lib_dir.c_str() ) << std::endl;
+    wxLogMessage( _( "Loading plugins from [%s]" ), lib_dir.c_str() );
+
     // Create a directory object we can scan for plugins
     if( wxDir::Exists( lib_dir ) )
     {
@@ -160,8 +156,9 @@ bool PluginLoader::LoadPlugins( wxString lib_dir )
             // Dispaly error
             wxString msg( _( "Directory " ) + dir.GetName() +
                       _( " is present but cannot be opened." ) );
-            wxMessageBox( msg, _( "Plugin Loader Failure" ),
-                      wxOK | wxICON_INFORMATION );
+            //wxMessageBox( msg, _( "Plugin Loader Failure" ),
+            //          wxOK | wxICON_INFORMATION );
+            wxLogMessage( msg );
             // deal with the error here - wxDir would already log an error
             // message explaining the exact reason of the failure
             //return FALSE;
@@ -180,9 +177,7 @@ bool PluginLoader::LoadPlugins( wxString lib_dir )
             wxPluginLibrary *lib = wxPluginManager::LoadLibrary( libn );
             if( lib )
             {
-                //wxLogDebug( _( "Loaded [ %s ]\n" ), filename.c_str() );
-                //std::cout << "Loaded " << ConvertUnicode( libn.c_str() )
-                //    << std::endl;
+                wxLogMessage( _( "Loaded [ %s ]" ), filename.c_str() );
                 mPluginLibs.push_back( lib );
                 mPluginNames.push_back( libn );
             }
@@ -228,10 +223,8 @@ void PluginLoader::RegisterPlugins()
                 wxString( "UIPluginBase", wxConvUTF8 ) )
         {
             RegisterPlugin( classInfo );
-            wxLogDebug( _( "|\tRegister plugins : %s" ),
+            wxLogMessage( _( "|\tRegister plugins : %s" ),
                         classInfo->GetClassName() );
-            std::cout << "|\tRegister plugins : "
-                << ConvertUnicode( classInfo->GetClassName() ) << std::endl;
         }
         node = wxClassInfo::sm_classTable->Next();
     }

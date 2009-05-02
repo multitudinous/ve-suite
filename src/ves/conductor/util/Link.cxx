@@ -446,7 +446,7 @@ void Link::OnShowLinkContent( wxCommandEvent& event )
     }
     catch ( CORBA::Exception& )
     {
-        ves::conductor::util::CORBAServiceList::instance()->GetMessageLog()->SetMessage( "Maybe Engine is down\n" );
+        //ves::conductor::util::CORBAServiceList::instance()->GetMessageLog()->SetMessage( "Maybe Engine is down\n" );
         return;
     }
 
