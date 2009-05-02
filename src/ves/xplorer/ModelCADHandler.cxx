@@ -190,8 +190,8 @@ void ModelCADHandler::CreateAssembly( const std::string& assemblyID )
 void ModelCADHandler::CreatePart( const std::string& fileName, const std::string& partID,
                                   const std::string& parentID )
 {
-    ves::xplorer::CommandHandler::instance()
-        ->SendConductorMessage( "Loading file: " + fileName +".\n" );
+    ves::xplorer::CommandHandler::instance()->
+        SendConductorMessage( "Loading file: " + fileName );
     ves::xplorer::scenegraph::CADEntity* tempCAD =
         ModelHandler::instance()->IsCADFileLoaded( fileName );
     if( tempCAD )
@@ -204,7 +204,7 @@ void ModelCADHandler::CreatePart( const std::string& fileName, const std::string
                 m_assemblyList[ parentID ].get(),
                 ves::xplorer::scenegraph::PhysicsSimulator::instance() );
         vprDEBUG( vesDBG, 1 ) << "|\t--Cloned new part--"
-        << std::endl << vprDEBUG_FLUSH;
+            << std::endl << vprDEBUG_FLUSH;
     }
     else
     {
@@ -218,13 +218,13 @@ void ModelCADHandler::CreatePart( const std::string& fileName, const std::string
                 true,
                 ves::xplorer::scenegraph::PhysicsSimulator::instance() );
         vprDEBUG( vesDBG, 1 ) << "|\t--Loaded new part--"
-        << std::endl << vprDEBUG_FLUSH;
+            << std::endl << vprDEBUG_FLUSH;
     }
     ModelHandler::instance()->RegisterCADFile( m_partList[ partID ] );
     //add key pointer to physics map for bullet rigid body
     //add data pair for transform node
-    ves::xplorer::CommandHandler::instance()
-        ->SendConductorMessage( "Loaded file: " + fileName +".\n" );
+    ves::xplorer::CommandHandler::instance()->
+        SendConductorMessage( "Loaded file: " + fileName );
 }
 /////////////////////////////////////////////////////
 void ModelCADHandler::RemoveNode( const std::string& nodeID,

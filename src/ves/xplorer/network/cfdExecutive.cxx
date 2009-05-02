@@ -351,7 +351,7 @@ void cfdExecutive::GetEverything( void )
         // The above code is from : The C++ Standard Library by:Josuttis pg. 205
     }
     ves::xplorer::CommandHandler::instance()
-        ->SendConductorMessage( "Finished loading data in VE-Xplorer\n" );
+        ->SendConductorMessage( "Finished loading data in VE-Xplorer." );
     vprDEBUG( vesDBG, 0 ) << "|\t\tDone Getting Network From Executive"
         << std::endl << vprDEBUG_FLUSH;
 }
@@ -380,7 +380,7 @@ void cfdExecutive::PreFrameUpdate( void )
         if( currentEventHandler != _eventHandlers.end() )
         {
             vprDEBUG( vesDBG, 0 ) << "|\t\tExecuting: " << tempCommand->GetCommandName()
-            << std::endl << vprDEBUG_FLUSH;
+                << std::endl << vprDEBUG_FLUSH;
             currentEventHandler->second->SetGlobalBaseObject();
             currentEventHandler->second->Execute( tempCommand );
         }

@@ -541,7 +541,7 @@ void DataSet::LoadData()
     vprDEBUG( vesDBG, 1 ) << "|\tLoadData: filename = " << fileName
         << std::endl << vprDEBUG_FLUSH;
     ves::xplorer::CommandHandler::instance()
-        ->SendConductorMessage( "Loading file: " + fileName +".\n" );
+        ->SendConductorMessage( "Loading file: " + fileName );
 
     std::string extension = ves::xplorer::util::fileIO::getExtension( fileName );
     //What should the extension of the star.param file be?
@@ -610,7 +610,7 @@ void DataSet::LoadData()
             vprDEBUG( vesDBG, 1 ) << "|\tInvalid input file: " << fileName
                 << std::endl << vprDEBUG_FLUSH;
             ves::xplorer::CommandHandler::instance()
-                ->SendConductorMessage( "Invalid input file: " + fileName + ".\n" );
+                ->SendConductorMessage( "Invalid input file: " + fileName );
             return;
         }
     }
@@ -701,7 +701,7 @@ void DataSet::LoadData()
 
     SetType();
     ves::xplorer::CommandHandler::instance()
-        ->SendConductorMessage( "Loaded file: " + fileName +".\n" );
+        ->SendConductorMessage( "Loaded file: " + fileName );
     //Register this dataset with the modeldatahandler
     CreateCompositeDataSets();
 }
@@ -721,7 +721,7 @@ void DataSet::LoadData( vtkDataSet* tempDataset, bool isPartOfCompositeDataset )
     vprDEBUG( vesDBG, 1 ) << "|\tLoadData: filename = " << fileName
     << std::endl << vprDEBUG_FLUSH;
     ves::xplorer::CommandHandler::instance()
-        ->SendConductorMessage( "Loading file: " + fileName +".\n" );
+        ->SendConductorMessage( "Loading file: " + fileName );
     
     m_dataSet = tempDataset;
 
@@ -777,7 +777,7 @@ void DataSet::LoadData( vtkDataSet* tempDataset, bool isPartOfCompositeDataset )
     SetType();
 
     ves::xplorer::CommandHandler::instance()
-        ->SendConductorMessage( "Loaded file: " + fileName +".\n" );
+        ->SendConductorMessage( "Loaded file: " + fileName );
     //Register this dataset with the modeldatahandler
 }    
 ////////////////////////////////////////////
