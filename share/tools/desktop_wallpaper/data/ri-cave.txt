@@ -1,0 +1,68 @@
+# Every non-value line _must_ start with a "#".
+# No blank lines allowed.
+#
+#
+# Number of walls
+# Numver of walls
+4
+#
+# Texture filename prefix. Generated wall image files are named "<prefix><suffix>.png"
+# Each filename shares this prefix, but can have a different suffix.
+cave-
+#
+# View position
+# Coordinate system is as follows:
+#   Origin (0, 0, 0) is at the center of the floor.
+#   +x right, +y forward, +z up
+#   Units are meters
+#
+# Viewpoint
+0 -2.3 1.6
+#
+# Each wall has five lines:
+#   Per-wall suffix for texture filename "<prefix><suffix>.png"
+#   xyz lower left corner location
+#   s axis vector
+#   t axis vector 
+#   debug texture file name
+#
+floor
+# <lower_left_corner>-1.3462 -0.6731 0.0
+# <lower_right_corner>1.3462 -0.6731 0.0
+# <upper_right_corner>1.3462 1.3462 0.0
+# <upper_left_corner>-1.3462 1.3462 0.0
+-1.3462 -0.6731 0.0
+2.6924 0 0
+0 2.0193 0
+floor.png
+#
+left
+# <lower_left_corner>-1.3462 -1.3462 0.0
+# <lower_right_corner>-1.3462 1.3462 0.0
+# <upper_right_corner>-1.3462 1.3462 2.0193
+# <upper_left_corner>-1.3462 -1.3462 2.0193
+-1.3462 -1.3462 0.0
+0 2.6924 0
+0 0 2.0193
+left.png
+#
+front
+# <lower_left_corner>-1.3462 1.3462 0.0
+# <lower_right_corner>1.3462 1.3462 0.0
+# <upper_right_corner>1.3462 1.3462 2.0193
+# <upper_left_corner>-1.3462 1.3462 2.0193
+-1.3462 1.3462 0.0
+2.6924 0 0
+0 0 2.0193
+front.png
+#
+right
+#
+# <lower_left_corner>1.3462 1.3462 0.0
+# <lower_right_corner>1.3462 -1.3462 0.0
+# <upper_right_corner>1.3462 -1.3462 2.0193
+# <upper_left_corner>1.3462 1.3462 2.0193
+1.3462 1.3462 0.0
+0 -2.6924 0
+0 0 2.0193
+right.png

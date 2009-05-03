@@ -1,0 +1,50 @@
+# Every non-value line _must_ start with a "#".
+# No blank lines allowed.
+#
+#
+# Number of walls
+4
+#
+# Texture filename prefix. Generated wall image files are named "<prefix><suffix>.png"
+# Each filename shares this prefix, but can have a different suffix.
+cave-
+#
+# View position
+# Coordinate system is as follows:
+#   Origin (0, 0, 0) is at the center of the floor.
+#   +x right, +y forward, +z up
+#   Units are meters
+#
+# Viewpoint
+0 -4. 1.6
+#
+# Each wall has five lines:
+#   Per-wall suffix for texture filename "<prefix><suffix>.png"
+#   xyz lower left corner location
+#   s axis vector
+#   t axis vector 
+#   debug texture file name
+#
+floor
+-2. -1.5 0.
+4. 0. 0.
+0. 3. 0.
+floor.png
+#
+left
+-2. -1.5 0.
+0. 3. 0.
+0. 0. 2.5
+left.png
+#
+front
+-2. 1.5 0.
+4. 0. 0.
+0. 0. 2.5
+front.png
+#
+right
+2. 1.5 0.
+0. -3. 0.
+0. 0. 2.5
+right.png

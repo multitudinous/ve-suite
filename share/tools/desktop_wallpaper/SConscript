@@ -1,0 +1,54 @@
+##Builds preprocessor program
+import os, sys, string
+pj = os.path.join
+import SConsAddons.Util as sca_util
+
+Import('ves_pkg LIBDIR PREFIX buildDir osg_options boost_options RootDir GetPlatform')
+
+#################################################################
+srcDir = os.path.abspath( pj(RootDir, 'share', 'tools', 'desktop_wallpaper','cavegen') )
+
+srcs = sca_util.getSourcesRecursive( srcDir )
+srcs = map(lambda s: pj('cavegen', s), srcs)
+
+headers = sca_util.getHeadersRecursive( srcDir )
+headers = map(lambda s: pj('cavegen', s), headers)
+
+env = ves_pkg.getEnv().Clone()
+
+osg_options.apply( env )
+
+if GetPlatform() == 'linux':
+    lib_env2.Append( CXXFLAGS=['-fPIC'])
+
+prog = ves_pkg.createProgram('caveGen' + env["PROGSUFFIX"], env, 'bin')
+prog.addSources( srcs )
+prog.addHeaders( headers )
+prog.build()
+
+#################################################################
+srcDir = os.path.abspath( pj(RootDir, 'share', 'tools', 'desktop_wallpaper','cavepreview') )
+
+srcs = sca_util.getSourcesRecursive( srcDir )
+srcs = map(lambda s: pj('cavepreview', s), srcs)
+srcs.append( pj('cavegen', 'Wall.cpp') )
+print srcs
+
+headers = sca_util.getHeadersRecursive( srcDir )
+headers = map(lambda s: pj('cavegen', s), headers)
+headers.append( pj('cavegen', 'Wall.h') )
+print headers
+
+env = ves_pkg.getEnv().Clone()
+
+osg_options.apply( env )
+
+if GetPlatform() == 'linux':
+    lib_env2.Append( CXXFLAGS=['-fPIC'])
+
+prog = ves_pkg.createProgram('cavePreview' + env["PROGSUFFIX"], env, 'bin')
+prog.addSources( srcs )
+prog.addHeaders( headers )
+prog.build()
+
+#################################################################
