@@ -271,16 +271,6 @@ void SDPlugin::OnOpen( wxCommandEvent& event )
     mAspenMenu->Enable( SDPLUGIN_STEP_ASPEN_NETWORK, true );
     mAspenMenu->Enable( SDPLUGIN_SAVE_SIMULATION, true );
     mAspenMenu->Enable( SDPLUGIN_SAVEAS_SIMULATION, true );
-
-    ///Submit job to xplorer
-    //wxCommandEvent event;
-    //SubmitToServer( event );
-    //AspenSimOpen = true;
-    //}
-    //else
-    //{
-    //    Log( "Simulation is already open.\n" );
-    //}
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SDPlugin::ShowAspenSimulation( wxCommandEvent& event )
