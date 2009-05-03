@@ -32,6 +32,11 @@ env.Append(LIBPATH = [  pj('#', buildDir, 'src','ves','xplorer','scenegraph'),
 #disable profiling by default
 if env['VPRProfile'] == 'no':
    env.Append( CPPDEFINES = ['DISABLE_VPR_PROFILE'] )
+
+#see if we need to compile minerva in
+if baseEnv[ 'MakeMinervaSupport' ] != 'no':
+   env.Append( CPPDEFINES = ['MINERVA_GIS_SUPPORT'] )
+
 env.Append( CPPDEFINES = [ GetSVNVersion( srcDir ) ] )
 #env.Append(CPPPATH = [pj('#','external','osgOQ','include')])
 #env.Append(CPPPATH = [pj('#','external','osgPPU','include')])

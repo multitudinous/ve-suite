@@ -8,11 +8,16 @@ toolsSubdirs = Split("""
     builder
     vea
 """)
-#DynSimUnit
+
 #Should Aspen support be built
 if GetPlatform() == 'win32':
     if baseEnv[ 'MakeAspenSupport' ] != 'no':
         toolsSubdirs.append( "aspen" )
+
+#Should DynSim support be built
+if GetPlatform() == 'win32':
+    if baseEnv[ 'MakeDynSimSupport' ] != 'no':
+        toolsSubdirs.append( "DynSimUnit" )
 
 #Should db support be built
 if mysqlpp_options.isAvailable():
