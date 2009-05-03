@@ -8,20 +8,16 @@ toolsSubdirs = Split("""
     builder
     vea
 """)
-
+#DynSimUnit
 #Should Aspen support be built
 if GetPlatform() == 'win32':
     if baseEnv[ 'MakeAspenSupport' ] != 'no':
-        toolsSubdirs = Split("""
-            aspen
-        """)
+        toolsSubdirs.append( "aspen" )
 
 #Should db support be built
 if mysqlpp_options.isAvailable():
-    toolsSubdirs = Split("""
-        db
-    """)
-        
+    toolsSubdirs.append( "db" )
+
 #Run SConscript files in all of those folders.
 for d in toolsSubdirs:
     SConscript( dirs = d )
