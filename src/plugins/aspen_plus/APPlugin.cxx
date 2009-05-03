@@ -126,11 +126,6 @@ wxString APPlugin::GetConductorName()
 void APPlugin::OnOpen( wxCommandEvent& event )
 {
     UIPLUGIN_CHECKID( event )
-    //wxString bkpext( "Aspen Plus ASCII files (*.bkp)|*.bkp", wxConvUTF8);
-    //wxString apwext( "Aspen Plus Binary files (*.apw)|*.apw", wxConvUTF8);
-    //wxString extText = bkpext + _("|") + apwext;
-    //wxFileDialog fd( m_canvas, wxT("Choose a file"), wxT(""), wxT(""), 
-    //    extText, wxOPEN );
 
     if( IsBKPOpen() )
     {
@@ -203,6 +198,7 @@ void APPlugin::OnOpen( wxCommandEvent& event )
         return;
     }
     
+    //Parse the network string thst was returned from the VE-PSI Unit
     ves::open::xml::XMLReaderWriter networkWriter;
     networkWriter.UseStandaloneDOMDocumentManager();
     networkWriter.ReadFromString();
@@ -210,29 +206,32 @@ void APPlugin::OnOpen( wxCommandEvent& event )
     std::vector< std::pair< std::string, std::string > >::iterator dataIter;
     dataToObtain.push_back( std::make_pair( "Model", "veSystem" ) );
     networkWriter.ReadXMLData( nw_str, dataToObtain );
+    //Now get the veopen classes from the network string
     std::vector< ves::open::xml::XMLObjectPtr >::iterator objectIter;
     std::vector< ves::open::xml::XMLObjectPtr > objectVector =
         networkWriter.GetLoadedXMLObjects();
 
+    //Now we need to make this plugin the top level plugin becuase
+    //the aspen flowsheet is actually a subnetwork of this 
+    //main aspen plus plugin
     ves::open::xml::model::SystemPtr tempSystem;
     tempSystem = boost::dynamic_pointer_cast<ves::open::xml::model::System>( objectVector.at( 0 ) );
     ves::open::xml::model::ModelPtr aspenPlusModel;
-    //set parent model on topmost level
-    for( int modelCount = 0; modelCount < tempSystem->GetNumberOfModels(); modelCount++)
+    //set a null pointer as the top most parent model on topmost level
+    for( size_t modelCount = 0; 
+        modelCount < tempSystem->GetNumberOfModels(); 
+        ++modelCount )
     {
+        //Not sure why we set a null pointer here...
         tempSystem->GetModel( modelCount )->SetParentModel( aspenPlusModel );
     }
-
-    //aspenPlusModel->SetSubSystem( tempSystem );
+    //Now we get this plugins veopen model and set its subsystem as the
+    //flowsheet we just queried from VE-PSI
     GetVEModel()->SetSubSystem( tempSystem );
     mDataBufferEngine->ParseSystem( tempSystem );
 
-    //Network * network = m_canvas->GetActiveNetwork();
-
-    //if( network->modules.empty() )
-    //{
-    //network->Load( nw_str, true );
-    m_canvas->AddSubNetworks( );
+    //Now let the rest of VE-Conductor know about the new network
+    m_canvas->AddSubNetworks();
 #if 0
     std::ofstream netdump ("netdump.txt");
     netdump << nw_str;
@@ -269,16 +268,6 @@ void APPlugin::OnOpen( wxCommandEvent& event )
     mAspenMenu->Enable( APPLUGIN_STEP_ASPEN_NETWORK, true );
     mAspenMenu->Enable( APPLUGIN_SAVE_SIMULATION, true );
     mAspenMenu->Enable( APPLUGIN_SAVEAS_SIMULATION, true );
-
-    ///Submit job to xplorer
-    //wxCommandEvent event;
-    //SubmitToServer( event );
-    //AspenSimOpen = true;
-    //}
-    //else
-    //{
-    //    Log( "Simulation is already open.\n" );
-    //}
 }
 ////////////////////////////////////////////////////////////////////////////////
 void APPlugin::ShowAspenSimulation( wxCommandEvent& event )
