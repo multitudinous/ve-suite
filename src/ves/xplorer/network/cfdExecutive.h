@@ -125,15 +125,8 @@ private:
     //cfdExecutive& operator=(const cfdExecutive& o) { ; }
     // this class should be a singleton
     // constructor
-    cfdExecutive():
-        mAvailableModules( 0 ),
-        ui_i( 0 ),
-        naming_context( 0 ),
-        _exec( 0 )
-    {
-        ;
-    }
-
+    cfdExecutive();
+    
     // destructor
     virtual ~cfdExecutive( void );
     vprSingletonHeader( cfdExecutive );
@@ -182,6 +175,8 @@ public:
     void UnRegisterExecutive();
     
 private:
+    ///Connect function so that we can connect at run time if needed
+    void ConnectToCE();
     ///Recusive function to find all sub-systems
     void ParseSystem( ves::open::xml::model::SystemPtr system, 
         bool getResults = false, 
@@ -203,14 +198,20 @@ private:
     std::map< std::string, ves::xplorer::plugin::PluginBase* > mPluginsMap;
     ///map to hold unique plugin command names and associated plugin pointers
     std::map< std::string, std::map< std::string, ves::xplorer::plugin::PluginBase* > > pluginEHMap;
-    //Network View
+    ///Network View
     NetworkSystemView* netSystemView;
     ///The event handler for commands.
     std::map< std::string, ves::xplorer::event::EventHandler*> _eventHandlers;
     ///the Computational Engine
     CosNaming::NamingContext* naming_context;
+    ///The executive interface in veopen
     Body::Executive* _exec;
+    ///The UI interface in veopen
     Body_UI_i* ui_i;
+    ///The GUID for the executive
+    std::string m_UINAME;
+    ///The POA interface from the main vexplorer app
+    PortableServer::POA* m_ChildPOA;
 };
 }
 }

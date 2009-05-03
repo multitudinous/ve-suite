@@ -86,13 +86,27 @@ using namespace ves::xplorer::scenegraph;
 using namespace ves::open::xml;
 using namespace ves::xplorer::plugin;
 using namespace ves::xplorer::network;
-
+////////////////////////////////////////////////////////////////////////////////
 vprSingletonImpLifetime( ves::xplorer::network::cfdExecutive, 15 );
-
+////////////////////////////////////////////////////////////////////////////////
+cfdExecutive::cfdExecutive()
+    :
+    mAvailableModules( 0 ),
+    ui_i( 0 ),
+    naming_context( 0 ),
+    _exec( 0 ),
+    netSystemView( 0 ),
+    m_ChildPOA( 0 )
+{
+    ;
+}
+////////////////////////////////////////////////////////////////////////////////
 void cfdExecutive::Initialize( CosNaming::NamingContext* inputNameContext,
                                PortableServer::POA* child_poa )
 {
     this->naming_context = inputNameContext;
+    m_ChildPOA = child_poa;
+    
     try
     {
         XMLPlatformUtils::Initialize();
@@ -115,52 +129,12 @@ void cfdExecutive::Initialize( CosNaming::NamingContext* inputNameContext,
     std::ostringstream dirStringStream;
     dirStringStream << "VEClient-" << vpr::System::getHostname()
         << "-" <<  vpr::GUID( vpr::GUID::generateTag ).toString();
-    std::string UINAME = dirStringStream.str();
+    m_UINAME = dirStringStream.str();
 
-    netSystemView = NULL;
-
-    try
-    {
-        CosNaming::Name name( 1 );
-        name.length( 1 );
-        name[0].id = CORBA::string_dup( "Executive" );
-
-        CORBA::Object_var exec_object = this->naming_context->resolve( name );
-        _exec = Body::Executive::_narrow( exec_object.in() );
-
-        //Create the Servant
-        ui_i = new Body_UI_i( _exec, UINAME );
-        //Body_UI_i ui_i( UINAME);
-
-        PortableServer::ObjectId_var id =
-            PortableServer::string_to_ObjectId( "cfdExecutive" );
-
-        //activate it with this child POA
-        child_poa->activate_object_with_id( id.in(), &( *ui_i ) );
-
-        // obtain the object reference
-        CORBA::Object_var objectRef = child_poa->id_to_reference( id.in() );
-        Body::UI_var unit = Body::UI::_narrow( objectRef.in() );
-
-        // Don't register it to the naming service anymore
-        // the bind call will hang if you try to register
-        // Instead, the new idl make the ref part of the register call
-        // Naming Service now is only used for boot trap
-        // to get the ref for Executive
-
-        //Call the Executive CORBA call to register it to the Executive
-        std::cout << "|\tRegistering " << UINAME << std::endl;
-        _exec->RegisterUI( ui_i->UIName_.c_str(), unit.in() );
-        std::cout << "|\tConnected to the Executive " << std::endl;
-        ui_i->GetNetworkFromCE();
-        LoadDataFromCE();
-    }
-    catch ( CORBA::Exception& )
-    {
-        std::cerr << "|\tExecutive not present or VEClient registration error"
-            << std::endl;
-    }
-
+    ConnectToCE();
+    ui_i->GetNetworkFromCE();
+    LoadDataFromCE();
+    
     _eventHandlers[std::string( "DELETE_OBJECT_FROM_NETWORK" )] = 
         new DeleteObjectFromNetworkEventHandler();
     _eventHandlers[std::string( "DELETE_NETWORK_SYSTEM_VIEW" )] = 
@@ -367,6 +341,7 @@ void cfdExecutive::PreFrameUpdate( void )
         << std::endl << vprDEBUG_FLUSH;
     if( !ui_i )
     {
+        ConnectToCE();
         return;
     }
 
@@ -442,7 +417,7 @@ void cfdExecutive::PreFrameUpdate( void )
 void cfdExecutive::PostFrameUpdate( void )
 {
     vprDEBUG( vesDBG, 3 ) << "|\tcfdExecutive::PostFrameUpdate"
-    << std::endl << vprDEBUG_FLUSH;
+        << std::endl << vprDEBUG_FLUSH;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdExecutive::LoadDataFromCE( void )
@@ -557,6 +532,51 @@ Body_UI_i* cfdExecutive::GetCORBAInterface()
 {
     return ui_i;
 }
+////////////////////////////////////////////////////////////////////////////////
+void cfdExecutive::ConnectToCE()
+{
+    try
+    {
+        std::cout << "|\tTrying to register " << m_UINAME << std::endl;
+
+        CosNaming::Name name( 1 );
+        name.length( 1 );
+        name[0].id = CORBA::string_dup( "Executive" );
+        
+        CORBA::Object_var exec_object = this->naming_context->resolve( name );
+        _exec = Body::Executive::_narrow( exec_object.in() );
+        
+        //Create the Servant
+        ui_i = new Body_UI_i( _exec, m_UINAME );
+        //Body_UI_i ui_i( UINAME);
+        
+        PortableServer::ObjectId_var id =
+        PortableServer::string_to_ObjectId( "cfdExecutive" );
+        
+        //activate it with this child POA
+        m_ChildPOA->activate_object_with_id( id.in(), &( *ui_i ) );
+        
+        // obtain the object reference
+        CORBA::Object_var objectRef = m_ChildPOA->id_to_reference( id.in() );
+        Body::UI_var unit = Body::UI::_narrow( objectRef.in() );
+        
+        // Don't register it to the naming service anymore
+        // the bind call will hang if you try to register
+        // Instead, the new idl make the ref part of the register call
+        // Naming Service now is only used for boot trap
+        // to get the ref for Executive
+        
+        //Call the Executive CORBA call to register it to the Executive
+        std::cout << "|\tRegistering " << m_UINAME << std::endl;
+        _exec->RegisterUI( ui_i->UIName_.c_str(), unit.in() );
+        std::cout << "|\tConnected to the Executive " << std::endl;
+    }
+    catch ( CORBA::Exception& )
+    {
+        std::cerr << "|\tExecutive not present or VEClient registration error"
+            << std::endl;
+    }
+}    
 ////////////////////////////////////////////////////////////////////////////////
 std::string cfdExecutive::GetCurrentNetwork()
 {
