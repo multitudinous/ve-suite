@@ -32,12 +32,10 @@ srcDir = os.path.abspath( pj(RootDir, 'share', 'tools', 'desktop_wallpaper','cav
 srcs = sca_util.getSourcesRecursive( srcDir )
 srcs = map(lambda s: pj('cavepreview', s), srcs)
 srcs.append( pj('cavegen', 'Wall.cpp') )
-print srcs
 
 headers = sca_util.getHeadersRecursive( srcDir )
 headers = map(lambda s: pj('cavegen', s), headers)
 headers.append( pj('cavegen', 'Wall.h') )
-print headers
 
 env = ves_pkg.getEnv().Clone()
 
