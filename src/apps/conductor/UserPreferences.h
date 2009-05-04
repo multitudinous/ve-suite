@@ -109,7 +109,8 @@ public:
         ID_BACKGROUND_COLOR_BUTTON,
         ID_SHUTDOWN_XPLORER,
         ID_GEOMETRY_LOD_SCALE_SLIDER,
-        ID_CONDUCTOR_CHKBX
+        ID_CONDUCTOR_CHKBX,
+        ID_PHYSICS_DEBUGGER_CHKBX
     };
 
     virtual ~UserPreferences();
@@ -139,6 +140,8 @@ public:
     void WriteConfiguration( void );
     void OnNearFarCheck( wxCommandEvent& event );
     void OnNearFarRatio( wxCommandEvent& event );
+    void OnPhysicsDebuggerCheck( wxCommandEvent& event );
+
     /// Should we show tooltips?
     static bool ShowToolTips();
 

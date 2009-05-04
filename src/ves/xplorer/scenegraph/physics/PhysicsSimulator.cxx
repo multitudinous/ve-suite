@@ -91,16 +91,11 @@ PhysicsSimulator::PhysicsSimulator()
     mCollisionInformation( false ),
     shoot_speed( 50.0f ),
     mCreatedGroundPlane( false ),
-    mDebugBullet( new osgBullet::DebugBullet ),
     mDebugBulletFlag( false )
 {
     head.init( "VJHead" );
 
     InitializePhysicsSimulation();
-    if( mDebugBulletFlag )
-    {
-        SceneManager::instance()->GetRootNode()->addChild( mDebugBullet->getRoot() );
-    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 PhysicsSimulator::~PhysicsSimulator()
@@ -109,12 +104,6 @@ PhysicsSimulator::~PhysicsSimulator()
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsSimulator::ExitPhysics()
 {
-    if( mDebugBulletFlag )
-    {
-        SceneManager::instance()->GetRootNode()->removeChild( mDebugBullet->getRoot() );
-    }
-    delete mDebugBullet;
-    
     for( size_t i = 0; i < mBoxVector.size(); ++i )
     {
         delete mBoxVector.at( i );
@@ -250,11 +239,11 @@ void PhysicsSimulator::InitializePhysicsSimulation()
     //mDynamicsWorld->getDispatchInfo().m_enableSPU = true;
     mDynamicsWorld->setGravity( btVector3( 0, 0, -32.174 ) );
 
-    if( mDebugBulletFlag )
-    {
-        mDynamicsWorld->setDebugDrawer( new osgBullet::GLDebugDrawer( SceneManager::instance()->GetRootNode() ) );
-        //mDynamicsWorld->getDebugDrawer()->setDebugMode( btIDebugDraw::DBG_MAX_DEBUG_DRAW_MODE );
-    }
+    mDynamicsWorld->setDebugDrawer( new osgBullet::GLDebugDrawer( 
+        SceneManager::instance()->GetRootNode() ) );
+    //mDynamicsWorld->getDebugDrawer()->
+    //    setDebugMode( btIDebugDraw::DBG_MAX_DEBUG_DRAW_MODE );
+
     //CreateGroundPlane();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -267,7 +256,7 @@ void PhysicsSimulator::UpdatePhysics( float dt )
 
     if( mDebugBulletFlag )
     {
-        dynamic_cast< osgBullet::GLDebugDrawer* >( mDynamicsWorld->getDebugDrawer() )->BeginDraw();
+        static_cast< osgBullet::GLDebugDrawer* >( mDynamicsWorld->getDebugDrawer() )->BeginDraw();
     }
 
     vxs::CharacterController* characterController =
@@ -659,8 +648,8 @@ osg::Node* PhysicsSimulator::CreateGround( float w, float h, const osg::Vec3& ce
     return ground;
 }
 ////////////////////////////////////////////////////////////////////////////////
-osgBullet::DebugBullet* PhysicsSimulator::GetDebugBullet()
+void PhysicsSimulator::SetDebuggingOn( bool toggle )
 {
-    return mDebugBullet;
+    mDebugBulletFlag = toggle;
 }
 ////////////////////////////////////////////////////////////////////////////////

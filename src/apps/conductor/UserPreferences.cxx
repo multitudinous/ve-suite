@@ -73,6 +73,7 @@ BEGIN_EVENT_TABLE( UserPreferences, wxDialog )
     EVT_COMMAND_SCROLL( USERPREFENCES_GEOMETRY_LOD_SCALE_SLIDER, UserPreferences::OnLODScale )
     EVT_CHECKBOX( USERPREFENCES_NEAR_FAR_CHKBX, UserPreferences::OnNearFarCheck )
     EVT_TEXT_ENTER( USERPREFENCES_NEAR_FAR_RATIO, UserPreferences::OnNearFarRatio )
+    EVT_CHECKBOX( ID_PHYSICS_DEBUGGER_CHKBX, UserPreferences::OnPhysicsDebuggerCheck )
 END_EVENT_TABLE()
 ////////////////////////////////////////////////////////////////////////////////
 UserPreferences::UserPreferences( )
@@ -189,7 +190,7 @@ void UserPreferences::CreateControls()
     nearFarSizer->Add( nearFarChkBx, 1, wxEXPAND | wxALIGN_CENTER_HORIZONTAL );
     nearFarSizer->Add( m_nearFarEntry, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
-    wxCheckBox* physicsDebuggerChkBx = new wxCheckBox( panel, wxNewId(), wxT( "Physics Debugger" ), wxDefaultPosition, wxDefaultSize, wxCHK_2STATE );
+    wxCheckBox* physicsDebuggerChkBx = new wxCheckBox( panel, ID_PHYSICS_DEBUGGER_CHKBX, wxT( "Physics Debugger" ), wxDefaultPosition, wxDefaultSize, wxCHK_2STATE );
     wxCheckBox* scriptLoggerChkBx = new wxCheckBox( panel, wxNewId(), wxT( "Script Logger" ), wxDefaultPosition, wxDefaultSize, wxCHK_2STATE );
 
     backgroundColorChkBx->SetValue( preferenceMap[ "Use Preferred Background Color" ] );
@@ -266,6 +267,24 @@ void UserPreferences::OnNearFarCheck( wxCommandEvent& event )
     CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
 
     UserPreferencesDataBuffer::instance()->SetCommand( "CHANGE_NEAR_FAR_RATIO", veCommand );
+}
+////////////////////////////////////////////////////////////////////////////////
+void UserPreferences::OnPhysicsDebuggerCheck( wxCommandEvent& event )
+{
+    wxString mode = dynamic_cast< wxControl* >( event.GetEventObject() )->GetLabelText();
+    preferenceMap[ ConvertUnicode( mode.c_str() ) ] = event.IsChecked();
+    
+    // Create the command and data value pairs
+    DataValuePairPtr dataValuePair( new DataValuePair() );
+    dataValuePair->SetData( "Physics Debugger Toggle Value", 
+        static_cast< unsigned int >( event.IsChecked() ) );
+    CommandPtr veCommand( new Command() );
+    veCommand->SetCommandName( std::string( "PHYSICS_SIMULATION" ) );
+    veCommand->AddDataValuePair( dataValuePair );
+    
+    CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
+    
+    UserPreferencesDataBuffer::instance()->SetCommand( "PHYSICS_SIMULATION", veCommand );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UserPreferences::OnNearFarRatio( wxCommandEvent& event )

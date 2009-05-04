@@ -132,5 +132,12 @@ void PhysicsSimulationEventHandler::Execute(
         vxs::PhysicsSimulator::instance()->SetIdle( true );
         vxs::PhysicsSimulator::instance()->StepSimulation();
     }
+    else if( command->GetDataValuePair( "Physics Debugger Toggle Value" ) )
+    {
+        unsigned int toggle = 0;
+        command->GetDataValuePair( "Physics Debugger Toggle Value" )->
+            GetData( toggle );
+        vxs::PhysicsSimulator::instance()->SetDebuggingOn( toggle );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////

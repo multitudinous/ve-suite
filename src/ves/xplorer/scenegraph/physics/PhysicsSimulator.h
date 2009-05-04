@@ -64,10 +64,6 @@ class btRigidBody;
 class btCollisionShape;
 
 // --- osgBullet Includes --- //
-namespace osgBullet
-{
-class DebugBullet;
-}
 
 // --- C/C++ Libraries --- //
 #include <vector>
@@ -115,6 +111,10 @@ public:
     ///Set the debug mode to use with the bullet debugger
     void SetDebugMode( int mode );
 
+    ///Set debugging data to be rendered
+    ///\param toggle Either true or false
+    void SetDebuggingOn( bool toggle );
+    
     ///Set whether physics is idle or not
     ///\param state State on or idle
     void SetIdle( bool state );
@@ -146,9 +146,6 @@ public:
     
     ///Create flat ground plane for the world
     void CreateGroundPlane();
-
-    ///Get the debug bullet class to add to other tools
-    osgBullet::DebugBullet* GetDebugBullet();
 
 private:
     ///Base constructor
@@ -212,9 +209,6 @@ private:
     ///A physics solver which sequentially applies impulses
     btSequentialImpulseConstraintSolver* mSolver;
     
-    ///
-    osgBullet::DebugBullet* mDebugBullet;
-
     ///Debug bullet
     bool mDebugBulletFlag;
 
