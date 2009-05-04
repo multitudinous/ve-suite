@@ -46,6 +46,8 @@ LocalToWorldNodePath::LocalToWorldNodePath( osg::Node* stopNode,
     NodeVisitor( TRAVERSE_ALL_CHILDREN ),
     mStopNode( stopNode )
 {
+    setNodeMaskOverride( 1 );
+
     startNode->accept( *this );
 }
 ////////////////////////////////////////////////////////////////////////////////

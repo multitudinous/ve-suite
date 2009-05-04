@@ -560,7 +560,7 @@ void PhysicsRigidBody::CreateRigidBody( const std::string& lod, const std::strin
     {
         mMass = 0.0f;
     }
-    std::cout << "Mesh " << mesh << " Overall " << overall << std::endl;
+    std::cout << "|\t\tMesh " << mesh << " Overall " << overall << std::endl;
     
     if( mesh == "Box" )
     {
