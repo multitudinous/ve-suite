@@ -323,7 +323,6 @@ void CADEventHandler::_addNodeToNode( std::string parentID,
             partNode->GetDCS()->setName( newPart->GetNodeName() );
 
             //set the visibility
-            partNode->GetDCS()->ToggleDisplay( newPart->GetVisibility() );
             partNode->SetOpacityValue( newPart->GetOpacity() );
             partNode->SetTransparencyFlag( newPart->GetTransparentFlag() );
 
@@ -373,6 +372,11 @@ void CADEventHandler::_addNodeToNode( std::string parentID,
                     << "|\t---End Part Physics Properties---" 
                     << std::endl << vprDEBUG_FLUSH;
             }
+            //Is the node off or on?
+            //This call must be last after all other properties are processed
+            //so that visitors and other internal osg visitors will
+            //travers the node even if it is turned off
+            partNode->GetDCS()->ToggleDisplay( newPart->GetVisibility() );
         }
         else
         {
