@@ -165,7 +165,7 @@ void AppNotebook::ClearTableData()
 void AppNotebook::PopulateTableDetails( const StringVector2D* tableDetails )
 {
     size_t numRows = (*tableDetails).size();
-    size_t numCols = (*tableDetails)[ 0 ].length;
+    size_t numCols = (*tableDetails)[ 0 ].size();
 
     //Resize the grid to fit the table details information
     int numTableRows = m_tableDetailsGrid->GetNumberRows();
@@ -183,8 +183,8 @@ void AppNotebook::PopulateTableDetails( const StringVector2D* tableDetails )
     {
         for( size_t j = 0; j < numCols; ++j )
         {
-            //m_tableDetailsGrid->SetCellValue(
-                //i, j, wxT( (*tableDetails)[ i ][ j ].c_str() ) );
+            m_tableDetailsGrid->SetCellValue(
+                i, j, wxT( (*tableDetails)[ i ][ j ].c_str() ) );
         }
     }
 
@@ -198,13 +198,13 @@ void AppNotebook::PopulateTableData(
     const StringVector1D* tableFieldNames, const StringVector2D* tableData )
 {
     size_t numRows = (*tableData).size();
-    size_t numCols = (*tableData)[ 0 ].length;
+    size_t numCols = (*tableData)[ 0 ].size();
 
     //Fill the column labels with the table field names
     for( size_t i = 0; i < numCols; ++i )
     {
-        //m_tableDataGrid->SetColLabelValue(
-            //i, wxT( (*tableFieldNames)[ i ].c_str() ) );
+        m_tableDataGrid->SetColLabelValue(
+            i, wxT( (*tableFieldNames)[ i ].c_str() ) );
     }
 
     //Resize the grid to fit the table data information
@@ -233,8 +233,8 @@ void AppNotebook::PopulateTableData(
     {
         for( size_t j = 0; j < numCols; ++j )
         {
-            //m_tableDataGrid->SetCellValue(
-                //i, j, wxT( (*tableData)[ i ][ j ].c_str() ) );
+            m_tableDataGrid->SetCellValue(
+                i, j, wxT( (*tableData)[ i ][ j ].c_str() ) );
         }
     }
 

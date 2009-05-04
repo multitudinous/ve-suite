@@ -77,7 +77,7 @@ void AppTreeCtrl::AddDBConnection( DBConnection* dbConnection )
     for( size_t i = 0; i < tableNames.size(); ++i )
     {
         DBTableData* dbTableData = new DBTableData();
-        //dbTableData->m_dbTableName = tableNames.at( i );
+        dbTableData->m_dbTableName = tableNames.at( i );
         AppendItem(
             dbLeaf, 
             wxString( dbTableData->m_dbTableName.c_str(), wxConvUTF8 ), 
@@ -92,7 +92,6 @@ void AppTreeCtrl::AddDBConnection( DBConnection* dbConnection )
 ////////////////////////////////////////////////////////////////////////////////
 void AppTreeCtrl::SelectionChanged( wxTreeEvent& WXUNUSED( event ) )
 {
-    /*
     wxTreeItemId selectedID = GetSelection();
     if( selectedID == m_selectionID )
     {
@@ -123,15 +122,14 @@ void AppTreeCtrl::SelectionChanged( wxTreeEvent& WXUNUSED( event ) )
 
     const StringVector2D* tableDetails =
         dbConnection->GetTableDetails( dbTableName );
-    const StringVector1D* tableFieldNames =
-        dbConnection->GetTableFieldNames( dbTableName );
-    const StringVector2D* tableData =
-        dbConnection->GetTableData( dbTableName );
+    //const StringVector1D* tableFieldNames =
+        //dbConnection->GetTableFieldNames( dbTableName );
+    //const StringVector2D* tableData =
+        //dbConnection->GetTableData( dbTableName );
 
     AppNotebook* appNotebook = m_appFrame->GetAppNotebook();
     appNotebook->PopulateTableDetails( tableDetails );
-    appNotebook->PopulateTableData( tableFieldNames, tableData );
-    */
+    //appNotebook->PopulateTableData( tableFieldNames, tableData );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppTreeCtrl::RightClick( wxTreeEvent& event )

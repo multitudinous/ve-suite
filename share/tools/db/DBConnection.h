@@ -51,6 +51,9 @@ public:
     };
 
     ///
+    const bool Connected() const;
+
+    ///
     const unsigned int GetDBType() const;
 
     ///
@@ -78,6 +81,9 @@ public:
 protected:
     ///
     virtual void QueryTables() = 0;
+
+    ///
+    bool m_connected;
 
     ///
     unsigned int m_dbType;

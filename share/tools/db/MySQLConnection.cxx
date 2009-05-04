@@ -5,7 +5,7 @@
 // --- POCO Includes --- //
 #include <Poco/Data/Session.h>
 #include <Poco/Data/SessionFactory.h>
-//#include <Poco/Data/RecordSet.h>
+#include <Poco/Data/RecordSet.h>
 #include <Poco/Data/MySQL/Connector.h>
 #include <Poco/Data/MySQL/MySQLException.h>
 
@@ -49,6 +49,8 @@ MySQLConnection::MySQLConnection(
     if( m_session && m_session->isConnected() )
     {
         std::cout << "*** Connected to " << '(' << connectionString.str() << ')' << std::endl;
+
+        m_connected = true;
 
         m_statement = new Poco::Data::Statement( *m_session );
 
@@ -122,30 +124,27 @@ const StringVector2D* const MySQLConnection::GetTableDetails(
     }
 
     //Get the table details if we have not done so already
-    StringVector2D tableDetails;
-    *m_statement << "describe " << tableName,
-        Poco::Data::into( tableDetails ), Poco::Data::now;
+    Poco::Data::Statement theStatement( *m_session );
+    theStatement << "describe " << tableName;
+    theStatement.execute();
+    Poco::Data::RecordSet rs( theStatement );
     
-
-
-        
-            /*(
-            res.num_rows(), StringVector1D( res.num_fields(), "" ) );
-        for( size_t j = 0; j < res.num_fields(); ++j )
+    StringVector2D tableDetails(
+        rs.rowCount(), StringVector1D( rs.columnCount(), "" ) );
+    for( size_t j = 0; j < rs.columnCount(); ++j )
+    {
+        for( size_t i = 0; i < rs.rowCount(); ++i )
         {
-            for( size_t i = 0; i < res.num_rows(); ++i )
-            {
-                tableDetails[ i ][ j ] = res[ i ][ j ].c_str();
-            }
+            tableDetails[ i ][ j ] = rs[ i ][ j ].convert< std::string >();
         }
+    }
 
-        m_tableDetails[ tableName ] = tableDetails;
-        itr = m_tableDetails.find( tableName );
-        if( itr != m_tableDetails.end() )
-        {
-            return &itr->second;
-        }
-*/
+    m_tableDetails[ tableName ] = tableDetails;
+    itr = m_tableDetails.find( tableName );
+    if( itr != m_tableDetails.end() )
+    {
+        return &itr->second;
+    }
 
     return NULL;
 }

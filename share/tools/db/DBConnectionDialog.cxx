@@ -219,7 +219,7 @@ void DBConnectionDialog::Connect( wxCommandEvent& WXUNUSED( event ) )
 	            //Connect to the database
                 MySQLConnection* mysqlConnection =
                     new MySQLConnection( db, server, username, password, port );
-	            //if( mysqlConnection->connected() )
+	            if( mysqlConnection->Connected() )
                 {
                     Hide();
 
@@ -232,7 +232,7 @@ void DBConnectionDialog::Connect( wxCommandEvent& WXUNUSED( event ) )
                         wxT( "Success" ) );
                     msgDlg.ShowModal();
 	            }
-	            //else
+	            else
                 {
                     wxMessageDialog wrnDlg(
                         this,

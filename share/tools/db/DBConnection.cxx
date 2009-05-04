@@ -11,6 +11,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 DBConnection::DBConnection( std::string& name )
     :
+    m_connected( false ),
     m_name( name )
 {
     ;
@@ -19,6 +20,11 @@ DBConnection::DBConnection( std::string& name )
 DBConnection::~DBConnection()
 {
     ;
+}
+////////////////////////////////////////////////////////////////////////////////
+const bool DBConnection::Connected() const
+{
+    return m_connected;
 }
 ////////////////////////////////////////////////////////////////////////////////
 const unsigned int DBConnection::GetDBType() const
