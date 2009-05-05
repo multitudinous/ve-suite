@@ -31,6 +31,7 @@ velauncherDistDir = pj(RootDir,buildDir,'dist','build','freeze')
 installerImages = pj(RootDir,'dist','installerImages')
 
 launcherPyFiles = sca_util.getFilesRecursiveByExt( installerbaseDir, ['.py'] )
+launcherPyFiles = map(lambda s: pj(installerbaseDir, s), launcherPyFiles)
 launcherPyFiles.append( 'velauncher.spec' )
 
 basePyinstallerDir = pj(RootDir,'external','FreezePython','pyinstaller-1.3')
