@@ -102,7 +102,7 @@ void VEAnimationGraphicalPlugin::InitializeNode( osg::Group* veworldDCS )
     PluginBase::InitializeNode( veworldDCS );
 
     m_keyboard = 
-        dynamic_cast< ves::xplorer::KeyboardMouse* >( mDevice );
+        dynamic_cast< ves::xplorer::device::KeyboardMouse* >( mDevice );
 
     m_idleGeometry = osgDB::readNodeFile( "valve/valve.idle.osg" );
     m_openGeometry = osgDB::readNodeFile( "valve/valve.opening.osg" );

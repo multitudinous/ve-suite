@@ -50,13 +50,19 @@ namespace ves
 {
 namespace xplorer
 {
-    class KeyboardMouse;
+
+namespace device
+{
+class KeyboardMouse;
+}
+
 namespace scenegraph
 {
-    class DCS;
+class DCS;
 }
-}
-}
+
+} //end xplorer
+} //end ves
 
 // --- C/C++ Libraries --- //
 #include <map>
@@ -71,7 +77,7 @@ public:
     virtual void PreFrameUpdate(); 
        
 private:
-    ves::xplorer::KeyboardMouse* m_keyboard;
+    ves::xplorer::device::KeyboardMouse* m_keyboard;
 /*
     osg::ref_ptr< osg::Node > _fermentorGeometry;
     osg::ref_ptr< osg::Node > _impellerGeometry;
