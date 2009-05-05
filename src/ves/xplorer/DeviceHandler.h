@@ -36,9 +36,12 @@
 
 // --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
+
 #include <ves/xplorer/DeviceHandlerPtr.h>
 
 #include <ves/xplorer/scenegraph/DCS.h>
+
+//#include <ves/xplorer/device/osg/GUIActionAdapter.h>
 
 // --- vrJuggler Includes --- //
 #include <vpr/Util/Singleton.h>
@@ -46,7 +49,15 @@
 #include <gmtl/Point.h>
 
 // --- OSG Includes --- //
+#include <osg/ref_ptr>
 #include <osg/Quat>
+
+/*
+namespace osgGA
+{
+class GUIEventAdapter;
+}
+*/
 
 // --- C/C++ Libraries --- //
 #include <string>
@@ -56,9 +67,13 @@ namespace ves
 {
 namespace xplorer
 {
+
+namespace device
+{
 class Device;
 class Wand;
 class KeyboardMouse;
+}
 
 namespace event
 {
@@ -81,7 +96,7 @@ private:
     ///Destructor
     ~DeviceHandler();
 
-    ///Do not know what this is
+    ///
     ///\param DeviceHandler
     vprSingletonHeader( DeviceHandler );
 
@@ -94,12 +109,12 @@ public:
 
     ///Get active device
     ///\return Get the active device
-    ves::xplorer::Device* const GetActiveDevice() const;
+    ves::xplorer::device::Device* const GetActiveDevice() const;
 
     ///Get a device
     ///\param deviceName The device name
     ///\return Get the device being requested
-    ves::xplorer::Device* const GetDevice(
+    ves::xplorer::device::Device* const GetDevice(
         const std::string& deviceName ) const;
 
     ///Get the reset location of the world
@@ -124,6 +139,8 @@ public:
     ///\param activeDevice The active device
     void SetActiveDevice( const std::string& activeDevice );
 
+    ///
+    ///\param centerPoint
     void SetCenterPoint( gmtl::Point3d* centerPoint );
 
     ///Set the center point mode
@@ -170,10 +187,10 @@ private:
     std::string mDeviceMode;
 
     ///The current active device
-    ves::xplorer::Device* mActiveDevice;
+    ves::xplorer::device::Device* mActiveDevice;
 
     ///A map of all the devices
-    std::map< const std::string, ves::xplorer::Device* > mDevices;
+    std::map< const std::string, ves::xplorer::device::Device* > mDevices;
 
     ///A map of all the event handlers
     std::map< std::string, ves::xplorer::event::EventHandler* > mEventHandlers;
@@ -185,16 +202,22 @@ private:
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > mSelectedDCS;
     
     ///Tablet convenience device pointer
-    ves::xplorer::Device* mTabletDevice;
+    ves::xplorer::device::Device* mTabletDevice;
 
     ///Tablet convenience device pointer
-    ves::xplorer::Device* mGlovesDevice;
+    ves::xplorer::device::Device* mGlovesDevice;
 
     ///Tablet convenience device pointer
-    ves::xplorer::Device* mWandDevice;
+    ves::xplorer::device::Device* mWandDevice;
 
     ///Tablet convenience device pointer
-    ves::xplorer::Device* mKMDevice;
+    ves::xplorer::device::Device* mKMDevice;
+
+    ///
+    //osg::ref_ptr< osgGA::GUIEventAdapter > m_guiEventAdapter;
+
+    ///
+    //ves::xplorer::device::GUIActionAdapter m_guiActionAdapter;
 
 };
 } //end xplorer

@@ -30,13 +30,16 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
+
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/device/Tablet.h>
-#include <ves/xplorer/environment/cfdEnum.h>
-#include <ves/xplorer/Debug.h>
 #include <ves/xplorer/device/KeyboardMouse.h>
 
+#include <ves/xplorer/environment/cfdEnum.h>
+
 #include <ves/xplorer/scenegraph/SceneManager.h>
+
+#include <ves/xplorer/Debug.h>
 
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>
@@ -47,7 +50,7 @@
 
 using namespace gmtl;
 using namespace gadget;
-using namespace ves::xplorer;
+using namespace ves::xplorer::device;
 using namespace ves::xplorer::scenegraph;
 using namespace ves::open::xml;
 

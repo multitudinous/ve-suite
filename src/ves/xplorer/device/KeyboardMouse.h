@@ -63,6 +63,8 @@ namespace ves
 {
 namespace xplorer
 {
+namespace device
+{
 
 /*!\file KeyboardMouse.h
  *
@@ -342,6 +344,7 @@ private:
     */
 
 };
+} //end device
 } //end xplorer
 } //end ves
 

@@ -30,22 +30,38 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
+
 #ifndef VE_XPLORER_ENVIRONMENTHANDLER_H
 #define VE_XPLORER_ENVIRONMENTHANDLER_H
 
+// --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
+
 #include <ves/xplorer/EnvironmentHandlerPtr.h>
+
+#include <ves/xplorer/scenegraph/DCS.h>
 
 #include <ves/xplorer/event/EventHandlerPtr.h>
 #include <ves/xplorer/event/data/SeedPoints.h>
-#include <ves/xplorer/scenegraph/DCS.h>
 
+// --- VTK Includes --- //
+class vtkPolyData;
+
+// --- VR Juggler Includes --- //
 #include <vpr/Util/Singleton.h>
 #include <vrj/vrjParam.h>
 
-#include <osgEphemeris/EphemerisModel.h>
+// --- OSG Includes --- //
 #include <osg/ref_ptr>
 
+#include <osgEphemeris/EphemerisModel.h>
+
+namespace osgEphemeris
+{
+class EphemerisModel;
+}
+
+// --- C/C++ Includes --- //
 #include <map>
 #include <vector>
 
@@ -53,32 +69,25 @@ namespace ves
 {
 namespace xplorer
 {
-class cfdCursor;
+
 class cfdTeacher;
 class cfdQuatCamHandler;
 class cfdDisplaySettings;
 
 class HeadsUpDisplay;
-}
-}
 
-class vtkPolyData;
-namespace osgEphemeris
+namespace device
 {
-class EphemerisModel;
+class cfdCursor;
 }
-
-namespace ves
-{
-namespace xplorer
-{
 
 /*!\file EnvironmentHandler.h
-EnvironmentHandler API
-*/
+ * EnvironmentHandler API
+ */
+
 /*!\class ves::xplorer::EnvironmentHandler
-*
-*/
+ *
+ */
 class VE_XPLORER_EXPORTS EnvironmentHandler
 {
 private:
@@ -111,7 +120,8 @@ public:
     void LatePreFrameUpdate();
 
     ///Accessor for cfdCursor
-    cfdCursor* GetCursor();
+    ves::xplorer::device::cfdCursor* GetCursor();
+
     ///Accessor for cfdTeacher
     cfdTeacher* GetTeacher();
 
@@ -200,7 +210,8 @@ private:
     bool _activeGeomPicking;
 #endif //_OSG
 
-    cfdCursor* cursor;///<The cursor.
+    ves::xplorer::device::cfdCursor* cursor;///<The cursor.
+
     std::string _param;///<Store parameters.
 
     // cur_box will eventually be used to define bounding box

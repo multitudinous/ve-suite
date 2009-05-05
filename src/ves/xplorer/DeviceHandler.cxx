@@ -48,9 +48,9 @@
 #include <ves/xplorer/event/EventHandler.h>
 #include <ves/xplorer/event/device/DeviceEH.h>
 #include <ves/xplorer/event/device/DeviceModeEH.h>
-#include <ves/xplorer/event/cad/UnselectObjectsEventHandler.h>
 #include <ves/xplorer/event/device/CenterPointEventHandler.h>
 #include <ves/xplorer/event/device/KeyboardMouseEH.h>
+#include <ves/xplorer/event/cad/UnselectObjectsEventHandler.h>
 #include <ves/xplorer/event/environment/NavigationDataEventHandler.h>
 
 #include <ves/open/xml/Command.h>
@@ -59,10 +59,13 @@
 // --- OSG Includes --- //
 #include <osg/BoundingSphere>
 
+//#include <osgGA/GUIEventAdapter>
+
 // --- Bulet Includes --- //
 
 using namespace ves::xplorer;
 namespace vx = ves::xplorer;
+namespace vxd = ves::xplorer::device;
 namespace vxs = vx::scenegraph;
 
 vprSingletonImp( DeviceHandler );
@@ -71,7 +74,7 @@ vprSingletonImp( DeviceHandler );
 DeviceHandler::DeviceHandler()
     :
     mActiveDCS( vxs::SceneManager::instance()->GetActiveNavSwitchNode() ),
-    mSelectedDCS( 0 ),
+    mSelectedDCS( NULL ),
     mDeviceMode( "World Navigation" ),
     mResetCenterPointPosition( 0.0, 0.1, 0.0 ),
     mCenterPoint( mResetCenterPointPosition ),
@@ -79,10 +82,10 @@ DeviceHandler::DeviceHandler()
     mCenterPointJump( 10.0 )
 {
     //Initialize Devices
-    mDevices[ "Tablet" ] = new vx::Tablet();
-    mDevices[ "Wand" ] = new vx::Wand();
-    mDevices[ "KeyboardMouse" ] = new vx::KeyboardMouse();
-    mDevices[ "Gloves" ] = new vx::Gloves();
+    mDevices[ "Tablet" ] = new vxd::Tablet();
+    mDevices[ "Wand" ] = new vxd::Wand();
+    mDevices[ "KeyboardMouse" ] = new vxd::KeyboardMouse();
+    mDevices[ "Gloves" ] = new vxd::Gloves();
 
     mTabletDevice = mDevices[ "Tablet" ];
     mGlovesDevice = mDevices[ "Gloves" ];
@@ -90,20 +93,17 @@ DeviceHandler::DeviceHandler()
     mKMDevice = mDevices[ "KeyboardMouse" ];
     
     //Set properties in Devices
-    vxs::PhysicsSimulator* physicsSimulator = vxs::PhysicsSimulator::instance();
     vxs::CharacterController* characterController =
         vxs::SceneManager::instance()->GetCharacterController();
-    characterController->Initialize( physicsSimulator->GetDynamicsWorld() );
-    std::map< const std::string, vx::Device* >::const_iterator itr;
+    characterController->Initialize();
+    std::map< const std::string, vxd::Device* >::const_iterator itr;
     for( itr = mDevices.begin(); itr != mDevices.end(); ++itr )
     {
-        vx::Device* device = itr->second;
+        vxd::Device* device = itr->second;
         device->SetCenterPoint( &mCenterPoint );
         device->SetCenterPointThreshold( &mCenterPointThreshold );
         device->SetCenterPointJump( &mCenterPointJump );
         device->SetResetWorldPosition( &mResetAxis, &mResetPosition );
-        device->SetPhysicsSimulator( physicsSimulator );
-        device->SetDynamicsWorld( physicsSimulator->GetDynamicsWorld() );
         device->SetCharacterController( characterController );
     }
 
@@ -128,7 +128,7 @@ DeviceHandler::DeviceHandler()
 DeviceHandler::~DeviceHandler()
 {
     //Delete mDevices in map
-    std::map< const std::string, vx::Device* >::iterator itr;
+    std::map< const std::string, vxd::Device* >::iterator itr;
     for( itr = mDevices.begin(); itr != mDevices.end(); ++itr )
     {
         delete itr->second;
@@ -172,12 +172,12 @@ vxs::DCS* const DeviceHandler::GetActiveDCS() const
     return mActiveDCS.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
-vx::Device* const DeviceHandler::GetActiveDevice() const
+vxd::Device* const DeviceHandler::GetActiveDevice() const
 {
     return mActiveDevice;
 }
 ////////////////////////////////////////////////////////////////////////////////
-vx::Device* const DeviceHandler::GetDevice(
+vxd::Device* const DeviceHandler::GetDevice(
     const std::string& deviceName ) const
 {
     return mDevices.find( deviceName )->second;
@@ -234,7 +234,7 @@ void DeviceHandler::SetActiveDCS( vxs::DCS* activeDCS )
 ////////////////////////////////////////////////////////////////////////////////
 void DeviceHandler::SetActiveDevice( const std::string& activeDevice )
 {
-    std::map< const std::string, vx::Device* >::const_iterator itr =
+    std::map< const std::string, vxd::Device* >::const_iterator itr =
         mDevices.find( activeDevice );
     if( itr != mDevices.end() )
     {
@@ -304,7 +304,7 @@ void DeviceHandler::SetResetWorldPosition(
     mResetPosition = pos;
     
     /*
-    std::map< const std::string, vx::Device* >::const_iterator itr;
+    std::map< const std::string, vxd::Device* >::const_iterator itr;
     for( itr = mDevices.begin(); itr != mDevices.end(); ++itr )
     {
         itr->second->SetResetWorldPosition( mResetAxis, mResetPosition );

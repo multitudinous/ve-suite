@@ -62,11 +62,15 @@ namespace ves
 namespace xplorer
 {
 class cfdCursor;
-class Device;
 class EnvironmentHandler;
 class ModelHandler;
 class Model;
 class CommandHandler;
+
+namespace device
+{
+class Device;
+}
 
 namespace scenegraph
 {
@@ -159,7 +163,7 @@ public:
     ///Set the pointer to the navigate class so that dynamic
     ///objects can do custom features with the wand buttons
     ///\param device The current active device
-    void SetInteractionDevice( ves::xplorer::Device* device );
+    void SetInteractionDevice( ves::xplorer::device::Device* device );
 
     ///Set the results for a particluar module so that we can use
     ///them for custom viz features
@@ -216,7 +220,7 @@ protected:
     std::string mObjectName;
     
     ves::xplorer::cfdCursor* mCursor;
-    ves::xplorer::Device* mDevice;
+    ves::xplorer::device::Device* mDevice;
     ///The model handler pointer
     ves::xplorer::ModelHandler* mModelHandler;
     ///The model for this plugin

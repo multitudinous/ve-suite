@@ -45,9 +45,7 @@
 #include <osgUtil/IntersectionVisitor>
 #include <osgUtil/PolytopeIntersector>
 
-using namespace ves::xplorer;
-namespace vx = ves::xplorer;
-namespace vxs = vx::scenegraph;
+using namespace ves::xplorer::device;
 
 ////////////////////////////////////////////////////////////////////////////////
 Device::Device()
@@ -57,8 +55,6 @@ Device::Device()
     mCenterPointJump( NULL ),
     mResetPosition( NULL ),
     mResetAxis( NULL ),
-    mPhysicsSimulator( NULL ),
-    mDynamicsWorld( NULL ),
     mCharacterController( NULL )
 {
     ;
@@ -210,17 +206,6 @@ void Device::SetResetWorldPosition(
 {
     mResetAxis = quat;
     mResetPosition = pos;
-}
-////////////////////////////////////////////////////////////////////////////////
-void Device::SetPhysicsSimulator(
-    ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator )
-{
-    mPhysicsSimulator = physicsSimulator;
-}
-////////////////////////////////////////////////////////////////////////////////
-void Device::SetDynamicsWorld( btDynamicsWorld* dynamicsWorld )
-{
-    mDynamicsWorld = dynamicsWorld;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Device::SetCharacterController(

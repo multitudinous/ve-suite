@@ -30,11 +30,12 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
+
 #ifndef CFD_CURSOR_H
 #define CFD_CURSOR_H
 
+// --- VE-Suite Includes --- //
 #include <ves/xplorer/GlobalBase.h>
-
 #include <ves/xplorer/DataSetPtr.h>
 
 #include <ves/xplorer/scenegraph/DCS.h>
@@ -43,19 +44,7 @@
 
 #include <ves/open/xml/CommandPtr.h>
 
-namespace ves
-{
-namespace xplorer
-{
-namespace scenegraph
-{
-class DCS;
-class Group;
-class Geode;
-}
-}
-}
-
+// --- VTK Includes --- //
 class vtkGlyph3D;
 class vtkCubeSource;
 class vtkSphereSource;
@@ -68,22 +57,32 @@ class vtkPlaneSource;
 class vtkLineSource;
 class vtkPolyDataSource;
 
-#ifdef _OSG
+// --- OSG Includes --- //
 #include <osg/ref_ptr>
-#elif _PERFORMER
-#endif
 
 namespace ves
 {
 namespace xplorer
 {
+
+namespace scenegraph
+{
+class DCS;
+class Group;
+class Geode;
+}
+
+namespace device
+{
+
 /*!\file cfdCursor.h
-cfdCursor API
-*/
+ * cfdCursor API
+ */
+
 /*!\class VE_XPlorer::cfdCursor
-*  A class to build virtual cursors. Type of virtual
-*  cursor built are single point, arrow, and multiple points.
-*/
+ * A class to build virtual cursors. Type of virtual
+ * cursor built are single point, arrow, and multiple points.
+ */
 class VE_XPLORER_EXPORTS cfdCursor : public GlobalBase
 {
 public:
@@ -139,15 +138,15 @@ public:
     float boxExtent;
 
     void SetActiveDataSetDCS( ves::xplorer::scenegraph::DCS* myDCS );
-    void SetActiveDataSet( DataSet* input );
+    void SetActiveDataSet( ves::xplorer::DataSet* input );
 
     int GetCursorID( void );
     double* GetCursorLocation( void );
     double* GetCursorLocalLocation( void );
     double* ReturnLocalLocationVector( void );
     void GetLocalLocationVector( void );
-private:
 
+private:
     // Move the cursor methods
     void SetTranslation( void );
     void SetRotation( double [3] );
@@ -245,7 +244,10 @@ private:
     int cursorId;
     float sphereRadius;
     float last_sphereRadius;
+
 };
-}
-}
-#endif
+} //end device
+} //end xplorer
+} //end ves
+
+#endif //CFD_CURSOR_H

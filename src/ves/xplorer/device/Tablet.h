@@ -30,17 +30,9 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
+
 #ifndef TABLET_H
 #define TABLET_H
-
-/*!\file Tablet.h
-  Tablet API
-*/
-
-/*!\class ves::xplorer::Tablet
-* A class to track the wand location, object translation,
-  and virtual cursor location in virtual environment.
-*/
 
 // --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
@@ -58,25 +50,28 @@
 #include <gadget/Type/DigitalInterface.h>
 
 // --- OSG Includes --- //
-#ifdef _OSG
 #include <osg/ref_ptr>
-#endif
 
 namespace ves
 {
 namespace xplorer
 {
+
 namespace scenegraph
 {
 class DCS;
 }
-}
-}
 
-namespace ves
+namespace device
 {
-namespace xplorer
-{
+/*!\file Tablet.h
+ * Tablet API
+ */
+
+/*!\class ves::xplorer::Tablet
+ * A class to track the wand location, object translation,
+   and virtual cursor location in virtual environment.
+ */
 class VE_XPLORER_EXPORTS Tablet : public Device
 {
 public:
@@ -129,6 +124,8 @@ private:
     ves::open::xml::CommandPtr command; ///<Stores xml command
 
 };
-}
-}
+} //end device
+} //end xplorer
+} //end ves
+
 #endif //TABLET_H

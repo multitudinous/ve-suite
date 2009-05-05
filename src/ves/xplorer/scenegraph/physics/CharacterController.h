@@ -94,13 +94,13 @@ public:
     void Advance( btScalar dt );
 
     ///Free memory for CharacterController
-    void Destroy( btDynamicsWorld* dynamicsWorld );
+    void Destroy();
 
     ///Make the character jump
     void Jump();
 
     ///Initialize the physics and geometric models for the character controller
-    void Initialize( btDynamicsWorld* dynamicsWorld );
+    void Initialize();
 
     ///Returns if the character controller is active
     bool IsActive();

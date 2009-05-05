@@ -132,8 +132,11 @@ CharacterController::~CharacterController()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CharacterController::Initialize( btDynamicsWorld* dynamicsWorld )
+void CharacterController::Initialize()
 {
+    btDynamicsWorld* dynamicsWorld =
+        vxs::PhysicsSimulator::instance()->GetDynamicsWorld();
+
     //Create physics mesh representation
     btBroadphaseInterface* broadphase = dynamicsWorld->getBroadphase();
     broadphase->getOverlappingPairCache()->setInternalGhostPairCallback(
@@ -211,7 +214,7 @@ void CharacterController::Initialize( btDynamicsWorld* dynamicsWorld )
     shapeDrawable->setColor( osg::Vec4( 1.0, 1.0, 0.0, 1.0 ) );
     geode->addDrawable( shapeDrawable.get() );
 
-    mMatrixTransform->addChild( geode.get() );
+    //mMatrixTransform->addChild( geode.get() );
 #endif
     vxs::SceneManager::instance()->GetModelRoot()->addChild(
         mMatrixTransform.get() );
@@ -227,7 +230,7 @@ void CharacterController::Initialize( btDynamicsWorld* dynamicsWorld )
             osg::Vec3( 0.0, 0.0, 0.0 ), osg::Vec3( 0.0, 0.0, 0.0 ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CharacterController::Destroy( btDynamicsWorld* dynamicsWorld )
+void CharacterController::Destroy()
 {
     ;
 }

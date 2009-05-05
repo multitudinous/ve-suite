@@ -75,6 +75,8 @@ class PhysicsSimulator;
 class CharacterController;
 }
 
+namespace device
+{
 
 /*!\file Device.h
  * Device API
@@ -124,13 +126,6 @@ public:
 
     ///Set the reset position for the world
     void SetResetWorldPosition( osg::Quat* quat, std::vector< double >* pos );
-
-    ///
-    void SetPhysicsSimulator(
-        ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator );
-
-    ///
-    void SetDynamicsWorld( btDynamicsWorld* dynamicsWorld );
         
     ///Set the character controller
     void SetCharacterController(
@@ -166,17 +161,12 @@ protected:
     ///The reset axis for the world
     osg::Quat* mResetAxis;
 
-    ///Pointer to the physics simulator singleton
-    ves::xplorer::scenegraph::PhysicsSimulator* mPhysicsSimulator;
-
-    ///Pointer to physics dynamics world
-    btDynamicsWorld* mDynamicsWorld;
-
     ///
     ///Do not allocate memory 'new' for this pointer
     ves::xplorer::scenegraph::CharacterController* mCharacterController;
     
 };
+} //end device
 } //end xplorer
 } //end ves
 

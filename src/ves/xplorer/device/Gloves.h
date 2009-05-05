@@ -30,19 +30,9 @@
 * -----------------------------------------------------------------
 *
 *************** <auto-copyright.rb END do not edit this line> ***************/
+
 #ifndef _VES_XPLORER_DEVICE_GLOVES_H
 #define _VES_XPLORER_DEVICE_GLOVES_H
-
-/*!\file Gloves.h
-Gloves API
-*/
-
-/*!\class ves::xplorer::Gloves
-*
-*/
-/*!\namespace ves::xplorer
- *
- */
 
 // --- VE-Suite Includes
 #include <ves/VEConfig.h>
@@ -56,6 +46,7 @@ Gloves API
 // --- VR Juggler Includes --- //
 #include <gmtl/Vec.h>
 #include <gmtl/Matrix.h>
+
 #include <gadget/Type/PositionInterface.h>
 #include <gadget/Type/DigitalInterface.h>
 #include <gadget/Type/AnalogInterface.h>
@@ -67,17 +58,6 @@ Gloves API
 #include <osgBullet/HandNode.h>
 
 #include <osgUtil/IntersectVisitor>
-
-namespace ves
-{
-namespace xplorer
-{
-namespace scenegraph
-{
-class DCS;
-}
-}
-}
 
 namespace osg
 {
@@ -93,6 +73,26 @@ namespace ves
 {
 namespace xplorer
 {
+
+namespace scenegraph
+{
+class DCS;
+}
+
+namespace device
+{
+
+/*!\file Gloves.h
+ * Gloves API
+ */
+
+/*!\class ves::xplorer::Gloves
+ *
+ */
+
+/*!\namespace ves::xplorer
+ *
+ */
 class VE_XPLORER_EXPORTS Gloves : public Device
 {
 public:
@@ -276,7 +276,10 @@ private:
 
     gadget::AnalogInterface      mLeftPinkyMCP;
     gadget::AnalogInterface      mLeftPinkyPIP;
+
 };
-}
-}
+} //end device
+} //end xplorer
+} //end ves
+
 #endif //GLOVES_H

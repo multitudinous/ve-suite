@@ -80,10 +80,11 @@
 #include <gmtl/AxisAngleOps.h>
 
 using namespace gmtl; //added by Gengxun
-using namespace ves::xplorer;
+using namespace ves::xplorer::device;
 using namespace ves::xplorer::scenegraph;
 using namespace ves::open::xml;
 
+////////////////////////////////////////////////////////////////////////////////
 cfdCursor::cfdCursor( vtkPolyData * arrow, ves::xplorer::scenegraph::DCS* worldDCS, ves::xplorer::scenegraph::Group* rootNode )
 {
     veCommand = ves::open::xml::CommandPtr();
@@ -166,7 +167,7 @@ cfdCursor::cfdCursor( vtkPolyData * arrow, ves::xplorer::scenegraph::DCS* worldD
     sphereRadius = 0.05f;
 //   command = 0;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 cfdCursor::~cfdCursor()
 {
     this->sphereSrc->Delete();
@@ -202,7 +203,7 @@ cfdCursor::~cfdCursor()
     //if ( cursorDCS != NULL )
     //delete this->cursorDCS;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void cfdCursor::Initialize( double x[3], double v[3] )
 {
     for( int i = 0; i < 3; i++ )
@@ -224,12 +225,12 @@ void cfdCursor::Initialize( double x[3], double v[3] )
     this->cursorGeode->TranslateToGeode( this->sphereActor );
     (( ves::xplorer::scenegraph::DCS* )this->cursorDCS->GetChild( 0 ) )->AddChild( this->cursorGeode.get() );
 }
-
+////////////////////////////////////////////////////////////////////////////////
 int cfdCursor::GetCursorID( void )
 {
     return cursorId;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void cfdCursor::BuildSphere()
 {
     // Case 0 -- single point with sphere polygon.
@@ -248,7 +249,7 @@ void cfdCursor::BuildSphere()
     this->sphereActor->SetMapper( this->sphereMapper );
     this->sphereActor->GetProperty()->SetColor( 1.0f, 0.5f, 0.15f );
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void cfdCursor::BuildPlaneSource()
 {
     // Create x, y, z plane source
@@ -272,7 +273,7 @@ void cfdCursor::BuildPlaneSource()
     this->planeActorS->SetMapper( this->planeMapperS );
     this->planeActorS->GetProperty()->SetColor( 1.0f, 0.5f, 0.15f );
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void cfdCursor::BuildArrowSource()
 {
     // Create x, y, z plane source
@@ -295,7 +296,7 @@ void cfdCursor::BuildArrowSource()
     this->arrowActorS->SetMapper( this->arrowMapperS );
     this->arrowActorS->GetProperty()->SetColor( 1.0f, 0.5f, 0.15f );
 }
-
+////////////////////////////////////////////////////////////////////////////////
 //add for box cursor
 void cfdCursor::BuildCube( void )
 {
@@ -312,7 +313,7 @@ void cfdCursor::BuildCube( void )
     this->cubeActor->GetProperty()->SetOpacity( 0.5f );
 }
 //add end
-
+////////////////////////////////////////////////////////////////////////////////
 void cfdCursor::BuildLineSource( void )
 {
     // build the Line Source
@@ -337,14 +338,14 @@ void cfdCursor::BuildLineSource( void )
     this->lineActor->SetMapper( this->lineMapper );
     this->lineActor->GetProperty()->SetColor( 1.0f, 0.5f, 0.15f );
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void cfdCursor::UpdateSphere( void )
 {
     this->sphereSrc->SetCenter( 0.0f, 0.0f, 0.0f );
     this->sphereSrc->Update();
     this->cursorGeode->TranslateToGeode( this->sphereActor );
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void cfdCursor::UpdateArrowSource( void )
 {
     //std::cout << " updating arrow source " << std::endl;
@@ -365,7 +366,7 @@ void cfdCursor::UpdateArrowSource( void )
 
     this->cursorGeode->TranslateToGeode( this->arrowActorS );
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void cfdCursor::UpdateCube( void )
 {
     //added for box cursor
@@ -374,7 +375,7 @@ void cfdCursor::UpdateCube( void )
 
     this->cursorGeode->TranslateToGeode( this->cubeActor );
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void cfdCursor::UpdateLineSource( int direction )
 {
     vprDEBUG( vesDBG, 1 ) << " updating line source "
@@ -408,7 +409,7 @@ void cfdCursor::UpdateLineSource( int direction )
 
     this->cursorGeode->TranslateToGeode( this->lineActor );
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void cfdCursor::UpdatePlaneSource( int i )
 {
     vprDEBUG( vesDBG, 1 ) << " updating plane source " << i
@@ -452,7 +453,7 @@ void cfdCursor::UpdatePlaneSource( int i )
     this->planeSrc->Update();
     this->cursorGeode->TranslateToGeode( this->planeActorS );
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void cfdCursor::Update( double x[3], double v[3], double wx[3] )
 {
     int i;
@@ -533,12 +534,12 @@ void cfdCursor::Update( double x[3], double v[3], double wx[3] )
 
     this->SetTranslation();
 }
-
+////////////////////////////////////////////////////////////////////////////////
 ves::xplorer::scenegraph::DCS* cfdCursor::GetDCS()
 {
     return this->cursorDCS.get();
 }
-
+////////////////////////////////////////////////////////////////////////////////
 //add for box cursor
 void cfdCursor::getExtent( double boxExtent[6] )
 {
@@ -549,14 +550,13 @@ void cfdCursor::getExtent( double boxExtent[6] )
     boxExtent[4] = pos_c[2] - BOX_LENGTH / 2;
     boxExtent[5] = pos_c[2] + BOX_LENGTH / 2;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 vtkCubeSource * cfdCursor::getBox()
 {
     return this->cubeSrc;
 }
 //add end
-
-
+////////////////////////////////////////////////////////////////////////////////
 void cfdCursor::SetPlaneSize( float size )
 {
     double* dataDCSScale = ModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->GetDCS()->GetScaleArray();
@@ -574,49 +574,44 @@ void cfdCursor::SetPlaneSize( float size )
     vprDEBUG( vesDBG, 1 ) << "Setting plane size : " << size
     << std::endl << vprDEBUG_FLUSH;
 }
-
-
+////////////////////////////////////////////////////////////////////////////////
 void cfdCursor::SetPlaneReso( int size )
 {
     this->last_pReso = this->pReso;
     this->pReso = size;
 }
-
-
+////////////////////////////////////////////////////////////////////////////////
 void cfdCursor::GetPlaneSize( float &size )
 {
     size = this->pSize;
 }
-
-
+////////////////////////////////////////////////////////////////////////////////
 float cfdCursor::GetPlaneSize()
 {
     return this->pSize;
 }
-
-
+////////////////////////////////////////////////////////////////////////////////
 void cfdCursor::GetPlaneReso( int &size )
 {
     size = this->pReso;
 }
-
-
+////////////////////////////////////////////////////////////////////////////////
 int cfdCursor::GetPlaneReso()
 {
     return this->pReso;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 double* cfdCursor::GetCursorLocation()
 {
     return this->loc;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 double* cfdCursor::GetCursorLocalLocation()
 {
     this->GetLocalLocationVector();
     return this->localLocation;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 vtkPolyData* cfdCursor::GetSourcePoints( void )
 {
     this->GetLocalLocationVector();
@@ -697,7 +692,7 @@ vtkPolyData* cfdCursor::GetSourcePoints( void )
             break;
     }
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void cfdCursor::SetTranslation( void )
 {
     // Called constantly to place the active cursor in the virtual world.
@@ -738,7 +733,7 @@ void cfdCursor::SetTranslation( void )
     this->cursorDCS->SetRotationMatrix( totalMat );
     this->cursorDCS->SetTranslationArray( loc_f );
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void cfdCursor::GetLocalLocationVector( void )
 {
     // Called when the local (dataset) cursor coordinates are needed.
@@ -811,18 +806,18 @@ void cfdCursor::GetLocalLocationVector( void )
     << this->localLocation[ 2 ]
     << std::endl << vprDEBUG_FLUSH;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 double* cfdCursor::ReturnLocalLocationVector( void )
 {
     return this->localLocation;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void cfdCursor::SetActiveDataSetDCS( ves::xplorer::scenegraph::DCS* myDCS )
 {
     this->activeDataSetDCS = myDCS;
 }
-
-void cfdCursor::SetActiveDataSet( DataSet* input )
+////////////////////////////////////////////////////////////////////////////////
+void cfdCursor::SetActiveDataSet( ves::xplorer::DataSet* input )
 {
     _activeDataSet = input;
     if( _activeDataSet != NULL )

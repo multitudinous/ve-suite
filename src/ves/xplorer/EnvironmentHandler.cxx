@@ -228,7 +228,7 @@ cfdDisplaySettings* EnvironmentHandler::GetDisplaySettings()
     return displaySettings;
 }
 ////////////////////////////////////////////////////////////////////////////////
-cfdCursor* EnvironmentHandler::GetCursor()
+ves::xplorer::device::cfdCursor* EnvironmentHandler::GetCursor()
 {
     return cursor;
 }
@@ -303,10 +303,10 @@ void EnvironmentHandler::InitScene()
     std::cout << "| 13. Initializing................................. Heads Up Display |" << std::endl;
     mHeadsUpDisplay = new ves::xplorer::HeadsUpDisplay( screenDims );
 
-    static_cast< ves::xplorer::KeyboardMouse* >(
+    static_cast< ves::xplorer::device::KeyboardMouse* >(
         ves::xplorer::DeviceHandler::instance()->GetDevice( "KeyboardMouse" ) )->
     SetWindowValues( screenDims.first, screenDims.second );
-    static_cast< ves::xplorer::KeyboardMouse* >(
+    static_cast< ves::xplorer::device::KeyboardMouse* >(
         ves::xplorer::DeviceHandler::instance()->GetDevice( "KeyboardMouse" ) )->
     SetScreenCornerValues( displaySettings->GetScreenCornerValues() );
 }
@@ -393,7 +393,7 @@ float EnvironmentHandler::GetFrameRate()
 void EnvironmentHandler::PostFrameUpdate()
 {
     //Update the values in trackball
-    static_cast< ves::xplorer::KeyboardMouse* >(
+    static_cast< ves::xplorer::device::KeyboardMouse* >(
         ves::xplorer::DeviceHandler::instance()->GetDevice( "KeyboardMouse" ) )->
     SetFrustumValues( _frustumLeft, _frustumRight, _frustumBottom, _frustumTop,
                        _frustumNear, _frustumFar );

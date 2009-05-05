@@ -85,7 +85,7 @@ void NavigationDataEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* 
 void NavigationDataEventHandler::Execute( const ves::open::xml::XMLObjectPtr& veXMLObject )
 {
     CommandPtr command = boost::dynamic_pointer_cast<ves::open::xml::Command>( veXMLObject );
-    dynamic_cast< Device* >( _baseObject )->SetVECommand( command );
+    dynamic_cast< ves::xplorer::device::Device* >( _baseObject )->SetVECommand( command );
 
     DataValuePairPtr quatPosition = command->GetDataValuePair( "QUAT_START_POSITION" );
     if( quatPosition )

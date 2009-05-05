@@ -30,19 +30,9 @@
 * -----------------------------------------------------------------
 *
 *************** <auto-copyright.rb END do not edit this line> ***************/
-#ifndef _VES_XPLORER_DEVICE_WAND_H
-#define _VES_XPLORER_DEVICE_WAND_H
 
-/*!\file Wand.h
-Wand API
-*/
-
-/*!\class ves::xplorer::Wand
-*
-*/
-/*!\namespace ves::xplorer
- *
- */
+#ifndef WAND_H
+#define WAND_H
 
 // --- VE-Suite Includes
 #include <ves/VEConfig.h>
@@ -64,17 +54,6 @@ Wand API
 
 #include <osgUtil/IntersectVisitor>
 
-namespace ves
-{
-namespace xplorer
-{
-namespace scenegraph
-{
-class DCS;
-}
-}
-}
-
 namespace osg
 {
 class Geode;
@@ -89,6 +68,25 @@ namespace ves
 {
 namespace xplorer
 {
+
+namespace scenegraph
+{
+class DCS;
+}
+
+namespace device
+{
+/*!\file Wand.h
+ * Wand API
+ */
+
+/*!\class ves::xplorer::Wand
+ *
+ */
+
+/*!\namespace ves::xplorer
+ *
+ */
 class VE_XPLORER_EXPORTS Wand : public Device
 {
 public:
@@ -212,7 +210,10 @@ private:
     osg::Quat m_rotIncrement;
     ///Array to hold work translation
     double m_worldTrans[ 3 ];
+
 };
-}
-}
+} //end device
+} //end xplorer
+} //end ves
+
 #endif //WAND_H

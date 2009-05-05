@@ -30,6 +30,7 @@
 * -----------------------------------------------------------------
 *
 *************** <auto-copyright.rb END do not edit this line> ***************/
+
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/device/Gloves.h>
 
@@ -63,7 +64,7 @@
 
 using namespace gmtl;
 using namespace gadget;
-using namespace ves::xplorer;
+using namespace ves::xplorer::device;
 using namespace ves::xplorer::scenegraph;
 using namespace ves::open::xml;
 

@@ -62,7 +62,7 @@
 
 using namespace gmtl;
 using namespace gadget;
-using namespace ves::xplorer;
+using namespace ves::xplorer::device;
 using namespace ves::xplorer::scenegraph;
 using namespace ves::open::xml;
 
@@ -72,9 +72,9 @@ Wand::Wand()
     subzeroFlag( 0 ),
     rotationFlag( 1 ),
     distance( 1000 ),
-    cursorLen( 1.0f ),
-    translationStepSize( 0.75f ),
-    rotationStepSize( 1.0f ),
+    cursorLen( 1.0 ),
+    translationStepSize( 0.75 ),
+    rotationStepSize( 1.0 ),
     m_buttonPushed( false )
 {
     command = ves::open::xml::CommandPtr();

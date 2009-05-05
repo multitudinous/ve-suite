@@ -89,7 +89,7 @@
 #include <iostream>
 #include <cmath>
 
-using namespace ves::xplorer;
+using namespace ves::xplorer::device;
 
 namespace vx = ves::xplorer;
 namespace vxs = vx::scenegraph;
@@ -712,7 +712,7 @@ void KeyboardMouse::NavOnKeyboardPress()
         }
         case gadget::KEY_A:
         {
-            if( !mPhysicsSimulator->GetIdle() &&
+            if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
                  mCharacterController->IsActive() )
             {
                 mCharacterController->StrafeLeft( true );
@@ -722,7 +722,7 @@ void KeyboardMouse::NavOnKeyboardPress()
         }
         case gadget::KEY_S:
         {
-            if( !mPhysicsSimulator->GetIdle() &&
+            if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
                  mCharacterController->IsActive() )
             {
                 mCharacterController->StepBackward( true );
@@ -732,7 +732,7 @@ void KeyboardMouse::NavOnKeyboardPress()
         }
         case gadget::KEY_W:
         {
-            if( !mPhysicsSimulator->GetIdle() &&
+            if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
                  mCharacterController->IsActive() )
             {
                 mCharacterController->StepForward( true );
@@ -742,7 +742,7 @@ void KeyboardMouse::NavOnKeyboardPress()
         }
         case gadget::KEY_D:
         {
-            if( !mPhysicsSimulator->GetIdle() &&
+            if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
                  mCharacterController->IsActive() )
             {
                 mCharacterController->StrafeRight( true );
@@ -752,7 +752,7 @@ void KeyboardMouse::NavOnKeyboardPress()
         }
         case gadget::KEY_C:
         {
-            if( !mPhysicsSimulator->GetIdle() &&
+            if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
                  mCharacterController->IsActive() )
             {
                 //mCharacterController
@@ -762,7 +762,7 @@ void KeyboardMouse::NavOnKeyboardPress()
         }
         case gadget::KEY_SPACE:
         {
-            if( !mPhysicsSimulator->GetIdle() &&
+            if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
                  mCharacterController->IsActive() )
             {
                 mCharacterController->Jump();
@@ -814,7 +814,7 @@ void KeyboardMouse::NavOnKeyboardRelease()
     {
         case gadget::KEY_A:
         {
-            if( !mPhysicsSimulator->GetIdle() &&
+            if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
                  mCharacterController->IsActive() )
             {
                 mCharacterController->StrafeLeft( false );
@@ -824,7 +824,7 @@ void KeyboardMouse::NavOnKeyboardRelease()
         }
         case gadget::KEY_S:
         {
-            if( !mPhysicsSimulator->GetIdle() &&
+            if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
                  mCharacterController->IsActive() )
             {
                 mCharacterController->StepBackward( false );
@@ -834,7 +834,7 @@ void KeyboardMouse::NavOnKeyboardRelease()
         }
         case gadget::KEY_D:
         {
-            if( !mPhysicsSimulator->GetIdle() &&
+            if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
                  mCharacterController->IsActive() )
             {
                 mCharacterController->StrafeRight( false );
@@ -844,7 +844,7 @@ void KeyboardMouse::NavOnKeyboardRelease()
         }
         case gadget::KEY_W:
         {
-            if( !mPhysicsSimulator->GetIdle() &&
+            if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
                  mCharacterController->IsActive() )
             {
                 mCharacterController->StepForward( false );
@@ -854,7 +854,7 @@ void KeyboardMouse::NavOnKeyboardRelease()
         }
         case gadget::KEY_SPACE:
         {
-            if( !mPhysicsSimulator->GetIdle() &&
+            if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
                  mCharacterController->IsActive() )
             {
                 //mCharacterController->Jump();
@@ -864,7 +864,7 @@ void KeyboardMouse::NavOnKeyboardRelease()
         }
         case gadget::KEY_C:
         {
-            if( !mPhysicsSimulator->GetIdle() &&
+            if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
                 mCharacterController->IsActive() )
             {
                 //mCharacterController
@@ -884,7 +884,7 @@ void KeyboardMouse::NavOnMousePress()
         case gadget::MBUTTON1:
         {
             //Rotate just the camera "3rd person view:
-            if( !mPhysicsSimulator->GetIdle() &&
+            if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
                  mCharacterController->IsActive() )
             {
                 mCharacterController->FirstPersonMode( false );
@@ -893,7 +893,7 @@ void KeyboardMouse::NavOnMousePress()
             //No modifier key
             if( mKeyNone )
             {
-                if( !mPhysicsSimulator->GetIdle() &&
+                if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
                      mCharacterController->IsActive() )
                 {
                     mCharacterController->SetCameraRotationSLERP( false );
@@ -903,7 +903,7 @@ void KeyboardMouse::NavOnMousePress()
             else if( mKeyShift )
             {
                 //Add a point to point constraint for picking
-                if( mPhysicsSimulator->GetIdle() )
+                if( vxs::PhysicsSimulator::instance()->GetIdle() )
                 {
                     break;
                 }
@@ -919,7 +919,7 @@ void KeyboardMouse::NavOnMousePress()
 
                 btCollisionWorld::ClosestRayResultCallback rayCallback(
                     rayFromWorld, rayToWorld );
-                mDynamicsWorld->rayTest(
+                vxs::PhysicsSimulator::instance()->GetDynamicsWorld()->rayTest(
                     rayFromWorld, rayToWorld, rayCallback );
                 
                 if( !rayCallback.hasHit() )
@@ -951,7 +951,7 @@ void KeyboardMouse::NavOnMousePress()
                     btPoint2PointConstraint* p2p =
                         new btPoint2PointConstraint(
                             *body, localPivot );
-                    mDynamicsWorld->addConstraint( p2p );
+                    vxs::PhysicsSimulator::instance()->GetDynamicsWorld()->addConstraint( p2p );
                     mPickConstraint = p2p;
 
                     mPrevPhysicsRayPos =
@@ -1016,7 +1016,7 @@ void KeyboardMouse::NavOnMousePress()
         //Right mouse button
         case gadget::MBUTTON3:
         {
-            if( !mPhysicsSimulator->GetIdle() &&
+            if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
                 mCharacterController->IsActive() )
             {
                 mCharacterController->FirstPersonMode( true );
@@ -1029,7 +1029,7 @@ void KeyboardMouse::NavOnMousePress()
         //Scroll wheel up
         case gadget::MBUTTON4:
         {
-            if( !mPhysicsSimulator->GetIdle() &&
+            if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
                 mCharacterController->IsActive() )
             {
                 mCharacterController->Zoom( true );
@@ -1040,7 +1040,7 @@ void KeyboardMouse::NavOnMousePress()
         //Scroll wheel down
         case gadget::MBUTTON5:
         {
-            if( !mPhysicsSimulator->GetIdle() &&
+            if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
                 mCharacterController->IsActive() )
             {
                 mCharacterController->Zoom( false );
@@ -1061,7 +1061,7 @@ void KeyboardMouse::NavOnMouseRelease()
             //Do not require mod key depending on what the user did
             if( mPickConstraint )
             {
-                mDynamicsWorld->removeConstraint( mPickConstraint );
+                vxs::PhysicsSimulator::instance()->GetDynamicsWorld()->removeConstraint( mPickConstraint );
                 delete mPickConstraint;
                 mPickConstraint = NULL;
 
@@ -1073,7 +1073,7 @@ void KeyboardMouse::NavOnMouseRelease()
             //No modifier key
             if( mKeyNone )
             {
-                if( !mPhysicsSimulator->GetIdle() &&
+                if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
                      mCharacterController->IsActive() )
                 {
                     mCharacterController->SetCameraRotationSLERP( true );
@@ -1114,7 +1114,7 @@ void KeyboardMouse::NavOnMouseMotion( std::pair< double, double > delta )
             if( mKeyNone )
             {
                 //Rotate just the camera "3rd person view:
-                if( !mPhysicsSimulator->GetIdle() &&
+                if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
                      mCharacterController->IsActive() )
                 {
                     mCharacterController->Rotate( delta.first, delta.second );
@@ -1144,7 +1144,7 @@ void KeyboardMouse::NavOnMouseMotion( std::pair< double, double > delta )
             //Mod key shift
             else if( mKeyShift )
             {
-                if( !mPhysicsSimulator->GetIdle() && mPickConstraint )
+                if( !vxs::PhysicsSimulator::instance()->GetIdle() && mPickConstraint )
                 {
                     //Move the constraint pivot
                     btPoint2PointConstraint* p2p =
@@ -1185,7 +1185,7 @@ void KeyboardMouse::NavOnMouseMotion( std::pair< double, double > delta )
         case gadget::MBUTTON3:
         {
             //Rotate the character and camera at the same time
-            if( !mPhysicsSimulator->GetIdle() &&
+            if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
                 mCharacterController->IsActive() )
             {
                 mCharacterController->Rotate( delta.first, delta.second );

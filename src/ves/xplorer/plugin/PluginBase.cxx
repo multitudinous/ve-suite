@@ -240,7 +240,7 @@ void PluginBase::SetCommandHandler(
     mCommandHandler = commandHandler;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void PluginBase::SetInteractionDevice( ves::xplorer::Device* device )
+void PluginBase::SetInteractionDevice( ves::xplorer::device::Device* device )
 {
     mDevice = device;
 }

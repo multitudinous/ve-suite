@@ -91,19 +91,19 @@ void ViewEventHandler::Execute( const ves::open::xml::XMLObjectPtr& veXMLObject 
 
     if( view == "Frame All" )
     {
-        static_cast< ves::xplorer::KeyboardMouse* >
+        static_cast< ves::xplorer::device::KeyboardMouse* >
         ( ves::xplorer::DeviceHandler::instance()->
           GetDevice( "KeyboardMouse" ) )->FrameAll();
     }
     else if( view == "Frame Selection" )
     {
-        static_cast< ves::xplorer::KeyboardMouse* >
+        static_cast< ves::xplorer::device::KeyboardMouse* >
         ( ves::xplorer::DeviceHandler::instance()->
           GetDevice( "KeyboardMouse" ) )->FrameSelection();
     }
     else if( view == "Reset" )
     {
-        static_cast< ves::xplorer::KeyboardMouse* >
+        static_cast< ves::xplorer::device::KeyboardMouse* >
         ( ves::xplorer::DeviceHandler::instance()->
           GetDevice( "KeyboardMouse" ) )->ResetTransforms();
     }
