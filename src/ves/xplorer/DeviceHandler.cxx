@@ -76,8 +76,7 @@ DeviceHandler::DeviceHandler()
     mResetCenterPointPosition( 0.0, 0.1, 0.0 ),
     mCenterPoint( mResetCenterPointPosition ),
     mCenterPointThreshold( 0.1 ),
-    mCenterPointJump( 10.0 ),
-    m_guiEventAdapter( new osgGA::GUIEventAdapter() )
+    mCenterPointJump( 10.0 )
 {
     //Initialize Devices
     mDevices[ "Tablet" ] = new vxd::Tablet();
@@ -179,16 +178,6 @@ vxd::Device* const DeviceHandler::GetDevice(
     const std::string& deviceName ) const
 {
     return mDevices.find( deviceName )->second;
-}
-////////////////////////////////////////////////////////////////////////////////
-const vxd::GUIActionAdapter& DeviceHandler::GetGUIActionAdapter() const
-{
-    return m_guiActionAdapter;
-}
-////////////////////////////////////////////////////////////////////////////////
-osgGA::GUIEventAdapter* const DeviceHandler::GetGUIEventAdapter() const
-{
-    return m_guiEventAdapter.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DeviceHandler::GetResetWorldPosition(

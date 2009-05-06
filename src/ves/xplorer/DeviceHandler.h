@@ -41,8 +41,6 @@
 
 #include <ves/xplorer/scenegraph/DCS.h>
 
-#include <ves/xplorer/device/osg/GUIActionAdapter.h>
-
 // --- vrJuggler Includes --- //
 #include <vpr/Util/Singleton.h>
 
@@ -51,15 +49,6 @@
 // --- OSG Includes --- //
 #include <osg/ref_ptr>
 #include <osg/Quat>
-
-#include <osgGA/GUIEventAdapter>
-
-/*
-namespace osgGA
-{
-class GUIEventAdapter;
-}
-*/
 
 // --- C/C++ Libraries --- //
 #include <string>
@@ -118,12 +107,6 @@ public:
     ///\return Get the device being requested
     ves::xplorer::device::Device* const GetDevice(
         const std::string& deviceName ) const;
-
-    ///
-    const ves::xplorer::device::GUIActionAdapter& GetGUIActionAdapter() const;
-
-    ///
-    osgGA::GUIEventAdapter* const GetGUIEventAdapter() const;
 
     ///Get the reset location of the world
     ///\param quat
@@ -222,12 +205,6 @@ private:
 
     ///Tablet convenience device pointer
     ves::xplorer::device::Device* mKMDevice;
-
-    ///
-    osg::ref_ptr< osgGA::GUIEventAdapter > m_guiEventAdapter;
-
-    ///
-    ves::xplorer::device::GUIActionAdapter m_guiActionAdapter;
 
 };
 } //end xplorer

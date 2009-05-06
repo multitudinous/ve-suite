@@ -31,32 +31,64 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
+#ifndef MANIPULATOR_H
+#define MANIPULATOR_H
+
 // --- VE-Suite Includes --- //
-#include <ves/xplorer/device/osg/GUIActionAdapter.h>
+#include <ves/VEConfig.h>
 
-// --- VR Juggler Includes --- //
+// --- OSG Includes --- //
+#include <osg/ref_ptr>
 
+namespace osg
+{
+class MatrixTransform;
+}
 
-using namespace ves::xplorer::device;
+namespace ves
+{
+namespace xplorer
+{
+namespace device
+{
+namespace manipulator
+{
+/*!\file Manipulator.h
+ * Manipulator API
+ */
 
-////////////////////////////////////////////////////////////////////////////////
-GUIActionAdapter::~GUIActionAdapter()
+/*!\class ves::xplorer::device::manipulator::Manipulator
+ *
+ */
+    class VE_XPLORER_EXPORTS Manipulator
 {
-    ;
-}
-////////////////////////////////////////////////////////////////////////////////
-void GUIActionAdapter::requestRedraw()
-{
-    ;
-}
-////////////////////////////////////////////////////////////////////////////////
-void GUIActionAdapter::requestContinuousUpdate( bool needed )
-{
-    ;
-}
-////////////////////////////////////////////////////////////////////////////////
-void GUIActionAdapter::requestWarpPointer( float x, float y )
-{
-    ;
-}
-////////////////////////////////////////////////////////////////////////////////
+public:
+    ///
+    Manipulator();
+
+    ///
+    ~Manipulator();
+
+    ///
+    osg::MatrixTransform* const GetMatrixTransform() const;
+
+    ///
+    void SetMatrixTransform( osg::MatrixTransform* matrixTransform );
+
+protected:
+    ///
+    virtual void SetupDefaultGeometry() = 0;
+
+    ///
+    osg::ref_ptr< osg::MatrixTransform > m_matrixTransform;
+
+private:
+    
+
+};
+} //end manipulator
+} //end device
+} //end xplorer
+} //end ves
+
+#endif //MANIPULATOR_H
