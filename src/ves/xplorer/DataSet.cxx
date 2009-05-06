@@ -1746,20 +1746,20 @@ void DataSet::CreateWireframeGeode( void )
     wireframeMapper->SelectColorArray( GetActiveScalarName().c_str() );
     wireframeMapper->SetLookupTable( GetLookupTable() );
     //wireframeMapper->Update();
-    
+    c2p->Delete();
+
     vtkActor *wireframeActor = vtkActor::New();
     wireframeActor->SetMapper( wireframeMapper );
     //wireframeActor->GetProperty()->SetColor( 0, 0, 1 );
     wireframeActor->GetProperty()->SetOpacity( 0.7f );
     //wireframeActor->GetProperty()->SetRepresentationToWireframe();
+    wireframeMapper->Delete();
 
     wireframeGeode = new ves::xplorer::scenegraph::Geode();
     wireframeGeode->TranslateToGeode( wireframeActor );
 
     //wireframe->Delete();
     //poly->Delete();
-    c2p->Delete();
-    wireframeMapper->Delete();
     wireframeActor->Delete();
 }
 ////////////////////////////////////////////////////////////////////////////////
