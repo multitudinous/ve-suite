@@ -41,7 +41,7 @@
 
 #include <ves/xplorer/scenegraph/DCS.h>
 
-//#include <ves/xplorer/device/osg/GUIActionAdapter.h>
+#include <ves/xplorer/device/osg/GUIActionAdapter.h>
 
 // --- vrJuggler Includes --- //
 #include <vpr/Util/Singleton.h>
@@ -51,6 +51,8 @@
 // --- OSG Includes --- //
 #include <osg/ref_ptr>
 #include <osg/Quat>
+
+#include <osgGA/GUIEventAdapter>
 
 /*
 namespace osgGA
@@ -117,6 +119,12 @@ public:
     ves::xplorer::device::Device* const GetDevice(
         const std::string& deviceName ) const;
 
+    ///
+    const ves::xplorer::device::GUIActionAdapter& GetGUIActionAdapter() const;
+
+    ///
+    osgGA::GUIEventAdapter* const GetGUIEventAdapter() const;
+
     ///Get the reset location of the world
     ///\param quat
     ///\param pos
@@ -163,6 +171,8 @@ public:
 
     ///Unselect all currently selected objects
     void UnselectObjects();
+
+protected:
 
 private:
     ///Triggers a center point jump after this distance has been breached
@@ -214,10 +224,10 @@ private:
     ves::xplorer::device::Device* mKMDevice;
 
     ///
-    //osg::ref_ptr< osgGA::GUIEventAdapter > m_guiEventAdapter;
+    osg::ref_ptr< osgGA::GUIEventAdapter > m_guiEventAdapter;
 
     ///
-    //ves::xplorer::device::GUIActionAdapter m_guiActionAdapter;
+    ves::xplorer::device::GUIActionAdapter m_guiActionAdapter;
 
 };
 } //end xplorer
