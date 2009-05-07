@@ -2072,7 +2072,7 @@ void UIPluginBase::AddPortToModel( wxPoint& tempPoint, unsigned int typePort )
     ves::open::xml::model::PortPtr port = m_veModel->GetPort( -1 );
     port->SetPortLocation( tempLoc );
     //either input or output
-    port->SetPluginName( ConvertUnicode( mPluginName.c_str() ) );
+    //port->SetPluginName( ConvertUnicode( mPluginName.c_str() ) );
     //add the port to the model
     //add the port to the internal plugin structure
     if( typePort == UIPLUGINBASE_ADD_INPUT_PORT )

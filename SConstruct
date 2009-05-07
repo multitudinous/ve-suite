@@ -584,7 +584,7 @@ if not SConsAddons.Util.hasHelpFlag():
       ves_dirs.append( testDir )
 
    # freeze the python code
-   if 'freeze' in  COMMAND_LINE_TARGETS:
+   if 'freeze' in  COMMAND_LINE_TARGETS or GetPlatform() == 'win32':
       veiFreezeSubdirs = pj(buildDir,'dist', 'build', 'freeze')
       ves_dirs.append( veiFreezeSubdirs )
       baseEnv.Alias('freeze', veiFreezeSubdirs) 
