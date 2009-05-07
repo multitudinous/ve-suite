@@ -91,7 +91,8 @@ PhysicsSimulator::PhysicsSimulator()
     mCollisionInformation( false ),
     shoot_speed( 50.0f ),
     mCreatedGroundPlane( false ),
-    mDebugBulletFlag( false )
+    mDebugBulletFlag( false ),
+    m_debugDrawer( 0 )
 {
     head.init( "VJHead" );
 
@@ -111,6 +112,9 @@ void PhysicsSimulator::ExitPhysics()
 
     mBoxVector.clear();
 
+    delete m_debugDrawer;
+    m_debugDrawer = 0;
+    
     if( mDynamicsWorld )
     {
         //Remove the rigidbodies from the dynamics world and delete them
@@ -239,10 +243,8 @@ void PhysicsSimulator::InitializePhysicsSimulation()
     //mDynamicsWorld->getDispatchInfo().m_enableSPU = true;
     mDynamicsWorld->setGravity( btVector3( 0, 0, -32.174 ) );
 
-    mDynamicsWorld->setDebugDrawer( new osgBullet::GLDebugDrawer( 
-        SceneManager::instance()->GetRootNode() ) );
-    //mDynamicsWorld->getDebugDrawer()->
-    //    setDebugMode( btIDebugDraw::DBG_MAX_DEBUG_DRAW_MODE );
+    m_debugDrawer = 
+        new osgBullet::GLDebugDrawer( SceneManager::instance()->GetRootNode() );
 
     //CreateGroundPlane();
 }
@@ -651,5 +653,17 @@ osg::Node* PhysicsSimulator::CreateGround( float w, float h, const osg::Vec3& ce
 void PhysicsSimulator::SetDebuggingOn( bool toggle )
 {
     mDebugBulletFlag = toggle;
+    
+    if( mDebugBulletFlag )
+    {
+        mDynamicsWorld->setDebugDrawer( m_debugDrawer );
+        //mDynamicsWorld->getDebugDrawer()->
+        //    setDebugMode( btIDebugDraw::DBG_MAX_DEBUG_DRAW_MODE );
+    }
+    else
+    {
+        mDynamicsWorld->setDebugDrawer( 0 );
+        m_debugDrawer->BeginDraw();
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////

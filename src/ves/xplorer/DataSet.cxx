@@ -1757,9 +1757,6 @@ void DataSet::CreateWireframeGeode( void )
 
     wireframeGeode = new ves::xplorer::scenegraph::Geode();
     wireframeGeode->TranslateToGeode( wireframeActor );
-
-    //wireframe->Delete();
-    //poly->Delete();
     wireframeActor->Delete();
 }
 ////////////////////////////////////////////////////////////////////////////////

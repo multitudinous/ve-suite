@@ -64,6 +64,10 @@ class btRigidBody;
 class btCollisionShape;
 
 // --- osgBullet Includes --- //
+namespace osgBullet
+{
+class GLDebugDrawer;
+}
 
 // --- C/C++ Libraries --- //
 #include <vector>
@@ -211,6 +215,9 @@ private:
     
     ///Debug bullet
     bool mDebugBulletFlag;
+    
+    ///THe debug drawer for the bullet physics simulator
+    osgBullet::GLDebugDrawer* m_debugDrawer;
 
 };
 }
