@@ -1307,7 +1307,6 @@ std::string BKPParser::CreateNetwork( void )
                 // inputs are to ports
                 tempPort->
                     SetPortNumber( streamPortIDS["_main_sheet"][ streamIter->first ].first );
-                tempPort->SetPluginName( streamIter->first );
                 tempPort->SetDataFlowDirection( std::string( "input" ) );
 
                 //PATCH
@@ -1315,10 +1314,10 @@ std::string BKPParser::CreateNetwork( void )
                 //NOT properly sized
                 //this will move any ports outside the icon into the icon
                 double portX = 
-                    linkPoints["_main_sheet"][tempPort->GetPluginName()][0].
+                    linkPoints["_main_sheet"][ streamIter->first ][0].
                     first - iOriginX;
                 double portY = 
-                    linkPoints["_main_sheet"][tempPort->GetPluginName()][0].
+                    linkPoints["_main_sheet"][ streamIter->first ][0].
                     second - iOriginY;
 
                 if( portX < 0 )
@@ -1356,19 +1355,18 @@ std::string BKPParser::CreateNetwork( void )
                 // outputs are from ports
                 tempPort->
                     SetPortNumber( streamPortIDS["_main_sheet"][ streamIter->first ].second );
-                tempPort->SetPluginName( streamIter->first );
                 tempPort->SetDataFlowDirection( std::string( "output" ) );
 
                 //PATCH
                 //This code is necessary because some of the captured icons are
                 //NOT properly sized
                 //this will move any ports outside the icon into the icon
-                double portX = linkPoints["_main_sheet"][tempPort->
-                    GetPluginName()][linkPoints["_main_sheet"][tempPort->
-                    GetPluginName()].size()-1].first - iOriginX;
-                double portY = linkPoints["_main_sheet"][tempPort->
-                    GetPluginName()][linkPoints["_main_sheet"][tempPort->
-                    GetPluginName()].size()-1].second - iOriginY;
+                double portX = linkPoints["_main_sheet"][ 
+                    streamIter->first ][linkPoints["_main_sheet"][ 
+                    streamIter->first ].size()-1].first - iOriginX;
+                double portY = linkPoints["_main_sheet"][ 
+                    streamIter->first ][linkPoints["_main_sheet"][ 
+                    streamIter->first].size()-1].second - iOriginY;
 
                 if( portX < 0 )
                 {
@@ -1479,7 +1477,6 @@ void BKPParser::ParseSubSystem( ves::open::xml::model::ModelPtr model,
                 // inputs are to ports
                 tempPort->
                     SetPortNumber( streamPortIDS[networkName][ streamIter->first ].first );
-                tempPort->SetPluginName( streamIter->first );
                 tempPort->SetDataFlowDirection( std::string( "input" ) );
                 
                 //PATCH
@@ -1487,10 +1484,10 @@ void BKPParser::ParseSubSystem( ves::open::xml::model::ModelPtr model,
                 //NOT properly sized
                 //this will move any ports outside the icon into the icon
                 double portX = 
-                    linkPoints[networkName][tempPort->GetPluginName()][0].
+                    linkPoints[networkName][ streamIter->first ][0].
                     first - iOriginX;
                 double portY = 
-                    linkPoints[networkName][tempPort->GetPluginName()][0].
+                    linkPoints[networkName][ streamIter->first ][0].
                     second - iOriginY;
 
                 if( portX < 0 )
@@ -1528,19 +1525,18 @@ void BKPParser::ParseSubSystem( ves::open::xml::model::ModelPtr model,
                 // outputs are from ports
                 tempPort->
                     SetPortNumber( streamPortIDS[networkName][ streamIter->first ].second );
-                tempPort->SetPluginName( streamIter->first );
                 tempPort->SetDataFlowDirection( std::string( "output" ) );
                 
                 //PATCH
                 //This code is necessary because some of the captured icons are
                 //NOT properly sized
                 //this will move any ports outside the icon into the icon
-                double portX = linkPoints[networkName][tempPort->
-                    GetPluginName()][linkPoints[networkName][tempPort->
-                    GetPluginName()].size()-1].first - iOriginX;
-                double portY = linkPoints[networkName][tempPort->
-                    GetPluginName()][linkPoints[networkName][tempPort->
-                    GetPluginName()].size()-1].second - iOriginY;
+                double portX = linkPoints[networkName][ 
+                    streamIter->first][linkPoints[networkName][ 
+                    streamIter->first].size()-1].first - iOriginX;
+                double portY = linkPoints[networkName][ 
+                    streamIter->first ][linkPoints[networkName][ 
+                    streamIter->first ].size()-1].second - iOriginY;
 
                 if( portX < 0 )
                 {

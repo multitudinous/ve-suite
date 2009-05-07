@@ -930,6 +930,7 @@ void DynParser::CreateNetworkLinks
             xmlLink->SetLinkName(iter->first);
             xmlLink->SetLinkType(linkTypes[hierName][iter->first]);
             
+
             *(xmlLink->GetFromPort()) = static_cast< long int >( fromPortId );
             *(xmlLink->GetToPort()) = static_cast< long int >( toPortId );
             
@@ -937,10 +938,14 @@ void DynParser::CreateNetworkLinks
                 j > 0 ; --j )
             {
                 // I am not sure why we need to reverse the points but we do
+                std::pair< unsigned int, unsigned int > tempLinkPointUI;
+                tempLinkPointUI = 
+                    std::pair< unsigned int, unsigned int >( 
+                    unsigned int( linkPoints[hierName][ fromPortName ].at( j - 1 ).first ), 
+                    unsigned int( linkPoints[hierName][ fromPortName ].at( j - 1 ).second ) );
                 xmlLink->GetLinkPoint(
                     linkPoints[hierName][ fromPortName ].size() - j )->
-                    SetPoint(linkPoints[hierName][ fromPortName ].
-                    at( j - 1 ) );
+                    SetPoint( tempLinkPointUI );
             }
             subNetwork->AddLink( xmlLink );
         }
@@ -999,11 +1004,16 @@ void DynParser::CreateNetworkLinks
                 j > 0 ; --j )
             {
                 // I am not sure why we need to reverse the points but we do
+                std::pair< unsigned int, unsigned int > tempLinkPointUI;
+                tempLinkPointUI = 
+                    std::pair< unsigned int, unsigned int >( 
+                    unsigned int( linkPoints[hierName][ toPortName ].at( j - 1 ).first ), 
+                    unsigned int( linkPoints[hierName][ toPortName ].at( j - 1 ).second ) );
                 xmlLink->GetLinkPoint(
-                    linkPoints[hierName][ toPortName ].size() - j )->SetPoint(
-                    linkPoints[hierName][ toPortName ].at( j - 1 ) );
+                    linkPoints[hierName][ toPortName ].size() - j )->
+                    SetPoint( tempLinkPointUI );
             }
-         
+ 
             //add location for dummy icon
             iconLocations[hierName][iter->first+"_dummy_connection"] = 
                 linkPoints[hierName][toPortName].at(
@@ -1099,9 +1109,14 @@ void DynParser::CreateNetworkLinks
                 j > 0 ; --j )
             {
                 // I am not sure why we need to reverse the points but we do
-                xmlLink->GetLinkPoint( linkPoints[hierName][fromPortName].
-                    size() - j )->SetPoint( 
-                    linkPoints[hierName][ fromPortName ].at( j - 1 ) );
+                std::pair< unsigned int, unsigned int > tempLinkPointUI;
+                tempLinkPointUI = 
+                    std::pair< unsigned int, unsigned int >( 
+                    unsigned int( linkPoints[hierName][ fromPortName ].at( j - 1 ).first ), 
+                    unsigned int( linkPoints[hierName][ fromPortName ].at( j - 1 ).second ) );
+                xmlLink->GetLinkPoint(
+                    linkPoints[hierName][ fromPortName ].size() - j )->
+                    SetPoint( tempLinkPointUI );
             }
 
             //add location for dummy icon
@@ -1193,9 +1208,10 @@ std::string DynParser::CreateNetwork( void )
             SetIconMirror(BlockInfoList["_main_sheet"][blockIter->first].
             mirror);
         tempModel->
-            GetIconLocation()->SetPoint( std::pair< double, double >(
-            iconLocations["_main_sheet"][ blockIter->first ].first,
-            iconLocations["_main_sheet"][ blockIter->first ].second ) );
+            GetIconLocation()->SetPoint( std::pair< unsigned int, unsigned int >(
+            unsigned int( iconLocations["_main_sheet"][ blockIter->first ].first ),
+            unsigned int( iconLocations["_main_sheet"][ blockIter->first ].second ) 
+            ) );
         tempModel->
             SetIconHiddenFlag( BlockInfoList["_main_sheet"][blockIter->first].
             iconHidden );
@@ -1216,14 +1232,14 @@ std::string DynParser::CreateNetwork( void )
                 // inputs are to ports
                 tempPort->
                     SetPortNumber( streamPortIDS[ streamIter->first ].first );
-                tempPort->SetPluginName( streamIter->first );
                 tempPort->SetDataFlowDirection( std::string( "input" ) );
                 tempPort->
-                    GetPortLocation()->SetPoint( std::pair< double, double >
-                    ( (linkPoints["_main_sheet"][tempPort->GetPluginName()][0].
-                    first - minX ), 
-                    (linkPoints["_main_sheet"][tempPort->GetPluginName()][0].
-                    second - minY ) ) );
+                    GetPortLocation()->SetPoint( 
+                        std::pair< unsigned int, unsigned int >( 
+                        (linkPoints["_main_sheet"][ streamIter->first ][0].
+                        first - minX ), 
+                        (linkPoints["_main_sheet"][ streamIter->first ][0].
+                        second - minY ) ) );
             }
         }
         // output ports
@@ -1238,16 +1254,13 @@ std::string DynParser::CreateNetwork( void )
                 // outputs are from ports
                 tempPort->
                     SetPortNumber( streamPortIDS[ streamIter->first ].second );
-                tempPort->SetPluginName( streamIter->first );
                 tempPort->SetDataFlowDirection( std::string( "output" ) );
                 tempPort->GetPortLocation()->SetPoint(
-                    std::pair< double, double >( (
-                    linkPoints["_main_sheet"][tempPort->
-                    GetPluginName()][linkPoints["_main_sheet"][tempPort->
-                    GetPluginName()].size()-1].first - minX ),
-                    (linkPoints["_main_sheet"][tempPort->
-                    GetPluginName()][linkPoints["_main_sheet"][tempPort->
-                    GetPluginName()].size()-1].second - minY ) ) );
+                    std::pair< unsigned int, unsigned int >( (
+                    linkPoints["_main_sheet"][ streamIter->first ]
+                    [linkPoints["_main_sheet"][ streamIter->first ].size()-1].first - minX ),
+                    (linkPoints["_main_sheet"][ streamIter->first ]
+                    [linkPoints["_main_sheet"][ streamIter->first ].size()-1].second - minY ) ) );
             }
         }
 
@@ -1350,7 +1363,7 @@ void DynParser::ParseSubSystem( ves::open::xml::model::ModelPtr model,
             BlockInfoList[networkName][blockIter->first].mirror );
         tempModel->
             GetIconLocation()->SetPoint(
-            std::pair< double, double >(
+            std::pair< unsigned int, unsigned int >(
             iconLocations[networkName][blockIter->first].first,
             iconLocations[networkName][blockIter->first].second ) );
         tempModel->
@@ -1374,14 +1387,13 @@ void DynParser::ParseSubSystem( ves::open::xml::model::ModelPtr model,
                 // inputs are to ports
                 tempPort->
                     SetPortNumber( streamPortIDS[ streamIter->first ].first );
-                tempPort->SetPluginName( streamIter->first );
                 tempPort->SetDataFlowDirection( std::string( "input" ) );
 
                 tempPort->GetPortLocation()->
-                    SetPoint( std::pair< double, double >
-                    ( ( linkPoints[networkName][tempPort->GetPluginName()][0].
+                    SetPoint( std::pair< unsigned int, unsigned int >
+                    ( ( linkPoints[networkName][streamIter->first][0].
                     first - minX ),
-                    (linkPoints[networkName][tempPort->GetPluginName()][0].
+                    (linkPoints[networkName][streamIter->first][0].
                     second - minY ) ) );
             }
         }
@@ -1397,16 +1409,13 @@ void DynParser::ParseSubSystem( ves::open::xml::model::ModelPtr model,
                 // outputs are from ports
                 tempPort->
                     SetPortNumber( streamPortIDS[ streamIter->first ].second );
-                tempPort->SetPluginName( streamIter->first );
                 tempPort->SetDataFlowDirection( std::string( "output" ) );
                 tempPort->GetPortLocation()->SetPoint(
-                    std::pair< double, double >( (
-                    linkPoints[networkName][tempPort->
-                    GetPluginName()][linkPoints[networkName][tempPort->
-                    GetPluginName()].size()-1].first - minX ),
-                    (linkPoints[networkName][tempPort->
-                    GetPluginName()][linkPoints[networkName][tempPort->
-                    GetPluginName()].size()-1].second - minY ) ) );
+                    std::pair< unsigned int, unsigned int >( (
+                    linkPoints[networkName][streamIter->first]
+                    [linkPoints[networkName][streamIter->first].size()-1].first - minX ),
+                    (linkPoints[networkName][streamIter->first]
+                    [linkPoints[networkName][streamIter->first].size()-1].second - minY ) ) );
             }
         }
 
