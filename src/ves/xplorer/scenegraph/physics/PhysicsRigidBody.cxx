@@ -457,7 +457,6 @@ void PhysicsRigidBody::CustomShape( const BroadphaseNativeTypes shapeType, const
         osg::ref_ptr< osg::PositionAttitudeTransform > tempSubgraph = 
             new osg::PositionAttitudeTransform( *static_cast< osg::PositionAttitudeTransform* >( mOSGToBullet.get() ), 
             osg::CopyOp::DEEP_COPY_ALL );            
- std::cout << " here 1 " << std::endl;           
         osgBullet::OSGToCollada converter;
         converter.setSceneGraph( tempSubgraph.get() );
         converter.setShapeType( shapeType );
@@ -465,9 +464,7 @@ void PhysicsRigidBody::CustomShape( const BroadphaseNativeTypes shapeType, const
         converter.setOverall( overall );
         //converter.setSimplifyPercent( simplifyPercent );
         //converter.setAxis( axis );
-        std::cout << " here 1 " << std::endl;           
         converter.convert("");
-        std::cout << " here 1 " << std::endl;           
        
         mRB = converter.getRigidBody();
         std::cout << "|\tJust finished creating a new btRigidBody." << std::endl;
