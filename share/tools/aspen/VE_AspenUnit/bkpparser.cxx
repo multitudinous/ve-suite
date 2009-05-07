@@ -1025,10 +1025,14 @@ void BKPParser::CreateNetworkLinks
                 j > 0 ; --j )
             {
                 // I am not sure why we need to reverse the points but we do
+                std::pair< unsigned int, unsigned int > tempLinkPointUI;
+                tempLinkPointUI = 
+                    std::pair< unsigned int, unsigned int >( 
+                    unsigned int( linkPoints[hierName][ fromPortName ].at( j - 1 ).first ), 
+                    unsigned int( linkPoints[hierName][ fromPortName ].at( j - 1 ).second ) );
                 xmlLink->GetLinkPoint(
                     linkPoints[hierName][ fromPortName ].size() - j )->
-                    SetPoint(linkPoints[hierName][ fromPortName ].
-                    at( j - 1 ) );
+                    SetPoint( tempLinkPointUI );
             }
             subNetwork->AddLink( xmlLink );
         }
@@ -1087,9 +1091,14 @@ void BKPParser::CreateNetworkLinks
                 j > 0 ; --j )
             {
                 // I am not sure why we need to reverse the points but we do
+                std::pair< unsigned int, unsigned int > tempLinkPointUI;
+                tempLinkPointUI = 
+                    std::pair< unsigned int, unsigned int >( 
+                    unsigned int( linkPoints[hierName][ toPortName ].at( j - 1 ).first ), 
+                    unsigned int( linkPoints[hierName][ toPortName ].at( j - 1 ).second ) );
                 xmlLink->GetLinkPoint(
-                    linkPoints[hierName][ toPortName ].size() - j )->SetPoint(
-                    linkPoints[hierName][ toPortName ].at( j - 1 ) );
+                    linkPoints[hierName][ toPortName ].size() - j )->
+                    SetPoint( tempLinkPointUI );
             }
          
             //add location for dummy icon
@@ -1187,9 +1196,14 @@ void BKPParser::CreateNetworkLinks
                 j > 0 ; --j )
             {
                 // I am not sure why we need to reverse the points but we do
-                xmlLink->GetLinkPoint( linkPoints[hierName][fromPortName].
-                    size() - j )->SetPoint( 
-                    linkPoints[hierName][ fromPortName ].at( j - 1 ) );
+                std::pair< unsigned int, unsigned int > tempLinkPointUI;
+                tempLinkPointUI = 
+                    std::pair< unsigned int, unsigned int >( 
+                    unsigned int( linkPoints[hierName][ fromPortName ].at( j - 1 ).first ), 
+                    unsigned int( linkPoints[hierName][ fromPortName ].at( j - 1 ).second ) );
+                xmlLink->GetLinkPoint(
+                    linkPoints[hierName][ fromPortName ].size() - j )->
+                    SetPoint( tempLinkPointUI );
             }
 
             //add location for dummy icon
@@ -1280,7 +1294,7 @@ std::string BKPParser::CreateNetwork( void )
             SetIconMirror(BlockInfoList["_main_sheet"][blockIter->first].
             mirror);
         tempModel->
-            GetIconLocation()->SetPoint( std::pair< double, double >(
+            GetIconLocation()->SetPoint( std::pair< unsigned int, unsigned int >(
             iconLocations["_main_sheet"][ blockIter->first ].first,
             iconLocations["_main_sheet"][ blockIter->first ].second ) );
         tempModel->
@@ -1339,7 +1353,7 @@ std::string BKPParser::CreateNetwork( void )
                 }
                 
                 tempPort->
-                    GetPortLocation()->SetPoint( std::pair< double, double >
+                    GetPortLocation()->SetPoint( std::pair< unsigned int, unsigned int >
                     ( portX, portY ) );
             }
         }
@@ -1387,7 +1401,7 @@ std::string BKPParser::CreateNetwork( void )
                 }
                 
                 tempPort->
-                    GetPortLocation()->SetPoint( std::pair< double, double >
+                    GetPortLocation()->SetPoint( std::pair< unsigned int, unsigned int >
                     ( portX, portY ) );
             }
         }
@@ -1449,7 +1463,7 @@ void BKPParser::ParseSubSystem( ves::open::xml::model::ModelPtr model,
             BlockInfoList[networkName][blockIter->first].mirror );
         tempModel->
             GetIconLocation()->SetPoint(
-            std::pair< double, double >(
+            std::pair< unsigned int, unsigned int >(
             iconLocations[networkName][blockIter->first].first,
             iconLocations[networkName][blockIter->first].second ) );
         tempModel->
@@ -1509,7 +1523,7 @@ void BKPParser::ParseSubSystem( ves::open::xml::model::ModelPtr model,
                 }
                 
                 tempPort->
-                    GetPortLocation()->SetPoint( std::pair< double, double >
+                    GetPortLocation()->SetPoint( std::pair< unsigned int, unsigned int >
                     ( portX, portY ) );
             }
         }
@@ -1557,7 +1571,7 @@ void BKPParser::ParseSubSystem( ves::open::xml::model::ModelPtr model,
                 }
                 
                 tempPort->
-                    GetPortLocation()->SetPoint( std::pair< double, double >
+                    GetPortLocation()->SetPoint( std::pair< unsigned int, unsigned int >
                     ( portX, portY ) );
             }
         }
