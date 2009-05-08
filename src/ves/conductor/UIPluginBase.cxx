@@ -1078,8 +1078,7 @@ void UIPluginBase::SetImageIcon( std::string path, float rotation, int mirror, f
         {
             return;
         }
-        //image.LoadFile( wxString( fullPath.c_str(), wxConvUTF8 ), wxBITMAP_TYPE_JPEG );
-        image.LoadFile( wxString( fullPath.c_str(), wxConvUTF8 ), wxBITMAP_TYPE_GIF );
+        image.LoadFile( wxString( fullPath.c_str(), wxConvUTF8 ), wxBITMAP_TYPE_ANY );
     }
     iconFilename = path;
 
