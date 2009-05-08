@@ -237,7 +237,7 @@ void AddVTKDataSetEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xml
             //Now load up the dataset
             {
                 const std::string tempDataSetFilename = 
-                    _activeModel->GetCfdDataSet( i )->GetFileName();
+                    _activeModel->GetCfdDataSet( -1 )->GetFileName();
                 std::cout << "|\tLoading data for file "
                     << tempDataSetFilename
                     << std::endl;
