@@ -1706,7 +1706,6 @@ void DataSet::CreateBoundingBoxGeode( void )
 void DataSet::CreateWireframeGeode( void )
 {
     vtkCellDataToPointData* c2p = vtkCellDataToPointData::New();
-#ifdef VTK_POST_FEB20
     if( GetDataSet()->IsA( "vtkCompositeDataSet" ) )
     {
         vtkCompositeDataGeometryFilter* wireframe = vtkCompositeDataGeometryFilter::New();
@@ -1716,17 +1715,6 @@ void DataSet::CreateWireframeGeode( void )
         
         wireframe->Delete();
     }
-#else
-    if( GetDataSet()->IsA( "vtkMultiGroupDataSet" ) )
-    {
-        vtkMultiGroupDataGeometryFilter* wireframe = vtkMultiGroupDataGeometryFilter::New();
-        wireframe->SetInput( GetDataSet() );
-        
-        c2p->SetInputConnection( wireframe->GetOutputPort() );
-        
-        wireframe->Delete();
-    }
-#endif
     else
     {
         vtkGeometryFilter* wireframe = vtkGeometryFilter::New();

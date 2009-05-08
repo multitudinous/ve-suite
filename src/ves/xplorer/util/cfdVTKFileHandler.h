@@ -89,9 +89,9 @@ public:
 
     ///Get the dataobject from the file
     ///\param vtkFileName The name of the file to read in.
-    vtkDataObject* GetDataSetFromFile( std::string vtkFileName );
+    vtkDataObject* GetDataSetFromFile( const std::string& vtkFileName );
     ///Get the vtkAlgorithm for the reader being used
-    vtkAlgorithm* GetAlgorithm();
+    //vtkAlgorithm* GetAlgorithm();
     
     ///Write the DataObject to file
     ///\param dataObject The vtkDataObject to write

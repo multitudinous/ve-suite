@@ -136,68 +136,60 @@ void cfdVTKFileHandler::SetOutputFileName( std::string oFile )
     _outFileName = oFile;
 }
 //////////////////////////////////////////////////////
-vtkAlgorithm* cfdVTKFileHandler::GetAlgorithm()
+/*vtkAlgorithm* cfdVTKFileHandler::GetAlgorithm()
 {
     return mDataReader;
-}
+}*/
 ////////////////////////////////////////////////////////////////////
-vtkDataObject* cfdVTKFileHandler::GetDataSetFromFile( std::string vtkFileName )
+vtkDataObject* cfdVTKFileHandler::GetDataSetFromFile( const std::string& vtkFileName )
 {
-    std::cout << "|\tLoading: " << vtkFileName << std::endl;
     if( vtkFileName.empty() )
     {
         return 0;
     }
+    std::cout << "|\tLoading: " << vtkFileName << std::endl;
     _inFileName = vtkFileName;
 
     if( !_xmlTester )
     {
         _xmlTester = vtkXMLFileReadTester::New();
     }
-    _xmlTester->SetFileName( vtkFileName.c_str() );
+    _xmlTester->SetFileName( _inFileName.c_str() );
 
-    //std::cout << "cfdVTKFileHandler::Checking file type...";
     if( _xmlTester->TestReadFile() )
     {
         std::cout << "|\t\tXML ";
         std::cout << _xmlTester->GetFileDataType() << std::endl;
         //process xml file
-        if( !strcmp( _xmlTester->GetFileDataType(), "UnstructuredGrid" ) )
+        if( !std::strcmp( _xmlTester->GetFileDataType(), "UnstructuredGrid" ) )
         {
             _getXMLUGrid();
         }
-        else if( !strcmp( _xmlTester->GetFileDataType(), "StructuredGrid" ) )
+        else if( !std::strcmp( _xmlTester->GetFileDataType(), "StructuredGrid" ) )
         {
             _getXMLSGrid();
         }
-        else if( !strcmp( _xmlTester->GetFileDataType(), "RectilinearGrid" ) )
+        else if( !std::strcmp( _xmlTester->GetFileDataType(), "RectilinearGrid" ) )
         {
             _getXMLRGrid();
         }
-        else if( !strcmp( _xmlTester->GetFileDataType(), "PolyData" ) )
+        else if( !std::strcmp( _xmlTester->GetFileDataType(), "PolyData" ) )
         {
             _getXMLPolyData();
         }
-        else if( !strcmp( _xmlTester->GetFileDataType(), "ImageData" ) )
+        else if( !std::strcmp( _xmlTester->GetFileDataType(), "ImageData" ) )
         {
             GetXMLImageData();
         }
-#ifdef VTK_POST_FEB20
-        else if( !strcmp( _xmlTester->GetFileDataType(), "vtkMultiBlockDataSet" ) )
+        else if( !std::strcmp( _xmlTester->GetFileDataType(), "vtkMultiBlockDataSet" ) )
         {
             _getXMLMultiGroupDataSet();
         }
-        else if( !strcmp( _xmlTester->GetFileDataType(), "vtkMultiGroupDataSet" ) )
+        else if( !std::strcmp( _xmlTester->GetFileDataType(), "vtkMultiGroupDataSet" ) )
         {
             _getXMLMultiGroupDataSet( false );
         }
-#else
-        else if( !strcmp( _xmlTester->GetFileDataType(), "vtkMultiGroupDataSet" ) )
-        {
-            _getXMLMultiGroupDataSet();
-        }        
-#endif
-        else if( !strcmp( _xmlTester->GetFileDataType(), "vtkHierarchicalDataSet" ) )
+        else if( !std::strcmp( _xmlTester->GetFileDataType(), "vtkHierarchicalDataSet" ) )
         {
             GetXMLHierarchicalDataSet();
         }

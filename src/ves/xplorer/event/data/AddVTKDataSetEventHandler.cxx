@@ -178,12 +178,12 @@ void AddVTKDataSetEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xml
             ///////////////////////////////////////////////////////////////
             //If not already there lets create a new dataset
             _activeModel->CreateCfdDataSet();
+            // Pass in -1 to GetCfdDataSet to get the last dataset added
             DataSet* lastDataAdded = _activeModel->GetCfdDataSet( -1 );
             vprDEBUG( vesDBG, 0 ) 
                 << "|\t*************Now starting to load new data************ "
                 << std::endl << vprDEBUG_FLUSH;
 
-            // Pass in -1 to GetCfdDataSet to get the last dataset added
             lastDataAdded->GetDCS()->SetScaleArray( 
                 tempInfoPacket->GetTransform()->GetScaleArray()->GetArray() );
             lastDataAdded->GetDCS()->SetTranslationArray( 
@@ -237,7 +237,7 @@ void AddVTKDataSetEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xml
             //Now load up the dataset
             {
                 const std::string tempDataSetFilename = 
-                    _activeModel->GetCfdDataSet( -1 )->GetFileName();
+                    lastDataAdded->GetFileName();
                 std::cout << "|\tLoading data for file "
                     << tempDataSetFilename
                     << std::endl;
