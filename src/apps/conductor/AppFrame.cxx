@@ -984,11 +984,27 @@ void AppFrame::Save( wxCommandEvent& event )
     else
     {
         canvas->Update();
+        wxFileName vesFileName( mVESFileName );
+
+        if( !wxFileName::IsFileWritable( vesFileName.GetFullPath() ) )
+        {
+            wxString tempMessage = 
+                _( "Cannot write file " ) + 
+                vesFileName.GetFullName() + _( "?" );
+            wxMessageDialog promptDlg( this,
+                tempMessage,
+                _( "Overwrite File Warning" ),
+                wxOK | wxICON_QUESTION,
+                wxDefaultPosition );
+            promptDlg.ShowModal();
+            Log( "Unable to save ves file." );
+            return;
+        }
+
         ///now write the file out from domdocument manager
         //wrtie to path
-        //std::string data = network->Save( );
         std::string nw_str = XMLDataBufferEngine::instance()->
-                             SaveVESData( ConvertUnicode( mVESFileName.c_str() ) );
+            SaveVESData( ConvertUnicode( mVESFileName.c_str() ) );
         Log( "Finished updating ves file." );
     }
 }
