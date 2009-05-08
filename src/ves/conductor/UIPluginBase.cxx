@@ -1060,7 +1060,7 @@ void UIPluginBase::SetImageIcon( std::string path, float rotation, int mirror, f
 
     wxImage image;
     //Try to find the default aspen icons
-    std::string fullPath = path + ".xpm";
+    std::string fullPath = path;// + ".xpm"; TJ - I don't know why we are appending with .xpm
     std::map< std::string, char** > aspenPlusIconMap = GetAspenPlusIconMap();
     std::map< std::string, char** >::iterator aspenIconIter;
     aspenIconIter = aspenPlusIconMap.find( fullPath );
@@ -1078,7 +1078,8 @@ void UIPluginBase::SetImageIcon( std::string path, float rotation, int mirror, f
         {
             return;
         }
-        image.LoadFile( wxString( fullPath.c_str(), wxConvUTF8 ), wxBITMAP_TYPE_JPEG );
+        //image.LoadFile( wxString( fullPath.c_str(), wxConvUTF8 ), wxBITMAP_TYPE_JPEG );
+        image.LoadFile( wxString( fullPath.c_str(), wxConvUTF8 ), wxBITMAP_TYPE_GIF );
     }
     iconFilename = path;
 
