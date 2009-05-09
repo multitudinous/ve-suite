@@ -156,48 +156,57 @@ vtkDataObject* cfdVTKFileHandler::GetDataSetFromFile( const std::string& vtkFile
     }
     _xmlTester->SetFileName( _inFileName.c_str() );
 
-    if( _xmlTester->TestReadFile() )
+    try
     {
-        std::cout << "|\t\tXML ";
-        std::cout << _xmlTester->GetFileDataType() << std::endl;
-        //process xml file
-        if( !std::strcmp( _xmlTester->GetFileDataType(), "UnstructuredGrid" ) )
+        if( _xmlTester->TestReadFile() )
         {
-            _getXMLUGrid();
+            std::cout << "|\t\tXML ";
+            std::cout << _xmlTester->GetFileDataType() << std::endl;
+            //process xml file
+            if( !std::strcmp( _xmlTester->GetFileDataType(), "UnstructuredGrid" ) )
+            {
+                _getXMLUGrid();
+            }
+            else if( !std::strcmp( _xmlTester->GetFileDataType(), "StructuredGrid" ) )
+            {
+                _getXMLSGrid();
+            }
+            else if( !std::strcmp( _xmlTester->GetFileDataType(), "RectilinearGrid" ) )
+            {
+                _getXMLRGrid();
+            }
+            else if( !std::strcmp( _xmlTester->GetFileDataType(), "PolyData" ) )
+            {
+                _getXMLPolyData();
+            }
+            else if( !std::strcmp( _xmlTester->GetFileDataType(), "ImageData" ) )
+            {
+                GetXMLImageData();
+            }
+            else if( !std::strcmp( _xmlTester->GetFileDataType(), "vtkMultiBlockDataSet" ) )
+            {
+                _getXMLMultiGroupDataSet();
+            }
+            else if( !std::strcmp( _xmlTester->GetFileDataType(), "vtkMultiGroupDataSet" ) )
+            {
+                _getXMLMultiGroupDataSet( false );
+            }
+            else if( !std::strcmp( _xmlTester->GetFileDataType(), "vtkHierarchicalDataSet" ) )
+            {
+                GetXMLHierarchicalDataSet();
+            }
         }
-        else if( !std::strcmp( _xmlTester->GetFileDataType(), "StructuredGrid" ) )
+        else
         {
-            _getXMLSGrid();
-        }
-        else if( !std::strcmp( _xmlTester->GetFileDataType(), "RectilinearGrid" ) )
-        {
-            _getXMLRGrid();
-        }
-        else if( !std::strcmp( _xmlTester->GetFileDataType(), "PolyData" ) )
-        {
-            _getXMLPolyData();
-        }
-        else if( !std::strcmp( _xmlTester->GetFileDataType(), "ImageData" ) )
-        {
-            GetXMLImageData();
-        }
-        else if( !std::strcmp( _xmlTester->GetFileDataType(), "vtkMultiBlockDataSet" ) )
-        {
-            _getXMLMultiGroupDataSet();
-        }
-        else if( !std::strcmp( _xmlTester->GetFileDataType(), "vtkMultiGroupDataSet" ) )
-        {
-            _getXMLMultiGroupDataSet( false );
-        }
-        else if( !std::strcmp( _xmlTester->GetFileDataType(), "vtkHierarchicalDataSet" ) )
-        {
-            GetXMLHierarchicalDataSet();
+            //this is a "classic" style vtk file
+            _readClassicVTKFile();
         }
     }
-    else
+    catch( ... )
     {
-        //this is a "classic" style vtk file
-        _readClassicVTKFile();
+        std::cerr << "cfdVTKFileHandler::GetDataSetFromFile "
+            << "Memory allocation error." << std::endl;
+        _dataSet = 0;
     }
     return _dataSet;
 }
