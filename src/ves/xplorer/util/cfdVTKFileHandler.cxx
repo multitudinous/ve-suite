@@ -165,6 +165,8 @@ vtkDataObject* cfdVTKFileHandler::GetDataSetFromFile( const std::string& vtkFile
             //process xml file
             if( !std::strcmp( _xmlTester->GetFileDataType(), "UnstructuredGrid" ) )
             {
+                _xmlTester->Delete();
+                _xmlTester = 0;
                 _getXMLUGrid();
             }
             else if( !std::strcmp( _xmlTester->GetFileDataType(), "StructuredGrid" ) )
@@ -293,8 +295,10 @@ void cfdVTKFileHandler::_getXMLUGrid()
         = vtkXMLUnstructuredGridReader::New();
     ugReader->SetFileName( _inFileName.c_str() );
     ugReader->Update();
-    _dataSet = vtkUnstructuredGrid::New();
-    _dataSet->ShallowCopy(ugReader->GetOutput());
+    _dataSet = ugReader->GetOutput();
+    _dataSet->SetReferenceCount( ugReader->GetOutput()->GetReferenceCount() + 1 );
+    //_dataSet = vtkUnstructuredGrid::New();
+    //_dataSet->ShallowCopy( ugReader->GetOutput() );
     ugReader->Delete();
 }
 //////////////////////////////////////

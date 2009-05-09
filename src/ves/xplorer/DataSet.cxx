@@ -567,8 +567,7 @@ void DataSet::LoadData()
             _vtkFHndlr = new cfdVTKFileHandler();
         }
 
-        this->m_dataSet = _vtkFHndlr->GetDataSetFromFile( fileName );
-        //mDataReader = _vtkFHndlr->GetAlgorithm();
+        m_dataSet = _vtkFHndlr->GetDataSetFromFile( fileName );
     }
     else
     {
