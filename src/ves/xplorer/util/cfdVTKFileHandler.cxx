@@ -259,7 +259,6 @@ void cfdVTKFileHandler::_readClassicVTKFile()
 /////////////////////////////////////////////////
 void cfdVTKFileHandler::_getXMLMultiGroupDataSet( bool isMultiBlock )
 {
-#ifdef VTK_POST_FEB20
     vtkXMLCompositeDataReader* mgdReader = 0;
     if( isMultiBlock )
     {
@@ -271,11 +270,6 @@ void cfdVTKFileHandler::_getXMLMultiGroupDataSet( bool isMultiBlock )
         mgdReader = vtkXMLMultiGroupDataReader::New();
         _dataSet = vtkMultiBlockDataSet::New();
     }
-#else
-    vtkXMLMultiGroupDataReader* mgdReader = 0;
-    mgdReader = vtkXMLMultiBlockDataReader::New();
-    _dataSet = vtkMultiBlockDataSet::New();
-#endif
     mgdReader->SetFileName( _inFileName.c_str() );
     mgdReader->Update();
     _dataSet->ShallowCopy( mgdReader->GetOutput() );
@@ -286,11 +280,7 @@ void cfdVTKFileHandler::GetXMLHierarchicalDataSet()
 {
     vtkXMLHierarchicalDataReader* mgdReader = 0;
     mgdReader = vtkXMLHierarchicalDataReader::New();
-#ifdef VTK_POST_FEB20
     _dataSet = vtkHierarchicalBoxDataSet::New();
-#else
-    _dataSet = vtkHierarchicalDataSet::New();
-#endif
     mgdReader->SetFileName( _inFileName.c_str() );
     mgdReader->Update();
     _dataSet->ShallowCopy( mgdReader->GetOutput() );
