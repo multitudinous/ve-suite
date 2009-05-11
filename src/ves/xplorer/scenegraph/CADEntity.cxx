@@ -30,32 +30,29 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
+
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/CADEntity.h>
-
 #include <ves/xplorer/scenegraph/CADEntityHelper.h>
-#include <ves/xplorer/scenegraph/SceneNode.h>
-#include <ves/xplorer/scenegraph/SceneManager.h>
+//#include <ves/xplorer/scenegraph/SceneManager.h>
+//#include <ves/xplorer/scenegraph/LocalToWorldNodePath.h>
 
 #include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
 #include <ves/xplorer/scenegraph/physics/PhysicsRigidBody.h>
 
-#include <ves/xplorer/scenegraph/LocalToWorldNodePath.h>
-
 #include <ves/xplorer/Debug.h>
 
 // --- OSG Includes --- //
-#ifdef _OSG
-#include <osg/Fog>
 #include <osg/Node>
 #include <osg/Group>
 #include <osg/MatrixTransform>
-#endif //_OSG
 
 // --- Bullet Includes --- //
 #include <BulletDynamics/Dynamics/btDiscreteDynamicsWorld.h>
-#include <btBulletDynamicsCommon.h>
+//#include <btBulletDynamicsCommon.h>
 
+// --- osgBullet Includes --- //
+/*
 #include <osgBullet/CollisionShape.h>
 #include <osgBullet/CollisionShapes.h>
 #include <osgBullet/MotionState.h>
@@ -64,24 +61,30 @@
 #include <osgBullet/DebugBullet.h>
 #include <osgBullet/ColladaUtils.h>
 #include <osgBullet/Utils.h>
+*/
 
 // --- C/C++ Libraries --- //
 #include <cassert>
 
 using namespace ves::xplorer::scenegraph;
 
+namespace vxsm = ves::xplorer::scenegraph::manipulator;
+
 ////////////////////////////////////////////////////////////////////////////////
-CADEntity::CADEntity( std::string geomFile,
-                      ves::xplorer::scenegraph::DCS* parentDCS,
-                      bool isStream,
-                      bool occlude,
-                      PhysicsSimulator* physicsSimulator )
-        :
-        mPhysicsRigidBody( 0 ),
-        mPhysicsFlag( false ),
-        mTransparencyFlag( false ),
-        mPhysicsSimulator( physicsSimulator ),
-        mOpacity( 1.0f )
+CADEntity::CADEntity(
+    std::string geomFile,
+    ves::xplorer::scenegraph::DCS* parentDCS,
+    bool isStream,
+    bool occlude,
+    PhysicsSimulator* physicsSimulator )
+    :
+    mPhysicsFlag( false ),
+    mTransparencyFlag( false ),
+    mOpacity( 1.0 ),
+    mPhysicsSimulator( physicsSimulator ),
+    mPhysicsRigidBody( NULL ),
+    mDCS( NULL ),
+    mCADEntityHelper( NULL )
 {
     //Need to fix this and move some code to Node
     //Leave some code here no more FILEInfo
@@ -93,17 +96,22 @@ CADEntity::CADEntity( std::string geomFile,
     mDCS->SetName( "CADEntityDCS" );
     mDCS->addChild( mCADEntityHelper->GetNode() );
     parentDCS->AddChild( mDCS.get() );
+
+    m_manipulator = vxsm::ManipulatorPtr( new vxsm::Manipulator() );
 }
 ////////////////////////////////////////////////////////////////////////////////
-CADEntity::CADEntity( osg::Node* node,
-                      ves::xplorer::scenegraph::DCS* parentDCS,
-                      PhysicsSimulator* physicsSimulator )
-        :
-        mPhysicsRigidBody( 0 ),
-        mPhysicsFlag( false ),
-        mTransparencyFlag( false ),
-        mPhysicsSimulator( physicsSimulator ),
-        mOpacity( 1.0f )
+CADEntity::CADEntity(
+    osg::Node* node,
+    ves::xplorer::scenegraph::DCS* parentDCS,
+    PhysicsSimulator* physicsSimulator )
+    :
+    mPhysicsFlag( false ),
+    mTransparencyFlag( false ),
+    mOpacity( 1.0 ),
+    mPhysicsSimulator( physicsSimulator ),
+    mPhysicsRigidBody( NULL ),
+    mDCS( NULL ),
+    mCADEntityHelper( NULL )
 {
     //Need to fix this and move some code to Node
     //Leave some code here no more FILEInfo
@@ -123,17 +131,22 @@ CADEntity::CADEntity( osg::Node* node,
     mDCS->SetName( "CADEntityDCS" );
     mDCS->addChild( mCADEntityHelper->GetNode() );
     parentDCS->AddChild( mDCS.get() );
+
+    m_manipulator = vxsm::ManipulatorPtr( new vxsm::Manipulator() );
 }
 ////////////////////////////////////////////////////////////////////////////////
-CADEntity::CADEntity( ves::xplorer::scenegraph::CADEntityHelper* nodeToCopy,
-                      ves::xplorer::scenegraph::DCS* parentDCS,
-                      PhysicsSimulator* physicsSimulator )
-        :
-        mPhysicsRigidBody( 0 ),
-        mPhysicsFlag( false ),
-        mTransparencyFlag( false ),
-        mPhysicsSimulator( physicsSimulator ),
-        mOpacity( 1.0f )
+CADEntity::CADEntity(
+    ves::xplorer::scenegraph::CADEntityHelper* nodeToCopy,
+    ves::xplorer::scenegraph::DCS* parentDCS,
+    PhysicsSimulator* physicsSimulator )
+    :
+    mPhysicsFlag( false ),
+    mTransparencyFlag( false ),
+    mOpacity( 1.0 ),
+    mPhysicsSimulator( physicsSimulator ),
+    mPhysicsRigidBody( NULL ),
+    mDCS( NULL ),
+    mCADEntityHelper( NULL )
 {
     //Need to fix this and move some code to Node
     //Leave some code here no more FILEInfo
@@ -148,6 +161,8 @@ CADEntity::CADEntity( ves::xplorer::scenegraph::CADEntityHelper* nodeToCopy,
     mDCS->SetName( "CADEntityDCS" );
     mDCS->addChild( mCADEntityHelper->GetNode() );
     parentDCS->AddChild( mDCS.get() );
+
+    m_manipulator = vxsm::ManipulatorPtr( new vxsm::Manipulator() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 CADEntity::~CADEntity()
@@ -164,6 +179,7 @@ CADEntity::~CADEntity()
                     removeRigidBody( mPhysicsRigidBody->GetbtRigidBody() );
             }
         }
+
         delete mPhysicsRigidBody;
     }
 }
@@ -180,29 +196,35 @@ void CADEntity::InitPhysics()
     return;
 }
 ////////////////////////////////////////////////////////////////////////////////
-ves::xplorer::scenegraph::CADEntityHelper* CADEntity::GetNode()
+ves::xplorer::scenegraph::CADEntityHelper* const CADEntity::GetNode() const
 {
     return mCADEntityHelper;
 }
 ////////////////////////////////////////////////////////////////////////////////
-ves::xplorer::scenegraph::DCS* CADEntity::GetDCS()
+ves::xplorer::scenegraph::DCS* const CADEntity::GetDCS() const
 {
     return mDCS.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
-ves::xplorer::scenegraph::PhysicsRigidBody* CADEntity::GetPhysicsRigidBody()
+PhysicsRigidBody* const CADEntity::GetPhysicsRigidBody()
 {
+    //can't say that this function is const because mPhysicsRigidBody can change
     InitPhysics();
     
     return mPhysicsRigidBody;
 }
 ////////////////////////////////////////////////////////////////////////////////
-std::string CADEntity::GetFilename()
+const std::string& CADEntity::GetFilename() const
 {
     return mFileName;
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool CADEntity::GetTransparentFlag()
+const float CADEntity::GetOpacityValue() const
+{
+    return mOpacity;
+}
+////////////////////////////////////////////////////////////////////////////////
+const bool CADEntity::GetTransparentFlag() const
 {
     return mTransparencyFlag;
 }
@@ -215,10 +237,5 @@ void CADEntity::SetTransparencyFlag( bool flag )
 void CADEntity::SetOpacityValue( float opacity )
 {
     mOpacity = opacity;
-}
-////////////////////////////////////////////////////////////////////////////////
-float CADEntity::GetOpacityValue()
-{
-    return mOpacity;
 }
 ////////////////////////////////////////////////////////////////////////////////

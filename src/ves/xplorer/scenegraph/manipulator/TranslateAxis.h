@@ -31,64 +31,52 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
-#ifndef MANIPULATOR_H
-#define MANIPULATOR_H
+#ifndef TRANSLATE_AXIS_H
+#define TRANSLATE_AXIS_H
 
 // --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
 
-// --- OSG Includes --- //
-#include <osg/ref_ptr>
+#include <ves/xplorer/scenegraph/manipulator/Dragger.h>
 
-namespace osg
-{
-class MatrixTransform;
-}
+// --- OSG Includes --- //
+
 
 namespace ves
 {
 namespace xplorer
 {
-namespace device
+namespace scenegraph
 {
 namespace manipulator
 {
-/*!\file Manipulator.h
- * Manipulator API
+/*!\file TranslateAxis.h
+ * Translate1D API
  */
 
-/*!\class ves::xplorer::device::manipulator::Manipulator
+/*!\class ves::xplorer::scenegraph::manipulator::TranslateAxis
  *
  */
-    class VE_XPLORER_EXPORTS Manipulator
+class VE_SCENEGRAPH_EXPORTS TranslateAxis : public Dragger
 {
 public:
     ///
-    Manipulator();
+    TranslateAxis();
 
     ///
-    ~Manipulator();
-
-    ///
-    osg::MatrixTransform* const GetMatrixTransform() const;
-
-    ///
-    void SetMatrixTransform( osg::MatrixTransform* matrixTransform );
+    ~TranslateAxis();
 
 protected:
     ///
-    virtual void SetupDefaultGeometry() = 0;
-
-    ///
-    osg::ref_ptr< osg::MatrixTransform > m_matrixTransform;
+    virtual void SetupDefaultGeometry();
 
 private:
-    
+
 
 };
 } //end manipulator
-} //end device
+} //end scenegraph
 } //end xplorer
 } //end ves
 
-#endif //MANIPULATOR_H
+#endif //TRANSLATE_AXIS_H

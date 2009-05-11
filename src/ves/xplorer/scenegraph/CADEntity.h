@@ -30,19 +30,9 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
+
 #ifndef CAD_ENTITY_H
 #define CAD_ENTITY_H
-
-/*!\file CADEntity.h
-*/
-
-/*!\class ves::xplorer::scenegraph::CADEntity
-*
-*/
-
-/*!\namespace ves::xplorer::scenegraph
-*
-*/
 
 // --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
@@ -50,29 +40,10 @@
 //Should not have to include these here
 #include <ves/xplorer/scenegraph/DCS.h>
 
-namespace ves
-{
-namespace xplorer
-{
-namespace scenegraph
-{
-    class DCS;
-    class CADEntityHelper;
-    class PhysicsRigidBody;
-}
-}
-}
+#include <ves/xplorer/scenegraph/manipulator/Manipulator.h>
 
 // --- OSG Includes --- //
-#ifdef _OSG
 #include <osg/ref_ptr>
-#include <osg/Fog>
-
-namespace osg
-{
-    class Fog;
-}
-#endif
 
 // --- C/C++ Libraries --- //
 #include <vector>
@@ -84,8 +55,22 @@ namespace xplorer
 {
 namespace scenegraph
 {
-    class PhysicsSimulator;
+//class DCS;
+class CADEntityHelper;
+class PhysicsSimulator;
+class PhysicsRigidBody;
 
+/*!\file CADEntity.h
+ *
+ */
+
+/*!\class ves::xplorer::scenegraph::CADEntity
+ *
+ */
+
+/*!\namespace ves::xplorer::scenegraph
+ *
+ */
 class VE_SCENEGRAPH_EXPORTS CADEntity
 {
 public:
@@ -95,78 +80,103 @@ public:
     ///\param isStream Is the file a stream
     ///\param occlude Occlude the node with osgOQ
     ///\param physicsSimulator Sets a pointer to the PhysicsSimulator singleton
-    CADEntity( std::string geomFile,
-               ves::xplorer::scenegraph::DCS* parentDCS,
-               bool isStream = false,
-               bool occlude = false,
-               PhysicsSimulator* physicsSimulator = NULL );
+    CADEntity(
+        std::string geomFile,
+        ves::xplorer::scenegraph::DCS* parentDCS,
+        bool isStream = false,
+        bool occlude = false,
+        PhysicsSimulator* physicsSimulator = NULL );
 
     ///Constructor that takes an osg::Node*
     ///\param node
     ///\param parentDCS
     ///\param physicsSimulator Sets a pointer to the PhysicsSimulator singleton
-    CADEntity( osg::Node* node,
-               ves::xplorer::scenegraph::DCS* parentDCS,
-               PhysicsSimulator* physicsSimulator = NULL );
+    CADEntity(
+        osg::Node* node,
+        ves::xplorer::scenegraph::DCS* parentDCS,
+        PhysicsSimulator* physicsSimulator = NULL );
 
     ///Constructor that takes a CADEntityHelper and deep copies
     ///the osg node contained in the CADEntityHelper
     ///\param nodeToCopy The node to copy
     ///\param parentDCS The parent DCS that CADEntity is added to
     ///\param physicsSimulator Sets a pointer to the PhysicsSimulator singleton
-    CADEntity( ves::xplorer::scenegraph::CADEntityHelper* nodeToCopy,
-               ves::xplorer::scenegraph::DCS* parentDCS,
-               PhysicsSimulator* physicsSimulator = NULL );
+    CADEntity(
+        ves::xplorer::scenegraph::CADEntityHelper* nodeToCopy,
+        ves::xplorer::scenegraph::DCS* parentDCS,
+        PhysicsSimulator* physicsSimulator = NULL );
 
     ///Destructor
     virtual ~CADEntity();
 
     ///Initializes physics for CADEntity
-    //Unless this is called, physics will not work
+    ///Unless this is called, physics will not work
     void InitPhysics();
 
     ///Returns the DCS of CADEntity
-    ves::xplorer::scenegraph::DCS* GetDCS();
+    ///\return 
+    ves::xplorer::scenegraph::DCS* const GetDCS() const;
 
     ///Returns the node of CADEntity
-    ves::xplorer::scenegraph::CADEntityHelper* GetNode();
+    ///\return 
+    ves::xplorer::scenegraph::CADEntityHelper* const GetNode() const;
 
     ///Returns the physics rigid body of CADEntity
-    ves::xplorer::scenegraph::PhysicsRigidBody* GetPhysicsRigidBody();
+    ///\return 
+    ves::xplorer::scenegraph::PhysicsRigidBody* const GetPhysicsRigidBody();
 
     ///Returns the filename of CADEntity
-    std::string GetFilename();
+    ///\return 
+    const std::string& GetFilename() const;
+
+    ///Get the opacity value for this file
+    ///\return 
+    const float GetOpacityValue() const;
 
     ///Returns the transparency state of the node
-    bool GetTransparentFlag();
+    ///\return 
+    const bool GetTransparentFlag() const;
 
     ///Set the transparency state of the node to go 
     ///transparent when data is selected
     ///\param flag The transparency state
     void SetTransparencyFlag( bool flag );
+
     ///Set the opacity value for this file
+    ///\param opacity
     void SetOpacityValue( float opacity );
-    ///Get the opacity value for this file
-    float GetOpacityValue();
 
 protected:
-    ///A helper class to give added functionality to CADEntity
-    ves::xplorer::scenegraph::CADEntityHelper* mCADEntityHelper;
-    ///The DCS of CADEntity
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > mDCS;
+    ///The current state of physics for CADEntity
+    bool mPhysicsFlag;
 
-    bool mPhysicsFlag;///<The current state of physics for CADEntity
-    bool mTransparencyFlag;///<The current state of transparency
+    ///The current state of transparency
+    bool mTransparencyFlag;
+
     ///Set the opacity value
     float mOpacity;
     
-    std::string mFileName;///<The name of the geometry file loaded
+    ///The name of the geometry file loaded
+    std::string mFileName;
 
-    PhysicsSimulator* mPhysicsSimulator;///<A pointer to the PhysicsSimulator singleton
+    ///A pointer to the PhysicsSimulator singleton
+    PhysicsSimulator* mPhysicsSimulator;
+
+    ///
     PhysicsRigidBody* mPhysicsRigidBody;
+
+    ///The DCS of CADEntity
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > mDCS;
+
+    ///A helper class to give added functionality to CADEntity
+    ves::xplorer::scenegraph::CADEntityHelper* mCADEntityHelper;
+
+    ///
+    ves::xplorer::scenegraph::manipulator::ManipulatorPtr m_manipulator;
+
 };
-}
-}
-}
+} //end scenegraph
+} //end xplorer
+} //end ves
 
 #endif //CAD_ENTITY_H

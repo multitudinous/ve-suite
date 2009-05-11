@@ -32,12 +32,12 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
 // --- VE-Suite Includes --- //
-#include <ves/xplorer/device/manipulator/Manipulator.h>
+#include <ves/xplorer/scenegraph/manipulator/Manipulator.h>
 
 // --- OSG Includes --- //
-#include <osg/MatrixTransform>
+#include <osg/PositionAttitudeTransform>
 
-using namespace ves::xplorer::device::manipulator;
+using namespace ves::xplorer::scenegraph::manipulator;
 
 ////////////////////////////////////////////////////////////////////////////////
 Manipulator::Manipulator()
@@ -50,13 +50,56 @@ Manipulator::~Manipulator()
 
 }
 ////////////////////////////////////////////////////////////////////////////////
-osg::MatrixTransform* const Manipulator::GetMatrixTransform() const
+const TransformationMode::Enum& Manipulator::GetActiveMode() const
 {
-    return m_matrixTransform.get();
+    return m_activeMode;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Manipulator::SetMatrixTransform( osg::MatrixTransform* matrixTransform )
+osg::PositionAttitudeTransform* const Manipulator::GetPAT() const
 {
-    m_matrixTransform = matrixTransform;
+    return m_pat.get();
+}
+////////////////////////////////////////////////////////////////////////////////
+const TransformationMode::Enum& Manipulator::GetEnabledModes() const
+{
+    return m_enabledModes;
+}
+////////////////////////////////////////////////////////////////////////////////
+const AxisFlags::Enum& Manipulator::GetSelectedAxes() const
+{
+    return m_selectedAxes;
+}
+////////////////////////////////////////////////////////////////////////////////
+const VectorSpace::Enum& Manipulator::GetVectorSpace() const
+{
+    return m_vectorSpace;
+}
+////////////////////////////////////////////////////////////////////////////////
+void Manipulator::SetEnabledModes( TransformationMode::Enum& value )
+{
+    if( m_enabledModes == value )
+    {
+        return;
+    }
+
+    if( m_manipulating )
+    {
+        //mRedoStack.clear();
+    }
+
+    m_manipulating = false;
+    m_enabledModes = value;
+    m_activeMode = TransformationMode::None;
+}
+////////////////////////////////////////////////////////////////////////////////
+void Manipulator::SetVectorSpace( VectorSpace::Enum& value )
+{
+    if( m_manipulating )
+    {
+        //mRedoStack.Clear();
+    }
+
+    m_manipulating = false;
+    m_vectorSpace = value;
 }
 ////////////////////////////////////////////////////////////////////////////////

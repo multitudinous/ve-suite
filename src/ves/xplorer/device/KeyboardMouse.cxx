@@ -1220,6 +1220,8 @@ void KeyboardMouse::SelOnMousePress()
                 ProcessNURBSSelectionEvents();
             }
 
+            ProcessSelectionEvents();
+
             break;
         }
         //Middle mouse button
@@ -1264,8 +1266,6 @@ void KeyboardMouse::SelOnMouseRelease()
             break;
         }
     }
-
-    ProcessSelectionEvents();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::SelOnMouseMotion( std::pair< double, double > delta )

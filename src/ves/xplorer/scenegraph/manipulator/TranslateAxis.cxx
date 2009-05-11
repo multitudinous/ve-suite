@@ -32,7 +32,7 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
 // --- VE-Suite Includes --- //
-#include <ves/xplorer/device/manipulator/Translate1D.h>
+#include <ves/xplorer/scenegraph/manipulator/TranslateAxis.h>
 
 // --- OSG Includes --- //
 #include <osg/Geode>
@@ -42,40 +42,37 @@
 #include <osg/Material>
 #include <osg/LineWidth>
 
-using namespace ves::xplorer::device::manipulator;
+using namespace ves::xplorer::scenegraph::manipulator;
 
 ////////////////////////////////////////////////////////////////////////////////
-Translate1D::Translate1D()
+TranslateAxis::TranslateAxis()
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-Translate1D::~Translate1D()
+TranslateAxis::~TranslateAxis()
 {
 
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Translate1D::SetupDefaultGeometry()
+void TranslateAxis::SetupDefaultGeometry()
 {
-    //Get the line length and direction.
-    //osg::Vec3 lineDir = _projector->getLineEnd()-_projector->getLineStart();
-    //float lineLength = lineDir.length();
-    //lineDir.normalize();
-
     osg::ref_ptr< osg::Geode > geode = new osg::Geode();
 
-    //Create a line
-    osg::ref_ptr< osg::Geometry > geometry = new osg::Geometry();
-    
-    osg::ref_ptr< osg::Vec3Array > vertices = new osg::Vec3Array();
-    (*vertices)[ 0 ] = osg::Vec3d( 0.0, 0.0, 0.0 );
-    (*vertices)[ 1 ] = osg::Vec3d( 1.0, 0.0, 0.0 );
+    //Create a right line
+    {
+        osg::ref_ptr< osg::Geometry > geometry = new osg::Geometry();
+        
+        osg::ref_ptr< osg::Vec3Array > vertices = new osg::Vec3Array();
+        (*vertices)[ 0 ] = osg::Vec3d( 0.0, 0.0, 0.0 );
+        (*vertices)[ 1 ] = osg::Vec3d( 1.0, 0.0, 0.0 );
 
-    geometry->setVertexArray( vertices.get() );
-    geometry->addPrimitiveSet(
-        new osg::DrawArrays( osg::PrimitiveSet::LINES, 0, 2 ) );
+        geometry->setVertexArray( vertices.get() );
+        geometry->addPrimitiveSet(
+            new osg::DrawArrays( osg::PrimitiveSet::LINES, 0, 2 ) );
 
-    geode->addDrawable( geometry.get() );
+        geode->addDrawable( geometry.get() );
+    }
 
     /*
     //Create a left cone
@@ -91,7 +88,7 @@ void Translate1D::SetupDefaultGeometry()
     */
 
     /*
-    //Create a cone
+    //Create a right cone
     {
         osg::ref_ptr< osg::Cone > cone =
             new osg::Cone(_projector->getLineEnd(), 0.025f * lineLength, 0.10f * lineLength);
@@ -127,6 +124,6 @@ void Translate1D::SetupDefaultGeometry()
     stateSet->setMode( GL_LIGHTING, osg::StateAttribute::OFF );
 
     //Add line and cones to the scene
-    m_matrixTransform->addChild( geode.get() );
+    addChild( geode.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
