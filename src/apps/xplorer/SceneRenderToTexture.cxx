@@ -213,7 +213,7 @@ osg::Camera* SceneRenderToTexture::CreatePipelineCamera(
     tempCamera->setReferenceFrame( osg::Camera::ABSOLUTE_RF );
     tempCamera->setRenderOrder( osg::Camera::PRE_RENDER, 0 );
     tempCamera->setClearMask( 
-        GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );// | GL_STENCIL_BUFFER_BIT );
+        GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT );
     tempCamera->setClearColor( osg::Vec4( 0.0, 0.0, 1.0, 1.0 ) );
     tempCamera->setRenderTargetImplementation(
         osg::Camera::FRAME_BUFFER_OBJECT );

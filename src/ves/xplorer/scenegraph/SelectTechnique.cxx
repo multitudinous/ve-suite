@@ -58,6 +58,7 @@ SelectTechnique::~SelectTechnique()
 ////////////////////////////////////////////////////////////////////////////////
 void SelectTechnique::DefinePasses()
 {
+    /*
     osg::Vec4 glowColor( 1.0, 0.0, 0.0, 1.0 );
     //Pass 1
     {
@@ -67,8 +68,6 @@ void SelectTechnique::DefinePasses()
 
         AddPass( mStateSet.get() );
     }
-
-    /*
     //Pass 2
     {
         std::string fragmentSource =
@@ -103,7 +102,7 @@ void SelectTechnique::DefinePasses()
         AddPass( stateset.get() );
     }
     */
-    /*
+
     //Implement pass #1
     {
         osg::ref_ptr< osg::Stencil > stencil = new osg::Stencil();
@@ -124,6 +123,30 @@ void SelectTechnique::DefinePasses()
 
     //Implement pass #2
     {
+        osg::ref_ptr< osg::StateSet > stateset = new osg::StateSet();
+
+        std::string fragmentSource =
+        "uniform vec4 selectionColor; \n"
+
+        "void main() \n"
+        "{ \n"
+            "gl_FragColor = selectionColor; \n"
+        "} \n";
+
+        osg::ref_ptr< osg::Shader > fragmentShader = new osg::Shader();
+        fragmentShader->setType( osg::Shader::FRAGMENT );
+        fragmentShader->setShaderSource( fragmentSource );
+
+        osg::ref_ptr< osg::Program > program = new osg::Program();
+        program->addShader( fragmentShader.get() );
+
+        stateset->setAttributeAndModes( program.get(),
+            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+
+        osg::Vec4d selectionColor( 1.0, 0.75, 1.0, 1.0 );
+        stateset->addUniform(
+            new osg::Uniform( "selectionColor", selectionColor ) );
+
         osg::ref_ptr< osg::Stencil > stencil = new osg::Stencil();
         stencil->setFunction( osg::Stencil::NOTEQUAL,  //comparison function
                               1,                       //reference value
@@ -132,35 +155,37 @@ void SelectTechnique::DefinePasses()
                                osg::Stencil::KEEP,     //stencil pass/depth fail
                                osg::Stencil::REPLACE );//stencil pass/depth pass
 
-        osg::ref_ptr< osg::LineWidth > linewidth = new osg::LineWidth();
-        linewidth->setWidth( 4.0 );
-
-        osg::ref_ptr< osg::Material > material = new osg::Material();
-        material->setColorMode( osg::Material::EMISSION );
-        material->setEmission(
-            osg::Material::FRONT_AND_BACK, osg::Vec4( 0.0, 1.0, 0.0, 1.0 ) );
-
-        osg::ref_ptr< osg::PolygonMode > polymode = new osg::PolygonMode();
-        polymode->setMode(
-            osg::PolygonMode::FRONT_AND_BACK, osg::PolygonMode::LINE );
-
-        osg::ref_ptr< osg::StateSet > stateset = new osg::StateSet();
-        stateset->setMode( GL_LIGHTING,
-            osg::StateAttribute::OFF | osg::StateAttribute::PROTECTED );
         stateset->setMode( GL_STENCIL_TEST,
             osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
         stateset->setAttributeAndModes( stencil.get(),
             osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+
+        osg::ref_ptr< osg::PolygonMode > polygonMode = new osg::PolygonMode();
+        polygonMode->setMode(
+            osg::PolygonMode::FRONT_AND_BACK, osg::PolygonMode::LINE );
+
+        stateset->setAttributeAndModes( polygonMode.get(),
+            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+
+        osg::ref_ptr< osg::LineWidth > linewidth = new osg::LineWidth();
+        linewidth->setWidth( 2.0 );
         stateset->setAttributeAndModes( linewidth.get(),
             osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+
+        /*
+        stateset->setMode( GL_LIGHTING,
+            osg::StateAttribute::OFF | osg::StateAttribute::PROTECTED );
+
+        osg::ref_ptr< osg::Material > material = new osg::Material();
+        material->setColorMode( osg::Material::EMISSION );
+        material->setEmission(
+            osg::Material::FRONT_AND_BACK, osg::Vec4( 1.0, 0.75, 1.0, 1.0 ) );
+
         stateset->setAttributeAndModes( material.get(),
-            osg::StateAttribute::ON | osg::StateAttribute::OVERRIDE |
-            osg::StateAttribute::PROTECTED );
-        stateset->setAttributeAndModes( polymode.get(),
             osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+        */
 
         AddPass( stateset.get() );
     }
-    */
 }
 ////////////////////////////////////////////////////////////////////////////////
