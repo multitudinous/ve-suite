@@ -252,7 +252,8 @@ opts.Add('MakeDynSimSupport', 'If "yes", make dynsim support', 'no')
 opts.Add('MakeMinervaSupport', 'If "yes", add GIS support with minerva', 'no')
 ##opts.Add('arch', 'CPU architecture (ia32, x86_64, or ppc)', cpu_arch_default)
 
-opts.Add( 'CharacterController', 'If "yes", then integrate CharacterController into the build ', 'no' )
+opts.Add( 'CharacterController', 'If "yes", then integrate CharacterController into the build', 'no' )
+opts.Add( 'TransformManipulator', 'If "yes", then integrate TransformManipulator into the build', 'no' )
 
 apr_options = fp_option.FlagPollBasedOption("Apache Portable Runtime",
                                             "apr-1", "1.0", True, True, helpText=None, compileTest=True, headerToCheck="apr.h")

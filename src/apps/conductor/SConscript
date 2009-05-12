@@ -16,6 +16,8 @@ env = ves_pkg.getEnv().Clone()
 env.Append( CPPDEFINES = [ GetSVNVersion( srcDir ) ] )
 if baseEnv[ 'CharacterController' ] != 'no':
     env.Append( CPPDEFINES = [ 'CHARACTER_CONTROLLER' ] )
+if baseEnv[ 'TransformManipulator' ] != 'no':
+    env.Append( CPPDEFINES = [ 'TRANSFORM_MANIPULATOR' ] )
 env.Append(LIBS = ['ves_conductor_plugin', 'ves_open_xml',
                    'ves_open_module'])
 env.Append(LIBPATH = [
