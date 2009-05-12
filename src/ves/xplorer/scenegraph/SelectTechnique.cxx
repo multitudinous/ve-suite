@@ -36,8 +36,9 @@
 
 // --- OSG Includes --- //
 #include <osg/Stencil>
+#include <osg/Hint>
+#include <osg/Point>
 #include <osg/LineWidth>
-#include <osg/Material>
 #include <osg/PolygonMode>
 #include <osg/Depth>
 
@@ -46,7 +47,9 @@ using namespace ves::xplorer::scenegraph;
 ////////////////////////////////////////////////////////////////////////////////
 SelectTechnique::SelectTechnique( osg::ref_ptr< osg::StateSet > stateSet )
     :
-    mStateSet( stateSet )
+    m_lineAndPointSize( 4.0 ),
+    m_selectionColor( 1.0, 0.75, 1.0, 1.0 ),
+    m_stateSet( stateSet )
 {
     DefinePasses();
 }
@@ -58,53 +61,10 @@ SelectTechnique::~SelectTechnique()
 ////////////////////////////////////////////////////////////////////////////////
 void SelectTechnique::DefinePasses()
 {
-    /*
-    osg::Vec4 glowColor( 1.0, 0.0, 0.0, 1.0 );
-    //Pass 1
-    {
-        //mStateSet->setRenderBinDetails( -1, "RenderBin" );
-
-        mStateSet->addUniform( new osg::Uniform( "glowColor", glowColor ) );
-
-        AddPass( mStateSet.get() );
-    }
-    //Pass 2
-    {
-        std::string fragmentSource =
-        "uniform vec4 glowColor; \n"
-
-        "void main() \n"
-        "{ \n"
-            "gl_FragData[ 2 ] = glowColor; \n"
-        "} \n";
-
-        osg::ref_ptr< osg::StateSet > stateset = new osg::StateSet();
-
-        osg::ref_ptr< osg::Shader > fragmentShader = new osg::Shader();
-        fragmentShader->setType( osg::Shader::FRAGMENT );
-        fragmentShader->setShaderSource( fragmentSource );
-
-        osg::ref_ptr< osg::Program > program = new osg::Program();
-        program->addShader( fragmentShader.get() );
-
-        stateset->setAttributeAndModes( program.get(),
-            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
-
-        osg::ref_ptr< osg::Depth > depth = new osg::Depth();
-        depth->setFunction( osg::Depth::ALWAYS );
-        depth->setWriteMask( false );
-
-        stateset->setAttributeAndModes( depth.get(),
-            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
-
-        stateset->addUniform( new osg::Uniform( "glowColor", glowColor ) );
-
-        AddPass( stateset.get() );
-    }
-    */
-
     //Implement pass #1
+    //Render the geometry with current StateSet and mask off stencil buffer
     {
+        //Setup the stencil function and operation
         osg::ref_ptr< osg::Stencil > stencil = new osg::Stencil();
         stencil->setFunction( osg::Stencil::ALWAYS,    //comparison function
                               1,                       //reference value
@@ -113,47 +73,48 @@ void SelectTechnique::DefinePasses()
                                osg::Stencil::KEEP,     //stencil pass/depth fail
                                osg::Stencil::REPLACE );//stencil pass/depth pass
 
-        mStateSet->setMode( GL_STENCIL_TEST,
+        m_stateSet->setMode( GL_STENCIL_TEST,
             osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
-        mStateSet->setAttributeAndModes( stencil.get(),
+        m_stateSet->setAttributeAndModes( stencil.get(),
             osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
 
-        AddPass( mStateSet.get() );
+        AddPass( m_stateSet.get() );
     }
 
+    //Create the shader used to render the lines and points
+    std::string fragmentSource =
+    "uniform vec4 selectionColor; \n"
+
+    "void main() \n"
+    "{ \n"
+        "gl_FragColor = selectionColor; \n"
+    "} \n";
+
+    osg::ref_ptr< osg::Shader > fragmentShader = new osg::Shader();
+    fragmentShader->setType( osg::Shader::FRAGMENT );
+    fragmentShader->setShaderSource( fragmentSource );
+
+    osg::ref_ptr< osg::Program > program = new osg::Program();
+    program->addShader( fragmentShader.get() );
+
+    //Create the stencil used to render the lines and points
+    osg::ref_ptr< osg::Stencil > stencil = new osg::Stencil();
+    stencil->setFunction( osg::Stencil::NOTEQUAL,  //comparison function
+                          1,                       //reference value
+                          ~0u );                   //comparison mask
+    stencil->setOperation( osg::Stencil::KEEP,     //stencil fail
+                           osg::Stencil::KEEP,     //stencil pass/depth fail
+                           osg::Stencil::REPLACE );//stencil pass/depth pass
+
     //Implement pass #2
+    //Render the geometry as lines where the stencil buffer has not been masked
     {
         osg::ref_ptr< osg::StateSet > stateset = new osg::StateSet();
-
-        std::string fragmentSource =
-        "uniform vec4 selectionColor; \n"
-
-        "void main() \n"
-        "{ \n"
-            "gl_FragColor = selectionColor; \n"
-        "} \n";
-
-        osg::ref_ptr< osg::Shader > fragmentShader = new osg::Shader();
-        fragmentShader->setType( osg::Shader::FRAGMENT );
-        fragmentShader->setShaderSource( fragmentSource );
-
-        osg::ref_ptr< osg::Program > program = new osg::Program();
-        program->addShader( fragmentShader.get() );
-
         stateset->setAttributeAndModes( program.get(),
             osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
 
-        osg::Vec4d selectionColor( 1.0, 0.75, 1.0, 1.0 );
         stateset->addUniform(
-            new osg::Uniform( "selectionColor", selectionColor ) );
-
-        osg::ref_ptr< osg::Stencil > stencil = new osg::Stencil();
-        stencil->setFunction( osg::Stencil::NOTEQUAL,  //comparison function
-                              1,                       //reference value
-                              ~0u );                   //comparison mask
-        stencil->setOperation( osg::Stencil::KEEP,     //stencil fail
-                               osg::Stencil::KEEP,     //stencil pass/depth fail
-                               osg::Stencil::REPLACE );//stencil pass/depth pass
+            new osg::Uniform( "selectionColor", m_selectionColor ) );
 
         stateset->setMode( GL_STENCIL_TEST,
             osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
@@ -168,24 +129,99 @@ void SelectTechnique::DefinePasses()
             osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
 
         osg::ref_ptr< osg::LineWidth > linewidth = new osg::LineWidth();
-        linewidth->setWidth( 2.0 );
+        linewidth->setWidth( m_lineAndPointSize );
         stateset->setAttributeAndModes( linewidth.get(),
             osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
 
-        /*
-        stateset->setMode( GL_LIGHTING,
-            osg::StateAttribute::OFF | osg::StateAttribute::PROTECTED );
-
-        osg::ref_ptr< osg::Material > material = new osg::Material();
-        material->setColorMode( osg::Material::EMISSION );
-        material->setEmission(
-            osg::Material::FRONT_AND_BACK, osg::Vec4( 1.0, 0.75, 1.0, 1.0 ) );
-
-        stateset->setAttributeAndModes( material.get(),
+        stateset->setMode( GL_LINE_SMOOTH,
             osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
-        */
+        osg::ref_ptr< osg::Hint > hint =
+            new osg::Hint( GL_LINE_SMOOTH_HINT, GL_NICEST );
+        stateset->setAttributeAndModes( hint.get(),
+            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+
+        AddPass( stateset.get() );
+    }
+
+    //Implement pass #3
+    //Render the geometry as points where the stencil buffer has not been masked
+    {
+        osg::ref_ptr< osg::StateSet > stateset = new osg::StateSet();
+        stateset->setAttributeAndModes( program.get(),
+            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+
+        stateset->addUniform(
+            new osg::Uniform( "selectionColor", m_selectionColor ) );
+
+        stateset->setMode( GL_STENCIL_TEST,
+            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+        stateset->setAttributeAndModes( stencil.get(),
+            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+
+        osg::ref_ptr< osg::PolygonMode > polygonMode = new osg::PolygonMode();
+        polygonMode->setMode(
+            osg::PolygonMode::FRONT_AND_BACK, osg::PolygonMode::POINT );
+
+        stateset->setAttributeAndModes( polygonMode.get(),
+            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+
+        stateset->setAttribute( new osg::Point( m_lineAndPointSize ),
+            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+
+        stateset->setMode( GL_POINT_SMOOTH,
+            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+        osg::ref_ptr< osg::Hint > hint =
+            new osg::Hint( GL_POINT_SMOOTH_HINT, GL_NICEST );
+        stateset->setAttributeAndModes( hint.get(),
+            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
 
         AddPass( stateset.get() );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
+
+//This is the old code to select using rtt glow method
+/*
+osg::Vec4 glowColor( 1.0, 0.0, 0.0, 1.0 );
+//Pass 1
+{
+    //m_stateSet->setRenderBinDetails( -1, "RenderBin" );
+
+    m_stateSet->addUniform( new osg::Uniform( "glowColor", glowColor ) );
+
+    AddPass( m_stateSet.get() );
+}
+//Pass 2
+{
+    std::string fragmentSource =
+    "uniform vec4 glowColor; \n"
+
+    "void main() \n"
+    "{ \n"
+        "gl_FragData[ 2 ] = glowColor; \n"
+    "} \n";
+
+    osg::ref_ptr< osg::StateSet > stateset = new osg::StateSet();
+
+    osg::ref_ptr< osg::Shader > fragmentShader = new osg::Shader();
+    fragmentShader->setType( osg::Shader::FRAGMENT );
+    fragmentShader->setShaderSource( fragmentSource );
+
+    osg::ref_ptr< osg::Program > program = new osg::Program();
+    program->addShader( fragmentShader.get() );
+
+    stateset->setAttributeAndModes( program.get(),
+        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+
+    osg::ref_ptr< osg::Depth > depth = new osg::Depth();
+    depth->setFunction( osg::Depth::ALWAYS );
+    depth->setWriteMask( false );
+
+    stateset->setAttributeAndModes( depth.get(),
+        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+
+    stateset->addUniform( new osg::Uniform( "glowColor", glowColor ) );
+
+    AddPass( stateset.get() );
+}
+*/

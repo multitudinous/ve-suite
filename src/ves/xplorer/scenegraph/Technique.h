@@ -37,6 +37,14 @@
 // --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
 
+// --- OSG Includes --- //
+#include <osg/State>
+#include <osg/Group>
+#include <osg/NodeVisitor>
+
+// --- C/C++ Includes --- //
+#include <vector>
+
 namespace ves
 {
 namespace xplorer
@@ -44,29 +52,19 @@ namespace xplorer
 namespace scenegraph
 {
 class SceneNode;
-}
-}
-}
 
-// --- OSG Includes --- //
-#include <osg/State>
-#include <osg/Group>
-#include <osg/NodeVisitor>
+/*!\file Technique.h
+ *
+ */
 
-// --- C/C++ Libraries --- //
-#include <vector>
-#include <string>
-
-namespace ves
-{
-namespace xplorer
-{
-namespace scenegraph
-{
+/*!\class Technique
+ *
+ */
 class VE_SCENEGRAPH_EXPORTS Technique
 {
 public:
     Technique();
+
     virtual ~Technique();
 
     int GetNumPasses() const;
@@ -87,9 +85,11 @@ protected:
 
     std::vector< osg::ref_ptr< osg::StateSet > > m_passes;
 
+private:
+
 };
-}
-}
-}
+} //end scenegraph
+} //end xplorer
+} //end ves
 
 #endif //TECHNIQUE_H

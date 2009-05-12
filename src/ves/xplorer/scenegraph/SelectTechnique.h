@@ -39,26 +39,46 @@
 
 #include <ves/xplorer/scenegraph/Technique.h>
 
+// --- C/C++ Includes --- //
+#include <string>
+
 namespace ves
 {
 namespace xplorer
 {
 namespace scenegraph
 {
+/*!\file SelectTechnique.h
+ *
+ */
+
+/*!\class SelectTechnique
+ *
+ */
 class VE_SCENEGRAPH_EXPORTS SelectTechnique : public Technique
 {
 public:
+    ///Constructor
+    ///\param stateSet
     SelectTechnique( osg::ref_ptr< osg::StateSet > stateSet );
+
+    ///Destructor
     virtual ~SelectTechnique();
 
 protected:
+    ///
     virtual void DefinePasses();
+
+private:
+    ///
+    float m_lineAndPointSize;
+
+    ///
+    osg::Vec4d m_selectionColor;
 
     ///This is a copy of the stateset passed into the constructor =>
     ///so it should have its own memory location as to not affect the original
-    osg::ref_ptr< osg::StateSet > mStateSet;
-
-private:
+    osg::ref_ptr< osg::StateSet > m_stateSet;
 
 };
 } //end scenegraph
