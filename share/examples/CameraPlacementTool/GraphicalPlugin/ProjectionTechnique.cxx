@@ -43,17 +43,17 @@ using namespace cpt;
 ////////////////////////////////////////////////////////////////////////////////
 ProjectionTechnique::ProjectionTechnique()
     :
-    ves::xplorer::scenegraph::Technique(),
-    mAlpha( new osg::Uniform(
-        osg::Uniform::FLOAT, "alpha" ) ),
-    mNearPlaneUniform( new osg::Uniform(
-        osg::Uniform::FLOAT, "nearPlane" ) ),
-    mFarPlaneUniform( new osg::Uniform(
-        osg::Uniform::FLOAT, "farPlane" ) ),
-    mFocalDistanceUniform( new osg::Uniform(
-        osg::Uniform::FLOAT, "focalDistance" ) ),
-    mFocalRangeUniform( new osg::Uniform(
-        osg::Uniform::FLOAT, "focalRange" ) )
+    ves::xplorer::scenegraph::technique::Technique(),
+    mAlpha(
+        new osg::Uniform( osg::Uniform::FLOAT, "alpha" ) ),
+    mNearPlaneUniform(
+        new osg::Uniform( osg::Uniform::FLOAT, "nearPlane" ) ),
+    mFarPlaneUniform(
+        new osg::Uniform( osg::Uniform::FLOAT, "farPlane" ) ),
+    mFocalDistanceUniform(
+        new osg::Uniform( osg::Uniform::FLOAT, "focalDistance" ) ),
+    mFocalRangeUniform(
+        new osg::Uniform( osg::Uniform::FLOAT, "focalRange" ) )
 {
     DefinePasses();
 }

@@ -45,11 +45,11 @@ using namespace cpt;
 ////////////////////////////////////////////////////////////////////////////////
 DepthOfFieldTechnique::DepthOfFieldTechnique()
     :
-    ves::xplorer::scenegraph::Technique(),
-    mTextureDimensionsUniform( new osg::Uniform(
-    osg::Uniform::INT_VEC2, "textureDimensions" ) ),
-    mMaxCircleOfConfusionUniform( new osg::Uniform(
-        osg::Uniform::FLOAT, "maxCoC" ) )
+    ves::xplorer::scenegraph::technique::Technique(),
+    mTextureDimensionsUniform(
+        new osg::Uniform( osg::Uniform::INT_VEC2, "textureDimensions" ) ),
+    mMaxCircleOfConfusionUniform(
+        new osg::Uniform( osg::Uniform::FLOAT, "maxCoC" ) )
 {
     DefinePasses();
 }

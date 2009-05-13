@@ -35,11 +35,11 @@
 #define DEPTH_HELPER_TECHNIQUE_H
 
 // --- VE-Suite Includes --- //
-#include <ves/xplorer/scenegraph/Technique.h>
+#include <ves/xplorer/scenegraph/technique/Technique.h>
 
 namespace cpt
 {
-class DepthHelperTechnique : public ves::xplorer::scenegraph::Technique
+class DepthHelperTechnique : public ves::xplorer::scenegraph::technique::Technique
 {
 public:
     DepthHelperTechnique();

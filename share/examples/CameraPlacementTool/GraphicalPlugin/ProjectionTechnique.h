@@ -35,11 +35,11 @@
 #define PROJECTION_TECHNIQUE_H
 
 // --- VE-Suite Includes --- //
-#include <ves/xplorer/scenegraph/Technique.h>
+#include <ves/xplorer/scenegraph/technique/Technique.h>
 
 namespace cpt
 {
-class ProjectionTechnique : public ves::xplorer::scenegraph::Technique
+class ProjectionTechnique : public ves::xplorer::scenegraph::technique::Technique
 {
 public:
     ProjectionTechnique();

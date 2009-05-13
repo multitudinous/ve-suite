@@ -35,11 +35,11 @@
 #define DEPTH_OF_FIELD_TECHNIQUE_H
 
 // --- VE-Suite Includes --- //
-#include <ves/xplorer/scenegraph/Technique.h>
+#include <ves/xplorer/scenegraph/technique/Technique.h>
 
 namespace cpt
 {
-class DepthOfFieldTechnique : public ves::xplorer::scenegraph::Technique
+class DepthOfFieldTechnique : public ves::xplorer::scenegraph::technique::Technique
 {
 public:
     DepthOfFieldTechnique();
