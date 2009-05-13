@@ -31,16 +31,19 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
-#ifndef SELECT_TECHNIQUE_H
-#define SELECT_TECHNIQUE_H
+#ifndef TECHNIQUE_H
+#define TECHNIQUE_H
 
 // --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
 
-#include <ves/xplorer/scenegraph/Technique.h>
+// --- OSG Includes --- //
+#include <osg/State>
+#include <osg/Group>
+#include <osg/NodeVisitor>
 
 // --- C/C++ Includes --- //
-#include <string>
+#include <vector>
 
 namespace ves
 {
@@ -48,41 +51,59 @@ namespace xplorer
 {
 namespace scenegraph
 {
-/*!\file SelectTechnique.h
+class SceneNode;
+
+namespace technique
+{
+
+/*!\file Technique.h
  *
  */
 
-/*!\class SelectTechnique
+/*!\class Technique
  *
  */
-class VE_SCENEGRAPH_EXPORTS SelectTechnique : public Technique
+class VE_SCENEGRAPH_EXPORTS Technique
 {
 public:
     ///Constructor
-    ///\param stateSet
-    SelectTechnique( osg::ref_ptr< osg::StateSet > stateSet );
+    Technique();
 
     ///Destructor
-    virtual ~SelectTechnique();
+    virtual ~Technique();
+
+    ///
+    void DirtyPasses();
+
+    ///
+    const size_t GetNumPasses() const;
+
+    ///
+    osg::StateSet* GetPassStateSet( int i );
+
+    ///
+    const osg::StateSet* GetPassStateSet( int i ) const;
+
+    ///
+    virtual void Traverse(
+        osg::NodeVisitor& nv, ves::xplorer::scenegraph::SceneNode* sceneNode );
 
 protected:
     ///
-    virtual void DefinePasses();
+    virtual void DefinePasses() = 0;
+
+    ///
+    void AddPass( osg::StateSet* ss = 0 );
+
+    ///
+    std::vector< osg::ref_ptr< osg::StateSet > > m_passes;
 
 private:
-    ///
-    float m_lineAndPointSize;
-
-    ///
-    osg::Vec4d m_selectionColor;
-
-    ///This is a copy of the stateset passed into the constructor =>
-    ///so it should have its own memory location as to not affect the original
-    osg::ref_ptr< osg::StateSet > m_stateSet;
 
 };
+} //end technique
 } //end scenegraph
 } //end xplorer
 } //end ves
 
-#endif //SELECT_TECHNIQUE_H
+#endif //TECHNIQUE_H

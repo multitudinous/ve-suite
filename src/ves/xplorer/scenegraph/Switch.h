@@ -30,28 +30,15 @@
 * -----------------------------------------------------------------
 *
 *************** <auto-copyright.rb END do not edit this line> ***************/
+
 #ifndef SWITCH_H
 #define SWITCH_H
-
-/*!\file Switch.h
-*/
-
-/*!\class ves::xplorer::scenegraph::Switch
-*
-*/
-
-/*!\namespace ves::xplorer::scenegraph
-*
-*/
 
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/SceneNode.h>
 
 // ---  OSG Includes --- //
-#ifdef _OSG
 #include <osg/Switch>
-#elif OPENSG
-#endif
 
 namespace ves
 {
@@ -59,9 +46,18 @@ namespace xplorer
 {
 namespace scenegraph
 {
-#ifdef _OSG
+/*!\file Switch.h
+ *
+ */
+
+/*!\class ves::xplorer::scenegraph::Switch
+ *
+ */
+
+/*!\namespace ves::xplorer::scenegraph
+ *
+ */
 class VE_SCENEGRAPH_EXPORTS Switch : public osg::Switch, public SceneNode
-#endif
 {
 public:
     ///Base Constructor
@@ -70,12 +66,15 @@ public:
     ///Copy constructor using CopyOp to manage deep vs shallow copy.
     Switch( const Switch&, const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
 
+    ///
     META_Node( ves::xplorer::scenegraph, Switch );
 
 protected:
+    ///Destructor
     virtual ~Switch();
 
 public:
+    ///
     enum Value
     {
         OFF = -1, ON
@@ -130,12 +129,15 @@ public:
 // --- This stuff is used for multipass rendering --- //
 // -------------------------------------------------- //
 public:
+    ///
     virtual void traverse( osg::NodeVisitor& nv );
+
+    ///
     virtual void InheritedTraverse( osg::NodeVisitor& nv );
 
 };
-}
-}
-}
+} //end scenegraph
+} //end xplorer
+} //end ves
 
 #endif //SWITCH_H

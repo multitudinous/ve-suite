@@ -30,13 +30,17 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#ifndef DEFAULT_TECHNIQUE_H
-#define DEFAULT_TECHNIQUE_H
+
+#ifndef SELECT_TECHNIQUE_H
+#define SELECT_TECHNIQUE_H
 
 // --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
 
-#include <ves/xplorer/scenegraph/Technique.h>
+#include <ves/xplorer/scenegraph/technique/Technique.h>
+
+// --- C/C++ Includes --- //
+#include <string>
 
 namespace ves
 {
@@ -44,23 +48,44 @@ namespace xplorer
 {
 namespace scenegraph
 {
-class VE_SCENEGRAPH_EXPORTS DefaultTechnique : public Technique
+namespace technique
+{
+/*!\file SelectTechnique.h
+ *
+ */
+
+/*!\class SelectTechnique
+ *
+ */
+class VE_SCENEGRAPH_EXPORTS SelectTechnique : public Technique
 {
 public:
-    DefaultTechnique();
-    virtual ~DefaultTechnique();
+    ///Constructor
+    ///\param stateSet
+    SelectTechnique( osg::ref_ptr< osg::StateSet > stateSet );
 
-    virtual void Traverse(
-        osg::NodeVisitor& nv, ves::xplorer::scenegraph::SceneNode* sceneNode );
+    ///Destructor
+    virtual ~SelectTechnique();
 
 protected:
+    ///
     virtual void DefinePasses();
 
 private:
+    ///
+    float m_lineAndPointSize;
+
+    ///
+    osg::Vec4d m_selectionColor;
+
+    ///This is a copy of the stateset passed into the constructor =>
+    ///so it should have its own memory location as to not affect the original
+    osg::ref_ptr< osg::StateSet > m_stateSet;
 
 };
-}
-}
-}
+} //end technique
+} //end scenegraph
+} //end xplorer
+} //end ves
 
-#endif //DEFAULT_TECHNIQUE_H
+#endif //SELECT_TECHNIQUE_H

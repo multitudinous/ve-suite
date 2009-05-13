@@ -32,30 +32,77 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
 // --- VE-Suite Includes --- //
-#include <ves/xplorer/scenegraph/DefaultTechnique.h>
-#include <ves/xplorer/scenegraph/DCS.h>
+#include <ves/xplorer/scenegraph/technique/Technique.h>
 
-using namespace ves::xplorer::scenegraph;
+#include <ves/xplorer/scenegraph/SceneNode.h>
+
+// --- OSG Includes --- //
+#include <osgUtil/CullVisitor>
+
+using namespace ves::xplorer::scenegraph::technique;
 
 ////////////////////////////////////////////////////////////////////////////////
-DefaultTechnique::DefaultTechnique()
+Technique::Technique()
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-DefaultTechnique::~DefaultTechnique()
+Technique::~Technique()
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DefaultTechnique::Traverse(
+const size_t Technique::GetNumPasses() const
+{
+    return m_passes.size();
+}
+////////////////////////////////////////////////////////////////////////////////
+osg::StateSet* Technique::GetPassStateSet( int i )
+{
+    return m_passes[ i ].get();
+}
+////////////////////////////////////////////////////////////////////////////////
+const osg::StateSet* Technique::GetPassStateSet( int i ) const
+{
+    return m_passes[ i ].get();
+}
+////////////////////////////////////////////////////////////////////////////////
+void Technique::DirtyPasses()
+{
+    m_passes.clear();
+}
+////////////////////////////////////////////////////////////////////////////////
+void Technique::AddPass( osg::StateSet* ss )
+{
+    if( ss )
+    {
+        m_passes.push_back( ss );
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void Technique::Traverse(
     osg::NodeVisitor& nv, ves::xplorer::scenegraph::SceneNode* sceneNode )
 {
-    sceneNode->InheritedTraverse( nv );
-}
-////////////////////////////////////////////////////////////////////////////////
-void DefaultTechnique::DefinePasses()
-{
-    ;
+    //Special actions must be taken if the node visitor is actually a CullVisitor
+    osgUtil::CullVisitor* cv = dynamic_cast< osgUtil::CullVisitor* >( &nv );
+
+    //Traverse all passes
+    for( int i = 0; i < GetNumPasses(); ++i )
+    {
+        //Push the i-th pass' StateSet if necessary
+        if( cv )
+        {
+            cv->pushStateSet( m_passes[ i ].get() );
+        }
+
+        //Traverse children as a Group would do
+        sceneNode->InheritedTraverse( nv );
+        
+        //Pop the StateSet if necessary
+        if( cv )
+        {
+            cv->popStateSet();
+        }
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////

@@ -30,9 +30,11 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
+
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/SceneNode.h>
-#include <ves/xplorer/scenegraph/DefaultTechnique.h>
+
+#include <ves/xplorer/scenegraph/technique/DefaultTechnique.h>
 
 // --- OSG Includes --- //
 #include <osg/NodeVisitor>
@@ -44,19 +46,19 @@ using namespace ves::xplorer::scenegraph;
 
 ////////////////////////////////////////////////////////////////////////////////
 SceneNode::SceneNode()
-        :
-        mActiveTechnique( "Default" )
+    :
+    mActiveTechnique( "Default" )
 {
-    AddTechnique( "Default", new DefaultTechnique() );
+    AddTechnique( "Default", new technique::DefaultTechnique() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 SceneNode::~SceneNode()
 {
     //Delete techniques in map
-    for( std::map< std::string, Technique* >::iterator
-            iter = mTechniques.begin(); iter != mTechniques.end(); ++iter )
+    std::map< std::string, technique::Technique* >::iterator itr;
+    for( itr =mTechniques.begin(); itr != mTechniques.end(); ++itr )
     {
-        Technique* tempTech = iter->second;
+        technique::Technique* tempTech = itr->second;
 
         delete tempTech;
     }
@@ -66,14 +68,15 @@ SceneNode::~SceneNode()
 ////////////////////////////////////////////////////////////////////////////////
 void SceneNode::DirtyTechniques()
 {
-    std::map< std::string, Technique* >::const_iterator itr;
+    std::map< std::string, technique::Technique* >::const_iterator itr;
     for( itr = mTechniques.begin(); itr != mTechniques.end(); ++itr )
     {
         itr->second->DirtyPasses();
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void SceneNode::AddTechnique( const std::string& name, Technique* technique )
+void SceneNode::AddTechnique(
+    const std::string& name, technique::Technique* technique )
 {
     mTechniques[ name ] = technique;
 }
@@ -88,13 +91,28 @@ void SceneNode::SetTechnique( const std::string& name )
     mActiveTechnique = name;
 }
 ////////////////////////////////////////////////////////////////////////////////
-Technique* SceneNode::GetTechnique( const std::string& name )
+technique::Technique* const SceneNode::GetTechnique(
+    const std::string& name ) const
 {
-    return mTechniques[ name ];
+    std::map< std::string, technique::Technique* >::const_iterator itr =
+        mTechniques.find( name );
+    if( itr != mTechniques.end() )
+    {
+        return itr->second;
+    }
+    
+    return NULL;
 }
 ////////////////////////////////////////////////////////////////////////////////
-Technique* SceneNode::GetActiveTechnique()
+technique::Technique* const SceneNode::GetActiveTechnique() const
 {
-    return mTechniques[ mActiveTechnique ];
+    std::map< std::string, technique::Technique* >::const_iterator itr =
+        mTechniques.find( mActiveTechnique );
+    if( itr != mTechniques.end() )
+    {
+        return itr->second;
+    }
+    
+    return NULL;
 }
 ////////////////////////////////////////////////////////////////////////////////

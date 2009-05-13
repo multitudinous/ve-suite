@@ -30,16 +30,15 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
+
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/Group.h>
-#include <ves/xplorer/scenegraph/Technique.h>
+
+#include <ves/xplorer/scenegraph/technique/Technique.h>
 
 // --- OSG Includes --- //
-#ifdef _OSG
 #include <osg/Group>
 #include <osg/Node>
-#elif _OPENSG
-#endif
 
 // --- C/C++ Libraries --- //
 #include <iostream>
@@ -50,8 +49,8 @@ using namespace ves::xplorer::scenegraph;
 
 ////////////////////////////////////////////////////////////////////////////////
 Group::Group( const Group& group, const osg::CopyOp& copyop )
-        :
-        osg::Group( group, copyop )
+    :
+    osg::Group( group, copyop )
 {
     ;
 }
@@ -68,100 +67,54 @@ Group::~Group()
 ////////////////////////////////////////////////////////////////////////////////
 int Group::RemoveChild( SceneNode* child )
 {
-#ifdef _OSG
     return removeChild( dynamic_cast< osg::Node* >( child ) );
-#elif _OPENSG
-    cerr << " ERROR: Group::ReplaceChild is NOT implemented " << endl;
-    exit( 1 );
-    return -1;
-#endif
 }
 ////////////////////////////////////////////////////////////////////////////////
 int Group::AddChild( SceneNode* child )
 {
-#ifdef _OSG
     return addChild( dynamic_cast< Node* >( child ) );
-#elif _OPENSG
-    cerr << " ERROR: Group::ReplaceChild is NOT implemented " << endl;
-    exit( 1 );
-    return -1;
-#endif
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Group::InsertChild( int position, SceneNode* child )
 {
-#ifdef _OSG
     insertChild( position, dynamic_cast< Node* >( child ) );
-#elif _OPENSG
-    cerr << " ERROR: Group::ReplaceChild is NOT implemented " << endl;
-    exit( 1 );
-    return -1;
-#endif
 }
 ////////////////////////////////////////////////////////////////////////////////
 int Group::GetNumChildren( void )
 {
-#ifdef _OSG
     return getNumChildren();
-#elif _OPENSG
-    cerr << " ERROR: Group::ReplaceChild is NOT implemented " << endl;
-    exit( 1 );
-    return -1;
-#endif
 }
 ////////////////////////////////////////////////////////////////////////////////
 const std::string Group::GetName( void )
 {
-#ifdef _OSG
     return getName().data();
-#elif _OPENSG
-    return 0;
-#endif
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Group::SetName( std::string name )
 {
-#ifdef _OSG
     setName( name );
-#elif _OPENSG
-    std::cerr << " ERROR: Group::SetName is NOT implemented " << std::endl;
-    exit( 1 );
-#endif
 }
 ////////////////////////////////////////////////////////////////////////////////
 int Group::ReplaceChild( SceneNode* childToBeReplaced, SceneNode* newChild )
 {
-#ifdef _OSG
-    return replaceChild( dynamic_cast< Node* >( childToBeReplaced ), dynamic_cast< Node* >( newChild ) );
-#elif _OPENSG
-    cerr << " ERROR: Group::ReplaceChild is NOT implemented " << endl;
-    exit( 1 );
-    return -1;
-#endif
+    return replaceChild(
+        dynamic_cast< Node* >( childToBeReplaced ),
+        dynamic_cast< Node* >( newChild ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool Group::SearchChild( ves::xplorer::scenegraph::SceneNode* searchChild )
 {
-#ifdef _OSG
     return containsNode( dynamic_cast< osg::Node* >( searchChild ) );
-#elif _OPENSG
-#endif
 }
 ////////////////////////////////////////////////////////////////////////////////
 osg::Group* Group::GetParent( unsigned int position )
 {
-#ifdef _OSG
     return getParent( position );
-#elif _OPENSG
-#endif
 }
 ////////////////////////////////////////////////////////////////////////////////
 osg::Node* Group::GetChild( unsigned int position )
 {
-#ifdef _OSG
     return getChild( position );
-#elif _OPENSG
-#endif
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Group::ToggleDisplay( bool onOff )
@@ -175,24 +128,18 @@ void Group::ToggleDisplay( std::string onOff )
 {
     if( onOff == "ON" )
     {
-#ifdef _OSG
         setNodeMask( 1 );
-#elif _OPENSG
-#endif
     }
 
     else if( onOff == "OFF" )
     {
-#ifdef _OSG
         setNodeMask( 0 );
-#elif _OPENSG
-#endif
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Group::traverse( osg::NodeVisitor& nv )
 {
-    ves::xplorer::scenegraph::Technique* technique = mTechniques[ mActiveTechnique ];
+    technique::Technique* technique = mTechniques[ mActiveTechnique ];
 
     technique->Traverse( nv, this );
 }

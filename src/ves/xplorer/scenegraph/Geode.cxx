@@ -30,20 +30,24 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
+
+// --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/Geode.h>
+#include <ves/xplorer/scenegraph/vtkActorToOSG.h>
+#include <ves/xplorer/scenegraph/vtkActorToStreamLine.h>
+
+#include <ves/xplorer/scenegraph/technique/Technique.h>
 
 #include <ves/xplorer/Debug.h>
 
-#include <ves/xplorer/scenegraph/vtkActorToOSG.h>
-#include <ves/xplorer/scenegraph/vtkActorToStreamLine.h>
-#include <ves/xplorer/scenegraph/Technique.h>
-
+// --- OSG Includes --- //
 #include <osg/Geode>
 #include <osg/Node>
 #include <osg/LightModel>
 #include <osg/CopyOp>
 #include <osgUtil/Optimizer>
 
+// --- VTK Includes --- //
 #include <vtkPolyData.h>
 #include <vtkActor.h>
 #include <vtkMapper.h>
@@ -61,14 +65,12 @@ Geode::Geode()
     _vtkDebugLevel = 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
-#ifdef _OSG
 Geode::Geode( const Geode& geode, const osg::CopyOp& copyop )
-        :
-        osg::Geode( geode, copyop )
+    :
+    osg::Geode( geode, copyop )
 {
     ;
 }
-#endif
 ////////////////////////////////////////////////////////////////////////////////
 Geode::~Geode()
 {
@@ -100,24 +102,18 @@ void Geode::TranslateToGeode( vtkActor* actor )
 ////////////////////////////////////////////////////////////////////////////////
 void Geode::StreamLineToGeode( vtkActor* actor )
 {
-#ifdef _PERFORMER
-#elif _OSG
-    ves::xplorer::scenegraph::vtkActorToStreamLine( actor, this, _vtkDebugLevel );
-#elif _OPENSG
-#endif
+    ves::xplorer::scenegraph::vtkActorToStreamLine(
+        actor, this, _vtkDebugLevel );
 }
 ////////////////////////////////////////////////////////////////////////////////
 osg::Group* Geode::GetParent( unsigned int position )
 {
-#ifdef _OPENSG
-#elif _OSG
     return getParent( position );
-#endif
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Geode::traverse( osg::NodeVisitor& nv )
 {
-    ves::xplorer::scenegraph::Technique* technique = mTechniques[ mActiveTechnique ];
+    technique::Technique* technique = mTechniques[ mActiveTechnique ];
 
     technique->Traverse( nv, this );
 }

@@ -30,34 +30,12 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
+
 #ifndef SCENENODE_H
 #define SCENENODE_H
 
-/*!\file SceneNode.h
-*/
-
-/*!\class ves::xplorer::scenegraph::SceneNode
-*Base class for all scene graph nodes
-*Do not understand why we need this class
-*/
-
-/*!\namespace ves::xplorer::scenegraph
-*
-*/
-
 // --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
-
-namespace ves
-{
-namespace xplorer
-{
-namespace scenegraph
-{
-class Technique;
-}
-}
-}
 
 // --- OSG Includes --- //
 namespace osg
@@ -75,32 +53,63 @@ namespace xplorer
 {
 namespace scenegraph
 {
+
+namespace technique
+{
+class Technique;
+} //end technique
+
+/*!\file SceneNode.h
+ *
+ */
+
+/*!\class ves::xplorer::scenegraph::SceneNode
+ *Base class for all scene graph nodes
+ *Do not understand why we need this class
+ */
+
+/*!\namespace ves::xplorer::scenegraph
+ *
+ */
 class VE_SCENEGRAPH_EXPORTS SceneNode
 {
 public:
+    ///Constructor
     SceneNode();
 
 protected:
+    ///Destructor
     virtual ~SceneNode();
 
 public:
+    ///
     virtual void InheritedTraverse( osg::NodeVisitor& nv ) = 0;
 
+    ///
     void DirtyTechniques();
 
-    void AddTechnique( const std::string& name, Technique* technique );
+    ///
+    void AddTechnique(
+        const std::string& name, technique::Technique* technique );
+
+    ///
     void RemoveTechnique( const std::string& name );
 
+    ///
     void SetTechnique( const std::string& name );
 
-    Technique* GetTechnique( const std::string& name );
+    ///
+    technique::Technique* const GetTechnique( const std::string& name ) const;
 
-    Technique* GetActiveTechnique();
+    ///
+    technique::Technique* const GetActiveTechnique() const;
 
 protected:
+    ///
     std::string mActiveTechnique;
 
-    std::map< std::string, Technique* > mTechniques;
+    ///
+    std::map< std::string, technique::Technique* > mTechniques;
 
 };
 } //end scenegraph

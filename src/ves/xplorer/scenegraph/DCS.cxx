@@ -30,9 +30,9 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
+
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/DCS.h>
-#include <ves/xplorer/scenegraph/SelectTechnique.h>
 
 #include <ves/xplorer/scenegraph/util/NormalizeVisitor.h>
 
@@ -40,6 +40,8 @@
 #include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
 #include <ves/xplorer/scenegraph/physics/vesMotionState.h>
 #include <ves/xplorer/scenegraph/physics/PhysicsRigidBody.h>
+
+#include <ves/xplorer/scenegraph/technique/SelectTechnique.h>
 
 // --- OSG Includes --- //
 #include <osg/Vec3d>
@@ -60,17 +62,12 @@
 // --- C/C++ Libraries --- //
 #include <iostream>
 
-namespace ves
-{
-namespace xplorer
-{
-namespace scenegraph
-{
+using namespace ves::xplorer::scenegraph;
 
 ////////////////////////////////////////////////////////////////////////////////
 DCS::DCS()
-        :
-        mPhysicsRigidBody( 0 )
+    :
+    mPhysicsRigidBody( 0 )
 {
     double temp[3];
     for( unsigned int i = 0; i < 3; ++i )
@@ -101,13 +98,15 @@ DCS::DCS()
     m_udcb->SetPhysicsRigidBody( mPhysicsRigidBody );
     setUpdateCallback( m_udcb.get() );*/
 
-    AddTechnique( "Select", new ves::xplorer::scenegraph::SelectTechnique
-                  ( new osg::StateSet( *getOrCreateStateSet() ) ) );
+    AddTechnique(
+        "Select",
+        new technique::SelectTechnique(
+            new osg::StateSet( *getOrCreateStateSet() ) ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 DCS::DCS( double* scale, double* trans, double* rot )
-        :
-        mPhysicsRigidBody( 0 )
+    :
+    mPhysicsRigidBody( 0 )
 {
     SetTranslationArray( trans );
     SetRotationArray( rot );
@@ -117,21 +116,25 @@ DCS::DCS( double* scale, double* trans, double* rot )
     m_udcb->SetPhysicsRigidBody( mPhysicsRigidBody );
     setUpdateCallback( m_udcb.get() );*/
 
-    AddTechnique( "Select", new ves::xplorer::scenegraph::SelectTechnique
-                  ( new osg::StateSet( *getOrCreateStateSet() ) ) );
+    AddTechnique(
+        "Select",
+        new technique::SelectTechnique(
+            new osg::StateSet( *getOrCreateStateSet() ) ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 DCS::DCS( const DCS& dcs, const osg::CopyOp& copyop )
-        :
-        osg::PositionAttitudeTransform( dcs, copyop ),
-        mPhysicsRigidBody( 0 )
+    :
+    osg::PositionAttitudeTransform( dcs, copyop ),
+    mPhysicsRigidBody( 0 )
 {
     /*m_udcb = new TransferPhysicsDataCallback();
     m_udcb->SetPhysicsRigidBody( mPhysicsRigidBody );
     setUpdateCallback( m_udcb.get() );*/
 
-    AddTechnique( "Select", new ves::xplorer::scenegraph::SelectTechnique
-                  ( new osg::StateSet( *getOrCreateStateSet() ) ) );
+    AddTechnique(
+        "Select",
+        new technique::SelectTechnique(
+            new osg::StateSet( *getOrCreateStateSet() ) ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 DCS::~DCS()
@@ -498,7 +501,7 @@ void DCS::SetPhysicsRigidBody( PhysicsRigidBody* physicsRigidBody )
 ////////////////////////////////////////////////////////////////////////////////
 void DCS::traverse( osg::NodeVisitor& nv )
 {
-    ves::xplorer::scenegraph::Technique* technique = mTechniques[ mActiveTechnique ];
+    technique::Technique* technique = mTechniques[ mActiveTechnique ];
 
     technique->Traverse( nv, this );
 }
@@ -509,7 +512,3 @@ void DCS::InheritedTraverse( osg::NodeVisitor& nv )
     inherited::traverse( nv );
 }
 ////////////////////////////////////////////////////////////////////////////////
-
-} // end scenegraph
-} // end xplorer
-} // end ves

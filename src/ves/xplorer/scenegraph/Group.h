@@ -30,28 +30,15 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
+
 #ifndef GROUP_H
 #define GROUP_H
-
-/*!\file Group.h
-*/
-
-/*!\class ves::xplorer::scenegraph::Group
-*General group node which maintains a list of children
-*/
-
-/*!\namespace ves::xplorer::scenegraph
-*
-*/
 
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/SceneNode.h>
 
 // --- OSG Includes --- //
-#ifdef _OSG
 #include <osg/Group>
-#elif _OPENSG
-#endif
 
 namespace ves
 {
@@ -59,9 +46,18 @@ namespace xplorer
 {
 namespace scenegraph
 {
-#ifdef _OSG
+/*!\file Group.h
+ *
+ */
+
+/*!\class ves::xplorer::scenegraph::Group
+ *General group node which maintains a list of children
+ */
+
+/*!\namespace ves::xplorer::scenegraph
+ *
+ */
 class VE_SCENEGRAPH_EXPORTS Group : public osg::Group, public SceneNode
-#endif
 {
 public:
     ///Default constructor
@@ -70,6 +66,7 @@ public:
     ///Copy constructor using CopyOp to manage deep vs shallow copy
     Group( const Group&, const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
 
+    ///
     META_Node( ves::xplorer::scenegraph, Group );
 
 protected:
@@ -131,12 +128,15 @@ public:
 // --- This stuff is used for multipass rendering --- //
 // -------------------------------------------------- //
 public:
+    ///
     virtual void traverse( osg::NodeVisitor& nv );
+
+    ///
     virtual void InheritedTraverse( osg::NodeVisitor& nv );
 
 };
-}
-}
-}
+} //end scenegraph
+} //end xplorer
+} //end ves
 
 #endif //GROUP_H

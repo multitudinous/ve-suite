@@ -30,23 +30,28 @@
 * -----------------------------------------------------------------
 *
 *************** <auto-copyright.rb END do not edit this line> ***************/
-#include <ves/xplorer/scenegraph/Switch.h>
-#include <ves/xplorer/scenegraph/Technique.h>
 
-//C/C++ Libraries
+// --- VE-Suite Includes --- //
+#include <ves/xplorer/scenegraph/Switch.h>
+
+#include <ves/xplorer/scenegraph/technique/Technique.h>
+
+// --- C/C++ Includes --- //
 #include <iostream>
 #include <algorithm>
 #include <string>
 
 using namespace ves::xplorer::scenegraph;
+
 ////////////////////////////////////////////////////////////////////////////////
 Switch::Switch()
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-Switch::Switch( const Switch& switchNode, const osg::CopyOp& copyop ):
-        osg::Switch( switchNode, copyop )
+Switch::Switch( const Switch& switchNode, const osg::CopyOp& copyop )
+    :
+    osg::Switch( switchNode, copyop )
 {
     ;
 }
@@ -58,7 +63,6 @@ Switch::~Switch()
 ////////////////////////////////////////////////////////////////////////////////
 void Switch::SetVal( int whichChildIsActive )
 {
-#ifdef _OSG
     if( whichChildIsActive == OFF )
     {
         setAllChildrenOff();
@@ -67,121 +71,63 @@ void Switch::SetVal( int whichChildIsActive )
     {
         setSingleChildOn( whichChildIsActive );
     }
-
-#endif
 }
 ////////////////////////////////////////////////////////////////////////////////
 int Switch::RemoveChild( SceneNode* child )
 {
-#ifdef _OPENSG
-    cerr << " ERROR: Switch::ReplaceChild is NOT implemented " << endl;
-    exit( 1 );
-    return -1;
-#elif _OSG
     return removeChild( dynamic_cast< osg::Node* >( child ) );
-#endif
 }
 ////////////////////////////////////////////////////////////////////////////////
 int Switch::AddChild( SceneNode* child )
 {
-#ifdef _OPENSG
-    cerr << " ERROR: Switch::ReplaceChild is NOT implemented " << endl;
-    exit( 1 );
-    return -1;
-#elif _OSG
     return addChild( dynamic_cast< Node* >( child ) );
-#endif
-
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Switch::InsertChild( int position, SceneNode* child )
 {
-#ifdef _OPENSG
-    cerr << " ERROR: Switch::ReplaceChild is NOT implemented " << endl;
-    exit( 1 );
-    return -1;
-#elif _OSG
     insertChild( position, dynamic_cast< Node* >( child ) );
-#endif
 }
 ////////////////////////////////////////////////////////////////////////////////
-int Switch::GetNumChildren( void )
+int Switch::GetNumChildren()
 {
-#ifdef _OPENSG
-    cerr << " ERROR: Switch::ReplaceChild is NOT implemented " << endl;
-    exit( 1 );
-    return -1;
-#elif _OSG
     return getNumChildren();
-#endif
 }
 ////////////////////////////////////////////////////////////////////////////////
-const std::string Switch::GetName( void )
+const std::string Switch::GetName()
 {
-#ifdef _OPENSG
-    return 0;
-#endif
-#ifdef _PERFORMER
-    return _Switch->getName();
-#elif _OSG
     return getName().data();
-#endif
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Switch::SetName( std::string name )
 {
-#ifdef _OPENSG
-    std::cerr << " ERROR: Switch::SetName is NOT implemented " << std::endl;
-    exit( 1 );
-#endif
-#ifdef _PERFORMER
-    _Switch->setName( name.c_str() );
-#elif _OSG
     setName( name );
-#endif
 }
 ////////////////////////////////////////////////////////////////////////////////
 int Switch::ReplaceChild( SceneNode* childToBeReplaced, SceneNode* newChild )
 {
-#ifdef _OPENSG
-    cerr << " ERROR: Switch::ReplaceChild is NOT implemented " << endl;
-    exit( 1 );
-    return -1;
-#elif _OSG
-    return replaceChild( dynamic_cast< Node* >( childToBeReplaced ), dynamic_cast< Node* >( newChild ) );
-#endif
+    return replaceChild(
+        dynamic_cast< Node* >( childToBeReplaced ),
+        dynamic_cast< Node* >( newChild ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool Switch::SearchChild( ves::xplorer::scenegraph::SceneNode* searchChild )
 {
-#ifdef _OPENSG
-
-#elif _OSG
     return containsNode( dynamic_cast< osg::Node* >( searchChild ) );
-#endif
 }
 ////////////////////////////////////////////////////////////////////////////////
 osg::Group* Switch::GetParent( unsigned int position )
 {
-#ifdef _OPENSG
-
-#elif _OSG
     return getParent( position );
-#endif
 }
 ////////////////////////////////////////////////////////////////////////////////
 osg::Node* Switch::GetChild( unsigned int position )
 {
-#ifdef _OPENSG
-
-#elif _OSG
     return getChild( position );
-#endif
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Switch::traverse( osg::NodeVisitor& nv )
 {
-    ves::xplorer::scenegraph::Technique* technique = mTechniques[ mActiveTechnique ];
+    technique::Technique* technique = mTechniques[ mActiveTechnique ];
 
     technique->Traverse( nv, this );
 }

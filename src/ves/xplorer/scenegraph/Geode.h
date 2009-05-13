@@ -30,29 +30,16 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
+
 #ifndef GEODE_H
 #define GEODE_H
-
-/*!\file Geode.h
-*/
-
-/*!\class ves::xplorer::scenegraph::Geode
-*A leaf node on the scene graph
-*/
-
-/*!\namespace ves::xplorer::scenegraph
-*
-*/
 
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/SceneNode.h>
 
 // --- OSG Includes --- //
-#ifdef _OSG
-#include <osg/Geode>
 #include <osg/ref_ptr>
-#elif _OPENSG
-#endif
+#include <osg/Geode>
 
 // --- VTK Includes --- //
 class vtkActor;
@@ -63,9 +50,18 @@ namespace xplorer
 {
 namespace scenegraph
 {
-#ifdef _OSG
+/*!\file Geode.h
+ *
+ */
+
+/*!\class ves::xplorer::scenegraph::Geode
+ *A leaf node on the scene graph
+ */
+
+/*!\namespace ves::xplorer::scenegraph
+ *
+ */
 class VE_SCENEGRAPH_EXPORTS Geode : public osg::Geode, public SceneNode
-#endif
 {
 public:
     ///Constructor
@@ -81,6 +77,7 @@ public:
     ///\param copyop
     Geode( const Geode& geode, const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
 
+    ///
     META_Node( ves::xplorer::scenegraph, Geode );
 
     ///Turn vtkActorToXX on and off
@@ -101,18 +98,22 @@ public:
     osg::Group* GetParent( unsigned int position );
 
 protected:
-    int _vtkDebugLevel;///<The VTK debug level
+    ///The VTK debug level
+    int _vtkDebugLevel;
 
 // -------------------------------------------------- //
 // --- This stuff is used for multipass rendering --- //
 // -------------------------------------------------- //
 public:
+    ///
     virtual void traverse( osg::NodeVisitor& nv );
+
+    ///
     virtual void InheritedTraverse( osg::NodeVisitor& nv );
 
 };
-}
-}
-}
+} //end scenegraph
+} //end xplorer
+} //end ves
 
 #endif //GEODE_H

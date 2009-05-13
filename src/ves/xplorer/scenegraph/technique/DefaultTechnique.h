@@ -30,20 +30,13 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-
-#ifndef TECHNIQUE_H
-#define TECHNIQUE_H
+#ifndef DEFAULT_TECHNIQUE_H
+#define DEFAULT_TECHNIQUE_H
 
 // --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
 
-// --- OSG Includes --- //
-#include <osg/State>
-#include <osg/Group>
-#include <osg/NodeVisitor>
-
-// --- C/C++ Includes --- //
-#include <vector>
+#include <ves/xplorer/scenegraph/technique/Technique.h>
 
 namespace ves
 {
@@ -51,45 +44,31 @@ namespace xplorer
 {
 namespace scenegraph
 {
-class SceneNode;
-
-/*!\file Technique.h
- *
- */
-
-/*!\class Technique
- *
- */
-class VE_SCENEGRAPH_EXPORTS Technique
+namespace technique
+{
+class VE_SCENEGRAPH_EXPORTS DefaultTechnique : public Technique
 {
 public:
-    Technique();
+    ///Constructor
+    DefaultTechnique();
 
-    virtual ~Technique();
+    ///Destructor
+    virtual ~DefaultTechnique();
 
-    int GetNumPasses() const;
-
-    osg::StateSet* GetPassStateSet( int i );
-
-    const osg::StateSet* GetPassStateSet( int i ) const;
-
-    void DirtyPasses();
-
+    ///
     virtual void Traverse(
         osg::NodeVisitor& nv, ves::xplorer::scenegraph::SceneNode* sceneNode );
 
 protected:
-    virtual void DefinePasses() = 0;
-
-    void AddPass( osg::StateSet* ss = 0 );
-
-    std::vector< osg::ref_ptr< osg::StateSet > > m_passes;
+    ///
+    virtual void DefinePasses();
 
 private:
 
 };
+} //end technique
 } //end scenegraph
 } //end xplorer
 } //end ves
 
-#endif //TECHNIQUE_H
+#endif //DEFAULT_TECHNIQUE_H
