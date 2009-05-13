@@ -41,12 +41,78 @@ using namespace ves::xplorer::scenegraph::manipulator;
 
 ////////////////////////////////////////////////////////////////////////////////
 Dragger::Dragger()
+    :
+    osg::MatrixTransform(),
+    m_defaultColor( 0.0, 0.0, 0.0, 1.0 ),
+    m_activeColor( 1.0, 1.0, 1.0, 1.0 ),
+    m_color( new osg::Uniform( "color", m_defaultColor ) )
+{
+    CreateDefaultShader();
+}
+////////////////////////////////////////////////////////////////////////////////
+Dragger::Dragger(
+    const Dragger& dragger, const osg::CopyOp& copyop )
+    :
+    osg::MatrixTransform( dragger, copyop ),
+    m_defaultColor( dragger.m_defaultColor ),
+    m_activeColor( dragger.m_activeColor ),
+    m_color( dragger.m_color )
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 Dragger::~Dragger()
 {
+    ;
+}
+////////////////////////////////////////////////////////////////////////////////
+void Dragger::SetupDefaultGeometry()
+{
+    ;
+}
+////////////////////////////////////////////////////////////////////////////////
+void Dragger::CreateDefaultShader()
+{
+    //Create the shader used to render the dragger
+    std::string fragmentSource =
+    "uniform vec4 color; \n"
 
+    "void main() \n"
+    "{ \n"
+        "gl_FragColor = color; \n"
+    "} \n";
+
+    osg::ref_ptr< osg::Shader > fragmentShader = new osg::Shader();
+    fragmentShader->setType( osg::Shader::FRAGMENT );
+    fragmentShader->setShaderSource( fragmentSource );
+
+    osg::ref_ptr< osg::Program > program = new osg::Program();
+    program->addShader( fragmentShader.get() );
+
+    osg::ref_ptr< osg::StateSet > stateSet = getOrCreateStateSet();
+    stateSet->setAttributeAndModes( program.get(),
+        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+
+    stateSet->addUniform( m_color.get() );
+}
+////////////////////////////////////////////////////////////////////////////////
+void Dragger::SetDefaultColor( osg::Vec4f& defaultColor, bool useNow  )
+{
+    m_defaultColor = defaultColor;
+
+    if( useNow )
+    {
+        m_color->set( m_defaultColor );
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void Dragger::SetActiveColor( osg::Vec4f& activeColor, bool useNow )
+{
+    m_activeColor = activeColor;
+
+    if( useNow )
+    {
+        m_color->set( m_activeColor );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////

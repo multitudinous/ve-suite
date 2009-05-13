@@ -35,17 +35,26 @@
 #include <ves/xplorer/scenegraph/manipulator/TranslateAxis.h>
 
 // --- OSG Includes --- //
+#include <osg/Hint>
 #include <osg/Geode>
 #include <osg/Geometry>
 #include <osg/ShapeDrawable>
-#include <osg/MatrixTransform>
-#include <osg/Material>
 #include <osg/LineWidth>
 
 using namespace ves::xplorer::scenegraph::manipulator;
 
 ////////////////////////////////////////////////////////////////////////////////
 TranslateAxis::TranslateAxis()
+    :
+    Dragger()
+{
+    SetupDefaultGeometry();
+}
+////////////////////////////////////////////////////////////////////////////////
+TranslateAxis::TranslateAxis(
+    const TranslateAxis& translateAxis, const osg::CopyOp& copyop )
+    :
+    Dragger( translateAxis, copyop )
 {
     ;
 }
@@ -60,10 +69,11 @@ void TranslateAxis::SetupDefaultGeometry()
     osg::ref_ptr< osg::Geode > geode = new osg::Geode();
 
     //Create a right line
-    {
+    //{
         osg::ref_ptr< osg::Geometry > geometry = new osg::Geometry();
         
         osg::ref_ptr< osg::Vec3Array > vertices = new osg::Vec3Array();
+        vertices->resize( 2 );
         (*vertices)[ 0 ] = osg::Vec3d( 0.0, 0.0, 0.0 );
         (*vertices)[ 1 ] = osg::Vec3d( 1.0, 0.0, 0.0 );
 
@@ -72,33 +82,33 @@ void TranslateAxis::SetupDefaultGeometry()
             new osg::DrawArrays( osg::PrimitiveSet::LINES, 0, 2 ) );
 
         geode->addDrawable( geometry.get() );
-    }
+    //}
+
+    //Create a right cone
+    //{
+        osg::ref_ptr< osg::Cone > cone =
+            new osg::Cone( (*vertices)[ 1 ], 0.05, 0.2 );
+        osg::Quat rotation;
+        rotation.makeRotate( osg::Vec3( 0.0, 0.0, 1.0 ), (*vertices)[ 1 ] );
+        cone->setRotation( rotation );
+
+        geode->addDrawable( new osg::ShapeDrawable( cone.get() ) );
+    //}
 
     /*
     //Create a left cone
     {
         osg::ref_ptr< osg::Cone > cone =
-            new osg::Cone( _projector->getLineStart(), 0.025f * lineLength, 0.10f * lineLength );
+            new osg::Cone( _projector->getLineStart(), 0.025 * lineLength, 0.1 * lineLength );
         osg::Quat rotation;
-        rotation.makeRotate(lineDir, osg::Vec3(0.0f, 0.0f, 1.0f));
+        rotation.makeRotate(lineDir, osg::Vec3(0.0, 0.0f, 1.0));
         cone->setRotation(rotation);
 
         geode->addDrawable( new osg::ShapeDrawable( cone ) );
     }
     */
 
-    /*
-    //Create a right cone
-    {
-        osg::ref_ptr< osg::Cone > cone =
-            new osg::Cone(_projector->getLineEnd(), 0.025f * lineLength, 0.10f * lineLength);
-        osg::Quat rotation;
-        rotation.makeRotate( osg::Vec3( 0.0, 0.0, 1.0 ), lineDir );
-        cone->setRotation(rotation);
 
-        geode->addDrawable( new osg::ShapeDrawable( cone ) );
-    }
-    */
 
     /*
     //Create an invisible cylinder for picking the line
@@ -122,6 +132,13 @@ void TranslateAxis::SetupDefaultGeometry()
     lineWidth->setWidth( 2.0 );
     stateSet->setAttributeAndModes( lineWidth.get(), osg::StateAttribute::ON );
     stateSet->setMode( GL_LIGHTING, osg::StateAttribute::OFF );
+
+    stateSet->setMode( GL_LINE_SMOOTH,
+        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+    osg::ref_ptr< osg::Hint > hint =
+        new osg::Hint( GL_LINE_SMOOTH_HINT, GL_NICEST );
+    stateSet->setAttributeAndModes( hint.get(),
+        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
 
     //Add line and cones to the scene
     addChild( geode.get() );

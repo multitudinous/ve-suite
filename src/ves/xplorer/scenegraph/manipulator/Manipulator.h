@@ -37,14 +37,13 @@
 // --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
 
-#include <ves/xplorer/scenegraph/manipulator/ManipulatorPtr.h>
-
 // --- OSG Includes --- //
 #include <osg/ref_ptr>
+#include <osg/MatrixTransform>
 
 namespace osg
 {
-class PositionAttitudeTransform;
+class AutoTransform;
 }
 
 // --- C/C++ Includes --- //
@@ -58,6 +57,8 @@ namespace scenegraph
 {
 namespace manipulator
 {
+class Dragger;
+//class TranslateAxis;
 
 namespace AxisFlags
 {
@@ -128,14 +129,19 @@ namespace AxisDirections
 /*!\class ves::xplorer::scenegraph::manipulator::Manipulator
  *
  */
-class VE_SCENEGRAPH_EXPORTS Manipulator
+class VE_SCENEGRAPH_EXPORTS Manipulator : public osg::MatrixTransform
 {
 public:
     ///Constructor
     Manipulator();
 
-    ///Destructor
-    virtual ~Manipulator();
+    ///Copy constructor using CopyOp to manage deep vs shallow copy
+    Manipulator(
+        const Manipulator& manipulator,
+        const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
+
+    ///
+    META_Node( ves::xplorer::scenegraph::manipulator, Manipulator );
 
     ///Gets the manipulator's active transformation mode
     const TransformationMode::Enum& GetActiveMode() const;
@@ -149,28 +155,24 @@ public:
     ///Gets the vector space in which the manipulator will operate
     const VectorSpace::Enum& GetVectorSpace() const;
 
-    ///
-    osg::PositionAttitudeTransform* const GetPAT() const;
-
     ///Sets the transformation modes enabled on the manipulator
     void SetEnabledModes( TransformationMode::Enum& value );
 
     ///Sets the vector space in which the manipulator will operate
     void SetVectorSpace( VectorSpace::Enum& value ); 
 
+    ///Activate the manipulator
+    void TurnOn();
+
+    ///Deactivate the manipulator
+    void TurnOff();
+
 protected:
+    ///Destructor
+    virtual ~Manipulator();
+
     ///
-    class ManipFunction
-    {
-    public:
-        ///
-        virtual void call() = 0;
-
-    protected:
-
-    private:
-
-    };
+    void CreateDraggers();
 
     ///
     TransformationMode::Enum m_activeMode;
@@ -188,11 +190,8 @@ protected:
     bool m_manipulating;
 
     ///
-    std::map< TransformationMode::Enum, std::map< AxisFlags::Enum, ManipFunction* > > m_manipFunctions;
-    //std::map< TransformationMode::Enum, std::map< AxisFlags::Enum, Dragger* > > m_draggers;
-
-    ///
-    osg::ref_ptr< osg::PositionAttitudeTransform > m_pat;
+    std::map< TransformationMode::Enum,
+        std::multimap< AxisFlags::Enum, osg::ref_ptr< Dragger > > > m_draggers;
 
 private:
 

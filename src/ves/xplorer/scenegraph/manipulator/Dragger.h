@@ -61,15 +61,40 @@ public:
     ///
     Dragger();
 
+    ///Copy constructor using CopyOp to manage deep vs shallow copy
+    Dragger(
+        const Dragger& dragger,
+        const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
+
+    ///
+    META_Node( ves::xplorer::scenegraph::manipulator, Dragger );
+
+    ///
+    void SetDefaultColor( osg::Vec4f& defaultColor, bool useNow = false );
+
+    ///
+    void SetActiveColor( osg::Vec4f& activeColor, bool useNow = false );
+
 protected:
     ///
     ~Dragger();
 
     ///
-    virtual void SetupDefaultGeometry() = 0;
+    ///Can't create pure virtual function here because of inheritance
+    virtual void SetupDefaultGeometry();
 
 private:
+    ///
+    void CreateDefaultShader();
 
+    ///
+    osg::Vec4f m_defaultColor;
+
+    ///
+    osg::Vec4f m_activeColor;
+
+    ///
+    osg::ref_ptr< osg::Uniform > m_color;
 
 };
 } //end manipulator

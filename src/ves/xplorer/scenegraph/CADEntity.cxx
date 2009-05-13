@@ -97,7 +97,7 @@ CADEntity::CADEntity(
     mDCS->addChild( mCADEntityHelper->GetNode() );
     parentDCS->AddChild( mDCS.get() );
 
-    m_manipulator = vxsm::ManipulatorPtr( new vxsm::Manipulator() );
+    m_manipulator = new vxsm::Manipulator();
 }
 ////////////////////////////////////////////////////////////////////////////////
 CADEntity::CADEntity(
@@ -132,7 +132,7 @@ CADEntity::CADEntity(
     mDCS->addChild( mCADEntityHelper->GetNode() );
     parentDCS->AddChild( mDCS.get() );
 
-    m_manipulator = vxsm::ManipulatorPtr( new vxsm::Manipulator() );
+    m_manipulator = new vxsm::Manipulator();
 }
 ////////////////////////////////////////////////////////////////////////////////
 CADEntity::CADEntity(
@@ -162,7 +162,7 @@ CADEntity::CADEntity(
     mDCS->addChild( mCADEntityHelper->GetNode() );
     parentDCS->AddChild( mDCS.get() );
 
-    m_manipulator = vxsm::ManipulatorPtr( new vxsm::Manipulator() );
+    m_manipulator = new vxsm::Manipulator();
 }
 ////////////////////////////////////////////////////////////////////////////////
 CADEntity::~CADEntity()
@@ -217,6 +217,11 @@ PhysicsRigidBody* const CADEntity::GetPhysicsRigidBody()
 const std::string& CADEntity::GetFilename() const
 {
     return mFileName;
+}
+////////////////////////////////////////////////////////////////////////////////
+vxsm::Manipulator* const CADEntity::GetManipulator() const
+{
+    return m_manipulator.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
 const float CADEntity::GetOpacityValue() const

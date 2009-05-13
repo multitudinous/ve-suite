@@ -33,31 +33,97 @@
 
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/manipulator/Manipulator.h>
+#include <ves/xplorer/scenegraph/manipulator/TranslateAxis.h>
+
+#include <ves/xplorer/scenegraph/SceneManager.h>
 
 // --- OSG Includes --- //
-#include <osg/PositionAttitudeTransform>
+#include <osg/AutoTransform>
 
 using namespace ves::xplorer::scenegraph::manipulator;
+namespace vxs = ves::xplorer::scenegraph;
 
 ////////////////////////////////////////////////////////////////////////////////
 Manipulator::Manipulator()
+    :
+    osg::MatrixTransform()
+{
+    osg::ref_ptr< osg::AutoTransform > autoTransform =
+        new osg::AutoTransform();
+    autoTransform->setAutoScaleToScreen( true );
+    autoTransform->setCullingActive( false );
+    autoTransform->addChild( this );
+    //vxs::SceneManager::instance()->GetModelRoot()->addChild(
+        //autoTransform.get() );
+
+    //Set initial size for this manipulator
+    setMatrix( osg::Matrix::scale( osg::Vec3d( 100.0, 100.0, 100.0 ) ) );
+
+    CreateDraggers();
+}
+////////////////////////////////////////////////////////////////////////////////
+Manipulator::Manipulator(
+    const Manipulator& manipulator, const osg::CopyOp& copyop )
+    :
+    osg::MatrixTransform( manipulator, copyop )
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 Manipulator::~Manipulator()
 {
+    ;
+}
+////////////////////////////////////////////////////////////////////////////////
+void Manipulator::CreateDraggers()
+{
+    osg::ref_ptr< TranslateAxis > translateAxisX = new TranslateAxis();
+    translateAxisX->SetDefaultColor( osg::Vec4f( 1.0, 0.0, 0.0, 1.0 ), true );
+    addChild( translateAxisX.get() );
+    osg::ref_ptr< TranslateAxis > translateAxisY = new TranslateAxis();
+    translateAxisY->SetDefaultColor( osg::Vec4f( 0.0, 1.0, 0.0, 1.0 ), true );
+    //Rotate y-axis dragger appropriately
+    {
+        osg::Quat rotation;
+        rotation.makeRotate(
+            osg::Vec3d( 1.0, 0.0, 0.0 ), osg::Vec3d( 0.0, 1.0, 0.0 ) );
+        translateAxisY->setMatrix( osg::Matrix( rotation ) );
+    }
+    addChild( translateAxisY.get() );
+    osg::ref_ptr< TranslateAxis > translateAxisZ = new TranslateAxis();
+    translateAxisZ->SetDefaultColor( osg::Vec4f( 0.0, 0.0, 1.0, 1.0 ), true );
+    //Rotate z-axis dragger appropriately
+    {
+        osg::Quat rotation;
+        rotation.makeRotate(
+            osg::Vec3d( 1.0, 0.0, 0.0 ), osg::Vec3d( 0.0, 0.0, 1.0 ) );
+        translateAxisZ->setMatrix( osg::Matrix( rotation ) );
+    }
+    addChild( translateAxisZ.get() );
 
+    std::multimap< AxisFlags::Enum, osg::ref_ptr< Dragger > > translateAxisMap;
+    //Insert the individual axis
+    translateAxisMap.insert(
+        std::make_pair( AxisFlags::X, translateAxisX.get() ) );
+    translateAxisMap.insert(
+        std::make_pair( AxisFlags::Y, translateAxisY.get() ) );
+    translateAxisMap.insert(
+        std::make_pair( AxisFlags::Z, translateAxisZ.get() ) );
+
+    //
+    translateAxisMap.insert(
+        std::make_pair( AxisFlags::XYZ, translateAxisX.get() ) );
+    translateAxisMap.insert(
+        std::make_pair( AxisFlags::XYZ, translateAxisY.get() ) );
+    translateAxisMap.insert(
+        std::make_pair( AxisFlags::XYZ, translateAxisZ.get() ) );
+
+    m_draggers[ TransformationMode::TranslateAxis ] = translateAxisMap;
 }
 ////////////////////////////////////////////////////////////////////////////////
 const TransformationMode::Enum& Manipulator::GetActiveMode() const
 {
     return m_activeMode;
-}
-////////////////////////////////////////////////////////////////////////////////
-osg::PositionAttitudeTransform* const Manipulator::GetPAT() const
-{
-    return m_pat.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
 const TransformationMode::Enum& Manipulator::GetEnabledModes() const
@@ -101,5 +167,15 @@ void Manipulator::SetVectorSpace( VectorSpace::Enum& value )
 
     m_manipulating = false;
     m_vectorSpace = value;
+}
+////////////////////////////////////////////////////////////////////////////////
+void Manipulator::TurnOn()
+{
+    setNodeMask( 1 );
+}
+////////////////////////////////////////////////////////////////////////////////
+void Manipulator::TurnOff()
+{
+    setNodeMask( 0 );
 }
 ////////////////////////////////////////////////////////////////////////////////

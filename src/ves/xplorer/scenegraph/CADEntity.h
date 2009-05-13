@@ -129,6 +129,10 @@ public:
     ///\return 
     const std::string& GetFilename() const;
 
+    ///
+    ///\return
+    manipulator::Manipulator* const GetManipulator() const;
+
     ///Get the opacity value for this file
     ///\return 
     const float GetOpacityValue() const;
@@ -169,10 +173,10 @@ protected:
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > mDCS;
 
     ///A helper class to give added functionality to CADEntity
-    ves::xplorer::scenegraph::CADEntityHelper* mCADEntityHelper;
+    CADEntityHelper* mCADEntityHelper;
 
     ///
-    ves::xplorer::scenegraph::manipulator::ManipulatorPtr m_manipulator;
+    osg::ref_ptr< manipulator::Manipulator > m_manipulator;
 
 };
 } //end scenegraph

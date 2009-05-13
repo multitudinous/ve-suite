@@ -63,10 +63,18 @@ public:
     ///
     TranslateAxis();
 
+    ///Copy constructor using CopyOp to manage deep vs shallow copy
+    TranslateAxis(
+        const TranslateAxis& translateAxis,
+        const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
+
+    ///
+    META_Node( ves::xplorer::scenegraph::manipulator, TranslateAxis );
+
+protected:
     ///
     ~TranslateAxis();
 
-protected:
     ///
     virtual void SetupDefaultGeometry();
 
