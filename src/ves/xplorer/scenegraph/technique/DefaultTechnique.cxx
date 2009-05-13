@@ -40,6 +40,8 @@ using namespace ves::xplorer::scenegraph::technique;
 
 ////////////////////////////////////////////////////////////////////////////////
 DefaultTechnique::DefaultTechnique()
+    :
+    Technique()
 {
     ;
 }
