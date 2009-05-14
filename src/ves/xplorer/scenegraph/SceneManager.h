@@ -30,6 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
+
 #ifndef SCENE_MANAGER_H
 #define SCENE_MANAGER_H
 
@@ -39,6 +40,7 @@
 #include <ves/xplorer/scenegraph/DCS.h>
 #include <ves/xplorer/scenegraph/Group.h>
 #include <ves/xplorer/scenegraph/Switch.h>
+#include <ves/xplorer/scenegraph/ManipulatorRoot.h>
 
 // --- OSG Includes --- //
 #include <osg/ref_ptr>
@@ -63,9 +65,8 @@ class CADEntity;
 #ifdef VE_SOUND
 class Sound;
 #endif
-
 class CharacterController;
-
+class ManipulatorRoot;
 
 /*!\file SceneManager.h
 */
@@ -80,69 +81,74 @@ class CharacterController;
 class VE_SCENEGRAPH_EXPORTS SceneManager
 {
 public:
-    ///???
-    ///\param param
-    void Initialize( std::string param );
+    ///Return the active nav switch node of the scenegraph
+    ///\return The DCS that should be used for nav matrix generation
+    DCS* const GetActiveNavSwitchNode() const;
 
-    ///Initialize the scene
-    void InitScene();
-    
-    ///Set the root node from the render to texture class
-    void SetRootNode( osg::Group* rootNode );
-    
-    ///Return the root node of the scenegraph
-    osg::Group* GetRootNode();
+    ///Return the active switch node of the scenegraph
+    osg::Group* const GetActiveSwitchNode() const;
 
-    ///Return the world DCS of the scenegraph
-    ///\return The world DCS
-    ves::xplorer::scenegraph::DCS* GetWorldDCS();
+    ///
+    ///\return
+    CharacterController* const GetCharacterController() const;
+
+    ///Get the framestamp used by SceneView
+    ///\return The osg::FrameStamp for the osg::SceneView
+    osg::FrameStamp* const GetFrameStamp() const;
 
     ///Get the inverted world DCS matrix
     ///\return The inverted matrix
-    const gmtl::Matrix44d& GetInvertedWorldDCS();
-    
-    ///Return the network DCS of the scenegraph
-    osg::Group* GetNetworkDCS();
+    const gmtl::Matrix44d& GetInvertedWorldDCS() const;
 
-    ///Return the active switch node of the scenegraph
-    osg::Group* GetActiveSwitchNode();
-
-    ///Return the active nav switch node of the scenegraph
-    ///\return The DCS that should be used for nav matrix generation
-    ves::xplorer::scenegraph::DCS* GetActiveNavSwitchNode();
+    ///Return the manipulator root node of the scenegraph
+    ManipulatorRoot* const GetManipulatorRoot() const;
 
     ///Return the model root node of the scenegraph
-    osg::Group* GetModelRoot();
+    ///\return
+    osg::Group* const GetModelRoot() const;
+
+    ///Return the network DCS of the scenegraph
+    osg::Group* const GetNetworkDCS() const;
+    
+    ///Return the root node of the scenegraph
+    osg::Group* const GetRootNode() const;
+
+    ///Return the world DCS of the scenegraph
+    ///\return The world DCS
+    DCS* const GetWorldDCS() const;
+
+    ///???
+    ///\param param
+    void Initialize( std::string& param );
+
+    ///Initialize the scene
+    void InitScene();
+
+    ///PreFrameUpdate call to sync DCS information across cluster
+    void PreFrameUpdate();
 
     ///Set the node on the switch node that is active
     ///\param activeNode The node to activate
     void SetActiveSwitchNode( int activeNode );
 
-    ///Switch the logo on and off
-    ///\param trueFalse Turn the logo on and off
-    void ViewLogo( bool trueFalse );
-
-    ///PreFrameUpdate call to sync DCS information across cluster
-    void PreFrameUpdate();
-
     ///Set the background color
     ///\param color the color to set the background color
     void SetBackgroundColor( std::vector< double > color );
 
-    ///Shutdown the sound manager and other extra engines used in the world
-    void Shutdown();
-    
     ///Set the framestamp to make it accessible to other areas of ves
     ///This can be used when traditional access through osg does not work
     ///for example when plugins need to set the SimulationTime
     void SetFrameStamp( osg::FrameStamp* frameStamp );
 
-    ///Get the framestamp used by SceneView
-    ///\return The osg::FrameStamp for the osg::SceneView
-    osg::FrameStamp* GetFrameStamp();
+    ///Set the root node from the render to texture class
+    void SetRootNode( osg::Group* rootNode );
 
-    ///
-    ves::xplorer::scenegraph::CharacterController* const GetCharacterController() const;
+    ///Shutdown the sound manager and other extra engines used in the world
+    void Shutdown();
+
+    ///Switch the logo on and off
+    ///\param trueFalse Turn the logo on and off
+    void ViewLogo( bool trueFalse );
 
 protected:
     ///Create the model for the logo
@@ -160,40 +166,62 @@ private:
     ///Destructor
     ~SceneManager();
 
+    ///
     vprSingletonHeader( SceneManager );
 
     ///The root node of our scenegraph
     osg::ref_ptr< osg::Group > mRootNode;
+
     ///The root model node of our scenegraph
     osg::ref_ptr< osg::Group > mModelRoot;
-    //osg::ref_ptr< ves::xplorer::scenegraph::DCS > mModelRoot;
+    //osg::ref_ptr< DCS > mModelRoot;
+
+    ///The root manipulator node of our scenegraph
+    ///If we add all manipulators under this node,
+    ///we don't have to traverse the whole scenegraph to find manipulators
+    osg::ref_ptr< ManipulatorRoot > m_manipulatorRoot;
+
     ///The node which contains our logo
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > mLogoNode;
+    osg::ref_ptr< DCS > mLogoNode;
+
     ///Node to switch between the logo and the worldDCS
-    osg::ref_ptr< ves::xplorer::scenegraph::Switch > mLogoSwitch;
+    osg::ref_ptr< Switch > mLogoSwitch;
+
     ///Node to switch between the nav dcs for logo, world, and network
-    osg::ref_ptr< ves::xplorer::scenegraph::Switch > mNavSwitch;
+    osg::ref_ptr< Switch > mNavSwitch;
+
     ///A convenience pointer to help find which node is being used for nav
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > mActiveNavDCS;
+    osg::ref_ptr< DCS > mActiveNavDCS;
+
     ///Node to control navigation
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > worldDCS;
+    osg::ref_ptr< DCS > worldDCS;
+
     ///Node to hold a network view of the system under investigation
-    //osg::ref_ptr< ves::xplorer::scenegraph::DCS > networkDCS;
+    //osg::ref_ptr< DCS > networkDCS;
     osg::ref_ptr< osg::Group > mNetworkDCS;
 
     ///Inverteded world dcs values
     gmtl::Matrix44d mInvertedWorldDCS;
 
 #ifdef VE_SOUND
-    ves::xplorer::scenegraph::Sound* m_sound;
+    ///
+    Sound* m_sound;
 #endif
 
     ///The logo
-    ves::xplorer::scenegraph::CADEntity* m_blueArrow;
-    ves::xplorer::scenegraph::CADEntity* m_greyArrow;
-    ves::xplorer::scenegraph::CADEntity* m_orangeArrow;
-    ves::xplorer::scenegraph::CADEntity* m_veText;
-    ves::xplorer::scenegraph::CADEntity* m_suiteText;
+    CADEntity* m_blueArrow;
+    
+    ///
+    CADEntity* m_greyArrow;
+    
+    ///
+    CADEntity* m_orangeArrow;
+    
+    ///
+    CADEntity* m_veText;
+    
+    ///
+    CADEntity* m_suiteText;
 
     ///Clear node to control the background color
     osg::ref_ptr< osg::ClearNode > m_clrNode;
@@ -202,11 +230,11 @@ private:
     osg::ref_ptr< osg::FrameStamp > mFrameStamp;
 
     ///
-    ves::xplorer::scenegraph::CharacterController* mCharacterController;
+    CharacterController* mCharacterController;
 
 };
-}
-}
-}
+} //end scenegraph
+} //end xplorer
+} //end ves
 
-#endif // SCENE_MANAGER_H
+#endif //SCENE_MANAGER_H

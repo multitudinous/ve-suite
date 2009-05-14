@@ -41,6 +41,9 @@
 #include <osg/MatrixTransform>
 #include <osg/Drawable>
 
+// --- C/C++ Includes --- //
+#include <map>
+
 namespace ves
 {
 namespace xplorer
@@ -60,6 +63,14 @@ class VE_SCENEGRAPH_EXPORTS Dragger : public osg::MatrixTransform
 {
 public:
     ///
+    enum ColorTag
+    {
+        DEFAULT,
+        FOCUS,
+        ACTIVE
+    };
+
+    ///
     Dragger();
 
     ///Copy constructor using CopyOp to manage deep vs shallow copy
@@ -71,10 +82,14 @@ public:
     META_Node( ves::xplorer::scenegraph::manipulator, Dragger );
 
     ///
-    void SetDefaultColor( osg::Vec4f& defaultColor, bool useNow = false );
+    osg::Vec4& GetColor( ColorTag colorTag );
 
     ///
-    void SetActiveColor( osg::Vec4f& activeColor, bool useNow = false );
+    void SetColor(
+        ColorTag colorTag, osg::Vec4& newColor, bool use = false );
+
+    ///
+    void UseColor( ColorTag colorTag );
 
 protected:
     ///
@@ -88,6 +103,9 @@ protected:
     void SetDrawableToAlwaysCull( osg::Drawable& drawable );
 
 private:
+    ///
+    typedef std::map< ColorTag, osg::Vec4 > ColorMap;
+
     ///
     class ForceCullCallback : public osg::Drawable::CullCallback
     {
@@ -120,10 +138,7 @@ private:
     void CreateDefaultShader();
 
     ///
-    osg::Vec4f m_defaultColor;
-
-    ///
-    osg::Vec4f m_activeColor;
+    ColorMap m_colorMap;
 
     ///
     osg::ref_ptr< osg::Uniform > m_color;

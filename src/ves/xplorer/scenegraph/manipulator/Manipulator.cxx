@@ -38,7 +38,7 @@
 #include <ves/xplorer/scenegraph/SceneManager.h>
 
 // --- OSG Includes --- //
-#include <osg/AutoTransform>
+#include <osg/MatrixTransform>
 
 using namespace ves::xplorer::scenegraph::manipulator;
 namespace vxs = ves::xplorer::scenegraph;
@@ -46,18 +46,17 @@ namespace vxs = ves::xplorer::scenegraph;
 ////////////////////////////////////////////////////////////////////////////////
 Manipulator::Manipulator()
     :
-    osg::MatrixTransform()
+    osg::AutoTransform(),
+    m_matrixTransform( new osg::MatrixTransform() )
 {
-    osg::ref_ptr< osg::AutoTransform > autoTransform =
-        new osg::AutoTransform();
-    autoTransform->setAutoScaleToScreen( true );
-    autoTransform->setCullingActive( false );
-    autoTransform->addChild( this );
-    //vxs::SceneManager::instance()->GetModelRoot()->addChild(
-        //autoTransform.get() );
+    setAutoScaleToScreen( true );
+    setCullingActive( false );
+    addChild( m_matrixTransform.get() );
+    //vxs::SceneManager::instance()->GetManipulatorRoot()->addChild( this );
 
     //Set initial size for this manipulator
-    setMatrix( osg::Matrix::scale( osg::Vec3d( 100.0, 100.0, 100.0 ) ) );
+    m_matrixTransform->setMatrix(
+        osg::Matrix::scale( osg::Vec3d( 100.0, 100.0, 100.0 ) ) );
 
     CreateDraggers();
 }
@@ -65,7 +64,8 @@ Manipulator::Manipulator()
 Manipulator::Manipulator(
     const Manipulator& manipulator, const osg::CopyOp& copyop )
     :
-    osg::MatrixTransform( manipulator, copyop )
+    osg::AutoTransform( manipulator, copyop ),
+    m_matrixTransform( manipulator.m_matrixTransform.get() )
 {
     ;
 }
@@ -77,11 +77,16 @@ Manipulator::~Manipulator()
 ////////////////////////////////////////////////////////////////////////////////
 void Manipulator::CreateDraggers()
 {
+    //Create translate x-axis dragger
     osg::ref_ptr< TranslateAxis > translateAxisX = new TranslateAxis();
-    translateAxisX->SetDefaultColor( osg::Vec4f( 1.0, 0.0, 0.0, 1.0 ), true );
-    addChild( translateAxisX.get() );
+    translateAxisX->SetColor(
+        Dragger::DEFAULT, osg::Vec4f( 1.0, 0.0, 0.0, 1.0 ), true );
+    m_matrixTransform->addChild( translateAxisX.get() );
+
+    //Create translate y-axis dragger
     osg::ref_ptr< TranslateAxis > translateAxisY = new TranslateAxis();
-    translateAxisY->SetDefaultColor( osg::Vec4f( 0.0, 1.0, 0.0, 1.0 ), true );
+    translateAxisY->SetColor(
+        Dragger::DEFAULT, osg::Vec4f( 0.0, 1.0, 0.0, 1.0 ), true );
     //Rotate y-axis dragger appropriately
     {
         osg::Quat rotation;
@@ -89,9 +94,12 @@ void Manipulator::CreateDraggers()
             osg::Vec3d( 1.0, 0.0, 0.0 ), osg::Vec3d( 0.0, 1.0, 0.0 ) );
         translateAxisY->setMatrix( osg::Matrix( rotation ) );
     }
-    addChild( translateAxisY.get() );
+    m_matrixTransform->addChild( translateAxisY.get() );
+
+    //Create translate z-axis dragger
     osg::ref_ptr< TranslateAxis > translateAxisZ = new TranslateAxis();
-    translateAxisZ->SetDefaultColor( osg::Vec4f( 0.0, 0.0, 1.0, 1.0 ), true );
+    translateAxisZ->SetColor(
+        Dragger::DEFAULT, osg::Vec4f( 0.0, 0.0, 1.0, 1.0 ), true );
     //Rotate z-axis dragger appropriately
     {
         osg::Quat rotation;
@@ -99,7 +107,7 @@ void Manipulator::CreateDraggers()
             osg::Vec3d( 1.0, 0.0, 0.0 ), osg::Vec3d( 0.0, 0.0, 1.0 ) );
         translateAxisZ->setMatrix( osg::Matrix( rotation ) );
     }
-    addChild( translateAxisZ.get() );
+    m_matrixTransform->addChild( translateAxisZ.get() );
 
     std::multimap< AxisFlags::Enum, osg::ref_ptr< Dragger > > translateAxisMap;
     //Insert the individual axis
@@ -121,27 +129,27 @@ void Manipulator::CreateDraggers()
     m_draggers[ TransformationMode::TranslateAxis ] = translateAxisMap;
 }
 ////////////////////////////////////////////////////////////////////////////////
-const TransformationMode::Enum& Manipulator::GetActiveMode() const
+const TransformationMode::Enum Manipulator::GetActiveMode() const
 {
     return m_activeMode;
 }
 ////////////////////////////////////////////////////////////////////////////////
-const TransformationMode::Enum& Manipulator::GetEnabledModes() const
+const TransformationMode::Enum Manipulator::GetEnabledModes() const
 {
     return m_enabledModes;
 }
 ////////////////////////////////////////////////////////////////////////////////
-const AxisFlags::Enum& Manipulator::GetSelectedAxes() const
+const AxisFlags::Enum Manipulator::GetSelectedAxes() const
 {
     return m_selectedAxes;
 }
 ////////////////////////////////////////////////////////////////////////////////
-const VectorSpace::Enum& Manipulator::GetVectorSpace() const
+const VectorSpace::Enum Manipulator::GetVectorSpace() const
 {
     return m_vectorSpace;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Manipulator::SetEnabledModes( TransformationMode::Enum& value )
+void Manipulator::SetEnabledModes( TransformationMode::Enum value )
 {
     if( m_enabledModes == value )
     {
@@ -158,7 +166,7 @@ void Manipulator::SetEnabledModes( TransformationMode::Enum& value )
     m_activeMode = TransformationMode::None;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Manipulator::SetVectorSpace( VectorSpace::Enum& value )
+void Manipulator::SetVectorSpace( VectorSpace::Enum value )
 {
     if( m_manipulating )
     {

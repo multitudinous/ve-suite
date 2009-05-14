@@ -30,6 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
+
 #ifndef WIN32
 #include <sys/types.h>
 //biv--check here if build/run problems occur
@@ -40,6 +41,7 @@
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/CADEntity.h>
+#include <ves/xplorer/scenegraph/ManipulatorRoot.h>
 #ifdef VE_SOUND
 #include <ves/xplorer/scenegraph/Sound.h>
 #endif
@@ -71,7 +73,7 @@
 #include <osgAL/SoundRoot>
 #include <osgAL/SoundNode>
 #include <osgAL/SoundState>
-#endif
+#endif //VE_SOUND
 
 // --- VR Juggler Includes --- //
 #include <jccl/RTRC/ConfigManager.h>
@@ -115,7 +117,7 @@ SceneManager::SceneManager()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void SceneManager::Initialize( std::string param )
+void SceneManager::Initialize( std::string& param )
 {
     ;
 }
@@ -164,13 +166,17 @@ void SceneManager::InitScene()
         "|  1. Initializing.................................... SceneManager |" 
         << std::endl;
 
+    //mRootNode = new ves::xplorer::scenegraph::Group();
+    mRootNode->setName( "Root Node" );
+    mRootNode->setThreadSafeRefUnref( true );
+
     mModelRoot = new osg::Group();
     //mModelRoot = new ves::xplorer::scenegraph::DCS();
     mModelRoot->setName( "Model Root Node" );
 
-    //mRootNode = new ves::xplorer::scenegraph::Group();
-    mRootNode->setName( "Root Node" );
-    mRootNode->setThreadSafeRefUnref( true );
+    m_manipulatorRoot = new ManipulatorRoot();
+    m_manipulatorRoot->setName( "Manipulator Root Node" );
+    mModelRoot->addChild( m_manipulatorRoot.get() );
 
 #ifdef VE_SOUND
     try
@@ -254,27 +260,32 @@ void SceneManager::SetRootNode( osg::Group* rootNode )
     mRootNode = rootNode;
 }
 ////////////////////////////////////////////////////////////////////////////////
-osg::Group* SceneManager::GetRootNode()
+osg::Group* const SceneManager::GetRootNode() const
 {
     return mRootNode.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
-osg::Group* SceneManager::GetModelRoot()
+osg::Group* const SceneManager::GetModelRoot() const
 {
     return mModelRoot.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
-ves::xplorer::scenegraph::DCS* SceneManager::GetWorldDCS()
+ManipulatorRoot* const SceneManager::GetManipulatorRoot() const
+{
+    return m_manipulatorRoot.get();
+}
+////////////////////////////////////////////////////////////////////////////////
+DCS* const SceneManager::GetWorldDCS() const
 {
     return worldDCS.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
-const gmtl::Matrix44d& SceneManager::GetInvertedWorldDCS()
+const gmtl::Matrix44d& SceneManager::GetInvertedWorldDCS() const
 {
     return mInvertedWorldDCS;
 }
 ////////////////////////////////////////////////////////////////////////////////
-osg::Group* SceneManager::GetNetworkDCS()
+osg::Group* const SceneManager::GetNetworkDCS() const
 {
     return mNetworkDCS.get();
 }
@@ -403,7 +414,7 @@ void SceneManager::PreFrameUpdate()
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-osg::Group* SceneManager::GetActiveSwitchNode()
+osg::Group* const SceneManager::GetActiveSwitchNode() const
 {
     osg::Switch::ValueList boolList = mLogoSwitch->getValueList();
 
@@ -417,7 +428,7 @@ osg::Group* SceneManager::GetActiveSwitchNode()
     return 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
-ves::xplorer::scenegraph::DCS* SceneManager::GetActiveNavSwitchNode()
+DCS* const SceneManager::GetActiveNavSwitchNode() const
 {
     osg::Switch::ValueList boolList = mNavSwitch->getValueList();
     
@@ -434,7 +445,8 @@ ves::xplorer::scenegraph::DCS* SceneManager::GetActiveNavSwitchNode()
 ////////////////////////////////////////////////////////////////////////////////
 void SceneManager::SetBackgroundColor( std::vector< double > color )
 {
-    m_clrNode->setClearColor( osg::Vec4( color.at( 0 ), color.at( 1 ), color.at( 2 ), 1.0f ) );
+    m_clrNode->setClearColor(
+        osg::Vec4( color.at( 0 ), color.at( 1 ), color.at( 2 ), 1.0f ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SceneManager::Shutdown()
@@ -449,12 +461,12 @@ void SceneManager::SetFrameStamp( osg::FrameStamp* frameStamp )
     mFrameStamp = frameStamp;
 }
 ////////////////////////////////////////////////////////////////////////////////
-osg::FrameStamp* SceneManager::GetFrameStamp()
+osg::FrameStamp* const SceneManager::GetFrameStamp() const
 {
     return mFrameStamp.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
-vxs::CharacterController* const SceneManager::GetCharacterController() const
+CharacterController* const SceneManager::GetCharacterController() const
 {
     return mCharacterController;
 }

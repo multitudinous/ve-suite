@@ -39,11 +39,11 @@
 
 // --- OSG Includes --- //
 #include <osg/ref_ptr>
-#include <osg/MatrixTransform>
+#include <osg/AutoTransform>
 
 namespace osg
 {
-class AutoTransform;
+class MatrixTransform;
 }
 
 // --- C/C++ Includes --- //
@@ -129,7 +129,7 @@ namespace AxisDirections
 /*!\class ves::xplorer::scenegraph::manipulator::Manipulator
  *
  */
-class VE_SCENEGRAPH_EXPORTS Manipulator : public osg::MatrixTransform
+class VE_SCENEGRAPH_EXPORTS Manipulator : public osg::AutoTransform
 {
 public:
     ///Constructor
@@ -144,22 +144,22 @@ public:
     META_Node( ves::xplorer::scenegraph::manipulator, Manipulator );
 
     ///Gets the manipulator's active transformation mode
-    const TransformationMode::Enum& GetActiveMode() const;
+    const TransformationMode::Enum GetActiveMode() const;
 
     ///Gets the transformation modes enabled on the manipulator
-    const TransformationMode::Enum& GetEnabledModes() const;
+    const TransformationMode::Enum GetEnabledModes() const;
 
     ///Gets the axes currently being operated on by the manipulator
-    const AxisFlags::Enum& GetSelectedAxes() const;
+    const AxisFlags::Enum GetSelectedAxes() const;
 
     ///Gets the vector space in which the manipulator will operate
-    const VectorSpace::Enum& GetVectorSpace() const;
+    const VectorSpace::Enum GetVectorSpace() const;
 
     ///Sets the transformation modes enabled on the manipulator
-    void SetEnabledModes( TransformationMode::Enum& value );
+    void SetEnabledModes( TransformationMode::Enum value );
 
     ///Sets the vector space in which the manipulator will operate
-    void SetVectorSpace( VectorSpace::Enum& value ); 
+    void SetVectorSpace( VectorSpace::Enum value ); 
 
     ///Activate the manipulator
     void TurnOn();
@@ -194,6 +194,8 @@ protected:
         std::multimap< AxisFlags::Enum, osg::ref_ptr< Dragger > > > m_draggers;
 
 private:
+    ///
+    osg::ref_ptr< osg::MatrixTransform > m_matrixTransform;
 
 };
 } //end manipulator

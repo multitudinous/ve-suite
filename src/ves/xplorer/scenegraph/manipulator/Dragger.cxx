@@ -42,11 +42,14 @@ using namespace ves::xplorer::scenegraph::manipulator;
 ////////////////////////////////////////////////////////////////////////////////
 Dragger::Dragger()
     :
-    osg::MatrixTransform(),
-    m_defaultColor( 0.0, 0.0, 0.0, 1.0 ),
-    m_activeColor( 1.0, 1.0, 1.0, 1.0 ),
-    m_color( new osg::Uniform( "color", m_defaultColor ) )
+    osg::MatrixTransform()
 {
+    m_colorMap[ ACTIVE ] = osg::Vec4f( 1.0, 1.0, 1.0, 1.0 );
+    m_colorMap[ DEFAULT ] = osg::Vec4f( 0.0, 0.0, 0.0, 1.0 );
+    m_colorMap[ FOCUS ] = osg::Vec4f( 1.0, 1.0, 0.0, 1.0 );
+
+    m_color = new osg::Uniform( "color", GetColor( DEFAULT ) );
+
     CreateDefaultShader();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -54,8 +57,7 @@ Dragger::Dragger(
     const Dragger& dragger, const osg::CopyOp& copyop )
     :
     osg::MatrixTransform( dragger, copyop ),
-    m_defaultColor( dragger.m_defaultColor ),
-    m_activeColor( dragger.m_activeColor ),
+    m_colorMap( dragger.m_colorMap ),
     m_color( dragger.m_color )
 {
     ;
@@ -103,24 +105,38 @@ void Dragger::CreateDefaultShader()
     stateSet->addUniform( m_color.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Dragger::SetDefaultColor( osg::Vec4f& defaultColor, bool useNow  )
+osg::Vec4& Dragger::GetColor( ColorTag colorTag )
 {
-    m_defaultColor = defaultColor;
-
-    if( useNow )
+    std::map< ColorTag, osg::Vec4 >::iterator itr = m_colorMap.find( colorTag );
+    /*
+    if( itr == m_colorMap.end() )
     {
-        m_color->set( m_defaultColor );
+        //error handling, but shouldn't need it since we know colors
+    }
+    */
+
+    return itr->second;
+}
+////////////////////////////////////////////////////////////////////////////////
+void Dragger::SetColor( ColorTag colorTag, osg::Vec4& newColor, bool use )
+{
+    osg::Vec4& color = GetColor( colorTag );
+    if( color == newColor )
+    {
+        return;
+    }
+
+    color = newColor;
+
+    if( use )
+    {
+        m_color->set( color );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Dragger::SetActiveColor( osg::Vec4f& activeColor, bool useNow )
+void Dragger::UseColor( ColorTag colorTag )
 {
-    m_activeColor = activeColor;
-
-    if( useNow )
-    {
-        m_color->set( m_activeColor );
-    }
+    m_color->set( GetColor( colorTag ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 Dragger::ForceCullCallback::ForceCullCallback()
