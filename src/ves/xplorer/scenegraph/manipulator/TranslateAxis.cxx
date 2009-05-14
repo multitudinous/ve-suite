@@ -61,77 +61,88 @@ TranslateAxis::TranslateAxis(
 ////////////////////////////////////////////////////////////////////////////////
 TranslateAxis::~TranslateAxis()
 {
-
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void TranslateAxis::SetupDefaultGeometry()
 {
     osg::ref_ptr< osg::Geode > geode = new osg::Geode();
 
-    //Create a right line
-    //{
+    //Create the positive axis
+    {
+        //Create a right line
         osg::ref_ptr< osg::Geometry > geometry = new osg::Geometry();
         
         osg::ref_ptr< osg::Vec3Array > vertices = new osg::Vec3Array();
         vertices->resize( 2 );
-        (*vertices)[ 0 ] = osg::Vec3d( 0.0, 0.0, 0.0 );
-        (*vertices)[ 1 ] = osg::Vec3d( 1.0, 0.0, 0.0 );
+        (*vertices)[ 0 ] = osg::Vec3( 0.0, 0.0, 0.0 );
+        (*vertices)[ 1 ] = osg::Vec3( 1.0, 0.0, 0.0 );
+
+        osg::Vec3 zAxis( 0.0, 0.0, 1.0 );
+        osg::Quat rotation;
+        rotation.makeRotate( zAxis, (*vertices)[ 1 ] );
 
         geometry->setVertexArray( vertices.get() );
         geometry->addPrimitiveSet(
             new osg::DrawArrays( osg::PrimitiveSet::LINES, 0, 2 ) );
-
         geode->addDrawable( geometry.get() );
-    //}
-
-    //Create a right cone
-    //{
+    
+        //Create a right cone
         osg::ref_ptr< osg::Cone > cone =
             new osg::Cone( (*vertices)[ 1 ], 0.05, 0.2 );
-        osg::Quat rotation;
-        rotation.makeRotate( osg::Vec3( 0.0, 0.0, 1.0 ), (*vertices)[ 1 ] );
         cone->setRotation( rotation );
-
         geode->addDrawable( new osg::ShapeDrawable( cone.get() ) );
-    //}
-
-    /*
-    //Create a left cone
-    {
-        osg::ref_ptr< osg::Cone > cone =
-            new osg::Cone( _projector->getLineStart(), 0.025 * lineLength, 0.1 * lineLength );
-        osg::Quat rotation;
-        rotation.makeRotate(lineDir, osg::Vec3(0.0, 0.0f, 1.0));
-        cone->setRotation(rotation);
-
-        geode->addDrawable( new osg::ShapeDrawable( cone ) );
-    }
-    */
-
-
-
-    /*
-    //Create an invisible cylinder for picking the line
-    {
-        osg::ref_ptr< osg::Cylinder > cylinder =
-            new osg::Cylinder( ( _projector->getLineStart() + _projector->getLineEnd() ) / 2, 0.015 * lineLength, lineLength );
-        osg::Quat rotation;
-        rotation.makeRotate(osg::Vec3(0.0f, 0.0f, 1.0f), lineDir);
-        cylinder->setRotation(rotation);
-        osg::Drawable* cylinderGeom = new osg::ShapeDrawable( cylinder );
-
-        setDrawableToAlwaysCull( *cylinderGeom );
     
-        geode->addDrawable( cylinderGeom );
+        //Create an invisible cylinder for picking the right line
+        osg::ref_ptr< osg::Cylinder > cylinder =
+            new osg::Cylinder( (*vertices)[ 1 ] * 0.5, 0.05, 1.0 );
+        cylinder->setRotation( rotation );
+        osg::ref_ptr< osg::Drawable > drawable =
+            new osg::ShapeDrawable( cylinder.get() );
+        SetDrawableToAlwaysCull( *drawable.get() );
+        geode->addDrawable( drawable.get() );
     }
-    */
 
-    //Turn off lighting for line and set line width
-    osg::ref_ptr< osg::StateSet > stateSet = geode->getOrCreateStateSet();
+    //Create the negative axis
+    {
+        //Create a left line
+        osg::ref_ptr< osg::Geometry > geometry = new osg::Geometry();
+        
+        osg::ref_ptr< osg::Vec3Array > vertices = new osg::Vec3Array();
+        vertices->resize( 2 );
+        (*vertices)[ 0 ] = osg::Vec3(  0.0, 0.0, 0.0 );
+        (*vertices)[ 1 ] = osg::Vec3( -1.0, 0.0, 0.0 );
+
+        osg::Vec3 zAxis( 0.0, 0.0, 1.0 );
+        osg::Quat rotation;
+        rotation.makeRotate( (*vertices)[ 1 ], zAxis );
+
+        geometry->setVertexArray( vertices.get() );
+        geometry->addPrimitiveSet(
+            new osg::DrawArrays( osg::PrimitiveSet::LINES, 0, 2 ) );
+        geode->addDrawable( geometry.get() );
+
+        //Create a left cone
+        osg::ref_ptr< osg::Cone > cone =
+            new osg::Cone( (*vertices)[ 1 ], 0.05, -0.2 );
+        cone->setRotation( rotation );
+        geode->addDrawable( new osg::ShapeDrawable( cone.get() ) );
+
+        //Create an invisible cylinder for picking the line
+        osg::ref_ptr< osg::Cylinder > cylinder =
+            new osg::Cylinder( (*vertices)[ 1 ] * 0.5, 0.05, 1.0 );
+        cylinder->setRotation( rotation );
+        osg::ref_ptr< osg::Drawable > drawable =
+            new osg::ShapeDrawable( cylinder.get() );
+        SetDrawableToAlwaysCull( *drawable.get() );
+        geode->addDrawable( drawable.get() );
+    }
+
+    //Set line width
+    osg::ref_ptr< osg::StateSet > stateSet = getOrCreateStateSet();
     osg::ref_ptr< osg::LineWidth > lineWidth = new osg::LineWidth();
     lineWidth->setWidth( 2.0 );
     stateSet->setAttributeAndModes( lineWidth.get(), osg::StateAttribute::ON );
-    stateSet->setMode( GL_LIGHTING, osg::StateAttribute::OFF );
 
     stateSet->setMode( GL_LINE_SMOOTH,
         osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
@@ -140,7 +151,7 @@ void TranslateAxis::SetupDefaultGeometry()
     stateSet->setAttributeAndModes( hint.get(),
         osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
 
-    //Add line and cones to the scene
+    //Add lines and cones to the scene
     addChild( geode.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////

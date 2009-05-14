@@ -71,6 +71,13 @@ void Dragger::SetupDefaultGeometry()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
+void Dragger::SetDrawableToAlwaysCull( osg::Drawable& drawable )
+{
+    osg::ref_ptr< Dragger::ForceCullCallback > forceCullCallback =
+        new Dragger::ForceCullCallback();
+    drawable.setCullCallback( forceCullCallback.get() );
+}
+////////////////////////////////////////////////////////////////////////////////
 void Dragger::CreateDefaultShader()
 {
     //Create the shader used to render the dragger
@@ -114,5 +121,29 @@ void Dragger::SetActiveColor( osg::Vec4f& activeColor, bool useNow )
     {
         m_color->set( m_activeColor );
     }
+}
+////////////////////////////////////////////////////////////////////////////////
+Dragger::ForceCullCallback::ForceCullCallback()
+    :
+    osg::Drawable::CullCallback()
+{
+    ;
+}
+////////////////////////////////////////////////////////////////////////////////
+Dragger::ForceCullCallback::ForceCullCallback(
+    const ForceCullCallback& forceCullCallback,
+    const osg::CopyOp& copyop )
+    :
+    osg::Drawable::CullCallback( forceCullCallback, copyop )
+{
+    ;
+}
+////////////////////////////////////////////////////////////////////////////////
+bool Dragger::ForceCullCallback::cull(
+    osg::NodeVisitor* nv,
+    osg::Drawable* drawable,
+    osg::RenderInfo* renderInfo ) const
+{
+    return true;
 }
 ////////////////////////////////////////////////////////////////////////////////

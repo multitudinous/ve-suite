@@ -39,6 +39,7 @@
 
 // --- OSG Includes --- //
 #include <osg/MatrixTransform>
+#include <osg/Drawable>
 
 namespace ves
 {
@@ -83,7 +84,38 @@ protected:
     ///Can't create pure virtual function here because of inheritance
     virtual void SetupDefaultGeometry();
 
+    ///
+    void SetDrawableToAlwaysCull( osg::Drawable& drawable );
+
 private:
+    ///
+    class ForceCullCallback : public osg::Drawable::CullCallback
+    {
+    public:
+        ///
+        ForceCullCallback();
+
+        ///
+        ForceCullCallback(
+            const ForceCullCallback& forceCullCallback,
+            const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
+
+        ///
+        META_Object(
+            ves::xplorer::scenegraph::manipulator::Dragger, ForceCullCallback );
+
+        ///
+        virtual bool cull(
+            osg::NodeVisitor* nv,
+            osg::Drawable* drawable,
+            osg::RenderInfo* renderInfo ) const;
+
+    protected:
+
+    private:
+
+    };
+
     ///
     void CreateDefaultShader();
 
