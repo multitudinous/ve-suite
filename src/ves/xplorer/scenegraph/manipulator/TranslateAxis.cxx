@@ -40,6 +40,8 @@
 #include <osg/Geometry>
 #include <osg/ShapeDrawable>
 #include <osg/LineWidth>
+#include <osg/LineStipple>
+#include <osg/PolygonStipple>
 
 using namespace ves::xplorer::scenegraph::manipulator;
 
@@ -68,6 +70,10 @@ void TranslateAxis::SetupDefaultGeometry()
 {
     osg::ref_ptr< osg::Geode > geode = new osg::Geode();
 
+    double coneRadius = 0.05;
+    double coneHeight = 0.2;
+    osg::Vec3 coneCenter( coneHeight / 4.0, 0.0, 0.0 );
+
     //Create the positive axis
     {
         //Create a right line
@@ -88,14 +94,17 @@ void TranslateAxis::SetupDefaultGeometry()
         geode->addDrawable( geometry.get() );
     
         //Create a right cone
+        (*vertices)[ 1 ].x() -= coneHeight;
         osg::ref_ptr< osg::Cone > cone =
-            new osg::Cone( (*vertices)[ 1 ], 0.05, 0.2 );
+            new osg::Cone(
+                (*vertices)[ 1 ] + coneCenter, coneRadius, coneHeight );
         cone->setRotation( rotation );
         geode->addDrawable( new osg::ShapeDrawable( cone.get() ) );
-    
+
         //Create an invisible cylinder for picking the right line
         osg::ref_ptr< osg::Cylinder > cylinder =
-            new osg::Cylinder( (*vertices)[ 1 ] * 0.5, 0.05, 1.0 );
+            new osg::Cylinder(
+                (*vertices)[ 1 ] * 0.5, coneRadius, (*vertices)[ 1 ].x() );
         cylinder->setRotation( rotation );
         osg::ref_ptr< osg::Drawable > drawable =
             new osg::ShapeDrawable( cylinder.get() );
@@ -123,14 +132,17 @@ void TranslateAxis::SetupDefaultGeometry()
         geode->addDrawable( geometry.get() );
 
         //Create a left cone
+        (*vertices)[ 1 ].x() += coneHeight;
         osg::ref_ptr< osg::Cone > cone =
-            new osg::Cone( (*vertices)[ 1 ], 0.05, -0.2 );
+            new osg::Cone(
+                (*vertices)[ 1 ] - coneCenter, coneRadius, -coneHeight );
         cone->setRotation( rotation );
         geode->addDrawable( new osg::ShapeDrawable( cone.get() ) );
 
         //Create an invisible cylinder for picking the line
         osg::ref_ptr< osg::Cylinder > cylinder =
-            new osg::Cylinder( (*vertices)[ 1 ] * 0.5, 0.05, 1.0 );
+            new osg::Cylinder(
+                (*vertices)[ 1 ] * 0.5, coneRadius, -(*vertices)[ 1 ].x() );
         cylinder->setRotation( rotation );
         osg::ref_ptr< osg::Drawable > drawable =
             new osg::ShapeDrawable( cylinder.get() );
@@ -141,8 +153,41 @@ void TranslateAxis::SetupDefaultGeometry()
     //Set line width
     osg::ref_ptr< osg::StateSet > stateSet = getOrCreateStateSet();
     osg::ref_ptr< osg::LineWidth > lineWidth = new osg::LineWidth();
-    lineWidth->setWidth( 2.0 );
+    lineWidth->setWidth( 1.0 );
     stateSet->setAttributeAndModes( lineWidth.get(), osg::StateAttribute::ON );
+
+    //Set line stipple
+    osg::ref_ptr< osg::LineStipple > lineStipple = new osg::LineStipple();
+    lineStipple->setFactor( 1 );
+    lineStipple->setPattern( 0xAAAA );
+    stateSet->setAttributeAndModes( lineStipple.get(),
+        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+
+    //Set polygon stipple
+    osg::ref_ptr< osg::PolygonStipple > polygonStipple =
+        new osg::PolygonStipple();
+    GLubyte halftone[] =
+    {
+        0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
+        0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
+        0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
+        0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
+        0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
+        0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
+        0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
+        0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
+        0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
+        0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
+        0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
+        0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
+        0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
+        0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
+        0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
+        0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55
+    };
+    polygonStipple->setMask( halftone );
+    stateSet->setAttributeAndModes( polygonStipple.get(),
+        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
 
     stateSet->setMode( GL_LINE_SMOOTH,
         osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );

@@ -39,10 +39,11 @@
 
 // --- OSG Includes --- //
 #include <osg/ref_ptr>
-#include <osg/AutoTransform>
+#include <osg/Group>
 
 namespace osg
 {
+class AutoTransform;
 class MatrixTransform;
 }
 
@@ -58,7 +59,6 @@ namespace scenegraph
 namespace manipulator
 {
 class Dragger;
-//class TranslateAxis;
 
 namespace AxisFlags
 {
@@ -129,7 +129,7 @@ namespace AxisDirections
 /*!\class ves::xplorer::scenegraph::manipulator::Manipulator
  *
  */
-class VE_SCENEGRAPH_EXPORTS Manipulator : public osg::AutoTransform
+class VE_SCENEGRAPH_EXPORTS Manipulator : public osg::Group
 {
 public:
     ///Constructor
@@ -195,6 +195,8 @@ protected:
 
 private:
     ///
+    osg::ref_ptr< osg::AutoTransform > m_autoTransform;
+
     osg::ref_ptr< osg::MatrixTransform > m_matrixTransform;
 
 };

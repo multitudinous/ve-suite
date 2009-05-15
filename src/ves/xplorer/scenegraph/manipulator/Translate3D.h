@@ -26,21 +26,21 @@
  * Date modified: $Date: 2009-05-13 15:17:12 -0600 (Wed, 13 May 2009) $
  * Version:       $Rev: 12684 $
  * Author:        $Author: jbkoch $
- * Id:            $Id: ManipulatorRoot.h 12684 2009-05-13 21:17:12Z jbkoch $
+ * Id:            $Id: Translate3D.h 12684 2009-05-13 21:17:12Z jbkoch $
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
-#ifndef MANIPULATOR_ROOT_H
-#define MANIPULATOR_ROOT_H
+#ifndef TRANSLATE_3D_H
+#define TRANSLATE_3D_H
 
 // --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
 
-// --- OSG Includes --- //
-#include <osg/Group>
+#include <ves/xplorer/scenegraph/manipulator/Dragger.h>
 
-// --- C/C++ Includes --- //
+// --- OSG Includes --- //
+#include <osg/ref_ptr>
 
 namespace ves
 {
@@ -48,63 +48,47 @@ namespace xplorer
 {
 namespace scenegraph
 {
-
 namespace manipulator
 {
-class Manipulator;
-} //end manipulator
+class TranslateAxis;
 
-/*!\file ManipulatorRoot.h
- * ManipulatorRoot API
+/*!\file Translate3D.h
+ * Translate1D API
  */
 
-/*!\class ves::xplorer::scenegraph::ManipulatorRoot
+/*!\class ves::xplorer::scenegraph::manipulator::Translate3D
  *
  */
-class VE_SCENEGRAPH_EXPORTS ManipulatorRoot : public osg::Group
+class VE_SCENEGRAPH_EXPORTS Translate3D : public Dragger
 {
 public:
-    ///Constructor
-    ManipulatorRoot();
+    ///
+    Translate3D();
 
     ///Copy constructor using CopyOp to manage deep vs shallow copy
-    ManipulatorRoot(
-        const ManipulatorRoot& manipulatorRoot,
+    Translate3D(
+        const Translate3D& translate3D,
         const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
 
     ///
-    META_Node( ves::xplorer::scenegraph, ManipulatorRoot );
-
-    ///Override the addChild function to only accept Manipulators
-    virtual bool addChild( manipulator::Manipulator* child );
-
-    ///Override the insertChild function to only accept Manipulators
-    virtual bool insertChild(
-        unsigned int index, manipulator::Manipulator* child );
-
-    ///Override the replaceChild function to only accept Manipulators
-    virtual bool replaceChild(
-        manipulator::Manipulator* origChild,
-        manipulator::Manipulator* newChild );
-
-    ///Override the setChild function to only accept Manipulators
-    virtual bool setChild( unsigned int i, manipulator::Manipulator* node );
-
-    ///Activate the manipulator root
-    void TurnOn();
-
-    ///Deactivate the manipulator root
-    void TurnOff();
+    META_Node( ves::xplorer::scenegraph::manipulator, Translate3D );
 
 protected:
-    ///Destructor
-    virtual ~ManipulatorRoot();
+    ///
+    ~Translate3D();
+
+    ///
+    virtual void SetupDefaultGeometry();
 
 private:
+    osg::ref_ptr< TranslateAxis > m_xTranslateAxis;
+    osg::ref_ptr< TranslateAxis > m_yTranslateAxis;
+    osg::ref_ptr< TranslateAxis > m_zTranslateAxis;
 
 };
+} //end manipulator
 } //end scenegraph
 } //end xplorer
 } //end ves
 
-#endif //MANIPULATOR_ROOT_H
+#endif //TRANSLATE_3D_H
