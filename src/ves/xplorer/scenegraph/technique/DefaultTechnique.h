@@ -44,8 +44,6 @@ namespace xplorer
 {
 namespace scenegraph
 {
-namespace technique
-{
 class VE_SCENEGRAPH_EXPORTS DefaultTechnique : public Technique
 {
 public:
@@ -56,8 +54,7 @@ public:
     virtual ~DefaultTechnique();
 
     ///
-    virtual void Traverse(
-        osg::NodeVisitor& nv, ves::xplorer::scenegraph::SceneNode* sceneNode );
+    virtual void Traverse( osg::NodeVisitor& nv, SceneNode* sceneNode );
 
 protected:
     ///
@@ -66,7 +63,6 @@ protected:
 private:
 
 };
-} //end technique
 } //end scenegraph
 } //end xplorer
 } //end ves

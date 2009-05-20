@@ -42,7 +42,7 @@
 #include <osg/PolygonMode>
 #include <osg/Depth>
 
-using namespace ves::xplorer::scenegraph::technique;
+using namespace ves::xplorer::scenegraph;
 
 ////////////////////////////////////////////////////////////////////////////////
 SelectTechnique::SelectTechnique( osg::ref_ptr< osg::StateSet > stateSet )
@@ -180,49 +180,3 @@ void SelectTechnique::DefinePasses()
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-
-//This is the old code to select using rtt glow method
-/*
-osg::Vec4 glowColor( 1.0, 0.0, 0.0, 1.0 );
-//Pass 1
-{
-    //m_stateSet->setRenderBinDetails( -1, "RenderBin" );
-
-    m_stateSet->addUniform( new osg::Uniform( "glowColor", glowColor ) );
-
-    AddPass( m_stateSet.get() );
-}
-//Pass 2
-{
-    std::string fragmentSource =
-    "uniform vec4 glowColor; \n"
-
-    "void main() \n"
-    "{ \n"
-        "gl_FragData[ 2 ] = glowColor; \n"
-    "} \n";
-
-    osg::ref_ptr< osg::StateSet > stateset = new osg::StateSet();
-
-    osg::ref_ptr< osg::Shader > fragmentShader = new osg::Shader();
-    fragmentShader->setType( osg::Shader::FRAGMENT );
-    fragmentShader->setShaderSource( fragmentSource );
-
-    osg::ref_ptr< osg::Program > program = new osg::Program();
-    program->addShader( fragmentShader.get() );
-
-    stateset->setAttributeAndModes( program.get(),
-        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
-
-    osg::ref_ptr< osg::Depth > depth = new osg::Depth();
-    depth->setFunction( osg::Depth::ALWAYS );
-    depth->setWriteMask( false );
-
-    stateset->setAttributeAndModes( depth.get(),
-        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
-
-    stateset->addUniform( new osg::Uniform( "glowColor", glowColor ) );
-
-    AddPass( stateset.get() );
-}
-*/

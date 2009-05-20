@@ -53,11 +53,7 @@ namespace xplorer
 {
 namespace scenegraph
 {
-
-namespace technique
-{
 class Technique;
-} //end technique
 
 /*!\file SceneNode.h
  *
@@ -90,7 +86,7 @@ public:
 
     ///
     void AddTechnique(
-        const std::string& name, technique::Technique* technique );
+        const std::string& name, Technique* technique );
 
     ///
     void RemoveTechnique( const std::string& name );
@@ -99,17 +95,17 @@ public:
     void SetTechnique( const std::string& name );
 
     ///
-    technique::Technique* const GetTechnique( const std::string& name ) const;
+    Technique* const GetTechnique( const std::string& name ) const;
 
     ///
-    technique::Technique* const GetActiveTechnique() const;
+    Technique* const GetActiveTechnique() const;
 
 protected:
     ///
     std::string mActiveTechnique;
 
     ///
-    std::map< std::string, technique::Technique* > mTechniques;
+    std::map< std::string, Technique* > mTechniques;
 
 };
 } //end scenegraph

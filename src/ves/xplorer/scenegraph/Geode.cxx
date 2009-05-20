@@ -113,7 +113,7 @@ osg::Group* Geode::GetParent( unsigned int position )
 ////////////////////////////////////////////////////////////////////////////////
 void Geode::traverse( osg::NodeVisitor& nv )
 {
-    technique::Technique* technique = mTechniques[ mActiveTechnique ];
+    Technique* technique = mTechniques[ mActiveTechnique ];
 
     technique->Traverse( nv, this );
 }

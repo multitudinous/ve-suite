@@ -49,16 +49,16 @@ SceneNode::SceneNode()
     :
     mActiveTechnique( "Default" )
 {
-    AddTechnique( "Default", new technique::DefaultTechnique() );
+    AddTechnique( "Default", new DefaultTechnique() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 SceneNode::~SceneNode()
 {
     //Delete techniques in map
-    std::map< std::string, technique::Technique* >::iterator itr;
+    std::map< std::string, Technique* >::iterator itr;
     for( itr =mTechniques.begin(); itr != mTechniques.end(); ++itr )
     {
-        technique::Technique* tempTech = itr->second;
+        Technique* tempTech = itr->second;
 
         delete tempTech;
     }
@@ -68,7 +68,7 @@ SceneNode::~SceneNode()
 ////////////////////////////////////////////////////////////////////////////////
 void SceneNode::DirtyTechniques()
 {
-    std::map< std::string, technique::Technique* >::const_iterator itr;
+    std::map< std::string, Technique* >::const_iterator itr;
     for( itr = mTechniques.begin(); itr != mTechniques.end(); ++itr )
     {
         itr->second->DirtyPasses();
@@ -76,7 +76,7 @@ void SceneNode::DirtyTechniques()
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SceneNode::AddTechnique(
-    const std::string& name, technique::Technique* technique )
+    const std::string& name, Technique* technique )
 {
     mTechniques[ name ] = technique;
 }
@@ -91,10 +91,10 @@ void SceneNode::SetTechnique( const std::string& name )
     mActiveTechnique = name;
 }
 ////////////////////////////////////////////////////////////////////////////////
-technique::Technique* const SceneNode::GetTechnique(
+Technique* const SceneNode::GetTechnique(
     const std::string& name ) const
 {
-    std::map< std::string, technique::Technique* >::const_iterator itr =
+    std::map< std::string, Technique* >::const_iterator itr =
         mTechniques.find( name );
     if( itr != mTechniques.end() )
     {
@@ -104,9 +104,9 @@ technique::Technique* const SceneNode::GetTechnique(
     return NULL;
 }
 ////////////////////////////////////////////////////////////////////////////////
-technique::Technique* const SceneNode::GetActiveTechnique() const
+Technique* const SceneNode::GetActiveTechnique() const
 {
-    std::map< std::string, technique::Technique* >::const_iterator itr =
+    std::map< std::string, Technique* >::const_iterator itr =
         mTechniques.find( mActiveTechnique );
     if( itr != mTechniques.end() )
     {

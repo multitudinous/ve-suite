@@ -39,7 +39,7 @@
 
 namespace cpt
 {
-class ProjectionTechnique : public ves::xplorer::scenegraph::technique::Technique
+class ProjectionTechnique : public ves::xplorer::scenegraph::Technique
 {
 public:
     ProjectionTechnique();

@@ -45,7 +45,7 @@ using namespace cpt;
 ////////////////////////////////////////////////////////////////////////////////
 DepthHelperTechnique::DepthHelperTechnique()
     :
-    ves::xplorer::scenegraph::technique::Technique()
+    ves::xplorer::scenegraph::Technique()
 {
     DefinePasses();
 }

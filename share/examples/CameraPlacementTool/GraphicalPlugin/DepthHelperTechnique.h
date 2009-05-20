@@ -39,7 +39,7 @@
 
 namespace cpt
 {
-class DepthHelperTechnique : public ves::xplorer::scenegraph::technique::Technique
+class DepthHelperTechnique : public ves::xplorer::scenegraph::Technique
 {
 public:
     DepthHelperTechnique();

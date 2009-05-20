@@ -139,7 +139,7 @@ void Group::ToggleDisplay( std::string onOff )
 ////////////////////////////////////////////////////////////////////////////////
 void Group::traverse( osg::NodeVisitor& nv )
 {
-    technique::Technique* technique = mTechniques[ mActiveTechnique ];
+    Technique* technique = mTechniques[ mActiveTechnique ];
 
     technique->Traverse( nv, this );
 }

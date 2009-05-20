@@ -43,7 +43,7 @@ using namespace cpt;
 ////////////////////////////////////////////////////////////////////////////////
 ProjectionTechnique::ProjectionTechnique()
     :
-    ves::xplorer::scenegraph::technique::Technique(),
+    ves::xplorer::scenegraph::Technique(),
     mAlpha(
         new osg::Uniform( osg::Uniform::FLOAT, "alpha" ) ),
     mNearPlaneUniform(

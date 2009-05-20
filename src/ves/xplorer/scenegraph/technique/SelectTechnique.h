@@ -48,8 +48,6 @@ namespace xplorer
 {
 namespace scenegraph
 {
-namespace technique
-{
 /*!\file SelectTechnique.h
  *
  */
@@ -83,7 +81,6 @@ private:
     osg::ref_ptr< osg::StateSet > m_stateSet;
 
 };
-} //end technique
 } //end scenegraph
 } //end xplorer
 } //end ves
