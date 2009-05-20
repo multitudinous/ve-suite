@@ -37,8 +37,15 @@
 // --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
 
+#include <ves/xplorer/scenegraph/manipulator/Enums.h>
+
 // --- OSG Includes --- //
 #include <osg/Group>
+
+namespace osgUtil
+{
+class LineSegmentIntersector;
+}
 
 // --- C/C++ Includes --- //
 
@@ -48,11 +55,7 @@ namespace xplorer
 {
 namespace scenegraph
 {
-
-namespace manipulator
-{
 class Manipulator;
-} //end manipulator
 
 /*!\file ManipulatorRoot.h
  * ManipulatorRoot API
@@ -76,19 +79,30 @@ public:
     META_Node( ves::xplorer::scenegraph, ManipulatorRoot );
 
     ///Override the addChild function to only accept Manipulators
-    virtual bool addChild( manipulator::Manipulator* child );
+    virtual bool addChild( Manipulator* child );
+
+    ///
+    Manipulator* ConvertNodeToManipulator( osg::Node* node );
+
+    ///Can't override the getChild function, so create our own
+    Manipulator* GetChild( unsigned int i );
+
+    ///
+    virtual bool Handle(
+        Event::Enum event,
+        osgUtil::LineSegmentIntersector* lineSegmentIntersector = NULL );
 
     ///Override the insertChild function to only accept Manipulators
     virtual bool insertChild(
-        unsigned int index, manipulator::Manipulator* child );
+        unsigned int index, Manipulator* child );
 
     ///Override the replaceChild function to only accept Manipulators
     virtual bool replaceChild(
-        manipulator::Manipulator* origChild,
-        manipulator::Manipulator* newChild );
+        Manipulator* origChild,
+        Manipulator* newChild );
 
     ///Override the setChild function to only accept Manipulators
-    virtual bool setChild( unsigned int i, manipulator::Manipulator* node );
+    virtual bool setChild( unsigned int i, Manipulator* node );
 
     ///Activate the manipulator root
     void TurnOn();
@@ -101,6 +115,14 @@ protected:
     virtual ~ManipulatorRoot();
 
 private:
+    ///
+    osg::NodePath m_nodePath;
+
+    ///
+    osg::ref_ptr< Manipulator > m_activeManipulator;
+
+    ///
+    osg::ref_ptr< osgUtil::LineSegmentIntersector > m_lineSegmentIntersector;
 
 };
 } //end scenegraph

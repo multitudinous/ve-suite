@@ -39,38 +39,31 @@
 
 // --- OSG Includes --- //
 #include <osg/AutoTransform>
-#include <osg/MatrixTransform>
 
-using namespace ves::xplorer::scenegraph::manipulator;
-namespace vxs = ves::xplorer::scenegraph;
+using namespace ves::xplorer::scenegraph;
 
 ////////////////////////////////////////////////////////////////////////////////
 Manipulator::Manipulator()
     :
-    osg::Group(),
-    m_autoTransform( new osg::AutoTransform() ),
-    m_matrixTransform( new osg::MatrixTransform() )
+    osg::MatrixTransform(),
+    m_autoTransform( new osg::AutoTransform() )
 {
-    //vxs::SceneManager::instance()->GetManipulatorRoot()->addChild( this );
-
-    m_autoTransform->setAutoScaleToScreen( true );
-    m_autoTransform->setCullingActive( false );
-    addChild( m_autoTransform.get() );
-
-    m_matrixTransform->setMatrix(
-        osg::Matrix::translate( 2.0, 0.0, 0.0 ) *
-        osg::Matrix::scale( 100.0, 100.0, 100.0 ) );
-    m_autoTransform->addChild( m_matrixTransform.get() );
-
     CreateDraggers();
+
+    setMatrix( osg::Matrix::scale( 100.0, 100.0, 100.0 ) );
+
+    SetAutoScaleToScreen( true );
+    m_autoTransform->setCullingActive( false );
+    m_autoTransform->addChild( this );
+
+    SceneManager::instance()->GetManipulatorRoot()->addChild( this );
 }
 ////////////////////////////////////////////////////////////////////////////////
 Manipulator::Manipulator(
     const Manipulator& manipulator, const osg::CopyOp& copyop )
     :
-    osg::Group( manipulator, copyop ),
-    m_autoTransform( manipulator.m_autoTransform.get() ),
-    m_matrixTransform( manipulator.m_matrixTransform.get() )
+    osg::MatrixTransform( manipulator, copyop ),
+    m_autoTransform( manipulator.m_autoTransform.get() )
 {
     ;
 }
@@ -80,30 +73,35 @@ Manipulator::~Manipulator()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
+bool Manipulator::addChild( Dragger* child )
+{
+    return osg::MatrixTransform::addChild( child );
+}
+////////////////////////////////////////////////////////////////////////////////
+Dragger* Manipulator::GetChild( unsigned int i )
+{
+    return dynamic_cast< Dragger* >( osg::MatrixTransform::getChild( i ) );
+}
+////////////////////////////////////////////////////////////////////////////////
+bool Manipulator::insertChild( unsigned int index, Dragger* child )
+{
+    return osg::MatrixTransform::insertChild( index, child );
+}
+////////////////////////////////////////////////////////////////////////////////
+bool Manipulator::replaceChild( Dragger* origChild, Dragger* newChild )
+{
+    return osg::MatrixTransform::replaceChild( origChild, newChild );
+}
+////////////////////////////////////////////////////////////////////////////////
+bool Manipulator::setChild( unsigned int i, Dragger* node )
+{
+    return osg::MatrixTransform::setChild( i, node );
+}
+////////////////////////////////////////////////////////////////////////////////
 void Manipulator::CreateDraggers()
 {
     osg::ref_ptr< Translate3D > translate3D = new Translate3D();
-    m_matrixTransform->addChild( translate3D.get() );
-/*
-    std::multimap< AxisFlags::Enum, osg::ref_ptr< Dragger > > translateAxisMap;
-    //Insert the individual axis
-    translateAxisMap.insert(
-        std::make_pair( AxisFlags::X, translateAxisX.get() ) );
-    translateAxisMap.insert(
-        std::make_pair( AxisFlags::Y, translateAxisY.get() ) );
-    translateAxisMap.insert(
-        std::make_pair( AxisFlags::Z, translateAxisZ.get() ) );
-
-    //
-    translateAxisMap.insert(
-        std::make_pair( AxisFlags::XYZ, translateAxisX.get() ) );
-    translateAxisMap.insert(
-        std::make_pair( AxisFlags::XYZ, translateAxisY.get() ) );
-    translateAxisMap.insert(
-        std::make_pair( AxisFlags::XYZ, translateAxisZ.get() ) );
-
-    m_draggers[ TransformationMode::TranslateAxis ] = translateAxisMap;
-*/
+    addChild( translate3D.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 const TransformationMode::Enum Manipulator::GetActiveMode() const
@@ -116,7 +114,7 @@ const TransformationMode::Enum Manipulator::GetEnabledModes() const
     return m_enabledModes;
 }
 ////////////////////////////////////////////////////////////////////////////////
-const AxisFlags::Enum Manipulator::GetSelectedAxes() const
+const AxesFlag::Enum Manipulator::GetSelectedAxes() const
 {
     return m_selectedAxes;
 }
@@ -124,6 +122,37 @@ const AxisFlags::Enum Manipulator::GetSelectedAxes() const
 const VectorSpace::Enum Manipulator::GetVectorSpace() const
 {
     return m_vectorSpace;
+}
+////////////////////////////////////////////////////////////////////////////////
+bool Manipulator::Handle( Event::Enum event )
+{
+    /*
+    for( size_t i = 0; i < getNumChildren(); ++i )
+    {
+        Dragger* dragger = GetChild( i );
+        if( dragger->Handle( event ) )
+        {
+            return true;
+        }
+    }
+
+    //std::find( 
+    //if( ( this ) )
+    {
+        UseColor( ColorTag::DEFAULT );
+
+        return false;
+    }
+
+    */
+
+    return false;
+
+}
+////////////////////////////////////////////////////////////////////////////////
+void Manipulator::SetAutoScaleToScreen( bool autoScaleToScreen )
+{
+    m_autoTransform->setAutoScaleToScreen( autoScaleToScreen );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Manipulator::SetEnabledModes( TransformationMode::Enum value )

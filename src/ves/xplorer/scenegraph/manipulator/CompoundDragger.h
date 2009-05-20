@@ -26,25 +26,23 @@
  * Date modified: $Date: 2009-05-06 14:32:42 -0600 (Wed, 06 May 2009) $
  * Version:       $Rev: 12657 $
  * Author:        $Author: jbkoch $
- * Id:            $Id: Dragger.h 12657 2009-05-06 20:32:42Z jbkoch $
+ * Id:            $Id: CompoundDragger.h 12657 2009-05-06 20:32:42Z jbkoch $
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
-#ifndef DRAGGER_H
-#define DRAGGER_H
+#ifndef COMPOUND_DRAGGER_H
+#define COMPOUND_DRAGGER_H
 
 // --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
 
-#include <ves/xplorer/scenegraph/manipulator/Enums.h>
+#include <ves/xplorer/scenegraph/manipulator/Dragger.h>
 
 // --- OSG Includes --- //
-#include <osg/MatrixTransform>
-#include <osg/Drawable>
 
 // --- C/C++ Includes --- //
-#include <map>
+//#include <map>
 
 namespace ves
 {
@@ -52,102 +50,68 @@ namespace xplorer
 {
 namespace scenegraph
 {
-/*!\file Dragger.h
+/*!\file CompoundDragger.h
  * Dragger API
  */
 
-/*!\class ves::xplorer::scenegraph::Dragger
+/*!\class ves::xplorer::scenegraph::CompoundDragger
  *
  */
-class VE_SCENEGRAPH_EXPORTS Dragger : public osg::MatrixTransform
+class VE_SCENEGRAPH_EXPORTS CompoundDragger : public Dragger
 {
 public:
     ///
-    Dragger();
+    CompoundDragger();
 
     ///Copy constructor using CopyOp to manage deep vs shallow copy
-    Dragger(
-        const Dragger& dragger,
+    CompoundDragger(
+        const CompoundDragger& compoundDragger,
         const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
 
     ///
-    META_Node( ves::xplorer::scenegraph::manipulator, Dragger );
+    META_Node( ves::xplorer::scenegraph::manipulator, CompoundDragger );
+
+    ///Override the addChild function to only accept Draggers
+    virtual bool addChild( Dragger* child );
+
+    ///Can't override the getChild function, so create our own
+    Dragger* GetChild( unsigned int i );
+
+    ///Override the insertChild function to only accept Draggers
+    virtual bool insertChild( unsigned int index, Dragger* child );
+
+    ///Override the replaceChild function to only accept Draggers
+    virtual bool replaceChild( Dragger* origChild, Dragger* newChild );
+
+    ///Override the setChild function to only accept Draggers
+    virtual bool setChild( unsigned int i, Dragger* node );
 
     ///
-    ///Can't use pure virtual with META_Node define
     virtual bool Handle( Event::Enum event );
 
     ///
     virtual void SetColor(
         ColorTag::Enum colorTag, osg::Vec4& newColor, bool use = false );
 
-    ///Activate the dragger
-    void TurnOn();
-
-    ///Deactivate the dragger
-    void TurnOff();
-
     ///
     virtual void UseColor( ColorTag::Enum colorTag );
 
 protected:
     ///
-    virtual ~Dragger();
+    virtual ~CompoundDragger();
 
     ///
     ///Can't use pure virtual with META_Node define
     virtual void SetupDefaultGeometry();// = 0;
 
-    ///
-    void SetDrawableToAlwaysCull( osg::Drawable& drawable );
 
 private:
-    ///
-    typedef std::map< ColorTag::Enum, osg::Vec4 > ColorMap;
 
-    ///
-    class ForceCullCallback : public osg::Drawable::CullCallback
-    {
-    public:
-        ///
-        ForceCullCallback();
 
-        ///
-        ForceCullCallback(
-            const ForceCullCallback& forceCullCallback,
-            const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
-
-        ///
-        META_Object(
-            ves::xplorer::scenegraph::Dragger, ForceCullCallback );
-
-        ///
-        virtual bool cull(
-            osg::NodeVisitor* nv,
-            osg::Drawable* drawable,
-            osg::RenderInfo* renderInfo ) const;
-
-    protected:
-
-    private:
-
-    };
-
-    ///
-    void CreateDefaultShader();
-
-    ///
-    osg::Vec4& GetColor( ColorTag::Enum colorTag );
-
-    ///
-    ColorMap m_colorMap;
-
-    ///
-    osg::ref_ptr< osg::Uniform > m_color;
 
 };
 } //end scenegraph
 } //end xplorer
 } //end ves
 
-#endif //DRAGGER_H
+#endif //COMPOUND_DRAGGER_H

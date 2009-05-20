@@ -48,13 +48,11 @@ namespace xplorer
 {
 namespace scenegraph
 {
-namespace manipulator
-{
 /*!\file TranslateAxis.h
  * Translate1D API
  */
 
-/*!\class ves::xplorer::scenegraph::manipulator::TranslateAxis
+/*!\class ves::xplorer::scenegraph::TranslateAxis
  *
  */
 class VE_SCENEGRAPH_EXPORTS TranslateAxis : public Dragger
@@ -71,9 +69,12 @@ public:
     ///
     META_Node( ves::xplorer::scenegraph::manipulator, TranslateAxis );
 
+    ///
+    virtual bool Handle( Event::Enum event );
+
 protected:
     ///
-    ~TranslateAxis();
+    virtual ~TranslateAxis();
 
     ///
     virtual void SetupDefaultGeometry();
@@ -82,7 +83,6 @@ private:
 
 
 };
-} //end manipulator
 } //end scenegraph
 } //end xplorer
 } //end ves

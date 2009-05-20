@@ -37,12 +37,12 @@
 
 // --- OSG Includes --- //
 
-using namespace ves::xplorer::scenegraph::manipulator;
+using namespace ves::xplorer::scenegraph;
 
 ////////////////////////////////////////////////////////////////////////////////
 Translate3D::Translate3D()
     :
-    Dragger(),
+    CompoundDragger(),
     m_xTranslateAxis( NULL ),
     m_yTranslateAxis( NULL ),
     m_zTranslateAxis( NULL )
@@ -53,7 +53,7 @@ Translate3D::Translate3D()
 Translate3D::Translate3D(
     const Translate3D& translate3D, const osg::CopyOp& copyop )
     :
-    Dragger( translate3D, copyop ),
+    CompoundDragger( translate3D, copyop ),
     m_xTranslateAxis( translate3D.m_xTranslateAxis.get() ),
     m_yTranslateAxis( translate3D.m_yTranslateAxis.get() ),
     m_zTranslateAxis( translate3D.m_zTranslateAxis.get() )
@@ -71,14 +71,14 @@ void Translate3D::SetupDefaultGeometry()
     //Create translate x-axis dragger
     m_xTranslateAxis = new TranslateAxis();
     m_xTranslateAxis->SetColor(
-        Dragger::DEFAULT, osg::Vec4f( 1.0, 0.0, 0.0, 1.0 ), true );
+        ColorTag::DEFAULT, osg::Vec4f( 1.0, 0.0, 0.0, 1.0 ), true );
 
     addChild( m_xTranslateAxis.get() );
 
     //Create translate y-axis dragger
     m_yTranslateAxis = new TranslateAxis();
     m_yTranslateAxis->SetColor(
-        Dragger::DEFAULT, osg::Vec4f( 0.0, 1.0, 0.0, 1.0 ), true );
+        ColorTag::DEFAULT, osg::Vec4f( 0.0, 1.0, 0.0, 1.0 ), true );
 
     //Rotate y-axis dragger appropriately
     {
@@ -93,7 +93,7 @@ void Translate3D::SetupDefaultGeometry()
     //Create translate z-axis dragger
     m_zTranslateAxis = new TranslateAxis();
     m_zTranslateAxis->SetColor(
-        Dragger::DEFAULT, osg::Vec4f( 0.0, 0.0, 1.0, 1.0 ), true );
+        ColorTag::DEFAULT, osg::Vec4f( 0.0, 0.0, 1.0, 1.0 ), true );
 
     //Rotate z-axis dragger appropriately
     {

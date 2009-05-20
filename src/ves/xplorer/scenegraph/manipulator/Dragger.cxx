@@ -37,18 +37,19 @@
 // --- OSG Includes --- //
 
 
-using namespace ves::xplorer::scenegraph::manipulator;
+using namespace ves::xplorer::scenegraph;
 
 ////////////////////////////////////////////////////////////////////////////////
 Dragger::Dragger()
     :
     osg::MatrixTransform()
 {
-    m_colorMap[ ACTIVE ] = osg::Vec4f( 1.0, 1.0, 1.0, 1.0 );
-    m_colorMap[ DEFAULT ] = osg::Vec4f( 0.0, 0.0, 0.0, 1.0 );
-    m_colorMap[ FOCUS ] = osg::Vec4f( 1.0, 1.0, 0.0, 1.0 );
+    m_colorMap[ ColorTag::DEFAULT ] = osg::Vec4f( 0.0, 0.0, 0.0, 1.0 );
+    m_colorMap[ ColorTag::FOCUS ] = osg::Vec4f( 1.0, 1.0, 0.0, 1.0 );
+    m_colorMap[ ColorTag::ACTIVE ] = osg::Vec4f( 1.0, 1.0, 1.0, 1.0 );
+    m_colorMap[ ColorTag::OTHER ] = osg::Vec4f( 0.0, 0.0, 0.0, 1.0 );
 
-    m_color = new osg::Uniform( "color", GetColor( DEFAULT ) );
+    m_color = new osg::Uniform( "color", GetColor( ColorTag::DEFAULT ) );
 
     CreateDefaultShader();
 }
@@ -66,6 +67,47 @@ Dragger::Dragger(
 Dragger::~Dragger()
 {
     ;
+}
+////////////////////////////////////////////////////////////////////////////////
+bool Dragger::Handle( Event::Enum event )
+{
+    //std::find( 
+    //if( ( this ) )
+    {
+        UseColor( ColorTag::DEFAULT );
+
+        return false;
+    }
+
+    switch( event )
+    {
+        case Event::FOCUS:
+        {
+            UseColor( ColorTag::FOCUS );
+
+            return true;
+        }
+        case Event::PUSH:
+        {
+            UseColor( ColorTag::ACTIVE );
+
+            return true;
+        }
+        case Event::DRAG:
+        {
+            return true;
+        }
+        case Event::RELEASE:
+        {
+            UseColor( ColorTag::DEFAULT );
+
+            return true;
+        }
+        default:
+        {
+            return false;
+        }
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Dragger::SetupDefaultGeometry()
@@ -105,9 +147,10 @@ void Dragger::CreateDefaultShader()
     stateSet->addUniform( m_color.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
-osg::Vec4& Dragger::GetColor( ColorTag colorTag )
+osg::Vec4& Dragger::GetColor( ColorTag::Enum colorTag )
 {
-    std::map< ColorTag, osg::Vec4 >::iterator itr = m_colorMap.find( colorTag );
+    std::map< ColorTag::Enum, osg::Vec4 >::iterator itr =
+        m_colorMap.find( colorTag );
     /*
     if( itr == m_colorMap.end() )
     {
@@ -118,7 +161,7 @@ osg::Vec4& Dragger::GetColor( ColorTag colorTag )
     return itr->second;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Dragger::SetColor( ColorTag colorTag, osg::Vec4& newColor, bool use )
+void Dragger::SetColor( ColorTag::Enum colorTag, osg::Vec4& newColor, bool use )
 {
     osg::Vec4& color = GetColor( colorTag );
     if( color == newColor )
@@ -134,7 +177,17 @@ void Dragger::SetColor( ColorTag colorTag, osg::Vec4& newColor, bool use )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Dragger::UseColor( ColorTag colorTag )
+void Dragger::TurnOn()
+{
+    setNodeMask( 1 );
+}
+////////////////////////////////////////////////////////////////////////////////
+void Dragger::TurnOff()
+{
+    setNodeMask( 0 );
+}
+////////////////////////////////////////////////////////////////////////////////
+void Dragger::UseColor( ColorTag::Enum colorTag )
 {
     m_color->set( GetColor( colorTag ) );
 }

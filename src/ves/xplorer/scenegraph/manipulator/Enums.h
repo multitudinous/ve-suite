@@ -23,19 +23,19 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * Date modified: $Date: 2009-05-06 14:32:42 -0600 (Wed, 06 May 2009) $
- * Version:       $Rev: 12657 $
+ * Date modified: $Date: 2009-05-13 15:17:12 -0600 (Wed, 13 May 2009) $
+ * Version:       $Rev: 12684 $
  * Author:        $Author: jbkoch $
- * Id:            $Id: ManipulatorPtr.h 12657 2009-05-06 20:32:42Z jbkoch $
+ * Id:            $Id: Enums.h 12684 2009-05-13 21:17:12Z jbkoch $
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
-#ifndef MANIPULATOR_PTR_H
-#define MANIPULATOR_PTR_H
+#ifndef ENUMS_H
+#define ENUMS_H
 
 // --- VE-Suite Includes --- //
-#include <ves/util/PointerTypes.h>
+//#include <ves/VEConfig.h>
 
 namespace ves
 {
@@ -44,16 +44,98 @@ namespace xplorer
 namespace scenegraph
 {
 
-class Manipulator;
+///
+namespace AxesFlag
+{
+    enum Enum
+    {
+        None = 0x0,
 
-//Typedef for a SmartPtr type for the Manipulator
-typedef ves::util::ClassPtrDef< Manipulator >::type ManipulatorPtr;
-typedef ves::util::SharedPtrDef< Manipulator >::type ManipulatorSharedPtr;
-typedef ves::util::WeakPtrDef< Manipulator >::type ManipulatorWeakPtr;
-typedef ves::util::ScopedPtrDef< Manipulator >::type ManipulatorScopedPtr;
+        X = 0x1,
+        Y = 0x2,
+        Z = 0x4,
+
+        XY = X | Y,
+        YX = Y | X,
+        XZ = X | Z,
+        ZX = Z | X,
+        YZ = Y | Z,
+        ZY = Z | Y,
+
+        XYZ = X | Y | Z,
+
+        All = XYZ
+    };
+}
+
+///
+namespace TransformationMode
+{
+    enum Enum
+    {
+        None = 0x00,
+
+        TranslateAxis = 0x01,
+        TranslatePlane = 0x02,
+        RotateAxis = 0x04,
+        ScaleAxis = 0x08,
+        ScalePlane = 0x10,
+        ScaleUniform = 0x20,
+
+        All = TranslateAxis | TranslatePlane |
+              RotateAxis |
+              ScaleAxis | ScalePlane | ScaleUniform
+    };
+}
+
+///
+namespace VectorSpace
+{
+    enum Enum
+    {
+        World,
+        Local
+    };
+}
+
+///
+namespace AxisDirection
+{
+    enum Enum
+    {
+        Positive = 0x1,
+        Negative = 0x2,
+
+        All = Positive | Negative
+    };
+}
+
+///
+namespace ColorTag
+{
+    enum Enum
+    {
+        DEFAULT,
+        FOCUS,
+        ACTIVE,
+        OTHER
+    };
+}
+
+///
+namespace Event
+{
+    enum Enum
+    {
+        FOCUS,
+        PUSH,
+        DRAG,
+        RELEASE
+    };
+}
 
 } //end scenegraph
 } //end xplorer
 } //end ves
 
-#endif //MANIPULATOR_PTR_H
+#endif //ENUMS_H

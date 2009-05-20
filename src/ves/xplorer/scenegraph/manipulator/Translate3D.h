@@ -37,7 +37,7 @@
 // --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
 
-#include <ves/xplorer/scenegraph/manipulator/Dragger.h>
+#include <ves/xplorer/scenegraph/manipulator/CompoundDragger.h>
 
 // --- OSG Includes --- //
 #include <osg/ref_ptr>
@@ -48,18 +48,16 @@ namespace xplorer
 {
 namespace scenegraph
 {
-namespace manipulator
-{
 class TranslateAxis;
 
 /*!\file Translate3D.h
  * Translate1D API
  */
 
-/*!\class ves::xplorer::scenegraph::manipulator::Translate3D
+/*!\class ves::xplorer::scenegraph::Translate3D
  *
  */
-class VE_SCENEGRAPH_EXPORTS Translate3D : public Dragger
+class VE_SCENEGRAPH_EXPORTS Translate3D : public CompoundDragger
 {
 public:
     ///
@@ -73,9 +71,12 @@ public:
     ///
     META_Node( ves::xplorer::scenegraph::manipulator, Translate3D );
 
+    ///
+    //virtual bool Handle( Event::Enum event );
+
 protected:
     ///
-    ~Translate3D();
+    virtual ~Translate3D();
 
     ///
     virtual void SetupDefaultGeometry();
@@ -86,7 +87,6 @@ private:
     osg::ref_ptr< TranslateAxis > m_zTranslateAxis;
 
 };
-} //end manipulator
 } //end scenegraph
 } //end xplorer
 } //end ves

@@ -37,14 +37,15 @@
 // --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
 
+#include <ves/xplorer/scenegraph/manipulator/Enums.h>
+
 // --- OSG Includes --- //
 #include <osg/ref_ptr>
-#include <osg/Group>
+#include <osg/MatrixTransform>
 
 namespace osg
 {
 class AutoTransform;
-class MatrixTransform;
 }
 
 // --- C/C++ Includes --- //
@@ -56,80 +57,16 @@ namespace xplorer
 {
 namespace scenegraph
 {
-namespace manipulator
-{
 class Dragger;
-
-namespace AxisFlags
-{
-    enum Enum
-    {
-        None = 0x0,
-
-        X = 0x1,
-        Y = 0x2,
-        Z = 0x4,
-
-        XY = X | Y,
-        YX = Y | X,
-        XZ = X | Z,
-        ZX = Z | X,
-        YZ = Y | Z,
-        ZY = Z | Y,
-
-        XYZ = X | Y | Z,
-
-        All = XYZ
-    };
-}
-
-namespace TransformationMode
-{
-    enum Enum
-    {
-        None = 0x00,
-
-        TranslateAxis = 0x01,
-        TranslatePlane = 0x02,
-        RotateAxis = 0x04,
-        ScaleAxis = 0x08,
-        ScalePlane = 0x10,
-        ScaleUniform = 0x20,
-
-        All = TranslateAxis | TranslatePlane |
-              RotateAxis |
-              ScaleAxis | ScalePlane | ScaleUniform
-    };
-}
-
-namespace VectorSpace
-{
-    enum Enum
-    {
-        World,
-        Local
-    };
-}
-
-namespace AxisDirections
-{
-    enum Enum
-    {
-        Positive = 0x1,
-        Negative = 0x2,
-
-        All = Positive | Negative
-    };
-}
 
 /*!\file Manipulator.h
  * Manipulator API
  */
 
-/*!\class ves::xplorer::scenegraph::manipulator::Manipulator
+/*!\class ves::xplorer::scenegraph::Manipulator
  *
  */
-class VE_SCENEGRAPH_EXPORTS Manipulator : public osg::Group
+class VE_SCENEGRAPH_EXPORTS Manipulator : public osg::MatrixTransform
 {
 public:
     ///Constructor
@@ -143,6 +80,24 @@ public:
     ///
     META_Node( ves::xplorer::scenegraph::manipulator, Manipulator );
 
+    ///Override the addChild function to only accept Draggers
+    virtual bool addChild( Dragger* child );
+
+    ///Can't override the getChild function, so create our own
+    Dragger* GetChild( unsigned int i );
+
+    ///
+    virtual bool Handle( Event::Enum event );
+
+    ///Override the insertChild function to only accept Draggers
+    virtual bool insertChild( unsigned int index, Dragger* child );
+
+    ///Override the replaceChild function to only accept Draggers
+    virtual bool replaceChild( Dragger* origChild, Dragger* newChild );
+
+    ///Override the setChild function to only accept Draggers
+    virtual bool setChild( unsigned int i, Dragger* node );
+
     ///Gets the manipulator's active transformation mode
     const TransformationMode::Enum GetActiveMode() const;
 
@@ -150,10 +105,13 @@ public:
     const TransformationMode::Enum GetEnabledModes() const;
 
     ///Gets the axes currently being operated on by the manipulator
-    const AxisFlags::Enum GetSelectedAxes() const;
+    const AxesFlag::Enum GetSelectedAxes() const;
 
     ///Gets the vector space in which the manipulator will operate
     const VectorSpace::Enum GetVectorSpace() const;
+
+    ///
+    void SetAutoScaleToScreen( bool autoScaleToScreen );
 
     ///Sets the transformation modes enabled on the manipulator
     void SetEnabledModes( TransformationMode::Enum value );
@@ -181,7 +139,7 @@ protected:
     TransformationMode::Enum m_enabledModes;
     
     ///
-    AxisFlags::Enum m_selectedAxes;
+    AxesFlag::Enum m_selectedAxes;
     
     ///
     VectorSpace::Enum m_vectorSpace;
@@ -189,18 +147,11 @@ protected:
     ///
     bool m_manipulating;
 
-    ///
-    std::map< TransformationMode::Enum,
-        std::multimap< AxisFlags::Enum, osg::ref_ptr< Dragger > > > m_draggers;
-
 private:
     ///
     osg::ref_ptr< osg::AutoTransform > m_autoTransform;
 
-    osg::ref_ptr< osg::MatrixTransform > m_matrixTransform;
-
 };
-} //end manipulator
 } //end scenegraph
 } //end xplorer
 } //end ves

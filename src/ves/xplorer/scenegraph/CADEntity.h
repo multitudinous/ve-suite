@@ -131,7 +131,7 @@ public:
 
     ///
     ///\return
-    manipulator::Manipulator* const GetManipulator() const;
+    Manipulator* const GetManipulator() const;
 
     ///Get the opacity value for this file
     ///\return 
@@ -176,7 +176,7 @@ protected:
     CADEntityHelper* mCADEntityHelper;
 
     ///
-    osg::ref_ptr< manipulator::Manipulator > m_manipulator;
+    osg::ref_ptr< Manipulator > m_manipulator;
 
 };
 } //end scenegraph

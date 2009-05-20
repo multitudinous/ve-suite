@@ -34,16 +34,20 @@
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/ManipulatorRoot.h>
 
+#include <ves/xplorer/Debug.h>
+
 #include <ves/xplorer/scenegraph/manipulator/Manipulator.h>
 
 // --- OSG Includes --- //
+#include <osgUtil/LineSegmentIntersector>
 
 using namespace ves::xplorer::scenegraph;
 
 ////////////////////////////////////////////////////////////////////////////////
 ManipulatorRoot::ManipulatorRoot()
     :
-    osg::Group()
+    osg::Group(),
+    m_activeManipulator( NULL )
 {
     ;
 }
@@ -51,7 +55,9 @@ ManipulatorRoot::ManipulatorRoot()
 ManipulatorRoot::ManipulatorRoot(
     const ManipulatorRoot& manipulatorRoot, const osg::CopyOp& copyop )
     :
-    osg::Group( manipulatorRoot, copyop )
+    osg::Group( manipulatorRoot, copyop ),
+    m_nodePath( manipulatorRoot.m_nodePath ),
+    m_activeManipulator( manipulatorRoot.m_activeManipulator.get() )
 {
     ;
 }
@@ -61,27 +67,107 @@ ManipulatorRoot::~ManipulatorRoot()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool ManipulatorRoot::addChild( manipulator::Manipulator* child )
+bool ManipulatorRoot::addChild( Manipulator* child )
 {
-    return Group::addChild( child );
+    return osg::Group::addChild( child->getParents().front() );
+}
+////////////////////////////////////////////////////////////////////////////////
+Manipulator* ManipulatorRoot::ConvertNodeToManipulator(
+    osg::Node* node )
+{
+    return dynamic_cast< Manipulator* >(
+        node->getParents().front() );
+}
+////////////////////////////////////////////////////////////////////////////////
+Manipulator* ManipulatorRoot::GetChild( unsigned int i )
+{
+    return ConvertNodeToManipulator( osg::Group::getChild( i ) );
+}
+////////////////////////////////////////////////////////////////////////////////
+bool ManipulatorRoot::Handle(
+    Event::Enum event,
+    osgUtil::LineSegmentIntersector* lineSegmentIntersector )
+{
+    if( lineSegmentIntersector )
+    {
+        osgUtil::IntersectionVisitor intersectionVisitor(
+            lineSegmentIntersector );
+
+        accept( intersectionVisitor );
+
+        osgUtil::LineSegmentIntersector::Intersections& intersections =
+            lineSegmentIntersector->getIntersections();
+        if( intersections.empty() )
+        {
+            vprDEBUG( vesDBG, 2 )
+                << "|\tManipulatorRoot::Handle - No manipulator hit"
+                << std::endl << vprDEBUG_FLUSH;
+
+            return false;
+        }
+
+        m_nodePath = intersections.begin()->nodePath;
+        m_activeManipulator = ConvertNodeToManipulator( m_nodePath.front() );
+    }
+
+    switch( event )
+    {
+        case Event::FOCUS:
+        {
+            if( m_activeManipulator.valid() )
+            {
+                m_activeManipulator->Handle( event );
+            }
+
+            break;
+        }
+        case Event::DRAG:
+        case Event::RELEASE:
+        {
+            if( m_activeManipulator.valid() )
+            {
+                m_activeManipulator->Handle( event );
+            }
+
+            break;
+        }
+        default:
+        {
+            break;
+        }
+    }
+
+    /*
+    for( size_t i = 0; i < getNumChildren(); ++i )
+    {
+        Manipulator* manipulator = GetChild( i );
+        if( manipulator->Handle( event ) )
+        {
+            //return true;
+        }
+    }
+    */
+
+    return false;
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool ManipulatorRoot::insertChild(
-    unsigned int index, manipulator::Manipulator* child )
+    unsigned int index, Manipulator* child )
 {
-    return Group::insertChild( index, child );
+    return osg::Group::insertChild( index, child->getParents().front() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool ManipulatorRoot::replaceChild(
-    manipulator::Manipulator* origChild,
-    manipulator::Manipulator* newChild )
+    Manipulator* origChild,
+    Manipulator* newChild )
 {
-    return Group::replaceChild( origChild, newChild );
+    return osg::Group::replaceChild(
+        origChild->getParents().front(), newChild->getParents().front() );
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool ManipulatorRoot::setChild( unsigned int i, manipulator::Manipulator* node )
+bool ManipulatorRoot::setChild( unsigned int i, Manipulator* node )
 {
-    return Group::setChild( i, node );
+    return osg::Group::setChild( i, node->getParents().front() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void ManipulatorRoot::TurnOn()
