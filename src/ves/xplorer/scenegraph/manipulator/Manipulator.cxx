@@ -56,7 +56,7 @@ Manipulator::Manipulator()
     m_autoTransform->setCullingActive( false );
     m_autoTransform->addChild( this );
 
-    SceneManager::instance()->GetManipulatorRoot()->addChild( this );
+    //SceneManager::instance()->GetManipulatorRoot()->addChild( this );
 }
 ////////////////////////////////////////////////////////////////////////////////
 Manipulator::Manipulator(
