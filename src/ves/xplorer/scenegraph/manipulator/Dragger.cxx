@@ -169,7 +169,7 @@ osg::Vec4& Dragger::GetColor( ColorTag::Enum colorTag )
     return itr->second;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Dragger::SetColor( ColorTag::Enum colorTag, osg::Vec4& newColor, bool use )
+void Dragger::SetColor( ColorTag::Enum colorTag, osg::Vec4 newColor, bool use )
 {
     osg::Vec4& color = GetColor( colorTag );
     if( color == newColor )

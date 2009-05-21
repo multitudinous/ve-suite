@@ -81,7 +81,7 @@ public:
 
     ///
     virtual void SetColor(
-        ColorTag::Enum colorTag, osg::Vec4& newColor, bool use = false );
+        ColorTag::Enum colorTag, osg::Vec4 newColor, bool use = false );
 
     ///Activate the dragger
     void TurnOn();
