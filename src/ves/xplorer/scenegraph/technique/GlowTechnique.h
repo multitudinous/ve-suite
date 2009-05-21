@@ -48,11 +48,13 @@ namespace xplorer
 {
 namespace scenegraph
 {
+namespace technique
+{
 /*!\file GlowTechnique.h
- *
+ * GlowTechnique API
  */
 
-/*!\class GlowTechnique
+/*!\class ves::xplorer::scenegraph::technique::GlowTechnique
  *
  */
 class VE_SCENEGRAPH_EXPORTS GlowTechnique : public Technique
@@ -75,6 +77,7 @@ private:
     osg::ref_ptr< osg::StateSet > m_stateSet;
 
 };
+} //end technique
 } //end scenegraph
 } //end xplorer
 } //end ves

@@ -42,7 +42,7 @@
 #include <osg/PolygonMode>
 #include <osg/Depth>
 
-using namespace ves::xplorer::scenegraph;
+using namespace ves::xplorer::scenegraph::technique;
 
 ////////////////////////////////////////////////////////////////////////////////
 SelectTechnique::SelectTechnique( osg::ref_ptr< osg::StateSet > stateSet )

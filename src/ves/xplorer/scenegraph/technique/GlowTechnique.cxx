@@ -37,7 +37,7 @@
 // --- OSG Includes --- //
 #include <osg/Depth>
 
-using namespace ves::xplorer::scenegraph;
+using namespace ves::xplorer::scenegraph::technique;
 
 ////////////////////////////////////////////////////////////////////////////////
 GlowTechnique::GlowTechnique( osg::ref_ptr< osg::StateSet > stateSet )

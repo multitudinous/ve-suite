@@ -53,11 +53,14 @@ namespace scenegraph
 {
 class SceneNode;
 
+namespace technique
+{
+
 /*!\file Technique.h
- *
+ * Technique API
  */
 
-/*!\class Technique
+/*!\class ves::xplorer::scenegraph::technique::Technique
  *
  */
 class VE_SCENEGRAPH_EXPORTS Technique
@@ -82,7 +85,8 @@ public:
     const osg::StateSet* GetPassStateSet( int i ) const;
 
     ///
-    virtual void Traverse( osg::NodeVisitor& nv, SceneNode* sceneNode );
+    virtual void Traverse(
+        osg::NodeVisitor& nv, ves::xplorer::scenegraph::SceneNode* sceneNode );
 
 protected:
     ///
@@ -97,6 +101,7 @@ protected:
 private:
 
 };
+} //end technique
 } //end scenegraph
 } //end xplorer
 } //end ves

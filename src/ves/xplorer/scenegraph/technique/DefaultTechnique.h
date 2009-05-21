@@ -30,6 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
+
 #ifndef DEFAULT_TECHNIQUE_H
 #define DEFAULT_TECHNIQUE_H
 
@@ -44,6 +45,15 @@ namespace xplorer
 {
 namespace scenegraph
 {
+namespace technique
+{
+/*!\file DefaultTechnique.h
+ * DefaultTechnique API
+ */
+
+/*!\class ves::xplorer::scenegraph::technique::DefaultTechnique
+ *
+ */
 class VE_SCENEGRAPH_EXPORTS DefaultTechnique : public Technique
 {
 public:
@@ -54,7 +64,8 @@ public:
     virtual ~DefaultTechnique();
 
     ///
-    virtual void Traverse( osg::NodeVisitor& nv, SceneNode* sceneNode );
+    virtual void Traverse(
+        osg::NodeVisitor& nv, ves::xplorer::scenegraph::SceneNode* sceneNode );
 
 protected:
     ///
@@ -63,6 +74,7 @@ protected:
 private:
 
 };
+} //end technique
 } //end scenegraph
 } //end xplorer
 } //end ves

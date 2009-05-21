@@ -45,7 +45,7 @@ using namespace cpt;
 ////////////////////////////////////////////////////////////////////////////////
 DepthOfFieldTechnique::DepthOfFieldTechnique()
     :
-    ves::xplorer::scenegraph::Technique(),
+    ves::xplorer::scenegraph::technique::Technique(),
     mTextureDimensionsUniform(
         new osg::Uniform( osg::Uniform::INT_VEC2, "textureDimensions" ) ),
     mMaxCircleOfConfusionUniform(

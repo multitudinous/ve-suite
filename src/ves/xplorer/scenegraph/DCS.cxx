@@ -100,7 +100,7 @@ DCS::DCS()
 
     AddTechnique(
         "Select",
-        new SelectTechnique(
+        new technique::SelectTechnique(
             new osg::StateSet( *getOrCreateStateSet() ) ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -118,7 +118,7 @@ DCS::DCS( double* scale, double* trans, double* rot )
 
     AddTechnique(
         "Select",
-        new SelectTechnique(
+        new technique::SelectTechnique(
             new osg::StateSet( *getOrCreateStateSet() ) ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -133,7 +133,7 @@ DCS::DCS( const DCS& dcs, const osg::CopyOp& copyop )
 
     AddTechnique(
         "Select",
-        new SelectTechnique(
+        new technique::SelectTechnique(
             new osg::StateSet( *getOrCreateStateSet() ) ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -501,7 +501,7 @@ void DCS::SetPhysicsRigidBody( PhysicsRigidBody* physicsRigidBody )
 ////////////////////////////////////////////////////////////////////////////////
 void DCS::traverse( osg::NodeVisitor& nv )
 {
-    Technique* technique = mTechniques[ mActiveTechnique ];
+    technique::Technique* technique = mTechniques[ mActiveTechnique ];
 
     technique->Traverse( nv, this );
 }

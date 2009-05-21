@@ -127,7 +127,7 @@ osg::Node* Switch::GetChild( unsigned int position )
 ////////////////////////////////////////////////////////////////////////////////
 void Switch::traverse( osg::NodeVisitor& nv )
 {
-    Technique* technique = mTechniques[ mActiveTechnique ];
+    technique::Technique* technique = mTechniques[ mActiveTechnique ];
 
     technique->Traverse( nv, this );
 }

@@ -39,7 +39,7 @@
 // --- OSG Includes --- //
 #include <osgUtil/CullVisitor>
 
-using namespace ves::xplorer::scenegraph;
+using namespace ves::xplorer::scenegraph::technique;
 
 ////////////////////////////////////////////////////////////////////////////////
 Technique::Technique()
@@ -80,9 +80,10 @@ void Technique::AddPass( osg::StateSet* ss )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Technique::Traverse( osg::NodeVisitor& nv, SceneNode* sceneNode )
+void Technique::Traverse(
+    osg::NodeVisitor& nv, ves::xplorer::scenegraph::SceneNode* sceneNode )
 {
-    //Special actions must be taken if the node visitor is actually a CullVisitor
+    //Special actions must be taken if the node visitor is a CullVisitor
     osgUtil::CullVisitor* cv = dynamic_cast< osgUtil::CullVisitor* >( &nv );
 
     //Traverse all passes

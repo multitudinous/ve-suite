@@ -36,7 +36,7 @@
 
 #include <ves/xplorer/scenegraph/DCS.h>
 
-using namespace ves::xplorer::scenegraph;
+using namespace ves::xplorer::scenegraph::technique;
 
 ////////////////////////////////////////////////////////////////////////////////
 DefaultTechnique::DefaultTechnique()
@@ -51,7 +51,8 @@ DefaultTechnique::~DefaultTechnique()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DefaultTechnique::Traverse( osg::NodeVisitor& nv, SceneNode* sceneNode )
+void DefaultTechnique::Traverse(
+    osg::NodeVisitor& nv, ves::xplorer::scenegraph::SceneNode* sceneNode )
 {
     sceneNode->InheritedTraverse( nv );
 }
