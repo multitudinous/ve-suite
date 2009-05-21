@@ -60,35 +60,35 @@ CompoundDragger::~CompoundDragger()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool CompoundDragger::Handle(
+Dragger* CompoundDragger::Handle(
     Event::Enum event, osg::NodePath::iterator npItr )
 {
     //Increment past parent
     ++npItr;
 
     //Get the active dragger
-    osg::Node* dragger = *npItr;
-    if( !dragger )
+    osg::Node* node = *npItr;
+    if( !node )
     {
-        return false;
+        return NULL;
     }
 
     //Check if this dragger is in the NodePath
-    if( this != dragger )
+    if( this != node )
     {
-        return false;
+        return NULL;
     }
 
     for( size_t i = 0; i < getNumChildren(); ++i )
     {
-        Dragger* dragger = GetChild( i );
-        if( dragger->Handle( event, npItr ) )
+        Dragger* dragger = GetChild( i )->Handle( event, npItr );
+        if( dragger )
         {
-            return true;
+            return dragger;
         }
     }
 
-    return false;
+    return NULL;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CompoundDragger::SetupDefaultGeometry()

@@ -93,6 +93,7 @@ using namespace ves::xplorer::device;
 
 namespace vx = ves::xplorer;
 namespace vxs = vx::scenegraph;
+namespace vxsm = vxs::manipulator;
 
 ////////////////////////////////////////////////////////////////////////////////
 KeyboardMouse::KeyboardMouse()
@@ -163,7 +164,7 @@ void KeyboardMouse::UpdateSelection()
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::SetStartEndPoint(
-    osg::Vec3d* startPoint, osg::Vec3d* endPoint )
+    osg::Vec3d& startPoint, osg::Vec3d& endPoint )
 {
     //Meters to feet conversion
     double m2ft = 3.2808399;
@@ -178,7 +179,7 @@ void KeyboardMouse::SetStartEndPoint(
 
         //We have to offset negative mX because the
         //view and frustum are drawn for the left eye
-        startPoint->set(
+        startPoint.set(
             jugglerHeadPoint.mData[ 0 ] - ( 0.0345 * m2ft ),
            -jugglerHeadPoint.mData[ 2 ],
             jugglerHeadPoint.mData[ 1 ] );
@@ -220,15 +221,15 @@ void KeyboardMouse::SetStartEndPoint(
             jugglerMousePosition.y() );
 
         //Find where the end point lands on the far plane
-        osg::Vec3d vecNear = mousePosition - *startPoint;
-        osg::Vec3d vecFar = -(*startPoint);
+        osg::Vec3d vecNear = mousePosition - startPoint;
+        osg::Vec3d vecFar = -startPoint;
         vecFar.y() += mFarFrustum;
 
         double distance = vecFar.y() / vecNear.y();
-        endPoint->set(
-            (*startPoint).x() + ( vecNear.x() * distance ),
+        endPoint.set(
+            startPoint.x() + ( vecNear.x() * distance ),
             mFarFrustum,
-            (*startPoint).z() + ( vecNear.z() * distance ) );
+            startPoint.z() + ( vecNear.z() * distance ) );
 
         /*
         std::cout << "endPoint: "
@@ -244,8 +245,8 @@ void KeyboardMouse::SetStartEndPoint(
         osg::Matrixd inverseCameraTransform(
             vxs::SceneManager::instance()->GetInvertedWorldDCS().getData() );
         
-        *startPoint = *startPoint * inverseCameraTransform;
-        *endPoint = *endPoint * inverseCameraTransform;
+        startPoint = startPoint * inverseCameraTransform;
+        endPoint = endPoint * inverseCameraTransform;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -375,6 +376,13 @@ void KeyboardMouse::ProcessKBEvents( int mode )
                     static_cast< double >( mY ) /
                     static_cast< double >( mHeight );
 
+#ifdef TRANSFORM_MANIPULATOR
+                UpdateSelectionLine();
+
+                vxs::SceneManager::instance()->GetManipulatorRoot()->Handle(
+                    vxsm::Event::PUSH, mLineSegmentIntersector.get() );
+#endif //TRANSFORM_MANIPULATOR
+
                 //Navigation mode
                 if( mode == 0 )
                 {
@@ -408,6 +416,11 @@ void KeyboardMouse::ProcessKBEvents( int mode )
                     static_cast< double >( mY ) /
                     static_cast< double >( mHeight );
 
+#ifdef TRANSFORM_MANIPULATOR
+                    vxs::SceneManager::instance()->GetManipulatorRoot()->Handle(
+                        vxsm::Event::RELEASE );
+#endif //TRANSFORM_MANIPULATOR
+
                 //Navigation mode
                 if( mode == 0 )
                 {
@@ -436,8 +449,17 @@ void KeyboardMouse::ProcessKBEvents( int mode )
 
                 mX = mouse_evt->getX();
                 mY = mouse_evt->getY();
+                
+                if( mState == 0 )
+                {
+#ifdef TRANSFORM_MANIPULATOR
+                    UpdateSelectionLine();
 
-                if( mState == 1 )
+                    vxs::SceneManager::instance()->GetManipulatorRoot()->Handle(
+                        vxsm::Event::FOCUS, mLineSegmentIntersector.get() );
+#endif //TRANSFORM_MANIPULATOR
+                }
+                else if( mState == 1 )
                 {
                     mCurrPos.first =
                         static_cast< double >( mX ) /
@@ -449,6 +471,11 @@ void KeyboardMouse::ProcessKBEvents( int mode )
                     std::pair< double, double > delta;
                     delta.first = mCurrPos.first - mPrevPos.first;
                     delta.second = mCurrPos.second - mPrevPos.second;
+
+#ifdef TRANSFORM_MANIPULATOR
+                    vxs::SceneManager::instance()->GetManipulatorRoot()->Handle(
+                        vxsm::Event::DRAG );
+#endif //TRANSFORM_MANIPULATOR
 
                     //Navigation mode
                     if( mode == 0 )
@@ -909,7 +936,7 @@ void KeyboardMouse::NavOnMousePress()
                 }
                 
                 osg::Vec3d startPoint, endPoint;
-                SetStartEndPoint( &startPoint, &endPoint );
+                SetStartEndPoint( startPoint, endPoint );
 
                 btVector3 rayFromWorld, rayToWorld;
                 rayFromWorld.setValue(
@@ -1152,7 +1179,7 @@ void KeyboardMouse::NavOnMouseMotion( std::pair< double, double > delta )
                     if( p2p )
                     {
                         osg::Vec3d startPoint, endPoint;
-                        SetStartEndPoint( &startPoint, &endPoint );
+                        SetStartEndPoint( startPoint, endPoint );
 
                         btVector3 rayFromWorld, rayToWorld;
                         rayFromWorld.setValue(
@@ -1208,7 +1235,9 @@ void KeyboardMouse::SelOnKeyboardPress()
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::SelOnMousePress()
 {
+#ifndef TRANSFORM_MANIPULATOR
     UpdateSelectionLine();
+#endif //TRANSFORM_MANIPULATOR
 
     switch( mButton )
     {
@@ -1239,7 +1268,9 @@ void KeyboardMouse::SelOnMousePress()
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::SelOnMouseRelease()
 {
+#ifndef TRANSFORM_MANIPULATOR
     UpdateSelectionLine();
+#endif //TRANSFORM_MANIPULATOR
 
     switch( mButton )
     {
@@ -1459,7 +1490,7 @@ void KeyboardMouse::Rotate( double angle, gmtl::Vec3d axis )
 void KeyboardMouse::UpdateSelectionLine()
 {
     osg::Vec3d startPoint, endPoint;
-    SetStartEndPoint( &startPoint, &endPoint );
+    SetStartEndPoint( startPoint, endPoint );
     mLineSegmentIntersector->reset();
     mLineSegmentIntersector->setStart( startPoint );
     mLineSegmentIntersector->setEnd( endPoint );

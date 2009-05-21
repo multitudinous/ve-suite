@@ -89,7 +89,7 @@ public:
     Dragger* GetChild( unsigned int i );
 
     ///
-    virtual bool Handle( Event::Enum event, osg::NodePath::iterator npItr );
+    virtual Dragger* Handle( Event::Enum event, osg::NodePath::iterator npItr );
 
     ///Override the insertChild function to only accept Draggers
     virtual bool insertChild( unsigned int index, Dragger* child );

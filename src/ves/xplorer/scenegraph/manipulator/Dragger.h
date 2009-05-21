@@ -77,7 +77,7 @@ public:
 
     ///
     ///Can't use pure virtual with META_Node define
-    virtual bool Handle( Event::Enum event, osg::NodePath::iterator npItr );
+    virtual Dragger* Handle( Event::Enum event, osg::NodePath::iterator npItr );
 
     ///
     virtual void SetColor(

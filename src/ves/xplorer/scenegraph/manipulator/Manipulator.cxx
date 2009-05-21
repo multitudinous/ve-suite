@@ -77,18 +77,18 @@ Dragger* Manipulator::GetChild( unsigned int i )
     return dynamic_cast< Dragger* >( osg::MatrixTransform::getChild( i ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool Manipulator::Handle( Event::Enum event, osg::NodePath::iterator npItr )
+Dragger* Manipulator::Handle( Event::Enum event, osg::NodePath::iterator npItr )
 {
     for( size_t i = 0; i < getNumChildren(); ++i )
     {
-        Dragger* dragger = GetChild( i );
-        if( dragger->Handle( event, npItr ) )
+        Dragger* dragger = GetChild( i )->Handle( event, npItr );
+        if( dragger )
         {
-            return true;
+            return dragger;
         }
     }
 
-    return false;
+    return NULL;
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool Manipulator::insertChild( unsigned int index, Dragger* child )

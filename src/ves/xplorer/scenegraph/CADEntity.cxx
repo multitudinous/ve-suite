@@ -51,19 +51,6 @@
 
 // --- Bullet Includes --- //
 #include <BulletDynamics/Dynamics/btDiscreteDynamicsWorld.h>
-//#include <btBulletDynamicsCommon.h>
-
-// --- osgBullet Includes --- //
-/*
-#include <osgBullet/CollisionShape.h>
-#include <osgBullet/CollisionShapes.h>
-#include <osgBullet/MotionState.h>
-#include <osgBullet/AbsoluteModelTransform.h>
-#include <osgBullet/OSGToCollada.h>
-#include <osgBullet/DebugBullet.h>
-#include <osgBullet/ColladaUtils.h>
-#include <osgBullet/Utils.h>
-*/
 
 // --- C/C++ Libraries --- //
 #include <cassert>
@@ -97,12 +84,14 @@ CADEntity::CADEntity(
     mDCS->addChild( mCADEntityHelper->GetNode() );
     parentDCS->AddChild( mDCS.get() );
 
+#ifdef TRANSFORM_MANIPULATOR
     m_manipulator = new manipulator::Manipulator();
     osg::ref_ptr< manipulator::Translate3D > translate3D =
         new manipulator::Translate3D();
     m_manipulator->addChild( translate3D.get() );
-    //SceneManager::instance()->GetManipulatorRoot()->addChild(
-        //m_manipulator.get() );
+    SceneManager::instance()->GetManipulatorRoot()->addChild(
+        m_manipulator.get() );
+#endif //TRANSFORM_MANIPULATOR
 }
 ////////////////////////////////////////////////////////////////////////////////
 CADEntity::CADEntity(
@@ -137,12 +126,14 @@ CADEntity::CADEntity(
     mDCS->addChild( mCADEntityHelper->GetNode() );
     parentDCS->AddChild( mDCS.get() );
 
+#ifdef TRANSFORM_MANIPULATOR
     m_manipulator = new manipulator::Manipulator();
     osg::ref_ptr< manipulator::Translate3D > translate3D =
         new manipulator::Translate3D();
     m_manipulator->addChild( translate3D.get() );
-    //SceneManager::instance()->GetManipulatorRoot()->addChild(
-        //m_manipulator.get() );
+    SceneManager::instance()->GetManipulatorRoot()->addChild(
+        m_manipulator.get() );
+#endif //TRANSFORM_MANIPULATOR
 }
 ////////////////////////////////////////////////////////////////////////////////
 CADEntity::CADEntity(
@@ -172,12 +163,14 @@ CADEntity::CADEntity(
     mDCS->addChild( mCADEntityHelper->GetNode() );
     parentDCS->AddChild( mDCS.get() );
 
+#ifdef TRANSFORM_MANIPULATOR
     m_manipulator = new manipulator::Manipulator();
     osg::ref_ptr< manipulator::Translate3D > translate3D =
         new manipulator::Translate3D();
     m_manipulator->addChild( translate3D.get() );
-    //SceneManager::instance()->GetManipulatorRoot()->addChild(
-        //m_manipulator.get() );
+    SceneManager::instance()->GetManipulatorRoot()->addChild(
+        m_manipulator.get() );
+#endif //TRANSFORM_MANIPULATOR
 }
 ////////////////////////////////////////////////////////////////////////////////
 CADEntity::~CADEntity()

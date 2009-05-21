@@ -60,6 +60,7 @@ namespace scenegraph
 namespace manipulator
 {
 class Manipulator;
+class Dragger;
 }
 
 /*!\file ManipulatorRoot.h
@@ -92,7 +93,7 @@ public:
     ///
     virtual bool Handle(
         manipulator::Event::Enum event,
-        osgUtil::LineSegmentIntersector* lineSegmentIntersector );
+        osgUtil::LineSegmentIntersector* lineSegmentIntersector = NULL );
 
     ///Override the insertChild function to only accept Manipulators
     virtual bool insertChild(
@@ -122,6 +123,10 @@ private:
     manipulator::Manipulator* ConvertNodeToManipulator( osg::Node* node );
 
     ///
+    bool TestForIntersections(
+        osgUtil::LineSegmentIntersector* lineSegmentIntersector );
+
+    ///
     osg::NodePath m_nodePath;
 
     ///
@@ -129,6 +134,9 @@ private:
 
     ///
     osg::ref_ptr< manipulator::Manipulator > m_activeManipulator;
+
+    ///
+    osg::ref_ptr< manipulator::Dragger > m_activeDragger;
 
     ///
     osg::ref_ptr< osgUtil::LineSegmentIntersector > m_lineSegmentIntersector;

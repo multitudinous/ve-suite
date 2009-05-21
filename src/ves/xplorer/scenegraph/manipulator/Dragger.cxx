@@ -69,22 +69,22 @@ Dragger::~Dragger()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool Dragger::Handle( Event::Enum event, osg::NodePath::iterator npItr )
+Dragger* Dragger::Handle( Event::Enum event, osg::NodePath::iterator npItr )
 {
     //Increment past parent
     ++npItr;
 
     //Get the active dragger
-    osg::Node* dragger = *npItr;
-    if( !dragger )
+    osg::Node* node = *npItr;
+    if( !node )
     {
-        return false;
+        return NULL;
     }
 
     //Check if this dragger is in the NodePath
-    if( this != dragger )
+    if( this != node )
     {
-        return false;
+        return NULL;
     }
 
     switch( event )
@@ -93,27 +93,27 @@ bool Dragger::Handle( Event::Enum event, osg::NodePath::iterator npItr )
         {
             UseColor( ColorTag::FOCUS );
 
-            return true;
+            return this;
         }
         case Event::PUSH:
         {
             UseColor( ColorTag::ACTIVE );
 
-            return true;
+            return this;
         }
         case Event::DRAG:
         {
-            return true;
+            return this;
         }
         case Event::RELEASE:
         {
             UseColor( ColorTag::DEFAULT );
 
-            return true;
+            return this;
         }
         default:
         {
-            return false;
+            return NULL;
         }
     }
 }

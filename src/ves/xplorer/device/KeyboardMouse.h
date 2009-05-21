@@ -129,7 +129,7 @@ protected:
     ///\param startPoint The start point
     ///\param endPoint The end point
     virtual void SetStartEndPoint(
-        osg::Vec3d* startPoint, osg::Vec3d* endPoint );
+        osg::Vec3d& startPoint, osg::Vec3d& endPoint );
 
     ///Draws a line to help visualize the selection process
     ///\param startPoint The start position
