@@ -170,7 +170,17 @@ void VjObsWrapper::init( CosNaming::NamingContext* input,
         for( size_t i = 0; i < tempAddrVec.size(); ++i )
         {
 #if __VJ_version > 2000003
-            tempHostname = tempAddrVec.at( i ).getHostname();
+            try
+            {
+                tempHostname = tempAddrVec.at( i ).getHostname();
+            }
+            catch( std::exception& e )
+            {
+                std::cout << "Vapor could not resolve hostname( " << i << " )"
+                    << ": " << std::endl
+                    << e.what() << std::endl;
+                continue;
+            }
 #elif __VJ_version == 2000003
             tempAddrVec.at( i ).getHostname( tempHostname );
 #endif
@@ -178,7 +188,7 @@ void VjObsWrapper::init( CosNaming::NamingContext* input,
             getStringTokens( tempHostname.c_str(), ".", toks );
             //now toks[0] will be the short host name
             //the one without the domain name
-            if (( tempHostname == masterhost ) || ( toks[0] == masterhost ) )
+            if( ( tempHostname == masterhost ) || ( toks[0] == masterhost ) )
             {
                 std::cout << "*** This is the master node. ***" << std::endl;
                 isMaster = true;
