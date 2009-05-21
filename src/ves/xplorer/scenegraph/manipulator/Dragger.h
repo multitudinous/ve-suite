@@ -52,6 +52,8 @@ namespace xplorer
 {
 namespace scenegraph
 {
+namespace manipulator
+{
 /*!\file Dragger.h
  * Dragger API
  */
@@ -75,7 +77,7 @@ public:
 
     ///
     ///Can't use pure virtual with META_Node define
-    virtual bool Handle( Event::Enum event );
+    virtual bool Handle( Event::Enum event, osg::NodePath::iterator npItr );
 
     ///
     virtual void SetColor(
@@ -119,7 +121,7 @@ private:
 
         ///
         META_Object(
-            ves::xplorer::scenegraph::Dragger, ForceCullCallback );
+            ves::xplorer::scenegraph::manipulator::Dragger, ForceCullCallback );
 
         ///
         virtual bool cull(
@@ -146,6 +148,7 @@ private:
     osg::ref_ptr< osg::Uniform > m_color;
 
 };
+} //end manipulator
 } //end scenegraph
 } //end xplorer
 } //end ves

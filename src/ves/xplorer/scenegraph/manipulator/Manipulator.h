@@ -57,6 +57,8 @@ namespace xplorer
 {
 namespace scenegraph
 {
+namespace manipulator
+{
 class Dragger;
 
 /*!\file Manipulator.h
@@ -87,7 +89,7 @@ public:
     Dragger* GetChild( unsigned int i );
 
     ///
-    virtual bool Handle( Event::Enum event );
+    virtual bool Handle( Event::Enum event, osg::NodePath::iterator npItr );
 
     ///Override the insertChild function to only accept Draggers
     virtual bool insertChild( unsigned int index, Dragger* child );
@@ -98,6 +100,7 @@ public:
     ///Override the setChild function to only accept Draggers
     virtual bool setChild( unsigned int i, Dragger* node );
 
+    /*
     ///Gets the manipulator's active transformation mode
     const TransformationMode::Enum GetActiveMode() const;
 
@@ -109,15 +112,18 @@ public:
 
     ///Gets the vector space in which the manipulator will operate
     const VectorSpace::Enum GetVectorSpace() const;
+    */
 
     ///
     void SetAutoScaleToScreen( bool autoScaleToScreen );
 
+    /*
     ///Sets the transformation modes enabled on the manipulator
     void SetEnabledModes( TransformationMode::Enum value );
 
     ///Sets the vector space in which the manipulator will operate
     void SetVectorSpace( VectorSpace::Enum value ); 
+    */
 
     ///Activate the manipulator
     void TurnOn();
@@ -129,9 +135,7 @@ protected:
     ///Destructor
     virtual ~Manipulator();
 
-    ///
-    void CreateDraggers();
-
+    /*
     ///
     TransformationMode::Enum m_activeMode;
     
@@ -143,6 +147,7 @@ protected:
     
     ///
     VectorSpace::Enum m_vectorSpace;
+    */
 
     ///
     bool m_manipulating;
@@ -152,6 +157,7 @@ private:
     osg::ref_ptr< osg::AutoTransform > m_autoTransform;
 
 };
+} //end manipulator
 } //end scenegraph
 } //end xplorer
 } //end ves

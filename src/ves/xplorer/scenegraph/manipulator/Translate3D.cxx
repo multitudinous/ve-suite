@@ -37,7 +37,7 @@
 
 // --- OSG Includes --- //
 
-using namespace ves::xplorer::scenegraph;
+using namespace ves::xplorer::scenegraph::manipulator;
 
 ////////////////////////////////////////////////////////////////////////////////
 Translate3D::Translate3D()

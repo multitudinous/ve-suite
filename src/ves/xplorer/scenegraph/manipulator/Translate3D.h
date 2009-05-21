@@ -48,6 +48,8 @@ namespace xplorer
 {
 namespace scenegraph
 {
+namespace manipulator
+{
 class TranslateAxis;
 
 /*!\file Translate3D.h
@@ -71,9 +73,6 @@ public:
     ///
     META_Node( ves::xplorer::scenegraph::manipulator, Translate3D );
 
-    ///
-    //virtual bool Handle( Event::Enum event );
-
 protected:
     ///
     virtual ~Translate3D();
@@ -87,6 +86,7 @@ private:
     osg::ref_ptr< TranslateAxis > m_zTranslateAxis;
 
 };
+} //end manipulator
 } //end scenegraph
 } //end xplorer
 } //end ves

@@ -39,6 +39,8 @@
 #include <ves/xplorer/scenegraph/manipulator/Manipulator.h>
 
 // --- OSG Includes --- //
+#include <osg/AutoTransform>
+
 #include <osgUtil/LineSegmentIntersector>
 
 using namespace ves::xplorer::scenegraph;
@@ -67,25 +69,26 @@ ManipulatorRoot::~ManipulatorRoot()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool ManipulatorRoot::addChild( Manipulator* child )
+bool ManipulatorRoot::addChild( manipulator::Manipulator* child )
 {
     return osg::Group::addChild( child->getParents().front() );
 }
 ////////////////////////////////////////////////////////////////////////////////
-Manipulator* ManipulatorRoot::ConvertNodeToManipulator(
+manipulator::Manipulator* ManipulatorRoot::ConvertNodeToManipulator(
     osg::Node* node )
 {
-    return dynamic_cast< Manipulator* >(
-        node->getParents().front() );
+    return dynamic_cast< manipulator::Manipulator* >( node );
 }
 ////////////////////////////////////////////////////////////////////////////////
-Manipulator* ManipulatorRoot::GetChild( unsigned int i )
+manipulator::Manipulator* ManipulatorRoot::GetChild( unsigned int i )
 {
-    return ConvertNodeToManipulator( osg::Group::getChild( i ) );
+    osg::AutoTransform* autoTransform =
+        dynamic_cast< osg::AutoTransform* >( osg::Group::getChild( i ) );
+    return ConvertNodeToManipulator( autoTransform->getChild( 0 ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool ManipulatorRoot::Handle(
-    Event::Enum event,
+    manipulator::Event::Enum event,
     osgUtil::LineSegmentIntersector* lineSegmentIntersector )
 {
     if( lineSegmentIntersector )
@@ -99,34 +102,36 @@ bool ManipulatorRoot::Handle(
             lineSegmentIntersector->getIntersections();
         if( intersections.empty() )
         {
-            vprDEBUG( vesDBG, 2 )
-                << "|\tManipulatorRoot::Handle - No manipulator hit"
-                << std::endl << vprDEBUG_FLUSH;
-
             return false;
         }
 
         m_nodePath = intersections.begin()->nodePath;
-        m_activeManipulator = ConvertNodeToManipulator( m_nodePath.front() );
+        m_nodePathItr = m_nodePath.begin();
+        //Increment past this - ManipulatorRoot
+        ++m_nodePathItr;
+        //Increment past the AutoTransform above Manipulators
+        ++m_nodePathItr;
+
+        m_activeManipulator = ConvertNodeToManipulator( *m_nodePathItr );
     }
 
     switch( event )
     {
-        case Event::FOCUS:
+        case manipulator::Event::FOCUS:
         {
             if( m_activeManipulator.valid() )
             {
-                m_activeManipulator->Handle( event );
+                m_activeManipulator->Handle( event, m_nodePathItr );
             }
 
             break;
         }
-        case Event::DRAG:
-        case Event::RELEASE:
+        case manipulator::Event::DRAG:
+        case manipulator::Event::RELEASE:
         {
             if( m_activeManipulator.valid() )
             {
-                m_activeManipulator->Handle( event );
+                m_activeManipulator->Handle( event, m_nodePathItr );
             }
 
             break;
@@ -137,35 +142,23 @@ bool ManipulatorRoot::Handle(
         }
     }
 
-    /*
-    for( size_t i = 0; i < getNumChildren(); ++i )
-    {
-        Manipulator* manipulator = GetChild( i );
-        if( manipulator->Handle( event ) )
-        {
-            //return true;
-        }
-    }
-    */
-
-    return false;
+    return true;
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool ManipulatorRoot::insertChild(
-    unsigned int index, Manipulator* child )
+    unsigned int index, manipulator::Manipulator* child )
 {
     return osg::Group::insertChild( index, child->getParents().front() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool ManipulatorRoot::replaceChild(
-    Manipulator* origChild,
-    Manipulator* newChild )
+    manipulator::Manipulator* origChild, manipulator::Manipulator* newChild )
 {
     return osg::Group::replaceChild(
         origChild->getParents().front(), newChild->getParents().front() );
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool ManipulatorRoot::setChild( unsigned int i, Manipulator* node )
+bool ManipulatorRoot::setChild( unsigned int i, manipulator::Manipulator* node )
 {
     return osg::Group::setChild( i, node->getParents().front() );
 }

@@ -43,6 +43,8 @@ namespace xplorer
 {
 namespace scenegraph
 {
+namespace manipulator
+{
 
 ///
 namespace AxesFlag
@@ -134,6 +136,7 @@ namespace Event
     };
 }
 
+} //end manipulator
 } //end scenegraph
 } //end xplorer
 } //end ves

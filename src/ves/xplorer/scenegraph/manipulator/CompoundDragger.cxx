@@ -37,7 +37,7 @@
 // --- OSG Includes --- //
 
 
-using namespace ves::xplorer::scenegraph;
+using namespace ves::xplorer::scenegraph::manipulator;
 
 ////////////////////////////////////////////////////////////////////////////////
 CompoundDragger::CompoundDragger()
@@ -52,7 +52,7 @@ CompoundDragger::CompoundDragger(
     :
     Dragger( compoundDragger, copyop )
 {
-    osg::NodePath;
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 CompoundDragger::~CompoundDragger()
@@ -60,26 +60,33 @@ CompoundDragger::~CompoundDragger()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool CompoundDragger::Handle( Event::Enum event )
+bool CompoundDragger::Handle(
+    Event::Enum event, osg::NodePath::iterator npItr )
 {
+    //Increment past parent
+    ++npItr;
+
+    //Get the active dragger
+    osg::Node* dragger = *npItr;
+    if( !dragger )
+    {
+        return false;
+    }
+
+    //Check if this dragger is in the NodePath
+    if( this != dragger )
+    {
+        return false;
+    }
+
     for( size_t i = 0; i < getNumChildren(); ++i )
     {
         Dragger* dragger = GetChild( i );
-        if( dragger->Handle( event ) )
+        if( dragger->Handle( event, npItr ) )
         {
             return true;
         }
     }
-
-    //std::find( 
-    //if( ( this ) )
-    {
-        UseColor( ColorTag::DEFAULT );
-
-        return false;
-    }
-
-
 
     return false;
 }

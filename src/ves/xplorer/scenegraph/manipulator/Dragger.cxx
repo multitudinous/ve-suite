@@ -37,7 +37,7 @@
 // --- OSG Includes --- //
 
 
-using namespace ves::xplorer::scenegraph;
+using namespace ves::xplorer::scenegraph::manipulator;
 
 ////////////////////////////////////////////////////////////////////////////////
 Dragger::Dragger()
@@ -69,13 +69,21 @@ Dragger::~Dragger()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool Dragger::Handle( Event::Enum event )
+bool Dragger::Handle( Event::Enum event, osg::NodePath::iterator npItr )
 {
-    //std::find( 
-    //if( ( this ) )
-    {
-        UseColor( ColorTag::DEFAULT );
+    //Increment past parent
+    ++npItr;
 
+    //Get the active dragger
+    osg::Node* dragger = *npItr;
+    if( !dragger )
+    {
+        return false;
+    }
+
+    //Check if this dragger is in the NodePath
+    if( this != dragger )
+    {
         return false;
     }
 

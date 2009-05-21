@@ -33,14 +33,12 @@
 
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/manipulator/Manipulator.h>
-#include <ves/xplorer/scenegraph/manipulator/Translate3D.h>
-
-#include <ves/xplorer/scenegraph/SceneManager.h>
+#include <ves/xplorer/scenegraph/manipulator/Dragger.h>
 
 // --- OSG Includes --- //
 #include <osg/AutoTransform>
 
-using namespace ves::xplorer::scenegraph;
+using namespace ves::xplorer::scenegraph::manipulator;
 
 ////////////////////////////////////////////////////////////////////////////////
 Manipulator::Manipulator()
@@ -48,15 +46,11 @@ Manipulator::Manipulator()
     osg::MatrixTransform(),
     m_autoTransform( new osg::AutoTransform() )
 {
-    CreateDraggers();
-
     setMatrix( osg::Matrix::scale( 100.0, 100.0, 100.0 ) );
 
     SetAutoScaleToScreen( true );
     m_autoTransform->setCullingActive( false );
     m_autoTransform->addChild( this );
-
-    //SceneManager::instance()->GetManipulatorRoot()->addChild( this );
 }
 ////////////////////////////////////////////////////////////////////////////////
 Manipulator::Manipulator(
@@ -83,6 +77,20 @@ Dragger* Manipulator::GetChild( unsigned int i )
     return dynamic_cast< Dragger* >( osg::MatrixTransform::getChild( i ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
+bool Manipulator::Handle( Event::Enum event, osg::NodePath::iterator npItr )
+{
+    for( size_t i = 0; i < getNumChildren(); ++i )
+    {
+        Dragger* dragger = GetChild( i );
+        if( dragger->Handle( event, npItr ) )
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+////////////////////////////////////////////////////////////////////////////////
 bool Manipulator::insertChild( unsigned int index, Dragger* child )
 {
     return osg::MatrixTransform::insertChild( index, child );
@@ -98,12 +106,7 @@ bool Manipulator::setChild( unsigned int i, Dragger* node )
     return osg::MatrixTransform::setChild( i, node );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Manipulator::CreateDraggers()
-{
-    osg::ref_ptr< Translate3D > translate3D = new Translate3D();
-    addChild( translate3D.get() );
-}
-////////////////////////////////////////////////////////////////////////////////
+/*
 const TransformationMode::Enum Manipulator::GetActiveMode() const
 {
     return m_activeMode;
@@ -123,38 +126,14 @@ const VectorSpace::Enum Manipulator::GetVectorSpace() const
 {
     return m_vectorSpace;
 }
-////////////////////////////////////////////////////////////////////////////////
-bool Manipulator::Handle( Event::Enum event )
-{
-    /*
-    for( size_t i = 0; i < getNumChildren(); ++i )
-    {
-        Dragger* dragger = GetChild( i );
-        if( dragger->Handle( event ) )
-        {
-            return true;
-        }
-    }
-
-    //std::find( 
-    //if( ( this ) )
-    {
-        UseColor( ColorTag::DEFAULT );
-
-        return false;
-    }
-
-    */
-
-    return false;
-
-}
+*/
 ////////////////////////////////////////////////////////////////////////////////
 void Manipulator::SetAutoScaleToScreen( bool autoScaleToScreen )
 {
     m_autoTransform->setAutoScaleToScreen( autoScaleToScreen );
 }
 ////////////////////////////////////////////////////////////////////////////////
+/*
 void Manipulator::SetEnabledModes( TransformationMode::Enum value )
 {
     if( m_enabledModes == value )
@@ -182,6 +161,7 @@ void Manipulator::SetVectorSpace( VectorSpace::Enum value )
     m_manipulating = false;
     m_vectorSpace = value;
 }
+*/
 ////////////////////////////////////////////////////////////////////////////////
 void Manipulator::TurnOn()
 {

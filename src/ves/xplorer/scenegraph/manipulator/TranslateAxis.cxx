@@ -43,7 +43,7 @@
 #include <osg/LineStipple>
 #include <osg/PolygonStipple>
 
-using namespace ves::xplorer::scenegraph;
+using namespace ves::xplorer::scenegraph::manipulator;
 
 ////////////////////////////////////////////////////////////////////////////////
 TranslateAxis::TranslateAxis()
@@ -64,47 +64,6 @@ TranslateAxis::TranslateAxis(
 TranslateAxis::~TranslateAxis()
 {
     ;
-}
-////////////////////////////////////////////////////////////////////////////////
-bool TranslateAxis::Handle( Event::Enum event )
-{
-    //std::find( 
-    //if( ( this ) )
-    {
-        UseColor( ColorTag::DEFAULT );
-
-        return false;
-    }
-
-    switch( event )
-    {
-        case Event::FOCUS:
-        {
-            UseColor( ColorTag::FOCUS );
-
-            return true;
-        }
-        case Event::PUSH:
-        {
-            UseColor( ColorTag::ACTIVE );
-
-            return true;
-        }
-        case Event::DRAG:
-        {
-            return true;
-        }
-        case Event::RELEASE:
-        {
-            UseColor( ColorTag::DEFAULT );
-
-            return true;
-        }
-        default:
-        {
-            return false;
-        }
-    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void TranslateAxis::SetupDefaultGeometry()

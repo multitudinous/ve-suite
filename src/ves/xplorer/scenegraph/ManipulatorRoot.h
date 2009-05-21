@@ -49,13 +49,18 @@ class LineSegmentIntersector;
 
 // --- C/C++ Includes --- //
 
+
 namespace ves
 {
 namespace xplorer
 {
 namespace scenegraph
 {
+
+namespace manipulator
+{
 class Manipulator;
+}
 
 /*!\file ManipulatorRoot.h
  * ManipulatorRoot API
@@ -79,30 +84,28 @@ public:
     META_Node( ves::xplorer::scenegraph, ManipulatorRoot );
 
     ///Override the addChild function to only accept Manipulators
-    virtual bool addChild( Manipulator* child );
-
-    ///
-    Manipulator* ConvertNodeToManipulator( osg::Node* node );
+    virtual bool addChild( manipulator::Manipulator* child );
 
     ///Can't override the getChild function, so create our own
-    Manipulator* GetChild( unsigned int i );
+    manipulator::Manipulator* GetChild( unsigned int i );
 
     ///
     virtual bool Handle(
-        Event::Enum event,
-        osgUtil::LineSegmentIntersector* lineSegmentIntersector = NULL );
+        manipulator::Event::Enum event,
+        osgUtil::LineSegmentIntersector* lineSegmentIntersector );
 
     ///Override the insertChild function to only accept Manipulators
     virtual bool insertChild(
-        unsigned int index, Manipulator* child );
+        unsigned int index, manipulator::Manipulator* child );
 
     ///Override the replaceChild function to only accept Manipulators
     virtual bool replaceChild(
-        Manipulator* origChild,
-        Manipulator* newChild );
+        manipulator::Manipulator* origChild,
+        manipulator::Manipulator* newChild );
 
     ///Override the setChild function to only accept Manipulators
-    virtual bool setChild( unsigned int i, Manipulator* node );
+    virtual bool setChild(
+        unsigned int i, manipulator::Manipulator* node );
 
     ///Activate the manipulator root
     void TurnOn();
@@ -116,10 +119,16 @@ protected:
 
 private:
     ///
+    manipulator::Manipulator* ConvertNodeToManipulator( osg::Node* node );
+
+    ///
     osg::NodePath m_nodePath;
 
     ///
-    osg::ref_ptr< Manipulator > m_activeManipulator;
+    osg::NodePath::iterator m_nodePathItr;
+
+    ///
+    osg::ref_ptr< manipulator::Manipulator > m_activeManipulator;
 
     ///
     osg::ref_ptr< osgUtil::LineSegmentIntersector > m_lineSegmentIntersector;

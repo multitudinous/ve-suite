@@ -41,14 +41,14 @@
 
 // --- OSG Includes --- //
 
-// --- C/C++ Includes --- //
-//#include <map>
 
 namespace ves
 {
 namespace xplorer
 {
 namespace scenegraph
+{
+namespace manipulator
 {
 /*!\file CompoundDragger.h
  * Dragger API
@@ -77,6 +77,9 @@ public:
     ///Can't override the getChild function, so create our own
     Dragger* GetChild( unsigned int i );
 
+    ///
+    virtual bool Handle( Event::Enum event, osg::NodePath::iterator npItr );
+
     ///Override the insertChild function to only accept Draggers
     virtual bool insertChild( unsigned int index, Dragger* child );
 
@@ -85,9 +88,6 @@ public:
 
     ///Override the setChild function to only accept Draggers
     virtual bool setChild( unsigned int i, Dragger* node );
-
-    ///
-    virtual bool Handle( Event::Enum event );
 
     ///
     virtual void SetColor(
@@ -107,9 +107,8 @@ protected:
 
 private:
 
-
-
 };
+} //end manipulator
 } //end scenegraph
 } //end xplorer
 } //end ves
