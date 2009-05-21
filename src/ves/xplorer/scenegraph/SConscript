@@ -13,7 +13,9 @@ headers = sca_util.getHeadersRecursive( srcDir )
 ##srcs = map(lambda s: pj('#', 'VE_Xplorer', 'SceneGraph', s), srcs)
 
 lib_env = ves_pkg.getEnv().Clone()
-
+#see if we need to compile support for transform manipulators
+if baseEnv[ 'TransformManipulator' ] != 'no':
+    lib_env.Append( CPPDEFINES = [ 'TRANSFORM_MANIPULATOR' ] )
 lib_env.Append(CPPPATH = [pj('#','external','osgBullet','include'),
                           pj('#','external', bulletBaseVar,'Extras'),
                           pj('#','external', bulletBaseVar,'src')])

@@ -114,7 +114,11 @@ if GetPlatform() == 'darwin':
 
 #see if we need to compile minerva in
 if baseEnv[ 'MakeMinervaSupport' ] != 'no':
-   env.Append( CPPDEFINES = ['MINERVA_GIS_SUPPORT'] )
+    lib_env.Append( CPPDEFINES = [ 'MINERVA_GIS_SUPPORT' ] )
+
+#see if we need to compile support for transform manipulators
+if baseEnv[ 'TransformManipulator' ] != 'no':
+    lib_env.Append( CPPDEFINES = [ 'TRANSFORM_MANIPULATOR' ] )
 
 lib_env.Append( CPPDEFINES = ['VE_XPLORER_LIBRARY','VE_XPLORER_NETWORK_LIBRARY','VE_GRAPHICALPLUGINS_LIBRARY'])
 
