@@ -295,10 +295,10 @@ void cfdVTKFileHandler::_getXMLUGrid()
         = vtkXMLUnstructuredGridReader::New();
     ugReader->SetFileName( _inFileName.c_str() );
     ugReader->Update();
-    _dataSet = ugReader->GetOutput();
-    _dataSet->SetReferenceCount( ugReader->GetOutput()->GetReferenceCount() + 1 );
-    //_dataSet = vtkUnstructuredGrid::New();
-    //_dataSet->ShallowCopy( ugReader->GetOutput() );
+    //_dataSet = ugReader->GetOutput();
+    //_dataSet->Register( ugReader->GetOutput() );
+    _dataSet = vtkUnstructuredGrid::New();
+    _dataSet->ShallowCopy( ugReader->GetOutput() );
     ugReader->Delete();
 }
 //////////////////////////////////////
