@@ -80,13 +80,12 @@ Dragger* Dragger::Handle( Event::Enum event, osg::NodePath::iterator npItr )
         }
     }
 
-    //Increment past parent
-    ++npItr;
-
     //Get the active dragger
-    osg::Node* node = *npItr;
+    osg::Node* node = *(++npItr);
     if( !node )
     {
+        //Something really bad happened
+        //Debug code - node should always be valid
         return NULL;
     }
 

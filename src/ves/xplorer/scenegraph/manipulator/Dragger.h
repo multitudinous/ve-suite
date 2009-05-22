@@ -82,12 +82,6 @@ public:
     virtual void SetColor(
         ColorTag::Enum colorTag, osg::Vec4 newColor, bool use = false );
 
-    ///Deactivate the manipulator root
-    void TurnOff();
-
-    ///Activate the manipulator root
-    void TurnOn();
-
     ///
     virtual void UseColor( ColorTag::Enum colorTag );
 
@@ -139,6 +133,12 @@ private:
 
     ///
     osg::Vec4& GetColor( ColorTag::Enum colorTag );
+
+    ///Deactivate the manipulator root
+    void TurnOff();
+
+    ///Activate the manipulator root
+    void TurnOn();
 
     ///
     ColorMap m_colorMap;

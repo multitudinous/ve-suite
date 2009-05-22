@@ -105,59 +105,42 @@ bool ManipulatorRoot::Handle(
         }
     }
 
+    //Make sure the active manipulator is valid before we continue
+    if( !m_activeManipulator.valid() )
+    {
+        return false;
+    }
+
     switch( event )
     {
         case manipulator::Event::FOCUS:
         case manipulator::Event::PUSH:
-        case manipulator::Event::RELEASE:
         {
-            if( m_activeManipulator.valid() )
-            {
-                manipulator::Dragger* newDragger =
-                    m_activeManipulator->Handle( event, m_nodePathItr );
-                //Something bad happened
-                if( !newDragger )
-                {
-                    //Debug output - newDragger should always be valid
-                    return false;
-                }
+            m_activeDragger =
+                m_activeManipulator->Handle( event, m_nodePathItr );
 
-                //If we are focused on a new valid dragger,
-                //reset the color of the previous dragger
-                //and set active dragger to the new dragger
-                if( newDragger != m_activeDragger )
-                {
-                    /*
-                    if( m_activeDragger.valid() )
-                    {
-                        m_activeDragger->UseColor(
-                            manipulator::ColorTag::DEFAULT );
-                    }
-                    */
-
-                    m_activeDragger = newDragger;
-                }
-
-                return true;
-            }
-
-            return false;
+            return( m_activeDragger.valid() );
         }
         case manipulator::Event::DRAG:
         {
             if( m_activeDragger.valid() )
             {
-                if( m_activeDragger->Handle( event, m_nodePathItr ) )
-                {
-                    return true;
-                }
+                return( m_activeDragger->Handle( event, m_nodePathItr ) );
             }
 
             return false;
         }
+        case manipulator::Event::RELEASE:
+        {
+            m_activeDragger = NULL;
+
+            return( m_activeManipulator->Handle( event, m_nodePathItr ) );
+        }
         default:
         {
-            return false;
+            m_activeDragger = NULL;
+
+            return( m_activeDragger.valid() );
         }
     }
 }
