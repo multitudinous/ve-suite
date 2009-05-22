@@ -257,7 +257,11 @@ DataSet::~DataSet()
     
     if( dcs.valid() )
     {
-        dcs->getParent( 0 )->removeChild( dcs.get() );
+        if( dcs->getNumParents() > 0 )
+        {
+            osg::Group* parent = dcs->getParent( 0 );
+            parent->removeChild( dcs.get() );
+        }
     }
 }
 
