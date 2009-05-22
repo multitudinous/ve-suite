@@ -34,13 +34,11 @@
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/CADEntity.h>
 #include <ves/xplorer/scenegraph/CADEntityHelper.h>
-#include <ves/xplorer/scenegraph/SceneManager.h>
+//#include <ves/xplorer/scenegraph/SceneManager.h>
 //#include <ves/xplorer/scenegraph/LocalToWorldNodePath.h>
 
 #include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
 #include <ves/xplorer/scenegraph/physics/PhysicsRigidBody.h>
-
-#include <ves/xplorer/scenegraph/manipulator/Translate3D.h>
 
 #include <ves/xplorer/Debug.h>
 
@@ -83,15 +81,6 @@ CADEntity::CADEntity(
     mDCS->SetName( "CADEntityDCS" );
     mDCS->addChild( mCADEntityHelper->GetNode() );
     parentDCS->AddChild( mDCS.get() );
-
-#ifdef TRANSFORM_MANIPULATOR
-    m_manipulator = new manipulator::Manipulator();
-    osg::ref_ptr< manipulator::Translate3D > translate3D =
-        new manipulator::Translate3D();
-    m_manipulator->addChild( translate3D.get() );
-    SceneManager::instance()->GetManipulatorRoot()->addChild(
-        m_manipulator.get() );
-#endif //TRANSFORM_MANIPULATOR
 }
 ////////////////////////////////////////////////////////////////////////////////
 CADEntity::CADEntity(
@@ -125,15 +114,6 @@ CADEntity::CADEntity(
     mDCS->SetName( "CADEntityDCS" );
     mDCS->addChild( mCADEntityHelper->GetNode() );
     parentDCS->AddChild( mDCS.get() );
-
-#ifdef TRANSFORM_MANIPULATOR
-    m_manipulator = new manipulator::Manipulator();
-    osg::ref_ptr< manipulator::Translate3D > translate3D =
-        new manipulator::Translate3D();
-    m_manipulator->addChild( translate3D.get() );
-    SceneManager::instance()->GetManipulatorRoot()->addChild(
-        m_manipulator.get() );
-#endif //TRANSFORM_MANIPULATOR
 }
 ////////////////////////////////////////////////////////////////////////////////
 CADEntity::CADEntity(
@@ -162,15 +142,6 @@ CADEntity::CADEntity(
     mDCS->SetName( "CADEntityDCS" );
     mDCS->addChild( mCADEntityHelper->GetNode() );
     parentDCS->AddChild( mDCS.get() );
-
-#ifdef TRANSFORM_MANIPULATOR
-    m_manipulator = new manipulator::Manipulator();
-    osg::ref_ptr< manipulator::Translate3D > translate3D =
-        new manipulator::Translate3D();
-    m_manipulator->addChild( translate3D.get() );
-    SceneManager::instance()->GetManipulatorRoot()->addChild(
-        m_manipulator.get() );
-#endif //TRANSFORM_MANIPULATOR
 }
 ////////////////////////////////////////////////////////////////////////////////
 CADEntity::~CADEntity()
@@ -225,11 +196,6 @@ PhysicsRigidBody* const CADEntity::GetPhysicsRigidBody()
 const std::string& CADEntity::GetFilename() const
 {
     return mFileName;
-}
-////////////////////////////////////////////////////////////////////////////////
-manipulator::Manipulator* const CADEntity::GetManipulator() const
-{
-    return m_manipulator.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
 const float CADEntity::GetOpacityValue() const

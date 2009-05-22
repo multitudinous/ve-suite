@@ -40,8 +40,6 @@
 //Should not have to include these here
 #include <ves/xplorer/scenegraph/DCS.h>
 
-#include <ves/xplorer/scenegraph/manipulator/Manipulator.h>
-
 // --- OSG Includes --- //
 #include <osg/ref_ptr>
 
@@ -129,10 +127,6 @@ public:
     ///\return 
     const std::string& GetFilename() const;
 
-    ///
-    ///\return
-    manipulator::Manipulator* const GetManipulator() const;
-
     ///Get the opacity value for this file
     ///\return 
     const float GetOpacityValue() const;
@@ -174,9 +168,6 @@ protected:
 
     ///A helper class to give added functionality to CADEntity
     CADEntityHelper* mCADEntityHelper;
-
-    ///
-    osg::ref_ptr< manipulator::Manipulator > m_manipulator;
 
 };
 } //end scenegraph

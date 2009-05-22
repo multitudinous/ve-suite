@@ -125,11 +125,11 @@ public:
     void SetVectorSpace( VectorSpace::Enum value ); 
     */
 
-    ///Activate the manipulator
-    void TurnOn();
-
-    ///Deactivate the manipulator
+    ///Deactivate the manipulator root
     void TurnOff();
+
+    ///Activate the manipulator root
+    void TurnOn();
 
 protected:
     ///Destructor

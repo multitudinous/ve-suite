@@ -71,6 +71,15 @@ Dragger::~Dragger()
 ////////////////////////////////////////////////////////////////////////////////
 Dragger* Dragger::Handle( Event::Enum event, osg::NodePath::iterator npItr )
 {
+    //DRAG events only get called by a dragger
+    switch( event )
+    {
+        case Event::DRAG:
+        {
+            return this;
+        }
+    }
+
     //Increment past parent
     ++npItr;
 
@@ -82,34 +91,52 @@ Dragger* Dragger::Handle( Event::Enum event, osg::NodePath::iterator npItr )
     }
 
     //Check if this dragger is in the NodePath
-    if( this != node )
+    bool isActive( false );
+    if( this == node )
     {
-        return NULL;
+        isActive = true;
     }
 
     switch( event )
     {
         case Event::FOCUS:
         {
-            UseColor( ColorTag::FOCUS );
+            if( isActive )
+            {
+                UseColor( ColorTag::FOCUS );
 
-            return this;
+                return this;
+            }
+
+            UseColor( ColorTag::DEFAULT );
+
+            return NULL;
         }
         case Event::PUSH:
         {
-            UseColor( ColorTag::ACTIVE );
+            if( isActive )
+            {
+                UseColor( ColorTag::ACTIVE );
 
-            return this;
-        }
-        case Event::DRAG:
-        {
-            return this;
+                return this;
+            }
+
+            TurnOff();
+
+            return NULL;
         }
         case Event::RELEASE:
         {
-            UseColor( ColorTag::DEFAULT );
+            if( isActive )
+            {
+                UseColor( ColorTag::DEFAULT );
 
-            return this;
+                return this;
+            }
+
+            TurnOn();
+
+            return NULL;
         }
         default:
         {
@@ -185,14 +212,14 @@ void Dragger::SetColor( ColorTag::Enum colorTag, osg::Vec4 newColor, bool use )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Dragger::TurnOn()
-{
-    setNodeMask( 1 );
-}
-////////////////////////////////////////////////////////////////////////////////
 void Dragger::TurnOff()
 {
     setNodeMask( 0 );
+}
+////////////////////////////////////////////////////////////////////////////////
+void Dragger::TurnOn()
+{
+    setNodeMask( 1 );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Dragger::UseColor( ColorTag::Enum colorTag )

@@ -108,11 +108,11 @@ public:
     virtual bool setChild(
         unsigned int i, manipulator::Manipulator* node );
 
-    ///Activate the manipulator root
-    void TurnOn();
-
     ///Deactivate the manipulator root
     void TurnOff();
+
+    ///Activate the manipulator root
+    void TurnOn();
 
 protected:
     ///Destructor

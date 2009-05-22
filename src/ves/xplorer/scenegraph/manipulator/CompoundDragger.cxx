@@ -68,27 +68,24 @@ Dragger* CompoundDragger::Handle(
 
     //Get the active dragger
     osg::Node* node = *npItr;
+    //Something really bad happened
     if( !node )
     {
+        //Debug code - node should always be valid
         return NULL;
     }
 
-    //Check if this dragger is in the NodePath
-    if( this != node )
-    {
-        return NULL;
-    }
-
+    Dragger* activeDragger( NULL );
     for( size_t i = 0; i < getNumChildren(); ++i )
     {
         Dragger* dragger = GetChild( i )->Handle( event, npItr );
         if( dragger )
         {
-            return dragger;
+            activeDragger = dragger;
         }
     }
 
-    return NULL;
+    return activeDragger;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CompoundDragger::SetupDefaultGeometry()

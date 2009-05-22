@@ -76,18 +76,17 @@ public:
     META_Node( ves::xplorer::scenegraph::manipulator, Dragger );
 
     ///
-    ///Can't use pure virtual with META_Node define
     virtual Dragger* Handle( Event::Enum event, osg::NodePath::iterator npItr );
 
     ///
     virtual void SetColor(
         ColorTag::Enum colorTag, osg::Vec4 newColor, bool use = false );
 
-    ///Activate the dragger
-    void TurnOn();
-
-    ///Deactivate the dragger
+    ///Deactivate the manipulator root
     void TurnOff();
+
+    ///Activate the manipulator root
+    void TurnOn();
 
     ///
     virtual void UseColor( ColorTag::Enum colorTag );

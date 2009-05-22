@@ -33,6 +33,7 @@
 
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/ManipulatorRoot.h>
+#include <ves/xplorer/scenegraph/SceneManager.h>
 
 #include <ves/xplorer/Debug.h>
 
@@ -108,6 +109,7 @@ bool ManipulatorRoot::Handle(
     {
         case manipulator::Event::FOCUS:
         case manipulator::Event::PUSH:
+        case manipulator::Event::RELEASE:
         {
             if( m_activeManipulator.valid() )
             {
@@ -120,44 +122,28 @@ bool ManipulatorRoot::Handle(
                     return false;
                 }
 
-                //If previous dragger is not valid, set it
-                if( !m_activeDragger.valid() )
-                {
-                    m_activeDragger = newDragger;
-
-                    return true;
-                }
-
-                //If previous dragger equals new dragger, return
-                if( m_activeDragger == newDragger )
-                {
-                    return true;
-                }
-
                 //If we are focused on a new valid dragger,
                 //reset the color of the previous dragger
                 //and set active dragger to the new dragger
-                m_activeDragger->UseColor( manipulator::ColorTag::DEFAULT );
-                m_activeDragger = newDragger;
-                
+                if( newDragger != m_activeDragger )
+                {
+                    /*
+                    if( m_activeDragger.valid() )
+                    {
+                        m_activeDragger->UseColor(
+                            manipulator::ColorTag::DEFAULT );
+                    }
+                    */
+
+                    m_activeDragger = newDragger;
+                }
+
                 return true;
             }
 
             return false;
         }
         case manipulator::Event::DRAG:
-        {
-            if( m_activeDragger.valid() )
-            {
-                if( m_activeDragger->Handle( event, m_nodePathItr ) )
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-        case manipulator::Event::RELEASE:
         {
             if( m_activeDragger.valid() )
             {
@@ -234,13 +220,13 @@ bool ManipulatorRoot::TestForIntersections(
     return true;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void ManipulatorRoot::TurnOn()
-{
-    setNodeMask( 1 );
-}
-////////////////////////////////////////////////////////////////////////////////
 void ManipulatorRoot::TurnOff()
 {
     setNodeMask( 0 );
+}
+////////////////////////////////////////////////////////////////////////////////
+void ManipulatorRoot::TurnOn()
+{
+    setNodeMask( 1 );
 }
 ////////////////////////////////////////////////////////////////////////////////

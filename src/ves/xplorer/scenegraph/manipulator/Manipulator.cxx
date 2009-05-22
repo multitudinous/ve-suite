@@ -46,10 +46,15 @@ Manipulator::Manipulator()
     osg::MatrixTransform(),
     m_autoTransform( new osg::AutoTransform() )
 {
-    setMatrix( osg::Matrix::scale( 100.0, 100.0, 100.0 ) );
+    //All manipulators should be based off unit axes
+    float initialScale = 100.0;
+    setMatrix( osg::Matrix::scale( initialScale, initialScale, initialScale ) );
 
+    //Set manipulator to scale to the same size based off distance from the eye
     SetAutoScaleToScreen( true );
-    m_autoTransform->setCullingActive( false );
+    //Set initial bound so AutoTransform is not culled by small feature culling
+    osg::BoundingSphere bs( osg::Vec3f( 0.0, 0.0, 0.0 ), initialScale );
+    m_autoTransform->setInitialBound( bs );
     m_autoTransform->addChild( this );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -79,16 +84,17 @@ Dragger* Manipulator::GetChild( unsigned int i )
 ////////////////////////////////////////////////////////////////////////////////
 Dragger* Manipulator::Handle( Event::Enum event, osg::NodePath::iterator npItr )
 {
+    Dragger* activeDragger( NULL );
     for( size_t i = 0; i < getNumChildren(); ++i )
     {
         Dragger* dragger = GetChild( i )->Handle( event, npItr );
         if( dragger )
         {
-            return dragger;
+            activeDragger = dragger;
         }
     }
 
-    return NULL;
+    return activeDragger;
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool Manipulator::insertChild( unsigned int index, Dragger* child )
@@ -163,13 +169,13 @@ void Manipulator::SetVectorSpace( VectorSpace::Enum value )
 }
 */
 ////////////////////////////////////////////////////////////////////////////////
-void Manipulator::TurnOn()
-{
-    setNodeMask( 1 );
-}
-////////////////////////////////////////////////////////////////////////////////
 void Manipulator::TurnOff()
 {
     setNodeMask( 0 );
+}
+////////////////////////////////////////////////////////////////////////////////
+void Manipulator::TurnOn()
+{
+    setNodeMask( 1 );
 }
 ////////////////////////////////////////////////////////////////////////////////

@@ -46,6 +46,8 @@
 #include <ves/xplorer/scenegraph/Sound.h>
 #endif
 
+#include <ves/xplorer/Debug.h>
+
 #include <ves/xplorer/scenegraph/logo/BlueArrow.h>
 #include <ves/xplorer/scenegraph/logo/GreyArrow.h>
 #include <ves/xplorer/scenegraph/logo/OrangeArrow.h>
@@ -54,7 +56,10 @@
 
 #include <ves/xplorer/scenegraph/physics/CharacterController.h>
 
-#include <ves/xplorer/Debug.h>
+#ifdef TRANSFORM_MANIPULATOR
+#include <ves/xplorer/scenegraph/manipulator/Manipulator.h>
+#include <ves/xplorer/scenegraph/manipulator/Translate3D.h>
+#endif //TRANSFORM_MANIPULATOR
 
 // --- OSG Includes --- //
 #include <osg/Node>
@@ -177,6 +182,16 @@ void SceneManager::InitScene()
     m_manipulatorRoot = new ManipulatorRoot();
     m_manipulatorRoot->setName( "Manipulator Root Node" );
     mModelRoot->addChild( m_manipulatorRoot.get() );
+
+    //A test scene manipulator for now
+#ifdef TRANSFORM_MANIPULATOR
+    osg::ref_ptr< manipulator::Manipulator > manipulator =
+        new manipulator::Manipulator();
+    osg::ref_ptr< manipulator::Translate3D > translate3D =
+        new manipulator::Translate3D();
+    manipulator->addChild( translate3D.get() );
+    m_manipulatorRoot->addChild( manipulator.get() );
+#endif //TRANSFORM_MANIPULATOR
 
 #ifdef VE_SOUND
     try
