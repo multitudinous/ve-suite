@@ -52,12 +52,7 @@
 #include <vtkAlgorithm.h>
 
 #include <vtkAlgorithmOutput.h>
-#include <vtkMultiGroupDataSetAlgorithm.h>
 #include <vtkAppendPolyData.h>
-#include <vtkMultiGroupDataGeometryFilter.h>
-#include <vtkMultiBlockDataSetAlgorithm.h>
-#include <vtkMultiGroupDataGeometryFilter.h>
-#include <vtkMultiGroupDataSet.h>
 #include <vtkCompositeDataPipeline.h>
 
 using namespace ves::xplorer::util;
@@ -65,17 +60,11 @@ using namespace ves::xplorer::util;
 void writeVtkGeomToStl( vtkDataObject * dataset, std::string filename )
 {
    vtkTriangleFilter *tFilter = vtkTriangleFilter::New();
-   vtkMultiGroupDataGeometryFilter *gFilter = NULL;
 
    // convert dataset to vtkPolyData 
-   if ( dataset->IsA("vtkPolyData") )
-      tFilter->SetInput( (vtkPolyData*)dataset );
-   else 
+   if( dataset->IsA("vtkPolyData") )
    {
-      std::cout << "Using vtkGeometryFilter to convert to polydata" << std::endl;
-      gFilter = vtkMultiGroupDataGeometryFilter::New();
-      gFilter->SetInput( dynamic_cast<vtkMultiGroupDataSet*> (dataset) );
-      tFilter->SetInput( gFilter->GetOutput() );
+      tFilter->SetInput( (vtkPolyData*)dataset );
    }
 
    std::cout << "Writing \"" << filename << "\"... ";
@@ -89,14 +78,14 @@ void writeVtkGeomToStl( vtkDataObject * dataset, std::string filename )
    std::cout << "... done\n" << std::endl;
 
    tFilter->Delete();
-
-   if ( gFilter ) 
-      gFilter->Delete();
 }
 
 int main( int argc, char *argv[] )
 {    
-   // If the command line contains an input vtk file name and an output file,
+    vtkCompositeDataPipeline* prototype = vtkCompositeDataPipeline::New();
+    vtkAlgorithm::SetDefaultExecutivePrototype( prototype );
+    prototype->Delete();
+    // If the command line contains an input vtk file name and an output file,
    // set them up.  Otherwise, get them from the user...
 	std::string inFileName;// = NULL;
    std::string outFileName;// = new char [20];
@@ -126,14 +115,10 @@ int main( int argc, char *argv[] )
       float value = 0.0;
       std::cout << "Enter isosurface value: ";
       std::cin >> value;
-
-      vtkMultiGroupDataGeometryFilter* filter1 = 
-               vtkMultiGroupDataGeometryFilter::New( );
-      filter1->SetInput( 0, dataset );
-      filter1->Update();
       
       vtkContourFilter *contour = vtkContourFilter::New();
-         contour->SetInputConnection( 0, filter1->GetOutputPort(0) );
+         //contour->SetInputConnection( 0, filter1->GetOutputPort(0) );
+         contour->SetInput( dataset );
          contour->SetValue( 0, value );
          contour->UseScalarTreeOff();
          contour->Update();
@@ -143,19 +128,18 @@ int main( int argc, char *argv[] )
       vtkPolyDataNormals *normals = vtkPolyDataNormals::New();
          normals->SetInputConnection( 0, contour->GetOutputPort(0) );
          normals->Update();
-         filter1->Update();
 
       std::cout<<"Set normals :"<<std::endl;
       
-      int numPolys = filter1->GetOutput()->GetNumberOfPolys();
-      std::cout << "     The number of polys is "<< numPolys << std::endl;
-      if ( numPolys==0 ) return 1;
+      //int numPolys = normals->GetOutput()->GetNumberOfPolys();
+      //std::cout << "     The number of polys is "<< numPolys << std::endl;
+      //if ( numPolys==0 ) return 1;
 
       float deciVal;
       std::cout << "\nDecimation value (range from 0 [more triangles] to 1 [less triangles]) : ";
       std::cin >> deciVal;
 
-      surface = cfdGrid2Surface( dynamic_cast<vtkDataSet*>(filter1->GetOutputDataObject(0)), deciVal );
+      surface = cfdGrid2Surface( dynamic_cast<vtkDataSet*>(normals->GetOutputDataObject(0)), deciVal );
       std::cout<<"Num polys in surf :"<<surface->GetNumberOfPolys()<<std::endl;
       if ( surface == NULL )
          std::cout<<"No surface !!!! "<<std::endl;
@@ -163,7 +147,6 @@ int main( int argc, char *argv[] )
       //clean up
       contour->Delete();
       normals->Delete();
-      filter1->Delete();
    
       std::cout<<" writing :"<<std::endl;
       writeVtkThing( surface, outFileName, 1 );   //1 is for binary

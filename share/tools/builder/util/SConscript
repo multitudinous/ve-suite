@@ -40,9 +40,9 @@ createMiniFlowdata = Split("""
    createMiniFlowdata.cxx
 """)
 
-#makeVtkSurface = Split("""
-#   makeVtkSurface.cxx
-#""")
+makeVtkSurface = Split("""
+   makeVtkSurface.cxx
+""")
 
 mergeVertices = Split("""
    mergeVertices.cxx
@@ -118,9 +118,9 @@ mini = ves_pkg.createProgram('createMiniFlowdata' + env["PROGSUFFIX"], env, 'bin
 mini.addSources( createMiniFlowdata )
 mini.build()
 
-#vtkSurf = ves_pkg.createProgram('makeVtkSurface' + env["PROGSUFFIX"], env, 'bin')
-#vtkSurf.addSources( makeVtkSurface )
-#vtkSurf.build()
+vtkSurf = ves_pkg.createProgram('makeVtkSurface' + env["PROGSUFFIX"], env, 'bin')
+vtkSurf.addSources( makeVtkSurface )
+vtkSurf.build()
 
 merge = ves_pkg.createProgram('mergeVertices' + env["PROGSUFFIX"], env, 'bin')
 merge.addSources( mergeVertices )
