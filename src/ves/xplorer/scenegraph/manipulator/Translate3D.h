@@ -53,7 +53,7 @@ namespace manipulator
 class TranslateAxis;
 
 /*!\file Translate3D.h
- * Translate1D API
+ * Translate3D API
  */
 
 /*!\class ves::xplorer::scenegraph::Translate3D

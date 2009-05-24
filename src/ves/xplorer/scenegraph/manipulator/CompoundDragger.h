@@ -51,7 +51,7 @@ namespace scenegraph
 namespace manipulator
 {
 /*!\file CompoundDragger.h
- * Dragger API
+ * CompoundDragger API
  */
 
 /*!\class ves::xplorer::scenegraph::CompoundDragger

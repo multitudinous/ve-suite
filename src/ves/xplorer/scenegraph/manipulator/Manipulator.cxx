@@ -139,6 +139,11 @@ void Manipulator::SetAutoScaleToScreen( bool autoScaleToScreen )
     m_autoTransform->setAutoScaleToScreen( autoScaleToScreen );
 }
 ////////////////////////////////////////////////////////////////////////////////
+void Manipulator::SetupDefaultDraggers()
+{
+    ;
+}
+////////////////////////////////////////////////////////////////////////////////
 /*
 void Manipulator::SetEnabledModes( TransformationMode::Enum value )
 {

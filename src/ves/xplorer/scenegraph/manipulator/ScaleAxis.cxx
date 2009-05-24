@@ -32,7 +32,7 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
 // --- VE-Suite Includes --- //
-#include <ves/xplorer/scenegraph/manipulator/TranslateAxis.h>
+#include <ves/xplorer/scenegraph/manipulator/ScaleAxis.h>
 
 // --- OSG Includes --- //
 #include <osg/Hint>
@@ -45,31 +45,30 @@
 using namespace ves::xplorer::scenegraph::manipulator;
 
 ////////////////////////////////////////////////////////////////////////////////
-TranslateAxis::TranslateAxis()
+ScaleAxis::ScaleAxis()
     :
     Dragger()
 {
     SetupDefaultGeometry();
 }
 ////////////////////////////////////////////////////////////////////////////////
-TranslateAxis::TranslateAxis(
-    const TranslateAxis& translateAxis, const osg::CopyOp& copyop )
+ScaleAxis::ScaleAxis(
+    const ScaleAxis& scaleAxis, const osg::CopyOp& copyop )
     :
-    Dragger( translateAxis, copyop )
+    Dragger( scaleAxis, copyop )
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-TranslateAxis::~TranslateAxis()
+ScaleAxis::~ScaleAxis()
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void TranslateAxis::SetupDefaultGeometry()
+void ScaleAxis::SetupDefaultGeometry()
 {
-    double coneRadius = 0.05;
-    double coneHeight = 0.2;
-    osg::Vec3 coneCenter( coneHeight * 0.25, 0.0, 0.0 );
+    double boxWidth = 0.1;
+    osg::Vec3 boxCenter( boxWidth * 0.5, 0.0, 0.0 );
 
     osg::ref_ptr< osg::Geode > geode = new osg::Geode();
 
@@ -91,23 +90,12 @@ void TranslateAxis::SetupDefaultGeometry()
             new osg::DrawArrays( osg::PrimitiveSet::LINES, 0, 2 ) );
         geode->addDrawable( geometry.get() );
     
-        //Create a positive cone
-        (*vertices)[ 1 ].x() -= coneHeight;
-        osg::ref_ptr< osg::Cone > cone =
-            new osg::Cone(
-                (*vertices)[ 1 ] + coneCenter, coneRadius, coneHeight );
-        cone->setRotation( rotation );
-        geode->addDrawable( new osg::ShapeDrawable( cone.get() ) );
-
-        //Create an invisible cylinder for picking the positive line
-        osg::ref_ptr< osg::Cylinder > cylinder =
-            new osg::Cylinder(
-                (*vertices)[ 1 ] * 0.5, coneRadius, (*vertices)[ 1 ].x() );
-        cylinder->setRotation( rotation );
-        osg::ref_ptr< osg::Drawable > drawable =
-            new osg::ShapeDrawable( cylinder.get() );
-        SetDrawableToAlwaysCull( *drawable.get() );
-        geode->addDrawable( drawable.get() );
+        //Create a positive box
+        (*vertices)[ 1 ].x() -= boxWidth;
+        osg::ref_ptr< osg::Box > box =
+            new osg::Box( (*vertices)[ 1 ] + boxCenter, boxWidth );
+        box->setRotation( rotation );
+        geode->addDrawable( new osg::ShapeDrawable( box.get() ) );
     }
 
     /*
@@ -168,6 +156,15 @@ void TranslateAxis::SetupDefaultGeometry()
         new osg::Hint( GL_LINE_SMOOTH_HINT, GL_NICEST );
     stateSet->setAttributeAndModes( hint.get(),
         osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+
+    /*
+    stateSet->setMode( GL_POLYGON_SMOOTH,
+        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+    osg::ref_ptr< osg::Hint > hint =
+        new osg::Hint( GL_POLYGON_SMOOTH_HINT, GL_NICEST );
+    stateSet->setAttributeAndModes( hint.get(),
+        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+    */
 
     //Add lines and cones to the scene
     addChild( geode.get() );

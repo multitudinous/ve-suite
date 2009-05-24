@@ -57,8 +57,7 @@
 #include <ves/xplorer/scenegraph/physics/CharacterController.h>
 
 #ifdef TRANSFORM_MANIPULATOR
-#include <ves/xplorer/scenegraph/manipulator/Manipulator.h>
-#include <ves/xplorer/scenegraph/manipulator/Translate3D.h>
+#include <ves/xplorer/scenegraph/manipulator/TransformManipulator.h>
 #endif //TRANSFORM_MANIPULATOR
 
 // --- OSG Includes --- //
@@ -185,12 +184,9 @@ void SceneManager::InitScene()
 
     //A test scene manipulator for now
 #ifdef TRANSFORM_MANIPULATOR
-    osg::ref_ptr< manipulator::Manipulator > manipulator =
-        new manipulator::Manipulator();
-    osg::ref_ptr< manipulator::Translate3D > translate3D =
-        new manipulator::Translate3D();
-    manipulator->addChild( translate3D.get() );
-    m_manipulatorRoot->addChild( manipulator.get() );
+    osg::ref_ptr< manipulator::TransformManipulator > transformManipulator =
+        new manipulator::TransformManipulator();
+    m_manipulatorRoot->addChild( transformManipulator.get() );
 #endif //TRANSFORM_MANIPULATOR
 
 #ifdef VE_SOUND

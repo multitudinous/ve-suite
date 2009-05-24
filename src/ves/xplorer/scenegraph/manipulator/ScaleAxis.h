@@ -31,8 +31,8 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
-#ifndef TRANSLATE_AXIS_H
-#define TRANSLATE_AXIS_H
+#ifndef SCALE_AXIS_H
+#define SCALE_AXIS_H
 
 // --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
@@ -50,30 +50,30 @@ namespace scenegraph
 {
 namespace manipulator
 {
-/*!\file TranslateAxis.h
- * TranslateAxis API
+/*!\file ScaleAxis.h
+ * ScaleAxis API
  */
 
-/*!\class ves::xplorer::scenegraph::TranslateAxis
+/*!\class ves::xplorer::scenegraph::ScaleAxis
  *
  */
-class VE_SCENEGRAPH_EXPORTS TranslateAxis : public Dragger
+class VE_SCENEGRAPH_EXPORTS ScaleAxis : public Dragger
 {
 public:
     ///
-    TranslateAxis();
+    ScaleAxis();
 
     ///Copy constructor using CopyOp to manage deep vs shallow copy
-    TranslateAxis(
-        const TranslateAxis& translateAxis,
+    ScaleAxis(
+        const ScaleAxis& scaleAxis,
         const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
 
     ///
-    META_Node( ves::xplorer::scenegraph::manipulator, TranslateAxis );
+    META_Node( ves::xplorer::scenegraph::manipulator, ScaleAxis );
 
 protected:
     ///
-    virtual ~TranslateAxis();
+    virtual ~ScaleAxis();
 
     ///
     virtual void SetupDefaultGeometry();
@@ -87,4 +87,4 @@ private:
 } //end xplorer
 } //end ves
 
-#endif //TRANSLATE_AXIS_H
+#endif //SCALE_AXIS_H

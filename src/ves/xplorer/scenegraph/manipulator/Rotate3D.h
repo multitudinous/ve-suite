@@ -31,16 +31,16 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
-#ifndef TRANSLATE_AXIS_H
-#define TRANSLATE_AXIS_H
+#ifndef ROTATE_3D_H
+#define ROTATE_3D_H
 
 // --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
 
-#include <ves/xplorer/scenegraph/manipulator/Dragger.h>
+#include <ves/xplorer/scenegraph/manipulator/CompoundDragger.h>
 
 // --- OSG Includes --- //
-
+#include <osg/ref_ptr>
 
 namespace ves
 {
@@ -50,36 +50,45 @@ namespace scenegraph
 {
 namespace manipulator
 {
-/*!\file TranslateAxis.h
- * TranslateAxis API
+class RotateAxis;
+
+/*!\file Rotate3D.h
+ * Rotate3D API
  */
 
-/*!\class ves::xplorer::scenegraph::TranslateAxis
+/*!\class ves::xplorer::scenegraph::Rotate3D
  *
  */
-class VE_SCENEGRAPH_EXPORTS TranslateAxis : public Dragger
+class VE_SCENEGRAPH_EXPORTS Rotate3D : public CompoundDragger
 {
 public:
     ///
-    TranslateAxis();
+    Rotate3D();
 
     ///Copy constructor using CopyOp to manage deep vs shallow copy
-    TranslateAxis(
-        const TranslateAxis& translateAxis,
+    Rotate3D(
+        const Rotate3D& rotate3D,
         const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
 
     ///
-    META_Node( ves::xplorer::scenegraph::manipulator, TranslateAxis );
+    META_Node( ves::xplorer::scenegraph::manipulator, Rotate3D );
 
 protected:
     ///
-    virtual ~TranslateAxis();
+    virtual ~Rotate3D();
 
     ///
     virtual void SetupDefaultGeometry();
 
 private:
-
+    ///
+    osg::ref_ptr< RotateAxis > m_xRotateAxis;
+    
+    ///
+    osg::ref_ptr< RotateAxis > m_yRotateAxis;
+    
+    ///
+    osg::ref_ptr< RotateAxis > m_zRotateAxis;
 
 };
 } //end manipulator
@@ -87,4 +96,4 @@ private:
 } //end xplorer
 } //end ves
 
-#endif //TRANSLATE_AXIS_H
+#endif //ROTATE_3D_H

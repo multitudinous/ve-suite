@@ -135,6 +135,10 @@ protected:
     ///Destructor
     virtual ~Manipulator();
 
+    ///
+    ///Can't use pure virtual with META_Node define
+    virtual void SetupDefaultDraggers();// = 0;
+
     /*
     ///
     TransformationMode::Enum m_activeMode;
