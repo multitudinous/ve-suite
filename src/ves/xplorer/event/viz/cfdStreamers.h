@@ -104,7 +104,7 @@ private:
     float propagationTime;
     float integrationStepLength;
     float lineDiameter;
-    float arrowDiameter;
+    double arrowDiameter;
 
     unsigned int xValue;///>number of points for x direction
     unsigned int yValue;///>number of points for y direction

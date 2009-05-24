@@ -48,7 +48,7 @@
 #include <vtkActor.h>
 #include <vtkPolyDataMapper.h>
 #include <vtkProperty.h>
-#include <vtkPolyDataWriter.h>
+#include <vtkXMLPolyDataWriter.h>
 #include <vtkConeSource.h>
 #include <vtkStreamPoints.h>
 #include <vtkGlyph3D.h>
@@ -58,6 +58,10 @@
 #include <vtkTriangleFilter.h>
 #include <vtkPolyDataNormals.h>
 #include <vtkCellDataToPointData.h>
+#include <vtkMaskPoints.h>
+#include <vtkThresholdPoints.h>
+#include <vtkCellArray.h>
+#include <vtkCleanPolyData.h>
 
 #include <ves/xplorer/Debug.h>
 
@@ -123,9 +127,9 @@ void cfdStreamers::Update()
     << " Integration Direction : " << integrationDirection
     << std::endl << vprDEBUG_FLUSH;
 
-    tubeFilter->SetRadius( lineDiameter );
-    tubeFilter->SetNumberOfSides( 3 );
-    tubeFilter->SidesShareVerticesOn();
+    //tubeFilter->SetRadius( lineDiameter );
+    //tubeFilter->SetNumberOfSides( 3 );
+    //tubeFilter->SidesShareVerticesOn();
 
     if( propagationTime == -1 )
     {
@@ -148,47 +152,22 @@ void cfdStreamers::Update()
     streamTracer->SetMaximumIntegrationStep( integrationStepLength );
 
     // Stream Points Section
-    vtkStreamPoints* streamPoints = 0;
     vtkConeSource* cone = 0;
     vtkGlyph3D* cones = 0;
     vtkAppendPolyData* append = 0;
     vtkPolyDataNormals* normals = 0;
 
-    if( streamArrows )
-    {
-        streamPoints = vtkStreamPoints::New();
-        streamPoints->SetInputConnection( c2p->GetOutputPort() );
-        streamPoints->SetSource( seedPoints );
-        //streamPoints->SetTimeIncrement( stepLength * 500 );
-        streamPoints->SetMaximumPropagationTime( propagationTime );
-        streamPoints->SetIntegrationStepLength( integrationStepLength );
-        streamPoints->SetIntegrator( integ );
-        streamPoints->SpeedScalarsOff();
-    }
-
     if( integrationDirection == 0 )
     {
         streamTracer->SetIntegrationDirectionToBoth();
-        if( streamArrows )
-        {
-            streamPoints->SetIntegrationDirectionToIntegrateBothDirections();
-        }
     }
     else if( integrationDirection == 1 )
     {
         streamTracer->SetIntegrationDirectionToForward();
-        if( streamArrows )
-        {
-            streamPoints->SetIntegrationDirectionToForward();
-        }
     }
     else if( integrationDirection == 2 )
     {
         streamTracer->SetIntegrationDirectionToBackward();
-        if( streamArrows )
-        {
-            streamPoints->SetIntegrationDirectionToBackward();
-        }
     }
 
     streamTracer->SetSource( seedPoints );
@@ -204,23 +183,63 @@ void cfdStreamers::Update()
 
     if( streamArrows )
     {
+        vtkCleanPolyData* cleanPD = vtkCleanPolyData::New();
+        cleanPD->PointMergingOn();
+        cleanPD->SetInputConnection( streamTracer->GetOutputPort() );
+        /*{
+            vtkXMLPolyDataWriter* writer = vtkXMLPolyDataWriter::New();
+            writer->SetInput( ( vtkPolyData* ) cleanPD->GetOutput() );
+            //writer->SetDataModeToAscii();
+            writer->SetFileName( "teststreamersclean.vtk" );
+            writer->Write();
+            writer->Delete();
+        }*/
+        
+        vtkMaskPoints* ptmask = vtkMaskPoints::New();
+        ptmask->RandomModeOff();
+        ptmask->SetInputConnection( cleanPD->GetOutputPort() );
+        ptmask->SetOnRatio( 2 );
+        cleanPD->Delete();
+
         cone = vtkConeSource::New();
         cone->SetResolution( 5 );
 
         cones = vtkGlyph3D::New();
-        cones->SetInputConnection( streamPoints->GetOutputPort() );
-        cones->SetSource( cone->GetOutput() );
+        cones->SetInputConnection( 0, ptmask->GetOutputPort() );
+        cones->SetInputConnection( 1, cone->GetOutputPort() );
+        //cones->SetSource( cone->GetOutput() );
         cones->SetScaleFactor( arrowDiameter );
         //cones->SetScaleModeToScaleByVector();
         cones->SetScaleModeToDataScalingOff();
+        //cones->SetColorModeToColorByScalar();
         cones->SetVectorModeToUseVector();
         //cones->GetOutput()->ReleaseDataFlagOn();
-
+        cones->SetInputArrayToProcess( 1, 0, 0,
+                                             vtkDataObject::FIELD_ASSOCIATION_POINTS, 
+                                             GetActiveDataSet()->GetActiveVectorName().c_str() );
+        /*cones->SetInputArrayToProcess( 0, 0, 0,
+                                      vtkDataObject::FIELD_ASSOCIATION_POINTS, 
+                                      GetActiveDataSet()->GetActiveScalarName().c_str() );
+        cones->SetInputArrayToProcess( 3, 0, 0,
+                                      vtkDataObject::FIELD_ASSOCIATION_POINTS, 
+                                      GetActiveDataSet()->GetActiveScalarName().c_str() );*/
+        ptmask->Delete();
+        
         append = vtkAppendPolyData::New();
+        //append->SetInputConnection( streamTracer->GetOutputPort() );
+        //append->AddInputConnection( cones->GetOutputPort() );
         append->AddInput( streamTracer->GetOutput() );
         append->AddInput( cones->GetOutput() );
-        append->Update();
-
+        /*{
+            vtkXMLPolyDataWriter* writer = vtkXMLPolyDataWriter::New();
+            writer->SetInput( ( vtkPolyData* ) append->GetOutput() );
+            //writer->SetDataModeToAscii();
+            writer->SetFileName( "teststreamersapp.vtk" );
+            writer->Write();
+            writer->Delete();
+        }*/
+        
+        
         normals = vtkPolyDataNormals::New();
         normals->SetInputConnection( append->GetOutputPort() );
         normals->SplittingOff();
@@ -229,7 +248,7 @@ void cfdStreamers::Update()
         normals->ComputePointNormalsOn();
         normals->ComputeCellNormalsOff();
         normals->NonManifoldTraversalOff();
-
+        
         mapper->SetInputConnection( normals->GetOutputPort() );
     }
     else
@@ -244,6 +263,7 @@ void cfdStreamers::Update()
     mapper->UseLookupTableScalarRangeOn();
     mapper->SelectColorArray( GetActiveDataSet()->
         GetActiveScalarName().c_str() );
+
     vtkActor* temp = vtkActor::New();
     temp->SetMapper( mapper );
     temp->GetProperty()->SetSpecularPower( 20.0f );
@@ -251,7 +271,8 @@ void cfdStreamers::Update()
     //test to see if there is enough memory, if not, filters are deleted
     try
     {
-        osg::ref_ptr< ves::xplorer::scenegraph::Geode > tempGeode = new ves::xplorer::scenegraph::Geode();
+        osg::ref_ptr< ves::xplorer::scenegraph::Geode > tempGeode = 
+            new ves::xplorer::scenegraph::Geode();
         tempGeode->TranslateToGeode( temp );
         //tempGeode->StreamLineToGeode( temp );
 
@@ -273,7 +294,6 @@ void cfdStreamers::Update()
     if( streamArrows )
     {
         // Clean Up Now...
-        streamPoints->Delete();
         append->Delete();
         cone->Delete();
         cones->Delete();
@@ -387,15 +407,15 @@ void cfdStreamers::UpdateCommand()
     lineDiameter = ( diameter + 110 ) * 0.005 *  20;
 
     vprDEBUG( vesDBG, 1 ) << "|\tNew Streamline Diameter : "
-    << lineDiameter << std::endl << vprDEBUG_FLUSH;
-    arrowDiameter = localLineDiameter * 60.0f;
-    vprDEBUG( vesDBG, 1 ) << "|\tNew Arrow Diameter : "
-    << arrowDiameter << std::endl << vprDEBUG_FLUSH;
+        << lineDiameter << std::endl << vprDEBUG_FLUSH;
 
     /////////////////////
-    //activeModelDVP = objectCommand->GetDataValuePair( "Sphere/Arrow/Particle Size" );
-    //double sphereArrow = 1.0f;
-    //activeModelDVP->GetData( streamDiamter );
+    activeModelDVP = 
+        objectCommand->GetDataValuePair( "Sphere/Arrow/Particle Size" );
+    activeModelDVP->GetData( arrowDiameter );
+    arrowDiameter = localLineDiameter * 60.0f * arrowDiameter;
+    vprDEBUG( vesDBG, 1 ) << "|\tNew Arrow Diameter : "
+        << arrowDiameter << std::endl << vprDEBUG_FLUSH;
 
     /////////////////////
     activeModelDVP = objectCommand->GetDataValuePair( "Use Last Seed Pt" );
