@@ -62,6 +62,7 @@
 #include <vtkThresholdPoints.h>
 #include <vtkCellArray.h>
 #include <vtkCleanPolyData.h>
+#include <vtkPointData.h>
 
 #include <ves/xplorer/Debug.h>
 
@@ -151,12 +152,6 @@ void cfdStreamers::Update()
     // typically < 1
     streamTracer->SetMaximumIntegrationStep( integrationStepLength );
 
-    // Stream Points Section
-    vtkConeSource* cone = 0;
-    vtkGlyph3D* cones = 0;
-    vtkAppendPolyData* append = 0;
-    vtkPolyDataNormals* normals = 0;
-
     if( integrationDirection == 0 )
     {
         streamTracer->SetIntegrationDirectionToBoth();
@@ -175,14 +170,15 @@ void cfdStreamers::Update()
     streamTracer->SetInputArrayToProcess( 0, 0, 0,
        vtkDataObject::FIELD_ASSOCIATION_POINTS, 
        GetActiveDataSet()->GetActiveVectorName().c_str() );
-    // Good Test code to see if you are actually getting streamlines
-    /*vtkPolyDataWriter *writer = vtkPolyDataWriter::New();
-    writer->SetInput( ( vtkPolyData * ) stream->GetOutput() );
-    writer->SetFileName( "teststreamers.vtk" );
-    writer->Write();*/
 
     if( streamArrows )
     {
+        // Stream Points Section
+        vtkConeSource* cone = 0;
+        vtkGlyph3D* cones = 0;
+        vtkAppendPolyData* append = 0;
+        vtkPolyDataNormals* normals = 0;
+
         vtkCleanPolyData* cleanPD = vtkCleanPolyData::New();
         cleanPD->PointMergingOn();
         cleanPD->SetInputConnection( streamTracer->GetOutputPort() );
@@ -217,19 +213,51 @@ void cfdStreamers::Update()
         cones->SetInputArrayToProcess( 1, 0, 0,
                                              vtkDataObject::FIELD_ASSOCIATION_POINTS, 
                                              GetActiveDataSet()->GetActiveVectorName().c_str() );
-        /*cones->SetInputArrayToProcess( 0, 0, 0,
+        cones->SetInputArrayToProcess( 0, 0, 0,
                                       vtkDataObject::FIELD_ASSOCIATION_POINTS, 
                                       GetActiveDataSet()->GetActiveScalarName().c_str() );
         cones->SetInputArrayToProcess( 3, 0, 0,
                                       vtkDataObject::FIELD_ASSOCIATION_POINTS, 
-                                      GetActiveDataSet()->GetActiveScalarName().c_str() );*/
+                                      GetActiveDataSet()->GetActiveScalarName().c_str() );
         ptmask->Delete();
         
+        normals = vtkPolyDataNormals::New();
+        normals->SetInputConnection( cones->GetOutputPort() );
+        normals->SplittingOff();
+        normals->ConsistencyOn();
+        normals->AutoOrientNormalsOn();
+        normals->ComputePointNormalsOn();
+        normals->ComputeCellNormalsOff();
+        normals->NonManifoldTraversalOff();
+        normals->Update();
+        /*{
+            vtkXMLPolyDataWriter* writer = vtkXMLPolyDataWriter::New();
+            writer->SetInput( ( vtkPolyData* ) normals->GetOutput() );
+            //writer->SetDataModeToAscii();
+            writer->SetFileName( "teststreamercones.vtk" );
+            writer->Write();
+            writer->Delete();
+        }*/
+        normals->GetOutput()->GetPointData()->SetActiveNormals( "Normals" );
+        normals->GetOutput()->GetPointData()->SetActiveScalars( GetActiveDataSet()->GetActiveScalarName().c_str() );
+        normals->GetOutput()->GetPointData()->SetActiveVectors( GetActiveDataSet()->GetActiveVectorName().c_str() );
+
+        streamTracer->GetOutput()->GetPointData()->SetActiveNormals( "Normals" );
+        streamTracer->GetOutput()->GetPointData()->SetActiveScalars( GetActiveDataSet()->GetActiveScalarName().c_str() );
+        streamTracer->GetOutput()->GetPointData()->SetActiveVectors( GetActiveDataSet()->GetActiveVectorName().c_str() );
+
         append = vtkAppendPolyData::New();
-        //append->SetInputConnection( streamTracer->GetOutputPort() );
-        //append->AddInputConnection( cones->GetOutputPort() );
+        //append->DebugOn();
         append->AddInput( streamTracer->GetOutput() );
-        append->AddInput( cones->GetOutput() );
+        /*{
+            vtkXMLPolyDataWriter* writer = vtkXMLPolyDataWriter::New();
+            writer->SetInput( ( vtkPolyData* ) streamTracer->GetOutput() );
+            //writer->SetDataModeToAscii();
+            writer->SetFileName( "teststreamersstream.vtk" );
+            writer->Write();
+            writer->Delete();
+        }*/
+        append->AddInput( normals->GetOutput() );
         /*{
             vtkXMLPolyDataWriter* writer = vtkXMLPolyDataWriter::New();
             writer->SetInput( ( vtkPolyData* ) append->GetOutput() );
@@ -238,18 +266,25 @@ void cfdStreamers::Update()
             writer->Write();
             writer->Delete();
         }*/
+
+        vtkPolyDataNormals* overallNormals = vtkPolyDataNormals::New();
+        overallNormals->SetInputConnection( append->GetOutputPort() );
+        overallNormals->SplittingOff();
+        overallNormals->ConsistencyOn();
+        overallNormals->AutoOrientNormalsOn();
+        overallNormals->ComputePointNormalsOn();
+        overallNormals->ComputeCellNormalsOff();
+        overallNormals->NonManifoldTraversalOff();
+        //overallNormals->Update();
         
+        mapper->SetInputConnection( overallNormals->GetOutputPort() );
         
-        normals = vtkPolyDataNormals::New();
-        normals->SetInputConnection( append->GetOutputPort() );
-        normals->SplittingOff();
-        normals->ConsistencyOn();
-        normals->AutoOrientNormalsOn();
-        normals->ComputePointNormalsOn();
-        normals->ComputeCellNormalsOff();
-        normals->NonManifoldTraversalOff();
-        
-        mapper->SetInputConnection( normals->GetOutputPort() );
+        // Stream Points Section
+        cone->Delete();
+        cones->Delete();
+        append->Delete();
+        normals->Delete();
+        overallNormals->Delete();
     }
     else
     {
@@ -286,19 +321,11 @@ void cfdStreamers::Update()
         mapper->Delete();
         mapper = vtkPolyDataMapper::New();
         vprDEBUG( vesDBG, 0 ) << "|\tMemory allocation failure : cfdStreamers "
-        << std::endl << vprDEBUG_FLUSH;
+            << std::endl << vprDEBUG_FLUSH;
     }
 
     temp->Delete();
     c2p->Delete();
-    if( streamArrows )
-    {
-        // Clean Up Now...
-        append->Delete();
-        cone->Delete();
-        cones->Delete();
-        normals->Delete();
-    }
 
     vprDEBUG( vesDBG, 0 ) << "|\tcfdStreamers::Update End" << std::endl << vprDEBUG_FLUSH;
 }
