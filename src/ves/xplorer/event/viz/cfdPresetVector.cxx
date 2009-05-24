@@ -52,6 +52,7 @@
 #include <vtkProperty.h>
 #include <vtkCellDataToPointData.h>
 #include <vtkPassThroughFilter.h>
+#include <vtkXMLPolyDataWriter.h>
 
 using namespace ves::xplorer;
 using namespace ves::xplorer::scenegraph;
@@ -165,6 +166,15 @@ void cfdPresetVector::Update( void )
         this->SetGlyphAttributes();
         //this->glyph->Update();
 
+        /*{
+            vtkXMLPolyDataWriter* writer = vtkXMLPolyDataWriter::New();
+            writer->SetInput( ( vtkPolyData* ) glyph->GetOutput() );
+            writer->SetDataModeToAscii();
+            writer->SetFileName( "teststreamervecglyphs.vtk" );
+            writer->Write();
+            writer->Delete();
+        }*/
+        
         mapper->SetInputConnection( glyph->GetOutputPort() );
         mapper->SetScalarModeToUsePointFieldData();
         mapper->UseLookupTableScalarRangeOn();
