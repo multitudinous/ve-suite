@@ -352,7 +352,15 @@ void cfdTranslatorToVTK::ExtractBaseName( std::string fileName )
 #else
     size_t slash = outfileMinusExtension.rfind( "/" );
 #endif
-    _baseFileName = std::string( outfileMinusExtension, slash + 1, period );
+    if( slash == 0 )
+    {
+        _baseFileName = std::string( outfileMinusExtension, 0, period );
+    }
+    else
+    {
+        _baseFileName = std::string( outfileMinusExtension, slash + 1, period );
+    }
+
     AddBaseName( _baseFileName );
     SetFileName( _baseFileName );
 }

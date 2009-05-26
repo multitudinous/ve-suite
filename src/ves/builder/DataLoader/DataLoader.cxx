@@ -139,7 +139,14 @@ vtkDataObject* DataLoader::GetVTKDataSet( int argc, char** argv )
         activeLoader->AddFoundFile( inputDataName );
     }
     activeLoader->TranslateToVTK( argc, argv );
-    vtkDataObject* tempDataset = activeLoader->GetVTKFile( 0 );
+    vtkDataObject* tempDataset = 0;
+    std::string writeOption;
+    translatorMap[ "dcm" ]->_extractOptionFromCmdLine( argc, argv, "-w", writeOption );
+    if( writeOption != "file" )
+    {
+        tempDataset = activeLoader->GetVTKFile( 0 );
+    }
+
     return tempDataset;
 }
 ///////////////////////////////////////////////////////////////////////////
