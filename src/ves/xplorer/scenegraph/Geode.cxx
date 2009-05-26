@@ -108,7 +108,14 @@ void Geode::StreamLineToGeode( vtkActor* actor )
 ////////////////////////////////////////////////////////////////////////////////
 osg::Group* Geode::GetParent( unsigned int position )
 {
-    return getParent( position );
+    if( getNumParents() > 0 )
+    {
+        return getParent( position );
+    }
+    else
+    {
+        return 0;
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Geode::traverse( osg::NodeVisitor& nv )
