@@ -369,25 +369,28 @@ void cfdStreamers::UpdateCommand()
     activeModelDVP = objectCommand->GetDataValuePair( "Integration Direction" );
     std::string intDirection;
     activeModelDVP->GetData( intDirection );
+    
+    vprDEBUG( vesDBG, 0 ) << "|\tStreamline settings"
+        << std::endl << vprDEBUG_FLUSH;
 
     if( !intDirection.compare( "backward" ) )
     {
-        vprDEBUG( vesDBG, 0 ) << " BACKWARD_INTEGRATION"
-        << std::endl << vprDEBUG_FLUSH;
+        vprDEBUG( vesDBG, 0 ) << "|\t\tBACKWARD_INTEGRATION"
+            << std::endl << vprDEBUG_FLUSH;
 
         SetIntegrationDirection( 2 );
     }
     else if( !intDirection.compare( "forward" ) )
     {
-        vprDEBUG( vesDBG, 0 ) << " FORWARD_INTEGRATION"
-        << std::endl << vprDEBUG_FLUSH;
+        vprDEBUG( vesDBG, 0 ) << "|\t\tFORWARD_INTEGRATION"
+            << std::endl << vprDEBUG_FLUSH;
 
         SetIntegrationDirection( 1 );
     }
     else if( !intDirection.compare( "both directions" ) )
     {
-        vprDEBUG( vesDBG, 0 ) << " TWO_DIRECTION_INTEGRATION"
-        << std::endl << vprDEBUG_FLUSH;
+        vprDEBUG( vesDBG, 0 ) << "|\t\tTWO_DIRECTION_INTEGRATION"
+            << std::endl << vprDEBUG_FLUSH;
 
         SetIntegrationDirection( 0 );
     }
@@ -400,33 +403,33 @@ void cfdStreamers::UpdateCommand()
     activeModelDVP = objectCommand->GetDataValuePair( "Use Stream Arrows" );
     unsigned int opacity;
     activeModelDVP->GetData( opacity );
-    vprDEBUG( vesDBG, 0 ) << " STREAMLINE_ARROW\t" << opacity
-    << std::endl << vprDEBUG_FLUSH;
+    vprDEBUG( vesDBG, 0 ) << "|\t\tSTREAMLINE_ARROW\t" << opacity
+        << std::endl << vprDEBUG_FLUSH;
     streamArrows = opacity;
 
     /////////////////////
     activeModelDVP = objectCommand->GetDataValuePair( "Integration Step Size" );
     double contourLOD;
     activeModelDVP->GetData( contourLOD );
-    vprDEBUG( vesDBG, 0 ) << " CHANGE_INT_STEP_LENGTH\t"
-    << contourLOD << std::endl << vprDEBUG_FLUSH;
+    vprDEBUG( vesDBG, 0 ) << "|\t\tCHANGE_INT_STEP_LENGTH\t"
+        << contourLOD << std::endl << vprDEBUG_FLUSH;
     SetIntegrationStepLength( static_cast< int >( contourLOD ) );
 
     /////////////////////
     activeModelDVP = objectCommand->GetDataValuePair( "Propagation Time" );
     double tempPropagationTime = 1.0f;
     activeModelDVP->GetData( tempPropagationTime );
-    vprDEBUG( vesDBG, 0 ) << " CHANGE_PROPAGATION_TIME\t"
-    << tempPropagationTime
-    << std::endl << vprDEBUG_FLUSH;
+    vprDEBUG( vesDBG, 0 ) << "|\t\tCHANGE_PROPAGATION_TIME\t"
+        << tempPropagationTime
+        << std::endl << vprDEBUG_FLUSH;
     SetPropagationTime( tempPropagationTime );
 
     /////////////////////
     activeModelDVP = objectCommand->GetDataValuePair( "Diameter" );
     double streamDiamter = 1.0f;
     activeModelDVP->GetData( streamDiamter );
-    vprDEBUG( vesDBG, 0 ) << " STREAMLINE_DIAMETER\t"
-    << streamDiamter << std::endl << vprDEBUG_FLUSH;
+    vprDEBUG( vesDBG, 0 ) << "|\t\tSTREAMLINE_DIAMETER\t"
+        << streamDiamter << std::endl << vprDEBUG_FLUSH;
     // diameter is obtained from gui, -100 < vectorScale < 100
     // we use a function y = exp(x), that has y(0) = 1 and y'(0) = 1
     // convert range to -2.5 < x < 2.5, and compute the exponent...
@@ -438,7 +441,7 @@ void cfdStreamers::UpdateCommand()
     // note that multiplying by 0.005 is the same as dividing by 200, or the range
     lineDiameter = ( diameter + 110 ) * 0.005 *  20;
 
-    vprDEBUG( vesDBG, 1 ) << "|\tNew Streamline Diameter : "
+    vprDEBUG( vesDBG, 1 ) << "|\t\tNew Streamline Diameter : "
         << lineDiameter << std::endl << vprDEBUG_FLUSH;
 
     /////////////////////
@@ -446,7 +449,7 @@ void cfdStreamers::UpdateCommand()
         objectCommand->GetDataValuePair( "Sphere/Arrow/Particle Size" );
     activeModelDVP->GetData( arrowDiameter );
     arrowDiameter = localLineDiameter * 60.0f * arrowDiameter;
-    vprDEBUG( vesDBG, 1 ) << "|\tNew Arrow Diameter : "
+    vprDEBUG( vesDBG, 1 ) << "|\t\tNew Arrow Diameter : "
         << arrowDiameter << std::endl << vprDEBUG_FLUSH;
 
     /////////////////////
@@ -462,31 +465,31 @@ void cfdStreamers::UpdateCommand()
     if( activeModelDVP )
     {
         activeModelDVP->GetData( xMaxBB );
-        vprDEBUG( vesDBG, 0 ) << "|\txMaxBB : " << xMaxBB << std::endl << vprDEBUG_FLUSH;
+        vprDEBUG( vesDBG, 0 ) << "|\t\txMaxBB : " << xMaxBB << std::endl << vprDEBUG_FLUSH;
         activeModelDVP = objectCommand->GetDataValuePair( "Max_Y_BB" );
         activeModelDVP->GetData( yMaxBB );
-        vprDEBUG( vesDBG, 0 ) << "|\tyMaxBB : " << yMaxBB << std::endl << vprDEBUG_FLUSH;
+        vprDEBUG( vesDBG, 0 ) << "|\t\tyMaxBB : " << yMaxBB << std::endl << vprDEBUG_FLUSH;
         activeModelDVP = objectCommand->GetDataValuePair( "Max_Z_BB" );
         activeModelDVP->GetData( zMaxBB );
-        vprDEBUG( vesDBG, 0 ) << "|\tzMaxBB : " << zMaxBB << std::endl << vprDEBUG_FLUSH;
+        vprDEBUG( vesDBG, 0 ) << "|\t\tzMaxBB : " << zMaxBB << std::endl << vprDEBUG_FLUSH;
         activeModelDVP = objectCommand->GetDataValuePair( "Min_X_BB" );
         activeModelDVP->GetData( xMinBB );
-        vprDEBUG( vesDBG, 0 ) << "|\txMinBB : " << xMinBB << std::endl << vprDEBUG_FLUSH;
+        vprDEBUG( vesDBG, 0 ) << "|\t\txMinBB : " << xMinBB << std::endl << vprDEBUG_FLUSH;
         activeModelDVP = objectCommand->GetDataValuePair( "Min_Y_BB" );
         activeModelDVP->GetData( yMinBB );
-        vprDEBUG( vesDBG, 0 ) << "|\tyMinBB : " << yMinBB << std::endl << vprDEBUG_FLUSH;
+        vprDEBUG( vesDBG, 0 ) << "|\t\tyMinBB : " << yMinBB << std::endl << vprDEBUG_FLUSH;
         activeModelDVP = objectCommand->GetDataValuePair( "Min_Z_BB" );
         activeModelDVP->GetData( zMinBB );
-        vprDEBUG( vesDBG, 0 ) << "|\tzMinBB : " << zMinBB << std::endl << vprDEBUG_FLUSH;
+        vprDEBUG( vesDBG, 0 ) << "|\t\tzMinBB : " << zMinBB << std::endl << vprDEBUG_FLUSH;
         activeModelDVP = objectCommand->GetDataValuePair( "Num_X_Points" );
         activeModelDVP->GetData( xValue );
-        vprDEBUG( vesDBG, 0 ) << "|\tX Points : " << xValue << std::endl << vprDEBUG_FLUSH;
+        vprDEBUG( vesDBG, 0 ) << "|\t\tX Points : " << xValue << std::endl << vprDEBUG_FLUSH;
         activeModelDVP = objectCommand->GetDataValuePair( "Num_Y_Points" );
         activeModelDVP->GetData( yValue );
-        vprDEBUG( vesDBG, 0 ) << "|\tY Points : " << yValue << std::endl << vprDEBUG_FLUSH;
+        vprDEBUG( vesDBG, 0 ) << "|\t\tY Points : " << yValue << std::endl << vprDEBUG_FLUSH;
         activeModelDVP = objectCommand->GetDataValuePair( "Num_Z_Points" );
         activeModelDVP->GetData( zValue );
-        vprDEBUG( vesDBG, 0 ) << "|\tZ Points : " << zValue << std::endl << vprDEBUG_FLUSH;
+        vprDEBUG( vesDBG, 0 ) << "|\t\tZ Points : " << zValue << std::endl << vprDEBUG_FLUSH;
     }
 
     CreateSeedPoints();
