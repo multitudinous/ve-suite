@@ -76,7 +76,7 @@ Source: {#VEINSTALLHOME}\bin\velauncher.exe; DestDir: {app}\bin
 Source: {#MSREDISTRIBUTABLE}; DestDir: {tmp}
 
 [Icons]
-Name: {group}\{cm:UninstallProgram,{#MyAppName}}; Filename: {uninstallexe}
+Name: {group}\Uninstallers\{cm:UninstallProgram,{#MyAppName}}; Filename: {uninstallexe}
 Name: {group}\VE-Suite-{#VEVERSION}; Filename: {app}\bin\{#VELauncher}; WorkingDir: {app}; IconFilename: {app}\bin\installerImages\VE_icon.ico
 Name: {commondesktop}\VE-Suite-{#VEVERSION}; Filename: {app}\bin\velauncher.exe; WorkingDir: {app}; IconFilename: {app}\bin\installerImages\VE_icon.ico; Tasks: desktopVELauncherIcon
 
