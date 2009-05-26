@@ -336,6 +336,11 @@ vtkPolyData* cfdStreamers::GetStreamersOutput()
     return ( streamTracer->GetOutput() );
 }
 //////////////////////////////////////////////////////////////////////////////////
+double cfdStreamers::GetArrowDiameter()
+{
+    return arrowDiameter;
+}
+//////////////////////////////////////////////////////////////////////////////////
 void cfdStreamers::SetIntegrationDirection( int value )
 {
     integrationDirection = value;

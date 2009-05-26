@@ -76,6 +76,9 @@ public:
     ///Get polydata output
     vtkPolyData* GetStreamersOutput();
 
+    ///Get arrow diameter size 
+    double GetArrowDiameter();
+    
     ///Set the inttegration direction for the streamlines, 0=Both, 1=Forward, 2=Backward
     void SetIntegrationDirection( int );
 
@@ -84,8 +87,6 @@ public:
 
     ///Set integration setp length
     void SetIntegrationStepLength( int );
-
-    int cfdIso_value;
 
 private:
     ///Create seed points to be used by streamline algorithms

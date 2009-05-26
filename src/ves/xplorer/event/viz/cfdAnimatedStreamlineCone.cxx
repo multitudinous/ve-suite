@@ -69,8 +69,6 @@ cfdAnimatedStreamlineCone::cfdAnimatedStreamlineCone( void )
 
     //this->_sequence = new cfdTempAnimation();
     this->particleDiameter = 1.0f;
-    //streamDir = cfdAnimatedStreamlineCone::FORWARD;
-    streamDir = cfdAnimatedStreamlineCone::BOTH;
 }
 ////////////////////////////////////////////////////////////////////////////////
 cfdAnimatedStreamlineCone::~cfdAnimatedStreamlineCone()
@@ -139,43 +137,6 @@ void cfdAnimatedStreamlineCone::Update( void )
     int maxNpts = 0;
     int minNpts = 1000000;
 
-    int increment = 0;
-    if (( streamDir == cfdAnimatedStreamlineCone::FORWARD ) ||
-            ( streamDir == cfdAnimatedStreamlineCone::BACKWARD ) )
-    {
-        increment = 1;
-    }
-    else
-    {
-        increment = 2;
-    }
-
-    for( cellId = 0; cellId < numberOfStreamLines; cellId += increment )
-    {
-        points = this->polyData->GetCell( cellId )->GetPoints();
-        npts = points->GetNumberOfPoints();
-        if( streamDir == cfdAnimatedStreamlineCone::BOTH )
-        {
-            points = this->polyData->GetCell( cellId + 1 )->GetPoints();
-            npts += points->GetNumberOfPoints();
-        }
-
-        vprDEBUG( vesDBG, 1 ) << "|\t\tNumber of points in cell " << cellId
-            << " = " << npts << std::endl << vprDEBUG_FLUSH;
-        if( maxNpts < npts )
-            maxNpts = npts;
-
-        if( minNpts > npts )
-            minNpts = npts;
-    }
-
-    // Define the points at each integration time step
-    pointsArray = new vtkPoints*[ maxNpts ];
-    for( size_t i = 0; i < maxNpts;  i++ )
-    {
-        pointsArray[ i ] = vtkPoints::New();
-    }
-
     vtkPoints* points2 = 0;
     double x2[ 3 ];
     double x1[ 3 ];
@@ -183,6 +144,8 @@ void cfdAnimatedStreamlineCone::Update( void )
     {
         points = this->polyData->GetCell( cellId )->GetPoints();
         points->GetPoint( 0, x1 );
+        npts = points->GetNumberOfPoints();
+
         bool foundmatch = false;
         for( vtkIdType cellId2 = cellId + 1; cellId2 < numberOfStreamLines; ++cellId2 )
         {
@@ -197,9 +160,19 @@ void cfdAnimatedStreamlineCone::Update( void )
                 std::cout << " Found a match " << cellId << " " << cellId2 << std::endl;
                 m_streamlines.push_back( std::make_pair< vtkIdType, vtkIdType >( cellId, cellId2 ) );
                 foundmatch = true;
+                npts += points2->GetNumberOfPoints();
                 break;
             }
         }
+
+        vprDEBUG( vesDBG, 1 ) << "|\t\tNumber of points in cell " << cellId
+            << " = " << npts << std::endl << vprDEBUG_FLUSH;
+        if( maxNpts < npts )
+            maxNpts = npts;
+        
+        if( minNpts > npts )
+            minNpts = npts;
+        
         if( !foundmatch )
         {
             bool foundstandalone = true;
@@ -259,68 +232,19 @@ void cfdAnimatedStreamlineCone::Update( void )
         }
     }
 
-    double *x;
-    /*int forwardPoints = 0;
-    for( cellId = 0; cellId < numberOfStreamLines; cellId += increment )
+    // Define the points at each integration time step
+    pointsArray = new vtkPoints*[ maxNpts ];
+    for( size_t i = 0; i < maxNpts;  i++ )
     {
-        // For forward integrated points
-        if (( streamDir == cfdAnimatedStreamlineCone::FORWARD ) ||
-                ( streamDir == cfdAnimatedStreamlineCone::BOTH ) )
-        {
-            points = this->polyData->GetCell( cellId )->GetPoints();
-            forwardPoints = points->GetNumberOfPoints();
-            vprDEBUG( vesDBG, 1 )
-            << "|\t\tNumber of Forward points = " << forwardPoints
-            << std::endl << vprDEBUG_FLUSH;
-            for( i = 0; i < forwardPoints; i++ )
-            {
-                x = points->GetPoint( i );
-                if( i == 0 )
-                {
-                    vprDEBUG( vesDBG, 0 )
-                    << "|\t\tx[ " << i << " ] = " << x[ 0 ] << " : "
-                    << x[ 1 ] << " : " << x[ 2 ] << " " << cellId << std::endl << vprDEBUG_FLUSH;
-                }
-                vprDEBUG( vesDBG, 3 )
-                << "|\t\tx[ " << i << " ] = " << x[ 0 ] << " : "
-                << x[ 1 ] << " : " << x[ 2 ] << std::endl << vprDEBUG_FLUSH;
-                pointsArray[ i ]->InsertNextPoint( x );
-            }
-        }
+        pointsArray[ i ] = vtkPoints::New();
+    }
 
-        // For backward integrated points
-        if (( streamDir == cfdAnimatedStreamlineCone::BACKWARD ) ||
-                ( streamDir == cfdAnimatedStreamlineCone::BOTH ) )
-        {
-            points = this->polyData->GetCell( cellId + ( increment - 1 ) )->GetPoints();
-            npts = points->GetNumberOfPoints();
-            vprDEBUG( vesDBG, 1 ) << "|\t\tNumber of Backward points = " << npts
-            << std::endl << vprDEBUG_FLUSH;
-            for( i = npts - 1; i >= 0; i-- )
-            {
-                x = points->GetPoint( i );
-                if( i == 0 )
-                {
-                    vprDEBUG( vesDBG, 0 )
-                    << "|\t\tx[ " << i << " ] = " << x[ 0 ] << " : "
-                    << x[ 1 ] << " : " << x[ 2 ] << " " << cellId + ( increment - 1 ) << std::endl << vprDEBUG_FLUSH;
-                }
-                vprDEBUG( vesDBG, 3 )
-                << " x[ " << i << " ] = " << x[ 0 ] << " : "
-                << x[ 1 ] << " : " << x[ 2 ] << std::endl << vprDEBUG_FLUSH;
-                pointsArray[( npts - 1 ) - i + forwardPoints]->InsertNextPoint( x );
-            }
-        }
-    }*/
-
-
+    double *x;
 
     for( size_t i = 0; i < m_streamlines.size(); ++i )
     {
         cellId = m_streamlines.at( i ).first;
         // For forward integrated points
-        //if (( streamDir == cfdAnimatedStreamlineCone::FORWARD ) ||
-        //    ( streamDir == cfdAnimatedStreamlineCone::BOTH ) )
         int forwardPoints = 0;
         if( cellId != -1 )
         {
@@ -347,8 +271,6 @@ void cfdAnimatedStreamlineCone::Update( void )
         
         cellId = m_streamlines.at( i ).second;
         // For backward integrated points
-        //if (( streamDir == cfdAnimatedStreamlineCone::BACKWARD ) ||
-        //    ( streamDir == cfdAnimatedStreamlineCone::BOTH ) )
         if( cellId != -1 )
         {
             points = polyData->GetCell( cellId )->GetPoints();
@@ -371,11 +293,8 @@ void cfdAnimatedStreamlineCone::Update( void )
             }
         }
     }
-    
 
-
-
-    this->sphere->SetRadius( this->particleDiameter );
+    this->sphere->SetRadius( m_streamers->GetArrowDiameter() );
     this->sphere->SetThetaResolution( 3 );
     this->sphere->SetPhiResolution( 3 );
     this->sphere->Update();
@@ -398,8 +317,9 @@ void cfdAnimatedStreamlineCone::Update( void )
 
         //Map spheres to the polydata
         vprDEBUG( vesDBG, 2 ) << "|\t\tcfdAnimatedStreamlineCone:: begin loop1" << std::endl << vprDEBUG_FLUSH;
-        this->glyph->SetSource( this->sphere->GetOutput() );
-        this->glyph->SetInput( this->polydata );
+        glyph->SetSource( this->sphere->GetOutput() );
+        glyph->SetInput( this->polydata );
+        glyph->SetScaleModeToDataScalingOff();
         //glyph->Update();
 
         vprDEBUG( vesDBG, 2 ) << "|\t\tcfdAnimatedStreamlineCone:: begin loop2" << std::endl << vprDEBUG_FLUSH;
