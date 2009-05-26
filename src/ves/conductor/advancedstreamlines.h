@@ -130,6 +130,9 @@ public:
     ///\param value The strength
     void SetGlowStrength( double value );
 
+    ///Set the animated particle flag
+    void SetAnimatedParticle( bool animateParticle );
+    
     ///Live command for setting streamline size
     void _OnLineDiameter( wxCommandEvent& WXUNUSED( event ) );
 
@@ -152,10 +155,15 @@ public:
     double GetLineDiameter();
 
     ///Get the glow strength.
+    ///\return The glow strength
     double GetGlowStrength();
 
     ///Get the stream arrow.
     bool GetStreamArrow();
+    
+    ///Render animated particles or not
+    ///\return True or false to render animated particles
+    bool GetAnimatedParticle();
 
     ///Get the use last seed point flag
     bool GetUseLastSeedPoint();
@@ -180,6 +188,7 @@ protected:
     wxSlider* _glowSlider;
     wxCheckBox* _lastSeedPtCheck;
     wxCheckBox* _streamArrowCheck;
+    wxCheckBox* m_particleCheck;
 
     ves::conductor::util::UI_TransientDialog* particleControls;
     AdvancedStreamlines* _particleParent;

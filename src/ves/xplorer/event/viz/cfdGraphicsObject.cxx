@@ -32,6 +32,7 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/event/viz/cfdGraphicsObject.h>
+
 #include <ves/xplorer/Model.h>
 #include <ves/xplorer/DataSet.h>
 #include <ves/xplorer/event/viz/cfdStreamers.h>
@@ -42,10 +43,9 @@
 #include <ves/open/xml/Command.h>
 
 // --- OSG Includes --- //
-#ifdef _OSG
 #include <osg/BlendFunc>
-#include <osgDB/WriteFile>
-#endif
+//#include <osgDB/WriteFile>
+#include <osg/Sequence>
 
 using namespace ves::xplorer;
 
@@ -55,7 +55,6 @@ cfdGraphicsObject::cfdGraphicsObject()
     parentNode = 0;
     worldNode = 0;
     type = OTHER;
-    //animation = 0;
     model = 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -103,7 +102,7 @@ void cfdGraphicsObject::AddGraphicsObjectToSceneGraph()
         // is parent on graph
         if( !worldNode->SearchChild( parentNode ) )
         {
-            vprDEBUG( vesDBG, 1 ) << "|\t\tadding active switch node to worldDCS"
+            vprDEBUG( vesDBG, 1 ) << "|\t\tAdding active switch node to worldDCS"
             << std::endl << vprDEBUG_FLUSH;
             worldNode->AddChild( parentNode );
         }
@@ -116,12 +115,12 @@ void cfdGraphicsObject::AddGraphicsObjectToSceneGraph()
             // classic ss
             if( !parentNode->SearchChild( temp ) )
             {
-                vprDEBUG( vesDBG, 1 ) << "|\t\tadding active dcs node to worldDCS for classic ss "
+                vprDEBUG( vesDBG, 1 ) << "|\t\tAdding active dcs node to worldDCS for classic ss "
                 << std::endl << vprDEBUG_FLUSH;
                 parentNode->AddChild( temp );
             }
 
-            vprDEBUG( vesDBG, 1 ) << "|\t\tadding geode to active dataset dcs "
+            vprDEBUG( vesDBG, 1 ) << "|\t\tAdding geode to active dataset dcs "
             << std::endl << vprDEBUG_FLUSH;
 
             // we can do this because classic group is always
@@ -131,25 +130,36 @@ void cfdGraphicsObject::AddGraphicsObjectToSceneGraph()
             vprDEBUG( vesDBG, 1 ) << "|\tFinished classic ss add to graph"
             << std::endl << vprDEBUG_FLUSH;
         }
-        /*
-        else if( geodes.size() > 1 && 
-               ( !(model->GetAnimation() ) || 
-                 !(model->GetActiveDataSet()->IsPartOfTransientSeries() ) ) )
+        // classic ss animated images, planes, tracked particles
+        // even if model contains transient data
+        else if( geodes.size() > 1 )
+                //&& 
+                //( !(model->GetAnimation() ) || 
+                // !(model->GetActiveDataSet()->IsPartOfTransientSeries() ) ) )
         {
-            // classic ss animated images, planes, tracked particles
-            // even if model contains transient data
-            animation = new ves::xplorer::scenegraph::cfdTempAnimation();
-            animation->AddGeodesToSequence( geodes );
-            if( parentNode->SearchChild( temp ) < 0 )
+            ves::xplorer::scenegraph::Switch* temp = model->GetActiveDataSet()->GetSwitchNode();
+
+            if( !parentNode->SearchChild( temp ) )
             {
-                vprDEBUG(vesDBG,1) << " adding active dcs node to worldDCS for classic ss animation"
-                << std::endl << vprDEBUG_FLUSH;
+                vprDEBUG(vesDBG,1) << "|\t\tAdding active dcs node to worldDCS for classic ss animation"
+                    << std::endl << vprDEBUG_FLUSH;
                 parentNode->AddChild( temp );
             }
-            //animation->SetDuration();
-            temp->GetChild( 0 )->AddChild( animation->GetSequence() );
+            m_animation = new osg::Sequence();
+            //m_animation->setDefaultTime( 1.0f );
+            m_animation->
+                setInterval( osg::Sequence::LOOP, 0, -1 );
+            for( size_t i = 0; i < geodes.size(); ++i )
+            {
+                m_animation->addChild( geodes.at( i ).get(), 0.3f );
+            }
+            m_animation->setDuration( 1.0f, -1 );
+            m_animation->setMode( osg::Sequence::START );
+
+            ves::xplorer::scenegraph::Group* test = dynamic_cast< ves::xplorer::scenegraph::Group* >( temp->GetChild( 0 ) );
+            test->addChild( m_animation.get() );
         }
-        else if( ( geodes.size() > 1 ) && 
+        /*else if( ( geodes.size() > 1 ) && 
                  model->GetActiveDataSet()->IsPartOfTransientSeries() )
         {
             if( worldNode->SearchChild( temp ) < 0 )
@@ -190,14 +200,15 @@ void cfdGraphicsObject::SetGeodes( ves::xplorer::cfdObjects* input )
     {
         isStreamLine = true;
     }
-
-    for( size_t i = 0; i < input->GetGeodes().size(); ++i )
+    std::vector< osg::ref_ptr< ves::xplorer::scenegraph::Geode > > geodeList =
+        input->GetGeodes();
+        
+    for( size_t i = 0; i < geodeList.size(); ++i )
     {
-        //std::cout << "1 " << input.at( i ).get() << std::endl;
-        //geodes.push_back( new ves::xplorer::scenegraph::Geode( *input->GetGeodes().at( i ) ) );
-        geodes.push_back( input->GetGeodes().at( i ) );
-        //std::cout << input.at( i ).get() << std::endl;
-
+        if(  geodeList.at( i ).valid() )
+        {
+            geodes.push_back( geodeList.at( i ) );
+        }
 
         if( !isStreamLine )
         {
@@ -421,26 +432,26 @@ void cfdGraphicsObject::RemoveGeodeFromDCS()
 {
     if( type == CLASSIC )
     {
-        unsigned int num = geodes.size();
-        for( unsigned int i = 0; i < num; ++i )
+        for( size_t i = 0; i < geodes.size(); ++i )
         {
             // Need to find tha parent because with multiple models
             // Not all geodes are going to be on the same dcs
             ves::xplorer::scenegraph::Group* parent =
                 dynamic_cast< ves::xplorer::scenegraph::Group* >
                 ( geodes.at( i )->GetParent( 0 ) );
-            parent->RemoveChild( geodes.at( i ).get() );
+            if( parent )
+            {
+                parent->RemoveChild( geodes.at( i ).get() );
+            }
         }
 
         geodes.clear();
 
-        /*if( animation )
+        if( m_animation.valid() )
         {
-            ves::xplorer::scenegraph::Group* parent = animation->GetSequence()->GetParent(0);
-            parent->RemoveChild( animation->GetSequence() );
-
-            animation = 0;
-        }*/
+            osg::Group* parent = m_animation->getParent(0);
+            parent->removeChild( m_animation.get() );
+        }
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

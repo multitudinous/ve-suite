@@ -35,6 +35,8 @@
 
 #include <ves/xplorer/event/viz/cfdObjects.h>
 
+#include <vtkType.h>
+
 class vtkPolyDataMapper;
 class vtkPolyData;
 class vtkGlyph3D;
@@ -45,6 +47,7 @@ namespace ves
 {
 namespace xplorer
 {
+class cfdStreamers;
 /*!\file cfdAnimatedStreamlineCone.h
 cfdAnimatedStreamlineCone API
 */
@@ -59,11 +62,9 @@ public:
     ///Destructor
     virtual ~cfdAnimatedStreamlineCone();
 
-    //void Initialize();
-    //void SetDirection( float [3]);
-    //void SetCenter( float [3]);
-    //void CleanUpSequence( void );
 
+    void SetStreamlineSource( cfdStreamers* streamers );
+    
     ///Set the Polydata Source
     ///\param polySource
     void SetPolyDataSource( vtkPolyData * polySource );
@@ -90,8 +91,10 @@ private:
     };
 
     STREAM_DIRECTION streamDir;///<Stream direction
-    //int nPts, nStr, iPts;
-    //float ptData[3], direction[3], center[3];
+    
+    cfdStreamers* m_streamers;
+    ///Forward and backward points for streamlines
+    std::vector< std::pair< vtkIdType, vtkIdType > > m_streamlines;
 };
 }
 }

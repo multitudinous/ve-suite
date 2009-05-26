@@ -54,7 +54,7 @@ using namespace ves::conductor;
 BEGIN_EVENT_TABLE( AdvancedStreamlines, wxDialog )
     EVT_SLIDER( ADVANCEDSTREAMLINES_LINE_DIAMETER_SLIDER, AdvancedStreamlines::_OnLineDiameter )
     EVT_SLIDER( ADVANCEDSTREAMLINES_GLOW_SLIDER, AdvancedStreamlines::_OnGlowStrength )
-    EVT_BUTTON( ADVANCEDSTREAMLINES_PARTICLE_TRACKING, AdvancedStreamlines::_OnParticleTracking )
+    //EVT_BUTTON( ADVANCEDSTREAMLINES_PARTICLE_TRACKING, AdvancedStreamlines::_OnParticleTracking )
 END_EVENT_TABLE()
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -191,11 +191,15 @@ void AdvancedStreamlines::CreateControls()
     _streamArrowCheck->SetValue( false );
     itemBoxSizer26->Add( _streamArrowCheck, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
+    m_particleCheck = new wxCheckBox( itemDialog1, ADVANCEDSTREAMLINES_PARTICLE_TRACKING, _T( "Animated Particles" ), wxDefaultPosition, wxDefaultSize, 0 );
+    m_particleCheck->SetValue( false );
+    itemBoxSizer26->Add( m_particleCheck, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
+    
     wxBoxSizer* _buttons = new wxBoxSizer( wxHORIZONTAL );
 
-    wxButton* _particleButton = new wxButton( itemDialog1, ADVANCEDSTREAMLINES_PARTICLE_TRACKING, _T( "Particle" ), wxDefaultPosition, wxDefaultSize, 0 );
+    //wxButton* _particleButton = new wxButton( itemDialog1, ADVANCEDSTREAMLINES_PARTICLE_TRACKING, _T( "Particle" ), wxDefaultPosition, wxDefaultSize, 0 );
     wxButton* _closeButton = new wxButton( itemDialog1, wxID_OK, _T( "Close" ), wxDefaultPosition, wxDefaultSize, 0 );
-    _buttons->Add( _particleButton, 0, wxALIGN_CENTER_HORIZONTAL | wxALL, 5 );
+    //_buttons->Add( _particleButton, 0, wxALIGN_CENTER_HORIZONTAL | wxALL, 5 );
     _buttons->Add( _closeButton, 0, wxALIGN_CENTER_HORIZONTAL | wxALL, 5 );
 
     itemStaticBoxSizer3->Add( _buttons, 0, wxALIGN_CENTER_HORIZONTAL | wxALL, 5 );
@@ -266,6 +270,14 @@ void AdvancedStreamlines::SetStreamArrow( bool value )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
+void AdvancedStreamlines::SetAnimatedParticle( bool animateParticle )
+{
+    if( m_particleCheck )
+    {
+        m_particleCheck->SetValue( animateParticle );
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
 void AdvancedStreamlines::SetUseLastSeedPt( bool value )
 {
     if( _lastSeedPtCheck )
@@ -307,6 +319,11 @@ bool AdvancedStreamlines::GetUseLastSeedPoint()
 bool AdvancedStreamlines::GetStreamArrow()
 {
     return _streamArrowCheck->GetValue();
+}
+////////////////////////////////////////////////////////////////////////////////
+bool AdvancedStreamlines::GetAnimatedParticle()
+{
+    return m_particleCheck->GetValue();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AdvancedStreamlines::_OnLineDiameter( wxCommandEvent& WXUNUSED( event ) )

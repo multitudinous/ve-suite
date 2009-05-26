@@ -209,6 +209,26 @@ void Contours::CreateControls()
     wxStaticText* itemStaticText13 = new wxStaticText( itemDialog1, wxID_STATIC, _T( "Plane" ), wxDefaultPosition, wxDefaultSize, 0 );
     itemStaticBoxSizer3->Add( itemStaticText13, 0, wxALIGN_LEFT | wxLEFT | wxRIGHT | wxTOP | wxADJUST_MINSIZE, 5 );
 
+//Add a spinner before the slider
+/*    wxBoxSizer* minSizer = new wxBoxSizer( wxHORIZONTAL );
+    wxBoxSizer* maxSizer = new wxBoxSizer( wxHORIZONTAL );
+    
+    _minSpinner = new wxSpinCtrlDbl( *itemDialog1, VISTAB_MIN_SPINCTRL, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 100, 0, 0.1, -1, wxEmptyString );
+    _minSlider = new wxSlider( itemDialog1, VISTAB_MIN_SLIDER, 0, 0, 100, wxDefaultPosition, wxSize( 300, -1 ), wxSL_HORIZONTAL | wxSL_LABELS );
+    
+    _maxSpinner = new wxSpinCtrlDbl( *itemDialog1, VISTAB_MAX_SPINCTRL, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 100, 100, 0.1, -1, wxEmptyString );
+    _maxSlider = new wxSlider( itemDialog1, VISTAB_MAX_SLIDER, 100, 0, 100, wxDefaultPosition, wxSize( 300, -1 ), wxSL_HORIZONTAL | wxSL_LABELS );
+    
+    wxStaticText* _min = new wxStaticText( itemDialog1, wxID_STATIC, _T( "Min" ), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT );
+    wxStaticText* _max = new wxStaticText( itemDialog1, wxID_STATIC, _T( "Max" ), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT );
+    
+    minSizer->Add( _minSpinner, 0, wxALIGN_LEFT | wxTOP | wxLEFT | wxRIGHT, 5 );
+    minSizer->Add( _minSlider, 1, wxALIGN_LEFT | wxLEFT | wxRIGHT | wxBOTTOM | wxEXPAND, 5 );
+    
+    maxSizer->Add( _maxSpinner, 0, wxALIGN_LEFT | wxLEFT | wxRIGHT | wxTOP, 5 );
+    maxSizer->Add( _maxSlider, 1, wxALIGN_LEFT | wxLEFT | wxRIGHT | wxBOTTOM | wxEXPAND, 5 );
+*/
+//////////////////////////    
     _planePositonSlider = new wxSlider( itemDialog1, CONTOURS_PLANE_SLIDER, 0, 0, 100, wxDefaultPosition, wxSize( 300, -1 ), wxSL_HORIZONTAL | wxSL_LABELS );
     itemStaticBoxSizer3->Add( _planePositonSlider, 0, wxGROW | wxLEFT | wxRIGHT | wxBOTTOM, 5 );
 

@@ -76,6 +76,8 @@
 #include <boost/filesystem/operations.hpp> // includes boost/filesystem/path.hpp
 #include <boost/filesystem/path.hpp>
 
+#include <vpr/System.h>
+
 #include <iostream>
 
 using namespace ves::xplorer::event;
@@ -122,11 +124,13 @@ CreateVisObjectEventHandler::CreateVisObjectEventHandler()
 
     // Initialize all the vis objects from ssvishandler
     //
+    std::cout << "| Initializing Viz Methods......................................... |" << std::endl;
+    
     // Initiate the isosurface.
     //
     std::pair< std::string, std::pair< std::string, std::string > > objectType;
     objectType = std::make_pair( std::string( "UPDATE_ISOSURFACE_SETTINGS" ), std::make_pair( "", "" ) );
-    std::cout << "| 14. Initializing...................................... Isosurface |" << std::endl;
+    //std::cout << "| 14. Initializing...................................... Isosurface |" << std::endl;
     this->isosurface = new cfdIsosurface( 10 );
     this->isosurface->SetObjectType( ISOSURFACE );
     visObjectMap[ objectType ] = this->isosurface;
@@ -137,7 +141,7 @@ CreateVisObjectEventHandler::CreateVisObjectEventHandler()
     objectType.first = std::string( "UPDATE_SCALAR_SETTINGS" );
     objectType.second.first = std::string( "wand" );
     objectType.second.second = std::string( "Single" );
-    std::cout << "| 15. Initializing......................................... Contour |" << std::endl;
+    //std::cout << "| 15. Initializing......................................... Contour |" << std::endl;
     this->contour = new cfdContour();
     this->contour->SetObjectType( CONTOUR );
     visObjectMap[ objectType ] = this->contour;
@@ -148,7 +152,7 @@ CreateVisObjectEventHandler::CreateVisObjectEventHandler()
     objectType.first = std::string( "UPDATE_SCALAR_SETTINGS" );
     objectType.second.first = std::string( "wand" );
     objectType.second.second = std::string( "Single-warp" );
-    std::cout << "| 16. Initializing........................................ Momemtum |" << std::endl;
+    //std::cout << "| 16. Initializing........................................ Momemtum |" << std::endl;
     this->momentum = new cfdMomentum();
     this->momentum->SetObjectType( MOMENTUM );
     visObjectMap[ objectType ] = this->momentum;
@@ -159,7 +163,7 @@ CreateVisObjectEventHandler::CreateVisObjectEventHandler()
     objectType.first = std::string( "UPDATE_VECTOR_SETTINGS" );
     objectType.second.first = std::string( "wand" );
     objectType.second.second = std::string( "Single" );
-    std::cout << "| 17. Initializing.......................................... Vector |" << std::endl;
+    //std::cout << "| 17. Initializing.......................................... Vector |" << std::endl;
     this->vector = new cfdVector();
     this->vector->SetObjectType( VECTOR );
     visObjectMap[ objectType ] = this->vector;
@@ -170,7 +174,7 @@ CreateVisObjectEventHandler::CreateVisObjectEventHandler()
     objectType.first = std::string( "UPDATE_SCALAR_SETTINGS" );
     objectType.second.first = std::string( "x" );
     objectType.second.second = std::string( "Single" );
-    std::cout << "| 19. Initializing................................ Preset x Contour |" << std::endl;
+    //std::cout << "| 19. Initializing................................ Preset x Contour |" << std::endl;
     this->x_contour = new cfdPresetContour( 0, 10 );
     this->x_contour->SetObjectType( X_CONTOUR );
     visObjectMap[ objectType ] = this->x_contour;
@@ -181,7 +185,7 @@ CreateVisObjectEventHandler::CreateVisObjectEventHandler()
     objectType.first = std::string( "UPDATE_SCALAR_SETTINGS" );
     objectType.second.first = std::string( "y" );
     objectType.second.second = std::string( "Single" );
-    std::cout << "| 20. Initializing................................ Preset y Contour |" << std::endl;
+    //std::cout << "| 20. Initializing................................ Preset y Contour |" << std::endl;
     this->y_contour = new cfdPresetContour( 1, 10 );
     this->y_contour->SetObjectType( Y_CONTOUR );
     visObjectMap[ objectType ] = this->y_contour;
@@ -192,7 +196,7 @@ CreateVisObjectEventHandler::CreateVisObjectEventHandler()
     objectType.first = std::string( "UPDATE_SCALAR_SETTINGS" );
     objectType.second.first = std::string( "z" );
     objectType.second.second = std::string( "Single" );
-    std::cout << "| 21. Initializing................................ Preset z Contour |" << std::endl;
+    //std::cout << "| 21. Initializing................................ Preset z Contour |" << std::endl;
     this->z_contour = new cfdPresetContour( 2, 10 );
     this->z_contour->SetObjectType( Z_CONTOUR );
     visObjectMap[ objectType ] = this->z_contour;
@@ -203,7 +207,7 @@ CreateVisObjectEventHandler::CreateVisObjectEventHandler()
     objectType.first = std::string( "UPDATE_SCALAR_SETTINGS" );
     objectType.second.first = std::string( "x" );
     objectType.second.second = std::string( "Single-warp" );
-    std::cout << "| 22. Initializing............................... Preset x Momentum |" << std::endl;
+    //std::cout << "| 22. Initializing............................... Preset x Momentum |" << std::endl;
     // Needs to be fixed, the isoscale should be set by the gui, 2nd parameter in constructor
     this->x_momentum = new cfdPresetMomentum( 0, 10 );
     this->x_momentum->SetObjectType( X_MOMENTUM );
@@ -215,7 +219,7 @@ CreateVisObjectEventHandler::CreateVisObjectEventHandler()
     objectType.first = std::string( "UPDATE_SCALAR_SETTINGS" );
     objectType.second.first = std::string( "y" );
     objectType.second.second = std::string( "Single-warp" );
-    std::cout << "| 23. Initializing............................... Preset y Momentum |" << std::endl;
+    //std::cout << "| 23. Initializing............................... Preset y Momentum |" << std::endl;
     // Needs to be fixed, the isoscale should be set by the gui, 2nd parameter in constructor
     this->y_momentum = new cfdPresetMomentum( 1, 10 );
     this->y_momentum->SetObjectType( Y_MOMENTUM );
@@ -227,7 +231,7 @@ CreateVisObjectEventHandler::CreateVisObjectEventHandler()
     objectType.first = std::string( "UPDATE_SCALAR_SETTINGS" );
     objectType.second.first = std::string( "z" );
     objectType.second.second = std::string( "Single-warp" );
-    std::cout << "| 24. Initializing............................... Preset z Momentum |" << std::endl;
+    //std::cout << "| 24. Initializing............................... Preset z Momentum |" << std::endl;
     // Needs to be fixed, the isoscale should be set by the gui, 2nd parameter in constructor
     this->z_momentum = new cfdPresetMomentum( 2, 10 );
     this->z_momentum->SetObjectType( Z_MOMENTUM );
@@ -239,7 +243,7 @@ CreateVisObjectEventHandler::CreateVisObjectEventHandler()
     objectType.first = std::string( "UPDATE_VECTOR_SETTINGS" );
     objectType.second.first = std::string( "x" );
     objectType.second.second = std::string( "Single" );
-    std::cout << "| 25. Initializing................................. Preset x Vector |" << std::endl;
+    //std::cout << "| 25. Initializing................................. Preset x Vector |" << std::endl;
     this->x_vector = new cfdPresetVector( 0, 10 );
     this->x_vector->SetObjectType( X_VECTOR );
     visObjectMap[ objectType ] = this->x_vector;
@@ -250,7 +254,7 @@ CreateVisObjectEventHandler::CreateVisObjectEventHandler()
     objectType.first = std::string( "UPDATE_VECTOR_SETTINGS" );
     objectType.second.first = std::string( "y" );
     objectType.second.second = std::string( "Single" );
-    std::cout << "| 26. Initializing................................. Preset y Vector |" << std::endl;
+    //std::cout << "| 26. Initializing................................. Preset y Vector |" << std::endl;
     this->y_vector = new cfdPresetVector( 1, 10 );
     this->y_vector->SetObjectType( Y_VECTOR );
     visObjectMap[ objectType ] = this->y_vector;
@@ -261,7 +265,7 @@ CreateVisObjectEventHandler::CreateVisObjectEventHandler()
     objectType.first = std::string( "UPDATE_VECTOR_SETTINGS" );
     objectType.second.first = std::string( "z" );
     objectType.second.second = std::string( "Single" );
-    std::cout << "| 27. Initializing................................. Preset z Vector |" << std::endl;
+    //std::cout << "| 27. Initializing................................. Preset z Vector |" << std::endl;
     cfdPresetVector* tempVector = new cfdPresetVector( 2, 10 );
     tempVector->SetObjectType( Z_VECTOR );
     visObjectMap[ objectType ] = tempVector;
@@ -272,7 +276,7 @@ CreateVisObjectEventHandler::CreateVisObjectEventHandler()
     objectType.first = std::string( "UPDATE_VECTOR_SETTINGS" );
     objectType.second.first = std::string( "All" );
     objectType.second.second = std::string( "Single" );
-    std::cout << "| 28. Initializing..................................... All Vectors |" << std::endl;
+    //std::cout << "| 28. Initializing..................................... All Vectors |" << std::endl;
     this->z_vector = new cfdPresetVector( 3, 10 );
     this->z_vector->SetObjectType( Z_VECTOR );
     visObjectMap[ objectType ] = this->z_vector;
@@ -283,7 +287,7 @@ CreateVisObjectEventHandler::CreateVisObjectEventHandler()
     objectType.first = std::string( "UPDATE_SCALAR_SETTINGS" );
     objectType.second.first = std::string( "x" );
     objectType.second.second = std::string( "Multiple" );
-    std::cout << "| 28. Initializing....................Multiple X-planes of Contours |" << std::endl;
+    //std::cout << "| 28. Initializing....................Multiple X-planes of Contours |" << std::endl;
     this->x_contours = new cfdContours( 0 );
     this->x_contours->SetObjectType( X_CONTOURS );
     visObjectMap[ objectType ] = this->x_contours;
@@ -294,7 +298,7 @@ CreateVisObjectEventHandler::CreateVisObjectEventHandler()
     objectType.first = std::string( "UPDATE_SCALAR_SETTINGS" );
     objectType.second.first = std::string( "y" );
     objectType.second.second = std::string( "Multiple" );
-    std::cout << "| 29. Initializing....................Multiple Y-planes of Contours |" << std::endl;
+    //std::cout << "| 29. Initializing....................Multiple Y-planes of Contours |" << std::endl;
     this->y_contours = new cfdContours( 1 );
     this->y_contours->SetObjectType( Y_CONTOURS );
     visObjectMap[ objectType ] = this->y_contours;
@@ -305,7 +309,7 @@ CreateVisObjectEventHandler::CreateVisObjectEventHandler()
     objectType.first = std::string( "UPDATE_SCALAR_SETTINGS" );
     objectType.second.first = std::string( "z" );
     objectType.second.second = std::string( "Multiple" );
-    std::cout << "| 30. Initializing....................Multiple Z-planes of Contours |" << std::endl;
+    //std::cout << "| 30. Initializing....................Multiple Z-planes of Contours |" << std::endl;
     this->z_contours = new cfdContours( 2 );
     this->z_contours->SetObjectType( Z_CONTOURS );
     visObjectMap[ objectType ] = this->z_contours;
@@ -316,7 +320,7 @@ CreateVisObjectEventHandler::CreateVisObjectEventHandler()
     objectType.first = std::string( "UPDATE_SCALAR_SETTINGS" );
     objectType.second.first = std::string( "x" );
     objectType.second.second = std::string( "Multiple-warp" );
-    std::cout << "| 31. Initializing.......Multiple X-planes of Precomputed Momentums |" << std::endl;
+    //std::cout << "| 31. Initializing.......Multiple X-planes of Precomputed Momentums |" << std::endl;
     this->x_momentums = new cfdMomentums( 0 );
     this->x_momentums->SetObjectType( X_MOMENTUMS );
     visObjectMap[ objectType ] = this->x_momentums;
@@ -327,7 +331,7 @@ CreateVisObjectEventHandler::CreateVisObjectEventHandler()
     objectType.first = std::string( "UPDATE_SCALAR_SETTINGS" );
     objectType.second.first = std::string( "y" );
     objectType.second.second = std::string( "Multiple-warp" );
-    std::cout << "| 32. Initializing.......Multiple Y-planes of Precomputed Momentums |" << std::endl;
+    //std::cout << "| 32. Initializing.......Multiple Y-planes of Precomputed Momentums |" << std::endl;
     this->y_momentums = new cfdMomentums( 1 );
     this->y_momentums->SetObjectType( Y_MOMENTUMS );
     visObjectMap[ objectType ] = this->y_momentums;
@@ -338,7 +342,7 @@ CreateVisObjectEventHandler::CreateVisObjectEventHandler()
     objectType.first = std::string( "UPDATE_SCALAR_SETTINGS" );
     objectType.second.first = std::string( "z" );
     objectType.second.second = std::string( "Multiple-warp" );
-    std::cout << "| 33. Initializing.......Multiple Z-planes of Precomputed Momentums |" << std::endl;
+    //std::cout << "| 33. Initializing.......Multiple Z-planes of Precomputed Momentums |" << std::endl;
     this->z_momentums = new cfdMomentums( 2 );
     this->z_momentums->SetObjectType( Z_MOMENTUMS );
     visObjectMap[ objectType ] = this->z_momentums;
@@ -349,7 +353,7 @@ CreateVisObjectEventHandler::CreateVisObjectEventHandler()
     objectType.first = std::string( "UPDATE_VECTOR_SETTINGS" );
     objectType.second.first = std::string( "x" );
     objectType.second.second = std::string( "Multiple" );
-    std::cout << "| 34. Initializing.........Multiple X-planes of Precomputed Vectors |" << std::endl;
+    //std::cout << "| 34. Initializing.........Multiple X-planes of Precomputed Vectors |" << std::endl;
     this->x_vectors = new cfdVectors( 0 );
     this->x_vectors->SetObjectType( X_VECTORS );
     visObjectMap[ objectType ] = this->x_vectors;
@@ -360,7 +364,7 @@ CreateVisObjectEventHandler::CreateVisObjectEventHandler()
     objectType.first = std::string( "UPDATE_VECTOR_SETTINGS" );
     objectType.second.first = std::string( "y" );
     objectType.second.second = std::string( "Multiple" );
-    std::cout << "| 35. Initializing.........Multiple Y-planes of Precomputed Vectors |" << std::endl;
+    //std::cout << "| 35. Initializing.........Multiple Y-planes of Precomputed Vectors |" << std::endl;
     this->y_vectors = new cfdVectors( 1 );
     this->y_vectors->SetObjectType( Y_VECTORS );
     visObjectMap[ objectType ] = this->y_vectors;
@@ -371,7 +375,7 @@ CreateVisObjectEventHandler::CreateVisObjectEventHandler()
     objectType.first = std::string( "UPDATE_VECTOR_SETTINGS" );
     objectType.second.first = std::string( "z" );
     objectType.second.second = std::string( "Multiple" );
-    std::cout << "| 36. Initializing.........Multiple Z-planes of Precomputed Vectors |" << std::endl;
+    //std::cout << "| 36. Initializing.........Multiple Z-planes of Precomputed Vectors |" << std::endl;
     this->z_vectors = new cfdVectors( 2 );
     this->z_vectors->SetObjectType( Z_VECTORS );
     visObjectMap[ objectType ] = this->z_vectors;
@@ -382,9 +386,9 @@ CreateVisObjectEventHandler::CreateVisObjectEventHandler()
     objectType.first = std::string( "UPDATE_STREAMLINE_SETTINGS" );
     objectType.second.first = std::string( "" );
     objectType.second.second = std::string( "" );
-    std::cout << "| 37. Initializing..................................... Streamlines |" << std::endl;
-    this->streamlines = new cfdStreamers();
-    this->streamlines->SetObjectType( STREAMLINES );
+    //std::cout << "| 37. Initializing..................................... Streamlines |" << std::endl;
+    streamlines = new cfdStreamers();
+    streamlines->SetObjectType( STREAMLINES );
     visObjectMap[ objectType ] = this->streamlines;
 
     //
@@ -393,9 +397,10 @@ CreateVisObjectEventHandler::CreateVisObjectEventHandler()
     objectType.first = std::string( "UPDATE_STREAMLINE_SETTINGS" );
     objectType.second.first = std::string( "animated" );
     objectType.second.second = std::string( "" );
-    std::cout << "| 39. Initializing............................. Animated Streamline |" << std::endl;
-    this->animStreamer = new cfdAnimatedStreamlineCone();
-    this->animStreamer->SetObjectType( ANIMATED_STREAMLINES );
+    //std::cout << "| 39. Initializing............................. Animated Streamline |" << std::endl;
+    animStreamer = new cfdAnimatedStreamlineCone();
+    animStreamer->SetObjectType( ANIMATED_STREAMLINES );
+    animStreamer->SetStreamlineSource( streamlines );
     visObjectMap[ objectType ] = this->animStreamer;
 
     //
@@ -412,7 +417,7 @@ CreateVisObjectEventHandler::CreateVisObjectEventHandler()
     objectType.first = std::string( "UPDATE_PARTICLE_SETTINGS" );
     objectType.second.first = std::string( "" );
     objectType.second.second = std::string( "" );
-    std::cout << "| 41. Initializing................................... PolyData File |" << std::endl;
+    //std::cout << "| 41. Initializing................................... PolyData File |" << std::endl;
     this->particles = new cfdPolyData();
     this->particles->SetObjectType( PARTICLES );
     visObjectMap[ objectType ] = this->particles;
@@ -420,7 +425,7 @@ CreateVisObjectEventHandler::CreateVisObjectEventHandler()
     objectType.first = std::string( "UPDATE_POLYDATA_SETTINGS" );
     objectType.second.first = std::string( "" );
     objectType.second.second = std::string( "" );
-    std::cout << "|  5. Initializing................................. Dataset surface |" << std::endl;
+    //std::cout << "|  5. Initializing................................. Dataset surface |" << std::endl;
     this->surface = new cfdPolyData( 1.0 );
     this->surface->SetObjectType( POLYDATA );
     visObjectMap[ objectType ] = this->surface;
@@ -445,6 +450,8 @@ CreateVisObjectEventHandler::CreateVisObjectEventHandler()
        iter->SetUpdateFlag( false );
        iter->SetActiveDataSet( ModelHandler::instance()->GetActiveDataSet() );
     }*/
+    
+    std::cout << "| Finished Initializing Viz Methods................................ |" << std::endl;
 }
 ////////////////////////////////////////////////////////////////////////////////
 CreateVisObjectEventHandler::CreateVisObjectEventHandler( const CreateVisObjectEventHandler& rhs )
@@ -482,6 +489,13 @@ void CreateVisObjectEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase*
 //////////////////////////////////////////////////////////////////////////
 void CreateVisObjectEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xmlObject )
 {
+    //Sleep here while we wait for the ss viz handler to finish computing the
+    //last request from the user
+    while(  SteadyStateVizHandler::instance()->TransientGeodesIsBusy() )
+    {
+        vpr::System::msleep( 500 );  // half-second delay
+    }
+
     // Set the active dataset
     SetActiveDataSet( xmlObject );
     // set the active scalar and range
@@ -550,7 +564,7 @@ void CreateVisObjectEventHandler::Execute( const ves::open::xml::XMLObjectPtr& x
     }
 
     // get the active vis object
-    vprDEBUG( vesDBG, 1 ) << " setting viz object " << activeObject->GetObjectType()
+    vprDEBUG( vesDBG, 1 ) << "|\tSetting viz object " << activeObject->GetObjectType()
         << " to _activeObject"
         << std::endl << vprDEBUG_FLUSH;
 
@@ -559,7 +573,7 @@ void CreateVisObjectEventHandler::Execute( const ves::open::xml::XMLObjectPtr& x
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > activeDataSetDCS = ModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->GetDCS();
 
     // add active dataset DCS to scene graph if not already there...
-    vprDEBUG( vesDBG, 1 ) << " setting DCS to activeDCS = "
+    vprDEBUG( vesDBG, 1 ) << "|\tSetting DCS to activeDCS = "
         << activeDataSetDCS.get()
         << std::endl << vprDEBUG_FLUSH;
     //this->activeObject->SetActiveDataSet( ModelHandler::instance()->GetActiveModel()->GetActiveDataSet() );
@@ -582,20 +596,19 @@ void CreateVisObjectEventHandler::SetActiveVector( ves::open::xml::XMLObjectPtr 
     activeModelDVP->GetData( activeVector );
 
     vprDEBUG( vesDBG, 1 ) << "|\tCreateVisObjectEventHandler::SetActiveVector Setting Active Vector = " << activeVector
-    << std::endl << vprDEBUG_FLUSH;
+        << std::endl << vprDEBUG_FLUSH;
 
     Model* activeModel = ModelHandler::instance()->GetActiveModel();
     DataSet* activeDataset = activeModel->GetActiveDataSet();
     // need to set the vector by name
     activeDataset->SetActiveVector( activeVector );
     //activeDataset->GetParent()->SetActiveVector( vectorIndex );
-#ifdef _OSG
+
     /*cfdTextureDataSet* activeTDSet = activeModel->GetActiveTextureDataSet();
     if(activeTDSet )
     {
        activeTDSet->SetActiveVector( activeVector );
     }*/
-#endif
 }
 //////////////////////////////////////////////////////////////////////////////////////
 void CreateVisObjectEventHandler::SetActiveScalarAndRange( ves::open::xml::XMLObjectPtr xmlObject )

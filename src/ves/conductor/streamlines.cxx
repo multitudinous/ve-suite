@@ -106,13 +106,14 @@ bool Streamlines::Create( wxWindow* parent,
     itemButton13 = 0;
     itemButton14 = 0;
     seedPointDialog = 0;
-
+    
     _lastIntegrationStepSize = 1000.0;
     _lastPropagationSize = 1.0;
     _lastLineDiameter = 0.0;
     _lastSphereArrowParticleSize = 1.0;
     _lastSeedPtFlag = false;
     _lastStreamArrow = false;
+    m_animatedParticles = false;
 
     SetExtraStyle( GetExtraStyle() | wxWS_EX_BLOCK_EVENTS );
     wxDialog::Create( parent, id, caption, pos, size, style );
@@ -335,7 +336,8 @@ void Streamlines::_onAdvanced( wxCommandEvent& WXUNUSED( event ) )
     adStreamline.SetSphereArrowParticleSize( _lastSphereArrowParticleSize );
     adStreamline.SetUseLastSeedPt( _lastSeedPtFlag );
     adStreamline.SetStreamArrow( _lastStreamArrow );
-
+    adStreamline.SetAnimatedParticle( m_animatedParticles );
+    
     int error = adStreamline.ShowModal();
     if( error == wxID_OK ||
             error == wxID_CLOSE ||
@@ -347,6 +349,7 @@ void Streamlines::_onAdvanced( wxCommandEvent& WXUNUSED( event ) )
         _lastSphereArrowParticleSize = adStreamline.GetSphereArrowParticleSize();
         _lastSeedPtFlag = adStreamline.GetUseLastSeedPoint();
         _lastStreamArrow = adStreamline.GetStreamArrow();
+        m_animatedParticles = adStreamline.GetAnimatedParticle();
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -393,20 +396,39 @@ void Streamlines::_onCompute( wxCommandEvent& WXUNUSED( event ) )
     advancedStreamlineSettings->SetData( "Advanced Streamline Settings", advancedSettings );
     newCommand->AddDataValuePair( advancedStreamlineSettings );
 
-    //dvp representing the advanced settings within the contours information
-    //VE_XML::DataValuePairPtr seedPoint = new VE_XML::DataValuePair();
-    //seedPoint->SetData( "Seed_Point_Settings", seedPointSettings );
-    //newCommand->AddDataValuePair( seedPoint );
-
     try
     {
-        dynamic_cast<Vistab*>( GetParent() )->SendUpdatedSettingsToXplorer( newCommand );
+        dynamic_cast<Vistab*>( GetParent() )->
+            SendUpdatedSettingsToXplorer( newCommand );
     }
     catch ( ... )
     {
         wxMessageBox( _( "Invalid Parent" ), _( "Communication Failure" ),
                       wxOK | wxICON_INFORMATION );
     }
+    
+    ///Now send a command for the animated streamlines 
+    //if the user has set them on
+    if( !m_animatedParticles )
+    {
+        return;
+    }
+    
+    ves::open::xml::DataValuePairPtr 
+        animatedSettings( new ves::open::xml::DataValuePair() );
+    animatedSettings->SetData( "Direction", "animated" );
+    newCommand->AddDataValuePair( animatedSettings );
+    
+    try
+    {
+        dynamic_cast<Vistab*>( GetParent() )->
+            SendUpdatedSettingsToXplorer( newCommand );
+    }
+    catch ( ... )
+    {
+        wxMessageBox( _( "Invalid Parent" ), _( "Communication Failure" ),
+                     wxOK | wxICON_INFORMATION );
+    }    
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Streamlines::_onCursorSelect( wxCommandEvent& WXUNUSED( event ) )

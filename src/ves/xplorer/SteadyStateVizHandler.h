@@ -64,6 +64,7 @@ class vtkPolyData;
 
 // --- C/C++ Libraries --- //
 #include <vector>
+#include <queue>
 #include <map>
 
 namespace ves
@@ -171,7 +172,7 @@ public:
     std::vector< cfdGraphicsObject* > GetGraphicsObjectsOfType( cfdGeodeEnum type );
 
 private:
-    cfdPolyData* surface;
+    /*cfdPolyData* surface;
     cfdIsosurface* isosurface;
     cfdContour* contour;
     cfdPresetContour* x_contour;
@@ -193,17 +194,21 @@ private:
     cfdPresetVector* z_vector;
     cfdVectors* x_vectors;
     cfdVectors* y_vectors;
-    cfdVectors* z_vectors;
-    cfdStreamers* streamlines;
-    cfdPolyData* particles;
+    cfdVectors* z_vectors;*/
+    //cfdStreamers* streamlines;
+    /*cfdPolyData* particles;
     cfdImage* image;
     cfdAnimatedImage* animImg;
     cfdAnimatedStreamlineCone* animStreamer;
-    cfdTextOutput* textOutput;
+    cfdTextOutput* textOutput;*/
 
     //Common objects for all functions
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > _activeDataSetDCS;
     cfdObjects* _activeObject;
+    ///A queue to stack active objects in to enable commands
+    ///to send multiple vis objec requests
+    std::queue< cfdObjects* > m_visObjectQueue;
+    
     //ves::xplorer::scenegraph::cfdTempAnimation* _activeTempAnimation;
 
     //Classes and variables for multithreading.

@@ -132,7 +132,7 @@ protected:
 
     // used for animated particles and other ss
     // animated features
-    //ves::xplorer::scenegraph::cfdTempAnimation* animation;
+    osg::ref_ptr< osg::Sequence > m_animation;
     ves::xplorer::Model* model;///<Xplorer cfd model.
 };
 }

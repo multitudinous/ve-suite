@@ -330,7 +330,7 @@ void cfdStreamers::Update()
     vprDEBUG( vesDBG, 0 ) << "|\tcfdStreamers::Update End" << std::endl << vprDEBUG_FLUSH;
 }
 //////////////////////////////////////////////////////////////////////////////////
-vtkPolyData * cfdStreamers::GetStreamersOutput()
+vtkPolyData* cfdStreamers::GetStreamersOutput()
 {
     // may need to gaurd this somehow
     return ( streamTracer->GetOutput() );

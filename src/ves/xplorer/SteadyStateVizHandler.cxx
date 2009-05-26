@@ -93,17 +93,15 @@ namespace xplorer
 
 ////////////////////////////////////////////////////////////////////////////////
 SteadyStateVizHandler::SteadyStateVizHandler()
+    :
+    _activeObject( 0 ),
+    lastSource( 0 ),
+    computeActorsAndGeodes( false ),
+    actorsAreReady( false ),
+    useLastSource( false ),
+    texturesActive( false ),
+    transientActors( true )
 {
-    //_activeDataSetDCS = 0;
-    _activeObject = 0;
-    lastSource = 0;
-    //_activeTempAnimation = 0;
-
-    computeActorsAndGeodes = false;
-    actorsAreReady = false;
-    useLastSource = false;
-    texturesActive = false;
-    transientActors = true;
     vjTh[ 0 ] = 0;
 
     vtkCompositeDataPipeline* prototype = vtkCompositeDataPipeline::New();
@@ -149,6 +147,7 @@ SteadyStateVizHandler::~SteadyStateVizHandler()
     
     vtkAlgorithm::SetDefaultExecutivePrototype( 0 );
 }
+////////////////////////////////////////////////////////////////////////////////
 bool SteadyStateVizHandler::TransientGeodesIsBusy()
 {
     //return transientBusy;
@@ -183,6 +182,7 @@ ves::xplorer::scenegraph::cfdTempAnimation* SteadyStateVizHandler::GetActiveAnim
 void SteadyStateVizHandler::SetActiveVisObject( cfdObjects* tempObject )
 {
     _activeObject = tempObject;
+    m_visObjectQueue.push( _activeObject );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SteadyStateVizHandler::SetComputeActorsAndGeodes( bool actorsAndGeodes )
@@ -233,8 +233,9 @@ void SteadyStateVizHandler::PreFrameUpdate()
         currentEventHandler = _eventHandlers.find( tempCommand->GetCommandName() );
         if( currentEventHandler != _eventHandlers.end() )
         {
-            vprDEBUG( vesDBG, 0 ) << "|\tExecuting: " << tempCommand->GetCommandName()
-            << std::endl << vprDEBUG_FLUSH;
+            vprDEBUG( vesDBG, 0 ) << "|\tExecuting: " 
+                << tempCommand->GetCommandName()
+                << std::endl << vprDEBUG_FLUSH;
             currentEventHandler->second->SetGlobalBaseObject();
             currentEventHandler->second->Execute( tempCommand );
         }
@@ -244,31 +245,29 @@ void SteadyStateVizHandler::PreFrameUpdate()
     if( actorsAreReady && transientActors )
     {
         vprDEBUG( vesDBG, 3 ) << "|\tUpdating Objects"
-        << std::endl << vprDEBUG_FLUSH;
-        bool alreadyRemoved = false;
-        //for ( unsigned int i = 0; i < dataList.size(); i++ )
-        //{
-        if( _activeObject->GetUpdateFlag() )// ||
-            //dataList.at( i )->GetTransientGeodeFlag() )
+            << std::endl << vprDEBUG_FLUSH;
+
+        cfdObjects* tempVisObject = m_visObjectQueue.front();
+        if( tempVisObject->GetUpdateFlag() )
         {
             //Set the update flag in steadystate viz handler
             //now update the vis object
             ModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->GetSwitchNode()->SetVal( 0 );
             vprDEBUG( vesDBG, 2 ) << "|\tCreating Objects"
-            << std::endl << vprDEBUG_FLUSH;
+                << std::endl << vprDEBUG_FLUSH;
             // if object needs updated then already have a graphics object
             cfdGraphicsObject* temp = new cfdGraphicsObject();
             temp->SetTypeOfViz( cfdGraphicsObject::CLASSIC );
-            temp->SetParentNode( _activeObject->GetActiveDataSet()->GetDCS() );
+            temp->SetParentNode( tempVisObject->GetActiveDataSet()->GetDCS() );
             temp->SetActiveModel( ModelHandler::instance()->GetActiveModel() );
             temp->SetWorldNode( ModelHandler::instance()->GetActiveModel()->GetDCS() );
-            temp->SetGeodes( _activeObject );
+            temp->SetGeodes( tempVisObject );
             temp->AddGraphicsObjectToSceneGraph();
 
             //Search map for other object types with the same type as this one
             std::multimap< int, cfdGraphicsObject* >::iterator pos;
-            for( pos = graphicsObjects.lower_bound( _activeObject->GetObjectType() );
-                    pos != graphicsObjects.upper_bound( _activeObject->GetObjectType() ); )
+            for( pos = graphicsObjects.lower_bound( tempVisObject->GetObjectType() );
+                    pos != graphicsObjects.upper_bound( tempVisObject->GetObjectType() ); )
             {
                 //and see if they have the same parent node
                 //the parent node is unique becaue each dataset has a dcs
@@ -284,34 +283,31 @@ void SteadyStateVizHandler::PreFrameUpdate()
                     ++pos;
                 }
             }
-            graphicsObjects.insert( std::make_pair( _activeObject->GetObjectType(), temp ) );
+            graphicsObjects.insert( std::make_pair( tempVisObject->GetObjectType(), temp ) );
 
             // Resetting these variables is very important
-            _activeObject->SetUpdateFlag( false );
-            actorsAreReady = false;
-            _activeObject->ClearGeodes();
+            tempVisObject->SetUpdateFlag( false );
+            tempVisObject->ClearGeodes();
             vprDEBUG( vesDBG, 2 ) << "|\tDone Creating Objects"
-            << std::endl << vprDEBUG_FLUSH;
+                << std::endl << vprDEBUG_FLUSH;
 
-            /*if( ModelHandler::instance()->GetActiveModel()->GetMirrorDataFlag() )
+            m_visObjectQueue.pop();
+            if( m_visObjectQueue.empty() )
             {
-                //we mirror the dataset in two places
-                //once here for data viz and once in modelhandler for geom
-                ves::xplorer::scenegraph::Group* temp = ModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->GetSwitchNode()->GetChild( 0 );
-                ModelHandler::instance()->GetActiveModel()->SetMirrorNode( temp );
-            }*/
-
-            _activeObject = NULL;
+                actorsAreReady = false;
+            }
         }
-
-
-        //If we have selected a viz feature and it is complete the remove the text
-        if( !computeActorsAndGeodes && !alreadyRemoved )
+        //This means the update flag was not set to true so the update failed
+        //on the viz object. This should really be handled with an exception
+        //in the viz object or a status enum flag in the viz objects.
+        else if( !computeActorsAndGeodes )
         {
-            alreadyRemoved = true;
-            //SceneManager::instance()->GetRootNode()->RemoveChild( textOutput->add_text( "executing..." ) );
+            m_visObjectQueue.pop();
+            if( m_visObjectQueue.empty() )
+            {
+                actorsAreReady = false;
+            }            
         }
-        //}
     }
 
     /*
@@ -320,7 +316,8 @@ void SteadyStateVizHandler::PreFrameUpdate()
         useLastSource = ( commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE )== 0 ) ? false : true;
     }
     */
-    /*else if( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == TRANSIENT_DURATION )
+    /*
+    else if( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == TRANSIENT_DURATION )
     {
         std::multimap< int, cfdGraphicsObject* >::iterator pos;
         for(pos=graphicsObjects.begin(); pos!=graphicsObjects.end(); ++pos )
@@ -331,7 +328,8 @@ void SteadyStateVizHandler::PreFrameUpdate()
                     commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) );
             }
         }
-    }*/
+    }
+    */
 }
 ////////////////////////////////////////////////////////////////////////////////
 #if __VJ_version > 2000003
@@ -344,7 +342,7 @@ void SteadyStateVizHandler::CreateActorThread( void* )
     //This thread is purely for creation of geodes
     while( runIntraParallelThread )
     {
-        vpr::System::msleep( 500 );  // half-second delay
+        vpr::System::msleep( 100 );  // thenth-second delay
 
         // Basically waiting for work here
         // This is a guard
@@ -353,71 +351,20 @@ void SteadyStateVizHandler::CreateActorThread( void* )
         {
             if( _activeObject != NULL )
             {
-                cfdContour* contourTest =
-                    dynamic_cast< cfdContour* >( _activeObject );
-                cfdVector* vectorTest =
-                    dynamic_cast< cfdVector* >( _activeObject );
-                cfdMomentum* momentumTest =
-                    dynamic_cast< cfdMomentum* >( _activeObject );
-                cfdStreamers* streamersTest =
-                    dynamic_cast< cfdStreamers* >( _activeObject );
-                cfdAnimatedStreamlineCone* animStreamerTest =
-                    dynamic_cast< cfdAnimatedStreamlineCone* >( _activeObject );
-                cfdAnimatedImage* animImgTest =
-                    dynamic_cast< cfdAnimatedImage* >( _activeObject );
+                vprDEBUG( vesDBG, 0 ) << "|\tUpdating cfdObject..."
+                    << std::endl << vprDEBUG_FLUSH;
 
-                vprDEBUG( vesDBG, 0 ) << " Updating cfdObject..."
-                << std::endl << vprDEBUG_FLUSH;
-
-                // May replace later , fix a later date
-                //vprDEBUG(vesDBG,2) << " Memory used before update ( bytes ) : "
-                //                   << pfMemory::getArenaBytesUsed() << std::endl << vprDEBUG_FLUSH;
-
-                //tt = GetTimeClock();
-                if( contourTest == NULL &&
-                        vectorTest == NULL &&
-                        momentumTest == NULL &&
-                        //streamersTest == NULL &&
-                        animStreamerTest == NULL &&
-                        animImgTest == NULL )
                 {
                     // For everything except for the interactive and transient stuff
-                    vprDEBUG( vesDBG, 1 ) << "non-interactive object." << std::endl << vprDEBUG_FLUSH;
+                    vprDEBUG( vesDBG, 1 ) << "|\tNon-interactive object." << std::endl << vprDEBUG_FLUSH;
 
                     _activeObject->Update();
-                    //_activeObject->SetSequence( 0 );
-                }
-                /*else if(streamersTest != NULL )
-                {
-                vprDEBUG(vesDBG,1) << "interactive object." 
-                   << std::endl << vprDEBUG_FLUSH;
-                // if we are not already computing streamlines
-                streamers();  
-                }*/
-                else if( animStreamerTest != NULL )
-                {
-                    // if we are not already computing animatedStreamlines
-                    animStreamer->SetPolyDataSource( streamlines->GetStreamersOutput() );
-                    animStreamer->Update();
-                }
-                else if( animImgTest != NULL )
-                {
-                    // if we are not already computing animatedImages
-                    animImg->Update();
                 }
 
-                // May fix later, not a crucial part
-                //vprDEBUG(vesDBG,1) << " Time: " << GetTimeClock()-tt
-                //                       << std::endl << vprDEBUG_FLUSH;
-                //vprDEBUG(vesDBG,2) <<" Memory used after update ( bytes ) : "
-                //                       << pfMemory::getArenaBytesUsed()
-                //                       << std::endl << vprDEBUG_FLUSH;
-
-                //_activeObject = NULL;
+                _activeObject = NULL;
                 computeActorsAndGeodes = false;
                 vprDEBUG( vesDBG, 0 ) << "|\tDone updating cfdObject"
-                << std::endl << std::endl << vprDEBUG_FLUSH;
-
+                    << std::endl << std::endl << vprDEBUG_FLUSH;
             }
         }
     } // End of While loop
