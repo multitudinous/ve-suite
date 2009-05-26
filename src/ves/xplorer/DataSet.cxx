@@ -294,13 +294,13 @@ double * DataSet::GetRange()
 ////////////////////////////////////////////////////////////////////////////////
 void DataSet::SetUserRange( double userRange[2] )
 {
-    vprDEBUG( vesDBG, 1 ) << "DataSet::SetUserRange OLD userRange = "
+    vprDEBUG( vesDBG, 1 ) << "|\t\tDataSet::SetUserRange OLD userRange = "
     << userRange[0] << " : " << userRange[1]
     << std::endl << vprDEBUG_FLUSH;
 
     this->SetUserRange( userRange[0], userRange[1] );
 
-    vprDEBUG( vesDBG, 1 ) << "DataSet::SetUserRange NEW userRange = "
+    vprDEBUG( vesDBG, 1 ) << "|\t\tDataSet::SetUserRange NEW userRange = "
     << userRange[0] << " : " << userRange[1]
     << std::endl << vprDEBUG_FLUSH;
 }
@@ -413,7 +413,7 @@ vtkUnstructuredGrid * DataSet::GetUnsData()
     if( ! this->m_dataSet->IsA( "vtkUnstructuredGrid" ) )
     {
         vprDEBUG( vesDBG, 0 )
-        << "DataSet::GetUnsData - dataset is not an unsGrid !!"
+        << "|\t\tDataSet::GetUnsData - dataset is not an unsGrid !!"
         << std::endl << vprDEBUG_FLUSH;
 
         return NULL;
@@ -432,7 +432,7 @@ vtkPolyData * DataSet::GetPolyData()
     if( ! this->m_dataSet->IsA( "vtkPolyData" ) )
     {
         vprDEBUG( vesDBG, 0 )
-        << "DataSet::GetPolyData - dataset is not a vtkPolyData !!"
+        << "|\t\tDataSet::GetPolyData - dataset is not a vtkPolyData !!"
         << std::endl << vprDEBUG_FLUSH;
 
         return NULL;
@@ -452,7 +452,7 @@ void DataSet::SetType()
     if( this->datasetType == -1 )
     {
         int dataObjectType = this->m_dataSet->GetDataObjectType();
-        vprDEBUG( vesDBG, 1 ) << "\tdataObjectType: " << dataObjectType
+        vprDEBUG( vesDBG, 1 ) << "|\t\tdataObjectType: " << dataObjectType
         << std::endl << vprDEBUG_FLUSH;
 
         this->datasetType = 0;
@@ -475,7 +475,7 @@ void DataSet::SetType()
             types->Delete();
         }
     }
-    vprDEBUG( vesDBG, 1 ) << "\tdatasetType: " << this->datasetType
+    vprDEBUG( vesDBG, 1 ) << "|\t\tdatasetType: " << this->datasetType
     << std::endl << vprDEBUG_FLUSH;
 }
 
@@ -867,7 +867,7 @@ void DataSet::SetActiveScalar( std::string tempActiveScalar )
         this->activeScalar = scalar;
 
         vprDEBUG( vesDBG, 1 )
-        << "DataSet::SetActiveScalar: requested activeScalar = "
+        << "|\t\tDataSet::SetActiveScalar: requested activeScalar = "
         << this->activeScalar << ", scalarName = "
         << this->scalarName[ this->activeScalar ]
         << std::endl << vprDEBUG_FLUSH;
@@ -903,24 +903,24 @@ void DataSet::SetActiveScalar( std::string tempActiveScalar )
     double * temp = this->GetActualScalarRange( this->activeScalar );
     this->range [ 0 ] = temp[ 0 ];
     this->range [ 1 ] = temp[ 1 ];
-    vprDEBUG( vesDBG, 1 ) << "range[0] = " << this->range[0]
+    vprDEBUG( vesDBG, 1 ) << "|\t\trange[0] = " << this->range[0]
     << ", range[1] = " << this->range[1]
     << std::endl << vprDEBUG_FLUSH;
 
     temp = this->GetDisplayedScalarRange( this->activeScalar );
     this->definedRange[ 0 ] = temp[ 0 ];
     this->definedRange[ 1 ] = temp[ 1 ];
-    vprDEBUG( vesDBG, 1 ) << "definedRange[0] = " << this->definedRange[0]
+    vprDEBUG( vesDBG, 1 ) << "|\t\tdefinedRange[0] = " << this->definedRange[0]
     << ", definedRange[1] = " << this->definedRange[1]
     << std::endl << vprDEBUG_FLUSH;
 
-    vprDEBUG( vesDBG, 1 ) << "actualScalarRange[0][0] = "
+    vprDEBUG( vesDBG, 1 ) << "|\t\tactualScalarRange[0][0] = "
     << this->actualScalarRange[0][0]
     << ", actualScalarRange[0][1] = "
     << this->actualScalarRange[0][1]
     << std::endl << vprDEBUG_FLUSH;
 
-    vprDEBUG( vesDBG, 1 ) << "displayedScalarRange[0][0] = "
+    vprDEBUG( vesDBG, 1 ) << "|\t\tdisplayedScalarRange[0][0] = "
     << this->displayedScalarRange[0][0]
     << ", displayedScalarRange[0][1] = "
     << this->displayedScalarRange[0][1]
@@ -928,18 +928,18 @@ void DataSet::SetActiveScalar( std::string tempActiveScalar )
 
     // Step length for streamline integration
     this->stepLength = this->bbDiagonal / 5.0f ;
-    vprDEBUG( vesDBG, 1 ) << "\tSetActiveScalar: stepLength = "
+    vprDEBUG( vesDBG, 1 ) << "|\t\tSetActiveScalar: stepLength = "
     << this->stepLength << std::endl << vprDEBUG_FLUSH;
 
     // Maximum integration time for streamline integration
     this->maxTime = 5.0f * this->bbDiagonal /
                     (( this->range[1] - this->range[0] ) * 0.5f );
-    vprDEBUG( vesDBG, 1 ) << "\tSetActiveScalar: maxTime = "
+    vprDEBUG( vesDBG, 1 ) << "|\t\tSetActiveScalar: maxTime = "
     << this->maxTime << std::endl << vprDEBUG_FLUSH;
 
     // Time step for streamline integration
     this->timeStep = this->bbDiagonal / this->definedRange[1];
-    vprDEBUG( vesDBG, 1 ) << "\tSetActiveScalar: timeStep = "
+    vprDEBUG( vesDBG, 1 ) << "|\t\tSetActiveScalar: timeStep = "
     << this->timeStep << std::endl << vprDEBUG_FLUSH;
 
     // set up the vtkLookupTable
@@ -969,7 +969,7 @@ void DataSet::SetActiveScalar( int scalar )
         this->activeScalar = scalar;
 
         vprDEBUG( vesDBG, 1 )
-        << "DataSet::SetActiveScalar: requested activeScalar = "
+        << "|\t\tDataSet::SetActiveScalar: requested activeScalar = "
         << this->activeScalar << ", scalarName = "
         << this->scalarName[ this->activeScalar ]
         << std::endl << vprDEBUG_FLUSH;
@@ -1005,24 +1005,24 @@ void DataSet::SetActiveScalar( int scalar )
     double * temp = this->GetActualScalarRange( this->activeScalar );
     this->range [ 0 ] = temp[ 0 ];
     this->range [ 1 ] = temp[ 1 ];
-    vprDEBUG( vesDBG, 1 ) << "range[0] = " << this->range[0]
+    vprDEBUG( vesDBG, 1 ) << "|\t\trange[0] = " << this->range[0]
     << ", range[1] = " << this->range[1]
     << std::endl << vprDEBUG_FLUSH;
 
     temp = this->GetDisplayedScalarRange( this->activeScalar );
     this->definedRange[ 0 ] = temp[ 0 ];
     this->definedRange[ 1 ] = temp[ 1 ];
-    vprDEBUG( vesDBG, 1 ) << "definedRange[0] = " << this->definedRange[0]
+    vprDEBUG( vesDBG, 1 ) << "|\t\tdefinedRange[0] = " << this->definedRange[0]
     << ", definedRange[1] = " << this->definedRange[1]
     << std::endl << vprDEBUG_FLUSH;
 
-    vprDEBUG( vesDBG, 1 ) << "actualScalarRange[0][0] = "
+    vprDEBUG( vesDBG, 1 ) << "|\t\tactualScalarRange[0][0] = "
     << this->actualScalarRange[0][0]
     << ", actualScalarRange[0][1] = "
     << this->actualScalarRange[0][1]
     << std::endl << vprDEBUG_FLUSH;
 
-    vprDEBUG( vesDBG, 1 ) << "displayedScalarRange[0][0] = "
+    vprDEBUG( vesDBG, 1 ) << "|\t\tdisplayedScalarRange[0][0] = "
     << this->displayedScalarRange[0][0]
     << ", displayedScalarRange[0][1] = "
     << this->displayedScalarRange[0][1]
@@ -1030,18 +1030,18 @@ void DataSet::SetActiveScalar( int scalar )
 
     // Step length for streamline integration
     this->stepLength = this->bbDiagonal / 5.0f ;
-    vprDEBUG( vesDBG, 1 ) << "\tSetActiveScalar: stepLength = "
+    vprDEBUG( vesDBG, 1 ) << "|\t\tSetActiveScalar: stepLength = "
     << this->stepLength << std::endl << vprDEBUG_FLUSH;
 
     // Maximum integration time for streamline integration
     this->maxTime = 5.0f * this->bbDiagonal /
                     (( this->range[1] - this->range[0] ) * 0.5f );
-    vprDEBUG( vesDBG, 1 ) << "\tSetActiveScalar: maxTime = "
+    vprDEBUG( vesDBG, 1 ) << "|\t\tSetActiveScalar: maxTime = "
     << this->maxTime << std::endl << vprDEBUG_FLUSH;
 
     // Time step for streamline integration
     this->timeStep = this->bbDiagonal / this->definedRange[1];
-    vprDEBUG( vesDBG, 1 ) << "\tSetActiveScalar: timeStep = "
+    vprDEBUG( vesDBG, 1 ) << "|\t\tSetActiveScalar: timeStep = "
     << this->timeStep << std::endl << vprDEBUG_FLUSH;
 
     // set up the vtkLookupTable
@@ -1082,7 +1082,7 @@ void DataSet::SetActiveVector( int vector )
         this->activeVector = vector;
 
         vprDEBUG( vesDBG, 1 )
-        << "DataSet::SetActiveVector: requested activeVector = "
+        << "|\t\tDataSet::SetActiveVector: requested activeVector = "
         << this->activeVector << ", vectorName= "
         << this->vectorName[ this->activeVector ]
         << std::endl << vprDEBUG_FLUSH;
@@ -1097,7 +1097,7 @@ void DataSet::SetActiveVector( int vector )
         {
             numPlanes = this->GetPrecomputedSlices( i )->GetNumberOfPlanes();
         }
-        vprDEBUG( vesDBG, 1 ) << "\tnumPlanes = " << numPlanes
+        vprDEBUG( vesDBG, 1 ) << "|\t\tDataSet::SetActiveVector: numPlanes = " << numPlanes
         << std::endl << vprDEBUG_FLUSH;
 
         if( numPlanes > 0 )
@@ -1146,7 +1146,7 @@ void DataSet::SetActiveVector( std::string tempVectorName )
         this->activeVector = vector;
 
         vprDEBUG( vesDBG, 1 )
-        << "DataSet::SetActiveVector: requested activeVector = "
+        << "|\t\tDataSet::SetActiveVector: requested activeVector = "
         << this->activeVector << ", vectorName= "
         << this->vectorName[ this->activeVector ]
         << std::endl << vprDEBUG_FLUSH;
@@ -1165,7 +1165,7 @@ void DataSet::SetActiveVector( std::string tempVectorName )
         {
             numPlanes = this->GetPrecomputedSlices( i )->GetNumberOfPlanes();
         }
-        vprDEBUG( vesDBG, 1 ) << "\tnumPlanes = " << numPlanes
+        vprDEBUG( vesDBG, 1 ) << "|\t\tDataSet::SetActiveVector: numPlanes = " << numPlanes
         << std::endl << vprDEBUG_FLUSH;
 
         if( numPlanes > 0 )
@@ -1189,7 +1189,7 @@ void DataSet::AutoComputeUserRange( const double rawRange[2],
                                     double prettyRange[2] )
 {
     double highMinusLow = rawRange[1] - rawRange[0];
-    vprDEBUG( vesDBG, 1 ) << " highMinusLow = " << highMinusLow
+    vprDEBUG( vesDBG, 1 ) << "|\t\thighMinusLow = " << highMinusLow
     << std::endl << vprDEBUG_FLUSH;
 
     // if all scalar data is the same, then lower bound = upper bound.
@@ -1204,7 +1204,7 @@ void DataSet::AutoComputeUserRange( const double rawRange[2],
         prettyRange[ 0 ] = rawRange[ 0 ];
         prettyRange[ 1 ] = rawRange[ 1 ];
     }
-    vprDEBUG( vesDBG, 1 ) << " prettyRange: "
+    vprDEBUG( vesDBG, 1 ) << "|\t\tprettyRange: "
     << prettyRange[ 0 ] << " : " << prettyRange[ 1 ]
     << std::endl << vprDEBUG_FLUSH;
 }
@@ -1212,7 +1212,7 @@ void DataSet::AutoComputeUserRange( const double rawRange[2],
 void DataSet::ResetScalarBarRange( double min, double max )
 {
     // converts percentile parameters into decimal values for a particular scalar
-    vprDEBUG( vesDBG, 1 ) << "DataSet::ResetScalarBarRange "
+    vprDEBUG( vesDBG, 1 ) << "|\t\tDataSet::ResetScalarBarRange "
     << "min = " << min << ", max = " << max
     << std::endl << vprDEBUG_FLUSH;
 
@@ -1231,7 +1231,7 @@ void DataSet::ResetScalarBarRange( double min, double max )
 
     double newPrettyRange[2];
     this->AutoComputeUserRange( newRawRange, newPrettyRange );
-    vprDEBUG( vesDBG, 1 ) << "newPrettyRange[0] = " << newPrettyRange[0]
+    vprDEBUG( vesDBG, 1 ) << "|\t\tnewPrettyRange[0] = " << newPrettyRange[0]
         << ", newPrettyRange[1] = " << newPrettyRange[1]
         << std::endl << vprDEBUG_FLUSH;
 
@@ -1294,8 +1294,8 @@ void DataSet::LoadPrecomputedDataSlices()
     {
         double bounds[ 6 ];
         GetBounds( bounds );
-        vprDEBUG( vesDBG, 0 ) << "\tDataset bounds xmin = " << bounds[ 0 ] << " xmax " << bounds[ 1 ] << " ymin " << bounds[ 2 ] << " ymax " << bounds[ 3 ] << " zmin " << bounds[ 4 ] << " zmax " << bounds[ 5 ] << std::endl << vprDEBUG_FLUSH;
-        vprDEBUG( vesDBG, 0 ) << "\tLoading precomputed planes from "
+        vprDEBUG( vesDBG, 0 ) << "|\t\tDataset bounds xmin = " << bounds[ 0 ] << " xmax " << bounds[ 1 ] << " ymin " << bounds[ 2 ] << " ymax " << bounds[ 3 ] << " zmin " << bounds[ 4 ] << " zmax " << bounds[ 5 ] << std::endl << vprDEBUG_FLUSH;
+        vprDEBUG( vesDBG, 0 ) << "|\t\tLoading precomputed planes from "
             << precomputedDataSliceDir << std::endl << vprDEBUG_FLUSH;
         this->x_planes = new cfdPlanes( 0, this->GetPrecomputedDataSliceDir().c_str(), bounds );
         this->y_planes = new cfdPlanes( 1, this->GetPrecomputedDataSliceDir().c_str(), bounds );
@@ -1484,18 +1484,18 @@ void DataSet::GetActualScalarRange( int index, double* range )
 void DataSet::SetActualScalarRange( int index, double* range )
 {
     vprDEBUG( vesDBG, 2 )
-    << "DataSet::SetActualScalarRange, for file " << this->fileName
+    << "|\t\tDataSet::SetActualScalarRange, for file " << this->fileName
     << ", index: " << index
     << std::endl << vprDEBUG_FLUSH;
 
     vprDEBUG( vesDBG, 2 )
-    << "DataSet::SetActualScalarRange OLD actualScalarRange["
+    << "|\t\tDataSet::SetActualScalarRange OLD actualScalarRange["
     << index << "] = "
     << this->actualScalarRange[ index ][ 0 ] << " : "
     << this->actualScalarRange[ index ][ 1 ]
     << std::endl << vprDEBUG_FLUSH;
 
-    vprDEBUG( vesDBG, 2 ) << "DataSet::SetActualScalarRange request range: "
+    vprDEBUG( vesDBG, 2 ) << "|\t\tDataSet::SetActualScalarRange request range: "
     << range[0] << " : " << range[1]
     << std::endl << vprDEBUG_FLUSH;
 
@@ -1503,7 +1503,7 @@ void DataSet::SetActualScalarRange( int index, double* range )
     this->actualScalarRange[ index ][ 1 ] = range[ 1 ];
 
     vprDEBUG( vesDBG, 1 )
-    << "DataSet::SetActualScalarRange NEW actualScalarRange["
+    << "|\t\tDataSet::SetActualScalarRange NEW actualScalarRange["
     << index << "] = "
     << this->actualScalarRange[ index ][ 0 ] << " : "
     << this->actualScalarRange[ index ][ 1 ]
@@ -1512,7 +1512,7 @@ void DataSet::SetActualScalarRange( int index, double* range )
 //////////////////////////////////////////////////////////
 double * DataSet::GetDisplayedScalarRange()
 {
-    vprDEBUG( vesDBG, 1 ) << "DataSet::GetDisplayedScalarRange"
+    vprDEBUG( vesDBG, 1 ) << "|\t\tDataSet::GetDisplayedScalarRange"
         << " activeScalar = " << this->activeScalar
         << std::endl << vprDEBUG_FLUSH;
     return this->displayedScalarRange[ this->activeScalar ];
@@ -1588,7 +1588,7 @@ void DataSet::StoreScalarInfo()
     this->numScalars = dynamic_cast<ves::xplorer::util::CountNumberOfParametersCallback*>
                        ( m_dataObjectOps["Count Number Of Vectors And Scalars"] )->GetNumberOfParameters();
 
-    vprDEBUG( vesDBG, 1 ) << "\tStoreScalarInfo: numScalars = "
+    vprDEBUG( vesDBG, 1 ) << "|\t\tStoreScalarInfo: numScalars = "
     << this->numScalars
     << std::endl << vprDEBUG_FLUSH;
 
