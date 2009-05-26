@@ -66,112 +66,175 @@ RotateAxis::~RotateAxis()
 ////////////////////////////////////////////////////////////////////////////////
 void RotateAxis::SetupDefaultGeometry()
 {
-    size_t numSegments = 100;
-    double innerRadius = 0.95;
-    double outerRadius = 1.00;
-    double deltaIncrement =
-        ( 2.0 * osg::PI ) / static_cast< double >( numSegments );
+    size_t numSegments( 100 );
+    double radius( 1.00 );
+    double TWO_PI( 2.0 * osg::PI );
+    double ringDelta( TWO_PI / numSegments );
 
+    //The geode to add the geometry to
     osg::ref_ptr< osg::Geode > geode = new osg::Geode();
-    osg::ref_ptr< osg::Geometry > geometry = new osg::Geometry();
-    osg::ref_ptr< osg::Vec3Array > vertices = new osg::Vec3Array();
-    size_t numVertices = numSegments + 2;
-    vertices->resize( numVertices );
-    vertices->push_back( osg::Vec3( 0.0, 0.0, 0.0 ) );
-    for( size_t i = 0; i <= numSegments; ++i )
+
+    //Create the rotation axis with line loops
     {
-        double rot = static_cast< double >( i ) * deltaIncrement;
-        double cosVal = cos( rot );
-        double sinVal = sin( rot );
+        osg::ref_ptr< osg::Geometry > geometry = new osg::Geometry();
+        osg::ref_ptr< osg::Vec3Array > vertices = new osg::Vec3Array();
+        for( size_t i = 0; i < numSegments; ++i )
+        {
+            double rot( i * ringDelta );
+            double cosVal( cos( rot ) );
+            double sinVal( sin( rot ) );
 
-        double y = outerRadius * cosVal;
-        double z = outerRadius * sinVal;
+            double y( radius * cosVal );
+            double z( radius * sinVal );
 
-        vertices->push_back( osg::Vec3( 0.0, y, z ) );
+            vertices->push_back( osg::Vec3( 0.0, y, z ) );
+        }
+
+        geometry->setVertexArray( vertices.get() );
+        geometry->addPrimitiveSet(
+            new osg::DrawArrays(
+                osg::PrimitiveSet::LINE_LOOP, 0, vertices->size() ) );
+
+        geode->addDrawable( geometry.get() );
+
+        //Set StateSet
+        osg::ref_ptr< osg::StateSet > stateSet =
+            geometry->getOrCreateStateSet();
+
+        //Set line width
+        osg::ref_ptr< osg::LineWidth > lineWidth = new osg::LineWidth();
+        lineWidth->setWidth( 2.0 );
+        stateSet->setAttributeAndModes(
+            lineWidth.get(), osg::StateAttribute::ON );
+
+        //Set line hints
+        stateSet->setMode( GL_LINE_SMOOTH,
+            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+        osg::ref_ptr< osg::Hint > hint =
+            new osg::Hint( GL_LINE_SMOOTH_HINT, GL_NICEST );
+        stateSet->setAttributeAndModes( hint.get(),
+            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
     }
 
-    geometry->setVertexArray( vertices.get() );
-    geometry->addPrimitiveSet(
-        new osg::DrawArrays(
-            osg::PrimitiveSet::TRIANGLE_FAN, 0, vertices->size() ) );
-    geometry->addPrimitiveSet(
-        new osg::DrawArrays(
-            osg::PrimitiveSet::LINES, 1, vertices->size() ) );
-    geode->addDrawable( geometry.get() );
-
-    //Triangle Strip
-    /*
-    size_t numVertices = 2 * ( numSegments + 1 );
-    vertices->resize( numVertices );
-    for( size_t i = 0; i < numVertices; i += 2 )
+    //Create invisible torus for picking the rotation axis
     {
-        double rot = static_cast< double >( i ) * deltaIncrement;
-        double cosVal = cos( rot );
-        double sinVal = sin( rot );
+        osg::ref_ptr< osg::Geometry > geometry = new osg::Geometry();
+        osg::ref_ptr< osg::Vec3Array > vertices = new osg::Vec3Array();
+        size_t numSides( 8 );
+        size_t numVerticesPerSegment = 2 * ( numSides + 1 );
 
-        double yi = innerRadius * cosVal;
-        double zi = innerRadius * sinVal;
+        double minorRadius( 0.025 );
+        double theta( 0.0 );
+        double cosTheta( 1.0 );
+        double sinTheta( 0.0 );
+        double sideDelta( TWO_PI / numSides );
+        for( size_t i = 0; i < numSegments; ++i )
+        {
+            double phi( 0.0 );
+            double newTheta( theta + ringDelta );
+            double newCosTheta( cos( newTheta ) );
+            double newSinTheta( sin( newTheta ) );
+            for( size_t j = 0; j <= numSides; ++j )
+            {
+                phi += sideDelta;
+                double cosPhi( cos( phi ) );
+                double sinPhi( sin( phi ) );
+                double dist( radius + minorRadius * cosPhi );
 
-        double yo = outerRadius * cosVal;
-        double zo = outerRadius * sinVal;
+                vertices->push_back(
+                    osg::Vec3(
+                        minorRadius * sinPhi,
+                        newCosTheta * dist,
+                       -newSinTheta * dist ) );
+                vertices->push_back(
+                    osg::Vec3(
+                        minorRadius * sinPhi,
+                        cosTheta * dist,
+                        -sinTheta * dist ) );
+            }
 
-        (*vertices)[ i ] = osg::Vec3( 0.0, yi, zi );
-        (*vertices)[ i + 1 ] = osg::Vec3( 0.0, yo, zo );
+            theta = newTheta;
+            cosTheta = newCosTheta;
+            sinTheta = newSinTheta;
+        }
+
+        geometry->setVertexArray( vertices.get() );
+        for( size_t i = 0; i < numSegments; ++i )
+        {
+            geometry->addPrimitiveSet(
+                new osg::DrawArrays(
+                    osg::PrimitiveSet::TRIANGLE_STRIP,
+                    i * numVerticesPerSegment,
+                    numVerticesPerSegment ) );
+        }
+
+        SetDrawableToAlwaysCull( *geometry.get() );
+        geode->addDrawable( geometry.get() );
     }
 
-    geometry->setVertexArray( vertices.get() );
-    geometry->addPrimitiveSet(
-        new osg::DrawArrays(
-            osg::PrimitiveSet::TRIANGLE_STRIP, 0, vertices->size() ) );
-    geode->addDrawable( geometry.get() );
-    */
-
-    osg::ref_ptr< osg::StateSet > stateSet = getOrCreateStateSet();
-
-    //Set line width
-    osg::ref_ptr< osg::LineWidth > lineWidth = new osg::LineWidth();
-    lineWidth->setWidth( 2.0 );
-    stateSet->setAttributeAndModes( lineWidth.get(), osg::StateAttribute::ON );
-
-    //stateSet->setMode( GL_LINE_SMOOTH,
-        //osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
-    //osg::ref_ptr< osg::Hint > hint =
-        //new osg::Hint( GL_LINE_SMOOTH_HINT, GL_NICEST );
-    //stateSet->setAttributeAndModes( hint.get(),
-        //osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
-
-    //Set polygon stipple
-    osg::ref_ptr< osg::PolygonStipple > polygonStipple =
-        new osg::PolygonStipple();
-    GLubyte halftone[] =
+    //Create stippled geometry to show rotation about the axis
     {
-        0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
-        0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
-        0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
-        0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
-        0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
-        0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
-        0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
-        0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
-        0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
-        0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
-        0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
-        0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
-        0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
-        0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
-        0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
-        0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55
-    };
-    polygonStipple->setMask( halftone );
-    stateSet->setAttributeAndModes( polygonStipple.get(),
-        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+        osg::ref_ptr< osg::Geometry > geometry = new osg::Geometry();
+        osg::ref_ptr< osg::Vec3Array > vertices = new osg::Vec3Array();
 
-    stateSet->setMode( GL_POLYGON_SMOOTH,
-        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
-    osg::ref_ptr< osg::Hint > hint =
-        new osg::Hint( GL_POLYGON_SMOOTH_HINT, GL_NICEST );
-    stateSet->setAttributeAndModes( hint.get(),
-        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+        vertices->push_back( osg::Vec3( 0.0, 0.0, 0.0 ) );
+        for( size_t i = 0; i <= numSegments; ++i )
+        {
+            double rot( i * ringDelta );
+            double cosVal( cos( rot ) );
+            double sinVal( sin( rot ) );
+
+            double y( radius * cosVal );
+            double z( radius * sinVal );
+
+            vertices->push_back( osg::Vec3( 0.0, y, z ) );
+        }
+
+        geometry->setVertexArray( vertices.get() );
+        geometry->addPrimitiveSet(
+            new osg::DrawArrays(
+                osg::PrimitiveSet::TRIANGLE_FAN, 0, vertices->size() ) );
+
+        geode->addDrawable( geometry.get() );
+        
+        //Set StateSet
+        osg::ref_ptr< osg::StateSet > stateSet =
+            geometry->getOrCreateStateSet();
+
+        //Set polygon stipple
+        osg::ref_ptr< osg::PolygonStipple > polygonStipple =
+            new osg::PolygonStipple();
+        GLubyte halftone[] =
+        {
+            0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
+            0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
+            0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
+            0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
+            0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
+            0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
+            0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
+            0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
+            0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
+            0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
+            0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
+            0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
+            0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
+            0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
+            0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
+            0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55
+        };
+        polygonStipple->setMask( halftone );
+        stateSet->setAttributeAndModes( polygonStipple.get(),
+            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+
+        //Set polygon hints
+        stateSet->setMode( GL_POLYGON_SMOOTH,
+            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+        osg::ref_ptr< osg::Hint > hint =
+            new osg::Hint( GL_POLYGON_SMOOTH_HINT, GL_NICEST );
+        stateSet->setAttributeAndModes( hint.get(),
+            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+    }
 
     //Add rotation axis to the scene
     addChild( geode.get() );
