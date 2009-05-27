@@ -250,7 +250,7 @@ void cfdContourBase::UpdateCommand()
     activeModelDVP = objectCommand->GetDataValuePair( "Position" );
     double planePosition;
     activeModelDVP->GetData( planePosition );
-    SetRequestedValue( static_cast< int >( planePosition ) );
+    SetRequestedValue( planePosition );
 
     activeModelDVP = objectCommand->GetDataValuePair( "Plane Option" );
     if( activeModelDVP )

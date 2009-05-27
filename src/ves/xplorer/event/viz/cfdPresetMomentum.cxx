@@ -87,7 +87,7 @@ void cfdPresetMomentum::Update( void )
     {
         vtkPolyData* preCalcData = this->GetActiveDataSet()
                                    ->GetPrecomputedSlices( xyz )
-                                   ->GetClosestPlane( this->requestedValue );
+                                   ->GetClosestPlane( requestedValue );
 
         if( preCalcData == NULL )
         {
@@ -127,7 +127,7 @@ void cfdPresetMomentum::Update( void )
         // insure that we are using correct bounds for the given data set...
         this->cuttingPlane->SetBounds(
             this->GetActiveDataSet()->GetBounds() );
-        this->cuttingPlane->Advance( this->requestedValue );
+        this->cuttingPlane->Advance( requestedValue );
         vtkCutter* tempCutter = vtkCutter::New();        
         tempCutter->SetCutFunction( this->cuttingPlane->GetPlane() );
         tempCutter->SetInput( GetActiveDataSet()->GetDataSet() );

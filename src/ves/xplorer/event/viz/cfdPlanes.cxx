@@ -199,7 +199,7 @@ vtkPolyDataAlgorithm* cfdPlanes::GetPlanesData( void )
 }
 
 // 0 <= sliderBarPos <= 100
-vtkPolyData * cfdPlanes::GetClosestPlane( const int sliderBarPos )
+vtkPolyData * cfdPlanes::GetClosestPlane( const double sliderBarPos )
 {
     if( this->numPlanes == 0 )
     {

@@ -131,9 +131,9 @@ public:
 
     ///Sets and stores the requested value.
     ///\param x
-    void SetRequestedValue( int x )
+    void SetRequestedValue( double x )
     {
-        this->requestedValue = x;
+        requestedValue = x;
     }
 
     ///Sets and stores the cursor type.
@@ -213,7 +213,7 @@ protected:
     bool updateFlag;///<flag for updating.
     int vtkToPFDebug;///<debugging for performer (may not be needed).
     int objectType;///<sets object type.
-    int requestedValue;///flag for requested value.
+    double requestedValue;///flag for requested value.
     int cursorType;///<flag for cursor type.
     int usePreCalcData;///<flag for using the precalculated data.
     double origin[ 3 ];///<stores origin values.

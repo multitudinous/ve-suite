@@ -94,7 +94,7 @@ void cfdPresetVector::Update( void )
         }
 
         vtkPolyData * preCalcData = 
-            precomputedPlanes->GetClosestPlane( this->requestedValue );
+            precomputedPlanes->GetClosestPlane( requestedValue );
 
         if( preCalcData == NULL )
         {
@@ -140,7 +140,7 @@ void cfdPresetVector::Update( void )
             // insure that we are using correct bounds for the given data set...
             this->cuttingPlane->SetBounds(
                                           this->GetActiveDataSet()->GetBounds() );
-            this->cuttingPlane->Advance( this->requestedValue );
+            this->cuttingPlane->Advance( requestedValue );
             vtkCutter* cutter = vtkCutter::New();
             cutter->SetInput( GetActiveDataSet()->GetDataSet() );
             cutter->SetCutFunction( this->cuttingPlane->GetPlane() );

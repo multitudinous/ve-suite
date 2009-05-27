@@ -463,7 +463,8 @@ void Vistab::_onVector( wxCommandEvent& WXUNUSED( event ) )
                       wxOK | wxICON_INFORMATION );
         return;
     }
-    else if( !vectorContour )
+    
+    if( !vectorContour )
     {
         vectorContour = new Contours( this,
                                       -1,
@@ -479,13 +480,22 @@ void Vistab::_onVector( wxCommandEvent& WXUNUSED( event ) )
 ////////////////////////////////////////////////////////////
 void Vistab::_onStreamline( wxCommandEvent& WXUNUSED( event ) )
 {
+    //We must check vectors and scalars for streamlines
     if( _activeScalarName.empty() )
     {
         wxMessageBox( _( "Select a scalar or vector" ), _( "Dataset Failure" ),
                       wxOK | wxICON_INFORMATION );
         return;
     }
-    else if( !streamline )
+    
+    if( _activeVectorName.empty() || _activeVectorName == "None" )
+    {
+        wxMessageBox( _( "Select a vector" ), _( "Dataset Failure" ),
+                     wxOK | wxICON_INFORMATION );
+        return;
+    }
+    
+    if( !streamline )
     {
         streamline = new Streamlines( this,
                                       /*SYMBOL_CONTOURS_IDNAME*/ -1,
@@ -507,7 +517,8 @@ void Vistab::_onIsosurface( wxCommandEvent& WXUNUSED( event ) )
                       wxOK | wxICON_INFORMATION );
         return;
     }
-    else if( !isosurface )
+    
+    if( !isosurface )
     {
         isosurface = new Isosurfaces( this,
                                       /*SYMBOL_CONTOURS_IDNAME*/ -1,

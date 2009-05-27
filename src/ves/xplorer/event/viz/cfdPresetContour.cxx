@@ -86,7 +86,7 @@ void cfdPresetContour::Update( void )
         }
 
         vtkPolyData* preCalcData = precomputedPlanes
-                                    ->GetClosestPlane( this->requestedValue );
+                                    ->GetClosestPlane( requestedValue );
 
         if( preCalcData == NULL )
         {

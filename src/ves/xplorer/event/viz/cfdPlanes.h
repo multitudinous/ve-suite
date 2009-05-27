@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #ifndef CFD_PLANES_H
 #define CFD_PLANES_H
@@ -85,7 +83,7 @@ public:
     ///Selects the closest cutting plane depending on the slider bar position.
     ///0 <= sliderBarPos <= 100
     ///\param sliderBarPos The position of the slider bar.
-    vtkPolyData* GetClosestPlane( const int sliderBarPos );
+    vtkPolyData* GetClosestPlane( const double sliderBarPos );
 
     ///Concatenate them all into one.
     void ConcatenateSelectedPlanes( void );

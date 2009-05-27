@@ -62,7 +62,7 @@ public:
 
     ///This reads in the requested value for the cutting plane.
     ///\param requestedValue
-    void Advance( int requestedValue );
+    void Advance( double requestedValue );
 
     ///This reads in the requested value for the cutting plane.
     ///\param Origin
@@ -73,7 +73,7 @@ private:
 
     ///This computes the origin as requested from the user.
     ///\param requestedValue
-    void ComputeOrigin( int requestedValue );
+    void ComputeOrigin( double requestedValue );
 
     ///Used to test if past range.
     int isPastEnd();

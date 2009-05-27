@@ -36,6 +36,10 @@
 #include <ves/conductor/advancedcontours.h>
 #include <ves/conductor/advancedvectors.h>
 
+#include <ves/conductor/util/spinctld.h>
+
+#include <wx/textctrl.h>
+
 #include <wx/sizer.h>
 #include <wx/checkbox.h>
 #include <wx/radiobox.h>
@@ -56,6 +60,7 @@
 #include <ves/util/icons/ve_icon32x32.xpm>
 
 using namespace ves::conductor;
+using namespace ves::conductor::util;
 
 BEGIN_EVENT_TABLE( Contours, wxDialog )
     ////@begin Contours event table entries
@@ -68,6 +73,10 @@ BEGIN_EVENT_TABLE( Contours, wxDialog )
     EVT_SLIDER( CONTOURS_PLANE_SLIDER,        Contours::_onPlane )
     EVT_BUTTON( CONTOURS_ADD_CONTOUR_PLANE_BUTTON,    Contours::_onAddPlane )
     EVT_BUTTON( CONTOURS_ADVANCED_CONTOUR_BUTTON,     Contours::_onAdvanced )
+    EVT_TEXT_ENTER( CONTOURS_PLANE_SPINNER, Contours::UpdatePlaneSlider )
+    EVT_TEXT( CONTOURS_PLANE_SPINNER, Contours::UpdatePlaneSlider )
+    //EVT_COMMAND_SCROLL( CONTOURS_PLANE_SPINNER, Contours::UpdatePlaneSlider )
+    EVT_SCROLLBAR( CONTOURS_PLANE_SPINNER, Contours::UpdatePlaneSlider )
     ////@end Contours event table entries
 END_EVENT_TABLE()
 //////////////////////////////////////////////////////////////////////
@@ -93,6 +102,7 @@ bool Contours::Create( wxWindow* parent, wxWindowID id, const wxString& caption,
     _planePositonSlider = 0;
     itemButton16 = 0;
     itemButton17 = 0;
+    m_positionSpinner = 0;
     _planeDirection = "x";
     _planeType = "Graduated";
     _numberOfPlanesOption = "Single";
@@ -209,28 +219,20 @@ void Contours::CreateControls()
     wxStaticText* itemStaticText13 = new wxStaticText( itemDialog1, wxID_STATIC, _T( "Plane" ), wxDefaultPosition, wxDefaultSize, 0 );
     itemStaticBoxSizer3->Add( itemStaticText13, 0, wxALIGN_LEFT | wxLEFT | wxRIGHT | wxTOP | wxADJUST_MINSIZE, 5 );
 
-//Add a spinner before the slider
-/*    wxBoxSizer* minSizer = new wxBoxSizer( wxHORIZONTAL );
-    wxBoxSizer* maxSizer = new wxBoxSizer( wxHORIZONTAL );
-    
-    _minSpinner = new wxSpinCtrlDbl( *itemDialog1, VISTAB_MIN_SPINCTRL, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 100, 0, 0.1, -1, wxEmptyString );
-    _minSlider = new wxSlider( itemDialog1, VISTAB_MIN_SLIDER, 0, 0, 100, wxDefaultPosition, wxSize( 300, -1 ), wxSL_HORIZONTAL | wxSL_LABELS );
-    
-    _maxSpinner = new wxSpinCtrlDbl( *itemDialog1, VISTAB_MAX_SPINCTRL, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 100, 100, 0.1, -1, wxEmptyString );
-    _maxSlider = new wxSlider( itemDialog1, VISTAB_MAX_SLIDER, 100, 0, 100, wxDefaultPosition, wxSize( 300, -1 ), wxSL_HORIZONTAL | wxSL_LABELS );
-    
-    wxStaticText* _min = new wxStaticText( itemDialog1, wxID_STATIC, _T( "Min" ), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT );
-    wxStaticText* _max = new wxStaticText( itemDialog1, wxID_STATIC, _T( "Max" ), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT );
-    
-    minSizer->Add( _minSpinner, 0, wxALIGN_LEFT | wxTOP | wxLEFT | wxRIGHT, 5 );
-    minSizer->Add( _minSlider, 1, wxALIGN_LEFT | wxLEFT | wxRIGHT | wxBOTTOM | wxEXPAND, 5 );
-    
-    maxSizer->Add( _maxSpinner, 0, wxALIGN_LEFT | wxLEFT | wxRIGHT | wxTOP, 5 );
-    maxSizer->Add( _maxSlider, 1, wxALIGN_LEFT | wxLEFT | wxRIGHT | wxBOTTOM | wxEXPAND, 5 );
-*/
-//////////////////////////    
-    _planePositonSlider = new wxSlider( itemDialog1, CONTOURS_PLANE_SLIDER, 0, 0, 100, wxDefaultPosition, wxSize( 300, -1 ), wxSL_HORIZONTAL | wxSL_LABELS );
-    itemStaticBoxSizer3->Add( _planePositonSlider, 0, wxGROW | wxLEFT | wxRIGHT | wxBOTTOM, 5 );
+    //////////////////////////    
+    //Add a spinner before the slider
+    wxBoxSizer* placementSliderSizer = new wxBoxSizer( wxHORIZONTAL );
+    m_positionSpinner = new wxSpinCtrlDbl( *itemDialog1, CONTOURS_PLANE_SPINNER, 
+        wxEmptyString, wxDefaultPosition, wxDefaultSize, 
+        wxSP_ARROW_KEYS, 0, 100, 0, 0.1, -1, wxEmptyString );
+    _planePositonSlider = new wxSlider( itemDialog1, CONTOURS_PLANE_SLIDER, 
+        0, 0, 100, wxDefaultPosition, wxSize( 300, -1 ), 
+        wxSL_HORIZONTAL | wxSL_LABELS );
+    placementSliderSizer->Add( m_positionSpinner, 0, wxALIGN_LEFT | wxTOP | wxLEFT | wxRIGHT, 5 );
+    placementSliderSizer->Add( _planePositonSlider, 0, wxALIGN_LEFT | wxLEFT | wxRIGHT | wxBOTTOM | wxGROW, 5 );
+    //itemStaticBoxSizer3->Add( _planePositonSlider, 0, wxGROW | wxLEFT | wxRIGHT | wxBOTTOM, 5 );
+    itemStaticBoxSizer3->Add( placementSliderSizer, 0, wxALIGN_CENTER_HORIZONTAL | wxALL, 5 );
+    //////////////////////////    
 
     wxBoxSizer* itemBoxSizer15 = new wxBoxSizer( wxHORIZONTAL );
     itemStaticBoxSizer3->Add( itemBoxSizer15, 0, wxALIGN_CENTER_HORIZONTAL | wxALL, 5 );
@@ -411,6 +413,7 @@ void Contours::_onPrecomputedPlane( wxCommandEvent& WXUNUSED( event ) )
 void Contours::_onPlane( wxCommandEvent& WXUNUSED( event ) )
 {
     _planePosition = static_cast<double>( _planePositonSlider->GetValue() );
+    m_positionSpinner->SetValue( _planePosition );
 }
 ////////////////////////////////////////
 void Contours::_updateAdvancedSettings()
@@ -570,8 +573,19 @@ void Contours::_onAddPlane( wxCommandEvent& WXUNUSED( event ) )
                       wxOK | wxICON_INFORMATION );
     }
 }
-///////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void Contours::SetActiveScalar( std::string activeScalar )
 {
     _activeScalar = activeScalar;
 }
+////////////////////////////////////////////////////////////////////////////////
+void Contours::UpdatePlaneSlider( wxCommandEvent& WXUNUSED( event ) )
+{
+    if( !m_positionSpinner )
+    {
+        return;
+    }
+    _planePosition = m_positionSpinner->GetValue();
+    _planePositonSlider->SetValue( _planePosition );
+}
+////////////////////////////////////////////////////////////////////////////////

@@ -56,6 +56,7 @@ class wxRadioButton;
 class wxCheckBox;
 class wxSlider;
 class wxButton;
+class ves::conductor::util::wxSpinCtrlDbl;
 ////@end forward declarations
 
 /*!
@@ -157,6 +158,8 @@ protected:
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON
     void _onAdvanced( wxCommandEvent& event );
 
+    void UpdatePlaneSlider( wxCommandEvent& event );
+    
     std::string _dataType;///<Scalar or vector data
     std::string _activeScalar;///Active scalar name
 
@@ -169,7 +172,8 @@ protected:
     wxSlider*      _planePositonSlider;
     wxButton*      itemButton16;
     wxButton*      itemButton17;
-
+    ves::conductor::util::wxSpinCtrlDbl* m_positionSpinner;
+    
     std::vector<ves::open::xml::DataValuePairPtr> _advancedSettings;///<The advanced settings.
     std::vector<ves::open::xml::DataValuePairPtr> _contourInformation;///<The countour setting data
 

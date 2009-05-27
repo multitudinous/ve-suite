@@ -120,7 +120,7 @@ vtkPlane * cfdCuttingPlane::GetPlane( )
     return this->plane;
 }
 
-void cfdCuttingPlane::Advance( int requestedValue )
+void cfdCuttingPlane::Advance( double requestedValue )
 {
     // with tablet, requestedValue will be an integer from 0-100
     // with old menu system, requestedValue will be 999
@@ -160,7 +160,7 @@ void cfdCuttingPlane::GetOrigin( double Origin[ 3 ] )
     Origin[2] = this->origin[2];
 }
 
-void cfdCuttingPlane::ComputeOrigin( int requestedValue )
+void cfdCuttingPlane::ComputeOrigin( double requestedValue )
 {
     if( requestedValue < 0 )   requestedValue = 0;
     if( requestedValue > 100 ) requestedValue = 100;
