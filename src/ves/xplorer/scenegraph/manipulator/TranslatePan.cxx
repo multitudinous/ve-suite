@@ -36,9 +36,8 @@
 
 // --- OSG Includes --- //
 #include <osg/Hint>
-#include <osg/Geode>
 #include <osg/Geometry>
-#include <osg/ShapeDrawable>
+#include <osg/Billboard>
 #include <osg/LineWidth>
 
 using namespace ves::xplorer::scenegraph::manipulator;
@@ -66,6 +65,85 @@ TranslatePan::~TranslatePan()
 ////////////////////////////////////////////////////////////////////////////////
 void TranslatePan::SetupDefaultGeometry()
 {
-    ;
+    size_t numSegments( 100 );
+    double radius( 0.2 );
+    double TWO_PI( 2.0 * osg::PI );
+    double ringDelta( TWO_PI / numSegments );
+
+    //The geode to add the geometry to
+    osg::ref_ptr< osg::Billboard > billboard = new osg::Billboard();
+    billboard->setMode( osg::Billboard::POINT_ROT_EYE );
+
+    //Create the rotation axis with line loops
+    {
+        osg::ref_ptr< osg::Geometry > geometry = new osg::Geometry();
+        osg::ref_ptr< osg::Vec3Array > vertices = new osg::Vec3Array();
+        for( size_t i = 0; i < numSegments; ++i )
+        {
+            double rot( i * ringDelta );
+            double cosVal( cos( rot ) );
+            double sinVal( sin( rot ) );
+
+            double x( radius * cosVal );
+            double z( radius * sinVal );
+
+            vertices->push_back( osg::Vec3( x, 0.0, z ) );
+        }
+
+        geometry->setVertexArray( vertices.get() );
+        geometry->addPrimitiveSet(
+            new osg::DrawArrays(
+                osg::PrimitiveSet::LINE_LOOP, 0, vertices->size() ) );
+
+        billboard->addDrawable( geometry.get() );
+
+        //Set StateSet
+        osg::ref_ptr< osg::StateSet > stateSet =
+            geometry->getOrCreateStateSet();
+
+        //Set line width
+        osg::ref_ptr< osg::LineWidth > lineWidth = new osg::LineWidth();
+        lineWidth->setWidth( 2.0 );
+        stateSet->setAttributeAndModes(
+            lineWidth.get(), osg::StateAttribute::ON );
+
+        //Set line hints
+        stateSet->setMode( GL_LINE_SMOOTH,
+            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+        osg::ref_ptr< osg::Hint > hint =
+            new osg::Hint( GL_LINE_SMOOTH_HINT, GL_NICEST );
+        stateSet->setAttributeAndModes( hint.get(),
+            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+    }
+
+    //Create invisible triangle fan to select the translate pan dragger
+    {
+        osg::ref_ptr< osg::Geometry > geometry = new osg::Geometry();
+        osg::ref_ptr< osg::Vec3Array > vertices = new osg::Vec3Array();
+
+        vertices->push_back( osg::Vec3( 0.0, 0.0, 0.0 ) );
+        for( size_t i = 0; i <= numSegments; ++i )
+        {
+            double rot( i * ringDelta );
+            double cosVal( cos( rot ) );
+            double sinVal( sin( rot ) );
+
+            double x( radius * cosVal );
+            double z( radius * sinVal );
+
+            vertices->push_back( osg::Vec3( x, 0.0, z ) );
+        }
+
+        geometry->setVertexArray( vertices.get() );
+        geometry->addPrimitiveSet(
+            new osg::DrawArrays(
+                osg::PrimitiveSet::TRIANGLE_FAN, 0, vertices->size() ) );
+
+        SetDrawableToAlwaysCull( *geometry.get() );
+        billboard->addDrawable( geometry.get() );
+    }
+
+    //Add rotation axis to the scene
+    addChild( billboard.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////

@@ -195,7 +195,7 @@ void RotateAxis::SetupDefaultGeometry()
             new osg::DrawArrays(
                 osg::PrimitiveSet::TRIANGLE_FAN, 0, vertices->size() ) );
 
-        geode->addDrawable( geometry.get() );
+        //geode->addDrawable( geometry.get() );
         
         //Set StateSet
         osg::ref_ptr< osg::StateSet > stateSet =

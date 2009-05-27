@@ -36,8 +36,8 @@
 
 // --- OSG Includes --- //
 #include <osg/Hint>
-#include <osg/Geode>
 #include <osg/Geometry>
+#include <osg/Billboard>
 #include <osg/LineWidth>
 #include <osg/PolygonStipple>
 
@@ -66,6 +66,155 @@ RotateTwist::~RotateTwist()
 ////////////////////////////////////////////////////////////////////////////////
 void RotateTwist::SetupDefaultGeometry()
 {
-    ;
+    size_t numSegments( 100 );
+    double radius( 1.2 );
+    double TWO_PI( 2.0 * osg::PI );
+    double ringDelta( TWO_PI / numSegments );
+
+    //The geode to add the geometry to
+    osg::ref_ptr< osg::Billboard > billboard = new osg::Billboard();
+    billboard->setMode( osg::Billboard::POINT_ROT_EYE );
+
+    //Create the rotation twist axis with line loops
+    {
+        osg::ref_ptr< osg::Geometry > geometry = new osg::Geometry();
+        osg::ref_ptr< osg::Vec3Array > vertices = new osg::Vec3Array();
+        for( size_t i = 0; i < numSegments; ++i )
+        {
+            double rot( i * ringDelta );
+            double cosVal( cos( rot ) );
+            double sinVal( sin( rot ) );
+
+            double x( radius * cosVal );
+            double z( radius * sinVal );
+
+            vertices->push_back( osg::Vec3( x, 0.0, z ) );
+        }
+
+        geometry->setVertexArray( vertices.get() );
+        geometry->addPrimitiveSet(
+            new osg::DrawArrays(
+                osg::PrimitiveSet::LINE_LOOP, 0, vertices->size() ) );
+
+        billboard->addDrawable( geometry.get() );
+
+        //Set StateSet
+        osg::ref_ptr< osg::StateSet > stateSet =
+            geometry->getOrCreateStateSet();
+
+        //Set line width
+        osg::ref_ptr< osg::LineWidth > lineWidth = new osg::LineWidth();
+        lineWidth->setWidth( 2.0 );
+        stateSet->setAttributeAndModes(
+            lineWidth.get(), osg::StateAttribute::ON );
+
+        //Set line hints
+        stateSet->setMode( GL_LINE_SMOOTH,
+            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+        osg::ref_ptr< osg::Hint > hint =
+            new osg::Hint( GL_LINE_SMOOTH_HINT, GL_NICEST );
+        stateSet->setAttributeAndModes( hint.get(),
+            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+    }
+
+    //Create invisible triangle strip for picking the rotation twist axis
+    {
+        osg::ref_ptr< osg::Geometry > geometry = new osg::Geometry();
+        osg::ref_ptr< osg::Vec3Array > vertices = new osg::Vec3Array();
+
+        double minorRadius( 0.025 );
+        double innerRadius( radius - minorRadius );
+        double outerRadius( radius + minorRadius );
+        for( size_t i = 0; i <= numSegments; ++i )
+        {
+            double rot( i * ringDelta );
+            double cosVal( cos( rot ) );
+            double sinVal( sin( rot ) );
+
+            double xi( innerRadius * cosVal );
+            double zi( innerRadius * sinVal );
+
+            double xo( outerRadius * cosVal );
+            double zo( outerRadius * sinVal );
+
+            vertices->push_back( osg::Vec3( xi, 0.0, zi ) );
+            vertices->push_back( osg::Vec3( xo, 0.0, zo ) );
+        }
+
+        geometry->setVertexArray( vertices.get() );
+        geometry->addPrimitiveSet(
+            new osg::DrawArrays(
+                osg::PrimitiveSet::TRIANGLE_STRIP, 0, vertices->size() ) );
+
+        SetDrawableToAlwaysCull( *geometry.get() );
+        billboard->addDrawable( geometry.get() );
+    }
+
+    //Create stippled geometry to show rotation about the twist axis
+    {
+        osg::ref_ptr< osg::Geometry > geometry = new osg::Geometry();
+        osg::ref_ptr< osg::Vec3Array > vertices = new osg::Vec3Array();
+
+        vertices->push_back( osg::Vec3( 0.0, 0.0, 0.0 ) );
+        for( size_t i = 0; i <= numSegments; ++i )
+        {
+            double rot( i * ringDelta );
+            double cosVal( cos( rot ) );
+            double sinVal( sin( rot ) );
+
+            double x( radius * cosVal );
+            double z( radius * sinVal );
+
+            vertices->push_back( osg::Vec3( x, 0.0, z ) );
+        }
+
+        geometry->setVertexArray( vertices.get() );
+        geometry->addPrimitiveSet(
+            new osg::DrawArrays(
+                osg::PrimitiveSet::TRIANGLE_FAN, 0, vertices->size() ) );
+
+        //billboard->addDrawable( geometry.get() );
+        
+        //Set StateSet
+        osg::ref_ptr< osg::StateSet > stateSet =
+            geometry->getOrCreateStateSet();
+
+        //Set polygon stipple
+        osg::ref_ptr< osg::PolygonStipple > polygonStipple =
+            new osg::PolygonStipple();
+        GLubyte halftone[] =
+        {
+            0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
+            0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
+            0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
+            0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
+            0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
+            0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
+            0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
+            0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
+            0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
+            0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
+            0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
+            0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
+            0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
+            0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
+            0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
+            0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55
+        };
+        polygonStipple->setMask( halftone );
+        stateSet->setAttributeAndModes( polygonStipple.get(),
+            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+
+        //Set polygon hints
+        stateSet->setMode( GL_POLYGON_SMOOTH,
+            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+        osg::ref_ptr< osg::Hint > hint =
+            new osg::Hint( GL_POLYGON_SMOOTH_HINT, GL_NICEST );
+        stateSet->setAttributeAndModes( hint.get(),
+            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+    }
+
+    //Add rotation axis to the scene
+    addChild( billboard.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////

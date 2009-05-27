@@ -46,7 +46,7 @@ Dragger::Dragger()
 {
     m_colorMap[ ColorTag::DEFAULT ] = osg::Vec4f( 0.0, 0.0, 0.0, 1.0 );
     m_colorMap[ ColorTag::FOCUS ] = osg::Vec4f( 1.0, 1.0, 0.0, 1.0 );
-    m_colorMap[ ColorTag::ACTIVE ] = osg::Vec4f( 1.0, 1.0, 1.0, 1.0 );
+    m_colorMap[ ColorTag::ACTIVE ] = osg::Vec4f( 0.7, 0.7, 0.7, 1.0 );
     m_colorMap[ ColorTag::OTHER ] = osg::Vec4f( 0.0, 0.0, 0.0, 1.0 );
 
     m_color = new osg::Uniform( "color", GetColor( ColorTag::DEFAULT ) );

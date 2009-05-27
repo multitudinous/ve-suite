@@ -70,11 +70,21 @@ void ScaleAxis::SetupDefaultGeometry()
     double boxWidth = 0.1;
     osg::Vec3 boxCenter( boxWidth * 0.5, 0.0, 0.0 );
 
+    //The geode to add the geometry to
     osg::ref_ptr< osg::Geode > geode = new osg::Geode();
 
-    //Create the positive axis
+    //The unit axis
+    osg::ref_ptr< osg::Vec3Array > vertices = new osg::Vec3Array();
+    vertices->resize( 2 );
+    (*vertices)[ 0 ] = osg::Vec3( 0.0, 0.0, 0.0 );
+    (*vertices)[ 1 ] = osg::Vec3( 1.0, 0.0, 0.0 );
+
+    //Rotation for boxes
+    osg::Quat rotation;
+    rotation.makeRotate( osg::Vec3( 0.0, 0.0, 1.0 ), (*vertices)[ 1 ] );
+
+    //Create a positive line
     {
-        //Create a positive line
         osg::ref_ptr< osg::Geometry > geometry = new osg::Geometry();
         
         osg::ref_ptr< osg::Vec3Array > vertices = new osg::Vec3Array();
@@ -82,89 +92,47 @@ void ScaleAxis::SetupDefaultGeometry()
         (*vertices)[ 0 ] = osg::Vec3( 0.0, 0.0, 0.0 );
         (*vertices)[ 1 ] = osg::Vec3( 1.0, 0.0, 0.0 );
 
-        osg::Quat rotation;
-        rotation.makeRotate( osg::Vec3( 0.0, 0.0, 1.0 ), (*vertices)[ 1 ] );
-
         geometry->setVertexArray( vertices.get() );
         geometry->addPrimitiveSet(
             new osg::DrawArrays( osg::PrimitiveSet::LINES, 0, 2 ) );
+
         geode->addDrawable( geometry.get() );
-    
-        //Create a positive box
+
+        //Set StateSet
+        osg::ref_ptr< osg::StateSet > stateSet =
+            geometry->getOrCreateStateSet();
+
+        //Set line width
+        osg::ref_ptr< osg::LineWidth > lineWidth = new osg::LineWidth();
+        lineWidth->setWidth( 2.0 );
+        stateSet->setAttributeAndModes(
+            lineWidth.get(), osg::StateAttribute::ON );
+
+        //Set line hints
+        stateSet->setMode( GL_LINE_SMOOTH,
+            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+        osg::ref_ptr< osg::Hint > hint =
+            new osg::Hint( GL_LINE_SMOOTH_HINT, GL_NICEST );
+        stateSet->setAttributeAndModes( hint.get(),
+            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+
+        //Set line stipple
+        osg::ref_ptr< osg::LineStipple > lineStipple = new osg::LineStipple();
+        lineStipple->setFactor( 2 );
+        lineStipple->setPattern( 0xAAAA );
+        stateSet->setAttributeAndModes( lineStipple.get(),
+            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+    }
+
+    //Create a positive box
+    {
         (*vertices)[ 1 ].x() -= boxWidth;
         osg::ref_ptr< osg::Box > box =
             new osg::Box( (*vertices)[ 1 ] + boxCenter, boxWidth );
         box->setRotation( rotation );
+
         geode->addDrawable( new osg::ShapeDrawable( box.get() ) );
     }
-
-    /*
-    //Create the negative axis
-    {
-        //Create a negative line
-        osg::ref_ptr< osg::Geometry > geometry = new osg::Geometry();
-        
-        osg::ref_ptr< osg::Vec3Array > vertices = new osg::Vec3Array();
-        vertices->resize( 2 );
-        (*vertices)[ 0 ] = osg::Vec3(  0.0, 0.0, 0.0 );
-        (*vertices)[ 1 ] = osg::Vec3( -1.0, 0.0, 0.0 );
-
-        osg::Quat rotation;
-        rotation.makeRotate( (*vertices)[ 1 ], osg::Vec3( 0.0, 0.0, 1.0 ) );
-
-        geometry->setVertexArray( vertices.get() );
-        geometry->addPrimitiveSet(
-            new osg::DrawArrays( osg::PrimitiveSet::LINES, 0, 2 ) );
-        geode->addDrawable( geometry.get() );
-
-        //Create a negative cone
-        (*vertices)[ 1 ].x() += coneHeight;
-        osg::ref_ptr< osg::Cone > cone =
-            new osg::Cone(
-                (*vertices)[ 1 ] - coneCenter, coneRadius, -coneHeight );
-        cone->setRotation( rotation );
-        geode->addDrawable( new osg::ShapeDrawable( cone.get() ) );
-
-        //Create an invisible cylinder for picking the negative line
-        osg::ref_ptr< osg::Cylinder > cylinder =
-            new osg::Cylinder(
-                (*vertices)[ 1 ] * 0.5, coneRadius, -(*vertices)[ 1 ].x() );
-        cylinder->setRotation( rotation );
-        osg::ref_ptr< osg::Drawable > drawable =
-            new osg::ShapeDrawable( cylinder.get() );
-        SetDrawableToAlwaysCull( *drawable.get() );
-        geode->addDrawable( drawable.get() );
-    }
-    */
-
-    //Set line width
-    osg::ref_ptr< osg::StateSet > stateSet = getOrCreateStateSet();
-    osg::ref_ptr< osg::LineWidth > lineWidth = new osg::LineWidth();
-    lineWidth->setWidth( 2.0 );
-    stateSet->setAttributeAndModes( lineWidth.get(), osg::StateAttribute::ON );
-
-    //Set line stipple
-    osg::ref_ptr< osg::LineStipple > lineStipple = new osg::LineStipple();
-    lineStipple->setFactor( 2 );
-    lineStipple->setPattern( 0xAAAA );
-    stateSet->setAttributeAndModes( lineStipple.get(),
-        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
-
-    stateSet->setMode( GL_LINE_SMOOTH,
-        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
-    osg::ref_ptr< osg::Hint > hint =
-        new osg::Hint( GL_LINE_SMOOTH_HINT, GL_NICEST );
-    stateSet->setAttributeAndModes( hint.get(),
-        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
-
-    /*
-    stateSet->setMode( GL_POLYGON_SMOOTH,
-        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
-    osg::ref_ptr< osg::Hint > hint =
-        new osg::Hint( GL_POLYGON_SMOOTH_HINT, GL_NICEST );
-    stateSet->setAttributeAndModes( hint.get(),
-        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
-    */
 
     //Add lines and cones to the scene
     addChild( geode.get() );

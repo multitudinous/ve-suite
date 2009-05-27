@@ -67,6 +67,20 @@ ScaleUniform::~ScaleUniform()
 ////////////////////////////////////////////////////////////////////////////////
 void ScaleUniform::SetupDefaultGeometry()
 {
-    ;
+    double boxWidth = 0.1;
+
+    //The geode to add the geometry to
+    osg::ref_ptr< osg::Geode > geode = new osg::Geode();
+
+    //Create a box
+    {
+        osg::ref_ptr< osg::Box > box =
+            new osg::Box( osg::Vec3( 0.0, 0.0, 0.0 ), boxWidth );
+
+        geode->addDrawable( new osg::ShapeDrawable( box.get() ) );
+    }
+
+    //Add box to the scene
+    addChild( geode.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////

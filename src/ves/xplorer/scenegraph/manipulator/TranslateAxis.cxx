@@ -91,6 +91,7 @@ void TranslateAxis::SetupDefaultGeometry()
         geometry->setVertexArray( vertices.get() );
         geometry->addPrimitiveSet(
             new osg::DrawArrays( osg::PrimitiveSet::LINES, 0, 2 ) );
+
         geode->addDrawable( geometry.get() );
 
         //Set StateSet
@@ -121,6 +122,7 @@ void TranslateAxis::SetupDefaultGeometry()
         cone->setRotation( rotation );
         osg::ref_ptr< osg::ShapeDrawable > shapeDrawable =
             new osg::ShapeDrawable( cone.get() );
+
         geode->addDrawable( shapeDrawable.get() );
 
         //Set StateSet
@@ -145,6 +147,7 @@ void TranslateAxis::SetupDefaultGeometry()
         osg::ref_ptr< osg::ShapeDrawable > shapeDrawable =
             new osg::ShapeDrawable( cylinder.get() );
         SetDrawableToAlwaysCull( *shapeDrawable.get() );
+
         geode->addDrawable( shapeDrawable.get() );
     }
 
