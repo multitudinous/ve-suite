@@ -33,9 +33,9 @@
 
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/manipulator/TransformManipulator.h>
-#include <ves/xplorer/scenegraph/manipulator/Translate3D.h>
-#include <ves/xplorer/scenegraph/manipulator/Rotate3D.h>
-#include <ves/xplorer/scenegraph/manipulator/Scale3D.h>
+#include <ves/xplorer/scenegraph/manipulator/TranslateCompound.h>
+#include <ves/xplorer/scenegraph/manipulator/RotateCompound.h>
+#include <ves/xplorer/scenegraph/manipulator/ScaleCompound.h>
 
 // --- OSG Includes --- //
 
@@ -46,9 +46,9 @@ using namespace ves::xplorer::scenegraph::manipulator;
 TransformManipulator::TransformManipulator()
     :
     Manipulator(),
-    m_translateDragger( NULL ),
-    m_rotateDragger( NULL ),
-    m_scaleDragger( NULL )
+    m_translateCompound( NULL ),
+    m_rotateCompound( NULL ),
+    m_scaleCompound( NULL )
 {
     SetupDefaultDraggers();
 }
@@ -58,9 +58,9 @@ TransformManipulator::TransformManipulator(
     const osg::CopyOp& copyop )
     :
     Manipulator( transformManipulator, copyop ),
-    m_translateDragger( transformManipulator.m_translateDragger.get() ),
-    m_rotateDragger( transformManipulator.m_rotateDragger.get() ),
-    m_scaleDragger( transformManipulator.m_scaleDragger.get() )
+    m_translateCompound( transformManipulator.m_translateCompound.get() ),
+    m_rotateCompound( transformManipulator.m_rotateCompound.get() ),
+    m_scaleCompound( transformManipulator.m_scaleCompound.get() )
 {
     ;
 }
@@ -72,16 +72,16 @@ TransformManipulator::~TransformManipulator()
 ////////////////////////////////////////////////////////////////////////////////
 void TransformManipulator::SetupDefaultDraggers()
 {
-    osg::ref_ptr< manipulator::Translate3D > translate3D =
-        new manipulator::Translate3D();
-    addChild( translate3D.get() );
+    osg::ref_ptr< manipulator::TranslateCompound > translateCompound =
+        new manipulator::TranslateCompound();
+    addChild( translateCompound.get() );
 
-    osg::ref_ptr< manipulator::Rotate3D > rotate3D =
-        new manipulator::Rotate3D();
-    addChild( rotate3D.get() );
+    osg::ref_ptr< manipulator::RotateCompound > rotateCompound =
+        new manipulator::RotateCompound();
+    addChild( rotateCompound.get() );
 
-    osg::ref_ptr< manipulator::Scale3D > scale3D =
-        new manipulator::Scale3D();
-    addChild( scale3D.get() );
+    osg::ref_ptr< manipulator::ScaleCompound > scaleCompound =
+        new manipulator::ScaleCompound();
+    addChild( scaleCompound.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////

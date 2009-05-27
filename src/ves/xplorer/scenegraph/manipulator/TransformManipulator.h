@@ -48,9 +48,9 @@ namespace scenegraph
 {
 namespace manipulator
 {
-class Translate3D;
-class Rotate3D;
-class Scale3D;
+class TranslateCompound;
+class RotateCompound;
+class ScaleCompound;
 
 /*!\file TransformManipulator.h
  * TransformManipulator API
@@ -83,13 +83,13 @@ protected:
 
 private:
     ///
-    osg::ref_ptr< Translate3D > m_translateDragger;
+    osg::ref_ptr< TranslateCompound > m_translateCompound;
 
     ///
-    osg::ref_ptr< Rotate3D > m_rotateDragger;
+    osg::ref_ptr< RotateCompound > m_rotateCompound;
 
     ///
-    osg::ref_ptr< Scale3D > m_scaleDragger;
+    osg::ref_ptr< ScaleCompound > m_scaleCompound;
 
 };
 } //end manipulator

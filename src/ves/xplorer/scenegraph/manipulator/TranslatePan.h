@@ -23,24 +23,24 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * Date modified: $Date: 2009-05-13 15:17:12 -0600 (Wed, 13 May 2009) $
- * Version:       $Rev: 12684 $
+ * Date modified: $Date: 2009-05-24 12:01:57 -0600 (Sun, 24 May 2009) $
+ * Version:       $Rev: 12717 $
  * Author:        $Author: jbkoch $
- * Id:            $Id: Translate3D.h 12684 2009-05-13 21:17:12Z jbkoch $
+ * Id:            $Id: TranslatePan.h 12717 2009-05-24 18:01:57Z jbkoch $
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
-#ifndef TRANSLATE_3D_H
-#define TRANSLATE_3D_H
+#ifndef TRANSLATE_PAN_H
+#define TRANSLATE_PAN_H
 
 // --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
 
-#include <ves/xplorer/scenegraph/manipulator/CompoundDragger.h>
+#include <ves/xplorer/scenegraph/manipulator/Dragger.h>
 
 // --- OSG Includes --- //
-#include <osg/ref_ptr>
+
 
 namespace ves
 {
@@ -50,40 +50,36 @@ namespace scenegraph
 {
 namespace manipulator
 {
-class TranslateAxis;
-
-/*!\file Translate3D.h
- * Translate3D API
+/*!\file TranslatePan.h
+ * TranslatePan API
  */
 
-/*!\class ves::xplorer::scenegraph::Translate3D
+/*!\class ves::xplorer::scenegraph::TranslatePan
  *
  */
-class VE_SCENEGRAPH_EXPORTS Translate3D : public CompoundDragger
+class VE_SCENEGRAPH_EXPORTS TranslatePan : public Dragger
 {
 public:
     ///
-    Translate3D();
+    TranslatePan();
 
     ///Copy constructor using CopyOp to manage deep vs shallow copy
-    Translate3D(
-        const Translate3D& translate3D,
+    TranslatePan(
+        const TranslatePan& translatePan,
         const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
 
     ///
-    META_Node( ves::xplorer::scenegraph::manipulator, Translate3D );
+    META_Node( ves::xplorer::scenegraph::manipulator, TranslatePan );
 
 protected:
     ///
-    virtual ~Translate3D();
+    virtual ~TranslatePan();
 
     ///
     virtual void SetupDefaultGeometry();
 
 private:
-    osg::ref_ptr< TranslateAxis > m_xTranslateAxis;
-    osg::ref_ptr< TranslateAxis > m_yTranslateAxis;
-    osg::ref_ptr< TranslateAxis > m_zTranslateAxis;
+
 
 };
 } //end manipulator
@@ -91,4 +87,4 @@ private:
 } //end xplorer
 } //end ves
 
-#endif //TRANSLATE_3D_H
+#endif //TRANSLATE_PAN_H

@@ -31,8 +31,8 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
-#ifndef SCALE_3D_H
-#define SCALE_3D_H
+#ifndef SCALE_COMPOUND_H
+#define SCALE_COMPOUND_H
 
 // --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
@@ -51,31 +51,32 @@ namespace scenegraph
 namespace manipulator
 {
 class ScaleAxis;
+class ScaleUniform;
 
-/*!\file Scale3D.h
- * Scale3D API
+/*!\file ScaleCompound.h
+ * ScaleCompound API
  */
 
-/*!\class ves::xplorer::scenegraph::Scale3D
+/*!\class ves::xplorer::scenegraph::ScaleCompound
  *
  */
-class VE_SCENEGRAPH_EXPORTS Scale3D : public CompoundDragger
+class VE_SCENEGRAPH_EXPORTS ScaleCompound : public CompoundDragger
 {
 public:
-    ///
-    Scale3D();
+    ///Constructor
+    ScaleCompound();
 
     ///Copy constructor using CopyOp to manage deep vs shallow copy
-    Scale3D(
-        const Scale3D& scale3D,
+    ScaleCompound(
+        const ScaleCompound& scaleCompound,
         const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
 
     ///
-    META_Node( ves::xplorer::scenegraph::manipulator, Scale3D );
+    META_Node( ves::xplorer::scenegraph::manipulator, ScaleCompound );
 
 protected:
-    ///
-    virtual ~Scale3D();
+    ///Destructor
+    virtual ~ScaleCompound();
 
     ///
     virtual void SetupDefaultGeometry();
@@ -90,10 +91,13 @@ private:
     ///
     osg::ref_ptr< ScaleAxis > m_zScaleAxis;
 
+    ///
+    osg::ref_ptr< ScaleUniform > m_scaleUniform;
+
 };
 } //end manipulator
 } //end scenegraph
 } //end xplorer
 } //end ves
 
-#endif //SCALE_3D_H
+#endif //SCALE_COMPOUND_H

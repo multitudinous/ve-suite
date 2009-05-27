@@ -23,61 +23,64 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * Date modified: $Date: 2009-05-14 10:29:09 -0600 (Thu, 14 May 2009) $
- * Version:       $Rev: 12686 $
- * Author:        $Author: jbkoch $
- * Id:            $Id: Translate3D.cxx 12686 2009-05-14 16:29:09Z jbkoch $
+ * Date modified: $Date$
+ * Version:       $Rev$
+ * Author:        $Author$
+ * Id:            $Id$
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
 // --- VE-Suite Includes --- //
-#include <ves/xplorer/scenegraph/manipulator/Translate3D.h>
-#include <ves/xplorer/scenegraph/manipulator/TranslateAxis.h>
+#include <ves/xplorer/scenegraph/manipulator/RotateCompound.h>
+#include <ves/xplorer/scenegraph/manipulator/RotateAxis.h>
+#include <ves/xplorer/scenegraph/manipulator/RotateTwist.h>
 
 // --- OSG Includes --- //
 
 using namespace ves::xplorer::scenegraph::manipulator;
 
 ////////////////////////////////////////////////////////////////////////////////
-Translate3D::Translate3D()
+RotateCompound::RotateCompound()
     :
     CompoundDragger(),
-    m_xTranslateAxis( NULL ),
-    m_yTranslateAxis( NULL ),
-    m_zTranslateAxis( NULL )
+    m_xRotateAxis( NULL ),
+    m_yRotateAxis( NULL ),
+    m_zRotateAxis( NULL ),
+    m_rotateTwist( NULL )
 {
     SetupDefaultGeometry();
 }
 ////////////////////////////////////////////////////////////////////////////////
-Translate3D::Translate3D(
-    const Translate3D& translate3D, const osg::CopyOp& copyop )
+RotateCompound::RotateCompound(
+    const RotateCompound& rotateCompound, const osg::CopyOp& copyop )
     :
-    CompoundDragger( translate3D, copyop ),
-    m_xTranslateAxis( translate3D.m_xTranslateAxis.get() ),
-    m_yTranslateAxis( translate3D.m_yTranslateAxis.get() ),
-    m_zTranslateAxis( translate3D.m_zTranslateAxis.get() )
+    CompoundDragger( rotateCompound, copyop ),
+    m_xRotateAxis( rotateCompound.m_xRotateAxis.get() ),
+    m_yRotateAxis( rotateCompound.m_yRotateAxis.get() ),
+    m_zRotateAxis( rotateCompound.m_zRotateAxis.get() ),
+    m_rotateTwist( rotateCompound.m_rotateTwist.get() )
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-Translate3D::~Translate3D()
+RotateCompound::~RotateCompound()
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Translate3D::SetupDefaultGeometry()
+void RotateCompound::SetupDefaultGeometry()
 {
     //Create translate x-axis dragger
-    m_xTranslateAxis = new TranslateAxis();
-    m_xTranslateAxis->SetColor(
+    m_xRotateAxis = new RotateAxis();
+    m_xRotateAxis->SetColor(
         ColorTag::DEFAULT, osg::Vec4f( 1.0, 0.0, 0.0, 1.0 ), true );
 
-    addChild( m_xTranslateAxis.get() );
+    addChild( m_xRotateAxis.get() );
 
     //Create translate y-axis dragger
-    m_yTranslateAxis = new TranslateAxis();
-    m_yTranslateAxis->SetColor(
+    m_yRotateAxis = new RotateAxis();
+    m_yRotateAxis->SetColor(
         ColorTag::DEFAULT, osg::Vec4f( 0.0, 1.0, 0.0, 1.0 ), true );
 
     //Rotate y-axis dragger appropriately
@@ -85,14 +88,14 @@ void Translate3D::SetupDefaultGeometry()
         osg::Quat rotation;
         rotation.makeRotate(
             osg::Vec3d( 1.0, 0.0, 0.0 ), osg::Vec3d( 0.0, 1.0, 0.0 ) );
-        m_yTranslateAxis->setMatrix( osg::Matrix( rotation ) );
+        m_yRotateAxis->setMatrix( osg::Matrix( rotation ) );
     }
 
-    addChild( m_yTranslateAxis.get() );
+    addChild( m_yRotateAxis.get() );
 
     //Create translate z-axis dragger
-    m_zTranslateAxis = new TranslateAxis();
-    m_zTranslateAxis->SetColor(
+    m_zRotateAxis = new RotateAxis();
+    m_zRotateAxis->SetColor(
         ColorTag::DEFAULT, osg::Vec4f( 0.0, 0.0, 1.0, 1.0 ), true );
 
     //Rotate z-axis dragger appropriately
@@ -100,9 +103,16 @@ void Translate3D::SetupDefaultGeometry()
         osg::Quat rotation;
         rotation.makeRotate(
             osg::Vec3d( 1.0, 0.0, 0.0 ), osg::Vec3d( 0.0, 0.0, 1.0 ) );
-        m_zTranslateAxis->setMatrix( osg::Matrix( rotation ) );
+        m_zRotateAxis->setMatrix( osg::Matrix( rotation ) );
     }
 
-    addChild( m_zTranslateAxis.get() );
+    addChild( m_zRotateAxis.get() );
+
+    //Create rotate twist dragger
+    m_rotateTwist = new RotateTwist();
+    m_rotateTwist->SetColor(
+        ColorTag::DEFAULT, osg::Vec4f( 1.0, 1.0, 1.0, 1.0 ), true );
+
+    addChild( m_rotateTwist.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////

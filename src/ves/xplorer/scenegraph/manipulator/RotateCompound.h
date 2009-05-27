@@ -51,31 +51,32 @@ namespace scenegraph
 namespace manipulator
 {
 class RotateAxis;
+class RotateTwist;
 
-/*!\file Rotate3D.h
- * Rotate3D API
+/*!\file RotateCompound.h
+ * RotateCompound API
  */
 
-/*!\class ves::xplorer::scenegraph::Rotate3D
+/*!\class ves::xplorer::scenegraph::RotateCompound
  *
  */
-class VE_SCENEGRAPH_EXPORTS Rotate3D : public CompoundDragger
+class VE_SCENEGRAPH_EXPORTS RotateCompound : public CompoundDragger
 {
 public:
-    ///
-    Rotate3D();
+    ///Constructor
+    RotateCompound();
 
     ///Copy constructor using CopyOp to manage deep vs shallow copy
-    Rotate3D(
-        const Rotate3D& rotate3D,
+    RotateCompound(
+        const RotateCompound& rotateCompound,
         const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
 
     ///
-    META_Node( ves::xplorer::scenegraph::manipulator, Rotate3D );
+    META_Node( ves::xplorer::scenegraph::manipulator, RotateCompound );
 
 protected:
-    ///
-    virtual ~Rotate3D();
+    ///Destructor
+    virtual ~RotateCompound();
 
     ///
     virtual void SetupDefaultGeometry();
@@ -89,6 +90,9 @@ private:
     
     ///
     osg::ref_ptr< RotateAxis > m_zRotateAxis;
+
+    ///
+    osg::ref_ptr< RotateTwist > m_rotateTwist;
 
 };
 } //end manipulator

@@ -32,41 +32,44 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
 // --- VE-Suite Includes --- //
-#include <ves/xplorer/scenegraph/manipulator/Scale3D.h>
+#include <ves/xplorer/scenegraph/manipulator/ScaleCompound.h>
 #include <ves/xplorer/scenegraph/manipulator/ScaleAxis.h>
+#include <ves/xplorer/scenegraph/manipulator/ScaleUniform.h>
 
 // --- OSG Includes --- //
 
 using namespace ves::xplorer::scenegraph::manipulator;
 
 ////////////////////////////////////////////////////////////////////////////////
-Scale3D::Scale3D()
+ScaleCompound::ScaleCompound()
     :
     CompoundDragger(),
     m_xScaleAxis( NULL ),
     m_yScaleAxis( NULL ),
-    m_zScaleAxis( NULL )
+    m_zScaleAxis( NULL ),
+    m_scaleUniform( NULL )
 {
     SetupDefaultGeometry();
 }
 ////////////////////////////////////////////////////////////////////////////////
-Scale3D::Scale3D(
-    const Scale3D& scale3D, const osg::CopyOp& copyop )
+ScaleCompound::ScaleCompound(
+    const ScaleCompound& scaleCompound, const osg::CopyOp& copyop )
     :
-    CompoundDragger( scale3D, copyop ),
-    m_xScaleAxis( scale3D.m_xScaleAxis.get() ),
-    m_yScaleAxis( scale3D.m_yScaleAxis.get() ),
-    m_zScaleAxis( scale3D.m_zScaleAxis.get() )
+    CompoundDragger( scaleCompound, copyop ),
+    m_xScaleAxis( scaleCompound.m_xScaleAxis.get() ),
+    m_yScaleAxis( scaleCompound.m_yScaleAxis.get() ),
+    m_zScaleAxis( scaleCompound.m_zScaleAxis.get() ),
+    m_scaleUniform( scaleCompound.m_scaleUniform.get() )
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-Scale3D::~Scale3D()
+ScaleCompound::~ScaleCompound()
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Scale3D::SetupDefaultGeometry()
+void ScaleCompound::SetupDefaultGeometry()
 {
     //Create translate x-axis dragger
     m_xScaleAxis = new ScaleAxis();
@@ -104,5 +107,12 @@ void Scale3D::SetupDefaultGeometry()
     }
 
     addChild( m_zScaleAxis.get() );
+
+    //Create rotate twist dragger
+    m_scaleUniform = new ScaleUniform();
+    m_scaleUniform->SetColor(
+        ColorTag::DEFAULT, osg::Vec4f( 1.0, 1.0, 1.0, 1.0 ), true );
+
+    addChild( m_scaleUniform.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
