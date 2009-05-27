@@ -56,7 +56,6 @@
 #include <iostream>
 #include <vtkUnstructuredGridReader.h>
 
-#ifdef VTK_POST_FEB20
 #include <vtkXMLHierarchicalBoxDataReader.h>
 #include <vtkXMLCompositeDataReader.h>
 #include <vtkXMLCompositeDataWriter.h>
@@ -65,10 +64,6 @@
 #include <vtkXMLReader.h>
 #include <vtkXMLWriter.h>
 #include <vtkAlgorithm.h>
-#else
-#include <vtkXMLMultiGroupDataWriter.h>
-#include <vtkHierarchicalDataSet.h>
-#endif
 
 #include <vtkXMLHierarchicalDataReader.h>
 #include <vtkXMLMultiGroupDataReader.h>
@@ -77,6 +72,12 @@
 #include <vtkGenericDataObjectReader.h>
 #include <vtkGenericDataObjectWriter.h>
 #include <fstream>
+
+//#include <boost/filesystem.hpp>
+#include <boost/filesystem/operations.hpp>
+#include <boost/filesystem/path.hpp>
+
+namespace fs = boost::filesystem;
 
 using namespace ves::xplorer::util;
 
@@ -351,11 +352,27 @@ bool cfdVTKFileHandler::WriteDataSet( vtkDataObject* dataSet, std::string outFil
     {
         return false;
     }
-#ifdef VTK_POST_FEB20
+
+    //ImageData (.vti) — Serial vtkImageData (structured). 
+    //PolyData (.vtp) — Serial vtkPolyData (unstructured). 
+    //RectilinearGrid (.vtr) — Serial vtkRectilinearGrid (structured). 
+    //StructuredGrid (.vts) — Serial vtkStructuredGrid (structured). 
+    //UnstructuredGrid (.vtu) — Serial vtkUnstructuredGrid (unstructured). 
+    //Multiblock (.vtm) - Serial vtkMultiBlockDataSet
+    //PImageData (.pvti) — Parallel vtkImageData (structured). 
+    //PPolyData (.pvtp) — Parallel vtkPolyData (unstructured). 
+    //PRectilinearGrid (.pvtr) — Parallel vtkRectilinearGrid (structured). 
+    //PStructuredGrid (.pvts) — Parallel vtkStructuredGrid (structured). 
+    //PUnstructuredGrid (.pvtu) — Parallel vtkUnstructuredGrid (unstructured). 
+    
+    fs::path file_name( outFileName, fs::native );
+
     if( dataSet->IsA( "vtkMultiBlockDataSet" ) )
     {
+        file_name.replace_extension( "vtm" );
+
         vtkXMLMultiBlockDataWriter* writer = vtkXMLMultiBlockDataWriter::New();
-        writer->SetFileName( outFileName.c_str() );
+        writer->SetFileName( file_name.string().c_str() );
         writer->SetInput( dataSet );
         if( _outFileMode == CFD_ASCII )
         {
@@ -369,33 +386,37 @@ bool cfdVTKFileHandler::WriteDataSet( vtkDataObject* dataSet, std::string outFil
         writer->Delete();
         return false;
     }
-#else
-    if( dataSet->IsA( "vtkMultiGroupDataSet" ) )
-    {
-        vtkXMLMultiGroupDataWriter* writer = vtkXMLMultiGroupDataWriter::New();
-        writer->SetFileName( outFileName.c_str() );
-        writer->SetInput( dataSet );
-        if( _outFileMode == CFD_ASCII )
-        {
-            writer->SetDataModeToAscii();
-        }
-
-        if( writer->Write() )
-        {
-            writer->Delete();
-            return true;
-        }
-        writer->Delete();
-        return false;
-    }
-#endif
     else
     {
+        if( dataSet->IsA( "vtkPolyData" ) )
+        {
+            file_name.replace_extension( "vtp" );
+        }
+        else if( dataSet->IsA( "vtkImageData" ) )
+        {
+            file_name.replace_extension( "vti" );
+        }
+        else if( dataSet->IsA( "vtkStructuredGrid" ) )
+        {
+            file_name.replace_extension( "vts" );
+        }
+        else if( dataSet->IsA( "vtkUnstructuredGrid" ) )
+        {
+            file_name.replace_extension( "vtu" );
+        }
+        else 
+        {
+            file_name.replace_extension( "vtk" );
+        }
+        
         vtkXMLDataSetWriter* writer = vtkXMLDataSetWriter::New();
-        writer->SetFileName( outFileName.c_str() );
+        writer->SetFileName( file_name.string().c_str() );
         writer->SetInput( dynamic_cast<vtkDataSet*>( dataSet ) );
+
         if( _outFileMode == CFD_ASCII )
+        {
             writer->SetDataModeToAscii();
+        }
 
         if( writer->Write() )
         {
