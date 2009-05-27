@@ -513,8 +513,9 @@ void Contours::_updateContourInformation()
     _contourInformation.push_back( numberOfPlanes );
 
     ves::open::xml::DataValuePairPtr planePosition( new ves::open::xml::DataValuePair() );
-    planePosition->SetData( "Position", _planePosition );
-
+    //planePosition->SetData( "Position", _planePosition );
+    planePosition->SetData( "Position", m_positionSpinner->GetValue() );
+    
     _contourInformation.push_back( planePosition );
 
     if( !_planeOption.empty() )
