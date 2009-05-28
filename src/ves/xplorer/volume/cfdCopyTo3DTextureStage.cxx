@@ -30,18 +30,27 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#ifdef _OSG
+
+// --- VE-Suite Includes --- //
+#include <ves/xplorer/volume/cfdCopyTo3DTextureStage.h>
+
+// --- OSG Includes --- //
+#include <osg/State>
+#include <osg/Texture3D>
 #include <osg/FrameStamp>
 #if ((OSG_VERSION_MAJOR>=1) && (OSG_VERSION_MINOR>2) || (OSG_VERSION_MAJOR>=2))
 #include <osg/RenderInfo>
 #endif
-#include <osg/State>
+
+// --- C/C++ Includes --- //
 #include <cassert>
-#include <ves/xplorer/volume/cfdCopyTo3DTextureStage.h>
+
 using namespace ves::xplorer::volume;
-//////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////////////////////////
 cfdCopyTo3DTextureStage::cfdCopyTo3DTextureStage()
-        : osgUtil::RenderStage()
+    :
+    osgUtil::RenderStage()
 {
     _texture = 0;
 
@@ -57,7 +66,7 @@ cfdCopyTo3DTextureStage::cfdCopyTo3DTextureStage()
     _whichDir = 2;
 
 }
-///////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 cfdCopyTo3DTextureStage::~cfdCopyTo3DTextureStage()
 {
     /*if(_pbuffer){
@@ -65,17 +74,17 @@ cfdCopyTo3DTextureStage::~cfdCopyTo3DTextureStage()
        _pbuffer = 0;
     }*/
 }
-//////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdCopyTo3DTextureStage::SetShaderStateSet( osg::StateSet* ss )
 {
     _shader = ss;
 }
-//////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdCopyTo3DTextureStage::SetWhichSliceToUpdate( unsigned int nSlices )
 {
     _whichSlice = nSlices;
 }
-/////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdCopyTo3DTextureStage::reset()
 {
     RenderStage::reset();
@@ -84,7 +93,7 @@ void cfdCopyTo3DTextureStage::reset()
         _whichSlice = 0;
     }
 }
-//////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 /*void cfdCopyTo3DTextureStage::draw(osg::State& state,
                                osgUtil::RenderLeaf*& previous)*/
 #if ((OSG_VERSION_MAJOR>=1) && (OSG_VERSION_MINOR>2) || (OSG_VERSION_MAJOR>=2))
@@ -149,4 +158,4 @@ void cfdCopyTo3DTextureStage::draw( osg::State& state,
     }
 #endif
 }
-#endif
+////////////////////////////////////////////////////////////////////////////////

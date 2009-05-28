@@ -30,27 +30,17 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
+
 #ifndef CFD_UPDATE_TEXTURE_CALLBACK_H
 #define CFD_UPDATE_TEXTURE_CALLBACK_H
-/*!\file cfdUpdateTextureCallback.h
-* cfdUpdateTextureCallback API
-*/
 
-/*!\class ves::xplorer::volume::cfdUpdateTextureCallback
-*
-*/
-#ifdef _PERFORMER
-#elif _OPENSG
-#elif _OSG
-#include <osg/Texture3D>
-#include <ves/xplorer/volume/ExternalPixelBufferObject.h>
-namespace osg
-{
-class Node;
-class NodeVisitor;
-class State;
-}
+// --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
+
+// --- OSG Includes --- //
+#include <osg/ref_ptr>
+#include <osg/Texture3D>
+
 namespace ves
 {
 namespace xplorer
@@ -58,11 +48,17 @@ namespace xplorer
 namespace volume
 {
 class cfdTextureManager;
-}
-namespace volume
-{
-class VE_TEXTURE_BASED_EXPORTS cfdUpdateTextureCallback
-            : public  osg::Texture3D::SubloadCallback
+class ExternalPixelBufferObject;
+
+/*!\file cfdUpdateTextureCallback.h
+ * cfdUpdateTextureCallback API
+ */
+
+/*!\class ves::xplorer::volume::cfdUpdateTextureCallback
+ *
+ */
+class VE_TEXTURE_BASED_EXPORTS cfdUpdateTextureCallback :
+    public  osg::Texture3D::SubloadCallback
 {
 public:
     cfdUpdateTextureCallback();
@@ -188,9 +184,10 @@ protected:
     GLint _subloadTextureOffsetX, _subloadTextureOffsetY, _subloadTextureOffsetZ;
     GLint _subloadImageOffsetX, _subloadImageOffsetY, _subloadImageOffsetZ;
     GLsizei _subloadImageWidth, _subloadImageHeight, _subloadImageDepth;
+
 };
-}
-}
-}
-#endif //OSG
+} //end volume
+} //end xplorer
+} //end ves
+
 #endif //CFD_UPDATE_TEXTURE_CALLBACK_H

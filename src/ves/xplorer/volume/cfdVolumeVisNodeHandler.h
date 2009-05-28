@@ -32,26 +32,28 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
+
 #ifndef CFD_VOLUME_VIZ_NODE_HANDLER_H
 #define CFD_VOLUME_VIZ_NODE_HANDLER_H
-/*!\file cfdVolumeVisNodeHandler.h
-* cfdVolumeVisNodeHandler API
-*/
 
-/*!\class ves::xplorer::volume::cfdVolumeVisNodeHandler
-*
-*/
-#ifdef _OSG
-#include <osg/BoundingBox>
+// --- VE-Suite Includes --- //
+#include <ves/VEConfig.h>
+
+// --- OSG Includes --- //
 #include <osg/ref_ptr>
-#include <map>
+#include <osg/BoundingBox>
+
 namespace osg
 {
 class Group;
 class Switch;
 class TexGenNode;
 }
-#include <ves/VEConfig.h>
+
+// --- C/C++ Includes --- //
+#include <string>
+#include <map>
+
 namespace ves
 {
 namespace xplorer
@@ -61,6 +63,13 @@ namespace volume
 class cfdTextureManager;
 class cfdOSGShaderManager;
 
+/*!\file cfdVolumeVisNodeHandler.h
+ * cfdVolumeVisNodeHandler API
+ */
+
+/*!\class ves::xplorer::volume::cfdVolumeVisNodeHandler
+ *
+ */
 class VE_TEXTURE_BASED_EXPORTS cfdVolumeVisNodeHandler
 {
 public:
@@ -133,6 +142,7 @@ public:
     ves::xplorer::volume::cfdOSGShaderManager* GetShaderManager( std::string name );
 
     cfdVolumeVisNodeHandler& operator=( const cfdVolumeVisNodeHandler& vvnh );
+
 protected:
     ///Set up the geometry for the bounding box
     void _createVisualBBox();
@@ -161,9 +171,10 @@ protected:
 
     std::string _activeShader;///<The active shader
     std::map<std::string, ves::xplorer::volume::cfdOSGShaderManager*> _shaderManagers;///<The shaders.
+
 };
-}
-}
-}
-#endif //_OSG
+} //end volume
+} //end xplorer
+} //end ves
+
 #endif// CFD_VOLUME_VIZ_NODE_HANDLER_H

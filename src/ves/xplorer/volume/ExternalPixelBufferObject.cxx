@@ -31,14 +31,16 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
+// --- VE-Suite Includes --- //
 #include <ves/xplorer/volume/ExternalPixelBufferObject.h>
+
+// --- OSG Includes --- //
 #include <osg/Image>
 #include <osg/State>
+
 using namespace ves::xplorer::volume;
-//////////////////////////////////////////////////////////////////////////////////
-//
-//  ExternalPixelBufferObject
-//
+
+////////////////////////////////////////////////////////////////////////////////
 ExternalPixelBufferObject::ExternalPixelBufferObject(osg::Image* image):
     BufferObject()
 {
@@ -56,11 +58,11 @@ osg::BufferObject(buffer,copyop),
 _bufferEntryImagePair(buffer._bufferEntryImagePair)
 {
 }
-///////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 ExternalPixelBufferObject::~ExternalPixelBufferObject()
 {
 }
-///////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void ExternalPixelBufferObject::setImage(osg::Image* image)
 {
     if (_bufferEntryImagePair.second == image) return;
@@ -69,7 +71,7 @@ void ExternalPixelBufferObject::setImage(osg::Image* image)
 
     dirty();
 }
-//////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void ExternalPixelBufferObject::compileBuffer(osg::State& state) const
 {
     unsigned int contextID = state.getContextID();
@@ -134,7 +136,7 @@ void ExternalPixelBufferObject::compileBuffer(osg::State& state) const
 //    osg::notify(osg::NOTICE)<<"pbo _totalSize="<<_totalSize<<std::endl;
 //    osg::notify(osg::NOTICE)<<"pbo "<<osg::Timer::instance()->delta_m(start_tick,osg::Timer::instance()->tick())<<"ms"<<std::endl;
 }
-///////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void ExternalPixelBufferObject::resizeGLObjectBuffers(unsigned int maxSize)
 {
     osg::BufferObject::resizeGLObjectBuffers(maxSize);
@@ -148,3 +150,4 @@ void ExternalPixelBufferObject::UpdateData( unsigned char* data )
     m_useExternalData = true;
     dirty();
 }
+////////////////////////////////////////////////////////////////////////////////

@@ -30,11 +30,14 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> **************/
+
 #ifndef JPG_DATABASE_DRIVER_H_
 #define JPG_DATABASE_DRIVER_H_
 
+// --- VE-Suite Includes --- //
 #include <ves/xplorer/volume/Data.h>
 
+// --- C/C++ Includes --- //
 #include <string>
 #include <vector>
 
@@ -99,6 +102,8 @@ public:
      * Gets the version of this database driver.
      */
     virtual std::string getDriverVersion() const = 0;
+
 };
 }
-#endif
+
+#endif //JPG_DATABASE_DRIVER_H_

@@ -30,12 +30,15 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> **************/
+
 #ifndef JPG_TEXTURE_DATA_MANAGER_H_
 #define JPG_TEXTURE_DATA_MANAGER_H_
 
+// --- VE-Suite Includes --- //
+#include <ves/VEConfig.h>
+
 #include <ves/xplorer/volume/SingletonDLL.h>
 #include <ves/xplorer/volume/TextureData.h>
-#include <ves/VEConfig.h>
 
 #define LOKI_SINGLETON_EXPORT VE_TEXTURE_BASED_EXPORTS
 #include <loki/Singleton.h>
@@ -43,10 +46,11 @@
 #ifdef _WIN32
 #include <windows.h>
 #endif
-#include <iostream>
-#include <map>
-#include <vector>
+
+// --- C/C++ Includes --- //
 #include <string>
+#include <map>
+
 namespace ves
 {
 namespace xplorer
@@ -110,9 +114,12 @@ private:
 #ifdef WIN32
 VE_TEXTURE_BASED_TEMPLATE_EXPORTS template class VE_TEXTURE_BASED_EXPORTS Singleton<TextureDataManager_t>;
 #endif
+
 /// Typedef for the singleton TextureDataManager.
 typedef Singleton<TextureDataManager_t> TextureDataManager;
-}
-}
-}
-#endif
+
+} //end volume
+} //end xplorer
+} //end ves
+
+#endif //JPG_TEXTURE_DATA_MANAGER_H_

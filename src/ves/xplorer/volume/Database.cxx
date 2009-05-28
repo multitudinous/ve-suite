@@ -30,6 +30,8 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> **************/
+
+// --- VE-Suite Includes --- //
 #include <ves/xplorer/volume/Database.h>
 
 /// The following is from the Loki::Singleton library.  This allows a windows

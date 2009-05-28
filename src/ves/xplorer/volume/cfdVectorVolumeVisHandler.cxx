@@ -30,14 +30,8 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#ifdef _OSG
-#include <osg/TexEnv>
-#include <osg/Geode>
-#include <osg/TexMat>
-#include <osg/StateSet>
-#include <osg/Switch>
-#include <osg/Node>
 
+// --- VE-Suite Includes --- //
 #include <ves/xplorer/volume/cfdAdvectionSubGraph.h>
 #include <ves/xplorer/volume/cfdVectorVolumeVisHandler.h>
 #include <ves/xplorer/volume/cfdOSGAdvectionShaderManager.h>
@@ -48,11 +42,19 @@
 #include <ves/xplorer/volume/cfdUpdateTextureCallback.h>
 #include <ves/xplorer/volume/cfd3DTextureCullCallback.h>
 #include <ves/xplorer/volume/cfdOSGPingPongTexture3d.h>
+#include <ves/xplorer/volume/ExternalPixelBufferObject.h>
+
+// --- OSG Includes --- //
+#include <osg/TexEnv>
+#include <osg/Geode>
+#include <osg/TexMat>
+#include <osg/StateSet>
+#include <osg/Switch>
+#include <osg/Node>
 
 using namespace ves::xplorer::volume;
-//////////////////////////////////////////////////////
-//Constructors                                      //
-//////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////////////////////////
 cfdVectorVolumeVisHandler::cfdVectorVolumeVisHandler()
         : cfdVolumeVisNodeHandler()
 {
@@ -66,7 +68,7 @@ cfdVectorVolumeVisHandler::cfdVectorVolumeVisHandler()
     _ssIsSet = false;
 
 }
-//////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 cfdVectorVolumeVisHandler::cfdVectorVolumeVisHandler( const cfdVectorVolumeVisHandler& vvnh )
         : cfdVolumeVisNodeHandler( vvnh )
 {
@@ -82,7 +84,7 @@ cfdVectorVolumeVisHandler::cfdVectorVolumeVisHandler( const cfdVectorVolumeVisHa
     _velocity = new osg::Texture3D( *vvnh._velocity );
     _propertyTextureGroup = new osg::Group( *vvnh._propertyTextureGroup );
 }
-///////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 cfdVectorVolumeVisHandler::~cfdVectorVolumeVisHandler()
 {
     if( _tm )
@@ -114,7 +116,7 @@ cfdVectorVolumeVisHandler::~cfdVectorVolumeVisHandler()
         _texturePingPong = 0;
     }
 }
-//////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdVectorVolumeVisHandler::Init()
 {
     cfdVolumeVisNodeHandler::Init();
@@ -122,7 +124,7 @@ void cfdVectorVolumeVisHandler::Init()
     SetBoundingBoxName( "Vector VVH BBox" );
     SetDecoratorName( "Advection VV Fragment PG" );
 }
-///////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdVectorVolumeVisHandler::_createTransferShader()
 {
     if( !_transferSM && _tm )
@@ -138,10 +140,12 @@ void cfdVectorVolumeVisHandler::_createTransferShader()
         }
     }
 }
-/////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdVectorVolumeVisHandler::_initPropertyTexture()
-{}
-///////////////////////////////////////////////////////////////////////////////////
+{
+    ;
+}
+////////////////////////////////////////////////////////////////////////////////
 void cfdVectorVolumeVisHandler::SetCurrentTransientTexture( unsigned int whichTimeStep,
                                                             bool makeSlave )
 {
@@ -150,7 +154,7 @@ void cfdVectorVolumeVisHandler::SetCurrentTransientTexture( unsigned int whichTi
         _velocityCbk->SetCurrentFrame( whichTimeStep, makeSlave );
     }
 }
-///////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdVectorVolumeVisHandler::_createVelocityFromTextureManager()
 {
     if( !_velocity.valid() )
@@ -192,13 +196,13 @@ void cfdVectorVolumeVisHandler::_createVelocityFromTextureManager()
     _velocityCbk->SetTextureManager( _tm );
     _velocityCbk->SetDelayTime( 0.1 );
 }
-////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdVectorVolumeVisHandler::SetTextureManager( ves::xplorer::volume::cfdTextureManager* tm )
 {
     cfdVolumeVisNodeHandler::SetTextureManager( tm );
     _createVelocityFromTextureManager();
 }
-/////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdVectorVolumeVisHandler::_setUpDecorator()
 {
     if( !_tm )
@@ -254,7 +258,7 @@ void cfdVectorVolumeVisHandler::_setUpDecorator()
     _setupTransferPropertyStateSet();
     _createTexturePingPong();
 }
-////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdVectorVolumeVisHandler::_setupTransferPropertyStateSet()
 {
     if( !_ssIsSet )
@@ -275,7 +279,7 @@ void cfdVectorVolumeVisHandler::_setupTransferPropertyStateSet()
         _ssIsSet = true;
     }
 }
-/////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdVectorVolumeVisHandler::_setupAdvectionPropertyStateSet()
 {
     if( !_ssIsSet )
@@ -299,7 +303,7 @@ void cfdVectorVolumeVisHandler::_setupAdvectionPropertyStateSet()
         ss->setDataVariance( osg::Object::DYNAMIC );
     }
 }
-/////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdVectorVolumeVisHandler::_applyTextureMatrix()
 {
     unsigned int tUnit = 0;/*_transferSM->GetAutoGenTextureUnit();*/
@@ -315,12 +319,12 @@ void cfdVectorVolumeVisHandler::_applyTextureMatrix()
                                         trans ) );
     _updateTexGenUnit( tUnit );
 }
-/////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdVectorVolumeVisHandler::SetPBufferManager( cfdPBufferManager* pbm )
 {
     _pbuffer = pbm;
 }
-////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdVectorVolumeVisHandler::_createTexturePingPong()
 {
     if( _cullCallback.valid() )
@@ -331,7 +335,7 @@ void cfdVectorVolumeVisHandler::_createTexturePingPong()
                                             current, _propertyTextureGroup.get() );
     }
 }
-//////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdVectorVolumeVisHandler::PingPongTextures()
 {
     if( _cullCallback.valid() )
@@ -339,7 +343,7 @@ void cfdVectorVolumeVisHandler::PingPongTextures()
         _cullCallback->GetPingPonger()->PingPongTextures();
     }
 }
-//////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 cfdVectorVolumeVisHandler&
 cfdVectorVolumeVisHandler::operator=( const cfdVectorVolumeVisHandler& vvnh )
 {
@@ -359,4 +363,4 @@ cfdVectorVolumeVisHandler::operator=( const cfdVectorVolumeVisHandler& vvnh )
     }
     return *this;
 }
-#endif //_OSG
+////////////////////////////////////////////////////////////////////////////////

@@ -30,16 +30,21 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#ifdef _OSG
+
+// --- VE-Suite Includes --- //
+#include <ves/xplorer/volume/cfdUpdateableOSGTexture1d.h>
+
+// --- OSG Includes --- //
 #include <osg/Texture1D>
 #include <osg/Image>
 #include <osg/State>
-#include <ves/xplorer/volume/cfdUpdateableOSGTexture1d.h>
+
+// --- C/C++ Includes --- //
 #include <iostream>
+
 using namespace ves::xplorer::volume;
-//////////////////////////////////////////////////////////
-//Constructors                                          //
-//////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////////////////////////
 cfdUpdateableOSGTexture1d::cfdUpdateableOSGTexture1d()
 {
     _alphaCutoff = .1;
@@ -65,9 +70,7 @@ cfdUpdateableOSGTexture1d::cfdUpdateableOSGTexture1d( const
     _oWidth = cb._oWidth;
     _data = 0;
 }
-//////////////////////////////////////////////////////////
-//Destructor                                            //
-//////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 cfdUpdateableOSGTexture1d::~cfdUpdateableOSGTexture1d()
 {
     if( _data )
@@ -76,7 +79,7 @@ cfdUpdateableOSGTexture1d::~cfdUpdateableOSGTexture1d()
         _data = 0;
     }
 }
-/////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdUpdateableOSGTexture1d::UpdateParam( TransType type, GLfloat param )
 {
     if( type == GAMMA_CORRECTION )
@@ -88,7 +91,7 @@ void cfdUpdateableOSGTexture1d::UpdateParam( TransType type, GLfloat param )
         SetAlphaCutoff( param );
     }
 }
-///////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdUpdateableOSGTexture1d::SetGamma( GLfloat gamma )
 {
     _gamma = gamma;
@@ -98,7 +101,7 @@ void cfdUpdateableOSGTexture1d::SetGamma( GLfloat gamma )
         _lastGamma = _gamma;
     }
 }
-///////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdUpdateableOSGTexture1d::SetAlphaCutoff( GLfloat aCutoff )
 {
     _alphaCutoff = aCutoff;
@@ -108,25 +111,25 @@ void cfdUpdateableOSGTexture1d::SetAlphaCutoff( GLfloat aCutoff )
         _lastAlpha = _alphaCutoff;
     }
 }
-//////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdUpdateableOSGTexture1d::subload( const osg::Texture1D& texture,
                                          osg::State& state ) const
 {
     glTexImage1D( GL_TEXTURE_1D, 0, GL_RGBA, 256, 0, GL_RGBA, GL_UNSIGNED_BYTE, _data );
 
 }
-///////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdUpdateableOSGTexture1d::load( const osg::Texture1D& texture,
                                       osg::State& ) const
 {
     glTexSubImage1D( GL_TEXTURE_1D, 0, 0, 256, GL_RGBA, GL_UNSIGNED_BYTE, _data );
 }
-///////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdUpdateableOSGTexture1d::SetTransferFunctionType( TransType type )
 {
     _type = type;
 }
-////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 bool cfdUpdateableOSGTexture1d::_needsUpdate() const
 {
     if( _type == GAMMA_CORRECTION )
@@ -139,7 +142,7 @@ bool cfdUpdateableOSGTexture1d::_needsUpdate() const
     }
     return false;
 }
-/////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdUpdateableOSGTexture1d::_updateData()
 {
     if( !_data )
@@ -183,8 +186,6 @@ void cfdUpdateableOSGTexture1d::_updateData()
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-//equal operator
-////////////////////////////////////////////////////////////////////////////////
 cfdUpdateableOSGTexture1d& cfdUpdateableOSGTexture1d::operator=( const cfdUpdateableOSGTexture1d& cb )
 {
     if( this != &cb )
@@ -207,4 +208,4 @@ cfdUpdateableOSGTexture1d& cfdUpdateableOSGTexture1d::operator=( const cfdUpdate
     }
     return *this;
 }
-#endif
+////////////////////////////////////////////////////////////////////////////////

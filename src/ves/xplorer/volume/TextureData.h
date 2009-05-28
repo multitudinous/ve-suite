@@ -30,6 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> **************/
+
 #ifndef JPG_TEXTURE_DATA_H_
 #define JPG_TEXTURE_DATA_H_
 
@@ -37,23 +38,29 @@
 #include <windows.h>
 #endif
 
+// --- VE-Suite Includes --- //
+#include <ves/VEConfig.h>
+
 #include <ves/xplorer/volume/ScalarData.h>
 #include <ves/xplorer/volume/VectorData.h>
 #include <ves/xplorer/volume/TimestepData.h>
 
+// --- VR Juggler Includes --- //
 #include <gmtl/Vec.h>
+
 #include <loki/SmartPtr.h>
 
-#include <map>
+// --- C/C++ Includes --- //
 #include <string>
-#include <vector>
-#include <ves/VEConfig.h>
+
 namespace ves
 {
 namespace xplorer
 {
 namespace volume
 {
+
+
 /**
  * Represents a data set that is used to create a texture.  This data
  * set is composed of several timesteps each of which contain a vector,
@@ -237,7 +244,9 @@ private:
 
 /// Typedef for a SmartPtr type for the TextureData.
 typedef Loki::SmartPtrDef<TextureData>::type TextureDataPtr;
-}
-}
-}
-#endif
+
+} //end volume
+} //end xplorer
+} //end ves
+
+#endif //JPG_TEXTURE_DATA_H_

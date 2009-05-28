@@ -30,10 +30,13 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> **************/
+
 #ifndef JPG_SINGLETON_DLL_H_
 #define JPG_SINGLETON_DLL_H_
 
+// --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
+
 namespace ves
 {
 namespace xplorer
@@ -49,9 +52,10 @@ class VE_TEXTURE_BASED_EXPORTS Singleton
 {
 public:
     static T& Instance();
-};
-}
-}
-}
 
-#endif
+};
+} //end volume
+} //end xplorer
+} //end ves
+
+#endif //JPG_SINGLETON_DLL_H_

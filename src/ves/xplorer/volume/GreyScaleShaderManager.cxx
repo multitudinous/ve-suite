@@ -30,23 +30,30 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#include <iostream>
-#ifdef _OSG
-#include <osg/Texture3D>
-#include <osg/Texture2D>
-#include <osg/BlendFunc>
-#include <osg/TexEnv>
-#include <osg/TexMat>
-#include <osg/TexGen>
+
+// --- VE-Suite Includes --- //
 #include <ves/xplorer/volume/cfdTextureManager.h>
 #include <ves/xplorer/volume/cfdUpdateTextureCallback.h>
 #include <ves/xplorer/volume/cfdScalarShaderManager.h>
 #include <ves/xplorer/volume/GreyScaleShaderManager.h>
 #include <ves/xplorer/volume/LuminanceTransferFunction.h>
 #include <ves/xplorer/volume/PreIntegrationTexture.h>
+#include <ves/xplorer/volume/ExternalPixelBufferObject.h>
+
+// --- OSG Includes --- //
+#include <osg/Texture3D>
+#include <osg/Texture2D>
+#include <osg/BlendFunc>
+#include <osg/TexEnv>
+#include <osg/TexMat>
+#include <osg/TexGen>
+
+// --- C/C++ Includes --- //
+#include <iostream>
+
 using namespace ves::xplorer::volume;
 
-////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 /*void GreyScaleShaderManager::_updateTransferFunction(bool preIntegrated)
 {
    if(!_tf)
@@ -179,7 +186,7 @@ using namespace ves::xplorer::volume;
    tFunc->dirtyTextureObject();
 
 }*/
-///////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void GreyScaleShaderManager::_initTransferFunctions()
 {
     if( _transferFunctions.empty() )
@@ -204,4 +211,4 @@ void GreyScaleShaderManager::_initTransferFunctions()
         _transferFunctions.push_back( _preIntTexture->GetPreIntegratedTexture() );
     }
 }
-#endif//_OSG
+////////////////////////////////////////////////////////////////////////////////

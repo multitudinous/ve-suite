@@ -30,6 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> **************/
+
 #ifndef JPG_VARIANT_H_
 #define JPG_VARIANT_H_
 

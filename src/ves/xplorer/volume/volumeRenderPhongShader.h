@@ -30,8 +30,10 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
+
 #ifndef VR_PHONG_SHADER_SOURCE_H
 #define VR_PHONG_SHADER_SOURCE_H
+
 //the shader inline source
 static const char* vrPhongVertSource =
     {
@@ -161,4 +163,5 @@ static const char* vrPhongFragSource =
         "//gl_FragColor.a = 1.0-pow(1.0-gl_FragColor.a,alphaRatio);\n"
         "}\n"
     };
-#endif
+
+#endif //VR_PHONG_SHADER_SOURCE_H

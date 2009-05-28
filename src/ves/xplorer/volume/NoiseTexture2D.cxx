@@ -31,11 +31,22 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> **************/
+
+// --- VE-Suite Includes --- //
 #include <ves/xplorer/volume/NoiseTexture2D.h>
+#include <ves/xplorer/volume/ExternalPixelBufferObject.h>
+
+// --- OSG Includes --- //
+#include <osg/Texture2D>
+
+// --- C/C++ Includes --- //
+
 #include <iostream>
 #include <fstream>
+
 using namespace ves::xplorer::volume;
-///////////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////////////////////////
 NoiseTexture2D::NoiseTexture2D( unsigned int x, unsigned int y )
 {
     _resolution[0] = x;
@@ -72,7 +83,7 @@ NoiseTexture2D::NoiseTexture2D( unsigned int x, unsigned int y )
                          osg::Image::USE_NEW_DELETE );
     _noiseTexture->setImage( imageData.get() );
 }
-/////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 NoiseTexture2D::NoiseTexture2D( const NoiseTexture2D& rhs )
 {
     _resolution[0] = rhs._resolution[0];
@@ -84,7 +95,7 @@ NoiseTexture2D::NoiseTexture2D( const NoiseTexture2D& rhs )
     }
     _noiseTexture = new osg::Texture2D( *rhs._noiseTexture.get() );
 }
-///////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 NoiseTexture2D& NoiseTexture2D::operator=( const NoiseTexture2D& rhs )
 {
     if( this != &rhs )
@@ -100,7 +111,7 @@ NoiseTexture2D& NoiseTexture2D::operator=( const NoiseTexture2D& rhs )
     }
     return *this;
 }
-/////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 NoiseTexture2D::~NoiseTexture2D()
 {
     /*if(_noiseData)
@@ -109,7 +120,7 @@ NoiseTexture2D::~NoiseTexture2D()
        _noiseData = 0;
     }*/
 }
-////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 osg::Texture2D* NoiseTexture2D::GetNoiseTexture()
 {
     if( _noiseTexture.valid() )
@@ -118,4 +129,4 @@ osg::Texture2D* NoiseTexture2D::GetNoiseTexture()
     }
     return 0;
 }
-
+////////////////////////////////////////////////////////////////////////////////

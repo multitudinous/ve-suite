@@ -30,8 +30,8 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#ifdef _OSG
-#include <cmath>
+
+// --- VE-Suite Includes --- //
 #include <ves/xplorer/volume/cfdAdvectionSubGraph.h>
 #include <ves/xplorer/volume/cfdOSGAdvectionShaderManager.h>
 #include <ves/xplorer/volume/cfdTextureManager.h>
@@ -40,6 +40,7 @@
 #include <ves/xplorer/volume/cfdTextureMatrixCallback.h>
 #include <ves/xplorer/volume/cfdPBufferQuad.h>
 
+// --- OSG Includes --- //
 #include <osg/Group>
 #include <osg/Geode>
 #include <osg/BoundingBox>
@@ -52,8 +53,12 @@
 #include <osg/StateSet>
 #include <osg/TexGenNode>
 
+// --- C/C++ Includes --- //
+#include <cmath>
+
 using namespace ves::xplorer::volume;
 
+////////////////////////////////////////////////////////////////////////////////
 osg::ref_ptr<osg::Group> ves::xplorer::volume::CreateAdvectionSubGraph( cfdTextureManager* tm,
         cfdPBufferManager* pbm,
         float deltaZ )
@@ -112,4 +117,4 @@ osg::ref_ptr<osg::Group> ves::xplorer::volume::CreateAdvectionSubGraph( cfdTextu
     group->addChild( geode.get() );
     return group;
 }
-#endif// _OSG
+////////////////////////////////////////////////////////////////////////////////

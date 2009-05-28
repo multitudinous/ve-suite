@@ -30,16 +30,13 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
+
 #ifndef GREY_SCALE_SHADER_MANAGER_H
 #define GREY_SCALE_SHADER_MANAGER_H
-/*!\file GreyScaleShaderManager.h
-* GreyScaleShaderManager API
-*/
 
-/*!\class ves::xplorer::volume::GreyScaleShaderManager
-*
-*/
-#ifdef _OSG
+// --- VE-Suite Includes --- //
+#include <ves/VEConfig.h>
+
 #include <ves/xplorer/volume/cfdScalarShaderManager.h>
 
 namespace ves
@@ -50,7 +47,14 @@ namespace volume
 {
 class cfdTextureManager;
 
-class GreyScaleShaderManager: public cfdScalarShaderManager
+/*!\file GreyScaleShaderManager.h
+ * GreyScaleShaderManager API
+ */
+
+/*!\class ves::xplorer::volume::GreyScaleShaderManager
+ *
+ */
+class GreyScaleShaderManager : public cfdScalarShaderManager
 {
 public:
     ///Constructor
@@ -66,9 +70,10 @@ protected:
     //void _updateTransferFunction(bool preIntegrated=true);
     ///Initialize the transfer functions
     virtual void _initTransferFunctions();
+
 };
-}
-}
-}
-#endif//_OSG
+} //end volume
+} //end xplorer
+} //end ves
+
 #endif// GREY_SCALE_SHADER_MANAGER_H

@@ -30,15 +30,19 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#ifdef _OSG
 
-#include <iostream>
+// --- VE-Suite Includes --- //
 #include <ves/xplorer/volume/cfdUpdateParameterCallback.h>
+
+// --- OSG Includes --- //
 #include <osg/NodeVisitor>
+
+// --- C/C++ Includes --- //
+#include <iostream>
+
 using namespace ves::xplorer::volume;
-////////////////////////////////////////////////////////
-//Constructors                                        //
-////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////////////////////////
 cfdUpdateParameterCallback::cfdUpdateParameterCallback()
 {
     _value[0] = 0;
@@ -48,7 +52,7 @@ cfdUpdateParameterCallback::cfdUpdateParameterCallback()
     _type = VECTOR;
     _size = ONE;
 }
-////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 /*cfdUpdateParameterCallback
 ::cfdUpdateParameterCallback(const cfdUpdateParameterCallback &copy,
                           const osg::CopyOp &copyop )
@@ -61,7 +65,7 @@ cfdUpdateParameterCallback::cfdUpdateParameterCallback()
    _type = copy._type;
    _size = copy._size;
 }*/
-///////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdUpdateParameterCallback::operator()( osg::Uniform* uniVar, osg::NodeVisitor* nv )
 {
     if( _type == VECTOR )
@@ -92,7 +96,7 @@ void cfdUpdateParameterCallback::operator()( osg::Uniform* uniVar, osg::NodeVisi
         std::cout << "Unknown parameter type in cfdUpdateParameterCallback." << std::endl;
     }
 }
-//////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdUpdateParameterCallback::updateParameter( float* v )
 {
     switch ( _size )
@@ -118,4 +122,4 @@ void cfdUpdateParameterCallback::updateParameter( float* v )
             break;
     };
 }
-#endif //_OSG
+////////////////////////////////////////////////////////////////////////////////

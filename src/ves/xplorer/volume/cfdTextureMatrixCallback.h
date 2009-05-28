@@ -30,33 +30,39 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
+
 //class to update the texture matrix appropriately
 #ifndef CFD_TEXTURE_MATRIX_CALLBACK_H
 #define CFD_TEXTURE_MATRIX_CALLBACK_H
-/*!\file cfdTextureMatrixCallback.h
-* cfdTextureMatrixCallback API
-*/
 
-/*!\class ves::xplorer::volume::cfdTextureMatrixCallback
-*
-*/
-#ifdef _OSG
+// --- VE-Suite Includes --- //
+#include <ves/VEConfig.h>
+
+// --- OSG Includes --- //
+#include <osg/ref_ptr>
+#include <osg/NodeCallback>
+#include <osg/Vec3>
 
 namespace osg
 {
 class TexMat;
-class Node;
 }
-#include <osg/NodeCallback>
-#include <osg/Vec3f>
-#include <ves/VEConfig.h>
+
 namespace ves
 {
 namespace xplorer
 {
 namespace volume
 {
-class VE_TEXTURE_BASED_EXPORTS cfdTextureMatrixCallback : public osg::NodeCallback
+/*!\file cfdTextureMatrixCallback.h
+ * cfdTextureMatrixCallback API
+ */
+
+/*!\class ves::xplorer::volume::cfdTextureMatrixCallback
+ *
+ */
+class VE_TEXTURE_BASED_EXPORTS cfdTextureMatrixCallback :
+    public osg::NodeCallback
 {
 public:
     ///Callback that updates the texture matrix
@@ -76,9 +82,10 @@ protected:
     float _scale[3];///<The scale vector
     osg::Vec3f _center;///<The center
     mutable osg::ref_ptr<osg::TexMat> _texMat;///<The texture matrix
+
 };
-}
-}
-}
-#endif //_OSG
+} //end volume
+} //end xplorer
+} //end ves
+
 #endif// CFD_TEXTURE_MATRIX_CALLBACK_H

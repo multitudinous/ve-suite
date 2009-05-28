@@ -30,17 +30,19 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#include <iostream>
-#ifdef _PERFORMER
-#elif _OPENSG
-#elif _OSG
 
-#include <osg/State>
+// --- VE-Suite Includes --- //
 #include <ves/xplorer/volume/cfdUpdateableOSGNoiseTexture3d.h>
+
+// --- OSG Includes --- //
+#include <osg/State>
+
+// --- C/C++ Includes --- //
+#include <iostream>
+
 using namespace ves::xplorer::volume;
-////////////////////////////////////////////////////////////////
-//Constructors                                                //
-////////////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////////////////////////
 cfdUpdateableOSGNoiseTexture3d::cfdUpdateableOSGNoiseTexture3d()
 {
     _textureWidth = 32;
@@ -80,9 +82,7 @@ cfdUpdateableOSGNoiseTexture3d::cfdUpdateableOSGNoiseTexture3d(
         _data[i] = uNT._data[i];
     }
 }
-/////////////////////////////////////////////////////////////////
-//Destructor                                                   //
-/////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 cfdUpdateableOSGNoiseTexture3d::~cfdUpdateableOSGNoiseTexture3d()
 {
     if( _data )
@@ -91,7 +91,7 @@ cfdUpdateableOSGNoiseTexture3d::~cfdUpdateableOSGNoiseTexture3d()
         _data = 0;
     }
 }
-///////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdUpdateableOSGNoiseTexture3d::_updateData()
 {
     int nPixels = 32 * 32 * 32;
@@ -168,12 +168,12 @@ void cfdUpdateableOSGNoiseTexture3d::_updateData()
         }
     }
 }
-/////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 bool cfdUpdateableOSGNoiseTexture3d::_needsUpdate() const
 {
     return ( _lastI == _taoI ) ? (( _lastH == _taoH ) ? false : true ) : true;
 }
-/////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdUpdateableOSGNoiseTexture3d::UpdateTaoH( GLfloat taoH )
 {
     _taoH = taoH;
@@ -183,7 +183,7 @@ void cfdUpdateableOSGNoiseTexture3d::UpdateTaoH( GLfloat taoH )
         _lastH = taoH;
     }
 }
-/////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdUpdateableOSGNoiseTexture3d::UpdateTaoI( GLfloat taoI )
 {
     _taoI = taoI;
@@ -193,7 +193,7 @@ void cfdUpdateableOSGNoiseTexture3d::UpdateTaoI( GLfloat taoI )
         _lastI = taoI;
     }
 }
-////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdUpdateableOSGNoiseTexture3d::load( const osg::Texture3D& texture, osg::State& state )const
 {
     //if(_needsUpdate()){
@@ -207,7 +207,7 @@ void cfdUpdateableOSGNoiseTexture3d::load( const osg::Texture3D& texture, osg::S
             ( unsigned char* )_data );
     //}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdUpdateableOSGNoiseTexture3d::subload( const osg::Texture3D& texture, osg::State& state ) const
 {
     if( _data && _needsUpdate() )
@@ -223,8 +223,6 @@ void cfdUpdateableOSGNoiseTexture3d::subload( const osg::Texture3D& texture, osg
                 ( unsigned char* )_data );
     }
 }
-////////////////////////////////////////////////////////////////////////////////
-//equal operator                                                              //
 ////////////////////////////////////////////////////////////////////////////////
 cfdUpdateableOSGNoiseTexture3d&
 cfdUpdateableOSGNoiseTexture3d::operator=( const cfdUpdateableOSGNoiseTexture3d& uNT )
@@ -255,4 +253,4 @@ cfdUpdateableOSGNoiseTexture3d::operator=( const cfdUpdateableOSGNoiseTexture3d&
     }
     return *this;
 }
-#endif
+////////////////////////////////////////////////////////////////////////////////

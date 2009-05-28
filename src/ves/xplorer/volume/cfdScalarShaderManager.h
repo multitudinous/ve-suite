@@ -32,16 +32,13 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
+
 #ifndef CFD_SCALAR_SHADER_MANAGER_H
 #define CFD_SCALAR_SHADER_MANAGER_H
-/*!\file cfdScalarShaderManager.h
-* cfdScalarShaderManager API
-*/
 
-/*!\class ves::xplorer::volume::cfdScalarShaderManager
-*
-*/
-#ifdef _OSG
+// --- VE-Suite Includes --- //
+#include <ves/VEConfig.h>
+
 #include <ves/xplorer/volume/cfdOSGTransferShaderManager.h>
 
 namespace ves
@@ -52,8 +49,15 @@ namespace volume
 {
 class cfdTextureManager;
 
-class VE_TEXTURE_BASED_EXPORTS cfdScalarShaderManager
-            : public cfdOSGTransferShaderManager
+/*!\file cfdScalarShaderManager.h
+ * cfdScalarShaderManager API
+ */
+
+/*!\class ves::xplorer::volume::cfdScalarShaderManager
+ *
+ */
+class VE_TEXTURE_BASED_EXPORTS cfdScalarShaderManager :
+    public cfdOSGTransferShaderManager
 {
 public:
     ///Construtor
@@ -111,9 +115,10 @@ protected:
     virtual void _initTransferFunctions();
     ///Initialize property texture
     void _initPropertyTexture();
+
 };
-}
-}
-}
-#endif//_OSG
+} //end volume
+} //end xplorer
+} //end ves
+
 #endif// CFD_SCALAR_SHADER_MANAGER_H

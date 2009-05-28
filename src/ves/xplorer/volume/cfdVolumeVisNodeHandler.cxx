@@ -30,25 +30,29 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#ifdef _OSG
 
+// --- VE-Suite Includes --- //
+#include <ves/xplorer/volume/cfdVolumeVisNodeHandler.h>
+#include <ves/xplorer/volume/cfdOSGShaderManager.h>
+#include <ves/xplorer/volume/cfdScalarShaderManager.h>
+#include <ves/xplorer/volume/cfdTextureManager.h>
+#include <ves/xplorer/volume/cfdTextureMatrixCallback.h>
+
+// --- OSG Includes --- //
 #include <osg/Geometry>
 #include <osg/Geode>
 #include <osg/Group>
 #include <osg/TexGenNode>
 #include <osg/TexMat>
 #include <osg/Switch>
-#include <iostream>
 #include <osg/Vec3f>
-#include <ves/xplorer/volume/cfdVolumeVisNodeHandler.h>
-#include <ves/xplorer/volume/cfdOSGShaderManager.h>
-#include <ves/xplorer/volume/cfdScalarShaderManager.h>
-#include <ves/xplorer/volume/cfdTextureManager.h>
-#include <ves/xplorer/volume/cfdTextureMatrixCallback.h>
+
+// --- C/C++ Includes --- //
+#include <iostream>
+
 using namespace ves::xplorer::volume;
-//////////////////////////////////////////////////
-//Constructors                                  //
-//////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////////////////////////
 cfdVolumeVisNodeHandler::cfdVolumeVisNodeHandler()
 {
     _whichChildIsThis = 0;
@@ -64,7 +68,7 @@ cfdVolumeVisNodeHandler::cfdVolumeVisNodeHandler()
     _autoTexGen = true;
     _activeShader = "";
 }
-//////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 cfdVolumeVisNodeHandler::cfdVolumeVisNodeHandler( const
                                                   cfdVolumeVisNodeHandler& vvnh )
 {
@@ -85,9 +89,7 @@ cfdVolumeVisNodeHandler::cfdVolumeVisNodeHandler( const
     _autoTexGen = vvnh._autoTexGen;
     _shaderManagers = vvnh._shaderManagers;
 }
-///////////////////////////////////////////////////
-//Destructor                                     //
-///////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 cfdVolumeVisNodeHandler::~cfdVolumeVisNodeHandler()
 {
     for( std::map < std::string ,
@@ -99,7 +101,7 @@ cfdVolumeVisNodeHandler::~cfdVolumeVisNodeHandler()
     }
     _shaderManagers.clear();
 }
-////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdVolumeVisNodeHandler::SetBoundingBox( float* bbox )
 {
     float minBBox[3];
@@ -115,12 +117,12 @@ void cfdVolumeVisNodeHandler::SetBoundingBox( float* bbox )
                osg::Vec3( maxBBox[0], maxBBox[1], maxBBox[2] ) );
 
 }
-///////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdVolumeVisNodeHandler::SetSwitchNode( osg::Switch* vvn )
 {
     _vvN = vvn;
 }
-////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdVolumeVisNodeHandler::SetTextureManager( cfdTextureManager* tm )
 {
     if( _tm != tm )
@@ -130,12 +132,12 @@ void cfdVolumeVisNodeHandler::SetTextureManager( cfdTextureManager* tm )
     else
        _tm->operator =(*tm);*/
 }
-///////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdVolumeVisNodeHandler::SetAttachNode( osg::Group* attachNode )
 {
     _byPassNode = attachNode;
 }
-////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdVolumeVisNodeHandler::Init()
 {
     if( !_bbox.valid() )
@@ -199,14 +201,14 @@ void cfdVolumeVisNodeHandler::Init()
         _vvN->setSingleChildOn( 0 );
     }
 }
-//////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdVolumeVisNodeHandler::SetCenter( osg::Vec3f center )
 {
     _center[0] = center[0];
     _center[1] = center[1];
     _center[2] = center[2];
 }
-///////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdVolumeVisNodeHandler::SetTextureScale( float* scale, bool isInverted )
 {
     _scale[0] = scale[0];
@@ -221,7 +223,7 @@ void cfdVolumeVisNodeHandler::SetTextureScale( float* scale, bool isInverted )
 
     }
 }
-///////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdVolumeVisNodeHandler::_updateTexGenUnit( unsigned int unit )
 {
     if( _texGenParams.valid() )
@@ -229,6 +231,7 @@ void cfdVolumeVisNodeHandler::_updateTexGenUnit( unsigned int unit )
         _texGenParams->setTextureUnit( unit );
     }
 }
+////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////
 //may need to modify this to use the bbox     //
 ////////////////////////////////////////////////
@@ -252,7 +255,7 @@ void cfdVolumeVisNodeHandler::_createTexGenNode()
         _texGenParams->getTexGen()->setPlane( osg::TexGen::R, rPlane );
     }
 }
-////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 bool cfdVolumeVisNodeHandler::IsThisActive()
 {
     if( _vvN.valid() )
@@ -262,7 +265,7 @@ bool cfdVolumeVisNodeHandler::IsThisActive()
     }
     return false;
 }
-////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdVolumeVisNodeHandler::SetBoundingBoxName( std::string name )
 {
     if (( !name.empty() ) && _bboxSwitch.valid() )
@@ -270,7 +273,7 @@ void cfdVolumeVisNodeHandler::SetBoundingBoxName( std::string name )
         _bboxSwitch->setName( name );
     }
 }
-////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdVolumeVisNodeHandler::SetDecoratorName( std::string name )
 {
     if (( !name.empty() ) && _decoratorGroup.valid() )
@@ -278,7 +281,7 @@ void cfdVolumeVisNodeHandler::SetDecoratorName( std::string name )
         _decoratorGroup->setName( name );
     }
 }
-///////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdVolumeVisNodeHandler::SetActiveShader( std::string name )
 {
     if (( !name.empty() ) && _decoratorGroup.valid() )
@@ -288,7 +291,7 @@ void cfdVolumeVisNodeHandler::SetActiveShader( std::string name )
         _applyTextureMatrix();
     }
 }
-///////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdVolumeVisNodeHandler::EnableDecorator()
 {
     if( _vvN.valid() )
@@ -296,7 +299,7 @@ void cfdVolumeVisNodeHandler::EnableDecorator()
         _vvN->setSingleChildOn( _whichChildIsThis );
     }
 }
-//////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdVolumeVisNodeHandler::TurnOnBBox()
 {
     if( _bboxSwitch.valid() )
@@ -304,7 +307,7 @@ void cfdVolumeVisNodeHandler::TurnOnBBox()
         _bboxSwitch->setSingleChildOn( 0 );
     }
 }
-///////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdVolumeVisNodeHandler::TurnOffBBox()
 {
     if( _bboxSwitch.valid() )
@@ -312,7 +315,7 @@ void cfdVolumeVisNodeHandler::TurnOffBBox()
         _bboxSwitch->setSingleChildOn( 1 );
     }
 }
-/////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdVolumeVisNodeHandler::_createVisualBBox()
 {
     if( _bbox.valid() )
@@ -374,7 +377,7 @@ void cfdVolumeVisNodeHandler::_createVisualBBox()
         std::cout << "Invalid bbox in cfdVolumeVisNodeHandler::_createVisualBBox!" << std::endl;
     }
 }
-////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdVolumeVisNodeHandler::AddShaderManager( std::string name,
                                                 ves::xplorer::volume::cfdOSGShaderManager* newShader,
                                                 bool isScalar )
@@ -389,7 +392,7 @@ void cfdVolumeVisNodeHandler::AddShaderManager( std::string name,
     newShader->Init();
     _shaderManagers[name] = newShader;
 }
-//////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 ves::xplorer::volume::cfdOSGShaderManager*
 cfdVolumeVisNodeHandler::GetShaderManager( std::string name )
 {
@@ -403,20 +406,18 @@ cfdVolumeVisNodeHandler::GetShaderManager( std::string name )
     }
     return 0;
 }
-//////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 std::string cfdVolumeVisNodeHandler::GetActiveShaderName()
 {
     return _activeShader;
 }
-//////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 ves::xplorer::volume::cfdOSGShaderManager*
 cfdVolumeVisNodeHandler::GetActiveShader()
 {
     return GetShaderManager( _activeShader );
 }
-///////////////////////////////////////////////////////////////////////
-//equal operator                                                     //
-///////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 cfdVolumeVisNodeHandler&
 cfdVolumeVisNodeHandler::operator=( const cfdVolumeVisNodeHandler& vvnh )
 {
@@ -439,5 +440,4 @@ cfdVolumeVisNodeHandler::operator=( const cfdVolumeVisNodeHandler& vvnh )
     }
     return *this;
 }
-
-#endif //_OSG
+////////////////////////////////////////////////////////////////////////////////

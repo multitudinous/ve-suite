@@ -30,6 +30,8 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> **************/
+
+// --- VE-Suite Includes --- //
 #include <ves/xplorer/volume/VectorData.h>
 
 namespace VE_TextureBased
@@ -82,6 +84,5 @@ VectorDataSet::getVectorNames() const
     }
     return results;
 }
-
 
 }

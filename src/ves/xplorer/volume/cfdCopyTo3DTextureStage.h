@@ -30,8 +30,33 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
+
 #ifndef CFD_COPY_TO_3DTEXTURE_STAGE_H
 #define CFD_COPY_TO_3DTEXTURE_STAGE_H
+
+// --- VE-Suite Includes --- //
+#include <ves/VEConfig.h>
+
+// --- OSG Includes --- //
+#include <osg/ref_ptr>
+#include <osg/Version>
+
+#include <osgUtil/RenderStage>
+
+namespace osg
+{
+class FrameStamp;
+class Texture3D;
+}
+
+namespace ves
+{
+namespace xplorer
+{
+namespace volume
+{
+class cfdPBufferManager;
+
 /*!\file cfdCopyTo3DTextureStage.h
 * cfdCopyTo3DTextureStage API
 */
@@ -39,25 +64,8 @@
 /*!\class ves::xplorer::volume::cfdCopyTo3DTextureStage
 *
 */
-#ifdef _OSG
-
-#include <osg/Texture3D>
-#include <osg/State>
-#include <osg/StateSet>
-#include <osgUtil/RenderStage>
-#include <osg/FrameStamp>
-
-#include <osg/Version>
-#include <ves/xplorer/volume/cfdPBufferManager.h>
-#include <ves/VEConfig.h>
-namespace ves
-{
-namespace xplorer
-{
-namespace volume
-{
-class VE_TEXTURE_BASED_EXPORTS cfdCopyTo3DTextureStage:
-            public osgUtil::RenderStage
+class VE_TEXTURE_BASED_EXPORTS cfdCopyTo3DTextureStage :
+    public osgUtil::RenderStage
 {
 public:
     cfdCopyTo3DTextureStage();
@@ -133,10 +141,11 @@ protected:
     int _width;
     int _height;
     int _nSlices;
+
 };
-}
-}
-}
-#endif //OSG
+} //end volume
+} //end xplorer
+} //end ves
+
 #endif// CFD_COPY_TO_3DTEXTURE_STAGE_H
 

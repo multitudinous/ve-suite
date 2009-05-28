@@ -31,34 +31,41 @@
  *
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
+
 #ifndef _BIV_TEXTURE_MANAGER_H_
 #define _BIV_TEXTURE_MANAGER_H_
-/*!\file cfdTextureManager.h
-* cfdTextureManager API
-*/
 
-/*!\class ves::xplorer::volume::cfdTextureManager
-*
-*/
 #ifdef WIN32
 #include <windows.h>
 #endif
 
 //#include <gl/gl.h>
-#include <iostream>
-#include <vector>
+
+// --- VE-Suite Includes --- //
+#include <ves/VEConfig.h>
+
+// --- C/C++ Includes --- //
 #include <string>
+#include <vector>
+
 struct ScalarRange
 {
-    float range[2];
+    float range[ 2 ];
 };
-#include <ves/VEConfig.h>
+
 namespace ves
 {
 namespace xplorer
 {
 namespace volume
 {
+/*!\file cfdTextureManager.h
+ * cfdTextureManager API
+ */
+
+/*!\class ves::xplorer::volume::cfdTextureManager
+ *
+ */
 class  VE_TEXTURE_BASED_EXPORTS cfdTextureManager
 {
 public:
@@ -222,8 +229,10 @@ protected:
     int _direction;///<Step direction
     PlayMode _mode;///<Play mode
     std::string dataName;///<Name of this data solution.
+
 };
-}
-}
-}
+} //end volume
+} //end xplorer
+} //end ves
+
 #endif //_BIV_TEXTURE_MANAGER_H_

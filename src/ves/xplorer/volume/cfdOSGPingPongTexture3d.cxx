@@ -30,24 +30,28 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#ifdef _PERFORMER
-#elif _OSG
+
+// --- VE-Suite Includes --- //
 #include <ves/xplorer/volume/cfdOSGPingPongTexture3d.h>
+
+// --- OSG Includes --- //
+#include <osg/Node>
 #include <osg/Image>
 #include <osg/State>
 #include <osg/Texture3D>
 #include <osg/StateAttribute>
+
 static bool start = false;
+
 using namespace ves::xplorer::volume;
-//////////////////////////////////////////////////
-//Constructors                                  //
-//////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////////////////////////
 cfdOSGPingPongTexture3D::cfdOSGPingPongTexture3D()
 {
     _pingUnit = 0;
     _pongUnit = 0;
 }
-//////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 cfdOSGPingPongTexture3D::cfdOSGPingPongTexture3D( const
                                                   cfdOSGPingPongTexture3D& pp )
 {
@@ -56,26 +60,24 @@ cfdOSGPingPongTexture3D::cfdOSGPingPongTexture3D( const
     _pingUnit = pp._pingUnit;
     _pongUnit = pp._pongUnit;
 }
-///////////////////////////////////////////////////
-//Destructor                                     //
-///////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 cfdOSGPingPongTexture3D::~cfdOSGPingPongTexture3D()
 {}
-//////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdOSGPingPongTexture3D::SetPingTexture( unsigned int unit,
                                               osg::Node* ping )
 {
     _pingUnit = unit;
     _previous = ping;
 }
-//////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdOSGPingPongTexture3D::SetPongTexture( unsigned int unit,
                                               osg::Node* pong )
 {
     _pongUnit = unit;
     _current = pong;
 }
-/////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 osg::Texture3D* cfdOSGPingPongTexture3D::GetCurrentTexture()
 {
     if( _current.valid() )
@@ -87,7 +89,7 @@ osg::Texture3D* cfdOSGPingPongTexture3D::GetCurrentTexture()
     }
     return 0;
 }
-////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdOSGPingPongTexture3D::PingPongTextures()
 {
     osg::ref_ptr<osg::StateSet> tmpStateSet = _previous->getStateSet();
@@ -99,9 +101,7 @@ void cfdOSGPingPongTexture3D::PingPongTextures()
     _current->setStateSet( tmpStateSet.get() );
     return;
 }
-/////////////////////////////////////////////////////////////////////
-//equal operator                                                   //
-/////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 cfdOSGPingPongTexture3D&
 cfdOSGPingPongTexture3D::operator=( const cfdOSGPingPongTexture3D& pp )
 {
@@ -112,4 +112,4 @@ cfdOSGPingPongTexture3D::operator=( const cfdOSGPingPongTexture3D& pp )
     }
     return *this;
 }
-#endif //_OSG
+////////////////////////////////////////////////////////////////////////////////

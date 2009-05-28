@@ -30,25 +30,28 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#ifdef _OSG
+
+// --- VE-Suite Includes --- //
 #include <ves/xplorer/volume/cfd3DTextureCullCallback.h>
 #include <ves/xplorer/volume/cfdCopyTo3DTextureStage.h>
 #include <ves/xplorer/volume/cfdPBufferManager.h>
 #include <ves/xplorer/volume/cfdOSGPingPongTexture3d.h>
-#include <osg/Node>
+
+// --- OSG Includes --- //
 #include <osg/NodeVisitor>
 #include <osg/Texture3D>
-#include <osgUtil/CullVisitor>
 #include <osg/Viewport>
 #include <osg/Geode>
 #include <osg/Geometry>
+#include <osg/FrameStamp>
+
 #include <osgUtil/RenderStage>
 #include <osgUtil/UpdateVisitor>
-#include <osg/FrameStamp>
-//#include <osg/BoundingBox>
+#include <osgUtil/CullVisitor>
+
 using namespace ves::xplorer::volume;
 
-////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 cfd3DTextureCullCallback::cfd3DTextureCullCallback( osg::Node* subgraph,
                                                     //osg::Texture3D* texture,
                                                     unsigned int width,
@@ -62,7 +65,7 @@ cfd3DTextureCullCallback::cfd3DTextureCullCallback( osg::Node* subgraph,
     _pingPonger = 0;
     _uniformUpdater = 0;
 }
-/////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 cfd3DTextureCullCallback::~cfd3DTextureCullCallback()
 {
     if( _pingPonger )
@@ -76,7 +79,7 @@ cfd3DTextureCullCallback::~cfd3DTextureCullCallback()
         _uniformUpdater = 0;
     }
 }
-///////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfd3DTextureCullCallback::SetPingPongTextures( unsigned int tPingUint,
                                                     osg::Node* ping,
                                                     unsigned int tPongUint,
@@ -99,7 +102,7 @@ void cfd3DTextureCullCallback::SetPingPongTextures( unsigned int tPingUint,
         ;
     }
 }
-//////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 cfdOSGPingPongTexture3D* cfd3DTextureCullCallback::GetPingPonger()
 {
     if( _pingPonger )
@@ -108,7 +111,7 @@ cfdOSGPingPongTexture3D* cfd3DTextureCullCallback::GetPingPonger()
     }
     return 0;
 }
-///////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfd3DTextureCullCallback::operator()( osg::Node* node,
                                            osg::NodeVisitor* nv )
 {
@@ -131,7 +134,7 @@ void cfd3DTextureCullCallback::operator()( osg::Node* node,
         //
     }
 }
-////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfd3DTextureCullCallback::preRender( osg::Node& node,
                                           osgUtil::CullVisitor& cv )
 {
@@ -219,4 +222,4 @@ void cfd3DTextureCullCallback::preRender( osg::Node& node,
     }
     _count++;
 }
-#endif
+////////////////////////////////////////////////////////////////////////////////

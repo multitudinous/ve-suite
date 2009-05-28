@@ -30,22 +30,17 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
+
 #ifndef CFD_TEXTURE_DATA_SET_H
 #define CFD_TEXTURE_DATA_SET_H
-/*!\file TextureDataSet.h
-* TextureData API
-*/
 
-/*!\class ves::xplorer::volume::TextureDataInfo
-*
-*/
-#ifdef _OSG
-
-#include <vector>
-#include <map>
-#include <iostream>
-#include <string>
+// --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
+
+// --- C/C++ Includes --- //
+#include <string>
+#include <vector>
+
 namespace ves
 {
 namespace xplorer
@@ -54,6 +49,7 @@ namespace volume
 {
 class cfdVolumeVisualization;
 class cfdTextureManager;
+
 class VE_TEXTURE_BASED_EXPORTS TextureDataInfo
 {
 public:
@@ -72,9 +68,13 @@ protected:
 };
 
 
+/*!\file cfdTextureDataSet.h
+ * cfdTextureDataSet API
+ */
+
 /*!\class ves::xplorer::volume::cfdTextureDataSet
-*
-*/
+ *
+ */
 class VE_TEXTURE_BASED_EXPORTS cfdTextureDataSet
 {
 public:
@@ -139,8 +139,8 @@ public:
 
     ///Get the cfdVolumeVisualizationNode
     cfdVolumeVisualization* GetVolumeVisNode();
-protected:
 
+protected:
     DataType _activeDataType;///<The active data type
     unsigned int _nScalars;///<The number of scalars
     unsigned int _nVectors;///<The number of vectors
@@ -155,9 +155,10 @@ protected:
 
     TextureDataList _scalars;///<The list of TextureDataInfo for each available scalar
     TextureDataList _vectors;///<The list of TextureDataInfo for each available vector
+
 };
-}
-}
-}
-#endif
+} //end volume
+} //end xplorer
+} //end ves
+
 #endif// CFD_TEXTURE_DATA_SET_H

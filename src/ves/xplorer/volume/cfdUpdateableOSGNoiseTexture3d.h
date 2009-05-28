@@ -32,32 +32,32 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
+
 #ifndef CFD_UPDATEABLE_OSG_NOISE_TEXTURE_3D_H
 #define CFD_UPDATEABLE_OSG_NOISE_TEXTURE_3D_H
-/*!\file cfdUpdateableOSGNoiseTexture3d.h
-* cfdUpdateableOSGNoiseTexture3d API
-*/
 
-/*!\class ves::xplorer::volume::cfdUpdateableOSGNoiseTexture3d
-*
-*/
-#ifdef _PERFORMER
-#elif _OPENSG
-#elif _OSG
-namespace osg
-{
-class State;
-}
-#include <osg/Texture3D>
+// --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
+
+// --- OSG Includes --- //
+#include <osg/ref_ptr>
+#include <osg/Texture3D>
+
 namespace ves
 {
 namespace xplorer
 {
 namespace volume
 {
-class VE_TEXTURE_BASED_EXPORTS cfdUpdateableOSGNoiseTexture3d
-            : public  osg::Texture3D::SubloadCallback
+/*!\file cfdUpdateableOSGNoiseTexture3d.h
+ * cfdUpdateableOSGNoiseTexture3d API
+ */
+
+/*!\class ves::xplorer::volume::cfdUpdateableOSGNoiseTexture3d
+ *
+ */
+class VE_TEXTURE_BASED_EXPORTS cfdUpdateableOSGNoiseTexture3d :
+    public  osg::Texture3D::SubloadCallback
 {
 public:
     cfdUpdateableOSGNoiseTexture3d();
@@ -72,6 +72,7 @@ public:
     void load( const osg::Texture3D& texture, osg::State& ) const;
 
     cfdUpdateableOSGNoiseTexture3d& operator=( const cfdUpdateableOSGNoiseTexture3d& );
+
 protected:
     bool _needsUpdate() const;
     void _updateData();
@@ -84,9 +85,10 @@ protected:
     GLfloat _lastI;
 
     unsigned char* _data;
+
 };
-}
-}
-}
-#endif //_OSG
+} //end volume
+} //end xplorer
+} //end ves
+
 #endif// CFD_UPDATEABLE_OSG_NOISE_TEXTURE_3D_H

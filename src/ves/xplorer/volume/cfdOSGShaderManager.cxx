@@ -30,20 +30,25 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#ifdef _OSG
-#include <osg/StateSet>
-#include <osg/Shader>
-#include <iostream>
-#include <sstream>
+
+// --- VE-Suite Includes --- //
+#include <ves/xplorer/volume/cfdOSGShaderManager.h>
+
+// --- VR Juggler Includes --- //
 #include <boost/filesystem/operations.hpp> // includes boost/filesystem/path.hpp
 #include <boost/filesystem/path.hpp>
 
+// --- OSG Includes --- //
+#include <osg/StateSet>
+#include <osg/Shader>
 
-#include <ves/xplorer/volume/cfdOSGShaderManager.h>
+// --- C/C++ Includes --- //
+#include <iostream>
+#include <sstream>
+
 using namespace ves::xplorer::volume;
-//////////////////////////////////////////
-//Constructors                          //
-//////////////////////////////////////////
+
+////////////////////////////////////////////////////////////////////////////////
 cfdOSGShaderManager::cfdOSGShaderManager()
 {
     _shaderDirectory = '\0';
@@ -51,7 +56,7 @@ cfdOSGShaderManager::cfdOSGShaderManager()
     _tUnit = 0;
     _useGLSL = true;
 }
-///////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 cfdOSGShaderManager::cfdOSGShaderManager( const cfdOSGShaderManager& sm )
 {
     _useGLSL = sm._useGLSL;
@@ -61,9 +66,7 @@ cfdOSGShaderManager::cfdOSGShaderManager( const cfdOSGShaderManager& sm )
     _programs = sm._programs;
     SetShaderDirectory( sm._shaderDirectory );
 }
-///////////////////////////////////////////
-//Destructor                             //
-///////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 cfdOSGShaderManager::~cfdOSGShaderManager()
 {
     if( !_shaderDirectory.empty() )
@@ -77,7 +80,7 @@ cfdOSGShaderManager::~cfdOSGShaderManager()
     }
     _programs.clear();
 }
-////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 osg::Shader* cfdOSGShaderManager::_createGLSLShaderFromInline( const std::string inlineSource,
         bool isFrag )
 {
@@ -91,7 +94,7 @@ osg::Shader* cfdOSGShaderManager::_createGLSLShaderFromInline( const std::string
     }
     return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 osg::Shader* cfdOSGShaderManager::_createGLSLShaderFromFile( const std::string filename,
         bool isFrag )
 {
@@ -109,7 +112,7 @@ osg::Shader* cfdOSGShaderManager::_createGLSLShaderFromFile( const std::string f
     }
     return 0;
 }
-//////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdOSGShaderManager::SetActiveShaderProgram( std::string name )
 {
     //Probably don't need this memeber yet
@@ -127,7 +130,7 @@ void cfdOSGShaderManager::SetActiveShaderProgram( std::string name )
         }
     }
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdOSGShaderManager::AddShaderProgram( std::string name, osg::ref_ptr<osg::Program> glslProgram )
 {
     _programs[name] = glslProgram;
@@ -136,7 +139,7 @@ void cfdOSGShaderManager::AddShaderProgram( std::string name, osg::ref_ptr<osg::
     SetActiveShaderProgram( name );
     //_setupGLSLShaderProgram(_programs[name].get(),name);
 }
-/////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdOSGShaderManager::_setupGLSLShaderProgram( osg::Program* glslProgram,
                                                    const std::string pgName,
                                                    bool override )
@@ -165,7 +168,7 @@ void cfdOSGShaderManager::_setupGLSLShaderProgram( osg::Program* glslProgram,
         }
     }
 }
-//////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdOSGShaderManager::SetBounds( float* bounds )
 {
     if( !_bounds )
@@ -180,7 +183,7 @@ void cfdOSGShaderManager::SetBounds( float* bounds )
     _bounds[5] = bounds[5];
 
 }
-///////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 osg::StateSet* cfdOSGShaderManager::GetShaderStateSet()
 {
     if( _ss.valid() )
@@ -189,14 +192,12 @@ osg::StateSet* cfdOSGShaderManager::GetShaderStateSet()
     }
     return 0;
 }
-///////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdOSGShaderManager::SetShaderDirectory( std::string shadDir )
 {
     _shaderDirectory = shadDir;
 }
-//////////////////////////////////////////////////////////
-//equal operator                                        //
-//////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 //not fully implemented!!!!!!!!!!!!!!!!!!!!!!!!!
 cfdOSGShaderManager& cfdOSGShaderManager::operator=( const
                                                      cfdOSGShaderManager& sm )
@@ -208,4 +209,4 @@ cfdOSGShaderManager& cfdOSGShaderManager::operator=( const
     }
     return *this;
 }
-#endif //_OSG
+////////////////////////////////////////////////////////////////////////////////

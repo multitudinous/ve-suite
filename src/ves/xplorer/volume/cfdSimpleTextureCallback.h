@@ -30,28 +30,32 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
+
 #ifndef CFD_SIMPLE_TEXTURE_CALLBACK_H
 #define CFD_SIMPLE_TEXTURE_CALLBACK_H
-/*!\file cfdSimpleTextureCallback.h
-* cfdSimpleTextureCallback API
-*/
 
-/*!\class ves::xplorer::volume::cfdSimpleTextureCallback
-*
-*/
-#ifdef _PERFORMER
-#elif _OPENSG
-#elif _OSG
-#include <osg/Texture3D>
+// --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
+
+// --- OSG Includes --- //
+#include <osg/ref_ptr>
+#include <osg/Texture3D>
+
 namespace ves
 {
 namespace xplorer
 {
 namespace volume
 {
-class VE_TEXTURE_BASED_EXPORTS cfdSimpleTextureCallback
-            : public  osg::Texture3D::SubloadCallback
+/*!\file cfdSimpleTextureCallback.h
+ * cfdSimpleTextureCallback API
+ */
+
+/*!\class ves::xplorer::volume::cfdSimpleTextureCallback
+ *
+ */
+class VE_TEXTURE_BASED_EXPORTS cfdSimpleTextureCallback :
+    public  osg::Texture3D::SubloadCallback
 {
 public:
     cfdSimpleTextureCallback();
@@ -76,10 +80,10 @@ public:
 protected:
     bool _isLuminance;
     mutable GLsizei _textureWidth, _textureHeight, _textureDepth;
-};
-}
-}
-}
-#endif //OSG
-#endif //CFD_SIMPLE_TEXTURE_CALLBACK_H
 
+};
+} //end volume
+} //end xplorer
+} //end ves
+
+#endif //CFD_SIMPLE_TEXTURE_CALLBACK_H

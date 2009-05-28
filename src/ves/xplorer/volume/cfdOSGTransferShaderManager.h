@@ -30,32 +30,30 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
+
 #ifndef CFD_OSG_TRANSFER_SHADER_MANAGER_H
 #define CFD_OSG_TRANSFER_SHADER_MANAGER_H
-/*!\file cfdOSGTransferShaderManager.h
-* cfdOSGTransferShaderManager API
-*/
 
-/*!\class ves::xplorer::volume::cfdOSGTransferShaderManager
-*
-*/
-#ifdef _OSG
-namespace osg
-{
-class Texture3D;
-class Texture1D;
-class Texture2D;
-class TexMat;
-}
-#include <vector>
-
-namespace volume
-    {}
+// --- VE-Suite Includes --- //
+#include <ves/VEConfig.h>
 
 #include <ves/xplorer/volume/cfdOSGShaderManager.h>
 #include <ves/xplorer/volume/cfdUpdateableOSGTexture1d.h>
 
-#include <string>
+// --- OSG Includes --- //
+#include <osg/ref_ptr>
+
+namespace osg
+{
+class Texture1D;
+class Texture2D;
+class Texture3D;
+class TexMat;
+}
+
+// --- C/C++ Includes --- //
+#include <vector>
+
 namespace ves
 {
 namespace xplorer
@@ -67,8 +65,16 @@ class cfdUpdateTextureCallback;
 class TransferFunction;
 class PreIntegrationTexture2D;
 class NoiseTexture2D;
-class VE_TEXTURE_BASED_EXPORTS cfdOSGTransferShaderManager
-            : public cfdOSGShaderManager
+
+/*!\file cfdOSGTransferShaderManager.h
+ * cfdOSGTransferShaderManager API
+ */
+
+/*!\class ves::xplorer::volume::cfdOSGTransferShaderManager
+ *
+ */
+class VE_TEXTURE_BASED_EXPORTS cfdOSGTransferShaderManager :
+    public cfdOSGShaderManager
 {
 public:
     ///Constructor
@@ -140,9 +146,10 @@ protected:
     ves::xplorer::volume::TransferFunction* _tf;///<The transfer function for preIntegration.
     ves::xplorer::volume::PreIntegrationTexture2D* _preIntTexture;///<The preIntegrated texture.
     ves::xplorer::volume::NoiseTexture2D* _jitterTexture;///<The noise texture
+
 };
-}
-}
-}
-#endif//_OSG
+} //end volume
+} //end xplorer
+} //end ves
+
 #endif// CFD_OSG_SCALAR_SHADER_MANAGER_H

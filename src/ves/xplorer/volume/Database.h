@@ -30,18 +30,21 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> **************/
+
 #ifndef JPG_DATABASE_H_
 #define JPG_DATABASE_H_
 
+// --- VE-Suite Includes --- //
+#include <ves/VEConfig.h>
 #include <ves/xplorer/volume/Data.h>
 #include <ves/xplorer/volume/DatabaseDriver.h>
 #include <ves/xplorer/volume/SingletonDLL.h>
-#include <ves/VEConfig.h>
 
 #define LOKI_SINGLETON_EXPORT VE_TEXTURE_BASED_EXPORTS
 #include <loki/Function.h>
 #include <loki/Singleton.h>
 
+// --- C/C++ Includes --- //
 #include <map>
 #include <string>
 #include <vector>
@@ -228,8 +231,10 @@ private:
 #ifdef WIN32
 VE_TEXTURE_BASED_TEMPLATE_EXPORTS template class VE_TEXTURE_BASED_EXPORTS Singleton<Database_t>;
 #endif
+
 /// Typedef for the singleton Database.
 typedef Singleton<Database_t> Database;
+
 }
 
-#endif
+#endif //JPG_DATABASE_H_

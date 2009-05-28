@@ -30,39 +30,42 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
+
 #ifndef CFD_AVDECTION_SUBGRAPH_H
 #define CFD_AVDECTION_SUBGRAPH_H
-/*!\file CreateAdvectionSubGraph.h
-* CreateAdvectionSubGraph API
-*/
 
-/*!\class ves::xplorer::volume::CreateAdvectionSubGraph
-*
-*/
-#ifdef _OSG
+// --- VE-Suite Includes --- //
+#include <ves/VEConfig.h>
+
+// --- OSG Includes --- //
+#include <osg/ref_ptr>
+
 namespace osg
 {
-class Texture3D;
+class Group;
 }
 
-#include <osg/Group>
-#include <osg/Drawable>
-#include <ves/VEConfig.h>
 namespace ves
 {
 namespace xplorer
 {
 namespace volume
 {
-class cfdOSGAdvectionShaderManager;
 class cfdTextureManager;
 class cfdPBufferManager;
-VE_TEXTURE_BASED_EXPORTS osg::ref_ptr<osg::Group> CreateAdvectionSubGraph( cfdTextureManager* tm,
-        cfdPBufferManager* pbm,
-        float deltaZ );
 
-}
-}
-}
-#endif// _OSG
+/*!\file CreateAdvectionSubGraph.h
+ * CreateAdvectionSubGraph API
+ */
+
+/*!\class ves::xplorer::volume::CreateAdvectionSubGraph
+ *
+ */
+VE_TEXTURE_BASED_EXPORTS osg::ref_ptr< osg::Group > CreateAdvectionSubGraph(
+    cfdTextureManager* tm, cfdPBufferManager* pbm, float deltaZ );
+
+} //end volume
+} //end xplorer
+} //end ves
+
 #endif //CFD_AVDECTION_SUBGRAPH_H

@@ -30,25 +30,28 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#ifdef _OSG
-#include <osg/Texture3D>
-#include <osg/Texture1D>
-#include <osg/TexEnv>
-#include <osg/BlendFunc>
-#include <vector>
-#include <iostream>
-#include <string>
-//#include <sstream>
 
-#include <osg/Array>
+// --- VE-Suite Includes --- //
 #include <ves/xplorer/volume/cfdOSGAdvectionShaderManager.h>
 #include <ves/xplorer/volume/cfdUpdateableOSGTexture1d.h>
 #include <ves/xplorer/volume/cfdSimpleTextureCallback.h>
 #include <ves/xplorer/volume/cfdUpdateParameterCallback.h>
+#include <ves/xplorer/volume/cfdUpdateableOSGNoiseTexture3d.h>
 
+// --- OSG Includes --- //
+#include <osg/Array>
+#include <osg/Texture3D>
+#include <osg/Texture1D>
+#include <osg/TexEnv>
+#include <osg/BlendFunc>
+
+// --- C/C++ Includes --- //
+#include <vector>
+#include <iostream>
+#include <string>
 
 using namespace ves::xplorer::volume;
-//#include "cfdUpdateMatrixParameterCallback.h>
+
 #define PI  3.1416
 
 //the shader inline source
@@ -116,9 +119,8 @@ static const char* advectionFragSource =
         "gl_FragColor.a = v.w;\n"
         "}\n"
     };
-////////////////////////////////////////////////////////////
-//Constructors                                            //
-////////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////////////////////////
 cfdOSGAdvectionShaderManager::cfdOSGAdvectionShaderManager()
         : cfdOSGShaderManager()
 {
@@ -155,7 +157,7 @@ cfdOSGAdvectionShaderManager::cfdOSGAdvectionShaderManager()
 
     _center.set( 0, 0, 0 );
 }
-////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 cfdOSGAdvectionShaderManager::cfdOSGAdvectionShaderManager( const
                                                             cfdOSGAdvectionShaderManager& sm )
         : cfdOSGShaderManager( sm )
@@ -196,10 +198,7 @@ cfdOSGAdvectionShaderManager::cfdOSGAdvectionShaderManager( const
     _weightW[2] = sm._weightW[2];
     _weightW[3] = sm._weightW[3];
 }
-
-/////////////////////////////////////////////////////////////
-//Destructor                                               //
-/////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 cfdOSGAdvectionShaderManager::~cfdOSGAdvectionShaderManager()
 {
     /*if(_noiseCbk){
@@ -247,7 +246,7 @@ cfdOSGAdvectionShaderManager::~cfdOSGAdvectionShaderManager()
        _dyeMatCallback = 0;
     }*/
 }
-/////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdOSGAdvectionShaderManager::Init()
 {
     _initNoiseTexture();
@@ -301,7 +300,7 @@ void cfdOSGAdvectionShaderManager::Init()
         std::cout << "cfdOSGAdvectionShaderManager::Init()" << std::endl;
     }
 }
-/////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdOSGAdvectionShaderManager::_setupStateSetForGLSL()
 {
     std::cout << "Using glsl..." << std::endl;
@@ -366,7 +365,7 @@ void cfdOSGAdvectionShaderManager::_setupStateSetForGLSL()
     }*/
 
 }
-/////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdOSGAdvectionShaderManager::_initFragProgramCallbacks()
 {
     if( _noiseScaleCallback.valid() )
@@ -426,33 +425,33 @@ void cfdOSGAdvectionShaderManager::_initFragProgramCallbacks()
     _timeCallback->setTypeAndSize( cfdUpdateParameterCallback::TIME,
                                    cfdUpdateParameterCallback::ONE );
 }
-//////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdOSGAdvectionShaderManager::SetCenter( osg::Vec3 center )
 {
     _center = center;
 }
-////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdOSGAdvectionShaderManager::UpdateDeltaT( float deltaT )
 {
     //_deltaT = deltaT;
     _deltaCallback->updateParameter( &deltaT );
 }
-////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdOSGAdvectionShaderManager::UpdateNoiseScale( float* scale )
 {
     _noiseScaleCallback->updateParameter( scale );
 }
-////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdOSGAdvectionShaderManager::UpdateDyeScale( float* scale )
 {
     _dyeScaleCallback->updateParameter( scale );
 }
-////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdOSGAdvectionShaderManager::UpdateDyeTranslation( float* translation )
 {
     _dyeTransCallback->updateParameter( translation );
 }
-///////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdOSGAdvectionShaderManager::SetFieldSize( unsigned int x,
                                                  unsigned int y,
                                                  unsigned int z )
@@ -461,23 +460,23 @@ void cfdOSGAdvectionShaderManager::SetFieldSize( unsigned int x,
     _fieldSize[1] = y;
     _fieldSize[2] = z;
 }
-///////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdOSGAdvectionShaderManager::SetVelocityTexture( osg::Texture3D* velocity )
 {
     _velocity = velocity;
 }
-////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdOSGAdvectionShaderManager::UpdateInjectionPeriod( GLfloat period )
 {
     period = 1.0;
     _periodCallback->updateParameter( &period );
 }
-///////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdOSGAdvectionShaderManager::UpdateTime( GLfloat time )
 {
     _timeCallback->updateParameter( &time );
 }
-///////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdOSGAdvectionShaderManager::UpdateNoiseFunction( float param,
                                                         NoiseParam whichFunction )
 {
@@ -494,7 +493,7 @@ void cfdOSGAdvectionShaderManager::UpdateNoiseFunction( float param,
         };
     }
 }
-//////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdOSGAdvectionShaderManager::UpdateWeight( GLfloat* param,
                                                  int whichMaterial )
 {
@@ -525,7 +524,7 @@ void cfdOSGAdvectionShaderManager::UpdateWeight( GLfloat* param,
     _weightWCallback->updateParameter( _weightW );
     _weightVCallback->updateParameter( _weightV );
 }
-//////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 osg::Texture3D* cfdOSGAdvectionShaderManager::GetPropertyTexture()
 {
     if( _propertyToAdvect.valid() )
@@ -534,7 +533,7 @@ osg::Texture3D* cfdOSGAdvectionShaderManager::GetPropertyTexture()
     }
     return 0;
 }
-/////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdOSGAdvectionShaderManager::_initPropertyTexture()
 {
     if( _propertyToAdvect.valid() )
@@ -593,7 +592,7 @@ void cfdOSGAdvectionShaderManager::_initPropertyTexture()
         std::cout << "cfdOSGTransferShaderManager::_initPropertyTexture" << std::endl;
     }
 }
-////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdOSGAdvectionShaderManager::_initDyeTexture()
 {
     if( _dye.valid() )
@@ -654,7 +653,7 @@ void cfdOSGAdvectionShaderManager::_initDyeTexture()
     _dye->setImage( dyeImage.get() );
 
 }
-//////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdOSGAdvectionShaderManager::_initNoiseTexture()
 {
     if( _noiseCbk.valid() )
@@ -767,7 +766,7 @@ void cfdOSGAdvectionShaderManager::_initNoiseTexture()
     _noiseCbk = new cfdUpdateableOSGNoiseTexture3d();
     _noiseTexture->setSubloadCallback( _noiseCbk.get() );
 }
-/////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdOSGAdvectionShaderManager::_initWeightFunctions()
 {
     /*if(_weightW.valid()&&_weightV.valid())return;
@@ -838,7 +837,7 @@ void cfdOSGAdvectionShaderManager::_initWeightFunctions()
     _weightV->setInternalFormat(GL_RGBA);
     _weightV->setImage(tempV.get());*/
 }
-////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdOSGAdvectionShaderManager::_initLookUpFunction()
 {
     if( _lookUpFunction.valid() )
@@ -910,7 +909,7 @@ void cfdOSGAdvectionShaderManager::_initLookUpFunction()
     _lookUpFunction->setDataVariance( osg::Object::DYNAMIC );
     _lookUpFunction->setImage( data.get() );
 }
-///////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 cfdOSGAdvectionShaderManager& cfdOSGAdvectionShaderManager::operator=( const
         cfdOSGAdvectionShaderManager& sm )
 {
@@ -974,4 +973,4 @@ cfdOSGAdvectionShaderManager& cfdOSGAdvectionShaderManager::operator=( const
     }
     return *this;
 }
-#endif//_OSG
+////////////////////////////////////////////////////////////////////////////////

@@ -31,11 +31,16 @@
  *
  *************** <auto-copyright.rb END do not edit this line> **************/
 
+// --- VE-Suite Includes --- //
 #include <ves/xplorer/volume/RedYellowGreenCyanBlueTransferFunction.h>
 #include <ves/xplorer/volume/TransferFunction.h>
+
+// --- C/C++ Includes --- //
 #include <iostream>
+
 using namespace ves::xplorer::volume;
-////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////////////////////////
 RYGCBLinearTF::RYGCBLinearTF( unsigned int s )
         : TransferFunction1D( s )
 {
@@ -43,14 +48,18 @@ RYGCBLinearTF::RYGCBLinearTF( unsigned int s )
     _types[1] = TransferFunction::RAMP;
     _types[2] = TransferFunction::RAMP;
 }
-//////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 RYGCBLinearTF::RYGCBLinearTF( const RYGCBLinearTF &rhs )
         : TransferFunction( rhs )
-{}
-///////////////////////////////
+{
+    ;
+}
+////////////////////////////////////////////////////////////////////////////////
 RYGCBLinearTF::~RYGCBLinearTF()
-{}
-/////////////////////////////////////
+{
+    ;
+}
+////////////////////////////////////////////////////////////////////////////////
 void RYGCBLinearTF::InitializeData()
 {
     if( _classification )
@@ -103,7 +112,7 @@ void RYGCBLinearTF::InitializeData()
         _textureData[i*4 + 3] = static_cast<unsigned char>( _classification[i*4+3] );
     }
 }
-//////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void RYGCBLinearTF::_update()
 {
     float newRange[2] = {0., 1.};
@@ -233,7 +242,7 @@ void RYGCBLinearTF::_update()
         }
     }
 }
-/////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 /*void RYGCBLinearTF::Update(unsigned int component,
                            void* data,
                            float rangeMin,
@@ -241,7 +250,7 @@ void RYGCBLinearTF::_update()
 {
 
 } */
-/////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 RYGCBLinearTF& RYGCBLinearTF::operator=( const RYGCBLinearTF& rhs )
 {
     if( this != &rhs )
@@ -250,3 +259,4 @@ RYGCBLinearTF& RYGCBLinearTF::operator=( const RYGCBLinearTF& rhs )
     }
     return *this;
 }
+////////////////////////////////////////////////////////////////////////////////

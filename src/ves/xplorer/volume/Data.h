@@ -30,11 +30,14 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> **************/
+
 #ifndef JPG_DATA_H_
 #define JPG_DATA_H_
 
+// --- VE-Suite Includes --- //
 #include <ves/xplorer/volume/Variant.h>
 
+// --- C/C++ Includes --- //
 #include <string>
 
 #ifndef WIN32

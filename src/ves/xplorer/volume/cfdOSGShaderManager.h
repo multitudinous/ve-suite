@@ -30,29 +30,40 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
+
 #ifndef CFD_OSG_SHADER_MANAGER_H
 #define CFD_OSG_SHADER_MANAGER_H
-/*!\file cfdOSGShaderManager.h
-* cfdOSGShaderManager API
-*/
 
-/*!\class ves::xplorer::volume::cfdOSGShaderManager
-*
-*/
-#ifdef _OSG
-#include <osg/StateSet>
+// --- VE-Suite Includes --- //
+#include <ves/VEConfig.h>
+
+// --- OSG Includes --- //
+#include <osg/ref_ptr>
+
 namespace osg
 {
+class StateSet;
+class Program;
 class Shader;
 }
-#include <ves/VEConfig.h>
+
+// --- C/C++ Includes --- //
 #include <string>
+#include <map>
+
 namespace ves
 {
 namespace xplorer
 {
 namespace volume
 {
+/*!\file cfdOSGShaderManager.h
+ * cfdOSGShaderManager API
+ */
+
+/*!\class ves::xplorer::volume::cfdOSGShaderManager
+ *
+ */
 class VE_TEXTURE_BASED_EXPORTS cfdOSGShaderManager
 {
 public:
@@ -128,9 +139,10 @@ protected:
     unsigned int _tUnit;///<The texture unit
     float* _bounds;///<The data boundary
     bool _useGLSL;///<Use GLSL instead of CG
+
 };
-}
-}
-}
-#endif //_OSG
+} //end volume
+} //end xplorer
+} //end ves
+
 #endif// CFD_OSG_SHADER_MANAGER_H

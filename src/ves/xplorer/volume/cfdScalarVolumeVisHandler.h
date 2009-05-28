@@ -30,22 +30,17 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
+
 #ifndef CFD_SCALAR_VOLUME_VIS_HANDLER_H
 #define CFD_SCALAR_VOLUME_VIS_HANDLER_H
-/*!\file cfdScalarVolumeVisHandler.h
-* cfdScalarVolumeVisHandler API
-*/
 
-/*!\class ves::xplorer::volume::cfdScalarVolumeVisHandler
-*
-*/
-#ifdef _OSG
-namespace osg
-{
-class Group;
-}
+// --- VE-Suite Includes --- //
+#include <ves/VEConfig.h>
 
 #include <ves/xplorer/volume/cfdVolumeVisNodeHandler.h>
+
+// --- OSG Includes --- //
+
 namespace ves
 {
 namespace xplorer
@@ -54,8 +49,16 @@ namespace volume
 {
 class cfdScalarShaderManager;
 class cfdTextureManager;
-class VE_TEXTURE_BASED_EXPORTS cfdScalarVolumeVisHandler
-            : public cfdVolumeVisNodeHandler
+
+/*!\file cfdScalarVolumeVisHandler.h
+ * cfdScalarVolumeVisHandler API
+ */
+
+/*!\class ves::xplorer::volume::cfdScalarVolumeVisHandler
+ *
+ */
+class VE_TEXTURE_BASED_EXPORTS cfdScalarVolumeVisHandler :
+    public cfdVolumeVisNodeHandler
 {
 public:
     ///Constructor
@@ -82,9 +85,10 @@ protected:
     ///Create the default set of shaders
     void _createDefaultShaders();
     cfdScalarShaderManager* _transferSM;///<cfdScalarShaderManager
+
 };
-}
-}
-}
-#endif //_OSG
+} //end volume
+} //end xplorer
+} //end ves
+
 #endif// CFD_SCALAR_VOLUME_VIS_HANDLER_H

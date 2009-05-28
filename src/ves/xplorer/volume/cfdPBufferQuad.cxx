@@ -30,22 +30,28 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#ifdef _OSG
-#include <iostream>
+
+// --- VE-Suite Includes --- //
+#include <ves/xplorer/volume/cfdPBufferQuad.h>
+
+// --- OSG Includes --- //
 #include <osg/BoundingBox>
 #include <osg/Matrixd>
 #include <osg/Texture3D>
 
-#include <ves/xplorer/volume/cfdPBufferQuad.h>
+// --- C/C++ Includes --- //
+#include <iostream>
 
 //need a better way to do this but leaving global for now
 unsigned int curSlice = 1;
-osg::ref_ptr<osg::Texture3D> texture;
+osg::ref_ptr< osg::Texture3D > texture;
+
 using namespace ves::xplorer::volume;
-////////////////////////////////
-//Constructor                 //
-////////////////////////////////
+
+////////////////////////////////////////////////////////////////////////////////
 cfdPBufferQuad::cfdPBufferQuad()
+    :
+    osg::Drawable()
 {
     _nSlices = 0;
     _curSlice = 0;
@@ -72,10 +78,12 @@ cfdPBufferQuad::cfdPBufferQuad()
     _d = 0;
     setComputeBoundingBoxCallback( new BBoxCallback( this ) );
 }
-///////////////////////////////////////////////////////////
-cfdPBufferQuad::cfdPBufferQuad( const cfdPBufferQuad& pbQuad,
-                                const osg::CopyOp& copyop )
-        : osg::Drawable( pbQuad, copyop )
+////////////////////////////////////////////////////////////////////////////////
+cfdPBufferQuad::cfdPBufferQuad(
+    const cfdPBufferQuad& pbQuad,
+    const osg::CopyOp& copyop )
+    :
+    osg::Drawable( pbQuad, copyop )
 {
     _nSlices = pbQuad._nSlices;
     _curSlice = pbQuad._curSlice;
@@ -111,7 +119,7 @@ cfdPBufferQuad::cfdPBufferQuad( const cfdPBufferQuad& pbQuad,
     _texture = new osg::Texture3D( *pbQuad._texture );
 
 }
-//////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 cfdPBufferQuad::~cfdPBufferQuad()
 {
     if( _slices )
@@ -125,13 +133,13 @@ cfdPBufferQuad::~cfdPBufferQuad()
         _nearFarSlices  = 0;
     }
 }
-////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdPBufferQuad::SetTextureToUpdate( osg::Texture3D* t3d )
 {
     _texture = t3d;
     texture = _texture;
 }
-//////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdPBufferQuad::SetBBox( float* bbox )
 {
     _bounds[0] = bbox[0];
@@ -170,28 +178,27 @@ void cfdPBufferQuad::SetBBox( float* bbox )
 
     _bbSet = true;
 }
-/////////////////////////////////////////////////////////
-void cfdPBufferQuad::SetTextureDimensions( unsigned int w,
-                                           unsigned int h,
-                                           unsigned int d )
+////////////////////////////////////////////////////////////////////////////////
+void cfdPBufferQuad::SetTextureDimensions(
+    unsigned int w, unsigned int h, unsigned int d )
 {
     _h = h;
     _w = w;
     _d = d;
 }
 
-/////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdPBufferQuad::SetUseAutoTexCoords( bool useAutoTCoords )
 {
     _useAutoTexCoords = useAutoTCoords;
 }
-///////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdPBufferQuad::SetNumberOfSlices( unsigned int ns )
 {
     _nSlices = ns;
     _sliceCountSet = true;
 }
-///////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdPBufferQuad::CalculateSlices()
 {
 
@@ -241,8 +248,8 @@ void cfdPBufferQuad::CalculateSlices()
         }
     }
 }
-//////////////////////////////////////////////
-void cfdPBufferQuad::_drawAutoTexCoords()const
+////////////////////////////////////////////////////////////////////////////////
+void cfdPBufferQuad::_drawAutoTexCoords() const
 {
     //set up things for the current slice
     glMatrixMode( GL_PROJECTION );
@@ -277,8 +284,8 @@ void cfdPBufferQuad::_drawAutoTexCoords()const
     glMatrixMode( GL_MODELVIEW );
 
 }
-//////////////////////////////////////////////////////////////////
-void cfdPBufferQuad::_drawHardCodedTCoords( osg::State& state )const
+////////////////////////////////////////////////////////////////////////////////
+void cfdPBufferQuad::_drawHardCodedTCoords( osg::State& state ) const
 {
 
     float m[16];
@@ -316,11 +323,11 @@ void cfdPBufferQuad::_drawHardCodedTCoords( osg::State& state )const
     glPopMatrix();
 
 }
-///////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 #if ((OSG_VERSION_MAJOR>=1) && (OSG_VERSION_MINOR>2) || (OSG_VERSION_MAJOR>=2))
-void cfdPBufferQuad::drawImplementation( osg::RenderInfo& renderState )const
+void cfdPBufferQuad::drawImplementation( osg::RenderInfo& renderState ) const
 #elif ((OSG_VERSION_MAJOR>=1) && (OSG_VERSION_MINOR<=2))
-void cfdPBufferQuad::drawImplementation( osg::State& renderState )const
+void cfdPBufferQuad::drawImplementation( osg::State& renderState ) const
 #endif
 {
 #if ((OSG_VERSION_MAJOR>=1) && (OSG_VERSION_MINOR>2) || (OSG_VERSION_MAJOR>=2))
@@ -364,7 +371,7 @@ void cfdPBufferQuad::drawImplementation( osg::State& renderState )const
     }
     curSlice++;
 }
-/////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 /*bool cfdPBufferQuad::computeBound() const
 {
    _bbox.init();
@@ -397,7 +404,7 @@ void cfdPBufferQuad::drawImplementation( osg::State& renderState )const
    return true;
 
 }*/
-/////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 /*osg::BoundingBox cfdPBufferQuad::computeBound() const
 {
    osg::BoundingBox bbox;
@@ -429,8 +436,9 @@ void cfdPBufferQuad::drawImplementation( osg::State& renderState )const
 
    return bbox;
 }*/
-////////////////////////////////////////////////////////////////////////////////////////
-osg::BoundingBox cfdPBufferQuad::BBoxCallback::computeBound( const osg::Drawable& quad ) const
+////////////////////////////////////////////////////////////////////////////////
+osg::BoundingBox cfdPBufferQuad::BBoxCallback::computeBound(
+    const osg::Drawable& quad ) const
 {
     osg::BoundingBox bbox;
     bbox.init();
@@ -465,4 +473,4 @@ osg::BoundingBox cfdPBufferQuad::BBoxCallback::computeBound( const osg::Drawable
     return bbox;
 
 }
-#endif// _OSG
+////////////////////////////////////////////////////////////////////////////////

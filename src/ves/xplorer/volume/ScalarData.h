@@ -30,15 +30,18 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> **************/
+
 #ifndef JPG_SCALAR_DATA_H_
 #define JPG_SCALAR_DATA_H_
 
+// --- VE-Suite Includes --- //
+#include <ves/VEConfig.h>
+
+// --- C/C++ Includes --- //
 #include <limits>
 #include <map>
 #include <string>
 #include <vector>
-
-#include <ves/VEConfig.h>
 
 namespace VE_TextureBased
 {
@@ -199,6 +202,6 @@ private:
     std::map<std::string, std::vector<float> >            mScalarMap;
 
 };
-
 }
-#endif
+
+#endif //JPG_SCALAR_DATA_H_

@@ -30,15 +30,20 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> **************/
+
 #ifndef JPG_VECTOR_DATA_H_
 #define JPG_VECTOR_DATA_H_
 
+// --- VE-Suite Includes --- //
+#include <ves/VEConfig.h>
+
+// --- VR Juggler Includes --- //
 #include <gmtl/Vec.h>
+
+// --- C/C++ Includes --- //
 #include <map>
 #include <string>
 #include <vector>
-
-#include <ves/VEConfig.h>
 
 namespace VE_TextureBased
 {
@@ -223,4 +228,5 @@ private:
 
 };
 }
-#endif
+
+#endif //JPG_VECTOR_DATA_H_

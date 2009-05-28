@@ -32,24 +32,34 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
+
 #ifndef NOISE_TEXTURE_2D_H
 #define NOISE_TEXTURE_2D_H
-/*!\file NoiseTexture.h
-  Texture-Based Volume Rendering NoiseTexture API
-  */
-/*!\class ves::xplorer::volume::NoiseTexture2D
- * Class defining noise texture.
- */
-#include <osg/Image>
-#include <osg/Texture2D>
+
+// --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
+
+// --- OSG Includes --- //
+#include <osg/ref_ptr>
+
+namespace osg
+{
+class Texture2D;
+}
+
 namespace ves
 {
 namespace xplorer
 {
 namespace volume
 {
-class TransferFunction;
+/*!\file NoiseTexture.h
+ * Texture-Based Volume Rendering NoiseTexture API
+ */
+
+/*!\class ves::xplorer::volume::NoiseTexture2D
+ * Class defining noise texture.
+ */
 class VE_TEXTURE_BASED_EXPORTS NoiseTexture2D
 {
 public:
@@ -87,8 +97,10 @@ protected:
     unsigned int _resolution[2];///<The resolution of the noise image
     unsigned char* _noiseData;///<The data
     osg::ref_ptr<osg::Texture2D> _noiseTexture;///<The noise texture
+
 };
-}
-}
-}
+} //end volume
+} //end xplorer
+} //end ves
+
 #endif //PREINTEGRATION_TEXTURE_2D_H

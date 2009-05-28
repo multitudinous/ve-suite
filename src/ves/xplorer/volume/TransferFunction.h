@@ -32,23 +32,26 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
+
 #ifndef TRANSFER_FUNCTION_H
 #define TRANSFER_FUNCTION_H
-#include <map>
-#include <vector>
-/*!\file TransferFunction.h
-  Transfer function API
-  */
-/*!\class ves::xplorer::volume::TransferFunction
- * Abstract class defining a transfer function.
- */
+
+// --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
+
 namespace ves
 {
 namespace xplorer
 {
 namespace volume
 {
+/*!\file TransferFunction.h
+ * Transfer function API
+ */
+
+/*!\class ves::xplorer::volume::TransferFunction
+ * Abstract class defining a transfer function.
+ */
 class VE_TEXTURE_BASED_EXPORTS TransferFunction
 {
 public:
@@ -163,6 +166,7 @@ public:
 
     ///Get the update callback
     UpdateCallback* GetUpdateCallback();
+
 protected:
 
     ///Update the transfer function
@@ -189,8 +193,11 @@ protected:
     float _currentScalarRange[2];///<The current scalar range;
     UpdateCallback* _updateCallback;///<Callback function to update the data in the TF
 };
+
 #define TransferFunction1D(X) TransferFunction(1,X,1,1)
-}
-}
-}
+
+} //end volume
+} //end xplorer
+} //end ves
+
 #endif// TRANSFER_FUNCTION_H

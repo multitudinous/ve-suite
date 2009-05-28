@@ -1,13 +1,55 @@
+/*************** <auto-copyright.rb BEGIN do not edit this line> *************
+ *
+ * VE-Suite is (C) Copyright 1998-2009 by Iowa State University
+ *
+ * Original Development Team:
+ *   - ISU's Thermal Systems Virtual Engineering Group,
+ *     Headed by Kenneth Mark Bryden, Ph.D., www.vrac.iastate.edu/~kmbryden
+ *   - Reaction Engineering International, www.reaction-eng.com
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ *
+ * -----------------------------------------------------------------
+ * Date modified: $Date$
+ * Version:       $Rev$
+ * Author:        $Author$
+ * Id:            $Id$
+ * -----------------------------------------------------------------
+ *
+ *************** <auto-copyright.rb END do not edit this line> **************/
+
+// --- VE-Suite Includes --- //
 #include <ves/xplorer/volume/PreIntegrationTexture.h>
 #include <ves/xplorer/volume/TransferFunction.h>
+
+// --- OSG Includes --- //
+#include <osg/Texture2D>
+
+// --- C/C++ Includes --- //
 #include <iostream>
 #include <fstream>
+
 using namespace ves::xplorer::volume;
+
+////////////////////////////////////////////////////////////////////////////////
 unsigned char clamp( unsigned char lower, unsigned char upper, unsigned char value )
 {
     return ( value < lower ) ? lower : ( value > upper ) ? upper : value;
 }
-///////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 PreIntegrationTexture2D::PreIntegrationTexture2D()
 {
     _tf = 0;
@@ -22,7 +64,7 @@ PreIntegrationTexture2D::PreIntegrationTexture2D()
     _preIntegratedTexture->setInternalFormat( GL_RGBA );
     _imageData = new osg::Image();
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 PreIntegrationTexture2D::PreIntegrationTexture2D( const PreIntegrationTexture2D& rhs )
 {
     _tf = rhs._tf;
@@ -45,7 +87,7 @@ PreIntegrationTexture2D::PreIntegrationTexture2D( const PreIntegrationTexture2D&
     _preIntegratedTexture = new osg::Texture2D( *rhs._preIntegratedTexture.get() );
     _imageData = new osg::Image( *rhs._imageData.get() );
 }
-///////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 PreIntegrationTexture2D& PreIntegrationTexture2D::operator=( const PreIntegrationTexture2D& rhs )
 {
     if( this != &rhs )
@@ -82,7 +124,7 @@ PreIntegrationTexture2D& PreIntegrationTexture2D::operator=( const PreIntegratio
     }
     return *this;
 }
-/////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 PreIntegrationTexture2D::~PreIntegrationTexture2D()
 {
     if( _sliceIntegrationValues )
@@ -91,7 +133,7 @@ PreIntegrationTexture2D::~PreIntegrationTexture2D()
         _sliceIntegrationValues = 0;
     }
 }
-////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void PreIntegrationTexture2D::SetTransferFunction( TransferFunction* tf )
 {
     if( tf->GetDimension() != 1 )
@@ -121,7 +163,7 @@ void PreIntegrationTexture2D::SetTransferFunction( TransferFunction* tf )
                           osg::Image::USE_NEW_DELETE );
     _preIntegratedTexture->setImage( _imageData.get() );
 }
-/////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void PreIntegrationTexture2D::FullUpdate()
 {
     if( !_tf )
@@ -196,7 +238,7 @@ void PreIntegrationTexture2D::FullUpdate()
     _preIntegratedTexture->dirtyTextureObject();
     _preIntegratedTexture->dirtyTextureParameters();
 }
-////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 osg::Texture2D* PreIntegrationTexture2D::GetPreIntegratedTexture()
 {
     if( _preIntegratedTexture.valid() )
@@ -205,7 +247,7 @@ osg::Texture2D* PreIntegrationTexture2D::GetPreIntegratedTexture()
     }
     return 0;
 }
-//////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void PreIntegrationTexture2D::_initializeSliceIntegrationValues()
 {
     //std::fstream fout("./interpo.txt",std::ios::out);
@@ -236,7 +278,7 @@ void PreIntegrationTexture2D::_initializeSliceIntegrationValues()
           fout<<std::endl;*/
     }
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 unsigned char PreIntegrationTexture2D::_calculateComponent( float ds, unsigned int component,
                                                             unsigned int sliceMin, unsigned int sliceMax )
 {
@@ -253,7 +295,7 @@ unsigned char PreIntegrationTexture2D::_calculateComponent( float ds, unsigned i
         return static_cast<unsigned char>( 255.0 *( 1.0 - exp( -ds*( backData - frontData ) / 255. ) ) );
     return static_cast<unsigned char>( ds*( backData - frontData ) );
 }
-/////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void PreIntegrationTexture2D::FastUpdate()
 {
     if( !_tf )
@@ -279,8 +321,4 @@ void PreIntegrationTexture2D::FastUpdate()
     _preIntegratedTexture->dirtyTextureObject();
     _preIntegratedTexture->dirtyTextureParameters();
 }
-
-
-
-
-
+////////////////////////////////////////////////////////////////////////////////

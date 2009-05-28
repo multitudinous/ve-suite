@@ -30,11 +30,12 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#ifdef _OSG
+
 #ifdef _PBUFFER
 
-#include <cmath>
+// --- VE-Suite Includes --- //
 #include <ves/xplorer/volume/cfdPBufferManager.h>
+
 #ifdef WIN32
 // WGL_ARB_pbuffer
 static PFNWGLCREATEPBUFFERARBPROC  wglCreatePbufferARB;
@@ -49,10 +50,13 @@ static PFNWGLGETPIXELFORMATATTRIBFVARBPROC   wglGetPixelFormatAttribfvARB;
 static PFNWGLCHOOSEPIXELFORMATARBPROC        wglChoosePixelFormatARB;
 #else
 #endif
+
+// --- C/C++ Includes --- //
+#include <cmath>
+
 using namespace ves::xplorer::volume;
-////////////////////////////////
-//Constructors                //
-////////////////////////////////
+
+////////////////////////////////////////////////////////////////////////////////
 cfdPBufferManager::cfdPBufferManager()
 {
 #ifdef WIN32
@@ -88,11 +92,12 @@ cfdPBufferManager::cfdPBufferManager()
     _w = 0;
 
 }
-///////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 cfdPBufferManager::~cfdPBufferManager()
 {
     cleanUpPBuffer();
 }
+////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////
 //initialize the entry functions                    //
 //////////////////////////////////////////////////////
@@ -186,6 +191,7 @@ void cfdPBufferManager::initializePBufferEntryFunctions()
 #endif
     _isSupported = true;
 }
+////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////
 //clean up the pbuffer             //
 /////////////////////////////////////
@@ -206,6 +212,7 @@ void cfdPBufferManager::cleanUpPBuffer()
         glXDestroyPbuffer( _oldDisplay, _hBuffer );
 #endif
 }
+////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////
 //initialize a pixel buffer                               //
 //this functionality will be                              //
@@ -380,13 +387,14 @@ bool cfdPBufferManager::initializePBuffer( int width, int height )
     _isCreated = true;
     return true;
 }
-/////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdPBufferManager::setViewport( double w, double h )
 {
     glViewport( 0.0, 0.0, w, h );
     _w = w;
     _h = h;
 }
+////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////
 //check if pbuffer extensions  //
 //are supported                //
@@ -397,7 +405,7 @@ bool cfdPBufferManager::isSupported()
     return _isSupported;
 }
 #ifndef WIN32
-//////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdPBufferManager::activate()
 {
     if( _isCreated )
@@ -411,7 +419,7 @@ void cfdPBufferManager::activate()
         }
     }
 }
-////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdPBufferManager::deactivate()
 {
     if( _isCreated )
@@ -422,7 +430,6 @@ void cfdPBufferManager::deactivate()
         }
     }
 }
+////////////////////////////////////////////////////////////////////////////////
 #endif
 #endif
-#endif
-

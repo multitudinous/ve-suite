@@ -32,25 +32,29 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
+
 #ifndef RED_YELLOW_GREE_CYAN_BLUE_LINEAR_TRANSFER_FUNCTION_H
 #define RED_YELLOW_GREE_CYAN_BLUE_LINEAR_TRANSFER_FUNCTION_H
-/*!\file RedYellowGreenCyanBlueTransferFunction.h
-  Red-to-Blue transfer function API
-  */
-/*!\class ves::xplorer::volume::RYGCBLinearTF
- * Class defining defining Red-to-Blue transfer function.
- */
-#include <map>
-#include <vector>
-#include <ves/xplorer/volume/TransferFunction.h>
+
+// --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
+
+#include <ves/xplorer/volume/TransferFunction.h>
+
 namespace ves
 {
 namespace xplorer
 {
 namespace volume
 {
-class VE_TEXTURE_BASED_EXPORTS RYGCBLinearTF: public TransferFunction
+/*!\file RedYellowGreenCyanBlueTransferFunction.h
+ * Red-to-Blue transfer function API
+ */
+
+/*!\class ves::xplorer::volume::RYGCBLinearTF
+ * Class defining defining Red-to-Blue transfer function.
+ */
+class VE_TEXTURE_BASED_EXPORTS RYGCBLinearTF : public TransferFunction
 {
 public:
     ///Constructor
@@ -79,11 +83,14 @@ public:
     ///Equal operator
     ///\param rhs The TransferFunction to set this one to.
     RYGCBLinearTF& operator=( const RYGCBLinearTF& rhs );
+
 protected:
     ///Update the transfer function
     virtual void _update();
+
 };
-}
-}
-}
-#endif// RED_YELLOW_GREE_CYAN_BLUE_LINEAR_TRANSFER_FUNCTION_H
+} //end volume
+} //end xplorer
+} //end ves
+
+#endif //RED_YELLOW_GREE_CYAN_BLUE_LINEAR_TRANSFER_FUNCTION_H

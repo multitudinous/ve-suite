@@ -30,35 +30,31 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
+
 #ifndef CFD_3D_TEXTURE_UPDATE_CALLBACK_H
 #define CFD_3D_TEXTURE_UPDATE_CALLBACK_H
-/*!\file cfd3DTextureCullCallback.h
-* cfd3DTextureCullCallback API
-*/
 
-/*!\class ves::xplorer::volume::cfd3DTextureCullCallback
-*
-*/
-#ifdef _OSG
-//#ifdef CFD_USE_SHADERS
+// --- VE-Suite Includes --- //
+#include <ves/VEConfig.h>
+
+// --- OSG Includes --- //
+#include <osg/ref_ptr>
+#include <osg/NodeCallback>
+#include <osg/BoundingBox>
+
 namespace osg
 {
-class Node;
 class Texture3D;
 class NodeVisitor;
-class Viewport;
 class FrameStamp;
-//class BoundingBox;
 }
+
 namespace osgUtil
 {
 class CullVisitor;
 class UpdateVisitor;
 }
 
-#include <osg/Node>
-#include <osg/NodeCallback>
-#include <osg/BoundingBox>
 namespace ves
 {
 namespace xplorer
@@ -67,12 +63,16 @@ namespace volume
 {
 class cfdPBufferManager;
 class cfdOSGPingPongTexture3D;
-}
-#include <ves/VEConfig.h>
-namespace volume
-{
-class VE_TEXTURE_BASED_EXPORTS cfd3DTextureCullCallback
-            : public osg::NodeCallback
+
+/*!\file cfd3DTextureCullCallback.h
+ * cfd3DTextureCullCallback API
+ */
+
+/*!\class ves::xplorer::volume::cfd3DTextureCullCallback
+ *
+ */
+class VE_TEXTURE_BASED_EXPORTS cfd3DTextureCullCallback :
+    public osg::NodeCallback
 {
 public:
     cfd3DTextureCullCallback( osg::Node* subgraph,
@@ -111,9 +111,10 @@ protected:
     osg::ref_ptr<osg::StateSet> _localState;
     osgUtil::UpdateVisitor* _uniformUpdater;
     osg::ref_ptr<osg::FrameStamp> _fs;
+
 };
-}
-}
-}
-#endif//_OSG
+} //end volume
+} //end xplorer
+} //end ves
+
 #endif //CFD_3D_TEXTURE_UPDATE_CALLBACK_H

@@ -30,8 +30,10 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
+
 #ifndef VR_BASIC_SHADER_SOURCE_H
 #define VR_BASIC_SHADER_SOURCE_H
+
 static const char* vrBasicVertSource =
     {
         "#version 110\n"
@@ -56,6 +58,7 @@ static const char* vrBasicVertSource =
         "gl_Position=ftransform(); \n"
         "} \n"
     };
+
 static const char* vrBasicFragSource =
     {
         //a volume rendering shader which applies a 2D transfer function
@@ -84,4 +87,5 @@ static const char* vrBasicFragSource =
         "//gl_FragColor.a = 1.0-pow(1.0-gl_FragColor.a,alphaRatio);\n"
         "}\n"
     };
+
 #endif// VR_BASIC_VERT_SOURCE_H

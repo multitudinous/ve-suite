@@ -30,16 +30,20 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
+
 //class to update the texture matrix appropriately
-#ifdef _OSG
+
+// --- VE-Suite Includes --- //
 #include <ves/xplorer/volume/cfdTextureMatrixCallback.h>
+
+// --- OSG Includes --- //
 #include <osg/TexMat>
 #include <osg/Matrix>
 #include <osg/Node>
+
 using namespace ves::xplorer::volume;
-////////////////////////////////////////////////////////////////////////
-//Constructor                                                         //
-////////////////////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////////////////////////
 cfdTextureMatrixCallback::cfdTextureMatrixCallback( osg::TexMat* texmat,
                                                     osg::Vec3f center,
                                                     float* scale, float* trans )
@@ -53,7 +57,7 @@ cfdTextureMatrixCallback::cfdTextureMatrixCallback( osg::TexMat* texmat,
     _trans[1] = trans[1];
     _trans[2] = trans[2];
 }
-////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdTextureMatrixCallback::operator()( osg::Node* node, osg::NodeVisitor* nv )
 {
     //osgUtil::CullVisitor* cv = dynamic_cast<osgUtil::CullVisitor*>(nv);
@@ -73,4 +77,4 @@ void cfdTextureMatrixCallback::operator()( osg::Node* node, osg::NodeVisitor* nv
     }
     traverse( node, nv );
 }
-#endif //_OSG
+////////////////////////////////////////////////////////////////////////////////

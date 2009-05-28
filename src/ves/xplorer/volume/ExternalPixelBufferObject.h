@@ -34,20 +34,32 @@
 #ifndef PIXEL_BUFFER_OBJECT_H
 #define PIXEL_BUFFER_OBJECT_H
 
+// --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
+
+// --- OSG Includes --- //
 #include <osg/BufferObject>
+
 namespace osg
 {
-    class Image;
-    class State;
+class Image;
 }
+
 namespace ves
 {
 namespace xplorer
 {
 namespace volume
 {
-class  VE_TEXTURE_BASED_EXPORTS ExternalPixelBufferObject : public osg::BufferObject
+/*!\file ExternalPixelBufferObject.h
+ * ExternalPixelBufferObject API
+ */
+
+/*!\class ves::xplorer::volume::ExternalPixelBufferObject
+ *
+ */
+class VE_TEXTURE_BASED_EXPORTS ExternalPixelBufferObject :
+    public osg::BufferObject
 {
     public:
 
@@ -81,9 +93,10 @@ class  VE_TEXTURE_BASED_EXPORTS ExternalPixelBufferObject : public osg::BufferOb
         virtual ~ExternalPixelBufferObject();
 
         BufferEntryImagePair _bufferEntryImagePair;
-};
-}
-}
-}
-#endif //PIXEL_BUFFER_OBJECT_H
 
+};
+} //end volume
+} //end xplorer
+} //end ves
+
+#endif //PIXEL_BUFFER_OBJECT_H

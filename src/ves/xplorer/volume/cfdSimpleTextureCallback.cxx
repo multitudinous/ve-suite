@@ -30,23 +30,26 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
+
+// --- VE-Suite Includes --- //
 #include <ves/xplorer/volume/cfdSimpleTextureCallback.h>
-#ifdef _PERFORMER
-#elif _OPENSG
-#elif _OSG
+
+// --- OSG Includes --- //
 #include <osg/State>
 #include <osg/TexMat>
 #include <osg/StateAttribute>
+
+// --- C/C++ Includes --- //
 #include <iostream>
+
 using namespace ves::xplorer::volume;
-//////////////////////////////////////////////////////////////////
-//Constructor                                                   //
-//////////////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////////////////////////
 cfdSimpleTextureCallback::cfdSimpleTextureCallback()
 {
     _isLuminance = false;
 }
-////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdSimpleTextureCallback::load( const osg::Texture3D& texture, osg::State& state )const
 {
     if( _isLuminance )
@@ -72,7 +75,9 @@ void cfdSimpleTextureCallback::load( const osg::Texture3D& texture, osg::State& 
                 0 );
     }
 }
-//////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdSimpleTextureCallback::subload( const osg::Texture3D& texture, osg::State& state ) const
-    {}
-#endif
+{
+    ;
+}
+////////////////////////////////////////////////////////////////////////////////

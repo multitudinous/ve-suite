@@ -30,29 +30,35 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
+
 #ifndef CFD_OSG_PING_PONG_TEXTURE_3D_H
 #define CFD_OSG_PING_PONG_TEXTURE_3D_H
-/*!\file cfdOSGPingPongTexture3D.h
-* cfdOSGPingPongTexture3D API
-*/
 
-/*!\class ves::xplorer::volume::cfdOSGPingPongTexture3D
-*
-*/
-#ifdef _PERFORMER
-#elif _OSG
-#include <osg/Node>
+// --- VE-Suite Includes --- //
+#include <ves/VEConfig.h>
+
+// --- OSG Includes --- //
+#include <osg/ref_ptr>
+
 namespace osg
 {
+class Node;
 class Texture3D;
 }
-#include <ves/VEConfig.h>
+
 namespace ves
 {
 namespace xplorer
 {
 namespace volume
 {
+/*!\file cfdOSGPingPongTexture3D.h
+ * cfdOSGPingPongTexture3D API
+ */
+
+/*!\class ves::xplorer::volume::cfdOSGPingPongTexture3D
+ *
+ */
 class VE_TEXTURE_BASED_EXPORTS cfdOSGPingPongTexture3D
 {
 public:
@@ -71,9 +77,10 @@ protected:
     osg::ref_ptr<osg::Node> _current;
     unsigned int _pingUnit;
     unsigned int _pongUnit;
+
 };
-}
-}
-}
-#endif //_OSG
+} //end volume
+} //end xplorer
+} //end ves
+
 #endif // CFD_OSG_PING_PONG_TEXTURE_3D_H

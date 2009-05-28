@@ -30,25 +30,26 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
+
 #ifndef CFD_OSG_ADVECTION_SHADER_MANAGER_H
 #define CFD_OSG_ADVECTION_SHADER_MANAGER_H
-/*!\file cfdOSGAdvectionShaderManager.h
-* cfdOSGAdvectionShaderManager API
-*/
 
-/*!\class ves::xplorer::volume::cfdOSGAdvectionShaderManager
-*Class that handles 3d texture advection
-*/
-#ifdef _OSG
+// --- VE-Suite Includes --- //
+#include <ves/VEConfig.h>
+
+#include <ves/xplorer/volume/cfdOSGShaderManager.h>
+
+// --- OSG Includes --- //
+#include <osg/ref_ptr>
+#include <osg/GL>
+#include <osg/Vec3>
+
 namespace osg
 {
-class Texture3D;
-class Texture1D;
 class State;
+class Texture1D;
+class Texture3D;
 }
-#include <vector>
-#include <ves/xplorer/volume/cfdOSGShaderManager.h>
-#include <ves/xplorer/volume/cfdUpdateableOSGNoiseTexture3d.h>
 
 namespace ves
 {
@@ -58,8 +59,17 @@ namespace volume
 {
 class cfdUpdateParameterCallback;
 class cfdUpdateMatrixParameterCallback;
-class VE_TEXTURE_BASED_EXPORTS cfdOSGAdvectionShaderManager
-            : public cfdOSGShaderManager
+class cfdUpdateableOSGNoiseTexture3d;
+
+/*!\file cfdOSGAdvectionShaderManager.h
+ * cfdOSGAdvectionShaderManager API
+ */
+
+/*!\class ves::xplorer::volume::cfdOSGAdvectionShaderManager
+ * Class that handles 3d texture advection
+ */
+class VE_TEXTURE_BASED_EXPORTS cfdOSGAdvectionShaderManager :
+    public cfdOSGShaderManager
 {
 public:
     ///Cosntructor
@@ -173,10 +183,11 @@ protected:
     osg::ref_ptr<cfdUpdateableOSGNoiseTexture3d> _noiseCbk;///<Callback for updating noise
     bool _reinit;///<Flag to re-initialize parameters
     osg::Vec3 _center;///<Center of the data
+
 };
-}
-}
-}
-#endif//_OSG
+} //end volume
+} //end xplorer
+} //end ves
+
 #endif// CFD_OSG_SCALAR_SHADER_MANAGER_H
 

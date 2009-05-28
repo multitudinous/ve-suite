@@ -30,80 +30,84 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
+
 #ifndef CFD_VOLUME_VISUALIZATION_H
 #define CFD_VOLUME_VISUALIZATION_H
-/*!\file cfdVolumeVisualization.h
-* cfdVolumeVisualization API
-*/
 
-/*!\class ves::xplorer::volume::cfdVolumeVisualization
-*
-*/
-#ifdef _PERFORMER
-#elif _OPENSG
-#elif _OSG
+// --- VE-Suite Includes --- //
+#include <ves/VEConfig.h>
+
+// --- OSG Includes --- //
+#include <osg/ref_ptr>
+#include <osg/BoundingBox>
+
 namespace osg
 {
-class Node;
-class Geometry;
-class Texture1D;
-class Texture3D;
-class TexGen;
-class TexEnv;
 class Geode;
-class ClipNode;
-class TexGenNode;
-class Material;
-class Shape;
-class Image;
-class Switch;
-class StateSet;
 class Group;
-class BoundingBox;
-class Billboard;
 class PositionAttitudeTransform;
+class Switch;
+class ClipNode;
+class Image;
+class Texture3D;
+class TexGenNode;
+class State;
+class StateSet;
 }
-#include <osgUtil/CullVisitor>
-#include <osg/TexMat>
-#include <osg/Vec3>
 
-#include <ves/xplorer/volume/cfdUpdateTextureCallback.h>
-#include <ves/xplorer/volume/cfdUpdateableOSGTexture1d.h>
-
-#include <ves/VEConfig.h>
+// --- C/C++ Includes --- //
 #include <string>
+
 namespace ves
 {
 namespace xplorer
 {
 namespace volume
 {
-class cfdTextureMatrixCallback;
 class cfdTextureManager;
 class TextureBasedVolumeSlices;
+class cfdUpdateTextureCallback;
+
+/*!\file cfdVolumeVisualization.h
+ * cfdVolumeVisualization API
+ */
+
+/*!\class ves::xplorer::volume::cfdVolumeVisualization
+ *
+ */
 class VE_TEXTURE_BASED_EXPORTS cfdVolumeVisualization
 {
 public:
     ///Constructor
     cfdVolumeVisualization();
+
     ///Copy constructor
     ///\param volumeVizNode The node to copy
     cfdVolumeVisualization( const cfdVolumeVisualization& volumeVizNode );
+
     ///Destructor
     virtual ~cfdVolumeVisualization();
+
+    ///
     enum CfdTexUnit
     {
         PLAIN = 0, TRANS_1, TRANS_2,
         TRANS_3, TRANS_4, PROPERTY, VELOCITY, NOISE
     };
+
+    ///
     enum VisMode
     {
         PLAY, STOP
     };
+
+    ///
     enum Direction
     {
         FORWARD, BACKWARD
     };
+
+    ///
     enum ClipPlane
     {
         XPLANE_MIN = 0,
@@ -118,34 +122,42 @@ public:
     ///Set the step direction
     ///\param dir Direction to step
     void SetPlayDirection( Direction dir );
+
     ///\param mode Play Mode for the cfdTextureManager
     void SetPlayMode( VisMode mode );
+
     ///DEPRICATED\n Set the alpha for each slice
     ///\param alpha Slice alpha
     void SetSliceAlpha( float alpha = .5 );
+
     ///Turn on debug output
     ///\param flag Debug output
     void SetVeboseFlag( bool flag );
+
     ///DEPRICATED\n Set the directory to load the shaders from
     ///\param shadDir The directory containing the shaders to load.
     void SetShaderDirectory( std::string shadDir );
-#ifdef _OSG
+
     ///Translate the center of volume
     ///DEPRICATED\n
     ///\param translate Translation value
     void TranslateCenterBy( float* translate );
+
     ///Set the state set
     ///DEPRICATED\n
     ///\param ss The osg::StateSet
     void SetStateSet( osg::StateSet* ss );
+
     ///Set the gl state before rendering this node
     ///DEPRICATED\n
     ///\param state The osg::State
     void SetState( osg::State* state );
+
     ///Set the texture data
     ///DEPRICATED\n
     ///\param texture The osg::Texture3D
     void Set3DTextureData( osg::Texture3D* texture );
+
     ///Set the bounding box for the data
     ///\param bbox The bounding box in VTK format, ie xmin,ymin,zmin,xmax,ymax,zmax
     void SetBoundingBox( float* bbox );
@@ -153,22 +165,29 @@ public:
     ///Set the number of slicing polygons
     ///\param nSlice The number of slices
     void SetNumberOfSlices( unsigned int nSlices = 100 );
+
     ///Set the texture data
     ///\param tm The cfdTextureManager
     void SetTextureManager( cfdTextureManager* tm );
+
     ///Set the position on the cfdTextureManager
     ///\param ct Position of the cfdTextureManager
     void SetCurrentTransientTexture( unsigned int ct );
+
     ///Disable use of shaders
     void DisableShaders();
+
     ///Create the violume visualzation node
     void CreateNode();
+
     ///Add a volume clipping plane
     ///\param direction The axis normal to the clip plane
     ///\param position The position along the axis
     void AddClipPlane( ClipPlane direction, double* position );
+
     ///Remove the clip plane specified by direction
     void RemoveClipPlane( ClipPlane direction );
+
     ///Update the clip  plane position
     ///\param direction The axis normal to the clip plane
     ///\param position The position along the axis
@@ -184,29 +203,37 @@ public:
     }
     ///Get the current time step
     unsigned int GetCurrentTransientTexture();
+
     ///The texture update callback
     cfdUpdateTextureCallback* GetUpdateCallback()
     {
         return _utCbk.get();
     }
+
     ///The center of the bbounding box
     osg::Vec3f GetBBoxCenter()
     {
         return _center;
     }
+
     ///Get the texture scale
     float* GetTextureScale()
     {
         return _scale;
     }
+
     ///Get the state set
-    osg::ref_ptr<osg::StateSet> GetStateSet();
+    osg::ref_ptr< osg::StateSet > GetStateSet();
+
     ///Get the texture data
-    osg::ref_ptr<osg::Texture3D> GetTextureData();
+    osg::ref_ptr< osg::Texture3D > GetTextureData();
+
     ///Get the top level node
-    osg::ref_ptr<osg::Switch> GetVolumeVisNode();
+    osg::ref_ptr< osg::Switch > GetVolumeVisNode();
+
     ///Get the node to attach shaders to
-    osg::ref_ptr<osg::Group> GetDecoratorAttachNode();
+    osg::ref_ptr< osg::Group > GetDecoratorAttachNode();
+
     ///Get the proxy geometry
     ves::xplorer::volume::TextureBasedVolumeSlices* GetGeometryProxyNode()
     {
@@ -216,7 +243,7 @@ public:
     ///Copy constructor
     ///\param rhs The cfdVolumeVisualization to set equal to
     cfdVolumeVisualization& operator=( const cfdVolumeVisualization& rhs );
-#endif
+
 protected:
     VisMode _mode;///<Play mode for the texture manager
     Direction _traverseDirection;///<Direction to step for the cfdTextureManager
@@ -261,7 +288,7 @@ protected:
     float _diagonal;///<BBox diagonal
     float _scale[3];///<The scale
     float* _vtkBBox;///<VTK formatted bounding box
-#ifdef _OSG
+
     osg::ref_ptr<osg::Switch> _volumeVizNode;///<Top-level node
     osg::ref_ptr<osg::TexGenNode> _texGenParams;///<The texture coordinate generation parameters
     osg::BoundingBox* _bbox;///< The bounding box of the data
@@ -273,14 +300,14 @@ protected:
     osg::ref_ptr<osg::Group> _noShaderGroup;///<The default group for volume rendering
     osg::ref_ptr<osg::Group> _decoratorAttachNode;///<Node to attach shaders to
     osg::ref_ptr<osg::Texture3D> _texture;
-    ;///<DEPRICATED\n3D texture.
+    ///<DEPRICATED\n3D texture.
     osg::ref_ptr<osg::Image> _image;///<DEPRICATED\n Image data
     osg::ref_ptr<osg::State> _state;///<DEPRICATED\nGL state
     osg::ref_ptr<cfdUpdateTextureCallback> _utCbk;///<Texture update callback
-#endif
+
 };
-}
-}
-}
-#endif//OSG
-#endif// CFD_VOLUME_VISUALIZATION_H
+} //end volume
+} //end xplorer
+} //end ves
+
+#endif //CFD_VOLUME_VISUALIZATION_H

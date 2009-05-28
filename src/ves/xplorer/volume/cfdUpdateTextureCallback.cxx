@@ -30,22 +30,21 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
+
+// --- VE-Suite Includes --- //
 #include <ves/xplorer/volume/cfdUpdateTextureCallback.h>
-
-#ifdef _PERFORMER
-#elif _OPENSG
-#elif _OSG
-#include <osg/State>
-
-#include <osg/Node>
-#include <osg/NodeVisitor>
-#include <vpr/Util/Debug.h>
+#include <ves/xplorer/volume/ExternalPixelBufferObject.h>
 #include <ves/xplorer/volume/cfdTextureManager.h>
 
+// --- OSG Includes --- //
+#include <osg/NodeVisitor>
+
+// --- VR Juggler Includes --- //
+//#include <vpr/Util/Debug.h>
+
 using namespace ves::xplorer::volume;
-//////////////////////////////////////////////////////////////////
-//Constructor                                                   //
-//////////////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////////////////////////
 cfdUpdateTextureCallback::cfdUpdateTextureCallback():
         _subloadMode( AUTO ),
         _textureWidth( 0 ),
@@ -68,7 +67,7 @@ cfdUpdateTextureCallback::cfdUpdateTextureCallback():
     _isLuminance = false;
     _update = false;
 }
-/////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 cfdUpdateTextureCallback::cfdUpdateTextureCallback( const cfdUpdateTextureCallback& cb )
         : osg::Texture3D::SubloadCallback( cb )
 {
@@ -79,16 +78,16 @@ cfdUpdateTextureCallback::cfdUpdateTextureCallback( const cfdUpdateTextureCallba
     _isLuminance = cb._isLuminance;
     m_pbo = cb.m_pbo;
 }
-///////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 cfdUpdateTextureCallback::~cfdUpdateTextureCallback()
 {
 }
-//////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdUpdateTextureCallback::SetExternalPixelBufferObject( ExternalPixelBufferObject* ePBO )
 {
     m_pbo = ePBO;
 }
-///////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdUpdateTextureCallback::SetTextureManager( cfdTextureManager* tm )
 {
     if( _tm != tm )
@@ -102,13 +101,13 @@ void cfdUpdateTextureCallback::SetTextureManager( cfdTextureManager* tm )
     }
     return;
 }
-/////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdUpdateTextureCallback::SetDelayTime( double delayTime )
 {
     _delay = delayTime;
     _update = false;
 }
-////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 unsigned int cfdUpdateTextureCallback::GetCurrentFrame()
 {
     if( _tm )
@@ -117,7 +116,7 @@ unsigned int cfdUpdateTextureCallback::GetCurrentFrame()
     }
     return 0;
 }
-///////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdUpdateTextureCallback::SetCurrentFrame( unsigned int cFrame,
                                                 bool forceUpdate )
 {
@@ -130,7 +129,7 @@ void cfdUpdateTextureCallback::SetCurrentFrame( unsigned int cFrame,
         }
     }
 }
-////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdUpdateTextureCallback::load( const osg::Texture3D& texture, osg::State& state )const
 {
     unsigned char* dataMinusOffset=0;
@@ -178,7 +177,7 @@ void cfdUpdateTextureCallback::load( const osg::Texture3D& texture, osg::State& 
     }
 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdUpdateTextureCallback::subload( const osg::Texture3D& texture, osg::State& state ) const
 {
     if( !state.getFrameStamp() )
@@ -251,4 +250,4 @@ void cfdUpdateTextureCallback::subload( const osg::Texture3D& texture, osg::Stat
         }
     }
 }
-#endif
+////////////////////////////////////////////////////////////////////////////////

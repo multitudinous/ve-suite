@@ -32,24 +32,29 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
+
 #ifndef LUMINANCE_TRANSFER_FUNCTION_H
 #define LUMINANCE_TRANSFER_FUNCTION_H
-/*!\file LuminanceTransferFunction.h
-  Grey scale transfer function API
-  */
-/*!\class ves::xplorer::volume::LuminanceTF
- * Class defining grey scale transfer function.
- */
-#include <vector>
-#include <ves/xplorer/volume/TransferFunction.h>
+
+// --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
+
+#include <ves/xplorer/volume/TransferFunction.h>
+
 namespace ves
 {
 namespace xplorer
 {
 namespace volume
 {
-class VE_TEXTURE_BASED_EXPORTS LuminanceTF: public TransferFunction
+/*!\file LuminanceTransferFunction.h
+ * Grey scale transfer function API
+ */
+
+/*!\class ves::xplorer::volume::LuminanceTF
+ * Class defining grey scale transfer function.
+ */
+class VE_TEXTURE_BASED_EXPORTS LuminanceTF : public TransferFunction
 {
 public:
     ///Constructor
@@ -78,11 +83,14 @@ public:
     ///Equal operator
     ///\param rhs The TransferFunction to set this one to.
     LuminanceTF& operator=( const LuminanceTF& rhs );
+
 protected:
     ///Update the transfer function
     virtual void _update();
+
 };
-}
-}
-}
+} //end volume
+} //end xplorer
+} //end ves
+
 #endif// LUMINANCE_TRANSFER_FUNCTION_H

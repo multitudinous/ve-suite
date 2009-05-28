@@ -30,27 +30,31 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
+
 #ifndef CFD_UPDATEABLE_TRANSFER_FUNCTION_TEXTURE_1D_H
 #define CFD_UPDATEABLE_TRANSFER_FUNCTION_TEXTURE_1D_H
-/*!\file cfdUpdateableOSGTexture1d.h
-* cfdUpdateableOSGTexture1d API
-*/
 
-/*!\class ves::xplorer::volume::cfdUpdateableOSGTexture1d
-*
-*/
-#ifdef _PERFORMER
-#elif _OSG
-#include <osg/Texture1D>
+// --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
+
+// --- OSG Includes --- //
+#include <osg/Texture1D>
+
 namespace ves
 {
 namespace xplorer
 {
 namespace volume
 {
-class VE_TEXTURE_BASED_EXPORTS cfdUpdateableOSGTexture1d
-            : public  osg::Texture1D::SubloadCallback
+/*!\file cfdUpdateableOSGTexture1d.h
+ * cfdUpdateableOSGTexture1d API
+ */
+
+/*!\class ves::xplorer::volume::cfdUpdateableOSGTexture1d
+ *
+ */
+class VE_TEXTURE_BASED_EXPORTS cfdUpdateableOSGTexture1d :
+    public osg::Texture1D::SubloadCallback
 {
 public:
     cfdUpdateableOSGTexture1d();
@@ -71,6 +75,7 @@ public:
     void load( const osg::Texture1D& texture, osg::State& ) const;
 
     cfdUpdateableOSGTexture1d& operator=( const cfdUpdateableOSGTexture1d& cb );
+
 protected:
     void _updateData();
     bool _needsUpdate()const;
@@ -83,9 +88,10 @@ protected:
 
     TransType _type;
     mutable GLsizei _textureWidth, _oWidth;
+
 };
-}
-}
-}
-#endif //_OSG
+} //end volume
+} //end xplorer
+} //end ves
+
 #endif //CFD_UPDATEABLE_TRANSFER_FUNCTION_TEXTURE_1D_H

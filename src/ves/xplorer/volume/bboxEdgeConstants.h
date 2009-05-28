@@ -30,8 +30,10 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
+
 #ifndef EDGE_CONSTANTS_H
 #define EDGE_CONSTANTS_H
+
 ///These should be in another class (brick manager)
 unsigned int edgeIndex[24][2]  = {
                                      { 0, 1 },
@@ -59,6 +61,7 @@ unsigned int edgeIndex[24][2]  = {
                                      { 3, 6 },
                                      { 6, 7 }
                                  };
+
 unsigned int edgeSequence[8][8] = {
                                       { 0, 1, 2, 4, 5, 3, 6, 7 },
                                       { 1, 3, 0, 5, 7, 2, 4, 6 },
@@ -71,4 +74,4 @@ unsigned int edgeSequence[8][8] = {
 
                                   };
 
-#endif
+#endif //EDGE_CONSTANTS_H

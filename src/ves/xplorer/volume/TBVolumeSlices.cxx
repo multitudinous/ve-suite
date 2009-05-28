@@ -31,21 +31,29 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
+// --- VE-Suite Includes --- //
 #include <ves/xplorer/volume/TBVolumeSlices.h>
 #include <ves/xplorer/volume/bboxEdgeConstants.h>
+#include <ves/xplorer/volume/ExternalPixelBufferObject.h>
+
+// --- OSG Includes --- //
 #include <osg/Matrixf>
 #include <osg/GL2Extensions>
 #include <osg/AlphaFunc>
+
 // --- VR Juggler Stuff --- //
 #include <gmtl/Xforms.h>
 #include <gmtl/Generate.h>
 
-using namespace gmtl;
-using namespace gadget;
+// --- C/C++ Includes --- //
 #include <iostream>
 
+using namespace gmtl;
+using namespace gadget;
+
 using namespace ves::xplorer::volume;
-////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////////////////////////
 TextureBasedVolumeSlices::TextureBasedVolumeSlices()
         : osg::Drawable(),
         _diagonal( 1.0 ),
@@ -79,7 +87,7 @@ TextureBasedVolumeSlices::TextureBasedVolumeSlices()
     _deltaZ[0] =
         _deltaZ[1] = 1.f;
 }
-//////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 TextureBasedVolumeSlices::TextureBasedVolumeSlices( float* dataBoundingBox,
                                                     unsigned int numberOfSlices )
         : osg::Drawable()
@@ -109,7 +117,7 @@ TextureBasedVolumeSlices::TextureBasedVolumeSlices( float* dataBoundingBox,
     _tcoordBBox->push_back( osg::Vec4( 0, 1, 0, 1 ) );
     _tcoordBBox->push_back( osg::Vec4( 1, 1, 0, 1 ) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 TextureBasedVolumeSlices::TextureBasedVolumeSlices( const TextureBasedVolumeSlices& slices,
                                                     const osg::CopyOp& copyop ):
         osg::Drawable( slices, copyop )
@@ -127,7 +135,7 @@ TextureBasedVolumeSlices::TextureBasedVolumeSlices( const TextureBasedVolumeSlic
     _coordTransformedBBox = new osg::Vec4Array( *slices._coordTransformedBBox );
     _rotatedBBox = new osg::Vec4Array( *slices._rotatedBBox );
 }
-/////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void TextureBasedVolumeSlices::_initBBoxIntersectionSlicesVertexProgram()
 {
     _bboxSlicer.clear();
@@ -179,7 +187,7 @@ void TextureBasedVolumeSlices::_initBBoxIntersectionSlicesVertexProgram()
     _bboxSlicer.append( "}\n" );
 
 }
-///////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void TextureBasedVolumeSlices::SetDataBoundingBox( float* boundingBox )
 {
     float minBBox[3] = {0, 0, 0};
@@ -219,7 +227,7 @@ void TextureBasedVolumeSlices::SetDataBoundingBox( float* boundingBox )
     _deltaZ[1] = _deltaZ[0];
     _ensureSliceDelta( _extremaIndicies, _deltaZ[0], _sliceDeltaRatio );
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void TextureBasedVolumeSlices::SetTextureDimensions( unsigned int x, unsigned int y, unsigned int z )
 {
     _dimensions.set( x, y, z );
@@ -227,7 +235,7 @@ void TextureBasedVolumeSlices::SetTextureDimensions( unsigned int x, unsigned in
     _deltaZ[1] = _deltaZ[0];
     _sliceDeltaRatio = 1.f;
 }
-//////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 float TextureBasedVolumeSlices::_calculateDelta()const
 {
     float delta = 0;
@@ -252,7 +260,7 @@ float TextureBasedVolumeSlices::_calculateDelta()const
     }
     return delta*.25;
 }
-//////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void TextureBasedVolumeSlices::_ensureSliceDelta( unsigned int extremaIndicies[],
                                                   float& delta,
                                                   float& deltaRatio )const
@@ -266,18 +274,18 @@ void TextureBasedVolumeSlices::_ensureSliceDelta( unsigned int extremaIndicies[]
         _deltaZ[1] = ( currentDistance * 2.0 ) / ( float )( _nSlices - 1 );
     }
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void TextureBasedVolumeSlices::SetNumberOfSlices( unsigned int numberOfSlices )
 {
     _nSlices = ( numberOfSlices < 32 ) ? 32 : numberOfSlices;
     _ensureSliceDelta( _extremaIndicies, _deltaZ[1], _sliceDeltaRatio );
 }
-//////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void TextureBasedVolumeSlices::SetRenderMethod( std::string method )
 {
     _sliceRenderMethod = method;
 }
-////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void TextureBasedVolumeSlices::_drawViewAlignedQuadSlices()const
 {
     //transform the eye point in
@@ -296,7 +304,7 @@ void TextureBasedVolumeSlices::_drawViewAlignedQuadSlices()const
     //pop the modelview matrix
     glPopMatrix();
 }
-/////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 #if ((OSG_VERSION_MAJOR>=1) && (OSG_VERSION_MINOR>2) || (OSG_VERSION_MAJOR>=2))
 void TextureBasedVolumeSlices::drawImplementation( osg::RenderInfo& renderState ) const
 #elif ((OSG_VERSION_MAJOR<=1) && (OSG_VERSION_MINOR<=2))
@@ -373,7 +381,7 @@ void TextureBasedVolumeSlices::drawImplementation( osg::State& renderState ) con
                                      currentDelta, deltaRatio );
     }
 }
-////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void TextureBasedVolumeSlices::_calculateEdgeIntersections( osg::State& currentState,
                                                             osg::Vec4 initialSlicePoint,
                                                             osg::Vec4 slicePlaneNormal,
@@ -477,7 +485,7 @@ void TextureBasedVolumeSlices::_calculateEdgeIntersections( osg::State& currentS
     glEnable( GL_TEXTURE_GEN_T );
     glEnable( GL_TEXTURE_GEN_R );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void TextureBasedVolumeSlices::_calculateVertsAndTextureCoordinates( unsigned int currentEdgeIndex,
         osg::Vec4 frontSlicePoint,
         osg::Vec4 backSlicePoint,
@@ -540,7 +548,7 @@ void TextureBasedVolumeSlices::_calculateVertsAndTextureCoordinates( unsigned in
         }
     }
 }
-///////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 float TextureBasedVolumeSlices::_calculateSampleDistance( osg::Matrixf iModelView ) const
 {
     /*Patrick O'Leary
@@ -565,7 +573,7 @@ float TextureBasedVolumeSlices::_calculateSampleDistance( osg::Matrixf iModelVie
 
     return maximumV.length();
 }
-/////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void TextureBasedVolumeSlices::_findBBoxMinMaxIndicies( osg::ref_ptr<osg::Vec4Array> rotatedBBox,
                                                         osg::Vec4 slicePlaneNormal,
                                                         unsigned int extremeIndicies[] )const
@@ -609,7 +617,7 @@ void TextureBasedVolumeSlices::_findBBoxMinMaxIndicies( osg::ref_ptr<osg::Vec4Ar
     //std::cout<<_coordTransformedBBox->at(_extremaIndicies[0]).x()<<","<<_coordTransformedBBox->at(_extremaIndicies[0]).y()<<","<<_coordTransformedBBox->at(_extremaIndicies[0]).z()<<std::endl;
     //std::cout<<_coordTransformedBBox->at(_extremaIndicies[1]).x()<<","<<_coordTransformedBBox->at(_extremaIndicies[1]).y()<<","<<_coordTransformedBBox->at(_extremaIndicies[1]).z()<<std::endl;
 }
-///////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void TextureBasedVolumeSlices::_drawQuadSlice( float zPosition )const
 {
     glBegin( GL_QUADS );
@@ -620,10 +628,9 @@ void TextureBasedVolumeSlices::_drawQuadSlice( float zPosition )const
     glVertex3f(( _eyeCenter[0] - .5*_diagonal ), ( _eyeCenter[1] + .5*_diagonal ), zPosition );
     glEnd();
 }
-///////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 osg::BoundingBox TextureBasedVolumeSlices::computeBound() const
 {
     return _bbox;
 }
-
-
+////////////////////////////////////////////////////////////////////////////////

@@ -30,22 +30,22 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
+
 #ifndef CFD_VECTOR_VOLUME_VIS_HANDLER_H
 #define CFD_VECTOR_VOLUME_VIS_HANDLER_H
-/*!\file cfdVectorVolumeVisHandler.h
-* cfdVectorVolumeVisHandler API
-*/
 
-/*!\class ves::xplorer::volume::cfdVectorVolumeVisHandler
-*
-*/
-#ifdef _OSG
+// --- VE-Suite Includes --- //
+#include <ves/VEConfig.h>
+#include <ves/xplorer/volume/cfdVolumeVisNodeHandler.h>
+
+// --- OSG Includes --- //
+#include <osg/ref_ptr>
+
 namespace osg
 {
 class Group;
 class Texture3D;
 }
-#include <ves/xplorer/volume/cfdVolumeVisNodeHandler.h>
 
 namespace ves
 {
@@ -61,7 +61,15 @@ class cfdUpdateTextureCallback;
 class cfd3DTextureCullCallback;
 class cfdOSGPingPongTexture3D;
 
-class VE_TEXTURE_BASED_EXPORTS cfdVectorVolumeVisHandler : public cfdVolumeVisNodeHandler
+/*!\file cfdVectorVolumeVisHandler.h
+ * cfdVectorVolumeVisHandler API
+ */
+
+/*!\class ves::xplorer::volume::cfdVectorVolumeVisHandler
+ *
+ */
+class VE_TEXTURE_BASED_EXPORTS cfdVectorVolumeVisHandler :
+    public cfdVolumeVisNodeHandler
 {
 public:
     ///Constructor
@@ -96,6 +104,7 @@ public:
     ///Equal Operator
     ///\param vvnh cfdVectorVolumeVisHandler to set this equal to.
     cfdVectorVolumeVisHandler& operator=( const cfdVectorVolumeVisHandler& vvnh );
+
 protected:
     ///Set up the decorator node
     virtual void _setUpDecorator();
@@ -131,8 +140,8 @@ protected:
     osg::ref_ptr<osg::Texture3D> _velocity;///<Velocity texture
 
 };
-}
-}
-}
-#endif //_OSG
+} //end volume
+} //end xplorer
+} //end ves
+
 #endif// CFD_SCALAR_VOLUME_VIS_HANDLER_H

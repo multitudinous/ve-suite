@@ -30,15 +30,8 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#include <iostream>
-#ifdef _OSG
-#include <osg/Texture3D>
-#include <osg/Texture1D>
-#include <osg/Texture2D>
-#include <osg/BlendFunc>
-#include <osg/TexEnv>
-#include <osg/TexMat>
-#include <osg/TexGen>
+
+// --- VE-Suite Includes --- //
 #include <ves/xplorer/volume/ExternalPixelBufferObject.h>
 #include <ves/xplorer/volume/cfdTextureManager.h>
 #include <ves/xplorer/volume/cfdUpdateTextureCallback.h>
@@ -47,11 +40,26 @@
 #include <ves/xplorer/volume/RedYellowGreenCyanBlueTransferFunction.h>
 #include <ves/xplorer/volume/PreIntegrationTexture.h>
 #include <ves/xplorer/volume/NoiseTexture2D.h>
-using namespace ves::xplorer::volume;
+
 //the shader inline source
 #include <ves/xplorer/volume/volumeRenderBasicShader.h>
 #include <ves/xplorer/volume/volumeRenderPhongShader.h>
-////////////////////////////////////////////////
+
+// --- OSG Includes --- //
+#include <osg/Texture1D>
+#include <osg/Texture2D>
+#include <osg/Texture3D>
+#include <osg/BlendFunc>
+#include <osg/TexEnv>
+#include <osg/TexMat>
+#include <osg/TexGen>
+
+// --- C/C++ Includes --- //
+#include <iostream>
+
+using namespace ves::xplorer::volume;
+
+////////////////////////////////////////////////////////////////////////////////
 cfdScalarShaderManager::cfdScalarShaderManager()
 {
     _useTM = true;
@@ -63,7 +71,7 @@ cfdScalarShaderManager::cfdScalarShaderManager()
     _stepSize[2] = .0001;
     _tUnit = 0;
 }
-///////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdScalarShaderManager::Init()
 {
     _initTransferFunctions();
@@ -116,7 +124,7 @@ void cfdScalarShaderManager::Init()
     }
     _reinit = false;
 }
-////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdScalarShaderManager::_setupStateSetForGLSL()
 {
     std::cout << "Using glsl..." << std::endl;
@@ -148,29 +156,29 @@ void cfdScalarShaderManager::_setupStateSetForGLSL()
 
     SetActiveShaderProgram( "Basic Volume Render" );
 }
-//////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdScalarShaderManager::FullTransferFunctionUpdate()
 {
     _preIntegrate = true;
 }
-//////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdScalarShaderManager::FastTransferFunctionUpdate()
 {
     _preIntegrate = false;
 }
-//////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdScalarShaderManager::ActivateIsoSurface()
 {
     _tf->SetIsoSurface( true );
     //_preIntegrate = true;
 }
-///////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdScalarShaderManager::DeactivateIsoSurface()
 {
     _tf->SetIsoSurface( false );
     //_preIntegrate = true;
 }
-/////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdScalarShaderManager::SetIsoSurfaceValue( float percentScalarRange )
 {
     _percentScalarRange = percentScalarRange;
@@ -178,7 +186,7 @@ void cfdScalarShaderManager::SetIsoSurfaceValue( float percentScalarRange )
     _tf->SetIsoSurfaceValue( percentScalarRange );
     _updateTransferFunction();
 }
-/////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdScalarShaderManager::_initTransferFunctions()
 {
     if( _transferFunctions.empty() )
@@ -203,7 +211,7 @@ void cfdScalarShaderManager::_initTransferFunctions()
         _transferFunctions.push_back( _preIntTexture->GetPreIntegratedTexture() );
     }
 }
-/////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdScalarShaderManager::_updateTransferFunction( bool fastUpdate )
 {
     if( !_tf )
@@ -226,12 +234,12 @@ void cfdScalarShaderManager::_updateTransferFunction( bool fastUpdate )
         _preIntTexture->FastUpdate();
     }
 }
-//////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdScalarShaderManager::EnsureScalarRange()
 {
     _updateTransferFunction();
 }
-/////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdScalarShaderManager::SetScalarRange( float* range )
 {
     if( !_tm )
@@ -248,7 +256,7 @@ void cfdScalarShaderManager::SetScalarRange( float* range )
     _tf->AdjustScalarMinimum( adjustedRange[0] );
     _updateTransferFunction();
 }
-/////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdScalarShaderManager::UpdateScalarMin( float minScalar )
 {
     if( !_tm )
@@ -260,7 +268,7 @@ void cfdScalarShaderManager::UpdateScalarMin( float minScalar )
     _tf->AdjustScalarMinimum( _scalarRange[0] );
     _updateTransferFunction();
 }
-/////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdScalarShaderManager::UpdateScalarMax( float maxScalar )
 {
     if( !_tm )
@@ -272,7 +280,7 @@ void cfdScalarShaderManager::UpdateScalarMax( float maxScalar )
     _tf->AdjustScalarMinimum( _scalarRange[1] );
     _updateTransferFunction();
 }
-///////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdScalarShaderManager::SetDelayTime( double delay )
 {
     if( _utCbk.valid() )
@@ -280,7 +288,7 @@ void cfdScalarShaderManager::SetDelayTime( double delay )
         _utCbk->SetDelayTime( delay );
     }
 }
-///////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdScalarShaderManager::SetCurrentTransientTexture( unsigned int whichTimeStep,
                                                          bool makeSlave )
 {
@@ -289,7 +297,7 @@ void cfdScalarShaderManager::SetCurrentTransientTexture( unsigned int whichTimeS
         _utCbk->SetCurrentFrame( whichTimeStep, makeSlave );
     }
 }
-//////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdScalarShaderManager::UpdateTextureManager( cfdTextureManager* tm )
 {
     if( _tm != tm )
@@ -304,7 +312,7 @@ void cfdScalarShaderManager::UpdateTextureManager( cfdTextureManager* tm )
     }
     _reinit = false;
 }
-///////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdScalarShaderManager::_initPropertyTexture()
 {
     if( !_utCbk )
@@ -354,4 +362,4 @@ void cfdScalarShaderManager::_initPropertyTexture()
 
     _jitterTexture = new ves::xplorer::volume::NoiseTexture2D();
 }
-#endif//_OSG
+////////////////////////////////////////////////////////////////////////////////

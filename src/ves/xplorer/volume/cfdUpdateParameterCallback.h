@@ -30,27 +30,31 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
+
 #ifndef CFD_UPDATE_PARAMETER_CALLBACK_H
 #define CFD_UPDATE_PARAMETER_CALLBACK_H
-/*!\file cfdUpdateParameterCallback.h
-* cfdUpdateParameterCallback API
-*/
 
-/*!\class ves::xplorer::volume::cfdUpdateParameterCallback
-*
-*/
-#ifdef _OSG
-
-#include <osg/Uniform>
+// --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
+
+// --- OSG Includes --- //
+#include <osg/Uniform>
+
 namespace ves
 {
 namespace xplorer
 {
 namespace volume
 {
-class VE_TEXTURE_BASED_EXPORTS cfdUpdateParameterCallback
-            : public osg::Uniform::Callback
+/*!\file cfdUpdateParameterCallback.h
+ * cfdUpdateParameterCallback API
+ */
+
+/*!\class ves::xplorer::volume::cfdUpdateParameterCallback
+ *
+ */
+class VE_TEXTURE_BASED_EXPORTS cfdUpdateParameterCallback :
+    public osg::Uniform::Callback
 {
 
 public:
@@ -76,9 +80,10 @@ protected:
     float _value[4];
     cfdParameterType _type;
     cfdParameterSize _size;
+
 };
-}
-}
-}
-#endif //_OSG
+} //end volume
+} //end xplorer
+} //end ves
+
 #endif //CFD_UPDATE_PARAMETER_CALLBACK_H

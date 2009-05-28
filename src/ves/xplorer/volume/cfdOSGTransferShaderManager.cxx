@@ -30,8 +30,18 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#include <iostream>
-#ifdef _OSG
+
+// --- VE-Suite Includes --- //
+#include <ves/xplorer/volume/cfdTextureManager.h>
+#include <ves/xplorer/volume/cfdUpdateTextureCallback.h>
+#include <ves/xplorer/volume/cfdOSGTransferShaderManager.h>
+#include <ves/xplorer/volume/cfdSimpleTextureCallback.h>
+#include <ves/xplorer/volume/NoiseTexture2D.h>
+#include <ves/xplorer/volume/PreIntegrationTexture.h>
+#include <ves/xplorer/volume/TransferFunction.h>
+#include <ves/xplorer/volume/ExternalPixelBufferObject.h>
+
+// --- OSG Includes --- //
 #include <osg/Texture3D>
 #include <osg/Texture1D>
 #include <osg/Texture2D>
@@ -40,14 +50,12 @@
 #include <osg/TexMat>
 #include <osg/TexGen>
 #include <osg/AlphaFunc>
-#include <ves/xplorer/volume/cfdTextureManager.h>
-#include <ves/xplorer/volume/cfdUpdateTextureCallback.h>
-#include <ves/xplorer/volume/cfdOSGTransferShaderManager.h>
-#include <ves/xplorer/volume/cfdSimpleTextureCallback.h>
-#include <ves/xplorer/volume/NoiseTexture2D.h>
-#include <ves/xplorer/volume/PreIntegrationTexture.h>
-#include <ves/xplorer/volume/TransferFunction.h>
+
+// --- C/C++ Includes --- //
+#include <iostream>
+
 using namespace ves::xplorer::volume;
+
 //the shader inline source
 static const char* volumeTransferFragSource =
     {
@@ -74,9 +82,8 @@ static const char* volumeTransferFragSource =
         "gl_FragColor.w *= gl_Color.a;\n"
         "}\n"
     };
-//////////////////////////////////////////////////////////
-//Constructors                                          //
-//////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////////////////////////
 cfdOSGTransferShaderManager::cfdOSGTransferShaderManager()
         : cfdOSGShaderManager()
 {
@@ -92,7 +99,7 @@ cfdOSGTransferShaderManager::cfdOSGTransferShaderManager()
     //_utCbk = 0;
     _tUnit = 0;
 }
-//////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 cfdOSGTransferShaderManager::cfdOSGTransferShaderManager( const
                                                           cfdOSGTransferShaderManager& sm )
         : cfdOSGShaderManager( sm )
@@ -115,7 +122,7 @@ cfdOSGTransferShaderManager::cfdOSGTransferShaderManager( const
     _preIntTexture = 0;
     _jitterTexture = 0;
 }
-///////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 cfdOSGTransferShaderManager::~cfdOSGTransferShaderManager()
 {
     if( _transferFunctions.size() )
@@ -138,13 +145,13 @@ cfdOSGTransferShaderManager::~cfdOSGTransferShaderManager()
         _jitterTexture = 0;
     }
 }
-////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdOSGTransferShaderManager::InitTextureManager( cfdTextureManager* tm )
 {
     _tm = tm;
     _reinit = true;
 }
-///////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdOSGTransferShaderManager::UpdateTextureManager( cfdTextureManager* tm )
 {
     _tm = tm;
@@ -154,7 +161,7 @@ void cfdOSGTransferShaderManager::UpdateTextureManager( cfdTextureManager* tm )
     }
     _reinit = false;
 }
-/////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdOSGTransferShaderManager::SetTextureMatrix( osg::TexMat* tmat )
 {
     _texMat = tmat;
@@ -165,12 +172,12 @@ void cfdOSGTransferShaderManager::SetTextureMatrix( osg::TexMat* tmat )
                                           osg::StateAttribute::ON );
     }
 }
-///////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdOSGTransferShaderManager::SetPropertyTexture( osg::Texture3D* property )
 {
     //_property = property;
 }
-////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdOSGTransferShaderManager::Init()
 {
     _initTransferFunctions();
@@ -217,7 +224,7 @@ void cfdOSGTransferShaderManager::Init()
     }
     _reinit = false;
 }
-/////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdOSGTransferShaderManager::_setupStateSetForGLSL()
 {
     std::cout << "Using glsl..." << std::endl;
@@ -232,7 +239,7 @@ void cfdOSGTransferShaderManager::_setupStateSetForGLSL()
     glslProgram->addShader( vTransfers.get() );
     AddShaderProgram( "3D Texture Advection Transfer Functions", glslProgram );
 }
-/////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 osg::Texture3D* cfdOSGTransferShaderManager::GetPropertyTexture()
 {
     if( _property.valid() )
@@ -241,7 +248,7 @@ osg::Texture3D* cfdOSGTransferShaderManager::GetPropertyTexture()
     }
     return 0;
 }
-//////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdOSGTransferShaderManager::_initTransferFunctions()
 {
     if( _transferFunctions.empty() )
@@ -253,7 +260,7 @@ void cfdOSGTransferShaderManager::_initTransferFunctions()
         _createTransferFunction( true );
     }
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdOSGTransferShaderManager::_createTransferFunction( bool useGamma,
                                                            bool clearList )
 {
@@ -363,12 +370,12 @@ void cfdOSGTransferShaderManager::_createTransferFunction( bool useGamma,
 
     _transferFunctions.push_back( trans );
 }
-//////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdOSGTransferShaderManager::SetUseTextureManagerForProperty( bool tf )
 {
     _useTM = tf;
 }
-///////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdOSGTransferShaderManager::_initPropertyTexture()
 {
     if( _fieldSize[0] &&
@@ -421,7 +428,7 @@ void cfdOSGTransferShaderManager::_initPropertyTexture()
         std::cout << "cfdOSGTransferShaderManager::_initPropertyTexture" << std::endl;
     }
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdOSGTransferShaderManager::UpdateTransferFunction( cfdUpdateableOSGTexture1d::TransType type,
                                                           float param, int whichFunction )
 {
@@ -449,14 +456,14 @@ void cfdOSGTransferShaderManager::UpdateTransferFunction( cfdUpdateableOSGTextur
     };
     temp->UpdateParam( type, param );
 }
-/////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdOSGTransferShaderManager::SetFieldSize( unsigned int x, unsigned int y, unsigned  int z )
 {
     _fieldSize[0] = x;
     _fieldSize[1] = y;
     _fieldSize[2] = z;
 }
-/////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 cfdOSGTransferShaderManager& cfdOSGTransferShaderManager::operator=( const cfdOSGTransferShaderManager& sm )
 
 {
@@ -479,4 +486,4 @@ cfdOSGTransferShaderManager& cfdOSGTransferShaderManager::operator=( const cfdOS
     }
     return *this;
 }
-#endif//_OSG
+////////////////////////////////////////////////////////////////////////////////

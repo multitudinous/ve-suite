@@ -30,14 +30,18 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> **************/
+
 #ifndef JPG_SQLITE_DRIVER_H_
 #define JPG_SQLITE_DRIVER_H_
 
+// --- VE-Suite Includes --- //
 #include <ves/xplorer/volume/DatabaseDriver.h>
 #include <ves/xplorer/volume/Data.h>
 
+// --- SQLite Includes --- //
 #include <sqlite3.h>
 
+// --- C/C++ Includes --- //
 #include <string>
 #include <vector>
 
@@ -117,7 +121,8 @@ private:
 
     /// the results of the most recently executed query.
     std::vector< std::vector< DBValue > >        mResults;
+
 };
 }
 
-#endif
+#endif //JPG_SQLITE_DRIVER_H_

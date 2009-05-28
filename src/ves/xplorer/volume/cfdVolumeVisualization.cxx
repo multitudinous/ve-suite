@@ -30,29 +30,30 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
+
+// --- VE-Suite Includes --- //
 #include <ves/xplorer/volume/cfdVolumeVisualization.h>
-
-#ifdef _PERFORMER
-#elif _OPENSG
-#elif _OSG
-#include <iostream>
-
 #include <ves/xplorer/volume/cfdAdvectionSubGraph.h>
 #include <ves/xplorer/volume/cfdTextureMatrixCallback.h>
 #include <ves/xplorer/volume/cfdTextureManager.h>
 #include <ves/xplorer/volume/TBVolumeSlices.h>
+#include <ves/xplorer/volume/cfdUpdateTextureCallback.h>
+#include <ves/xplorer/volume/ExternalPixelBufferObject.h>
 
+// --- OSG Includes --- //
+//#include <osg/Node>
+#include <osg/Geode>
+#include <osg/Geometry>
 #include <osg/TexMat>
 #include <osg/BlendFunc>
 #include <osg/ClipPlane>
 #include <osg/ClipNode>
-#include <osg/Node>
-#include <osg/Geometry>
-#include <osg/Texture1D>
+
+//#include <osg/Texture1D>
 #include <osg/Texture3D>
 #include <osg/TexGen>
 #include <osg/TexEnv>
-#include <osg/Geode>
+
 #include <osg/Billboard>
 #include <osg/ClipNode>
 #include <osg/TexGenNode>
@@ -62,11 +63,13 @@
 #include <osg/Switch>
 #include <osg/BoundingBox>
 #include <osg/PositionAttitudeTransform>
+
+// --- C/C++ Includes --- //
+#include <iostream>
+
 using namespace ves::xplorer::volume;
 
-////////////////////////////////////////////////
-//Constructor                                 //
-////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 cfdVolumeVisualization::cfdVolumeVisualization()
 {
     _diagonal = 0;
@@ -96,7 +99,7 @@ cfdVolumeVisualization::cfdVolumeVisualization()
     _transferShaderIsActive = false;
     _vtkBBox = 0;
 }
-/////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 cfdVolumeVisualization::cfdVolumeVisualization( const cfdVolumeVisualization& rhs )
 {
     _utCbk = rhs._utCbk;
@@ -122,7 +125,7 @@ cfdVolumeVisualization::cfdVolumeVisualization( const cfdVolumeVisualization& rh
     _shaderDirectory = rhs._shaderDirectory;
 
 }
-//////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 cfdVolumeVisualization::~cfdVolumeVisualization()
 {
     //not sure if I should call release here or not
@@ -142,18 +145,18 @@ cfdVolumeVisualization::~cfdVolumeVisualization()
         _bbox = 0;
     }
 }
-////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdVolumeVisualization::SetState( osg::State* state )
 {
     _state = state;
 }
-//////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdVolumeVisualization::SetShaderDirectory( std::string shadDir )
 {
     _shaderDirectory = shadDir;
 
 }
-/////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 unsigned int cfdVolumeVisualization::GetCurrentTransientTexture()
 {
     if( _utCbk.valid() )
@@ -162,7 +165,7 @@ unsigned int cfdVolumeVisualization::GetCurrentTransientTexture()
     }
     return 0;
 }
-////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdVolumeVisualization::SetCurrentTransientTexture( unsigned int ct )
 {
     if( _utCbk.valid() )
@@ -170,7 +173,7 @@ void cfdVolumeVisualization::SetCurrentTransientTexture( unsigned int ct )
         _utCbk->SetCurrentFrame( ct );
     }
 }
-//////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdVolumeVisualization::SetPlayMode( VisMode mode )
 {
     _mode = mode;
@@ -195,7 +198,7 @@ void cfdVolumeVisualization::SetPlayMode( VisMode mode )
         std::cout << "cfdVolumeVisualization::SetPlayMode()" << std::endl;
     }
 }
-////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdVolumeVisualization::SetPlayDirection( Direction dir )
 {
     _traverseDirection = dir;
@@ -220,7 +223,7 @@ void cfdVolumeVisualization::SetPlayDirection( Direction dir )
         std::cout << "cfdVolumeVisualization::SetPlayDirection()" << std::endl;
     }
 }
-//////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdVolumeVisualization::Set3DTextureData( osg::Texture3D* texture )
 {
     //not sure if this is needed
@@ -243,7 +246,7 @@ void cfdVolumeVisualization::Set3DTextureData( osg::Texture3D* texture )
         _attachTextureToStateSet( _stateSet.get() );
     }
 }
-////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdVolumeVisualization::SetBoundingBox( float* bbox )
 {
     _vtkBBox = bbox;
@@ -288,7 +291,7 @@ void cfdVolumeVisualization::SetBoundingBox( float* bbox )
     osg::Vec3(maxBBox[0],maxBBox[1],maxBBox[2]));
     */
 }
-//////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdVolumeVisualization::SetTextureManager( cfdTextureManager* tm )
 {
     if( tm->GetDataType( 0 ) == cfdTextureManager::VECTOR )
@@ -337,18 +340,18 @@ void cfdVolumeVisualization::SetTextureManager( cfdTextureManager* tm )
         _utCbk->SetTextureManager( _tm );
     }
 }
-///////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdVolumeVisualization::SetNumberOfSlices( unsigned int nSlices )
 {
     /*_nSlices = nSlices*3;*/
     _slices->SetNumberOfSlices( nSlices );
 }
-///////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdVolumeVisualization::SetSliceAlpha( float alpha )
 {
     _alpha = alpha;
 }
-/////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 osg::ref_ptr<osg::StateSet> cfdVolumeVisualization::GetStateSet()
 {
     if( _stateSet.valid() )
@@ -362,7 +365,7 @@ osg::ref_ptr<osg::StateSet> cfdVolumeVisualization::GetStateSet()
         return 0;
     }
 }
-///////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 osg::ref_ptr<osg::Switch> cfdVolumeVisualization::GetVolumeVisNode()
 {
     if( !_volumeVizNode.valid() )
@@ -371,7 +374,7 @@ osg::ref_ptr<osg::Switch> cfdVolumeVisualization::GetVolumeVisNode()
     }
     return _volumeVizNode;
 }
-/////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdVolumeVisualization::DisableShaders()
 {
     if( _volumeVizNode.valid() )
@@ -379,7 +382,7 @@ void cfdVolumeVisualization::DisableShaders()
         _volumeVizNode->setSingleChildOn( 0 );
     }
 }
-/////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 osg::ref_ptr<osg::Texture3D> cfdVolumeVisualization::GetTextureData()
 {
     if( _texture.valid() )
@@ -393,12 +396,12 @@ osg::ref_ptr<osg::Texture3D> cfdVolumeVisualization::GetTextureData()
         return 0;
     }
 }
-/////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdVolumeVisualization::SetVeboseFlag( bool flag )
 {
     _verbose = flag;
 }
-//////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdVolumeVisualization::_createClipNode()
 {
     if( !_clipNode.valid() )
@@ -407,7 +410,7 @@ void cfdVolumeVisualization::_createClipNode()
         _clipNode->setDataVariance( osg::Object::DYNAMIC );
     }
 }
-//////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdVolumeVisualization::AddClipPlane( ClipPlane direction, double* position )
 {
     //biv -- check the logic here if we add more than one plane in
@@ -427,7 +430,7 @@ void cfdVolumeVisualization::AddClipPlane( ClipPlane direction, double* position
         std::cout << "Invalid osg::ClipNode in cfdVolumeVisualization::AddClipPlane!!" << std::endl;
     }
 }
-//////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdVolumeVisualization::ResetClipPlanes()
 {
     if( _clipNode.valid() )
@@ -460,7 +463,7 @@ void cfdVolumeVisualization::ResetClipPlanes()
         UpdateClipPlanePosition( ZPLANE_MAX, position );
     }
 }
-/////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdVolumeVisualization::RemoveClipPlane( ClipPlane direction )
 {
     if( _clipNode.valid() )
@@ -501,7 +504,7 @@ void cfdVolumeVisualization::RemoveClipPlane( ClipPlane direction )
         plane = 0;
     }
 }
-/////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdVolumeVisualization::UpdateClipPlanePosition( ClipPlane direction,
                                                       double* newPosition )
 {
@@ -555,9 +558,7 @@ void cfdVolumeVisualization::UpdateClipPlanePosition( ClipPlane direction,
     }
     plane = 0;
 }
-
-
-////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdVolumeVisualization::_createStateSet()
 {
     if( _noShaderGroup.valid() )
@@ -595,7 +596,7 @@ void cfdVolumeVisualization::_createStateSet()
             std::cout << "Invalid TexGenNode in cfdVolumeVisualization::_createStateSet!" << std::endl;
     }
 }
-////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdVolumeVisualization::_attachTextureToStateSet( osg::StateSet* ss )
 {
     if( ss )
@@ -631,6 +632,7 @@ void cfdVolumeVisualization::_attachTextureToStateSet( osg::StateSet* ss )
             std::cout << "Invalid state set in cfdVolumeVisualization::GetStateSet!" << std::endl;
     }
 }
+////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////
 //may need to modify this to use the bbox     //
 ////////////////////////////////////////////////
@@ -655,7 +657,7 @@ void cfdVolumeVisualization::_createTexGenNode()
     std::cout<<"Invalid bbox in cfdVolumeVisualization::_createTexGenNode!"<<std::endl;
     }*/
 }
-////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdVolumeVisualization::TranslateCenterBy( float* translate )
 {
     /*if(_vcCbk.valid())
@@ -663,7 +665,7 @@ void cfdVolumeVisualization::TranslateCenterBy( float* translate )
     _vcCbk->Translate(translate);
     }*/
 }
-///////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdVolumeVisualization::_buildSlices()
 {
 
@@ -716,7 +718,7 @@ void cfdVolumeVisualization::_buildSlices()
     //_billboard->setPosition(0,osg::Vec3(_center[0],_center[1],_center[2]));
 
 }
-///////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdVolumeVisualization::_createVolumeSlices()
 {
     std::cout << "Creating Slices" << std::endl;
@@ -726,7 +728,7 @@ void cfdVolumeVisualization::_createVolumeSlices()
     _billboard->addDrawable( _slices.get() );
     //_buildSlices();
 }
-//////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 osg::ref_ptr<osg::Group> cfdVolumeVisualization::GetDecoratorAttachNode()
 {
     if( _decoratorAttachNode.valid() )
@@ -735,7 +737,7 @@ osg::ref_ptr<osg::Group> cfdVolumeVisualization::GetDecoratorAttachNode()
     }
     return 0;
 }
-/////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdVolumeVisualization::CreateNode()
 {
     if( !_isCreated )
@@ -743,7 +745,7 @@ void cfdVolumeVisualization::CreateNode()
         _buildGraph();
     }
 }
-//////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdVolumeVisualization::_buildGraph()
 {
     if( !_tm )
@@ -820,7 +822,7 @@ void cfdVolumeVisualization::_buildGraph()
         _isCreated = false;
     }
 }
-////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 cfdVolumeVisualization&
 cfdVolumeVisualization::operator=( const cfdVolumeVisualization& rhs )
 {
@@ -855,4 +857,4 @@ cfdVolumeVisualization::operator=( const cfdVolumeVisualization& rhs )
     }
     return *this;
 }
-#endif
+////////////////////////////////////////////////////////////////////////////////

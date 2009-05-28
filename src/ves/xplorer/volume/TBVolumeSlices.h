@@ -30,40 +30,42 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
+
 #ifndef TEXTURE_BASED_VOLUME_SLICES_H
 #define TEXTURE_BASED_VOLUME_SLICES_H
-#ifdef _OSG
 
-/*!\file TBVolumeSlices.h
-  Texture-Based Volume Rendering Slices API
-  */
-/*!\class ves::xplorer::volume::TextureBasedVolumeSlices
- * Class defining slices for texture-based volume rendering .
- */
-
+// --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
 
+// --- VR Juggler Includes --- //
 #include <gmtl/Vec.h>
 #include <gmtl/Matrix.h>
+
 #include <gadget/Type/PositionInterface.h>
 //#include <gadget/Type/DigitalInterface.h>
 
+// --- OSG Includes --- //
+#include <osg/ref_ptr>
+#include <osg/Version>
 #include <osg/Drawable>
 
-#include <osg/Version>
 #if ((OSG_VERSION_MAJOR>=1) && (OSG_VERSION_MINOR>2) || (OSG_VERSION_MAJOR>=2))
 #include <osg/RenderInfo>
 #endif
-namespace osg
-{
-class Matrixf;
-}
+
 namespace ves
 {
 namespace xplorer
 {
 namespace volume
 {
+/*!\file TBVolumeSlices.h
+ * Texture-Based Volume Rendering Slices API
+ */
+
+/*!\class ves::xplorer::volume::TextureBasedVolumeSlices
+ * Class defining slices for texture-based volume rendering.
+ */
 class  VE_TEXTURE_BASED_EXPORTS TextureBasedVolumeSlices : public osg::Drawable
 {
 public:
@@ -110,6 +112,7 @@ public:
     // we need to set up the bounding box of the data too, so that the scene graph knows where this
     // objects is, for both positioning the camera at start up, and most importantly for culling.
     virtual osg::BoundingBox computeBound() const;
+
 protected:
     ///Draw a quad along the lookAtVector of the camera at position z
     ///\param zPosition Distance along the lookAtVector to draw the slice
@@ -203,9 +206,10 @@ protected:
     mutable osg::ref_ptr<osg::Vec4Array> _coordTransformedBBox;///<The rotated bbox.
     mutable osg::ref_ptr<osg::Vec4Array> _tcoordBBox;///<The rotated bbox.
     mutable gadget::PositionInterface head;///<vjPosInterface Head Position from Juggler;
+
 };
-}
-}
-}
-#endif //_OSG
+} //end volume
+} //end xplorer
+} //end ves
+
 #endif// TEXTURE_BASED_VOLUME_SLICES_H

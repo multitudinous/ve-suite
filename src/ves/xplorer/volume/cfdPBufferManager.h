@@ -30,17 +30,11 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
+
 #ifndef _BIV_PBUFFER_MANAGER_H_
 #define _BIV_PBUFFER_MANAGER_H_
-/*!\file cfdPBufferManager.h
-* cfdPBufferManager API
-*/
 
-/*!\class ves::xplorer::volume::cfdPBufferManager
-*
-*/
 #ifdef _PBUFFER
-#ifdef _OSG
 
 #include <osg/GL>
 
@@ -64,6 +58,13 @@ namespace xplorer
 {
 namespace volume
 {
+/*!\file cfdPBufferManager.h
+ * cfdPBufferManager API
+ */
+
+/*!\class ves::xplorer::volume::cfdPBufferManager
+ *
+ */
 class VE_TEXTURE_BASED_EXPORTS cfdPBufferManager
 {
 public:
@@ -153,10 +154,12 @@ protected:
 
     int _h;
     int _w;
+
 };
-}
-}
-}
-#endif
-#endif
+} //end volume
+} //end xplorer
+} //end ves
+
+#endif //_PBUFFER
+
 #endif //_BIV_PBUFFER_MANAGER_H_

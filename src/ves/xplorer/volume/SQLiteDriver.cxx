@@ -30,13 +30,13 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> **************/
+
+// --- VE-Suite Includes --- //
 #include <ves/xplorer/volume/SQLiteDriver.h>
 #include <ves/xplorer/volume/Database.h>
 
+// --- SQLite Includes --- //
 #include <sqlite3.h>
-
-#include <string>
-#include <vector>
 
 namespace VE_TextureBased
 {

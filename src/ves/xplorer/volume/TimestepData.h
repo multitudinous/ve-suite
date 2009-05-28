@@ -30,17 +30,22 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> **************/
+
 #ifndef JPG_TIMESTEP_DATA_H_
 #define JPG_TIMESTEP_DATA_H_
+
+// --- VE-Suite Includes --- //
+#include <ves/VEConfig.h>
 
 #include <ves/xplorer/volume/ScalarData.h>
 #include <ves/xplorer/volume/VectorData.h>
 
+// --- VR Juggler Includes --- //
 #include <gmtl/Vec.h>
 
+// --- C/C++ Includes --- //
 #include <limits>
 
-#include <ves/VEConfig.h>
 namespace ves
 {
 namespace xplorer
@@ -67,7 +72,8 @@ struct VE_TEXTURE_BASED_EXPORTS TimestepData
     ScalarDataMap                                   mScalarData;
 
 };
-}
-}
-}
-#endif
+} //end volume
+} //end xplorer
+} //end ves
+
+#endif //JPG_TIMESTEP_DATA_H_
