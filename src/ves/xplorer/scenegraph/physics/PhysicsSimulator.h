@@ -50,6 +50,7 @@ namespace osg
 {
 class Transform;
 class Node;
+class Group;
 }
 
 // --- Bullet Includes --- //
@@ -218,7 +219,9 @@ private:
     
     ///THe debug drawer for the bullet physics simulator
     osgBullet::GLDebugDrawer* m_debugDrawer;
-
+    ///A group node to better control when debug info is displayed for
+    ///the osgBullet::GLDebugDrawer
+    osg::ref_ptr< osg::Group > m_debugDrawerGroup;
 };
 }
 }

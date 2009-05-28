@@ -243,9 +243,13 @@ void PhysicsSimulator::InitializePhysicsSimulation()
     //mDynamicsWorld->getDispatchInfo().m_enableSPU = true;
     mDynamicsWorld->setGravity( btVector3( 0, 0, -32.174 ) );
 
+    m_debugDrawerGroup = new osg::Group();
+    m_debugDrawerGroup->setName( "osgBullet::DebugDrawer Root" );
+    SceneManager::instance()->GetRootNode()->
+        addChild( m_debugDrawerGroup.get() );
     m_debugDrawer = 
-        new osgBullet::GLDebugDrawer( SceneManager::instance()->GetRootNode() );
-
+        new osgBullet::GLDebugDrawer( m_debugDrawerGroup.get() );
+    m_debugDrawerGroup->setNodeMask( 0 );
     //CreateGroundPlane();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -656,6 +660,7 @@ void PhysicsSimulator::SetDebuggingOn( bool toggle )
     
     if( mDebugBulletFlag )
     {
+        m_debugDrawerGroup->setNodeMask( 1 );
         mDynamicsWorld->setDebugDrawer( m_debugDrawer );
         //mDynamicsWorld->getDebugDrawer()->
         //    setDebugMode( btIDebugDraw::DBG_MAX_DEBUG_DRAW_MODE );
@@ -664,6 +669,7 @@ void PhysicsSimulator::SetDebuggingOn( bool toggle )
     {
         mDynamicsWorld->setDebugDrawer( 0 );
         m_debugDrawer->BeginDraw();
+        m_debugDrawerGroup->setNodeMask( 0 );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
