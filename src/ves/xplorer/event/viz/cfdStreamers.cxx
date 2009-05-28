@@ -63,6 +63,7 @@
 #include <vtkCellArray.h>
 #include <vtkCleanPolyData.h>
 #include <vtkPointData.h>
+#include <vtkPolyDataAlgorithm.h>
 
 #include <ves/xplorer/Debug.h>
 
@@ -166,6 +167,16 @@ void cfdStreamers::Update()
     }
 
     streamTracer->SetSource( seedPoints );
+    /*vtkPolyDataAlgorithm* pdFilter = vtkPolyDataAlgorithm::New();
+    pdFilter->SetInput( seedPoints );
+    streamTracer->SetSourceConnection( pdFilter->GetOutputPort() );
+    pdFilter->Delete();*/
+    /*vtkCleanPolyData* pdFilter = vtkCleanPolyData::New();
+    pdFilter->PointMergingOn();
+    pdFilter->SetInput( seedPoints );
+    streamTracer->SetSourceConnection( pdFilter->GetOutputPort() );
+    pdFilter->Delete();
+     */
     streamTracer->SetIntegrator( integ );
     streamTracer->SetInputArrayToProcess( 0, 0, 0,
        vtkDataObject::FIELD_ASSOCIATION_POINTS, 

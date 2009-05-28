@@ -153,11 +153,6 @@ void cfdAnimatedStreamlineCone::Update( void )
             points2->GetPoint( 0, x2 );
             if( (x1[ 0 ] == x2[ 0 ]) && (x1[ 1 ] == x2[ 1 ]) && (x1[ 2 ] == x2[ 2 ]) )
             {
-                /*std::cout << "|\t\tx1[ " << 0 << " ] = " << x1[ 0 ] << " : "
-                    << x1[ 1 ] << " : " << x1[ 2 ] << " " << cellId << std::endl;
-                std::cout << "|\t\tx2[ " << 0 << " ] = " << x2[ 0 ] << " : "
-                    << x2[ 1 ] << " : " << x2[ 2 ] << " " << cellId2 << std::endl;
-                std::cout << " Found a match " << cellId << " " << cellId2 << std::endl;*/
                 m_streamlines.push_back( std::make_pair< vtkIdType, vtkIdType >( cellId, cellId2 ) );
                 foundmatch = true;
                 npts += points2->GetNumberOfPoints();
@@ -192,41 +187,17 @@ void cfdAnimatedStreamlineCone::Update( void )
                 continue;
             }
             
-            vtkIdType globalPointId1 = polyData->FindPoint( x1 );
-            points->GetPoint( 1, x2 );
-            //vtkIdType globalPointId2 = polyData->FindPoint( x2 );
+            bool isBackwards = IsStreamlineBackwards( cellId );
 
-            double xComp = x2[ 0 ] - x1[ 0 ];
-            double yComp = x2[ 1 ] - x1[ 1 ];
-            double zComp = x2[ 2 ] - x1[ 2 ];
-
-            polyData->GetPointData()->GetVectors( GetActiveDataSet()->GetActiveVectorName().c_str() )->GetTuple( globalPointId1, x1 );
-            //polyData->GetPointData()->GetVectors( GetActiveDataSet()->GetActiveVectorName().c_str() )->GetTuple( globalPointId2, x2 );
-            double diffX = xComp - x1[ 0 ];
-            double diffY = yComp - x1[ 1 ];
-            double diffZ = zComp - x1[ 2 ];
-            std::cout << diffX << " " << diffY << " " << diffZ << std::endl;
-
-            /*double floorX = vtkMath::Floor( diffX );
-            double floorY = vtkMath::Floor( diffY );
-            double floorZ = vtkMath::Floor( diffZ );
-            std::cout << floorX << " " << floorY << " " << floorZ << std::endl;
-             */
-             bool isBackwards = false;
-             if( (diffX < 0) || (diffY < 0) || (diffZ < 0) )
-             {
-                 isBackwards = true;
-             }
-            
             if( isBackwards )
             {
                 //Is a backward integrated line
-                //std::cout << " Use backward" << std::endl;
+                std::cout << " Use backward" << std::endl;
                 m_streamlines.push_back( std::make_pair< vtkIdType, vtkIdType >( -1, cellId ) );
             }
             else
             {
-                //std::cout << " Use forward" << std::endl;
+                std::cout << " Use forward" << std::endl;
                 m_streamlines.push_back( std::make_pair< vtkIdType, vtkIdType >( cellId, -1 ) );
             }
         }
@@ -445,5 +416,55 @@ void cfdAnimatedStreamlineCone::UpdateCommand()
 {
     cfdObjects::UpdateCommand();
     std::cerr << "doing nothing in cfdAnimatedStreamlineCone::UpdateCommand()" << std::endl;
+}
+////////////////////////////////////////////////////////////////////////////////
+bool cfdAnimatedStreamlineCone::IsStreamlineBackwards( vtkIdType cellId )
+{
+    double x2[ 3 ];
+    double x1[ 3 ];
+    vtkPoints* points = this->polyData->GetCell( cellId )->GetPoints();
+    points->GetPoint( 0, x1 );
+    vtkIdType globalPointId1 = polyData->FindPoint( x1 );
+    points->GetPoint( 1, x2 );
+    //vtkIdType globalPointId2 = polyData->FindPoint( x2 );
+    
+    //Create a vector along the streamline from point 0 to point 1
+    double xComp = x2[ 0 ] - x1[ 0 ];
+    double yComp = x2[ 1 ] - x1[ 1 ];
+    double zComp = x2[ 2 ] - x1[ 2 ];
+    
+    polyData->GetPointData()->GetVectors( GetActiveDataSet()->GetActiveVectorName().c_str() )->GetTuple( globalPointId1, x1 );
+    //polyData->GetPointData()->GetVectors( GetActiveDataSet()->GetActiveVectorName().c_str() )->GetTuple( globalPointId2, x2 );
+    /*double diffX = xComp - x1[ 0 ];
+    double diffY = yComp - x1[ 1 ];
+    double diffZ = zComp - x1[ 2 ];
+    std::cout << diffX << " " << diffY << " " << diffZ << std::endl;
+    std::cout << xComp << " " << yComp << " " << zComp << std::endl;
+    std::cout << x1[ 0 ] << " " << x1[ 1 ] << " " << x1[ 2 ] << std::endl;
+     */
+     
+    bool isBackwards = true;
+    /*if( (((x1[ 0 ] > 0) && (xComp > 0)) || ((x1[ 0 ] < 0) && (xComp < 0))) &&
+       (((x1[ 1 ] > 0) && (yComp > 0)) || ((x1[ 1 ] < 0) && (yComp < 0))) &&
+       (((x1[ 2 ] > 0) && (zComp > 0)) || ((x1[ 2 ] < 0) && (zComp < 0))) )
+    {
+        isBackwards = false;
+    }*/
+    if( ((x1[ 0 ] * xComp) >= 0) && ((x1[ 1 ] * yComp) >= 0) && ((x1[ 2 ] * zComp) >= 0) )
+    {
+        isBackwards = false;
+    }
+    /*double floorX = vtkMath::Floor( diffX );
+     double floorY = vtkMath::Floor( diffY );
+     double floorZ = vtkMath::Floor( diffZ );
+     std::cout << floorX << " " << floorY << " " << floorZ << std::endl;
+     */
+    /*bool isBackwards = false;
+    if( (diffX < 0) || (diffY < 0) || (diffZ < 0) )
+    {
+        isBackwards = true;
+    }*/
+
+    return isBackwards;
 }
 ////////////////////////////////////////////////////////////////////////////////

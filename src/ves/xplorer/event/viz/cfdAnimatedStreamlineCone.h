@@ -76,6 +76,10 @@ public:
     virtual void Update( void );
 
 private:
+    ///Determine is a streamline is going backwards
+    ///\return Return true if streamline is going backwards
+    bool IsStreamlineBackwards( vtkIdType cellId );
+    
     vtkPolyDataMapper *mapper;///<Mapper for vtk polydata
     vtkPolyData *polyData;///<polyData
     vtkPolyData *polydata;///<polydata
