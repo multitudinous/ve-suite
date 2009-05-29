@@ -262,39 +262,50 @@ void KeyboardMouse::SetStartEndPoint(
                     0.5 * heightViewportInPixels + yOriginViewportInPixels;
                 windowMatrix.mData[ 14 ] = 0.5;
 
+                std::cout << "windowMatrix: " << std::endl << windowMatrix << std::endl << std::endl;
+
                 //Calculate the projecton matrix
                 const vrj::Frustum& frustum = project->getFrustum();
-                const double& left = frustum[ vrj::Frustum::VJ_LEFT ];
-                const double& right = frustum[ vrj::Frustum::VJ_RIGHT ];
-                const double& bottom = frustum[ vrj::Frustum::VJ_BOTTOM ];
-                const double& top = frustum[ vrj::Frustum::VJ_TOP ];
+                //const double& left = frustum[ vrj::Frustum::VJ_LEFT ];
+                //const double& right = frustum[ vrj::Frustum::VJ_RIGHT ];
+                //const double& bottom = frustum[ vrj::Frustum::VJ_BOTTOM ];
+                //const double& top = frustum[ vrj::Frustum::VJ_TOP ];
+                //const double& _near = frustum[ vrj::Frustum::VJ_NEAR ];
+                //const double& _far = frustum[ vrj::Frustum::VJ_FAR ];
 
                 gmtl::Matrix44d projectionMatrix;
                 projectionMatrix.mState =
                     gmtl::Matrix44d::AFFINE | gmtl::Matrix44d::NON_UNISCALE;
-                projectionMatrix.mData[ 0 ]  =
-                    ( 2.0 * mNearFrustum ) / ( right - left );
-                projectionMatrix.mData[ 2 ]  =
-                    ( right + left ) / ( right - left );
-                projectionMatrix.mData[ 5 ]  =
-                    ( 2.0 * mNearFrustum ) / ( top - bottom );
-                projectionMatrix.mData[ 6 ]  =
-                    ( top + bottom ) / ( top - bottom );
+                projectionMatrix.mData[  0 ] =
+                    ( 2.0 * mNearFrustum ) / ( mRightFrustum - mLeftFrustum );
+                projectionMatrix.mData[  5 ] =
+                    ( 2.0 * mNearFrustum ) / ( mTopFrustum - mBottomFrustum );
+                projectionMatrix.mData[  8 ] =
+                    ( mRightFrustum + mLeftFrustum ) / ( mRightFrustum - mLeftFrustum );
+                projectionMatrix.mData[  9 ] =
+                    ( mTopFrustum + mBottomFrustum ) / ( mTopFrustum - mBottomFrustum );
                 projectionMatrix.mData[ 10 ] =
                     -1.0 * ( mFarFrustum + mNearFrustum ) /
                            ( mFarFrustum - mNearFrustum );
-                projectionMatrix.mData[ 11 ] =
+                projectionMatrix.mData[ 11 ] = -1.0;
+                projectionMatrix.mData[ 14 ] =
                     ( -2.0 * mFarFrustum * mNearFrustum ) /
                            ( mFarFrustum - mNearFrustum );
-                projectionMatrix.mData[ 14 ] = -1.0;
+                projectionMatrix.mData[ 15 ] =  0.0;
+
+                std::cout << "projectionMatrix: " << std::endl << projectionMatrix << std::endl << std::endl;
 
                 //Calculate the view matrix
-                const gmtl::Matrix44f& viewMatrix = project->getViewMatrix();
+                gmtl::Matrix44d viewMatrix =
+                    gmtl::convertTo< double >( project->getViewMatrix() );
 
-                //Transform into z up land
+                //Transform view matrix into z up land
                 gmtl::Vec3d x_axis( 1.0, 0.0, 0.0 );
                 gmtl::Matrix44d zUp = gmtl::makeRot< gmtl::Matrix44d >( 
                     gmtl::AxisAngled( -gmtl::Math::PI_OVER_2, x_axis ) );
+                viewMatrix *= zUp;
+                
+                std::cout << "viewMatrix: " << std::endl << viewMatrix << std::endl << std::endl;
 
                 //Calculate the MVPW matrix
                 gmtl::Matrix44d MVPW =
@@ -303,26 +314,34 @@ void KeyboardMouse::SetStartEndPoint(
                     //mul by inverse - clip coordinates
                     projectionMatrix *
                     //mul by inverse - eye coordinates
-                    gmtl::convertTo< double >( viewMatrix ) * zUp *
+                    viewMatrix *
                     //mul by inverse - object coordinates
                     vxs::SceneManager::instance()->GetActiveNavSwitchNode()->GetMat();
 
-                //Now get the inverse
-                osg::Matrix inverseMVPW( gmtl::invert( MVPW ).getData() );
-                osg::Vec3 near_point = osg::Vec3( mX, mY, 0.0 ) * inverseMVPW;
-                osg::Vec3 far_point = osg::Vec3( mX, mY, 1.0 ) * inverseMVPW;
+                std::cout << "MVPW: " << std::endl << MVPW << std::endl << std::endl;
+
+                //Calculate the inverse MVPW matrix
+                gmtl::Matrix44d inverseMVPW;
+                gmtl::invertFull( inverseMVPW, MVPW );
+
+                std::cout << "inverseMVPW: " << std::endl << inverseMVPW << std::endl << std::endl;
+
+                //Calculate the start & end points for the line segment
+                osg::Matrix osgInverseMVPW( inverseMVPW.getData() );
+                startPoint = osg::Vec3d( mX, mY, 0.0 ) * osgInverseMVPW;
+                endPoint = osg::Vec3d( mX, mY, 1.0 ) * osgInverseMVPW;
 
                 ///*
-                std::cout << "near_point: "
-                          << "( " << near_point.x()
-                          << ", " << near_point.y()
-                          << ", " << near_point.z()
+                std::cout << "startPoint: "
+                          << "( " << startPoint.x()
+                          << ", " << startPoint.y()
+                          << ", " << startPoint.z()
                           << " )" << std::endl;
 
-                std::cout << "far_point: "
-                          << "( " << far_point.x()
-                          << ", " << far_point.y()
-                          << ", " << far_point.z()
+                std::cout << "endPoint: "
+                          << "( " << endPoint.x()
+                          << ", " << endPoint.y()
+                          << ", " << endPoint.z()
                           << " )" << std::endl;
                 //*/
 
@@ -330,8 +349,7 @@ void KeyboardMouse::SetStartEndPoint(
             }
         }
     }
-#endif //TRANSFORM_MANIPULATOR
-
+#elif
     //Meters to feet conversion
     double m2ft = 3.2808399;
 
@@ -412,6 +430,7 @@ void KeyboardMouse::SetStartEndPoint(
               << ", " << endPoint.z()
               << " )" << std::endl;
     */
+#endif //TRANSFORM_MANIPULATOR
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::DrawLine( osg::Vec3d startPoint, osg::Vec3d endPoint )
