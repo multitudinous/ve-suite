@@ -76,6 +76,14 @@
 #include <gmtl/Generate.h>
 #include <gmtl/Misc/MatrixConvert.h>
 
+#ifdef TRANSFORM_MANIPULATOR
+#include <vrj/Display/Display.h>
+#include <vrj/Display/Viewport.h>
+#include <vrj/Display/Frustum.h>
+#include <vrj/Display/Projection.h>
+#include <vrj/Display/DisplayManager.h>
+#endif //TRANSFORM_MANIPULATOR
+
 // --- OSG Includes --- //
 #include <osg/Matrix>
 #include <osg/Group>
@@ -166,6 +174,164 @@ void KeyboardMouse::UpdateSelection()
 void KeyboardMouse::SetStartEndPoint(
     osg::Vec3d& startPoint, osg::Vec3d& endPoint )
 {
+#ifdef TRANSFORM_MANIPULATOR
+    //Get the displays
+    const std::vector< vrj::DisplayPtr >& displayVector =
+        vrj::DisplayManager::instance()->getActiveDisplays();
+
+    //Iterate over the displays
+    std::vector< vrj::DisplayPtr >::const_iterator itr = displayVector.begin();
+    for( itr; itr != displayVector.end(); ++itr )
+    {
+        //Get actual dimensions of display
+        int xOriginDisplay, yOriginDisplay, widthDisplay, heightDisplay;
+        (*itr)->getOriginAndSize(
+            xOriginDisplay, yOriginDisplay, widthDisplay, heightDisplay );
+
+        //Iterate over the viewports
+        for( size_t i = 0; i < (*itr)->getNumViewports(); ++i )
+        {
+#if __VJ_version >= 2003000
+            vrj::ViewportPtr viewport = (*itr)->getViewport( i );
+#else
+            vrj::Viewport* viewport = (*itr)->getViewport( i );
+#endif
+            //Get normalized dimensions of viewport
+            float xOriginViewport, yOriginViewport, widthViewport, heightViewport;
+            viewport->getOriginAndSize(
+                xOriginViewport, yOriginViewport,
+                widthViewport, heightViewport );
+
+            //Get dimensions of viewport in pixels
+            const size_t xOriginViewportInPixels =
+                static_cast< size_t >( xOriginViewport * widthDisplay );
+            const size_t yOriginViewportInPixels =
+                static_cast< size_t >( yOriginViewport * heightDisplay );
+            const size_t widthViewportInPixels =
+                static_cast< size_t >( widthViewport * widthDisplay );
+            const size_t heightViewportInPixels =
+                static_cast< size_t >( heightViewport * heightDisplay );
+
+            //Check if mouse is inside viewport
+            if( ( mX >= xOriginViewportInPixels ) &&
+                ( mY >= yOriginViewportInPixels ) &&
+                ( mX <= xOriginViewportInPixels + widthViewportInPixels ) &&
+                ( mY <= yOriginViewportInPixels + heightViewportInPixels ) )
+            {
+                //Make the coordinates relative to viewport
+                mX -= xOriginViewportInPixels;
+                mY -= yOriginViewportInPixels;
+
+                //Convert relative screen coords
+                //mCurrPos.first = 
+                    //static_cast< double >( mX ) /
+                    //static_cast< double >( widthViewportInPixels );
+                //mCurrPos.second =
+                    //static_cast< double >( mY ) /
+                    //static_cast< double >( heightViewportInPixels );
+                
+                //The view for the active viewport
+                vrj::Viewport::View view = viewport->getView();
+#if __VJ_version >= 2003000
+                vrj::ProjectionPtr project;
+#else
+                vrj::Projection* project;
+#endif
+                if( ( vrj::Viewport::STEREO == view ) ||
+                    ( vrj::Viewport::LEFT_EYE == view ) )
+                {
+                    project = viewport->getLeftProj();
+                }
+
+                if( ( vrj::Viewport::STEREO == view ) ||
+                    ( vrj::Viewport::RIGHT_EYE == view ) )
+                {
+                    project = viewport->getRightProj();
+                }
+
+                //Calculate the window matrix
+                gmtl::Matrix44d windowMatrix;
+                windowMatrix.mState =
+                    gmtl::Matrix44d::AFFINE | gmtl::Matrix44d::NON_UNISCALE;
+                windowMatrix.mData[  0 ] = 0.5 * widthViewportInPixels;
+                windowMatrix.mData[  5 ] = 0.5 * heightViewportInPixels;
+                windowMatrix.mData[ 10 ] = 0.5;
+                windowMatrix.mData[ 12 ] =
+                    0.5 * widthViewportInPixels + xOriginViewportInPixels;
+                windowMatrix.mData[ 13 ] =
+                    0.5 * heightViewportInPixels + yOriginViewportInPixels;
+                windowMatrix.mData[ 14 ] = 0.5;
+
+                //Calculate the projecton matrix
+                const vrj::Frustum& frustum = project->getFrustum();
+                const double& left = frustum[ vrj::Frustum::VJ_LEFT ];
+                const double& right = frustum[ vrj::Frustum::VJ_RIGHT ];
+                const double& bottom = frustum[ vrj::Frustum::VJ_BOTTOM ];
+                const double& top = frustum[ vrj::Frustum::VJ_TOP ];
+
+                gmtl::Matrix44d projectionMatrix;
+                projectionMatrix.mState =
+                    gmtl::Matrix44d::AFFINE | gmtl::Matrix44d::NON_UNISCALE;
+                projectionMatrix.mData[ 0 ]  =
+                    ( 2.0 * mNearFrustum ) / ( right - left );
+                projectionMatrix.mData[ 2 ]  =
+                    ( right + left ) / ( right - left );
+                projectionMatrix.mData[ 5 ]  =
+                    ( 2.0 * mNearFrustum ) / ( top - bottom );
+                projectionMatrix.mData[ 6 ]  =
+                    ( top + bottom ) / ( top - bottom );
+                projectionMatrix.mData[ 10 ] =
+                    -1.0 * ( mFarFrustum + mNearFrustum ) /
+                           ( mFarFrustum - mNearFrustum );
+                projectionMatrix.mData[ 11 ] =
+                    ( -2.0 * mFarFrustum * mNearFrustum ) /
+                           ( mFarFrustum - mNearFrustum );
+                projectionMatrix.mData[ 14 ] = -1.0;
+
+                //Calculate the view matrix
+                const gmtl::Matrix44f& viewMatrix = project->getViewMatrix();
+
+                //Transform into z up land
+                gmtl::Vec3d x_axis( 1.0, 0.0, 0.0 );
+                gmtl::Matrix44d zUp = gmtl::makeRot< gmtl::Matrix44d >( 
+                    gmtl::AxisAngled( -gmtl::Math::PI_OVER_2, x_axis ) );
+
+                //Calculate the MVPW matrix
+                gmtl::Matrix44d MVPW =
+                    //mul by inverse - normalized device coordinates( -1 to 1 )
+                    windowMatrix *
+                    //mul by inverse - clip coordinates
+                    projectionMatrix *
+                    //mul by inverse - eye coordinates
+                    gmtl::convertTo< double >( viewMatrix ) * zUp *
+                    //mul by inverse - object coordinates
+                    vxs::SceneManager::instance()->GetActiveNavSwitchNode()->GetMat();
+
+                //Now get the inverse
+                osg::Matrix inverseMVPW( gmtl::invert( MVPW ).getData() );
+                osg::Vec3 near_point = osg::Vec3( mX, mY, 0.0 ) * inverseMVPW;
+                osg::Vec3 far_point = osg::Vec3( mX, mY, 1.0 ) * inverseMVPW;
+
+                ///*
+                std::cout << "near_point: "
+                          << "( " << near_point.x()
+                          << ", " << near_point.y()
+                          << ", " << near_point.z()
+                          << " )" << std::endl;
+
+                std::cout << "far_point: "
+                          << "( " << far_point.x()
+                          << ", " << far_point.y()
+                          << ", " << far_point.z()
+                          << " )" << std::endl;
+                //*/
+
+                break;
+            }
+        }
+    }
+#endif //TRANSFORM_MANIPULATOR
+
     //Meters to feet conversion
     double m2ft = 3.2808399;
 
@@ -183,14 +349,6 @@ void KeyboardMouse::SetStartEndPoint(
             jugglerHeadPoint.mData[ 0 ] - ( 0.0345 * m2ft ),
            -jugglerHeadPoint.mData[ 2 ],
             jugglerHeadPoint.mData[ 1 ] );
-
-        /*
-        std::cout << "startPoint: "
-                  << "( " << startPoint.x()
-                  << ", " << startPoint.y()
-                  << ", " << startPoint.z()
-                  << " )" << std::endl;
-        */
     }
 
     //Set the end point
@@ -230,14 +388,6 @@ void KeyboardMouse::SetStartEndPoint(
             startPoint.x() + ( vecNear.x() * distance ),
             mFarFrustum,
             startPoint.z() + ( vecNear.z() * distance ) );
-
-        /*
-        std::cout << "endPoint: "
-                  << "( " << endPoint.x()
-                  << ", " << endPoint.y()
-                  << ", " << endPoint.z()
-                  << " )" << std::endl;
-        */
     }
 
     //Need to negate the the camera transform that is multiplied into the view
@@ -248,6 +398,20 @@ void KeyboardMouse::SetStartEndPoint(
         startPoint = startPoint * inverseCameraTransform;
         endPoint = endPoint * inverseCameraTransform;
     }
+
+    /*
+    std::cout << "startPoint: "
+              << "( " << startPoint.x()
+              << ", " << startPoint.y()
+              << ", " << startPoint.z()
+              << " )" << std::endl;
+
+    std::cout << "endPoint: "
+              << "( " << endPoint.x()
+              << ", " << endPoint.y()
+              << ", " << endPoint.z()
+              << " )" << std::endl;
+    */
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::DrawLine( osg::Vec3d startPoint, osg::Vec3d endPoint )
