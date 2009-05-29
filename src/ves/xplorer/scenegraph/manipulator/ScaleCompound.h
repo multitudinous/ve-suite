@@ -74,6 +74,12 @@ public:
     ///
     META_Node( ves::xplorer::scenegraph::manipulator, ScaleCompound );
 
+    ///
+    virtual void ComboForm();
+
+    ///
+    virtual void DefaultForm();
+
 protected:
     ///Destructor
     virtual ~ScaleCompound();
@@ -82,6 +88,9 @@ protected:
     virtual void SetupDefaultGeometry();
 
 private:
+    ///
+    osg::Vec3 m_boxExplodeVector;
+
     ///
     osg::ref_ptr< ScaleAxis > m_xScaleAxis;
     

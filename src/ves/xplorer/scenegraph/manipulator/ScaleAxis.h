@@ -40,7 +40,13 @@
 #include <ves/xplorer/scenegraph/manipulator/Dragger.h>
 
 // --- OSG Includes --- //
+#include <osg/ref_ptr>
 
+namespace osg
+{
+class Box;
+class Geometry;
+}
 
 namespace ves
 {
@@ -71,6 +77,18 @@ public:
     ///
     META_Node( ves::xplorer::scenegraph::manipulator, ScaleAxis );
 
+    ///
+    osg::Box* const GetBox() const;
+
+    ///
+    osg::Vec3Array* const GetLineVertices() const;
+
+    ///
+    osg::Geometry* const GetLineGeometry() const;
+
+    ///
+    virtual void UseColor( ColorTag::Enum colorTag );
+
 protected:
     ///
     virtual ~ScaleAxis();
@@ -79,7 +97,20 @@ protected:
     virtual void SetupDefaultGeometry();
 
 private:
+    ///
+    osg::Vec4 m_defaultAxisColor;
 
+    ///
+    osg::ref_ptr< osg::Box > m_box;
+
+    ///
+    osg::ref_ptr< osg::Vec3Array > m_lineVertices;
+
+    ///
+    osg::ref_ptr< osg::Geometry > m_lineGeometry;
+
+    ///
+    osg::ref_ptr< osg::Uniform > m_axisColor;
 
 };
 } //end manipulator

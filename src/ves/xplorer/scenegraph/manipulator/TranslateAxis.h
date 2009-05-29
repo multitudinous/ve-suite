@@ -40,7 +40,13 @@
 #include <ves/xplorer/scenegraph/manipulator/Dragger.h>
 
 // --- OSG Includes --- //
+#include <osg/ref_ptr>
 
+namespace osg
+{
+class Geode;
+class Cone;
+}
 
 namespace ves
 {
@@ -71,6 +77,12 @@ public:
     ///
     META_Node( ves::xplorer::scenegraph::manipulator, TranslateAxis );
 
+    ///
+    osg::Geode* const GetLineAndCylinderGeode() const;
+
+    ///
+    osg::Cone* const GetCone() const;
+
 protected:
     ///
     virtual ~TranslateAxis();
@@ -79,7 +91,11 @@ protected:
     virtual void SetupDefaultGeometry();
 
 private:
+    ///
+    osg::ref_ptr< osg::Geode > m_lineAndCylinderGeode;
 
+    ///
+    osg::ref_ptr< osg::Cone > m_cone;
 
 };
 } //end manipulator

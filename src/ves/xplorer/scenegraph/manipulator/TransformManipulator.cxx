@@ -76,6 +76,8 @@ void TransformManipulator::SetupDefaultDraggers()
         new manipulator::TranslateCompound();
     addChild( translateCompound.get() );
 
+    translateCompound->ComboForm();
+
     osg::ref_ptr< manipulator::RotateCompound > rotateCompound =
         new manipulator::RotateCompound();
     addChild( rotateCompound.get() );
@@ -83,5 +85,7 @@ void TransformManipulator::SetupDefaultDraggers()
     osg::ref_ptr< manipulator::ScaleCompound > scaleCompound =
         new manipulator::ScaleCompound();
     addChild( scaleCompound.get() );
+
+    scaleCompound->ComboForm();
 }
 ////////////////////////////////////////////////////////////////////////////////

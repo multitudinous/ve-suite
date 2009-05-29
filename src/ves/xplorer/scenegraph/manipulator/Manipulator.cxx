@@ -79,7 +79,7 @@ bool Manipulator::addChild( Dragger* child )
 ////////////////////////////////////////////////////////////////////////////////
 Dragger* Manipulator::GetChild( unsigned int i )
 {
-    return dynamic_cast< Dragger* >( osg::MatrixTransform::getChild( i ) );
+    return static_cast< Dragger* >( osg::MatrixTransform::getChild( i ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 Dragger* Manipulator::Handle( Event::Enum event, osg::NodePath::iterator npItr )

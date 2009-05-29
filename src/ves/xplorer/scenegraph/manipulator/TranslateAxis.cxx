@@ -46,7 +46,9 @@ using namespace ves::xplorer::scenegraph::manipulator;
 ////////////////////////////////////////////////////////////////////////////////
 TranslateAxis::TranslateAxis()
     :
-    Dragger()
+    Dragger(),
+    m_lineAndCylinderGeode( NULL ),
+    m_cone( NULL )
 {
     SetupDefaultGeometry();
 }
@@ -54,7 +56,9 @@ TranslateAxis::TranslateAxis()
 TranslateAxis::TranslateAxis(
     const TranslateAxis& translateAxis, const osg::CopyOp& copyop )
     :
-    Dragger( translateAxis, copyop )
+    Dragger( translateAxis, copyop ),
+    m_lineAndCylinderGeode( translateAxis.m_lineAndCylinderGeode.get() ),
+    m_cone( translateAxis.m_cone.get() )
 {
     ;
 }
@@ -64,6 +68,16 @@ TranslateAxis::~TranslateAxis()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
+osg::Geode* const TranslateAxis::GetLineAndCylinderGeode() const
+{
+    return m_lineAndCylinderGeode.get();
+}
+////////////////////////////////////////////////////////////////////////////////
+osg::Cone* const TranslateAxis::GetCone() const
+{
+    return m_cone.get();
+}
+////////////////////////////////////////////////////////////////////////////////
 void TranslateAxis::SetupDefaultGeometry()
 {
     double cylinderRadius = 0.025;
@@ -71,8 +85,11 @@ void TranslateAxis::SetupDefaultGeometry()
     double coneHeight = 0.2;
     osg::Vec3 coneCenter( coneHeight * 0.25, 0.0, 0.0 );
 
-    //The geode to add the geometry to
-    osg::ref_ptr< osg::Geode > geode = new osg::Geode();
+    //The geode to add the line and cylinder geometry to
+    m_lineAndCylinderGeode = new osg::Geode();
+
+    //The geode to add the cone geometry to
+    osg::ref_ptr< osg::Geode > coneGeode = new osg::Geode();
 
     //The unit axis
     osg::ref_ptr< osg::Vec3Array > vertices = new osg::Vec3Array();
@@ -92,7 +109,7 @@ void TranslateAxis::SetupDefaultGeometry()
         geometry->addPrimitiveSet(
             new osg::DrawArrays( osg::PrimitiveSet::LINES, 0, 2 ) );
 
-        geode->addDrawable( geometry.get() );
+        m_lineAndCylinderGeode->addDrawable( geometry.get() );
 
         //Set StateSet
         osg::ref_ptr< osg::StateSet > stateSet =
@@ -116,14 +133,13 @@ void TranslateAxis::SetupDefaultGeometry()
     //Create a positive cone
     {
         (*vertices)[ 1 ].x() -= coneHeight;
-        osg::ref_ptr< osg::Cone > cone =
-            new osg::Cone(
-                (*vertices)[ 1 ] + coneCenter, coneRadius, coneHeight );
-        cone->setRotation( rotation );
+        m_cone = new osg::Cone(
+            (*vertices)[ 1 ] + coneCenter, coneRadius, coneHeight );
+        m_cone->setRotation( rotation );
         osg::ref_ptr< osg::ShapeDrawable > shapeDrawable =
-            new osg::ShapeDrawable( cone.get() );
+            new osg::ShapeDrawable( m_cone.get() );
 
-        geode->addDrawable( shapeDrawable.get() );
+        coneGeode->addDrawable( shapeDrawable.get() );
 
         //Set StateSet
         osg::ref_ptr< osg::StateSet > stateSet =
@@ -146,12 +162,16 @@ void TranslateAxis::SetupDefaultGeometry()
         cylinder->setRotation( rotation );
         osg::ref_ptr< osg::ShapeDrawable > shapeDrawable =
             new osg::ShapeDrawable( cylinder.get() );
-        SetDrawableToAlwaysCull( *shapeDrawable.get() );
 
-        geode->addDrawable( shapeDrawable.get() );
+        SetDrawableToAlwaysCull( *shapeDrawable.get() );
+        m_lineAndCylinderGeode->addDrawable( shapeDrawable.get() );
     }
 
-    //Add everything to this
-    addChild( geode.get() );
+
+    //Add line and invisible cylinder to this
+    addChild( m_lineAndCylinderGeode.get() );
+
+    //Add cone to this
+    addChild( coneGeode.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////

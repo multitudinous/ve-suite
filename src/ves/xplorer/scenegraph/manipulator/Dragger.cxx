@@ -207,7 +207,7 @@ void Dragger::SetColor( ColorTag::Enum colorTag, osg::Vec4 newColor, bool use )
 
     if( use )
     {
-        m_color->set( color );
+        UseColor( colorTag );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

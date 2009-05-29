@@ -74,6 +74,12 @@ public:
     ///
     META_Node( ves::xplorer::scenegraph::manipulator, TranslateCompound );
 
+    ///
+    virtual void ComboForm();
+
+    ///
+    virtual void DefaultForm();
+
 protected:
     ///Destructor
     virtual ~TranslateCompound();
@@ -82,6 +88,9 @@ protected:
     virtual void SetupDefaultGeometry();
 
 private:
+    ///
+    osg::Vec3 m_coneExplodeVector;
+
     ///
     osg::ref_ptr< TranslateAxis > m_xTranslateAxis;
 

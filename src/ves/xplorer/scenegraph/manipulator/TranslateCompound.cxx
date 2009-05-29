@@ -37,6 +37,8 @@
 #include <ves/xplorer/scenegraph/manipulator/TranslatePan.h>
 
 // --- OSG Includes --- //
+#include <osg/Geode>
+#include <osg/ShapeDrawable>
 
 using namespace ves::xplorer::scenegraph::manipulator;
 
@@ -44,6 +46,7 @@ using namespace ves::xplorer::scenegraph::manipulator;
 TranslateCompound::TranslateCompound()
     :
     CompoundDragger(),
+    m_coneExplodeVector( 0.5, 0.0, 0.0 ),
     m_xTranslateAxis( NULL ),
     m_yTranslateAxis( NULL ),
     m_zTranslateAxis( NULL ),
@@ -56,6 +59,7 @@ TranslateCompound::TranslateCompound(
     const TranslateCompound& translateCompound, const osg::CopyOp& copyop )
     :
     CompoundDragger( translateCompound, copyop ),
+    m_coneExplodeVector( translateCompound.m_coneExplodeVector ),
     m_xTranslateAxis( translateCompound.m_xTranslateAxis.get() ),
     m_yTranslateAxis( translateCompound.m_yTranslateAxis.get() ),
     m_zTranslateAxis( translateCompound.m_zTranslateAxis.get() ),
@@ -67,6 +71,48 @@ TranslateCompound::TranslateCompound(
 TranslateCompound::~TranslateCompound()
 {
     ;
+}
+////////////////////////////////////////////////////////////////////////////////
+void TranslateCompound::ComboForm()
+{
+    osg::Geode* geode( NULL );
+    osg::Cone* cone( NULL );
+    for( size_t i = 0; i < getNumChildren(); ++i )
+    {
+        TranslateAxis* translateAxis =
+            dynamic_cast< TranslateAxis* >( GetChild( i ) );
+        if( translateAxis )
+        {
+            //Turn off line and cylinder geometry
+            geode = translateAxis->GetLineAndCylinderGeode();
+            geode->setNodeMask( 0 );
+
+            //Move the cones out from the unit axis
+            cone = translateAxis->GetCone();
+            cone->setCenter( cone->getCenter() + m_coneExplodeVector );
+        }
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void TranslateCompound::DefaultForm()
+{
+    osg::Geode* geode( NULL );
+    osg::Cone* cone( NULL );
+    for( size_t i = 0; i < getNumChildren(); ++i )
+    {
+        TranslateAxis* translateAxis =
+            dynamic_cast< TranslateAxis* >( GetChild( i ) );
+        if( translateAxis )
+        {
+            //Turn off line and cylinder geometry
+            geode = translateAxis->GetLineAndCylinderGeode();
+            geode->setNodeMask( 1 );
+
+            //Move the cones out from the unit axis
+            cone = translateAxis->GetCone();
+            cone->setCenter( cone->getCenter() - m_coneExplodeVector );
+        }
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void TranslateCompound::SetupDefaultGeometry()

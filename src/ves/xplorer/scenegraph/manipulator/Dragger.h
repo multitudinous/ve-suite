@@ -90,11 +90,17 @@ protected:
     virtual ~Dragger();
 
     ///
+    osg::Vec4& GetColor( ColorTag::Enum colorTag );
+
+    ///
     ///Can't use pure virtual with META_Node define
     virtual void SetupDefaultGeometry();// = 0;
 
     ///
     void SetDrawableToAlwaysCull( osg::Drawable& drawable );
+
+    ///
+    osg::ref_ptr< osg::Uniform > m_color;
 
 private:
     ///
@@ -131,9 +137,6 @@ private:
     ///
     void CreateDefaultShader();
 
-    ///
-    osg::Vec4& GetColor( ColorTag::Enum colorTag );
-
     ///Deactivate the manipulator root
     void TurnOff();
 
@@ -142,9 +145,6 @@ private:
 
     ///
     ColorMap m_colorMap;
-
-    ///
-    osg::ref_ptr< osg::Uniform > m_color;
 
 };
 } //end manipulator

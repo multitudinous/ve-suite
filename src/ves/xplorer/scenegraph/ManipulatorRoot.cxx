@@ -81,7 +81,7 @@ bool ManipulatorRoot::addChild( manipulator::Manipulator* child )
 manipulator::Manipulator* ManipulatorRoot::ConvertNodeToManipulator(
     osg::Node* node )
 {
-    return dynamic_cast< manipulator::Manipulator* >( node );
+    return static_cast< manipulator::Manipulator* >( node );
 }
 ////////////////////////////////////////////////////////////////////////////////
 manipulator::Manipulator* ManipulatorRoot::GetChild( unsigned int i )

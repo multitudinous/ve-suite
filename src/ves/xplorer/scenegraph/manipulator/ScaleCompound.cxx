@@ -37,6 +37,8 @@
 #include <ves/xplorer/scenegraph/manipulator/ScaleUniform.h>
 
 // --- OSG Includes --- //
+#include <osg/Geometry>
+#include <osg/ShapeDrawable>
 
 using namespace ves::xplorer::scenegraph::manipulator;
 
@@ -44,6 +46,7 @@ using namespace ves::xplorer::scenegraph::manipulator;
 ScaleCompound::ScaleCompound()
     :
     CompoundDragger(),
+    m_boxExplodeVector( -0.2, 0.0, 0.0 ),
     m_xScaleAxis( NULL ),
     m_yScaleAxis( NULL ),
     m_zScaleAxis( NULL ),
@@ -56,6 +59,7 @@ ScaleCompound::ScaleCompound(
     const ScaleCompound& scaleCompound, const osg::CopyOp& copyop )
     :
     CompoundDragger( scaleCompound, copyop ),
+    m_boxExplodeVector( scaleCompound.m_boxExplodeVector ),
     m_xScaleAxis( scaleCompound.m_xScaleAxis.get() ),
     m_yScaleAxis( scaleCompound.m_yScaleAxis.get() ),
     m_zScaleAxis( scaleCompound.m_zScaleAxis.get() ),
@@ -67,6 +71,58 @@ ScaleCompound::ScaleCompound(
 ScaleCompound::~ScaleCompound()
 {
     ;
+}
+////////////////////////////////////////////////////////////////////////////////
+void ScaleCompound::ComboForm()
+{
+    osg::Vec3Array* lineVertices( NULL );
+    osg::Geometry* lineGeometry( NULL );
+    osg::Box* box( NULL );
+    for( size_t i = 0; i < getNumChildren(); ++i )
+    {
+        ScaleAxis* scaleAxis = dynamic_cast< ScaleAxis* >( GetChild( i ) );
+        if( scaleAxis )
+        {
+            //Move the lines and cylinders in from the origin and unit axis
+            lineVertices = scaleAxis->GetLineVertices();
+            (*lineVertices)[ 0 ] -= m_boxExplodeVector;
+            (*lineVertices)[ 1 ] += m_boxExplodeVector;
+
+            lineGeometry = scaleAxis->GetLineGeometry();
+            lineGeometry->dirtyDisplayList();
+            lineGeometry->dirtyBound();
+
+            //Move the boxes in from the unit axis
+            box = scaleAxis->GetBox();
+            box->setCenter( box->getCenter() + m_boxExplodeVector );
+        }
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void ScaleCompound::DefaultForm()
+{
+    osg::Vec3Array* lineVertices( NULL );
+    osg::Geometry* lineGeometry( NULL );
+    osg::Box* box( NULL );
+    for( size_t i = 0; i < getNumChildren(); ++i )
+    {
+        ScaleAxis* scaleAxis = dynamic_cast< ScaleAxis* >( GetChild( i ) );
+        if( scaleAxis )
+        {
+            //Move the lines and cylinders back to the origin and unit axis
+            lineVertices = scaleAxis->GetLineVertices();
+            (*lineVertices)[ 0 ] += m_boxExplodeVector;
+            (*lineVertices)[ 1 ] -= m_boxExplodeVector;
+
+            lineGeometry = scaleAxis->GetLineGeometry();
+            lineGeometry->dirtyDisplayList();
+            lineGeometry->dirtyBound();
+
+            //Move the boxes back to the unit axis
+            box = scaleAxis->GetBox();
+            box->setCenter( box->getCenter() - m_boxExplodeVector );
+        }
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void ScaleCompound::SetupDefaultGeometry()
@@ -111,7 +167,7 @@ void ScaleCompound::SetupDefaultGeometry()
     //Create rotate twist dragger
     m_scaleUniform = new ScaleUniform();
     m_scaleUniform->SetColor(
-        ColorTag::DEFAULT, osg::Vec4f( 1.0, 1.0, 1.0, 1.0 ), true );
+        ColorTag::DEFAULT, osg::Vec4f( 0.0, 1.0, 1.0, 1.0 ), true );
 
     addChild( m_scaleUniform.get() );
 }

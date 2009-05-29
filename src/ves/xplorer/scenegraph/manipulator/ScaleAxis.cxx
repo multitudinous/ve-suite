@@ -47,15 +47,27 @@ using namespace ves::xplorer::scenegraph::manipulator;
 ////////////////////////////////////////////////////////////////////////////////
 ScaleAxis::ScaleAxis()
     :
-    Dragger()
+    Dragger(),
+    m_defaultAxisColor( 0.7, 0.7, 0.7, 1.0 ),
+    m_box( NULL ),
+    m_lineVertices( NULL ),
+    m_lineGeometry( NULL ),
+    m_axisColor( NULL )
 {
+    m_axisColor = new osg::Uniform( "color", m_defaultAxisColor );
+
     SetupDefaultGeometry();
 }
 ////////////////////////////////////////////////////////////////////////////////
 ScaleAxis::ScaleAxis(
     const ScaleAxis& scaleAxis, const osg::CopyOp& copyop )
     :
-    Dragger( scaleAxis, copyop )
+    Dragger( scaleAxis, copyop ),
+    m_defaultAxisColor( scaleAxis.m_defaultAxisColor ),
+    m_box( scaleAxis.m_box.get()  ),
+    m_lineVertices( scaleAxis.m_lineVertices.get() ),
+    m_lineGeometry( scaleAxis.m_lineGeometry.get()  ),
+    m_axisColor( scaleAxis.m_axisColor.get() )
 {
     ;
 }
@@ -65,8 +77,24 @@ ScaleAxis::~ScaleAxis()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
+osg::Box* const ScaleAxis::GetBox() const
+{
+    return m_box.get();
+}
+////////////////////////////////////////////////////////////////////////////////
+osg::Vec3Array* const ScaleAxis::GetLineVertices() const
+{
+    return m_lineVertices.get();
+}
+////////////////////////////////////////////////////////////////////////////////
+osg::Geometry* const ScaleAxis::GetLineGeometry() const
+{
+    return m_lineGeometry.get();
+}
+////////////////////////////////////////////////////////////////////////////////
 void ScaleAxis::SetupDefaultGeometry()
 {
+    double cylinderRadius = 0.025;
     double boxWidth = 0.1;
     osg::Vec3 boxCenter( boxWidth * 0.5, 0.0, 0.0 );
 
@@ -74,33 +102,31 @@ void ScaleAxis::SetupDefaultGeometry()
     osg::ref_ptr< osg::Geode > geode = new osg::Geode();
 
     //The unit axis
-    osg::ref_ptr< osg::Vec3Array > vertices = new osg::Vec3Array();
-    vertices->resize( 2 );
-    (*vertices)[ 0 ] = osg::Vec3( 0.0, 0.0, 0.0 );
-    (*vertices)[ 1 ] = osg::Vec3( 1.0, 0.0, 0.0 );
+    m_lineVertices = new osg::Vec3Array();
+    m_lineVertices->resize( 2 );
+    (*m_lineVertices)[ 0 ] = osg::Vec3( 0.0, 0.0, 0.0 );
+    (*m_lineVertices)[ 1 ] = osg::Vec3( 1.0, 0.0, 0.0 );
 
     //Rotation for boxes
     osg::Quat rotation;
-    rotation.makeRotate( osg::Vec3( 0.0, 0.0, 1.0 ), (*vertices)[ 1 ] );
+    rotation.makeRotate( osg::Vec3( 0.0, 0.0, 1.0 ), (*m_lineVertices)[ 1 ] );
 
     //Create a positive line
     {
-        osg::ref_ptr< osg::Geometry > geometry = new osg::Geometry();
-        
-        osg::ref_ptr< osg::Vec3Array > vertices = new osg::Vec3Array();
-        vertices->resize( 2 );
-        (*vertices)[ 0 ] = osg::Vec3( 0.0, 0.0, 0.0 );
-        (*vertices)[ 1 ] = osg::Vec3( 1.0, 0.0, 0.0 );
+        m_lineGeometry = new osg::Geometry();
 
-        geometry->setVertexArray( vertices.get() );
-        geometry->addPrimitiveSet(
+        m_lineGeometry->setVertexArray( m_lineVertices.get() );
+        m_lineGeometry->addPrimitiveSet(
             new osg::DrawArrays( osg::PrimitiveSet::LINES, 0, 2 ) );
 
-        geode->addDrawable( geometry.get() );
+        geode->addDrawable( m_lineGeometry.get() );
 
         //Set StateSet
         osg::ref_ptr< osg::StateSet > stateSet =
-            geometry->getOrCreateStateSet();
+            m_lineGeometry->getOrCreateStateSet();
+
+        //Override color uniform
+        stateSet->addUniform( m_axisColor.get() );
 
         //Set line width
         osg::ref_ptr< osg::LineWidth > lineWidth = new osg::LineWidth();
@@ -126,15 +152,46 @@ void ScaleAxis::SetupDefaultGeometry()
 
     //Create a positive box
     {
-        (*vertices)[ 1 ].x() -= boxWidth;
-        osg::ref_ptr< osg::Box > box =
-            new osg::Box( (*vertices)[ 1 ] + boxCenter, boxWidth );
-        box->setRotation( rotation );
+        (*m_lineVertices)[ 1 ].x() -= boxWidth;
+        m_box = new osg::Box( (*m_lineVertices)[ 1 ] + boxCenter, boxWidth );
+        m_box->setRotation( rotation );
 
-        geode->addDrawable( new osg::ShapeDrawable( box.get() ) );
+        geode->addDrawable( new osg::ShapeDrawable( m_box.get() ) );
     }
+
+    /*
+    //Create an invisible cylinder for picking the positive line
+    {
+        osg::ref_ptr< osg::Cylinder > cylinder =
+            new osg::Cylinder(
+                (*m_lineVertices)[ 1 ] * 0.5, cylinderRadius,
+                (*m_lineVertices)[ 1 ].x() );
+        cylinder->setRotation( rotation );
+        osg::ref_ptr< osg::ShapeDrawable > shapeDrawable =
+            new osg::ShapeDrawable( cylinder.get() );
+
+        SetDrawableToAlwaysCull( *shapeDrawable.get() );
+        geode->addDrawable( shapeDrawable.get() );
+    }
+    */
 
     //Add lines and cones to the scene
     addChild( geode.get() );
+}
+////////////////////////////////////////////////////////////////////////////////
+void ScaleAxis::UseColor( ColorTag::Enum colorTag )
+{
+    osg::Vec4& color = GetColor( colorTag );
+
+    m_color->set( color );
+    
+    if( colorTag == ColorTag::DEFAULT )
+    {
+        m_axisColor->set( m_defaultAxisColor );
+    }
+    else
+    {
+        m_axisColor->set( color );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
