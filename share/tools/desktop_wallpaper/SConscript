@@ -19,7 +19,7 @@ env = ves_pkg.getEnv().Clone()
 osg_options.apply( env )
 
 if GetPlatform() == 'linux':
-    lib_env2.Append( CXXFLAGS=['-fPIC'])
+    env.Append( CXXFLAGS=['-fPIC'])
 
 prog = ves_pkg.createProgram('caveGen' + env["PROGSUFFIX"], env, 'bin')
 prog.addSources( srcs )
@@ -42,7 +42,7 @@ env = ves_pkg.getEnv().Clone()
 osg_options.apply( env )
 
 if GetPlatform() == 'linux':
-    lib_env2.Append( CXXFLAGS=['-fPIC'])
+    env.Append( CXXFLAGS=['-fPIC'])
 
 prog = ves_pkg.createProgram('cavePreview' + env["PROGSUFFIX"], env, 'bin')
 prog.addSources( srcs )
