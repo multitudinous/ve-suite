@@ -364,13 +364,13 @@ bool cfdVTKFileHandler::WriteDataSet( vtkDataObject* dataSet, std::string outFil
     //PRectilinearGrid (.pvtr) — Parallel vtkRectilinearGrid (structured). 
     //PStructuredGrid (.pvts) — Parallel vtkStructuredGrid (structured). 
     //PUnstructuredGrid (.pvtu) — Parallel vtkUnstructuredGrid (unstructured). 
-    
     fs::path file_name( outFileName, fs::native );
-
+    
     if( dataSet->IsA( "vtkMultiBlockDataSet" ) )
     {
+#if BOOST_VERSION > 103301
         file_name.replace_extension( "vtm" );
-
+#endif
         vtkXMLMultiBlockDataWriter* writer = vtkXMLMultiBlockDataWriter::New();
         writer->SetFileName( file_name.string().c_str() );
         writer->SetInput( dataSet );
@@ -388,6 +388,7 @@ bool cfdVTKFileHandler::WriteDataSet( vtkDataObject* dataSet, std::string outFil
     }
     else
     {
+#if BOOST_VERSION > 103301
         if( dataSet->IsA( "vtkPolyData" ) )
         {
             file_name.replace_extension( "vtp" );
@@ -408,7 +409,7 @@ bool cfdVTKFileHandler::WriteDataSet( vtkDataObject* dataSet, std::string outFil
         {
             file_name.replace_extension( "vtk" );
         }
-        
+#endif
         vtkXMLDataSetWriter* writer = vtkXMLDataSetWriter::New();
         writer->SetFileName( file_name.string().c_str() );
         writer->SetInput( dynamic_cast<vtkDataSet*>( dataSet ) );
