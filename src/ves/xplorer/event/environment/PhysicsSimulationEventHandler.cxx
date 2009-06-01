@@ -30,6 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
+
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/event/environment/PhysicsSimulationEventHandler.h>
 
@@ -102,42 +103,52 @@ void PhysicsSimulationEventHandler::Execute(
     ves::open::xml::CommandPtr command =
         boost::dynamic_pointer_cast< ves::open::xml::Command >( veXMLObject );
 
-    if( command->GetDataValuePair( "CharacterControllerOn" ) )
-    {
-        vxs::CharacterController* characterController =
-            vxs::SceneManager::instance()->GetCharacterController();
-        characterController->TurnOn();
-    }
-    else if( command->GetDataValuePair( "CharacterControllerOff" ) )
-    {
-        vxs::CharacterController* characterController =
-            vxs::SceneManager::instance()->GetCharacterController();
-        characterController->TurnOff();
-    }
-    else if( command->GetDataValuePair( "ResetPhysicsSimulation" ) )
-    {
-        vxs::PhysicsSimulator::instance()->SetIdle( true );
-        vxs::PhysicsSimulator::instance()->ResetScene();
-    }
-    else if( command->GetDataValuePair( "PausePhysicsSimulation" ) )
-    {
-        vxs::PhysicsSimulator::instance()->SetIdle( true );
-    }
-    else if( command->GetDataValuePair( "StartPhysicsSimulation" ) )
-    {
-        vxs::PhysicsSimulator::instance()->SetIdle( false );
-    }
-    else if( command->GetDataValuePair( "StepPhysicsSimulation" ) )
-    {
-        vxs::PhysicsSimulator::instance()->SetIdle( true );
-        vxs::PhysicsSimulator::instance()->StepSimulation();
-    }
-    else if( command->GetDataValuePair( "Physics Debugger Toggle Value" ) )
+    if( command->GetDataValuePair( "Physics Debugger Toggle Value" ) )
     {
         unsigned int toggle = 0;
         command->GetDataValuePair( "Physics Debugger Toggle Value" )->
             GetData( toggle );
         vxs::PhysicsSimulator::instance()->SetDebuggingOn( toggle );
+    }
+
+    ves::open::xml::DataValuePairPtr physicsDVP =
+        command->GetDataValuePair( "value" );
+    if( !physicsDVP )
+    {
+        return;
+    }
+
+    std::string value;
+    physicsDVP->GetData( value );
+    if( value == "CharacterControllerOn" )
+    {
+        vxs::CharacterController* characterController =
+            vxs::SceneManager::instance()->GetCharacterController();
+        characterController->TurnOn();
+    }
+    else if( value == "CharacterControllerOff" )
+    {
+        vxs::CharacterController* characterController =
+            vxs::SceneManager::instance()->GetCharacterController();
+        characterController->TurnOff();
+    }
+    else if( value == "ResetPhysicsSimulation" )
+    {
+        vxs::PhysicsSimulator::instance()->SetIdle( true );
+        vxs::PhysicsSimulator::instance()->ResetScene();
+    }
+    else if( value == "PausePhysicsSimulation" )
+    {
+        vxs::PhysicsSimulator::instance()->SetIdle( true );
+    }
+    else if( value == "StartPhysicsSimulation" )
+    {
+        vxs::PhysicsSimulator::instance()->SetIdle( false );
+    }
+    else if( value == "StepPhysicsSimulation" )
+    {
+        vxs::PhysicsSimulator::instance()->SetIdle( true );
+        vxs::PhysicsSimulator::instance()->StepSimulation();
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
