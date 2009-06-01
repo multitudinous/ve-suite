@@ -30,39 +30,67 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#ifndef MAIN_TOOL_BAR_H
-#define MAIN_TOOL_BAR_H
 
-/*!\file MainToolBar.h
- */
+#ifndef APP_TOOL_BAR_H
+#define APP_TOOL_BAR_H
 
-/*!\class MainToolBar
- *
- */
+// --- VE-Suite Includes --- //
+#include "ConductorAppEnums.h"
+
+class AppFrame;
 
 // --- wxWidgets Includes --- //
 #include <wx/toolbar.h>
+
+class wxChoice;
 
 // --- C/C++ Libraries --- //
 #include <map>
 #include <string>
 
-class MainToolBar : public wxToolBar
+/*!\file AppToolBar.h
+ *
+ */
+
+/*!\class AppToolBar
+ *
+ */
+class AppToolBar : public wxToolBar
 {
 public:
     ///Constructor
     ///\param parent The parent of the toolbar
-    MainToolBar( wxWindow* parent );
+    AppToolBar( wxWindow* parent );
 
     ///Destructor
-    virtual ~MainToolBar();
+    virtual ~AppToolBar();
 
 private:
     ///Loads and stores the xpm images into a std::map for this toolbar
     void LoadToolBarBitmaps();
 
     ///Adds the tools to the toolbar
-    void CreateMainToolBar();
+    void CreateAppToolBar();
+
+    ///Handles events for changing the center point
+    ///\param event The wxCommand event
+    void OnCenterPointUpdate( wxCommandEvent& event );
+
+    ///Handles events for changing xplorer device mode
+    ///\param event The wxCommand event
+    void OnChangeDeviceMode( wxCommandEvent& event );
+
+    ///
+    ///\param
+    void OnChangeManipulatorMode( wxCommandEvent& event );
+
+    ///
+    ///\param
+    void OnEraseBackGround( wxEraseEvent& event );
+
+    ///
+    ///\param
+    void OnManipulatorState( wxCommandEvent& event );
 
     ///Handles event for new
     ///\param event The wxCommand event
@@ -72,21 +100,9 @@ private:
     ///\param event The wxCommand event
     void OnOpen( wxCommandEvent& event );
 
-    ///Handles event for save
+    ///Handles events for the physics simulation
     ///\param event The wxCommand event
-    void OnSave( wxCommandEvent& event );
-
-    ///Handles events for changing xplorer device mode
-    ///\param event The wxCommand event
-    void OnChangeDeviceMode( wxCommandEvent& event );
-
-    ///Handles events for changing the center point
-    ///\param event The wxCommand event
-    void OnCenterPointUpdate( wxCommandEvent& event );
-
-    ///Handles the event to unselect all objects in xplorer
-    ///\param event The wxCommand event
-    void OnUnselectObjects( wxCommandEvent& event );
+    void OnPhysicsSimulation( wxCommandEvent& event );
 
     ///Handles event for physics state
     ///\param event The wxCommand event
@@ -94,16 +110,70 @@ private:
 
     ///Handles events for the physics simulation
     ///\param event The wxCommand event
-    void OnPhysicsSimulation( wxCommandEvent& event );
+    void OnResetCenterPoint( wxCommandEvent& event );
+
+    ///Handles event for save
+    ///\param event The wxCommand event
+    void OnSave( wxCommandEvent& event );
 
     ///Handles event for summit job
     ///\param event The wxCommand event
     void OnSummitJob( wxCommandEvent& event );
 
+    ///Handles the event to unselect all objects in xplorer
+    ///\param event The wxCommand event
+    void OnUnselectObjects( wxCommandEvent& event );
+
+    ///
+    APP_TOOL_BAR m_prevDeviceMode;
+
+    ///
+    APP_TOOL_BAR m_prevCenterPoint;
+
+    ///
+    APP_TOOL_BAR m_prevPhysicsSimulation;
+
+    ///
+    APP_TOOL_BAR m_prevManipulatorMode;
+
     ///A map that holds the bitmaps for this toolbar
-    std::map< std::string, wxBitmap > mToolbarBitmaps;
+    std::map< APP_TOOL_BAR, wxBitmap > mToolbarBitmaps;
+
+    ///
+    wxToolBarToolBase* m_manipulatorTranslateTool;
+
+    ///
+    wxToolBarToolBase* m_manipulatorRotateTool;
+
+    ///
+    wxToolBarToolBase* m_manipulatorScaleTool;
+
+    ///
+    wxToolBarToolBase* m_manipulatorComboTool;
+
+    ///
+    wxToolBarToolBase* m_characterTool;
+
+    ///
+    wxToolBarToolBase* m_resetTool;
+
+    ///
+    wxToolBarToolBase* m_pauseTool;
+
+    ///
+    wxToolBarToolBase* m_playTool;
+
+    ///
+    wxToolBarToolBase* m_stepTool;
+
+    ///
+    wxChoice* m_manipulatorChoice;
+
+    ///
+    AppFrame* m_appFrame;
 
     DECLARE_EVENT_TABLE()
+
 };
 
-#endif //MAIN_TOOL_BAR_H
+#endif //APP_TOOL_BAR_H

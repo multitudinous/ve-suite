@@ -59,7 +59,7 @@ class CORBAServiceList;
 
 class Splitter;
 class ViewLocPane;
-class MainToolBar;
+class AppToolBar;
 class AvailableModules;
 class HierarchyTree;
 class UITeacherTab;
@@ -138,7 +138,7 @@ public:
     wxSplitterWindow* wx_ve_splitter;
     Splitter* wx_nw_splitter;
     wxMenuBar* menubar;
-    MainToolBar* mainToolBar;///<The main toolbar
+    AppToolBar* appToolBar;///<The app toolbar
 
     AvailableModules* av_modules;
     HierarchyTree* hierarchyTree;

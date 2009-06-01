@@ -71,7 +71,7 @@
 #include "NavigationPane.h"
 #include "Splitter.h"
 #include "ViewLocPane.h"
-#include "MainToolBar.h"
+#include "AppToolBar.h"
 #include "ExportMenu.h"
 #include "EphemerisDialog.h"
 
@@ -206,7 +206,13 @@ END_EVENT_TABLE()
 ////////////////////////////////////////////////////////////////////////////////
 AppFrame::AppFrame( wxWindow * parent, wxWindowID id, const wxString& title )
         :
-        wxFrame( parent, id, title, wxDefaultPosition, wxDefaultSize ),
+        wxFrame(
+            parent,
+            id,
+            title,
+            wxDefaultPosition,
+            wxDefaultSize,
+            wxNO_FULL_REPAINT_ON_RESIZE | wxCLIP_CHILDREN ),
         f_financial( true ),
         f_geometry( true ),
         f_visualization( true ),
@@ -224,7 +230,7 @@ AppFrame::AppFrame( wxWindow * parent, wxWindowID id, const wxString& title )
         wx_ve_splitter( 0 ),
         wx_nw_splitter( 0 ),
         menubar( 0 ),
-        mainToolBar( 0 ),
+        appToolBar( 0 ),
         serviceList( CORBAServiceList::instance() ),
         newCanvas( false ),
         mTimer( this, APPFRAME_TIMER_ID ),
@@ -255,8 +261,8 @@ AppFrame::AppFrame( wxWindow * parent, wxWindowID id, const wxString& title )
 
     CreateMenu();
 
-    mainToolBar = new MainToolBar( this );
-    this->SetToolBar( mainToolBar );
+    appToolBar = new AppToolBar( this );
+    this->SetToolBar( appToolBar );
     CreateStatusBar();
     SetStatusText( _( "VE-Conductor Status" ) );
     //SetAutoLayout(true);
