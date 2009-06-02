@@ -156,19 +156,19 @@ private:
     wxToolBarToolBase* m_manipulatorComboTool;
 
     ///
-    wxToolBarToolBase* m_characterTool;
+    wxToolBarToolBase* m_physicsCharacterTool;
 
     ///
-    wxToolBarToolBase* m_resetTool;
+    wxToolBarToolBase* m_physicsResetTool;
 
     ///
-    wxToolBarToolBase* m_pauseTool;
+    wxToolBarToolBase* m_physicsPauseTool;
 
     ///
-    wxToolBarToolBase* m_playTool;
+    wxToolBarToolBase* m_physicsPlayTool;
 
     ///
-    wxToolBarToolBase* m_stepTool;
+    wxToolBarToolBase* m_physicsStepTool;
 
     ///
     wxChoice* m_manipulatorChoice;

@@ -95,10 +95,10 @@
 //http://www.wxwidgets.org/docs/faqmsw.htm#asuffix
 #include <wx/msw/winundef.h>
 #endif //WIN32
-#include <wx/dc.h>
-#include <wx/dcbuffer.h>
+//#include <wx/dc.h>
+//#include <wx/dcbuffer.h>
 #include <wx/choice.h>
-#include <wx/settings.h>
+//#include <wx/settings.h>
 
 using namespace ves::open::xml;
 using namespace ves::conductor::util;
@@ -161,11 +161,11 @@ AppToolBar::AppToolBar( wxWindow* parent )
     m_manipulatorRotateTool( NULL ),
     m_manipulatorScaleTool( NULL ),
     m_manipulatorComboTool( NULL ),
-    m_characterTool( NULL ),
-    m_resetTool( NULL ),
-    m_pauseTool( NULL ),
-    m_playTool( NULL ),
-    m_stepTool( NULL ),
+    m_physicsCharacterTool( NULL ),
+    m_physicsResetTool( NULL ),
+    m_physicsPauseTool( NULL ),
+    m_physicsPlayTool( NULL ),
+    m_physicsStepTool( NULL ),
     m_manipulatorChoice( NULL ),
     m_appFrame( static_cast< AppFrame* >( parent ) )
 {
@@ -209,29 +209,29 @@ AppToolBar::~AppToolBar()
         delete m_manipulatorComboTool;
     }
 
-    if( m_characterTool )
+    if( m_physicsCharacterTool )
     {
-        delete m_characterTool;
+        delete m_physicsCharacterTool;
     }
 
-    if( m_resetTool )
+    if( m_physicsResetTool )
     {
-        delete m_resetTool;
+        delete m_physicsResetTool;
     }
 
-    if( m_pauseTool )
+    if( m_physicsPauseTool )
     {
-        delete m_pauseTool;
+        delete m_physicsPauseTool;
     }
 
-    if( m_playTool )
+    if( m_physicsPlayTool )
     {
-        delete m_playTool;
+        delete m_physicsPlayTool;
     }
 
-    if( m_stepTool )
+    if( m_physicsStepTool )
     {
-        delete m_stepTool;
+        delete m_physicsStepTool;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -372,20 +372,20 @@ void AppToolBar::CreateAppToolBar()
 
     m_manipulatorTranslateTool = new wxToolBarToolBase(
         NULL, APP_TOOL_BAR_MANIPULATOR_TRANSLATE, wxEmptyString,
-        mToolbarBitmaps[ APP_TOOL_BAR_MANIPULATOR_TRANSLATE ], wxNullBitmap,
-        wxITEM_RADIO, NULL, wxT( "Translate Manipulator Mode" ) );
+        mToolbarBitmaps[ APP_TOOL_BAR_MANIPULATOR_TRANSLATE_SELECT ], 
+        wxNullBitmap, wxITEM_RADIO, NULL, wxT( "Translate Manipulator Mode" ) );
     m_manipulatorRotateTool = new wxToolBarToolBase(
         NULL, APP_TOOL_BAR_MANIPULATOR_ROTATE, wxEmptyString,
-        mToolbarBitmaps[ APP_TOOL_BAR_MANIPULATOR_ROTATE ], wxNullBitmap,
-        wxITEM_RADIO, NULL, wxT( "Rotate Manipulator Mode" ) );
+        mToolbarBitmaps[ APP_TOOL_BAR_MANIPULATOR_ROTATE ],
+        wxNullBitmap, wxITEM_RADIO, NULL, wxT( "Rotate Manipulator Mode" ) );
     m_manipulatorScaleTool = new wxToolBarToolBase(
         NULL, APP_TOOL_BAR_MANIPULATOR_SCALE, wxEmptyString,
-        mToolbarBitmaps[ APP_TOOL_BAR_MANIPULATOR_SCALE ], wxNullBitmap,
-        wxITEM_RADIO, NULL, wxT( "Scale Manipulator Mode" ) );
+        mToolbarBitmaps[ APP_TOOL_BAR_MANIPULATOR_SCALE ],
+        wxNullBitmap, wxITEM_RADIO, NULL, wxT( "Scale Manipulator Mode" ) );
     m_manipulatorComboTool = new wxToolBarToolBase(
         NULL, APP_TOOL_BAR_MANIPULATOR_COMBO, wxEmptyString,
-        mToolbarBitmaps[ APP_TOOL_BAR_MANIPULATOR_COMBO ], wxNullBitmap,
-        wxITEM_RADIO, NULL, wxT( "Combo Manipulator Mode" ) );
+        mToolbarBitmaps[ APP_TOOL_BAR_MANIPULATOR_COMBO ],
+        wxNullBitmap, wxITEM_RADIO, NULL, wxT( "Combo Manipulator Mode" ) );
 
     wxString manipulatorChoices[] =
         { wxT( "Global" ), wxT( "Local" ), wxT( "View" ) };
@@ -430,24 +430,24 @@ void AppToolBar::CreateAppToolBar()
         mToolbarBitmaps[ APP_TOOL_BAR_PHYSICS ],
         wxT( "Physics On/Off" ), wxITEM_CHECK );
 #ifdef CHARACTER_CONTROLLER
-    m_characterTool = new wxToolBarToolBase(
+    m_physicsCharacterTool = new wxToolBarToolBase(
         NULL, APP_TOOL_BAR_PHYSICS_CHARACTER, wxEmptyString,
         mToolbarBitmaps[ APP_TOOL_BAR_PHYSICS_CHARACTER ], wxNullBitmap,
         wxITEM_CHECK, NULL, wxT( "Character Controller" ) );
 #endif //CHARACTER_CONTROLLER
-    m_resetTool = new wxToolBarToolBase(
+    m_physicsResetTool = new wxToolBarToolBase(
         NULL, APP_TOOL_BAR_PHYSICS_RESET, wxEmptyString,
         mToolbarBitmaps[ APP_TOOL_BAR_PHYSICS_RESET ], wxNullBitmap,
         wxITEM_NORMAL, NULL, wxT( "Reset Simulation" ) );
-    m_pauseTool = new wxToolBarToolBase(
+    m_physicsPauseTool = new wxToolBarToolBase(
         NULL, APP_TOOL_BAR_PHYSICS_PAUSE, wxEmptyString,
         mToolbarBitmaps[ APP_TOOL_BAR_PHYSICS_PAUSE ], wxNullBitmap,
         wxITEM_CHECK, NULL, wxT( "Pause Simulation" ) );
-    m_playTool = new wxToolBarToolBase(
+    m_physicsPlayTool = new wxToolBarToolBase(
         NULL, APP_TOOL_BAR_PHYSICS_PLAY, wxEmptyString,
         mToolbarBitmaps[ APP_TOOL_BAR_PHYSICS_PLAY ], wxNullBitmap,
         wxITEM_CHECK, NULL, wxT( "Start Simulation" ) );
-    m_stepTool = new wxToolBarToolBase(
+    m_physicsStepTool = new wxToolBarToolBase(
         NULL, APP_TOOL_BAR_PHYSICS_STEP, wxEmptyString,
         mToolbarBitmaps[ APP_TOOL_BAR_PHYSICS_STEP ], wxNullBitmap,
         wxITEM_NORMAL, NULL, wxT( "Step Simulation" ) );
@@ -463,9 +463,11 @@ void AppToolBar::CreateAppToolBar()
 
     ToggleTool( APP_TOOL_BAR_WORLD_NAVIGATION, true );
     ToggleTool( APP_TOOL_BAR_SMALL_CENTER_POINT_JUMP, true );
+    ToggleTool( APP_TOOL_BAR_MANIPULATOR_TRANSLATE, true );
 
     m_prevDeviceMode = APP_TOOL_BAR_WORLD_NAVIGATION;
     m_prevCenterPoint = APP_TOOL_BAR_SMALL_CENTER_POINT_JUMP;
+    m_prevManipulatorMode = APP_TOOL_BAR_MANIPULATOR_TRANSLATE;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppToolBar::OnEraseBackGround( wxEraseEvent& event )
@@ -507,12 +509,122 @@ void AppToolBar::OnSave( wxCommandEvent& event )
 ////////////////////////////////////////////////////////////////////////////////
 void AppToolBar::OnChangeManipulatorMode( wxCommandEvent& event )
 {
+    APP_TOOL_BAR currentSelection =
+        static_cast< APP_TOOL_BAR >( event.GetId() );
 
+    if( m_prevManipulatorMode == currentSelection )
+    {
+        return;
+    }
+
+    std::string mode;
+    switch( currentSelection )
+    {
+        case APP_TOOL_BAR_MANIPULATOR_TRANSLATE:
+        {
+            mode = "Translate";
+
+            SetToolNormalBitmap(
+                currentSelection,
+                mToolbarBitmaps[ APP_TOOL_BAR_MANIPULATOR_TRANSLATE_SELECT ] );
+
+            break;
+        }
+        case APP_TOOL_BAR_MANIPULATOR_ROTATE:
+        {
+            mode = "Rotate";
+
+            SetToolNormalBitmap(
+                currentSelection,
+                mToolbarBitmaps[ APP_TOOL_BAR_MANIPULATOR_ROTATE_SELECT ] );
+
+            break;
+        }
+        case APP_TOOL_BAR_MANIPULATOR_SCALE:
+        {
+            mode = "Scale";
+
+            SetToolNormalBitmap(
+                currentSelection,
+                mToolbarBitmaps[ APP_TOOL_BAR_MANIPULATOR_SCALE_SELECT ] );
+
+            break;
+        }
+        case APP_TOOL_BAR_MANIPULATOR_COMBO:
+        {
+            mode = "Combo";
+
+            SetToolNormalBitmap(
+                currentSelection,
+                mToolbarBitmaps[ APP_TOOL_BAR_MANIPULATOR_COMBO_SELECT ] );
+
+            break;
+        }
+    }
+
+    SetToolNormalBitmap(
+        m_prevManipulatorMode,
+        mToolbarBitmaps[ m_prevManipulatorMode ] );
+
+    m_prevManipulatorMode = currentSelection;
+
+    /*
+    DataValuePairPtr dvp( new DataValuePair() );
+    dvp->SetData( "Mode", mode );
+
+    CommandSharedPtr command( new ves::open::xml::Command() );
+    command->SetCommandName( "CHANGE_DEVICE_MODE" );
+    command->AddDataValuePair( dvp );
+
+    CORBAServiceList::instance()->SendCommandStringToXplorer( command );
+    */
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppToolBar::OnManipulatorState( wxCommandEvent& event )
 {
+    APP_TOOL_BAR currentSelection =
+        static_cast< APP_TOOL_BAR >( event.GetId() );
 
+    if( GetToolState( currentSelection ) )
+    {
+        SetToolNormalBitmap(
+            currentSelection,
+            mToolbarBitmaps[ APP_TOOL_BAR_MANIPULATOR_SELECT ] );
+
+        int position = GetToolPos( currentSelection );
+        InsertTool( ++position, m_manipulatorTranslateTool );
+        Realize();
+        InsertTool( ++position, m_manipulatorRotateTool );
+        Realize();
+        InsertTool( ++position, m_manipulatorScaleTool );
+        Realize();
+        InsertTool( ++position, m_manipulatorComboTool );
+        Realize();
+    }
+    else
+    {
+        SetToolNormalBitmap(
+            currentSelection,
+            mToolbarBitmaps[ currentSelection ] );
+
+        RemoveTool( APP_TOOL_BAR_MANIPULATOR_TRANSLATE );
+        RemoveTool( APP_TOOL_BAR_MANIPULATOR_ROTATE );
+        RemoveTool( APP_TOOL_BAR_MANIPULATOR_SCALE );
+        RemoveTool( APP_TOOL_BAR_MANIPULATOR_COMBO );
+        
+        /*
+        std::string value = "PausePhysicsSimulation";
+
+        DataValuePairPtr dvp( new DataValuePair() );
+        dvp->SetData( "value", value );
+
+        ves::open::xml::CommandPtr command( new ves::open::xml::Command() );
+        command->SetCommandName( "PHYSICS_SIMULATION" );
+        command->AddDataValuePair( dvp );
+
+        CORBAServiceList::instance()->SendCommandStringToXplorer( command );
+        */
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppToolBar::OnChangeDeviceMode( wxCommandEvent& event )
@@ -676,43 +788,32 @@ void AppToolBar::OnPhysicsState( wxCommandEvent& event )
 
     if( GetToolState( currentSelection ) )
     {
-        int position = GetToolPos( currentSelection );
-#ifdef CHARACTER_CONTROLLER
-        InsertTool( ++position, m_characterTool );
-#endif //CHARACTER_CONTROLLER
-        InsertTool( ++position, m_resetTool );
-        InsertTool( ++position, m_pauseTool );
-        InsertTool( ++position, m_playTool );
-        InsertTool( ++position, m_stepTool );
-
         SetToolNormalBitmap(
             currentSelection,
             mToolbarBitmaps[ APP_TOOL_BAR_PHYSICS_SELECT ] );
 
+        int position = GetToolPos( currentSelection );
+#ifdef CHARACTER_CONTROLLER
+        InsertTool( ++position, m_physicsCharacterTool );
+        Realize();
+#endif //CHARACTER_CONTROLLER
+        InsertTool( ++position, m_physicsResetTool );
+        Realize();
+        InsertTool( ++position, m_physicsPauseTool );
+        Realize();
+        InsertTool( ++position, m_physicsPlayTool );
+        Realize();
+        InsertTool( ++position, m_physicsStepTool );
         Realize();
     }
     else
     {
-#ifdef CHARACTER_CONTROLLER
-        ToggleTool( APP_TOOL_BAR_PHYSICS_CHARACTER, false );
-#endif //CHARACTER_CONTROLLER
-        ToggleTool( APP_TOOL_BAR_PHYSICS_PAUSE, false );
-        ToggleTool( APP_TOOL_BAR_PHYSICS_PLAY, false );
-
         SetToolNormalBitmap(
             currentSelection,
             mToolbarBitmaps[ currentSelection ] );
-#ifdef CHARACTER_CONTROLLER
-        SetToolNormalBitmap(
-            APP_TOOL_BAR_PHYSICS_CHARACTER,
-            mToolbarBitmaps[ APP_TOOL_BAR_PHYSICS_CHARACTER ] );
-#endif //CHARACTER_CONTROLLER
-        SetToolNormalBitmap(
-            APP_TOOL_BAR_PHYSICS_PAUSE,
-            mToolbarBitmaps[ APP_TOOL_BAR_PHYSICS_PAUSE ] );
-        SetToolNormalBitmap(
-            APP_TOOL_BAR_PHYSICS_PLAY,
-            mToolbarBitmaps[ APP_TOOL_BAR_PHYSICS_PLAY ] );
+
+        event.SetId( APP_TOOL_BAR_PHYSICS_PAUSE );
+        OnPhysicsSimulation( event );
 
 #ifdef CHARACTER_CONTROLLER
         RemoveTool( APP_TOOL_BAR_PHYSICS_CHARACTER );
@@ -721,19 +822,6 @@ void AppToolBar::OnPhysicsState( wxCommandEvent& event )
         RemoveTool( APP_TOOL_BAR_PHYSICS_PAUSE );
         RemoveTool( APP_TOOL_BAR_PHYSICS_PLAY );
         RemoveTool( APP_TOOL_BAR_PHYSICS_STEP );
-
-        m_prevPhysicsSimulation = APP_TOOL_BAR_NULL;
-        
-        std::string value = "PausePhysicsSimulation";
-
-        DataValuePairPtr dvp( new DataValuePair() );
-        dvp->SetData( "value", value );
-
-        ves::open::xml::CommandPtr command( new ves::open::xml::Command() );
-        command->SetCommandName( "PHYSICS_SIMULATION" );
-        command->AddDataValuePair( dvp );
-
-        CORBAServiceList::instance()->SendCommandStringToXplorer( command );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -743,8 +831,8 @@ void AppToolBar::OnPhysicsSimulation( wxCommandEvent& event )
         static_cast< APP_TOOL_BAR >( event.GetId() );
 
     if( m_prevPhysicsSimulation == currentSelection &&
-        currentSelection != APP_TOOL_BAR_PHYSICS_RESET &&
-        currentSelection != APP_TOOL_BAR_PHYSICS_STEP )
+      ( currentSelection == APP_TOOL_BAR_PHYSICS_PLAY ||
+        currentSelection == APP_TOOL_BAR_PHYSICS_PAUSE ) )
     {
         return;
     }
@@ -776,10 +864,34 @@ void AppToolBar::OnPhysicsSimulation( wxCommandEvent& event )
         case APP_TOOL_BAR_PHYSICS_PAUSE:
         {
             value = "PausePhysicsSimulation";
+
+            ToggleTool( APP_TOOL_BAR_PHYSICS_PAUSE, true );
+            ToggleTool( APP_TOOL_BAR_PHYSICS_PLAY, false );
+
+            SetToolNormalBitmap(
+                APP_TOOL_BAR_PHYSICS_PAUSE,
+                mToolbarBitmaps[ APP_TOOL_BAR_PHYSICS_PAUSE_SELECT ] );
+            SetToolNormalBitmap(
+                APP_TOOL_BAR_PHYSICS_PLAY,
+                mToolbarBitmaps[ APP_TOOL_BAR_PHYSICS_PLAY ] );
+
+            break;
         }
         case APP_TOOL_BAR_PHYSICS_RESET:
         {
             value = "ResetPhysicsSimulation";
+
+            ToggleTool( APP_TOOL_BAR_PHYSICS_PAUSE, true );
+            ToggleTool( APP_TOOL_BAR_PHYSICS_PLAY, false );
+
+            SetToolNormalBitmap(
+                APP_TOOL_BAR_PHYSICS_PAUSE,
+                mToolbarBitmaps[ APP_TOOL_BAR_PHYSICS_PAUSE_SELECT ] );
+            SetToolNormalBitmap(
+                APP_TOOL_BAR_PHYSICS_PLAY,
+                mToolbarBitmaps[ APP_TOOL_BAR_PHYSICS_PLAY ] );
+
+            break;
         }
         case APP_TOOL_BAR_PHYSICS_STEP:
         {
