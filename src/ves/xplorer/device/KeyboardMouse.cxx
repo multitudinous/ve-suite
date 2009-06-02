@@ -344,7 +344,7 @@ void KeyboardMouse::SetStartEndPoint(
             }
         }
     }
-#elif
+#else
     //Meters to feet conversion
     double m2ft = 3.2808399;
 
