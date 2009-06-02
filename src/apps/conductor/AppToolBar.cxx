@@ -631,6 +631,8 @@ void AppToolBar::OnPhysicsState( wxCommandEvent& event )
         SetToolNormalBitmap(
             currentSelection,
             mToolbarBitmaps[ APP_TOOL_BAR_PHYSICS_SELECT ] );
+
+        Realize();
     }
     else
     {
