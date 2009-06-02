@@ -175,7 +175,64 @@ AppToolBar::AppToolBar( wxWindow* parent )
 ////////////////////////////////////////////////////////////////////////////////
 AppToolBar::~AppToolBar()
 {
-    ;
+    //It is safe to call RemoveTool from tbarbase.h even if tool is not in toolbar
+    RemoveTool( APP_TOOL_BAR_MANIPULATOR_TRANSLATE );
+    RemoveTool( APP_TOOL_BAR_MANIPULATOR_ROTATE );
+    RemoveTool( APP_TOOL_BAR_MANIPULATOR_SCALE );
+    RemoveTool( APP_TOOL_BAR_MANIPULATOR_COMBO );
+
+#ifdef CHARACTER_CONTROLLER
+    RemoveTool( APP_TOOL_BAR_PHYSICS_CHARACTER );
+#endif //CHARACTER_CONTROLLER
+    RemoveTool( APP_TOOL_BAR_PHYSICS_RESET );
+    RemoveTool( APP_TOOL_BAR_PHYSICS_PAUSE );
+    RemoveTool( APP_TOOL_BAR_PHYSICS_PLAY );
+    RemoveTool( APP_TOOL_BAR_PHYSICS_STEP );
+
+    if( m_manipulatorTranslateTool )
+    {
+        delete m_manipulatorTranslateTool;
+    }
+
+    if( m_manipulatorRotateTool )
+    {
+        delete m_manipulatorRotateTool;
+    }
+
+    if( m_manipulatorScaleTool )
+    {
+        delete m_manipulatorScaleTool;
+    }
+
+    if( m_manipulatorComboTool )
+    {
+        delete m_manipulatorComboTool;
+    }
+
+    if( m_characterTool )
+    {
+        delete m_characterTool;
+    }
+
+    if( m_resetTool )
+    {
+        delete m_resetTool;
+    }
+
+    if( m_pauseTool )
+    {
+        delete m_pauseTool;
+    }
+
+    if( m_playTool )
+    {
+        delete m_playTool;
+    }
+
+    if( m_stepTool )
+    {
+        delete m_stepTool;
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppToolBar::LoadToolBarBitmaps()
