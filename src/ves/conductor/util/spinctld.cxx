@@ -402,7 +402,7 @@ void wxSpinCtrlDbl::SetValue( double value )
 
     if (( value != m_value ) || ( str != m_textCtrl->GetValue() ) )
     {
-        m_textCtrl->SetValue( str );
+        m_textCtrl->ChangeValue( str );
         m_textCtrl->DiscardEdits();
         m_value = value;
         str.ToDouble( &m_value );    // wysiwyg for textctrl
@@ -418,7 +418,7 @@ void wxSpinCtrlDbl::SetValue( const wxString& text, bool force )
         SetValue( value );
     else if( force )
     {
-        m_textCtrl->SetValue( text );
+        m_textCtrl->ChangeValue( text );
         m_textCtrl->DiscardEdits();
     }
 }
