@@ -96,14 +96,17 @@
 #include <wx/msw/winundef.h>
 #endif //WIN32
 #include <wx/dc.h>
+#include <wx/dcbuffer.h>
 #include <wx/choice.h>
+#include <wx/settings.h>
 
 using namespace ves::open::xml;
 using namespace ves::conductor::util;
 
 BEGIN_EVENT_TABLE( AppToolBar, wxToolBar )
 
-EVT_ERASE_BACKGROUND( AppToolBar::OnEraseBackGround )
+//EVT_ERASE_BACKGROUND( AppToolBar::OnEraseBackGround )
+//EVT_PAINT( AppToolBar::OnPaint )
 
 EVT_MENU( APP_TOOL_BAR_NEW, AppToolBar::OnNew )
 EVT_MENU( APP_TOOL_BAR_OPEN, AppToolBar::OnOpen )
@@ -148,7 +151,6 @@ AppToolBar::AppToolBar( wxWindow* parent )
         wxID_ANY,
         wxDefaultPosition,
         wxDefaultSize,
-        wxNO_FULL_REPAINT_ON_RESIZE | wxCLIP_CHILDREN |
         wxTB_FLAT | wxTB_NODIVIDER | wxTB_HORIZONTAL | wxNO_BORDER,
         wxT( "ToolBar" ) ),
     m_prevDeviceMode( APP_TOOL_BAR_NULL ),
@@ -278,7 +280,7 @@ void AppToolBar::CreateAppToolBar()
     AddTool(
         APP_TOOL_BAR_OPEN, wxEmptyString,
         mToolbarBitmaps[ APP_TOOL_BAR_OPEN ],
-        wxT( "Open" ), wxITEM_NORMAL ); 
+        wxT( "Open" ), wxITEM_NORMAL );
     AddTool(
         APP_TOOL_BAR_SAVE, wxEmptyString,
         mToolbarBitmaps[ APP_TOOL_BAR_SAVE ],
@@ -408,30 +410,10 @@ void AppToolBar::CreateAppToolBar()
     m_prevDeviceMode = APP_TOOL_BAR_WORLD_NAVIGATION;
     m_prevCenterPoint = APP_TOOL_BAR_SMALL_CENTER_POINT_JUMP;
 }
+////////////////////////////////////////////////////////////////////////////////
 void AppToolBar::OnEraseBackGround( wxEraseEvent& event )
 {
-    wxDC* theDC = event.GetDC();
-    wxColour bgColor = GetBackgroundColour();
-    wxBrush myBrush( bgColor, wxSOLID );
-    theDC->SetBackground( myBrush );
-
-    wxCoord x, y, w, h;
-    theDC->GetClippingBox( &x, &y, &w, &h );
-
-    //Now declare the clipping region which is what needs to be repainted
-    wxRegion myRegion( x, y, w, h ); 
-
-    //Now destroy the old clipping region
-    theDC->DestroyClippingRegion();
-
-    //Set the new one
-    theDC->SetClippingRegion( myRegion );
-
-    //This actually does the erasing
-    theDC->Clear();
-
-    //Don't call -- not needed, we already erased the background
-    //event.Skip();
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppToolBar::OnNew( wxCommandEvent& event )
@@ -442,6 +424,11 @@ void AppToolBar::OnNew( wxCommandEvent& event )
 void AppToolBar::OnOpen( wxCommandEvent& event )
 {
     m_appFrame->Open( event );
+}
+////////////////////////////////////////////////////////////////////////////////
+void AppToolBar::OnPaint( wxPaintEvent& event )
+{
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppToolBar::OnResetCenterPoint( wxCommandEvent& event )

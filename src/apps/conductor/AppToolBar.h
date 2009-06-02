@@ -100,6 +100,10 @@ private:
     ///\param event The wxCommand event
     void OnOpen( wxCommandEvent& event );
 
+    ///
+    ///\param
+    void OnPaint( wxPaintEvent& event );
+
     ///Handles events for the physics simulation
     ///\param event The wxCommand event
     void OnPhysicsSimulation( wxCommandEvent& event );
