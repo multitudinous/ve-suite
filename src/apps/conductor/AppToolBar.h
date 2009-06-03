@@ -42,11 +42,8 @@ class AppFrame;
 // --- wxWidgets Includes --- //
 #include <wx/toolbar.h>
 
-class wxChoice;
-
-// --- C/C++ Libraries --- //
+// --- C/C++ Includes --- //
 #include <map>
-#include <string>
 
 /*!\file AppToolBar.h
  *
@@ -83,6 +80,10 @@ private:
     ///
     ///\param
     void OnChangeManipulatorMode( wxCommandEvent& event );
+
+    ///
+    ///\param
+    void OnCharacterState( wxCommandEvent& event );
 
     ///
     ///\param
@@ -129,6 +130,15 @@ private:
     void OnUnselectObjects( wxCommandEvent& event );
 
     ///
+    bool m_physicsState;
+
+    ///
+    bool m_characterState;
+
+    ///
+    bool m_manipulatorState;
+
+    ///
     unsigned int m_prevDeviceMode;
 
     ///
@@ -141,37 +151,7 @@ private:
     unsigned int  m_prevManipulatorMode;
 
     ///A map that holds the bitmaps for this toolbar
-    std::map< unsigned int, wxBitmap > mToolbarBitmaps;
-
-    ///
-    wxToolBarToolBase* m_manipulatorTranslateTool;
-
-    ///
-    wxToolBarToolBase* m_manipulatorRotateTool;
-
-    ///
-    wxToolBarToolBase* m_manipulatorScaleTool;
-
-    ///
-    wxToolBarToolBase* m_manipulatorComboTool;
-
-    ///
-    wxToolBarToolBase* m_physicsCharacterTool;
-
-    ///
-    wxToolBarToolBase* m_physicsResetTool;
-
-    ///
-    wxToolBarToolBase* m_physicsPauseTool;
-
-    ///
-    wxToolBarToolBase* m_physicsPlayTool;
-
-    ///
-    wxToolBarToolBase* m_physicsStepTool;
-
-    ///
-    wxChoice* m_manipulatorChoice;
+    std::map< unsigned int, wxBitmap > m_toolbarBitmaps;
 
     ///
     AppFrame* m_appFrame;

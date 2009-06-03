@@ -64,23 +64,32 @@
 #include <ves/conductor/xpm/ToolBar/ManipulatorButtonSelect.xpm>
 #include <ves/conductor/xpm/ToolBar/ManipulatorTranslateButton.xpm>
 #include <ves/conductor/xpm/ToolBar/ManipulatorTranslateButtonSelect.xpm>
+#include <ves/conductor/xpm/ToolBar/ManipulatorTranslateButtonDisabled.xpm>
 #include <ves/conductor/xpm/ToolBar/ManipulatorRotateButton.xpm>
 #include <ves/conductor/xpm/ToolBar/ManipulatorRotateButtonSelect.xpm>
+#include <ves/conductor/xpm/ToolBar/ManipulatorRotateButtonDisabled.xpm>
 #include <ves/conductor/xpm/ToolBar/ManipulatorScaleButton.xpm>
 #include <ves/conductor/xpm/ToolBar/ManipulatorScaleButtonSelect.xpm>
+#include <ves/conductor/xpm/ToolBar/ManipulatorScaleButtonDisabled.xpm>
 #include <ves/conductor/xpm/ToolBar/ManipulatorComboButton.xpm>
 #include <ves/conductor/xpm/ToolBar/ManipulatorComboButtonSelect.xpm>
+#include <ves/conductor/xpm/ToolBar/ManipulatorComboButtonDisabled.xpm>
 
 #include <ves/conductor/xpm/ToolBar/PhysicsButton.xpm>
 #include <ves/conductor/xpm/ToolBar/PhysicsButtonSelect.xpm>
 #include <ves/conductor/xpm/ToolBar/CharacterButton.xpm>
 #include <ves/conductor/xpm/ToolBar/CharacterButtonSelect.xpm>
+#include <ves/conductor/xpm/ToolBar/CharacterButtonDisabled.xpm>
 #include <ves/conductor/xpm/ToolBar/ResetButton.xpm>
+#include <ves/conductor/xpm/ToolBar/ResetButtonDisabled.xpm>
 #include <ves/conductor/xpm/ToolBar/PauseButton.xpm>
 #include <ves/conductor/xpm/ToolBar/PauseButtonSelect.xpm>
+#include <ves/conductor/xpm/ToolBar/PauseButtonDisabled.xpm>
 #include <ves/conductor/xpm/ToolBar/PlayButton.xpm>
 #include <ves/conductor/xpm/ToolBar/PlayButtonSelect.xpm>
+#include <ves/conductor/xpm/ToolBar/PlayButtonDisabled.xpm>
 #include <ves/conductor/xpm/ToolBar/StepButton.xpm>
+#include <ves/conductor/xpm/ToolBar/StepButtonDisabled.xpm>
 
 #include <ves/conductor/xpm/ToolBar/SendJobButton.xpm>
 
@@ -99,6 +108,9 @@
 //#include <wx/dcbuffer.h>
 #include <wx/choice.h>
 //#include <wx/settings.h>
+
+// --- C/C++ Includes --- //
+#include <string>
 
 using namespace ves::open::xml;
 using namespace ves::conductor::util;
@@ -133,7 +145,7 @@ EVT_MENU( APP_TOOL_BAR_RESET_CENTER_POINT, AppToolBar::OnResetCenterPoint )
 
 EVT_MENU( APP_TOOL_BAR_PHYSICS, AppToolBar::OnPhysicsState )
 
-EVT_MENU( APP_TOOL_BAR_PHYSICS_CHARACTER, AppToolBar::OnPhysicsSimulation )
+EVT_MENU( APP_TOOL_BAR_PHYSICS_CHARACTER, AppToolBar::OnCharacterState )
 EVT_MENU( APP_TOOL_BAR_PHYSICS_RESET, AppToolBar::OnPhysicsSimulation )
 EVT_MENU( APP_TOOL_BAR_PHYSICS_PAUSE, AppToolBar::OnPhysicsSimulation )
 EVT_MENU( APP_TOOL_BAR_PHYSICS_PLAY, AppToolBar::OnPhysicsSimulation )
@@ -153,20 +165,13 @@ AppToolBar::AppToolBar( wxWindow* parent )
         wxDefaultSize,
         wxTB_FLAT | wxTB_NODIVIDER | wxTB_HORIZONTAL | wxNO_BORDER,
         wxT( "ToolBar" ) ),
+    m_physicsState( false ),
+    m_characterState( false ),
+    m_manipulatorState( false ),
     m_prevDeviceMode( APP_TOOL_BAR_NULL ),
     m_prevCenterPoint( APP_TOOL_BAR_NULL ),
     m_prevPhysicsSimulation( APP_TOOL_BAR_NULL ),
     m_prevManipulatorMode( APP_TOOL_BAR_NULL ),
-    m_manipulatorTranslateTool( NULL ),
-    m_manipulatorRotateTool( NULL ),
-    m_manipulatorScaleTool( NULL ),
-    m_manipulatorComboTool( NULL ),
-    m_physicsCharacterTool( NULL ),
-    m_physicsResetTool( NULL ),
-    m_physicsPauseTool( NULL ),
-    m_physicsPlayTool( NULL ),
-    m_physicsStepTool( NULL ),
-    m_manipulatorChoice( NULL ),
     m_appFrame( static_cast< AppFrame* >( parent ) )
 {
     LoadToolBarBitmaps();
@@ -175,152 +180,113 @@ AppToolBar::AppToolBar( wxWindow* parent )
 ////////////////////////////////////////////////////////////////////////////////
 AppToolBar::~AppToolBar()
 {
-    //It is safe to call RemoveTool from tbarbase.h even if tool is not in toolbar
-    RemoveTool( APP_TOOL_BAR_MANIPULATOR_TRANSLATE );
-    RemoveTool( APP_TOOL_BAR_MANIPULATOR_ROTATE );
-    RemoveTool( APP_TOOL_BAR_MANIPULATOR_SCALE );
-    RemoveTool( APP_TOOL_BAR_MANIPULATOR_COMBO );
-
-#ifdef CHARACTER_CONTROLLER
-    RemoveTool( APP_TOOL_BAR_PHYSICS_CHARACTER );
-#endif //CHARACTER_CONTROLLER
-    RemoveTool( APP_TOOL_BAR_PHYSICS_RESET );
-    RemoveTool( APP_TOOL_BAR_PHYSICS_PAUSE );
-    RemoveTool( APP_TOOL_BAR_PHYSICS_PLAY );
-    RemoveTool( APP_TOOL_BAR_PHYSICS_STEP );
-
-    if( m_manipulatorTranslateTool )
-    {
-        delete m_manipulatorTranslateTool;
-    }
-
-    if( m_manipulatorRotateTool )
-    {
-        delete m_manipulatorRotateTool;
-    }
-
-    if( m_manipulatorScaleTool )
-    {
-        delete m_manipulatorScaleTool;
-    }
-
-    if( m_manipulatorComboTool )
-    {
-        delete m_manipulatorComboTool;
-    }
-
-    if( m_physicsCharacterTool )
-    {
-        delete m_physicsCharacterTool;
-    }
-
-    if( m_physicsResetTool )
-    {
-        delete m_physicsResetTool;
-    }
-
-    if( m_physicsPauseTool )
-    {
-        delete m_physicsPauseTool;
-    }
-
-    if( m_physicsPlayTool )
-    {
-        delete m_physicsPlayTool;
-    }
-
-    if( m_physicsStepTool )
-    {
-        delete m_physicsStepTool;
-    }
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppToolBar::LoadToolBarBitmaps()
 {
-    mToolbarBitmaps[ APP_TOOL_BAR_NEW ] =
+    m_toolbarBitmaps[ APP_TOOL_BAR_NEW ] =
         wxBitmap( NewDocumentButton_xpm );
-    mToolbarBitmaps[ APP_TOOL_BAR_OPEN ] =
+    m_toolbarBitmaps[ APP_TOOL_BAR_OPEN ] =
         wxBitmap( OpenButton_xpm );
-    mToolbarBitmaps[ APP_TOOL_BAR_SAVE ] =
+    m_toolbarBitmaps[ APP_TOOL_BAR_SAVE ] =
         wxBitmap( SaveButton_xpm );
 
-    mToolbarBitmaps[ APP_TOOL_BAR_CURSOR ] =
+    m_toolbarBitmaps[ APP_TOOL_BAR_CURSOR ] =
         wxBitmap( CursorButton_xpm );
-    mToolbarBitmaps[ APP_TOOL_BAR_CURSOR_SELECT ] =
+    m_toolbarBitmaps[ APP_TOOL_BAR_CURSOR_SELECT ] =
         wxBitmap( CursorButtonSelect_xpm );
-    mToolbarBitmaps[ APP_TOOL_BAR_WORLD_NAVIGATION ] =
+    m_toolbarBitmaps[ APP_TOOL_BAR_WORLD_NAVIGATION ] =
         wxBitmap( WorldNavigationButton_xpm );
-    mToolbarBitmaps[ APP_TOOL_BAR_WORLD_NAVIGATION_SELECT ] =
+    m_toolbarBitmaps[ APP_TOOL_BAR_WORLD_NAVIGATION_SELECT ] =
         wxBitmap( WorldNavigationButtonSelect_xpm );
-    mToolbarBitmaps[ APP_TOOL_BAR_OBJECT_NAVIGATION ] =
+    m_toolbarBitmaps[ APP_TOOL_BAR_OBJECT_NAVIGATION ] =
         wxBitmap( ObjectNavigationButton_xpm );
-    mToolbarBitmaps[ APP_TOOL_BAR_OBJECT_NAVIGATION_SELECT ] =
+    m_toolbarBitmaps[ APP_TOOL_BAR_OBJECT_NAVIGATION_SELECT ] =
         wxBitmap( ObjectNavigationButtonSelect_xpm );
-    mToolbarBitmaps[ APP_TOOL_BAR_UNSELECT ] =
+    m_toolbarBitmaps[ APP_TOOL_BAR_UNSELECT ] =
         wxBitmap( UnselectButton_xpm );
 
-    mToolbarBitmaps[ APP_TOOL_BAR_MANIPULATOR ] =
+    m_toolbarBitmaps[ APP_TOOL_BAR_MANIPULATOR ] =
         wxBitmap( ManipulatorButton_xpm );
-    mToolbarBitmaps[ APP_TOOL_BAR_MANIPULATOR_SELECT ] =
+    m_toolbarBitmaps[ APP_TOOL_BAR_MANIPULATOR_SELECT ] =
         wxBitmap( ManipulatorButtonSelect_xpm );
-    mToolbarBitmaps[ APP_TOOL_BAR_MANIPULATOR_TRANSLATE ] =
+    m_toolbarBitmaps[ APP_TOOL_BAR_MANIPULATOR_TRANSLATE ] =
         wxBitmap( ManipulatorTranslateButton_xpm );
-    mToolbarBitmaps[ APP_TOOL_BAR_MANIPULATOR_TRANSLATE_SELECT ] =
+    m_toolbarBitmaps[ APP_TOOL_BAR_MANIPULATOR_TRANSLATE_SELECT ] =
         wxBitmap( ManipulatorTranslateButtonSelect_xpm );
-    mToolbarBitmaps[ APP_TOOL_BAR_MANIPULATOR_ROTATE ] =
+    m_toolbarBitmaps[ APP_TOOL_BAR_MANIPULATOR_TRANSLATE_DISABLED ] =
+        wxBitmap( ManipulatorTranslateButtonDisabled_xpm );
+    m_toolbarBitmaps[ APP_TOOL_BAR_MANIPULATOR_ROTATE ] =
         wxBitmap( ManipulatorRotateButton_xpm );
-    mToolbarBitmaps[ APP_TOOL_BAR_MANIPULATOR_ROTATE_SELECT ] =
+    m_toolbarBitmaps[ APP_TOOL_BAR_MANIPULATOR_ROTATE_SELECT ] =
         wxBitmap( ManipulatorRotateButtonSelect_xpm );
-    mToolbarBitmaps[ APP_TOOL_BAR_MANIPULATOR_SCALE ] =
+    m_toolbarBitmaps[ APP_TOOL_BAR_MANIPULATOR_ROTATE_DISABLED ] =
+        wxBitmap( ManipulatorRotateButtonDisabled_xpm );
+    m_toolbarBitmaps[ APP_TOOL_BAR_MANIPULATOR_SCALE ] =
         wxBitmap( ManipulatorScaleButton_xpm );
-    mToolbarBitmaps[ APP_TOOL_BAR_MANIPULATOR_SCALE_SELECT ] =
+    m_toolbarBitmaps[ APP_TOOL_BAR_MANIPULATOR_SCALE_SELECT ] =
         wxBitmap( ManipulatorScaleButtonSelect_xpm );
-    mToolbarBitmaps[ APP_TOOL_BAR_MANIPULATOR_COMBO ] =
+    m_toolbarBitmaps[ APP_TOOL_BAR_MANIPULATOR_SCALE_DISABLED ] =
+        wxBitmap( ManipulatorScaleButtonDisabled_xpm );
+    m_toolbarBitmaps[ APP_TOOL_BAR_MANIPULATOR_COMBO ] =
         wxBitmap( ManipulatorComboButton_xpm );
-    mToolbarBitmaps[ APP_TOOL_BAR_MANIPULATOR_COMBO_SELECT ] =
+    m_toolbarBitmaps[ APP_TOOL_BAR_MANIPULATOR_COMBO_SELECT ] =
         wxBitmap( ManipulatorComboButtonSelect_xpm );
+    m_toolbarBitmaps[ APP_TOOL_BAR_MANIPULATOR_COMBO_DISABLED ] =
+        wxBitmap( ManipulatorComboButtonDisabled_xpm );
 
-    mToolbarBitmaps[ APP_TOOL_BAR_SMALL_CENTER_POINT_JUMP ] =
+    m_toolbarBitmaps[ APP_TOOL_BAR_SMALL_CENTER_POINT_JUMP ] =
         wxBitmap( SmallCenterPointJumpButton_xpm );
-    mToolbarBitmaps[ APP_TOOL_BAR_SMALL_CENTER_POINT_JUMP_SELECT ] =
+    m_toolbarBitmaps[ APP_TOOL_BAR_SMALL_CENTER_POINT_JUMP_SELECT ] =
         wxBitmap( SmallCenterPointJumpButtonSelect_xpm );
-    mToolbarBitmaps[ APP_TOOL_BAR_MEDIUM_CENTER_POINT_JUMP ] =
+    m_toolbarBitmaps[ APP_TOOL_BAR_MEDIUM_CENTER_POINT_JUMP ] =
         wxBitmap( MediumCenterPointJumpButton_xpm );
-    mToolbarBitmaps[ APP_TOOL_BAR_MEDIUM_CENTER_POINT_JUMP_SELECT ] =
+    m_toolbarBitmaps[ APP_TOOL_BAR_MEDIUM_CENTER_POINT_JUMP_SELECT ] =
         wxBitmap( MediumCenterPointJumpButtonSelect_xpm );
-    mToolbarBitmaps[ APP_TOOL_BAR_LARGE_CENTER_POINT_JUMP ] =
+    m_toolbarBitmaps[ APP_TOOL_BAR_LARGE_CENTER_POINT_JUMP ] =
         wxBitmap( LargeCenterPointJumpButton_xpm );
-    mToolbarBitmaps[ APP_TOOL_BAR_LARGE_CENTER_POINT_JUMP_SELECT ] =
+    m_toolbarBitmaps[ APP_TOOL_BAR_LARGE_CENTER_POINT_JUMP_SELECT ] =
         wxBitmap( LargeCenterPointJumpButtonSelect_xpm );
-    mToolbarBitmaps[ APP_TOOL_BAR_BB_CENTER_POINT_JUMP ] =
+    m_toolbarBitmaps[ APP_TOOL_BAR_BB_CENTER_POINT_JUMP ] =
         wxBitmap( BBCenterPointJumpButton_xpm );
-    mToolbarBitmaps[ APP_TOOL_BAR_BB_CENTER_POINT_JUMP_SELECT ] =
+    m_toolbarBitmaps[ APP_TOOL_BAR_BB_CENTER_POINT_JUMP_SELECT ] =
         wxBitmap( BBCenterPointJumpButtonSelect_xpm );
-    mToolbarBitmaps[ APP_TOOL_BAR_RESET_CENTER_POINT ] =
+    m_toolbarBitmaps[ APP_TOOL_BAR_RESET_CENTER_POINT ] =
         wxBitmap( ResetCenterPointButton_xpm );
 
-    mToolbarBitmaps[ APP_TOOL_BAR_PHYSICS ] =
+    m_toolbarBitmaps[ APP_TOOL_BAR_PHYSICS ] =
         wxBitmap( PhysicsButton_xpm );
-    mToolbarBitmaps[ APP_TOOL_BAR_PHYSICS_SELECT ] =
+    m_toolbarBitmaps[ APP_TOOL_BAR_PHYSICS_SELECT ] =
         wxBitmap( PhysicsButtonSelect_xpm );
-    mToolbarBitmaps[ APP_TOOL_BAR_PHYSICS_CHARACTER ] =
+    m_toolbarBitmaps[ APP_TOOL_BAR_PHYSICS_CHARACTER ] =
         wxBitmap( CharacterButton_xpm );
-    mToolbarBitmaps[ APP_TOOL_BAR_PHYSICS_CHARACTER_SELECT ] =
+    m_toolbarBitmaps[ APP_TOOL_BAR_PHYSICS_CHARACTER_SELECT ] =
         wxBitmap( CharacterButtonSelect_xpm );
-    mToolbarBitmaps[ APP_TOOL_BAR_PHYSICS_RESET ] =
+    m_toolbarBitmaps[ APP_TOOL_BAR_PHYSICS_CHARACTER_DISABLED ] =
+        wxBitmap( CharacterButtonDisabled_xpm );
+    m_toolbarBitmaps[ APP_TOOL_BAR_PHYSICS_RESET ] =
         wxBitmap( ResetButton_xpm );
-    mToolbarBitmaps[ APP_TOOL_BAR_PHYSICS_PAUSE ] =
+    m_toolbarBitmaps[ APP_TOOL_BAR_PHYSICS_RESET_DISABLED ] =
+        wxBitmap( ResetButtonDisabled_xpm );
+    m_toolbarBitmaps[ APP_TOOL_BAR_PHYSICS_PAUSE ] =
         wxBitmap( PauseButton_xpm );
-    mToolbarBitmaps[ APP_TOOL_BAR_PHYSICS_PAUSE_SELECT ] =
+    m_toolbarBitmaps[ APP_TOOL_BAR_PHYSICS_PAUSE_SELECT ] =
         wxBitmap( PauseButtonSelect_xpm );
-    mToolbarBitmaps[ APP_TOOL_BAR_PHYSICS_PLAY ] =
+    m_toolbarBitmaps[ APP_TOOL_BAR_PHYSICS_PAUSE_DISABLED ] =
+        wxBitmap( PauseButtonDisabled_xpm );
+    m_toolbarBitmaps[ APP_TOOL_BAR_PHYSICS_PLAY ] =
         wxBitmap( PlayButton_xpm );
-    mToolbarBitmaps[ APP_TOOL_BAR_PHYSICS_PLAY_SELECT ] =
+    m_toolbarBitmaps[ APP_TOOL_BAR_PHYSICS_PLAY_SELECT ] =
         wxBitmap( PlayButtonSelect_xpm );
-    mToolbarBitmaps[ APP_TOOL_BAR_PHYSICS_STEP ] =
+    m_toolbarBitmaps[ APP_TOOL_BAR_PHYSICS_PLAY_DISABLED ] =
+        wxBitmap( PlayButtonDisabled_xpm );
+    m_toolbarBitmaps[ APP_TOOL_BAR_PHYSICS_STEP ] =
         wxBitmap( StepButton_xpm );
+    m_toolbarBitmaps[ APP_TOOL_BAR_PHYSICS_STEP_DISABLED ] =
+        wxBitmap( StepButtonDisabled_xpm );
 
-    mToolbarBitmaps[ APP_TOOL_BAR_SUMMIT_JOB ] =
+    m_toolbarBitmaps[ APP_TOOL_BAR_SUMMIT_JOB ] =
         wxBitmap( SendJobButton_xpm );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -332,34 +298,34 @@ void AppToolBar::CreateAppToolBar()
 
     AddTool(
         APP_TOOL_BAR_NEW, wxEmptyString,
-        mToolbarBitmaps[ APP_TOOL_BAR_NEW ],
+        m_toolbarBitmaps[ APP_TOOL_BAR_NEW ],
         wxT( "New" ), wxITEM_NORMAL );
     AddTool(
         APP_TOOL_BAR_OPEN, wxEmptyString,
-        mToolbarBitmaps[ APP_TOOL_BAR_OPEN ],
+        m_toolbarBitmaps[ APP_TOOL_BAR_OPEN ],
         wxT( "Open" ), wxITEM_NORMAL );
     AddTool(
         APP_TOOL_BAR_SAVE, wxEmptyString,
-        mToolbarBitmaps[ APP_TOOL_BAR_SAVE ],
+        m_toolbarBitmaps[ APP_TOOL_BAR_SAVE ],
         wxT( "Save" ), wxITEM_NORMAL );
 
     AddSeparator();
 
     AddTool(
         APP_TOOL_BAR_CURSOR, wxEmptyString,
-        mToolbarBitmaps[ APP_TOOL_BAR_CURSOR ],
+        m_toolbarBitmaps[ APP_TOOL_BAR_CURSOR ],
         wxT( "Selection" ), wxITEM_RADIO );
     AddTool(
         APP_TOOL_BAR_WORLD_NAVIGATION, wxEmptyString,
-        mToolbarBitmaps[ APP_TOOL_BAR_WORLD_NAVIGATION_SELECT ],
+        m_toolbarBitmaps[ APP_TOOL_BAR_WORLD_NAVIGATION_SELECT ],
         wxT( "World Navigation" ), wxITEM_RADIO );
     AddTool(
         APP_TOOL_BAR_OBJECT_NAVIGATION, wxEmptyString,
-        mToolbarBitmaps[ APP_TOOL_BAR_OBJECT_NAVIGATION ],
+        m_toolbarBitmaps[ APP_TOOL_BAR_OBJECT_NAVIGATION ],
         wxT( "Object Navigation" ), wxITEM_RADIO );
     AddTool(
         APP_TOOL_BAR_UNSELECT, wxEmptyString,
-        mToolbarBitmaps[ APP_TOOL_BAR_UNSELECT ],
+        m_toolbarBitmaps[ APP_TOOL_BAR_UNSELECT ],
         wxT( "Unselect Objects" ), wxITEM_NORMAL );
 
     AddSeparator();
@@ -367,107 +333,209 @@ void AppToolBar::CreateAppToolBar()
 #ifdef TRANSFORM_MANIPULATOR
     AddTool(
         APP_TOOL_BAR_MANIPULATOR, wxEmptyString,
-        mToolbarBitmaps[ APP_TOOL_BAR_MANIPULATOR ],
+        m_toolbarBitmaps[ APP_TOOL_BAR_MANIPULATOR ],
         wxT( "Transform Manipulator On/Off" ), wxITEM_CHECK );
-
-    m_manipulatorTranslateTool = new wxToolBarToolBase(
-        NULL, APP_TOOL_BAR_MANIPULATOR_TRANSLATE, wxEmptyString,
-        mToolbarBitmaps[ APP_TOOL_BAR_MANIPULATOR_TRANSLATE_SELECT ], 
-        wxNullBitmap, wxITEM_RADIO, NULL, wxT( "Translate Manipulator Mode" ) );
-    m_manipulatorRotateTool = new wxToolBarToolBase(
-        NULL, APP_TOOL_BAR_MANIPULATOR_ROTATE, wxEmptyString,
-        mToolbarBitmaps[ APP_TOOL_BAR_MANIPULATOR_ROTATE ],
-        wxNullBitmap, wxITEM_RADIO, NULL, wxT( "Rotate Manipulator Mode" ) );
-    m_manipulatorScaleTool = new wxToolBarToolBase(
-        NULL, APP_TOOL_BAR_MANIPULATOR_SCALE, wxEmptyString,
-        mToolbarBitmaps[ APP_TOOL_BAR_MANIPULATOR_SCALE ],
-        wxNullBitmap, wxITEM_RADIO, NULL, wxT( "Scale Manipulator Mode" ) );
-    m_manipulatorComboTool = new wxToolBarToolBase(
-        NULL, APP_TOOL_BAR_MANIPULATOR_COMBO, wxEmptyString,
-        mToolbarBitmaps[ APP_TOOL_BAR_MANIPULATOR_COMBO ],
-        wxNullBitmap, wxITEM_RADIO, NULL, wxT( "Combo Manipulator Mode" ) );
+//#ifdef WIN32
+    AddTool(
+        APP_TOOL_BAR_MANIPULATOR_TRANSLATE, wxEmptyString,
+        m_toolbarBitmaps[ APP_TOOL_BAR_MANIPULATOR_TRANSLATE_SELECT ],
+        m_toolbarBitmaps[ APP_TOOL_BAR_MANIPULATOR_TRANSLATE_DISABLED ],
+        wxITEM_RADIO, wxT( "Translate Manipulator Mode" ) );
+    AddTool(
+        APP_TOOL_BAR_MANIPULATOR_ROTATE, wxEmptyString,
+        m_toolbarBitmaps[ APP_TOOL_BAR_MANIPULATOR_ROTATE ],
+        m_toolbarBitmaps[ APP_TOOL_BAR_MANIPULATOR_ROTATE_DISABLED ],
+        wxITEM_RADIO, wxT( "Rotate Manipulator Mode" ) );
+    AddTool(
+        APP_TOOL_BAR_MANIPULATOR_SCALE, wxEmptyString,
+        m_toolbarBitmaps[ APP_TOOL_BAR_MANIPULATOR_SCALE ],
+        m_toolbarBitmaps[ APP_TOOL_BAR_MANIPULATOR_SCALE_DISABLED ],
+        wxITEM_RADIO, wxT( "Scale Manipulator Mode" ) );
+    AddTool(
+        APP_TOOL_BAR_MANIPULATOR_COMBO, wxEmptyString,
+        m_toolbarBitmaps[ APP_TOOL_BAR_MANIPULATOR_COMBO ],
+        m_toolbarBitmaps[ APP_TOOL_BAR_MANIPULATOR_COMBO_DISABLED ],
+        wxITEM_RADIO, wxT( "Combo Manipulator Mode" ) );
+/*
+#else
+    AddTool(
+        APP_TOOL_BAR_MANIPULATOR_TRANSLATE, wxEmptyString,
+        m_toolbarBitmaps[ APP_TOOL_BAR_MANIPULATOR_TRANSLATE_SELECT ],
+        wxT( "Translate Manipulator Mode" ), wxITEM_RADIO );
+    AddTool(
+        APP_TOOL_BAR_MANIPULATOR_ROTATE, wxEmptyString,
+        m_toolbarBitmaps[ APP_TOOL_BAR_MANIPULATOR_ROTATE ],
+        wxT( "Rotate Manipulator Mode" ), wxITEM_RADIO );
+    AddTool(
+        APP_TOOL_BAR_MANIPULATOR_SCALE, wxEmptyString,
+        m_toolbarBitmaps[ APP_TOOL_BAR_MANIPULATOR_SCALE ],
+        wxT( "Scale Manipulator Mode" ), wxITEM_RADIO );
+    AddTool(
+        APP_TOOL_BAR_MANIPULATOR_COMBO, wxEmptyString,
+        m_toolbarBitmaps[ APP_TOOL_BAR_MANIPULATOR_COMBO ],
+        wxT( "Combo Manipulator Mode" ), wxITEM_RADIO );
+#endif //WIN32
+*/
 
     wxString manipulatorChoices[] =
         { wxT( "Global" ), wxT( "Local" ), wxT( "View" ) };
 	int numManipulatorChoices = sizeof( manipulatorChoices ) / sizeof( wxString );
-	m_manipulatorChoice = new wxChoice(
+	wxChoice* manipulatorChoice = new wxChoice(
         this, wxID_ANY,
         wxDefaultPosition, wxDefaultSize,
         numManipulatorChoices, manipulatorChoices );
-	m_manipulatorChoice->SetSelection( 0 );
-	m_manipulatorChoice->SetBackgroundColour( wxColour( 255, 255, 255 ) );
+	manipulatorChoice->SetSelection( 0 );
+	manipulatorChoice->SetBackgroundColour( wxColour( 255, 255, 255 ) );
 	
-	AddControl( m_manipulatorChoice );
+	AddControl( manipulatorChoice );
 
     AddSeparator();
 #endif //TRANSFORM_MANIPULATOR
 
     AddTool(
         APP_TOOL_BAR_SMALL_CENTER_POINT_JUMP, wxEmptyString,
-        mToolbarBitmaps[ APP_TOOL_BAR_SMALL_CENTER_POINT_JUMP_SELECT ],
+        m_toolbarBitmaps[ APP_TOOL_BAR_SMALL_CENTER_POINT_JUMP_SELECT ],
         wxT( "Small Centerpoint Jump" ), wxITEM_RADIO );
     AddTool(
         APP_TOOL_BAR_MEDIUM_CENTER_POINT_JUMP, wxEmptyString,
-        mToolbarBitmaps[ APP_TOOL_BAR_MEDIUM_CENTER_POINT_JUMP ],
+        m_toolbarBitmaps[ APP_TOOL_BAR_MEDIUM_CENTER_POINT_JUMP ],
         wxT( "Medium Centerpoint Jump" ), wxITEM_RADIO );
     AddTool(
         APP_TOOL_BAR_LARGE_CENTER_POINT_JUMP, wxEmptyString,
-        mToolbarBitmaps[ APP_TOOL_BAR_LARGE_CENTER_POINT_JUMP ],
+        m_toolbarBitmaps[ APP_TOOL_BAR_LARGE_CENTER_POINT_JUMP ],
         wxT( "Large Centerpoint Jump" ), wxITEM_RADIO );
     AddTool(
         APP_TOOL_BAR_BB_CENTER_POINT_JUMP, wxEmptyString,
-        mToolbarBitmaps[ APP_TOOL_BAR_BB_CENTER_POINT_JUMP ],
+        m_toolbarBitmaps[ APP_TOOL_BAR_BB_CENTER_POINT_JUMP ],
         wxT( "Bounding Box Centerpoint Jump" ), wxITEM_RADIO );
     AddTool(
         APP_TOOL_BAR_RESET_CENTER_POINT, wxEmptyString,
-        mToolbarBitmaps[ APP_TOOL_BAR_RESET_CENTER_POINT ],
+        m_toolbarBitmaps[ APP_TOOL_BAR_RESET_CENTER_POINT ],
         wxT( "Reset Centerpoint" ), wxITEM_NORMAL );
 
     AddSeparator();
 
     AddTool(
         APP_TOOL_BAR_PHYSICS, wxEmptyString,
-        mToolbarBitmaps[ APP_TOOL_BAR_PHYSICS ],
+        m_toolbarBitmaps[ APP_TOOL_BAR_PHYSICS ],
+        wxT( "Physics On/Off" ), wxITEM_CHECK );
+//#ifdef WIN32
+#ifdef CHARACTER_CONTROLLER
+    AddTool(
+        APP_TOOL_BAR_PHYSICS_CHARACTER, wxEmptyString,
+        m_toolbarBitmaps[ APP_TOOL_BAR_PHYSICS_CHARACTER ],
+        m_toolbarBitmaps[ APP_TOOL_BAR_PHYSICS_CHARACTER_DISABLED ],
+        wxITEM_CHECK, wxT( "Character Controller" ) );
+#endif //CHARACTER_CONTROLLER
+    AddTool(
+        APP_TOOL_BAR_PHYSICS_RESET, wxEmptyString,
+        m_toolbarBitmaps[ APP_TOOL_BAR_PHYSICS_RESET ],
+        m_toolbarBitmaps[ APP_TOOL_BAR_PHYSICS_RESET_DISABLED ],
+        wxITEM_NORMAL, wxT( "Reset Simulation" ) );
+    AddTool(
+        APP_TOOL_BAR_PHYSICS_PAUSE, wxEmptyString,
+        m_toolbarBitmaps[ APP_TOOL_BAR_PHYSICS_PAUSE ],
+        m_toolbarBitmaps[ APP_TOOL_BAR_PHYSICS_PAUSE_DISABLED ],
+        wxITEM_CHECK, wxT( "Pause Simulation" ) );
+    AddTool(
+        APP_TOOL_BAR_PHYSICS_PLAY, wxEmptyString,
+        m_toolbarBitmaps[ APP_TOOL_BAR_PHYSICS_PLAY ],
+        m_toolbarBitmaps[ APP_TOOL_BAR_PHYSICS_PLAY_DISABLED ],
+        wxITEM_CHECK, wxT( "Start Simulation" ) );
+    AddTool(
+        APP_TOOL_BAR_PHYSICS_STEP, wxEmptyString,
+        m_toolbarBitmaps[ APP_TOOL_BAR_PHYSICS_STEP ],
+        m_toolbarBitmaps[ APP_TOOL_BAR_PHYSICS_STEP_DISABLED ],
+        wxITEM_NORMAL, wxT( "Step Simulation" ) );
+/*
+#else
+    AddTool(
+        APP_TOOL_BAR_PHYSICS, wxEmptyString,
+        m_toolbarBitmaps[ APP_TOOL_BAR_PHYSICS ],
         wxT( "Physics On/Off" ), wxITEM_CHECK );
 #ifdef CHARACTER_CONTROLLER
-    m_physicsCharacterTool = new wxToolBarToolBase(
-        NULL, APP_TOOL_BAR_PHYSICS_CHARACTER, wxEmptyString,
-        mToolbarBitmaps[ APP_TOOL_BAR_PHYSICS_CHARACTER ], wxNullBitmap,
-        wxITEM_CHECK, NULL, wxT( "Character Controller" ) );
+    AddTool(
+        APP_TOOL_BAR_PHYSICS_CHARACTER, wxEmptyString,
+        m_toolbarBitmaps[ APP_TOOL_BAR_PHYSICS_CHARACTER ],
+        wxT( "Character Controller" ), wxITEM_CHECK );
 #endif //CHARACTER_CONTROLLER
-    m_physicsResetTool = new wxToolBarToolBase(
-        NULL, APP_TOOL_BAR_PHYSICS_RESET, wxEmptyString,
-        mToolbarBitmaps[ APP_TOOL_BAR_PHYSICS_RESET ], wxNullBitmap,
-        wxITEM_NORMAL, NULL, wxT( "Reset Simulation" ) );
-    m_physicsPauseTool = new wxToolBarToolBase(
-        NULL, APP_TOOL_BAR_PHYSICS_PAUSE, wxEmptyString,
-        mToolbarBitmaps[ APP_TOOL_BAR_PHYSICS_PAUSE ], wxNullBitmap,
-        wxITEM_CHECK, NULL, wxT( "Pause Simulation" ) );
-    m_physicsPlayTool = new wxToolBarToolBase(
-        NULL, APP_TOOL_BAR_PHYSICS_PLAY, wxEmptyString,
-        mToolbarBitmaps[ APP_TOOL_BAR_PHYSICS_PLAY ], wxNullBitmap,
-        wxITEM_CHECK, NULL, wxT( "Start Simulation" ) );
-    m_physicsStepTool = new wxToolBarToolBase(
-        NULL, APP_TOOL_BAR_PHYSICS_STEP, wxEmptyString,
-        mToolbarBitmaps[ APP_TOOL_BAR_PHYSICS_STEP ], wxNullBitmap,
-        wxITEM_NORMAL, NULL, wxT( "Step Simulation" ) );
+    AddTool(
+        APP_TOOL_BAR_PHYSICS_RESET, wxEmptyString,
+        m_toolbarBitmaps[ APP_TOOL_BAR_PHYSICS_RESET ],
+        wxT( "Reset Simulation" ), wxITEM_NORMAL );
+    AddTool(
+        APP_TOOL_BAR_PHYSICS_PAUSE, wxEmptyString,
+        m_toolbarBitmaps[ APP_TOOL_BAR_PHYSICS_PAUSE ],
+        wxT( "Pause Simulation" ), wxITEM_CHECK );
+    AddTool(
+        APP_TOOL_BAR_PHYSICS_PLAY, wxEmptyString,
+        m_toolbarBitmaps[ APP_TOOL_BAR_PHYSICS_PLAY ],
+        wxT( "Start Simulation" ), wxITEM_CHECK );
+    AddTool(
+        APP_TOOL_BAR_PHYSICS_STEP, wxEmptyString,
+        m_toolbarBitmaps[ APP_TOOL_BAR_PHYSICS_STEP ],
+        wxT( "Step Simulation" ), wxITEM_NORMAL );
+#endif //WIN32
+*/
 
     AddSeparator();
 
     AddTool(
         APP_TOOL_BAR_SUMMIT_JOB, wxEmptyString,
-        mToolbarBitmaps[ APP_TOOL_BAR_SUMMIT_JOB ],
+        m_toolbarBitmaps[ APP_TOOL_BAR_SUMMIT_JOB ],
         wxT( "Submit Job" ), wxITEM_NORMAL );
 
     Realize();
 
     ToggleTool( APP_TOOL_BAR_WORLD_NAVIGATION, true );
     ToggleTool( APP_TOOL_BAR_SMALL_CENTER_POINT_JUMP, true );
-    ToggleTool( APP_TOOL_BAR_MANIPULATOR_TRANSLATE, true );
+    ToggleTool( APP_TOOL_BAR_MANIPULATOR_TRANSLATE, false );
 
     m_prevDeviceMode = APP_TOOL_BAR_WORLD_NAVIGATION;
     m_prevCenterPoint = APP_TOOL_BAR_SMALL_CENTER_POINT_JUMP;
     m_prevManipulatorMode = APP_TOOL_BAR_MANIPULATOR_TRANSLATE;
+
+    EnableTool( APP_TOOL_BAR_PHYSICS_CHARACTER, false );
+    EnableTool( APP_TOOL_BAR_PHYSICS_RESET, false );
+    EnableTool( APP_TOOL_BAR_PHYSICS_PAUSE, false );
+    EnableTool( APP_TOOL_BAR_PHYSICS_PLAY, false );
+    EnableTool( APP_TOOL_BAR_PHYSICS_STEP, false );
+    EnableTool( APP_TOOL_BAR_MANIPULATOR_TRANSLATE, false );
+    EnableTool( APP_TOOL_BAR_MANIPULATOR_ROTATE, false );
+    EnableTool( APP_TOOL_BAR_MANIPULATOR_SCALE, false );
+    EnableTool( APP_TOOL_BAR_MANIPULATOR_COMBO, false );
+}
+////////////////////////////////////////////////////////////////////////////////
+void AppToolBar::OnCharacterState( wxCommandEvent& event )
+{
+    std::string value;
+    int currentSelection = event.GetId();
+    m_characterState = GetToolState( currentSelection );
+    if( m_characterState )
+    {
+        value = "CharacterControllerOn";
+
+        SetToolNormalBitmap(
+            currentSelection,
+            m_toolbarBitmaps[ APP_TOOL_BAR_PHYSICS_CHARACTER_SELECT ] );
+    }
+    else
+    {
+        value = "CharacterControllerOff";
+
+        SetToolNormalBitmap(
+            currentSelection,
+            m_toolbarBitmaps[ currentSelection ] );
+    }
+
+    DataValuePairPtr dvp( new DataValuePair() );
+    dvp->SetData( "value", value );
+
+    CommandSharedPtr command( new ves::open::xml::Command() );
+    command->SetCommandName( "PHYSICS_SIMULATION" );
+    command->AddDataValuePair( dvp );
+
+    CORBAServiceList::instance()->SendCommandStringToXplorer( command );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppToolBar::OnEraseBackGround( wxEraseEvent& event )
@@ -510,52 +578,51 @@ void AppToolBar::OnSave( wxCommandEvent& event )
 void AppToolBar::OnChangeManipulatorMode( wxCommandEvent& event )
 {
     int currentSelection = event.GetId();
-
     if( m_prevManipulatorMode == currentSelection )
     {
         return;
     }
 
-    std::string mode;
+    std::string data;
     switch( currentSelection )
     {
         case APP_TOOL_BAR_MANIPULATOR_TRANSLATE:
         {
-            mode = "Translate";
+            data = "TRANSLATE";
 
             SetToolNormalBitmap(
                 currentSelection,
-                mToolbarBitmaps[ APP_TOOL_BAR_MANIPULATOR_TRANSLATE_SELECT ] );
+                m_toolbarBitmaps[ APP_TOOL_BAR_MANIPULATOR_TRANSLATE_SELECT ] );
 
             break;
         }
         case APP_TOOL_BAR_MANIPULATOR_ROTATE:
         {
-            mode = "Rotate";
+            data = "ROTATE";
 
             SetToolNormalBitmap(
                 currentSelection,
-                mToolbarBitmaps[ APP_TOOL_BAR_MANIPULATOR_ROTATE_SELECT ] );
+                m_toolbarBitmaps[ APP_TOOL_BAR_MANIPULATOR_ROTATE_SELECT ] );
 
             break;
         }
         case APP_TOOL_BAR_MANIPULATOR_SCALE:
         {
-            mode = "Scale";
+            data = "SCALE";
 
             SetToolNormalBitmap(
                 currentSelection,
-                mToolbarBitmaps[ APP_TOOL_BAR_MANIPULATOR_SCALE_SELECT ] );
+                m_toolbarBitmaps[ APP_TOOL_BAR_MANIPULATOR_SCALE_SELECT ] );
 
             break;
         }
         case APP_TOOL_BAR_MANIPULATOR_COMBO:
         {
-            mode = "Combo";
+            data = "COMBO";
 
             SetToolNormalBitmap(
                 currentSelection,
-                mToolbarBitmaps[ APP_TOOL_BAR_MANIPULATOR_COMBO_SELECT ] );
+                m_toolbarBitmaps[ APP_TOOL_BAR_MANIPULATOR_COMBO_SELECT ] );
 
             break;
         }
@@ -563,66 +630,57 @@ void AppToolBar::OnChangeManipulatorMode( wxCommandEvent& event )
 
     SetToolNormalBitmap(
         m_prevManipulatorMode,
-        mToolbarBitmaps[ m_prevManipulatorMode ] );
+        m_toolbarBitmaps[ m_prevManipulatorMode ] );
 
     m_prevManipulatorMode = currentSelection;
 
-    /*
     DataValuePairPtr dvp( new DataValuePair() );
-    dvp->SetData( "Mode", mode );
+    dvp->SetData( "MANIPULATOR_DVP", data );
 
     CommandSharedPtr command( new ves::open::xml::Command() );
-    command->SetCommandName( "CHANGE_DEVICE_MODE" );
+    command->SetCommandName( "MANIPULATOR_COMMAND" );
     command->AddDataValuePair( dvp );
 
     CORBAServiceList::instance()->SendCommandStringToXplorer( command );
-    */
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppToolBar::OnManipulatorState( wxCommandEvent& event )
 {
+    std::string data;
     int currentSelection = event.GetId();
-
-    if( GetToolState( currentSelection ) )
+    m_manipulatorState = GetToolState( currentSelection );
+    if( m_manipulatorState )
     {
+        data = "ENABLE";
+
         SetToolNormalBitmap(
             currentSelection,
-            mToolbarBitmaps[ APP_TOOL_BAR_MANIPULATOR_SELECT ] );
-
-        int position = GetToolPos( currentSelection );
-        InsertTool( ++position, m_manipulatorTranslateTool );
-        Realize();
-        InsertTool( ++position, m_manipulatorRotateTool );
-        Realize();
-        InsertTool( ++position, m_manipulatorScaleTool );
-        Realize();
-        InsertTool( ++position, m_manipulatorComboTool );
-        Realize();
+            m_toolbarBitmaps[ APP_TOOL_BAR_MANIPULATOR_SELECT ] );
     }
     else
     {
+        data = "DISABLE";
+
         SetToolNormalBitmap(
             currentSelection,
-            mToolbarBitmaps[ currentSelection ] );
-
-        RemoveTool( APP_TOOL_BAR_MANIPULATOR_TRANSLATE );
-        RemoveTool( APP_TOOL_BAR_MANIPULATOR_ROTATE );
-        RemoveTool( APP_TOOL_BAR_MANIPULATOR_SCALE );
-        RemoveTool( APP_TOOL_BAR_MANIPULATOR_COMBO );
-        
-        /*
-        std::string value = "PausePhysicsSimulation";
-
-        DataValuePairPtr dvp( new DataValuePair() );
-        dvp->SetData( "value", value );
-
-        ves::open::xml::CommandPtr command( new ves::open::xml::Command() );
-        command->SetCommandName( "PHYSICS_SIMULATION" );
-        command->AddDataValuePair( dvp );
-
-        CORBAServiceList::instance()->SendCommandStringToXplorer( command );
-        */
+            m_toolbarBitmaps[ currentSelection ] );
     }
+
+    ToggleTool( m_prevManipulatorMode, m_manipulatorState );
+
+    EnableTool( APP_TOOL_BAR_MANIPULATOR_TRANSLATE, m_manipulatorState );
+    EnableTool( APP_TOOL_BAR_MANIPULATOR_ROTATE, m_manipulatorState );
+    EnableTool( APP_TOOL_BAR_MANIPULATOR_SCALE, m_manipulatorState );
+    EnableTool( APP_TOOL_BAR_MANIPULATOR_COMBO, m_manipulatorState );
+
+    DataValuePairPtr dvp( new DataValuePair() );
+    dvp->SetData( "MANIPULATOR_DVP", data );
+
+    CommandSharedPtr command( new ves::open::xml::Command() );
+    command->SetCommandName( "MANIPULATOR_COMMAND" );
+    command->AddDataValuePair( dvp );
+
+    CORBAServiceList::instance()->SendCommandStringToXplorer( command );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppToolBar::OnChangeDeviceMode( wxCommandEvent& event )
@@ -643,7 +701,7 @@ void AppToolBar::OnChangeDeviceMode( wxCommandEvent& event )
 
             SetToolNormalBitmap(
                 currentSelection,
-                mToolbarBitmaps[ APP_TOOL_BAR_CURSOR_SELECT ] );
+                m_toolbarBitmaps[ APP_TOOL_BAR_CURSOR_SELECT ] );
 
             break;
         }
@@ -653,7 +711,7 @@ void AppToolBar::OnChangeDeviceMode( wxCommandEvent& event )
 
             SetToolNormalBitmap(
                 currentSelection,
-                mToolbarBitmaps[ APP_TOOL_BAR_WORLD_NAVIGATION_SELECT ] );
+                m_toolbarBitmaps[ APP_TOOL_BAR_WORLD_NAVIGATION_SELECT ] );
 
             break;
         }
@@ -663,7 +721,7 @@ void AppToolBar::OnChangeDeviceMode( wxCommandEvent& event )
 
             SetToolNormalBitmap(
                 currentSelection,
-                mToolbarBitmaps[ APP_TOOL_BAR_OBJECT_NAVIGATION_SELECT ] );
+                m_toolbarBitmaps[ APP_TOOL_BAR_OBJECT_NAVIGATION_SELECT ] );
 
             break;
         }
@@ -671,7 +729,7 @@ void AppToolBar::OnChangeDeviceMode( wxCommandEvent& event )
 
     SetToolNormalBitmap(
         m_prevDeviceMode,
-        mToolbarBitmaps[ m_prevDeviceMode ] );
+        m_toolbarBitmaps[ m_prevDeviceMode ] );
 
     m_prevDeviceMode = currentSelection;
 
@@ -703,7 +761,7 @@ void AppToolBar::OnCenterPointUpdate( wxCommandEvent& event )
 
             SetToolNormalBitmap(
                 currentSelection,
-                mToolbarBitmaps[ APP_TOOL_BAR_SMALL_CENTER_POINT_JUMP_SELECT ] );
+                m_toolbarBitmaps[ APP_TOOL_BAR_SMALL_CENTER_POINT_JUMP_SELECT ] );
 
             break;
         }
@@ -713,7 +771,7 @@ void AppToolBar::OnCenterPointUpdate( wxCommandEvent& event )
 
             SetToolNormalBitmap(
                 currentSelection,
-                mToolbarBitmaps[ APP_TOOL_BAR_MEDIUM_CENTER_POINT_JUMP_SELECT ] );
+                m_toolbarBitmaps[ APP_TOOL_BAR_MEDIUM_CENTER_POINT_JUMP_SELECT ] );
 
             break;
         }
@@ -723,7 +781,7 @@ void AppToolBar::OnCenterPointUpdate( wxCommandEvent& event )
 
             SetToolNormalBitmap(
                 currentSelection,
-                mToolbarBitmaps[ APP_TOOL_BAR_LARGE_CENTER_POINT_JUMP_SELECT ] );
+                m_toolbarBitmaps[ APP_TOOL_BAR_LARGE_CENTER_POINT_JUMP_SELECT ] );
 
             break;
         }
@@ -733,7 +791,7 @@ void AppToolBar::OnCenterPointUpdate( wxCommandEvent& event )
 
             SetToolNormalBitmap(
                 currentSelection,
-                mToolbarBitmaps[ APP_TOOL_BAR_BB_CENTER_POINT_JUMP_SELECT ] );
+                m_toolbarBitmaps[ APP_TOOL_BAR_BB_CENTER_POINT_JUMP_SELECT ] );
 
             break;
         }
@@ -741,7 +799,7 @@ void AppToolBar::OnCenterPointUpdate( wxCommandEvent& event )
 
     SetToolNormalBitmap(
         m_prevCenterPoint,
-        mToolbarBitmaps[ m_prevCenterPoint ] );
+        m_toolbarBitmaps[ m_prevCenterPoint ] );
 
     m_prevCenterPoint = currentSelection;
 
@@ -759,12 +817,12 @@ void AppToolBar::OnUnselectObjects( wxCommandEvent& event )
 {
     SetToolNormalBitmap(
         m_prevDeviceMode,
-        mToolbarBitmaps[ m_prevDeviceMode ] );
+        m_toolbarBitmaps[ m_prevDeviceMode ] );
 
     m_prevDeviceMode = APP_TOOL_BAR_WORLD_NAVIGATION;
     SetToolNormalBitmap(
         m_prevDeviceMode,
-        mToolbarBitmaps[ APP_TOOL_BAR_WORLD_NAVIGATION_SELECT ] );
+        m_toolbarBitmaps[ APP_TOOL_BAR_WORLD_NAVIGATION_SELECT ] );
 
     ToggleTool( APP_TOOL_BAR_WORLD_NAVIGATION, true );
 
@@ -780,45 +838,38 @@ void AppToolBar::OnUnselectObjects( wxCommandEvent& event )
 void AppToolBar::OnPhysicsState( wxCommandEvent& event )
 {
     int currentSelection = event.GetId();
-
-    if( GetToolState( currentSelection ) )
+    m_physicsState = GetToolState( currentSelection );
+    if( m_physicsState )
     {
         SetToolNormalBitmap(
             currentSelection,
-            mToolbarBitmaps[ APP_TOOL_BAR_PHYSICS_SELECT ] );
-
-        int position = GetToolPos( currentSelection );
-
-#ifdef CHARACTER_CONTROLLER
-        InsertTool( ++position, m_physicsCharacterTool );
-        //Realize();
-#endif //CHARACTER_CONTROLLER
-        InsertTool( ++position, m_physicsResetTool );
-        //Realize();
-        InsertTool( ++position, m_physicsPauseTool );
-        //Realize();
-        InsertTool( ++position, m_physicsPlayTool );
-        //Realize();
-        InsertTool( ++position, m_physicsStepTool );
-        Realize();
+            m_toolbarBitmaps[ APP_TOOL_BAR_PHYSICS_SELECT ] );
     }
     else
     {
         SetToolNormalBitmap(
             currentSelection,
-            mToolbarBitmaps[ currentSelection ] );
+            m_toolbarBitmaps[ currentSelection ] );
 
         event.SetId( APP_TOOL_BAR_PHYSICS_PAUSE );
         OnPhysicsSimulation( event );
-
-#ifdef CHARACTER_CONTROLLER
-        RemoveTool( APP_TOOL_BAR_PHYSICS_CHARACTER );
-#endif //CHARACTER_CONTROLLER
-        RemoveTool( APP_TOOL_BAR_PHYSICS_RESET );
-        RemoveTool( APP_TOOL_BAR_PHYSICS_PAUSE );
-        RemoveTool( APP_TOOL_BAR_PHYSICS_PLAY );
-        RemoveTool( APP_TOOL_BAR_PHYSICS_STEP );
     }
+
+    if( m_prevPhysicsSimulation == APP_TOOL_BAR_PHYSICS_PAUSE )
+    {
+        ToggleTool( APP_TOOL_BAR_PHYSICS_PAUSE, m_physicsState );
+    }
+
+    if( m_characterState )
+    {
+        ToggleTool( APP_TOOL_BAR_PHYSICS_CHARACTER, m_physicsState );
+    }
+
+    EnableTool( APP_TOOL_BAR_PHYSICS_CHARACTER, m_physicsState );
+    EnableTool( APP_TOOL_BAR_PHYSICS_RESET, m_physicsState );
+    EnableTool( APP_TOOL_BAR_PHYSICS_PAUSE, m_physicsState );
+    EnableTool( APP_TOOL_BAR_PHYSICS_PLAY, m_physicsState );
+    EnableTool( APP_TOOL_BAR_PHYSICS_STEP, m_physicsState );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppToolBar::OnPhysicsSimulation( wxCommandEvent& event )
@@ -835,27 +886,6 @@ void AppToolBar::OnPhysicsSimulation( wxCommandEvent& event )
     std::string value;
     switch( currentSelection )
     {
-        case APP_TOOL_BAR_PHYSICS_CHARACTER:
-        {
-            if( GetToolState( currentSelection ) )
-            {
-                value = "CharacterControllerOn";
-
-                SetToolNormalBitmap(
-                    currentSelection,
-                    mToolbarBitmaps[ APP_TOOL_BAR_PHYSICS_CHARACTER_SELECT ] );
-            }
-            else
-            {
-                value = "CharacterControllerOff";
-
-                SetToolNormalBitmap(
-                    currentSelection,
-                    mToolbarBitmaps[ currentSelection ] );
-            }
-
-            break;
-        }
         case APP_TOOL_BAR_PHYSICS_PAUSE:
         {
             value = "PausePhysicsSimulation";
@@ -865,10 +895,10 @@ void AppToolBar::OnPhysicsSimulation( wxCommandEvent& event )
 
             SetToolNormalBitmap(
                 APP_TOOL_BAR_PHYSICS_PAUSE,
-                mToolbarBitmaps[ APP_TOOL_BAR_PHYSICS_PAUSE_SELECT ] );
+                m_toolbarBitmaps[ APP_TOOL_BAR_PHYSICS_PAUSE_SELECT ] );
             SetToolNormalBitmap(
                 APP_TOOL_BAR_PHYSICS_PLAY,
-                mToolbarBitmaps[ APP_TOOL_BAR_PHYSICS_PLAY ] );
+                m_toolbarBitmaps[ APP_TOOL_BAR_PHYSICS_PLAY ] );
 
             break;
         }
@@ -881,10 +911,10 @@ void AppToolBar::OnPhysicsSimulation( wxCommandEvent& event )
 
             SetToolNormalBitmap(
                 APP_TOOL_BAR_PHYSICS_PAUSE,
-                mToolbarBitmaps[ APP_TOOL_BAR_PHYSICS_PAUSE_SELECT ] );
+                m_toolbarBitmaps[ APP_TOOL_BAR_PHYSICS_PAUSE_SELECT ] );
             SetToolNormalBitmap(
                 APP_TOOL_BAR_PHYSICS_PLAY,
-                mToolbarBitmaps[ APP_TOOL_BAR_PHYSICS_PLAY ] );
+                m_toolbarBitmaps[ APP_TOOL_BAR_PHYSICS_PLAY ] );
 
             break;
         }
@@ -897,10 +927,10 @@ void AppToolBar::OnPhysicsSimulation( wxCommandEvent& event )
 
             SetToolNormalBitmap(
                 APP_TOOL_BAR_PHYSICS_PAUSE,
-                mToolbarBitmaps[ APP_TOOL_BAR_PHYSICS_PAUSE_SELECT ] );
+                m_toolbarBitmaps[ APP_TOOL_BAR_PHYSICS_PAUSE_SELECT ] );
             SetToolNormalBitmap(
                 APP_TOOL_BAR_PHYSICS_PLAY,
-                mToolbarBitmaps[ APP_TOOL_BAR_PHYSICS_PLAY ] );
+                m_toolbarBitmaps[ APP_TOOL_BAR_PHYSICS_PLAY ] );
 
             break;
         }
@@ -913,10 +943,10 @@ void AppToolBar::OnPhysicsSimulation( wxCommandEvent& event )
             
             SetToolNormalBitmap(
                 APP_TOOL_BAR_PHYSICS_PLAY,
-                mToolbarBitmaps[ APP_TOOL_BAR_PHYSICS_PLAY_SELECT ] );
+                m_toolbarBitmaps[ APP_TOOL_BAR_PHYSICS_PLAY_SELECT ] );
             SetToolNormalBitmap(
                 APP_TOOL_BAR_PHYSICS_PAUSE,
-                mToolbarBitmaps[ APP_TOOL_BAR_PHYSICS_PAUSE ] );
+                m_toolbarBitmaps[ APP_TOOL_BAR_PHYSICS_PAUSE ] );
 
             break;
         }
