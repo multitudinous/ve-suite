@@ -5,7 +5,7 @@ pj = os.path.join
 Import('baseEnv RootDir ves_pkg LIBDIR GetPlatform buildDir vtk_options')
 
 srcs = Split("""
-   fluentmulti.c2p.cpp
+  vector_field.cpp
 """)
 
 
@@ -13,8 +13,6 @@ srcs = Split("""
 env = baseEnv.Clone()
 vtk_options.apply( env )
 
-multiblock = ves_pkg.createProgram('multiblockTest' + env["PROGSUFFIX"], env, 'bin')
+multiblock = ves_pkg.createProgram('vectorField' + env["PROGSUFFIX"], env, 'bin')
 multiblock.addSources( srcs )
 multiblock.build()
-
-SConscript( dirs = ['vector_field'] )
