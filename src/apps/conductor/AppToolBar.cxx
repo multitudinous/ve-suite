@@ -509,8 +509,7 @@ void AppToolBar::OnSave( wxCommandEvent& event )
 ////////////////////////////////////////////////////////////////////////////////
 void AppToolBar::OnChangeManipulatorMode( wxCommandEvent& event )
 {
-    APP_TOOL_BAR currentSelection =
-        static_cast< APP_TOOL_BAR >( event.GetId() );
+    int currentSelection = event.GetId();
 
     if( m_prevManipulatorMode == currentSelection )
     {
@@ -582,8 +581,7 @@ void AppToolBar::OnChangeManipulatorMode( wxCommandEvent& event )
 ////////////////////////////////////////////////////////////////////////////////
 void AppToolBar::OnManipulatorState( wxCommandEvent& event )
 {
-    APP_TOOL_BAR currentSelection =
-        static_cast< APP_TOOL_BAR >( event.GetId() );
+    int currentSelection = event.GetId();
 
     if( GetToolState( currentSelection ) )
     {
@@ -629,8 +627,7 @@ void AppToolBar::OnManipulatorState( wxCommandEvent& event )
 ////////////////////////////////////////////////////////////////////////////////
 void AppToolBar::OnChangeDeviceMode( wxCommandEvent& event )
 {
-    APP_TOOL_BAR currentSelection =
-        static_cast< APP_TOOL_BAR >( event.GetId() );
+    int currentSelection = event.GetId();
 
     if( m_prevDeviceMode == currentSelection )
     {
@@ -690,8 +687,7 @@ void AppToolBar::OnChangeDeviceMode( wxCommandEvent& event )
 ////////////////////////////////////////////////////////////////////////////////
 void AppToolBar::OnCenterPointUpdate( wxCommandEvent& event )
 {
-    APP_TOOL_BAR currentSelection =
-        static_cast< APP_TOOL_BAR >( event.GetId() );
+    int currentSelection = event.GetId();
 
     if( m_prevCenterPoint == currentSelection )
     {
@@ -783,8 +779,7 @@ void AppToolBar::OnUnselectObjects( wxCommandEvent& event )
 ////////////////////////////////////////////////////////////////////////////////
 void AppToolBar::OnPhysicsState( wxCommandEvent& event )
 {
-    APP_TOOL_BAR currentSelection =
-        static_cast< APP_TOOL_BAR >( event.GetId() );
+    int currentSelection = event.GetId();
 
     if( GetToolState( currentSelection ) )
     {
@@ -793,16 +788,17 @@ void AppToolBar::OnPhysicsState( wxCommandEvent& event )
             mToolbarBitmaps[ APP_TOOL_BAR_PHYSICS_SELECT ] );
 
         int position = GetToolPos( currentSelection );
+
 #ifdef CHARACTER_CONTROLLER
         InsertTool( ++position, m_physicsCharacterTool );
-        Realize();
+        //Realize();
 #endif //CHARACTER_CONTROLLER
         InsertTool( ++position, m_physicsResetTool );
-        Realize();
+        //Realize();
         InsertTool( ++position, m_physicsPauseTool );
-        Realize();
+        //Realize();
         InsertTool( ++position, m_physicsPlayTool );
-        Realize();
+        //Realize();
         InsertTool( ++position, m_physicsStepTool );
         Realize();
     }
@@ -827,8 +823,7 @@ void AppToolBar::OnPhysicsState( wxCommandEvent& event )
 ////////////////////////////////////////////////////////////////////////////////
 void AppToolBar::OnPhysicsSimulation( wxCommandEvent& event )
 {
-    APP_TOOL_BAR currentSelection =
-        static_cast< APP_TOOL_BAR >( event.GetId() );
+    int currentSelection = event.GetId();
 
     if( m_prevPhysicsSimulation == currentSelection &&
       ( currentSelection == APP_TOOL_BAR_PHYSICS_PLAY ||

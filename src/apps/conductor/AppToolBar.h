@@ -129,19 +129,19 @@ private:
     void OnUnselectObjects( wxCommandEvent& event );
 
     ///
-    APP_TOOL_BAR m_prevDeviceMode;
+    unsigned int m_prevDeviceMode;
 
     ///
-    APP_TOOL_BAR m_prevCenterPoint;
+    unsigned int m_prevCenterPoint;
 
     ///
-    APP_TOOL_BAR m_prevPhysicsSimulation;
+    unsigned int  m_prevPhysicsSimulation;
 
     ///
-    APP_TOOL_BAR m_prevManipulatorMode;
+    unsigned int  m_prevManipulatorMode;
 
     ///A map that holds the bitmaps for this toolbar
-    std::map< APP_TOOL_BAR, wxBitmap > mToolbarBitmaps;
+    std::map< unsigned int, wxBitmap > mToolbarBitmaps;
 
     ///
     wxToolBarToolBase* m_manipulatorTranslateTool;
