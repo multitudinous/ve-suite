@@ -837,7 +837,7 @@ std::vector<std::string> DataSet::GetParameterNames( const int numComponents,
 void DataSet::UpdatePropertiesForNewMesh()
 {}
 ////////////////////////////////////////////////////////////////////////////////
-void DataSet::SetActiveScalar( std::string tempActiveScalar )
+void DataSet::SetActiveScalar( const std::string& tempActiveScalar )
 {
     if( tempActiveScalar.empty() )
     {
@@ -1002,7 +1002,7 @@ void DataSet::SetActiveScalar( int scalar )
         }
     }*/
     // Store the actual range of the active scalar...
-    double * temp = this->GetActualScalarRange( this->activeScalar );
+    /*double * temp = this->GetActualScalarRange( this->activeScalar );
     this->range [ 0 ] = temp[ 0 ];
     this->range [ 1 ] = temp[ 1 ];
     vprDEBUG( vesDBG, 1 ) << "|\t\trange[0] = " << this->range[0]
@@ -1048,7 +1048,7 @@ void DataSet::SetActiveScalar( int scalar )
     this->lut->SetNumberOfColors( 256 );            //default is 256
     this->lut->SetHueRange( 2.0f / 3.0f, 0.0f );    //a blue-to-red scale
     this->lut->SetTableRange( this->definedRange );
-    this->lut->Build();
+    this->lut->Build();*/
 }
 ////////////////////////////////////////////////////////////////////////////////
 int DataSet::GetActiveScalar()
@@ -1090,7 +1090,7 @@ void DataSet::SetActiveVector( int vector )
 
 
     SetActiveVector( this->vectorName[ this->activeVector ] );
-    for( int i = 0; i < 3; i++ )
+    /*for( int i = 0; i < 3; i++ )
     {
         int numPlanes = 0;
         if( this->GetPrecomputedSlices( i ) )
@@ -1102,10 +1102,6 @@ void DataSet::SetActiveVector( int vector )
 
         if( numPlanes > 0 )
         {
-            /*this->GetPrecomputedSlices( i )->GetPlanesData()
-                ->GetPointData()->SetActiveVectors( 
-                                    this->vectorName[ this->activeVector ].c_str() );
-            */
             for( int j = 0; j < numPlanes; j++ )
             {
                 this->GetPrecomputedSlices( i )->GetPlane( j )
@@ -1113,10 +1109,10 @@ void DataSet::SetActiveVector( int vector )
                     this->vectorName[ this->activeVector ].c_str() );
             }
         }
-    }
+    }*/
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DataSet::SetActiveVector( std::string tempVectorName )
+void DataSet::SetActiveVector( const std::string& tempVectorName )
 {
     if( tempVectorName.empty() )
     {
@@ -1158,7 +1154,7 @@ void DataSet::SetActiveVector( std::string tempVectorName )
     m_dataObjectHandler->SetDatasetOperatorCallback( activeDataInfoCbk );
     m_dataObjectHandler->OperateOnAllDatasetsInObject( this->m_dataSet );
 
-    for( int i = 0; i < 3; i++ )
+    /*for( int i = 0; i < 3; i++ )
     {
         int numPlanes = 0;
         if( this->GetPrecomputedSlices( i ) )
@@ -1177,7 +1173,7 @@ void DataSet::SetActiveVector( std::string tempVectorName )
                     this->vectorName[ this->activeVector ].c_str() );
             }
         }
-    }
+    }*/
 }
 ////////////////////////////////////////////////////////////////////////////////
 int DataSet::GetActiveVector()
@@ -1268,7 +1264,7 @@ const std::string& DataSet::GetFileName()
     return fileName;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DataSet::SetPrecomputedDataSliceDir( const std::string newName )
+void DataSet::SetPrecomputedDataSliceDir( const std::string& newName )
 {
     precomputedDataSliceDir.assign( newName );
 }
@@ -1294,26 +1290,29 @@ void DataSet::LoadPrecomputedDataSlices()
     {
         double bounds[ 6 ];
         GetBounds( bounds );
-        vprDEBUG( vesDBG, 0 ) << "|\t\tDataset bounds xmin = " << bounds[ 0 ] << " xmax " << bounds[ 1 ] << " ymin " << bounds[ 2 ] << " ymax " << bounds[ 3 ] << " zmin " << bounds[ 4 ] << " zmax " << bounds[ 5 ] << std::endl << vprDEBUG_FLUSH;
+        vprDEBUG( vesDBG, 0 ) << "|\t\tDataset bounds xmin = " << bounds[ 0 ] 
+            << " xmax " << bounds[ 1 ] << " ymin " << bounds[ 2 ] 
+            << " ymax " << bounds[ 3 ] << " zmin " << bounds[ 4 ] 
+            << " zmax " << bounds[ 5 ] << std::endl << vprDEBUG_FLUSH;
         vprDEBUG( vesDBG, 0 ) << "|\t\tLoading precomputed planes from "
             << precomputedDataSliceDir << std::endl << vprDEBUG_FLUSH;
-        this->x_planes = new cfdPlanes( 0, this->GetPrecomputedDataSliceDir().c_str(), bounds );
-        this->y_planes = new cfdPlanes( 1, this->GetPrecomputedDataSliceDir().c_str(), bounds );
-        this->z_planes = new cfdPlanes( 2, this->GetPrecomputedDataSliceDir().c_str(), bounds );
+        x_planes = new cfdPlanes( 0, GetPrecomputedDataSliceDir().c_str(), bounds );
+        y_planes = new cfdPlanes( 1, this->GetPrecomputedDataSliceDir().c_str(), bounds );
+        z_planes = new cfdPlanes( 2, this->GetPrecomputedDataSliceDir().c_str(), bounds );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-std::string DataSet::GetPrecomputedDataSliceDir()
+const std::string& DataSet::GetPrecomputedDataSliceDir()
 {
     return this->precomputedDataSliceDir;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DataSet::SetPrecomputedSurfaceDir( const std::string newName )
+void DataSet::SetPrecomputedSurfaceDir( const std::string& newName )
 {
     precomputedSurfaceDir = newName;
 }
 ///////////////////////////////////////////////////////////////
-std::string DataSet::GetPrecomputedSurfaceDir()
+const std::string& DataSet::GetPrecomputedSurfaceDir()
 {
     return this->precomputedSurfaceDir;
 }
@@ -1385,12 +1384,12 @@ cfdPlanes* DataSet::GetPrecomputedSlices( int xyz )
     }
 }
 ////////////////////////////////////////////////////////////
-void DataSet::SetArrow( vtkPolyData * arrow )
+void DataSet::SetArrow( vtkPolyData* arrow )
 {
     this->arrow = arrow;
 }
 ///////////////////////////////////////////////
-vtkPolyData * DataSet::GetArrow( )
+vtkPolyData* DataSet::GetArrow( )
 {
     return this->arrow;
 }
@@ -1400,7 +1399,7 @@ int DataSet::GetNumberOfScalars()
     return this->numScalars;
 }
 ///////////////////////////////////////////////////////
-std::string DataSet::GetScalarName( int i )
+const std::string DataSet::GetScalarName( int i )
 {
     if( 0 <= i && i < this->numScalars )
     {
@@ -1419,7 +1418,7 @@ int DataSet::GetNumberOfVectors()
     return this->numVectors;
 }
 ////////////////////////////////////////////////////////
-std::string DataSet::GetVectorName( int i )
+const std::string DataSet::GetVectorName( int i )
 {
     if( 0 <= i && i < this->numVectors )
     {
@@ -1621,7 +1620,7 @@ void DataSet::StoreScalarInfo()
     }
 }
 //////////////////////////////////////////////////////////
-double* DataSet::GetScalarRange( std::string scalarName )
+double* DataSet::GetScalarRange( const std::string& scalarName )
 {
     for( int i = 0; i < this->numScalars; ++i )
     {
@@ -1659,12 +1658,12 @@ void DataSet::Print()
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DataSet::SetUUID( std::string attribute, std::string uuid )
+void DataSet::SetUUID( const std::string& attribute, const std::string& uuid )
 {
     dataSetUUIDMap[ attribute ] = uuid;
 }
 ////////////////////////////////////////////////////////////////////////////////
-std::string DataSet::GetUUID( std::string attribute )
+const std::string DataSet::GetUUID( const std::string& attribute )
 {
     std::map< std::string, std::string >::iterator iter;
     iter = dataSetUUIDMap.find( attribute );
@@ -1844,12 +1843,12 @@ void DataSet::SetDataSetScalarState( unsigned int state )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-std::string DataSet::GetActiveScalarName()
+const std::string DataSet::GetActiveScalarName()
 {
     return GetScalarName( GetActiveScalar() );
 }
 ////////////////////////////////////////////////////////////////////////////////
-std::string DataSet::GetActiveVectorName()
+const std::string DataSet::GetActiveVectorName()
 {
     return GetVectorName( GetActiveVector() );
 }    

@@ -209,7 +209,7 @@ ACE_THROW_SPEC((
         tempCfdModel = ModelHandler::instance()->GetModel( i );
         if( tempCfdModel->GetID() == std::string( modelID ) )
         {
-            vprDEBUG( vesDBG, 1 ) << "|\tFound model: " 
+            vprDEBUG( vesDBG, 1 ) << "|\tVjObs_i::GetModel Found model: " 
                 << modelID << std::endl << vprDEBUG_FLUSH;
             break;
         }
@@ -219,14 +219,14 @@ ACE_THROW_SPEC((
     // if we didn't find it then...
     if( tempCfdModel == 0 )
     {
-        vprDEBUG( vesDBG, 0 ) << "|\tDid not find model: " 
+        vprDEBUG( vesDBG, 0 ) << "|\tVjObs_i::GetModel Did not find model: " 
             << modelID << std::endl << vprDEBUG_FLUSH;
         return tempModel._retn();
     }
 
     // now lets pass the model back
     CORBA::ULong numDatasets = tempCfdModel->GetNumberOfCfdDataSets();
-    vprDEBUG( vesDBG, 0 ) << "|\tnumDatasets = " 
+    vprDEBUG( vesDBG, 0 ) << "|\tVjObs_i::GetModel numDatasets = " 
         << numDatasets << std::endl << vprDEBUG_FLUSH;
     if( numDatasets > 0 )
     {
@@ -253,18 +253,18 @@ ACE_THROW_SPEC((
             tempModel->dataVector[ j ].vectornames.length( totalNumberOfVectors );
         }
         vprDEBUG( vesDBG, 0 )
-            << " totalNumberOfScalars: " << totalNumberOfScalars
+            << "|\tVjObs_i::GetModel totalNumberOfScalars: " << totalNumberOfScalars
             << std::endl << vprDEBUG_FLUSH;
 
         vprDEBUG( vesDBG, 0 )
-            << " totalNumberOfVectors: " << totalNumberOfVectors
+            << "|\tVjObs_i::GetModel totalNumberOfVectors: " << totalNumberOfVectors
             << std::endl << vprDEBUG_FLUSH;
 
         for( CORBA::ULong j = 0; j < numDatasets; j++ )
         {
             tempModel->dataVector[ j ].datasetname = CORBA::string_dup(
                                                          tempCfdModel->GetCfdDataSet( j )->GetFileName().c_str() );
-            vprDEBUG( vesDBG, 1 ) << " dataset_name:   "
+            vprDEBUG( vesDBG, 1 ) << "|\tVjObs_i::GetModel dataset_name:   "
                 << tempModel->dataVector[ j ].datasetname.in()
                 << std::endl << vprDEBUG_FLUSH;
 
@@ -293,7 +293,7 @@ ACE_THROW_SPEC((
                     range[ 0 ];
                 tempModel->dataVector[ j ].scalarVector[ k ].scalarrange[ 1 ] =
                     range[ 1 ];
-                vprDEBUG( vesDBG, 1 ) << "\tscl_name : "
+                vprDEBUG( vesDBG, 1 ) << "|\tVjObs_i::GetModel scl_name : "
                 << tempModel->dataVector[ j ].scalarVector[ k ].scalarnames.in()
                 << tempModel->dataVector[ j ].scalarVector[ k ].scalarrange[ 0 ]
                 << " : "
@@ -309,17 +309,17 @@ ACE_THROW_SPEC((
             {
                 tempModel->dataVector[ j ].vectornames[ k ] = CORBA::string_dup(
                                                                   tempCfdModel->GetCfdDataSet( j )->GetVectorName( k ).c_str() );
-                vprDEBUG( vesDBG, 1 ) << "\tvec_name : "
-                << tempModel->dataVector[ j ].vectornames[ k ].in()
-                << std::endl << vprDEBUG_FLUSH;
+                vprDEBUG( vesDBG, 1 ) << "|\tVjObs_i::GetModel vec_name : "
+                    << tempModel->dataVector[ j ].vectornames[ k ].in()
+                    << std::endl << vprDEBUG_FLUSH;
             }
         }
     }
     CORBA::ULong numGeoArrays = tempCfdModel->GetNumberOfGeomDataSets();
     vprDEBUG( vesDBG, 0 )
-    << " Number of geometries to be transfered to the client: "
-    << numGeoArrays
-    << std::endl << vprDEBUG_FLUSH;
+        << "|\tVjObs_i::GetModel Number of geometries to be transfered to the client: "
+        << numGeoArrays
+        << std::endl << vprDEBUG_FLUSH;
     if( numGeoArrays > 0 )
     {
         //(*_models)[ i ].geometrynames = VjObs::scalar_p(50);
@@ -327,9 +327,10 @@ ACE_THROW_SPEC((
         for( CORBA::ULong j = 0; j < numGeoArrays; j++ )
         {
             vprDEBUG( vesDBG, 0 )
-            << " Geometry file ( "
-            << j << " ) = " << tempCfdModel->GetGeomDataSet( j )->GetFilename()
-            << std::endl << vprDEBUG_FLUSH;
+                << "|\tVjObs_i::GetModel Geometry file ( "
+                << j << " ) = " 
+                << tempCfdModel->GetGeomDataSet( j )->GetFilename()
+                << std::endl << vprDEBUG_FLUSH;
             tempModel->geometrynames[ j ] = CORBA::string_dup(
                                                 tempCfdModel->GetGeomDataSet( j )->GetFilename().c_str() );
         }
@@ -362,13 +363,13 @@ void VjObs_i::CreateDatasetInfo( void )
 
         _models = new VjObs::Models( numberOfModels );
         _models->length( numberOfModels );
-        vprDEBUG( vesDBG, 0 ) << "|\tNumber of Models = " << numberOfModels
+        vprDEBUG( vesDBG, 0 ) << "|\tVjObs_i::GetModel Number of Models = " << numberOfModels
         << std::endl << vprDEBUG_FLUSH;
         for( CORBA::ULong i = 0; i < numberOfModels; i++ )
         {
             Model* temp = ModelHandler::instance()->GetModel( i );
             CORBA::ULong numDatasets = temp->GetNumberOfCfdDataSets();
-            vprDEBUG( vesDBG, 0 ) << "|\tnumDatasets = " << numDatasets
+            vprDEBUG( vesDBG, 0 ) << "|\tVjObs_i::GetModel numDatasets = " << numDatasets
             << std::endl << vprDEBUG_FLUSH;
             if( numDatasets > 0 )
             {
@@ -395,18 +396,18 @@ void VjObs_i::CreateDatasetInfo( void )
                     ( *_models )[ i ].dataVector[ j ].vectornames.length( totalNumberOfVectors );
                 }
                 vprDEBUG( vesDBG, 0 )
-                << " totalNumberOfScalars: " << totalNumberOfScalars
+                << "|\tVjObs_i::GetModel totalNumberOfScalars: " << totalNumberOfScalars
                 << std::endl << vprDEBUG_FLUSH;
 
                 vprDEBUG( vesDBG, 0 )
-                << " totalNumberOfVectors: " << totalNumberOfVectors
+                << "|\tVjObs_i::GetModel totalNumberOfVectors: " << totalNumberOfVectors
                 << std::endl << vprDEBUG_FLUSH;
 
                 for( CORBA::ULong j = 0; j < numDatasets; j++ )
                 {
                     ( *_models )[ i ].dataVector[ j ].datasetname = CORBA::string_dup(
                                                                         temp->GetCfdDataSet( j )->GetFileName().c_str() );
-                    vprDEBUG( vesDBG, 1 ) << " dataset_name:   "
+                    vprDEBUG( vesDBG, 1 ) << "|\tVjObs_i::GetModel dataset_name:   "
                     << ( *_models )[ i ].dataVector[ j ].datasetname.in()
                     << std::endl << vprDEBUG_FLUSH;
 
@@ -431,7 +432,7 @@ void VjObs_i::CreateDatasetInfo( void )
                         // Set
                         ( *_models )[ i ].dataVector[ j ].scalarVector[ k ].scalarrange[ 0 ] = range[ 0 ];
                         ( *_models )[ i ].dataVector[ j ].scalarVector[ k ].scalarrange[ 1 ] = range[ 1 ];
-                        vprDEBUG( vesDBG, 1 ) << "\tscl_name : "
+                        vprDEBUG( vesDBG, 1 ) << "|\tVjObs_i::GetModel scl_name : "
                         << ( *_models )[ i ].dataVector[ j ].scalarVector[ k ].scalarnames.in()
                         << ( *_models )[ i ].dataVector[ j ].scalarVector[ k ].scalarrange[ 0 ]
                         << " : "
@@ -447,7 +448,7 @@ void VjObs_i::CreateDatasetInfo( void )
                     {
                         ( *_models )[ i ].dataVector[ j ].vectornames[ k ] = CORBA::string_dup(
                                                                                  temp->GetCfdDataSet( j )->GetVectorName( k ).c_str() );
-                        vprDEBUG( vesDBG, 1 ) << "|\tvec_name : "
+                        vprDEBUG( vesDBG, 1 ) << "|\tVjObs_i::GetModel vec_name : "
                         << ( *_models )[ i ].dataVector[ j ].vectornames[ k ].in()
                         << std::endl << vprDEBUG_FLUSH;
                     }
@@ -455,7 +456,7 @@ void VjObs_i::CreateDatasetInfo( void )
             }
             CORBA::ULong numGeoArrays = temp->GetNumberOfGeomDataSets();
             vprDEBUG( vesDBG, 0 )
-            << "|\tNumber of geometries to be transfered to the client: "
+            << "|\tVjObs_i::GetModel Number of geometries to be transfered to the client: "
             << numGeoArrays
             << std::endl << vprDEBUG_FLUSH;
 
@@ -466,7 +467,7 @@ void VjObs_i::CreateDatasetInfo( void )
                 for( CORBA::ULong j = 0; j < numGeoArrays; j++ )
                 {
                     vprDEBUG( vesDBG, 0 )
-                    << "|\tGeometry file ( "
+                    << "|\tVjObs_i::GetModel Geometry file ( "
                     << j << " ) = " << temp->GetGeomDataSet( j )->GetFilename()
                     << std::endl << vprDEBUG_FLUSH;
                     ( *_models )[ i ].geometrynames[ j ] = CORBA::string_dup(
@@ -485,7 +486,7 @@ void VjObs_i::CreateTeacherInfo( void )
 {
     CORBA::Short numTeacherArrays = EnvironmentHandler::instance()->GetTeacher()->getNumberOfFiles();
     vprDEBUG( vesDBG, 0 )
-    << " Number of performer binary files to be transfered to the client: "
+    << "|\tVjObs_i::CreateTeacherInfo Number of performer binary files to be transfered to the client: "
     << numTeacherArrays
     << std::endl << vprDEBUG_FLUSH;
 

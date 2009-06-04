@@ -201,12 +201,12 @@ public:
     // SetActiveScalar and compute the actual scalar range and the pretty range for display purposes
     // 0 <= activeScalar < numScalars
     void SetActiveScalar( int );
-    void SetActiveScalar( std::string scalarName );
+    void SetActiveScalar( const std::string& scalarName );
     int GetActiveScalar();
-    std::string GetActiveScalarName();
+    const std::string GetActiveScalarName();
 
     void SetActiveVector( int );
-    void SetActiveVector( std::string vectorName );
+    void SetActiveVector( const std::string& vectorName );
     int GetActiveVector();
 
     // Update the geometrical properties of the mesh
@@ -219,11 +219,11 @@ public:
 
     void SetFileName_OnFly( int );
 
-    void SetPrecomputedDataSliceDir( const std::string newDir );
-    std::string GetPrecomputedDataSliceDir();
+    void SetPrecomputedDataSliceDir( const std::string& newDir );
+    const std::string& GetPrecomputedDataSliceDir();
 
-    void SetPrecomputedSurfaceDir( const std::string newDir );
-    std::string GetPrecomputedSurfaceDir();
+    void SetPrecomputedSurfaceDir( const std::string& newDir );
+    const std::string& GetPrecomputedSurfaceDir();
 
     cfdPlanes * GetPrecomputedXSlices();
     cfdPlanes * GetPrecomputedYSlices();
@@ -245,11 +245,11 @@ public:
     int IsNewlyActivated();
 
     int GetNumberOfScalars();
-    std::string GetScalarName( int );
+    const std::string GetScalarName( int );
 
     int GetNumberOfVectors();
-    std::string GetVectorName( int );
-    std::string GetActiveVectorName();
+    const std::string GetVectorName( int );
+    const std::string GetActiveVectorName();
 
     DataSet * GetParent();
     void SetParent( DataSet * );
@@ -283,8 +283,8 @@ public:
     void Print();
     ///Accessor methods to store and query the uuids for specfic
     ///attributes of a DataSet
-    void SetUUID( std::string attribute, std::string uuid );
-    std::string GetUUID( std::string attribute );
+    void SetUUID( const std::string& attribute, const std::string& uuid );
+    const std::string GetUUID( const std::string& attribute );
 
     ///Create the bbox geode for the dataset
     void CreateBoundingBoxGeode( void );
@@ -317,7 +317,7 @@ public:
 
     ///Get the scalar range by name
     ///\param scalarName The name of the scalar to get the range
-    double* GetScalarRange( std::string scalarName );
+    double* GetScalarRange( const std::string& scalarName );
 
     ///Get the number of points
     unsigned int GetNumberOfPoints();
