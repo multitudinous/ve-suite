@@ -91,9 +91,6 @@ CADNodeManagerDlg::CADNodeManagerDlg( CADNodePtr node, wxWindow* parent, wxWindo
 {
     _propsDlg = 0;
     _cadTreeBuilder = 0;
-
-    _quitButton = 0;
-    _saveButton = 0;
     _commandName = std::string( "CAD" );
     _cloneFromSameFile = false;
     SetRootCADNode( node );
@@ -200,6 +197,10 @@ void CADNodeManagerDlg::_buildDialog()
 
     wxBoxSizer* treeSizer = new wxBoxSizer( wxHORIZONTAL );
 
+    ///The button to close the dialog.
+    wxButton* _quitButton;
+    ///The button to save the current CADHierarchy.
+    wxButton* _saveButton;
     _quitButton = new wxButton( this, wxID_OK, _( "Close" ) );
     _saveButton = new wxButton( this, GEOM_SAVE, _( "Save As..." ) );
 

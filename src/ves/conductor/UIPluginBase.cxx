@@ -201,7 +201,7 @@ UIPluginBase::~UIPluginBase()
         DisconnectPluginDialogsDestroyEvent( _soundsDlg );
         DisconnectPluginDialogsDestroyEvent( m_iconChooser );
         DisconnectPluginDialogsDestroyEvent( vistab );
-        //DisconnectPluginDialogsDestroyEvent( cadDialog );
+        DisconnectPluginDialogsDestroyEvent( cadDialog );
     }
 
     delete [] poly;
@@ -1551,28 +1551,27 @@ void UIPluginBase::OnGeometry( wxCommandEvent& event )
 
     // Here we launch a dialog for a specific plugins input values
 
-    ves::open::xml::model::ModelPtr veModel = GetVEModel();
     if( !cadDialog )
     {
+        ves::open::xml::model::ModelPtr veModel = GetVEModel();
         cadDialog = new ves::conductor::util::CADNodeManagerDlg( veModel->AddGeometry(),
                                                                  GetPluginParent(), ::wxNewId() );
 
-        //cadDialog->SetSize( dialogSize );
         cadDialog->SetSize( dialogSize.x, dialogSize.y, dialogSize.width,
                         dialogSize.height, wxSIZE_AUTO );
 
-        //Cannot use this until we are using a non modal dialog
-        //ConfigurePluginDialogs( cadDialog );
+        ConfigurePluginDialogs( cadDialog );
     }
-    cadDialog->SetRootCADNode( veModel->GetGeometry() );
-    cadDialog->ShowModal();
+    //cadDialog->SetRootCADNode( veModel->GetGeometry() );
+    //A modal dialog should no longer be needed since we are using smart ptrs
+    cadDialog->Show();
     // Get cadnode back
-    if( cadDialog->GetRootCADNode() )
+    /*if( cadDialog->GetRootCADNode() )
     {
         veModel->AddGeometry( cadDialog->GetRootCADNode() );
-    }
-    cadDialog->Destroy();
-    cadDialog = 0;
+    }*/
+    //cadDialog->Destroy();
+    //cadDialog = 0;
 }
 
 ///////////////////////////////////////////
@@ -2188,7 +2187,7 @@ void UIPluginBase::RemovePluginDialogsFromCanvas()
     RemoveWindowFromCanvas( _soundsDlg );
     RemoveWindowFromCanvas( m_iconChooser );
     RemoveWindowFromCanvas( vistab );
-    //RemoveWindowFromCanvas( cadDialog );
+    RemoveWindowFromCanvas( cadDialog );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIPluginBase::RemoveWindowFromCanvas( wxWindow* window ) 

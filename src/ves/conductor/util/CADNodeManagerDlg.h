@@ -208,10 +208,6 @@ protected:
 
     ///The tree control.
     wxTreeCtrl* _geometryTree;
-    ///The button to close the dialog.
-    wxButton* _quitButton;
-    ///The button to save the current CADHierarchy.
-    wxButton* _saveButton;
     ///The initial position of the dialog.
     wxRect _geomPosition;
 
