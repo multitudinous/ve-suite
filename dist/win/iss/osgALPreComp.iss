@@ -1,6 +1,6 @@
 ; osgAL iss installer
 #include <vesenv.iss>
-#define OSGALVERSION "0.6.1"
+#define OSGALVERSION "0.6.1-74"
 #define MyAppName "osgAL Pre-Compile"
 #define MyAppVerName "osgAL_{#OSGALVERSION} Pre-Compile_vc{#MSVCVERSION}"
 #define MyAppPublisher "VERG"
@@ -8,7 +8,7 @@
 #define LIBOGGHOME "C:\dev\ves_deps\osgAL_Test\libvorbis-1.2.0\ogg"
 #define LIBVORBISHOME "C:\dev\ves_deps\osgAL_Test\libvorbis-1.2.0\libvorbis-1.2.0"
 #define OPENALHOME "C:\dev\ves_deps\osgAL_Test"
-#define OSGALHOME "C:\dev\ves_deps\osgAL_Test\osgal"
+#define OSGALHOME "C:\dev\ves_deps\osgAL_Test\osgal\install-win32"
 #define ALUTSRCINSTALL "C:\dev\ves_deps\osgAL_Test\freealut-1.1.0-bin\freealut-1.1.0-bin"
 
 [Setup]

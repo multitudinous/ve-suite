@@ -8,7 +8,7 @@ Name: OpenSceneGraph
 Description: OpenSceneGraph release pre-compiled for VES
 Provides: OpenSceneGraph OpenThreads
 Requires:
-Version: 2.6.1
+Version: 2.8.1
 Libs: /libpath:"${libdir}" OpenThreads.lib osg.lib osgDB.lib osgFX.lib osgGA.lib osgParticle.lib osgSim.lib osgTerrain.lib osgText.lib osgUtil.lib opengl32.lib glu32.lib ${viewerlibs}
 Cflags: /I"${includedir}"
 Arch: noarch
