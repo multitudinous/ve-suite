@@ -308,9 +308,10 @@ mysqlpp_options = fp_option.FlagPollBasedOption( "MySQLpp", "MySQL++", "3.0.9", 
 poco_options = fp_option.FlagPollBasedOption( "POCO", "POCO", "1.3.4", False, True, None,
 		                              compileTest = True, headerToCheck = "Poco/Poco.h" )
 
-#minerva_options = fp_option.FlagPollBasedOption( "minerva", "minerva", "1.3.4", False, True, None,
-#		                              compileTest = True, headerToCheck = "" )
 
+minerva_options = fp_option.FlagPollBasedOption( "Minerva", "Minerva", "1.0", False, True, None, 
+									  compileTest = False, headerToCheck = "Minerva/Core/Data/Object.h" )
+									  
 opts.AddOption( apr_options )
 opts.AddOption( apu_options )
 #opts.AddOption( bullet_options )
@@ -324,6 +325,7 @@ opts.AddOption( vrjuggler_options )
 opts.AddOption( osgal_options )
 opts.AddOption( mysqlpp_options )
 opts.AddOption( poco_options )
+opts.AddOption( minerva_options )
 
 Export( 'opts', 'vtk_options', 'osg_options', 
         'xerces_options','wxwidgets_options',
@@ -337,7 +339,8 @@ Export( 'opts', 'vtk_options', 'osg_options',
         'vrjuggler_options', 'boost_options',
         'gmtl_options', 'vpr_options',
         'gadgeteer_options', 'osgal_options',
-        'mysqlpp_options', 'poco_options' )
+        'mysqlpp_options', 'poco_options',
+		'minerva_options' )
 
 ##Display some help
 help_text = """--- VE-Suite Build system ---

@@ -6,6 +6,7 @@ import SConsAddons.Util as sca_util
 
 Import('baseEnv buildDir RootDir ves_pkg vtk_options osg_options xerces_options LIBDIR bulletBaseVar')
 Import('tao_options boost_options vrjuggler_options osgal_options GetPlatform')
+Import('minerva_options')
 
 xplorerSubdirs = Split("""
     scenegraph
@@ -114,7 +115,13 @@ if GetPlatform() == 'darwin':
 
 #see if we need to compile minerva in
 if baseEnv[ 'MakeMinervaSupport' ] != 'no':
-    lib_env.Append( CPPDEFINES = [ 'MINERVA_GIS_SUPPORT' ] )
+	lib_env.Append( CPPDEFINES = ['MINERVA_GIS_SUPPORT'] )
+	srcDir = os.path.abspath( pj(RootDir, 'src', 'ves', 'xplorer','minerva') )
+	base_plugin_srcs = sca_util.getSourcesRecursive( srcDir )
+	base_header_srcs = sca_util.getHeadersRecursive( srcDir )
+	sources += map(lambda s: pj('minerva', s), base_plugin_srcs)
+	headers += map(lambda s: pj('minerva', s), base_header_srcs)
+	minerva_options.apply( lib_env )
 
 #see if we need to compile support for transform manipulators
 if baseEnv[ 'TransformManipulator' ] != 'no':

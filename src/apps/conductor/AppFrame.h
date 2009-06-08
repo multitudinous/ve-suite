@@ -156,6 +156,7 @@ public:
     wxMenu* xplorerJugglerMenu;
     wxMenu* xplorerViewMenu;
     wxMenu* xplorerDisplayMenu;
+    wxMenu* xplorerMinervaMenu;
 
     //Configuration flags
     bool f_financial;
@@ -313,6 +314,8 @@ protected:
     void OnShowIconChooser(wxCommandEvent& event );
     void UpdateHierarchyTree( wxCommandEvent& event );
 
+    void OnAddPlanet ( wxCommandEvent& event );
+    void OnRemovePlanet ( wxCommandEvent& event );
 private:
     void ExitXplorer();
 	void CloseAspenSimulation();

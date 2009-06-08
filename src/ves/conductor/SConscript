@@ -21,6 +21,11 @@ xerces_options.apply( lib_env )
 wxwidgets_options.apply( lib_env )
 vpr_options.apply( lib_env )
 lib_env.Append( CPPDEFINES = ['VE_GUIPLUGINS_LIBRARY','VE_CONDUCTOR_UTILS_LIBRARY'])
+
+#see if we need to compile minerva in
+if baseEnv[ 'MakeMinervaSupport' ] != 'no':
+	lib_env.Append( CPPDEFINES = ['MINERVA_GIS_SUPPORT'] )
+	
 if GetPlatform() == 'win32':
    lib_env.Append( CXXFLAGS = [ '/bigobj' ] )
    

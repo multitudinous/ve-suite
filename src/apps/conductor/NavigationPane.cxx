@@ -146,7 +146,11 @@ NavigationPane::NavigationPane( wxWindow* parent )
 
     // Update VE-Xplorer data
     dataValueName = "CHANGE_TRANSLATION_STEP_SIZE";
+#ifdef MINERVA_GIS_SUPPORT
+    cIso_value = translationStepSize->GetValue() * 1000;
+#else
     cIso_value = translationStepSize->GetValue();
+#endif
     SendCommandsToXplorer();
     dataValueName = "CHANGE_ROTATION_STEP_SIZE";
     cIso_value = rotationStepSize->GetValue();

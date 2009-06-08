@@ -216,6 +216,14 @@ public:
     ///Set the mode of how to treat this node when vis is selected
     void SetTransparentFlag( bool transparent );
     
+    ///Set/get the longitude value.
+    void SetLongitude ( double );
+    double GetLongitude() const;
+
+    ///Set/get the latitude value.
+    void SetLatitude ( double );
+    double GetLatitude() const;
+
 protected:
     ///Constructor
     ///\param name The name of this node.
@@ -278,6 +286,9 @@ protected:
     ///Tells xplorer whether or not to change this node transparent when
     ///vis is selected
     bool mMakeTransparentOnVis;
+
+    double _longitude;
+    double _latitude;
 };
 
 }

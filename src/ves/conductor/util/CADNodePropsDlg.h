@@ -96,7 +96,8 @@ public:
         EDIT_ANIMATION,///<The edit attribute ID.
         REMOVE_ANIMATION,///<The remove attribute ID.
         ADD_ANIMATION,///<The add attribute button ID.
-        UNIFORM_SCALE///<The scale uniformly checkbox ID.
+        UNIFORM_SCALE,///<The scale uniformly checkbox ID.
+        GEOGRAPHIC_PANEL_ID
     };
     ///Constructor
     ///\param parent The parent window.
@@ -129,6 +130,9 @@ public:
 
     ///Return the Animation Panel
     wxPanel* GetAnimationPanel();
+
+    /// Return the panel for geographic properties.
+    wxPanel* GetGeographicPanel();
 protected:
     ///Internally build the GUI.
     void _buildGUI();
@@ -147,6 +151,9 @@ protected:
 
     ///Build the animation panel.
     void _buildAnimationPanel();
+
+    ///Build the geographic panel.
+    void _buildGeographicPanel();
 
     ///Update the transform of a node
     ///\param event The wxCommand event.
@@ -167,6 +174,9 @@ protected:
     ///Update the attribute type and available attributes.
     ///\param event The wxCommand event.
     void _updateAttributeType( wxCommandEvent& event );
+
+    ///Update the geographic information.
+    void _updateGeographic ( wxSpinEvent& event );
 
     ///Update the active attribute.
     ///\param event The wxListEvent event.
@@ -246,6 +256,7 @@ protected:
     wxPanel* _attributePanel;///<The attribute panel.
     wxPanel* _physicsPanel;///<The physics panel.
     wxPanel* _animationPanel;///<The animation panel.
+    wxPanel* _geographicPanel;///<The panel for geographic infomation (lat/lon,etc).
 
     ///Transform panel controls
     wxSpinCtrlDbl* _xTransformCtrl;///<X translation control
@@ -292,6 +303,9 @@ protected:
     wxButton* _addAnimationButton;///<The button for adding attributes.
     wxButton* _removeAnimationButton;///<The button for adding attributes.
 
+    wxSpinCtrlDbl* _longitudeControl;
+    wxSpinCtrlDbl* _latitudeControl;
+    
     unsigned int _nMaterials;///<The number of materials.
     unsigned int _nShaders;///<The number of shaders.
     std::string _commandName;///<The command name.

@@ -108,6 +108,7 @@
 #include <wx/dirdlg.h>
 #include <wx/aboutdlg.h>
 
+#include <ves/util/commands/Minerva.h>
 #include <ves/util/icons/ve_icon64x64.xpm>
 #include <ves/util/icons/ve_icon32x32.xpm>
 #include <ves/VEConfig.h>
@@ -197,6 +198,9 @@ BEGIN_EVENT_TABLE( AppFrame, wxFrame )
 	EVT_MENU( UIPLUGINBASE_SHOW_ICON_CHOOSER, AppFrame::OnShowIconChooser )
 	
     EVT_MENU( APPFRAME_UPDATE_HIER_TREE, AppFrame::UpdateHierarchyTree )
+
+    EVT_MENU( APPFRAME_MINERVA_ADD_PLANET, AppFrame::OnAddPlanet )
+    EVT_MENU( APPFRAME_MINERVA_REMOVE_PLANET, AppFrame::OnRemovePlanet )
 
     EVT_WINDOW_CREATE( AppFrame::OnChildCreate ) 
 	EVT_BUTTON( ICONCHOOSER_OK, AppFrame::OnChangeIcon )
@@ -870,6 +874,15 @@ void AppFrame::CreateMenu()
         xplorerMenu->Append( APPFRAME_XPLORER_EXIT, _( "Shutdown Xplorer" ) );
         xplorerMenu->Enable( APPFRAME_XPLORER_EXIT, true );
     }
+
+#ifdef MINERVA_GIS_SUPPORT
+
+    xplorerMinervaMenu = new wxMenu;
+    xplorerMenu->AppendSubMenu ( xplorerMinervaMenu, "Minerva" );
+    xplorerMinervaMenu->Append ( APPFRAME_MINERVA_ADD_PLANET, _( "Add Planet" ) );
+    xplorerMinervaMenu->Append ( APPFRAME_MINERVA_REMOVE_PLANET, _( "Remove Planet" ) );
+
+#endif
 
     xplorerMenu->Enable( APPFRAME_XPLORER_NAVIGATION, true );
     xplorerMenu->Enable( APPFRAME_XPLORER_VIEWPOINTS, true );
@@ -2801,4 +2814,30 @@ void AppFrame::OnKeyPress( wxKeyEvent &event )
 void AppFrame::UpdateHierarchyTree( wxCommandEvent& event )
 {
     hierarchyTree->PopulateTree();
+}
+///////////////////////////////////////////////////////////////////////////////
+void AppFrame::OnAddPlanet ( wxCommandEvent& event )
+{
+  CommandPtr veCommand ( new Command );
+  veCommand->SetCommandName ( ves::util::commands::ADD_EARTH_COMMAND_NAME );
+
+  // Add a dummy data value pair.
+  DataValuePairPtr dataValuePair ( new DataValuePair );
+  dataValuePair->SetData( "dummy", "dummy" );
+  veCommand->AddDataValuePair( dataValuePair );
+
+  serviceList->SendCommandStringToXplorer ( veCommand );
+}
+///////////////////////////////////////////////////////////////////////////////
+void AppFrame::OnRemovePlanet ( wxCommandEvent& event )
+{
+  CommandPtr veCommand ( new Command );
+  veCommand->SetCommandName ( ves::util::commands::REMOVE_EARTH_COMMAND_NAME );
+
+  // Add a dummy data value pair.
+  DataValuePairPtr dataValuePair ( new DataValuePair );
+  dataValuePair->SetData( "dummy", "dummy" );
+  veCommand->AddDataValuePair( dataValuePair );
+
+  serviceList->SendCommandStringToXplorer ( veCommand );
 }

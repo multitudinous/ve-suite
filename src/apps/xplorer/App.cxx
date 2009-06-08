@@ -54,6 +54,10 @@
 
 #include <ves/xplorer/volume/cfdPBufferManager.h>
 
+#ifdef MINERVA_GIS_SUPPORT
+# include <ves/xplorer/minerva/MinervaManager.h>
+#endif
+
 #include <ves/open/xml/XMLObjectFactory.h>
 #include <ves/open/xml/XMLCreator.h>
 #include <ves/open/xml/Command.h>
@@ -187,6 +191,9 @@ void App::exit()
     //Profiling guard used by vrjuggler
     VPR_PROFILE_RESULTS();
     std::cout << "|\tApp is now exiting." << std::endl;
+#ifdef MINERVA_GIS_SUPPORT
+    ves::xplorer::minerva::MinervaManager::instance()->Clear();
+#endif
     ves::xplorer::scenegraph::SceneManager::instance()->Shutdown();
     ves::xplorer::network::cfdExecutive::instance()->UnRegisterExecutive();
 }
@@ -560,6 +567,12 @@ void App::latePreFrame()
         VPR_PROFILE_GUARD_HISTORY( "App::latePreFrame update", 20 );
         this->update();
     }
+#ifdef MINERVA_GIS_SUPPORT
+    {
+      VPR_PROFILE_GUARD_HISTORY( "App::latePreFrame MinervaManager", 20 );
+      ves::xplorer::minerva::MinervaManager::instance()->PreFrameUpdate();
+    }
+#endif
 
     ///Increment framenumber now that we are done using it everywhere
     _frameNumber += 1;

@@ -68,7 +68,9 @@ CADNode::CADNode( const std::string& name )
         m_restitution( 0.0f ),
         mPhysicsMesh( "Bounding Box" ),
         mOpacity( 1.f ),
-        m_name( name )
+        m_name( name ),
+        _longitude ( 0.0 ),
+        _latitude ( 0.0 )
 {
     m_transform = TransformPtr( new Transform() );
 
@@ -636,6 +638,9 @@ CADNode::CADNode( const CADNode& rhs, bool clone )
     mPhysicsMotionType = rhs.mPhysicsMotionType;
     mPhysicsLODType = rhs.mPhysicsLODType;
     
+    _longitude = rhs._longitude;
+    _latitude = rhs._latitude;
+
     //maintain a unique ID
     if( clone )
     {
@@ -687,7 +692,31 @@ CADNode& CADNode::operator=( const CADNode& rhs )
         //_uID = rhs._uID;
         m_parent = rhs.m_parent;
         m_name = rhs.m_name;
+
+        _longitude = rhs._longitude;
+        _latitude = rhs._latitude;
     }
     return *this;
 }
 
+///Set/get the longitude value.
+void CADNode::SetLongitude ( double value )
+{
+  _longitude = value;
+}
+
+double CADNode::GetLongitude() const
+{
+  return _longitude;
+}
+
+///Set/get the latitude value.
+void CADNode::SetLatitude ( double value )
+{
+  _latitude = value;
+}
+
+double CADNode::GetLatitude() const
+{
+  return _latitude;
+}

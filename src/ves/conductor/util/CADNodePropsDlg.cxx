@@ -55,6 +55,8 @@
 #include <wx/filename.h>
 #include <wx/checkbox.h>
 #include <wx/radiobox.h>
+#include <wx/stattext.h>
+#include <wx/grid.h>
 
 #include <iostream>
 #include <ves/conductor/util/spinctld.h>
@@ -76,6 +78,8 @@
 #include <ves/open/xml/cad/CADNodeAnimation.h>
 
 #include <ves/open/xml/shader/Program.h>
+
+#include <ves/util/commands/Minerva.h>
 
 using namespace ves::open::xml::cad;
 using namespace ves::open::xml::shader;
@@ -102,6 +106,7 @@ BEGIN_EVENT_TABLE( CADNodePropertiesDlg, wxDialog )
     EVT_MENU( CADMaterialEditMenu::COLOR_MODE_ID, CADNodePropertiesDlg::_showColorModeSelectDialog )
     EVT_MENU( CADMaterialEditMenu::OPACITY_ID, CADNodePropertiesDlg::_showOpacityDialog )
     EVT_CHECKBOX( UNIFORM_SCALE, CADNodePropertiesDlg::UpdateUniformScale )
+    EVT_SPINCTRL( GEOGRAPHIC_PANEL_ID, CADNodePropertiesDlg::_updateGeographic )
 END_EVENT_TABLE()
 ////////////////////////////////////////////////////
 //Here is the constructor with passed in pointers //
@@ -116,6 +121,7 @@ _transformPanel( 0 ),
 _attributePanel( 0 ),
 _physicsPanel( 0 ),
 _animationPanel( 0 ),
+_geographicPanel ( 0x0 ),
 _attributeType( 0 ),
 _attributeSelection( 0 ),
 _addAttributeButton( 0 ),
@@ -179,6 +185,10 @@ void CADNodePropertiesDlg::_buildTabs()
         _propertyTabs->AddPage( GetPhysicsPanel(), _T( "Physics" ), false );
     }
 
+#ifdef MINERVA_GIS_SUPPORT
+    _propertyTabs->AddPage( GetGeographicPanel(), _T( "Geographic" ), false );
+#endif
+
     //_propertyTabs->AddPage(GetAnimationPanel(),_T("Animation"), false);
 }
 //////////////////////////////////////////////////
@@ -216,6 +226,15 @@ wxPanel* CADNodePropertiesDlg::GetAnimationPanel()
         _buildAnimationPanel();
     }
     return _animationPanel;
+}
+///////////////////////////////////////////////////
+wxPanel* CADNodePropertiesDlg::GetGeographicPanel()
+{
+  if ( !_geographicPanel )
+  {
+    this->_buildGeographicPanel();
+  }
+  return _geographicPanel;
 }
 ///////////////////////////////////////////////////
 void CADNodePropertiesDlg::_buildTransformPanel()
@@ -1360,6 +1379,78 @@ void CADNodePropertiesDlg::_showColorDialog( wxCommandEvent& event )
         }
     }
 
+}
+///////////////////////////////////////////////////////////////
+void CADNodePropertiesDlg::_buildGeographicPanel()
+{
+  _geographicPanel = new wxPanel ( _propertyTabs, GEOGRAPHIC_PANEL_ID );
+  wxStaticBox* outerStaticBox = new wxStaticBox ( _geographicPanel, -1, wxT ( "Geographic Properties" ) );
+
+  _longitudeControl = new wxSpinCtrlDbl ( _geographicPanel, GEOGRAPHIC_PANEL_ID );
+  _longitudeControl->SetValue( 0 );
+  _longitudeControl->SetRange( -180.0, 180.0 );
+  _longitudeControl->SetIncrement( 0.01 );
+  _longitudeControl->Raise();
+
+  _latitudeControl = new wxSpinCtrlDbl ( _geographicPanel, GEOGRAPHIC_PANEL_ID );
+  _latitudeControl->SetValue( 0 );
+  _latitudeControl->SetRange( -90.0, 90.0 );
+  _latitudeControl->SetIncrement( 0.01 );
+  _latitudeControl->Raise();
+
+  if ( _cadNode )
+  {
+    _longitudeControl->SetValue ( _cadNode->GetLongitude() );
+    _latitudeControl->SetValue ( _cadNode->GetLatitude() );
+  }
+
+  wxStaticBoxSizer* sizer ( new wxStaticBoxSizer ( outerStaticBox, wxVERTICAL ) );
+  wxGridSizer *grid ( new wxGridSizer ( 2, 2, 5, 5 ) );
+
+  grid->Add ( new wxStaticText ( _geographicPanel, wxID_ANY, wxT ( "Longitude" ) ), 0 );
+  grid->Add ( _longitudeControl, 0, 0, 0 );
+  grid->Add ( new wxStaticText ( _geographicPanel, wxID_ANY, wxT ( "Latitude" ) ), 0 );
+  grid->Add ( _latitudeControl, 0, 0, 0 );
+
+  sizer->Add ( grid );
+
+  _geographicPanel->SetSizer ( sizer );
+}
+/////////////////////////////////////////////////////////////
+void CADNodePropertiesDlg::_updateGeographic ( wxSpinEvent& event )
+{
+  if( _cadNode )
+  {
+    this->ClearInstructions();
+    _commandName = ves::util::commands::SET_GEOGRAPHIC_PROPERTIERS;
+
+    ves::open::xml::DataValuePairPtr nodeID( new ves::open::xml::DataValuePair );
+    nodeID->SetDataType( "STRING" );
+    nodeID->SetData ( std::string( "Node ID" ), _cadNode->GetID() );
+    _instructions.push_back( nodeID );
+
+    ves::open::xml::DataValuePairPtr nodeType( new ves::open::xml::DataValuePair );
+    nodeType->SetDataType( "STRING" );
+    nodeType->SetDataName( std::string( "Node Type" ) );
+    nodeType->SetDataString( _cadNode->GetNodeType() );
+    _instructions.push_back( nodeType );
+
+    ves::open::xml::DataValuePairPtr longitudeValue ( new ves::open::xml::DataValuePair );
+    longitudeValue->SetDataType( "DOUBLE" );
+    longitudeValue->SetData( ves::util::commands::LONGITUDE_VALUE, _longitudeControl->GetValue() );
+    _instructions.push_back ( longitudeValue );
+
+    ves::open::xml::DataValuePairPtr latitudeValue ( new ves::open::xml::DataValuePair );
+    latitudeValue->SetDataType( "DOUBLE" );
+    latitudeValue->SetData( ves::util::commands::LATITUDE_VALUE, _latitudeControl->GetValue() );
+    _instructions.push_back ( latitudeValue );
+
+    this->_sendCommandsToXplorer();
+    this->ClearInstructions();
+
+    _cadNode->SetLongitude ( _longitudeControl->GetValue() );
+    _cadNode->SetLatitude ( _latitudeControl->GetValue() );
+  }
 }
 #ifndef STAND_ALONE
 ///////////////////////////////////////////////////
