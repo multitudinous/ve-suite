@@ -46,6 +46,7 @@ namespace osg
 {
 class Geode;
 class Cone;
+class LineSegment;
 }
 
 namespace ves
@@ -85,12 +86,23 @@ public:
 
 protected:
     ///
+    virtual void ComputeProjectedPoint(
+        const osgUtil::LineSegmentIntersector& deviceInput,
+        osg::Vec3d& projectedPoint );
+
+    ///
     virtual ~TranslateAxis();
+
+    ///
+    virtual void ManipFunction( const osgUtil::LineSegmentIntersector& deviceInput );
 
     ///
     virtual void SetupDefaultGeometry();
 
 private:
+    ///
+    osg::ref_ptr< osg::LineSegment > m_unitAxis;
+
     ///
     osg::ref_ptr< osg::Geode > m_lineAndCylinderGeode;
 

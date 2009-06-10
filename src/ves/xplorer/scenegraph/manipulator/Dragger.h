@@ -43,6 +43,11 @@
 #include <osg/MatrixTransform>
 #include <osg/Drawable>
 
+namespace osgUtil
+{
+class LineSegmentIntersector;
+}
+
 // --- C/C++ Includes --- //
 #include <map>
 
@@ -59,7 +64,7 @@ namespace manipulator
  */
 
 /*!\class ves::xplorer::scenegraph::Dragger
- *
+ * Abstract Class
  */
 class VE_SCENEGRAPH_EXPORTS Dragger : public osg::MatrixTransform
 {
@@ -73,10 +78,32 @@ public:
         const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
 
     ///
-    META_Node( ves::xplorer::scenegraph::manipulator, Dragger );
+    ///\param obj
+    ///\return
+    virtual bool isSameKindAs( const osg::Object* obj ) const;
 
     ///
-    virtual Dragger* Handle( Event::Enum event, osg::NodePath::iterator npItr );
+    ///\return
+    virtual const char* className() const;
+
+    ///
+    ///\return
+    virtual const char* libraryName() const;
+
+    ///
+    Dragger* Drag( const osgUtil::LineSegmentIntersector& deviceInput );
+
+    ///
+    virtual Dragger* Focus( osg::NodePath::iterator& npItr );
+
+    ///
+    virtual Dragger* Push(
+        const osgUtil::LineSegmentIntersector& deviceInput,
+        const osg::NodePath& np,
+        osg::NodePath::iterator& npItr );
+
+    ///
+    virtual Dragger* Release( osg::NodePath::iterator& npItr );
 
     ///
     virtual void SetColor(
@@ -89,18 +116,47 @@ protected:
     ///
     virtual ~Dragger();
 
+    ///Will be pure virtual eventually
+    ///
+    virtual void ComputeProjectedPoint(
+        const osgUtil::LineSegmentIntersector& deviceInput,
+        osg::Vec3d& projectedPoint );// = 0;
+
     ///
     osg::Vec4& GetColor( ColorTag::Enum colorTag );
 
+    ///Will be pure virtual eventually
     ///
-    ///Can't use pure virtual with META_Node define
-    virtual void SetupDefaultGeometry();// = 0;
+    virtual void ManipFunction( const osgUtil::LineSegmentIntersector& deviceInput );// = 0;
+
+    ///Pure virtual
+    ///
+    virtual void SetupDefaultGeometry() = 0;
 
     ///
+    ///\param drawable
     void SetDrawableToAlwaysCull( osg::Drawable& drawable );
+
+    ///Deactivate the manipulator root
+    void TurnOff();
+
+    ///Activate the manipulator root
+    void TurnOn();
 
     ///
     osg::ref_ptr< osg::Uniform > m_color;
+
+    ///
+    osg::Vec3d m_startProjectedPoint;
+
+    ///
+    osg::Matrixd m_localToWorld;
+
+    ///
+    osg::Matrixd m_worldToLocal;
+
+    ///
+    osg::Matrixd m_startMotionMatrix;
 
 private:
     ///
@@ -136,12 +192,6 @@ private:
 
     ///
     void CreateDefaultShader();
-
-    ///Deactivate the manipulator root
-    void TurnOff();
-
-    ///Activate the manipulator root
-    void TurnOn();
 
     ///
     ColorMap m_colorMap;

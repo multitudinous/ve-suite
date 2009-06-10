@@ -93,7 +93,7 @@ public:
     ///
     virtual bool Handle(
         manipulator::Event::Enum event,
-        osgUtil::LineSegmentIntersector* lineSegmentIntersector = NULL );
+        osgUtil::LineSegmentIntersector* testForIntersections = NULL );
 
     ///Override the insertChild function to only accept Manipulators
     virtual bool insertChild(
@@ -133,13 +133,13 @@ private:
     osg::NodePath::iterator m_nodePathItr;
 
     ///
-    osg::ref_ptr< manipulator::Manipulator > m_activeManipulator;
+    manipulator::Manipulator* m_activeManipulator;
 
     ///
-    osg::ref_ptr< manipulator::Dragger > m_activeDragger;
+    manipulator::Dragger* m_activeDragger;
 
     ///
-    osg::ref_ptr< osgUtil::LineSegmentIntersector > m_lineSegmentIntersector;
+    osgUtil::LineSegmentIntersector* m_deviceInput;
 
 };
 } //end scenegraph

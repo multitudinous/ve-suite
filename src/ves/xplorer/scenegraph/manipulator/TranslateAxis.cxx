@@ -33,6 +33,10 @@
 
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/manipulator/TranslateAxis.h>
+#include <ves/xplorer/scenegraph/manipulator/TransformManipulator.h>
+
+#include <ves/xplorer/scenegraph/SceneManager.h>
+#include <ves/xplorer/scenegraph/ManipulatorRoot.h>
 
 // --- OSG Includes --- //
 #include <osg/Hint>
@@ -40,6 +44,9 @@
 #include <osg/Geometry>
 #include <osg/ShapeDrawable>
 #include <osg/LineWidth>
+#include <osg/LineSegment>
+
+#include <osgUtil/LineSegmentIntersector>
 
 using namespace ves::xplorer::scenegraph::manipulator;
 
@@ -47,6 +54,9 @@ using namespace ves::xplorer::scenegraph::manipulator;
 TranslateAxis::TranslateAxis()
     :
     Dragger(),
+    m_unitAxis(
+        new osg::LineSegment(
+            osg::Vec3d( 0.0, 0.0, 0.0 ), osg::Vec3d( 1.0, 0.0, 0.0 ) ) ),
     m_lineAndCylinderGeode( NULL ),
     m_cone( NULL )
 {
@@ -57,6 +67,7 @@ TranslateAxis::TranslateAxis(
     const TranslateAxis& translateAxis, const osg::CopyOp& copyop )
     :
     Dragger( translateAxis, copyop ),
+    m_unitAxis( translateAxis.m_unitAxis.get() ),
     m_lineAndCylinderGeode( translateAxis.m_lineAndCylinderGeode.get() ),
     m_cone( translateAxis.m_cone.get() )
 {
@@ -68,6 +79,75 @@ TranslateAxis::~TranslateAxis()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
+void TranslateAxis::ComputeProjectedPoint(
+    const osgUtil::LineSegmentIntersector& deviceInput,
+    osg::Vec3d& projectedPoint )
+{
+    //Transform the dragger axis to world space
+    osg::ref_ptr< osg::LineSegment > draggerAxis = new osg::LineSegment();
+    draggerAxis->mult( *m_unitAxis, m_localToWorld );
+    //draggerAxis->mult( m_localToWorld, *m_unitAxis );
+
+    //Get the start and end points for the dragger axis in world space
+    const osg::Vec3d& startDraggerAxis = draggerAxis->start();
+    const osg::Vec3d& endDraggerAxis = draggerAxis->end();
+
+    //Get the near and far points for the active device
+    const osg::Vec3d& startDeviceInput = deviceInput.getStart();
+    const osg::Vec3d& endDeviceInput = deviceInput.getEnd();
+
+    std::cout << "startDraggerAxis: " << "( "
+              << startDraggerAxis.x() << ", "
+              << startDraggerAxis.y() << ", "
+              << startDraggerAxis.z() << " )"
+              << std::endl;
+
+    std::cout << "endDraggerAxis: " << "( "
+              << endDraggerAxis.x() << ", "
+              << endDraggerAxis.y() << ", "
+              << endDraggerAxis.z() << " )"
+              << std::endl;
+
+    std::cout << "startDeviceInput: " << "( "
+              << startDeviceInput.x() << ", "
+              << startDeviceInput.y() << ", "
+              << startDeviceInput.z() << " )"
+              << std::endl;
+
+    std::cout << "endDeviceInput: " << "( "
+              << endDeviceInput.x() << ", "
+              << endDeviceInput.y() << ", "
+              << endDeviceInput.z() << " )"
+              << std::endl;
+
+    osg::Vec3d u = endDraggerAxis - startDraggerAxis;
+    u.normalize();
+    osg::Vec3d v = endDeviceInput - startDeviceInput;
+    v.normalize();
+    osg::Vec3d w = startDraggerAxis - startDeviceInput;
+
+    double a = u * u;
+    double b = u * v;
+    double c = v * v;
+    double d = u * w;
+    double e = v * w;
+
+    double denominator = a * c - b * b;
+    if( denominator == 0.0 )
+    {
+        //If lines are parallel, return
+        return;
+    }
+
+    double sc = ( b * e - c * d ) / denominator;
+    //double tc = ( a * e - b * d ) / denominator;
+
+    projectedPoint = startDraggerAxis + u * sc;
+    //osg::Vec3d p2 = startDeviceInput + v * tc;
+
+    //projectedPoint = projectedPoint * m_worldToLocal;
+}
+////////////////////////////////////////////////////////////////////////////////
 osg::Geode* const TranslateAxis::GetLineAndCylinderGeode() const
 {
     return m_lineAndCylinderGeode.get();
@@ -76,6 +156,23 @@ osg::Geode* const TranslateAxis::GetLineAndCylinderGeode() const
 osg::Cone* const TranslateAxis::GetCone() const
 {
     return m_cone.get();
+}
+////////////////////////////////////////////////////////////////////////////////
+void TranslateAxis::ManipFunction( const osgUtil::LineSegmentIntersector& deviceInput )
+{
+    //Get the end projected point
+    osg::Vec3d endProjectedPoint;
+    ComputeProjectedPoint( deviceInput, endProjectedPoint );
+
+    osg::Vec3d deltaTranslation = endProjectedPoint - m_startProjectedPoint;
+    osg::Matrixd motionMatrix = osg::Matrix::translate( deltaTranslation );
+
+    ves::xplorer::scenegraph::ManipulatorRoot* mr =
+        ves::xplorer::scenegraph::SceneManager::instance()->GetManipulatorRoot();
+
+    Manipulator* manipulator = mr->GetChild( 0 );
+
+    manipulator->setMatrix( m_startMotionMatrix * motionMatrix );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void TranslateAxis::SetupDefaultGeometry()

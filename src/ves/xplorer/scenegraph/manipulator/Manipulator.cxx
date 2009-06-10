@@ -72,6 +72,21 @@ Manipulator::~Manipulator()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
+bool Manipulator::isSameKindAs( const osg::Object* obj ) const
+{
+    return dynamic_cast< const Manipulator* >( obj ) != NULL;
+}
+////////////////////////////////////////////////////////////////////////////////
+const char* Manipulator::className() const
+{
+    return "Manipulator";
+}
+////////////////////////////////////////////////////////////////////////////////
+const char* Manipulator::libraryName() const
+{
+    return "ves::xplorer::scenegraph::manipulator";
+}
+////////////////////////////////////////////////////////////////////////////////
 bool Manipulator::addChild( Dragger* child )
 {
     return osg::MatrixTransform::addChild( child );
@@ -82,12 +97,45 @@ Dragger* Manipulator::GetChild( unsigned int i )
     return static_cast< Dragger* >( osg::MatrixTransform::getChild( i ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
-Dragger* Manipulator::Handle( Event::Enum event, osg::NodePath::iterator npItr )
+Dragger* Manipulator::Focus( osg::NodePath::iterator& npItr )
 {
     Dragger* activeDragger( NULL );
     for( size_t i = 0; i < getNumChildren(); ++i )
     {
-        Dragger* dragger = GetChild( i )->Handle( event, npItr );
+        Dragger* dragger = GetChild( i )->Focus( npItr );
+        if( dragger )
+        {
+            activeDragger = dragger;
+        }
+    }
+
+    return activeDragger;
+}
+////////////////////////////////////////////////////////////////////////////////
+Dragger* Manipulator::Push(
+    const osgUtil::LineSegmentIntersector& deviceInput,
+    const osg::NodePath& np,
+    osg::NodePath::iterator& npItr )
+{
+    Dragger* activeDragger( NULL );
+    for( size_t i = 0; i < getNumChildren(); ++i )
+    {
+        Dragger* dragger = GetChild( i )->Push( deviceInput, np, npItr );
+        if( dragger )
+        {
+            activeDragger = dragger;
+        }
+    }
+
+    return activeDragger;
+}
+////////////////////////////////////////////////////////////////////////////////
+Dragger* Manipulator::Release( osg::NodePath::iterator& npItr )
+{
+    Dragger* activeDragger( NULL );
+    for( size_t i = 0; i < getNumChildren(); ++i )
+    {
+        Dragger* dragger = GetChild( i )->Release( npItr );
         if( dragger )
         {
             activeDragger = dragger;
@@ -137,11 +185,6 @@ const VectorSpace::Enum Manipulator::GetVectorSpace() const
 void Manipulator::SetAutoScaleToScreen( bool autoScaleToScreen )
 {
     m_autoTransform->setAutoScaleToScreen( autoScaleToScreen );
-}
-////////////////////////////////////////////////////////////////////////////////
-void Manipulator::SetupDefaultDraggers()
-{
-    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 /*

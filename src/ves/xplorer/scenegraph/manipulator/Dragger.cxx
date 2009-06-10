@@ -33,11 +33,16 @@
 
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/manipulator/Dragger.h>
+#include <ves/xplorer/scenegraph/manipulator/TransformManipulator.h>
+
+#include <ves/xplorer/scenegraph/SceneManager.h>
+#include <ves/xplorer/scenegraph/ManipulatorRoot.h>
 
 // --- OSG Includes --- //
 
 
 using namespace ves::xplorer::scenegraph::manipulator;
+namespace vxs = ves::xplorer::scenegraph;
 
 ////////////////////////////////////////////////////////////////////////////////
 Dragger::Dragger()
@@ -50,7 +55,7 @@ Dragger::Dragger()
     m_colorMap[ ColorTag::OTHER ] = osg::Vec4f( 0.0, 0.0, 0.0, 1.0 );
 
     m_color = new osg::Uniform( "color", GetColor( ColorTag::DEFAULT ) );
-
+    
     CreateDefaultShader();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -59,7 +64,9 @@ Dragger::Dragger(
     :
     osg::MatrixTransform( dragger, copyop ),
     m_colorMap( dragger.m_colorMap ),
-    m_color( dragger.m_color )
+    m_color( dragger.m_color ),
+    m_localToWorld( dragger.m_localToWorld ),
+    m_worldToLocal( dragger.m_worldToLocal )
 {
     ;
 }
@@ -69,84 +76,111 @@ Dragger::~Dragger()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-Dragger* Dragger::Handle( Event::Enum event, osg::NodePath::iterator npItr )
+bool Dragger::isSameKindAs( const osg::Object* obj ) const
 {
-    //DRAG events only get called by a dragger
-    switch( event )
-    {
-        case Event::DRAG:
-        {
-            return this;
-        }
-    }
-
-    //Get the active dragger
-    osg::Node* node = *(++npItr);
-    if( !node )
-    {
-        //Something really bad happened
-        //Debug code - node should always be valid
-        return NULL;
-    }
-
-    //Check if this dragger is in the NodePath
-    bool isActive( false );
-    if( this == node )
-    {
-        isActive = true;
-    }
-
-    switch( event )
-    {
-        case Event::FOCUS:
-        {
-            if( isActive )
-            {
-                UseColor( ColorTag::FOCUS );
-
-                return this;
-            }
-
-            UseColor( ColorTag::DEFAULT );
-
-            return NULL;
-        }
-        case Event::PUSH:
-        {
-            if( isActive )
-            {
-                UseColor( ColorTag::ACTIVE );
-
-                return this;
-            }
-
-            TurnOff();
-
-            return NULL;
-        }
-        case Event::RELEASE:
-        {
-            if( isActive )
-            {
-                UseColor( ColorTag::DEFAULT );
-
-                return this;
-            }
-
-            TurnOn();
-
-            return NULL;
-        }
-        default:
-        {
-            return NULL;
-        }
-    }
+    return dynamic_cast< const Dragger* >( obj ) != NULL;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Dragger::SetupDefaultGeometry()
+const char* Dragger::className() const
+{
+    return "Dragger";
+}
+////////////////////////////////////////////////////////////////////////////////
+const char* Dragger::libraryName() const
+{
+    return "ves::xplorer::scenegraph::manipulator";
+}
+////////////////////////////////////////////////////////////////////////////////
+void Dragger::ComputeProjectedPoint(
+    const osgUtil::LineSegmentIntersector& deviceInput,
+    osg::Vec3d& projectedPoint )
 {
     ;
+}
+////////////////////////////////////////////////////////////////////////////////
+Dragger* Dragger::Drag( const osgUtil::LineSegmentIntersector& deviceInput )
+{
+    ManipFunction( deviceInput );
+
+    return this;
+}
+////////////////////////////////////////////////////////////////////////////////
+Dragger* Dragger::Focus( osg::NodePath::iterator& npItr )
+{
+    //Get the active dragger
+    osg::Node* node = *(++npItr);
+    if( this == node )
+    {
+        UseColor( ColorTag::FOCUS );
+
+        --npItr;
+        return this;
+    }
+
+    UseColor( ColorTag::DEFAULT );
+
+    --npItr;
+    return NULL;
+}
+////////////////////////////////////////////////////////////////////////////////
+void Dragger::ManipFunction( const osgUtil::LineSegmentIntersector& deviceInput )
+{
+    ;
+}
+////////////////////////////////////////////////////////////////////////////////
+Dragger* Dragger::Push(
+    const osgUtil::LineSegmentIntersector& deviceInput,
+    const osg::NodePath& np,
+    osg::NodePath::iterator& npItr )
+{
+    //Get the active dragger
+    osg::Node* node = *(++npItr);
+    if( this == node )
+    {
+        UseColor( ColorTag::ACTIVE );
+
+        //Compute local to world and world to local matrices
+        m_localToWorld = osg::computeLocalToWorld( np );
+        m_worldToLocal = osg::Matrix::inverse( m_localToWorld );
+
+        ves::xplorer::scenegraph::ManipulatorRoot* mr =
+            ves::xplorer::scenegraph::SceneManager::instance()->GetManipulatorRoot();
+
+        Manipulator* manipulator = mr->GetChild( 0 );
+
+        m_startMotionMatrix = manipulator->getMatrix();
+
+        //Get the start projected point
+        ComputeProjectedPoint( deviceInput, m_startProjectedPoint );
+
+        --npItr;
+        return this;
+    }
+
+    TurnOff();
+
+    --npItr;
+    return NULL;
+}
+////////////////////////////////////////////////////////////////////////////////
+Dragger* Dragger::Release( osg::NodePath::iterator& npItr )
+{
+    //Get the active dragger
+    osg::Node* node = *(++npItr);
+    if( this == node )
+    {
+        UseColor( ColorTag::DEFAULT );
+
+        //m_startProjectedPoint.set( 0.0, 0.0, 0.0 );
+
+        --npItr;
+        return this;
+    }
+
+    TurnOn();
+
+    --npItr;
+    return NULL;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Dragger::SetDrawableToAlwaysCull( osg::Drawable& drawable )

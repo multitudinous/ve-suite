@@ -557,8 +557,11 @@ void KeyboardMouse::ProcessKBEvents( int mode )
 #ifdef TRANSFORM_MANIPULATOR
                 UpdateSelectionLine();
 
-                vxs::SceneManager::instance()->GetManipulatorRoot()->Handle(
-                    vxsm::Event::PUSH, mLineSegmentIntersector.get() );
+                if( vxs::SceneManager::instance()->GetManipulatorRoot()->Handle(
+                        vxsm::Event::PUSH, mLineSegmentIntersector.get() ) )
+                {
+                    break;
+                }
 #endif //TRANSFORM_MANIPULATOR
 
                 //Navigation mode
@@ -595,8 +598,11 @@ void KeyboardMouse::ProcessKBEvents( int mode )
                     static_cast< double >( mHeight );
 
 #ifdef TRANSFORM_MANIPULATOR
-                    vxs::SceneManager::instance()->GetManipulatorRoot()->Handle(
-                        vxsm::Event::RELEASE );
+                if( vxs::SceneManager::instance()->GetManipulatorRoot()->Handle(
+                        vxsm::Event::RELEASE ) );
+                {
+                    break;
+                }
 #endif //TRANSFORM_MANIPULATOR
 
                 //Navigation mode
@@ -633,8 +639,12 @@ void KeyboardMouse::ProcessKBEvents( int mode )
 #ifdef TRANSFORM_MANIPULATOR
                     UpdateSelectionLine();
 
+                    if(
                     vxs::SceneManager::instance()->GetManipulatorRoot()->Handle(
-                        vxsm::Event::FOCUS, mLineSegmentIntersector.get() );
+                        vxsm::Event::FOCUS, mLineSegmentIntersector.get() ) )
+                    {
+                        break;
+                    }
 #endif //TRANSFORM_MANIPULATOR
                 }
                 else if( mState == 1 )
@@ -651,8 +661,14 @@ void KeyboardMouse::ProcessKBEvents( int mode )
                     delta.second = mCurrPos.second - mPrevPos.second;
 
 #ifdef TRANSFORM_MANIPULATOR
+                    UpdateSelectionLine();
+
+                    if(
                     vxs::SceneManager::instance()->GetManipulatorRoot()->Handle(
-                        vxsm::Event::DRAG );
+                        vxsm::Event::DRAG ) )
+                    {
+                        break;
+                    }
 #endif //TRANSFORM_MANIPULATOR
 
                     //Navigation mode

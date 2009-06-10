@@ -43,6 +43,11 @@
 #include <osg/ref_ptr>
 #include <osg/MatrixTransform>
 
+namespace osgUtil
+{
+class LineSegmentIntersector;
+}
+
 namespace osg
 {
 class AutoTransform;
@@ -66,7 +71,7 @@ class Dragger;
  */
 
 /*!\class ves::xplorer::scenegraph::Manipulator
- *
+ * Abstract Class
  */
 class VE_SCENEGRAPH_EXPORTS Manipulator : public osg::MatrixTransform
 {
@@ -80,7 +85,17 @@ public:
         const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
 
     ///
-    META_Node( ves::xplorer::scenegraph::manipulator, Manipulator );
+    ///\param obj
+    ///\return
+    virtual bool isSameKindAs( const osg::Object* obj ) const;
+
+    ///
+    ///\return
+    virtual const char* className() const;
+
+    ///
+    ///\return
+    virtual const char* libraryName() const;
 
     ///Override the addChild function to only accept Draggers
     virtual bool addChild( Dragger* child );
@@ -89,7 +104,16 @@ public:
     Dragger* GetChild( unsigned int i );
 
     ///
-    virtual Dragger* Handle( Event::Enum event, osg::NodePath::iterator npItr );
+    virtual Dragger* Focus( osg::NodePath::iterator& npItr );
+
+    ///
+    virtual Dragger* Push(
+        const osgUtil::LineSegmentIntersector& deviceInput,
+        const osg::NodePath& np,
+        osg::NodePath::iterator& npItr );
+
+    ///
+    virtual Dragger* Release( osg::NodePath::iterator& npItr );
 
     ///Override the insertChild function to only accept Draggers
     virtual bool insertChild( unsigned int index, Dragger* child );
@@ -137,7 +161,7 @@ protected:
 
     ///
     ///Can't use pure virtual with META_Node define
-    virtual void SetupDefaultDraggers();// = 0;
+    virtual void SetupDefaultDraggers() = 0;
 
     /*
     ///

@@ -60,6 +60,16 @@ CompoundDragger::~CompoundDragger()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
+bool CompoundDragger::isSameKindAs( const osg::Object* obj ) const
+{
+    return dynamic_cast< const CompoundDragger* >( obj ) != NULL;
+}
+////////////////////////////////////////////////////////////////////////////////
+const char* CompoundDragger::className() const
+{
+    return "CompoundDragger";
+}
+////////////////////////////////////////////////////////////////////////////////
 void CompoundDragger::ComboForm()
 {
     ;
@@ -70,29 +80,82 @@ void CompoundDragger::DefaultForm()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-Dragger* CompoundDragger::Handle(
-    Event::Enum event, osg::NodePath::iterator npItr )
+Dragger* CompoundDragger::Focus( osg::NodePath::iterator& npItr )
 {
     //Get the active dragger
     osg::Node* node = *(++npItr);
-    if( !node )
+    if( this == node )
     {
-        //Something really bad happened
-        //Debug code - node should always be valid
-        return NULL;
+        ;
     }
 
     Dragger* activeDragger( NULL );
     for( size_t i = 0; i < getNumChildren(); ++i )
     {
-        Dragger* dragger = GetChild( i )->Handle( event, npItr );
+        Dragger* dragger = GetChild( i )->Focus( npItr );
         if( dragger )
         {
             activeDragger = dragger;
         }
     }
 
+    --npItr;
     return activeDragger;
+}
+////////////////////////////////////////////////////////////////////////////////
+Dragger* CompoundDragger::Push(
+    const osgUtil::LineSegmentIntersector& deviceInput,
+    const osg::NodePath& np,
+    osg::NodePath::iterator& npItr )
+{
+    //Get the active dragger
+    osg::Node* node = *(++npItr);
+    if( this == node )
+    {
+        Dragger* activeDragger( NULL );
+        for( size_t i = 0; i < getNumChildren(); ++i )
+        {
+            Dragger* dragger = GetChild( i )->Push( deviceInput, np, npItr );
+            if( dragger )
+            {
+                activeDragger = dragger;
+            }
+        }
+
+        --npItr;
+        return activeDragger;
+    }
+
+    TurnOff();
+
+    --npItr;
+    return NULL;
+}
+////////////////////////////////////////////////////////////////////////////////
+Dragger* CompoundDragger::Release( osg::NodePath::iterator& npItr )
+{
+    //Get the active dragger
+    osg::Node* node = *(++npItr);
+    if( this == node )
+    {
+        Dragger* activeDragger( NULL );
+        for( size_t i = 0; i < getNumChildren(); ++i )
+        {
+            Dragger* dragger = GetChild( i )->Release( npItr );
+            if( dragger )
+            {
+                activeDragger = dragger;
+            }
+        }
+
+        --npItr;
+        return activeDragger;
+    }
+
+    TurnOn();
+
+    --npItr;
+    return NULL;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CompoundDragger::SetupDefaultGeometry()

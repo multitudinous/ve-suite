@@ -62,8 +62,9 @@ ManipulatorRoot::ManipulatorRoot(
     :
     osg::Group( manipulatorRoot, copyop ),
     m_nodePath( manipulatorRoot.m_nodePath ),
-    m_activeManipulator( manipulatorRoot.m_activeManipulator.get() ),
-    m_activeDragger( manipulatorRoot.m_activeDragger.get() )
+    m_nodePathItr( manipulatorRoot.m_nodePathItr ),
+    m_activeManipulator( manipulatorRoot.m_activeManipulator ),
+    m_activeDragger( manipulatorRoot.m_activeDragger )
 {
     ;
 }
@@ -93,20 +94,20 @@ manipulator::Manipulator* ManipulatorRoot::GetChild( unsigned int i )
 ////////////////////////////////////////////////////////////////////////////////
 bool ManipulatorRoot::Handle(
     manipulator::Event::Enum event,
-    osgUtil::LineSegmentIntersector* lineSegmentIntersector )
+    osgUtil::LineSegmentIntersector* testForIntersections )
 {
     //If we want to test for manipulator intersections
-    if( lineSegmentIntersector )
+    if( testForIntersections )
     {
         //If no manipulator intersections, return
-        if( !TestForIntersections( lineSegmentIntersector ) )
+        if( !TestForIntersections( testForIntersections ) )
         {
             return false;
         }
     }
 
     //Make sure the active manipulator is valid before we continue
-    if( !m_activeManipulator.valid() )
+    if( !m_activeManipulator )
     {
         return false;
     }
@@ -114,18 +115,25 @@ bool ManipulatorRoot::Handle(
     switch( event )
     {
         case manipulator::Event::FOCUS:
+        {
+            m_activeDragger =
+                m_activeManipulator->Focus( m_nodePathItr );
+
+            return( m_activeDragger );
+        }
         case manipulator::Event::PUSH:
         {
             m_activeDragger =
-                m_activeManipulator->Handle( event, m_nodePathItr );
+                m_activeManipulator->Push(
+                    *m_deviceInput, m_nodePath, m_nodePathItr );
 
-            return( m_activeDragger.valid() );
+            return( m_activeDragger );
         }
         case manipulator::Event::DRAG:
         {
-            if( m_activeDragger.valid() )
+            if( m_activeDragger )
             {
-                return( m_activeDragger->Handle( event, m_nodePathItr ) );
+                return( m_activeDragger->Drag( *m_deviceInput ) );
             }
 
             return false;
@@ -134,13 +142,13 @@ bool ManipulatorRoot::Handle(
         {
             m_activeDragger = NULL;
 
-            return( m_activeManipulator->Handle( event, m_nodePathItr ) );
+            return( m_activeManipulator->Release( m_nodePathItr ) );
         }
         default:
         {
             m_activeDragger = NULL;
 
-            return( m_activeDragger.valid() );
+            return( m_activeDragger );
         }
     }
 }
@@ -176,13 +184,13 @@ bool ManipulatorRoot::TestForIntersections(
     if( intersections.empty() )
     {
         //Reset the active manipulator
-        if( m_activeManipulator.valid() )
+        if( m_activeManipulator )
         {
             m_activeManipulator = NULL;
         }
 
         //Reset the active dragger
-        if( m_activeDragger.valid() )
+        if( m_activeDragger )
         {
             m_activeDragger->UseColor( manipulator::ColorTag::DEFAULT );
             m_activeDragger = NULL;
@@ -191,7 +199,10 @@ bool ManipulatorRoot::TestForIntersections(
         return false;
     }
 
+    //Get the full node path
     m_nodePath = intersections.begin()->nodePath;
+    //Remove this ManipulatorRoot and the AutoTransform above the manipulators
+    //m_nodePath = osg::NodePath( m_nodePath.begin() + 2, m_nodePath.end() );
     m_nodePathItr = m_nodePath.begin();
     //Increment past this - ManipulatorRoot
     ++m_nodePathItr;
@@ -199,6 +210,8 @@ bool ManipulatorRoot::TestForIntersections(
     ++m_nodePathItr;
 
     m_activeManipulator = ConvertNodeToManipulator( *m_nodePathItr );
+    
+    m_deviceInput = lineSegmentIntersector;
 
     return true;
 }
