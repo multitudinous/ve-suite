@@ -112,6 +112,12 @@ public:
     ///
     virtual void UseColor( ColorTag::Enum colorTag );
 
+    ///Deactivate this dragger
+    void TurnOff();
+
+    ///Activate this dragger
+    void TurnOn();
+
 protected:
     ///
     virtual ~Dragger();
@@ -137,17 +143,11 @@ protected:
     ///\param drawable
     void SetDrawableToAlwaysCull( osg::Drawable& drawable );
 
-    ///Deactivate the manipulator root
-    void TurnOff();
-
-    ///Activate the manipulator root
-    void TurnOn();
-
-    ///
-    osg::ref_ptr< osg::Uniform > m_color;
-
     ///
     osg::Vec3d m_startProjectedPoint;
+
+    ///
+    osg::Vec3d m_startPosition;
 
     ///
     osg::Matrixd m_localToWorld;
@@ -156,7 +156,7 @@ protected:
     osg::Matrixd m_worldToLocal;
 
     ///
-    osg::Matrixd m_startMotionMatrix;
+    osg::ref_ptr< osg::Uniform > m_color;
 
 private:
     ///

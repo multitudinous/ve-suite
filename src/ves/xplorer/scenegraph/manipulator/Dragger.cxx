@@ -39,7 +39,7 @@
 #include <ves/xplorer/scenegraph/ManipulatorRoot.h>
 
 // --- OSG Includes --- //
-
+#include <osg/AutoTransform>
 
 using namespace ves::xplorer::scenegraph::manipulator;
 namespace vxs = ves::xplorer::scenegraph;
@@ -64,9 +64,9 @@ Dragger::Dragger(
     :
     osg::MatrixTransform( dragger, copyop ),
     m_colorMap( dragger.m_colorMap ),
-    m_color( dragger.m_color ),
     m_localToWorld( dragger.m_localToWorld ),
-    m_worldToLocal( dragger.m_worldToLocal )
+    m_worldToLocal( dragger.m_worldToLocal ),
+    m_color( dragger.m_color )
 {
     ;
 }
@@ -143,12 +143,14 @@ Dragger* Dragger::Push(
         m_localToWorld = osg::computeLocalToWorld( np );
         m_worldToLocal = osg::Matrix::inverse( m_localToWorld );
 
-        ves::xplorer::scenegraph::ManipulatorRoot* mr =
-            ves::xplorer::scenegraph::SceneManager::instance()->GetManipulatorRoot();
+        vxs::ManipulatorRoot* manipulatorRoot =
+            vxs::SceneManager::instance()->GetManipulatorRoot();
 
-        Manipulator* manipulator = mr->GetChild( 0 );
+        osg::AutoTransform* autoTransform =
+            static_cast< osg::AutoTransform* >(
+                manipulatorRoot->getChild( 0 ) );
 
-        m_startMotionMatrix = manipulator->getMatrix();
+        m_startPosition = autoTransform->getPosition();
 
         //Get the start projected point
         ComputeProjectedPoint( deviceInput, m_startProjectedPoint );
@@ -170,8 +172,6 @@ Dragger* Dragger::Release( osg::NodePath::iterator& npItr )
     if( this == node )
     {
         UseColor( ColorTag::DEFAULT );
-
-        //m_startProjectedPoint.set( 0.0, 0.0, 0.0 );
 
         --npItr;
         return this;

@@ -112,21 +112,22 @@ public:
     virtual void UseColor( ColorTag::Enum colorTag );
 
     ///
-    ///Can't use pure virtual with META_Node define
-    virtual void ComboForm();// = 0;
+    virtual void ComboForm();
 
     ///
-    ///Can't use pure virtual with META_Node define
-    virtual void DefaultForm();// = 0;
+    virtual void DefaultForm();
 
 protected:
     ///
     virtual ~CompoundDragger();
 
+    ///Pure virtual again
     ///
-    virtual void SetupDefaultGeometry();
+    virtual void SetupDefaultGeometry() = 0;
 
 private:
+    ///
+    bool m_comboForm;
 
 };
 } //end manipulator

@@ -42,7 +42,8 @@ using namespace ves::xplorer::scenegraph::manipulator;
 ////////////////////////////////////////////////////////////////////////////////
 CompoundDragger::CompoundDragger()
     :
-    Dragger()
+    Dragger(),
+    m_comboForm( false )
 {
     ;
 }
@@ -50,7 +51,8 @@ CompoundDragger::CompoundDragger()
 CompoundDragger::CompoundDragger(
     const CompoundDragger& compoundDragger, const osg::CopyOp& copyop )
     :
-    Dragger( compoundDragger, copyop )
+    Dragger( compoundDragger, copyop ),
+    m_comboForm( compoundDragger.m_comboForm )
 {
     ;
 }
@@ -72,12 +74,12 @@ const char* CompoundDragger::className() const
 ////////////////////////////////////////////////////////////////////////////////
 void CompoundDragger::ComboForm()
 {
-    ;
+    m_comboForm = true;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CompoundDragger::DefaultForm()
 {
-    ;
+    m_comboForm = false;
 }
 ////////////////////////////////////////////////////////////////////////////////
 Dragger* CompoundDragger::Focus( osg::NodePath::iterator& npItr )
@@ -126,7 +128,10 @@ Dragger* CompoundDragger::Push(
         return activeDragger;
     }
 
-    TurnOff();
+    if( m_comboForm )
+    {
+        TurnOff();
+    }
 
     --npItr;
     return NULL;
@@ -152,15 +157,13 @@ Dragger* CompoundDragger::Release( osg::NodePath::iterator& npItr )
         return activeDragger;
     }
 
-    TurnOn();
+    if( m_comboForm )
+    {
+        TurnOn();
+    }
 
     --npItr;
     return NULL;
-}
-////////////////////////////////////////////////////////////////////////////////
-void CompoundDragger::SetupDefaultGeometry()
-{
-    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool CompoundDragger::addChild( Dragger* child )

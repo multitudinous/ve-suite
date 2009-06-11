@@ -88,7 +88,7 @@ manipulator::Manipulator* ManipulatorRoot::ConvertNodeToManipulator(
 manipulator::Manipulator* ManipulatorRoot::GetChild( unsigned int i )
 {
     osg::AutoTransform* autoTransform =
-        dynamic_cast< osg::AutoTransform* >( osg::Group::getChild( i ) );
+        static_cast< osg::AutoTransform* >( osg::Group::getChild( i ) );
     return ConvertNodeToManipulator( autoTransform->getChild( 0 ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -119,7 +119,7 @@ bool ManipulatorRoot::Handle(
             m_activeDragger =
                 m_activeManipulator->Focus( m_nodePathItr );
 
-            return( m_activeDragger );
+            return m_activeDragger;
         }
         case manipulator::Event::PUSH:
         {
@@ -127,13 +127,13 @@ bool ManipulatorRoot::Handle(
                 m_activeManipulator->Push(
                     *m_deviceInput, m_nodePath, m_nodePathItr );
 
-            return( m_activeDragger );
+            return m_activeDragger;
         }
         case manipulator::Event::DRAG:
         {
             if( m_activeDragger )
             {
-                return( m_activeDragger->Drag( *m_deviceInput ) );
+                return m_activeDragger->Drag( *m_deviceInput );
             }
 
             return false;
@@ -142,13 +142,13 @@ bool ManipulatorRoot::Handle(
         {
             m_activeDragger = NULL;
 
-            return( m_activeManipulator->Release( m_nodePathItr ) );
+            return m_activeManipulator->Release( m_nodePathItr );
         }
         default:
         {
             m_activeDragger = NULL;
 
-            return( m_activeDragger );
+            return false;
         }
     }
 }
@@ -199,18 +199,15 @@ bool ManipulatorRoot::TestForIntersections(
         return false;
     }
 
-    //Get the full node path
+    //Get the full node path from selected dragger to this
     m_nodePath = intersections.begin()->nodePath;
-    //Remove this ManipulatorRoot and the AutoTransform above the manipulators
-    //m_nodePath = osg::NodePath( m_nodePath.begin() + 2, m_nodePath.end() );
+
+    //Increment past this and the AutoTransform above a Manipulator
     m_nodePathItr = m_nodePath.begin();
-    //Increment past this - ManipulatorRoot
     ++m_nodePathItr;
-    //Increment past the AutoTransform above Manipulators
     ++m_nodePathItr;
 
     m_activeManipulator = ConvertNodeToManipulator( *m_nodePathItr );
-    
     m_deviceInput = lineSegmentIntersector;
 
     return true;

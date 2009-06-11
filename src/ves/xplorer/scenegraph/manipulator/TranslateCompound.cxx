@@ -75,6 +75,9 @@ TranslateCompound::~TranslateCompound()
 ////////////////////////////////////////////////////////////////////////////////
 void TranslateCompound::ComboForm()
 {
+    //Call base method
+    CompoundDragger::ComboForm();
+
     osg::Geode* geode( NULL );
     osg::Cone* cone( NULL );
     for( size_t i = 0; i < getNumChildren(); ++i )
@@ -96,6 +99,9 @@ void TranslateCompound::ComboForm()
 ////////////////////////////////////////////////////////////////////////////////
 void TranslateCompound::DefaultForm()
 {
+    //Call base method
+    CompoundDragger::DefaultForm();
+
     osg::Geode* geode( NULL );
     osg::Cone* cone( NULL );
     for( size_t i = 0; i < getNumChildren(); ++i )
@@ -104,11 +110,11 @@ void TranslateCompound::DefaultForm()
             dynamic_cast< TranslateAxis* >( GetChild( i ) );
         if( translateAxis )
         {
-            //Turn off line and cylinder geometry
+            //Turn on line and cylinder geometry
             geode = translateAxis->GetLineAndCylinderGeode();
             geode->setNodeMask( 1 );
 
-            //Move the cones out from the unit axis
+            //Move the cones back to the unit axis
             cone = translateAxis->GetCone();
             cone->setCenter( cone->getCenter() - m_coneExplodeVector );
         }

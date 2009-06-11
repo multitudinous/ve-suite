@@ -26,57 +26,97 @@
  * Date modified: $Date: 2009-05-26 17:48:25 -0600 (Tue, 26 May 2009) $
  * Version:       $Rev: 12728 $
  * Author:        $Author: jbkoch $
- * Id:            $Id: RotateTwist.cxx 12728 2009-05-26 23:48:25Z jbkoch $
+ * Id:            $Id: ClippingCircle.cxx 12728 2009-05-26 23:48:25Z jbkoch $
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
 // --- VE-Suite Includes --- //
-#include <ves/xplorer/scenegraph/manipulator/RotateTwist.h>
 #include <ves/xplorer/scenegraph/manipulator/ClippingCircle.h>
 
 // --- OSG Includes --- //
+#include <osg/ColorMask>
+#include <osg/Depth>
+#include <osg/Stencil>
 #include <osg/Hint>
 #include <osg/Geometry>
-#include <osg/Billboard>
 #include <osg/LineWidth>
-#include <osg/PolygonStipple>
+
+#include <osgUtil/LineSegmentIntersector>
 
 using namespace ves::xplorer::scenegraph::manipulator;
 
 ////////////////////////////////////////////////////////////////////////////////
-RotateTwist::RotateTwist()
+ClippingCircle::ClippingCircle()
     :
-    Dragger()
+    osg::Billboard()
 {
+    setMode( osg::Billboard::POINT_ROT_EYE );
+
     SetupDefaultGeometry();
 }
 ////////////////////////////////////////////////////////////////////////////////
-RotateTwist::RotateTwist(
-    const RotateTwist& rotateTwist, const osg::CopyOp& copyop )
+ClippingCircle::ClippingCircle(
+    const ClippingCircle& clippingCircle, const osg::CopyOp& copyop )
     :
-    Dragger( rotateTwist, copyop )
+    osg::Billboard( clippingCircle, copyop )
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-RotateTwist::~RotateTwist()
+ClippingCircle::~ClippingCircle()
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void RotateTwist::SetupDefaultGeometry()
+void ClippingCircle::accept( osg::NodeVisitor& nv )
+{
+    if( nv.validNodeMask( *this ) ) 
+    {
+        if( dynamic_cast< osgUtil::IntersectionVisitor* >( &nv ) )
+        {
+            return;
+        }
+
+        nv.pushOntoNodePath( this );
+        nv.apply( *this );
+        nv.popFromNodePath();
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+const char* ClippingCircle::className() const
+{
+    return "ClippingCircle";
+}
+////////////////////////////////////////////////////////////////////////////////
+osg::Object* ClippingCircle::clone( const osg::CopyOp& copyop ) const
+{
+    return new ClippingCircle( *this, copyop );
+}
+////////////////////////////////////////////////////////////////////////////////
+osg::Object* ClippingCircle::cloneType() const
+{
+    return new ClippingCircle();
+}
+////////////////////////////////////////////////////////////////////////////////
+bool ClippingCircle::isSameKindAs( const osg::Object* obj ) const
+{
+    return dynamic_cast< const ClippingCircle* >( obj ) != NULL;
+}
+////////////////////////////////////////////////////////////////////////////////
+const char* ClippingCircle::libraryName() const
+{
+    return "ves::xplorer::scenegraph::manipulator";
+}
+////////////////////////////////////////////////////////////////////////////////
+void ClippingCircle::SetupDefaultGeometry()
 {
     size_t numSegments( 100 );
-    double radius( 1.2 );
+    double radius( 1.0 );
     double TWO_PI( 2.0 * osg::PI );
     double ringDelta( TWO_PI / numSegments );
 
-    //The geode to add the geometry to
-    osg::ref_ptr< osg::Billboard > billboard = new osg::Billboard();
-    billboard->setMode( osg::Billboard::POINT_ROT_EYE );
-
-    //Create the rotation twist axis with line loops
+    //Create the clipping circle with line loops
     {
         osg::ref_ptr< osg::Geometry > geometry = new osg::Geometry();
         osg::ref_ptr< osg::Vec3Array > vertices = new osg::Vec3Array();
@@ -97,7 +137,7 @@ void RotateTwist::SetupDefaultGeometry()
             new osg::DrawArrays(
                 osg::PrimitiveSet::LINE_LOOP, 0, vertices->size() ) );
 
-        billboard->addDrawable( geometry.get() );
+        addDrawable( geometry.get() );
 
         //Set StateSet
         osg::ref_ptr< osg::StateSet > stateSet =
@@ -118,40 +158,7 @@ void RotateTwist::SetupDefaultGeometry()
             osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
     }
 
-    //Create invisible triangle strip for picking the rotation twist axis
-    {
-        osg::ref_ptr< osg::Geometry > geometry = new osg::Geometry();
-        osg::ref_ptr< osg::Vec3Array > vertices = new osg::Vec3Array();
-
-        double minorRadius( 0.025 );
-        double innerRadius( radius - minorRadius );
-        double outerRadius( radius + minorRadius );
-        for( size_t i = 0; i <= numSegments; ++i )
-        {
-            double rot( i * ringDelta );
-            double cosVal( cos( rot ) );
-            double sinVal( sin( rot ) );
-
-            double xi( innerRadius * cosVal );
-            double zi( innerRadius * sinVal );
-
-            double xo( outerRadius * cosVal );
-            double zo( outerRadius * sinVal );
-
-            vertices->push_back( osg::Vec3( xi, 0.0, zi ) );
-            vertices->push_back( osg::Vec3( xo, 0.0, zo ) );
-        }
-
-        geometry->setVertexArray( vertices.get() );
-        geometry->addPrimitiveSet(
-            new osg::DrawArrays(
-                osg::PrimitiveSet::TRIANGLE_STRIP, 0, vertices->size() ) );
-
-        SetDrawableToAlwaysCull( *geometry.get() );
-        billboard->addDrawable( geometry.get() );
-    }
-
-    //Create stippled geometry to show rotation about the twist axis
+    //Create a triangle fan to act as the invisible clipping circle
     {
         osg::ref_ptr< osg::Geometry > geometry = new osg::Geometry();
         osg::ref_ptr< osg::Vec3Array > vertices = new osg::Vec3Array();
@@ -163,8 +170,8 @@ void RotateTwist::SetupDefaultGeometry()
             double cosVal( cos( rot ) );
             double sinVal( sin( rot ) );
 
-            double x( cosVal );
-            double z( sinVal );
+            double x( radius * cosVal );
+            double z( radius * sinVal );
 
             vertices->push_back( osg::Vec3( x, 0.0, z ) );
         }
@@ -174,54 +181,17 @@ void RotateTwist::SetupDefaultGeometry()
             new osg::DrawArrays(
                 osg::PrimitiveSet::TRIANGLE_FAN, 0, vertices->size() ) );
 
-        //billboard->addDrawable( geometry.get() );
+        //addDrawable( geometry.get() );
         
         //Set StateSet
         osg::ref_ptr< osg::StateSet > stateSet =
             geometry->getOrCreateStateSet();
 
-        //Set polygon stipple
-        osg::ref_ptr< osg::PolygonStipple > polygonStipple =
-            new osg::PolygonStipple();
-        GLubyte halftone[] =
-        {
-            0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
-            0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
-            0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
-            0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
-            0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
-            0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
-            0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
-            0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
-            0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
-            0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
-            0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
-            0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
-            0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
-            0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
-            0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
-            0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55
-        };
-        polygonStipple->setMask( halftone );
-        stateSet->setAttributeAndModes( polygonStipple.get(),
-            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
-
-        //Set polygon hints
-        stateSet->setMode( GL_POLYGON_SMOOTH,
-            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
-        osg::ref_ptr< osg::Hint > hint =
-            new osg::Hint( GL_POLYGON_SMOOTH_HINT, GL_NICEST );
-        stateSet->setAttributeAndModes( hint.get(),
+        //Turn color writes off
+        osg::ref_ptr< osg::ColorMask > colorMask =
+            new osg::ColorMask( false, false, false, false );
+        stateSet->setAttributeAndModes( colorMask.get(),
             osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
     }
-
-    //Create a clipping circle
-    {
-        osg::ref_ptr< ClippingCircle > clippingCircle = new ClippingCircle();
-        addChild( clippingCircle.get() );
-    }
-
-    //Add rotation axis to the scene
-    addChild( billboard.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
