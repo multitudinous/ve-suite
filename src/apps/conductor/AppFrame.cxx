@@ -878,7 +878,7 @@ void AppFrame::CreateMenu()
 #ifdef MINERVA_GIS_SUPPORT
 
     xplorerMinervaMenu = new wxMenu;
-    xplorerMenu->AppendSubMenu ( xplorerMinervaMenu, "Minerva" );
+    xplorerMenu->AppendSubMenu ( xplorerMinervaMenu, _("Minerva") );
     xplorerMinervaMenu->Append ( APPFRAME_MINERVA_ADD_PLANET, _( "Add Planet" ) );
     xplorerMinervaMenu->Append ( APPFRAME_MINERVA_REMOVE_PLANET, _( "Remove Planet" ) );
 

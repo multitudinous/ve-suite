@@ -184,7 +184,7 @@ void MinervaManager::AddEarthToScene()
 
   _scene = _body->scene();
 
-  osg::ref_ptr<osg::Group> root ( ves::xplorer::scenegraph::SceneManager::instance()->GetRootNode() );
+  osg::ref_ptr<osg::Group> root ( ves::xplorer::scenegraph::SceneManager::instance()->GetModelRoot() );
   if ( root.valid() )
   {
     root->addChild ( _scene.get() );
@@ -200,7 +200,7 @@ void MinervaManager::AddEarthToScene()
 
 void MinervaManager::Clear()
 {
-  osg::ref_ptr<osg::Group> root ( ves::xplorer::scenegraph::SceneManager::instance()->GetRootNode() );
+  osg::ref_ptr<osg::Group> root ( ves::xplorer::scenegraph::SceneManager::instance()->GetModelRoot() );
   if ( root.valid() )
   {
     root->removeChild ( _scene.get() );
