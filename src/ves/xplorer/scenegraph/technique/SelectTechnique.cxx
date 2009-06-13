@@ -49,7 +49,7 @@ SelectTechnique::SelectTechnique( osg::ref_ptr< osg::StateSet > stateSet )
     :
     Technique(),
     m_lineAndPointSize( 4.0 ),
-    m_selectionColor( 1.0, 0.75, 1.0, 1.0 ),
+    m_selectionColor( 1.0, 0.0, 1.0, 1.0 ),
     m_stateSet( stateSet )
 {
     DefinePasses();
