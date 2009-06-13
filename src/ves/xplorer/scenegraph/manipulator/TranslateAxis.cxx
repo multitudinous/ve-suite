@@ -81,6 +81,7 @@ TranslateAxis::~TranslateAxis()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
+//See http://softsurfer.com/Archive/algorithm_0106/algorithm_0106.htm
 void TranslateAxis::ComputeProjectedPoint(
     const osgUtil::LineSegmentIntersector& deviceInput,
     osg::Vec3d& projectedPoint )
@@ -98,9 +99,7 @@ void TranslateAxis::ComputeProjectedPoint(
     const osg::Vec3d& endDeviceInput = deviceInput.getEnd();
 
     osg::Vec3d u = endDraggerAxis - startDraggerAxis;
-    u.normalize();
     osg::Vec3d v = endDeviceInput - startDeviceInput;
-    v.normalize();
     osg::Vec3d w = startDraggerAxis - startDeviceInput;
 
     double a = u * u;
@@ -108,17 +107,17 @@ void TranslateAxis::ComputeProjectedPoint(
     double c = v * v;
     double d = u * w;
     double e = v * w;
-
-    double denominator = a * c - b * b;
-    if( denominator == 0.0 )
+    
+    //Compute the line parameters of the two closest points
+    double sc( 0.0 );
+    double D = ( a * c ) - ( b * b );
+    //If the lines are not parallel
+    if( D > 0.00000001 )
     {
-        //If lines are parallel, return
-        return;
+        sc = ( b * e - c * d ) / D;
     }
 
-    double sc = ( b * e - c * d ) / denominator;
-    projectedPoint = startDraggerAxis + u * sc;
-
+    projectedPoint = startDraggerAxis + ( u * sc );
     //projectedPoint = projectedPoint * m_worldToLocal;
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -134,20 +133,21 @@ osg::Cone* const TranslateAxis::GetCone() const
 ////////////////////////////////////////////////////////////////////////////////
 void TranslateAxis::ManipFunction( const osgUtil::LineSegmentIntersector& deviceInput )
 {
-    //Get the end projected point
-    osg::Vec3d endProjectedPoint;
-    ComputeProjectedPoint( deviceInput, endProjectedPoint );
-
-    osg::Vec3d deltaTranslation = endProjectedPoint - m_startProjectedPoint;
-    osg::Vec3d newTranslation = m_startPosition + deltaTranslation;
-
     vxs::ManipulatorRoot* manipulatorRoot =
         vxs::SceneManager::instance()->GetManipulatorRoot();
 
     osg::AutoTransform* autoTransform =
         static_cast< osg::AutoTransform* >( manipulatorRoot->getChild( 0 ) );
 
+    //Get the end projected point
+    osg::Vec3d endProjectedPoint;
+    ComputeProjectedPoint( deviceInput, endProjectedPoint );
+
+    osg::Vec3d deltaTranslation = endProjectedPoint - m_startProjectedPoint;
+    osg::Vec3d newTranslation = autoTransform->getPosition() + deltaTranslation;
     autoTransform->setPosition( newTranslation );
+
+    m_startProjectedPoint = endProjectedPoint;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void TranslateAxis::SetupDefaultGeometry()
@@ -238,7 +238,6 @@ void TranslateAxis::SetupDefaultGeometry()
         SetDrawableToAlwaysCull( *shapeDrawable.get() );
         m_lineAndCylinderGeode->addDrawable( shapeDrawable.get() );
     }
-
 
     //Add line and invisible cylinder to this
     addChild( m_lineAndCylinderGeode.get() );

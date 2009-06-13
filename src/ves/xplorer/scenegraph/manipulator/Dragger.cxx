@@ -41,6 +41,8 @@
 // --- OSG Includes --- //
 #include <osg/AutoTransform>
 
+#include <osgUtil/CullVisitor>
+
 using namespace ves::xplorer::scenegraph::manipulator;
 namespace vxs = ves::xplorer::scenegraph;
 
@@ -149,6 +151,7 @@ Dragger* Dragger::Push(
         osg::AutoTransform* autoTransform =
             static_cast< osg::AutoTransform* >(
                 manipulatorRoot->getChild( 0 ) );
+        autoTransform->setAutoScaleToScreen( false );
 
         m_startPosition = autoTransform->getPosition();
 
@@ -172,6 +175,17 @@ Dragger* Dragger::Release( osg::NodePath::iterator& npItr )
     if( this == node )
     {
         UseColor( ColorTag::DEFAULT );
+
+        vxs::ManipulatorRoot* manipulatorRoot =
+            vxs::SceneManager::instance()->GetManipulatorRoot();
+
+        osg::AutoTransform* autoTransform =
+            static_cast< osg::AutoTransform* >(
+                manipulatorRoot->getChild( 0 ) );
+        autoTransform->setAutoScaleToScreen( true );
+        //Force update now on release event for this frame
+        //This function call sets _firstTimeToInitEyePoint = true
+        autoTransform->setAutoRotateMode( osg::AutoTransform::NO_ROTATION );
 
         --npItr;
         return this;

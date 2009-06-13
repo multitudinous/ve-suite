@@ -554,16 +554,6 @@ void KeyboardMouse::ProcessKBEvents( int mode )
                     static_cast< double >( mY ) /
                     static_cast< double >( mHeight );
 
-#ifdef TRANSFORM_MANIPULATOR
-                UpdateSelectionLine();
-
-                if( vxs::SceneManager::instance()->GetManipulatorRoot()->Handle(
-                        vxsm::Event::PUSH, mLineSegmentIntersector.get() ) )
-                {
-                    break;
-                }
-#endif //TRANSFORM_MANIPULATOR
-
                 //Navigation mode
                 if( mode == 0 )
                 {
@@ -596,14 +586,6 @@ void KeyboardMouse::ProcessKBEvents( int mode )
                 mCurrPos.second =
                     static_cast< double >( mY ) /
                     static_cast< double >( mHeight );
-
-#ifdef TRANSFORM_MANIPULATOR
-                if( vxs::SceneManager::instance()->GetManipulatorRoot()->Handle(
-                        vxsm::Event::RELEASE ) );
-                {
-                    break;
-                }
-#endif //TRANSFORM_MANIPULATOR
 
                 //Navigation mode
                 if( mode == 0 )
@@ -659,17 +641,6 @@ void KeyboardMouse::ProcessKBEvents( int mode )
                     std::pair< double, double > delta;
                     delta.first = mCurrPos.first - mPrevPos.first;
                     delta.second = mCurrPos.second - mPrevPos.second;
-
-#ifdef TRANSFORM_MANIPULATOR
-                    UpdateSelectionLine();
-
-                    if(
-                    vxs::SceneManager::instance()->GetManipulatorRoot()->Handle(
-                        vxsm::Event::DRAG ) )
-                    {
-                        break;
-                    }
-#endif //TRANSFORM_MANIPULATOR
 
                     //Navigation mode
                     if( mode == 0 )
@@ -1114,6 +1085,16 @@ void KeyboardMouse::NavOnMousePress()
             //No modifier key
             if( mKeyNone )
             {
+#ifdef TRANSFORM_MANIPULATOR
+                UpdateSelectionLine();
+
+                if( vxs::SceneManager::instance()->GetManipulatorRoot()->Handle(
+                        vxsm::Event::PUSH, mLineSegmentIntersector.get() ) )
+                {
+                    break;
+                }
+#endif //TRANSFORM_MANIPULATOR
+
                 if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
                      mCharacterController->IsActive() )
                 {
@@ -1294,6 +1275,14 @@ void KeyboardMouse::NavOnMouseRelease()
             //No modifier key
             if( mKeyNone )
             {
+#ifdef TRANSFORM_MANIPULATOR
+                if( vxs::SceneManager::instance()->GetManipulatorRoot()->Handle(
+                        vxsm::Event::RELEASE ) );
+                {
+                    break;
+                }
+#endif //TRANSFORM_MANIPULATOR
+
                 if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
                      mCharacterController->IsActive() )
                 {
@@ -1334,6 +1323,17 @@ void KeyboardMouse::NavOnMouseMotion( std::pair< double, double > delta )
             //No modifier key
             if( mKeyNone )
             {
+
+#ifdef TRANSFORM_MANIPULATOR
+                UpdateSelectionLine();
+
+                if( vxs::SceneManager::instance()->GetManipulatorRoot()->Handle(
+                        vxsm::Event::DRAG ) )
+                {
+                    break;
+                }
+#endif //TRANSFORM_MANIPULATOR
+
                 //Rotate just the camera "3rd person view:
                 if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
                      mCharacterController->IsActive() )
