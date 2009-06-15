@@ -14,6 +14,7 @@
 #include <ves/xplorer/minerva/ModelWrapper.h>
 
 #include <Usul/App/Application.h>
+#include <Usul/Components/Manager.h>
 #include <Usul/Errors/Assert.h>
 #include <Usul/Pointers/Functions.h>
 #include <Usul/Jobs/Manager.h>
@@ -55,6 +56,10 @@ MinervaManager::MinervaManager() :
   _eventHandlers[ves::util::commands::SET_GEOGRAPHIC_PROPERTIERS] = new PropertiesHandler;
   _eventHandlers["CAD_TRANSFORM_UPDATE"] = new TransformHandler;
   //_eventHandlers["CAD_DELETE_NODE"] = nre DeleteHandler;
+
+#ifdef __APPLE__
+  Usul::Components::Manager::instance().load ( Usul::Interfaces::IUnknown::IID, "GDALReadImage.plug" );
+#endif
 }
 
 
