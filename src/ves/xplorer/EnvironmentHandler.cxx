@@ -37,7 +37,6 @@
 #include <ves/xplorer/DeviceHandler.h>
 #include <ves/xplorer/ModelHandler.h>
 #include <ves/xplorer/Model.h>
-#include <ves/xplorer/event/environment/PhysicsSimulationEventHandler.h>
 
 #include <ves/xplorer/device/cfdCursor.h>
 #include <ves/xplorer/device/KeyboardMouse.h>
@@ -67,6 +66,8 @@
 #include <ves/xplorer/event/environment/EphemerisDisplayToggleEventHandler.h>
 #include <ves/xplorer/event/environment/GeometryLODScaleEventHandler.h>
 #include <ves/xplorer/event/environment/SetResetStartPositionEventHandler.h>
+#include <ves/xplorer/event/environment/PhysicsSimulationEventHandler.h>
+#include <ves/xplorer/event/environment/ManipulatorEventHandler.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/Group.h>
@@ -131,6 +132,8 @@ m_lodScale( 0.01 )
     _seedPointsDCS->SetName( "Seed Points DCS" );
     _seedPointsDCS->addChild( _seedPoints.get() );
 
+    _eventHandlers[ std::string( "MANIPULATOR_COMMAND" )] =
+        new ves::xplorer::event::ManipulatorEventHandler();
     _eventHandlers[ std::string( "PHYSICS_SIMULATION" )] =
         new ves::xplorer::event::PhysicsSimulationEventHandler();
     _eventHandlers[ std::string( "VIEW_SELECTION" )] =
