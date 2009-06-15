@@ -40,7 +40,8 @@
 #include <ves/xplorer/scenegraph/DCS.h>
 #include <ves/xplorer/scenegraph/Group.h>
 #include <ves/xplorer/scenegraph/Switch.h>
-#include <ves/xplorer/scenegraph/ManipulatorRoot.h>
+
+#include <ves/xplorer/scenegraph/manipulator/ManipulatorManager.h>
 
 // --- OSG Includes --- //
 #include <osg/ref_ptr>
@@ -66,7 +67,11 @@ class CADEntity;
 class Sound;
 #endif
 class CharacterController;
-class ManipulatorRoot;
+
+namespace manipulator
+{
+class ManipulatorManager;
+}
 
 /*!\file SceneManager.h
 */
@@ -101,7 +106,7 @@ public:
     const gmtl::Matrix44d& GetInvertedWorldDCS() const;
 
     ///Return the manipulator root node of the scenegraph
-    ManipulatorRoot* const GetManipulatorRoot() const;
+    manipulator::ManipulatorManager* const GetManipulatorManager() const;
 
     ///Return the model root node of the scenegraph
     ///\return
@@ -179,7 +184,7 @@ private:
     ///The root manipulator node of our scenegraph
     ///If we add all manipulators under this node,
     ///we don't have to traverse the whole scenegraph to find manipulators
-    osg::ref_ptr< ManipulatorRoot > m_manipulatorRoot;
+    osg::ref_ptr< manipulator::ManipulatorManager > m_manipulatorManager;
 
     ///The node which contains our logo
     osg::ref_ptr< DCS > mLogoNode;

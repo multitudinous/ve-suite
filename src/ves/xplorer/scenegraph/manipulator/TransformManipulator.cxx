@@ -80,12 +80,10 @@ void TransformManipulator::SetupDefaultDraggers()
         new manipulator::RotateCompound();
     addChild( rotateCompound.get() );
 
-    rotateCompound->TurnOff();
-
     osg::ref_ptr< manipulator::ScaleCompound > scaleCompound =
         new manipulator::ScaleCompound();
     addChild( scaleCompound.get() );
 
-    scaleCompound->TurnOff();
+    SetEnabledModes( TransformationType::TRANSLATE_COMPOUND );
 }
 ////////////////////////////////////////////////////////////////////////////////

@@ -42,8 +42,7 @@ using namespace ves::xplorer::scenegraph::manipulator;
 ////////////////////////////////////////////////////////////////////////////////
 CompoundDragger::CompoundDragger()
     :
-    Dragger(),
-    m_comboForm( false )
+    Dragger()
 {
     ;
 }
@@ -51,8 +50,7 @@ CompoundDragger::CompoundDragger()
 CompoundDragger::CompoundDragger(
     const CompoundDragger& compoundDragger, const osg::CopyOp& copyop )
     :
-    Dragger( compoundDragger, copyop ),
-    m_comboForm( compoundDragger.m_comboForm )
+    Dragger( compoundDragger, copyop )
 {
     ;
 }
@@ -70,16 +68,6 @@ bool CompoundDragger::isSameKindAs( const osg::Object* obj ) const
 const char* CompoundDragger::className() const
 {
     return "CompoundDragger";
-}
-////////////////////////////////////////////////////////////////////////////////
-void CompoundDragger::ComboForm()
-{
-    m_comboForm = true;
-}
-////////////////////////////////////////////////////////////////////////////////
-void CompoundDragger::DefaultForm()
-{
-    m_comboForm = false;
 }
 ////////////////////////////////////////////////////////////////////////////////
 Dragger* CompoundDragger::Focus( osg::NodePath::iterator& npItr )

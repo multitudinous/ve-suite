@@ -622,7 +622,7 @@ void KeyboardMouse::ProcessKBEvents( int mode )
                     UpdateSelectionLine();
 
                     if(
-                    vxs::SceneManager::instance()->GetManipulatorRoot()->Handle(
+                    vxs::SceneManager::instance()->GetManipulatorManager()->Handle(
                         vxsm::Event::FOCUS, mLineSegmentIntersector.get() ) )
                     {
                         break;
@@ -1088,7 +1088,7 @@ void KeyboardMouse::NavOnMousePress()
 #ifdef TRANSFORM_MANIPULATOR
                 UpdateSelectionLine();
 
-                if( vxs::SceneManager::instance()->GetManipulatorRoot()->Handle(
+                if( vxs::SceneManager::instance()->GetManipulatorManager()->Handle(
                         vxsm::Event::PUSH, mLineSegmentIntersector.get() ) )
                 {
                     break;
@@ -1276,7 +1276,7 @@ void KeyboardMouse::NavOnMouseRelease()
             if( mKeyNone )
             {
 #ifdef TRANSFORM_MANIPULATOR
-                if( vxs::SceneManager::instance()->GetManipulatorRoot()->Handle(
+                if( vxs::SceneManager::instance()->GetManipulatorManager()->Handle(
                         vxsm::Event::RELEASE ) );
                 {
                     break;
@@ -1327,7 +1327,7 @@ void KeyboardMouse::NavOnMouseMotion( std::pair< double, double > delta )
 #ifdef TRANSFORM_MANIPULATOR
                 UpdateSelectionLine();
 
-                if( vxs::SceneManager::instance()->GetManipulatorRoot()->Handle(
+                if( vxs::SceneManager::instance()->GetManipulatorManager()->Handle(
                         vxsm::Event::DRAG ) )
                 {
                     break;

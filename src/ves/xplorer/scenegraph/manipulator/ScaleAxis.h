@@ -87,7 +87,7 @@ public:
     osg::Geometry* const GetLineGeometry() const;
 
     ///
-    virtual void UseColor( ColorTag::Enum colorTag );
+    //virtual void UseColor( ColorTag::Enum colorTag );
 
 protected:
     ///

@@ -34,9 +34,9 @@
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/manipulator/Dragger.h>
 #include <ves/xplorer/scenegraph/manipulator/TransformManipulator.h>
+#include <ves/xplorer/scenegraph/manipulator/ManipulatorManager.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
-#include <ves/xplorer/scenegraph/ManipulatorRoot.h>
 
 // --- OSG Includes --- //
 #include <osg/AutoTransform>
@@ -49,7 +49,8 @@ namespace vxs = ves::xplorer::scenegraph;
 ////////////////////////////////////////////////////////////////////////////////
 Dragger::Dragger()
     :
-    osg::MatrixTransform()
+    osg::MatrixTransform(),
+    m_comboForm( false )
 {
     m_colorMap[ ColorTag::DEFAULT ] = osg::Vec4f( 0.0, 0.0, 0.0, 1.0 );
     m_colorMap[ ColorTag::FOCUS ] = osg::Vec4f( 1.0, 1.0, 0.0, 1.0 );
@@ -65,6 +66,7 @@ Dragger::Dragger(
     const Dragger& dragger, const osg::CopyOp& copyop )
     :
     osg::MatrixTransform( dragger, copyop ),
+    m_comboForm( dragger.m_comboForm ),
     m_colorMap( dragger.m_colorMap ),
     m_localToWorld( dragger.m_localToWorld ),
     m_worldToLocal( dragger.m_worldToLocal ),
@@ -91,6 +93,16 @@ const char* Dragger::className() const
 const char* Dragger::libraryName() const
 {
     return "ves::xplorer::scenegraph::manipulator";
+}
+////////////////////////////////////////////////////////////////////////////////
+void Dragger::ComboForm()
+{
+    m_comboForm = true;
+}
+////////////////////////////////////////////////////////////////////////////////
+void Dragger::DefaultForm()
+{
+    m_comboForm = false;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Dragger::ComputeProjectedPoint(
@@ -125,6 +137,11 @@ Dragger* Dragger::Focus( osg::NodePath::iterator& npItr )
     return NULL;
 }
 ////////////////////////////////////////////////////////////////////////////////
+const TransformationType::Enum Dragger::GetTransformationType() const
+{
+    return m_transformationType;
+}
+////////////////////////////////////////////////////////////////////////////////
 void Dragger::ManipFunction( const osgUtil::LineSegmentIntersector& deviceInput )
 {
     ;
@@ -145,12 +162,12 @@ Dragger* Dragger::Push(
         m_localToWorld = osg::computeLocalToWorld( np );
         m_worldToLocal = osg::Matrix::inverse( m_localToWorld );
 
-        vxs::ManipulatorRoot* manipulatorRoot =
-            vxs::SceneManager::instance()->GetManipulatorRoot();
+        ManipulatorManager* manipulatorManager =
+            vxs::SceneManager::instance()->GetManipulatorManager();
 
         osg::AutoTransform* autoTransform =
             static_cast< osg::AutoTransform* >(
-                manipulatorRoot->getChild( 0 ) );
+                manipulatorManager->getChild( 0 ) );
         autoTransform->setAutoScaleToScreen( false );
 
         m_startPosition = autoTransform->getPosition();
@@ -176,12 +193,12 @@ Dragger* Dragger::Release( osg::NodePath::iterator& npItr )
     {
         UseColor( ColorTag::DEFAULT );
 
-        vxs::ManipulatorRoot* manipulatorRoot =
-            vxs::SceneManager::instance()->GetManipulatorRoot();
+        ManipulatorManager* manipulatorManager =
+            vxs::SceneManager::instance()->GetManipulatorManager();
 
         osg::AutoTransform* autoTransform =
             static_cast< osg::AutoTransform* >(
-                manipulatorRoot->getChild( 0 ) );
+                manipulatorManager->getChild( 0 ) );
         autoTransform->setAutoScaleToScreen( true );
         //Force update now on release event for this frame
         //This function call sets _firstTimeToInitEyePoint = true

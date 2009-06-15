@@ -100,6 +100,12 @@ public:
     ///Override the addChild function to only accept Draggers
     virtual bool addChild( Dragger* child );
 
+    ///
+    void ComboForm();
+
+    ///
+    void DefaultForm();
+
     ///Can't override the getChild function, so create our own
     Dragger* GetChild( unsigned int i );
 
@@ -126,10 +132,10 @@ public:
 
     /*
     ///Gets the manipulator's active transformation mode
-    const TransformationMode::Enum GetActiveMode() const;
+    const TransformationType::Enum GetActiveMode() const;
 
     ///Gets the transformation modes enabled on the manipulator
-    const TransformationMode::Enum GetEnabledModes() const;
+    const TransformationType::Enum GetEnabledModes() const;
 
     ///Gets the axes currently being operated on by the manipulator
     const AxesFlag::Enum GetSelectedAxes() const;
@@ -141,10 +147,10 @@ public:
     ///
     void SetAutoScaleToScreen( bool autoScaleToScreen );
 
-    /*
     ///Sets the transformation modes enabled on the manipulator
-    void SetEnabledModes( TransformationMode::Enum value );
+    void SetEnabledModes( TransformationType::Enum value );
 
+    /*
     ///Sets the vector space in which the manipulator will operate
     void SetVectorSpace( VectorSpace::Enum value ); 
     */
@@ -163,12 +169,12 @@ protected:
     ///Can't use pure virtual with META_Node define
     virtual void SetupDefaultDraggers() = 0;
 
+    ///
+    TransformationType::Enum m_enabledModes;
+
     /*
     ///
-    TransformationMode::Enum m_activeMode;
-    
-    ///
-    TransformationMode::Enum m_enabledModes;
+    TransformationType::Enum m_activeMode;
     
     ///
     AxesFlag::Enum m_selectedAxes;

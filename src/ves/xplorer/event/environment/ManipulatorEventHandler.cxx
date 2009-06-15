@@ -37,7 +37,9 @@
 #include <ves/xplorer/GlobalBase.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
-#include <ves/xplorer/scenegraph/ManipulatorRoot.h>
+
+#include <ves/xplorer/scenegraph/manipulator/ManipulatorManager.h>
+#include <ves/xplorer/scenegraph/manipulator/TransformManipulator.h>
 
 #include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/Command.h>
@@ -58,6 +60,7 @@
 
 using namespace ves::xplorer::event;
 namespace vxs = ves::xplorer::scenegraph;
+namespace vxsm = vxs::manipulator;
 
 ////////////////////////////////////////////////////////////////////////////////
 ManipulatorEventHandler::ManipulatorEventHandler()
@@ -99,33 +102,48 @@ void ManipulatorEventHandler::Execute(
         return;
     }
 
-    ves::xplorer::scenegraph::ManipulatorRoot* manipulatorRoot =
-        vxs::SceneManager::instance()->GetManipulatorRoot();
+    vxsm::ManipulatorManager* manipulatorManager =
+        vxs::SceneManager::instance()->GetManipulatorManager();
+    vxsm::TransformManipulator* sceneManipulator =
+        manipulatorManager->GetSceneManipulator();
+
     std::string data;
     manipulatorDVP->GetData( data );
     if( data == "ENABLE" )
     {
-        manipulatorRoot->TurnOn();
+        sceneManipulator->TurnOn();
+
+        return;
     }
     else if( data == "DISABLE" )
     {
-        manipulatorRoot->TurnOff();
+        sceneManipulator->TurnOff();
+
+        return;
     }
-    else if( data == "TRANSLATE" )
+
+    if( data == "TRANSLATE" )
     {
-        ;
+        sceneManipulator->SetEnabledModes(
+            vxsm::TransformationType::TRANSLATE_COMPOUND );
+        sceneManipulator->DefaultForm();
     }
     else if( data == "ROTATE" )
     {
-        ;
+        sceneManipulator->SetEnabledModes(
+            vxsm::TransformationType::ROTATE_COMPOUND );
+        sceneManipulator->DefaultForm();
     }
     else if( data == "SCALE" )
     {
-        ;
+        sceneManipulator->SetEnabledModes(
+            vxsm::TransformationType::SCALE_COMPOUND );
+        sceneManipulator->DefaultForm();
     }
     else if( data == "COMBO" )
     {
-        ;
+        sceneManipulator->SetEnabledModes( vxsm::TransformationType::ALL );
+        sceneManipulator->ComboForm();
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

@@ -26,13 +26,13 @@
  * Date modified: $Date: 2009-05-13 15:17:12 -0600 (Wed, 13 May 2009) $
  * Version:       $Rev: 12684 $
  * Author:        $Author: jbkoch $
- * Id:            $Id: ManipulatorRoot.h 12684 2009-05-13 21:17:12Z jbkoch $
+ * Id:            $Id: ManipulatorManager.h 12684 2009-05-13 21:17:12Z jbkoch $
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
-#ifndef MANIPULATOR_ROOT_H
-#define MANIPULATOR_ROOT_H
+#ifndef MANIPULATOR_MANAGER_H
+#define MANIPULATOR_MANAGER_H
 
 // --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
@@ -56,71 +56,70 @@ namespace xplorer
 {
 namespace scenegraph
 {
-
 namespace manipulator
 {
 class Manipulator;
+class TransformManipulator;
 class Dragger;
-}
 
-/*!\file ManipulatorRoot.h
- * ManipulatorRoot API
+/*!\file ManipulatorManager.h
+ * ManipulatorManager API
  */
 
-/*!\class ves::xplorer::scenegraph::ManipulatorRoot
+/*!\class ves::xplorer::scenegraph::manipulator::ManipulatorManager
  *
  */
-class VE_SCENEGRAPH_EXPORTS ManipulatorRoot : public osg::Group
+class VE_SCENEGRAPH_EXPORTS ManipulatorManager : public osg::Group
 {
 public:
     ///Constructor
-    ManipulatorRoot();
+    ManipulatorManager();
 
     ///Copy constructor using CopyOp to manage deep vs shallow copy
-    ManipulatorRoot(
-        const ManipulatorRoot& manipulatorRoot,
+    ManipulatorManager(
+        const ManipulatorManager& manipulatorManager,
         const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
 
     ///
-    META_Node( ves::xplorer::scenegraph, ManipulatorRoot );
+    META_Node( ves::xplorer::scenegraph::manipulator, ManipulatorManager );
 
     ///Override the addChild function to only accept Manipulators
-    virtual bool addChild( manipulator::Manipulator* child );
+    virtual bool addChild( Manipulator* child );
 
     ///Can't override the getChild function, so create our own
-    manipulator::Manipulator* GetChild( unsigned int i );
+    Manipulator* GetChild( unsigned int i );
+
+    ///
+    ///\return
+    TransformManipulator* const GetSceneManipulator() const;
 
     ///
     virtual bool Handle(
-        manipulator::Event::Enum event,
+        Event::Enum event,
         osgUtil::LineSegmentIntersector* testForIntersections = NULL );
 
     ///Override the insertChild function to only accept Manipulators
-    virtual bool insertChild(
-        unsigned int index, manipulator::Manipulator* child );
+    virtual bool insertChild( unsigned int index, Manipulator* child );
 
     ///Override the replaceChild function to only accept Manipulators
-    virtual bool replaceChild(
-        manipulator::Manipulator* origChild,
-        manipulator::Manipulator* newChild );
+    virtual bool replaceChild( Manipulator* origChild, Manipulator* newChild );
 
     ///Override the setChild function to only accept Manipulators
-    virtual bool setChild(
-        unsigned int i, manipulator::Manipulator* node );
+    virtual bool setChild( unsigned int i, Manipulator* node );
 
-    ///Deactivate the manipulator root
+    ///Deactivate the manipulator manager
     void TurnOff();
 
-    ///Activate the manipulator root
+    ///Activate the manipulator manager
     void TurnOn();
 
 protected:
     ///Destructor
-    virtual ~ManipulatorRoot();
+    virtual ~ManipulatorManager();
 
 private:
     ///
-    manipulator::Manipulator* ConvertNodeToManipulator( osg::Node* node );
+    Manipulator* ConvertNodeToManipulator( osg::Node* node );
 
     ///
     bool TestForIntersections(
@@ -133,17 +132,22 @@ private:
     osg::NodePath::iterator m_nodePathItr;
 
     ///
-    manipulator::Manipulator* m_activeManipulator;
+    Manipulator* m_activeManipulator;
 
     ///
-    manipulator::Dragger* m_activeDragger;
+    Dragger* m_activeDragger;
 
     ///
     osgUtil::LineSegmentIntersector* m_deviceInput;
 
+    ///
+    ///Not sure if this guy should live here, but will work for now
+    osg::ref_ptr< TransformManipulator > m_sceneManipulator;
+
 };
+} //end manipulator
 } //end scenegraph
 } //end xplorer
 } //end ves
 
-#endif //MANIPULATOR_ROOT_H
+#endif //MANIPULATOR_MANAGER_H

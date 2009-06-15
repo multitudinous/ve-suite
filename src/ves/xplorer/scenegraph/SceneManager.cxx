@@ -41,7 +41,6 @@
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/CADEntity.h>
-#include <ves/xplorer/scenegraph/ManipulatorRoot.h>
 #ifdef VE_SOUND
 #include <ves/xplorer/scenegraph/Sound.h>
 #endif
@@ -56,9 +55,7 @@
 
 #include <ves/xplorer/scenegraph/physics/CharacterController.h>
 
-#ifdef TRANSFORM_MANIPULATOR
-#include <ves/xplorer/scenegraph/manipulator/TransformManipulator.h>
-#endif //TRANSFORM_MANIPULATOR
+#include <ves/xplorer/scenegraph/manipulator/ManipulatorManager.h>
 
 // --- OSG Includes --- //
 #include <osg/Node>
@@ -100,6 +97,7 @@ SceneManager::SceneManager()
     :
     mRootNode( NULL ),
     mModelRoot( NULL ),
+    m_manipulatorManager( NULL ),
     mLogoNode( NULL ),
     mLogoSwitch( NULL ),
     mNavSwitch( NULL ),
@@ -178,16 +176,9 @@ void SceneManager::InitScene()
     //mModelRoot = new ves::xplorer::scenegraph::DCS();
     mModelRoot->setName( "Model Root Node" );
 
-    m_manipulatorRoot = new ManipulatorRoot();
-    m_manipulatorRoot->setName( "Manipulator Root Node" );
-    mModelRoot->addChild( m_manipulatorRoot.get() );
-
-    //A test scene manipulator for now
-#ifdef TRANSFORM_MANIPULATOR
-    osg::ref_ptr< manipulator::TransformManipulator > transformManipulator =
-        new manipulator::TransformManipulator();
-    m_manipulatorRoot->addChild( transformManipulator.get() );
-#endif //TRANSFORM_MANIPULATOR
+    m_manipulatorManager = new manipulator::ManipulatorManager();
+    m_manipulatorManager->setName( "Manipulator Manager Node" );
+    mModelRoot->addChild( m_manipulatorManager.get() );
 
 #ifdef VE_SOUND
     try
@@ -281,9 +272,9 @@ osg::Group* const SceneManager::GetModelRoot() const
     return mModelRoot.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
-ManipulatorRoot* const SceneManager::GetManipulatorRoot() const
+manipulator::ManipulatorManager* const SceneManager::GetManipulatorManager() const
 {
-    return m_manipulatorRoot.get();
+    return m_manipulatorManager.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
 DCS* const SceneManager::GetWorldDCS() const

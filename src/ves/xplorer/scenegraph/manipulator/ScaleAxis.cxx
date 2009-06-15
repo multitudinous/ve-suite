@@ -54,6 +54,7 @@ ScaleAxis::ScaleAxis()
     m_lineGeometry( NULL ),
     m_axisColor( NULL )
 {
+    m_transformationType = TransformationType::SCALE_AXIS;
     m_axisColor = new osg::Uniform( "color", m_defaultAxisColor );
 
     SetupDefaultGeometry();
@@ -144,7 +145,7 @@ void ScaleAxis::SetupDefaultGeometry()
 
         //Set line stipple
         osg::ref_ptr< osg::LineStipple > lineStipple = new osg::LineStipple();
-        lineStipple->setFactor( 2 );
+        lineStipple->setFactor( 1 );
         lineStipple->setPattern( 0xAAAA );
         stateSet->setAttributeAndModes( lineStipple.get(),
             osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
@@ -179,6 +180,7 @@ void ScaleAxis::SetupDefaultGeometry()
     addChild( geode.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
+/*
 void ScaleAxis::UseColor( ColorTag::Enum colorTag )
 {
     osg::Vec4& color = GetColor( colorTag );
@@ -194,4 +196,5 @@ void ScaleAxis::UseColor( ColorTag::Enum colorTag )
         m_axisColor->set( color );
     }
 }
+*/
 ////////////////////////////////////////////////////////////////////////////////

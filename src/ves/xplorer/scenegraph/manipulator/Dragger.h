@@ -91,10 +91,20 @@ public:
     virtual const char* libraryName() const;
 
     ///
+    virtual void ComboForm();
+
+    ///
+    virtual void DefaultForm();
+
+    ///
     Dragger* Drag( const osgUtil::LineSegmentIntersector& deviceInput );
 
     ///
     virtual Dragger* Focus( osg::NodePath::iterator& npItr );
+
+    ///
+    ///\return
+    const TransformationType::Enum GetTransformationType() const;
 
     ///
     virtual Dragger* Push(
@@ -129,6 +139,9 @@ protected:
         osg::Vec3d& projectedPoint );// = 0;
 
     ///
+    bool m_comboForm;
+
+    ///
     osg::Vec4& GetColor( ColorTag::Enum colorTag );
 
     ///Will be pure virtual eventually
@@ -142,6 +155,9 @@ protected:
     ///
     ///\param drawable
     void SetDrawableToAlwaysCull( osg::Drawable& drawable );
+
+    ///
+    TransformationType::Enum m_transformationType;
 
     ///
     osg::Vec3d m_startProjectedPoint;

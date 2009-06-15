@@ -47,6 +47,8 @@ TranslatePan::TranslatePan()
     :
     Dragger()
 {
+    m_transformationType = TransformationType::TRANSLATE_PAN;
+
     SetupDefaultGeometry();
 }
 ////////////////////////////////////////////////////////////////////////////////

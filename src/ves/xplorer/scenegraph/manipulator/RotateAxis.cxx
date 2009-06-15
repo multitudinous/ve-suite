@@ -48,6 +48,8 @@ RotateAxis::RotateAxis()
     :
     Dragger()
 {
+    m_transformationType = TransformationType::ROTATE_AXIS;
+
     SetupDefaultGeometry();
 }
 ////////////////////////////////////////////////////////////////////////////////

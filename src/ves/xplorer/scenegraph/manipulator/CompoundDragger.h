@@ -111,12 +111,6 @@ public:
     ///
     virtual void UseColor( ColorTag::Enum colorTag );
 
-    ///
-    virtual void ComboForm();
-
-    ///
-    virtual void DefaultForm();
-
 protected:
     ///
     virtual ~CompoundDragger();
@@ -126,8 +120,6 @@ protected:
     virtual void SetupDefaultGeometry() = 0;
 
 private:
-    ///
-    bool m_comboForm;
 
 };
 } //end manipulator

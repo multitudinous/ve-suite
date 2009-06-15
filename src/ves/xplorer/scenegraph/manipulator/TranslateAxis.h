@@ -45,6 +45,7 @@
 namespace osg
 {
 class Geode;
+class Geometry;
 class Cone;
 class LineSegment;
 }
@@ -79,6 +80,12 @@ public:
     META_Node( ves::xplorer::scenegraph::manipulator, TranslateAxis );
 
     ///
+    virtual void ComboForm();
+
+    ///
+    virtual void DefaultForm();
+
+    ///
     osg::Geode* const GetLineAndCylinderGeode() const;
 
     ///
@@ -101,7 +108,16 @@ protected:
 
 private:
     ///
+    osg::Vec3 m_lineExplodeVector;
+
+    ///
     osg::ref_ptr< osg::LineSegment > m_unitAxis;
+
+    ///
+    osg::ref_ptr< osg::Vec3Array > m_lineVertices;
+
+    ///
+    osg::ref_ptr< osg::Geometry > m_lineGeometry;
 
     ///
     osg::ref_ptr< osg::Geode > m_lineAndCylinderGeode;

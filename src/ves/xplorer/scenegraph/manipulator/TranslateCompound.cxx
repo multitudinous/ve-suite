@@ -52,6 +52,8 @@ TranslateCompound::TranslateCompound()
     m_zTranslateAxis( NULL ),
     m_translatePan( NULL )
 {
+    m_transformationType = TransformationType::TRANSLATE_COMPOUND;
+
     SetupDefaultGeometry();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -75,6 +77,11 @@ TranslateCompound::~TranslateCompound()
 ////////////////////////////////////////////////////////////////////////////////
 void TranslateCompound::ComboForm()
 {
+    if( m_comboForm )
+    {
+        return;
+    }
+
     //Call base method
     CompoundDragger::ComboForm();
 
@@ -99,6 +106,11 @@ void TranslateCompound::ComboForm()
 ////////////////////////////////////////////////////////////////////////////////
 void TranslateCompound::DefaultForm()
 {
+    if( !m_comboForm )
+    {
+        return;
+    }
+
     //Call base method
     CompoundDragger::DefaultForm();
 
@@ -127,6 +139,7 @@ void TranslateCompound::SetupDefaultGeometry()
     m_xTranslateAxis = new TranslateAxis();
     m_xTranslateAxis->SetColor(
         ColorTag::DEFAULT, osg::Vec4f( 1.0, 0.0, 0.0, 1.0 ), true );
+    m_xTranslateAxis->ComboForm();
 
     addChild( m_xTranslateAxis.get() );
 
@@ -134,6 +147,7 @@ void TranslateCompound::SetupDefaultGeometry()
     m_yTranslateAxis = new TranslateAxis();
     m_yTranslateAxis->SetColor(
         ColorTag::DEFAULT, osg::Vec4f( 0.0, 1.0, 0.0, 1.0 ), true );
+    m_yTranslateAxis->ComboForm();
 
     //Rotate y-axis dragger appropriately
     {
@@ -149,6 +163,7 @@ void TranslateCompound::SetupDefaultGeometry()
     m_zTranslateAxis = new TranslateAxis();
     m_zTranslateAxis->SetColor(
         ColorTag::DEFAULT, osg::Vec4f( 0.0, 0.0, 1.0, 1.0 ), true );
+    m_zTranslateAxis->ComboForm();
 
     //Rotate z-axis dragger appropriately
     {

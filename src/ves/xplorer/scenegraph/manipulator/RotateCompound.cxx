@@ -49,6 +49,8 @@ RotateCompound::RotateCompound()
     m_zRotateAxis( NULL ),
     m_rotateTwist( NULL )
 {
+    m_transformationType = TransformationType::ROTATE_COMPOUND;
+
     SetupDefaultGeometry();
 }
 ////////////////////////////////////////////////////////////////////////////////

@@ -44,6 +44,7 @@ using namespace ves::xplorer::scenegraph::manipulator;
 Manipulator::Manipulator()
     :
     osg::MatrixTransform(),
+    m_enabledModes( TransformationType::NONE ),
     m_autoTransform( new osg::AutoTransform() )
 {
     //All manipulators should be based off unit axes
@@ -62,6 +63,7 @@ Manipulator::Manipulator(
     const Manipulator& manipulator, const osg::CopyOp& copyop )
     :
     osg::MatrixTransform( manipulator, copyop ),
+    m_enabledModes( manipulator.m_enabledModes ),
     m_autoTransform( manipulator.m_autoTransform.get() )
 {
     ;
@@ -90,6 +92,22 @@ const char* Manipulator::libraryName() const
 bool Manipulator::addChild( Dragger* child )
 {
     return osg::MatrixTransform::addChild( child );
+}
+////////////////////////////////////////////////////////////////////////////////
+void Manipulator::ComboForm()
+{
+    for( size_t i = 0; i < getNumChildren(); ++i )
+    {
+        GetChild( i )->ComboForm();
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void Manipulator::DefaultForm()
+{
+    for( size_t i = 0; i < getNumChildren(); ++i )
+    {
+        GetChild( i )->DefaultForm();
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 Dragger* Manipulator::GetChild( unsigned int i )
@@ -161,12 +179,12 @@ bool Manipulator::setChild( unsigned int i, Dragger* node )
 }
 ////////////////////////////////////////////////////////////////////////////////
 /*
-const TransformationMode::Enum Manipulator::GetActiveMode() const
+const TransformationType::Enum Manipulator::GetActiveMode() const
 {
     return m_activeMode;
 }
 ////////////////////////////////////////////////////////////////////////////////
-const TransformationMode::Enum Manipulator::GetEnabledModes() const
+const TransformationType::Enum Manipulator::GetEnabledModes() const
 {
     return m_enabledModes;
 }
@@ -187,8 +205,7 @@ void Manipulator::SetAutoScaleToScreen( bool autoScaleToScreen )
     m_autoTransform->setAutoScaleToScreen( autoScaleToScreen );
 }
 ////////////////////////////////////////////////////////////////////////////////
-/*
-void Manipulator::SetEnabledModes( TransformationMode::Enum value )
+void Manipulator::SetEnabledModes( TransformationType::Enum value )
 {
     if( m_enabledModes == value )
     {
@@ -200,11 +217,25 @@ void Manipulator::SetEnabledModes( TransformationMode::Enum value )
         //mRedoStack.clear();
     }
 
-    m_manipulating = false;
+    //m_manipulating = false;
     m_enabledModes = value;
-    m_activeMode = TransformationMode::None;
+    //m_activeMode = TransformationType::NONE;
+
+    for( size_t i = 0; i < getNumChildren(); ++i )
+    {
+        Dragger* dragger = GetChild( i );
+        if( dragger->GetTransformationType() & value )
+        {
+            dragger->TurnOn();
+        }
+        else
+        {
+            dragger->TurnOff();
+        }
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
+/*
 void Manipulator::SetVectorSpace( VectorSpace::Enum value )
 {
     if( m_manipulating )

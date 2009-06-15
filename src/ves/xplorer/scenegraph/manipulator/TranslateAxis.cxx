@@ -34,9 +34,9 @@
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/manipulator/TranslateAxis.h>
 #include <ves/xplorer/scenegraph/manipulator/TransformManipulator.h>
+#include <ves/xplorer/scenegraph/manipulator/ManipulatorManager.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
-#include <ves/xplorer/scenegraph/ManipulatorRoot.h>
 
 // --- OSG Includes --- //
 #include <osg/Hint>
@@ -56,12 +56,17 @@ namespace vxs = ves::xplorer::scenegraph;
 TranslateAxis::TranslateAxis()
     :
     Dragger(),
+    m_lineExplodeVector( 0.2, 0.0, 0.0 ),
     m_unitAxis(
         new osg::LineSegment(
             osg::Vec3d( 0.0, 0.0, 0.0 ), osg::Vec3d( 1.0, 0.0, 0.0 ) ) ),
+    m_lineVertices( NULL ),
+    m_lineGeometry( NULL ),
     m_lineAndCylinderGeode( NULL ),
     m_cone( NULL )
 {
+    m_transformationType = TransformationType::TRANSLATE_AXIS;
+
     SetupDefaultGeometry();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -70,6 +75,8 @@ TranslateAxis::TranslateAxis(
     :
     Dragger( translateAxis, copyop ),
     m_unitAxis( translateAxis.m_unitAxis.get() ),
+    m_lineVertices( translateAxis.m_lineVertices.get() ),
+    m_lineGeometry( translateAxis.m_lineGeometry.get() ),
     m_lineAndCylinderGeode( translateAxis.m_lineAndCylinderGeode.get() ),
     m_cone( translateAxis.m_cone.get() )
 {
@@ -79,6 +86,40 @@ TranslateAxis::TranslateAxis(
 TranslateAxis::~TranslateAxis()
 {
     ;
+}
+////////////////////////////////////////////////////////////////////////////////
+void TranslateAxis::ComboForm()
+{
+    if( m_comboForm )
+    {
+        return;
+    }
+
+    //Call base method
+    Dragger::ComboForm();
+
+    //Move the line in from the origin and unit axis
+    (*m_lineVertices)[ 0 ] += m_lineExplodeVector;
+
+    m_lineGeometry->dirtyDisplayList();
+    m_lineGeometry->dirtyBound();
+}
+////////////////////////////////////////////////////////////////////////////////
+void TranslateAxis::DefaultForm()
+{
+    if( !m_comboForm )
+    {
+        return;
+    }
+
+    //Call base method
+    Dragger::DefaultForm();
+
+    //Move the line back to the origin and unit axis
+    (*m_lineVertices)[ 0 ] -= m_lineExplodeVector;
+
+    m_lineGeometry->dirtyDisplayList();
+    m_lineGeometry->dirtyBound();
 }
 ////////////////////////////////////////////////////////////////////////////////
 //See http://softsurfer.com/Archive/algorithm_0106/algorithm_0106.htm
@@ -133,11 +174,11 @@ osg::Cone* const TranslateAxis::GetCone() const
 ////////////////////////////////////////////////////////////////////////////////
 void TranslateAxis::ManipFunction( const osgUtil::LineSegmentIntersector& deviceInput )
 {
-    vxs::ManipulatorRoot* manipulatorRoot =
-        vxs::SceneManager::instance()->GetManipulatorRoot();
+    ManipulatorManager* manipulatorManager =
+        vxs::SceneManager::instance()->GetManipulatorManager();
 
     osg::AutoTransform* autoTransform =
-        static_cast< osg::AutoTransform* >( manipulatorRoot->getChild( 0 ) );
+        static_cast< osg::AutoTransform* >( manipulatorManager->getChild( 0 ) );
 
     //Get the end projected point
     osg::Vec3d endProjectedPoint;
@@ -164,28 +205,28 @@ void TranslateAxis::SetupDefaultGeometry()
     osg::ref_ptr< osg::Geode > coneGeode = new osg::Geode();
 
     //The unit axis
-    osg::ref_ptr< osg::Vec3Array > vertices = new osg::Vec3Array();
-    vertices->resize( 2 );
-    (*vertices)[ 0 ] = osg::Vec3( 0.0, 0.0, 0.0 );
-    (*vertices)[ 1 ] = osg::Vec3( 1.0, 0.0, 0.0 );
+    m_lineVertices = new osg::Vec3Array();
+    m_lineVertices->resize( 2 );
+    (*m_lineVertices)[ 0 ] = osg::Vec3( 0.0, 0.0, 0.0 );
+    (*m_lineVertices)[ 1 ] = osg::Vec3( 1.0, 0.0, 0.0 );
 
     //Rotation for cones and cylinders
     osg::Quat rotation;
-    rotation.makeRotate( osg::Vec3( 0.0, 0.0, 1.0 ), (*vertices)[ 1 ] );
+    rotation.makeRotate( osg::Vec3( 0.0, 0.0, 1.0 ), (*m_lineVertices)[ 1 ] );
 
     //Create a positive line
     {
-        osg::ref_ptr< osg::Geometry > geometry = new osg::Geometry();
+        m_lineGeometry = new osg::Geometry();
 
-        geometry->setVertexArray( vertices.get() );
-        geometry->addPrimitiveSet(
+        m_lineGeometry->setVertexArray( m_lineVertices.get() );
+        m_lineGeometry->addPrimitiveSet(
             new osg::DrawArrays( osg::PrimitiveSet::LINES, 0, 2 ) );
 
-        m_lineAndCylinderGeode->addDrawable( geometry.get() );
+        m_lineAndCylinderGeode->addDrawable( m_lineGeometry.get() );
 
         //Set StateSet
         osg::ref_ptr< osg::StateSet > stateSet =
-            geometry->getOrCreateStateSet();
+            m_lineGeometry->getOrCreateStateSet();
 
         //Set line width
         osg::ref_ptr< osg::LineWidth > lineWidth = new osg::LineWidth();
@@ -204,9 +245,9 @@ void TranslateAxis::SetupDefaultGeometry()
 
     //Create a positive cone
     {
-        (*vertices)[ 1 ].x() -= coneHeight;
+        (*m_lineVertices)[ 1 ].x() -= coneHeight;
         m_cone = new osg::Cone(
-            (*vertices)[ 1 ] + coneCenter, coneRadius, coneHeight );
+            (*m_lineVertices)[ 1 ] + coneCenter, coneRadius, coneHeight );
         m_cone->setRotation( rotation );
         osg::ref_ptr< osg::ShapeDrawable > shapeDrawable =
             new osg::ShapeDrawable( m_cone.get() );
@@ -230,7 +271,9 @@ void TranslateAxis::SetupDefaultGeometry()
     {
         osg::ref_ptr< osg::Cylinder > cylinder =
             new osg::Cylinder(
-                (*vertices)[ 1 ] * 0.5, cylinderRadius, (*vertices)[ 1 ].x() );
+                (*m_lineVertices)[ 1 ] * 0.5,
+                cylinderRadius,
+                (*m_lineVertices)[ 1 ].x() );
         cylinder->setRotation( rotation );
         osg::ref_ptr< osg::ShapeDrawable > shapeDrawable =
             new osg::ShapeDrawable( cylinder.get() );

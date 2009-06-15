@@ -49,6 +49,8 @@ RotateTwist::RotateTwist()
     :
     Dragger()
 {
+    m_transformationType = TransformationType::ROTATE_TWIST;
+
     SetupDefaultGeometry();
 }
 ////////////////////////////////////////////////////////////////////////////////

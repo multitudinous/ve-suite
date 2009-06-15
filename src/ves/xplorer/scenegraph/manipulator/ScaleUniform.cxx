@@ -49,6 +49,8 @@ ScaleUniform::ScaleUniform()
     :
     Dragger()
 {
+    m_transformationType = TransformationType::SCALE_UNIFORM;
+
     SetupDefaultGeometry();
 }
 ////////////////////////////////////////////////////////////////////////////////

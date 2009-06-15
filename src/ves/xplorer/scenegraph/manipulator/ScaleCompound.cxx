@@ -52,6 +52,8 @@ ScaleCompound::ScaleCompound()
     m_zScaleAxis( NULL ),
     m_scaleUniform( NULL )
 {
+    m_transformationType = TransformationType::SCALE_COMPOUND;
+
     SetupDefaultGeometry();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -75,6 +77,14 @@ ScaleCompound::~ScaleCompound()
 ////////////////////////////////////////////////////////////////////////////////
 void ScaleCompound::ComboForm()
 {
+    if( m_comboForm )
+    {
+        return;
+    }
+
+    //Call base method
+    CompoundDragger::ComboForm();
+
     osg::Vec3Array* lineVertices( NULL );
     osg::Geometry* lineGeometry( NULL );
     osg::Box* box( NULL );
@@ -101,6 +111,14 @@ void ScaleCompound::ComboForm()
 ////////////////////////////////////////////////////////////////////////////////
 void ScaleCompound::DefaultForm()
 {
+    if( !m_comboForm )
+    {
+        return;
+    }
+
+    //Call base method
+    CompoundDragger::DefaultForm();
+
     osg::Vec3Array* lineVertices( NULL );
     osg::Geometry* lineGeometry( NULL );
     osg::Box* box( NULL );

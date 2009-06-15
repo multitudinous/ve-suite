@@ -51,7 +51,7 @@ namespace AxesFlag
 {
     enum Enum
     {
-        None = 0x0,
+        NONE = 0x0,
 
         X = 0x1,
         Y = 0x2,
@@ -66,27 +66,28 @@ namespace AxesFlag
 
         XYZ = X | Y | Z,
 
-        All = XYZ
+        ALL = XYZ
     };
 }
 
 ///
-namespace TransformationMode
+namespace TransformationType
 {
     enum Enum
     {
-        None = 0x00,
+        NONE = 0x00,
 
-        TranslateAxis = 0x01,
-        TranslatePlane = 0x02,
-        RotateAxis = 0x04,
-        ScaleAxis = 0x08,
-        ScalePlane = 0x10,
-        ScaleUniform = 0x20,
+        TRANSLATE_AXIS = 0x01,
+        TRANSLATE_PAN = 0x02,
+        TRANSLATE_COMPOUND = TRANSLATE_AXIS | TRANSLATE_PAN,
+        ROTATE_AXIS = 0x04,
+        ROTATE_TWIST = 0x08,
+        ROTATE_COMPOUND = ROTATE_AXIS | ROTATE_TWIST,
+        SCALE_AXIS = 0x10,
+        SCALE_UNIFORM = 0x20,
+        SCALE_COMPOUND = SCALE_AXIS | SCALE_UNIFORM,
 
-        All = TranslateAxis | TranslatePlane |
-              RotateAxis |
-              ScaleAxis | ScalePlane | ScaleUniform
+        ALL = TRANSLATE_COMPOUND | ROTATE_COMPOUND | SCALE_COMPOUND
     };
 }
 
@@ -95,8 +96,9 @@ namespace VectorSpace
 {
     enum Enum
     {
-        World,
-        Local
+        WORLD,
+        LOCAL,
+        VIEW
     };
 }
 
@@ -105,10 +107,10 @@ namespace AxisDirection
 {
     enum Enum
     {
-        Positive = 0x1,
-        Negative = 0x2,
+        POSITIVE = 0x1,
+        NEGATIVE = 0x2,
 
-        All = Positive | Negative
+        ALL = POSITIVE | NEGATIVE
     };
 }
 

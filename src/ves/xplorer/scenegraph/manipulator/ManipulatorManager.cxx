@@ -26,74 +26,83 @@
  * Date modified: $Date: 2009-05-13 15:17:12 -0600 (Wed, 13 May 2009) $
  * Version:       $Rev: 12684 $
  * Author:        $Author: jbkoch $
- * Id:            $Id: ManipulatorRoot.cxx 12684 2009-05-13 21:17:12Z jbkoch $
+ * Id:            $Id: ManipulatorManager.cxx 12684 2009-05-13 21:17:12Z jbkoch $
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
 // --- VE-Suite Includes --- //
-#include <ves/xplorer/scenegraph/ManipulatorRoot.h>
+#include <ves/xplorer/scenegraph/manipulator/ManipulatorManager.h>
+#include <ves/xplorer/scenegraph/manipulator/Manipulator.h>
+#include <ves/xplorer/scenegraph/manipulator/TransformManipulator.h>
+#include <ves/xplorer/scenegraph/manipulator/Dragger.h>
+
 #include <ves/xplorer/scenegraph/SceneManager.h>
 
 #include <ves/xplorer/Debug.h>
-
-#include <ves/xplorer/scenegraph/manipulator/Manipulator.h>
-#include <ves/xplorer/scenegraph/manipulator/Dragger.h>
 
 // --- OSG Includes --- //
 #include <osg/AutoTransform>
 
 #include <osgUtil/LineSegmentIntersector>
 
-using namespace ves::xplorer::scenegraph;
+using namespace ves::xplorer::scenegraph::manipulator;
 
 ////////////////////////////////////////////////////////////////////////////////
-ManipulatorRoot::ManipulatorRoot()
+ManipulatorManager::ManipulatorManager()
     :
     osg::Group(),
     m_activeManipulator( NULL ),
-    m_activeDragger( NULL )
+    m_activeDragger( NULL ),
+    m_sceneManipulator( NULL )
 {
-    ;
+    m_sceneManipulator = new TransformManipulator();
+    //Turn off the scene manipulator until requested by user
+    m_sceneManipulator->TurnOff();
+    addChild( m_sceneManipulator.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
-ManipulatorRoot::ManipulatorRoot(
-    const ManipulatorRoot& manipulatorRoot, const osg::CopyOp& copyop )
+ManipulatorManager::ManipulatorManager(
+    const ManipulatorManager& manipulatorManager, const osg::CopyOp& copyop )
     :
-    osg::Group( manipulatorRoot, copyop ),
-    m_nodePath( manipulatorRoot.m_nodePath ),
-    m_nodePathItr( manipulatorRoot.m_nodePathItr ),
-    m_activeManipulator( manipulatorRoot.m_activeManipulator ),
-    m_activeDragger( manipulatorRoot.m_activeDragger )
+    osg::Group( manipulatorManager, copyop ),
+    m_nodePath( manipulatorManager.m_nodePath ),
+    m_nodePathItr( manipulatorManager.m_nodePathItr ),
+    m_activeManipulator( manipulatorManager.m_activeManipulator ),
+    m_activeDragger( manipulatorManager.m_activeDragger )
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-ManipulatorRoot::~ManipulatorRoot()
+ManipulatorManager::~ManipulatorManager()
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool ManipulatorRoot::addChild( manipulator::Manipulator* child )
+bool ManipulatorManager::addChild( Manipulator* child )
 {
     return osg::Group::addChild( child->getParents().front() );
 }
 ////////////////////////////////////////////////////////////////////////////////
-manipulator::Manipulator* ManipulatorRoot::ConvertNodeToManipulator(
-    osg::Node* node )
+Manipulator* ManipulatorManager::ConvertNodeToManipulator( osg::Node* node )
 {
-    return static_cast< manipulator::Manipulator* >( node );
+    return static_cast< Manipulator* >( node );
 }
 ////////////////////////////////////////////////////////////////////////////////
-manipulator::Manipulator* ManipulatorRoot::GetChild( unsigned int i )
+Manipulator* ManipulatorManager::GetChild( unsigned int i )
 {
     osg::AutoTransform* autoTransform =
         static_cast< osg::AutoTransform* >( osg::Group::getChild( i ) );
     return ConvertNodeToManipulator( autoTransform->getChild( 0 ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool ManipulatorRoot::Handle(
-    manipulator::Event::Enum event,
+TransformManipulator* const ManipulatorManager::GetSceneManipulator() const
+{
+    return m_sceneManipulator.get();
+}
+////////////////////////////////////////////////////////////////////////////////
+bool ManipulatorManager::Handle(
+    Event::Enum event,
     osgUtil::LineSegmentIntersector* testForIntersections )
 {
     //If we want to test for manipulator intersections
@@ -114,14 +123,14 @@ bool ManipulatorRoot::Handle(
 
     switch( event )
     {
-        case manipulator::Event::FOCUS:
+        case Event::FOCUS:
         {
             m_activeDragger =
                 m_activeManipulator->Focus( m_nodePathItr );
 
             return m_activeDragger;
         }
-        case manipulator::Event::PUSH:
+        case Event::PUSH:
         {
             m_activeDragger =
                 m_activeManipulator->Push(
@@ -129,7 +138,7 @@ bool ManipulatorRoot::Handle(
 
             return m_activeDragger;
         }
-        case manipulator::Event::DRAG:
+        case Event::DRAG:
         {
             if( m_activeDragger )
             {
@@ -138,7 +147,7 @@ bool ManipulatorRoot::Handle(
 
             return false;
         }
-        case manipulator::Event::RELEASE:
+        case Event::RELEASE:
         {
             m_activeDragger = NULL;
 
@@ -153,30 +162,27 @@ bool ManipulatorRoot::Handle(
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool ManipulatorRoot::insertChild(
-    unsigned int index, manipulator::Manipulator* child )
+bool ManipulatorManager::insertChild( unsigned int index, Manipulator* child )
 {
     return osg::Group::insertChild( index, child->getParents().front() );
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool ManipulatorRoot::replaceChild(
-    manipulator::Manipulator* origChild, manipulator::Manipulator* newChild )
+bool ManipulatorManager::replaceChild(
+    Manipulator* origChild, Manipulator* newChild )
 {
     return osg::Group::replaceChild(
         origChild->getParents().front(), newChild->getParents().front() );
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool ManipulatorRoot::setChild( unsigned int i, manipulator::Manipulator* node )
+bool ManipulatorManager::setChild( unsigned int i, Manipulator* node )
 {
     return osg::Group::setChild( i, node->getParents().front() );
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool ManipulatorRoot::TestForIntersections(
+bool ManipulatorManager::TestForIntersections(
     osgUtil::LineSegmentIntersector* lineSegmentIntersector )
 {
-    osgUtil::IntersectionVisitor intersectionVisitor(
-        lineSegmentIntersector );
-
+    osgUtil::IntersectionVisitor intersectionVisitor( lineSegmentIntersector );
     accept( intersectionVisitor );
 
     osgUtil::LineSegmentIntersector::Intersections& intersections =
@@ -192,7 +198,7 @@ bool ManipulatorRoot::TestForIntersections(
         //Reset the active dragger
         if( m_activeDragger )
         {
-            m_activeDragger->UseColor( manipulator::ColorTag::DEFAULT );
+            m_activeDragger->UseColor( ColorTag::DEFAULT );
             m_activeDragger = NULL;
         }
 
@@ -213,12 +219,12 @@ bool ManipulatorRoot::TestForIntersections(
     return true;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void ManipulatorRoot::TurnOff()
+void ManipulatorManager::TurnOff()
 {
     setNodeMask( 0 );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void ManipulatorRoot::TurnOn()
+void ManipulatorManager::TurnOn()
 {
     setNodeMask( 1 );
 }
