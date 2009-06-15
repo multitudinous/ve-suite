@@ -31,6 +31,7 @@
  *
  *************** <auto-copyright.rb END do not edit this line> **************/
 
+// --- VE-Suite Includes --- //
 #include <ves/xplorer/event/device/KeyboardMouseEH.h>
 
 #include <ves/xplorer/GlobalBase.h>
@@ -41,6 +42,7 @@
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>
 
+// --- VR Juggler Includes --- //
 #include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/path.hpp>
 
@@ -82,7 +84,7 @@ void KeyboardMouseEventHandler::SetGlobalBaseObject(
 void KeyboardMouseEventHandler::Execute(
     const ves::open::xml::XMLObjectPtr& veXMLObject )
 {
-    ;
+    return;
 }
 ////////////////////////////////////////////////////////////////////////////////
 KeyboardMouseEventHandler& KeyboardMouseEventHandler::operator=(

@@ -2674,7 +2674,7 @@ void AppFrame::LoadNewNetwork( wxUpdateUIEvent& WXUNUSED( event )  )
         centerPointUpdateData->SetCommandName( "CENTER_POINT_UPDATE" );
         
         DataValuePairPtr resetDVP( new DataValuePair() );
-        resetDVP->SetData( "Reset", static_cast< unsigned int >( 0 ) );
+        resetDVP->SetData( "CENTER_POINT_UPDATE_DVP", "Reset" );
         centerPointUpdateData->AddDataValuePair( resetDVP );
         serviceList->SendCommandStringToXplorer( centerPointUpdateData );
     }

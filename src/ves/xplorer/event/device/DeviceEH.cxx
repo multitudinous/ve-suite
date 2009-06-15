@@ -30,8 +30,8 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> **************/
-#include <string>
 
+// --- VE-Suite Includes --- //
 #include <ves/xplorer/event/device/DeviceEH.h>
 
 #include <ves/xplorer/GlobalBase.h>
@@ -41,23 +41,26 @@
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>
 
+// --- VR Juggler Includes --- //
 #include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/path.hpp>
 
+// --- C/C++ Libraries --- //
+#include <string>
+
 using namespace ves::xplorer::event;
-using namespace ves::open::xml;
 
 ////////////////////////////////////////////////////////////////////////////////
 DeviceEventHandler::DeviceEventHandler()
-        :
-        ves::xplorer::event::EventHandler()
+    :
+    ves::xplorer::event::EventHandler()
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 DeviceEventHandler::DeviceEventHandler( const DeviceEventHandler& rhs )
-        :
-        ves::xplorer::event::EventHandler()
+    :
+    ves::xplorer::event::EventHandler()
 {
     ;
 }
@@ -67,22 +70,32 @@ DeviceEventHandler::~DeviceEventHandler()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DeviceEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* modelHandler )
+void DeviceEventHandler::SetGlobalBaseObject(
+    ves::xplorer::GlobalBase* modelHandler )
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DeviceEventHandler::Execute( const ves::open::xml::XMLObjectPtr& veXMLObject )
+void DeviceEventHandler::Execute(
+    const ves::open::xml::XMLObjectPtr& veXMLObject )
 {
-    CommandPtr command = boost::dynamic_pointer_cast<ves::open::xml::Command>( veXMLObject );
+    ves::open::xml::CommandPtr command =
+        boost::dynamic_pointer_cast< ves::open::xml::Command >( veXMLObject );
+
+    ves::open::xml::DataValuePairPtr deviceDVP =
+        command->GetDataValuePair( "Device" );
+    if( !deviceDVP )
+    {
+        return;
+    }
 
     std::string device;
-    command->GetDataValuePair( "Device" )->GetData( device );
-
+    deviceDVP->GetData( device );
     ves::xplorer::DeviceHandler::instance()->SetActiveDevice( device );
 }
 ////////////////////////////////////////////////////////////////////////////////
-DeviceEventHandler& DeviceEventHandler::operator=( const DeviceEventHandler& rhs )
+DeviceEventHandler& DeviceEventHandler::operator=(
+    const DeviceEventHandler& rhs )
 {
     if( this != &rhs )
     {

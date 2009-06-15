@@ -56,6 +56,7 @@
 #endif
 
 using namespace ves::xplorer::event;
+namespace vx = ves::xplorer;
 
 ////////////////////////////////////////////////////////////////////////////////
 CenterPointEventHandler::CenterPointEventHandler()
@@ -93,21 +94,22 @@ void CenterPointEventHandler::Execute(
             boost::dynamic_pointer_cast< ves::open::xml::Command >(
                 veXMLObject );
 
-        if( command->GetDataValuePair( "Reset" ) )
+        ves::open::xml::DataValuePairPtr centerPointUpdateDVP =
+            command->GetDataValuePair( "CENTER_POINT_UPDATE_DVP" );
+        if( !centerPointUpdateDVP )
         {
-            ves::xplorer::DeviceHandler::instance()->ResetCenterPoint();
-
             return;
         }
 
-        ves::open::xml::DataValuePairPtr jumpModeDVP =
-            command->GetDataValuePair( "Mode" );
-        if( jumpModeDVP )
+        std::string data;
+        centerPointUpdateDVP->GetData( data );
+        if( data == "Reset" )
         {
-            std::string mode;
-            jumpModeDVP->GetData( mode );
-            ves::xplorer::DeviceHandler::instance()->SetCenterPointJumpMode(
-                mode );
+            vx::DeviceHandler::instance()->ResetCenterPoint();
+        }
+        else
+        {
+            vx::DeviceHandler::instance()->SetCenterPointJumpMode( data );
         }
     }
     catch( ... )

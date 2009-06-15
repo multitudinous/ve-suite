@@ -294,7 +294,6 @@ void AppToolBar::CreateAppToolBar()
 {
     SetBackgroundColour( wxColour( 255, 255, 255 ) );
     SetToolBitmapSize( wxSize( 32, 32 ) );
-    SetToolSeparation( 10 );
 
     AddTool(
         APP_TOOL_BAR_NEW, wxEmptyString,
@@ -529,7 +528,7 @@ void AppToolBar::OnCharacterState( wxCommandEvent& event )
     }
 
     DataValuePairPtr dvp( new DataValuePair() );
-    dvp->SetData( "value", value );
+    dvp->SetData( "PHYSICS_SIMULATION_DVP", value );
 
     CommandSharedPtr command( new ves::open::xml::Command() );
     command->SetCommandName( "PHYSICS_SIMULATION" );
@@ -560,12 +559,13 @@ void AppToolBar::OnPaint( wxPaintEvent& event )
 ////////////////////////////////////////////////////////////////////////////////
 void AppToolBar::OnResetCenterPoint( wxCommandEvent& event )
 {
-    DataValuePairPtr resetDVP( new DataValuePair() );
-    resetDVP->SetData( "Reset", static_cast< unsigned int >( 0 ) );
+    std::string mode = "Reset";
+    DataValuePairPtr dvp( new DataValuePair() );
+    dvp->SetData( "CENTER_POINT_UPDATE_DVP", mode );
 
     CommandSharedPtr command( new ves::open::xml::Command() );
     command->SetCommandName( "CENTER_POINT_UPDATE" );
-    command->AddDataValuePair( resetDVP );
+    command->AddDataValuePair( dvp );
 
     CORBAServiceList::instance()->SendCommandStringToXplorer( command );
 }
@@ -734,7 +734,7 @@ void AppToolBar::OnChangeDeviceMode( wxCommandEvent& event )
     m_prevDeviceMode = currentSelection;
 
     DataValuePairPtr dvp( new DataValuePair() );
-    dvp->SetData( "Mode", mode );
+    dvp->SetData( "CHANGE_DEVICE_MODE_DVP", mode );
 
     CommandSharedPtr command( new ves::open::xml::Command() );
     command->SetCommandName( "CHANGE_DEVICE_MODE" );
@@ -746,7 +746,6 @@ void AppToolBar::OnChangeDeviceMode( wxCommandEvent& event )
 void AppToolBar::OnCenterPointUpdate( wxCommandEvent& event )
 {
     int currentSelection = event.GetId();
-
     if( m_prevCenterPoint == currentSelection )
     {
         return;
@@ -803,12 +802,12 @@ void AppToolBar::OnCenterPointUpdate( wxCommandEvent& event )
 
     m_prevCenterPoint = currentSelection;
 
-    DataValuePairPtr jumpModeDVP( new DataValuePair() );
-    jumpModeDVP->SetData( "Mode", mode );
+    DataValuePairPtr dvp( new DataValuePair() );
+    dvp->SetData( "CENTER_POINT_UPDATE_DVP", mode );
 
     CommandSharedPtr command( new ves::open::xml::Command() );
     command->SetCommandName( "CENTER_POINT_UPDATE" );
-    command->AddDataValuePair( jumpModeDVP );
+    command->AddDataValuePair( dvp );
 
     CORBAServiceList::instance()->SendCommandStringToXplorer( command );
 }
@@ -875,7 +874,6 @@ void AppToolBar::OnPhysicsState( wxCommandEvent& event )
 void AppToolBar::OnPhysicsSimulation( wxCommandEvent& event )
 {
     int currentSelection = event.GetId();
-
     if( m_prevPhysicsSimulation == currentSelection &&
       ( currentSelection == APP_TOOL_BAR_PHYSICS_PLAY ||
         currentSelection == APP_TOOL_BAR_PHYSICS_PAUSE ) )
@@ -955,7 +953,7 @@ void AppToolBar::OnPhysicsSimulation( wxCommandEvent& event )
     m_prevPhysicsSimulation = currentSelection;
 
     DataValuePairPtr dvp( new DataValuePair() );
-    dvp->SetData( "value", value );
+    dvp->SetData( "PHYSICS_SIMULATION_DVP", value );
 
     ves::open::xml::CommandPtr command( new ves::open::xml::Command() );
     command->SetCommandName( "PHYSICS_SIMULATION" );

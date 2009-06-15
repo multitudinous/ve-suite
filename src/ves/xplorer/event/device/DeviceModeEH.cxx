@@ -30,6 +30,8 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> **************/
+
+// --- VE-Suite Includes --- //
 #include <ves/xplorer/event/device/DeviceModeEH.h>
 
 #include <ves/xplorer/GlobalBase.h>
@@ -39,9 +41,11 @@
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>
 
+// --- VR Juggler Includes --- //
 #include <boost/filesystem/operations.hpp> //includes boost/filesystem/path.hpp
 #include <boost/filesystem/path.hpp>
 
+// --- C/C++ Libraries --- //
 #include <string>
 
 #ifdef WIN32
@@ -51,19 +55,19 @@
 #endif
 
 using namespace ves::xplorer::event;
-using namespace ves::open::xml;
 
 ////////////////////////////////////////////////////////////////////////////////
 DeviceModeEventHandler::DeviceModeEventHandler()
-        :
-        ves::xplorer::event::EventHandler()
+    :
+    ves::xplorer::event::EventHandler()
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-DeviceModeEventHandler::DeviceModeEventHandler( const DeviceModeEventHandler& rhs )
-        :
-        ves::xplorer::event::EventHandler()
+DeviceModeEventHandler::DeviceModeEventHandler(
+    const DeviceModeEventHandler& rhs )
+    :
+    ves::xplorer::event::EventHandler()
 {
     ;
 }
@@ -73,22 +77,32 @@ DeviceModeEventHandler::~DeviceModeEventHandler()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DeviceModeEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* modelHandler )
+void DeviceModeEventHandler::SetGlobalBaseObject(
+    ves::xplorer::GlobalBase* modelHandler )
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DeviceModeEventHandler::Execute( const ves::open::xml::XMLObjectPtr& veXMLObject )
+void DeviceModeEventHandler::Execute(
+    const ves::open::xml::XMLObjectPtr& veXMLObject )
 {
-    CommandPtr command = boost::dynamic_pointer_cast<ves::open::xml::Command>( veXMLObject );
+    ves::open::xml::CommandPtr command =
+        boost::dynamic_pointer_cast< ves::open::xml::Command >( veXMLObject );
+
+    ves::open::xml::DataValuePairPtr changeDeviceModeDVP =
+        command->GetDataValuePair( "CHANGE_DEVICE_MODE_DVP" );
+    if( !changeDeviceModeDVP )
+    {
+        return;
+    }
 
     std::string mode;
-    command->GetDataValuePair( "Mode" )->GetData( mode );
-
+    changeDeviceModeDVP->GetData( mode );
     ves::xplorer::DeviceHandler::instance()->SetDeviceMode( mode );
 }
 ////////////////////////////////////////////////////////////////////////////////
-DeviceModeEventHandler& DeviceModeEventHandler::operator=( const DeviceModeEventHandler& rhs )
+DeviceModeEventHandler& DeviceModeEventHandler::operator=(
+    const DeviceModeEventHandler& rhs )
 {
     if( this != &rhs )
     {

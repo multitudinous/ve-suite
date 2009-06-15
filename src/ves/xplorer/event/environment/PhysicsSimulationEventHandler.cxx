@@ -112,7 +112,7 @@ void PhysicsSimulationEventHandler::Execute(
     }
 
     ves::open::xml::DataValuePairPtr physicsDVP =
-        command->GetDataValuePair( "value" );
+        command->GetDataValuePair( "PHYSICS_SIMULATION_DVP" );
     if( !physicsDVP )
     {
         return;
