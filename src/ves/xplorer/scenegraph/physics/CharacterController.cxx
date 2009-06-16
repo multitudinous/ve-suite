@@ -588,8 +588,10 @@ void CharacterController::EyeToCenterRayTest(
 
     osgUtil::IntersectionVisitor intersectionVisitor(
         mLineSegmentIntersector.get() );
-    //Set traversal mask to exclude ManipulatorManager
-    intersectionVisitor.setTraversalMask( 0x1 );
+    //Use bitwise NOT operator to get opposite of ManipulatorManager NodeMask
+    unsigned int traversalMask =
+        ~vxs::SceneManager::instance()->GetManipulatorManager()->getNodeMask();
+    intersectionVisitor.setTraversalMask( traversalMask );
 
     vxs::SceneManager::instance()->GetModelRoot()->accept(
         intersectionVisitor );
