@@ -184,6 +184,8 @@ public:
     ///Removes Xplorer shutdown option using user preferences
     void ShutdownXplorerOptionOff( void );
     HierarchyTree * GetHierarchyTree();
+    ///Change data logging settings
+    void OnDataLogging( wxCommandEvent &event );
 
     //virtual void OnInternalIdle();
     ///Internal function to make the orb run

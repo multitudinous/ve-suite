@@ -61,7 +61,7 @@ namespace conductor
 namespace util
 {
 class Body_UI_i;
-class PEThread;
+//class PEThread;
 class VE_CONDUCTOR_UTILS_EXPORTS CORBAServiceList //: public wxObject
 {
 private:
@@ -70,6 +70,7 @@ private:
     //SceneManager(const SceneManager& o) { ; }
     //SceneManager& operator=(const SceneManager& o) { ; }
     CORBAServiceList( void );
+    ///Destructor
     ~CORBAServiceList();
     vprSingletonHeader( CORBAServiceList );
 
@@ -77,7 +78,6 @@ public:
     ///Constructor
     void SetArgcArgv( int argc, char** argv );
     ///Destructor
-    //~CORBAServiceList( void );
     void CleanUp( void );
     ///Set a naming context
     ///\param naming_context
@@ -102,7 +102,7 @@ public:
     bool SendCommandStringToXplorer( const ves::open::xml::CommandWeakPtr& veCommand );
     ///Set ce network string
     ///\param network string containing network
-    bool SendNetworkStringToCE( std::string network );
+    //bool SendNetworkStringToCE( std::string network );
     ///Keep the orb running and check for corba commands to be processed
     void CheckORBWorkLoad( void );
     ///Connect to the CORBA naming service
@@ -121,13 +121,13 @@ public:
     bool SetID( int moduleId, std::string moduleName );
 
     ///Excutive wrapper functions
-    std::string GetNetwork( void );
+    const std::string GetNetwork( void );
     void SetNetwork( const std::string& command );
     void StopCalc( void );
     void StartCalc( void );
     void PauseCalc( void );
     void Resume( void );
-    std::string Query( const std::string& command );
+    const std::string Query( const std::string& command );
 
 private:
     void CreateCORBAModule( void );
@@ -148,7 +148,7 @@ private:
     Body::VEXplorer_var veXplorer;
     Body::Executive_var veCE;
     Body_UI_i* p_ui_i;
-    PEThread* pelog;
+    //PEThread* pelog;
     int peArgc;
     char** peArgv;
     ves::open::xml::CommandPtr nullTextPtr;

@@ -79,6 +79,7 @@
 #include <ves/conductor/IconChooser.h>
 #include <ves/conductor/Module.h>
 #include <ves/conductor/util/Tag.h>
+#include <ves/conductor/util/DataLoggerEngine.h>
 
 #include <ves/open/xml/DOMDocumentManager.h>
 #include <ves/open/xml/XMLReaderWriter.h>
@@ -139,6 +140,9 @@ BEGIN_EVENT_TABLE( AppFrame, wxFrame )
     EVT_MENU( APPFRAME_PREFERENCES, AppFrame::OnPreferences )
     EVT_MENU( APPFRAME_CLEAR_RECENT_FILES, AppFrame::OnClearRecentFiles )
     EVT_MENU( APPFRAME_OPEN, AppFrame::Open )
+    EVT_MENU( APPFRAME_START_DATALOGGING, AppFrame::OnDataLogging )
+    EVT_MENU( APPFRAME_STOP_DATALOGGING, AppFrame::OnDataLogging )
+
     EVT_MENU( APPFRAME_RUN, AppFrame::Run )
     EVT_MENU( APPFRAME_CHANGE_WORKING_DIRECTORY, AppFrame::OnChangeWorkingDirectory )
 
@@ -370,6 +374,9 @@ AppFrame::~AppFrame()
     //serviceList->CleanUp();
     //serviceList = 0;
 
+    //Write the final script file if we need to
+    ves::conductor::util::DataLoggerEngine::instance()->CleanUp();
+    
     delete m_recentVESFiles;
     m_recentVESFiles = 0;
     for( int i = 0; i < pids.size(); i++ )
@@ -722,9 +729,17 @@ void AppFrame::CreateMenu()
 
     file_menu->Append( APPFRAME_SAVE, _( "&Save\tCtrl+S" ) );
     file_menu->Append( APPFRAME_SAVEAS, _( "Save &as ..\tCtrl+Shift+S" ) );
+
     file_menu->AppendSeparator();
+
+    file_menu->Append( APPFRAME_START_DATALOGGING, _( "Start Data Logging" ) );
+    file_menu->Append( APPFRAME_STOP_DATALOGGING, _( "Stop Data Logging" ) );
+
+    file_menu->AppendSeparator();
+
     file_menu->Append( APPFRAME_EXPORT_MENU_OPT, _( "Export" ),
                        new ExportMenu(), _( "Options" ) );
+
     file_menu->AppendSeparator();
     file_menu->Append( APPFRAME_CHANGE_WORKING_DIRECTORY, _( "Change Working Directory" ) );
     file_menu->AppendSeparator();
@@ -1115,7 +1130,7 @@ void AppFrame::Open( wxCommandEvent& WXUNUSED( event ) )
         _T( "Open File dialog" ),
         ::wxGetCwd(),
         mVESFileName,
-        _T( "Network files (*.ves)|*.ves" ),
+        _T( "System files (*.ves)|*.ves|Script files (*.vem)|*.vem" ),
         wxOPEN | wxFILE_MUST_EXIST | wxFD_PREVIEW
     );
 
@@ -1129,11 +1144,9 @@ void AppFrame::Open( wxCommandEvent& WXUNUSED( event ) )
     if( !success )
     {
         wxMessageBox( _( "Can't open a VES file on another drive." ),
-                      _( "VES File Read Error" ), wxOK | wxICON_INFORMATION );
+                     _( "VES File Read Error" ), wxOK | wxICON_INFORMATION );
         return;
     }
-
-    SetTitle( vesFileName.GetFullName() );
 
     directory = vesFileName.GetPath( wxPATH_GET_VOLUME, wxPATH_UNIX );
     //change conductor working dir
@@ -1144,10 +1157,7 @@ void AppFrame::Open( wxCommandEvent& WXUNUSED( event ) )
     {
         tempDir = "./";
     }
-    //Update recent file and mVESFileName variable
-    SetRecentFile( wxFileName( dialog.GetPath() ) );
-    mVESFileName = dialog.GetFilename();
-
+    
     //Send Command to change xplorer working dir
     // Create the command and data value pairs
     DataValuePairPtr dataValuePair( new DataValuePair( std::string( "STRING" ) ) );
@@ -1157,53 +1167,38 @@ void AppFrame::Open( wxCommandEvent& WXUNUSED( event ) )
     veCommand->AddDataValuePair( dataValuePair );
     serviceList->SendCommandStringToXplorer( veCommand );
 
-    //Clear the viewpoints data
-    //Since the data is "managed" by Xplorer we need to notify
-    //Xplorer when we load a new ves file to clear viewpoints since
-    //They don't go with the new data.
+    //Set the title displayed on the conductor dialog
+    SetTitle( vesFileName.GetFullName() );
+    //Update the recent file menu in conductor
+    SetRecentFile( wxFileName( dialog.GetPath() ) );
 
-    //Dummy data that isn't used but I don't know if a command will work
-    //w/o a DVP
-    DataValuePairPtr dvp( new DataValuePair( std::string( "STRING" ) ) );
-    dvp->SetData( "Clear Quat Data", tempDir );
-    CommandPtr vec( new Command() );
-    vec->SetCommandName( std::string( "QC_CLEAR_QUAT_DATA" ) );
-    vec->AddDataValuePair( dvp );
-    serviceList->SendCommandStringToXplorer( vec );
-    
-    //clear the old networks so that all the event handlers are removed
-    //before cleaning up the rest of the classes
-    canvas->New( true );
-    /*
-    //Reloading plugins
-    av_modules->ResetPluginTree();
-
-    //Now laod the xml data now that we are in the correct directory
-    canvas->PopulateNetworks( ConvertUnicode( mVESFileName.c_str() ) );
-
-    //create hierarchy page
-    hierarchyTree->PopulateTree( XMLDataBufferEngine::instance()->
-                                 GetXMLModels(), XMLDataBufferEngine::instance()->
-                                 GetTopSystemId() );
-    wxCommandEvent event;
-    SubmitToServer( event );
-    if( recordScenes )
+    if( vesFileName.GetExt() == wxString( _("ves") ) )
     {
-        recordScenes->_buildPage();
+        //Update mVESFileName variable
+        mVESFileName = dialog.GetFilename();
+
+        //Clear the viewpoints data
+        //Since the data is "managed" by Xplorer we need to notify
+        //Xplorer when we load a new ves file to clear viewpoints since
+        //they don't go with the new data.
+        DataValuePairPtr dvp( new DataValuePair( std::string( "STRING" ) ) );
+        dvp->SetData( "Clear Quat Data", tempDir );
+        CommandPtr vec( new Command() );
+        vec->SetCommandName( std::string( "QC_CLEAR_QUAT_DATA" ) );
+        vec->AddDataValuePair( dvp );
+        serviceList->SendCommandStringToXplorer( vec );
+        
+        //clear the old networks so that all the event handlers are removed
+        //before cleaning up the rest of the classes
+        canvas->New( true );
     }
-
-    ///This code will be moved in the future. It is Aspen specific code.
-    CommandPtr aspenBKPFile =
-        UserPreferencesDataBuffer::instance()->
-        GetCommand( "Aspen_Plus_Preferences" );
-    if( aspenBKPFile->GetCommandName() != "NULL" )
+    else if( vesFileName.GetExt() == wxString( _("vem") ) )
     {
-        DataValuePairPtr bkpPtr =
-            aspenBKPFile->GetDataValuePair( "BKPFileName" );
-        std::string bkpFilename;
-        bkpPtr->GetData( bkpFilename );
-        OpenSimulation( wxString( bkpFilename.c_str(), wxConvUTF8 ) );
-    }*/
+        std::string vemFilename = ConvertUnicode( dialog.GetFilename().c_str() );
+
+        ves::conductor::util::DataLoggerEngine::instance()->LoadVEMFile( vemFilename );
+        ves::conductor::util::DataLoggerEngine::instance()->PlayVEMFile();
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::Run( wxCommandEvent& WXUNUSED( event ) )
@@ -1272,15 +1267,10 @@ void AppFrame::OpenRecentFile( wxCommandEvent& event )
         return;
     }
 
-    SetTitle( vesFileName.GetFullName() );
-
     directory = vesFileName.GetPath( wxPATH_GET_VOLUME, wxPATH_UNIX );
     //change conductor working dir
     ::wxSetWorkingDirectory( directory );
     directory.Replace( _( "\\" ), _( "/" ), true );
-
-    // TODO also, make call if file they are trying to call does not exist, call DeleteRecentFile
-    mVESFileName = vesFileName.GetFullName();
 
     std::string tempDir = ConvertUnicode( directory.c_str() );
     if( tempDir.empty() )
@@ -1297,53 +1287,33 @@ void AppFrame::OpenRecentFile( wxCommandEvent& event )
     veCommand->AddDataValuePair( dataValuePair );
     serviceList->SendCommandStringToXplorer( veCommand );
 
-    //Dummy data that isn't used but I don't know if a command will work
-    //w/o a DVP
-    DataValuePairPtr dvp( new DataValuePair( std::string( "STRING" ) ) );
-    dvp->SetData( "Clear Quat Data", tempDir );
-    CommandPtr vec( new Command() );
-    vec->SetCommandName( std::string( "QC_CLEAR_QUAT_DATA" ) );
-    vec->AddDataValuePair( dvp );
-    serviceList->SendCommandStringToXplorer( vec );
-
-    //clear the old networks so that all the event handlers are removed
-    //before cleaning up the rest of the classes
-    canvas->New( true );
-    
     //Update recent file history and make it number 1
     SetRecentFile( fileToOpen );
-    
-    /*
-    //Reloading plugins
-    av_modules->ResetPluginTree();
 
-    //Now laod the xml data now that we are in the correct directory
-    canvas->PopulateNetworks( ConvertUnicode( mVESFileName.c_str() ) );
+    SetTitle( vesFileName.GetFullName() );
 
-    //create hierarchy page
-    hierarchyTree->PopulateTree( XMLDataBufferEngine::instance()->
-                                 GetXMLModels(), XMLDataBufferEngine::instance()->
-                                 GetTopSystemId() );
-    SubmitToServer( event );
-    //Rebuild the teacher tab so that the new stored files are loaded
-    if( recordScenes )
+    if( vesFileName.GetExt() == wxString( _("ves") ) )
     {
-        recordScenes->_buildPage();
-    }
+        mVESFileName = vesFileName.GetFullName();
 
-    ///This code will be moved in the future. It is Aspen specific code.
-    CommandPtr aspenBKPFile =
-        UserPreferencesDataBuffer::instance()->
-        GetCommand( "Aspen_Plus_Preferences" );
-    if( aspenBKPFile->GetCommandName() != "NULL" )
-    {
-        DataValuePairPtr bkpPtr =
-            aspenBKPFile->GetDataValuePair( "BKPFileName" );
-        std::string bkpFilename;
-        bkpPtr->GetData( bkpFilename );
-        OpenSimulation( wxString( bkpFilename.c_str(), wxConvUTF8 ) );
+        DataValuePairPtr dvp( new DataValuePair( std::string( "STRING" ) ) );
+        dvp->SetData( "Clear Quat Data", tempDir );
+        CommandPtr vec( new Command() );
+        vec->SetCommandName( std::string( "QC_CLEAR_QUAT_DATA" ) );
+        vec->AddDataValuePair( dvp );
+        serviceList->SendCommandStringToXplorer( vec );
+
+        //clear the old networks so that all the event handlers are removed
+        //before cleaning up the rest of the classes
+        canvas->New( true );
     }
-    */
+    else if( vesFileName.GetExt() == wxString( _("vem") ) )
+    {
+        std::string vemFilename = ConvertUnicode( vesFileName.GetFullName().c_str() );
+        std::cout << " file to open " << vemFilename << std::endl;
+        ves::conductor::util::DataLoggerEngine::instance()->LoadVEMFile( vemFilename );
+        ves::conductor::util::DataLoggerEngine::instance()->PlayVEMFile();
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::OnClearRecentFiles( wxCommandEvent& event )
@@ -1775,7 +1745,7 @@ void AppFrame::SubmitToServer( wxCommandEvent& WXUNUSED( event ) )
 
     canvas->Update();
 
-    std::string nw_str = XMLDataBufferEngine::instance()->
+    const std::string nw_str = XMLDataBufferEngine::instance()->
                          SaveVESData( std::string( "returnString" ) );
     // write the domdoc to the string above
     try
@@ -2841,3 +2811,78 @@ void AppFrame::OnRemovePlanet ( wxCommandEvent& event )
 
   serviceList->SendCommandStringToXplorer ( veCommand );
 }
+///////////////////////////////////////////////////////////////////////////////
+void AppFrame::OnDataLogging( wxCommandEvent& event )
+{
+    if( event.GetId() == APPFRAME_START_DATALOGGING )
+    {
+        wxFileName vesFileName;
+        int answer = 0;
+        do
+        {
+            //Set this here so that after correcting for not replacing the file name
+            //we can exit the do while loop
+            answer = 0;
+            wxTextEntryDialog* newDataSetName;
+                newDataSetName = new wxTextEntryDialog( this,
+                                                       _( "Enter the prefix for *.vem filename:" ),
+                                                       _( "Save VEM file as..." ),
+                                                       _( "untitled" ), wxOK | wxCANCEL );
+            
+            if( newDataSetName->ShowModal() == wxID_OK )
+            {
+                vesFileName.ClearExt();
+                vesFileName.SetName( newDataSetName->GetValue() );
+                vesFileName.SetExt( _( "vem" ) );
+            }
+            else
+            {
+                break;
+            }
+            
+            if( vesFileName.FileExists() )
+            {
+                wxString tempMessage = _( "Do you want to replace " ) + 
+                vesFileName.GetFullName() + _( "?" );
+                wxMessageDialog promptDlg( this,
+                                          tempMessage,
+                                          _( "Overwrite File Warning" ),
+                                          wxYES_NO | wxNO_DEFAULT | wxICON_QUESTION,
+                                          wxDefaultPosition );
+                answer = promptDlg.ShowModal();
+            }
+            delete newDataSetName;
+        }
+        while( answer == wxID_NO );
+        
+        if( vesFileName.FileExists() && !wxFileName::IsFileWritable( vesFileName.GetFullPath() ) )
+        {
+            wxString tempMessage = _( "Cannot write file " ) + vesFileName.GetFullName() + _( "?" );
+            wxMessageDialog promptDlg( this,
+                                      tempMessage,
+                                      _( "Overwrite File Warning" ),
+                                      wxYES_NO | wxNO_DEFAULT | wxICON_QUESTION,
+                                      wxDefaultPosition );
+            promptDlg.ShowModal();
+            return;
+        }
+        
+        if( vesFileName.HasName() )
+        {
+            directory = vesFileName.GetPath();
+            SetRecentFile( vesFileName );
+        }
+    
+    
+        std::string vemFilename = ConvertUnicode( vesFileName.GetFullName().c_str() );
+        ves::conductor::util::DataLoggerEngine::instance()->SetMovieFilename( vemFilename );
+
+        std::cout << " file to open " << vemFilename << std::endl;  
+    }
+    else
+    {
+        ves::conductor::util::DataLoggerEngine::instance()->ToggleOn( false );
+    }
+}
+///////////////////////////////////////////////////////////////////////////////
+
