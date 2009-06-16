@@ -584,7 +584,7 @@ if not SConsAddons.Util.hasHelpFlag():
 
    #build applications in test/ directory
    if baseEnv[ 'buildTests' ] == 'yes':
-      testDir = [test] #[ pj(buildDir,'test','testNURBS'),  pj(buildDir,'test','vtk') ]
+      testDir = [test,  pj(buildDir,'test','vtk')] #[ pj(buildDir,'test','testNURBS') ]
       ves_dirs.append( testDir )
 
    # freeze the python code
