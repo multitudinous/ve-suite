@@ -83,7 +83,7 @@ public:
 
     ///Load an XML tree from a string or a file.
     ///\param inputCommand Can be a string in memory of the tree or point to a file on disk.
-    void Load( const std::string inputCommand );
+    void Load( const std::string& inputCommand );
     ///Unload memory created by the parser.
     void UnLoadParser( void );
 
@@ -104,7 +104,7 @@ public:
     void SetOuputXMLFile( const std::string& xmlOutputFile );
 
     /// Functions used to create a document and then return it in a std::string
-    std::string WriteAndReleaseCommandDocument( void );
+    const std::string WriteAndReleaseCommandDocument( void );
     ///Create the command document.
     ///\param type The type of document to be encoded in the header of the xml document either: Network, Shader, Command
     void CreateCommandDocument( const std::string& type );

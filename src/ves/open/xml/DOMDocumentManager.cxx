@@ -149,7 +149,7 @@ XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* DOMDocumentManager::GetModulesDocume
 }
 
 ///////////////////////////////////////////////////////////////
-void DOMDocumentManager::Load( const std::string inputCommand )
+void DOMDocumentManager::Load( const std::string& inputCommand )
 {
     //std::string system_id( "command.xml" );
     //MemBufInputSource inpsrc( (const XMLByte*)inputCommand.c_str(), inputCommand.size(), system_id.c_str());
@@ -300,7 +300,7 @@ void DOMDocumentManager::CreateCommandDocument( const std::string& type )
                Convert( "veshader.xsd" ).toXMLString() );
 }
 /////////////////////////////////////////////////////
-std::string DOMDocumentManager::WriteAndReleaseCommandDocument( void )
+const std::string DOMDocumentManager::WriteAndReleaseCommandDocument( void )
 {
     DOMImplementation* impl = DOMImplementationRegistry::getDOMImplementation(
                               Convert( "LS" ).toXMLString() );

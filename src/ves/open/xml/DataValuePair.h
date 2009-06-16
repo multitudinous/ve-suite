@@ -112,9 +112,9 @@ public:
     unsigned int GetUIntData();
 
     ///Get the data type.
-    const std::string GetDataType();
+    const std::string& GetDataType();
     ///Get the data name.
-    const std::string GetDataName();
+    const std::string& GetDataName();
 
     ///Get the string data.
     const std::string GetDataString();

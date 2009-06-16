@@ -237,12 +237,12 @@ void DataValuePair::SetDataName( const std::string& name )
     }
 }
 //////////////////////////////////////////
-const std::string DataValuePair::GetDataName()
+const std::string& DataValuePair::GetDataName()
 {
     return mDataName;
 }
 //////////////////////////////////////////
-const std::string DataValuePair::GetDataType()
+const std::string& DataValuePair::GetDataType()
 {
     return mDataType;
 }
