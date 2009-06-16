@@ -588,6 +588,8 @@ void CharacterController::EyeToCenterRayTest(
 
     osgUtil::IntersectionVisitor intersectionVisitor(
         mLineSegmentIntersector.get() );
+    //Set traversal mask to exclude ManipulatorManager
+    intersectionVisitor.setTraversalMask( 0x1 );
 
     vxs::SceneManager::instance()->GetModelRoot()->accept(
         intersectionVisitor );
@@ -609,7 +611,7 @@ void CharacterController::EyeToCenterRayTest(
             notTheCharacter = true;
         }
 #else
-        osg::Node* tempCharacter = objectHit->getParent(0);
+        osg::Node* tempCharacter = objectHit->getParent( 0 );
         vxs::FindParentWithNameVisitor findParent(
             tempCharacter, "Character" );
         osg::ref_ptr< osg::Node > tempParent = findParent.GetParentNode();

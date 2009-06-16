@@ -126,6 +126,9 @@ private:
         osgUtil::LineSegmentIntersector* lineSegmentIntersector );
 
     ///
+    unsigned int m_nodeMask;
+
+    ///
     osg::NodePath m_nodePath;
 
     ///
