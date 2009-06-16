@@ -121,10 +121,10 @@ void SoundsPane::_onLoadAndUpdate( wxCommandEvent& WXUNUSED( event ) )
 {
     wxFileDialog dialog( this,
                          _T( "Open Sound File" ),
-                         _T( "" ),
+                         ::wxGetCwd(),
                          _T( "" ),
                          _T( "Wave files (*.wav)|*.wav;|MP3 files (*.mp3)|*.mp3;|All Files (*.*)|*.*" ),
-                         wxOPEN | wxFILE_MUST_EXIST | wxMULTIPLE,
+                         wxOPEN | wxFILE_MUST_EXIST | wxMULTIPLE | wxFD_PREVIEW,
                          wxDefaultPosition );
     dialog.CentreOnParent();
     

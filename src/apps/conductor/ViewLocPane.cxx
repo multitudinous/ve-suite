@@ -115,11 +115,11 @@ void ViewLocPane::_onLoadStoredPointsFile( wxCommandEvent& event )
 {
     ///this is Waaaaaaaaaaaaaaay hacked... --biv
     wxFileDialog dialog( this,
-                         _T( "Open file" ),
-                         _T( "" ),
+                         _T( "Open File" ),
+                         ::wxGetCwd(),
                          _T( "" ),
                          _T( "View Location files (*.vel;*.dat)|*.vel;*.dat;" ),
-                         wxOPEN | wxFILE_MUST_EXIST,
+                         wxOPEN | wxFILE_MUST_EXIST | wxFD_PREVIEW,
                          wxDefaultPosition );
     dialog.CentreOnParent();
     

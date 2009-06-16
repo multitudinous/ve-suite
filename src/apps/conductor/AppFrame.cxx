@@ -1127,7 +1127,7 @@ void AppFrame::Open( wxCommandEvent& WXUNUSED( event ) )
     wxFileDialog dialog
     (
         this,
-        _T( "Open File dialog" ),
+        _T( "Open File" ),
         ::wxGetCwd(),
         mVESFileName,
         _T( "System files (*.ves)|*.ves|Script files (*.vem)|*.vem" ),

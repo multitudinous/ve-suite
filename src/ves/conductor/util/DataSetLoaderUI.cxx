@@ -416,11 +416,11 @@ void DataSetLoaderUI::OnLoadFile( wxCommandEvent& WXUNUSED( event ) )
     // Before editing this code, remove the block markers.
     wxPoint pos( 0, 0 );
     wxFileDialog dialog( this,
-                         _T( "Open file" ),
-                         _T( "" ),
+                         _T( "Open Data Set File" ),
+                         ::wxGetCwd(),
                          _T( "" ),
                          _T( "VTK DataSet Files (*.vtk;*.vtu;*.vts;*.vti;*.vtm)|*.vtk;*.vtu;*.vts;*.vti;*.vtm;|StarCD Parameter File (*.param)|*.param;|EnSight(*.ens;*.case)|*.ens;*.case;|MFIX (*.mfix)|*.mfix;|Fluent (*.cas)|*.cas;|AVS (*.avs)|*.avs;|Dicom (*.dcm)|*.dcm;|All Files (*.*)|*.*" ),
-                         wxOPEN | wxFILE_MUST_EXIST,
+                         wxOPEN | wxFILE_MUST_EXIST | wxFD_PREVIEW,
                          wxDefaultPosition );
     dialog.CentreOnParent();
 
@@ -458,11 +458,11 @@ void DataSetLoaderUI::OnLoadSurfaceFile( wxCommandEvent& event )
     //Launch the precomputed data dir
     wxPoint pos( 0, 0 );
     wxFileDialog dialog( this,
-                         _T( "Open file" ),
-                         _T( "" ),
+                         _T( "Open VTK PolyData File" ),
+                         ::wxGetCwd(),
                          _T( "" ),
                          _T( "VTK Surface Files (*.vtk;*.vtp)|*.vtk;*.vtp;" ),
-                         wxOPEN | wxFILE_MUST_EXIST,
+                         wxOPEN | wxFILE_MUST_EXIST | wxFD_PREVIEW,
                          wxDefaultPosition );
     dialog.CentreOnParent();
 
@@ -586,11 +586,11 @@ void DataSetLoaderUI::OnLoadTextureFile( wxCommandEvent& WXUNUSED( event ) )
     {
         wxPoint pos( 0, 0 );
         wxFileDialog dialog( this,
-                             _T( "Open file" ),
-                             _T( "" ),
+                             _T( "Open VTK Image File" ),
+                             ::wxGetCwd(),
                              _T( "" ),
                              _T( "VTK Texture Files (*.vti)|*.vti;" ),
-                             wxOPEN | wxFILE_MUST_EXIST,
+                             wxOPEN | wxFILE_MUST_EXIST | wxFD_PREVIEW,
                              wxDefaultPosition );
         dialog.CentreOnParent();
         
