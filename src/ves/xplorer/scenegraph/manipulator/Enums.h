@@ -37,6 +37,10 @@
 // --- VE-Suite Includes --- //
 //#include <ves/VEConfig.h>
 
+//Define manipulator constants
+
+
+//Define manipulator enums w/ namespaces
 namespace ves
 {
 namespace xplorer

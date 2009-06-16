@@ -86,7 +86,6 @@ void ScaleCompound::ComboForm()
     CompoundDragger::ComboForm();
 
     osg::Vec3Array* lineVertices( NULL );
-    osg::Geometry* lineGeometry( NULL );
     osg::Box* box( NULL );
     for( size_t i = 0; i < getNumChildren(); ++i )
     {
@@ -98,13 +97,12 @@ void ScaleCompound::ComboForm()
             (*lineVertices)[ 0 ] -= m_boxExplodeVector;
             (*lineVertices)[ 1 ] += m_boxExplodeVector;
 
-            lineGeometry = scaleAxis->GetLineGeometry();
-            lineGeometry->dirtyDisplayList();
-            lineGeometry->dirtyBound();
-
             //Move the boxes in from the unit axis
             box = scaleAxis->GetBox();
             box->setCenter( box->getCenter() + m_boxExplodeVector );
+            
+            //Update the geometry's display list
+            scaleAxis->DirtyGeometry();
         }
     }
 }
@@ -120,7 +118,6 @@ void ScaleCompound::DefaultForm()
     CompoundDragger::DefaultForm();
 
     osg::Vec3Array* lineVertices( NULL );
-    osg::Geometry* lineGeometry( NULL );
     osg::Box* box( NULL );
     for( size_t i = 0; i < getNumChildren(); ++i )
     {
@@ -132,13 +129,12 @@ void ScaleCompound::DefaultForm()
             (*lineVertices)[ 0 ] += m_boxExplodeVector;
             (*lineVertices)[ 1 ] -= m_boxExplodeVector;
 
-            lineGeometry = scaleAxis->GetLineGeometry();
-            lineGeometry->dirtyDisplayList();
-            lineGeometry->dirtyBound();
-
             //Move the boxes back to the unit axis
             box = scaleAxis->GetBox();
             box->setCenter( box->getCenter() - m_boxExplodeVector );
+
+            //Update the geometry's display list
+            scaleAxis->DirtyGeometry();
         }
     }
 }

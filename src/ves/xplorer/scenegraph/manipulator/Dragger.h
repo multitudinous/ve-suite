@@ -142,6 +142,9 @@ protected:
     bool m_comboForm;
 
     ///
+    virtual void DirtyGeometry(){;}
+
+    ///
     osg::Vec4& GetColor( ColorTag::Enum colorTag );
 
     ///Will be pure virtual eventually

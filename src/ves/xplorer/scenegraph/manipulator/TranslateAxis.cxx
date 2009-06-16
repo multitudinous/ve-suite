@@ -63,7 +63,8 @@ TranslateAxis::TranslateAxis()
     m_lineVertices( NULL ),
     m_lineGeometry( NULL ),
     m_lineAndCylinderGeode( NULL ),
-    m_cone( NULL )
+    m_cone( NULL ),
+    m_shapeDrawable( NULL )
 {
     m_transformationType = TransformationType::TRANSLATE_AXIS;
 
@@ -78,7 +79,8 @@ TranslateAxis::TranslateAxis(
     m_lineVertices( translateAxis.m_lineVertices.get() ),
     m_lineGeometry( translateAxis.m_lineGeometry.get() ),
     m_lineAndCylinderGeode( translateAxis.m_lineAndCylinderGeode.get() ),
-    m_cone( translateAxis.m_cone.get() )
+    m_cone( translateAxis.m_cone.get() ),
+    m_shapeDrawable( translateAxis.m_shapeDrawable.get() )
 {
     ;
 }
@@ -120,6 +122,15 @@ void TranslateAxis::DefaultForm()
 
     m_lineGeometry->dirtyDisplayList();
     m_lineGeometry->dirtyBound();
+}
+////////////////////////////////////////////////////////////////////////////////
+void TranslateAxis::DirtyGeometry()
+{
+    m_lineGeometry->dirtyDisplayList();
+    m_lineGeometry->dirtyBound();
+
+    m_shapeDrawable->dirtyDisplayList();
+    m_shapeDrawable->dirtyBound();
 }
 ////////////////////////////////////////////////////////////////////////////////
 //See http://softsurfer.com/Archive/algorithm_0106/algorithm_0106.htm
@@ -249,16 +260,15 @@ void TranslateAxis::SetupDefaultGeometry()
         m_cone = new osg::Cone(
             (*m_lineVertices)[ 1 ] + coneCenter, coneRadius, coneHeight );
         m_cone->setRotation( rotation );
-        osg::ref_ptr< osg::ShapeDrawable > shapeDrawable =
-            new osg::ShapeDrawable( m_cone.get() );
 
-        coneGeode->addDrawable( shapeDrawable.get() );
+        m_shapeDrawable = new osg::ShapeDrawable( m_cone.get() );
+        coneGeode->addDrawable( m_shapeDrawable.get() );
 
         //Set StateSet
         osg::ref_ptr< osg::StateSet > stateSet =
-            shapeDrawable->getOrCreateStateSet();
+            m_shapeDrawable->getOrCreateStateSet();
 
-        //Set line hints
+        //Set polygon hints
         stateSet->setMode( GL_POLYGON_SMOOTH,
             osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
         osg::ref_ptr< osg::Hint > hint =

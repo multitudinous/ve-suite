@@ -48,6 +48,7 @@ class Geode;
 class Geometry;
 class Cone;
 class LineSegment;
+class ShapeDrawable;
 }
 
 namespace ves
@@ -86,6 +87,9 @@ public:
     virtual void DefaultForm();
 
     ///
+    virtual void DirtyGeometry();
+
+    ///
     osg::Geode* const GetLineAndCylinderGeode() const;
 
     ///
@@ -101,7 +105,8 @@ protected:
     virtual ~TranslateAxis();
 
     ///
-    virtual void ManipFunction( const osgUtil::LineSegmentIntersector& deviceInput );
+    virtual void ManipFunction(
+        const osgUtil::LineSegmentIntersector& deviceInput );
 
     ///
     virtual void SetupDefaultGeometry();
@@ -124,6 +129,9 @@ private:
 
     ///
     osg::ref_ptr< osg::Cone > m_cone;
+
+    ///
+    osg::ref_ptr< osg::ShapeDrawable > m_shapeDrawable;
 
 };
 } //end manipulator

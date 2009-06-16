@@ -100,6 +100,9 @@ void TranslateCompound::ComboForm()
             //Move the cones out from the unit axis
             cone = translateAxis->GetCone();
             cone->setCenter( cone->getCenter() + m_coneExplodeVector );
+
+            //Update the geometry's display list
+            translateAxis->DirtyGeometry();
         }
     }
 }
@@ -129,6 +132,9 @@ void TranslateCompound::DefaultForm()
             //Move the cones back to the unit axis
             cone = translateAxis->GetCone();
             cone->setCenter( cone->getCenter() - m_coneExplodeVector );
+
+            //Update the geometry's display list
+            translateAxis->DirtyGeometry();
         }
     }
 }

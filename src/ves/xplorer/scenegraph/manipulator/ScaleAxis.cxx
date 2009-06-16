@@ -49,10 +49,11 @@ ScaleAxis::ScaleAxis()
     :
     Dragger(),
     m_defaultAxisColor( 0.7, 0.7, 0.7, 1.0 ),
-    m_box( NULL ),
+    m_axisColor( NULL ),
     m_lineVertices( NULL ),
     m_lineGeometry( NULL ),
-    m_axisColor( NULL )
+    m_box( NULL ),
+    m_shapeDrawable( NULL )
 {
     m_transformationType = TransformationType::SCALE_AXIS;
     m_axisColor = new osg::Uniform( "color", m_defaultAxisColor );
@@ -65,10 +66,11 @@ ScaleAxis::ScaleAxis(
     :
     Dragger( scaleAxis, copyop ),
     m_defaultAxisColor( scaleAxis.m_defaultAxisColor ),
-    m_box( scaleAxis.m_box.get()  ),
+    m_axisColor( scaleAxis.m_axisColor.get() ),
     m_lineVertices( scaleAxis.m_lineVertices.get() ),
     m_lineGeometry( scaleAxis.m_lineGeometry.get()  ),
-    m_axisColor( scaleAxis.m_axisColor.get() )
+    m_box( scaleAxis.m_box.get()  ),
+    m_shapeDrawable( scaleAxis.m_shapeDrawable.get() )
 {
     ;
 }
@@ -76,6 +78,15 @@ ScaleAxis::ScaleAxis(
 ScaleAxis::~ScaleAxis()
 {
     ;
+}
+////////////////////////////////////////////////////////////////////////////////
+void ScaleAxis::DirtyGeometry()
+{
+    m_lineGeometry->dirtyDisplayList();
+    m_lineGeometry->dirtyBound();
+
+    m_shapeDrawable->dirtyDisplayList();
+    m_shapeDrawable->dirtyBound();
 }
 ////////////////////////////////////////////////////////////////////////////////
 osg::Box* const ScaleAxis::GetBox() const
@@ -86,11 +97,6 @@ osg::Box* const ScaleAxis::GetBox() const
 osg::Vec3Array* const ScaleAxis::GetLineVertices() const
 {
     return m_lineVertices.get();
-}
-////////////////////////////////////////////////////////////////////////////////
-osg::Geometry* const ScaleAxis::GetLineGeometry() const
-{
-    return m_lineGeometry.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void ScaleAxis::SetupDefaultGeometry()
@@ -157,7 +163,20 @@ void ScaleAxis::SetupDefaultGeometry()
         m_box = new osg::Box( (*m_lineVertices)[ 1 ] + boxCenter, boxWidth );
         m_box->setRotation( rotation );
 
-        geode->addDrawable( new osg::ShapeDrawable( m_box.get() ) );
+        m_shapeDrawable = new osg::ShapeDrawable( m_box.get() );
+        geode->addDrawable( m_shapeDrawable.get() );
+
+        //Set StateSet
+        osg::ref_ptr< osg::StateSet > stateSet =
+            m_shapeDrawable->getOrCreateStateSet();
+
+        //Set polygon hints
+        stateSet->setMode( GL_POLYGON_SMOOTH,
+            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+        osg::ref_ptr< osg::Hint > hint =
+            new osg::Hint( GL_POLYGON_SMOOTH_HINT, GL_NICEST );
+        stateSet->setAttributeAndModes( hint.get(),
+            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
     }
 
     /*
