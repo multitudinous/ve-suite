@@ -136,7 +136,7 @@ protected:
     ///
     virtual void ComputeProjectedPoint(
         const osgUtil::LineSegmentIntersector& deviceInput,
-        osg::Vec3d& projectedPoint );// = 0;
+        osg::Vec3d& projectedPoint ){;}// = 0;
 
     ///
     bool m_comboForm;
@@ -149,7 +149,8 @@ protected:
 
     ///Will be pure virtual eventually
     ///
-    virtual void ManipFunction( const osgUtil::LineSegmentIntersector& deviceInput );// = 0;
+    virtual void ManipFunction(
+        const osgUtil::LineSegmentIntersector& deviceInput ){;}// = 0;
 
     ///Pure virtual
     ///

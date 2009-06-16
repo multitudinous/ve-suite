@@ -74,7 +74,7 @@ namespace AxesFlag
     };
 }
 
-///
+///Defines transformation type associations with the draggers
 namespace TransformationType
 {
     enum Enum
@@ -95,7 +95,7 @@ namespace TransformationType
     };
 }
 
-///
+///Defines what space the manipulators operate in
 namespace VectorSpace
 {
     enum Enum

@@ -51,11 +51,15 @@ using namespace ves::xplorer::scenegraph::manipulator;
 ////////////////////////////////////////////////////////////////////////////////
 ManipulatorManager::ManipulatorManager()
     :
-    osg::Group(),
+    osg::Camera(),
     m_activeManipulator( NULL ),
     m_activeDragger( NULL ),
     m_sceneManipulator( NULL )
 {
+    setClearMask( GL_DEPTH_BUFFER_BIT );
+    setRenderOrder( osg::Camera::POST_RENDER );
+    setReferenceFrame( osg::Transform::RELATIVE_RF );
+
     m_sceneManipulator = new TransformManipulator();
     //Turn off the scene manipulator until requested by user
     m_sceneManipulator->TurnOff();
@@ -65,7 +69,7 @@ ManipulatorManager::ManipulatorManager()
 ManipulatorManager::ManipulatorManager(
     const ManipulatorManager& manipulatorManager, const osg::CopyOp& copyop )
     :
-    osg::Group( manipulatorManager, copyop ),
+    osg::Camera( manipulatorManager, copyop ),
     m_nodePath( manipulatorManager.m_nodePath ),
     m_nodePathItr( manipulatorManager.m_nodePathItr ),
     m_activeManipulator( manipulatorManager.m_activeManipulator ),

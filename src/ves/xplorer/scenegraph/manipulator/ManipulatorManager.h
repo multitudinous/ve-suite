@@ -40,7 +40,7 @@
 #include <ves/xplorer/scenegraph/manipulator/Enums.h>
 
 // --- OSG Includes --- //
-#include <osg/Group>
+#include <osg/Camera>
 
 namespace osgUtil
 {
@@ -69,7 +69,7 @@ class Dragger;
 /*!\class ves::xplorer::scenegraph::manipulator::ManipulatorManager
  *
  */
-class VE_SCENEGRAPH_EXPORTS ManipulatorManager : public osg::Group
+class VE_SCENEGRAPH_EXPORTS ManipulatorManager : public osg::Camera
 {
 public:
     ///Constructor

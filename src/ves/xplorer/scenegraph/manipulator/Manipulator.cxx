@@ -45,6 +45,7 @@ Manipulator::Manipulator()
     :
     osg::MatrixTransform(),
     m_enabledModes( TransformationType::NONE ),
+    m_vectorSpace( VectorSpace::WORLD ),
     m_autoTransform( new osg::AutoTransform() )
 {
     //All manipulators should be based off unit axes
@@ -64,6 +65,7 @@ Manipulator::Manipulator(
     :
     osg::MatrixTransform( manipulator, copyop ),
     m_enabledModes( manipulator.m_enabledModes ),
+    m_vectorSpace( manipulator.m_vectorSpace ),
     m_autoTransform( manipulator.m_autoTransform.get() )
 {
     ;
@@ -110,11 +112,6 @@ void Manipulator::DefaultForm()
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-Dragger* Manipulator::GetChild( unsigned int i )
-{
-    return static_cast< Dragger* >( osg::MatrixTransform::getChild( i ) );
-}
-////////////////////////////////////////////////////////////////////////////////
 Dragger* Manipulator::Focus( osg::NodePath::iterator& npItr )
 {
     Dragger* activeDragger( NULL );
@@ -128,6 +125,21 @@ Dragger* Manipulator::Focus( osg::NodePath::iterator& npItr )
     }
 
     return activeDragger;
+}
+////////////////////////////////////////////////////////////////////////////////
+Dragger* Manipulator::GetChild( unsigned int i )
+{
+    return static_cast< Dragger* >( osg::MatrixTransform::getChild( i ) );
+}
+////////////////////////////////////////////////////////////////////////////////
+const TransformationType::Enum Manipulator::GetEnabledModes() const
+{
+    return m_enabledModes;
+}
+////////////////////////////////////////////////////////////////////////////////
+const VectorSpace::Enum Manipulator::GetVectorSpace() const
+{
+    return m_vectorSpace;
 }
 ////////////////////////////////////////////////////////////////////////////////
 Dragger* Manipulator::Push(
@@ -178,28 +190,6 @@ bool Manipulator::setChild( unsigned int i, Dragger* node )
     return osg::MatrixTransform::setChild( i, node );
 }
 ////////////////////////////////////////////////////////////////////////////////
-/*
-const TransformationType::Enum Manipulator::GetActiveMode() const
-{
-    return m_activeMode;
-}
-////////////////////////////////////////////////////////////////////////////////
-const TransformationType::Enum Manipulator::GetEnabledModes() const
-{
-    return m_enabledModes;
-}
-////////////////////////////////////////////////////////////////////////////////
-const AxesFlag::Enum Manipulator::GetSelectedAxes() const
-{
-    return m_selectedAxes;
-}
-////////////////////////////////////////////////////////////////////////////////
-const VectorSpace::Enum Manipulator::GetVectorSpace() const
-{
-    return m_vectorSpace;
-}
-*/
-////////////////////////////////////////////////////////////////////////////////
 void Manipulator::SetAutoScaleToScreen( bool autoScaleToScreen )
 {
     m_autoTransform->setAutoScaleToScreen( autoScaleToScreen );
@@ -214,7 +204,7 @@ void Manipulator::SetEnabledModes( TransformationType::Enum value )
 
     if( m_manipulating )
     {
-        //mRedoStack.clear();
+        //m_redoStack.clear();
     }
 
     //m_manipulating = false;
@@ -224,7 +214,7 @@ void Manipulator::SetEnabledModes( TransformationType::Enum value )
     for( size_t i = 0; i < getNumChildren(); ++i )
     {
         Dragger* dragger = GetChild( i );
-        if( dragger->GetTransformationType() & value )
+        if( dragger->GetTransformationType() & m_enabledModes )
         {
             dragger->TurnOn();
         }
@@ -235,18 +225,21 @@ void Manipulator::SetEnabledModes( TransformationType::Enum value )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-/*
 void Manipulator::SetVectorSpace( VectorSpace::Enum value )
 {
-    if( m_manipulating )
+    if( m_vectorSpace == value )
     {
-        //mRedoStack.Clear();
+        return;
     }
 
-    m_manipulating = false;
+    if( m_manipulating )
+    {
+        //m_redoStack.Clear();
+    }
+
+    //m_manipulating = false;
     m_vectorSpace = value;
 }
-*/
 ////////////////////////////////////////////////////////////////////////////////
 void Manipulator::TurnOff()
 {

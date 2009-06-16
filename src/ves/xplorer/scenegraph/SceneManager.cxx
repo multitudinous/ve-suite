@@ -177,7 +177,7 @@ void SceneManager::InitScene()
     mModelRoot->setName( "Model Root Node" );
 
     m_manipulatorManager = new manipulator::ManipulatorManager();
-    m_manipulatorManager->setName( "Manipulator Manager Node" );
+    m_manipulatorManager->setName( "Manipulator Manager Camera" );
     mModelRoot->addChild( m_manipulatorManager.get() );
 
 #ifdef VE_SOUND

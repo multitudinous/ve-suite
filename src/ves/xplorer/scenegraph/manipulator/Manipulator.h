@@ -43,14 +43,14 @@
 #include <osg/ref_ptr>
 #include <osg/MatrixTransform>
 
-namespace osgUtil
-{
-class LineSegmentIntersector;
-}
-
 namespace osg
 {
 class AutoTransform;
+}
+
+namespace osgUtil
+{
+class LineSegmentIntersector;
 }
 
 // --- C/C++ Includes --- //
@@ -106,11 +106,20 @@ public:
     ///
     void DefaultForm();
 
+    ///
+    virtual Dragger* Focus( osg::NodePath::iterator& npItr );
+
     ///Can't override the getChild function, so create our own
     Dragger* GetChild( unsigned int i );
 
-    ///
-    virtual Dragger* Focus( osg::NodePath::iterator& npItr );
+    ///Gets the transformation modes enabled on the manipulator
+    const TransformationType::Enum GetEnabledModes() const;
+
+    ///Gets the vector space in which the manipulator will operate
+    const VectorSpace::Enum GetVectorSpace() const;
+
+    ///Override the insertChild function to only accept Draggers
+    virtual bool insertChild( unsigned int index, Dragger* child );
 
     ///
     virtual Dragger* Push(
@@ -121,28 +130,11 @@ public:
     ///
     virtual Dragger* Release( osg::NodePath::iterator& npItr );
 
-    ///Override the insertChild function to only accept Draggers
-    virtual bool insertChild( unsigned int index, Dragger* child );
-
     ///Override the replaceChild function to only accept Draggers
     virtual bool replaceChild( Dragger* origChild, Dragger* newChild );
 
     ///Override the setChild function to only accept Draggers
     virtual bool setChild( unsigned int i, Dragger* node );
-
-    /*
-    ///Gets the manipulator's active transformation mode
-    const TransformationType::Enum GetActiveMode() const;
-
-    ///Gets the transformation modes enabled on the manipulator
-    const TransformationType::Enum GetEnabledModes() const;
-
-    ///Gets the axes currently being operated on by the manipulator
-    const AxesFlag::Enum GetSelectedAxes() const;
-
-    ///Gets the vector space in which the manipulator will operate
-    const VectorSpace::Enum GetVectorSpace() const;
-    */
 
     ///
     void SetAutoScaleToScreen( bool autoScaleToScreen );
@@ -150,10 +142,8 @@ public:
     ///Sets the transformation modes enabled on the manipulator
     void SetEnabledModes( TransformationType::Enum value );
 
-    /*
     ///Sets the vector space in which the manipulator will operate
     void SetVectorSpace( VectorSpace::Enum value ); 
-    */
 
     ///Deactivate the manipulator root
     void TurnOff();
@@ -172,16 +162,8 @@ protected:
     ///
     TransformationType::Enum m_enabledModes;
 
-    /*
-    ///
-    TransformationType::Enum m_activeMode;
-    
-    ///
-    AxesFlag::Enum m_selectedAxes;
-    
     ///
     VectorSpace::Enum m_vectorSpace;
-    */
 
     ///
     bool m_manipulating;

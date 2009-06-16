@@ -105,13 +105,6 @@ void Dragger::DefaultForm()
     m_comboForm = false;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Dragger::ComputeProjectedPoint(
-    const osgUtil::LineSegmentIntersector& deviceInput,
-    osg::Vec3d& projectedPoint )
-{
-    ;
-}
-////////////////////////////////////////////////////////////////////////////////
 Dragger* Dragger::Drag( const osgUtil::LineSegmentIntersector& deviceInput )
 {
     ManipFunction( deviceInput );
@@ -140,11 +133,6 @@ Dragger* Dragger::Focus( osg::NodePath::iterator& npItr )
 const TransformationType::Enum Dragger::GetTransformationType() const
 {
     return m_transformationType;
-}
-////////////////////////////////////////////////////////////////////////////////
-void Dragger::ManipFunction( const osgUtil::LineSegmentIntersector& deviceInput )
-{
-    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 Dragger* Dragger::Push(
