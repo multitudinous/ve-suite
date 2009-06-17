@@ -55,6 +55,8 @@
 #include <ves/xplorer/scenegraph/physics/PhysicsRigidBody.h>
 #include <ves/xplorer/scenegraph/physics/CharacterController.h>
 
+#include <ves/xplorer/scenegraph/manipulator/TransformManipulator.h>
+
 #include <ves/xplorer/plugin/PluginBase.h>
 #include <ves/xplorer/network/cfdExecutive.h>
 
@@ -1751,8 +1753,12 @@ void KeyboardMouse::ProcessSelectionEvents()
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::ProcessHit()
 {
+    //Get pointers to DeviceHandler & SceneManager
+    vx::DeviceHandler* deviceHandler = vx::DeviceHandler::instance();
+    vxs::SceneManager* sceneManager = vxs::SceneManager::instance();
+
     //Unselect the previous selected DCS
-    vx::DeviceHandler::instance()->UnselectObjects();
+    deviceHandler->UnselectObjects();
 
     osgUtil::LineSegmentIntersector::Intersections& intersections =
         mLineSegmentIntersector->getIntersections();
@@ -1814,21 +1820,24 @@ void KeyboardMouse::ProcessHit()
     vxs::DCS* newSelectedDCS =
         static_cast< vxs::DCS* >( parentNode.get() );
     newSelectedDCS->SetTechnique( "Select" );
-    vx::DeviceHandler::instance()->SetSelectedDCS( newSelectedDCS );
+    deviceHandler->SetSelectedDCS( newSelectedDCS );
 
     //Move the center point to the center of the selected object
     osg::ref_ptr< vxs::CoordinateSystemTransform > cst =
         new vxs::CoordinateSystemTransform(
-            vxs::SceneManager::instance()->GetActiveSwitchNode(),
-            newSelectedDCS, true );
-    gmtl::Matrix44d localToWorldMatrix =
-        cst->GetTransformationMatrix( false );
+            sceneManager->GetActiveSwitchNode(), newSelectedDCS, true );
+    gmtl::Matrix44d localToWorldMatrix = cst->GetTransformationMatrix( false );
 
     //Multiplying by the new local matrix mCenterPoint
     osg::Matrixd tempMatrix;
     tempMatrix.set( localToWorldMatrix.getData() );
     osg::Vec3d center = newSelectedDCS->getBound().center() * tempMatrix;
     mCenterPoint->set( center.x(), center.y(), center.z() );
+
+    //Set the connection between the scene manipulator and the selected dcs
+    vxsm::TransformManipulator* sceneManipulator =
+        sceneManager->GetManipulatorManager()->GetSceneManipulator();
+    sceneManipulator->PushBackAssociation( newSelectedDCS, true );
 }
 ////////////////////////////////////////////////////////////////////////////////
 gadget::KeyboardMousePtr KeyboardMouse::GetKeyboardMouseVRJDevice()

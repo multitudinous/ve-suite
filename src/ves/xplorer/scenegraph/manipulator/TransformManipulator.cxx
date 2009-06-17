@@ -73,15 +73,15 @@ TransformManipulator::~TransformManipulator()
 void TransformManipulator::SetupDefaultDraggers()
 {
     osg::ref_ptr< manipulator::TranslateCompound > translateCompound =
-        new manipulator::TranslateCompound();
+        new manipulator::TranslateCompound( this );
     addChild( translateCompound.get() );
 
     osg::ref_ptr< manipulator::RotateCompound > rotateCompound =
-        new manipulator::RotateCompound();
+        new manipulator::RotateCompound( this );
     addChild( rotateCompound.get() );
 
     osg::ref_ptr< manipulator::ScaleCompound > scaleCompound =
-        new manipulator::ScaleCompound();
+        new manipulator::ScaleCompound( this );
     addChild( scaleCompound.get() );
 
     SetEnabledModes( TransformationType::TRANSLATE_COMPOUND );

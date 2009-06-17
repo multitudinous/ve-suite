@@ -35,15 +35,16 @@
 #include <ves/xplorer/scenegraph/manipulator/RotateCompound.h>
 #include <ves/xplorer/scenegraph/manipulator/RotateAxis.h>
 #include <ves/xplorer/scenegraph/manipulator/RotateTwist.h>
+#include <ves/xplorer/scenegraph/manipulator/Manipulator.h>
 
 // --- OSG Includes --- //
 
 using namespace ves::xplorer::scenegraph::manipulator;
 
 ////////////////////////////////////////////////////////////////////////////////
-RotateCompound::RotateCompound()
+RotateCompound::RotateCompound( Manipulator* parentManipulator )
     :
-    CompoundDragger(),
+    CompoundDragger( parentManipulator ),
     m_xRotateAxis( NULL ),
     m_yRotateAxis( NULL ),
     m_zRotateAxis( NULL ),
@@ -71,17 +72,52 @@ RotateCompound::~RotateCompound()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
+void RotateCompound::accept( osg::NodeVisitor& nv )
+{
+    if( nv.validNodeMask( *this ) )
+    {
+        nv.pushOntoNodePath( this );
+        nv.apply( *this );
+        nv.popFromNodePath();
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+const char* RotateCompound::className() const
+{
+    return "RotateCompound";
+}
+////////////////////////////////////////////////////////////////////////////////
+osg::Object* RotateCompound::clone( const osg::CopyOp& copyop ) const
+{
+    return new RotateCompound( *this, copyop );
+}
+////////////////////////////////////////////////////////////////////////////////
+osg::Object* RotateCompound::cloneType() const
+{
+    return new RotateCompound( m_parentManipulator );
+}
+////////////////////////////////////////////////////////////////////////////////
+bool RotateCompound::isSameKindAs( const osg::Object* obj ) const
+{
+    return dynamic_cast< const RotateCompound* >( obj ) != NULL;
+}
+////////////////////////////////////////////////////////////////////////////////
+const char* RotateCompound::libraryName() const
+{
+    return "ves::xplorer::scenegraph::manipulator";
+}
+////////////////////////////////////////////////////////////////////////////////
 void RotateCompound::SetupDefaultGeometry()
 {
     //Create translate x-axis dragger
-    m_xRotateAxis = new RotateAxis();
+    m_xRotateAxis = new RotateAxis( m_parentManipulator );
     m_xRotateAxis->SetColor(
         ColorTag::DEFAULT, osg::Vec4f( 1.0, 0.0, 0.0, 1.0 ), true );
 
     addChild( m_xRotateAxis.get() );
 
     //Create translate y-axis dragger
-    m_yRotateAxis = new RotateAxis();
+    m_yRotateAxis = new RotateAxis( m_parentManipulator );
     m_yRotateAxis->SetColor(
         ColorTag::DEFAULT, osg::Vec4f( 0.0, 1.0, 0.0, 1.0 ), true );
 
@@ -96,7 +132,7 @@ void RotateCompound::SetupDefaultGeometry()
     addChild( m_yRotateAxis.get() );
 
     //Create translate z-axis dragger
-    m_zRotateAxis = new RotateAxis();
+    m_zRotateAxis = new RotateAxis( m_parentManipulator );
     m_zRotateAxis->SetColor(
         ColorTag::DEFAULT, osg::Vec4f( 0.0, 0.0, 1.0, 1.0 ), true );
 
@@ -111,7 +147,7 @@ void RotateCompound::SetupDefaultGeometry()
     addChild( m_zRotateAxis.get() );
 
     //Create rotate twist dragger
-    m_rotateTwist = new RotateTwist();
+    m_rotateTwist = new RotateTwist( m_parentManipulator );
     m_rotateTwist->SetColor(
         ColorTag::DEFAULT, osg::Vec4f( 1.0, 1.0, 1.0, 1.0 ), true );
 

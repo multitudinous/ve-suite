@@ -127,6 +127,11 @@ Dragger* Manipulator::Focus( osg::NodePath::iterator& npItr )
     return activeDragger;
 }
 ////////////////////////////////////////////////////////////////////////////////
+const std::vector< osg::Transform* >& Manipulator::GetAssociatedTransforms() const
+{
+    return m_associatedTransforms;
+}
+////////////////////////////////////////////////////////////////////////////////
 Dragger* Manipulator::GetChild( unsigned int i )
 {
     return static_cast< Dragger* >( osg::MatrixTransform::getChild( i ) );
@@ -158,6 +163,17 @@ Dragger* Manipulator::Push(
     }
 
     return activeDragger;
+}
+////////////////////////////////////////////////////////////////////////////////
+void Manipulator::PushBackAssociation(
+    osg::Transform* transform, bool clearPreviousAssociations )
+{
+    if( clearPreviousAssociations )
+    {
+        m_associatedTransforms.clear();
+    }
+
+    m_associatedTransforms.push_back( transform );
 }
 ////////////////////////////////////////////////////////////////////////////////
 Dragger* Manipulator::Release( osg::NodePath::iterator& npItr )

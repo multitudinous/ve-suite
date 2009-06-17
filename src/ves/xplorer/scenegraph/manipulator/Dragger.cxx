@@ -33,10 +33,10 @@
 
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/manipulator/Dragger.h>
-#include <ves/xplorer/scenegraph/manipulator/TransformManipulator.h>
-#include <ves/xplorer/scenegraph/manipulator/ManipulatorManager.h>
+#include <ves/xplorer/scenegraph/manipulator/Manipulator.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
+#include <ves/xplorer/scenegraph/LocalToWorldNodePath.h>
 
 // --- OSG Includes --- //
 #include <osg/AutoTransform>
@@ -47,10 +47,12 @@ using namespace ves::xplorer::scenegraph::manipulator;
 namespace vxs = ves::xplorer::scenegraph;
 
 ////////////////////////////////////////////////////////////////////////////////
-Dragger::Dragger()
+Dragger::Dragger( Manipulator* parentManipulator )
     :
     osg::MatrixTransform(),
-    m_comboForm( false )
+    m_comboForm( false ),
+    m_color( NULL ),
+    m_parentManipulator( parentManipulator )
 {
     m_colorMap[ ColorTag::DEFAULT ] = osg::Vec4f( 0.0, 0.0, 0.0, 1.0 );
     m_colorMap[ ColorTag::FOCUS ] = osg::Vec4f( 1.0, 1.0, 0.0, 1.0 );
@@ -70,7 +72,8 @@ Dragger::Dragger(
     m_colorMap( dragger.m_colorMap ),
     m_localToWorld( dragger.m_localToWorld ),
     m_worldToLocal( dragger.m_worldToLocal ),
-    m_color( dragger.m_color )
+    m_color( dragger.m_color ),
+    m_parentManipulator( dragger.m_parentManipulator )
 {
     ;
 }
@@ -147,15 +150,32 @@ Dragger* Dragger::Push(
         UseColor( ColorTag::ACTIVE );
 
         //Compute local to world and world to local matrices
+        //For the dragger
         m_localToWorld = osg::computeLocalToWorld( np );
         m_worldToLocal = osg::Matrix::inverse( m_localToWorld );
+        //For all associated node's transforms
+        const std::vector< osg::Transform* >& associatedTransforms =
+            m_parentManipulator->GetAssociatedTransforms();
+        std::vector< osg::Transform* >::const_iterator itr =
+            associatedTransforms.begin();
+        for( itr; itr != associatedTransforms.end(); ++itr )
+        {
+            vxs::LocalToWorldNodePath nodePath(
+                *itr, vxs::SceneManager::instance()->GetModelRoot() );
+            vxs::LocalToWorldNodePath::NodeAndPathList npl =
+                nodePath.GetLocalToWorldNodePath( true );
+            vxs::LocalToWorldNodePath::NodeAndPath nap = npl.at( 0 );
 
-        ManipulatorManager* manipulatorManager =
-            vxs::SceneManager::instance()->GetManipulatorManager();
+            osg::Matrixd localToWorld = osg::computeLocalToWorld( nap.second );
+            osg::Matrixd worldToLocal = osg::Matrix::inverse( localToWorld );
+            m_associatedMatrices[ *itr ] =
+                std::make_pair( localToWorld, worldToLocal );
+        }
 
+        //Turn off automatic scaling for the dragger
         osg::AutoTransform* autoTransform =
             static_cast< osg::AutoTransform* >(
-                manipulatorManager->getChild( 0 ) );
+                m_parentManipulator->getParent( 0 ) );
         autoTransform->setAutoScaleToScreen( false );
 
         m_startPosition = autoTransform->getPosition();
@@ -181,12 +201,12 @@ Dragger* Dragger::Release( osg::NodePath::iterator& npItr )
     {
         UseColor( ColorTag::DEFAULT );
 
-        ManipulatorManager* manipulatorManager =
-            vxs::SceneManager::instance()->GetManipulatorManager();
+        //Clear the associated matrices
+        m_associatedMatrices.clear();
 
         osg::AutoTransform* autoTransform =
             static_cast< osg::AutoTransform* >(
-                manipulatorManager->getChild( 0 ) );
+                m_parentManipulator->getParent( 0 ) );
         autoTransform->setAutoScaleToScreen( true );
         //Force update now on release event for this frame
         //This function call sets _firstTimeToInitEyePoint = true

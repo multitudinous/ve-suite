@@ -59,6 +59,8 @@ namespace scenegraph
 {
 namespace manipulator
 {
+class Manipulator;
+
 /*!\file Dragger.h
  * Dragger API
  */
@@ -70,7 +72,7 @@ class VE_SCENEGRAPH_EXPORTS Dragger : public osg::MatrixTransform
 {
 public:
     ///
-    Dragger();
+    Dragger( Manipulator* parentManipulator );
 
     ///Copy constructor using CopyOp to manage deep vs shallow copy
     Dragger(
@@ -176,7 +178,13 @@ protected:
     osg::Matrixd m_worldToLocal;
 
     ///
+    std::map< osg::Transform*, std::pair< osg::Matrixd, osg::Matrixd > > m_associatedMatrices;
+
+    ///
     osg::ref_ptr< osg::Uniform > m_color;
+
+    ///
+    Manipulator* m_parentManipulator;
 
 private:
     ///

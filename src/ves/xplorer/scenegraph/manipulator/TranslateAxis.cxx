@@ -33,8 +33,7 @@
 
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/manipulator/TranslateAxis.h>
-#include <ves/xplorer/scenegraph/manipulator/TransformManipulator.h>
-#include <ves/xplorer/scenegraph/manipulator/ManipulatorManager.h>
+#include <ves/xplorer/scenegraph/manipulator/Manipulator.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
 
@@ -49,13 +48,16 @@
 
 #include <osgUtil/LineSegmentIntersector>
 
+// --- osgBullet Includes --- //
+#include <osgBullet/AbsoluteModelTransform.h>
+
 using namespace ves::xplorer::scenegraph::manipulator;
 namespace vxs = ves::xplorer::scenegraph;
 
 ////////////////////////////////////////////////////////////////////////////////
-TranslateAxis::TranslateAxis()
+TranslateAxis::TranslateAxis( Manipulator* parentManipulator )
     :
-    Dragger(),
+    Dragger( parentManipulator ),
     m_lineExplodeVector( 0.2, 0.0, 0.0 ),
     m_unitAxis(
         new osg::LineSegment(
@@ -88,6 +90,41 @@ TranslateAxis::TranslateAxis(
 TranslateAxis::~TranslateAxis()
 {
     ;
+}
+////////////////////////////////////////////////////////////////////////////////
+void TranslateAxis::accept( osg::NodeVisitor& nv )
+{
+    if( nv.validNodeMask( *this ) )
+    {
+        nv.pushOntoNodePath( this );
+        nv.apply( *this );
+        nv.popFromNodePath();
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+const char* TranslateAxis::className() const
+{
+    return "TranslateAxis";
+}
+////////////////////////////////////////////////////////////////////////////////
+osg::Object* TranslateAxis::clone( const osg::CopyOp& copyop ) const
+{
+    return new TranslateAxis( *this, copyop );
+}
+////////////////////////////////////////////////////////////////////////////////
+osg::Object* TranslateAxis::cloneType() const
+{
+    return new TranslateAxis( m_parentManipulator );
+}
+////////////////////////////////////////////////////////////////////////////////
+bool TranslateAxis::isSameKindAs( const osg::Object* obj ) const
+{
+    return dynamic_cast< const TranslateAxis* >( obj ) != NULL;
+}
+////////////////////////////////////////////////////////////////////////////////
+const char* TranslateAxis::libraryName() const
+{
+    return "ves::xplorer::scenegraph::manipulator";
 }
 ////////////////////////////////////////////////////////////////////////////////
 void TranslateAxis::ComboForm()
@@ -185,20 +222,69 @@ osg::Cone* const TranslateAxis::GetCone() const
 ////////////////////////////////////////////////////////////////////////////////
 void TranslateAxis::ManipFunction( const osgUtil::LineSegmentIntersector& deviceInput )
 {
-    ManipulatorManager* manipulatorManager =
-        vxs::SceneManager::instance()->GetManipulatorManager();
-
     osg::AutoTransform* autoTransform =
-        static_cast< osg::AutoTransform* >( manipulatorManager->getChild( 0 ) );
+        static_cast< osg::AutoTransform* >(
+            m_parentManipulator->getParent( 0 ) );
 
     //Get the end projected point
     osg::Vec3d endProjectedPoint;
     ComputeProjectedPoint( deviceInput, endProjectedPoint );
 
+    //Calculate the delta transform
     osg::Vec3d deltaTranslation = endProjectedPoint - m_startProjectedPoint;
+    
+    //Set the m_parentManipulator's transform
     osg::Vec3d newTranslation = autoTransform->getPosition() + deltaTranslation;
     autoTransform->setPosition( newTranslation );
 
+    //Set all associated node's transforms
+    const std::vector< osg::Transform* >& associatedTransforms =
+        m_parentManipulator->GetAssociatedTransforms();
+    std::vector< osg::Transform* >::const_iterator itr =
+        associatedTransforms.begin();
+    for( itr; itr != associatedTransforms.end(); ++itr )
+    {
+        osg::Transform* transform = *itr;
+        std::map< osg::Transform*, std::pair< osg::Matrixd, osg::Matrixd > >::const_iterator transformMatrices =
+            m_associatedMatrices.find( transform );
+        if( transformMatrices == m_associatedMatrices.end() )
+        {
+            //Error output
+            break;
+        }
+
+        const osg::Matrixd& localToWorld = transformMatrices->second.first;
+        const osg::Matrixd& worldToLocal = transformMatrices->second.second;
+
+        osg::MatrixTransform* mt( NULL );
+        osg::PositionAttitudeTransform* pat( NULL );
+        osgBullet::AbsoluteModelTransform* amt( NULL );
+        if( mt = transform->asMatrixTransform() )
+        {
+            const osg::Matrix& currentMatrix = mt->getMatrix();
+            mt->setMatrix(
+                localToWorld *
+                osg::Matrix::translate( deltaTranslation ) * currentMatrix *
+                worldToLocal );
+        }
+        else if( pat = transform->asPositionAttitudeTransform() )
+        {
+            const osg::Vec3& currentPosition = pat->getPosition();
+            osg::Vec3d newTranslation = currentPosition;
+            //No *= operator
+            newTranslation = newTranslation * localToWorld;
+            newTranslation += deltaTranslation;
+            //No *= operator
+            newTranslation = newTranslation * worldToLocal;
+            pat->setPosition( newTranslation );
+        }
+        else if( amt = dynamic_cast< osgBullet::AbsoluteModelTransform* >( transform ) )
+        {
+
+        }
+    }
+
+    //Reset
     m_startProjectedPoint = endProjectedPoint;
 }
 ////////////////////////////////////////////////////////////////////////////////

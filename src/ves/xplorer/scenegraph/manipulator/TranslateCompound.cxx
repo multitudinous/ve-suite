@@ -35,6 +35,7 @@
 #include <ves/xplorer/scenegraph/manipulator/TranslateCompound.h>
 #include <ves/xplorer/scenegraph/manipulator/TranslateAxis.h>
 #include <ves/xplorer/scenegraph/manipulator/TranslatePan.h>
+#include <ves/xplorer/scenegraph/manipulator/Manipulator.h>
 
 // --- OSG Includes --- //
 #include <osg/Geode>
@@ -43,9 +44,9 @@
 using namespace ves::xplorer::scenegraph::manipulator;
 
 ////////////////////////////////////////////////////////////////////////////////
-TranslateCompound::TranslateCompound()
+TranslateCompound::TranslateCompound( Manipulator* parentManipulator )
     :
-    CompoundDragger(),
+    CompoundDragger( parentManipulator ),
     m_coneExplodeVector( 0.5, 0.0, 0.0 ),
     m_xTranslateAxis( NULL ),
     m_yTranslateAxis( NULL ),
@@ -73,6 +74,41 @@ TranslateCompound::TranslateCompound(
 TranslateCompound::~TranslateCompound()
 {
     ;
+}
+////////////////////////////////////////////////////////////////////////////////
+void TranslateCompound::accept( osg::NodeVisitor& nv )
+{
+    if( nv.validNodeMask( *this ) )
+    {
+        nv.pushOntoNodePath( this );
+        nv.apply( *this );
+        nv.popFromNodePath();
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+const char* TranslateCompound::className() const
+{
+    return "TranslateCompound";
+}
+////////////////////////////////////////////////////////////////////////////////
+osg::Object* TranslateCompound::clone( const osg::CopyOp& copyop ) const
+{
+    return new TranslateCompound( *this, copyop );
+}
+////////////////////////////////////////////////////////////////////////////////
+osg::Object* TranslateCompound::cloneType() const
+{
+    return new TranslateCompound( m_parentManipulator );
+}
+////////////////////////////////////////////////////////////////////////////////
+bool TranslateCompound::isSameKindAs( const osg::Object* obj ) const
+{
+    return dynamic_cast< const TranslateCompound* >( obj ) != NULL;
+}
+////////////////////////////////////////////////////////////////////////////////
+const char* TranslateCompound::libraryName() const
+{
+    return "ves::xplorer::scenegraph::manipulator";
 }
 ////////////////////////////////////////////////////////////////////////////////
 void TranslateCompound::ComboForm()
@@ -142,7 +178,7 @@ void TranslateCompound::DefaultForm()
 void TranslateCompound::SetupDefaultGeometry()
 {
     //Create translate x-axis dragger
-    m_xTranslateAxis = new TranslateAxis();
+    m_xTranslateAxis = new TranslateAxis( m_parentManipulator );
     m_xTranslateAxis->SetColor(
         ColorTag::DEFAULT, osg::Vec4f( 1.0, 0.0, 0.0, 1.0 ), true );
     m_xTranslateAxis->ComboForm();
@@ -150,7 +186,7 @@ void TranslateCompound::SetupDefaultGeometry()
     addChild( m_xTranslateAxis.get() );
 
     //Create translate y-axis dragger
-    m_yTranslateAxis = new TranslateAxis();
+    m_yTranslateAxis = new TranslateAxis( m_parentManipulator );
     m_yTranslateAxis->SetColor(
         ColorTag::DEFAULT, osg::Vec4f( 0.0, 1.0, 0.0, 1.0 ), true );
     m_yTranslateAxis->ComboForm();
@@ -166,7 +202,7 @@ void TranslateCompound::SetupDefaultGeometry()
     addChild( m_yTranslateAxis.get() );
 
     //Create translate z-axis dragger
-    m_zTranslateAxis = new TranslateAxis();
+    m_zTranslateAxis = new TranslateAxis( m_parentManipulator );
     m_zTranslateAxis->SetColor(
         ColorTag::DEFAULT, osg::Vec4f( 0.0, 0.0, 1.0, 1.0 ), true );
     m_zTranslateAxis->ComboForm();
@@ -182,7 +218,7 @@ void TranslateCompound::SetupDefaultGeometry()
     addChild( m_zTranslateAxis.get() );
 
     //Create translate pan dragger
-    m_translatePan = new TranslatePan();
+    m_translatePan = new TranslatePan( m_parentManipulator );
     m_translatePan->SetColor(
         ColorTag::DEFAULT, osg::Vec4f( 1.0, 1.0, 1.0, 1.0 ), true );
 

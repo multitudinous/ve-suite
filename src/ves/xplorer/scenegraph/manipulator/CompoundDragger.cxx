@@ -33,6 +33,7 @@
 
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/manipulator/CompoundDragger.h>
+#include <ves/xplorer/scenegraph/manipulator/Manipulator.h>
 
 // --- OSG Includes --- //
 
@@ -40,9 +41,9 @@
 using namespace ves::xplorer::scenegraph::manipulator;
 
 ////////////////////////////////////////////////////////////////////////////////
-CompoundDragger::CompoundDragger()
+CompoundDragger::CompoundDragger( Manipulator* parentManipulator )
     :
-    Dragger()
+    Dragger( parentManipulator )
 {
     ;
 }

@@ -34,6 +34,7 @@
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/manipulator/RotateTwist.h>
 #include <ves/xplorer/scenegraph/manipulator/ClippingCircle.h>
+#include <ves/xplorer/scenegraph/manipulator/Manipulator.h>
 
 // --- OSG Includes --- //
 #include <osg/Hint>
@@ -45,9 +46,9 @@
 using namespace ves::xplorer::scenegraph::manipulator;
 
 ////////////////////////////////////////////////////////////////////////////////
-RotateTwist::RotateTwist()
+RotateTwist::RotateTwist( Manipulator* parentManipulator )
     :
-    Dragger()
+    Dragger( parentManipulator )
 {
     m_transformationType = TransformationType::ROTATE_TWIST;
 
@@ -65,6 +66,41 @@ RotateTwist::RotateTwist(
 RotateTwist::~RotateTwist()
 {
     ;
+}
+////////////////////////////////////////////////////////////////////////////////
+void RotateTwist::accept( osg::NodeVisitor& nv )
+{
+    if( nv.validNodeMask( *this ) )
+    {
+        nv.pushOntoNodePath( this );
+        nv.apply( *this );
+        nv.popFromNodePath();
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+const char* RotateTwist::className() const
+{
+    return "RotateTwist";
+}
+////////////////////////////////////////////////////////////////////////////////
+osg::Object* RotateTwist::clone( const osg::CopyOp& copyop ) const
+{
+    return new RotateTwist( *this, copyop );
+}
+////////////////////////////////////////////////////////////////////////////////
+osg::Object* RotateTwist::cloneType() const
+{
+    return new RotateTwist( m_parentManipulator );
+}
+////////////////////////////////////////////////////////////////////////////////
+bool RotateTwist::isSameKindAs( const osg::Object* obj ) const
+{
+    return dynamic_cast< const RotateTwist* >( obj ) != NULL;
+}
+////////////////////////////////////////////////////////////////////////////////
+const char* RotateTwist::libraryName() const
+{
+    return "ves::xplorer::scenegraph::manipulator";
 }
 ////////////////////////////////////////////////////////////////////////////////
 void RotateTwist::SetupDefaultGeometry()

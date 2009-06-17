@@ -50,6 +50,8 @@ namespace scenegraph
 {
 namespace manipulator
 {
+class Manipulator;
+
 /*!\file TranslatePan.h
  * TranslatePan API
  */
@@ -61,7 +63,7 @@ class VE_SCENEGRAPH_EXPORTS TranslatePan : public Dragger
 {
 public:
     ///
-    TranslatePan();
+    TranslatePan( Manipulator* parentManipulator );
 
     ///Copy constructor using CopyOp to manage deep vs shallow copy
     TranslatePan(
@@ -69,7 +71,30 @@ public:
         const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
 
     ///
-    META_Node( ves::xplorer::scenegraph::manipulator, TranslatePan );
+    ///\param nv
+    virtual void accept( osg::NodeVisitor& nv );
+
+    ///
+    ///\return
+    virtual const char* className() const;
+
+    ///
+    ///\param copyop
+    ///\return
+    virtual osg::Object* clone( const osg::CopyOp& copyop ) const;
+
+    ///
+    ///\return
+    virtual osg::Object* cloneType() const;
+
+    ///
+    ///\param obj
+    ///\return
+    virtual bool isSameKindAs( const osg::Object* obj ) const;
+
+    ///
+    ///\return
+    virtual const char* libraryName() const;
 
 protected:
     ///

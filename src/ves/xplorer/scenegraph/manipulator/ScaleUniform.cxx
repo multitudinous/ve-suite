@@ -33,6 +33,7 @@
 
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/manipulator/ScaleUniform.h>
+#include <ves/xplorer/scenegraph/manipulator/Manipulator.h>
 
 // --- OSG Includes --- //
 #include <osg/Hint>
@@ -45,9 +46,9 @@
 using namespace ves::xplorer::scenegraph::manipulator;
 
 ////////////////////////////////////////////////////////////////////////////////
-ScaleUniform::ScaleUniform()
+ScaleUniform::ScaleUniform( Manipulator* parentManipulator )
     :
-    Dragger()
+    Dragger( parentManipulator )
 {
     m_transformationType = TransformationType::SCALE_UNIFORM;
 
@@ -65,6 +66,41 @@ ScaleUniform::ScaleUniform(
 ScaleUniform::~ScaleUniform()
 {
     ;
+}
+////////////////////////////////////////////////////////////////////////////////
+void ScaleUniform::accept( osg::NodeVisitor& nv )
+{
+    if( nv.validNodeMask( *this ) )
+    {
+        nv.pushOntoNodePath( this );
+        nv.apply( *this );
+        nv.popFromNodePath();
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+const char* ScaleUniform::className() const
+{
+    return "ScaleUniform";
+}
+////////////////////////////////////////////////////////////////////////////////
+osg::Object* ScaleUniform::clone( const osg::CopyOp& copyop ) const
+{
+    return new ScaleUniform( *this, copyop );
+}
+////////////////////////////////////////////////////////////////////////////////
+osg::Object* ScaleUniform::cloneType() const
+{
+    return new ScaleUniform( m_parentManipulator );
+}
+////////////////////////////////////////////////////////////////////////////////
+bool ScaleUniform::isSameKindAs( const osg::Object* obj ) const
+{
+    return dynamic_cast< const ScaleUniform* >( obj ) != NULL;
+}
+////////////////////////////////////////////////////////////////////////////////
+const char* ScaleUniform::libraryName() const
+{
+    return "ves::xplorer::scenegraph::manipulator";
 }
 ////////////////////////////////////////////////////////////////////////////////
 void ScaleUniform::SetupDefaultGeometry()

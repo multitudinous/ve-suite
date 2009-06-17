@@ -52,6 +52,7 @@ namespace manipulator
 {
 class ScaleAxis;
 class ScaleUniform;
+class Manipulator;
 
 /*!\file ScaleCompound.h
  * ScaleCompound API
@@ -64,7 +65,7 @@ class VE_SCENEGRAPH_EXPORTS ScaleCompound : public CompoundDragger
 {
 public:
     ///Constructor
-    ScaleCompound();
+    ScaleCompound( Manipulator* parentManipulator );
 
     ///Copy constructor using CopyOp to manage deep vs shallow copy
     ScaleCompound(
@@ -72,7 +73,30 @@ public:
         const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
 
     ///
-    META_Node( ves::xplorer::scenegraph::manipulator, ScaleCompound );
+    ///\param nv
+    virtual void accept( osg::NodeVisitor& nv );
+
+    ///
+    ///\return
+    virtual const char* className() const;
+
+    ///
+    ///\param copyop
+    ///\return
+    virtual osg::Object* clone( const osg::CopyOp& copyop ) const;
+
+    ///
+    ///\return
+    virtual osg::Object* cloneType() const;
+
+    ///
+    ///\param obj
+    ///\return
+    virtual bool isSameKindAs( const osg::Object* obj ) const;
+
+    ///
+    ///\return
+    virtual const char* libraryName() const;
 
     ///
     virtual void ComboForm();

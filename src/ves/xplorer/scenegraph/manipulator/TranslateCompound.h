@@ -52,6 +52,7 @@ namespace manipulator
 {
 class TranslateAxis;
 class TranslatePan;
+class Manipulator;
 
 /*!\file TranslateCompound.h
  * TranslateCompound API
@@ -64,7 +65,7 @@ class VE_SCENEGRAPH_EXPORTS TranslateCompound : public CompoundDragger
 {
 public:
     ///Constructor
-    TranslateCompound();
+    TranslateCompound( Manipulator* parentManipulator );
 
     ///Copy constructor using CopyOp to manage deep vs shallow copy
     TranslateCompound(
@@ -72,7 +73,30 @@ public:
         const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
 
     ///
-    META_Node( ves::xplorer::scenegraph::manipulator, TranslateCompound );
+    ///\param nv
+    virtual void accept( osg::NodeVisitor& nv );
+
+    ///
+    ///\return
+    virtual const char* className() const;
+
+    ///
+    ///\param copyop
+    ///\return
+    virtual osg::Object* clone( const osg::CopyOp& copyop ) const;
+
+    ///
+    ///\return
+    virtual osg::Object* cloneType() const;
+
+    ///
+    ///\param obj
+    ///\return
+    virtual bool isSameKindAs( const osg::Object* obj ) const;
+
+    ///
+    ///\return
+    virtual const char* libraryName() const;
 
     ///
     virtual void ComboForm();

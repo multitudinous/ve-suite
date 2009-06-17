@@ -43,6 +43,9 @@
 #include <osg/ref_ptr>
 #include <osg/MatrixTransform>
 
+// --- C/C++ Includes --- //
+#include <vector>
+
 namespace osg
 {
 class AutoTransform;
@@ -84,21 +87,12 @@ public:
         const Manipulator& manipulator,
         const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
 
-    ///
-    ///\param obj
-    ///\return
-    virtual bool isSameKindAs( const osg::Object* obj ) const;
+    ///Override the addChild function to only accept Draggers
+    virtual bool addChild( Dragger* child );
 
     ///
     ///\return
     virtual const char* className() const;
-
-    ///
-    ///\return
-    virtual const char* libraryName() const;
-
-    ///Override the addChild function to only accept Draggers
-    virtual bool addChild( Dragger* child );
 
     ///
     void ComboForm();
@@ -109,7 +103,13 @@ public:
     ///
     virtual Dragger* Focus( osg::NodePath::iterator& npItr );
 
+    ///
+    ///\return
+    const std::vector< osg::Transform* >& GetAssociatedTransforms() const;
+
+    ///
     ///Can't override the getChild function, so create our own
+    ///\param i
     Dragger* GetChild( unsigned int i );
 
     ///Gets the transformation modes enabled on the manipulator
@@ -122,10 +122,24 @@ public:
     virtual bool insertChild( unsigned int index, Dragger* child );
 
     ///
+    ///\param obj
+    ///\return
+    virtual bool isSameKindAs( const osg::Object* obj ) const;
+
+    ///
+    ///\return
+    virtual const char* libraryName() const;
+
+    ///
     virtual Dragger* Push(
         const osgUtil::LineSegmentIntersector& deviceInput,
         const osg::NodePath& np,
         osg::NodePath::iterator& npItr );
+
+
+    ///
+    void PushBackAssociation(
+        osg::Transform* transform, bool clearPreviousAssociations = false );
 
     ///
     virtual Dragger* Release( osg::NodePath::iterator& npItr );
@@ -133,11 +147,11 @@ public:
     ///Override the replaceChild function to only accept Draggers
     virtual bool replaceChild( Dragger* origChild, Dragger* newChild );
 
-    ///Override the setChild function to only accept Draggers
-    virtual bool setChild( unsigned int i, Dragger* node );
-
     ///
     void SetAutoScaleToScreen( bool autoScaleToScreen );
+
+    ///Override the setChild function to only accept Draggers
+    virtual bool setChild( unsigned int i, Dragger* node );
 
     ///Sets the transformation modes enabled on the manipulator
     void SetEnabledModes( TransformationType::Enum value );
@@ -155,8 +169,7 @@ protected:
     ///Destructor
     virtual ~Manipulator();
 
-    ///
-    ///Can't use pure virtual with META_Node define
+    ///Pure virtual
     virtual void SetupDefaultDraggers() = 0;
 
     ///
@@ -169,6 +182,9 @@ protected:
     bool m_manipulating;
 
 private:
+    ///
+    std::vector< osg::Transform* > m_associatedTransforms;
+
     ///
     osg::ref_ptr< osg::AutoTransform > m_autoTransform;
 

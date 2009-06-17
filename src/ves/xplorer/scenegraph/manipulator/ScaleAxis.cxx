@@ -33,6 +33,7 @@
 
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/manipulator/ScaleAxis.h>
+#include <ves/xplorer/scenegraph/manipulator/Manipulator.h>
 
 // --- OSG Includes --- //
 #include <osg/Hint>
@@ -45,9 +46,9 @@
 using namespace ves::xplorer::scenegraph::manipulator;
 
 ////////////////////////////////////////////////////////////////////////////////
-ScaleAxis::ScaleAxis()
+ScaleAxis::ScaleAxis( Manipulator* parentManipulator )
     :
-    Dragger(),
+    Dragger( parentManipulator ),
     m_defaultAxisColor( 0.7, 0.7, 0.7, 1.0 ),
     m_axisColor( NULL ),
     m_lineVertices( NULL ),
@@ -78,6 +79,41 @@ ScaleAxis::ScaleAxis(
 ScaleAxis::~ScaleAxis()
 {
     ;
+}
+////////////////////////////////////////////////////////////////////////////////
+void ScaleAxis::accept( osg::NodeVisitor& nv )
+{
+    if( nv.validNodeMask( *this ) )
+    {
+        nv.pushOntoNodePath( this );
+        nv.apply( *this );
+        nv.popFromNodePath();
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+const char* ScaleAxis::className() const
+{
+    return "ScaleAxis";
+}
+////////////////////////////////////////////////////////////////////////////////
+osg::Object* ScaleAxis::clone( const osg::CopyOp& copyop ) const
+{
+    return new ScaleAxis( *this, copyop );
+}
+////////////////////////////////////////////////////////////////////////////////
+osg::Object* ScaleAxis::cloneType() const
+{
+    return new ScaleAxis( m_parentManipulator );
+}
+////////////////////////////////////////////////////////////////////////////////
+bool ScaleAxis::isSameKindAs( const osg::Object* obj ) const
+{
+    return dynamic_cast< const ScaleAxis* >( obj ) != NULL;
+}
+////////////////////////////////////////////////////////////////////////////////
+const char* ScaleAxis::libraryName() const
+{
+    return "ves::xplorer::scenegraph::manipulator";
 }
 ////////////////////////////////////////////////////////////////////////////////
 void ScaleAxis::DirtyGeometry()

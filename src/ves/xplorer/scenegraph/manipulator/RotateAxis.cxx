@@ -33,6 +33,7 @@
 
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/manipulator/RotateAxis.h>
+#include <ves/xplorer/scenegraph/manipulator/Manipulator.h>
 
 // --- OSG Includes --- //
 #include <osg/Hint>
@@ -44,9 +45,9 @@
 using namespace ves::xplorer::scenegraph::manipulator;
 
 ////////////////////////////////////////////////////////////////////////////////
-RotateAxis::RotateAxis()
+RotateAxis::RotateAxis( Manipulator* parentManipulator )
     :
-    Dragger()
+    Dragger( parentManipulator )
 {
     m_transformationType = TransformationType::ROTATE_AXIS;
 
@@ -64,6 +65,41 @@ RotateAxis::RotateAxis(
 RotateAxis::~RotateAxis()
 {
     ;
+}
+////////////////////////////////////////////////////////////////////////////////
+void RotateAxis::accept( osg::NodeVisitor& nv )
+{
+    if( nv.validNodeMask( *this ) )
+    {
+        nv.pushOntoNodePath( this );
+        nv.apply( *this );
+        nv.popFromNodePath();
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+const char* RotateAxis::className() const
+{
+    return "RotateAxis";
+}
+////////////////////////////////////////////////////////////////////////////////
+osg::Object* RotateAxis::clone( const osg::CopyOp& copyop ) const
+{
+    return new RotateAxis( *this, copyop );
+}
+////////////////////////////////////////////////////////////////////////////////
+osg::Object* RotateAxis::cloneType() const
+{
+    return new RotateAxis( m_parentManipulator );
+}
+////////////////////////////////////////////////////////////////////////////////
+bool RotateAxis::isSameKindAs( const osg::Object* obj ) const
+{
+    return dynamic_cast< const RotateAxis* >( obj ) != NULL;
+}
+////////////////////////////////////////////////////////////////////////////////
+const char* RotateAxis::libraryName() const
+{
+    return "ves::xplorer::scenegraph::manipulator";
 }
 ////////////////////////////////////////////////////////////////////////////////
 void RotateAxis::SetupDefaultGeometry()

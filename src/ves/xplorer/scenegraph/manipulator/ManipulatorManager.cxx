@@ -52,8 +52,8 @@ using namespace ves::xplorer::scenegraph::manipulator;
 ManipulatorManager::ManipulatorManager()
     :
     osg::Camera(),
-    //NodeMask is an unsigned int which is 32 bits long
-    m_nodeMask( 0x00000001 ),
+    //NodeMask is an unsigned int
+    m_nodeMask( 0x1 ),
     m_activeManipulator( NULL ),
     m_activeDragger( NULL ),
     m_sceneManipulator( NULL )
