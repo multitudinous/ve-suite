@@ -271,16 +271,14 @@ void TranslateAxis::ManipFunction( const osgUtil::LineSegmentIntersector& device
         {
             const osg::Vec3& currentPosition = pat->getPosition();
             osg::Vec3d newTranslation = currentPosition;
-            //No *= operator
-            newTranslation = newTranslation * localToWorld;
+            newTranslation = newTranslation * localToWorld; 
             newTranslation += deltaTranslation;
-            //No *= operator
             newTranslation = newTranslation * worldToLocal;
             pat->setPosition( newTranslation );
         }
         else if( amt = dynamic_cast< osgBullet::AbsoluteModelTransform* >( transform ) )
         {
-
+            ;
         }
     }
 

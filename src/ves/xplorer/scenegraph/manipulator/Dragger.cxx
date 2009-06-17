@@ -163,7 +163,7 @@ Dragger* Dragger::Push(
             vxs::LocalToWorldNodePath nodePath(
                 *itr, vxs::SceneManager::instance()->GetModelRoot() );
             vxs::LocalToWorldNodePath::NodeAndPathList npl =
-                nodePath.GetLocalToWorldNodePath( true );
+                nodePath.GetLocalToWorldNodePath();
             vxs::LocalToWorldNodePath::NodeAndPath nap = npl.at( 0 );
 
             osg::Matrixd localToWorld = osg::computeLocalToWorld( nap.second );
