@@ -43,6 +43,7 @@
 #include <ves/open/xml/CommandPtr.h>
 
 #include <vpr/Util/Singleton.h>
+#include <vpr/Sync/Mutex.h>
 
 #include <vector>
 #include <string>
@@ -155,6 +156,8 @@ private:
     ///This map connects filenames to GUIDs so that we can
     ///figure out what CAD files should be copied
     std::multimap< std::string, ves::xplorer::scenegraph::CADEntity* > m_filenameToCADMap;
+    ///A mutex to protect variables accesses
+    vpr::Mutex mValueLock;
 };
 }
 }

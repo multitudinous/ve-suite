@@ -564,6 +564,8 @@ void ModelHandler::ContextPreDrawUpdate()
 {
     if( m_rescaleCADEntityTextures )
     {
+        vpr::Guard<vpr::Mutex> val_guard( mValueLock );
+
         std::multimap< std::string, ves::xplorer::scenegraph::CADEntity* >::iterator iter;
         for( iter = m_filenameToCADMap.begin(); iter != m_filenameToCADMap.end(); ++iter )
         {
