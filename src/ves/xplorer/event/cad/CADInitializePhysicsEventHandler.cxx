@@ -33,6 +33,7 @@
 #include <ves/xplorer/event/cad/CADInitializePhysicsEventHandler.h>
 #include <ves/xplorer/Model.h>
 #include <ves/xplorer/ModelCADHandler.h>
+#include <ves/xplorer/Debug.h>
 
 #include <ves/xplorer/scenegraph/CADEntity.h>
 
@@ -87,7 +88,9 @@ void CADInitializePhysicsEventHandler::_operateOnNode( XMLObjectPtr xmlObject )
 
         if( nodeType->GetDataString() == std::string( "Part" ) )
         {
-            std::cout << "|\tInitialized Physics: " << m_cadHandler->GetPart( nodeID->GetDataString() )->GetFilename() << std::endl;
+            vprDEBUG( vesDBG, 1 ) << "|\tInitialized Physics: " 
+                << m_cadHandler->GetPart( nodeID->GetDataString() )->GetFilename() 
+                << std::endl << vprDEBUG_FLUSH;
             m_cadHandler->GetPart( nodeID->GetDataString() )->InitPhysics();
         }
     }

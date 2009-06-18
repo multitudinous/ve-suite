@@ -33,6 +33,7 @@
 #include <ves/xplorer/event/cad/CADMoveNodeEventHandler.h>
 #include <ves/xplorer/Model.h>
 #include <ves/xplorer/ModelCADHandler.h>
+#include <ves/xplorer/Debug.h>
 
 #include <ves/xplorer/scenegraph/CADEntity.h>
 

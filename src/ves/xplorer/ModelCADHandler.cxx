@@ -250,6 +250,7 @@ void ModelCADHandler::RemoveNode( const std::string& nodeID,
     {
         ves::xplorer::scenegraph::CADEntity* tempCAD = 
             m_partList[ nodeID ];
+        ModelHandler::instance()->UnregisterCADFile( tempCAD );
         delete tempCAD;
         m_partList.erase( nodeID );
     }

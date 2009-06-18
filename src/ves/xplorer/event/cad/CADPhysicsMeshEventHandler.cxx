@@ -33,6 +33,7 @@
 #include <ves/xplorer/event/cad/CADPhysicsMeshEventHandler.h>
 #include <ves/xplorer/Model.h>
 #include <ves/xplorer/ModelCADHandler.h>
+#include <ves/xplorer/Debug.h>
 
 #include <ves/xplorer/scenegraph/CADEntity.h>
 
@@ -92,26 +93,14 @@ void CADPhysicsMeshEventHandler::_operateOnNode( XMLObjectPtr xmlObject )
         const std::string mesh = meshType->GetDataString();
         const std::string lod = lodType->GetDataString();
         const std::string motion = motionType->GetDataString();
-        
-        //if( nodeType->GetDataString() == std::string( "Part" ) )
-        {
-            /*if( meshType->GetDataString() == std::string( "Bounding Box" ) )
-            {
-                m_cadHandler->GetPart( nodeID->GetDataString() )->GetPhysicsRigidBody()->BoundingBoxShape();
-            }
-            else if( meshType->GetDataString() == std::string( "Convex" ) )
-            {
-                m_cadHandler->GetPart( nodeID->GetDataString() )->GetPhysicsRigidBody()->ConvexShape();
-            }
-            else if( meshType->GetDataString() == std::string( "Static Concave" ) )
-            {
-                m_cadHandler->GetPart( nodeID->GetDataString() )->GetPhysicsRigidBody()->StaticConcaveShape();
-            }*/
 
-            m_cadHandler->GetPart( nodeID->GetDataString() )->GetPhysicsRigidBody()->CreateRigidBody( lod, motion, mesh );
+        m_cadHandler->GetPart( nodeID->GetDataString() )->
+            GetPhysicsRigidBody()->
+            CreateRigidBody( lod, motion, mesh );
 
-            std::cout << "Changed Physics Mesh: " << m_cadHandler->GetPart( nodeID->GetDataString() )->GetFilename() << std::endl;
-        }
+        vprDEBUG( vesDBG, 1 ) << "|\tChanged Physics Mesh: " 
+            << m_cadHandler->GetPart( nodeID->GetDataString() )->GetFilename() 
+            << std::endl << vprDEBUG_FLUSH;
     }
     catch ( ... )
     {

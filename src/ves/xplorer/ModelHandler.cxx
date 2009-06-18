@@ -570,7 +570,7 @@ void ModelHandler::ContextPreDrawUpdate()
         for( iter = m_filenameToCADMap.begin(); iter != m_filenameToCADMap.end(); ++iter )
         {
             ves::xplorer::scenegraph::util::RescaleTextureVisitor 
-            textureVisitor( iter->second->GetDCS() );
+                textureVisitor( iter->second->GetDCS() );
         }
         m_rescaleCADEntityTextures = false;
     }

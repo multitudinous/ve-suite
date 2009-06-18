@@ -33,6 +33,7 @@
 #include <ves/xplorer/event/cad/CADDeleteNodeEH.h>
 #include <ves/xplorer/Model.h>
 #include <ves/xplorer/ModelCADHandler.h>
+#include <ves/xplorer/Debug.h>
 
 #include <ves/xplorer/scenegraph/CADEntity.h>
 #include <ves/xplorer/scenegraph/Clone.h>
@@ -80,8 +81,9 @@ void CADDeleteNodeEventHandler::_operateOnNode( XMLObjectPtr xmlObject )
         DataValuePairPtr nodeID = command->GetDataValuePair( "Node ID" );
         DataValuePairPtr nodeType = command->GetDataValuePair( "Node Type" );
 
-        //ves::xplorer::Model* activeModel = dynamic_cast<ves::xplorer::Model*>(_baseObject);
-        std::cout << "|\t---Deleting node---" << std::endl;
+        vprDEBUG( vesDBG, 1 ) << "|\t---Deleting node---" << std::endl
+            << vprDEBUG_FLUSH;
+
         ves::xplorer::scenegraph::DCS* parentAssembly = 0;
         parentAssembly = m_cadHandler->GetAssembly( parentID->GetDataString() );
 
