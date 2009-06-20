@@ -37,12 +37,15 @@
 // --- My Includes --- //
 #include "WarrantyToolUIDialog.h"
 #include "wxFixWidthImportCtrl.h"
+#include "csvparser.h"
 
 // --- VE-Suite Includes --- //
 #include <ves/conductor/util/spinctld.h>
 
 #include <ves/open/xml/DataValuePair.h>
 #include <ves/open/xml/Command.h>
+#include <ves/open/xml/DataValuePairPtr.h>
+#include <ves/open/xml/CommandPtr.h>
 
 // --- wxWidgets Includes --- //
 #include <wx/statline.h>
@@ -56,8 +59,16 @@
 #include <wx/frame.h>
 #include <wx/textctrl.h>
 #include <wx/notebook.h>
+#include <wx/combobox.h>
+
+#include <wx/filename.h>
+#include <wx/choicdlg.h>
+
+#include <wx/filedlg.h>
+#include <wx/textdlg.h>
 
 using namespace warrantytool;
+using namespace ves::open::xml;
 
 BEGIN_EVENT_TABLE( WarrantyToolUIDialog, wxDialog )
 END_EVENT_TABLE()
@@ -163,8 +174,18 @@ void WarrantyToolUIDialog::BuildGUI()
     }
     //Warranty file
     {
-        mTabDialog = new wxFixWidthImportCtrl( this, OPEN_WARRANTY_FILE );
-        buttonSizer->Add( mTabDialog, 0, wxALL, 5 );
+        //mTabDialog = new wxFixWidthImportCtrl( this, OPEN_WARRANTY_FILE );
+        //buttonSizer->Add( mTabDialog, 0, wxALL, 5 );
+        wxArrayString choices;
+        mPartListCMB = new wxComboBox( this, 
+                   PART_SELECTION, 
+                   wxString(), 
+                   wxDefaultPosition, 
+                   wxDefaultSize, 
+                   choices, 
+                   wxCB_DROPDOWN, 
+                   wxDefaultValidator );
+        buttonSizer->Add( mPartListCMB, 0, wxALL, 5 );
    }
 
     mainSizer->Add( buttonSizer, 0, wxALL | wxEXPAND, 5 );
@@ -233,7 +254,147 @@ void WarrantyToolUIDialog::GetTextInput( wxCommandEvent& event )
 ////////////////////////////////////////////////////////////////////////////////
 void WarrantyToolUIDialog::OpenWarrantyFile( wxCommandEvent& event )
 {
-    wxString fileName( _("C:/dev/test_data/tab_delimited/0904-RIDesktop.txt") );
-    mTabDialog->SetTabSize( 7 );
-    mTabDialog->LoadFile( fileName );
+    //wxString fileName( _("C:/dev/test_data/tab_delimited/0904-RIDesktop.txt") );
+    //mTabDialog->SetTabSize( 7 );
+    //mTabDialog->LoadFile( fileName );
+    wxFileDialog dialog( this,
+                        _T( "Open File" ),
+                        ::wxGetCwd(),
+                        _T( "" ),
+                        _T( "Warranty data file (*.csv;*.tsv)|*.csv;*.tsv;" ),
+                        wxOPEN | wxFILE_MUST_EXIST | wxFD_PREVIEW,
+                        wxDefaultPosition );
+    dialog.CentreOnParent();
+    
+    if( dialog.ShowModal() == wxID_OK )
+    {
+        wxFileName viewPtsFilename( dialog.GetPath() );
+        //viewPtsFilename.MakeRelativeTo( ::wxGetCwd(), wxPATH_NATIVE );
+        wxString relativeViewLocationsPath( wxString( "./", wxConvUTF8 ) + viewPtsFilename.GetFullPath() );
+        
+        DataValuePairPtr velFileName( new DataValuePair() );
+        velFileName->SetData( "View Locations file", ConvertUnicode( relativeViewLocationsPath.c_str() ) );
+        //_dataValuePairList.push_back( velFileName );
+        
+        ///_commandName = "QC_LOAD_STORED_POINTS";
+        //SendCommandsToXplorer();
+        std::string csvFilename = ConvertUnicode( viewPtsFilename.GetFullPath().c_str() );
+        ParseDataFile( csvFilename );
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void WarrantyToolUIDialog::StripCharacters( std::string& data, const std::string& character )
+{
+    for ( size_t index = 0; index < data.length(); )
+    {
+        index = data.find( character, index );
+        if ( index != std::string::npos )
+        {
+            data.replace( index, 1, "\n" );
+            //data.erase( index, 1 );
+        }
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void WarrantyToolUIDialog::ParseDataFile( const std::string& csvFilename )
+{
+    std::string sLine;
+    std::string sCol1, sCol3, sCol4;
+    double fCol2;
+    int iCol5, iCol6;
+
+    CSVParser parser;
+
+    std::ifstream infile( csvFilename.c_str() );
+    //std::streampos beforeNetwork;
+    //beforeNetwork = inFile.tellg();
+
+    infile.seekg( 0, ios::end);
+    std::streampos length = infile.tellg();
+    infile.seekg (0, ios::beg);
+
+    //Now we have passed the network data so record it
+    //std::streampos afterNetwork;
+    //afterNetwork = inFile.tellg();
+    //go back to the beginning of the network
+    //inFile.seekg( beforeNetwork );
+    // allocate memory:
+    char* buffer = new char [ length ];
+    // read data as a block:
+    infile.read( buffer, (length) );
+    //std::ofstream tester4 ("tester4.txt");
+    //tester4<<buffer<<std::endl;
+    //tester4.close();
+    std::string networkData( buffer );
+    delete [] buffer;
+    StripCharacters( networkData, "\r" );
+
+    //std::cout << networkData << std::endl;
+    //build network information
+    //CreateNetworkInformation( networkData );
+    std::istringstream iss;
+    iss.str( networkData );
+
+    std::getline(iss, sLine); // Get a line
+    parser << sLine; // Feed the line to the parser
+    size_t columnCount = 0;
+    std::map< int, std::vector< std::string > > csvDataMap;
+
+    while( parser.getPos() < sLine.size() )
+    {
+        parser >> sCol1; // Feed the line to the parser
+        //std::cout << sCol1 << std::endl;
+        std::vector< std::string > data;
+        if( sCol1.empty() )
+        {
+            std::ostringstream headerTemp;
+            headerTemp << "N/A " << columnCount;
+            sCol1 = headerTemp.str();
+        }
+        data.push_back( sCol1 );
+        //std::vector< std::string > data;
+        csvDataMap[ columnCount ] = data;
+        columnCount += 1;
+    }
+
+    while (!iss.eof()) 
+    {
+        std::getline(iss, sLine); // Get a line
+        if (sLine == "")
+            continue;
+        
+        parser << sLine; // Feed the line to the parser
+        std::cout << sLine << std::endl;
+        for( size_t i = 0; i < columnCount; ++i )
+        {
+            parser >> sCol1;
+            //std::cout << sCol1 << " ";
+            csvDataMap[ i ].push_back( sCol1 );
+        }
+        //std::cout << std::endl;
+        // Now extract the columns from the line
+        /*parser >> sCol1 >> fCol2 >> sCol3;
+         parser >> sCol4 >> iCol5;
+         parser >> iCol6;
+         
+         cout << "Column1: " << sCol1 << endl
+         << "Column2: " << fCol2 << endl
+         << "Column3: " << sCol3 << endl
+         << "Column4: " << sCol4 << endl
+         << "Column5: " << iCol5 << endl
+         << "Column6: " << iCol6 << endl
+         << endl;*/
+    }
+    //iss.close();
+    std::vector< std::string > prtnumbers = csvDataMap[ 2 ];
+    mPartNumberDescriptions = csvDataMap[ 3 ];
+    mLoadedPartNumbers = csvDataMap[ 2 ];
+    wxArrayString tempString;
+
+    for( size_t i = 0; i < prtnumbers.size(); ++i )
+    {
+        tempString.Add( wxString( prtnumbers.at( i ).c_str(), wxConvUTF8 ) );
+        std::cout << prtnumbers.at( i ) << std::endl;
+    }
+    mPartListCMB->Append( tempString );
 }

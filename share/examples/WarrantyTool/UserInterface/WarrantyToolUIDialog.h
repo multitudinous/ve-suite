@@ -55,6 +55,7 @@ class wxSpinCtrlDbl;
 class wxRadioBox;
 class wxSlider;
 class wxSpinCtrl;
+class wxComboBox;
 class wxTextCtrl;
 class wxFixWidthImportCtrl;
 
@@ -80,12 +81,17 @@ public:
         GLOW_RESET,
         GLOW_CLEAR,
         GLOW_ADD,
-        OPEN_WARRANTY_FILE
+        OPEN_WARRANTY_FILE,
+        PART_SELECTION
     };
 
 protected:
 
 private:
+    void StripCharacters( std::string& data, const std::string& character );
+
+    void ParseDataFile( const std::string& csvFilename );
+
     void GetTextInput( wxCommandEvent& event );
 
     void BuildGUI();
@@ -100,6 +106,12 @@ private:
     wxFixWidthImportCtrl* mTabDialog;
     
     std::vector< std::string > mPartNumberList;
+    ///PArt numbers loaded from the csv files
+    std::vector< std::string > mLoadedPartNumbers;
+    ///Description of part numbers loaded from csv files
+    std::vector< std::string > mPartNumberDescriptions;
+    wxComboBox* mPartListCMB;
+    
     DECLARE_EVENT_TABLE()
 };
 
