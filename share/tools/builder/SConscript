@@ -8,6 +8,7 @@ builderSubdirs = Split("""
     vtkto3dtexture
     hexgridgen
     part_tree
+    csvclass
 """)
 #    starmesh
 
