@@ -103,6 +103,8 @@ WarrantyToolUIDialog::~WarrantyToolUIDialog()
             wxCommandEventHandler( WarrantyToolUIDialog::GetTextInput ) );
     Disconnect( GLOW_ADD, wxEVT_COMMAND_BUTTON_CLICKED,
             wxCommandEventHandler( WarrantyToolUIDialog::GetTextInput ) );
+    Disconnect( OPEN_WARRANTY_FILE, wxEVT_COMMAND_BUTTON_CLICKED,
+               wxCommandEventHandler( WarrantyToolUIDialog::OpenWarrantyFile ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void WarrantyToolUIDialog::BuildGUI()
@@ -172,6 +174,16 @@ void WarrantyToolUIDialog::BuildGUI()
         stdDialogButtonAdd = new wxButton( this, GLOW_ADD, _("Add") );
         buttonSizer->Add( stdDialogButtonAdd, 0, wxALL, 5 );
     }
+    
+    wxBoxSizer* warrantyDialogSizer = 0;
+    warrantyDialogSizer = new wxBoxSizer( wxHORIZONTAL );
+
+    //Open
+    {
+        wxButton* stdDialogButtonAdd = 0;
+        stdDialogButtonAdd = new wxButton( this, OPEN_WARRANTY_FILE, _("Open") );
+        warrantyDialogSizer->Add( stdDialogButtonAdd, 0, wxALL, 5 );
+    }
     //Warranty file
     {
         //mTabDialog = new wxFixWidthImportCtrl( this, OPEN_WARRANTY_FILE );
@@ -185,18 +197,19 @@ void WarrantyToolUIDialog::BuildGUI()
                    choices, 
                    wxCB_DROPDOWN, 
                    wxDefaultValidator );
-        buttonSizer->Add( mPartListCMB, 0, wxALL, 5 );
+        warrantyDialogSizer->Add( mPartListCMB, 0, wxALL, 5 );
    }
 
+    mainSizer->Add( warrantyDialogSizer, 0, wxALL | wxEXPAND, 5 );
     mainSizer->Add( buttonSizer, 0, wxALL | wxEXPAND, 5 );
-    
+
     Connect( GLOW_RESET, wxEVT_COMMAND_BUTTON_CLICKED,
         wxCommandEventHandler( WarrantyToolUIDialog::GetTextInput ) );
     Connect( GLOW_CLEAR, wxEVT_COMMAND_BUTTON_CLICKED,
         wxCommandEventHandler( WarrantyToolUIDialog::GetTextInput ) );
-    //Connect( GLOW_ADD, wxEVT_COMMAND_BUTTON_CLICKED,
-    //    wxCommandEventHandler( WarrantyToolUIDialog::GetTextInput ) );
     Connect( GLOW_ADD, wxEVT_COMMAND_BUTTON_CLICKED,
+        wxCommandEventHandler( WarrantyToolUIDialog::GetTextInput ) );
+    Connect( OPEN_WARRANTY_FILE, wxEVT_COMMAND_BUTTON_CLICKED,
         wxCommandEventHandler( WarrantyToolUIDialog::OpenWarrantyFile ) );
     ///////////////////////////////////////////////////////////
 
@@ -240,9 +253,12 @@ void WarrantyToolUIDialog::GetTextInput( wxCommandEvent& event )
     else if( event.GetId() == GLOW_ADD )
     {
         //If add is pushed then send the name to add
-        mPartNumberList.push_back( 
+        /*mPartNumberList.push_back( 
             ConvertUnicode( mPartNumberEntry->GetValue().c_str() ) );
-        cameraGeometryOnOffDVP->SetData( "ADD", ConvertUnicode( mPartNumberEntry->GetValue().c_str() ) );
+        cameraGeometryOnOffDVP->SetData( "ADD", ConvertUnicode( mPartNumberEntry->GetValue().c_str() ) );*/
+        mPartNumberList.push_back( 
+            ConvertUnicode( mPartListCMB->GetValue().c_str() ) );
+        cameraGeometryOnOffDVP->SetData( "ADD", ConvertUnicode( mPartListCMB->GetValue().c_str() ) );
     }
 
     ves::open::xml::CommandPtr command( new ves::open::xml::Command() ); 
@@ -280,6 +296,15 @@ void WarrantyToolUIDialog::OpenWarrantyFile( wxCommandEvent& event )
         //SendCommandsToXplorer();
         std::string csvFilename = ConvertUnicode( viewPtsFilename.GetFullPath().c_str() );
         ParseDataFile( csvFilename );
+        
+        ves::open::xml::DataValuePairSharedPtr cameraGeometryOnOffDVP(
+            new ves::open::xml::DataValuePair() );
+        cameraGeometryOnOffDVP->SetData( "WARRANTY_FILE", csvFilename );
+        ves::open::xml::CommandPtr command( new ves::open::xml::Command() ); 
+        command->AddDataValuePair( cameraGeometryOnOffDVP );
+        std::string mCommandName = "CAMERA_GEOMETRY_ON_OFF";
+        command->SetCommandName( mCommandName );
+        mServiceList->SendCommandStringToXplorer( command );        
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -325,6 +350,8 @@ void WarrantyToolUIDialog::ParseDataFile( const std::string& csvFilename )
     //std::ofstream tester4 ("tester4.txt");
     //tester4<<buffer<<std::endl;
     //tester4.close();
+    infile.close();
+
     std::string networkData( buffer );
     delete [] buffer;
     StripCharacters( networkData, "\r" );
@@ -368,22 +395,8 @@ void WarrantyToolUIDialog::ParseDataFile( const std::string& csvFilename )
         for( size_t i = 0; i < columnCount; ++i )
         {
             parser >> sCol1;
-            //std::cout << sCol1 << " ";
             csvDataMap[ i ].push_back( sCol1 );
         }
-        //std::cout << std::endl;
-        // Now extract the columns from the line
-        /*parser >> sCol1 >> fCol2 >> sCol3;
-         parser >> sCol4 >> iCol5;
-         parser >> iCol6;
-         
-         cout << "Column1: " << sCol1 << endl
-         << "Column2: " << fCol2 << endl
-         << "Column3: " << sCol3 << endl
-         << "Column4: " << sCol4 << endl
-         << "Column5: " << iCol5 << endl
-         << "Column6: " << iCol6 << endl
-         << endl;*/
     }
     //iss.close();
     std::vector< std::string > prtnumbers = csvDataMap[ 2 ];
@@ -394,7 +407,7 @@ void WarrantyToolUIDialog::ParseDataFile( const std::string& csvFilename )
     for( size_t i = 0; i < prtnumbers.size(); ++i )
     {
         tempString.Add( wxString( prtnumbers.at( i ).c_str(), wxConvUTF8 ) );
-        std::cout << prtnumbers.at( i ) << std::endl;
+        //std::cout << prtnumbers.at( i ) << std::endl;
     }
     mPartListCMB->Append( tempString );
 }

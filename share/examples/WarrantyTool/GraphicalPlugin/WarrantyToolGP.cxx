@@ -33,6 +33,7 @@
 
 // --- My Includes --- //
 #include "WarrantyToolGP.h"
+#include "csvparser.h"
 
 // --- VE-Suite Includes --- //
 #include <ves/open/xml/model/Model.h>
@@ -41,9 +42,14 @@
 
 #include <ves/xplorer/scenegraph/util/OpacityVisitor.h>
 #include <ves/xplorer/scenegraph/util/MaterialInitializer.h>
+#include <ves/xplorer/scenegraph/util/FindChildWithNameVisitor.h>
 #include <ves/xplorer/scenegraph/HighlightNodeByNameVisitor.h>
 
 #include <ves/xplorer/scenegraph/CADEntity.h>
+
+#include <sstream>
+#include <iostream>
+#include <fstream>
 
 using namespace ves::xplorer::scenegraph;
 using namespace warrantytool;
@@ -139,5 +145,114 @@ void WarrantyToolGP::SetCurrentCommand( ves::open::xml::CommandPtr command )
         ves::xplorer::scenegraph::HighlightNodeByNameVisitor 
             highlight2( mDCS.get(), "", false );
     }
+    else if( dvp->GetDataName() == "WARRANTY_FILE" )
+    {
+        //std::vector< std::string > prts;
+        ParseDataFile( dvp->GetDataString() );
+        for( size_t i = 0; i < mLoadedPartNumbers.size(); ++i )
+        {
+            ves::xplorer::scenegraph::util::FindChildWithNameVisitor 
+                childVisitor( mDCS.get(), mLoadedPartNumbers.at( i ), false );
+            if( childVisitor.FoundChild() )
+            {
+                std::cout << "Found match for " << mLoadedPartNumbers.at( i ) << std::endl;
+            }
+        }
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void WarrantyToolGP::StripCharacters( std::string& data, const std::string& character )
+{
+    for ( size_t index = 0; index < data.length(); )
+    {
+        index = data.find( character, index );
+        if ( index != std::string::npos )
+        {
+            data.replace( index, 1, "\n" );
+            //data.erase( index, 1 );
+        }
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void WarrantyToolGP::ParseDataFile( const std::string& csvFilename )
+{
+    std::string sLine;
+    std::string sCol1, sCol3, sCol4;
+    double fCol2;
+    int iCol5, iCol6;
+    
+    CSVParser parser;
+    
+    std::ifstream infile( csvFilename.c_str() );
+    //std::streampos beforeNetwork;
+    //beforeNetwork = inFile.tellg();
+    
+    infile.seekg( 0, std::ios::end);
+    std::streampos length = infile.tellg();
+    infile.seekg (0, std::ios::beg);
+    
+    //Now we have passed the network data so record it
+    //std::streampos afterNetwork;
+    //afterNetwork = inFile.tellg();
+    //go back to the beginning of the network
+    //inFile.seekg( beforeNetwork );
+    // allocate memory:
+    char* buffer = new char [ length ];
+    // read data as a block:
+    infile.read( buffer, (length) );
+    //std::ofstream tester4 ("tester4.txt");
+    //tester4<<buffer<<std::endl;
+    //tester4.close();
+    infile.close();
+    std::string networkData( buffer );
+    delete [] buffer;
+    StripCharacters( networkData, "\r" );
+    
+    //std::cout << networkData << std::endl;
+    //build network information
+    //CreateNetworkInformation( networkData );
+    std::istringstream iss;
+    iss.str( networkData );
+    
+    std::getline(iss, sLine); // Get a line
+    parser << sLine; // Feed the line to the parser
+    size_t columnCount = 0;
+    std::map< int, std::vector< std::string > > csvDataMap;
+    
+    while( parser.getPos() < sLine.size() )
+    {
+        parser >> sCol1; // Feed the line to the parser
+        //std::cout << sCol1 << std::endl;
+        std::vector< std::string > data;
+        if( sCol1.empty() )
+        {
+            std::ostringstream headerTemp;
+            headerTemp << "N/A " << columnCount;
+            sCol1 = headerTemp.str();
+        }
+        data.push_back( sCol1 );
+        //std::vector< std::string > data;
+        csvDataMap[ columnCount ] = data;
+        columnCount += 1;
+    }
+    
+    while( !iss.eof() ) 
+    {
+        std::getline(iss, sLine); // Get a line
+        if (sLine == "")
+            continue;
+        
+        parser << sLine; // Feed the line to the parser
+        std::cout << sLine << std::endl;
+        for( size_t i = 0; i < columnCount; ++i )
+        {
+            parser >> sCol1;
+            csvDataMap[ i ].push_back( sCol1 );
+        }
+    }
+    //iss.close();
+    std::vector< std::string > prtnumbers = csvDataMap[ 2 ];
+    mPartNumberDescriptions = csvDataMap[ 3 ];
+    mLoadedPartNumbers = csvDataMap[ 2 ];
 }
 ////////////////////////////////////////////////////////////////////////////////

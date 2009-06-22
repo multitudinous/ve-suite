@@ -62,6 +62,16 @@ public:
 protected:
 
 private:
+    ///Strip characters from datafile
+    void StripCharacters( std::string& data, const std::string& character );
+    void ParseDataFile( const std::string& csvFilename );
+    std::vector< std::string > mPartNumberList;
+    ///PArt numbers loaded from the csv files
+    std::vector< std::string > mLoadedPartNumbers;
+    ///Description of part numbers loaded from csv files
+    std::vector< std::string > mPartNumberDescriptions;
+    
+    
     ves::xplorer::scenegraph::CADEntity* cadEntity;
     bool mAddingParts;
 };
