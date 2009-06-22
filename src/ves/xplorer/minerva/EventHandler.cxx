@@ -66,7 +66,9 @@ ModelWrapper* EventHandler::GetOrCreateModel ( const std::string& nodeId, Minerv
           if ( 0x0 != tempPart )
           {
             modelWrapper = new ModelWrapper;
-            modelWrapper->toMeters ( 1.0 );
+
+            // ves units are in feet.  Add the conversion to meters.
+            modelWrapper->toMeters ( 0.3048 );
             modelWrapper->SetCADEntity ( tempPart );
             manager.AddModel ( nodeId, modelWrapper.get() );
 

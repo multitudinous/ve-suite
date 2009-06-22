@@ -1,12 +1,12 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 //
-//  Event handler for add earth command.
+//  Event handler to navigate to the model.
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#ifndef VES_XPLORER_MINERVA_ADD_EARTH_HANDLER_H
-#define VES_XPLORER_MINERVA_ADD_EARTH_HANDLER_H
+#ifndef VES_XPLORER_MINERVA_NAVIGATE_TO_MODEL_H
+#define VES_XPLORER_MINERVA_NAVIGATE_TO_MODEL_H
 
 #include "ves/xplorer/minerva/EventHandler.h"
 
@@ -15,14 +15,14 @@ namespace xplorer {
 namespace minerva {
 
 
-class AddEarthHandler : public EventHandler
+class NavigateToModel : public EventHandler
 {
   typedef EventHandler BaseClass;
 
 public:
 
-  AddEarthHandler();
-  virtual ~AddEarthHandler();
+  NavigateToModel();
+  virtual ~NavigateToModel();
 
   virtual void Execute ( CommandPtr command, MinervaManager& manager );
 };
@@ -32,4 +32,4 @@ public:
 }
 }
 
-#endif // VES_XPLORER_MINERVA_ADD_EARTH_HANDLER_H
+#endif // VES_XPLORER_MINERVA_NAVIGATE_TO_MODEL_H

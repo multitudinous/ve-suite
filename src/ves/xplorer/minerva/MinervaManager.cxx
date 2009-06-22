@@ -11,17 +11,21 @@
 #include <ves/xplorer/minerva/RemoveEarthHandler.h>
 #include <ves/xplorer/minerva/PropertiesHandler.h>
 #include <ves/xplorer/minerva/TransformHandler.h>
+#include <ves/xplorer/minerva/NavigateToModel.h>
 #include <ves/xplorer/minerva/ModelWrapper.h>
+
+#include <Minerva/Core/Data/Camera.h>
+#include <Minerva/Core/TileEngine/Body.h>
+#include <Minerva/Core/Functions/MakeBody.h>
+#include <Minerva/Core/Layers/RasterLayerWms.h>
+
+#include <OsgTools/Convert/Matrix.h>
 
 #include <Usul/App/Application.h>
 #include <Usul/Components/Manager.h>
 #include <Usul/Errors/Assert.h>
 #include <Usul/Pointers/Functions.h>
 #include <Usul/Jobs/Manager.h>
-
-#include <Minerva/Core/TileEngine/Body.h>
-#include <Minerva/Core/Functions/MakeBody.h>
-#include <Minerva/Core/Layers/RasterLayerWms.h>
 
 #include <ves/util/commands/Minerva.h>
 #include <ves/open/xml/Command.h>
@@ -55,7 +59,8 @@ MinervaManager::MinervaManager() :
   _eventHandlers[ves::util::commands::REMOVE_EARTH_COMMAND_NAME] = new RemoveEarthHandler;
   _eventHandlers[ves::util::commands::SET_GEOGRAPHIC_PROPERTIERS] = new PropertiesHandler;
   _eventHandlers["CAD_TRANSFORM_UPDATE"] = new TransformHandler;
-  //_eventHandlers["CAD_DELETE_NODE"] = nre DeleteHandler;
+  //_eventHandlers["CAD_DELETE_NODE"] = new DeleteHandler;
+  _eventHandlers["Move to cad"] = new NavigateToModel;
 
 #ifdef __APPLE__
   Usul::Components::Manager::instance().load ( Usul::Interfaces::IUnknown::IID, "GDALReadImage.plug" );
@@ -320,4 +325,27 @@ void MinervaManager::RemoveModel ( const std::string& guid )
 
     _models.erase ( guid );
   }
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+//
+//  Create the view matrix for the given camera.
+//
+///////////////////////////////////////////////////////////////////////////////
+
+void MinervaManager::GetViewMatrix ( Minerva::Core::Data::Camera* camera, osg::Matrix& matrix ) const
+{
+  if ( 0x0 == _body || 0x0 == camera )
+    return;
+
+  Minerva::Core::TileEngine::LandModel::RefPtr landModel ( _body->landModel() );
+  if ( !landModel.valid() )
+    return;
+
+  typedef Minerva::Core::Data::Camera::Matrix Matrix;
+  Matrix m ( camera->viewMatrix ( landModel.get() ) );
+
+  Usul::Convert::Type<Matrix,osg::Matrixd>::convert ( m, matrix );
+  matrix = osg::Matrixd::inverse ( matrix );
 }

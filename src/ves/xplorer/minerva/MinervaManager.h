@@ -20,7 +20,9 @@
 #include <map>
 
 namespace Minerva { namespace Core { namespace TileEngine { class Body; } } }
+namespace Minerva { namespace Core { namespace Data { class Camera; } } }
 namespace Usul { namespace Jobs { class Manager; } }
+namespace osg { class Matrixd; }
 
 namespace ves {
 namespace xplorer {
@@ -42,6 +44,8 @@ public:
 
   ModelWrapper* GetModel ( const std::string& guid ) const;
   bool HasModel ( const std::string& guid ) const;
+
+  void GetViewMatrix ( Minerva::Core::Data::Camera* camera, osg::Matrix& matrix ) const;
 
   void PreFrameUpdate();
 
