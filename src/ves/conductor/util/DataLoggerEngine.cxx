@@ -43,6 +43,7 @@
 #include <vpr/System.h>
 
 #include <sstream>
+#include <fstream>
 
 using namespace ves::open::xml;
 using namespace ves::conductor::util;

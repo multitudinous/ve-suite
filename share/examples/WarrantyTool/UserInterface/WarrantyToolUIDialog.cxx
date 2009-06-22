@@ -67,6 +67,8 @@
 #include <wx/filedlg.h>
 #include <wx/textdlg.h>
 
+#include <fstream>
+
 using namespace warrantytool;
 using namespace ves::open::xml;
 
