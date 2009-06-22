@@ -111,13 +111,13 @@ void ManipulatorEventHandler::Execute(
     manipulatorDVP->GetData( data );
     if( data == "ENABLE" )
     {
-        sceneManipulator->TurnOn();
+        manipulatorManager->TurnOn();
 
         return;
     }
     else if( data == "DISABLE" )
     {
-        sceneManipulator->TurnOff();
+        manipulatorManager->TurnOff();
 
         return;
     }

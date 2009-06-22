@@ -31,8 +31,8 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
-#ifndef TRANSFORM_MANIPULATOR_H
-#define TRANSFORM_MANIPULATOR_H
+#ifndef VES_XPLORER_SCENEGRAPH_MANIPULATOR_TRANSFORM_MANIPULATOR_H
+#define VES_XPLORER_SCENEGRAPH_MANIPULATOR_TRANSFORM_MANIPULATOR_H
 
 // --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
@@ -97,4 +97,4 @@ private:
 } //end xplorer
 } //end ves
 
-#endif //TRANSFORM_MANIPULATOR_H
+#endif //VES_XPLORER_SCENEGRAPH_MANIPULATOR_TRANSFORM_MANIPULATOR_H

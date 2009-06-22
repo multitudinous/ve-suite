@@ -45,6 +45,9 @@
 #include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
 #include <ves/xplorer/scenegraph/physics/CharacterController.h>
 
+#include <ves/xplorer/scenegraph/manipulator/ManipulatorManager.h>
+#include <ves/xplorer/scenegraph/manipulator/TransformManipulator.h>
+
 #include <ves/xplorer/event/EventHandler.h>
 #include <ves/xplorer/event/device/DeviceEH.h>
 #include <ves/xplorer/event/device/DeviceModeEH.h>
@@ -64,6 +67,7 @@ using namespace ves::xplorer;
 namespace vx = ves::xplorer;
 namespace vxd = ves::xplorer::device;
 namespace vxs = vx::scenegraph;
+namespace vxsm = vxs::manipulator;
 
 vprSingletonImp( DeviceHandler );
 
@@ -322,6 +326,13 @@ void DeviceHandler::UnselectObjects()
     {
         mSelectedDCS->SetTechnique( "Default" );
         mSelectedDCS = 0;
+
+        vxsm::ManipulatorManager* manipulatorManager =
+            vxs::SceneManager::instance()->GetManipulatorManager();
+        vxsm::TransformManipulator* sceneManipulator =
+            manipulatorManager->GetSceneManipulator();
+
+        sceneManipulator->TurnOff();
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

@@ -52,6 +52,7 @@ using namespace ves::xplorer::scenegraph::manipulator;
 ManipulatorManager::ManipulatorManager()
     :
     osg::Camera(),
+    m_enabled( false ),
     //NodeMask is an unsigned int
     m_nodeMask( 0x1 ),
     m_activeManipulator( NULL ),
@@ -61,7 +62,7 @@ ManipulatorManager::ManipulatorManager()
     setClearMask( GL_DEPTH_BUFFER_BIT );
     setRenderOrder( osg::Camera::POST_RENDER );
     setReferenceFrame( osg::Transform::RELATIVE_RF );
-    setNodeMask( m_nodeMask );
+    TurnOff();
 
     m_sceneManipulator = new TransformManipulator();
     //Turn off the scene manipulator until requested by user
@@ -73,6 +74,8 @@ ManipulatorManager::ManipulatorManager(
     const ManipulatorManager& manipulatorManager, const osg::CopyOp& copyop )
     :
     osg::Camera( manipulatorManager, copyop ),
+    m_enabled( manipulatorManager.m_enabled ),
+    m_nodeMask( manipulatorManager.m_nodeMask ),
     m_nodePath( manipulatorManager.m_nodePath ),
     m_nodePathItr( manipulatorManager.m_nodePathItr ),
     m_activeManipulator( manipulatorManager.m_activeManipulator ),
@@ -174,6 +177,11 @@ bool ManipulatorManager::insertChild( unsigned int index, Manipulator* child )
     return osg::Group::insertChild( index, child->getParents().front() );
 }
 ////////////////////////////////////////////////////////////////////////////////
+const bool ManipulatorManager::IsEnabled() const
+{
+    return m_enabled;
+}
+////////////////////////////////////////////////////////////////////////////////
 bool ManipulatorManager::replaceChild(
     Manipulator* origChild, Manipulator* newChild )
 {
@@ -228,11 +236,15 @@ bool ManipulatorManager::TestForIntersections(
 ////////////////////////////////////////////////////////////////////////////////
 void ManipulatorManager::TurnOff()
 {
+    m_enabled = false;
+
     setNodeMask( 0 );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void ManipulatorManager::TurnOn()
 {
+    m_enabled = true;
+
     setNodeMask( m_nodeMask );
 }
 ////////////////////////////////////////////////////////////////////////////////

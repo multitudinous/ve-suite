@@ -34,11 +34,15 @@
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/manipulator/Manipulator.h>
 #include <ves/xplorer/scenegraph/manipulator/Dragger.h>
+#include <ves/xplorer/scenegraph/manipulator/ManipulatorManager.h>
+
+#include <ves/xplorer/scenegraph/SceneManager.h>
 
 // --- OSG Includes --- //
 #include <osg/AutoTransform>
 
 using namespace ves::xplorer::scenegraph::manipulator;
+namespace vxs = ves::xplorer::scenegraph;
 
 ////////////////////////////////////////////////////////////////////////////////
 Manipulator::Manipulator()
@@ -46,6 +50,7 @@ Manipulator::Manipulator()
     osg::MatrixTransform(),
     m_enabledModes( TransformationType::NONE ),
     m_vectorSpace( VectorSpace::WORLD ),
+    m_enabled( false ),
     m_autoTransform( new osg::AutoTransform() )
 {
     //All manipulators should be based off unit axes
@@ -66,6 +71,7 @@ Manipulator::Manipulator(
     osg::MatrixTransform( manipulator, copyop ),
     m_enabledModes( manipulator.m_enabledModes ),
     m_vectorSpace( manipulator.m_vectorSpace ),
+    m_enabled( manipulator.m_enabled ),
     m_autoTransform( manipulator.m_autoTransform.get() )
 {
     ;
@@ -174,6 +180,13 @@ void Manipulator::PushBackAssociation(
     }
 
     m_associatedTransforms.push_back( transform );
+
+    ManipulatorManager* manipulatorManager =
+        vxs::SceneManager::instance()->GetManipulatorManager();
+    if( manipulatorManager->IsEnabled() && !m_enabled )
+    {
+        TurnOn();
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 Dragger* Manipulator::Release( osg::NodePath::iterator& npItr )
@@ -218,12 +231,12 @@ void Manipulator::SetEnabledModes( TransformationType::Enum value )
         return;
     }
 
-    if( m_manipulating )
+    if( m_enabled )
     {
         //m_redoStack.clear();
     }
 
-    //m_manipulating = false;
+    //m_enabled = false;
     m_enabledModes = value;
     //m_activeMode = TransformationType::NONE;
 
@@ -248,22 +261,26 @@ void Manipulator::SetVectorSpace( VectorSpace::Enum value )
         return;
     }
 
-    if( m_manipulating )
+    if( m_enabled )
     {
         //m_redoStack.Clear();
     }
 
-    //m_manipulating = false;
+    //m_enabled = false;
     m_vectorSpace = value;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Manipulator::TurnOff()
 {
+    m_enabled = false;
+
     setNodeMask( 0 );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Manipulator::TurnOn()
 {
+    m_enabled = true;
+
     setNodeMask( 1 );
 }
 ////////////////////////////////////////////////////////////////////////////////

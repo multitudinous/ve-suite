@@ -31,13 +31,13 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
-#ifndef MANIPULATOR_H
-#define MANIPULATOR_H
+#ifndef VES_XPLORER_SCENEGRAPH_MANIPULATOR_MANIPULATOR_H
+#define VES_XPLORER_SCENEGRAPH_MANIPULATOR_MANIPULATOR_H
 
 // --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
 
-#include <ves/xplorer/scenegraph/manipulator/Enums.h>
+#include <ves/xplorer/scenegraph/manipulator/Definitions.h>
 
 // --- OSG Includes --- //
 #include <osg/ref_ptr>
@@ -138,7 +138,7 @@ public:
 
 
     ///
-    void PushBackAssociation(
+    virtual void PushBackAssociation(
         osg::Transform* transform, bool clearPreviousAssociations = false );
 
     ///
@@ -179,7 +179,7 @@ protected:
     VectorSpace::Enum m_vectorSpace;
 
     ///
-    bool m_manipulating;
+    bool m_enabled;
 
 private:
     ///
@@ -194,4 +194,4 @@ private:
 } //end xplorer
 } //end ves
 
-#endif //MANIPULATOR_H
+#endif //VES_XPLORER_SCENEGRAPH_MANIPULATOR_MANIPULATOR_H

@@ -103,11 +103,6 @@ const char* TranslatePan::libraryName() const
 ////////////////////////////////////////////////////////////////////////////////
 void TranslatePan::SetupDefaultGeometry()
 {
-    size_t numSegments( 100 );
-    double radius( 0.2 );
-    double TWO_PI( 2.0 * osg::PI );
-    double ringDelta( TWO_PI / numSegments );
-
     //The geode to add the geometry to
     osg::ref_ptr< osg::Billboard > billboard = new osg::Billboard();
     billboard->setMode( osg::Billboard::POINT_ROT_EYE );
@@ -116,14 +111,14 @@ void TranslatePan::SetupDefaultGeometry()
     {
         osg::ref_ptr< osg::Geometry > geometry = new osg::Geometry();
         osg::ref_ptr< osg::Vec3Array > vertices = new osg::Vec3Array();
-        for( size_t i = 0; i < numSegments; ++i )
+        for( size_t i = 0; i < NUM_CIRCLE_SEGMENTS; ++i )
         {
-            double rot( i * ringDelta );
+            double rot( i * DELTA_SEGMENT_ANGLE );
             double cosVal( cos( rot ) );
             double sinVal( sin( rot ) );
 
-            double x( radius * cosVal );
-            double z( radius * sinVal );
+            double x( TRANSLATE_PAN_RADIUS * cosVal );
+            double z( TRANSLATE_PAN_RADIUS * sinVal );
 
             vertices->push_back( osg::Vec3( x, 0.0, z ) );
         }
@@ -160,14 +155,14 @@ void TranslatePan::SetupDefaultGeometry()
         osg::ref_ptr< osg::Vec3Array > vertices = new osg::Vec3Array();
 
         vertices->push_back( osg::Vec3( 0.0, 0.0, 0.0 ) );
-        for( size_t i = 0; i <= numSegments; ++i )
+        for( size_t i = 0; i <= NUM_CIRCLE_SEGMENTS; ++i )
         {
-            double rot( i * ringDelta );
+            double rot( i * DELTA_SEGMENT_ANGLE );
             double cosVal( cos( rot ) );
             double sinVal( sin( rot ) );
 
-            double x( radius * cosVal );
-            double z( radius * sinVal );
+            double x( TRANSLATE_PAN_RADIUS * cosVal );
+            double z( TRANSLATE_PAN_RADIUS * sinVal );
 
             vertices->push_back( osg::Vec3( x, 0.0, z ) );
         }

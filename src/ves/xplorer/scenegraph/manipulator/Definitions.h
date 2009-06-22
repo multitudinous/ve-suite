@@ -31,13 +31,24 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
-#ifndef ENUMS_H
-#define ENUMS_H
+#ifndef VES_XPLORER_SCENEGRAPH_MANIPULATOR_DEFINITIONS_H
+#define VES_XPLORER_SCENEGRAPH_MANIPULATOR_DEFINITIONS_H
 
-// --- VE-Suite Includes --- //
-//#include <ves/VEConfig.h>
+// --- VR Juggler Includes --- //
+#include <gmtl/Math.h>
 
 //Define manipulator constants
+const unsigned int NUM_CIRCLE_SEGMENTS = 100;
+const double DELTA_SEGMENT_ANGLE = gmtl::Math::TWO_PI / NUM_CIRCLE_SEGMENTS;
+
+const double CONE_HEIGHT = 0.2;
+const double CONE_RADIUS = 0.05;
+const double CYLINDER_RADIUS = 0.025;
+const double LINE_WIDTH = 2.0;
+const double ROTATE_AXIS_RADIUS = 1.0;
+const double CLIPPING_CIRCLE_RADIUS = ROTATE_AXIS_RADIUS;
+const double ROTATE_TWIST_RADIUS = 1.2;
+const double TRANSLATE_PAN_RADIUS = 0.2;
 
 
 //Define manipulator enums w/ namespaces
@@ -147,4 +158,4 @@ namespace Event
 } //end xplorer
 } //end ves
 
-#endif //ENUMS_H
+#endif //VES_XPLORER_SCENEGRAPH_MANIPULATOR_DEFINITIONS_H

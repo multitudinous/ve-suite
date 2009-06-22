@@ -31,8 +31,8 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
-#ifndef SCALE_COMPOUND_H
-#define SCALE_COMPOUND_H
+#ifndef VES_XPLORER_SCENEGRAPH_MANIPULATOR_SCALE_COMPOUND_H
+#define VES_XPLORER_SCENEGRAPH_MANIPULATOR_SCALE_COMPOUND_H
 
 // --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
@@ -133,4 +133,4 @@ private:
 } //end xplorer
 } //end ves
 
-#endif //SCALE_COMPOUND_H
+#endif //VES_XPLORER_SCENEGRAPH_MANIPULATOR_SCALE_COMPOUND_H

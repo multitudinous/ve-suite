@@ -44,19 +44,19 @@
 #include <boost/filesystem/path.hpp>
 
 using namespace ves::xplorer::event;
-using namespace ves::open::xml;
 
 ////////////////////////////////////////////////////////////////////////////////
 UnselectObjectsEventHandler::UnselectObjectsEventHandler()
-        :
-        ves::xplorer::event::EventHandler()
+    :
+    ves::xplorer::event::EventHandler()
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-UnselectObjectsEventHandler::UnselectObjectsEventHandler( const UnselectObjectsEventHandler& rhs )
-        :
-        ves::xplorer::event::EventHandler()
+UnselectObjectsEventHandler::UnselectObjectsEventHandler(
+    const UnselectObjectsEventHandler& rhs )
+    :
+    ves::xplorer::event::EventHandler()
 {
     ;
 }
@@ -66,14 +66,17 @@ UnselectObjectsEventHandler::~UnselectObjectsEventHandler()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UnselectObjectsEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* modelHandler )
+void UnselectObjectsEventHandler::SetGlobalBaseObject(
+    ves::xplorer::GlobalBase* modelHandler )
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UnselectObjectsEventHandler::Execute( const ves::open::xml::XMLObjectPtr& veXMLObject )
+void UnselectObjectsEventHandler::Execute(
+    const ves::open::xml::XMLObjectPtr& veXMLObject )
 {
-    CommandPtr command( boost::dynamic_pointer_cast<ves::open::xml::Command>( veXMLObject ) );
+    ves::open::xml::CommandPtr command =
+        boost::dynamic_pointer_cast< ves::open::xml::Command >( veXMLObject );
 
     if( command->GetCommandName() == "UNSELECT_OBJECTS" )
     {
@@ -81,7 +84,8 @@ void UnselectObjectsEventHandler::Execute( const ves::open::xml::XMLObjectPtr& v
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-UnselectObjectsEventHandler& UnselectObjectsEventHandler::operator=( const UnselectObjectsEventHandler& rhs )
+UnselectObjectsEventHandler& UnselectObjectsEventHandler::operator=(
+    const UnselectObjectsEventHandler& rhs )
 {
     if( this != &rhs )
     {

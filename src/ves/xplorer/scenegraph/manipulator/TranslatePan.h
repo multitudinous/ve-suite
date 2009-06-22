@@ -31,8 +31,8 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
-#ifndef TRANSLATE_PAN_H
-#define TRANSLATE_PAN_H
+#ifndef VES_XPLORER_SCENEGRAPH_MANIPULATOR_TRANSLATE_PAN_H
+#define VES_XPLORER_SCENEGRAPH_MANIPULATOR_TRANSLATE_PAN_H
 
 // --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
@@ -112,4 +112,4 @@ private:
 } //end xplorer
 } //end ves
 
-#endif //TRANSLATE_PAN_H
+#endif //VES_XPLORER_SCENEGRAPH_MANIPULATOR_TRANSLATE_PAN_H

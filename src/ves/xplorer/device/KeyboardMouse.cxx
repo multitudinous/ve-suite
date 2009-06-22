@@ -78,6 +78,9 @@
 #include <gmtl/Generate.h>
 #include <gmtl/Misc/MatrixConvert.h>
 
+
+#include <osg/AutoTransform>
+#include <ves/xplorer/scenegraph/LocalToWorldNodePath.h>
 #ifdef TRANSFORM_MANIPULATOR
 #include <vrj/Display/Display.h>
 #include <vrj/Display/Viewport.h>
@@ -1834,10 +1837,26 @@ void KeyboardMouse::ProcessHit()
     osg::Vec3d center = newSelectedDCS->getBound().center() * tempMatrix;
     mCenterPoint->set( center.x(), center.y(), center.z() );
 
+
+
+
     //Set the connection between the scene manipulator and the selected dcs
     vxsm::TransformManipulator* sceneManipulator =
         sceneManager->GetManipulatorManager()->GetSceneManipulator();
     sceneManipulator->PushBackAssociation( newSelectedDCS, true );
+
+
+    //Move the scene manipulator to the center point
+    vxs::LocalToWorldNodePath nodePath(
+        newSelectedDCS, vxs::SceneManager::instance()->GetModelRoot() );
+    vxs::LocalToWorldNodePath::NodeAndPathList npl =
+        nodePath.GetLocalToWorldNodePath();
+    vxs::LocalToWorldNodePath::NodeAndPath nap = npl.at( 0 );
+    osg::Matrixd localToWorld = osg::computeLocalToWorld( nap.second );
+    osg::Vec3d newCenter = newSelectedDCS->getBound().center() * localToWorld;
+    osg::AutoTransform* autoTransform =
+        static_cast< osg::AutoTransform* >( sceneManipulator->getParent( 0 ) );
+    autoTransform->setPosition( newCenter );
 }
 ////////////////////////////////////////////////////////////////////////////////
 gadget::KeyboardMousePtr KeyboardMouse::GetKeyboardMouseVRJDevice()

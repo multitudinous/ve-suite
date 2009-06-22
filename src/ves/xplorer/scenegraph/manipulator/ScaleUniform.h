@@ -31,8 +31,8 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
-#ifndef SCALE_UNIFORM_H
-#define SCALE_UNIFORM_H
+#ifndef VES_XPLORER_SCENEGRAPH_MANIPULATOR_SCALE_UNIFORM_H
+#define VES_XPLORER_SCENEGRAPH_MANIPULATOR_SCALE_UNIFORM_H
 
 // --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
@@ -112,4 +112,4 @@ private:
 } //end xplorer
 } //end ves
 
-#endif //SCALE_UNIFORM_H
+#endif //VES_XPLORER_SCENEGRAPH_MANIPULATOR_SCALE_UNIFORM_H

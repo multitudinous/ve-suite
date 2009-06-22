@@ -31,8 +31,8 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
-#ifndef TRANSLATE_AXIS_H
-#define TRANSLATE_AXIS_H
+#ifndef VES_XPLORER_SCENEGRAPH_MANIPULATOR_TRANSLATE_AXIS_H
+#define VES_XPLORER_SCENEGRAPH_MANIPULATOR_TRANSLATE_AXIS_H
 
 // --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
@@ -47,6 +47,7 @@ namespace osg
 class Geode;
 class Geometry;
 class Cone;
+class Cylinder;
 class LineSegment;
 class ShapeDrawable;
 }
@@ -112,7 +113,7 @@ public:
     virtual void DefaultForm();
 
     ///
-    virtual void DirtyGeometry();
+    void DirtyCone();
 
     ///
     osg::Geode* const GetLineAndCylinderGeode() const;
@@ -156,7 +157,13 @@ private:
     osg::ref_ptr< osg::Cone > m_cone;
 
     ///
-    osg::ref_ptr< osg::ShapeDrawable > m_shapeDrawable;
+    osg::ref_ptr< osg::Cylinder > m_cylinder;
+
+    ///
+    osg::ref_ptr< osg::ShapeDrawable > m_coneDrawable;
+
+    ///
+    osg::ref_ptr< osg::ShapeDrawable > m_cylinderDrawable;
 
 };
 } //end manipulator
@@ -164,4 +171,4 @@ private:
 } //end xplorer
 } //end ves
 
-#endif //TRANSLATE_AXIS_H
+#endif //VES_XPLORER_SCENEGRAPH_MANIPULATOR_TRANSLATE_AXIS_H

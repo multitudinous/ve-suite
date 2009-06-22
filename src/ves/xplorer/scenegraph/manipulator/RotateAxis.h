@@ -31,8 +31,8 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
-#ifndef ROTATE_AXIS_H
-#define ROTATE_AXIS_H
+#ifndef VES_XPLORER_SCENEGRAPH_MANIPULATOR_ROTATE_AXIS_H
+#define VES_XPLORER_SCENEGRAPH_MANIPULATOR_ROTATE_AXIS_H
 
 // --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
@@ -112,4 +112,4 @@ private:
 } //end xplorer
 } //end ves
 
-#endif //ROTATE_AXIS_H
+#endif //VES_XPLORER_SCENEGRAPH_MANIPULATOR_ROTATE_AXIS_H

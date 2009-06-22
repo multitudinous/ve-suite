@@ -31,13 +31,13 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
-#ifndef MANIPULATOR_MANAGER_H
-#define MANIPULATOR_MANAGER_H
+#ifndef VES_XPLORER_SCENEGRAPH_MANIPULATOR_MANIPULATOR_MANAGER_H
+#define VES_XPLORER_SCENEGRAPH_MANIPULATOR_MANIPULATOR_MANAGER_H
 
 // --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
 
-#include <ves/xplorer/scenegraph/manipulator/Enums.h>
+#include <ves/xplorer/scenegraph/manipulator/Definitions.h>
 
 // --- OSG Includes --- //
 #include <osg/Camera>
@@ -101,6 +101,9 @@ public:
     ///Override the insertChild function to only accept Manipulators
     virtual bool insertChild( unsigned int index, Manipulator* child );
 
+    ///
+    const bool IsEnabled() const;
+
     ///Override the replaceChild function to only accept Manipulators
     virtual bool replaceChild( Manipulator* origChild, Manipulator* newChild );
 
@@ -124,6 +127,9 @@ private:
     ///
     bool TestForIntersections(
         osgUtil::LineSegmentIntersector* lineSegmentIntersector );
+
+    ///
+    bool m_enabled;
 
     ///
     unsigned int m_nodeMask;
@@ -153,4 +159,4 @@ private:
 } //end xplorer
 } //end ves
 
-#endif //MANIPULATOR_MANAGER_H
+#endif //VES_XPLORER_SCENEGRAPH_MANIPULATOR_MANIPULATOR_MANAGER_H

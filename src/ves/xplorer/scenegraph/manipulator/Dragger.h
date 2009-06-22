@@ -31,13 +31,13 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
-#ifndef DRAGGER_H
-#define DRAGGER_H
+#ifndef VES_XPLORER_SCENEGRAPH_MANIPULATOR_DRAGGER_H
+#define VES_XPLORER_SCENEGRAPH_MANIPULATOR_DRAGGER_H
 
 // --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
 
-#include <ves/xplorer/scenegraph/manipulator/Enums.h>
+#include <ves/xplorer/scenegraph/manipulator/Definitions.h>
 
 // --- OSG Includes --- //
 #include <osg/MatrixTransform>
@@ -144,9 +144,6 @@ protected:
     bool m_comboForm;
 
     ///
-    virtual void DirtyGeometry(){;}
-
-    ///
     osg::Vec4& GetColor( ColorTag::Enum colorTag );
 
     ///Will be pure virtual eventually
@@ -230,4 +227,4 @@ private:
 } //end xplorer
 } //end ves
 
-#endif //DRAGGER_H
+#endif //VES_XPLORER_SCENEGRAPH_MANIPULATOR_DRAGGER_H

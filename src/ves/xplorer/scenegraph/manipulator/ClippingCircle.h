@@ -31,8 +31,8 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
-#ifndef CLIPPING_CIRCLE_H
-#define CLIPPING_CIRCLE_H
+#ifndef VES_XPLORER_SCENEGRAPH_MANIPULATOR_CLIPPING_CIRCLE_H
+#define VES_XPLORER_SCENEGRAPH_MANIPULATOR_CLIPPING_CIRCLE_H
 
 // --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
@@ -108,4 +108,4 @@ private:
 } //end xplorer
 } //end ves
 
-#endif //CLIPPING_CIRCLE_H
+#endif //VES_XPLORER_SCENEGRAPH_MANIPULATOR_CLIPPING_CIRCLE_H

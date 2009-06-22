@@ -31,8 +31,8 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
-#ifndef COMPOUND_DRAGGER_H
-#define COMPOUND_DRAGGER_H
+#ifndef VES_XPLORER_SCENEGRAPH_MANIPULATOR_COMPOUND_DRAGGER_H
+#define VES_XPLORER_SCENEGRAPH_MANIPULATOR_COMPOUND_DRAGGER_H
 
 // --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
@@ -129,4 +129,4 @@ private:
 } //end xplorer
 } //end ves
 
-#endif //COMPOUND_DRAGGER_H
+#endif //VES_XPLORER_SCENEGRAPH_MANIPULATOR_COMPOUND_DRAGGER_H

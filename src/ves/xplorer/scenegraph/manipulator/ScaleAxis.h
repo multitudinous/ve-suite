@@ -31,8 +31,8 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
-#ifndef SCALE_AXIS_H
-#define SCALE_AXIS_H
+#ifndef VES_XPLORER_SCENEGRAPH_MANIPULATOR_SCALE_AXIS_H
+#define VES_XPLORER_SCENEGRAPH_MANIPULATOR_SCALE_AXIS_H
 
 // --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
@@ -104,7 +104,7 @@ public:
     virtual const char* libraryName() const;
 
     ///
-    virtual void DirtyGeometry();
+    void DirtyGeometry();
 
     ///
     osg::Box* const GetBox() const;
@@ -147,4 +147,4 @@ private:
 } //end xplorer
 } //end ves
 
-#endif //SCALE_AXIS_H
+#endif //VES_XPLORER_SCENEGRAPH_MANIPULATOR_SCALE_AXIS_H
