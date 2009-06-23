@@ -54,7 +54,7 @@ ManipulatorManager::ManipulatorManager()
     osg::Camera(),
     m_enabled( false ),
     //NodeMask is an unsigned int
-    m_nodeMask( 0x1 ),
+    m_nodeMask( 0xfffffffe ),
     m_activeManipulator( NULL ),
     m_activeDragger( NULL ),
     m_sceneManipulator( NULL )
@@ -62,7 +62,7 @@ ManipulatorManager::ManipulatorManager()
     setClearMask( GL_DEPTH_BUFFER_BIT );
     setRenderOrder( osg::Camera::POST_RENDER );
     setReferenceFrame( osg::Transform::RELATIVE_RF );
-    TurnOff();
+    TurnOn();
 
     m_sceneManipulator = new TransformManipulator();
     //Turn off the scene manipulator until requested by user
