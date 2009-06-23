@@ -83,7 +83,7 @@ void NavigateToModel::Execute ( CommandPtr command, MinervaManager& manager )
 
   osg::BoundingSphere boundingSphere ( dcs->getBound() );
   osg::Vec3d location ( modelWrapper->location() );
-  const double altitudeOffset ( gmtl::Math::Max ( boundingSphere.radius() * 2, 30000.0 ) );
+  const double altitudeOffset ( gmtl::Math::Max( double( boundingSphere.radius() * 2 ), 30000.0 ) );
 
   Minerva::Core::Data::Camera::RefPtr camera ( new Minerva::Core::Data::Camera );
   camera->longitude ( location[0] );
