@@ -70,8 +70,8 @@ void SelectTechnique::DefinePasses()
         stencil->setFunction( osg::Stencil::ALWAYS,    //comparison function
                               1,                       //reference value
                               ~0u );                   //comparison mask
-        stencil->setOperation( osg::Stencil::KEEP,     //stencil fail
-                               osg::Stencil::KEEP,     //stencil pass/depth fail
+        stencil->setOperation( osg::Stencil::REPLACE,  //stencil fail
+                               osg::Stencil::REPLACE,  //stencil pass/depth fail
                                osg::Stencil::REPLACE );//stencil pass/depth pass
 
         m_stateSet->setMode( GL_STENCIL_TEST,
