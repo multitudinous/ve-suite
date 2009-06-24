@@ -132,8 +132,11 @@ void cfdExecutive::Initialize( CosNaming::NamingContext* inputNameContext,
     m_UINAME = dirStringStream.str();
 
     ConnectToCE();
-    ui_i->GetNetworkFromCE();
-    LoadDataFromCE();
+    if( ui_i )
+    {
+        ui_i->GetNetworkFromCE();
+        LoadDataFromCE();
+    }
     
     _eventHandlers[std::string( "DELETE_OBJECT_FROM_NETWORK" )] = 
         new DeleteObjectFromNetworkEventHandler();
@@ -575,6 +578,7 @@ void cfdExecutive::ConnectToCE()
     {
         std::cerr << "|\tExecutive not present or VEClient registration error"
             << std::endl;
+        ui_i = 0;
     }
 }    
 ////////////////////////////////////////////////////////////////////////////////

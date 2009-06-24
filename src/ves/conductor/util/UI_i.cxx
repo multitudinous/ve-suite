@@ -33,6 +33,8 @@
 #include <ves/conductor/util/UI_i.h>
 #include <ves/conductor/util/OrbThread.h>
 
+#include <ves/conductor/util/DataLoggerEngine.h>
+
 #include <ves/open/xml/XMLReaderWriter.h>
 #include <ves/open/xml/DataValuePair.h>
 #include <ves/open/xml/Command.h>
@@ -141,9 +143,11 @@ ACE_THROW_SPEC((
 {
     // Add your implementation here
     std::string tempString( notification );
-    if( !tempString.empty() )
+    if( !tempString.empty() && !ves::conductor::util::DataLoggerEngine::instance()->IsPlaying() )
     {
+        //_mutex.acquire();
         ::wxLogMessage( wxString( tempString.c_str(), wxConvUTF8 ) );
+        //_mutex.release();
 
         //logWindow->SetMessage( tempString.c_str() );
     }
@@ -178,7 +182,9 @@ ACE_THROW_SPEC((
         ves::open::xml::CommandPtr temp = boost::dynamic_pointer_cast<ves::open::xml::Command>( xmlObjects.at( 0 ) );
         if( !temp )
         {
+            //_mutex.acquire();
             ::wxLogMessage( wxString( "NULL Command", wxConvUTF8 ) );
+            //_mutex.release();
         }
         m_commandNameMap[ temp->GetCommandName()] = temp;
         //iter = xmlObjects.erase( iter );

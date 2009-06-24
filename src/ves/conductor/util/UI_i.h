@@ -73,6 +73,8 @@ public:
 protected:
     Body::Executive_var executive_;
     PEThread* logWindow;
+    ACE_Thread_Mutex _mutex;
+
 public:
 
     void SetLogWindow( PEThread* logWindow );

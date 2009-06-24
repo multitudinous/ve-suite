@@ -49,6 +49,8 @@
 #include <sstream>
 #include <fstream>
 
+#include <wx/log.h>
+
 using namespace ves::open::xml;
 using namespace ves::conductor::util;
 
@@ -71,15 +73,18 @@ DataLoggerEngine::~DataLoggerEngine()
     m_commandTimer = 0;
     m_looping = false;
     
-    try
+    if( !m_playThread )
     {
-        m_playThread->kill();
-    }
-    catch ( ... )
-    {
-        ;//do nothing
-    }
-    delete m_playThread;    
+        try
+        {
+            m_playThread->kill();
+        }
+        catch ( ... )
+        {
+            ;//do nothing
+        }
+        delete m_playThread;   
+    } 
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DataLoggerEngine::CleanUp()
@@ -172,19 +177,30 @@ void DataLoggerEngine::LoadVEMFile( const std::string& file )
 ////////////////////////////////////////////////////////////////////////////////
 void DataLoggerEngine::PlayVEMFile()
 {
-    if( !m_playThread )
+    if( m_playThread )
     {
-#if __VPR_version > 2000001
-        m_playThread = new vpr::Thread( boost::bind( &DataLoggerEngine::PlayThread, this ) );
-#else
-        m_playThread = new vpr::Thread( new vpr::ThreadMemberFunctor< DataLoggerEngine >(
-            this, &DataLoggerEngine::PlayThread ) );
-#endif
+        try
+        {
+            m_playThread->kill();
+        }
+        catch ( ... )
+        {
+            ;//do nothing
+        }
+        delete m_playThread;   
     }
-    else
+    /*else
     {
         m_playThread->start();
-    }
+    }*/
+    
+#if __VPR_version > 2000001
+    m_playThread = new vpr::Thread( boost::bind( &DataLoggerEngine::PlayThread, this ) );
+#else
+    m_playThread = new vpr::Thread( new vpr::ThreadMemberFunctor< DataLoggerEngine >(
+                                                                                     this, &DataLoggerEngine::PlayThread ) );
+#endif
+    
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DataLoggerEngine::ToggleOn( bool turnOn )
