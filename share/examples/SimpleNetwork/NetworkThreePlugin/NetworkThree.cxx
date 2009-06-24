@@ -32,13 +32,7 @@ double NetworkThree::GetVersion()
 	return result;
 }
 ///////////////////////////////////////////////////////////////////////////////
-int NetworkThree::GetNumIports()
-{
-	int result=2;
-	return result;
-}
-///////////////////////////////////////////////////////////////////////////////
-void NetworkThree::GetIPorts(PORT& iports)
+PORT NetworkThree::GetIPorts()
 {
     if( inputPort.size() == 0 )
     {
@@ -51,16 +45,10 @@ void NetworkThree::GetIPorts(PORT& iports)
         AddPortToModel( tempPort2, UIPLUGINBASE_ADD_INPUT_PORT );
     }
     
-    UIPluginBase::GetIPorts( iports );
+    return UIPluginBase::GetIPorts();
 }
 ///////////////////////////////////////////////////////////////////////////////
-int NetworkThree::GetNumOports()
-{
-	int result=2;
-	return result;
-}
-///////////////////////////////////////////////////////////////////////////////
-void NetworkThree::GetOPorts(PORT& oports)
+PORT NetworkThree::GetOPorts()
 {
     if( outputPort.size() == 0 )
     {
@@ -73,7 +61,7 @@ void NetworkThree::GetOPorts(PORT& oports)
         AddPortToModel( tempPort2, UIPLUGINBASE_ADD_OUTPUT_PORT );
     }
     
-    UIPluginBase::GetOPorts( oports );
+    return UIPluginBase::GetOPorts();
 }
 ///////////////////////////////////////////////////////////////////////////////
 ves::conductor::UIDialog* NetworkThree::UI(wxWindow* parent)

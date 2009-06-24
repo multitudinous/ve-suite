@@ -37,6 +37,8 @@
 // --- VE-Suite Includes --- //
 #include <ves/conductor/UIDialog.h>
 
+#include <ves/open/xml/DataValuePairPtr.h>
+
 namespace ves
 {
 namespace conductor

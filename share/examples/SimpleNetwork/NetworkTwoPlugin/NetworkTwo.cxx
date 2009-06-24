@@ -32,13 +32,7 @@ double NetworkTwo::GetVersion()
 	return result;
 }
 ///////////////////////////////////////////////////////////////////////////////
-int NetworkTwo::GetNumIports()
-{
-	int result=2;
-	return result;
-}
-///////////////////////////////////////////////////////////////////////////////
-void NetworkTwo::GetIPorts(PORT& iports)
+PORT NetworkTwo::GetIPorts()
 {
     if( inputPort.size() == 0 )
     {
@@ -51,16 +45,10 @@ void NetworkTwo::GetIPorts(PORT& iports)
         AddPortToModel( tempPort2, UIPLUGINBASE_ADD_INPUT_PORT );
     }
     
-    UIPluginBase::GetIPorts( iports );
+    return UIPluginBase::GetIPorts();
 }
 ///////////////////////////////////////////////////////////////////////////////
-int NetworkTwo::GetNumOports()
-{
-	int result=2;
-	return result;
-}
-///////////////////////////////////////////////////////////////////////////////
-void NetworkTwo::GetOPorts(PORT &oports)
+PORT NetworkTwo::GetOPorts()
 {
     if( outputPort.size() == 0 )
     {
@@ -73,7 +61,7 @@ void NetworkTwo::GetOPorts(PORT &oports)
         AddPortToModel( tempPort2, UIPLUGINBASE_ADD_OUTPUT_PORT );
     }
     
-    UIPluginBase::GetOPorts( oports );
+    return UIPluginBase::GetOPorts();
 }
 ///////////////////////////////////////////////////////////////////////////////
 ves::conductor::UIDialog* NetworkTwo::UI(wxWindow* parent)

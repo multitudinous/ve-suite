@@ -54,6 +54,7 @@
 #include <ves/open/xml/model/NetworkPtr.h>
 #include <ves/open/xml/model/Tag.h>
 #include <ves/open/xml/model/TagPtr.h>
+#include <ves/open/xml/model/Port.h>
 
 #include <ves/open/xml/DataValuePair.h>
 #include <ves/open/xml/Command.h>
@@ -215,12 +216,12 @@ void Network::OnMLeftDown( wxMouseEvent& event )
 
         relative_pt = temp;
         PORT ports;
-        ports.resize( iter->second.GetPlugin()->GetNumIports() );
-        iter->second.GetPlugin()->GetIPorts( ports );
+        //ports.resize( iter->second.GetPlugin()->GetNumIports() );
+        ports = iter->second.GetPlugin()->GetIPorts();
 
         for( unsigned int i = 0; i < ports.size(); i++ )
         {
-            wxPoint tempPoint( ports[i].GetPortLocation()->GetPoint().first, ports[i].GetPortLocation()->GetPoint().second );
+            wxPoint tempPoint( ports[i]->GetPortLocation()->GetPoint().first, ports[i]->GetPortLocation()->GetPoint().second );
             if( computenorm( temp, tempPoint ) <= 10 )
             {
                 m_selFrPort = i;
@@ -228,11 +229,11 @@ void Network::OnMLeftDown( wxMouseEvent& event )
             }
         }
 
-        ports.resize( iter->second.GetPlugin()->GetNumOports() );
-        iter->second.GetPlugin()->GetOPorts( ports );
+        //ports.resize( iter->second.GetPlugin()->GetNumOports() );
+        ports = iter->second.GetPlugin()->GetOPorts();
         for( unsigned int i = 0; i < ports.size(); i++ )
         {
-            wxPoint tempPoint( ports[i].GetPortLocation()->GetPoint().first, ports[i].GetPortLocation()->GetPoint().second );
+            wxPoint tempPoint( ports[i]->GetPortLocation()->GetPoint().first, ports[i]->GetPortLocation()->GetPoint().second );
             if( computenorm( temp, tempPoint ) <= 10 )
             {
                 m_selToPort = i;
@@ -1077,7 +1078,6 @@ void Network::DropModule( int ix, int iy, int mod )
 /////////////////////////////////////////////////////////////////////////
 void Network::TryLink( int x, int y, int mod, int pt, wxDC& dc, bool flag )
 {
-    PORT ports;
     wxRect bbox;
     //int dest_mod = -1;
     //Reset back to -1 so that we can loop over and 
@@ -1112,24 +1112,25 @@ void Network::TryLink( int x, int y, int mod, int pt, wxDC& dc, bool flag )
     //DrawPorts(modules[mod].GetPlugin(), false); //wipe the ports
 
     wxPoint offSet;
+    PORT ports;
     //DrawPorti(modules[mod].GetPlugin(), pt, flag);
     if( flag )
     {
-        int num = modules[mod].GetPlugin()->GetNumIports();
-        ports.resize( num );
-        modules[mod].GetPlugin()->GetIPorts( ports );
-        offSet = GetPointForSelectedPlugin( mod, ports[ pt ].GetPortNumber(), "input" );
+        //int num = modules[mod].GetPlugin()->GetNumIports();
+        //ports.resize( num );
+        ports = modules[mod].GetPlugin()->GetIPorts();
+        offSet = GetPointForSelectedPlugin( mod, ports[ pt ]->GetPortNumber(), "input" );
     }
     else
     {
-        int num = modules[mod].GetPlugin()->GetNumOports();
-        ports.resize( num );
-        modules[mod].GetPlugin()->GetOPorts( ports );
+        //int num = modules[mod].GetPlugin()->GetNumOports();
+        //ports.resize( num );
+        ports = modules[mod].GetPlugin()->GetOPorts();
         /*for(size_t i = 0; i < ports.size(); ++i )
         {
             std::cout << " output port " <<  i << " " << ports[ i ].GetPortNumber() << std::endl;
         }*/
-        offSet = GetPointForSelectedPlugin( mod, ports[ pt ].GetPortNumber(), "output" );
+        offSet = GetPointForSelectedPlugin( mod, ports[ pt ]->GetPortNumber(), "output" );
     }
     //std::cout << ConvertUnicode( modules[mod].GetPlugin()->GetName().c_str() ) << std::endl;
     //dc.SetPen(*wxWHITE_PEN);
@@ -1157,7 +1158,6 @@ void Network::DropLink( int x, int y, int mod, int pt, wxDC &dc, bool flag )
     //in the mean time, also find out the wipe off line's start position
     //int xoff, yoff;
 
-    PORT ports;
     wxRect bbox;
     wxPoint temp;
     int dest_mod, dest_port;
@@ -1185,21 +1185,22 @@ void Network::DropLink( int x, int y, int mod, int pt, wxDC &dc, bool flag )
     wxPoint offSet;
     int acutallPortNumber = -1;
     int acutallDestPortNumber = -1;
+    PORT ports;
     if( flag )
     {
-        int num = modules[ mod ].GetPlugin()->GetNumIports();
-        ports.resize( num );
-        modules[ mod ].GetPlugin()->GetIPorts( ports );
-        offSet = GetPointForSelectedPlugin( mod, ports[ pt ].GetPortNumber(), "input" );
-        acutallPortNumber = ports[ pt ].GetPortNumber();
+        //int num = modules[ mod ].GetPlugin()->GetNumIports();
+        //ports.resize( num );
+        ports = modules[ mod ].GetPlugin()->GetIPorts();
+        offSet = GetPointForSelectedPlugin( mod, ports[ pt ]->GetPortNumber(), "input" );
+        acutallPortNumber = ports[ pt ]->GetPortNumber();
         if( dest_mod >= 0 )
         {
-            ports.resize( modules[dest_mod].GetPlugin()->GetNumOports() );
-            modules[dest_mod].GetPlugin()->GetOPorts( ports );
+            //ports.resize( modules[dest_mod].GetPlugin()->GetNumOports() );
+            ports = modules[dest_mod].GetPlugin()->GetOPorts();
 
             for( size_t i = 0; i < ports.size(); i++ )
             {
-                wxPoint tempPoint( ports[i].GetPortLocation()->GetPoint().first, ports[i].GetPortLocation()->GetPoint().second );
+                wxPoint tempPoint( ports[i]->GetPortLocation()->GetPoint().first, ports[i]->GetPortLocation()->GetPoint().second );
                 if( computenorm( temp, tempPoint ) <= 10 )
                 {
                     //Also, we need to check if port Type is the same
@@ -1207,7 +1208,7 @@ void Network::DropLink( int x, int y, int mod, int pt, wxDC &dc, bool flag )
                         //if (IsPortCompatible(mod, pt, dest_mod, i))
                     {
                         dest_port = i;
-                        acutallDestPortNumber = ports[ dest_port ].GetPortNumber();
+                        acutallDestPortNumber = ports[ dest_port ]->GetPortNumber();
                         break;
                     }
                 }
@@ -1216,27 +1217,27 @@ void Network::DropLink( int x, int y, int mod, int pt, wxDC &dc, bool flag )
     }
     else    // If ouput port
     {
-        int num = modules[ mod ].GetPlugin()->GetNumOports();
-        ports.resize( num );
-        modules[ mod ].GetPlugin()->GetOPorts( ports );
-        offSet = GetPointForSelectedPlugin( mod, ports[ pt ].GetPortNumber(), "output" );
-        acutallPortNumber = ports[ pt ].GetPortNumber();
+        //int num = modules[ mod ].GetPlugin()->GetNumOports();
+        //ports.resize( num );
+        ports = modules[ mod ].GetPlugin()->GetOPorts();
+        offSet = GetPointForSelectedPlugin( mod, ports[ pt ]->GetPortNumber(), "output" );
+        acutallPortNumber = ports[ pt ]->GetPortNumber();
 
         // check if the drop point is a out port
         if( dest_mod >= 0 )
         {
-            ports.resize( modules[dest_mod].GetPlugin()->GetNumIports() );
-            modules[dest_mod].GetPlugin()->GetIPorts( ports );
+            //ports.resize( modules[dest_mod].GetPlugin()->GetNumIports() );
+            ports = modules[dest_mod].GetPlugin()->GetIPorts();
             for( size_t i = 0; i < ports.size(); i++ )
             {
-                wxPoint tempPoint( ports[i].GetPortLocation()->GetPoint().first, ports[i].GetPortLocation()->GetPoint().second );
+                wxPoint tempPoint( ports[i]->GetPortLocation()->GetPoint().first, ports[i]->GetPortLocation()->GetPoint().second );
                 if( computenorm( temp, tempPoint ) <= 10 )
                 {
                     //if (IsPortCompatible(dest_mod, i, mod, pt))
                     if( IsPortCompatible( mod, pt, dest_mod, i ) )
                     {
                         dest_port = i;
-                        acutallDestPortNumber = ports[ dest_port ].GetPortNumber();
+                        acutallDestPortNumber = ports[ dest_port ]->GetPortNumber();
                         break;
                     }
                 }
@@ -1411,19 +1412,19 @@ bool Network::IsPortCompatible( int frmod, int frport, int tomod, int toport )
     PORT ports;
     wxPoint tempPoint;
 
-    num = modules[ frmod ].GetPlugin()->GetNumOports();
-    ports.resize( num );
-    modules[ frmod ].GetPlugin()->GetOPorts( ports );
+    //num = modules[ frmod ].GetPlugin()->GetNumOports();
+    //ports.resize( num );
+    ports = modules[ frmod ].GetPlugin()->GetOPorts();
     std::string type1 = "";
     if( frport >= 0 && frport < num )
-        type1 = ports[frport].GetPortType();
+        type1 = ports[frport]->GetPortType();
 
-    num = modules[ tomod ].GetPlugin()->GetNumIports();
-    ports.resize( num );
-    modules[ tomod ].GetPlugin()->GetIPorts( ports );
+    //num = modules[ tomod ].GetPlugin()->GetNumIports();
+    //ports.resize( num );
+    ports = modules[ tomod ].GetPlugin()->GetIPorts();
     std::string type2 = "";
     if( toport >= 0 && toport < num )
-        type2 = ports[toport].GetPortType();
+        type2 = ports[toport]->GetPortType();
 
     if( type1 == type2 )
         return true;
@@ -1727,10 +1728,10 @@ void Network::AddtoNetwork( UIPluginBase *cur_module, std::string cls_name )
     modules[id].GetPlugin()->SetDialogSize( parent->GetAppropriateSubDialogSize() );
     //Initialize ports
     PORT ports;
-    ports.resize( modules[id].GetPlugin()->GetNumIports() );
-    modules[id].GetPlugin()->GetIPorts( ports );
-    ports.resize( modules[id].GetPlugin()->GetNumOports() );
-    modules[id].GetPlugin()->GetOPorts( ports );
+    //ports.resize( modules[id].GetPlugin()->GetNumIports() );
+    ports = modules[id].GetPlugin()->GetIPorts();
+    //ports.resize( modules[id].GetPlugin()->GetNumOports() );
+    ports = modules[id].GetPlugin()->GetOPorts();
     
     ///Add the plugin model pointer to the respective system
     systemPtr->AddModel( modules[id].GetPlugin()->GetVEModel() );
@@ -2024,15 +2025,15 @@ wxPoint Network::GetPointForSelectedPlugin( unsigned long moduleID, unsigned int
 
     if( portType == "input" )
     {
-        num = modules[ moduleID ].GetPlugin()->GetNumIports();
-        ports.resize( num );
-        modules[ moduleID ].GetPlugin()->GetIPorts( ports );
+        //num = modules[ moduleID ].GetPlugin()->GetNumIports();
+        //ports.resize( num );
+        ports = modules[ moduleID ].GetPlugin()->GetIPorts();
     }
     else if( portType == "output" )
     {
-        num = modules[ moduleID ].GetPlugin()->GetNumOports();
-        ports.resize( num );
-        modules[ moduleID ].GetPlugin()->GetOPorts( ports );
+        //num = modules[ moduleID ].GetPlugin()->GetNumOports();
+        //ports.resize( num );
+        ports = modules[ moduleID ].GetPlugin()->GetOPorts();
     }
     else
     {
@@ -2049,7 +2050,7 @@ wxPoint Network::GetPointForSelectedPlugin( unsigned long moduleID, unsigned int
                      << i << " " << ports.at( i ).GetPortNumber() << " " 
                      << ports[ i ].GetPortLocation()->GetPoint().first << " " 
                      << ports[ i ].GetPortLocation()->GetPoint().second << std::endl;*/
-            if( ports.at( i ).GetPortNumber() == portNumber )
+            if( ports.at( i )->GetPortNumber() == portNumber )
             {
                 index = i;
                 break;
@@ -2068,7 +2069,7 @@ wxPoint Network::GetPointForSelectedPlugin( unsigned long moduleID, unsigned int
         /*std::cout << portNumber << " "
           << ports[ index ].GetPortLocation()->GetPoint().first << " " 
           << ports[ index ].GetPortLocation()->GetPoint().second << std::endl;*/
-        wxPoint portPoint( ports[ index ].GetPortLocation()->GetPoint().first, ports[ index ].GetPortLocation()->GetPoint().second );
+        wxPoint portPoint( ports[ index ]->GetPortLocation()->GetPoint().first, ports[ index ]->GetPortLocation()->GetPoint().second );
         tempPoint.x = bbox.x + portPoint.x;
         tempPoint.y = bbox.y + portPoint.y;
     }

@@ -68,6 +68,7 @@
 #include <ves/open/xml/model/System.h>
 #include <ves/open/xml/model/NetworkPtr.h>
 #include <ves/open/xml/model/Network.h>
+#include <ves/open/xml/model/Port.h>
 
 #include <ves/conductor/util/CADNodeManagerDlg.h>
 #include <ves/conductor/xpm/contour.xpm>
@@ -311,12 +312,14 @@ int UIPluginBase::GetNumIports()
     return inputPort.size();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UIPluginBase::GetIPorts( PORT& iports )
+PORT UIPluginBase::GetIPorts()
 {
-    for( size_t i = 0; i <  inputPort.size(); ++i )
+    return inputPort;
+    
+    //for( size_t i = 0; i <  inputPort.size(); ++i )
     {
 
-        iports[ i ] = ( *inputPort.at( i ) );
+        //iports[ i ] = ( *inputPort.at( i ) );
         /*
          iports[ i ].GetPortLocation()->SetPoint( 
                   std::pair< unsigned int, unsigned int >( poly[ 0 ].x, ( poly[ 3 ].y / inputPort.size() ) * i ) 
@@ -337,11 +340,12 @@ int UIPluginBase::GetNumOports()
     return outputPort.size();
 }
 /////////////////////////////////////////////////////////////////////////////
-void UIPluginBase::GetOPorts( PORT& oports )
+PORT UIPluginBase::GetOPorts()
 {
-    for( size_t i = 0; i < outputPort.size(); ++i )
+    return outputPort;
+    //for( size_t i = 0; i < outputPort.size(); ++i )
     {
-        oports[ i ] = ( *outputPort.at( i ) );
+        //oports[ i ] = ( *outputPort.at( i ) );
         /*
          oports[ i ].GetPortLocation()->SetPoint( 
                   std::pair< unsigned int, unsigned int >( poly[ 1 ].x, ( poly[ 3 ].y / outputPort.size() ) * i ) 

@@ -39,6 +39,8 @@
 
 #include <ves/conductor/util/DualSlider.h>
 
+#include <ves/open/xml/DataValuePairPtr.h>
+
 namespace ves
 {
 namespace conductor

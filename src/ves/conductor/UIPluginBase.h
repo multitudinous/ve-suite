@@ -41,7 +41,7 @@ UIPluginBase API
 #include <ves/VEConfig.h>
 #include <ves/conductor/Canvas.h>
 #include <ves/conductor/Network.h>
-#include <ves/open/xml/model/Port.h>
+#include <ves/open/xml/model/PortPtr.h>
 #include <ves/open/xml/model/ModelPtr.h>
 #include <ves/open/xml/CommandPtr.h>
 #include <vector>
@@ -83,7 +83,7 @@ class DataSetLoaderUI;
 }
 
 typedef std::vector< wxPoint > POLY;
-typedef std::vector< ves::open::xml::model::Port > PORT;
+typedef std::vector< ves::open::xml::model::PortPtr > PORT;
 
 namespace ves
 {
@@ -182,11 +182,11 @@ public:
     //To Get around the Memory allocation problem of windows dll
     //Add the calls for the size. So the main program can preallocate memory for it
 
-    virtual int GetNumIports();
-    virtual void GetIPorts( PORT& ports );
+    int GetNumIports();
+    virtual PORT GetIPorts();
 
-    virtual int GetNumOports();
-    virtual void GetOPorts( PORT& ports );
+    int GetNumOports();
+    virtual PORT GetOPorts();
 
     virtual void Lock( bool lock );
     void SetID( int id );

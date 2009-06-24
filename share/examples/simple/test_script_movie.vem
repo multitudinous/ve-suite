@@ -920,18 +920,5 @@
     </parameter>
   </vecommand>
 
-  <vecommand commandName="Action Pair">
-    <parameter dataName="Time" id="0e9f2855-dab7-497d-bd19-24ce1e92e31c">
-      <dataValue type="xs:double">24.63992786</dataValue>
-    </parameter>
-    <parameter dataName="Xplorer Action" id="23d2b6c7-8af8-47b9-aa89-0abf3475fdd1">
-      <genericObject commandName="EXIT_XPLORER" objectType="Command">
-        <parameter dataName="EXIT_FLAG" id="6da98a73-c658-4cfc-9601-80ee2a7b0c1d">
-          <dataValue type="xs:string">EXIT</dataValue>
-        </parameter>
-      </genericObject>
-    </parameter>
-  </vecommand>
-
 </commands>
 

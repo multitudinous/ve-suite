@@ -20,11 +20,9 @@ public:
     virtual wxString GetConductorName();
     virtual wxString GetName();
 
-    virtual int GetNumIports();
-    virtual void GetIPorts( PORT& ports );
+    virtual PORT GetIPorts();
 
-    virtual int GetNumOports();
-    virtual void GetOPorts( PORT& ports );
+    virtual PORT GetOPorts();
 
 	std::string mTextTwo;
 
