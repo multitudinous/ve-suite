@@ -1405,134 +1405,6 @@ void AppFrame::OpenSimulation( wxString simName )
 	AspenSimOpen = true;
 }
 ////////////////////////////////////////////////////////////////////////////////
-/*void AppFrame::ShowAspenSimulation( wxCommandEvent& WXUNUSED( event ) )
-{
-    Log( "Show Simulation.\n" );
-    CommandPtr returnState( new Command() );
-    returnState->SetCommandName( "showSimulation" );
-    DataValuePairPtr data( new DataValuePair() );
-    data->SetData( "NetworkQuery", "showSimulation" );
-    returnState->AddDataValuePair( data );
-
-    std::vector< std::pair< XMLObjectPtr, std::string > > nodes;
-    nodes.push_back( std::pair< XMLObjectPtr, std::string >( returnState, "vecommand" ) );
-
-    XMLReaderWriter commandWriter;
-    std::string status = "returnString";
-    commandWriter.UseStandaloneDOMDocumentManager();
-    commandWriter.WriteXMLDocument( nodes, status, "Command" );
-
-    std::string nw_str = serviceList->Query( status ) + "\n";
-    Log( nw_str.c_str() );
-}
-////////////////////////////////////////////////////////////////////////////////
-void AppFrame::HideAspenSimulation( wxCommandEvent& WXUNUSED( event ) )
-{
-    Log( "Hide Simulation.\n" );
-    CommandPtr returnState( new Command() );
-    returnState->SetCommandName( "hideSimulation" );
-    DataValuePairPtr data( new DataValuePair() );
-    data->SetData( "NetworkQuery", "hideSimulation" );
-    returnState->AddDataValuePair( data );
-
-    std::vector< std::pair< XMLObjectPtr, std::string > > nodes;
-    nodes.push_back( std::pair< XMLObjectPtr, std::string >( returnState, "vecommand" ) );
-
-    XMLReaderWriter commandWriter;
-    std::string status = "returnString";
-    commandWriter.UseStandaloneDOMDocumentManager();
-    commandWriter.WriteXMLDocument( nodes, status, "Command" );
-
-    std::string nw_str = serviceList->Query( status ) + "\n";
-    Log( nw_str.c_str() );
-}
-////////////////////////////////////////////////////////////////////////////////
-void AppFrame::CloseAspenSimulation( void )
-{    
-	Log( "Close Simulation.\n" );
-    CommandPtr returnState( new Command() );
-    returnState->SetCommandName( "closeSimulation" );
-    DataValuePairPtr data( new DataValuePair() );
-    data->SetData( "NetworkQuery", "closeSimulation" );
-    returnState->AddDataValuePair( data );
-
-    std::vector< std::pair< XMLObjectPtr, std::string > > nodes;
-    nodes.push_back( std::pair< XMLObjectPtr, std::string >( returnState, "vecommand" ) );
-
-    XMLReaderWriter commandWriter;
-    std::string status = "returnString";
-    commandWriter.UseStandaloneDOMDocumentManager();
-    commandWriter.WriteXMLDocument( nodes, status, "Command" );
-
-    std::string nw_str = serviceList->Query( status ) + "\n";
-    Log( nw_str.c_str() );
-	AspenSimOpen = false;
-}
-void AppFrame::OnCloseAspenSimulation( wxCommandEvent& WXUNUSED( event ) )
-{
-    CloseAspenSimulation();
-}
-////////////////////////////////////////////////////////////////////////////////
-void AppFrame::RunAspenNetwork( wxCommandEvent& WXUNUSED( event ) )
-{
-    Log( "Run Simulation.\n" );
-    CommandPtr returnState( new Command() );
-    returnState->SetCommandName( "runNetwork" );
-    DataValuePairPtr data( new DataValuePair() );
-    data->SetData( "NetworkQuery", "runNetwork" );
-    returnState->AddDataValuePair( data );
-
-    std::vector< std::pair< XMLObjectPtr, std::string > > nodes;
-    nodes.push_back( std::pair< XMLObjectPtr, std::string >( returnState, "vecommand" ) );
-
-    XMLReaderWriter commandWriter;
-    std::string status = "returnString";
-    commandWriter.UseStandaloneDOMDocumentManager();
-    commandWriter.WriteXMLDocument( nodes, status, "Command" );
-
-    serviceList->Query( status );
-}
-///////////////////////////////////////////////////////////////////////////////
-void AppFrame::ReinitializeAspenSimulation( wxCommandEvent& WXUNUSED( event ) )
-{
-	Log( "Reinitialize Simulation.\n" );
-	CommandPtr returnState( new Command() );
-    returnState->SetCommandName( "reinitNetwork" );
-    DataValuePairPtr data( new DataValuePair() );
-    data->SetData( "NetworkQuery", "reinitNetwork" );
-    returnState->AddDataValuePair( data );
-
-    std::vector< std::pair< XMLObjectPtr, std::string > > nodes;
-    nodes.push_back( std::pair< XMLObjectPtr, std::string >( returnState, "vecommand" ) );
-
-    XMLReaderWriter commandWriter;
-    std::string status = "returnString";
-    commandWriter.UseStandaloneDOMDocumentManager();
-    commandWriter.WriteXMLDocument( nodes, status, "Command" );
-
-    serviceList->Query( status );
-}
-////////////////////////////////////////////////////////////////////////////////
-void AppFrame::StepAspenNetwork( wxCommandEvent& WXUNUSED( event ) )
-{
-    Log( "Run Simulation.\n" );
-    CommandPtr returnState( new Command() );
-    returnState->SetCommandName( "stepNetwork" );
-    DataValuePairPtr data( new DataValuePair() );
-    data->SetData( "NetworkQuery", "runNetwork" );
-    returnState->AddDataValuePair( data );
-
-    std::vector< std::pair< XMLObjectPtr, std::string > > nodes;
-    nodes.push_back( std::pair< XMLObjectPtr, std::string >( returnState, "vecommand" ) );
-
-    XMLReaderWriter commandWriter;
-    std::string status = "returnString";
-    commandWriter.UseStandaloneDOMDocumentManager();
-    commandWriter.WriteXMLDocument( nodes, status, "Command" );
-
-    serviceList->Query( status );
-}*/
-////////////////////////////////////////////////////////////////////////////////
 void AppFrame::FindBlocks( wxCommandEvent& WXUNUSED( event ) )
 {
     Network* network = canvas->GetActiveNetwork();
@@ -1571,13 +1443,10 @@ void AppFrame::FindBlocks( wxCommandEvent& WXUNUSED( event ) )
 
     //Find for streams
     //alphabetize map
-    ////std::map< std::string, std::string > alphaMapStreams;
-    //std::map< std::string, int > alphaMapStreams;
     std::multimap< std::string, int > alphaMapStreams;
     for( int i = 0; i < network->links.size(); i++ )
     {
-        ////alphaMapStreams[ConvertUnicode( network->links[i].GetName().c_str() )]
-        ////    = network->links[i].GetUUID();
+
         alphaMapStreams.insert(std::pair< std::string, int >
             ( ConvertUnicode( network->links[i].GetName().c_str() ), i ) );
     }
@@ -1616,80 +1485,7 @@ void AppFrame::FindBlocks( wxCommandEvent& WXUNUSED( event ) )
         }
         //Log( selectModuleName.c_str() );
     }
-}/*
-////////////////////////////////////////////////////////////////////////////////
-void AppFrame::SaveSimulation( wxCommandEvent& WXUNUSED( event ) )
-{
-    Log( "Saving Simulation...\n" );
-    CommandPtr returnState( new Command() );
-    returnState->SetCommandName( "saveSimulation" );
-    DataValuePairPtr data( new DataValuePair() );
-    data->SetData( "NetworkQuery", "saveSimulation" );
-    returnState->AddDataValuePair( data );
-
-    std::vector< std::pair< XMLObjectPtr, std::string > > nodes;
-    nodes.push_back( std::pair< XMLObjectPtr, std::string >( returnState, "vecommand" ) );
-
-    XMLReaderWriter commandWriter;
-    std::string status = "returnString";
-    commandWriter.UseStandaloneDOMDocumentManager();
-    commandWriter.WriteXMLDocument( nodes, status, "Command" );
-
-    serviceList->Query( status );
-    //std::string nw_str = serviceList->Query( status ) + "\n";
-    //Log(nw_str.c_str());
-    Log( "Simulation Saved.\n" );
 }
-////////////////////////////////////////////////////////////////////////////////
-void AppFrame::SaveAsSimulation( wxCommandEvent& WXUNUSED( event ) )
-{
-    wxFileName saveFileName;
-    wxTextEntryDialog newDataSetName( this,
-                                      wxString( "Enter filename (.apw):", wxConvUTF8 ),
-                                      wxString( "Save Flowsheet", wxConvUTF8 ),
-                                      wxString( "", wxConvUTF8 ), wxOK | wxCANCEL );
-
-    if( newDataSetName.ShowModal() != wxID_OK )
-    {
-        return;
-    }
-
-    Log( "Saving Simulation...\n" );
-    saveFileName.ClearExt();
-    saveFileName.SetName( newDataSetName.GetValue() );
-    //bkpFileName.SetExt( wxString( "bkp", wxConvUTF8 ) );
-
-    CommandPtr returnState( new Command() );
-    returnState->SetCommandName( "saveAsSimulation" );
-    DataValuePairPtr data( new DataValuePair() );
-    data->SetData( "NetworkQuery", "saveAsSimulation" );
-    returnState->AddDataValuePair( data );
-
-    data = DataValuePairPtr( new DataValuePair() );
-    data->SetData( "SaveFileName",
-                   ConvertUnicode( saveFileName.GetFullName().c_str() ) );
-    returnState->AddDataValuePair( data );
-
-    std::vector< std::pair< XMLObjectPtr, std::string > > nodes;
-    nodes.push_back( std::pair < XMLObjectPtr,
-                     std::string > ( returnState, "vecommand" ) );
-    XMLReaderWriter commandWriter;
-    std::string status = "returnString";
-    commandWriter.UseStandaloneDOMDocumentManager();
-    commandWriter.WriteXMLDocument( nodes, status, "Command" );
-    //Get results
-    std::string nw_str = serviceList->Query( status );
-    Log( "Simulation Saved.\n" );
-
-    CommandPtr aspenAPWFile( new Command() );
-    aspenAPWFile->SetCommandName( "Aspen_Plus_Preferences" );
-    data = DataValuePairPtr( new DataValuePair() );
-    data->SetData( "BKPFileName",
-                   ConvertUnicode( saveFileName.GetFullName().c_str() ) );
-    aspenAPWFile->AddDataValuePair( data );
-    UserPreferencesDataBuffer::instance()->
-    SetCommand( "Aspen_Plus_Preferences", aspenAPWFile );
-}*/
 ///////////////////////////////////////////////////////////////////////////
 void AppFrame::NewCanvas( wxCommandEvent& WXUNUSED( event ) )
 {
@@ -2106,21 +1902,6 @@ void AppFrame::ViewAbout( wxCommandEvent& WXUNUSED( event ) )
 
     ::wxAboutBox(info);
 }
-////////////////////////////////////////////////////////////////////////////////
-/*void AppFrame::ViewRevision( wxCommandEvent& WXUNUSED( event ) )
-{
-    std::ostringstream revNum;
-    revNum << VES_MAJOR_VERSION << "."
-    << VES_MINOR_VERSION << "."
-    << VES_PATCH_VERSION << "."
-    << SVN_VES_REVISION;
-
-
-    wxString tempNum = wxString( "Current Revision: ", wxConvUTF8 ) +
-                       wxString( revNum.str().c_str(), wxConvUTF8 );
-
-    wxMessageBox( tempNum, _( "Revision" ), wxOK | wxICON_INFORMATION );
-}*/
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::ViewContacts( wxCommandEvent& WXUNUSED( event ) )
 {

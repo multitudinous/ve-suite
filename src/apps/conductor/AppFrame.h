@@ -154,15 +154,10 @@ public:
     HierarchyTree * GetHierarchyTree();
     ///Change data logging settings
     void OnDataLogging( wxCommandEvent &event );
-
-    //virtual void OnInternalIdle();
     ///Internal function to make the orb run
     void OnTimer(wxTimerEvent& event);
 
 protected:
-    wxString mVESFileName;
-    wxString directory;
-
     void _createTreeAndLogWindow( wxWindow* parent );
     void _configureDesktop();
     void _configureTablet();
@@ -193,32 +188,13 @@ protected:
     ///Clear the recent file history menu
     void OnClearRecentFiles( wxCommandEvent& event );
     void OnKeyPress( wxKeyEvent &event );
-
-    HierarchyTree* hierarchyTree;
-    wxNotebook* side_pane;
-    ves::conductor::Canvas* canvas;
-	ves::conductor::IconChooser* iconChooser;
-    AvailableModules* av_modules;
-    
-    Splitter* wx_log_splitter;
-    wxSplitterWindow* wx_ve_splitter;
-    Splitter* wx_nw_splitter;
-    wxMenuBar* menubar;
-    AppToolBar* appToolBar;///<The app toolbar
     
     void LoadFromServer( wxCommandEvent &event );
     void QueryFromServer( wxCommandEvent& event );
     void OpenSimulation( wxString simName );
-    //void QueryNetwork( wxCommandEvent& event );
-    //void RunAspenNetwork( wxCommandEvent& event );
-    //void StepAspenNetwork( wxCommandEvent& event );
-    //void ShowAspenSimulation( wxCommandEvent& WXUNUSED( event ) );
-    //void HideAspenSimulation( wxCommandEvent& WXUNUSED( event ) );
-    //void OnCloseAspenSimulation( wxCommandEvent& WXUNUSED( event ) );
-	//void ReinitializeAspenSimulation( wxCommandEvent& WXUNUSED( event ) );
+
     void FindBlocks( wxCommandEvent& WXUNUSED( event ) );
-    //void SaveSimulation( wxCommandEvent& WXUNUSED( event ) );
-    //void SaveAsSimulation( wxCommandEvent& WXUNUSED( event ) );
+
     void StartCalc( wxCommandEvent &event );
     void StopCalc( wxCommandEvent &event );
     void PauseCalc( wxCommandEvent &event );
@@ -228,7 +204,6 @@ protected:
 
     void ViewHelp( wxCommandEvent &event );
     void ViewAbout( wxCommandEvent &event );
-    //void ViewRevision( wxCommandEvent &event );
     void ViewContacts( wxCommandEvent &event );
     void ViewPlatformInfo( wxCommandEvent &event );
 
@@ -300,6 +275,7 @@ protected:
 
     void OnAddPlanet ( wxCommandEvent& event );
     void OnRemovePlanet ( wxCommandEvent& event );
+
 private:
     void ExitXplorer();
 	void CloseAspenSimulation();
@@ -339,6 +315,20 @@ private:
     wxMenu* xplorerJugglerMenu;
     wxMenu* xplorerViewMenu;
     wxMenu* xplorerDisplayMenu;
+    
+    HierarchyTree* hierarchyTree;
+    wxNotebook* side_pane;
+    ves::conductor::Canvas* canvas;
+	ves::conductor::IconChooser* iconChooser;
+    AvailableModules* av_modules;
+    wxString mVESFileName;
+    wxString directory;
+    
+    Splitter* wx_log_splitter;
+    wxSplitterWindow* wx_ve_splitter;
+    Splitter* wx_nw_splitter;
+    wxMenuBar* menubar;
+    AppToolBar* appToolBar;///<The app toolbar
     
     //Configuration flags
     bool f_financial;

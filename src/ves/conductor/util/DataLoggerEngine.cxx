@@ -49,8 +49,6 @@
 #include <sstream>
 #include <fstream>
 
-#include <wx/log.h>
-
 using namespace ves::open::xml;
 using namespace ves::conductor::util;
 
@@ -65,6 +63,7 @@ DataLoggerEngine::DataLoggerEngine( void )
     m_playThread( 0 ),
     m_isPlaying( false )
 {
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 DataLoggerEngine::~DataLoggerEngine()
@@ -142,7 +141,7 @@ bool DataLoggerEngine::SendNetworkStringToCE( const std::string& command )
         // do this for models
         networkWriter.ReadXMLData( command, "System", "veSystem" );
         std::vector< XMLObjectPtr > objectVector =
-        networkWriter.GetLoadedXMLObjects();
+            networkWriter.GetLoadedXMLObjects();
         
         DataValuePairPtr dataValuePair( new DataValuePair() );
         dataValuePair->SetData( std::string( "Time" ), m_commandTimer->getLastTiming() );
@@ -189,16 +188,14 @@ void DataLoggerEngine::PlayVEMFile()
         }
         delete m_playThread;   
     }
-    /*else
-    {
-        m_playThread->start();
-    }*/
     
 #if __VPR_version > 2000001
-    m_playThread = new vpr::Thread( boost::bind( &DataLoggerEngine::PlayThread, this ) );
+    m_playThread = 
+        new vpr::Thread( boost::bind( &DataLoggerEngine::PlayThread, this ) );
 #else
-    m_playThread = new vpr::Thread( new vpr::ThreadMemberFunctor< DataLoggerEngine >(
-                                                                                     this, &DataLoggerEngine::PlayThread ) );
+    m_playThread = 
+        new vpr::Thread( new vpr::ThreadMemberFunctor< DataLoggerEngine >( this, 
+            &DataLoggerEngine::PlayThread ) );
 #endif
     
 }
@@ -236,8 +233,8 @@ void DataLoggerEngine::WriteFile()
     netowrkWriter.WriteXMLDocument( nodes, xmlDocument, "Command" );
     
     {
-        std::cout << "Writing VE movie file " 
-            << m_movieFilename << "." << std::endl;
+        //std::cout << "Writing VE movie file " 
+        //    << m_movieFilename << "." << std::endl;
         std::ofstream commandScriptfile( m_movieFilename.c_str() );
         commandScriptfile << xmlDocument << std::endl;
         commandScriptfile.close();
