@@ -193,6 +193,7 @@ BEGIN_EVENT_TABLE( AppFrame, wxFrame )
     EVT_MENU( APPFRAME_CHANGE_XPLORER_VIEW_NETWORK, AppFrame::ChangeXplorerViewSettings )
     EVT_MENU( APPFRAME_CHANGE_XPLORER_VIEW_CAD, AppFrame::ChangeXplorerViewSettings )
     EVT_MENU( APPFRAME_CHANGE_XPLORER_VIEW_LOGO, AppFrame::ChangeXplorerViewSettings )
+    EVT_MENU( APPFRAME_XPLORER_DATALOGGING_LOOPING, AppFrame::OnDataLoggingSettings )
     
     EVT_MENU( EXPORTMENU_SCREEN_SHOT, ExportMenu::OnScreenShot )
     EVT_MENU( EXPORTMENU_DOT_FILE, ExportMenu::OnDOTFile )
@@ -890,10 +891,15 @@ void AppFrame::CreateMenu()
         xplorerMenu->Enable( APPFRAME_XPLORER_EXIT, true );
     }
 
+    wxMenu* xplorerDataLogginMenu = new wxMenu;
+    xplorerMenu->AppendSubMenu ( xplorerDataLogginMenu, _("Data Logging") );
+    xplorerDataLogginMenu->Append ( APPFRAME_XPLORER_DATALOGGING_LOOPING, _( "Toggle Looping" ) );
+    //xplorerDataLogginMenu->Append ( APPFRAME_MINERVA_REMOVE_PLANET, _( "Remove Planet" ) );
+    
 #ifdef MINERVA_GIS_SUPPORT
 
-    xplorerMinervaMenu = new wxMenu;
-    xplorerMenu->AppendSubMenu ( xplorerMinervaMenu, _("Minerva") );
+    wxMenu* xplorerMinervaMenu = new wxMenu;
+    xplorerMenu->AppendSubMenu ( xplorerMinervaMenu, _("GIS") );
     xplorerMinervaMenu->Append ( APPFRAME_MINERVA_ADD_PLANET, _( "Add Planet" ) );
     xplorerMinervaMenu->Append ( APPFRAME_MINERVA_REMOVE_PLANET, _( "Remove Planet" ) );
 
@@ -1310,7 +1316,6 @@ void AppFrame::OpenRecentFile( wxCommandEvent& event )
     else if( vesFileName.GetExt() == wxString( _("vem") ) )
     {
         std::string vemFilename = ConvertUnicode( vesFileName.GetFullName().c_str() );
-        std::cout << " file to open " << vemFilename << std::endl;
         ves::conductor::util::DataLoggerEngine::instance()->LoadVEMFile( vemFilename );
         ves::conductor::util::DataLoggerEngine::instance()->PlayVEMFile();
     }
@@ -2885,4 +2890,10 @@ void AppFrame::OnDataLogging( wxCommandEvent& event )
     }
 }
 ///////////////////////////////////////////////////////////////////////////////
-
+void AppFrame::OnDataLoggingSettings( wxCommandEvent& event )
+{
+    if( event.GetId() == APPFRAME_XPLORER_DATALOGGING_LOOPING )
+    {
+        ves::conductor::util::DataLoggerEngine::instance()->LoopingOn( true );
+    }
+}

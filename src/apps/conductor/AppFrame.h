@@ -130,39 +130,7 @@ public:
     ///Get the active display mode of conductor
     ///\return Returns either:\n "Desktop" or "Tablet"
     std::string GetDisplayMode();
-
-    ///Get an appropriate size for sub dialogs
-    //wxRect GetAppropriateSubDialogSize();
-
-    Splitter* wx_log_splitter;
-    wxSplitterWindow* wx_ve_splitter;
-    Splitter* wx_nw_splitter;
-    wxMenuBar* menubar;
-    AppToolBar* appToolBar;///<The app toolbar
-
-    AvailableModules* av_modules;
-    HierarchyTree* hierarchyTree;
-    wxNotebook* side_pane;
-    ves::conductor::Canvas* canvas;
-	ves::conductor::IconChooser* iconChooser;
-
-    wxMenu* file_menu;
-    wxMenu* con_menu;
-    wxMenu* run_menu;
-    wxMenu* edit_menu;
-    wxMenu* help_menu;
-    wxMenu* xplorerMenu;
-    wxMenu* xplorerDeviceMenu;
-    wxMenu* xplorerJugglerMenu;
-    wxMenu* xplorerViewMenu;
-    wxMenu* xplorerDisplayMenu;
-    wxMenu* xplorerMinervaMenu;
-
-    //Configuration flags
-    bool f_financial;
-    bool f_geometry;
-    bool f_visualization;
-
+ 
     void Log( const char* msg );
 
     ///Function to process command line args to conductor and specifically
@@ -226,7 +194,18 @@ protected:
     void OnClearRecentFiles( wxCommandEvent& event );
     void OnKeyPress( wxKeyEvent &event );
 
-protected:
+    HierarchyTree* hierarchyTree;
+    wxNotebook* side_pane;
+    ves::conductor::Canvas* canvas;
+	ves::conductor::IconChooser* iconChooser;
+    AvailableModules* av_modules;
+    
+    Splitter* wx_log_splitter;
+    wxSplitterWindow* wx_ve_splitter;
+    Splitter* wx_nw_splitter;
+    wxMenuBar* menubar;
+    AppToolBar* appToolBar;///<The app toolbar
+    
     void LoadFromServer( wxCommandEvent &event );
     void QueryFromServer( wxCommandEvent& event );
     void OpenSimulation( wxString simName );
@@ -288,6 +267,9 @@ protected:
     ///Change the visual view in xplorer
     void ChangeXplorerViewSettings( wxCommandEvent& event );
 
+    ///Change the data logging settings
+    void OnDataLoggingSettings( wxCommandEvent& event );
+
     ///Get the user preferences class
     UserPreferences* GetUserPreferences();
 
@@ -347,6 +329,22 @@ private:
     wxTimer mTimer;
     std::vector< long > pids;
     
+    wxMenu* file_menu;
+    wxMenu* con_menu;
+    wxMenu* run_menu;
+    wxMenu* edit_menu;
+    wxMenu* help_menu;
+    wxMenu* xplorerMenu;
+    wxMenu* xplorerDeviceMenu;
+    wxMenu* xplorerJugglerMenu;
+    wxMenu* xplorerViewMenu;
+    wxMenu* xplorerDisplayMenu;
+    
+    //Configuration flags
+    bool f_financial;
+    bool f_geometry;
+    bool f_visualization;
+        
     DECLARE_EVENT_TABLE()
 };
 
