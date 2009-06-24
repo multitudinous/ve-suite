@@ -1408,7 +1408,7 @@ void Network::DropLinkCon( int x, int y, int ln, int ln_con, wxDC &dc )
 /////////////////////////////////////////////////////////////////////
 bool Network::IsPortCompatible( int frmod, int frport, int tomod, int toport )
 {
-    int num = 0;
+    //size_t num = 0;
     PORT ports;
     wxPoint tempPoint;
 
@@ -1416,14 +1416,14 @@ bool Network::IsPortCompatible( int frmod, int frport, int tomod, int toport )
     //ports.resize( num );
     ports = modules[ frmod ].GetPlugin()->GetOPorts();
     std::string type1 = "";
-    if( frport >= 0 && frport < num )
+    if( frport >= 0 && frport < ports.size() )
         type1 = ports[frport]->GetPortType();
 
     //num = modules[ tomod ].GetPlugin()->GetNumIports();
     //ports.resize( num );
     ports = modules[ tomod ].GetPlugin()->GetIPorts();
     std::string type2 = "";
-    if( toport >= 0 && toport < num )
+    if( toport >= 0 && toport < ports.size() )
         type2 = ports[toport]->GetPortType();
 
     if( type1 == type2 )
@@ -2019,7 +2019,6 @@ std::pair< unsigned int, unsigned int >* Network::GetNumUnit( void )
 wxPoint Network::GetPointForSelectedPlugin( unsigned long moduleID, unsigned int portNumber, std::string portType )
 {
     wxRect bbox = modules[ moduleID ].GetPlugin()->GetBBox();
-    int num = 0;
     PORT ports;
     wxPoint tempPoint;
 
@@ -2041,7 +2040,7 @@ wxPoint Network::GetPointForSelectedPlugin( unsigned long moduleID, unsigned int
         return tempPoint;
     }
 
-    if( num > 0 )
+    if( ports.size() > 0 )
     {
         int index = -1;
         for( size_t i = 0; i < ports.size(); ++i )
