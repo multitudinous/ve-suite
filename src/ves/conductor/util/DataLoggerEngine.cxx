@@ -40,7 +40,11 @@
 #include <ves/open/xml/XMLReaderWriter.h>
 
 #include <vpr/Util/Timer.h>
+#include <vpr/Thread/Thread.h>
 #include <vpr/System.h>
+#include <vpr/vprParam.h>
+
+#include <boost/bind.hpp>
 
 #include <sstream>
 #include <fstream>
@@ -54,7 +58,10 @@ vprSingletonImp( DataLoggerEngine );
 DataLoggerEngine::DataLoggerEngine( void )
     :
     m_commandTimer( new vpr::Timer() ),
-    m_dataLogging( false )
+    m_dataLogging( false ),
+    m_looping( false ),
+    m_playThread( 0 ),
+    m_isPlaying( false )
 {
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -62,6 +69,17 @@ DataLoggerEngine::~DataLoggerEngine()
 {    
     delete m_commandTimer;
     m_commandTimer = 0;
+    m_looping = false;
+    
+    try
+    {
+        m_playThread->kill();
+    }
+    catch ( ... )
+    {
+        ;//do nothing
+    }
+    delete m_playThread;    
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DataLoggerEngine::CleanUp()
@@ -74,18 +92,18 @@ void DataLoggerEngine::CleanUp()
 ////////////////////////////////////////////////////////////////////////////////
 bool DataLoggerEngine::SendCommandStringToXplorer( const ves::open::xml::CommandWeakPtr& veCommand )
 {
-    //Now send the data to xplorer
-    ves::open::xml::XMLReaderWriter netowrkWriter;
-    netowrkWriter.UseStandaloneDOMDocumentManager();
-
-    // New need to destroy document and send it
-    std::vector< std::pair< ves::open::xml::XMLObjectPtr, std::string > > nodes;
-    nodes.push_back( std::pair< ves::open::xml::XMLObjectPtr, std::string >( veCommand.lock(), "vecommand" ) );
-    std::string xmlDocument( "returnString" );
-    netowrkWriter.WriteXMLDocument( nodes, xmlDocument, "Command" );
-
     if( m_dataLogging )
     {
+        //Now send the data to xplorer
+        ves::open::xml::XMLReaderWriter netowrkWriter;
+        netowrkWriter.UseStandaloneDOMDocumentManager();
+        
+        // New need to destroy document and send it
+        std::vector< std::pair< ves::open::xml::XMLObjectPtr, std::string > > nodes;
+        nodes.push_back( std::pair< ves::open::xml::XMLObjectPtr, std::string >( veCommand.lock(), "vecommand" ) );
+        std::string xmlDocument( "returnString" );
+        netowrkWriter.WriteXMLDocument( nodes, xmlDocument, "Command" );
+
         m_commandTimer->stopTiming();
 
         DataValuePairPtr dataValuePair( new DataValuePair() );
@@ -102,7 +120,6 @@ bool DataLoggerEngine::SendCommandStringToXplorer( const ves::open::xml::Command
         m_commandTimer->reset();
         m_commandTimer->startTiming();
     }
-
 
     return true;
 }
@@ -143,7 +160,6 @@ void DataLoggerEngine::LoadVEMFile( const std::string& file )
 {    
     m_dataLogging = false;
 
-    //std::ofstream commandScriptfile( "scriptFile.vem" );
     m_loadedCommands.clear();
     
     //Now send the data to xplorer
@@ -156,45 +172,29 @@ void DataLoggerEngine::LoadVEMFile( const std::string& file )
 ////////////////////////////////////////////////////////////////////////////////
 void DataLoggerEngine::PlayVEMFile()
 {
-    for( size_t i = 0; i < m_loadedCommands.size(); ++i )
+    if( !m_playThread )
     {
-        ves::open::xml::CommandPtr tempCmd = boost::dynamic_pointer_cast<ves::open::xml::Command >( m_loadedCommands.at( i ) );
-        DataValuePairPtr timeDvp = tempCmd->GetDataValuePair( 0 );
-        DataValuePairPtr actionDvp = tempCmd->GetDataValuePair( 1 );
-        //sleep
-        double sleepTime;
-        timeDvp->GetData( sleepTime );
-        vpr::System::sleep( vpr::Uint32( sleepTime ) );
-        //now send command the appropriate place
-        if( actionDvp->GetDataName() == "Xplorer Action" )
-        {
-            ves::conductor::util::CORBAServiceList::instance()->
-                SendCommandStringToXplorer( 
-                boost::dynamic_pointer_cast<ves::open::xml::Command >( 
-                actionDvp->GetDataXMLObject() ) );
-        }
-        else if( actionDvp->GetDataName() == "SetNetwork" )
-        {
-            ves::open::xml::model::SystemPtr tempSys = boost::dynamic_pointer_cast<ves::open::xml::model::System >( 
-                                                                  actionDvp->GetDataXMLObject() );
-            std::vector< std::pair< ves::open::xml::XMLObjectPtr, std::string > > nodes;
-                nodes.push_back( std::pair< ves::open::xml::XMLObjectPtr, std::string >( tempSys, "veSystem" ) );
-            
-            std::string xmlDocument( "returnString" );
-            //Now send the data to xplorer
-            ves::open::xml::XMLReaderWriter netowrkWriter;
-            netowrkWriter.UseStandaloneDOMDocumentManager();
-            netowrkWriter.WriteXMLDocument( nodes, xmlDocument, "Network" );
-
-            ves::conductor::util::CORBAServiceList::instance()->
-            SetNetwork( xmlDocument );
-        }
+#if __VPR_version > 2000001
+        m_playThread = new vpr::Thread( boost::bind( &DataLoggerEngine::PlayThread, this ) );
+#else
+        m_playThread = new vpr::Thread( new vpr::ThreadMemberFunctor< DataLoggerEngine >(
+            this, &DataLoggerEngine::PlayThread ) );
+#endif
+    }
+    else
+    {
+        m_playThread->start();
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DataLoggerEngine::ToggleOn( bool turnOn )
 {
     m_dataLogging = turnOn;
+}
+////////////////////////////////////////////////////////////////////////////////
+void DataLoggerEngine::LoopingOn( bool looping )
+{
+    m_looping = looping;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DataLoggerEngine::SetMovieFilename( const std::string& filename )
@@ -228,3 +228,55 @@ void DataLoggerEngine::WriteFile()
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
+#if __VPR_version > 2000001
+void DataLoggerEngine::PlayThread()
+#else
+void DataLoggerEngine::PlayThread( void* )
+#endif
+{
+    m_isPlaying = true;
+    do
+    {
+        for( size_t i = 0; i < m_loadedCommands.size(); ++i )
+        {
+            ves::open::xml::CommandPtr tempCmd = boost::dynamic_pointer_cast<ves::open::xml::Command >( m_loadedCommands.at( i ) );
+            DataValuePairPtr timeDvp = tempCmd->GetDataValuePair( 0 );
+            DataValuePairPtr actionDvp = tempCmd->GetDataValuePair( 1 );
+            //sleep
+            double sleepTime;
+            timeDvp->GetData( sleepTime );
+            vpr::System::sleep( vpr::Uint32( sleepTime ) );
+            //now send command the appropriate place
+            if( actionDvp->GetDataName() == "Xplorer Action" )
+            {
+                ves::conductor::util::CORBAServiceList::instance()->
+                SendCommandStringToXplorer( 
+                                           boost::dynamic_pointer_cast<ves::open::xml::Command >( 
+                                                                                                 actionDvp->GetDataXMLObject() ) );
+            }
+            else if( actionDvp->GetDataName() == "SetNetwork" )
+            {
+                ves::open::xml::model::SystemPtr tempSys = boost::dynamic_pointer_cast<ves::open::xml::model::System >( 
+                                                                                                                       actionDvp->GetDataXMLObject() );
+                std::vector< std::pair< ves::open::xml::XMLObjectPtr, std::string > > nodes;
+                nodes.push_back( std::pair< ves::open::xml::XMLObjectPtr, std::string >( tempSys, "veSystem" ) );
+                
+                std::string xmlDocument( "returnString" );
+                //Now send the data to xplorer
+                ves::open::xml::XMLReaderWriter netowrkWriter;
+                netowrkWriter.UseStandaloneDOMDocumentManager();
+                netowrkWriter.WriteXMLDocument( nodes, xmlDocument, "Network" );
+                
+                ves::conductor::util::CORBAServiceList::instance()->
+                SetNetwork( xmlDocument );
+            }
+        }
+    }
+    while( m_looping );    
+    m_isPlaying = false;
+}
+////////////////////////////////////////////////////////////////////////////////
+bool DataLoggerEngine::IsPlaying()
+{
+    return m_isPlaying;
+}

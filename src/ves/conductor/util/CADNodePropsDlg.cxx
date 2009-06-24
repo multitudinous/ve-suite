@@ -558,7 +558,7 @@ void CADNodePropertiesDlg::_addAnimation( wxCommandEvent& event )
 
             wxFileDialog dialog( this,
                                  _T( "Add New Animation File" ),
-                                 _T( "" ),
+                                 ::wxGetCwd(),
                                  _T( "" ),
                                  _T( "Animation Files(*.txt)|*.txt;" ),
                                  wxOPEN | wxFILE_MUST_EXIST );
@@ -877,7 +877,7 @@ void CADNodePropertiesDlg::_addAttribute( wxCommandEvent& WXUNUSED( event ) )
     {
         wxFileDialog dialog( this,
                              _T( "Add New Attribute" ),
-                             _T( "" ),
+                             ::wxGetCwd(),
                              _T( "" ),
                              _T( "VE-Attribute files (*.vea)|*.vea;" ),
                              wxOPEN | wxFILE_MUST_EXIST );

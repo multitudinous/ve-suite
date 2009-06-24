@@ -92,8 +92,14 @@ public:
     void ToggleOn( bool turnOn );
     
     void SetMovieFilename( const std::string& filename );
+ 
+    void LoopingOn( bool looping );
     
+    bool IsPlaying();
+
 private:
+    void PlayThread();
+
     void WriteFile();
     
     /// command vector to store animation data
@@ -105,6 +111,12 @@ private:
     bool m_dataLogging;
     ///Movie filename
     std::string m_movieFilename;
+    ///Loop the script 
+    bool m_looping;
+    
+    bool m_isPlaying;
+    vpr::Thread* m_playThread;
+
 };
 }
 }
