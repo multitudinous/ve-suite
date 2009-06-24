@@ -146,6 +146,7 @@ ACE_THROW_SPEC((
     if( !tempString.empty() && !ves::conductor::util::DataLoggerEngine::instance()->IsPlaying() )
     {
         //_mutex.acquire();
+        ///wxLogMessage is not thread safe...can cause problems
         ::wxLogMessage( wxString( tempString.c_str(), wxConvUTF8 ) );
         //_mutex.release();
 

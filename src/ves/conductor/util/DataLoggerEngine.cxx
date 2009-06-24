@@ -73,7 +73,7 @@ DataLoggerEngine::~DataLoggerEngine()
     m_commandTimer = 0;
     m_looping = false;
     
-    if( !m_playThread )
+    if( m_playThread )
     {
         try
         {
