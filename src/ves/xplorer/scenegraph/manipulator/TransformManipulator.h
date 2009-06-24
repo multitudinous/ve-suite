@@ -73,7 +73,6 @@ public:
     ///
     META_Node( ves::xplorer::scenegraph::manipulator, TransformManipulator );
 
-
 protected:
     ///Destructor
     virtual ~TransformManipulator();

@@ -105,11 +105,6 @@ const char* RotateTwist::libraryName() const
 ////////////////////////////////////////////////////////////////////////////////
 void RotateTwist::SetupDefaultGeometry()
 {
-    size_t numSegments( 100 );
-    double radius( 1.2 );
-    double TWO_PI( 2.0 * osg::PI );
-    double ringDelta( TWO_PI / numSegments );
-
     //The geode to add the geometry to
     osg::ref_ptr< osg::Billboard > billboard = new osg::Billboard();
     billboard->setMode( osg::Billboard::POINT_ROT_EYE );
@@ -118,14 +113,14 @@ void RotateTwist::SetupDefaultGeometry()
     {
         osg::ref_ptr< osg::Geometry > geometry = new osg::Geometry();
         osg::ref_ptr< osg::Vec3Array > vertices = new osg::Vec3Array();
-        for( size_t i = 0; i < numSegments; ++i )
+        for( size_t i = 0; i < NUM_CIRCLE_SEGMENTS; ++i )
         {
-            double rot( i * ringDelta );
+            double rot( i * DELTA_SEGMENT_ANGLE );
             double cosVal( cos( rot ) );
             double sinVal( sin( rot ) );
 
-            double x( radius * cosVal );
-            double z( radius * sinVal );
+            double x( ROTATE_TWIST_RADIUS * cosVal );
+            double z( ROTATE_TWIST_RADIUS * sinVal );
 
             vertices->push_back( osg::Vec3( x, 0.0, z ) );
         }
@@ -162,11 +157,11 @@ void RotateTwist::SetupDefaultGeometry()
         osg::ref_ptr< osg::Vec3Array > vertices = new osg::Vec3Array();
 
         double minorRadius( 0.025 );
-        double innerRadius( radius - minorRadius );
-        double outerRadius( radius + minorRadius );
-        for( size_t i = 0; i <= numSegments; ++i )
+        double innerRadius( ROTATE_TWIST_RADIUS - minorRadius );
+        double outerRadius( ROTATE_TWIST_RADIUS + minorRadius );
+        for( size_t i = 0; i <= NUM_CIRCLE_SEGMENTS; ++i )
         {
-            double rot( i * ringDelta );
+            double rot( i * DELTA_SEGMENT_ANGLE );
             double cosVal( cos( rot ) );
             double sinVal( sin( rot ) );
 
@@ -195,9 +190,9 @@ void RotateTwist::SetupDefaultGeometry()
         osg::ref_ptr< osg::Vec3Array > vertices = new osg::Vec3Array();
 
         vertices->push_back( osg::Vec3( 0.0, 0.0, 0.0 ) );
-        for( size_t i = 0; i <= numSegments; ++i )
+        for( size_t i = 0; i <= NUM_CIRCLE_SEGMENTS; ++i )
         {
-            double rot( i * ringDelta );
+            double rot( i * DELTA_SEGMENT_ANGLE );
             double cosVal( cos( rot ) );
             double sinVal( sin( rot ) );
 

@@ -101,6 +101,12 @@ public:
     void DefaultForm();
 
     ///
+    void Disable();
+
+    ///
+    void Enable();
+
+    ///
     virtual Dragger* Focus( osg::NodePath::iterator& npItr );
 
     ///
@@ -120,6 +126,9 @@ public:
 
     ///Override the insertChild function to only accept Draggers
     virtual bool insertChild( unsigned int index, Dragger* child );
+
+    ///
+    const bool IsEnabled() const;
 
     ///
     ///\param obj

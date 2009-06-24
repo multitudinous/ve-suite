@@ -41,6 +41,7 @@
 const unsigned int NUM_CIRCLE_SEGMENTS = 100;
 const double DELTA_SEGMENT_ANGLE = gmtl::Math::TWO_PI / NUM_CIRCLE_SEGMENTS;
 
+const double BOX_WIDTH = 0.1;
 const double CONE_HEIGHT = 0.2;
 const double CONE_RADIUS = 0.05;
 const double CYLINDER_RADIUS = 0.025;

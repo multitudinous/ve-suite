@@ -37,6 +37,8 @@
 // --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
 
+#include <ves/xplorer/scenegraph/manipulator/Definitions.h>
+
 // --- OSG Includes --- //
 #include <osg/Billboard>
 

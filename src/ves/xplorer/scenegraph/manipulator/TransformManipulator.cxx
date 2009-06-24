@@ -37,6 +37,8 @@
 #include <ves/xplorer/scenegraph/manipulator/RotateCompound.h>
 #include <ves/xplorer/scenegraph/manipulator/ScaleCompound.h>
 
+#include <ves/xplorer/DeviceHandler.h>
+
 // --- OSG Includes --- //
 
 

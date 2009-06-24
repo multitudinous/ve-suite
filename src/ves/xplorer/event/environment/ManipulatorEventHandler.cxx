@@ -35,6 +35,7 @@
 #include <ves/xplorer/event/environment/ManipulatorEventHandler.h>
 
 #include <ves/xplorer/GlobalBase.h>
+#include <ves/xplorer/DeviceHandler.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
 
@@ -111,13 +112,19 @@ void ManipulatorEventHandler::Execute(
     manipulatorDVP->GetData( data );
     if( data == "ENABLE" )
     {
-        manipulatorManager->TurnOn();
+        sceneManipulator->Enable();
+
+        if( ves::xplorer::DeviceHandler::instance()->GetSelectedDCS() )
+        {
+            sceneManipulator->TurnOn();
+        }
 
         return;
     }
     else if( data == "DISABLE" )
     {
-        manipulatorManager->TurnOff();
+        sceneManipulator->Disable();
+        sceneManipulator->TurnOff();
 
         return;
     }

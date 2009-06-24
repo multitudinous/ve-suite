@@ -316,6 +316,16 @@ void DeviceHandler::SetResetWorldPosition(
 void DeviceHandler::SetSelectedDCS( vxs::DCS* selectedDCS )
 {
     mSelectedDCS = selectedDCS;
+
+    vxsm::ManipulatorManager* manipulatorManager =
+        vxs::SceneManager::instance()->GetManipulatorManager();
+    vxsm::TransformManipulator* sceneManipulator =
+        manipulatorManager->GetSceneManipulator();
+
+    if( sceneManipulator->IsEnabled() && !sceneManipulator->getNodeMask() )
+    {
+        sceneManipulator->TurnOn();
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DeviceHandler::UnselectObjects()
@@ -332,7 +342,10 @@ void DeviceHandler::UnselectObjects()
         vxsm::TransformManipulator* sceneManipulator =
             manipulatorManager->GetSceneManipulator();
 
-        sceneManipulator->TurnOff();
+        if( sceneManipulator->IsEnabled() )
+        {
+            sceneManipulator->TurnOff();
+        }
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

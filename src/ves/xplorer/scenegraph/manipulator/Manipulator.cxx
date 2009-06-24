@@ -118,6 +118,16 @@ void Manipulator::DefaultForm()
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
+void Manipulator::Disable()
+{
+    m_enabled = false;
+}
+////////////////////////////////////////////////////////////////////////////////
+void Manipulator::Enable()
+{
+    m_enabled = true;
+}
+////////////////////////////////////////////////////////////////////////////////
 Dragger* Manipulator::Focus( osg::NodePath::iterator& npItr )
 {
     Dragger* activeDragger( NULL );
@@ -153,6 +163,11 @@ const VectorSpace::Enum Manipulator::GetVectorSpace() const
     return m_vectorSpace;
 }
 ////////////////////////////////////////////////////////////////////////////////
+const bool Manipulator::IsEnabled() const
+{
+    return m_enabled;
+}
+////////////////////////////////////////////////////////////////////////////////
 Dragger* Manipulator::Push(
     const osgUtil::LineSegmentIntersector& deviceInput,
     const osg::NodePath& np,
@@ -180,13 +195,6 @@ void Manipulator::PushBackAssociation(
     }
 
     m_associatedTransforms.push_back( transform );
-
-    ManipulatorManager* manipulatorManager =
-        vxs::SceneManager::instance()->GetManipulatorManager();
-    if( manipulatorManager->IsEnabled() && !m_enabled )
-    {
-        TurnOn();
-    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 Dragger* Manipulator::Release( osg::NodePath::iterator& npItr )
@@ -272,15 +280,11 @@ void Manipulator::SetVectorSpace( VectorSpace::Enum value )
 ////////////////////////////////////////////////////////////////////////////////
 void Manipulator::TurnOff()
 {
-    m_enabled = false;
-
     setNodeMask( 0 );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Manipulator::TurnOn()
 {
-    m_enabled = true;
-
     setNodeMask( 1 );
 }
 ////////////////////////////////////////////////////////////////////////////////
