@@ -46,6 +46,7 @@ Name: osg; Description: OpenSceneGraph; Types: full
 Name: juggler; Description: vrJuggler; Types: full
 Name: apr; Description: Apache APR; Types: full
 Name: osgal; Description: osgAL; Types: full
+Name: minerva; Description: Minerva; Types: full
 Name: depsbuildenv; Description: Headers and Libs
 
 [Files]
@@ -69,7 +70,6 @@ Source: {#DEPENDSINSTALLHOME}\{#WXHOME}\lib\vc_dll\*.h; DestDir: {app}\include\w
 
 ; Juggler Files
 Source: {#DEPENDSINSTALLHOME}\{#JUGGLERINSTHOME}\lib\*.dll; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs; Components: juggler
-;Source: {#DEPENDSINSTALLHOME}\{#JUGGLERINSTHOME}\bin\*.dll; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs; Components: juggler
 Source: {#DEPENDSINSTALLHOME}\{#JUGGLERINSTHOME}\lib\*.lib; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs; Components: depsbuildenv; Languages: 
 Source: {#DEPENDSINSTALLHOME}\{#JUGGLERINSTHOME}\share\vrjuggler\data\configFiles\*; DestDir: {app}\share\configFiles; Flags: ignoreversion recursesubdirs; Components: juggler
 Source: {#DEPENDSINSTALLHOME}\{#JUGGLERINSTHOME}\share\vrjuggler\data\definitions\*; DestDir: {app}\share\definitions; Flags: ignoreversion recursesubdirs createallsubdirs; Components: juggler
@@ -105,12 +105,16 @@ Source: {#DEPENDSINSTALLHOME}\{#ACETAOHOME}\tao\TAO_IDL\*.h; DestDir: {app}\incl
 Source: {#DEPENDSINSTALLHOME}\{#ACETAOHOME}\tao\orbsvcs\*.h; DestDir: {app}\include\orbsvcs; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion createallsubdirs; Components: depsbuildenv
 Source: {#DEPENDSINSTALLHOME}\{#ACETAOHOME}\tao\tao\*.h; DestDir: {app}\include\tao; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion createallsubdirs; Components: depsbuildenv
 
-; osgAL includes
+; osgAL Files
 Source: {#DEPENDSINSTALLHOME}\{#OSGALHOME}\include\*.h; DestDir: {app}\include; Flags: ignoreversion recursesubdirs skipifsourcedoesntexist; Components: depsbuildenv
-; osgAL libs
 Source: {#DEPENDSINSTALLHOME}\{#OSGALHOME}\lib\*.lib; DestDir: {app}\lib; Flags: ignoreversion skipifsourcedoesntexist; Components: depsbuildenv
-; osgAL dlls
 Source: {#DEPENDSINSTALLHOME}\{#OSGALHOME}\lib\*.dll; DestDir: {app}\lib; Flags: ignoreversion skipifsourcedoesntexist; Components: osgal
+
+; Minerva files
+Source: {#DEPENDSINSTALLHOME}\{#MINERVAHOME}\include\*.h; DestDir: {app}\include; Flags: ignoreversion recursesubdirs skipifsourcedoesntexist; Components: depsbuildenv
+Source: {#DEPENDSINSTALLHOME}\{#MINERVAHOME}\lib\*.lib; DestDir: {app}\lib; Flags: ignoreversion skipifsourcedoesntexist; Components: depsbuildenv
+Source: {#DEPENDSINSTALLHOME}\{#MINERVAHOME}\lib\*.dll; DestDir: {app}\lib; Flags: ignoreversion skipifsourcedoesntexist; Components: minerva
+Source: {#DEPENDSINSTALLHOME}\{#MINERVAHOME}\lib\*.plug; DestDir: {app}\lib; Flags: ignoreversion skipifsourcedoesntexist; Components: minerva
 
 ; README setup for depends info
 Source: {#VEDEVHOME}\dist\win\iss\dependencies.txt; DestDir: {app}; Flags: isreadme; DestName: README.txt; Components: ; Languages: 
@@ -147,4 +151,4 @@ Source: {#VEDEVHOME}\dist\win\iss\dependencies.txt; DestDir: {app}; Flags: isrea
 ;Source: {#DEPENDSINSTALLHOME}\{#ACETAOHOME}\TAO\orbsvcs\Naming_Service\Naming_Service_d.exe; DestDir: {app}\bin; Components: acetao
 
 [Icons]
-Name: {group}\{cm:UninstallProgram,{#MyAppName}}; Filename: {uninstallexe}
+Name: {group}\Uninstallers\{cm:UninstallProgram,{#MyAppName}}; Filename: {uninstallexe}

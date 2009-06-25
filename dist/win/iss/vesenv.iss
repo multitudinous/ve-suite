@@ -3,7 +3,7 @@
 #define VEVERSION "1.1.7"
 #define SVNVERSION "12737"
 #define MSVCVERSION "8.0_SP1"
-#define JUGGLERVERSION "2.3.18"
+#define JUGGLERVERSION "2.3.18-21119"
 ; Define the group name for all the windows links to be
 ; installed under for the Start Menu
 #define VESGROUPNAME "VE-Suite"
@@ -20,13 +20,13 @@
 ; Directory names for all VES dependencies
 #define ACETAOHOME "ACETAO_5.6.8_Pre-Compile_vc8.0_SP1"
 #define VTKHOME "VTK_5.2.0"
-#define OSGHOME "OSG_2.6.1_Pre-Compile_vc8.0_SP1"
+#define OSGHOME "OSG_2.8.1_Pre-Compile_vc8.0_SP1"
 #define WXHOME "WxWidgets_2.8.9_Pre-Compile_vc8.0_SP1"
 #define XERCESHOME "Xerces-c_2.8_Pre-Compile"
 #define JUGGLERINSTHOME "VRJuggler_Pre-Compile_2.3.18_SP1"
 #define APRHOME "apr_1.3_Pre-Compile"
 #define APRUTILHOME "apr_1.3_Pre-Compile"
 #define APRICONVHOME "apr_1.3_Pre-Compile"
-; #define BULLETHOME "Bullet_Pre-Compile_2.60"
+#define MINERVAHOME "Minerva_5422_Pre-Compile_vc8.0_SP1"
 #define SKEWMATRIXHOME "C:\dev\ves_deps\skewmatrix"
 #define OSGALHOME "osgAL_0.6.1_Pre-Compile_vc8.0_SP1"
