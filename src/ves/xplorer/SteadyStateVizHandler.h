@@ -134,11 +134,7 @@ public:
     void PreFrameUpdate();
 
     ///The thread function used to create geodes and actors
-#if __VJ_version > 2000003
     void CreateActorThread();
-#elif __VJ_version == 2000003
-    void CreateActorThread();
-#endif
 
     ///The function used to create streamlines
     //void streamers();

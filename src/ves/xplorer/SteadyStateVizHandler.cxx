@@ -215,12 +215,7 @@ void SteadyStateVizHandler::InitScene()
     //This set of thread stuff needs to be in ssvizhandler and transvizhandler
     std::cout << "|  9. Initializing......................................... Threads |" << std::endl;
     runIntraParallelThread = true;
-#if __VJ_version > 2000003
     vjTh[ 0 ] = new vpr::Thread( boost::bind( &SteadyStateVizHandler::CreateActorThread, this ) );
-#elif __VJ_version == 2000003
-    vjTh[ 0 ] = new vpr::Thread( new vpr::ThreadMemberFunctor< SteadyStateVizHandler >(
-                                     this, &SteadyStateVizHandler::CreateActorThread ) );
-#endif
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SteadyStateVizHandler::PreFrameUpdate()
@@ -332,11 +327,7 @@ void SteadyStateVizHandler::PreFrameUpdate()
     */
 }
 ////////////////////////////////////////////////////////////////////////////////
-#if __VJ_version > 2000003
 void SteadyStateVizHandler::CreateActorThread()
-#elif __VJ_version == 2000003
-void SteadyStateVizHandler::CreateActorThread( void* )
-#endif
 {
     //DO NOT put scene graph manipulation code in this function
     //This thread is purely for creation of geodes
