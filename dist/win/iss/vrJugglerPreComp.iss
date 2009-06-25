@@ -39,7 +39,7 @@ Name: eng; MessagesFile: compiler:Default.isl
 [Files]
 ;Get all of VR Juggler
 Source: {#VRJUGGLER_INST_LOCATION}\include\*.h; DestDir: {app}\include; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: {#VRJUGGLER_INST_LOCATION}\include\*.hpp; DestDir: {app}\include; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: {#VRJUGGLER_INST_LOCATION}\include\*.*pp; DestDir: {app}\include; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: {#VRJUGGLER_INST_LOCATION}\lib\*.dll; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: {#VRJUGGLER_INST_LOCATION}\lib\*.lib; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: {#VRJUGGLER_INST_LOCATION}\lib\*.fpc; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs
@@ -49,7 +49,7 @@ Source: {#VRJUGGLER_INST_LOCATION}\share\*; DestDir: {app}\share; Flags: ignorev
 
 ;Get all of VR Juggler Deps
 Source: {#VRJUGGLER_DEPS_INST_LOCATION}\include\*.h; DestDir: {app}\include; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: {#VRJUGGLER_DEPS_INST_LOCATION}\include\*.hpp; DestDir: {app}\include; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: {#VRJUGGLER_DEPS_INST_LOCATION}\include\*.*pp; DestDir: {app}\include; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: {#VRJUGGLER_DEPS_INST_LOCATION}\lib\*.lib; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: {#VRJUGGLER_DEPS_INST_LOCATION}\lib\*.dll; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: {#VRJUGGLER_DEPS_INST_LOCATION}\lib\*.fpc; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs
