@@ -189,14 +189,8 @@ void DataLoggerEngine::PlayVEMFile()
         delete m_playThread;   
     }
     
-#if __VPR_version > 2000001
     m_playThread = 
         new vpr::Thread( boost::bind( &DataLoggerEngine::PlayThread, this ) );
-#else
-    m_playThread = 
-        new vpr::Thread( new vpr::ThreadMemberFunctor< DataLoggerEngine >( this, 
-            &DataLoggerEngine::PlayThread ) );
-#endif
     
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -241,11 +235,7 @@ void DataLoggerEngine::WriteFile()
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-#if __VPR_version > 2000001
 void DataLoggerEngine::PlayThread()
-#else
-void DataLoggerEngine::PlayThread( void* )
-#endif
 {
     m_isPlaying = true;
     do
