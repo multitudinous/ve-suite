@@ -99,7 +99,8 @@ void ProcessScalarRangeCallback::OperateOnDataset( vtkDataSet* dataset )
             }
         }
     }
-    else if( dataset->GetPointData()->GetNumberOfArrays() > 0 )
+    //THe dataset could have both point and cell data
+    if( dataset->GetPointData()->GetNumberOfArrays() > 0 )
     {
         int numArrays = dataset->GetPointData()->GetNumberOfArrays();
         for( int i = 0; i < numArrays; ++i )
