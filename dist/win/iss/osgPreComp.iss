@@ -47,6 +47,10 @@ Source: {#OSGSRCHOME}\bin\*.exe; DestDir: {app}\bin; Flags: ignoreversion recurs
 Source: {#OSGSRCHOME}\lib\*.lib; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: {#OSGSRCHOME}\bin\*.dll; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs
 
+Source: {#OSGSRCHOME}\bin\osgPlugins-{#OSGVERSION}\osgdb_qt.dll; DestDir: {app}\lib\osgPlugins-{#OSGVERSION}\; Flags: ignoreversion recursesubdirs createallsubdirs skipifsourcedoesntexist; DestName: osgdb_qt.dll
+Source: {#OSGSRCHOME}\bin\osgPlugins-{#OSGVERSION}\osgdb_qt.dll; DestDir: {app}\lib\osgPlugins-{#OSGVERSION}\; Flags: ignoreversion recursesubdirs createallsubdirs skipifsourcedoesntexist; DestName: osgdb_avi.dll
+Source: {#OSGSRCHOME}\bin\osgPlugins-{#OSGVERSION}\osgdb_qt.dll; DestDir: {app}\lib\osgPlugins-{#OSGVERSION}\; Flags: ignoreversion recursesubdirs createallsubdirs skipifsourcedoesntexist; DestName: osgdb_mpg.dll
+
 ;simage
 ; Source: {#SIMAGEHOME}\bin\simage*.dll; DestDir: {app}\bin; Flags: ignoreversion recursesubdirs createallsubdirs
 
