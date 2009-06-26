@@ -64,6 +64,7 @@ class GrinderEntity : public ves::xplorer::scenegraph::CADEntity
 {
 public:
     GrinderEntity( std::string geomFile,
+                   osg::Group* parentNode,
                    ves::xplorer::scenegraph::DCS* pluginDCS,
                    ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator,
                    ves::xplorer::scenegraph::ResourceManager* resourceManager );
@@ -82,6 +83,8 @@ private:
     void Initialize();
 
     ves::xplorer::scenegraph::ResourceManager* m_resourceManager;
+
+    osg::ref_ptr< osg::Group > mParentNode;
 
 };
 } //end cpt

@@ -35,6 +35,7 @@
 #include "GrinderEntity.h"
 
 // --- VE-Suite Includes --- //
+#include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/ResourceManager.h>
 #include <ves/xplorer/scenegraph/CADEntityHelper.h>
 
@@ -51,15 +52,18 @@ using namespace cpt;
 ////////////////////////////////////////////////////////////////////////////////
 GrinderEntity::GrinderEntity(
     std::string geomFile,
+    osg::Group* parentNode,
     ves::xplorer::scenegraph::DCS* pluginDCS,
     ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator,
     ves::xplorer::scenegraph::ResourceManager* resourceManager )
     :
     CADEntity( geomFile, pluginDCS, false, false, physicsSimulator ),
-    m_resourceManager( resourceManager )
+    m_resourceManager( resourceManager ),
+    mParentNode( parentNode )
 {
     GetNode()->GetNode()->setNodeMask( 0 );
     Initialize();
+    SetNameAndDescriptions( "Movie Quad" );
 }
 ////////////////////////////////////////////////////////////////////////////////
 GrinderEntity::~GrinderEntity()
@@ -135,50 +139,34 @@ osg::Geometry* GrinderEntity::CreateTexturedQuadGeometry(
 void GrinderEntity::Initialize()
 {
     osg::ref_ptr< osg::Geode > geode = new osg::Geode();
-    mDCS->addChild( geode.get() );
+    mParentNode->addChild( geode.get() );
 
     osg::ref_ptr< osg::StateSet > stateSet = geode->getOrCreateStateSet();
     stateSet->setMode( GL_LIGHTING, osg::StateAttribute::OFF );
 
-    static const char* shaderSourceTextureRec =
-    {
+    static const char* shaderSourceTextureRec = {
     //"uniform vec4 cutoff_color; \n"
-    "uniform samplerRect movie_texture; \n"
+    "uniform samplerRect movieTexture; \n"
 
     "void main() \n"
     "{ \n"
-        "vec4 texture_color = textureRect( movie_texture, gl_TexCoord[ 0 ].st ); \n"
-        /*
-        "if( all( lessThanEqual( texture_color, cutoff_color ) ) ) \n"
-        "{ \n"
-            "discard; \n"
-        "} \n"
-        */
+        "vec4 texture_color = textureRect( movieTexture, gl_TexCoord[ 0 ].st ); \n"
 
         "gl_FragColor = texture_color; \n"
-    "} \n"
-    };
+    "} \n" };
 
-    static const char* shaderSourceTexture2D =
-    {
+    static const char* shaderSourceTexture2D = {
     "uniform vec4 cutoff_color; \n"
-    "uniform sampler2D movie_texture; \n"
+    "uniform sampler2D movieTexture; \n"
 
     "void main() \n"
     "{ \n"
-        "vec4 texture_color = texture2D( movie_texture, gl_TexCoord[ 0 ].st ); \n"
-        /*
-        "if( all( lessThanEqual( texture_color, cutoff_color ) ) ) \n"
-        "{ \n"
-            "discard; \n"
-        "} \n"
-        */
+        "vec4 texture_color = texture2D( movieTexture, gl_TexCoord[ 0 ].st ); \n"
 
         "gl_FragColor = texture_color; \n"
-    "} \n"
-    };
+    "} \n" };
 
-    bool useTextureRectangle = true;
+    bool useTextureRectangle = false;
     bool xyPlane = false;
 
     osg::ref_ptr< osg::Program > program = new osg::Program();
@@ -187,10 +175,10 @@ void GrinderEntity::Initialize()
             osg::Shader::FRAGMENT,
             useTextureRectangle ? shaderSourceTextureRec : shaderSourceTexture2D ) );
 
-    //stateSet->addUniform( new osg::Uniform( "cutoff_color", osg::Vec4( 0.0, 0.0, 0.0, 1.0 ) ) );
-    stateSet->addUniform( new osg::Uniform( "movie_texture", 0 ) );
+    stateSet->addUniform( new osg::Uniform( "movieTexture", 0 ) );
 
-    stateSet->setAttribute( program.get() );
+    stateSet->setAttribute(
+        program.get(), osg::StateAttribute::PROTECTED );
 
     osg::Vec3 pos( 0.0, 0.0, 0.0 );
     osg::Vec3 topleft = pos;

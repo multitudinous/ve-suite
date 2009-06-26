@@ -149,7 +149,7 @@ void CameraPlacementToolGP::InitializeNode(
     mSceneManager->GetRootNode()->addChild( mCameraEntity.get() );
 
     mGrinderEntity =
-        new cpt::GrinderEntity( "Models/IVEs/grinder.ive", mDCS.get(), mPhysicsSimulator, mResourceManager );
+        new cpt::GrinderEntity( "Models/IVEs/grinder.ive", mSceneManager->GetRootNode(), mDCS.get(), mPhysicsSimulator, mResourceManager );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraPlacementToolGP::PreFrameUpdate()
