@@ -39,6 +39,12 @@
 
 #include <ves/xplorer/scenegraph/technique/Technique.h>
 
+// --- OSG Includes --- //
+namespace osg
+{
+class Uniform;
+}
+
 // --- C/C++ Includes --- //
 #include <string>
 
@@ -67,6 +73,9 @@ public:
     ///Destructor
     virtual ~SelectTechnique();
 
+    ///
+    void UseColor( osg::Vec4f color );
+
 protected:
     ///
     virtual void DefinePasses();
@@ -76,7 +85,7 @@ private:
     float m_lineAndPointSize;
 
     ///
-    osg::Vec4d m_selectionColor;
+    osg::ref_ptr< osg::Uniform > m_color;
 
     ///This is a copy of the stateset passed into the constructor =>
     ///so it should have its own memory location as to not affect the original

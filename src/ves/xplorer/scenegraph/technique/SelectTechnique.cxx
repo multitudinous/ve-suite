@@ -49,9 +49,10 @@ SelectTechnique::SelectTechnique( osg::ref_ptr< osg::StateSet > stateSet )
     :
     Technique(),
     m_lineAndPointSize( 4.0 ),
-    m_selectionColor( 1.0, 0.0, 1.0, 1.0 ),
     m_stateSet( stateSet )
 {
+    m_color = new osg::Uniform( "color", osg::Vec4f( 1.0, 0.0, 1.0, 1.0 ) );
+
     DefinePasses();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -84,11 +85,11 @@ void SelectTechnique::DefinePasses()
 
     //Create the shader used to render the lines and points
     std::string fragmentSource =
-    "uniform vec4 selectionColor; \n"
+    "uniform vec4 color; \n"
 
     "void main() \n"
     "{ \n"
-        "gl_FragColor = selectionColor; \n"
+        "gl_FragColor = color; \n"
     "} \n";
 
     osg::ref_ptr< osg::Shader > fragmentShader = new osg::Shader();
@@ -114,8 +115,7 @@ void SelectTechnique::DefinePasses()
         stateset->setAttributeAndModes( program.get(),
             osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
 
-        stateset->addUniform(
-            new osg::Uniform( "selectionColor", m_selectionColor ) );
+        stateset->addUniform( m_color.get() );
 
         stateset->setMode( GL_STENCIL_TEST,
             osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
@@ -151,8 +151,7 @@ void SelectTechnique::DefinePasses()
         stateset->setAttributeAndModes( program.get(),
             osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
 
-        stateset->addUniform(
-            new osg::Uniform( "selectionColor", m_selectionColor ) );
+        stateset->addUniform( m_color.get() );
 
         stateset->setMode( GL_STENCIL_TEST,
             osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
@@ -178,5 +177,10 @@ void SelectTechnique::DefinePasses()
 
         AddPass( stateset.get() );
     }
+}
+////////////////////////////////////////////////////////////////////////////////
+void SelectTechnique::UseColor( osg::Vec4f color )
+{
+    m_color->set( color );
 }
 ////////////////////////////////////////////////////////////////////////////////
