@@ -31,9 +31,10 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
-// --- My Includes --- //
+// --- CPT Includes --- //
 #include "CameraPlacementToolGP.h"
 #include "CameraEntity.h"
+#include "GrinderEntity.h"
 
 // --- VE-Suite Includes --- //
 #include <ves/open/xml/model/Model.h>
@@ -52,9 +53,10 @@ using namespace cpt;
 
 ////////////////////////////////////////////////////////////////////////////////
 CameraPlacementToolGP::CameraPlacementToolGP()
-:
-PluginBase(),
-mCameraEntity( 0 )
+    :
+    PluginBase(),
+    mCameraEntity( NULL ),
+    mGrinderEntity( NULL )
 {
     //Needs to match inherited UIPluginBase class name
     mObjectName = "CameraPlacementToolUI";
@@ -120,6 +122,11 @@ CameraPlacementToolGP::~CameraPlacementToolGP()
             rootNode->removeChild( mCameraEntity.get() );
         }
     }
+
+    if( mGrinderEntity )
+    {
+        delete mGrinderEntity;
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraPlacementToolGP::InitializeNode(
@@ -140,6 +147,9 @@ void CameraPlacementToolGP::InitializeNode(
     mCameraEntity->GetDCS()->SetTranslationArray( cameraPosition );
 
     mSceneManager->GetRootNode()->addChild( mCameraEntity.get() );
+
+    mGrinderEntity =
+        new cpt::GrinderEntity( "Models/IVEs/grinder.ive", mDCS.get(), mPhysicsSimulator, mResourceManager );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraPlacementToolGP::PreFrameUpdate()

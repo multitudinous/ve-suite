@@ -31,79 +31,59 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
-#ifndef CAMERA_PLACEMENT_TOOL_GP_H
-#define CAMERA_PLACEMENT_TOOL_GP_H
+#ifndef GRINDER_ENTITY_H
+#define GRINDER_ENTITY_H
 
 // --- VE-Suite Includes --- //
-#include <ves/xplorer/plugin/PluginBase.h>
+#include <ves/xplorer/scenegraph/CADEntity.h>
+
+namespace ves
+{
+namespace xplorer
+{
+namespace scenegraph
+{
+class ResourceManager;
+}
+}
+}
+
+// --- OSG Includes --- //
+namespace osg
+{
+class Geometry;
+class Image;
+}
+
+// --- C/C++ Libraries --- //
+#include <string>
 
 namespace cpt
 {
-class CameraEntity;
-class GrinderEntity;
-
-class VE_USER_PLUGIN_EXPORTS CameraPlacementToolGP :
-    public ves::xplorer::plugin::PluginBase
+class GrinderEntity : public ves::xplorer::scenegraph::CADEntity
 {
 public:
-    ///
-    CameraPlacementToolGP();
+    GrinderEntity( std::string geomFile,
+                   ves::xplorer::scenegraph::DCS* pluginDCS,
+                   ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator,
+                   ves::xplorer::scenegraph::ResourceManager* resourceManager );
 
-    ///
-    virtual ~CameraPlacementToolGP();
+    virtual ~GrinderEntity();
 
-    ///
-    enum STRING_TO_INT_IDS
-    {
-        DRUM_ANIMATION_ON_OFF,
-        CAMERA_GEOMETRY_ON_OFF,
-        FRUSTUM_GEOMETRY_ON_OFF,
-
-        DEPTH_OF_FIELD_EFFECT_ON_OFF,
-        PROJECTION_EFFECT_ON_OFF,
-        PROJECTION_EFFECT_OPACITY,
-
-        CAMERA_WINDOW_ON_OFF,
-        CAMERA_WINDOW_RESOLUTION,
-
-        DEPTH_HELPER_WINDOW_ON_OFF,
-        DEPTH_HELPER_WINDOW_RESOLUTION,
-
-        PROJECTION_UPDATE,
-
-        FOCAL_DISTANCE,
-        FOCAL_RANGE,
-        MAX_CIRCLE_OF_CONFUSION,
-    };
-
-    ///
-    virtual void InitializeNode( osg::Group* veworldDCS );
-
-    ///
-    virtual void PreFrameUpdate();
-
-    ///
-    virtual void SetCurrentCommand( ves::open::xml::CommandPtr command );
+    void SetNameAndDescriptions( const std::string& name );
 
 protected:
 
 private:
-    ///
-    void InitializeResources();
+    osg::Geometry* CreateTexturedQuadGeometry(
+        const osg::Vec3& pos, float width, float height, osg::Image* image,
+        bool useTextureRectangle, bool xzPlane, bool optionFlip );
 
-    ///
-    osg::ref_ptr< cpt::CameraEntity > mCameraEntity;
+    void Initialize();
 
-    ///
-    cpt::GrinderEntity* mGrinderEntity;
-
-    ///
-    std::map< const std::string, STRING_TO_INT_IDS > mCommandNameToInt;
+    ves::xplorer::scenegraph::ResourceManager* m_resourceManager;
 
 };
-
-CREATE_VES_XPLORER_PLUGIN_ENTRY_POINT( CameraPlacementToolGP )
-
 } //end cpt
 
-#endif //CAMERA_PLACEMENT_TOOL_GP_H
+#endif //end GRINDER_ENTITY_H
