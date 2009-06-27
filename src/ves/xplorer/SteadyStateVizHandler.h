@@ -113,8 +113,6 @@ private:
     ///Constructor
     SteadyStateVizHandler();
 
-    //SteadyStateVizHandler( const SteadyStateVizHandler& o ) { ; }
-    //SteadyStateVizHandler& operator=( const SteadyStateVizHandler& o ) { ; }
     ///Destructor
     ~SteadyStateVizHandler();
 
