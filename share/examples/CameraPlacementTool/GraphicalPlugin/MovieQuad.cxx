@@ -32,12 +32,10 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
 // --- CPT Includes --- //
-#include "GrinderEntity.h"
+#include "MovieQuad.h"
 
 // --- VE-Suite Includes --- //
-#include <ves/xplorer/scenegraph/SceneManager.h>
-#include <ves/xplorer/scenegraph/ResourceManager.h>
-#include <ves/xplorer/scenegraph/CADEntityHelper.h>
+#include <ves/xplorer/scenegraph/CADEntity.h>
 
 // --- OSG Includes --- //
 #include <osg/Geometry>
@@ -47,33 +45,41 @@
 
 #include <osgDB/ReadFile>
 
+// --- C/C++ Includes --- //
+#include <iostream>
+
 using namespace cpt;
 
 ////////////////////////////////////////////////////////////////////////////////
-GrinderEntity::GrinderEntity(
-    std::string geomFile,
-    osg::Group* parentNode,
-    ves::xplorer::scenegraph::DCS* pluginDCS,
-    ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator,
-    ves::xplorer::scenegraph::ResourceManager* resourceManager )
+MovieQuad::MovieQuad( ves::xplorer::scenegraph::DCS* parentDCS  )
     :
-    CADEntity( geomFile, pluginDCS, false, false, physicsSimulator ),
-    m_resourceManager( resourceManager ),
-    mParentNode( parentNode )
+    mGeode( NULL ),
+    mImageStream( NULL ),
+    mCADEntity( NULL )
 {
-    GetNode()->GetNode()->setNodeMask( 0 );
     Initialize();
+
+    mCADEntity =
+        new ves::xplorer::scenegraph::CADEntity( mGeode.get(), parentDCS );
     SetNameAndDescriptions( "Movie Quad" );
+
+    double position[ 3 ] = { 0.16, 0.0, -0.25 };
+    mCADEntity->GetDCS()->SetTranslationArray( position );
 }
 ////////////////////////////////////////////////////////////////////////////////
-GrinderEntity::~GrinderEntity()
+MovieQuad::~MovieQuad()
 {
-    ;
+    mImageStream->quit();
+
+    if( mCADEntity )
+    {
+        delete mCADEntity;
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
-osg::Geometry* GrinderEntity::CreateTexturedQuadGeometry(
+osg::Geometry* MovieQuad::CreateTexturedQuadGeometry(
     const osg::Vec3& pos, float width, float height, osg::Image* image,
-    bool useTextureRectangle, bool xyPlane, bool optionFlip )
+    bool useTextureRectangle, bool xzPlane, bool optionFlip )
 {
     bool flip = image->getOrigin() == osg::Image::TOP_LEFT;
     if( optionFlip )
@@ -86,8 +92,10 @@ osg::Geometry* GrinderEntity::CreateTexturedQuadGeometry(
         osg::Geometry* pictureQuad =
             osg::createTexturedQuadGeometry(
                 pos, osg::Vec3( width, 0.0, 0.0 ),
-                xyPlane ? osg::Vec3( 0.0, height, 0.0 ) : osg::Vec3( 0.0, 0.0, height ),
-                0.0, flip ? image->t() : 0.0, image->s(), flip ? 0.0 : image->t() );
+                xzPlane ? osg::Vec3( 0.0, height, 0.0 ) :
+                          osg::Vec3( 0.0, 0.0, height ),
+                0.0, flip ? image->t() : 0.0, image->s(),
+                     flip ? 0.0 : image->t() );
 
         osg::ref_ptr< osg::TextureRectangle > textureRectangle =
             new osg::TextureRectangle( image );
@@ -105,7 +113,8 @@ osg::Geometry* GrinderEntity::CreateTexturedQuadGeometry(
 
 
         pictureQuad->getOrCreateStateSet()->setTextureAttributeAndModes(
-            0, textureRectangle.get(), osg::StateAttribute::ON );
+            3, textureRectangle.get(),
+            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
 
         return pictureQuad;
     }
@@ -114,7 +123,8 @@ osg::Geometry* GrinderEntity::CreateTexturedQuadGeometry(
         osg::Geometry* pictureQuad =
             osg::createTexturedQuadGeometry(
                 pos, osg::Vec3( width, 0.0, 0.0 ),
-                xyPlane ? osg::Vec3( 0.0, height, 0.0 ) : osg::Vec3( 0.0, 0.0, height ),
+                xzPlane ? osg::Vec3( 0.0, height, 0.0 ) :
+                          osg::Vec3( 0.0, 0.0, height ),
                 0.0, flip ? 1.0 : 0.0 , 1.0, flip ? 0.0 : 1.0 );
 
         osg::ref_ptr< osg::Texture2D > texture = new osg::Texture2D( image );
@@ -130,86 +140,90 @@ osg::Geometry* GrinderEntity::CreateTexturedQuadGeometry(
         texture->setWrap( osg::Texture::WRAP_T, osg::Texture::CLAMP_TO_EDGE );
 
         pictureQuad->getOrCreateStateSet()->setTextureAttributeAndModes(
-            0, texture.get(), osg::StateAttribute::ON );
+            3, texture.get(),
+            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
 
         return pictureQuad;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void GrinderEntity::Initialize()
+void MovieQuad::Initialize()
 {
-    osg::ref_ptr< osg::Geode > geode = new osg::Geode();
-    mParentNode->addChild( geode.get() );
+    mGeode = new osg::Geode();
 
-    osg::ref_ptr< osg::StateSet > stateSet = geode->getOrCreateStateSet();
+    osg::ref_ptr< osg::StateSet > stateSet = mGeode->getOrCreateStateSet();
     stateSet->setMode( GL_LIGHTING, osg::StateAttribute::OFF );
 
     static const char* shaderSourceTextureRec = {
-    //"uniform vec4 cutoff_color; \n"
     "uniform samplerRect movieTexture; \n"
 
     "void main() \n"
     "{ \n"
-        "vec4 texture_color = textureRect( movieTexture, gl_TexCoord[ 0 ].st ); \n"
+        "vec4 texture_color = \n"
+            "textureRect( movieTexture, gl_TexCoord[ 0 ].st ); \n"
 
         "gl_FragColor = texture_color; \n"
     "} \n" };
 
     static const char* shaderSourceTexture2D = {
-    "uniform vec4 cutoff_color; \n"
     "uniform sampler2D movieTexture; \n"
 
     "void main() \n"
     "{ \n"
-        "vec4 texture_color = texture2D( movieTexture, gl_TexCoord[ 0 ].st ); \n"
+        "vec4 texture_color = \n"
+            "texture2D( movieTexture, gl_TexCoord[ 0 ].st ); \n"
 
         "gl_FragColor = texture_color; \n"
     "} \n" };
 
     bool useTextureRectangle = false;
-    bool xyPlane = false;
+    bool xzPlane = true;
 
     osg::ref_ptr< osg::Program > program = new osg::Program();
     program->addShader(
         new osg::Shader(
             osg::Shader::FRAGMENT,
-            useTextureRectangle ? shaderSourceTextureRec : shaderSourceTexture2D ) );
+            useTextureRectangle ? shaderSourceTextureRec :
+                                  shaderSourceTexture2D ) );
 
-    stateSet->addUniform( new osg::Uniform( "movieTexture", 0 ) );
+    stateSet->addUniform( new osg::Uniform( "movieTexture", 3 ) );
 
     stateSet->setAttribute(
-        program.get(), osg::StateAttribute::PROTECTED );
+        program.get(),
+        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
 
     osg::Vec3 pos( 0.0, 0.0, 0.0 );
     osg::Vec3 topleft = pos;
     osg::Vec3 bottomright = pos;
 
     osg::ref_ptr< osg::Image > image =
-        osgDB::readImageFile( "Movies/Side_View.avi" );
-    osg::ref_ptr< osg::ImageStream > imageStream =
-        dynamic_cast< osg::ImageStream* >( image.get() );
-    if( imageStream.valid() )
+        osgDB::readImageFile( "Movies/Miscanthus-11-25-2008-01b.avi" );
+    mImageStream = dynamic_cast< osg::ImageStream* >( image.get() );
+    if( mImageStream.valid() )
     {
-        imageStream->play();   
+        mImageStream->play();
     }
 
+    double ratio = 0.00025;
+    double width = ratio * image->s();
+    double height = ratio * image->t();
     if( image.valid() )
     {
         osg::notify( osg::NOTICE )
-            << "image->s() " << image->s()
-            << "image->t()=" << image->t()
+            << "width: " << width
+            << " height: " << height
             << std::endl;
 
-        geode->addDrawable(
+        mGeode->addDrawable(
             CreateTexturedQuadGeometry(
-                pos, image->s(), image->t(), image.get(),
+                pos, width, height, image.get(),
                 useTextureRectangle, false, false ) );
 
         bottomright =
-            pos + osg::Vec3( static_cast< float >( image->s() ),
-                             static_cast< float >( image->t() ), 0.0 );
+            pos + osg::Vec3( static_cast< double >( width ),
+                             static_cast< double >( height ), 0.0 );
 
-        if( xyPlane )
+        if( xzPlane )
         {
             pos.y() += image->t() * 1.05;
         }
@@ -224,12 +238,12 @@ void GrinderEntity::Initialize()
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void GrinderEntity::SetNameAndDescriptions( const std::string& name )
+void MovieQuad::SetNameAndDescriptions( const std::string& name )
 {
     osg::Node::DescriptionList descriptorsList;
     descriptorsList.push_back( "VE_XML_ID" );
     descriptorsList.push_back( "" );
-    GetDCS()->setDescriptions( descriptorsList );
-    GetDCS()->setName( name );
+    mCADEntity->GetDCS()->setDescriptions( descriptorsList );
+    mCADEntity->GetDCS()->setName( name );
 }
 ////////////////////////////////////////////////////////////////////////////////

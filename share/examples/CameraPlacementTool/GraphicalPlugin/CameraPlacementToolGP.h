@@ -40,7 +40,7 @@
 namespace cpt
 {
 class CameraEntity;
-class GrinderEntity;
+class MovieQuad;
 
 class VE_USER_PLUGIN_EXPORTS CameraPlacementToolGP :
     public ves::xplorer::plugin::PluginBase
@@ -95,7 +95,7 @@ private:
     osg::ref_ptr< cpt::CameraEntity > mCameraEntity;
 
     ///
-    cpt::GrinderEntity* mGrinderEntity;
+    cpt::MovieQuad* mMovieQuad;
 
     ///
     std::map< const std::string, STRING_TO_INT_IDS > mCommandNameToInt;

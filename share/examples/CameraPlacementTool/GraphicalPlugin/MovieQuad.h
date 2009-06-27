@@ -31,28 +31,32 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
-#ifndef GRINDER_ENTITY_H
-#define GRINDER_ENTITY_H
+#ifndef MOVIE_QUAD_H
+#define MOVIE_QUAD_H
 
 // --- VE-Suite Includes --- //
-#include <ves/xplorer/scenegraph/CADEntity.h>
-
 namespace ves
 {
 namespace xplorer
 {
 namespace scenegraph
 {
-class ResourceManager;
+class DCS;
+class CADEntity;
 }
 }
 }
 
 // --- OSG Includes --- //
+#include <osg/ref_ptr>
+#include <osg/Vec3>
+
 namespace osg
 {
 class Geometry;
+class Geode;
 class Image;
+class ImageStream;
 }
 
 // --- C/C++ Libraries --- //
@@ -60,18 +64,12 @@ class Image;
 
 namespace cpt
 {
-class GrinderEntity : public ves::xplorer::scenegraph::CADEntity
+class MovieQuad
 {
 public:
-    GrinderEntity( std::string geomFile,
-                   osg::Group* parentNode,
-                   ves::xplorer::scenegraph::DCS* pluginDCS,
-                   ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator,
-                   ves::xplorer::scenegraph::ResourceManager* resourceManager );
+    MovieQuad( ves::xplorer::scenegraph::DCS* parentDCS );
 
-    virtual ~GrinderEntity();
-
-    void SetNameAndDescriptions( const std::string& name );
+    virtual ~MovieQuad();
 
 protected:
 
@@ -82,11 +80,15 @@ private:
 
     void Initialize();
 
-    ves::xplorer::scenegraph::ResourceManager* m_resourceManager;
+    void SetNameAndDescriptions( const std::string& name );
 
-    osg::ref_ptr< osg::Group > mParentNode;
+    osg::ref_ptr< osg::Geode > mGeode;
+
+    osg::ref_ptr< osg::ImageStream > mImageStream;
+
+    ves::xplorer::scenegraph::CADEntity* mCADEntity;
 
 };
 } //end cpt
 
-#endif //end GRINDER_ENTITY_H
+#endif //end MOVIE_QUAD_H

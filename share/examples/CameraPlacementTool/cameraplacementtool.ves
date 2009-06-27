@@ -22,10 +22,10 @@
         <dataValue type="xs:integer">1</dataValue>
       </conductorState>
     </network>
-    <model ID="103" id="c8d606ef-c8b2-d24f-9ca7-32d086571ab5" name="CameraPlacementToolUI" vendorUnit="CameraPlacementToolUI">
+    <model ID="103" id="c8d606ef-c8b2-d24f-9ca7-32d086571ab5" name="CameraPlacementToolUI" plugintype="CameraPlacementToolUI" vendorUnit="CameraPlacementToolUI">
       <icon iconHidden="0" iconMirror="0" iconRotation="0" iconScale="1" type="xs:string">DefaultPlugin</icon>
-      <iconLocation xLocation="10" yLocation="10"/>
-      <geometry associatedDataset="NONE" friction="1" id="40694521-997c-6643-9004-8ef30c76c806" makeTransparentOnVis="true" mass="1" opacity="1" physics="false" restitution="0" visibility="true">
+      <iconLocation xLocation="54" yLocation="19"/>
+      <geometry associatedDataset="NONE" id="40694521-997c-6643-9004-8ef30c76c806" makeTransparentOnVis="true" opacity="1" physics="false" visibility="true">
         <type>Assembly</type>
         <name>Model_Geometry</name>
         <parent type="xs:string"></parent>
@@ -41,20 +41,112 @@
             <value>1</value>
           </scale>
           <rotation>
-            <value>0</value>
+            <value>180</value>
             <value>0</value>
             <value>0</value>
           </rotation>
         </transform>
         <children>
-          <child friction="1" id="07d01d59-d34a-af44-92f7-e1bb9d41d67b" makeTransparentOnVis="true" mass="1" opacity="1" physics="false" restitution="0" visibility="true">
+          <child id="bf845d2a-afac-ee43-8198-1f5c7cf3be05" makeTransparentOnVis="true" opacity="1" physics="false" visibility="true">
             <type>Part</type>
-            <name>spheres</name>
+            <name>frame_mechanical</name>
+            <parent type="xs:string">40694521-997c-6643-9004-8ef30c76c806</parent>
+            <transform>
+              <translation>
+                <value>-0.205</value>
+                <value>0.5345</value>
+                <value>-0.6825</value>
+              </translation>
+              <scale>
+                <value>1</value>
+                <value>1</value>
+                <value>1</value>
+              </scale>
+              <rotation>
+                <value>0</value>
+                <value>0</value>
+                <value>0</value>
+              </rotation>
+            </transform>
+            <fileName>Models/IVEs/frame_mechanical.ive</fileName>
+          </child>
+          <child id="ce7c98cb-9ee9-994f-875d-3afceb74a22c" makeTransparentOnVis="true" opacity="1" physics="false" visibility="true">
+            <type>Part</type>
+            <name>grinder</name>
+            <parent type="xs:string">40694521-997c-6643-9004-8ef30c76c806</parent>
+            <transform>
+              <translation>
+                <value>-0.091</value>
+                <value>0</value>
+                <value>-0.0135</value>
+              </translation>
+              <scale>
+                <value>1</value>
+                <value>1</value>
+                <value>1</value>
+              </scale>
+              <rotation>
+                <value>0</value>
+                <value>0</value>
+                <value>0</value>
+              </rotation>
+            </transform>
+            <fileName>Models/IVEs/grinder.ive</fileName>
+          </child>
+          <child id="8b1ec39f-3461-3046-8619-0748b74979f2" makeTransparentOnVis="true" opacity="1" physics="false" visibility="false">
+            <type>Part</type>
+            <name>guards</name>
+            <parent type="xs:string">40694521-997c-6643-9004-8ef30c76c806</parent>
+            <transform>
+              <translation>
+                <value>-0.205</value>
+                <value>0.5345</value>
+                <value>-0.6825</value>
+              </translation>
+              <scale>
+                <value>1</value>
+                <value>1</value>
+                <value>1</value>
+              </scale>
+              <rotation>
+                <value>0</value>
+                <value>0</value>
+                <value>0</value>
+              </rotation>
+            </transform>
+            <fileName>Models/IVEs/guards.ive</fileName>
+          </child>
+          <child id="81b6d613-869d-934b-b966-86e542d64152" makeTransparentOnVis="true" opacity="1" physics="false" visibility="false">
+            <type>Part</type>
+            <name>load_frontguard</name>
+            <parent type="xs:string">40694521-997c-6643-9004-8ef30c76c806</parent>
+            <transform>
+              <translation>
+                <value>-0.205</value>
+                <value>0.5345</value>
+                <value>-0.6825</value>
+              </translation>
+              <scale>
+                <value>1</value>
+                <value>1</value>
+                <value>1</value>
+              </scale>
+              <rotation>
+                <value>0</value>
+                <value>0</value>
+                <value>0</value>
+              </rotation>
+            </transform>
+            <fileName>Models/IVEs/load_frontguard.ive</fileName>
+          </child>
+          <child id="d08d690b-6f0b-c54e-b3df-152a656b3afa" makeTransparentOnVis="true" opacity="1" physics="false" visibility="false">
+            <type>Part</type>
+            <name>outside_panels</name>
             <parent type="xs:string">40694521-997c-6643-9004-8ef30c76c806</parent>
             <transform>
               <translation>
                 <value>0</value>
-                <value>10</value>
+                <value>0</value>
                 <value>0</value>
               </translation>
               <scale>
@@ -64,11 +156,103 @@
               </scale>
               <rotation>
                 <value>0</value>
-                <value>35</value>
+                <value>0</value>
                 <value>0</value>
               </rotation>
             </transform>
-            <fileName>Models/spheres.ive</fileName>
+            <fileName>Models/IVEs/outside_panels.ive</fileName>
+          </child>
+          <child id="9460bb93-0956-2a44-a4a2-40a440109914" makeTransparentOnVis="true" opacity="1" physics="false" visibility="false">
+            <type>Part</type>
+            <name>top_panel</name>
+            <parent type="xs:string">40694521-997c-6643-9004-8ef30c76c806</parent>
+            <transform>
+              <translation>
+                <value>0.17</value>
+                <value>0</value>
+                <value>0.3</value>
+              </translation>
+              <scale>
+                <value>1</value>
+                <value>1</value>
+                <value>1</value>
+              </scale>
+              <rotation>
+                <value>0</value>
+                <value>0</value>
+                <value>10</value>
+              </rotation>
+            </transform>
+            <fileName>Models/IVEs/top_panel.ive</fileName>
+          </child>
+          <child id="eedc21e6-b19f-3a41-937d-de8b69a1d8ce" makeTransparentOnVis="true" opacity="1" physics="false" visibility="false">
+            <type>Part</type>
+            <name>unload</name>
+            <parent type="xs:string">40694521-997c-6643-9004-8ef30c76c806</parent>
+            <transform>
+              <translation>
+                <value>-0.205</value>
+                <value>0.5345</value>
+                <value>-0.6825</value>
+              </translation>
+              <scale>
+                <value>1</value>
+                <value>1</value>
+                <value>1</value>
+              </scale>
+              <rotation>
+                <value>0</value>
+                <value>0</value>
+                <value>0</value>
+              </rotation>
+            </transform>
+            <fileName>Models/IVEs/unload.ive</fileName>
+          </child>
+          <child id="7c481ce4-b516-8a42-a475-af7016c056fb" makeTransparentOnVis="true" opacity="1" physics="false" visibility="false">
+            <type>Part</type>
+            <name>mechanical</name>
+            <parent type="xs:string">40694521-997c-6643-9004-8ef30c76c806</parent>
+            <transform>
+              <translation>
+                <value>-0.205</value>
+                <value>0.5345</value>
+                <value>-0.6825</value>
+              </translation>
+              <scale>
+                <value>1</value>
+                <value>1</value>
+                <value>1</value>
+              </scale>
+              <rotation>
+                <value>0</value>
+                <value>0</value>
+                <value>0</value>
+              </rotation>
+            </transform>
+            <fileName>Models/IVEs/mechanical.wrl</fileName>
+          </child>
+          <child id="de229e73-91fb-6044-837e-4c1fc07fcbe3" makeTransparentOnVis="true" opacity="1" physics="false" visibility="false">
+            <type>Part</type>
+            <name>structure_hitch</name>
+            <parent type="xs:string">40694521-997c-6643-9004-8ef30c76c806</parent>
+            <transform>
+              <translation>
+                <value>-0.205</value>
+                <value>0.5345</value>
+                <value>-0.6825</value>
+              </translation>
+              <scale>
+                <value>1</value>
+                <value>1</value>
+                <value>1</value>
+              </scale>
+              <rotation>
+                <value>0</value>
+                <value>0</value>
+                <value>0</value>
+              </rotation>
+            </transform>
+            <fileName>Models/IVEs/structure_hitch.ive</fileName>
           </child>
         </children>
       </geometry>

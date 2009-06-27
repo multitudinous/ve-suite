@@ -42,7 +42,6 @@
 #include <ves/xplorer/environment/HeadsUpDisplay.h>
 
 #include <ves/xplorer/scenegraph/DCS.h>
-#include <ves/xplorer/scenegraph/Group.h>
 #include <ves/xplorer/scenegraph/ResourceManager.h>
 
 // --- vrJuggler Includes --- //
@@ -73,28 +72,29 @@ using namespace cpt;
 CameraEntity::CameraEntity()
     :
     osg::Camera(),
-    mTexGenNode( 0 ),
-    mDepthOfFieldTechnique( 0 ),
-    mDepthHelperTechnique( 0 ),
-    mProjectionTechnique( 0 ),
-    mCameraEntityCallback( 0 ),
-    mHeadsUpDisplay( 0 ),
-    mResourceManager( 0 ),
-    mPluginDCS( 0 ),
-    mCameraDCS( 0 ),
-    mCameraNode( 0 ),
-    mFrustumGeode( 0 ),
-    mFrustumGeometry( 0 ),
-    mFrustumVertices( 0 ),
-    mCameraViewQuadDCS( 0 ),
-    mCameraViewQuadGeode( 0 ),
-    mCameraViewQuadGeometry( 0 ),
-    mCameraViewQuadVertices( 0 ),
-    mDistanceText( 0 ),
-    mDepthHelperQuadDCS( 0 ),
-    mDepthHelperQuadGeode( 0 ),
-    mDepthHelperQuadGeometry( 0 ),
-    mDepthHelperQuadVertices( 0 )
+    mTexGenNode( NULL ),
+    mDepthOfFieldTechnique( NULL ),
+    mDepthHelperTechnique( NULL ),
+    mProjectionTechnique( NULL ),
+    mCameraEntityCallback( NULL ),
+    mHeadsUpDisplay( NULL ),
+    mResourceManager( NULL ),
+    mPluginDCS( NULL ),
+    mDCS( NULL ),
+    mCameraDCS( NULL ),
+    mCameraNode( NULL ),
+    mFrustumGeode( NULL ),
+    mFrustumGeometry( NULL ),
+    mFrustumVertices( NULL ),
+    mCameraViewQuadDCS( NULL ),
+    mCameraViewQuadGeode( NULL ),
+    mCameraViewQuadGeometry( NULL ),
+    mCameraViewQuadVertices( NULL ),
+    mDistanceText( NULL ),
+    mDepthHelperQuadDCS( NULL ),
+    mDepthHelperQuadGeode( NULL ),
+    mDepthHelperQuadGeometry( NULL ),
+    mDepthHelperQuadVertices( NULL )
 {
     ;
 }
@@ -105,58 +105,61 @@ CameraEntity::CameraEntity(
     ves::xplorer::scenegraph::ResourceManager* resourceManager )
     :
     osg::Camera(),
-    mTexGenNode( 0 ),
-    mDepthOfFieldTechnique( 0 ),
-    mDepthHelperTechnique( 0 ),
-    mProjectionTechnique( 0 ),
-    mCameraEntityCallback( 0 ),
+    mTexGenNode( NULL ),
+    mDepthOfFieldTechnique( NULL ),
+    mDepthHelperTechnique( NULL ),
+    mProjectionTechnique( NULL ),
+    mCameraEntityCallback( NULL ),
     mHeadsUpDisplay( headsUpDisplay ),
     mResourceManager( resourceManager ),
     mPluginDCS( pluginDCS ),
-    mCameraDCS( 0 ),
-    mCameraNode( 0 ),
-    mFrustumGeode( 0 ),
-    mFrustumGeometry( 0 ),
-    mFrustumVertices( 0 ),
-    mCameraViewQuadDCS( 0 ),
-    mCameraViewQuadGeode( 0 ),
-    mCameraViewQuadGeometry( 0 ),
-    mCameraViewQuadVertices( 0 ),
-    mDistanceText( 0 ),
-    mDepthHelperQuadDCS( 0 ),
-    mDepthHelperQuadGeode( 0 ),
-    mDepthHelperQuadGeometry( 0 ),
-    mDepthHelperQuadVertices( 0 )
+    mDCS( NULL ),
+    mCameraDCS( NULL ),
+    mCameraNode( NULL ),
+    mFrustumGeode( NULL ),
+    mFrustumGeometry( NULL ),
+    mFrustumVertices( NULL ),
+    mCameraViewQuadDCS( NULL ),
+    mCameraViewQuadGeode( NULL ),
+    mCameraViewQuadGeometry( NULL ),
+    mCameraViewQuadVertices( NULL ),
+    mDistanceText( NULL ),
+    mDepthHelperQuadDCS( NULL ),
+    mDepthHelperQuadGeode( NULL ),
+    mDepthHelperQuadGeometry( NULL ),
+    mDepthHelperQuadVertices( NULL )
 {
     Initialize();
 }
 ////////////////////////////////////////////////////////////////////////////////
-CameraEntity::CameraEntity( const CameraEntity& cameraEntity,
-                            const osg::CopyOp& copyop )
+CameraEntity::CameraEntity(
+    const CameraEntity& cameraEntity,
+    const osg::CopyOp& copyop )
     :
     osg::Camera( cameraEntity, copyop ),
-    mTexGenNode( 0 ),
-    mDepthOfFieldTechnique( 0 ),
-    mDepthHelperTechnique( 0 ),
-    mProjectionTechnique( 0 ),
-    mCameraEntityCallback( 0 ),
-    mHeadsUpDisplay( 0 ),
-    mResourceManager( 0 ),
-    mPluginDCS( 0 ),
-    mCameraDCS( 0 ),
-    mCameraNode( 0 ),
-    mFrustumGeode( 0 ),
-    mFrustumGeometry( 0 ),
-    mFrustumVertices( 0 ),
-    mCameraViewQuadDCS( 0 ),
-    mCameraViewQuadGeode( 0 ),
-    mCameraViewQuadGeometry( 0 ),
-    mCameraViewQuadVertices( 0 ),
-    mDistanceText( 0 ),
-    mDepthHelperQuadDCS( 0 ),
-    mDepthHelperQuadGeode( 0 ),
-    mDepthHelperQuadGeometry( 0 ),
-    mDepthHelperQuadVertices( 0 )
+    mTexGenNode( cameraEntity.mTexGenNode.get() ),
+    mDepthOfFieldTechnique( cameraEntity.mDepthOfFieldTechnique ),
+    mDepthHelperTechnique( cameraEntity.mDepthHelperTechnique ),
+    mProjectionTechnique( cameraEntity.mProjectionTechnique ),
+    mCameraEntityCallback( cameraEntity.mCameraEntityCallback.get() ),
+    mHeadsUpDisplay( cameraEntity.mHeadsUpDisplay ),
+    mResourceManager( cameraEntity.mResourceManager ),
+    mPluginDCS( cameraEntity.mPluginDCS.get() ),
+    mDCS( cameraEntity.mDCS.get() ),
+    mCameraDCS( cameraEntity.mCameraDCS.get() ),
+    mCameraNode( cameraEntity.mCameraNode.get() ),
+    mFrustumGeode( cameraEntity.mFrustumGeode.get() ),
+    mFrustumGeometry( cameraEntity.mFrustumGeometry.get() ),
+    mFrustumVertices( cameraEntity.mFrustumVertices.get() ),
+    mCameraViewQuadDCS( cameraEntity.mCameraViewQuadDCS.get() ),
+    mCameraViewQuadGeode( cameraEntity.mCameraViewQuadGeode.get() ),
+    mCameraViewQuadGeometry( cameraEntity.mCameraViewQuadGeometry.get() ),
+    mCameraViewQuadVertices( cameraEntity.mCameraViewQuadVertices.get() ),
+    mDistanceText( cameraEntity.mDistanceText.get() ),
+    mDepthHelperQuadDCS( cameraEntity.mDepthHelperQuadDCS.get() ),
+    mDepthHelperQuadGeode( cameraEntity.mDepthHelperQuadGeode.get() ),
+    mDepthHelperQuadGeometry( cameraEntity.mDepthHelperQuadGeometry.get() ),
+    mDepthHelperQuadVertices( cameraEntity.mDepthHelperQuadVertices.get() )
 {
     if( &cameraEntity != this )
     {
@@ -202,7 +205,11 @@ void CameraEntity::Initialize()
             ( ves::xplorer::scenegraph::ResourceManager::instance()->get
             < osg::Texture2D, osg::ref_ptr >( "DepthTexture" ) ).get() );
 
+    //
+    mDCS = new ves::xplorer::scenegraph::DCS();
+
     //Add the subgraph to render
+    addChild( mDCS.get() );
     addChild( mPluginDCS.get() );
 
     //Initialize mInitialViewMatrix
@@ -210,7 +217,7 @@ void CameraEntity::Initialize()
                                    osg::Vec3( 0, 1, 0 ),
                                    osg::Vec3( 0, 0, 1 ) );
     setViewMatrix( mInitialViewMatrix );
-    setProjectionMatrixAsPerspective( 40.0, 1.0, 1.0, 50.0 );
+    setProjectionMatrixAsPerspective( 20.0, 1.0, 0.1, 2.0 );
 
     //Initialize mMVPT
     mMVPT = osg::Matrix::identity();
@@ -260,11 +267,11 @@ void CameraEntity::Initialize()
     mProjectionTechnique->GetAlpha()->set(
         static_cast< float >( 0.3 ) );
     mProjectionTechnique->GetNearPlaneUniform()->set(
-        static_cast< float >( 1.0 ) );
+        static_cast< float >( 0.1 ) );
     mProjectionTechnique->GetFarPlaneUniform()->set(
-        static_cast< float >( 50.0 ) );
+        static_cast< float >( 2.0 ) );
     mProjectionTechnique->GetFocalDistanceUniform()->set(
-        static_cast< float >( 15.0 ) );
+        static_cast< float >( 1.5 ) );
     mProjectionTechnique->GetFocalRangeUniform()->set(
         static_cast< float >( 5.0 ) );
     mPluginDCS->AddTechnique( "Projection", mProjectionTechnique );
@@ -481,7 +488,7 @@ void CameraEntity::CreateHitQuadGeode()
 void CameraEntity::CreateCameraViewQuad()
 {
     mCameraViewQuadDCS = new ves::xplorer::scenegraph::DCS();
-    mCameraViewQuadDCS->setScale( osg::Vec3( 200, 200, 1 ) );
+    mCameraViewQuadDCS->setScale( osg::Vec3( 300, 300, 1 ) );
     mHeadsUpDisplay->GetCamera()->addChild( mCameraViewQuadDCS.get() );
 
     mCameraViewQuadGeode = new osg::Geode();
@@ -661,14 +668,19 @@ void CameraEntity::DisplayDepthHelperQuad( bool onOff )
     mDepthHelperQuadDCS->setNodeMask( onOff );
 }
 ////////////////////////////////////////////////////////////////////////////////
+ves::xplorer::scenegraph::DCS* CameraEntity::GetDCS()
+{
+    return mDCS.get();
+}
+////////////////////////////////////////////////////////////////////////////////
+ves::xplorer::scenegraph::DCS* CameraEntity::GetCameraDCS()
+{
+    return mCameraDCS.get();
+}
+////////////////////////////////////////////////////////////////////////////////
 ves::xplorer::scenegraph::DCS* CameraEntity::GetPluginDCS()
 {
     return mPluginDCS.get();
-}
-////////////////////////////////////////////////////////////////////////////////
-ves::xplorer::scenegraph::DCS* CameraEntity::GetDCS()
-{
-    return mCameraDCS.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
 const osg::Matrixd& CameraEntity::GetInitialViewMatrix()

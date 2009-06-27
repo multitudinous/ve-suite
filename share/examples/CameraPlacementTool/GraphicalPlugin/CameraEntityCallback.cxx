@@ -83,7 +83,8 @@ void CameraEntityCallback::operator()( osg::Node* node, osg::NodeVisitor* nv )
         osg::ref_ptr< ves::xplorer::scenegraph::CoordinateSystemTransform >
             coordinateSystemTransform =
                 new ves::xplorer::scenegraph::CoordinateSystemTransform(
-                    cameraEntity->GetPluginDCS(), cameraEntity->GetDCS() );
+                    cameraEntity->GetPluginDCS(),
+                    cameraEntity->GetCameraDCS() );
 
         gmtl::Matrix44d localToWorldMatrix =
             coordinateSystemTransform->GetTransformationMatrix();

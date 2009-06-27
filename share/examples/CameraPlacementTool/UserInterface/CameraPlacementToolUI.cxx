@@ -49,8 +49,13 @@ CameraPlacementToolUI::CameraPlacementToolUI()
 {
     mPluginName = wxT( "CameraPlacementTool" );
 
-    wxImage my_img( camera_xpm );
-    SetImage( my_img );
+    wxImage image( camera_xpm );
+
+    float scale = 0.50;
+    int iconW = static_cast< int >( ( image.GetWidth() - 1 ) * scale );
+    int iconH = static_cast< int >( ( image.GetHeight() - 1 ) * scale );
+
+    SetImage( image.Scale( iconW, iconH, wxIMAGE_QUALITY_HIGH ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 CameraPlacementToolUI::~CameraPlacementToolUI()

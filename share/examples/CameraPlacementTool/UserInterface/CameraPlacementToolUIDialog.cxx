@@ -172,12 +172,12 @@ CameraPlacementToolUIDialog::CameraPlacementToolUIDialog(
 :
 UIDialog( ( wxWindow* )parent, id, wxT( "CameraPlacementTool" ) )
 {
-    mProjectionData[ 0 ] = 40.0;
+    mProjectionData[ 0 ] = 20.0;
     mProjectionData[ 1 ] = 1.0;
-    mProjectionData[ 2 ] = 1.0;
-    mProjectionData[ 3 ] = 50.0;
+    mProjectionData[ 2 ] = 0.1;
+    mProjectionData[ 3 ] = 2.0;
 
-    mDepthOfFieldData[ 0 ] = 15.0;
+    mDepthOfFieldData[ 0 ] = 1.5;
     mDepthOfFieldData[ 1 ] = 5.0;
     mDepthOfFieldData[ 2 ] = 6.0;
 
@@ -398,7 +398,7 @@ void CameraPlacementToolUIDialog::BuildGUI()
     cameraWindowResolutionSizer->Add( cameraWindowResolutionText, 0, wxALL, 5 );
 
     mCameraWindowResolution = new wxSlider(
-        mainPanel, ID_CAMERA_WINDOW_RESOLUTION, 200, 0, 1000,
+        mainPanel, ID_CAMERA_WINDOW_RESOLUTION, 300, 0, 1000,
         wxDefaultPosition, wxSize( -1, -1 ),
         wxSL_BOTH | wxSL_HORIZONTAL | wxSL_LABELS | wxSL_TOP );
     cameraWindowResolutionSizer->Add( mCameraWindowResolution, 0, wxEXPAND, 5 );

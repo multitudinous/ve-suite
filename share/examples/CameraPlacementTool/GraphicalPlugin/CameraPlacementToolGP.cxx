@@ -34,7 +34,7 @@
 // --- CPT Includes --- //
 #include "CameraPlacementToolGP.h"
 #include "CameraEntity.h"
-#include "GrinderEntity.h"
+#include "MovieQuad.h"
 
 // --- VE-Suite Includes --- //
 #include <ves/open/xml/model/Model.h>
@@ -56,7 +56,7 @@ CameraPlacementToolGP::CameraPlacementToolGP()
     :
     PluginBase(),
     mCameraEntity( NULL ),
-    mGrinderEntity( NULL )
+    mMovieQuad( NULL )
 {
     //Needs to match inherited UIPluginBase class name
     mObjectName = "CameraPlacementToolUI";
@@ -117,20 +117,25 @@ CameraPlacementToolGP::~CameraPlacementToolGP()
         osg::ref_ptr< osg::Group > rootNode =
             mSceneManager->GetRootNode();
 
-        if( rootNode.valid() && mCameraEntity.valid() )
+        if( rootNode.valid() )
         {
-            rootNode->removeChild( mCameraEntity.get() );
+            if( mCameraEntity.valid() )
+            {
+                rootNode->removeChild( mCameraEntity->GetDCS() );
+                if( mMovieQuad )
+                {
+                    delete mMovieQuad;
+                }
+
+                rootNode->removeChild( mCameraEntity.get() );
+            }
         }
     }
 
-    if( mGrinderEntity )
-    {
-        delete mGrinderEntity;
-    }
+    
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CameraPlacementToolGP::InitializeNode(
-    osg::Group* veworldDCS )
+void CameraPlacementToolGP::InitializeNode( osg::Group* veworldDCS )
 {
     PluginBase::InitializeNode( veworldDCS );
 
@@ -143,13 +148,15 @@ void CameraPlacementToolGP::InitializeNode(
         mEnvironmentHandler->GetHeadsUpDisplay(),
         mResourceManager );
 
-    double cameraPosition[ 3 ] = { 0, -5.0, 0 };
-    mCameraEntity->GetDCS()->SetTranslationArray( cameraPosition );
+    double cameraPosition[ 3 ] = { 0.6, -1.0, -0.2 };
+    mCameraEntity->GetCameraDCS()->SetTranslationArray( cameraPosition );
+    double cameraRotation[ 3 ] = { 20.0, 0.0, 0.0 };
+    mCameraEntity->GetCameraDCS()->SetRotationArray( cameraRotation );
 
+    mMovieQuad = new cpt::MovieQuad( mCameraEntity->GetDCS() );
+
+    mSceneManager->GetRootNode()->addChild( mCameraEntity->GetDCS() );
     mSceneManager->GetRootNode()->addChild( mCameraEntity.get() );
-
-    mGrinderEntity =
-        new cpt::GrinderEntity( "Models/IVEs/grinder.ive", mSceneManager->GetRootNode(), mDCS.get(), mPhysicsSimulator, mResourceManager );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraPlacementToolGP::PreFrameUpdate()

@@ -103,8 +103,9 @@ public:
     void DisplayCameraViewQuad( bool onOff );
     void DisplayDepthHelperQuad( bool onOff );
     
-    ves::xplorer::scenegraph::DCS* GetPluginDCS();
     ves::xplorer::scenegraph::DCS* GetDCS();
+    ves::xplorer::scenegraph::DCS* GetCameraDCS();
+    ves::xplorer::scenegraph::DCS* GetPluginDCS();
     ves::xplorer::scenegraph::DCS* GetQuadDCS();
     const osg::Matrixd& GetInitialViewMatrix();
     osg::TexGenNode* GetTexGenNode();
@@ -152,6 +153,8 @@ private:
     ves::xplorer::scenegraph::ResourceManager* mResourceManager;
 
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > mPluginDCS;
+
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > mDCS;
     
     //The loaded camera geometry node and frustum geometry lines
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > mCameraDCS;
