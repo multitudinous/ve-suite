@@ -1,0 +1,21 @@
+##Builds preprocessor program
+import os, sys, string
+pj = os.path.join
+import SConsAddons.Util as sca_util
+
+Import('ves_pkg LIBDIR PREFIX buildDir vtk_options boost_options RootDir')
+
+srcDir = os.path.abspath( pj(RootDir, 'share', 'tools', 'builder','ABAQUS_Translator') )
+srcs = Split( """
+main.cxx
+""")
+
+# headers = sca_util.getHeadersRecursive( srcDir )
+
+env = ves_pkg.getEnv().Clone()
+
+vtk_options.apply( env )
+
+prog = ves_pkg.createProgram('abaqus' + env["PROGSUFFIX"], env, 'bin')
+prog.addSources( srcs )
+prog.build()

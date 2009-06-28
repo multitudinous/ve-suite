@@ -456,7 +456,7 @@ vtkIdType vtkAbaqusReaderHelper::FindSection( InputDeckBase::iterator seekStart,
     //check to see if it is a set of some kind
     if( iter->c_str()[0] == *(star) )
     {
-      //cerr << "FindSection found : " << *iter << endl;
+      cerr << "FindSection found : " << *iter << endl;
 
       if( bInSection )
       {
@@ -544,19 +544,21 @@ int vtkAbaqusInputDeckReader::RequestData(
   vtkInformationVector **vtkNotUsed(inputVector),
   vtkInformationVector *outputVector)
 {
-//  if( this->NumberOfOutputs < 1 )
-//    {
-//    this->SetOutput( vtkAbaqusElementModel::New() );
-//    }
-//  vtkAbaqusElementModel *out = 
-//    vtkAbaqusElementModel::SafeDownCast(this->GetOutput());
+  //if( this->NumberOfOutputs < 1 )
+  //  {
+  //  this->SetOutput( vtkAbaqusElementModel::New() );
+  //  }
+  //vtkAbaqusElementModel *out = 
+  //  vtkAbaqusElementModel::SafeDownCast(this->GetOutput());
 
   // get the info object
   vtkInformation *outInfo = outputVector->GetInformationObject(0);
 
+  //vtkUnstructuredGrid* tempOut =  static_cast< vtkUnstructuredGrid* >( outInfo->Get(vtkDataObject::DATA_OBJECT()) );
+  vtkAbaqusElementModel* out = static_cast< vtkAbaqusElementModel* >( outInfo->Get(vtkDataObject::DATA_OBJECT()) );
   // get the ouptut
-  vtkAbaqusElementModel *out = vtkAbaqusElementModel::SafeDownCast(
-    outInfo->Get(vtkDataObject::DATA_OBJECT()));
+  //vtkAbaqusElementModel* out = vtkAbaqusElementModel::SafeDownCast(
+  //  outInfo->Get(vtkDataObject::DATA_OBJECT()));
   if( !out )
     {
     vtkErrorMacro("Ack!! no output!!");
@@ -570,7 +572,8 @@ int vtkAbaqusInputDeckReader::RequestData(
 #ifdef WIN32
   ifstream ifile( this->FileName, ios::in | ios::nocreate);
 #else
-  ifstream ifile( this->FileName, ios::in|ios::binary);
+  //ifstream ifile( this->FileName, ios::in|ios::binary);
+    ifstream ifile( this->FileName, ios::in);
 #endif
   if( !ifile )
     {
@@ -589,6 +592,7 @@ int vtkAbaqusInputDeckReader::RequestData(
       }
     inp.push_back( line.c_str() );
     }
+    cout << " here 0 " << std::endl;
 
   //cleanup and done
   ifile.clear();
@@ -602,6 +606,7 @@ int vtkAbaqusInputDeckReader::RequestData(
   ElementMapBase::iterator idIter;
   
   vtkStdString::size_type s,e,v;
+    cout << " here 0 " << std::endl;
 
   vtkPoints *nodes = NULL;
   vtkDoubleArray *nodeScalars = NULL;
@@ -609,14 +614,17 @@ int vtkAbaqusInputDeckReader::RequestData(
   vtkIdTypeArray *idSet = NULL;
   vtkIdType tokens, cellType, nodeCount, sIdx, eIdx, idx;
   vtkIdType min, max, curr;
+    cout << " here 0 " << std::endl;
 
   //get the file header
-  tokens = vtkAbaqusReaderHelper::FindSection( inp.begin(), secStart, secEnd, "*HEADING", inp );
+  tokens = vtkAbaqusReaderHelper::FindSection( inp.begin(), secStart, secEnd, "*Heading", inp );
   iter = secStart+1;
+    cout << " here 1 " << (iter)->c_str() << std::endl;
   out->SetHeading( (iter)->c_str() );
+    cout << " here 0 " << std::endl;
 
   //load the nodes to a vtkPoints object
-  tokens = vtkAbaqusReaderHelper::FindSection( iter, secStart, secEnd, "*NODE", inp );  
+  tokens = vtkAbaqusReaderHelper::FindSection( iter, secStart, secEnd, "*Node", inp );  
   nodes = vtkPoints::New();
     nodeScalars = vtkDoubleArray::New();
       idx = vtkAbaqusReaderHelper::LoadNodes( secStart, secEnd, tokens, nodes, nodeScalars );
@@ -626,6 +634,7 @@ int vtkAbaqusInputDeckReader::RequestData(
     nodeScalars->Delete();
   nodes->Delete();
   
+    cout << " here 1 " << std::endl;
 
   //
   //Get all the explicit element sections tokenized so we can build cells in teh out dataset
@@ -644,18 +653,19 @@ int vtkAbaqusInputDeckReader::RequestData(
     rawElements->Allocate(1);
 
     tokens = cellType = nodeCount = sIdx = eIdx = 0;
-    
+    cout << " here 1 " << std::endl;
+
     while( secEnd != inp.end() )
     {
       tokens = cellType = nodeCount = 0;
       iter = secEnd;
-      tokens = vtkAbaqusReaderHelper::FindSection( iter, secStart, secEnd, "*ELEMENT, TYPE=", inp );
+      tokens = vtkAbaqusReaderHelper::FindSection( iter, secStart, secEnd, "*Element, type=", inp );
       if( secEnd >= inp.end() )
         break;
 
       //find and the node count for this block
       vtkStdString &hdr = *secStart;
-      s = hdr.find( "TYPE=", 0 );
+      s = hdr.find( "type=", 0 );
       e = hdr.length();
       if( s+5 < e )
         cellType = vtkAbaqusReaderHelper::GetVTKCellTypeFromAbaqusType( (hdr.substr( s+5, e ) ).c_str(), nodeCount );
@@ -664,10 +674,11 @@ int vtkAbaqusInputDeckReader::RequestData(
         //fatal error?
         vtkErrorMacro( << "Could not find element type!" );
       }
-      
+        cout << " here 0 " << std::endl;
+
       idSet = vtkIdTypeArray::New();
         //get the set name if there is one, should be last in line
-        v = (hdr.find( "ELSET=", 0 ));
+        v = (hdr.find( "elset=", 0 ));
         if( v < (e-6) )
         {
           idSet->SetName( (hdr.substr( v+6, e ) ).c_str() );
@@ -675,7 +686,7 @@ int vtkAbaqusInputDeckReader::RequestData(
         else
         {
           //give it a generic name
-          vtkStdString tmpName = "ELSET_";
+          vtkStdString tmpName = "elset_";
           char *buff = new char[32];
             sprintf( buff, "%06ld", static_cast<long>(eIdx) );
             tmpName += buff;
@@ -714,7 +725,8 @@ int vtkAbaqusInputDeckReader::RequestData(
         for( int i=sIdx; i<=eIdx; i+=(nodeCount+1) )
         {
           assert( idx < idSet->GetNumberOfTuples());
-          assert( i < rawElements->GetMaxId());
+          cout << i << " " << rawElements->GetMaxId() << endl;
+          assert( i <= rawElements->GetMaxId());
           vtkDebugMacro( << " Adding element " << rawElements->GetValue(i)
             << " as index " << idx << " in the new cell id array." );
           AbqMap.insert( vtkstd::make_pair( rawElements->GetValue(i), 
@@ -726,7 +738,7 @@ int vtkAbaqusInputDeckReader::RequestData(
       idSet->Delete();
       idSet = NULL;
     }
-
+cout << " here 1 " << std::endl;
     //now iterate the map to get the largest element id,
     min = 100000;
     max = -1;
@@ -736,6 +748,7 @@ int vtkAbaqusInputDeckReader::RequestData(
       if( curr < min ) min = curr;
       if( curr > max ) max = curr;
     }
+    cout << " here 2 " << std::endl;
     
     //max number of cells...
     out->Allocate(max);
@@ -750,6 +763,7 @@ int vtkAbaqusInputDeckReader::RequestData(
     //
     vtkIdType empty;
     empty = 0;
+    cout << " here 3 " << std::endl;
 
     for( vtkIdType eid = 0; eid <= max; eid++ )
     {
@@ -792,7 +806,7 @@ int vtkAbaqusInputDeckReader::RequestData(
   while( secEnd != inp.end() )
   {
     iter = secEnd;
-    tokens = vtkAbaqusReaderHelper::FindSection( iter, secStart, secEnd, "*NSET,", inp ); 
+    tokens = vtkAbaqusReaderHelper::FindSection( iter, secStart, secEnd, "*Nset,", inp ); 
     if( secEnd == inp.end() )
       break;
 
@@ -800,11 +814,11 @@ int vtkAbaqusInputDeckReader::RequestData(
 
     idSet = vtkIdTypeArray::New();
       //find the set name
-      v = hdr.find( "NSET=", 0 );
+      v = hdr.find( "nset=", 0 );
       if( v < hdr.length() )
       {
         vtkStdString tmp = hdr.substr( v+5, hdr.length() );
-        e = tmp.find( ", GENERATE", 0 );
+        e = tmp.find( ", generate", 0 );
         if( e < tmp.length() )
           tmp.erase( e );
         idSet->SetName( tmp.c_str() );
@@ -812,7 +826,7 @@ int vtkAbaqusInputDeckReader::RequestData(
       }
 
       //determine which kind of set it is
-      v = hdr.find( "GENERATE", 0 );
+      v = hdr.find( "generate", 0 );
       if( v < hdr.length() )
       {
         //we have a generated set to create
@@ -836,7 +850,7 @@ int vtkAbaqusInputDeckReader::RequestData(
   while( secEnd != inp.end() )
   {
     iter = secEnd;
-    tokens = vtkAbaqusReaderHelper::FindSection( iter, secStart, secEnd, "*ELSET,", inp ); 
+    tokens = vtkAbaqusReaderHelper::FindSection( iter, secStart, secEnd, "*Elset,", inp ); 
     if( secEnd == inp.end() )
       break;
 
@@ -844,11 +858,11 @@ int vtkAbaqusInputDeckReader::RequestData(
 
     idSet = vtkIdTypeArray::New();
       //find the set name
-      v = hdr.find( "ELSET=", 0 );
+      v = hdr.find( "elset=", 0 );
       if( v < hdr.length() )
       {
         vtkStdString tmp = hdr.substr( v+6, hdr.length() );
-        e = tmp.find( ", GENERATE", 0 );
+        e = tmp.find( ", generate", 0 );
         if( e < tmp.length() )
           tmp.erase( e );
         idSet->SetName( tmp.c_str() );
@@ -856,7 +870,7 @@ int vtkAbaqusInputDeckReader::RequestData(
       }
 
       //determine which kind of set it is
-      v = hdr.find( "GENERATE", 0 );
+      v = hdr.find( "generate", 0 );
       if( v < hdr.length() )
       {
         //we have a generated set to create
