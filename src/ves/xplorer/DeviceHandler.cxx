@@ -80,7 +80,8 @@ DeviceHandler::DeviceHandler()
     mResetCenterPointPosition( 0.0, 0.1, 0.0 ),
     mCenterPoint( mResetCenterPointPosition ),
     mCenterPointThreshold( 0.1 ),
-    mCenterPointJump( 10.0 )
+    mCenterPointJump( 10.0 ),
+    m_rttMode( false )
 {
     //Initialize Devices
     mDevices[ "Tablet" ] = new vxd::Tablet();
@@ -347,5 +348,15 @@ void DeviceHandler::UnselectObjects()
             sceneManipulator->TurnOff();
         }
     }
+}
+////////////////////////////////////////////////////////////////////////////////
+void DeviceHandler::SetRTTMode( bool rttMode )
+{
+    m_rttMode = rttMode;
+}
+////////////////////////////////////////////////////////////////////////////////
+bool DeviceHandler::GetRTTMode()
+{
+    return m_rttMode;
 }
 ////////////////////////////////////////////////////////////////////////////////

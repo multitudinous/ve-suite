@@ -1822,7 +1822,14 @@ void KeyboardMouse::ProcessHit()
 
     vxs::DCS* newSelectedDCS =
         static_cast< vxs::DCS* >( parentNode.get() );
-    newSelectedDCS->SetTechnique( "Select" );
+    if( deviceHandler->GetRTTMode() )
+    {
+        newSelectedDCS->SetTechnique( "Glow" );
+    }
+    else
+    {
+        newSelectedDCS->SetTechnique( "Select" );
+    }
     deviceHandler->SetSelectedDCS( newSelectedDCS );
 
     //Move the center point to the center of the selected object

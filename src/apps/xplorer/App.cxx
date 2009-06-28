@@ -37,6 +37,7 @@
 
 #include <ves/xplorer/TextureBasedVizHandler.h>
 #include <ves/xplorer/EnvironmentHandler.h>
+#include <ves/xplorer/DeviceHandler.h>
 #include <ves/xplorer/SteadyStateVizHandler.h>
 #include <ves/xplorer/ModelHandler.h>
 #include <ves/xplorer/Model.h>
@@ -396,6 +397,9 @@ void App::initScene()
     }
     EnvironmentHandler::instance()->InitScene();
     cfdQuatCamHandler::instance()->SetMasterNode( m_vjobsWrapper->IsMaster() );
+    
+    //Set rtt mode for devices
+    ves::xplorer::DeviceHandler::instance()->SetRTTMode( mRTT );
     
     // create steady state visualization objects
     SteadyStateVizHandler::instance()->Initialize( std::string() );

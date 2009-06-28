@@ -155,6 +155,12 @@ public:
     ///Unselect all currently selected objects
     void UnselectObjects();
 
+    ///Set RTT mode
+    void SetRTTMode( bool rttMode );
+    
+    ///Get RTT mode
+    bool GetRTTMode();
+    
 protected:
 
 private:
@@ -206,6 +212,8 @@ private:
     ///Tablet convenience device pointer
     ves::xplorer::device::Device* mKMDevice;
 
+    /// rtt mode
+    bool m_rttMode;
 };
 } //end xplorer
 } //end ves

@@ -42,6 +42,7 @@
 #include <ves/xplorer/scenegraph/physics/PhysicsRigidBody.h>
 
 #include <ves/xplorer/scenegraph/technique/SelectTechnique.h>
+#include <ves/xplorer/scenegraph/technique/GlowTechnique.h>
 
 // --- OSG Includes --- //
 #include <osg/Vec3d>
@@ -102,6 +103,10 @@ DCS::DCS()
         "Select",
         new technique::SelectTechnique(
             new osg::StateSet( *getOrCreateStateSet() ) ) );
+            
+    AddTechnique(
+                 "Glow",
+                 new technique::GlowTechnique( new osg::StateSet( *getOrCreateStateSet() ) ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 DCS::DCS( double* scale, double* trans, double* rot )
@@ -120,6 +125,10 @@ DCS::DCS( double* scale, double* trans, double* rot )
         "Select",
         new technique::SelectTechnique(
             new osg::StateSet( *getOrCreateStateSet() ) ) );
+
+    AddTechnique(
+                 "Glow",
+                 new technique::GlowTechnique( new osg::StateSet( *getOrCreateStateSet() ) ) );    
 }
 ////////////////////////////////////////////////////////////////////////////////
 DCS::DCS( const DCS& dcs, const osg::CopyOp& copyop )
@@ -135,6 +144,10 @@ DCS::DCS( const DCS& dcs, const osg::CopyOp& copyop )
         "Select",
         new technique::SelectTechnique(
             new osg::StateSet( *getOrCreateStateSet() ) ) );
+
+    AddTechnique(
+                 "Glow",
+                 new technique::GlowTechnique( new osg::StateSet( *getOrCreateStateSet() ) ) );    
 }
 ////////////////////////////////////////////////////////////////////////////////
 DCS::~DCS()
