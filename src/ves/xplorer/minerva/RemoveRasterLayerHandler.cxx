@@ -1,12 +1,17 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 //
-//  Event handler for add earth command.
+//  Event handler for removing a raster layer.
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#include <ves/xplorer/minerva/AddEarthHandler.h>
+#include <ves/xplorer/minerva/RemoveRasterLayerHandler.h>
 #include <ves/xplorer/minerva/MinervaManager.h>
+
+#include <ves/open/xml/Command.h>
+#include <ves/open/xml/DataValuePair.h>
+
+#include <ves/util/commands/Minerva.h>
 
 using namespace ves::xplorer::minerva;
 
@@ -17,7 +22,7 @@ using namespace ves::xplorer::minerva;
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-AddEarthHandler::AddEarthHandler() : BaseClass()
+RemoveRasterLayerHandler::RemoveRasterLayerHandler() : BaseClass()
 {
 }
 
@@ -28,18 +33,24 @@ AddEarthHandler::AddEarthHandler() : BaseClass()
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-AddEarthHandler::~AddEarthHandler()
+RemoveRasterLayerHandler::~RemoveRasterLayerHandler()
 {
 }
 
 
 ///////////////////////////////////////////////////////////////////////////////
 //
-//  Add the earth.
+//  Remove raster layer.
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-void AddEarthHandler::Execute ( CommandPtr command, MinervaManager& manager )
+void RemoveRasterLayerHandler::Execute ( CommandPtr command, MinervaManager& manager )
 {
-  manager.AddEarthToScene();
+  ves::open::xml::DataValuePairPtr guidData ( command->GetDataValuePair ( ves::util::names::UNIQUE_ID ) );
+
+  std::string guid;
+  guidData->GetData ( guid );
+
+  manager.RemoveRasterLayer ( guid );
+
 }

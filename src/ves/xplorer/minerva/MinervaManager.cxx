@@ -8,7 +8,11 @@
 #include <ves/xplorer/minerva/MinervaManager.h>
 #include <ves/xplorer/minerva/EventHandler.h>
 #include <ves/xplorer/minerva/AddEarthHandler.h>
+#include <ves/xplorer/minerva/AddElevationLayerHandler.h>
+#include <ves/xplorer/minerva/AddRasterLayerHandler.h>
 #include <ves/xplorer/minerva/RemoveEarthHandler.h>
+#include <ves/xplorer/minerva/RemoveElevationLayerHandler.h>
+#include <ves/xplorer/minerva/RemoveRasterLayerHandler.h>
 #include <ves/xplorer/minerva/PropertiesHandler.h>
 #include <ves/xplorer/minerva/TransformHandler.h>
 #include <ves/xplorer/minerva/NavigateToModel.h>
@@ -61,6 +65,10 @@ MinervaManager::MinervaManager() :
   _eventHandlers["CAD_TRANSFORM_UPDATE"] = new TransformHandler;
   //_eventHandlers["CAD_DELETE_NODE"] = new DeleteHandler;
   _eventHandlers["Move to cad"] = new NavigateToModel;
+  _eventHandlers[ves::util::commands::ADD_ELEVATION_LAYER] = new AddElevationLayerHandler;
+  _eventHandlers[ves::util::commands::ADD_RASTER_LAYER] = new AddRasterLayerHandler;
+  _eventHandlers[ves::util::commands::REMOVE_ELEVATION_LAYER] = new RemoveElevationLayerHandler;
+  _eventHandlers[ves::util::commands::REMOVE_RASTER_LAYER] = new RemoveRasterLayerHandler;
 
 #ifdef __APPLE__
   Usul::Components::Manager::instance().load ( Usul::Interfaces::IUnknown::IID, "GDALReadImage.plug" );
@@ -159,6 +167,7 @@ void MinervaManager::AddEarthToScene()
 
   // Until a user interface is in place to add layers, add some base layers.
   {
+#if 0
     typedef Minerva::Core::Layers::RasterLayerWms RasterLayerWms;
     typedef RasterLayerWms::Options Options;
     typedef RasterLayerWms::Extents Extents;
@@ -177,19 +186,8 @@ void MinervaManager::AddEarthToScene()
 
     RasterLayerWms::RefPtr srtm ( new RasterLayerWms ( extents, "http://serv.asu.edu/cgi-bin/srtm.cgi", options ) );
     _body->elevationAppend ( Usul::Interfaces::IRasterLayer::QueryPtr ( srtm ) );
+#endif
 
-    // Add OpenAerialMap for raster.
-    options.clear();
-    options["format"] = "image/jpeg";
-    options["layers"] = "OpenAerialMap";
-    options["request"] = "GetMap";
-    options["service"] = "WMS";
-    options["srs"] = "EPSG:4326";
-    options["styles"] = "";
-    options["version"] = "1.1.1";
-
-    RasterLayerWms::RefPtr openAerialMap ( new RasterLayerWms ( extents, "http://serv.asu.edu/cgi-bin/tilecache-2.03/tilecache.cgi", options ) );
-    _body->rasterAppend ( Usul::Interfaces::IRasterLayer::QueryPtr ( openAerialMap ) );
   }
 
   _scene = _body->scene();
@@ -348,4 +346,126 @@ void MinervaManager::GetViewMatrix ( Minerva::Core::Data::Camera* camera, osg::M
 
   Usul::Convert::Type<Matrix,osg::Matrixd>::convert ( m, matrix );
   matrix = osg::Matrixd::inverse ( matrix );
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+//
+//  Add an elevation layer.
+//
+///////////////////////////////////////////////////////////////////////////////
+
+void MinervaManager::AddElevationLayer ( Minerva::Core::Layers::RasterLayer* layer )
+{
+  if ( 0x0 == _body || 0x0 == layer )
+    return;
+
+  _body->elevationAppend ( Usul::Interfaces::IRasterLayer::QueryPtr ( layer ) );
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+//
+//  Add a raster layer.
+//
+///////////////////////////////////////////////////////////////////////////////
+
+void MinervaManager::AddRasterLayer ( Minerva::Core::Layers::RasterLayer* layer )
+{
+  if ( 0x0 == _body || 0x0 == layer )
+    return;
+
+  _body->rasterAppend ( Usul::Interfaces::IRasterLayer::QueryPtr ( layer ) );
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+//
+//  Remove an elevation layer.
+//
+///////////////////////////////////////////////////////////////////////////////
+
+void MinervaManager::RemoveElevationLayer ( const std::string& guid )
+{
+  if ( 0x0 == _body )
+    return;
+
+  // This dynamic cast should always be true.
+  typedef Minerva::Core::TileEngine::Body::RasterGroup RasterGroup;
+  RasterGroup::RefPtr group ( dynamic_cast<RasterGroup*> ( _body->elevationData().get() ) );
+  Extents extents;
+  this->_removeLayer ( group.get(), guid, extents );
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+//
+//  Remove a raster layer.
+//
+///////////////////////////////////////////////////////////////////////////////
+
+void MinervaManager::RemoveRasterLayer ( const std::string& guid )
+{
+  if ( 0x0 == _body )
+    return;
+
+  // This dynamic cast should always be true.
+  typedef Minerva::Core::TileEngine::Body::RasterGroup RasterGroup;
+  RasterGroup::RefPtr group ( dynamic_cast<RasterGroup*> ( _body->rasterData().get() ) );
+
+  Extents extents;
+  if ( this->_removeLayer ( group.get(), guid, extents ) )
+  {
+    _body->dirtyTextures ( extents );
+  }
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+//
+//  Remove a layer from the group.
+//
+///////////////////////////////////////////////////////////////////////////////
+
+bool MinervaManager::_removeLayer ( Minerva::Core::Layers::RasterGroup *group, const std::string& guid, Extents& extents )
+{
+  typedef Minerva::Core::TileEngine::Body::RasterGroup RasterGroup;
+  typedef Minerva::Core::TileEngine::Body::RasterLayer RasterLayer;
+  typedef RasterGroup::Layers Layers;
+  typedef RasterGroup::IRasterLayer IRasterLayer;
+
+  if ( 0x0 != group )
+  {
+    // The api doesn't support removing by a guid, so this is a little ugly.
+    IRasterLayer::RefPtr layerToRemove ( 0x0 );
+
+    // Loop through all the layers and look for a layer that matches our guid.
+    Layers layers;
+    group->layers ( layers );
+    for ( Layers::iterator iter = layers.begin(); iter != layers.end(); ++iter )
+    {
+      Usul::Interfaces::ILayer::QueryPtr layer ( *iter );
+      if ( layer.valid() && guid == layer->guid() )
+      {
+        layerToRemove = *iter;
+      }
+    }
+
+    // If we found a layer, remove it.
+    if ( layerToRemove.valid() )
+    {
+      group->remove ( layerToRemove.get() );
+
+      Usul::Interfaces::ILayerExtents::QueryPtr le ( layerToRemove );
+      const double minLon ( le.valid() ? le->minLon() : -180.0 );
+      const double minLat ( le.valid() ? le->minLat() : -90.0 );
+      const double maxLon ( le.valid() ? le->maxLon() : 180.0 );
+      const double maxLat ( le.valid() ? le->maxLat() : 90.0 );
+      extents = Extents ( minLon, minLat, maxLon, maxLat );
+
+      return true;
+    }
+  }
+
+  return false;
 }

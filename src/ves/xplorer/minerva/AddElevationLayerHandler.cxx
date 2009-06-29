@@ -1,12 +1,14 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 //
-//  Event handler for add earth command.
+//  Event handler for adding an elevation layer.
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#include <ves/xplorer/minerva/AddEarthHandler.h>
+#include <ves/xplorer/minerva/AddElevationLayerHandler.h>
 #include <ves/xplorer/minerva/MinervaManager.h>
+
+#include <Minerva/Core/Layers/RasterLayer.h>
 
 using namespace ves::xplorer::minerva;
 
@@ -17,7 +19,7 @@ using namespace ves::xplorer::minerva;
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-AddEarthHandler::AddEarthHandler() : BaseClass()
+AddElevationLayerHandler::AddElevationLayerHandler() : BaseClass()
 {
 }
 
@@ -28,18 +30,22 @@ AddEarthHandler::AddEarthHandler() : BaseClass()
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-AddEarthHandler::~AddEarthHandler()
+AddElevationLayerHandler::~AddElevationLayerHandler()
 {
 }
 
 
 ///////////////////////////////////////////////////////////////////////////////
 //
-//  Add the earth.
+//  Add elevation layer.
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-void AddEarthHandler::Execute ( CommandPtr command, MinervaManager& manager )
+void AddElevationLayerHandler::Execute ( CommandPtr command, MinervaManager& manager )
 {
-  manager.AddEarthToScene();
+  Minerva::Core::Layers::RasterLayer::RefPtr layer ( EventHandler::_createRasterLayerFromCommand ( command ) );
+  if ( layer.valid() )
+  {
+    manager.AddElevationLayer ( layer.get() );
+  }
 }

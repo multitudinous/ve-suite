@@ -1437,12 +1437,12 @@ void CADNodePropertiesDlg::_updateGeographic ( wxSpinEvent& event )
 
     ves::open::xml::DataValuePairPtr longitudeValue ( new ves::open::xml::DataValuePair );
     longitudeValue->SetDataType( "DOUBLE" );
-    longitudeValue->SetData( ves::util::commands::LONGITUDE_VALUE, _longitudeControl->GetValue() );
+    longitudeValue->SetData( ves::util::names::LONGITUDE_VALUE, _longitudeControl->GetValue() );
     _instructions.push_back ( longitudeValue );
 
     ves::open::xml::DataValuePairPtr latitudeValue ( new ves::open::xml::DataValuePair );
     latitudeValue->SetDataType( "DOUBLE" );
-    latitudeValue->SetData( ves::util::commands::LATITUDE_VALUE, _latitudeControl->GetValue() );
+    latitudeValue->SetData( ves::util::names::LATITUDE_VALUE, _latitudeControl->GetValue() );
     _instructions.push_back ( latitudeValue );
 
     this->_sendCommandsToXplorer();

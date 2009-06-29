@@ -1,12 +1,17 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 //
-//  Event handler for add earth command.
+//  Event handler for removing an elevation layer.
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#include <ves/xplorer/minerva/AddEarthHandler.h>
+#include <ves/xplorer/minerva/RemoveElevationLayerHandler.h>
 #include <ves/xplorer/minerva/MinervaManager.h>
+
+#include <ves/open/xml/Command.h>
+#include <ves/open/xml/DataValuePair.h>
+
+#include <ves/util/commands/Minerva.h>
 
 using namespace ves::xplorer::minerva;
 
@@ -17,7 +22,7 @@ using namespace ves::xplorer::minerva;
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-AddEarthHandler::AddEarthHandler() : BaseClass()
+RemoveElevationLayerHandler::RemoveElevationLayerHandler() : BaseClass()
 {
 }
 
@@ -28,18 +33,24 @@ AddEarthHandler::AddEarthHandler() : BaseClass()
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-AddEarthHandler::~AddEarthHandler()
+RemoveElevationLayerHandler::~RemoveElevationLayerHandler()
 {
 }
 
 
 ///////////////////////////////////////////////////////////////////////////////
 //
-//  Add the earth.
+//  Remove elevation layer.
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-void AddEarthHandler::Execute ( CommandPtr command, MinervaManager& manager )
+void RemoveElevationLayerHandler::Execute ( CommandPtr command, MinervaManager& manager )
 {
-  manager.AddEarthToScene();
+  ves::open::xml::DataValuePairPtr guidData ( command->GetDataValuePair ( ves::util::names::UNIQUE_ID ) );
+
+  std::string guid;
+  guidData->GetData ( guid );
+
+  manager.RemoveElevationLayer ( guid );
+
 }

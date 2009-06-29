@@ -1,12 +1,14 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 //
-//  Event handler for add earth command.
+//  Event handler for adding a raster layer.
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#include <ves/xplorer/minerva/AddEarthHandler.h>
+#include <ves/xplorer/minerva/AddRasterLayerHandler.h>
 #include <ves/xplorer/minerva/MinervaManager.h>
+
+#include <Minerva/Core/Layers/RasterLayer.h>
 
 using namespace ves::xplorer::minerva;
 
@@ -17,7 +19,7 @@ using namespace ves::xplorer::minerva;
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-AddEarthHandler::AddEarthHandler() : BaseClass()
+AddRasterLayerHandler::AddRasterLayerHandler() : BaseClass()
 {
 }
 
@@ -28,7 +30,7 @@ AddEarthHandler::AddEarthHandler() : BaseClass()
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-AddEarthHandler::~AddEarthHandler()
+AddRasterLayerHandler::~AddRasterLayerHandler()
 {
 }
 
@@ -39,7 +41,11 @@ AddEarthHandler::~AddEarthHandler()
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-void AddEarthHandler::Execute ( CommandPtr command, MinervaManager& manager )
+void AddRasterLayerHandler::Execute ( CommandPtr command, MinervaManager& manager )
 {
-  manager.AddEarthToScene();
+  Minerva::Core::Layers::RasterLayer::RefPtr layer ( EventHandler::_createRasterLayerFromCommand ( command ) );
+  if ( layer.valid() )
+  {
+    manager.AddRasterLayer ( layer.get() );
+  }
 }

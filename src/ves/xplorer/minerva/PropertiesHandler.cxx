@@ -56,8 +56,8 @@ void PropertiesHandler::Execute ( CommandPtr command, MinervaManager& manager )
   ves::open::xml::DataValuePairPtr nodeIDData ( command->GetDataValuePair( "Node ID" ) );
   ves::open::xml::DataValuePairPtr nodeTypeData ( command->GetDataValuePair( "Node Type" ) );
 
-  ves::open::xml::DataValuePairPtr longitudeData ( command->GetDataValuePair ( ves::util::commands::LONGITUDE_VALUE ) );
-  ves::open::xml::DataValuePairPtr latitudeData ( command->GetDataValuePair ( ves::util::commands::LATITUDE_VALUE ) );
+  ves::open::xml::DataValuePairPtr longitudeData ( command->GetDataValuePair ( ves::util::names::LONGITUDE_VALUE ) );
+  ves::open::xml::DataValuePairPtr latitudeData ( command->GetDataValuePair ( ves::util::names::LATITUDE_VALUE ) );
 
   // Note: node id is a guid.
   std::string nodeId;

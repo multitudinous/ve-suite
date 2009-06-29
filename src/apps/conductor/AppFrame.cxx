@@ -74,6 +74,7 @@
 #include "AppToolBar.h"
 #include "ExportMenu.h"
 #include "EphemerisDialog.h"
+#include "MinervaDialog.h"
 
 #include <ves/conductor/util/CADNodeManagerDlg.h>
 #include <ves/conductor/IconChooser.h>
@@ -85,6 +86,7 @@
 #include <ves/open/xml/XMLReaderWriter.h>
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>
+#include <ves/open/xml/TwoDStringArrayPtr.h>
 #include <ves/open/xml/XMLObjectFactory.h>
 #include <ves/open/xml/XMLCreator.h>
 #include <ves/open/xml/cad/CADCreator.h>
@@ -206,6 +208,7 @@ BEGIN_EVENT_TABLE( AppFrame, wxFrame )
 
     EVT_MENU( APPFRAME_MINERVA_ADD_PLANET, AppFrame::OnAddPlanet )
     EVT_MENU( APPFRAME_MINERVA_REMOVE_PLANET, AppFrame::OnRemovePlanet )
+    EVT_MENU( APPFRAME_MINERVA_SHOW_DIALOG, AppFrame::ShowMinervaDialog )
 
     EVT_WINDOW_CREATE( AppFrame::OnChildCreate ) 
 	EVT_BUTTON( ICONCHOOSER_OK, AppFrame::OnChangeIcon )
@@ -242,6 +245,7 @@ AppFrame::AppFrame( wxWindow * parent, wxWindowID id, const wxString& title )
         serviceList( CORBAServiceList::instance() ),
         newCanvas( false ),
         mTimer( this, APPFRAME_TIMER_ID ),
+        _minervaDialog ( 0x0 ),
         mDestoryFrame( false )
 {
     char** tempArray = new char*[ ::wxGetApp().argc ];
@@ -902,6 +906,7 @@ void AppFrame::CreateMenu()
     xplorerMenu->AppendSubMenu ( xplorerMinervaMenu, _("GIS") );
     xplorerMinervaMenu->Append ( APPFRAME_MINERVA_ADD_PLANET, _( "Add Planet" ) );
     xplorerMinervaMenu->Append ( APPFRAME_MINERVA_REMOVE_PLANET, _( "Remove Planet" ) );
+    xplorerMinervaMenu->Append ( APPFRAME_MINERVA_SHOW_DIALOG, _( "Configure Layers" ) );
 
 #endif
 
@@ -2583,6 +2588,9 @@ void AppFrame::OnAddPlanet ( wxCommandEvent& event )
   veCommand->AddDataValuePair( dataValuePair );
 
   serviceList->SendCommandStringToXplorer ( veCommand );
+
+  MinervaDialog *dialog ( this->GetMinervaDialog() );
+  dialog->AddDefaultLayers();
 }
 ///////////////////////////////////////////////////////////////////////////////
 void AppFrame::OnRemovePlanet ( wxCommandEvent& event )
@@ -2596,6 +2604,21 @@ void AppFrame::OnRemovePlanet ( wxCommandEvent& event )
   veCommand->AddDataValuePair( dataValuePair );
 
   serviceList->SendCommandStringToXplorer ( veCommand );
+}
+///////////////////////////////////////////////////////////////////////////////
+void AppFrame::ShowMinervaDialog ( wxCommandEvent& event )
+{
+  MinervaDialog *dialog ( this->GetMinervaDialog() );
+  dialog->Show();
+}
+///////////////////////////////////////////////////////////////////////////////
+MinervaDialog* AppFrame::GetMinervaDialog()
+{
+  if ( 0x0 == _minervaDialog )
+  {
+    _minervaDialog = new MinervaDialog ( this, wxID_ANY );
+  }
+  return _minervaDialog;
 }
 ///////////////////////////////////////////////////////////////////////////////
 void AppFrame::OnDataLogging( wxCommandEvent& event )

@@ -21,8 +21,10 @@
 
 namespace Minerva { namespace Core { namespace TileEngine { class Body; } } }
 namespace Minerva { namespace Core { namespace Data { class Camera; } } }
+namespace Minerva { namespace Core { namespace Layers { class RasterLayer; class RasterGroup; } } }
+namespace Minerva { namespace Core { template<class T> class Extents; } }
 namespace Usul { namespace Jobs { class Manager; } }
-namespace osg { class Matrixd; }
+namespace osg { class Matrixd; class osg::Vec2d; }
 
 namespace ves {
 namespace xplorer {
@@ -37,9 +39,13 @@ public:
 
   typedef ves::open::xml::CommandPtr CommandPtr;
   typedef Minerva::Core::TileEngine::Body Body;
+  typedef Minerva::Core::Extents<osg::Vec2d> Extents;
 
   void AddEarthToScene();
+  void AddElevationLayer ( Minerva::Core::Layers::RasterLayer* );
+  void AddRasterLayer ( Minerva::Core::Layers::RasterLayer* );
   void AddModel ( const std::string& guid, ModelWrapper* model );
+
   void Clear();
 
   ModelWrapper* GetModel ( const std::string& guid ) const;
@@ -49,6 +55,8 @@ public:
 
   void PreFrameUpdate();
 
+  void RemoveElevationLayer ( const std::string& guid );
+  void RemoveRasterLayer ( const std::string& guid );
   void RemoveModel ( const std::string& guid );
 
   void SetVECommand ( CommandPtr command );
@@ -56,6 +64,8 @@ public:
   void UpdateModel ( ModelWrapper* );
 
 private:
+
+  bool _removeLayer ( Minerva::Core::Layers::RasterGroup *group, const std::string& guid, Extents& extents );
 
   MinervaManager();
   ~MinervaManager();

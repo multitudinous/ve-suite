@@ -106,5 +106,5 @@ void NavigateToModel::Execute ( CommandPtr command, MinervaManager& manager )
   ves::xplorer::NavigationAnimationEngine::instance()->SetAnimationEndPoints(
     gmtl::Vec3d ( translate[0], translate[1], translate[2] ), 
     gmtl::Quatd ( rotation[0], rotation[1], rotation[2], rotation[3] ), 
-    true, dcs );
+    false, dcs );
 }

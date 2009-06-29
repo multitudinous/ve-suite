@@ -5,6 +5,7 @@ pj = os.path.join
 
 Import('baseEnv ves_pkg LIBDIR GetPlatform buildDir xerces_options wxwidgets_options PREFIX RootDir GetSVNVersion')
 Import('tao_options vpr_options')
+Import('minerva_options')
 
 srcDir = os.path.abspath( pj(RootDir, 'src', 'apps', 'conductor') )
 srcs = sca_util.getSourcesRecursive( srcDir )
@@ -22,7 +23,8 @@ if baseEnv[ 'TransformManipulator' ] != 'no':
 # See if we need to turn on the Minerva sub-menu.
 if baseEnv[ 'MakeMinervaSupport' ] != 'no':
 	env.Append( CPPDEFINES = ['MINERVA_GIS_SUPPORT'] )
-	
+	minerva_options.apply( env )
+
 env.Append(LIBS = ['ves_conductor_plugin', 'ves_open_xml',
                    'ves_open_module'])
 env.Append(LIBPATH = [

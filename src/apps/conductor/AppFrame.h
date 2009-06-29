@@ -67,6 +67,7 @@ class NavigationPane;
 class UserPreferences;
 class DeviceProperties;
 class EphemerisDialog;
+class MinervaDialog;
 
 
 // --- wxWidgets Includes --- //
@@ -275,6 +276,8 @@ protected:
 
     void OnAddPlanet ( wxCommandEvent& event );
     void OnRemovePlanet ( wxCommandEvent& event );
+    void ShowMinervaDialog ( wxCommandEvent& event );
+    MinervaDialog* GetMinervaDialog();
 
 private:
     void ExitXplorer();
@@ -304,6 +307,7 @@ private:
     bool mDestoryFrame;
     wxTimer mTimer;
     std::vector< long > pids;
+    MinervaDialog *_minervaDialog;
     
     wxMenu* file_menu;
     wxMenu* con_menu;
@@ -319,7 +323,7 @@ private:
     HierarchyTree* hierarchyTree;
     wxNotebook* side_pane;
     ves::conductor::Canvas* canvas;
-	ves::conductor::IconChooser* iconChooser;
+  	ves::conductor::IconChooser* iconChooser;
     AvailableModules* av_modules;
     wxString mVESFileName;
     wxString directory;
