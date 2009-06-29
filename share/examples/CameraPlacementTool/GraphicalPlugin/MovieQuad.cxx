@@ -204,11 +204,12 @@ void MovieQuad::Initialize()
         mImageStream->play();
     }
 
-    double ratio = 0.00025;
-    double width = ratio * image->s();
-    double height = ratio * image->t();
     if( image.valid() )
     {
+        double ratio = 0.00025;
+        double width = ratio * image->s();
+        double height = ratio * image->t();
+        
         osg::notify( osg::NOTICE )
             << "width: " << width
             << " height: " << height
