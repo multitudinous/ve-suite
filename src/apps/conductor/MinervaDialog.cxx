@@ -16,7 +16,7 @@
 
 #include <ves/util/commands/Minerva.h>
 
-#include <vpr/util/Guid.h>
+#include <vpr/Util/GUID.h>
 
 // Include this to avoid unresolved references to GetClassInfo.
 #if defined (WIN32)
@@ -229,7 +229,7 @@ void MinervaDialog::_addLayer (
 
   ves::conductor::util::CORBAServiceList::instance()->SendCommandStringToXplorer( command );
 
-  layersList->Append ( server.c_str() );
+  layersList->Append ( wxString( server.c_str(), wxConvUTF8 ) );
   guids.push_back ( guid.toString() );
 }
 ///////////////////////////////////////////////////////////////////////////////

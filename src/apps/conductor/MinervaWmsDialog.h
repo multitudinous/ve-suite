@@ -27,12 +27,18 @@ public:
   MinervaWmsDialog ( wxWindow *parent, wxWindowID id );
   virtual ~MinervaWmsDialog();
 
-  std::string server() const;
-  std::string layers() const;
-  std::string styles() const;
+  std::string server() ;
+  std::string layers() ;
+  std::string styles() ;
   std::string format() const;
 
 private:
+
+    std::string ConvertUnicode( const wxChar* data )
+    {
+        std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( data ) ) );
+        return tempStr;
+    }
 
 	wxTextCtrl* _serverTextCtrl;
 	wxTextCtrl* _layersTextCtrl;

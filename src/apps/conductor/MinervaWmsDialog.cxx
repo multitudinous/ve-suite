@@ -108,19 +108,19 @@ MinervaWmsDialog::~MinervaWmsDialog()
 {
 }
 ///////////////////////////////////////////////////////////////////////////////
-std::string MinervaWmsDialog::server() const
+std::string MinervaWmsDialog::server() 
 {
-  return _serverTextCtrl->GetLineText ( 0 ).c_str();
+  return ConvertUnicode( _serverTextCtrl->GetLineText ( 0 ).c_str() );
 }
 ///////////////////////////////////////////////////////////////////////////////
-std::string MinervaWmsDialog::layers() const
+std::string MinervaWmsDialog::layers() 
 {
-  return _layersTextCtrl->GetLineText ( 0 ).c_str();
+  return ConvertUnicode( _layersTextCtrl->GetLineText ( 0 ).c_str() );
 }
 ///////////////////////////////////////////////////////////////////////////////
-std::string MinervaWmsDialog::styles() const
+std::string MinervaWmsDialog::styles() 
 {
-  return _stylesTextCtrl->GetLineText ( 0 ).c_str();
+  return ConvertUnicode( _stylesTextCtrl->GetLineText ( 0 ).c_str() );
 }
 ///////////////////////////////////////////////////////////////////////////////
 std::string MinervaWmsDialog::format() const
