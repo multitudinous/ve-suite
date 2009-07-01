@@ -42,13 +42,13 @@ Source: {#ACETAOSRCHOME}\lib\*.lib; DestDir: {app}\lib; Attribs: readonly; Flags
 Source: {#ACETAOSRCHOME}\lib\*.dll; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs
 ; Release version of the naming service
 Source: {#ACETAOSRCHOME}\TAO\orbsvcs\Naming_Service\Release\Naming_Service.exe; DestDir: {app}\TAO\orbsvcs\Naming_Service\
-Source: {#ACETAOSRCHOME}\ace\*.h; DestDir: {app}\ace; Flags: recursesubdirs createallsubdirs uninsremovereadonly ignoreversion
-Source: {#ACETAOSRCHOME}\tao\*.h; DestDir: {app}\TAO; Attribs: readonly; Flags: recursesubdirs createallsubdirs uninsremovereadonly  ignoreversion
-Source: {#ACETAOSRCHOME}\ace\*.inl; DestDir: {app}\ace; Attribs: readonly; Flags: recursesubdirs createallsubdirs uninsremovereadonly ignoreversion
-Source: {#ACETAOSRCHOME}\TAO\*.inl; DestDir: {app}\TAO; Attribs: readonly; Flags: recursesubdirs createallsubdirs uninsremovereadonly ignoreversion
-Source: {#ACETAOSRCHOME}\TAO\*.i; DestDir: {app}\TAO; Attribs: readonly; Flags: recursesubdirs createallsubdirs uninsremovereadonly ignoreversion
-Source: {#ACETAOSRCHOME}\ace\*.cpp; DestDir: {app}\ace; Attribs: readonly; Flags: recursesubdirs createallsubdirs uninsremovereadonly ignoreversion
-Source: {#ACETAOSRCHOME}\TAO\*.cpp; DestDir: {app}\TAO; Attribs: readonly; Flags: recursesubdirs createallsubdirs uninsremovereadonly ignoreversion
+Source: {#ACETAOSRCHOME}\ace\*.h; DestDir: {app}\include\ace; Flags: recursesubdirs createallsubdirs uninsremovereadonly ignoreversion
+Source: {#ACETAOSRCHOME}\tao\*.h; DestDir: {app}\include\TAO; Attribs: readonly; Flags: recursesubdirs createallsubdirs uninsremovereadonly  ignoreversion
+Source: {#ACETAOSRCHOME}\ace\*.inl; DestDir: {app}\include\ace; Attribs: readonly; Flags: recursesubdirs createallsubdirs uninsremovereadonly ignoreversion
+Source: {#ACETAOSRCHOME}\TAO\*.inl; DestDir: {app}\include\TAO; Attribs: readonly; Flags: recursesubdirs createallsubdirs uninsremovereadonly ignoreversion
+Source: {#ACETAOSRCHOME}\TAO\*.i; DestDir: {app}\include\TAO; Attribs: readonly; Flags: recursesubdirs createallsubdirs uninsremovereadonly ignoreversion
+Source: {#ACETAOSRCHOME}\ace\*.cpp; DestDir: {app}\include\ace; Attribs: readonly; Flags: recursesubdirs createallsubdirs uninsremovereadonly ignoreversion
+Source: {#ACETAOSRCHOME}\TAO\*.cpp; DestDir: {app}\include\TAO; Attribs: readonly; Flags: recursesubdirs createallsubdirs uninsremovereadonly ignoreversion
 
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 ; Source: {#ACETAOHOME}\TAO\orbsvcs\Naming_Service\Naming_Service_d.exe; DestDir: {app}\TAO\orbsvcs\Naming_Service\
