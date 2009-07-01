@@ -1,7 +1,7 @@
 prefix=${fp_file_cwd}\..\..
 exec_prefix=${prefix}
 libdir=${exec_prefix}\lib
-includedir=${prefix}
+includedir=${prefix}\include
 
 Name: TAO
 Description: The ACE ORB
