@@ -34,6 +34,7 @@
 #include <ves/util/commands/Minerva.h>
 #include <ves/open/xml/Command.h>
 #include <ves/xplorer/Debug.h>
+#include <ves/xplorer/ModelHandler.h>
 #include <ves/xplorer/scenegraph/SceneManager.h>
 
 using namespace ves::xplorer::minerva;
@@ -111,9 +112,13 @@ MinervaManager::~MinervaManager()
 
 void MinervaManager::PreFrameUpdate()
 {
-  if ( _currentCommand )
+    vprDEBUG( vesDBG, 3 ) << "|MinervaManager::PreFrameUpdate" 
+    << std::endl << vprDEBUG_FLUSH;
+    ves::open::xml::CommandPtr tempCommand =
+        ves::xplorer::ModelHandler::instance()->GetXMLCommand();
+  if ( tempCommand )
   {
-    const std::string name ( _currentCommand->GetCommandName() );
+    const std::string name ( tempCommand->GetCommandName() );
 
     EventHandlers::iterator iter ( _eventHandlers.find ( name ) );
     if ( iter != _eventHandlers.end() )
@@ -122,12 +127,12 @@ void MinervaManager::PreFrameUpdate()
       if ( 0x0 != handler )
       {
         vprDEBUG( vesDBG, 0 ) << "|Minerva manager executing: " << name << std::endl << vprDEBUG_FLUSH;
-        handler->Execute ( _currentCommand, *this );
+        handler->Execute ( tempCommand, *this );
       }
     }
 
     // Clear the command.
-    _currentCommand = CommandPtr();
+    //_currentCommand = CommandPtr();
   }
 
   if ( _body )
@@ -135,6 +140,8 @@ void MinervaManager::PreFrameUpdate()
     // Remove all tiles that are ready for deletion.
     _body->purgeTiles();
   }
+    vprDEBUG( vesDBG, 3 ) << "|MinervaManager::PreFrameUpdate End" 
+    << std::endl << vprDEBUG_FLUSH;
 }
 
 

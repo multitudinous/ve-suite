@@ -52,10 +52,6 @@
 #include <ves/open/xml/DataValuePair.h>
 #include <ves/open/xml/XMLReaderWriter.h>
 
-#ifdef MINERVA_GIS_SUPPORT
-# include <ves/xplorer/minerva/MinervaManager.h>
-#endif
-
 #ifdef _OSG
 #include <ves/xplorer/TextureBasedVizHandler.h>
 #include <ves/xplorer/volume/cfdVolumeVisualization.h>
@@ -744,11 +740,6 @@ void VjObs_i::PreFrameUpdate( void )
         {
             ModelHandler::instance()->GetActiveModel()->SetVECommand( bufferCommand );
         }
-
-#ifdef MINERVA_GIS_SUPPORT
-        ves::xplorer::minerva::MinervaManager::instance()->SetVECommand ( bufferCommand );
-#endif
-
     }
     ///If the command name is null
     else if( !bufferCommand->GetCommandName().compare( "NULL" ) )

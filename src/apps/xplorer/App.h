@@ -273,9 +273,9 @@ private:
     ///Light model for the scene
     osg::ref_ptr< osg::LightModel > light_model_0;
     ///-90 z up matrix
-    gmtl::Matrix44f mZUp;
+    gmtl::Matrix44d mZUp;
     ///User nav position for camera
-    gmtl::Matrix44f mNavPosition;
+    gmtl::Matrix44d mNavPosition;
     
     ///
     ves::xplorer::SceneRenderToTexturePtr mSceneRenderToTexture;

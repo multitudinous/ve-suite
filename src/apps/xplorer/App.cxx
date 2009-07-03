@@ -177,9 +177,9 @@ App::App( int argc, char* argv[], bool enableRTT )
     mSceneRenderToTexture = 
         SceneRenderToTexturePtr( new SceneRenderToTexture() );
     
-    gmtl::Vec3f x_axis( 1.0f, 0.0f, 0.0f );
-    mZUp = gmtl::makeRot< gmtl::Matrix44f >( 
-        gmtl::AxisAnglef( gmtl::Math::deg2Rad( -90.0f ), x_axis ) );
+    gmtl::Vec3d x_axis( 1.0f, 0.0f, 0.0f );
+    mZUp = gmtl::makeRot< gmtl::Matrix44d >( 
+        gmtl::AxisAngled( gmtl::Math::deg2Rad( -90.0f ), x_axis ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 App::~App()
@@ -584,7 +584,7 @@ void App::latePreFrame()
 
     ///Grab nav data
     mNavPosition = 
-        gmtl::convertTo< float >( 
+        gmtl::convertTo< double >( 
             ves::xplorer::scenegraph::SceneManager::instance()->
             GetActiveNavSwitchNode()->GetMat() );
 
@@ -775,7 +775,8 @@ void App::draw()
     //gmtl::postMult(
     //    _vjMatrixLeft, gmtl::makeRot< gmtl::Matrix44f >(
     //        gmtl::AxisAnglef( gmtl::Math::deg2Rad( -90.0f ), x_axis ) ) );
-    gmtl::Matrix44f _vjMatrixLeft( project->getViewMatrix() );
+    gmtl::Matrix44d _vjMatrixLeft = 
+        gmtl::convertTo< double >( project->getViewMatrix() );
     //Transform into z-up land
     _vjMatrixLeft = _vjMatrixLeft * mZUp * mNavPosition;
     
