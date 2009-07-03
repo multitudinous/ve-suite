@@ -215,33 +215,33 @@ void MinervaManager::AddEarthToScene()
 
 void MinervaManager::Clear()
 {
-  osg::ref_ptr<osg::Group> root ( ves::xplorer::scenegraph::SceneManager::instance()->GetModelRoot() );
-  if ( root.valid() )
-  {
-    root->removeChild ( _scene.get() );
-  }
-  _scene = 0x0;
+    osg::ref_ptr<osg::Group> root( ves::xplorer::scenegraph::SceneManager::instance()->GetModelRoot() );
+    if( root.valid() )
+    {
+        root->removeChild( _scene.get() );
+    }
+    _scene = 0x0;
 
-  if ( 0x0 != _body )
-  {
-    _body->clear();
-    Usul::Pointers::unreference ( _body );
-    _body = 0x0;
-  }
+    if( 0x0 != _body )
+    {
+        _body->clear();
+        Usul::Pointers::unreference( _body );
+        _body = 0x0;
+    }
 
-  // Clean up job manager.
-  if ( 0x0 != _manager )
-  {
-    // Remove all queued jobs and cancel running jobs.
-    _manager->cancel();
+    // Clean up job manager.
+    if( 0x0 != _manager )
+    {
+        // Remove all queued jobs and cancel running jobs.
+        _manager->cancel();
 
-    // Wait for remaining jobs to finish.
-    _manager->wait();
+        // Wait for remaining jobs to finish.
+        _manager->wait();
 
-    // Delete the manager.
-    delete _manager;
-    _manager = 0x0;
-  }
+        // Delete the manager.
+        delete _manager;
+        _manager = 0x0;
+    }
 }
 
 
@@ -436,43 +436,43 @@ void MinervaManager::RemoveRasterLayer ( const std::string& guid )
 
 bool MinervaManager::_removeLayer ( Minerva::Core::Layers::RasterGroup *group, const std::string& guid, Extents& extents )
 {
-  typedef Minerva::Core::TileEngine::Body::RasterGroup RasterGroup;
-  typedef Minerva::Core::TileEngine::Body::RasterLayer RasterLayer;
-  typedef RasterGroup::Layers Layers;
-  typedef RasterGroup::IRasterLayer IRasterLayer;
+    typedef Minerva::Core::TileEngine::Body::RasterGroup RasterGroup;
+    typedef Minerva::Core::TileEngine::Body::RasterLayer RasterLayer;
+    typedef RasterGroup::Layers Layers;
+    typedef RasterGroup::IRasterLayer IRasterLayer;
 
-  if ( 0x0 != group )
-  {
-    // The api doesn't support removing by a guid, so this is a little ugly.
-    IRasterLayer::RefPtr layerToRemove ( 0x0 );
-
-    // Loop through all the layers and look for a layer that matches our guid.
-    Layers layers;
-    group->layers ( layers );
-    for ( Layers::iterator iter = layers.begin(); iter != layers.end(); ++iter )
+    if( 0x0 != group )
     {
-      Usul::Interfaces::ILayer::QueryPtr layer ( *iter );
-      if ( layer.valid() && guid == layer->guid() )
-      {
-        layerToRemove = *iter;
-      }
+        // The api doesn't support removing by a guid, so this is a little ugly.
+        IRasterLayer::RefPtr layerToRemove ( 0x0 );
+
+        // Loop through all the layers and look for a layer that matches our guid.
+        Layers layers;
+        group->layers ( layers );
+        for ( Layers::iterator iter = layers.begin(); iter != layers.end(); ++iter )
+        {
+            Usul::Interfaces::ILayer::QueryPtr layer ( *iter );
+            if ( layer.valid() && guid == layer->guid() )
+            {
+                layerToRemove = *iter;
+            }
+        }
+
+        // If we found a layer, remove it.
+        if ( layerToRemove.valid() )
+        {
+            group->remove ( layerToRemove.get() );
+
+            Usul::Interfaces::ILayerExtents::QueryPtr le ( layerToRemove );
+            const double minLon ( le.valid() ? le->minLon() : -180.0 );
+            const double minLat ( le.valid() ? le->minLat() : -90.0 );
+            const double maxLon ( le.valid() ? le->maxLon() : 180.0 );
+            const double maxLat ( le.valid() ? le->maxLat() : 90.0 );
+            extents = Extents ( minLon, minLat, maxLon, maxLat );
+
+            return true;
+        }
     }
 
-    // If we found a layer, remove it.
-    if ( layerToRemove.valid() )
-    {
-      group->remove ( layerToRemove.get() );
-
-      Usul::Interfaces::ILayerExtents::QueryPtr le ( layerToRemove );
-      const double minLon ( le.valid() ? le->minLon() : -180.0 );
-      const double minLat ( le.valid() ? le->minLat() : -90.0 );
-      const double maxLon ( le.valid() ? le->maxLon() : 180.0 );
-      const double maxLat ( le.valid() ? le->maxLat() : 90.0 );
-      extents = Extents ( minLon, minLat, maxLon, maxLat );
-
-      return true;
-    }
-  }
-
-  return false;
+    return false;
 }

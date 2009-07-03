@@ -199,7 +199,6 @@ vxs::DCS* const DeviceHandler::GetSelectedDCS() const
 ////////////////////////////////////////////////////////////////////////////////
 void DeviceHandler::ProcessDeviceEvents()
 {
-std::cout << " here 5" << std::endl;
     //Update Device properties
     ExecuteCommands();
 
@@ -223,8 +222,6 @@ std::cout << " here 5" << std::endl;
     mTabletDevice->UpdateNavigation();
     //Always do this by default
     mGlovesDevice->UpdateNavigation();
-    std::cout << " here 6" << std::endl;
-
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DeviceHandler::ResetCenterPoint()
