@@ -481,11 +481,6 @@ if not SConsAddons.Util.hasHelpFlag():
       baseEnv['LDMODULESUFFIX'] = '.bundle'
       #baseEnv['LDMODULEFLAGS'] = '$LDMODULEFLAGS -bundle -flat_namespace -undefined suppress'
 
-   #setup default libraries and defines
-   #baseEnv.Append( CPPPATH = [pj(RootDir,'external', 'loki-0.1.6', 'include')] )
-   #baseEnv.Append( LIBS = ['loki.0.1.6'] )
-   #baseEnv.Append( LIBPATH = [pj(RootDir, buildDir,'external', 'loki-0.1.6')] )
-
    if GetPlatform() == 'win32':
       #baseEnv[ 'MSVS']['VERSION' ] = 8.0
       baseEnv[ 'MSVS_VERSION' ] = "8.0"
@@ -504,7 +499,7 @@ if not SConsAddons.Util.hasHelpFlag():
       baseEnv.Append( WINDOWS_INSERT_MANIFEST = ['True'] )
       # As noted below WINVER will be defined as 0x0502
       # http://msdn.microsoft.com/en-us/library/aa383745(VS.85).aspx
-      baseEnv.AppendUnique( CPPDEFINES = ['WINVER=0x0502'] )
+      baseEnv.AppendUnique( CPPDEFINES = ['WINVER=0x0502','_WIN32_WINNT=0x0502'] )
       #if baseEnv['default_debug_level'] != EnvironmentBuilder.NONE:
       #    baseEnv['PDB'] = 1
       #baseEnv.AppendUnique( CPPPATH = os.environ['INCLUDE'].split(os.pathsep) )
@@ -534,7 +529,8 @@ if not SConsAddons.Util.hasHelpFlag():
    baseEnv.BuildDir(buildDir, '.', duplicate = 0)
    # Test code to print what the environment is when debugging windows build issues
    #print baseEnv['ENV']
-   Export('baseEnv buildDir bulletBaseVar')
+   lokiBaseVar = 'loki-0.1.7'
+   Export('baseEnv buildDir bulletBaseVar lokiBaseVar')
 
    # Setup file paths
    PREFIX = os.path.abspath(baseEnv['prefix'])
@@ -570,7 +566,7 @@ if not SConsAddons.Util.hasHelpFlag():
    #fpcSubdirs = pj(buildDir,'VE_Installer','fpc')
    #installerSubdirs = pj(buildDir,'VE_Installer' )
    shareSubdirs = pj(buildDir,'share')
-   lokiSubdirs = pj( buildDir, 'external', 'loki-0.1.6')
+   lokiSubdirs = pj( buildDir, 'external', lokiBaseVar )
    #osgOQSubdirs = pj( buildDir, 'external', 'osgOQ')
    osgPPUSubdirs = pj( buildDir, 'external', 'osgPPU')
    osgEphemerisSubdirs = pj( buildDir, 'external', 'osgEphemeris')

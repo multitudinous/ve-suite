@@ -29,4 +29,4 @@
 #define APRICONVHOME "apr_1.3_Pre-Compile"
 #define MINERVAHOME "Minerva_5422_Pre-Compile_vc8.0_SP1"
 #define SKEWMATRIXHOME "C:\dev\ves_deps\skewmatrix"
-#define OSGALHOME "osgAL_0.6.1_Pre-Compile_vc8.0_SP1"
+#define OSGALHOME "osgAL_0.6.1-74_Pre-Compile_vc8.0_SP1"

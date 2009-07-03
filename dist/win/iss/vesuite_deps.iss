@@ -108,7 +108,7 @@ Source: {#DEPENDSINSTALLHOME}\{#ACETAOHOME}\tao\tao\*.h; DestDir: {app}\include\
 ; osgAL Files
 Source: {#DEPENDSINSTALLHOME}\{#OSGALHOME}\include\*.h; DestDir: {app}\include; Flags: ignoreversion recursesubdirs skipifsourcedoesntexist; Components: depsbuildenv
 Source: {#DEPENDSINSTALLHOME}\{#OSGALHOME}\lib\*.lib; DestDir: {app}\lib; Flags: ignoreversion skipifsourcedoesntexist; Components: depsbuildenv
-Source: {#DEPENDSINSTALLHOME}\{#OSGALHOME}\lib\*.dll; DestDir: {app}\lib; Flags: ignoreversion skipifsourcedoesntexist; Components: osgal
+Source: {#DEPENDSINSTALLHOME}\{#OSGALHOME}\lib\*.dll; DestDir: {app}\lib; Flags: ignoreversion skipifsourcedoesntexist; Components: osgal; Languages: 
 
 ; Minerva files
 Source: {#DEPENDSINSTALLHOME}\{#MINERVAHOME}\include\*.h; DestDir: {app}\include; Flags: ignoreversion recursesubdirs skipifsourcedoesntexist; Components: depsbuildenv

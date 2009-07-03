@@ -2,7 +2,7 @@
 import os, sys, string
 pj = os.path.join
 
-Import('baseEnv buildDir RootDir vrjuggler_options tao_options xerces_options ves_pkg')
+Import('baseEnv buildDir RootDir vrjuggler_options tao_options xerces_options ves_pkg lokiBaseVar')
 Import('wxwidgets_options')
 
 env = ves_pkg.getEnv().Clone()
@@ -22,12 +22,12 @@ loki_srcs = Split("""
    Singleton.cpp
    SmartPtr.cpp
 """)
-loki_srcs = map(lambda s: pj('#', 'external', 'loki-0.1.6', 'src', s),
+loki_srcs = map(lambda s: pj('#', 'external', lokiBaseVar, 'src', s),
                 loki_srcs)
 srcs.extend(loki_srcs)
 
 env.AppendUnique( CPPPATH = [pj('#', 'external', 'cxxtest-3.10.1'),
-                             pj('#', 'external', 'loki-0.1.6', 'include'),
+                             pj('#', 'external', lokiBaseVar, 'include'),
                              pj('#', 'src'),
                              '#'],
                   LIBPATH = [pj('#', buildDir, 'src', 'ves', 'open'),
