@@ -45,7 +45,7 @@ cfdCuttingPlane::cfdCuttingPlane( const double bounds[6], const int xyz,
     // set the boundary of current data set.
     this->SetBounds( bounds );
 
-    vprDEBUG( vesDBG, 1 ) << "cfdCuttingPlane type = " << this->type
+    vprDEBUG( vesDBG, 1 ) << "|\tcfdCuttingPlane type = " << this->type
         << std::endl << vprDEBUG_FLUSH;
 
     // specify the normal to sweep, the step-size, and the origin...
@@ -88,7 +88,7 @@ cfdCuttingPlane::cfdCuttingPlane( const double bounds[6], const int xyz,
         exit( 1 );
     }
 
-    vprDEBUG( vesDBG, 1 ) << "cfdCuttingPlane origin = " << this->origin[0] << " : "
+    vprDEBUG( vesDBG, 1 ) << "|\t\tcfdCuttingPlane origin = " << this->origin[0] << " : "
     << this->origin[1] << " : " << this->origin[2]
     << std::endl << vprDEBUG_FLUSH;
     this->plane = vtkPlane::New( );
@@ -145,7 +145,7 @@ void cfdCuttingPlane::Advance( double requestedValue )
     if( this->isPastEnd() ) this->ResetOriginToLow();
     else if( this->isAtEnd() ) this->ResetOriginToHigh();
 
-    vprDEBUG( vesDBG, 0 ) << "this->origin[" << this->type << "] = "
+    vprDEBUG( vesDBG, 0 ) << "|\t\tthis->origin[" << this->type << "] = "
     << this->origin[this->type] << std::endl << vprDEBUG_FLUSH;
 
     this->plane->SetOrigin( this->origin );

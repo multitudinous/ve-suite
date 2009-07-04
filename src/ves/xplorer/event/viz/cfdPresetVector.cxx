@@ -71,10 +71,10 @@ cfdPresetVector::~cfdPresetVector()
 
 void cfdPresetVector::Update( void )
 {
-    vprDEBUG( vesDBG, 1 ) << "cfdPresetVector::ActiveDataSet = "
+    vprDEBUG( vesDBG, 1 ) << "|\tcfdPresetVector::ActiveDataSet = "
         << this->GetActiveDataSet()
         << std::endl << vprDEBUG_FLUSH;
-        vprDEBUG( vesDBG, 1 ) << this->cursorType
+    vprDEBUG( vesDBG, 1 ) << "|\t\tcfdPresetVector "<< this->cursorType
         << " : " << usePreCalcData
         << std::endl << vprDEBUG_FLUSH;
 
@@ -86,7 +86,7 @@ void cfdPresetVector::Update( void )
         if( !precomputedPlanes )
         {
             vprDEBUG( vesDBG, 0 )
-            << "Dataset contains no precomputed vector planes."
+            << "|\tDataset contains no precomputed vector planes."
             << std::endl << vprDEBUG_FLUSH;
             ves::xplorer::CommandHandler::instance()
             ->SendConductorMessage( "Dataset contains no precomputed vector planes.\n" );
@@ -99,7 +99,7 @@ void cfdPresetVector::Update( void )
         if( preCalcData == NULL )
         {
             vprDEBUG( vesDBG, 0 )
-            << "cfdPresetVector: no precalculated data available"
+            << "|\t\tcfdPresetVector: no precalculated data available"
             << std::endl << vprDEBUG_FLUSH;
             this->updateFlag = false;
             return;
@@ -108,7 +108,7 @@ void cfdPresetVector::Update( void )
         //tempPipe->SetInput( preCalcData );
 
         // get every nth point from the dataSet data
-        this->ptmask->SetInput( preCalcData );//ApplyGeometryFilterNew( tempPipe->GetOutputPort() ) );
+        this->ptmask->SetInput( preCalcData );
         this->ptmask->SetOnRatio( this->GetVectorRatioFactor() );
         this->ptmask->Update();
 
@@ -125,7 +125,7 @@ void cfdPresetVector::Update( void )
         mapper->Update();
         
         //tempPipe->Delete();
-        vprDEBUG( vesDBG, 1 ) << "|\tcfdPresetVector::Update Yes Precalc : "
+        vprDEBUG( vesDBG, 1 ) << "|\t\tcfdPresetVector::Update Yes Precalc : "
             << this->cursorType << " : " << usePreCalcData
             << std::endl << vprDEBUG_FLUSH;
     }
@@ -170,7 +170,7 @@ void cfdPresetVector::Update( void )
             vtkXMLPolyDataWriter* writer = vtkXMLPolyDataWriter::New();
             writer->SetInput( ( vtkPolyData* ) glyph->GetOutput() );
             writer->SetDataModeToAscii();
-            writer->SetFileName( "teststreamervecglyphs.vtk" );
+            writer->SetFileName( "testvecglyphs.vtp" );
             writer->Write();
             writer->Delete();
         }*/
@@ -185,7 +185,7 @@ void cfdPresetVector::Update( void )
 
         c2p->Delete();
         vprDEBUG( vesDBG, 1 )
-            << "No Precalc : " << this->cursorType << " : " << usePreCalcData
+            << "|\t\tNo Precalc : " << this->cursorType << " : " << usePreCalcData
             << " : " << GetVectorRatioFactor() << std::endl << vprDEBUG_FLUSH;
     }
 

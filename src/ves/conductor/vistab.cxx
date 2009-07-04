@@ -631,8 +631,6 @@ void Vistab::_updateModelInformation( VjObs::Model_var newModel )
 //////////////////////////////////////////////////
 void Vistab::_setActiveDataset( unsigned int index )
 {
-    //std::cout<<"setActiveDataset"<<std::endl;
-    //is this incorrect to assume we have a model? -- biv
     if( _activeModel )
     {
         CORBA::ULong i = index;
@@ -732,7 +730,7 @@ void Vistab::_updateAvailableSolutions( std::string dataType,
 {
     if( dataType != "MESH_VECTORS" )
     {
-        std::cout << dataType << " not available in current dataset: " << _activeDataset.datasetname << std::endl;
+        //std::cout << dataType << " not available in current dataset: " << _activeDataset.datasetname << std::endl;
         return;
     }
     //std::cout<<"updateAvailableSolutions"<<std::endl;
@@ -752,53 +750,41 @@ void Vistab::_updateAvailableSolutions( std::string dataType,
     }
     else
     {
-        std::cout << dataType << " not available in current dataset: " << _activeDataset.datasetname << std::endl;
+        //std::cout << dataType << " not available in current dataset: " << _activeDataset.datasetname << std::endl;
     }
 }
 ///////////////////////////////////////////////////////////
-void Vistab::_updateComboBoxNames( std::string dataType,
+void Vistab::_updateComboBoxNames( const std::string& dataType,
                                    wxArrayString listOfNames )
 {
-    //std::cout<<"updateComboBoxNames"<<std::endl;
     wxListBox* activeComboBox = 0;
     if( dataType == "MESH_SCALARS" ||
             dataType == "TEXTURE_SCALARS" )
     {
-        //std::cout<<"scalar combo box"<<std::endl;
         activeComboBox = _scalarSelection;
     }
     else if( dataType == "MESH_VECTORS" ||
               dataType == "TEXTURE_VECTORS" )
     {
-        //std::cout<<"vector list box"<<std::endl;
         activeComboBox = _vectorSelection;
     }
-    else
+
+    if( !activeComboBox )
     {
-        std::cout << "Invalid data type: " << dataType << std::endl;
-    }
-    if( activeComboBox )
-    {
-        activeComboBox->Clear();
-        for( size_t i = 0; i < listOfNames.GetCount(); i++ )
-        {
-            activeComboBox->Insert( listOfNames[i], i );
-        }
+        return;
     }
 
-    //if( _activeScalarName.empty() )
+    activeComboBox->Clear();
+    for( size_t i = 0; i < listOfNames.GetCount(); i++ )
     {
-        _scalarSelection->SetSelection( 0 );
-        _activeScalarName = ConvertUnicode( _scalarSelection->GetStringSelection() );
+        activeComboBox->Insert( listOfNames[i], i );
     }
-    /*else
-    {
-       _scalarSelection->SetSelection(scalarValue);
-       _activeScalarName = ConvertUnicode( _scalarSelection->GetStringSelection() );
-    }*/
 
-    //scalarSelect = false;
-    //vectorSelect = false;
+    _scalarSelection->SetSelection( 0 );
+    _activeScalarName = ConvertUnicode( _scalarSelection->GetStringSelection() );
+
+    _vectorSelection->SetSelection( 0 );
+    _activeVectorName = ConvertUnicode( _vectorSelection->GetStringSelection() );
 }
 ////////////////////////////////////////////////////
 void Vistab::_OnSelectDataset( wxCommandEvent& WXUNUSED( event ) )

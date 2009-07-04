@@ -308,7 +308,7 @@ protected:
     ///TEXTURE_SCALARS == 3d texture scalar data\n
     ///TEXTURE_VECTORS == 3d texture vector data\n
     ///\param newNames The list of new names to update
-    void _updateComboBoxNames( std::string dataType, wxArrayString listOfNames );
+    void _updateComboBoxNames( const std::string& dataType, wxArrayString listOfNames );
 
     ///Set the the active dataset internally
     ///\param index The index of the dataset to make active.
