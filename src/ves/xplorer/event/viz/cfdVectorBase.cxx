@@ -53,7 +53,9 @@
 #include <vtkStripper.h>
 
 using namespace ves::xplorer;
-
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 // this class requires that the dataset has a vector field.
 cfdVectorBase::cfdVectorBase()
 {
@@ -84,8 +86,7 @@ cfdVectorBase::cfdVectorBase()
     _scaleByVector = 0;
     _vectorRatioFactor = 1;
 }
-
-
+////////////////////////////////////////////////////////////////////////////////
 cfdVectorBase::~cfdVectorBase()
 {
     tfilter->Delete();
@@ -107,7 +108,7 @@ cfdVectorBase::~cfdVectorBase()
     this->mapper->Delete();
     this->mapper = 0;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void cfdVectorBase::UpdateCommand()
 {
     //Call base method - currently does nothing
@@ -165,17 +166,17 @@ void cfdVectorBase::UpdateCommand()
     activeModelDVP->GetData( scaleByMagnitude );
     SetScaleByVectorFlag( static_cast< int >( scaleByMagnitude ) );
 }
-//////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdVectorBase::SetVectorScale( float x )
 {
     _vectorScale = x;
 }
-/////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 float cfdVectorBase::GetVectorScale()
 {
     return _vectorScale;
 }
-///////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdVectorBase::SetGlyphWithThreshold()
 {
     vprDEBUG( vesDBG, 1 )
@@ -189,7 +190,7 @@ void cfdVectorBase::SetGlyphWithThreshold()
     if( _vectorThreshHoldValues[ 0 ] > currentScalarRange[ 0 ] &&
             _vectorThreshHoldValues[ 1 ] < currentScalarRange[ 1 ] )
     {
-        vprDEBUG( vesDBG, 1 ) << "cfdVectorBase: ThresholdBetween"
+        vprDEBUG( vesDBG, 1 ) << "|\tcfdVectorBase: ThresholdBetween"
             << std::endl << vprDEBUG_FLUSH;
         tfilter->SetInputConnection( this->ptmask->GetOutputPort() );
         tfilter->ThresholdBetween( _vectorThreshHoldValues[ 0 ],
@@ -204,7 +205,7 @@ void cfdVectorBase::SetGlyphWithThreshold()
     }
     else if( _vectorThreshHoldValues[ 0 ] > currentScalarRange[ 0 ] )
     {
-        vprDEBUG( vesDBG, 1 ) << "cfdVectorBase: ThresholdByUpper"
+        vprDEBUG( vesDBG, 1 ) << "|\tcfdVectorBase: ThresholdByUpper"
             << std::endl << vprDEBUG_FLUSH;
         tfilter->SetInputConnection( this->ptmask->GetOutputPort() );
         tfilter->ThresholdByUpper( _vectorThreshHoldValues[ 0 ] );
@@ -217,7 +218,7 @@ void cfdVectorBase::SetGlyphWithThreshold()
     }
     else if( _vectorThreshHoldValues[ 1 ] < currentScalarRange[ 1 ] )
     {
-        vprDEBUG( vesDBG, 1 ) << "cfdVectorBase: ThresholdByLower"
+        vprDEBUG( vesDBG, 1 ) << "|\tcfdVectorBase: ThresholdByLower"
             << std::endl << vprDEBUG_FLUSH;
         tfilter->SetInputConnection( this->ptmask->GetOutputPort() );
         tfilter->ThresholdByLower( _vectorThreshHoldValues[ 1 ] );
@@ -230,64 +231,12 @@ void cfdVectorBase::SetGlyphWithThreshold()
     }
     else
     {
-        vprDEBUG( vesDBG, 1 ) << "cfdVectorBase: NO Threshold"
+        vprDEBUG( vesDBG, 1 ) << "|\tcfdVectorBase: NO Threshold"
             << std::endl << vprDEBUG_FLUSH;
         this->glyph->SetInputConnection( this->ptmask->GetOutputPort() );
     }
 }
-///////////////////////////////////////////
-/*void cfdVectorBase::SetGlyphWithThreshold()
-{
-   vprDEBUG(vesDBG, 1) << "vectorThreshHoldValues : "
-      << _vectorThreshHoldValues[ 0 ] << " : "
-      << _vectorThreshHoldValues[ 1 ] << std::endl << vprDEBUG_FLUSH;
-
-   double currentScalarRange[ 2 ];
-   this->GetActiveDataSet()->GetRange( currentScalarRange );
-
-   if(_vectorThreshHoldValues[ 0 ] > currentScalarRange[ 0 ] &&
-        _vectorThreshHoldValues[ 1 ] < currentScalarRange[ 1 ] )
-   {
-      vprDEBUG(vesDBG, 1) <<"cfdVectorBase: ThresholdBetween"
-         << std::endl << vprDEBUG_FLUSH;
-      vtkThresholdPoints * tfilter = vtkThresholdPoints::New();
-      tfilter->SetInput( this->ptmask->GetOutput() );
-      tfilter->ThresholdBetween( _vectorThreshHoldValues[ 0 ],
-                                 _vectorThreshHoldValues[ 1 ] );
-      tfilter->Update();
-      this->glyph->SetInput( tfilter->GetOutput());
-      tfilter->Delete();
-   }
-   else if(_vectorThreshHoldValues[ 0 ] > currentScalarRange[ 0 ] )
-   {
-      vprDEBUG(vesDBG, 1) <<"cfdVectorBase: ThresholdByUpper"
-         << std::endl << vprDEBUG_FLUSH;
-      vtkThresholdPoints * tfilter = vtkThresholdPoints::New();
-      tfilter->SetInput( this->ptmask->GetOutput() );
-      tfilter->ThresholdByUpper( _vectorThreshHoldValues[ 0 ] );
-      tfilter->Update();
-      this->glyph->SetInput( tfilter->GetOutput());
-      tfilter->Delete();
-   }
-   else if(_vectorThreshHoldValues[ 1 ] < currentScalarRange[ 1 ] )
-   {
-      vprDEBUG(vesDBG, 1) <<"cfdVectorBase: ThresholdByLower"
-         << std::endl << vprDEBUG_FLUSH;
-      vtkThresholdPoints * tfilter = vtkThresholdPoints::New();
-      tfilter->SetInput( this->ptmask->GetOutput() );
-      tfilter->ThresholdByLower( _vectorThreshHoldValues[ 1 ] );
-      tfilter->Update();
-      this->glyph->SetInput( tfilter->GetOutput());
-      tfilter->Delete();
-   }
-   else
-   {
-      vprDEBUG(vesDBG, 1) <<"cfdVectorBase: NO Threshold"
-         << std::endl << vprDEBUG_FLUSH;
-      this->glyph->SetInput( this->ptmask->GetOutput() );
-   }
-}*/
-
+////////////////////////////////////////////////////////////////////////////////
 void cfdVectorBase::SetGlyphAttributes()
 {
     glyph->SetSource( GetActiveDataSet()->GetArrow() );
@@ -306,7 +255,7 @@ void cfdVectorBase::SetGlyphAttributes()
         glyph->SetRange( GetActiveDataSet()->GetVectorMagRange() );
     }
 }
-
+////////////////////////////////////////////////////////////////////////////////
 float cfdVectorBase::GetVectorScaleFactor()
 {
     // this->GetVectorScale() is obtained from gui, 0 < vectorScale < 300
@@ -328,7 +277,7 @@ float cfdVectorBase::GetVectorScaleFactor()
 
     return scaleFactor;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 /*
 int cfdVectorBase::GetVectorRatioFactor()
 {
@@ -354,6 +303,7 @@ int cfdVectorBase::GetVectorRatioFactor()
    return ratioFactor;
 }
 */
+////////////////////////////////////////////////////////////////////////////////
 /*
 int cfdVectors::GetVectorRatioFactor()
 {
@@ -381,8 +331,7 @@ int cfdVectors::GetVectorRatioFactor()
    return ratioFactor;
 }
 */
-
-
+////////////////////////////////////////////////////////////////////////////////
 void cfdVectorBase::UpdateThreshHoldValues()
 {
     //double currentScalarRange[ 2 ];
@@ -409,39 +358,46 @@ void cfdVectorBase::UpdateThreshHoldValues()
         << _vectorThreshHoldValues[ 1 ] << std::endl << vprDEBUG_FLUSH;
     }
 }
+////////////////////////////////////////////////////////////////////////////////
 void cfdVectorBase::SetThreshHoldPercentages( int minThread, int maxThread )
 {
     _vectorThreshHoldMinPercentage = minThread;
     _vectorThreshHoldMaxPercentage = maxThread;
 }
+////////////////////////////////////////////////////////////////////////////////
 void cfdVectorBase::SetThreshHoldValues( double* input )
 {
     _vectorThreshHoldValues[ 0 ] = input[ 0 ];
     _vectorThreshHoldValues[ 1 ] = input[ 1 ];
 
-    vprDEBUG( vesDBG, 1 ) << " Threshold Values = "
+    vprDEBUG( vesDBG, 1 ) << "|\tThreshold Values = "
     << _vectorThreshHoldValues[ 0 ] << " : "
     << _vectorThreshHoldValues[ 1 ] << std::endl << vprDEBUG_FLUSH;
 }
+////////////////////////////////////////////////////////////////////////////////
 double* cfdVectorBase::GetThreshHoldValues( void )
 {
     return ( _vectorThreshHoldValues );
 }
+////////////////////////////////////////////////////////////////////////////////
 void cfdVectorBase::SetVectorRatioFactor( int x )
 {
     _vectorRatioFactor = x;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 int cfdVectorBase::GetVectorRatioFactor()
 {
     return _vectorRatioFactor;
 }
+////////////////////////////////////////////////////////////////////////////////
 void cfdVectorBase::SetScaleByVectorFlag( int input )
 {
     _scaleByVector = input;
 }
+////////////////////////////////////////////////////////////////////////////////
 int cfdVectorBase::GetScaleByVectorFlag( void )
 {
     return _scaleByVector;
 }
+////////////////////////////////////////////////////////////////////////////////
 
