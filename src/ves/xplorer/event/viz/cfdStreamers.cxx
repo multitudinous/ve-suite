@@ -64,6 +64,7 @@
 #include <vtkCleanPolyData.h>
 #include <vtkPointData.h>
 #include <vtkPolyDataAlgorithm.h>
+#include <vtkRibbonFilter.h>
 
 #include <ves/xplorer/Debug.h>
 
@@ -149,7 +150,7 @@ void cfdStreamers::Update()
     streamTracer->SetInputConnection( c2p->GetOutputPort() );
     //overall length of streamline
     streamTracer->SetMaximumPropagation( propagationTime );
-
+    
     // typically < 1
     streamTracer->SetMaximumIntegrationStep( integrationStepLength );
 
@@ -178,10 +179,26 @@ void cfdStreamers::Update()
     pdFilter->Delete();
      */
     streamTracer->SetIntegrator( integ );
+    streamTracer->ComputeVorticityOn();
     streamTracer->SetInputArrayToProcess( 0, 0, 0,
        vtkDataObject::FIELD_ASSOCIATION_POINTS, 
        GetActiveDataSet()->GetActiveVectorName().c_str() );
 
+    vtkCleanPolyData* cleanPD = vtkCleanPolyData::New();
+    cleanPD->PointMergingOn();
+    cleanPD->SetInputConnection( streamTracer->GetOutputPort() );
+    
+    vtkRibbonFilter* ribbon = 0;
+    /*if( ribbonFilter )
+    {
+        ribbon = vtkRibbonFilter::New();
+        ribbon->SetWidthFactor( arrowDiameter * 0.25);
+        ribbon->SetInputConnection( cleanPD->GetOutputPort() );
+        ribbon->SetInputArrayToProcess( 0, 0, 0,
+                                       vtkDataObject::FIELD_ASSOCIATION_POINTS, 
+                                       "Vorticity" );
+    }*/
+        
     if( streamArrows )
     {
         // Stream Points Section
@@ -190,9 +207,6 @@ void cfdStreamers::Update()
         vtkAppendPolyData* append = 0;
         vtkPolyDataNormals* normals = 0;
 
-        vtkCleanPolyData* cleanPD = vtkCleanPolyData::New();
-        cleanPD->PointMergingOn();
-        cleanPD->SetInputConnection( streamTracer->GetOutputPort() );
         /*{
             vtkXMLPolyDataWriter* writer = vtkXMLPolyDataWriter::New();
             writer->SetInput( ( vtkPolyData* ) cleanPD->GetOutput() );
@@ -206,7 +220,6 @@ void cfdStreamers::Update()
         ptmask->RandomModeOff();
         ptmask->SetInputConnection( cleanPD->GetOutputPort() );
         ptmask->SetOnRatio( 2 );
-        cleanPD->Delete();
 
         cone = vtkConeSource::New();
         cone->SetResolution( 5 );
@@ -259,7 +272,18 @@ void cfdStreamers::Update()
 
         append = vtkAppendPolyData::New();
         //append->DebugOn();
-        append->AddInput( streamTracer->GetOutput() );
+
+        if( ribbon )
+        {
+            append->AddInput( ribbon->GetOutput() );
+            ribbon->Delete();
+        }
+        else
+        {
+            append->AddInput( cleanPD->GetOutput() );
+        }
+        cleanPD->Delete();
+
         /*{
             vtkXMLPolyDataWriter* writer = vtkXMLPolyDataWriter::New();
             writer->SetInput( ( vtkPolyData* ) streamTracer->GetOutput() );
@@ -299,7 +323,17 @@ void cfdStreamers::Update()
     }
     else
     {
-        mapper->SetInputConnection( streamTracer->GetOutputPort() );
+        
+        if( ribbon )
+        {
+            mapper->SetInputConnection( ribbon->GetOutputPort() );
+            ribbon->Delete();
+        }
+        else
+        {
+            mapper->SetInputConnection( cleanPD->GetOutputPort() );
+        }
+        cleanPD->Delete();
     }
 
     mapper->SetColorModeToMapScalars();
