@@ -46,6 +46,12 @@
 
 #include <ves/VEConfig.h>
 
+#include <utility>
+#include <vector>
+
+#include <boost/program_options.hpp>
+namespace po = boost::program_options;
+
 using namespace ves::xplorer;
 
 int main( int argc, char* argv[] )
@@ -61,6 +67,51 @@ int main( int argc, char* argv[] )
         << "|-----------------------------------------------------------------|"
         << std::endl;
 
+    //Start the juggler kernel here so that we can run on darwin
+    vrj::Kernel* kernel = vrj::Kernel::instance(); // Declare a new Kernel
+    po::options_description xplorer_desc("VE-Xplorer Options");
+    po::options_description& general_desc = kernel->getGeneralOptions();
+    po::options_description& cluster_desc = kernel->getClusterOptions();
+    xplorer_desc.add(general_desc).add(cluster_desc);
+    po::options_description& config_desc = kernel->getConfigOptions();
+    xplorer_desc.add(config_desc);
+    
+    xplorer_desc.add_options()("VESRTT", po::bool_switch(), 
+        "Enable render-to-texture mode");
+
+    xplorer_desc.add_options()("VESDesktop", po::value< std::vector< int > >(), 
+        "Enable desktop mode with the resolution of the desktop");
+    //-VESDesktop', '1440', '900'
+    
+    xplorer_desc.add_options()("VESCluster", po::value< std::string >(), 
+        "Cluster master node machine name");
+
+    xplorer_desc.add_options()("ORBInitRef", po::value< std::string >(), 
+        "CORBA name server reference");
+    //-ORBInitRef', 'NameService=corbaloc:iiop:localhost:1239/NameService'
+
+    // jconf files can be given as postion arguments.
+    //po::positional_options_description pos_desc;
+    //pos_desc.add("jconf", -1);
+    
+    // Construct a parser and do the actual parsing.
+    po::command_line_parser parser(argc, argv);
+    //po::parsed_options parsed = 
+        parser.options(xplorer_desc).positional(pos_desc).allow_unregistered().run();
+    po::parsed_options parsed = 
+        parser.options(xplorer_desc).allow_unregistered().run();
+    
+    // Finally store our options and use them.
+    po::variables_map vm;
+    po::store(parsed, vm);
+    po::notify(vm);
+    
+    if( vm.count("help") )
+    {
+        std::cout << xplorer_desc << std::endl;
+        return 0;
+    }
+    
     try
     {
         //std::string Advanced_Resource_Factory( "static Advanced_Resource_Factory \"-ORBReactorType select_st -ORBInputCDRAllocator null -ORBConnectionCacheLock null -ORBFlushingStrategy blocking\"" );
@@ -78,12 +129,16 @@ int main( int argc, char* argv[] )
         //orb->perform_work();
         //CORBA::String_var sior1( orb->object_to_string( naming_context_object.in() ) );
         //std::cout << "|\tIOR of the server side : " << std::endl << sior1 << std::endl;
-        CosNaming::NamingContext_var naming_context = CosNaming::NamingContext::_narrow( naming_context_object.in() );
+        CosNaming::NamingContext_var naming_context = 
+            CosNaming::NamingContext::_narrow( naming_context_object.in() );
         //orb->perform_work();
         //Here is the code to set up the server
-        CORBA::Object_var poa_object = orb->resolve_initial_references( "RootPOA" ); // get the root poa
-        PortableServer::POA_var poa = PortableServer::POA::_narrow( poa_object.in() );
-        PortableServer::POAManager_var poa_manager = poa->the_POAManager();
+        CORBA::Object_var poa_object = 
+            orb->resolve_initial_references( "RootPOA" ); // get the root poa
+        PortableServer::POA_var poa = 
+            PortableServer::POA::_narrow( poa_object.in() );
+        PortableServer::POAManager_var poa_manager = 
+            poa->the_POAManager();
 
         // Create policy with BiDirPolicy::BOTH
         CORBA::PolicyList policies( 1 );
@@ -98,8 +153,8 @@ int main( int argc, char* argv[] )
         // will receive request in the same connection in which it sent
         // the request
 
-        PortableServer::POA_var child_poa = poa->create_POA( "childPOA",
-                                                             poa_manager.in(), policies );
+        PortableServer::POA_var child_poa = 
+            poa->create_POA( "childPOA", poa_manager.in(), policies );
 
         // Creation of childPOA is over. Destroy the Policy objects.
         for( CORBA::ULong i = 0; i < policies.length(); ++i )
@@ -110,15 +165,28 @@ int main( int argc, char* argv[] )
 
         //Initialize Xplorer CORBA interfaces
         VjObsWrapper* vjobsWrapper = new VjObsWrapper();
-        vjobsWrapper->init( naming_context.in(), orb.in(), child_poa.in(), NULL, argc, argv );
-
-        //Start the juggler kernel here so that we can run on darwin
-        vrj::Kernel* kernel = vrj::Kernel::instance(); // Declare a new Kernel
+        vjobsWrapper->init( naming_context.in(), orb.in(), 
+            child_poa.in(), NULL, argc, argv );
+        
 #if __VJ_version >= 2003000
-        kernel->init( argc, argv );
+        kernel->init( vm );
 #elif __VJ_version == 2000003
 #endif
-        for( int i = 1; i < argc; ++i )    // Configure the kernel
+        // If we have configuration files, load them.
+        if ( vm.count("jconf") > 0 )
+        {
+            std::vector<std::string> jconfs =
+                vm["jconf"].as< std::vector<std::string> >();
+            
+            std::vector<std::string>::iterator i;
+            for ( i = jconfs.begin(); i != jconfs.end(); ++i )
+            {
+                std::cout << "Reading: " << *i << std::endl;
+                kernel->loadConfigFile(*i);
+            }
+        }
+        
+        /*for( int i = 1; i < argc; ++i )    // Configure the kernel
         {
             if( std::string( argv[ i ] ) == std::string( "-VESDesktop" ) )
             {
@@ -138,7 +206,7 @@ int main( int argc, char* argv[] )
             {
                 kernel->loadConfigFile( argv[i] );
             }
-        }
+        }*/
 
         AppWrapper* appWrapper = new AppWrapper( argc, argv, vjobsWrapper );
 
