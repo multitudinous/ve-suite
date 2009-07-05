@@ -32,8 +32,8 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/conductor/util/CORBAServiceList.h>
 
-#include "NavigationPane.h"
-#include "ConductorAppEnums.h"
+#include <ves/conductor/NavigationPane.h>
+#include <ves/conductor/ConductorLibEnums.h>
 
 #include <ves/conductor/UserPreferencesDataBuffer.h>
 

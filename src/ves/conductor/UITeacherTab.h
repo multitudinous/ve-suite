@@ -40,6 +40,8 @@ UITeacherTab API
 */
 #include <wx/dialog.h>
 
+#include <ves/VEConfig.h>
+
 class wxWindow;
 class wxButton;
 class wxRadioButton;
@@ -47,7 +49,7 @@ class wxSizer;
 class wxRadioBox;
 class wxBoxSizer;
 
-class UITeacherTab : public wxDialog
+class VE_GUIPLUGINS_EXPORTS UITeacherTab : public wxDialog
 {
 public:
     UITeacherTab( wxWindow* tControl );

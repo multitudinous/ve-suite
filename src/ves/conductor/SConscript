@@ -24,8 +24,9 @@ lib_env.Append( CPPDEFINES = ['VE_GUIPLUGINS_LIBRARY','VE_CONDUCTOR_UTILS_LIBRAR
 
 #see if we need to compile minerva in
 if baseEnv[ 'MakeMinervaSupport' ] != 'no':
-	lib_env.Append( CPPDEFINES = ['MINERVA_GIS_SUPPORT'] )
-	
+   lib_env.Append( CPPDEFINES = ['MINERVA_GIS_SUPPORT'] )
+   #minerva_options.apply( env )
+
 if GetPlatform() == 'win32':
    lib_env.Append( CXXFLAGS = [ '/bigobj' ] )
    

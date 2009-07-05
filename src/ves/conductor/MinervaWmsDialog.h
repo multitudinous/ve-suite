@@ -11,6 +11,7 @@
 #include <wx/dialog.h>
 
 #include <string>
+#include <ves/VEConfig.h>
 
 class wxTextCtrl;
 class wxStaticText;
@@ -19,7 +20,7 @@ class wxCheckBox;
 class wxStdDialogButtonSizer;
 class wxButton;
 
-class MinervaWmsDialog : public wxDialog
+class VE_GUIPLUGINS_EXPORTS MinervaWmsDialog : public wxDialog
 {
 public:
   typedef wxDialog BaseClass;

@@ -39,8 +39,8 @@
 #include <wx/msgdlg.h>
 #include <wx/filename.h>
 
-#include "UITeacherTab.h"
-#include "ConductorAppEnums.h"
+#include <ves/conductor/UITeacherTab.h>
+#include <ves/conductor/ConductorLibEnums.h>
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>
 

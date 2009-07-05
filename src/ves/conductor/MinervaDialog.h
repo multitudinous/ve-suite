@@ -13,11 +13,13 @@
 #include <vector>
 #include <string>
 
+#include <ves/VEConfig.h>
+
 class wxButton;
 class wxListBox;
 class wxStdDialogButtonSizer;
 
-class MinervaDialog : public wxDialog
+class VE_GUIPLUGINS_EXPORTS MinervaDialog : public wxDialog
 {
 public:
   typedef wxDialog BaseClass;

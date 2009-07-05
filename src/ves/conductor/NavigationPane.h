@@ -54,6 +54,8 @@ NavigationPane API
 #include <ves/open/xml/CommandPtr.h>
 #include <ves/open/xml/DataValuePairPtr.h>
 
+#include <ves/VEConfig.h>
+
 class wxCheckBox;
 class wxSlider;
 class wxButton;
@@ -81,7 +83,7 @@ protected:
 };
 
 //the main navigation tab class
-class NavigationPane : public wxDialog
+class VE_GUIPLUGINS_EXPORTS NavigationPane : public wxDialog
 {
 public:
     NavigationPane( wxWindow* parent );

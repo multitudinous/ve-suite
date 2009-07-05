@@ -22,8 +22,8 @@ if baseEnv[ 'TransformManipulator' ] != 'no':
 
 # See if we need to turn on the Minerva sub-menu.
 if baseEnv[ 'MakeMinervaSupport' ] != 'no':
-	env.Append( CPPDEFINES = ['MINERVA_GIS_SUPPORT'] )
-	minerva_options.apply( env )
+   env.Append( CPPDEFINES = ['MINERVA_GIS_SUPPORT'] )
+   #minerva_options.apply( env )
 
 env.Append(LIBS = ['ves_conductor_plugin', 'ves_open_xml',
                    'ves_open_module'])

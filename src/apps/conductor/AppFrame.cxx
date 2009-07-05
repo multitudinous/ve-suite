@@ -61,20 +61,20 @@
 #include <ves/conductor/XMLDataBufferEngine.h>
 #include <ves/conductor/Network.h>
 #include <ves/conductor/Canvas.h>
+#include <ves/conductor/UITeacherTab.h>
+#include <ves/conductor/MinervaDialog.h>
+#include <ves/conductor/NavigationPane.h>
 
 #include "ConductorApp.h"
 #include "UserPreferences.h"
 #include "AvailableModules.h"
 #include "HierarchyTree.h"
-#include "UITeacherTab.h"
 #include "DeviceProperties.h"
-#include "NavigationPane.h"
 #include "Splitter.h"
 #include "ViewLocPane.h"
 #include "AppToolBar.h"
 #include "ExportMenu.h"
 #include "EphemerisDialog.h"
-#include "MinervaDialog.h"
 
 #include <ves/conductor/util/CADNodeManagerDlg.h>
 #include <ves/conductor/IconChooser.h>

@@ -5,7 +5,7 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#include "MinervaWmsDialog.h"
+#include <ves/conductor/MinervaWmsDialog.h>
 
 #include <wx/string.h>
 #include <wx/stattext.h>

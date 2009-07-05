@@ -5,8 +5,8 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#include "MinervaDialog.h"
-#include "MinervaWmsDialog.h"
+#include <ves/conductor/MinervaDialog.h>
+#include <ves/conductor/MinervaWmsDialog.h>
 
 #include <ves/conductor/util/CORBAServiceList.h>
 
