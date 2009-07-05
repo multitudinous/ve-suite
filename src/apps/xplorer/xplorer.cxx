@@ -97,7 +97,7 @@ int main( int argc, char* argv[] )
     // Construct a parser and do the actual parsing.
     po::command_line_parser parser(argc, argv);
     //po::parsed_options parsed = 
-        parser.options(xplorer_desc).positional(pos_desc).allow_unregistered().run();
+    //    parser.options(xplorer_desc).positional(pos_desc).allow_unregistered().run();
     po::parsed_options parsed = 
         parser.options(xplorer_desc).allow_unregistered().run();
     
