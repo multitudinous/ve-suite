@@ -7,6 +7,7 @@
 
 #include <ves/conductor/MinervaDialog.h>
 #include <ves/conductor/MinervaWmsDialog.h>
+#include <ves/conductor/ConductorLibEnums.h>
 
 #include <ves/conductor/util/CORBAServiceList.h>
 
@@ -43,13 +44,6 @@ const wxString WINDOW_TITLE ( wxT( "Minerva Properties" ) );
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-enum
-{
-  MINERVA_DIALOG_ADD_ELEVATION_LAYER,
-  MINERVA_DIALOG_REMOVE_ELEVATION_LAYER,
-  MINERVA_DIALOG_ADD_RASTER_LAYER,
-  MINERVA_DIALOG_REMOVE_RASTER_LAYER
-};
 
 
 ///////////////////////////////////////////////////////////////////////////////

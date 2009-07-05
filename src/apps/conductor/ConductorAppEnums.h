@@ -2,7 +2,7 @@
 #ifndef CONDUCTORAPPENUMS_H
 #define CONDUCTORAPPENUMS_H
     
-enum
+enum CONDUCTOR_APP_ENUMS
 {
     //for updating hierarchy tree
     APPFRAME_UPDATE_HIER_TREE = 9999,
@@ -151,7 +151,7 @@ enum
     //
     //ExportMenu.h
     //
-    EXPORTMENU_SCREEN_SHOT = 1950,
+    EXPORTMENU_SCREEN_SHOT = 1500,
     EXPORTMENU_DOT_FILE,
 
 

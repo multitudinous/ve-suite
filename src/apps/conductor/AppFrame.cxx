@@ -2442,7 +2442,7 @@ void AppFrame::LoadNewNetwork( wxUpdateUIEvent& WXUNUSED( event )  )
 
     //Reloading plugins
     av_modules->ResetPluginTree();
-    
+
     if( newCanvas )
     {
         //clear any current tree
