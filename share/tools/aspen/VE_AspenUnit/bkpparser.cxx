@@ -1,8 +1,5 @@
 #include "stdafx.h"
 #include "BKPParser.h"
-#include <iostream>
-#include <fstream>
-#include <algorithm>
 #include <ves/open/xml/model/Link.h>
 #include <ves/open/xml/model/Model.h>
 #include <ves/open/xml/DataValuePair.h>
@@ -10,8 +7,9 @@
 #include <ves/open/xml/model/Point.h>
 #include <ves/open/xml/model/Port.h>
 #include <ves/open/xml/Command.h>
-#include <fstream>
 #include <iostream>
+#include <fstream>
+#include <algorithm>
 #include <cmath>
 #include <cctype>
 
@@ -1283,7 +1281,7 @@ std::string BKPParser::CreateNetwork( void )
         tempModel->
             SetIconFilename(BlockInfoList["_main_sheet"][blockIter->first].type
             +"_"+BlockInfoList["_main_sheet"][blockIter->first].type+"_"
-            +BlockInfoList["_main_sheet"][blockIter->first].icon);
+            +BlockInfoList["_main_sheet"][blockIter->first].icon + ".xpm");
         tempModel->
             SetIconRotation(BlockInfoList["_main_sheet"][blockIter->first].
             rotation);
@@ -1451,7 +1449,7 @@ void BKPParser::ParseSubSystem( ves::open::xml::model::ModelPtr model,
         tempModel->
             SetIconFilename(BlockInfoList[networkName][blockIter->first].type +
             "_" + BlockInfoList[networkName][blockIter->first].type+"_" +
-            BlockInfoList[networkName][blockIter->first].icon );
+            BlockInfoList[networkName][blockIter->first].icon + ".xpm" );
         tempModel->
             SetIconRotation(
             BlockInfoList[networkName][blockIter->first].rotation );

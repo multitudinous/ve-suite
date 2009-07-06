@@ -191,7 +191,7 @@ void HierarchyTree::PopulateTree( )
             }
 
             //Add the icon to the image list
-            fullPath = iter->second->GetIconFilename() + ".xpm";
+            fullPath = iter->second->GetIconFilename();// + ".xpm";
             aspenIconIter = aspenPlusIconMap.find( fullPath );
             if( aspenIconIter != aspenPlusIconMap.end() )
             {
@@ -200,9 +200,11 @@ void HierarchyTree::PopulateTree( )
             }
             else
             {
-                wxIcon square ( square_xpm );
-                AddtoImageList( wxBitmap( wxBitmap( square ).ConvertToImage().
-                    Rescale( iconsize, iconsize ) ) );
+                AddtoImageList( wxBitmap( wxBitmap( iter->second->GetIconFilename(), wxBITMAP_TYPE_GIF ).
+                    ConvertToImage().Rescale( iconsize, iconsize ) ) );
+                //wxIcon square ( square_xpm );
+                //AddtoImageList( wxBitmap( wxBitmap( square ).ConvertToImage().
+                //    Rescale( iconsize, iconsize ) ) );
             }
 
             //Add the new model to the tree
@@ -258,7 +260,7 @@ void HierarchyTree::PopulateLevel( wxTreeItemId parentLeaf,
             }
 
             //Add the icon to the image list
-            fullPath = models[i]->GetIconFilename() + ".xpm";
+            fullPath = models[i]->GetIconFilename();// + ".xpm";
             aspenIconIter = aspenPlusIconMap.find( fullPath );
             if( aspenIconIter != aspenPlusIconMap.end() )
             {
@@ -267,9 +269,11 @@ void HierarchyTree::PopulateLevel( wxTreeItemId parentLeaf,
             }
             else
             {
-                wxIcon square ( square_xpm );
-                AddtoImageList( wxBitmap( wxBitmap( square ).ConvertToImage().
-                    Rescale( iconsize, iconsize ) ) );
+                AddtoImageList( wxBitmap( wxBitmap( models[i]->GetIconFilename(), wxBITMAP_TYPE_GIF ).
+                    ConvertToImage().Rescale( iconsize, iconsize ) ) );
+                //wxIcon square ( square_xpm );
+                //AddtoImageList( wxBitmap( wxBitmap( square ).ConvertToImage().
+                //    Rescale( iconsize, iconsize ) ) );
             }
 
             //add the new item to the list
