@@ -189,15 +189,16 @@ void cfdStreamers::Update()
     cleanPD->SetInputConnection( streamTracer->GetOutputPort() );
     
     vtkRibbonFilter* ribbon = 0;
-    /*if( ribbonFilter )
+    if( m_streamRibbons )
     {
         ribbon = vtkRibbonFilter::New();
-        ribbon->SetWidthFactor( arrowDiameter * 0.25);
+        //ribbon->SetWidthFactor( arrowDiameter * 0.25);
+        ribbon->SetWidth( arrowDiameter );
         ribbon->SetInputConnection( cleanPD->GetOutputPort() );
         ribbon->SetInputArrayToProcess( 0, 0, 0,
                                        vtkDataObject::FIELD_ASSOCIATION_POINTS, 
                                        "Vorticity" );
-    }*/
+    }
         
     if( streamArrows )
     {
@@ -444,6 +445,14 @@ void cfdStreamers::UpdateCommand()
     activeModelDVP = objectCommand->GetDataValuePair( "Advanced Streamline Settings" );
     objectCommand = boost::dynamic_pointer_cast<ves::open::xml::Command>( activeModelDVP->GetDataXMLObject() );
 
+    /////////////////////
+    activeModelDVP = objectCommand->GetDataValuePair( "Use Stream Ribbons" );
+    unsigned int streamRibbons;
+    activeModelDVP->GetData( streamRibbons );
+    vprDEBUG( vesDBG, 0 ) << "|\t\tUse Stream Ribbons\t" << streamRibbons
+        << std::endl << vprDEBUG_FLUSH;
+    m_streamRibbons = streamRibbons;
+    
     /////////////////////
     activeModelDVP = objectCommand->GetDataValuePair( "Use Stream Arrows" );
     unsigned int opacity;

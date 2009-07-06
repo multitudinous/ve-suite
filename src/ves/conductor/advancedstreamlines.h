@@ -132,7 +132,10 @@ public:
 
     ///Set the animated particle flag
     void SetAnimatedParticle( bool animateParticle );
-    
+ 
+    ///Set the animated particle flag
+    void SetStreamRibbon( bool streamRibbon );
+   
     ///Live command for setting streamline size
     void _OnLineDiameter( wxCommandEvent& WXUNUSED( event ) );
 
@@ -165,6 +168,10 @@ public:
     ///\return True or false to render animated particles
     bool GetAnimatedParticle();
 
+    ///Render stream ribbons or not
+    ///\return True or false to render stream ribbons
+    bool GetStreamRibbon();
+    
     ///Get the use last seed point flag
     bool GetUseLastSeedPoint();
 
@@ -189,7 +196,8 @@ protected:
     wxCheckBox* _lastSeedPtCheck;
     wxCheckBox* _streamArrowCheck;
     wxCheckBox* m_particleCheck;
-
+    wxCheckBox* m_streamRibbon;
+    
     ves::conductor::util::UI_TransientDialog* particleControls;
     AdvancedStreamlines* _particleParent;
 

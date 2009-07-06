@@ -114,7 +114,8 @@ bool Streamlines::Create( wxWindow* parent,
     _lastSeedPtFlag = false;
     _lastStreamArrow = false;
     m_animatedParticles = false;
-
+    m_streamRibbons = false;
+    
     SetExtraStyle( GetExtraStyle() | wxWS_EX_BLOCK_EVENTS );
     wxDialog::Create( parent, id, caption, pos, size, style );
 
@@ -258,19 +259,35 @@ void Streamlines::_updateAdvancedSettings()
     }
     _advancedSettings.push_back( seedPtFlag );
 
-    ves::open::xml::DataValuePairPtr streamArrow( new ves::open::xml::DataValuePair() );
-    streamArrow->SetDataName( "Use Stream Arrows" );
-    streamArrow->SetDataType( "UNSIGNED INT" );
-    if( _lastStreamArrow )
-    {
-        streamArrow->SetDataValue( static_cast<unsigned int>( 1 ) );
-    }
-    else
-    {
-        streamArrow->SetDataValue( static_cast<unsigned int>( 0 ) );
-    }
 
-    _advancedSettings.push_back( streamArrow );
+    {
+        ves::open::xml::DataValuePairPtr streamArrow( new ves::open::xml::DataValuePair() );
+        streamArrow->SetDataName( "Use Stream Arrows" );
+        streamArrow->SetDataType( "UNSIGNED INT" );
+        if( _lastStreamArrow )
+        {
+            streamArrow->SetDataValue( static_cast<unsigned int>( 1 ) );
+        }
+        else
+        {
+            streamArrow->SetDataValue( static_cast<unsigned int>( 0 ) );
+        }
+        
+        _advancedSettings.push_back( streamArrow );
+    }
+    
+    {
+        ves::open::xml::DataValuePairPtr streamRibbon( new ves::open::xml::DataValuePair() );
+        if( m_streamRibbons )
+        {
+            streamRibbon->SetData( "Use Stream Ribbons", static_cast<unsigned int>( 1 ) );
+        }
+        else
+        {
+            streamRibbon->SetData( "Use Stream Ribbons", static_cast<unsigned int>( 0 ) );
+        }
+        _advancedSettings.push_back( streamRibbon );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Streamlines::_updateStreamlineInformation()
@@ -337,6 +354,7 @@ void Streamlines::_onAdvanced( wxCommandEvent& WXUNUSED( event ) )
     adStreamline.SetUseLastSeedPt( _lastSeedPtFlag );
     adStreamline.SetStreamArrow( _lastStreamArrow );
     adStreamline.SetAnimatedParticle( m_animatedParticles );
+    adStreamline.SetStreamRibbon( m_streamRibbons );
     
     int error = adStreamline.ShowModal();
     if( error == wxID_OK ||
@@ -350,6 +368,7 @@ void Streamlines::_onAdvanced( wxCommandEvent& WXUNUSED( event ) )
         _lastSeedPtFlag = adStreamline.GetUseLastSeedPoint();
         _lastStreamArrow = adStreamline.GetStreamArrow();
         m_animatedParticles = adStreamline.GetAnimatedParticle();
+        m_streamRibbons = adStreamline.GetStreamRibbon();
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

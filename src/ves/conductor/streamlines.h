@@ -154,6 +154,7 @@ protected:
     bool _lastSeedPtFlag;///<Seed pt flat from advanced settings.
     bool _lastStreamArrow;///<Stream arrow from advanced settings.
     bool m_animatedParticles;
+    bool m_streamRibbons;
     
     int cId, cIso_value, cMin, cMax, cSc;
     std::vector< long > commandInputs;

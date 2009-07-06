@@ -87,7 +87,8 @@ bool AdvancedStreamlines::Create( wxWindow* parent,
     _glowSlider = 0;
     _lastSeedPtCheck = 0;
     _streamArrowCheck = 0;
-
+    m_streamRibbon = 0;
+    m_particleCheck = 0;
     particleControls = 0;
 
     SetExtraStyle( GetExtraStyle() | wxWS_EX_BLOCK_EVENTS );
@@ -191,9 +192,9 @@ void AdvancedStreamlines::CreateControls()
     _streamArrowCheck->SetValue( false );
     itemBoxSizer26->Add( _streamArrowCheck, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
-    wxCheckBox* streamRibbon = new wxCheckBox( itemDialog1, -1, _T( "Stream Ribbon" ), wxDefaultPosition, wxDefaultSize, 0 );
-    streamRibbon->SetValue( false );
-    itemBoxSizer26->Add( streamRibbon, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
+    m_streamRibbon = new wxCheckBox( itemDialog1, -1, _T( "Stream Ribbon" ), wxDefaultPosition, wxDefaultSize, 0 );
+    m_streamRibbon->SetValue( false );
+    itemBoxSizer26->Add( m_streamRibbon, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
     m_particleCheck = new wxCheckBox( itemDialog1, ADVANCEDSTREAMLINES_PARTICLE_TRACKING, _T( "Animated Particles" ), wxDefaultPosition, wxDefaultSize, 0 );
     m_particleCheck->SetValue( false );
@@ -282,6 +283,14 @@ void AdvancedStreamlines::SetAnimatedParticle( bool animateParticle )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
+void AdvancedStreamlines::SetStreamRibbon( bool streamRibbon )
+{
+    if( m_streamRibbon )
+    {
+        m_streamRibbon->SetValue( streamRibbon );
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
 void AdvancedStreamlines::SetUseLastSeedPt( bool value )
 {
     if( _lastSeedPtCheck )
@@ -328,6 +337,11 @@ bool AdvancedStreamlines::GetStreamArrow()
 bool AdvancedStreamlines::GetAnimatedParticle()
 {
     return m_particleCheck->GetValue();
+}
+////////////////////////////////////////////////////////////////////////////////
+bool AdvancedStreamlines::GetStreamRibbon()
+{
+    return m_streamRibbon->GetValue();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AdvancedStreamlines::_OnLineDiameter( wxCommandEvent& WXUNUSED( event ) )

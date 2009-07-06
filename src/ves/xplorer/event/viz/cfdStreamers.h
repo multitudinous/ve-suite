@@ -101,7 +101,8 @@ private:
 
     int integrationDirection;
     int streamArrows;
-
+    int m_streamRibbons;
+    
     float propagationTime;
     float integrationStepLength;
     float lineDiameter;
