@@ -399,7 +399,7 @@ void App::initScene()
     cfdQuatCamHandler::instance()->SetMasterNode( m_vjobsWrapper->IsMaster() );
     
     //Set rtt mode for devices
-    ves::xplorer::DeviceHandler::instance()->SetRTTMode( mRTT );
+    ves::xplorer::scenegraph::SceneManager::instance()->SetRTT( mRTT );
     
     // create steady state visualization objects
     SteadyStateVizHandler::instance()->Initialize( std::string() );

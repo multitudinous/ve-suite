@@ -155,6 +155,11 @@ public:
     ///\param trueFalse Turn the logo on and off
     void ViewLogo( bool trueFalse );
 
+    ///Tell if RTT is on
+    bool IsRTTOn();
+    ///Set the RTT flag on
+    void SetRTT( bool isRTTOn );
+    
 protected:
     ///Create the model for the logo
     void _createLogo();
@@ -236,6 +241,9 @@ private:
 
     ///
     CharacterController* mCharacterController;
+    
+    ///Flag to tell if RTT is off or on
+    bool m_isRTTOn;
 
 };
 } //end scenegraph

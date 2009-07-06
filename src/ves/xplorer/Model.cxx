@@ -61,11 +61,9 @@
 
 #include <ves/open/xml/shader/ShaderCreator.h>
 
-#ifdef _OSG
 #include <osg/StateSet>
 #include <ves/xplorer/volume/cfdTextureDataSet.h>
 using namespace ves::xplorer::volume;
-#endif
 
 #include <vpr/IO/Socket/SocketStream.h>
 #include <vpr/IO/Socket/SocketAcceptor.h>

@@ -114,7 +114,8 @@ SceneManager::SceneManager()
     m_suiteText( NULL ),
     m_clrNode( NULL ),
     mFrameStamp( NULL ),
-    mCharacterController( NULL )
+    mCharacterController( NULL ),
+    m_isRTTOn( false )
 {
     ;
 }
@@ -471,5 +472,15 @@ osg::FrameStamp* const SceneManager::GetFrameStamp() const
 CharacterController* const SceneManager::GetCharacterController() const
 {
     return mCharacterController;
+}
+////////////////////////////////////////////////////////////////////////////////
+bool SceneManager::IsRTTOn()
+{
+    return m_isRTTOn;
+}
+////////////////////////////////////////////////////////////////////////////////
+void SceneManager::SetRTT( bool isRTTOn )
+{
+    m_isRTTOn = isRTTOn;
 }
 ////////////////////////////////////////////////////////////////////////////////

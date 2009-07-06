@@ -1822,7 +1822,7 @@ void KeyboardMouse::ProcessHit()
 
     vxs::DCS* newSelectedDCS =
         static_cast< vxs::DCS* >( parentNode.get() );
-    if( deviceHandler->GetRTTMode() )
+    if( sceneManager->IsRTTOn() )
     {
         newSelectedDCS->SetTechnique( "Glow" );
     }
