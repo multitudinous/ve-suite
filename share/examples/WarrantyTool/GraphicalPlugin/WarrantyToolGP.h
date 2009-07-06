@@ -36,6 +36,12 @@
 
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/plugin/PluginBase.h>
+
+#include <map>
+#include <vector>
+#include <utility>
+#include <string>
+
 namespace ves
 {
 namespace xplorer
@@ -43,6 +49,7 @@ namespace xplorer
 namespace scenegraph
 {
     class CADEntity;
+    class TextTexture;
 }
 }
 }
@@ -65,15 +72,19 @@ private:
     ///Strip characters from datafile
     void StripCharacters( std::string& data, const std::string& character );
     void ParseDataFile( const std::string& csvFilename );
+    void RenderTextualDisplay( bool onOff );
+
     std::vector< std::string > mPartNumberList;
     ///PArt numbers loaded from the csv files
     std::vector< std::string > mLoadedPartNumbers;
     ///Description of part numbers loaded from csv files
     std::vector< std::string > mPartNumberDescriptions;
     
-    
+    std::string m_lastPartNumber;
     ves::xplorer::scenegraph::CADEntity* cadEntity;
     bool mAddingParts;
+    std::map< std::string, std::vector< std::pair< std::string, std::string > > > m_dataMap;
+    osg::ref_ptr< ves::xplorer::scenegraph::TextTexture > mModelText;
 };
 
 CREATE_VES_XPLORER_PLUGIN_ENTRY_POINT( WarrantyToolGP )

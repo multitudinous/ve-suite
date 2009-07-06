@@ -46,6 +46,10 @@
 #include <ves/xplorer/scenegraph/HighlightNodeByNameVisitor.h>
 
 #include <ves/xplorer/scenegraph/CADEntity.h>
+#include <ves/xplorer/scenegraph/TextTexture.h>
+
+#include <ves/xplorer/environment/TextTextureCallback.h>
+#include <ves/xplorer/environment/HeadPositionCallback.h>
 
 #include <sstream>
 #include <iostream>
@@ -134,8 +138,10 @@ void WarrantyToolGP::SetCurrentCommand( ves::open::xml::CommandPtr command )
             mAddingParts = true;
         }
         //Highlight part
+        m_lastPartNumber = dvp->GetDataString();
         ves::xplorer::scenegraph::HighlightNodeByNameVisitor 
-            highlight( mDCS.get(), dvp->GetDataString() );
+            highlight( mDCS.get(), m_lastPartNumber );
+        RenderTextualDisplay( true );
     }
     else if( dvp->GetDataName() == "CLEAR" )
     {
@@ -251,8 +257,70 @@ void WarrantyToolGP::ParseDataFile( const std::string& csvFilename )
         }
     }
     //iss.close();
-    std::vector< std::string > prtnumbers = csvDataMap[ 2 ];
+    //std::vector< std::string > prtnumbers = csvDataMap[ 2 ];
     mPartNumberDescriptions = csvDataMap[ 3 ];
     mLoadedPartNumbers = csvDataMap[ 2 ];
+    
+    for( size_t i = 1; i < mLoadedPartNumbers.size(); ++i )
+    {
+        std::vector< std::pair< std::string, std::string > > partData;
+        for( size_t j = 0; j < columnCount; ++j )
+        {
+            partData.push_back( std::pair< std::string, std::string >( csvDataMap[ j ].at( 0 ), csvDataMap[ j ].at( i ) ) );
+            std::cout << csvDataMap[ j ].at( 0 ) << " " <<  csvDataMap[ j ].at( i ) << std::endl;
+        }
+        m_dataMap[ csvDataMap[ 2 ].at( i ) ] = partData;
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void WarrantyToolGP::RenderTextualDisplay( bool onOff )
+{
+    if( onOff )
+    {
+        //add 3d blocks
+        if( !mModelText.valid() )
+        {
+            mModelText = new ves::xplorer::scenegraph::TextTexture();
+            
+            osg::ref_ptr< ves::xplorer::scenegraph::DCS > textTrans = 
+                new ves::xplorer::scenegraph::DCS();
+            textTrans->addChild( mModelText.get() );
+            
+            mDCS->addChild( textTrans.get() );
+            
+            mModelText->setUpdateCallback( 
+                                          new ves::xplorer::environment::TextTextureCallback( mModelText.get() ) );
+            textTrans->setUpdateCallback( 
+                                         new ves::xplorer::environment::HeadPositionCallback() );
+            static_cast< osg::PositionAttitudeTransform* >( 
+                                                           mModelText->getParent( 0 ) )->setPosition(
+                                                                                                     osg::Vec3d( 0, 0, 0 ) );
+        }
+        else
+        {
+            mModelText->setNodeMask( 1 );
+        }
+        
+        std::string displayString;
+        std::pair< std::string, std::string > displayPair;
+        std::vector< std::pair< std::string, std::string > > displayVector;
+        std::map< std::string, std::vector< std::pair< std::string, std::string > > >::iterator iter;
+        iter = m_dataMap.find( m_lastPartNumber );
+        displayVector = ( iter->second );
+        for( size_t i = 0; i < displayVector.size(); ++i )
+        {
+            displayPair = displayVector.at( i );
+            displayString = displayString + displayPair.first + " " +  displayPair.second + "\n";
+        }
+        mModelText->UpdateText( displayString );
+        std::cout << displayString << std::endl;
+    }
+    else
+    {
+        if( mModelText.valid() )
+        {
+            mModelText->setNodeMask( 0 );
+        }
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
