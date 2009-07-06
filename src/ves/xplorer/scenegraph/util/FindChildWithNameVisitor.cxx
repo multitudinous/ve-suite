@@ -72,7 +72,9 @@ void FindChildWithNameVisitor::apply( osg::Node& node )
     else
     {
         std::string name = node.getName();
-        if( !name.compare( 0, mParentName.size(), mParentName ) )
+        size_t found = name.find( mNodeName );
+        if( found != std::string::npos )
+        //if( !name.compare( 0, mNodeName.size(), mNodeName ) )
         {
             m_foundMatch = true;
             return;

@@ -61,7 +61,9 @@ void HighlightNodeByNameVisitor::apply( osg::Node& node )
 
     if( mAddGlow )
     {
-        if( !name.compare( 0, mNodeName.size(), mNodeName ) )
+        size_t found = name.find( mNodeName );
+        if( found != std::string::npos )
+        //if( !name.compare( 0, mNodeName.size(), mNodeName ) )
         {
             std::cout << " changing parts " << name << " " 
                 << mNodeName.size() << " " << mNodeName << std::endl;
