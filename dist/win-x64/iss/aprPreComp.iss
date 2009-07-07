@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #include <vesenv.iss>
-#define APRVERSION "1.3"
+#define APRVERSION "1.3.7"
 #define MyAppName "APR Pre-Compile"
 #define MyAppVerName "apr_{#APRVERSION}  Pre-Compile_vc{#MSVCVERSION}"
 #define MyAppPublisher "VERG"
@@ -10,7 +10,7 @@
 ;The directory below contains all each apr, apr-iconv, and apr-util
 ;The versioned directories have been copied to be easier to build
 ;and less version dependent when running this installer
-#define APRINSTALL "C:\dev\ves_deps\apr"
+#define APRINSTALL "E:\dev\ves_deps\apr\apr-util-1.3.7-win32-src"
 
 [Setup]
 AppName={#MyAppName}
@@ -20,9 +20,9 @@ AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
 DefaultDirName=C:\apr_{#APRVERSION}_Pre-Compile
-DefaultGroupName={#VESGROUPNAME}
+DefaultGroupName={#VESGROUPNAME}\Uninstallers
 AllowNoIcons=true
-OutputBaseFilename=apr_PreCompile_{#APRVERSION}
+OutputBaseFilename=apr{#APRVERSION}_PreCompile_{#MSVCVERSION}
 SetupIconFile={#VEDEVHOME}\dist\installerImages\Ve_icon.ico
 Compression=lzma
 SolidCompression=true
@@ -41,17 +41,17 @@ UsePreviousGroup=false
 Name: english; MessagesFile: compiler:Default.isl
 
 [Files]
-Source: {#APRINSTALL}\apr-util\Release\*.dll; DestDir: {app}\lib; Flags: ignoreversion
-Source: {#APRINSTALL}\apr-util\Release\*.lib; DestDir: {app}\lib; Flags: ignoreversion
-Source: {#APRINSTALL}\apr-iconv\Release\*.dll; DestDir: {app}\lib; Flags: ignoreversion
-Source: {#APRINSTALL}\apr-iconv\Release\*.lib; DestDir: {app}\lib; Flags: ignoreversion
-Source: {#APRINSTALL}\apr\Release\*.dll; DestDir: {app}\lib; Flags: ignoreversion
-Source: {#APRINSTALL}\apr\Release\*.lib; DestDir: {app}\lib; Flags: ignoreversion
+Source: {#APRINSTALL}\apr-util\x64\Release\*.dll; DestDir: {app}\lib; Flags: ignoreversion
+Source: {#APRINSTALL}\apr-util\x64\Release\*.lib; DestDir: {app}\lib; Flags: ignoreversion
+Source: {#APRINSTALL}\apr-iconv\x64\Release\*.dll; DestDir: {app}\lib; Flags: ignoreversion
+Source: {#APRINSTALL}\apr-iconv\x64\Release\*.lib; DestDir: {app}\lib; Flags: ignoreversion
+Source: {#APRINSTALL}\apr\x64\Release\*.dll; DestDir: {app}\lib; Flags: ignoreversion
+Source: {#APRINSTALL}\apr\x64\Release\*.lib; DestDir: {app}\lib; Flags: ignoreversion
 Source: {#APRINSTALL}\apr\include\*.h; DestDir: {app}\include; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: {#APRINSTALL}\apr-util\include\*.h; DestDir: {app}\include; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: {#APRINSTALL}\apr-iconv\include\*.h; DestDir: {app}\include; Flags: ignoreversion recursesubdirs createallsubdirs
 ;FPC file integration
 Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\apr-1.pc.in; DestDir: {app}\lib\flagpoll; DestName: apr-1.fpc; Languages: ; Flags: ignoreversion
 Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\apr-util-1.pc.in; DestDir: {app}\lib\flagpoll; DestName: apr-util-1.fpc; Languages: ; Flags: ignoreversion
-;[Icons]
-;Name: {group}\{cm:UninstallProgram,{#MyAppName}}; Filename: {uninstallexe}; Languages:
+[Icons]
+Name: {group}\{cm:UninstallProgram,{#MyAppName}}; Filename: {uninstallexe}; Languages: 

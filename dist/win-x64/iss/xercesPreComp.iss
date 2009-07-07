@@ -2,12 +2,12 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #include <vesenv.iss>
-#define XERCESVERSION "2.8"
+#define XERCESVERSION "3.0.1"
 #define MyAppName "Xerces-c Pre-Compile"
 #define MyAppVerName "Xerces-c_{#XERCESVERSION}  Pre-Compile_vc{#MSVCVERSION}"
 #define MyAppPublisher "VERG"
 #define MyAppURL "www.vesuite.org"
-#define XERCESSRCINSTALL "C:\dev\ves_deps\xerces-c_2_8_0-x86-windows-vc_8_0"
+#define XERCESSRCINSTALL "E:\dev\ves_deps\xerces-c-3.0.1-x86_64-windows-vc-9.0\xerces-c-3.0.1-x86_64-windows-vc-9.0"
 [Setup]
 AppName={#MyAppName}
 AppVerName=Xerces-c_{#XERCESVERSION} Pre-Compile_vc{#MSVCVERSION}
@@ -15,10 +15,10 @@ AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
-DefaultDirName=C:\Xerces-c_{#XERCESVERSION}_Pre-Compile
-DefaultGroupName={#VESGROUPNAME}
+DefaultDirName=C:\Xerces-c_{#XERCESVERSION}_Pre-Compile_vc{#MSVCVERSION}
+DefaultGroupName={#VESGROUPNAME}\Uninstallers
 AllowNoIcons=false
-OutputBaseFilename=xerces-c_PreCompile_{#XERCESVERSION}
+OutputBaseFilename=xerces{#XERCESVERSION}-c_PreCompile_{#MSVCVERSION}
 SetupIconFile={#VEDEVHOME}\dist\installerImages\Ve_icon.ico
 Compression=lzma
 SolidCompression=true
@@ -49,3 +49,5 @@ Source: {#XERCESSRCINSTALL}\include\*.h*; DestDir: {app}\include; Flags: ignorev
 Source: {#XERCESSRCINSTALL}\include\*.c; DestDir: {app}\include; Flags: ignoreversion recursesubdirs createallsubdirs
 ;FPC file integration
 Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\xerces.fpc.in; DestDir: {app}\lib\flagpoll; DestName: xerces.fpc; Languages: ; Flags: ignoreversion
+[Icons]
+Name: {group}\{cm:UninstallProgram,{#MyAppName}}; Filename: {uninstallexe}; Languages: 

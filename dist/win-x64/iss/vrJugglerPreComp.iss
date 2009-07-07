@@ -5,8 +5,8 @@
 #define MyAppVerName "VRJuggler_{#JUGGLERVERSION} Pre-Compile_vc{#MSVCVERSION} "
 #define MyAppPublisher "VERG"
 #define MyAppURL "www.vesuite.org"
-#define VRJUGGLER_INST_LOCATION "C:\dev\ves_deps\vrjuggler-2.3"
-#define VRJUGGLER_DEPS_INST_LOCATION "C:\dev\ves_deps\vrjuggler-2.3-deps"
+#define VRJUGGLER_INST_LOCATION "E:\dev\ves_deps\vrjuggler-src-2.3.21119\install-win64"
+#define VRJUGGLER_DEPS_INST_LOCATION "E:\dev\ves_deps\vrjuggler-src-2.3.21119\install-win64-deps"
 
 [Setup]
 AppName={#MyAppName}
@@ -15,7 +15,7 @@ AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
-DefaultDirName=C:\VRJuggler_Pre-Compile_{#JUGGLERVERSION}
+DefaultDirName=C:\VRJuggler_{#JUGGLERVERSION}_Pre-Compile_vc{#MSVCVERSION}
 DefaultGroupName={#VESGROUPNAME}\Uninstallers
 AllowNoIcons=true
 OutputBaseFilename=vrjugglerPreCompile_{#JUGGLERVERSION}_{#MSVCVERSION}
