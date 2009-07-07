@@ -1,0 +1,7 @@
+## This cluster template file lets you insert extra lines of code into
+## the cluster.bat file used for Windows clusters.
+## Any code you enter into this file will be executed after connecting to
+## the other computers, but before running the Xplorer startup code.
+## Any lines started with '##' will be ignored.
+## Example:
+## net use H: \\mambo.vrac.iastate.edu\home\users\mcdoe

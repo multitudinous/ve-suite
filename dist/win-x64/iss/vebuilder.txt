@@ -1,0 +1,22 @@
+===============================================
+          VE-Builder Tools 1.0*
+===============================================
+VE-Builder Tools is a set of programs that help w/ manipulating data
+for analysis in VE-Suite. 
+
+To run a tool, launch the VE-Builder Shell. This can be simply be done by 
+using VE-Launcher to open a Shell with the proper environment. Start VE-Launcher and
+select "Shell" under "Launch Mode". Then press "Launch".
+This will launch the default shell for the platform with the appropriate environment.
+
+Then simply type the name of the tool you wish to run and follow the prompts
+on the screen.
+
+
+Visit our website for more information on available Builder Tools along with
+more specific information on running the tools.
+
+=====================================================
+NOTES:
+Some of the tools require the installation of VTK and
+wxWidgets which can be installed w/ the VE-Suite dependency installer.
