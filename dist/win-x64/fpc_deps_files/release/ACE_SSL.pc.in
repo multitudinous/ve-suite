@@ -1,0 +1,11 @@
+prefix=${fp_file_cwd}\..\..
+exec_prefix=${prefix}
+libdir=${exec_prefix}\lib
+includedir=${prefix}
+
+Name: ACE_SSL
+Description: ACE SSL Library
+Requires: ACE
+Version: 5.5
+Libs: /libpath:"${libdir}"  ACE_SSL.lib ssl.lib crypto.lib
+Cflags: /I"${includedir}" 

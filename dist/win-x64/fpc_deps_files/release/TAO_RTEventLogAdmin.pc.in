@@ -1,0 +1,11 @@
+prefix=${fp_file_cwd}\..\..
+exec_prefix=${prefix}
+libdir=${exec_prefix}\lib
+includedir=${prefix}
+
+Name: TAO_RTEventLogAdmin
+Description: TAO RTEvent Logging Service Stub Library
+Requires: TAO, TAO_DsLogAdmin, TAO_RTEvent
+Version: 1.5
+Libs: /libpath:"${libdir}" TAO_RTEventLogAdmin.lib
+Cflags: /I"${includedir}"

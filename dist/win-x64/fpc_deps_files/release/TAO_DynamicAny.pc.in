@@ -1,0 +1,11 @@
+prefix=${fp_file_cwd}\..\..
+exec_prefix=${prefix}
+libdir=${exec_prefix}\lib
+includedir=${prefix}
+
+Name: TAO_DynamicAny
+Description: TAO Dynamic Any Library
+Requires: TAO_AnyTypeCode, TAO
+Version: 1.5
+Libs: /libpath:"${libdir}" TAO_DynamicAny.lib
+Cflags: /I"${includedir}"

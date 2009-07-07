@@ -1,0 +1,11 @@
+prefix=${fp_file_cwd}\..\..
+exec_prefix=${prefix}
+libdir=${exec_prefix}\lib
+includedir=${prefix}
+
+Name: TAO_CosProperty_Skel
+Description: TAO CosProperty Skeleton Library
+Requires: TAO_CosProperty, TAO_PortableServer
+Version: 1.5
+Libs: /libpath:"${libdir}" TAO_CosProperty_Skel.lib
+Cflags: /I"${includedir}"

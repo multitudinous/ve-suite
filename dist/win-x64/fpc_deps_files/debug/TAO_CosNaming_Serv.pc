@@ -1,0 +1,11 @@
+prefix=${fp_file_cwd}\..\..\ACETAO_5.5_Pre-Compile_vc8.0_SP1
+exec_prefix=${prefix}
+libdir=${exec_prefix}\lib
+includedir=${prefix}
+
+Name: TAO_CosNaming_Serv
+Description: TAO CosNaming Service Library
+Requires: TAO_CosNaming_Skel, TAO_Messaging, TAO_Svc_Utils, TAO_IORTable
+Version: 1.5
+Libs: /libpath:"${libdir}" TAO_CosNaming_Servd.lib
+Cflags: /I"${includedir}"

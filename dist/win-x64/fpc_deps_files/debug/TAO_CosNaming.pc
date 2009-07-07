@@ -1,0 +1,11 @@
+prefix=${fp_file_cwd}\..\..\ACETAO_5.5_Pre-Compile_vc8.0_SP1
+exec_prefix=${prefix}
+libdir=${exec_prefix}\lib
+includedir=${prefix}\TAO\orbsvcs
+
+Name: TAO_CosNaming
+Description: TAO CosNaming Stub Library
+Requires: TAO_AnyTypeCode, TAO
+Version: 1.5
+Libs: /libpath:"${libdir}" TAO_CosNamingd.lib
+Cflags: /I"${includedir}"

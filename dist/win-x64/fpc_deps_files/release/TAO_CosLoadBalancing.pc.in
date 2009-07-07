@@ -1,0 +1,11 @@
+prefix=${fp_file_cwd}\..\..
+exec_prefix=${prefix}
+libdir=${exec_prefix}\lib
+includedir=${prefix}
+
+Name: TAO_CosLoadBalancing
+Description: TAO CosLoadBalancing Library
+Requires: TAO_CosNaming, TAO_IORManip, TAO_PortableGroup, TAO
+Version: 1.5
+Libs: /libpath:"${libdir}" TAO_CosLoadBalancing.lib
+Cflags: /I"${includedir}"

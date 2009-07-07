@@ -1,0 +1,11 @@
+prefix=${fp_file_cwd}\..\..
+exec_prefix=${prefix}
+libdir=${exec_prefix}\lib
+includedir=${prefix}
+
+Name: TAO_CSD_Framework
+Description: TAO CSD Framework Library
+Requires: TAO_PortableServer, TAO_PI, TAO
+Version: 1.5
+Libs: /libpath:"${libdir}" TAO.lib
+Cflags: /I"${includedir}"

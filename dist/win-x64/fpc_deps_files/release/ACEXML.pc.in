@@ -1,0 +1,11 @@
+prefix=${fp_file_cwd}\..\..
+exec_prefix=${prefix}
+libdir=${exec_prefix}\lib
+includedir=${prefix}
+
+Name: ACEXML
+Description: ACE XML Library
+Requires: ACE
+Version: 5.5
+Libs: /libpath:"${libdir}" ACEXML.lib
+Cflags: /I"${includedir}"

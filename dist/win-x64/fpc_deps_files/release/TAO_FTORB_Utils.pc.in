@@ -1,0 +1,11 @@
+prefix=${fp_file_cwd}\..\..
+exec_prefix=${prefix}
+libdir=${exec_prefix}\lib
+includedir=${prefix}
+
+Name: TAO_FTORB_Utils
+Description: TAO Fault Tolerant ORB Utilities Library
+Requires: TAO_IORManip, TAO_PortableServer, TAO
+Version: 1.5
+Libs: /libpath:"${libdir}" TAO_FTORB_Utils.lib
+Cflags: /I"${includedir}"

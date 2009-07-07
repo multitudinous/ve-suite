@@ -1,0 +1,11 @@
+prefix=${fp_file_cwd}\..\..
+exec_prefix=${prefix}
+libdir=${exec_prefix}\lib
+includedir=${prefix}
+
+Name: TAO_Strategies
+Description: TAO Strategies Library
+Requires: TAO_AnyTypeCode, TAO
+Version: 1.5
+Libs: /libpath:"${libdir}" TAO_Strategies.lib
+Cflags: /I"${includedir}"

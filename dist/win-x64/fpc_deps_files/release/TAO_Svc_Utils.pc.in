@@ -1,0 +1,11 @@
+prefix=${fp_file_cwd}\..\..
+exec_prefix=${prefix}
+libdir=${exec_prefix}\lib
+includedir=${prefix}
+
+Name: TAO_Svc_Utils 
+Description: TAO Service Utilities Library
+Requires: TAO_PortableServer
+Version: 1.5
+Libs: /libpath:"${libdir}" TAO_Svc_Utils.lib
+Cflags: /I"${includedir}"

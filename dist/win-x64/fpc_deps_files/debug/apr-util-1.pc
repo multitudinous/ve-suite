@@ -1,0 +1,10 @@
+prefix=${fp_file_cwd}\..\..\apr-vc8\apr-util
+exec_prefix=${prefix}
+libdir=${exec_prefix}\Debug
+includedir=${prefix}\include
+
+Name: APR Utils
+Description: Companion library for APR
+Version: 1.2.8
+Libs: /libpath:"${libdir}" libaprutil-1_d.lib
+Cflags: /I"${includedir}"

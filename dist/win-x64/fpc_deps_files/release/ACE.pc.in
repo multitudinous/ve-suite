@@ -1,0 +1,10 @@
+prefix=${fp_file_cwd}\..\..
+exec_prefix=${prefix}
+libdir=${exec_prefix}\lib
+includedir=${prefix}\include
+
+Name: ACE
+Description: ADAPTIVE Communication Environment 
+Version: 5.5
+Libs: /libpath:"${libdir}" ACE.lib  
+Cflags: /I"${includedir}"

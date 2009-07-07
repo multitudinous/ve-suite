@@ -1,0 +1,11 @@
+prefix=${fp_file_cwd}\..\..
+exec_prefix=${prefix}
+libdir=${exec_prefix}\lib
+includedir=${prefix}
+
+Name: Kokyu
+Description: Kokyu Scheduling Framework
+Requires: ACE
+Version: 5.5
+Libs: /libpath:"${libdir}" Kokyu.lib
+Cflags: /I"${includedir}"

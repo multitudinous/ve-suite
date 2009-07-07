@@ -1,0 +1,11 @@
+prefix=${fp_file_cwd}\..\..
+exec_prefix=${prefix}
+libdir=${exec_prefix}\lib
+includedir=${prefix}
+
+Name: TAO_CosNotification
+Description: TAO CosNotification Stub Library
+Requires: TAO_CosEvent, TAO
+Version: 1.5
+Libs: /libpath:"${libdir}" TAO_CosNotification.lib
+Cflags: /I"${includedir}"

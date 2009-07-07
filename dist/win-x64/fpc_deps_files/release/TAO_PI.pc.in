@@ -1,0 +1,11 @@
+prefix=${fp_file_cwd}\..\..
+exec_prefix=${prefix}
+libdir=${exec_prefix}\lib
+includedir=${prefix}
+
+Name: TAO_PI
+Description: TAO PI Library
+Requires: TAO_CodecFactory, TAO_AnyTypeCode, TAO
+Version: 1.5
+Libs: /libpath:"${libdir}" TAO_PI.lib
+Cflags: /I"${includedir}"

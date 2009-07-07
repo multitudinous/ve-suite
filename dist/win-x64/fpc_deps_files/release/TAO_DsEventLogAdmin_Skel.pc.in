@@ -1,0 +1,11 @@
+prefix=${fp_file_cwd}\..\..
+exec_prefix=${prefix}
+libdir=${exec_prefix}\lib
+includedir=${prefix}
+
+Name: TAO_DsEventLogAdmin_Skel
+Description: TAO Event Logging Service Skeleton Library
+Requires: TAO_DsEventLogAdmin, TAO_DsLogAdmin_Skel, TAO_CosEvent_Skel, TAO_PortableServer
+Version: 1.5
+Libs: /libpath:"${libdir}" TAO_DsEventLogAdmin_Skel.lib
+Cflags: /I"${includedir}"

@@ -1,0 +1,11 @@
+prefix=${fp_file_cwd}\..\..
+exec_prefix=${prefix}
+libdir=${exec_prefix}\lib
+includedir=${prefix}
+
+Name: TAO_DsLogAdmin_Skel
+Description: TAO Basic Logging Service Skeleton Library
+Requires: TAO_DsLogAdmin, TAO_PortableServer
+Version: 1.5
+Libs: /libpath:"${libdir}" TAO_DsLogAdmin_Skel.lib
+Cflags: /I"${includedir}"

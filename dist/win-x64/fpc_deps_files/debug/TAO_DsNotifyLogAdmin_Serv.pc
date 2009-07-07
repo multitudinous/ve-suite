@@ -1,0 +1,11 @@
+prefix=${fp_file_cwd}\..\..\ACETAO_5.5_Pre-Compile_vc8.0_SP1
+exec_prefix=${prefix}
+libdir=${exec_prefix}\lib
+includedir=${prefix}
+
+Name: TAO_DsNotifyLogAdmin_Serv
+Description: TAO Notify Logging Service Implementation Library
+Requires: TAO_DsNotifyLogAdmin_Skel, TAO_DsLogAdmin_Serv
+Version: 1.5
+Libs: /libpath:"${libdir}" TAO_DsNotifyLogAdmin_Servd.lib
+Cflags: /I"${includedir}"

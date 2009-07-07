@@ -1,0 +1,11 @@
+prefix=${fp_file_cwd}\..\..
+exec_prefix=${prefix}
+libdir=${exec_prefix}\lib
+includedir=${prefix}
+
+Name: TAO_CosConcurrency_Skel
+Description: TAO CosConcurrency Skeleton Library
+Requires: TAO_CosConcurrency, TAO_PortableServer
+Version: 1.5
+Libs: /libpath:"${libdir}" TAO_CosConcurrency_Skel.lib
+Cflags: /I"${includedir}"

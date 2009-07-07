@@ -1,0 +1,11 @@
+prefix=${fp_file_cwd}\..\..
+exec_prefix=${prefix}
+libdir=${exec_prefix}\lib
+includedir=${prefix}
+
+Name: TAO_SmartProxies
+Description: TAO Smart Proxies Library
+Requires: TAO
+Version: 1.5
+Libs: /libpath:"${libdir}" TAO_SmartProxies.lib
+Cflags: /I"${includedir}"

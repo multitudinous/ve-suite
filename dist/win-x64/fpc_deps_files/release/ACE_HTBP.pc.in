@@ -1,0 +1,11 @@
+prefix=${fp_file_cwd}\..\..
+exec_prefix=${prefix}
+libdir=${exec_prefix}\lib
+includedir=${prefix}
+
+Name: ACE_HTBP
+Description: ACE HTTP Tunneling, Bidirectional, Protocol
+Requires: ACE
+Version: 5.5
+Libs: /libpath:"${libdir}" ACE_HTBP.lib
+Cflags: /I"${includedir}"

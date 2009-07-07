@@ -1,0 +1,14 @@
+prefix=${fp_file_cwd}/../..
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: OpenSceneGraph Audio Library (osgAL)
+Description: osgAL debug pre-compiled for VES
+Provides: osgAL OpenAL libvorbis libogg
+Requires: OpenSceneGraph OpenThreads
+Version: 0.6.1
+Libs: /libpath:"${libdir}" osgAL.lib openalpp.lib OpenAL32.lib EFX-Util.lib alut.lib vorbis.lib vorbisenc.lib vorbisfile.lib ogg.lib
+Cflags: /I"${includedir}" /I"${includedir}/AL"
+Arch: noarch
+

@@ -1,0 +1,11 @@
+prefix=${fp_file_cwd}\..\..
+exec_prefix=${prefix}
+libdir=${exec_prefix}\lib
+includedir=${prefix}
+
+Name: TAO_RTCORBA
+Description: TAO Real-Time CORBA Library
+Requires: TAO_PI, TAO_CodecFactory, TAO_AnyTypeCode, TAO
+Version: 1.5
+Libs: /libpath:"${libdir}" TAO_RTCORBA.lib
+Cflags: /I"${includedir}"

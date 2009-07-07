@@ -1,0 +1,13 @@
+prefix=${fp_file_cwd}\..\..
+exec_prefix=${prefix}
+libdir=${exec_prefix}\lib
+includedir=${prefix}\include
+
+Name: APR Utils
+Description: Companion library for APR
+Provides: apr-util-1
+Requires:
+Version: 1.3
+Libs: /libpath:"${libdir}" libaprutil-1.lib
+Cflags: /I"${includedir}"
+Arch: noarch
