@@ -56,15 +56,18 @@
 #include <wx/dcbuffer.h>
 #include <wx/msgdlg.h>
 #include <wx/defs.h>
+
+#include <boost/math/special_functions/round.hpp>
+
 using namespace ves::open::xml;
 using namespace ves::conductor;
 using namespace ves::conductor::util;
 
-#ifdef WIN32
+/*#ifdef WIN32
 #include <cmath>
-/* Win32 doesn't seem to have these functions.
-** Therefore implement inline versions of these functions here.
-*/
+// Win32 doesn't seem to have these functions.
+// Therefore implement inline versions of these functions here.
+//
 __inline long int
 lrint( double flt )
 {
@@ -91,7 +94,7 @@ lrintf( float flt )
     return intgr ;
 }
 #endif
-
+*/
 BEGIN_EVENT_TABLE( Canvas, wxScrolledWindow )
     EVT_PAINT( Canvas::OnPaint )
     EVT_MENU( UIPLUGINBASE_DEL_MOD, Canvas::OnDelMod )
@@ -372,9 +375,9 @@ wxRect Canvas::GetAppropriateSubDialogSize()
     //if( GetDisplayMode() == std::string( "Desktop" ) )
     {
         wxRect bbox = GetRect();
-        int xStart = lrint( 2.0f * displayWidth / 3.0f );
-        int width = lrint( displayWidth / 3.0f );
-        int height = lrint( 3.0f * ( displayHeight - tempRect.GetTopLeft().y ) / 4.0f );
+        int xStart = boost::math::iround( 2.0f * displayWidth / 3.0f );
+        int width = boost::math::iround( displayWidth / 3.0f );
+        int height = boost::math::iround( 3.0f * ( displayHeight - tempRect.GetTopLeft().y ) / 4.0f );
         return wxRect( xStart, tempRect.GetTopLeft().y , width, height );
     }
     /*else
