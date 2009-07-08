@@ -64,12 +64,14 @@
 #include <string>
 #include <map>
 
+#include <ves/VEConfig.h>
+
 ////Dialog Style Start
 #undef EphemerisDialog_STYLE
 #define EphemerisDialog_STYLE wxCAPTION | wxRESIZE_BORDER | wxDIALOG_NO_PARENT | wxMINIMIZE_BOX | wxMAXIMIZE_BOX | wxCLOSE_BOX
 ////Dialog Style End
 
-class EphemerisDialog : public wxDialog
+class VE_GUIPLUGINS_EXPORTS EphemerisDialog : public wxDialog
 {
 private:
     DECLARE_EVENT_TABLE();

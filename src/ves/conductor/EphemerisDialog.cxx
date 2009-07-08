@@ -31,8 +31,8 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/conductor/util/CORBAServiceList.h>
-#include "EphemerisDialog.h"
-#include "ConductorAppEnums.h"
+#include <ves/conductor/EphemerisDialog.h>
+#include <ves/conductor/ConductorLibEnums.h>
 
 #include <ves/open/xml/DataValuePair.h>
 #include <ves/open/xml/Command.h>

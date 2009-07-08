@@ -64,6 +64,8 @@
 #include <ves/conductor/UITeacherTab.h>
 #include <ves/conductor/MinervaDialog.h>
 #include <ves/conductor/NavigationPane.h>
+#include <ves/conductor/EphemerisDialog.h>
+#include <ves/conductor/ViewLocPane.h>
 
 #include "ConductorApp.h"
 #include "UserPreferences.h"
@@ -71,10 +73,8 @@
 #include "HierarchyTree.h"
 #include "DeviceProperties.h"
 #include "Splitter.h"
-#include "ViewLocPane.h"
 #include "AppToolBar.h"
 #include "ExportMenu.h"
-#include "EphemerisDialog.h"
 
 #include <ves/conductor/util/CADNodeManagerDlg.h>
 #include <ves/conductor/IconChooser.h>

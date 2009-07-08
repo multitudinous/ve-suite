@@ -73,6 +73,8 @@
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>
 
+#include <ves/VEConfig.h>
+
 namespace ves
 {
 namespace conductor
@@ -84,7 +86,7 @@ class wxSpinCtrlDbl;
 }
 }
 
-class ViewLocPane : public wxDialog
+class VE_GUIPLUGINS_EXPORTS ViewLocPane : public wxDialog
 {
 public:
     ViewLocPane( wxWindow* parent );
