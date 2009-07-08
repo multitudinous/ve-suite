@@ -191,7 +191,8 @@ void HierarchyTree::PopulateTree( )
             }
 
             //Add the icon to the image list
-            fullPath = iter->second->GetIconFilename();// + ".xpm";
+            fullPath = iter->second->GetIconFilename();
+            wxString tempIconName( fullPath.c_str(), wxConvUTF8 );
             aspenIconIter = aspenPlusIconMap.find( fullPath );
             if( aspenIconIter != aspenPlusIconMap.end() )
             {
@@ -200,7 +201,7 @@ void HierarchyTree::PopulateTree( )
             }
             else
             {
-                AddtoImageList( wxBitmap( wxBitmap( iter->second->GetIconFilename(), wxBITMAP_TYPE_GIF ).
+                AddtoImageList( wxBitmap( wxBitmap( tempIconName, wxBITMAP_TYPE_GIF ).
                     ConvertToImage().Rescale( iconsize, iconsize ) ) );
                 //wxIcon square ( square_xpm );
                 //AddtoImageList( wxBitmap( wxBitmap( square ).ConvertToImage().
@@ -261,6 +262,7 @@ void HierarchyTree::PopulateLevel( wxTreeItemId parentLeaf,
 
             //Add the icon to the image list
             fullPath = models[i]->GetIconFilename();// + ".xpm";
+            wxString tempIconName( fullPath.c_str(), wxConvUTF8 );
             aspenIconIter = aspenPlusIconMap.find( fullPath );
             if( aspenIconIter != aspenPlusIconMap.end() )
             {
@@ -269,7 +271,7 @@ void HierarchyTree::PopulateLevel( wxTreeItemId parentLeaf,
             }
             else
             {
-                AddtoImageList( wxBitmap( wxBitmap( models[i]->GetIconFilename(), wxBITMAP_TYPE_GIF ).
+                AddtoImageList( wxBitmap( wxBitmap( tempIconName, wxBITMAP_TYPE_GIF ).
                     ConvertToImage().Rescale( iconsize, iconsize ) ) );
                 //wxIcon square ( square_xpm );
                 //AddtoImageList( wxBitmap( wxBitmap( square ).ConvertToImage().
