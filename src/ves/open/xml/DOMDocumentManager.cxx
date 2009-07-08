@@ -41,6 +41,7 @@
 #include <xercesc/parsers/XercesDOMParser.hpp>
 #include <xercesc/dom/DOM.hpp>
 #include <xercesc/util/XMLString.hpp>
+#include <xercesc/util/XercesVersion.hpp>
 #include <xercesc/framework/MemBufInputSource.hpp>
 #include <xercesc/framework/LocalFileInputSource.hpp>
 #include <xercesc/framework/LocalFileFormatTarget.hpp>
@@ -159,8 +160,14 @@ void DOMDocumentManager::Load( const std::string& inputCommand )
     {
         mParser = new XercesDOMParser();
 
-        mParser->setValidationScheme( XercesDOMParser::Val_Always );  // optional.
-        mParser->setDoNamespaces( true );  // optional
+        //Optional settings for the parser
+        //XercesDOMParser::Val_Never; XercesDOMParser::Val_Auto; XercesDOMParser::Val_Always;
+        mParser->setValidationScheme( XercesDOMParser::Val_Never );
+        mParser->setDoNamespaces( false );
+        mParser->setDoSchema( false );
+        mParser->setValidationSchemaFullChecking( false );
+        mParser->setCreateEntityReferenceNodes( false );
+
         mErrHandler = ( ErrorHandler* ) new HandlerBase();
         mParser->setErrorHandler( mErrHandler );
     }
@@ -272,10 +279,13 @@ void DOMDocumentManager::CreateCommandDocument( const std::string& type )
         std::cerr << " ERROR : not a vaild document type : " << type << std::endl;
         return;
     }
-
+#if _XERCES_VERSION >= 30001
+    mCommandDocument->setXmlVersion( Convert( "1.0" ).toXMLString() );
+    //mCommandDocument->setTextEncoding( Convert( "ISO-8859-1" ).toXMLString() );
+#else
     mCommandDocument->setVersion( Convert( "1.0" ).toXMLString() );
     mCommandDocument->setEncoding( Convert( "ISO-8859-1" ).toXMLString() );
-
+#endif
     DOMElement* root_elem = mCommandDocument->getDocumentElement(); //This is the root element
 
     root_elem->setAttribute( Convert( "name" ).toXMLString(),
@@ -283,29 +293,38 @@ void DOMDocumentManager::CreateCommandDocument( const std::string& type )
 
     root_elem->setAttribute( Convert( "xmlns:xsi" ).toXMLString(),
          Convert( "http://www.w3.org/2001/XMLSchema-instance" ).toXMLString() );
-    root_elem->setAttribute(
-               Convert( "xsi:noNamespaceSchemaLocation" ).toXMLString(),
-               Convert( "verg.xsd" ).toXMLString() );
+    //root_elem->setAttribute(
+    //           Convert( "xsi:noNamespaceSchemaLocation" ).toXMLString(),
+    //           Convert( "verg.xsd" ).toXMLString() );
 
     root_elem->setAttribute(
                Convert( "xsi:noNamespaceSchemaLocation" ).toXMLString(),
                Convert( "verg_model.xsd" ).toXMLString() );
 
-    root_elem->setAttribute(
-               Convert( "xsi:noNamespaceSchemaLocation" ).toXMLString(),
-               Convert( "vecad.xsd" ).toXMLString() );
+    //root_elem->setAttribute(
+    //           Convert( "xsi:noNamespaceSchemaLocation" ).toXMLString(),
+    //           Convert( "vecad.xsd" ).toXMLString() );
 
-    root_elem->setAttribute(
-               Convert( "xsi:noNamespaceSchemaLocation" ).toXMLString(),
-               Convert( "veshader.xsd" ).toXMLString() );
+    //root_elem->setAttribute(
+    //           Convert( "xsi:noNamespaceSchemaLocation" ).toXMLString(),
+    //           Convert( "veshader.xsd" ).toXMLString() );
 }
 /////////////////////////////////////////////////////
 const std::string DOMDocumentManager::WriteAndReleaseCommandDocument( void )
 {
     DOMImplementation* impl = DOMImplementationRegistry::getDOMImplementation(
                               Convert( "LS" ).toXMLString() );
-    DOMWriter* theSerializer = dynamic_cast< DOMImplementationLS* >( impl )->createDOMWriter();
+#if _XERCES_VERSION >= 30001
+    DOMLSSerializer* theSerializer = static_cast< DOMImplementationLS* >( impl )->createLSSerializer();
+    DOMLSOutput* theOutputDesc = static_cast< DOMImplementationLS* >( impl )->createLSOutput();
+    theOutputDesc->setEncoding( Convert( "ISO-8859-1" ).toXMLString() );
+    //theSerializer->setFeature( XMLUni::fgDOMWRTFormatPrettyPrint, true );
+    DOMConfiguration* serializerConfig=theSerializer->getDomConfig();
+#else
+    DOMWriter* theSerializer = static_cast< DOMImplementationLS* >( impl )->createDOMWriter();
     theSerializer->setFeature( XMLUni::fgDOMWRTFormatPrettyPrint, true );
+#endif
+
     char* message = 0;
     char* tempResultString = 0;
     std::string result;
@@ -316,12 +335,22 @@ const std::string DOMDocumentManager::WriteAndReleaseCommandDocument( void )
         {
             //take a string passed in as the filename to write out
             LocalFileFormatTarget outputXML( mOutputXMLFile.c_str() );
+#if _XERCES_VERSION >= 30001
+            theOutputDesc->setByteStream( &outputXML );
+            theSerializer->write( mCommandDocument, theOutputDesc  );
+#else
             theSerializer->writeNode( &outputXML, *mCommandDocument );
+#endif
         }
         else
         {
             // do the serialization through DOMWriter::writeNode();
-            XMLCh* xXml = theSerializer->writeToString(( *mCommandDocument ) );
+#if _XERCES_VERSION >= 30001
+            serializerConfig->setParameter(XMLUni::fgDOMWRTFormatPrettyPrint, true);
+            XMLCh* xXml = theSerializer->writeToString( mCommandDocument );
+#else 
+            XMLCh* xXml = theSerializer->writeToString( (*mCommandDocument) )
+#endif
             tempResultString = XMLString::transcode( xXml );
             result = tempResultString;
             XMLString::release( &tempResultString );
@@ -354,6 +383,9 @@ const std::string DOMDocumentManager::WriteAndReleaseCommandDocument( void )
     }
 
     theSerializer->release();
+#if _XERCES_VERSION >= 30001
+    theOutputDesc->release();
+#endif
     //rv=true;
     return result;
 }
