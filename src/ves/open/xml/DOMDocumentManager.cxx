@@ -349,7 +349,7 @@ const std::string DOMDocumentManager::WriteAndReleaseCommandDocument( void )
             serializerConfig->setParameter(XMLUni::fgDOMWRTFormatPrettyPrint, true);
             XMLCh* xXml = theSerializer->writeToString( mCommandDocument );
 #else 
-            XMLCh* xXml = theSerializer->writeToString( (*mCommandDocument) )
+            XMLCh* xXml = theSerializer->writeToString( (*mCommandDocument) );
 #endif
             tempResultString = XMLString::transcode( xXml );
             result = tempResultString;
