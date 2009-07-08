@@ -284,6 +284,9 @@ void WarrantyToolGP::RenderTextualDisplay( bool onOff )
             
             osg::ref_ptr< ves::xplorer::scenegraph::DCS > textTrans = 
                 new ves::xplorer::scenegraph::DCS();
+            textTrans->getOrCreateStateSet()->addUniform(
+                new osg::Uniform( "glowColor", osg::Vec4( 0.0, 0.0, 0.0, 1.0 ) ) );
+
             textTrans->addChild( mModelText.get() );
             
             mDCS->addChild( textTrans.get() );

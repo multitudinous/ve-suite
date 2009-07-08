@@ -165,10 +165,15 @@ void TextTexture::CreateTexturedQuad()
     quadGeometry->setColorArray( colorArray.get() );
     quadGeometry->setColorBinding( osg::Geometry::BIND_OVERALL );
 #endif
+
     //Set the stateset for the quad
+    osg::Geode* texttureGeode = new osg::Geode();
+    texttureGeode->setCullingActive( false );
+    texttureGeode->addDrawable( quadGeometry.get() );
+    
     osg::ref_ptr< osg::StateSet > stateset =
-        quadGeometry->getOrCreateStateSet();
-    stateset->setMode( GL_LIGHTING, osg::StateAttribute::OFF );
+        texttureGeode->getOrCreateStateSet();
+    stateset->setMode( GL_LIGHTING, osg::StateAttribute::OFF );    
 #ifndef VES_SRTT_DEBUG
     stateset->setTextureAttributeAndModes(
           0, _texture.get(), osg::StateAttribute::ON );
@@ -181,10 +186,6 @@ void TextTexture::CreateTexturedQuad()
         osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
     stateset->setAttributeAndModes( bf.get(), 
         osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
-
-    osg::Geode* texttureGeode = new osg::Geode();
-    texttureGeode->setCullingActive( false );
-    texttureGeode->addDrawable( quadGeometry.get() );
     
     addChild( texttureGeode );
     
@@ -194,7 +195,6 @@ void TextTexture::CreateTexturedQuad()
     getOrCreateStateSet()->setAttributeAndModes( 
         new osg::Depth( osg::Depth::ALWAYS ), 
         osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
-
 
     //osg::ref_ptr< osg::Shader > fragmentShader = new osg::Shader();
     //fragmentShader->setType( osg::Shader::FRAGMENT );
@@ -207,15 +207,17 @@ void TextTexture::CreateTexturedQuad()
     osg::ref_ptr< osg::Program > program = new osg::Program();
     program->addShader( fragShader.get() );
     
-    osg::ref_ptr< osg::StateSet > geodeStateset = 
-        texttureGeode->getOrCreateStateSet();
-    geodeStateset->setAttributeAndModes( program.get(),
+    //osg::ref_ptr< osg::StateSet > geodeStateset = 
+    //    texttureGeode->getOrCreateStateSet();
+    stateset->setAttributeAndModes( program.get(),
         osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
     
-    geodeStateset->addUniform(
+    stateset->addUniform(
         new osg::Uniform( "opacityVal", 0.70f ) );
 
-    geodeStateset->addUniform( new osg::Uniform( "tex", 0 ) );
+    stateset->addUniform( new osg::Uniform( "tex", 0 ) );
+
+    //geodeStateset->addUniform( new osg::Uniform( "tex", 1 ) );
     
     //getOrCreateStateSet()->setNestRenderBins( true );  
 }
@@ -246,6 +248,25 @@ void TextTexture::CreateText()
     osg::Geode* textGeode = new osg::Geode();
     textGeode->addDrawable( _text.get() );
 
+    osg::ref_ptr< osg::StateSet > stateset =
+        textGeode->getOrCreateStateSet();
+    
+    std::string shaderName = osgDB::findDataFile( "null_glow_texture.fs" );
+    osg::ref_ptr< osg::Shader > fragShader = 
+        osg::Shader::readShaderFile( osg::Shader::FRAGMENT, shaderName );
+    
+    osg::ref_ptr< osg::Program > program = new osg::Program();
+    program->addShader( fragShader.get() );
+    
+    //osg::ref_ptr< osg::StateSet > geodeStateset = 
+    //    textGeode->getOrCreateStateSet();
+    stateset->setAttributeAndModes( program.get(),
+        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+    
+    //stateset->addUniform( new osg::Uniform( "opacityVal", 0.70f ) );
+    
+    stateset->addUniform( new osg::Uniform( "tex", 0 ) );
+    
     addChild( textGeode );
 }
 ////////////////////////////////////////////////////////////////////////////////
