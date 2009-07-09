@@ -14,6 +14,11 @@ import commands
 from time import sleep
 pj = os.path.join
 
+# Pull in SConsAddons from the source directory if necessary.
+sys.path.append(pj(os.getcwd(), 'Tools', 'scons-addons', 'src'))
+sys.path.append(pj(os.getcwd(), 'Tools', 'scons-addons', 'templates'))
+import SConsAddons
+
 import SConsAddons.Util as sca_util
 import SConsAddons.Options as asc_opt
 import SConsAddons.Options.Options 
@@ -38,11 +43,6 @@ Export('GetArch')
 
 sys.path.append(pj(os.getcwd(), 'dist', 'build', 'tools'))
 import doxygen
-
-# Pull in SConsAddons from the source directory if necessary.
-sys.path.append(pj(os.getcwd(), 'Tools', 'scons-addons', 'src'))
-sys.path.append(pj(os.getcwd(), 'Tools', 'scons-addons', 'templates'))
-import SConsAddons
 
 # Pull in HDF options files
 sys.path.append(pj(os.getcwd(), 'share', 'python'))
