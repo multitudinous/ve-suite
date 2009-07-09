@@ -426,7 +426,7 @@ if GetPlatform() == 'win32':
     else:
         os.environ[ 'MSVS_ARCH' ] = "x86"
 
-    os.environ[ 'MSVS_USE_MFC_DIRS' ] = 1
+    os.environ[ 'MSVS_USE_MFC_DIRS' ] = "1"
     print "Using MSVS version %s and for CPU architecture %s." %(os.environ[ 'MSVS_VERSION' ],os.environ[ 'MSVS_ARCH' ])
 
 ## Create Environment builder from scons addons
