@@ -318,11 +318,9 @@ const std::string DOMDocumentManager::WriteAndReleaseCommandDocument( void )
     DOMLSSerializer* theSerializer = static_cast< DOMImplementationLS* >( impl )->createLSSerializer();
     DOMLSOutput* theOutputDesc = static_cast< DOMImplementationLS* >( impl )->createLSOutput();
     theOutputDesc->setEncoding( Convert( "ISO-8859-1" ).toXMLString() );
-    //theSerializer->setFeature( XMLUni::fgDOMWRTFormatPrettyPrint, true );
     DOMConfiguration* serializerConfig=theSerializer->getDomConfig();
 #else
     DOMWriter* theSerializer = static_cast< DOMImplementationLS* >( impl )->createDOMWriter();
-    theSerializer->setFeature( XMLUni::fgDOMWRTFormatPrettyPrint, true );
 #endif
 
     char* message = 0;
@@ -337,8 +335,10 @@ const std::string DOMDocumentManager::WriteAndReleaseCommandDocument( void )
             LocalFileFormatTarget outputXML( mOutputXMLFile.c_str() );
 #if _XERCES_VERSION >= 30001
             theOutputDesc->setByteStream( &outputXML );
+            serializerConfig->setParameter(XMLUni::fgDOMWRTFormatPrettyPrint, true);
             theSerializer->write( mCommandDocument, theOutputDesc  );
 #else
+            theSerializer->setFeature( XMLUni::fgDOMWRTFormatPrettyPrint, true );
             theSerializer->writeNode( &outputXML, *mCommandDocument );
 #endif
         }
@@ -346,7 +346,6 @@ const std::string DOMDocumentManager::WriteAndReleaseCommandDocument( void )
         {
             // do the serialization through DOMWriter::writeNode();
 #if _XERCES_VERSION >= 30001
-            serializerConfig->setParameter(XMLUni::fgDOMWRTFormatPrettyPrint, true);
             XMLCh* xXml = theSerializer->writeToString( mCommandDocument );
 #else 
             XMLCh* xXml = theSerializer->writeToString( (*mCommandDocument) );
