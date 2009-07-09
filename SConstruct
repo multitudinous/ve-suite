@@ -1,5 +1,5 @@
 #!python
-EnsureSConsVersion(0,98)
+EnsureSConsVersion(1,2)
 SConsignFile()
 
 ###
@@ -14,6 +14,28 @@ import commands
 from time import sleep
 pj = os.path.join
 
+import SConsAddons.Util as sca_util
+import SConsAddons.Options as asc_opt
+import SConsAddons.Options.Options 
+import SConsAddons.Options.VTK
+import SConsAddons.Options.OSG
+import SConsAddons.Options.VRJuggler.VRJ
+import SConsAddons.Options.Boost
+#import SConsAddons.Options.OPAL
+#import SConsAddons.Options.ODE
+import SConsAddons.Options.Xerces
+import SConsAddons.Options.WxWidgets
+import SConsAddons.AutoDist as sca_auto_dist
+import SConsAddons.Options.FlagPollBasedOption as fp_option
+from SConsAddons.EnvironmentBuilder import EnvironmentBuilder
+
+RootDir = os.getcwd()
+Export('RootDir')
+GetPlatform = sca_util.GetPlatform
+Export('GetPlatform')
+GetArch = sca_util.GetArch
+Export('GetArch')
+
 sys.path.append(pj(os.getcwd(), 'dist', 'build', 'tools'))
 import doxygen
 
@@ -27,10 +49,15 @@ sys.path.append(pj(os.getcwd(), 'share', 'python'))
 import HDF5
 import HDF4
 
-# Add flagpoll from the source directory to the end of the path so it is found
+# Add svnversion and upx source directory to the end of the path so it is found
 # LAST.
-#local_fp_dir = pj(os.getcwd(), 'Tools', 'flagpoll') 
-#os.environ['PATH'] = '%s%s%s' %(local_fp_dir, os.path.pathsep, os.environ['PATH'])
+if GetPlatform() == 'win32':
+    local_fp_dir = pj(os.getcwd(), 'external', 'svn-win32-1.6.0','bin') 
+    os.environ['PATH'] = '%s%s%s' %(local_fp_dir, os.path.pathsep, os.environ['PATH'])
+    local_fp_dir = pj(os.getcwd(), 'external', 'FreezePython','upx301w') 
+    os.environ['PATH'] = '%s%s%s' %(local_fp_dir, os.path.pathsep, os.environ['PATH'])
+  
+# Find flagpoll
 sys.stdout.write("Searching for flagpoll...\n")
 flagpoll_cmd = WhereIs('flagpoll')
 
@@ -57,29 +84,8 @@ def GetSVNVersion( dir = ''):
 
 Export('GetSVNVersion')
 
-import SConsAddons.Util as sca_util
-import SConsAddons.Options as asc_opt
-import SConsAddons.Options.Options 
-import SConsAddons.Options.VTK
-import SConsAddons.Options.OSG
-import SConsAddons.Options.VRJuggler.VRJ
-import SConsAddons.Options.Boost
-#import SConsAddons.Options.OPAL
-#import SConsAddons.Options.ODE
-import SConsAddons.Options.Xerces
-import SConsAddons.Options.WxWidgets
-import SConsAddons.AutoDist as sca_auto_dist
-import SConsAddons.Options.FlagPollBasedOption as fp_option
-from SConsAddons.EnvironmentBuilder import EnvironmentBuilder
-
 ################################################################################
 ########### Setup build dir and name
-RootDir = os.getcwd()
-Export('RootDir')
-GetPlatform = sca_util.GetPlatform
-Export('GetPlatform')
-GetArch = sca_util.GetArch
-Export('GetArch')
 buildPlatform = distutils.util.get_platform()
 ##setup platform specific information
 pt = platform
@@ -234,7 +240,7 @@ opts.Add('prefix', 'Installation prefix', '/usr/local')
 ##opts.Add('build_test', 'Build the test programs', 'yes')
 opts.Add('StaticLibs', 'If yes then build static libraries too', 'no')
 opts.Add('MakeDist', 'If "yes", make the distribution packages as part of the build', 'no')
-opts.Add('Patented', 'If "yes", make the patented version of VE-Suite', 'no')
+#opts.Add('Patented', 'If "yes", make the patented version of VE-Suite', 'no')
 opts.Add('UseMPI', 'If "yes", make 3D texture creator with MPI support', 'no')
 opts.Add('validate', 'If "no", do not validate flagpoll packages. Should help speed up the build', 'yes')
 opts.Add('buildTests', 'If "yes", Build tests applications', 'no')
@@ -251,6 +257,9 @@ opts.Add('MakeAspenSupport', 'If "yes", make aspen support', 'no')
 opts.Add('MakeDynSimSupport', 'If "yes", make dynsim support', 'no')
 opts.Add('MakeMinervaSupport', 'If "yes", add GIS support with minerva', 'no')
 ##opts.Add('arch', 'CPU architecture (ia32, x86_64, or ppc)', cpu_arch_default)
+if GetPlatform() == 'win32':
+    opts.Add('MSVS_ARCH', 'CPU architecture (x86, amd64)', 'x86')
+    opts.Add('MSVS_VERSION', 'MSVS version (9.0,8.0)', '8.0')
 
 opts.Add( 'CharacterController', 'If "yes", then integrate CharacterController into the build', 'no' )
 opts.Add( 'TransformManipulator', 'If "yes", then integrate TransformManipulator into the build', 'no' )
@@ -406,13 +415,27 @@ This file will be loaded each time.  Note: Options are cached in the file
 %s
 """ % options_cache
 
+if GetPlatform() == 'win32':
+    if ARGUMENTS.has_key("MSVS_VERSION"):
+        os.environ[ 'MSVS_VERSION' ] = ARGUMENTS[ 'MSVS_VERSION' ]
+    else:
+        os.environ[ 'MSVS_VERSION' ] = "8.0"
+    
+    if ARGUMENTS.has_key("MSVS_ARCH"):
+        os.environ[ 'MSVS_ARCH' ] = ARGUMENTS[ 'MSVS_ARCH' ]
+    else:
+        os.environ[ 'MSVS_ARCH' ] = "x86"
+
+    os.environ[ 'MSVS_USE_MFC_DIRS' ] = 1
+    print "Using MSVS version %s and for CPU architecture %s." %(os.environ[ 'MSVS_VERSION' ],os.environ[ 'MSVS_ARCH' ])
+
 ## Create Environment builder from scons addons
+## At this point the scons tool is initialize (e.g msvc, g++,...)
 base_bldr = EnvironmentBuilder()
 ## Add debug options in for vesuite from SConsAddons 
 base_bldr.addOptions( opts )
 
 baseEnv = base_bldr.buildEnvironment(ENV = os.environ)
-# add in once we are using 0.98
 baseEnv.Decider('MD5-timestamp')
 # Add doxygen builder to the base environment
 doxygen.generate(baseEnv)
@@ -424,12 +447,12 @@ if not SConsAddons.Util.hasHelpFlag():
    # setup initial windows build environment before the options are processed
    # it will be setup again below for the environment that the user sees
    if GetPlatform() == 'win32':
-      baseEnv[ 'MSVS_VERSION' ] = "8.0"
-      baseEnv[ 'MSVS_ARCH' ] = "x86"
+   #   baseEnv[ 'MSVS_VERSION' ] = "8.0"
+   #   baseEnv[ 'MSVS_ARCH' ] = "x86"
       print "Visual Studio Versions Available %s" %baseEnv[ 'MSVS' ]['VERSIONS']
-      baseEnv[ 'MSVS_USE_MFC_DIRS' ] = 1
-      baseEnv.Tool('msvc')
-      baseEnv.AppendUnique( CXXFLAGS = ['/EHsc'] )
+   #   baseEnv[ 'MSVS_USE_MFC_DIRS' ] = 1
+   #   baseEnv.Tool('msvc')
+   #   baseEnv.AppendUnique( CXXFLAGS = ['/EHsc'] )
 
    # now lets process everything
    opts.Process(baseEnv)                   # Update the options
@@ -445,10 +468,6 @@ if not SConsAddons.Util.hasHelpFlag():
    ## see if the options file has the build dir
    if baseEnv['build_dir'] != '':
       buildDir = baseEnv['build_dir']
-
-   if baseEnv['Patented'] == 'yes':
-      baseEnv.Append( CPPDEFINES = ['VE_PATENTED'] )
-      buildDir += '.patented'
 
    if baseEnv['default_debug_level'] != EnvironmentBuilder.NONE:
       base_bldr.enableDebug()
@@ -483,19 +502,23 @@ if not SConsAddons.Util.hasHelpFlag():
 
    if GetPlatform() == 'win32':
       #baseEnv[ 'MSVS']['VERSION' ] = 8.0
-      baseEnv[ 'MSVS_VERSION' ] = "8.0"
+      #baseEnv[ 'MSVS_VERSION' ] = "8.0"
       #baseEnv[ 'MSVS_ARCH' ] = "x86"
       #print baseEnv[ 'MSVS_ARCH' ]
       print "Visual Studio Versions Available %s" %baseEnv[ 'MSVS' ]['VERSIONS']
-      baseEnv[ 'MSVS_USE_MFC_DIRS' ] = 1
-      baseEnv.Tool('msvc')
+      #baseEnv[ 'MSVS_USE_MFC_DIRS' ] = 1
+      #baseEnv.Tool('msvc')
       #ms = Tool('msvc')
       #ms( baseEnv )
-      baseEnv.AppendUnique( CPPDEFINES = ['WIN32_LEAN_AND_MEAN'] )
       #baseEnv.AppendUnique( CXXFLAGS = ['/wd4005'] /EHsc )
+      baseEnv.AppendUnique( CPPDEFINES = ['WIN32_LEAN_AND_MEAN'] )
       # for more information on WIN32_LEAN_AND_MEAN see:
       # http://support.microsoft.com/kb/166474
-      baseEnv.Append( ARFLAGS = ['/MACHINE:X86'], LINKFLAGS = ['/MACHINE:X86'] )
+      if os.environ[ 'MSVS_ARCH' ] == "x86":
+         baseEnv.AppendUnique( ARFLAGS = ['/MACHINE:X86'], LINKFLAGS = ['/MACHINE:X86'] )
+      else:
+         baseEnv.AppendUnique( ARFLAGS = ['/MACHINE:X64'], LINKFLAGS = ['/MACHINE:X64'] )
+
       baseEnv.Append( WINDOWS_INSERT_MANIFEST = ['True'] )
       # As noted below WINVER will be defined as 0x0502
       # http://msdn.microsoft.com/en-us/library/aa383745(VS.85).aspx
@@ -506,7 +529,7 @@ if not SConsAddons.Util.hasHelpFlag():
       #baseEnv.AppendUnique( LIBPATH = os.environ['LIB'].split(os.pathsep) ) 
       #baseEnv.AppendUnique( LIBPATH = os.environ['LIBPATH'].split(os.pathsep) ) 
 
-   baseEnv = base_bldr.applyToEnvironment( baseEnv.Clone() )
+   #baseEnv = base_bldr.applyToEnvironment( baseEnv.Clone() )
 
    # Apply boost include path to whole build
    tmpBoostEnv = base_bldr.buildEnvironment()
