@@ -164,7 +164,14 @@ BOOL __stdcall DllMain(HINSTANCE module, DWORD reason, LPVOID reserved)
                 // base_dir.
                 if( NULL == env_dir )
                 {
-                    fs::path plugin_dir(base_dir / "lib" / "xplorer" / "plugins");
+#if defined(WIN64)
+                    const std::string bit_suffix("64");
+#else
+                    const std::string bit_suffix("");
+#endif
+                    const fs::path lib_subdir(std::string("lib") + bit_suffix);
+                    
+                    fs::path plugin_dir(base_dir / lib_subdir / "xplorer" / "plugins");
                     const std::string plugin_dir_str =
                         plugin_dir.native_directory_string();
 
