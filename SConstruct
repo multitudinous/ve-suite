@@ -447,12 +447,12 @@ if not SConsAddons.Util.hasHelpFlag():
    # setup initial windows build environment before the options are processed
    # it will be setup again below for the environment that the user sees
    if GetPlatform() == 'win32':
-   #   baseEnv[ 'MSVS_VERSION' ] = "8.0"
-   #   baseEnv[ 'MSVS_ARCH' ] = "x86"
+      baseEnv[ 'MSVS_VERSION' ] = "8.0"
+      baseEnv[ 'MSVS_ARCH' ] = "x86"
       print "Visual Studio Versions Available %s" %baseEnv[ 'MSVS' ]['VERSIONS']
-   #   baseEnv[ 'MSVS_USE_MFC_DIRS' ] = 1
-   #   baseEnv.Tool('msvc')
-   #   baseEnv.AppendUnique( CXXFLAGS = ['/EHsc'] )
+      baseEnv[ 'MSVS_USE_MFC_DIRS' ] = 1
+      baseEnv.Tool('msvc')
+      baseEnv.AppendUnique( CXXFLAGS = ['/EHsc'] )
 
    # now lets process everything
    opts.Process(baseEnv)                   # Update the options
@@ -529,7 +529,7 @@ if not SConsAddons.Util.hasHelpFlag():
       #baseEnv.AppendUnique( LIBPATH = os.environ['LIB'].split(os.pathsep) ) 
       #baseEnv.AppendUnique( LIBPATH = os.environ['LIBPATH'].split(os.pathsep) ) 
 
-   #baseEnv = base_bldr.applyToEnvironment( baseEnv.Clone() )
+   baseEnv = base_bldr.applyToEnvironment( baseEnv.Clone() )
 
    # Apply boost include path to whole build
    tmpBoostEnv = base_bldr.buildEnvironment()
