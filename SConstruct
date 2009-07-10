@@ -415,28 +415,39 @@ This file will be loaded each time.  Note: Options are cached in the file
 %s
 """ % options_cache
 
+tempEnv = dict( ENV=os.environ)
+
 if GetPlatform() == 'win32':
     if ARGUMENTS.has_key("MSVS_VERSION"):
-        os.environ[ 'MSVS_VERSION' ] = ARGUMENTS[ 'MSVS_VERSION' ]
+        tempEnv[ 'MSVS_VERSION' ] = ARGUMENTS[ 'MSVS_VERSION' ]
     else:
-        os.environ[ 'MSVS_VERSION' ] = "8.0"
+        tempEnv[ 'MSVS_VERSION' ] = "8.0"
     
     if ARGUMENTS.has_key("MSVS_ARCH"):
-        os.environ[ 'MSVS_ARCH' ] = ARGUMENTS[ 'MSVS_ARCH' ]
+        tempEnv[ 'MSVS_ARCH' ] = ARGUMENTS[ 'MSVS_ARCH' ]
     else:
-        os.environ[ 'MSVS_ARCH' ] = "x86"
+        tempEnv[ 'MSVS_ARCH' ] = "x86"
 
-    os.environ[ 'MSVS_USE_MFC_DIRS' ] = "1"
+    tempEnv[ 'MSVS_USE_MFC_DIRS' ] = 1
+
     print "Using MSVS version %s and for CPU architecture %s." %(os.environ[ 'MSVS_VERSION' ],os.environ[ 'MSVS_ARCH' ])
 
 ## Create Environment builder from scons addons
 ## At this point the scons tool is initialize (e.g msvc, g++,...)
 base_bldr = EnvironmentBuilder()
-## Add debug options in for vesuite from SConsAddons 
+## Add debug options in for vesuite from SConsAddons
 base_bldr.addOptions( opts )
 
-baseEnv = base_bldr.buildEnvironment(ENV = os.environ)
+#tempEnv = dict( test_var_mccdo =1, ENV=os.environ)
+#tempEnv[ "test_var_mccdo" ] = "1"
+#tempEnv[ "ENV" ] = os.environ
+#**kw tempenv
+tempEnv[ "test_var_mccdo" ] = "1"
+#os.environ[ "test_var_mccdo" ] = "1"
+#baseEnv = base_bldr.buildEnvironment(None,None,test_var_mccdo=1, ENV=os.environ)
+baseEnv = base_bldr.buildEnvironment(None,None,**tempEnv)
 baseEnv.Decider('MD5-timestamp')
+
 # Add doxygen builder to the base environment
 doxygen.generate(baseEnv)
 
