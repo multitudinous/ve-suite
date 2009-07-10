@@ -414,9 +414,11 @@ You can store configuration options in the file: options.custom
 This file will be loaded each time.  Note: Options are cached in the file
 %s
 """ % options_cache
-
-tempEnv = dict( ENV=os.environ)
-
+# create an initial dictionary to store variables that scons needs 
+# to setup fthe proper build tool. This should be done BEFORE
+# the buildEnvironment call is made.
+tempEnv = dict(ENV=os.environ)
+# setup common windows specific variables for the build
 if GetPlatform() == 'win32':
     if ARGUMENTS.has_key("MSVS_VERSION"):
         tempEnv[ 'MSVS_VERSION' ] = ARGUMENTS[ 'MSVS_VERSION' ]
@@ -428,9 +430,9 @@ if GetPlatform() == 'win32':
     else:
         tempEnv[ 'MSVS_ARCH' ] = "x86"
 
-    tempEnv[ 'MSVS_USE_MFC_DIRS' ] = 1
-
-    print "Using MSVS version %s and for CPU architecture %s." %(os.environ[ 'MSVS_VERSION' ],os.environ[ 'MSVS_ARCH' ])
+    tempEnv[ 'MSVS_USE_MFC_DIRS' ] = "1"
+    tempEnv[ 'WINDOWS_INSERT_MANIFEST' ] = 'True'
+    print "Using MSVS version %s and for CPU architecture %s." %(tempEnv[ 'MSVS_VERSION' ],tempEnv[ 'MSVS_ARCH' ])
 
 ## Create Environment builder from scons addons
 ## At this point the scons tool is initialize (e.g msvc, g++,...)
@@ -438,13 +440,6 @@ base_bldr = EnvironmentBuilder()
 ## Add debug options in for vesuite from SConsAddons
 base_bldr.addOptions( opts )
 
-#tempEnv = dict( test_var_mccdo =1, ENV=os.environ)
-#tempEnv[ "test_var_mccdo" ] = "1"
-#tempEnv[ "ENV" ] = os.environ
-#**kw tempenv
-tempEnv[ "test_var_mccdo" ] = "1"
-#os.environ[ "test_var_mccdo" ] = "1"
-#baseEnv = base_bldr.buildEnvironment(None,None,test_var_mccdo=1, ENV=os.environ)
 baseEnv = base_bldr.buildEnvironment(None,None,**tempEnv)
 baseEnv.Decider('MD5-timestamp')
 
@@ -458,12 +453,12 @@ if not SConsAddons.Util.hasHelpFlag():
    # setup initial windows build environment before the options are processed
    # it will be setup again below for the environment that the user sees
    if GetPlatform() == 'win32':
-      baseEnv[ 'MSVS_VERSION' ] = "8.0"
-      baseEnv[ 'MSVS_ARCH' ] = "x86"
+      #baseEnv[ 'MSVS_VERSION' ] = "8.0"
+      #baseEnv[ 'MSVS_ARCH' ] = "x86"
       print "Visual Studio Versions Available %s" %baseEnv[ 'MSVS' ]['VERSIONS']
-      baseEnv[ 'MSVS_USE_MFC_DIRS' ] = 1
-      baseEnv.Tool('msvc')
-      baseEnv.AppendUnique( CXXFLAGS = ['/EHsc'] )
+      #baseEnv[ 'MSVS_USE_MFC_DIRS' ] = 1
+      #baseEnv.Tool('msvc')
+      #baseEnv.AppendUnique( CXXFLAGS = ['/EHsc'] )
 
    # now lets process everything
    opts.Process(baseEnv)                   # Update the options
@@ -525,12 +520,11 @@ if not SConsAddons.Util.hasHelpFlag():
       baseEnv.AppendUnique( CPPDEFINES = ['WIN32_LEAN_AND_MEAN'] )
       # for more information on WIN32_LEAN_AND_MEAN see:
       # http://support.microsoft.com/kb/166474
-      if os.environ[ 'MSVS_ARCH' ] == "x86":
+      if baseEnv[ 'MSVS_ARCH' ] == "x86":
          baseEnv.AppendUnique( ARFLAGS = ['/MACHINE:X86'], LINKFLAGS = ['/MACHINE:X86'] )
       else:
          baseEnv.AppendUnique( ARFLAGS = ['/MACHINE:X64'], LINKFLAGS = ['/MACHINE:X64'] )
 
-      baseEnv.Append( WINDOWS_INSERT_MANIFEST = ['True'] )
       # As noted below WINVER will be defined as 0x0502
       # http://msdn.microsoft.com/en-us/library/aa383745(VS.85).aspx
       baseEnv.AppendUnique( CPPDEFINES = ['WINVER=0x0502','_WIN32_WINNT=0x0502'] )
