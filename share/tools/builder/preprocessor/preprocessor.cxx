@@ -52,8 +52,14 @@ using namespace ves::xplorer::util;
 
 int main( int argc, char *argv[] )
 {
-   int  noOfCellsInOctant, isoNum, xCut, yCut, zCut;
-   float deciVal, isoMin, isoMax;
+   int  noOfCellsInOctant = 0;
+   int isoNum = 10;
+   int xCut = 0;
+   int yCut = 0;
+   int zCut = 0;
+   float deciVal = 0.7f;
+   float isoMin = 0.0f;
+   float isoMax = 100.0f;
    char surfFname[100], paramFile[100];
 
    bool B_octree = false, B_surface = false, B_iso = false, B_cont = false;
@@ -61,7 +67,7 @@ int main( int argc, char *argv[] )
 
    int cutPlanesOption = 1;
    int multiPlaneOption;
-   int myid;
+   int myid = 0;
 #ifdef _MPI
    int xprocs, yprocs, zprocs, procs_remainder, numprocs;
    MPI_Init(&argc, &argv);
