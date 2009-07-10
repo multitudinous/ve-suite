@@ -415,7 +415,7 @@ This file will be loaded each time.  Note: Options are cached in the file
 %s
 """ % options_cache
 # create an initial dictionary to store variables that scons needs 
-# to setup fthe proper build tool. This should be done BEFORE
+# to setup the proper build tool. This should be done BEFORE
 # the buildEnvironment call is made.
 tempEnv = dict(ENV=os.environ)
 # setup common windows specific variables for the build
@@ -451,181 +451,179 @@ help_text += opts.GenerateHelpText(baseEnv)
 baseEnv.Help(help_text)
 
 if not SConsAddons.Util.hasHelpFlag():
-   # setup initial windows build environment before the options are processed
-   if GetPlatform() == 'win32':
-      print "Visual Studio Versions Available %s" %baseEnv[ 'MSVS' ]['VERSIONS']
-      # This flag is needed because some packages still use win32 even on win64 systems
-      baseEnv.AppendUnique( CPPDEFINES = ['WIN32'] )
-      if baseEnv[ 'MSVS_ARCH' ] == "x86":
-        baseEnv.AppendUnique( ARFLAGS = ['/MACHINE:X86'], LINKFLAGS = ['/MACHINE:X86'] )
-      else:
-        baseEnv.AppendUnique( ARFLAGS = ['/MACHINE:X64'], LINKFLAGS = ['/MACHINE:X64'] )
+    # setup initial windows build environment before the options are processed
+    if GetPlatform() == 'win32':
+        print "Visual Studio Versions Available %s" %baseEnv[ 'MSVS' ]['VERSIONS']
+        # This flag is needed because some packages still use win32 even on win64 systems
+        baseEnv.AppendUnique( CPPDEFINES = ['WIN32'] )
+        if baseEnv[ 'MSVS_ARCH' ] == "x86":
+            baseEnv.AppendUnique( ARFLAGS = ['/MACHINE:X86'], LINKFLAGS = ['/MACHINE:X86'] )
+        else:
+            baseEnv.AppendUnique( ARFLAGS = ['/MACHINE:X64'], LINKFLAGS = ['/MACHINE:X64'] )
 
-   # now lets process everything
-   opts.Process(baseEnv)                   # Update the options
+    # now lets process everything
+    opts.Process(baseEnv)                   # Update the options
 
-   ## Try to save the options if possible and if the user did
-   ## not specify an options file
-   try:                                   
-      if not ARGUMENTS.has_key("options_file"):
-         opts.Save(options_cache, baseEnv)
-   except LookupError, le:
-      pass
+    ## Try to save the options if possible and if the user did
+    ## not specify an options file
+    try:                                   
+        if not ARGUMENTS.has_key("options_file"):
+            opts.Save(options_cache, baseEnv)
+    except LookupError, le:
+        pass
 
-   ## see if the options file has the build dir
-   if baseEnv['build_dir'] != '':
-      buildDir = baseEnv['build_dir']
+    ## see if the options file has the build dir
+    if baseEnv['build_dir'] != '':
+        buildDir = baseEnv['build_dir']
 
-   if baseEnv['default_debug_level'] != EnvironmentBuilder.NONE:
-      base_bldr.enableDebug()
-      base_bldr.setMsvcRuntime(EnvironmentBuilder.MSVC_MT_DLL_RT)
-   else:
-      base_bldr.enableOpt()
-      base_bldr.setMsvcRuntime(EnvironmentBuilder.MSVC_MT_DLL_RT)
+    if baseEnv['default_debug_level'] != EnvironmentBuilder.NONE:
+        base_bldr.enableDebug()
+        base_bldr.setMsvcRuntime(EnvironmentBuilder.MSVC_MT_DLL_RT)
+    else:
+        base_bldr.enableOpt()
+        base_bldr.setMsvcRuntime(EnvironmentBuilder.MSVC_MT_DLL_RT)
 
-   if osgal_options.isAvailable():
-      baseEnv.Append( CPPDEFINES = [ 'VE_SOUND' ] )
+    if osgal_options.isAvailable():
+        baseEnv.Append( CPPDEFINES = [ 'VE_SOUND' ] )
 
-   # VTK defines
-   baseEnv.AppendUnique( CPPDEFINES = ['VTK_POST_FEB20'] )
-   baseEnv.AppendUnique( CPPDEFINES = ['VTK_STREAMS_FWD_ONLY'] )
-   # Bullet defines
-   baseEnv.AppendUnique( CPPDEFINES = ['BULLET_MAJOR_VERSION=%i' %bulletVersion[ 0 ],
+    # VTK defines
+    baseEnv.AppendUnique( CPPDEFINES = ['VTK_POST_FEB20'] )
+    baseEnv.AppendUnique( CPPDEFINES = ['VTK_STREAMS_FWD_ONLY'] )
+    # Bullet defines
+    baseEnv.AppendUnique( CPPDEFINES = ['BULLET_MAJOR_VERSION=%i' %bulletVersion[ 0 ],
                   'BULLET_MINOR_VERSION=%i' %bulletVersion[ 1 ] ] )  
-   baseEnv.AppendUnique(CPPPATH = [pj(RootDir,'external','osgBullet','include')])
-   baseEnv.AppendUnique(CPPPATH = [pj(RootDir,'external', bulletBaseVar,'src')])
-   if GetArch() == 'x64':
-      baseEnv.AppendUnique( CPPDEFINES = ['USE_ADDR64=1'] )
+    baseEnv.AppendUnique(CPPPATH = [pj(RootDir,'external','osgBullet','include')])
+    baseEnv.AppendUnique(CPPPATH = [pj(RootDir,'external', bulletBaseVar,'src')])
+    if GetArch() == 'x64':
+        baseEnv.AppendUnique( CPPDEFINES = ['USE_ADDR64=1'] )
 
-   baseEnv.AppendUnique( CPPPATH = [pj(RootDir,'src'),pj(RootDir,buildDir,'src')] )
-   baseEnv.AppendUnique( CPPDEFINES = ['_OSG','VTK44'] )
+    baseEnv.AppendUnique( CPPPATH = [pj(RootDir,'src'),pj(RootDir,buildDir,'src')] )
+    baseEnv.AppendUnique( CPPDEFINES = ['_OSG','VTK44'] )
 
-   if GetPlatform() == 'darwin':
-      baseEnv.AppendUnique( CPPDEFINES = ['_DARWIN'] )
-      baseEnv.AppendUnique( LINKFLAGS = ['-Wl,-bind_at_load'] )
-      baseEnv['LDMODULESUFFIX'] = '.bundle'
-      #baseEnv['LDMODULEFLAGS'] = '$LDMODULEFLAGS -bundle -flat_namespace -undefined suppress'
+    if GetPlatform() == 'darwin':
+        baseEnv.AppendUnique( CPPDEFINES = ['_DARWIN'] )
+        baseEnv.AppendUnique( LINKFLAGS = ['-Wl,-bind_at_load'] )
+        baseEnv['LDMODULESUFFIX'] = '.bundle'
+        #baseEnv['LDMODULEFLAGS'] = '$LDMODULEFLAGS -bundle -flat_namespace -undefined suppress'
 
-   if GetPlatform() == 'win32':
-      # for more information on WIN32_LEAN_AND_MEAN see:
-      # http://support.microsoft.com/kb/166474
-      baseEnv.AppendUnique( CPPDEFINES = ['WIN32_LEAN_AND_MEAN'] )
-      # As noted below WINVER will be defined as 0x0502
-      # http://msdn.microsoft.com/en-us/library/aa383745(VS.85).aspx
-      baseEnv.AppendUnique( CPPDEFINES = ['WINVER=0x0502','_WIN32_WINNT=0x0502'] )
+    if GetPlatform() == 'win32':
+        # for more information on WIN32_LEAN_AND_MEAN see:
+        # http://support.microsoft.com/kb/166474
+        baseEnv.AppendUnique( CPPDEFINES = ['WIN32_LEAN_AND_MEAN'] )
+        # As noted below WINVER will be defined as 0x0502
+        # http://msdn.microsoft.com/en-us/library/aa383745(VS.85).aspx
+        baseEnv.AppendUnique( CPPDEFINES = ['WINVER=0x0502','_WIN32_WINNT=0x0502'] )
 
-   baseEnv = base_bldr.applyToEnvironment( baseEnv.Clone() )
+    baseEnv = base_bldr.applyToEnvironment( baseEnv.Clone() )
 
-   # Apply boost include path to whole build
-   tmpBoostEnv = base_bldr.buildEnvironment()
-   boost_options.apply( tmpBoostEnv )
-   if tmpBoostEnv.has_key('CXXFLAGS'):
-      baseEnv.AppendUnique( CXXFLAGS = tmpBoostEnv['CXXFLAGS'])
-   if tmpBoostEnv.has_key('CPPPATH'):
-      baseEnv.AppendUnique( CPPPATH = tmpBoostEnv['CPPPATH'] )
-   if tmpBoostEnv.has_key('CPPDEFINES'):
-      baseEnv.AppendUnique( CPPDEFINES = tmpBoostEnv['CPPDEFINES']  )
-   baseEnv.AppendUnique( CPPDEFINES = ['BOOST_ALL_DYN_LINK'] )
+    # Apply boost include path to whole build
+    tmpBoostEnv = base_bldr.buildEnvironment()
+    boost_options.apply( tmpBoostEnv )
+    if tmpBoostEnv.has_key('CXXFLAGS'):
+        baseEnv.AppendUnique( CXXFLAGS = tmpBoostEnv['CXXFLAGS'])
+    if tmpBoostEnv.has_key('CPPPATH'):
+        baseEnv.AppendUnique( CPPPATH = tmpBoostEnv['CPPPATH'] )
+    if tmpBoostEnv.has_key('CPPDEFINES'):
+        baseEnv.AppendUnique( CPPDEFINES = tmpBoostEnv['CPPDEFINES']  )
+    baseEnv.AppendUnique( CPPDEFINES = ['BOOST_ALL_DYN_LINK'] )
 
-   if GetPlatform() != 'win32':
-      baseEnv.Append( LINKFLAGS = ['-g'] )
-      baseEnv.Append( CXXFLAGS = ['-g'] )
-      #baseEnv.Append( CXXFLAGS = ['-Wall', '-Wold-style-cast', '-Wundef', '-Wsign-compare', '-Wconversion', '-Wpointer-arith', '-pedantic'] )
+    if GetPlatform() != 'win32':
+        baseEnv.Append( LINKFLAGS = ['-g'] )
+        baseEnv.Append( CXXFLAGS = ['-g'] )
+        #baseEnv.Append( CXXFLAGS = ['-Wall', '-Wold-style-cast', '-Wundef', '-Wsign-compare', '-Wconversion', '-Wpointer-arith', '-pedantic'] )
 
-   baseEnv.Append(BUILDERS = builders)
-   #setup the build dir
-   baseEnv.BuildDir(buildDir, '.', duplicate = 0)
-   # Test code to print what the environment is when debugging windows build issues
-   #print baseEnv['ENV']
-   lokiBaseVar = 'loki-0.1.7'
-   Export('baseEnv buildDir bulletBaseVar lokiBaseVar')
+    baseEnv.Append(BUILDERS = builders)
+    #setup the build dir
+    baseEnv.BuildDir(buildDir, '.', duplicate = 0)
+    lokiBaseVar = 'loki-0.1.7'
+    Export('baseEnv buildDir bulletBaseVar lokiBaseVar')
 
-   # Setup file paths
-   PREFIX = os.path.abspath(baseEnv['prefix'])
+    # Setup file paths
+    PREFIX = os.path.abspath(baseEnv['prefix'])
 
-   if baseEnv.has_key('libdir'):
-      LIBDIR = baseEnv['libdir']
-   else:
-      if GetArch() == 'x64':
-         LIBDIR = 'lib64'
-      else:
-         LIBDIR = 'lib'
-      baseEnv['libdir'] = LIBDIR
+    if baseEnv.has_key('libdir'):
+        LIBDIR = baseEnv['libdir']
+    else:
+        if GetArch() == 'x64':
+            LIBDIR = 'lib64'
+        else:
+            LIBDIR = 'lib'
+        baseEnv['libdir'] = LIBDIR
 
-   distDir = pj(buildDir, 'dist')
-   Export('PREFIX', 'LIBDIR', 'distDir')
+    distDir = pj(buildDir, 'dist')
+    Export('PREFIX', 'LIBDIR', 'distDir')
 
-   # Create the VE-Suite package
-   ves_pkg = sca_auto_dist.Package( name="VE-Suite-%s"%(buildUUID), 
+    # Create the VE-Suite package
+    ves_pkg = sca_auto_dist.Package( name="VE-Suite-%s"%(buildUUID), 
                                     version = "%i.%i.%i"%VE_SUITE_VERSION,
                                     prefix=PREFIX, baseEnv=baseEnv)
  
-   Export('ves_pkg')
+    Export('ves_pkg')
       
-   ## setup build log to aid in debugging remote builds
-   if baseEnv[ 'buildLog' ] != '':
-      sys.stdout = os.popen("tee "+ baseEnv[ 'buildLog' ], "w")
-      sys.stderr = sys.stdout
+    ## setup build log to aid in debugging remote builds
+    if baseEnv[ 'buildLog' ] != '':
+        sys.stdout = os.popen("tee "+ baseEnv[ 'buildLog' ], "w")
+        sys.stderr = sys.stdout
 
-   ##Tack on path prefixes to subdirs specified above.
-   vesSubdirs=pj(buildDir, 'src' )
-   distSubdirs = pj(buildDir,'dist','installerImages')
-   #veiDistSubdirs = pj(buildDir,'VE_Installer','installer', 'dist')
-   #fpcSubdirs = pj(buildDir,'VE_Installer','fpc')
-   #installerSubdirs = pj(buildDir,'VE_Installer' )
-   shareSubdirs = pj(buildDir,'share')
-   lokiSubdirs = pj( buildDir, 'external', lokiBaseVar )
-   #osgOQSubdirs = pj( buildDir, 'external', 'osgOQ')
-   #osgPPUSubdirs = pj( buildDir, 'external', 'osgPPU')
-   osgEphemerisSubdirs = pj( buildDir, 'external', 'osgEphemeris')
-   osgBulletSubdirs = pj( buildDir, 'external', 'osgBullet')
-   bullet = pj( buildDir, 'external', bulletBaseVar)
-   test = pj( buildDir, 'test', 'osg')
+    ##Tack on path prefixes to subdirs specified above.
+    vesSubdirs=pj(buildDir, 'src' )
+    distSubdirs = pj(buildDir,'dist','installerImages')
+    #veiDistSubdirs = pj(buildDir,'VE_Installer','installer', 'dist')
+    #fpcSubdirs = pj(buildDir,'VE_Installer','fpc')
+    #installerSubdirs = pj(buildDir,'VE_Installer' )
+    shareSubdirs = pj(buildDir,'share')
+    lokiSubdirs = pj( buildDir, 'external', lokiBaseVar )
+    #osgOQSubdirs = pj( buildDir, 'external', 'osgOQ')
+    #osgPPUSubdirs = pj( buildDir, 'external', 'osgPPU')
+    osgEphemerisSubdirs = pj( buildDir, 'external', 'osgEphemeris')
+    osgBulletSubdirs = pj( buildDir, 'external', 'osgBullet')
+    bullet = pj( buildDir, 'external', bulletBaseVar)
+    test = pj( buildDir, 'test', 'osg')
 
-   ves_dirs = [vesSubdirs, distSubdirs, osgEphemerisSubdirs,
+    ves_dirs = [vesSubdirs, distSubdirs, osgEphemerisSubdirs,
                shareSubdirs, lokiSubdirs, 
                osgBulletSubdirs, bullet ]
 
-   #build applications in test/ directory
-   if baseEnv[ 'buildTests' ] == 'yes':
-      testDir = [test,  pj(buildDir,'test','vtk')] #[ pj(buildDir,'test','testNURBS') ]
-      ves_dirs.append( testDir )
+    #build applications in test/ directory
+    if baseEnv[ 'buildTests' ] == 'yes':
+        testDir = [test,  pj(buildDir,'test','vtk')] #[ pj(buildDir,'test','testNURBS') ]
+        ves_dirs.append( testDir )
 
-   # freeze the python code
-   if 'freeze' in  COMMAND_LINE_TARGETS or GetPlatform() == 'win32':
-      veiFreezeSubdirs = pj(buildDir,'dist', 'build', 'freeze')
-      ves_dirs.append( veiFreezeSubdirs )
-      baseEnv.Alias('freeze', veiFreezeSubdirs) 
+    # freeze the python code
+    if 'freeze' in  COMMAND_LINE_TARGETS or GetPlatform() == 'win32':
+        veiFreezeSubdirs = pj(buildDir,'dist', 'build', 'freeze')
+        ves_dirs.append( veiFreezeSubdirs )
+        baseEnv.Alias('freeze', veiFreezeSubdirs) 
      
-   # Build the test suite if asked.
-   if 'testsuite' in COMMAND_LINE_TARGETS:
-      ves_dirs.append(pj('#', 'test'))
-      baseEnv.Alias('testsuite', pj('#', 'test'))
+    # Build the test suite if asked.
+    if 'testsuite' in COMMAND_LINE_TARGETS:
+        ves_dirs.append(pj('#', 'test'))
+        baseEnv.Alias('testsuite', pj('#', 'test'))
    
-   ##Run SConscript files in all of those folders.
-   for d in ves_dirs:
-      SConscript( dirs = d )
+    ##Run SConscript files in all of those folders.
+    for d in ves_dirs:
+        SConscript( dirs = d )
 
-   ## create a tar ball of VE-Suite
-   if baseEnv['MakeDist'] != 'no':
-      ves_pkg.setDistDir( distDir )
-      if GetPlatform() == 'linux':
-         ves_pkg.addPackager( SConsAddons.AutoDist.TarGzPackager() )
-      elif GetPlatform() == 'win32':
-         pass
-      else:
-         ves_pkg.addPackager( SConsAddons.AutoDist.TarGzPackager() )
+    ## create a tar ball of VE-Suite
+    if baseEnv['MakeDist'] != 'no':
+        ves_pkg.setDistDir( distDir )
+        if GetPlatform() == 'linux':
+            ves_pkg.addPackager( SConsAddons.AutoDist.TarGzPackager() )
+        elif GetPlatform() == 'win32':
+            pass
+        else:
+            ves_pkg.addPackager( SConsAddons.AutoDist.TarGzPackager() )
 
-   # Requires one build on command line to verify options are correct.
-   if GetPlatform() == 'win32':
-      SConsAddons.AutoDist.GenerateVisualStudioSolution(ves_pkg, 'VisualStudio')
+    # Requires one build on command line to verify options are correct.
+    if GetPlatform() == 'win32':
+        SConsAddons.AutoDist.GenerateVisualStudioSolution(ves_pkg, 'VisualStudio')
 
-   ##Setup the install flag to install VE-Suite
-   if 'install' in COMMAND_LINE_TARGETS:
-      ves_pkg.build( install=True )
-   else:
-      ves_pkg.build( install=False )
+    ##Setup the install flag to install VE-Suite
+    if 'install' in COMMAND_LINE_TARGETS:
+        ves_pkg.build( install=True )
+    else:
+        ves_pkg.build( install=False )
          
-   baseEnv.Alias('install', PREFIX)
-   Default('.')
-
+    baseEnv.Alias('install', PREFIX)
+    Default('.')
+    
