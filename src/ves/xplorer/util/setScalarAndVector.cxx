@@ -35,7 +35,6 @@
 
 #include <vtkDataSet.h>
 #include <vtkPointData.h>
-#include <vtkFloatArray.h>
 
 using namespace ves::xplorer::util;
 
@@ -89,7 +88,6 @@ void ves::xplorer::util::activateScalar( vtkDataSet * dataSet )
                     break;
                 else
                     std::cout << "ERROR!: " << std::flush;
-
             }
             while( 1 );
 
@@ -136,14 +134,26 @@ void ves::xplorer::util::activateVector( vtkDataSet * dataSet )
                 if( dataSet->GetPointData()->GetArray( i )->GetNumberOfComponents() == 3 )
                     std::cout << "\t" << i << "\t" << dataSet->GetPointData()->GetArray( i )->GetName() << std::endl;
             }
-            std::cout << "\nEnter the integer corresponding to the vector you want to activate: " << std::endl;
+
             int choice;
-            std::cin >> choice;
+            do
+            {
+                std::cout << "\nEnter the integer corresponding to the vector you want to activate: " << std::endl;
+                std::cin >> choice;
+
+                // verify that the choice corresponds to a valid vector...
+                if( dataSet->GetPointData()->GetArray( choice )
+                        ->GetNumberOfComponents() == 3 )
+                    break;
+                else
+                    std::cout << "ERROR!: " << std::flush;
+            }
+            while( 1 );
+
             dataSet->GetPointData()->SetActiveVectors(
                 dataSet->GetPointData()->GetArray( choice )->GetName() );
         }
     }
     return;
 }
-
 

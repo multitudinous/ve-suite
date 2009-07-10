@@ -134,7 +134,7 @@ std::string fileIO::getFilenameFromDefault( std::string fileContents, std::strin
     int answer = 1;
 
     // if supplied with a default name, ask if it is OK...
-    if( defaultName != "" )
+    if( ! defaultName.empty() )
     {
         std::cout << "\nThe default name for " << fileContents
         << " is \"" << defaultName << "\"" << std::endl;

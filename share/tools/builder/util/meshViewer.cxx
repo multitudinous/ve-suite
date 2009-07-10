@@ -67,16 +67,15 @@ vtkActor * getActorFromFile( std::string vtkFilename );
 
 int main( const int argc, char *argv[] )
 {  
-
    int i;
-	std::string vtkFilename;// = NULL;
+	std::string vtkFilename;
    float shrinkFactor = 1.0;
    if (argc == 1)  // Process a single vtk file that will be obtained from the user...
    {
-       char tempText[ 100 ]; 
-       strcpy( tempText, "input" );
-       vtkFilename = fileIO::getReadableFileFromDefault( tempText, 
-                                                         "delaunay3DOut.vtk" );
+       std::string fileContents( "input" );
+       std::string defaultName( "../ves/share/vesuite/examples/simple/3scl.vtk" );
+       vtkFilename = fileIO::getReadableFileFromDefault( fileContents, 
+                                                         defaultName );
        shrinkFactor = 0.95;
        std::cout << "Recommended shrinkFactor = " << shrinkFactor << std::endl;
        do
@@ -98,13 +97,11 @@ int main( const int argc, char *argv[] )
        vtkRenderWindowInteractor* iren = vtkRenderWindowInteractor::New();
            iren->SetRenderWindow( renWin );
 
-       //vtkFilename = new char [100];
-
        int numActors = argc - 1;
        vtkActor ** actor = new vtkActor* [numActors];
        for ( i=0; i<numActors; i++ )
        {
-           vtkFilename.assign(argv[i+1]);//strcpy( vtkFilename, argv[i+1]);
+           vtkFilename.assign(argv[i+1]);
            actor[i] = getActorFromFile( vtkFilename );
            if (actor[i] == NULL) continue;
 
@@ -202,8 +199,6 @@ int main( const int argc, char *argv[] )
        iren->Delete();
    }
 
-   //delete [] vtkFilename;
-
 	return 0;
 }
 
@@ -215,14 +210,9 @@ void viewWhatsInFile( std::string vtkFilename, const float shrinkFactor )
    vtkDataSet* dataset = dynamic_cast<vtkDataSet*>(readVtkThing( vtkFilename, 1 ));
    if ( dataset->GetDataObjectType() == VTK_UNSTRUCTURED_GRID )
    {
-      // let the user pick the active scalar
-      //activateScalar( unsReader->GetOutput() ); 
-      activateScalar( dataset ); 
-
-      //showGraphics: 0=noShowCells, 1=showExteriorCells, 2=showAllCells
       int showGraphics;
       std::cout << "\nPick an option for displaying cells..." << std::endl;
-      std::cout << "Answer  (0) noDrawCells   " 
+      std::cout << "Answer  " 
       << "(1) drawExteriorCellsOnly (faster)   (2) drawAllCells" << std::endl;
       std::cin >> showGraphics;
 
@@ -237,14 +227,17 @@ void viewWhatsInFile( std::string vtkFilename, const float shrinkFactor )
          }
          else 
          {
+            // let the user pick the active scalar
+            activateScalar( dataset ); 
+
             // if multiple point data scalar arrays are present,
             // allow user to change active scalar
-            do
+            //do
             {
                viewCells( dataset, shrinkFactor );
-               activateScalar( dataset ); 
+               //activateScalar( dataset ); 
             }
-            while ( 1 );
+            //while ( 1 );
          }
       }
    }
@@ -363,7 +356,6 @@ vtkActor * getActorFromDataSet( vtkDataSet * dataset )
    return actor;
 }
 
-
 vtkActor * getActorFromFile( std::string vtkFilename )
 {
    //std::cout << "getActorFromFile" << std::endl;
@@ -373,7 +365,7 @@ vtkActor * getActorFromFile( std::string vtkFilename )
    //std::cout << "vtkFilename = \"" << vtkFilename << "\"" << std::endl;
    //std::cout << "extension = \"" << extension << "\"" << std::endl;
 
-   if ( !extension.compare("bmp") || !extension.compare("BMP") )//!strcmp(extension,"bmp") || !strcmp(extension,"BMP") )
+   if ( !extension.compare("bmp") || !extension.compare("BMP") )
    {
       /*
       delete [] extension;
@@ -383,7 +375,7 @@ vtkActor * getActorFromFile( std::string vtkFilename )
       std::cout<<"Bmp's not supported by cfdImage!!!"<<std::endl;
 
    }
-   else if ( !extension.compare("stl") || !extension.compare("STL") )//( !strcmp(extension,"stl") || !strcmp(extension,"STL") )
+   else if ( !extension.compare("stl") || !extension.compare("STL") )
    {
       vtkSTLReader * reader = vtkSTLReader::New();
       //reader->DebugOn();
@@ -391,24 +383,19 @@ vtkActor * getActorFromFile( std::string vtkFilename )
       reader->Update();
       actor = getActorFromDataSet( reader->GetOutput() );
       reader->Delete();
-      extension.erase();//delete [] extension;
+      extension.erase();
       return actor;
    }
    else
-      extension.erase();//delete [] extension;
+      extension.erase();
    ///This will need to be changed to handle both vtkDataset and vtkMultigroupDataSet
    vtkDataSet* dataset = dynamic_cast<vtkDataSet*>(readVtkThing( vtkFilename, 1 ));
    if ( dataset->GetDataObjectType() == VTK_UNSTRUCTURED_GRID )
    {
       std::cout << "IsFileUnstructuredGrid" << std::endl;
 
-      // let the user pick the active scalar
-      activateScalar( dataset ); 
-
-      //showGraphics: 0=noShowCells, 1=showExteriorCells, 2=showAllCells
       int showGraphics;
       std::cout << "\nPick an option for displaying cells..." << std::endl;
-      //std::cout << "Answer  (0) noDrawCells   (1) drawExteriorFacesOnly (for faster interaction)   (2) drawAllCells" << std::endl;
       std::cout << "Answer  (1) drawExteriorFacesOnly (for faster interaction)   (2) drawAllCells" << std::endl;
       std::cin >> showGraphics;
 
@@ -422,6 +409,9 @@ vtkActor * getActorFromFile( std::string vtkFilename )
          }
          else 
          {
+            // let the user pick the active scalar
+            activateScalar( dataset ); 
+
             // if multiple point data scalar arrays are present,
             // allow user to change active scalar
             //do

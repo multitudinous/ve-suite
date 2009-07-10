@@ -57,14 +57,12 @@
 #include <vtkCamera.h>
 #include <vtkProperty.h>
 #include <vtkCellArray.h>
-#include <vtkScalarsToColors.h>
 #include <vtkLookupTable.h>
 
 using namespace ves::xplorer::util;
 
 vtkUnstructuredGrid* ves::xplorer::util::extractExteriorCellsOnly( vtkUnstructuredGrid *output )
 {
-    // Loop over the cells and remove interior cells...
     int pt, npts, ptId;
     vtkIdList *pts = vtkIdList::New();
     vtkPoints *extCellPoints = vtkPoints::New();
@@ -75,9 +73,10 @@ vtkUnstructuredGrid* ves::xplorer::util::extractExteriorCellsOnly( vtkUnstructur
     //    exteriorCells->DebugOn();
 
     int numCells = output->GetNumberOfCells();
-    //std::cout << "     The number of cells is " << numCells << std::endl;
+    std::cout << "     At start of extractExteriorCellsOnly, the number of cells is " << numCells << std::endl;
     exteriorCells->Allocate( numCells, numCells );
 
+    // Loop over the cells and remove interior cells...
     for( int cellId = 0; cellId < numCells; cellId++ )
     {
         int thisIsExteriorCell = 0;
@@ -99,7 +98,7 @@ vtkUnstructuredGrid* ves::xplorer::util::extractExteriorCellsOnly( vtkUnstructur
 
         if( thisIsExteriorCell )
         {
-//            std::cout << "ext cell found" << std::endl;
+            //std::cout << "ext cell found" << std::endl;
             npts = cell->GetNumberOfPoints();
             pts->Reset();
             for( int i = 0; i < npts; i++ )
@@ -118,6 +117,9 @@ vtkUnstructuredGrid* ves::xplorer::util::extractExteriorCellsOnly( vtkUnstructur
     exteriorCells->SetPoints( extCellPoints );
     //exteriorCells->Squeeze();    // Reclaim any extra memory used to store data. vtk says: THIS METHOD IS NOT THREAD SAFE
 //    exteriorCells->Print( std::cout );
+
+    //numCells = exteriorCells->GetNumberOfCells();
+    //std::cout << "     After removing interior cells, the number of cells is " << numCells << std::endl;
 
     pts->Delete();
     extCellPoints->Delete();
@@ -494,18 +496,16 @@ void ves::xplorer::util::AddToRenderer( vtkDataSet *dataset, vtkRenderer* ren1, 
 //    You can turn off display lists by turning on ImmediateModeRendering.
     map->ImmediateModeRenderingOn();
 
-    std::cout << "Using shrinkFactor = " << shrinkFactor << std::endl;
+    //std::cout << "Using shrinkFactor = " << shrinkFactor << std::endl;
 
     vtkShrinkFilter *shrink = NULL;
-    if( shrinkFactor > 0.0 && shrinkFactor < 1.0 )
+    if( shrinkFactor < 1.0 )
     {
-        //std::cout << "Using shrinkFactor = " << shrinkFactor << std::endl;
         shrink = vtkShrinkFilter::New();
         shrink->SetInput( dataset );
         shrink->SetShrinkFactor( shrinkFactor );
-        shrink->GetOutput()->ReleaseDataFlagOn();
-
-        map->SetInput( shrink->GetOutput() );    //don't use this with stock version of vtk3.2: has code error!
+        //shrink->GetOutput()->ReleaseDataFlagOn();
+        map->SetInput( shrink->GetOutput() );
     }
     else
         map->SetInput( dataset );
