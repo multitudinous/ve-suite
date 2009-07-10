@@ -432,14 +432,15 @@ if GetPlatform() == 'win32':
 
     tempEnv[ 'MSVS_USE_MFC_DIRS' ] = "1"
     tempEnv[ 'WINDOWS_INSERT_MANIFEST' ] = 'True'
+    #tempEnv['ENV'][ 'SCONS_MSCOMMON_DEBUG' ] = "test.log"
     print "Using MSVS version %s and for CPU architecture %s." %(tempEnv[ 'MSVS_VERSION' ],tempEnv[ 'MSVS_ARCH' ])
 
 ## Create Environment builder from scons addons
-## At this point the scons tool is initialize (e.g msvc, g++,...)
+## At this point the scons tool is initialized (e.g msvc, g++,...)
 base_bldr = EnvironmentBuilder()
 ## Add debug options in for vesuite from SConsAddons
 base_bldr.addOptions( opts )
-
+base_bldr.setCpuArch()
 baseEnv = base_bldr.buildEnvironment(None,None,**tempEnv)
 baseEnv.Decider('MD5-timestamp')
 
@@ -451,14 +452,14 @@ baseEnv.Help(help_text)
 
 if not SConsAddons.Util.hasHelpFlag():
    # setup initial windows build environment before the options are processed
-   # it will be setup again below for the environment that the user sees
    if GetPlatform() == 'win32':
-      #baseEnv[ 'MSVS_VERSION' ] = "8.0"
-      #baseEnv[ 'MSVS_ARCH' ] = "x86"
       print "Visual Studio Versions Available %s" %baseEnv[ 'MSVS' ]['VERSIONS']
-      #baseEnv[ 'MSVS_USE_MFC_DIRS' ] = 1
-      #baseEnv.Tool('msvc')
-      #baseEnv.AppendUnique( CXXFLAGS = ['/EHsc'] )
+      # This flag is needed because some packages still use win32 even on win64 systems
+      baseEnv.AppendUnique( CPPDEFINES = ['WIN32'] )
+      if baseEnv[ 'MSVS_ARCH' ] == "x86":
+        baseEnv.AppendUnique( ARFLAGS = ['/MACHINE:X86'], LINKFLAGS = ['/MACHINE:X86'] )
+      else:
+        baseEnv.AppendUnique( ARFLAGS = ['/MACHINE:X64'], LINKFLAGS = ['/MACHINE:X64'] )
 
    # now lets process everything
    opts.Process(baseEnv)                   # Update the options
@@ -520,10 +521,6 @@ if not SConsAddons.Util.hasHelpFlag():
       baseEnv.AppendUnique( CPPDEFINES = ['WIN32_LEAN_AND_MEAN'] )
       # for more information on WIN32_LEAN_AND_MEAN see:
       # http://support.microsoft.com/kb/166474
-      if baseEnv[ 'MSVS_ARCH' ] == "x86":
-         baseEnv.AppendUnique( ARFLAGS = ['/MACHINE:X86'], LINKFLAGS = ['/MACHINE:X86'] )
-      else:
-         baseEnv.AppendUnique( ARFLAGS = ['/MACHINE:X64'], LINKFLAGS = ['/MACHINE:X64'] )
 
       # As noted below WINVER will be defined as 0x0502
       # http://msdn.microsoft.com/en-us/library/aa383745(VS.85).aspx
