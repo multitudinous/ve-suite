@@ -61,9 +61,6 @@ ves_version_str = '%i.%i.%i'%VE_SUITE_VERSION
 
 ves_defines = '-D_TAO -D_OSG -DVTK44 -DLOKI_OBJECT_LEVEL_THREADING'
 
-if baseEnv[ 'Patented' ] == 'yes':
-    ves_defines += ' -DVE_PATENTED'
-
 # Build up substitution map
 submap = {
    '@provides@'                  : provides,
