@@ -8,6 +8,6 @@ Description: POCO debug pre-compiled for VES
 Provides: POCO
 Requires: 
 Version: 1.3.4
-Libs: /libpath:"${libdir}" PocoData.lib PocoFoundation.lib PocoMySQL.lib PocoODBC.lib
+Libs: /libpath:"${libdir}" PocoData.lib PocoFoundation.lib PocoMySQL.lib PocoODBC.lib PocoSQLite.lib
 Cflags: /I"${includedir}"
 Arch: noarch

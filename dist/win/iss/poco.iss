@@ -48,6 +48,7 @@ Source: {#POCOHOME}\Foundation\include\*.h; DestDir: {app}\include; Flags: ignor
 Source: {#POCOHOME}\Data\include\*.h; DestDir: {app}\include; Flags: ignoreversion recursesubdirs
 Source: {#POCOHOME}\Data\MySQL\include\*.h; DestDir: {app}\include; Flags: ignoreversion recursesubdirs
 Source: {#POCOHOME}\Data\ODBC\include\*.h; DestDir: {app}\include; Flags: ignoreversion recursesubdirs
+Source: {#POCOHOME}\Data\SQLite\include\*.h; DestDir: {app}\include; Flags: ignoreversion recursesubdirs
 
 ; libs
 Source: {#POCOHOME}\lib\*.lib; DestDir: {app}\lib; Flags: ignoreversion
