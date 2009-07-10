@@ -497,7 +497,6 @@ if not SConsAddons.Util.hasHelpFlag():
    if GetArch() == 'x64':
       baseEnv.AppendUnique( CPPDEFINES = ['USE_ADDR64=1'] )
 
-
    baseEnv.AppendUnique( CPPPATH = [pj(RootDir,'src'),pj(RootDir,buildDir,'src')] )
    baseEnv.AppendUnique( CPPDEFINES = ['_OSG','VTK44'] )
 
@@ -508,28 +507,12 @@ if not SConsAddons.Util.hasHelpFlag():
       #baseEnv['LDMODULEFLAGS'] = '$LDMODULEFLAGS -bundle -flat_namespace -undefined suppress'
 
    if GetPlatform() == 'win32':
-      #baseEnv[ 'MSVS']['VERSION' ] = 8.0
-      #baseEnv[ 'MSVS_VERSION' ] = "8.0"
-      #baseEnv[ 'MSVS_ARCH' ] = "x86"
-      #print baseEnv[ 'MSVS_ARCH' ]
-      print "Visual Studio Versions Available %s" %baseEnv[ 'MSVS' ]['VERSIONS']
-      #baseEnv[ 'MSVS_USE_MFC_DIRS' ] = 1
-      #baseEnv.Tool('msvc')
-      #ms = Tool('msvc')
-      #ms( baseEnv )
-      #baseEnv.AppendUnique( CXXFLAGS = ['/wd4005'] /EHsc )
-      baseEnv.AppendUnique( CPPDEFINES = ['WIN32_LEAN_AND_MEAN'] )
       # for more information on WIN32_LEAN_AND_MEAN see:
       # http://support.microsoft.com/kb/166474
-
+      baseEnv.AppendUnique( CPPDEFINES = ['WIN32_LEAN_AND_MEAN'] )
       # As noted below WINVER will be defined as 0x0502
       # http://msdn.microsoft.com/en-us/library/aa383745(VS.85).aspx
       baseEnv.AppendUnique( CPPDEFINES = ['WINVER=0x0502','_WIN32_WINNT=0x0502'] )
-      #if baseEnv['default_debug_level'] != EnvironmentBuilder.NONE:
-      #    baseEnv['PDB'] = 1
-      #baseEnv.AppendUnique( CPPPATH = os.environ['INCLUDE'].split(os.pathsep) )
-      #baseEnv.AppendUnique( LIBPATH = os.environ['LIB'].split(os.pathsep) ) 
-      #baseEnv.AppendUnique( LIBPATH = os.environ['LIBPATH'].split(os.pathsep) ) 
 
    baseEnv = base_bldr.applyToEnvironment( baseEnv.Clone() )
 
