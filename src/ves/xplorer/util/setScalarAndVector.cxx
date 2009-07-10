@@ -35,6 +35,7 @@
 
 #include <vtkDataSet.h>
 #include <vtkPointData.h>
+#include <vtkDataArray.h>
 
 using namespace ves::xplorer::util;
 
