@@ -38,15 +38,8 @@
 #include <vtkFLUENTReader.h>
 #include <vtkUnstructuredGrid.h>
 #include <vtkPointData.h>
-
 #include <vtkMultiBlockDataSet.h>
-
-#ifdef VTK_POST_FEB20
 #include <vtkCompositeDataIterator.h>
-#else
-#include <vtkMultiGroupDataIterator.h>
-#endif
-
 #include <vtkCellData.h>
 #include <vtkDoubleArray.h>
 
@@ -55,25 +48,23 @@
 
 using namespace ves::builder::DataLoader;
 using namespace ves::builder::cfdTranslatorToVTK;
-////////////////////////////////////////
-//Constructors                        //
-////////////////////////////////////////
+
 FluentTranslator::FluentTranslator()
 {
 
     SetTranslateCallback( &fluentToVTK );
     SetPreTranslateCallback( &cmdParser );
 }
-/////////////////////////////////////////
+
 FluentTranslator::~FluentTranslator()
 {}
-//////////////////////////////////////////////////////////////////////////
+
 void FluentTranslator::FluentPreTranslateCbk::Preprocess( int argc, char** argv,
                                                           cfdTranslatorToVTK* toVTK )
 {
     PreTranslateCallback::Preprocess( argc, argv, toVTK );
 }
-////////////////////////////////////////////////////////////////////////////////
+
 void FluentTranslator::FluentTranslateCbk::Translate( vtkDataObject*& outputDataset,
                                                       cfdTranslatorToVTK* toVTK,
                                                       vtkAlgorithm*& dataReader )
@@ -111,21 +102,13 @@ void FluentTranslator::FluentTranslateCbk::Translate( vtkDataObject*& outputData
     outputDataset->Update();
     reader->Delete();
 
-#ifdef VTK_POST_FEB20
     //vtkCompositeDataSet* mgd = outputDataset;
     vtkCompositeDataIterator* mgdIterator = vtkCompositeDataIterator::New();
     mgdIterator->SetDataSet( vtkCompositeDataSet::SafeDownCast( outputDataset ) );
     ///For traversal of nested multigroupdatasets
     mgdIterator->VisitOnlyLeavesOn();
     mgdIterator->GoToFirstItem();
-#else
-    //vtkMultiGroupDataSet* mgd = outputDataset;
-    vtkMultiGroupDataIterator* mgdIterator = vtkMultiGroupDataIterator::New();
-    mgdIterator->SetDataSet( vtkMultiGroupDataSet::SafeDownCast( outputDataset ) );
-    ///For traversal of nested multigroupdatasets
-    mgdIterator->VisitOnlyLeavesOn();
-    mgdIterator->GoToFirstItem();
-#endif            
+           
     while( !mgdIterator->IsDoneWithTraversal() )
     {
         vtkDataSet* currentDataset = 
@@ -144,14 +127,14 @@ void FluentTranslator::FluentTranslateCbk::Translate( vtkDataObject*& outputData
     std::cout << " write " << writer->Write() << std::endl;
     writer->Delete();*/
 }
-////////////////////////////////////////////////////////////////////////////////
+
 void FluentTranslator::DisplayHelp( void )
 {
     std::cout << "|\tFluent Translator Usage:" << std::endl
         << "\t -singleFile <filename_to_load> -o <output_dir> "
         << "-outFileName <output_filename> -loader cas -w file" << std::endl;
 }
-////////////////////////////////////////////////////////////////////////////////
+
 void FluentTranslator::FluentTranslateCbk::CreateVectorFromScalar( vtkDataSet* dataSet )
 {
     vtkCellData* cData = dataSet->GetCellData();

@@ -39,7 +39,7 @@
 #include <vtkPoints.h>
 #include <vtkRectilinearGrid.h>
 #include <vtkStructuredGrid.h>   // s-grids allow blanking - rect grids don't
-#include <vtkFloatArray.h>  // this code requires VTK4
+#include <vtkFloatArray.h>
 #include <vtkPointData.h>
 
 #include <ves/xplorer/util/fileIO.h>

@@ -43,14 +43,7 @@
 
 #include <ves/xplorer/scenegraph/vtkActorToOSG.h>
 #include <ves/xplorer/util/readWriteVtkThings.h>
-#ifdef VTK44
-#define VTK4
-typedef double vtkReal;
-#else
-typedef float vtkReal;
-#endif
 
-#ifdef VTK4
 #include <vtkDataSet.h>
 #include <vtkPolyData.h>
 #include <vtkProperty.h>
@@ -58,7 +51,6 @@ typedef float vtkReal;
 #include <vtkCellData.h>
 #include <vtkMapper.h>
 #include <vtkPolyDataMapper.h>
-#endif
 
 #include <osg/Vec3>
 #include <osg/LineWidth>
@@ -68,7 +60,6 @@ using namespace ves::xplorer::scenegraph;
 
 osg::Geode* ves::xplorer::scenegraph::vtkActorToOSG( vtkActor *actor, osg::Geode* geode, int verbose )
 {
-
     // make actor current
     actor->GetMapper()->Update();
 
@@ -164,11 +155,7 @@ osg::Geometry* ves::xplorer::scenegraph::processPrimitive( vtkActor *actor, vtkC
     // check to see if there are normals
     int normalPerVertex = 0;
     int normalPerCell = 0;
-#ifdef VTK4
     vtkDataArray* normals = polyData->GetPointData()->GetNormals();
-#else
-    vtkNormals* normals = polyData->GetPointData()->GetNormals();
-#endif
     if( actor->GetProperty()->GetInterpolation() == VTK_FLAT )
         normals = NULL;
     if( normals != NULL )
@@ -185,12 +172,8 @@ osg::Geometry* ves::xplorer::scenegraph::processPrimitive( vtkActor *actor, vtkC
     // check to see if there is color information
     int colorPerVertex = 0;
     int colorPerCell = 0;
-#ifdef VTK4
-    vtkReal opacity = actor->GetProperty()->GetOpacity();
+    double opacity = actor->GetProperty()->GetOpacity();
     vtkUnsignedCharArray *colorArray = actor->GetMapper()->MapScalars( opacity );
-#else
-    vtkScalars *colorArray = actor->GetMapper()->GetColors();
-#endif
     if( actor->GetMapper()->GetScalarVisibility() && colorArray != NULL )
     {
         int scalarMode = actor->GetMapper()->GetScalarMode();
@@ -204,11 +187,7 @@ osg::Geometry* ves::xplorer::scenegraph::processPrimitive( vtkActor *actor, vtkC
     osg::ref_ptr< osg::Vec4Array > colors = new osg::Vec4Array;
 
     // check to see if there are texture coordinates
-#ifdef VTK4
     vtkDataArray* texCoords = polyData->GetPointData()->GetTCoords();
-#else
-    vtkTCoords* texCoords = polyData->GetPointData()->GetTCoords();
-#endif
     osg::ref_ptr< osg::Vec2Array > tcoords = new osg::Vec2Array;
 
     // copy data from vtk prim array to osg Geometry
@@ -222,11 +201,7 @@ osg::Geometry* ves::xplorer::scenegraph::processPrimitive( vtkActor *actor, vtkC
         totpts += npts;
         if( colorPerCell )
         {
-#ifdef VTK4
             unsigned char *aColor = colorArray->GetPointer( 4 * prim );
-#else
-            unsigned char *aColor = colorArray->GetColor( prim );
-#endif
             colors->push_back( osg::Vec4( aColor[0] / 255.0f, aColor[1] / 255.0f,
                                           aColor[2] / 255.0f, aColor[3] / 255.0f ) );
             if( aColor[3] / 255.0f < 1 )
@@ -235,27 +210,23 @@ osg::Geometry* ves::xplorer::scenegraph::processPrimitive( vtkActor *actor, vtkC
 
         if( normalPerCell )
         {
-            vtkReal* aNormal = normals->GetTuple( prim );
+            double* aNormal = normals->GetTuple( prim );
             norms->push_back( osg::Vec3( aNormal[0], aNormal[1], aNormal[2] ) );
         }
 
         // go through points in cell (verts)
         for( i = 0; i < npts; i++ )
         {
-            vtkReal* aVertex = polyData->GetPoint( pts[i] );
+            double* aVertex = polyData->GetPoint( pts[i] );
             vertices->push_back( osg::Vec3( aVertex[0], aVertex[1], aVertex[2] ) );
             if( normalPerVertex )
             {
-                vtkReal* aNormal = normals->GetTuple( pts[i] );
+                double* aNormal = normals->GetTuple( pts[i] );
                 norms->push_back( osg::Vec3( aNormal[0], aNormal[1], aNormal[2] ) );
             }
             if( colorPerVertex )
             {
-#ifdef VTK4
                 unsigned char *aColor = colorArray->GetPointer( 4 * pts[i] );
-#else
-                unsigned char *aColor = colorArray->GetColor( pts[i] );
-#endif
                 colors->push_back( osg::Vec4( aColor[0] / 255.0f, aColor[1] / 255.0f,
                                               aColor[2] / 255.0f, aColor[3] / 255.0f ) );
                 if( aColor[3] / 255.0f < 1 )
@@ -263,7 +234,7 @@ osg::Geometry* ves::xplorer::scenegraph::processPrimitive( vtkActor *actor, vtkC
             }
             if( texCoords != NULL )
             {
-                vtkReal* aTCoord = texCoords->GetTuple( pts[i] );
+                double* aTCoord = texCoords->GetTuple( pts[i] );
                 tcoords->push_back( osg::Vec2( aTCoord[0], aTCoord[1] ) );
             }
             vert++;
@@ -287,8 +258,8 @@ osg::Geometry* ves::xplorer::scenegraph::processPrimitive( vtkActor *actor, vtkC
     else
     {
         // use overall color (get from Actor)
-        vtkReal* actorColor = actor->GetProperty()->GetColor();
-        vtkReal opacity = actor->GetProperty()->GetOpacity();
+        double* actorColor = actor->GetProperty()->GetColor();
+        double opacity = actor->GetProperty()->GetOpacity();
 
         colors->push_back( osg::Vec4( actorColor[0], actorColor[1], actorColor[2], opacity ) );
         geom->setColorBinding( osg::Geometry::BIND_OVERALL );
@@ -296,7 +267,6 @@ osg::Geometry* ves::xplorer::scenegraph::processPrimitive( vtkActor *actor, vtkC
 
     if( texCoords != NULL )
         geom->setTexCoordArray( 0, tcoords.get() );
-
 
     // create a geostate for this geoset
     osg::ref_ptr< osg::StateSet > stateset = new osg::StateSet;

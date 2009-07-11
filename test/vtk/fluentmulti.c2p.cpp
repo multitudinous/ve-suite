@@ -5,13 +5,8 @@
 #include "vtkCellDataToPointData.h"
 #include "vtkContourFilter.h"
 #include "vtkDebugLeaks.h"
-
-#include "vtkMultiBlockDataSet.h"
-#ifdef VTK_POST_FEB20
+//#include "vtkMultiBlockDataSet.h"
 #include "vtkCompositeDataGeometryFilter.h"
-#else
-#include "vtkMultiGroupDataGeometryFilter.h"
-#endif
 #include "vtkLookupTable.h"
 #include "vtkOutlineCornerFilter.h"
 #include "vtkPolyData.h"
@@ -112,13 +107,8 @@ int main(int argc, char* argv[])
     // input. These blocks will be processed by simple processes as if they
     // are the whole dataset
     // geometry filter
-#ifdef VTK_POST_FEB20
     vtkCompositeDataGeometryFilter* geom2 = 
         vtkCompositeDataGeometryFilter::New();
-#else
-    vtkMultiGroupDataGeometryFilter* geom2 = 
-        vtkMultiGroupDataGeometryFilter::New();
-#endif
     geom2->SetInputConnection(0, normals->GetOutputPort(0));
 
     vtkLookupTable* lut = vtkLookupTable::New();
@@ -158,13 +148,8 @@ int main(int argc, char* argv[])
     contourFilter->SetValue( 0, 2000 );
     contourFilter->ComputeNormalsOff();
     contourFilter->Update();
-#ifdef VTK_POST_FEB20
     vtkCompositeDataGeometryFilter* geom3 = 
     vtkCompositeDataGeometryFilter::New();
-#else
-    vtkMultiGroupDataGeometryFilter* geom3 = 
-    vtkMultiGroupDataGeometryFilter::New();
-#endif
     geom3->SetInputConnection(0, contourFilter->GetOutputPort(0));
     
     vtkPolyDataMapper* mapper1 = vtkPolyDataMapper::New();

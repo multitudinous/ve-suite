@@ -46,7 +46,9 @@
 #include <vtkTransformFilter.h>
 #include <vtkCellLocator.h>
 #include <vtkFloatArray.h>
+
 using namespace ves::xplorer::util;
+
 /* the CFD grid is much more dense than the PIV grid. 
 CFD dataset used in testing ------------> CFX_bin_ss_04.vtk  numPoints = 468782   numCells = 231025
 PIV dataset used in testing -------------> PIV_All_linear_combine.vtk   numPoints = 23528    numCells = 11524
@@ -124,13 +126,8 @@ int main( int argc, char *argv[] )
       //grab absolute velocity scalar values from CFD and PIV datasets
       datasetPIV->GetPointData()->SetActiveScalars("Absolute Velocity");
        datasetCFD->GetPointData()->SetActiveScalars("Velocity_magnitude");
-#ifdef VTK_POST_FEB20
        absVelPIV = datasetPIV->GetPointData()->GetArray( "Absolute Velocity" )->GetTuple1( countPoints );
        absVelCFD = datasetCFD->GetPointData()->GetArray( "Velocity_magnitude" )->GetTuple1( countPoints );
-#else
-       absVelPIV = datasetPIV->GetPointData()->GetComponent( countPoints, 0 );
-       absVelCFD = datasetCFD->GetPointData()->GetComponent( countPoints, 0 );
-#endif
       diff = fabs( absVelPIV - absVelCFD );
       scalarDiff->SetComponent( countPoints, 0, diff );
       countPoints++;      

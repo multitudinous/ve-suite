@@ -42,11 +42,7 @@
 // VTK Includes
 #include <vtkPolyData.h>
 #include <vtkActor.h>
-#ifdef VTK_POST_FEB20
 #include <vtkCompositeDataGeometryFilter.h>
-#else
-#include <vtkMultiGroupDataGeometryFilter.h>
-#endif
 #include <vtkGeometryFilter.h>
 #include <vtkAlgorithmOutput.h>
 
@@ -76,11 +72,7 @@ cfdObjects::cfdObjects( void ):
         box_size[ i ] = 0;
     }
     
-#ifdef VTK_POST_FEB20
     m_multiGroupGeomFilter = vtkCompositeDataGeometryFilter::New();
-#else
-    m_multiGroupGeomFilter = vtkMultiGroupDataGeometryFilter::New();
-#endif
     m_geometryFilter = vtkGeometryFilter::New();
 }
 
@@ -159,27 +151,23 @@ void cfdObjects::SetBoxSize( double b[ 6 ] )
     this->center[1] = ( this->box_size[2] + this->box_size[3] ) / 2;
     this->center[2] = ( this->box_size[4] + this->box_size[5] ) / 2;
 }
-////////////////////////////////////////////////////////////////////////////////
+
 void cfdObjects::SetSourcePoints( vtkPolyData* pointSource )
 {
     this->pointSource = pointSource;
 }
-////////////////////////////////////////////////////////////////////////////////
+
 void cfdObjects::UpdateCommand()
 {
     ;
 }
-////////////////////////////////////////////////////////////////////////////////
+
 void cfdObjects::UpdateActors()
 {}
-////////////////////////////////////////////////////////////////////////////////
+
 vtkAlgorithmOutput* cfdObjects::ApplyGeometryFilterNew( vtkAlgorithmOutput* input )
 {
-#ifdef VTK_POST_FEB20
     if( this->activeDataSet->GetDataSet()->IsA( "vtkCompositeDataSet" ) )
-#else
-    if( this->activeDataSet->GetDataSet()->IsA( "vtkMultiGroupDataSet" ) )
-#endif
     {
         m_multiGroupGeomFilter->SetInputConnection( input );
         return m_multiGroupGeomFilter->GetOutputPort(0);
@@ -190,12 +178,12 @@ vtkAlgorithmOutput* cfdObjects::ApplyGeometryFilterNew( vtkAlgorithmOutput* inpu
         return m_geometryFilter->GetOutputPort();
     }
 }
-////////////////////////////////////////////////////////////////////////////////
+
 DataSet* cfdObjects::GetActiveDataSet()
 {
     return activeDataSet;
 }
-////////////////////////////////////////////////////////////////////////////////
+
 void cfdObjects::SetActiveDataSet( DataSet* dataset )
 {
     /*vprDEBUG(vesDBG, 4)

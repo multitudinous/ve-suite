@@ -45,11 +45,7 @@ class vtkPolyData;
 class vtkActor;
 class vtkGlyph3D;
 class vtkMaskPoints;
-#ifdef VTK_POST_FEB20
 class vtkCompositeDataGeometryFilter;
-#else
-class vtkMultiGroupDataGeometryFilter;
-#endif
 class vtkGeometryFilter;
 class vtkAlgorithmOutput;
 
@@ -202,11 +198,7 @@ protected:
     vtkPolyData* pointSource;///<point source for vtk polydata.
 
     ///vtkMultiGroupGeometryFilter
-#ifdef VTK_POST_FEB20
     vtkCompositeDataGeometryFilter* m_multiGroupGeomFilter;
-#else
-    vtkMultiGroupDataGeometryFilter* m_multiGroupGeomFilter;
-#endif
     ///vtkGeometryFilter
     vtkGeometryFilter* m_geometryFilter;
 

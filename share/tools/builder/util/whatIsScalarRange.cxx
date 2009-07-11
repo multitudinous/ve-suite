@@ -40,16 +40,12 @@
 #include <vtkDataObject.h>
 #include <vtkDataArray.h>
 #include <vtkPointData.h>
-
-#ifdef VTK_POST_FEB20
 #include <vtkCompositeDataSet.h>
 #include <vtkCompositeDataIterator.h>
-#else
-#include <vtkMultiGroupDataSet.h>
-#include <vtkMultiGroupDataIterator.h>
-#endif
+
 using namespace ves::xplorer::util;
 void ProcessScalarRangeInfo(vtkDataObject* dataSet);
+
 int main( int argc, char *argv[] )
 {    
    // If the command line contains an input vtk file name, then use it.
@@ -70,7 +66,6 @@ int main( int argc, char *argv[] )
    // read the data set ("1" means print info to screen)
    ///This will need to be changed to handle multiblock datasets
    vtkDataObject* dataObject = readVtkThing( inFileName, 1 );
-#ifdef VTK_POST_FEB20
    if(dataObject->IsA("vtkCompositeDataSet"))
    {
 	  try
@@ -99,37 +94,6 @@ int main( int argc, char *argv[] )
 		  std::cout<<"Invalid Dataset: "<<dataObject->GetClassName()<<std::endl;
 	  }
    }
-#else
-    if(dataObject->IsA("vtkMultiGroupDataSet"))
-    {
-        try
-        {
-            vtkMultiGroupDataSet* mgd = dynamic_cast<vtkMultiGroupDataSet*>( dataObject );
-            //unsigned int nGroups = mgd->GetNumberOfGroups();
-            unsigned int nDatasetsInGroup = 0;
-            vtkMultiGroupDataIterator* mgdIterator = vtkMultiGroupDataIterator::New();
-            mgdIterator->SetDataSet( mgd );
-            ///For traversal of nested multigroupdatasets
-            mgdIterator->VisitOnlyLeavesOn();
-            mgdIterator->GoToFirstItem();
-            while( !mgdIterator->IsDoneWithTraversal() )
-            {
-                ProcessScalarRangeInfo( mgdIterator->GetCurrentDataObject() );
-
-                mgdIterator->GoToNextItem();
-            }
-            if( mgdIterator )
-            {
-                mgdIterator->Delete();
-                mgdIterator = 0;
-            }
-        }
-        catch(...)
-        {
-            std::cout<<"Invalid Dataset: "<<dataObject->GetClassName()<<std::endl;
-        }
-    }
-#endif
    else
    {
 	   ProcessScalarRangeInfo(dataObject);
@@ -137,7 +101,7 @@ int main( int argc, char *argv[] )
    dataObject->Delete();
    return 0;
 }
-////////////////////////////////////////////////////////////////////
+
 void ProcessScalarRangeInfo(vtkDataObject* dataObject)
 {
    vtkDataSet* dataset = dynamic_cast<vtkDataSet*>(dataObject);

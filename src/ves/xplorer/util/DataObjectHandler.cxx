@@ -39,56 +39,37 @@
 #include <vtkCellData.h>
 #include <vtkPointData.h>
 #include <vtkPolyData.h>
+#include <vtkCompositeDataSet.h>
+#include <vtkCompositeDataIterator.h>
 
 #include <iostream>
 
-#ifdef VTK_POST_FEB20
-#include <vtkCompositeDataSet.h>
-#include <vtkCompositeDataIterator.h>
-#else
-#include <vtkMultiGroupDataSet.h>
-#include <vtkMultiGroupDataIterator.h>
-#endif
 using namespace ves::xplorer::util;
 
-//////////////////////////////////////
 DataObjectHandler::DataObjectHandler()
         : m_numberOfPointDataArrays( 0 ),
         m_numberOfCellDataArrays( 0 )
-
 {
     m_datasetOperator = 0;
 }
-///////////////////////////////////////
+
 DataObjectHandler::~DataObjectHandler()
 {}
-///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void DataObjectHandler::OperateOnAllDatasetsInObject( vtkDataObject* dataObject )
 {
     vtkDataSet* currentDataset = 0;
-#ifdef VTK_POST_FEB20
     if( dataObject->IsA( "vtkCompositeDataSet" ) )
-#else
-    if( dataObject->IsA( "vtkMultiGroupDataSet" ) )
-#endif
     {
         try
         {
-#ifdef VTK_POST_FEB20
             vtkCompositeDataSet* mgd = dynamic_cast<vtkCompositeDataSet*>( dataObject );
             vtkCompositeDataIterator* mgdIterator = vtkCompositeDataIterator::New();
             mgdIterator->SetDataSet( mgd );
             ///For traversal of nested multigroupdatasets
             mgdIterator->VisitOnlyLeavesOn();
             mgdIterator->GoToFirstItem();
-#else
-            vtkMultiGroupDataSet* mgd = dynamic_cast<vtkMultiGroupDataSet*>( dataObject );
-            vtkMultiGroupDataIterator* mgdIterator = vtkMultiGroupDataIterator::New();
-            mgdIterator->SetDataSet( mgd );
-            ///For traversal of nested multigroupdatasets
-            mgdIterator->VisitOnlyLeavesOn();
-            mgdIterator->GoToFirstItem();
-#endif            
+          
             while( !mgdIterator->IsDoneWithTraversal() )
             {
                 currentDataset = dynamic_cast<vtkDataSet*>( mgdIterator->GetCurrentDataObject() );
@@ -121,7 +102,7 @@ void DataObjectHandler::OperateOnAllDatasetsInObject( vtkDataObject* dataObject 
     }
 
 }
-////////////////////////////////////////////////////////////////////////
+
 void DataObjectHandler::_convertCellDataToPointData( vtkDataSet* dataSet )
 {
     if( dataSet->GetPointData()->GetNumberOfArrays() > m_numberOfPointDataArrays )
@@ -170,12 +151,12 @@ void DataObjectHandler::_convertCellDataToPointData( vtkDataSet* dataSet )
     }
     return;
 }
-///////////////////////////////////////////////////////////////////////
+
 unsigned int DataObjectHandler::GetNumberOfDataArrays( bool isPointData )
 {
     return ( isPointData ) ? m_numberOfPointDataArrays : m_numberOfCellDataArrays;
 }
-/////////////////////////////////////////////////////////////////////////////////////////////
+
 void DataObjectHandler::SetDatasetOperatorCallback( DatasetOperatorCallback* dsoCbk )
 {
     m_datasetOperator = dsoCbk;

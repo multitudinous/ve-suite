@@ -39,7 +39,7 @@
 #include <vtkPoints.h>
 #include <vtkUnstructuredGrid.h>
 #include <vtkFieldData.h>
-#include <vtkFloatArray.h>  // this code requires VTK4
+#include <vtkFloatArray.h>
 #include <vtkGenericCell.h>
 #include <vtkCellArray.h>
 #include <vtkPointData.h>

@@ -39,7 +39,7 @@
 #include <vtkRectilinearGrid.h>
 #include <vtkRectilinearGridWriter.h>
 #include <vtkPoints.h>
-#include <vtkFloatArray.h>  // this code requires VTK4
+#include <vtkFloatArray.h>
 #include <vtkPointData.h>
 #include <vtkCellType.h>
 #include <vtkIdList.h>

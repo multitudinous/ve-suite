@@ -41,12 +41,8 @@
 #include <vtkPointData.h>
 #include <vtkCellData.h>
 #include <vtkDataObject.h>
-#ifdef VTK_POST_FEB20
 #include <vtkCompositeDataSet.h>
-#include <vtkCompositeDataSet.h>
-#else
-#include <vtkMultiGroupDataSet.h>
-#endif
+
 using namespace ves::xplorer::util;
 
 int main( int argc, char *argv[] )
@@ -64,22 +60,11 @@ int main( int argc, char *argv[] )
    ///This will need to be changed to handle both vtkDataset and vtkMultigroupDataSet
    vtkDataObject * dataset = (readVtkThing( inFileName, 1 ));
    int numArrays;
-#ifdef VTK_POST_FEB20
    if ( dataset->IsA("vtkCompositeDataSet") )
    {
       vtkCompositeDataSet* mgd = dynamic_cast<vtkCompositeDataSet*> ( dataset );
-      
       numArrays = mgd->GetFieldData()->GetNumberOfArrays();
    }
-#else
-    if ( dataset->IsA("vtkMultiGroupDataSet") )
-    {
-        vtkMultiGroupDataSet* mgd = dynamic_cast<vtkMultiGroupDataSet*> ( dataset );
-        
-        numArrays = dynamic_cast<vtkDataSet*>(mgd->GetDataSet(0,0))
-        ->GetCellData()->GetNumberOfArrays();
-    }
-#endif    
    else
    {
       vtkDataSet* ds = dynamic_cast<vtkDataSet*> ( dataset );

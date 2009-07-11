@@ -54,15 +54,8 @@
 #include <Performer/pfutil.h>
 #include <vtkActor.h>
 #include <vtkPolyDataMapper.h>
-
-// VTK44 is a subset of VTK4, so turn VTK4 flag on if not already
-#ifdef VTK44
-#define VTK4
-#endif //VTK44
-
-#ifdef VTK4
 #include <vtkCellArray.h>
-#endif
+
 #include <cstdio>
 #include <cstdlib>
 #include <string>

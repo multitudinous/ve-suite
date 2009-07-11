@@ -35,7 +35,7 @@
 #include <iostream>
 
 #include <vtkPointData.h>
-#include <vtkFloatArray.h> // this code requires VTK4
+#include <vtkFloatArray.h>
 
 using namespace ves::builder::DataLoader;
 

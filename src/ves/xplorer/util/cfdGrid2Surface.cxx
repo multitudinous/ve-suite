@@ -42,34 +42,20 @@
 #include <vtkTriangleFilter.h>
 #include <vtkDecimatePro.h>
 #include <vtkSmoothPolyDataFilter.h>
-
-#ifdef VTK_POST_FEB20
 #include <vtkCompositeDataGeometryFilter.h>
-#else
-#include <vtkMultiGroupDataGeometryFilter.h>
-#endif
 #include <vtkAlgorithmOutput.h>
 
-
 using namespace ves::xplorer::util;
-//////////////////////////////////////////////////////////////////////////////////////////
+
 vtkPolyData* ves::xplorer::util::cfdGrid2Surface( vtkDataObject *dataSet, float deciVal )
 {
     vtkPolyDataAlgorithm* geometryFilter = 0; 
 
-#ifdef VTK_POST_FEB20
     if( dataSet->IsA( "vtkCompositeDataSet" ) )
     {
         // we have to use a compsite pipeline
         geometryFilter = vtkCompositeDataGeometryFilter::New();
     }
-#else
-    if( dataSet->IsA( "vtkMultiGroupDataSet" ) )
-    {
-        // we have to use a compsite pipeline
-        geometryFilter = vtkMultiGroupDataGeometryFilter::New();
-    }
-#endif
     else
     {
         geometryFilter = vtkGeometryFilter::New();
@@ -84,7 +70,6 @@ vtkPolyData* ves::xplorer::util::cfdGrid2Surface( vtkDataObject *dataSet, float 
     // Note that if merging is on, points with different point attributes
     // (e.g., normals) are merged, which may cause rendering artifacts.
     //cFilter->MergingOff();
-
 
     // generate triangles from input polygons
     vtkTriangleFilter *tFilter = vtkTriangleFilter::New();
