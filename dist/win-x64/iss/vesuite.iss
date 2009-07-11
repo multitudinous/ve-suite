@@ -10,16 +10,16 @@
 
 [Setup]
 AppName={#MyAppName}
-AppVerName={#MyAppName}_{#VEVERSION}_{#MSVCVERSION}
+AppVerName={#MyAppName}_{#VEVERSION}.{#SVNVERSION}_{#MSVCVERSION}
 AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
-DefaultDirName=C:\{#MyAppName}_{#VEVERSION}_{#MSVCVERSION}
+DefaultDirName=C:\{#MyAppName}_{#VEVERSION}.{#SVNVERSION}_{#MSVCVERSION}
 DefaultGroupName={#VESGROUPNAME}
 AllowNoIcons=true
 OutputDir={#INSTALLERINSTALLLOCATION}
-OutputBaseFilename={#MyAppName}_{#VEVERSION}_{#MSVCVERSION}
+OutputBaseFilename={#MyAppName}_{#VEVERSION}.{#SVNVERSION}_{#MSVCVERSION}
 Compression=lzma
 SolidCompression=true
 ChangesEnvironment=true
@@ -38,6 +38,9 @@ BackColor2=$1b84f7
 SetupIconFile={#VEDEVHOME}\dist\installerImages\Ve_icon.ico
 PrivilegesRequired=none
 UsePreviousGroup=false
+VersionInfoCompany=SMDS Program
+VersionInfoDescription=VE-Suite Installer
+UserInfoPage=false
 
 [Types]
 Name: full; Description: Full installation

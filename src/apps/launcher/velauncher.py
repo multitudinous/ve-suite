@@ -440,22 +440,22 @@ class LauncherWindow(wx.Frame):
     def BuilderChange(self, event = None):
         """Asks the user to choose a new Builder folder."""
         ##Ask for the builder directory.
-        startBuilderDir = self.state.GetBase("BuilderDir")
-        if startBuilderDir == None:
-            startBuilderDir = VELAUNCHER_DIR
-        dlg = wx.DirDialog(None,
-                           "Choose the VE-Builder directory:",
-                           startBuilderDir,
-                           style=wx.DD_DEFAULT_STYLE)
-        choice = dlg.ShowModal()
-        builderDir = dlg.GetPath()
-        dlg.Destroy()
-        if choice == wx.ID_OK:
-            ##If a directory's chosen, change it and return True.
-            self.state.Edit("BuilderDir", builderDir)
-            return True
-        else: ##If not, return False.
-            return False        
+        #startBuilderDir = self.state.GetBase("BuilderDir")
+        #if startBuilderDir == None:
+        #    startBuilderDir = VELAUNCHER_DIR
+        #dlg = wx.DirDialog(None,
+        #                   "Choose the VE-Builder directory:",
+        #                   startBuilderDir,
+        #                   style=wx.DD_DEFAULT_STYLE)
+        #choice = dlg.ShowModal()
+        #builderDir = dlg.GetPath()
+        #dlg.Destroy()
+        #if choice == wx.ID_OK:
+        #    ##If a directory's chosen, change it and return True.
+        #    self.state.Edit("BuilderDir", builderDir)
+        #    return True
+        #else: ##If not, return False.
+        #    return False        
 
     def ResetVESuite(self, event = None):
         ##Killall process in master cluster
@@ -939,36 +939,36 @@ class LauncherWindow(wx.Frame):
             return
         ##Set the builderDir, if necessary.
         passedBuilderDir = None
-##        if v("Shell") and v("BuilderShell") == None:
-        if v("Shell") and v("BuilderDir") == None and self.state.IsEnabled("BuilderDir"):
-            dlg = wx.MessageDialog(self,
-                                    "Do you want to use this shell\n" +
-                                    "to run VE-Builder?",
-                                    "Create a VE-Builder Shell?",
-                                    wx.YES_NO)
-            choice = dlg.ShowModal()
-            dlg.Destroy()
-            if choice == wx.ID_YES:
-                while v("BuilderDir") == None:
-                    ##Force the user to choose a Builder directory if he
-                    ##hasn't chosen one yet.
-                    dirChosen = self.BuilderChange()
-                    if dirChosen:
-                        pass
-                    else:
-                        dlg = wx.MessageDialog(self,
-                                               "You didn't choose a\n" +
-                                               "directory for the Builder.\n" +
-                                               "Please choose one.",
-                                               "Error: No Directory Chosen",
-                                                wx.OK)
-                        dlg.ShowModal()
-                        dlg.Destroy()
-            elif choice == wx.ID_NO:
-                ##Hide the BuilderDir
-                self.state.React(True, "BuilderDir", None)
-            else:
-                return
+        ##if v("Shell") and v("BuilderShell") == None:
+        #if v("Shell") and v("BuilderDir") == None and self.state.IsEnabled("BuilderDir"):
+            #dlg = wx.MessageDialog(self,
+            #                        "Do you want to use this shell\n" +
+            #                        "to run VE-Builder?",
+            #                        "Create a VE-Builder Shell?",
+            #                        wx.YES_NO)
+            #choice = dlg.ShowModal()
+            #dlg.Destroy()
+            #if choice == wx.ID_YES:
+            #    while v("BuilderDir") == None:
+            #        ##Force the user to choose a Builder directory if he
+            #        ##hasn't chosen one yet.
+            #        dirChosen = self.BuilderChange()
+            #        if dirChosen:
+            #            pass
+            #        else:
+            #            dlg = wx.MessageDialog(self,
+            #                                   "You didn't choose a\n" +
+            #                                   "directory for the Builder.\n" +
+            #                                   "Please choose one.",
+            #                                   "Error: No Directory Chosen",
+            #                                    wx.OK)
+            #            dlg.ShowModal()
+            #            dlg.Destroy()
+            #elif choice == wx.ID_NO:
+            #    ##Hide the BuilderDir
+            #    self.state.React(True, "BuilderDir", None)
+            #else:
+            #    return
         ##If the DependenciesDir is generic, change it to system-specific.
         alternateDep = velDependencies.GetSpecific(v("DependenciesDir"))
         self.state.React(alternateDep, "DependenciesDir", alternateDep)

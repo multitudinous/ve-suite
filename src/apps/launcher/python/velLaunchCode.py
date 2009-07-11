@@ -45,6 +45,8 @@ from velDepsArray import *
 import string
 import subprocess
 
+import _winreg
+
 from os import name ##Used for getting system values
 pj = os.path.join
 
@@ -797,17 +799,35 @@ class Launch:
 
         ##Update OSG_FILE_PATH & PATH (and the Library Path for Unix)
         if windows:
+            vesLibPath = os.path.join(VELAUNCHER_DIR, '..', 'lib')
+            if not os.path.exists( vesLibPath ):
+                vesLibPath = os.path.join(VELAUNCHER_DIR, '..', 'lib64')
+
             pathList = [os.path.join(os.path.join(VELAUNCHER_DIR,"bin")),
                         os.path.join(VELAUNCHER_DIR),
                         os.path.join(os.path.join(VELAUNCHER_DIR,"lib")),
-                        os.path.join(VELAUNCHER_DIR, '..', "lib"),
+                        vesLibPath,
                         os.path.join(str(os.getenv("VE_DEPS_DIR")), "share"),
                         os.path.join(str(os.getenv("VE_DEPS_DIR")), "bin"),
                         os.path.join(str(os.getenv("VJ_BASE_DIR")), "lib")]
 
-            if self.settings["BuilderDir"] != None:
-                pathList.append(os.path.join(str(self.settings["BuilderDir"]), "bin"))
+            #if self.settings["BuilderDir"] != None:
+            #    pathList.append(os.path.join(str(self.settings["BuilderDir"]), "bin"))
             ##TEST to append 64-bit libraries:
+            
+            #value = "Software\Wow6432Node"
+            #root = _winreg.HKEY_LOCAL_MACHINE
+            #p = value.rfind('\\') + 1
+            #keyp = value[:p-1]          # -1 to omit trailing slash
+            #val = value[p:]
+            #aReg = _winreg.ConnectRegistry(None,root)
+            #k = _winreg.OpenKeyEx(aReg, keyp)
+            #k = _winreg.OpenKeyEx(k, val)
+            #flag64 = _winreg.QueryInfoKey( k )
+            # need closekey calls
+            #vesArchitecture = 
+            #if flag64 gt 1:
+            
             if architecture()[0] == "64bit":
                 pathList.append(os.path.join(str(os.getenv("VJ_BASE_DIR")), "lib64"))
             ##Append the custom dependencies list.
@@ -815,6 +835,7 @@ class Launch:
                 libTag = "lib64"
             else:
                 libTag = "lib"
+
             for entry in self.settings["Dependencies"].GetNames():
                 pathList.append(os.path.join(entry, "bin"))
                 pathList.append(os.path.join(entry, libTag))
