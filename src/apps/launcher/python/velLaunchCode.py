@@ -45,7 +45,8 @@ from velDepsArray import *
 import string
 import subprocess
 
-import _winreg
+#used to work with the windows registrey
+#import _winreg
 
 from os import name ##Used for getting system values
 pj = os.path.join
