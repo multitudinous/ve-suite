@@ -2,8 +2,8 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 #define VEVERSION "1.1.7"
 #define SVNVERSION "12929"
-#define MSVCVERSION "9.0-x64"
-#define JUGGLERVERSION "2.3.18-21119"
+#define MSVCVERSION "msvc-9.0-sp1-x64"
+;#define JUGGLERVERSION "2.3.18-21119"
 ; Define the group name for all the windows links to be
 ; installed under for the Start Menu
 #define VESGROUPNAME "VE-Suite"
@@ -12,21 +12,21 @@
 ; Location where you want innosetup to build the installers
 #define INSTALLERINSTALLLOCATION "E:\dev\TSVEG\VE_Suite\dist\win-x64\iss"
 ; Install prefix of ves
-#define VEINSTALLHOME "E:\dev\TSVEG\VE_Suite\install-debug"
+#define VEINSTALLHOME "E:\dev\TSVEG\VE_Suite\install-win64"
 ; Source root location for ves
 #define VEDEVHOME "E:\dev\TSVEG\VE_Suite"
 ; Location if the Microsoft redistributable executable
 ; #define MSREDISTRIBUTABLE "C:\dev\ves_deps\vcredist_x86.exe"
 ; Directory names for all VES dependencies
-#define ACETAOHOME "ACETAO_5.6.8_Pre-Compile_vc8.0_SP1"
-#define VTKHOME "VTK_5.2.0"
-#define OSGHOME "OSG_2.8.1_Pre-Compile_vc8.0_SP1"
-#define WXHOME "WxWidgets_2.8.9_Pre-Compile_vc8.0_SP1"
-#define XERCESHOME "Xerces-c_2.8_Pre-Compile"
-#define JUGGLERINSTHOME "VRJuggler_Pre-Compile_2.3.18_SP1"
-#define APRHOME "apr_1.3_Pre-Compile"
-#define APRUTILHOME "apr_1.3_Pre-Compile"
-#define APRICONVHOME "apr_1.3_Pre-Compile"
+#define ACETAOHOME "ACETAO_5.7.0_msvc-9.0-sp1-x64"
+#define VTKHOME "VTK_5.2.1_msvc-9.0-sp1-x64"
+#define OSGHOME "OSG_2.8.1_msvc-9.0-sp1-x64"
+#define WXHOME "wxWidgets_2.8.10_msvc-9.0-sp1-x64"
+#define XERCESHOME "xerces-c_3.0.1_msvc-9.0-sp1-x64"
+#define JUGGLERINSTHOME "VRJuggler_2.3.18-21119_msvc-9.0-sp1-x64"
+#define APRHOME "apr_1.3.7_msvc-9.0-sp1-x64"
+#define APRUTILHOME "apr_1.3.7_msvc-9.0-sp1-x64"
+#define APRICONVHOME "apr_1.3.7_msvc-9.0-sp1-x64"
 #define MINERVAHOME "Minerva_5422_Pre-Compile_vc8.0_SP1"
 #define SKEWMATRIXHOME "C:\dev\ves_deps\skewmatrix"
 #define OSGALHOME "osgAL_0.6.1-74_Pre-Compile_vc8.0_SP1"

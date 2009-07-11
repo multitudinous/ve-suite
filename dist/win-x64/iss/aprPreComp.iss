@@ -3,8 +3,9 @@
 
 #include <vesenv.iss>
 #define APRVERSION "1.3.7"
+#define MyAppVer "1.3.7"
 #define MyAppName "APR Pre-Compile"
-#define MyAppVerName "apr_{#APRVERSION}  Pre-Compile_vc{#MSVCVERSION}"
+#define MyAppVerName "apr"
 #define MyAppPublisher "VERG"
 #define MyAppURL "www.vesuite.org"
 ;The directory below contains all each apr, apr-iconv, and apr-util
@@ -14,15 +15,15 @@
 
 [Setup]
 AppName={#MyAppName}
-AppVerName=apr_{#APRVERSION} Pre-Compile_vc{#MSVCVERSION}
+AppVerName={#MyAppVerName}_{#MyAppVer}_{#MSVCVERSION}
 AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
-DefaultDirName=C:\apr_{#APRVERSION}_Pre-Compile
+DefaultDirName=C:\{#MyAppVerName}_{#MyAppVer}_{#MSVCVERSION}
 DefaultGroupName={#VESGROUPNAME}\Uninstallers
 AllowNoIcons=true
-OutputBaseFilename=apr{#APRVERSION}_PreCompile_{#MSVCVERSION}
+OutputBaseFilename={#MyAppVerName}_{#MyAppVer}_{#MSVCVERSION}
 SetupIconFile={#VEDEVHOME}\dist\installerImages\Ve_icon.ico
 Compression=lzma
 SolidCompression=true
@@ -51,7 +52,7 @@ Source: {#APRINSTALL}\apr\include\*.h; DestDir: {app}\include; Flags: ignorevers
 Source: {#APRINSTALL}\apr-util\include\*.h; DestDir: {app}\include; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: {#APRINSTALL}\apr-iconv\include\*.h; DestDir: {app}\include; Flags: ignoreversion recursesubdirs createallsubdirs
 ;FPC file integration
-Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\apr-1.pc.in; DestDir: {app}\lib\flagpoll; DestName: apr-1.fpc; Languages: ; Flags: ignoreversion
-Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\apr-util-1.pc.in; DestDir: {app}\lib\flagpoll; DestName: apr-util-1.fpc; Languages: ; Flags: ignoreversion
+Source: {#VEDEVHOME}\dist\win-x64\fpc_deps_files\release\apr-1.pc.in; DestDir: {app}\lib\flagpoll; DestName: apr-1.fpc; Languages: ; Flags: ignoreversion
+Source: {#VEDEVHOME}\dist\win-x64\fpc_deps_files\release\apr-util-1.pc.in; DestDir: {app}\lib\flagpoll; DestName: apr-util-1.fpc; Languages: ; Flags: ignoreversion
 [Icons]
 Name: {group}\{cm:UninstallProgram,{#MyAppName}}; Filename: {uninstallexe}; Languages: 

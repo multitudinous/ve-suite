@@ -5,6 +5,6 @@ includedir=${prefix}\include
 
 Name: ACE
 Description: ADAPTIVE Communication Environment 
-Version: 5.5
+Version: 5.7.0
 Libs: /libpath:"${libdir}" ACE.lib  
 Cflags: /I"${includedir}"

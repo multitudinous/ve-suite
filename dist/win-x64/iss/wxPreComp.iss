@@ -3,22 +3,23 @@
 
 #include <vesenv.iss>
 #define WXVERSION "2.8.10"
+#define MyAppVer "2.8.10"
 #define MyAppName "WxWidgets Pre-Compile"
-#define MyAppVerName "WxWidgets_{#WXVERSION} Pre-Compile_vc{#MSVCVERSION}"
+#define MyAppVerName "wxWidgets"
 #define MyAppPublisher "Virtual Engineering Research Group, Iowa State University"
 #define MyAppURL "www.vesuite.org"
 #define WXSRCINSTALL "E:\dev\ves_deps\wxMSW-2.8.10"
 [Setup]
 AppName=WxWidgets Pre-Compile
-AppVerName=WxWidgets_{#WXVERSION} Pre-Compile_vc{#MSVCVERSION}
+AppVerName={#MyAppVerName}_{#MyAppVer}_{#MSVCVERSION}
 AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
-DefaultDirName=C:\WxWidgets_{#WXVERSION}_Pre-Compile_vc{#MSVCVERSION}
+DefaultDirName=C:\{#MyAppVerName}_{#MyAppVer}_{#MSVCVERSION}
 DefaultGroupName={#VESGROUPNAME}\Uninstallers
 AllowNoIcons=true
-OutputBaseFilename=wx{#WXVERSION}-precompile_{#MSVCVERSION}
+OutputBaseFilename={#MyAppVerName}_{#MyAppVer}_{#MSVCVERSION}
 SetupIconFile={#VEDEVHOME}\dist\installerImages\Ve_icon.ico
 Compression=lzma
 SolidCompression=true
@@ -44,6 +45,6 @@ Source: {#WXSRCINSTALL}\lib\vc_dll\*.lib; DestDir: {app}\lib\vc_dll\; Flags: ign
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 Source: {#WXSRCINSTALL}\lib\vc_dll\*.h; DestDir: {app}\lib\vc_dll\; Flags: ignoreversion recursesubdirs createallsubdirs
 ;FPC file integration
-Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\wxWidgets.fpc.in; DestDir: {app}\lib\vc_dll\flagpoll; DestName: wxWidgets.fpc; Languages: ; Flags: ignoreversion
+Source: {#VEDEVHOME}\dist\win-x64\fpc_deps_files\release\wxWidgets.fpc.in; DestDir: {app}\lib\vc_dll\flagpoll; DestName: wxWidgets.fpc; Languages: ; Flags: ignoreversion
 [Icons]
 Name: {group}\{cm:UninstallProgram,{#MyAppName}}; Filename: {uninstallexe}; Languages: 

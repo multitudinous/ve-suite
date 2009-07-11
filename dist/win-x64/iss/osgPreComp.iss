@@ -2,25 +2,26 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 #include <vesenv.iss>
 #define OSGVERSION "2.8.1"
+#define MyAppVer "2.8.1"
 #define MyAppName "OSG Pre-Compile"
-#define MyAppVerName "OSG_{#OSGVERSION}_Pre-Compile_vc{#MSVCVERSION}"
+#define MyAppVerName "OSG"
 #define MyAppPublisher "VERG"
 #define MyAppURL "www.vesuite.org"
 #define OSGSRCHOME "E:\dev\ves_deps\OpenSceneGraph-2.8.1\install-win64"
 ; #define SIMAGEHOME "D:\devEnv\VES-Deps_1.1\prebuiltInstalls\simage-1.6.1"
 #define COINHOME "C:\dev\ves_deps\Coind3D-2.3.0-0"
-#define OSG3RDPARTY "C:\dev\ves_deps\3rdParty\3rdParty_win32binaries_vs80sp1"
+#define OSG3RDPARTY "E:\dev\ves_deps\OSG-3rd-party-deps\install-win64"
 
 [Setup]
 AppName={#MyAppName}
-AppVerName=OSG_{#OSGVERSION} Pre-Compile_vc{#MSVCVERSION}
+AppVerName={#MyAppVerName}_{#MyAppVer}_{#MSVCVERSION}
 AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
-DefaultDirName=C:\OSG_{#OSGVERSION}_Pre-Compile_vc{#MSVCVERSION}
+DefaultDirName=C:\{#MyAppVerName}_{#MyAppVer}_{#MSVCVERSION}
 DefaultGroupName={#VESGROUPNAME}\Uninstallers
-OutputBaseFilename=osg{#OSGVERSION}-precompile_{#MSVCVERSION}
+OutputBaseFilename={#MyAppVerName}_{#MyAppVer}_{#MSVCVERSION}
 Compression=lzma
 SolidCompression=true
 OutputDir={#INSTALLERINSTALLLOCATION}
@@ -63,7 +64,7 @@ Source: {#COINHOME}\bin\*.dll; DestDir: {app}\lib; Flags: ignoreversion recurses
 Source: {#COINHOME}\lib\*.lib; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs skipifsourcedoesntexist
 Source: {#COINHOME}\include\*.h; DestDir: {app}\include; Flags: ignoreversion recursesubdirs createallsubdirs skipifsourcedoesntexist
 ;FPC file integration
-Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\OSG.fpc.in; DestDir: {app}\lib\flagpoll; DestName: OSG.fpc; Languages: ; Flags: ignoreversion
+Source: {#VEDEVHOME}\dist\win-x64\fpc_deps_files\release\OSG.fpc.in; DestDir: {app}\lib\flagpoll; DestName: OSG.fpc; Languages: ; Flags: ignoreversion
 
 [Icons]
 Name: {group}\{cm:UninstallProgram,{#MyAppName}}; Filename: {uninstallexe}; Languages: 

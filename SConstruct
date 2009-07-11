@@ -422,11 +422,15 @@ tempEnv = dict(ENV=os.environ)
 if GetPlatform() == 'win32':
     if ARGUMENTS.has_key("MSVS_VERSION"):
         tempEnv[ 'MSVS_VERSION' ] = ARGUMENTS[ 'MSVS_VERSION' ]
+    #elif opts.GetOption( "MSVS_VERSION" ) != None:
+    #    tempEnv[ 'MSVS_VERSION' ] = opts.GetOption( "MSVS_VERSION" ).getValue()
     else:
         tempEnv[ 'MSVS_VERSION' ] = "8.0"
-    
+
     if ARGUMENTS.has_key("MSVS_ARCH"):
         tempEnv[ 'MSVS_ARCH' ] = ARGUMENTS[ 'MSVS_ARCH' ]
+    #elif opts.GetOption( "MSVS_ARCH" ) != None:
+    #    tempEnv[ 'MSVS_ARCH' ] = opts.GetOption( "MSVS_ARCH" ).getValue()
     else:
         tempEnv[ 'MSVS_ARCH' ] = "x86"
 

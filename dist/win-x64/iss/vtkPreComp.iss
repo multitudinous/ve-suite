@@ -2,22 +2,23 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 #include <vesenv.iss>
 #define VTKVERSION "5.2.1"
+#define MyAppVer "5.2.1"
 #define MyAppName "VTK Pre-Compile"
-#define MyAppVerName "VTK_{#VTKVERSION}_Pre-Compile_vc{#MSVCVERSION}"
+#define MyAppVerName "VTK"
 #define MyAppPublisher "VERG"
 #define MyAppURL "www.vesuite.org"
 #define VTKSRCHOME "E:\dev\ves_deps\vtk-5.2.1\install-x64"
 [Setup]
 AppName={#MyAppName}
-AppVerName=VTK_{#VTKVERSION}_Pre-Compile_vc{#MSVCVERSION}
+AppVerName={#MyAppVerName}_{#MyAppVer}_{#MSVCVERSION}
 AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
-DefaultDirName=C:\VTK_{#VTKVERSION}_vc{#MSVCVERSION}
+DefaultDirName=C:\{#MyAppVerName}_{#MyAppVer}_{#MSVCVERSION}
 DefaultGroupName={#VESGROUPNAME}\Uninstallers
 AllowNoIcons=true
-OutputBaseFilename=vtkPreCompile_{#VTKVERSION}_vc{#MSVCVERSION}
+OutputBaseFilename={#MyAppVerName}_{#MyAppVer}_{#MSVCVERSION}
 SetupIconFile={#VEDEVHOME}\dist\installerImages\Ve_icon.ico
 Compression=lzma
 SolidCompression=true
@@ -40,7 +41,7 @@ Source: {#VTKSRCHOME}\lib\*lib; DestDir: {app}\lib; Flags: ignoreversion recurse
 Source: {#VTKSRCHOME}\bin\*.dll; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 ;FPC file integration
-Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\VTK.fpc.in; DestDir: {app}\lib\flagpoll; DestName: VTK.fpc; Languages: ; Flags: ignoreversion
+Source: {#VEDEVHOME}\dist\win-x64\fpc_deps_files\release\VTK.fpc.in; DestDir: {app}\lib\flagpoll; DestName: VTK.fpc; Languages: ; Flags: ignoreversion
 
 [Icons]
 Name: {group}\{cm:UninstallProgram,{#MyAppName}}; Filename: {uninstallexe}; Languages: 

@@ -3,22 +3,23 @@
 
 #include <vesenv.iss>
 #define XERCESVERSION "3.0.1"
+#define MyAppVer "3.0.1"
 #define MyAppName "Xerces-c Pre-Compile"
-#define MyAppVerName "Xerces-c_{#XERCESVERSION}  Pre-Compile_vc{#MSVCVERSION}"
+#define MyAppVerName "xerces-c"
 #define MyAppPublisher "VERG"
 #define MyAppURL "www.vesuite.org"
 #define XERCESSRCINSTALL "E:\dev\ves_deps\xerces-c-3.0.1-x86_64-windows-vc-9.0\xerces-c-3.0.1-x86_64-windows-vc-9.0"
 [Setup]
 AppName={#MyAppName}
-AppVerName=Xerces-c_{#XERCESVERSION} Pre-Compile_vc{#MSVCVERSION}
+AppVerName={#MyAppVerName}_{#MyAppVer}_{#MSVCVERSION}
 AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
-DefaultDirName=C:\Xerces-c_{#XERCESVERSION}_Pre-Compile_vc{#MSVCVERSION}
+DefaultDirName=C:\{#MyAppVerName}_{#MyAppVer}_{#MSVCVERSION}
 DefaultGroupName={#VESGROUPNAME}\Uninstallers
-AllowNoIcons=false
-OutputBaseFilename=xerces{#XERCESVERSION}-c_PreCompile_{#MSVCVERSION}
+AllowNoIcons=true
+OutputBaseFilename={#MyAppVerName}_{#MyAppVer}_{#MSVCVERSION}
 SetupIconFile={#VEDEVHOME}\dist\installerImages\Ve_icon.ico
 Compression=lzma
 SolidCompression=true
@@ -32,6 +33,7 @@ WizardImageStretch=false
 OutputDir={#INSTALLERINSTALLLOCATION}
 PrivilegesRequired=none
 UsePreviousGroup=false
+EnableDirDoesntExistWarning=true
 
 [Languages]
 Name: english; MessagesFile: compiler:Default.isl
@@ -48,6 +50,6 @@ Source: {#XERCESSRCINSTALL}\lib\*.lib; DestDir: {app}\lib; Flags: ignoreversion
 Source: {#XERCESSRCINSTALL}\include\*.h*; DestDir: {app}\include; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: {#XERCESSRCINSTALL}\include\*.c; DestDir: {app}\include; Flags: ignoreversion recursesubdirs createallsubdirs
 ;FPC file integration
-Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\xerces.fpc.in; DestDir: {app}\lib\flagpoll; DestName: xerces.fpc; Languages: ; Flags: ignoreversion
+Source: {#VEDEVHOME}\dist\win-x64\fpc_deps_files\release\xerces.fpc.in; DestDir: {app}\lib\flagpoll; DestName: xerces.fpc; Languages: ; Flags: ignoreversion
 [Icons]
-Name: {group}\{cm:UninstallProgram,{#MyAppName}}; Filename: {uninstallexe}; Languages: 
+Name: {group}\{cm:UninstallProgram,{#MyAppName}}; Filename: {uninstallexe}

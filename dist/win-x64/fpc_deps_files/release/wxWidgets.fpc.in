@@ -8,7 +8,7 @@ Name: wxWidgets
 Description: wxWidgets release pre-compiled for VES
 Provides: wxWidgets
 Requires:
-Version: 2.8.9
+Version: 2.8.10
 Libs: /libpath:"${libdir}" wxbase28.lib wxbase28_net.lib wxbase28_xml.lib wxexpat.lib wxjpeg.lib wxmsw28_adv.lib wxmsw28_aui.lib wxmsw28_core.lib wxmsw28_gl.lib wxmsw28_html.lib wxmsw28_media.lib wxmsw28_qa.lib wxmsw28_richtext.lib wxmsw28_xrc.lib wxpng.lib wxregex.lib wxtiff.lib wxzlib.lib opengl32.lib glu32.lib
 Cflags: /I"${prefix}/include" /I"${prefix}/lib/vc_dll/msw" /DWXUSINGDLL 
 Arch: noarch

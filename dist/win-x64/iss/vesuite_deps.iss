@@ -93,17 +93,17 @@ Source: {#DEPENDSINSTALLHOME}\{#APRICONVHOME}\lib\*.dll; DestDir: {app}\lib; Com
 ; ACE/TAO Files
 Source: {#DEPENDSINSTALLHOME}\{#ACETAOHOME}\lib\*.dll; DestDir: {app}\lib; Flags: ignoreversion; Components: acetao
 Source: {#DEPENDSINSTALLHOME}\{#ACETAOHOME}\bin\tao_idl.exe; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
-Source: {#DEPENDSINSTALLHOME}\{#ACETAOHOME}\TAO\orbsvcs\Naming_Service\Naming_Service.exe; DestDir: {app}\bin; Components: acetao
-Source: {#DEPENDSINSTALLHOME}\{#ACETAOHOME}\ace\*.h; DestDir: {app}\include\ace; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion; Components: depsbuildenv
-Source: {#DEPENDSINSTALLHOME}\{#ACETAOHOME}\tao\utils\*.h; DestDir: {app}\include\tao\utils; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion createallsubdirs; Components: depsbuildenv
+Source: {#DEPENDSINSTALLHOME}\{#ACETAOHOME}\bin\Naming_Service.exe; DestDir: {app}\bin; Components: acetao
+Source: {#DEPENDSINSTALLHOME}\{#ACETAOHOME}\include\*.h; DestDir: {app}\include; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion; Components: depsbuildenv
+;Source: {#DEPENDSINSTALLHOME}\{#ACETAOHOME}\tao\utils\*.h; DestDir: {app}\include\tao\utils; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion createallsubdirs; Components: depsbuildenv
 Source: {#DEPENDSINSTALLHOME}\{#ACETAOHOME}\lib\*.lib; DestDir: {app}\lib; Attribs: readonly; Flags: recursesubdirs overwritereadonly uninsremovereadonly ignoreversion; Components: depsbuildenv
-Source: {#DEPENDSINSTALLHOME}\{#ACETAOHOME}\ace\*.inl; DestDir: {app}\include\ace; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion; Components: depsbuildenv
-Source: {#DEPENDSINSTALLHOME}\{#ACETAOHOME}\tao\*.inl; DestDir: {app}\include\tao; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion; Components: depsbuildenv
-Source: {#DEPENDSINSTALLHOME}\{#ACETAOHOME}\ace\*.cpp; DestDir: {app}\include\ace; Attribs: readonly; Flags: overwritereadonly uninsremovereadonly ignoreversion; Components: depsbuildenv
-Source: {#DEPENDSINSTALLHOME}\{#ACETAOHOME}\tao\tao\*.cpp; DestDir: {app}\include\tao\tao; Attribs: readonly; Flags: overwritereadonly uninsremovereadonly ignoreversion; Components: depsbuildenv
-Source: {#DEPENDSINSTALLHOME}\{#ACETAOHOME}\tao\TAO_IDL\*.h; DestDir: {app}\include\TAO_IDL; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion createallsubdirs; Components: depsbuildenv
-Source: {#DEPENDSINSTALLHOME}\{#ACETAOHOME}\tao\orbsvcs\*.h; DestDir: {app}\include\orbsvcs; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion createallsubdirs; Components: depsbuildenv
-Source: {#DEPENDSINSTALLHOME}\{#ACETAOHOME}\tao\tao\*.h; DestDir: {app}\include\tao; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion createallsubdirs; Components: depsbuildenv
+Source: {#DEPENDSINSTALLHOME}\{#ACETAOHOME}\include\*.inl; DestDir: {app}\include; Attribs: readonly; Flags: recursesubdirs overwritereadonly recursesubdirs uninsremovereadonly ignoreversion; Components: depsbuildenv
+;Source: {#DEPENDSINSTALLHOME}\{#ACETAOHOME}\tao\*.inl; DestDir: {app}\include\tao; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion; Components: depsbuildenv
+Source: {#DEPENDSINSTALLHOME}\{#ACETAOHOME}\include\*.cpp; DestDir: {app}\include; Attribs: readonly; Flags: recursesubdirs overwritereadonly uninsremovereadonly ignoreversion; Components: depsbuildenv
+;Source: {#DEPENDSINSTALLHOME}\{#ACETAOHOME}\tao\tao\*.cpp; DestDir: {app}\include\tao\tao; Attribs: readonly; Flags: overwritereadonly uninsremovereadonly ignoreversion; Components: depsbuildenv
+;Source: {#DEPENDSINSTALLHOME}\{#ACETAOHOME}\tao\TAO_IDL\*.h; DestDir: {app}\include\TAO_IDL; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion createallsubdirs; Components: depsbuildenv
+;Source: {#DEPENDSINSTALLHOME}\{#ACETAOHOME}\tao\orbsvcs\*.h; DestDir: {app}\include\orbsvcs; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion createallsubdirs; Components: depsbuildenv
+;Source: {#DEPENDSINSTALLHOME}\{#ACETAOHOME}\tao\tao\*.h; DestDir: {app}\include\tao; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion createallsubdirs; Components: depsbuildenv
 
 ; osgAL Files
 Source: {#DEPENDSINSTALLHOME}\{#OSGALHOME}\include\*.h; DestDir: {app}\include; Flags: ignoreversion recursesubdirs skipifsourcedoesntexist; Components: depsbuildenv
