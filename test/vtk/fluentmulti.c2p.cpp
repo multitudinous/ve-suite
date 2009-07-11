@@ -64,7 +64,7 @@ int main(int argc, char* argv[])
 
     // cell 2 point and contour
     vtkCellDataToPointData* c2p = vtkCellDataToPointData::New();
-    c2p->SetInput(reader->GetOutput());
+    c2p->SetInput((vtkDataObject*)reader->GetOutput());
 
     //Cut through the data set
     double center[3]= {0,0,0};
@@ -137,7 +137,7 @@ int main(int argc, char* argv[])
 
 
     vtkCellDataToPointData* c2p1 = vtkCellDataToPointData::New(); 
-    c2p1->SetInput( reader->GetOutput() );
+    c2p1->SetInput( (vtkDataObject*)reader->GetOutput() );
     c2p1->Update();    
     
     vtkContourFilter* contourFilter = vtkContourFilter::New();
