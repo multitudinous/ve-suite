@@ -2,22 +2,22 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #include <vesenv.iss>
-#define MyAppName "VE_Suite.1.1_Dependencies"
+#define MyAppName "VE_Suite_Dependencies"
 #define MyAppVerName "VE_Suite.1.1_Dependencies"
 #define MyAppPublisher "Virtual Engineering Research Group"
 #define MyAppURL "www.vesuite.org"
 
 [Setup]
 AppName={#MyAppName}
-AppVerName={#MyAppVerName}
+AppVerName={#MyAppName}_{#VEVERSION}_{#MSVCVERSION}
 AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
-DefaultDirName=C:\{#MyAppName}
+DefaultDirName=C:\{#MyAppName}_{#VEVERSION}_{#MSVCVERSION}
 DefaultGroupName={#VESGROUPNAME}
 AllowNoIcons=true
-OutputBaseFilename=vesuite_deps{#VEVERSION}
+OutputBaseFilename={#MyAppName}_{#VEVERSION}_{#MSVCVERSION}
 Compression=lzma
 SolidCompression=true
 OutputDir={#INSTALLERINSTALLLOCATION}

@@ -10,16 +10,16 @@
 
 [Setup]
 AppName={#MyAppName}
-AppVerName={#MyAppVerName}_{#SVNVERSION}
+AppVerName={#MyAppName}_{#VEVERSION}_{#MSVCVERSION}
 AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
-DefaultDirName=C:\{#MyAppName}_{#VEVERSION}
+DefaultDirName=C:\{#MyAppName}_{#VEVERSION}_{#MSVCVERSION}
 DefaultGroupName={#VESGROUPNAME}
 AllowNoIcons=true
 OutputDir={#INSTALLERINSTALLLOCATION}
-OutputBaseFilename=vesuite{#VEVERSION}_{#SVNVERSION}
+OutputBaseFilename={#MyAppName}_{#VEVERSION}_{#MSVCVERSION}
 Compression=lzma
 SolidCompression=true
 ChangesEnvironment=true
@@ -64,16 +64,16 @@ Root: HKCR; Subkey: VESNetworkfile\shell\OpenWithVELauncher\command; ValueType: 
 Name: desktopVELauncherIcon; Description: VE-Launcher; GroupDescription: Create Desktop Icon
 
 [Files]
-Source: {#VEINSTALLHOME}\lib\*.dll; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: {#VEINSTALLHOME}\lib64\*.dll; DestDir: {app}\lib64; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: {#VEINSTALLHOME}\bin\*; DestDir: {app}\bin; Flags: ignoreversion uninsremovereadonly
 
 Source: {#VEINSTALLHOME}\share\*; DestDir: {app}\share\; Components: examples; Flags: recursesubdirs createallsubdirs
 Source: {#VEINSTALLHOME}\include\*; DestDir: {app}\include\; Attribs: readonly; Flags: replacesameversion uninsremovereadonly recursesubdirs createallsubdirs; Components: vebuildenv
-Source: {#VEINSTALLHOME}\lib\*.lib; DestDir: {app}\lib; Attribs: readonly; Flags: uninsremovereadonly replacesameversion; Components: vebuildenv
+Source: {#VEINSTALLHOME}\lib64\*.lib; DestDir: {app}\lib64; Attribs: readonly; Flags: uninsremovereadonly replacesameversion; Components: vebuildenv
 Source: {#VEINSTALLHOME}\bin\installerImages\*; DestDir: {app}\bin\installerImages; Flags: replacesameversion
-Source: {#SKEWMATRIXHOME}\*.dll; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs skipifsourcedoesntexist
+Source: {#SKEWMATRIXHOME}\*.dll; DestDir: {app}\lib64; Flags: ignoreversion recursesubdirs skipifsourcedoesntexist
 Source: {#VEINSTALLHOME}\bin\velauncher.exe; DestDir: {app}\bin
-Source: {#MSREDISTRIBUTABLE}; DestDir: {tmp}
+; Source: {#MSREDISTRIBUTABLE}; DestDir: {tmp}
 
 [Icons]
 Name: {group}\Uninstallers\{cm:UninstallProgram,{#MyAppName}}; Filename: {uninstallexe}
