@@ -74,10 +74,10 @@ class DebugWindow(wx.Dialog):
         self.cbLauncherDebug = wx.CheckBox(self, -1, "Debug Launch")
         self.cbLauncherDebug.SetToolTip(wx.ToolTip("Debug VE-Suite's launch."))
         ##Build VE-Suite Debug checkbox.
-        self.cbRunDebugPrograms = wx.CheckBox(self, -1,
-                                              "Run VE-Suite, Debug Build")
-        self.cbRunDebugPrograms.SetToolTip(wx.ToolTip("Launch debug build of" +
-                                           " VE-Suite instead of opt build."))
+        #self.cbRunDebugPrograms = wx.CheckBox(self, -1,
+        #                                      "Run VE-Suite, Debug Build")
+        #self.cbRunDebugPrograms.SetToolTip(wx.ToolTip("Launch debug build of" +
+        #                                   " VE-Suite instead of opt build."))
         ##Build OK button.
         bOk = wx.Button(self, -1, "Ok")
         bOk.SetToolTip(wx.ToolTip("Return to Launcher."))
@@ -104,8 +104,8 @@ class DebugWindow(wx.Dialog):
         mainSizer.Add(VERTICAL_SPACE)
         mainSizer.Add(self.cbLauncherDebug, 0, wx.LEFT | wx.RIGHT | wx.EXPAND,
                       BORDER)
-        mainSizer.Add(self.cbRunDebugPrograms, 0, wx.TOP | wx.LEFT |
-                      wx.RIGHT | wx.EXPAND, BORDER)
+        #mainSizer.Add(self.cbRunDebugPrograms, 0, wx.TOP | wx.LEFT |
+        #              wx.RIGHT | wx.EXPAND, BORDER)
         mainSizer.Add(bOk, 0, wx.ALL | wx.EXPAND, BORDER)
         mainSizer.SetSizeHints(self)
         self.SetSizer(mainSizer)
@@ -126,9 +126,9 @@ class DebugWindow(wx.Dialog):
             self.state.Edit("OSGNotifyLevel", self.osgMenu.GetStringSelection())
         if self.cbLauncherDebug.IsEnabled():
             self.state.Edit("Debug", self.cbLauncherDebug.GetValue())
-        if self.cbRunDebugPrograms.IsEnabled():
-            self.state.Edit("RunDebugPrograms",
-                            self.cbRunDebugPrograms.GetValue())
+        #if self.cbRunDebugPrograms.IsEnabled():
+        #    self.state.Edit("RunDebugPrograms",
+        #                    self.cbRunDebugPrograms.GetValue())
 
     def UpdateDisplay(self):
         ##VPR Menu
@@ -140,8 +140,8 @@ class DebugWindow(wx.Dialog):
         ##Checkboxes
         self.cbLauncherDebug.SetValue(self.state.GetSurface("Debug"))
         self.cbLauncherDebug.Enable(self.state.IsEnabled("Debug"))
-        self.cbRunDebugPrograms.SetValue(self.state.GetSurface("RunDebugPrograms"))
-        self.cbRunDebugPrograms.Enable(self.state.IsEnabled("RunDebugPrograms"))
+        #self.cbRunDebugPrograms.SetValue(self.state.GetSurface("RunDebugPrograms"))
+        #self.cbRunDebugPrograms.Enable(self.state.IsEnabled("RunDebugPrograms"))
 
     def OnClose(self, event = None):
         self.UpdateData()

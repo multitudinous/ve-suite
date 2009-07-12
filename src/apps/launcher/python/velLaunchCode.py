@@ -44,6 +44,7 @@ from velModes import DEFAULT_JCONF
 from velDepsArray import *
 import string
 import subprocess
+import platform
 
 #used to work with the windows registrey
 #import _winreg
@@ -94,26 +95,24 @@ class Launch:
         self.debugOutput = []
         if self.settings["Debug"] and self.runOnce:
             self.inputSource = subprocess.PIPE
+            machineName = platform.node()
             if posix:
                 ves_userName = os.popen("whoami").readline().split()[0]
-                vesDebugFileName = "debug." + ves_userName +".txt"
-                debugFileName = os.path.join('/','var', 'tmp', vesDebugFileName)
+                vesDebugFileName = "debug." + ves_userName + "." + machineName + ".txt"
+                #debugFileName = os.path.join('/','var', 'tmp', vesDebugFileName)
+                debugFileName = os.path.join(self.settings["Directory"],vesDebugFileName)
             else:
-                debugFileName = "debug.txt"
+                vesDebugFileName = "debug." + machineName + ".txt"
+                debugFileName = os.path.join(self.settings["Directory"],vesDebugFileName)
             self.debugFile = open(debugFileName, 'w') 
             self.outputDestination = self.debugFile
             print "Output written to %s" %self.debugFile.name
         else:
             self.inputSource = None
             self.outputDestination = None
-        ##Set debug suffix.
-        #if self.settings["RunDebugPrograms"]:
-        #    self.debugSuffix = "_d"
-        #else:
-        self.debugSuffix = ""
+
         ##Set Windows suffix.
         ##our installs do not support debug and release so there is not need for this
-	#self.windowsSuffix = self.debugSuffix + ".exe"
         self.windowsSuffix = ".exe"
         ##Set self.cluster to True if there's cluster functionality.
         ##If so, begin building self.clusterScript
@@ -295,7 +294,7 @@ class Launch:
                 sys.exit(2)
                 
             #Checking existence of executable file first before calling it
-            exe = "ves_ce" + self.debugSuffix
+            exe = "ves_ce"
             sleep(3)
             try:
                 pids.append(subprocess.Popen(self.ServerCall(), 
@@ -341,7 +340,7 @@ class Launch:
         elif self.settings["Xplorer"]:
             print "Starting Xplorer."
             #Checking existence of project_tao_osg_vep file first before calling it
-            exe = "ves_xplorer" + self.debugSuffix
+            exe = "ves_xplorer"
                 
             try:
                 subprocess.Popen(self.XplorerCall(), 
@@ -354,7 +353,7 @@ class Launch:
         if self.settings["Conductor"]:
             print "Starting Conductor."
             #Checking existence of WinClient file first before calling it
-            exe = "ves_conductor" + self.debugSuffix
+            exe = "ves_conductor"
 
             conduct_Pid = []
             try:
@@ -395,7 +394,7 @@ class Launch:
     def ServerCall(self):
         """Returns a generic Server call."""
         if unix:
-            exe = "ves_ce" + self.debugSuffix
+            exe = "ves_ce"
         elif windows:
             exe = "ves_ce" + self.windowsSuffix
         else:
@@ -410,9 +409,7 @@ class Launch:
         """Returns a generic Conductor call."""
         exe = "ves_conductor"
             
-        if unix:
-            exe += self.debugSuffix
-        elif windows:
+        if windows:
             exe += self.windowsSuffix
         ##Append ves arguments if needed.
         if self.settings["VESFile"]:
@@ -445,9 +442,7 @@ class Launch:
         exe = "ves_xplorer"
 
         ##Tack on the Windows suffix.
-        if unix:
-            exe += self.debugSuffix
-        elif windows:
+        if windows:
             exe += self.windowsSuffix
         ##Construct the call
         #support for vrj 3.0
@@ -548,10 +543,12 @@ class Launch:
             vesOutFile = "ves." + ves_userName +"."+ves_machineName+".out"
             
             slaveCommand = "%s" %(string.join(self.XplorerCall("slave")))
-            #slaveCommand = slaveCommand + "> & $1.%s.log" %vesOutFile
+            if self.settings["Debug"]: 
+                slaveCommand = slaveCommand + "> & $1.%s.log" %vesOutFile
             masterCommand = "%s" %(string.join(self.XplorerCall("master")))
             self.clusterScript += 'cd "%s"\n' %self.settings["Directory"]
-            #self.clusterScript += 'limit coredumpsize 1000000000000\n'
+            if self.settings["Debug"]: 
+                self.clusterScript += 'limit coredumpsize 1000000000000\n'
             self.clusterScript += 'if ( $2 == "slave" ) then\n'
             self.clusterScript += "    %s\n" %(slaveCommand)
             self.clusterScript += "else\n"
@@ -559,8 +556,8 @@ class Launch:
             ##network traffic issues. Change " &" to " 2>&1 &" to reroute
             ##StdErrors to local /var/tmp file as well.
             self.clusterScript += "    %s " % (masterCommand) + '| grep -v -e "Stable buffer is empty." > '
-            #if self.settings["Debug"]: 
-            #self.clusterScript += str(os.path.join('/','var', 'tmp', vesOutFile))
+            if self.settings["Debug"]: 
+                self.clusterScript += str(os.path.join('/','var', 'tmp', vesOutFile))
             #else :
             #    self.clusterScript += os.path.join('/','dev', 'null')
             self.clusterScript += " &\n"
