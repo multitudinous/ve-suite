@@ -16,7 +16,6 @@
 #include <osg/Point>
 #include <osg/PointSprite>
 #include <osg/AlphaFunc>
-#include "PrimitiveSetInstanced.h"
 
 
 // Allows you to change the animation play rate:
