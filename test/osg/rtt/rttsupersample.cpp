@@ -57,7 +57,7 @@ protected:
     osg::Node* createClearQuad( const osg::Vec4& clearColor, float fov, float minZNear );
     osg::Geode* createFullScreenTexturedQuad( osg::Texture2D* colorTexture, osg::Texture2D* glowTexture );
 
-    osg::Node* RTTGlow::createDefaultScene( osg::Vec4 glowColor );
+    osg::Node* createDefaultScene( osg::Vec4 glowColor );
 
     osg::ref_ptr< osgViewer::Viewer > _viewer;
     osg::ref_ptr< osg::Camera > _rttCamera;
