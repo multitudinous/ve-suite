@@ -1,28 +1,18 @@
-//
-// Copyright (c) 2008 Skew Matrix  Software LLC.
-// All rights reserved.
-//
+#include "OSGStage.h"
+#include <string>
 
-#include <osgDB/ReadFile>
-#include <osgViewer/Viewer>
-#include <osgViewer/ViewerEventHandlers>
+using namespace std;
 
-#include <osg/Geometry>
-#include <osg/PositionAttitudeTransform>
+OSGStage::OSGStage(void)
+{
+	tm=tn=0;
+}
 
-//#include "PrimitiveSetInstanced.h"
+OSGStage::~OSGStage(void)
+{
+}
 
-
-
-const int m( 128 );
-const int n( 128 );
-const int nVerts( 22 );
-const float dx( 1.5f ), dy( 1.5f );
-
-
-
-void
-createArrow( osg::Geometry& geom, int nInstances=1 )
+void OSGStage::createArrow( osg::Geometry& geom, int nInstances )
 {
     const float sD( .05 ); // shaft diameter
     const float hD( .075 ); // head diameter
@@ -110,114 +100,168 @@ createArrow( osg::Geometry& geom, int nInstances=1 )
 }
 
 
-
-float*
-createPositionArray( int m, int n )
+float* OSGStage::createPositionArray( int m, int n , vtkPoints* points)
 {
     float* pos = new float[ m * n * 3 ];
     float* posI = pos;
 
-    int mIdx, nIdx;
-    for( mIdx = 0; mIdx < m; mIdx++ )
-    {
-        for( nIdx = 0; nIdx < n; nIdx++ )
-        {
-            *posI++ = mIdx*dx;
-            *posI++ =  nIdx*dy;
-            *posI++ = 0.;
-        }
-    }
-
+	int np = points->GetNumberOfPoints();
+    double x[3];
+	for (int i=0; i<m*n; i++)
+	{
+		if (i<np)
+		{
+			points->GetPoint(i, x);
+			*posI++=(float)x[0];
+			*posI++=(float)x[1];
+			*posI++=(float)x[2];
+		}
+		else
+		{
+			*posI++ = 0.;
+			*posI++ =  0.;
+			*posI++ = 0.;
+		}
+	}
+   
     return pos;
 }
 
-float*
-createAttitudeArray( int m, int n )
+float* OSGStage::createAttitudeArray( int m, int n, vtkDataArray* dataArray)
 {
     float* att = new float[ m * n * 3 ];
     float* attI = att;
 
-    int mIdx, nIdx;
-    for( mIdx = 0; mIdx < m; mIdx++ )
-    {
-        for( nIdx = 0; nIdx < n; nIdx++ )
-        {
-            float nD = sqrtf( mIdx*mIdx + nIdx*nIdx ) / (float) m * 2.f;
-            osg::Vec3 v( sin( -nD*osg::PI ), cos( nD*osg::PI ), sin( nD*osg::PI ) );
-            if( v.length2() < .0001 )
-                v.set( 0., 0., 1. );
-            v.normalize();
-            *attI++ = v.x();
+	int nd = dataArray->GetNumberOfTuples();
+
+    double x[3];
+	for (int i=0; i<m*n; i++)
+	{
+		if (i<nd)
+		{
+			dataArray->GetTuple(i,x);
+			osg::Vec3 v( x[0], x[1], x[2] );
+			v.normalize();
+			*attI++ = v.x();
             *attI++ = v.y();
             *attI++ = v.z();
-        }
-    }
-
+		}
+		else
+		{
+			*attI++ = 0.;
+			*attI++ =  0.;
+			*attI++ = 0.;
+		}
+	}
     return att;
 }
 
-osg::Node*
-createNonInstanced( const int m, const int n )
+float* OSGStage::createScalarArray( int m, int n, vtkDataArray* dataArray)
 {
-    osg::Group* grp = new osg::Group;
+    float* sca = new float[ m * n * 3 ];
+    float* scaI = sca;
 
-    osg::Geode* geode = new osg::Geode;
-    osg::Geometry* geom = new osg::Geometry;
-    geom->setUseDisplayList( false );
-    geom->setUseVertexBufferObjects( true );
-    createArrow( *geom, 1 );
-    geode->addDrawable( geom );
+	int nd = dataArray->GetNumberOfTuples();
 
-    float* pos = createPositionArray( m, n );
-    float* posI = pos;
-    float* att = createAttitudeArray( m, n );
-    float* attI = att;
-
-    for( int iIdx=0; iIdx<m*n; iIdx++ )
-    {
-        osg::PositionAttitudeTransform* pat = new osg::PositionAttitudeTransform;
-        pat->setPosition( osg::Vec3( posI[0], posI[1], posI[2] ) );
-        posI += 3;
-
-        osg::Vec3 a( attI[0], attI[1], attI[2] );
-        osg::Quat q; q.makeRotate( osg::Vec3( 0., 0., 1. ), a );
-        pat->setAttitude( q );
-        attI += 3;
-
-        pat->addChild( geode );
-        grp->addChild( pat );
-    }
-
-    grp->getOrCreateStateSet()->setMode( GL_NORMALIZE, osg::StateAttribute::ON );
-
-    delete[] pos;
-    delete[] att;
-
-    return grp;
+    double x;
+	for (int i=0; i<m*n; i++)
+	{
+		if (i<nd)
+		{
+			dataArray->GetTuple(i,&x);
+			*scaI++ = x;
+            *scaI++ = 0.;
+            *scaI++ = 0.;
+		}
+		else
+		{
+			*scaI++ = 0.;
+			*scaI++ =  0.;
+			*scaI++ = 0.;
+		}
+	}
+    return sca;
 }
 
-osg::Node*
-createInstanced( const int m, const int n )
-{
-    osg::Group* grp = new osg::Group;
 
+int OSGStage::mylog2(unsigned x)
+{
+    int l = -1; // mylog2(0) will return -1
+    while (x != 0u)
+    {
+        x = x >> 1u;
+        ++l;
+    }
+    return l;
+}
+
+int OSGStage::mypow2(unsigned x)
+{
+    int l = 1; // mylog2(0) will return -1
+    while (x != 0u)
+    {
+        l = l << 1u;
+        x--;
+    }
+    return l;
+}
+
+osg::Node* OSGStage::createInstanced(vtkGlyph3D* glyph, string vectorName, string scalarName)
+{
+	//Now pull in the vtk data
+	if (glyph==NULL)
+		return NULL;
+	glyph->Update();
+	
+	vtkPolyData *polyData = glyph->GetOutput();
+	if (polyData==NULL)
+		return NULL;
+	polyData->Update();
+	
+	vtkPointData *pointData = polyData->GetPointData();
+	if (pointData==NULL)
+		return NULL;
+	
+	pointData->Update();
+
+	vtkPoints *points = polyData->GetPoints();	
+	if (points==NULL)
+		return NULL;
+	vtkDataArray *vectorArray = pointData->GetVectors(vectorName.c_str());//("GlyphVector");
+	vtkDataArray *scalarArray = pointData->GetScalars(scalarName.c_str());
+
+	if ((vectorArray==NULL) && (scalarArray==NULL))
+		return NULL;
+
+	//calculate texture dimension
+	int numPoints = points->GetNumberOfPoints();
+	tm = mypow2(mylog2( (int)(sqrt(float(numPoints/3))))+1);
+	tn = tm;
+
+	//create the Geometry Node with arrows
+    osg::Group* grp = new osg::Group;
     osg::Geode* geode = new osg::Geode;
     osg::Geometry* geom = new osg::Geometry;
-    geom->setUseDisplayList( false );
+    
+	geom->setUseDisplayList( false );
     geom->setUseVertexBufferObjects( true );
-    createArrow( *geom, m*n );
+    createArrow( *geom, tm*tn );
     geode->addDrawable( geom );
     grp->addChild( geode );
 
-    osg::BoundingBox bb( 0., 0., 0., m*dx, n*dy, 1. );
+	double bounds[6];
+	points->GetBounds(bounds);
+	osg::BoundingBox bb(bounds[0],bounds[1],bounds[2],bounds[3],bounds[4],bounds[5]);
     geom->setInitialBound( bb );
 
+	//Create the rendering shader
 
     std::string vertexSource =
 
         "uniform vec2 sizes; \n"
         "uniform sampler2D texPos; \n"
         "uniform sampler2D texAtt; \n"
+		"uniform sampler2D texSca; \n"
 
         "void main() \n"
         "{ \n"
@@ -257,14 +301,16 @@ createInstanced( const int m, const int n )
         osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
 
     osg::ref_ptr< osg::Uniform > sizesUniform =
-        new osg::Uniform( "sizes", osg::Vec2( (float)m, (float)n ) );
+        new osg::Uniform( "sizes", osg::Vec2( (float)tm, (float)tn ) );
     ss->addUniform( sizesUniform.get() );
 
-
-    float* pos = createPositionArray( m, n );
+	//now set the arrays
+	
+	//First set the point position array
+	float* pos = createPositionArray( tm, tn, points);
 
     osg::Image* iPos = new osg::Image;
-    iPos->setImage( m, n, 1, GL_RGB32F_ARB, GL_RGB, GL_FLOAT,
+    iPos->setImage( tm, tn, 1, GL_RGB32F_ARB, GL_RGB, GL_FLOAT,
         (unsigned char*) pos, osg::Image::USE_NEW_DELETE );
     osg::Texture2D* texPos = new osg::Texture2D( iPos );
     texPos->setFilter( osg::Texture2D::MIN_FILTER, osg::Texture2D::NEAREST );
@@ -276,45 +322,42 @@ createInstanced( const int m, const int n )
         new osg::Uniform( "texPos", 0 );
     ss->addUniform( texPosUniform.get() );
 
-    //delete[] pos;
+    
+	if (vectorArray!=NULL)
+	{
+		float* att = createAttitudeArray( tm, tn, vectorArray);
 
+		osg::Image* iAtt = new osg::Image;
+		iAtt->setImage( tm, tn, 1, GL_RGB32F_ARB, GL_RGB, GL_FLOAT,
+			(unsigned char*)att, osg::Image::USE_NEW_DELETE );
+		osg::Texture2D* texAtt = new osg::Texture2D( iAtt );
+		texAtt->setFilter( osg::Texture2D::MIN_FILTER, osg::Texture2D::NEAREST );
+		texAtt->setFilter( osg::Texture2D::MAG_FILTER, osg::Texture2D::NEAREST );
 
-    float* att = createAttitudeArray( m, n );
+		ss->setTextureAttribute( 1, texAtt );
 
-    osg::Image* iAtt = new osg::Image;
-    iAtt->setImage( m, n, 1, GL_RGB32F_ARB, GL_RGB, GL_FLOAT,
-        (unsigned char*)att, osg::Image::USE_NEW_DELETE );
-    osg::Texture2D* texAtt = new osg::Texture2D( iAtt );
-    texAtt->setFilter( osg::Texture2D::MIN_FILTER, osg::Texture2D::NEAREST );
-    texAtt->setFilter( osg::Texture2D::MAG_FILTER, osg::Texture2D::NEAREST );
+		osg::ref_ptr< osg::Uniform > texAttUniform =
+			new osg::Uniform( "texAtt", 1 );
+		ss->addUniform( texAttUniform.get() );
+	}
 
-    ss->setTextureAttribute( 1, texAtt );
+	if (scalarArray!=NULL)
+	{
+		float* sca = createScalarArray( tm, tn, scalarArray);
 
-    osg::ref_ptr< osg::Uniform > texAttUniform =
-        new osg::Uniform( "texAtt", 1 );
-    ss->addUniform( texAttUniform.get() );
+		osg::Image* iSca = new osg::Image;
+		iSca->setImage( tm, tn, 1, GL_RGB32F_ARB, GL_RGB, GL_FLOAT,
+			(unsigned char*)sca, osg::Image::USE_NEW_DELETE );
+		osg::Texture2D* texSca = new osg::Texture2D( iSca );
+		texSca->setFilter( osg::Texture2D::MIN_FILTER, osg::Texture2D::NEAREST );
+		texSca->setFilter( osg::Texture2D::MAG_FILTER, osg::Texture2D::NEAREST );
 
-    //delete[] att;
+		ss->setTextureAttribute( 2, texSca );
+
+		osg::ref_ptr< osg::Uniform > texScaUniform =
+			new osg::Uniform( "texSca", 2 );
+		ss->addUniform( texScaUniform.get() );
+	}
 
     return grp;
 }
-
-int
-main( int argc,
-      char ** argv )
-{
-    osg::ref_ptr< osg::Node > root;
-
-    osg::notify( osg::ALWAYS ) << m*n << " instances." << std::endl;
-    osg::notify( osg::ALWAYS ) << m*n*nVerts << " total vertices." << std::endl;
-
-    //root = createNonInstanced( m, n );
-    root = createInstanced( m, n );
-
-    osgViewer::Viewer viewer;
-    viewer.addEventHandler( new osgViewer::StatsHandler );
-    viewer.setUpViewOnSingleScreen( 0 );
-    viewer.setSceneData( root.get() );
-    return( viewer.run() );
-}
-

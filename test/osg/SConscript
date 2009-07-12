@@ -13,6 +13,7 @@ shareSubdirs = Split("""
    geometry_opt
    geometry_drawarray_conversion
    warp_surface
+   vtk_osg_vectors
 """)
 
 ##Run SConscript files in all of those folders.

@@ -5,7 +5,6 @@ pj = os.path.join
 Import('baseEnv RootDir ves_pkg LIBDIR GetPlatform buildDir osg_options')
 
 srcs = Split("""
-   PrimitiveSetInstanced.cpp
    Vectors.cpp
 """)
 

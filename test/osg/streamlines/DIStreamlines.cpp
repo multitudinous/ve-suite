@@ -133,7 +133,7 @@ createSLPoint( osg::Geometry& geom, int nInstances, const osg::Vec3 position, co
     geom.setColorBinding( osg::Geometry::BIND_OVERALL );
     (*c)[ 0 ] = color;
 
-    geom.addPrimitiveSet( new osg::DrawArraysInstanced( GL_POINTS, 0, 1, nInstances ) );
+    geom.addPrimitiveSet( new osg::DrawArrays( GL_POINTS, 0, 1, nInstances ) );
 
 
     osg::StateSet* ss = geom.getOrCreateStateSet();
