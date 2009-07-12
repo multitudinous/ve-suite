@@ -39,6 +39,8 @@
 #include <vtkStripper.h>
 #include <vtkPolyDataNormals.h>
 #include <vtkPointData.h>
+#include <vtkCellArray.h>
+#include <vtkMaskPoints.h>
 
 #include <iostream>
 #include <string>
@@ -58,7 +60,7 @@ public:
 	void SetXMLPolyDataFileName(string name);
 
 	//real read code
-	void Update();
+	void Update(int n);
 
 	//write to a .vtk file
 	void Dump(string foutput);
@@ -76,5 +78,5 @@ private:
 	vtkTriangleFilter* tris;
 	vtkStripper* strip;
 	vtkConeSource* cone;
-
+	vtkMaskPoints* mask;
 };

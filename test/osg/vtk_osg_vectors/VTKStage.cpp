@@ -11,6 +11,7 @@ VTKStage::VTKStage(void)
 	tris = NULL;
 	strip = NULL;
 	cone = NULL;
+	mask = NULL;
 }
 
 VTKStage::VTKStage(string name)
@@ -25,6 +26,7 @@ VTKStage::VTKStage(string name)
 	tris = NULL;
 	strip = NULL;
 	cone = NULL;
+	mask = NULL;
 }
 
 VTKStage::~VTKStage(void)
@@ -46,7 +48,9 @@ VTKStage::~VTKStage(void)
     if (strip)
 		strip->Delete();
 	if (cone)
-			cone->Delete();
+		cone->Delete();
+	if (mask)
+		mask->Delete();
 }
 
 vtkGlyph3D* VTKStage::GetOutput()
@@ -54,7 +58,7 @@ vtkGlyph3D* VTKStage::GetOutput()
 	return glyph;
 }
 
-void VTKStage::Update()
+void VTKStage::Update(int n)
 {
 	//Not sure why we need this, but I am leaving this alone. CYANG 07/10/09
     vtkCompositeDataPipeline* prototype = vtkCompositeDataPipeline::New();
@@ -73,7 +77,8 @@ void VTKStage::Update()
     c2p->SetInput( dataset );
     c2p->Update();
 
-    // get every nth point from the dataSet data
+    // get every nth point from the dataSet data 
+	//?? the above comment doesn't make sense to me CYANG 07/11/09
 	if (m_multiGroupGeomFilter)
 		m_multiGroupGeomFilter->Delete();
     m_multiGroupGeomFilter = vtkCompositeDataGeometryFilter::New();
@@ -108,11 +113,20 @@ void VTKStage::Update()
 		strip->Delete();
 	strip = vtkStripper::New();    
     
+	//using vtkMaskPoints filter to select every nth point
+	if (mask)
+		mask->Delete();
+	mask = vtkMaskPoints::New();
+	
+	if (n>0)
+		mask->SetOnRatio(n);
+
 	//void cfdVectorBase::SetGlyphWithThreshold()
     {
         double currentScalarRange[ 2 ] = {0, 1};
         double _vectorThreshHoldValues[ 2 ] = { 0, 1 };
         //dataset->GetRange( currentScalarRange );
+		//dataset->GetScalarRange(currentScalarRange );
         
         if( _vectorThreshHoldValues[ 0 ] > currentScalarRange[ 0 ] &&
            _vectorThreshHoldValues[ 1 ] < currentScalarRange[ 1 ] )
@@ -126,7 +140,8 @@ void VTKStage::Update()
             
             tris->SetInputConnection( tfilter->GetOutputPort() );
             strip->SetInputConnection( tris->GetOutputPort() );
-            glyph->SetInputConnection( strip->GetOutputPort() );
+			mask->SetInputConnection( strip->GetOutputPort() );
+            glyph->SetInputConnection( mask->GetOutputPort() );
         }
         else if( _vectorThreshHoldValues[ 0 ] > currentScalarRange[ 0 ] )
         {
@@ -137,7 +152,8 @@ void VTKStage::Update()
             //                                GetActiveDataSet()->GetActiveScalarName().c_str() );
             tris->SetInputConnection( tfilter->GetOutputPort() );
             strip->SetInputConnection( tris->GetOutputPort() );
-            glyph->SetInputConnection( strip->GetOutputPort() );
+            mask->SetInputConnection( strip->GetOutputPort() );
+            glyph->SetInputConnection( mask->GetOutputPort() );
         }
         else if( _vectorThreshHoldValues[ 1 ] < currentScalarRange[ 1 ] )
         {
@@ -148,11 +164,13 @@ void VTKStage::Update()
             //                                GetActiveDataSet()->GetActiveScalarName().c_str() );
             tris->SetInputConnection( tfilter->GetOutputPort() );
             strip->SetInputConnection( tris->GetOutputPort() );
-            glyph->SetInputConnection( strip->GetOutputPort() );
+            mask->SetInputConnection( strip->GetOutputPort() );
+            glyph->SetInputConnection( mask->GetOutputPort() );
         }
         else
         {
-            glyph->SetInputConnection( m_geometryFilter->GetOutputPort() );
+			mask->SetInputConnection( m_geometryFilter->GetOutputPort() );
+            glyph->SetInputConnection( mask->GetOutputPort() );
         }
     }
 

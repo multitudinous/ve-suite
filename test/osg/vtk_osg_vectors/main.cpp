@@ -5,8 +5,8 @@ int main( int argc,
       char ** argv )
 {
     
-	VTKStage vtkStage( argv[ 1 ] );
-	vtkStage.Update();
+	VTKStage vtkStage( argv[ 1 ]);
+	vtkStage.Update(100); //only use every 100th data
 	//vtkStage.Dump("C:\\Dougm\\testyang.vtk");
 
 	OSGStage osgStage;

@@ -16,7 +16,7 @@ void OSGStage::createArrow( osg::Geometry& geom, int nInstances )
 {
     const float sD( .05 ); // shaft diameter
     const float hD( .075 ); // head diameter
-    const float len( 1. ); // length
+	const float len( 1. ); // length
     const float sh( .65 ); // length from base to start of head
 
     osg::Vec3Array* v = new osg::Vec3Array;
@@ -52,7 +52,7 @@ void OSGStage::createArrow( osg::Geometry& geom, int nInstances )
     (*n)[ 9 ] = osg::Vec3( 1., 0., 0. );
 
     if( nInstances > 1 )
-        geom.addPrimitiveSet( new osg::DrawArrays( GL_QUAD_STRIP, 0, 10, nInstances ) );
+        geom.addPrimitiveSet( new osg::DrawArraysInstanced( GL_QUAD_STRIP, 0, 10, nInstances ) );
     else
         geom.addPrimitiveSet( new osg::DrawArrays( GL_QUAD_STRIP, 0, 10 ) );
 
@@ -94,7 +94,7 @@ void OSGStage::createArrow( osg::Geometry& geom, int nInstances )
     (*n)[ 21 ] = norm;
 
     if( nInstances > 1 )
-        geom.addPrimitiveSet( new osg::DrawArrays( GL_TRIANGLES, 10, 12, nInstances ) );
+        geom.addPrimitiveSet( new osg::DrawArraysInstanced( GL_TRIANGLES, 10, 12, nInstances ) );
     else
         geom.addPrimitiveSet( new osg::DrawArrays( GL_TRIANGLES, 10, 12 ) );
 }
@@ -106,11 +106,12 @@ float* OSGStage::createPositionArray( int m, int n , vtkPoints* points)
     float* posI = pos;
 
 	int np = points->GetNumberOfPoints();
-    double x[3];
+	double x[3];
+
 	for (int i=0; i<m*n; i++)
 	{
 		if (i<np)
-		{
+		{			
 			points->GetPoint(i, x);
 			*posI++=(float)x[0];
 			*posI++=(float)x[1];
@@ -133,8 +134,7 @@ float* OSGStage::createAttitudeArray( int m, int n, vtkDataArray* dataArray)
     float* attI = att;
 
 	int nd = dataArray->GetNumberOfTuples();
-
-    double x[3];
+	double x[3];
 	for (int i=0; i<m*n; i++)
 	{
 		if (i<nd)
@@ -149,7 +149,7 @@ float* OSGStage::createAttitudeArray( int m, int n, vtkDataArray* dataArray)
 		else
 		{
 			*attI++ = 0.;
-			*attI++ =  0.;
+			*attI++ = 0.;
 			*attI++ = 0.;
 		}
 	}
@@ -197,7 +197,7 @@ int OSGStage::mylog2(unsigned x)
 
 int OSGStage::mypow2(unsigned x)
 {
-    int l = 1; // mylog2(0) will return -1
+    int l = 1; // mypow2(0) will return 1
     while (x != 0u)
     {
         l = l << 1u;
@@ -217,7 +217,7 @@ osg::Node* OSGStage::createInstanced(vtkGlyph3D* glyph, string vectorName, strin
 	if (polyData==NULL)
 		return NULL;
 	polyData->Update();
-	
+
 	vtkPointData *pointData = polyData->GetPointData();
 	if (pointData==NULL)
 		return NULL;
@@ -235,8 +235,12 @@ osg::Node* OSGStage::createInstanced(vtkGlyph3D* glyph, string vectorName, strin
 
 	//calculate texture dimension
 	int numPoints = points->GetNumberOfPoints();
-	tm = mypow2(mylog2( (int)(sqrt(float(numPoints/3))))+1);
-	tn = tm;
+
+	int am = mylog2(numPoints)+1;
+	int mm = am/2;
+	int nn = am -am/2;
+	tm = mypow2(mm);
+	tn = mypow2(nn);
 
 	//create the Geometry Node with arrows
     osg::Group* grp = new osg::Group;
@@ -245,7 +249,7 @@ osg::Node* OSGStage::createInstanced(vtkGlyph3D* glyph, string vectorName, strin
     
 	geom->setUseDisplayList( false );
     geom->setUseVertexBufferObjects( true );
-    createArrow( *geom, tm*tn );
+    createArrow( *geom, numPoints);//tm*tn );
     geode->addDrawable( geom );
     grp->addChild( geode );
 
@@ -255,7 +259,6 @@ osg::Node* OSGStage::createInstanced(vtkGlyph3D* glyph, string vectorName, strin
     geom->setInitialBound( bb );
 
 	//Create the rendering shader
-
     std::string vertexSource =
 
         "uniform vec2 sizes; \n"
@@ -300,6 +303,7 @@ osg::Node* OSGStage::createInstanced(vtkGlyph3D* glyph, string vectorName, strin
     ss->setAttribute( program.get(),
         osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
 
+	//set size
     osg::ref_ptr< osg::Uniform > sizesUniform =
         new osg::Uniform( "sizes", osg::Vec2( (float)tm, (float)tn ) );
     ss->addUniform( sizesUniform.get() );
@@ -322,7 +326,7 @@ osg::Node* OSGStage::createInstanced(vtkGlyph3D* glyph, string vectorName, strin
         new osg::Uniform( "texPos", 0 );
     ss->addUniform( texPosUniform.get() );
 
-    
+    //set attitude array
 	if (vectorArray!=NULL)
 	{
 		float* att = createAttitudeArray( tm, tn, vectorArray);
@@ -340,7 +344,8 @@ osg::Node* OSGStage::createInstanced(vtkGlyph3D* glyph, string vectorName, strin
 			new osg::Uniform( "texAtt", 1 );
 		ss->addUniform( texAttUniform.get() );
 	}
-
+	
+	//set scalar array
 	if (scalarArray!=NULL)
 	{
 		float* sca = createScalarArray( tm, tn, scalarArray);
