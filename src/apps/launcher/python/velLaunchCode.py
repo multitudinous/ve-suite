@@ -559,10 +559,10 @@ class Launch:
             ##network traffic issues. Change " &" to " 2>&1 &" to reroute
             ##StdErrors to local /var/tmp file as well.
             self.clusterScript += "    %s " % (masterCommand) + '| grep -v -e "Stable buffer is empty." > '
-            if self.settings["Debug"]: 
-                self.clusterScript += os.path.join('/','var', 'tmp', vesOutFile)
-            else :
-                self.clusterScript += os.path.join('/','dev', 'null')
+            #if self.settings["Debug"]: 
+            #self.clusterScript += str(os.path.join('/','var', 'tmp', vesOutFile))
+            #else :
+            #    self.clusterScript += os.path.join('/','dev', 'null')
             self.clusterScript += " &\n"
             self.clusterScript += "endif\n"
             self.clusterScript += "EOF\n"
