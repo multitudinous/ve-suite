@@ -57,7 +57,10 @@
 #include <wx/msgdlg.h>
 #include <wx/defs.h>
 
+#include <boost/version.hpp>
+#if BOOST_VERSION >= 103600 
 #include <boost/math/special_functions/round.hpp>
+#endif
 
 using namespace ves::open::xml;
 using namespace ves::conductor;
@@ -375,9 +378,15 @@ wxRect Canvas::GetAppropriateSubDialogSize()
     //if( GetDisplayMode() == std::string( "Desktop" ) )
     {
         wxRect bbox = GetRect();
+#if BOOST_VERSION >= 103600 
         int xStart = boost::math::iround( 2.0f * displayWidth / 3.0f );
         int width = boost::math::iround( displayWidth / 3.0f );
         int height = boost::math::iround( 3.0f * ( displayHeight - tempRect.GetTopLeft().y ) / 4.0f );
+#else
+        int xStart = lrint( 2.0f * displayWidth / 3.0f );
+        int width = lrint( displayWidth / 3.0f );
+        int height = lrint( 3.0f * ( displayHeight - tempRect.GetTopLeft().y ) / 4.0f );
+#endif
         return wxRect( xStart, tempRect.GetTopLeft().y , width, height );
     }
     /*else
