@@ -10,7 +10,7 @@
 #include <osgViewer/ViewerEventHandlers>
 #include <osg/Geometry>
 #include <osg/PositionAttitudeTransform>
-#include "PrimitiveSetInstanced.h"
+//#include "PrimitiveSetInstanced.h"
 #include "VTKStage.h"
 #include <vtkPointData.h>
 #include <math.h>
@@ -22,7 +22,7 @@ public:
 	~OSGStage(void);
 
 	//create a osgNode
-	osg::Node* createInstanced(vtkGlyph3D* glyph, string vectorName="GlyphVector", string scalarName="");
+	osg::Node* createInstanced(vtkPolyData* glyph, string vectorName="GlyphVector", string scalarName="");
 
 private:
 

@@ -94,7 +94,7 @@ void OSGStage::createArrow( osg::Geometry& geom, int nInstances )
     (*n)[ 21 ] = norm;
 
     if( nInstances > 1 )
-        geom.addPrimitiveSet( new osg::DrawArraysInstanced( GL_TRIANGLES, 10, 12, nInstances ) );
+        geom.addPrimitiveSet( new osg::DrawArrays( GL_TRIANGLES, 10, 12, nInstances ) );
     else
         geom.addPrimitiveSet( new osg::DrawArrays( GL_TRIANGLES, 10, 12 ) );
 }
@@ -107,7 +107,7 @@ float* OSGStage::createPositionArray( int m, int n , vtkPoints* points)
 
 	int np = points->GetNumberOfPoints();
 	double x[3];
-
+    float y[3];
 	for (int i=0; i<m*n; i++)
 	{
 		if (i<np)
@@ -115,14 +115,21 @@ float* OSGStage::createPositionArray( int m, int n , vtkPoints* points)
 			points->GetPoint(i, x);
 			*posI++=(float)x[0];
 			*posI++=(float)x[1];
-			*posI++=(float)x[2];
+			*posI++=(float)x[2]; 
+            //y[ 0 ] = x[0];
+            //y[ 1 ] = x[1];
+            //y[ 2 ] = x[2];
 		}
 		else
 		{
 			*posI++ = 0.;
 			*posI++ =  0.;
 			*posI++ = 0.;
+            //y[ 0 ] = 0.0f;
+            //y[ 1 ] = 0.0f;
+            //y[ 2 ] = 0.0f;
 		}
+        //std::cout << "pos " << y[ 0] << " " << y[ 1] << " " << y[ 2 ] << std::endl;
 	}
    
     return pos;
@@ -206,41 +213,65 @@ int OSGStage::mypow2(unsigned x)
     return l;
 }
 
-osg::Node* OSGStage::createInstanced(vtkGlyph3D* glyph, string vectorName, string scalarName)
+osg::Node* OSGStage::createInstanced(vtkPolyData* glyph, string vectorName, string scalarName)
 {
+    std::cout << "creating osg planes" << std::endl;
 	//Now pull in the vtk data
 	if (glyph==NULL)
-		return NULL;
-	glyph->Update();
+    {
+        std::cout << " glyph is null " << std::endl;
+        		return NULL;
+    }
+	//glyph->Update();
 	
-	vtkPolyData *polyData = glyph->GetOutput();
+	vtkPolyData *polyData = glyph;//->GetOutput();
 	if (polyData==NULL)
+    {
+        std::cout << "pd is null " << std::endl;
 		return NULL;
+    }
 	polyData->Update();
 
 	vtkPointData *pointData = polyData->GetPointData();
 	if (pointData==NULL)
+    {
+        std::cout << " pd point data is null " << std::endl;
 		return NULL;
-	
+    }
 	pointData->Update();
 
 	vtkPoints *points = polyData->GetPoints();	
 	if (points==NULL)
+    {
+        std::cout << " points are null " << std::endl;
 		return NULL;
-	vtkDataArray *vectorArray = pointData->GetVectors(vectorName.c_str());//("GlyphVector");
+    }
+        vtkDataArray *vectorArray = pointData->GetVectors(vectorName.c_str());//("GlyphVector");
 	vtkDataArray *scalarArray = pointData->GetScalars(scalarName.c_str());
 
+    if (vectorArray==NULL)
+    {
+        std::cout << " vectors are null " << std::endl;
+		return NULL;
+    }
+
+    if (scalarArray==NULL)
+    {
+        std::cout << " scalars are null " << std::endl;
+		return NULL;
+    }
 	if ((vectorArray==NULL) && (scalarArray==NULL))
 		return NULL;
 
 	//calculate texture dimension
 	int numPoints = points->GetNumberOfPoints();
-
+    std::cout << "number of points " << numPoints << std::endl;
 	int am = mylog2(numPoints)+1;
 	int mm = am/2;
 	int nn = am -am/2;
 	tm = mypow2(mm);
 	tn = mypow2(nn);
+    std::cout << tm << " "<< tn << std::endl;
 
 	//create the Geometry Node with arrows
     osg::Group* grp = new osg::Group;

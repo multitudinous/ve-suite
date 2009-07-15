@@ -25,7 +25,7 @@
 #include <vtkXMLUnstructuredGridReader.h>
 #include <vtkDataSet.h>
 #include <vtkDataSetReader.h>
-#include <vtkXMLPolyDataReader.h>
+#include <vtkXMLDataReader.h>
 
 #include <vtkCutter.h>
 #include <vtkPlane.h>
@@ -54,7 +54,7 @@ public:
 	~VTKStage(void);
 
 	//result accessor
-	vtkGlyph3D* GetOutput();
+	vtkPolyData* GetOutput();
 	
 	//Set Interface
 	void SetXMLPolyDataFileName(string name);
@@ -69,7 +69,7 @@ private:
 	string xmlPolydateFname; //the file name
 
 	//all variable allocated by VTK New and not release immediately
-	vtkXMLPolyDataReader* polydataReader;
+	vtkXMLDataReader* polydataReader;
 	vtkCellDataToPointData* c2p;
 	vtkCompositeDataGeometryFilter* m_multiGroupGeomFilter;
 	vtkGeometryFilter* m_geometryFilter;

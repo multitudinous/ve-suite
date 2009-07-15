@@ -1,7 +1,17 @@
 #include "VTKStage.h"
 
+#include <vtkXMLUnstructuredGridReader.h>
+#include <vtkCellData.h>
+#include <vtkXMLPolyDataReader.h>
+#include <vtkXMLStructuredGridReader.h>
+#include <vtkStructuredGrid.h>
+
 VTKStage::VTKStage(void)
 {
+    vtkCompositeDataPipeline* prototype = vtkCompositeDataPipeline::New();
+    vtkAlgorithm::SetDefaultExecutivePrototype(prototype);
+    prototype->Delete();
+
 	polydataReader = NULL;
 	c2p = NULL;
 	m_multiGroupGeomFilter = NULL;
@@ -53,26 +63,33 @@ VTKStage::~VTKStage(void)
 		mask->Delete();
 }
 
-vtkGlyph3D* VTKStage::GetOutput()
+vtkPolyData* VTKStage::GetOutput()
 {
-	return glyph;
+	return mask->GetOutput();
 }
 
 void VTKStage::Update(int n)
 {
 	//Not sure why we need this, but I am leaving this alone. CYANG 07/10/09
-    vtkCompositeDataPipeline* prototype = vtkCompositeDataPipeline::New();
-    vtkAlgorithm::SetDefaultExecutivePrototype(prototype);
-    prototype->Delete();
-
 	if (polydataReader)
 		polydataReader->Delete();
-	polydataReader = vtkXMLPolyDataReader::New();
+	//polydataReader = vtkXMLUnstructuredGridReader::New();
+	//polydataReader->SetFileName(xmlPolydateFname.c_str());//("C:\\Dougm\\testvecglyphs_large.vtp");
+    //polydataReader->Update();
+	//vtkDataSet* dataset = static_cast< vtkXMLUnstructuredGridReader* >( polydataReader )->GetOutput();
+	polydataReader = vtkXMLStructuredGridReader::New();
 	polydataReader->SetFileName(xmlPolydateFname.c_str());//("C:\\Dougm\\testvecglyphs_large.vtp");
     polydataReader->Update();
-    
-	vtkDataSet* dataset = polydataReader->GetOutput();
+	vtkDataSet* dataset = static_cast< vtkXMLStructuredGridReader* >( polydataReader )->GetOutput();
+	//polydataReader = vtkXMLPolyDataReader::New();
+	//polydataReader->SetFileName(xmlPolydateFname.c_str());//("C:\\Dougm\\testvecglyphs_large.vtp");
+    //polydataReader->Update();
+	//vtkDataSet* dataset = static_cast< vtkXMLPolyDataReader* >( polydataReader )->GetOutput();
 
+    //dataset->GetPointData()->SetActiveVectors( "steve's_vector" );
+    //dataset->GetPointData()->SetActiveScalars( "first-scalar" );
+    //dataset->GetCellData()->SetActiveVectors( "steve's_vector" );
+    //dataset->GetCellData()->SetActiveScalars( "first-scalar" );
 	if (c2p)
 		c2p->Delete();
     c2p = vtkCellDataToPointData::New();
@@ -119,7 +136,8 @@ void VTKStage::Update(int n)
 	if (mask)
 		mask->Delete();
 	mask = vtkMaskPoints::New();
-	
+	mask->RandomModeOn();
+
 	if (n>0)
 		mask->SetOnRatio(n);
 
@@ -130,7 +148,7 @@ void VTKStage::Update(int n)
         //dataset->GetRange( currentScalarRange );
 		//dataset->GetScalarRange(currentScalarRange );
         
-        if( _vectorThreshHoldValues[ 0 ] > currentScalarRange[ 0 ] &&
+        /*if( _vectorThreshHoldValues[ 0 ] > currentScalarRange[ 0 ] &&
            _vectorThreshHoldValues[ 1 ] < currentScalarRange[ 1 ] )
         {
             tfilter->SetInputConnection( m_geometryFilter->GetOutputPort() );
@@ -145,17 +163,18 @@ void VTKStage::Update(int n)
 			mask->SetInputConnection( strip->GetOutputPort() );
             glyph->SetInputConnection( mask->GetOutputPort() );
         }
-        else if( _vectorThreshHoldValues[ 0 ] > currentScalarRange[ 0 ] )
-        {
-            tfilter->SetInputConnection( m_geometryFilter->GetOutputPort() );
-            tfilter->ThresholdByUpper( _vectorThreshHoldValues[ 0 ] );
+        else if( _vectorThreshHoldValues[ 0 ] > currentScalarRange[ 0 ] )*/
+        /*{
+            mask->SetInputConnection( m_geometryFilter->GetOutputPort() );
+            mask->Update();
+            tfilter->SetInputConnection( mask->GetOutputPort() );
+            tfilter->ThresholdByUpper( 1.0f );
             //tfilter->SetInputArrayToProcess( 0, 0, 0,
             //                                vtkDataObject::FIELD_ASSOCIATION_POINTS, 
-            //                                GetActiveDataSet()->GetActiveScalarName().c_str() );
+            //                               "first-scalar" );
             tris->SetInputConnection( tfilter->GetOutputPort() );
             strip->SetInputConnection( tris->GetOutputPort() );
-            mask->SetInputConnection( strip->GetOutputPort() );
-            glyph->SetInputConnection( mask->GetOutputPort() );
+            glyph->SetInputConnection( strip->GetOutputPort() );
         }
         else if( _vectorThreshHoldValues[ 1 ] < currentScalarRange[ 1 ] )
         {
@@ -169,9 +188,20 @@ void VTKStage::Update(int n)
             mask->SetInputConnection( strip->GetOutputPort() );
             glyph->SetInputConnection( mask->GetOutputPort() );
         }
-        else
+        else*/
         {
 			mask->SetInputConnection( m_geometryFilter->GetOutputPort() );
+            mask->Update();
+
+               /*{
+    vtkXMLPolyDataWriter* writer = vtkXMLPolyDataWriter::New();
+    writer->SetInput( mask->GetOutput() );
+    writer->SetDataModeToAscii();
+    writer->SetFileName( "teststreamervecglyphs.vtp" );
+    writer->Write();
+    writer->Delete();
+    }*/
+
             glyph->SetInputConnection( mask->GetOutputPort() );
         }
     }
@@ -189,6 +219,7 @@ void VTKStage::Update(int n)
         //if( _scaleByVector == 0 )
         {
             glyph->SetScaleModeToDataScalingOff();
+            glyph->Update();
         }
         /*else
         {
@@ -200,18 +231,17 @@ void VTKStage::Update(int n)
     }
     
     
-   /* 
-   file dumping is turned off 
-   {
+   
+   //file dumping is turned off 
+   /*{
     vtkXMLPolyDataWriter* writer = vtkXMLPolyDataWriter::New();
     writer->SetInput( glyph->GetOutput() );
     writer->SetDataModeToAscii();
-    writer->SetFileName( "C:\\Dougm\\teststreamervecglyphs.vtk" );
+    writer->SetFileName( "teststreamervecglyphs.vtp" );
     writer->Write();
     writer->Delete();
-    }
-    */
-    
+    }*/
+
   return;
 
 }
