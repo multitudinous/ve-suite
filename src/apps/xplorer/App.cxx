@@ -30,6 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
+
 // --- VE-Suite Includes --- //
 #include "App.h"
 #include "VjObsWrapper.h"
@@ -121,10 +122,11 @@ namespace vxs = ves::xplorer::scenegraph;
 
 ////////////////////////////////////////////////////////////////////////////////
 App::App( int argc, char* argv[], bool enableRTT )
+    :
 #if __VJ_version >= 2003000
-    : vrj::osg::App( vrj::Kernel::instance() ),
+    vrj::osg::App( vrj::Kernel::instance() ),
 #else
-    : vrj::OsgApp( vrj::Kernel::instance() ),
+    vrj::OsgApp( vrj::Kernel::instance() ),
 #endif
     readyToWriteWebImage( false ),
     writingWebImageNow( false ),
@@ -176,10 +178,28 @@ App::App( int argc, char* argv[], bool enableRTT )
     
     mSceneRenderToTexture = 
         SceneRenderToTexturePtr( new SceneRenderToTexture() );
+
+    //Set the ortho2D( 0, 1, 0, 1, 0, 1 ) matrix
+    m_ortho2D.mState =
+        gmtl::Matrix44d::AFFINE | gmtl::Matrix44d::NON_UNISCALE;
+    m_ortho2D.mData[  0 ] =  2.0;
+    m_ortho2D.mData[  5 ] =  2.0;
+    m_ortho2D.mData[ 10 ] = -2.0;
+    m_ortho2D.mData[ 12 ] = -1.0;
+    m_ortho2D.mData[ 13 ] = -1.0;
+    m_ortho2D.mData[ 14 ] = -1.0;
+    //Copy the ortho2D matrix
+    m_osgOrtho2D.set( m_ortho2D.mData );
+
+    //Set the identity matrix
+    m_identity.mState = gmtl::Matrix44d::IDENTITY;
+    //Copy the identity matrix
+    m_osgIdentity.set( m_identity.mData );
     
-    gmtl::Vec3d x_axis( 1.0f, 0.0f, 0.0f );
+    //Set the zUp transformation matrix
+    gmtl::Vec3d x_axis( 1.0, 0.0, 0.0 );
     mZUp = gmtl::makeRot< gmtl::Matrix44d >( 
-        gmtl::AxisAngled( gmtl::Math::deg2Rad( -90.0f ), x_axis ) );
+        gmtl::AxisAngled( gmtl::Math::deg2Rad( -90.0 ), x_axis ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 App::~App()
@@ -201,8 +221,9 @@ void App::exit()
 ////////////////////////////////////////////////////////////////////////////////
 osg::Group* App::getScene()
 {
-    //osgDB::writeNodeFile(*this->_sceneManager->GetRootNode()->GetRawNode(),
-    //   "C:/test.osg");
+    //osgDB::writeNodeFile(
+        //*this->_sceneManager->GetRootNode()->GetRawNode(), "C:/test.osg" );
+
     return ves::xplorer::scenegraph::SceneManager::instance()->GetRootNode();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -216,16 +237,18 @@ void App::contextInit()
 #else
         vrj::GlDrawManager::instance()->getCurrentContext();
 #endif
-    // --- Create new context specific scene viewer -- //
-    osg::ref_ptr<osgUtil::SceneView> new_sv( new osgUtil::SceneView );
-    this->configSceneView( new_sv.get() );          // Configure the new viewer
-    // hard code the LOD setting to be something high for the time being
-    new_sv->setLODScale( 0.01f );
-    // set the unique id for this particular context
+
+    //Create new context specific scene viewer
+    osg::ref_ptr< osgUtil::SceneView > new_sv( new osgUtil::SceneView() );
+    //Configure the new viewer
+    configSceneView( new_sv.get() );
+    //Hard code the LOD setting to be something high for the time being
+    new_sv->setLODScale( 0.01 );
+    //Set the unique id for this particular context
     new_sv->getState()->setContextID( unique_context_id );
-    // Add the tree to the scene viewer and set properties
+    //Add the tree to the scene viewer and set properties
     {
-        vpr::Guard<vpr::Mutex> sv_guard( mValueLock );
+        vpr::Guard< vpr::Mutex > sv_guard( mValueLock );
         new_sv->getCamera()->setName( "SV Camera" );
         if( !mRTT )
         {
@@ -233,7 +256,6 @@ void App::contextInit()
         }
         else
         {
-            *mAlreadyRendered = false;
             *mRTTChanged = false;
         }
     }
@@ -284,7 +306,7 @@ void App::configSceneView( osgUtil::SceneView* newSceneViewer )
     newSceneViewer->setFrameStamp( mFrameStamp.get() );
 
     newSceneViewer->init();
-    newSceneViewer->setClearColor( osg::Vec4( 1.0f, 0.0f, 0.0f, 1.0f ) );
+    newSceneViewer->setClearColor( osg::Vec4( 1.0, 0.0, 0.0, 1.0 ) );
 
     {
         vpr::Guard<vpr::Mutex> val_guard( mValueLock );
@@ -343,8 +365,8 @@ void App::configSceneView( osgUtil::SceneView* newSceneViewer )
 void App::bufferPreDraw()
 {
 #if 0
-    glClearColor(1.0, 0.0, 0.0, 0.0);
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClearColor( 1.0, 0.0, 0.0, 0.0 );
+    glClear( GL_COLOR_BUFFER_BIT );
 #endif
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -374,7 +396,8 @@ void App::initScene()
         SetFrameStamp( mFrameStamp.get() );
 
     getScene()->addChild( light_source_0.get() );
-    getScene()->getOrCreateStateSet()->setAttributeAndModes( light_model_0.get(), osg::StateAttribute::ON );
+    getScene()->getOrCreateStateSet()->setAttributeAndModes(
+        light_model_0.get(), osg::StateAttribute::ON );
 
     // modelHandler stores the arrow and holds all data and geometry
     ModelHandler::instance()->SetXMLCommand( m_vjobsWrapper->GetXMLCommand() );
@@ -382,15 +405,15 @@ void App::initScene()
 
     // navigation and cursor
     EnvironmentHandler::instance()->Initialize();
-    for( int i = 1;i < argc;++i )
+    for( int i = 1; i < argc; ++i )
     {
-        if( ( std::string( argv[i] ) == std::string( "-VESDesktop" ) ) && 
+        if( ( std::string( argv[ i ] ) == std::string( "-VESDesktop" ) ) && 
             ( argc >= i + 2 ) )
         {
             EnvironmentHandler::instance()->
-            SetDesktopSize( atoi( argv[i+1] ), atoi( argv[i+2] ) );
+                SetDesktopSize( atoi( argv[ i + 1 ] ), atoi( argv[ i + 2 ] ) );
         }
-        else if( std::string( argv[i] ) == std::string( "-VESCluster" ) )
+        else if( std::string( argv[ i ] ) == std::string( "-VESCluster" ) )
         {
             isCluster = true;
         }
@@ -411,7 +434,8 @@ void App::initScene()
     _tbvHandler->SetMasterNode( m_vjobsWrapper->IsMaster() );
 
     std::cout << "|  2. Initializing.................................... cfdExecutive |" << std::endl;
-    cfdExecutive::instance()->Initialize( m_vjobsWrapper->naming_context, m_vjobsWrapper->child_poa );
+    cfdExecutive::instance()->Initialize(
+        m_vjobsWrapper->naming_context, m_vjobsWrapper->child_poa );
 
     // This may need to be fixed
     this->m_vjobsWrapper->GetCfdStateVariables();
@@ -423,7 +447,7 @@ void App::preFrame()
     vprDEBUG( vesDBG, 3 ) << "|App::preFrame" << std::endl << vprDEBUG_FLUSH;
     ///////////////////////
     {
-        //Check and see if the ord has any work to do
+        //Check and see if the orb has any work to do
         VPR_PROFILE_GUARD_HISTORY( "App::preFrame CheckORBWorkLoad", 20 );
         m_vjobsWrapper->CheckORBWorkLoad();
     }
@@ -467,7 +491,7 @@ void App::latePreFrame()
         m_vjobsWrapper->GetXMLCommand()->
             GetDataValuePair( "Filename" )->GetData( m_filename );
     }
-    
+
     {
         VPR_PROFILE_GUARD_HISTORY( "App::latePreFrame Framerate Calculations", 20 );
         float current_time = this->m_vjobsWrapper->GetSetAppTime( -1 );
@@ -513,7 +537,7 @@ void App::latePreFrame()
                     << vprDEBUG_FLUSH;
             }        
         }
-        
+
         ///This came from OSG/src/osgViewer/Viewer.cpp line 541
         ///I am not sure what it does but it seems important
         if( osg::Referenced::getDeleteHandler() )
@@ -521,7 +545,7 @@ void App::latePreFrame()
             osg::Referenced::getDeleteHandler()->flush();
             osg::Referenced::getDeleteHandler()->
                 setFrameNumber( mFrameStamp->getFrameNumber() );
-        }        
+        }
     }
     ///////////////////////
     {
@@ -586,7 +610,7 @@ void App::latePreFrame()
     mNavPosition = 
         gmtl::convertTo< double >( 
             ves::xplorer::scenegraph::SceneManager::instance()->
-            GetActiveNavSwitchNode()->GetMat() );
+                GetActiveNavSwitchNode()->GetMat() );
 
     vprDEBUG( vesDBG, 3 ) << "|App::End latePreFrame" 
         << std::endl << vprDEBUG_FLUSH;
@@ -641,12 +665,11 @@ void App::contextPreDraw()
                 *mRTTChanged = true;
             }
         }
-        *mAlreadyRendered = false;
     }
-    
+
     ///Context specific updates for models that are loaded
     ves::xplorer::ModelHandler::instance()->ContextPreDrawUpdate();
-    
+
     ///Adjust settings on the SceneView
     ///Info from Paul Martz below:
     ///OSG automatically computes near and far values to obtain the largest
@@ -668,28 +691,19 @@ void App::contextPreDraw()
         m_vjobsWrapper->GetXMLCommand()->GetDataValuePair( "Near Far Ratio" )->GetData( nearFar );
         (*sceneViewer)->setNearFarRatio( nearFar );
     }
-    
 }
 ////////////////////////////////////////////////////////////////////////////////
 ///Remember that this is called in parrallel in a multiple context situation
 ///so setting variables should not be done here
 void App::draw()
 {
-    if( mRTT )
-    {
-        if( *mAlreadyRendered )
-        {
-            return;
-        }
-    }
-
     //std::cout << "----------Draw-----------" << std::endl;
     VPR_PROFILE_GUARD_HISTORY( "App::draw", 20 );
     glClear( GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT );
 
-    // Users have reported problems with OpenGL reporting stack underflow
-    // problems when the texture attribute bit is pushed here, so we push all
-    // attributes *except* GL_TEXTURE_BIT.
+    //Users have reported problems with OpenGL reporting stack underflow
+    //problems when the texture attribute bit is pushed here, so we push all
+    //attributes *except* GL_TEXTURE_BIT.
     glPushAttrib( GL_ALL_ATTRIB_BITS & ~GL_TEXTURE_BIT );
     glPushAttrib( GL_TRANSFORM_BIT );
     glPushAttrib( GL_VIEWPORT_BIT );
@@ -700,135 +714,152 @@ void App::draw()
     glMatrixMode( GL_PROJECTION );
     glPushMatrix();
 
-    osg::ref_ptr< osgUtil::SceneView > sv;
-    sv = ( *sceneViewer );  // Get context specific scene viewer
+    //Get context specific scene viewer
+    osg::ref_ptr< osgUtil::SceneView > sv = ( *sceneViewer );
     vprASSERT( sv.get() != NULL );
 
     sv->setLODScale( EnvironmentHandler::instance()->GetGlobalLODScale() );
 
-    // The OpenGL Draw Manager that we are rendering for.
-    //Get the view matrix and the frustrum form the draw manager
+    //The OpenGL Draw Manager that we are rendering for
+    //Get the view matrix and the frustrum from the draw manager
 #if __VJ_version >= 2003000
-    vrj::opengl::DrawManager* gl_manager =
-        static_cast<vrj::opengl::DrawManager*>( this->getDrawManager() );
-    //vprASSERT( gl_manager != NULL );
-    vrj::opengl::UserData* user_data = gl_manager->currentUserData();
+    vrj::opengl::DrawManager* glDrawManager =
+        static_cast< vrj::opengl::DrawManager* >( getDrawManager() );
+    //vprASSERT( glDrawManager != NULL );
+    vrj::opengl::UserData* userData = glDrawManager->currentUserData();
+    vrj::opengl::WindowPtr glWindow = userData->getGlWindow();
+    vrj::ViewportPtr viewport = userData->getViewport();
+    vrj::ProjectionPtr project = userData->getProjection();
 #else
-    vrj::GlDrawManager* gl_manager =
-        static_cast< vrj::GlDrawManager* >( this->getDrawManager() );
-    //vprASSERT( gl_manager != NULL );
-    vrj::GlUserData* user_data = gl_manager->currentUserData();
+    vrj::GlDrawManager* glDrawManager =
+        static_cast< vrj::opengl::DrawManager* >( getDrawManager() );
+    //vprASSERT( glDrawManager != NULL );
+    vrj::GlUserData* userData = glDrawManager->currentUserData();
+    vrj::GlWindowPtr glWindow = userData->getGlWindow();
+    vrj::Viewport* viewport = userData->getViewport();
+    vrj::Projection* project = userData->getProjection();
 #endif
-
-    // Set the up the viewport (since OSG clears it out)
-    float vp_ox, vp_oy, vp_sx, vp_sy;   // The float vrj sizes of the view ports
-    int w_ox, w_oy, w_width, w_height;  // Origin and size of the window
-    user_data->getViewport()->getOriginAndSize( vp_ox, vp_oy, vp_sx, vp_sy );
-    user_data->getGlWindow()->getOriginSize( w_ox, w_oy, w_width, w_height );
-
-    // compute unsigned versions of the viewport info (for passing to glViewport)
-    const unsigned int ll_x =
-        static_cast< unsigned int >( vp_ox * static_cast< float >( w_width ) );
-    const unsigned int ll_y =
-        static_cast< unsigned int >( vp_oy * static_cast< float >( w_height ) );
-    const unsigned int x_size =
-        static_cast< unsigned int >( vp_sx * static_cast< float >( w_width ) );
-    const unsigned int y_size =
-        static_cast< unsigned int >( vp_sy * static_cast< float >( w_height ) );
-
-    if( mRTT )
-    {
-        sv->setViewport(  0, 0, w_width, w_height  );
-    }
-    else
-    {
-        sv->setViewport(  ll_x, ll_y, x_size, y_size  );
-    }
-
-    //Get the frustrum
-#if __VJ_version >= 2003000
-    vrj::ProjectionPtr project = user_data->getProjection();
-#else
-    vrj::Projection* project = user_data->getProjection();
-#endif
-
     vrj::Frustum frustum = project->getFrustum();
-    double _left( frustum[ vrj::Frustum::VJ_LEFT ] );
-    double _right( frustum[ vrj::Frustum::VJ_RIGHT ] );
-    double _bottom( frustum[ vrj::Frustum::VJ_BOTTOM ] );
-    double _top( frustum[ vrj::Frustum::VJ_TOP ] );
-    double _near( frustum[ vrj::Frustum::VJ_NEAR ] );
-    double _far( frustum[ vrj::Frustum::VJ_FAR ] );
-    if( mRTT )
-    {
-        //These are in device coordinates
-        sv->setProjectionMatrix( osg::Matrix::ortho( 0, 1, 0, 1, 0, 1 ) );
-    }
-    else
-    {
-        sv->setProjectionMatrixAsFrustum(
-            _left, _right, _bottom, _top, _near, _far );
-    }
-                                      
-    //Copy the view matrix
-    //    gmtl::Vec3f x_axis( 1.0f, 0.0f, 0.0f );
-    //gmtl::postMult(
-    //    _vjMatrixLeft, gmtl::makeRot< gmtl::Matrix44f >(
-    //        gmtl::AxisAnglef( gmtl::Math::deg2Rad( -90.0f ), x_axis ) ) );
-    gmtl::Matrix44d _vjMatrixLeft = 
-        gmtl::convertTo< double >( project->getViewMatrix() );
-    //Transform into z-up land
-    _vjMatrixLeft = _vjMatrixLeft * mZUp * mNavPosition;
-    
-    //Copy the matrix
-    if( mRTT )
-    {
-        sv->setViewMatrix( osg::Matrixd::identity() );
-    }
-    else
-    {
-        osg::ref_ptr< osg::RefMatrix > osg_proj_xform_mat = new osg::RefMatrix();
-        osg_proj_xform_mat->set( _vjMatrixLeft.mData );
-        sv->setViewMatrix( *(osg_proj_xform_mat.get()) );
-    }
 
-    //Setup render to texture and post-processing pipeline
+    //Set up the viewport (since OSG clears it out)
+    int w_ox, w_oy, w_width, w_height; //Origin and size of the window
+    glWindow->getOriginSize( w_ox, w_oy, w_width, w_height );
+    float vp_ox, vp_oy, vp_sx, vp_sy;  //The float vrj sizes of the view ports
+    viewport->getOriginAndSize( vp_ox, vp_oy, vp_sx, vp_sy );
+
+    //Compute unsigned versions of the viewport info (for passing to glViewport)
+    const unsigned int ll_x = static_cast< unsigned int >( vp_ox * w_width );
+    const unsigned int ll_y = static_cast< unsigned int >( vp_oy * w_height );
+    const unsigned int x_size = static_cast< unsigned int >( vp_sx * w_width );
+    const unsigned int y_size = static_cast< unsigned int >( vp_sy * w_height );
+
+    //Get the frustum values
+    double l = frustum[ vrj::Frustum::VJ_LEFT ];
+    double r = frustum[ vrj::Frustum::VJ_RIGHT ];
+    double b = frustum[ vrj::Frustum::VJ_BOTTOM ];
+    double t = frustum[ vrj::Frustum::VJ_TOP ];
+    double n = frustum[ vrj::Frustum::VJ_NEAR ];
+    double f = frustum[ vrj::Frustum::VJ_FAR ];
+
+    //Calculate the projection matrix from the frustum values
+    gmtl::Matrix44d projectionMatrix;
+    projectionMatrix.mState =
+        gmtl::Matrix44d::AFFINE | gmtl::Matrix44d::NON_UNISCALE;
+    projectionMatrix.mData[  0 ] = ( 2.0 * n ) / ( r - l );
+    projectionMatrix.mData[  5 ] = ( 2.0 * n ) / ( t - b );
+    projectionMatrix.mData[  8 ] = ( r + l ) / ( r - l );
+    projectionMatrix.mData[  9 ] = ( t + b ) / ( t - b );
+    projectionMatrix.mData[ 10 ] = -1.0 * ( f + n ) / ( f - n );
+    projectionMatrix.mData[ 11 ] = -1.0;
+    projectionMatrix.mData[ 14 ] = ( -2.0 * f * n ) / ( f - n );
+    projectionMatrix.mData[ 15 ] =  0.0;
+    //Copy the projection matrix
+    //Use smart pointer RefMatrix to prevent memory leak
+    osg::ref_ptr< osg::RefMatrix > osgProjectionMatrix =
+        new osg::RefMatrix( projectionMatrix.mData );
+
+    //Get the modelview matrix
+    //Start by getting the view matrix
+    gmtl::Matrix44d modelViewMatrix = 
+        gmtl::convertTo< double >( project->getViewMatrix() );
+    //Transform into z-up land (mZUp) and mul by the model matrix (mNavPosition)
+    modelViewMatrix = modelViewMatrix * mZUp * mNavPosition;
+    //Copy the modelview matrix
+    //Use smart pointer RefMatrix to prevent memory leak
+    osg::ref_ptr< osg::RefMatrix > osgModelViewMatrix =
+        new osg::RefMatrix( modelViewMatrix.mData );
+
+    //Set the matrices for the scene
     if( mRTT )
     {
-        VPR_PROFILE_GUARD_HISTORY( "App::draw RTT Camera", 20 );
-        mSceneRenderToTexture->ConfigureRTTCameras();
+        //Set the viewport for the sv camera
+        sv->setViewport( 0, 0, w_width, w_height );
+        //Set the projection matrix for the sv camera
+        //ortho2D( 0, 1, 0, 1, 0, 1 )
+        sv->setProjectionMatrix( m_osgOrtho2D );
+        //Set the view matrix for the sv camera
+        sv->setViewMatrix( m_osgIdentity );
+
+        if( *mRTTChanged )
+        {
+            osg::ref_ptr< osg::Camera > camera =
+                mSceneRenderToTexture->GetCamera( viewport );
+            if( camera.valid() )
+            {
+                //Set the projection matrix for the rtt camera
+                camera->setProjectionMatrix( *(osgProjectionMatrix.get()) );
+
+                //Set the view matrix for the rtt camera
+                camera->setViewMatrix( *(osgModelViewMatrix.get()) );
+            }
+        }
+    }
+    else
+    {
+        //Set the viewport for the sv camera
+        sv->setViewport( ll_x, ll_y, x_size, y_size );
+        //Set the projection matrix for the sv camera
+        sv->setProjectionMatrix( *(osgProjectionMatrix.get()) );
+        //Set the view matrix for the sv camera
+        sv->setViewMatrix( *(osgModelViewMatrix.get()) );
     }
 
     //Draw the scene
-    // NOTE: It is not safe to call osgUtil::SceneView::update() here; it
-    // should only be called by a single thread. The equivalent of calling
-    // osgUtil::SceneView::update() is in vrj::OsgApp::update().
-    //profile the cull call
+    //NOTE: It is not safe to call osgUtil::SceneView::update() here; it
+    //should only be called by a single thread. The equivalent of calling
+    //osgUtil::SceneView::update() is in vrj::OsgApp::update()
+    //Profile the cull call
     {
         VPR_PROFILE_GUARD_HISTORY( "App::draw sv->cull", 20 );
         //Not sure if it should be used - came from osgViewer::Renderer::cull/draw
         //sv->inheritCullSettings( *(sv->getCamera()) );
         sv->cull();
     }
-    //profile the draw call
+    //Profile the draw call
     {
         VPR_PROFILE_GUARD_HISTORY( "App::draw sv->draw", 20 );
         sv->draw();
     }
 
     //Get the frustum planes based on the current bounding volume of the scene
-    sv->getCamera()->getProjectionMatrixAsFrustum(
-        _left, _right, _bottom, _top, _near, _far );
+    sv->getCamera()->getProjectionMatrixAsFrustum( l, r, b, t, n, f );
 
     //The code below is not thread safe and will result in random results
     //in multithreaded use cases
-    EnvironmentHandler::instance()->SetFrustumValues(
-        _left, _right, _bottom, _top, _near, _far );
-    
+    EnvironmentHandler::instance()->SetFrustumValues( l, r, b, t, n, f );
+    /*
+    projectionMatrix.mData[  0 ] = ( 2.0 * n ) / ( r - l );
+    projectionMatrix.mData[  5 ] = ( 2.0 * n ) / ( t - b );
+    projectionMatrix.mData[  8 ] = ( r + l ) / ( r - l );
+    projectionMatrix.mData[  9 ] = ( t + b ) / ( t - b );
+    projectionMatrix.mData[ 10 ] = -1.0 * ( f + n ) / ( f - n );
+    projectionMatrix.mData[ 14 ] = ( -2.0 * f * n ) / ( f - n );
+    */
+
     //Screen capture code
     if( captureNextFrameForWeb )
     {
-        vpr::Guard<vpr::Mutex> val_guard( mValueLock );
+        vpr::Guard< vpr::Mutex > val_guard( mValueLock );
         mSceneRenderToTexture->WriteImageFileForWeb(
             getScene(), sv.get(), m_filename );
         captureNextFrameForWeb = false;
@@ -844,11 +875,6 @@ void App::draw()
     glPopAttrib();
     glPopAttrib();
 
-    if( mRTT )
-    {
-        *mAlreadyRendered = true;
-    }
-    
     //GLenum errorEnum = glGetError();
     //vprDEBUG( vesDBG, 3 ) <<  << errorEnum & GL_NO_ERROR 
     //    << std::endl << vprDEBUG_FLUSH;

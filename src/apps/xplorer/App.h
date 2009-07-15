@@ -30,6 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
+
 #ifndef CFD_APP_H
 #define CFD_APP_H
 
@@ -186,36 +187,11 @@ public:
     ///Update the framestamp and traverse the scenegraph
     void update();
 
-    ///Update sceneview
-    bool svUpdate;
-
-    ///The current frame number
-    unsigned int _frameNumber;
-
-    ///Should be removed since this is a singleton
-    ves::xplorer::TextureBasedVizHandler* _tbvHandler;
-
-    ///The timer for framestamp
-    osg::Timer _timer;
-    ///The timer for framestamp
-    osg::Timer_t _start_tick;
-
-#ifdef _PBUFFER
-    //biv --may convert this to a singleton later
-    ///Should be removed since this is a singleton
-    ves::xplorer::volume::cfdPBufferManager* _pbuffer;
-#endif //_PBUFFER
-
-    ///The vjobs wrapper
-    VjObsWrapper* m_vjobsWrapper;
-
-    //Only used in preframe for transient stuff
-    ///The last frame
-    int lastFrame;
-    
 protected:
 
 private:
+    ///Update sceneview
+    bool svUpdate;
     ///Are we in cluster mode
     bool isCluster;
     ///Not sure what this is for
@@ -226,10 +202,17 @@ private:
     bool writingWebImageNow;
     ///Not sure what this is for
     bool captureNextFrameForWeb;
+    ///Turn off/on RTT
+    bool mRTT;
 
+    ///The current frame number
+    unsigned int _frameNumber;
     ///Used to count frames specifically for profilling
     unsigned int mProfileCounter;
 
+    //Only used in preframe for transient stuff
+    ///The last frame
+    int lastFrame;
     ///Not sure what this is for
     int webImageWidth;
     ///Not sure what this is for
@@ -245,13 +228,11 @@ private:
 
     ///Used for framerate calculation as integers only
     float mLastTime;
-    
     ///Last time from last frame
     float mLastFrameTime;
-
     ///The frame delta time
     float mFrameDT;
-    
+
     ///Time to start
     double time_since_start;
 
@@ -262,6 +243,10 @@ private:
     ///Stream buffer to write stats too
     std::ostringstream mStatsStream;
 
+    ///The timer for framestamp
+    osg::Timer _timer;
+    ///The timer for framestamp
+    osg::Timer_t _start_tick;
     ///Update visitor
     osg::ref_ptr< osg::NodeVisitor > mUpdateVisitor;
     ///Framestamp
@@ -272,22 +257,37 @@ private:
     osg::ref_ptr< osg::LightSource > light_source_0;
     ///Light model for the scene
     osg::ref_ptr< osg::LightModel > light_model_0;
+    ///
+    gmtl::Matrix44d m_ortho2D;
+    ///
+    osg::Matrixd m_osgOrtho2D;
+    ///
+    gmtl::Matrix44d m_identity;
+    ///
+    osg::Matrixd m_osgIdentity;
     ///-90 z up matrix
     gmtl::Matrix44d mZUp;
     ///User nav position for camera
     gmtl::Matrix44d mNavPosition;
-    
+
+    ///The vjobs wrapper
+    VjObsWrapper* m_vjobsWrapper;
+#ifdef _PBUFFER
+    //biv --may convert this to a singleton later
+    ///Should be removed since this is a singleton
+    ves::xplorer::volume::cfdPBufferManager* _pbuffer;
+#endif //_PBUFFER
+    ///Should be removed since this is a singleton
+    ves::xplorer::TextureBasedVizHandler* _tbvHandler;
     ///
     ves::xplorer::SceneRenderToTexturePtr mSceneRenderToTexture;
-    ///Turn off/on RTT
-    bool mRTT;
+
 #if __VJ_version >= 2003000
-    vrj::opengl::ContextData< bool > mAlreadyRendered;
     vrj::opengl::ContextData< bool > mRTTChanged;
 #else
-    vrj::GlContextData< bool > mAlreadyRendered;
     vrj::GlContextData< bool > mRTTChanged;
 #endif
+
 };
 } //end xplorer
 } //end ves
