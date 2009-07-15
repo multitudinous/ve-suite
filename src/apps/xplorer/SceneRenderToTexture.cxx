@@ -637,15 +637,17 @@ osg::Group* const SceneRenderToTexture::GetGroup() const
     return mRootGroup.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
-/*#if __VJ_version >= 2003000
-osg::Camera* SceneRenderToTexture::GetCamera( vrj::ViewportPtr viewport )
+#if __VJ_version >= 2003000
+osg::Camera* const SceneRenderToTexture::GetCamera(
+    vrj::ViewportPtr const viewport )
 #else
-osg::Camera* SceneRenderToTexture::GetCamera( vrj::Viewport* viewport )
+osg::Camera* const SceneRenderToTexture::GetCamera(
+    vrj::Viewport* const viewport )
 #endif
 {
-    PipelineMap::iterator itr = (*mPipelines).find( viewport );
+    PipelineMap::const_iterator itr = (*mPipelines).find( viewport );
     if( itr != (*mPipelines).end() )
-    {                  
+    {
         return itr->second.first.get();
     }
     else
@@ -655,7 +657,7 @@ osg::Camera* SceneRenderToTexture::GetCamera( vrj::Viewport* viewport )
 
         return NULL;
     }
-}*/
+}
 ////////////////////////////////////////////////////////////////////////////////
 void SceneRenderToTexture::ConfigureRTTCameras()
 {

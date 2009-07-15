@@ -110,11 +110,12 @@ public:
 
     ///Get the camera with specified vrj::Viewport
     ///\return The camera with specified vrj::Viewport
-//#if __VJ_version >= 2003000    
-//    osg::Camera* GetCamera( vrj::ViewportPtr viewport );
-//#else    
-//    osg::Camera* GetCamera( vrj::Viewport* viewport );
-//#endif
+#if __VJ_version >= 2003000
+    osg::Camera* const GetCamera( vrj::ViewportPtr const viewport );
+#else
+    osg::Camera* const GetCamera( vrj::Viewport* const viewport );
+#endif
+
     ///Update something
     ///NOTE: Must have an active context to call
     void UpdateRTTQuadAndViewport();
