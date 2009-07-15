@@ -54,8 +54,6 @@
 
 using namespace ves::xplorer::scenegraph;
 
-typedef double vtkReal;
-
 ////////////////////////////////////////////////////////////////////////////////
 osg::Geode* ves::xplorer::scenegraph::vtkActorToStreamLine( vtkActor *actor, osg::Geode* geode, int verbose )
 {
@@ -141,7 +139,7 @@ osg::Geometry* ves::xplorer::scenegraph::ProcessPrimitive( vtkActor *actor, vtkC
     osg::ref_ptr< osg::Vec3Array > normals = new osg::Vec3Array();
     osg::ref_ptr< osg::Vec3Array > texcoord0 = new osg::Vec3Array();
 
-    vtkReal opacity = actor->GetProperty()->GetOpacity();
+    double opacity = actor->GetProperty()->GetOpacity();
     vtkUnsignedCharArray *colorArray = actor->GetMapper()->MapScalars( opacity );
 
     //Copy data from vtk prim array to osg Geometry
