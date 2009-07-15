@@ -69,6 +69,8 @@ void VTKStage::Update(int n)
 		polydataReader->Delete();
 	polydataReader = vtkXMLPolyDataReader::New();
 	polydataReader->SetFileName(xmlPolydateFname.c_str());//("C:\\Dougm\\testvecglyphs_large.vtp");
+    polydataReader->Update();
+    
 	vtkDataSet* dataset = polydataReader->GetOutput();
 
 	if (c2p)

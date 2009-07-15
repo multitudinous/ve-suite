@@ -52,7 +52,7 @@ void OSGStage::createArrow( osg::Geometry& geom, int nInstances )
     (*n)[ 9 ] = osg::Vec3( 1., 0., 0. );
 
     if( nInstances > 1 )
-        geom.addPrimitiveSet( new osg::DrawArraysInstanced( GL_QUAD_STRIP, 0, 10, nInstances ) );
+        geom.addPrimitiveSet( new osg::DrawArrays( GL_QUAD_STRIP, 0, 10, nInstances ) );
     else
         geom.addPrimitiveSet( new osg::DrawArrays( GL_QUAD_STRIP, 0, 10 ) );
 
@@ -255,7 +255,9 @@ osg::Node* OSGStage::createInstanced(vtkGlyph3D* glyph, string vectorName, strin
 
 	double bounds[6];
 	points->GetBounds(bounds);
-	osg::BoundingBox bb(bounds[0],bounds[1],bounds[2],bounds[3],bounds[4],bounds[5]);
+    //VTK does bounds xmin, xmax,....
+    //OSG does bounds xmin, ymin, zmin, xmax, ymax,...
+	osg::BoundingBox bb(bounds[0],bounds[2],bounds[4],bounds[1],bounds[3],bounds[5]);
     geom->setInitialBound( bb );
 
 	//Create the rendering shader
