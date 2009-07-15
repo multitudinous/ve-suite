@@ -100,13 +100,8 @@ public:
     ///Destructor
     ~SceneRenderToTexture();
 
-    ///Initialize correct screen info for the texture and quad
-    ///NOTE: MUST be called AFTER EnvironmentHandler::InitScene
-    void InitScene( osg::Camera* const sceneViewCamera );
-
-    ///Get the root node for all children in the scene to be added to
-    ///\return The root osg::Group node
-    osg::Group* const GetGroup() const;
+    ///
+    void ConfigureRTTCameras();
 
     ///Get the camera with specified vrj::Viewport
     ///\return The camera with specified vrj::Viewport
@@ -116,11 +111,17 @@ public:
     osg::Camera* const GetCamera( vrj::Viewport* const viewport );
 #endif
 
+    ///Get the root node for all children in the scene to be added to
+    ///\return The root osg::Group node
+    osg::Group* const GetGroup() const;
+
+    ///Initialize correct screen info for the texture and quad
+    ///NOTE: MUST be called AFTER EnvironmentHandler::InitScene
+    void InitScene( osg::Camera* const sceneViewCamera );
+
     ///Update something
     ///NOTE: Must have an active context to call
     void UpdateRTTQuadAndViewport();
-    
-    void ConfigureRTTCameras();
 
     ///Take a high resolution screen capture of the render window for SceneView
     ///\param root The osg::Group to be rendered

@@ -68,6 +68,7 @@
 // --- OSG Includes --- //
 #include <osg/Group>
 #include <osg/Camera>
+#include <osg/ClearNode>
 #include <osg/FrameBufferObject>
 
 #include <osgDB/WriteFile>
@@ -80,21 +81,8 @@
 // --- C/C++ Libraries --- //
 #include <iostream>
 
-//jbkoch - these do not seem to be defined in osg
-#ifndef GL_DEPTH_STENCIL_EXT
-#define GL_DEPTH_STENCIL_EXT 0x84F9
-#endif
-#ifndef GL_UNSIGNED_INT_24_8_EXT
-#define GL_UNSIGNED_INT_24_8_EXT 0x84FA
-#endif
-#ifndef GL_DEPTH24_STENCIL8_EXT
-#define GL_DEPTH24_STENCIL8_EXT 0x88F0
-#endif
-#ifndef GL_TEXTURE_STENCIL_SIZE_EXT
-#define GL_TEXTURE_STENCIL_SIZE_EXT 0x88F1
-#endif
-
 //#define VES_SRTT_DEBUG
+
 using namespace ves::xplorer;
 
 namespace vxsr = ves::xplorer::scenegraph::rtt;
@@ -104,7 +92,7 @@ SceneRenderToTexture::SceneRenderToTexture()
     :
     mRootGroup( new osg::Group() ),
     mScaleFactor( 1 )
-{    
+{
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -190,7 +178,7 @@ void SceneRenderToTexture::InitScene( osg::Camera* const sceneViewCamera )
         processor->getOrCreateStateSet()->setRenderBinDetails(
             100, std::string( "RenderBin" ) );
 
-        //Add the scenegraph to the camera    
+        //Add the scenegraph to the camera
         camera->addChild( mRootGroup.get() );
         rttPipelines->addChild( processor.get() );
 
@@ -202,7 +190,7 @@ void SceneRenderToTexture::InitScene( osg::Camera* const sceneViewCamera )
         sceneViewCamera->addChild( camera.get() );
     }
     sceneViewCamera->addChild( rttPipelines.get() );
-    
+
     *mCamerasConfigured = true;
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -210,6 +198,7 @@ osg::Camera* SceneRenderToTexture::CreatePipelineCamera(
     osg::Viewport* viewport )
 {
     osg::Camera* tempCamera = new osg::Camera();
+    tempCamera->setClearStencil( 0 );
     tempCamera->setReferenceFrame( osg::Camera::ABSOLUTE_RF );
     tempCamera->setRenderOrder( osg::Camera::PRE_RENDER, 0 );
     tempCamera->setClearMask( 
@@ -220,7 +209,8 @@ osg::Camera* SceneRenderToTexture::CreatePipelineCamera(
     tempCamera->setViewport( viewport );
     tempCamera->setViewMatrix( osg::Matrix::identity() );
     tempCamera->setProjectionMatrix( osg::Matrix::identity() );
-    tempCamera->setComputeNearFarMode( osg::CullSettings::COMPUTE_NEAR_FAR_USING_BOUNDING_VOLUMES );
+    tempCamera->setComputeNearFarMode(
+        osg::CullSettings::COMPUTE_NEAR_FAR_USING_BOUNDING_VOLUMES );
     tempCamera->setCullingActive( false );
 
     std::pair< int, int > viewportDimensions = 
@@ -239,20 +229,6 @@ osg::Camera* SceneRenderToTexture::CreatePipelineCamera(
         osg::Texture2D::LINEAR, osg::Texture2D::REPEAT,
         viewportDimensions );
 
-    /*
-    //Set up the depth buffer
-    osg::ref_ptr< osg::Texture2D > depthMap = CreateViewportTexture(
-        GL_DEPTH_COMPONENT24, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE,
-        osg::Texture2D::NEAREST, osg::Texture2D::CLAMP_TO_EDGE,
-        viewportDimensions );
-
-    //Set up a depth/stencil buffer
-    depthStencilMap = CreateViewportTexture(
-        GL_DEPTH24_STENCIL8_EXT, GL_DEPTH_STENCIL_EXT, GL_UNSIGNED_INT_24_8_EXT,
-        osg::Texture2D::NEAREST, osg::Texture2D::CLAMP_TO_EDGE,
-        viewportDimensions );
-    */
-
     //Attach a texture and use it as the render target
 #if ( ( OSG_VERSION_MAJOR >= 2 ) && ( OSG_VERSION_MINOR >= 6 ) && ( OSG_VERSION_PATCH >= 0 ) )
     tempCamera->attach(
@@ -267,13 +243,33 @@ osg::Camera* SceneRenderToTexture::CreatePipelineCamera(
     //mCamera->attach( osg::Camera::COLOR_BUFFER2, mGlowStencil.get() );
 #endif
 
-    //Use an interleaved depth/stencil texture to get a depth and stencil buffer
-    //jbkoch: In order to get the stencil buffer to work on my card/driver,
-    //jbkoch: the depth and stencil must be attached to the same texture or
-    //jbkoch: renderbuffer. I have not found a way to access the renderbuffer
-    //jbkoch: for osg::Camera so must create texture for now.
-    //tempCamera->attach( osg::Camera::DEPTH_BUFFER, depthMap.get() );
-    //tempCamera->attach( osg::Camera::STENCIL_BUFFER, depthStencilMap.get() );
+    /*
+    //Set up the depth buffer
+    osg::ref_ptr< osg::Texture2D > depthMap = CreateViewportTexture(
+        GL_DEPTH_COMPONENT24, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE,
+        osg::Texture2D::NEAREST, osg::Texture2D::CLAMP_TO_EDGE,
+        viewportDimensions );
+    */
+
+    /*
+    //Set up interleaved depth/stencil buffer
+#if ( ( OSG_VERSION_MAJOR >= 2 ) && ( OSG_VERSION_MINOR >= 8 ) && ( OSG_VERSION_PATCH >= 1 ) )
+    //Set up a depth/stencil buffer
+    osg::ref_ptr< osg::Texture2D > depthStencilMap = CreateViewportTexture(
+        GL_DEPTH24_STENCIL8_EXT, GL_DEPTH_STENCIL_EXT, GL_UNSIGNED_INT_24_8_EXT,
+        osg::Texture2D::NEAREST, osg::Texture2D::CLAMP_TO_EDGE,
+        viewportDimensions );
+#endif
+    */
+
+    //Use interleaved depth/stencil renderbuffer
+#if ( ( OSG_VERSION_MAJOR >= 2 ) && ( OSG_VERSION_MINOR >= 8 ) && ( OSG_VERSION_PATCH >= 1 ) )
+    tempCamera->attach( osg::Camera::PACKED_DEPTH_STENCIL_BUFFER, GL_DEPTH_STENCIL_EXT );
+#endif
+
+    osg::ref_ptr< osg::ClearNode > clearNode = new osg::ClearNode();
+    clearNode->setClearMask( GL_STENCIL_BUFFER_BIT );
+    //tempCamera->addChild( clearNode.get() );
 
     //Setup the MRT shader to make glow work correctly
     std::string fragmentSource =
@@ -307,7 +303,7 @@ osg::Camera* SceneRenderToTexture::CreatePipelineCamera(
     //Default glow color for any children that don't explicitly set it.
     stateset->addUniform(
         new osg::Uniform( "glowColor", osg::Vec4( 0.0, 0.0, 0.0, 1.0 ) ) );
-    
+
     return tempCamera;
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -317,11 +313,11 @@ osg::Texture2D* SceneRenderToTexture::CreateViewportTexture(
     GLenum sourceType,
     osg::Texture2D::FilterMode filterMode,
     osg::Texture2D::WrapMode wrapMode,
-    std::pair< int, int >& viewportDimensions  )
+    std::pair< int, int >& viewportDimensions )
 {
     osg::Texture2D* tempTexture = new osg::Texture2D();
     //GL_RGBA8/GL_UNSIGNED_INT - GL_RGBA16F_ARB/GL_FLOAT 
-    
+
     tempTexture->setInternalFormat( GL_RGBA16F_ARB );
     tempTexture->setSourceFormat( GL_RGBA );
     tempTexture->setSourceType( GL_FLOAT );
@@ -459,7 +455,7 @@ vxsr::Processor* SceneRenderToTexture::CreatePipelineProcessor(
                 "glsl/gauss_convolution_1Dy_fp.glsl",
                 fragmentOptions.get() );
         }
-        catch( ...  )
+        catch( ... )
         {
             std::cerr << "Could not load shader files!" << std::endl;
         }
@@ -551,7 +547,7 @@ osg::Geode* SceneRenderToTexture::CreateTexturedQuad(
     vrj::SurfaceViewport* tempView =
         dynamic_cast< vrj::SurfaceViewport* >( viewport );
 #endif
-    
+
     float viewportOriginX, viewportOriginY, viewportWidth, viewportHeight;
     tempView->getOriginAndSize(
         viewportOriginX, viewportOriginY, viewportWidth, viewportHeight );
@@ -622,7 +618,7 @@ osg::Geode* SceneRenderToTexture::CreateTexturedQuad(
     stateset->setTextureAttributeAndModes(
           0, texture, osg::StateAttribute::ON );
 #endif
-    
+
     osg::Geode* quadGeode = new osg::Geode();
     quadGeode->setCullingActive( false );
     quadGeode->addDrawable( quadGeometry.get() );
@@ -677,9 +673,9 @@ void SceneRenderToTexture::ConfigureRTTCameras()
 #endif
     vrj::DisplayPtr display = glWindow->getDisplay();
     const size_t numViewports = display->getNumViewports();
-    
+
     // --- FOR EACH VIEWPORT -- //
-    vrj::Viewport::View view;                      
+    vrj::Viewport::View view;
     float vp_ox, vp_oy, vp_sx, vp_sy; //Viewport origin and size
     for( size_t i = 0; i < numViewports; ++i )
     {
@@ -688,7 +684,7 @@ void SceneRenderToTexture::ConfigureRTTCameras()
 #else
         vrj::Viewport* viewport = display->getViewport( i );
 #endif
-        
+
         //Should viewport be rendered???
         if( viewport->isActive() )
         {            
@@ -710,7 +706,7 @@ void SceneRenderToTexture::ConfigureRTTCameras()
                     glWindow->setViewBuffer( vrj::Viewport::LEFT_EYE );
                     glWindow->setProjection( viewport->getLeftProj() );
                     glUserData->setProjection( viewport->getLeftProj() );
-                    
+
                     //Update rtt camera
                     UpdateRTTQuadAndViewport();
                 }
@@ -740,12 +736,12 @@ void SceneRenderToTexture::UpdateRTTQuadAndViewport()
     vrj::Viewport* viewport = vrj::GlDrawManager::instance()->
         currentUserData()->getViewport();
 #endif
-    
+
     PipelineMap::iterator itr = (*mPipelines).find( viewport );
     if( itr != (*mPipelines).end() )
     {
         PipelinePair* activePipeline = &(itr->second);
-        
+
         //Get the frustrum
 #if __VJ_version >= 2003000
         vrj::ProjectionPtr project = vrj::opengl::DrawManager::instance()->
@@ -756,12 +752,12 @@ void SceneRenderToTexture::UpdateRTTQuadAndViewport()
 #endif
 
         vrj::Frustum frustum = project->getFrustum();
-        
+
         activePipeline->first->setProjectionMatrixAsFrustum(
             frustum[ vrj::Frustum::VJ_LEFT ], frustum[ vrj::Frustum::VJ_RIGHT ],
             frustum[ vrj::Frustum::VJ_BOTTOM ], frustum[ vrj::Frustum::VJ_TOP ],
             frustum[ vrj::Frustum::VJ_NEAR ], frustum[ vrj::Frustum::VJ_FAR ] );
-        
+
         gmtl::Vec3f x_axis( 1.0f, 0.0f, 0.0f );
         gmtl::Matrix44f mZUp = gmtl::makeRot< gmtl::Matrix44f >( 
             gmtl::AxisAnglef( gmtl::Math::deg2Rad( -90.0f ), x_axis ) );
@@ -769,7 +765,7 @@ void SceneRenderToTexture::UpdateRTTQuadAndViewport()
         gmtl::Matrix44f mNavPosition =  gmtl::convertTo< float >( 
             ves::xplorer::scenegraph::SceneManager::instance()->
                 GetActiveNavSwitchNode()->GetMat() );
-        
+
         //Transform into z-up land
         vjMatrixLeft = vjMatrixLeft * mZUp * mNavPosition;
         osg::ref_ptr< osg::RefMatrix > osg_proj_xform_mat =
@@ -827,17 +823,17 @@ void SceneRenderToTexture::WriteImageFileForWeb(
     int largeWidth =  w * 2; 
     int largeHeight = h * 2 ;
     shot->allocateImage( largeWidth, largeHeight, 1, GL_RGB, GL_UNSIGNED_BYTE );
-    
+
     ///Now lets create the scene
     osg::ref_ptr<osg::Node> subgraph = new osg::Group( *root );
     std::vector< osg::ref_ptr< osg::Camera > > rttCameraList;
-    
+
     ///create the screen shot root
     osg::ref_ptr< osg::Group > screenShotRoot = new osg::Group;
-    
+
     ///create the list of RTT's
     std::vector< osg::ref_ptr< osg::Texture2D > >rttList;
-    
+
     //osg::ref_ptr<osgUtil::SceneView> sv;
     //sv = ( *sceneViewer );  // Get context specific scene viewer
     osg::ref_ptr<osg::Camera> oldcamera = sv->getCamera();
@@ -852,7 +848,7 @@ void SceneRenderToTexture::WriteImageFileForWeb(
     //z values don't change
     tileFrustum[ 4 ] = frustum[ 4 ];
     tileFrustum[ 5 ] = frustum[ 5 ];
-    
+
     std::vector< osg::ref_ptr< osg::Texture2D > > textures;
     for( size_t i = 0; i < 4; ++i )
     {
@@ -867,7 +863,7 @@ void SceneRenderToTexture::WriteImageFileForWeb(
         rttList.back()->setFilter( osg::Texture2D::MAG_FILTER, osg::Texture2D::LINEAR );
         rttList.back()->setWrap( osg::Texture::WRAP_S, osg::Texture::CLAMP_TO_EDGE );
         rttList.back()->setWrap( osg::Texture::WRAP_T, osg::Texture::CLAMP_TO_EDGE );
-        
+
         //Setup the cameras
         rttCameraList.push_back( new osg::Camera );
         rttCameraList.back()->setClearColor( oldcamera->getClearColor() );
@@ -875,22 +871,22 @@ void SceneRenderToTexture::WriteImageFileForWeb(
         rttCameraList.back()->setColorMask( oldcamera->getColorMask() );
         rttCameraList.back()->setTransformOrder( oldcamera->getTransformOrder() );
         rttCameraList.back()->setViewMatrix( oldcamera->getViewMatrix() );
-        
+
         // set view
         rttCameraList.back()->setReferenceFrame( osg::Transform::ABSOLUTE_RF );
-        
+
         // set the camera to render before after the main camera.
         rttCameraList.back()->setRenderOrder( osg::Camera::PRE_RENDER );
-        
+
         // tell the camera to use OpenGL frame buffer object where supported.
         rttCameraList.back()->setRenderTargetImplementation(
             osg::Camera::FRAME_BUFFER_OBJECT );
         // add subgraph to render
         rttCameraList.back()->addChild( subgraph.get() );
-        
+
         // set viewport
         rttCameraList.back()->setViewport( 0, 0, w*2, h*2 );
-        
+
         ///Attach the camera to the image
         rttCameraList.back()->attach(
             osg::Camera::COLOR_BUFFER, rttList.back().get() );
@@ -965,7 +961,7 @@ void SceneRenderToTexture::WriteImageFileForWeb(
     //Add the screen shot as a pre-render node of the main
     //graph. 
     root->addChild( screenShotRoot.get() );
-    
+
     //Render to produce the tiles via RTT
     sv->update();
     sv->cull();
@@ -1023,7 +1019,7 @@ void SceneRenderToTexture::WriteImageFileForWeb(
     "    gl_FragColor = normalize(sum);\n"
     "}\n";
     ssaaProgram->addShader( new osg::Shader( osg::Shader::FRAGMENT, fragmentShaderSource ) );
-    
+
     //Is this overkill???
     //Probably can use only 1 quad and hook them up to the 4 cameras
     //but this is the brute force way...
@@ -1044,7 +1040,7 @@ void SceneRenderToTexture::WriteImageFileForWeb(
                                                                               osg::Vec3( 0.0f, 2.0f, 0.0f ),
                                                                               0.0f, 0.0f, 1.0f, 1.0f ) );
     }
-    
+
     //create the FBO's for ssaa for each tile
     //The output image here is the actual size that we want
     std::vector< osg::ref_ptr< osg::Image > > ssImageList;
@@ -1063,7 +1059,7 @@ void SceneRenderToTexture::WriteImageFileForWeb(
         fullScreenQuadCameraList.back()->setRenderOrder( osg::Camera::PRE_RENDER );
         fullScreenQuadCameraList.back()->setRenderTargetImplementation(
             osg::Camera::FRAME_BUFFER_OBJECT );
-        
+
         fullScreenQuadCameraList.back()->setViewport( 0, 0, w, h );
         fullScreenQuadCameraList.back()->setViewMatrix( osg::Matrix::identity() );
         fullScreenQuadCameraList.back()->setProjectionMatrix( osg::Matrix::identity() );
@@ -1071,12 +1067,12 @@ void SceneRenderToTexture::WriteImageFileForWeb(
         ///Attach the camera to the output image
         fullScreenQuadCameraList.back()->attach( osg::Camera::COLOR_BUFFER,
                                                 ssImageList.back().get() );
-        
+
         fullScreenQuadCameraList.back()->addChild( fullScreenQuads.at( i ).get() );
         //swap out the cameras 
         screenShotRoot->replaceChild( rttCameraList.at( i ).get(), fullScreenQuadCameraList.back().get() );
     }
-    
+
     //render the scene again to create the ssaa image
     sv->update();
     sv->cull();
@@ -1087,10 +1083,10 @@ void SceneRenderToTexture::WriteImageFileForWeb(
     osgDB::writeImageFile( *(ssImageList.at( 2 )), "ssImage3.jpg" );
     osgDB::writeImageFile( *(ssImageList.at( 3 )), "ssImage4.jpg" );
     */
-    
+
     //remove the screen shot from the graph
     root->removeChild( screenShotRoot.get() );
-    
+
     ///Now put the images together
     std::vector< osg::ref_ptr< osg::Image > >::iterator activeImage;
     //setup ll
