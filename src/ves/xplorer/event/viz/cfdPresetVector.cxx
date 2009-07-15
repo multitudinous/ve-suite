@@ -168,7 +168,7 @@ void cfdPresetVector::Update( void )
 
         /*{
             vtkXMLPolyDataWriter* writer = vtkXMLPolyDataWriter::New();
-            writer->SetInput( ( vtkPolyData* ) glyph->GetOutput() );
+            writer->SetInput( glyph->GetOutput() );
             writer->SetDataModeToAscii();
             writer->SetFileName( "testvecglyphs.vtp" );
             writer->Write();

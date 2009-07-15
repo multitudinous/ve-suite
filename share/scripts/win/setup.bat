@@ -7,13 +7,9 @@ set VJ_BASE_DIR=C:\dev\ves_deps\VRJuggler_Pre-Compile_2.2_SP1
 set VTK_HOME=C:\dev\ves_deps\VTK_5.2.0
 set WX_HOME=C:\dev\ves_deps\WxWidgets_2.8.9_Pre-Compile_vc8.0_SP1
 set ACE_ROOT=C:\dev\ves_deps\ACETAO_5.6.6_Pre-Compile_vc8.0_SP1
-set TAO_ROOT=%ACE_ROOT%\TAO
 set XERCESCROOT=C:\dev\ves_deps\Xerces-c_2.8_Pre-Compile
-REM set BULLET_HOME=C:\dev\ves_deps\Bullet_Pre-Compile_2.64
 set OSGHOME=C:\dev\ves_deps\OSG_2.6.1_Pre-Compile_vc8.0_SP1
 set APR_HOME=C:\dev\ves_deps\apr_1.3_Pre-Compile
-set APR_UTIL_HOME=C:\dev\ves_deps\apr_1.3_Pre-Compile
-set APR_ICONV_HOME=C:\dev\ves_deps\apr_1.3_Pre-Compile
 
 set OPENAL_LIB_DIR=C:\devEnv\VES.1.0-Deps\openal\OpenAL-Windows\OpenAL32\Debug
 REM NOTE: On Windows the juggler location must point to a Windows
@@ -42,12 +38,6 @@ set Path=%VJ_BASE_DIR%\lib;%Path%
 set Path=%VE_INSTALL_DIR%\bin;%VTK_HOME%\lib;%WX_HOME%\lib\vc_dll;%Path%
 set Path=%ACE_ROOT%\bin;%ACE_ROOT%\lib;%Path%
 set Path=%XERCESCROOT%\lib;%Path%
-set Path=%TAO_ROOT%\orbsvcs\Naming_Service;%Path%
 set Path=%OSGHOME%\lib;%VE_INSTALL_DIR%\lib;%Path%
-set Path=%APR_UTIL_HOME%\lib;%Path%
-set Path=%APR_ICONV_HOME%\lib;%Path%
-set Path=%Path%;C:\dev\ves_deps\svn-win32-1.5.0\bin
-set Path=%Path%;C:\dev\VE_Suite\external\FreezePython\upx301w
+set Path=%APR_HOME%\lib;%Path%
 set Path=%Path%;C:\dev\ves_deps\osgAL_0.6.1_Pre-Compile_vc8.0_SP1\lib
-
-REM call %VE_SUITE_HOME%\share\scripts\win\defineSVNVersion.bat
