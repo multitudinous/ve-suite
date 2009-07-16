@@ -91,33 +91,33 @@ CountsVisitor::reset()
 void
 CountsVisitor::dump()
 {
-    std::cout << std::endl;
-    std::cout << "      OSG Object \tCount\tUnique" << std::endl;
-    std::cout << "      ---------- \t-----\t------" << std::endl;
-    std::cout << "           Nodes \t" << _nodes << "\t" << _uNodes.size() << std::endl;
-    std::cout << "          Groups \t" << _groups << "\t" << _uGroups.size() << std::endl;
-    std::cout << "            LODs \t" << _lods << "\t" << _uLods.size() << std::endl;
-    std::cout << "       PagedLODs \t" << _pagedLods << "\t" << _uPagedLods.size() << std::endl;
-    std::cout << "        Switches \t" << _switches << "\t" << _uSwitches.size() << std::endl;
-    std::cout << "       Sequences \t" << _sequences << "\t" << _uSequences.size() << std::endl;
-    std::cout << "      Transforms \t" << _transforms << "\t" << _uTransforms.size() << std::endl;
-    std::cout << "MatrixTransforms \t" << _matrixTransforms << "\t" << _uMatrixTransforms.size() << std::endl;
-    std::cout << "   DOFTransforms \t" << _dofTransforms << "\t" << _uDofTransforms.size() << std::endl;
-    std::cout << "          Geodes \t" << _geodes << "\t" << _uGeodes.size() << std::endl;
-    std::cout << "       Drawables \t" << _drawables << "\t" << _uDrawables.size() << std::endl;
-    std::cout << "      Geometries \t" << _geometries << "\t" << _uGeometries.size() << std::endl;
-    std::cout << "           Texts \t" << _texts << "\t" << _uTexts.size() << std::endl;
-    std::cout << "   PrimitiveSets \t" << _primitiveSets << "\t" << _uPrimitiveSets.size() << std::endl;
-    std::cout << "      DrawArrays \t" << _drawArrays << "\t" << _uDrawArrays.size() << std::endl;
-    std::cout << " NULL Geometries \t" << _nullGeometries << std::endl;
+    osg::notify( osg::INFO ) << std::endl
+            << "      OSG Object \tCount\tUnique" << std::endl
+        << "      ---------- \t-----\t------" << std::endl
+        << "           Nodes \t" << _nodes << "\t" << _uNodes.size() << std::endl
+        << "          Groups \t" << _groups << "\t" << _uGroups.size() << std::endl
+        << "            LODs \t" << _lods << "\t" << _uLods.size() << std::endl
+        << "       PagedLODs \t" << _pagedLods << "\t" << _uPagedLods.size() << std::endl
+        << "        Switches \t" << _switches << "\t" << _uSwitches.size() << std::endl
+        << "       Sequences \t" << _sequences << "\t" << _uSequences.size() << std::endl
+        << "      Transforms \t" << _transforms << "\t" << _uTransforms.size() << std::endl
+        << "MatrixTransforms \t" << _matrixTransforms << "\t" << _uMatrixTransforms.size() << std::endl
+        << "   DOFTransforms \t" << _dofTransforms << "\t" << _uDofTransforms.size() << std::endl
+        << "          Geodes \t" << _geodes << "\t" << _uGeodes.size() << std::endl
+        << "       Drawables \t" << _drawables << "\t" << _uDrawables.size() << std::endl
+        << "      Geometries \t" << _geometries << "\t" << _uGeometries.size() << std::endl
+        << "           Texts \t" << _texts << "\t" << _uTexts.size() << std::endl
+        << "   PrimitiveSets \t" << _primitiveSets << "\t" << _uPrimitiveSets.size() << std::endl
+        << "      DrawArrays \t" << _drawArrays << "\t" << _uDrawArrays.size() << std::endl
+        << " NULL Geometries \t" << _nullGeometries << std::endl;
 
     if (_slowPathGeometries)
-        std::cout << "Slow path Geometries: " << _slowPathGeometries << std::endl;
+        osg::notify( osg::INFO )<< "Slow path Geometries: " << _slowPathGeometries << std::endl;
     float avgChildren = (float)_totalChildren / (float)(_nodes+_groups+_lods+_pagedLods+_switches+_sequences+_transforms+_matrixTransforms+_dofTransforms);
-    std::cout << "Average children per node: " << avgChildren << std::endl;
-
-    std::cout << "Total vertices: " << _vertices << std::endl;
-    std::cout << "Max depth: " << _maxDepth << std::endl;
+    
+    osg::notify( osg::INFO ) << "Average children per node: " << avgChildren << std::endl;
+    osg::notify( osg::INFO ) << "Total vertices: " << _vertices << std::endl;
+    osg::notify( osg::INFO ) << "Max depth: " << _maxDepth << std::endl;
 }
 
 void

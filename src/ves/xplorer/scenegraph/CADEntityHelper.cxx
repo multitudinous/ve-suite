@@ -362,11 +362,11 @@ void CADEntityHelper::LoadFile( const std::string& filename,
         const float ratioThreshold=.05f;
         if( da2Verts < ratioThreshold )
         {
-            std::cout << "DrawArrays to vertices ratio too small. No optimization." << std::endl;
+           osg::notify( osg::INFO ) << "|\tDrawArrays to vertices ratio too small. No optimization." << std::endl;
         }
         else
         {
-            std::cout << "Converting DrawArrays to DrawElementsUInt." << std::endl;
+            osg::notify( osg::INFO ) << "|\tConverting DrawArrays to DrawElementsUInt." << std::endl;
             OptVisitor ov;
             ov.changeDAtoDEUI_ = true;
             ov.changeDLtoVBO_ = false;
@@ -464,7 +464,7 @@ void CADEntityHelper::LoadFile( const std::string& filename,
         osg::ComputeBoundsVisitor cbbv( osg::NodeVisitor::TRAVERSE_ALL_CHILDREN );
         mCadNode->accept(cbbv);
         osg::BoundingBox bb = cbbv.getBoundingBox();
-        std::cout << "|\tBounding Box Info" << std::endl 
+        osg::notify( osg::INFO ) << "|\tBounding Box Info" << std::endl 
             << "|\tCenter " << bb.center() << std::endl
             << "|\tRadius " << bb.radius() << std::endl
             << "|\tMin " << bb._min << std::endl

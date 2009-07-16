@@ -75,14 +75,17 @@ void OpacityVisitor::apply( osg::Geode& node )
 
     if( geode_material.valid() )
     {
-        geode_material->setAlpha( osg::Material::FRONT_AND_BACK, m_alpha );
-        geode_stateset->setAttribute( geode_material.get(), 
-            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
-        //The stateset only needs set at the part level in VE-Suite.
-        //The alpha an material information can be set at the higher level
-        //because otherwise the renderbins end up being nested and cause odd
-        //problems.
-        SetupBlendingForStateSet( geode_stateset.get() );
+        //if( geode_material->getAmbient( osg::Material::FRONT_AND_BACK ).a() == 1.0f )
+        {
+            geode_material->setAlpha( osg::Material::FRONT_AND_BACK, double( m_alpha ) );
+            geode_stateset->setAttribute( geode_material.get(), 
+                                         osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+            //The stateset only needs set at the part level in VE-Suite.
+            //The alpha an material information can be set at the higher level
+            //because otherwise the renderbins end up being nested and cause odd
+            //problems.
+            SetupBlendingForStateSet( geode_stateset.get() );
+        }
     }
 
     for( size_t i = 0; i < node.getNumDrawables(); i++ )
@@ -156,15 +159,15 @@ void OpacityVisitor::apply( osg::Geode& node )
             //The first time we come through here store the original state
             //for the colors and the materials so that we can determine
             //if we should mess with the opacity
-            if( color_array.valid() )
+            if( color_array.valid() && !node.getDrawable( i )->getUserData() )
             {
-                osg::Vec4Array* tempColorArray = 
+                    osg::Vec4Array* tempColorArray = 
                     new osg::Vec4Array( *(color_array.get()), 
-                                   osg::CopyOp::DEEP_COPY_ALL );
-               node.getDrawable( i )->setUserData( tempColorArray );
+                                       osg::CopyOp::DEEP_COPY_ALL );
+                    node.getDrawable( i )->setUserData( tempColorArray );
             }
 
-            if( drawable_material.valid() )
+            if( drawable_material.valid() && !drawable_stateset->getUserData() )
             {
                 drawable_stateset->setUserData( 
                     new osg::Material( (*drawable_material.get()), 
@@ -195,18 +198,48 @@ void OpacityVisitor::apply( osg::Geode& node )
             osg::ref_ptr< osg::Material > temp_drawable_material = 
                 static_cast< osg::Material* >( 
                 drawable_stateset->getUserData() );
-                
-            //If it is opaque then change the surface but if it is 
-            //transparent then do not mess with the surface
-            if( ( temp_drawable_material->getAmbient( osg::Material::FRONT_AND_BACK )[3] == 1.0f ) && 
-               ( temp_drawable_material->getDiffuse( osg::Material::FRONT_AND_BACK )[3] == 1.0f ) && 
-               ( temp_drawable_material->getSpecular( osg::Material::FRONT_AND_BACK )[3] == 1.0f ) && 
-               ( temp_drawable_material->getEmission( osg::Material::FRONT_AND_BACK )[3] == 1.0f ) )
+
+            //Used to determine if the stored alpha state of the material
+            //is actually transparent
+            double storedAlphState = 
+            temp_drawable_material->getAmbient( osg::Material::FRONT_AND_BACK )[3] *
+            temp_drawable_material->getDiffuse( osg::Material::FRONT_AND_BACK )[3] *
+            temp_drawable_material->getSpecular( osg::Material::FRONT_AND_BACK )[3] *
+            temp_drawable_material->getEmission( osg::Material::FRONT_AND_BACK )[3];
+
+            //Used to determine what the actual state of the material is
+            double actualAlphaState = 
+            drawable_material->getAmbient( osg::Material::FRONT_AND_BACK )[3] *
+            drawable_material->getDiffuse( osg::Material::FRONT_AND_BACK )[3] *
+            drawable_material->getSpecular( osg::Material::FRONT_AND_BACK )[3] *
+            drawable_material->getEmission( osg::Material::FRONT_AND_BACK )[3];
+            
+            if( mStoreState )
             {
-                drawable_material->setAlpha( 
-                    osg::Material::FRONT_AND_BACK, m_alpha );
-                drawable_stateset->setAttribute( drawable_material.get(), 
-                                                osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+                //If the stored material is opaque then change the surface but if it is 
+                //transparent then do not mess with the surface and if the material
+                //has already been changed then do not change it back to opaque.
+                //This is an issue when an assmebly node is opaque but children 
+                //are transparent when ves files are loaded
+                if( ( storedAlphState == 1.0f ) && ( actualAlphaState == 1.0f ) )
+                {
+                    drawable_material->setAlpha( 
+                                                osg::Material::FRONT_AND_BACK, double( m_alpha ) );
+                    drawable_stateset->setAttribute( drawable_material.get(), 
+                                                    osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );                
+                }
+            }
+            else
+            {
+                //If we are not storing state (ie initializing the node) then
+                //we only care about what the stored state of the material is
+                if( storedAlphState == 1.0f )
+                {
+                    drawable_material->setAlpha( 
+                                                osg::Material::FRONT_AND_BACK, double( m_alpha ) );
+                    drawable_stateset->setAttribute( drawable_material.get(), 
+                                                    osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );               
+                }
             }
         }            
 
@@ -244,33 +277,35 @@ void OpacityVisitor::apply( osg::Geode& node )
 ////////////////////////////////////////////////////////////////////////////////
 void OpacityVisitor::apply( osg::Group& node )
 {
-    /*osg::Node::DescriptionList descriptorsList;
-    descriptorsList = node.getDescriptions();
-    bool isPart = false;
-    //Find if the node is an assembly
-    for( size_t i = 0; i < descriptorsList.size(); i++ )
+    osg::ref_ptr< osg::StateSet > stateset = node.getOrCreateStateSet();
+    osg::ref_ptr< osg::Material > material = 
+        static_cast< osg::Material* >( stateset->
+            getAttribute( osg::StateAttribute::MATERIAL ) );
+    //This is typically only valid for stl files which we apply
+    //materials for at the group part level
+    if( material.valid() )
     {
-        if( descriptorsList.at( i ) == "Part" )
+        if( mStoreState )
         {
-            isPart = true;
-            break;
-        }
-    }*/
+            double actualAlphState = 
+            material->getAmbient( osg::Material::FRONT_AND_BACK )[3] *
+            material->getDiffuse( osg::Material::FRONT_AND_BACK )[3] *
+            material->getSpecular( osg::Material::FRONT_AND_BACK )[3] *
+            material->getEmission( osg::Material::FRONT_AND_BACK )[3];
 
-    ///Only process if it is a part
-    //if( isPart )
-    {
-        osg::ref_ptr< osg::StateSet > stateset = node.getOrCreateStateSet();
-        osg::ref_ptr< osg::Material > material = 
-            static_cast< osg::Material* >( stateset->
-                getAttribute( osg::StateAttribute::MATERIAL ) );
-        
-        if( material.valid() )
+            if( actualAlphState == 1.0f )
+            {
+                material->setAlpha( osg::Material::FRONT_AND_BACK, m_alpha );
+                stateset->setAttribute( material.get(), osg::StateAttribute::ON );
+            }
+        }
+        else
         {
             material->setAlpha( osg::Material::FRONT_AND_BACK, m_alpha );
             stateset->setAttribute( material.get(), osg::StateAttribute::ON );
-            SetupBlendingForStateSet( stateset.get() );
         }
+
+        SetupBlendingForStateSet( stateset.get() );
     }
 
     osg::NodeVisitor::traverse( node );

@@ -295,8 +295,11 @@ void CADEventHandler::_addNodeToNode( std::string parentID,
         m_cadHandler->GetAssembly( newAssembly->GetID() )->
                 ToggleDisplay( newAssembly->GetVisibility() );
 
-        vprDEBUG( vesDBG, 1 ) << "|\t---Set Assembly Opacity---" << std::endl << vprDEBUG_FLUSH;
-        vprDEBUG( vesDBG, 1 ) << "|\t\t" << newAssembly->GetOpacity() << std::endl << vprDEBUG_FLUSH;
+        vprDEBUG( vesDBG, 1 ) << "|\t---Set Assembly Opacity---" 
+            << std::endl << vprDEBUG_FLUSH;
+        vprDEBUG( vesDBG, 1 ) << "|\t\tOpacity Value = " 
+            << newAssembly->GetOpacity() << std::endl << vprDEBUG_FLUSH;
+
         m_cadHandler->UpdateOpacity( newAssembly->GetID(), newAssembly->GetOpacity(), true );
     }
     else if( activeNode->GetNodeType() == "Part" )
