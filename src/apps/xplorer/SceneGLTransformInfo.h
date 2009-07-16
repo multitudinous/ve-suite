@@ -47,6 +47,8 @@
 #include <vrj/Draw/OGL/GlContextData.h>
 #endif
 
+#include <gmtl/Matrix.h>
+
 // --- OSG Includes --- //
 #include <osg/ref_ptr>
 #include <osg/Matrixd>
@@ -85,7 +87,9 @@ class SceneGLTransformInfo
 {
 public:
     ///Constructor
-    SceneGLTransformInfo();
+    SceneGLTransformInfo(
+        const gmtl::Matrix44d& ortho2DMatrix,
+        const gmtl::Matrix44d& identityMatrix );
 
     ///Destructor
     ~SceneGLTransformInfo();
@@ -100,6 +104,18 @@ public:
         vrj::Viewport* const viewport );
 #endif
 
+    ///
+    const gmtl::Matrix44d& GetOrtho2DMatrix() const;
+
+    ///
+    const osg::Matrixd& GetOSGOrtho2DMatrix() const;
+
+    ///
+    const gmtl::Matrix44d& GetIdentityMatrix() const;
+
+    ///
+    const osg::Matrixd& GetOSGIdentityMatrix() const;
+
     ///Initialize transform info for the scene w.r.t each viewport
     ///NOTE: MUST be called AFTER EnvironmentHandler::InitScene
     void Initialize();
@@ -107,6 +123,15 @@ public:
 protected:
 
 private:
+    ///
+    const gmtl::Matrix44d m_ortho2DMatrix;
+    ///
+    const osg::Matrixd m_osgOrtho2DMatrix;
+    ///
+    const gmtl::Matrix44d m_identityMatrix;
+    ///
+    const osg::Matrixd m_osgIdentityMatrix;
+
 #if __VJ_version >= 2003000
     typedef std::map<
         vrj::ViewportPtr, scenegraph::GLTransformInfoPtr > GLTransformInfoMap;

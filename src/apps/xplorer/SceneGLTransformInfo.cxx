@@ -51,11 +51,7 @@
 #include <vrj/Display/Frustum.h>
 #include <vrj/Display/Projection.h>
 
-//#include <gmtl/gmtl.h>
-//#include <gmtl/Misc/MatrixConvert.h>
-
 // --- OSG Includes --- //
-
 
 //#include <osgUtil/SceneView>
 
@@ -66,7 +62,14 @@
 using namespace ves::xplorer;
 
 ////////////////////////////////////////////////////////////////////////////////
-SceneGLTransformInfo::SceneGLTransformInfo()
+SceneGLTransformInfo::SceneGLTransformInfo(
+    const gmtl::Matrix44d& ortho2DMatrix,
+    const gmtl::Matrix44d& identityMatrix )
+    :
+    m_ortho2DMatrix( ortho2DMatrix ),
+    m_osgOrtho2DMatrix( m_ortho2DMatrix.mData ),
+    m_identityMatrix( identityMatrix ),
+    m_osgIdentityMatrix( m_identityMatrix.mData )
 {
     ;
 }
@@ -99,6 +102,26 @@ scenegraph::GLTransformInfoPtr const SceneGLTransformInfo::GetGLTransformInfo(
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
+const gmtl::Matrix44d& SceneGLTransformInfo::GetOrtho2DMatrix() const
+{
+    return m_ortho2DMatrix;
+}
+////////////////////////////////////////////////////////////////////////////////
+const osg::Matrixd& SceneGLTransformInfo::GetOSGOrtho2DMatrix() const
+{
+    return m_osgOrtho2DMatrix;
+}
+////////////////////////////////////////////////////////////////////////////////
+const gmtl::Matrix44d& SceneGLTransformInfo::GetIdentityMatrix() const
+{
+    return m_identityMatrix;
+}
+////////////////////////////////////////////////////////////////////////////////
+const osg::Matrixd& SceneGLTransformInfo::GetOSGIdentityMatrix() const
+{
+    return m_osgIdentityMatrix;
+}
+////////////////////////////////////////////////////////////////////////////////
 void SceneGLTransformInfo::Initialize()
 {
     //Get window and viewport information
@@ -116,9 +139,9 @@ void SceneGLTransformInfo::Initialize()
 #endif
 
     //Get state info about the screen
-    int contextOriginX, contextOriginY, contextWidth, contextHeight;
+    int windowOriginX, windowOriginY, windowWidth, windowHeight;
     display->getOriginAndSize(
-        contextOriginX, contextOriginY, contextWidth, contextHeight );
+        windowOriginX, windowOriginY, windowWidth, windowHeight );
 
     size_t numViewports = display->getNumViewports();
     for( size_t i = 0; i < numViewports; ++i )
@@ -130,33 +153,34 @@ void SceneGLTransformInfo::Initialize()
 #endif
 
         //Get state info about the viewport
-        float viewportOriginX, viewportOriginY, viewportWidth, viewportHeight;
-        viewport->getOriginAndSize(
-            viewportOriginX, viewportOriginY, viewportWidth, viewportHeight );
+        float vp_ox, vp_oy, vp_sx, vp_sy;
+        viewport->getOriginAndSize( vp_ox, vp_oy, vp_sx, vp_sy );
 
-        const unsigned int ll_x =
-            static_cast< unsigned int >( viewportOriginX * contextWidth );
-        const unsigned int ll_y =
-            static_cast< unsigned int >( viewportOriginY * contextHeight );
-        const unsigned int x_size =
-            static_cast< unsigned int >( viewportWidth * contextWidth );
-        const unsigned int y_size =
-            static_cast< unsigned int >( viewportHeight * contextHeight );
+        const unsigned int viewportOriginX =
+            static_cast< unsigned int >( vp_ox * windowWidth );
+        const unsigned int viewportOriginY =
+            static_cast< unsigned int >( vp_oy * windowHeight );
+        const unsigned int viewportWidth =
+            static_cast< unsigned int >( vp_sx * windowWidth );
+        const unsigned int viewportHeight =
+            static_cast< unsigned int >( vp_sy * windowHeight );
 
         //Calculate the window matrix for the viewport
         gmtl::Matrix44d windowMatrix;
         windowMatrix.mState =
             gmtl::Matrix44d::AFFINE | gmtl::Matrix44d::NON_UNISCALE;
-        windowMatrix.mData[  0 ] = 0.5 * x_size;
-        windowMatrix.mData[  5 ] = 0.5 * y_size;
+        windowMatrix.mData[  0 ] = 0.5 * viewportWidth;
+        windowMatrix.mData[  5 ] = 0.5 * viewportHeight;
         windowMatrix.mData[ 10 ] = 0.5;
-        windowMatrix.mData[ 12 ] = ( 0.5 * x_size ) + ll_x;
-        windowMatrix.mData[ 13 ] = ( 0.5 * y_size ) + ll_y;
+        windowMatrix.mData[ 12 ] = ( 0.5 * viewportWidth ) + viewportOriginX;
+        windowMatrix.mData[ 13 ] = ( 0.5 * viewportHeight ) + viewportOriginY;
         windowMatrix.mData[ 14 ] = 0.5;
 
         scenegraph::GLTransformInfoPtr glTransformInfo =
             scenegraph::GLTransformInfoPtr( new scenegraph::GLTransformInfo(
-                ll_x, ll_y, x_size, y_size, windowMatrix ) );
+                viewportOriginX, viewportOriginY, viewportWidth, viewportHeight,
+                0, 0, windowWidth, windowHeight,
+                windowMatrix ) );
 
         (*m_glTransformInfoMap)[ viewport ] = glTransformInfo;
     }
