@@ -45,7 +45,7 @@ namespace scenegraph
 {
 class GLTransformInfo;
 
-//Typedef for a SmartPtr type for TransformationInfo
+//Typedef for a SmartPtr type for GLTransformInfo
 typedef ves::util::ClassPtrDef< GLTransformInfo >::type
     GLTransformInfoPtr;
 typedef ves::util::SharedPtrDef< GLTransformInfo >::type

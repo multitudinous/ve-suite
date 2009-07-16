@@ -41,18 +41,10 @@
 
 // --- OSG Includes --- //
 #include <osg/ref_ptr>
+#include <osg/Matrixd>
 
 // --- VR Juggler Includes --- //
 #include <gmtl/Matrix.h>
-
-#if __VJ_version >= 2003000
-#include <vrj/Display/ViewportPtr.h>
-#else
-namespace vrj
-{
-class Viewport;
-}
-#endif
 
 // --- C/C++ Libraries --- //
 #include <string>
@@ -81,6 +73,8 @@ public:
     GLTransformInfo(
         const unsigned int& viewportOriginX, const unsigned int& viewportOriginY,
         const unsigned int& viewportWidth, const unsigned int& viewportHeight,
+        const int& windowOriginX, const int& windowOriginY,
+        const int& windowWidth, const int& windowHeight,
         const gmtl::Matrix44d& windowMatrix );
 
     ///Copy Constructor
@@ -102,20 +96,74 @@ public:
     const unsigned int& GetViewportHeight() const;
 
     ///
+    const int& GetWindowOriginX() const;
+
+    ///
+    const int& GetWindowOriginY() const;
+
+    ///
+    const int& GetWindowWidth() const;
+
+    ///
+    const int& GetWindowHeight() const;
+
+    ///
+    const double& GetLeftFrustum() const;
+
+    ///
+    const double& GetRightFrustum() const;
+
+    ///
+    const double& GetBottomFrustum() const;
+
+    ///
+    const double& GetTopFrustum() const;
+
+    ///
+    const double& GetNearFrustum() const;
+
+    ///
+    const double& GetFarFrustum() const;
+
+    ///
     const gmtl::Matrix44d& GetModelViewMatrix() const;
+
+    ///
+    const osg::Matrixd& GetOSGModelViewMatrix() const;
 
     ///
     const gmtl::Matrix44d& GetProjectionMatrix() const;
 
     ///
+    const osg::Matrixd& GetOSGProjectionMatrix() const;
+
+    ///
     const gmtl::Matrix44d& GetWindowMatrix() const;
+
+    ///
+    const osg::Matrixd& GetOSGWindowMatrix() const;
 
     ///
     const gmtl::Matrix44d GetMVPWMatrix() const;
 
+    ///
+    const osg::Matrixd GetOSGMVPWMatrix() const;
+
+    ///
+    void UpdateFrustumValues(
+        const double& l, const double& r,
+        const double& b, const double& t,
+        const double& n, const double& f );
+
+    ///
+    void UpdateModelViewMatrix( const gmtl::Matrix44d& modelViewMatrix );
+
 protected:
 
 private:
+    ///
+    void UpdateProjectionMatrix();
+
     ///
     const unsigned int m_viewportOriginX;
     ///
@@ -126,26 +174,44 @@ private:
     const unsigned int m_viewportHeight;
 
     ///
-    float m_leftFrustum;
+    const int m_windowOriginX;
     ///
-    float m_rightFrustum;
+    const int m_windowOriginY;
     ///
-    float m_bottomFrustum;
+    const int m_windowWidth;
     ///
-    float m_topFrustum;
+    const int m_windowHeight;
+
     ///
-    float m_nearFrustum;
+    double m_leftFrustum;
     ///
-    float m_farFrustum;
+    double m_rightFrustum;
+    ///
+    double m_bottomFrustum;
+    ///
+    double m_topFrustum;
+    ///
+    double m_nearFrustum;
+    ///
+    double m_farFrustum;
 
     ///
     gmtl::Matrix44d m_modelViewMatrix;
 
     ///
+    osg::Matrixd m_osgModelViewMatrix;
+
+    ///
     gmtl::Matrix44d m_projectionMatrix;
 
     ///
+    osg::Matrixd m_osgProjectionMatrix;
+
+    ///
     const gmtl::Matrix44d m_windowMatrix;
+
+    ///
+    const osg::Matrixd m_osgWindowMatrix;
 
 };
 } //end scenegraph
