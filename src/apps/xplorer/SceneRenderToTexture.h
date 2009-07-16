@@ -81,6 +81,7 @@ class Processor;
 }
 
 /*!\file SceneRenderToTexture.h
+ *
  */
 
 /*!\class ves::xplorer::SceneRenderToTexture
@@ -100,8 +101,10 @@ public:
     ///Destructor
     ~SceneRenderToTexture();
 
+    /*
     ///
     void ConfigureRTTCameras();
+    */
 
     ///Get the camera with specified vrj::Viewport
     ///\return The camera with specified vrj::Viewport
@@ -119,9 +122,11 @@ public:
     ///NOTE: MUST be called AFTER EnvironmentHandler::InitScene
     void InitScene( osg::Camera* const sceneViewCamera );
 
+    /*
     ///Update something
     ///NOTE: Must have an active context to call
     void UpdateRTTQuadAndViewport();
+    */
 
     ///Take a high resolution screen capture of the render window for SceneView
     ///\param root The osg::Group to be rendered
@@ -190,6 +195,7 @@ private:
     ///The root group that everything gets added to
     ///Is the same for all contexts
     osg::ref_ptr< osg::Group > mRootGroup;
+
 };
 } //end xplorer
 } //end ves

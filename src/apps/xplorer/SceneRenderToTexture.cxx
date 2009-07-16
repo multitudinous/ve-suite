@@ -655,6 +655,7 @@ osg::Camera* const SceneRenderToTexture::GetCamera(
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
+/*
 void SceneRenderToTexture::ConfigureRTTCameras()
 {
     if( !(*mCamerasConfigured) )
@@ -663,7 +664,8 @@ void SceneRenderToTexture::ConfigureRTTCameras()
     }
 
 #if __VJ_version >= 2003000
-    vrj::opengl::DrawManager* glDrawManager = vrj::opengl::DrawManager::instance();
+    vrj::opengl::DrawManager* glDrawManager =
+        vrj::opengl::DrawManager::instance();
     vrj::opengl::UserData* glUserData = glDrawManager->currentUserData();
     vrj::opengl::WindowPtr glWindow = glUserData->getGlWindow();
 #else
@@ -725,7 +727,9 @@ void SceneRenderToTexture::ConfigureRTTCameras()
         }
     }
 }
+*/
 ////////////////////////////////////////////////////////////////////////////////
+/*
 void SceneRenderToTexture::UpdateRTTQuadAndViewport()
 {
 
@@ -772,7 +776,9 @@ void SceneRenderToTexture::UpdateRTTQuadAndViewport()
             new osg::RefMatrix();
         osg_proj_xform_mat->set( vjMatrixLeft.mData );
         activePipeline->first->setViewMatrix( *(osg_proj_xform_mat.get()) );
-        //vprDEBUG( vesDBG, 1 ) << vjMatrixLeft << mZUp << mNavPosition << std::endl << frustum << std::endl << std::endl << vprDEBUG_FLUSH;
+        //vprDEBUG( vesDBG, 1 )
+            //<< vjMatrixLeft << mZUp << mNavPosition << std::endl
+            //<< frustum << std::endl << std::endl << vprDEBUG_FLUSH;
     }
     else
     {
@@ -780,6 +786,7 @@ void SceneRenderToTexture::UpdateRTTQuadAndViewport()
                   << viewport->getName() << "viewport not found!" << std::endl;
     }
 }
+*/
 ////////////////////////////////////////////////////////////////////////////////
 void SceneRenderToTexture::WriteImageFileForWeb(
     osg::Group* root, osgUtil::SceneView* sv, std::string& filename )
@@ -825,7 +832,7 @@ void SceneRenderToTexture::WriteImageFileForWeb(
     shot->allocateImage( largeWidth, largeHeight, 1, GL_RGB, GL_UNSIGNED_BYTE );
 
     ///Now lets create the scene
-    osg::ref_ptr<osg::Node> subgraph = new osg::Group( *root );
+    osg::ref_ptr< osg::Node > subgraph = new osg::Group( *root );
     std::vector< osg::ref_ptr< osg::Camera > > rttCameraList;
 
     ///create the screen shot root
@@ -842,7 +849,7 @@ void SceneRenderToTexture::WriteImageFileForWeb(
     //Get the current frustum from the current sceneView-camera
     double frustum[6] = {0, 0, 0, 0, 0, 0};
     oldcamera->getProjectionMatrixAsFrustum(
-        frustum[0], frustum[1], frustum[2], frustum[3], frustum[4], frustum[5] );
+        frustum[ 0 ], frustum[ 1 ], frustum[ 2 ], frustum[ 3 ], frustum[ 4 ], frustum[ 5 ] );
     //Create 4 cameras whose frustums tile the original camera frustum
     double tileFrustum[6] = { 0, 0, 0, 0, 0, 0 };
     //z values don't change
@@ -905,58 +912,58 @@ void SceneRenderToTexture::WriteImageFileForWeb(
         //bottom
         tileFrustum[ 2 ] = frustum[ 2 ];
         //top
-        tileFrustum[3] = frustum[3] + ( frustum[2] - frustum[3] ) * .5;
+        tileFrustum[ 3 ] = frustum[ 3 ] + ( frustum[ 2 ] - frustum[ 3 ] ) * .5;
         (*activeCamera)->setProjectionMatrixAsFrustum(
-            tileFrustum[0], tileFrustum[1], tileFrustum[2],
-            tileFrustum[3], tileFrustum[4], tileFrustum[5] );
+            tileFrustum[ 0 ], tileFrustum[ 1 ], tileFrustum[ 2 ],
+            tileFrustum[ 3 ], tileFrustum[ 4 ], tileFrustum[ 5 ] );
     }
     ///
     {
         //setup lr
         activeCamera = rttCameraList.begin() + 1;
         //left
-        tileFrustum[0] = frustum[0] + .5 * ( frustum[1] - frustum[0] );
+        tileFrustum[ 0 ] = frustum[ 0 ] + .5 * ( frustum[ 1 ] - frustum[ 0 ] );
         //right
-        tileFrustum[1] = frustum[1];
+        tileFrustum[ 1 ] = frustum[ 1 ];
         //bottom
-        tileFrustum[2] = frustum[2];
+        tileFrustum[ 2 ] = frustum[ 2 ];
         //top
-        tileFrustum[3] = frustum[3] + ( frustum[2] - frustum[3] ) * .5;
+        tileFrustum[ 3 ] = frustum[ 3 ] + ( frustum[ 2 ] - frustum[ 3 ] ) * .5;
         (*activeCamera)->setProjectionMatrixAsFrustum(
-            tileFrustum[0], tileFrustum[1], tileFrustum[2],
-            tileFrustum[3], tileFrustum[4], tileFrustum[5] );
+            tileFrustum[ 0 ], tileFrustum[ 1 ], tileFrustum[ 2 ],
+            tileFrustum[ 3 ], tileFrustum[ 4 ], tileFrustum[ 5 ] );
     }
     ///
     {
         //setup ur
         activeCamera = rttCameraList.begin() + 2;
         //left
-        tileFrustum[0] = frustum[0] + .5 * ( frustum[1] - frustum[0] );
+        tileFrustum[ 0 ] = frustum[ 0 ] + .5 * ( frustum[ 1 ] - frustum[ 0 ] );
         //right
-        tileFrustum[1] = frustum[1];
+        tileFrustum[ 1 ] = frustum[ 1 ];
         //bottom
-        tileFrustum[2] = frustum[3] + ( frustum[2] - frustum[3] ) * .5;
+        tileFrustum[ 2 ] = frustum[ 3 ] + ( frustum[ 2 ] - frustum[ 3 ] ) * .5;
         //top
-        tileFrustum[3] = frustum[3];
+        tileFrustum[ 3 ] = frustum[ 3 ];
         ( *activeCamera )->setProjectionMatrixAsFrustum(
-            tileFrustum[0], tileFrustum[1], tileFrustum[2],
-            tileFrustum[3], tileFrustum[4], tileFrustum[5] );
+            tileFrustum[ 0 ], tileFrustum[ 1 ], tileFrustum[ 2 ],
+            tileFrustum[ 3 ], tileFrustum[ 4 ], tileFrustum[ 5 ] );
     }
     ///
     {
         //setup ul
         activeCamera = rttCameraList.begin() + 3;
         //left
-        tileFrustum[0] = frustum[0];
+        tileFrustum[ 0 ] = frustum[ 0 ];
         //right
-        tileFrustum[1] = frustum[0] + .5 * ( frustum[1] - frustum[0] );
+        tileFrustum[ 1 ] = frustum[ 0 ] + .5 * ( frustum[ 1 ] - frustum[ 0 ] );
         //bottom
-        tileFrustum[2] = frustum[3] + ( frustum[2] - frustum[3] ) * .5;
+        tileFrustum[ 2 ] = frustum[ 3 ] + ( frustum[ 2 ] - frustum[ 3 ] ) * .5;
         //top
-        tileFrustum[3] = frustum[3];
+        tileFrustum[ 3 ] = frustum[ 3 ];
         ( *activeCamera )->setProjectionMatrixAsFrustum(
-            tileFrustum[0], tileFrustum[1], tileFrustum[2],
-            tileFrustum[3], tileFrustum[4], tileFrustum[5] );
+            tileFrustum[ 0 ], tileFrustum[ 1 ], tileFrustum[ 2 ],
+            tileFrustum[ 3 ], tileFrustum[ 4 ], tileFrustum[ 5 ] );
     }
     //Add the screen shot as a pre-render node of the main
     //graph. 
@@ -990,29 +997,29 @@ void SceneRenderToTexture::WriteImageFileForWeb(
     "void main(void) \n"
     "{\n"
     "  vec2 sample = 1.0/(dimensions*2.0);\n"
-    "  vec4 sum = texture2D(baseTexture,gl_TexCoord[0].xy );\n"
-    "  //if( ( gl_TexCoord[0].x > 0.0 ) &&\n"
-    "  //    ( gl_TexCoord[0].x < 1.0 ) &&\n"
-    "  //    ( gl_TexCoord[0].y > 0.0 ) &&\n"
-    "  //    ( gl_TexCoord[0].y < 1.0 ) )\n"
+    "  vec4 sum = texture2D(baseTexture,gl_TexCoord[ 0 ].xy );\n"
+    "  //if( ( gl_TexCoord[ 0 ].x > 0.0 ) &&\n"
+    "  //    ( gl_TexCoord[ 0 ].x < 1.0 ) &&\n"
+    "  //    ( gl_TexCoord[ 0 ].y > 0.0 ) &&\n"
+    "  //    ( gl_TexCoord[ 0 ].y < 1.0 ) )\n"
     "    {\n"
-    "        sum += texture2D(baseTexture,gl_TexCoord[0].xy + sample);\n"
+    "        sum += texture2D(baseTexture,gl_TexCoord[ 0 ].xy + sample);\n"
     "        vec2 diff = vec2(-sample.x, sample.y);\n"
-    "        sum += texture2D(baseTexture,gl_TexCoord[0].xy + diff);\n"
+    "        sum += texture2D(baseTexture,gl_TexCoord[ 0 ].xy + diff);\n"
     
     "        diff = vec2(-sample.x, -sample.y);\n"
-    "        sum += texture2D(baseTexture,gl_TexCoord[0].xy + diff);\n"
+    "        sum += texture2D(baseTexture,gl_TexCoord[ 0 ].xy + diff);\n"
     
     "        diff = vec2(sample.x, -sample.y);\n"
-    "        sum += texture2D(baseTexture,gl_TexCoord[0].xy + diff);\n"
+    "        sum += texture2D(baseTexture,gl_TexCoord[ 0 ].xy + diff);\n"
     
     "        diff = vec2(sample.x, 0.0);\n"
-    "        sum += texture2D(baseTexture,gl_TexCoord[0].xy + diff);\n"
-    "        sum += texture2D(baseTexture,gl_TexCoord[0].xy - diff);\n"
+    "        sum += texture2D(baseTexture,gl_TexCoord[ 0 ].xy + diff);\n"
+    "        sum += texture2D(baseTexture,gl_TexCoord[ 0 ].xy - diff);\n"
     
     "        diff = vec2(0.0, sample.y);\n"
-    "        sum += texture2D(baseTexture,gl_TexCoord[0].xy + diff);\n"
-    "        sum += texture2D(baseTexture,gl_TexCoord[0].xy - diff);\n"
+    "        sum += texture2D(baseTexture,gl_TexCoord[ 0 ].xy + diff);\n"
+    "        sum += texture2D(baseTexture,gl_TexCoord[ 0 ].xy - diff);\n"
     
     "        sum /= 9.0;\n"
     "    }\n"

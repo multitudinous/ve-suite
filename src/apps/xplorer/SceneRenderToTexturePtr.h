@@ -34,6 +34,7 @@
 #ifndef SCENE_RENDER_TO_TEXTURE_PTR_H
 #define SCENE_RENDER_TO_TEXTURE_PTR_H
 
+// --- VE-Suite Includes --- //
 #include <ves/util/PointerTypes.h>
 
 namespace ves
@@ -42,7 +43,7 @@ namespace xplorer
 {
 class SceneRenderToTexture;
 
-//Typedef for a SmartPtr type for the HyperLabScene
+//Typedef for a SmartPtr type for SceneRenderToTexture
 typedef ves::util::ClassPtrDef< SceneRenderToTexture >::type
     SceneRenderToTexturePtr;
 typedef ves::util::SharedPtrDef< SceneRenderToTexture >::type
