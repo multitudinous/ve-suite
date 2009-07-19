@@ -114,6 +114,7 @@ BEGIN_EVENT_TABLE( UIPluginBase, wxEvtHandler )
     EVT_MENU( UIPLUGINBASE_SHOW_ICON_CHOOSER, UIPluginBase::OnShowIconChooser )
     EVT_MENU( UIPLUGINBASE_GEOMETRY, UIPluginBase::OnGeometry )
     EVT_MENU( UIPLUGINBASE_NAVTO, UIPluginBase::OnNavigateTo )
+    EVT_MENU( UIPLUGINBASE_NAVTO_SELECT, UIPluginBase::OnNavigateTo )
     EVT_MENU( UIPLUGINBASE_DATASET, UIPluginBase::OnDataSet )
     EVT_MENU( UIPLUGINBASE_MODEL_INPUTS, UIPluginBase::OnInputsWindow ) /* EPRI TAG */
     EVT_MENU( UIPLUGINBASE_MODEL_RESULTS, UIPluginBase::OnResultsWindow ) /* EPRI TAG */
@@ -1534,13 +1535,21 @@ void UIPluginBase::OnNavigateTo( wxCommandEvent& event )
         return;
     }
 
+    ves::open::xml::CommandPtr veCommand( new ves::open::xml::Command() );
+    veCommand->SetCommandName( std::string( "Move to cad" ) );
     ves::open::xml::DataValuePairPtr dataValuePair( 
         new ves::open::xml::DataValuePair() );
     dataValuePair->SetData( "NAVIGATE_TO", m_veModel->GetID() );
-    ves::open::xml::CommandPtr veCommand( new ves::open::xml::Command() );
-    veCommand->SetCommandName( 
-        std::string( "Move to cad" ) );
     veCommand->AddDataValuePair( dataValuePair );
+    
+    if( event.GetId() == UIPLUGINBASE_NAVTO_SELECT )
+    {
+        ves::open::xml::DataValuePairPtr selectDVP( 
+            new ves::open::xml::DataValuePair() );
+        selectDVP->SetData( "Select", "Glow" );
+        veCommand->AddDataValuePair( selectDVP );
+    }
+
     bool connected = serviceList->SendCommandStringToXplorer( veCommand );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -2374,6 +2383,9 @@ wxMenu* UIPluginBase::SetupPluginBasePopupMenu()
                      _( "Controls for Xplorer" ) );
     mPopMenu->Enable( UIPLUGINBASE_XPLORER_MENU, true );    
     
+    xplorer_menu->Append( UIPLUGINBASE_NAVTO_SELECT, _( "Navigate To - Select" ) );
+    xplorer_menu->Enable( UIPLUGINBASE_NAVTO_SELECT, true );
+
     xplorer_menu->Append( UIPLUGINBASE_NAVTO, _( "Navigate To" ) );
     xplorer_menu->Enable( UIPLUGINBASE_NAVTO, true );
 

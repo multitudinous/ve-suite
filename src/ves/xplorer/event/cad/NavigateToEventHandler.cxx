@@ -124,10 +124,17 @@ void NavigateToEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xmlObj
     std::string viewData;
     activeModelDVP->GetData( viewData );
 
-    SkyCamTo( viewData );
+    DataValuePairPtr selectDVP = command->GetDataValuePair( "Select" );
+    std::string selectMethod = "Default";
+    if( selectDVP )
+    {
+        selectMethod = "Glow";
+    }
+    
+    SkyCamTo( viewData, selectMethod );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void NavigateToEventHandler::SkyCamTo( const std::string& viewData )
+void NavigateToEventHandler::SkyCamTo( const std::string& viewData, const std::string& selectMethod )
 {
     if( !ModelHandler::instance()->GetActiveModel() )
     {
@@ -168,7 +175,11 @@ void NavigateToEventHandler::SkyCamTo( const std::string& viewData )
         return;
     }
     
-    selectedDCS->SetTechnique("Select");
+    if( selectMethod == "Glow" )
+    {
+        selectedDCS->SetTechnique("Select");
+    }
+
     vx::DeviceHandler::instance()->SetSelectedDCS( selectedDCS.get() );
     osg::BoundingSphere sbs = selectedDCS->getBound();
     

@@ -108,7 +108,7 @@ public:
 
 private:
     ///Navigate to the object
-    void SkyCamTo( const std::string& viewData );
+    void SkyCamTo( const std::string& viewData, const std::string& selectMethod );
 };
 }
 }
