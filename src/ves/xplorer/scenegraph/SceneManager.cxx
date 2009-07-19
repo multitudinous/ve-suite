@@ -324,15 +324,15 @@ void SceneManager::_createLogo()
         mLogoNode->SetScaleArray( scale );
 
         //m_blueArrow = new ves::xplorer::scenegraph::CADEntity( 
-        //    BlueArrow(), mLogoNode.get(), true, false );
+        //    BlueArrow(), mLogoNode.get(), true, "Off" );
         //m_greyArrow = new ves::xplorer::scenegraph::CADEntity( 
-        //    GreyArrow(), mLogoNode.get(), true, false );
+        //    GreyArrow(), mLogoNode.get(), true, "Off" );
         //m_orangeArrow = new ves::xplorer::scenegraph::CADEntity( 
-        //    OrangeArrow(), mLogoNode.get(), true, false );
+        //    OrangeArrow(), mLogoNode.get(), true, "Off" );
         m_veText = new ves::xplorer::scenegraph::CADEntity( 
-            VE(), mLogoNode.get(), true, false );
+            VE(), mLogoNode.get(), true, "Off" );
         m_suiteText = new ves::xplorer::scenegraph::CADEntity( 
-            Suite(), mLogoNode.get(), true, false );
+            Suite(), mLogoNode.get(), true, "Off" );
 
         char phong_vertex[] =
             "varying vec4 color; \n"

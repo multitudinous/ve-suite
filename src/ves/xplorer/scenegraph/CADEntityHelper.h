@@ -153,11 +153,9 @@ public:
     ///Load a geometry file
     ///\param filename The name of the file to be loaded
     ///\param isStream Is the file a stream
-    ///\param occlude Occlude the geom with osgOQ if desired
     void LoadFile(
         const std::string& filename,
-        const bool isStream = false,
-        const bool occlude = false );
+        const bool isStream = false );
 
     ///Used for working with PolyTrans
     std::string ComputeIntermediateFileNameAndPath(
@@ -168,6 +166,10 @@ public:
     ///\return The node for the surface
     osg::Node* parseOCCNURBSFile( const std::string& directory );
 
+    ///Set the Occlusion Culling settings
+    ///\param cullingSettings Valid values are Off, Low, Medium, High
+    void SetOcclusionCulling( const std::string& cullingSettings );
+
 private:
     ///Node representing the loaded in geometry file
     osg::ref_ptr< osg::Node > mCadNode;
@@ -177,7 +179,8 @@ private:
 
     ///The current state of two sided lighting for the node
     bool mIsSTLFile;
-
+    ///Control how the occlusion culling settings are handled
+    std::string m_occlusionSettings;
 };
 }
 }

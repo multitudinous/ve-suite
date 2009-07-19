@@ -61,7 +61,7 @@ MarbleEntity::MarbleEntity(
 #endif
     )
 :
-CADEntity( geomFile, pluginDCS, false, false, physicsSimulator ),
+CADEntity( geomFile, pluginDCS, false, "Off", physicsSimulator ),
 mResourceManager( resourceManager )
 #ifdef VE_SOUND
 ,

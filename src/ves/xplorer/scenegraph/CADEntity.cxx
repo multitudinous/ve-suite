@@ -60,7 +60,7 @@ CADEntity::CADEntity(
     std::string geomFile,
     ves::xplorer::scenegraph::DCS* parentDCS,
     bool isStream,
-    bool occlude,
+    std::string occlude,
     PhysicsSimulator* physicsSimulator )
     :
     mPhysicsFlag( false ),
@@ -75,8 +75,8 @@ CADEntity::CADEntity(
     //Leave some code here no more FILEInfo
     mDCS = new ves::xplorer::scenegraph::DCS();
     mCADEntityHelper = new ves::xplorer::scenegraph::CADEntityHelper();
-
-    mCADEntityHelper->LoadFile( geomFile.c_str(), isStream, occlude );
+    mCADEntityHelper->SetOcclusionCulling( occlude );
+    mCADEntityHelper->LoadFile( geomFile.c_str(), isStream );
     mFileName.assign( geomFile );
     mDCS->SetName( "CADEntityDCS" );
     mDCS->addChild( mCADEntityHelper->GetNode() );

@@ -109,6 +109,8 @@ using namespace ves::xplorer::scenegraph;
 
 ////////////////////////////////////////////////////////////////////////////////
 CADEntityHelper::CADEntityHelper()
+    :
+    m_occlusionSettings( "Off" )
 {
     mIsSTLFile = false;
 }
@@ -122,6 +124,8 @@ CADEntityHelper::CADEntityHelper( const CADEntityHelper& input )
         return;
     }
 
+    m_occlusionSettings = input.m_occlusionSettings;
+    
     ///We deep copy nodes so that picking is accurate
     ///and so that physics will work properly in the future
     if( input.mCadNode->asGroup() )
@@ -152,8 +156,8 @@ CADEntityHelper& CADEntityHelper::operator=( const CADEntityHelper& input )
     {
         //Recreate the node
         mCadNode = input.mCadNode;
+        m_occlusionSettings = input.m_occlusionSettings;
     }
-
     return *this;
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -187,6 +191,11 @@ void CADEntityHelper::ToggleDisplay( const bool onOff )
     ToggleDisplay( value );
 }
 ////////////////////////////////////////////////////////////////////////////////
+void CADEntityHelper::SetOcclusionCulling( const std::string& cullingSettings )
+{
+    m_occlusionSettings = cullingSettings;
+}
+////////////////////////////////////////////////////////////////////////////////
 void CADEntityHelper::ToggleDisplay( const std::string& onOff )
 {
     if( !GetNode() )
@@ -205,7 +214,7 @@ void CADEntityHelper::ToggleDisplay( const std::string& onOff )
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CADEntityHelper::LoadFile( const std::string& filename,
-                                const bool isStream, const bool occlude )
+                                const bool isStream )
 {
     if( strstr( filename.c_str(), ".stl" ) ||
         strstr( filename.c_str(), ".stla" ) )
@@ -405,6 +414,34 @@ void CADEntityHelper::LoadFile( const std::string& filename,
     osg::ref_ptr< osgOQ::OcclusionQueryNode > root;
     root = dynamic_cast< osgOQ::OcclusionQueryNode* >( tempCADNode.get() );
 #endif
+
+    unsigned int occlusionThreshold = 1000;
+    unsigned int visibilityThreshold = 100;
+    bool occlude = false;
+    
+    if( m_occlusionSettings == "Off" )
+    {
+        occlude = false;
+    }
+    else if( m_occlusionSettings == "Low" )
+    {
+        occlude = true;
+        occlusionThreshold = 10000;
+        visibilityThreshold = 100;
+    }
+    else if( m_occlusionSettings == "Medium" )
+    {
+        occlude = true;
+        occlusionThreshold = 5000;
+        visibilityThreshold = 250;
+    }
+    else if( m_occlusionSettings == "High" )
+    {
+        occlude = true;
+        occlusionThreshold = 2500;
+        visibilityThreshold = 500;
+    }
+    
     if( !root.valid() && occlude )
     {
         osg::ref_ptr< osg::Group > tempGroup = new osg::Group();
@@ -424,7 +461,7 @@ void CADEntityHelper::LoadFile( const std::string& filename,
         //   of vertices, don't perform occlusion query testing (it's
         //   an occluder). Otherwise, perform occlusion query testing
         //   (it's an occludee).
-        oqv.setOccluderThreshold( 2500 );
+        oqv.setOccluderThreshold( occlusionThreshold );
         tempGroup->accept( oqv );
         //Setup the number frames to skip
         osgOQ::QueryFrameCountVisitor queryFrameVisitor( 2 );
@@ -433,7 +470,7 @@ void CADEntityHelper::LoadFile( const std::string& filename,
         //   visible pixels is greater than this value, render the
         //   child geometry. Otherwise, don't render and continue to
         //   test for visibility in future frames.
-        osgOQ::VisibilityThresholdVisitor visibilityThresholdVisitor( 500 );
+        osgOQ::VisibilityThresholdVisitor visibilityThresholdVisitor( visibilityThreshold );
         tempGroup->accept( visibilityThresholdVisitor );
 
         mCadNode = tempGroup.get();

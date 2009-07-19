@@ -332,6 +332,14 @@ void cfdStreamers::Update()
         }
         else
         {
+            {
+             vtkXMLPolyDataWriter* writer = vtkXMLPolyDataWriter::New();
+             writer->SetInput( cleanPD->GetOutput() );
+             //writer->SetDataModeToAscii();
+             writer->SetFileName( "streamline_output.vtp" );
+             writer->Write();
+             writer->Delete();
+             }
             mapper->SetInputConnection( cleanPD->GetOutputPort() );
         }
         cleanPD->Delete();

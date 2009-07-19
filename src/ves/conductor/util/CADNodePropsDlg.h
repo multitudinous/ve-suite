@@ -133,6 +133,10 @@ public:
 
     /// Return the panel for geographic properties.
     wxPanel* GetGeographicPanel();
+    
+    ///Return occlusion panel
+    wxPanel* GetOcculsionPanel();
+    
 protected:
     ///Internally build the GUI.
     void _buildGUI();
@@ -248,6 +252,9 @@ protected:
     ///\param value The value to convert to double
     unsigned char _convertToUnsignedCharColor( double value );
 
+    ///Build the occlusion settings panel
+    void _buildOcclusionSettings();
+    
     ///Send the Command back to VE-Xplorer.
     void _sendCommandsToXplorer();
 
@@ -257,6 +264,7 @@ protected:
     wxPanel* _physicsPanel;///<The physics panel.
     wxPanel* _animationPanel;///<The animation panel.
     wxPanel* _geographicPanel;///<The panel for geographic infomation (lat/lon,etc).
+    wxPanel* m_occlusionPanel;
 
     ///Transform panel controls
     wxSpinCtrlDbl* _xTransformCtrl;///<X translation control

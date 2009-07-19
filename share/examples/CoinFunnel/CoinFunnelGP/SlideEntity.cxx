@@ -52,7 +52,7 @@ SlideEntity::SlideEntity(
     ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator,
     ves::xplorer::scenegraph::ResourceManager* resourceManager )
 :
-CADEntity( geomFile, pluginDCS, false, false, physicsSimulator ),
+CADEntity( geomFile, pluginDCS, false, "Off", physicsSimulator ),
 mResourceManager( resourceManager )
 {
     Initialize();

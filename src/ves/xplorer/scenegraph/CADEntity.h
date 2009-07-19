@@ -82,7 +82,7 @@ public:
         std::string geomFile,
         ves::xplorer::scenegraph::DCS* parentDCS,
         bool isStream = false,
-        bool occlude = false,
+        std::string occlude = "Off",
         PhysicsSimulator* physicsSimulator = NULL );
 
     ///Constructor that takes an osg::Node*

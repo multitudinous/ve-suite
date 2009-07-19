@@ -286,9 +286,11 @@ protected:
     ///Tells xplorer whether or not to change this node transparent when
     ///vis is selected
     bool mMakeTransparentOnVis;
-
-    double _longitude;
-    double _latitude;
+    ///Set what level of culling
+    std::string m_occlusionCulling;
+    
+    double m_longitude;
+    double m_latitude;
 };
 
 }

@@ -129,7 +129,8 @@ _editAttributeButton( 0 ),
 _addAnimationButton( 0 ),
 _restoreDefaultAttributeButton( 0 ),
 _nShaders( 0 ),
-_nMaterials( 0 )
+_nMaterials( 0 ),
+m_occlusionPanel( 0 )
 {
     _cadNode = activeNode;
 
@@ -180,6 +181,11 @@ void CADNodePropertiesDlg::_buildTabs()
 
     _propertyTabs->AddPage( GetTransformPanel(), _T( "Transform" ), true );
     _propertyTabs->AddPage( GetAttributePanel(), _T( "Attributes" ), false );
+    if( _cadNode->GetNodeType() == "Part" )
+    {
+        _propertyTabs->AddPage( GetOcculsionPanel(), _T( "Culling" ), false );
+    }
+    
     if (( _cadNode->GetNodeType() == "Part" ) && ( _cadNode->HasPhysics() ) )
     {
         _propertyTabs->AddPage( GetPhysicsPanel(), _T( "Physics" ), false );
@@ -191,7 +197,7 @@ void CADNodePropertiesDlg::_buildTabs()
 
     //_propertyTabs->AddPage(GetAnimationPanel(),_T("Animation"), false);
 }
-//////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 wxPanel* CADNodePropertiesDlg::GetTransformPanel()
 {
     if( !_transformPanel )
@@ -200,7 +206,7 @@ wxPanel* CADNodePropertiesDlg::GetTransformPanel()
     }
     return _transformPanel;
 }
-//////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 wxPanel* CADNodePropertiesDlg::GetAttributePanel()
 {
     if( !_attributePanel )
@@ -209,7 +215,7 @@ wxPanel* CADNodePropertiesDlg::GetAttributePanel()
     }
     return _attributePanel;
 }
-//////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 wxPanel* CADNodePropertiesDlg::GetPhysicsPanel()
 {
     if( !_physicsPanel )
@@ -218,7 +224,7 @@ wxPanel* CADNodePropertiesDlg::GetPhysicsPanel()
     }
     return _physicsPanel;
 }
-//////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 wxPanel* CADNodePropertiesDlg::GetAnimationPanel()
 {
     if( !_animationPanel )
@@ -227,7 +233,7 @@ wxPanel* CADNodePropertiesDlg::GetAnimationPanel()
     }
     return _animationPanel;
 }
-///////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 wxPanel* CADNodePropertiesDlg::GetGeographicPanel()
 {
   if ( !_geographicPanel )
@@ -236,7 +242,16 @@ wxPanel* CADNodePropertiesDlg::GetGeographicPanel()
   }
   return _geographicPanel;
 }
-///////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+wxPanel* CADNodePropertiesDlg::GetOcculsionPanel()
+{
+    if ( !m_occlusionPanel )
+    {
+        this->_buildOcclusionSettings();
+    }
+    return m_occlusionPanel;
+}
+////////////////////////////////////////////////////////////////////////////////
 void CADNodePropertiesDlg::_buildTransformPanel()
 {
     _transformPanel = new wxPanel( _propertyTabs, TRANSFORM_PANEL_ID );
@@ -1477,4 +1492,40 @@ void CADNodePropertiesDlg::_sendCommandsToXplorer()
     }
 }
 #endif
+////////////////////////////////////////////////////////////////////////////////
+void CADNodePropertiesDlg::_buildOcclusionSettings()
+{
+    m_occlusionPanel = new wxPanel( _propertyTabs, GEOGRAPHIC_PANEL_ID );
+    wxStaticBox* outerStaticBox = new wxStaticBox( m_occlusionPanel, -1, wxT ( "Occlusion Culling Settings" ) );
+    /*
+    _longitudeControl = new wxSpinCtrlDbl ( _geographicPanel, GEOGRAPHIC_PANEL_ID );
+    _longitudeControl->SetValue( 0 );
+    _longitudeControl->SetRange( -180.0, 180.0 );
+    _longitudeControl->SetIncrement( 0.01 );
+    _longitudeControl->Raise();
+    
+    _latitudeControl = new wxSpinCtrlDbl ( _geographicPanel, GEOGRAPHIC_PANEL_ID );
+    _latitudeControl->SetValue( 0 );
+    _latitudeControl->SetRange( -90.0, 90.0 );
+    _latitudeControl->SetIncrement( 0.01 );
+    _latitudeControl->Raise();
+    
+    if ( _cadNode )
+    {
+        _longitudeControl->SetValue ( _cadNode->GetLongitude() );
+        _latitudeControl->SetValue ( _cadNode->GetLatitude() );
+    }
+    
+    wxStaticBoxSizer* sizer ( new wxStaticBoxSizer ( outerStaticBox, wxVERTICAL ) );
+    wxGridSizer *grid ( new wxGridSizer ( 2, 2, 5, 5 ) );
+    
+    grid->Add ( new wxStaticText ( _geographicPanel, wxID_ANY, wxT ( "Longitude" ) ), 0 );
+    grid->Add ( _longitudeControl, 0, 0, 0 );
+    grid->Add ( new wxStaticText ( _geographicPanel, wxID_ANY, wxT ( "Latitude" ) ), 0 );
+    grid->Add ( _latitudeControl, 0, 0, 0 );
+    
+    sizer->Add ( grid );
+    
+    _geographicPanel->SetSizer ( sizer );*/
+}
 

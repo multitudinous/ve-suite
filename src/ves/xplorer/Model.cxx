@@ -268,7 +268,7 @@ void Model::AddDataSetToTextureDataSet( unsigned int index,
 ////////////////////////////////////////////////////////////////////////////////
 void Model::CreateGeomDataSet( std::string filename )
 {
-    mGeomDataSets.push_back( new CADEntity( filename, _worldDCS.get(), false, true ) );
+    mGeomDataSets.push_back( new CADEntity( filename, _worldDCS.get(), false, "High" ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Model::setModelType( ModelTypeIndex type )

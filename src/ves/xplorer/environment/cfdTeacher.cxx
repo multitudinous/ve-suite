@@ -118,7 +118,7 @@ ves::xplorer::scenegraph::CADEntityHelper* cfdTeacher::GetCurrentLoadedScene( in
     }
 
     m_currentScene = new ves::xplorer::scenegraph::CADEntityHelper();
-    m_currentScene->LoadFile( this->pfbFileNames[ i ], false, true );
+    m_currentScene->LoadFile( this->pfbFileNames[ i ], false );
     return m_currentScene;
 }
 ////////////////////////////////////////////////////////////////////////////////

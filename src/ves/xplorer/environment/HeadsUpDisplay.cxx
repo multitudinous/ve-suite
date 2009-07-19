@@ -97,7 +97,7 @@ void HeadsUpDisplay::Initialize()
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > wcsDCS =
         new ves::xplorer::scenegraph::DCS();
     mGeometryWCS = new ves::xplorer::scenegraph::CADEntity(
-        GetVESuite_WCS(), wcsDCS.get(), true, false );
+        GetVESuite_WCS(), wcsDCS.get(), true, "Off" );
     mGeometryWCS->GetDCS()->setScale( osg::Vec3( 0.7, 0.7, 0.7 ) );
     mGeometryWCS->GetDCS()->setPosition(
         osg::Vec3( mWindowResolution.first - 50, mWindowResolution.second - 50, -40.0 ) );

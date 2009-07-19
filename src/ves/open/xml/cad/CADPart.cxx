@@ -40,10 +40,13 @@ using namespace ves::open::xml;
 //Constructor                                             //
 ////////////////////////////////////////////////////////////
 CADPart::CADPart( const std::string& name )
-        : ves::open::xml::cad::CADNode( name )
+    : 
+    ves::open::xml::cad::CADNode( name ),
+    m_cadFileName( "CADFile" )
 {
-    m_cadFileName = std::string( "CADFile" );
-    m_type = std::string( "Part" );
+    m_occlusionCulling = "Off";
+    m_type = "Part";
+
     SetObjectType( "CADPart" );
 }
 ///////////////////
@@ -64,7 +67,7 @@ std::string CADPart::GetCADFileName()
 //////////////////////////////////
 void CADPart::_updateCADFileName()
 {
-    DOMElement* nameElement  = mRootDocument->createElement(
+    /*DOMElement* nameElement  = mRootDocument->createElement(
                                Convert( "fileName" ).toXMLString() );
 
     mVeElement->appendChild( nameElement );
@@ -72,14 +75,16 @@ void CADPart::_updateCADFileName()
     DOMText* fileName = mRootDocument->createTextNode(
                         Convert( m_cadFileName ).toXMLString() );
 
-    nameElement->appendChild( fileName );
+    nameElement->appendChild( fileName );*/
+    
+    SetSubElement( "fileName", m_cadFileName );
 }
 /////////////////////////////////////////////////
 void CADPart::_updateVEElement( const std::string& input )
 {
-    //How is this going to work???
-    //Get the base elements from CADNode
     ves::open::xml::cad::CADNode::_updateVEElement( input );
+
+    SetAttribute( "occlusionCulling", m_occlusionCulling );
 
     _updateCADFileName();
 }
@@ -93,20 +98,30 @@ void CADPart::SetObjectFromXMLData( DOMNode* xmlNode )
         currentElement = dynamic_cast<DOMElement*>( xmlNode );
     }
 
-    if( currentElement )
+    if( !currentElement )
     {
-        //populate the base elements in node
-        ves::open::xml::cad::CADNode::SetObjectFromXMLData( currentElement );
-
-        //break down the element
-        {
-            if( currentElement->hasChildNodes() )
-            {
-                DOMElement* fileNameElement = GetSubElement( currentElement, std::string( "fileName" ), 0 );
-                GetDataFromElement( fileNameElement, m_cadFileName );
-            }
-        }
+        return;
     }
+    //populate the base elements in node
+    ves::open::xml::cad::CADNode::SetObjectFromXMLData( currentElement );
+
+    if( currentElement->hasChildNodes() )
+    {
+        DOMElement* fileNameElement = 
+            GetSubElement( currentElement, std::string( "fileName" ), 0 );
+        GetDataFromElement( fileNameElement, m_cadFileName );
+    }
+    
+    if( currentElement->getAttributeNode(
+        Convert( "occlusionCulling" ).toXMLString() ) )
+    {
+        XMLObject::GetAttribute( currentElement, "occlusionCulling", m_occlusionCulling );
+    }
+    else
+    {
+        m_occlusionCulling = "Off";
+    }
+    
 }
 ////////////////////////////////////////////////
 CADPart::CADPart( CADPart& rhs, bool clone )

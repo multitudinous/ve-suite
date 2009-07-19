@@ -215,7 +215,7 @@ void ModelCADHandler::CreatePart( const std::string& fileName, const std::string
                 fileName,
                 m_assemblyList[ parentID ].get(),
                 false,
-                true,
+                "High",
                 ves::xplorer::scenegraph::PhysicsSimulator::instance() );
         vprDEBUG( vesDBG, 1 ) << "|\t--Loaded new part--"
             << std::endl << vprDEBUG_FLUSH;
