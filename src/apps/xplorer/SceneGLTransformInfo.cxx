@@ -156,14 +156,10 @@ void SceneGLTransformInfo::Initialize()
         float vp_ox, vp_oy, vp_sx, vp_sy;
         viewport->getOriginAndSize( vp_ox, vp_oy, vp_sx, vp_sy );
 
-        const unsigned int viewportOriginX =
-            static_cast< unsigned int >( vp_ox * windowWidth );
-        const unsigned int viewportOriginY =
-            static_cast< unsigned int >( vp_oy * windowHeight );
-        const unsigned int viewportWidth =
-            static_cast< unsigned int >( vp_sx * windowWidth );
-        const unsigned int viewportHeight =
-            static_cast< unsigned int >( vp_sy * windowHeight );
+        const int viewportOriginX = static_cast< int >( vp_ox * windowWidth );
+        const int viewportOriginY = static_cast< int >( vp_oy * windowHeight );
+        const int viewportWidth = static_cast< int >( vp_sx * windowWidth );
+        const int viewportHeight = static_cast< int >( vp_sy * windowHeight );
 
         //Calculate the window matrix for the viewport
         gmtl::Matrix44d windowMatrix;

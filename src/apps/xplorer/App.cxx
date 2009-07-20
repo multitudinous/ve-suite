@@ -35,6 +35,7 @@
 #include "App.h"
 #include "VjObsWrapper.h"
 #include "SceneRenderToTexture.h"
+#include "SceneGLTransformInfo.h"
 
 #include <ves/xplorer/TextureBasedVizHandler.h>
 #include <ves/xplorer/EnvironmentHandler.h>
@@ -47,6 +48,7 @@
 #include <ves/xplorer/util/fileIO.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
+#include <ves/xplorer/scenegraph/GLTransformInfo.h>
 
 #include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
 
@@ -180,22 +182,24 @@ App::App( int argc, char* argv[], bool enableRTT )
         SceneRenderToTexturePtr( new SceneRenderToTexture() );
 
     //Set the ortho2D( 0, 1, 0, 1, 0, 1 ) matrix
-    m_ortho2D.mState =
+    gmtl::Matrix44d ortho2DMatrix;
+    ortho2DMatrix.mState =
         gmtl::Matrix44d::AFFINE | gmtl::Matrix44d::NON_UNISCALE;
-    m_ortho2D.mData[  0 ] =  2.0;
-    m_ortho2D.mData[  5 ] =  2.0;
-    m_ortho2D.mData[ 10 ] = -2.0;
-    m_ortho2D.mData[ 12 ] = -1.0;
-    m_ortho2D.mData[ 13 ] = -1.0;
-    m_ortho2D.mData[ 14 ] = -1.0;
-    //Copy the ortho2D matrix
-    m_osgOrtho2D.set( m_ortho2D.mData );
+    ortho2DMatrix.mData[  0 ] =  2.0;
+    ortho2DMatrix.mData[  5 ] =  2.0;
+    ortho2DMatrix.mData[ 10 ] = -2.0;
+    ortho2DMatrix.mData[ 12 ] = -1.0;
+    ortho2DMatrix.mData[ 13 ] = -1.0;
+    ortho2DMatrix.mData[ 14 ] = -1.0;
 
     //Set the identity matrix
-    m_identity.mState = gmtl::Matrix44d::IDENTITY;
-    //Copy the identity matrix
-    m_osgIdentity.set( m_identity.mData );
-    
+    gmtl::Matrix44d identityMatrix;
+    identityMatrix.mState = gmtl::Matrix44d::IDENTITY;
+
+    m_sceneGLTransformInfo =
+        SceneGLTransformInfoPtr(
+            new SceneGLTransformInfo( ortho2DMatrix, identityMatrix ) );
+
     //Set the zUp transformation matrix
     gmtl::Vec3d x_axis( 1.0, 0.0, 0.0 );
     mZUp = gmtl::makeRot< gmtl::Matrix44d >( 
@@ -254,10 +258,8 @@ void App::contextInit()
         {
             new_sv->setSceneData( getScene() );
         }
-        else
-        {
-            *mRTTChanged = false;
-        }
+
+        *mViewportsChanged = false;
     }
 
     ( *sceneViewer ) = new_sv;
@@ -654,16 +656,20 @@ void App::contextPreDraw()
 {
     //std::cout << "----------contextPreDraw-----------" << std::endl;
     VPR_PROFILE_GUARD_HISTORY( "App::contextPreDraw", 20 );
-    if( mRTT )
+
+    if( !(*mViewportsChanged) && (_frameNumber > 5) )
     {
-        if( !(*mRTTChanged) && (_frameNumber > 5) )
+        if( jccl::ConfigManager::instance()->isPendingStale() )
         {
-            if( jccl::ConfigManager::instance()->isPendingStale() )
+            vpr::Guard< vpr::Mutex > val_guard( mValueLock );
+            if( mRTT )
             {
-                vpr::Guard<vpr::Mutex> val_guard( mValueLock );
                 mSceneRenderToTexture->InitScene( (*sceneViewer)->getCamera() );
-                *mRTTChanged = true;
             }
+
+            m_sceneGLTransformInfo->Initialize();
+
+            *mViewportsChanged = true;
         }
     }
 
@@ -721,13 +727,12 @@ void App::draw()
     sv->setLODScale( EnvironmentHandler::instance()->GetGlobalLODScale() );
 
     //The OpenGL Draw Manager that we are rendering for
-    //Get the view matrix and the frustrum from the draw manager
+    //Get the view matrix and the frustum from the draw manager
 #if __VJ_version >= 2003000
     vrj::opengl::DrawManager* glDrawManager =
         static_cast< vrj::opengl::DrawManager* >( getDrawManager() );
     //vprASSERT( glDrawManager != NULL );
     vrj::opengl::UserData* userData = glDrawManager->currentUserData();
-    vrj::opengl::WindowPtr glWindow = userData->getGlWindow();
     vrj::ViewportPtr viewport = userData->getViewport();
     vrj::ProjectionPtr project = userData->getProjection();
 #else
@@ -735,23 +740,10 @@ void App::draw()
         static_cast< vrj::opengl::DrawManager* >( getDrawManager() );
     //vprASSERT( glDrawManager != NULL );
     vrj::GlUserData* userData = glDrawManager->currentUserData();
-    vrj::GlWindowPtr glWindow = userData->getGlWindow();
     vrj::Viewport* viewport = userData->getViewport();
     vrj::Projection* project = userData->getProjection();
 #endif
     vrj::Frustum frustum = project->getFrustum();
-
-    //Set up the viewport (since OSG clears it out)
-    int w_ox, w_oy, w_width, w_height; //Origin and size of the window
-    glWindow->getOriginSize( w_ox, w_oy, w_width, w_height );
-    float vp_ox, vp_oy, vp_sx, vp_sy;  //The float vrj sizes of the view ports
-    viewport->getOriginAndSize( vp_ox, vp_oy, vp_sx, vp_sy );
-
-    //Compute unsigned versions of the viewport info (for passing to glViewport)
-    const unsigned int ll_x = static_cast< unsigned int >( vp_ox * w_width );
-    const unsigned int ll_y = static_cast< unsigned int >( vp_oy * w_height );
-    const unsigned int x_size = static_cast< unsigned int >( vp_sx * w_width );
-    const unsigned int y_size = static_cast< unsigned int >( vp_sy * w_height );
 
     //Get the frustum values
     double l = frustum[ vrj::Frustum::VJ_LEFT ];
@@ -761,67 +753,55 @@ void App::draw()
     double n = frustum[ vrj::Frustum::VJ_NEAR ];
     double f = frustum[ vrj::Frustum::VJ_FAR ];
 
-    //Calculate the projection matrix from the frustum values
-    gmtl::Matrix44d projectionMatrix;
-    projectionMatrix.mState =
-        gmtl::Matrix44d::AFFINE | gmtl::Matrix44d::NON_UNISCALE;
-    projectionMatrix.mData[  0 ] = ( 2.0 * n ) / ( r - l );
-    projectionMatrix.mData[  5 ] = ( 2.0 * n ) / ( t - b );
-    projectionMatrix.mData[  8 ] = ( r + l ) / ( r - l );
-    projectionMatrix.mData[  9 ] = ( t + b ) / ( t - b );
-    projectionMatrix.mData[ 10 ] = -1.0 * ( f + n ) / ( f - n );
-    projectionMatrix.mData[ 11 ] = -1.0;
-    projectionMatrix.mData[ 14 ] = ( -2.0 * f * n ) / ( f - n );
-    projectionMatrix.mData[ 15 ] =  0.0;
-    //Copy the projection matrix
-    //Use smart pointer RefMatrix to prevent memory leak
-    osg::ref_ptr< osg::RefMatrix > osgProjectionMatrix =
-        new osg::RefMatrix( projectionMatrix.mData );
-
-    //Get the modelview matrix
-    //Start by getting the view matrix
-    gmtl::Matrix44d modelViewMatrix = 
-        gmtl::convertTo< double >( project->getViewMatrix() );
-    //Transform into z-up land (mZUp) and mul by the model matrix (mNavPosition)
-    modelViewMatrix = modelViewMatrix * mZUp * mNavPosition;
-    //Copy the modelview matrix
-    //Use smart pointer RefMatrix to prevent memory leak
-    osg::ref_ptr< osg::RefMatrix > osgModelViewMatrix =
-        new osg::RefMatrix( modelViewMatrix.mData );
-
-    //Set the matrices for the scene
-    if( mRTT )
+    //Get the GLTransformInfo associated w/ this viewport and context
+    scenegraph::GLTransformInfoPtr glTI =
+        m_sceneGLTransformInfo->GetGLTransformInfo( viewport );
+    const osg::Matrixd& osgIdentityMatrix =
+        m_sceneGLTransformInfo->GetOSGIdentityMatrix();
+    //Set scene info associated w/ this viewport and context
+    if( glTI != scenegraph::GLTransformInfoPtr() )
     {
-        //Set the viewport for the sv camera
-        sv->setViewport( 0, 0, w_width, w_height );
-        //Set the projection matrix for the sv camera
-        //ortho2D( 0, 1, 0, 1, 0, 1 )
-        sv->setProjectionMatrix( m_osgOrtho2D );
-        //Set the view matrix for the sv camera
-        sv->setViewMatrix( m_osgIdentity );
+        //Get the projection matrix
+        glTI->UpdateFrustumValues( l, r, b, t, n, f );
+        const osg::Matrixd& osgProjectionMatrix = glTI->GetOSGProjectionMatrix();
 
-        if( *mRTTChanged )
+        //Get the view matrix
+        gmtl::Matrix44d viewMatrix =
+            gmtl::convertTo< double >( project->getViewMatrix() );
+        //Transform into z-up land (mZUp) and mul by the model matrix (mNavPosition)
+        glTI->UpdateModelViewMatrix( viewMatrix * mZUp * mNavPosition );
+        const osg::Matrixd& osgModelViewMatrix = glTI->GetOSGModelViewMatrix();
+
+        if( mRTT )
         {
+            sv->setViewport(
+                0, 0, glTI->GetWindowWidth(), glTI->GetWindowHeight() );
+            sv->setProjectionMatrix(
+                m_sceneGLTransformInfo->GetOSGOrtho2DMatrix() );
+            sv->setViewMatrix( osgIdentityMatrix );
+
             osg::ref_ptr< osg::Camera > camera =
                 mSceneRenderToTexture->GetCamera( viewport );
             if( camera.valid() )
             {
-                //Set the projection matrix for the rtt camera
-                camera->setProjectionMatrix( *(osgProjectionMatrix.get()) );
-
-                //Set the view matrix for the rtt camera
-                camera->setViewMatrix( *(osgModelViewMatrix.get()) );
+                camera->setProjectionMatrix( osgProjectionMatrix );
+                camera->setViewMatrix( osgModelViewMatrix );
             }
+        }
+        else
+        {
+            sv->setViewport(
+                glTI->GetViewportOriginX(), glTI->GetViewportOriginY(),
+                glTI->GetViewportWidth(), glTI->GetViewportHeight() );
+            sv->setProjectionMatrix( osgProjectionMatrix );
+            sv->setViewMatrix( osgModelViewMatrix );
         }
     }
     else
     {
-        //Set the viewport for the sv camera
-        sv->setViewport( ll_x, ll_y, x_size, y_size );
-        //Set the projection matrix for the sv camera
-        sv->setProjectionMatrix( *(osgProjectionMatrix.get()) );
-        //Set the view matrix for the sv camera
-        sv->setViewMatrix( *(osgModelViewMatrix.get()) );
+        sv->setViewport( 0, 0, 1, 1 );
+        sv->setProjectionMatrix( osgIdentityMatrix );
+        sv->setViewMatrix( osgIdentityMatrix );
     }
 
     //Draw the scene
@@ -841,20 +821,17 @@ void App::draw()
         sv->draw();
     }
 
-    //Get the frustum planes based on the current bounding volume of the scene
-    sv->getCamera()->getProjectionMatrixAsFrustum( l, r, b, t, n, f );
-
-    //The code below is not thread safe and will result in random results
-    //in multithreaded use cases
-    EnvironmentHandler::instance()->SetFrustumValues( l, r, b, t, n, f );
-    /*
-    projectionMatrix.mData[  0 ] = ( 2.0 * n ) / ( r - l );
-    projectionMatrix.mData[  5 ] = ( 2.0 * n ) / ( t - b );
-    projectionMatrix.mData[  8 ] = ( r + l ) / ( r - l );
-    projectionMatrix.mData[  9 ] = ( t + b ) / ( t - b );
-    projectionMatrix.mData[ 10 ] = -1.0 * ( f + n ) / ( f - n );
-    projectionMatrix.mData[ 14 ] = ( -2.0 * f * n ) / ( f - n );
-    */
+    if( glTI != scenegraph::GLTransformInfoPtr() )
+    {
+        //The code below is not thread safe and will result in random results
+        //in multithreaded use cases
+        //Get the frustum planes based on the current bounding volume of the scene
+        sv->getCamera()->getProjectionMatrixAsFrustum( l, r, b, t, n, f );
+        //This code will go away eventually
+        EnvironmentHandler::instance()->SetFrustumValues( l, r, b, t, n, f );
+        //Recalculate the projection matrix from the new frustum values
+        glTI->UpdateFrustumValues( l, r, b, t, n, f );
+    }
 
     //Screen capture code
     if( captureNextFrameForWeb )

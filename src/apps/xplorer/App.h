@@ -36,6 +36,7 @@
 
 // --- VE-Suite Includes --- //
 #include "SceneRenderToTexturePtr.h"
+#include "SceneGLTransformInfoPtr.h"
 
 #include <ves/xplorer/TextureBasedVizHandlerPtr.h>
 
@@ -257,14 +258,6 @@ private:
     osg::ref_ptr< osg::LightSource > light_source_0;
     ///Light model for the scene
     osg::ref_ptr< osg::LightModel > light_model_0;
-    ///
-    gmtl::Matrix44d m_ortho2D;
-    ///
-    osg::Matrixd m_osgOrtho2D;
-    ///
-    gmtl::Matrix44d m_identity;
-    ///
-    osg::Matrixd m_osgIdentity;
     ///-90 z up matrix
     gmtl::Matrix44d mZUp;
     ///User nav position for camera
@@ -281,11 +274,13 @@ private:
     ves::xplorer::TextureBasedVizHandler* _tbvHandler;
     ///
     ves::xplorer::SceneRenderToTexturePtr mSceneRenderToTexture;
+    ///
+    ves::xplorer::SceneGLTransformInfoPtr m_sceneGLTransformInfo;
 
 #if __VJ_version >= 2003000
-    vrj::opengl::ContextData< bool > mRTTChanged;
+    vrj::opengl::ContextData< bool > mViewportsChanged;
 #else
-    vrj::GlContextData< bool > mRTTChanged;
+    vrj::GlContextData< bool > mViewportsChanged;
 #endif
 
 };
