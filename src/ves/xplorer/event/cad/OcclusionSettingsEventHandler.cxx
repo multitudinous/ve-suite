@@ -112,7 +112,7 @@ void OcclusionSettingsEventHandler::_operateOnNode( XMLObjectPtr xmlObject )
         unsigned int numOQNs = statsVisitor.getNumOQNs();
         bool oqPresent = false;
         std::cout << numOQNs << std::endl;
-        vprDEBUG( vesDBG, 1 ) << "|\t\tThere are currently " << numOQNs <<
+        vprDEBUG( vesDBG, 1 ) << "|\t\tThere are currently " << numOQNs
             << "oq nodes." << std::endl
             << vprDEBUG_FLUSH;
         
@@ -212,7 +212,7 @@ void OcclusionSettingsEventHandler::_operateOnNode( XMLObjectPtr xmlObject )
             osgOQ::VisibilityThresholdVisitor visibilityThresholdVisitor( visibilityThreshold );
             rootPartNode->accept( visibilityThresholdVisitor );
         }
-        vprDEBUG( vesDBG, 1 ) << "|\t\tThere are now " << numOQNs <<
+        vprDEBUG( vesDBG, 1 ) << "|\t\tThere are now " << numOQNs
             << "oq nodes." << std::endl
             << vprDEBUG_FLUSH;
         
