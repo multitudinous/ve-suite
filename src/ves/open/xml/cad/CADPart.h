@@ -85,6 +85,7 @@ public:
 
     ///Equal operator
     CADPart& operator=( const CADPart& rhs );
+    
 protected:
 
 

@@ -316,7 +316,8 @@ void CADEventHandler::_addNodeToNode( std::string parentID,
             << std::endl << vprDEBUG_FLUSH;
         m_cadHandler->CreatePart( correctedPath.native_file_string(),
                                   newPart->GetID(),
-                                  parentID );
+                                  parentID,
+                                  newPart->GetOcclusionSettings() );
 
         ves::xplorer::scenegraph::CADEntity* partNode = 
             m_cadHandler->GetPart( newPart->GetID() );

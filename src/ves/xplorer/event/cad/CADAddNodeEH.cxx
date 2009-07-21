@@ -137,7 +137,7 @@ void CADAddNodeEventHandler::_operateOnNode( XMLObjectPtr xmlObject )
         else if( nodeType == "Part" )
             _addNodeToNode( node->GetParent(), part );
     }
-    catch ( char* str )
+    catch( char* str )
     {
         std::cout << str << std::endl;
     }

@@ -118,6 +118,7 @@ public:
                                    const std::string& nodeType,
                                    const std::string& attributeName );
     ///Create a new assembly
+    ///\param assemblyID The xml id for the assembly
     void CreateAssembly( const std::string& assemblyID );
 
     ///Create a new clone
@@ -126,9 +127,14 @@ public:
                       const std::string& orignalType );
 
     ///Create a new part
+    ///\param fileName The filename of the part to load
+    ///\param partID The xml part ID
+    ///\param parentID The xml parent id of the part
+    ///\param occlusionSettings The occlusion settings for the part
     void CreatePart( const std::string& fileName,
-                     const std::string& partID,
-                     const std::string& parentID );
+                    const std::string& partID,
+                    const std::string& parentID, 
+                    const std::string& occlusionSettings );
 
     ///Clear out the associated information for a node
     ///\param nodeID The node id

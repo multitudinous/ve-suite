@@ -47,6 +47,7 @@
 #include <osg/Notify>
 #include <sstream>
 #include <string>
+#include <iostream>
 
 
 using namespace osgOQ;
@@ -521,7 +522,7 @@ RemoveOcclusionQueryVisitor::~RemoveOcclusionQueryVisitor()
 }
 
 void
-RemoveOcclusionQueryVisitor::apply( osg::Node& node )
+RemoveOcclusionQueryVisitor::apply( osg::Group& node )
 {
     if (node.getNumParents() == 0)
     {
@@ -530,30 +531,48 @@ RemoveOcclusionQueryVisitor::apply( osg::Node& node )
         return;
     }
 
-    osg::OcclusionQueryNode* oqnRaw = dynamic_cast<osg::OcclusionQueryNode*>( &node );
-    if (!oqnRaw)
+    for( size_t i = 0; i < node.getNumChildren(); ++i)
     {
-        traverse( node );
-        return;
-    }
-    osg::ref_ptr<OcclusionQueryNode> oqn = oqnRaw;
+        osg::OcclusionQueryNode* oqnRaw = 
+            dynamic_cast<osg::OcclusionQueryNode*>( node.getChild( i ) );
 
-
-    unsigned int np = oqn->getNumParents();
-    while (np--)
-    {
-        osg::Group* parent = dynamic_cast<osg::Group*>( oqn->getParent( np ) );
-        if (parent != NULL)
+        if( oqnRaw )
         {
-            // Remove OQN from parent.
-            parent->removeChild( oqn.get() );
-
-            // Add OQN's children to parent.
-            unsigned int nc = oqn->getNumChildren();
-            while (nc--)
-                parent->addChild( oqn->getChild( nc ) );
+            m_oqNodes.push_back( oqnRaw );
         }
     }
+    
+    for( size_t i = 0; i < m_oqNodes.size(); ++i )
+    {
+        osg::OcclusionQueryNode* oqnRaw = m_oqNodes.at( i ).get();
+        unsigned int np = oqnRaw->getNumParents();
+        //std::cout << "num parents " << np << std::endl;
+        while (np--)
+        {
+            //std::cout << "parent " <<  np << std::endl;
+            osg::Group* parent = dynamic_cast< osg::Group* >( oqnRaw->getParent( np ) );
+            if (parent != NULL)
+            {
+                // Remove OQN from parent.
+                parent->removeChild( oqnRaw );
+                
+                // Add OQN's children to parent.
+                unsigned int nc = oqnRaw->getNumChildren();
+                //std::cout << " num children " << nc << std::endl;
+                while (nc--)
+                {    
+                    //std::cout << "child " <<  nc << std::endl;
+                    parent->addChild( oqnRaw->getChild( nc ) );
+                    //m_oqNodes.at( i )->removeChild( nc );
+                }
+                oqnRaw->removeChildren( 0, oqnRaw->getNumChildren() );
+            }
+        }
+    }
+    
+    m_oqNodes.clear();
+    
+    traverse( node );
 }
 
 

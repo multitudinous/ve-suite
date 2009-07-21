@@ -97,7 +97,9 @@ public:
         REMOVE_ANIMATION,///<The remove attribute ID.
         ADD_ANIMATION,///<The add attribute button ID.
         UNIFORM_SCALE,///<The scale uniformly checkbox ID.
-        GEOGRAPHIC_PANEL_ID
+        GEOGRAPHIC_PANEL_ID,
+        CULLING_PANEL_ID,
+        CULLING_SETTINGS
     };
     ///Constructor
     ///\param parent The parent window.
@@ -171,6 +173,10 @@ protected:
     ///\param event The wxCommand event.
     void _updatePhysicsMesh( wxCommandEvent& event );
 
+    ///Update the physics mesh of a node
+    ///\param event The wxCommand event.
+    void UpdateCullingSettings( wxCommandEvent& event );
+    
     ///Update whether uniform scaling is used
     ///\param event The wxCommand event
     void UpdateUniformScale( wxCommandEvent& event );
@@ -289,7 +295,8 @@ protected:
     wxButton* _editAttributeButton;///<The button for removing attributes.
     wxArrayString _availableShaders;///<The shader names.
     wxArrayString _availableMaterials;///<The material names.
-
+    wxRadioBox* m_cullingRB;
+    
     ///Physics panel controls
     ///Mass control
     wxSpinCtrlDbl* _physicsMassCtrl;

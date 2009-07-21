@@ -94,6 +94,7 @@ BEGIN_EVENT_TABLE( CADNodePropertiesDlg, wxDialog )
     EVT_SPINCTRL( PHYSICS_FRICTION_ID, CADNodePropertiesDlg::_updatePhysicsProperties )
     EVT_SPINCTRL( PHYSICS_RESTITUTION_ID, CADNodePropertiesDlg::_updatePhysicsProperties )
     EVT_RADIOBOX( PHYSICS_MESH_ID, CADNodePropertiesDlg::_updatePhysicsMesh )
+    EVT_RADIOBOX( CULLING_SETTINGS, CADNodePropertiesDlg::UpdateCullingSettings )
     EVT_COMBOBOX( ATTRIBUTE_TYPE, CADNodePropertiesDlg::_updateAttributeType )
     EVT_LIST_ITEM_SELECTED( ACTIVE_ATTRIBUTE, CADNodePropertiesDlg::_setActiveAttribute )
     EVT_LIST_ITEM_RIGHT_CLICK( ACTIVE_ATTRIBUTE, CADNodePropertiesDlg::_editAttribute )
@@ -130,12 +131,10 @@ _addAnimationButton( 0 ),
 _restoreDefaultAttributeButton( 0 ),
 _nShaders( 0 ),
 _nMaterials( 0 ),
-m_occlusionPanel( 0 )
+m_occlusionPanel( 0 ),
+_cadNode( activeNode ),
+m_cullingRB( 0 )
 {
-    _cadNode = activeNode;
-
-    //_associateWithDataCheck = 0;
-
     tempX = 1.0;
     tempY = 1.0;
     tempZ = 1.0;
@@ -1441,7 +1440,7 @@ void CADNodePropertiesDlg::_updateGeographic ( wxSpinEvent& event )
 
     ves::open::xml::DataValuePairPtr nodeID( new ves::open::xml::DataValuePair );
     nodeID->SetDataType( "STRING" );
-    nodeID->SetData ( std::string( "Node ID" ), _cadNode->GetID() );
+    nodeID->SetData( std::string( "Node ID" ), _cadNode->GetID() );
     _instructions.push_back( nodeID );
 
     ves::open::xml::DataValuePairPtr nodeType( new ves::open::xml::DataValuePair );
@@ -1458,13 +1457,13 @@ void CADNodePropertiesDlg::_updateGeographic ( wxSpinEvent& event )
     ves::open::xml::DataValuePairPtr latitudeValue ( new ves::open::xml::DataValuePair );
     latitudeValue->SetDataType( "DOUBLE" );
     latitudeValue->SetData( ves::util::names::LATITUDE_VALUE, _latitudeControl->GetValue() );
-    _instructions.push_back ( latitudeValue );
+    _instructions.push_back( latitudeValue );
 
     this->_sendCommandsToXplorer();
     this->ClearInstructions();
 
-    _cadNode->SetLongitude ( _longitudeControl->GetValue() );
-    _cadNode->SetLatitude ( _latitudeControl->GetValue() );
+    _cadNode->SetLongitude( _longitudeControl->GetValue() );
+    _cadNode->SetLatitude( _latitudeControl->GetValue() );
   }
 }
 #ifndef STAND_ALONE
@@ -1495,37 +1494,52 @@ void CADNodePropertiesDlg::_sendCommandsToXplorer()
 ////////////////////////////////////////////////////////////////////////////////
 void CADNodePropertiesDlg::_buildOcclusionSettings()
 {
-    m_occlusionPanel = new wxPanel( _propertyTabs, GEOGRAPHIC_PANEL_ID );
-    wxStaticBox* outerStaticBox = new wxStaticBox( m_occlusionPanel, -1, wxT ( "Occlusion Culling Settings" ) );
-    /*
-    _longitudeControl = new wxSpinCtrlDbl ( _geographicPanel, GEOGRAPHIC_PANEL_ID );
-    _longitudeControl->SetValue( 0 );
-    _longitudeControl->SetRange( -180.0, 180.0 );
-    _longitudeControl->SetIncrement( 0.01 );
-    _longitudeControl->Raise();
+    m_occlusionPanel = new wxPanel( _propertyTabs, CULLING_PANEL_ID );
     
-    _latitudeControl = new wxSpinCtrlDbl ( _geographicPanel, GEOGRAPHIC_PANEL_ID );
-    _latitudeControl->SetValue( 0 );
-    _latitudeControl->SetRange( -90.0, 90.0 );
-    _latitudeControl->SetIncrement( 0.01 );
-    _latitudeControl->Raise();
+    wxBoxSizer* transformPanelSizer = new wxBoxSizer( wxVERTICAL );
+    wxStaticBox* transformProperties = new wxStaticBox( m_occlusionPanel, -1, wxT( "Occlusion Culling Settings" ) );
+    wxStaticBoxSizer* transformPropSizer = new wxStaticBoxSizer( transformProperties, wxVERTICAL );
     
-    if ( _cadNode )
+    transformPanelSizer->Add( transformPropSizer, 1, wxEXPAND | wxALIGN_CENTER | wxALL, 5 );
+    
+    wxString motionStrings[] = { _T( "Off" ),_T( "Low" ), _T( "Medium" ), _T( "High" ) };
+    m_cullingRB = new wxRadioBox( m_occlusionPanel, CULLING_SETTINGS, wxT( "Culling Settings" ),
+                                       wxDefaultPosition, wxDefaultSize, 4,
+                                       motionStrings, 0, wxRA_SPECIFY_ROWS );
+    
+    transformPropSizer->Add( m_cullingRB, 1, wxALIGN_CENTER | wxALL, 5 );
+
+    m_occlusionPanel->SetAutoLayout( true );
+    m_occlusionPanel->SetSizer( transformPanelSizer );
+    
+    if( _cadNode )
     {
-        _longitudeControl->SetValue ( _cadNode->GetLongitude() );
-        _latitudeControl->SetValue ( _cadNode->GetLatitude() );
+        m_cullingRB->SetStringSelection( wxString( _cadNode->GetOcclusionSettings().c_str(), wxConvUTF8 ) );
+    }
+}
+///////////////////////////////////////////////////////////////////////////////
+void CADNodePropertiesDlg::UpdateCullingSettings( wxCommandEvent& event )
+{
+    if( !_cadNode )
+    {
+        return;
     }
     
-    wxStaticBoxSizer* sizer ( new wxStaticBoxSizer ( outerStaticBox, wxVERTICAL ) );
-    wxGridSizer *grid ( new wxGridSizer ( 2, 2, 5, 5 ) );
+    wxString tempString = m_cullingRB->GetStringSelection();
+    std::string ctempString = ConvertUnicode( tempString.c_str() );
+    _cadNode->SetOcclusionSettings( ctempString );
     
-    grid->Add ( new wxStaticText ( _geographicPanel, wxID_ANY, wxT ( "Longitude" ) ), 0 );
-    grid->Add ( _longitudeControl, 0, 0, 0 );
-    grid->Add ( new wxStaticText ( _geographicPanel, wxID_ANY, wxT ( "Latitude" ) ), 0 );
-    grid->Add ( _latitudeControl, 0, 0, 0 );
+    _commandName = std::string( "Culling Settings" );
     
-    sizer->Add ( grid );
-    
-    _geographicPanel->SetSizer ( sizer );*/
+    ves::open::xml::DataValuePairPtr nodeID( new ves::open::xml::DataValuePair() );
+    nodeID->SetData( std::string( "Node ID" ), _cadNode->GetID() );
+    _instructions.push_back( nodeID );
+
+    ves::open::xml::DataValuePairPtr oqSettings( new ves::open::xml::DataValuePair() );
+    oqSettings->SetData( std::string( "OQ Settings" ), ctempString );
+    _instructions.push_back( oqSettings );
+
+    _sendCommandsToXplorer();
+    ClearInstructions();
 }
 

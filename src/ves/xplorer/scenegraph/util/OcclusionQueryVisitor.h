@@ -229,9 +229,10 @@ public:
     RemoveOcclusionQueryVisitor();
     virtual ~RemoveOcclusionQueryVisitor();
 
-    virtual void apply( osg::Node& node );
+    virtual void apply( osg::Group& node );
 
 protected:
+    std::vector< osg::ref_ptr< osg::OcclusionQueryNode > > m_oqNodes;
 };
 
 // Gather statistics about OQN performance in the visited scene graph.
