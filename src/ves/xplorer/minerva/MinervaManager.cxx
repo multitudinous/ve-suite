@@ -27,7 +27,9 @@
 
 #include <Usul/App/Application.h>
 #include <Usul/Components/Manager.h>
+#include <Usul/DLL/LibraryPool.h>
 #include <Usul/Errors/Assert.h>
+#include <Usul/Functions/SafeCall.h>
 #include <Usul/Pointers/Functions.h>
 #include <Usul/Jobs/Manager.h>
 
@@ -38,7 +40,6 @@
 #include <ves/xplorer/scenegraph/SceneManager.h>
 
 using namespace ves::xplorer::minerva;
-
 
 vprSingletonImp ( MinervaManager );
 
@@ -71,9 +72,7 @@ MinervaManager::MinervaManager() :
   _eventHandlers[ves::util::commands::REMOVE_ELEVATION_LAYER] = new RemoveElevationLayerHandler;
   _eventHandlers[ves::util::commands::REMOVE_RASTER_LAYER] = new RemoveRasterLayerHandler;
 
-#ifdef __APPLE__
-  Usul::Components::Manager::instance().load ( Usul::Interfaces::IUnknown::IID, "GDALReadImage.plug" );
-#endif
+  Usul::Functions::safeCall ( boost::bind ( &MinervaManager::_loadPlugins, this ) );
 }
 
 
@@ -85,6 +84,8 @@ MinervaManager::MinervaManager() :
 
 MinervaManager::~MinervaManager()
 {
+  Usul::Functions::safeCall ( boost::bind ( &MinervaManager::_unloadPlugins, this ) );
+
   // Delete the event handlers.
   EventHandlers::iterator iter ( _eventHandlers.begin() );
   while ( iter != _eventHandlers.end() )
@@ -127,7 +128,13 @@ void MinervaManager::PreFrameUpdate()
       if ( 0x0 != handler )
       {
         vprDEBUG( vesDBG, 0 ) << "|Minerva manager executing: " << name << std::endl << vprDEBUG_FLUSH;
-        handler->Execute ( tempCommand, *this );
+        try
+        {
+          handler->Execute ( tempCommand, *this );
+        }
+        catch ( ... )
+        {
+        }
       }
     }
 
@@ -172,32 +179,9 @@ void MinervaManager::AddEarthToScene()
   _body = Minerva::Core::Functions::makeEarth ( _manager );
   Usul::Pointers::reference ( _body );
 
-  // Until a user interface is in place to add layers, add some base layers.
-  {
-#if 0
-    typedef Minerva::Core::Layers::RasterLayerWms RasterLayerWms;
-    typedef RasterLayerWms::Options Options;
-    typedef RasterLayerWms::Extents Extents;
-
-    Extents extents ( -180.0, -90.0, 180.0, 90.0 );
-    Options options;
-
-    // Add srtm for terrain.
-    options["format"] = "image/tiff";
-    options["layers"] = "strmplus";
-    options["request"] = "GetMap";
-    options["service"] = "WMS";
-    options["srs"] = "EPSG:4326";
-    options["styles"] = "";
-    options["version"] = "1.1.1";
-
-    RasterLayerWms::RefPtr srtm ( new RasterLayerWms ( extents, "http://serv.asu.edu/cgi-bin/srtm.cgi", options ) );
-    _body->elevationAppend ( Usul::Interfaces::IRasterLayer::QueryPtr ( srtm ) );
-#endif
-
-  }
-
   _scene = _body->scene();
+
+  _scene->getOrCreateStateSet()->setRenderBinDetails ( -100, "RenderBin" );
 
   osg::ref_ptr<osg::Group> root ( ves::xplorer::scenegraph::SceneManager::instance()->GetModelRoot() );
   if ( root.valid() )
@@ -475,4 +459,46 @@ bool MinervaManager::_removeLayer ( Minerva::Core::Layers::RasterGroup *group, c
     }
 
     return false;
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+//
+//  Load the plugins.
+//
+///////////////////////////////////////////////////////////////////////////////
+
+void MinervaManager::_loadPlugins()
+{
+#ifdef __APPLE__
+  Usul::Components::Manager::instance().load ( Usul::Interfaces::IUnknown::IID, "GDALReadImage.plug" );
+#endif
+
+  if ( vpr::Debug::instance()->isDebugEnabled() && vpr::Debug::instance()->isCategoryAllowed( vesDBG ) )
+  {
+    Usul::Components::Manager::instance().print ( vpr::Debug::instance()->getStream( vesDBG, 0, true ) );
+  }
+
+#ifdef _MSC_VER
+  const std::string minervaGdalName ( "MinervaGDAL.dll" );
+#elif __APPLE__
+  const std::string minervaGdalName ( "MinervaGDAL.dylib" );
+#else
+  const std::string minervaGdalName ( "MinervaGDAL.so" );
+#endif
+
+  Usul::DLL::Library::RefPtr library ( new Usul::DLL::Library ( minervaGdalName ) );
+  Usul::DLL::LibraryPool::instance().add ( library.get() );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+//
+//  Unload the plugins.
+//
+///////////////////////////////////////////////////////////////////////////////
+
+void MinervaManager::_unloadPlugins()
+{
+  Usul::DLL::LibraryPool::instance().clear ( 0x0 );
+  Usul::Components::Manager::instance().clear ( 0x0 );
 }
