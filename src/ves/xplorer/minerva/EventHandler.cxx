@@ -19,7 +19,10 @@
 
 #include <ves/util/commands/Minerva.h>
 
+#include <Minerva/Core/Functions/ReadFile.h>
 #include <Minerva/Core/Layers/RasterLayerWms.h>
+
+#include <Minerva/Interfaces/IFeature.h>
 
 using namespace ves::xplorer::minerva;
 
@@ -93,15 +96,35 @@ ModelWrapper* EventHandler::GetOrCreateModel ( const std::string& nodeId, Minerv
 
   return modelWrapper.release();
 }
-
-
 ///////////////////////////////////////////////////////////////////////////////
-//
-//  Create a raster layer from the command.
-//
-///////////////////////////////////////////////////////////////////////////////
-
 EventHandler::RasterLayer* EventHandler::_createRasterLayerFromCommand ( CommandPtr command )
+{
+  ves::open::xml::DataValuePairPtr typeData ( command->GetDataValuePair ( ves::util::names::LAYER_DATA_SOURCE ) );
+  
+  if ( typeData )
+  {
+    std::string type;
+    typeData->GetData ( type );
+
+    if ( ves::util::values::FILESYSTEM_SOURCE == type )
+    {
+      return EventHandler::_createFileSystemLayerFromCommand ( command );
+    }
+    else if ( ves::util::values::WMS_SOURCE == type )
+    {
+      return EventHandler::_createWMSLayerFromCommand ( command );
+    }
+    else
+    {
+      vprDEBUG( vesDBG, 0 ) << "|Cannot create layer of type " << type << std::endl;
+    }
+  }
+  
+  vprDEBUG( vesDBG, 0 ) << "|Cannot determine type of layer. " << std::endl;
+  return 0x0;
+}
+///////////////////////////////////////////////////////////////////////////////
+EventHandler::RasterLayer* EventHandler::_createWMSLayerFromCommand ( CommandPtr command )
 {
   ves::open::xml::DataValuePairPtr guidData ( command->GetDataValuePair ( ves::util::names::UNIQUE_ID ) );
   ves::open::xml::DataValuePairPtr serverData ( command->GetDataValuePair ( ves::util::names::SERVER_URL ) );
@@ -151,6 +174,38 @@ EventHandler::RasterLayer* EventHandler::_createRasterLayerFromCommand ( Command
 
     return layer.release();
   }
-  
+
+  return 0x0;
+}
+///////////////////////////////////////////////////////////////////////////////
+EventHandler::RasterLayer* EventHandler::_createFileSystemLayerFromCommand ( CommandPtr command )
+{
+  ves::open::xml::DataValuePairPtr guidData ( command->GetDataValuePair ( ves::util::names::UNIQUE_ID ) );
+  ves::open::xml::DataValuePairPtr filenameData ( command->GetDataValuePair ( ves::util::names::FILENAME ) );
+
+  if ( guidData && filenameData )
+  {
+    std::string guid;
+    guidData->GetData ( guid );
+
+    std::string filename;
+    filenameData->GetData ( filename );
+
+    Usul::Interfaces::IUnknown::QueryPtr unknown ( Minerva::Core::Functions::readFile ( filename ) );
+    Minerva::Interfaces::IFeature::QueryPtr iFeature ( unknown.get() );
+    Minerva::Core::Data::Feature::RefPtr feature ( iFeature.valid() ? iFeature->feature() : 0x0 );
+    RasterLayer::RefPtr rasterLayer ( dynamic_cast<RasterLayer*> ( feature.get() ) );
+
+    if ( rasterLayer.valid() )
+    {
+      vprDEBUG( vesDBG, 0 ) << "|Creating layer from file " << filename << vprDEBUG_FLUSH;
+
+      unknown = static_cast<Usul::Interfaces::IUnknown*> ( 0x0 );
+      iFeature = static_cast<Minerva::Interfaces::IFeature*> ( 0x0 );
+      feature = 0x0;
+      return rasterLayer.release();
+    }
+  }
+
   return 0x0;
 }
