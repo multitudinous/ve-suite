@@ -1,3 +1,35 @@
+/*************** <auto-copyright.rb BEGIN do not edit this line> **************
+ *
+ * VE-Suite is (C) Copyright 1998-2009 by Iowa State University
+ *
+ * Original Development Team:
+ *   - ISU's Thermal Systems Virtual Engineering Group,
+ *     Headed by Kenneth Mark Bryden, Ph.D., www.vrac.iastate.edu/~kmbryden
+ *   - Reaction Engineering International, www.reaction-eng.com
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ *
+ * -----------------------------------------------------------------
+ * Date modified: $Date: 2009-06-28 23:47:14 -0700 (Sun, 28 Jun 2009) $
+ * Version:       $Rev: 12939 $
+ * Author:        $Author: akubach $
+ * Id:            $Id: AppFrame.cxx 12939 2009-06-29 06:47:14Z akubach $
+ * -----------------------------------------------------------------
+ *
+ *************** <auto-copyright.rb END do not edit this line> ***************/
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -7,7 +39,6 @@
 
 #include <ves/conductor/MinervaDialog.h>
 #include <ves/conductor/MinervaWmsDialog.h>
-#include <ves/conductor/ConductorLibEnums.h>
 
 #include <ves/conductor/util/CORBAServiceList.h>
 
@@ -27,6 +58,7 @@
 #endif
 
 #include <wx/button.h>
+#include <wx/filedlg.h>
 #include <wx/listbox.h>
 #include <wx/string.h>
 #include <wx/gdicmn.h>
@@ -44,6 +76,15 @@ const wxString WINDOW_TITLE ( wxT( "Minerva Properties" ) );
 //
 ///////////////////////////////////////////////////////////////////////////////
 
+enum
+{
+  MINERVA_DIALOG_ADD_ELEVATION_WMS_LAYER,
+  MINERVA_DIALOG_ADD_ELEVATION_LAYER_FILE_SYSTEM,
+  MINERVA_DIALOG_REMOVE_ELEVATION_LAYER,
+  MINERVA_DIALOG_ADD_RASTER_WMS_LAYER,
+  MINERVA_DIALOG_ADD_RASTER_LAYER_FILE_SYSTEM,
+  MINERVA_DIALOG_REMOVE_RASTER_LAYER
+};
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -53,9 +94,11 @@ const wxString WINDOW_TITLE ( wxT( "Minerva Properties" ) );
 ///////////////////////////////////////////////////////////////////////////////
 
 BEGIN_EVENT_TABLE( MinervaDialog, wxDialog )
-    EVT_BUTTON( MINERVA_DIALOG_ADD_ELEVATION_LAYER, MinervaDialog::AddElevationLayer )
+    EVT_BUTTON( MINERVA_DIALOG_ADD_ELEVATION_WMS_LAYER, MinervaDialog::AddElevationLayerWMS )
+    EVT_BUTTON( MINERVA_DIALOG_ADD_ELEVATION_LAYER_FILE_SYSTEM, MinervaDialog::AddElevationLayerFileSystem )
     EVT_BUTTON( MINERVA_DIALOG_REMOVE_ELEVATION_LAYER, MinervaDialog::RemoveElevationLayer )
-    EVT_BUTTON( MINERVA_DIALOG_ADD_RASTER_LAYER, MinervaDialog::AddRasterLayer )
+    EVT_BUTTON( MINERVA_DIALOG_ADD_RASTER_WMS_LAYER, MinervaDialog::AddRasterLayerWMS )
+    EVT_BUTTON( MINERVA_DIALOG_ADD_RASTER_LAYER_FILE_SYSTEM, MinervaDialog::AddRasterLayerFileSystem )
     EVT_BUTTON( MINERVA_DIALOG_REMOVE_RASTER_LAYER, MinervaDialog::RemoveRasterLayer )
 END_EVENT_TABLE()
 
@@ -90,9 +133,12 @@ MinervaDialog::MinervaDialog (
 	  elevationSizer->Add( _elevationLayersList, 0, wxALL, 5 );
   	
 	  wxGridSizer* buttonSizer;
-	  buttonSizer = new wxGridSizer( 2, 2, 0, 0 );
+    buttonSizer = new wxGridSizer( 3, 2, 0, 0 );
+
+    wxButton* addFileSystem = new wxButton( this, MINERVA_DIALOG_ADD_ELEVATION_LAYER_FILE_SYSTEM, wxT("Add file..."), wxDefaultPosition, wxDefaultSize, 0 );
+	  buttonSizer->Add( addFileSystem, 0, wxALL, 5 );
   	
-	  _addElevationLayerButton = new wxButton( this, MINERVA_DIALOG_ADD_ELEVATION_LAYER, wxT("Add From WMS..."), wxDefaultPosition, wxDefaultSize, 0 );
+	  _addElevationLayerButton = new wxButton( this, MINERVA_DIALOG_ADD_ELEVATION_WMS_LAYER, wxT("Add From WMS..."), wxDefaultPosition, wxDefaultSize, 0 );
 	  buttonSizer->Add( _addElevationLayerButton, 0, wxALL, 5 );
   	
 	  _removeElevationLayerButton = new wxButton( this, MINERVA_DIALOG_REMOVE_ELEVATION_LAYER, wxT("Remove"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -112,9 +158,12 @@ MinervaDialog::MinervaDialog (
 	  rasterSizer->Add( _rasterLayersList, 0, wxALL, 5 );
   	
 	  wxGridSizer* buttonSizer;
-	  buttonSizer = new wxGridSizer( 2, 2, 0, 0 );
+	  buttonSizer = new wxGridSizer( 3, 2, 0, 0 );
+
+    wxButton* addFileSystem = new wxButton( this, MINERVA_DIALOG_ADD_RASTER_LAYER_FILE_SYSTEM, wxT("Add file..."), wxDefaultPosition, wxDefaultSize, 0 );
+	  buttonSizer->Add( addFileSystem, 0, wxALL, 5 );
   	
-	  _addRasterLayerButton = new wxButton( this, MINERVA_DIALOG_ADD_RASTER_LAYER, wxT("Add From WMS..."), wxDefaultPosition, wxDefaultSize, 0 );
+	  _addRasterLayerButton = new wxButton( this, MINERVA_DIALOG_ADD_RASTER_WMS_LAYER, wxT("Add From WMS..."), wxDefaultPosition, wxDefaultSize, 0 );
 	  buttonSizer->Add( _addRasterLayerButton, 0, wxALL, 5 );
   	
 	  _removeRasterLayerButton = new wxButton( this, MINERVA_DIALOG_REMOVE_RASTER_LAYER, wxT("Remove"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -148,7 +197,7 @@ void MinervaDialog::AddDefaultLayers()
   MinervaDialog::_addLayer ( ves::util::commands::ADD_RASTER_LAYER, server, "OpenAerialMap", "", "image/jpeg", _rasterLayersList, _rasterLayers );
 }
 ///////////////////////////////////////////////////////////////////////////////
-void MinervaDialog::AddElevationLayer ( wxCommandEvent& event )
+void MinervaDialog::AddElevationLayerWMS ( wxCommandEvent& event )
 {
   MinervaWmsDialog dialog ( this, wxID_ANY );
   if ( wxID_OK == dialog.ShowModal() )
@@ -161,12 +210,22 @@ void MinervaDialog::AddElevationLayer ( wxCommandEvent& event )
   }
 }
 ///////////////////////////////////////////////////////////////////////////////
+void MinervaDialog::AddElevationLayerFileSystem ( wxCommandEvent& event )
+{
+  wxFileDialog dialog ( this, "Open" );
+  if ( wxID_OK == dialog.ShowModal() )
+  {
+    wxString filename ( dialog.GetFilename() );
+    MinervaDialog::_addLayerFileSystem ( ves::util::commands::ADD_ELEVATION_LAYER, filename.c_str(), _elevationLayersList, _elevationLayers );
+  }
+}
+///////////////////////////////////////////////////////////////////////////////
 void MinervaDialog::RemoveElevationLayer ( wxCommandEvent& event )
 {
   MinervaDialog::_removeLayer ( ves::util::commands::REMOVE_ELEVATION_LAYER, _rasterLayersList, _rasterLayers );
 }
 ///////////////////////////////////////////////////////////////////////////////
-void MinervaDialog::AddRasterLayer ( wxCommandEvent& event )
+void MinervaDialog::AddRasterLayerWMS ( wxCommandEvent& event )
 {
   MinervaWmsDialog dialog ( this, wxID_ANY );
   if ( wxID_OK == dialog.ShowModal() )
@@ -179,9 +238,52 @@ void MinervaDialog::AddRasterLayer ( wxCommandEvent& event )
   }
 }
 ///////////////////////////////////////////////////////////////////////////////
+void MinervaDialog::AddRasterLayerFileSystem ( wxCommandEvent& event )
+{
+  wxFileDialog dialog ( this, "Open" );
+  if ( wxID_OK == dialog.ShowModal() )
+  {
+    const std::string directory ( dialog.GetDirectory().c_str() );
+    const std::string filename ( dialog.GetFilename().c_str() );
+    const std::string fullPath ( directory + "/" + filename );
+    MinervaDialog::_addLayerFileSystem ( ves::util::commands::ADD_RASTER_LAYER, fullPath, _rasterLayersList, _rasterLayers );
+  }
+}
+///////////////////////////////////////////////////////////////////////////////
 void MinervaDialog::RemoveRasterLayer ( wxCommandEvent& event )
 {
   MinervaDialog::_removeLayer ( ves::util::commands::REMOVE_RASTER_LAYER, _rasterLayersList, _rasterLayers );
+}
+///////////////////////////////////////////////////////////////////////////////
+void MinervaDialog::_addLayerFileSystem ( 
+  const std::string& commandName, 
+  const std::string& filename, 
+  wxListBox *layersList, 
+  LayerIds &guids )
+{
+  ves::open::xml::CommandPtr command ( new ves::open::xml::Command );
+  command->SetCommandName ( commandName );
+
+  // Start adding the dave value pairs.
+  ves::open::xml::DataValuePairPtr typeData ( new ves::open::xml::DataValuePair );
+  typeData->SetData ( ves::util::names::LAYER_DATA_SOURCE, ves::util::values::FILESYSTEM_SOURCE );
+  command->AddDataValuePair ( typeData );
+
+  ves::open::xml::DataValuePairPtr filenameData ( new ves::open::xml::DataValuePair );
+  filenameData->SetData ( ves::util::names::FILENAME, filename );
+  command->AddDataValuePair ( filenameData );
+
+  vpr::GUID guid;
+  guid.generate();
+
+  ves::open::xml::DataValuePairPtr guidData ( new ves::open::xml::DataValuePair );
+  guidData->SetData ( ves::util::names::UNIQUE_ID, guid.toString() );
+  command->AddDataValuePair ( guidData );
+
+  ves::conductor::util::CORBAServiceList::instance()->SendCommandStringToXplorer( command );
+
+  layersList->Append ( wxString( filename.c_str(), wxConvUTF8 ) );
+  guids.push_back ( guid.toString() );
 }
 ///////////////////////////////////////////////////////////////////////////////
 void MinervaDialog::_addLayer ( 
@@ -198,6 +300,10 @@ void MinervaDialog::_addLayer (
   command->SetCommandName ( commandName );
 
   // Start adding the dave value pairs.
+  ves::open::xml::DataValuePairPtr typeData ( new ves::open::xml::DataValuePair );
+  typeData->SetData ( ves::util::names::LAYER_DATA_SOURCE, ves::util::values::WMS_SOURCE );
+  command->AddDataValuePair ( typeData );
+
   ves::open::xml::DataValuePairPtr serverData ( new ves::open::xml::DataValuePair );
   serverData->SetData ( ves::util::names::SERVER_URL, server );
   command->AddDataValuePair ( serverData );
