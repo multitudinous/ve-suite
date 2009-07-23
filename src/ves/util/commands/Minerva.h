@@ -40,6 +40,8 @@ namespace names {
   const std::string WMS_STYLES ( "styles" );
   const std::string SERVER_URL ( "Server URL" );
 
+  const std::string FILENAME ( "filename" );
+
 }
 
 namespace values {
