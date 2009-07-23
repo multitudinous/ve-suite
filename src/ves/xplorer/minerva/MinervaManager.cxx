@@ -39,6 +39,8 @@
 #include <ves/xplorer/ModelHandler.h>
 #include <ves/xplorer/scenegraph/SceneManager.h>
 
+#include <boost/bind.hpp>
+
 using namespace ves::xplorer::minerva;
 
 vprSingletonImp ( MinervaManager );
