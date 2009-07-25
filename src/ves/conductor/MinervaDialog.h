@@ -54,31 +54,31 @@ class wxStdDialogButtonSizer;
 class VE_GUIPLUGINS_EXPORTS MinervaDialog : public wxDialog
 {
 public:
-  typedef wxDialog BaseClass;
+    typedef wxDialog BaseClass;
 
-  MinervaDialog ( wxWindow *parent, wxWindowID id );
-  virtual ~MinervaDialog();
+    MinervaDialog ( wxWindow *parent, wxWindowID id );
+    virtual ~MinervaDialog();
 
-  void AddDefaultLayers();
+    void AddDefaultLayers();
 
-  void AddElevationLayerWMS ( wxCommandEvent& event );
-  void AddElevationLayerFileSystem ( wxCommandEvent& event );
-  void RemoveElevationLayer ( wxCommandEvent& event );
+    void AddElevationLayerWMS ( wxCommandEvent& event );
+    void AddElevationLayerFileSystem ( wxCommandEvent& event );
+    void RemoveElevationLayer ( wxCommandEvent& event );
 
-  void AddRasterLayerWMS ( wxCommandEvent& event );
-  void AddRasterLayerFileSystem ( wxCommandEvent& event );
-  void RemoveRasterLayer ( wxCommandEvent& event );
+    void AddRasterLayerWMS ( wxCommandEvent& event );
+    void AddRasterLayerFileSystem ( wxCommandEvent& event );
+    void RemoveRasterLayer ( wxCommandEvent& event );
 
 private:
 
-  typedef std::vector<std::string> LayerIds;
+    typedef std::vector<std::string> LayerIds;
 
-  static void _addLayerFileSystem ( 
+    static void _addLayerFileSystem ( 
     const std::string& commandName, 
     const std::string& filename,
     wxListBox *layersList, 
     LayerIds &guids );
-  static void _addLayer ( 
+    static void _addLayer ( 
     const std::string& commandName, 
     const std::string& server, 
     const std::string& layers, 
@@ -86,22 +86,29 @@ private:
     const std::string& format,
     wxListBox *layersList, 
     LayerIds &guids );
-  static void _removeLayer ( const std::string& commandName, wxListBox *layersList, LayerIds &guids );
+    static void _removeLayer ( const std::string& commandName, wxListBox *layersList, LayerIds &guids );
 
-  wxListBox* _elevationLayersList;
-	wxButton* _addElevationLayerButton;
-	wxButton* _removeElevationLayerButton;
-	wxListBox* _rasterLayersList;
-	wxButton* _addRasterLayerButton;
-	wxButton* _removeRasterLayerButton;
-	wxStdDialogButtonSizer* _sdbSizer1;
-	wxButton* _sdbSizer1OK;
-	wxButton* _sdbSizer1Cancel;
+    wxListBox* _elevationLayersList;
+    wxButton* _addElevationLayerButton;
+    wxButton* _removeElevationLayerButton;
+    wxListBox* _rasterLayersList;
+    wxButton* _addRasterLayerButton;
+    wxButton* _removeRasterLayerButton;
+    wxStdDialogButtonSizer* _sdbSizer1;
+    wxButton* _sdbSizer1OK;
+    wxButton* _sdbSizer1Cancel;
 
-  LayerIds _elevationLayers;
-  LayerIds _rasterLayers;
+    LayerIds _elevationLayers;
+    LayerIds _rasterLayers;
 
-  DECLARE_EVENT_TABLE();
+    
+    std::string ConvertUnicode( const wxChar* data )
+    {
+        std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( data ) ) );
+        return tempStr;
+    }
+    
+    DECLARE_EVENT_TABLE();
 };
 
 #endif // _MINERVA_DIALOG_H_

@@ -68,7 +68,7 @@
 #include <wx/sizer.h>
 #include <wx/statbox.h>
 
-const wxString WINDOW_TITLE ( wxT( "Minerva Properties" ) );
+const wxString WINDOW_TITLE( wxT( "Minerva Properties" ) );
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -104,18 +104,18 @@ END_EVENT_TABLE()
 
 
 ///////////////////////////////////////////////////////////////////////////////
-MinervaDialog::MinervaDialog ( 
+MinervaDialog::MinervaDialog( 
   wxWindow *parent, 
-  wxWindowID id ) : BaseClass ( parent, id, WINDOW_TITLE, wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE ),
-  _elevationLayersList ( 0x0 ),
-	_addElevationLayerButton ( 0x0 ),
-	_removeElevationLayerButton ( 0x0 ),
-	_rasterLayersList ( 0x0 ),
-	_addRasterLayerButton ( 0x0 ),
-	_removeRasterLayerButton ( 0x0 ),
-	_sdbSizer1 ( 0x0 ),
-	_sdbSizer1OK ( 0x0 ),
-	_sdbSizer1Cancel ( 0x0 ),
+  wxWindowID id ) : BaseClass( parent, id, WINDOW_TITLE, wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE ),
+  _elevationLayersList( 0x0 ),
+	_addElevationLayerButton( 0x0 ),
+	_removeElevationLayerButton( 0x0 ),
+	_rasterLayersList( 0x0 ),
+	_addRasterLayerButton( 0x0 ),
+	_removeRasterLayerButton( 0x0 ),
+	_sdbSizer1( 0x0 ),
+	_sdbSizer1OK( 0x0 ),
+	_sdbSizer1Cancel( 0x0 ),
   _elevationLayers(),
   _rasterLayers()
 {
@@ -193,100 +193,100 @@ MinervaDialog::~MinervaDialog()
 ///////////////////////////////////////////////////////////////////////////////
 void MinervaDialog::AddDefaultLayers()
 {
-  const std::string server ( "http://serv.asu.edu/cgi-bin/tilecache-2.03/tilecache.cgi" );
-  MinervaDialog::_addLayer ( ves::util::commands::ADD_RASTER_LAYER, server, "OpenAerialMap", "", "image/jpeg", _rasterLayersList, _rasterLayers );
+    const std::string server( "http://serv.asu.edu/cgi-bin/tilecache-2.03/tilecache.cgi" );
+    MinervaDialog::_addLayer( ves::util::commands::ADD_RASTER_LAYER, server, "OpenAerialMap", "", "image/jpeg", _rasterLayersList, _rasterLayers );
 }
 ///////////////////////////////////////////////////////////////////////////////
-void MinervaDialog::AddElevationLayerWMS ( wxCommandEvent& event )
+void MinervaDialog::AddElevationLayerWMS( wxCommandEvent& event )
 {
-  MinervaWmsDialog dialog ( this, wxID_ANY );
-  if ( wxID_OK == dialog.ShowModal() )
-  {
-    const std::string server ( dialog.server() );
-    const std::string layers ( dialog.layers() );
-    const std::string styles ( dialog.styles() );
-    const std::string format ( dialog.format() );
-    MinervaDialog::_addLayer ( ves::util::commands::ADD_ELEVATION_LAYER, server, layers, styles, format, _elevationLayersList, _elevationLayers );
-  }
+    MinervaWmsDialog dialog( this, wxID_ANY );
+    if( wxID_OK == dialog.ShowModal() )
+    {
+        const std::string server( dialog.server() );
+        const std::string layers( dialog.layers() );
+        const std::string styles( dialog.styles() );
+        const std::string format( dialog.format() );
+        MinervaDialog::_addLayer( ves::util::commands::ADD_ELEVATION_LAYER, server, layers, styles, format, _elevationLayersList, _elevationLayers );
+    }
 }
 ///////////////////////////////////////////////////////////////////////////////
-void MinervaDialog::AddElevationLayerFileSystem ( wxCommandEvent& event )
+void MinervaDialog::AddElevationLayerFileSystem( wxCommandEvent& event )
 {
-  wxFileDialog dialog ( this, "Open" );
-  if ( wxID_OK == dialog.ShowModal() )
-  {
-    wxString filename ( dialog.GetFilename() );
-    MinervaDialog::_addLayerFileSystem ( ves::util::commands::ADD_ELEVATION_LAYER, filename.c_str(), _elevationLayersList, _elevationLayers );
-  }
+    wxFileDialog dialog( this, _("Open") );
+    if( wxID_OK == dialog.ShowModal() )
+    {
+        wxString filename( dialog.GetFilename() );
+        MinervaDialog::_addLayerFileSystem( ves::util::commands::ADD_ELEVATION_LAYER, ConvertUnicode( filename.c_str() ), _elevationLayersList, _elevationLayers );
+    }
 }
 ///////////////////////////////////////////////////////////////////////////////
-void MinervaDialog::RemoveElevationLayer ( wxCommandEvent& event )
+void MinervaDialog::RemoveElevationLayer( wxCommandEvent& event )
 {
-  MinervaDialog::_removeLayer ( ves::util::commands::REMOVE_ELEVATION_LAYER, _rasterLayersList, _rasterLayers );
+    MinervaDialog::_removeLayer( ves::util::commands::REMOVE_ELEVATION_LAYER, _rasterLayersList, _rasterLayers );
 }
 ///////////////////////////////////////////////////////////////////////////////
-void MinervaDialog::AddRasterLayerWMS ( wxCommandEvent& event )
+void MinervaDialog::AddRasterLayerWMS( wxCommandEvent& event )
 {
-  MinervaWmsDialog dialog ( this, wxID_ANY );
-  if ( wxID_OK == dialog.ShowModal() )
-  {
-    const std::string server ( dialog.server() );
-    const std::string layers ( dialog.layers() );
-    const std::string styles ( dialog.styles() );
-    const std::string format ( dialog.format() );
-    MinervaDialog::_addLayer ( ves::util::commands::ADD_RASTER_LAYER, server, layers, styles, format, _rasterLayersList, _rasterLayers );
-  }
+    MinervaWmsDialog dialog( this, wxID_ANY );
+    if( wxID_OK == dialog.ShowModal() )
+    {
+        const std::string server( dialog.server() );
+        const std::string layers( dialog.layers() );
+        const std::string styles( dialog.styles() );
+        const std::string format( dialog.format() );
+        MinervaDialog::_addLayer( ves::util::commands::ADD_RASTER_LAYER, server, layers, styles, format, _rasterLayersList, _rasterLayers );
+    }
 }
 ///////////////////////////////////////////////////////////////////////////////
-void MinervaDialog::AddRasterLayerFileSystem ( wxCommandEvent& event )
+void MinervaDialog::AddRasterLayerFileSystem( wxCommandEvent& event )
 {
-  wxFileDialog dialog ( this, "Open" );
-  if ( wxID_OK == dialog.ShowModal() )
-  {
-    const std::string directory ( dialog.GetDirectory().c_str() );
-    const std::string filename ( dialog.GetFilename().c_str() );
-    const std::string fullPath ( directory + "/" + filename );
-    MinervaDialog::_addLayerFileSystem ( ves::util::commands::ADD_RASTER_LAYER, fullPath, _rasterLayersList, _rasterLayers );
-  }
+    wxFileDialog dialog( this, _("Open") );
+    if( wxID_OK == dialog.ShowModal() )
+    {
+        const std::string directory( ConvertUnicode( dialog.GetDirectory().c_str() ) );
+        const std::string filename( ConvertUnicode( dialog.GetFilename().c_str() ) );
+        const std::string fullPath( directory + "/" + filename );
+        MinervaDialog::_addLayerFileSystem( ves::util::commands::ADD_RASTER_LAYER, fullPath, _rasterLayersList, _rasterLayers );
+    }
 }
 ///////////////////////////////////////////////////////////////////////////////
-void MinervaDialog::RemoveRasterLayer ( wxCommandEvent& event )
+void MinervaDialog::RemoveRasterLayer( wxCommandEvent& event )
 {
-  MinervaDialog::_removeLayer ( ves::util::commands::REMOVE_RASTER_LAYER, _rasterLayersList, _rasterLayers );
+    MinervaDialog::_removeLayer( ves::util::commands::REMOVE_RASTER_LAYER, _rasterLayersList, _rasterLayers );
 }
 ///////////////////////////////////////////////////////////////////////////////
-void MinervaDialog::_addLayerFileSystem ( 
+void MinervaDialog::_addLayerFileSystem( 
   const std::string& commandName, 
   const std::string& filename, 
   wxListBox *layersList, 
   LayerIds &guids )
 {
-  ves::open::xml::CommandPtr command ( new ves::open::xml::Command );
-  command->SetCommandName ( commandName );
+    ves::open::xml::CommandPtr command( new ves::open::xml::Command );
+    command->SetCommandName( commandName );
 
-  // Start adding the dave value pairs.
-  ves::open::xml::DataValuePairPtr typeData ( new ves::open::xml::DataValuePair );
-  typeData->SetData ( ves::util::names::LAYER_DATA_SOURCE, ves::util::values::FILESYSTEM_SOURCE );
-  command->AddDataValuePair ( typeData );
+    // Start adding the dave value pairs.
+    ves::open::xml::DataValuePairPtr typeData( new ves::open::xml::DataValuePair );
+    typeData->SetData( ves::util::names::LAYER_DATA_SOURCE, ves::util::values::FILESYSTEM_SOURCE );
+    command->AddDataValuePair( typeData );
 
-  ves::open::xml::DataValuePairPtr filenameData ( new ves::open::xml::DataValuePair );
-  filenameData->SetData ( ves::util::names::FILENAME, filename );
-  command->AddDataValuePair ( filenameData );
+    ves::open::xml::DataValuePairPtr filenameData( new ves::open::xml::DataValuePair );
+    filenameData->SetData( ves::util::names::FILENAME, filename );
+    command->AddDataValuePair( filenameData );
 
-  vpr::GUID guid;
-  guid.generate();
+    vpr::GUID guid;
+    guid.generate();
 
-  ves::open::xml::DataValuePairPtr guidData ( new ves::open::xml::DataValuePair );
-  guidData->SetData ( ves::util::names::UNIQUE_ID, guid.toString() );
-  command->AddDataValuePair ( guidData );
+    ves::open::xml::DataValuePairPtr guidData( new ves::open::xml::DataValuePair );
+    guidData->SetData( ves::util::names::UNIQUE_ID, guid.toString() );
+    command->AddDataValuePair( guidData );
 
-  ves::conductor::util::CORBAServiceList::instance()->SendCommandStringToXplorer( command );
+    ves::conductor::util::CORBAServiceList::instance()->SendCommandStringToXplorer( command );
 
-  layersList->Append ( wxString( filename.c_str(), wxConvUTF8 ) );
-  guids.push_back ( guid.toString() );
+    layersList->Append( wxString( filename.c_str(), wxConvUTF8 ) );
+    guids.push_back( guid.toString() );
 }
 ///////////////////////////////////////////////////////////////////////////////
-void MinervaDialog::_addLayer ( 
+void MinervaDialog::_addLayer( 
   const std::string& commandName, 
   const std::string& server, 
   const std::string& layers, 
@@ -295,64 +295,64 @@ void MinervaDialog::_addLayer (
   wxListBox *layersList, 
   LayerIds &guids )
 {
-  // Make the command for adding a raster layer.
-  ves::open::xml::CommandPtr command ( new ves::open::xml::Command );
-  command->SetCommandName ( commandName );
+    // Make the command for adding a raster layer.
+    ves::open::xml::CommandPtr command( new ves::open::xml::Command );
+    command->SetCommandName( commandName );
 
-  // Start adding the dave value pairs.
-  ves::open::xml::DataValuePairPtr typeData ( new ves::open::xml::DataValuePair );
-  typeData->SetData ( ves::util::names::LAYER_DATA_SOURCE, ves::util::values::WMS_SOURCE );
-  command->AddDataValuePair ( typeData );
+    // Start adding the dave value pairs.
+    ves::open::xml::DataValuePairPtr typeData( new ves::open::xml::DataValuePair );
+    typeData->SetData( ves::util::names::LAYER_DATA_SOURCE, ves::util::values::WMS_SOURCE );
+    command->AddDataValuePair( typeData );
 
-  ves::open::xml::DataValuePairPtr serverData ( new ves::open::xml::DataValuePair );
-  serverData->SetData ( ves::util::names::SERVER_URL, server );
-  command->AddDataValuePair ( serverData );
+    ves::open::xml::DataValuePairPtr serverData( new ves::open::xml::DataValuePair );
+    serverData->SetData( ves::util::names::SERVER_URL, server );
+    command->AddDataValuePair( serverData );
 
-  ves::open::xml::DataValuePairPtr formatData ( new ves::open::xml::DataValuePair );
-  formatData->SetData ( ves::util::names::WMS_FORMAT, format );
-  command->AddDataValuePair ( formatData );
+    ves::open::xml::DataValuePairPtr formatData( new ves::open::xml::DataValuePair );
+    formatData->SetData( ves::util::names::WMS_FORMAT, format );
+    command->AddDataValuePair( formatData );
 
-  ves::open::xml::DataValuePairPtr layersData ( new ves::open::xml::DataValuePair );
-  layersData->SetData ( ves::util::names::WMS_LAYERS, layers );
-  command->AddDataValuePair ( layersData );
+    ves::open::xml::DataValuePairPtr layersData( new ves::open::xml::DataValuePair );
+    layersData->SetData( ves::util::names::WMS_LAYERS, layers );
+    command->AddDataValuePair( layersData );
 
-  ves::open::xml::DataValuePairPtr stylesData ( new ves::open::xml::DataValuePair );
-  stylesData->SetData ( ves::util::names::WMS_STYLES, styles );
-  command->AddDataValuePair ( stylesData );
+    ves::open::xml::DataValuePairPtr stylesData( new ves::open::xml::DataValuePair );
+    stylesData->SetData( ves::util::names::WMS_STYLES, styles );
+    command->AddDataValuePair( stylesData );
 
-  vpr::GUID guid;
-  guid.generate();
+    vpr::GUID guid;
+    guid.generate();
 
-  ves::open::xml::DataValuePairPtr guidData ( new ves::open::xml::DataValuePair );
-  guidData->SetData ( ves::util::names::UNIQUE_ID, guid.toString() );
-  command->AddDataValuePair ( guidData );
-
-  ves::conductor::util::CORBAServiceList::instance()->SendCommandStringToXplorer( command );
-
-  layersList->Append ( wxString( server.c_str(), wxConvUTF8 ) );
-  guids.push_back ( guid.toString() );
-}
-///////////////////////////////////////////////////////////////////////////////
-void MinervaDialog::_removeLayer ( const std::string& commandName, wxListBox *layersList, LayerIds &guids )
-{
-  wxArrayInt selectedIndices;
-  layersList->GetSelections ( selectedIndices );
-
-  if ( selectedIndices.Count() > 0 )
-  {
-    int index ( selectedIndices[0] );
-    std::string guid ( guids.at ( index ) );
-
-    guids.erase ( guids.begin() + index );
-    layersList->Delete ( index );
-
-    ves::open::xml::CommandPtr command ( new ves::open::xml::Command );
-    command->SetCommandName ( commandName );
-
-    ves::open::xml::DataValuePairPtr guidData ( new ves::open::xml::DataValuePair );
-    guidData->SetData ( ves::util::names::UNIQUE_ID, guid );
-    command->AddDataValuePair ( guidData );
+    ves::open::xml::DataValuePairPtr guidData( new ves::open::xml::DataValuePair );
+    guidData->SetData( ves::util::names::UNIQUE_ID, guid.toString() );
+    command->AddDataValuePair( guidData );
 
     ves::conductor::util::CORBAServiceList::instance()->SendCommandStringToXplorer( command );
-  }
+
+    layersList->Append( wxString( server.c_str(), wxConvUTF8 ) );
+    guids.push_back( guid.toString() );
+}
+///////////////////////////////////////////////////////////////////////////////
+void MinervaDialog::_removeLayer( const std::string& commandName, wxListBox *layersList, LayerIds &guids )
+{
+    wxArrayInt selectedIndices;
+    layersList->GetSelections( selectedIndices );
+
+    if( selectedIndices.Count() > 0 )
+    {
+        int index( selectedIndices[0] );
+        std::string guid( guids.at( index ) );
+
+        guids.erase( guids.begin() + index );
+        layersList->Delete( index );
+
+        ves::open::xml::CommandPtr command( new ves::open::xml::Command );
+        command->SetCommandName( commandName );
+
+        ves::open::xml::DataValuePairPtr guidData( new ves::open::xml::DataValuePair );
+        guidData->SetData( ves::util::names::UNIQUE_ID, guid );
+        command->AddDataValuePair( guidData );
+
+        ves::conductor::util::CORBAServiceList::instance()->SendCommandStringToXplorer( command );
+    }
 }
