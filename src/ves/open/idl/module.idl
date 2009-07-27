@@ -274,6 +274,11 @@ module Body{
    interface InfoSource
    { // This is the interface for working with a hierarchy of models under one
      // unit operation. This is a beta interface.
+
+      //This is a temporary fix to call StartCalc in subunits
+      //Allows for current units (would be subunits) 
+      //to remain unchanged in order to perform calculations
+      void StartCalc() raises(Error::EUnknown);
     
       //This is for querying the status of the module
       string GetStatusMessage() raises(Error::EUnknown);
