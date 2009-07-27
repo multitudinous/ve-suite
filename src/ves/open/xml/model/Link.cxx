@@ -209,10 +209,10 @@ void Link::SetObjectFromXMLData( DOMNode* element )
             else
             {
                 GetAttribute( currentElement, "name", mLinkName );
-                if( mLinkName.empty() )
+                /*if( mLinkName.empty() )
                 {
                     mLinkName = "noName";
-                }
+                }*/
             }
         }
         //link type
