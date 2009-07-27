@@ -57,7 +57,7 @@ os.popen("python " + config_cmd)
 launcherBundle = ves_pkg.createFileBundle( 'bin' )
 
 if sca_util.GetPlatform() == "win32":
-    makespecAction = '%s --onefile --out=%s --path=%s --icon=%s\\Ve_icon.ico --upx ${SOURCE.abspath}' % (make_cmd, velauncherDistDir, velauncherLibDir, installerImages)
+    makespecAction = '%s --onefile --out=%s --path=%s --icon=%s\\ves_icon.ico --upx ${SOURCE.abspath}' % (make_cmd, velauncherDistDir, velauncherLibDir, installerImages)
     makespecBuilder = Builder(action = makespecAction, single_source = True, suffix = ".spec", chdir = velauncherDistDir)
     
     freezeAction = '%s ${SOURCE.abspath} %s\\velauncher.spec' % (build_cmd, velauncherDistDir)
