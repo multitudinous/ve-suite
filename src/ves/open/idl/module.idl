@@ -278,6 +278,12 @@ module Body{
       //This is a temporary fix to call StartCalc in subunits
       //Allows for current units (would be subunits) 
       //to remain unchanged in order to perform calculations
+      
+      //This function may need to be moved to a new implementation for a unit
+      //based on the information in Doug's dissertation. An info source 
+      //typically only provides information. There is a another class
+      //of object that would take information and perform a calculation
+      //and return results.
       void StartCalc() raises(Error::EUnknown);
     
       //This is for querying the status of the module
