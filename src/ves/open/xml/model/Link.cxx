@@ -209,6 +209,8 @@ void Link::SetObjectFromXMLData( DOMNode* element )
             else
             {
                 GetAttribute( currentElement, "name", mLinkName );
+                //There is an option for name to be empty therefore if it is 
+                //empty by default then we need to keep it empty.
                 /*if( mLinkName.empty() )
                 {
                     mLinkName = "noName";
