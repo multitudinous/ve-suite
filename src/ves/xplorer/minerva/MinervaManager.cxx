@@ -74,7 +74,7 @@ MinervaManager::MinervaManager() :
   _eventHandlers[ves::util::commands::REMOVE_ELEVATION_LAYER] = new RemoveElevationLayerHandler;
   _eventHandlers[ves::util::commands::REMOVE_RASTER_LAYER] = new RemoveRasterLayerHandler;
 
-  Usul::Functions::safeCall ( boost::bind ( &MinervaManager::_loadPlugins, this ) );
+  Usul::Functions::safeCall( boost::bind( &MinervaManager::_loadPlugins, this ) );
 }
 
 
@@ -115,41 +115,41 @@ MinervaManager::~MinervaManager()
 
 void MinervaManager::PreFrameUpdate()
 {
-    vprDEBUG( vesDBG, 3 ) << "|MinervaManager::PreFrameUpdate" 
+    vprDEBUG( vesDBG, 3 ) << "|MinervaManager::LatePreFrameUpdate" 
     << std::endl << vprDEBUG_FLUSH;
     ves::open::xml::CommandPtr tempCommand =
         ves::xplorer::ModelHandler::instance()->GetXMLCommand();
-  if ( tempCommand )
-  {
-    const std::string name ( tempCommand->GetCommandName() );
-
-    EventHandlers::iterator iter ( _eventHandlers.find ( name ) );
-    if ( iter != _eventHandlers.end() )
+    if ( tempCommand )
     {
-      EventHandler *handler ( iter->second );
-      if ( 0x0 != handler )
-      {
-        vprDEBUG( vesDBG, 0 ) << "|Minerva manager executing: " << name << std::endl << vprDEBUG_FLUSH;
-        try
+        const std::string name ( tempCommand->GetCommandName() );
+
+        EventHandlers::iterator iter ( _eventHandlers.find ( name ) );
+        if ( iter != _eventHandlers.end() )
         {
-          handler->Execute ( tempCommand, *this );
+            EventHandler *handler ( iter->second );
+            if ( 0x0 != handler )
+            {
+                vprDEBUG( vesDBG, 0 ) << "|Minerva manager executing: " << name << std::endl << vprDEBUG_FLUSH;
+                try
+                {
+                    handler->Execute ( tempCommand, *this );
+                }
+                catch ( ... )
+                {
+                    ;
+                }
+            }
         }
-        catch ( ... )
-        {
-        }
-      }
+        // Clear the command.
+        //_currentCommand = CommandPtr();
     }
 
-    // Clear the command.
-    //_currentCommand = CommandPtr();
-  }
-
-  if ( _body )
-  {
-    // Remove all tiles that are ready for deletion.
-    _body->purgeTiles();
-  }
-    vprDEBUG( vesDBG, 3 ) << "|MinervaManager::PreFrameUpdate End" 
+    if ( _body )
+    {
+        // Remove all tiles that are ready for deletion.
+        _body->purgeTiles();
+    }
+    vprDEBUG( vesDBG, 3 ) << "|MinervaManager::LatePreFrameUpdate End" 
     << std::endl << vprDEBUG_FLUSH;
 }
 
@@ -484,12 +484,11 @@ void MinervaManager::_loadPlugins()
 #ifdef _MSC_VER
   const std::string minervaGdalName ( "MinervaGDAL.dll" );
 #elif __APPLE__
-  const std::string minervaGdalName ( "MinervaGDAL.dylib" );
+  const std::string minervaGdalName ( "libMinervaGDAL.dylib" );
 #else
   const std::string minervaGdalName ( "MinervaGDAL.so" );
 #endif
-
-  Usul::DLL::Library::RefPtr library ( new Usul::DLL::Library ( minervaGdalName ) );
+  Usul::DLL::Library::RefPtr library( new Usul::DLL::Library ( minervaGdalName ) );
   Usul::DLL::LibraryPool::instance().add ( library.get() );
 }
 
