@@ -484,10 +484,12 @@ void MinervaManager::_loadPlugins()
 #ifdef _MSC_VER
   const std::string minervaGdalName ( "MinervaGDAL.dll" );
 #elif __APPLE__
-  const std::string minervaGdalName ( "libMinervaGDAL.dylib" );
+  const std::string minervaGdalName ( "libMinervaGDAL.bundle" );
 #else
-  const std::string minervaGdalName ( "MinervaGDAL.so" );
+  const std::string minervaGdalName ( "libMinervaGDAL.so" );
 #endif
+  
+  // Should I use vpr::LibraryLoader instead?  Also, should the directory of the library be specified.
   Usul::DLL::Library::RefPtr library( new Usul::DLL::Library ( minervaGdalName ) );
   Usul::DLL::LibraryPool::instance().add ( library.get() );
 }
