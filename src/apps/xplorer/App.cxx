@@ -592,17 +592,19 @@ void App::latePreFrame()
         VPR_PROFILE_GUARD_HISTORY( "App::latePreFrame cfdExecutive", 20 );
         cfdExecutive::instance()->PreFrameUpdate();
     }
+    ///////////////////////
+#ifdef MINERVA_GIS_SUPPORT
+    {
+        VPR_PROFILE_GUARD_HISTORY( "App::latePreFrame MinervaManager", 20 );
+        ves::xplorer::minerva::MinervaManager::instance()->PreFrameUpdate();
+    }
+#endif
+    ///////////////////////
     //profile the update call
     {
         VPR_PROFILE_GUARD_HISTORY( "App::latePreFrame update", 20 );
         this->update();
     }
-#ifdef MINERVA_GIS_SUPPORT
-    {
-      VPR_PROFILE_GUARD_HISTORY( "App::latePreFrame MinervaManager", 20 );
-      ves::xplorer::minerva::MinervaManager::instance()->PreFrameUpdate();
-    }
-#endif
 
     ///Increment framenumber now that we are done using it everywhere
     _frameNumber += 1;
@@ -823,11 +825,11 @@ void App::draw()
 
     if( glTI != scenegraph::GLTransformInfoPtr() )
     {
-        //The code below is not thread safe and will result in random results
-        //in multithreaded use cases
         //Get the frustum planes based on the current bounding volume of the scene
         sv->getCamera()->getProjectionMatrixAsFrustum( l, r, b, t, n, f );
         //This code will go away eventually
+        //The code below is not thread safe and will result in random results
+        //in multithreaded use cases
         EnvironmentHandler::instance()->SetFrustumValues( l, r, b, t, n, f );
         //Recalculate the projection matrix from the new frustum values
         glTI->UpdateFrustumValues( l, r, b, t, n, f );
@@ -859,6 +861,8 @@ void App::draw()
 ////////////////////////////////////////////////////////////////////////////////
 void App::update()
 {
+    vprDEBUG( vesDBG, 3 ) <<  "|\tApp LatePreframe Update" 
+        << std::endl << vprDEBUG_FLUSH;
     const std::string tempCommandName = 
         m_vjobsWrapper->GetXMLCommand()->GetCommandName();
     // This code came from osgViewer::Viewer::setSceneData
@@ -892,5 +896,7 @@ void App::update()
     // the bounding volumes from within the cull traversal which may be
     // multi-threaded.
     getScene()->getBound();
+    vprDEBUG( vesDBG, 3 ) <<  "|\tEnd App LatePreframe Update" 
+        << std::endl << vprDEBUG_FLUSH;
 }
 ////////////////////////////////////////////////////////////////////////////////
