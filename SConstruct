@@ -232,7 +232,7 @@ opts.AddOption( wxwidgets_options )
 
 opts.Add('AprVersion', 'Set the APR version so that the proper apr pkg-config files can be found', '1.0')
 opts.Add('VRJugglerVersion', 'Set the VRJuggler version so that the proper flagpoll files can be found', '2.0.2')
-opts.Add('BoostVersion', 'Set the Boost version so that the proper Boost flagpoll files can be found', '1.31')
+#opts.Add('BoostVersion', 'Set the Boost version so that the proper Boost flagpoll files can be found', '1.31')
 opts.Add('VPRVersion', 'Set the VPR version so that the proper VPR flagpoll files can be found', '1.0.2')
 opts.Add('VPRProfile', 'If "yes", build applications with VPR profiling enabled', 'no')
 opts.Add('prefix', 'Installation prefix', '/usr/local')
