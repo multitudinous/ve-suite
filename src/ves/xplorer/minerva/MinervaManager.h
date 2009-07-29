@@ -106,8 +106,8 @@ private:
   ~MinervaManager();
 
   /// Do not copy.
-  MinervaManager ( const MinervaManager& );
-  MinervaManager& operator= ( const MinervaManager& );
+  //MinervaManager ( const MinervaManager& );
+  //MinervaManager& operator= ( const MinervaManager& );
 
   vprSingletonHeader ( MinervaManager );
 
