@@ -39,7 +39,7 @@ env['ENV']['CLASSPATH'] = '${FOP_JAR}' + os.pathsep +'${BATIK_JAR}' + os.pathsep
 
 ##Base parameters.
 relativeDir = pj('share', 'docs', 'docbook')
-baseDir = pj('#', relativeDir)
+baseDir = pj(RootDir, relativeDir)
 
 if SConsAddons.Util.GetPlatform() == "win32":
     TOOL_PATH = pj(DOCBOOK_FO,'libxml')
@@ -49,6 +49,10 @@ if SConsAddons.Util.GetPlatform() == "win32":
 else:
     xslt_cmd = WhereIs('xsltproc')
     xml_cmd = WhereIs('xmllint')
+    java_cmd = WhereIs('java')
+    javaPath = os.path.split( java_cmd )
+    #env['ENV']['JAVA_HOME'] = javaPath[ 0 ]
+    env['ENV']['JAVA_HOME'] = os.sep + 'usr'
 
 if SConsAddons.Util.GetPlatform() == "win32":
     fo_cmd = pj(DOCBOOK_FO, 'fop.bat')
@@ -92,18 +96,26 @@ pdfAction = '%s ${SOURCE.abspath} ${TARGET.abspath}' % fo_cmd
 pdfBuilder = Builder(action = pdfAction, single_source = True, suffix = ".pdf",
                      chdir = relativeDir)
 
-env.Append(BUILDERS = {'xmlResolve': xmlResolveBuilder,
-                       'fo': foBuilder,
-                       'html': htmlBuilder,
-		       'htmlChunk': htmlChunkBuilder,
-		       'pdf': pdfBuilder})
-
-env.xmlResolve(srcs)
-env.fo(resolvedSrcs)
+env.Append(BUILDERS = {
+            'xmlResolve': xmlResolveBuilder,
+            'fo': foBuilder,
+            'html': htmlBuilder,
+            'htmlChunk': htmlChunkBuilder,
+            'pdf': pdfBuilder})
 
 ##Build the docs.
+env.xmlResolve(srcs)
+
+env.Depends( foedSrcs, resolvedSrcs)
+env.fo(resolvedSrcs)
+
+env.Depends( htmlTargets, resolvedSrcs)
 env.html(target = htmlTargets, source = resolvedSrcs)
+
+env.Depends( htmlChunkTargets, resolvedSrcs)
 env.htmlChunk(target = htmlChunkTargets, source = resolvedSrcs)
+
+env.Depends( pdfTargets, foedSrcs)
 env.pdf(target = pdfTargets, source = foedSrcs)
 
 ##Extra cleaning
