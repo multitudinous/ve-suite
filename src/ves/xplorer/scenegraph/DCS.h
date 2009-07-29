@@ -74,7 +74,7 @@ class btRigidBody;
 // --- C/C++ Libraries --- //
 #include <vector>
 #include <string>
-
+/*
 template< typename DATA_TYPE_OUT, typename DATA_TYPE_IN, unsigned ROWS, unsigned COLS >
 gmtl::Matrix< DATA_TYPE_OUT, ROWS, COLS >
 convertTo( const gmtl::Matrix< DATA_TYPE_IN, ROWS, COLS >& in )
@@ -91,7 +91,7 @@ convertTo( const gmtl::Matrix< DATA_TYPE_IN, ROWS, COLS >& in )
 
     return out;
 }
-
+*/
 namespace ves
 {
 namespace xplorer

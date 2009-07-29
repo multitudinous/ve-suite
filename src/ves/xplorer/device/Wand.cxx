@@ -48,6 +48,7 @@
 // --- vrJuggler Includes --- //
 #include <gmtl/Xforms.h>
 #include <gmtl/Generate.h>
+#include <gmtl/Misc/MatrixConvert.h>
 
 // --- OSG Includes --- //
 #include <osg/LineSegment>
@@ -567,7 +568,7 @@ void Wand::UpdateWandLocalDirection()
     //Get the normalized direction relative to the juggler frame
     gmtl::Vec3d vjVec;
     vjVec.set( 0.0f, 0.0f, -1.0f );
-    Matrix44d vjMat = convertTo< double >( wand->getData() );
+    Matrix44d vjMat = gmtl::convertTo< double >( wand->getData() );
 
     gmtl::xform( vjVec, vjMat, vjVec );
     gmtl::normalize( vjVec );
@@ -583,7 +584,7 @@ void Wand::UpdateWandGlobalLocation()
     //Transform wand point into global space get juggler Matrix of worldDCS
     //Note:: for osg we are in z up land
     gmtl::Point3d loc_temp, osgPointLoc;
-    Matrix44d vjMat = convertTo< double >( wand->getData() );
+    Matrix44d vjMat = gmtl::convertTo< double >( wand->getData() );
 
     gmtl::setTrans( loc_temp, vjMat );
     osgPointLoc[ 0 ] =  loc_temp[ 0 ];
@@ -626,7 +627,7 @@ void Wand::FreeRotateAboutWand( const bool freeRotate )
     ves::xplorer::scenegraph::DCS* const activeDCS =
         ves::xplorer::DeviceHandler::instance()->GetActiveDCS();
 
-    gmtl::Matrix44d vrjWandMat = convertTo< double >( wand->getData() );
+    gmtl::Matrix44d vrjWandMat = gmtl::convertTo< double >( wand->getData() );
     gmtl::Quatd wandQuat = gmtl::make< gmtl::Quatd >( vrjWandMat );
 
     osg::Vec3d tempVec( 0, 0, wandQuat[ 1 ] );
@@ -639,7 +640,7 @@ void Wand::FreeRotateAboutWand( const bool freeRotate )
         return;
     }
 
-    vjHeadMat = convertTo< double >( head->getData() );
+    vjHeadMat = gmtl::convertTo< double >( head->getData() );
 
     //Get juggler Matrix of worldDCS
     //Note:: for osg we are in z up land
@@ -708,7 +709,7 @@ void Wand::FreeRotateAboutWand( const bool freeRotate )
 double* Wand::GetPlaneEquationConstantsNormalToWand()
 {
     ///Get wand pointing vector
-    Matrix44d vjMat = convertTo< double >( wand->getData() );
+    Matrix44d vjMat = gmtl::convertTo< double >( wand->getData() );
     ///Transform from juggler space to world space
     Matrix44d worldWandMat =
         ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS()->GetMat() * vjMat;

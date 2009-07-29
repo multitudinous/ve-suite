@@ -50,6 +50,7 @@
 // --- vrJuggler Includes --- //
 #include <gmtl/Xforms.h>
 #include <gmtl/Generate.h>
+#include <gmtl/Misc/MatrixConvert.h>
 
 // --- OSG Includes --- //
 #include <osg/LineSegment>
@@ -650,7 +651,7 @@ void Gloves::UpdateWandLocalDirection()
     //Get the normalized direction relative to the juggler frame
     gmtl::Vec3d vjVec;
     vjVec.set( 0.0f, 0.0f, -1.0f );
-    Matrix44d vjMat = convertTo< double >( wand->getData() );
+    Matrix44d vjMat = gmtl::convertTo< double >( wand->getData() );
 
     gmtl::xform( vjVec, vjMat, vjVec );
     gmtl::normalize( vjVec );
@@ -666,7 +667,7 @@ void Gloves::UpdateWandGlobalLocation()
     //Transform wand point into global space get juggler Matrix of worldDCS
     //Note:: for osg we are in z up land
     gmtl::Point3d loc_temp, osgPointLoc;
-    Matrix44d vjMat = convertTo< double >( wand->getData() );
+    Matrix44d vjMat = gmtl::convertTo< double >( wand->getData() );
 
     gmtl::setTrans( loc_temp, vjMat );
     osgPointLoc[ 0 ] =  loc_temp[ 0 ];
@@ -709,7 +710,7 @@ void Gloves::FreeRotateAboutWand( const bool freeRotate )
     ves::xplorer::scenegraph::DCS* const activeDCS =
         ves::xplorer::DeviceHandler::instance()->GetActiveDCS();
 
-    gmtl::Matrix44d vrjWandMat = convertTo< double >( wand->getData() );
+    gmtl::Matrix44d vrjWandMat = gmtl::convertTo< double >( wand->getData() );
     gmtl::Quatd wandQuat = gmtl::make< gmtl::Quatd >( vrjWandMat );
 
     osg::Vec3d tempVec( 0, 0, wandQuat[ 1 ] );
@@ -722,7 +723,7 @@ void Gloves::FreeRotateAboutWand( const bool freeRotate )
         return;
     }
 
-    vjHeadMat = convertTo< double >( head->getData() );
+    vjHeadMat = gmtl::convertTo< double >( head->getData() );
 
     //Get juggler Matrix of worldDCS
     //Note:: for osg we are in z up land
@@ -791,7 +792,7 @@ void Gloves::FreeRotateAboutWand( const bool freeRotate )
 double* Gloves::GetPlaneEquationConstantsNormalToWand()
 {
     ///Get wand pointing vector
-    Matrix44d vjMat = convertTo< double >( wand->getData() );
+    Matrix44d vjMat = gmtl::convertTo< double >( wand->getData() );
     ///Transform from juggler space to world space
     Matrix44d worldWandMat =
         ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS()->GetMat() * vjMat;
@@ -1043,11 +1044,11 @@ void Gloves::UpdateRightHandGlove()
     {
         //Get data from the trackers
         gmtl::Matrix44f tempHand = mRightHandPos->getData();
-        hand_pos_rot = convertTo< double >( tempHand );
+        hand_pos_rot = gmtl::convertTo< double >( tempHand );
     }
     else
     {
-        return;
+        //return;
     }
 
     gmtl::Vec3d x_axis( 1.0f, 0.0f, 0.0f );
@@ -1058,15 +1059,18 @@ void Gloves::UpdateRightHandGlove()
     hand_pos_rot = tempCamera * rhRot * hand_pos_rot;
     mRightHand->setPosition( osg::Vec3( hand_pos_rot[0][3], hand_pos_rot[1][3], hand_pos_rot[2][3] ) );
 
-    //gmtl::Matrix44d vrjRHandMat = convertTo< double >( hand_pos_rot );
-    osg::Vec3d pitch( 1, 0, 0 );
-    osg::Vec3d roll( 0, 1, 0 );
-    osg::Vec3d yaw( 0, 0, 1 );
-
-    osg::Matrixd rotateMat;
-    rotateMat.makeRotate( osg::DegreesToRadians( 180.0 ), yaw,
-                         osg::DegreesToRadians( -90.0 ), pitch,
-                         osg::DegreesToRadians( 0.0 ), roll );
+    //gmtl::Matrix44d vrjRHandMat = gmtl::convertTo< double >( hand_pos_rot );
+    //osg::Vec3d pitch( 1, 0, 0 );
+    //osg::Vec3d roll( 0, 1, 0 );
+    //osg::Vec3d yaw( 0, 0, 1 );
+    
+    //osg::Matrixd rotateMat;
+    //rotateMat.makeRotate( osg::DegreesToRadians( 180.0 ), yaw,
+    //                     osg::DegreesToRadians( -90.0 ), pitch,
+    //                     osg::DegreesToRadians( 0.0 ), roll );
+    
+    double rotArray[ 3 ] = { 0.0, -90.0, 0.0 };
+    osg::Matrix rotateMat = CreateQuat( rotArray );
     
     gmtl::Matrix44d naVRot;
     naVRot.set( rotateMat.ptr() );
@@ -1132,11 +1136,11 @@ void Gloves::UpdateLeftHandGlove()
     {
         //Get data from the trackers
         gmtl::Matrix44f tempHand = mLeftHandPos->getData();
-        hand_pos_rot = convertTo< double >( tempHand );
+        hand_pos_rot = gmtl::convertTo< double >( tempHand );
     }
     else
     {
-        return;
+        //return;
     }
     
     gmtl::Vec3d x_axis( 1.0f, 0.0f, 0.0f );
@@ -1147,20 +1151,57 @@ void Gloves::UpdateLeftHandGlove()
     hand_pos_rot = tempCamera * rhRot * hand_pos_rot;
     mLeftHand->setPosition( osg::Vec3( hand_pos_rot[0][3], hand_pos_rot[1][3], hand_pos_rot[2][3] ) );
     
-    //gmtl::Matrix44d vrjRHandMat = convertTo< double >( hand_pos_rot );
-    osg::Vec3d pitch( 1, 0, 0 );
-    osg::Vec3d roll( 0, 1, 0 );
-    osg::Vec3d yaw( 0, 0, 1 );
+    //gmtl::Matrix44d vrjRHandMat = gmtl::convertTo< double >( hand_pos_rot );
+    //osg::Vec3d pitch( 1, 0, 0 );
+    //osg::Vec3d roll( 0, 1, 0 );
+    //osg::Vec3d yaw( 0, 0, 1 );
     
-    osg::Matrixd rotateMat;
-    rotateMat.makeRotate( osg::DegreesToRadians( 180.0 ), yaw,
-                         osg::DegreesToRadians( -90.0 ), pitch,
-                         osg::DegreesToRadians( 0.0 ), roll );
+    //osg::Matrixd rotateMat;
+    //rotateMat.makeRotate( osg::DegreesToRadians( 180.0 ), yaw,
+    //                     osg::DegreesToRadians( -90.0 ), pitch,
+    //                     osg::DegreesToRadians( 0.0 ), roll );
     
+    double rotArray[ 3 ] = { 0.0, -90.0, 0.0 };
+    osg::Matrix rotateMat = CreateQuat( rotArray );
+
     gmtl::Matrix44d naVRot;
     naVRot.set( rotateMat.ptr() );
     hand_pos_rot = hand_pos_rot * naVRot;
     gmtl::Quatd rhandQuat = gmtl::make< gmtl::Quatd >( hand_pos_rot );
     
     mLeftHand->setAttitude( osg::Quat(rhandQuat[0], rhandQuat[1], rhandQuat[2], rhandQuat[3]  ) );
+}
+////////////////////////////////////////////////////////////////////////////////
+osg::Matrix Gloves::CreateQuat( double* rotArray )
+{
+    // We now have h, p, and r angles. Build a Quat to affect these rotatiions.
+    // We do this by creating a Matrix that contains correctly-oriented x, y, and
+    // z axes. Then we create the Quat from the Matrix.
+    //
+    // First, create x, y, and z axes that represent the h, p, and r angles.
+    //   Rotate x and y axes by the heading.
+    osg::Vec3 z( 0., 0., 1. );
+    osg::Quat qHeading( osg::DegreesToRadians( rotArray[0] ), z );
+    osg::Vec3 x = qHeading * osg::Vec3( 1., 0., 0. );
+    osg::Vec3 y = qHeading * osg::Vec3( 0., 1., 0. );
+    //   Rotate z and y axes by the pitch.
+    osg::Quat qPitch( osg::DegreesToRadians( rotArray[1] ), x );
+    y = qPitch * y;
+    z = qPitch * z;
+    //   Rotate x and z axes by the roll.
+    osg::Quat qRoll( osg::DegreesToRadians( rotArray[2] ), y );
+    x = qRoll * x;
+    z = qRoll * z;
+    // Use x, y, and z axes to create an orientation matrix.
+    osg::Matrix m( x[0], x[1], x[2], 0.,
+                  y[0], y[1], y[2], 0.,
+                  z[0], z[1], z[2], 0.,
+                  0., 0., 0., 1. );
+    
+    //osg::Quat quat;
+    //quat.set( m );
+    //setAttitude( quat );
+    //setPivotPoint( osg::Vec3d( 0, 0, 0 ) );
+    
+    return m;
 }

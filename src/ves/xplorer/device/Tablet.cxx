@@ -47,6 +47,7 @@
 // --- VR Juggler Includes --- //
 #include <gmtl/Xforms.h>
 #include <gmtl/Generate.h>
+#include <gmtl/Misc/MatrixConvert.h>
 
 using namespace gmtl;
 using namespace gadget;
@@ -193,7 +194,7 @@ void Tablet::UpdateNavigation()
 
             if( rotationFlag )
             {
-                vjHeadMat = convertTo< double >( head->getData() );
+                vjHeadMat = gmtl::convertTo< double >( head->getData() );
 
                 //Get juggler Matrix of worldDCS
                 //Note:: for pf we are in juggler land
@@ -278,7 +279,7 @@ void Tablet::UpdateNavigation()
 
             if( rotationFlag )
             {
-                vjHeadMat = convertTo< double >( head->getData() );
+                vjHeadMat = gmtl::convertTo< double >( head->getData() );
 
                 //Get juggler Matrix of worldDCS
                 //Note:: for pf we are in juggler land

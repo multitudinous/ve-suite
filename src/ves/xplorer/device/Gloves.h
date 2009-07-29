@@ -54,6 +54,7 @@
 
 // --- OSG Includes --- //
 #include <osg/Geometry>
+#include <osg/Matrix>
 
 #include <osgBullet/HandNode.h>
 
@@ -159,6 +160,7 @@ public:
     ///Get the plane equation constants normal to the wand in world space
     double* GetPlaneEquationConstantsNormalToWand();
 
+    osg::Matrix CreateQuat( double* rotArray );
 protected:
     ///Set the start and end point
     ///\param startPoint The start point
