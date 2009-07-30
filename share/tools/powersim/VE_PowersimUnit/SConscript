@@ -1,0 +1,56 @@
+#dev/share/tools/powersim/VE_PowersimUnit/SConscript
+import os, sys, string
+pj = os.path.join
+
+Import( 'baseEnv buildDir bioenergy_pkg LIBDIR' )
+Import( 'ves_options xerces_options tao_options boost_options' )
+
+sources = Split("""
+    AboutDlg.cxx
+    CorbaUnitManager.cxx
+    MainDlg.cxx
+    SIPParser.cxx
+    VE_PowersimUnit.cxx
+    VE_PowersimUnit_i.cxx
+""")
+
+headers = Split("""
+    AboutDlg.h
+    CorbaUnitManager.h
+    MainDlg.h
+    SIPParser.h
+    Resource.h
+    VE_PowersimUnit.rc
+    VE_PowersimUnit_i.h
+""")
+
+env = bioenergy_pkg.getEnv().Clone()
+env.Append( LIBPATH = [ pj( '#', buildDir, 'share', 'tools', 'powersim', 'CPSIlib' ) ] )
+env.Append( LIBS = [ 'CPSIlib' ] )
+env.Append( CPPPATH = [ pj( '..', 'WTL' ) ] )
+env.Append( CPPPATH = [ pj( '..', 'CPSIlib' ) ] )
+env.Append( CPPDEFINES = [ 'WIN32' ] )
+env.Append( CPPDEFINES = [ '_WINDOWS' ] )
+env.Append( CPPDEFINES = [ 'STRICT' ] )
+env.Append( CPPDEFINES = [ 'NDEBUG' ] )
+env.Append( LINKFLAGS = [ '/SUBSYSTEM:WINDOWS' ] )
+
+env[ 'MSVS_USE_MFC_DIRS' ] = 1
+env[ 'PCHSTOP' ] = "StdAtl.h"
+env [ 'PCH' ] = env.PCH( 'StdAtl.cxx' )[0]
+env[ 'PDB' ] = pj( 'VE_PowersimUnit.pdb' )
+env.Clone( WINDOWS_INSERT_DEF = 1 )
+
+app_res = env.RES( 'VE_PowersimUnit.rc' )
+for res in app_res:
+    sources.append( res )
+
+ves_options.apply( env )
+xerces_options.apply( env )
+tao_options.apply( env )
+boost_options.apply( env )
+
+prog = bioenergy_pkg.createProgram( 'ves_sdi' + env[ "PROGSUFFIX" ], env, 'bin' )
+prog.addSources( sources )
+prog.addHeaders( headers )
+prog.build()
