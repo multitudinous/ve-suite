@@ -20,6 +20,11 @@ if GetPlatform() == 'win32':
     if baseEnv[ 'MakeDynSimSupport' ] != 'no':
         toolsSubdirs.append( "DynSimUnit" )
 
+#Should Powersim support be built
+if GetPlatform() == 'win32':
+    if baseEnv[ 'MakePowersimSupport' ] != 'no':
+        toolsSubdirs.append( "powersim" )
+
 #Should db support be built
 if mysqlpp_options.isAvailable():
     toolsSubdirs.append( "db" )

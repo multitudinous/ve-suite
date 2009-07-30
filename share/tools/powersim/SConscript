@@ -1,0 +1,16 @@
+#Install powersim libraries
+
+Import( 'GetPlatform' )
+
+powersimSubdirs = Split("""
+
+""")
+
+if GetPlatform() == 'win32':
+   powersimSubdirs += Split("""    
+      CPSIlib
+   """)
+
+#Run SConscript files in all of those folders
+for d in powersimSubdirs:
+   SConscript( dirs = d )

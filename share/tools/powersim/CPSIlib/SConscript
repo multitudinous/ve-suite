@@ -1,0 +1,30 @@
+#Build CPSIlib
+import os, sys, string
+pj = os.path.join
+
+Import( 'baseEnv ves_pkg LIBDIR' )
+
+sources = Split("""
+   CPSI.cxx
+   CPSI_Project.cxx
+""")
+
+headers = Split("""
+   CPSI.h
+""")
+
+env = ves_pkg.getEnv().Clone()
+#env.Append( LIBS = [] )
+#env.Append( LIBPATH = [] )
+env.Append( CPPDEFINES = [ 'CPSI_LIBRARY' ] )
+env.Append( CPPDEFINES = [ 'STRICT' ] )
+env.Append( CPPDEFINES = [ 'NDEBUG' ] )
+env.Append( LINKFLAGS = [ '/SUBSYSTEM:WINDOWS' ] )
+
+env[ 'MSVS_USE_MFC_DIRS' ] = 1
+env.Clone( WINDOWS_INSERT_DEF = 1 )
+
+lib = ves_pkg.createSharedLibrary( 'CPSIlib', env, installPrefix = LIBDIR )
+lib.addSources( sources )
+lib.addHeaders( headers, pj( 'ves' ) )
+lib.build()
