@@ -1,0 +1,36 @@
+#Builds Powersim UserInterface Plugin
+import os, sys, string
+import SConsAddons.Util as sca_util
+import distutils.util
+pj = os.path.join
+
+host_type = distutils.util.get_platform()
+
+Import( 'baseEnv GetPlatform buildDir RootDir LIBDIR ves_pkg' )
+Import( 'wxwidgets_options', 'tao_options', 'vpr_options', 'xerces_options' )
+openDir = os.path.abspath( pj( RootDir, 'src', 'plugins', 'powersim' ) )
+sources = sca_util.getSourcesRecursive( openDir )
+headers = sca_util.getHeadersRecursive( openDir )
+
+env = ves_pkg.getEnv().Clone()
+env.Append( LIBS = [ 'ves_conductor_plugin',
+                     'ves_open_xml' ] )
+env.Append( LIBPATH = [ pj('#', buildDir, 'src','ves','conductor' ),
+                        pj('#', buildDir, 'src','ves','open', 'xml' ) ] )
+#env.Append( CPPPATH = [] )
+#env.Append( CPPDEFINES = [] )
+
+tao_options.apply( env )
+vpr_options.apply( env )
+xerces_options.apply( env )
+wxwidgets_options.apply( env )
+
+if GetPlatform() == 'win32':
+    env[ 'no_import_lib' ] = 1
+    env[ 'WINDOWS_INSERT_MANIFEST' ] = False
+
+lib = ves_pkg.createLoadableModule( 'PowersimUI', env,
+    installPrefix = pj( LIBDIR, 'conductor', 'plugins' ) )
+
+lib.addSources( sources )
+lib.build()

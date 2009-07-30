@@ -89,6 +89,12 @@ enum
     APUOPLUGIN_REINIT_BLOCK,
     APUOPLUGIN_ASPEN_MENU,
 
+    //
+    //PSPlugin.h
+    //
+    PS_PLUGIN_OPEN,
+    PS_PLUGIN_MENU,
+
     PLUGIN_END_INDEX
 };
 
