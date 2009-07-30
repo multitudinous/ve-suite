@@ -2,8 +2,8 @@
 import os, sys, string
 pj = os.path.join
 
-Import( 'baseEnv buildDir bioenergy_pkg LIBDIR' )
-Import( 'ves_options xerces_options tao_options boost_options' )
+Import( 'baseEnv buildDir ves_pkg LIBDIR' )
+Import( 'xerces_options tao_options boost_options' )
 
 sources = Split("""
     AboutDlg.cxx
@@ -24,11 +24,14 @@ headers = Split("""
     VE_PowersimUnit_i.h
 """)
 
-env = bioenergy_pkg.getEnv().Clone()
+env = ves_pkg.getEnv().Clone()
+env.Append( CPPPATH = [ pj( '#', 'src' ) ] )
+env.Append( CPPPATH = [ pj( '#', 'share', 'tools', 'powersim','CPSIlib' ) ] )
+env.Append( CPPPATH = [ pj( '#', buildDir, 'src', 'ves', 'open' ) ] )
 env.Append( LIBPATH = [ pj( '#', buildDir, 'share', 'tools', 'powersim', 'CPSIlib' ) ] )
+env.Append( LIBPATH = [ pj( '#', buildDir, 'src', 'ves', 'open' ) ] )
+env.Append( LIBPATH = [ pj( '#', buildDir, 'src', 'ves', 'open','xml' ) ] )
 env.Append( LIBS = [ 'CPSIlib' ] )
-env.Append( CPPPATH = [ pj( '..', 'WTL' ) ] )
-env.Append( CPPPATH = [ pj( '..', 'CPSIlib' ) ] )
 env.Append( CPPDEFINES = [ 'WIN32' ] )
 env.Append( CPPDEFINES = [ '_WINDOWS' ] )
 env.Append( CPPDEFINES = [ 'STRICT' ] )
@@ -45,12 +48,11 @@ app_res = env.RES( 'VE_PowersimUnit.rc' )
 for res in app_res:
     sources.append( res )
 
-ves_options.apply( env )
 xerces_options.apply( env )
 tao_options.apply( env )
 boost_options.apply( env )
 
-prog = bioenergy_pkg.createProgram( 'ves_sdi' + env[ "PROGSUFFIX" ], env, 'bin' )
+prog = ves_pkg.createProgram( 'ves_sdi' + env[ "PROGSUFFIX" ], env, 'bin' )
 prog.addSources( sources )
 prog.addHeaders( headers )
 prog.build()
