@@ -255,6 +255,7 @@ opts.Add('build_dir', 'Provide an alternate build directory for variants', build
 opts.Add('SVN_Previous_Date', 'Previous Date to create a change log from. Should be of the form yyyy-mm-dd','')
 opts.Add('MakeAspenSupport', 'If "yes", make aspen support', 'no')
 opts.Add('MakeDynSimSupport', 'If "yes", make dynsim support', 'no')
+opts.Add('MakePowersimSupport', 'If "yes", make powersim support', 'no')
 opts.Add('MakeMinervaSupport', 'If "yes", add GIS support with minerva', 'no')
 ##opts.Add('arch', 'CPU architecture (ia32, x86_64, or ppc)', cpu_arch_default)
 if GetPlatform() == 'win32':
