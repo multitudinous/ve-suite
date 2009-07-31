@@ -9,9 +9,4 @@
 
 extern CComModule _Module;
 
-#include <atlcom.h>
-#include <atlwin.h>
-
-#include <atlstr.h>
-
 #endif //STD_ATL_H

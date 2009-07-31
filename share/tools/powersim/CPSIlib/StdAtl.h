@@ -6,6 +6,5 @@
 #define VC_EXTRALEAN
 
 #include <atlbase.h>
-#include <atlstr.h> //This includes <atlbase.h>
 
 #endif //STD_ATL_H

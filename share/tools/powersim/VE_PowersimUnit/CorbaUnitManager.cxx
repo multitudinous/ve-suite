@@ -86,9 +86,6 @@ void CorbaUnitManager::RunORB()
     ves::open::xml::XMLObjectFactory::Instance()->RegisterObjectCreator(
         "CAD", new ves::open::xml::cad::CADCreator() );
 
-    //Initialize OLE
-    //CoInitialize( NULL );
-
     int argc = 5;
     char** argv;
     std::vector< char* > cmdargs;
@@ -150,7 +147,6 @@ void CorbaUnitManager::RunORB()
 
         //Create POA as child of RootPOA with the above policies
         //This POA will receive request in the same connection in which it sent the request
-
         PortableServer::POA_var child_poa = poa->create_POA(
             "childPOA", poa_manager.in(), policies ACE_ENV_ARG_PARAMETER );
         ACE_TRY_CHECK;
@@ -166,7 +162,7 @@ void CorbaUnitManager::RunORB()
 
         //Create the Servant
         unit_i = new Body_Unit_i(
-            /*exec.in(),*/ UNITNAME, /*parser,*/ parent, this, std::string( m_workingDir ) );
+            UNITNAME, parent, this, std::string( m_workingDir ) );
         unit_i_instantiated = true;
 
         //Activate it to obtain the object reference

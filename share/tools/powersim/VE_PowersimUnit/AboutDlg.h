@@ -2,6 +2,10 @@
 #ifndef CABOUT_DLG_H
 #define CABOUT_DLG_H
 
+// --- ATL Includes --- //
+#include <atlbase.h>
+#include <atlwin.h>
+
 class CAboutDlg : public CDialogImpl< CAboutDlg >
 {
 public:

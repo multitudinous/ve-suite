@@ -42,9 +42,6 @@ env.Append( CPPDEFINES = [ 'NDEBUG' ] )
 env.Append( LINKFLAGS = [ '/SUBSYSTEM:WINDOWS' ] )
 
 env[ 'MSVS_USE_MFC_DIRS' ] = 1
-env[ 'PCHSTOP' ] = "StdAtl.h"
-env [ 'PCH' ] = env.PCH( 'StdAtl.cxx' )[0]
-env[ 'PDB' ] = pj( 'VE_PowersimUnit.pdb' )
 env.Clone( WINDOWS_INSERT_DEF = 1 )
 
 app_res = env.RES( 'VE_PowersimUnit.rc' )

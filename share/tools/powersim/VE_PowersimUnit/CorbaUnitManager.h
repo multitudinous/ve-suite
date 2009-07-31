@@ -10,6 +10,9 @@ class SIPParser;
 // --- VE-Suite Includes --- //
 #include <ves/open/moduleS.h>
 
+// --- ATL Includes --- //
+#include <atlstr.h>
+
 class CorbaUnitManager
 {
 public:

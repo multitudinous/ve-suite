@@ -6,6 +6,10 @@
 class Body_Unit_i;
 class CorbaUnitManager;
 
+// --- ATL Includes --- //
+#include <atlbase.h>
+#include <atlwin.h>
+
 class CMainDlg : public CDialogImpl< CMainDlg >
 {
 public:

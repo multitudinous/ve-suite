@@ -2,8 +2,8 @@
 #ifndef CPSI_H
 #define CPSI_H
 
-// --- CPSI Includes --- //
-#include "StdAtl.h"
+// --- ATL Includes --- //
+#include <atlstr.h>
 
 // --- Powersim Includes --- //
 #include "PsSimEng.h"

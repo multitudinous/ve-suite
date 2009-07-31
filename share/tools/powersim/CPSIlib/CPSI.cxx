@@ -1,5 +1,6 @@
 
 // --- CPSI Includes --- //
+#include "StdAtl.h"
 #include "CPSI.h"
 
 using namespace cpsi;
