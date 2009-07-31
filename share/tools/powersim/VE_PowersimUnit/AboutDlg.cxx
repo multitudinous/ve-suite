@@ -5,17 +5,14 @@
 #include "AboutDlg.h"
 
 ////////////////////////////////////////////////////////////////////////////////
-LRESULT CAboutDlg::OnInitDialog(
-    UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/ )
+LRESULT CAboutDlg::OnInitDialog( UINT, WPARAM, LPARAM, BOOL& )
 {
     CenterWindow( GetParent() );
 
     return TRUE;
 }
-
 ////////////////////////////////////////////////////////////////////////////////
-LRESULT CAboutDlg::OnCloseCmd(
-    WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /*bHandled*/ )
+LRESULT CAboutDlg::OnCloseCmd( WORD, WORD wID, HWND, BOOL& )
 {
     EndDialog( wID );
 

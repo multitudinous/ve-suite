@@ -9,6 +9,7 @@ powersimSubdirs = Split("""
 if GetPlatform() == 'win32':
    powersimSubdirs += Split("""    
       CPSIlib
+      VE_PowersimUnit
    """)
 
 #Run SConscript files in all of those folders

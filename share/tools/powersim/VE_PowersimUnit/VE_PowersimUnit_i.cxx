@@ -230,9 +230,6 @@ ACE_THROW_SPEC( ( CORBA::SystemException, Error::EUnknown ) )
 ////////////////////////////////////////////////////////////////////////////////
 char* Body_Unit_i::HandleOpenSimulation( ves::open::xml::CommandPtr cmd )
 {
-    CEdit fileName;
-    fileName.Attach( m_mainDialog->GetDlgItem( IDC_FILENAME ) );
-
     //This command has no params
     std::string filename = cmd->GetDataValuePair( 1 )->GetDataString();
 
@@ -253,7 +250,7 @@ char* Body_Unit_i::HandleOpenSimulation( ves::open::xml::CommandPtr cmd )
         }
         sipFile.close();
 
-        fileName.SetWindowText( filename.c_str() );
+        m_mainDialog->SetDlgItemText( IDC_FILENAME, filename.c_str() );
         m_sipParser = new SIPParser();
         m_sipParser->SetWorkingDir( m_workingDir );
         m_sipParser->OpenSimulation( filename );

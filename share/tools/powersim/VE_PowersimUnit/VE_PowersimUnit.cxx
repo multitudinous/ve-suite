@@ -4,15 +4,13 @@
 #include "Resource.h"
 #include "MainDlg.h"
 
-CAppModule _Module;
+CComModule _Module;
 
 ////////////////////////////////////////////////////////////////////////////////
-int Run( LPTSTR /*lpstrCmdLine*/ = NULL, int nCmdShow = SW_SHOWDEFAULT )
+int Run( LPTSTR = NULL, int nCmdShow = SW_SHOWDEFAULT )
 {
-    CMessageLoop theLoop;
-    _Module.AddMessageLoop( &theLoop );
-
     CMainDlg dlgMain;
+    MSG msg;
 
     if( dlgMain.Create( NULL ) == NULL )
     {
@@ -23,16 +21,18 @@ int Run( LPTSTR /*lpstrCmdLine*/ = NULL, int nCmdShow = SW_SHOWDEFAULT )
 
     dlgMain.ShowWindow( nCmdShow );
 
-    int nRet = theLoop.Run();
+    //Run the message loop
+    while( GetMessage( &msg, NULL, 0, 0 ) > 0 )
+    {
+        TranslateMessage( &msg );
+        DispatchMessage( &msg );
+    }
 
-    _Module.RemoveMessageLoop();
-
-    return nRet;
+    return 1;
 }
 ////////////////////////////////////////////////////////////////////////////////
 int WINAPI _tWinMain(
-    HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/,
-    LPTSTR lpstrCmdLine, int nCmdShow )
+    HINSTANCE hInstance, HINSTANCE, LPTSTR lpstrCmdLine, int nCmdShow )
 {
     HRESULT hRes = CoInitialize( NULL );
     //If you are running on NT 4.0 or higher you can use the
@@ -44,9 +44,6 @@ int WINAPI _tWinMain(
     //This resolves ATL window thunking problem when
     // Microsoft Layer for Unicode (MSLU) is used
     DefWindowProc( NULL, 0, 0, 0L );
-
-    //Add flags to support other controls
-    AtlInitCommonControls( ICC_BAR_CLASSES );
 
     hRes = _Module.Init( NULL, hInstance );
     ATLASSERT( SUCCEEDED( hRes ) );
