@@ -7,10 +7,6 @@
 #include "VE_PowersimUnit_i.h"
 #include "CorbaUnitManager.h"
 
-//
-#include "SIPParser.h"
-//
-
 // --- WIN32 Includes --- //
 #include <shlobj.h> //For SHBrowseForFolder
 
@@ -110,13 +106,6 @@ LRESULT CMainDlg::OnOK( WORD, WORD wID, HWND, BOOL& )
             computerName, computerName, computerPort, "PowersimUnit" );
         m_corbaUnitManager->RunORB();
         m_unitObject = m_corbaUnitManager->GetUnitObject();
-
-        //Test Code
-        SIPParser* sipParser = m_corbaUnitManager->CreateParser();
-        sipParser->SetWorkingDir( std::string( workingDir ) );
-        sipParser->OpenSimulation( "InventoryTutorial" );
-        //
-
         if( !m_unitObject )
         {
             MessageBox( _T( "Unable to connect to VE-CE" ) );
