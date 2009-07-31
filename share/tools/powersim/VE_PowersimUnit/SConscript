@@ -36,6 +36,7 @@ env.Append( LIBS = [ 'ves_open_module' ] )
 env.Append( LIBS = [ 'ves_open_xml' ] )
 env.Append( CPPDEFINES = [ 'WIN32' ] )
 env.Append( CPPDEFINES = [ '_WINDOWS' ] )
+#http://msdn.microsoft.com/en-us/library/aa383681(VS.85).aspx
 env.Append( CPPDEFINES = [ 'STRICT' ] )
 env.Append( CPPDEFINES = [ 'NDEBUG' ] )
 env.Append( LINKFLAGS = [ '/SUBSYSTEM:WINDOWS' ] )

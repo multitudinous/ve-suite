@@ -17,6 +17,7 @@ env = ves_pkg.getEnv().Clone()
 #env.Append( LIBS = [] )
 #env.Append( LIBPATH = [] )
 env.Append( CPPDEFINES = [ 'CPSI_LIBRARY' ] )
+#http://msdn.microsoft.com/en-us/library/aa383681(VS.85).aspx
 env.Append( CPPDEFINES = [ 'STRICT' ] )
 env.Append( CPPDEFINES = [ 'NDEBUG' ] )
 env.Append( LINKFLAGS = [ '/SUBSYSTEM:WINDOWS' ] )
