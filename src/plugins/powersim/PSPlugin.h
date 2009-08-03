@@ -34,6 +34,9 @@ protected:
 
 private:
     ///
+    bool IsSIPOpen();
+
+    ///
     void OnOpen( wxCommandEvent& event );
 
     ///

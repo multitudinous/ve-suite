@@ -2,6 +2,7 @@
 // --- VE-Suite Includes --- //
 #include <ves/conductor/util/CORBAServiceList.h>
 #include <plugins/powersim/PSPlugin.h>
+#include <plugins/powersim/PSOpenDialog.h>
 #include <plugins/ConductorPluginEnums.h>
 #include <ves/conductor/xpm/powersim/PSStudio.xpm>
 
@@ -17,13 +18,14 @@
 
 // --- wxWidgets Includes --- //
 #include <wx/menu.h>
-//#include <wx/msgdlg.h>
+#include <wx/msgdlg.h>
 #include <wx/image.h>
 //#include <wx/window.h>
 //#include <wx/filedlg.h>
-//#include <wx/filename.h>
+#include <wx/filename.h>
 
 using namespace ves::conductor;
+namespace vox = ves::open::xml;
 
 BEGIN_EVENT_TABLE( PSPlugin, ves::conductor::UIPluginBase )
 EVT_MENU( PS_PLUGIN_OPEN, PSPlugin::OnOpen )
@@ -89,7 +91,7 @@ wxMenu* PSPlugin::GetPluginPopupMenu( wxMenu* baseMenu )
 
     m_powersimMenu = new wxMenu();
     m_powersimMenu->Append( PS_PLUGIN_OPEN, wxT( "Open" ) );
-    //m_powersimMenu->Enable( APPLUGIN_OPEN_SIM, true );
+    m_powersimMenu->Enable( PS_PLUGIN_OPEN, true );
     //m_powersimMenu->Append( APPLUGIN_CLOSE_ASPEN_SIMULATION, wxT( "Close" ) );
     //m_powersimMenu->Append( APPLUGIN_DISCONNECT_ASPEN_SIMULATION, wxT( "Disconnect" ) );
     //m_powersimMenu->Append( APPLUGIN_SHOW_ASPEN_SIMULATION, wxT( "Show" ) );
@@ -133,29 +135,33 @@ wxMenu* PSPlugin::GetPluginPopupMenu( wxMenu* baseMenu )
     return baseMenu;
 }
 ////////////////////////////////////////////////////////////////////////////////
+bool PSPlugin::IsSIPOpen()
+{
+    /*
+    if( mUserPrefBuffer )
+    {
+        CommandPtr aspenBKPFile = mUserPrefBuffer->GetCommand( "Aspen_Plus_Preferences" );
+
+        if( aspenBKPFile->GetCommandName() != "NULL" )
+        {
+            DataValuePairPtr bkpPtr =
+                aspenBKPFile->GetDataValuePair( "BKPFileName" );
+            if( bkpPtr )
+            {
+                return true;
+            }
+        }
+    }
+    */
+
+    return false;
+}
+////////////////////////////////////////////////////////////////////////////////
 void PSPlugin::OnOpen( wxCommandEvent& event )
 {
     UIPLUGIN_CHECKID( event )
 
-    /*
-    if( IsBKPOpen() )
-    {
-        wxMessageDialog md( m_canvas, 
-            wxT( "Simulation already open.\nClose it and open another?" ),
-            wxT( "Confirm" ),
-            wxYES_NO);
-        if( md.ShowModal() == wxID_NO )
-        {
-            return;
-        }
-        else
-        {
-            DisconnectAspenSimulation();
-            CloseAspenSimulation();
-        }
-    }
-
-    APOpenDialog fd( m_canvas );
+    PSOpenDialog fd( m_canvas );
     fd.SetPopulateFilenames( );
 
     if( fd.ShowModal() != wxID_OK )
@@ -163,122 +169,103 @@ void PSPlugin::OnOpen( wxCommandEvent& event )
         return;
     }
 
-    wxFileName bkpFileName;
-    bkpFileName.ClearExt();
-    bkpFileName.SetName( fd.GetFilename() + wxT(".bkp") );
+    wxFileName sipFileName;
+    sipFileName.ClearExt();
+    sipFileName.SetName( fd.GetFilename() + wxT( ".sip" ) );
 
-    CommandPtr returnState ( new Command() );
+    vox::CommandPtr returnState ( new vox::Command() );
     returnState->SetCommandName( "getNetwork" );
-    DataValuePairPtr data( new DataValuePair() );
+    vox::DataValuePairPtr data( new vox::DataValuePair() );
     data->SetData( "NetworkQuery", "getNetwork" );
     returnState->AddDataValuePair( data );
 
-    data = DataValuePairPtr( new DataValuePair() );
-    data->SetData( "BKPFileName",  ConvertUnicode( bkpFileName.GetFullName().c_str() ) );
+    data = vox::DataValuePairPtr( new vox::DataValuePair() );
+    data->SetData(
+        "sipFileName", ConvertUnicode( sipFileName.GetFullName().c_str() ) );
     returnState->AddDataValuePair( data );
 
-    std::vector< std::pair< XMLObjectPtr, std::string > > nodes;
-    nodes.push_back( std::pair< XMLObjectPtr, std::string >( returnState, "vecommand" ) );
-    XMLReaderWriter commandWriter;
+    std::vector< std::pair< vox::XMLObjectPtr, std::string > > nodes;
+    nodes.push_back( std::pair< vox::XMLObjectPtr, std::string >(
+        returnState, "vecommand" ) );
+    vox::XMLReaderWriter commandWriter;
     std::string status = "returnString";
     commandWriter.UseStandaloneDOMDocumentManager();
     commandWriter.WriteXMLDocument( nodes, status, "Command" );
+
     //Get results
     std::string nw_str = serviceList->Query( status );
-    
     if( nw_str.empty() )
     {
-        wxMessageDialog md( m_canvas, wxT("No Aspen Unit connected.\nPlease launch Aspen Unit."), wxT("Error"), wxOK);
+        wxMessageDialog md(
+            m_canvas,
+            wxT( "No Powersim Unit connected.\nPlease launch Powersim Unit." ),
+            wxT( "Error" ), wxOK );
         md.ShowModal();
+
         return;
     }
 
-    // If there is nothing on the CE
-    if( nw_str.compare("BKPDNE") == 0 )
+    //If there is nothing on the CE
+    if( nw_str.compare( "SIPDNE" ) == 0 )
     {
-        wxMessageDialog md(m_canvas, wxT("Aspen Unit is unable to find the bkp file.\nDid you select the correct directory in Aspen Unit?" ), wxT("Error"), wxOK );
+        wxMessageDialog md(
+            m_canvas,
+            wxT( "Powersim Unit is unable to find the sip file.\nDid you select the correct directory in Powersim Unit?" ),
+            wxT( "Error" ), wxOK );
         md.ShowModal();
-        //Log( "BKP File Does NOT exist.\n" );
-        return;
-    }    
-    else if( nw_str.compare("APWDNE") == 0 )
-    {
-        wxMessageDialog md( m_canvas, wxT("Aspen Unit is unable to find the apw file.\nDid you select the correct directory in Aspen Unit?" ), wxT("Error"), wxOK);
-        md.ShowModal();
-        //Log( "APW File Does NOT exist.\n" );
+        //Log( "SIP File Does NOT exist.\n" );
+
         return;
     }
-    
-    //Parse the network string thst was returned from the VE-PSI Unit
-    ves::open::xml::XMLReaderWriter networkWriter;
+
+    vox::XMLReaderWriter networkWriter;
     networkWriter.UseStandaloneDOMDocumentManager();
     networkWriter.ReadFromString();
     std::vector< std::pair< std::string, std::string > > dataToObtain;
     std::vector< std::pair< std::string, std::string > >::iterator dataIter;
     dataToObtain.push_back( std::make_pair( "Model", "veSystem" ) );
     networkWriter.ReadXMLData( nw_str, dataToObtain );
-    //Now get the veopen classes from the network string
-    std::vector< ves::open::xml::XMLObjectPtr >::iterator objectIter;
-    std::vector< ves::open::xml::XMLObjectPtr > objectVector =
+    std::vector< vox::XMLObjectPtr >::iterator objectIter;
+    std::vector< vox::XMLObjectPtr > objectVector =
         networkWriter.GetLoadedXMLObjects();
 
-    //Now we need to make this plugin the top level plugin becuase
-    //the aspen flowsheet is actually a subnetwork of this 
-    //main aspen plus plugin
-    ves::open::xml::model::SystemPtr tempSystem;
-    tempSystem = boost::dynamic_pointer_cast<ves::open::xml::model::System>( objectVector.at( 0 ) );
-    ves::open::xml::model::ModelPtr aspenPlusModel;
-    //set a null pointer as the top most parent model on topmost level
-    for( size_t modelCount = 0; 
-        modelCount < tempSystem->GetNumberOfModels(); 
-        ++modelCount )
+    vox::model::SystemPtr tempSystem;
+    tempSystem = boost::dynamic_pointer_cast< vox::model::System >(
+        objectVector.at( 0 ) );
+    vox::model::ModelPtr powersimModel;
+    //Set parent model on topmost level
+    for( int i = 0; i < tempSystem->GetNumberOfModels(); ++i )
     {
-        //Not sure why we set a null pointer here...
-        tempSystem->GetModel( modelCount )->SetParentModel( aspenPlusModel );
+        tempSystem->GetModel( i )->SetParentModel( powersimModel );
     }
-    //Now we get this plugins veopen model and set its subsystem as the
-    //flowsheet we just queried from VE-PSI
+
     GetVEModel()->SetSubSystem( tempSystem );
     mDataBufferEngine->ParseSystem( tempSystem );
 
-    //Now let the rest of VE-Conductor know about the new network
-    m_canvas->AddSubNetworks();
-#if 0
-    std::ofstream netdump ("netdump.txt");
-    netdump << nw_str;
-    netdump.close();
-#endif
-    
+    m_canvas->AddSubNetworks( );
     event.SetId( UPDATE_HIER_TREE );
-    ::wxPostEvent( m_canvas, event );
+    wxPostEvent( m_canvas, event );
 
-    //create hierarchy page
-    //hierarchyTree->PopulateTree( 
-    //    mDataBufferEngine->GetTopSystemId() );
-
-    //Log( "Simulation Opened.\n" );
-    ///
-    CommandPtr aspenBKPFile( new Command() );
-    aspenBKPFile->SetCommandName( "Aspen_Plus_Preferences" );
-    data = DataValuePairPtr( new DataValuePair() );
-    data->SetData( "BKPFileName",
-                   ConvertUnicode( bkpFileName.GetFullName().c_str() ) );
-    aspenBKPFile->AddDataValuePair( data );
-    mUserPrefBuffer->SetCommand( "Aspen_Plus_Preferences", aspenBKPFile );
+    vox::CommandPtr powersimSIPFile( new vox::Command() );
+    powersimSIPFile->SetCommandName( "sipPreferences" );
+    data = vox::DataValuePairPtr( new vox::DataValuePair() );
+    data->SetData(
+        "sipFileName", ConvertUnicode( sipFileName.GetFullName().c_str() ) );
+    powersimSIPFile->AddDataValuePair( data );
+    mUserPrefBuffer->SetCommand( "sipPreferences", powersimSIPFile );
 
     SetName( fd.GetFilename() );
     event.SetId( UIPLUGINBASE_SET_UI_PLUGIN_NAME );
     GlobalNameUpdate( event );
 
-    //mAspenMenu->Enable( APPLUGIN_CLOSE_ASPEN_SIMULATION, true );
-    mAspenMenu->Enable( APPLUGIN_DISCONNECT_ASPEN_SIMULATION, true );
-    mAspenMenu->Enable( APPLUGIN_SHOW_ASPEN_SIMULATION, true );
-    mAspenMenu->Enable( APPLUGIN_HIDE_ASPEN_SIMULATION, true );
-    mAspenMenu->Enable( APPLUGIN_RUN_ASPEN_NETWORK, true );
-    mAspenMenu->Enable( APPLUGIN_REINITIALIZE_ASPEN_SIMULATION, true );
-    mAspenMenu->Enable( APPLUGIN_STEP_ASPEN_NETWORK, true );
-    mAspenMenu->Enable( APPLUGIN_SAVE_SIMULATION, true );
-    mAspenMenu->Enable( APPLUGIN_SAVEAS_SIMULATION, true );
-    */
+    //mAspenMenu->Enable( SDPLUGIN_CLOSE_ASPEN_SIMULATION, true );
+    //mAspenMenu->Enable( SDPLUGIN_DISCONNECT_ASPEN_SIMULATION, true );
+    //mAspenMenu->Enable( SDPLUGIN_SHOW_ASPEN_SIMULATION, true );
+    //mAspenMenu->Enable( SDPLUGIN_HIDE_ASPEN_SIMULATION, true );
+    //mAspenMenu->Enable( SDPLUGIN_RUN_ASPEN_NETWORK, true );
+    //mAspenMenu->Enable( SDPLUGIN_REINITIALIZE_ASPEN_SIMULATION, true );
+    //mAspenMenu->Enable( SDPLUGIN_STEP_ASPEN_NETWORK, true );
+    //mAspenMenu->Enable( SDPLUGIN_SAVE_SIMULATION, true );
+    //mAspenMenu->Enable( SDPLUGIN_SAVEAS_SIMULATION, true );
 }
 /////////////////////////////////////////////////////////////////////////////
