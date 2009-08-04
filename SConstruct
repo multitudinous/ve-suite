@@ -513,7 +513,9 @@ if not SConsAddons.Util.hasHelpFlag():
     if GetPlatform() == 'win32':
         # for more information on WIN32_LEAN_AND_MEAN see:
         # http://support.microsoft.com/kb/166474
-        baseEnv.AppendUnique( CPPDEFINES = ['WIN32_LEAN_AND_MEAN'] )
+        # For more info on STRICT
+        # http://msdn.microsoft.com/en-us/library/aa383681(VS.85).aspx
+        baseEnv.AppendUnique( CPPDEFINES = ['WIN32_LEAN_AND_MEAN','STRICT'] ) 
         # As noted below WINVER will be defined as 0x0502
         # http://msdn.microsoft.com/en-us/library/aa383745(VS.85).aspx
         baseEnv.AppendUnique( CPPDEFINES = ['WINVER=0x0502','_WIN32_WINNT=0x0502'] )
