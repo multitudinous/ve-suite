@@ -10,16 +10,16 @@
 
 [Setup]
 AppName={#MyAppName}
-AppVerName={#MyAppVerName}_{#SVNVERSION}
+AppVerName={#MyAppName}_{#VEVERSION}.{#SVNVERSION}_{#MSVCVERSION}
 AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
-DefaultDirName=C:\{#MyAppName}_{#VEVERSION}
+DefaultDirName=C:\{#MyAppName}_{#VEVERSION}.{#SVNVERSION}_{#MSVCVERSION}
 DefaultGroupName={#VESGROUPNAME}
 AllowNoIcons=true
 OutputDir={#INSTALLERINSTALLLOCATION}
-OutputBaseFilename=vesuite{#VEVERSION}_{#SVNVERSION}
+OutputBaseFilename={#MyAppName}_{#VEVERSION}.{#SVNVERSION}_{#MSVCVERSION}
 Compression=lzma
 SolidCompression=true
 ChangesEnvironment=true
@@ -35,7 +35,7 @@ WizardImageBackColor=clWhite
 ChangesAssociations=true
 BackColor=$a16502
 BackColor2=$1b84f7
-SetupIconFile={#VEDEVHOME}\dist\installerImages\Ve_icon.ico
+SetupIconFile={#VEDEVHOME}\dist\installerImages\ves_icon.ico
 PrivilegesRequired=none
 UsePreviousGroup=false
 
