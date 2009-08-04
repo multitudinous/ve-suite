@@ -2254,7 +2254,9 @@ void AppFrame::OnChangeWorkingDirectory( wxCommandEvent& event )
         ///Clear the canvas then change the directory
         NewCanvas( event );
 
-        directory = vesFileName.GetPath( wxPATH_GET_VOLUME, wxPATH_UNIX );
+        //wxFileName::GetPath treats the last directory as the filename and excludes it from the path
+        directory = vesFileName.GetFullPath( wxPATH_UNIX );
+        //directory = vesFileName.GetPath( wxPATH_GET_VOLUME, wxPATH_UNIX );
         //change conductor working dir
         ::wxSetWorkingDirectory( directory );
         directory.Replace( _( "\\" ), _( "/" ), true );
