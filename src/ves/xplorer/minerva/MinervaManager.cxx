@@ -475,11 +475,12 @@ void MinervaManager::_loadPlugins()
 #ifdef __APPLE__
   Usul::Components::Manager::instance().load ( Usul::Interfaces::IUnknown::IID, "GDALReadImage.plug" );
 #endif
-
-  if ( vpr::Debug::instance()->isDebugEnabled() && vpr::Debug::instance()->isCategoryAllowed( vesDBG ) )
-  {
-    Usul::Components::Manager::instance().print ( vpr::Debug::instance()->getStream( vesDBG, 0, true ) );
-  }
+  // this causes huge problems because the output is never flushed.
+  //This can probably be corrected but I am not sure how.
+  //if ( vpr::Debug::instance()->isDebugEnabled() && vpr::Debug::instance()->isCategoryAllowed( vesDBG ) )
+  //{
+  //  Usul::Components::Manager::instance().print ( vpr::Debug::instance()->getStream( vesDBG, 0, true ) );
+  //}
 
 #ifdef _MSC_VER
   const std::string minervaGdalName ( "MinervaGDAL.dll" );
