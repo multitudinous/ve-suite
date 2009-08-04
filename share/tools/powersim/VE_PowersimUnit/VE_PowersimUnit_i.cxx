@@ -49,6 +49,9 @@ Body_Unit_i::Body_Unit_i(
     vox::XMLObjectFactory::Instance()->RegisterObjectCreator(
         "CAD", new vox::cad::CADCreator() );
 
+    m_powersimLog = m_mainDialog->GetDlgItem( IDC_LOG );
+
+    m_queryCommandNames.insert( "GetNetwork" );
     m_queryCommandNames.insert( "OpenSimulation" );
 
 }
@@ -194,7 +197,13 @@ ACE_THROW_SPEC( ( CORBA::SystemException, Error::EUnknown ) )
         return CORBA::string_dup( "NULL" );
     }
 
-    if( cmdname == "OpenSimulation" )
+    if( cmdname == "GetNetwork" )
+    {
+        returnValue = HandleGetNetwork( cmd );
+
+        return returnValue;
+    }
+    else if( cmdname == "OpenSimulation" )
     {
         returnValue = HandleOpenSimulation( cmd );
 
@@ -228,32 +237,89 @@ ACE_THROW_SPEC( ( CORBA::SystemException, Error::EUnknown ) )
 
 }
 ////////////////////////////////////////////////////////////////////////////////
-char* Body_Unit_i::HandleOpenSimulation( ves::open::xml::CommandPtr cmd )
+char* Body_Unit_i::HandleGetNetwork( ves::open::xml::CommandPtr cmd )
 {
-    //This command has no params
-    std::string filename = cmd->GetDataValuePair( 1 )->GetDataString();
-
-    std::string extension = filename.substr( filename.size() - 4, 4 );
+    std::string fileName = cmd->GetDataValuePair( 1 )->GetDataString();
+    std::string extension = fileName.substr( fileName.size() - 4, 4 );
     if( extension.find( "sip" ) != std::string::npos )
     {
-        filename.resize( filename.size() - 4 );
+        fileName.resize( fileName.size() - 4 );
+        m_sipParser = new SIPParser();
+        m_sipParser->SetWorkingDir( m_workingDir );
+    }
+
+    //This command has no params
+    //bool firsttime = true;
+    //if( firsttime )
+    //{
         //Make sure sip file exists
         std::ifstream sipFile(
-            ( m_workingDir + filename + ".sip" ).c_str(), std::ios::binary );
+            ( m_workingDir + fileName + ".sip" ).c_str(), std::ios::binary );
         if( !sipFile.is_open() )
         {
             //No sip file
-            //AspenLog->SetSel( -1, -1 );
-            //AspenLog->ReplaceSel( "SIP File Does NOT exist.\r\n" );
+            LPCTSTR logText( "SIP File Does NOT exist.\r\n" );
+            m_mainDialog->SendMessage( m_powersimLog, EM_SETSEL, -1, -1 );
+            m_mainDialog->SendMessage(
+                m_powersimLog, EM_REPLACESEL, 0,
+                reinterpret_cast< LPARAM >( logText ) );
 
             return CORBA::string_dup( "SIPDNE" );
         }
         sipFile.close();
 
-        m_mainDialog->SetDlgItemText( IDC_FILENAME, filename.c_str() );
+        m_mainDialog->SetDlgItemText( IDC_FILENAME, fileName.c_str() );
+
+        //Go through sip parsing procedure
+        //m_sipParser->OpenSimAndParse( fileName.c_str() );
+        m_fileName = fileName;
+
+        //firsttime = false;
+    //}
+
+    std::string network;
+    try
+    {
+        //network = m_sipParser->CreateNetwork();
+    }
+    catch( ... )
+    {
+        std::cout << "GetNetwork Exception Powersim Unit" << std::endl;
+        return NULL;
+    }
+
+    return CORBA::string_dup( network.c_str() );
+}
+////////////////////////////////////////////////////////////////////////////////
+char* Body_Unit_i::HandleOpenSimulation( ves::open::xml::CommandPtr cmd )
+{
+    //This command has no params
+    std::string fileName = cmd->GetDataValuePair( 1 )->GetDataString();
+
+    std::string extension = fileName.substr( fileName.size() - 4, 4 );
+    if( extension.find( "sip" ) != std::string::npos )
+    {
+        fileName.resize( fileName.size() - 4 );
+        //Make sure sip file exists
+        std::ifstream sipFile(
+            ( m_workingDir + fileName + ".sip" ).c_str(), std::ios::binary );
+        if( !sipFile.is_open() )
+        {
+            //No sip file
+            LPCTSTR logText( "SIP File Does NOT exist.\r\n" );
+            m_mainDialog->SendMessage( m_powersimLog, EM_SETSEL, -1, -1 );
+            m_mainDialog->SendMessage(
+                m_powersimLog, EM_REPLACESEL, 0,
+                reinterpret_cast< LPARAM >( logText ) );
+
+            return CORBA::string_dup( "SIPDNE" );
+        }
+        sipFile.close();
+
+        m_mainDialog->SetDlgItemText( IDC_FILENAME, fileName.c_str() );
         m_sipParser = new SIPParser();
         m_sipParser->SetWorkingDir( m_workingDir );
-        m_sipParser->OpenSimulation( filename );
+        m_sipParser->OpenSimulation( fileName );
     }
 
     return CORBA::string_dup( "Simulation Opened." );

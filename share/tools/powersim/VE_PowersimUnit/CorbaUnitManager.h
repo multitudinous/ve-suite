@@ -39,13 +39,13 @@ public:
     void DestroyORB();
 
     ///
-    Body_Unit_i* GetUnitObject();
+    Body_Unit_i* const GetUnitObject() const;
 
     ///
     void CheckCORBAWork();
 
     ///
-    SIPParser* CreateParser();
+    //SIPParser* CreateParser();
 
     ///
     bool unit_i_instantiated;

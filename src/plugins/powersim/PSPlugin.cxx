@@ -174,9 +174,9 @@ void PSPlugin::OnOpen( wxCommandEvent& event )
     sipFileName.SetName( fd.GetFilename() + wxT( ".sip" ) );
 
     vox::CommandPtr returnState ( new vox::Command() );
-    returnState->SetCommandName( "getNetwork" );
+    returnState->SetCommandName( "GetNetwork" );
     vox::DataValuePairPtr data( new vox::DataValuePair() );
-    data->SetData( "NetworkQuery", "getNetwork" );
+    data->SetData( "NetworkQuery", "GetNetwork" );
     returnState->AddDataValuePair( data );
 
     data = vox::DataValuePairPtr( new vox::DataValuePair() );

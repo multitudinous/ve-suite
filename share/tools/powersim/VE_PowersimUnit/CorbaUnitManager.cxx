@@ -5,7 +5,7 @@
 #include "CorbaUnitManager.h"
 #include "VE_PowersimUnit_i.h"
 #include "MainDlg.h"
-#include "SIPParser.h"
+//#include "SIPParser.h"
 
 // --- VE-Suite Includes --- //
 #include <ves/open/xml/XMLObjectFactory.h>
@@ -215,7 +215,7 @@ void CorbaUnitManager::DestroyORB()
     CleanUp();
 }
 ////////////////////////////////////////////////////////////////////////////////
-Body_Unit_i* CorbaUnitManager::GetUnitObject()
+Body_Unit_i* const CorbaUnitManager::GetUnitObject() const
 {
    return unit_i;
 }
@@ -231,10 +231,12 @@ void CorbaUnitManager::CheckCORBAWork()
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
+/*
 SIPParser* CorbaUnitManager::CreateParser()
 {
     return new SIPParser();
 }
+*/
 ////////////////////////////////////////////////////////////////////////////////
 bool CorbaUnitManager::CleanUp()
 {

@@ -95,10 +95,13 @@ public:
     //void SaveAspen( std::string filename );
     //void StepSim();
 
+    ///
+    char* HandleGetNetwork( ves::open::xml::CommandPtr cmd );
+
+    ///
     char* HandleOpenSimulation( ves::open::xml::CommandPtr cmd );
     /*
     void ReinitializeBlock(ves::open::xml::CommandPtr cmd);
-    char* handleGetNetwork(ves::open::xml::CommandPtr cmd);
     char* handleSaveAs(ves::open::xml::CommandPtr cmd);
     char* handleGetModuleParamList(ves::open::xml::CommandPtr cmd);
     char* handleGetInputModuleParamList(ves::open::xml::CommandPtr cmd);
@@ -114,26 +117,39 @@ public:
     void SetLinkParam( ves::open::xml::CommandPtr cmd );
     */
 
-    std::string UnitName_;
     //Types::ArrayLong ids_;
     //CORBA::Long cur_id_;
     //std::string status_;
     //std::string data_;
 
+    ///
+    std::string UnitName_;
+
 protected:
-    //CEdit* AspenLog;
-    //std::string mFileName;
 
 private:
+    ///
     unsigned int m_returnState;
 
+    ///
     CMainDlg* m_mainDialog;
+
+    ///
+    HWND m_powersimLog;
+
+    ///
     CorbaUnitManager* m_corbaUnitManager;
 
+    ///
     SIPParser* m_sipParser;
 
+    ///
     std::string m_workingDir;
 
+    ///
+    std::string m_fileName;
+
+    ///
     std::set< std::string > m_queryCommandNames;
 
 };
