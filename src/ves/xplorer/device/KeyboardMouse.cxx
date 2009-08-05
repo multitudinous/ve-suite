@@ -70,6 +70,8 @@
 // --- vrJuggler Includes --- //
 #include <vrj/vrjParam.h>
 
+#include <gadget/Devices/KeyboardMouseDevice/InputArea.h>
+
 #include <gadget/Type/KeyboardMouse/KeyEvent.h>
 #include <gadget/Type/KeyboardMouse/MouseEvent.h>
 
@@ -77,7 +79,6 @@
 #include <gmtl/AxisAngle.h>
 #include <gmtl/Generate.h>
 #include <gmtl/Misc/MatrixConvert.h>
-
 
 #include <osg/AutoTransform>
 #include <ves/xplorer/scenegraph/LocalToWorldNodePath.h>
@@ -107,6 +108,8 @@ using namespace ves::xplorer::device;
 namespace vx = ves::xplorer;
 namespace vxs = vx::scenegraph;
 namespace vxsm = vxs::manipulator;
+
+//#define VJ21120
 
 ////////////////////////////////////////////////////////////////////////////////
 KeyboardMouse::KeyboardMouse()
@@ -179,7 +182,7 @@ void KeyboardMouse::UpdateSelection()
 void KeyboardMouse::SetStartEndPoint(
     osg::Vec3d& startPoint, osg::Vec3d& endPoint )
 {
-#ifdef TRANSFORM_MANIPULATOR
+#ifdef VJ21120
     //Get the displays
     const std::vector< vrj::DisplayPtr >& displayVector =
         vrj::DisplayManager::instance()->getActiveDisplays();
@@ -228,7 +231,7 @@ void KeyboardMouse::SetStartEndPoint(
                 mY -= yOriginViewportInPixels;
 
                 //Convert relative screen coords
-                //mCurrPos.first = 
+                //mCurrPos.first =
                     //static_cast< double >( mX ) /
                     //static_cast< double >( widthViewportInPixels );
                 //mCurrPos.second =
@@ -305,7 +308,7 @@ void KeyboardMouse::SetStartEndPoint(
                 gmtl::Matrix44d zUp = gmtl::makeRot< gmtl::Matrix44d >( 
                     gmtl::AxisAngled( -gmtl::Math::PI_OVER_2, x_axis ) );
                 viewMatrix *= zUp;
-                
+
                 //std::cout << "viewMatrix: " << std::endl << viewMatrix << std::endl << std::endl;
 
                 //Calculate the MVPW matrix
@@ -430,7 +433,7 @@ void KeyboardMouse::SetStartEndPoint(
               << ", " << endPoint.z()
               << " )" << std::endl;
     */
-#endif //TRANSFORM_MANIPULATOR
+#endif //VJ21120
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::DrawLine( osg::Vec3d startPoint, osg::Vec3d endPoint )
@@ -500,17 +503,21 @@ void KeyboardMouse::ProcessKBEvents( int mode )
     mKeyAlt = mKeyboardMouse->modifierOnly( gadget::KEY_ALT );
 
     //Iterate over the keyboard and mouse events
-    gadget::KeyboardMouse::EventQueue::iterator i;
+    gadget::KeyboardMouse::EventQueue::const_iterator i;
     for( i = evt_queue.begin(); i != evt_queue.end(); ++i )
     {
-        const gadget::EventType type = ( *i )->type();
+        const gadget::EventPtr event = *i;
+#ifdef VJ21120
+        const gadget::InputArea* inputArea = event->getSource();
+#endif //VJ21120
+        const gadget::EventType eventType = event->type();
 
-        switch( type )
+        switch( eventType )
         {
             case gadget::KeyPressEvent:
             {
-                gadget::KeyEventPtr keyEvt =
-                    boost::dynamic_pointer_cast< gadget::KeyEvent >( *i );
+                const gadget::KeyEventPtr keyEvt =
+                    boost::dynamic_pointer_cast< gadget::KeyEvent >( event );
 
                 mKey = keyEvt->getKey();
 
@@ -529,8 +536,8 @@ void KeyboardMouse::ProcessKBEvents( int mode )
             }
             case gadget::KeyReleaseEvent:
             {
-                gadget::KeyEventPtr keyEvt =
-                    boost::dynamic_pointer_cast< gadget::KeyEvent >( *i );
+                const gadget::KeyEventPtr keyEvt =
+                    boost::dynamic_pointer_cast< gadget::KeyEvent >( event );
 
                 mKey = keyEvt->getKey();
 
@@ -544,8 +551,8 @@ void KeyboardMouse::ProcessKBEvents( int mode )
             }
             case gadget::MouseButtonPressEvent:
             {
-                gadget::MouseEventPtr mouse_evt =
-                    boost::dynamic_pointer_cast< gadget::MouseEvent >( *i );
+                const gadget::MouseEventPtr mouse_evt =
+                    boost::dynamic_pointer_cast< gadget::MouseEvent >( event );
 
                 mButton = mouse_evt->getButton();
                 mState = 1;
@@ -577,8 +584,8 @@ void KeyboardMouse::ProcessKBEvents( int mode )
             }
             case gadget::MouseButtonReleaseEvent:
             {
-                gadget::MouseEventPtr mouse_evt =
-                    boost::dynamic_pointer_cast< gadget::MouseEvent >( *i );
+                const gadget::MouseEventPtr mouse_evt =
+                    boost::dynamic_pointer_cast< gadget::MouseEvent >( event );
 
                 mButton = mouse_evt->getButton();
                 mState = 0;
@@ -615,12 +622,12 @@ void KeyboardMouse::ProcessKBEvents( int mode )
             }
             case gadget::MouseMoveEvent:
             {
-                gadget::MouseEventPtr mouse_evt =
-                    boost::dynamic_pointer_cast< gadget::MouseEvent >( *i );
+                const gadget::MouseEventPtr mouse_evt =
+                    boost::dynamic_pointer_cast< gadget::MouseEvent >( event );
 
                 mX = mouse_evt->getX();
                 mY = mouse_evt->getY();
-                
+
                 if( mState == 0 )
                 {
 #ifdef TRANSFORM_MANIPULATOR
@@ -763,6 +770,160 @@ void KeyboardMouse::SetFrustumValues(
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::FrameAll()
 {
+#ifdef VJ21120
+    osg::Group* activeSwitchNode =
+        ves::xplorer::scenegraph::SceneManager::instance()->GetActiveSwitchNode();
+    ves::xplorer::scenegraph::DCS* activeNavSwitchNode =
+        ves::xplorer::scenegraph::SceneManager::instance()->GetActiveNavSwitchNode();
+    osg::Group* modelRoot =
+        ves::xplorer::scenegraph::SceneManager::instance()->GetModelRoot();
+    ves::xplorer::scenegraph::manipulator::ManipulatorManager* manipulatorManager =
+        ves::xplorer::scenegraph::SceneManager::instance()->GetManipulatorManager();
+    ves::xplorer::scenegraph::DCS* cameraDCS =
+        ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS();
+
+    //No node visitor for computeBound method so have to manually remove/add ManipulatorRoot
+    modelRoot->removeChild( manipulatorManager );
+    osg::BoundingSphere bs = activeSwitchNode->computeBound();
+    modelRoot->addChild( manipulatorManager );
+
+    //Set the position of the camera to the center of the bounding sphere
+    cameraDCS->setPosition( bs.center() );
+    
+    //Determine the distance from the center of the BoundingSphere
+    //that the camera needs to be to view the entire scene
+    double topAngle = atan( mTopFrustum / mNearFrustum );
+    double tempDiv = fabs( mBottomFrustum ) / mNearFrustum;
+    double bottomAngle = atan( tempDiv );
+    double theta = mFoVZ * 0.5;
+    if( mAspectRatio < 1.0 )
+    {
+        theta *= mAspectRatio;
+    }
+
+    double distanceToCenter = bs.radius() / sin( theta );
+
+    //Get the backward vector of the view Matrix and flip its x component
+    osg::Vec3d back;
+    
+    //Get the displays
+    const std::vector< vrj::DisplayPtr >& displayVector =
+        vrj::DisplayManager::instance()->getActiveDisplays();
+
+    //Iterate over the displays
+    std::vector< vrj::DisplayPtr >::const_iterator itr = displayVector.begin();
+    for( itr; itr != displayVector.end(); ++itr )
+    {
+        //Get actual dimensions of display
+        int xOriginDisplay, yOriginDisplay, widthDisplay, heightDisplay;
+        (*itr)->getOriginAndSize(
+            xOriginDisplay, yOriginDisplay, widthDisplay, heightDisplay );
+
+        //Iterate over the viewports
+        for( size_t i = 0; i < (*itr)->getNumViewports(); ++i )
+        {
+#if __VJ_version >= 2003000
+            vrj::ViewportPtr viewport = (*itr)->getViewport( i );
+#else
+            vrj::Viewport* viewport = (*itr)->getViewport( i );
+#endif
+            //Get normalized dimensions of viewport
+            float xOriginViewport, yOriginViewport, widthViewport, heightViewport;
+            viewport->getOriginAndSize(
+                xOriginViewport, yOriginViewport,
+                widthViewport, heightViewport );
+
+            //Get dimensions of viewport in pixels
+            const size_t xOriginViewportInPixels =
+                static_cast< size_t >( xOriginViewport * widthDisplay );
+            const size_t yOriginViewportInPixels =
+                static_cast< size_t >( yOriginViewport * heightDisplay );
+            const size_t widthViewportInPixels =
+                static_cast< size_t >( widthViewport * widthDisplay );
+            const size_t heightViewportInPixels =
+                static_cast< size_t >( heightViewport * heightDisplay );
+
+            //Check if mouse is inside viewport
+            if( ( mX >= xOriginViewportInPixels ) &&
+                ( mY >= yOriginViewportInPixels ) &&
+                ( mX <= xOriginViewportInPixels + widthViewportInPixels ) &&
+                ( mY <= yOriginViewportInPixels + heightViewportInPixels ) )
+            {
+                //Make the coordinates relative to viewport
+                mX -= xOriginViewportInPixels;
+                mY -= yOriginViewportInPixels;
+                
+                //The view for the active viewport
+                vrj::Viewport::View view = viewport->getView();
+#if __VJ_version >= 2003000
+                vrj::ProjectionPtr project;
+#else
+                vrj::Projection* project;
+#endif
+                if( ( vrj::Viewport::STEREO == view ) ||
+                    ( vrj::Viewport::LEFT_EYE == view ) )
+                {
+                    project = viewport->getLeftProj();
+                }
+
+                if( ( vrj::Viewport::STEREO == view ) ||
+                    ( vrj::Viewport::RIGHT_EYE == view ) )
+                {
+                    project = viewport->getRightProj();
+                }
+
+                //Calculate the view matrix
+                gmtl::Matrix44d viewMatrix =
+                    gmtl::convertTo< double >( project->getViewMatrix() );
+
+                //Transform view matrix into z up land
+                gmtl::Vec3d x_axis( 1.0, 0.0, 0.0 );
+                gmtl::Matrix44d zUp = gmtl::makeRot< gmtl::Matrix44d >( 
+                    gmtl::AxisAngled( -gmtl::Math::PI_OVER_2, x_axis ) );
+                viewMatrix *= zUp;
+
+                //Calculate the MVPW matrix
+                gmtl::Matrix44d VW = viewMatrix;
+
+                //Calculate the inverse MVPW matrix
+                gmtl::Matrix44d inverseVW = gmtl::invert( VW );
+
+                //Now get the inverse
+                back.set( inverseVW.mData[ 2 ], inverseVW.mData[ 6 ], inverseVW.mData[ 10 ] );
+                
+                /*
+                gmtl::Matrix44d vjHeadMat =
+                    gmtl::convertTo< double >( mHead->getData() );
+                gmtl::Point3d jugglerHeadPoint =
+                    gmtl::makeTrans< gmtl::Point3d >( vjHeadMat );
+
+                //We have to offset negative mX because the
+                //view and frustum are drawn for the left eye
+                double m2ft = 3.2808399;
+                osg::Vec3d startPoint(
+                    jugglerHeadPoint.mData[ 0 ] - ( 0.069 * m2ft ),
+                   -jugglerHeadPoint.mData[ 2 ],
+                    jugglerHeadPoint.mData[ 1 ] );
+                    */
+
+                //back.set( back.x() - startPoint.x(), back.y() - startPoint.y(), back.z() - startPoint.z() );
+                //back.normalize();
+            }
+        }
+    }
+
+    //Move the camera backward w/ respect to its orientation, multiply the
+    //desired distance by the adjusted back vector from the previous step
+    cameraDCS->setPosition(
+        cameraDCS->getPosition() + ( back * distanceToCenter ) );
+
+    //Get the new center of the bounding sphere in camera space
+    //activeSwitchNode->computeBound();
+    osg::Vec3d center =
+        bs.center() * osg::Matrixd( activeNavSwitchNode->GetMat().getData() );
+    mCenterPoint->set( center.x(), center.y(), center.z() );
+
+#else
     osg::Group* activeSwitchNode =
         vxs::SceneManager::instance()->GetActiveSwitchNode();
     vxs::DCS* activeNavSwitchNode =
@@ -844,6 +1005,7 @@ void KeyboardMouse::FrameAll()
     osg::Vec3d center =
         bs.center() * osg::Matrixd( activeNavSwitchNode->GetMat().getData() );
     mCenterPoint->set( center.x(), center.y(), center.z() );
+#endif //VJ21120
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::FrameSelection()
@@ -1277,22 +1439,24 @@ void KeyboardMouse::NavOnMouseRelease()
                 mPickedBody = NULL;
             }
 
+#ifdef TRANSFORM_MANIPULATOR
+            if( vxs::SceneManager::instance()->GetManipulatorManager()->Handle(
+                    vxsm::Event::RELEASE ) );
+            {
+                ;
+            }
+#endif //TRANSFORM_MANIPULATOR
+
+            if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
+                 mCharacterController->IsActive() )
+            {
+                mCharacterController->SetCameraRotationSLERP( true );
+            }
+
             //No modifier key
             if( mKeyNone )
             {
-#ifdef TRANSFORM_MANIPULATOR
-                if( vxs::SceneManager::instance()->GetManipulatorManager()->Handle(
-                        vxsm::Event::RELEASE ) );
-                {
-                    break;
-                }
-#endif //TRANSFORM_MANIPULATOR
-
-                if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
-                     mCharacterController->IsActive() )
-                {
-                    mCharacterController->SetCameraRotationSLERP( true );
-                }
+                ;
             }
             //Mod key shift
             else if( mKeyShift )
