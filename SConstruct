@@ -1,6 +1,10 @@
 #!python
 EnsureSConsVersion(1,2)
 SConsignFile()
+# See this page for more information about these options
+# http://scons.org/wiki/GoFastButton
+SetOption('max_drift', 1)
+SetOption('implicit_cache', 1)
 
 ###
 from SCons.Defaults import SharedCheck, ProgScan
