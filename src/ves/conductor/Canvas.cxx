@@ -460,18 +460,26 @@ void Canvas::CreateDefaultNetwork()
     std::pair< long int, long int > numUnit;
     numUnit.first = 1;
     numUnit.second = 1;
-    tempNetwork->GetDataValuePair( -1 )->
-        SetData( "m_xUserScale", 1.0f );
-    tempNetwork->GetDataValuePair( -1 )->
-        SetData( "m_yUserScale", 1.0f );
-    tempNetwork->GetDataValuePair( -1 )->
-        SetData( "nPixX", static_cast< long int >( numPix.first ) );
-    tempNetwork->GetDataValuePair( -1 )->
-        SetData( "nPixY", static_cast< long int >( numPix.second ) );
-    tempNetwork->GetDataValuePair( -1 )->
-        SetData( "nUnitX", static_cast< long int >( numUnit.first ) );
-    tempNetwork->GetDataValuePair( -1 )->
-        SetData( "nUnitY", static_cast< long int >( numUnit.second ) );
+
+    ves::open::xml::DataValuePairPtr dvpPtr;
+    dvpPtr = ves::open::xml::DataValuePairPtr( new ves::open::xml::DataValuePair() );
+    dvpPtr->SetData( "m_xUserScale", 1.0 );
+    tempNetwork->AddDataValuePair( dvpPtr );
+    dvpPtr = ves::open::xml::DataValuePairPtr( new ves::open::xml::DataValuePair() );
+    dvpPtr->SetData( "m_yUserScale", 1.0 );
+    tempNetwork->AddDataValuePair( dvpPtr );
+    dvpPtr = ves::open::xml::DataValuePairPtr( new ves::open::xml::DataValuePair() );
+    dvpPtr->SetData( "nPixX", static_cast< long int >( numPix.first ) );
+    tempNetwork->AddDataValuePair( dvpPtr );
+    dvpPtr = ves::open::xml::DataValuePairPtr( new ves::open::xml::DataValuePair() );
+    dvpPtr->SetData( "nPixY", static_cast< long int >( numPix.second ) );
+    tempNetwork->AddDataValuePair( dvpPtr );
+    dvpPtr = ves::open::xml::DataValuePairPtr( new ves::open::xml::DataValuePair() );
+    dvpPtr->SetData( "nUnitX", static_cast< long int >( numUnit.first ) );
+    tempNetwork->AddDataValuePair( dvpPtr );
+    dvpPtr = ves::open::xml::DataValuePairPtr( new ves::open::xml::DataValuePair() );
+    dvpPtr->SetData( "nUnitY", static_cast< long int >( numUnit.second ) );
+    tempNetwork->AddDataValuePair( dvpPtr );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Canvas::Update()

@@ -125,6 +125,11 @@ void Network::_updateVEElement( const std::string& input )
     SetSubElements( "tag", mTags );
 }
 ////////////////////////////////////////////////////////////////////////////////
+void Network::AddDataValuePair( ves::open::xml::DataValuePairPtr dataValuePair )
+{
+    mConductorState.push_back( dataValuePair );
+}
+////////////////////////////////////////////////////////////////////////////////
 LinkPtr Network::GetLink( int i )
 {
     try
@@ -142,18 +147,19 @@ size_t Network::GetNumberOfLinks( void )
     return mLinks.size();
 }
 ////////////////////////////////////////////////////////////////////////////////
-DataValuePairPtr Network::GetDataValuePair( int i )
+DataValuePairPtr Network::GetDataValuePair( size_t index )
 {
     try
     {
-        return mConductorState.at( i );
+        return mConductorState.at( index );
     }
-    catch ( ... )
+    catch( ... )
     {
-        ///This is way bad code
-        ///Needs to be corrected
-        mConductorState.push_back( DataValuePairPtr( new DataValuePair() ) );
-        return mConductorState.back();
+        std::cerr << " Network::GetDataValuePair The element request "
+        << "is out of sequence. Please ask for a lower number point."
+        << std::endl;
+
+        return DataValuePairPtr();
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

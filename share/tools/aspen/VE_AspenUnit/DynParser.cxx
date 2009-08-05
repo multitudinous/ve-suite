@@ -1166,19 +1166,26 @@ std::string DynParser::CreateNetwork( void )
         veSystem( new ves::open::xml::model::System() );
 
     // create default state info section
-    mainNetwork->GetDataValuePair( -1 )->
-        SetData( "m_xUserScale", 1.0 );
-    mainNetwork->GetDataValuePair( -1 )->
-        SetData( "m_yUserScale", 1.0 );
-    mainNetwork->GetDataValuePair( -1 )->
-        SetData( "nPixX", static_cast< long int >( 20 ) );
-    mainNetwork->GetDataValuePair( -1 )->
-        SetData( "nPixY", static_cast< long int >( 20 ) );
-    mainNetwork->GetDataValuePair( -1 )->
-        SetData( "nUnitX", static_cast< long int >( 200 ) );
-    mainNetwork->GetDataValuePair( -1 )->
-        SetData( "nUnitY", static_cast< long int >( 200 ) );
-    veSystem->AddNetwork(mainNetwork);
+    ves::open::xml::DataValuePairPtr dvpPtr;
+    dvpPtr = ves::open::xml::DataValuePairPtr( new ves::open::xml::DataValuePair() );
+    dvpPtr->SetData( "m_xUserScale", 1.0 );
+    mainNetwork->AddDataValuePair( dvpPtr );
+    dvpPtr = ves::open::xml::DataValuePairPtr( new ves::open::xml::DataValuePair() );
+    dvpPtr->SetData( "m_yUserScale", 1.0 );
+    mainNetwork->AddDataValuePair( dvpPtr );
+    dvpPtr = ves::open::xml::DataValuePairPtr( new ves::open::xml::DataValuePair() );
+    dvpPtr->SetData( "nPixX", static_cast< long int >( 20 ) );
+    mainNetwork->AddDataValuePair( dvpPtr );
+    dvpPtr = ves::open::xml::DataValuePairPtr( new ves::open::xml::DataValuePair() );
+    dvpPtr->SetData( "nPixY", static_cast< long int >( 20 ) );
+    mainNetwork->AddDataValuePair( dvpPtr );
+    dvpPtr = ves::open::xml::DataValuePairPtr( new ves::open::xml::DataValuePair() );
+    dvpPtr->SetData( "nUnitX", static_cast< long int >( 200 ) );
+    mainNetwork->AddDataValuePair( dvpPtr );
+    dvpPtr = ves::open::xml::DataValuePairPtr( new ves::open::xml::DataValuePair() );
+    dvpPtr->SetData( "nUnitY", static_cast< long int >( 200 ) );
+    mainNetwork->AddDataValuePair( dvpPtr );
+    veSystem->AddNetwork( mainNetwork );
 
     CreateNetworkLinks(mainNetwork, "_main_sheet");
 

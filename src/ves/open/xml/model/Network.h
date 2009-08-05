@@ -75,6 +75,10 @@ public:
     ///equal operator
     Network& operator= ( const Network& );
 
+    ///Add a data value pair for the network.
+    ///\param dataValuePair
+    void AddDataValuePair( ves::open::xml::DataValuePairPtr dataValuePair );
+
     ///set the data from an string representing the xml
     ///\param xmlInput The input XML data.
     virtual void SetObjectFromXMLData( XERCES_CPP_NAMESPACE_QUALIFIER DOMNode* xmlInput );
@@ -88,7 +92,8 @@ public:
 
     ///Get the i'th link from the Network.
     ///\param i The i'th link you are after.
-    ves::open::xml::DataValuePairPtr GetDataValuePair( int i );
+    ves::open::xml::DataValuePairPtr GetDataValuePair( size_t index );
+
     ///Get the number of states for the network
     size_t GetNumberOfNetworkStates();
 
