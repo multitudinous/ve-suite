@@ -452,6 +452,9 @@ base_bldr.addOptions( opts )
 base_bldr.setCpuArch()
 baseEnv = base_bldr.buildEnvironment(None,None,**tempEnv)
 baseEnv.Decider('MD5-timestamp')
+# more info about the option below can be found here:
+# http://scons.org/wiki/GoFastButton
+baseEnv.SourceCode('.', None)
 
 # Add doxygen builder to the base environment
 doxygen.generate(baseEnv)
