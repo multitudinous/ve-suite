@@ -44,8 +44,8 @@ using namespace ves::xplorer::scenegraph;
 
 ////////////////////////////////////////////////////////////////////////////////
 GLTransformInfo::GLTransformInfo(
-    const unsigned int& viewportOriginX, const unsigned int& viewportOriginY,
-    const unsigned int& viewportWidth, const unsigned int& viewportHeight,
+    const int& viewportOriginX, const int& viewportOriginY,
+    const int& viewportWidth, const int& viewportHeight,
     const int& windowOriginX, const int& windowOriginY,
     const int& windowWidth, const int& windowHeight,
     const gmtl::Matrix44d& windowMatrix )
@@ -110,22 +110,22 @@ GLTransformInfo::~GLTransformInfo()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-const unsigned int& GLTransformInfo::GetViewportOriginX() const
+const int& GLTransformInfo::GetViewportOriginX() const
 {
     return m_viewportOriginX;
 }
 ////////////////////////////////////////////////////////////////////////////////
-const unsigned int& GLTransformInfo::GetViewportOriginY() const
+const int& GLTransformInfo::GetViewportOriginY() const
 {
     return m_viewportOriginY;
 }
 ////////////////////////////////////////////////////////////////////////////////
-const unsigned int& GLTransformInfo::GetViewportWidth() const
+const int& GLTransformInfo::GetViewportWidth() const
 {
     return m_viewportWidth;
 }
 ////////////////////////////////////////////////////////////////////////////////
-const unsigned int& GLTransformInfo::GetViewportHeight() const
+const int& GLTransformInfo::GetViewportHeight() const
 {
     return m_viewportHeight;
 }

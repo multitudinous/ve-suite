@@ -71,8 +71,8 @@ class VE_SCENEGRAPH_EXPORTS GLTransformInfo
 public:
     ///Constructor
     GLTransformInfo(
-        const unsigned int& viewportOriginX, const unsigned int& viewportOriginY,
-        const unsigned int& viewportWidth, const unsigned int& viewportHeight,
+        const int& viewportOriginX, const int& viewportOriginY,
+        const int& viewportWidth, const int& viewportHeight,
         const int& windowOriginX, const int& windowOriginY,
         const int& windowWidth, const int& windowHeight,
         const gmtl::Matrix44d& windowMatrix );
@@ -84,16 +84,16 @@ public:
     ~GLTransformInfo();
 
     ///
-    const unsigned int& GetViewportOriginX() const;
+    const int& GetViewportOriginX() const;
 
     ///
-    const unsigned int& GetViewportOriginY() const;
+    const int& GetViewportOriginY() const;
 
     ///
-    const unsigned int& GetViewportWidth() const;
+    const int& GetViewportWidth() const;
 
     ///
-    const unsigned int& GetViewportHeight() const;
+    const int& GetViewportHeight() const;
 
     ///
     const int& GetWindowOriginX() const;
@@ -165,13 +165,13 @@ private:
     void UpdateProjectionMatrix();
 
     ///
-    const unsigned int m_viewportOriginX;
+    const int m_viewportOriginX;
     ///
-    const unsigned int m_viewportOriginY;
+    const int m_viewportOriginY;
     ///
-    const unsigned int m_viewportWidth;
+    const int m_viewportWidth;
     ///
-    const unsigned int m_viewportHeight;
+    const int m_viewportHeight;
 
     ///
     const int m_windowOriginX;
