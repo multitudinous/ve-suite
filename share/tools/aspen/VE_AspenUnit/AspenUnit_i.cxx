@@ -1066,31 +1066,25 @@ void Body_Unit_i::SetParams (CORBA::Long id,
     ::Error::EUnknown
   ))
 {
-   //discard the id, it is not used;
-   ves::open::xml::XMLReaderWriter networkWriter;
-   networkWriter.UseStandaloneDOMDocumentManager();
-   networkWriter.ReadFromString();
-   networkWriter.ReadXMLData( param, "Command", "vecommand" );
-   std::vector< ves::open::xml::XMLObjectPtr > objectVector = networkWriter.GetLoadedXMLObjects();
-  
-   //this part would need rewrite later
-   for( size_t i=0; i<objectVector.size(); i++)
-   {
-		ves::open::xml::CommandPtr param = boost::dynamic_pointer_cast<ves::open::xml::Command>( objectVector.at( i ) );
-		std::string paramName = param->GetCommandName();
-		
-		size_t num = param->GetNumberOfDataValuePairs();
-		for (size_t j=0; j<num; j++)
-		{
-			ves::open::xml::DataValuePairPtr curPair= param->GetDataValuePair("NodePath");
-			CString nodepath = curPair->GetDataString().c_str();
-			curPair = param->GetDataValuePair("Value");
-			CString nodevalue = curPair->GetDataString().c_str();
+    //discard the id, it is not used;
+    ves::open::xml::XMLReaderWriter networkWriter;
+    networkWriter.UseStandaloneDOMDocumentManager();
+    networkWriter.ReadFromString();
+    networkWriter.ReadXMLData( param, "Command", "vecommand" );
+    std::vector< ves::open::xml::XMLObjectPtr > objectVector = 
+        networkWriter.GetLoadedXMLObjects();
 
-			CASI::Variable cur_var=bkp->aspendoc->getVarByNodePath(nodepath);
-			cur_var.setValue(nodevalue);
-		}
-   }
+    //this part would need rewrite later
+    for( size_t i=0; i<objectVector.size(); i++)
+    {
+        ves::open::xml::CommandPtr param = 
+            boost::dynamic_pointer_cast<ves::open::xml::Command>( 
+            objectVector.at( i ) );
+        std::string paramName = param->GetCommandName();
+
+        //insert code here to resolve how upwind data is passed to aspen unit
+        //when it is included in a network
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Body_Unit_i::SetParam (ves::open::xml::CommandPtr cmd)
