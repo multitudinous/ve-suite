@@ -70,6 +70,8 @@
 // --- vrJuggler Includes --- //
 #include <vrj/vrjParam.h>
 
+#include <gadget/gadgetParam.h>
+
 #include <gadget/Devices/KeyboardMouseDevice/InputArea.h>
 
 #include <gadget/Type/KeyboardMouse/KeyEvent.h>
@@ -108,8 +110,6 @@ using namespace ves::xplorer::device;
 namespace vx = ves::xplorer;
 namespace vxs = vx::scenegraph;
 namespace vxsm = vxs::manipulator;
-
-//#define VJ21120
 
 ////////////////////////////////////////////////////////////////////////////////
 KeyboardMouse::KeyboardMouse()
@@ -182,7 +182,7 @@ void KeyboardMouse::UpdateSelection()
 void KeyboardMouse::SetStartEndPoint(
     osg::Vec3d& startPoint, osg::Vec3d& endPoint )
 {
-#ifdef VJ21120
+#if __GADGET_version >= 1003023
     //Get the displays
     const std::vector< vrj::DisplayPtr >& displayVector =
         vrj::DisplayManager::instance()->getActiveDisplays();
@@ -433,7 +433,7 @@ void KeyboardMouse::SetStartEndPoint(
               << ", " << endPoint.z()
               << " )" << std::endl;
     */
-#endif //VJ21120
+#endif
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::DrawLine( osg::Vec3d startPoint, osg::Vec3d endPoint )
@@ -507,9 +507,9 @@ void KeyboardMouse::ProcessKBEvents( int mode )
     for( i = evt_queue.begin(); i != evt_queue.end(); ++i )
     {
         const gadget::EventPtr event = *i;
-#ifdef VJ21120
+#if __GADGET_version >= 1003023
         const gadget::InputArea* inputArea = event->getSource();
-#endif //VJ21120
+#endif
         const gadget::EventType eventType = event->type();
 
         switch( eventType )
@@ -770,7 +770,7 @@ void KeyboardMouse::SetFrustumValues(
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::FrameAll()
 {
-#ifdef VJ21120
+#if __GADGET_version >= 1003023
     osg::Group* activeSwitchNode =
         ves::xplorer::scenegraph::SceneManager::instance()->GetActiveSwitchNode();
     ves::xplorer::scenegraph::DCS* activeNavSwitchNode =
@@ -1005,7 +1005,7 @@ void KeyboardMouse::FrameAll()
     osg::Vec3d center =
         bs.center() * osg::Matrixd( activeNavSwitchNode->GetMat().getData() );
     mCenterPoint->set( center.x(), center.y(), center.z() );
-#endif //VJ21120
+#endif
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::FrameSelection()
