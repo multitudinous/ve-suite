@@ -85,7 +85,7 @@ APPlugin::APPlugin() :
     GetVEModel()->SetPluginType( "APPlugin" );
     GetVEModel()->SetVendorName( "ASPENUNIT" );
 
-    iconFilename = "aspen";
+    iconFilename = "aspen.xpm";
     wxImage my_img( aspen );
     SetImage( my_img );
 }

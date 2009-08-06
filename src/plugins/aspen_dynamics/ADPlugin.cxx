@@ -86,7 +86,7 @@ ADPlugin::ADPlugin() :
     GetVEModel()->SetPluginType( "ADPlugin" );
     GetVEModel()->SetVendorName( "ASPENUNIT" );
 
-    iconFilename = "dynamics";
+    iconFilename = "dynamics.xpm";
     wxImage my_img( dynamics );
     SetImage( my_img );
     mIsSheetOpen = false;
