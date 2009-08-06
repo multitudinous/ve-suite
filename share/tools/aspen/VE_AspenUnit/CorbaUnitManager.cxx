@@ -70,19 +70,12 @@ void CorbaUnitManager::RunORB()
     char** argv;
     std::vector< char* > cmdargs;
 
-    cmdargs.push_back( "VE_AspenUnit.exe" );
+    cmdargs.push_back( "VE_PSI.exe" );
     cmdargs.push_back( "-ORBInitRef" );
-    //std::string orbInfo = std::string("NameService=corbaloc:iiop:localhost:1239/NameService");
     std::string orbInfo = std::string("NameService=corbaloc:iiop:"+computerName+":"+computerPort+"/NameService");
     cmdargs.push_back( (char*)orbInfo.c_str() );
     cmdargs.push_back( "-ORBDottedDecimalAddresses" );
     cmdargs.push_back( "1" );
-
-    //CEdit *Display;
-    //Display = reinterpret_cast<CEdit *>(parent->GetDlgItem(IDC_EDIT3));
-    //Display->SetWindowText("localhost");
-    //Display = reinterpret_cast<CEdit *>(parent->GetDlgItem(IDC_EDIT4));
-    //Display->SetWindowText("1239");
 
     argv = new char*[ argc ];
 

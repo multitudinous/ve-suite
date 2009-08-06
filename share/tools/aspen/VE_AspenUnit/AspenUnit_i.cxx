@@ -1087,7 +1087,7 @@ void Body_Unit_i::SetParams (CORBA::Long id,
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Body_Unit_i::SetParam (ves::open::xml::CommandPtr cmd)
+void Body_Unit_i::SetParam( ves::open::xml::CommandPtr cmd )
 {
 	size_t num = cmd->GetNumberOfDataValuePairs();
 	std::string modname,paramName, paramValue;
