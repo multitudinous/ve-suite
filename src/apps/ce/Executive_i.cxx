@@ -342,7 +342,7 @@ ACE_THROW_SPEC((
 
     _mutex.release();
 }
-/////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void Body_Executive_i::execute_next_mod( long module_id )
 {
     ///This is the 0 based number of the index for the module_id
@@ -599,7 +599,7 @@ ACE_THROW_SPEC((
 
     _mutex.release();
 }
-////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 char * Body_Executive_i::GetModuleResult(
     CORBA::Long module_id
 )
@@ -611,7 +611,7 @@ ACE_THROW_SPEC((
     std::cout << "VE-CE : Body_Executive_i::GetModuleResult has been replaced with the query function." << std::endl;
     return CORBA::string_dup( "" );
 }
-////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void Body_Executive_i::SetNetwork(
     const char * network
     ACE_ENV_ARG_DECL
@@ -653,7 +653,7 @@ ACE_THROW_SPEC((
         return;
     }
 }
-////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 char * Body_Executive_i::GetNetwork(
     const char * moduleName
     ACE_ENV_ARG_DECL
@@ -675,7 +675,7 @@ ACE_THROW_SPEC((
 
     return CORBA::string_dup( xmlNetwork.c_str() );
 }
-////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void Body_Executive_i::SetModuleUI(
     CORBA::Long module_id,
     const char * ui
@@ -927,7 +927,7 @@ ACE_THROW_SPEC((
     }
     _mutex.release();
 }
-
+////////////////////////////////////////////////////////////////////////////////
 char *  Body_Executive_i::Query( const char * command
                                  ACE_ENV_SINGLE_ARG_DECL
                                )
@@ -942,7 +942,7 @@ ACE_THROW_SPEC(( CORBA::SystemException, Error::EUnknown ) )
     networkWriter.ReadXMLData( command, "Command", "vecommand" );
     std::vector< XMLObjectPtr > objectVector = networkWriter.GetLoadedXMLObjects();
 
-    std::string moduleName;
+    //std::string moduleName;
     std::string vendorUnit;
     long int moduleId;
     CommandPtr tempCommand =  boost::dynamic_pointer_cast<ves::open::xml::Command>( objectVector.at( 0 ) );

@@ -104,7 +104,7 @@ public:
     int get_id();
     ///Get the modules name
     ///\return The module name
-    std::string GetModuleName( void );
+    const std::string& GetModuleName( void );
     ///Get the VE_Model for this module
     ///\return The model for this module
     ves::open::xml::model::ModelPtr GetVEModel( void );

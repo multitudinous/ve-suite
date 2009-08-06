@@ -261,7 +261,7 @@ int Module::setPortProfile( int p, const Types::Profile* prof )
    return 1;
 }
 ////////////////////////////////////////////////////////////////////////////////
-std::string Module::GetModuleName( void )
+const std::string& Module::GetModuleName( void )
 {
    return _name;
 }
@@ -276,7 +276,7 @@ void Module::SetVEModel( model::ModelPtr mod )
 {
    veModel = mod;
    //Set the name of this module
-   _name = veModel->GetPluginName();
+   _name = veModel->GetVendorName();
    // _id is set in the constructor
    _id = veModel->GetModelID();
    _need_execute = 1;
