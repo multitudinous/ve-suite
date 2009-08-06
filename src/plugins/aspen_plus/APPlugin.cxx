@@ -83,6 +83,7 @@ APPlugin::APPlugin() :
     mPluginName = wxString( "AspenPlus", wxConvUTF8 );
     mDescription = wxString( "Aspen Plus Plugin", wxConvUTF8 );
     GetVEModel()->SetPluginType( "APPlugin" );
+    GetVEModel()->SetVendorName( "ASPENUNIT" );
 
     iconFilename = "aspen";
     wxImage my_img( aspen );
