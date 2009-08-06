@@ -194,7 +194,7 @@ class Launch:
                                              stdout = self.outputDestination,
                                              stderr = self.outputDestination).pid)
             except OSError:
-                print "Winserver call error, \"%s\" not found on your environment." % exe
+                print "CE call error, \"%s\" not found on your environment." % exe
                 sys.exit(2)
                 
             sleep(2)
@@ -249,7 +249,7 @@ class Launch:
                                                     stdout = self.outputDestination, 
                                                     stderr = self.outputDestination).pid)
             except OSError:
-                print "WinClient call error, \"%s\" not found on your environment." % exe
+                print "Conductor call error, \"%s\" not found on your environment." % exe
                 sys.exit(2)
 
             sleep(2)
@@ -300,7 +300,7 @@ class Launch:
                 pids.append(subprocess.Popen(self.ServerCall(), 
                                              stdout = self.outputDestination, stderr = subprocess.STDOUT).pid)
             except OSError:
-                print "ves_ce call error, \"%s\" not found on your environment." % exe
+                print "CE call error, \"%s\" not found on your environment." % exe
                 sys.exit(2)
                 
             self.nameserverPids = pids
@@ -360,7 +360,7 @@ class Launch:
                 conduct_Pid.append(subprocess.Popen(self.ConductorCall(), 
                                                     stdout = self.outputDestination, stderr = subprocess.STDOUT).pid)
             except OSError:
-                print "WinClient call error, \"%s\" not found on your environment." % exe
+                print "Conductor call error, \"%s\" not found on your environment." % exe
                 sys.exit(2)
                 
             sleep(3)
