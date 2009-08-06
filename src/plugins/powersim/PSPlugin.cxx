@@ -4,7 +4,7 @@
 #include <plugins/powersim/PSPlugin.h>
 #include <plugins/powersim/PSOpenDialog.h>
 #include <plugins/ConductorPluginEnums.h>
-//#include <ves/conductor/xpm/powersim/PSStudio.xpm>
+#include <ves/conductor/xpm/powersim/Ps_STUDIO.xpm>
 
 #include <ves/conductor/ConductorLibEnums.h>
 #include <ves/conductor/UserPreferencesDataBuffer.h>
@@ -53,10 +53,11 @@ PSPlugin::PSPlugin()
     mPluginName = wxString( "Powersim", wxConvUTF8 );
     mDescription = wxString( "Powersim Plugin", wxConvUTF8 );
     GetVEModel()->SetPluginType( "PSPlugin" );
+    GetVEModel()->SetVendorName( "POWERSIMUNIT" );
 
-    iconFilename = "PSStudio_xpm";
-    //wxImage image( PSStudio_xpm );
-    //SetImage( image );
+    iconFilename = "Ps_STUDIO";
+    wxImage image( Ps_STUDIO_xpm );
+    SetImage( image );
 }
 ////////////////////////////////////////////////////////////////////////////////
 PSPlugin::~PSPlugin()
