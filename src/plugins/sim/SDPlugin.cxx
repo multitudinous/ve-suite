@@ -83,6 +83,7 @@ SDPlugin::SDPlugin() :
     mPluginName = wxString( "Sim", wxConvUTF8 );
     mDescription = wxString( "Sim Plugin", wxConvUTF8 );
     GetVEModel()->SetPluginType( "SDPlugin" );
+    GetVEModel()->SetVendorName( "ASPENUNIT" );
 
     iconFilename = "sim";
     //wxImage my_img( sim );

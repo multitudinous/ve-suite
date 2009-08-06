@@ -84,6 +84,7 @@ ADPlugin::ADPlugin() :
     mPluginName = wxString( "AspenDynamics", wxConvUTF8 );
     mDescription = wxString( "Aspen Dynamics Plugin", wxConvUTF8 );
     GetVEModel()->SetPluginType( "ADPlugin" );
+    GetVEModel()->SetVendorName( "ASPENUNIT" );
 
     iconFilename = "dynamics";
     wxImage my_img( dynamics );
