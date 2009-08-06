@@ -4,7 +4,7 @@
 #include <plugins/powersim/PSPlugin.h>
 #include <plugins/powersim/PSOpenDialog.h>
 #include <plugins/ConductorPluginEnums.h>
-#include <ves/conductor/xpm/powersim/PSStudio.xpm>
+//#include <ves/conductor/xpm/powersim/PSStudio.xpm>
 
 #include <ves/conductor/ConductorLibEnums.h>
 #include <ves/conductor/UserPreferencesDataBuffer.h>
@@ -55,8 +55,8 @@ PSPlugin::PSPlugin()
     GetVEModel()->SetPluginType( "PSPlugin" );
 
     iconFilename = "PSStudio_xpm";
-    wxImage image( PSStudio_xpm );
-    SetImage( image );
+    //wxImage image( PSStudio_xpm );
+    //SetImage( image );
 }
 ////////////////////////////////////////////////////////////////////////////////
 PSPlugin::~PSPlugin()
