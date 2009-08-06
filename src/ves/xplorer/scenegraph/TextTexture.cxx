@@ -191,6 +191,7 @@ void TextTexture::CreateTexturedQuad()
     
     getOrCreateStateSet()->
         setRenderBinDetails( 21, std::string( "RenderBin" ) );
+    getOrCreateStateSet()->setNestRenderBins( false );
     
     getOrCreateStateSet()->setAttributeAndModes( 
         new osg::Depth( osg::Depth::ALWAYS ), 
