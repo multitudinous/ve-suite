@@ -79,11 +79,10 @@ SceneGLTransformInfo::~SceneGLTransformInfo()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-#if __VJ_version >= 2003000
 scenegraph::GLTransformInfoPtr const SceneGLTransformInfo::GetGLTransformInfo(
+#if __VJ_version >= 2003000
     vrj::ViewportPtr const viewport )
 #else
-scenegraph::GLTransformInfoPtr const SceneGLTransformInfo::GetGLTransformInfo(
     vrj::Viewport* const viewport )
 #endif
 {
@@ -143,8 +142,11 @@ void SceneGLTransformInfo::Initialize()
     display->getOriginAndSize(
         windowOriginX, windowOriginY, windowWidth, windowHeight );
 
-    size_t numViewports = display->getNumViewports();
-    for( size_t i = 0; i < numViewports; ++i )
+    //Push back window and viewport information
+    scenegraph::SceneManager* sceneManager =
+        scenegraph::SceneManager::instance();
+    unsigned int numViewports = display->getNumViewports();
+    for( unsigned int i = 0; i < numViewports; ++i )
     {
 #if __VJ_version >= 2003000
         vrj::ViewportPtr viewport = display->getViewport( i );
@@ -163,8 +165,7 @@ void SceneGLTransformInfo::Initialize()
 
         //Calculate the window matrix for the viewport
         gmtl::Matrix44d windowMatrix;
-        windowMatrix.mState =
-            gmtl::Matrix44d::AFFINE | gmtl::Matrix44d::NON_UNISCALE;
+        windowMatrix.mState = gmtl::Matrix44d::FULL;
         windowMatrix.mData[  0 ] = 0.5 * viewportWidth;
         windowMatrix.mData[  5 ] = 0.5 * viewportHeight;
         windowMatrix.mData[ 10 ] = 0.5;
@@ -177,8 +178,8 @@ void SceneGLTransformInfo::Initialize()
                 viewportOriginX, viewportOriginY, viewportWidth, viewportHeight,
                 0, 0, windowWidth, windowHeight,
                 windowMatrix ) );
-
         (*m_glTransformInfoMap)[ viewport ] = glTransformInfo;
+        sceneManager->PushBackGLTransformInfo( viewport, glTransformInfo );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

@@ -96,11 +96,10 @@ public:
 
     ///
     ///\return
-#if __VJ_version >= 2003000
     scenegraph::GLTransformInfoPtr const GetGLTransformInfo(
+#if __VJ_version >= 2003000
         vrj::ViewportPtr const viewport );
 #else
-    scenegraph::GLTransformInfoPtr const GetGLTransformInfo(
         vrj::Viewport* const viewport );
 #endif
 
