@@ -70,10 +70,8 @@ GLTransformInfo::GLTransformInfo(
     m_windowMatrix( windowMatrix ),
     m_osgWindowMatrix( m_windowMatrix.mData )
 {
-    m_modelViewMatrix.mState =
-        gmtl::Matrix44d::AFFINE | gmtl::Matrix44d::NON_UNISCALE;
-    m_projectionMatrix.mState =
-        gmtl::Matrix44d::AFFINE | gmtl::Matrix44d::NON_UNISCALE;
+    m_modelViewMatrix.mState = gmtl::Matrix44d::FULL;
+    m_projectionMatrix.mState = gmtl::Matrix44d::FULL;
     m_projectionMatrix.mData[ 11 ] = -1.0;
     m_projectionMatrix.mData[ 15 ] =  0.0;
 }
