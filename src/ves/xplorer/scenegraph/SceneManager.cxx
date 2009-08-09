@@ -268,6 +268,28 @@ osg::Group* const SceneManager::GetRootNode() const
     return mRootNode.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
+GLTransformInfoPtr const SceneManager::GetGLTransformInfo(
+#if __VJ_version >= 2003000
+    vrj::ViewportPtr const viewport )
+#else
+    vrj::Viewport* const viewport )
+#endif
+{
+    GLTransformInfoMap::const_iterator itr =
+        m_glTransformInfoMap.find( viewport );
+    if( itr != m_glTransformInfoMap.end() )
+    {
+        return itr->second;
+    }
+    else
+    {
+        std::cout << "SceneManager::GetGLTransformInfo - "
+                  << "GLTransformInfo not found!" << std::endl;
+
+        return GLTransformInfoPtr();
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
 osg::Group* const SceneManager::GetModelRoot() const
 {
     return mModelRoot.get();
@@ -415,6 +437,17 @@ void SceneManager::PreFrameUpdate()
         static_cast< ves::xplorer::scenegraph::DCS* >( 
             mNavSwitch->getChild( 1 ) )->SetMat( mInvertedWorldDCS );
     }
+}
+////////////////////////////////////////////////////////////////////////////////
+void SceneManager::PushBackGLTransformInfo(
+#if __VJ_version >= 2003000
+    vrj::ViewportPtr viewport,
+#else
+    vrj::Viewport* viewport,
+#endif
+    GLTransformInfoPtr glTransformInfo )
+{
+    m_glTransformInfoMap[ viewport ] = glTransformInfo;
 }
 ////////////////////////////////////////////////////////////////////////////////
 osg::Group* const SceneManager::GetActiveSwitchNode() const

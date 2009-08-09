@@ -40,6 +40,7 @@
 #include <ves/xplorer/scenegraph/DCS.h>
 #include <ves/xplorer/scenegraph/Group.h>
 #include <ves/xplorer/scenegraph/Switch.h>
+#include <ves/xplorer/scenegraph/GLTransformInfoPtr.h>
 
 #include <ves/xplorer/scenegraph/manipulator/ManipulatorManager.h>
 
@@ -49,6 +50,17 @@
 #include <osg/FrameStamp>
 
 // --- VR Juggler Includes --- //
+#include <vrj/vrjParam.h>
+
+#if __VJ_version >= 2003000
+#include <vrj/Display/ViewportPtr.h>
+#else
+namespace vrj
+{
+    class Viewport;
+}
+#endif
+
 #include <vpr/Util/Singleton.h>
 
 #include <gmtl/Matrix.h>
@@ -108,6 +120,15 @@ public:
     ///Return the manipulator root node of the scenegraph
     manipulator::ManipulatorManager* const GetManipulatorManager() const;
 
+    ///
+    ///\return
+    GLTransformInfoPtr const GetGLTransformInfo(
+#if __VJ_version >= 2003000
+        vrj::ViewportPtr const viewport );
+#else
+        vrj::Viewport* const viewport );
+#endif
+
     ///Return the model root node of the scenegraph
     ///\return
     osg::Group* const GetModelRoot() const;
@@ -131,6 +152,15 @@ public:
 
     ///PreFrameUpdate call to sync DCS information across cluster
     void PreFrameUpdate();
+
+    ///
+    void SceneManager::PushBackGLTransformInfo(
+#if __VJ_version >= 2003000
+        vrj::ViewportPtr viewport,
+#else
+        vrj::Viewport* viewport,
+#endif
+        GLTransformInfoPtr glTransformInfo );
 
     ///Set the node on the switch node that is active
     ///\param activeNode The node to activate
@@ -244,6 +274,14 @@ private:
     
     ///Flag to tell if RTT is off or on
     bool m_isRTTOn;
+
+#if __VJ_version >= 2003000
+    typedef std::map< vrj::ViewportPtr, GLTransformInfoPtr > GLTransformInfoMap;
+    GLTransformInfoMap m_glTransformInfoMap;
+#else
+    typedef std::map< vrj::Viewport*, GLTransformInfoPtr > GLTransformInfoMap;
+    GLTransformInfoMap m_glTransformInfoMap;
+#endif
 
 };
 } //end scenegraph
