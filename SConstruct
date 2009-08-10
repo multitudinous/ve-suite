@@ -30,8 +30,6 @@ import SConsAddons.Options.VTK
 import SConsAddons.Options.OSG
 import SConsAddons.Options.VRJuggler.VRJ
 import SConsAddons.Options.Boost
-#import SConsAddons.Options.OPAL
-#import SConsAddons.Options.ODE
 import SConsAddons.Options.Xerces
 import SConsAddons.Options.WxWidgets
 import SConsAddons.AutoDist as sca_auto_dist
@@ -316,9 +314,6 @@ osgal_options = fp_option.FlagPollBasedOption("osgAL", "osgAL", "0.6.1", False, 
                                               None, 
                                               compileTest=True, headerToCheck="osgAL/SoundNode")
 
-mysqlpp_options = fp_option.FlagPollBasedOption( "MySQLpp", "MySQL++", "3.0.9", False, True, None,
-                                                 compileTest = True, headerToCheck = "mysql++.h" )
-
 # Setup POCO library
 if GetPlatform() == 'win32':
     poco_options = fp_option.FlagPollBasedOption( "POCO", "POCO", "1.3.4", False, True, None,
@@ -343,7 +338,6 @@ opts.AddOption( gadgeteer_options )
 # Test VR Juggler after all the rest of its dependencies
 opts.AddOption( vrjuggler_options )
 opts.AddOption( osgal_options )
-opts.AddOption( mysqlpp_options )
 opts.AddOption( poco_options )
 opts.AddOption( minerva_options )
 
@@ -359,7 +353,7 @@ Export( 'opts', 'vtk_options', 'osg_options',
         'vrjuggler_options', 'boost_options',
         'gmtl_options', 'vpr_options',
         'gadgeteer_options', 'osgal_options',
-        'mysqlpp_options', 'poco_options',
+        'poco_options',
 		'minerva_options' )
 
 ##Display some help
