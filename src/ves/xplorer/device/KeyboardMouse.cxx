@@ -74,10 +74,10 @@
 
 #if __VJ_version >= 2003000
 #include <vrj/Draw/OpenGL/Window.h>
-#if defined VPR_OS_Mac
+#if defined VPR_OS_Darwin
 #include <vrj/Draw/OpenGL/WindowCocoa.h>
 #include <gadget/Devices/KeyboardMouseDevice/InputAreaCocoa.h>
-#elif defined VPR_OS_Windows
+#elif defined VPR_OS_Win32
 #include <vrj/Draw/OpenGL/WindowWin32.h>
 #include <gadget/Devices/KeyboardMouseDevice/InputAreaWin32.h>
 #elif defined VPR_OS_Linux
@@ -1783,13 +1783,13 @@ vrj::DisplayPtr const KeyboardMouse::GetCurrentDisplay(
 {
     const gadget::InputArea* inputArea = event->getSource();
     const vrj::opengl::Window* window( NULL );
-#if defined VPR_OS_Mac
+#if defined VPR_OS_Darwin
     //downcast
     const vrj::opengl::WindowCocoa* windowCocoa =
         static_cast< const vrj::opengl::WindowCocoa* >( inputArea );
     //upcast
     window = dynamic_cast< const vrj::opengl::Window* >( windowCocoa );
-#elif defined VPR_OS_Windows
+#elif defined VPR_OS_Win32
     //downcast
     const vrj::opengl::WindowWin32* windowWin32 =
         static_cast< const vrj::opengl::WindowWin32* >( inputArea );
@@ -1807,9 +1807,14 @@ vrj::DisplayPtr const KeyboardMouse::GetCurrentDisplay(
     {
         return window->getDisplay();
     }
-
-    //Error output, this should never happen
-    return vrj::DisplayPtr();
+    else
+    {
+        //Error output, this should never happen
+        std::cerr 
+            << "VPR OS is not defined properly in KeyboardMouse::GetCurrentDisplay." 
+            << std::endl;
+        return vrj::DisplayPtr();
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool KeyboardMouse::SetCurrentGLTransformInfo(
