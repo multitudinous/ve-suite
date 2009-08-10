@@ -59,6 +59,22 @@ using namespace ves::xplorer::scenegraph;
 using namespace warrantytool;
 
 ////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
+#include <Poco/SharedPtr.h>
+#include <Poco/Tuple.h>
+#include <Poco/Data/SessionFactory.h>
+#include <Poco/Data/Session.h>
+#include <Poco/Data/SQLite/Connector.h>
+#include <vector>
+#include <iostream>
+
+#include <boost/lexical_cast.hpp>
+
+using namespace Poco::Data;
+
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 WarrantyToolGP::WarrantyToolGP()
 :
 PluginBase(),
@@ -271,6 +287,12 @@ void WarrantyToolGP::ParseDataFile( const std::string& csvFilename )
         }
         m_dataMap[ csvDataMap[ 2 ].at( i ) ] = partData;
     }
+    
+    
+    //Open DB
+    //Add data
+    //close connection
+    CreateDB();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void WarrantyToolGP::RenderTextualDisplay( bool onOff )
@@ -327,3 +349,67 @@ void WarrantyToolGP::RenderTextualDisplay( bool onOff )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
+void WarrantyToolGP::CreateDB()
+{
+	typedef Poco::Tuple< std::string, std::string, int, std::string, double, std::string > Part;
+	typedef std::vector<Part> Assembly;
+    
+	// register SQLite connector
+	Poco::Data::SQLite::Connector::registerConnector();
+	
+	// create a session
+	Session session("SQLite", "sample.db");
+    
+	// drop sample table, if it exists
+	session << "DROP TABLE IF EXISTS Parts", now;
+
+	// (re)create table
+	session << "CREATE TABLE Parts (Part_Number VARCHAR, Description VARCHAR, Claims INT, Claims_Cost VARCHAR, FPM DOUBLE, CCPM VARCHAR)", now;
+	
+	// insert some rows
+	Assembly assem;
+
+    std::map< std::string, std::vector< std::pair< std::string, std::string > > >::iterator iter;
+    for( iter = m_dataMap.begin(); iter != m_dataMap.end(); ++iter )
+    {
+        std::vector< std::pair< std::string, std::string > > tempData;
+        tempData = iter->second;
+        Part tempPart;
+        //for( size_t i = 0; i < tempData.size(); ++i )
+        {
+            tempPart.set< 0 >( tempData.at( 2 ).second );
+            tempPart.set< 1 >( tempData.at( 3 ).second );
+            tempPart.set< 2 >( boost::lexical_cast<int>( tempData.at( 4 ).second ) );
+            tempPart.set< 3 >( tempData.at( 5 ).second );
+            tempPart.set< 4 >( boost::lexical_cast<double>( tempData.at( 6 ).second ) );
+            tempPart.set< 5 >( tempData.at( 7 ).second );
+        }
+        assem.push_back(tempPart);
+    }
+    
+    
+	Statement insert(session);
+	insert << "INSERT INTO Parts VALUES(?, ?, ?, ?, ?, ?)",
+    use(assem), now;
+	std::cout << "create table 3  " << std::endl;
+
+	assem.clear();
+    
+	// a simple query
+	//select << "SELECT Part_Number, Description, Claims FROM Parts",
+	//select << "SELECT Part_Number, Description, Claims FROM Parts WHERE Claims > 10 AND Claims_Cost > 1000",
+	Statement select(session);
+	select << "SELECT * FROM Parts WHERE Claims > 10 AND FPM > 0.1",
+    into(assem),
+    now;
+
+	for (Assembly::const_iterator it = assem.begin(); it != assem.end(); ++it)
+	{
+		std::cout 
+            << "Part Number: " << it->get<0>() 
+            << ", Description: " << it->get<1>() 
+            << ", Claims: " << it->get<2>()
+            << ", FPM: " << it->get<4>() << std::endl;
+	}
+    Poco::Data::SQLite::Connector::unregisterConnector();
+}

@@ -69,6 +69,7 @@ public:
 protected:
 
 private:
+    void CreateDB();
     ///Strip characters from datafile
     void StripCharacters( std::string& data, const std::string& character );
     void ParseDataFile( const std::string& csvFilename );

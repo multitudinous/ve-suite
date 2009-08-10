@@ -3,7 +3,7 @@ import os, sys, string
 import SConsAddons.Util as sca_util
 pj = os.path.join
 
-Import( 'RootDir ves_pkg GetPlatform' )
+Import( 'RootDir ves_pkg GetPlatform poco_options' )
 
 fileBundle = ves_pkg.createFileBundle( pj( 'share', 'vesuite', 'examples', 'WarrantyTool' ) )
 WarrantyToolDir = pj( RootDir, 'share', 'examples', 'WarrantyTool' )
@@ -13,9 +13,12 @@ iveFile = sca_util.getFilesRecursiveByExt( WarrantyToolDir, [ '.ive' ] )
 fileBundle.addFiles( iveFile )
 
 WarrantyToolSubdirs = Split("""
-    GraphicalPlugin
     UserInterface
 """)
+
+if poco_options.isAvailable():
+    WarrantyToolSubdirs.append( 'GraphicalPlugin' )
+
 
 ##Run SConscript files in all of these folders.
 for d in WarrantyToolSubdirs:
