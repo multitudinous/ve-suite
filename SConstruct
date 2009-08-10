@@ -319,9 +319,15 @@ osgal_options = fp_option.FlagPollBasedOption("osgAL", "osgAL", "0.6.1", False, 
 mysqlpp_options = fp_option.FlagPollBasedOption( "MySQLpp", "MySQL++", "3.0.9", False, True, None,
                                                  compileTest = True, headerToCheck = "mysql++.h" )
 
-poco_options = fp_option.FlagPollBasedOption( "POCO", "POCO", "1.3.4", False, True, None,
+# Setup POCO library
+if GetPlatform() == 'win32':
+    poco_options = fp_option.FlagPollBasedOption( "POCO", "POCO", "1.3.4", False, True, None,
 		                              compileTest = True, headerToCheck = "Poco/Poco.h" )
-
+else:
+    poco_options = SConsAddons.Options.StandardPackageOption("POCO",
+      "POCO library options, default : POCO_incdir=<POCO>/include POCO_libdir=<xercesc>/lib(64)", 
+      pj('Poco','Data','SQLite','SQLite.h'), library=['PocoFoundation','PocoData',
+      'PocoNet','PocoSQLite','PocoUtil','PocoXML','PocoZip'], symbol="main", required=False)
 
 minerva_options = fp_option.FlagPollBasedOption( "Minerva", "Minerva", "1.0", False, True, None, 
 									  compileTest = False, headerToCheck = "Minerva/Core/Data/Object.h" )
@@ -440,7 +446,7 @@ if GetPlatform() == 'win32':
         tempEnv[ 'MSVS_ARCH' ] = "x86"
 
     tempEnv[ 'MSVS_USE_MFC_DIRS' ] = "1"
-    tempEnv[ 'WINDOWS_INSERT_MANIFEST' ] = 'True'
+    tempEnv[ 'WINDOWS_INSERT_MANIFEST' ] = "1"
     #tempEnv['ENV'][ 'SCONS_MSCOMMON_DEBUG' ] = "test.log"
     print "Using MSVS version %s and for CPU architecture %s." %(tempEnv[ 'MSVS_VERSION' ],tempEnv[ 'MSVS_ARCH' ])
 
@@ -497,6 +503,8 @@ if not SConsAddons.Util.hasHelpFlag():
 
     if osgal_options.isAvailable():
         baseEnv.Append( CPPDEFINES = [ 'VE_SOUND' ] )
+
+    base_bldr.enableWarnings( EnvironmentBuilder.MAXIMUM )
 
     # VTK defines
     baseEnv.AppendUnique( CPPDEFINES = ['VTK_STREAMS_FWD_ONLY'] )
