@@ -39,14 +39,22 @@
 
 #include <ves/xplorer/device/Device.h>
 
+#include <ves/xplorer/scenegraph/GLTransformInfoPtr.h>
+
 // --- vrJuggler Includes --- //
+#include <vrj/Display/DisplayPtr.h>
+
 #include <gmtl/Vec.h>
 #include <gmtl/Quat.h>
 
 #include <boost/shared_ptr.hpp>
 
+#include <gadget/gadgetParam.h>
+
 #include <gadget/Type/KeyboardMouseInterface.h>
 #include <gadget/Type/PositionInterface.h>
+
+#include <gadget/Type/KeyboardMouse/EventPtr.h>
 
 // --- OSG Includes --- //
 #include <osg/Geode>
@@ -204,6 +212,15 @@ private:
     ///\param angle
     void Rotate( double angle, gmtl::Vec3d axis );
 
+#if __GADGET_version >= 1003023
+    ///
+    vrj::DisplayPtr const GetCurrentDisplay( const gadget::EventPtr event );
+
+    ///
+    bool SetCurrentGLTransformInfo(
+        const vrj::DisplayPtr display, bool isKeyEvent );
+#endif //__GADGET_version >= 1003023
+
     ///Is no key pushed
     bool mKeyNone;
 
@@ -312,6 +329,9 @@ private:
 
     ///
     osg::ref_ptr< osgUtil::LineSegmentIntersector > mLineSegmentIntersector;
+
+    ///
+    scenegraph::GLTransformInfoPtr m_currentGLTransformInfo;
 
     ///VRJuggler's keyboard/mouse positional interface
     gadget::KeyboardMouseInterface mKeyboardMouse;
