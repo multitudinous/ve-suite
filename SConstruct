@@ -504,7 +504,8 @@ if not SConsAddons.Util.hasHelpFlag():
     if osgal_options.isAvailable():
         baseEnv.Append( CPPDEFINES = [ 'VE_SOUND' ] )
 
-    base_bldr.enableWarnings( EnvironmentBuilder.MAXIMUM )
+    if GetPlatform() != 'win32':
+        base_bldr.enableWarnings( EnvironmentBuilder.MAXIMUM )
 
     # VTK defines
     baseEnv.AppendUnique( CPPDEFINES = ['VTK_STREAMS_FWD_ONLY'] )
