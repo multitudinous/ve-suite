@@ -20,7 +20,7 @@ DefaultDirName=C:\{#MyAppVerName}_{#MyAppVer}_{#MSVCVERSION}
 DefaultGroupName={#VESGROUPNAME}\Uninstallers
 AllowNoIcons=true
 OutputBaseFilename={#MyAppVerName}_{#MyAppVer}_{#MSVCVERSION}
-SetupIconFile={#VEDEVHOME}\dist\installerImages\Ve_icon.ico
+SetupIconFile={#VEDEVHOME}\dist\installerImages\ves_icon.ico
 Compression=lzma
 SolidCompression=true
 WindowVisible=true
@@ -31,9 +31,15 @@ WizardImageBackColor=clWhite
 WizardSmallImageFile={#VEDEVHOME}\dist\installerImages\ve_icon.bmp
 WizardImageStretch=false
 OutputDir={#INSTALLERINSTALLLOCATION}
+AllowRootDirectory=true
+EnableDirDoesntExistWarning=true
 PrivilegesRequired=none
+RestartIfNeededByRun=false
 UsePreviousGroup=false
 AppendDefaultGroupName=true
+TimeStampsInUTC=true
+DisableProgramGroupPage=false
+Uninstallable=true
 [Languages]
 Name: eng; MessagesFile: compiler:Default.isl
 

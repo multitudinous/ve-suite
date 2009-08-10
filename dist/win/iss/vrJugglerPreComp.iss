@@ -31,9 +31,15 @@ WizardImageBackColor=clWhite
 WizardSmallImageFile={#VEDEVHOME}\dist\installerImages\ve_icon.bmp
 WizardImageStretch=false
 OutputDir={#INSTALLERINSTALLLOCATION}
+AllowRootDirectory=true
+EnableDirDoesntExistWarning=true
 PrivilegesRequired=none
+RestartIfNeededByRun=false
 UsePreviousGroup=false
 AppendDefaultGroupName=true
+TimeStampsInUTC=true
+DisableProgramGroupPage=false
+Uninstallable=true
 [Languages]
 Name: eng; MessagesFile: compiler:Default.isl
 
