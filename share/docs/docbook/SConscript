@@ -8,11 +8,11 @@ env = ves_pkg.getEnv().Clone()
 
 #Tool Directory
 DOCBOOKBASE = pj(RootDir,'external','DocBook')
-DOCBOOK_XSL = pj(DOCBOOKBASE,'docbook-xsl-1.72.0')
-DOCBOOK_FO = pj(DOCBOOKBASE,'fop-0.20.5')
+DOCBOOK_XSL = pj(DOCBOOKBASE,'docbook-xsl-1.75.2')
+DOCBOOK_FO = pj(DOCBOOKBASE,'fop-0.95')
 HTML_XSL = pj(DOCBOOK_XSL,'html','docbook.xsl')
-#CHUNK_HTML_XSL = pj(DOCBOOK_XSL,'html','chunk.xsl')
-CHUNK_HTML_XSL = pj(DOCBOOK_FO,'stylesheet','html.xsl')
+CHUNK_HTML_XSL = pj(DOCBOOK_XSL,'html','chunk.xsl')
+#CHUNK_HTML_XSL = pj(DOCBOOK_FO,'stylesheet','html.xsl')
 FO_XSL = pj(DOCBOOK_XSL,'fo','docbook.xsl')
 
 #Java Classpath
@@ -20,22 +20,24 @@ JAR_PATH = pj(DOCBOOK_FO,'lib')
 
 #Jar Files
 FOP_JAR = pj(JAR_PATH,'fop.jar')
-BATIK_JAR = pj(JAR_PATH,'batik-all-1.6.jar')
-AVALON_JAR = pj(JAR_PATH,'avalon-framework-cvs-20020806.jar')
-XALAN_JAR = pj(JAR_PATH,'xalan-2.4.1.jar')
-RESOLVER_JAR = pj(JAR_PATH,'resolver.jar')
-XALAN_JAR = pj(JAR_PATH,'xalan-2.4.1.jar')
-XERCES_JAR = pj(JAR_PATH,'xercesImpl-2.2.1.jar')
-XML_JAR = pj(JAR_PATH,'xml-apis.jar')
-JIMI_JAR = pj(JAR_PATH,'JimiProClasses.jar')
+BATIK_JAR = pj(JAR_PATH,'batik-all-1.7.jar')
+AVALON_JAR = pj(JAR_PATH,'avalon-framework-4.2.0.jar')
+#XALAN_JAR = pj(JAR_PATH,'xalan-2.7.0.jar')
+#RESOLVER_JAR = pj(JAR_PATH,'resolver.jar')
+XALAN_JAR = pj(JAR_PATH,'xalan-2.7.0.jar')
+XERCES_JAR = pj(JAR_PATH,'xercesImpl-2.7.1.jar')
+XML_JAR = pj(JAR_PATH,'xml-apis-1.3.04.jar')
+#JIMI_JAR = pj(JAR_PATH,'JimiProClasses.jar')
 
-if SConsAddons.Util.GetPlatform() == "win32":
-    JAI_JAR = pj(JAR_PATH,'jai_windows-i586.jar')
-else:
-    JAI_JAR = pj(JAR_PATH,'jai_linux-i586.jar')
+#if SConsAddons.Util.GetPlatform() == "win32":
+#    JAI_JAR = pj(JAR_PATH,'jai_windows-i586.jar')
+#else:
+#    JAI_JAR = pj(JAR_PATH,'jai_linux-i586.jar')
 
 #Set Classpath in ENV
-env['ENV']['CLASSPATH'] = '${FOP_JAR}' + os.pathsep +'${BATIK_JAR}' + os.pathsep +'${AVALON_JAR}' + os.pathsep +'${JAI_JAR}' + os.pathsep +'${XALAN_JAR}' + os.pathsep +'${RESOLVER_JAR}' + os.pathsep +'${XALAN_JAR}' + os.pathsep +'${XERCES_JAR}' + os.pathsep +'${XML_JAR}' + os.pathsep +'${JIMI_JAR}'
+#env['ENV']['CLASSPATH'] = '${FOP_JAR}' + os.pathsep +'${BATIK_JAR}' + os.pathsep +'${AVALON_JAR}' + os.pathsep +'${JAI_JAR}' + os.pathsep +'${XALAN_JAR}' + os.pathsep +'${RESOLVER_JAR}' + os.pathsep +'${XALAN_JAR}' + os.pathsep +'${XERCES_JAR}' + os.pathsep +'${XML_JAR}' + os.pathsep +'${JIMI_JAR}'
+
+env['ENV']['CLASSPATH'] = '${FOP_JAR}' + os.pathsep +'${BATIK_JAR}' + os.pathsep +'${AVALON_JAR}' + os.pathsep +'${XALAN_JAR}' + os.pathsep +'${XALAN_JAR}' + os.pathsep +'${XERCES_JAR}' + os.pathsep +'${XML_JAR}' + os.pathsep + '${JAR_PATH}'
 
 ##Base parameters.
 relativeDir = pj('share', 'docs', 'docbook')
@@ -57,7 +59,7 @@ else:
 if SConsAddons.Util.GetPlatform() == "win32":
     fo_cmd = pj(DOCBOOK_FO, 'fop.bat')
 else:
-    fo_cmd = pj(DOCBOOK_FO, 'fop.sh')
+    fo_cmd = pj(DOCBOOK_FO, 'fop')
 
 ##NOTE: Do NOT put the suffixes of the filenames.
 srcs = Split("""
@@ -80,7 +82,10 @@ xmlResolveBuilder = Builder(action = xmlAction, single_source = True,
                             suffix = ".tmp", chdir = relativeDir)
 								
 #Convert an XML source file Unix or Linux:
-foAction = '%s %s ${TARGET.abspath} %s %s %s %s %s %s %s ${SOURCE.abspath}' % (xslt_cmd, "--output", "--stringparam", "fop.extensions 1", "--stringparam", "alignment start", "--stringparam", "draft.mode no", FO_XSL)
+# old way of generating a fo file
+#foAction = '%s %s ${TARGET.abspath} %s %s %s %s %s %s %s ${SOURCE.abspath}' % (xslt_cmd, "--output", "--stringparam", "fop.extensions 1", "--stringparam", "alignment start", "--stringparam", "draft.mode no", FO_XSL)
+#Use fop to generate fo file
+foAction = '%s %s ${SOURCE.abspath} %s %s %s ${TARGET.abspath}' %(fo_cmd, "-xml", "-xsl", FO_XSL, "-foout")
 foBuilder = Builder(action = foAction, single_source = True, suffix = ".fo",
                     chdir = relativeDir)
 
@@ -92,6 +97,8 @@ htmlChunkAction = '%s %s ${TARGET.abspath} %s %s %s ${SOURCE.abspath}' % (xslt_c
 htmlChunkBuilder = Builder(action = htmlChunkAction, single_source = True,
                            suffix = ".html", chdir = relativeDir)
 
+# Here is a test command to generate a pdf direct from xml
+# external/DocBook/fop-0.95/fop -xml share/docs/docbook/xml_sources/vesuite_docs.tmp -xsl external/DocBook/docbook-xsl-1.75.2/fo/docbook.xsl -pdf foo.pdf
 pdfAction = '%s ${SOURCE.abspath} ${TARGET.abspath}' % fo_cmd
 pdfBuilder = Builder(action = pdfAction, single_source = True, suffix = ".pdf",
                      chdir = relativeDir)
