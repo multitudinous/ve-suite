@@ -86,6 +86,9 @@ public:
     ///Override the addChild function to only accept Manipulators
     virtual bool addChild( Manipulator* child );
 
+    ///Override the computeBound function to return an empty bounding sphere
+    virtual osg::BoundingSphere computeBound() const;
+
     ///Can't override the getChild function, so create our own
     Manipulator* GetChild( unsigned int i );
 

@@ -94,6 +94,13 @@ bool ManipulatorManager::addChild( Manipulator* child )
     return osg::Group::addChild( child->getParents().front() );
 }
 ////////////////////////////////////////////////////////////////////////////////
+osg::BoundingSphere ManipulatorManager::computeBound() const
+{
+    osg::BoundingSphere bsphere;
+
+    return bsphere;
+}
+////////////////////////////////////////////////////////////////////////////////
 Manipulator* ManipulatorManager::ConvertNodeToManipulator( osg::Node* node )
 {
     return static_cast< Manipulator* >( node );
