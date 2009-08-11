@@ -119,6 +119,11 @@ void AddVTKDataSetEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xml
     CommandPtr command( boost::dynamic_pointer_cast<ves::open::xml::Command>( xmlObject ) );
     std::string dataSetName =
         command->GetDataValuePair( "VTK_DATASET_NAME" )->GetDataString();
+    if( !dataSetName.compare( "NULL" ) )
+    {
+        std::cerr << "AddVTKDataSetEventHandler::Execute : No base dataset is specified." << std::endl;
+        return;
+    }
 
     if( command->GetDataValuePair( "CREATE_NEW_DATASETS" ) )
     {
@@ -288,8 +293,9 @@ void AddVTKDataSetEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xml
         //Load texture datasets
         vprDEBUG( vesDBG, 0 ) << "|\tCreating texture dataset."
             << std::endl << vprDEBUG_FLUSH;
+        DataValuePairPtr tempDVP = boost::dynamic_pointer_cast<DataValuePair>( command->GetDataValuePair( "ADD_SURFACE_DATA_DIR" )->GetDataXMLObject() );
         _activeModel->CreateTextureDataSet();
-        DataValuePairPtr tempDVP = boost::dynamic_pointer_cast<DataValuePair>( command->GetDataValuePair( "VTK_TEXTURE_DIR_PATH" )->GetDataXMLObject() );
+        //DataValuePairPtr tempDVP = boost::dynamic_pointer_cast<DataValuePair>( tempDVP->GetDataValuePair( "VTK_TEXTURE_DIR_PATH" )->GetDataXMLObject() );
         _activeModel->AddDataSetToTextureDataSet( 0, tempDVP->GetDataString() );
 
         std::ostringstream textId;

@@ -46,8 +46,8 @@
 #include <wx/msgdlg.h>
 #include <wx/textdlg.h>
 #include <wx/string.h>
+#include <wx/log.h>
 
-//#include "VE_Installer/installer/installerImages/ve_icon32x32.xpm"
 #include <ves/conductor/util/DataSetLoaderUI.h>
 #include <ves/conductor/util/TransformUI.h>
 
@@ -725,7 +725,14 @@ void DataSetLoaderUI::OnDeleteDataset( wxCommandEvent& WXUNUSED( event ) )
     wxString selection = dataSetList->GetStringSelection();
 
     std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( selection.c_str() ) ) );
+    
+    ves::open::xml::DataValuePairSharedPtr dataFileDVP = mParamBlock->GetProperty( "VTK_DATA_FILE" );
 
+    if( !dataFileDVP )
+    {
+        ::wxLogMessage(  wxString( "This dataset has no VTK dataset.", wxConvUTF8 ) );
+        return;
+    }
     std::string tempDataSetName =
         mParamBlock->GetProperty( "VTK_DATA_FILE" )->GetDataString();
 

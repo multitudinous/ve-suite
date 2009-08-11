@@ -385,14 +385,22 @@ void PluginBase::SetXMLModel( ves::open::xml::model::ModelPtr& tempModel )
             mXmlModel->GetInformationPacket( 0 );
         ves::open::xml::DataValuePairPtr dataSetName(
                      new ves::open::xml::DataValuePair() );
-        dataSetName->SetData( "VTK_DATASET_NAME",
-            parameterBlock->GetProperty( "VTK_DATA_FILE" )->GetDataString() );
-        dataCommand->AddDataValuePair( dataSetName );
+        ves::open::xml::DataValuePairPtr dataSetDVP = parameterBlock->GetProperty( "VTK_DATA_FILE" );
+        if( dataSetDVP )
+        {
+            dataSetName->SetData( "VTK_DATASET_NAME", 
+                                 dataSetDVP->GetDataString() );
+            dataCommand->AddDataValuePair( dataSetName );
+            //Process the vtk data
+            ves::xplorer::event::AddVTKDataSetEventHandler addVTKEH;
+            addVTKEH.SetGlobalBaseObject( mModel );
+            addVTKEH.Execute( dataCommand );
+        }
+        else
+        {
+            std::cerr << "PluginBase::SetXMLModel : Dataset does not have a VTK dataset as part of this Parameter Block." << std::endl;
+        }
 
-        //Process the vtk data
-        ves::xplorer::event::AddVTKDataSetEventHandler addVTKEH;
-        addVTKEH.SetGlobalBaseObject( mModel );
-        addVTKEH.Execute( dataCommand );
     }
 
     //process inputs
