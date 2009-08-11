@@ -238,7 +238,6 @@ opts.Add('VRJugglerVersion', 'Set the VRJuggler version so that the proper flagp
 opts.Add('VPRVersion', 'Set the VPR version so that the proper VPR flagpoll files can be found', '1.0.2')
 opts.Add('VPRProfile', 'If "yes", build applications with VPR profiling enabled', 'no')
 opts.Add('prefix', 'Installation prefix', '/usr/local')
-#opts.Add('UseCVSVTKPostFeb20', 'If "yes", use the version of VTK with Composite Datasets', 'no')
 ##opts.Add('build_test', 'Build the test programs', 'yes')
 opts.Add('StaticLibs', 'If yes then build static libraries too', 'no')
 opts.Add('MakeDist', 'If "yes", make the distribution packages as part of the build', 'no')
@@ -246,11 +245,6 @@ opts.Add('MakeDist', 'If "yes", make the distribution packages as part of the bu
 opts.Add('UseMPI', 'If "yes", make 3D texture creator with MPI support', 'no')
 opts.Add('validate', 'If "no", do not validate flagpoll packages. Should help speed up the build', 'yes')
 opts.Add('buildTests', 'If "yes", Build tests applications', 'no')
-##Added options for velauncher build.
-##opts.Add('LauncherExe', 'If true, builds velauncher.py as an executable', 'yes')
-##opts.Add('CxPath', "Set CXPATH to find 
-##opts.Add('PythonHome', "Set PYTHONHOME to find python's executable and libs", '')
-##End added velauncher build options.
 opts.Add('buildLog', 'Provide a file name for the build log if you would like a log', '')
 opts.Add('options_file', 'Provide a file name for the options caches', '')
 opts.Add('build_dir', 'Provide an alternate build directory for variants', buildDir)
