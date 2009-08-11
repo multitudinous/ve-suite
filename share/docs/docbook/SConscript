@@ -79,29 +79,27 @@ srcs = map(lambda s: pj(baseDir, "xml_sources", "%s.xml" %(s)), srcs)
 xmlAction = '%s --xinclude ${SOURCE.abspath} > ${TARGET.abspath}' % xml_cmd
 
 xmlResolveBuilder = Builder(action = xmlAction, single_source = True,
-                            suffix = ".tmp", chdir = relativeDir)
+                            suffix = ".tmp")
 								
 #Convert an XML source file Unix or Linux:
 # old way of generating a fo file
 #foAction = '%s %s ${TARGET.abspath} %s %s %s %s %s %s %s ${SOURCE.abspath}' % (xslt_cmd, "--output", "--stringparam", "fop.extensions 1", "--stringparam", "alignment start", "--stringparam", "draft.mode no", FO_XSL)
 #Use fop to generate fo file
 foAction = '%s %s ${SOURCE.abspath} %s %s %s ${TARGET.abspath}' %(fo_cmd, "-xml", "-xsl", FO_XSL, "-foout")
-foBuilder = Builder(action = foAction, single_source = True, suffix = ".fo",
-                    chdir = relativeDir)
+foBuilder = Builder(action = foAction, single_source = True, suffix = ".fo")
 
 htmlAction = '%s %s ${TARGET.abspath} %s %s %s ${SOURCE.abspath}' % (xslt_cmd, "--output", "--stringparam", "navig.graphics 1", HTML_XSL)
 htmlBuilder = Builder(action = htmlAction, single_source = True,
-                      suffix = ".html", chdir = relativeDir)
+                      suffix = ".html")
 
 htmlChunkAction = '%s %s ${TARGET.abspath} %s %s %s ${SOURCE.abspath}' % (xslt_cmd, "--output", "--stringparam", "use.extensions 0", CHUNK_HTML_XSL)
 htmlChunkBuilder = Builder(action = htmlChunkAction, single_source = True,
-                           suffix = ".html", chdir = relativeDir)
+                           suffix = ".html")
 
 # Here is a test command to generate a pdf direct from xml
 # external/DocBook/fop-0.95/fop -xml share/docs/docbook/xml_sources/vesuite_docs.tmp -xsl external/DocBook/docbook-xsl-1.75.2/fo/docbook.xsl -pdf foo.pdf
 pdfAction = '%s ${SOURCE.abspath} ${TARGET.abspath}' % fo_cmd
-pdfBuilder = Builder(action = pdfAction, single_source = True, suffix = ".pdf",
-                     chdir = relativeDir)
+pdfBuilder = Builder(action = pdfAction, single_source = True, suffix = ".pdf")
 
 env.Append(BUILDERS = {
             'xmlResolve': xmlResolveBuilder,
