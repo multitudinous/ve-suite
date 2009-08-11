@@ -2,7 +2,7 @@
 #import os
 #pj = os.path.join
 
-Import( 'GetPlatform baseEnv ves_pkg mysqlpp_options' )
+Import( 'GetPlatform baseEnv ves_pkg' )
 
 toolsSubdirs = Split("""
     builder
@@ -26,8 +26,8 @@ if GetPlatform() == 'win32':
         toolsSubdirs.append( "powersim" )
 
 #Should db support be built
-if mysqlpp_options.isAvailable():
-    toolsSubdirs.append( "db" )
+#if mysqlpp_options.isAvailable():
+#    toolsSubdirs.append( "db" )
 
 #Run SConscript files in all of those folders.
 for d in toolsSubdirs:
