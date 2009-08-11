@@ -23,10 +23,10 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * Date modified: $Date: 2009-05-06 14:32:42 -0600 (Wed, 06 May 2009) $
- * Version:       $Rev: 12657 $
- * Author:        $Author: jbkoch $
- * Id:            $Id: CompoundDragger.cxx 12657 2009-05-06 20:32:42Z jbkoch $
+ * Date modified: $Date$
+ * Version:       $Rev$
+ * Author:        $Author$
+ * Id:            $Id$
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/

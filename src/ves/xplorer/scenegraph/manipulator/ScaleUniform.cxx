@@ -23,10 +23,10 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * Date modified: $Date: 2009-05-24 12:01:57 -0600 (Sun, 24 May 2009) $
- * Version:       $Rev: 12717 $
- * Author:        $Author: jbkoch $
- * Id:            $Id: ScaleUniform.cxx 12717 2009-05-24 18:01:57Z jbkoch $
+ * Date modified: $Date$
+ * Version:       $Rev$
+ * Author:        $Author$
+ * Id:            $Id$
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/

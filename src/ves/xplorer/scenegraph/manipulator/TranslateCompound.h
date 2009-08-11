@@ -23,10 +23,10 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * Date modified: $Date: 2009-05-13 15:17:12 -0600 (Wed, 13 May 2009) $
- * Version:       $Rev: 12684 $
- * Author:        $Author: jbkoch $
- * Id:            $Id: TranslateCompound.h 12684 2009-05-13 21:17:12Z jbkoch $
+ * Date modified: $Date$
+ * Version:       $Rev$
+ * Author:        $Author$
+ * Id:            $Id$
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/

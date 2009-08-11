@@ -23,10 +23,10 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * Date modified: $Date: 2009-05-26 17:48:25 -0600 (Tue, 26 May 2009) $
- * Version:       $Rev: 12728 $
- * Author:        $Author: jbkoch $
- * Id:            $Id: ClippingCircle.cxx 12728 2009-05-26 23:48:25Z jbkoch $
+ * Date modified: $Date$
+ * Version:       $Rev$
+ * Author:        $Author$
+ * Id:            $Id$
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
