@@ -154,7 +154,7 @@ public:
     void PreFrameUpdate();
 
     ///
-    void SceneManager::PushBackGLTransformInfo(
+    void PushBackGLTransformInfo(
 #if __VJ_version >= 2003000
         vrj::ViewportPtr viewport,
 #else
