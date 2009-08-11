@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#include <ves/xplorer/scenegraph/TextTexture.h>
+#include <ves/xplorer/scenegraph/GroupedTextTextures.h>
 
 // --- OSG Includes --- //
 #include <osg/Geometry>
@@ -50,7 +50,7 @@ using namespace ves::xplorer::scenegraph;
 //#define VES_SRTT_DEBUG
 
 ////////////////////////////////////////////////////////////////////////////////
-TextTexture::TextTexture( std::string fontFile )
+GroupedTextTextures::GroupedTextTextures( std::string fontFile )
     :
     osg::Group()
 {
@@ -59,11 +59,10 @@ TextTexture::TextTexture( std::string fontFile )
     LoadBackgroundTexture();
     CreateTexturedQuad();
     CreateText();
-    CreateChart();
 }
 ////////////////////////////////////////////////////////////////////////////////
-TextTexture::TextTexture(
-    const TextTexture& ttexture,
+GroupedTextTextures::GroupedTextTextures(
+    const GroupedTextTextures& ttexture,
     const osg::CopyOp& copyop )
     :
     osg::Group( ttexture, copyop )
@@ -79,17 +78,17 @@ TextTexture::TextTexture(
     _textColor[ 3 ] = ttexture._textColor[ 3 ];
 }
 ////////////////////////////////////////////////////////////////////////////////
-TextTexture::~TextTexture()
+GroupedTextTextures::~GroupedTextTextures()
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void TextTexture::SetFont( std::string fontFile )
+void GroupedTextTextures::SetFont( std::string fontFile )
 {
     _font = fontFile;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void TextTexture::UpdateText( std::string newText )
+void GroupedTextTextures::UpdateText( std::string newText )
 {
     _text->setFont( _font );
     _text->setColor(
@@ -104,7 +103,7 @@ void TextTexture::UpdateText( std::string newText )
     //computeBound();
 }
 ////////////////////////////////////////////////////////////////////////////////
-osg::Texture2D* TextTexture::GetTexture()
+osg::Texture2D* GroupedTextTextures::GetTexture()
 {
     if( _texture.valid() )
     {
@@ -114,7 +113,7 @@ osg::Texture2D* TextTexture::GetTexture()
     return 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void TextTexture::LoadBackgroundTexture()
+void GroupedTextTextures::LoadBackgroundTexture()
 {
     _texture = new osg::Texture2D();
     _texture->setInternalFormat( GL_RGBA );
@@ -130,7 +129,7 @@ void TextTexture::LoadBackgroundTexture()
     _texture->setImage( osgDB::readImageFile( "Info_Panel.png" ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void TextTexture::CreateTexturedQuad()
+void GroupedTextTextures::CreateTexturedQuad()
 {
     osg::ref_ptr< osg::Vec3Array > quadVertices = new osg::Vec3Array();
     quadVertices->resize( 4 );
@@ -223,7 +222,7 @@ void TextTexture::CreateTexturedQuad()
     //getOrCreateStateSet()->setNestRenderBins( true );  
 }
 ////////////////////////////////////////////////////////////////////////////////
-void TextTexture::CreateText()
+void GroupedTextTextures::CreateText()
 {
     _textColor[ 0 ] = 0.0;
     _textColor[ 1 ] = 0.0;
@@ -271,21 +270,14 @@ void TextTexture::CreateText()
     addChild( textGeode );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void TextTexture::CreateChart()
+void GroupedTextTextures::AddTextTexture( const std::string tempKey, TextTexturePtr tempTexture )
 {
-    m_chartSurface = new osgBullet::Chart();
-    osg::Vec4 bg( 1.f, 0.f, 0.f, .33f );
-    m_chartSurface->setBackgroundColor( bg );
-    osg::Vec4 fg( 1.f, 1.f, 0.f, .5f );
-    m_chartSurface->setForegroundColor( fg );
-    m_chartSurface->setChartLocationAndSize( 0.045, 0.1, 0.19, 0.1 );
-    //m_chartSurface->setChartLocationAndSize( 0.05, 0.05, 2, 1 );
-    m_chartSurface->createChart();
-    //addChild( m_chartSurface->get() );
+    m_groupedTextures[ tempKey ] = tempTexture;
 }
 ////////////////////////////////////////////////////////////////////////////////
-osgBullet::Chart* TextTexture::GetChart()
+void GroupedTextTextures::RemoveTextTexture( const std::string tempKey )
 {
-    return m_chartSurface;
+    m_groupedTextures[ tempKey ] = tempTexture;
 }
+////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////

@@ -30,14 +30,14 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#ifndef TEXT_TEXTURE_H
-#define TEXT_TEXTURE_H
+#ifndef GROUPED_TEXT_TEXTURES_H
+#define GROUPED_TEXT_TEXTURES_H
 
-/*!\file TextTexture.h
+/*!\file GroupedTextTextures.h
 *Text Texture API that renders text offscreen to a texture
 */
 
-/*!\class ves::xplorer::scenegraph::TextTexture
+/*!\class ves::xplorer::scenegraph::GroupedTextTextures
 *
 */
 
@@ -47,16 +47,11 @@
 
 // --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
-#include <ves/xplorer/scenegraph/TextTexturePtr.h>
 
 // --- OSG Includes --- //
 #include <osg/Version>
 #include <osg/Geode>
 #include <osg/Group>
-namespace osgBullet
-{
-    class Chart;
-}
 
 namespace osg
 {
@@ -76,21 +71,21 @@ namespace xplorer
 {
 namespace scenegraph
 {
-class VE_SCENEGRAPH_EXPORTS TextTexture : public osg::Group
+class VE_SCENEGRAPH_EXPORTS GroupedTextTextures : public osg::Group
 {
 public:
     ///Constructor
     ///\param textureResolutionX The X resolution of the output texture in pixels
     ///\param textureResolutionY The Y resolution of the output texture in pixels
     ///\param fontFile The file to load fonts from. See osgText/Font for usage.
-    TextTexture( std::string fontFile = "fonts/arial.ttf" );
+    GroupedTextTextures( std::string fontFile = "fonts/arial.ttf" );
 
     ///Copy constructors for osg
-    TextTexture( const TextTexture& ttexture,
+    GroupedTextTextures( const GroupedTextTextures& ttexture,
                  const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
 
     ///
-    META_Node( ves::xplorer::scenegraph, TextTexture );
+    META_Node( ves::xplorer::scenegraph, GroupedTextTextures );
 
     ///Set the color of the text
     ///\param color Text color
@@ -105,17 +100,13 @@ public:
     void UpdateText( std::string newText );
 
     ///Get the texture with the text
-    osg::Texture2D* GetTexture();
+    void AddTextTexture( const std::string tempKey, TextTexturePtr tempTexture );
 
-    ///Create the data display chart
-    void CreateChart();
+    void RemoveTextTexture( const std::string tempKey );
 
-    ///Get the data display chart
-    osgBullet::Chart* GetChart();
-    
 protected:
     ///Destructor
-    virtual ~TextTexture();
+    virtual ~GroupedTextTextures();
 
     ///Load the backgroud texture the text will render over
     void LoadBackgroundTexture();
@@ -132,17 +123,9 @@ protected:
     ///The font file
     std::string _font;
 
-    ///The text
-    osg::ref_ptr< osgText::Text > _text;
-
-    ///The texture we create
-    osg::ref_ptr< osg::Texture2D > _texture;
-
-    //The update callback
-    //osg::ref_ptr< TextUpdateCallback > _ttUpdateCallback;
-    osgBullet::Chart* m_chartSurface;
+    std::map< std::string, TextTexturePtr > m_groupedTextures;
 };
 }
 }
 }
-#endif //TEXT_TEXTURE_H
+#endif //GROUPED_TEXT_TEXTURES_H
