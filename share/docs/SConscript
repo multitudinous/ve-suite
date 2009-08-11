@@ -25,10 +25,9 @@ else:
 
 docSubdirs = Split("""
     docbook
-    changelog
     doxygen
 """)
-
+#changelog
 ##Run SConscript files in all of those folders.
 for d in docSubdirs:
    SConscript( dirs = d )
