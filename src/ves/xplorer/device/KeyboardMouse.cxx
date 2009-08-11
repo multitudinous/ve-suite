@@ -77,7 +77,7 @@
 #if defined VPR_OS_Darwin
 #include <vrj/Draw/OpenGL/WindowCocoa.h>
 #include <gadget/Devices/KeyboardMouseDevice/InputAreaCocoa.h>
-#elif defined VPR_OS_Win32
+#elif defined VPR_OS_Windows
 #include <vrj/Draw/OpenGL/WindowWin32.h>
 #include <gadget/Devices/KeyboardMouseDevice/InputAreaWin32.h>
 #elif defined VPR_OS_Linux
@@ -1789,7 +1789,7 @@ vrj::DisplayPtr const KeyboardMouse::GetCurrentDisplay(
         static_cast< const vrj::opengl::WindowCocoa* >( inputArea );
     //upcast
     window = dynamic_cast< const vrj::opengl::Window* >( windowCocoa );
-#elif defined VPR_OS_Win32
+#elif defined VPR_OS_Windows
     //downcast
     const vrj::opengl::WindowWin32* windowWin32 =
         static_cast< const vrj::opengl::WindowWin32* >( inputArea );
