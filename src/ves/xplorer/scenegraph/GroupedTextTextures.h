@@ -47,6 +47,7 @@
 
 // --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
+#include <ves/xplorer/scenegraph/TextTexturePtr.h>
 
 // --- OSG Includes --- //
 #include <osg/Version>

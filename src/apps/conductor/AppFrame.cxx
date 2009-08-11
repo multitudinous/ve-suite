@@ -224,9 +224,6 @@ AppFrame::AppFrame( wxWindow * parent, wxWindowID id, const wxString& title )
             title,
             wxDefaultPosition,
             wxDefaultSize ),
-        f_financial( true ),
-        f_geometry( true ),
-        f_visualization( true ),
         xplorerMenu( 0 ),
         recordScenes( 0 ),
         canvas( 0 ),
@@ -246,7 +243,10 @@ AppFrame::AppFrame( wxWindow * parent, wxWindowID id, const wxString& title )
         newCanvas( false ),
         mTimer( this, APPFRAME_TIMER_ID ),
         _minervaDialog ( 0x0 ),
-        mDestoryFrame( false )
+        mDestoryFrame( false ),
+        f_financial( true ),
+        f_geometry( true ),
+        f_visualization( true )
 {
     char** tempArray = new char*[ ::wxGetApp().argc ];
     for( unsigned int i = 0; i < ::wxGetApp().argc; ++i )
