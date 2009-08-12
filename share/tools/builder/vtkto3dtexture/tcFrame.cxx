@@ -413,7 +413,7 @@ void TCFrame::_onTranslateCallback(wxCommandEvent& event)
                       wxICON_EXCLAMATION|wxICON_HAND).ShowModal(); 
       UpdateStatus( "No files found!!!" );
    }
-   //char* oname;
+
    wxString statusMsg = _("");
 
    _fileProgress = new wxProgressDialog(_("Translation Progress"),
@@ -428,18 +428,17 @@ void TCFrame::_onTranslateCallback(wxCommandEvent& event)
       UpdateStatus( ConvertUnicode( statusMsg.c_str() ) );
       _fileProgress->Update(i, statusMsg);
       _translator->reset();
-      _translator->setOutputDirectory((char*)_outputDir.c_str());
-      //sprintf(oname,"_%d",i);
+      _translator->setOutputDirectory( ConvertUnicode( _outputDir.c_str() ) );
       std::ostringstream dirStringStream;
       dirStringStream << "_" << std::setfill( '0' ) << std::setw( 6 ) << _minTimeStepIndex+i;
       std::string dirString = dirStringStream.str();
-      //oname = (char*)dirString.c_str();
+
       if(_translator->createDataSetFromFile( gridFiles.at( i ) ))
       {
          _translator->setOutputResolution(_resolution[0],
                                           _resolution[1],
                                           _resolution[2]);
-         _translator->setVelocityFileName((char*)dirString.c_str());
+         _translator->setVelocityFileName( dirString );
          _translator->createTextures();
          statusMsg = wxString("Files written to: ", wxConvUTF8) + _outputDir;
          UpdateStatus( ConvertUnicode( statusMsg.c_str() ) );
@@ -521,7 +520,6 @@ void TCFrame::_chooseDirectory(int style, int browseID)
          
          //make the output dir == to the current input directory
          _outputDir = wxString(_inputDir.c_str(), wxConvUTF8);
-
          inputFileDirectory.Open(wxString(_inputDir));
          if ( inputFileDirectory.IsOpened() )
          {
@@ -629,7 +627,7 @@ void TCFrame::BatchTranslation()
    for ( int i = rank; i < _numFiles; i += numProcessors )
    {
       _translator->reset();
-      _translator->setOutputDirectory((char*)_outputDir.c_str());
+      _translator->setOutputDirectory( ConvertUnicode( _outputDir.c_str() ) );
 
       std::ostringstream dirStringStream;
       dirStringStream << "_" << std::setfill( '0' ) << std::setw( 6 ) << _minTimeStepIndex + i;
@@ -641,7 +639,7 @@ void TCFrame::BatchTranslation()
          _translator->setOutputResolution(_resolution[0],
                                           _resolution[1],
                                           _resolution[2]);
-         _translator->setVelocityFileName((char*)dirString.c_str());
+         _translator->setVelocityFileName( dirString );
          _translator->createTextures();
       }
    }

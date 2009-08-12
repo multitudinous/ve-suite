@@ -564,7 +564,7 @@ void VTKDataToTexture::createTextures()
         //build the octree
         vectorCellLocators.at( i )->BuildLocator();
      }
-      long endtimeID = (long)time( NULL );
+      //long endtimeID = (long)time( NULL );
       //std::cout << endtimeID - timeID << std::endl;
       //Now use it...
       _createValidityTexture();
@@ -680,8 +680,6 @@ void VTKDataToTexture::_createValidityTexture()
 
    int nX = _resolution[0];
    int nY = _resolution[1];
-   int jInit = -1;
-   int kInit = -1;
 
    int nPixels = _resolution[0]*_resolution[1]*_resolution[2];
    _validPt.resize( nPixels );
@@ -824,29 +822,29 @@ void VTKDataToTexture::_resampleData(int dataValueIndex,int isScalar)
    //the data as a texture
    //our original cell that contains our cartesian point
    vtkGenericCell* cell = vtkGenericCell::New();
-   
-   vtkIdType cellId;
-   int subId;
-   double dist = 0;
-   double closestPt[3];
-   double pcoords[3];
-   double* weights = 0;
-   //int index = 0;
-   //_curPt = 0;
 
-   unsigned int i=0;
-   unsigned int j=0;
-   unsigned int k = 0;
+    vtkIdType cellId;
+    int subId;
+    //double dist = 0;
+    //double closestPt[3];
+    //double pcoords[3];
+    double* weights = 0;
+    //int index = 0;
+    //_curPt = 0;
 
-   unsigned int nX = _resolution[0]-1;
-   unsigned int nY = _resolution[1]-1;
-   unsigned int nZ = _resolution[2]-1;
+    unsigned int i=0;
+    unsigned int j=0;
+    unsigned int k = 0;
 
-   unsigned int nPixels = _resolution[0]*_resolution[1]*_resolution[2];
+    unsigned int nX = _resolution[0]-1;
+    unsigned int nY = _resolution[1]-1;
+    unsigned int nZ = _resolution[2]-1;
 
-   //resample the data into a cartesian grid
-   for(unsigned int l = 0; l < nPixels; ++l)
-   {
+    unsigned int nPixels = _resolution[0]*_resolution[1]*_resolution[2];
+
+    //resample the data into a cartesian grid
+    for(unsigned int l = 0; l < nPixels; ++l)
+    {
       // we can parallelize this for loop by using a map to store the data and then
       // merge the map after the texture has been created. 
       // this would allow this function to be much faster. This function
@@ -901,17 +899,13 @@ void VTKDataToTexture::_resampleData(int dataValueIndex,int isScalar)
 ///////////////////////////////////////////
 void VTKDataToTexture::_cleanUpFileNames()
 {
-   char* ptr = 0;
-   //char replace = "_";
    size_t len = 0;
    std::string tempName;// = 0;
    int index = 0;
    for(int i = 0; i < _nScalars; i++)
    {
-      //len = strlen(_scalarNames[i]);
       len = _scalarNames.at(i).size();
-      //ptr = _scalarNames[i];
-      tempName.clear();// = new char[len +1];
+      tempName.clear();
       index = 0;
       for(size_t j = 0; j < len; j++)
       {
@@ -1162,7 +1156,7 @@ int VTKDataToTexture::countNumberOfParameters( const int numComponents )
 std::vector<std::string> VTKDataToTexture::getParameterNames( const int numComponents, 
                                                               const int numParameters )
 {
-   std::vector<std::string> names;// = new char * [numParameters];
+   std::vector<std::string> names;
    int ii = 0;
 
    for ( int i=0; i < _nPtDataArrays; i++ )
@@ -1264,6 +1258,7 @@ void VTKDataToTexture::writeVelocityTexture(int whichVector)
         boost::filesystem::create_directory( vectorPath );
 	    std::cout << "...so we made it for you..." << std::endl;
 	}
+    nameString.clear();
     nameString.append( "/" );
     nameString.append(vectorPath.string());
     nameString.append( "/" );
@@ -1330,11 +1325,11 @@ void VTKDataToTexture::writeScalarTexture(int whichScalar)
 	    std::cout << "...so we made it for you..." << std::endl;
 	}   
 
+    nameString.clear();
     nameString.append( "/" );
     nameString.append(scalarPath.string());
     nameString.append( "/" );
     nameString.append( _scalarNames[whichScalar] );
-   
     if ( _vFileName )
     {
       nameString.append( _vFileName );
