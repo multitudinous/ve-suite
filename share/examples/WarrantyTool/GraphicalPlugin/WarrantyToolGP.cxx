@@ -47,6 +47,7 @@
 
 #include <ves/xplorer/scenegraph/CADEntity.h>
 #include <ves/xplorer/scenegraph/TextTexture.h>
+#include <ves/xplorer/scenegraph/GroupedTextTextures.h>
 
 #include <ves/xplorer/environment/TextTextureCallback.h>
 #include <ves/xplorer/environment/HeadPositionCallback.h>
@@ -293,6 +294,7 @@ void WarrantyToolGP::ParseDataFile( const std::string& csvFilename )
     //Add data
     //close connection
     CreateDB();
+    //CreateTextTextures();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void WarrantyToolGP::RenderTextualDisplay( bool onOff )
@@ -302,24 +304,7 @@ void WarrantyToolGP::RenderTextualDisplay( bool onOff )
         //add 3d blocks
         if( !mModelText.valid() )
         {
-            mModelText = new ves::xplorer::scenegraph::TextTexture();
-            
-            osg::ref_ptr< ves::xplorer::scenegraph::DCS > textTrans = 
-                new ves::xplorer::scenegraph::DCS();
-            textTrans->getOrCreateStateSet()->addUniform(
-                new osg::Uniform( "glowColor", osg::Vec4( 0.0, 0.0, 0.0, 1.0 ) ) );
-
-            textTrans->addChild( mModelText.get() );
-            
-            mDCS->addChild( textTrans.get() );
-            
-            mModelText->setUpdateCallback( 
-                                          new ves::xplorer::environment::TextTextureCallback( mModelText.get() ) );
-            textTrans->setUpdateCallback( 
-                                         new ves::xplorer::environment::HeadPositionCallback() );
-            static_cast< osg::PositionAttitudeTransform* >( 
-                                                           mModelText->getParent( 0 ) )->setPosition(
-                                                                                                     osg::Vec3d( 0, 0, 0 ) );
+            CreateTextTextures();
         }
         else
         {
@@ -338,7 +323,7 @@ void WarrantyToolGP::RenderTextualDisplay( bool onOff )
             displayString = displayString + displayPair.first + " " +  displayPair.second + "\n";
         }
         mModelText->UpdateText( displayString );
-        std::cout << displayString << std::endl;
+        //std::cout << displayString << std::endl;
     }
     else
     {
@@ -413,3 +398,35 @@ void WarrantyToolGP::CreateDB()
 	}
     Poco::Data::SQLite::Connector::unregisterConnector();
 }
+////////////////////////////////////////////////////////////////////////////////
+void WarrantyToolGP::CreateTextTextures()
+{
+
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > textTrans = 
+    new ves::xplorer::scenegraph::DCS();
+    textTrans->getOrCreateStateSet()->addUniform(
+        new osg::Uniform( "glowColor", osg::Vec4( 0.0, 0.0, 0.0, 1.0 ) ) );
+    
+    mModelText = new ves::xplorer::scenegraph::TextTexture();
+    textTrans->addChild( mModelText.get() );
+    
+    mDCS->addChild( textTrans.get() );
+    
+    ves::xplorer::scenegraph::GroupedTextTextures* tempGroup = 
+        new ves::xplorer::scenegraph::GroupedTextTextures();
+    for( size_t i = 0; i < 4; ++i )
+    {
+        ves::xplorer::scenegraph::TextTexture* tempText = new ves::xplorer::scenegraph::TextTexture();
+        std::string tempKey = "test_" + boost::lexical_cast<std::string>( i );
+        tempGroup->AddTextTexture( tempKey, tempText );
+    }
+    textTrans->addChild( tempGroup );
+
+    //mModelText->setUpdateCallback( 
+    //    new ves::xplorer::environment::TextTextureCallback( mModelText.get() ) );
+    textTrans->setUpdateCallback( 
+        new ves::xplorer::environment::HeadPositionCallback() );
+    //static_cast< osg::PositionAttitudeTransform* >( 
+    //    mModelText->getParent( 0 ) )->setPosition( osg::Vec3d( 0, 0, 0 ) );
+}
+////////////////////////////////////////////////////////////////////////////////

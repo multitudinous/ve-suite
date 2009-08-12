@@ -47,12 +47,15 @@
 
 // --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
-#include <ves/xplorer/scenegraph/TextTexturePtr.h>
+#include <ves/xplorer/scenegraph/DCS.h>
 
 // --- OSG Includes --- //
 #include <osg/Version>
 #include <osg/Geode>
 #include <osg/Group>
+
+#include <list>
+#include <map>
 
 namespace osg
 {
@@ -72,6 +75,8 @@ namespace xplorer
 {
 namespace scenegraph
 {
+class TextTexture;
+
 class VE_SCENEGRAPH_EXPORTS GroupedTextTextures : public osg::Group
 {
 public:
@@ -88,35 +93,26 @@ public:
     ///
     META_Node( ves::xplorer::scenegraph, GroupedTextTextures );
 
-    ///Set the color of the text
-    ///\param color Text color
-    void SetTextColor( float color[ 4 ] );
-
     ///Set the font
     ///\param fontFile The file containing the font to use
     void SetFont( std::string fontFile );
 
-    ///Update the text
-    ///\param newText The new text
-    void UpdateText( std::string newText );
-
     ///Get the texture with the text
-    void AddTextTexture( const std::string tempKey, TextTexturePtr tempTexture );
+    void AddTextTexture( const std::string& tempKey, TextTexture* tempTexture );
 
-    void RemoveTextTexture( const std::string tempKey );
+    void RemoveTextTextures( const std::string& tempKey );
+
+    void UpdateDCSPosition( DCS* tempDCS, size_t i );
+
+    void UpdateListPositions();
+
+    void MakeTextureActive( const std::string& tempKey );
+    
+    void MakeTextureActive( const TextTexture* tempKey );
 
 protected:
     ///Destructor
     virtual ~GroupedTextTextures();
-
-    ///Load the backgroud texture the text will render over
-    void LoadBackgroundTexture();
-
-    ///
-    void CreateTexturedQuad();
-
-    ///
-    void CreateText();
 
     ///The color of the text, default is black
     float _textColor[ 4 ];
@@ -124,7 +120,11 @@ protected:
     ///The font file
     std::string _font;
 
-    std::map< std::string, TextTexturePtr > m_groupedTextures;
+    std::map< std::string, osg::ref_ptr< DCS > > m_groupedTextures;
+    
+    osg::ref_ptr< DCS > m_activeDCS;
+    
+    std::list< DCS* > m_transformList;
 };
 }
 }

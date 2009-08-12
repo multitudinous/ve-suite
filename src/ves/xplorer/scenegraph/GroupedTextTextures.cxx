@@ -32,6 +32,8 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/xplorer/scenegraph/GroupedTextTextures.h>
 
+#include <ves/xplorer/scenegraph/TextTexture.h>
+
 // --- OSG Includes --- //
 #include <osg/Geometry>
 #include <osg/Texture2D>
@@ -45,9 +47,9 @@
 
 #include <osgBullet/Chart.h>
 
-using namespace ves::xplorer::scenegraph;
+#include <iostream>
 
-//#define VES_SRTT_DEBUG
+using namespace ves::xplorer::scenegraph;
 
 ////////////////////////////////////////////////////////////////////////////////
 GroupedTextTextures::GroupedTextTextures( std::string fontFile )
@@ -55,10 +57,6 @@ GroupedTextTextures::GroupedTextTextures( std::string fontFile )
     osg::Group()
 {
     _font = fontFile;
-
-    LoadBackgroundTexture();
-    CreateTexturedQuad();
-    CreateText();
 }
 ////////////////////////////////////////////////////////////////////////////////
 GroupedTextTextures::GroupedTextTextures(
@@ -80,30 +78,86 @@ void GroupedTextTextures::SetFont( std::string fontFile )
     _font = fontFile;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void GroupedTextTextures::UpdateText( std::string newText )
+void GroupedTextTextures::MakeTextureActive( const std::string& tempKey )
 {
+    std::map< std::string, osg::ref_ptr< DCS > >::iterator iter = m_groupedTextures.find( tempKey );
+    
+    if( iter != m_groupedTextures.end() )
+    {
+        MakeTextureActive( static_cast< TextTexture* >( iter->second->getChild( 0 ) ) );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void GroupedTextTextures::LoadBackgroundTexture()
+void GroupedTextTextures::MakeTextureActive( const TextTexture* tempKey )
 {
+    //std::map< std::string, osg::ref_ptr< DCS > >::iterator iter = m_groupedTextures.find( tempKey );
+    
+    //if( iter != m_groupedTextures.end() )
+    {
+        //find dcs in list
+        std::list< DCS* >::iterator listIter = std::find( m_transformList.begin(), m_transformList.end(), tempKey->getParent( 0 ) );
+        //make this dcs the first one in the list
+        std::cout << std::distance( m_transformList.begin(), listIter ) << std::endl;
+        m_transformList.insert( m_transformList.begin(), listIter, m_transformList.end() );
+        std::cout << std::distance( m_transformList.begin(), listIter ) << std::endl;
+        m_transformList.erase( listIter, m_transformList.end() );
+        //Now update all the positions of the other textures
+        UpdateListPositions();
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void GroupedTextTextures::CreateTexturedQuad()
+void GroupedTextTextures::AddTextTexture( const std::string& tempKey, TextTexture* tempTexture )
 {
+    osg::ref_ptr< DCS > tempDCS = new DCS();
+    tempDCS->addChild( tempTexture );
+    m_groupedTextures[ tempKey ] = tempDCS.get();
+    addChild( tempDCS.get() );
+    
+    m_transformList.push_front( tempDCS.get() );
+    m_activeDCS = tempDCS.get();
+    
+    UpdateListPositions();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void GroupedTextTextures::CreateText()
+void GroupedTextTextures::UpdateListPositions()
 {
+    for( std::list< DCS* >::iterator iter = m_transformList.begin(); 
+        iter != m_transformList.end(); ++iter)
+    {
+        size_t i = std::distance( m_transformList.begin(), iter );
+        UpdateDCSPosition( (*iter), i );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void GroupedTextTextures::AddTextTexture( const std::string tempKey, TextTexturePtr tempTexture )
+void GroupedTextTextures::UpdateDCSPosition( DCS* tempDCS, size_t i )
 {
-    m_groupedTextures[ tempKey ] = tempTexture;
+    //y = ax + b
+    double b = 0.0f;
+    double a = 0.5f;
+    double x = 0.0f;
+    double deltaX = 1.0f;
+    double y = 0.0f;
+    
+    x = i * deltaX;
+    y = a * x + b;
+    
+    double pos[ 3 ];
+    pos[ 0 ] = 0.0f;
+    pos[ 1 ] = x;
+    pos[ 2 ] = y;
+
+    tempDCS->SetTranslationArray( pos );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void GroupedTextTextures::RemoveTextTexture( const std::string tempKey )
+void GroupedTextTextures::RemoveTextTextures( const std::string& tempKey )
 {
-    //m_groupedTextures[ tempKey ] = tempTexture;
+    if( tempKey.empty() )
+    {
+        m_transformList.clear();
+        m_groupedTextures.clear();
+    }
+    else
+    {
+        ;
+    }
 }
-////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////
