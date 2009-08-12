@@ -62,6 +62,8 @@
 #include <boost/filesystem/operations.hpp> // includes boost/filesystem/path.hpp
 #include <boost/filesystem/path.hpp>
 
+#include <boost/concept_check.hpp>
+
 
 #include <sys/types.h>
 #include <sys/timeb.h>
@@ -1156,6 +1158,8 @@ int VTKDataToTexture::countNumberOfParameters( const int numComponents )
 std::vector<std::string> VTKDataToTexture::getParameterNames( const int numComponents, 
                                                               const int numParameters )
 {
+    boost::ignore_unused_variable_warning( numParameters );
+
    std::vector<std::string> names;
    int ii = 0;
 
