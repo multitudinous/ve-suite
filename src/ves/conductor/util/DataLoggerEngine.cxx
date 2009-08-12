@@ -220,18 +220,18 @@ void DataLoggerEngine::WriteFile()
     }
     m_dataLoggerCommandVectorQueue.clear();
     
-    std::string xmlDocument( "returnString" );
+    //std::string xmlDocument( "returnString" );
     //Now send the data to xplorer
     ves::open::xml::XMLReaderWriter netowrkWriter;
     netowrkWriter.UseStandaloneDOMDocumentManager();
-    netowrkWriter.WriteXMLDocument( nodes, xmlDocument, "Command" );
+    netowrkWriter.WriteXMLDocument( nodes, m_movieFilename.c_str(), "Command" );
     
     {
         //std::cout << "Writing VE movie file " 
         //    << m_movieFilename << "." << std::endl;
-        std::ofstream commandScriptfile( m_movieFilename.c_str() );
-        commandScriptfile << xmlDocument << std::endl;
-        commandScriptfile.close();
+        //std::ofstream commandScriptfile( m_movieFilename.c_str() );
+        //commandScriptfile << xmlDocument << std::endl;
+        //commandScriptfile.close();
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
