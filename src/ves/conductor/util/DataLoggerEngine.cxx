@@ -224,7 +224,7 @@ void DataLoggerEngine::WriteFile()
     //Now send the data to xplorer
     ves::open::xml::XMLReaderWriter netowrkWriter;
     netowrkWriter.UseStandaloneDOMDocumentManager();
-    netowrkWriter.WriteXMLDocument( nodes, m_movieFilename.c_str(), "Command" );
+    netowrkWriter.WriteXMLDocument( nodes, m_movieFilename, "Command" );
     
     {
         //std::cout << "Writing VE movie file " 
