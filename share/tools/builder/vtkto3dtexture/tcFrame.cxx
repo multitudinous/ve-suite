@@ -65,7 +65,7 @@ TCFrame::TCFrame(wxWindow* parent,
            const wxPoint& pos , 
            const wxSize& size, 
            long style)
-:wxFrame(parent, -1, title,pos, size, style)
+:wxFrame(parent, id, title,pos, size, style)
 {
    _numFiles = 0;
    
@@ -311,7 +311,7 @@ void TCFrame::UpdateProgressDialog(const std::string msg)
    }
 }
 /////////////////////////////////////////////////////////
-void TCFrame::_onTransientMinimum(wxCommandEvent& event)
+void TCFrame::_onTransientMinimum(wxCommandEvent& WXUNUSED( event ) )
 {
    wxTextEntryDialog minimumDlg(this, 
                         _("Beginning Transient Time Step"),
@@ -321,7 +321,7 @@ void TCFrame::_onTransientMinimum(wxCommandEvent& event)
    minimumDlg.GetValue().ToULong(&_minTimeStepIndex);
 }
 ////////////////////////////////////////////////////////////////
-void TCFrame::_transientGridTypeSelection(wxCommandEvent& event)
+void TCFrame::_transientGridTypeSelection(wxCommandEvent& WXUNUSED( event ) )
 {
     wxArrayString transientType;
     transientType.Add( _("Static") );
@@ -376,7 +376,7 @@ void TCFrame::SetMPIVariables( int iRank, int inumProcessors )
 //event callbacks                                      //
 /////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////
-void TCFrame::_onGridTypeCallback(wxCommandEvent& event)
+void TCFrame::_onGridTypeCallback(wxCommandEvent& WXUNUSED( event ) )
 {
    UpdateStatus("Switching grid type. . .");
    int type = _gridTypeBox->GetSelection();
@@ -400,7 +400,7 @@ void TCFrame::_onGridTypeCallback(wxCommandEvent& event)
    };
 }
 /////////////////////////////////////////////////////////
-void TCFrame::_onTranslateCallback(wxCommandEvent& event)
+void TCFrame::_onTranslateCallback(wxCommandEvent& WXUNUSED( event ) )
 {
    _translator->setBatchOff();
    
@@ -458,7 +458,7 @@ void TCFrame::_onTranslateCallback(wxCommandEvent& event)
    _translator->reInit();
 }
 //////////////////////////////////////////////////////////
-void TCFrame::_onResolutionCallback(wxCommandEvent& event)
+void TCFrame::_onResolutionCallback(wxCommandEvent& event )
 {
    int value = event.GetSelection()+1;
    int id = event.GetId();
@@ -478,13 +478,13 @@ void TCFrame::_onResolutionCallback(wxCommandEvent& event)
    };
 }
 ///////////////////////////////////////////////////////////
-void TCFrame::_onUpdateDirectoryText(wxCommandEvent& event)
+void TCFrame::_onUpdateDirectoryText(wxCommandEvent& WXUNUSED( event ) )
 {
    SetInputDirectory( ConvertUnicode( _inputDirBox->GetValue().c_str() ) );
    SetOutputDirectory( ConvertUnicode( _outputDirBox->GetValue().c_str() ) );
 }
 ////////////////////////////////////////////////////
-void TCFrame::_onQuitCallback(wxCommandEvent& event)
+void TCFrame::_onQuitCallback(wxCommandEvent& WXUNUSED( event ) )
 {
    Destroy();
    exit(0);
