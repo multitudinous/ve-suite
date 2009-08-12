@@ -25,10 +25,18 @@ targetVjObs = [pj('#', buildDir,'src','ves','open','VjObsS.h'),
                pj('#', buildDir,'src','ves','open','VjObsI.h'),
                pj('#', buildDir,'src','ves','open','VjObsS.inl')]
 
-#taoPrefix=os.popen('flagpoll TAO --variable=prefix').read().strip()
-#env.PrependENVPath( 'LD_LIBRARY_PATH',pj( taoPrefix,'lib'))
-#env.PrependENVPath( 'PATH',pj( taoPrefix,'bin'))
 tao_idl ='tao_idl'
+
+# Find tao_idl exectuable
+sys.stdout.write("Searching for tao_idl...\n")
+taoidl_cmd = WhereIs('tao_idl')
+
+if None == taoidl_cmd:
+    sys.stdout.write("Could not find tao_idl. Please make sure tao_idl is in your PATH.\n")
+    sys.exit(0)
+else:
+    sys.stdout.write("Found tao_idl %s\n" % taoidl_cmd )
+
 if GetPlatform() != 'win32':
     idlCmd = '%s -o %s/src/ves/open -in -GC -GI  -I%s/src/ves/open/idl -Wb,export_macro=VE_OPEN_MODULE_EXPORTS -Wb,export_include=ves/VEConfig.h ${SOURCES}' %(tao_idl, buildDir, buildDir)
 else:
