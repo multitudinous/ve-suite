@@ -58,10 +58,10 @@ launcherBundle = ves_pkg.createFileBundle( 'bin' )
 
 if sca_util.GetPlatform() == "win32":
     makespecAction = '%s --onefile --out=%s --path=%s --icon=%s\\ves_icon.ico --upx ${SOURCE.abspath}' % (make_cmd, velauncherDistDir, velauncherLibDir, installerImages)
-    makespecBuilder = Builder(action = makespecAction, single_source = True, suffix = ".spec", chdir = velauncherDistDir)
+    makespecBuilder = Builder(action = makespecAction, single_source = True, suffix = ".spec")
     
     freezeAction = '%s ${SOURCE.abspath} %s\\velauncher.spec' % (build_cmd, velauncherDistDir)
-    freezeBuilder = Builder(action = freezeAction, single_source = True, suffix = "", chdir = velauncherCodeDir)
+    freezeBuilder = Builder(action = freezeAction, single_source = True, suffix = "")
 
     env.Append(BUILDERS = {'makespec': makespecBuilder, 'freeze' : freezeBuilder})
     env.makespec(target = makespecTarget ,source = makespecSrc)
@@ -73,10 +73,10 @@ if sca_util.GetPlatform() == "win32":
 
 else:
     makespecAction = '%s --onefile --out=%s --path=%s ${SOURCE.abspath}' % (make_cmd, velauncherDistDir, velauncherLibDir)
-    makespecBuilder = Builder(action = makespecAction, single_source = True, suffix = ".spec", chdir = velauncherDistDir)
+    makespecBuilder = Builder(action = makespecAction, single_source = True, suffix = ".spec")
 
     freezeAction = '%s ${SOURCE.abspath} %s/velauncher.spec' % (build_cmd, velauncherDistDir)
-    freezeBuilder = Builder(action = freezeAction, single_source = True, suffix = "", chdir = velauncherCodeDir)
+    freezeBuilder = Builder(action = freezeAction, single_source = True, suffix = "")
 
     env.Append(BUILDERS = {'makespec': makespecBuilder, 'freeze' : freezeBuilder})
     env.makespec(target = makespecTarget ,source = makespecSrc)
