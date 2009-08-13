@@ -115,11 +115,6 @@ MinervaManager::~MinervaManager()
 
 void MinervaManager::PreFrameUpdate()
 {
-    if( !_manager )
-    {
-        return;
-    }
-
     vprDEBUG( vesDBG, 3 ) << "|MinervaManager::LatePreFrameUpdate" 
         << std::endl << vprDEBUG_FLUSH;
     ves::open::xml::CommandPtr tempCommand =
@@ -131,6 +126,11 @@ void MinervaManager::PreFrameUpdate()
         EventHandlers::iterator iter ( _eventHandlers.find ( name ) );
         if ( iter != _eventHandlers.end() )
         {
+            if( !_manager && ( name != ves::util::commands::ADD_EARTH_COMMAND_NAME ) )
+            {
+                return;
+            }
+
             EventHandler *handler ( iter->second );
             if ( 0x0 != handler )
             {
