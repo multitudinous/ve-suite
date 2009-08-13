@@ -17,7 +17,7 @@ int main( int argc,
 	
 	osg::ref_ptr< osg::Node > root;
 
-	root = osgStage.createInstanced(vtkStage->GetOutput(),"","");
+	root = osgStage.createInstanced(vtkStage->GetOutput(),"","Density");
     std::cout << "end osg pipeline" << std::endl;
 
     osgViewer::Viewer viewer;

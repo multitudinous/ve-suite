@@ -1,4 +1,5 @@
 #include "OSGStage.h"
+#include "vtkLookupTable.h"
 #include <string>
 
 using namespace std;
@@ -167,18 +168,33 @@ float* OSGStage::createScalarArray( int m, int n, vtkDataArray* dataArray)
 {
     float* sca = new float[ m * n * 3 ];
     float* scaI = sca;
-
+	double dataRange[2]; 
+	
+	dataArray->GetRange(dataRange);
+	
+	//Here we build a color look up table
+	vtkLookupTable *lut = vtkLookupTable::New(); 
+	lut->SetHueRange (0.667, 0.0);
+	lut->SetRange(dataRange);
+	lut->SetRampToLinear();
+	lut->Build();
+	
 	int nd = dataArray->GetNumberOfTuples();
-
-    double x;
+	
+	double x;
+	double rgb[3];
 	for (int i=0; i<m*n; i++)
 	{
 		if (i<nd)
 		{
 			dataArray->GetTuple(i,&x);
-			*scaI++ = x;
-            *scaI++ = 0.;
-            *scaI++ = 0.;
+			lut->GetColor(x,rgb);
+			//*scaI++ = x;
+            //*scaI++ = 0.;
+            //*scaI++ = 0.;
+			*scaI++ = rgb[0];
+            *scaI++ = rgb[1];
+            *scaI++ = rgb[2];
 		}
 		else
 		{
@@ -187,6 +203,7 @@ float* OSGStage::createScalarArray( int m, int n, vtkDataArray* dataArray)
 			*scaI++ = 0.;
 		}
 	}
+	lut->Delete();
     return sca;
 }
 
@@ -260,6 +277,7 @@ osg::Node* OSGStage::createInstanced(vtkPolyData* glyph, string vectorName, stri
         std::cout << " scalars are null " << std::endl;
 		return NULL;
     }
+	
 	if ((vectorArray==NULL) && (scalarArray==NULL))
 		return NULL;
 
@@ -315,14 +333,16 @@ osg::Node* OSGStage::createInstanced(vtkPolyData* glyph, string vectorName, stri
             "vec4 pos = texture2D( texPos, tC ); \n"
             "mat4 mV = mat4( newX.x, newX.y, newX.z, 0., newY.x, newY.y, newY.z, 0., newZ.x, newZ.y, newZ.z, 0., pos.x, pos.y, pos.z, 1. ); \n"
             "gl_Position = (gl_ModelViewProjectionMatrix * mV * gl_Vertex); \n"
-
+			
             // Use just the orientation components to transform the normal.
             "mat3 mN = mat3( newX, newY, newZ ); \n"
             "vec3 norm = normalize(gl_NormalMatrix * mN * gl_Normal); \n"
 
             // Diffuse lighting with light at the eyepoint.
-            "gl_FrontColor = gl_Color * dot( norm, vec3( 0, 0, 1 ) ); \n"
-
+            //"gl_FrontColor = gl_Color * dot( norm, vec3( 0, 0, 1 ) ); \n"
+			"vec4 color = texture2D( texSca, tC ); \n"
+			"color[3]=1; \n"
+			"gl_FrontColor = vec4( color ); \n"
         "} \n";
 
     osg::ref_ptr< osg::Shader > vertexShader = new osg::Shader();
