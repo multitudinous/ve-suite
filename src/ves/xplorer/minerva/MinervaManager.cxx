@@ -115,8 +115,13 @@ MinervaManager::~MinervaManager()
 
 void MinervaManager::PreFrameUpdate()
 {
+    if( !_manager )
+    {
+        return;
+    }
+
     vprDEBUG( vesDBG, 3 ) << "|MinervaManager::LatePreFrameUpdate" 
-    << std::endl << vprDEBUG_FLUSH;
+        << std::endl << vprDEBUG_FLUSH;
     ves::open::xml::CommandPtr tempCommand =
         ves::xplorer::ModelHandler::instance()->GetXMLCommand();
     if ( tempCommand )
@@ -473,7 +478,7 @@ bool MinervaManager::_removeLayer ( Minerva::Core::Layers::RasterGroup *group, c
 void MinervaManager::_loadPlugins()
 {
 #ifdef __APPLE__
-  Usul::Components::Manager::instance().load( Usul::Interfaces::IUnknown::IID, "GDALReadImage.plug" );
+  Usul::Components::Manager::instance().load( Usul::Interfaces::IUnknown::IID, std::string("GDALReadImage.plug") );
 #endif
   // this causes huge problems because the output is never flushed.
   //This can probably be corrected but I am not sure how.
