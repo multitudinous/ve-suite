@@ -190,12 +190,11 @@ void KeyboardMouse::SetStartEndPoint(
     osg::Vec3d& startPoint, osg::Vec3d& endPoint )
 {
 #if __GADGET_version >= 1003023
-    gmtl::Matrix44d MVPW = m_currentGLTransformInfo->GetMVPWMatrix();
-    gmtl::Matrix44d inverseMVPW = gmtl::invert( MVPW );
-    osg::Matrixd osgInverseMVPW( inverseMVPW.getData() );
+    osg::Matrixd inverseMVPW = m_currentGLTransformInfo->GetOSGMVPWMatrix();
+    inverseMVPW.invert( inverseMVPW );
 
-    startPoint = osg::Vec3d( mX, mY, 0.0 ) * osgInverseMVPW;
-    endPoint = osg::Vec3d( mX, mY, 1.0 ) * osgInverseMVPW;
+    startPoint = osg::Vec3d( mX, mY, 0.0 ) * inverseMVPW;
+    endPoint = osg::Vec3d( mX, mY, 1.0 ) * inverseMVPW;
 
     /*
     std::cout << "near_point: "
@@ -1527,6 +1526,23 @@ void KeyboardMouse::Zoom45( double dy )
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::Pan( double dx, double dz )
 {
+#if __GADGET_version >= 1003023
+    osg::Matrixd vpwMatrix = m_currentGLTransformInfo->GetOSGVPWMatrix();
+    osg::Matrixd inverseVPW = vpwMatrix.inverse( vpwMatrix );
+
+    osg::Vec3d centerPointVec(
+        (*mCenterPoint)[ 0 ], (*mCenterPoint)[ 1 ], (*mCenterPoint)[ 2 ] );
+    osg::Vec3d newPosition = centerPointVec * vpwMatrix;
+    newPosition.x() += dx * mWidth;
+    newPosition.y() += dz * mHeight;
+    newPosition = newPosition * inverseVPW;
+    newPosition -= centerPointVec;
+
+    mDeltaTranslation.set( newPosition.x(), newPosition.y(), newPosition.z() );
+    mCenterPoint->mData[ 0 ] += newPosition.x();
+    mCenterPoint->mData[ 1 ] += newPosition.y();
+    mCenterPoint->mData[ 2 ] += newPosition.z();
+#else
     double d = mCenterPoint->mData[ 1 ];
     double theta = mFoVZ * 0.5 ;
     double b = 2.0 * d * tan( theta );
@@ -1547,6 +1563,7 @@ void KeyboardMouse::Pan( double dx, double dz )
 
     mCenterPoint->mData[ 0 ] += dwx;
     mCenterPoint->mData[ 2 ] += dwz;
+#endif //__GADGET_version >= 1003023
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::Rotate( double angle, gmtl::Vec3d axis )
