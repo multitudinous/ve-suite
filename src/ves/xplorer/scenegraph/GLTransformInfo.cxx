@@ -70,6 +70,8 @@ GLTransformInfo::GLTransformInfo(
     m_windowMatrix( windowMatrix ),
     m_osgWindowMatrix( m_windowMatrix.mData )
 {
+    m_modelMatrix.mState = gmtl::Matrix44d::FULL;
+    m_viewMatrix.mState = gmtl::Matrix44d::FULL;
     m_modelViewMatrix.mState = gmtl::Matrix44d::FULL;
     m_projectionMatrix.mState = gmtl::Matrix44d::FULL;
     m_projectionMatrix.mData[ 11 ] = -1.0;
@@ -178,6 +180,26 @@ const double& GLTransformInfo::GetFarFrustum() const
     return m_farFrustum;
 }
 ////////////////////////////////////////////////////////////////////////////////
+const gmtl::Matrix44d& GLTransformInfo::GetModelMatrix() const
+{
+    return m_modelMatrix;
+}
+////////////////////////////////////////////////////////////////////////////////
+const osg::Matrixd& GLTransformInfo::GetOSGModelMatrix() const
+{
+    return m_osgModelMatrix;
+}
+////////////////////////////////////////////////////////////////////////////////
+const gmtl::Matrix44d& GLTransformInfo::GetViewMatrix() const
+{
+    return m_viewMatrix;
+}
+////////////////////////////////////////////////////////////////////////////////
+const osg::Matrixd& GLTransformInfo::GetOSGViewMatrix() const
+{
+    return m_osgViewMatrix;
+}
+////////////////////////////////////////////////////////////////////////////////
 const gmtl::Matrix44d& GLTransformInfo::GetModelViewMatrix() const
 {
     return m_modelViewMatrix;
@@ -210,12 +232,26 @@ const osg::Matrixd& GLTransformInfo::GetOSGWindowMatrix() const
 ////////////////////////////////////////////////////////////////////////////////
 const gmtl::Matrix44d GLTransformInfo::GetMVPWMatrix() const
 {
+    //Original vertex data - [ vertex ]
+    //Eye coordinates - [ vertex ] [ MV ]
+    //Clip/Normalized coordinates - [ vertex ] [ MV ] [ P ]
+    //Screen coordinates - [ vertex ] [ MV ] [ P ] [ W ]
     return m_windowMatrix * m_projectionMatrix * m_modelViewMatrix;
 }
 ////////////////////////////////////////////////////////////////////////////////
 const osg::Matrixd GLTransformInfo::GetOSGMVPWMatrix() const
 {
     return m_osgModelViewMatrix * m_osgProjectionMatrix * m_osgWindowMatrix;
+}
+////////////////////////////////////////////////////////////////////////////////
+const gmtl::Matrix44d GLTransformInfo::GetVPWMatrix() const
+{
+    return m_windowMatrix * m_projectionMatrix * m_viewMatrix;
+}
+////////////////////////////////////////////////////////////////////////////////
+const osg::Matrixd GLTransformInfo::GetOSGVPWMatrix() const
+{
+    return m_osgViewMatrix * m_osgProjectionMatrix * m_osgWindowMatrix;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void GLTransformInfo::UpdateFrustumValues(
@@ -234,9 +270,14 @@ void GLTransformInfo::UpdateFrustumValues(
 }
 ////////////////////////////////////////////////////////////////////////////////
 void GLTransformInfo::UpdateModelViewMatrix(
-    const gmtl::Matrix44d& modelViewMatrix )
+    const gmtl::Matrix44d& viewMatrix,
+    const gmtl::Matrix44d& modelMatrix )
 {
-    m_modelViewMatrix = modelViewMatrix;
+    m_viewMatrix = viewMatrix;
+    m_osgViewMatrix.set( m_viewMatrix.mData );
+    m_modelMatrix = modelMatrix;
+    m_osgModelMatrix.set( m_modelMatrix.mData );
+    m_modelViewMatrix = m_viewMatrix * m_modelMatrix;
     m_osgModelViewMatrix.set( m_modelViewMatrix.mData );
 }
 ////////////////////////////////////////////////////////////////////////////////

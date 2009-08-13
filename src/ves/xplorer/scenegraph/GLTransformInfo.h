@@ -126,6 +126,18 @@ public:
     const double& GetFarFrustum() const;
 
     ///
+    const gmtl::Matrix44d& GetModelMatrix() const;
+
+    ///
+    const osg::Matrixd& GetOSGModelMatrix() const;
+
+    ///
+    const gmtl::Matrix44d& GetViewMatrix() const;
+
+    ///
+    const osg::Matrixd& GetOSGViewMatrix() const;
+
+    ///
     const gmtl::Matrix44d& GetModelViewMatrix() const;
 
     ///
@@ -150,13 +162,21 @@ public:
     const osg::Matrixd GetOSGMVPWMatrix() const;
 
     ///
+    const gmtl::Matrix44d GetVPWMatrix() const;
+
+    ///
+    const osg::Matrixd GetOSGVPWMatrix() const;
+
+    ///
     void UpdateFrustumValues(
         const double& l, const double& r,
         const double& b, const double& t,
         const double& n, const double& f );
 
     ///
-    void UpdateModelViewMatrix( const gmtl::Matrix44d& modelViewMatrix );
+    void UpdateModelViewMatrix(
+        const gmtl::Matrix44d& viewMatrix,
+        const gmtl::Matrix44d& modelMatrix );
 
 protected:
 
@@ -194,6 +214,18 @@ private:
     double m_nearFrustum;
     ///
     double m_farFrustum;
+
+    ///
+    gmtl::Matrix44d m_modelMatrix;
+
+    ///
+    osg::Matrixd m_osgModelMatrix;
+
+    ///
+    gmtl::Matrix44d m_viewMatrix;
+
+    ///
+    osg::Matrixd m_osgViewMatrix;
 
     ///
     gmtl::Matrix44d m_modelViewMatrix;

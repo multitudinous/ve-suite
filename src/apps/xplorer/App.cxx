@@ -771,7 +771,7 @@ void App::draw()
         gmtl::Matrix44d viewMatrix =
             gmtl::convertTo< double >( project->getViewMatrix() );
         //Transform into z-up land (mZUp) and mul by the model matrix (mNavPosition)
-        glTI->UpdateModelViewMatrix( viewMatrix * mZUp * mNavPosition );
+        glTI->UpdateModelViewMatrix( viewMatrix * mZUp, mNavPosition );
         const osg::Matrixd& osgModelViewMatrix = glTI->GetOSGModelViewMatrix();
 
         if( mRTT )
