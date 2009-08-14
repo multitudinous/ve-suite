@@ -5,7 +5,7 @@
 
 #ifdef WIN32
 #include <windows.h>
-#nedif
+#endif
 
 #include <osgDB/ReadFile>
 #include <osgViewer/Viewer>
