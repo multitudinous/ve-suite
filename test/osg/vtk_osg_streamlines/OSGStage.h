@@ -3,7 +3,9 @@
 //the Testure2D data is used as away to transfer data into the shader
 //It acts as a raw array instead of 2D data
 
-//#include <windows.h>
+#ifdef WIN32
+#include <windows.h>
+#endif
 
 #include <osgDB/ReadFile>
 #include <osgDB/FileUtils>
@@ -30,7 +32,7 @@ public:
 	~OSGStage(void);
 
 	//create a Group of Stream Lines
-	osg::Group* createInstanced(vtkPolyData* polyData, int mult);
+	osg::Group* createInstanced(vtkPolyData* polyData, int mult, const char* scalarName);
 
 private:
 
@@ -45,8 +47,10 @@ private:
 	float* createPositionArray( int numPoints , int mult, vtkPoints* points, const int* pts, int &tm, int &tn);
 
 	//create strealines
-	void createStreamLines(vtkPolyData* polyData, osg::Geode* geode, int mult);
-
+	void createStreamLines(vtkPolyData* polyData, osg::Geode* geode, int mult, const char* scalarName);
+	
+	//create the coloring scalar array
+	float* createScalarArray( int numPoints , int mult, vtkPointData* pointdata, const int* pts, int &tm, int &tn, const char* scalarName);
 };
 
 // Allows you to change the animation play rate:

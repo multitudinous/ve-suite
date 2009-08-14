@@ -1,6 +1,7 @@
 
 uniform vec2 sizes;
 uniform sampler2D texPos;
+uniform sampler2D texSca;
 
 uniform float osg_SimulationTime;
 uniform float totalInstances;
@@ -28,8 +29,11 @@ void main()
     float timeOffset = ( ((float)gl_InstanceID) / totalInstances ) * repeatTime;
     float repTimer = mod( ( osg_SimulationTime - timeOffset ), repeatTime );
     float alpha = fadeTime - min( repTimer, fadeTime );
-    vec4 color = gl_Color;
-    color.a *= alpha;
+    //vec4 color = gl_Color;
+    
+	//color.a *= alpha;
+	vec4 color = texture2D( texSca, tC ); 
+	color[3]=alpha;
     gl_FrontColor = color;
 
 }

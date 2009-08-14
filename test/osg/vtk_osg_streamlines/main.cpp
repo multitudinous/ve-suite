@@ -19,7 +19,7 @@ int main( int argc,
 
 	int mult=10;  //This is a mulitiplier to create extra points using linear interplation to smooth out the animation
 
-	root->addChild(osgStage.createInstanced(vtkStage->GetOutput(), mult));
+	root->addChild(osgStage.createInstanced(vtkStage->GetOutput(), mult, "Density"));
 	
     std::cout << "end osg pipeline" << std::endl;
 

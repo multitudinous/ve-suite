@@ -143,9 +143,83 @@ int OSGStage::mypow2(unsigned x)
     return l;
 }
 
+float* OSGStage::createScalarArray( int numPoints , int mult, vtkPointData* pointData, const int* pts, int &tm, int &tn, const char* scalarName)
+{
+	int am = mylog2(numPoints*mult)+1;
+	int mm = am/2;
+	int nn = am -am/2;
+	tm = mypow2(mm);
+	tn = mypow2(nn);
+    std::cout << tm << " "<< tn << std::endl;
+
+    float* sca = new float[ tm * tn * 3 ];
+    float* scaI = sca;
+
+	double curColor[3];
+	double nextColor[3];
+
+	vtkDataArray* dataArray = pointData->GetScalars(scalarName);
+	double dataRange[2]; 
+	
+	dataArray->GetRange(dataRange);
+	
+	//Here we build a color look up table
+	vtkLookupTable *lut = vtkLookupTable::New(); 
+	lut->SetHueRange (0.667, 0.0);
+	lut->SetRange(dataRange);
+	lut->SetRampToLinear();
+	lut->Build();
+
+	double nextVal = dataArray->GetTuple1(pts[0]);
+	lut->GetColor(nextVal,nextColor);
+
+	int j=0;
+	for (int i=0; i<tm*tn; i++)
+	{
+		if (i<numPoints*mult)
+		{	
+			int mod = i%mult;
+			if (mod == 0)
+			{
+				*scaI++=(float)nextColor[0];
+				*scaI++=(float)nextColor[1];
+				*scaI++=(float)nextColor[2];
+
+				curColor[0]=nextColor[0];
+				curColor[1]=nextColor[1];
+				curColor[2]=nextColor[2];
+
+				j++;
+				if (j<numPoints)
+				{
+					nextVal = dataArray->GetTuple1(pts[j]);
+					lut->GetColor(nextVal,nextColor);
+				}
+			}
+			else
+			{
+				mod = i%mult;
+				*scaI++=(float)(curColor[0]+mod*(nextColor[0]-curColor[0])/mult);
+				*scaI++=(float)(curColor[1]+mod*(nextColor[1]-curColor[1])/mult);
+				*scaI++=(float)(curColor[2]+mod*(nextColor[2]-curColor[2])/mult);
+			}
+		}
+		else
+		{
+			*scaI++ = 0.;
+			*scaI++ =  0.;
+			*scaI++ = 0.;
+		}
+	}
+           
+	lut->Delete();
+    return sca;
+}
+
+
 //CreateStreamLines
 
-void OSGStage::createStreamLines(vtkPolyData* polyData, osg::Geode* geode, int mult)
+void OSGStage::createStreamLines(vtkPolyData* polyData, osg::Geode* geode, int mult, const char* scalarName)
 {
 	int numOfLine = polyData->GetNumberOfLines();
 	vtkCellArray* lines = polyData->GetLines();
@@ -193,6 +267,7 @@ void OSGStage::createStreamLines(vtkPolyData* polyData, osg::Geode* geode, int m
 		int tn=0;
 		
 		float* pos = createPositionArray( cLineNp , mult, points, pts, tm, tn);
+		float* sca = createScalarArray( cLineNp , mult, pointData, pts, tm, tn, scalarName);
 
 		osg::StateSet* ss = geom->getOrCreateStateSet();
 
@@ -281,37 +356,26 @@ void OSGStage::createStreamLines(vtkPolyData* polyData, osg::Geode* geode, int m
 		osg::ref_ptr< osg::Uniform > texPosUniform =
 			new osg::Uniform( "texPos", 0 );
 		ss->addUniform( texPosUniform.get() );
+		
+		//send down rgb using texture
+		osg::Image* iSca = new osg::Image;
+		iSca->setImage( tm, tn, 1, GL_RGB32F_ARB, GL_RGB, GL_FLOAT,
+			(unsigned char*)sca, osg::Image::USE_NEW_DELETE );
+		osg::Texture2D* texSca = new osg::Texture2D( iSca );
+		texSca->setFilter( osg::Texture2D::MIN_FILTER, osg::Texture2D::NEAREST );
+		texSca->setFilter( osg::Texture2D::MAG_FILTER, osg::Texture2D::NEAREST );
+
+		ss->setTextureAttribute( 2, texSca );
+
+		osg::ref_ptr< osg::Uniform > texScaUniform =
+			new osg::Uniform( "texSca", 2 );
+		ss->addUniform( texScaUniform.get() );
 	}
-	
-    
-    
-/*
-    // 2nd streamline
-    geom = new osg::Geometry;
-    geom->setUseDisplayList( false );
-    geom->setUseVertexBufferObjects( true );
-    loc.set( 0., -3., 1. );
-    createSLPoint( *geom, m*n, loc, osg::Vec4( 1., .7, .5, 1. ) );
-    geode->addDrawable( geom );
-
-    bb = osg::BoundingBox( osg::Vec3( 0., -1., -4. )+loc, osg::Vec3( m*n*dX, 1., 4. )+loc );
-    geom->setInitialBound( bb );
-
-    // 3rd streamline
-    geom = new osg::Geometry;
-    geom->setUseDisplayList( false );
-    geom->setUseVertexBufferObjects( true );
-    loc.set( 2., 4.5, 1.5 );
-    createSLPoint( *geom, m*n, loc, osg::Vec4( .5, 1., .6, 1. ) );
-    geode->addDrawable( geom );
-
-    bb = osg::BoundingBox( osg::Vec3( 0., -1., -4. )+loc, osg::Vec3( m*n*dX, 1., 4. )+loc );
-    geom->setInitialBound( bb );
-	*/
+   
 }
 
 // Create a scene graph and state set configured to render a streamline using draw instanced.
-osg::Group* OSGStage::createInstanced( vtkPolyData* polyData, int mult)
+osg::Group* OSGStage::createInstanced( vtkPolyData* polyData, int mult, const char* scalarName)
 {
 	if (polyData==NULL)
     {
@@ -346,7 +410,7 @@ osg::Group* OSGStage::createInstanced( vtkPolyData* polyData, int mult)
     grp->addChild( geode );
 
 	//Now needs to create streams line with the passed in polyData line data
-	createStreamLines(polyData,geode, mult);
+	createStreamLines(polyData,geode, mult, scalarName);
 
 
     
