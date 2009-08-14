@@ -2,22 +2,22 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #include <vesenv.iss>
-#define MyAppName "VE_Suite.1.1_Dependencies"
+#define MyAppName "VE_Suite_Dependencies"
 #define MyAppVerName "VE_Suite.1.1_Dependencies"
 #define MyAppPublisher "Virtual Engineering Research Group"
 #define MyAppURL "www.vesuite.org"
 
 [Setup]
 AppName={#MyAppName}
-AppVerName={#MyAppVerName}
+AppVerName={#MyAppName}_{#VEVERSION}_{#MSVCVERSION}
 AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
-DefaultDirName=C:\{#MyAppName}
+DefaultDirName=C:\{#MyAppName}_{#VEVERSION}_{#MSVCVERSION}
 DefaultGroupName={#VESGROUPNAME}
 AllowNoIcons=true
-OutputBaseFilename=vesuite_deps{#VEVERSION}
+OutputBaseFilename={#MyAppName}_{#VEVERSION}_{#MSVCVERSION}
 Compression=lzma
 SolidCompression=true
 OutputDir={#INSTALLERINSTALLLOCATION}
@@ -28,7 +28,7 @@ WizardImageStretch=false
 WizardImageBackColor=clWhite
 BackColor=$a16502
 BackColor2=$1b84f7
-SetupIconFile={#VEINSTALLHOME}\bin\installerImages\Ve_icon.ico
+SetupIconFile={#VEINSTALLHOME}\bin\installerImages\ves_icon.ico
 PrivilegesRequired=none
 UsePreviousGroup=false
 [Languages]
@@ -41,12 +41,13 @@ Name: custom; Description: Custom installation; Flags: iscustom
 Name: vtk; Description: Visualiztion ToolKit; Types: full
 Name: acetao; Description: ACE/TAO; Types: full
 Name: wxwidgets; Description: wxWidgets; Types: full
-Name: xercesc; Description: Xerces-C++; Types: full
+Name: xercesc; Description: Apache Xerces-C++; Types: full
 Name: osg; Description: OpenSceneGraph; Types: full
-Name: juggler; Description: vrJuggler; Types: full
+Name: juggler; Description: VR Juggler; Types: full
 Name: apr; Description: Apache APR; Types: full
 Name: osgal; Description: osgAL; Types: full
 Name: minerva; Description: Minerva; Types: full
+Name: poco; Description: POCO; Types: full
 Name: depsbuildenv; Description: Headers and Libs
 
 [Files]
@@ -115,6 +116,11 @@ Source: {#DEPENDSINSTALLHOME}\{#MINERVAHOME}\include\*.h; DestDir: {app}\include
 Source: {#DEPENDSINSTALLHOME}\{#MINERVAHOME}\lib\*.lib; DestDir: {app}\lib; Flags: ignoreversion skipifsourcedoesntexist; Components: depsbuildenv
 Source: {#DEPENDSINSTALLHOME}\{#MINERVAHOME}\lib\*.dll; DestDir: {app}\lib; Flags: ignoreversion skipifsourcedoesntexist; Components: minerva
 Source: {#DEPENDSINSTALLHOME}\{#MINERVAHOME}\lib\*.plug; DestDir: {app}\lib; Flags: ignoreversion skipifsourcedoesntexist; Components: minerva
+
+; POCO Files
+Source: {#DEPENDSINSTALLHOME}\{#POCOHOME}\include\*.h; DestDir: {app}\include; Flags: ignoreversion recursesubdirs skipifsourcedoesntexist; Components: depsbuildenv
+Source: {#DEPENDSINSTALLHOME}\{#POCOHOME}\lib\*.lib; DestDir: {app}\lib; Flags: ignoreversion skipifsourcedoesntexist; Components: depsbuildenv
+Source: {#DEPENDSINSTALLHOME}\{#POCOHOME}\lib\*.dll; DestDir: {app}\lib; Flags: ignoreversion skipifsourcedoesntexist; Components: poco; Languages: 
 
 ; README setup for depends info
 Source: {#VEDEVHOME}\dist\win\iss\dependencies.txt; DestDir: {app}; Flags: isreadme; DestName: README.txt; Components: ; Languages: 
