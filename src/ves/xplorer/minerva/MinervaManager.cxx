@@ -149,7 +149,7 @@ void MinervaManager::PreFrameUpdate()
         //_currentCommand = CommandPtr();
     }
 
-    if ( _body )
+    if( _body )
     {
         // Remove all tiles that are ready for deletion.
         _body->purgeTiles();
