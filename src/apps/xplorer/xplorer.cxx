@@ -112,6 +112,20 @@ int main( int argc, char* argv[] )
         return 0;
     }
     
+    if( !vm.count("jconf") )
+    {
+        std::cerr << std::endl << std::endl
+            << "************************************************" << std::endl
+            << "*** The --jconf argument is not specified as ***" << std::endl
+            << "*** an option for ves_xplorer. Please update ***" << std::endl
+            << "*** the command line arguments to properly   ***" << std::endl
+            << "*** launch ves_xplorer.                      ***" << std::endl
+            << "************************************************" << std::endl
+            << std::endl << std::endl;
+        std::cout << xplorer_desc << std::endl;
+        return 0;
+    }
+
     try
     {
         //std::string Advanced_Resource_Factory( "static Advanced_Resource_Factory \"-ORBReactorType select_st -ORBInputCDRAllocator null -ORBConnectionCacheLock null -ORBFlushingStrategy blocking\"" );
