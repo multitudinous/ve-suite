@@ -156,7 +156,7 @@ KeyboardMouse::KeyboardMouse()
     mPrevPos( 0, 0 ),
 
     mDeltaRotation( 0.0, 0.0, 0.0, 1.0 ),
-    mDeltaTranslation( 0.0, 0.0, 0.0, 1.0 ),
+    mDeltaTranslation( 0.0, 0.0, 0.0 ),
 
     mLineSegmentIntersector(
         new osgUtil::LineSegmentIntersector(
@@ -637,7 +637,7 @@ void KeyboardMouse::ProcessNavigationEvents()
 
     //Reset the delta transform
     mDeltaRotation.set( 0.0, 0.0, 0.0, 1.0 );
-    mDeltaTranslation.set( 0.0, 0.0, 0.0, 1.0 );
+    mDeltaTranslation.set( 0.0, 0.0, 0.0 );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::SetWindowValues( unsigned int w, unsigned int h )
@@ -1459,13 +1459,46 @@ void KeyboardMouse::Twist()
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::Zoom( double dy )
 {
+#if __GADGET_version >= 1003023
+    gmtl::Matrix44d vpwMatrix = m_currentGLTransformInfo->GetVPWMatrix();
+
+    double viewlength = mCenterPoint->mData[ 1 ];
+    double d = ( viewlength * ( 1 / ( 1 - dy * 2 ) ) ) - viewlength;
+
+    gmtl::Point3d yTransform = *mCenterPoint;
+    yTransform.mData[ 1 ] += d;
+    yTransform = vpwMatrix * yTransform;
+
+    gmtl::Point3d position = vpwMatrix * *mCenterPoint;
+    position.mData[ 2 ] = yTransform.mData[ 2 ];
+    position = gmtl::invert( vpwMatrix ) * position;
+    mDeltaTranslation = position - *mCenterPoint;
+
+    //Test if center point has breached our specified threshold
+    if( position.mData[ 1 ] < *mCenterPointThreshold )
+    {
+        //Prevent center point from jumping when manipulating a selected object
+        vxs::DCS* const selectedDCS =
+            vx::DeviceHandler::instance()->GetSelectedDCS();
+        if( selectedDCS )
+        {
+            mDeltaTranslation.set( 0.0, 0.0, 0.0 );
+
+            return;
+        }
+
+        position.mData[ 1 ] = *mCenterPointJump;
+    }
+
+    *mCenterPoint = position;
+#else
     double viewlength = mCenterPoint->mData[ 1 ];
 #if __VJ_version >= 2003000
     double d = ( viewlength * ( 1 / ( 1 - dy * 2 ) ) ) - viewlength;
 #else
     double d = ( viewlength * ( 1 / ( 1 + dy * 2 ) ) ) - viewlength;
 #endif
-
+    gmtl::VecBase::
     mDeltaTranslation.mData[ 1 ] = d;
     mCenterPoint->mData[ 1 ] += d;
 
@@ -1487,6 +1520,7 @@ void KeyboardMouse::Zoom( double dy )
             mCenterPoint->mData[ 1 ] -= d;
         }
     }
+#endif //__GADGET_version >= 1003023
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::Zoom45( double dy )
@@ -1527,21 +1561,15 @@ void KeyboardMouse::Zoom45( double dy )
 void KeyboardMouse::Pan( double dx, double dz )
 {
 #if __GADGET_version >= 1003023
-    osg::Matrixd vpwMatrix = m_currentGLTransformInfo->GetOSGVPWMatrix();
-    osg::Matrixd inverseVPW = vpwMatrix.inverse( vpwMatrix );
+    gmtl::Matrix44d vpwMatrix = m_currentGLTransformInfo->GetVPWMatrix();
 
-    osg::Vec3d centerPointVec(
-        (*mCenterPoint)[ 0 ], (*mCenterPoint)[ 1 ], (*mCenterPoint)[ 2 ] );
-    osg::Vec3d newPosition = centerPointVec * vpwMatrix;
-    newPosition.x() += dx * mWidth;
-    newPosition.y() += dz * mHeight;
-    newPosition = newPosition * inverseVPW;
-    newPosition -= centerPointVec;
+    gmtl::Point3d position = vpwMatrix * *mCenterPoint;
+    position.mData[ 0 ] += dx * mWidth;
+    position.mData[ 1 ] += dz * mHeight;
+    position = gmtl::invert( vpwMatrix ) * position;
 
-    mDeltaTranslation.set( newPosition.x(), newPosition.y(), newPosition.z() );
-    mCenterPoint->mData[ 0 ] += newPosition.x();
-    mCenterPoint->mData[ 1 ] += newPosition.y();
-    mCenterPoint->mData[ 2 ] += newPosition.z();
+    mDeltaTranslation = position - *mCenterPoint;
+    *mCenterPoint = position;
 #else
     double d = mCenterPoint->mData[ 1 ];
     double theta = mFoVZ * 0.5 ;

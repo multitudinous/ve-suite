@@ -319,7 +319,7 @@ private:
     gmtl::Quatd mDeltaRotation;
 
     ///
-    gmtl::Vec4d mDeltaTranslation;
+    gmtl::Vec3d mDeltaTranslation;
 
     ///
     osg::ref_ptr< osg::Geode > mBeamGeode;
