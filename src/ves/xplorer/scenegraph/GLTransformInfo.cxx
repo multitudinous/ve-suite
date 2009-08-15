@@ -97,8 +97,14 @@ GLTransformInfo::GLTransformInfo( const GLTransformInfo& glTransformInfo )
     m_nearFrustum( glTransformInfo.m_nearFrustum ),
     m_farFrustum( glTransformInfo.m_farFrustum ),
 
+    m_modelMatrix( glTransformInfo.m_modelMatrix ),
+    m_osgModelMatrix( glTransformInfo.m_osgModelMatrix ),
+    m_viewMatrix( glTransformInfo.m_viewMatrix ),
+    m_osgViewMatrix( glTransformInfo.m_osgViewMatrix ),
     m_modelViewMatrix( glTransformInfo.m_modelViewMatrix ),
+    m_osgModelViewMatrix( glTransformInfo.m_osgModelViewMatrix ),
     m_projectionMatrix( glTransformInfo.m_projectionMatrix ),
+    m_osgProjectionMatrix( glTransformInfo.m_osgProjectionMatrix ),
     m_windowMatrix( glTransformInfo.m_windowMatrix ),
     m_osgWindowMatrix( glTransformInfo.m_osgWindowMatrix )
 {
