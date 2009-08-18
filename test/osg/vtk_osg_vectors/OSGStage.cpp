@@ -339,9 +339,9 @@ osg::Node* OSGStage::createInstanced(vtkPolyData* glyph, string vectorName, stri
             "vec3 norm = normalize(gl_NormalMatrix * mN * gl_Normal); \n"
 
             // Diffuse lighting with light at the eyepoint.
-            //"gl_FrontColor = gl_Color * dot( norm, vec3( 0, 0, 1 ) ); \n"
-			"vec4 color = texture2D( texSca, tC ); \n"
-			"color[3]=1; \n"
+            "vec4 color = texture2D( texSca, tC ); \n"
+            "color = color * dot( norm, vec3( 0, 0, 1 ) ); \n"
+            "color[3]=1; \n"
 			"gl_FrontColor = vec4( color ); \n"
         "} \n";
 
