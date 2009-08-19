@@ -1502,7 +1502,6 @@ void KeyboardMouse::Zoom( double dy )
 #else
     double d = ( viewlength * ( 1 / ( 1 + dy * 2 ) ) ) - viewlength;
 #endif
-    gmtl::VecBase::
     mDeltaTranslation.mData[ 1 ] = d;
     mCenterPoint->mData[ 1 ] += d;
 
