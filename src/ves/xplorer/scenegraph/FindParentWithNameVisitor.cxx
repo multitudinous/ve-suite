@@ -37,11 +37,12 @@ using namespace ves::xplorer::scenegraph;
 
 ////////////////////////////////////////////////////////////////////////////////
 FindParentWithNameVisitor::FindParentWithNameVisitor( osg::Node* node, 
-    const std::string& nodeName )
+    const std::string& nodeName, bool exactNameMatch )
     :
     NodeVisitor( TRAVERSE_PARENTS ),
     parentNode( 0 ),
-    mParentName( nodeName )
+    mParentName( nodeName ),
+    m_exactNameMatch( exactNameMatch )
 {
     node->accept( *this );
 }
@@ -59,12 +60,27 @@ osg::Node* FindParentWithNameVisitor::GetParentNode()
 void FindParentWithNameVisitor::apply( osg::Node& node )
 {
     //Find the parent node with the specified name
-    if( node.getName() == mParentName )
+    if( m_exactNameMatch )
     {
-        parentNode = &node;
-        return;
+        //Find the parent node with the specified name
+        if( node.getName() == mParentName )
+        {
+            parentNode = &node;
+            return;
+        }
     }
-
+    else
+    {
+        std::string name = node.getName();
+        size_t found = name.find( mParentName );
+        if( found != std::string::npos )
+            //if( !name.compare( 0, mNodeName.size(), mNodeName ) )
+        {
+            parentNode = &node;
+            return;
+        }
+    }
+    
     //If we did not find an id and therefore a parent then keep going up
     if( !parentNode )
     {
