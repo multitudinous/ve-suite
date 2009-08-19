@@ -131,6 +131,11 @@ public:
     
     ///Get raw vrjuggler keyboardmouse ptr
     gadget::KeyboardMousePtr GetKeyboardMouseVRJDevice();
+    
+    ///Get the line segment intersector
+    ///\pre UpdateSelectionLine must be called first
+    ///\return Returns the osg class that manages the line interesection tests
+    osgUtil::LineSegmentIntersector* GetLineSegmentIntersector();
 
 protected:
     ///Set the start and end point
