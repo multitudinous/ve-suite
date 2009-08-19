@@ -190,10 +190,11 @@ void TextTexture::CreateTexturedQuad()
     addChild( texttureGeode );
     
     getOrCreateStateSet()->
-        setRenderBinDetails( 21, std::string( "RenderBin" ) );
+        setRenderBinDetails( 21, std::string( "DepthSortedBin" ) );
     getOrCreateStateSet()->setNestRenderBins( false );
     
-    getOrCreateStateSet()->setAttributeAndModes( 
+    //getOrCreateStateSet()
+    stateset->setAttributeAndModes( 
         new osg::Depth( osg::Depth::ALWAYS ), 
         osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
 
@@ -214,7 +215,7 @@ void TextTexture::CreateTexturedQuad()
         osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
     
     stateset->addUniform(
-        new osg::Uniform( "opacityVal", 0.70f ) );
+        new osg::Uniform( "opacityVal", 0.85f ) );
 
     stateset->addUniform( new osg::Uniform( "tex", 0 ) );
 
@@ -251,6 +252,16 @@ void TextTexture::CreateText()
 
     osg::ref_ptr< osg::StateSet > stateset =
         textGeode->getOrCreateStateSet();
+    stateset->setMode( GL_LIGHTING, osg::StateAttribute::OFF );    
+
+    osg::ref_ptr< osg::BlendFunc > bf = new osg::BlendFunc();
+    bf->setFunction( osg::BlendFunc::SRC_ALPHA, 
+                    osg::BlendFunc::ONE_MINUS_SRC_ALPHA );
+    stateset->setMode( GL_BLEND, 
+                      osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+    stateset->setAttributeAndModes( bf.get(), 
+                                   osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+    
     
     std::string shaderName = osgDB::findDataFile( "null_glow_texture.fs" );
     osg::ref_ptr< osg::Shader > fragShader = 
