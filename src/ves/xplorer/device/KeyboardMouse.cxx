@@ -348,6 +348,10 @@ void KeyboardMouse::ProcessKBEvents( int mode )
     gadget::KeyboardMouse::EventQueue evt_queue =
         mKeyboardMouse->getEventQueue();
 
+    //Reset intersector every frame so that the list is erased if others are 
+    //using the list
+    mLineSegmentIntersector->reset();
+
     //Return if no events occurred
     if( evt_queue.empty() )
     {
@@ -1915,4 +1919,9 @@ bool KeyboardMouse::SetCurrentGLTransformInfo(
     return false;
 }
 #endif //__GADGET_version >= 1003023
+////////////////////////////////////////////////////////////////////////////////
+osgUtil::LineSegmentIntersector* KeyboardMouse::GetLineSegmentIntersector()
+{
+    return mLineSegmentIntersector.get();
+}
 ////////////////////////////////////////////////////////////////////////////////
