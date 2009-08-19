@@ -1463,6 +1463,7 @@ void KeyboardMouse::Twist()
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::Zoom( double dy )
 {
+/*
 #if __GADGET_version >= 1003023
     gmtl::Matrix44d vpwMatrix = m_currentGLTransformInfo->GetVPWMatrix();
 
@@ -1496,6 +1497,7 @@ void KeyboardMouse::Zoom( double dy )
 
     *mCenterPoint = position;
 #else
+*/
     double viewlength = mCenterPoint->mData[ 1 ];
 #if __VJ_version >= 2003000
     double d = ( viewlength * ( 1 / ( 1 - dy * 2 ) ) ) - viewlength;
@@ -1523,7 +1525,7 @@ void KeyboardMouse::Zoom( double dy )
             mCenterPoint->mData[ 1 ] -= d;
         }
     }
-#endif //__GADGET_version >= 1003023
+//#endif //__GADGET_version >= 1003023
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::Zoom45( double dy )
