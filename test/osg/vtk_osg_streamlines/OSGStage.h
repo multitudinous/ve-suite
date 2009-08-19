@@ -44,13 +44,13 @@ private:
 	void createSLPoint( osg::Geometry& geom, int nInstances, const osg::Vec3 position, const osg::Vec4 color );
 
 	//create the position array based on the passed in VTK points
-	float* createPositionArray( int numPoints , int mult, vtkPoints* points, const int* pts, int &tm, int &tn);
+	float* createPositionArray( int numPoints , int mult, vtkPoints* points, const vtkIdType* pts, int &tm, int &tn);
 
 	//create strealines
 	void createStreamLines(vtkPolyData* polyData, osg::Geode* geode, int mult, const char* scalarName);
 	
 	//create the coloring scalar array
-	float* createScalarArray( int numPoints , int mult, vtkPointData* pointdata, const int* pts, int &tm, int &tn, const char* scalarName);
+	float* createScalarArray( vtkIdType numPoints , int mult, vtkPointData* pointdata, vtkIdType* pts, int &tm, int &tn, const char* scalarName);
 };
 
 // Allows you to change the animation play rate:

@@ -57,7 +57,7 @@ void OSGStage::createSLPoint( osg::Geometry& geom, int nInstances, const osg::Ve
 
 
 
-float* OSGStage::createPositionArray( int numPoints , int mult, vtkPoints* points, const int* pts, int &tm, int &tn)
+float* OSGStage::createPositionArray( int numPoints , int mult, vtkPoints* points, const vtkIdType* pts, int &tm, int &tn)
 {
 	//mult is the multiplier to add extra points using linear interplation
 
@@ -143,7 +143,7 @@ int OSGStage::mypow2(unsigned x)
     return l;
 }
 
-float* OSGStage::createScalarArray( int numPoints , int mult, vtkPointData* pointData, const int* pts, int &tm, int &tn, const char* scalarName)
+float* OSGStage::createScalarArray( vtkIdType numPoints , int mult, vtkPointData* pointData, vtkIdType* pts, int &tm, int &tn, const char* scalarName)
 {
 	int am = mylog2(numPoints*mult)+1;
 	int mm = am/2;
@@ -232,8 +232,8 @@ void OSGStage::createStreamLines(vtkPolyData* polyData, osg::Geode* geode, int m
     //VTK does bounds xmin, xmax,....
     //OSG does bounds xmin, ymin, zmin, xmax, ymax,...
 	osg::BoundingBox bb(bounds[0],bounds[2],bounds[4],bounds[1],bounds[3],bounds[5]);
-	int cLineNp;
-	int *pts;
+	vtkIdType cLineNp;
+	vtkIdType *pts;
 	//for (int i=0; i< numOfLine; i++)
 	int lineNum=0;
 	for (lines->InitTraversal(); ((lineNum<numOfLine) && (lines->GetNextCell(cLineNp, pts))); lineNum++)
