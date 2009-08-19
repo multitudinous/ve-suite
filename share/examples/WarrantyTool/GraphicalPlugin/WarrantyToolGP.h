@@ -46,10 +46,15 @@ namespace ves
 {
 namespace xplorer
 {
+namespace device
+{
+    class KeyboardMouse;
+}
 namespace scenegraph
 {
     class CADEntity;
     class TextTexture;
+    class GroupedTextTextures;
 }
 }
 }
@@ -87,6 +92,10 @@ private:
     bool mAddingParts;
     std::map< std::string, std::vector< std::pair< std::string, std::string > > > m_dataMap;
     osg::ref_ptr< ves::xplorer::scenegraph::TextTexture > mModelText;
+    ves::xplorer::device::KeyboardMouse* m_keyboard;
+    ves::xplorer::scenegraph::GroupedTextTextures* m_groupedTextTextures;
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > m_textTrans;
+
 };
 
 CREATE_VES_XPLORER_PLUGIN_ENTRY_POINT( WarrantyToolGP )

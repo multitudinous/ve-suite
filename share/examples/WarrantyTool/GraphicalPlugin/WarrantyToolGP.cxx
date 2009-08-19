@@ -44,6 +44,7 @@
 #include <ves/xplorer/scenegraph/util/MaterialInitializer.h>
 #include <ves/xplorer/scenegraph/util/FindChildWithNameVisitor.h>
 #include <ves/xplorer/scenegraph/HighlightNodeByNameVisitor.h>
+#include <ves/xplorer/scenegraph/FindParentWithNameVisitor.h>
 
 #include <ves/xplorer/scenegraph/CADEntity.h>
 #include <ves/xplorer/scenegraph/TextTexture.h>
@@ -52,9 +53,14 @@
 #include <ves/xplorer/environment/TextTextureCallback.h>
 #include <ves/xplorer/environment/HeadPositionCallback.h>
 
+#include <ves/xplorer/device/KeyboardMouse.h>
+
+#include <osgUtil/LineSegmentIntersector>
+
 #include <sstream>
 #include <iostream>
 #include <fstream>
+#include <algorithm>
 
 using namespace ves::xplorer::scenegraph;
 using namespace warrantytool;
@@ -68,7 +74,6 @@ using namespace warrantytool;
 #include <Poco/Data/Session.h>
 #include <Poco/Data/SQLite/Connector.h>
 #include <vector>
-#include <iostream>
 
 #include <boost/lexical_cast.hpp>
 
@@ -79,7 +84,9 @@ using namespace Poco::Data;
 WarrantyToolGP::WarrantyToolGP()
 :
 PluginBase(),
-mAddingParts( false )
+mAddingParts( false ),
+m_keyboard( 0 ),
+m_groupedTextTextures( 0 )
 {
     //Needs to match inherited UIPluginBase class name
     mObjectName = "WarrantyToolUI";
@@ -96,6 +103,9 @@ void WarrantyToolGP::InitializeNode(
     osg::Group* veworldDCS )
 {
     PluginBase::InitializeNode( veworldDCS );
+    
+    m_keyboard = 
+        dynamic_cast< ves::xplorer::device::KeyboardMouse* >( mDevice );
     //Load model
     /*cadEntity = new CADEntity( "Models/test2_head_osg26-share.ive",
               mDCS.get(), false, false, NULL );
@@ -122,7 +132,54 @@ void WarrantyToolGP::InitializeNode(
 ////////////////////////////////////////////////////////////////////////////////
 void WarrantyToolGP::PreFrameUpdate()
 {
-    ;
+    //If the keymbaord mouse selected something
+    //std::cout << " here 1 " << std::endl;
+    //ves::xplorer::device::KeyboardMouse* kbMouse = dynamic_cast< ves::xplorer::device::KeyboardMouse* >( mDevice );
+    if( m_keyboard )
+    {
+        //Get the intersection visitor from keyboard mouse or the wand
+        osg::ref_ptr< osgUtil::LineSegmentIntersector > intersectorSegment = 
+            m_keyboard->GetLineSegmentIntersector();
+        
+        osgUtil::LineSegmentIntersector::Intersections& intersections =
+            intersectorSegment->getIntersections();
+        //figure out which text texutre we found
+        osg::Node* objectHit = 0;
+        bool foundMatch = false;
+        osg::Node* tempParent = 0;
+        for( osgUtil::LineSegmentIntersector::Intersections::iterator itr =
+            intersections.begin(); itr != intersections.end(); ++itr )
+        {
+            objectHit = *( itr->nodePath.rbegin() );
+            
+            ves::xplorer::scenegraph::FindParentWithNameVisitor 
+                findParent( objectHit, "VES_TextTexture", false );
+            
+            tempParent = findParent.GetParentNode();
+
+            //size_t found = objectName.find( "VES_TextTexture" );
+            if( tempParent )
+            {
+                std::string objectName = tempParent->getName();
+                std::cout << "name " << objectName << std::endl;
+                std::cout << "found " << objectName << std::endl;
+                //tempParent = objectHit;
+                foundMatch = true;
+                break;
+            }
+        }
+        //Update which one is in front
+        if( foundMatch )
+        {
+            //ves::xplorer::scenegraph::DCS* tempKey = static_cast< ves::xplorer::scenegraph::DCS* >( static_cast< osg::Group* >( objectHit )->getParent( 0 ) );
+            ves::xplorer::scenegraph::DCS* tempKey = static_cast< ves::xplorer::scenegraph::DCS* >( tempParent );
+            m_groupedTextTextures->MakeTextureActive( tempKey );
+        }
+    }
+    //If we are in interactive mode to mouse over things
+        //Find part we are over
+        //active text texture with the info
+        //highlight all associated nodes
 }
 ////////////////////////////////////////////////////////////////////////////////
 void WarrantyToolGP::SetCurrentCommand( ves::open::xml::CommandPtr command )
@@ -290,11 +347,19 @@ void WarrantyToolGP::ParseDataFile( const std::string& csvFilename )
     }
     
     
+    if( !mAddingParts )
+    {
+        ves::xplorer::scenegraph::util::OpacityVisitor 
+        opVisitor1( mDCS.get(), false, true, 0.3f );
+        mAddingParts = true;
+    }
+    
     //Open DB
     //Add data
     //close connection
+    CreateTextTextures();
+
     CreateDB();
-    //CreateTextTextures();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void WarrantyToolGP::RenderTextualDisplay( bool onOff )
@@ -384,9 +449,16 @@ void WarrantyToolGP::CreateDB()
 	//select << "SELECT Part_Number, Description, Claims FROM Parts",
 	//select << "SELECT Part_Number, Description, Claims FROM Parts WHERE Claims > 10 AND Claims_Cost > 1000",
 	Statement select(session);
-	select << "SELECT * FROM Parts WHERE Claims > 10 AND FPM > 0.1",
+	select << "SELECT * FROM Parts WHERE Claims > 10",// AND FPM > 0.1",
     into(assem),
     now;
+    
+    //ves::xplorer::scenegraph::util::OpacityVisitor 
+    //    opVisitor1( mDCS.get(), false, true, 0.3f );
+    //mAddingParts = true;
+    
+    m_groupedTextTextures = 
+        new ves::xplorer::scenegraph::GroupedTextTextures();
 
 	for (Assembly::const_iterator it = assem.begin(); it != assem.end(); ++it)
 	{
@@ -395,36 +467,46 @@ void WarrantyToolGP::CreateDB()
             << ", Description: " << it->get<1>() 
             << ", Claims: " << it->get<2>()
             << ", FPM: " << it->get<4>() << std::endl;
+            
+        std::ostringstream tempTextData;
+        tempTextData
+            << "Part Number: " << it->get<0>() << "\n"
+            << "Description: " << it->get<1>() << "\n"
+            << "Claims: " << it->get<2>() << "\n"
+            << "FPM: " << it->get<4>();
+
+        ves::xplorer::scenegraph::TextTexture* tempText = new ves::xplorer::scenegraph::TextTexture();
+        //std::string tempKey = "test_" + it->get<0>(); 
+        //boost::lexical_cast<std::string>( std::distance( assem.begin(), it) );
+        std::string partText = tempTextData.str();
+        //std::cout << " here 1 " << partText << std::endl;
+        tempText->UpdateText( partText );
+        m_groupedTextTextures->AddTextTexture( it->get<0>(), tempText );
+        
+        ves::xplorer::scenegraph::HighlightNodeByNameVisitor 
+            highlight( mDCS.get(), it->get<0>() );
 	}
+    m_textTrans->addChild( m_groupedTextTextures );
+
     Poco::Data::SQLite::Connector::unregisterConnector();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void WarrantyToolGP::CreateTextTextures()
 {
 
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > textTrans = 
+    m_textTrans = 
     new ves::xplorer::scenegraph::DCS();
-    textTrans->getOrCreateStateSet()->addUniform(
+    m_textTrans->getOrCreateStateSet()->addUniform(
         new osg::Uniform( "glowColor", osg::Vec4( 0.0, 0.0, 0.0, 1.0 ) ) );
     
     mModelText = new ves::xplorer::scenegraph::TextTexture();
-    textTrans->addChild( mModelText.get() );
+    //m_textTrans->addChild( mModelText.get() );
     
-    mDCS->addChild( textTrans.get() );
-    
-    ves::xplorer::scenegraph::GroupedTextTextures* tempGroup = 
-        new ves::xplorer::scenegraph::GroupedTextTextures();
-    for( size_t i = 0; i < 4; ++i )
-    {
-        ves::xplorer::scenegraph::TextTexture* tempText = new ves::xplorer::scenegraph::TextTexture();
-        std::string tempKey = "test_" + boost::lexical_cast<std::string>( i );
-        tempGroup->AddTextTexture( tempKey, tempText );
-    }
-    textTrans->addChild( tempGroup );
+    mDCS->addChild( m_textTrans.get() );
 
     //mModelText->setUpdateCallback( 
     //    new ves::xplorer::environment::TextTextureCallback( mModelText.get() ) );
-    textTrans->setUpdateCallback( 
+    m_textTrans->setUpdateCallback( 
         new ves::xplorer::environment::HeadPositionCallback() );
     //static_cast< osg::PositionAttitudeTransform* >( 
     //    mModelText->getParent( 0 ) )->setPosition( osg::Vec3d( 0, 0, 0 ) );
