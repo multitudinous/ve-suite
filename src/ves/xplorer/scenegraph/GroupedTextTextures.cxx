@@ -39,6 +39,7 @@
 #include <osg/Texture2D>
 #include <osg/BlendFunc>
 #include <osg/Depth>
+#include <osg/Group>
 
 #include <osgText/Text>
 
@@ -57,6 +58,9 @@ GroupedTextTextures::GroupedTextTextures( std::string fontFile )
     osg::Group()
 {
     _font = fontFile;
+    //getOrCreateStateSet()->setAttributeAndModes( 
+    //    new osg::Depth( osg::Depth::ALWAYS ), 
+    //    osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
 }
 ////////////////////////////////////////////////////////////////////////////////
 GroupedTextTextures::GroupedTextTextures(
@@ -90,32 +94,110 @@ void GroupedTextTextures::MakeTextureActive( const std::string& tempKey )
 ////////////////////////////////////////////////////////////////////////////////
 void GroupedTextTextures::MakeTextureActive( const TextTexture* tempKey )
 {
-    //std::map< std::string, osg::ref_ptr< DCS > >::iterator iter = m_groupedTextures.find( tempKey );
+    //std::map< std::string, osg::ref_ptr< DCS > >::iterator iter = m_groupedTextures.find( tempKey->getParent( 0 ) );
     
     //if( iter != m_groupedTextures.end() )
     {
         //find dcs in list
-        std::list< DCS* >::iterator listIter = std::find( m_transformList.begin(), m_transformList.end(), tempKey->getParent( 0 ) );
+        osg::Group* tempGroup = const_cast< osg::Group* >( tempKey->getParent( 0 ) );
+        ves::xplorer::scenegraph::DCS* tempParent =
+            static_cast< ves::xplorer::scenegraph::DCS* >( tempGroup );
+        std::list< DCS* >::iterator listIter = 
+            std::find( m_transformList.begin(), m_transformList.end(), 
+            tempParent );
+        for( listIter = m_transformList.begin(); 
+            listIter != m_transformList.end(); 
+            ++listIter )
+        {
+            std::cout << tempParent << " " << (*listIter) << std::endl;
+            if( tempParent == (*listIter) )
+            {
+                //std::cout << " found DCS " << std::endl;
+                break;
+            }
+        }
+
+        if( listIter == m_transformList.end() )
+        {
+            std::cout << "Not in list " << std::endl;
+            return;
+        }
         //make this dcs the first one in the list
-        std::cout << std::distance( m_transformList.begin(), listIter ) << std::endl;
         m_transformList.insert( m_transformList.begin(), listIter, m_transformList.end() );
-        std::cout << std::distance( m_transformList.begin(), listIter ) << std::endl;
         m_transformList.erase( listIter, m_transformList.end() );
         //Now update all the positions of the other textures
         UpdateListPositions();
     }
+    //else
+    //{
+    //    std::cout << "No texture found " << std::endl;
+    //}
+}
+////////////////////////////////////////////////////////////////////////////////
+void GroupedTextTextures::MakeTextureActive( const ves::xplorer::scenegraph::DCS* tempKey )
+{
+    //std::map< std::string, osg::ref_ptr< DCS > >::iterator iter = m_groupedTextures.find( tempKey->getParent( 0 ) );
+    
+    //if( iter != m_groupedTextures.end() )
+    {
+        //find dcs in list
+        //osg::Group* tempGroup = const_cast< osg::Group* >( tempKey->getParent( 0 ) );
+        //ves::xplorer::scenegraph::DCS* tempParent =
+        //static_cast< ves::xplorer::scenegraph::DCS* >( tempGroup );
+        std::list< DCS* >::iterator listIter = 
+        std::find( m_transformList.begin(), m_transformList.end(), 
+                  tempKey );
+        if( listIter == m_transformList.end() )
+        {
+            std::cout << "Not in list " << std::endl;
+            //return;
+        }
+        /*for( listIter = m_transformList.begin(); 
+            listIter != m_transformList.end(); 
+            ++listIter )
+        {
+            std::cout << tempKey << " " << (*listIter) << " " << (*listIter)->getName() << std::endl;
+            if( tempKey == (*listIter) )
+            {
+                std::cout << " found DCS " << std::endl;
+                break;
+            }
+            if( (*listIter)->getName() == tempKey->getName() )
+            {
+                std::cout << " found DCS " << std::endl;
+                break;
+            }
+        }*/
+        
+        if( listIter == m_transformList.end() )
+        {
+            std::cout << "Not in list " << std::endl;
+            return;
+        }
+        //make this dcs the first one in the list
+        m_transformList.insert( m_transformList.begin(), listIter, m_transformList.end() );
+        m_transformList.erase( listIter, m_transformList.end() );
+        //Now update all the positions of the other textures
+        UpdateListPositions();
+    }
+    //else
+    //{
+    //    std::cout << "No texture found " << std::endl;
+    //}
 }
 ////////////////////////////////////////////////////////////////////////////////
 void GroupedTextTextures::AddTextTexture( const std::string& tempKey, TextTexture* tempTexture )
 {
-    osg::ref_ptr< DCS > tempDCS = new DCS();
+    DCS* tempDCS = new DCS();
     tempDCS->addChild( tempTexture );
-    m_groupedTextures[ tempKey ] = tempDCS.get();
-    addChild( tempDCS.get() );
-    
-    m_transformList.push_front( tempDCS.get() );
-    m_activeDCS = tempDCS.get();
-    
+    std::string nameString = "VES_TextTexture_" + tempKey;
+    //tempTexture->setName( nameString );
+    tempDCS->setName( nameString );
+    m_groupedTextures[ tempKey ] = tempDCS;
+    addChild( tempDCS );
+    m_transformList.push_front( tempDCS );
+    m_activeDCS = tempDCS;
+
     UpdateListPositions();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -133,18 +215,20 @@ void GroupedTextTextures::UpdateDCSPosition( DCS* tempDCS, size_t i )
 {
     //y = ax + b
     double b = 0.0f;
-    double a = 0.5f;
+    double a = 0.4f;
     double x = 0.0f;
     double deltaX = 1.0f;
     double y = 0.0f;
-    
-    x = i * deltaX;
-    y = a * x + b;
+    double z = 0.0f;
+    i+=1;
+    x = i * -0.30f;
+    y = i * deltaX;
+    z = a * y + b;
     
     double pos[ 3 ];
-    pos[ 0 ] = 0.0f;
-    pos[ 1 ] = x;
-    pos[ 2 ] = y;
+    pos[ 0 ] = x;//0.0f;//-i;// * 0.0f;
+    pos[ 1 ] = y;
+    pos[ 2 ] = z;
 
     tempDCS->SetTranslationArray( pos );
 }

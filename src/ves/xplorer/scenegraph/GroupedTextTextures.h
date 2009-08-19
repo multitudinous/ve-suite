@@ -110,6 +110,8 @@ public:
     
     void MakeTextureActive( const TextTexture* tempKey );
 
+    void MakeTextureActive( const ves::xplorer::scenegraph::DCS* tempKey );
+
 protected:
     ///Destructor
     virtual ~GroupedTextTextures();
