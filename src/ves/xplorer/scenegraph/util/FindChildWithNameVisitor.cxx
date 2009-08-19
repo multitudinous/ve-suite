@@ -66,6 +66,7 @@ void FindChildWithNameVisitor::apply( osg::Node& node )
         if( node.getName() == mParentName )
         {
             m_foundMatch = true;
+            parentNode = &node;
             return;
         }
     }
@@ -77,6 +78,7 @@ void FindChildWithNameVisitor::apply( osg::Node& node )
         //if( !name.compare( 0, mNodeName.size(), mNodeName ) )
         {
             m_foundMatch = true;
+            parentNode = &node;
             return;
         }
     }

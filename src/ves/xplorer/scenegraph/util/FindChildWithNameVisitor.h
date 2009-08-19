@@ -64,7 +64,8 @@ public:
     ///Constructor
     ///\param node The node to be traversed
     ///\param nodeName The name of the parent you want to find
-    FindChildWithNameVisitor( osg::Node* node, const std::string& nodeName, bool exactNameMatch = true );
+    FindChildWithNameVisitor( osg::Node* node, const std::string& nodeName, 
+                             bool exactNameMatch = true );
 
     ///Destructor
     virtual ~FindChildWithNameVisitor();
