@@ -71,7 +71,7 @@ void GlowTechnique::DefinePasses()
 
         "void main() \n"
         "{ \n"
-            "gl_FragData[ 2 ] = glowColor; \n"
+            "gl_FragData[ 1 ] = glowColor; \n"
         "} \n";
 
         osg::ref_ptr< osg::StateSet > stateset = new osg::StateSet();
