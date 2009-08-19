@@ -112,7 +112,7 @@ int main( int argc, char* argv[] )
         return 0;
     }
     
-    if( !vm.count("jconf") )
+    if( !vm.count("jconf") && !vm.count("vrjslave") )
     {
         std::cerr << std::endl << std::endl
             << "************************************************" << std::endl
