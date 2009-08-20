@@ -110,7 +110,7 @@ void TransformHandler::Execute ( CommandPtr command, MinervaManager& manager )
   modelWrapper->scale ( osg::Vec3d ( scaleArray->GetElement ( 0 ), scaleArray->GetElement ( 1 ), scaleArray->GetElement ( 2 ) ) );
   modelWrapper->orientation ( rotationArray->GetElement ( 0 ), rotationArray->GetElement ( 1 ), rotationArray->GetElement ( 2 ) );
 
-  // TODO: Handle rotation from cad transform.
+  // TODO: Handle translation from cad transform.
 
   manager.UpdateModel ( modelWrapper.get() );
 }
