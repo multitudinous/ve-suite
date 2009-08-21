@@ -30,7 +30,7 @@ headers = Split("""
 
 env = ves_pkg.getEnv().Clone()
 #env['MSVS_IGNORE_IDE_PATHS'] = 1
-env['MSVS_USE_MFC_DIRS'] = 1
+env['MSVS_USE_MFC_DIRS'] = "1"
 
 env.Clone(WINDOWS_INSERT_DEF = 1)
 env.Append( CPPDEFINES = ['WIN32'])
