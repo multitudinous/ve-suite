@@ -1,0 +1,36 @@
+##Builds VascularSimViewer UserInterface Plugin
+import os, sys, string
+import SConsAddons.Util as sca_util
+import distutils.util
+pj = os.path.join
+
+host_type = distutils.util.get_platform()
+
+Import( 'baseEnv ves_pkg buildDir RootDir vpr_options wxwidgets_options' )
+Import( 'tao_options xerces_options vtk_options GetPlatform' )
+openDir = os.path.abspath( pj( RootDir, 'share', 'examples', 'VascularSimViewer', 'UserInterface' ) )
+sources = sca_util.getSourcesRecursive( openDir )
+headers = sca_util.getHeadersRecursive( openDir )
+
+lib_env = ves_pkg.getEnv().Clone()
+lib_env.Append( LIBS = ['ves_conductor_plugin',
+                        'ves_open_xml' ] )
+lib_env.Append( LIBPATH = [ pj('#', buildDir, 'src','ves','conductor' ),
+                            pj('#', buildDir, 'src','ves','open', 'xml' ) ] )
+#lib_env.Append( CPPPATH = [] )
+
+vpr_options.apply( lib_env )
+wxwidgets_options.apply( lib_env )
+tao_options.apply( lib_env )
+xerces_options.apply( lib_env )
+vtk_options.apply( lib_env )
+
+if GetPlatform() == 'win32':
+   lib_env['no_import_lib'] = 1
+   lib_env['WINDOWS_INSERT_MANIFEST'] = False
+
+lib = ves_pkg.createLoadableModule( 'VascularSimViewerUI', lib_env,
+    installPrefix = pj( 'share', 'vesuite', 'examples', 'VascularSimViewer', 'Plugins', 'UI', host_type ) )
+   
+lib.addSources( sources )
+lib.build()

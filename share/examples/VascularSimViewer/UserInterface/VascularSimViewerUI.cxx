@@ -32,61 +32,64 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
 // --- My Includes --- //
-#include "WarrantyToolUI.h"
-#include "WarrantyToolUIDialog.h"
+#include "VascularSimViewerUI.h"
+#include "VascularSimViewerUIDialog.h"
 
-#include "Icons/camera.xpm"
+#include "Icons/EKGWave.xpm"
 
 // --- wxWidgets Includes --- //
 #include <wx/wx.h>
 
-using namespace warrantytool;
+using namespace vascularsimviewer;
 
-IMPLEMENT_DYNAMIC_CLASS( WarrantyToolUI, ves::conductor::UIPluginBase )
+IMPLEMENT_DYNAMIC_CLASS( VascularSimViewerUI, ves::conductor::UIPluginBase )
 
 ////////////////////////////////////////////////////////////////////////////////
-WarrantyToolUI::WarrantyToolUI()
+VascularSimViewerUI::VascularSimViewerUI()
 {
-    mPluginName = wxT( "WarrantyToolUI" );
+    mPluginName = wxT( "VascularSimViewerUI" );
 
-    wxImage my_img( camera_xpm );
+    wxImage my_img( EKGWave_xpm );
     SetImage( my_img );
-    mDescription = wxT( "The generic tool to display warranty data." );
+    mDescription = wxT( "Tool to visualize vascular CFD results in conjunction with imaging data"  );
 }
 ////////////////////////////////////////////////////////////////////////////////
-WarrantyToolUI::~WarrantyToolUI()
+VascularSimViewerUI::~VascularSimViewerUI()
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-double WarrantyToolUI::GetVersion()
+double VascularSimViewerUI::GetVersion()
 {
     double result = 1.0;
 
     return result;
 }
 ////////////////////////////////////////////////////////////////////////////////
-ves::conductor::UIDialog* WarrantyToolUI::UI( wxWindow* parent )
+ves::conductor::UIDialog* VascularSimViewerUI::UI( wxWindow* parent )
 {
     if( dlg != NULL )
     {
         return dlg;
     }
 
-    dlg = new WarrantyToolUIDialog( parent, -1, serviceList );
+    /* This is the only thing I changed from Warranty Tool.  It just creates 
+    the main UI for the Plugin and passes the CORBA serviceList to it. */
+    
+    dlg = new VascularSimViewerUIDialog( parent, -1, serviceList );
     ConfigurePluginDialogs( dlg );
 
     return dlg;
 }
 ////////////////////////////////////////////////////////////////////////////////
-wxString WarrantyToolUI::GetConductorName()
+wxString VascularSimViewerUI::GetConductorName()
 {         
-    wxString result = wxT( "WarrantyToolUI" );
+    wxString result = wxT( "VascularSimViewer" );  //Small Icon Name
 
     return result;
 }
 ////////////////////////////////////////////////////////////////////////////////
-wxString WarrantyToolUI::GetName()
+wxString VascularSimViewerUI::GetName()
 {
     if( mPluginName.IsEmpty() )
     {

@@ -16,6 +16,7 @@ exampleSubdirs = Split("""
     golf_game
     SimpleNetwork
     WarrantyTool
+    VascularSimViewer
     simple_physics
     input_animation
 """)

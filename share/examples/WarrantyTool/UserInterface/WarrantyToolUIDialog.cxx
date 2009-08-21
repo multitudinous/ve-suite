@@ -90,7 +90,7 @@ WarrantyToolUIDialog::WarrantyToolUIDialog(
     int id, 
     ves::conductor::util::CORBAServiceList* service )
     :
-    UIDialog( parent, id, wxT( "WarrantyTool" ) ),
+    UIDialog( parent, id, wxT( "WarrantyTool_UIDialog" ) ),
     mPartNumberEntry( 0 ),
     mServiceList( service )
 {    
@@ -125,7 +125,7 @@ void WarrantyToolUIDialog::BuildGUI()
 
     wxStaticText* projectionEffectOpacityText = 0;
     projectionEffectOpacityText = new wxStaticText(
-            this, wxID_ANY, wxT( "Part Number" ),
+            this, wxID_ANY, wxT( "Part Number_static" ),
             wxDefaultPosition, wxDefaultSize, 0 );
             
     projectionEffectOpacityText->Wrap( -1 );
@@ -135,7 +135,7 @@ void WarrantyToolUIDialog::BuildGUI()
     //wxBoxSizer* axesTextBS = new wxBoxSizer( wxHORIZONTAL );
     //dataSetSBSizer->Add( axesTextBS, 0, wxGROW );
     mPartNumberEntry = new wxTextCtrl( this, wxID_ANY,//ID_DATA_UPDATE_AXES,
-                                _( "Part Number" ), wxDefaultPosition,
+                                _( "Part Number_xtxt_crtl" ), wxDefaultPosition,
                                 wxDefaultSize, wxTE_PROCESS_ENTER );
     projectionEffectOpacitySizer->Add( mPartNumberEntry, 1, wxALL, 5 );
     mPartNumberEntry->Raise();
@@ -158,19 +158,19 @@ void WarrantyToolUIDialog::BuildGUI()
         stdDialogButtonCancel = new wxButton( this, wxID_CANCEL );
         buttonSizer->Add( stdDialogButtonCancel, 0, wxALL, 5 );
     }
-    //Reset
+   //Reset
     {
         wxButton* stdDialogButtonReset = 0;
         stdDialogButtonReset = new wxButton( this, GLOW_RESET, _("Reset") );
         buttonSizer->Add( stdDialogButtonReset, 0, wxALL, 5 );
     }
-    //Clear
+  //Clear
     {
         wxButton* stdDialogButtonClear = 0;
         stdDialogButtonClear = new wxButton( this, GLOW_CLEAR, _("Clear") );
         buttonSizer->Add( stdDialogButtonClear, 0, wxALL, 5 );
     }
-    //Add
+   //Add
     {
         wxButton* stdDialogButtonAdd = 0;
         stdDialogButtonAdd = new wxButton( this, GLOW_ADD, _("Add") );
