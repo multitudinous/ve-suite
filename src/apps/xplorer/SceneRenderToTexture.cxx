@@ -277,16 +277,11 @@ osg::Camera* SceneRenderToTexture::CreatePipelineCamera(
 
     "void main() \n"
     "{ \n"
-        "gl_FragData[ 0 ] = gl_Color; \n"
-
         "vec4 color = glowColor; \n"
-        "if( gl_Color.a < 1.0 ) \n"
-        "{ \n"
-           "color.a = gl_Color.a; \n"
-        "} \n"
+        "color.a = gl_Color.a; \n"
 
+        "gl_FragData[ 0 ] = gl_Color; \n"
         "gl_FragData[ 1 ] = color; \n"
-        
     "} \n";
 
     osg::ref_ptr< osg::StateSet > stateset = tempCamera->getOrCreateStateSet();
@@ -510,15 +505,12 @@ vxsr::Processor* SceneRenderToTexture::CreatePipelineProcessor(
         finalShader->addShader( vShader.get() );
         finalShader->setName( "FinalShader" );
 
-        finalShader->add( "gloStrength", osg::Uniform::FLOAT );
-        finalShader->add( "gloColor", osg::Uniform::FLOAT_VEC4 );
-
-        finalShader->set( "gloStrength", static_cast< float >( 4.0 ) );
-        finalShader->set( "gloColor", osg::Vec4( 0.57255, 1.0, 0.34118, 1.0 ) );
+        finalShader->add( "glowStrength", osg::Uniform::FLOAT );
+        finalShader->set( "glowStrength", static_cast< float >( 4.0 ) );
 
         final->getOrCreateStateSet()->setAttributeAndModes( finalShader.get() );
         final->SetInputToUniform( colorBuffer0.get(), "baseMap", false );
-        final->SetInputToUniform( colorBuffer1.get(), "stencilGlowMap", false );
+        final->SetInputToUniform( colorBuffer1.get(), "stencilMap", false );
         final->SetInputToUniform( blurY.get(), "glowMap", true );
         final->SetInputTextureIndexForViewportReference( 0 );
     }
