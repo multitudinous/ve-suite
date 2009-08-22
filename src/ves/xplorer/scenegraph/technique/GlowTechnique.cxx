@@ -55,7 +55,12 @@ GlowTechnique::~GlowTechnique()
 ////////////////////////////////////////////////////////////////////////////////
 void GlowTechnique::DefinePasses()
 {
-    osg::Vec4 glowColor( 1.0, 0.0, 0.0, 1.0 );
+    //GreenYellow
+    //osg::Vec4 glowColor( 0.57255, 1.0, 0.34118, 1.0 );
+    //GreenBlue
+    //osg::Vec4 glowColor( 0.34118, 1.0, 0.57255, 1.0 );
+    //Blue
+    osg::Vec4 glowColor( 0.34118, 0.57255, 1.0, 1.0 );
     //Pass 1
     {
         //m_stateSet->setRenderBinDetails( -1, "RenderBin" );
@@ -64,6 +69,7 @@ void GlowTechnique::DefinePasses()
 
         AddPass( m_stateSet.get() );
     }
+    /*
     //Pass 2
     {
         std::string fragmentSource =
@@ -71,7 +77,7 @@ void GlowTechnique::DefinePasses()
 
         "void main() \n"
         "{ \n"
-            "gl_FragData[ 1 ] = glowColor; \n"
+            "gl_FragData[ 2 ] = glowColor; \n"
         "} \n";
 
         osg::ref_ptr< osg::StateSet > stateset = new osg::StateSet();
@@ -97,5 +103,6 @@ void GlowTechnique::DefinePasses()
 
         AddPass( stateset.get() );
     }
+    */
 }
 ////////////////////////////////////////////////////////////////////////////////
