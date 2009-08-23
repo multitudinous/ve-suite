@@ -506,7 +506,7 @@ vxsr::Processor* SceneRenderToTexture::CreatePipelineProcessor(
         finalShader->setName( "FinalShader" );
 
         finalShader->add( "glowStrength", osg::Uniform::FLOAT );
-        finalShader->set( "glowStrength", static_cast< float >( 4.0 ) );
+        finalShader->set( "glowStrength", static_cast< float >( 6.0 ) );
 
         final->getOrCreateStateSet()->setAttributeAndModes( finalShader.get() );
         final->SetInputToUniform( colorBuffer0.get(), "baseMap", false );
