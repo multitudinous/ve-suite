@@ -123,9 +123,11 @@ KeyboardMouse::KeyboardMouse()
     mKeyShift( false ),
     mKeyAlt( false ),
 
+    mSelect( false ),
+
     mKey( -1 ),
     mButton( -1 ),
-    mState( 0 ),
+    mState( false ),
     mX( 0 ),
     mY( 0 ),
 
@@ -178,12 +180,12 @@ KeyboardMouse::~KeyboardMouse()
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::UpdateNavigation()
 {
-    ProcessKBEvents( 0 );
+    ProcessEvents();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::UpdateSelection()
 {
-    ProcessKBEvents( 1 );
+    ProcessEvents();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::SetStartEndPoint(
@@ -342,7 +344,7 @@ void KeyboardMouse::SetScreenCornerValues(
     mZValScreen = values[ "zval" ];
 }
 ////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::ProcessKBEvents( int mode )
+void KeyboardMouse::ProcessEvents()
 {
     //Get the event queue
     gadget::KeyboardMouse::EventQueue evt_queue =
@@ -391,16 +393,7 @@ void KeyboardMouse::ProcessKBEvents( int mode )
                 }
 #endif //__GADGET_version >= 1003023
 
-                //Navigation mode
-                if( mode == 0 )
-                {
-                    NavOnKeyboardPress();
-                }
-                //Selection mode
-                else if( mode == 1 )
-                {
-                    SelOnKeyboardPress();
-                }
+                OnKeyPress();
 
                 break;
             }
@@ -419,11 +412,7 @@ void KeyboardMouse::ProcessKBEvents( int mode )
                 }
 #endif //__GADGET_version >= 1003023
 
-                //Navigation mode
-                if( mode == 0 )
-                {
-                    NavOnKeyboardRelease();
-                }
+                OnKeyRelease();
 
                 break;
             }
@@ -433,7 +422,7 @@ void KeyboardMouse::ProcessKBEvents( int mode )
                     boost::dynamic_pointer_cast< gadget::MouseEvent >( event );
 
                 mButton = mouse_evt->getButton();
-                mState = 1;
+                mState = true;
                 mX = mouse_evt->getX();
                 mY = mouse_evt->getY();
 
@@ -445,26 +434,7 @@ void KeyboardMouse::ProcessKBEvents( int mode )
                 }
 #endif //__GADGET_version >= 1003023
 
-                mCurrPos.first =
-                    static_cast< double >( mX ) /
-                    static_cast< double >( mWidth );
-                mCurrPos.second =
-                    static_cast< double >( mY ) /
-                    static_cast< double >( mHeight );
-
-                //Navigation mode
-                if( mode == 0 )
-                {
-                    NavOnMousePress();
-                }
-                //Selection mode
-                else if( mode == 1 )
-                {
-                    SelOnMousePress();
-                }
-
-                mPrevPos.first = mCurrPos.first;
-                mPrevPos.second = mCurrPos.second;
+                OnMousePress();
 
                 break;
             }
@@ -474,7 +444,7 @@ void KeyboardMouse::ProcessKBEvents( int mode )
                     boost::dynamic_pointer_cast< gadget::MouseEvent >( event );
 
                 mButton = mouse_evt->getButton();
-                mState = 0;
+                mState = false;
                 mX = mouse_evt->getX();
                 mY = mouse_evt->getY();
 
@@ -486,31 +456,7 @@ void KeyboardMouse::ProcessKBEvents( int mode )
                 }
 #endif //__GADGET_version >= 1003023
 
-                mCurrPos.first =
-                    static_cast< double >( mX ) /
-                    static_cast< double >( mWidth );
-                mCurrPos.second =
-                    static_cast< double >( mY ) /
-                    static_cast< double >( mHeight );
-
-                //Navigation mode
-                if( mode == 0 )
-                {
-                    NavOnMouseRelease();
-                }
-                //Selection mode
-                else if( mode == 1 )
-                {
-                    //We process selection on the release of the left button
-                    //because in the future we would like to be able to select
-                    //with a rubber band rectangle which would mean the mouse
-                    //down would be the first point of the rectangle and the
-                    //mouse up would be the second point
-                    SelOnMouseRelease();
-                }
-
-                mPrevPos.first = mCurrPos.first;
-                mPrevPos.second = mCurrPos.second;
+                OnMouseRelease();
 
                 break;
             }
@@ -530,45 +476,13 @@ void KeyboardMouse::ProcessKBEvents( int mode )
                 }
 #endif //__GADGET_version >= 1003023
 
-                if( mState == 0 )
+                if( !mState )
                 {
-#ifdef TRANSFORM_MANIPULATOR
-                    UpdateSelectionLine();
-
-                    if(
-                    vxs::SceneManager::instance()->GetManipulatorManager()->Handle(
-                        vxsm::Event::FOCUS, mLineSegmentIntersector.get() ) )
-                    {
-                        break;
-                    }
-#endif //TRANSFORM_MANIPULATOR
+                    OnMouseMotionUp();
                 }
-                else if( mState == 1 )
+                else
                 {
-                    mCurrPos.first =
-                        static_cast< double >( mX ) /
-                        static_cast< double >( mWidth );
-                    mCurrPos.second =
-                        static_cast< double >( mY ) /
-                        static_cast< double >( mHeight );
-
-                    std::pair< double, double > delta;
-                    delta.first = mCurrPos.first - mPrevPos.first;
-                    delta.second = mCurrPos.second - mPrevPos.second;
-
-                    //Navigation mode
-                    if( mode == 0 )
-                    {
-                        NavOnMouseMotion( delta );
-                    }
-                    //Selection mode
-                    else if( mode == 1 )
-                    {
-                        SelOnMouseMotion( delta );
-                    }
-
-                    mPrevPos.first = mCurrPos.first;
-                    mPrevPos.second = mCurrPos.second;
+                    OnMouseMotionDown();
                 }
 
                 break;
@@ -800,7 +714,7 @@ void KeyboardMouse::SkyCam()
     ProcessNavigationEvents();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::NavOnKeyboardPress()
+void KeyboardMouse::OnKeyPress()
 {
     switch( mKey )
     {
@@ -914,7 +828,7 @@ void KeyboardMouse::NavOnKeyboardPress()
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::NavOnKeyboardRelease()
+void KeyboardMouse::OnKeyRelease()
 {
     switch( mKey )
     {
@@ -981,9 +895,15 @@ void KeyboardMouse::NavOnKeyboardRelease()
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::NavOnMousePress()
+void KeyboardMouse::OnMousePress()
 {
-    //Would be cool to change mouse cursor for nav events here
+    mCurrPos.first =
+        static_cast< double >( mX ) /
+        static_cast< double >( mWidth );
+    mCurrPos.second =
+        static_cast< double >( mY ) /
+        static_cast< double >( mHeight );
+
     switch( mButton )
     {
         //Left mouse button
@@ -1079,7 +999,116 @@ void KeyboardMouse::NavOnMousePress()
             }
             else if( mKeyAlt )
             {
-                SelOnMouseRelease();
+                ;
+            }
+
+            mSelect = true;
+
+            break;
+        }
+        //Middle mouse button
+        case gadget::MBUTTON2:
+        {
+            mSelect = true;
+
+            break;
+        }
+        //Right mouse button
+        case gadget::MBUTTON3:
+        {
+            if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
+                mCharacterController->IsActive() )
+            {
+                mCharacterController->FirstPersonMode( true );
+                mCharacterController->SetCameraRotationSLERP( false );
+                mCharacterController->SetCharacterRotationFromCamera();
+            }
+
+            mSelect = true;
+
+            break;
+        }
+        //Scroll wheel up
+        case gadget::MBUTTON4:
+        {
+            if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
+                mCharacterController->IsActive() )
+            {
+                mCharacterController->Zoom( true );
+            }
+
+            break;
+        }
+        //Scroll wheel down
+        case gadget::MBUTTON5:
+        {
+            if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
+                mCharacterController->IsActive() )
+            {
+                mCharacterController->Zoom( false );
+            }
+
+            break;
+        }
+    }
+
+    mPrevPos.first = mCurrPos.first;
+    mPrevPos.second = mCurrPos.second;
+}
+////////////////////////////////////////////////////////////////////////////////
+void KeyboardMouse::OnMouseRelease()
+{
+    mCurrPos.first =
+        static_cast< double >( mX ) /
+        static_cast< double >( mWidth );
+    mCurrPos.second =
+        static_cast< double >( mY ) /
+        static_cast< double >( mHeight );
+
+    switch( mButton )
+    {
+        //Left mouse button
+        case gadget::MBUTTON1:
+        {
+            //Do not require mod key depending on what the user did
+            if( mPickConstraint )
+            {
+                vxs::PhysicsSimulator::instance()->GetDynamicsWorld()->removeConstraint( mPickConstraint );
+                delete mPickConstraint;
+                mPickConstraint = NULL;
+
+                mPickedBody->forceActivationState( ACTIVE_TAG );
+                mPickedBody->setDeactivationTime( 0.0 );
+                mPickedBody = NULL;
+            }
+
+#ifdef TRANSFORM_MANIPULATOR
+            if( vxs::SceneManager::instance()->GetManipulatorManager()->Handle(
+                    vxsm::Event::RELEASE ) );
+            {
+                ;
+            }
+#endif //TRANSFORM_MANIPULATOR
+
+            if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
+                 mCharacterController->IsActive() )
+            {
+                mCharacterController->SetCameraRotationSLERP( true );
+            }
+
+            //No modifier key
+            if( mKeyNone )
+            {
+                ;
+            }
+            //Mod key shift
+            else if( mKeyShift )
+            {
+                ;
+            }
+            else if( mKeyAlt )
+            {
+                //OnMouseRelease();
                 vxs::DCS* infoDCS = 
                     vx::DeviceHandler::instance()->GetSelectedDCS();
                 vx::DeviceHandler::instance()->UnselectObjects();
@@ -1122,6 +1151,7 @@ void KeyboardMouse::NavOnMousePress()
                     pluginIter->second->GetCFDModel()->RenderTextualDisplay( true );
                 }
             }
+
             break;
         }
         //Middle mouse button
@@ -1132,102 +1162,35 @@ void KeyboardMouse::NavOnMousePress()
         //Right mouse button
         case gadget::MBUTTON3:
         {
-            if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
-                mCharacterController->IsActive() )
-            {
-                mCharacterController->FirstPersonMode( true );
-                mCharacterController->SetCameraRotationSLERP( false );
-                mCharacterController->SetCharacterRotationFromCamera();
-            }
-
-            break;
-        }
-        //Scroll wheel up
-        case gadget::MBUTTON4:
-        {
-            if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
-                mCharacterController->IsActive() )
-            {
-                mCharacterController->Zoom( true );
-            }
-
-            break;
-        }
-        //Scroll wheel down
-        case gadget::MBUTTON5:
-        {
-            if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
-                mCharacterController->IsActive() )
-            {
-                mCharacterController->Zoom( false );
-            }
-
             break;
         }
     }
-}
-////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::NavOnMouseRelease()
-{
-    switch( mButton )
+
+    if( mSelect )
     {
-        //Left mouse button
-        case gadget::MBUTTON1:
-        {
-            //Do not require mod key depending on what the user did
-            if( mPickConstraint )
-            {
-                vxs::PhysicsSimulator::instance()->GetDynamicsWorld()->removeConstraint( mPickConstraint );
-                delete mPickConstraint;
-                mPickConstraint = NULL;
+        UpdateSelectionLine();
+        ProcessSelectionEvents();
 
-                mPickedBody->forceActivationState( ACTIVE_TAG );
-                mPickedBody->setDeactivationTime( 0.0 );
-                mPickedBody = NULL;
-            }
-
-#ifdef TRANSFORM_MANIPULATOR
-            if( vxs::SceneManager::instance()->GetManipulatorManager()->Handle(
-                    vxsm::Event::RELEASE ) );
-            {
-                ;
-            }
-#endif //TRANSFORM_MANIPULATOR
-
-            if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
-                 mCharacterController->IsActive() )
-            {
-                mCharacterController->SetCameraRotationSLERP( true );
-            }
-
-            //No modifier key
-            if( mKeyNone )
-            {
-                ;
-            }
-            //Mod key shift
-            else if( mKeyShift )
-            {
-                ;
-            }
-
-            break;
-        }
-        //Middle mouse button
-        case gadget::MBUTTON2:
-        {
-            break;
-        }
-        //Right mouse button
-        case gadget::MBUTTON3:
-        {
-            break;
-        }
+        mSelect = false;
     }
+
+    mPrevPos.first = mCurrPos.first;
+    mPrevPos.second = mCurrPos.second;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::NavOnMouseMotion( std::pair< double, double > delta )
+void KeyboardMouse::OnMouseMotionDown()
 {
+    mCurrPos.first =
+        static_cast< double >( mX ) /
+        static_cast< double >( mWidth );
+    mCurrPos.second =
+        static_cast< double >( mY ) /
+        static_cast< double >( mHeight );
+
+    std::pair< double, double > delta;
+    delta.first = mCurrPos.first - mPrevPos.first;
+    delta.second = mCurrPos.second - mPrevPos.second;
+
     mMagnitude =
         sqrtf( delta.first * delta.first + delta.second * delta.second );
 
@@ -1336,8 +1299,31 @@ void KeyboardMouse::NavOnMouseMotion( std::pair< double, double > delta )
             break;
         }
     }
+
+    mSelect = false;
+
+    mPrevPos.first = mCurrPos.first;
+    mPrevPos.second = mCurrPos.second;
 }
 ////////////////////////////////////////////////////////////////////////////////
+void KeyboardMouse::OnMouseMotionUp()
+{
+#ifdef TRANSFORM_MANIPULATOR
+    UpdateSelectionLine();
+
+    if( vxs::SceneManager::instance()->GetManipulatorManager()->Handle(
+        vxsm::Event::FOCUS, mLineSegmentIntersector.get() ) )
+    {
+        ;
+    }
+#endif //TRANSFORM_MANIPULATOR
+}
+////////////////////////////////////////////////////////////////////////////////
+/*
+//This stuff is used for the old NURBS selection events
+//In the future, NURBS should be selectable in the scene like manipulators
+//A button in the toolbar could turn NURBS points on/off like manipulators
+
 void KeyboardMouse::SelOnKeyboardPress()
 {
     return;
@@ -1432,6 +1418,7 @@ void KeyboardMouse::SelOnMouseMotion( std::pair< double, double > delta )
         }
     }
 }
+*/
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::ResetTransforms()
 {
@@ -1655,6 +1642,7 @@ void KeyboardMouse::UpdateSelectionLine()
     //DrawLine( startPoint, endPoint );
 }
 ////////////////////////////////////////////////////////////////////////////////
+/*
 void KeyboardMouse::ProcessNURBSSelectionEvents()
 {
     osg::ref_ptr< osgUtil::IntersectorGroup > intersectorGroup =
@@ -1697,24 +1685,20 @@ void KeyboardMouse::ProcessNURBSSelectionEvents()
          }
     }
 }
+*/
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::ProcessSelectionEvents()
 {
+    //Get pointers to DeviceHandler & SceneManager
+    vx::DeviceHandler* deviceHandler = vx::DeviceHandler::instance();
+    vxs::SceneManager* sceneManager = vxs::SceneManager::instance();
+    
     osgUtil::IntersectionVisitor intersectionVisitor(
         mLineSegmentIntersector.get() );
 
     //Add the IntersectVisitor to the root Node so that all geometry will be
     //checked and no transforms are done to the line segement
-    vxs::SceneManager::instance()->GetModelRoot()->accept( intersectionVisitor );
-
-    ProcessHit();
-}
-////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::ProcessHit()
-{
-    //Get pointers to DeviceHandler & SceneManager
-    vx::DeviceHandler* deviceHandler = vx::DeviceHandler::instance();
-    vxs::SceneManager* sceneManager = vxs::SceneManager::instance();
+    sceneManager->GetModelRoot()->accept( intersectionVisitor );
 
     //Unselect the previous selected DCS
     deviceHandler->UnselectObjects();

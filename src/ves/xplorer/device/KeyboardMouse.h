@@ -152,7 +152,7 @@ protected:
 private:
     ///Processes any keyboard events
     ///\param mode Determines whether in navigation mode or selection mode
-    void ProcessKBEvents( int mode );
+    void ProcessEvents();
 
     ///Processes the navigation events
     void ProcessNavigationEvents();
@@ -160,28 +160,33 @@ private:
     ///Processes the selection events
     void ProcessSelectionEvents();
 
+    /*
     ///Process the NURBS selection events
     void ProcessNURBSSelectionEvents();
+    */
 
-    ///Process if selection is valid
-    ///\param listOfHits A vector containing CAD hit in selection process
-    void ProcessHit();
+    ///Functions called on keyboard press events
+    void OnKeyPress();
 
-    ///Navigation functions called on keyboard press events
-    void NavOnKeyboardPress();
+    ///Functions called on keyboard release events
+    void OnKeyRelease();
 
-    ///Navigation functions called on keyboard release events
-    void NavOnKeyboardRelease();
+    ///Functions called on mouse press events
+    void OnMousePress();
 
-    ///Navigation functions called on mouse press events
-    void NavOnMousePress();
+    ///Functions called on mouse release events
+    void OnMouseRelease();
 
-    ///Navigation functions called on mouse release events
-    void NavOnMouseRelease();
+    ///Functions called on mouse move events
+    void OnMouseMotionDown();
 
-    ///Navigation using the mouse
-    void NavOnMouseMotion( std::pair< double, double > delta );
+    ///Functions called on mouse move events
+    void OnMouseMotionUp();
 
+    //This stuff is used for the old NURBS selection events
+    //In the future, NURBS should be selectable in the scene like manipulators
+    //A button in the toolbar could turn NURBS points on/off like manipulators
+    /*
     ///Currently this does nothing
     void SelOnKeyboardPress();
 
@@ -193,6 +198,7 @@ private:
 
     ///Currently this does nothing
     void SelOnMouseMotion( std::pair< double, double > delta );
+    */
 
     ///Rotates an object about the y-axis
     void Twist();
@@ -235,6 +241,9 @@ private:
     ///Is alt pushed
     bool mKeyAlt;
 
+    ///
+    bool mSelect;
+
     ///Width of the window
     unsigned int mWidth;
 
@@ -248,7 +257,7 @@ private:
     int mButton;
 
     ///Determines if mouse button is pressed or released
-    int mState;
+    bool mState;
 
     ///x position of the mouse
     int mX;
