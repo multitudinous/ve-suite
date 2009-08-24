@@ -279,8 +279,10 @@ private:
 
 #if __VJ_version >= 2003000
     vrj::opengl::ContextData< bool > mViewportsChanged;
+    vrj::opengl::ContextData< bool > m_skipDraw;
 #else
     vrj::GlContextData< bool > mViewportsChanged;
+    vrj::GlContextData< bool > m_skipDraw;
 #endif
 
 };

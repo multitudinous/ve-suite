@@ -257,7 +257,11 @@ std::cout << " context init" << std::endl;
         if( !mRTT )
         {
             new_sv->setSceneData( getScene() );
-        }        
+        }
+        else
+        {
+            *m_skipDraw = false;
+        }
         *mViewportsChanged = false;
         m_sceneGLTransformInfo->Initialize();
         mSceneRenderToTexture->InitializeRTT();
@@ -668,6 +672,7 @@ void App::contextPreDraw()
             if( mRTT )
             {
                 mSceneRenderToTexture->InitScene( (*sceneViewer)->getCamera() );
+                *m_skipDraw = true;
             }
             *mViewportsChanged = true;
         }
@@ -707,6 +712,12 @@ void App::draw()
     {
         if( !mSceneRenderToTexture->CameraConfigured() )
         {
+            return;
+        }
+        
+        if( *m_skipDraw )
+        {
+            *m_skipDraw = false;
             return;
         }
     }
