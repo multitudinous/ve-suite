@@ -52,7 +52,6 @@
 #include <ves/xplorer/event/device/DeviceEH.h>
 #include <ves/xplorer/event/device/DeviceModeEH.h>
 #include <ves/xplorer/event/device/CenterPointEventHandler.h>
-#include <ves/xplorer/event/device/KeyboardMouseEH.h>
 #include <ves/xplorer/event/cad/UnselectObjectsEventHandler.h>
 #include <ves/xplorer/event/environment/NavigationDataEventHandler.h>
 
@@ -118,8 +117,6 @@ DeviceHandler::DeviceHandler()
         new vx::event::UnselectObjectsEventHandler();
     mEventHandlers[ "CENTER_POINT_UPDATE" ] =
         new vx::event::CenterPointEventHandler();
-    mEventHandlers[ "TRACKBALL_PROPERTIES" ] =
-        new vx::event::KeyboardMouseEventHandler();
     mEventHandlers[ "Navigation_Data" ] =
         new vx::event::NavigationDataEventHandler();
     

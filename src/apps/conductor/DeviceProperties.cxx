@@ -119,7 +119,7 @@ void DeviceProperties::SendCommandsToXplorer()
 {
     //Build the command
     CommandPtr command( new Command() );
-    command->SetCommandName( "TRACKBALL_PROPERTIES" );
+    command->SetCommandName( "DEVICE_PROPERTIES" );
 
     for( size_t i = 0;i < instructions.size();i++ )
     {
