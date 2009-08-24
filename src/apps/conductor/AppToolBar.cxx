@@ -40,8 +40,6 @@
 #include <ves/conductor/xpm/ToolBar/OpenButton.xpm>
 #include <ves/conductor/xpm/ToolBar/SaveButton.xpm>
 
-#include <ves/conductor/xpm/ToolBar/CursorButton.xpm>
-#include <ves/conductor/xpm/ToolBar/CursorButtonSelect.xpm>
 #include <ves/conductor/xpm/ToolBar/WorldNavigationButton.xpm>
 #include <ves/conductor/xpm/ToolBar/WorldNavigationButtonSelect.xpm>
 #include <ves/conductor/xpm/ToolBar/ObjectNavigationButton.xpm>
@@ -124,7 +122,6 @@ EVT_MENU( APP_TOOL_BAR_NEW, AppToolBar::OnNew )
 EVT_MENU( APP_TOOL_BAR_OPEN, AppToolBar::OnOpen )
 EVT_MENU( APP_TOOL_BAR_SAVE, AppToolBar::OnSave )
 
-EVT_MENU( APP_TOOL_BAR_CURSOR, AppToolBar::OnChangeDeviceMode )
 EVT_MENU( APP_TOOL_BAR_WORLD_NAVIGATION, AppToolBar::OnChangeDeviceMode )
 EVT_MENU( APP_TOOL_BAR_OBJECT_NAVIGATION, AppToolBar::OnChangeDeviceMode )
 
@@ -192,10 +189,6 @@ void AppToolBar::LoadToolBarBitmaps()
     m_toolbarBitmaps[ APP_TOOL_BAR_SAVE ] =
         wxBitmap( SaveButton_xpm );
 
-    m_toolbarBitmaps[ APP_TOOL_BAR_CURSOR ] =
-        wxBitmap( CursorButton_xpm );
-    m_toolbarBitmaps[ APP_TOOL_BAR_CURSOR_SELECT ] =
-        wxBitmap( CursorButtonSelect_xpm );
     m_toolbarBitmaps[ APP_TOOL_BAR_WORLD_NAVIGATION ] =
         wxBitmap( WorldNavigationButton_xpm );
     m_toolbarBitmaps[ APP_TOOL_BAR_WORLD_NAVIGATION_SELECT ] =
@@ -311,10 +304,6 @@ void AppToolBar::CreateAppToolBar()
     AddSeparator();
 
     AddTool(
-        APP_TOOL_BAR_CURSOR, wxEmptyString,
-        m_toolbarBitmaps[ APP_TOOL_BAR_CURSOR ],
-        wxT( "Selection" ), wxITEM_RADIO );
-    AddTool(
         APP_TOOL_BAR_WORLD_NAVIGATION, wxEmptyString,
         m_toolbarBitmaps[ APP_TOOL_BAR_WORLD_NAVIGATION_SELECT ],
         wxT( "World Navigation" ), wxITEM_RADIO );
@@ -334,7 +323,6 @@ void AppToolBar::CreateAppToolBar()
         APP_TOOL_BAR_MANIPULATOR, wxEmptyString,
         m_toolbarBitmaps[ APP_TOOL_BAR_MANIPULATOR ],
         wxT( "Transform Manipulator On/Off" ), wxITEM_CHECK );
-//#ifdef WIN32
     AddTool(
         APP_TOOL_BAR_MANIPULATOR_TRANSLATE, wxEmptyString,
         m_toolbarBitmaps[ APP_TOOL_BAR_MANIPULATOR_TRANSLATE_SELECT ],
@@ -355,26 +343,6 @@ void AppToolBar::CreateAppToolBar()
         m_toolbarBitmaps[ APP_TOOL_BAR_MANIPULATOR_COMBO ],
         m_toolbarBitmaps[ APP_TOOL_BAR_MANIPULATOR_COMBO_DISABLED ],
         wxITEM_RADIO, wxT( "Combo Manipulator Mode" ) );
-/*
-#else
-    AddTool(
-        APP_TOOL_BAR_MANIPULATOR_TRANSLATE, wxEmptyString,
-        m_toolbarBitmaps[ APP_TOOL_BAR_MANIPULATOR_TRANSLATE_SELECT ],
-        wxT( "Translate Manipulator Mode" ), wxITEM_RADIO );
-    AddTool(
-        APP_TOOL_BAR_MANIPULATOR_ROTATE, wxEmptyString,
-        m_toolbarBitmaps[ APP_TOOL_BAR_MANIPULATOR_ROTATE ],
-        wxT( "Rotate Manipulator Mode" ), wxITEM_RADIO );
-    AddTool(
-        APP_TOOL_BAR_MANIPULATOR_SCALE, wxEmptyString,
-        m_toolbarBitmaps[ APP_TOOL_BAR_MANIPULATOR_SCALE ],
-        wxT( "Scale Manipulator Mode" ), wxITEM_RADIO );
-    AddTool(
-        APP_TOOL_BAR_MANIPULATOR_COMBO, wxEmptyString,
-        m_toolbarBitmaps[ APP_TOOL_BAR_MANIPULATOR_COMBO ],
-        wxT( "Combo Manipulator Mode" ), wxITEM_RADIO );
-#endif //WIN32
-*/
 
     wxString manipulatorChoices[] =
         { wxT( "Global" ), wxT( "Local" ), wxT( "View" ) };
@@ -418,7 +386,6 @@ void AppToolBar::CreateAppToolBar()
         APP_TOOL_BAR_PHYSICS, wxEmptyString,
         m_toolbarBitmaps[ APP_TOOL_BAR_PHYSICS ],
         wxT( "Physics On/Off" ), wxITEM_CHECK );
-//#ifdef WIN32
 #ifdef CHARACTER_CONTROLLER
     AddTool(
         APP_TOOL_BAR_PHYSICS_CHARACTER, wxEmptyString,
@@ -446,36 +413,6 @@ void AppToolBar::CreateAppToolBar()
         m_toolbarBitmaps[ APP_TOOL_BAR_PHYSICS_STEP ],
         m_toolbarBitmaps[ APP_TOOL_BAR_PHYSICS_STEP_DISABLED ],
         wxITEM_NORMAL, wxT( "Step Simulation" ) );
-/*
-#else
-    AddTool(
-        APP_TOOL_BAR_PHYSICS, wxEmptyString,
-        m_toolbarBitmaps[ APP_TOOL_BAR_PHYSICS ],
-        wxT( "Physics On/Off" ), wxITEM_CHECK );
-#ifdef CHARACTER_CONTROLLER
-    AddTool(
-        APP_TOOL_BAR_PHYSICS_CHARACTER, wxEmptyString,
-        m_toolbarBitmaps[ APP_TOOL_BAR_PHYSICS_CHARACTER ],
-        wxT( "Character Controller" ), wxITEM_CHECK );
-#endif //CHARACTER_CONTROLLER
-    AddTool(
-        APP_TOOL_BAR_PHYSICS_RESET, wxEmptyString,
-        m_toolbarBitmaps[ APP_TOOL_BAR_PHYSICS_RESET ],
-        wxT( "Reset Simulation" ), wxITEM_NORMAL );
-    AddTool(
-        APP_TOOL_BAR_PHYSICS_PAUSE, wxEmptyString,
-        m_toolbarBitmaps[ APP_TOOL_BAR_PHYSICS_PAUSE ],
-        wxT( "Pause Simulation" ), wxITEM_CHECK );
-    AddTool(
-        APP_TOOL_BAR_PHYSICS_PLAY, wxEmptyString,
-        m_toolbarBitmaps[ APP_TOOL_BAR_PHYSICS_PLAY ],
-        wxT( "Start Simulation" ), wxITEM_CHECK );
-    AddTool(
-        APP_TOOL_BAR_PHYSICS_STEP, wxEmptyString,
-        m_toolbarBitmaps[ APP_TOOL_BAR_PHYSICS_STEP ],
-        wxT( "Step Simulation" ), wxITEM_NORMAL );
-#endif //WIN32
-*/
 
     AddSeparator();
 
@@ -695,16 +632,6 @@ void AppToolBar::OnChangeDeviceMode( wxCommandEvent& event )
     std::string mode;
     switch( currentSelection )
     {
-        case APP_TOOL_BAR_CURSOR:
-        {
-            mode = "Selection";
-
-            SetToolNormalBitmap(
-                currentSelection,
-                m_toolbarBitmaps[ APP_TOOL_BAR_CURSOR_SELECT ] );
-
-            break;
-        }
         case APP_TOOL_BAR_WORLD_NAVIGATION:
         {
             mode = "World Navigation";
