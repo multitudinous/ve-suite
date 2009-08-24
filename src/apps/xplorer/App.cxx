@@ -751,18 +751,18 @@ void App::draw()
     vrj::opengl::DrawManager* glDrawManager =
         static_cast< vrj::opengl::DrawManager* >( getDrawManager() );
     //vprASSERT( glDrawManager != NULL );
-    vrj::opengl::UserData* userData = glDrawManager->currentUserData();
-    vrj::ViewportPtr viewport = userData->getViewport();
-    vrj::ProjectionPtr project = userData->getProjection();
+    const vrj::opengl::UserData* userData = glDrawManager->currentUserData();
+    const vrj::ViewportPtr viewport = userData->getViewport();
+    const vrj::ProjectionPtr project = userData->getProjection();
 #else
     vrj::GlDrawManager* glDrawManager =
         static_cast< vrj::opengl::DrawManager* >( getDrawManager() );
     //vprASSERT( glDrawManager != NULL );
-    vrj::GlUserData* userData = glDrawManager->currentUserData();
-    vrj::Viewport* viewport = userData->getViewport();
-    vrj::Projection* project = userData->getProjection();
+    const vrj::GlUserData* userData = glDrawManager->currentUserData();
+    const vrj::Viewport* viewport = userData->getViewport();
+    const vrj::Projection* project = userData->getProjection();
 #endif
-    vrj::Frustum frustum = project->getFrustum();
+    const vrj::Frustum frustum = project->getFrustum();
 
     //Get the frustum values
     double l = frustum[ vrj::Frustum::VJ_LEFT ];
@@ -775,14 +775,14 @@ void App::draw()
     //Get the GLTransformInfo associated w/ this viewport and context
     scenegraph::GLTransformInfoPtr glTI =
         m_sceneGLTransformInfo->GetGLTransformInfo( viewport );
-    const osg::Matrixd osgIdentityMatrix =
+    const osg::Matrixd& osgIdentityMatrix =
         m_sceneGLTransformInfo->GetOSGIdentityMatrix();
     //Set scene info associated w/ this viewport and context
     if( glTI )
     {
         //Get the projection matrix
         glTI->UpdateFrustumValues( l, r, b, t, n, f );
-        const osg::Matrixd osgProjectionMatrix = glTI->GetOSGProjectionMatrix();
+        const osg::Matrixd& osgProjectionMatrix = glTI->GetOSGProjectionMatrix();
 
         //Get the view matrix
         const gmtl::Matrix44d viewMatrix =
@@ -790,7 +790,7 @@ void App::draw()
         //Transform into z-up land (mZUp) and mul by the model matrix (mNavPosition)
         const gmtl::Matrix44d modelViewMatrix = viewMatrix * mZUp;
         glTI->UpdateModelViewMatrix( modelViewMatrix, mNavPosition );
-        const osg::Matrixd osgModelViewMatrix = glTI->GetOSGModelViewMatrix();
+        const osg::Matrixd& osgModelViewMatrix = glTI->GetOSGModelViewMatrix();
 
         if( mRTT )
         {
