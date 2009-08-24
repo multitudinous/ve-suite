@@ -50,6 +50,9 @@ import doxygen
 sys.path.append(pj(os.getcwd(), 'share', 'python'))
 import HDF5
 import HDF4
+# Pull in scolorizer files
+#sys.path.append(pj(os.getcwd(), 'share', 'python','scolorizer-0.2'))
+#from colorizer import colorizer
 
 # Add svnversion and upx source directory to the end of the path so it is found
 # LAST.
@@ -445,6 +448,10 @@ base_bldr = EnvironmentBuilder()
 base_bldr.addOptions( opts )
 base_bldr.setCpuArch()
 baseEnv = base_bldr.buildEnvironment(None,None,**tempEnv)
+## Now build commands will be colored
+#col = colorizer()
+#col.colorize( baseEnv )
+## Help speed up build times
 baseEnv.Decider('MD5-timestamp')
 # more info about the option below can be found here:
 # http://scons.org/wiki/GoFastButton
