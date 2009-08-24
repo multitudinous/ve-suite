@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no" ?>
+<network name="Network" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="verg_model.xsd">
+
+  <veSystem id="23be4987-a55e-a24d-98de-3584047b88ea">
+    <network>
+      <link id="215ce662-6c63-b641-a312-15ccc3b7ba66" name="NameHere">
+        <fromModule dataName="FromModule" id="f2d55c29-ee4d-404f-833e-6ac02ba7d8d5">
+          <dataValue type="xs:integer">104</dataValue>
+        </fromModule>
+        <toModule dataName="ToModule" id="9a8b5322-32af-4d49-8363-4d5192499fd5">
+          <dataValue type="xs:integer">105</dataValue>
+        </toModule>
+        <fromPort type="xs:integer">4</fromPort>
+        <toPort type="xs:integer">2</toPort>
+        <linkPoints xLocation="176" yLocation="126"/>
+        <linkPoints xLocation="268" yLocation="126"/>
+      </link>
+      <link id="43c1414b-e8f9-174d-b1bf-cb97ca490d04" name="NameHere">
+        <fromModule dataName="FromModule" id="ac1ddcf2-834d-d74b-b3b5-2835af1762d3">
+          <dataValue type="xs:integer">105</dataValue>
+        </fromModule>
+        <toModule dataName="ToModule" id="a865409d-9c9b-6e45-9b96-e059de1dd84d">
+          <dataValue type="xs:integer">106</dataValue>
+        </toModule>
+        <fromPort type="xs:integer">4</fromPort>
+        <toPort type="xs:integer">2</toPort>
+        <linkPoints xLocation="395" yLocation="126"/>
+        <linkPoints xLocation="484" yLocation="126"/>
+      </link>
+      <link id="f28b7647-d75e-d143-9d2e-0c086b4742a3" name="NameHere">
+        <fromModule dataName="FromModule" id="56d45eb7-cdc1-a247-9f5f-e35e564547da">
+          <dataValue type="xs:integer">106</dataValue>
+        </fromModule>
+        <toModule dataName="ToModule" id="0572e4dd-3a57-614d-8473-e272116a97ee">
+          <dataValue type="xs:integer">107</dataValue>
+        </toModule>
+        <fromPort type="xs:integer">4</fromPort>
+        <toPort type="xs:integer">2</toPort>
+        <linkPoints xLocation="611" yLocation="126"/>
+        <linkPoints xLocation="705" yLocation="126"/>
+      </link>
+      <conductorState dataName="m_xUserScale" id="9327b036-ae49-4a4f-933d-2f88c7dc9885">
+        <dataValue type="xs:double">1</dataValue>
+      </conductorState>
+      <conductorState dataName="m_yUserScale" id="569ddd37-ca09-7547-bf0d-6e060836d73d">
+        <dataValue type="xs:double">1</dataValue>
+      </conductorState>
+      <conductorState dataName="nPixX" id="a97234ae-b9ca-bb4a-a6cc-f3e4b949e64b">
+        <dataValue type="xs:integer">1</dataValue>
+      </conductorState>
+      <conductorState dataName="nPixY" id="9d720231-b20e-a74c-a3f7-795630561420">
+        <dataValue type="xs:integer">1</dataValue>
+      </conductorState>
+      <conductorState dataName="nUnitX" id="fa97072b-3ead-b54e-b6b9-4ef74849f1a0">
+        <dataValue type="xs:integer">1</dataValue>
+      </conductorState>
+      <conductorState dataName="nUnitY" id="aeba4af5-a726-c146-ab08-6f6ee780dc02">
+        <dataValue type="xs:integer">1</dataValue>
+      </conductorState>
+    </network>
+    <model ID="104" id="539d7c2a-43d0-d445-addf-ccbdc67286c8" name="NetworkThree" plugintype="NetworkThree" vendorUnit="NetworkThree">
+      <icon iconHidden="0" iconMirror="0" iconRotation="0" iconScale="1" type="xs:string">DefaultPlugin</icon>
+      <iconLocation xLocation="11" yLocation="13"/>
+      <ports>
+        <number type="xs:unsignedInt">1</number>
+        <dataFlow type="xs:string">input</dataFlow>
+        <portLocation xLocation="38" yLocation="39"/>
+        <portType type="xs:string"></portType>
+      </ports>
+      <ports>
+        <number type="xs:unsignedInt">2</number>
+        <dataFlow type="xs:string">input</dataFlow>
+        <portLocation xLocation="38" yLocation="113"/>
+        <portType type="xs:string"></portType>
+      </ports>
+      <ports>
+        <number type="xs:unsignedInt">3</number>
+        <dataFlow type="xs:string">output</dataFlow>
+        <portLocation xLocation="165" yLocation="39"/>
+        <portType type="xs:string"></portType>
+      </ports>
+      <ports>
+        <number type="xs:unsignedInt">4</number>
+        <dataFlow type="xs:string">output</dataFlow>
+        <portLocation xLocation="165" yLocation="113"/>
+        <portType type="xs:string"></portType>
+      </ports>
+      <inputs commandName="mNetworkThreeInputs">
+        <parameter dataName="mNetworkThreeInputs" id="cf44017b-8e0e-484b-bfeb-53af48da85c6">
+          <genericObject objectType="OneDStringArray"/>
+        </parameter>
+      </inputs>
+    </model>
+    <model ID="105" id="796a0653-2b5a-8146-ab5c-0dc478c584ac" name="NetworkTwo" plugintype="NetworkTwo" vendorUnit="NetworkTwo">
+      <icon iconHidden="0" iconMirror="0" iconRotation="0" iconScale="1" type="xs:string">DefaultPlugin</icon>
+      <iconLocation xLocation="230" yLocation="13"/>
+      <ports>
+        <number type="xs:unsignedInt">1</number>
+        <dataFlow type="xs:string">input</dataFlow>
+        <portLocation xLocation="38" yLocation="39"/>
+        <portType type="xs:string"></portType>
+      </ports>
+      <ports>
+        <number type="xs:unsignedInt">2</number>
+        <dataFlow type="xs:string">input</dataFlow>
+        <portLocation xLocation="38" yLocation="113"/>
+        <portType type="xs:string"></portType>
+      </ports>
+      <ports>
+        <number type="xs:unsignedInt">3</number>
+        <dataFlow type="xs:string">output</dataFlow>
+        <portLocation xLocation="165" yLocation="39"/>
+        <portType type="xs:string"></portType>
+      </ports>
+      <ports>
+        <number type="xs:unsignedInt">4</number>
+        <dataFlow type="xs:string">output</dataFlow>
+        <portLocation xLocation="165" yLocation="113"/>
+        <portType type="xs:string"></portType>
+      </ports>
+      <inputs commandName="mTextTwo">
+        <parameter dataName="mTextTwo" id="9aa5f788-2047-b141-937b-881f0a0a8429">
+          <dataValue type="xs:string"></dataValue>
+        </parameter>
+      </inputs>
+    </model>
+    <model ID="106" id="4001168e-3188-2e40-9b55-a2d0beda2940" name="NetworkOne" plugintype="NetworkOne" vendorUnit="NetworkOne">
+      <icon iconHidden="0" iconMirror="0" iconRotation="0" iconScale="1" type="xs:string">DefaultPlugin</icon>
+      <iconLocation xLocation="446" yLocation="13"/>
+      <ports>
+        <number type="xs:unsignedInt">1</number>
+        <dataFlow type="xs:string">input</dataFlow>
+        <portLocation xLocation="38" yLocation="39"/>
+        <portType type="xs:string"></portType>
+      </ports>
+      <ports>
+        <number type="xs:unsignedInt">2</number>
+        <dataFlow type="xs:string">input</dataFlow>
+        <portLocation xLocation="38" yLocation="113"/>
+        <portType type="xs:string"></portType>
+      </ports>
+      <ports>
+        <number type="xs:unsignedInt">3</number>
+        <dataFlow type="xs:string">output</dataFlow>
+        <portLocation xLocation="165" yLocation="39"/>
+        <portType type="xs:string"></portType>
+      </ports>
+      <ports>
+        <number type="xs:unsignedInt">4</number>
+        <dataFlow type="xs:string">output</dataFlow>
+        <portLocation xLocation="165" yLocation="113"/>
+        <portType type="xs:string"></portType>
+      </ports>
+      <inputs commandName="mTextOne">
+        <parameter dataName="mTextOne" id="8923cc67-ab93-af4e-a31f-bdc30adc754f">
+          <dataValue type="xs:string"></dataValue>
+        </parameter>
+      </inputs>
+    </model>
+    <model ID="107" id="b894de8c-6adb-264c-841e-8556b550e484" name="NetworkOne" plugintype="NetworkOne" vendorUnit="NetworkOne">
+      <icon iconHidden="0" iconMirror="0" iconRotation="0" iconScale="1" type="xs:string">DefaultPlugin</icon>
+      <iconLocation xLocation="667" yLocation="13"/>
+      <ports>
+        <number type="xs:unsignedInt">1</number>
+        <dataFlow type="xs:string">input</dataFlow>
+        <portLocation xLocation="38" yLocation="39"/>
+        <portType type="xs:string"></portType>
+      </ports>
+      <ports>
+        <number type="xs:unsignedInt">2</number>
+        <dataFlow type="xs:string">input</dataFlow>
+        <portLocation xLocation="38" yLocation="113"/>
+        <portType type="xs:string"></portType>
+      </ports>
+      <ports>
+        <number type="xs:unsignedInt">3</number>
+        <dataFlow type="xs:string">output</dataFlow>
+        <portLocation xLocation="165" yLocation="39"/>
+        <portType type="xs:string"></portType>
+      </ports>
+      <ports>
+        <number type="xs:unsignedInt">4</number>
+        <dataFlow type="xs:string">output</dataFlow>
+        <portLocation xLocation="165" yLocation="113"/>
+        <portType type="xs:string"></portType>
+      </ports>
+      <inputs commandName="mTextOne">
+        <parameter dataName="mTextOne" id="428db3e7-65db-284c-904c-e6ae8a0c4f88">
+          <dataValue type="xs:string"></dataValue>
+        </parameter>
+      </inputs>
+    </model>
+  </veSystem>
+
+  <User id="04fe2ec8-580d-8046-8692-eb07ab558ff9" userID="User" veControlStatus="MASTER">
+    <stateInfo>
+      <Command commandName="CHANGE_BACKGROUND_COLOR">
+        <parameter dataName="Background Color" id="7baf6977-a4d0-bd46-81ba-2f89af69f535">
+          <genericObject objectType="OneDDoubleArray">
+            <data>0</data>
+            <data>0</data>
+            <data>0</data>
+            <data>1</data>
+          </genericObject>
+        </parameter>
+      </Command>
+    </stateInfo>
+  </User>
+
+</network>
