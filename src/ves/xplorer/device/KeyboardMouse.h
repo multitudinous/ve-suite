@@ -250,6 +250,15 @@ private:
     ///Height of the window
     unsigned int mHeight;
 
+    ///
+    const unsigned int m_pickCushion;
+
+    ///
+    unsigned int m_xMotionPixels;
+
+    ///
+    unsigned int m_yMotionPixels;
+
     ///Holds the value of the key being used
     int mKey;
 
@@ -312,10 +321,10 @@ private:
     double mPrevPhysicsRayPos;
 
     ///The current mouse position
-    std::pair< double, double > mCurrPos;
+    std::pair< int, int > mCurrPos;
 
     ///The previous mouse position
-    std::pair< double, double > mPrevPos;
+    std::pair< int, int > mPrevPos;
 
     /*
     Note: osg::Matrix multiplication is reverse of gmtl::Matrix multiplication

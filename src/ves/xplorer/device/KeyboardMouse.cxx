@@ -125,14 +125,17 @@ KeyboardMouse::KeyboardMouse()
 
     mSelect( false ),
 
+    mWidth( 1 ),
+    mHeight( 1 ),
+    m_pickCushion( 1 ),
+    m_xMotionPixels( 0 ),
+    m_yMotionPixels( 0 ),
+
     mKey( -1 ),
     mButton( -1 ),
     mState( false ),
     mX( 0 ),
     mY( 0 ),
-
-    mWidth( 1 ),
-    mHeight( 1 ),
 
     mAspectRatio( 0.0 ),
     mFoVZ( 0.0 ),
@@ -144,6 +147,8 @@ KeyboardMouse::KeyboardMouse()
     mNearFrustum( 0.0 ),
     mFarFrustum( 0.0 ),
 
+    mMagnitude( 0.0 ),
+
     mXMinScreen( 0.0 ),
     mXMaxScreen( 0.0 ),
     mYMinScreen( 0.0 ),
@@ -151,8 +156,6 @@ KeyboardMouse::KeyboardMouse()
     mZValScreen( 0.0 ),
 
     mPrevPhysicsRayPos( 0.0 ),
-
-    mMagnitude( 0.0 ),
 
     mCurrPos( 0, 0 ),
     mPrevPos( 0, 0 ),
@@ -378,116 +381,116 @@ void KeyboardMouse::ProcessEvents()
         const gadget::EventType eventType = event->type();
         switch( eventType )
         {
-            case gadget::KeyPressEvent:
-            {
-                const gadget::KeyEventPtr keyEvt =
-                    boost::dynamic_pointer_cast< gadget::KeyEvent >( event );
+        case gadget::KeyPressEvent:
+        {
+            const gadget::KeyEventPtr keyEvt =
+                boost::dynamic_pointer_cast< gadget::KeyEvent >( event );
 
-                mKey = keyEvt->getKey();
-
-#if __GADGET_version >= 1003023
-                //Set the current GLTransfromInfo from the event
-                if( !SetCurrentGLTransformInfo( currentDisplay, true ) )
-                {
-                    return;
-                }
-#endif //__GADGET_version >= 1003023
-
-                OnKeyPress();
-
-                break;
-            }
-            case gadget::KeyReleaseEvent:
-            {
-                const gadget::KeyEventPtr keyEvt =
-                    boost::dynamic_pointer_cast< gadget::KeyEvent >( event );
-
-                mKey = keyEvt->getKey();
+            mKey = keyEvt->getKey();
 
 #if __GADGET_version >= 1003023
-                //Set the current GLTransfromInfo from the event
-                if( !SetCurrentGLTransformInfo( currentDisplay, true ) )
-                {
-                    return;
-                }
-#endif //__GADGET_version >= 1003023
-
-                OnKeyRelease();
-
-                break;
-            }
-            case gadget::MouseButtonPressEvent:
+            //Set the current GLTransfromInfo from the event
+            if( !SetCurrentGLTransformInfo( currentDisplay, true ) )
             {
-                const gadget::MouseEventPtr mouse_evt =
-                    boost::dynamic_pointer_cast< gadget::MouseEvent >( event );
-
-                mButton = mouse_evt->getButton();
-                mState = true;
-                mX = mouse_evt->getX();
-                mY = mouse_evt->getY();
-
-#if __GADGET_version >= 1003023
-                //Set the current GLTransfromInfo from the event
-                if( !SetCurrentGLTransformInfo( currentDisplay, false ) )
-                {
-                    return;
-                }
+                return;
+            }
 #endif //__GADGET_version >= 1003023
 
-                OnMousePress();
+            OnKeyPress();
 
-                break;
-            }
-            case gadget::MouseButtonReleaseEvent:
-            {
-                const gadget::MouseEventPtr mouse_evt =
-                    boost::dynamic_pointer_cast< gadget::MouseEvent >( event );
-
-                mButton = mouse_evt->getButton();
-                mState = false;
-                mX = mouse_evt->getX();
-                mY = mouse_evt->getY();
-
-#if __GADGET_version >= 1003023
-                //Set the current GLTransfromInfo from the event
-                if( !SetCurrentGLTransformInfo( currentDisplay, false ) )
-                {
-                    return;
-                }
-#endif //__GADGET_version >= 1003023
-
-                OnMouseRelease();
-
-                break;
-            }
-            case gadget::MouseMoveEvent:
-            {
-                const gadget::MouseEventPtr mouse_evt =
-                    boost::dynamic_pointer_cast< gadget::MouseEvent >( event );
-
-                mX = mouse_evt->getX();
-                mY = mouse_evt->getY();
-
-#if __GADGET_version >= 1003023
-                //Set the current GLTransfromInfo from the event
-                if( !SetCurrentGLTransformInfo( currentDisplay, false ) )
-                {
-                    return;
-                }
-#endif //__GADGET_version >= 1003023
-
-                if( !mState )
-                {
-                    OnMouseMotionUp();
-                }
-                else
-                {
-                    OnMouseMotionDown();
-                }
-
-                break;
-            }
+            break;
         }
+        case gadget::KeyReleaseEvent:
+        {
+            const gadget::KeyEventPtr keyEvt =
+                boost::dynamic_pointer_cast< gadget::KeyEvent >( event );
+
+            mKey = keyEvt->getKey();
+
+#if __GADGET_version >= 1003023
+            //Set the current GLTransfromInfo from the event
+            if( !SetCurrentGLTransformInfo( currentDisplay, true ) )
+            {
+                return;
+            }
+#endif //__GADGET_version >= 1003023
+
+            OnKeyRelease();
+
+            break;
+        }
+        case gadget::MouseButtonPressEvent:
+        {
+            const gadget::MouseEventPtr mouse_evt =
+                boost::dynamic_pointer_cast< gadget::MouseEvent >( event );
+
+            mButton = mouse_evt->getButton();
+            mState = true;
+            mX = mouse_evt->getX();
+            mY = mouse_evt->getY();
+
+#if __GADGET_version >= 1003023
+            //Set the current GLTransfromInfo from the event
+            if( !SetCurrentGLTransformInfo( currentDisplay, false ) )
+            {
+                return;
+            }
+#endif //__GADGET_version >= 1003023
+
+            OnMousePress();
+
+            break;
+        }
+        case gadget::MouseButtonReleaseEvent:
+        {
+            const gadget::MouseEventPtr mouse_evt =
+                boost::dynamic_pointer_cast< gadget::MouseEvent >( event );
+
+            mButton = mouse_evt->getButton();
+            mState = false;
+            mX = mouse_evt->getX();
+            mY = mouse_evt->getY();
+
+#if __GADGET_version >= 1003023
+            //Set the current GLTransfromInfo from the event
+            if( !SetCurrentGLTransformInfo( currentDisplay, false ) )
+            {
+                return;
+            }
+#endif //__GADGET_version >= 1003023
+
+            OnMouseRelease();
+
+            break;
+        }
+        case gadget::MouseMoveEvent:
+        {
+            const gadget::MouseEventPtr mouse_evt =
+                boost::dynamic_pointer_cast< gadget::MouseEvent >( event );
+
+            mX = mouse_evt->getX();
+            mY = mouse_evt->getY();
+
+#if __GADGET_version >= 1003023
+            //Set the current GLTransfromInfo from the event
+            if( !SetCurrentGLTransformInfo( currentDisplay, false ) )
+            {
+                return;
+            }
+#endif //__GADGET_version >= 1003023
+
+            if( !mState )
+            {
+                OnMouseMotionUp();
+            }
+            else
+            {
+                OnMouseMotionDown();
+            }
+
+            break;
+        }
+        } //end switch( eventType )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -718,339 +721,338 @@ void KeyboardMouse::OnKeyPress()
 {
     switch( mKey )
     {
-        case gadget::KEY_R:
-        {
-            ResetTransforms();
+    case gadget::KEY_R:
+    {
+        ResetTransforms();
 
-            break;
-        }
-        case gadget::KEY_F:
-        {
-            FrameAll();
-
-            break;
-        }
-        case gadget::KEY_A:
-        {
-            if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
-                 mCharacterController->IsActive() )
-            {
-                mCharacterController->StrafeLeft( true );
-            }
-
-            break;
-        }
-        case gadget::KEY_S:
-        {
-            if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
-                 mCharacterController->IsActive() )
-            {
-                mCharacterController->StepBackward( true );
-            }
-
-            break;
-        }
-        case gadget::KEY_W:
-        {
-            if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
-                 mCharacterController->IsActive() )
-            {
-                mCharacterController->StepForward( true );
-            }
-
-            break;
-        }
-        case gadget::KEY_D:
-        {
-            if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
-                 mCharacterController->IsActive() )
-            {
-                mCharacterController->StrafeRight( true );
-            }
-
-            break;
-        }
-        case gadget::KEY_C:
-        {
-            if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
-                 mCharacterController->IsActive() )
-            {
-                //mCharacterController
-            }
-
-            break;
-        }
-        case gadget::KEY_SPACE:
-        {
-            if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
-                 mCharacterController->IsActive() )
-            {
-                mCharacterController->Jump();
-            }
-
-            break;
-        }
-        case gadget::KEY_K:
-        {
-            SkyCam();
-
-            break;
-        }
-            
-        case gadget::KEY_UP:
-        {
-            Zoom45( 0.05 );
-            ProcessNavigationEvents();
-
-            break;
-        }
-        case gadget::KEY_DOWN: 
-        {
-            Zoom45( -0.05 );
-            ProcessNavigationEvents();
-
-            break;
-        }
-        case gadget::KEY_LEFT:
-        {
-            Pan( 0.05, 0 );
-            ProcessNavigationEvents();
-
-            break;
-        }
-        case gadget::KEY_RIGHT:
-        {
-            Pan( -0.05, 0 );
-            ProcessNavigationEvents();
-
-            break;
-        }
+        break;
     }
+    case gadget::KEY_F:
+    {
+        FrameAll();
+
+        break;
+    }
+    case gadget::KEY_A:
+    {
+        if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
+             mCharacterController->IsActive() )
+        {
+            mCharacterController->StrafeLeft( true );
+        }
+
+        break;
+    }
+    case gadget::KEY_S:
+    {
+        if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
+             mCharacterController->IsActive() )
+        {
+            mCharacterController->StepBackward( true );
+        }
+
+        break;
+    }
+    case gadget::KEY_W:
+    {
+        if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
+             mCharacterController->IsActive() )
+        {
+            mCharacterController->StepForward( true );
+        }
+
+        break;
+    }
+    case gadget::KEY_D:
+    {
+        if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
+             mCharacterController->IsActive() )
+        {
+            mCharacterController->StrafeRight( true );
+        }
+
+        break;
+    }
+    case gadget::KEY_C:
+    {
+        if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
+             mCharacterController->IsActive() )
+        {
+            //mCharacterController
+        }
+
+        break;
+    }
+    case gadget::KEY_SPACE:
+    {
+        if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
+             mCharacterController->IsActive() )
+        {
+            mCharacterController->Jump();
+        }
+
+        break;
+    }
+    case gadget::KEY_K:
+    {
+        SkyCam();
+
+        break;
+    }
+        
+    case gadget::KEY_UP:
+    {
+        Zoom45( 0.05 );
+        ProcessNavigationEvents();
+
+        break;
+    }
+    case gadget::KEY_DOWN: 
+    {
+        Zoom45( -0.05 );
+        ProcessNavigationEvents();
+
+        break;
+    }
+    case gadget::KEY_LEFT:
+    {
+        Pan( 0.05, 0 );
+        ProcessNavigationEvents();
+
+        break;
+    }
+    case gadget::KEY_RIGHT:
+    {
+        Pan( -0.05, 0 );
+        ProcessNavigationEvents();
+
+        break;
+    }
+    } //end switch( mKey )
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::OnKeyRelease()
 {
     switch( mKey )
     {
-        case gadget::KEY_A:
+    case gadget::KEY_A:
+    {
+        if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
+             mCharacterController->IsActive() )
         {
-            if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
-                 mCharacterController->IsActive() )
-            {
-                mCharacterController->StrafeLeft( false );
-            }
-
-            break;
+            mCharacterController->StrafeLeft( false );
         }
-        case gadget::KEY_S:
-        {
-            if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
-                 mCharacterController->IsActive() )
-            {
-                mCharacterController->StepBackward( false );
-            }
 
-            break;
-        }
-        case gadget::KEY_D:
-        {
-            if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
-                 mCharacterController->IsActive() )
-            {
-                mCharacterController->StrafeRight( false );
-            }
-
-            break;
-        }
-        case gadget::KEY_W:
-        {
-            if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
-                 mCharacterController->IsActive() )
-            {
-                mCharacterController->StepForward( false );
-            }
-
-            break;
-        }
-        case gadget::KEY_SPACE:
-        {
-            if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
-                 mCharacterController->IsActive() )
-            {
-                //mCharacterController->Jump();
-            }
-
-            break;
-        }
-        case gadget::KEY_C:
-        {
-            if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
-                mCharacterController->IsActive() )
-            {
-                //mCharacterController
-            }
-
-            break;
-        }
+        break;
     }
+    case gadget::KEY_S:
+    {
+        if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
+             mCharacterController->IsActive() )
+        {
+            mCharacterController->StepBackward( false );
+        }
+
+        break;
+    }
+    case gadget::KEY_D:
+    {
+        if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
+             mCharacterController->IsActive() )
+        {
+            mCharacterController->StrafeRight( false );
+        }
+
+        break;
+    }
+    case gadget::KEY_W:
+    {
+        if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
+             mCharacterController->IsActive() )
+        {
+            mCharacterController->StepForward( false );
+        }
+
+        break;
+    }
+    case gadget::KEY_SPACE:
+    {
+        if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
+             mCharacterController->IsActive() )
+        {
+            //mCharacterController->Jump();
+        }
+
+        break;
+    }
+    case gadget::KEY_C:
+    {
+        if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
+            mCharacterController->IsActive() )
+        {
+            //mCharacterController
+        }
+
+        break;
+    }
+    } //end switch( mKey )
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::OnMousePress()
 {
-    mCurrPos.first =
-        static_cast< double >( mX ) /
-        static_cast< double >( mWidth );
-    mCurrPos.second =
-        static_cast< double >( mY ) /
-        static_cast< double >( mHeight );
+    mCurrPos.first = mX;
+    mCurrPos.second = mY;
+
+    m_xMotionPixels = 0;
+    m_yMotionPixels = 0;
 
     switch( mButton )
     {
-        //Left mouse button
-        case gadget::MBUTTON1:
+    //Left mouse button
+    case gadget::MBUTTON1:
+    {
+        //Rotate just the camera "3rd person view:
+        if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
+             mCharacterController->IsActive() )
         {
-            //Rotate just the camera "3rd person view:
+            mCharacterController->FirstPersonMode( false );
+        }
+
+        //No modifier key
+        if( mKeyNone )
+        {
+#ifdef TRANSFORM_MANIPULATOR
+            UpdateSelectionLine();
+
+            if( vxs::SceneManager::instance()->GetManipulatorManager()->Handle(
+                    vxsm::Event::PUSH, mLineSegmentIntersector.get() ) )
+            {
+                break;
+            }
+#endif //TRANSFORM_MANIPULATOR
+
             if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
                  mCharacterController->IsActive() )
             {
-                mCharacterController->FirstPersonMode( false );
-            }
-
-            //No modifier key
-            if( mKeyNone )
-            {
-#ifdef TRANSFORM_MANIPULATOR
-                UpdateSelectionLine();
-
-                if( vxs::SceneManager::instance()->GetManipulatorManager()->Handle(
-                        vxsm::Event::PUSH, mLineSegmentIntersector.get() ) )
-                {
-                    break;
-                }
-#endif //TRANSFORM_MANIPULATOR
-
-                if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
-                     mCharacterController->IsActive() )
-                {
-                    mCharacterController->SetCameraRotationSLERP( false );
-                }
-            }
-            //Mod key shift
-            else if( mKeyShift )
-            {
-                //Add a point to point constraint for picking
-                if( vxs::PhysicsSimulator::instance()->GetIdle() )
-                {
-                    break;
-                }
-                
-                osg::Vec3d startPoint, endPoint;
-                SetStartEndPoint( startPoint, endPoint );
-
-                btVector3 rayFromWorld, rayToWorld;
-                rayFromWorld.setValue(
-                    startPoint.x(), startPoint.y(), startPoint.z() );
-                rayToWorld.setValue(
-                    endPoint.x(), endPoint.y(), endPoint.z() );
-
-                btCollisionWorld::ClosestRayResultCallback rayCallback(
-                    rayFromWorld, rayToWorld );
-                vxs::PhysicsSimulator::instance()->GetDynamicsWorld()->rayTest(
-                    rayFromWorld, rayToWorld, rayCallback );
-                
-                if( !rayCallback.hasHit() )
-                {
-                    break;
-                }
-                
-                btRigidBody* body = btRigidBody::upcast(
-                    rayCallback.m_collisionObject );
-                if( !body )
-                {
-                    break;
-                }
-
-                //Other exclusions
-                if( !( body->isStaticObject() ||
-                       body->isKinematicObject() ) )
-                {
-                    mPickedBody = body;
-                    mPickedBody->setActivationState(
-                        DISABLE_DEACTIVATION );
-
-                    btVector3 pickPos = rayCallback.m_hitPointWorld;
-
-                    btVector3 localPivot =
-                        body->getCenterOfMassTransform().inverse() *
-                        pickPos;
-
-                    btPoint2PointConstraint* p2p =
-                        new btPoint2PointConstraint(
-                            *body, localPivot );
-                    vxs::PhysicsSimulator::instance()->GetDynamicsWorld()->addConstraint( p2p );
-                    mPickConstraint = p2p;
-
-                    mPrevPhysicsRayPos =
-                        ( pickPos - rayFromWorld ).length();
-
-                    //Very weak constraint for picking
-                    p2p->m_setting.m_tau = 0.1;
-                }
-            }
-            else if( mKeyAlt )
-            {
-                ;
-            }
-
-            mSelect = true;
-
-            break;
-        }
-        //Middle mouse button
-        case gadget::MBUTTON2:
-        {
-            mSelect = true;
-
-            break;
-        }
-        //Right mouse button
-        case gadget::MBUTTON3:
-        {
-            if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
-                mCharacterController->IsActive() )
-            {
-                mCharacterController->FirstPersonMode( true );
                 mCharacterController->SetCameraRotationSLERP( false );
-                mCharacterController->SetCharacterRotationFromCamera();
             }
-
-            mSelect = true;
-
-            break;
         }
-        //Scroll wheel up
-        case gadget::MBUTTON4:
+        //Mod key shift
+        else if( mKeyShift )
         {
-            if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
-                mCharacterController->IsActive() )
+            //Add a point to point constraint for picking
+            if( vxs::PhysicsSimulator::instance()->GetIdle() )
             {
-                mCharacterController->Zoom( true );
+                break;
+            }
+            
+            osg::Vec3d startPoint, endPoint;
+            SetStartEndPoint( startPoint, endPoint );
+
+            btVector3 rayFromWorld, rayToWorld;
+            rayFromWorld.setValue(
+                startPoint.x(), startPoint.y(), startPoint.z() );
+            rayToWorld.setValue(
+                endPoint.x(), endPoint.y(), endPoint.z() );
+
+            btCollisionWorld::ClosestRayResultCallback rayCallback(
+                rayFromWorld, rayToWorld );
+            vxs::PhysicsSimulator::instance()->GetDynamicsWorld()->rayTest(
+                rayFromWorld, rayToWorld, rayCallback );
+            
+            if( !rayCallback.hasHit() )
+            {
+                break;
+            }
+            
+            btRigidBody* body = btRigidBody::upcast(
+                rayCallback.m_collisionObject );
+            if( !body )
+            {
+                break;
             }
 
-            break;
+            //Other exclusions
+            if( !( body->isStaticObject() ||
+                   body->isKinematicObject() ) )
+            {
+                mPickedBody = body;
+                mPickedBody->setActivationState(
+                    DISABLE_DEACTIVATION );
+
+                btVector3 pickPos = rayCallback.m_hitPointWorld;
+
+                btVector3 localPivot =
+                    body->getCenterOfMassTransform().inverse() *
+                    pickPos;
+
+                btPoint2PointConstraint* p2p =
+                    new btPoint2PointConstraint(
+                        *body, localPivot );
+                vxs::PhysicsSimulator::instance()->GetDynamicsWorld()->addConstraint( p2p );
+                mPickConstraint = p2p;
+
+                mPrevPhysicsRayPos =
+                    ( pickPos - rayFromWorld ).length();
+
+                //Very weak constraint for picking
+                p2p->m_setting.m_tau = 0.1;
+            }
         }
-        //Scroll wheel down
-        case gadget::MBUTTON5:
+        else if( mKeyAlt )
         {
-            if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
-                mCharacterController->IsActive() )
-            {
-                mCharacterController->Zoom( false );
-            }
-
-            break;
+            ;
         }
+
+        mSelect = true;
+
+        break;
     }
+    //Middle mouse button
+    case gadget::MBUTTON2:
+    {
+        mSelect = true;
+
+        break;
+    }
+    //Right mouse button
+    case gadget::MBUTTON3:
+    {
+        if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
+            mCharacterController->IsActive() )
+        {
+            mCharacterController->FirstPersonMode( true );
+            mCharacterController->SetCameraRotationSLERP( false );
+            mCharacterController->SetCharacterRotationFromCamera();
+        }
+
+        mSelect = true;
+
+        break;
+    }
+    //Scroll wheel up
+    case gadget::MBUTTON4:
+    {
+        if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
+            mCharacterController->IsActive() )
+        {
+            mCharacterController->Zoom( true );
+        }
+
+        break;
+    }
+    //Scroll wheel down
+    case gadget::MBUTTON5:
+    {
+        if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
+            mCharacterController->IsActive() )
+        {
+            mCharacterController->Zoom( false );
+        }
+
+        break;
+    }
+    } //end switch( mButton )
 
     mPrevPos.first = mCurrPos.first;
     mPrevPos.second = mCurrPos.second;
@@ -1058,113 +1060,109 @@ void KeyboardMouse::OnMousePress()
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::OnMouseRelease()
 {
-    mCurrPos.first =
-        static_cast< double >( mX ) /
-        static_cast< double >( mWidth );
-    mCurrPos.second =
-        static_cast< double >( mY ) /
-        static_cast< double >( mHeight );
+    mCurrPos.first = mX;
+    mCurrPos.second = mY;
 
     switch( mButton )
     {
-        //Left mouse button
-        case gadget::MBUTTON1:
+    //Left mouse button
+    case gadget::MBUTTON1:
+    {
+        //Do not require mod key depending on what the user did
+        if( mPickConstraint )
         {
-            //Do not require mod key depending on what the user did
-            if( mPickConstraint )
-            {
-                vxs::PhysicsSimulator::instance()->GetDynamicsWorld()->removeConstraint( mPickConstraint );
-                delete mPickConstraint;
-                mPickConstraint = NULL;
+            vxs::PhysicsSimulator::instance()->GetDynamicsWorld()->removeConstraint( mPickConstraint );
+            delete mPickConstraint;
+            mPickConstraint = NULL;
 
-                mPickedBody->forceActivationState( ACTIVE_TAG );
-                mPickedBody->setDeactivationTime( 0.0 );
-                mPickedBody = NULL;
-            }
+            mPickedBody->forceActivationState( ACTIVE_TAG );
+            mPickedBody->setDeactivationTime( 0.0 );
+            mPickedBody = NULL;
+        }
 
 #ifdef TRANSFORM_MANIPULATOR
-            if( vxs::SceneManager::instance()->GetManipulatorManager()->Handle(
-                    vxsm::Event::RELEASE ) );
-            {
-                ;
-            }
+        if( vxs::SceneManager::instance()->GetManipulatorManager()->Handle(
+                vxsm::Event::RELEASE ) );
+        {
+            ;
+        }
 #endif //TRANSFORM_MANIPULATOR
 
-            if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
-                 mCharacterController->IsActive() )
-            {
-                mCharacterController->SetCameraRotationSLERP( true );
-            }
+        if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
+             mCharacterController->IsActive() )
+        {
+            mCharacterController->SetCameraRotationSLERP( true );
+        }
 
-            //No modifier key
-            if( mKeyNone )
+        //No modifier key
+        if( mKeyNone )
+        {
+            ;
+        }
+        //Mod key shift
+        else if( mKeyShift )
+        {
+            ;
+        }
+        else if( mKeyAlt )
+        {
+            //OnMouseRelease();
+            vxs::DCS* infoDCS = 
+                vx::DeviceHandler::instance()->GetSelectedDCS();
+            vx::DeviceHandler::instance()->UnselectObjects();
+            
+            std::map< std::string, ves::xplorer::plugin::PluginBase* >* 
+                tempPlugins = 
+                    ves::xplorer::network::cfdExecutive::instance()->
+                    GetTheCurrentPlugins();
+            
+            std::map< std::string, 
+                ves::xplorer::plugin::PluginBase* >::iterator pluginIter;
+            
+            for( pluginIter = tempPlugins->begin(); 
+                pluginIter != tempPlugins->end(); ++pluginIter )
             {
-                ;
+                pluginIter->second->GetCFDModel()->
+                    RenderTextualDisplay( false );
             }
-            //Mod key shift
-            else if( mKeyShift )
+            
+            if( !infoDCS )
             {
-                ;
+                break;
             }
-            else if( mKeyAlt )
+            osg::Node::DescriptionList descriptorsList;
+            descriptorsList = infoDCS->getDescriptions();
+            std::string modelIdStr;
+            for( size_t i = 0; i < descriptorsList.size(); ++i )
             {
-                //OnMouseRelease();
-                vxs::DCS* infoDCS = 
-                    vx::DeviceHandler::instance()->GetSelectedDCS();
-                vx::DeviceHandler::instance()->UnselectObjects();
-                
-                std::map< std::string, ves::xplorer::plugin::PluginBase* >* 
-                    tempPlugins = 
-                        ves::xplorer::network::cfdExecutive::instance()->
-                        GetTheCurrentPlugins();
-                
-                std::map< std::string, 
-                    ves::xplorer::plugin::PluginBase* >::iterator pluginIter;
-                
-                for( pluginIter = tempPlugins->begin(); 
-                    pluginIter != tempPlugins->end(); ++pluginIter )
+                //std::cout << descriptorsList.at( i ) << std::endl;
+                if( descriptorsList.at( i ) == "VE_XML_MODEL_ID" )
                 {
-                    pluginIter->second->GetCFDModel()->
-                        RenderTextualDisplay( false );
-                }
-                
-                if( !infoDCS )
-                {
+                    modelIdStr = descriptorsList.at( i + 1 );
                     break;
                 }
-                osg::Node::DescriptionList descriptorsList;
-                descriptorsList = infoDCS->getDescriptions();
-                std::string modelIdStr;
-                for( size_t i = 0; i < descriptorsList.size(); ++i )
-                {
-                    //std::cout << descriptorsList.at( i ) << std::endl;
-                    if( descriptorsList.at( i ) == "VE_XML_MODEL_ID" )
-                    {
-                        modelIdStr = descriptorsList.at( i + 1 );
-                        break;
-                    }
-                }
-                                
-                pluginIter = tempPlugins->find( modelIdStr );
-                if( pluginIter != tempPlugins->end() )
-                {
-                    pluginIter->second->GetCFDModel()->RenderTextualDisplay( true );
-                }
             }
+                            
+            pluginIter = tempPlugins->find( modelIdStr );
+            if( pluginIter != tempPlugins->end() )
+            {
+                pluginIter->second->GetCFDModel()->RenderTextualDisplay( true );
+            }
+        }
 
-            break;
-        }
-        //Middle mouse button
-        case gadget::MBUTTON2:
-        {
-            break;
-        }
-        //Right mouse button
-        case gadget::MBUTTON3:
-        {
-            break;
-        }
+        break;
     }
+    //Middle mouse button
+    case gadget::MBUTTON2:
+    {
+        break;
+    }
+    //Right mouse button
+    case gadget::MBUTTON3:
+    {
+        break;
+    }
+    } //end switch( mButton )
 
     if( mSelect )
     {
@@ -1180,127 +1178,128 @@ void KeyboardMouse::OnMouseRelease()
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::OnMouseMotionDown()
 {
-    mCurrPos.first =
-        static_cast< double >( mX ) /
-        static_cast< double >( mWidth );
-    mCurrPos.second =
-        static_cast< double >( mY ) /
-        static_cast< double >( mHeight );
+    mCurrPos.first = mX;
+    mCurrPos.second = mY;
 
-    std::pair< double, double > delta;
-    delta.first = mCurrPos.first - mPrevPos.first;
-    delta.second = mCurrPos.second - mPrevPos.second;
+    double xDelta = mCurrPos.first - mPrevPos.first;
+    double yDelta = mCurrPos.second - mPrevPos.second;
+    m_xMotionPixels += abs( static_cast< int >( xDelta ) );
+    m_yMotionPixels += abs( static_cast< int >( yDelta ) );
 
-    mMagnitude =
-        sqrtf( delta.first * delta.first + delta.second * delta.second );
+    xDelta /= mWidth;
+    yDelta /= mHeight;
+
+    mMagnitude = sqrt( xDelta * xDelta + yDelta * yDelta );
 
     switch( mButton )
     {
-        //Left mouse button
-        case gadget::MBUTTON1:
+    //Left mouse button
+    case gadget::MBUTTON1:
+    {
+        //No modifier key
+        if( mKeyNone )
         {
-            //No modifier key
-            if( mKeyNone )
-            {
 
 #ifdef TRANSFORM_MANIPULATOR
-                UpdateSelectionLine();
+            UpdateSelectionLine();
 
-                if( vxs::SceneManager::instance()->GetManipulatorManager()->Handle(
-                        vxsm::Event::DRAG ) )
-                {
-                    break;
-                }
+            if( vxs::SceneManager::instance()->GetManipulatorManager()->Handle(
+                    vxsm::Event::DRAG ) )
+            {
+                break;
+            }
 #endif //TRANSFORM_MANIPULATOR
 
-                //Rotate just the camera "3rd person view:
-                if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
-                     mCharacterController->IsActive() )
-                {
-                    mCharacterController->Rotate( delta.first, delta.second );
-                }
-                else
-                {
-                    if( ( mX > 0.1 * mWidth ) && ( mX < 0.9 * mWidth ) &&
-                        ( mY > 0.1 * mHeight ) && ( mY < 0.9 * mHeight ) )
-                    {
-                        double angle = mMagnitude * 7.0;
-#if __VJ_version >= 2003000
-                        Rotate(
-                            angle, gmtl::Vec3d( -delta.second, 0.0, delta.first ) );
-#else
-                        Rotate(
-                            angle, gmtl::Vec3d(  delta.second, 0.0, delta.first ) );
-#endif
-                    }
-                    else
-                    {
-                        Twist();
-                    }
-
-                    ProcessNavigationEvents();
-                }
-            }
-            //Mod key shift
-            else if( mKeyShift )
-            {
-                if( !vxs::PhysicsSimulator::instance()->GetIdle() && mPickConstraint )
-                {
-                    //Move the constraint pivot
-                    btPoint2PointConstraint* p2p =
-                        static_cast< btPoint2PointConstraint* >( mPickConstraint );
-                    if( p2p )
-                    {
-                        osg::Vec3d startPoint, endPoint;
-                        SetStartEndPoint( startPoint, endPoint );
-
-                        btVector3 rayFromWorld, rayToWorld;
-                        rayFromWorld.setValue(
-                            startPoint.x(), startPoint.y(), startPoint.z() );
-                        rayToWorld.setValue(
-                            endPoint.x(), endPoint.y(), endPoint.z() );
-
-                        //Keep it at the same picking distance
-                        btVector3 dir = rayToWorld - rayFromWorld;
-                        dir.normalize();
-                        dir *= mPrevPhysicsRayPos;
-
-                        btVector3 newPos = rayFromWorld + dir;
-                        p2p->setPivotB( newPos );
-                    }
-                }
-            }
-
-            break;
-        }
-        //Middle mouse button
-        case gadget::MBUTTON2:
-        {
-            Pan( delta.first, delta.second );
-            ProcessNavigationEvents();
-
-            break;
-        }
-        //Right mouse button
-        case gadget::MBUTTON3:
-        {
-            //Rotate the character and camera at the same time
+            //Rotate just the camera "3rd person view:
             if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
-                mCharacterController->IsActive() )
+                 mCharacterController->IsActive() )
             {
-                mCharacterController->Rotate( delta.first, delta.second );
+                mCharacterController->Rotate( xDelta, yDelta );
             }
             else
             {
-                Zoom( delta.second );
+                if( ( mX > 0.1 * mWidth ) && ( mX < 0.9 * mWidth ) &&
+                    ( mY > 0.1 * mHeight ) && ( mY < 0.9 * mHeight ) )
+                {
+                    double angle = mMagnitude * 7.0;
+#if __VJ_version >= 2003000
+                    Rotate( angle, gmtl::Vec3d( -yDelta, 0.0, xDelta ) );
+#else
+                    Rotate( angle, gmtl::Vec3d(  yDelta, 0.0, xDelta ) );
+#endif
+                }
+                else
+                {
+                    Twist();
+                }
+
                 ProcessNavigationEvents();
             }
-
-            break;
         }
-    }
+        //Mod key shift
+        else if( mKeyShift )
+        {
+            if( !vxs::PhysicsSimulator::instance()->GetIdle() && mPickConstraint )
+            {
+                //Move the constraint pivot
+                btPoint2PointConstraint* p2p =
+                    static_cast< btPoint2PointConstraint* >( mPickConstraint );
+                if( p2p )
+                {
+                    osg::Vec3d startPoint, endPoint;
+                    SetStartEndPoint( startPoint, endPoint );
 
-    mSelect = false;
+                    btVector3 rayFromWorld, rayToWorld;
+                    rayFromWorld.setValue(
+                        startPoint.x(), startPoint.y(), startPoint.z() );
+                    rayToWorld.setValue(
+                        endPoint.x(), endPoint.y(), endPoint.z() );
+
+                    //Keep it at the same picking distance
+                    btVector3 dir = rayToWorld - rayFromWorld;
+                    dir.normalize();
+                    dir *= mPrevPhysicsRayPos;
+
+                    btVector3 newPos = rayFromWorld + dir;
+                    p2p->setPivotB( newPos );
+                }
+            }
+        }
+
+        break;
+    }
+    //Middle mouse button
+    case gadget::MBUTTON2:
+    {
+        Pan( xDelta, yDelta );
+        ProcessNavigationEvents();
+
+        break;
+    }
+    //Right mouse button
+    case gadget::MBUTTON3:
+    {
+        //Rotate the character and camera at the same time
+        if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
+            mCharacterController->IsActive() )
+        {
+            mCharacterController->Rotate( xDelta, yDelta );
+        }
+        else
+        {
+            Zoom( yDelta );
+            ProcessNavigationEvents();
+        }
+
+        break;
+    }
+    } //end switch( mButton )
+
+    //If delta mouse motion is less than m_pickCushion, do selection
+    if( m_xMotionPixels > m_pickCushion || m_yMotionPixels > m_pickCushion )
+    {
+        mSelect = false;
+    }
 
     mPrevPos.first = mCurrPos.first;
     mPrevPos.second = mCurrPos.second;
@@ -1436,8 +1435,16 @@ void KeyboardMouse::ResetTransforms()
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::Twist()
 {
-    double theta = atan2( mPrevPos.first - 0.5, mPrevPos.second - 0.5 );
-    double newTheta = atan2( mCurrPos.first - 0.5, mCurrPos.second - 0.5 );
+    double xTheta = mPrevPos.first;
+    xTheta /= mWidth;
+    double yTheta = mPrevPos.second;
+    yTheta /= mHeight;
+    double theta = atan2( xTheta - 0.5, yTheta - 0.5 );
+    xTheta = mCurrPos.first;
+    xTheta /= mWidth;
+    yTheta = mCurrPos.second;
+    yTheta /= mHeight;
+    double newTheta = atan2( xTheta - 0.5, yTheta - 0.5 );
 #if __VJ_version >= 2003000
     double angle = newTheta - theta;
 #else
