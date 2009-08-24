@@ -101,11 +101,12 @@ public:
     ///Destructor
     ~SceneRenderToTexture();
 
-    /*
     ///
-    void ConfigureRTTCameras();
-    */
+    bool CameraConfigured();
 
+    ///Initialized
+    void InitializeRTT();
+    
     ///Get the camera with specified vrj::Viewport
     ///\return The camera with specified vrj::Viewport
 #if __VJ_version >= 2003000

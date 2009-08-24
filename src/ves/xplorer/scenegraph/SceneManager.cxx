@@ -120,7 +120,7 @@ SceneManager::SceneManager()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void SceneManager::Initialize( std::string& param )
+void SceneManager::Initialize()
 {
     ;
 }

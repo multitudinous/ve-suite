@@ -37,6 +37,8 @@
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/GLTransformInfo.h>
 
+#include <ves/xplorer/Debug.h>
+
 // ---  VR Juggler Includes --- //
 #if __VJ_version >= 2003000
 #include <vrj/Draw/OpenGL/Window.h>
@@ -94,8 +96,8 @@ scenegraph::GLTransformInfoPtr const SceneGLTransformInfo::GetGLTransformInfo(
     }
     else
     {
-        std::cout << "SceneGLTransformInfo::GetGLTransformInfo - "
-                  << "GLTransformInfo not found!" << std::endl;
+        vprDEBUG( vesDBG, 1 ) << "SceneGLTransformInfo::GetGLTransformInfo - "
+                  << "Not initialized yet." << std::endl << vprDEBUG_FLUSH;
 
         return scenegraph::GLTransformInfoPtr();
     }
@@ -173,13 +175,14 @@ void SceneGLTransformInfo::Initialize()
         windowMatrix.mData[ 13 ] = ( 0.5 * viewportHeight ) + viewportOriginY;
         windowMatrix.mData[ 14 ] = 0.5;
 
-        scenegraph::GLTransformInfoPtr glTransformInfo =
-            scenegraph::GLTransformInfoPtr( new scenegraph::GLTransformInfo(
+        scenegraph::GLTransformInfoPtr glTransformInfo( new scenegraph::GLTransformInfo(
                 viewportOriginX, viewportOriginY, viewportWidth, viewportHeight,
                 0, 0, windowWidth, windowHeight,
                 windowMatrix ) );
         (*m_glTransformInfoMap)[ viewport ] = glTransformInfo;
         sceneManager->PushBackGLTransformInfo( viewport, glTransformInfo );
     }
+    vprDEBUG( vesDBG, 1 ) << "SceneGLTransformInfo::Initialize - "
+        << "GLTransformInfo is initialized." << std::endl << vprDEBUG_FLUSH;
 }
 ////////////////////////////////////////////////////////////////////////////////

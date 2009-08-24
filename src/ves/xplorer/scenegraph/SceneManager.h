@@ -145,7 +145,7 @@ public:
 
     ///???
     ///\param param
-    void Initialize( std::string& param );
+    void Initialize();
 
     ///Initialize the scene
     void InitScene();
@@ -275,6 +275,9 @@ private:
     ///Flag to tell if RTT is off or on
     bool m_isRTTOn;
 
+    ///This containes a map to context specific data given a viewport
+    ///This map should never be returned to the user as the map
+    ///can have more viewports than active at a given time
 #if __VJ_version >= 2003000
     typedef std::map< vrj::ViewportPtr, GLTransformInfoPtr > GLTransformInfoMap;
     GLTransformInfoMap m_glTransformInfoMap;

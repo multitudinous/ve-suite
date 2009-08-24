@@ -50,7 +50,10 @@
 #include <vector>
 
 #include <boost/program_options.hpp>
+#include <boost/filesystem/operations.hpp> // includes boost/filesystem/path.hpp
+#include <boost/filesystem/path.hpp>
 namespace po = boost::program_options;
+namespace fs = boost::filesystem;
 
 using namespace ves::xplorer;
 
@@ -68,7 +71,46 @@ int main( int argc, char* argv[] )
         << std::endl;
 
     //Start the juggler kernel here so that we can run on darwin
-    vrj::Kernel* kernel = vrj::Kernel::instance(); // Declare a new Kernel
+    vrj::Kernel* kernel = vrj::Kernel::instance();
+    //Check to make sure the jccl env var is defined properly
+    std::cout
+        << "|-----------------------------------------------------------------|"
+        << std::endl
+        << "| Be sure that the JCCL_CFG_PATH is set properply by VR Juggler."
+        << std::endl
+        << "|-----------------------------------------------------------------|"
+        << std::endl;
+    
+    /*const char* env_dir = std::getenv("JCCL_CFG_PATH");
+    if( env_dir )
+    {
+        try
+        {
+            fs::path base_dir;
+            base_dir = fs::path(env_dir, fs::native);
+
+            if( !fs::exists( base_dir ) )
+            {
+                std::cerr << "JCCL_CFG_PATH directory does not exist." << std::endl;
+                return 0;
+            }
+            else
+            {
+                std::cout << "Defined JCCL_CFG_PATH " << env_dir << std::endl;
+            }
+        }
+        catch( fs::filesystem_error& err )
+        {
+            std::cerr << "JCCL_CFG_PATH directory does not exist." << std::endl;
+            return 0;
+        }
+    }
+    else
+    {
+        std::cerr << "JCCL_CFG_PATH environment variable is not defined properly." << std::endl;
+        return 0;
+    }*/
+    
     po::options_description xplorer_desc("VE-Xplorer Options");
     po::options_description& general_desc = kernel->getGeneralOptions();
     po::options_description& cluster_desc = kernel->getClusterOptions();

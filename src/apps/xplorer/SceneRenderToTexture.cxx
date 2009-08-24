@@ -267,8 +267,8 @@ osg::Camera* SceneRenderToTexture::CreatePipelineCamera(
     tempCamera->attach( osg::Camera::PACKED_DEPTH_STENCIL_BUFFER, GL_DEPTH_STENCIL_EXT );
 #endif
 
-    osg::ref_ptr< osg::ClearNode > clearNode = new osg::ClearNode();
-    clearNode->setClearMask( GL_STENCIL_BUFFER_BIT );
+    //osg::ref_ptr< osg::ClearNode > clearNode = new osg::ClearNode();
+    //clearNode->setClearMask( GL_STENCIL_BUFFER_BIT );
     //tempCamera->addChild( clearNode.get() );
 
     //Setup the MRT shader to make glow work correctly
@@ -1102,5 +1102,15 @@ void SceneRenderToTexture::WriteImageFileForWeb(
     shot->copySubImage( 0, h, 0, ( *activeImage ).get() );
     //This would work, too:
     osgDB::writeImageFile( *( shot.get() ), filename );
+}
+////////////////////////////////////////////////////////////////////////////////
+bool SceneRenderToTexture::CameraConfigured()
+{
+    return *mCamerasConfigured;
+}
+////////////////////////////////////////////////////////////////////////////////
+void SceneRenderToTexture::InitializeRTT()
+{
+    *mCamerasConfigured = false;
 }
 ////////////////////////////////////////////////////////////////////////////////

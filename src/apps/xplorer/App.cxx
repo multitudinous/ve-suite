@@ -134,10 +134,10 @@ App::App( int argc, char* argv[], bool enableRTT )
     writingWebImageNow( false ),
     captureNextFrameForWeb( false ),
     isCluster( false ),
+    mRTT( enableRTT ),
     mLastFrame( 0 ),
     mLastTime( 0 ),
-    mProfileCounter( 0 ),
-    mRTT( enableRTT )
+    mProfileCounter( 0 )
 {
     osg::Referenced::setThreadSafeReferenceCounting( true );
     osg::DisplaySettings::instance()->setMaxNumberOfGraphicsContexts( 20 );
@@ -234,7 +234,7 @@ osg::Group* App::getScene()
 void App::contextInit()
 {
     //vrj::OsgApp::contextInit();
-
+std::cout << " context init" << std::endl;
     const unsigned int unique_context_id =
 #if __VJ_version >= 2003000
         vrj::opengl::DrawManager::instance()->getCurrentContext();
@@ -257,9 +257,10 @@ void App::contextInit()
         if( !mRTT )
         {
             new_sv->setSceneData( getScene() );
-        }
-
+        }        
         *mViewportsChanged = false;
+        m_sceneGLTransformInfo->Initialize();
+        mSceneRenderToTexture->InitializeRTT();
     }
 
     ( *sceneViewer ) = new_sv;
@@ -662,19 +663,16 @@ void App::contextPreDraw()
     if( !(*mViewportsChanged) && (_frameNumber > 5) )
     {
         if( jccl::ConfigManager::instance()->isPendingStale() )
-        {
+        {            
             vpr::Guard< vpr::Mutex > val_guard( mValueLock );
             if( mRTT )
             {
                 mSceneRenderToTexture->InitScene( (*sceneViewer)->getCamera() );
             }
-
-            m_sceneGLTransformInfo->Initialize();
-
             *mViewportsChanged = true;
         }
     }
-
+    
     ///Context specific updates for models that are loaded
     ves::xplorer::ModelHandler::instance()->ContextPreDrawUpdate();
 
@@ -705,6 +703,14 @@ void App::contextPreDraw()
 ///so setting variables should not be done here
 void App::draw()
 {
+    if( mRTT )
+    {
+        if( !mSceneRenderToTexture->CameraConfigured() )
+        {
+            return;
+        }
+    }
+    
     //std::cout << "----------Draw-----------" << std::endl;
     VPR_PROFILE_GUARD_HISTORY( "App::draw", 20 );
     glClear( GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT );
@@ -758,21 +764,22 @@ void App::draw()
     //Get the GLTransformInfo associated w/ this viewport and context
     scenegraph::GLTransformInfoPtr glTI =
         m_sceneGLTransformInfo->GetGLTransformInfo( viewport );
-    const osg::Matrixd& osgIdentityMatrix =
+    const osg::Matrixd osgIdentityMatrix =
         m_sceneGLTransformInfo->GetOSGIdentityMatrix();
     //Set scene info associated w/ this viewport and context
-    if( glTI != scenegraph::GLTransformInfoPtr() )
+    if( glTI )
     {
         //Get the projection matrix
         glTI->UpdateFrustumValues( l, r, b, t, n, f );
-        const osg::Matrixd& osgProjectionMatrix = glTI->GetOSGProjectionMatrix();
+        const osg::Matrixd osgProjectionMatrix = glTI->GetOSGProjectionMatrix();
 
         //Get the view matrix
-        gmtl::Matrix44d viewMatrix =
+        const gmtl::Matrix44d viewMatrix =
             gmtl::convertTo< double >( project->getViewMatrix() );
         //Transform into z-up land (mZUp) and mul by the model matrix (mNavPosition)
-        glTI->UpdateModelViewMatrix( viewMatrix * mZUp, mNavPosition );
-        const osg::Matrixd& osgModelViewMatrix = glTI->GetOSGModelViewMatrix();
+        const gmtl::Matrix44d modelViewMatrix = viewMatrix * mZUp;
+        glTI->UpdateModelViewMatrix( modelViewMatrix, mNavPosition );
+        const osg::Matrixd osgModelViewMatrix = glTI->GetOSGModelViewMatrix();
 
         if( mRTT )
         {
@@ -823,7 +830,7 @@ void App::draw()
         sv->draw();
     }
 
-    if( glTI != scenegraph::GLTransformInfoPtr() )
+    if( glTI )
     {
         //Get the frustum planes based on the current bounding volume of the scene
         sv->getCamera()->getProjectionMatrixAsFrustum( l, r, b, t, n, f );
