@@ -63,17 +63,12 @@
 
 using namespace ves::xplorer;
 
-namespace vx = ves::xplorer;
-namespace vxd = ves::xplorer::device;
-namespace vxs = vx::scenegraph;
-namespace vxsm = vxs::manipulator;
-
 vprSingletonImp( DeviceHandler );
 
 ////////////////////////////////////////////////////////////////////////////////
 DeviceHandler::DeviceHandler()
     :
-    mActiveDCS( vxs::SceneManager::instance()->GetActiveNavSwitchNode() ),
+    mActiveDCS( scenegraph::SceneManager::instance()->GetActiveNavSwitchNode() ),
     mSelectedDCS( NULL ),
     mDeviceMode( "World Navigation" ),
     mResetCenterPointPosition( 0.0, 0.1, 0.0 ),
@@ -82,24 +77,27 @@ DeviceHandler::DeviceHandler()
     mCenterPointJump( 10.0 )
 {
     //Initialize Devices
-    mDevices[ "Tablet" ] = new vxd::Tablet();
-    mDevices[ "Wand" ] = new vxd::Wand();
-    mDevices[ "KeyboardMouse" ] = new vxd::KeyboardMouse();
-    mDevices[ "Gloves" ] = new vxd::Gloves();
+    mKMDevice = new device::KeyboardMouse();
+    mKMDevice->Enable();
+    mWandDevice = new device::Wand();
+    mWandDevice->Enable();
+    mTabletDevice = new device::Tablet();
+    mTabletDevice->Enable();
+    mGlovesDevice = new device::Gloves();
 
-    mTabletDevice = mDevices[ "Tablet" ];
-    mGlovesDevice = mDevices[ "Gloves" ];
-    mWandDevice = mDevices[ "Wand" ];
-    mKMDevice = mDevices[ "KeyboardMouse" ];
+    mDevices[ "KeyboardMouse" ] = mKMDevice;
+    mDevices[ "Wand" ] = mWandDevice;
+    mDevices[ "Tablet" ] = mTabletDevice;
+    mDevices[ "Gloves" ] = mGlovesDevice;
     
     //Set properties in Devices
-    vxs::CharacterController* characterController =
-        vxs::SceneManager::instance()->GetCharacterController();
+    scenegraph::CharacterController* characterController =
+        scenegraph::SceneManager::instance()->GetCharacterController();
     characterController->Initialize();
-    std::map< const std::string, vxd::Device* >::const_iterator itr;
+    std::map< const std::string, device::Device* >::const_iterator itr;
     for( itr = mDevices.begin(); itr != mDevices.end(); ++itr )
     {
-        vxd::Device* device = itr->second;
+        device::Device* device = itr->second;
         device->SetCenterPoint( &mCenterPoint );
         device->SetCenterPointThreshold( &mCenterPointThreshold );
         device->SetCenterPointJump( &mCenterPointJump );
@@ -107,18 +105,16 @@ DeviceHandler::DeviceHandler()
         device->SetCharacterController( characterController );
     }
 
-    mActiveDevice = mDevices.find( "KeyboardMouse" )->second;
-
-    mEventHandlers[ "CHANGE_DEVICE" ] =
-        new vx::event::DeviceEventHandler();
+    mEventHandlers[ "ENABLE_DEVICE" ] =
+        new event::DeviceEventHandler();
     mEventHandlers[ "CHANGE_DEVICE_MODE" ] =
-        new vx::event::DeviceModeEventHandler();
+        new event::DeviceModeEventHandler();
     mEventHandlers[ "UNSELECT_OBJECTS" ] =
-        new vx::event::UnselectObjectsEventHandler();
+        new event::UnselectObjectsEventHandler();
     mEventHandlers[ "CENTER_POINT_UPDATE" ] =
-        new vx::event::CenterPointEventHandler();
+        new event::CenterPointEventHandler();
     mEventHandlers[ "Navigation_Data" ] =
-        new vx::event::NavigationDataEventHandler();
+        new event::NavigationDataEventHandler();
     
     mResetPosition.resize( 3 );
 }
@@ -126,7 +122,7 @@ DeviceHandler::DeviceHandler()
 DeviceHandler::~DeviceHandler()
 {
     //Delete mDevices in map
-    std::map< const std::string, vxd::Device* >::iterator itr;
+    std::map< const std::string, device::Device* >::iterator itr;
     for( itr = mDevices.begin(); itr != mDevices.end(); ++itr )
     {
         delete itr->second;
@@ -135,50 +131,56 @@ DeviceHandler::~DeviceHandler()
     mDevices.clear();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DeviceHandler::ExecuteCommands()
+void DeviceHandler::EnableDevice(
+    const std::string& deviceName, const bool& enable )
 {
-    std::map< std::string, vx::event::EventHandler* >::iterator
-        currentEventHandler;
-    const ves::open::xml::CommandPtr tempCommand = 
-        ModelHandler::instance()->GetXMLCommand();
-    if( tempCommand )
+    std::map< const std::string, device::Device* >::const_iterator itr =
+        mDevices.find( deviceName );
+    if( itr != mDevices.end() )
     {
-        currentEventHandler = mEventHandlers.find(
-            tempCommand->GetCommandName() );
-
-        if( currentEventHandler != mEventHandlers.end() )
-        {
-            vx::event::EventHandler* tempEvent = 
-                currentEventHandler->second;
-            tempEvent->SetGlobalBaseObject( mActiveDevice );
-            tempEvent->Execute( tempCommand );
-
-            //Tablet and Wand are always active and need updated...
-            if( tempCommand->GetCommandName() == "Navigation_Data" )
-            {
-                tempEvent->SetGlobalBaseObject( mTabletDevice );
-                tempEvent->Execute( tempCommand );
-                tempEvent->SetGlobalBaseObject( mWandDevice );
-                tempEvent->Execute( tempCommand );
-            }
-        }
+        device::Device* device = itr->second;
+        device->Enable( enable );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-vxs::DCS* const DeviceHandler::GetActiveDCS() const
+void DeviceHandler::ExecuteCommands()
 {
-    return mActiveDCS.get();
+    const ves::open::xml::CommandPtr tempCommand = 
+        ModelHandler::instance()->GetXMLCommand();
+    if( !tempCommand )
+    {
+        return;
+    }
+
+    std::map< std::string, event::EventHandler* >::iterator ehItr =
+        mEventHandlers.find( tempCommand->GetCommandName() );
+    if( ehItr == mEventHandlers.end() )
+    {
+        return;
+    }
+
+    event::EventHandler* tempEvent = ehItr->second;
+    std::map< const std::string, device::Device* >::const_iterator itr;
+    for( itr = mDevices.begin(); itr != mDevices.end(); ++itr )
+    {
+        device::Device* device = itr->second;
+        if( device->IsEnabled() )
+        {
+            tempEvent->SetGlobalBaseObject( device );
+            tempEvent->Execute( tempCommand );
+        } 
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
-vxd::Device* const DeviceHandler::GetActiveDevice() const
-{
-    return mActiveDevice;
-}
-////////////////////////////////////////////////////////////////////////////////
-vxd::Device* const DeviceHandler::GetDevice(
+device::Device* const DeviceHandler::GetDevice(
     const std::string& deviceName ) const
 {
     return mDevices.find( deviceName )->second;
+}
+////////////////////////////////////////////////////////////////////////////////
+scenegraph::DCS* const DeviceHandler::GetActiveDCS() const
+{
+    return mActiveDCS.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DeviceHandler::GetResetWorldPosition(
@@ -188,36 +190,26 @@ void DeviceHandler::GetResetWorldPosition(
     pos = mResetPosition;
 }
 ////////////////////////////////////////////////////////////////////////////////
-vxs::DCS* const DeviceHandler::GetSelectedDCS() const
+scenegraph::DCS* const DeviceHandler::GetSelectedDCS() const
 {
     return mSelectedDCS.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DeviceHandler::ProcessDeviceEvents()
 {
-    //Update Device properties
+    //Update device properties
     ExecuteCommands();
 
-    if( mDeviceMode == "Selection" )
+    //Process device events
+    std::map< const std::string, device::Device* >::const_iterator itr;
+    for( itr = mDevices.begin(); itr != mDevices.end(); ++itr )
     {
-        mActiveDevice->UpdateSelection();
-    }
-    else
-    {
-        mWandDevice->UpdateNavigation();
-        mKMDevice->UpdateNavigation();
-
-        if( ( mActiveDevice != mWandDevice ) && 
-            ( mActiveDevice != mKMDevice ) )
+        device::Device* device = itr->second;
+        if( device->IsEnabled() )
         {
-            mActiveDevice->UpdateNavigation();
+            device->ProcessEvents();
         }
     }
-
-    //Always do this by default
-    mTabletDevice->UpdateNavigation();
-    //Always do this by default
-    mGlovesDevice->UpdateNavigation();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DeviceHandler::ResetCenterPoint()
@@ -225,27 +217,9 @@ void DeviceHandler::ResetCenterPoint()
     mCenterPoint = mResetCenterPointPosition;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DeviceHandler::SetActiveDCS( vxs::DCS* activeDCS )
+void DeviceHandler::SetActiveDCS( scenegraph::DCS* activeDCS )
 {
     mActiveDCS = activeDCS;
-}
-////////////////////////////////////////////////////////////////////////////////
-void DeviceHandler::SetActiveDevice( const std::string& activeDevice )
-{
-    std::map< const std::string, vxd::Device* >::const_iterator itr =
-        mDevices.find( activeDevice );
-    if( itr != mDevices.end() )
-    {
-        mActiveDevice = itr->second;
-        /*
-        std::cout << "|\tDeviceHandler::SetActiveDevice = "
-                  << activeDevice << std::endl;
-        */
-        if( activeDevice == "Gloves" )
-        {
-            mActiveDevice->Initialize();
-        }
-    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DeviceHandler::SetDeviceMode( const std::string& deviceMode )
@@ -255,7 +229,7 @@ void DeviceHandler::SetDeviceMode( const std::string& deviceMode )
     if( mDeviceMode == "World Navigation" )
     {
         mActiveDCS = 
-            vxs::SceneManager::instance()->GetActiveNavSwitchNode();
+            scenegraph::SceneManager::instance()->GetActiveNavSwitchNode();
     }
     else if( mDeviceMode == "Object Navigation" )
     {
@@ -302,7 +276,7 @@ void DeviceHandler::SetResetWorldPosition(
     mResetPosition = pos;
     
     /*
-    std::map< const std::string, vxd::Device* >::const_iterator itr;
+    std::map< const std::string, device::Device* >::const_iterator itr;
     for( itr = mDevices.begin(); itr != mDevices.end(); ++itr )
     {
         itr->second->SetResetWorldPosition( mResetAxis, mResetPosition );
@@ -310,13 +284,13 @@ void DeviceHandler::SetResetWorldPosition(
     */
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DeviceHandler::SetSelectedDCS( vxs::DCS* selectedDCS )
+void DeviceHandler::SetSelectedDCS( scenegraph::DCS* selectedDCS )
 {
     mSelectedDCS = selectedDCS;
 
-    vxsm::ManipulatorManager* manipulatorManager =
-        vxs::SceneManager::instance()->GetManipulatorManager();
-    vxsm::TransformManipulator* sceneManipulator =
+    scenegraph::manipulator::ManipulatorManager* manipulatorManager =
+        scenegraph::SceneManager::instance()->GetManipulatorManager();
+    scenegraph::manipulator::TransformManipulator* sceneManipulator =
         manipulatorManager->GetSceneManipulator();
 
     if( sceneManipulator->IsEnabled() && !sceneManipulator->getNodeMask() )
@@ -327,16 +301,16 @@ void DeviceHandler::SetSelectedDCS( vxs::DCS* selectedDCS )
 ////////////////////////////////////////////////////////////////////////////////
 void DeviceHandler::UnselectObjects()
 {
-    mActiveDCS = vxs::SceneManager::instance()->GetWorldDCS();
+    mActiveDCS = scenegraph::SceneManager::instance()->GetWorldDCS();
 
     if( mSelectedDCS.valid() )
     {
         mSelectedDCS->SetTechnique( "Default" );
-        mSelectedDCS = 0;
+        mSelectedDCS = NULL;
 
-        vxsm::ManipulatorManager* manipulatorManager =
-            vxs::SceneManager::instance()->GetManipulatorManager();
-        vxsm::TransformManipulator* sceneManipulator =
+        scenegraph::manipulator::ManipulatorManager* manipulatorManager =
+            scenegraph::SceneManager::instance()->GetManipulatorManager();
+        scenegraph::manipulator::TransformManipulator* sceneManipulator =
             manipulatorManager->GetSceneManipulator();
 
         if( sceneManipulator->IsEnabled() )

@@ -94,17 +94,15 @@ public:
     ///Destructor
     virtual ~Device();
 
-    ///Definition to update the position in scene
-    virtual void UpdateNavigation();
-
-    ///Definition to update the current object selected
-    virtual void UpdateSelection();
+    ///Processes device events
+    ///This should be pure virtual, but isn't because of GlobalBase
+    virtual void ProcessEvents(){;}
 
     ///New function for new VECommand structure
     ///\param veCommand Sets the Command used for navigation
     virtual void SetVECommand( ves::open::xml::CommandPtr command );
 
-    ///Do not know what this is
+    ///This is a pure virtual function from GlobalBase
     virtual void UpdateCommand();
     
     ///Initialize the device if needed
@@ -113,6 +111,14 @@ public:
     ///Check if the head collides with the rest of the objects in the scene
     ///\param headPositionInWorld The head position in world coordinates
     bool CheckCollisionsWithHead( osg::Vec3 headPositionInWorld );
+
+    ///
+    ///\param
+    virtual void Enable( const bool& enable = true );
+
+    ///
+    ///\return
+    const bool& IsEnabled();
 
     ///Set the center point
     ///\param cp The center point
@@ -129,7 +135,7 @@ public:
         
     ///Set the character controller
     void SetCharacterController(
-        ves::xplorer::scenegraph::CharacterController* characterController );
+        scenegraph::CharacterController* characterController );
 
 protected:
     ///Process the selection of a piece of geometry
@@ -146,24 +152,32 @@ protected:
     ///\param endPoint The end point
     virtual void DrawLine( osg::Vec3d startPoint, osg::Vec3d endPoint );
 
+    ///
+    bool m_enabled;
+
     ///Triggers a center point jump after this distance has been breached
+    ///Do not allocate memory 'new' for this pointer
     double* mCenterPointThreshold;
 
     ///The distance the center point jumps along the +y axis
+    ///Do not allocate memory 'new' for this pointer
     double* mCenterPointJump;
 
     ///The reset position for the world
+    ///Do not allocate memory 'new' for this pointer
     std::vector< double >* mResetPosition;
 
     ///The point about which rotation occurs
+    ///Do not allocate memory 'new' for this pointer
     gmtl::Point3d* mCenterPoint;
 
     ///The reset axis for the world
+    ///Do not allocate memory 'new' for this pointer
     osg::Quat* mResetAxis;
 
     ///
     ///Do not allocate memory 'new' for this pointer
-    ves::xplorer::scenegraph::CharacterController* mCharacterController;
+    scenegraph::CharacterController* mCharacterController;
     
 };
 } //end device

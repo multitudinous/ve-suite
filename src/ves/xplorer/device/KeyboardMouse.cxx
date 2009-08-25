@@ -119,6 +119,8 @@ namespace vxsm = vxs::manipulator;
 ////////////////////////////////////////////////////////////////////////////////
 KeyboardMouse::KeyboardMouse()
     :
+    Device(),
+
     mKeyNone( false ),
     mKeyShift( false ),
     mKeyAlt( false ),
@@ -179,16 +181,6 @@ KeyboardMouse::KeyboardMouse()
 KeyboardMouse::~KeyboardMouse()
 {
     ;
-}
-////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::UpdateNavigation()
-{
-    ProcessEvents();
-}
-////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::UpdateSelection()
-{
-    ProcessEvents();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::SetStartEndPoint(
@@ -494,7 +486,7 @@ void KeyboardMouse::ProcessEvents()
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::ProcessNavigationEvents()
+void KeyboardMouse::ProcessNavigation()
 {
     gmtl::Matrix44d newTransform;
     gmtl::Matrix44d currentTransform;
@@ -714,7 +706,7 @@ void KeyboardMouse::SkyCam()
 
     //put it at 45 degrees
     Rotate( gmtl::Math::deg2Rad( 45.0 ), gmtl::Vec3d( 1.0, 0.0, 0.0 ) );
-    ProcessNavigationEvents();
+    ProcessNavigation();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::OnKeyPress()
@@ -803,28 +795,28 @@ void KeyboardMouse::OnKeyPress()
     case gadget::KEY_UP:
     {
         Zoom45( 0.05 );
-        ProcessNavigationEvents();
+        ProcessNavigation();
 
         break;
     }
     case gadget::KEY_DOWN: 
     {
         Zoom45( -0.05 );
-        ProcessNavigationEvents();
+        ProcessNavigation();
 
         break;
     }
     case gadget::KEY_LEFT:
     {
         Pan( 0.05, 0 );
-        ProcessNavigationEvents();
+        ProcessNavigation();
 
         break;
     }
     case gadget::KEY_RIGHT:
     {
         Pan( -0.05, 0 );
-        ProcessNavigationEvents();
+        ProcessNavigation();
 
         break;
     }
@@ -1167,7 +1159,7 @@ void KeyboardMouse::OnMouseRelease()
     if( mSelect )
     {
         UpdateSelectionLine();
-        ProcessSelectionEvents();
+        ProcessSelection();
 
         mSelect = false;
     }
@@ -1183,8 +1175,12 @@ void KeyboardMouse::OnMouseMotionDown()
 
     double xDelta = mCurrPos.first - mPrevPos.first;
     double yDelta = mCurrPos.second - mPrevPos.second;
-    m_xMotionPixels += abs( static_cast< int >( xDelta ) );
-    m_yMotionPixels += abs( static_cast< int >( yDelta ) );
+
+    if( mSelect )
+    {
+        m_xMotionPixels += abs( static_cast< int >( xDelta ) );
+        m_yMotionPixels += abs( static_cast< int >( yDelta ) );
+    }
 
     xDelta /= mWidth;
     yDelta /= mHeight;
@@ -1233,7 +1229,7 @@ void KeyboardMouse::OnMouseMotionDown()
                     Twist();
                 }
 
-                ProcessNavigationEvents();
+                ProcessNavigation();
             }
         }
         //Mod key shift
@@ -1272,7 +1268,7 @@ void KeyboardMouse::OnMouseMotionDown()
     case gadget::MBUTTON2:
     {
         Pan( xDelta, yDelta );
-        ProcessNavigationEvents();
+        ProcessNavigation();
 
         break;
     }
@@ -1288,7 +1284,7 @@ void KeyboardMouse::OnMouseMotionDown()
         else
         {
             Zoom( yDelta );
-            ProcessNavigationEvents();
+            ProcessNavigation();
         }
 
         break;
@@ -1296,7 +1292,8 @@ void KeyboardMouse::OnMouseMotionDown()
     } //end switch( mButton )
 
     //If delta mouse motion is less than m_pickCushion, do selection
-    if( m_xMotionPixels > m_pickCushion || m_yMotionPixels > m_pickCushion )
+    if( mSelect && ( ( m_xMotionPixels > m_pickCushion ) ||
+                     ( m_yMotionPixels > m_pickCushion ) ) )
     {
         mSelect = false;
     }
@@ -1342,7 +1339,7 @@ void KeyboardMouse::SelOnMousePress()
                 ProcessNURBSSelectionEvents();
             }
 
-            ProcessSelectionEvents();
+            ProcessSelection();
 
             break;
         }
@@ -1694,7 +1691,7 @@ void KeyboardMouse::ProcessNURBSSelectionEvents()
 }
 */
 ////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::ProcessSelectionEvents()
+void KeyboardMouse::ProcessSelection()
 {
     //Get pointers to DeviceHandler & SceneManager
     vx::DeviceHandler* deviceHandler = vx::DeviceHandler::instance();

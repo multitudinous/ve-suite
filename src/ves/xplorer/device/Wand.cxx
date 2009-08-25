@@ -70,6 +70,7 @@ using namespace ves::open::xml;
 ////////////////////////////////////////////////////////////////////////////////
 Wand::Wand()
     :
+    Device(),
     subzeroFlag( 0 ),
     rotationFlag( 1 ),
     distance( 1000 ),
@@ -115,7 +116,7 @@ Wand::~Wand()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Wand::UpdateNavigation()
+void Wand::ProcessEvents()
 {
     ves::xplorer::scenegraph::DCS* const activeDCS =
         ves::xplorer::DeviceHandler::instance()->GetActiveDCS();
@@ -279,11 +280,6 @@ void Wand::UpdateNavigation()
     }
 
     vprDEBUG( vesDBG, 3 ) << "|\tEnd Navigate" << std::endl << vprDEBUG_FLUSH;
-}
-////////////////////////////////////////////////////////////////////////////////
-void Wand::UpdateSelection()
-{
-    UpdateObjectHandler();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::SetStartEndPoint( osg::Vec3d* startPoint, osg::Vec3d* endPoint )

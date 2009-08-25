@@ -99,17 +99,19 @@ class VE_XPLORER_EXPORTS Gloves : public Device
 public:
     ///Constructor
     Gloves();
+
     ///Destructor
     virtual ~Gloves();
+
+    ///
+    ///\param
+    virtual void Enable( const bool& enable = true );
 
     ///Initialize some variables in the class
     virtual void Initialize();
 
-    ///Update the position in scene
-    virtual void UpdateNavigation();
-
-    ///Update the current object selected
-    virtual void UpdateSelection();
+    ///Processes keyboard events
+    virtual void ProcessEvents();
 
     ///Set the rotation method
     ///\param input Indicates which rotation method is needed

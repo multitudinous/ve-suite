@@ -72,6 +72,7 @@ using namespace ves::open::xml;
 ////////////////////////////////////////////////////////////////////////////////
 Gloves::Gloves()
     :
+    Device(),
     subzeroFlag( 0 ),
     rotationFlag( 1 ),
     distance( 1000 ),
@@ -140,22 +141,37 @@ Gloves::Gloves()
     
     mRootNode = 
         ves::xplorer::scenegraph::SceneManager::instance()->GetRootNode();
+
+    Initialize();
+}
+////////////////////////////////////////////////////////////////////////////////
+void Gloves::Enable( const bool& enable )
+{
+    m_enabled = enable;
+
+    if( m_enabled )
+    {
+        mRootNode->addChild( mRightHand.get() );
+        mRootNode->addChild( mLeftHand.get() );
+    }
+    else
+    {
+        if( mRootNode->containsNode( mRightHand.get() ) )
+        {
+            mRootNode->removeChild( mRightHand.get() );
+            //return;
+        }
+
+        if( mRootNode->containsNode( mLeftHand.get() ) )
+        {
+            mRootNode->removeChild( mLeftHand.get() );
+            //return;
+        }
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Gloves::Initialize()
 {
-    if( mRootNode->containsNode( mRightHand.get() ) )
-    {
-        mRootNode->removeChild( mRightHand.get() );
-        //return;
-    }
-
-    if( mRootNode->containsNode( mLeftHand.get() ) )
-    {
-        mRootNode->removeChild( mLeftHand.get() );
-        //return;
-    }
-
     for( int i = 0; i < 3; ++i )
     {
         cursorLoc[ i ] = 0;
@@ -178,7 +194,6 @@ void Gloves::Initialize()
     pos.set( 0, 3, 3 );
     mRightHand->setPosition( pos );
     mRightHand->setAttitude( quat );
-    mRootNode->addChild( mRightHand.get() );
     mRightHand->setDebug( mDebugInfo );
     
     mLeftHand = new osgBullet::HandNode( ves::xplorer::scenegraph::PhysicsSimulator::instance()->GetDynamicsWorld(), osgBullet::HandNode::LEFT, length );
@@ -191,7 +206,6 @@ void Gloves::Initialize()
     pos.set( 3, 3, 3 );
     mLeftHand->setPosition( pos );
     mLeftHand->setAttitude( quat );
-    mRootNode->addChild( mLeftHand.get() );
     mLeftHand->setDebug( mDebugInfo );
 
     std::cout << "|\tInitialize Gloves" << std::endl;
@@ -202,7 +216,7 @@ Gloves::~Gloves()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Gloves::UpdateNavigation()
+void Gloves::ProcessEvents()
 {
     UpdateRightHandGlove();
     UpdateLeftHandGlove();
@@ -362,11 +376,6 @@ void Gloves::UpdateNavigation()
     }
 */
     vprDEBUG( vesDBG, 3 ) << "|\tEnd Navigate" << std::endl << vprDEBUG_FLUSH;
-}
-////////////////////////////////////////////////////////////////////////////////
-void Gloves::UpdateSelection()
-{
-    UpdateObjectHandler();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Gloves::SetStartEndPoint( osg::Vec3d* startPoint, osg::Vec3d* endPoint )

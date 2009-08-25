@@ -92,21 +92,21 @@ private:
     vprSingletonHeader( DeviceHandler );
 
 public:
+    ///
+    ///\param deviceName
+    ///\param enable
+    void EnableDevice( const std::string& deviceName, const bool& enable );
+
     ///Execute navigation commands from active device
     void ExecuteCommands();
 
     ///Get the active coordinate system
-    ves::xplorer::scenegraph::DCS* const GetActiveDCS() const;
-
-    ///Get active device
-    ///\return Get the active device
-    ves::xplorer::device::Device* const GetActiveDevice() const;
+    scenegraph::DCS* const GetActiveDCS() const;
 
     ///Get a device
     ///\param deviceName The device name
     ///\return Get the device being requested
-    ves::xplorer::device::Device* const GetDevice(
-        const std::string& deviceName ) const;
+    device::Device* const GetDevice( const std::string& deviceName ) const;
 
     ///Get the reset location of the world
     ///\param quat
@@ -114,7 +114,7 @@ public:
     void GetResetWorldPosition( osg::Quat& quat, std::vector< double >& pos );
 
     ///Get the active coordinate system
-    ves::xplorer::scenegraph::DCS* const GetSelectedDCS() const;
+    scenegraph::DCS* const GetSelectedDCS() const;
 
     ///Process navigation and selection commands
     void ProcessDeviceEvents();
@@ -124,11 +124,7 @@ public:
 
     ///Set the active coordinate system
     ///\param dcs The current active coordinate system
-    void SetActiveDCS( ves::xplorer::scenegraph::DCS* activeDCS );
-
-    ///Set the active device
-    ///\param activeDevice The active device
-    void SetActiveDevice( const std::string& activeDevice );
+    void SetActiveDCS( scenegraph::DCS* activeDCS );
 
     ///
     ///\param centerPoint
@@ -150,7 +146,7 @@ public:
 
     ///Set the selected dcs
     ///\param dcs The current selected dcs
-    void SetSelectedDCS( ves::xplorer::scenegraph::DCS* selectedDCS );
+    void SetSelectedDCS( scenegraph::DCS* selectedDCS );
 
     ///Unselect all currently selected objects
     void UnselectObjects();
@@ -179,32 +175,30 @@ private:
     ///The current device mode
     std::string mDeviceMode;
 
-    ///The current active device
-    ves::xplorer::device::Device* mActiveDevice;
-
     ///A map of all the devices
-    std::map< const std::string, ves::xplorer::device::Device* > mDevices;
+    std::map< const std::string, device::Device* > mDevices;
 
     ///A map of all the event handlers
-    std::map< std::string, ves::xplorer::event::EventHandler* > mEventHandlers;
+    std::map< std::string, event::EventHandler* > mEventHandlers;
 
     ///The current active DCS
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > mActiveDCS;
+    osg::ref_ptr< scenegraph::DCS > mActiveDCS;
 
     ///The current selected DCS
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > mSelectedDCS;
+    osg::ref_ptr< scenegraph::DCS > mSelectedDCS;
     
     ///Tablet convenience device pointer
-    ves::xplorer::device::Device* mTabletDevice;
+    device::Device* mTabletDevice;
 
     ///Tablet convenience device pointer
-    ves::xplorer::device::Device* mGlovesDevice;
+    device::Device* mGlovesDevice;
 
     ///Tablet convenience device pointer
-    ves::xplorer::device::Device* mWandDevice;
+    device::Device* mWandDevice;
 
     ///Tablet convenience device pointer
-    ves::xplorer::device::Device* mKMDevice;
+    device::Device* mKMDevice;
+
 };
 } //end xplorer
 } //end ves

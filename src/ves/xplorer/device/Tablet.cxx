@@ -57,6 +57,8 @@ using namespace ves::open::xml;
 
 ////////////////////////////////////////////////////////////////////////////////
 Tablet::Tablet( )
+    :
+    Device()
 {
     head.init( "VJHead" );
 
@@ -77,7 +79,7 @@ void Tablet::Initialize()
     rotationStepSize = 1.0f;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Tablet::UpdateNavigation()
+void Tablet::ProcessEvents()
 {
     //This is NOT how we should do things.
     //Command should allowed to be null but because we always

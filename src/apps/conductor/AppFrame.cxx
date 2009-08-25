@@ -170,8 +170,9 @@ BEGIN_EVENT_TABLE( AppFrame, wxFrame )
 
     EVT_MENU( APPFRAME_V21ID_VIEW_RESULT, AppFrame::ViewResult )
 
-    EVT_MENU( APPFRAME_WAND, AppFrame::ChangeDevice )
     EVT_MENU( APPFRAME_KEYBOARD_MOUSE, AppFrame::ChangeDevice )
+    EVT_MENU( APPFRAME_WAND, AppFrame::ChangeDevice )
+    EVT_MENU( APPFRAME_TABLET, AppFrame::ChangeDevice )
     EVT_MENU( APPFRAME_GLOVES, AppFrame::ChangeDevice )
 
     EVT_MENU( APPFRAME_DEVICE_PROPERTIES, AppFrame::LaunchDeviceProperties )
@@ -840,17 +841,35 @@ void AppFrame::CreateMenu()
 
     xplorerMenu = new wxMenu();
     xplorerDeviceMenu = new wxMenu();
-
+    wxMenuItem* keyboardMouseMenuItem = new wxMenuItem(
+        xplorerDeviceMenu, APPFRAME_KEYBOARD_MOUSE,
+        wxT( "Keyboard/Mouse" ), wxT( "" ), wxITEM_CHECK );
+    wxMenuItem* wandMenuItem = new wxMenuItem(
+        xplorerDeviceMenu, APPFRAME_WAND,
+        wxT( "Wand" ), wxT( "" ), wxITEM_CHECK );
+    wxMenuItem* tabletMenuItem = new wxMenuItem(
+        xplorerDeviceMenu, APPFRAME_TABLET,
+        wxT( "Tablet" ), wxT( "" ), wxITEM_CHECK );
+    wxMenuItem* glovesMenuItem = new wxMenuItem(
+        xplorerDeviceMenu, APPFRAME_GLOVES,
+        wxT( "Gloves" ), wxT( "" ), wxITEM_CHECK );
+    
     xplorerJugglerMenu = new wxMenu();
     xplorerDisplayMenu = new wxMenu();
     xplorerViewMenu = new wxMenu();
     wxMenu* xplorerView = new wxMenu();
 
-    xplorerDeviceMenu->Append( APPFRAME_WAND, _( "Wand" ) );
-    xplorerDeviceMenu->Append( APPFRAME_KEYBOARD_MOUSE,  _( "Keyboard Mouse" ) );
-    xplorerDeviceMenu->Append( APPFRAME_GLOVES,  _( "Gloves" ) );
+    xplorerDeviceMenu->Append( keyboardMouseMenuItem );
+    xplorerDeviceMenu->Append( wandMenuItem );
+    xplorerDeviceMenu->Append( tabletMenuItem );
+    xplorerDeviceMenu->Append( glovesMenuItem );
     xplorerDeviceMenu->AppendSeparator();
-    xplorerDeviceMenu->Append( APPFRAME_DEVICE_PROPERTIES,    _( "Properties" ) );
+    xplorerDeviceMenu->Append( APPFRAME_DEVICE_PROPERTIES, _( "Properties" ) );
+
+    keyboardMouseMenuItem->Check();
+    wandMenuItem->Check();
+    tabletMenuItem->Check();
+    glovesMenuItem->Check( false );
 
     xplorerDisplayMenu->AppendCheckItem( APPFRAME_FRAME_RATE,        _( "Frame Rate" ) );
     xplorerDisplayMenu->AppendCheckItem( APPFRAME_COORDINATE_SYSTEM, _( "Coord System" ) );
@@ -2003,30 +2022,57 @@ void AppFrame::SetBackgroundColor( wxCommandEvent& WXUNUSED( event ) )
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::ChangeDevice( wxCommandEvent& event )
 {
-    //Create the command and data value pairs
-    DataValuePairPtr dvp( new DataValuePair() );
-    CommandPtr command( new Command() );
-
-    std::string device;
-
-    if( event.GetId() == APPFRAME_WAND )
+    int deviceMenuItem = event.GetId();
+    
+    std::vector< std::string > data;
+    switch( deviceMenuItem )
     {
-        device = "Wand";
+    case APPFRAME_KEYBOARD_MOUSE:
+    {
+        data.push_back( "KeyboardMouse" );
+
+        break;
     }
-
-    else if( event.GetId() == APPFRAME_KEYBOARD_MOUSE )
+    case APPFRAME_WAND:
     {
-        device = "KeyboardMouse";
+        data.push_back( "Wand" );
+
+        break;
     }
-
-    else if( event.GetId() == APPFRAME_GLOVES )
+    case APPFRAME_TABLET:
     {
-        device = "Gloves";
+        data.push_back( "Tablet" );
+
+        break;
+    }
+    case APPFRAME_GLOVES:
+    {
+        data.push_back( "Gloves" );
+
+        break;
+    }
+    default:
+    {
+        //Error output
+        return;
+    }
+    } //end switch( event.GetId() )
+
+    if( xplorerDeviceMenu->IsChecked( deviceMenuItem ) )
+    {
+        data.push_back( "true" );
+    }
+    else
+    {
+        data.push_back( "false" );
     }
     
-    dvp->SetData( std::string( "Device" ), device );
+    //Create the command and data value pairs
+    DataValuePairPtr dvp( new DataValuePair() );
+    dvp->SetData( "EnableDeviceData", data );
 
-    command->SetCommandName( std::string( "CHANGE_DEVICE" ) );
+    CommandPtr command( new Command() );
+    command->SetCommandName( "ENABLE_DEVICE" );
     command->AddDataValuePair( dvp );
 
     serviceList->SendCommandStringToXplorer( command );

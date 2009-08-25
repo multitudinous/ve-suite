@@ -45,11 +45,13 @@
 #include <osgUtil/IntersectionVisitor>
 #include <osgUtil/PolytopeIntersector>
 
+using namespace ves::xplorer;
 using namespace ves::xplorer::device;
 
 ////////////////////////////////////////////////////////////////////////////////
 Device::Device()
     :
+    m_enabled( false ),
     mCenterPoint( NULL ),
     mCenterPointThreshold( NULL ),
     mCenterPointJump( NULL ),
@@ -61,16 +63,6 @@ Device::Device()
 }
 ////////////////////////////////////////////////////////////////////////////////
 Device::~Device()
-{
-    ;
-}
-////////////////////////////////////////////////////////////////////////////////
-void Device::UpdateNavigation()
-{
-    ;
-}
-////////////////////////////////////////////////////////////////////////////////
-void Device::UpdateSelection()
 {
     ;
 }
@@ -113,7 +105,7 @@ void Device::ProcessSelection()
     intersect_visitor.addLineSegment( line_segment.get() );
 
     //Add IntersectVisitor to RootNode so that all geometry is checked and no transforms are applied to LineSegment
-    ves::xplorer::scenegraph::SceneManager::instance()->GetRootNode()->accept( intersect_visitor );
+    scenegraph::SceneManager::instance()->GetRootNode()->accept( intersect_visitor );
 
     osgUtil::IntersectVisitor::HitList hit_list;
     hit_list = intersect_visitor.getHitList( line_segment.get() );
@@ -182,13 +174,23 @@ bool Device::CheckCollisionsWithHead( osg::Vec3 headPositionInWorld )
                          new osgUtil::PolytopeIntersector( polytope );
     osgUtil::IntersectionVisitor intersectionVisitor( headCollider.get() );
 
-    ves::xplorer::scenegraph::SceneManager::instance()->GetActiveSwitchNode()->accept( intersectionVisitor );
+    scenegraph::SceneManager::instance()->GetActiveSwitchNode()->accept( intersectionVisitor );
     if ( headCollider->containsIntersections() )
     {
         return true;
     }
 
     return false;
+}
+////////////////////////////////////////////////////////////////////////////////
+void Device::Enable( const bool& enable )
+{
+    m_enabled = enable;
+}
+////////////////////////////////////////////////////////////////////////////////
+const bool& Device::IsEnabled()
+{
+    return m_enabled;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Device::SetStartEndPoint( osg::Vec3d* startPoint, osg::Vec3d* endPoint )
@@ -209,7 +211,7 @@ void Device::SetResetWorldPosition(
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Device::SetCharacterController(
-    ves::xplorer::scenegraph::CharacterController* characterController )
+    scenegraph::CharacterController* characterController )
 {
     mCharacterController = characterController;
 }

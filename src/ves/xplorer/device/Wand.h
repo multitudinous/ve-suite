@@ -98,11 +98,8 @@ public:
     ///Initialize some variables in the class
     virtual void Initialize();
 
-    ///Update the position in scene
-    virtual void UpdateNavigation();
-
-    ///Update the current object selected
-    virtual void UpdateSelection();
+    ///Processes wand events
+    virtual void ProcessEvents();
 
     ///Set the rotation method
     ///\param input Indicates which rotation method is needed

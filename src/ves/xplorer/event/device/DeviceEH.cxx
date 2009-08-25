@@ -48,6 +48,7 @@
 // --- C/C++ Libraries --- //
 #include <string>
 
+using namespace ves::xplorer;
 using namespace ves::xplorer::event;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -83,15 +84,25 @@ void DeviceEventHandler::Execute(
         boost::dynamic_pointer_cast< ves::open::xml::Command >( veXMLObject );
 
     ves::open::xml::DataValuePairPtr deviceDVP =
-        command->GetDataValuePair( "Device" );
+        command->GetDataValuePair( "EnableDeviceData" );
     if( !deviceDVP )
     {
         return;
     }
 
-    std::string device;
-    deviceDVP->GetData( device );
-    ves::xplorer::DeviceHandler::instance()->SetActiveDevice( device );
+    std::vector< std::string > data;
+    deviceDVP->GetData( data );
+    bool enable;
+    if( data.back() == "true" )
+    {
+        enable = true;
+    }
+    else
+    {
+        enable = false;
+    }
+
+    DeviceHandler::instance()->EnableDevice( data.front(), enable );
 }
 ////////////////////////////////////////////////////////////////////////////////
 DeviceEventHandler& DeviceEventHandler::operator=(

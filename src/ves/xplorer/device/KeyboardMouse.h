@@ -89,11 +89,8 @@ public:
     ///Destructor
     ~KeyboardMouse();
 
-    ///Update the position in scene
-    virtual void UpdateNavigation();
-
-    ///Update the current object selected
-    virtual void UpdateSelection();
+    ///Processes keyboard events
+    virtual void ProcessEvents();
 
     ///Sets the screen corner values
     ///\param values A map of strings to doubles
@@ -150,15 +147,11 @@ protected:
     virtual void DrawLine( osg::Vec3d startPoint, osg::Vec3d endPoint );
 
 private:
-    ///Processes any keyboard events
-    ///\param mode Determines whether in navigation mode or selection mode
-    void ProcessEvents();
-
     ///Processes the navigation events
-    void ProcessNavigationEvents();
+    void ProcessNavigation();
 
     ///Processes the selection events
-    void ProcessSelectionEvents();
+    virtual void ProcessSelection();
 
     /*
     ///Process the NURBS selection events

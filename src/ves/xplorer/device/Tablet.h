@@ -83,8 +83,8 @@ public:
     ///Initialize some variables in the class
     virtual void Initialize();
 
-    ///Update the position in scene
-    void UpdateNavigation();
+    ///Processes tablet events
+    virtual void ProcessEvents();
 
     ///Set the rotation method
     ///\param input Indicates which rotation method is needed
