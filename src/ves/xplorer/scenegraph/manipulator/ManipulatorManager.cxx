@@ -42,6 +42,7 @@
 #include <ves/xplorer/Debug.h>
 
 // --- OSG Includes --- //
+#include <osg/Depth>
 #include <osg/AutoTransform>
 
 #include <osgUtil/LineSegmentIntersector>
@@ -51,7 +52,7 @@ using namespace ves::xplorer::scenegraph::manipulator;
 ////////////////////////////////////////////////////////////////////////////////
 ManipulatorManager::ManipulatorManager()
     :
-    osg::Camera(),
+    osg::Group(),
     m_enabled( false ),
     //NodeMask is an unsigned int
     m_nodeMask( 0xfffffffe ),
@@ -59,9 +60,16 @@ ManipulatorManager::ManipulatorManager()
     m_activeDragger( NULL ),
     m_sceneManipulator( NULL )
 {
-    setClearMask( GL_DEPTH_BUFFER_BIT );
-    setRenderOrder( osg::Camera::POST_RENDER );
-    setReferenceFrame( osg::Transform::RELATIVE_RF );
+    osg::ref_ptr< osg::StateSet > stateSet = getOrCreateStateSet();
+    stateSet->setRenderBinDetails( 11, std::string( "DepthSortedBin" ) );
+
+    osg::ref_ptr< osg::Depth > depth = new osg::Depth();
+    depth->setFunction( osg::Depth::ALWAYS );
+    depth->setWriteMask( false );
+    stateSet->setAttributeAndModes( 
+        depth.get(), 
+        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+
     TurnOn();
 
     m_sceneManipulator = new TransformManipulator();
@@ -73,7 +81,7 @@ ManipulatorManager::ManipulatorManager()
 ManipulatorManager::ManipulatorManager(
     const ManipulatorManager& manipulatorManager, const osg::CopyOp& copyop )
     :
-    osg::Camera( manipulatorManager, copyop ),
+    osg::Group( manipulatorManager, copyop ),
     m_enabled( manipulatorManager.m_enabled ),
     m_nodeMask( manipulatorManager.m_nodeMask ),
     m_nodePath( manipulatorManager.m_nodePath ),

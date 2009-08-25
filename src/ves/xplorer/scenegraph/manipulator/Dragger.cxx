@@ -237,7 +237,8 @@ void Dragger::CreateDefaultShader()
 
     "void main() \n"
     "{ \n"
-        "gl_FragColor = color; \n"
+        "gl_FragData[ 0 ] = color; \n"
+        "gl_FragData[ 1 ] = vec4( 0.0, 0.0, 0.0, 1.0 ); \n"
     "} \n";
 
     osg::ref_ptr< osg::Shader > fragmentShader = new osg::Shader();
