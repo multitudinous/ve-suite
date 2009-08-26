@@ -177,7 +177,14 @@ void NavigateToEventHandler::SkyCamTo( const std::string& viewData, const std::s
     
     if( selectMethod == "Glow" )
     {
-        selectedDCS->SetTechnique("Select");
+        if( vxs::SceneManager::instance()->IsRTTOn() )
+        {
+            selectedDCS->SetTechnique( "Glow" );
+        }
+        else
+        {
+            selectedDCS->SetTechnique("Select");
+        }
     }
 
     vx::DeviceHandler::instance()->SetSelectedDCS( selectedDCS.get() );
@@ -200,8 +207,9 @@ void NavigateToEventHandler::SkyCamTo( const std::string& viewData, const std::s
     //Move the center point to the center of the selected object
     osg::ref_ptr< vxs::CoordinateSystemTransform > cst =
     new vxs::CoordinateSystemTransform(
-                                       vxs::SceneManager::instance()->GetActiveSwitchNode(),
-                                       selectedDCS.get(), true );
+       vxs::SceneManager::instance()->GetActiveSwitchNode(),
+       selectedDCS.get(), true );
+
     gmtl::Matrix44d localToWorldMatrix = cst->GetTransformationMatrix( false );
     
     gmtl::Point3d tempTransPoint = 
