@@ -244,7 +244,7 @@ void RotateAxis::SetupDefaultGeometry()
     //Create the rotation axis with line loops
     {
         osg::ref_ptr< osg::Geometry > geometry = new osg::Geometry();
-        osg::ref_ptr< osg::Vec3dArray > vertices = new osg::Vec3dArray();
+        osg::ref_ptr< osg::Vec3Array > vertices = new osg::Vec3Array();
         for( size_t i = 0; i < numSegments; ++i )
         {
             double rot( i * ringDelta );
@@ -258,19 +258,19 @@ void RotateAxis::SetupDefaultGeometry()
             {
             case AxesFlag::X:
             {
-                vertices->push_back( osg::Vec3d( 0.0, s, t ) );
+                vertices->push_back( osg::Vec3( 0.0, s, t ) );
 
                 break;
             }
             case AxesFlag::Y:
             {
-                vertices->push_back( osg::Vec3d( s, 0.0, t ) );
+                vertices->push_back( osg::Vec3( s, 0.0, t ) );
 
                 break;
             }
             case AxesFlag::Z:
             {
-                vertices->push_back( osg::Vec3d( s, t, 0.0 ) );
+                vertices->push_back( osg::Vec3( s, t, 0.0 ) );
 
                 break;
             }
@@ -306,7 +306,7 @@ void RotateAxis::SetupDefaultGeometry()
     //Create invisible torus for picking the rotation axis
     {
         osg::ref_ptr< osg::Geometry > geometry = new osg::Geometry();
-        osg::ref_ptr< osg::Vec3dArray > vertices = new osg::Vec3dArray();
+        osg::ref_ptr< osg::Vec3Array > vertices = new osg::Vec3Array();
         size_t numSides( 8 );
         size_t numVerticesPerSegment = 2 * ( numSides + 1 );
 
@@ -338,22 +338,22 @@ void RotateAxis::SetupDefaultGeometry()
                 {
                 case AxesFlag::X:
                 {
-                    vertices->push_back( osg::Vec3d( s, t1, p1 ) );
-                    vertices->push_back( osg::Vec3d( s, t2, p2 ) );
+                    vertices->push_back( osg::Vec3( s, t1, p1 ) );
+                    vertices->push_back( osg::Vec3( s, t2, p2 ) );
 
                     break;
                 }
                 case AxesFlag::Y:
                 {
-                    vertices->push_back( osg::Vec3d( t1, s, p1 ) );
-                    vertices->push_back( osg::Vec3d( t2, s, p2 ) );
+                    vertices->push_back( osg::Vec3( t1, s, p1 ) );
+                    vertices->push_back( osg::Vec3( t2, s, p2 ) );
 
                     break;
                 }
                 case AxesFlag::Z:
                 {
-                    vertices->push_back( osg::Vec3d( t1, p1, s ) );
-                    vertices->push_back( osg::Vec3d( t2, p2, s ) );
+                    vertices->push_back( osg::Vec3( t1, p1, s ) );
+                    vertices->push_back( osg::Vec3( t2, p2, s ) );
 
                     break;
                 }
@@ -382,9 +382,9 @@ void RotateAxis::SetupDefaultGeometry()
     //Create stippled geometry to show rotation about the axis
     {
         osg::ref_ptr< osg::Geometry > geometry = new osg::Geometry();
-        osg::ref_ptr< osg::Vec3dArray > vertices = new osg::Vec3dArray();
+        osg::ref_ptr< osg::Vec3Array > vertices = new osg::Vec3Array();
 
-        vertices->push_back( osg::Vec3d( 0.0, 0.0, 0.0 ) );
+        vertices->push_back( osg::Vec3( 0.0, 0.0, 0.0 ) );
         for( size_t i = 0; i <= numSegments; ++i )
         {
             double rot( i * ringDelta );
@@ -398,19 +398,19 @@ void RotateAxis::SetupDefaultGeometry()
             {
             case AxesFlag::X:
             {
-                vertices->push_back( osg::Vec3d( 0.0, s, t ) );
+                vertices->push_back( osg::Vec3( 0.0, s, t ) );
 
                 break;
             }
             case AxesFlag::Y:
             {
-                vertices->push_back( osg::Vec3d( s, 0.0, t ) );
+                vertices->push_back( osg::Vec3( s, 0.0, t ) );
 
                 break;
             }
             case AxesFlag::Z:
             {
-                vertices->push_back( osg::Vec3d( s, t, 0.0 ) );
+                vertices->push_back( osg::Vec3( s, t, 0.0 ) );
 
                 break;
             }

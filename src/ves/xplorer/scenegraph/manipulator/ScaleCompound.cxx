@@ -123,6 +123,7 @@ void ScaleCompound::ComboForm()
     //Call base method
     CompoundDragger::ComboForm();
 
+    osg::Vec3d explodeVector;
     osg::Vec3dArray* lineVertices( NULL );
     osg::Box* box( NULL );
     for( size_t i = 0; i < getNumChildren(); ++i )
@@ -131,8 +132,7 @@ void ScaleCompound::ComboForm()
         if( scaleAxis )
         {
             //Get the explode vector
-            osg::Vec3d explodeVector =
-               scaleAxis->GetUnitAxis() * m_explodeDistance;
+            explodeVector = scaleAxis->GetUnitAxis() * m_explodeDistance;
 
             //Move the lines and cylinders in from the origin and unit axis
             lineVertices = scaleAxis->GetLineVertices();
@@ -159,6 +159,7 @@ void ScaleCompound::DefaultForm()
     //Call base method
     CompoundDragger::DefaultForm();
 
+    osg::Vec3d explodeVector;
     osg::Vec3dArray* lineVertices( NULL );
     osg::Box* box( NULL );
     for( size_t i = 0; i < getNumChildren(); ++i )
@@ -167,8 +168,7 @@ void ScaleCompound::DefaultForm()
         if( scaleAxis )
         {
             //Get the explode vector
-            osg::Vec3d explodeVector =
-               scaleAxis->GetUnitAxis() * m_explodeDistance;
+            explodeVector = scaleAxis->GetUnitAxis() * m_explodeDistance;
 
             //Move the lines and cylinders back to the origin and unit axis
             lineVertices = scaleAxis->GetLineVertices();

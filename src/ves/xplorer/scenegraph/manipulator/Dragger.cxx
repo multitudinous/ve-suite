@@ -426,6 +426,13 @@ void Dragger::UseColor( ColorTag::Enum colorTag )
     m_color->set( GetColor( colorTag ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
+void Dragger::SetDrawableToAlwaysCull( osg::Drawable& drawable )
+{
+    osg::ref_ptr< ForceCullCallback > forceCullCallback =
+        new ForceCullCallback();
+    drawable.setCullCallback( forceCullCallback.get() );
+}
+////////////////////////////////////////////////////////////////////////////////
 Dragger::ForceCullCallback::ForceCullCallback()
     :
     osg::Drawable::CullCallback()
@@ -448,12 +455,5 @@ bool Dragger::ForceCullCallback::cull(
     osg::RenderInfo* renderInfo ) const
 {
     return true;
-}
-////////////////////////////////////////////////////////////////////////////////
-void Dragger::SetDrawableToAlwaysCull( osg::Drawable& drawable )
-{
-    osg::ref_ptr< ForceCullCallback > forceCullCallback =
-        new ForceCullCallback();
-    drawable.setCullCallback( forceCullCallback.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////

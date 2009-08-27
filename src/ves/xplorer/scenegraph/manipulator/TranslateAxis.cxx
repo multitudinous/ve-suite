@@ -78,6 +78,7 @@ TranslateAxis::TranslateAxis(
     const TranslateAxis& translateAxis, const osg::CopyOp& copyop )
     :
     Dragger( translateAxis, copyop ),
+    m_lineExplodeVector( translateAxis.m_lineExplodeVector ),
     m_lineVertices( translateAxis.m_lineVertices.get() ),
     m_lineGeometry( translateAxis.m_lineGeometry.get() ),
     m_lineAndCylinderGeode( translateAxis.m_lineAndCylinderGeode.get() ),

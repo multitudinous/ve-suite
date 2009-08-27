@@ -123,6 +123,7 @@ void TranslateCompound::ComboForm()
     //Call base method
     CompoundDragger::ComboForm();
 
+    osg::Vec3d explodeVector;
     osg::Geode* geode( NULL );
     osg::Cone* cone( NULL );
     for( size_t i = 0; i < getNumChildren(); ++i )
@@ -132,8 +133,7 @@ void TranslateCompound::ComboForm()
         if( translateAxis )
         {
             //Get the explode vector
-            osg::Vec3d explodeVector =
-               translateAxis->GetUnitAxis() * m_explodeDistance;
+            explodeVector = translateAxis->GetUnitAxis() * m_explodeDistance;
 
             //Turn off line and cylinder geometry
             geode = translateAxis->GetLineAndCylinderGeode();
@@ -158,6 +158,7 @@ void TranslateCompound::DefaultForm()
     //Call base method
     CompoundDragger::DefaultForm();
 
+    osg::Vec3d explodeVector;
     osg::Geode* geode( NULL );
     osg::Cone* cone( NULL );
     for( size_t i = 0; i < getNumChildren(); ++i )
@@ -167,8 +168,7 @@ void TranslateCompound::DefaultForm()
         if( translateAxis )
         {
             //Get the explode vector
-            osg::Vec3d explodeVector =
-               translateAxis->GetUnitAxis() * m_explodeDistance;
+            explodeVector = translateAxis->GetUnitAxis() * m_explodeDistance;
 
             //Turn on line and cylinder geometry
             geode = translateAxis->GetLineAndCylinderGeode();

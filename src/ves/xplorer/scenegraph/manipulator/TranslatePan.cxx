@@ -112,17 +112,17 @@ void TranslatePan::SetupDefaultGeometry()
     //Create the rotation axis with line loops
     {
         osg::ref_ptr< osg::Geometry > geometry = new osg::Geometry();
-        osg::ref_ptr< osg::Vec3dArray > vertices = new osg::Vec3dArray();
+        osg::ref_ptr< osg::Vec3Array > vertices = new osg::Vec3Array();
         for( size_t i = 0; i < NUM_CIRCLE_SEGMENTS; ++i )
         {
             double rot( i * DELTA_SEGMENT_ANGLE );
             double cosVal( cos( rot ) );
             double sinVal( sin( rot ) );
 
-            double x( TRANSLATE_PAN_RADIUS * cosVal );
-            double z( TRANSLATE_PAN_RADIUS * sinVal );
+            double s( TRANSLATE_PAN_RADIUS * cosVal );
+            double t( TRANSLATE_PAN_RADIUS * sinVal );
 
-            vertices->push_back( osg::Vec3d( x, 0.0, z ) );
+            vertices->push_back( osg::Vec3( s, 0.0, t ) );
         }
 
         geometry->setVertexArray( vertices.get() );
@@ -154,19 +154,19 @@ void TranslatePan::SetupDefaultGeometry()
     //Create invisible triangle fan to select the translate pan dragger
     {
         osg::ref_ptr< osg::Geometry > geometry = new osg::Geometry();
-        osg::ref_ptr< osg::Vec3dArray > vertices = new osg::Vec3dArray();
+        osg::ref_ptr< osg::Vec3Array > vertices = new osg::Vec3Array();
 
-        vertices->push_back( osg::Vec3d( 0.0, 0.0, 0.0 ) );
+        vertices->push_back( osg::Vec3( 0.0, 0.0, 0.0 ) );
         for( size_t i = 0; i <= NUM_CIRCLE_SEGMENTS; ++i )
         {
             double rot( i * DELTA_SEGMENT_ANGLE );
             double cosVal( cos( rot ) );
             double sinVal( sin( rot ) );
 
-            double x( TRANSLATE_PAN_RADIUS * cosVal );
-            double z( TRANSLATE_PAN_RADIUS * sinVal );
+            double s( TRANSLATE_PAN_RADIUS * cosVal );
+            double t( TRANSLATE_PAN_RADIUS * sinVal );
 
-            vertices->push_back( osg::Vec3d( x, 0.0, z ) );
+            vertices->push_back( osg::Vec3( s, 0.0, t ) );
         }
 
         geometry->setVertexArray( vertices.get() );

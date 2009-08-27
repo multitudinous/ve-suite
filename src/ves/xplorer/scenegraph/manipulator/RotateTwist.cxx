@@ -114,17 +114,17 @@ void RotateTwist::SetupDefaultGeometry()
     //Create the rotation twist axis with line loops
     {
         osg::ref_ptr< osg::Geometry > geometry = new osg::Geometry();
-        osg::ref_ptr< osg::Vec3dArray > vertices = new osg::Vec3dArray();
+        osg::ref_ptr< osg::Vec3Array > vertices = new osg::Vec3Array();
         for( size_t i = 0; i < NUM_CIRCLE_SEGMENTS; ++i )
         {
             double rot( i * DELTA_SEGMENT_ANGLE );
             double cosVal( cos( rot ) );
             double sinVal( sin( rot ) );
 
-            double x( ROTATE_TWIST_RADIUS * cosVal );
-            double z( ROTATE_TWIST_RADIUS * sinVal );
+            double s( ROTATE_TWIST_RADIUS * cosVal );
+            double t( ROTATE_TWIST_RADIUS * sinVal );
 
-            vertices->push_back( osg::Vec3d( x, 0.0, z ) );
+            vertices->push_back( osg::Vec3( s, 0.0, t ) );
         }
 
         geometry->setVertexArray( vertices.get() );
@@ -156,7 +156,7 @@ void RotateTwist::SetupDefaultGeometry()
     //Create invisible triangle strip for picking the rotation twist axis
     {
         osg::ref_ptr< osg::Geometry > geometry = new osg::Geometry();
-        osg::ref_ptr< osg::Vec3dArray > vertices = new osg::Vec3dArray();
+        osg::ref_ptr< osg::Vec3Array > vertices = new osg::Vec3Array();
 
         double minorRadius( 0.025 );
         double innerRadius( ROTATE_TWIST_RADIUS - minorRadius );
@@ -167,14 +167,14 @@ void RotateTwist::SetupDefaultGeometry()
             double cosVal( cos( rot ) );
             double sinVal( sin( rot ) );
 
-            double xi( innerRadius * cosVal );
-            double zi( innerRadius * sinVal );
+            double si( innerRadius * cosVal );
+            double ti( innerRadius * sinVal );
 
-            double xo( outerRadius * cosVal );
-            double zo( outerRadius * sinVal );
+            double so( outerRadius * cosVal );
+            double to( outerRadius * sinVal );
 
-            vertices->push_back( osg::Vec3d( xi, 0.0, zi ) );
-            vertices->push_back( osg::Vec3d( xo, 0.0, zo ) );
+            vertices->push_back( osg::Vec3( si, 0.0, ti ) );
+            vertices->push_back( osg::Vec3( so, 0.0, to ) );
         }
 
         geometry->setVertexArray( vertices.get() );
@@ -189,19 +189,19 @@ void RotateTwist::SetupDefaultGeometry()
     //Create stippled geometry to show rotation about the twist axis
     {
         osg::ref_ptr< osg::Geometry > geometry = new osg::Geometry();
-        osg::ref_ptr< osg::Vec3dArray > vertices = new osg::Vec3dArray();
+        osg::ref_ptr< osg::Vec3Array > vertices = new osg::Vec3Array();
 
-        vertices->push_back( osg::Vec3d( 0.0, 0.0, 0.0 ) );
+        vertices->push_back( osg::Vec3( 0.0, 0.0, 0.0 ) );
         for( size_t i = 0; i <= NUM_CIRCLE_SEGMENTS; ++i )
         {
             double rot( i * DELTA_SEGMENT_ANGLE );
             double cosVal( cos( rot ) );
             double sinVal( sin( rot ) );
 
-            double x( cosVal );
-            double z( sinVal );
+            double s( cosVal );
+            double t( sinVal );
 
-            vertices->push_back( osg::Vec3d( x, 0.0, z ) );
+            vertices->push_back( osg::Vec3( s, 0.0, t ) );
         }
 
         geometry->setVertexArray( vertices.get() );

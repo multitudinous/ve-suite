@@ -175,6 +175,10 @@ protected:
     virtual void SetupDefaultGeometry() = 0;
 
     ///
+    ///\param drawable
+    void SetDrawableToAlwaysCull( osg::Drawable& drawable );
+
+    ///
     const AxesFlag::Enum m_axesFlag;
 
     ///
@@ -204,7 +208,10 @@ protected:
     ///
     Manipulator* const m_parentManipulator;
 
-    // --- *** --- //
+private:
+    ///
+    typedef std::map< ColorTag::Enum, osg::Vec4 > ColorMap;
+
     ///
     class ForceCullCallback : public osg::Drawable::CullCallback
     {
@@ -232,15 +239,6 @@ protected:
     private:
 
     };
-
-    ///
-    ///\param drawable
-    void SetDrawableToAlwaysCull( osg::Drawable& drawable );
-    // --- *** --- //
-
-private:
-    ///
-    typedef std::map< ColorTag::Enum, osg::Vec4 > ColorMap;
 
     ///
     void CreateDefaultShader();
