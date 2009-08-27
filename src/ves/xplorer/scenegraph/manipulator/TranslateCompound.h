@@ -114,7 +114,7 @@ protected:
 
 private:
     ///
-    osg::Vec3d m_coneExplodeVector;
+    const double m_explodeDistance;
 
     ///
     osg::ref_ptr< TranslateAxis > m_xTranslateAxis;

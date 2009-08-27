@@ -115,8 +115,14 @@ public:
     const AxesFlag::Enum GetAxesFlag() const;
 
     ///
+    const osg::Plane GetPlane() const;
+
+    ///
     ///\return
     const TransformationType::Enum GetTransformationType() const;
+
+    ///
+    const osg::Vec3d GetUnitAxis( const bool& transformToWorld = false ) const;
 
     ///
     virtual Dragger* Push(
@@ -152,12 +158,6 @@ protected:
 
     ///
     osg::Vec4& GetColor( ColorTag::Enum colorTag );
-
-    ///
-    const osg::Plane GetPlane() const;
-
-    ///
-    const osg::Vec3d GetUnitAxis( const bool& transformToWorld = false ) const;
 
     ///
     const bool IntersectsPlane(

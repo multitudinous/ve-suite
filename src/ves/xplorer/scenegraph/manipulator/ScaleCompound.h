@@ -114,7 +114,7 @@ protected:
 
 private:
     ///
-    osg::Vec3d m_boxExplodeVector;
+    const double m_explodeDistance;
 
     ///
     osg::ref_ptr< ScaleAxis > m_xScaleAxis;

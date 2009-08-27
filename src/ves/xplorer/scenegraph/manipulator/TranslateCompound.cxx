@@ -51,7 +51,7 @@ TranslateCompound::TranslateCompound(
         AxesFlag::ALL,
         TransformationType::TRANSLATE_COMPOUND,
         parentManipulator ),
-    m_coneExplodeVector( GetUnitAxis() * 0.5 ),
+    m_explodeDistance( 0.5 ),
     m_xTranslateAxis( NULL ),
     m_yTranslateAxis( NULL ),
     m_zTranslateAxis( NULL ),
@@ -64,7 +64,7 @@ TranslateCompound::TranslateCompound(
     const TranslateCompound& translateCompound, const osg::CopyOp& copyop )
     :
     CompoundDragger( translateCompound, copyop ),
-    m_coneExplodeVector( translateCompound.m_coneExplodeVector ),
+    m_explodeDistance( translateCompound.m_explodeDistance ),
     m_xTranslateAxis( translateCompound.m_xTranslateAxis.get() ),
     m_yTranslateAxis( translateCompound.m_yTranslateAxis.get() ),
     m_zTranslateAxis( translateCompound.m_zTranslateAxis.get() ),
@@ -131,13 +131,17 @@ void TranslateCompound::ComboForm()
             dynamic_cast< TranslateAxis* >( GetChild( i ) );
         if( translateAxis )
         {
+            //Get the explode vector
+            osg::Vec3d explodeVector =
+               translateAxis->GetUnitAxis() * m_explodeDistance;
+
             //Turn off line and cylinder geometry
             geode = translateAxis->GetLineAndCylinderGeode();
             geode->setNodeMask( 0 );
 
             //Move the cones out from the unit axis
             cone = translateAxis->GetCone();
-            cone->setCenter( cone->getCenter() + m_coneExplodeVector );
+            cone->setCenter( cone->getCenter() + explodeVector );
             //Update the geometry's display list
             translateAxis->DirtyCone();
         }
@@ -162,13 +166,17 @@ void TranslateCompound::DefaultForm()
             dynamic_cast< TranslateAxis* >( GetChild( i ) );
         if( translateAxis )
         {
+            //Get the explode vector
+            osg::Vec3d explodeVector =
+               translateAxis->GetUnitAxis() * m_explodeDistance;
+
             //Turn on line and cylinder geometry
             geode = translateAxis->GetLineAndCylinderGeode();
             geode->setNodeMask( 1 );
 
             //Move the cones back to the unit axis
             cone = translateAxis->GetCone();
-            cone->setCenter( cone->getCenter() - m_coneExplodeVector );
+            cone->setCenter( cone->getCenter() - explodeVector );
             //Update the geometry's display list
             translateAxis->DirtyCone();
         }

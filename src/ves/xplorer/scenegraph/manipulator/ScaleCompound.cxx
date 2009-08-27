@@ -51,7 +51,7 @@ ScaleCompound::ScaleCompound(
         AxesFlag::ALL,
         TransformationType::SCALE_COMPOUND,
         parentManipulator ),
-    m_boxExplodeVector( GetUnitAxis() * -0.2 ),
+    m_explodeDistance( 0.2 ),
     m_xScaleAxis( NULL ),
     m_yScaleAxis( NULL ),
     m_zScaleAxis( NULL ),
@@ -64,7 +64,7 @@ ScaleCompound::ScaleCompound(
     const ScaleCompound& scaleCompound, const osg::CopyOp& copyop )
     :
     CompoundDragger( scaleCompound, copyop ),
-    m_boxExplodeVector( scaleCompound.m_boxExplodeVector ),
+    m_explodeDistance( scaleCompound.m_explodeDistance ),
     m_xScaleAxis( scaleCompound.m_xScaleAxis.get() ),
     m_yScaleAxis( scaleCompound.m_yScaleAxis.get() ),
     m_zScaleAxis( scaleCompound.m_zScaleAxis.get() ),
@@ -130,14 +130,18 @@ void ScaleCompound::ComboForm()
         ScaleAxis* scaleAxis = dynamic_cast< ScaleAxis* >( GetChild( i ) );
         if( scaleAxis )
         {
+            //Get the explode vector
+            osg::Vec3d explodeVector =
+               scaleAxis->GetUnitAxis() * m_explodeDistance;
+
             //Move the lines and cylinders in from the origin and unit axis
             lineVertices = scaleAxis->GetLineVertices();
-            (*lineVertices)[ 0 ] -= m_boxExplodeVector;
-            (*lineVertices)[ 1 ] += m_boxExplodeVector;
+            (*lineVertices)[ 0 ] += explodeVector;
+            (*lineVertices)[ 1 ] -= explodeVector;
 
             //Move the boxes in from the unit axis
             box = scaleAxis->GetBox();
-            box->setCenter( box->getCenter() + m_boxExplodeVector );
+            box->setCenter( box->getCenter() - explodeVector );
             
             //Update the geometry's display list
             scaleAxis->DirtyGeometry();
@@ -162,14 +166,18 @@ void ScaleCompound::DefaultForm()
         ScaleAxis* scaleAxis = dynamic_cast< ScaleAxis* >( GetChild( i ) );
         if( scaleAxis )
         {
+            //Get the explode vector
+            osg::Vec3d explodeVector =
+               scaleAxis->GetUnitAxis() * m_explodeDistance;
+
             //Move the lines and cylinders back to the origin and unit axis
             lineVertices = scaleAxis->GetLineVertices();
-            (*lineVertices)[ 0 ] += m_boxExplodeVector;
-            (*lineVertices)[ 1 ] -= m_boxExplodeVector;
+            (*lineVertices)[ 0 ] -= explodeVector;
+            (*lineVertices)[ 1 ] += explodeVector;
 
             //Move the boxes back to the unit axis
             box = scaleAxis->GetBox();
-            box->setCenter( box->getCenter() - m_boxExplodeVector );
+            box->setCenter( box->getCenter() + explodeVector );
 
             //Update the geometry's display list
             scaleAxis->DirtyGeometry();
