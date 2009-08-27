@@ -40,11 +40,12 @@ using namespace ves::xplorer::scenegraph;
 using namespace ves::xplorer::scenegraph::util;
 
 ////////////////////////////////////////////////////////////////////////////////
-HighlightNodeByNameVisitor::HighlightNodeByNameVisitor( osg::Node* node, std::string nodeName, bool addGlow )
+HighlightNodeByNameVisitor::HighlightNodeByNameVisitor( osg::Node* node, std::string nodeName, bool addGlow, osg::Vec4 glowColor )
         :
         NodeVisitor( TRAVERSE_ALL_CHILDREN ),
         mNodeName( nodeName ),
-        mAddGlow( addGlow )
+        mAddGlow( addGlow ),
+        m_glowColor( glowColor )
 {
     node->accept( *this );
 }
@@ -65,8 +66,8 @@ void HighlightNodeByNameVisitor::apply( osg::Node& node )
         if( found != std::string::npos )
         //if( !name.compare( 0, mNodeName.size(), mNodeName ) )
         {
-            std::cout << " changing parts " << name << " " 
-                << mNodeName.size() << " " << mNodeName << std::endl;
+            //std::cout << " changing parts " << name << " " 
+            //    << mNodeName.size() << " " << mNodeName << std::endl;
             foundNode = true;
             osg::ref_ptr< osg::StateSet > geode_stateset = node.getOrCreateStateSet();
 
@@ -75,9 +76,11 @@ void HighlightNodeByNameVisitor::apply( osg::Node& node )
                 opVisitor( &node, false, false, 1.0f );
 
             //Add shader code to have code highlighted
-            osg::Vec4 glowColor( 1.0, 0.0, 0.0, 1.0 );
-            geode_stateset->addUniform( new osg::Uniform( "glowColor", glowColor ) );
-            osg::StateSet::UniformList uniList = geode_stateset->getUniformList();
+            //osg::Vec4 enableGlow( 1.0, 0.0, 0.0, 1.0 );
+            //m_glowColor = glowColor;
+            geode_stateset->addUniform( new osg::Uniform( "glowColor", m_glowColor ) );
+            //geode_stateset->addUniform( new osg::Uniform( "gloColor", m_glowColor ) );
+            //osg::StateSet::UniformList uniList = geode_stateset->getUniformList();
         }
     }
     else
@@ -87,6 +90,7 @@ void HighlightNodeByNameVisitor::apply( osg::Node& node )
         if( uniList.size() )
         {
             geode_stateset->removeUniform( "glowColor" );
+            //geode_stateset->removeUniform( "gloColor" );
             //std::cout << uniList.size() << std::endl;
         }
     }

@@ -50,6 +50,7 @@
 // --- OSG Includes --- //
 #include <osg/NodeVisitor>
 #include <osg/Group>
+#include <osg/Vec4>
 
 namespace ves
 {
@@ -64,7 +65,7 @@ public:
     ///\param node The node to be traversed
     ///\param nodeName The name of the node to highlight
     ///\param opaqueParent The hack to get around osg transparency issues
-    HighlightNodeByNameVisitor( osg::Node* node, std::string nodeName, bool addGlow = true );
+    HighlightNodeByNameVisitor( osg::Node* node, std::string nodeName, bool addGlow = true, osg::Vec4 glowColor = osg::Vec4( 1.0, 0.0, 0.0, 1.0 ) );
     
     ///Default Constructor
     HighlightNodeByNameVisitor();
@@ -83,6 +84,8 @@ private:
     osg::ref_ptr< osg::Group > mOpaqueParent;
     ///Add the glow to parts, if false then remove all glow
     bool mAddGlow;
+    ///The color to set the glow
+    osg::Vec4 m_glowColor;
 };
 }
 }

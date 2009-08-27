@@ -61,6 +61,8 @@ GroupedTextTextures::GroupedTextTextures( std::string fontFile )
     //getOrCreateStateSet()->setAttributeAndModes( 
     //    new osg::Depth( osg::Depth::ALWAYS ), 
     //    osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+    getOrCreateStateSet()->addUniform(
+        new osg::Uniform( "glowColor", osg::Vec4( 0.0, 0.0, 0.0, 1.0) ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 GroupedTextTextures::GroupedTextTextures(
@@ -244,4 +246,18 @@ void GroupedTextTextures::RemoveTextTextures( const std::string& tempKey )
     {
         ;
     }
+}
+////////////////////////////////////////////////////////////////////////////////
+const std::string& GroupedTextTextures::GetKeyForTexture( const ves::xplorer::scenegraph::DCS* tempKey )
+{
+    for( std::map< std::string, osg::ref_ptr< DCS > >::iterator iter =
+        m_groupedTextures.begin(); iter != m_groupedTextures.end(); ++iter )
+    {
+        if( iter->second == tempKey )
+        {
+            return iter->first;
+        }
+    }
+
+    return std::string();
 }

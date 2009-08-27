@@ -37,6 +37,8 @@
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/plugin/PluginBase.h>
 
+#include <Poco/Tuple.h>
+
 #include <map>
 #include <vector>
 #include <utility>
@@ -95,6 +97,12 @@ private:
     ves::xplorer::device::KeyboardMouse* m_keyboard;
     ves::xplorer::scenegraph::GroupedTextTextures* m_groupedTextTextures;
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > m_textTrans;
+
+    typedef Poco::Tuple< std::string, std::string, int, std::string, double, std::string > Part;
+	typedef std::vector<Part> Assembly;
+    
+    // insert some rows
+	Assembly m_selectedAssembly;
 
 };
 

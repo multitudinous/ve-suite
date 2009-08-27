@@ -113,6 +113,12 @@ public:
     ///Get the data display chart
     osgBullet::Chart* GetChart();
     
+    ///Set the title for the dialog
+    void SetTitle( const std::string& title );
+    
+    ///Get the title for the dialog
+    const std::string& GetTitle();
+    
 protected:
     ///Destructor
     virtual ~TextTexture();
@@ -132,9 +138,15 @@ protected:
     ///The font file
     std::string _font;
 
-    ///The text
-    osg::ref_ptr< osgText::Text > _text;
+    ///The title for the dialog
+    std::string m_title;
+    
+    ///The body text
+    osg::ref_ptr< osgText::Text > m_bodyText;
 
+    ///The title text
+    osg::ref_ptr< osgText::Text > m_titleText;
+    
     ///The texture we create
     osg::ref_ptr< osg::Texture2D > _texture;
 

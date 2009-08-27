@@ -34,6 +34,8 @@
 // --- My Includes --- //
 #include "WarrantyToolGP.h"
 #include "csvparser.h"
+#include "ves/xplorer/ModelCADHandler.h"
+#include "ves/xplorer/Model.h"
 
 // --- VE-Suite Includes --- //
 #include <ves/open/xml/model/Model.h>
@@ -174,6 +176,33 @@ void WarrantyToolGP::PreFrameUpdate()
             //ves::xplorer::scenegraph::DCS* tempKey = static_cast< ves::xplorer::scenegraph::DCS* >( static_cast< osg::Group* >( objectHit )->getParent( 0 ) );
             ves::xplorer::scenegraph::DCS* tempKey = static_cast< ves::xplorer::scenegraph::DCS* >( tempParent );
             m_groupedTextTextures->MakeTextureActive( tempKey );
+            const std::string partName = m_groupedTextTextures->GetKeyForTexture( tempKey );
+            ves::xplorer::scenegraph::DCS* tempModelNodes = this->mModel->GetModelCADHandler()->GetAssembly( mModel->GetModelCADHandler()->GetRootCADNodeID() );
+
+            for (Assembly::const_iterator it = m_selectedAssembly.begin(); it != m_selectedAssembly.end(); ++it)
+            {
+                std::ostringstream tempTextData;
+                tempTextData
+                    << "Part Number: " << it->get<0>() << "\n"
+                    << "Description: " << it->get<1>() << "\n"
+                    << "Claims: " << it->get<2>() << "\n"
+                    << "FPM: " << it->get<4>();
+
+                //ves::xplorer::scenegraph::TextTexture* tempText = new ves::xplorer::scenegraph::TextTexture();
+                //std::string tempKey = "test_" + it->get<0>();
+                //boost::lexical_cast<std::string>( std::distance( assem.begin(), it) );
+                //std::string partText = tempTextData.str();
+                //std::cout << " here 1 " << partText << std::endl;
+                //tempText->UpdateText( partText );
+                //m_groupedTextTextures->AddTextTexture( it->get<0>(), tempText );
+
+                ves::xplorer::scenegraph::HighlightNodeByNameVisitor
+                    highlight( tempModelNodes, it->get<0>(), true, osg::Vec4( 0.57255, 0.34118, 1.0, 1.0 ) );
+            }
+
+            ves::xplorer::scenegraph::HighlightNodeByNameVisitor
+                highlight( tempModelNodes, partName, true,
+                          osg::Vec4( 0.34118, 1.0, 0.57255, 1.0 ) );
         }
     }
     //If we are in interactive mode to mouse over things
@@ -388,6 +417,8 @@ void WarrantyToolGP::RenderTextualDisplay( bool onOff )
             displayString = displayString + displayPair.first + " " +  displayPair.second + "\n";
         }
         mModelText->UpdateText( displayString );
+        mModelText->SetTitle( m_lastPartNumber );
+
         //std::cout << displayString << std::endl;
     }
     else
@@ -401,9 +432,6 @@ void WarrantyToolGP::RenderTextualDisplay( bool onOff )
 ////////////////////////////////////////////////////////////////////////////////
 void WarrantyToolGP::CreateDB()
 {
-	typedef Poco::Tuple< std::string, std::string, int, std::string, double, std::string > Part;
-	typedef std::vector<Part> Assembly;
-    
 	// register SQLite connector
 	Poco::Data::SQLite::Connector::registerConnector();
 	
@@ -415,7 +443,7 @@ void WarrantyToolGP::CreateDB()
 
 	// (re)create table
 	session << "CREATE TABLE Parts (Part_Number VARCHAR, Description VARCHAR, Claims INT, Claims_Cost VARCHAR, FPM DOUBLE, CCPM VARCHAR)", now;
-	
+
 	// insert some rows
 	Assembly assem;
 
@@ -443,14 +471,12 @@ void WarrantyToolGP::CreateDB()
     use(assem), now;
 	std::cout << "create table 3  " << std::endl;
 
-	assem.clear();
-    
 	// a simple query
 	//select << "SELECT Part_Number, Description, Claims FROM Parts",
 	//select << "SELECT Part_Number, Description, Claims FROM Parts WHERE Claims > 10 AND Claims_Cost > 1000",
 	Statement select(session);
 	select << "SELECT * FROM Parts WHERE Claims > 10",// AND FPM > 0.1",
-    into(assem),
+    into( m_selectedAssembly ),
     now;
     
     //ves::xplorer::scenegraph::util::OpacityVisitor 
@@ -460,9 +486,9 @@ void WarrantyToolGP::CreateDB()
     m_groupedTextTextures = 
         new ves::xplorer::scenegraph::GroupedTextTextures();
 
-	for (Assembly::const_iterator it = assem.begin(); it != assem.end(); ++it)
-	{
-		std::cout 
+    for (Assembly::const_iterator it = m_selectedAssembly.begin(); it != m_selectedAssembly.end(); ++it)
+    {
+        std::cout
             << "Part Number: " << it->get<0>() 
             << ", Description: " << it->get<1>() 
             << ", Claims: " << it->get<2>()
@@ -481,11 +507,12 @@ void WarrantyToolGP::CreateDB()
         std::string partText = tempTextData.str();
         //std::cout << " here 1 " << partText << std::endl;
         tempText->UpdateText( partText );
+        tempText->SetTitle( it->get<0>() );
         m_groupedTextTextures->AddTextTexture( it->get<0>(), tempText );
         
         ves::xplorer::scenegraph::HighlightNodeByNameVisitor 
-            highlight( mDCS.get(), it->get<0>() );
-	}
+            highlight( mDCS.get(), it->get<0>(), true, osg::Vec4( 0.57255, 0.34118, 1.0, 1.0 ) );
+    }
     m_textTrans->addChild( m_groupedTextTextures );
 
     Poco::Data::SQLite::Connector::unregisterConnector();

@@ -102,7 +102,7 @@ public:
 
     void RemoveTextTextures( const std::string& tempKey );
 
-    void UpdateDCSPosition( DCS* tempDCS, size_t i );
+    void UpdateDCSPosition( ves::xplorer::scenegraph::DCS* tempDCS, size_t i );
 
     void UpdateListPositions();
 
@@ -111,6 +111,8 @@ public:
     void MakeTextureActive( const TextTexture* tempKey );
 
     void MakeTextureActive( const ves::xplorer::scenegraph::DCS* tempKey );
+
+    const std::string& GetKeyForTexture( const ves::xplorer::scenegraph::DCS* tempKey );
 
 protected:
     ///Destructor
