@@ -63,7 +63,8 @@ class VE_SCENEGRAPH_EXPORTS ScaleUniform : public Dragger
 {
 public:
     ///
-    ScaleUniform( Manipulator* parentManipulator );
+    ScaleUniform(
+        Manipulator* const parentManipulator );
 
     ///Copy constructor using CopyOp to manage deep vs shallow copy
     ScaleUniform(

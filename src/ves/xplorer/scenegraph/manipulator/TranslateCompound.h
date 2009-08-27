@@ -65,7 +65,8 @@ class VE_SCENEGRAPH_EXPORTS TranslateCompound : public CompoundDragger
 {
 public:
     ///Constructor
-    TranslateCompound( Manipulator* parentManipulator );
+    TranslateCompound(
+        Manipulator* const parentManipulator );
 
     ///Copy constructor using CopyOp to manage deep vs shallow copy
     TranslateCompound(
@@ -113,7 +114,7 @@ protected:
 
 private:
     ///
-    osg::Vec3 m_coneExplodeVector;
+    osg::Vec3d m_coneExplodeVector;
 
     ///
     osg::ref_ptr< TranslateAxis > m_xTranslateAxis;

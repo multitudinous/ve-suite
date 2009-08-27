@@ -63,7 +63,10 @@ class VE_SCENEGRAPH_EXPORTS CompoundDragger : public Dragger
 {
 public:
     ///
-    CompoundDragger( Manipulator* parentManipulator );
+    CompoundDragger(
+        const AxesFlag::Enum& axesFlag,
+        const TransformationType::Enum& transformationType,
+        Manipulator* const parentManipulator );
 
     ///Copy constructor using CopyOp to manage deep vs shallow copy
     CompoundDragger(

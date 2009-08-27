@@ -63,7 +63,8 @@ class VE_SCENEGRAPH_EXPORTS TranslatePan : public Dragger
 {
 public:
     ///
-    TranslatePan( Manipulator* parentManipulator );
+    TranslatePan(
+        Manipulator* const parentManipulator );
 
     ///Copy constructor using CopyOp to manage deep vs shallow copy
     TranslatePan(

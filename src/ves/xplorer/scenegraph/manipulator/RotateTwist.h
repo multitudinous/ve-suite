@@ -63,7 +63,8 @@ class VE_SCENEGRAPH_EXPORTS RotateTwist : public Dragger
 {
 public:
     ///
-    RotateTwist( Manipulator* parentManipulator );
+    RotateTwist(
+        Manipulator* const parentManipulator );
 
     ///Copy constructor using CopyOp to manage deep vs shallow copy
     RotateTwist(

@@ -51,7 +51,6 @@ const double CLIPPING_CIRCLE_RADIUS = ROTATE_AXIS_RADIUS;
 const double ROTATE_TWIST_RADIUS = 1.2;
 const double TRANSLATE_PAN_RADIUS = 0.2;
 
-
 //Define manipulator enums w/ namespaces
 namespace ves
 {
@@ -74,15 +73,14 @@ namespace AxesFlag
         Z = 0x4,
 
         XY = X | Y,
-        YX = Y | X,
         XZ = X | Z,
-        ZX = Z | X,
         YZ = Y | Z,
-        ZY = Z | Y,
 
         XYZ = X | Y | Z,
 
-        ALL = XYZ
+        BILLBOARD = 0x8,
+
+        ALL = XYZ | BILLBOARD
     };
 }
 

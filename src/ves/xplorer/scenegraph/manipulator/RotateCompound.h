@@ -65,7 +65,8 @@ class VE_SCENEGRAPH_EXPORTS RotateCompound : public CompoundDragger
 {
 public:
     ///Constructor
-    RotateCompound( Manipulator* parentManipulator );
+    RotateCompound(
+        Manipulator* const parentManipulator );
 
     ///Copy constructor using CopyOp to manage deep vs shallow copy
     RotateCompound(

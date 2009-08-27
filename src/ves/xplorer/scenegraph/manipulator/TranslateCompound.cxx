@@ -44,17 +44,19 @@
 using namespace ves::xplorer::scenegraph::manipulator;
 
 ////////////////////////////////////////////////////////////////////////////////
-TranslateCompound::TranslateCompound( Manipulator* parentManipulator )
+TranslateCompound::TranslateCompound(
+    Manipulator* const parentManipulator )
     :
-    CompoundDragger( parentManipulator ),
-    m_coneExplodeVector( 0.5, 0.0, 0.0 ),
+    CompoundDragger(
+        AxesFlag::ALL,
+        TransformationType::TRANSLATE_COMPOUND,
+        parentManipulator ),
+    m_coneExplodeVector( GetUnitAxis() * 0.5 ),
     m_xTranslateAxis( NULL ),
     m_yTranslateAxis( NULL ),
     m_zTranslateAxis( NULL ),
     m_translatePan( NULL )
 {
-    m_transformationType = TransformationType::TRANSLATE_COMPOUND;
-
     SetupDefaultGeometry();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -176,7 +178,7 @@ void TranslateCompound::DefaultForm()
 void TranslateCompound::SetupDefaultGeometry()
 {
     //Create translate x-axis dragger
-    m_xTranslateAxis = new TranslateAxis( m_parentManipulator );
+    m_xTranslateAxis = new TranslateAxis( AxesFlag::X, m_parentManipulator );
     m_xTranslateAxis->SetColor(
         ColorTag::DEFAULT, osg::Vec4f( 1.0, 0.0, 0.0, 1.0 ), true );
     m_xTranslateAxis->ComboForm();
@@ -184,34 +186,18 @@ void TranslateCompound::SetupDefaultGeometry()
     addChild( m_xTranslateAxis.get() );
 
     //Create translate y-axis dragger
-    m_yTranslateAxis = new TranslateAxis( m_parentManipulator );
+    m_yTranslateAxis = new TranslateAxis( AxesFlag::Y, m_parentManipulator );
     m_yTranslateAxis->SetColor(
         ColorTag::DEFAULT, osg::Vec4f( 0.0, 1.0, 0.0, 1.0 ), true );
     m_yTranslateAxis->ComboForm();
 
-    //Rotate y-axis dragger appropriately
-    {
-        osg::Quat rotation;
-        rotation.makeRotate(
-            osg::Vec3d( 1.0, 0.0, 0.0 ), osg::Vec3d( 0.0, 1.0, 0.0 ) );
-        m_yTranslateAxis->setMatrix( osg::Matrix( rotation ) );
-    }
-
     addChild( m_yTranslateAxis.get() );
 
     //Create translate z-axis dragger
-    m_zTranslateAxis = new TranslateAxis( m_parentManipulator );
+    m_zTranslateAxis = new TranslateAxis( AxesFlag::Z, m_parentManipulator );
     m_zTranslateAxis->SetColor(
         ColorTag::DEFAULT, osg::Vec4f( 0.0, 0.0, 1.0, 1.0 ), true );
     m_zTranslateAxis->ComboForm();
-
-    //Rotate z-axis dragger appropriately
-    {
-        osg::Quat rotation;
-        rotation.makeRotate(
-            osg::Vec3d( 1.0, 0.0, 0.0 ), osg::Vec3d( 0.0, 0.0, 1.0 ) );
-        m_zTranslateAxis->setMatrix( osg::Matrix( rotation ) );
-    }
 
     addChild( m_zTranslateAxis.get() );
 

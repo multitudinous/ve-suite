@@ -65,7 +65,8 @@ class VE_SCENEGRAPH_EXPORTS ScaleCompound : public CompoundDragger
 {
 public:
     ///Constructor
-    ScaleCompound( Manipulator* parentManipulator );
+    ScaleCompound(
+        Manipulator* const parentManipulator );
 
     ///Copy constructor using CopyOp to manage deep vs shallow copy
     ScaleCompound(
@@ -113,7 +114,7 @@ protected:
 
 private:
     ///
-    osg::Vec3 m_boxExplodeVector;
+    osg::Vec3d m_boxExplodeVector;
 
     ///
     osg::ref_ptr< ScaleAxis > m_xScaleAxis;

@@ -42,16 +42,18 @@
 using namespace ves::xplorer::scenegraph::manipulator;
 
 ////////////////////////////////////////////////////////////////////////////////
-RotateCompound::RotateCompound( Manipulator* parentManipulator )
+RotateCompound::RotateCompound(
+    Manipulator* const parentManipulator )
     :
-    CompoundDragger( parentManipulator ),
+    CompoundDragger(
+        AxesFlag::ALL,
+        TransformationType::ROTATE_COMPOUND,
+        parentManipulator ),
     m_xRotateAxis( NULL ),
     m_yRotateAxis( NULL ),
     m_zRotateAxis( NULL ),
     m_rotateTwist( NULL )
 {
-    m_transformationType = TransformationType::ROTATE_COMPOUND;
-
     SetupDefaultGeometry();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -110,39 +112,23 @@ const char* RotateCompound::libraryName() const
 void RotateCompound::SetupDefaultGeometry()
 {
     //Create translate x-axis dragger
-    m_xRotateAxis = new RotateAxis( m_parentManipulator );
+    m_xRotateAxis = new RotateAxis( AxesFlag::X, m_parentManipulator );
     m_xRotateAxis->SetColor(
         ColorTag::DEFAULT, osg::Vec4f( 1.0, 0.0, 0.0, 1.0 ), true );
 
     addChild( m_xRotateAxis.get() );
 
     //Create translate y-axis dragger
-    m_yRotateAxis = new RotateAxis( m_parentManipulator );
+    m_yRotateAxis = new RotateAxis( AxesFlag::Y, m_parentManipulator );
     m_yRotateAxis->SetColor(
         ColorTag::DEFAULT, osg::Vec4f( 0.0, 1.0, 0.0, 1.0 ), true );
-
-    //Rotate y-axis dragger appropriately
-    {
-        osg::Quat rotation;
-        rotation.makeRotate(
-            osg::Vec3d( 1.0, 0.0, 0.0 ), osg::Vec3d( 0.0, 1.0, 0.0 ) );
-        m_yRotateAxis->setMatrix( osg::Matrix( rotation ) );
-    }
 
     addChild( m_yRotateAxis.get() );
 
     //Create translate z-axis dragger
-    m_zRotateAxis = new RotateAxis( m_parentManipulator );
+    m_zRotateAxis = new RotateAxis( AxesFlag::Z, m_parentManipulator );
     m_zRotateAxis->SetColor(
         ColorTag::DEFAULT, osg::Vec4f( 0.0, 0.0, 1.0, 1.0 ), true );
-
-    //Rotate z-axis dragger appropriately
-    {
-        osg::Quat rotation;
-        rotation.makeRotate(
-            osg::Vec3d( 1.0, 0.0, 0.0 ), osg::Vec3d( 0.0, 0.0, 1.0 ) );
-        m_zRotateAxis->setMatrix( osg::Matrix( rotation ) );
-    }
 
     addChild( m_zRotateAxis.get() );
 

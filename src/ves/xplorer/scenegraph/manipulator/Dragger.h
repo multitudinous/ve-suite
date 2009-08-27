@@ -42,6 +42,9 @@
 // --- OSG Includes --- //
 #include <osg/MatrixTransform>
 #include <osg/Drawable>
+#include <osg/Plane>
+
+#include <osgUtil/LineSegmentIntersector>
 
 namespace osgUtil
 {
@@ -72,7 +75,10 @@ class VE_SCENEGRAPH_EXPORTS Dragger : public osg::MatrixTransform
 {
 public:
     ///
-    Dragger( Manipulator* parentManipulator );
+    Dragger(
+        const AxesFlag::Enum& axesFlag,
+        const TransformationType::Enum& transformationType,
+        Manipulator* const parentManipulator );
 
     ///Copy constructor using CopyOp to manage deep vs shallow copy
     Dragger(
@@ -106,6 +112,10 @@ public:
 
     ///
     ///\return
+    const AxesFlag::Enum GetAxesFlag() const;
+
+    ///
+    ///\return
     const TransformationType::Enum GetTransformationType() const;
 
     ///
@@ -136,15 +146,24 @@ protected:
 
     ///Will be pure virtual eventually
     ///
-    virtual void ComputeProjectedPoint(
+    virtual const bool ComputeProjectedPoint(
         const osgUtil::LineSegmentIntersector& deviceInput,
-        osg::Vec3d& projectedPoint ){;}// = 0;
-
-    ///
-    bool m_comboForm;
+        osg::Vec3d& projectedPoint ){return false;}// = 0;
 
     ///
     osg::Vec4& GetColor( ColorTag::Enum colorTag );
+
+    ///
+    const osg::Plane GetPlane() const;
+
+    ///
+    const osg::Vec3d GetUnitAxis( const bool& transformToWorld = false ) const;
+
+    ///
+    const bool IntersectsPlane(
+        const osg::Vec3d& startPosition,
+        const osg::Vec3d& direction,
+        double& intersectDistance );
 
     ///Will be pure virtual eventually
     ///
@@ -156,11 +175,13 @@ protected:
     virtual void SetupDefaultGeometry() = 0;
 
     ///
-    ///\param drawable
-    void SetDrawableToAlwaysCull( osg::Drawable& drawable );
+    const AxesFlag::Enum m_axesFlag;
 
     ///
-    TransformationType::Enum m_transformationType;
+    const TransformationType::Enum m_transformationType;
+
+    ///
+    bool m_comboForm;
 
     ///
     osg::Vec3d m_startProjectedPoint;
@@ -181,12 +202,9 @@ protected:
     osg::ref_ptr< osg::Uniform > m_color;
 
     ///
-    Manipulator* m_parentManipulator;
+    Manipulator* const m_parentManipulator;
 
-private:
-    ///
-    typedef std::map< ColorTag::Enum, osg::Vec4 > ColorMap;
-
+    // --- *** --- //
     ///
     class ForceCullCallback : public osg::Drawable::CullCallback
     {
@@ -216,12 +234,22 @@ private:
     };
 
     ///
+    ///\param drawable
+    void SetDrawableToAlwaysCull( osg::Drawable& drawable );
+    // --- *** --- //
+
+private:
+    ///
+    typedef std::map< ColorTag::Enum, osg::Vec4 > ColorMap;
+
+    ///
     void CreateDefaultShader();
 
     ///
     ColorMap m_colorMap;
 
 };
+
 } //end manipulator
 } //end scenegraph
 } //end xplorer

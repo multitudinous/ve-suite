@@ -44,17 +44,19 @@
 using namespace ves::xplorer::scenegraph::manipulator;
 
 ////////////////////////////////////////////////////////////////////////////////
-ScaleCompound::ScaleCompound( Manipulator* parentManipulator )
+ScaleCompound::ScaleCompound(
+    Manipulator* const parentManipulator )
     :
-    CompoundDragger( parentManipulator ),
-    m_boxExplodeVector( -0.2, 0.0, 0.0 ),
+    CompoundDragger(
+        AxesFlag::ALL,
+        TransformationType::SCALE_COMPOUND,
+        parentManipulator ),
+    m_boxExplodeVector( GetUnitAxis() * -0.2 ),
     m_xScaleAxis( NULL ),
     m_yScaleAxis( NULL ),
     m_zScaleAxis( NULL ),
     m_scaleUniform( NULL )
 {
-    m_transformationType = TransformationType::SCALE_COMPOUND;
-
     SetupDefaultGeometry();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -121,7 +123,7 @@ void ScaleCompound::ComboForm()
     //Call base method
     CompoundDragger::ComboForm();
 
-    osg::Vec3Array* lineVertices( NULL );
+    osg::Vec3dArray* lineVertices( NULL );
     osg::Box* box( NULL );
     for( size_t i = 0; i < getNumChildren(); ++i )
     {
@@ -153,7 +155,7 @@ void ScaleCompound::DefaultForm()
     //Call base method
     CompoundDragger::DefaultForm();
 
-    osg::Vec3Array* lineVertices( NULL );
+    osg::Vec3dArray* lineVertices( NULL );
     osg::Box* box( NULL );
     for( size_t i = 0; i < getNumChildren(); ++i )
     {
@@ -178,39 +180,23 @@ void ScaleCompound::DefaultForm()
 void ScaleCompound::SetupDefaultGeometry()
 {
     //Create translate x-axis dragger
-    m_xScaleAxis = new ScaleAxis( m_parentManipulator );
+    m_xScaleAxis = new ScaleAxis( AxesFlag::X, m_parentManipulator );
     m_xScaleAxis->SetColor(
         ColorTag::DEFAULT, osg::Vec4f( 1.0, 0.0, 0.0, 1.0 ), true );
 
     addChild( m_xScaleAxis.get() );
 
     //Create translate y-axis dragger
-    m_yScaleAxis = new ScaleAxis( m_parentManipulator );
+    m_yScaleAxis = new ScaleAxis( AxesFlag::Y, m_parentManipulator );
     m_yScaleAxis->SetColor(
         ColorTag::DEFAULT, osg::Vec4f( 0.0, 1.0, 0.0, 1.0 ), true );
-
-    //Rotate y-axis dragger appropriately
-    {
-        osg::Quat rotation;
-        rotation.makeRotate(
-            osg::Vec3d( 1.0, 0.0, 0.0 ), osg::Vec3d( 0.0, 1.0, 0.0 ) );
-        m_yScaleAxis->setMatrix( osg::Matrix( rotation ) );
-    }
 
     addChild( m_yScaleAxis.get() );
 
     //Create translate z-axis dragger
-    m_zScaleAxis = new ScaleAxis( m_parentManipulator );
+    m_zScaleAxis = new ScaleAxis( AxesFlag::Z, m_parentManipulator );
     m_zScaleAxis->SetColor(
         ColorTag::DEFAULT, osg::Vec4f( 0.0, 0.0, 1.0, 1.0 ), true );
-
-    //Rotate z-axis dragger appropriately
-    {
-        osg::Quat rotation;
-        rotation.makeRotate(
-            osg::Vec3d( 1.0, 0.0, 0.0 ), osg::Vec3d( 0.0, 0.0, 1.0 ) );
-        m_zScaleAxis->setMatrix( osg::Matrix( rotation ) );
-    }
 
     addChild( m_zScaleAxis.get() );
 

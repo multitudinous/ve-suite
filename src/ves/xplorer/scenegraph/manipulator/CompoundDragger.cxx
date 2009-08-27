@@ -41,9 +41,12 @@
 using namespace ves::xplorer::scenegraph::manipulator;
 
 ////////////////////////////////////////////////////////////////////////////////
-CompoundDragger::CompoundDragger( Manipulator* parentManipulator )
+CompoundDragger::CompoundDragger(
+    const AxesFlag::Enum& axesFlag,
+    const TransformationType::Enum& transformationType,
+    Manipulator* const parentManipulator )
     :
-    Dragger( parentManipulator )
+    Dragger( axesFlag, transformationType, parentManipulator )
 {
     ;
 }

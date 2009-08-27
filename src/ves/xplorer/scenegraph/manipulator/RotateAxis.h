@@ -63,7 +63,9 @@ class VE_SCENEGRAPH_EXPORTS RotateAxis : public Dragger
 {
 public:
     ///
-    RotateAxis( Manipulator* parentManipulator );
+    RotateAxis(
+        const AxesFlag::Enum& axesFlag,
+        Manipulator* const parentManipulator );
 
     ///Copy constructor using CopyOp to manage deep vs shallow copy
     RotateAxis(
@@ -98,13 +100,21 @@ public:
 
 protected:
     ///
+    virtual const bool ComputeProjectedPoint(
+        const osgUtil::LineSegmentIntersector& deviceInput,
+        osg::Vec3d& projectedPoint );
+
+    ///
     virtual ~RotateAxis();
+
+    ///
+    virtual void ManipFunction(
+        const osgUtil::LineSegmentIntersector& deviceInput );
 
     ///
     virtual void SetupDefaultGeometry();
 
 private:
-
 
 };
 } //end manipulator

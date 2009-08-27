@@ -73,7 +73,9 @@ class VE_SCENEGRAPH_EXPORTS TranslateAxis : public Dragger
 {
 public:
     ///
-    TranslateAxis( Manipulator* parentManipulator );
+    TranslateAxis(
+        const AxesFlag::Enum& axesFlag,
+        Manipulator* const parentManipulator );
 
     ///Copy constructor using CopyOp to manage deep vs shallow copy
     TranslateAxis(
@@ -123,7 +125,7 @@ public:
 
 protected:
     ///
-    virtual void ComputeProjectedPoint(
+    virtual const bool ComputeProjectedPoint(
         const osgUtil::LineSegmentIntersector& deviceInput,
         osg::Vec3d& projectedPoint );
 
@@ -139,13 +141,10 @@ protected:
 
 private:
     ///
-    osg::Vec3 m_lineExplodeVector;
+    osg::Vec3d m_lineExplodeVector;
 
     ///
-    osg::ref_ptr< osg::LineSegment > m_unitAxis;
-
-    ///
-    osg::ref_ptr< osg::Vec3Array > m_lineVertices;
+    osg::ref_ptr< osg::Vec3dArray > m_lineVertices;
 
     ///
     osg::ref_ptr< osg::Geometry > m_lineGeometry;

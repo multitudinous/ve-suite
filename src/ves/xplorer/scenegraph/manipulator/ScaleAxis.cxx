@@ -46,9 +46,14 @@
 using namespace ves::xplorer::scenegraph::manipulator;
 
 ////////////////////////////////////////////////////////////////////////////////
-ScaleAxis::ScaleAxis( Manipulator* parentManipulator )
+ScaleAxis::ScaleAxis(
+    const AxesFlag::Enum& axesFlag,
+    Manipulator* const parentManipulator )
     :
-    Dragger( parentManipulator ),
+    Dragger(
+        axesFlag,
+        TransformationType::SCALE_AXIS,
+        parentManipulator ),
     m_defaultAxisColor( 0.7, 0.7, 0.7, 1.0 ),
     m_axisColor( NULL ),
     m_lineVertices( NULL ),
@@ -56,7 +61,6 @@ ScaleAxis::ScaleAxis( Manipulator* parentManipulator )
     m_box( NULL ),
     m_shapeDrawable( NULL )
 {
-    m_transformationType = TransformationType::SCALE_AXIS;
     m_axisColor = new osg::Uniform( "color", m_defaultAxisColor );
 
     SetupDefaultGeometry();
@@ -103,7 +107,7 @@ osg::Object* ScaleAxis::clone( const osg::CopyOp& copyop ) const
 ////////////////////////////////////////////////////////////////////////////////
 osg::Object* ScaleAxis::cloneType() const
 {
-    return new ScaleAxis( m_parentManipulator );
+    return new ScaleAxis( m_axesFlag, m_parentManipulator );
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool ScaleAxis::isSameKindAs( const osg::Object* obj ) const
@@ -130,7 +134,7 @@ osg::Box* const ScaleAxis::GetBox() const
     return m_box.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
-osg::Vec3Array* const ScaleAxis::GetLineVertices() const
+osg::Vec3dArray* const ScaleAxis::GetLineVertices() const
 {
     return m_lineVertices.get();
 }
@@ -141,14 +145,15 @@ void ScaleAxis::SetupDefaultGeometry()
     osg::ref_ptr< osg::Geode > geode = new osg::Geode();
 
     //The unit axis
-    m_lineVertices = new osg::Vec3Array();
+    const osg::Vec3d unitAxis = GetUnitAxis();
+    m_lineVertices = new osg::Vec3dArray;
     m_lineVertices->resize( 2 );
-    (*m_lineVertices)[ 0 ] = osg::Vec3( 0.0, 0.0, 0.0 );
-    (*m_lineVertices)[ 1 ] = osg::Vec3( 1.0, 0.0, 0.0 );
+    (*m_lineVertices)[ 0 ] = osg::Vec3d( 0.0, 0.0, 0.0 );
+    (*m_lineVertices)[ 1 ] = unitAxis;
 
     //Rotation for boxes
     osg::Quat rotation;
-    rotation.makeRotate( osg::Vec3( 0.0, 0.0, 1.0 ), (*m_lineVertices)[ 1 ] );
+    rotation.makeRotate( osg::Vec3d( 0.0, 0.0, 1.0 ), unitAxis );
 
     //Create a positive line
     {
@@ -191,8 +196,9 @@ void ScaleAxis::SetupDefaultGeometry()
 
     //Create a positive box
     {
-        osg::Vec3 BOX_CENTER( BOX_WIDTH * 0.5, 0.0, 0.0 );
-        (*m_lineVertices)[ 1 ].x() -= BOX_WIDTH;
+        osg::Vec3d BOX_CENTER = unitAxis * BOX_WIDTH;
+        (*m_lineVertices)[ 1 ] -= BOX_CENTER;
+        BOX_CENTER *= 0.5;
         m_box = new osg::Box( (*m_lineVertices)[ 1 ] + BOX_CENTER, BOX_WIDTH );
         m_box->setRotation( rotation );
 
@@ -217,8 +223,9 @@ void ScaleAxis::SetupDefaultGeometry()
     {
         osg::ref_ptr< osg::Cylinder > cylinder =
             new osg::Cylinder(
-                (*m_lineVertices)[ 1 ] * 0.5, CYLINDER_RADIUS,
-                (*m_lineVertices)[ 1 ].x() );
+                (*m_lineVertices)[ 1 ] * 0.5,
+                CYLINDER_RADIUS,
+                (*m_lineVertices)[ 1 ].length() );
         cylinder->setRotation( rotation );
         osg::ref_ptr< osg::ShapeDrawable > shapeDrawable =
             new osg::ShapeDrawable( cylinder.get() );

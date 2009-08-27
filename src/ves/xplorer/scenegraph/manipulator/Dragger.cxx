@@ -42,14 +42,20 @@
 #include <osg/AutoTransform>
 
 #include <osgUtil/CullVisitor>
+#include <osgUtil/LineSegmentIntersector>
 
 using namespace ves::xplorer::scenegraph::manipulator;
 namespace vxs = ves::xplorer::scenegraph;
 
 ////////////////////////////////////////////////////////////////////////////////
-Dragger::Dragger( Manipulator* parentManipulator )
+Dragger::Dragger(
+    const AxesFlag::Enum& axesFlag,
+    const TransformationType::Enum& transformationType,
+    Manipulator* const parentManipulator )
     :
     osg::MatrixTransform(),
+    m_axesFlag( axesFlag ),
+    m_transformationType( transformationType ),
     m_comboForm( false ),
     m_color( NULL ),
     m_parentManipulator( parentManipulator )
@@ -68,6 +74,8 @@ Dragger::Dragger(
     const Dragger& dragger, const osg::CopyOp& copyop )
     :
     osg::MatrixTransform( dragger, copyop ),
+    m_axesFlag( dragger.m_axesFlag ),
+    m_transformationType( dragger.m_transformationType ),
     m_comboForm( dragger.m_comboForm ),
     m_colorMap( dragger.m_colorMap ),
     m_localToWorld( dragger.m_localToWorld ),
@@ -131,6 +139,11 @@ Dragger* Dragger::Focus( osg::NodePath::iterator& npItr )
 
     --npItr;
     return NULL;
+}
+////////////////////////////////////////////////////////////////////////////////
+const AxesFlag::Enum Dragger::GetAxesFlag() const
+{
+    return m_axesFlag;
 }
 ////////////////////////////////////////////////////////////////////////////////
 const TransformationType::Enum Dragger::GetTransformationType() const
@@ -222,13 +235,6 @@ Dragger* Dragger::Release( osg::NodePath::iterator& npItr )
     return NULL;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Dragger::SetDrawableToAlwaysCull( osg::Drawable& drawable )
-{
-    osg::ref_ptr< Dragger::ForceCullCallback > forceCullCallback =
-        new Dragger::ForceCullCallback();
-    drawable.setCullCallback( forceCullCallback.get() );
-}
-////////////////////////////////////////////////////////////////////////////////
 void Dragger::CreateDefaultShader()
 {
     //Create the shader used to render the dragger
@@ -267,6 +273,126 @@ osg::Vec4& Dragger::GetColor( ColorTag::Enum colorTag )
     */
 
     return itr->second;
+}
+////////////////////////////////////////////////////////////////////////////////
+const osg::Plane Dragger::GetPlane() const
+{
+    //The unit plane
+    //| i   j   k  |
+    //| Ax  Ay  Az |
+    //| Bx  By  Bz |
+    //A x B = ( AyBz - ByAz )i + ( BxAz - AxBz )j + ( AxBy - BxAy )k
+    //P1 = ( 0, 0, 0 ) : P2 = ( 1, 0, 0 ) : P3 = ( 0, 0, 1 )
+    //N = P1P2 x P1P3 = ( 1, 0, 0 ) x ( 0, 0, 1 ) = ( 0, -1, 0 )
+    //-y + d = 0 : d = 0
+
+    osg::Plane plane;
+    switch( m_axesFlag )
+    {
+        case AxesFlag::X:
+        case AxesFlag::YZ:
+        {
+            plane.set( osg::Vec3d( 1.0, 0.0, 0.0 ), 0.0 );
+
+            break;
+        }
+
+        case AxesFlag::Y:
+        case AxesFlag::XZ:
+        {
+            plane.set( osg::Vec3d( 0.0, 1.0, 0.0 ), 0.0 );
+
+            break;
+        }
+
+        case AxesFlag::Z:
+        case AxesFlag::XY:
+        {
+            plane.set( osg::Vec3d( 0.0, 0.0, 1.0 ), 0.0 );
+
+            break;
+        }
+    }
+
+    /*
+    //plane = ( mVectorSpace == VectorSpace.Local )
+    ? (Plane.Transform(p, Matrix.CreateFromQuaternion(mTransform.Rotation)
+    * Matrix.CreateTranslation(mTransform.Translation)))
+    : (Plane.Transform(p, Matrix.CreateTranslation(mTransform.Translation)));
+
+    if( mVectorSpace == VectorSpace.Local )
+    {
+
+    }
+    else
+    {
+
+    }
+    */
+
+    plane.transformProvidingInverse( m_worldToLocal );
+
+    return plane;
+}
+////////////////////////////////////////////////////////////////////////////////
+const osg::Vec3d Dragger::GetUnitAxis( const bool& transformToWorld ) const
+{
+    osg::Vec3d zero( 0.0, 0.0, 0.0 );
+    osg::Vec3d unitAxis = zero;
+    if( ( m_axesFlag & AxesFlag::X ) == AxesFlag::X )
+    {
+        unitAxis.set( 1.0, 0.0, 0.0 );
+    }
+    if( ( m_axesFlag & AxesFlag::Y ) == AxesFlag::Y )
+    {
+        unitAxis.set( 0.0, 1.0, 0.0 );
+    }
+    if( ( m_axesFlag & AxesFlag::Z ) == AxesFlag::Z )
+    {
+        unitAxis.set( 0.0, 0.0, 1.0 );
+    }
+
+    if( unitAxis == zero )
+    {
+        //Error output
+    }
+
+    if( transformToWorld )
+    {
+        unitAxis = unitAxis * m_localToWorld;
+    }
+
+    return unitAxis;
+}
+////////////////////////////////////////////////////////////////////////////////
+const bool Dragger::IntersectsPlane(
+    const osg::Vec3d& startPosition,
+    const osg::Vec3d& direction,
+    double& intersectDistance )
+{
+    double error = -1E-05;
+
+    osg::Plane plane = GetPlane();
+
+    double num2 = plane.dotProductNormal( direction );
+    if( fabs( num2 ) < error )
+    {
+        return false;
+    }
+
+    double num3 = plane.dotProductNormal( startPosition );
+    intersectDistance = ( -plane[ 3 ] - num3 ) / num2;
+    if( intersectDistance < 0.0 )
+    {
+        if( intersectDistance < error )
+        {
+            return false;
+        }
+
+        intersectDistance = 0.0;
+    }
+
+    return true;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Dragger::SetColor( ColorTag::Enum colorTag, osg::Vec4 newColor, bool use )
@@ -322,5 +448,12 @@ bool Dragger::ForceCullCallback::cull(
     osg::RenderInfo* renderInfo ) const
 {
     return true;
+}
+////////////////////////////////////////////////////////////////////////////////
+void Dragger::SetDrawableToAlwaysCull( osg::Drawable& drawable )
+{
+    osg::ref_ptr< ForceCullCallback > forceCullCallback =
+        new ForceCullCallback();
+    drawable.setCullCallback( forceCullCallback.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////

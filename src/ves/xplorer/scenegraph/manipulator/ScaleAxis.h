@@ -70,7 +70,9 @@ class VE_SCENEGRAPH_EXPORTS ScaleAxis : public Dragger
 {
 public:
     ///
-    ScaleAxis( Manipulator* parentManipulator );
+    ScaleAxis(
+        const AxesFlag::Enum& axesFlag,
+        Manipulator* const parentManipulator );
 
     ///Copy constructor using CopyOp to manage deep vs shallow copy
     ScaleAxis(
@@ -110,7 +112,7 @@ public:
     osg::Box* const GetBox() const;
 
     ///
-    osg::Vec3Array* const GetLineVertices() const;
+    osg::Vec3dArray* const GetLineVertices() const;
 
     ///
     //virtual void UseColor( ColorTag::Enum colorTag );
@@ -130,7 +132,7 @@ private:
     osg::ref_ptr< osg::Uniform > m_axisColor;
 
     ///
-    osg::ref_ptr< osg::Vec3Array > m_lineVertices;
+    osg::ref_ptr< osg::Vec3dArray > m_lineVertices;
 
     ///
     osg::ref_ptr< osg::Geometry > m_lineGeometry;

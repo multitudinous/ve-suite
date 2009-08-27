@@ -46,12 +46,14 @@
 using namespace ves::xplorer::scenegraph::manipulator;
 
 ////////////////////////////////////////////////////////////////////////////////
-ScaleUniform::ScaleUniform( Manipulator* parentManipulator )
+ScaleUniform::ScaleUniform(
+    Manipulator* const parentManipulator )
     :
-    Dragger( parentManipulator )
+    Dragger(
+        AxesFlag::BILLBOARD,
+        TransformationType::SCALE_UNIFORM,
+        parentManipulator )
 {
-    m_transformationType = TransformationType::SCALE_UNIFORM;
-
     SetupDefaultGeometry();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -111,7 +113,7 @@ void ScaleUniform::SetupDefaultGeometry()
     //Create a box
     {
         osg::ref_ptr< osg::Box > box =
-            new osg::Box( osg::Vec3( 0.0, 0.0, 0.0 ), BOX_WIDTH );
+            new osg::Box( osg::Vec3d( 0.0, 0.0, 0.0 ), BOX_WIDTH );
 
         geode->addDrawable( new osg::ShapeDrawable( box.get() ) );
     }

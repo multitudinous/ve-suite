@@ -35,8 +35,6 @@
 #include <ves/xplorer/scenegraph/manipulator/TranslateAxis.h>
 #include <ves/xplorer/scenegraph/manipulator/Manipulator.h>
 
-#include <ves/xplorer/scenegraph/SceneManager.h>
-
 // --- OSG Includes --- //
 #include <osg/Hint>
 #include <osg/Geode>
@@ -45,6 +43,7 @@
 #include <osg/LineWidth>
 #include <osg/LineSegment>
 #include <osg/AutoTransform>
+#include <osg/PositionAttitudeTransform>
 
 #include <osgUtil/LineSegmentIntersector>
 
@@ -55,13 +54,15 @@ using namespace ves::xplorer::scenegraph::manipulator;
 namespace vxs = ves::xplorer::scenegraph;
 
 ////////////////////////////////////////////////////////////////////////////////
-TranslateAxis::TranslateAxis( Manipulator* parentManipulator )
+TranslateAxis::TranslateAxis(
+    const AxesFlag::Enum& axesFlag,
+    Manipulator* const parentManipulator )
     :
-    Dragger( parentManipulator ),
-    m_lineExplodeVector( TRANSLATE_PAN_RADIUS, 0.0, 0.0 ),
-    m_unitAxis(
-        new osg::LineSegment(
-            osg::Vec3d( 0.0, 0.0, 0.0 ), osg::Vec3d( 1.0, 0.0, 0.0 ) ) ),
+    Dragger(
+        axesFlag,
+        TransformationType::TRANSLATE_AXIS,
+        parentManipulator ),
+    m_lineExplodeVector( GetUnitAxis() * TRANSLATE_PAN_RADIUS ),
     m_lineVertices( NULL ),
     m_lineGeometry( NULL ),
     m_lineAndCylinderGeode( NULL ),
@@ -70,8 +71,6 @@ TranslateAxis::TranslateAxis( Manipulator* parentManipulator )
     m_coneDrawable( NULL ),
     m_cylinderDrawable( NULL )
 {
-    m_transformationType = TransformationType::TRANSLATE_AXIS;
-
     SetupDefaultGeometry();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -79,7 +78,6 @@ TranslateAxis::TranslateAxis(
     const TranslateAxis& translateAxis, const osg::CopyOp& copyop )
     :
     Dragger( translateAxis, copyop ),
-    m_unitAxis( translateAxis.m_unitAxis.get() ),
     m_lineVertices( translateAxis.m_lineVertices.get() ),
     m_lineGeometry( translateAxis.m_lineGeometry.get() ),
     m_lineAndCylinderGeode( translateAxis.m_lineAndCylinderGeode.get() ),
@@ -118,7 +116,7 @@ osg::Object* TranslateAxis::clone( const osg::CopyOp& copyop ) const
 ////////////////////////////////////////////////////////////////////////////////
 osg::Object* TranslateAxis::cloneType() const
 {
-    return new TranslateAxis( m_parentManipulator );
+    return new TranslateAxis( m_axesFlag, m_parentManipulator );
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool TranslateAxis::isSameKindAs( const osg::Object* obj ) const
@@ -189,17 +187,14 @@ void TranslateAxis::DirtyCone()
 }
 ////////////////////////////////////////////////////////////////////////////////
 //See http://softsurfer.com/Archive/algorithm_0106/algorithm_0106.htm
-void TranslateAxis::ComputeProjectedPoint(
+const bool TranslateAxis::ComputeProjectedPoint(
     const osgUtil::LineSegmentIntersector& deviceInput,
     osg::Vec3d& projectedPoint )
 {
-    //Transform the dragger axis to world space
-    osg::ref_ptr< osg::LineSegment > draggerAxis = new osg::LineSegment();
-    draggerAxis->mult( *m_unitAxis, m_localToWorld );
-
     //Get the start and end points for the dragger axis in world space
-    const osg::Vec3d& startDraggerAxis = draggerAxis->start();
-    const osg::Vec3d& endDraggerAxis = draggerAxis->end();
+    const osg::Vec3d startDraggerAxis =
+        m_localToWorld * osg::Vec3d( 0.0, 0.0, 0.0 );
+    const osg::Vec3d endDraggerAxis = m_localToWorld * GetUnitAxis();
 
     //Get the near and far points for the active device
     const osg::Vec3d& startDeviceInput = deviceInput.getStart();
@@ -226,6 +221,8 @@ void TranslateAxis::ComputeProjectedPoint(
 
     projectedPoint = startDraggerAxis + ( u * sc );
     //projectedPoint = projectedPoint * m_worldToLocal;
+
+    return true;
 }
 ////////////////////////////////////////////////////////////////////////////////
 osg::Geode* const TranslateAxis::GetLineAndCylinderGeode() const
@@ -246,7 +243,10 @@ void TranslateAxis::ManipFunction( const osgUtil::LineSegmentIntersector& device
 
     //Get the end projected point
     osg::Vec3d endProjectedPoint;
-    ComputeProjectedPoint( deviceInput, endProjectedPoint );
+    if( !ComputeProjectedPoint( deviceInput, endProjectedPoint ) )
+    {
+        return;
+    }
 
     //Calculate the delta transform
     osg::Vec3d deltaTranslation = endProjectedPoint - m_startProjectedPoint;
@@ -287,7 +287,7 @@ void TranslateAxis::ManipFunction( const osgUtil::LineSegmentIntersector& device
         }
         else if( pat = transform->asPositionAttitudeTransform() )
         {
-            const osg::Vec3& currentPosition = pat->getPosition();
+            const osg::Vec3d& currentPosition = pat->getPosition();
             osg::Vec3d newTranslation = currentPosition;
             newTranslation = newTranslation * localToWorld; 
             newTranslation += deltaTranslation;
@@ -313,14 +313,15 @@ void TranslateAxis::SetupDefaultGeometry()
     osg::ref_ptr< osg::Geode > coneGeode = new osg::Geode();
 
     //The unit axis
-    m_lineVertices = new osg::Vec3Array();
+    const osg::Vec3d unitAxis = GetUnitAxis();
+    m_lineVertices = new osg::Vec3dArray();
     m_lineVertices->resize( 2 );
-    (*m_lineVertices)[ 0 ] = osg::Vec3( 0.0, 0.0, 0.0 );
-    (*m_lineVertices)[ 1 ] = osg::Vec3( 1.0, 0.0, 0.0 );
+    (*m_lineVertices)[ 0 ] = osg::Vec3d( 0.0, 0.0, 0.0 );
+    (*m_lineVertices)[ 1 ] = unitAxis;
 
     //Rotation for cones and cylinders
     osg::Quat rotation;
-    rotation.makeRotate( osg::Vec3( 0.0, 0.0, 1.0 ), (*m_lineVertices)[ 1 ] );
+    rotation.makeRotate( osg::Vec3d( 0.0, 0.0, 1.0 ), unitAxis );
 
     //Create a positive line
     {
@@ -353,8 +354,9 @@ void TranslateAxis::SetupDefaultGeometry()
 
     //Create a positive cone
     {
-        osg::Vec3 CONE_CENTER( CONE_HEIGHT * 0.25, 0.0, 0.0 );
-        (*m_lineVertices)[ 1 ].x() -= CONE_HEIGHT;
+        osg::Vec3d CONE_CENTER = unitAxis * CONE_HEIGHT;
+        (*m_lineVertices)[ 1 ] -= CONE_CENTER;
+        CONE_CENTER *= 0.25;
         m_cone = new osg::Cone(
             (*m_lineVertices)[ 1 ] + CONE_CENTER, CONE_RADIUS, CONE_HEIGHT );
         m_cone->setRotation( rotation );
@@ -380,14 +382,14 @@ void TranslateAxis::SetupDefaultGeometry()
         m_cylinder = new osg::Cylinder(
             (*m_lineVertices)[ 1 ] * 0.5,
             CYLINDER_RADIUS,
-            (*m_lineVertices)[ 1 ].x() );
+            (*m_lineVertices)[ 1 ].length() );
         m_cylinder->setRotation( rotation );
         m_cylinderDrawable = new osg::ShapeDrawable( m_cylinder.get() );
 
         SetDrawableToAlwaysCull( *m_cylinderDrawable.get() );
         m_lineAndCylinderGeode->addDrawable( m_cylinderDrawable.get() );
     }
-
+    
     //Add line and invisible cylinder to this
     addChild( m_lineAndCylinderGeode.get() );
 

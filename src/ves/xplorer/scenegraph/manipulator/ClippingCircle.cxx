@@ -114,7 +114,7 @@ void ClippingCircle::SetupDefaultGeometry()
     //Create the clipping circle with line loops
     {
         osg::ref_ptr< osg::Geometry > geometry = new osg::Geometry();
-        osg::ref_ptr< osg::Vec3Array > vertices = new osg::Vec3Array();
+        osg::ref_ptr< osg::Vec3dArray > vertices = new osg::Vec3dArray();
         for( size_t i = 0; i < NUM_CIRCLE_SEGMENTS; ++i )
         {
             double rot( i * DELTA_SEGMENT_ANGLE );
@@ -124,7 +124,7 @@ void ClippingCircle::SetupDefaultGeometry()
             double x( CLIPPING_CIRCLE_RADIUS * cosVal );
             double z( CLIPPING_CIRCLE_RADIUS * sinVal );
 
-            vertices->push_back( osg::Vec3( x, 0.0, z ) );
+            vertices->push_back( osg::Vec3d( x, 0.0, z ) );
         }
 
         geometry->setVertexArray( vertices.get() );
@@ -156,9 +156,9 @@ void ClippingCircle::SetupDefaultGeometry()
     //Create a triangle fan to act as the invisible clipping circle
     {
         osg::ref_ptr< osg::Geometry > geometry = new osg::Geometry();
-        osg::ref_ptr< osg::Vec3Array > vertices = new osg::Vec3Array();
+        osg::ref_ptr< osg::Vec3dArray > vertices = new osg::Vec3dArray();
 
-        vertices->push_back( osg::Vec3( 0.0, 0.0, 0.0 ) );
+        vertices->push_back( osg::Vec3d( 0.0, 0.0, 0.0 ) );
         for( size_t i = 0; i <= NUM_CIRCLE_SEGMENTS; ++i )
         {
             double rot( i * DELTA_SEGMENT_ANGLE );
@@ -168,7 +168,7 @@ void ClippingCircle::SetupDefaultGeometry()
             double x( CLIPPING_CIRCLE_RADIUS * cosVal );
             double z( CLIPPING_CIRCLE_RADIUS * sinVal );
 
-            vertices->push_back( osg::Vec3( x, 0.0, z ) );
+            vertices->push_back( osg::Vec3d( x, 0.0, z ) );
         }
 
         geometry->setVertexArray( vertices.get() );
