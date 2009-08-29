@@ -72,15 +72,12 @@
 using namespace warrantytool;
 using namespace ves::open::xml;
 
-BEGIN_EVENT_TABLE( WarrantyToolUIDialog, wxDialog )
-END_EVENT_TABLE()
-
 ////////////////////////////////////////////////////////////////////////////////
 WarrantyToolUIDialog::WarrantyToolUIDialog()
     :
-    UIDialog(),
     mPartNumberEntry( 0 ),
-    mServiceList( 0 )
+    mServiceList( 0 ),
+    MachineInfoDlg( 0 )
 {
     ;
 }
@@ -90,26 +87,38 @@ WarrantyToolUIDialog::WarrantyToolUIDialog(
     int id, 
     ves::conductor::util::CORBAServiceList* service )
     :
-    UIDialog( parent, id, wxT( "WarrantyTool_UIDialog" ) ),
+    MachineInfoDlg( parent ),
     mPartNumberEntry( 0 ),
     mServiceList( service )
 {    
-    BuildGUI();
+    m_variableChoice01->Disable();
+    m_variableLogicOperator01->Disable();
+    m_textInput01->Disable();
+    m_logicOperator01->Disable();
+    m_variableChoice02->Disable();
+    m_variableLogicOperator02->Disable();
+    m_textInput02->Disable();
+    m_logicOperator02->Disable();
+    m_variableChoice03->Disable();
+    m_variableLogicOperator03->Disable();
+    m_textInput03->Disable();
+    
+    CenterOnParent();
 }
 ////////////////////////////////////////////////////////////////////////////////
 WarrantyToolUIDialog::~WarrantyToolUIDialog()
 {
-    Disconnect( GLOW_RESET, wxEVT_COMMAND_BUTTON_CLICKED,
+    /*Disconnect( GLOW_RESET, wxEVT_COMMAND_BUTTON_CLICKED,
             wxCommandEventHandler( WarrantyToolUIDialog::GetTextInput ) );
     Disconnect( GLOW_CLEAR, wxEVT_COMMAND_BUTTON_CLICKED,
             wxCommandEventHandler( WarrantyToolUIDialog::GetTextInput ) );
     Disconnect( GLOW_ADD, wxEVT_COMMAND_BUTTON_CLICKED,
             wxCommandEventHandler( WarrantyToolUIDialog::GetTextInput ) );
     Disconnect( OPEN_WARRANTY_FILE, wxEVT_COMMAND_BUTTON_CLICKED,
-               wxCommandEventHandler( WarrantyToolUIDialog::OpenWarrantyFile ) );
+               wxCommandEventHandler( WarrantyToolUIDialog::OpenWarrantyFile ) );*/
 }
 ////////////////////////////////////////////////////////////////////////////////
-void WarrantyToolUIDialog::BuildGUI()
+/*void WarrantyToolUIDialog::BuildGUI()
 {
     SetSizeHints( wxDefaultSize, wxDefaultSize );
     SetFont( wxFont(
@@ -219,7 +228,7 @@ void WarrantyToolUIDialog::BuildGUI()
     Layout();
     mainSizer->Fit( this );
     CenterOnParent();
-}
+}*/
 ////////////////////////////////////////////////////////////////////////////////
 void WarrantyToolUIDialog::SendCommandsToXplorer()
 {
@@ -398,18 +407,308 @@ void WarrantyToolUIDialog::ParseDataFile( const std::string& csvFilename )
         {
             parser >> sCol1;
             csvDataMap[ i ].push_back( sCol1 );
+            m_columnStrings.Add( wxString( csvDataMap[ i ].at( 0 ).c_str(), wxConvUTF8 ) );
         }
     }
     //iss.close();
     std::vector< std::string > prtnumbers = csvDataMap[ 2 ];
     mPartNumberDescriptions = csvDataMap[ 3 ];
     mLoadedPartNumbers = csvDataMap[ 2 ];
-    wxArrayString tempString;
+    //wxArrayString tempString;
 
     for( size_t i = 0; i < prtnumbers.size(); ++i )
     {
-        tempString.Add( wxString( prtnumbers.at( i ).c_str(), wxConvUTF8 ) );
+        m_partNumberStrings.Add( wxString( prtnumbers.at( i ).c_str(), wxConvUTF8 ) );
         //std::cout << prtnumbers.at( i ) << std::endl;
     }
-    mPartListCMB->Append( tempString );
 }
+////////////////////////////////////////////////////////////////////////////////
+void WarrantyToolUIDialog::OnDataLoad( wxFileDirPickerEvent& event )
+{
+	// TODO: Implement OnDataLoad
+    wxString fileName = event.GetPath();
+    if( !fileName.IsEmpty() )
+    {
+        wxFileName viewPtsFilename( fileName );
+        //viewPtsFilename.MakeRelativeTo( ::wxGetCwd(), wxPATH_NATIVE );
+        wxString relativeViewLocationsPath( wxString( "./", wxConvUTF8 ) + 
+                                           viewPtsFilename.GetFullPath() );
+        
+        DataValuePairPtr velFileName( new DataValuePair() );
+        velFileName->SetData( "View Locations file", 
+                             ConvertUnicode( relativeViewLocationsPath.c_str() ) );
+        
+        std::string csvFilename = 
+        ConvertUnicode( viewPtsFilename.GetFullPath().c_str() );
+        //Parse the csv file
+        ParseDataFile( csvFilename );
+        
+        //tell ves to load
+        ves::open::xml::DataValuePairSharedPtr cameraGeometryOnOffDVP(
+                                                                      new ves::open::xml::DataValuePair() );
+        cameraGeometryOnOffDVP->SetData( "WARRANTY_FILE", csvFilename );
+        ves::open::xml::CommandPtr command( new ves::open::xml::Command() ); 
+        command->AddDataValuePair( cameraGeometryOnOffDVP );
+        std::string mCommandName = "CAMERA_GEOMETRY_ON_OFF";
+        command->SetCommandName( mCommandName );
+        mServiceList->SendCommandStringToXplorer( command );
+        
+        //Populate all of the choice dialog boxes with the appropriate data
+        m_variableChoice00->Append( m_columnStrings );
+        m_variableChoice01->Append( m_columnStrings );
+        m_variableChoice02->Append( m_columnStrings );
+        m_variableChoice03->Append( m_columnStrings );
+        
+        m_manualPartSelectionChoice->Append( m_partNumberStrings );
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void WarrantyToolUIDialog::OnVariableAndLogicalChoice( wxCommandEvent& event )
+{
+    wxChoice* eventChoice = dynamic_cast< wxChoice* >( event.GetEventObject() );
+	// TODO: Implement OnVariableAndLogicalChoice
+
+    //When the user selects a logical operator
+    if( eventChoice == m_logicOperator00 )
+    {
+        //Turn on tools for 01
+        //if off update query command
+        if( m_logicOperator00->GetStringSelection() == wxString( "None", wxConvUTF8 ) )
+        {
+            m_variableChoice01->Disable();
+            m_variableLogicOperator01->Disable();
+            m_textInput01->Disable();
+            m_logicOperator01->Disable();
+            m_variableChoice02->Disable();
+            m_variableLogicOperator02->Disable();
+            m_textInput02->Disable();
+            m_logicOperator02->Disable();
+            m_variableChoice03->Disable();
+            m_variableLogicOperator03->Disable();
+            m_textInput03->Disable();
+        }
+        else
+        {
+            m_variableChoice01->Enable();
+            m_variableLogicOperator01->Enable();
+            m_textInput01->Enable();
+            m_logicOperator01->Enable();            
+        }
+    }
+    else if( eventChoice == m_logicOperator01 )
+    {
+        //Turn on tools for 02
+        //if off update query command
+        if( m_logicOperator01->GetStringSelection() == wxString( "None", wxConvUTF8 ) )
+        {
+            m_variableChoice02->Disable();
+            m_variableLogicOperator02->Disable();
+            m_textInput02->Disable();
+            m_logicOperator02->Disable();
+            m_variableChoice03->Disable();
+            m_variableLogicOperator03->Disable();
+            m_textInput03->Disable();
+        }
+        else
+        {
+            m_variableChoice02->Enable();
+            m_variableLogicOperator02->Enable();
+            m_textInput02->Enable();
+            m_logicOperator02->Enable();
+        }
+    }
+    else if( eventChoice == m_logicOperator02 )
+    {
+        //Turn on tools for 03
+        //if off update query command
+        if( m_logicOperator02->GetStringSelection() == wxString( "None", wxConvUTF8 ) )
+        {
+            m_variableChoice03->Disable();
+            m_variableLogicOperator03->Disable();
+            m_textInput03->Disable();
+        }
+        else
+        {
+            m_variableChoice03->Enable();
+            m_variableLogicOperator03->Enable();
+            m_textInput03->Enable();
+        }
+    }
+    
+    UpdateQueryDisplay();
+}
+////////////////////////////////////////////////////////////////////////////////
+void WarrantyToolUIDialog::OnCreateInputText( wxCommandEvent& event )
+{
+	// TODO: Implement OnCreateInputText
+    //Get the text from the user and update the query text display
+    UpdateQueryDisplay();
+}
+////////////////////////////////////////////////////////////////////////////////
+void WarrantyToolUIDialog::OnTextQueryEnter( wxCommandEvent& event )
+{
+	// TODO: Implement OnTextQueryEnter
+    //When the user types in their on text entry submit the query
+    SubmitQueryCommand();
+}
+////////////////////////////////////////////////////////////////////////////////
+void WarrantyToolUIDialog::OnPartSelection( wxCommandEvent& event )
+{
+	// TODO: Implement OnPartSelection
+    //When the user selects a part number submit it and update the associated 
+    //text entry box
+}
+////////////////////////////////////////////////////////////////////////////////
+void WarrantyToolUIDialog::OnPartNumberEntry( wxCommandEvent& event )
+{
+	// TODO: Implement OnPartNumberEntry
+    //When a user types in a part number to find submit it and go find it
+}
+////////////////////////////////////////////////////////////////////////////////
+void WarrantyToolUIDialog::OnQueryApply( wxCommandEvent& event )
+{
+	// TODO: Implement OnQueryApply
+    //Submit the command currently in the query text box
+    SubmitQueryCommand();    
+}
+////////////////////////////////////////////////////////////////////////////////
+void WarrantyToolUIDialog::OnDialogCancel( wxCommandEvent& event )
+{
+	// TODO: Implement OnDialogCancel
+    
+    //Do not do anything and close the dialog
+}
+////////////////////////////////////////////////////////////////////////////////
+void WarrantyToolUIDialog::OnQueryOK( wxCommandEvent& event )
+{
+	// TODO: Implement OnQueryOK
+    //Submit the command currently in the query text box and close the dialog
+    SubmitQueryCommand();
+}
+////////////////////////////////////////////////////////////////////////////////
+const std::string WarrantyToolUIDialog::GetTextFromChoice( wxChoice* variable,
+                                                     wxChoice* logicOperator, wxTextCtrl* textInput )
+{
+    //"SELECT * FROM Parts WHERE Claims > 10"
+    std::string variableString = ConvertUnicode( variable->GetStringSelection().c_str() );
+    
+    std::string logicString = ConvertUnicode( logicOperator->GetStringSelection().c_str() );
+    if( logicString == "Less Than" )
+    {
+        logicString = "<";
+    }
+    else if( logicString == "Greater Than" )
+    {
+        logicString = ">";
+    }
+    else if( logicString == "Equal" )
+    {
+        logicString = "==";
+    }
+    else if( logicString == "Not Equal" )
+    {
+        logicString = "!=";
+    }
+    
+    std::string inputString = ConvertUnicode( textInput->GetValue().c_str() );
+    
+    std::string queryCommand = variableString + " " + logicString + " " + inputString;
+    
+    return queryCommand;
+}
+////////////////////////////////////////////////////////////////////////////////
+const std::string WarrantyToolUIDialog::GetTextFromLogicOperator( wxChoice* logicOperator )
+{
+    std::string logicString = ConvertUnicode( logicOperator->GetStringSelection().c_str() );
+    if( logicString == "None" )
+    {
+        logicString = "";
+    }
+    else if( logicString == "And" )
+    {
+        logicString = "AND";
+    }
+    else if( logicString == "Or" )
+    {
+        logicString = "OR";
+    }
+    
+    return logicString;
+}
+////////////////////////////////////////////////////////////////////////////////
+void WarrantyToolUIDialog::SubmitQueryCommand()
+{
+    wxString queryText = m_queryTextCommandCtrl->GetValue();
+    if( queryText.IsEmpty() )
+    {
+        return;
+    }
+    std::string queryString = ConvertUnicode( queryText.c_str() );
+    
+    ves::open::xml::DataValuePairSharedPtr cameraGeometryOnOffDVP(
+                                                                  new ves::open::xml::DataValuePair() );
+    /*cameraGeometryOnOffDVP->SetData( "WARRANTY_FILE", csvFilename );
+    ves::open::xml::CommandPtr command( new ves::open::xml::Command() ); 
+    command->AddDataValuePair( cameraGeometryOnOffDVP );
+    std::string mCommandName = "CAMERA_GEOMETRY_ON_OFF";
+    command->SetCommandName( mCommandName );
+    mServiceList->SendCommandStringToXplorer( command );   */     
+}
+////////////////////////////////////////////////////////////////////////////////
+void WarrantyToolUIDialog::UpdateQueryDisplay()
+{
+    //Setup first variable
+    std::string queryCommand = "SELECT * FROM Parts WHERE ";
+    queryCommand += 
+    GetTextFromChoice( m_variableChoice00, m_variableLogicOperator00, 
+                      m_textInput00 );
+    
+    //Setup second variable
+    std::string logicOperator;
+    if( m_logicOperator00->IsEnabled() )
+    {
+        logicOperator = GetTextFromLogicOperator( m_logicOperator00 );
+    }
+    queryCommand = queryCommand + " " + logicOperator;
+    
+    if( m_variableChoice01->IsEnabled() )
+    {
+        queryCommand = queryCommand + " " +
+        GetTextFromChoice( m_variableChoice01, 
+                          m_variableLogicOperator01, m_textInput01 );
+    }
+    
+    //Setup third variable
+    logicOperator = "";
+    if( m_logicOperator01->IsEnabled() )
+    {
+        logicOperator = GetTextFromLogicOperator( m_logicOperator01 );
+    }
+    queryCommand = queryCommand + " " + logicOperator;
+    
+    if( m_variableChoice02->IsEnabled() )
+    {
+        queryCommand = queryCommand + " " + 
+        GetTextFromChoice( m_variableChoice02, 
+                          m_variableLogicOperator02, m_textInput02 );
+    }
+    
+    //Setup fourth variable
+    logicOperator = "";
+    if( m_logicOperator02->IsEnabled() )
+    {
+        logicOperator = GetTextFromLogicOperator( m_logicOperator02 );
+    }
+    queryCommand = queryCommand + " " + logicOperator;
+    
+    if( m_variableChoice03->IsEnabled() )
+    {
+        queryCommand = queryCommand + " " +
+        GetTextFromChoice( m_variableChoice03, 
+                          m_variableLogicOperator03, m_textInput03 );
+    }
+    
+    //The update the text display box
+    m_queryTextCommandCtrl->ChangeValue( wxString( queryCommand.c_str(), wxConvUTF8 ) );    
+}
+////////////////////////////////////////////////////////////////////////////////

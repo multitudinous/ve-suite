@@ -432,20 +432,20 @@ void WarrantyToolGP::RenderTextualDisplay( bool onOff )
 ////////////////////////////////////////////////////////////////////////////////
 void WarrantyToolGP::CreateDB()
 {
-	// register SQLite connector
-	Poco::Data::SQLite::Connector::registerConnector();
+    // register SQLite connector
+    Poco::Data::SQLite::Connector::registerConnector();
 	
-	// create a session
-	Session session("SQLite", "sample.db");
+    // create a session
+    Session session("SQLite", "sample.db");
     
-	// drop sample table, if it exists
-	session << "DROP TABLE IF EXISTS Parts", now;
+    // drop sample table, if it exists
+    session << "DROP TABLE IF EXISTS Parts", now;
 
-	// (re)create table
-	session << "CREATE TABLE Parts (Part_Number VARCHAR, Description VARCHAR, Claims INT, Claims_Cost VARCHAR, FPM DOUBLE, CCPM VARCHAR)", now;
+    // (re)create table
+    session << "CREATE TABLE Parts (Part_Number VARCHAR, Description VARCHAR, Claims INT, Claims_Cost VARCHAR, FPM DOUBLE, CCPM VARCHAR)", now;
 
-	// insert some rows
-	Assembly assem;
+    // insert some rows
+    Assembly assem;
 
     std::map< std::string, std::vector< std::pair< std::string, std::string > > >::iterator iter;
     for( iter = m_dataMap.begin(); iter != m_dataMap.end(); ++iter )

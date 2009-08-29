@@ -39,6 +39,8 @@
 
 #include <ves/conductor/util/DualSlider.h>
 
+#include "MachineInfoDlg.h"
+
 namespace ves
 {
 namespace conductor
@@ -65,7 +67,7 @@ class wxFixWidthImportCtrl;
 
 namespace warrantytool
 {
-class WarrantyToolUIDialog : public ves::conductor::UIDialog
+class WarrantyToolUIDialog : public MachineInfoDlg
 {
 public:
     WarrantyToolUIDialog();
@@ -111,8 +113,34 @@ private:
     ///Description of part numbers loaded from csv files
     std::vector< std::string > mPartNumberDescriptions;
     wxComboBox* mPartListCMB;
+private:
+    wxArrayString m_partNumberStrings;
+    wxArrayString m_columnStrings;
     
-    DECLARE_EVENT_TABLE()
+protected:
+	// Handlers for MachineInfoDlg events.
+	void OnDataLoad( wxFileDirPickerEvent& event );
+	void OnVariableAndLogicalChoice( wxCommandEvent& event );
+	void OnCreateInputText( wxCommandEvent& event );
+	void OnTextQueryEnter( wxCommandEvent& event );
+	void OnPartSelection( wxCommandEvent& event );
+	void OnPartNumberEntry( wxCommandEvent& event );
+	void OnQueryApply( wxCommandEvent& event );
+	void OnDialogCancel( wxCommandEvent& event );
+	void OnQueryOK( wxCommandEvent& event );
+    
+    const std::string GetTextFromChoice( wxChoice* variable,
+                                        wxChoice* logicOperator,
+                                        wxTextCtrl* textInput );
+    
+    const std::string GetTextFromLogicOperator( wxChoice* logicOperator );
+    
+    void SubmitQueryCommand();
+    
+    void UpdateQueryDisplay();
+    
+    
+    //DECLARE_EVENT_TABLE()
 };
 
 } //end warrantytool
