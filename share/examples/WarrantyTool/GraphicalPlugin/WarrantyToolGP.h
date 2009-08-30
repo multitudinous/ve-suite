@@ -36,6 +36,7 @@
 
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/plugin/PluginBase.h>
+#include <ves/open/xml/DataValuePairPtr.h>
 
 #include <Poco/Tuple.h>
 
@@ -72,6 +73,7 @@ public:
     virtual void InitializeNode( osg::Group* veworldDCS );
     virtual void PreFrameUpdate();
     virtual void SetCurrentCommand( ves::open::xml::CommandPtr command );
+    virtual void RemoveSelfFromSG();
 
 protected:
 
@@ -82,7 +84,8 @@ private:
     void StripCharacters( std::string& data, const std::string& character );
     void ParseDataFile( const std::string& csvFilename );
     void RenderTextualDisplay( bool onOff );
-
+    void CreateDBQuery( ves::open::xml::DataValuePairPtr dvp );
+    
     std::vector< std::string > mPartNumberList;
     ///PArt numbers loaded from the csv files
     std::vector< std::string > mLoadedPartNumbers;
@@ -95,7 +98,7 @@ private:
     std::map< std::string, std::vector< std::pair< std::string, std::string > > > m_dataMap;
     osg::ref_ptr< ves::xplorer::scenegraph::TextTexture > mModelText;
     ves::xplorer::device::KeyboardMouse* m_keyboard;
-    ves::xplorer::scenegraph::GroupedTextTextures* m_groupedTextTextures;
+    osg::ref_ptr< ves::xplorer::scenegraph::GroupedTextTextures > m_groupedTextTextures;
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > m_textTrans;
 
     typedef Poco::Tuple< std::string, std::string, int, std::string, double, std::string > Part;
@@ -103,7 +106,6 @@ private:
     
     // insert some rows
 	Assembly m_selectedAssembly;
-
 };
 
 CREATE_VES_XPLORER_PLUGIN_ENTRY_POINT( WarrantyToolGP )

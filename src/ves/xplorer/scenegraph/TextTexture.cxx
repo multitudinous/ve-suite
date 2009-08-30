@@ -167,6 +167,23 @@ void TextTexture::CreateTexturedQuad()
     quadGeometry->setColorArray( colorArray.get() );
     quadGeometry->setColorBinding( osg::Geometry::BIND_OVERALL );
 #endif
+    osg::ref_ptr< osg::StateSet > drawable_stateset =
+        quadGeometry->getOrCreateStateSet();
+    
+    osg::ref_ptr< osg::BlendFunc > bf = new osg::BlendFunc();
+    bf->setFunction( osg::BlendFunc::SRC_ALPHA, 
+                    osg::BlendFunc::ONE_MINUS_SRC_ALPHA );
+    drawable_stateset->setMode( GL_BLEND, 
+        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+    drawable_stateset->setAttributeAndModes( bf.get(), 
+        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+    drawable_stateset->
+    setRenderBinDetails( 22, std::string( "DepthSortedBin" ) );
+    drawable_stateset->setNestRenderBins( false );
+    drawable_stateset->
+        setAttributeAndModes( new osg::Depth( osg::Depth::ALWAYS ),
+        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+    
 
     //Set the stateset for the quad
     osg::Geode* texttureGeode = new osg::Geode();
@@ -180,31 +197,11 @@ void TextTexture::CreateTexturedQuad()
     stateset->setTextureAttributeAndModes(
           0, _texture.get(), osg::StateAttribute::ON );
 #endif
-
-    osg::ref_ptr< osg::BlendFunc > bf = new osg::BlendFunc();
-    bf->setFunction( osg::BlendFunc::SRC_ALPHA, 
-                    osg::BlendFunc::ONE_MINUS_SRC_ALPHA );
-    stateset->setMode( GL_BLEND, 
-        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
-    stateset->setAttributeAndModes( bf.get(), 
-        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
     
     addChild( texttureGeode );
-    
-    stateset->
-        setRenderBinDetails( 22, std::string( "DepthSortedBin" ) );
-    stateset->setNestRenderBins( false );
+
     getOrCreateStateSet()->addUniform(
         new osg::Uniform( "glowColor", osg::Vec4( 0.0, 0.0, 0.0, 1.0) ) );
-
-    //getOrCreateStateSet()
-    stateset->setAttributeAndModes(
-        new osg::Depth( osg::Depth::ALWAYS ),
-        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
-
-    //osg::ref_ptr< osg::Shader > fragmentShader = new osg::Shader();
-    //fragmentShader->setType( osg::Shader::FRAGMENT );
-    //ragmentShader->setShaderSource( fragmentSource );
     
     std::string shaderName = osgDB::findDataFile( "opacity.fs" );
     osg::ref_ptr< osg::Shader > fragShader = 
@@ -212,9 +209,7 @@ void TextTexture::CreateTexturedQuad()
     
     osg::ref_ptr< osg::Program > program = new osg::Program();
     program->addShader( fragShader.get() );
-    
-    //osg::ref_ptr< osg::StateSet > geodeStateset = 
-    //    texttureGeode->getOrCreateStateSet();
+
     stateset->setAttributeAndModes( program.get(),
         osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
     
@@ -222,10 +217,6 @@ void TextTexture::CreateTexturedQuad()
         new osg::Uniform( "opacityVal", 0.85f ) );
 
     stateset->addUniform( new osg::Uniform( "tex", 0 ) );
-
-    //geodeStateset->addUniform( new osg::Uniform( "tex", 1 ) );
-    
-    //getOrCreateStateSet()->setNestRenderBins( true );  
 }
 ////////////////////////////////////////////////////////////////////////////////
 void TextTexture::CreateText()
@@ -254,24 +245,21 @@ void TextTexture::CreateText()
     {
         osg::Geode* titleTextGeode = new osg::Geode();
         titleTextGeode->addDrawable( m_titleText.get() );
+
+        titleTextGeode->getOrCreateStateSet()->setMode( GL_LIGHTING, osg::StateAttribute::OFF );    
         
-        osg::ref_ptr< osg::StateSet > stateset =
-        titleTextGeode->getOrCreateStateSet();
-        stateset->setMode( GL_LIGHTING, osg::StateAttribute::OFF );    
-        
+        osg::ref_ptr< osg::StateSet > drawable_stateset = 
+            m_titleText->getOrCreateStateSet();
         osg::ref_ptr< osg::BlendFunc > bf = new osg::BlendFunc();
         bf->setFunction( osg::BlendFunc::SRC_ALPHA, 
-                        osg::BlendFunc::ONE_MINUS_SRC_ALPHA );
-        stateset->setMode( GL_BLEND, 
-                          osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
-        stateset->setAttributeAndModes( bf.get(), 
-                                       osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+            osg::BlendFunc::ONE_MINUS_SRC_ALPHA );
+        drawable_stateset->setMode( GL_BLEND, 
+            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+        drawable_stateset->setAttributeAndModes( bf.get(), 
+            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
         
-        stateset->setRenderBinDetails( 23, std::string( "DepthSortedBin" ) );
-        stateset->setNestRenderBins( false );
-        //stateset->setAttributeAndModes(
-        //    new osg::Depth( osg::Depth::ALWAYS ),
-        //    osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+        drawable_stateset->setRenderBinDetails( 22, std::string( "DepthSortedBin" ) );
+        drawable_stateset->setNestRenderBins( false );
         
         std::string shaderName = osgDB::findDataFile( "null_glow_texture.fs" );
         osg::ref_ptr< osg::Shader > fragShader = 
@@ -280,14 +268,12 @@ void TextTexture::CreateText()
         osg::ref_ptr< osg::Program > program = new osg::Program();
         program->addShader( fragShader.get() );
         
-        //osg::ref_ptr< osg::StateSet > geodeStateset = 
-        //    textGeode->getOrCreateStateSet();
-        stateset->setAttributeAndModes( program.get(),
+        drawable_stateset->setAttributeAndModes( program.get(),
                                        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
         
         //stateset->addUniform( new osg::Uniform( "opacityVal", 0.70f ) );
         
-        stateset->addUniform( new osg::Uniform( "tex", 0 ) );
+        drawable_stateset->addUniform( new osg::Uniform( "tex", 0 ) );
         
         addChild( titleTextGeode );
     }
@@ -312,24 +298,20 @@ void TextTexture::CreateText()
     {
         osg::Geode* textGeode = new osg::Geode();
         textGeode->addDrawable( m_bodyText.get() );
-        
-        osg::ref_ptr< osg::StateSet > stateset =
-        textGeode->getOrCreateStateSet();
-        stateset->setMode( GL_LIGHTING, osg::StateAttribute::OFF );    
-        
+
+        textGeode->getOrCreateStateSet()->setMode( GL_LIGHTING, osg::StateAttribute::OFF );    
+        osg::ref_ptr< osg::StateSet > drawable_stateset = m_titleText->getOrCreateStateSet();
+
         osg::ref_ptr< osg::BlendFunc > bf = new osg::BlendFunc();
         bf->setFunction( osg::BlendFunc::SRC_ALPHA, 
                         osg::BlendFunc::ONE_MINUS_SRC_ALPHA );
-        stateset->setMode( GL_BLEND, 
+        drawable_stateset->setMode( GL_BLEND, 
                           osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
-        stateset->setAttributeAndModes( bf.get(), 
+        drawable_stateset->setAttributeAndModes( bf.get(), 
                                        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
         
-        stateset->setRenderBinDetails( 23, std::string( "DepthSortedBin" ) );
-        stateset->setNestRenderBins( false );
-        //stateset->setAttributeAndModes(
-        //    new osg::Depth( osg::Depth::ALWAYS ),
-        //    osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+        drawable_stateset->setRenderBinDetails( 22, std::string( "DepthSortedBin" ) );
+        drawable_stateset->setNestRenderBins( false );
         
         std::string shaderName = osgDB::findDataFile( "null_glow_texture.fs" );
         osg::ref_ptr< osg::Shader > fragShader = 
@@ -337,15 +319,13 @@ void TextTexture::CreateText()
         
         osg::ref_ptr< osg::Program > program = new osg::Program();
         program->addShader( fragShader.get() );
-        
-        //osg::ref_ptr< osg::StateSet > geodeStateset = 
-        //    textGeode->getOrCreateStateSet();
-        stateset->setAttributeAndModes( program.get(),
+
+        drawable_stateset->setAttributeAndModes( program.get(),
                                        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
         
         //stateset->addUniform( new osg::Uniform( "opacityVal", 0.70f ) );
         
-        stateset->addUniform( new osg::Uniform( "tex", 0 ) );
+        drawable_stateset->addUniform( new osg::Uniform( "tex", 0 ) );
         
         addChild( textGeode );
     }

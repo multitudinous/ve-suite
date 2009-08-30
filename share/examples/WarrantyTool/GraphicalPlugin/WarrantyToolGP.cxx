@@ -58,6 +58,7 @@
 #include <ves/xplorer/device/KeyboardMouse.h>
 
 #include <osgUtil/LineSegmentIntersector>
+#include <osg/Depth>
 
 #include <sstream>
 #include <iostream>
@@ -93,12 +94,12 @@ m_groupedTextTextures( 0 )
     //Needs to match inherited UIPluginBase class name
     mObjectName = "WarrantyToolUI";
 
-    mEventHandlerMap[ "CAMERA_GEOMETRY_ON_OFF" ] = this;
+    mEventHandlerMap[ "WARRANTY_TOOL_PART_TOOLS" ] = this;
+    mEventHandlerMap[ "WARRANTY_TOOL_DB_TOOLS" ] = this;
 }
 ////////////////////////////////////////////////////////////////////////////////
 WarrantyToolGP::~WarrantyToolGP()
 {
-    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void WarrantyToolGP::InitializeNode(
@@ -163,8 +164,8 @@ void WarrantyToolGP::PreFrameUpdate()
             if( tempParent )
             {
                 std::string objectName = tempParent->getName();
-                std::cout << "name " << objectName << std::endl;
-                std::cout << "found " << objectName << std::endl;
+                //std::cout << "name " << objectName << std::endl;
+                //std::cout << "found " << objectName << std::endl;
                 //tempParent = objectHit;
                 foundMatch = true;
                 break;
@@ -220,53 +221,59 @@ void WarrantyToolGP::SetCurrentCommand( ves::open::xml::CommandPtr command )
     const std::string commandName = command->GetCommandName();
     ves::open::xml::DataValuePairPtr dvp = command->GetDataValuePair( 0 );
     //Before anything else remove the glow if there is glow
-    
-    if( dvp->GetDataName() == "RESET" )
+    if( commandName == "WARRANTY_TOOL_PART_TOOLS" )
     {
-        ves::xplorer::scenegraph::HighlightNodeByNameVisitor 
+        if( dvp->GetDataName() == "RESET" )
+        {
+            ves::xplorer::scenegraph::HighlightNodeByNameVisitor 
             highlight2( mDCS.get(), "", false );
-        //Make everything opaque
-        ves::xplorer::scenegraph::util::OpacityVisitor 
+            //Make everything opaque
+            ves::xplorer::scenegraph::util::OpacityVisitor 
             opVisitor( mDCS.get(), false, false, 1.0f );
-        mAddingParts = false;
-    }
-    else if( dvp->GetDataName() == "ADD" )
-    {
-        //Highlight the respective node
-        //Make a user specified part glow
-        if( !mAddingParts )
+            mAddingParts = false;
+        }
+        else if( dvp->GetDataName() == "ADD" )
+        {
+            //Highlight the respective node
+            //Make a user specified part glow
+            if( !mAddingParts )
+            {
+                ves::xplorer::scenegraph::util::OpacityVisitor 
+                opVisitor1( mDCS.get(), false, true, 0.3f );
+                mAddingParts = true;
+            }
+            //Highlight part
+            m_lastPartNumber = dvp->GetDataString();
+            ves::xplorer::scenegraph::HighlightNodeByNameVisitor 
+            highlight( mDCS.get(), m_lastPartNumber );
+            RenderTextualDisplay( true );
+        }
+        else if( dvp->GetDataName() == "CLEAR" )
         {
             ves::xplorer::scenegraph::util::OpacityVisitor 
-                opVisitor1( mDCS.get(), false, true, 0.3f );
-            mAddingParts = true;
-        }
-        //Highlight part
-        m_lastPartNumber = dvp->GetDataString();
-        ves::xplorer::scenegraph::HighlightNodeByNameVisitor 
-            highlight( mDCS.get(), m_lastPartNumber );
-        RenderTextualDisplay( true );
-    }
-    else if( dvp->GetDataName() == "CLEAR" )
-    {
-        ves::xplorer::scenegraph::util::OpacityVisitor 
             opVisitor1( mDCS.get(), false, true, 0.3f );
-
-        ves::xplorer::scenegraph::HighlightNodeByNameVisitor 
+            
+            ves::xplorer::scenegraph::HighlightNodeByNameVisitor 
             highlight2( mDCS.get(), "", false );
-    }
-    else if( dvp->GetDataName() == "WARRANTY_FILE" )
-    {
-        //std::vector< std::string > prts;
-        ParseDataFile( dvp->GetDataString() );
-        for( size_t i = 0; i < mLoadedPartNumbers.size(); ++i )
+        }
+        else if( dvp->GetDataName() == "WARRANTY_FILE" )
         {
-            ves::xplorer::scenegraph::util::FindChildWithNameVisitor 
-                childVisitor( mDCS.get(), mLoadedPartNumbers.at( i ), false );
-            if( childVisitor.FoundChild() )
+            //std::vector< std::string > prts;
+            ParseDataFile( dvp->GetDataString() );
+            for( size_t i = 0; i < mLoadedPartNumbers.size(); ++i )
             {
-                std::cout << "Found match for " << mLoadedPartNumbers.at( i ) << std::endl;
+                ves::xplorer::scenegraph::util::FindChildWithNameVisitor 
+                childVisitor( mDCS.get(), mLoadedPartNumbers.at( i ), false );
+                if( childVisitor.FoundChild() )
+                {
+                    std::cout << "Found match for " << mLoadedPartNumbers.at( i ) << std::endl;
+                }
             }
         }
+    }
+    else if( commandName == "WARRANTY_TOOL_DB_TOOLS" )
+    {
+        CreateDBQuery( dvp );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -352,7 +359,7 @@ void WarrantyToolGP::ParseDataFile( const std::string& csvFilename )
             continue;
         
         parser << sLine; // Feed the line to the parser
-        std::cout << sLine << std::endl;
+        //std::cout << sLine << std::endl;
         for( size_t i = 0; i < columnCount; ++i )
         {
             parser >> sCol1;
@@ -370,7 +377,7 @@ void WarrantyToolGP::ParseDataFile( const std::string& csvFilename )
         for( size_t j = 0; j < columnCount; ++j )
         {
             partData.push_back( std::pair< std::string, std::string >( csvDataMap[ j ].at( 0 ), csvDataMap[ j ].at( i ) ) );
-            std::cout << csvDataMap[ j ].at( 0 ) << " " <<  csvDataMap[ j ].at( i ) << std::endl;
+            //std::cout << csvDataMap[ j ].at( 0 ) << " " <<  csvDataMap[ j ].at( i ) << std::endl;
         }
         m_dataMap[ csvDataMap[ 2 ].at( i ) ] = partData;
     }
@@ -436,7 +443,7 @@ void WarrantyToolGP::CreateDB()
     Poco::Data::SQLite::Connector::registerConnector();
 	
     // create a session
-    Session session("SQLite", "sample.db");
+    Poco::Data::Session session("SQLite", "sample.db");
     
     // drop sample table, if it exists
     session << "DROP TABLE IF EXISTS Parts", now;
@@ -466,56 +473,9 @@ void WarrantyToolGP::CreateDB()
     }
     
     
-	Statement insert(session);
+	Statement insert( session );
 	insert << "INSERT INTO Parts VALUES(?, ?, ?, ?, ?, ?)",
     use(assem), now;
-	std::cout << "create table 3  " << std::endl;
-
-	// a simple query
-	//select << "SELECT Part_Number, Description, Claims FROM Parts",
-	//select << "SELECT Part_Number, Description, Claims FROM Parts WHERE Claims > 10 AND Claims_Cost > 1000",
-	Statement select(session);
-	select << "SELECT * FROM Parts WHERE Claims > 10",// AND FPM > 0.1",
-    into( m_selectedAssembly ),
-    now;
-    
-    //ves::xplorer::scenegraph::util::OpacityVisitor 
-    //    opVisitor1( mDCS.get(), false, true, 0.3f );
-    //mAddingParts = true;
-    
-    m_groupedTextTextures = 
-        new ves::xplorer::scenegraph::GroupedTextTextures();
-
-    for (Assembly::const_iterator it = m_selectedAssembly.begin(); it != m_selectedAssembly.end(); ++it)
-    {
-        std::cout
-            << "Part Number: " << it->get<0>() 
-            << ", Description: " << it->get<1>() 
-            << ", Claims: " << it->get<2>()
-            << ", FPM: " << it->get<4>() << std::endl;
-            
-        std::ostringstream tempTextData;
-        tempTextData
-            << "Part Number: " << it->get<0>() << "\n"
-            << "Description: " << it->get<1>() << "\n"
-            << "Claims: " << it->get<2>() << "\n"
-            << "FPM: " << it->get<4>();
-
-        ves::xplorer::scenegraph::TextTexture* tempText = new ves::xplorer::scenegraph::TextTexture();
-        //std::string tempKey = "test_" + it->get<0>(); 
-        //boost::lexical_cast<std::string>( std::distance( assem.begin(), it) );
-        std::string partText = tempTextData.str();
-        //std::cout << " here 1 " << partText << std::endl;
-        tempText->UpdateText( partText );
-        tempText->SetTitle( it->get<0>() );
-        m_groupedTextTextures->AddTextTexture( it->get<0>(), tempText );
-        
-        ves::xplorer::scenegraph::HighlightNodeByNameVisitor 
-            highlight( mDCS.get(), it->get<0>(), true, osg::Vec4( 0.57255, 0.34118, 1.0, 1.0 ) );
-    }
-    m_textTrans->addChild( m_groupedTextTextures );
-
-    Poco::Data::SQLite::Connector::unregisterConnector();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void WarrantyToolGP::CreateTextTextures()
@@ -539,3 +499,70 @@ void WarrantyToolGP::CreateTextTextures()
     //    mModelText->getParent( 0 ) )->setPosition( osg::Vec3d( 0, 0, 0 ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
+void WarrantyToolGP::CreateDBQuery( ves::open::xml::DataValuePairPtr dvp )
+{
+    // a simple query
+    std::string queryString = dvp->GetDataString();
+    m_selectedAssembly.clear();
+    
+    ves::xplorer::scenegraph::HighlightNodeByNameVisitor 
+        highlight2( mDCS.get(), "", false );
+
+    //select << "SELECT Part_Number, Description, Claims FROM Parts",
+    //select << "SELECT Part_Number, Description, Claims FROM Parts WHERE Claims > 10 AND Claims_Cost > 1000",
+    Poco::Data::Session session("SQLite", "sample.db");
+    Statement select( session );
+    select << queryString.c_str(),
+    into( m_selectedAssembly ),
+    now;
+
+    //ves::xplorer::scenegraph::util::OpacityVisitor 
+    //    opVisitor1( mDCS.get(), false, true, 0.3f );
+    //mAddingParts = true;
+    bool removed = m_textTrans->removeChild( m_groupedTextTextures.get() );
+
+    m_groupedTextTextures = 
+        new ves::xplorer::scenegraph::GroupedTextTextures();
+
+    for( Assembly::const_iterator it = m_selectedAssembly.begin(); it != m_selectedAssembly.end(); ++it )
+    {
+        std::cout
+            << "Part Number: " << it->get<0>() 
+            << ", Description: " << it->get<1>() 
+            << ", Claims: " << it->get<2>()
+            << ", FPM: " << it->get<4>() << std::endl;
+        
+        std::ostringstream tempTextData;
+        tempTextData
+            << "Part Number: " << it->get<0>() << "\n"
+            << "Description: " << it->get<1>() << "\n"
+            << "Claims: " << it->get<2>() << "\n"
+            << "FPM: " << it->get<4>();
+        
+        ves::xplorer::scenegraph::TextTexture* tempText = 
+            new ves::xplorer::scenegraph::TextTexture();
+        //std::string tempKey = "test_" + it->get<0>(); 
+        //boost::lexical_cast<std::string>( std::distance( assem.begin(), it) );
+        std::string partText = tempTextData.str();
+        //std::cout << " here 1 " << partText << std::endl;
+        tempText->UpdateText( partText );
+        tempText->SetTitle( it->get<0>() );
+        m_groupedTextTextures->AddTextTexture( it->get<0>(), tempText );
+        
+        ves::xplorer::scenegraph::HighlightNodeByNameVisitor 
+            highlight( mDCS.get(), it->get<0>(), true, osg::Vec4( 0.57255, 0.34118, 1.0, 1.0 ) );
+    }
+    m_textTrans->addChild( m_groupedTextTextures.get() );
+    //m_textTrans->getOrCreateStateSet()->setAttributeAndModes(
+    //                               new osg::Depth( osg::Depth::ALWAYS ),
+    //                               osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+    
+    //ves::xplorer::scenegraph::util::OpacityVisitor 
+    //    opVisitor1( m_textTrans.get(), false, true, 0.3f );
+}
+////////////////////////////////////////////////////////////////////////////////
+void WarrantyToolGP::RemoveSelfFromSG()
+{
+    PluginBase::RemoveSelfFromSG();
+    Poco::Data::SQLite::Connector::unregisterConnector();
+}

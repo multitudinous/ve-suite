@@ -321,11 +321,13 @@ void OpacityVisitor::SetupBlendingForStateSet( osg::StateSet* stateset )
 
     if( transparent )
     {
+        //std::cout << " setting transparent settings " << std::endl;
         stateset->setRenderBinDetails( 10, std::string( "DepthSortedBin" ) );
         stateset->setNestRenderBins( false );
     }   
     else
     {
+        //std::cout << " setting opaque settings " << std::endl;
         stateset->setRenderBinDetails( 0, std::string( "RenderBin" ) );
         stateset->setNestRenderBins( true );
     }
