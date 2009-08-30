@@ -294,8 +294,8 @@ void WarrantyToolGP::ParseDataFile( const std::string& csvFilename )
 {
     std::string sLine;
     std::string sCol1, sCol3, sCol4;
-    double fCol2;
-    int iCol5, iCol6;
+    //double fCol2;
+    //int iCol5, iCol6;
     
     CSVParser parser;
     
@@ -346,6 +346,7 @@ void WarrantyToolGP::ParseDataFile( const std::string& csvFilename )
             headerTemp << "N/A " << columnCount;
             sCol1 = headerTemp.str();
         }
+        ReplaceSpacesCharacters( sCol1 );
         data.push_back( sCol1 );
         //std::vector< std::string > data;
         csvDataMap[ columnCount ] = data;
@@ -363,6 +364,7 @@ void WarrantyToolGP::ParseDataFile( const std::string& csvFilename )
         for( size_t i = 0; i < columnCount; ++i )
         {
             parser >> sCol1;
+            StripDollarCharacters( sCol1 );
             csvDataMap[ i ].push_back( sCol1 );
         }
     }
@@ -449,7 +451,7 @@ void WarrantyToolGP::CreateDB()
     session << "DROP TABLE IF EXISTS Parts", now;
 
     // (re)create table
-    session << "CREATE TABLE Parts (Part_Number VARCHAR, Description VARCHAR, Claims INT, Claims_Cost VARCHAR, FPM DOUBLE, CCPM VARCHAR)", now;
+    session << "CREATE TABLE Parts (Part_Number VARCHAR, Description VARCHAR, Claims INT, Claim_Cost DOUBLE, FPM DOUBLE, CCPM DOUBLE, By VARCHAR)", now;
 
     // insert some rows
     Assembly assem;
@@ -465,16 +467,17 @@ void WarrantyToolGP::CreateDB()
             tempPart.set< 0 >( tempData.at( 2 ).second );
             tempPart.set< 1 >( tempData.at( 3 ).second );
             tempPart.set< 2 >( boost::lexical_cast<int>( tempData.at( 4 ).second ) );
-            tempPart.set< 3 >( tempData.at( 5 ).second );
+            tempPart.set< 3 >( boost::lexical_cast<double>( tempData.at( 5 ).second ) );
             tempPart.set< 4 >( boost::lexical_cast<double>( tempData.at( 6 ).second ) );
-            tempPart.set< 5 >( tempData.at( 7 ).second );
+            tempPart.set< 5 >( boost::lexical_cast<double>( tempData.at( 7 ).second ) );
+            tempPart.set< 6 >( tempData.at( 8 ).second );
         }
         assem.push_back(tempPart);
     }
     
     
 	Statement insert( session );
-	insert << "INSERT INTO Parts VALUES(?, ?, ?, ?, ?, ?)",
+	insert << "INSERT INTO Parts VALUES(?, ?, ?, ?, ?, ?, ?)",
     use(assem), now;
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -510,11 +513,18 @@ void WarrantyToolGP::CreateDBQuery( ves::open::xml::DataValuePairPtr dvp )
 
     //select << "SELECT Part_Number, Description, Claims FROM Parts",
     //select << "SELECT Part_Number, Description, Claims FROM Parts WHERE Claims > 10 AND Claims_Cost > 1000",
-    Poco::Data::Session session("SQLite", "sample.db");
-    Statement select( session );
-    select << queryString.c_str(),
-    into( m_selectedAssembly ),
-    now;
+    try
+    {
+        Poco::Data::Session session("SQLite", "sample.db");
+        Statement select( session );
+        select << queryString.c_str(),
+        into( m_selectedAssembly ),
+        now;
+    }
+    catch( ... )
+    {
+        ;
+    }
 
     //ves::xplorer::scenegraph::util::OpacityVisitor 
     //    opVisitor1( mDCS.get(), false, true, 0.3f );
@@ -530,14 +540,20 @@ void WarrantyToolGP::CreateDBQuery( ves::open::xml::DataValuePairPtr dvp )
             << "Part Number: " << it->get<0>() 
             << ", Description: " << it->get<1>() 
             << ", Claims: " << it->get<2>()
-            << ", FPM: " << it->get<4>() << std::endl;
+            << ", Claim Cost: " << it->get<3>()
+            << ", FPM: " << it->get<4>() 
+            << ", CCPM: " << it->get<5>()
+            << ", By: " << it->get<6>() << std::endl;
         
         std::ostringstream tempTextData;
         tempTextData
             << "Part Number: " << it->get<0>() << "\n"
             << "Description: " << it->get<1>() << "\n"
             << "Claims: " << it->get<2>() << "\n"
-            << "FPM: " << it->get<4>();
+            << "Claim Cost: " << it->get<3>() << "\n"
+            << "FPM: " << it->get<4>() << "\n"
+            << "CCPM: " << it->get<5>() << "\n"
+            << "By: " << it->get<6>();
         
         ves::xplorer::scenegraph::TextTexture* tempText = 
             new ves::xplorer::scenegraph::TextTexture();
@@ -566,3 +582,47 @@ void WarrantyToolGP::RemoveSelfFromSG()
     PluginBase::RemoveSelfFromSG();
     Poco::Data::SQLite::Connector::unregisterConnector();
 }
+////////////////////////////////////////////////////////////////////////////////
+void WarrantyToolGP::StripDollarCharacters( std::string& data )
+{
+    char firstChar = data[ 0 ];
+    char dollarChar( '$' );
+    if( firstChar != dollarChar )
+    {
+        return;
+    }
+
+    for ( size_t index = 0; index < data.length(); )
+    {
+        index = data.find( '$', index );
+        if ( index != std::string::npos )
+        {
+            //data.replace( index, 1, "" );
+            data.erase( index, 1 );
+        }
+    }
+
+    for ( size_t index = 0; index < data.length(); )
+    {
+        index = data.find( ',', index );
+        if ( index != std::string::npos )
+        {
+            //data.replace( index, 1, "" );
+            data.erase( index, 1 );
+        }
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void WarrantyToolGP::ReplaceSpacesCharacters( std::string& data )
+{
+    for ( size_t index = 0; index < data.length(); )
+    {
+        index = data.find( ' ', index );
+        if ( index != std::string::npos )
+        {
+            data.replace( index, 1, "_" );
+            //data.erase( index, 1 );
+        }
+    }
+}
+////////////////////////////////////////////////////////////////////////////////

@@ -412,7 +412,9 @@ void WarrantyToolUIDialog::ParseDataFile( const std::string& csvFilename )
 
     for( size_t i = 0; i < columnCount; ++i )
     {
-        m_columnStrings.Add( wxString( csvDataMap[ i ].at( 0 ).c_str(), wxConvUTF8 ) );
+        wxString columnNames = wxString( csvDataMap[ i ].at( 0 ).c_str(), wxConvUTF8 );
+        columnNames.Replace( wxT(" "), wxT("_") );
+        m_columnStrings.Add( columnNames );
     }
 
     //iss.close();
@@ -580,8 +582,8 @@ void WarrantyToolUIDialog::OnQueryApply( wxCommandEvent& event )
 void WarrantyToolUIDialog::OnDialogCancel( wxCommandEvent& event )
 {
 	// TODO: Implement OnDialogCancel
-    
     //Do not do anything and close the dialog
+    Close();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void WarrantyToolUIDialog::OnQueryOK( wxCommandEvent& event )
@@ -589,6 +591,7 @@ void WarrantyToolUIDialog::OnQueryOK( wxCommandEvent& event )
 	// TODO: Implement OnQueryOK
     //Submit the command currently in the query text box and close the dialog
     SubmitQueryCommand();
+    Close();
 }
 ////////////////////////////////////////////////////////////////////////////////
 const std::string WarrantyToolUIDialog::GetTextFromChoice( wxChoice* variable,

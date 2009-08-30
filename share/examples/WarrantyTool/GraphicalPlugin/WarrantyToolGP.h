@@ -85,7 +85,9 @@ private:
     void ParseDataFile( const std::string& csvFilename );
     void RenderTextualDisplay( bool onOff );
     void CreateDBQuery( ves::open::xml::DataValuePairPtr dvp );
-    
+    void StripDollarCharacters( std::string& data );
+    void ReplaceSpacesCharacters( std::string& data );
+
     std::vector< std::string > mPartNumberList;
     ///PArt numbers loaded from the csv files
     std::vector< std::string > mLoadedPartNumbers;
@@ -101,7 +103,7 @@ private:
     osg::ref_ptr< ves::xplorer::scenegraph::GroupedTextTextures > m_groupedTextTextures;
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > m_textTrans;
 
-    typedef Poco::Tuple< std::string, std::string, int, std::string, double, std::string > Part;
+    typedef Poco::Tuple< std::string, std::string, int, double, double, double, std::string > Part;
 	typedef std::vector<Part> Assembly;
     
     // insert some rows
