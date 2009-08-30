@@ -57,6 +57,7 @@
 #include <osgBullet/DebugBullet.h>
 #include <osgBullet/ColladaUtils.h>
 #include <osgBullet/Utils.h>
+#include <osgBullet/RigidBody.h>
 
 #include <osg/io_utils>
 #include <osg/ComputeBoundsVisitor>
@@ -484,7 +485,14 @@ void PhysicsRigidBody::CustomShape( const BroadphaseNativeTypes shapeType, const
         parent->addChild( amt.get() );
         parent->removeChild( mOSGToBullet.get() );
     }
-    
+    const std::string dcsName = mOSGToBullet->getName();
+    if( dcsName.empty() )
+    {
+        amt->setName( "AMT_" + dcsName );
+    }
+    osg::ref_ptr< osgBullet::RigidBody > tempRB = new osgBullet::RigidBody( mRB );
+    amt->setUserData( tempRB.get() );
+
     mRB->setRestitution( mRestitution );
     mRB->setFriction( mFriction );
     

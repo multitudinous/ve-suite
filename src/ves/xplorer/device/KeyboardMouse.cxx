@@ -1794,6 +1794,19 @@ void KeyboardMouse::ProcessSelection()
     //Set the connection between the scene manipulator and the selected dcs
     vxsm::TransformManipulator* sceneManipulator =
         sceneManager->GetManipulatorManager()->GetSceneManipulator();
+    //Check and see if the selected node has an attached physics mesh
+    //osgBullet::AbsoulteModelTransform* tempAMT = 
+    //    dynamic_cast< osgBullet::AbsoulteModelTransform* >( 
+    //    newSelectedDCS->getParent( 0 ) );
+    //if( tempAMT )
+    //{
+    //    osgBullet::RigidBody* tempRB = 
+    //        dynamic_cast< osgBullet::RigidBody* >( tempAMT->getUserData() );
+    //    if( tempRB )
+    //    {
+    //        bool hasAPhysicsMesh = true;
+    //    }
+    //}
     sceneManipulator->PushBackAssociation( newSelectedDCS, true );
 
 
