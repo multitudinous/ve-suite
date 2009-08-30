@@ -33,7 +33,6 @@
 
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/manipulator/RotateAxis.h>
-#include <ves/xplorer/scenegraph/manipulator/Manipulator.h>
 
 // --- OSG Includes --- //
 #include <osg/Hint>
@@ -52,14 +51,9 @@
 using namespace ves::xplorer::scenegraph::manipulator;
 
 ////////////////////////////////////////////////////////////////////////////////
-RotateAxis::RotateAxis(
-    const AxesFlag::Enum& axesFlag,
-    Manipulator* const parentManipulator )
+RotateAxis::RotateAxis( const AxesFlag::Enum& axesFlag )
     :
-    Dragger(
-        axesFlag,
-        TransformationType::ROTATE_AXIS,
-        parentManipulator )
+    Dragger( axesFlag, TransformationType::ROTATE_AXIS )
 {
     SetupDefaultGeometry();
 }
@@ -99,7 +93,7 @@ osg::Object* RotateAxis::clone( const osg::CopyOp& copyop ) const
 ////////////////////////////////////////////////////////////////////////////////
 osg::Object* RotateAxis::cloneType() const
 {
-    return new RotateAxis( m_axesFlag, m_parentManipulator );
+    return new RotateAxis( m_axesFlag );
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool RotateAxis::isSameKindAs( const osg::Object* obj ) const
@@ -136,13 +130,14 @@ const bool RotateAxis::ComputeProjectedPoint(
     return true;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void RotateAxis::ManipFunction( const osgUtil::LineSegmentIntersector& deviceInput )
+Dragger* RotateAxis::Drag( const osgUtil::LineSegmentIntersector& deviceInput )
 {
-    osg::AutoTransform* autoTransform =
-        static_cast< osg::AutoTransform* >(
-            m_parentManipulator->getParent( 0 ) );
-    const osg::Vec3d& origin = autoTransform->getPosition();
+    //osg::AutoTransform* autoTransform =
+        //static_cast< osg::AutoTransform* >(
+            //m_parentManipulator->getParent( 0 ) );
+    //const osg::Vec3d& origin = autoTransform->getPosition();
 
+    /*
     //Get the end projected point
     osg::Vec3d endProjectedPoint;
     if( !ComputeProjectedPoint( deviceInput, endProjectedPoint ) )
@@ -157,7 +152,7 @@ void RotateAxis::ManipFunction( const osgUtil::LineSegmentIntersector& deviceInp
     originToEnd.normalize();
 
     //Calculate cross products of the direction vectors with rotation axis
-    const osg::Vec3d rotationAxis = GetUnitAxis();
+    const osg::Vec3d rotationAxis = GetUnitAxis( true );
     osg::Vec3d crossRotStart = rotationAxis ^ originToStart;
     crossRotStart.normalize();
     osg::Vec3d crossRotEnd = rotationAxis ^ originToEnd;
@@ -179,9 +174,13 @@ void RotateAxis::ManipFunction( const osgUtil::LineSegmentIntersector& deviceInp
     deltaRotation /= deltaRotation.length();
 
     //Add the calculated rotation to the current rotation
-    osg::Quat newRotation = deltaRotation * autoTransform->getRotation();
-    autoTransform->setRotation( newRotation );
+    //osg::Quat newRotation = deltaRotation * autoTransform->getRotation();
+    //if( m_vectorSpace == VectorSpace::LOCAL )
+    //{
+        //autoTransform->setRotation( newRotation );
+    //}
 
+    /*
     //Set all associated node's transforms
     const std::vector< osg::Transform* >& associatedTransforms =
         m_parentManipulator->GetAssociatedTransforms();
@@ -216,9 +215,9 @@ void RotateAxis::ManipFunction( const osgUtil::LineSegmentIntersector& deviceInp
         {
             const osg::Quat& currentRotation = pat->getAttitude();
             osg::Quat newRotation = currentRotation;
-            //newRotation = newRotation *  localToWorld; 
+            newRotation = localToWorld.getRotate() * newRotation; 
             newRotation = deltaRotation * newRotation;
-            //newRotation = newRotation * worldToLocal;
+            newRotation = worldToLocal.getRotate() * newRotation;
             pat->setAttitude( newRotation );
         }
         else if( amt = dynamic_cast< osgBullet::AbsoluteModelTransform* >( transform ) )
@@ -226,9 +225,12 @@ void RotateAxis::ManipFunction( const osgUtil::LineSegmentIntersector& deviceInp
             ;
         }
     }
+    */
 
     //Reset
-    m_startProjectedPoint = endProjectedPoint;
+    //m_startProjectedPoint = endProjectedPoint;
+
+    return this;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void RotateAxis::SetupDefaultGeometry()
@@ -302,6 +304,63 @@ void RotateAxis::SetupDefaultGeometry()
         stateSet->setAttributeAndModes( hint.get(),
             osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
     }
+
+    /*
+    //Create invisible triangle strip for picking the rotation axis
+    {
+        osg::ref_ptr< osg::Geometry > geometry = new osg::Geometry();
+        osg::ref_ptr< osg::Vec3Array > vertices = new osg::Vec3Array();
+
+        double minorRadius( 0.025 );
+        double innerRadius( radius - minorRadius );
+        double outerRadius( radius + minorRadius );
+        for( size_t i = 0; i <= NUM_CIRCLE_SEGMENTS; ++i )
+        {
+            double rot( i * DELTA_SEGMENT_ANGLE );
+            double cosVal( cos( rot ) );
+            double sinVal( sin( rot ) );
+
+            double si( innerRadius * cosVal );
+            double ti( innerRadius * sinVal );
+
+            double so( outerRadius * cosVal );
+            double to( outerRadius * sinVal );
+
+            switch( m_axesFlag )
+            {
+            case AxesFlag::X:
+            {
+                vertices->push_back( osg::Vec3( 0.0, si, ti ) );
+                vertices->push_back( osg::Vec3( 0.0, so, to ) );
+
+                break;
+            }
+            case AxesFlag::Y:
+            {
+                vertices->push_back( osg::Vec3( si, 0.0, ti ) );
+                vertices->push_back( osg::Vec3( so, 0.0, to ) );
+
+                break;
+            }
+            case AxesFlag::Z:
+            {
+                vertices->push_back( osg::Vec3( si, ti, 0.0 ) );
+                vertices->push_back( osg::Vec3( so, to, 0.0 ) );
+
+                break;
+            }
+            } //end switch( m_axesFlag )
+        }
+
+        geometry->setVertexArray( vertices.get() );
+        geometry->addPrimitiveSet(
+            new osg::DrawArrays(
+                osg::PrimitiveSet::TRIANGLE_STRIP, 0, vertices->size() ) );
+
+        SetDrawableToAlwaysCull( *geometry.get() );
+        geode->addDrawable( geometry.get() );
+    }
+    */
 
     //Create invisible torus for picking the rotation axis
     {

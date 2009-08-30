@@ -50,8 +50,6 @@ namespace scenegraph
 {
 namespace manipulator
 {
-class Manipulator;
-
 /*!\file TranslatePan.h
  * TranslatePan API
  */
@@ -63,8 +61,7 @@ class VE_SCENEGRAPH_EXPORTS TranslatePan : public Dragger
 {
 public:
     ///
-    TranslatePan(
-        Manipulator* const parentManipulator );
+    TranslatePan();
 
     ///Copy constructor using CopyOp to manage deep vs shallow copy
     TranslatePan(

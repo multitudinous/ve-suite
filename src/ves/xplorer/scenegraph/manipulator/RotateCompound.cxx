@@ -35,20 +35,15 @@
 #include <ves/xplorer/scenegraph/manipulator/RotateCompound.h>
 #include <ves/xplorer/scenegraph/manipulator/RotateAxis.h>
 #include <ves/xplorer/scenegraph/manipulator/RotateTwist.h>
-#include <ves/xplorer/scenegraph/manipulator/Manipulator.h>
 
 // --- OSG Includes --- //
 
 using namespace ves::xplorer::scenegraph::manipulator;
 
 ////////////////////////////////////////////////////////////////////////////////
-RotateCompound::RotateCompound(
-    Manipulator* const parentManipulator )
+RotateCompound::RotateCompound()
     :
-    CompoundDragger(
-        AxesFlag::ALL,
-        TransformationType::ROTATE_COMPOUND,
-        parentManipulator ),
+    CompoundDragger( AxesFlag::ALL, TransformationType::ROTATE_COMPOUND ),
     m_xRotateAxis( NULL ),
     m_yRotateAxis( NULL ),
     m_zRotateAxis( NULL ),
@@ -96,7 +91,7 @@ osg::Object* RotateCompound::clone( const osg::CopyOp& copyop ) const
 ////////////////////////////////////////////////////////////////////////////////
 osg::Object* RotateCompound::cloneType() const
 {
-    return new RotateCompound( m_parentManipulator );
+    return new RotateCompound();
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool RotateCompound::isSameKindAs( const osg::Object* obj ) const
@@ -112,30 +107,30 @@ const char* RotateCompound::libraryName() const
 void RotateCompound::SetupDefaultGeometry()
 {
     //Create translate x-axis dragger
-    m_xRotateAxis = new RotateAxis( AxesFlag::X, m_parentManipulator );
+    m_xRotateAxis = new RotateAxis( AxesFlag::X );
     m_xRotateAxis->SetColor(
-        ColorTag::DEFAULT, osg::Vec4f( 1.0, 0.0, 0.0, 1.0 ), true );
+        Color::DEFAULT, osg::Vec4f( 1.0, 0.0, 0.0, 1.0 ), true );
 
     addChild( m_xRotateAxis.get() );
 
     //Create translate y-axis dragger
-    m_yRotateAxis = new RotateAxis( AxesFlag::Y, m_parentManipulator );
+    m_yRotateAxis = new RotateAxis( AxesFlag::Y );
     m_yRotateAxis->SetColor(
-        ColorTag::DEFAULT, osg::Vec4f( 0.0, 1.0, 0.0, 1.0 ), true );
+        Color::DEFAULT, osg::Vec4f( 0.0, 1.0, 0.0, 1.0 ), true );
 
     addChild( m_yRotateAxis.get() );
 
     //Create translate z-axis dragger
-    m_zRotateAxis = new RotateAxis( AxesFlag::Z, m_parentManipulator );
+    m_zRotateAxis = new RotateAxis( AxesFlag::Z );
     m_zRotateAxis->SetColor(
-        ColorTag::DEFAULT, osg::Vec4f( 0.0, 0.0, 1.0, 1.0 ), true );
+        Color::DEFAULT, osg::Vec4f( 0.0, 0.0, 1.0, 1.0 ), true );
 
     addChild( m_zRotateAxis.get() );
 
     //Create rotate twist dragger
-    m_rotateTwist = new RotateTwist( m_parentManipulator );
+    m_rotateTwist = new RotateTwist();
     m_rotateTwist->SetColor(
-        ColorTag::DEFAULT, osg::Vec4f( 1.0, 1.0, 1.0, 1.0 ), true );
+        Color::DEFAULT, osg::Vec4f( 1.0, 1.0, 1.0, 1.0 ), true );
 
     addChild( m_rotateTwist.get() );
 }

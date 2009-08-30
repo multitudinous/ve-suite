@@ -41,6 +41,8 @@
 
 // --- OSG Includes --- //
 #include <osg/Group>
+#include <osg/AutoTransform>
+#include <osg/PositionAttitudeTransform>
 
 namespace osgUtil
 {
@@ -58,9 +60,8 @@ namespace scenegraph
 {
 namespace manipulator
 {
-class Manipulator;
-class TransformManipulator;
 class Dragger;
+class TransformManipulator;
 
 /*!\file ManipulatorManager.h
  * ManipulatorManager API
@@ -83,14 +84,23 @@ public:
     ///
     META_Node( ves::xplorer::scenegraph::manipulator, ManipulatorManager );
 
-    ///Override the addChild function to only accept Manipulators
-    virtual bool addChild( Manipulator* child );
+    ///Override the addChild function to only accept Draggers
+    virtual bool addChild( Dragger* child );
 
     ///Override the computeBound function to return an empty bounding sphere
     virtual osg::BoundingSphere computeBound() const;
 
+    ///
+    bool Connect( Dragger& dragger, osg::Transform& transform );
+
+    ///
+    void Disconnect( Dragger& dragger );
+
+    ///
+    void Enable( const bool& enable = true );
+
     ///Can't override the getChild function, so create our own
-    Manipulator* GetChild( unsigned int i );
+    Dragger* GetChild( unsigned int i );
 
     ///
     ///\return
@@ -99,25 +109,19 @@ public:
     ///
     virtual bool Handle(
         Event::Enum event,
-        osgUtil::LineSegmentIntersector* testForIntersections = NULL );
+        osgUtil::LineSegmentIntersector* lineSegmentIntersector = NULL );
 
     ///Override the insertChild function to only accept Manipulators
-    virtual bool insertChild( unsigned int index, Manipulator* child );
+    virtual bool insertChild( unsigned int index, Dragger* child );
 
     ///
     const bool IsEnabled() const;
 
     ///Override the replaceChild function to only accept Manipulators
-    virtual bool replaceChild( Manipulator* origChild, Manipulator* newChild );
+    virtual bool replaceChild( Dragger* origChild, Dragger* newChild );
 
     ///Override the setChild function to only accept Manipulators
-    virtual bool setChild( unsigned int i, Manipulator* node );
-
-    ///Deactivate the manipulator manager
-    void TurnOff();
-
-    ///Activate the manipulator manager
-    void TurnOn();
+    virtual bool setChild( unsigned int i, Dragger* node );
 
 protected:
     ///Destructor
@@ -125,11 +129,17 @@ protected:
 
 private:
     ///
-    Manipulator* ConvertNodeToManipulator( osg::Node* node );
+    void ComputeAssociatedMatrices();
+
+    ///
+    Dragger* ConvertNodeToDragger( osg::Node* node );
 
     ///
     bool TestForIntersections(
         osgUtil::LineSegmentIntersector* lineSegmentIntersector );
+
+    ///
+    void UpdateAssociatedTransforms();
 
     ///
     bool m_enabled;
@@ -144,17 +154,31 @@ private:
     osg::NodePath::iterator m_nodePathItr;
 
     ///
-    Manipulator* m_activeManipulator;
+    Dragger* m_rootDragger;
 
     ///
-    Dragger* m_activeDragger;
+    Dragger* m_leafDragger;
 
     ///
     osgUtil::LineSegmentIntersector* m_deviceInput;
 
     ///
-    ///Not sure if this guy should live here, but will work for now
     osg::ref_ptr< TransformManipulator > m_sceneManipulator;
+
+    ///
+    typedef std::map< osg::ref_ptr< Dragger >,
+        osg::ref_ptr< osg::PositionAttitudeTransform > > DraggerMap;
+
+    ///
+    DraggerMap m_draggerMap;
+
+    ///
+    typedef std::multimap< Dragger*, osg::Transform* > DraggerAssociationMap;
+    DraggerAssociationMap m_draggerAssociationMap;
+
+    ///
+    std::map< osg::Transform*,
+              std::pair< osg::Matrixd, osg::Matrixd > > m_associatedMatrices;
 
 };
 } //end manipulator

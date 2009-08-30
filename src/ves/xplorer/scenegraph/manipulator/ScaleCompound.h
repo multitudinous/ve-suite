@@ -52,7 +52,6 @@ namespace manipulator
 {
 class ScaleAxis;
 class ScaleUniform;
-class Manipulator;
 
 /*!\file ScaleCompound.h
  * ScaleCompound API
@@ -65,8 +64,7 @@ class VE_SCENEGRAPH_EXPORTS ScaleCompound : public CompoundDragger
 {
 public:
     ///Constructor
-    ScaleCompound(
-        Manipulator* const parentManipulator );
+    ScaleCompound();
 
     ///Copy constructor using CopyOp to manage deep vs shallow copy
     ScaleCompound(

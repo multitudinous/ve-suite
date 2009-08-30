@@ -50,8 +50,6 @@ namespace scenegraph
 {
 namespace manipulator
 {
-class Manipulator;
-
 /*!\file CompoundDragger.h
  * CompoundDragger API
  */
@@ -65,13 +63,18 @@ public:
     ///
     CompoundDragger(
         const AxesFlag::Enum& axesFlag,
-        const TransformationType::Enum& transformationType,
-        Manipulator* const parentManipulator );
+        const TransformationType::Enum& transformationType );
 
     ///Copy constructor using CopyOp to manage deep vs shallow copy
     CompoundDragger(
         const CompoundDragger& compoundDragger,
         const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
+
+    ///
+    void ComboForm();
+
+    ///
+    void DefaultForm();
 
     ///
     ///\param obj
@@ -85,11 +88,14 @@ public:
     ///Override the addChild function to only accept Draggers
     virtual bool addChild( Dragger* child );
 
+    ///
+    virtual Dragger* Focus( osg::NodePath::iterator& npItr );
+
     ///Can't override the getChild function, so create our own
     Dragger* GetChild( unsigned int i );
 
     ///
-    virtual Dragger* Focus( osg::NodePath::iterator& npItr );
+    //virtual void Hide();
 
     ///
     virtual Dragger* Push(
@@ -111,10 +117,19 @@ public:
 
     ///
     virtual void SetColor(
-        ColorTag::Enum colorTag, osg::Vec4& newColor, bool use = false );
+        Color::Enum colorTag, osg::Vec4& newColor, bool use = false );
+
+    ///Sets the transformation modes enabled on the manipulator
+    void SetEnabledModes( TransformationType::Enum value );
 
     ///
-    virtual void UseColor( ColorTag::Enum colorTag );
+    virtual void SetVectorSpace( const VectorSpace::Enum& vectorSpace );
+
+    ///
+    //virtual void Show();
+
+    ///
+    virtual void UseColor( Color::Enum colorTag );
 
 protected:
     ///
@@ -123,6 +138,9 @@ protected:
     ///Pure virtual again
     ///
     virtual void SetupDefaultGeometry() = 0;
+
+    ///
+    TransformationType::Enum m_enabledModes;
 
 private:
 

@@ -35,7 +35,6 @@
 #include <ves/xplorer/scenegraph/manipulator/ScaleCompound.h>
 #include <ves/xplorer/scenegraph/manipulator/ScaleAxis.h>
 #include <ves/xplorer/scenegraph/manipulator/ScaleUniform.h>
-#include <ves/xplorer/scenegraph/manipulator/Manipulator.h>
 
 // --- OSG Includes --- //
 #include <osg/Geometry>
@@ -44,13 +43,9 @@
 using namespace ves::xplorer::scenegraph::manipulator;
 
 ////////////////////////////////////////////////////////////////////////////////
-ScaleCompound::ScaleCompound(
-    Manipulator* const parentManipulator )
+ScaleCompound::ScaleCompound()
     :
-    CompoundDragger(
-        AxesFlag::ALL,
-        TransformationType::SCALE_COMPOUND,
-        parentManipulator ),
+    CompoundDragger( AxesFlag::ALL, TransformationType::SCALE_COMPOUND ),
     m_explodeDistance( 0.2 ),
     m_xScaleAxis( NULL ),
     m_yScaleAxis( NULL ),
@@ -100,7 +95,7 @@ osg::Object* ScaleCompound::clone( const osg::CopyOp& copyop ) const
 ////////////////////////////////////////////////////////////////////////////////
 osg::Object* ScaleCompound::cloneType() const
 {
-    return new ScaleCompound( m_parentManipulator );
+    return new ScaleCompound();
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool ScaleCompound::isSameKindAs( const osg::Object* obj ) const
@@ -121,7 +116,7 @@ void ScaleCompound::ComboForm()
     }
 
     //Call base method
-    CompoundDragger::ComboForm();
+    Dragger::ComboForm();
 
     osg::Vec3d explodeVector;
     osg::Vec3dArray* lineVertices( NULL );
@@ -157,7 +152,7 @@ void ScaleCompound::DefaultForm()
     }
 
     //Call base method
-    CompoundDragger::DefaultForm();
+    Dragger::DefaultForm();
 
     osg::Vec3d explodeVector;
     osg::Vec3dArray* lineVertices( NULL );
@@ -188,30 +183,30 @@ void ScaleCompound::DefaultForm()
 void ScaleCompound::SetupDefaultGeometry()
 {
     //Create translate x-axis dragger
-    m_xScaleAxis = new ScaleAxis( AxesFlag::X, m_parentManipulator );
+    m_xScaleAxis = new ScaleAxis( AxesFlag::X );
     m_xScaleAxis->SetColor(
-        ColorTag::DEFAULT, osg::Vec4f( 1.0, 0.0, 0.0, 1.0 ), true );
+        Color::DEFAULT, osg::Vec4f( 1.0, 0.0, 0.0, 1.0 ), true );
 
     addChild( m_xScaleAxis.get() );
 
     //Create translate y-axis dragger
-    m_yScaleAxis = new ScaleAxis( AxesFlag::Y, m_parentManipulator );
+    m_yScaleAxis = new ScaleAxis( AxesFlag::Y );
     m_yScaleAxis->SetColor(
-        ColorTag::DEFAULT, osg::Vec4f( 0.0, 1.0, 0.0, 1.0 ), true );
+        Color::DEFAULT, osg::Vec4f( 0.0, 1.0, 0.0, 1.0 ), true );
 
     addChild( m_yScaleAxis.get() );
 
     //Create translate z-axis dragger
-    m_zScaleAxis = new ScaleAxis( AxesFlag::Z, m_parentManipulator );
+    m_zScaleAxis = new ScaleAxis( AxesFlag::Z );
     m_zScaleAxis->SetColor(
-        ColorTag::DEFAULT, osg::Vec4f( 0.0, 0.0, 1.0, 1.0 ), true );
+        Color::DEFAULT, osg::Vec4f( 0.0, 0.0, 1.0, 1.0 ), true );
 
     addChild( m_zScaleAxis.get() );
 
     //Create rotate twist dragger
-    m_scaleUniform = new ScaleUniform( m_parentManipulator );
+    m_scaleUniform = new ScaleUniform();
     m_scaleUniform->SetColor(
-        ColorTag::DEFAULT, osg::Vec4f( 0.0, 1.0, 1.0, 1.0 ), true );
+        Color::DEFAULT, osg::Vec4f( 0.0, 1.0, 1.0, 1.0 ), true );
 
     addChild( m_scaleUniform.get() );
 }

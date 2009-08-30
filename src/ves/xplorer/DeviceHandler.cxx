@@ -295,7 +295,7 @@ void DeviceHandler::SetSelectedDCS( scenegraph::DCS* selectedDCS )
 
     if( sceneManipulator->IsEnabled() && !sceneManipulator->getNodeMask() )
     {
-        sceneManipulator->TurnOn();
+        sceneManipulator->Show();
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -315,7 +315,7 @@ void DeviceHandler::UnselectObjects()
 
         if( sceneManipulator->IsEnabled() )
         {
-            sceneManipulator->TurnOff();
+            sceneManipulator->Hide();
         }
     }
 }

@@ -916,10 +916,16 @@ void KeyboardMouse::OnMousePress()
 #ifdef TRANSFORM_MANIPULATOR
             UpdateSelectionLine();
 
-            if( vxs::SceneManager::instance()->GetManipulatorManager()->Handle(
-                    vxsm::Event::PUSH, mLineSegmentIntersector.get() ) )
+            scenegraph::manipulator::ManipulatorManager* manipulatorManager =
+                scenegraph::SceneManager::instance()->GetManipulatorManager();
+            if( manipulatorManager->IsEnabled() )
             {
-                break;
+                if( manipulatorManager->Handle(
+                        scenegraph::manipulator::Event::PUSH,
+                        mLineSegmentIntersector.get() ) )
+                {
+                    break;
+                }
             }
 #endif //TRANSFORM_MANIPULATOR
 
@@ -1073,10 +1079,15 @@ void KeyboardMouse::OnMouseRelease()
         }
 
 #ifdef TRANSFORM_MANIPULATOR
-        if( vxs::SceneManager::instance()->GetManipulatorManager()->Handle(
-                vxsm::Event::RELEASE ) );
+        scenegraph::manipulator::ManipulatorManager* manipulatorManager =
+            scenegraph::SceneManager::instance()->GetManipulatorManager();
+        if( manipulatorManager->IsEnabled() )
         {
-            ;
+            if( manipulatorManager->Handle(
+                    scenegraph::manipulator::Event::RELEASE ) )
+            {
+                break;
+            }
         }
 #endif //TRANSFORM_MANIPULATOR
 
@@ -1199,10 +1210,15 @@ void KeyboardMouse::OnMouseMotionDown()
 #ifdef TRANSFORM_MANIPULATOR
             UpdateSelectionLine();
 
-            if( vxs::SceneManager::instance()->GetManipulatorManager()->Handle(
-                    vxsm::Event::DRAG ) )
+            scenegraph::manipulator::ManipulatorManager* manipulatorManager =
+                scenegraph::SceneManager::instance()->GetManipulatorManager();
+            if( manipulatorManager->IsEnabled() )
             {
-                break;
+                if( manipulatorManager->Handle(
+                        scenegraph::manipulator::Event::DRAG ) )
+                {
+                    break;
+                }
             }
 #endif //TRANSFORM_MANIPULATOR
 
@@ -1307,10 +1323,16 @@ void KeyboardMouse::OnMouseMotionUp()
 #ifdef TRANSFORM_MANIPULATOR
     UpdateSelectionLine();
 
-    if( vxs::SceneManager::instance()->GetManipulatorManager()->Handle(
-        vxsm::Event::FOCUS, mLineSegmentIntersector.get() ) )
+    scenegraph::manipulator::ManipulatorManager* manipulatorManager =
+        scenegraph::SceneManager::instance()->GetManipulatorManager();
+    if( manipulatorManager->IsEnabled() )
     {
-        ;
+        if( manipulatorManager->Handle(
+                scenegraph::manipulator::Event::FOCUS,
+                mLineSegmentIntersector.get() ) )
+        {
+            ;
+        }
     }
 #endif //TRANSFORM_MANIPULATOR
 }
@@ -1788,12 +1810,9 @@ void KeyboardMouse::ProcessSelection()
     osg::Vec3d center = newSelectedDCS->getBound().center() * tempMatrix;
     mCenterPoint->set( center.x(), center.y(), center.z() );
 
-
-
-
     //Set the connection between the scene manipulator and the selected dcs
-    vxsm::TransformManipulator* sceneManipulator =
-        sceneManager->GetManipulatorManager()->GetSceneManipulator();
+    scenegraph::manipulator::ManipulatorManager* manipulatorManager =
+        sceneManager->GetManipulatorManager();
     //Check and see if the selected node has an attached physics mesh
     //osgBullet::AbsoulteModelTransform* tempAMT = 
     //    dynamic_cast< osgBullet::AbsoulteModelTransform* >( 
@@ -1807,20 +1826,18 @@ void KeyboardMouse::ProcessSelection()
     //        bool hasAPhysicsMesh = true;
     //    }
     //}
-    sceneManipulator->PushBackAssociation( newSelectedDCS, true );
-
+    manipulatorManager->Connect(
+        *manipulatorManager->GetSceneManipulator(), *newSelectedDCS );
 
     //Move the scene manipulator to the center point
-    vxs::LocalToWorldNodePath nodePath(
-        newSelectedDCS, vxs::SceneManager::instance()->GetModelRoot() );
-    vxs::LocalToWorldNodePath::NodeAndPathList npl =
+    scenegraph::LocalToWorldNodePath nodePath(
+        newSelectedDCS, sceneManager->GetModelRoot() );
+    scenegraph::LocalToWorldNodePath::NodeAndPathList npl =
         nodePath.GetLocalToWorldNodePath();
-    vxs::LocalToWorldNodePath::NodeAndPath nap = npl.at( 0 );
+    scenegraph::LocalToWorldNodePath::NodeAndPath nap = npl.at( 0 );
     osg::Matrixd localToWorld = osg::computeLocalToWorld( nap.second );
     osg::Vec3d newCenter = newSelectedDCS->getBound().center() * localToWorld;
-    osg::AutoTransform* autoTransform =
-        static_cast< osg::AutoTransform* >( sceneManipulator->getParent( 0 ) );
-    autoTransform->setPosition( newCenter );
+    //sceneManipulator->setPosition( newCenter );
 }
 ////////////////////////////////////////////////////////////////////////////////
 gadget::KeyboardMousePtr KeyboardMouse::GetKeyboardMouseVRJDevice()

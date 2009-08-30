@@ -52,7 +52,6 @@ namespace manipulator
 {
 class RotateAxis;
 class RotateTwist;
-class Manipulator;
 
 /*!\file RotateCompound.h
  * RotateCompound API
@@ -65,8 +64,7 @@ class VE_SCENEGRAPH_EXPORTS RotateCompound : public CompoundDragger
 {
 public:
     ///Constructor
-    RotateCompound(
-        Manipulator* const parentManipulator );
+    RotateCompound();
 
     ///Copy constructor using CopyOp to manage deep vs shallow copy
     RotateCompound(

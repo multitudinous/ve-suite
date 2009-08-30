@@ -35,7 +35,6 @@
 #include <ves/xplorer/scenegraph/manipulator/TranslateCompound.h>
 #include <ves/xplorer/scenegraph/manipulator/TranslateAxis.h>
 #include <ves/xplorer/scenegraph/manipulator/TranslatePan.h>
-#include <ves/xplorer/scenegraph/manipulator/Manipulator.h>
 
 // --- OSG Includes --- //
 #include <osg/Geode>
@@ -44,13 +43,9 @@
 using namespace ves::xplorer::scenegraph::manipulator;
 
 ////////////////////////////////////////////////////////////////////////////////
-TranslateCompound::TranslateCompound(
-    Manipulator* const parentManipulator )
+TranslateCompound::TranslateCompound()
     :
-    CompoundDragger(
-        AxesFlag::ALL,
-        TransformationType::TRANSLATE_COMPOUND,
-        parentManipulator ),
+    CompoundDragger( AxesFlag::ALL, TransformationType::TRANSLATE_COMPOUND ),
     m_explodeDistance( 0.5 ),
     m_xTranslateAxis( NULL ),
     m_yTranslateAxis( NULL ),
@@ -100,7 +95,7 @@ osg::Object* TranslateCompound::clone( const osg::CopyOp& copyop ) const
 ////////////////////////////////////////////////////////////////////////////////
 osg::Object* TranslateCompound::cloneType() const
 {
-    return new TranslateCompound( m_parentManipulator );
+    return new TranslateCompound();
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool TranslateCompound::isSameKindAs( const osg::Object* obj ) const
@@ -121,7 +116,7 @@ void TranslateCompound::ComboForm()
     }
 
     //Call base method
-    CompoundDragger::ComboForm();
+    Dragger::ComboForm();
 
     osg::Vec3d explodeVector;
     osg::Geode* geode( NULL );
@@ -156,7 +151,7 @@ void TranslateCompound::DefaultForm()
     }
 
     //Call base method
-    CompoundDragger::DefaultForm();
+    Dragger::DefaultForm();
 
     osg::Vec3d explodeVector;
     osg::Geode* geode( NULL );
@@ -186,33 +181,33 @@ void TranslateCompound::DefaultForm()
 void TranslateCompound::SetupDefaultGeometry()
 {
     //Create translate x-axis dragger
-    m_xTranslateAxis = new TranslateAxis( AxesFlag::X, m_parentManipulator );
+    m_xTranslateAxis = new TranslateAxis( AxesFlag::X );
     m_xTranslateAxis->SetColor(
-        ColorTag::DEFAULT, osg::Vec4f( 1.0, 0.0, 0.0, 1.0 ), true );
+        Color::DEFAULT, osg::Vec4f( 1.0, 0.0, 0.0, 1.0 ), true );
     m_xTranslateAxis->ComboForm();
 
     addChild( m_xTranslateAxis.get() );
 
     //Create translate y-axis dragger
-    m_yTranslateAxis = new TranslateAxis( AxesFlag::Y, m_parentManipulator );
+    m_yTranslateAxis = new TranslateAxis( AxesFlag::Y );
     m_yTranslateAxis->SetColor(
-        ColorTag::DEFAULT, osg::Vec4f( 0.0, 1.0, 0.0, 1.0 ), true );
+        Color::DEFAULT, osg::Vec4f( 0.0, 1.0, 0.0, 1.0 ), true );
     m_yTranslateAxis->ComboForm();
 
     addChild( m_yTranslateAxis.get() );
 
     //Create translate z-axis dragger
-    m_zTranslateAxis = new TranslateAxis( AxesFlag::Z, m_parentManipulator );
+    m_zTranslateAxis = new TranslateAxis( AxesFlag::Z );
     m_zTranslateAxis->SetColor(
-        ColorTag::DEFAULT, osg::Vec4f( 0.0, 0.0, 1.0, 1.0 ), true );
+        Color::DEFAULT, osg::Vec4f( 0.0, 0.0, 1.0, 1.0 ), true );
     m_zTranslateAxis->ComboForm();
 
     addChild( m_zTranslateAxis.get() );
 
     //Create translate pan dragger
-    m_translatePan = new TranslatePan( m_parentManipulator );
+    m_translatePan = new TranslatePan();
     m_translatePan->SetColor(
-        ColorTag::DEFAULT, osg::Vec4f( 1.0, 1.0, 1.0, 1.0 ), true );
+        Color::DEFAULT, osg::Vec4f( 1.0, 1.0, 1.0, 1.0 ), true );
 
     addChild( m_translatePan.get() );
 }

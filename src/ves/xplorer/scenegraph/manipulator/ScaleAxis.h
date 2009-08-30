@@ -57,8 +57,6 @@ namespace scenegraph
 {
 namespace manipulator
 {
-class Manipulator;
-
 /*!\file ScaleAxis.h
  * ScaleAxis API
  */
@@ -70,9 +68,7 @@ class VE_SCENEGRAPH_EXPORTS ScaleAxis : public Dragger
 {
 public:
     ///
-    ScaleAxis(
-        const AxesFlag::Enum& axesFlag,
-        Manipulator* const parentManipulator );
+    ScaleAxis( const AxesFlag::Enum& axesFlag );
 
     ///Copy constructor using CopyOp to manage deep vs shallow copy
     ScaleAxis(
@@ -115,7 +111,7 @@ public:
     osg::Vec3dArray* const GetLineVertices() const;
 
     ///
-    //virtual void UseColor( ColorTag::Enum colorTag );
+    //virtual void UseColor( Color::Enum colorTag );
 
 protected:
     ///

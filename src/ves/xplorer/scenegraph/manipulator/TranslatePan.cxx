@@ -33,7 +33,6 @@
 
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/manipulator/TranslatePan.h>
-#include <ves/xplorer/scenegraph/manipulator/Manipulator.h>
 
 // --- OSG Includes --- //
 #include <osg/Hint>
@@ -44,13 +43,9 @@
 using namespace ves::xplorer::scenegraph::manipulator;
 
 ////////////////////////////////////////////////////////////////////////////////
-TranslatePan::TranslatePan(
-    Manipulator* const parentManipulator )
+TranslatePan::TranslatePan()
     :
-    Dragger(
-        AxesFlag::BILLBOARD,
-        TransformationType::TRANSLATE_PAN,
-        parentManipulator )
+    Dragger( AxesFlag::BILLBOARD, TransformationType::TRANSLATE_PAN )
 {
     SetupDefaultGeometry();
 }
@@ -90,7 +85,7 @@ osg::Object* TranslatePan::clone( const osg::CopyOp& copyop ) const
 ////////////////////////////////////////////////////////////////////////////////
 osg::Object* TranslatePan::cloneType() const
 {
-    return new TranslatePan( m_parentManipulator );
+    return new TranslatePan();
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool TranslatePan::isSameKindAs( const osg::Object* obj ) const

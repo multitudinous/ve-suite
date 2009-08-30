@@ -37,7 +37,7 @@
 // --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
 
-#include <ves/xplorer/scenegraph/manipulator/Manipulator.h>
+#include <ves/xplorer/scenegraph/manipulator/CompoundDragger.h>
 
 
 namespace ves
@@ -59,7 +59,7 @@ class ScaleCompound;
 /*!\class ves::xplorer::scenegraph::TransformManipulator
  *
  */
-class VE_SCENEGRAPH_EXPORTS TransformManipulator : public Manipulator
+class VE_SCENEGRAPH_EXPORTS TransformManipulator : public CompoundDragger
 {
 public:
     ///Constructor
@@ -78,7 +78,7 @@ protected:
     virtual ~TransformManipulator();
 
     ///
-    virtual void SetupDefaultDraggers();
+    virtual void SetupDefaultGeometry();
 
 private:
     ///

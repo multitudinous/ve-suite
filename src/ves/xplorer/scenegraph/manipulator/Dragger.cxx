@@ -33,10 +33,8 @@
 
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/manipulator/Dragger.h>
-#include <ves/xplorer/scenegraph/manipulator/Manipulator.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
-#include <ves/xplorer/scenegraph/LocalToWorldNodePath.h>
 
 // --- OSG Includes --- //
 #include <osg/AutoTransform>
@@ -50,22 +48,22 @@ namespace vxs = ves::xplorer::scenegraph;
 ////////////////////////////////////////////////////////////////////////////////
 Dragger::Dragger(
     const AxesFlag::Enum& axesFlag,
-    const TransformationType::Enum& transformationType,
-    Manipulator* const parentManipulator )
+    const TransformationType::Enum& transformationType )
     :
-    osg::MatrixTransform(),
+    osg::Group(),
     m_axesFlag( axesFlag ),
     m_transformationType( transformationType ),
+    m_vectorSpace( VectorSpace::GLOBAL ),
+    m_enabled( false ),
     m_comboForm( false ),
-    m_color( NULL ),
-    m_parentManipulator( parentManipulator )
+    m_color( NULL )
 {
-    m_colorMap[ ColorTag::DEFAULT ] = osg::Vec4f( 0.0, 0.0, 0.0, 1.0 );
-    m_colorMap[ ColorTag::FOCUS ] = osg::Vec4f( 1.0, 1.0, 0.0, 1.0 );
-    m_colorMap[ ColorTag::ACTIVE ] = osg::Vec4f( 0.7, 0.7, 0.7, 1.0 );
-    m_colorMap[ ColorTag::OTHER ] = osg::Vec4f( 0.0, 0.0, 0.0, 1.0 );
+    m_colorMap[ Color::DEFAULT ] = osg::Vec4f( 0.0, 0.0, 0.0, 1.0 );
+    m_colorMap[ Color::FOCUS ] = osg::Vec4f( 1.0, 1.0, 0.0, 1.0 );
+    m_colorMap[ Color::ACTIVE ] = osg::Vec4f( 0.7, 0.7, 0.7, 1.0 );
+    m_colorMap[ Color::OTHER ] = osg::Vec4f( 0.0, 0.0, 0.0, 1.0 );
 
-    m_color = new osg::Uniform( "color", GetColor( ColorTag::DEFAULT ) );
+    m_color = new osg::Uniform( "color", GetColor( Color::DEFAULT ) );
     
     CreateDefaultShader();
 }
@@ -73,15 +71,13 @@ Dragger::Dragger(
 Dragger::Dragger(
     const Dragger& dragger, const osg::CopyOp& copyop )
     :
-    osg::MatrixTransform( dragger, copyop ),
+    osg::Group( dragger, copyop ),
     m_axesFlag( dragger.m_axesFlag ),
     m_transformationType( dragger.m_transformationType ),
+    m_enabled( dragger.m_enabled ),
     m_comboForm( dragger.m_comboForm ),
     m_colorMap( dragger.m_colorMap ),
-    m_localToWorld( dragger.m_localToWorld ),
-    m_worldToLocal( dragger.m_worldToLocal ),
-    m_color( dragger.m_color ),
-    m_parentManipulator( dragger.m_parentManipulator )
+    m_color( dragger.m_color )
 {
     ;
 }
@@ -108,36 +104,47 @@ const char* Dragger::libraryName() const
 ////////////////////////////////////////////////////////////////////////////////
 void Dragger::ComboForm()
 {
+    if( m_comboForm )
+    {
+        return;
+    }
+
     m_comboForm = true;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Dragger::DefaultForm()
 {
+    if( !m_comboForm )
+    {
+        return;
+    }
+
     m_comboForm = false;
+}
+////////////////////////////////////////////////////////////////////////////////
+void Dragger::Enable( const bool& enable )
+{
+    m_enabled = enable;
 }
 ////////////////////////////////////////////////////////////////////////////////
 Dragger* Dragger::Drag( const osgUtil::LineSegmentIntersector& deviceInput )
 {
-    ManipFunction( deviceInput );
-
     return this;
 }
 ////////////////////////////////////////////////////////////////////////////////
 Dragger* Dragger::Focus( osg::NodePath::iterator& npItr )
 {
     //Get the active dragger
-    osg::Node* node = *(++npItr);
+    osg::Node* node = *npItr;
     if( this == node )
     {
-        UseColor( ColorTag::FOCUS );
+        UseColor( Color::FOCUS );
 
-        --npItr;
         return this;
     }
 
-    UseColor( ColorTag::DEFAULT );
+    UseColor( Color::DEFAULT );
 
-    --npItr;
     return NULL;
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -157,81 +164,46 @@ Dragger* Dragger::Push(
     osg::NodePath::iterator& npItr )
 {
     //Get the active dragger
-    osg::Node* node = *(++npItr);
+    osg::Node* node = *npItr;
     if( this == node )
     {
-        UseColor( ColorTag::ACTIVE );
-
-        //Compute local to world and world to local matrices
-        //For the dragger
-        m_localToWorld = osg::computeLocalToWorld( np );
-        m_worldToLocal = osg::Matrix::inverse( m_localToWorld );
-        //For all associated node's transforms
-        const std::vector< osg::Transform* >& associatedTransforms =
-            m_parentManipulator->GetAssociatedTransforms();
-        std::vector< osg::Transform* >::const_iterator itr =
-            associatedTransforms.begin();
-        for( itr; itr != associatedTransforms.end(); ++itr )
-        {
-            vxs::LocalToWorldNodePath nodePath(
-                *itr, vxs::SceneManager::instance()->GetModelRoot() );
-            vxs::LocalToWorldNodePath::NodeAndPathList npl =
-                nodePath.GetLocalToWorldNodePath();
-            vxs::LocalToWorldNodePath::NodeAndPath nap = npl.at( 0 );
-
-            osg::Matrixd localToWorld = osg::computeLocalToWorld( nap.second );
-            osg::Matrixd worldToLocal = osg::Matrix::inverse( localToWorld );
-            m_associatedMatrices[ *itr ] =
-                std::make_pair( localToWorld, worldToLocal );
-        }
-
-        //Turn off automatic scaling for the dragger
-        osg::AutoTransform* autoTransform =
-            static_cast< osg::AutoTransform* >(
-                m_parentManipulator->getParent( 0 ) );
-        autoTransform->setAutoScaleToScreen( false );
-
-        m_startPosition = autoTransform->getPosition();
+        UseColor( Color::ACTIVE );
 
         //Get the start projected point
         ComputeProjectedPoint( deviceInput, m_startProjectedPoint );
 
-        --npItr;
         return this;
     }
 
-    TurnOff();
+    Hide();
 
-    --npItr;
     return NULL;
 }
 ////////////////////////////////////////////////////////////////////////////////
 Dragger* Dragger::Release( osg::NodePath::iterator& npItr )
 {
     //Get the active dragger
-    osg::Node* node = *(++npItr);
+    osg::Node* node = *npItr;
     if( this == node )
     {
-        UseColor( ColorTag::DEFAULT );
+        UseColor( Color::DEFAULT );
 
         //Clear the associated matrices
-        m_associatedMatrices.clear();
+        //m_associatedMatrices.clear();
 
-        osg::AutoTransform* autoTransform =
-            static_cast< osg::AutoTransform* >(
-                m_parentManipulator->getParent( 0 ) );
-        autoTransform->setAutoScaleToScreen( true );
+        //osg::AutoTransform* autoTransform =
+            //static_cast< osg::AutoTransform* >(
+                //m_parentManipulator->getParent( 0 ) );
+        //autoTransform->setAutoScaleToScreen( true );
         //Force update now on release event for this frame
         //This function call sets _firstTimeToInitEyePoint = true
-        autoTransform->setAutoRotateMode( osg::AutoTransform::NO_ROTATION );
+        //autoTransform->setAutoRotateMode( osg::AutoTransform::NO_ROTATION );
 
-        --npItr;
         return this;
     }
 
-    TurnOn();
+    Show();
 
-    --npItr;
     return NULL;
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -261,9 +233,9 @@ void Dragger::CreateDefaultShader()
     stateSet->addUniform( m_color.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
-osg::Vec4& Dragger::GetColor( ColorTag::Enum colorTag )
+osg::Vec4& Dragger::GetColor( Color::Enum colorTag )
 {
-    std::map< ColorTag::Enum, osg::Vec4 >::iterator itr =
+    std::map< Color::Enum, osg::Vec4 >::iterator itr =
         m_colorMap.find( colorTag );
     /*
     if( itr == m_colorMap.end() )
@@ -275,7 +247,7 @@ osg::Vec4& Dragger::GetColor( ColorTag::Enum colorTag )
     return itr->second;
 }
 ////////////////////////////////////////////////////////////////////////////////
-const osg::Plane Dragger::GetPlane() const
+const osg::Plane Dragger::GetPlane( const bool& transform ) const
 {
     //The unit plane
     //| i   j   k  |
@@ -314,28 +286,37 @@ const osg::Plane Dragger::GetPlane() const
         }
     }
 
-    /*
-    //plane = ( mVectorSpace == VectorSpace.Local )
-    ? (Plane.Transform(p, Matrix.CreateFromQuaternion(mTransform.Rotation)
-    * Matrix.CreateTranslation(mTransform.Translation)))
-    : (Plane.Transform(p, Matrix.CreateTranslation(mTransform.Translation)));
-
-    if( mVectorSpace == VectorSpace.Local )
+    if( transform )
     {
+        switch( m_vectorSpace )
+        {
+        case VectorSpace::GLOBAL:
+        {
+            osg::Vec4d vec = plane.asVec4();
+            const osg::Vec3d trans;// = m_worldToLocal.getTrans();
+            osg::Matrixd matrix;
+            matrix.makeTranslate( trans );
+            plane.transformProvidingInverse( matrix );
+            
+            break;
+        }
+        case VectorSpace::LOCAL:
+        {
+            //plane.transformProvidingInverse( m_worldToLocal );
 
+            break;
+        }
+        case VectorSpace::VIEW:
+        {
+            break;
+        }
+        } //end switch( m_vectorSpace )
     }
-    else
-    {
-
-    }
-    */
-
-    plane.transformProvidingInverse( m_worldToLocal );
 
     return plane;
 }
 ////////////////////////////////////////////////////////////////////////////////
-const osg::Vec3d Dragger::GetUnitAxis( const bool& transformToWorld ) const
+const osg::Vec3d Dragger::GetUnitAxis( const bool& transform ) const
 {
     osg::Vec3d zero( 0.0, 0.0, 0.0 );
     osg::Vec3d unitAxis = zero;
@@ -357,12 +338,40 @@ const osg::Vec3d Dragger::GetUnitAxis( const bool& transformToWorld ) const
         //Error output
     }
 
-    if( transformToWorld )
+    if( transform )
     {
-        unitAxis = unitAxis * m_localToWorld;
+        switch( m_vectorSpace )
+        {
+        case VectorSpace::GLOBAL:
+        {
+            //unitAxis = unitAxis * m_localToWorld.getTrans();
+
+            break;
+        }
+        case VectorSpace::LOCAL:
+        {
+            //unitAxis = unitAxis * m_localToWorld;
+
+            break;
+        }
+        case VectorSpace::VIEW:
+        {
+            break;
+        }
+        } //end switch( m_vectorSpace )
     }
 
     return unitAxis;
+}
+////////////////////////////////////////////////////////////////////////////////
+const VectorSpace::Enum& Dragger::GetVectorSpace() const
+{
+    return m_vectorSpace;
+}
+////////////////////////////////////////////////////////////////////////////////
+const bool& Dragger::IsEnabled() const
+{
+    return m_enabled;
 }
 ////////////////////////////////////////////////////////////////////////////////
 const bool Dragger::IntersectsPlane(
@@ -395,7 +404,7 @@ const bool Dragger::IntersectsPlane(
     return true;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Dragger::SetColor( ColorTag::Enum colorTag, osg::Vec4 newColor, bool use )
+void Dragger::SetColor( Color::Enum colorTag, osg::Vec4 newColor, bool use )
 {
     osg::Vec4& color = GetColor( colorTag );
     if( color == newColor )
@@ -411,17 +420,22 @@ void Dragger::SetColor( ColorTag::Enum colorTag, osg::Vec4 newColor, bool use )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Dragger::TurnOff()
+void Dragger::SetVectorSpace( const VectorSpace::Enum& vectorSpace )
+{
+    m_vectorSpace = vectorSpace;
+}
+////////////////////////////////////////////////////////////////////////////////
+void Dragger::Hide()
 {
     setNodeMask( 0 );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Dragger::TurnOn()
+void Dragger::Show()
 {
     setNodeMask( 1 );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Dragger::UseColor( ColorTag::Enum colorTag )
+void Dragger::UseColor( Color::Enum colorTag )
 {
     m_color->set( GetColor( colorTag ) );
 }

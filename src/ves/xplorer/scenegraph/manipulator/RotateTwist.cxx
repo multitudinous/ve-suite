@@ -34,7 +34,6 @@
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/manipulator/RotateTwist.h>
 #include <ves/xplorer/scenegraph/manipulator/ClippingCircle.h>
-#include <ves/xplorer/scenegraph/manipulator/Manipulator.h>
 
 // --- OSG Includes --- //
 #include <osg/Hint>
@@ -46,13 +45,9 @@
 using namespace ves::xplorer::scenegraph::manipulator;
 
 ////////////////////////////////////////////////////////////////////////////////
-RotateTwist::RotateTwist(
-    Manipulator* const parentManipulator )
+RotateTwist::RotateTwist()
     :
-    Dragger(
-        AxesFlag::BILLBOARD,
-        TransformationType::ROTATE_TWIST,
-        parentManipulator )
+    Dragger( AxesFlag::BILLBOARD, TransformationType::ROTATE_TWIST )
 {
     SetupDefaultGeometry();
 }
@@ -92,7 +87,7 @@ osg::Object* RotateTwist::clone( const osg::CopyOp& copyop ) const
 ////////////////////////////////////////////////////////////////////////////////
 osg::Object* RotateTwist::cloneType() const
 {
-    return new RotateTwist( m_parentManipulator );
+    return new RotateTwist();
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool RotateTwist::isSameKindAs( const osg::Object* obj ) const

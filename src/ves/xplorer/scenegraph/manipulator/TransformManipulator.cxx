@@ -47,19 +47,19 @@ using namespace ves::xplorer::scenegraph::manipulator;
 ////////////////////////////////////////////////////////////////////////////////
 TransformManipulator::TransformManipulator()
     :
-    Manipulator(),
+    CompoundDragger( AxesFlag::ALL, TransformationType::ALL ),
     m_translateCompound( NULL ),
     m_rotateCompound( NULL ),
     m_scaleCompound( NULL )
 {
-    SetupDefaultDraggers();
+    SetupDefaultGeometry();
 }
 ////////////////////////////////////////////////////////////////////////////////
 TransformManipulator::TransformManipulator(
     const TransformManipulator& transformManipulator,
     const osg::CopyOp& copyop )
     :
-    Manipulator( transformManipulator, copyop ),
+    CompoundDragger( transformManipulator, copyop ),
     m_translateCompound( transformManipulator.m_translateCompound.get() ),
     m_rotateCompound( transformManipulator.m_rotateCompound.get() ),
     m_scaleCompound( transformManipulator.m_scaleCompound.get() )
@@ -72,18 +72,18 @@ TransformManipulator::~TransformManipulator()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void TransformManipulator::SetupDefaultDraggers()
+void TransformManipulator::SetupDefaultGeometry()
 {
     osg::ref_ptr< manipulator::TranslateCompound > translateCompound =
-        new manipulator::TranslateCompound( this );
+        new manipulator::TranslateCompound();
     addChild( translateCompound.get() );
 
     osg::ref_ptr< manipulator::RotateCompound > rotateCompound =
-        new manipulator::RotateCompound( this );
+        new manipulator::RotateCompound();
     addChild( rotateCompound.get() );
 
     osg::ref_ptr< manipulator::ScaleCompound > scaleCompound =
-        new manipulator::ScaleCompound( this );
+        new manipulator::ScaleCompound();
     addChild( scaleCompound.get() );
 
     SetEnabledModes( TransformationType::TRANSLATE_COMPOUND );

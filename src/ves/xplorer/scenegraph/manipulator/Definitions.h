@@ -110,7 +110,7 @@ namespace VectorSpace
 {
     enum Enum
     {
-        WORLD,
+        GLOBAL,
         LOCAL,
         VIEW
     };
@@ -129,7 +129,7 @@ namespace AxisDirection
 }
 
 ///
-namespace ColorTag
+namespace Color
 {
     enum Enum
     {

@@ -50,8 +50,6 @@ namespace scenegraph
 {
 namespace manipulator
 {
-class Manipulator;
-
 /*!\file ScaleUniform.h
  * ScaleUniform API
  */
@@ -63,8 +61,7 @@ class VE_SCENEGRAPH_EXPORTS ScaleUniform : public Dragger
 {
 public:
     ///
-    ScaleUniform(
-        Manipulator* const parentManipulator );
+    ScaleUniform();
 
     ///Copy constructor using CopyOp to manage deep vs shallow copy
     ScaleUniform(

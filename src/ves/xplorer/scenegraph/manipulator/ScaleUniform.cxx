@@ -33,7 +33,6 @@
 
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/manipulator/ScaleUniform.h>
-#include <ves/xplorer/scenegraph/manipulator/Manipulator.h>
 
 // --- OSG Includes --- //
 #include <osg/Hint>
@@ -46,13 +45,9 @@
 using namespace ves::xplorer::scenegraph::manipulator;
 
 ////////////////////////////////////////////////////////////////////////////////
-ScaleUniform::ScaleUniform(
-    Manipulator* const parentManipulator )
+ScaleUniform::ScaleUniform()
     :
-    Dragger(
-        AxesFlag::BILLBOARD,
-        TransformationType::SCALE_UNIFORM,
-        parentManipulator )
+    Dragger( AxesFlag::BILLBOARD, TransformationType::SCALE_UNIFORM )
 {
     SetupDefaultGeometry();
 }
@@ -92,7 +87,7 @@ osg::Object* ScaleUniform::clone( const osg::CopyOp& copyop ) const
 ////////////////////////////////////////////////////////////////////////////////
 osg::Object* ScaleUniform::cloneType() const
 {
-    return new ScaleUniform( m_parentManipulator );
+    return new ScaleUniform();
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool ScaleUniform::isSameKindAs( const osg::Object* obj ) const

@@ -50,8 +50,6 @@ namespace scenegraph
 {
 namespace manipulator
 {
-class Manipulator;
-
 /*!\file RotateTwist.h
  * RotateTwist API
  */
@@ -63,8 +61,7 @@ class VE_SCENEGRAPH_EXPORTS RotateTwist : public Dragger
 {
 public:
     ///
-    RotateTwist(
-        Manipulator* const parentManipulator );
+    RotateTwist();
 
     ///Copy constructor using CopyOp to manage deep vs shallow copy
     RotateTwist(

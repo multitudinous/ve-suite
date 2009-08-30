@@ -33,7 +33,6 @@
 
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/manipulator/TranslateAxis.h>
-#include <ves/xplorer/scenegraph/manipulator/Manipulator.h>
 
 // --- OSG Includes --- //
 #include <osg/Hint>
@@ -43,6 +42,7 @@
 #include <osg/LineWidth>
 #include <osg/LineSegment>
 #include <osg/AutoTransform>
+#include <osg/MatrixTransform>
 #include <osg/PositionAttitudeTransform>
 
 #include <osgUtil/LineSegmentIntersector>
@@ -54,14 +54,9 @@ using namespace ves::xplorer::scenegraph::manipulator;
 namespace vxs = ves::xplorer::scenegraph;
 
 ////////////////////////////////////////////////////////////////////////////////
-TranslateAxis::TranslateAxis(
-    const AxesFlag::Enum& axesFlag,
-    Manipulator* const parentManipulator )
+TranslateAxis::TranslateAxis( const AxesFlag::Enum& axesFlag )
     :
-    Dragger(
-        axesFlag,
-        TransformationType::TRANSLATE_AXIS,
-        parentManipulator ),
+    Dragger( axesFlag, TransformationType::TRANSLATE_AXIS ),
     m_lineExplodeVector( GetUnitAxis() * TRANSLATE_PAN_RADIUS ),
     m_lineVertices( NULL ),
     m_lineGeometry( NULL ),
@@ -117,7 +112,7 @@ osg::Object* TranslateAxis::clone( const osg::CopyOp& copyop ) const
 ////////////////////////////////////////////////////////////////////////////////
 osg::Object* TranslateAxis::cloneType() const
 {
-    return new TranslateAxis( m_axesFlag, m_parentManipulator );
+    return new TranslateAxis( m_axesFlag );
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool TranslateAxis::isSameKindAs( const osg::Object* obj ) const
@@ -193,9 +188,9 @@ const bool TranslateAxis::ComputeProjectedPoint(
     osg::Vec3d& projectedPoint )
 {
     //Get the start and end points for the dragger axis in world space
-    const osg::Vec3d startDraggerAxis =
-        m_localToWorld * osg::Vec3d( 0.0, 0.0, 0.0 );
-    const osg::Vec3d endDraggerAxis = m_localToWorld * GetUnitAxis();
+    const osg::Vec3d startDraggerAxis;// =
+        //m_localToWorld * osg::Vec3d( 0.0, 0.0, 0.0 );
+    const osg::Vec3d endDraggerAxis;// = m_localToWorld * GetUnitAxis();
 
     //Get the near and far points for the active device
     const osg::Vec3d& startDeviceInput = deviceInput.getStart();
@@ -236,73 +231,26 @@ osg::Cone* const TranslateAxis::GetCone() const
     return m_cone.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void TranslateAxis::ManipFunction( const osgUtil::LineSegmentIntersector& deviceInput )
+Dragger* TranslateAxis::Drag( const osgUtil::LineSegmentIntersector& deviceInput )
 {
-    osg::AutoTransform* autoTransform =
-        static_cast< osg::AutoTransform* >(
-            m_parentManipulator->getParent( 0 ) );
-
     //Get the end projected point
     osg::Vec3d endProjectedPoint;
     if( !ComputeProjectedPoint( deviceInput, endProjectedPoint ) )
     {
-        return;
+        return NULL;
     }
 
     //Calculate the delta transform
     osg::Vec3d deltaTranslation = endProjectedPoint - m_startProjectedPoint;
     
     //Set the m_parentManipulator's transform
-    osg::Vec3d newTranslation = autoTransform->getPosition() + deltaTranslation;
-    autoTransform->setPosition( newTranslation );
-
-    //Set all associated node's transforms
-    const std::vector< osg::Transform* >& associatedTransforms =
-        m_parentManipulator->GetAssociatedTransforms();
-    std::vector< osg::Transform* >::const_iterator itr =
-        associatedTransforms.begin();
-    for( itr; itr != associatedTransforms.end(); ++itr )
-    {
-        osg::Transform* transform = *itr;
-        std::map< osg::Transform*, std::pair< osg::Matrixd, osg::Matrixd > >::const_iterator transformMatrices =
-            m_associatedMatrices.find( transform );
-        if( transformMatrices == m_associatedMatrices.end() )
-        {
-            //Error output
-            break;
-        }
-
-        const osg::Matrixd& localToWorld = transformMatrices->second.first;
-        const osg::Matrixd& worldToLocal = transformMatrices->second.second;
-
-        osg::MatrixTransform* mt( NULL );
-        osg::PositionAttitudeTransform* pat( NULL );
-        osgBullet::AbsoluteModelTransform* amt( NULL );
-        if( mt = transform->asMatrixTransform() )
-        {
-            const osg::Matrix& currentMatrix = mt->getMatrix();
-            mt->setMatrix(
-                localToWorld *
-                osg::Matrix::translate( deltaTranslation ) * currentMatrix *
-                worldToLocal );
-        }
-        else if( pat = transform->asPositionAttitudeTransform() )
-        {
-            const osg::Vec3d& currentPosition = pat->getPosition();
-            osg::Vec3d newTranslation = currentPosition;
-            newTranslation = newTranslation * localToWorld; 
-            newTranslation += deltaTranslation;
-            newTranslation = newTranslation * worldToLocal;
-            pat->setPosition( newTranslation );
-        }
-        else if( amt = dynamic_cast< osgBullet::AbsoluteModelTransform* >( transform ) )
-        {
-            ;
-        }
-    }
+    osg::Vec3d newTranslation;// = getPosition() + deltaTranslation;
+    //setPosition( newTranslation );
 
     //Reset
     m_startProjectedPoint = endProjectedPoint;
+
+    return this;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void TranslateAxis::SetupDefaultGeometry()

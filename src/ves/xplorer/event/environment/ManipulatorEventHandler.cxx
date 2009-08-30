@@ -116,15 +116,15 @@ void ManipulatorEventHandler::Execute(
 
         if( ves::xplorer::DeviceHandler::instance()->GetSelectedDCS() )
         {
-            sceneManipulator->TurnOn();
+            sceneManipulator->Show();
         }
 
         return;
     }
     else if( data == "DISABLE" )
     {
-        sceneManipulator->Disable();
-        sceneManipulator->TurnOff();
+        sceneManipulator->Enable( false );
+        sceneManipulator->Hide();
 
         return;
     }

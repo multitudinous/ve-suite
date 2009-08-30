@@ -40,7 +40,7 @@
 #include <ves/xplorer/scenegraph/manipulator/Definitions.h>
 
 // --- OSG Includes --- //
-#include <osg/MatrixTransform>
+#include <osg/PositionAttitudeTransform>
 #include <osg/Drawable>
 #include <osg/Plane>
 
@@ -62,8 +62,6 @@ namespace scenegraph
 {
 namespace manipulator
 {
-class Manipulator;
-
 /*!\file Dragger.h
  * Dragger API
  */
@@ -71,14 +69,13 @@ class Manipulator;
 /*!\class ves::xplorer::scenegraph::Dragger
  * Abstract Class
  */
-class VE_SCENEGRAPH_EXPORTS Dragger : public osg::MatrixTransform
+class VE_SCENEGRAPH_EXPORTS Dragger : public osg::Group
 {
 public:
     ///
     Dragger(
         const AxesFlag::Enum& axesFlag,
-        const TransformationType::Enum& transformationType,
-        Manipulator* const parentManipulator );
+        const TransformationType::Enum& transformationType );
 
     ///Copy constructor using CopyOp to manage deep vs shallow copy
     Dragger(
@@ -86,17 +83,8 @@ public:
         const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
 
     ///
-    ///\param obj
-    ///\return
-    virtual bool isSameKindAs( const osg::Object* obj ) const;
-
-    ///
     ///\return
     virtual const char* className() const;
-
-    ///
-    ///\return
-    virtual const char* libraryName() const;
 
     ///
     virtual void ComboForm();
@@ -105,7 +93,10 @@ public:
     virtual void DefaultForm();
 
     ///
-    Dragger* Drag( const osgUtil::LineSegmentIntersector& deviceInput );
+    void Enable( const bool& enable = true );
+
+    ///
+    virtual Dragger* Drag( const osgUtil::LineSegmentIntersector& deviceInput );
 
     ///
     virtual Dragger* Focus( osg::NodePath::iterator& npItr );
@@ -115,14 +106,32 @@ public:
     const AxesFlag::Enum GetAxesFlag() const;
 
     ///
-    const osg::Plane GetPlane() const;
+    const osg::Plane GetPlane( const bool& transform = true ) const;
 
     ///
     ///\return
     const TransformationType::Enum GetTransformationType() const;
 
     ///
-    const osg::Vec3d GetUnitAxis( const bool& transformToWorld = false ) const;
+    const osg::Vec3d GetUnitAxis( const bool& transform = false ) const;
+
+    ///
+    const VectorSpace::Enum& GetVectorSpace() const;
+
+    ///
+    virtual void Hide();
+
+    ///
+    const bool& IsEnabled() const;
+
+    ///
+    ///\param obj
+    ///\return
+    virtual bool isSameKindAs( const osg::Object* obj ) const;
+
+    ///
+    ///\return
+    virtual const char* libraryName() const;
 
     ///
     virtual Dragger* Push(
@@ -135,16 +144,16 @@ public:
 
     ///
     virtual void SetColor(
-        ColorTag::Enum colorTag, osg::Vec4 newColor, bool use = false );
+        Color::Enum colorTag, osg::Vec4 newColor, bool use = false );
 
     ///
-    virtual void UseColor( ColorTag::Enum colorTag );
+    virtual void SetVectorSpace( const VectorSpace::Enum& vectorSpace );
 
-    ///Deactivate this dragger
-    void TurnOff();
+    ///
+    virtual void Show();
 
-    ///Activate this dragger
-    void TurnOn();
+    ///
+    virtual void UseColor( Color::Enum colorTag );
 
 protected:
     ///
@@ -157,18 +166,13 @@ protected:
         osg::Vec3d& projectedPoint ){return false;}// = 0;
 
     ///
-    osg::Vec4& GetColor( ColorTag::Enum colorTag );
+    osg::Vec4& GetColor( Color::Enum colorTag );
 
     ///
     const bool IntersectsPlane(
         const osg::Vec3d& startPosition,
         const osg::Vec3d& direction,
         double& intersectDistance );
-
-    ///Will be pure virtual eventually
-    ///
-    virtual void ManipFunction(
-        const osgUtil::LineSegmentIntersector& deviceInput ){;}// = 0;
 
     ///Pure virtual
     ///
@@ -185,32 +189,26 @@ protected:
     const TransformationType::Enum m_transformationType;
 
     ///
+    VectorSpace::Enum m_vectorSpace;
+
+    ///
+    bool m_enabled;
+
+    ///
     bool m_comboForm;
 
     ///
     osg::Vec3d m_startProjectedPoint;
 
     ///
-    osg::Vec3d m_startPosition;
-
-    ///
-    osg::Matrixd m_localToWorld;
-
-    ///
-    osg::Matrixd m_worldToLocal;
-
-    ///
-    std::map< osg::Transform*, std::pair< osg::Matrixd, osg::Matrixd > > m_associatedMatrices;
-
-    ///
     osg::ref_ptr< osg::Uniform > m_color;
 
     ///
-    Manipulator* const m_parentManipulator;
+    osg::ref_ptr< osg::Transform > m_transform;
 
 private:
     ///
-    typedef std::map< ColorTag::Enum, osg::Vec4 > ColorMap;
+    typedef std::map< Color::Enum, osg::Vec4 > ColorMap;
 
     ///
     class ForceCullCallback : public osg::Drawable::CullCallback

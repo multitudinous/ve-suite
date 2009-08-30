@@ -60,8 +60,6 @@ namespace scenegraph
 {
 namespace manipulator
 {
-class Manipulator;
-
 /*!\file TranslateAxis.h
  * TranslateAxis API
  */
@@ -73,9 +71,7 @@ class VE_SCENEGRAPH_EXPORTS TranslateAxis : public Dragger
 {
 public:
     ///
-    TranslateAxis(
-        const AxesFlag::Enum& axesFlag,
-        Manipulator* const parentManipulator );
+    TranslateAxis( const AxesFlag::Enum& axesFlag );
 
     ///Copy constructor using CopyOp to manage deep vs shallow copy
     TranslateAxis(
@@ -98,6 +94,9 @@ public:
     ///
     ///\return
     virtual osg::Object* cloneType() const;
+
+    ///
+    virtual Dragger* Drag( const osgUtil::LineSegmentIntersector& deviceInput );
 
     ///
     ///\param obj
@@ -125,16 +124,12 @@ public:
 
 protected:
     ///
-    virtual const bool ComputeProjectedPoint(
-        const osgUtil::LineSegmentIntersector& deviceInput,
-        osg::Vec3d& projectedPoint );
-
-    ///
     virtual ~TranslateAxis();
 
     ///
-    virtual void ManipFunction(
-        const osgUtil::LineSegmentIntersector& deviceInput );
+    virtual const bool ComputeProjectedPoint(
+        const osgUtil::LineSegmentIntersector& deviceInput,
+        osg::Vec3d& projectedPoint );
 
     ///
     virtual void SetupDefaultGeometry();

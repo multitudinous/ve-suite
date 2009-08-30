@@ -33,7 +33,6 @@
 
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/manipulator/ScaleAxis.h>
-#include <ves/xplorer/scenegraph/manipulator/Manipulator.h>
 
 // --- OSG Includes --- //
 #include <osg/Hint>
@@ -46,14 +45,9 @@
 using namespace ves::xplorer::scenegraph::manipulator;
 
 ////////////////////////////////////////////////////////////////////////////////
-ScaleAxis::ScaleAxis(
-    const AxesFlag::Enum& axesFlag,
-    Manipulator* const parentManipulator )
+ScaleAxis::ScaleAxis( const AxesFlag::Enum& axesFlag )
     :
-    Dragger(
-        axesFlag,
-        TransformationType::SCALE_AXIS,
-        parentManipulator ),
+    Dragger( axesFlag, TransformationType::SCALE_AXIS ),
     m_defaultAxisColor( 0.7, 0.7, 0.7, 1.0 ),
     m_axisColor( NULL ),
     m_lineVertices( NULL ),
@@ -107,7 +101,7 @@ osg::Object* ScaleAxis::clone( const osg::CopyOp& copyop ) const
 ////////////////////////////////////////////////////////////////////////////////
 osg::Object* ScaleAxis::cloneType() const
 {
-    return new ScaleAxis( m_axesFlag, m_parentManipulator );
+    return new ScaleAxis( m_axesFlag );
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool ScaleAxis::isSameKindAs( const osg::Object* obj ) const
@@ -240,13 +234,13 @@ void ScaleAxis::SetupDefaultGeometry()
 }
 ////////////////////////////////////////////////////////////////////////////////
 /*
-void ScaleAxis::UseColor( ColorTag::Enum colorTag )
+void ScaleAxis::UseColor( Color::Enum colorTag )
 {
     osg::Vec4& color = GetColor( colorTag );
 
     m_color->set( color );
     
-    if( colorTag == ColorTag::DEFAULT )
+    if( colorTag == Color::DEFAULT )
     {
         m_axisColor->set( m_defaultAxisColor );
     }

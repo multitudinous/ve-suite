@@ -52,7 +52,6 @@ namespace manipulator
 {
 class TranslateAxis;
 class TranslatePan;
-class Manipulator;
 
 /*!\file TranslateCompound.h
  * TranslateCompound API
@@ -65,8 +64,7 @@ class VE_SCENEGRAPH_EXPORTS TranslateCompound : public CompoundDragger
 {
 public:
     ///Constructor
-    TranslateCompound(
-        Manipulator* const parentManipulator );
+    TranslateCompound();
 
     ///Copy constructor using CopyOp to manage deep vs shallow copy
     TranslateCompound(
