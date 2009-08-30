@@ -406,14 +406,7 @@ void DCS::InsertChild( int position, SceneNode* child )
 ////////////////////////////////////////////////////////////////////////////////
 int DCS::GetNumChildren()
 {
-#ifdef _OSG
     return getNumChildren();
-#elif _OPENSG
-    cerr << " ERROR: DCS::ReplaceChild is NOT implemented " << endl;
-    exit( 1 );
-
-    return -1;
-#endif
 }
 ////////////////////////////////////////////////////////////////////////////////
 const std::string DCS::GetName()
