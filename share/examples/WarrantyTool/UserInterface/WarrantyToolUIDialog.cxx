@@ -407,9 +407,14 @@ void WarrantyToolUIDialog::ParseDataFile( const std::string& csvFilename )
         {
             parser >> sCol1;
             csvDataMap[ i ].push_back( sCol1 );
-            m_columnStrings.Add( wxString( csvDataMap[ i ].at( 0 ).c_str(), wxConvUTF8 ) );
         }
     }
+
+    for( size_t i = 0; i < columnCount; ++i )
+    {
+        m_columnStrings.Add( wxString( csvDataMap[ i ].at( 0 ).c_str(), wxConvUTF8 ) );
+    }
+
     //iss.close();
     std::vector< std::string > prtnumbers = csvDataMap[ 2 ];
     mPartNumberDescriptions = csvDataMap[ 3 ];
@@ -449,7 +454,7 @@ void WarrantyToolUIDialog::OnDataLoad( wxFileDirPickerEvent& event )
         cameraGeometryOnOffDVP->SetData( "WARRANTY_FILE", csvFilename );
         ves::open::xml::CommandPtr command( new ves::open::xml::Command() ); 
         command->AddDataValuePair( cameraGeometryOnOffDVP );
-        std::string mCommandName = "CAMERA_GEOMETRY_ON_OFF";
+        std::string mCommandName = "WARRANTY_TOOL_PART_TOOLS";
         command->SetCommandName( mCommandName );
         mServiceList->SendCommandStringToXplorer( command );
         
@@ -647,12 +652,12 @@ void WarrantyToolUIDialog::SubmitQueryCommand()
     
     ves::open::xml::DataValuePairSharedPtr cameraGeometryOnOffDVP(
                                                                   new ves::open::xml::DataValuePair() );
-    /*cameraGeometryOnOffDVP->SetData( "WARRANTY_FILE", csvFilename );
+    cameraGeometryOnOffDVP->SetData( "QUERY_STRING", queryString );
     ves::open::xml::CommandPtr command( new ves::open::xml::Command() ); 
     command->AddDataValuePair( cameraGeometryOnOffDVP );
-    std::string mCommandName = "CAMERA_GEOMETRY_ON_OFF";
+    std::string mCommandName = "WARRANTY_TOOL_DB_TOOLS";
     command->SetCommandName( mCommandName );
-    mServiceList->SendCommandStringToXplorer( command );   */     
+    mServiceList->SendCommandStringToXplorer( command );  
 }
 ////////////////////////////////////////////////////////////////////////////////
 void WarrantyToolUIDialog::UpdateQueryDisplay()
