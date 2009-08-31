@@ -41,6 +41,7 @@
 
 // ---  VR Juggler Includes --- //
 #include <vrj/vrjParam.h>
+
 #if __VJ_version >= 2003000
 #include <vrj/Draw/OpenGL/ContextData.h>
 #else

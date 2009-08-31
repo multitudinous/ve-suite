@@ -909,6 +909,11 @@ void App::update()
     // call all node update callbacks and animations. This is equivalent to calling
     // SceneView::update
     getScene()->accept( *mUpdateVisitor.get() );
+    
+    if( mRTT )
+    {
+        mSceneRenderToTexture->Update( mUpdateVisitor.get() );
+    }
     // now force a recompute of the bounding volume while we are still in
     // the read/write app phase, this should prevent the need to recompute
     // the bounding volumes from within the cull traversal which may be

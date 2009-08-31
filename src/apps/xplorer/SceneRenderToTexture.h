@@ -59,6 +59,7 @@ class Camera;
 
 namespace osgUtil
 {
+class NodeVisitor;
 class SceneView;
 }
 
@@ -136,6 +137,9 @@ public:
     void WriteImageFileForWeb(
         osg::Group* root, osgUtil::SceneView* sv, std::string& filename );
 
+    //Update function to traverse 
+    void Update( osg::NodeVisitor* updateVisitor );
+
 protected:
 
 private:
@@ -193,6 +197,8 @@ private:
     typedef std::map< vrj::Viewport*, PipelinePair > PipelineMap;
     vrj::GlContextData< PipelineMap > mPipelines;
 #endif
+    std::vector< PipelinePair > m_updateList;
+
     ///The root group that everything gets added to
     ///Is the same for all contexts
     osg::ref_ptr< osg::Group > mRootGroup;
