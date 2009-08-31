@@ -39,7 +39,7 @@ CPPDEPS = -MT$@ -MF$(shell echo $@ | sed -e 's,\.o$$,.d,') -MD -MP
 
 all: $(EXECUTABLE)
 	
-$(EXECUTABLE): $(OBJECTS) makefile_mac 
+$(EXECUTABLE): $(OBJECTS) Makefile
 	$(CXX) -o $@ $(OBJECTS) $(WX_LDFLAGS) $(LDFLAGS)
 
 #$(OBJECTS): $(HEADERS) makefile_mac
