@@ -47,7 +47,7 @@ using namespace ves::xplorer::scenegraph::manipulator;
 ////////////////////////////////////////////////////////////////////////////////
 ScaleUniform::ScaleUniform()
     :
-    Dragger( AxesFlag::BILLBOARD, TransformationType::SCALE_UNIFORM )
+    Dragger( TransformationType::SCALE_UNIFORM )
 {
     SetupDefaultGeometry();
 }

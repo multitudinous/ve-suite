@@ -69,13 +69,11 @@ namespace manipulator
 /*!\class ves::xplorer::scenegraph::Dragger
  * Abstract Class
  */
-class VE_SCENEGRAPH_EXPORTS Dragger : public osg::Group
+class VE_SCENEGRAPH_EXPORTS Dragger : public osg::PositionAttitudeTransform
 {
 public:
     ///
-    Dragger(
-        const AxesFlag::Enum& axesFlag,
-        const TransformationType::Enum& transformationType );
+    Dragger( const TransformationType::Enum& transformationType );
 
     ///Copy constructor using CopyOp to manage deep vs shallow copy
     Dragger(
@@ -102,10 +100,6 @@ public:
     virtual Dragger* Focus( osg::NodePath::iterator& npItr );
 
     ///
-    ///\return
-    const AxesFlag::Enum GetAxesFlag() const;
-
-    ///
     const osg::Plane GetPlane( const bool& transform = true ) const;
 
     ///
@@ -113,13 +107,17 @@ public:
     const TransformationType::Enum GetTransformationType() const;
 
     ///
-    const osg::Vec3d GetUnitAxis( const bool& transform = false ) const;
+    const osg::Vec3d GetUnitAxis(
+        const bool& zero = false, const bool& transform = false ) const;
 
     ///
     const VectorSpace::Enum& GetVectorSpace() const;
 
     ///
     virtual void Hide();
+
+    ///
+    const bool IsCompound() const;
 
     ///
     const bool& IsEnabled() const;
@@ -145,6 +143,9 @@ public:
     ///
     virtual void SetColor(
         Color::Enum colorTag, osg::Vec4 newColor, bool use = false );
+
+    ///
+    virtual void SetRootDragger( Dragger* rootDragger );
 
     ///
     virtual void SetVectorSpace( const VectorSpace::Enum& vectorSpace );
@@ -179,13 +180,6 @@ protected:
     virtual void SetupDefaultGeometry() = 0;
 
     ///
-    ///\param drawable
-    void SetDrawableToAlwaysCull( osg::Drawable& drawable );
-
-    ///
-    const AxesFlag::Enum m_axesFlag;
-
-    ///
     const TransformationType::Enum m_transformationType;
 
     ///
@@ -201,42 +195,17 @@ protected:
     osg::Vec3d m_startProjectedPoint;
 
     ///
-    osg::ref_ptr< osg::Uniform > m_color;
+    osg::Matrixd m_localToWorld;
 
     ///
-    osg::ref_ptr< osg::Transform > m_transform;
+    osg::Matrixd m_worldToLocal;
+
+    ///
+    Dragger* m_rootDragger;
 
 private:
     ///
     typedef std::map< Color::Enum, osg::Vec4 > ColorMap;
-
-    ///
-    class ForceCullCallback : public osg::Drawable::CullCallback
-    {
-    public:
-        ///
-        ForceCullCallback();
-
-        ///
-        ForceCullCallback(
-            const ForceCullCallback& forceCullCallback,
-            const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
-
-        ///
-        META_Object(
-            ves::xplorer::scenegraph::manipulator::Dragger, ForceCullCallback );
-
-        ///
-        virtual bool cull(
-            osg::NodeVisitor* nv,
-            osg::Drawable* drawable,
-            osg::RenderInfo* renderInfo ) const;
-
-    protected:
-
-    private:
-
-    };
 
     ///
     void CreateDefaultShader();
@@ -244,7 +213,14 @@ private:
     ///
     ColorMap m_colorMap;
 
+    ///
+    osg::ref_ptr< osg::Uniform > m_color;
+
 };
+
+///
+///\param drawable
+void VE_SCENEGRAPH_EXPORTS SetDrawableToAlwaysCull( osg::Drawable& drawable );
 
 } //end manipulator
 } //end scenegraph

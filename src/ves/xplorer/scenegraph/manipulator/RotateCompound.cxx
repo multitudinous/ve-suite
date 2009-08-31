@@ -43,7 +43,7 @@ using namespace ves::xplorer::scenegraph::manipulator;
 ////////////////////////////////////////////////////////////////////////////////
 RotateCompound::RotateCompound()
     :
-    CompoundDragger( AxesFlag::ALL, TransformationType::ROTATE_COMPOUND ),
+    CompoundDragger( TransformationType::ROTATE_COMPOUND ),
     m_xRotateAxis( NULL ),
     m_yRotateAxis( NULL ),
     m_zRotateAxis( NULL ),
@@ -107,23 +107,37 @@ const char* RotateCompound::libraryName() const
 void RotateCompound::SetupDefaultGeometry()
 {
     //Create translate x-axis dragger
-    m_xRotateAxis = new RotateAxis( AxesFlag::X );
+    m_xRotateAxis = new RotateAxis();
     m_xRotateAxis->SetColor(
         Color::DEFAULT, osg::Vec4f( 1.0, 0.0, 0.0, 1.0 ), true );
 
     addChild( m_xRotateAxis.get() );
 
     //Create translate y-axis dragger
-    m_yRotateAxis = new RotateAxis( AxesFlag::Y );
+    m_yRotateAxis = new RotateAxis();
     m_yRotateAxis->SetColor(
         Color::DEFAULT, osg::Vec4f( 0.0, 1.0, 0.0, 1.0 ), true );
+
+    //Rotate y-axis dragger appropriately
+    {
+        osg::Quat rotation;
+        rotation.makeRotate( GetUnitAxis(), osg::Vec3d( 0.0, 1.0, 0.0 ) );
+        m_yRotateAxis->setAttitude( rotation );
+    }
 
     addChild( m_yRotateAxis.get() );
 
     //Create translate z-axis dragger
-    m_zRotateAxis = new RotateAxis( AxesFlag::Z );
+    m_zRotateAxis = new RotateAxis();
     m_zRotateAxis->SetColor(
         Color::DEFAULT, osg::Vec4f( 0.0, 0.0, 1.0, 1.0 ), true );
+
+    //Rotate z-axis dragger appropriately
+    {
+        osg::Quat rotation;
+        rotation.makeRotate( GetUnitAxis(), osg::Vec3d( 0.0, 0.0, 1.0 ) );
+        m_zRotateAxis->setAttitude( rotation );
+    }
 
     addChild( m_zRotateAxis.get() );
 

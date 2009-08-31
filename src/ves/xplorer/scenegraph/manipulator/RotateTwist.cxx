@@ -47,7 +47,7 @@ using namespace ves::xplorer::scenegraph::manipulator;
 ////////////////////////////////////////////////////////////////////////////////
 RotateTwist::RotateTwist()
     :
-    Dragger( AxesFlag::BILLBOARD, TransformationType::ROTATE_TWIST )
+    Dragger( TransformationType::ROTATE_TWIST )
 {
     SetupDefaultGeometry();
 }
@@ -110,7 +110,7 @@ void RotateTwist::SetupDefaultGeometry()
     {
         osg::ref_ptr< osg::Geometry > geometry = new osg::Geometry();
         osg::ref_ptr< osg::Vec3Array > vertices = new osg::Vec3Array();
-        for( size_t i = 0; i < NUM_CIRCLE_SEGMENTS; ++i )
+        for( unsigned int i = 0; i < NUM_CIRCLE_SEGMENTS; ++i )
         {
             double rot( i * DELTA_SEGMENT_ANGLE );
             double cosVal( cos( rot ) );
@@ -156,7 +156,7 @@ void RotateTwist::SetupDefaultGeometry()
         double minorRadius( 0.025 );
         double innerRadius( ROTATE_TWIST_RADIUS - minorRadius );
         double outerRadius( ROTATE_TWIST_RADIUS + minorRadius );
-        for( size_t i = 0; i <= NUM_CIRCLE_SEGMENTS; ++i )
+        for( unsigned int i = 0; i <= NUM_CIRCLE_SEGMENTS; ++i )
         {
             double rot( i * DELTA_SEGMENT_ANGLE );
             double cosVal( cos( rot ) );
@@ -187,7 +187,7 @@ void RotateTwist::SetupDefaultGeometry()
         osg::ref_ptr< osg::Vec3Array > vertices = new osg::Vec3Array();
 
         vertices->push_back( osg::Vec3( 0.0, 0.0, 0.0 ) );
-        for( size_t i = 0; i <= NUM_CIRCLE_SEGMENTS; ++i )
+        for( unsigned int i = 0; i <= NUM_CIRCLE_SEGMENTS; ++i )
         {
             double rot( i * DELTA_SEGMENT_ANGLE );
             double cosVal( cos( rot ) );

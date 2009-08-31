@@ -54,9 +54,9 @@ using namespace ves::xplorer::scenegraph::manipulator;
 namespace vxs = ves::xplorer::scenegraph;
 
 ////////////////////////////////////////////////////////////////////////////////
-TranslateAxis::TranslateAxis( const AxesFlag::Enum& axesFlag )
+TranslateAxis::TranslateAxis()
     :
-    Dragger( axesFlag, TransformationType::TRANSLATE_AXIS ),
+    Dragger( TransformationType::TRANSLATE_AXIS ),
     m_lineExplodeVector( GetUnitAxis() * TRANSLATE_PAN_RADIUS ),
     m_lineVertices( NULL ),
     m_lineGeometry( NULL ),
@@ -112,7 +112,7 @@ osg::Object* TranslateAxis::clone( const osg::CopyOp& copyop ) const
 ////////////////////////////////////////////////////////////////////////////////
 osg::Object* TranslateAxis::cloneType() const
 {
-    return new TranslateAxis( m_axesFlag );
+    return new TranslateAxis();
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool TranslateAxis::isSameKindAs( const osg::Object* obj ) const
@@ -188,9 +188,8 @@ const bool TranslateAxis::ComputeProjectedPoint(
     osg::Vec3d& projectedPoint )
 {
     //Get the start and end points for the dragger axis in world space
-    const osg::Vec3d startDraggerAxis;// =
-        //m_localToWorld * osg::Vec3d( 0.0, 0.0, 0.0 );
-    const osg::Vec3d endDraggerAxis;// = m_localToWorld * GetUnitAxis();
+    const osg::Vec3d startDraggerAxis = GetUnitAxis( true, true );
+    const osg::Vec3d endDraggerAxis = GetUnitAxis( false, true );
 
     //Get the near and far points for the active device
     const osg::Vec3d& startDeviceInput = deviceInput.getStart();
@@ -216,7 +215,6 @@ const bool TranslateAxis::ComputeProjectedPoint(
     }
 
     projectedPoint = startDraggerAxis + ( u * sc );
-    //projectedPoint = projectedPoint * m_worldToLocal;
 
     return true;
 }
@@ -243,9 +241,9 @@ Dragger* TranslateAxis::Drag( const osgUtil::LineSegmentIntersector& deviceInput
     //Calculate the delta transform
     osg::Vec3d deltaTranslation = endProjectedPoint - m_startProjectedPoint;
     
-    //Set the m_parentManipulator's transform
-    osg::Vec3d newTranslation;// = getPosition() + deltaTranslation;
-    //setPosition( newTranslation );
+    //Set the transform
+    osg::Vec3d newTranslation = m_rootDragger->getPosition() + deltaTranslation;
+    m_rootDragger->setPosition( newTranslation );
 
     //Reset
     m_startProjectedPoint = endProjectedPoint;

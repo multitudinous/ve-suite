@@ -61,9 +61,7 @@ class VE_SCENEGRAPH_EXPORTS CompoundDragger : public Dragger
 {
 public:
     ///
-    CompoundDragger(
-        const AxesFlag::Enum& axesFlag,
-        const TransformationType::Enum& transformationType );
+    CompoundDragger( const TransformationType::Enum& transformationType );
 
     ///Copy constructor using CopyOp to manage deep vs shallow copy
     CompoundDragger(
@@ -95,9 +93,6 @@ public:
     Dragger* GetChild( unsigned int i );
 
     ///
-    //virtual void Hide();
-
-    ///
     virtual Dragger* Push(
         const osgUtil::LineSegmentIntersector& deviceInput,
         const osg::NodePath& np,
@@ -123,10 +118,10 @@ public:
     void SetEnabledModes( TransformationType::Enum value );
 
     ///
-    virtual void SetVectorSpace( const VectorSpace::Enum& vectorSpace );
+    virtual void SetRootDragger( Dragger* rootDragger );
 
     ///
-    //virtual void Show();
+    virtual void SetVectorSpace( const VectorSpace::Enum& vectorSpace );
 
     ///
     virtual void UseColor( Color::Enum colorTag );

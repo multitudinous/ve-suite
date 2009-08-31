@@ -107,6 +107,9 @@ ManipulatorManager::~ManipulatorManager()
 ////////////////////////////////////////////////////////////////////////////////
 bool ManipulatorManager::addChild( Dragger* child )
 {
+    //new osg::PositionAttitudeTransform();
+    //dragger.SetTransform( transform );
+
     return osg::Group::addChild( child );
 }
 ////////////////////////////////////////////////////////////////////////////////

@@ -115,7 +115,7 @@ void ClippingCircle::SetupDefaultGeometry()
     {
         osg::ref_ptr< osg::Geometry > geometry = new osg::Geometry();
         osg::ref_ptr< osg::Vec3dArray > vertices = new osg::Vec3dArray();
-        for( size_t i = 0; i < NUM_CIRCLE_SEGMENTS; ++i )
+        for( unsigned int i = 0; i < NUM_CIRCLE_SEGMENTS; ++i )
         {
             double rot( i * DELTA_SEGMENT_ANGLE );
             double cosVal( cos( rot ) );
@@ -159,7 +159,7 @@ void ClippingCircle::SetupDefaultGeometry()
         osg::ref_ptr< osg::Vec3dArray > vertices = new osg::Vec3dArray();
 
         vertices->push_back( osg::Vec3d( 0.0, 0.0, 0.0 ) );
-        for( size_t i = 0; i <= NUM_CIRCLE_SEGMENTS; ++i )
+        for( unsigned int i = 0; i <= NUM_CIRCLE_SEGMENTS; ++i )
         {
             double rot( i * DELTA_SEGMENT_ANGLE );
             double cosVal( cos( rot ) );

@@ -37,8 +37,6 @@
 #include <ves/xplorer/scenegraph/SceneManager.h>
 
 // --- OSG Includes --- //
-#include <osg/AutoTransform>
-
 #include <osgUtil/CullVisitor>
 #include <osgUtil/LineSegmentIntersector>
 
@@ -46,18 +44,19 @@ using namespace ves::xplorer::scenegraph::manipulator;
 namespace vxs = ves::xplorer::scenegraph;
 
 ////////////////////////////////////////////////////////////////////////////////
-Dragger::Dragger(
-    const AxesFlag::Enum& axesFlag,
-    const TransformationType::Enum& transformationType )
+Dragger::Dragger( const TransformationType::Enum& transformationType )
     :
-    osg::Group(),
-    m_axesFlag( axesFlag ),
+    osg::PositionAttitudeTransform(),
     m_transformationType( transformationType ),
     m_vectorSpace( VectorSpace::GLOBAL ),
     m_enabled( false ),
     m_comboForm( false ),
+    m_startProjectedPoint( 0.0, 0.0, 0.0 ),
+    m_rootDragger( NULL ),
     m_color( NULL )
 {
+    m_rootDragger = this;
+
     m_colorMap[ Color::DEFAULT ] = osg::Vec4f( 0.0, 0.0, 0.0, 1.0 );
     m_colorMap[ Color::FOCUS ] = osg::Vec4f( 1.0, 1.0, 0.0, 1.0 );
     m_colorMap[ Color::ACTIVE ] = osg::Vec4f( 0.7, 0.7, 0.7, 1.0 );
@@ -68,14 +67,15 @@ Dragger::Dragger(
     CreateDefaultShader();
 }
 ////////////////////////////////////////////////////////////////////////////////
-Dragger::Dragger(
-    const Dragger& dragger, const osg::CopyOp& copyop )
+Dragger::Dragger( const Dragger& dragger, const osg::CopyOp& copyop )
     :
-    osg::Group( dragger, copyop ),
-    m_axesFlag( dragger.m_axesFlag ),
+    osg::PositionAttitudeTransform( dragger, copyop ),
     m_transformationType( dragger.m_transformationType ),
+    m_vectorSpace( dragger.m_vectorSpace ),
     m_enabled( dragger.m_enabled ),
     m_comboForm( dragger.m_comboForm ),
+    m_startProjectedPoint( dragger.m_startProjectedPoint ),
+    m_rootDragger( dragger.m_rootDragger ),
     m_colorMap( dragger.m_colorMap ),
     m_color( dragger.m_color )
 {
@@ -148,11 +148,6 @@ Dragger* Dragger::Focus( osg::NodePath::iterator& npItr )
     return NULL;
 }
 ////////////////////////////////////////////////////////////////////////////////
-const AxesFlag::Enum Dragger::GetAxesFlag() const
-{
-    return m_axesFlag;
-}
-////////////////////////////////////////////////////////////////////////////////
 const TransformationType::Enum Dragger::GetTransformationType() const
 {
     return m_transformationType;
@@ -168,6 +163,10 @@ Dragger* Dragger::Push(
     if( this == node )
     {
         UseColor( Color::ACTIVE );
+
+        //Compute local to world and world to local matrices for dragger
+        m_localToWorld = osg::computeLocalToWorld( np );
+        m_worldToLocal = osg::Matrix::inverse( m_localToWorld );
 
         //Get the start projected point
         ComputeProjectedPoint( deviceInput, m_startProjectedPoint );
@@ -258,34 +257,7 @@ const osg::Plane Dragger::GetPlane( const bool& transform ) const
     //N = P1P2 x P1P3 = ( 1, 0, 0 ) x ( 0, 0, 1 ) = ( 0, -1, 0 )
     //-y + d = 0 : d = 0
 
-    osg::Plane plane;
-    switch( m_axesFlag )
-    {
-        case AxesFlag::X:
-        case AxesFlag::YZ:
-        {
-            plane.set( osg::Vec3d( 1.0, 0.0, 0.0 ), 0.0 );
-
-            break;
-        }
-
-        case AxesFlag::Y:
-        case AxesFlag::XZ:
-        {
-            plane.set( osg::Vec3d( 0.0, 1.0, 0.0 ), 0.0 );
-
-            break;
-        }
-
-        case AxesFlag::Z:
-        case AxesFlag::XY:
-        {
-            plane.set( osg::Vec3d( 0.0, 0.0, 1.0 ), 0.0 );
-
-            break;
-        }
-    }
-
+    osg::Plane plane( osg::Vec3d( 1.0, 0.0, 0.0 ), 0.0 );
     if( transform )
     {
         switch( m_vectorSpace )
@@ -293,7 +265,7 @@ const osg::Plane Dragger::GetPlane( const bool& transform ) const
         case VectorSpace::GLOBAL:
         {
             osg::Vec4d vec = plane.asVec4();
-            const osg::Vec3d trans;// = m_worldToLocal.getTrans();
+            const osg::Vec3d trans = m_worldToLocal.getTrans();
             osg::Matrixd matrix;
             matrix.makeTranslate( trans );
             plane.transformProvidingInverse( matrix );
@@ -302,7 +274,7 @@ const osg::Plane Dragger::GetPlane( const bool& transform ) const
         }
         case VectorSpace::LOCAL:
         {
-            //plane.transformProvidingInverse( m_worldToLocal );
+            plane.transformProvidingInverse( m_worldToLocal );
 
             break;
         }
@@ -316,26 +288,13 @@ const osg::Plane Dragger::GetPlane( const bool& transform ) const
     return plane;
 }
 ////////////////////////////////////////////////////////////////////////////////
-const osg::Vec3d Dragger::GetUnitAxis( const bool& transform ) const
+const osg::Vec3d Dragger::GetUnitAxis(
+    const bool& zero, const bool& transform ) const
 {
-    osg::Vec3d zero( 0.0, 0.0, 0.0 );
-    osg::Vec3d unitAxis = zero;
-    if( ( m_axesFlag & AxesFlag::X ) == AxesFlag::X )
+    osg::Vec3d unitAxis( 0.0, 0.0, 0.0 );
+    if( !zero )
     {
         unitAxis.set( 1.0, 0.0, 0.0 );
-    }
-    if( ( m_axesFlag & AxesFlag::Y ) == AxesFlag::Y )
-    {
-        unitAxis.set( 0.0, 1.0, 0.0 );
-    }
-    if( ( m_axesFlag & AxesFlag::Z ) == AxesFlag::Z )
-    {
-        unitAxis.set( 0.0, 0.0, 1.0 );
-    }
-
-    if( unitAxis == zero )
-    {
-        //Error output
     }
 
     if( transform )
@@ -344,13 +303,13 @@ const osg::Vec3d Dragger::GetUnitAxis( const bool& transform ) const
         {
         case VectorSpace::GLOBAL:
         {
-            //unitAxis = unitAxis * m_localToWorld.getTrans();
+            unitAxis += m_localToWorld.getTrans();
 
             break;
         }
         case VectorSpace::LOCAL:
         {
-            //unitAxis = unitAxis * m_localToWorld;
+            unitAxis = m_localToWorld * unitAxis;
 
             break;
         }
@@ -367,6 +326,11 @@ const osg::Vec3d Dragger::GetUnitAxis( const bool& transform ) const
 const VectorSpace::Enum& Dragger::GetVectorSpace() const
 {
     return m_vectorSpace;
+}
+////////////////////////////////////////////////////////////////////////////////
+const bool Dragger::IsCompound() const
+{
+    return false;
 }
 ////////////////////////////////////////////////////////////////////////////////
 const bool& Dragger::IsEnabled() const
@@ -420,6 +384,11 @@ void Dragger::SetColor( Color::Enum colorTag, osg::Vec4 newColor, bool use )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
+void Dragger::SetRootDragger( Dragger* rootDragger )
+{
+    m_rootDragger = rootDragger;
+}
+////////////////////////////////////////////////////////////////////////////////
 void Dragger::SetVectorSpace( const VectorSpace::Enum& vectorSpace )
 {
     m_vectorSpace = vectorSpace;
@@ -440,34 +409,50 @@ void Dragger::UseColor( Color::Enum colorTag )
     m_color->set( GetColor( colorTag ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Dragger::SetDrawableToAlwaysCull( osg::Drawable& drawable )
+class ForceCullCallback : public osg::Drawable::CullCallback
 {
-    osg::ref_ptr< ForceCullCallback > forceCullCallback =
-        new ForceCullCallback();
-    drawable.setCullCallback( forceCullCallback.get() );
-}
+public:
+    ///
+    ForceCullCallback()
+        :
+        osg::Drawable::CullCallback()
+    {
+        ;
+    }
+
+    ///
+    ForceCullCallback(
+        const ForceCullCallback& forceCullCallback,
+        const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY )
+        :
+        osg::Drawable::CullCallback( forceCullCallback, copyop )
+    {
+        ;
+    }
+
+    ///
+    META_Object(
+        ves::xplorer::scenegraph::manipulator::Dragger, ForceCullCallback );
+
+    ///
+    virtual bool cull(
+        osg::NodeVisitor* nv,
+        osg::Drawable* drawable,
+        osg::RenderInfo* renderInfo ) const
+    {
+        return true;
+    }
+
+protected:
+
+private:
+
+};
 ////////////////////////////////////////////////////////////////////////////////
-Dragger::ForceCullCallback::ForceCullCallback()
-    :
-    osg::Drawable::CullCallback()
+void ves::xplorer::scenegraph::manipulator::SetDrawableToAlwaysCull(
+    osg::Drawable& drawable )
 {
-    ;
-}
-////////////////////////////////////////////////////////////////////////////////
-Dragger::ForceCullCallback::ForceCullCallback(
-    const ForceCullCallback& forceCullCallback,
-    const osg::CopyOp& copyop )
-    :
-    osg::Drawable::CullCallback( forceCullCallback, copyop )
-{
-    ;
-}
-////////////////////////////////////////////////////////////////////////////////
-bool Dragger::ForceCullCallback::cull(
-    osg::NodeVisitor* nv,
-    osg::Drawable* drawable,
-    osg::RenderInfo* renderInfo ) const
-{
-    return true;
+    osg::ref_ptr< ForceCullCallback > fcc = new ForceCullCallback();
+    drawable.setCullCallback( fcc.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////

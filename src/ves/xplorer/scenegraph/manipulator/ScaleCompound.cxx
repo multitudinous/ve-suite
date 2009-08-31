@@ -45,7 +45,7 @@ using namespace ves::xplorer::scenegraph::manipulator;
 ////////////////////////////////////////////////////////////////////////////////
 ScaleCompound::ScaleCompound()
     :
-    CompoundDragger( AxesFlag::ALL, TransformationType::SCALE_COMPOUND ),
+    CompoundDragger( TransformationType::SCALE_COMPOUND ),
     m_explodeDistance( 0.2 ),
     m_xScaleAxis( NULL ),
     m_yScaleAxis( NULL ),
@@ -121,7 +121,7 @@ void ScaleCompound::ComboForm()
     osg::Vec3d explodeVector;
     osg::Vec3dArray* lineVertices( NULL );
     osg::Box* box( NULL );
-    for( size_t i = 0; i < getNumChildren(); ++i )
+    for( unsigned int i = 0; i < getNumChildren(); ++i )
     {
         ScaleAxis* scaleAxis = dynamic_cast< ScaleAxis* >( GetChild( i ) );
         if( scaleAxis )
@@ -157,7 +157,7 @@ void ScaleCompound::DefaultForm()
     osg::Vec3d explodeVector;
     osg::Vec3dArray* lineVertices( NULL );
     osg::Box* box( NULL );
-    for( size_t i = 0; i < getNumChildren(); ++i )
+    for( unsigned int i = 0; i < getNumChildren(); ++i )
     {
         ScaleAxis* scaleAxis = dynamic_cast< ScaleAxis* >( GetChild( i ) );
         if( scaleAxis )
@@ -183,23 +183,37 @@ void ScaleCompound::DefaultForm()
 void ScaleCompound::SetupDefaultGeometry()
 {
     //Create translate x-axis dragger
-    m_xScaleAxis = new ScaleAxis( AxesFlag::X );
+    m_xScaleAxis = new ScaleAxis();
     m_xScaleAxis->SetColor(
         Color::DEFAULT, osg::Vec4f( 1.0, 0.0, 0.0, 1.0 ), true );
 
     addChild( m_xScaleAxis.get() );
 
     //Create translate y-axis dragger
-    m_yScaleAxis = new ScaleAxis( AxesFlag::Y );
+    m_yScaleAxis = new ScaleAxis();
     m_yScaleAxis->SetColor(
         Color::DEFAULT, osg::Vec4f( 0.0, 1.0, 0.0, 1.0 ), true );
+
+    //Rotate y-axis dragger appropriately
+    {
+        osg::Quat rotation;
+        rotation.makeRotate( GetUnitAxis(), osg::Vec3d( 0.0, 1.0, 0.0 ) );
+        m_yScaleAxis->setAttitude( rotation );
+    }
 
     addChild( m_yScaleAxis.get() );
 
     //Create translate z-axis dragger
-    m_zScaleAxis = new ScaleAxis( AxesFlag::Z );
+    m_zScaleAxis = new ScaleAxis();
     m_zScaleAxis->SetColor(
         Color::DEFAULT, osg::Vec4f( 0.0, 0.0, 1.0, 1.0 ), true );
+
+    //Rotate z-axis dragger appropriately
+    {
+        osg::Quat rotation;
+        rotation.makeRotate( GetUnitAxis(), osg::Vec3d( 0.0, 0.0, 1.0 ) );
+        m_zScaleAxis->setAttitude( rotation );
+    }
 
     addChild( m_zScaleAxis.get() );
 

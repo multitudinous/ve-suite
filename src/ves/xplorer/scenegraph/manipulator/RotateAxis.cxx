@@ -51,9 +51,9 @@
 using namespace ves::xplorer::scenegraph::manipulator;
 
 ////////////////////////////////////////////////////////////////////////////////
-RotateAxis::RotateAxis( const AxesFlag::Enum& axesFlag )
+RotateAxis::RotateAxis()
     :
-    Dragger( axesFlag, TransformationType::ROTATE_AXIS )
+    Dragger( TransformationType::ROTATE_AXIS )
 {
     SetupDefaultGeometry();
 }
@@ -93,7 +93,7 @@ osg::Object* RotateAxis::clone( const osg::CopyOp& copyop ) const
 ////////////////////////////////////////////////////////////////////////////////
 osg::Object* RotateAxis::cloneType() const
 {
-    return new RotateAxis( m_axesFlag );
+    return new RotateAxis();
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool RotateAxis::isSameKindAs( const osg::Object* obj ) const
@@ -235,7 +235,7 @@ Dragger* RotateAxis::Drag( const osgUtil::LineSegmentIntersector& deviceInput )
 ////////////////////////////////////////////////////////////////////////////////
 void RotateAxis::SetupDefaultGeometry()
 {
-    size_t numSegments( 100 );
+    unsigned int numSegments( 100 );
     double radius( 1.00 );
     double TWO_PI( 2.0 * osg::PI );
     double ringDelta( TWO_PI / numSegments );
@@ -247,7 +247,7 @@ void RotateAxis::SetupDefaultGeometry()
     {
         osg::ref_ptr< osg::Geometry > geometry = new osg::Geometry();
         osg::ref_ptr< osg::Vec3Array > vertices = new osg::Vec3Array();
-        for( size_t i = 0; i < numSegments; ++i )
+        for( unsigned int i = 0; i < numSegments; ++i )
         {
             double rot( i * ringDelta );
             double cosVal( cos( rot ) );
@@ -256,27 +256,7 @@ void RotateAxis::SetupDefaultGeometry()
             double s( radius * cosVal );
             double t( radius * sinVal );
 
-            switch( m_axesFlag )
-            {
-            case AxesFlag::X:
-            {
-                vertices->push_back( osg::Vec3( 0.0, s, t ) );
-
-                break;
-            }
-            case AxesFlag::Y:
-            {
-                vertices->push_back( osg::Vec3( s, 0.0, t ) );
-
-                break;
-            }
-            case AxesFlag::Z:
-            {
-                vertices->push_back( osg::Vec3( s, t, 0.0 ) );
-
-                break;
-            }
-            } //end switch( m_axesFlag )
+            vertices->push_back( osg::Vec3( 0.0, s, t ) );
         }
 
         geometry->setVertexArray( vertices.get() );
@@ -314,7 +294,7 @@ void RotateAxis::SetupDefaultGeometry()
         double minorRadius( 0.025 );
         double innerRadius( radius - minorRadius );
         double outerRadius( radius + minorRadius );
-        for( size_t i = 0; i <= NUM_CIRCLE_SEGMENTS; ++i )
+        for( unsigned int i = 0; i <= NUM_CIRCLE_SEGMENTS; ++i )
         {
             double rot( i * DELTA_SEGMENT_ANGLE );
             double cosVal( cos( rot ) );
@@ -326,30 +306,8 @@ void RotateAxis::SetupDefaultGeometry()
             double so( outerRadius * cosVal );
             double to( outerRadius * sinVal );
 
-            switch( m_axesFlag )
-            {
-            case AxesFlag::X:
-            {
-                vertices->push_back( osg::Vec3( 0.0, si, ti ) );
-                vertices->push_back( osg::Vec3( 0.0, so, to ) );
-
-                break;
-            }
-            case AxesFlag::Y:
-            {
-                vertices->push_back( osg::Vec3( si, 0.0, ti ) );
-                vertices->push_back( osg::Vec3( so, 0.0, to ) );
-
-                break;
-            }
-            case AxesFlag::Z:
-            {
-                vertices->push_back( osg::Vec3( si, ti, 0.0 ) );
-                vertices->push_back( osg::Vec3( so, to, 0.0 ) );
-
-                break;
-            }
-            } //end switch( m_axesFlag )
+            vertices->push_back( osg::Vec3( 0.0, si, ti ) );
+            vertices->push_back( osg::Vec3( 0.0, so, to ) );
         }
 
         geometry->setVertexArray( vertices.get() );
@@ -366,8 +324,8 @@ void RotateAxis::SetupDefaultGeometry()
     {
         osg::ref_ptr< osg::Geometry > geometry = new osg::Geometry();
         osg::ref_ptr< osg::Vec3Array > vertices = new osg::Vec3Array();
-        size_t numSides( 8 );
-        size_t numVerticesPerSegment = 2 * ( numSides + 1 );
+        unsigned int numSides( 8 );
+        unsigned int numVerticesPerSegment = 2 * ( numSides + 1 );
 
         double minorRadius( 0.025 );
         double theta( 0.0 );
@@ -380,7 +338,7 @@ void RotateAxis::SetupDefaultGeometry()
             double newTheta( theta + ringDelta );
             double newCosTheta( cos( newTheta ) );
             double newSinTheta( sin( newTheta ) );
-            for( size_t j = 0; j <= numSides; ++j )
+            for( unsigned int j = 0; j <= numSides; ++j )
             {
                 phi += sideDelta;
                 double cosPhi( cos( phi ) );
@@ -393,30 +351,8 @@ void RotateAxis::SetupDefaultGeometry()
                 double t2 = cosTheta * dist;
                 double p2 = -sinTheta * dist;
 
-                switch( m_axesFlag )
-                {
-                case AxesFlag::X:
-                {
-                    vertices->push_back( osg::Vec3( s, t1, p1 ) );
-                    vertices->push_back( osg::Vec3( s, t2, p2 ) );
-
-                    break;
-                }
-                case AxesFlag::Y:
-                {
-                    vertices->push_back( osg::Vec3( t1, s, p1 ) );
-                    vertices->push_back( osg::Vec3( t2, s, p2 ) );
-
-                    break;
-                }
-                case AxesFlag::Z:
-                {
-                    vertices->push_back( osg::Vec3( t1, p1, s ) );
-                    vertices->push_back( osg::Vec3( t2, p2, s ) );
-
-                    break;
-                }
-                } //end switch( m_axesFlag )
+                vertices->push_back( osg::Vec3( s, t1, p1 ) );
+                vertices->push_back( osg::Vec3( s, t2, p2 ) );
             }
 
             theta = newTheta;
@@ -425,7 +361,7 @@ void RotateAxis::SetupDefaultGeometry()
         }
 
         geometry->setVertexArray( vertices.get() );
-        for( size_t i = 0; i < numSegments; ++i )
+        for( unsigned int i = 0; i < numSegments; ++i )
         {
             geometry->addPrimitiveSet(
                 new osg::DrawArrays(
@@ -444,7 +380,7 @@ void RotateAxis::SetupDefaultGeometry()
         osg::ref_ptr< osg::Vec3Array > vertices = new osg::Vec3Array();
 
         vertices->push_back( osg::Vec3( 0.0, 0.0, 0.0 ) );
-        for( size_t i = 0; i <= numSegments; ++i )
+        for( unsigned int i = 0; i <= numSegments; ++i )
         {
             double rot( i * ringDelta );
             double cosVal( cos( rot ) );
@@ -453,27 +389,7 @@ void RotateAxis::SetupDefaultGeometry()
             double s( radius * cosVal );
             double t( radius * sinVal );
 
-            switch( m_axesFlag )
-            {
-            case AxesFlag::X:
-            {
-                vertices->push_back( osg::Vec3( 0.0, s, t ) );
-
-                break;
-            }
-            case AxesFlag::Y:
-            {
-                vertices->push_back( osg::Vec3( s, 0.0, t ) );
-
-                break;
-            }
-            case AxesFlag::Z:
-            {
-                vertices->push_back( osg::Vec3( s, t, 0.0 ) );
-
-                break;
-            }
-            } //end switch( m_axesFlag )
+            vertices->push_back( osg::Vec3( 0.0, s, t ) );
         }
 
         geometry->setVertexArray( vertices.get() );

@@ -45,9 +45,9 @@
 using namespace ves::xplorer::scenegraph::manipulator;
 
 ////////////////////////////////////////////////////////////////////////////////
-ScaleAxis::ScaleAxis( const AxesFlag::Enum& axesFlag )
+ScaleAxis::ScaleAxis()
     :
-    Dragger( axesFlag, TransformationType::SCALE_AXIS ),
+    Dragger( TransformationType::SCALE_AXIS ),
     m_defaultAxisColor( 0.7, 0.7, 0.7, 1.0 ),
     m_axisColor( NULL ),
     m_lineVertices( NULL ),
@@ -101,7 +101,7 @@ osg::Object* ScaleAxis::clone( const osg::CopyOp& copyop ) const
 ////////////////////////////////////////////////////////////////////////////////
 osg::Object* ScaleAxis::cloneType() const
 {
-    return new ScaleAxis( m_axesFlag );
+    return new ScaleAxis();
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool ScaleAxis::isSameKindAs( const osg::Object* obj ) const
@@ -232,22 +232,4 @@ void ScaleAxis::SetupDefaultGeometry()
     //Add lines and cones to the scene
     addChild( geode.get() );
 }
-////////////////////////////////////////////////////////////////////////////////
-/*
-void ScaleAxis::UseColor( Color::Enum colorTag )
-{
-    osg::Vec4& color = GetColor( colorTag );
-
-    m_color->set( color );
-    
-    if( colorTag == Color::DEFAULT )
-    {
-        m_axisColor->set( m_defaultAxisColor );
-    }
-    else
-    {
-        m_axisColor->set( color );
-    }
-}
-*/
 ////////////////////////////////////////////////////////////////////////////////

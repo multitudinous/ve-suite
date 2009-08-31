@@ -61,7 +61,7 @@ class VE_SCENEGRAPH_EXPORTS RotateAxis : public Dragger
 {
 public:
     ///
-    RotateAxis( const AxesFlag::Enum& axesFlag );
+    RotateAxis();
 
     ///Copy constructor using CopyOp to manage deep vs shallow copy
     RotateAxis(

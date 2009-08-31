@@ -34,17 +34,13 @@
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/manipulator/CompoundDragger.h>
 
-// --- OSG Includes --- //
-
-
 using namespace ves::xplorer::scenegraph::manipulator;
 
 ////////////////////////////////////////////////////////////////////////////////
 CompoundDragger::CompoundDragger(
-    const AxesFlag::Enum& axesFlag,
     const TransformationType::Enum& transformationType )
     :
-    Dragger( axesFlag, transformationType )
+    Dragger( transformationType )
 {
     ;
 }
@@ -69,12 +65,12 @@ void CompoundDragger::ComboForm()
         return;
     }
 
-    Dragger::ComboForm();
-
-    for( size_t i = 0; i < getNumChildren(); ++i )
+    for( unsigned int i = 0; i < getNumChildren(); ++i )
     {
         GetChild( i )->ComboForm();
     }
+
+    Dragger::ComboForm();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CompoundDragger::DefaultForm()
@@ -84,12 +80,12 @@ void CompoundDragger::DefaultForm()
         return;
     }
 
-    Dragger::DefaultForm();
-
-    for( size_t i = 0; i < getNumChildren(); ++i )
+    for( unsigned int i = 0; i < getNumChildren(); ++i )
     {
         GetChild( i )->DefaultForm();
     }
+
+    Dragger::DefaultForm();
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool CompoundDragger::isSameKindAs( const osg::Object* obj ) const
@@ -109,7 +105,7 @@ Dragger* CompoundDragger::Focus( osg::NodePath::iterator& npItr )
     ++npItr;
 
     Dragger* activeDragger( NULL );
-    for( size_t i = 0; i < getNumChildren(); ++i )
+    for( unsigned int i = 0; i < getNumChildren(); ++i )
     {
         Dragger* dragger = GetChild( i )->Focus( npItr );
         if( dragger )
@@ -133,7 +129,7 @@ Dragger* CompoundDragger::Push(
         //Get the active dragger
         ++npItr;
         Dragger* activeDragger( NULL );
-        for( size_t i = 0; i < getNumChildren(); ++i )
+        for( unsigned int i = 0; i < getNumChildren(); ++i )
         {
             Dragger* dragger = GetChild( i )->Push( deviceInput, np, npItr );
             if( dragger )
@@ -162,7 +158,7 @@ Dragger* CompoundDragger::Release( osg::NodePath::iterator& npItr )
     {
         ++npItr;
         Dragger* activeDragger( NULL );
-        for( size_t i = 0; i < getNumChildren(); ++i )
+        for( unsigned int i = 0; i < getNumChildren(); ++i )
         {
             Dragger* dragger = GetChild( i )->Release( npItr );
             if( dragger )
@@ -185,6 +181,8 @@ Dragger* CompoundDragger::Release( osg::NodePath::iterator& npItr )
 ////////////////////////////////////////////////////////////////////////////////
 bool CompoundDragger::addChild( Dragger* child )
 {
+    child->SetRootDragger( this );
+
     return Dragger::addChild( child );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -211,7 +209,7 @@ bool CompoundDragger::setChild( unsigned int i, Dragger* node )
 void CompoundDragger::SetColor(
     Color::Enum colorTag, osg::Vec4& newColor, bool use )
 {
-    for( size_t i = 0; i < getNumChildren(); ++i )
+    for( unsigned int i = 0; i < getNumChildren(); ++i )
     {
         GetChild( i )->SetColor( colorTag, newColor, use );
     }
@@ -224,16 +222,9 @@ void CompoundDragger::SetEnabledModes( TransformationType::Enum value )
         return;
     }
 
-    if( m_enabled )
-    {
-        //m_redoStack.clear();
-    }
-
-    //m_enabled = false;
     m_enabledModes = value;
-    //m_activeMode = TransformationType::NONE;
 
-    for( size_t i = 0; i < getNumChildren(); ++i )
+    for( unsigned int i = 0; i < getNumChildren(); ++i )
     {
         Dragger* dragger = GetChild( i );
         if( dragger->GetTransformationType() & m_enabledModes )
@@ -247,19 +238,29 @@ void CompoundDragger::SetEnabledModes( TransformationType::Enum value )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
+void CompoundDragger::SetRootDragger( Dragger* rootDragger )
+{
+    for( unsigned int i = 0; i < getNumChildren(); ++i )
+    {
+        GetChild( i )->SetRootDragger( rootDragger );
+    }
+
+    Dragger::SetRootDragger( rootDragger );
+}
+////////////////////////////////////////////////////////////////////////////////
 void CompoundDragger::SetVectorSpace( const VectorSpace::Enum& vectorSpace )
 {
-    Dragger::SetVectorSpace( vectorSpace );
-
-    for( size_t i = 0; i < getNumChildren(); ++i )
+    for( unsigned int i = 0; i < getNumChildren(); ++i )
     {
         GetChild( i )->SetVectorSpace( vectorSpace );
     }
+
+    Dragger::SetVectorSpace( vectorSpace );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CompoundDragger::UseColor( Color::Enum colorTag )
 {
-    for( size_t i = 0; i < getNumChildren(); ++i )
+    for( unsigned int i = 0; i < getNumChildren(); ++i )
     {
         GetChild( i )->UseColor( colorTag );
     }

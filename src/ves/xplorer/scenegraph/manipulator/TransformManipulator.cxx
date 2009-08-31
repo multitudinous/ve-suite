@@ -47,7 +47,7 @@ using namespace ves::xplorer::scenegraph::manipulator;
 ////////////////////////////////////////////////////////////////////////////////
 TransformManipulator::TransformManipulator()
     :
-    CompoundDragger( AxesFlag::ALL, TransformationType::ALL ),
+    CompoundDragger( TransformationType::ALL ),
     m_translateCompound( NULL ),
     m_rotateCompound( NULL ),
     m_scaleCompound( NULL )

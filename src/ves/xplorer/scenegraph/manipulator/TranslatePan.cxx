@@ -45,7 +45,7 @@ using namespace ves::xplorer::scenegraph::manipulator;
 ////////////////////////////////////////////////////////////////////////////////
 TranslatePan::TranslatePan()
     :
-    Dragger( AxesFlag::BILLBOARD, TransformationType::TRANSLATE_PAN )
+    Dragger( TransformationType::TRANSLATE_PAN )
 {
     SetupDefaultGeometry();
 }
@@ -108,7 +108,7 @@ void TranslatePan::SetupDefaultGeometry()
     {
         osg::ref_ptr< osg::Geometry > geometry = new osg::Geometry();
         osg::ref_ptr< osg::Vec3Array > vertices = new osg::Vec3Array();
-        for( size_t i = 0; i < NUM_CIRCLE_SEGMENTS; ++i )
+        for( unsigned int i = 0; i < NUM_CIRCLE_SEGMENTS; ++i )
         {
             double rot( i * DELTA_SEGMENT_ANGLE );
             double cosVal( cos( rot ) );
@@ -152,7 +152,7 @@ void TranslatePan::SetupDefaultGeometry()
         osg::ref_ptr< osg::Vec3Array > vertices = new osg::Vec3Array();
 
         vertices->push_back( osg::Vec3( 0.0, 0.0, 0.0 ) );
-        for( size_t i = 0; i <= NUM_CIRCLE_SEGMENTS; ++i )
+        for( unsigned int i = 0; i <= NUM_CIRCLE_SEGMENTS; ++i )
         {
             double rot( i * DELTA_SEGMENT_ANGLE );
             double cosVal( cos( rot ) );

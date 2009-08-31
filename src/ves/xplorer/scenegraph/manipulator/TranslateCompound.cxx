@@ -45,7 +45,7 @@ using namespace ves::xplorer::scenegraph::manipulator;
 ////////////////////////////////////////////////////////////////////////////////
 TranslateCompound::TranslateCompound()
     :
-    CompoundDragger( AxesFlag::ALL, TransformationType::TRANSLATE_COMPOUND ),
+    CompoundDragger( TransformationType::TRANSLATE_COMPOUND ),
     m_explodeDistance( 0.5 ),
     m_xTranslateAxis( NULL ),
     m_yTranslateAxis( NULL ),
@@ -121,7 +121,7 @@ void TranslateCompound::ComboForm()
     osg::Vec3d explodeVector;
     osg::Geode* geode( NULL );
     osg::Cone* cone( NULL );
-    for( size_t i = 0; i < getNumChildren(); ++i )
+    for( unsigned int i = 0; i < getNumChildren(); ++i )
     {
         TranslateAxis* translateAxis =
             dynamic_cast< TranslateAxis* >( GetChild( i ) );
@@ -156,7 +156,7 @@ void TranslateCompound::DefaultForm()
     osg::Vec3d explodeVector;
     osg::Geode* geode( NULL );
     osg::Cone* cone( NULL );
-    for( size_t i = 0; i < getNumChildren(); ++i )
+    for( unsigned int i = 0; i < getNumChildren(); ++i )
     {
         TranslateAxis* translateAxis =
             dynamic_cast< TranslateAxis* >( GetChild( i ) );
@@ -181,7 +181,7 @@ void TranslateCompound::DefaultForm()
 void TranslateCompound::SetupDefaultGeometry()
 {
     //Create translate x-axis dragger
-    m_xTranslateAxis = new TranslateAxis( AxesFlag::X );
+    m_xTranslateAxis = new TranslateAxis();
     m_xTranslateAxis->SetColor(
         Color::DEFAULT, osg::Vec4f( 1.0, 0.0, 0.0, 1.0 ), true );
     m_xTranslateAxis->ComboForm();
@@ -189,18 +189,32 @@ void TranslateCompound::SetupDefaultGeometry()
     addChild( m_xTranslateAxis.get() );
 
     //Create translate y-axis dragger
-    m_yTranslateAxis = new TranslateAxis( AxesFlag::Y );
+    m_yTranslateAxis = new TranslateAxis();
     m_yTranslateAxis->SetColor(
         Color::DEFAULT, osg::Vec4f( 0.0, 1.0, 0.0, 1.0 ), true );
     m_yTranslateAxis->ComboForm();
 
+    //Rotate y-axis dragger appropriately
+    {
+        osg::Quat rotation;
+        rotation.makeRotate( GetUnitAxis(), osg::Vec3d( 0.0, 1.0, 0.0 ) );
+        m_yTranslateAxis->setAttitude( rotation );
+    }
+
     addChild( m_yTranslateAxis.get() );
 
     //Create translate z-axis dragger
-    m_zTranslateAxis = new TranslateAxis( AxesFlag::Z );
+    m_zTranslateAxis = new TranslateAxis();
     m_zTranslateAxis->SetColor(
         Color::DEFAULT, osg::Vec4f( 0.0, 0.0, 1.0, 1.0 ), true );
     m_zTranslateAxis->ComboForm();
+
+    //Rotate z-axis dragger appropriately
+    {
+        osg::Quat rotation;
+        rotation.makeRotate( GetUnitAxis(), osg::Vec3d( 0.0, 0.0, 1.0 ) );
+        m_zTranslateAxis->setAttitude( rotation );
+    }
 
     addChild( m_zTranslateAxis.get() );
 

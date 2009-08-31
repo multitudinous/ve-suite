@@ -71,7 +71,7 @@ class VE_SCENEGRAPH_EXPORTS TranslateAxis : public Dragger
 {
 public:
     ///
-    TranslateAxis( const AxesFlag::Enum& axesFlag );
+    TranslateAxis();
 
     ///Copy constructor using CopyOp to manage deep vs shallow copy
     TranslateAxis(

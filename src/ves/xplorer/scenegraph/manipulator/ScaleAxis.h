@@ -68,7 +68,7 @@ class VE_SCENEGRAPH_EXPORTS ScaleAxis : public Dragger
 {
 public:
     ///
-    ScaleAxis( const AxesFlag::Enum& axesFlag );
+    ScaleAxis();
 
     ///Copy constructor using CopyOp to manage deep vs shallow copy
     ScaleAxis(

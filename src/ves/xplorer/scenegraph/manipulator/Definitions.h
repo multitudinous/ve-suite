@@ -61,6 +61,7 @@ namespace scenegraph
 namespace manipulator
 {
 
+/*
 ///
 namespace AxesFlag
 {
@@ -83,6 +84,7 @@ namespace AxesFlag
         ALL = XYZ | BILLBOARD
     };
 }
+*/
 
 ///Defines transformation type associations with the draggers
 namespace TransformationType
