@@ -197,7 +197,7 @@ private:
     typedef std::map< vrj::Viewport*, PipelinePair > PipelineMap;
     vrj::GlContextData< PipelineMap > mPipelines;
 #endif
-    std::vector< PipelinePair > m_updateList;
+    std::vector< osg::Camera* > m_updateList;
 
     ///The root group that everything gets added to
     ///Is the same for all contexts

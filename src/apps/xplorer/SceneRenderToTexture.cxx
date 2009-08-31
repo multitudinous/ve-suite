@@ -187,10 +187,10 @@ void SceneRenderToTexture::InitScene( osg::Camera* const sceneViewCamera )
         (*mPipelines)[ viewport ] =
             std::make_pair( camera.get(), processor.get() );
         
-        m_updateList.push_back( std::make_pair( camera.get(), processor.get() ) );
         sceneViewCamera->addChild( camera.get() );
     }
     sceneViewCamera->addChild( rttPipelines.get() );
+    m_updateList.push_back( sceneViewCamera );
 
     *mCamerasConfigured = true;
 }
@@ -1117,9 +1117,8 @@ void SceneRenderToTexture::InitializeRTT()
 ////////////////////////////////////////////////////////////////////////////////
 void SceneRenderToTexture::Update( osg::NodeVisitor* updateVisitor )
 {
-    for( std::vector< PipelinePair >::iterator iter = m_updateList.begin(); iter != m_updateList.end(); ++iter )
+    for( std::vector< osg::Camera* >::iterator iter = m_updateList.begin(); iter != m_updateList.end(); ++iter )
     {
-        iter->first->accept( *updateVisitor );
-        iter->second->accept( *updateVisitor );
+        (*iter)->accept( *updateVisitor );
     }
 }
