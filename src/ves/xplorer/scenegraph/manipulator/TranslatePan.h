@@ -99,6 +99,14 @@ protected:
     virtual ~TranslatePan();
 
     ///
+    virtual void ComputeDeltaTransform();
+
+    ///
+    virtual const bool ComputeProjectedPoint(
+        const osgUtil::LineSegmentIntersector& deviceInput,
+        osg::Vec3d& projectedPoint );
+
+    ///
     virtual void SetupDefaultGeometry();
 
 private:

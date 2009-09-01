@@ -34,8 +34,17 @@
 #ifndef VES_XPLORER_SCENEGRAPH_MANIPULATOR_DEFINITIONS_H
 #define VES_XPLORER_SCENEGRAPH_MANIPULATOR_DEFINITIONS_H
 
+// --- VE-Suite Includes --- //
+#include <ves/VEConfig.h>
+
 // --- VR Juggler Includes --- //
 #include <gmtl/Math.h>
+
+// --- OSG Includes --- //
+namespace osg
+{
+class Drawable;
+}
 
 //Define manipulator constants
 const unsigned int NUM_CIRCLE_SEGMENTS = 100;
@@ -103,6 +112,13 @@ namespace TransformationType
         SCALE_UNIFORM = 0x20,
         SCALE_COMPOUND = SCALE_AXIS | SCALE_UNIFORM,
 
+        /*
+        NONE = 0x0,
+        TRANSLATE = 0x1,
+        ROTATE = 0x2,
+        SCALE = 0x3,
+        */
+
         ALL = TRANSLATE_COMPOUND | ROTATE_COMPOUND | SCALE_COMPOUND
     };
 }
@@ -153,6 +169,10 @@ namespace Event
         RELEASE
     };
 }
+
+///
+///\param drawable
+void VE_SCENEGRAPH_EXPORTS SetDrawableToAlwaysCull( osg::Drawable& drawable );
 
 } //end manipulator
 } //end scenegraph

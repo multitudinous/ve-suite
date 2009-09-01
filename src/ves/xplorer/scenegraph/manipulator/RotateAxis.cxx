@@ -128,7 +128,8 @@ void RotateAxis::ComputeDeltaTransform()
     //of the derived cross product calculated above to obtain the direction
     //by which we should rotate with the angle
     double dot = originToStart * originToEnd;
-    double rotationAngle = acos( dot ) * sin( rotationAxis * crossStartEnd );
+    double rotationAngle =
+        acos( dot ) * osg::sign( rotationAxis * crossStartEnd );
 
     //Create a normalized quaternion representing the rotation from the start to end points
     m_deltaRotation.makeRotate( rotationAngle, rotationAxis );
@@ -147,21 +148,15 @@ const bool RotateAxis::ComputeProjectedPoint(
     osg::Vec3d& projectedPoint )
 {
     //Get the near and far points for the active device
-    const osg::Vec3d& startDeviceInput = deviceInput.getStart();
-    const osg::Vec3d& endDeviceInput = deviceInput.getEnd();
-
-    osg::Vec3d direction = endDeviceInput - startDeviceInput;
-    direction.normalize();
+    const osg::Vec3d& lineStart = deviceInput.getStart();
+    const osg::Vec3d& lineEnd = deviceInput.getEnd();
     
     //Exit if the intersection is invalid
     double intersectDistance;
-    if( !IntersectsPlane( startDeviceInput, direction, intersectDistance ) )
+    if( !GetLinePlaneIntersection( lineStart, lineEnd, projectedPoint ) )
     {
         return false;
     }
-
-    //Calculate the intersection position of the ray on the plane
-    projectedPoint = startDeviceInput + ( direction * intersectDistance );
 
     return true;
 }

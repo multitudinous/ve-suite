@@ -45,11 +45,6 @@
 
 #include <osgUtil/LineSegmentIntersector>
 
-namespace osg
-{
-class Drawable;
-}
-
 // --- C/C++ Includes --- //
 #include <set>
 #include <map>
@@ -179,10 +174,10 @@ protected:
     osg::Vec4& GetColor( Color::Enum colorTag );
 
     ///
-    const bool IntersectsPlane(
-        const osg::Vec3d& startPosition,
-        const osg::Vec3d& direction,
-        double& intersectDistance );
+    const bool GetLinePlaneIntersection(
+        const osg::Vec3d& lineStart,
+        const osg::Vec3d& lineEnd,
+        osg::Vec3d& intersection );
 
     ///Pure virtual
     ///
@@ -253,10 +248,6 @@ private:
     AssociationMatricesMap m_associationMatricesMap;
 
 };
-
-///
-///\param drawable
-void VE_SCENEGRAPH_EXPORTS SetDrawableToAlwaysCull( osg::Drawable& drawable );
 
 } //end manipulator
 } //end scenegraph

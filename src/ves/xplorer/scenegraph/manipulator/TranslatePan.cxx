@@ -88,6 +88,54 @@ osg::Object* TranslatePan::cloneType() const
     return new TranslatePan();
 }
 ////////////////////////////////////////////////////////////////////////////////
+void TranslatePan::ComputeDeltaTransform()
+{
+    //Calculate the delta transform
+    m_deltaTranslation = m_endProjectedPoint - m_startProjectedPoint;
+    
+    //Set the transform
+    osg::Vec3d newTranslation =
+        m_rootDragger->getPosition() + m_deltaTranslation;
+    m_rootDragger->setPosition( newTranslation );
+}
+////////////////////////////////////////////////////////////////////////////////
+//See http://softsurfer.com/Archive/algorithm_0106/algorithm_0106.htm
+const bool TranslatePan::ComputeProjectedPoint(
+    const osgUtil::LineSegmentIntersector& deviceInput,
+    osg::Vec3d& projectedPoint )
+{
+    //Get the start and end points for the dragger axis in world space
+    const osg::Vec3d startDraggerAxis = GetUnitAxis( true, true );
+    const osg::Vec3d endDraggerAxis = GetUnitAxis( false, true );
+
+    //Get the near and far points for the active device
+    const osg::Vec3d& startDeviceInput = deviceInput.getStart();
+    const osg::Vec3d& endDeviceInput = deviceInput.getEnd();
+
+    osg::Vec3d u = endDraggerAxis - startDraggerAxis;
+    osg::Vec3d v = endDeviceInput - startDeviceInput;
+    osg::Vec3d w = startDraggerAxis - startDeviceInput;
+
+    double a = u * u;
+    double b = u * v;
+    double c = v * v;
+    double d = u * w;
+    double e = v * w;
+    
+    //Compute the line parameters of the two closest points
+    double sc( 0.0 );
+    double D = ( a * c ) - ( b * b );
+    //If the lines are not parallel
+    if( D > 0.00000001 )
+    {
+        sc = ( b * e - c * d ) / D;
+    }
+
+    projectedPoint = startDraggerAxis + ( u * sc );
+
+    return true;
+}
+////////////////////////////////////////////////////////////////////////////////
 bool TranslatePan::isSameKindAs( const osg::Object* obj ) const
 {
     return dynamic_cast< const TranslatePan* >( obj ) != NULL;

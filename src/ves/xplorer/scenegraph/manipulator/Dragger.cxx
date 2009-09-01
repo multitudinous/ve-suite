@@ -38,7 +38,6 @@
 #include <ves/xplorer/scenegraph/LocalToWorldNodePath.h>
 
 // --- OSG Includes --- //
-#include <osg/Drawable>
 #include <osg/MatrixTransform>
 
 #include <osgUtil/CullVisitor>
@@ -207,7 +206,10 @@ Dragger* Dragger::Push(
         m_worldToLocal = osg::Matrix::inverse( m_localToWorld );
 
         //Get the start projected point
-        ComputeProjectedPoint( deviceInput, m_startProjectedPoint );
+        if( !ComputeProjectedPoint( deviceInput, m_startProjectedPoint ) )
+        {
+            return NULL;
+        }
 
         //Compute the association matrices
         ComputeAssociationMatrices();
@@ -384,31 +386,15 @@ const osg::Plane Dragger::GetPlane( const bool& transform ) const
     osg::Plane plane( osg::Vec3d( 1.0, 0.0, 0.0 ), 0.0 );
     if( transform )
     {
-        switch( m_vectorSpace )
-        {
-        case VectorSpace::GLOBAL:
-        {
-            osg::Vec4d vec = plane.asVec4();
-            const osg::Vec3d trans = m_worldToLocal.getTrans();
-            osg::Matrixd matrix;
-            matrix.makeTranslate( trans );
-            plane.transformProvidingInverse( matrix );
-
+        //case TransformationType::TRANSLATE_PAN:
+        //case TransformationType::ROTATE_TWIST:
+        //{
+            //break;
+        //}
+        //default:
+        //{
             plane.transformProvidingInverse( m_worldToLocal );
-            
-            break;
-        }
-        case VectorSpace::LOCAL:
-        {
-            plane.transformProvidingInverse( m_worldToLocal );
-
-            break;
-        }
-        case VectorSpace::VIEW:
-        {
-            break;
-        }
-        } //end switch( m_vectorSpace )
+        //}
     }
 
     return plane;
@@ -425,26 +411,7 @@ const osg::Vec3d Dragger::GetUnitAxis(
 
     if( transform )
     {
-        switch( m_vectorSpace )
-        {
-        case VectorSpace::GLOBAL:
-        {
-            //unitAxis += m_localToWorld.getTrans();
-            unitAxis = m_localToWorld * unitAxis;
-
-            break;
-        }
-        case VectorSpace::LOCAL:
-        {
-            unitAxis = m_localToWorld * unitAxis;
-
-            break;
-        }
-        case VectorSpace::VIEW:
-        {
-            break;
-        }
-        } //end switch( m_vectorSpace )
+        unitAxis = m_localToWorld * unitAxis;
     }
 
     return unitAxis;
@@ -465,11 +432,14 @@ const bool& Dragger::IsEnabled() const
     return m_enabled;
 }
 ////////////////////////////////////////////////////////////////////////////////
-const bool Dragger::IntersectsPlane(
-    const osg::Vec3d& startPosition,
-    const osg::Vec3d& direction,
-    double& intersectDistance )
+const bool Dragger::GetLinePlaneIntersection(
+    const osg::Vec3d& lineStart,
+    const osg::Vec3d& lineEnd,
+    osg::Vec3d& intersection )
 {
+    osg::Vec3d direction = lineEnd - lineStart;
+    direction.normalize();
+
     double error = -1E-05;
 
     osg::Plane plane = GetPlane();
@@ -480,8 +450,8 @@ const bool Dragger::IntersectsPlane(
         return false;
     }
 
-    double num3 = plane.dotProductNormal( startPosition );
-    intersectDistance = ( -plane[ 3 ] - num3 ) / num2;
+    double num3 = plane.dotProductNormal( lineStart );
+    double intersectDistance = ( -plane[ 3 ] - num3 ) / num2;
     if( intersectDistance < 0.0 )
     {
         if( intersectDistance < error )
@@ -491,6 +461,9 @@ const bool Dragger::IntersectsPlane(
 
         intersectDistance = 0.0;
     }
+
+    //Calculate the intersection position of the ray on the plane
+    intersection = lineStart + ( direction * intersectDistance );
 
     return true;
 }
@@ -534,52 +507,5 @@ void Dragger::Show()
 void Dragger::UseColor( Color::Enum colorTag )
 {
     m_color->set( GetColor( colorTag ) );
-}
-////////////////////////////////////////////////////////////////////////////////
-class ForceCullCallback : public osg::Drawable::CullCallback
-{
-public:
-    ///
-    ForceCullCallback()
-        :
-        osg::Drawable::CullCallback()
-    {
-        ;
-    }
-
-    ///
-    ForceCullCallback(
-        const ForceCullCallback& forceCullCallback,
-        const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY )
-        :
-        osg::Drawable::CullCallback( forceCullCallback, copyop )
-    {
-        ;
-    }
-
-    ///
-    META_Object(
-        ves::xplorer::scenegraph::manipulator::Dragger, ForceCullCallback );
-
-    ///
-    virtual bool cull(
-        osg::NodeVisitor* nv,
-        osg::Drawable* drawable,
-        osg::RenderInfo* renderInfo ) const
-    {
-        return true;
-    }
-
-protected:
-
-private:
-
-};
-////////////////////////////////////////////////////////////////////////////////
-void ves::xplorer::scenegraph::manipulator::SetDrawableToAlwaysCull(
-    osg::Drawable& drawable )
-{
-    osg::ref_ptr< ForceCullCallback > fcc = new ForceCullCallback();
-    drawable.setCullCallback( fcc.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////

@@ -34,4 +34,56 @@
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/manipulator/Definitions.h>
 
+// --- OSG Includes --- //
+#include <osg/Drawable>
+
 using namespace ves::xplorer::scenegraph::manipulator;
+
+////////////////////////////////////////////////////////////////////////////////
+class ForceCullCallback : public osg::Drawable::CullCallback
+{
+public:
+    ///
+    ForceCullCallback()
+        :
+        osg::Drawable::CullCallback()
+    {
+        ;
+    }
+
+    ///
+    ForceCullCallback(
+        const ForceCullCallback& forceCullCallback,
+        const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY )
+        :
+        osg::Drawable::CullCallback( forceCullCallback, copyop )
+    {
+        ;
+    }
+
+    ///
+    META_Object(
+        ves::xplorer::scenegraph::manipulator::Dragger, ForceCullCallback );
+
+    ///
+    virtual bool cull(
+        osg::NodeVisitor* nv,
+        osg::Drawable* drawable,
+        osg::RenderInfo* renderInfo ) const
+    {
+        return true;
+    }
+
+protected:
+
+private:
+
+};
+////////////////////////////////////////////////////////////////////////////////
+void ves::xplorer::scenegraph::manipulator::SetDrawableToAlwaysCull(
+    osg::Drawable& drawable )
+{
+    osg::ref_ptr< ForceCullCallback > fcc = new ForceCullCallback();
+    drawable.setCullCallback( fcc.get() );
+}
+////////////////////////////////////////////////////////////////////////////////
