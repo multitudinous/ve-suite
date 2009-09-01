@@ -1,12 +1,85 @@
+/*************** <auto-copyright.rb BEGIN do not edit this line> **************
+ *
+ * VE-Suite is (C) Copyright 1998-2009 by Iowa State University
+ *
+ * Original Development Team:
+ *   - ISU's Thermal Systems Virtual Engineering Group,
+ *     Headed by Kenneth Mark Bryden, Ph.D., www.vrac.iastate.edu/~kmbryden
+ *   - Reaction Engineering International, www.reaction-eng.com
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ *
+ * -----------------------------------------------------------------
+ * Date modified: $Date$
+ * Version:       $Rev$
+ * Author:        $Author$
+ * Id:            $Id$
+ * -----------------------------------------------------------------
+ *
+ *************** <auto-copyright.rb END do not edit this line> ***************/
+
 #include "TecIntegrationManager.h"
 #include "Manager.h"
 #include "ApplicationEventMonitor.h"
 #include "StringList.h"
 #include <iostream>
 
+#include <vtkUnstructuredGrid.h>    // -lvtkFiltering
+#include <vtkPoints.h>              // -lvtkCommon
+#include <vtkCellType.h>
+#include <vtkFloatArray.h>
+#include <vtkPointData.h>
+
 using namespace tecplot::sdk::integration;
 using namespace tecplot::toolbox;
 using namespace std;
+
+double * readVariable( EntIndex_t currentZone, int varNumber, char * varName )
+{
+    double * array = NULL;
+    // Read a single variable from the current zone...
+    if( varNumber )
+    {
+        FieldData_pa FieldData = TecUtilDataValueGetReadableNativeRef( currentZone, varNumber ); //1-based
+        if( FieldData )
+        {
+            LgIndex_t NumValues = TecUtilDataValueGetCountByRef( FieldData );
+            array = new double [ NumValues ];
+
+/*
+            if( NumValues != numDataPoints )
+            {
+                cout << "NumValues != numDataPoints" << endl;
+            }
+*/
+            cout << "Writing Variable " << varName << ":" << endl;
+            for( int i = 0; i < NumValues; i++ )
+            {
+                array[ i ] = TecUtilDataValueGetByRef( FieldData, i+1 ); //GetByRef function is 1-based
+                cout << varName << "[" << i+1 << "] = " << array[ i ] << endl;
+            }
+        }
+        else
+        {
+            cerr << "Error: Unable to read " << varName << " variable data" << endl;
+            return array;
+        }
+    }
+    return array;
+}
 
 void convertTecplotToVTK( char * fName )
 {
@@ -35,13 +108,38 @@ void convertTecplotToVTK( char * fName )
     cout << "Number of zones is " << nzones << " and number of variables is " << nvars << endl;
     TecUtilStringDealloc(&dataset_title);
 
-    VarName_t Name;
-    for( int i = 1; i < nvars+1; i++ ) // variable numbers are 1-based
+    VarName_t * Name = new VarName_t [ nvars ];
+    int xIndex = 0;
+    int yIndex = 0;
+    int zIndex = 0;
+    int numNodalParameters = 0;
+
+    for( int i = 0; i < nvars; i++ )
     {
-        TecUtilVarGetName( i, &Name );
-        cout << "The name of Variable " << i << " is \"" << Name << "\"" << endl;
-        TecUtilStringDealloc( &Name );
+        TecUtilVarGetName( i+1, &Name[ i ] ); // variable numbers are 1-based
+        cout << "The name of Variable " << i+1 << " is \"" << Name[ i ] << "\"" << endl;
+        if( strcmp( Name[ i ], "X" ) == 0 )
+        {
+            xIndex = i+1;
+        }
+        else if( strcmp( Name[ i ], "Y" ) == 0 )
+        {
+            yIndex = i+1;
+        }
+        else if( strcmp( Name[ i ], "Z" ) == 0 )
+        {
+            zIndex = i+1;
+        }
+        else
+        {
+            // count number of non-coordinate nodal data parameters
+            numNodalParameters++;
+        }
     }
+    cout << "xIndex is " << xIndex << ", yIndex is " << yIndex << ", zIndex is " << zIndex << endl;
+    cout << "numNodalParameters is " << numNodalParameters << endl;
+
+    vtkUnstructuredGrid *ugrid = vtkUnstructuredGrid::New();
 
     for( EntIndex_t currentZone = 1; currentZone < nzones+1; currentZone++ ) // zone numbers are 1-based
     {
@@ -84,7 +182,8 @@ void convertTecplotToVTK( char * fName )
         } 	
 
         // Obtain information about the current zone.
-        // If the frame mode is XY the handles must be passed in as NULL. Otherwise, passing NULL indicates the value is not desired.
+        // If the frame mode is XY the handles must be passed in as NULL. 
+        // Otherwise, passing NULL indicates the value is not desired.
         LgIndex_t IMax, JMax, KMax;
         TecUtilZoneGetInfo( 
             currentZone,    // Number of the zone to query
@@ -104,7 +203,9 @@ void convertTecplotToVTK( char * fName )
             NULL,           // Receives the handle to a writable field data for the contouring variable.
             NULL );         // Receives the handle to a writable field data for the scatter sizing variable.
 
+        int numDataPoints = 0;
         int numNodesPerElement = 0;
+        int numFacesPerCell = 0;
         LgIndex_t numElements = 0;
 
         if( zoneType == ZoneType_Ordered )
@@ -134,7 +235,8 @@ void convertTecplotToVTK( char * fName )
         }
         else if( zoneType > ZoneType_Ordered && zoneType < END_ZoneType_e )
         {
-            cout << "The number of data points is " << IMax << endl;
+            numDataPoints = IMax;
+            cout << "The number of data points is " << numDataPoints << endl;
 
             numElements = JMax;
             cout << "The number of elements is " << numElements << endl;
@@ -142,7 +244,8 @@ void convertTecplotToVTK( char * fName )
             if( zoneType == ZoneType_FEPolygon || zoneType == ZoneType_FEPolyhedron )
             {
                 // face-based FE-data
-                cout << "The number of faces per cell is " << KMax << endl;
+                numFacesPerCell = KMax;
+                cout << "The number of faces per cell is " << numFacesPerCell << endl;
             }
             else
             {
@@ -156,7 +259,8 @@ void convertTecplotToVTK( char * fName )
             cout << "ZoneType not known. Not supposed to get here." << endl;
         }
 
-        cout << "The number of nodes per element is " << numNodesPerElement << endl;
+        if( numNodesPerElement == 0 )
+            cout << "The number of nodes per element is " << numNodesPerElement << endl;
 
         NodeMap_pa nm = TecUtilDataNodeGetReadableRef( currentZone );
         if( nm )
@@ -167,13 +271,24 @@ void convertTecplotToVTK( char * fName )
 
                 // Node information (connectivity)
                 // NOTE - You could use the "RawPtr" functions if speed is a critical issue
-                NodeMap_t node[ numNodesPerElement ];
-                for( int i = 1; i < numNodesPerElement+1; i++ ) // node numbers are 1-based
+                NodeMap_t nodeArray[ numNodesPerElement ];
+                for( int i = 0; i < numNodesPerElement; i++ ) 
                 {
-                    node[ i-1 ] = TecUtilDataNodeGetByRef( nm, elemNum, i );
-                    cout << " " << node[ i-1 ];
+                    nodeArray[ i ] = TecUtilDataNodeGetByRef( nm, elemNum, i+1 ); // node numbers are 1-based
+                    cout << " " << nodeArray[ i ];
                 }
                 cout << endl;
+
+                if( zoneType == ZoneType_FEBrick )
+                {
+                    ugrid->InsertNextCell( VTK_HEXAHEDRON, numNodesPerElement, nodeArray );
+                }
+                else
+                {
+                    cout << "Note: Can not yet handle element type " << zoneType
+                    << ", numNodesPerElement = " << numNodesPerElement << endl;
+                    ugrid->InsertNextCell( VTK_EMPTY_CELL, 0, NULL );
+                }
             }
         }
         else
@@ -181,28 +296,73 @@ void convertTecplotToVTK( char * fName )
             cerr << "Error: Unable to get node map" << endl;
         }
 
-        // Read some variable data from the current zone...
-        EntIndex_t VarNum = 1;
 
-        FieldData_pa FieldData = TecUtilDataValueGetReadableNativeRef( currentZone, VarNum );
-        if( FieldData )
+
+        // Read the nodal coordinates from the current zone...
+        double * x = readVariable( currentZone, xIndex, "X" );
+        double * y = readVariable( currentZone, yIndex, "Y" );
+        double * z = readVariable( currentZone, zIndex, "Z" );
+
+        vtkPoints *vertex = vtkPoints::New();
+        for( int i = 0; i < numDataPoints; i++ )
         {
-            LgIndex_t NumValues = TecUtilDataValueGetCountByRef( FieldData );
-            double Var[ NumValues ];
+            vertex->InsertPoint( i+1 , x[ i ], y[ i ], z[ i ] );
+        }
 
-            cout << "Writing Variable " << VarNum << ":" << endl;
-            for( int i = 0; i < NumValues; i++ )
+        ugrid->SetPoints( vertex );
+        vertex->Delete();
+
+        // set up arrays to store scalar nodal data over entire mesh...
+        vtkFloatArray ** parameterData = new vtkFloatArray * [ numNodalParameters ];
+/*
+        for( int i = 0; i < numNodalParameters; i++ )
+        {
+            parameterData[ i ] = vtkFloatArray::New();
+        }
+*/
+        int ii = 0;
+        double * tempArray;
+        for( int i = 0; i < nvars; i++ )
+        {
+            if( strcmp( Name[ i ], "X" ) == 0 ||
+                strcmp( Name[ i ], "Y" ) == 0 ||
+                strcmp( Name[ i ], "Z" ) == 0 )
             {
-                Var[ i ] = TecUtilDataValueGetByRef( FieldData, i+1 ); //GetByRef function is 1-based
-                cout << "Var[" << i << "] = " << Var[ i ] << "\n";
+                // nodal coordinates already processed
+            }
+            else
+            {
+                // Read the parameter data from the current zone...
+                tempArray = readVariable( currentZone, i, Name[ i ] );
+                parameterData[ ii ] = vtkFloatArray::New();
+                parameterData[ ii ]->SetNumberOfTuples( numDataPoints );
+                //dirStringStream << "displacement mag " << currentDataSetSolution << " " << displacementUnits;
+                parameterData[ ii ]->SetName( Name[ i ] ); //dirStringStream.str().c_str() );
+                parameterData[ ii ]->SetNumberOfComponents( 1 );
+                //dirStringStream.str( "" );
+                for( int j = 0; j < numDataPoints; j++ )
+                {
+                    parameterData[ ii ]->SetTuple1( j, tempArray[ j ] );
+                }
+                delete [] tempArray;
             }
         }
-        else
+
+        for( int i = 0; i < numNodalParameters; i++ )
         {
-            cerr << "Error: Unable to read variable data" << endl;
+            ugrid->GetPointData()->AddArray( parameterData[ i ] );
+            parameterData[ i ]->Delete();
         }
 
+        delete [] parameterData;
+
     } // for each zone
+
+    for( int i = 0; i < nvars; i++ )
+    {
+        TecUtilStringDealloc( &Name[ i ] );
+    }
+
 }
 
 int main( int argc, char** argv )
