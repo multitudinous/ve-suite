@@ -35,10 +35,17 @@
 #include <ves/xplorer/scenegraph/manipulator/Dragger.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
+#include <ves/xplorer/scenegraph/LocalToWorldNodePath.h>
 
 // --- OSG Includes --- //
+#include <osg/Drawable>
+#include <osg/MatrixTransform>
+
 #include <osgUtil/CullVisitor>
 #include <osgUtil/LineSegmentIntersector>
+
+// --- osgBullet Includes --- //
+#include <osgBullet/AbsoluteModelTransform.h>
 
 using namespace ves::xplorer::scenegraph::manipulator;
 namespace vxs = ves::xplorer::scenegraph;
@@ -52,6 +59,7 @@ Dragger::Dragger( const TransformationType::Enum& transformationType )
     m_enabled( false ),
     m_comboForm( false ),
     m_startProjectedPoint( 0.0, 0.0, 0.0 ),
+    m_endProjectedPoint( 0.0, 0.0, 0.0 ),
     m_rootDragger( NULL ),
     m_color( NULL )
 {
@@ -75,6 +83,7 @@ Dragger::Dragger( const Dragger& dragger, const osg::CopyOp& copyop )
     m_enabled( dragger.m_enabled ),
     m_comboForm( dragger.m_comboForm ),
     m_startProjectedPoint( dragger.m_startProjectedPoint ),
+    m_endProjectedPoint( dragger.m_endProjectedPoint ),
     m_rootDragger( dragger.m_rootDragger ),
     m_colorMap( dragger.m_colorMap ),
     m_color( dragger.m_color )
@@ -112,6 +121,17 @@ void Dragger::ComboForm()
     m_comboForm = true;
 }
 ////////////////////////////////////////////////////////////////////////////////
+bool Dragger::Connect( osg::Transform* activeAssociation )
+{
+    //Store the active association
+    m_activeAssociation = activeAssociation;
+
+    //Associate transform with this dragger
+    m_associationSet.insert( activeAssociation );
+
+    return true;
+}
+////////////////////////////////////////////////////////////////////////////////
 void Dragger::DefaultForm()
 {
     if( !m_comboForm )
@@ -122,6 +142,11 @@ void Dragger::DefaultForm()
     m_comboForm = false;
 }
 ////////////////////////////////////////////////////////////////////////////////
+void Dragger::Disconnect()
+{
+    m_associationSet.clear();
+}
+////////////////////////////////////////////////////////////////////////////////
 void Dragger::Enable( const bool& enable )
 {
     m_enabled = enable;
@@ -129,6 +154,19 @@ void Dragger::Enable( const bool& enable )
 ////////////////////////////////////////////////////////////////////////////////
 Dragger* Dragger::Drag( const osgUtil::LineSegmentIntersector& deviceInput )
 {
+    //Get the end projected point
+    if( !ComputeProjectedPoint( deviceInput, m_endProjectedPoint ) )
+    {
+        return NULL;
+    }
+
+    ComputeDeltaTransform();
+
+    UpdateAssociations();
+
+    //Reset
+    m_startProjectedPoint = m_endProjectedPoint;
+
     return this;
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -171,6 +209,9 @@ Dragger* Dragger::Push(
         //Get the start projected point
         ComputeProjectedPoint( deviceInput, m_startProjectedPoint );
 
+        //Compute the association matrices
+        ComputeAssociationMatrices();
+
         return this;
     }
 
@@ -188,15 +229,7 @@ Dragger* Dragger::Release( osg::NodePath::iterator& npItr )
         UseColor( Color::DEFAULT );
 
         //Clear the associated matrices
-        //m_associatedMatrices.clear();
-
-        //osg::AutoTransform* autoTransform =
-            //static_cast< osg::AutoTransform* >(
-                //m_parentManipulator->getParent( 0 ) );
-        //autoTransform->setAutoScaleToScreen( true );
-        //Force update now on release event for this frame
-        //This function call sets _firstTimeToInitEyePoint = true
-        //autoTransform->setAutoRotateMode( osg::AutoTransform::NO_ROTATION );
+        m_associationMatricesMap.clear();
 
         return this;
     }
@@ -204,6 +237,25 @@ Dragger* Dragger::Release( osg::NodePath::iterator& npItr )
     Show();
 
     return NULL;
+}
+////////////////////////////////////////////////////////////////////////////////
+void Dragger::ComputeAssociationMatrices()
+{
+    //Compute local to world and world to local matrices for associated transforms
+    AssociationSet::const_iterator itr = m_associationSet.begin();
+    for( itr; itr != m_associationSet.end(); ++itr )
+    {
+        LocalToWorldNodePath nodePath(
+            *itr, SceneManager::instance()->GetModelRoot() );
+        LocalToWorldNodePath::NodeAndPathList npl =
+            nodePath.GetLocalToWorldNodePath();
+        LocalToWorldNodePath::NodeAndPath nap = npl.at( 0 );
+
+        osg::Matrixd localToWorld = osg::computeLocalToWorld( nap.second );
+        osg::Matrixd worldToLocal = osg::Matrixd::inverse( localToWorld );
+        m_associationMatricesMap[ *itr ] =
+            std::make_pair( localToWorld, worldToLocal );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Dragger::CreateDefaultShader()
@@ -230,6 +282,78 @@ void Dragger::CreateDefaultShader()
         osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
 
     stateSet->addUniform( m_color.get() );
+}
+////////////////////////////////////////////////////////////////////////////////
+void Dragger::UpdateAssociations()
+{
+    //Set all associated transforms
+    AssociationSet::const_iterator itr = m_associationSet.begin();
+    for( itr; itr != m_associationSet.end(); ++itr )
+    {
+        osg::Transform* transform = *itr;
+        AssociationMatricesMap::const_iterator ammItr =
+            m_associationMatricesMap.find( transform );
+        if( ammItr == m_associationMatricesMap.end() )
+        {
+            //Error output
+            return;
+        }
+
+        const std::pair< osg::Matrixd, osg::Matrixd >& matrices = ammItr->second;
+
+        osg::MatrixTransform* mt( NULL );
+        osg::PositionAttitudeTransform* pat( NULL );
+        osgBullet::AbsoluteModelTransform* amt( NULL );
+        if( mt = transform->asMatrixTransform() )
+        {
+            const osg::Matrix& currentMatrix = mt->getMatrix();
+            switch( m_transformationType )
+            {
+            /*
+            mt->setMatrix(
+                localToWorld *
+                osg::Matrix::translate( deltaTranslation ) * currentMatrix *
+                worldToLocal );
+            */
+            }
+        }
+        else if( pat = transform->asPositionAttitudeTransform() )
+        {
+            switch( m_transformationType )
+            {
+            case TransformationType::TRANSLATE_AXIS:
+            case TransformationType::TRANSLATE_PAN:
+            {
+                osg::Vec3d position = pat->getPosition();
+                position = position * matrices.first;
+                position += m_deltaTranslation;
+                position = position * matrices.second;
+                pat->setPosition( position );
+
+                break;
+            }
+            case TransformationType::ROTATE_AXIS:
+            case TransformationType::ROTATE_TWIST:
+            {
+                osg::Quat rotation = pat->getAttitude();
+                rotation *= matrices.first.getRotate();
+                rotation *= m_deltaRotation;
+                rotation *= matrices.second.getRotate();
+                pat->setAttitude( rotation );
+
+                break;
+            }
+            default:
+            {
+                break;
+            }
+            } //end switch( m_transformationType )
+        }
+        else if( amt = dynamic_cast< osgBullet::AbsoluteModelTransform* >( transform ) )
+        {
+            ;
+        }
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 osg::Vec4& Dragger::GetColor( Color::Enum colorTag )
@@ -269,6 +393,8 @@ const osg::Plane Dragger::GetPlane( const bool& transform ) const
             osg::Matrixd matrix;
             matrix.makeTranslate( trans );
             plane.transformProvidingInverse( matrix );
+
+            plane.transformProvidingInverse( m_worldToLocal );
             
             break;
         }
@@ -303,7 +429,8 @@ const osg::Vec3d Dragger::GetUnitAxis(
         {
         case VectorSpace::GLOBAL:
         {
-            unitAxis += m_localToWorld.getTrans();
+            //unitAxis += m_localToWorld.getTrans();
+            unitAxis = m_localToWorld * unitAxis;
 
             break;
         }

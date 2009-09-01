@@ -37,15 +37,12 @@
 #include <ves/xplorer/scenegraph/manipulator/Dragger.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
-#include <ves/xplorer/scenegraph/LocalToWorldNodePath.h>
 
 #include <ves/xplorer/Debug.h>
 
 // --- OSG Includes --- //
 #include <osg/Depth>
 #include <osg/AutoTransform>
-
-#include <osgUtil/LineSegmentIntersector>
 
 using namespace ves::xplorer::scenegraph::manipulator;
 
@@ -120,35 +117,6 @@ osg::BoundingSphere ManipulatorManager::computeBound() const
     return bsphere;
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool ManipulatorManager::Connect( Dragger& dragger, osg::Transform& transform )
-{
-    //Check to see if the transform is already associated with the dragger
-    if( m_draggerAssociationMap.count( &dragger ) > 0 )
-    {
-        std::pair< DraggerAssociationMap::iterator,
-                   DraggerAssociationMap::iterator > range;
-        range = m_draggerAssociationMap.equal_range( &dragger );
-        DraggerAssociationMap::iterator itr = range.first;
-        for( itr; itr != range.second; ++itr )
-        {
-            if( itr->second == &transform )
-            {
-                return false;
-            }
-        }
-    }
-
-    //Associate transform with dragger
-    m_draggerAssociationMap.insert( std::make_pair( &dragger, &transform ) );
-
-    return true;
-}
-////////////////////////////////////////////////////////////////////////////////
-void ManipulatorManager::Disconnect( Dragger& dragger )
-{
-    m_draggerAssociationMap.erase( &dragger );
-}
-////////////////////////////////////////////////////////////////////////////////
 void ManipulatorManager::Enable( const bool& enable )
 {
     m_enabled = enable;
@@ -166,35 +134,6 @@ void ManipulatorManager::Enable( const bool& enable )
 Dragger* ManipulatorManager::ConvertNodeToDragger( osg::Node* node )
 {
     return static_cast< Dragger* >( node );
-}
-////////////////////////////////////////////////////////////////////////////////
-void ManipulatorManager::ComputeAssociatedMatrices()
-{
-    /*
-    //Compute local to world and world to local matrices
-    //for all associated node's transforms
-    std::vector< osg::Transform* >::const_iterator itr =
-        m_associatedTransforms.find( m_rootDragger )->second.begin();
-    for( itr; itr != m_associatedTransforms.end(); ++itr )
-    {
-        LocalToWorldNodePath nodePath(
-            *itr, SceneManager::instance()->GetModelRoot() );
-        LocalToWorldNodePath::NodeAndPathList npl =
-            nodePath.GetLocalToWorldNodePath();
-        LocalToWorldNodePath::NodeAndPath nap = npl.at( 0 );
-
-        osg::Matrixd localToWorld = osg::computeLocalToWorld( nap.second );
-        osg::Matrixd worldToLocal = osg::Matrixd::inverse( localToWorld );
-        m_coordinateSystemTransforms[ *itr ] =
-            std::make_pair( localToWorld, worldToLocal );
-    }
-
-    //Turn off automatic scaling for the dragger
-    //osg::AutoTransform* autoTransform =
-    //static_cast< osg::AutoTransform* >(
-        //m_parentManipulator->getParent( 0 ) );
-    //autoTransform->setAutoScaleToScreen( false );
-    */
 }
 ////////////////////////////////////////////////////////////////////////////////
 Dragger* ManipulatorManager::GetChild( unsigned int i )
@@ -239,7 +178,11 @@ bool ManipulatorManager::Handle(
             m_leafDragger =
                 m_rootDragger->Push( *m_deviceInput, m_nodePath, m_nodePathItr );
 
-            ComputeAssociatedMatrices();
+            //Turn off automatic scaling for the dragger
+            //osg::AutoTransform* autoTransform =
+            //static_cast< osg::AutoTransform* >(
+                //m_parentManipulator->getParent( 0 ) );
+            //autoTransform->setAutoScaleToScreen( false );
 
             return m_leafDragger;
         }
@@ -252,13 +195,19 @@ bool ManipulatorManager::Handle(
 
             m_leafDragger->Drag( *m_deviceInput );
 
-            UpdateAssociatedTransforms();
-
             return m_leafDragger;
         }
         case Event::RELEASE:
         {
             m_leafDragger = NULL;
+
+            //osg::AutoTransform* autoTransform =
+            //static_cast< osg::AutoTransform* >(
+                //m_parentManipulator->getParent( 0 ) );
+            //autoTransform->setAutoScaleToScreen( true );
+            //Force update now on release event for this frame
+            //This function call sets _firstTimeToInitEyePoint = true
+            //autoTransform->setAutoRotateMode( osg::AutoTransform::NO_ROTATION );
 
             return m_rootDragger->Release( m_nodePathItr );
         }
@@ -327,53 +276,5 @@ bool ManipulatorManager::TestForIntersections(
     m_rootDragger = ConvertNodeToDragger( *m_nodePathItr );
 
     return true;
-}
-////////////////////////////////////////////////////////////////////////////////
-void ManipulatorManager::UpdateAssociatedTransforms()
-{
-    /*
-    //Set all associated node's transforms
-    std::vector< osg::Transform* >::const_iterator itr =
-        m_associatedTransforms.begin();
-    for( itr; itr != m_associatedTransforms.end(); ++itr )
-    {
-        osg::Transform* transform = *itr;
-        std::map< osg::Transform*, std::pair< osg::Matrixd, osg::Matrixd > >::const_iterator transformMatrices =
-            m_associatedMatrices.find( transform );
-        if( transformMatrices == m_associatedMatrices.end() )
-        {
-            //Error output
-            break;
-        }
-
-        const osg::Matrixd& localToWorld = transformMatrices->second.first;
-        const osg::Matrixd& worldToLocal = transformMatrices->second.second;
-
-        osg::MatrixTransform* mt( NULL );
-        osg::PositionAttitudeTransform* pat( NULL );
-        osgBullet::AbsoluteModelTransform* amt( NULL );
-        if( mt = transform->asMatrixTransform() )
-        {
-            const osg::Matrix& currentMatrix = mt->getMatrix();
-            mt->setMatrix(
-                localToWorld *
-                osg::Matrix::translate( deltaTranslation ) * currentMatrix *
-                worldToLocal );
-        }
-        else if( pat = transform->asPositionAttitudeTransform() )
-        {
-            const osg::Vec3d& currentPosition = pat->getPosition();
-            osg::Vec3d newTranslation = currentPosition;
-            newTranslation = newTranslation * localToWorld; 
-            newTranslation += deltaTranslation;
-            newTranslation = newTranslation * worldToLocal;
-            pat->setPosition( newTranslation );
-        }
-        else if( amt = dynamic_cast< osgBullet::AbsoluteModelTransform* >( transform ) )
-        {
-            ;
-        }
-    }
-    */
 }
 ////////////////////////////////////////////////////////////////////////////////

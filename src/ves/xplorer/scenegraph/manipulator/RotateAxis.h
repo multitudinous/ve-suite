@@ -86,9 +86,6 @@ public:
     virtual osg::Object* cloneType() const;
 
     ///
-    virtual Dragger* Drag( const osgUtil::LineSegmentIntersector& deviceInput );
-
-    ///
     ///\param obj
     ///\return
     virtual bool isSameKindAs( const osg::Object* obj ) const;
@@ -100,6 +97,9 @@ public:
 protected:
     ///
     virtual ~RotateAxis();
+
+    ///
+    virtual void ComputeDeltaTransform();
 
     ///
     virtual const bool ComputeProjectedPoint(

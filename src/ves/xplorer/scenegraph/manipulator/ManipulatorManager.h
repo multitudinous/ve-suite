@@ -42,7 +42,6 @@
 // --- OSG Includes --- //
 #include <osg/Group>
 #include <osg/AutoTransform>
-#include <osg/PositionAttitudeTransform>
 
 namespace osgUtil
 {
@@ -91,12 +90,6 @@ public:
     virtual osg::BoundingSphere computeBound() const;
 
     ///
-    bool Connect( Dragger& dragger, osg::Transform& transform );
-
-    ///
-    void Disconnect( Dragger& dragger );
-
-    ///
     void Enable( const bool& enable = true );
 
     ///Can't override the getChild function, so create our own
@@ -129,17 +122,11 @@ protected:
 
 private:
     ///
-    void ComputeAssociatedMatrices();
-
-    ///
     Dragger* ConvertNodeToDragger( osg::Node* node );
 
     ///
     bool TestForIntersections(
         osgUtil::LineSegmentIntersector* lineSegmentIntersector );
-
-    ///
-    void UpdateAssociatedTransforms();
 
     ///
     bool m_enabled;
@@ -165,20 +152,8 @@ private:
     ///
     osg::ref_ptr< TransformManipulator > m_sceneManipulator;
 
-    ///
-    typedef std::map< osg::ref_ptr< Dragger >,
-        osg::ref_ptr< osg::PositionAttitudeTransform > > DraggerMap;
-
-    ///
-    DraggerMap m_draggerMap;
-
-    ///
-    typedef std::multimap< Dragger*, osg::Transform* > DraggerAssociationMap;
-    DraggerAssociationMap m_draggerAssociationMap;
-
-    ///
-    std::map< osg::Transform*,
-              std::pair< osg::Matrixd, osg::Matrixd > > m_associatedMatrices;
+public:
+    //friend class Dragger;
 
 };
 } //end manipulator

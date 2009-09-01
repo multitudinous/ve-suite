@@ -41,14 +41,9 @@
 #include <osg/ShapeDrawable>
 #include <osg/LineWidth>
 #include <osg/LineSegment>
-#include <osg/AutoTransform>
-#include <osg/MatrixTransform>
-#include <osg/PositionAttitudeTransform>
 
-#include <osgUtil/LineSegmentIntersector>
-
-// --- osgBullet Includes --- //
-#include <osgBullet/AbsoluteModelTransform.h>
+// --- C/C++ Includes --- //
+#include <iostream>
 
 using namespace ves::xplorer::scenegraph::manipulator;
 namespace vxs = ves::xplorer::scenegraph;
@@ -182,6 +177,17 @@ void TranslateAxis::DirtyCone()
     m_coneDrawable->dirtyBound();
 }
 ////////////////////////////////////////////////////////////////////////////////
+void TranslateAxis::ComputeDeltaTransform()
+{
+    //Calculate the delta transform
+    m_deltaTranslation = m_endProjectedPoint - m_startProjectedPoint;
+    
+    //Set the transform
+    osg::Vec3d newTranslation =
+        m_rootDragger->getPosition() + m_deltaTranslation;
+    m_rootDragger->setPosition( newTranslation );
+}
+////////////////////////////////////////////////////////////////////////////////
 //See http://softsurfer.com/Archive/algorithm_0106/algorithm_0106.htm
 const bool TranslateAxis::ComputeProjectedPoint(
     const osgUtil::LineSegmentIntersector& deviceInput,
@@ -227,28 +233,6 @@ osg::Geode* const TranslateAxis::GetLineAndCylinderGeode() const
 osg::Cone* const TranslateAxis::GetCone() const
 {
     return m_cone.get();
-}
-////////////////////////////////////////////////////////////////////////////////
-Dragger* TranslateAxis::Drag( const osgUtil::LineSegmentIntersector& deviceInput )
-{
-    //Get the end projected point
-    osg::Vec3d endProjectedPoint;
-    if( !ComputeProjectedPoint( deviceInput, endProjectedPoint ) )
-    {
-        return NULL;
-    }
-
-    //Calculate the delta transform
-    osg::Vec3d deltaTranslation = endProjectedPoint - m_startProjectedPoint;
-    
-    //Set the transform
-    osg::Vec3d newTranslation = m_rootDragger->getPosition() + deltaTranslation;
-    m_rootDragger->setPosition( newTranslation );
-
-    //Reset
-    m_startProjectedPoint = endProjectedPoint;
-
-    return this;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void TranslateAxis::SetupDefaultGeometry()

@@ -73,6 +73,16 @@ void CompoundDragger::ComboForm()
     Dragger::ComboForm();
 }
 ////////////////////////////////////////////////////////////////////////////////
+bool CompoundDragger::Connect( osg::Transform* activeAssociation )
+{
+    for( unsigned int i = 0; i < getNumChildren(); ++i )
+    {
+        GetChild( i )->Connect( activeAssociation );
+    }
+
+    return Dragger::Connect( activeAssociation );
+}
+////////////////////////////////////////////////////////////////////////////////
 void CompoundDragger::DefaultForm()
 {
     if( !m_comboForm )
@@ -86,6 +96,16 @@ void CompoundDragger::DefaultForm()
     }
 
     Dragger::DefaultForm();
+}
+////////////////////////////////////////////////////////////////////////////////
+void CompoundDragger::Disconnect()
+{
+    for( unsigned int i = 0; i < getNumChildren(); ++i )
+    {
+        GetChild( i )->Disconnect();
+    }
+
+    return Dragger::Disconnect();
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool CompoundDragger::isSameKindAs( const osg::Object* obj ) const

@@ -72,7 +72,13 @@ public:
     void ComboForm();
 
     ///
+    virtual bool Connect( osg::Transform* activeAssociation );
+
+    ///
     void DefaultForm();
+
+    ///
+    virtual void Disconnect();
 
     ///
     ///\param obj

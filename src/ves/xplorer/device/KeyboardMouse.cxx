@@ -1811,8 +1811,9 @@ void KeyboardMouse::ProcessSelection()
     mCenterPoint->set( center.x(), center.y(), center.z() );
 
     //Set the connection between the scene manipulator and the selected dcs
-    scenegraph::manipulator::ManipulatorManager* manipulatorManager =
-        sceneManager->GetManipulatorManager();
+    scenegraph::manipulator::TransformManipulator* sceneManipulator =
+        sceneManager->GetManipulatorManager()->GetSceneManipulator();
+    sceneManipulator->Disconnect();
     //Check and see if the selected node has an attached physics mesh
     //osgBullet::AbsoulteModelTransform* tempAMT = 
     //    dynamic_cast< osgBullet::AbsoulteModelTransform* >( 
@@ -1826,8 +1827,7 @@ void KeyboardMouse::ProcessSelection()
     //        bool hasAPhysicsMesh = true;
     //    }
     //}
-    manipulatorManager->Connect(
-        *manipulatorManager->GetSceneManipulator(), *newSelectedDCS );
+    sceneManipulator->Connect( newSelectedDCS );
 
     //Move the scene manipulator to the center point
     scenegraph::LocalToWorldNodePath nodePath(
@@ -1837,7 +1837,7 @@ void KeyboardMouse::ProcessSelection()
     scenegraph::LocalToWorldNodePath::NodeAndPath nap = npl.at( 0 );
     osg::Matrixd localToWorld = osg::computeLocalToWorld( nap.second );
     osg::Vec3d newCenter = newSelectedDCS->getBound().center() * localToWorld;
-    //sceneManipulator->setPosition( newCenter );
+    sceneManipulator->setPosition( newCenter );
 }
 ////////////////////////////////////////////////////////////////////////////////
 gadget::KeyboardMousePtr KeyboardMouse::GetKeyboardMouseVRJDevice()

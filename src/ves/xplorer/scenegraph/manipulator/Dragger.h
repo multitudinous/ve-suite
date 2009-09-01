@@ -41,17 +41,17 @@
 
 // --- OSG Includes --- //
 #include <osg/PositionAttitudeTransform>
-#include <osg/Drawable>
 #include <osg/Plane>
 
 #include <osgUtil/LineSegmentIntersector>
 
-namespace osgUtil
+namespace osg
 {
-class LineSegmentIntersector;
+class Drawable;
 }
 
 // --- C/C++ Includes --- //
+#include <set>
 #include <map>
 
 namespace ves
@@ -88,13 +88,19 @@ public:
     virtual void ComboForm();
 
     ///
+    virtual bool Connect( osg::Transform* activeAssociation );
+
+    ///
     virtual void DefaultForm();
+
+    ///
+    virtual void Disconnect();
 
     ///
     void Enable( const bool& enable = true );
 
     ///
-    virtual Dragger* Drag( const osgUtil::LineSegmentIntersector& deviceInput );
+    Dragger* Drag( const osgUtil::LineSegmentIntersector& deviceInput );
 
     ///
     virtual Dragger* Focus( osg::NodePath::iterator& npItr );
@@ -160,6 +166,9 @@ protected:
     ///
     virtual ~Dragger();
 
+    ///
+    virtual void ComputeDeltaTransform(){;}
+
     ///Will be pure virtual eventually
     ///
     virtual const bool ComputeProjectedPoint(
@@ -195,26 +204,53 @@ protected:
     osg::Vec3d m_startProjectedPoint;
 
     ///
-    osg::Matrixd m_localToWorld;
-
-    ///
-    osg::Matrixd m_worldToLocal;
+    osg::Vec3d m_endProjectedPoint;
 
     ///
     Dragger* m_rootDragger;
+
+    ///
+    osg::Transform* m_activeAssociation;
+
+    ///
+    typedef std::set< osg::Transform* > AssociationSet;
+    AssociationSet m_associationSet;
+
+    ///
+    osg::Quat m_deltaRotation;
+
+    ///
+    osg::Vec3d m_deltaTranslation;
 
 private:
     ///
     typedef std::map< Color::Enum, osg::Vec4 > ColorMap;
 
     ///
+    void ComputeAssociationMatrices();
+
+    ///
     void CreateDefaultShader();
+
+    ///
+    void UpdateAssociations();
 
     ///
     ColorMap m_colorMap;
 
     ///
     osg::ref_ptr< osg::Uniform > m_color;
+
+    ///
+    osg::Matrixd m_localToWorld;
+
+    ///
+    osg::Matrixd m_worldToLocal;
+
+    ///
+    typedef std::map< osg::Transform*,
+            std::pair< osg::Matrixd, osg::Matrixd > > AssociationMatricesMap;
+    AssociationMatricesMap m_associationMatricesMap;
 
 };
 

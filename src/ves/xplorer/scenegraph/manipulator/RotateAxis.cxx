@@ -40,12 +40,8 @@
 #include <osg/Geometry>
 #include <osg/LineWidth>
 #include <osg/PolygonStipple>
-#include <osg/AutoTransform>
-#include <osg/PositionAttitudeTransform>
 
-// --- osgBullet Includes --- //
-#include <osgBullet/AbsoluteModelTransform.h>
-
+// --- C/C++ Includes --- //
 #include <iostream>
 
 using namespace ves::xplorer::scenegraph::manipulator;
@@ -106,6 +102,46 @@ const char* RotateAxis::libraryName() const
     return "ves::xplorer::scenegraph::manipulator";
 }
 ////////////////////////////////////////////////////////////////////////////////
+void RotateAxis::ComputeDeltaTransform()
+{
+    const osg::Vec3d& origin = m_rootDragger->getPosition();
+
+    //Get the direction vectors of the rotation origin to start and end points
+    osg::Vec3d originToStart = m_startProjectedPoint - origin;
+    originToStart.normalize();
+    osg::Vec3d originToEnd = m_endProjectedPoint - origin;
+    originToEnd.normalize();
+
+    //Calculate cross products of the direction vectors with rotation axis
+    const osg::Vec3d rotationAxis = GetUnitAxis( false, true );
+    osg::Vec3d crossRotStart = rotationAxis ^ originToStart;
+    crossRotStart.normalize();
+    osg::Vec3d crossRotEnd = rotationAxis ^ originToEnd;
+    crossRotEnd.normalize();
+
+    //Calculate the cross product of the above start and end cross products
+    osg::Vec3d crossStartEnd = crossRotStart ^ crossRotEnd;
+    crossStartEnd.normalize();
+
+    //Dot the two direction vectors and get the arccos of the dot product to get
+    //the angle between them, then multiply it by the sign of the dot product
+    //of the derived cross product calculated above to obtain the direction
+    //by which we should rotate with the angle
+    double dot = originToStart * originToEnd;
+    double rotationAngle = acos( dot ) * sin( rotationAxis * crossStartEnd );
+
+    //Create a normalized quaternion representing the rotation from the start to end points
+    m_deltaRotation.makeRotate( rotationAngle, rotationAxis );
+    //m_deltaRotation /= m_deltaRotation.length();
+
+    //Add the calculated rotation to the current rotation
+    osg::Quat newRotation = m_deltaRotation * m_rootDragger->getAttitude();
+    if( m_vectorSpace == VectorSpace::LOCAL )
+    {
+        m_rootDragger->setAttitude( newRotation );
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
 const bool RotateAxis::ComputeProjectedPoint(
     const osgUtil::LineSegmentIntersector& deviceInput,
     osg::Vec3d& projectedPoint )
@@ -128,109 +164,6 @@ const bool RotateAxis::ComputeProjectedPoint(
     projectedPoint = startDeviceInput + ( direction * intersectDistance );
 
     return true;
-}
-////////////////////////////////////////////////////////////////////////////////
-Dragger* RotateAxis::Drag( const osgUtil::LineSegmentIntersector& deviceInput )
-{
-    //osg::AutoTransform* autoTransform =
-        //static_cast< osg::AutoTransform* >(
-            //m_parentManipulator->getParent( 0 ) );
-    //const osg::Vec3d& origin = autoTransform->getPosition();
-
-    /*
-    //Get the end projected point
-    osg::Vec3d endProjectedPoint;
-    if( !ComputeProjectedPoint( deviceInput, endProjectedPoint ) )
-    {
-        return;
-    }
-
-    //Get the direction vectors of the rotation origin to start and end points
-    osg::Vec3d originToStart = m_startProjectedPoint - origin;
-    originToStart.normalize();
-    osg::Vec3d originToEnd = endProjectedPoint - origin;
-    originToEnd.normalize();
-
-    //Calculate cross products of the direction vectors with rotation axis
-    const osg::Vec3d rotationAxis = GetUnitAxis( true );
-    osg::Vec3d crossRotStart = rotationAxis ^ originToStart;
-    crossRotStart.normalize();
-    osg::Vec3d crossRotEnd = rotationAxis ^ originToEnd;
-    crossRotEnd.normalize();
-
-    //Calculate the cross product of the above start and end cross products
-    osg::Vec3d crossStartEnd = crossRotStart ^ crossRotEnd;
-    crossStartEnd.normalize();
-
-    //Dot the two direction vectors and get the arccos of the dot product to get
-    //the angle between them, then multiply it by the sign of the dot product
-    //of the derived cross product calculated above to obtain the direction
-    //by which we should rotate with the angle
-    double dot = originToStart * originToEnd;
-    double rotationAngle = acos( dot ) * sin( rotationAxis * crossStartEnd );
-
-    //Create a normalized quaternion representing the rotation from the start to end points
-    osg::Quat deltaRotation( rotationAngle, rotationAxis );
-    deltaRotation /= deltaRotation.length();
-
-    //Add the calculated rotation to the current rotation
-    //osg::Quat newRotation = deltaRotation * autoTransform->getRotation();
-    //if( m_vectorSpace == VectorSpace::LOCAL )
-    //{
-        //autoTransform->setRotation( newRotation );
-    //}
-
-    /*
-    //Set all associated node's transforms
-    const std::vector< osg::Transform* >& associatedTransforms =
-        m_parentManipulator->GetAssociatedTransforms();
-    std::vector< osg::Transform* >::const_iterator itr =
-        associatedTransforms.begin();
-    for( itr; itr != associatedTransforms.end(); ++itr )
-    {
-        osg::Transform* transform = *itr;
-        std::map< osg::Transform*, std::pair< osg::Matrixd, osg::Matrixd > >::const_iterator transformMatrices =
-            m_associatedMatrices.find( transform );
-        if( transformMatrices == m_associatedMatrices.end() )
-        {
-            //Error output
-            break;
-        }
-
-        const osg::Matrixd& localToWorld = transformMatrices->second.first;
-        const osg::Matrixd& worldToLocal = transformMatrices->second.second;
-
-        osg::MatrixTransform* mt( NULL );
-        osg::PositionAttitudeTransform* pat( NULL );
-        osgBullet::AbsoluteModelTransform* amt( NULL );
-        if( mt = transform->asMatrixTransform() )
-        {
-            const osg::Matrix& currentMatrix = mt->getMatrix();
-            mt->setMatrix(
-                localToWorld *
-                osg::Matrix::rotate( deltaRotation ) * currentMatrix *
-                worldToLocal );
-        }
-        else if( pat = transform->asPositionAttitudeTransform() )
-        {
-            const osg::Quat& currentRotation = pat->getAttitude();
-            osg::Quat newRotation = currentRotation;
-            newRotation = localToWorld.getRotate() * newRotation; 
-            newRotation = deltaRotation * newRotation;
-            newRotation = worldToLocal.getRotate() * newRotation;
-            pat->setAttitude( newRotation );
-        }
-        else if( amt = dynamic_cast< osgBullet::AbsoluteModelTransform* >( transform ) )
-        {
-            ;
-        }
-    }
-    */
-
-    //Reset
-    //m_startProjectedPoint = endProjectedPoint;
-
-    return this;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void RotateAxis::SetupDefaultGeometry()
