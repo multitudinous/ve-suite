@@ -17,8 +17,8 @@ CPPFLAGS ?= -DENGINE -DDARWIN -DMAC64
 LDFLAGS ?= -arch x86_64 -isysroot /Developer/SDKs/MacOSX10.5.sdk -g \
         -L${TECSDKHOME}/lib/macix64.105 \
         -ltpsdkbase -ltpsdkintegrationmanager -ltptoolbox \
-        -L${DEPS_HOME}/lib/vtk-5.4 \
-        -lvtkCommon -lvtkFiltering
+        -L${DEPS_HOME}/lib64/vtk-5.4 \
+        -lvtkCommon -lvtkFiltering -lvtkIO
 
 # wxWidgets-related C++ flags
 WX_CXXFLAGS ?= $(shell wx-config --cxxflags)

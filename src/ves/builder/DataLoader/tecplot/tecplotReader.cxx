@@ -37,11 +37,12 @@
 #include "StringList.h"
 #include <iostream>
 
-#include <vtkUnstructuredGrid.h>    // -lvtkFiltering
-#include <vtkPoints.h>              // -lvtkCommon
+#include <vtkUnstructuredGrid.h>        // -lvtkFiltering
+#include <vtkPoints.h>                  // -lvtkCommon
 #include <vtkCellType.h>
 #include <vtkFloatArray.h>
 #include <vtkPointData.h>
+#include <vtkUnstructuredGridWriter.h>  // -lvtkIO
 
 using namespace tecplot::sdk::integration;
 using namespace tecplot::toolbox;
@@ -65,18 +66,21 @@ double * readVariable( EntIndex_t currentZone, int varNumber, char * varName )
                 cout << "NumValues != numDataPoints" << endl;
             }
 */
-            cout << "Writing Variable " << varName << ":" << endl;
+            cout << "Reading Variable " << varName << endl;
             for( int i = 0; i < NumValues; i++ )
             {
                 array[ i ] = TecUtilDataValueGetByRef( FieldData, i+1 ); //GetByRef function is 1-based
-                cout << varName << "[" << i+1 << "] = " << array[ i ] << endl;
+                //cout << varName << "[" << i+1 << "] = " << array[ i ] << endl;
             }
         }
         else
         {
             cerr << "Error: Unable to read " << varName << " variable data" << endl;
-            return array;
         }
+    }
+    else    // varNumber is zero which means it does not exist
+    {
+        // will return a NULL array pointer
     }
     return array;
 }
@@ -140,6 +144,9 @@ void convertTecplotToVTK( char * fName )
     cout << "numNodalParameters is " << numNodalParameters << endl;
 
     vtkUnstructuredGrid *ugrid = vtkUnstructuredGrid::New();
+
+    int nodeOffset = 0;
+    ////int elementOffset = 0
 
     for( EntIndex_t currentZone = 1; currentZone < nzones+1; currentZone++ ) // zone numbers are 1-based
     {
@@ -274,7 +281,8 @@ void convertTecplotToVTK( char * fName )
                 NodeMap_t nodeArray[ numNodesPerElement ];
                 for( int i = 0; i < numNodesPerElement; i++ ) 
                 {
-                    nodeArray[ i ] = TecUtilDataNodeGetByRef( nm, elemNum, i+1 ); // node numbers are 1-based
+                    // node numbers in tecplot are 1-based, 0-based in VTK
+                    nodeArray[ i ] = TecUtilDataNodeGetByRef( nm, elemNum, i+1 ) - 1 + nodeOffset;
                     cout << " " << nodeArray[ i ];
                 }
                 cout << endl;
@@ -282,6 +290,14 @@ void convertTecplotToVTK( char * fName )
                 if( zoneType == ZoneType_FEBrick )
                 {
                     ugrid->InsertNextCell( VTK_HEXAHEDRON, numNodesPerElement, nodeArray );
+                }
+                else if( zoneType == ZoneType_FETriangle )
+                {
+                    ugrid->InsertNextCell( VTK_TRIANGLE, numNodesPerElement, nodeArray );
+                }
+                else if( zoneType == ZoneType_FEQuad )
+                {
+                    ugrid->InsertNextCell( VTK_QUAD, numNodesPerElement, nodeArray );
                 }
                 else
                 {
@@ -296,17 +312,35 @@ void convertTecplotToVTK( char * fName )
             cerr << "Error: Unable to get node map" << endl;
         }
 
-
-
         // Read the nodal coordinates from the current zone...
         double * x = readVariable( currentZone, xIndex, "X" );
+        if( x == 0 )
+        {
+            x = new double [ numDataPoints ];
+            for( int i = 0; i < numDataPoints; i++ )
+                x[ i ] = 0.0;
+        }
+
         double * y = readVariable( currentZone, yIndex, "Y" );
+        if( y == 0 )
+        {
+            y = new double [ numDataPoints ];
+            for( int i = 0; i < numDataPoints; i++ )
+                y[ i ] = 0.0;
+        }
+
         double * z = readVariable( currentZone, zIndex, "Z" );
+        if( z == 0 )
+        {
+            z = new double [ numDataPoints ];
+            for( int i = 0; i < numDataPoints; i++ )
+                z[ i ] = 0.0;
+        }
 
         vtkPoints *vertex = vtkPoints::New();
         for( int i = 0; i < numDataPoints; i++ )
         {
-            vertex->InsertPoint( i+1 , x[ i ], y[ i ], z[ i ] );
+            vertex->InsertPoint( i , x[ i ], y[ i ], z[ i ] );
         }
 
         ugrid->SetPoints( vertex );
@@ -314,12 +348,7 @@ void convertTecplotToVTK( char * fName )
 
         // set up arrays to store scalar nodal data over entire mesh...
         vtkFloatArray ** parameterData = new vtkFloatArray * [ numNodalParameters ];
-/*
-        for( int i = 0; i < numNodalParameters; i++ )
-        {
-            parameterData[ i ] = vtkFloatArray::New();
-        }
-*/
+
         int ii = 0;
         double * tempArray;
         for( int i = 0; i < nvars; i++ )
@@ -333,7 +362,7 @@ void convertTecplotToVTK( char * fName )
             else
             {
                 // Read the parameter data from the current zone...
-                tempArray = readVariable( currentZone, i, Name[ i ] );
+                tempArray = readVariable( currentZone, i+1, Name[ i ] );    //variable index is 1-based, names aren't
                 parameterData[ ii ] = vtkFloatArray::New();
                 parameterData[ ii ]->SetNumberOfTuples( numDataPoints );
                 //dirStringStream << "displacement mag " << currentDataSetSolution << " " << displacementUnits;
@@ -344,6 +373,7 @@ void convertTecplotToVTK( char * fName )
                 {
                     parameterData[ ii ]->SetTuple1( j, tempArray[ j ] );
                 }
+                ii++;
                 delete [] tempArray;
             }
         }
@@ -355,6 +385,12 @@ void convertTecplotToVTK( char * fName )
         }
 
         delete [] parameterData;
+        delete [] x;
+        delete [] y;
+        delete [] z;
+
+        nodeOffset += numDataPoints;
+        ////elementOffset += numElements;
 
     } // for each zone
 
@@ -362,6 +398,13 @@ void convertTecplotToVTK( char * fName )
     {
         TecUtilStringDealloc( &Name[ i ] );
     }
+
+    vtkUnstructuredGridWriter *writer = vtkUnstructuredGridWriter::New();
+    writer->SetInput( ugrid );
+    writer-> SetFileType( VTK_ASCII );
+    writer->SetFileName( "out.vtk" );
+    writer->Write();
+    writer->Delete();
 
 }
 
