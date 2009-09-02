@@ -68,6 +68,22 @@ public:
         const CompoundDragger& compoundDragger,
         const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
 
+    ///Override the addChild function to only accept Draggers
+    virtual bool addChild( Dragger* child );
+
+    ///
+    ///\return
+    virtual const char* className() const;
+
+    ///
+    ///\param copyop
+    ///\return
+    virtual osg::Object* clone( const osg::CopyOp& copyop ) const;
+
+    ///
+    ///\return
+    virtual osg::Object* cloneType() const;
+
     ///
     void ComboForm();
 
@@ -84,13 +100,6 @@ public:
     ///\param obj
     ///\return
     virtual bool isSameKindAs( const osg::Object* obj ) const;
-
-    ///
-    ///\return
-    virtual const char* className() const;
-
-    ///Override the addChild function to only accept Draggers
-    virtual bool addChild( Dragger* child );
 
     ///
     virtual Dragger* Focus( osg::NodePath::iterator& npItr );
@@ -135,10 +144,6 @@ public:
 protected:
     ///
     virtual ~CompoundDragger();
-
-    ///Pure virtual again
-    ///
-    virtual void SetupDefaultGeometry() = 0;
 
     ///
     TransformationType::Enum m_enabledModes;

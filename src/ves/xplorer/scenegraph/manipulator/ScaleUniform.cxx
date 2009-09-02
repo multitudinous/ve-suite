@@ -65,16 +65,6 @@ ScaleUniform::~ScaleUniform()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void ScaleUniform::accept( osg::NodeVisitor& nv )
-{
-    if( nv.validNodeMask( *this ) )
-    {
-        nv.pushOntoNodePath( this );
-        nv.apply( *this );
-        nv.popFromNodePath();
-    }
-}
-////////////////////////////////////////////////////////////////////////////////
 const char* ScaleUniform::className() const
 {
     return "ScaleUniform";
@@ -93,11 +83,6 @@ osg::Object* ScaleUniform::cloneType() const
 bool ScaleUniform::isSameKindAs( const osg::Object* obj ) const
 {
     return dynamic_cast< const ScaleUniform* >( obj ) != NULL;
-}
-////////////////////////////////////////////////////////////////////////////////
-const char* ScaleUniform::libraryName() const
-{
-    return "ves::xplorer::scenegraph::manipulator";
 }
 ////////////////////////////////////////////////////////////////////////////////
 void ScaleUniform::SetupDefaultGeometry()

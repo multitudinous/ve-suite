@@ -63,16 +63,6 @@ TranslatePan::~TranslatePan()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void TranslatePan::accept( osg::NodeVisitor& nv )
-{
-    if( nv.validNodeMask( *this ) )
-    {
-        nv.pushOntoNodePath( this );
-        nv.apply( *this );
-        nv.popFromNodePath();
-    }
-}
-////////////////////////////////////////////////////////////////////////////////
 const char* TranslatePan::className() const
 {
     return "TranslatePan";
@@ -139,11 +129,6 @@ const bool TranslatePan::ComputeProjectedPoint(
 bool TranslatePan::isSameKindAs( const osg::Object* obj ) const
 {
     return dynamic_cast< const TranslatePan* >( obj ) != NULL;
-}
-////////////////////////////////////////////////////////////////////////////////
-const char* TranslatePan::libraryName() const
-{
-    return "ves::xplorer::scenegraph::manipulator";
 }
 ////////////////////////////////////////////////////////////////////////////////
 void TranslatePan::SetupDefaultGeometry()

@@ -72,6 +72,26 @@ TransformManipulator::~TransformManipulator()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
+const char* TransformManipulator::className() const
+{
+    return "TransformManipulator";
+}
+////////////////////////////////////////////////////////////////////////////////
+osg::Object* TransformManipulator::clone( const osg::CopyOp& copyop ) const
+{
+    return new TransformManipulator( *this, copyop );
+}
+////////////////////////////////////////////////////////////////////////////////
+osg::Object* TransformManipulator::cloneType() const
+{
+    return new TransformManipulator();
+}
+////////////////////////////////////////////////////////////////////////////////
+bool TransformManipulator::isSameKindAs( const osg::Object* obj ) const
+{
+    return dynamic_cast< const TransformManipulator* >( obj ) != NULL;
+}
+////////////////////////////////////////////////////////////////////////////////
 void TransformManipulator::SetupDefaultGeometry()
 {
     osg::ref_ptr< manipulator::TranslateCompound > translateCompound =

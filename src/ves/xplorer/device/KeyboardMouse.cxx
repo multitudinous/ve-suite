@@ -39,7 +39,10 @@
 #include <ves/xplorer/ModelHandler.h>
 #include <ves/xplorer/ModelCADHandler.h>
 #include <ves/xplorer/DeviceHandler.h>
-#include <ves/xplorer/environment/NavigationAnimationEngine.h>
+
+#include <ves/xplorer/plugin/PluginBase.h>
+
+#include <ves/xplorer/network/cfdExecutive.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/FindParentsVisitor.h>
@@ -59,8 +62,7 @@
 
 #include <ves/xplorer/scenegraph/manipulator/TransformManipulator.h>
 
-#include <ves/xplorer/plugin/PluginBase.h>
-#include <ves/xplorer/network/cfdExecutive.h>
+#include <ves/xplorer/environment/NavigationAnimationEngine.h>
 
 // --- Bullet Includes --- //
 #include <LinearMath/btVector3.h>
@@ -105,6 +107,10 @@
 #include <osg/LineWidth>
 #include <osg/AutoTransform>
 //#include <osg/PolygonStipple>
+
+// --- osgBullet Includes --- //
+#include <osgBullet/AbsoluteModelTransform.h>
+#include <osgBullet/RigidBody.h>
 
 // --- C/C++ Libraries --- //
 #include <iostream>
@@ -1815,19 +1821,28 @@ void KeyboardMouse::ProcessSelection()
         sceneManager->GetManipulatorManager()->GetSceneManipulator();
     sceneManipulator->Disconnect();
     //Check and see if the selected node has an attached physics mesh
-    //osgBullet::AbsoulteModelTransform* tempAMT = 
-    //    dynamic_cast< osgBullet::AbsoulteModelTransform* >( 
-    //    newSelectedDCS->getParent( 0 ) );
-    //if( tempAMT )
-    //{
-    //    osgBullet::RigidBody* tempRB = 
-    //        dynamic_cast< osgBullet::RigidBody* >( tempAMT->getUserData() );
-    //    if( tempRB )
-    //    {
-    //        bool hasAPhysicsMesh = true;
-    //    }
-    //}
-    sceneManipulator->Connect( newSelectedDCS );
+    bool hasAPhysicsMesh( false );
+    osgBullet::AbsoluteModelTransform* tempAMT = 
+        dynamic_cast< osgBullet::AbsoluteModelTransform* >( 
+            newSelectedDCS->getParent( 0 ) );
+    if( tempAMT )
+    {
+        osgBullet::RigidBody* tempRB = 
+            dynamic_cast< osgBullet::RigidBody* >( tempAMT->getUserData() );
+        if( tempRB )
+        {
+            hasAPhysicsMesh = true;
+        }
+    }
+
+    if( hasAPhysicsMesh )
+    {
+        sceneManipulator->Connect( tempAMT );
+    }
+    else
+    {
+        sceneManipulator->Connect( newSelectedDCS );
+    }
 
     //Move the scene manipulator to the center point
     scenegraph::LocalToWorldNodePath nodePath(

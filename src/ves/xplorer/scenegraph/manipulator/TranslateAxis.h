@@ -79,10 +79,6 @@ public:
         const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
 
     ///
-    ///\param nv
-    virtual void accept( osg::NodeVisitor& nv );
-
-    ///
     ///\return
     virtual const char* className() const;
 
@@ -99,10 +95,6 @@ public:
     ///\param obj
     ///\return
     virtual bool isSameKindAs( const osg::Object* obj ) const;
-
-    ///
-    ///\return
-    virtual const char* libraryName() const;
 
     ///
     virtual void ComboForm();

@@ -49,6 +49,11 @@ RotateTwist::RotateTwist()
     :
     Dragger( TransformationType::ROTATE_TWIST )
 {
+    //If desktop mode
+    setAutoRotateMode( osg::AutoTransform::ROTATE_TO_SCREEN );
+    //If cave mode
+    //setAutoRotateMode( osg::AutoTransform::ROTATE_TO_CAMERA );
+
     SetupDefaultGeometry();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -63,16 +68,6 @@ RotateTwist::RotateTwist(
 RotateTwist::~RotateTwist()
 {
     ;
-}
-////////////////////////////////////////////////////////////////////////////////
-void RotateTwist::accept( osg::NodeVisitor& nv )
-{
-    if( nv.validNodeMask( *this ) )
-    {
-        nv.pushOntoNodePath( this );
-        nv.apply( *this );
-        nv.popFromNodePath();
-    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 const char* RotateTwist::className() const
@@ -95,16 +90,11 @@ bool RotateTwist::isSameKindAs( const osg::Object* obj ) const
     return dynamic_cast< const RotateTwist* >( obj ) != NULL;
 }
 ////////////////////////////////////////////////////////////////////////////////
-const char* RotateTwist::libraryName() const
-{
-    return "ves::xplorer::scenegraph::manipulator";
-}
-////////////////////////////////////////////////////////////////////////////////
 void RotateTwist::SetupDefaultGeometry()
 {
     //The geode to add the geometry to
-    osg::ref_ptr< osg::Billboard > billboard = new osg::Billboard();
-    billboard->setMode( osg::Billboard::POINT_ROT_EYE );
+    osg::ref_ptr< osg::Geode > billboard = new osg::Geode();
+    //billboard->setMode( osg::Billboard::POINT_ROT_EYE );
 
     //Create the rotation twist axis with line loops
     {

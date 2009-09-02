@@ -67,16 +67,6 @@ RotateAxis::~RotateAxis()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void RotateAxis::accept( osg::NodeVisitor& nv )
-{
-    if( nv.validNodeMask( *this ) )
-    {
-        nv.pushOntoNodePath( this );
-        nv.apply( *this );
-        nv.popFromNodePath();
-    }
-}
-////////////////////////////////////////////////////////////////////////////////
 const char* RotateAxis::className() const
 {
     return "RotateAxis";
@@ -95,11 +85,6 @@ osg::Object* RotateAxis::cloneType() const
 bool RotateAxis::isSameKindAs( const osg::Object* obj ) const
 {
     return dynamic_cast< const RotateAxis* >( obj ) != NULL;
-}
-////////////////////////////////////////////////////////////////////////////////
-const char* RotateAxis::libraryName() const
-{
-    return "ves::xplorer::scenegraph::manipulator";
 }
 ////////////////////////////////////////////////////////////////////////////////
 void RotateAxis::ComputeDeltaTransform()
@@ -136,10 +121,10 @@ void RotateAxis::ComputeDeltaTransform()
     //m_deltaRotation /= m_deltaRotation.length();
 
     //Add the calculated rotation to the current rotation
-    osg::Quat newRotation = m_deltaRotation * m_rootDragger->getAttitude();
+    osg::Quat newRotation = m_deltaRotation * m_rootDragger->getRotation();
     if( m_vectorSpace == VectorSpace::LOCAL )
     {
-        m_rootDragger->setAttitude( newRotation );
+        m_rootDragger->setRotation( newRotation );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

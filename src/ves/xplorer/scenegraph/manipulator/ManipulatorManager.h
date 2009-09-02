@@ -41,7 +41,6 @@
 
 // --- OSG Includes --- //
 #include <osg/Group>
-#include <osg/AutoTransform>
 
 namespace osgUtil
 {
@@ -87,7 +86,7 @@ public:
     virtual bool addChild( Dragger* child );
 
     ///Override the computeBound function to return an empty bounding sphere
-    virtual osg::BoundingSphere computeBound() const;
+    //virtual osg::BoundingSphere computeBound() const;
 
     ///
     void Enable( const bool& enable = true );

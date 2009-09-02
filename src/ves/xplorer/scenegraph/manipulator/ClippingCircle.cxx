@@ -36,7 +36,6 @@
 
 // --- OSG Includes --- //
 #include <osg/ColorMask>
-#include <osg/Depth>
 #include <osg/Stencil>
 #include <osg/Hint>
 #include <osg/Geometry>
@@ -49,8 +48,11 @@ using namespace ves::xplorer::scenegraph::manipulator;
 ////////////////////////////////////////////////////////////////////////////////
 ClippingCircle::ClippingCircle()
     :
-    osg::Billboard()
+    osg::Billboard(),
+    m_color( NULL )
 {
+    m_color = new osg::Uniform( "color", osg::Vec4f( 0.7, 0.7, 0.7, 1.0 ) );
+
     setMode( osg::Billboard::POINT_ROT_EYE );
 
     SetupDefaultGeometry();
@@ -59,7 +61,8 @@ ClippingCircle::ClippingCircle()
 ClippingCircle::ClippingCircle(
     const ClippingCircle& clippingCircle, const osg::CopyOp& copyop )
     :
-    osg::Billboard( clippingCircle, copyop )
+    osg::Billboard( clippingCircle, copyop ),
+    m_color( clippingCircle.m_color.get() )
 {
     ;
 }
@@ -104,11 +107,6 @@ bool ClippingCircle::isSameKindAs( const osg::Object* obj ) const
     return dynamic_cast< const ClippingCircle* >( obj ) != NULL;
 }
 ////////////////////////////////////////////////////////////////////////////////
-const char* ClippingCircle::libraryName() const
-{
-    return "ves::xplorer::scenegraph::manipulator";
-}
-////////////////////////////////////////////////////////////////////////////////
 void ClippingCircle::SetupDefaultGeometry()
 {
     //Create the clipping circle with line loops
@@ -121,10 +119,10 @@ void ClippingCircle::SetupDefaultGeometry()
             double cosVal( cos( rot ) );
             double sinVal( sin( rot ) );
 
-            double x( CLIPPING_CIRCLE_RADIUS * cosVal );
-            double z( CLIPPING_CIRCLE_RADIUS * sinVal );
+            double s( CLIPPING_CIRCLE_RADIUS * cosVal );
+            double t( CLIPPING_CIRCLE_RADIUS * sinVal );
 
-            vertices->push_back( osg::Vec3d( x, 0.0, z ) );
+            vertices->push_back( osg::Vec3d( s, 0.0, t ) );
         }
 
         geometry->setVertexArray( vertices.get() );
@@ -137,6 +135,9 @@ void ClippingCircle::SetupDefaultGeometry()
         //Set StateSet
         osg::ref_ptr< osg::StateSet > stateSet =
             geometry->getOrCreateStateSet();
+
+        //Override color uniform
+        stateSet->addUniform( m_color.get() );
 
         //Set line width
         osg::ref_ptr< osg::LineWidth > lineWidth = new osg::LineWidth();
@@ -165,10 +166,10 @@ void ClippingCircle::SetupDefaultGeometry()
             double cosVal( cos( rot ) );
             double sinVal( sin( rot ) );
 
-            double x( CLIPPING_CIRCLE_RADIUS * cosVal );
-            double z( CLIPPING_CIRCLE_RADIUS * sinVal );
+            double s( CLIPPING_CIRCLE_RADIUS * cosVal );
+            double t( CLIPPING_CIRCLE_RADIUS * sinVal );
 
-            vertices->push_back( osg::Vec3d( x, 0.0, z ) );
+            vertices->push_back( osg::Vec3d( s, 0.0, t ) );
         }
 
         geometry->setVertexArray( vertices.get() );

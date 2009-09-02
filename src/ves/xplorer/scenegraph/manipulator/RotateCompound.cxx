@@ -69,16 +69,6 @@ RotateCompound::~RotateCompound()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void RotateCompound::accept( osg::NodeVisitor& nv )
-{
-    if( nv.validNodeMask( *this ) )
-    {
-        nv.pushOntoNodePath( this );
-        nv.apply( *this );
-        nv.popFromNodePath();
-    }
-}
-////////////////////////////////////////////////////////////////////////////////
 const char* RotateCompound::className() const
 {
     return "RotateCompound";
@@ -99,11 +89,6 @@ bool RotateCompound::isSameKindAs( const osg::Object* obj ) const
     return dynamic_cast< const RotateCompound* >( obj ) != NULL;
 }
 ////////////////////////////////////////////////////////////////////////////////
-const char* RotateCompound::libraryName() const
-{
-    return "ves::xplorer::scenegraph::manipulator";
-}
-////////////////////////////////////////////////////////////////////////////////
 void RotateCompound::SetupDefaultGeometry()
 {
     //Create translate x-axis dragger
@@ -122,7 +107,7 @@ void RotateCompound::SetupDefaultGeometry()
     {
         osg::Quat rotation;
         rotation.makeRotate( GetUnitAxis(), osg::Vec3d( 0.0, 1.0, 0.0 ) );
-        m_yRotateAxis->setAttitude( rotation );
+        m_yRotateAxis->setRotation( rotation );
     }
 
     addChild( m_yRotateAxis.get() );
@@ -136,7 +121,7 @@ void RotateCompound::SetupDefaultGeometry()
     {
         osg::Quat rotation;
         rotation.makeRotate( GetUnitAxis(), osg::Vec3d( 0.0, 0.0, 1.0 ) );
-        m_zRotateAxis->setAttitude( rotation );
+        m_zRotateAxis->setRotation( rotation );
     }
 
     addChild( m_zRotateAxis.get() );
@@ -146,6 +131,6 @@ void RotateCompound::SetupDefaultGeometry()
     m_rotateTwist->SetColor(
         Color::DEFAULT, osg::Vec4f( 1.0, 1.0, 1.0, 1.0 ), true );
 
-    addChild( m_rotateTwist.get() );
+    //addChild( m_rotateTwist.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////

@@ -73,16 +73,6 @@ ScaleCompound::~ScaleCompound()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void ScaleCompound::accept( osg::NodeVisitor& nv )
-{
-    if( nv.validNodeMask( *this ) )
-    {
-        nv.pushOntoNodePath( this );
-        nv.apply( *this );
-        nv.popFromNodePath();
-    }
-}
-////////////////////////////////////////////////////////////////////////////////
 const char* ScaleCompound::className() const
 {
     return "ScaleCompound";
@@ -101,11 +91,6 @@ osg::Object* ScaleCompound::cloneType() const
 bool ScaleCompound::isSameKindAs( const osg::Object* obj ) const
 {
     return dynamic_cast< const ScaleCompound* >( obj ) != NULL;
-}
-////////////////////////////////////////////////////////////////////////////////
-const char* ScaleCompound::libraryName() const
-{
-    return "ves::xplorer::scenegraph::manipulator";
 }
 ////////////////////////////////////////////////////////////////////////////////
 void ScaleCompound::ComboForm()
@@ -198,7 +183,7 @@ void ScaleCompound::SetupDefaultGeometry()
     {
         osg::Quat rotation;
         rotation.makeRotate( GetUnitAxis(), osg::Vec3d( 0.0, 1.0, 0.0 ) );
-        m_yScaleAxis->setAttitude( rotation );
+        m_yScaleAxis->setRotation( rotation );
     }
 
     addChild( m_yScaleAxis.get() );
@@ -212,7 +197,7 @@ void ScaleCompound::SetupDefaultGeometry()
     {
         osg::Quat rotation;
         rotation.makeRotate( GetUnitAxis(), osg::Vec3d( 0.0, 0.0, 1.0 ) );
-        m_zScaleAxis->setAttitude( rotation );
+        m_zScaleAxis->setRotation( rotation );
     }
 
     addChild( m_zScaleAxis.get() );

@@ -90,10 +90,6 @@ public:
     ///\return
     virtual bool isSameKindAs( const osg::Object* obj ) const;
 
-    ///
-    ///\return
-    virtual const char* libraryName() const;
-
 protected:
     ///Destructor
     virtual ~ClippingCircle();
@@ -102,8 +98,8 @@ protected:
     virtual void SetupDefaultGeometry();
 
 private:
-
-
+    ///
+    osg::ref_ptr< osg::Uniform > m_color;
 };
 } //end manipulator
 } //end scenegraph

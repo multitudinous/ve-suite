@@ -48,14 +48,13 @@ using namespace ves::xplorer::scenegraph::manipulator;
 ScaleAxis::ScaleAxis()
     :
     Dragger( TransformationType::SCALE_AXIS ),
-    m_defaultAxisColor( 0.7, 0.7, 0.7, 1.0 ),
     m_axisColor( NULL ),
     m_lineVertices( NULL ),
     m_lineGeometry( NULL ),
     m_box( NULL ),
     m_shapeDrawable( NULL )
 {
-    m_axisColor = new osg::Uniform( "color", m_defaultAxisColor );
+    m_axisColor = new osg::Uniform( "color", osg::Vec4f( 0.7, 0.7, 0.7, 1.0 ) );
 
     SetupDefaultGeometry();
 }
@@ -64,7 +63,6 @@ ScaleAxis::ScaleAxis(
     const ScaleAxis& scaleAxis, const osg::CopyOp& copyop )
     :
     Dragger( scaleAxis, copyop ),
-    m_defaultAxisColor( scaleAxis.m_defaultAxisColor ),
     m_axisColor( scaleAxis.m_axisColor.get() ),
     m_lineVertices( scaleAxis.m_lineVertices.get() ),
     m_lineGeometry( scaleAxis.m_lineGeometry.get()  ),
@@ -77,16 +75,6 @@ ScaleAxis::ScaleAxis(
 ScaleAxis::~ScaleAxis()
 {
     ;
-}
-////////////////////////////////////////////////////////////////////////////////
-void ScaleAxis::accept( osg::NodeVisitor& nv )
-{
-    if( nv.validNodeMask( *this ) )
-    {
-        nv.pushOntoNodePath( this );
-        nv.apply( *this );
-        nv.popFromNodePath();
-    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 const char* ScaleAxis::className() const
@@ -107,11 +95,6 @@ osg::Object* ScaleAxis::cloneType() const
 bool ScaleAxis::isSameKindAs( const osg::Object* obj ) const
 {
     return dynamic_cast< const ScaleAxis* >( obj ) != NULL;
-}
-////////////////////////////////////////////////////////////////////////////////
-const char* ScaleAxis::libraryName() const
-{
-    return "ves::xplorer::scenegraph::manipulator";
 }
 ////////////////////////////////////////////////////////////////////////////////
 void ScaleAxis::DirtyGeometry()

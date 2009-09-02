@@ -42,7 +42,6 @@
 
 // --- OSG Includes --- //
 #include <osg/Depth>
-#include <osg/AutoTransform>
 
 using namespace ves::xplorer::scenegraph::manipulator;
 
@@ -68,14 +67,6 @@ ManipulatorManager::ManipulatorManager()
         osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
 
     Enable();
-
-    //double initialScale = 10.0;
-    //setScale( initialScale );
-    //Set manipulator to scale to the same size based off distance from the eye
-    //setAutoScaleToScreen( true );
-    //Set initial bound so AutoTransform is not culled by small feature culling
-    //osg::BoundingSphere bs( osg::Vec3f( 0.0, 0.0, 0.0 ), initialScale );
-    //setInitialBound( bs );
 
     m_sceneManipulator = new TransformManipulator();
     //Turn off the scene manipulator until requested by user
@@ -104,18 +95,20 @@ ManipulatorManager::~ManipulatorManager()
 ////////////////////////////////////////////////////////////////////////////////
 bool ManipulatorManager::addChild( Dragger* child )
 {
-    //new osg::PositionAttitudeTransform();
-    //dragger.SetTransform( transform );
+    child->setScale( 100.0 );
+    child->setAutoScaleToScreen( true );
 
     return osg::Group::addChild( child );
 }
 ////////////////////////////////////////////////////////////////////////////////
+/*
 osg::BoundingSphere ManipulatorManager::computeBound() const
 {
     osg::BoundingSphere bsphere;
 
     return bsphere;
 }
+*/
 ////////////////////////////////////////////////////////////////////////////////
 void ManipulatorManager::Enable( const bool& enable )
 {
@@ -175,16 +168,8 @@ bool ManipulatorManager::Handle(
         }
         case Event::PUSH:
         {
-            m_leafDragger =
+            return m_leafDragger =
                 m_rootDragger->Push( *m_deviceInput, m_nodePath, m_nodePathItr );
-
-            //Turn off automatic scaling for the dragger
-            //osg::AutoTransform* autoTransform =
-            //static_cast< osg::AutoTransform* >(
-                //m_parentManipulator->getParent( 0 ) );
-            //autoTransform->setAutoScaleToScreen( false );
-
-            return m_leafDragger;
         }
         case Event::DRAG:
         {
@@ -200,14 +185,6 @@ bool ManipulatorManager::Handle(
         case Event::RELEASE:
         {
             m_leafDragger = NULL;
-
-            //osg::AutoTransform* autoTransform =
-            //static_cast< osg::AutoTransform* >(
-                //m_parentManipulator->getParent( 0 ) );
-            //autoTransform->setAutoScaleToScreen( true );
-            //Force update now on release event for this frame
-            //This function call sets _firstTimeToInitEyePoint = true
-            //autoTransform->setAutoRotateMode( osg::AutoTransform::NO_ROTATION );
 
             return m_rootDragger->Release( m_nodePathItr );
         }

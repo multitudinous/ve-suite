@@ -71,7 +71,22 @@ public:
         const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
 
     ///
-    META_Node( ves::xplorer::scenegraph::manipulator, TransformManipulator );
+    ///\return
+    virtual const char* className() const;
+
+    ///
+    ///\param copyop
+    ///\return
+    virtual osg::Object* clone( const osg::CopyOp& copyop ) const;
+
+    ///
+    ///\return
+    virtual osg::Object* cloneType() const;
+
+    ///
+    ///\param obj
+    ///\return
+    virtual bool isSameKindAs( const osg::Object* obj ) const;
 
 protected:
     ///Destructor

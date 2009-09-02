@@ -73,16 +73,6 @@ TranslateCompound::~TranslateCompound()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void TranslateCompound::accept( osg::NodeVisitor& nv )
-{
-    if( nv.validNodeMask( *this ) )
-    {
-        nv.pushOntoNodePath( this );
-        nv.apply( *this );
-        nv.popFromNodePath();
-    }
-}
-////////////////////////////////////////////////////////////////////////////////
 const char* TranslateCompound::className() const
 {
     return "TranslateCompound";
@@ -101,11 +91,6 @@ osg::Object* TranslateCompound::cloneType() const
 bool TranslateCompound::isSameKindAs( const osg::Object* obj ) const
 {
     return dynamic_cast< const TranslateCompound* >( obj ) != NULL;
-}
-////////////////////////////////////////////////////////////////////////////////
-const char* TranslateCompound::libraryName() const
-{
-    return "ves::xplorer::scenegraph::manipulator";
 }
 ////////////////////////////////////////////////////////////////////////////////
 void TranslateCompound::ComboForm()
@@ -198,7 +183,7 @@ void TranslateCompound::SetupDefaultGeometry()
     {
         osg::Quat rotation;
         rotation.makeRotate( GetUnitAxis(), osg::Vec3d( 0.0, 1.0, 0.0 ) );
-        m_yTranslateAxis->setAttitude( rotation );
+        m_yTranslateAxis->setRotation( rotation );
     }
 
     addChild( m_yTranslateAxis.get() );
@@ -213,7 +198,7 @@ void TranslateCompound::SetupDefaultGeometry()
     {
         osg::Quat rotation;
         rotation.makeRotate( GetUnitAxis(), osg::Vec3d( 0.0, 0.0, 1.0 ) );
-        m_zTranslateAxis->setAttitude( rotation );
+        m_zTranslateAxis->setRotation( rotation );
     }
 
     addChild( m_zTranslateAxis.get() );

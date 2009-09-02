@@ -40,7 +40,7 @@
 #include <ves/xplorer/scenegraph/manipulator/Definitions.h>
 
 // --- OSG Includes --- //
-#include <osg/PositionAttitudeTransform>
+#include <osg/AutoTransform>
 #include <osg/Plane>
 
 #include <osgUtil/LineSegmentIntersector>
@@ -64,7 +64,7 @@ namespace manipulator
 /*!\class ves::xplorer::scenegraph::Dragger
  * Abstract Class
  */
-class VE_SCENEGRAPH_EXPORTS Dragger : public osg::PositionAttitudeTransform
+class VE_SCENEGRAPH_EXPORTS Dragger : public osg::AutoTransform
 {
 public:
     ///
@@ -76,8 +76,20 @@ public:
         const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
 
     ///
+    virtual void accept( osg::NodeVisitor& nv );
+
+    ///
     ///\return
     virtual const char* className() const;
+
+    ///
+    ///\param copyop
+    ///\return
+    virtual osg::Object* clone( const osg::CopyOp& copyop ) const;
+
+    ///
+    ///\return
+    virtual osg::Object* cloneType() const;
 
     ///
     virtual void ComboForm();
@@ -149,6 +161,12 @@ public:
     virtual void SetRootDragger( Dragger* rootDragger );
 
     ///
+    void setScale( const double scale );
+
+    ///
+    void setScale( const osg::Vec3d& scale );
+
+    ///
     virtual void SetVectorSpace( const VectorSpace::Enum& vectorSpace );
 
     ///
@@ -168,7 +186,7 @@ protected:
     ///
     virtual const bool ComputeProjectedPoint(
         const osgUtil::LineSegmentIntersector& deviceInput,
-        osg::Vec3d& projectedPoint ){return false;}// = 0;
+        osg::Vec3d& projectedPoint ){return false;}
 
     ///
     osg::Vec4& GetColor( Color::Enum colorTag );
@@ -181,7 +199,7 @@ protected:
 
     ///Pure virtual
     ///
-    virtual void SetupDefaultGeometry() = 0;
+    virtual void SetupDefaultGeometry(){;}
 
     ///
     const TransformationType::Enum m_transformationType;
@@ -217,6 +235,12 @@ protected:
     ///
     osg::Vec3d m_deltaTranslation;
 
+    ///
+    osg::Vec3d m_deltaScale;
+
+    ///
+    osg::Vec3d m_scale;
+
 private:
     ///
     typedef std::map< Color::Enum, osg::Vec4 > ColorMap;
@@ -226,6 +250,12 @@ private:
 
     ///
     void CreateDefaultShader();
+
+    ///
+    void SetScale( const double scale );
+
+    ///
+    void SetScale( osg::Vec3d& scale );
 
     ///
     void UpdateAssociations();

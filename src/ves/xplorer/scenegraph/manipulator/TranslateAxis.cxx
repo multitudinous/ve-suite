@@ -85,16 +85,6 @@ TranslateAxis::~TranslateAxis()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void TranslateAxis::accept( osg::NodeVisitor& nv )
-{
-    if( nv.validNodeMask( *this ) )
-    {
-        nv.pushOntoNodePath( this );
-        nv.apply( *this );
-        nv.popFromNodePath();
-    }
-}
-////////////////////////////////////////////////////////////////////////////////
 const char* TranslateAxis::className() const
 {
     return "TranslateAxis";
@@ -113,11 +103,6 @@ osg::Object* TranslateAxis::cloneType() const
 bool TranslateAxis::isSameKindAs( const osg::Object* obj ) const
 {
     return dynamic_cast< const TranslateAxis* >( obj ) != NULL;
-}
-////////////////////////////////////////////////////////////////////////////////
-const char* TranslateAxis::libraryName() const
-{
-    return "ves::xplorer::scenegraph::manipulator";
 }
 ////////////////////////////////////////////////////////////////////////////////
 void TranslateAxis::ComboForm()
