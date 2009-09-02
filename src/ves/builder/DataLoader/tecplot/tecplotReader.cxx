@@ -44,9 +44,55 @@
 #include <vtkPointData.h>
 #include <vtkUnstructuredGridWriter.h>  // -lvtkIO
 
+//#include <ves/xplorer/util/fileIO.h>
+
 using namespace tecplot::sdk::integration;
 using namespace tecplot::toolbox;
 using namespace std;
+//using namespace ves::xplorer::util;
+
+string extractFileNameFromFullPath( const string& s )
+{
+    char sep = '/';
+
+#ifdef _WIN32
+    sep = '\';
+#endif
+
+    size_t i = s.rfind(sep, s.length());
+    if( i != string::npos )
+    {
+        return( s.substr(i+1, s.length() - i) );
+    }
+
+    return( "" );
+} 
+
+string replaceExtension( const string& s, const string& newextension )
+{
+    char sep = '.';
+
+    size_t i = s.rfind(sep, s.length());
+    if( i != string::npos )
+    {
+        return( s.substr(0, i+1 ) + newextension );
+    }
+
+    return( "" );
+} 
+
+string getExtension( const string& s )
+{
+    char sep = '.';
+
+    size_t i = s.rfind(sep, s.length());
+    if( i != string::npos )
+    {
+        return( s.substr(i+1, s.length() ) );
+    }
+
+    return( "" );
+} 
 
 double * readVariable( EntIndex_t currentZone, int varNumber, char * varName )
 {
@@ -85,11 +131,9 @@ double * readVariable( EntIndex_t currentZone, int varNumber, char * varName )
     return array;
 }
 
-void convertTecplotToVTK( char * fName )
+void convertTecplotToVTK( string inputFileNameAndPath )
 {
-    std::string inFName(fName);
-    cout << "\nPreparing to read file: " << inFName << endl;
-    StringList fileName(inFName.c_str(), NULL);
+    StringList fileName(inputFileNameAndPath.c_str(), NULL);
 
     Boolean_t IsOk =
     TecUtilReadDataSet(ReadDataOption_NewData,    // NewData = Remove data set fron current frame before loading new data set
@@ -144,9 +188,9 @@ void convertTecplotToVTK( char * fName )
     cout << "numNodalParameters is " << numNodalParameters << endl;
 
     vtkUnstructuredGrid *ugrid = vtkUnstructuredGrid::New();
+    vtkPoints *vertex = vtkPoints::New();
 
     int nodeOffset = 0;
-    ////int elementOffset = 0
 
     for( EntIndex_t currentZone = 1; currentZone < nzones+1; currentZone++ ) // zone numbers are 1-based
     {
@@ -337,14 +381,11 @@ void convertTecplotToVTK( char * fName )
                 z[ i ] = 0.0;
         }
 
-        vtkPoints *vertex = vtkPoints::New();
         for( int i = 0; i < numDataPoints; i++ )
         {
-            vertex->InsertPoint( i , x[ i ], y[ i ], z[ i ] );
+            //vertex->InsertPoint( i , x[ i ], y[ i ], z[ i ] );
+            vertex->InsertNextPoint( x[ i ], y[ i ], z[ i ] );
         }
-
-        ugrid->SetPoints( vertex );
-        vertex->Delete();
 
         // set up arrays to store scalar nodal data over entire mesh...
         vtkFloatArray ** parameterData = new vtkFloatArray * [ numNodalParameters ];
@@ -371,7 +412,7 @@ void convertTecplotToVTK( char * fName )
                 //dirStringStream.str( "" );
                 for( int j = 0; j < numDataPoints; j++ )
                 {
-                    parameterData[ ii ]->SetTuple1( j, tempArray[ j ] );
+                    parameterData[ ii ]->SetTuple1( j+nodeOffset, tempArray[ j ] );
                 }
                 ii++;
                 delete [] tempArray;
@@ -390,22 +431,28 @@ void convertTecplotToVTK( char * fName )
         delete [] z;
 
         nodeOffset += numDataPoints;
-        ////elementOffset += numElements;
 
     } // for each zone
+
+    ugrid->SetPoints( vertex );
+    vertex->Delete();
 
     for( int i = 0; i < nvars; i++ )
     {
         TecUtilStringDealloc( &Name[ i ] );
     }
 
+    // create an output filename to be written to current location...
+    //string filename = fileIO::ExtractBaseFileNameFromFullPath( inputFileNameAndPath );
+    string outputFileName = replaceExtension( extractFileNameFromFullPath( inputFileNameAndPath ), "vtk" );
+    //cout << "outputFileName = " << outputFileName << endl;
+
     vtkUnstructuredGridWriter *writer = vtkUnstructuredGridWriter::New();
     writer->SetInput( ugrid );
     writer-> SetFileType( VTK_ASCII );
-    writer->SetFileName( "out.vtk" );
+    writer->SetFileName( outputFileName.c_str() );
     writer->Write();
     writer->Delete();
-
 }
 
 int main( int argc, char** argv )
@@ -465,7 +512,18 @@ int main( int argc, char** argv )
 
         for( int i = 1; i < argc; i++ ) // argument array is 0-based, but we won't use the zeroth one (program name)
         {
-	        convertTecplotToVTK( argv[ i ] );
+            string inputFileNameAndPath( argv[ i ] );
+            cout << "\nPreparing to read file: " << inputFileNameAndPath << endl;
+
+            string extension = getExtension( inputFileNameAndPath );
+            if( extension.compare("tec") == 0 || extension.compare("plt") == 0 )
+            {
+	            convertTecplotToVTK( inputFileNameAndPath );
+            }
+            else
+            {
+                cout << "Error: This program can only convert tecplot filenames with extensions '.tec' or '.plt'" << endl;
+            }
         }
 
         TecUtilParentLockFinish();
