@@ -274,8 +274,8 @@ void KeyboardMouse::SetStartEndPoint(
     //Need to negate the the camera transform that is multiplied into the view
     {
         osg::Matrixd inverseCameraTransform(
-            vxs::SceneManager::instance()->GetInvertedWorldDCS().getData() );
-        
+            m_sceneManager.GetInvertedWorldDCS().getData() );
+
         startPoint = startPoint * inverseCameraTransform;
         endPoint = endPoint * inverseCameraTransform;
     }
@@ -298,8 +298,7 @@ void KeyboardMouse::SetStartEndPoint(
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::DrawLine( osg::Vec3d startPoint, osg::Vec3d endPoint )
 {   
-    osg::Group* rootNode =
-        vxs::SceneManager::instance()->GetRootNode();
+    osg::Group* rootNode = m_sceneManager.GetRootNode();
 
     if( mBeamGeode.valid() )
     {
@@ -496,19 +495,14 @@ void KeyboardMouse::ProcessNavigation()
 {
     gmtl::Matrix44d newTransform;
     gmtl::Matrix44d currentTransform;
-    
-    vxs::DCS* const activeDCS =
-        vx::DeviceHandler::instance()->GetActiveDCS();
+
+    vxs::DCS* const activeDCS = DeviceHandler::instance()->GetActiveDCS();
     //Get the node where are all the geometry is handled
-    osg::Group* const activeSwitchNode =
-        vxs::SceneManager::instance()->GetActiveSwitchNode();
+    osg::Group* const activeSwitchNode = m_sceneManager.GetActiveSwitchNode();
     //Get the node where all the nav matrix's are handled
-    vxs::DCS* const cameraDCS =
-        vxs::SceneManager::instance()->GetActiveNavSwitchNode();
+    vxs::DCS* const cameraDCS = m_sceneManager.GetActiveNavSwitchNode();
 
-    osg::ref_ptr< vxs::CoordinateSystemTransform >
-        coordinateSystemTransform;
-
+    osg::ref_ptr< vxs::CoordinateSystemTransform > coordinateSystemTransform;
     //Test if we are manipulating the camera dcs or a model dcs
     if( activeDCS->GetName() != cameraDCS->GetName() )
     {
@@ -587,10 +581,8 @@ void KeyboardMouse::SetFrustumValues(
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::FrameAll()
 {
-    osg::Group* activeSwitchNode =
-        vxs::SceneManager::instance()->GetActiveSwitchNode();
-    vxs::DCS* activeNavSwitchNode =
-        vxs::SceneManager::instance()->GetActiveNavSwitchNode();
+    osg::Group* activeSwitchNode = m_sceneManager.GetActiveSwitchNode();
+    vxs::DCS* activeNavSwitchNode = m_sceneManager.GetActiveNavSwitchNode();
     osg::BoundingSphere bs = activeSwitchNode->computeBound();
 
     //Meters to feet conversion
@@ -678,20 +670,18 @@ void KeyboardMouse::FrameSelection()
 void KeyboardMouse::SkyCam()
 {
     //Unselect the previous selected DCS
-    vx::DeviceHandler::instance()->UnselectObjects();
+    DeviceHandler::instance()->UnselectObjects();
 
     //gmtl::Matrix44d matrix;
     //mCenterPoint->mData[ 1 ] = matrix[ 1 ][ 3 ] = *mCenterPointThreshold;
-    //vxs::SceneManager::instance()->GetActiveSwitchNode()->SetMat( matrix );
-
-    //reset view
-    vxs::SceneManager::instance()->GetWorldDCS()->SetQuat( *mResetAxis );
-    vxs::SceneManager::instance()->GetWorldDCS()->SetTranslationArray(
-        *mResetPosition );
+    //m_sceneManager.GetActiveSwitchNode()->SetMat( matrix );
 
     //Grab the current matrix
-    osg::ref_ptr< vxs::DCS > activeSwitchDCS =
-        vxs::SceneManager::instance()->GetWorldDCS();
+    osg::ref_ptr< vxs::DCS > activeSwitchDCS = m_sceneManager.GetWorldDCS();
+
+    //reset view
+    activeSwitchDCS->SetQuat( *mResetAxis );
+    activeSwitchDCS->SetTranslationArray( *mResetPosition );
 
     osg::BoundingSphere bs = activeSwitchDCS->computeBound();
 
@@ -733,8 +723,7 @@ void KeyboardMouse::OnKeyPress()
     }
     case gadget::KEY_A:
     {
-        if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
-             m_characterController.IsActive() )
+        if( !m_physicsSimulator.GetIdle() && m_characterController.IsActive() )
         {
             m_characterController.StrafeLeft( true );
         }
@@ -743,8 +732,7 @@ void KeyboardMouse::OnKeyPress()
     }
     case gadget::KEY_S:
     {
-        if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
-             m_characterController.IsActive() )
+        if( !m_physicsSimulator.GetIdle() && m_characterController.IsActive() )
         {
             m_characterController.StepBackward( true );
         }
@@ -753,8 +741,7 @@ void KeyboardMouse::OnKeyPress()
     }
     case gadget::KEY_W:
     {
-        if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
-             m_characterController.IsActive() )
+        if( !m_physicsSimulator.GetIdle() && m_characterController.IsActive() )
         {
             m_characterController.StepForward( true );
         }
@@ -763,8 +750,7 @@ void KeyboardMouse::OnKeyPress()
     }
     case gadget::KEY_D:
     {
-        if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
-             m_characterController.IsActive() )
+        if( !m_physicsSimulator.GetIdle() && m_characterController.IsActive() )
         {
             m_characterController.StrafeRight( true );
         }
@@ -773,8 +759,7 @@ void KeyboardMouse::OnKeyPress()
     }
     case gadget::KEY_C:
     {
-        if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
-             m_characterController.IsActive() )
+        if( !m_physicsSimulator.GetIdle() && m_characterController.IsActive() )
         {
             //m_characterController
         }
@@ -783,8 +768,7 @@ void KeyboardMouse::OnKeyPress()
     }
     case gadget::KEY_SPACE:
     {
-        if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
-             m_characterController.IsActive() )
+        if( !m_physicsSimulator.GetIdle() && m_characterController.IsActive() )
         {
             m_characterController.Jump();
         }
@@ -835,8 +819,7 @@ void KeyboardMouse::OnKeyRelease()
     {
     case gadget::KEY_A:
     {
-        if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
-             m_characterController.IsActive() )
+        if( !m_physicsSimulator.GetIdle() && m_characterController.IsActive() )
         {
             m_characterController.StrafeLeft( false );
         }
@@ -845,8 +828,7 @@ void KeyboardMouse::OnKeyRelease()
     }
     case gadget::KEY_S:
     {
-        if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
-             m_characterController.IsActive() )
+        if( !m_physicsSimulator.GetIdle() && m_characterController.IsActive() )
         {
             m_characterController.StepBackward( false );
         }
@@ -855,8 +837,7 @@ void KeyboardMouse::OnKeyRelease()
     }
     case gadget::KEY_D:
     {
-        if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
-             m_characterController.IsActive() )
+        if( !m_physicsSimulator.GetIdle() && m_characterController.IsActive() )
         {
             m_characterController.StrafeRight( false );
         }
@@ -865,8 +846,7 @@ void KeyboardMouse::OnKeyRelease()
     }
     case gadget::KEY_W:
     {
-        if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
-             m_characterController.IsActive() )
+        if( !m_physicsSimulator.GetIdle() && m_characterController.IsActive() )
         {
             m_characterController.StepForward( false );
         }
@@ -875,8 +855,7 @@ void KeyboardMouse::OnKeyRelease()
     }
     case gadget::KEY_SPACE:
     {
-        if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
-             m_characterController.IsActive() )
+        if( !m_physicsSimulator.GetIdle() && m_characterController.IsActive() )
         {
             //m_characterController.Jump();
         }
@@ -885,8 +864,7 @@ void KeyboardMouse::OnKeyRelease()
     }
     case gadget::KEY_C:
     {
-        if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
-            m_characterController.IsActive() )
+        if( !m_physicsSimulator.GetIdle() && m_characterController.IsActive() )
         {
             //m_characterController
         }
@@ -910,8 +888,7 @@ void KeyboardMouse::OnMousePress()
     case gadget::MBUTTON1:
     {
         //Rotate just the camera "3rd person view:
-        if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
-             m_characterController.IsActive() )
+        if( !m_physicsSimulator.GetIdle() && m_characterController.IsActive() )
         {
             m_characterController.FirstPersonMode( false );
         }
@@ -922,11 +899,9 @@ void KeyboardMouse::OnMousePress()
 #ifdef TRANSFORM_MANIPULATOR
             UpdateSelectionLine();
 
-            scenegraph::manipulator::ManipulatorManager* manipulatorManager =
-                scenegraph::SceneManager::instance()->GetManipulatorManager();
-            if( manipulatorManager->IsEnabled() )
+            if( m_manipulatorManager.IsEnabled() )
             {
-                if( manipulatorManager->Handle(
+                if( m_manipulatorManager.Handle(
                         scenegraph::manipulator::Event::PUSH,
                         mLineSegmentIntersector.get() ) )
                 {
@@ -935,8 +910,7 @@ void KeyboardMouse::OnMousePress()
             }
 #endif //TRANSFORM_MANIPULATOR
 
-            if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
-                 m_characterController.IsActive() )
+            if( !m_physicsSimulator.GetIdle() && m_characterController.IsActive() )
             {
                 m_characterController.SetCameraRotationSLERP( false );
             }
@@ -945,11 +919,11 @@ void KeyboardMouse::OnMousePress()
         else if( mKeyShift )
         {
             //Add a point to point constraint for picking
-            if( vxs::PhysicsSimulator::instance()->GetIdle() )
+            if( m_physicsSimulator.GetIdle() )
             {
                 break;
             }
-            
+
             osg::Vec3d startPoint, endPoint;
             SetStartEndPoint( startPoint, endPoint );
 
@@ -961,14 +935,14 @@ void KeyboardMouse::OnMousePress()
 
             btCollisionWorld::ClosestRayResultCallback rayCallback(
                 rayFromWorld, rayToWorld );
-            vxs::PhysicsSimulator::instance()->GetDynamicsWorld()->rayTest(
+            m_physicsSimulator.GetDynamicsWorld()->rayTest(
                 rayFromWorld, rayToWorld, rayCallback );
-            
+
             if( !rayCallback.hasHit() )
             {
                 break;
             }
-            
+
             btRigidBody* body = btRigidBody::upcast(
                 rayCallback.m_collisionObject );
             if( !body )
@@ -993,7 +967,7 @@ void KeyboardMouse::OnMousePress()
                 btPoint2PointConstraint* p2p =
                     new btPoint2PointConstraint(
                         *body, localPivot );
-                vxs::PhysicsSimulator::instance()->GetDynamicsWorld()->addConstraint( p2p );
+                m_physicsSimulator.GetDynamicsWorld()->addConstraint( p2p );
                 mPickConstraint = p2p;
 
                 mPrevPhysicsRayPos =
@@ -1022,8 +996,7 @@ void KeyboardMouse::OnMousePress()
     //Right mouse button
     case gadget::MBUTTON3:
     {
-        if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
-            m_characterController.IsActive() )
+        if( !m_physicsSimulator.GetIdle() && m_characterController.IsActive() )
         {
             m_characterController.FirstPersonMode( true );
             m_characterController.SetCameraRotationSLERP( false );
@@ -1037,8 +1010,7 @@ void KeyboardMouse::OnMousePress()
     //Scroll wheel up
     case gadget::MBUTTON4:
     {
-        if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
-            m_characterController.IsActive() )
+        if( !m_physicsSimulator.GetIdle() && m_characterController.IsActive() )
         {
             m_characterController.Zoom( true );
         }
@@ -1048,8 +1020,7 @@ void KeyboardMouse::OnMousePress()
     //Scroll wheel down
     case gadget::MBUTTON5:
     {
-        if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
-            m_characterController.IsActive() )
+        if( !m_physicsSimulator.GetIdle() && m_characterController.IsActive() )
         {
             m_characterController.Zoom( false );
         }
@@ -1075,7 +1046,7 @@ void KeyboardMouse::OnMouseRelease()
         //Do not require mod key depending on what the user did
         if( mPickConstraint )
         {
-            vxs::PhysicsSimulator::instance()->GetDynamicsWorld()->removeConstraint( mPickConstraint );
+            m_physicsSimulator.GetDynamicsWorld()->removeConstraint( mPickConstraint );
             delete mPickConstraint;
             mPickConstraint = NULL;
 
@@ -1085,11 +1056,9 @@ void KeyboardMouse::OnMouseRelease()
         }
 
 #ifdef TRANSFORM_MANIPULATOR
-        scenegraph::manipulator::ManipulatorManager* manipulatorManager =
-            scenegraph::SceneManager::instance()->GetManipulatorManager();
-        if( manipulatorManager->IsEnabled() )
+        if( m_manipulatorManager.IsEnabled() )
         {
-            if( manipulatorManager->Handle(
+            if( m_manipulatorManager.Handle(
                     scenegraph::manipulator::Event::RELEASE ) )
             {
                 break;
@@ -1097,8 +1066,7 @@ void KeyboardMouse::OnMouseRelease()
         }
 #endif //TRANSFORM_MANIPULATOR
 
-        if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
-             m_characterController.IsActive() )
+        if( !m_physicsSimulator.GetIdle() && m_characterController.IsActive() )
         {
             m_characterController.SetCameraRotationSLERP( true );
         }
@@ -1116,25 +1084,24 @@ void KeyboardMouse::OnMouseRelease()
         else if( mKeyAlt )
         {
             //OnMouseRelease();
-            vxs::DCS* infoDCS = 
-                vx::DeviceHandler::instance()->GetSelectedDCS();
-            vx::DeviceHandler::instance()->UnselectObjects();
-            
-            std::map< std::string, ves::xplorer::plugin::PluginBase* >* 
-                tempPlugins = 
-                    ves::xplorer::network::cfdExecutive::instance()->
+            vxs::DCS* infoDCS = DeviceHandler::instance()->GetSelectedDCS();
+            DeviceHandler::instance()->UnselectObjects();
+
+            std::map< std::string,
+                      ves::xplorer::plugin::PluginBase* >* tempPlugins =
+                ves::xplorer::network::cfdExecutive::instance()->
                     GetTheCurrentPlugins();
-            
+
             std::map< std::string, 
                 ves::xplorer::plugin::PluginBase* >::iterator pluginIter;
-            
+
             for( pluginIter = tempPlugins->begin(); 
                 pluginIter != tempPlugins->end(); ++pluginIter )
             {
                 pluginIter->second->GetCFDModel()->
                     RenderTextualDisplay( false );
             }
-            
+
             if( !infoDCS )
             {
                 break;
@@ -1216,11 +1183,9 @@ void KeyboardMouse::OnMouseMotionDown()
 #ifdef TRANSFORM_MANIPULATOR
             UpdateSelectionLine();
 
-            scenegraph::manipulator::ManipulatorManager* manipulatorManager =
-                scenegraph::SceneManager::instance()->GetManipulatorManager();
-            if( manipulatorManager->IsEnabled() )
+            if( m_manipulatorManager.IsEnabled() )
             {
-                if( manipulatorManager->Handle(
+                if( m_manipulatorManager.Handle(
                         scenegraph::manipulator::Event::DRAG ) )
                 {
                     break;
@@ -1229,8 +1194,7 @@ void KeyboardMouse::OnMouseMotionDown()
 #endif //TRANSFORM_MANIPULATOR
 
             //Rotate just the camera "3rd person view:
-            if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
-                 m_characterController.IsActive() )
+            if( !m_physicsSimulator.GetIdle() && m_characterController.IsActive() )
             {
                 m_characterController.Rotate( xDelta, yDelta );
             }
@@ -1257,7 +1221,7 @@ void KeyboardMouse::OnMouseMotionDown()
         //Mod key shift
         else if( mKeyShift )
         {
-            if( !vxs::PhysicsSimulator::instance()->GetIdle() && mPickConstraint )
+            if( !m_physicsSimulator.GetIdle() && mPickConstraint )
             {
                 //Move the constraint pivot
                 btPoint2PointConstraint* p2p =
@@ -1298,8 +1262,7 @@ void KeyboardMouse::OnMouseMotionDown()
     case gadget::MBUTTON3:
     {
         //Rotate the character and camera at the same time
-        if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
-            m_characterController.IsActive() )
+        if( !m_physicsSimulator.GetIdle() && m_characterController.IsActive() )
         {
             m_characterController.Rotate( xDelta, yDelta );
         }
@@ -1329,11 +1292,9 @@ void KeyboardMouse::OnMouseMotionUp()
 #ifdef TRANSFORM_MANIPULATOR
     UpdateSelectionLine();
 
-    scenegraph::manipulator::ManipulatorManager* manipulatorManager =
-        scenegraph::SceneManager::instance()->GetManipulatorManager();
-    if( manipulatorManager->IsEnabled() )
+    if( m_manipulatorManager.IsEnabled() )
     {
-        if( manipulatorManager->Handle(
+        if( m_manipulatorManager.Handle(
                 scenegraph::manipulator::Event::FOCUS,
                 mLineSegmentIntersector.get() ) )
         {
@@ -1398,7 +1359,7 @@ void KeyboardMouse::SelOnMouseRelease()
             if( mKeyNone )
             {
                 vxs::SetStateOnNURBSNodeVisitor(
-                    vxs::SceneManager::instance()->GetActiveSwitchNode(), false,
+                    m_sceneManager.GetActiveSwitchNode(), false,
                     false, mCurrPos, std::pair< double, double >( 0.0, 0.0 ) );
             }
 
@@ -1425,7 +1386,7 @@ void KeyboardMouse::SelOnMouseMotion( std::pair< double, double > delta )
         case gadget::MBUTTON1:
         {
             vxs::SetStateOnNURBSNodeVisitor(
-                vxs::SceneManager::instance()->GetActiveSwitchNode(),
+                m_sceneManager.GetActiveSwitchNode(),
                 true, true, mCurrPos, delta );
 
             break;
@@ -1446,16 +1407,15 @@ void KeyboardMouse::SelOnMouseMotion( std::pair< double, double > delta )
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::ResetTransforms()
 {
-    vx::DeviceHandler::instance()->ResetCenterPoint();
+    DeviceHandler::instance()->ResetCenterPoint();
 
     gmtl::Matrix44d matrix;
     gmtl::identity( matrix );
-    vxs::SceneManager::instance()->
-        GetWorldDCS()->SetMat( matrix );
-    
-    vxs::SceneManager::instance()->GetWorldDCS()->SetQuat( *mResetAxis );
-    vxs::SceneManager::instance()->GetWorldDCS()->SetTranslationArray(
-        *mResetPosition );
+
+    osg::ref_ptr< scenegraph::DCS > worldDCS = m_sceneManager.GetWorldDCS();
+    worldDCS->SetMat( matrix );
+    worldDCS->SetQuat( *mResetAxis );
+    worldDCS->SetTranslationArray( *mResetPosition );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::Twist()
@@ -1502,8 +1462,7 @@ void KeyboardMouse::Zoom( double dy )
     if( position.mData[ 1 ] < *mCenterPointThreshold )
     {
         //Prevent center point from jumping when manipulating a selected object
-        vxs::DCS* const selectedDCS =
-            vx::DeviceHandler::instance()->GetSelectedDCS();
+        vxs::DCS* const selectedDCS = DeviceHandler::instance()->GetSelectedDCS();
         if( selectedDCS )
         {
             mDeltaTranslation.set( 0.0, 0.0, 0.0 );
@@ -1529,8 +1488,7 @@ void KeyboardMouse::Zoom( double dy )
     //Test if center point has breached our specified threshold
     if( mCenterPoint->mData[ 1 ] < *mCenterPointThreshold )
     {
-        vxs::DCS* const selectedDCS =
-            vx::DeviceHandler::instance()->GetSelectedDCS();
+        vxs::DCS* const selectedDCS = DeviceHandler::instance()->GetSelectedDCS();
         //Only jump center point for the worldDCS
         if( !selectedDCS )
         {
@@ -1565,8 +1523,7 @@ void KeyboardMouse::Zoom45( double dy )
     //Test if center point has breached our specified threshold
     if( mCenterPoint->mData[ 1 ] < *mCenterPointThreshold )
     {
-        vxs::DCS* const selectedDCS =
-            vx::DeviceHandler::instance()->GetSelectedDCS();
+        vxs::DCS* const selectedDCS = DeviceHandler::instance()->GetSelectedDCS();
         //Only jump center point for the worldDCS
         if( !selectedDCS )
         {
@@ -1691,8 +1648,7 @@ void KeyboardMouse::ProcessNURBSSelectionEvents()
 
     //Add the IntersectVisitor to the root Node so that all geometry will be
     //checked and no transforms are done to the line segement
-    vxs::SceneManager::instance()->GetRootNode()->accept(
-        controlMeshPointIntersectVisitor );
+    m_sceneManager.GetRootNode()->accept( controlMeshPointIntersectVisitor );
 
     if( intersectorGroup->containsIntersections() )
     {
@@ -1721,19 +1677,15 @@ void KeyboardMouse::ProcessNURBSSelectionEvents()
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::ProcessSelection()
 {
-    //Get pointers to DeviceHandler & SceneManager
-    vx::DeviceHandler* deviceHandler = vx::DeviceHandler::instance();
-    vxs::SceneManager* sceneManager = vxs::SceneManager::instance();
-    
     osgUtil::IntersectionVisitor intersectionVisitor(
         mLineSegmentIntersector.get() );
 
     //Add the IntersectVisitor to the root Node so that all geometry will be
     //checked and no transforms are done to the line segement
-    sceneManager->GetModelRoot()->accept( intersectionVisitor );
+    m_sceneManager.GetModelRoot()->accept( intersectionVisitor );
 
     //Unselect the previous selected DCS
-    deviceHandler->UnselectObjects();
+    DeviceHandler::instance()->UnselectObjects();
 
     osgUtil::LineSegmentIntersector::Intersections& intersections =
         mLineSegmentIntersector->getIntersections();
@@ -1794,7 +1746,7 @@ void KeyboardMouse::ProcessSelection()
 
     vxs::DCS* newSelectedDCS =
         static_cast< vxs::DCS* >( parentNode.get() );
-    if( sceneManager->IsRTTOn() )
+    if( m_sceneManager.IsRTTOn() )
     {
         newSelectedDCS->SetTechnique( "Glow" );
     }
@@ -1802,12 +1754,12 @@ void KeyboardMouse::ProcessSelection()
     {
         newSelectedDCS->SetTechnique( "Select" );
     }
-    deviceHandler->SetSelectedDCS( newSelectedDCS );
+    DeviceHandler::instance()->SetSelectedDCS( newSelectedDCS );
 
     //Move the center point to the center of the selected object
     osg::ref_ptr< vxs::CoordinateSystemTransform > cst =
         new vxs::CoordinateSystemTransform(
-            sceneManager->GetActiveSwitchNode(), newSelectedDCS, true );
+            m_sceneManager.GetActiveSwitchNode(), newSelectedDCS, true );
     gmtl::Matrix44d localToWorldMatrix = cst->GetTransformationMatrix( false );
 
     //Multiplying by the new local matrix mCenterPoint
@@ -1818,7 +1770,7 @@ void KeyboardMouse::ProcessSelection()
 
     //Set the connection between the scene manipulator and the selected dcs
     scenegraph::manipulator::TransformManipulator* sceneManipulator =
-        sceneManager->GetManipulatorManager()->GetSceneManipulator();
+        m_manipulatorManager.GetSceneManipulator();
     sceneManipulator->Disconnect();
     //Check and see if the selected node has an attached physics mesh
     bool hasAPhysicsMesh( false );
@@ -1846,7 +1798,7 @@ void KeyboardMouse::ProcessSelection()
 
     //Move the scene manipulator to the center point
     scenegraph::LocalToWorldNodePath nodePath(
-        newSelectedDCS, sceneManager->GetModelRoot() );
+        newSelectedDCS, m_sceneManager.GetModelRoot() );
     scenegraph::LocalToWorldNodePath::NodeAndPathList npl =
         nodePath.GetLocalToWorldNodePath();
     scenegraph::LocalToWorldNodePath::NodeAndPath nap = npl.at( 0 );
@@ -1909,14 +1861,12 @@ bool KeyboardMouse::SetCurrentGLTransformInfo(
         return false;
     }
 
-    scenegraph::SceneManager* sceneManager =
-        scenegraph::SceneManager::instance();
     vrj::ViewportPtr viewport;
     //Iterate over the viewports
     for( unsigned int i = 0; i < display->getNumViewports(); ++i )
     {
         viewport = display->getViewport( i );
-        m_currentGLTransformInfo = sceneManager->GetGLTransformInfo( viewport );
+        m_currentGLTransformInfo = m_sceneManager.GetGLTransformInfo( viewport );
         if( m_currentGLTransformInfo == scenegraph::GLTransformInfoPtr() )
         {
             return false;
