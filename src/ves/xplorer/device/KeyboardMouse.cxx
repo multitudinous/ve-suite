@@ -734,9 +734,9 @@ void KeyboardMouse::OnKeyPress()
     case gadget::KEY_A:
     {
         if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
-             mCharacterController->IsActive() )
+             m_characterController.IsActive() )
         {
-            mCharacterController->StrafeLeft( true );
+            m_characterController.StrafeLeft( true );
         }
 
         break;
@@ -744,9 +744,9 @@ void KeyboardMouse::OnKeyPress()
     case gadget::KEY_S:
     {
         if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
-             mCharacterController->IsActive() )
+             m_characterController.IsActive() )
         {
-            mCharacterController->StepBackward( true );
+            m_characterController.StepBackward( true );
         }
 
         break;
@@ -754,9 +754,9 @@ void KeyboardMouse::OnKeyPress()
     case gadget::KEY_W:
     {
         if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
-             mCharacterController->IsActive() )
+             m_characterController.IsActive() )
         {
-            mCharacterController->StepForward( true );
+            m_characterController.StepForward( true );
         }
 
         break;
@@ -764,9 +764,9 @@ void KeyboardMouse::OnKeyPress()
     case gadget::KEY_D:
     {
         if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
-             mCharacterController->IsActive() )
+             m_characterController.IsActive() )
         {
-            mCharacterController->StrafeRight( true );
+            m_characterController.StrafeRight( true );
         }
 
         break;
@@ -774,9 +774,9 @@ void KeyboardMouse::OnKeyPress()
     case gadget::KEY_C:
     {
         if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
-             mCharacterController->IsActive() )
+             m_characterController.IsActive() )
         {
-            //mCharacterController
+            //m_characterController
         }
 
         break;
@@ -784,9 +784,9 @@ void KeyboardMouse::OnKeyPress()
     case gadget::KEY_SPACE:
     {
         if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
-             mCharacterController->IsActive() )
+             m_characterController.IsActive() )
         {
-            mCharacterController->Jump();
+            m_characterController.Jump();
         }
 
         break;
@@ -836,9 +836,9 @@ void KeyboardMouse::OnKeyRelease()
     case gadget::KEY_A:
     {
         if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
-             mCharacterController->IsActive() )
+             m_characterController.IsActive() )
         {
-            mCharacterController->StrafeLeft( false );
+            m_characterController.StrafeLeft( false );
         }
 
         break;
@@ -846,9 +846,9 @@ void KeyboardMouse::OnKeyRelease()
     case gadget::KEY_S:
     {
         if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
-             mCharacterController->IsActive() )
+             m_characterController.IsActive() )
         {
-            mCharacterController->StepBackward( false );
+            m_characterController.StepBackward( false );
         }
 
         break;
@@ -856,9 +856,9 @@ void KeyboardMouse::OnKeyRelease()
     case gadget::KEY_D:
     {
         if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
-             mCharacterController->IsActive() )
+             m_characterController.IsActive() )
         {
-            mCharacterController->StrafeRight( false );
+            m_characterController.StrafeRight( false );
         }
 
         break;
@@ -866,9 +866,9 @@ void KeyboardMouse::OnKeyRelease()
     case gadget::KEY_W:
     {
         if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
-             mCharacterController->IsActive() )
+             m_characterController.IsActive() )
         {
-            mCharacterController->StepForward( false );
+            m_characterController.StepForward( false );
         }
 
         break;
@@ -876,9 +876,9 @@ void KeyboardMouse::OnKeyRelease()
     case gadget::KEY_SPACE:
     {
         if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
-             mCharacterController->IsActive() )
+             m_characterController.IsActive() )
         {
-            //mCharacterController->Jump();
+            //m_characterController.Jump();
         }
 
         break;
@@ -886,9 +886,9 @@ void KeyboardMouse::OnKeyRelease()
     case gadget::KEY_C:
     {
         if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
-            mCharacterController->IsActive() )
+            m_characterController.IsActive() )
         {
-            //mCharacterController
+            //m_characterController
         }
 
         break;
@@ -911,9 +911,9 @@ void KeyboardMouse::OnMousePress()
     {
         //Rotate just the camera "3rd person view:
         if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
-             mCharacterController->IsActive() )
+             m_characterController.IsActive() )
         {
-            mCharacterController->FirstPersonMode( false );
+            m_characterController.FirstPersonMode( false );
         }
 
         //No modifier key
@@ -936,9 +936,9 @@ void KeyboardMouse::OnMousePress()
 #endif //TRANSFORM_MANIPULATOR
 
             if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
-                 mCharacterController->IsActive() )
+                 m_characterController.IsActive() )
             {
-                mCharacterController->SetCameraRotationSLERP( false );
+                m_characterController.SetCameraRotationSLERP( false );
             }
         }
         //Mod key shift
@@ -1023,11 +1023,11 @@ void KeyboardMouse::OnMousePress()
     case gadget::MBUTTON3:
     {
         if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
-            mCharacterController->IsActive() )
+            m_characterController.IsActive() )
         {
-            mCharacterController->FirstPersonMode( true );
-            mCharacterController->SetCameraRotationSLERP( false );
-            mCharacterController->SetCharacterRotationFromCamera();
+            m_characterController.FirstPersonMode( true );
+            m_characterController.SetCameraRotationSLERP( false );
+            m_characterController.SetCharacterRotationFromCamera();
         }
 
         mSelect = true;
@@ -1038,9 +1038,9 @@ void KeyboardMouse::OnMousePress()
     case gadget::MBUTTON4:
     {
         if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
-            mCharacterController->IsActive() )
+            m_characterController.IsActive() )
         {
-            mCharacterController->Zoom( true );
+            m_characterController.Zoom( true );
         }
 
         break;
@@ -1049,9 +1049,9 @@ void KeyboardMouse::OnMousePress()
     case gadget::MBUTTON5:
     {
         if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
-            mCharacterController->IsActive() )
+            m_characterController.IsActive() )
         {
-            mCharacterController->Zoom( false );
+            m_characterController.Zoom( false );
         }
 
         break;
@@ -1098,9 +1098,9 @@ void KeyboardMouse::OnMouseRelease()
 #endif //TRANSFORM_MANIPULATOR
 
         if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
-             mCharacterController->IsActive() )
+             m_characterController.IsActive() )
         {
-            mCharacterController->SetCameraRotationSLERP( true );
+            m_characterController.SetCameraRotationSLERP( true );
         }
 
         //No modifier key
@@ -1230,9 +1230,9 @@ void KeyboardMouse::OnMouseMotionDown()
 
             //Rotate just the camera "3rd person view:
             if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
-                 mCharacterController->IsActive() )
+                 m_characterController.IsActive() )
             {
-                mCharacterController->Rotate( xDelta, yDelta );
+                m_characterController.Rotate( xDelta, yDelta );
             }
             else
             {
@@ -1299,9 +1299,9 @@ void KeyboardMouse::OnMouseMotionDown()
     {
         //Rotate the character and camera at the same time
         if( !vxs::PhysicsSimulator::instance()->GetIdle() &&
-            mCharacterController->IsActive() )
+            m_characterController.IsActive() )
         {
-            mCharacterController->Rotate( xDelta, yDelta );
+            m_characterController.Rotate( xDelta, yDelta );
         }
         else
         {

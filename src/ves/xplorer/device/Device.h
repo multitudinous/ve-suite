@@ -72,12 +72,17 @@ namespace xplorer
 namespace scenegraph
 {
 class PhysicsSimulator;
+class SceneManager;
 class CharacterController;
+
+namespace manipulator
+{
+class ManipulatorManager;
+}
 }
 
 namespace device
 {
-
 /*!\file Device.h
  * Device API
  */
@@ -132,10 +137,6 @@ public:
 
     ///Set the reset position for the world
     void SetResetWorldPosition( osg::Quat* quat, std::vector< double >* pos );
-        
-    ///Set the character controller
-    void SetCharacterController(
-        scenegraph::CharacterController* characterController );
 
 protected:
     ///Process the selection of a piece of geometry
@@ -176,9 +177,17 @@ protected:
     osg::Quat* mResetAxis;
 
     ///
-    ///Do not allocate memory 'new' for this pointer
-    scenegraph::CharacterController* mCharacterController;
-    
+    scenegraph::PhysicsSimulator& m_physicsSimulator;
+
+    ///
+    scenegraph::SceneManager& m_sceneManager;
+
+    ///
+    scenegraph::CharacterController& m_characterController;
+
+    ///
+    scenegraph::manipulator::ManipulatorManager& m_manipulatorManager;
+
 };
 } //end device
 } //end xplorer

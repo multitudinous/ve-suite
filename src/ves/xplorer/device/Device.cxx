@@ -36,6 +36,11 @@
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
 
+#include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
+#include <ves/xplorer/scenegraph/physics/CharacterController.h>
+
+#include <ves/xplorer/scenegraph/manipulator/ManipulatorManager.h>
+
 // --- OSG Includes --- //
 #include <osg/Polytope>
 #include <osg/LineSegment>
@@ -57,7 +62,10 @@ Device::Device()
     mCenterPointJump( NULL ),
     mResetPosition( NULL ),
     mResetAxis( NULL ),
-    mCharacterController( NULL )
+    m_physicsSimulator( *scenegraph::PhysicsSimulator::instance() ),
+    m_sceneManager( *scenegraph::SceneManager::instance() ),
+    m_characterController( *(m_sceneManager.GetCharacterController()) ),
+    m_manipulatorManager( *(m_sceneManager.GetManipulatorManager()) )
 {
     ;
 }
@@ -208,11 +216,5 @@ void Device::SetResetWorldPosition(
 {
     mResetAxis = quat;
     mResetPosition = pos;
-}
-////////////////////////////////////////////////////////////////////////////////
-void Device::SetCharacterController(
-    scenegraph::CharacterController* characterController )
-{
-    mCharacterController = characterController;
 }
 ////////////////////////////////////////////////////////////////////////////////

@@ -102,7 +102,6 @@ DeviceHandler::DeviceHandler()
         device->SetCenterPointThreshold( &mCenterPointThreshold );
         device->SetCenterPointJump( &mCenterPointJump );
         device->SetResetWorldPosition( &mResetAxis, &mResetPosition );
-        device->SetCharacterController( characterController );
     }
 
     mEventHandlers[ "ENABLE_DEVICE" ] =
