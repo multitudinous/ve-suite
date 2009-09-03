@@ -118,10 +118,6 @@
 
 using namespace ves::xplorer::device;
 
-namespace vx = ves::xplorer;
-namespace vxs = vx::scenegraph;
-namespace vxsm = vxs::manipulator;
-
 ////////////////////////////////////////////////////////////////////////////////
 KeyboardMouse::KeyboardMouse()
     :
@@ -496,18 +492,18 @@ void KeyboardMouse::ProcessNavigation()
     gmtl::Matrix44d newTransform;
     gmtl::Matrix44d currentTransform;
 
-    vxs::DCS* const activeDCS = DeviceHandler::instance()->GetActiveDCS();
+    scenegraph::DCS* const activeDCS = DeviceHandler::instance()->GetActiveDCS();
     //Get the node where are all the geometry is handled
     osg::Group* const activeSwitchNode = m_sceneManager.GetActiveSwitchNode();
     //Get the node where all the nav matrix's are handled
-    vxs::DCS* const cameraDCS = m_sceneManager.GetActiveNavSwitchNode();
+    scenegraph::DCS* const cameraDCS = m_sceneManager.GetActiveNavSwitchNode();
 
-    osg::ref_ptr< vxs::CoordinateSystemTransform > coordinateSystemTransform;
+    osg::ref_ptr< scenegraph::CoordinateSystemTransform > coordinateSystemTransform;
     //Test if we are manipulating the camera dcs or a model dcs
     if( activeDCS->GetName() != cameraDCS->GetName() )
     {
         //If local dcs, transform to camera space
-        coordinateSystemTransform = new vxs::CoordinateSystemTransform(
+        coordinateSystemTransform = new scenegraph::CoordinateSystemTransform(
             activeSwitchNode, activeDCS, true );
 
         currentTransform = coordinateSystemTransform->GetTransformationMatrix();
@@ -582,7 +578,7 @@ void KeyboardMouse::SetFrustumValues(
 void KeyboardMouse::FrameAll()
 {
     osg::Group* activeSwitchNode = m_sceneManager.GetActiveSwitchNode();
-    vxs::DCS* activeNavSwitchNode = m_sceneManager.GetActiveNavSwitchNode();
+    scenegraph::DCS* activeNavSwitchNode = m_sceneManager.GetActiveNavSwitchNode();
     osg::BoundingSphere bs = activeSwitchNode->computeBound();
 
     //Meters to feet conversion
@@ -677,7 +673,7 @@ void KeyboardMouse::SkyCam()
     //m_sceneManager.GetActiveSwitchNode()->SetMat( matrix );
 
     //Grab the current matrix
-    osg::ref_ptr< vxs::DCS > activeSwitchDCS = m_sceneManager.GetWorldDCS();
+    osg::ref_ptr< scenegraph::DCS > activeSwitchDCS = m_sceneManager.GetWorldDCS();
 
     //reset view
     activeSwitchDCS->SetQuat( *mResetAxis );
@@ -1084,7 +1080,7 @@ void KeyboardMouse::OnMouseRelease()
         else if( mKeyAlt )
         {
             //OnMouseRelease();
-            vxs::DCS* infoDCS = DeviceHandler::instance()->GetSelectedDCS();
+            scenegraph::DCS* infoDCS = DeviceHandler::instance()->GetSelectedDCS();
             DeviceHandler::instance()->UnselectObjects();
 
             std::map< std::string,
@@ -1358,7 +1354,7 @@ void KeyboardMouse::SelOnMouseRelease()
         {
             if( mKeyNone )
             {
-                vxs::SetStateOnNURBSNodeVisitor(
+                scenegraph::SetStateOnNURBSNodeVisitor(
                     m_sceneManager.GetActiveSwitchNode(), false,
                     false, mCurrPos, std::pair< double, double >( 0.0, 0.0 ) );
             }
@@ -1385,7 +1381,7 @@ void KeyboardMouse::SelOnMouseMotion( std::pair< double, double > delta )
         //Left mouse button
         case gadget::MBUTTON1:
         {
-            vxs::SetStateOnNURBSNodeVisitor(
+            scenegraph::SetStateOnNURBSNodeVisitor(
                 m_sceneManager.GetActiveSwitchNode(),
                 true, true, mCurrPos, delta );
 
@@ -1462,7 +1458,7 @@ void KeyboardMouse::Zoom( double dy )
     if( position.mData[ 1 ] < *mCenterPointThreshold )
     {
         //Prevent center point from jumping when manipulating a selected object
-        vxs::DCS* const selectedDCS = DeviceHandler::instance()->GetSelectedDCS();
+        scenegraph::DCS* const selectedDCS = DeviceHandler::instance()->GetSelectedDCS();
         if( selectedDCS )
         {
             mDeltaTranslation.set( 0.0, 0.0, 0.0 );
@@ -1488,7 +1484,7 @@ void KeyboardMouse::Zoom( double dy )
     //Test if center point has breached our specified threshold
     if( mCenterPoint->mData[ 1 ] < *mCenterPointThreshold )
     {
-        vxs::DCS* const selectedDCS = DeviceHandler::instance()->GetSelectedDCS();
+        scenegraph::DCS* const selectedDCS = DeviceHandler::instance()->GetSelectedDCS();
         //Only jump center point for the worldDCS
         if( !selectedDCS )
         {
@@ -1523,7 +1519,7 @@ void KeyboardMouse::Zoom45( double dy )
     //Test if center point has breached our specified threshold
     if( mCenterPoint->mData[ 1 ] < *mCenterPointThreshold )
     {
-        vxs::DCS* const selectedDCS = DeviceHandler::instance()->GetSelectedDCS();
+        scenegraph::DCS* const selectedDCS = DeviceHandler::instance()->GetSelectedDCS();
         //Only jump center point for the worldDCS
         if( !selectedDCS )
         {
@@ -1636,8 +1632,8 @@ void KeyboardMouse::ProcessNURBSSelectionEvents()
 {
     osg::ref_ptr< osgUtil::IntersectorGroup > intersectorGroup =
         new osgUtil::IntersectorGroup();
-    osg::ref_ptr< vxs::nurbs::PointLineSegmentIntersector > intersector =
-        new vxs::nurbs::PointLineSegmentIntersector(
+    osg::ref_ptr< scenegraph::nurbs::PointLineSegmentIntersector > intersector =
+        new scenegraph::nurbs::PointLineSegmentIntersector(
             mLineSegmentIntersector->getStart(),
             mLineSegmentIntersector->getEnd() );
     intersectorGroup->addIntersector( intersector.get() );
@@ -1654,17 +1650,17 @@ void KeyboardMouse::ProcessNURBSSelectionEvents()
     {
          //std::cout<<"Found intersections "<<std::endl;
          ///only want the first one
-         vxs::nurbs::PointLineSegmentIntersector::Intersections& intersections =
+         scenegraph::nurbs::PointLineSegmentIntersector::Intersections& intersections =
              intersector->getIntersections();
-         vxs::nurbs::PointLineSegmentIntersector::Intersection closestControlPoint =
+         scenegraph::nurbs::PointLineSegmentIntersector::Intersection closestControlPoint =
              (*intersections.begin());
-         osg::ref_ptr<vxs::nurbs::NURBSControlMesh> ctMesh =
-            dynamic_cast< vxs::nurbs::NURBSControlMesh* >(
+         osg::ref_ptr<scenegraph::nurbs::NURBSControlMesh> ctMesh =
+            dynamic_cast< scenegraph::nurbs::NURBSControlMesh* >(
                 closestControlPoint.drawable.get() );
          if( ctMesh.valid() )
          {
-             osg::ref_ptr<vxs::nurbs::NURBS> nurbs = 
-                dynamic_cast<vxs::nurbs::NURBS*>( ctMesh->getParent( 0 ) );
+             osg::ref_ptr<scenegraph::nurbs::NURBS> nurbs = 
+                dynamic_cast<scenegraph::nurbs::NURBS*>( ctMesh->getParent( 0 ) );
              if( nurbs.valid() )
              {
                  nurbs->SetSelectedControlPoint(
@@ -1725,7 +1721,7 @@ void KeyboardMouse::ProcessSelection()
     }
 
     //Now find the id for the cad
-    vxs::FindParentsVisitor parentVisitor( objectHit );
+    scenegraph::FindParentsVisitor parentVisitor( objectHit );
     osg::ref_ptr< osg::Node > parentNode = parentVisitor.GetParentNode();
     if( !parentNode.valid() )
     {
@@ -1744,8 +1740,8 @@ void KeyboardMouse::ProcessSelection()
                           << parentNode->getDescriptions().at( 1 )
                           << std::endl << vprDEBUG_FLUSH;
 
-    vxs::DCS* newSelectedDCS =
-        static_cast< vxs::DCS* >( parentNode.get() );
+    scenegraph::DCS* newSelectedDCS =
+        static_cast< scenegraph::DCS* >( parentNode.get() );
     if( m_sceneManager.IsRTTOn() )
     {
         newSelectedDCS->SetTechnique( "Glow" );
@@ -1757,8 +1753,8 @@ void KeyboardMouse::ProcessSelection()
     DeviceHandler::instance()->SetSelectedDCS( newSelectedDCS );
 
     //Move the center point to the center of the selected object
-    osg::ref_ptr< vxs::CoordinateSystemTransform > cst =
-        new vxs::CoordinateSystemTransform(
+    osg::ref_ptr< scenegraph::CoordinateSystemTransform > cst =
+        new scenegraph::CoordinateSystemTransform(
             m_sceneManager.GetActiveSwitchNode(), newSelectedDCS, true );
     gmtl::Matrix44d localToWorldMatrix = cst->GetTransformationMatrix( false );
 
