@@ -103,7 +103,7 @@ void Dragger::accept( osg::NodeVisitor& nv )
         return;
     }
 
-    if( this != m_rootDragger )
+    if( ( this != m_rootDragger ) && ( getAutoRotateMode() == NO_ROTATION ) )
     {
         //Now do the proper accept
         osg::Transform::accept( nv );
@@ -173,6 +173,13 @@ void Dragger::accept( osg::NodeVisitor& nv )
             {
                 if( getAutoScaleToScreen() )
                 {
+                    //Need code to set pixel size based off distance from screen
+                    //Flat screen mode
+                    /*
+
+                    */
+                    //This is code to set pixel size based off distance from eye
+                    //Cave mode
                     osg::Matrixd modelViewMatrix = *(cs->getModelViewMatrix());
                     modelViewMatrix.invert( modelViewMatrix );
                     osg::Vec3d eye = modelViewMatrix.getTrans() - getPosition();
@@ -389,7 +396,7 @@ Dragger* Dragger::Push(
         //Compute the association matrices
         ComputeAssociationMatrices();
 
-        //m_rootDragger->setAutoScaleToScreen( false );
+        m_rootDragger->setAutoScaleToScreen( false );
 
         return this;
     }
@@ -410,10 +417,9 @@ Dragger* Dragger::Release( osg::NodePath::iterator& npItr )
         //Clear the associated matrices
         m_associationMatricesMap.clear();
 
-        //m_rootDragger->setAutoScaleToScreen( true );
+        m_rootDragger->setAutoScaleToScreen( true );
         //Force update now on release event for this frame
-        //This function call sets _firstTimeToInitEyePoint = true
-        //m_rootDragger->setAutoRotateMode( m_rootDragger->getAutoRotateMode() );
+        m_rootDragger->setAutoRotateMode( m_rootDragger->getAutoRotateMode() );
 
         return this;
     }
@@ -644,18 +650,27 @@ const osg::Plane Dragger::GetPlane( const bool& transform ) const
     //N = P1P2 x P1P3 = ( 1, 0, 0 ) x ( 0, 0, 1 ) = ( 0, -1, 0 )
     //-y + d = 0 : d = 0
 
-    osg::Plane plane( osg::Vec3d( 1.0, 0.0, 0.0 ), 0.0 );
+    osg::Plane plane;
     if( transform )
     {
-        //case TransformationType::TRANSLATE_PAN:
-        //case TransformationType::ROTATE_TWIST:
-        //{
-            //break;
-        //}
-        //default:
-        //{
-            plane.transformProvidingInverse( m_worldToLocal );
-        //}
+        switch( m_transformationType )
+        {
+        case TransformationType::TRANSLATE_PAN:
+        case TransformationType::ROTATE_TWIST:
+        {
+            plane.set( osg::Vec3d( 0.0, 0.0, 1.0 ), 0.0 );
+
+            break;
+        }
+        default:
+        {
+            plane.set( osg::Vec3d( 1.0, 0.0, 0.0 ), 0.0 );
+
+            break;
+        }
+        } //end switch( m_transformationType )
+
+        plane.transformProvidingInverse( m_worldToLocal );
     }
 
     return plane;
@@ -667,7 +682,22 @@ const osg::Vec3d Dragger::GetUnitAxis(
     osg::Vec3d unitAxis( 0.0, 0.0, 0.0 );
     if( !zero )
     {
-        unitAxis.set( 1.0, 0.0, 0.0 );
+        switch( m_transformationType )
+        {
+        case TransformationType::TRANSLATE_PAN:
+        case TransformationType::ROTATE_TWIST:
+        {
+            unitAxis.set( 1.0, 0.0, 0.0 );
+
+            break;
+        }
+        default:
+        {
+            unitAxis.set( 1.0, 0.0, 0.0 );
+
+            break;
+        }
+        }//end switch( m_transformationType )
     }
 
     if( transform )

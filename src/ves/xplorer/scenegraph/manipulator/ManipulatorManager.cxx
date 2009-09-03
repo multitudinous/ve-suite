@@ -33,6 +33,7 @@
 
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/manipulator/ManipulatorManager.h>
+#include <ves/xplorer/scenegraph/manipulator/RotateTwist.h>
 #include <ves/xplorer/scenegraph/manipulator/TransformManipulator.h>
 #include <ves/xplorer/scenegraph/manipulator/Dragger.h>
 
@@ -67,6 +68,13 @@ ManipulatorManager::ManipulatorManager()
         osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
 
     Enable();
+
+    //Create rotate twist dragger
+    m_rotateTwist = new RotateTwist();
+    m_rotateTwist->SetColor(
+        Color::DEFAULT, osg::Vec4f( 1.0, 1.0, 1.0, 1.0 ), true );
+    m_rotateTwist->Hide();
+    addChild( m_rotateTwist.get() );
 
     m_sceneManipulator = new TransformManipulator();
     //Turn off the scene manipulator until requested by user
@@ -132,6 +140,11 @@ Dragger* ManipulatorManager::ConvertNodeToDragger( osg::Node* node )
 Dragger* ManipulatorManager::GetChild( unsigned int i )
 {
     return static_cast< Dragger* >( osg::Group::getChild( i ) );
+}
+////////////////////////////////////////////////////////////////////////////////
+RotateTwist* const ManipulatorManager::GetTwistManipulator() const
+{
+    return m_rotateTwist.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
 TransformManipulator* const ManipulatorManager::GetSceneManipulator() const

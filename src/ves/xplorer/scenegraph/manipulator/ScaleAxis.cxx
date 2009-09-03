@@ -48,14 +48,11 @@ using namespace ves::xplorer::scenegraph::manipulator;
 ScaleAxis::ScaleAxis()
     :
     Dragger( TransformationType::SCALE_AXIS ),
-    m_axisColor( NULL ),
     m_lineVertices( NULL ),
     m_lineGeometry( NULL ),
     m_box( NULL ),
     m_shapeDrawable( NULL )
 {
-    m_axisColor = new osg::Uniform( "color", osg::Vec4f( 0.7, 0.7, 0.7, 1.0 ) );
-
     SetupDefaultGeometry();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -63,7 +60,6 @@ ScaleAxis::ScaleAxis(
     const ScaleAxis& scaleAxis, const osg::CopyOp& copyop )
     :
     Dragger( scaleAxis, copyop ),
-    m_axisColor( scaleAxis.m_axisColor.get() ),
     m_lineVertices( scaleAxis.m_lineVertices.get() ),
     m_lineGeometry( scaleAxis.m_lineGeometry.get()  ),
     m_box( scaleAxis.m_box.get()  ),
@@ -147,7 +143,8 @@ void ScaleAxis::SetupDefaultGeometry()
             m_lineGeometry->getOrCreateStateSet();
 
         //Override color uniform
-        stateSet->addUniform( m_axisColor.get() );
+        stateSet->addUniform(
+            new osg::Uniform( "color", osg::Vec4f( 0.7, 0.7, 0.7, 1.0 ) ) );
 
         //Set line width
         osg::ref_ptr< osg::LineWidth > lineWidth = new osg::LineWidth();

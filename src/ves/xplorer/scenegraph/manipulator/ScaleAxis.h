@@ -114,9 +114,6 @@ protected:
 
 private:
     ///
-    osg::ref_ptr< osg::Uniform > m_axisColor;
-
-    ///
     osg::ref_ptr< osg::Vec3dArray > m_lineVertices;
 
     ///

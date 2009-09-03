@@ -59,6 +59,7 @@ namespace scenegraph
 namespace manipulator
 {
 class Dragger;
+class RotateTwist;
 class TransformManipulator;
 
 /*!\file ManipulatorManager.h
@@ -93,6 +94,10 @@ public:
 
     ///Can't override the getChild function, so create our own
     Dragger* GetChild( unsigned int i );
+
+    ///
+    ///\return
+    RotateTwist* const GetTwistManipulator() const;
 
     ///
     ///\return
@@ -147,6 +152,9 @@ private:
 
     ///
     osgUtil::LineSegmentIntersector* m_deviceInput;
+
+    ///
+    osg::ref_ptr< RotateTwist > m_rotateTwist;
 
     ///
     osg::ref_ptr< TransformManipulator > m_sceneManipulator;

@@ -131,6 +131,6 @@ void RotateCompound::SetupDefaultGeometry()
     m_rotateTwist->SetColor(
         Color::DEFAULT, osg::Vec4f( 1.0, 1.0, 1.0, 1.0 ), true );
 
-    //addChild( m_rotateTwist.get() );
+    addChild( m_rotateTwist.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////

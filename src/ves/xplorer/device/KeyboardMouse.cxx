@@ -60,6 +60,7 @@
 #include <ves/xplorer/scenegraph/physics/PhysicsRigidBody.h>
 #include <ves/xplorer/scenegraph/physics/CharacterController.h>
 
+#include <ves/xplorer/scenegraph/manipulator/RotateTwist.h>
 #include <ves/xplorer/scenegraph/manipulator/TransformManipulator.h>
 
 #include <ves/xplorer/environment/NavigationAnimationEngine.h>
@@ -893,10 +894,9 @@ void KeyboardMouse::OnMousePress()
         if( mKeyNone )
         {
 #ifdef TRANSFORM_MANIPULATOR
-            UpdateSelectionLine();
-
             if( m_manipulatorManager.IsEnabled() )
             {
+                UpdateSelectionLine();
                 if( m_manipulatorManager.Handle(
                         scenegraph::manipulator::Event::PUSH,
                         mLineSegmentIntersector.get() ) )
@@ -1177,10 +1177,9 @@ void KeyboardMouse::OnMouseMotionDown()
         {
 
 #ifdef TRANSFORM_MANIPULATOR
-            UpdateSelectionLine();
-
             if( m_manipulatorManager.IsEnabled() )
             {
+                UpdateSelectionLine();
                 if( m_manipulatorManager.Handle(
                         scenegraph::manipulator::Event::DRAG ) )
                 {
@@ -1286,10 +1285,9 @@ void KeyboardMouse::OnMouseMotionDown()
 void KeyboardMouse::OnMouseMotionUp()
 {
 #ifdef TRANSFORM_MANIPULATOR
-    UpdateSelectionLine();
-
     if( m_manipulatorManager.IsEnabled() )
     {
+        UpdateSelectionLine();
         if( m_manipulatorManager.Handle(
                 scenegraph::manipulator::Event::FOCUS,
                 mLineSegmentIntersector.get() ) )
@@ -1343,9 +1341,7 @@ void KeyboardMouse::SelOnMousePress()
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::SelOnMouseRelease()
 {
-#ifndef TRANSFORM_MANIPULATOR
     UpdateSelectionLine();
-#endif //TRANSFORM_MANIPULATOR
 
     switch( mButton )
     {
@@ -1767,6 +1763,9 @@ void KeyboardMouse::ProcessSelection()
     //Set the connection between the scene manipulator and the selected dcs
     scenegraph::manipulator::TransformManipulator* sceneManipulator =
         m_manipulatorManager.GetSceneManipulator();
+    scenegraph::manipulator::RotateTwist* rotateTwist =
+        m_manipulatorManager.GetTwistManipulator();
+    rotateTwist->Disconnect();
     sceneManipulator->Disconnect();
     //Check and see if the selected node has an attached physics mesh
     bool hasAPhysicsMesh( false );
@@ -1785,10 +1784,12 @@ void KeyboardMouse::ProcessSelection()
 
     if( hasAPhysicsMesh )
     {
+        rotateTwist->Connect( tempAMT );
         sceneManipulator->Connect( tempAMT );
     }
     else
     {
+        rotateTwist->Connect( newSelectedDCS );
         sceneManipulator->Connect( newSelectedDCS );
     }
 
@@ -1800,6 +1801,7 @@ void KeyboardMouse::ProcessSelection()
     scenegraph::LocalToWorldNodePath::NodeAndPath nap = npl.at( 0 );
     osg::Matrixd localToWorld = osg::computeLocalToWorld( nap.second );
     osg::Vec3d newCenter = newSelectedDCS->getBound().center() * localToWorld;
+    rotateTwist->setPosition( newCenter );
     sceneManipulator->setPosition( newCenter );
 }
 ////////////////////////////////////////////////////////////////////////////////

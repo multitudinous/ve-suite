@@ -36,8 +36,8 @@
 
 // --- OSG Includes --- //
 #include <osg/Hint>
+#include <osg/Geode>
 #include <osg/Geometry>
-#include <osg/Billboard>
 #include <osg/LineWidth>
 
 using namespace ves::xplorer::scenegraph::manipulator;
@@ -47,6 +47,11 @@ TranslatePan::TranslatePan()
     :
     Dragger( TransformationType::TRANSLATE_PAN )
 {
+    //If desktop mode
+    //setAutoRotateMode( osg::AutoTransform::ROTATE_TO_SCREEN );
+    //If cave mode
+    setAutoRotateMode( osg::AutoTransform::ROTATE_TO_CAMERA );
+
     SetupDefaultGeometry();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -134,8 +139,7 @@ bool TranslatePan::isSameKindAs( const osg::Object* obj ) const
 void TranslatePan::SetupDefaultGeometry()
 {
     //The geode to add the geometry to
-    osg::ref_ptr< osg::Billboard > billboard = new osg::Billboard();
-    billboard->setMode( osg::Billboard::POINT_ROT_EYE );
+    osg::ref_ptr< osg::Geode > geode = new osg::Geode();
 
     //Create the rotation axis with line loops
     {
@@ -150,7 +154,7 @@ void TranslatePan::SetupDefaultGeometry()
             double s( TRANSLATE_PAN_RADIUS * cosVal );
             double t( TRANSLATE_PAN_RADIUS * sinVal );
 
-            vertices->push_back( osg::Vec3( s, 0.0, t ) );
+            vertices->push_back( osg::Vec3( s, t, 0.0 ) );
         }
 
         geometry->setVertexArray( vertices.get() );
@@ -158,7 +162,7 @@ void TranslatePan::SetupDefaultGeometry()
             new osg::DrawArrays(
                 osg::PrimitiveSet::LINE_LOOP, 0, vertices->size() ) );
 
-        billboard->addDrawable( geometry.get() );
+        geode->addDrawable( geometry.get() );
 
         //Set StateSet
         osg::ref_ptr< osg::StateSet > stateSet =
@@ -194,7 +198,7 @@ void TranslatePan::SetupDefaultGeometry()
             double s( TRANSLATE_PAN_RADIUS * cosVal );
             double t( TRANSLATE_PAN_RADIUS * sinVal );
 
-            vertices->push_back( osg::Vec3( s, 0.0, t ) );
+            vertices->push_back( osg::Vec3( s, t, 0.0 ) );
         }
 
         geometry->setVertexArray( vertices.get() );
@@ -203,10 +207,10 @@ void TranslatePan::SetupDefaultGeometry()
                 osg::PrimitiveSet::TRIANGLE_FAN, 0, vertices->size() ) );
 
         SetDrawableToAlwaysCull( *geometry.get() );
-        billboard->addDrawable( geometry.get() );
+        geode->addDrawable( geometry.get() );
     }
 
     //Add rotation axis to the scene
-    addChild( billboard.get() );
+    addChild( geode.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////

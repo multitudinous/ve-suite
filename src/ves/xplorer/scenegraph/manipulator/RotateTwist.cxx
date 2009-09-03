@@ -33,12 +33,13 @@
 
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/manipulator/RotateTwist.h>
-#include <ves/xplorer/scenegraph/manipulator/ClippingCircle.h>
 
 // --- OSG Includes --- //
 #include <osg/Hint>
+#include <osg/Stencil>
+#include <osg/ColorMask>
+#include <osg/Geode>
 #include <osg/Geometry>
-#include <osg/Billboard>
 #include <osg/LineWidth>
 #include <osg/PolygonStipple>
 
@@ -50,9 +51,9 @@ RotateTwist::RotateTwist()
     Dragger( TransformationType::ROTATE_TWIST )
 {
     //If desktop mode
-    setAutoRotateMode( osg::AutoTransform::ROTATE_TO_SCREEN );
+    //setAutoRotateMode( osg::AutoTransform::ROTATE_TO_SCREEN );
     //If cave mode
-    //setAutoRotateMode( osg::AutoTransform::ROTATE_TO_CAMERA );
+    setAutoRotateMode( osg::AutoTransform::ROTATE_TO_CAMERA );
 
     SetupDefaultGeometry();
 }
@@ -85,6 +86,66 @@ osg::Object* RotateTwist::cloneType() const
     return new RotateTwist();
 }
 ////////////////////////////////////////////////////////////////////////////////
+void RotateTwist::ComputeDeltaTransform()
+{
+    const osg::Vec3d& origin = m_rootDragger->getPosition();
+
+    //Get the direction vectors of the rotation origin to start and end points
+    osg::Vec3d originToStart = m_startProjectedPoint - origin;
+    originToStart.normalize();
+    osg::Vec3d originToEnd = m_endProjectedPoint - origin;
+    originToEnd.normalize();
+
+    //Calculate cross products of the direction vectors with rotation axis
+    //const osg::Vec3d rotationAxis = GetUnitAxis( false, true );
+    const osg::Vec3d rotationAxis = originToStart ^ originToEnd;
+    osg::Vec3d crossRotStart = rotationAxis ^ originToStart;
+    crossRotStart.normalize();
+    osg::Vec3d crossRotEnd = rotationAxis ^ originToEnd;
+    crossRotEnd.normalize();
+
+    //Calculate the cross product of the above start and end cross products
+    osg::Vec3d crossStartEnd = crossRotStart ^ crossRotEnd;
+    crossStartEnd.normalize();
+
+    //Dot the two direction vectors and get the arccos of the dot product to get
+    //the angle between them, then multiply it by the sign of the dot product
+    //of the derived cross product calculated above to obtain the direction
+    //by which we should rotate with the angle
+    double dot = originToStart * originToEnd;
+    double rotationAngle =
+        acos( dot ) * osg::sign( rotationAxis * crossStartEnd );
+
+    //Create a normalized quaternion representing the rotation from the start to end points
+    m_deltaRotation.makeRotate( rotationAngle, rotationAxis );
+    //m_deltaRotation /= m_deltaRotation.length();
+
+    //Add the calculated rotation to the current rotation
+    osg::Quat newRotation = m_deltaRotation * m_rootDragger->getRotation();
+    if( m_vectorSpace == VectorSpace::LOCAL )
+    {
+        m_rootDragger->setRotation( newRotation );
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+const bool RotateTwist::ComputeProjectedPoint(
+    const osgUtil::LineSegmentIntersector& deviceInput,
+    osg::Vec3d& projectedPoint )
+{
+    //Get the near and far points for the active device
+    const osg::Vec3d& lineStart = deviceInput.getStart();
+    const osg::Vec3d& lineEnd = deviceInput.getEnd();
+    
+    //Exit if the intersection is invalid
+    double intersectDistance;
+    if( !GetLinePlaneIntersection( lineStart, lineEnd, projectedPoint ) )
+    {
+        return false;
+    }
+
+    return true;
+}
+////////////////////////////////////////////////////////////////////////////////
 bool RotateTwist::isSameKindAs( const osg::Object* obj ) const
 {
     return dynamic_cast< const RotateTwist* >( obj ) != NULL;
@@ -93,8 +154,7 @@ bool RotateTwist::isSameKindAs( const osg::Object* obj ) const
 void RotateTwist::SetupDefaultGeometry()
 {
     //The geode to add the geometry to
-    osg::ref_ptr< osg::Geode > billboard = new osg::Geode();
-    //billboard->setMode( osg::Billboard::POINT_ROT_EYE );
+    osg::ref_ptr< osg::Geode > geode = new osg::Geode();
 
     //Create the rotation twist axis with line loops
     {
@@ -109,7 +169,7 @@ void RotateTwist::SetupDefaultGeometry()
             double s( ROTATE_TWIST_RADIUS * cosVal );
             double t( ROTATE_TWIST_RADIUS * sinVal );
 
-            vertices->push_back( osg::Vec3( s, 0.0, t ) );
+            vertices->push_back( osg::Vec3( s, t, 0.0 ) );
         }
 
         geometry->setVertexArray( vertices.get() );
@@ -117,7 +177,7 @@ void RotateTwist::SetupDefaultGeometry()
             new osg::DrawArrays(
                 osg::PrimitiveSet::LINE_LOOP, 0, vertices->size() ) );
 
-        billboard->addDrawable( geometry.get() );
+        geode->addDrawable( geometry.get() );
 
         //Set StateSet
         osg::ref_ptr< osg::StateSet > stateSet =
@@ -158,8 +218,8 @@ void RotateTwist::SetupDefaultGeometry()
             double so( outerRadius * cosVal );
             double to( outerRadius * sinVal );
 
-            vertices->push_back( osg::Vec3( si, 0.0, ti ) );
-            vertices->push_back( osg::Vec3( so, 0.0, to ) );
+            vertices->push_back( osg::Vec3( si, ti, 0.0 ) );
+            vertices->push_back( osg::Vec3( so, to, 0.0 ) );
         }
 
         geometry->setVertexArray( vertices.get() );
@@ -168,7 +228,7 @@ void RotateTwist::SetupDefaultGeometry()
                 osg::PrimitiveSet::TRIANGLE_STRIP, 0, vertices->size() ) );
 
         SetDrawableToAlwaysCull( *geometry.get() );
-        billboard->addDrawable( geometry.get() );
+        geode->addDrawable( geometry.get() );
     }
 
     //Create stippled geometry to show rotation about the twist axis
@@ -186,7 +246,7 @@ void RotateTwist::SetupDefaultGeometry()
             double s( cosVal );
             double t( sinVal );
 
-            vertices->push_back( osg::Vec3( s, 0.0, t ) );
+            vertices->push_back( osg::Vec3( s, t, 0.0 ) );
         }
 
         geometry->setVertexArray( vertices.get() );
@@ -194,8 +254,8 @@ void RotateTwist::SetupDefaultGeometry()
             new osg::DrawArrays(
                 osg::PrimitiveSet::TRIANGLE_FAN, 0, vertices->size() ) );
 
-        //billboard->addDrawable( geometry.get() );
-        
+        //geode->addDrawable( geometry.get() );
+
         //Set StateSet
         osg::ref_ptr< osg::StateSet > stateSet =
             geometry->getOrCreateStateSet();
@@ -236,12 +296,89 @@ void RotateTwist::SetupDefaultGeometry()
     }
 
     //Create a clipping circle
+    //Create the clipping circle with line loops
     {
-        osg::ref_ptr< ClippingCircle > clippingCircle = new ClippingCircle();
-        addChild( clippingCircle.get() );
+        osg::ref_ptr< osg::Geometry > geometry = new osg::Geometry();
+        osg::ref_ptr< osg::Vec3dArray > vertices = new osg::Vec3dArray();
+        for( unsigned int i = 0; i < NUM_CIRCLE_SEGMENTS; ++i )
+        {
+            double rot( i * DELTA_SEGMENT_ANGLE );
+            double cosVal( cos( rot ) );
+            double sinVal( sin( rot ) );
+
+            double s( CLIPPING_CIRCLE_RADIUS * cosVal );
+            double t( CLIPPING_CIRCLE_RADIUS * sinVal );
+
+            vertices->push_back( osg::Vec3d( s, t, 0.0 ) );
+        }
+
+        geometry->setVertexArray( vertices.get() );
+        geometry->addPrimitiveSet(
+            new osg::DrawArrays(
+                osg::PrimitiveSet::LINE_LOOP, 0, vertices->size() ) );
+
+        geode->addDrawable( geometry.get() );
+
+        //Set StateSet
+        osg::ref_ptr< osg::StateSet > stateSet =
+            geometry->getOrCreateStateSet();
+
+        //Override color uniform
+        stateSet->addUniform(
+            new osg::Uniform( "color", osg::Vec4f( 0.7, 0.7, 0.7, 1.0 ) ) );
+
+        //Set line width
+        osg::ref_ptr< osg::LineWidth > lineWidth = new osg::LineWidth();
+        lineWidth->setWidth( 2.0 );
+        stateSet->setAttributeAndModes(
+            lineWidth.get(), osg::StateAttribute::ON );
+
+        //Set line hints
+        stateSet->setMode( GL_LINE_SMOOTH,
+            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+        osg::ref_ptr< osg::Hint > hint =
+            new osg::Hint( GL_LINE_SMOOTH_HINT, GL_NICEST );
+        stateSet->setAttributeAndModes( hint.get(),
+            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+    }
+
+    //Create a triangle fan to act as the invisible clipping circle
+    {
+        osg::ref_ptr< osg::Geometry > geometry = new osg::Geometry();
+        osg::ref_ptr< osg::Vec3dArray > vertices = new osg::Vec3dArray();
+
+        vertices->push_back( osg::Vec3d( 0.0, 0.0, 0.0 ) );
+        for( unsigned int i = 0; i <= NUM_CIRCLE_SEGMENTS; ++i )
+        {
+            double rot( i * DELTA_SEGMENT_ANGLE );
+            double cosVal( cos( rot ) );
+            double sinVal( sin( rot ) );
+
+            double s( CLIPPING_CIRCLE_RADIUS * cosVal );
+            double t( CLIPPING_CIRCLE_RADIUS * sinVal );
+
+            vertices->push_back( osg::Vec3d( s, t, 0.0 ) );
+        }
+
+        geometry->setVertexArray( vertices.get() );
+        geometry->addPrimitiveSet(
+            new osg::DrawArrays(
+                osg::PrimitiveSet::TRIANGLE_FAN, 0, vertices->size() ) );
+
+        //geode->addDrawable( geometry.get() );
+        
+        //Set StateSet
+        osg::ref_ptr< osg::StateSet > stateSet =
+            geometry->getOrCreateStateSet();
+
+        //Turn color writes off
+        osg::ref_ptr< osg::ColorMask > colorMask =
+            new osg::ColorMask( false, false, false, false );
+        stateSet->setAttributeAndModes( colorMask.get(),
+            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
     }
 
     //Add rotation axis to the scene
-    addChild( billboard.get() );
+    addChild( geode.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
