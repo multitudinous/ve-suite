@@ -752,7 +752,8 @@ void Dragger::SetRootDragger( Dragger* rootDragger )
 ////////////////////////////////////////////////////////////////////////////////
 void Dragger::setScale( const double scale )
 {
-    setScale( osg::Vec3d( scale, scale, scale ) );
+    osg::Vec3d temp( scale, scale, scale );
+    setScale( temp );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Dragger::setScale( const osg::Vec3d& scale )
@@ -765,7 +766,8 @@ void Dragger::setScale( const osg::Vec3d& scale )
 ////////////////////////////////////////////////////////////////////////////////
 void Dragger::SetScale( const double scale )
 {
-    SetScale( osg::Vec3d( scale, scale, scale ) );
+    osg::Vec3d temp( scale, scale, scale );
+    SetScale( temp );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Dragger::SetScale( osg::Vec3d& scale )
