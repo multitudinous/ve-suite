@@ -20,10 +20,6 @@ LDFLAGS ?= -arch x86_64 -isysroot /Developer/SDKs/MacOSX10.5.sdk -g \
         -L${DEPS_HOME}/lib64/vtk-5.4 \
         -lvtkCommon -lvtkFiltering -lvtkIO
 
-# wxWidgets-related C++ flags
-WX_CXXFLAGS ?= $(shell wx-config --cxxflags)
-WX_LDFLAGS ?= $(shell wx-config --libs gl,core,base)
-
 ### Variables: ###
 
 SOURCES=tecplotReader.cxx Manager.cxx ApplicationEventMonitor.cxx 
@@ -38,7 +34,7 @@ COMPILE_CXXFLAGS =  -I. \
                     -I${TECSDKHOME}/include/sdk/integrationmanager/services \
                     -I${TECSDKHOME}/include/toolbox \
                     -I${DEPS_HOME}/include/vtk-5.4 \
-                     $(WX_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
+                     $(CPPFLAGS) $(CXXFLAGS)
 CPPDEPS = -MT$@ -MF$(shell echo $@ | sed -e 's,\.o$$,.d,') -MD -MP
 
 ### Targets: ###
@@ -46,7 +42,7 @@ CPPDEPS = -MT$@ -MF$(shell echo $@ | sed -e 's,\.o$$,.d,') -MD -MP
 all: $(EXECUTABLE)
 	
 $(EXECUTABLE): $(OBJECTS) Makefile
-	$(CXX) -o $@ $(OBJECTS) $(WX_LDFLAGS) $(LDFLAGS)
+	$(CXX) -o $@ $(OBJECTS) $(LDFLAGS)
 
 #$(OBJECTS): $(HEADERS) makefile_mac
 
