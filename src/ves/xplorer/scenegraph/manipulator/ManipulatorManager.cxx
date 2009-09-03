@@ -95,7 +95,7 @@ ManipulatorManager::~ManipulatorManager()
 ////////////////////////////////////////////////////////////////////////////////
 bool ManipulatorManager::addChild( Dragger* child )
 {
-    child->setScale( 100.0 );
+    child->SetScale( 100.0 );
     child->setAutoScaleToScreen( true );
 
     return osg::Group::addChild( child );

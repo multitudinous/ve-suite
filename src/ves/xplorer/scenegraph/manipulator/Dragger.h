@@ -161,10 +161,10 @@ public:
     virtual void SetRootDragger( Dragger* rootDragger );
 
     ///
-    void setScale( const double scale );
+    void SetScale( const double scale );
 
     ///
-    void setScale( const osg::Vec3d& scale );
+    void SetScale( const osg::Vec3d& scale );
 
     ///
     virtual void SetVectorSpace( const VectorSpace::Enum& vectorSpace );
@@ -250,12 +250,6 @@ private:
 
     ///
     void CreateDefaultShader();
-
-    ///
-    void SetScale( const double scale );
-
-    ///
-    void SetScale( osg::Vec3d& scale );
 
     ///
     void UpdateAssociations();

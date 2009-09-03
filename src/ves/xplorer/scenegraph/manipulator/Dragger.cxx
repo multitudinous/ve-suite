@@ -173,18 +173,18 @@ void Dragger::accept( osg::NodeVisitor& nv )
             {
                 if( getAutoScaleToScreen() )
                 {
-                    double size = 1.0 / cs->pixelSize( getPosition(), 0.48 );
-                    /*
-                    const osg::Matrix& matrix = *(cs->getMVPW());
-                    //Get node origin in screen space
-                    osg::Vec3d origin( 0.0, 0.0, 0.0 );
-                    origin = origin * matrix;
-                    //Get local up vector in screen space
-                    osg::Vec3d vector = localUp * matrix;
-                    vector -= origin;
-                    //Calculate the length of the vector in screen space
-                    double size = ;
-                    */
+                    osg::Matrixd modelViewMatrix = *(cs->getModelViewMatrix());
+                    modelViewMatrix.invert( modelViewMatrix );
+                    osg::Vec3d eye = modelViewMatrix.getTrans() - getPosition();
+                    eye = osg::Vec3d( 0.0, 1.0, 0.0 ) * eye.length();
+                    osg::Vec3d center( 0.0, 0.0, 0.0 );
+                    osg::Matrixd scaleView = osg::Matrixd::lookAt(
+                        eye, center, osg::Vec3d( 0.0, 0.0, 1.0 ) );
+                    osg::Matrixd mvpwMatrix = scaleView *
+                        *(cs->getProjectionMatrix()) * cs->getWindowMatrix();
+                    osg::Vec3d ps = center * mvpwMatrix;
+                    osg::Vec3d pe = osg::Vec3d( 1.0, 0.0, 0.0 ) * mvpwMatrix;
+                    double size = 1.0 / ( pe - ps ).length();
                     if( _autoScaleTransitionWidthRatio > 0.0 )
                     {
                         if( _minimumScale > 0.0 )
@@ -220,7 +220,7 @@ void Dragger::accept( osg::NodeVisitor& nv )
                         }
                     }
 
-                    SetScale( size );
+                    setScale( m_scale * size );
                 }
 
                 if( _autoRotateMode == ROTATE_TO_SCREEN )
@@ -750,36 +750,18 @@ void Dragger::SetRootDragger( Dragger* rootDragger )
     m_rootDragger = rootDragger;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Dragger::setScale( const double scale )
-{
-    osg::Vec3d temp( scale, scale, scale );
-    setScale( temp );
-}
-////////////////////////////////////////////////////////////////////////////////
-void Dragger::setScale( const osg::Vec3d& scale )
-{
-    m_scale = scale;
-
-    //Force scale update
-    setAutoRotateMode( getAutoRotateMode() );
-}
-////////////////////////////////////////////////////////////////////////////////
 void Dragger::SetScale( const double scale )
 {
     osg::Vec3d temp( scale, scale, scale );
     SetScale( temp );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Dragger::SetScale( osg::Vec3d& scale )
+void Dragger::SetScale( const osg::Vec3d& scale )
 {
-    std::cout << scale.x() << std::endl;
-    scale.x() *= m_scale.x();
-    scale.y() *= m_scale.y();
-    scale.z() *= m_scale.z();
-    std::cout << scale.x() << std::endl;
-    std::cout << std::endl;
+    m_scale = scale;
 
-    osg::AutoTransform::setScale( scale );
+    //Force scale update
+    setAutoRotateMode( getAutoRotateMode() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Dragger::SetVectorSpace( const VectorSpace::Enum& vectorSpace )
