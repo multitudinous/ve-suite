@@ -498,8 +498,9 @@ void Dragger::UpdateAssociations()
         const std::pair< osg::Matrixd, osg::Matrixd >& matrices = ammItr->second;
 
         //Test for PATs 1st
-        osg::PositionAttitudeTransform* pat( NULL );
-        if( pat = transform->asPositionAttitudeTransform() )
+        osg::PositionAttitudeTransform* pat =
+            transform->asPositionAttitudeTransform();
+        if( pat )
         {
             switch( m_transformationType )
             {
@@ -517,10 +518,11 @@ void Dragger::UpdateAssociations()
             case TransformationType::ROTATE_AXIS:
             case TransformationType::ROTATE_TWIST:
             {
-                osg::Quat rotation = pat->getAttitude();
-                rotation *= matrices.first.getRotate();
-                rotation *= m_deltaRotation;
-                rotation *= matrices.second.getRotate();
+                osg::Quat rotation =
+                    pat->getAttitude() *
+                    matrices.first.getRotate() *
+                    m_deltaRotation *
+                    matrices.second.getRotate();
                 pat->setAttitude( rotation );
 
                 break;
@@ -535,8 +537,9 @@ void Dragger::UpdateAssociations()
         }
 
         //Test for AMTs 2nd
-        osgBullet::AbsoluteModelTransform* amt( NULL );
-        if( amt = dynamic_cast< osgBullet::AbsoluteModelTransform* >( transform ) )
+        osgBullet::AbsoluteModelTransform* amt =
+            dynamic_cast< osgBullet::AbsoluteModelTransform* >( transform );
+        if( amt )
         {
             const osg::Matrix& currentMatrix = amt->getMatrix();
             switch( m_transformationType )
@@ -561,8 +564,8 @@ void Dragger::UpdateAssociations()
         }
 
         //Test for MTs 3rd
-        osg::MatrixTransform* mt( NULL );
-        if( mt = transform->asMatrixTransform() )
+        osg::MatrixTransform* mt = transform->asMatrixTransform();
+        if( mt )
         {
             const osg::Matrix& currentMatrix = mt->getMatrix();
             switch( m_transformationType )
@@ -572,7 +575,8 @@ void Dragger::UpdateAssociations()
             {
                 mt->setMatrix(
                     matrices.first *
-                    osg::Matrix::translate( m_deltaTranslation ) * currentMatrix *
+                    osg::Matrix::translate( m_deltaTranslation ) *
+                    currentMatrix *
                     matrices.second );
 
                 break;
@@ -587,8 +591,9 @@ void Dragger::UpdateAssociations()
         }
 
         //Test for ATs 4th
-        osg::AutoTransform* at( NULL );
-        if( at = dynamic_cast< osg::AutoTransform* >( transform ) )
+        osg::AutoTransform* at =
+            dynamic_cast< osg::AutoTransform* >( transform );
+        if( at )
         {
             switch( m_transformationType )
             {
@@ -650,60 +655,51 @@ const osg::Plane Dragger::GetPlane( const bool& transform ) const
     //N = P1P2 x P1P3 = ( 1, 0, 0 ) x ( 0, 0, 1 ) = ( 0, -1, 0 )
     //-y + d = 0 : d = 0
 
-    osg::Plane plane;
+    osg::Plane plane( GetUnitAxis(), 0.0 );
     if( transform )
     {
-        switch( m_transformationType )
-        {
-        case TransformationType::TRANSLATE_PAN:
-        case TransformationType::ROTATE_TWIST:
-        {
-            plane.set( osg::Vec3d( 0.0, 0.0, 1.0 ), 0.0 );
-
-            break;
-        }
-        default:
-        {
-            plane.set( osg::Vec3d( 1.0, 0.0, 0.0 ), 0.0 );
-
-            break;
-        }
-        } //end switch( m_transformationType )
-
         plane.transformProvidingInverse( m_worldToLocal );
     }
 
     return plane;
 }
 ////////////////////////////////////////////////////////////////////////////////
-const osg::Vec3d Dragger::GetUnitAxis(
-    const bool& zero, const bool& transform ) const
+const osg::Vec3d Dragger::GetAxis(
+    const bool& zero, const bool& premultiply ) const
 {
-    osg::Vec3d unitAxis( 0.0, 0.0, 0.0 );
+    osg::Vec3d axis( 0.0, 0.0, 0.0 );
     if( !zero )
     {
-        switch( m_transformationType )
-        {
-        case TransformationType::TRANSLATE_PAN:
-        case TransformationType::ROTATE_TWIST:
-        {
-            unitAxis.set( 1.0, 0.0, 0.0 );
-
-            break;
-        }
-        default:
-        {
-            unitAxis.set( 1.0, 0.0, 0.0 );
-
-            break;
-        }
-        }//end switch( m_transformationType )
+        axis = GetUnitAxis();
     }
 
-    if( transform )
+    if( premultiply )
     {
-        unitAxis = m_localToWorld * unitAxis;
+        return axis * m_localToWorld;
     }
+
+    return m_localToWorld * axis;
+}
+////////////////////////////////////////////////////////////////////////////////
+const osg::Vec3d Dragger::GetUnitAxis() const
+{
+    osg::Vec3d unitAxis( 0.0, 0.0, 0.0 );
+    switch( m_transformationType )
+    {
+    case TransformationType::TRANSLATE_PAN:
+    case TransformationType::ROTATE_TWIST:
+    {
+        unitAxis.set( 0.0, 0.0, 1.0 );
+
+        break;
+    }
+    default:
+    {
+        unitAxis.set( 1.0, 0.0, 0.0 );
+
+        break;
+    }
+    } //end switch( m_transformationType )
 
     return unitAxis;
 }

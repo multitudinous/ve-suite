@@ -97,7 +97,6 @@ void RotateTwist::ComputeDeltaTransform()
     originToEnd.normalize();
 
     //Calculate cross products of the direction vectors with rotation axis
-    //const osg::Vec3d rotationAxis = GetUnitAxis( false, true );
     const osg::Vec3d rotationAxis = originToStart ^ originToEnd;
     osg::Vec3d crossRotStart = rotationAxis ^ originToStart;
     crossRotStart.normalize();
@@ -135,7 +134,7 @@ const bool RotateTwist::ComputeProjectedPoint(
     //Get the near and far points for the active device
     const osg::Vec3d& lineStart = deviceInput.getStart();
     const osg::Vec3d& lineEnd = deviceInput.getEnd();
-    
+
     //Exit if the intersection is invalid
     double intersectDistance;
     if( !GetLinePlaneIntersection( lineStart, lineEnd, projectedPoint ) )

@@ -120,8 +120,11 @@ public:
     const TransformationType::Enum GetTransformationType() const;
 
     ///
-    const osg::Vec3d GetUnitAxis(
-        const bool& zero = false, const bool& transform = false ) const;
+    const osg::Vec3d GetAxis(
+        const bool& zero = false, const bool& premultiply = false ) const;
+
+    ///
+    const osg::Vec3d GetUnitAxis() const;
 
     ///
     const VectorSpace::Enum& GetVectorSpace() const;

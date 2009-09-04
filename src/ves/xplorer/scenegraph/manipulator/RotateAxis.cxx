@@ -98,7 +98,7 @@ void RotateAxis::ComputeDeltaTransform()
     originToEnd.normalize();
 
     //Calculate cross products of the direction vectors with rotation axis
-    const osg::Vec3d rotationAxis = GetUnitAxis( false, true );
+    const osg::Vec3d rotationAxis = GetAxis();
     osg::Vec3d crossRotStart = rotationAxis ^ originToStart;
     crossRotStart.normalize();
     osg::Vec3d crossRotEnd = rotationAxis ^ originToEnd;
