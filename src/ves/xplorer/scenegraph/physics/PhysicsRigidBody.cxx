@@ -469,7 +469,6 @@ void PhysicsRigidBody::CustomShape( const BroadphaseNativeTypes shapeType, const
        
         mRB = converter.getRigidBody();
         std::cout << "|\tJust finished creating a new btRigidBody." << std::endl;
-
     }
     
     osg::Group* parent = stopNode->getParent( 0 );

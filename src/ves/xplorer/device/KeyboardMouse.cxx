@@ -1769,7 +1769,7 @@ void KeyboardMouse::ProcessSelection()
     sceneManipulator->Disconnect();
     //Check and see if the selected node has an attached physics mesh
     bool hasAPhysicsMesh( false );
-    osgBullet::AbsoluteModelTransform* tempAMT = 
+    osg::ref_ptr< osgBullet::AbsoluteModelTransform > tempAMT = 
         dynamic_cast< osgBullet::AbsoluteModelTransform* >( 
             newSelectedDCS->getParent( 0 ) );
     if( tempAMT )
@@ -1784,8 +1784,8 @@ void KeyboardMouse::ProcessSelection()
 
     if( hasAPhysicsMesh )
     {
-        rotateTwist->Connect( tempAMT );
-        sceneManipulator->Connect( tempAMT );
+        rotateTwist->Connect( tempAMT.get() );
+        sceneManipulator->Connect( tempAMT.get() );
     }
     else
     {

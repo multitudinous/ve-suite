@@ -41,11 +41,14 @@
 #include <osg/PositionAttitudeTransform>
 #include <osg/MatrixTransform>
 #include <osg/AutoTransform>
-
+#include <osg/io_utils>
 #include <osgUtil/CullVisitor>
 
 // --- osgBullet Includes --- //
 #include <osgBullet/AbsoluteModelTransform.h>
+#include <osgBullet/MotionState.h>
+#include <osgBullet/RigidBody.h>
+#include <osgBullet/Utils.h>
 
 using namespace ves::xplorer::scenegraph::manipulator;
 namespace vxs = ves::xplorer::scenegraph;
@@ -547,11 +550,29 @@ void Dragger::UpdateAssociations()
             case TransformationType::TRANSLATE_AXIS:
             case TransformationType::TRANSLATE_PAN:
             {
-                amt->setMatrix(
-                    //matrices.first *
-                    osg::Matrix::translate( m_deltaTranslation ) * currentMatrix );// *
-                    //matrices.second );
+                osgBullet::RigidBody* rb = 
+                    static_cast< osgBullet::RigidBody* >( amt->getUserData() );
+                osgBullet::MotionState* ms = 
+                    static_cast< osgBullet::MotionState* >( 
+                    rb->getRigidBody()->getMotionState() );
+                if( rb->getRigidBody()->isStaticObject() )
+                {
+                    break;
+                }
 
+                osg::Matrix tempTrans = 
+                    osg::Matrix::translate( ms->getCenterOfMass() ) *
+                    osg::Matrix::translate( m_deltaTranslation ) *
+                    currentMatrix;
+
+                btTransform tempBT = osgBullet::asBtTransform( tempTrans );
+                ms->setWorldTransform( tempBT );
+                
+                rb->getRigidBody()->setWorldTransform( tempBT );
+                rb->getRigidBody()->setInterpolationWorldTransform( tempBT );
+                rb->getRigidBody()->activate();
+                rb->getRigidBody()->setLinearVelocity( btVector3( 0, 0, 0 ) );
+                rb->getRigidBody()->setAngularVelocity( btVector3( 0, 0, 0 ) );
                 break;
             }
             default:
