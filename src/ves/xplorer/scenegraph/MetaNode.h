@@ -103,14 +103,12 @@ protected:
       return Container<T>( new T( ) );
    }
 
-private:
     ///Base Constructor
-    ResourceManager();
+    MetaNode();
 
+private:
     ///Destructor
-    ~ResourceManager();
-
-    vprSingletonHeader( ResourceManager );
+    virtual ~MetaNode();
 
     ResourceMap mResourceMap;
 };
