@@ -68,43 +68,43 @@ namespace scenegraph
 class VE_SCENEGRAPH_EXPORTS MetaNode : public osg::Referenced
 {
 protected:
-   typedef std::pair<std::string, boost::any> ResourcePair;
-   typedef std::map<std::string, boost::any> ResourceMap;
-   typedef ResourceMap::iterator ResourceMapIterator;
+    typedef std::pair<std::string, boost::any> ResourcePair;
+    typedef std::map<std::string, boost::any> ResourceMap;
+    typedef ResourceMap::iterator ResourceMapIterator;
 
 public:
-   /* Looks up resource and creates new if not available yet! */
-   template<typename T, template< typename > class Container >
-   const Container<T> get( const std::string& resourceName)
-   {
-      ResourceMapIterator iter = mResourceMap.find( resourceName );
-      if( iter != mResourceMap.end() )
-      {
-         return boost::any_cast<Container<T> >(iter->second);
-      }
-      // Was not found. So, lets make it!
-      Container<T> real_val = createResource<T, Container>( resourceName );
-      boost::any to_append = real_val;
-      mResourceMap.insert( ResourcePair( resourceName, real_val) );
-      return real_val;
-   }
+    ///Base Constructor
+    MetaNode();
 
-   /* Explicitly add a resource. */
-   void add( const std::string& resourceName, boost::any& value );
+    /* Looks up resource and creates new if not available yet! */
+    template<typename T, template< typename > class Container >
+    const Container<T> get( const std::string& resourceName)
+    {
+        ResourceMapIterator iter = mResourceMap.find( resourceName );
+        if( iter != mResourceMap.end() )
+        {
+            return boost::any_cast<Container<T> >(iter->second);
+        }
+        // Was not found. So, lets make it!
+        Container<T> real_val = createResource<T, Container>( resourceName );
+        boost::any to_append = real_val;
+        mResourceMap.insert( ResourcePair( resourceName, real_val) );
+        return real_val;
+    }
+
+    /* Explicitly add a resource. */
+    void add( const std::string& resourceName, boost::any& value );
 
     /* Explicitly remove a resource. */
     bool remove( const std::string& resourceName );
         
 protected:
-   template<typename T, template< typename > class Container >
-   Container<T> createResource( const std::string& resourceName)
-   {
-      //return Container<T>( new T( resourceName ) );
-      return Container<T>( new T( ) );
-   }
-
-    ///Base Constructor
-    MetaNode();
+    template<typename T, template< typename > class Container >
+    Container<T> createResource( const std::string& resourceName)
+    {
+        //return Container<T>( new T( resourceName ) );
+        return Container<T>( new T( ) );
+    }
 
 private:
     ///Destructor

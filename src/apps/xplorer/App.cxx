@@ -857,7 +857,7 @@ void App::draw()
     if( captureNextFrameForWeb )
     {
         vpr::Guard< vpr::Mutex > val_guard( mValueLock );
-        mSceneRenderToTexture->WriteImageFileForWeb(
+        mSceneRenderToTexture->WriteLowResImageFile(
             getScene(), sv.get(), m_filename );
         captureNextFrameForWeb = false;
     }

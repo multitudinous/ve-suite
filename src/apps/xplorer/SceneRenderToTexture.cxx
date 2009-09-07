@@ -1122,3 +1122,109 @@ void SceneRenderToTexture::Update( osg::NodeVisitor* updateVisitor )
         (*iter)->accept( *updateVisitor );
     }
 }
+////////////////////////////////////////////////////////////////////////////////
+void SceneRenderToTexture::WriteLowResImageFile(
+                          osg::Group* root, osgUtil::SceneView* sv, std::string& filename )
+{
+    ///Setup all the images for rendering
+    osg::ref_ptr< osg::Image > shot = new osg::Image();
+    //std::vector< osg::ref_ptr< osg::Image > > imageList;
+    // get the image ratio:
+    std::pair< int, int > screenDims = EnvironmentHandler::instance()->GetDisplaySettings()->GetScreenResolution();
+    int w = 0; int  h = 0; int m = 1;
+    w = screenDims.first;
+    h = screenDims.second;
+    std::cout << w << " " << h << std::endl;
+    //EnvironmentHandler::instance()->GetDesktopSize( w, h );
+    int largeWidth =  w * m; 
+    int largeHeight = h * m ;
+    shot->allocateImage( largeWidth, largeHeight, 1, GL_RGB, GL_UNSIGNED_BYTE );
+    
+    ///Now lets create the scene
+    osg::ref_ptr< osg::Node > subgraph = new osg::Group( *root );
+    osg::ref_ptr< osg::Camera > rttCameraList;
+    ///create the screen shot root
+    osg::ref_ptr< osg::Group > screenShotRoot = new osg::Group;
+        
+    ///create the list of RTT's
+    osg::ref_ptr< osg::Texture2D > rttList;
+    
+    //osg::ref_ptr<osgUtil::SceneView> sv;
+    //sv = ( *sceneViewer );  // Get context specific scene viewer
+    osg::ref_ptr<osg::Camera> oldcamera = sv->getCamera();
+    //Copy the settings from sceneView-camera to
+    //get exactly the view the user sees at the moment:
+    //Get the current frustum from the current sceneView-camera
+    double frustum[6] = {0, 0, 0, 0, 0, 0};
+    oldcamera->getProjectionMatrixAsFrustum(
+                                            frustum[ 0 ], frustum[ 1 ], frustum[ 2 ], frustum[ 3 ], frustum[ 4 ], frustum[ 5 ] );
+    //Create 4 cameras whose frustums tile the original camera frustum
+    //double tileFrustum[6] = { 0, 0, 0, 0, 0, 0 };
+    //z values don't change
+    //tileFrustum[ 4 ] = frustum[ 4 ];
+    //tileFrustum[ 5 ] = frustum[ 5 ];
+    
+    osg::ref_ptr< osg::Texture2D > textures;
+    //for( size_t i = 0; i < 1; ++i )
+    {
+        //Set up the RTT's (Render-To-Textures)
+        //The output textures here are 2x as big as the desired tile
+        //This gives us more information to fight aliasing by "super-sampling"
+        //at the desired resolution 
+        textures = new osg::Texture2D();
+        //textures = new osg::Image();
+        //textures->allocateImage( w, h, 1, GL_RGB, GL_UNSIGNED_BYTE );
+
+        //rttList = textures;
+        textures->setTextureSize( w * m, h * m );
+        textures->setInternalFormat( GL_RGB );
+        textures->setFilter( osg::Texture2D::MIN_FILTER, osg::Texture2D::LINEAR );
+        textures->setFilter( osg::Texture2D::MAG_FILTER, osg::Texture2D::LINEAR );
+        textures->setWrap( osg::Texture::WRAP_S, osg::Texture::CLAMP_TO_EDGE );
+        textures->setWrap( osg::Texture::WRAP_T, osg::Texture::CLAMP_TO_EDGE );
+        
+        //Setup the cameras
+        rttCameraList = new osg::Camera();
+        rttCameraList->setClearColor( oldcamera->getClearColor() );
+        rttCameraList->setClearMask( oldcamera->getClearMask() );
+        rttCameraList->setColorMask( oldcamera->getColorMask() );
+        rttCameraList->setTransformOrder( oldcamera->getTransformOrder() );
+        rttCameraList->setViewMatrix( oldcamera->getViewMatrix() );
+        
+        // set view
+        rttCameraList->setReferenceFrame( osg::Transform::ABSOLUTE_RF );
+        
+        // set the camera to render before after the main camera.
+        rttCameraList->setRenderOrder( osg::Camera::PRE_RENDER );
+        
+        // tell the camera to use OpenGL frame buffer object where supported.
+        rttCameraList->setRenderTargetImplementation( osg::Camera::FRAME_BUFFER_OBJECT );
+        // add subgraph to render
+        rttCameraList->addChild( subgraph.get() );
+        
+        // set viewport
+        rttCameraList->setViewport( 0, 0, w*m, h*m );
+        
+        ///Attach the camera to the image
+        rttCameraList->attach( osg::Camera::COLOR_BUFFER, textures.get(), 0, 0, false, 8, 8 );
+        screenShotRoot->addChild( rttCameraList.get() );
+        rttCameraList->setProjectionMatrixAsFrustum(
+                                                    frustum[ 0 ], frustum[ 1 ], frustum[ 2 ],
+                                                    frustum[ 3 ], frustum[ 4 ], frustum[ 5 ] );
+    }
+    
+    //Add the screen shot as a pre-render node of the main
+    //graph. 
+    root->addChild( screenShotRoot.get() );
+    
+    //Render to produce the tiles via RTT
+    sv->update();
+    sv->cull();
+    sv->draw();
+    //remove the screen shot from the graph
+    root->removeChild( screenShotRoot.get() );
+    shot->copySubImage( 0, 0, 0, textures->getImage() );
+
+    //This would work, too:
+    osgDB::writeImageFile( *( shot.get() ), filename );
+}

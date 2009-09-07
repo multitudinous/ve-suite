@@ -137,6 +137,13 @@ public:
     void WriteImageFileForWeb(
         osg::Group* root, osgUtil::SceneView* sv, std::string& filename );
 
+    ///Take a low resolution screen capture of the render window for SceneView
+    ///\param root The osg::Group to be rendered
+    ///\param sv The osgUtil::SceneView to provide the context for the render
+    ///\param filename The file name to be used for the screen capture
+    void WriteLowResImageFile(
+        osg::Group* root, osgUtil::SceneView* sv, std::string& filename );
+
     //Update function to traverse 
     void Update( osg::NodeVisitor* updateVisitor );
 
