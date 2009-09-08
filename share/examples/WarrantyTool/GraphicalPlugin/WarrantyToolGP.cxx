@@ -75,6 +75,7 @@ using namespace warrantytool;
 #include <Poco/Tuple.h>
 #include <Poco/Data/SessionFactory.h>
 #include <Poco/Data/Session.h>
+#include <Poco/Data/RecordSet.h>
 #include <Poco/Data/SQLite/Connector.h>
 #include <vector>
 
@@ -180,15 +181,15 @@ void WarrantyToolGP::PreFrameUpdate()
             const std::string partName = m_groupedTextTextures->GetKeyForTexture( tempKey );
             ves::xplorer::scenegraph::DCS* tempModelNodes = this->mModel->GetModelCADHandler()->GetAssembly( mModel->GetModelCADHandler()->GetRootCADNodeID() );
 
-            for (Assembly::const_iterator it = m_selectedAssembly.begin(); it != m_selectedAssembly.end(); ++it)
+            for( std::vector< std::string >::const_iterator it = m_assemblyPartNumbers.begin(); it != m_assemblyPartNumbers.end(); ++it)
             {
-                std::ostringstream tempTextData;
+                /*std::ostringstream tempTextData;
                 tempTextData
                     << "Part Number: " << it->get<0>() << "\n"
                     << "Description: " << it->get<1>() << "\n"
                     << "Claims: " << it->get<2>() << "\n"
                     << "FPM: " << it->get<4>();
-
+                */
                 //ves::xplorer::scenegraph::TextTexture* tempText = new ves::xplorer::scenegraph::TextTexture();
                 //std::string tempKey = "test_" + it->get<0>();
                 //boost::lexical_cast<std::string>( std::distance( assem.begin(), it) );
@@ -198,7 +199,7 @@ void WarrantyToolGP::PreFrameUpdate()
                 //m_groupedTextTextures->AddTextTexture( it->get<0>(), tempText );
 
                 ves::xplorer::scenegraph::HighlightNodeByNameVisitor
-                    highlight( tempModelNodes, it->get<0>(), true, osg::Vec4( 0.57255, 0.34118, 1.0, 1.0 ) );
+                    highlight( tempModelNodes, (*it), true, osg::Vec4( 0.57255, 0.34118, 1.0, 1.0 ) );
             }
 
             ves::xplorer::scenegraph::HighlightNodeByNameVisitor
@@ -266,7 +267,7 @@ void WarrantyToolGP::SetCurrentCommand( ves::open::xml::CommandPtr command )
                 childVisitor( mDCS.get(), mLoadedPartNumbers.at( i ), false );
                 if( childVisitor.FoundChild() )
                 {
-                    std::cout << "Found match for " << mLoadedPartNumbers.at( i ) << std::endl;
+                    std::cout << "Found graphics node match for " << mLoadedPartNumbers.at( i ) << std::endl;
                 }
             }
         }
@@ -451,34 +452,107 @@ void WarrantyToolGP::CreateDB()
     session << "DROP TABLE IF EXISTS Parts", now;
 
     // (re)create table
-    session << "CREATE TABLE Parts (Part_Number VARCHAR, Description VARCHAR, Claims INT, Claim_Cost DOUBLE, FPM DOUBLE, CCPM DOUBLE, By VARCHAR)", now;
+    //session << "CREATE TABLE Parts (Part_Number VARCHAR, Description VARCHAR, Claims INT, Claim_Cost DOUBLE, FPM DOUBLE, CCPM DOUBLE, By VARCHAR)", now;
+    
+    std::ostringstream createCommand;
+    createCommand << "CREATE TABLE Parts (";
+    std::vector< std::pair< std::string, std::string > > tempData = m_dataMap.begin()->second;
+    for( size_t i = 0; i < tempData.size(); ++i )
+    {
+        bool isString = false;
+        try
+        {
+            double test = boost::lexical_cast<double>( tempData.at( i ).second );      
+        }
+        catch( boost::bad_lexical_cast::bad_lexical_cast& ex )
+        {
+            std::cout << "Is string data " << tempData.at( i ).first << std::endl;
+            std::cout << ex.what() << std::endl;
+            isString = true;
+        }
+        
+        if( isString )
+        {
+            createCommand << "'" << tempData.at( i ).first << "' VARCHAR";
+        }
+        else
+        {
+            createCommand << "'" << tempData.at( i ).first << "' DOUBLE";
+        }
 
-    // insert some rows
-    Assembly assem;
+        if( i < tempData.size() - 1 )
+        {
+            createCommand << ",";
+        }
+    }
+    createCommand << ")";
 
+    try
+    {
+        session << createCommand.str(), now;
+    }
+    catch( Poco::Data::DataException& ex )
+    {
+        std::cout << ex.displayText() << std::endl;
+    }
+
+    std::ostringstream insertCommand;
     std::map< std::string, std::vector< std::pair< std::string, std::string > > >::iterator iter;
     for( iter = m_dataMap.begin(); iter != m_dataMap.end(); ++iter )
     {
-        std::vector< std::pair< std::string, std::string > > tempData;
         tempData = iter->second;
-        Part tempPart;
-        //for( size_t i = 0; i < tempData.size(); ++i )
+        insertCommand << "INSERT INTO Parts VALUES(";
+        for( size_t i = 0; i < tempData.size(); ++i )
         {
-            tempPart.set< 0 >( tempData.at( 2 ).second );
-            tempPart.set< 1 >( tempData.at( 3 ).second );
-            tempPart.set< 2 >( boost::lexical_cast<int>( tempData.at( 4 ).second ) );
-            tempPart.set< 3 >( boost::lexical_cast<double>( tempData.at( 5 ).second ) );
-            tempPart.set< 4 >( boost::lexical_cast<double>( tempData.at( 6 ).second ) );
-            tempPart.set< 5 >( boost::lexical_cast<double>( tempData.at( 7 ).second ) );
-            tempPart.set< 6 >( tempData.at( 8 ).second );
+            bool isString = false;
+            double tempDouble = 0;
+            try
+            {
+                tempDouble = boost::lexical_cast<double>( tempData.at( i ).second );      
+            }
+            catch( boost::bad_lexical_cast::bad_lexical_cast& ex )
+            {
+                //std::cout << "Bad Field " << tempData.at( i ).first << std::endl;
+                //std::cout << ex.what() << std::endl;
+                isString = true;
+            }
+            
+            if( isString )
+            {
+                insertCommand << "'"<< tempData.at( i ).second << "'";
+            }
+            else
+            {
+                insertCommand << tempDouble;
+            }
+            
+            if( i < tempData.size() - 1 )
+            {
+                insertCommand << ",";
+            }            
         }
-        assem.push_back(tempPart);
+        insertCommand << ")";
+
+        //insertCommand << "INSERT INTO Parts VALUES('" << tempData.at( 2 ).second << "','" << tempData.at( 3 ).second << "'," << boost::lexical_cast<int>( tempData.at( 4 ).second )
+        //    << "," << boost::lexical_cast<double>( tempData.at( 5 ).second ) << "," << boost::lexical_cast<double>( tempData.at( 6 ).second )
+        //    << "," <<  boost::lexical_cast<double>( tempData.at( 7 ).second ) << ",'" << tempData.at( 8 ).second << "')";
+        Statement insert( session );
+        try
+        {
+            insert << insertCommand.str(), now;
+        }
+        catch( Poco::Data::DataException& ex )
+        {
+            std::cout << ex.displayText() << std::endl;
+            //std::string ses = insert.toString();
+            //std::cout << ses << std::endl;
+        }
+        insertCommand.str("");
     }
     
     
-	Statement insert( session );
-	insert << "INSERT INTO Parts VALUES(?, ?, ?, ?, ?, ?, ?)",
-    use(assem), now;
+	//insert << "INSERT INTO Parts VALUES(?, ?, ?, ?, ?, ?, ?)",
+    //    use(assem), now;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void WarrantyToolGP::CreateTextTextures()
@@ -506,26 +580,72 @@ void WarrantyToolGP::CreateDBQuery( ves::open::xml::DataValuePairPtr dvp )
 {
     // a simple query
     std::string queryString = dvp->GetDataString();
-    m_selectedAssembly.clear();
+    //m_selectedAssembly.clear();
+    m_assemblyPartNumbers.clear();
     
     ves::xplorer::scenegraph::HighlightNodeByNameVisitor 
         highlight2( mDCS.get(), "", false );
 
     //select << "SELECT Part_Number, Description, Claims FROM Parts",
     //select << "SELECT Part_Number, Description, Claims FROM Parts WHERE Claims > 10 AND Claims_Cost > 1000",
+    Poco::Data::Session session("SQLite", "sample.db");
+    Statement select( session );
     try
     {
-        Poco::Data::Session session("SQLite", "sample.db");
-        Statement select( session );
-        select << queryString.c_str(),
-        into( m_selectedAssembly ),
-        now;
+        //select << queryString.c_str(),
+        //into( m_selectedAssembly ),
+        //now;
+        select << queryString.c_str(),now;
+        select.execute();
     }
     catch( ... )
     {
         ;
     }
 
+    bool removed = m_textTrans->removeChild( m_groupedTextTextures.get() );
+    
+    m_groupedTextTextures = 
+        new ves::xplorer::scenegraph::GroupedTextTextures();
+        
+	// create a RecordSet 
+	Poco::Data::RecordSet rs(select);
+	std::size_t cols = rs.columnCount();
+	// iterate over all rows and columns
+	bool more = rs.moveFirst();
+	while (more)
+	{
+        ves::xplorer::scenegraph::TextTexture* tempText = 
+            new ves::xplorer::scenegraph::TextTexture();
+        std::ostringstream tempTextData;
+        std::string partNumber;
+		for (std::size_t col = 0; col < cols; ++col)
+		{
+            std::string partNumberHeader = rs.columnName(col);
+            //std::cout << rs.columnName(col) << std::endl;
+            if( partNumberHeader == "Part_Number" )
+            {
+                partNumber = rs[col].convert<std::string>();
+                tempText->SetTitle( partNumber );
+                m_assemblyPartNumbers.push_back( partNumber );
+            }
+
+			//std::cout << rs[col].convert<std::string>() << " ";
+            tempTextData
+                << rs.columnName(col) << ": " << rs[col].convert<std::string>() << "\n";
+		}
+        std::string partText = tempTextData.str();
+        tempText->UpdateText( partText );
+        m_groupedTextTextures->AddTextTexture( partNumber, tempText );
+        
+        ves::xplorer::scenegraph::HighlightNodeByNameVisitor 
+            highlight( mDCS.get(), partNumber, true, osg::Vec4( 0.57255, 0.34118, 1.0, 1.0 ) );
+
+		more = rs.moveNext();
+	}
+    m_textTrans->addChild( m_groupedTextTextures.get() );
+
+/*
     //ves::xplorer::scenegraph::util::OpacityVisitor 
     //    opVisitor1( mDCS.get(), false, true, 0.3f );
     //mAddingParts = true;
@@ -575,6 +695,7 @@ void WarrantyToolGP::CreateDBQuery( ves::open::xml::DataValuePairPtr dvp )
     
     //ves::xplorer::scenegraph::util::OpacityVisitor 
     //    opVisitor1( m_textTrans.get(), false, true, 0.3f );
+*/
 }
 ////////////////////////////////////////////////////////////////////////////////
 void WarrantyToolGP::RemoveSelfFromSG()

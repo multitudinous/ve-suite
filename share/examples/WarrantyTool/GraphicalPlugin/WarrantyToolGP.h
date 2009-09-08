@@ -105,7 +105,7 @@ private:
 
     typedef Poco::Tuple< std::string, std::string, int, double, double, double, std::string > Part;
 	typedef std::vector<Part> Assembly;
-    
+    std::vector< std::string > m_assemblyPartNumbers;
     // insert some rows
 	Assembly m_selectedAssembly;
 };
