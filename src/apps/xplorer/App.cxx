@@ -234,7 +234,7 @@ osg::Group* App::getScene()
 void App::contextInit()
 {
     //vrj::OsgApp::contextInit();
-std::cout << " context init" << std::endl;
+    std::cout << "|\tContext initialized" << std::endl;
     const unsigned int unique_context_id =
 #if __VJ_version >= 2003000
         vrj::opengl::DrawManager::instance()->getCurrentContext();
