@@ -103,26 +103,12 @@ void RotateCompound::SetupDefaultGeometry()
     m_yRotateAxis->SetColor(
         Color::DEFAULT, osg::Vec4f( 0.0, 1.0, 0.0, 1.0 ), true );
 
-    //Rotate y-axis dragger appropriately
-    {
-        osg::Quat rotation;
-        rotation.makeRotate( GetUnitAxis(), osg::Vec3d( 0.0, 1.0, 0.0 ) );
-        m_yRotateAxis->setRotation( rotation );
-    }
-
     addChild( m_yRotateAxis.get() );
 
     //Create translate x-axis dragger
     m_xRotateAxis = new RotateAxis();
     m_xRotateAxis->SetColor(
         Color::DEFAULT, osg::Vec4f( 1.0, 0.0, 0.0, 1.0 ), true );
-
-    //Rotate x-axis dragger appropriately
-    {
-        osg::Quat rotation;
-        rotation.makeRotate( GetUnitAxis(), osg::Vec3d( 1.0, 0.0, 0.0 ) );
-        m_xRotateAxis->setRotation( rotation );
-    }
 
     addChild( m_xRotateAxis.get() );
 
@@ -132,5 +118,19 @@ void RotateCompound::SetupDefaultGeometry()
         Color::DEFAULT, osg::Vec4f( 1.0, 1.0, 1.0, 1.0 ), true );
 
     addChild( m_rotateTwist.get() );
+
+    //Rotate y-axis dragger appropriately
+    {
+        osg::Quat rotation;
+        rotation.makeRotate( GetUnitAxis(), osg::Vec3d( 0.0, 1.0, 0.0 ) );
+        m_yRotateAxis->setRotation( rotation );
+    }
+
+    //Rotate x-axis dragger appropriately
+    {
+        osg::Quat rotation;
+        rotation.makeRotate( GetUnitAxis(), osg::Vec3d( 1.0, 0.0, 0.0 ) );
+        m_xRotateAxis->setRotation( rotation );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////

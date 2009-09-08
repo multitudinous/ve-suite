@@ -31,8 +31,8 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
-#ifndef VES_XPLORER_SCENEGRAPH_MANIPULATOR_TRANSLATE_AXIS_H
-#define VES_XPLORER_SCENEGRAPH_MANIPULATOR_TRANSLATE_AXIS_H
+#ifndef VES_XPLORER_SCENEGRAPH_MANIPULATOR_TRANSLATE_PLANE_H
+#define VES_XPLORER_SCENEGRAPH_MANIPULATOR_TRANSLATE_PLANE_H
 
 // --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
@@ -46,10 +46,8 @@ namespace osg
 {
 class Geode;
 class Geometry;
-class Cone;
-class Cylinder;
-class ShapeDrawable;
 }
+
 
 namespace ves
 {
@@ -59,22 +57,22 @@ namespace scenegraph
 {
 namespace manipulator
 {
-/*!\file TranslateAxis.h
- * TranslateAxis API
+/*!\file TranslatePlane.h
+ * TranslatePlane API
  */
 
-/*!\class ves::xplorer::scenegraph::TranslateAxis
+/*!\class ves::xplorer::scenegraph::TranslatePlane
  *
  */
-class VE_SCENEGRAPH_EXPORTS TranslateAxis : public Dragger
+class VE_SCENEGRAPH_EXPORTS TranslatePlane : public Dragger
 {
 public:
     ///
-    TranslateAxis();
+    TranslatePlane();
 
     ///Copy constructor using CopyOp to manage deep vs shallow copy
-    TranslateAxis(
-        const TranslateAxis& translateAxis,
+    TranslatePlane(
+        const TranslatePlane& translatePan,
         const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
 
     ///
@@ -95,24 +93,9 @@ public:
     ///\return
     virtual bool isSameKindAs( const osg::Object* obj ) const;
 
-    ///
-    virtual void ComboForm();
-
-    ///
-    virtual void DefaultForm();
-
-    ///
-    void DirtyCone();
-
-    ///
-    osg::Geode* const GetLineAndCylinderGeode() const;
-
-    ///
-    osg::Cone* const GetCone() const;
-
 protected:
     ///
-    virtual ~TranslateAxis();
+    virtual ~TranslatePlane();
 
     ///
     virtual void ComputeDeltaTransform();
@@ -127,28 +110,13 @@ protected:
 
 private:
     ///
-    osg::Vec3d m_lineExplodeVector;
+    osg::Vec3d m_explodeVector;
 
     ///
-    osg::ref_ptr< osg::Vec3dArray > m_lineVertices;
+    osg::ref_ptr< osg::Vec3Array > m_triangleVertices;
 
     ///
-    osg::ref_ptr< osg::Geometry > m_lineGeometry;
-
-    ///
-    osg::ref_ptr< osg::Geode > m_lineAndCylinderGeode;
-
-    ///
-    osg::ref_ptr< osg::Cone > m_cone;
-
-    ///
-    osg::ref_ptr< osg::Cylinder > m_cylinder;
-
-    ///
-    osg::ref_ptr< osg::ShapeDrawable > m_coneDrawable;
-
-    ///
-    osg::ref_ptr< osg::ShapeDrawable > m_cylinderDrawable;
+    osg::ref_ptr< osg::Geometry > m_triangleGeometry;
 
 };
 } //end manipulator
@@ -156,4 +124,4 @@ private:
 } //end xplorer
 } //end ves
 
-#endif //VES_XPLORER_SCENEGRAPH_MANIPULATOR_TRANSLATE_AXIS_H
+#endif //VES_XPLORER_SCENEGRAPH_MANIPULATOR_TRANSLATE_PLANE_H

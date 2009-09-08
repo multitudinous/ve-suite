@@ -508,6 +508,7 @@ void Dragger::UpdateAssociations()
             switch( m_transformationType )
             {
             case TransformationType::TRANSLATE_AXIS:
+            case TransformationType::TRANSLATE_PLANE:
             case TransformationType::TRANSLATE_PAN:
             {
                 osg::Vec3d position = pat->getPosition();
@@ -559,6 +560,7 @@ void Dragger::UpdateAssociations()
             switch( m_transformationType )
             {
             case TransformationType::TRANSLATE_AXIS:
+            case TransformationType::TRANSLATE_PLANE:
             case TransformationType::TRANSLATE_PAN:
             {
                 btVector3 deltaTranslation(
@@ -605,6 +607,7 @@ void Dragger::UpdateAssociations()
             switch( m_transformationType )
             {
             case TransformationType::TRANSLATE_AXIS:
+            case TransformationType::TRANSLATE_PLANE:
             case TransformationType::TRANSLATE_PAN:
             {
                 mt->setMatrix(
@@ -632,6 +635,7 @@ void Dragger::UpdateAssociations()
             switch( m_transformationType )
             {
             case TransformationType::TRANSLATE_AXIS:
+            case TransformationType::TRANSLATE_PLANE:
             case TransformationType::TRANSLATE_PAN:
             {
                 osg::Vec3d position = at->getPosition();

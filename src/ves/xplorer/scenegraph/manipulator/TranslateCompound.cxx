@@ -34,6 +34,7 @@
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/manipulator/TranslateCompound.h>
 #include <ves/xplorer/scenegraph/manipulator/TranslateAxis.h>
+#include <ves/xplorer/scenegraph/manipulator/TranslatePlane.h>
 #include <ves/xplorer/scenegraph/manipulator/TranslatePan.h>
 
 // --- OSG Includes --- //
@@ -50,6 +51,9 @@ TranslateCompound::TranslateCompound()
     m_xTranslateAxis( NULL ),
     m_yTranslateAxis( NULL ),
     m_zTranslateAxis( NULL ),
+    m_yzTranslatePlane( NULL ),
+    m_xzTranslatePlane( NULL ),
+    m_xyTranslatePlane( NULL ),
     m_translatePan( NULL )
 {
     SetupDefaultGeometry();
@@ -63,6 +67,9 @@ TranslateCompound::TranslateCompound(
     m_xTranslateAxis( translateCompound.m_xTranslateAxis.get() ),
     m_yTranslateAxis( translateCompound.m_yTranslateAxis.get() ),
     m_zTranslateAxis( translateCompound.m_zTranslateAxis.get() ),
+    m_yzTranslatePlane( translateCompound.m_yzTranslatePlane.get() ),
+    m_xzTranslatePlane( translateCompound.m_xzTranslatePlane.get() ),
+    m_xyTranslatePlane( translateCompound.m_xyTranslatePlane.get() ),
     m_translatePan( translateCompound.m_translatePan.get() )
 {
     ;
@@ -179,13 +186,6 @@ void TranslateCompound::SetupDefaultGeometry()
         Color::DEFAULT, osg::Vec4f( 0.0, 1.0, 0.0, 1.0 ), true );
     m_yTranslateAxis->ComboForm();
 
-    //Rotate y-axis dragger appropriately
-    {
-        osg::Quat rotation;
-        rotation.makeRotate( GetUnitAxis(), osg::Vec3d( 0.0, 1.0, 0.0 ) );
-        m_yTranslateAxis->setRotation( rotation );
-    }
-
     addChild( m_yTranslateAxis.get() );
 
     //Create translate x-axis dragger
@@ -194,14 +194,31 @@ void TranslateCompound::SetupDefaultGeometry()
         Color::DEFAULT, osg::Vec4f( 1.0, 0.0, 0.0, 1.0 ), true );
     m_xTranslateAxis->ComboForm();
 
-    //Rotate x-axis dragger appropriately
-    {
-        osg::Quat rotation;
-        rotation.makeRotate( GetUnitAxis(), osg::Vec3d( 1.0, 0.0, 0.0 ) );
-        m_xTranslateAxis->setRotation( rotation );
-    }
-
     addChild( m_xTranslateAxis.get() );
+
+    //Create translate xy-plane dragger
+    m_xyTranslatePlane = new TranslatePlane();
+    m_xyTranslatePlane->SetColor(
+        Color::DEFAULT, osg::Vec4f( 0.0, 0.0, 1.0, 1.0 ), true );
+    m_xyTranslatePlane->ComboForm();
+
+    addChild( m_xyTranslatePlane.get() );
+
+    //Create translate xz-plane dragger
+    m_xzTranslatePlane = new TranslatePlane();
+    m_xzTranslatePlane->SetColor(
+        Color::DEFAULT, osg::Vec4f( 0.0, 1.0, 0.0, 1.0 ), true );
+    m_xzTranslatePlane->ComboForm();
+
+    addChild( m_xzTranslatePlane.get() );
+
+    //Create translate yz-plane dragger
+    m_yzTranslatePlane = new TranslatePlane();
+    m_yzTranslatePlane->SetColor(
+        Color::DEFAULT, osg::Vec4f( 1.0, 0.0, 0.0, 1.0 ), true );
+    m_yzTranslatePlane->ComboForm();
+
+    addChild( m_yzTranslatePlane.get() );
 
     //Create translate pan dragger
     m_translatePan = new TranslatePan();
@@ -209,5 +226,33 @@ void TranslateCompound::SetupDefaultGeometry()
         Color::DEFAULT, osg::Vec4f( 1.0, 1.0, 1.0, 1.0 ), true );
 
     addChild( m_translatePan.get() );
+
+    //Rotate y-axis dragger appropriately
+    {
+        osg::Quat rotation;
+        rotation.makeRotate( GetUnitAxis(), osg::Vec3d( 0.0, 1.0, 0.0 ) );
+        m_yTranslateAxis->setRotation( rotation );
+    }
+
+    //Rotate xz-plane dragger appropriately
+    {
+        osg::Quat rotation;
+        rotation.makeRotate( GetUnitAxis(), osg::Vec3d( 0.0, -1.0, 0.0 ) );
+        m_xzTranslatePlane->setRotation( rotation );
+    }
+
+    //Rotate x-axis dragger appropriately
+    {
+        osg::Quat rotation;
+        rotation.makeRotate( GetUnitAxis(), osg::Vec3d( 1.0, 0.0, 0.0 ) );
+        m_xTranslateAxis->setRotation( rotation );
+    }
+
+    //Rotate yz-plane dragger appropriately
+    {
+        osg::Quat rotation;
+        rotation.makeRotate( GetUnitAxis(), osg::Vec3d( -1.0, 0.0, 0.0 ) );
+        m_yzTranslatePlane->setRotation( -rotation );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////

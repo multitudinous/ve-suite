@@ -51,6 +51,7 @@ namespace scenegraph
 namespace manipulator
 {
 class TranslateAxis;
+class TranslatePlane;
 class TranslatePan;
 
 /*!\file TranslateCompound.h
@@ -114,6 +115,15 @@ private:
 
     ///
     osg::ref_ptr< TranslateAxis > m_zTranslateAxis;
+
+    ///
+    osg::ref_ptr< TranslatePlane > m_yzTranslatePlane;
+
+    ///
+    osg::ref_ptr< TranslatePlane > m_xzTranslatePlane;
+
+    ///
+    osg::ref_ptr< TranslatePlane > m_xyTranslatePlane;
 
     ///
     osg::ref_ptr< TranslatePan > m_translatePan;
