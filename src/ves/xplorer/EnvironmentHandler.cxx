@@ -255,7 +255,8 @@ void EnvironmentHandler::GetDesktopSize( int &width, int &height )
 ////////////////////////////////////////////////////////////////////////////////
 void EnvironmentHandler::InitScene()
 {
-    std::cout << "| ***************************************************************** |" << std::endl;
+    std::cout 
+        << "| ***************************************************************** |" << std::endl;
     //
     // Initiate cursors.
     //
@@ -267,29 +268,32 @@ void EnvironmentHandler::InitScene()
     //
     // Initiate quatcam
     //
-    std::cout << "| 9. Initializing..................................... cfdQuatCams |" << std::endl;
+    std::cout 
+        << "| Initializing......................................... cfdQuatCams |" << std::endl;
     ves::xplorer::cfdQuatCamHandler::instance()->SetDCS( ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS() );
     
     //
     // Initiate the Performer Stored Binary objects.
     //
-    std::cout << "| 11. Initializing...................................... pfBinaries |" << std::endl;
+    std::cout 
+        << "| Initializing....................................... Stored Scenes |" << std::endl;
     _teacher = new cfdTeacher( std::string( "STORED_FILES" ),
                                      ves::xplorer::scenegraph::SceneManager::instance()->GetModelRoot() );
 
-    if (( desktopWidth > 0 ) && ( desktopHeight > 0 ) )
+    if( (desktopWidth > 0) && (desktopHeight > 0) )
     {
-        std::cout << "| 12. Initializing................................  Desktop Display |" << std::endl;
+        std::cout 
+            << "| Initializing....................................  Desktop Display |" << std::endl;
         // Create the command and data value pairs
         // to adjust the desktop settings.
         ves::open::xml::DataValuePairPtr dvpDesktopWidth( new ves::open::xml::DataValuePair( std::string( "FLOAT" ) ) );
         dvpDesktopWidth->SetDataName( "desktop_width" );
         dvpDesktopWidth->SetDataValue( static_cast< double >( desktopWidth ) );
-
+        
         ves::open::xml::DataValuePairPtr dvpDesktopHeight( new ves::open::xml::DataValuePair( std::string( "FLOAT" ) ) );
         dvpDesktopHeight->SetDataName( "desktop_height" );
         dvpDesktopHeight->SetDataValue( static_cast< double >( desktopHeight ) );
-
+        
         ves::open::xml::CommandPtr displayCommand( new ves::open::xml::Command() );
         displayCommand->SetCommandName( std::string( "Juggler_Desktop_Data" ) );
         displayCommand->AddDataValuePair( dvpDesktopWidth );
@@ -303,7 +307,8 @@ void EnvironmentHandler::InitScene()
     //
     std::pair< int, int > screenDims = displaySettings->GetScreenResolution();
 
-    std::cout << "| 13. Initializing................................. Heads Up Display |" << std::endl;
+    std::cout 
+        << "| Initializing.................................... Heads Up Display |" << std::endl;
     mHeadsUpDisplay = new ves::xplorer::HeadsUpDisplay( screenDims );
 
     static_cast< ves::xplorer::device::KeyboardMouse* >(
