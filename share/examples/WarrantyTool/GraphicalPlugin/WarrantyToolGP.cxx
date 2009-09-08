@@ -464,7 +464,7 @@ void WarrantyToolGP::CreateDB()
         {
             double test = boost::lexical_cast<double>( tempData.at( i ).second );      
         }
-        catch( boost::bad_lexical_cast::bad_lexical_cast& ex )
+        catch( boost::bad_lexical_cast& ex )
         {
             std::cout << "Is string data " << tempData.at( i ).first << std::endl;
             std::cout << ex.what() << std::endl;
@@ -510,7 +510,7 @@ void WarrantyToolGP::CreateDB()
             {
                 tempDouble = boost::lexical_cast<double>( tempData.at( i ).second );      
             }
-            catch( boost::bad_lexical_cast::bad_lexical_cast& ex )
+            catch( boost::bad_lexical_cast& ex )
             {
                 //std::cout << "Bad Field " << tempData.at( i ).first << std::endl;
                 //std::cout << ex.what() << std::endl;
