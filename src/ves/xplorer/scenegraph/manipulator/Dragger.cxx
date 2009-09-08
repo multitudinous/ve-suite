@@ -544,35 +544,41 @@ void Dragger::UpdateAssociations()
             dynamic_cast< osgBullet::AbsoluteModelTransform* >( transform );
         if( amt )
         {
-            const osg::Matrix& currentMatrix = amt->getMatrix();
+            osgBullet::RigidBody* rb = static_cast< osgBullet::RigidBody* >(
+                amt->getUserData() );
+            btRigidBody* btRB = rb->getRigidBody();
+            if( btRB->isStaticObject() )
+            {
+                continue;
+            }
+
+            osgBullet::MotionState* ms = static_cast< osgBullet::MotionState* >(
+                btRB->getMotionState() );
+            btTransform currentMatrix;
+            ms->getWorldTransform( currentMatrix );
             switch( m_transformationType )
             {
             case TransformationType::TRANSLATE_AXIS:
             case TransformationType::TRANSLATE_PAN:
             {
-                osgBullet::RigidBody* rb = 
-                    static_cast< osgBullet::RigidBody* >( amt->getUserData() );
-                osgBullet::MotionState* ms = 
-                    static_cast< osgBullet::MotionState* >( 
-                    rb->getRigidBody()->getMotionState() );
-                if( rb->getRigidBody()->isStaticObject() )
-                {
-                    break;
-                }
+                btVector3 deltaTranslation(
+                    m_deltaTranslation.x(),
+                    m_deltaTranslation.y(),
+                    m_deltaTranslation.z() );
+                currentMatrix.setOrigin(
+                    deltaTranslation + currentMatrix.getOrigin() );
 
-                osg::Matrix tempTrans = 
-                    osg::Matrix::translate( ms->getCenterOfMass() ) *
-                    osg::Matrix::translate( m_deltaTranslation ) *
-                    currentMatrix;
+                break;
+            }
+            case TransformationType::ROTATE_AXIS:
+            case TransformationType::ROTATE_TWIST:
+            {
+                btQuaternion deltaRotation(
+                    m_deltaRotation.x(), m_deltaRotation.y(),
+                    m_deltaRotation.z(), m_deltaRotation.w() );
+                currentMatrix.setRotation(
+                    deltaRotation * currentMatrix.getRotation() );
 
-                btTransform tempBT = osgBullet::asBtTransform( tempTrans );
-                ms->setWorldTransform( tempBT );
-                
-                rb->getRigidBody()->setWorldTransform( tempBT );
-                rb->getRigidBody()->setInterpolationWorldTransform( tempBT );
-                rb->getRigidBody()->activate();
-                rb->getRigidBody()->setLinearVelocity( btVector3( 0, 0, 0 ) );
-                rb->getRigidBody()->setAngularVelocity( btVector3( 0, 0, 0 ) );
                 break;
             }
             default:
@@ -580,6 +586,12 @@ void Dragger::UpdateAssociations()
                 break;
             }
             } //end switch( m_transformationType )
+
+            btRB->setWorldTransform( currentMatrix );
+            btRB->setInterpolationWorldTransform( currentMatrix );
+            btRB->activate();
+            btRB->setLinearVelocity( btVector3( 0.0, 0.0, 0.0 ) );
+            btRB->setAngularVelocity( btVector3( 0.0, 0.0, 0.0 ) );
 
             continue;
         }
@@ -722,42 +734,6 @@ const bool Dragger::IsCompound() const
 const bool& Dragger::IsEnabled() const
 {
     return m_enabled;
-}
-////////////////////////////////////////////////////////////////////////////////
-const bool Dragger::GetLinePlaneIntersection(
-    const osg::Vec3d& lineStart,
-    const osg::Vec3d& lineEnd,
-    osg::Vec3d& intersection )
-{
-    osg::Vec3d direction = lineEnd - lineStart;
-    direction.normalize();
-
-    double error = -1E-05;
-
-    osg::Plane plane = GetPlane();
-
-    double num2 = plane.dotProductNormal( direction );
-    if( fabs( num2 ) < error )
-    {
-        return false;
-    }
-
-    double num3 = plane.dotProductNormal( lineStart );
-    double intersectDistance = ( -plane[ 3 ] - num3 ) / num2;
-    if( intersectDistance < 0.0 )
-    {
-        if( intersectDistance < error )
-        {
-            return false;
-        }
-
-        intersectDistance = 0.0;
-    }
-
-    //Calculate the intersection position of the ray on the plane
-    intersection = lineStart + ( direction * intersectDistance );
-
-    return true;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Dragger::SetColor( Color::Enum colorTag, osg::Vec4 newColor, bool use )

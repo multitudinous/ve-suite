@@ -44,6 +44,8 @@
 namespace osg
 {
 class Drawable;
+class Plane;
+class Vec3d;
 }
 
 //Define manipulator constants
@@ -173,6 +175,18 @@ namespace Event
 ///
 ///\param drawable
 void VE_SCENEGRAPH_EXPORTS SetDrawableToAlwaysCull( osg::Drawable& drawable );
+
+///
+///\param lineStart
+///\param lineEnd
+///\param plane
+///\param intersection
+///\return const bool
+const bool VE_SCENEGRAPH_EXPORTS GetLinePlaneIntersection(
+    const osg::Vec3d& lineStart,
+    const osg::Vec3d& lineEnd,
+    const osg::Plane& plane,
+    osg::Vec3d& intersection );
 
 } //end manipulator
 } //end scenegraph

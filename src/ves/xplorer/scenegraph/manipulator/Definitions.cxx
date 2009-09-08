@@ -36,6 +36,7 @@
 
 // --- OSG Includes --- //
 #include <osg/Drawable>
+#include <osg/Plane>
 
 using namespace ves::xplorer::scenegraph::manipulator;
 
@@ -85,5 +86,40 @@ void ves::xplorer::scenegraph::manipulator::SetDrawableToAlwaysCull(
 {
     osg::ref_ptr< ForceCullCallback > fcc = new ForceCullCallback();
     drawable.setCullCallback( fcc.get() );
+}
+////////////////////////////////////////////////////////////////////////////////
+const bool ves::xplorer::scenegraph::manipulator::GetLinePlaneIntersection(
+    const osg::Vec3d& lineStart,
+    const osg::Vec3d& lineEnd,
+    const osg::Plane& plane,
+    osg::Vec3d& intersection )
+{
+    const double error = -1E-05;
+
+    osg::Vec3d direction = lineEnd - lineStart;
+    direction.normalize();
+
+    const double num2 = plane.dotProductNormal( direction );
+    if( fabs( num2 ) < error )
+    {
+        return false;
+    }
+
+    const double num3 = plane.dotProductNormal( lineStart );
+    double intersectDistance = ( -plane[ 3 ] - num3 ) / num2;
+    if( intersectDistance < 0.0 )
+    {
+        if( intersectDistance < error )
+        {
+            return false;
+        }
+
+        intersectDistance = 0.0;
+    }
+
+    //Calculate the intersection position of the ray on the plane
+    intersection = lineStart + ( direction * intersectDistance );
+
+    return true;
 }
 ////////////////////////////////////////////////////////////////////////////////

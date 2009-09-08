@@ -194,12 +194,6 @@ protected:
     ///
     osg::Vec4& GetColor( Color::Enum colorTag );
 
-    ///
-    const bool GetLinePlaneIntersection(
-        const osg::Vec3d& lineStart,
-        const osg::Vec3d& lineEnd,
-        osg::Vec3d& intersection );
-
     ///Pure virtual
     ///
     virtual void SetupDefaultGeometry(){;}

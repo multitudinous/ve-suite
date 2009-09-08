@@ -137,7 +137,8 @@ const bool RotateTwist::ComputeProjectedPoint(
 
     //Exit if the intersection is invalid
     double intersectDistance;
-    if( !GetLinePlaneIntersection( lineStart, lineEnd, projectedPoint ) )
+    if( !GetLinePlaneIntersection(
+            lineStart, lineEnd, GetPlane(), projectedPoint ) )
     {
         return false;
     }
