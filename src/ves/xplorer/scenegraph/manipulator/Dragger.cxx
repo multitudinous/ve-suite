@@ -587,6 +587,7 @@ void Dragger::UpdateAssociations()
             }
             } //end switch( m_transformationType )
 
+            ms->setWorldTransform( currentMatrix );
             btRB->setWorldTransform( currentMatrix );
             btRB->setInterpolationWorldTransform( currentMatrix );
             btRB->activate();
