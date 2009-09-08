@@ -47,7 +47,7 @@ class Drawable;
 }
 
 //Define manipulator constants
-const unsigned int NUM_CIRCLE_SEGMENTS = 100;
+const unsigned int NUM_CIRCLE_SEGMENTS = 64;
 const double DELTA_SEGMENT_ANGLE = gmtl::Math::TWO_PI / NUM_CIRCLE_SEGMENTS;
 
 const double BOX_WIDTH = 0.1;

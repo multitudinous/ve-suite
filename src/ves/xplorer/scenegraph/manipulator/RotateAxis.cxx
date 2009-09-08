@@ -169,7 +169,7 @@ void RotateAxis::SetupDefaultGeometry()
             double s( radius * cosVal );
             double t( radius * sinVal );
 
-            vertices->push_back( osg::Vec3( 0.0, s, t ) );
+            vertices->push_back( osg::Vec3( s, t, 0.0 ) );
         }
 
         geometry->setVertexArray( vertices.get() );
@@ -219,8 +219,8 @@ void RotateAxis::SetupDefaultGeometry()
             double so( outerRadius * cosVal );
             double to( outerRadius * sinVal );
 
-            vertices->push_back( osg::Vec3( 0.0, si, ti ) );
-            vertices->push_back( osg::Vec3( 0.0, so, to ) );
+            vertices->push_back( osg::Vec3( si, ti, 0.0 ) );
+            vertices->push_back( osg::Vec3( so, to, 0.0 ) );
         }
 
         geometry->setVertexArray( vertices.get() );
@@ -264,8 +264,8 @@ void RotateAxis::SetupDefaultGeometry()
                 double t2 = cosTheta * dist;
                 double p2 = -sinTheta * dist;
 
-                vertices->push_back( osg::Vec3( s, t1, p1 ) );
-                vertices->push_back( osg::Vec3( s, t2, p2 ) );
+                vertices->push_back( osg::Vec3( t1, p1, s ) );
+                vertices->push_back( osg::Vec3( t2, p2, s ) );
             }
 
             theta = newTheta;
@@ -302,7 +302,7 @@ void RotateAxis::SetupDefaultGeometry()
             double s( radius * cosVal );
             double t( radius * sinVal );
 
-            vertices->push_back( osg::Vec3( 0.0, s, t ) );
+            vertices->push_back( osg::Vec3( s, t, 0.0 ) );
         }
 
         geometry->setVertexArray( vertices.get() );

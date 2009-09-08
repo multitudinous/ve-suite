@@ -167,12 +167,12 @@ void ScaleCompound::DefaultForm()
 ////////////////////////////////////////////////////////////////////////////////
 void ScaleCompound::SetupDefaultGeometry()
 {
-    //Create translate x-axis dragger
-    m_xScaleAxis = new ScaleAxis();
-    m_xScaleAxis->SetColor(
-        Color::DEFAULT, osg::Vec4f( 1.0, 0.0, 0.0, 1.0 ), true );
+    //Create translate z-axis dragger
+    m_zScaleAxis = new ScaleAxis();
+    m_zScaleAxis->SetColor(
+        Color::DEFAULT, osg::Vec4f( 0.0, 0.0, 1.0, 1.0 ), true );
 
-    addChild( m_xScaleAxis.get() );
+    addChild( m_zScaleAxis.get() );
 
     //Create translate y-axis dragger
     m_yScaleAxis = new ScaleAxis();
@@ -188,19 +188,19 @@ void ScaleCompound::SetupDefaultGeometry()
 
     addChild( m_yScaleAxis.get() );
 
-    //Create translate z-axis dragger
-    m_zScaleAxis = new ScaleAxis();
-    m_zScaleAxis->SetColor(
-        Color::DEFAULT, osg::Vec4f( 0.0, 0.0, 1.0, 1.0 ), true );
+    //Create translate x-axis dragger
+    m_xScaleAxis = new ScaleAxis();
+    m_xScaleAxis->SetColor(
+        Color::DEFAULT, osg::Vec4f( 1.0, 0.0, 0.0, 1.0 ), true );
 
-    //Rotate z-axis dragger appropriately
+    //Rotate x-axis dragger appropriately
     {
         osg::Quat rotation;
-        rotation.makeRotate( GetUnitAxis(), osg::Vec3d( 0.0, 0.0, 1.0 ) );
-        m_zScaleAxis->setRotation( rotation );
+        rotation.makeRotate( GetUnitAxis(), osg::Vec3d( 1.0, 0.0, 0.0 ) );
+        m_xScaleAxis->setRotation( rotation );
     }
 
-    addChild( m_zScaleAxis.get() );
+    addChild( m_xScaleAxis.get() );
 
     //Create rotate twist dragger
     m_scaleUniform = new ScaleUniform();

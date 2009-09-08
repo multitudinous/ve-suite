@@ -165,13 +165,13 @@ void TranslateCompound::DefaultForm()
 ////////////////////////////////////////////////////////////////////////////////
 void TranslateCompound::SetupDefaultGeometry()
 {
-    //Create translate x-axis dragger
-    m_xTranslateAxis = new TranslateAxis();
-    m_xTranslateAxis->SetColor(
-        Color::DEFAULT, osg::Vec4f( 1.0, 0.0, 0.0, 1.0 ), true );
-    m_xTranslateAxis->ComboForm();
+    //Create translate z-axis dragger
+    m_zTranslateAxis = new TranslateAxis();
+    m_zTranslateAxis->SetColor(
+        Color::DEFAULT, osg::Vec4f( 0.0, 0.0, 1.0, 1.0 ), true );
+    m_zTranslateAxis->ComboForm();
 
-    addChild( m_xTranslateAxis.get() );
+    addChild( m_zTranslateAxis.get() );
 
     //Create translate y-axis dragger
     m_yTranslateAxis = new TranslateAxis();
@@ -188,20 +188,20 @@ void TranslateCompound::SetupDefaultGeometry()
 
     addChild( m_yTranslateAxis.get() );
 
-    //Create translate z-axis dragger
-    m_zTranslateAxis = new TranslateAxis();
-    m_zTranslateAxis->SetColor(
-        Color::DEFAULT, osg::Vec4f( 0.0, 0.0, 1.0, 1.0 ), true );
-    m_zTranslateAxis->ComboForm();
+    //Create translate x-axis dragger
+    m_xTranslateAxis = new TranslateAxis();
+    m_xTranslateAxis->SetColor(
+        Color::DEFAULT, osg::Vec4f( 1.0, 0.0, 0.0, 1.0 ), true );
+    m_xTranslateAxis->ComboForm();
 
-    //Rotate z-axis dragger appropriately
+    //Rotate x-axis dragger appropriately
     {
         osg::Quat rotation;
-        rotation.makeRotate( GetUnitAxis(), osg::Vec3d( 0.0, 0.0, 1.0 ) );
-        m_zTranslateAxis->setRotation( rotation );
+        rotation.makeRotate( GetUnitAxis(), osg::Vec3d( 1.0, 0.0, 0.0 ) );
+        m_xTranslateAxis->setRotation( rotation );
     }
 
-    addChild( m_zTranslateAxis.get() );
+    addChild( m_xTranslateAxis.get() );
 
     //Create translate pan dragger
     m_translatePan = new TranslatePan();

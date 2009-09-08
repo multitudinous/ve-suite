@@ -74,7 +74,7 @@ Dragger::Dragger( const TransformationType::Enum& transformationType )
     m_colorMap[ Color::OTHER ] = osg::Vec4f( 0.0, 0.0, 0.0, 1.0 );
 
     m_color = new osg::Uniform( "color", GetColor( Color::DEFAULT ) );
-    
+
     CreateDefaultShader();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -341,7 +341,7 @@ Dragger* Dragger::Drag( const osgUtil::LineSegmentIntersector& deviceInput )
     //Get the end projected point
     if( !ComputeProjectedPoint( deviceInput, m_endProjectedPoint ) )
     {
-        return NULL;
+        return this;
     }
 
     ComputeDeltaTransform();
@@ -393,7 +393,7 @@ Dragger* Dragger::Push(
         //Get the start projected point
         if( !ComputeProjectedPoint( deviceInput, m_startProjectedPoint ) )
         {
-            return NULL;
+            return this;
         }
 
         //Compute the association matrices
@@ -704,23 +704,7 @@ const osg::Vec3d Dragger::GetAxis(
 ////////////////////////////////////////////////////////////////////////////////
 const osg::Vec3d Dragger::GetUnitAxis() const
 {
-    osg::Vec3d unitAxis( 0.0, 0.0, 0.0 );
-    switch( m_transformationType )
-    {
-    case TransformationType::TRANSLATE_PAN:
-    case TransformationType::ROTATE_TWIST:
-    {
-        unitAxis.set( 0.0, 0.0, 1.0 );
-
-        break;
-    }
-    default:
-    {
-        unitAxis.set( 1.0, 0.0, 0.0 );
-
-        break;
-    }
-    } //end switch( m_transformationType )
+    osg::Vec3d unitAxis( 0.0, 0.0, 1.0 );
 
     return unitAxis;
 }

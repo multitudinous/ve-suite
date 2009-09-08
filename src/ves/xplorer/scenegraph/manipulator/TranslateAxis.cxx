@@ -235,10 +235,6 @@ void TranslateAxis::SetupDefaultGeometry()
     (*m_lineVertices)[ 0 ] = osg::Vec3d( 0.0, 0.0, 0.0 );
     (*m_lineVertices)[ 1 ] = unitAxis;
 
-    //Rotation for cones and cylinders
-    osg::Quat rotation;
-    rotation.makeRotate( osg::Vec3d( 0.0, 0.0, 1.0 ), unitAxis );
-
     //Create a positive line
     {
         m_lineGeometry = new osg::Geometry();
@@ -275,7 +271,6 @@ void TranslateAxis::SetupDefaultGeometry()
         CONE_CENTER *= 0.25;
         m_cone = new osg::Cone(
             (*m_lineVertices)[ 1 ] + CONE_CENTER, CONE_RADIUS, CONE_HEIGHT );
-        m_cone->setRotation( rotation );
 
         m_coneDrawable = new osg::ShapeDrawable( m_cone.get() );
         coneGeode->addDrawable( m_coneDrawable.get() );
@@ -299,7 +294,6 @@ void TranslateAxis::SetupDefaultGeometry()
             (*m_lineVertices)[ 1 ] * 0.5,
             CYLINDER_RADIUS,
             (*m_lineVertices)[ 1 ].length() );
-        m_cylinder->setRotation( rotation );
         m_cylinderDrawable = new osg::ShapeDrawable( m_cylinder.get() );
 
         SetDrawableToAlwaysCull( *m_cylinderDrawable.get() );

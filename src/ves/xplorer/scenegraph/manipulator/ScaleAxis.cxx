@@ -124,10 +124,6 @@ void ScaleAxis::SetupDefaultGeometry()
     (*m_lineVertices)[ 0 ] = osg::Vec3d( 0.0, 0.0, 0.0 );
     (*m_lineVertices)[ 1 ] = unitAxis;
 
-    //Rotation for boxes
-    osg::Quat rotation;
-    rotation.makeRotate( osg::Vec3d( 0.0, 0.0, 1.0 ), unitAxis );
-
     //Create a positive line
     {
         m_lineGeometry = new osg::Geometry();
@@ -174,7 +170,6 @@ void ScaleAxis::SetupDefaultGeometry()
         (*m_lineVertices)[ 1 ] -= BOX_CENTER;
         BOX_CENTER *= 0.5;
         m_box = new osg::Box( (*m_lineVertices)[ 1 ] + BOX_CENTER, BOX_WIDTH );
-        m_box->setRotation( rotation );
 
         m_shapeDrawable = new osg::ShapeDrawable( m_box.get() );
         geode->addDrawable( m_shapeDrawable.get() );
@@ -200,7 +195,7 @@ void ScaleAxis::SetupDefaultGeometry()
                 (*m_lineVertices)[ 1 ] * 0.5,
                 CYLINDER_RADIUS,
                 (*m_lineVertices)[ 1 ].length() );
-        cylinder->setRotation( rotation );
+
         osg::ref_ptr< osg::ShapeDrawable > shapeDrawable =
             new osg::ShapeDrawable( cylinder.get() );
 
