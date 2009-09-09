@@ -203,7 +203,7 @@ void TextTexture::CreateTexturedQuad()
     getOrCreateStateSet()->addUniform(
         new osg::Uniform( "glowColor", osg::Vec4( 0.0, 0.0, 0.0, 1.0) ) );
     
-    std::string shaderName = osgDB::findDataFile( "opacity.fs" );
+    std::string shaderName = osgDB::findDataFile( "opacity-ignore-white.fs" );
     osg::ref_ptr< osg::Shader > fragShader = 
         osg::Shader::readShaderFile( osg::Shader::FRAGMENT, shaderName );
     
