@@ -147,7 +147,7 @@ IPort* Module::getFBPort( void )
    return NULL;
 }
 ////////////////////////////////////////////////////////////////////////////////
-int Module::get_id()
+unsigned int Module::get_id()
 {
    return _id;
 }
@@ -263,7 +263,11 @@ int Module::setPortProfile( int p, const Types::Profile* prof )
 ////////////////////////////////////////////////////////////////////////////////
 const std::string& Module::GetModuleName( void )
 {
-   return _name;
+    /*if( (veModel->GetPluginType()) == "APPlugin" )
+    {
+        _name = "ASPENUNIT";
+    }*/
+    return _name;
 }
 ////////////////////////////////////////////////////////////////////////////////
 model::ModelPtr Module::GetVEModel( void )

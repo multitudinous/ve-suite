@@ -434,8 +434,7 @@ void Body_Executive_i::execute_next_mod( long module_id )
 
     try
     {
-        long int tempID = 
-            static_cast< long int >( _network->GetModule( rt )->get_id() );
+        unsigned int tempID = _network->GetModule( rt )->get_id();
         _mod_units[ _network->GetModule( rt )->GetModuleName() ]->
             SetCurID( tempID );
         if( resultsData != "NULL" )
@@ -500,8 +499,7 @@ std::string Body_Executive_i::GetResults( int rt )
                 vendorData->SetData( "vendorUnit", m->GetModuleName() );
                 resultsCommand->AddDataValuePair( vendorData );
                 DataValuePairPtr moduleIdData( new DataValuePair() );
-                moduleIdData->SetData( "moduleId", static_cast< long int >( 
-                    m->get_id() ) );
+                moduleIdData->SetData( "moduleId", m->get_id() );
                 resultsCommand->AddDataValuePair( moduleIdData );
 
                 //Then parse command
@@ -944,7 +942,7 @@ ACE_THROW_SPEC(( CORBA::SystemException, Error::EUnknown ) )
 
     //std::string moduleName;
     std::string vendorUnit;
-    long int moduleId;
+    unsigned int moduleId;
     CommandPtr tempCommand =  boost::dynamic_pointer_cast<ves::open::xml::Command>( objectVector.at( 0 ) );
     CommandPtr passCommand( new Command() );
     passCommand->SetCommandName( tempCommand->GetCommandName() );

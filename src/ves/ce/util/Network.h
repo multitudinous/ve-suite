@@ -64,7 +64,7 @@ public:
     std::string GetNetworkString( void );
 
     int nmodules();
-    void add_module( int, std::string );
+    void add_module( unsigned int, std::string );
 
     ///The module of interest is passed in and the
     /// vector index is returned

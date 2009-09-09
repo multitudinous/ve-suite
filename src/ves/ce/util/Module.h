@@ -101,7 +101,7 @@ public:
 
     ///Get the ID for the module
     ///\return The module id
-    int get_id();
+    unsigned int get_id();
     ///Get the modules name
     ///\return The module name
     const std::string& GetModuleName( void );
@@ -123,7 +123,7 @@ private:
     std::vector<OPort*> _oports;
 
     ///ID for the particular module
-    int _id;
+    unsigned int _id;
     ///Module name
     std::string _name;
 

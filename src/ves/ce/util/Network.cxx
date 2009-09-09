@@ -97,8 +97,7 @@ int Network::parse( std::string xmlNetwork )
         return 0;
     }
 
-    std::vector< model::ModelPtr > models =
-        mSystemPtr->GetModels();
+    std::vector< model::ModelPtr > models = mSystemPtr->GetModels();
     // now lets create a list of them
     for( size_t i = 0; i < models.size(); ++i )
     {
@@ -178,10 +177,12 @@ int Network::moduleIdx( int id )
     return -1;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Network::add_module( int m, std::string name )
+void Network::add_module( unsigned int m, std::string name )
 {
     if( moduleIdx( m ) >= 0 )
+    {
         return;
+    }
 
     _module_ptrs.push_back( new Module() );
 }
