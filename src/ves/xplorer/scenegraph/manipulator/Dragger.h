@@ -178,6 +178,9 @@ public:
     ///
     virtual void UseColor( Color::Enum colorTag );
 
+    ///
+    void ResetPhysics();
+    
 protected:
     ///
     virtual ~Dragger();

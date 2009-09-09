@@ -330,6 +330,9 @@ void Dragger::DefaultForm()
 ////////////////////////////////////////////////////////////////////////////////
 void Dragger::Disconnect()
 {
+    //Turn gravity back on for the selected objects
+    ResetPhysics();
+    
     m_associationSet.clear();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -425,7 +428,10 @@ Dragger* Dragger::Release( osg::NodePath::iterator& npItr )
         m_rootDragger->setAutoScaleToScreen( true );
         //Force update now on release event for this frame
         m_rootDragger->setAutoRotateMode( m_rootDragger->getAutoRotateMode() );
-
+        
+        //Turn gravity back on for the selected objects
+        ResetPhysics();
+        
         return this;
     }
 
@@ -571,8 +577,10 @@ void Dragger::UpdateAssociations()
             btRB->setWorldTransform( currentMatrix );
             btRB->setInterpolationWorldTransform( currentMatrix );
             btRB->activate();
-            btRB->setLinearVelocity( btVector3( 0.0, 0.0, 0.0 ) );
-            btRB->setAngularVelocity( btVector3( 0.0, 0.0, 0.0 ) );
+            //btRB->setGravity( btVector3( 0, 0, -32.174 ) );
+            btRB->setGravity( btVector3( 0, 0, 0 ) );
+            //btRB->setLinearVelocity( btVector3( 0.0, 0.0, 0.0 ) );
+            //btRB->setAngularVelocity( btVector3( 0.0, 0.0, 0.0 ) );
 
             continue;
         }
@@ -757,3 +765,52 @@ void Dragger::UseColor( Color::Enum colorTag )
     m_color->set( GetColor( colorTag ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
+void Dragger::ResetPhysics()
+{
+    AssociationSet::const_iterator itr = m_associationSet.begin();
+    for( itr; itr != m_associationSet.end(); ++itr )
+    {
+        osg::Transform* transform = *itr;
+        
+        //Test for PATs 1st
+        osg::PositionAttitudeTransform* pat =
+            transform->asPositionAttitudeTransform();
+        if( pat )
+        {
+            continue;
+        }
+        
+        //Test for AMTs 2nd
+        osgBullet::AbsoluteModelTransform* amt =
+            dynamic_cast< osgBullet::AbsoluteModelTransform* >( transform );
+        if( amt )
+        {
+            osgBullet::RigidBody* rb = 
+            static_cast< osgBullet::RigidBody* >( amt->getUserData() );
+            btRigidBody* btRB = rb->getRigidBody();
+            if( btRB->isStaticObject() )
+            {
+                continue;
+            }
+            
+            btRB->setGravity( btVector3( 0, 0, -32.174 ) );
+            //btRB->setGravity( btVector3( 0, 0, 0 ) );
+            continue;
+        }
+        
+        //Test for MTs 3rd
+        osg::MatrixTransform* mt = transform->asMatrixTransform();
+        if( mt )
+        {
+            continue;
+        }
+        
+        //Test for ATs 4th
+        osg::AutoTransform* at =
+            dynamic_cast< osg::AutoTransform* >( transform );
+        if( at )
+        {
+            continue;
+        }
+    }    
+}
