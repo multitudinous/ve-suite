@@ -263,10 +263,6 @@ int Module::setPortProfile( int p, const Types::Profile* prof )
 ////////////////////////////////////////////////////////////////////////////////
 const std::string& Module::GetModuleName( void )
 {
-    /*if( (veModel->GetPluginType()) == "APPlugin" )
-    {
-        _name = "ASPENUNIT";
-    }*/
     return _name;
 }
 ////////////////////////////////////////////////////////////////////////////////

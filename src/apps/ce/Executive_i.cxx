@@ -801,7 +801,7 @@ ACE_THROW_SPEC((
                     //to the unit. This should be changed in the future so 
                     //that the veopen model data is passed directly to
                     //the respective unit.
-                    long int tempID = static_cast< long >( _network->GetModule( rt )->get_id() );
+                    unsigned int tempID = _network->GetModule( rt )->get_id();
                     _mod_units[ moduleName ]->SetParams( tempID, fileName.c_str() );
                     _mod_units[ moduleName ]->SetCurID( tempID );
                     // This starts a chain reaction which eventually leads to Execute_Thread
