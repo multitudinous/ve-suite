@@ -205,6 +205,9 @@ protected:
     VectorSpace::Enum m_vectorSpace;
 
     ///
+    AxisDirection::Enum m_axisDirection;
+
+    ///
     bool m_enabled;
 
     ///

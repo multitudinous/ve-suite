@@ -292,7 +292,7 @@ void TranslateAxis::SetupDefaultGeometry()
     {
         m_cylinder = new osg::Cylinder(
             (*m_lineVertices)[ 1 ] * 0.5,
-            CYLINDER_RADIUS,
+            PICK_RADIUS,
             (*m_lineVertices)[ 1 ].length() );
         m_cylinderDrawable = new osg::ShapeDrawable( m_cylinder.get() );
 

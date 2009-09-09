@@ -52,6 +52,9 @@ TranslatePan::TranslatePan()
     //If cave mode
     setAutoRotateMode( osg::AutoTransform::ROTATE_TO_CAMERA );
 
+    osg::ref_ptr< osg::StateSet > stateSet = getOrCreateStateSet();
+    stateSet->setRenderBinDetails( 11, std::string( "RenderBin" ) );
+
     SetupDefaultGeometry();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -209,6 +212,40 @@ void TranslatePan::SetupDefaultGeometry()
         SetDrawableToAlwaysCull( *geometry.get() );
         geode->addDrawable( geometry.get() );
     }
+
+    /*
+    //Create invisible triangle strip for picking the rotation twist axis
+    {
+        osg::ref_ptr< osg::Geometry > geometry = new osg::Geometry();
+        osg::ref_ptr< osg::Vec3Array > vertices = new osg::Vec3Array();
+
+        double innerRadius( TRANSLATE_PAN_RADIUS - PICK_RADIUS );
+        double outerRadius( TRANSLATE_PAN_RADIUS + PICK_RADIUS );
+        for( unsigned int i = 0; i <= NUM_CIRCLE_SEGMENTS; ++i )
+        {
+            double rot( i * DELTA_SEGMENT_ANGLE );
+            double cosVal( cos( rot ) );
+            double sinVal( sin( rot ) );
+
+            double si( innerRadius * cosVal );
+            double ti( innerRadius * sinVal );
+
+            double so( outerRadius * cosVal );
+            double to( outerRadius * sinVal );
+
+            vertices->push_back( osg::Vec3( si, ti, 0.0 ) );
+            vertices->push_back( osg::Vec3( so, to, 0.0 ) );
+        }
+
+        geometry->setVertexArray( vertices.get() );
+        geometry->addPrimitiveSet(
+            new osg::DrawArrays(
+                osg::PrimitiveSet::TRIANGLE_STRIP, 0, vertices->size() ) );
+
+        SetDrawableToAlwaysCull( *geometry.get() );
+        geode->addDrawable( geometry.get() );
+    }
+    */
 
     //Add rotation axis to the scene
     addChild( geode.get() );

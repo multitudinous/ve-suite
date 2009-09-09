@@ -55,7 +55,7 @@ const double DELTA_SEGMENT_ANGLE = gmtl::Math::TWO_PI / NUM_CIRCLE_SEGMENTS;
 const double BOX_WIDTH = 0.1;
 const double CONE_HEIGHT = 0.2;
 const double CONE_RADIUS = 0.05;
-const double CYLINDER_RADIUS = 0.025;
+const double PICK_RADIUS = CONE_RADIUS;
 const double LINE_WIDTH = 2.0;
 const double ROTATE_AXIS_RADIUS = 1.0;
 const double CLIPPING_CIRCLE_RADIUS = ROTATE_AXIS_RADIUS;
@@ -102,7 +102,7 @@ namespace TransformationType
 {
     enum Enum
     {
-        NONE = 0x00,
+        NONE = 0x000,
 
         TRANSLATE_AXIS = 0x001,
         TRANSLATE_PLANE = 0x002,
@@ -114,13 +114,6 @@ namespace TransformationType
         SCALE_AXIS = 0x100,
         SCALE_UNIFORM = 0x200,
         SCALE_COMPOUND = SCALE_AXIS | SCALE_UNIFORM,
-
-        /*
-        NONE = 0x0,
-        TRANSLATE = 0x1,
-        ROTATE = 0x2,
-        SCALE = 0x3,
-        */
 
         ALL = TRANSLATE_COMPOUND | ROTATE_COMPOUND | SCALE_COMPOUND
     };
@@ -157,6 +150,7 @@ namespace Color
         DEFAULT,
         FOCUS,
         ACTIVE,
+        DISABLED,
         OTHER
     };
 }

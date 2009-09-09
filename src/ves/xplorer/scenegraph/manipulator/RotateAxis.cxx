@@ -205,9 +205,8 @@ void RotateAxis::SetupDefaultGeometry()
         osg::ref_ptr< osg::Geometry > geometry = new osg::Geometry();
         osg::ref_ptr< osg::Vec3Array > vertices = new osg::Vec3Array();
 
-        double minorRadius( 0.025 );
-        double innerRadius( radius - minorRadius );
-        double outerRadius( radius + minorRadius );
+        double innerRadius( radius - PICK_RADIUS );
+        double outerRadius( radius + PICK_RADIUS );
         for( unsigned int i = 0; i <= NUM_CIRCLE_SEGMENTS; ++i )
         {
             double rot( i * DELTA_SEGMENT_ANGLE );
@@ -241,7 +240,6 @@ void RotateAxis::SetupDefaultGeometry()
         unsigned int numSides( 8 );
         unsigned int numVerticesPerSegment = 2 * ( numSides + 1 );
 
-        double minorRadius( 0.025 );
         double theta( 0.0 );
         double cosTheta( 1.0 );
         double sinTheta( 0.0 );
@@ -257,9 +255,9 @@ void RotateAxis::SetupDefaultGeometry()
                 phi += sideDelta;
                 double cosPhi( cos( phi ) );
                 double sinPhi( sin( phi ) );
-                double dist( radius + minorRadius * cosPhi );
+                double dist( radius + PICK_RADIUS * cosPhi );
 
-                double s = minorRadius * sinPhi;
+                double s = PICK_RADIUS * sinPhi;
                 double t1 = newCosTheta * dist;
                 double p1 = -newSinTheta * dist;
                 double t2 = cosTheta * dist;

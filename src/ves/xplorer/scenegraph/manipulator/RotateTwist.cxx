@@ -203,9 +203,8 @@ void RotateTwist::SetupDefaultGeometry()
         osg::ref_ptr< osg::Geometry > geometry = new osg::Geometry();
         osg::ref_ptr< osg::Vec3Array > vertices = new osg::Vec3Array();
 
-        double minorRadius( 0.025 );
-        double innerRadius( ROTATE_TWIST_RADIUS - minorRadius );
-        double outerRadius( ROTATE_TWIST_RADIUS + minorRadius );
+        double innerRadius( ROTATE_TWIST_RADIUS - PICK_RADIUS );
+        double outerRadius( ROTATE_TWIST_RADIUS + PICK_RADIUS );
         for( unsigned int i = 0; i <= NUM_CIRCLE_SEGMENTS; ++i )
         {
             double rot( i * DELTA_SEGMENT_ANGLE );
@@ -325,7 +324,7 @@ void RotateTwist::SetupDefaultGeometry()
 
         //Override color uniform
         stateSet->addUniform(
-            new osg::Uniform( "color", osg::Vec4f( 0.7, 0.7, 0.7, 1.0 ) ) );
+            new osg::Uniform( "color", GetColor( Color::DISABLED ) ) );
 
         //Set line width
         osg::ref_ptr< osg::LineWidth > lineWidth = new osg::LineWidth();

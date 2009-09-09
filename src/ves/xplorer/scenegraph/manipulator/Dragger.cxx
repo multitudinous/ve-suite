@@ -59,6 +59,7 @@ Dragger::Dragger( const TransformationType::Enum& transformationType )
     osg::AutoTransform(),
     m_transformationType( transformationType ),
     m_vectorSpace( VectorSpace::GLOBAL ),
+    m_axisDirection( AxisDirection::ALL ),
     m_enabled( false ),
     m_comboForm( false ),
     m_startProjectedPoint( 0.0, 0.0, 0.0 ),
@@ -68,9 +69,10 @@ Dragger::Dragger( const TransformationType::Enum& transformationType )
 {
     m_rootDragger = this;
 
-    m_colorMap[ Color::DEFAULT ] = osg::Vec4f( 1.0, 0.0, 0.0, 1.0 );
+    m_colorMap[ Color::DEFAULT ] = osg::Vec4f( 0.7, 0.7, 0.7, 1.0 );
     m_colorMap[ Color::FOCUS ] = osg::Vec4f( 1.0, 1.0, 0.0, 1.0 );
-    m_colorMap[ Color::ACTIVE ] = osg::Vec4f( 0.7, 0.7, 0.7, 1.0 );
+    m_colorMap[ Color::ACTIVE ] = osg::Vec4f( 1.0, 0.0, 1.0, 1.0 );
+    m_colorMap[ Color::DISABLED ] = osg::Vec4f( 0.6, 0.6, 0.6, 1.0 );
     m_colorMap[ Color::OTHER ] = osg::Vec4f( 0.0, 0.0, 0.0, 1.0 );
 
     m_color = new osg::Uniform( "color", GetColor( Color::DEFAULT ) );
@@ -505,22 +507,15 @@ void Dragger::UpdateAssociations()
             transform->asPositionAttitudeTransform();
         if( pat )
         {
-            switch( m_transformationType )
-            {
-            case TransformationType::TRANSLATE_AXIS:
-            case TransformationType::TRANSLATE_PLANE:
-            case TransformationType::TRANSLATE_PAN:
+            if( m_transformationType & TransformationType::TRANSLATE_COMPOUND )
             {
                 osg::Vec3d position = pat->getPosition();
                 position = position * matrices.first;
                 position += m_deltaTranslation;
                 position = position * matrices.second;
                 pat->setPosition( position );
-
-                break;
             }
-            case TransformationType::ROTATE_AXIS:
-            case TransformationType::ROTATE_TWIST:
+            else if( m_transformationType & TransformationType::ROTATE_COMPOUND )
             {
                 osg::Quat rotation =
                     pat->getAttitude() *
@@ -528,14 +523,11 @@ void Dragger::UpdateAssociations()
                     m_deltaRotation *
                     matrices.second.getRotate();
                 pat->setAttitude( rotation );
-
-                break;
             }
-            default:
+            else if( m_transformationType & TransformationType::SCALE_COMPOUND )
             {
-                break;
+                ;
             }
-            } //end switch( m_transformationType )
 
             continue;
         }
@@ -557,11 +549,7 @@ void Dragger::UpdateAssociations()
                 btRB->getMotionState() );
             btTransform currentMatrix;
             ms->getWorldTransform( currentMatrix );
-            switch( m_transformationType )
-            {
-            case TransformationType::TRANSLATE_AXIS:
-            case TransformationType::TRANSLATE_PLANE:
-            case TransformationType::TRANSLATE_PAN:
+            if( m_transformationType & TransformationType::TRANSLATE_COMPOUND )
             {
                 btVector3 deltaTranslation(
                     m_deltaTranslation.x(),
@@ -569,25 +557,15 @@ void Dragger::UpdateAssociations()
                     m_deltaTranslation.z() );
                 currentMatrix.setOrigin(
                     deltaTranslation + currentMatrix.getOrigin() );
-
-                break;
             }
-            case TransformationType::ROTATE_AXIS:
-            case TransformationType::ROTATE_TWIST:
+            else if( m_transformationType & TransformationType::ROTATE_COMPOUND )
             {
                 btQuaternion deltaRotation(
                     m_deltaRotation.x(), m_deltaRotation.y(),
                     m_deltaRotation.z(), m_deltaRotation.w() );
                 currentMatrix.setRotation(
                     deltaRotation * currentMatrix.getRotation() );
-
-                break;
             }
-            default:
-            {
-                break;
-            }
-            } //end switch( m_transformationType )
 
             ms->setWorldTransform( currentMatrix );
             btRB->setWorldTransform( currentMatrix );
@@ -604,25 +582,18 @@ void Dragger::UpdateAssociations()
         if( mt )
         {
             const osg::Matrix& currentMatrix = mt->getMatrix();
-            switch( m_transformationType )
+            if( m_transformationType & TransformationType::TRANSLATE_COMPOUND )
             {
-            case TransformationType::TRANSLATE_AXIS:
-            case TransformationType::TRANSLATE_PLANE:
-            case TransformationType::TRANSLATE_PAN:
-            {
-                mt->setMatrix(
-                    matrices.first *
-                    osg::Matrix::translate( m_deltaTranslation ) *
-                    currentMatrix *
-                    matrices.second );
-
-                break;
+                ;
             }
-            default:
+            else if( m_transformationType & TransformationType::ROTATE_COMPOUND )
             {
-                break;
+                ;
             }
-            } //end switch( m_transformationType )
+            else if( m_transformationType & TransformationType::SCALE_COMPOUND )
+            {
+                ;
+            }
 
             continue;
         }
@@ -632,36 +603,26 @@ void Dragger::UpdateAssociations()
             dynamic_cast< osg::AutoTransform* >( transform );
         if( at )
         {
-            switch( m_transformationType )
-            {
-            case TransformationType::TRANSLATE_AXIS:
-            case TransformationType::TRANSLATE_PLANE:
-            case TransformationType::TRANSLATE_PAN:
+            if( m_transformationType & TransformationType::TRANSLATE_COMPOUND )
             {
                 osg::Vec3d position = at->getPosition();
                 position = position * matrices.first;
                 position += m_deltaTranslation;
                 position = position * matrices.second;
                 at->setPosition( position );
-
-                break;
             }
-            case TransformationType::ROTATE_AXIS:
-            case TransformationType::ROTATE_TWIST:
+            else if( m_transformationType & TransformationType::ROTATE_COMPOUND )
             {
                 osg::Quat rotation = at->getRotation();
                 rotation *= matrices.first.getRotate();
                 rotation *= m_deltaRotation;
                 rotation *= matrices.second.getRotate();
                 at->setRotation( rotation );
-
-                break;
             }
-            default:
+            else if( m_transformationType & TransformationType::SCALE_COMPOUND )
             {
-                break;
+                ;
             }
-            } //end switch( m_transformationType )
 
             continue;
         }

@@ -140,7 +140,7 @@ void ScaleAxis::SetupDefaultGeometry()
 
         //Override color uniform
         stateSet->addUniform(
-            new osg::Uniform( "color", osg::Vec4f( 0.7, 0.7, 0.7, 1.0 ) ) );
+            new osg::Uniform( "color", GetColor( Color::DISABLED ) ) );
 
         //Set line width
         osg::ref_ptr< osg::LineWidth > lineWidth = new osg::LineWidth();
@@ -193,7 +193,7 @@ void ScaleAxis::SetupDefaultGeometry()
         osg::ref_ptr< osg::Cylinder > cylinder =
             new osg::Cylinder(
                 (*m_lineVertices)[ 1 ] * 0.5,
-                CYLINDER_RADIUS,
+                PICK_RADIUS,
                 (*m_lineVertices)[ 1 ].length() );
 
         osg::ref_ptr< osg::ShapeDrawable > shapeDrawable =
