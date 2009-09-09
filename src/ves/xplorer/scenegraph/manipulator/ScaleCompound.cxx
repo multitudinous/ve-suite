@@ -46,7 +46,7 @@ using namespace ves::xplorer::scenegraph::manipulator;
 ScaleCompound::ScaleCompound()
     :
     CompoundDragger( TransformationType::SCALE_COMPOUND ),
-    m_explodeDistance( TRANSLATE_PAN_RADIUS ),
+    m_explodeDistance( 0.2 ),
     m_xScaleAxis( NULL ),
     m_yScaleAxis( NULL ),
     m_zScaleAxis( NULL ),
@@ -109,11 +109,14 @@ void ScaleCompound::ComboForm()
         ScaleAxis* scaleAxis = dynamic_cast< ScaleAxis* >( GetChild( i ) );
         if( scaleAxis )
         {
+            //Turn off line and cylinder geometry
+            scaleAxis->EnableLinesAndCylinders( false );
+
             //Get the explode vector
             explodeVector = scaleAxis->GetUnitAxis() * m_explodeDistance;
 
             //Move the lines and cylinders in from the origin and unit axis
-            scaleAxis->ExpandLineVertices( explodeVector );
+            //scaleAxis->ExpandLineVertices( explodeVector );
 
             //Move the boxes in from the unit axis
             scaleAxis->BoxCenterOffset( -explodeVector );
@@ -137,11 +140,14 @@ void ScaleCompound::DefaultForm()
         ScaleAxis* scaleAxis = dynamic_cast< ScaleAxis* >( GetChild( i ) );
         if( scaleAxis )
         {
+            //Turn on line and cylinder geometry
+            scaleAxis->EnableLinesAndCylinders( true );
+
             //Get the explode vector
             explodeVector = scaleAxis->GetUnitAxis() * m_explodeDistance;
 
             //Move the lines and cylinders back to the origin and unit axis
-            scaleAxis->ExpandLineVertices( -explodeVector );
+            //scaleAxis->ExpandLineVertices( -explodeVector );
 
             //Move the boxes back to the unit axis
             scaleAxis->BoxCenterOffset( explodeVector );

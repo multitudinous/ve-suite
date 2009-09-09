@@ -37,6 +37,7 @@
 #include <ves/xplorer/scenegraph/manipulator/RotateTwist.h>
 
 // --- OSG Includes --- //
+#include <osg/ClipNode>
 
 using namespace ves::xplorer::scenegraph::manipulator;
 
@@ -91,10 +92,25 @@ bool RotateCompound::isSameKindAs( const osg::Object* obj ) const
 ////////////////////////////////////////////////////////////////////////////////
 void RotateCompound::SetupDefaultGeometry()
 {
+    //Create rotate twist dragger
+    m_rotateTwist = new RotateTwist();
+    m_rotateTwist->SetColor(
+        Color::DEFAULT, osg::Vec4f( 1.0, 1.0, 1.0, 1.0 ), true );
+
+    addChild( m_rotateTwist.get() );
+
     //Create translate z-axis dragger
     m_zRotateAxis = new RotateAxis();
     m_zRotateAxis->SetColor(
         Color::DEFAULT, osg::Vec4f( 0.0, 0.0, 1.0, 1.0 ), true );
+
+    //Set z-axis stateset
+    {
+        osg::ref_ptr< osg::StateSet > stateSet =
+            m_zRotateAxis->getOrCreateStateSet();
+        m_rotateTwist->GetClipNode()->setStateSetModes( 
+            *stateSet.get(), osg::StateAttribute::ON );
+    }
 
     addChild( m_zRotateAxis.get() );
 
@@ -103,22 +119,6 @@ void RotateCompound::SetupDefaultGeometry()
     m_yRotateAxis->SetColor(
         Color::DEFAULT, osg::Vec4f( 0.0, 1.0, 0.0, 1.0 ), true );
 
-    addChild( m_yRotateAxis.get() );
-
-    //Create translate x-axis dragger
-    m_xRotateAxis = new RotateAxis();
-    m_xRotateAxis->SetColor(
-        Color::DEFAULT, osg::Vec4f( 1.0, 0.0, 0.0, 1.0 ), true );
-
-    addChild( m_xRotateAxis.get() );
-
-    //Create rotate twist dragger
-    m_rotateTwist = new RotateTwist();
-    m_rotateTwist->SetColor(
-        Color::DEFAULT, osg::Vec4f( 1.0, 1.0, 1.0, 1.0 ), true );
-
-    addChild( m_rotateTwist.get() );
-
     //Rotate y-axis dragger appropriately
     {
         osg::Quat rotation;
@@ -126,11 +126,36 @@ void RotateCompound::SetupDefaultGeometry()
         m_yRotateAxis->setRotation( rotation );
     }
 
+    //Set y-axis stateset
+    {
+        osg::ref_ptr< osg::StateSet > stateSet =
+            m_yRotateAxis->getOrCreateStateSet();
+        m_rotateTwist->GetClipNode()->setStateSetModes( 
+            *stateSet.get(), osg::StateAttribute::ON );
+    }
+
+    addChild( m_yRotateAxis.get() );
+
+    //Create translate x-axis dragger
+    m_xRotateAxis = new RotateAxis();
+    m_xRotateAxis->SetColor(
+        Color::DEFAULT, osg::Vec4f( 1.0, 0.0, 0.0, 1.0 ), true );
+
     //Rotate x-axis dragger appropriately
     {
         osg::Quat rotation;
         rotation.makeRotate( GetUnitAxis(), osg::Vec3d( 1.0, 0.0, 0.0 ) );
         m_xRotateAxis->setRotation( rotation );
     }
+
+    //Set x-axis stateset
+    {
+        osg::ref_ptr< osg::StateSet > stateSet =
+            m_xRotateAxis->getOrCreateStateSet();
+        m_rotateTwist->GetClipNode()->setStateSetModes( 
+            *stateSet.get(), osg::StateAttribute::ON );
+    }
+
+    addChild( m_xRotateAxis.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////

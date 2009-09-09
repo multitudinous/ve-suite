@@ -93,6 +93,9 @@ public:
     virtual osg::Object* cloneType() const;
 
     ///
+    void EnableLinesAndCylinders( const bool& enable );
+
+    ///
     void ExpandLineVertices( const osg::Vec3& expansion );
 
     ///
@@ -103,6 +106,14 @@ public:
 protected:
     ///
     virtual ~ScaleAxis();
+
+    ///
+    virtual void ComputeDeltaTransform();
+
+    ///
+    virtual const bool ComputeProjectedPoint(
+        const osgUtil::LineSegmentIntersector& deviceInput,
+        osg::Vec3d& projectedPoint );
 
     ///
     virtual void SetupDefaultGeometry();
@@ -128,6 +139,9 @@ private:
 
     ///
     osg::ref_ptr< osg::ShapeDrawable > m_negativeBoxDrawable;
+
+    ///
+    osg::ref_ptr< osg::Geode > m_lineAndCylinderGeode;
 
 };
 } //end manipulator

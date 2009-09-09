@@ -35,11 +35,9 @@
 #include <ves/xplorer/scenegraph/manipulator/RotateAxis.h>
 
 // --- OSG Includes --- //
-#include <osg/Hint>
 #include <osg/Geode>
 #include <osg/Geometry>
 #include <osg/LineWidth>
-#include <osg/PolygonStipple>
 
 // --- C/C++ Includes --- //
 #include <iostream>
@@ -89,7 +87,7 @@ bool RotateAxis::isSameKindAs( const osg::Object* obj ) const
 ////////////////////////////////////////////////////////////////////////////////
 void RotateAxis::ComputeDeltaTransform()
 {
-    const osg::Vec3d& origin = m_rootDragger->getPosition();
+    const osg::Vec3d& origin = GetAxis( true, true );
 
     //Get the direction vectors of the rotation origin to start and end points
     osg::Vec3d originToStart = m_startProjectedPoint - origin;
@@ -189,14 +187,6 @@ void RotateAxis::SetupDefaultGeometry()
         lineWidth->setWidth( 2.0 );
         stateSet->setAttributeAndModes(
             lineWidth.get(), osg::StateAttribute::ON );
-
-        //Set line hints
-        stateSet->setMode( GL_LINE_SMOOTH,
-            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
-        osg::ref_ptr< osg::Hint > hint =
-            new osg::Hint( GL_LINE_SMOOTH_HINT, GL_NICEST );
-        stateSet->setAttributeAndModes( hint.get(),
-            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
     }
 
     /*
@@ -314,40 +304,6 @@ void RotateAxis::SetupDefaultGeometry()
         //Set StateSet
         osg::ref_ptr< osg::StateSet > stateSet =
             geometry->getOrCreateStateSet();
-
-        //Set polygon stipple
-        osg::ref_ptr< osg::PolygonStipple > polygonStipple =
-            new osg::PolygonStipple();
-        GLubyte halftone[] =
-        {
-            0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
-            0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
-            0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
-            0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
-            0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
-            0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
-            0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
-            0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
-            0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
-            0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
-            0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
-            0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
-            0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
-            0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
-            0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
-            0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55
-        };
-        polygonStipple->setMask( halftone );
-        stateSet->setAttributeAndModes( polygonStipple.get(),
-            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
-
-        //Set polygon hints
-        stateSet->setMode( GL_POLYGON_SMOOTH,
-            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
-        osg::ref_ptr< osg::Hint > hint =
-            new osg::Hint( GL_POLYGON_SMOOTH_HINT, GL_NICEST );
-        stateSet->setAttributeAndModes( hint.get(),
-            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
     }
 
     //Add rotation axis to the scene

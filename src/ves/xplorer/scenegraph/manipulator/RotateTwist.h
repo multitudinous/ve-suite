@@ -40,7 +40,12 @@
 #include <ves/xplorer/scenegraph/manipulator/Dragger.h>
 
 // --- OSG Includes --- //
+#include <osg/ref_ptr>
 
+namespace osg
+{
+class ClipNode;
+}
 
 namespace ves
 {
@@ -82,6 +87,9 @@ public:
     virtual osg::Object* cloneType() const;
 
     ///
+    const osg::ClipNode* const GetClipNode() const;
+
+    ///
     ///\param obj
     ///\return
     virtual bool isSameKindAs( const osg::Object* obj ) const;
@@ -102,7 +110,8 @@ protected:
     virtual void SetupDefaultGeometry();
 
 private:
-
+    ///
+    osg::ref_ptr< osg::ClipNode > m_clipNode;
 
 };
 } //end manipulator

@@ -35,7 +35,6 @@
 #include <ves/xplorer/scenegraph/manipulator/TranslateAxis.h>
 
 // --- OSG Includes --- //
-#include <osg/Hint>
 #include <osg/Geode>
 #include <osg/Geometry>
 #include <osg/ShapeDrawable>
@@ -241,13 +240,13 @@ const bool TranslateAxis::ComputeProjectedPoint(
 
     //If the lines are not parallel
     double D = ( a * c ) - ( b * b );
-    if( D == 0.0 )
+    double sc( 0.0 );
+    if( D > 1E-05 )
     {
-        return false;
+        sc = ( b * e - c * d ) / D;
     }
 
     //Compute the line parameters of the two closest points
-    double sc = ( b * e - c * d ) / D;
     projectedPoint = startDraggerAxis + ( u * sc );
 
     return true;
@@ -300,14 +299,6 @@ void TranslateAxis::SetupDefaultGeometry()
         lineWidth->setWidth( LINE_WIDTH );
         stateSet->setAttributeAndModes(
             lineWidth.get(), osg::StateAttribute::ON );
-
-        //Set line hints
-        stateSet->setMode( GL_LINE_SMOOTH,
-            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
-        osg::ref_ptr< osg::Hint > hint =
-            new osg::Hint( GL_LINE_SMOOTH_HINT, GL_NICEST );
-        stateSet->setAttributeAndModes( hint.get(),
-            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
     }
 
     //Create a positive cone
@@ -324,14 +315,6 @@ void TranslateAxis::SetupDefaultGeometry()
         //Set StateSet
         osg::ref_ptr< osg::StateSet > stateSet =
             m_positiveConeDrawable->getOrCreateStateSet();
-
-        //Set polygon hints
-        stateSet->setMode( GL_POLYGON_SMOOTH,
-            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
-        osg::ref_ptr< osg::Hint > hint =
-            new osg::Hint( GL_POLYGON_SMOOTH_HINT, GL_NICEST );
-        stateSet->setAttributeAndModes( hint.get(),
-            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
     }
 
     //Create an invisible cylinder for picking the positive line
@@ -366,14 +349,6 @@ void TranslateAxis::SetupDefaultGeometry()
         lineWidth->setWidth( LINE_WIDTH );
         stateSet->setAttributeAndModes(
             lineWidth.get(), osg::StateAttribute::ON );
-
-        //Set line hints
-        stateSet->setMode( GL_LINE_SMOOTH,
-            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
-        osg::ref_ptr< osg::Hint > hint =
-            new osg::Hint( GL_LINE_SMOOTH_HINT, GL_NICEST );
-        stateSet->setAttributeAndModes( hint.get(),
-            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
     }
 
     //Create a negative cone
@@ -390,14 +365,6 @@ void TranslateAxis::SetupDefaultGeometry()
         //Set StateSet
         osg::ref_ptr< osg::StateSet > stateSet =
             m_negativeConeDrawable->getOrCreateStateSet();
-
-        //Set polygon hints
-        stateSet->setMode( GL_POLYGON_SMOOTH,
-            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
-        osg::ref_ptr< osg::Hint > hint =
-            new osg::Hint( GL_POLYGON_SMOOTH_HINT, GL_NICEST );
-        stateSet->setAttributeAndModes( hint.get(),
-            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
     }
 
     //Create an invisible cylinder for picking the negative line
@@ -416,7 +383,7 @@ void TranslateAxis::SetupDefaultGeometry()
     //Add line and invisible cylinder to this
     addChild( m_lineAndCylinderGeode.get() );
 
-    //Add cone to this
+    //Add cones to this
     addChild( coneGeode.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////

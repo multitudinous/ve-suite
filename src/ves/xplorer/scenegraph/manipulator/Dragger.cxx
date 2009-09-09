@@ -65,6 +65,9 @@ Dragger::Dragger( const TransformationType::Enum& transformationType )
     m_startProjectedPoint( 0.0, 0.0, 0.0 ),
     m_endProjectedPoint( 0.0, 0.0, 0.0 ),
     m_rootDragger( NULL ),
+    m_deltaRotation( 0.0, 0.0, 0.0, 0.0 ),
+    m_deltaTranslation( 0.0, 0.0, 0.0 ),
+    m_deltaScale( 0.0, 0.0, 0.0 ),
     m_color( NULL )
 {
     m_rootDragger = this;
@@ -90,6 +93,9 @@ Dragger::Dragger( const Dragger& dragger, const osg::CopyOp& copyop )
     m_startProjectedPoint( dragger.m_startProjectedPoint ),
     m_endProjectedPoint( dragger.m_endProjectedPoint ),
     m_rootDragger( dragger.m_rootDragger ),
+    m_deltaRotation( dragger.m_deltaRotation ),
+    m_deltaTranslation( dragger.m_deltaTranslation ),
+    m_deltaScale( dragger.m_deltaScale ),
     m_colorMap( dragger.m_colorMap ),
     m_color( dragger.m_color )
 {
@@ -515,6 +521,14 @@ void Dragger::UpdateAssociations()
         {
             if( m_transformationType & TransformationType::TRANSLATE_COMPOUND )
             {
+                /*
+                osg::Vec3d translation =
+                    pat->getPosition() +
+                    matrices.first.getTrans() +
+                    m_deltaTranslation +
+                    matrices.second.getTrans();
+                pat->setPosition( translation );
+                */
                 osg::Vec3d position = pat->getPosition();
                 position = position * matrices.first;
                 position += m_deltaTranslation;
@@ -532,7 +546,11 @@ void Dragger::UpdateAssociations()
             }
             else if( m_transformationType & TransformationType::SCALE_COMPOUND )
             {
-                ;
+                osg::Vec3d scale = pat->getScale();
+                scale = scale * matrices.first;
+                scale += m_deltaScale;
+                scale = scale * matrices.second;
+                pat->setScale( scale );
             }
 
             continue;

@@ -35,7 +35,6 @@
 #include <ves/xplorer/scenegraph/manipulator/TranslatePlane.h>
 
 // --- OSG Includes --- //
-#include <osg/Hint>
 #include <osg/Geode>
 #include <osg/Geometry>
 
@@ -156,14 +155,6 @@ void TranslatePlane::SetupDefaultGeometry()
         //Set StateSet
         osg::ref_ptr< osg::StateSet > stateSet =
             m_triangleGeometry->getOrCreateStateSet();
-
-        //Set polygon hints
-        stateSet->setMode( GL_POLYGON_SMOOTH,
-            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
-        osg::ref_ptr< osg::Hint > hint =
-            new osg::Hint( GL_POLYGON_SMOOTH_HINT, GL_NICEST );
-        stateSet->setAttributeAndModes( hint.get(),
-            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
     }
 
     //Create a triangle
@@ -179,14 +170,6 @@ void TranslatePlane::SetupDefaultGeometry()
         //Set StateSet
         osg::ref_ptr< osg::StateSet > stateSet =
             geometry->getOrCreateStateSet();
-
-        //Set polygon hints
-        stateSet->setMode( GL_POLYGON_SMOOTH,
-            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
-        osg::ref_ptr< osg::Hint > hint =
-            new osg::Hint( GL_POLYGON_SMOOTH_HINT, GL_NICEST );
-        stateSet->setAttributeAndModes( hint.get(),
-            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
     }
 
     //Create a triangle
@@ -202,14 +185,6 @@ void TranslatePlane::SetupDefaultGeometry()
         //Set StateSet
         osg::ref_ptr< osg::StateSet > stateSet =
             geometry->getOrCreateStateSet();
-
-        //Set polygon hints
-        stateSet->setMode( GL_POLYGON_SMOOTH,
-            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
-        osg::ref_ptr< osg::Hint > hint =
-            new osg::Hint( GL_POLYGON_SMOOTH_HINT, GL_NICEST );
-        stateSet->setAttributeAndModes( hint.get(),
-            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
     }
 
     //Create a triangle
@@ -225,14 +200,6 @@ void TranslatePlane::SetupDefaultGeometry()
         //Set StateSet
         osg::ref_ptr< osg::StateSet > stateSet =
             geometry->getOrCreateStateSet();
-
-        //Set polygon hints
-        stateSet->setMode( GL_POLYGON_SMOOTH,
-            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
-        osg::ref_ptr< osg::Hint > hint =
-            new osg::Hint( GL_POLYGON_SMOOTH_HINT, GL_NICEST );
-        stateSet->setAttributeAndModes( hint.get(),
-            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
     }
 
     addChild( geode.get() );

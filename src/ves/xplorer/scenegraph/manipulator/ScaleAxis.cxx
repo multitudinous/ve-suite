@@ -35,7 +35,6 @@
 #include <ves/xplorer/scenegraph/manipulator/ScaleAxis.h>
 
 // --- OSG Includes --- //
-#include <osg/Hint>
 #include <osg/Geode>
 #include <osg/Geometry>
 #include <osg/ShapeDrawable>
@@ -54,7 +53,8 @@ ScaleAxis::ScaleAxis()
     m_positiveLineGeometry( NULL ),
     m_negativeLineGeometry( NULL ),
     m_positiveBoxDrawable( NULL ),
-    m_negativeBoxDrawable( NULL )
+    m_negativeBoxDrawable( NULL ),
+    m_lineAndCylinderGeode( NULL )
 {
     SetupDefaultGeometry();
 }
@@ -69,7 +69,8 @@ ScaleAxis::ScaleAxis(
     m_positiveLineGeometry( scaleAxis.m_positiveLineGeometry.get() ),
     m_negativeLineGeometry( scaleAxis.m_negativeLineGeometry.get() ),
     m_positiveBoxDrawable( scaleAxis.m_positiveBoxDrawable.get() ),
-    m_negativeBoxDrawable( scaleAxis.m_negativeBoxDrawable.get() )
+    m_negativeBoxDrawable( scaleAxis.m_negativeBoxDrawable.get() ),
+    m_lineAndCylinderGeode( scaleAxis.m_lineAndCylinderGeode.get() )
 {
     ;
 }
@@ -105,6 +106,87 @@ osg::Object* ScaleAxis::cloneType() const
     return new ScaleAxis();
 }
 ////////////////////////////////////////////////////////////////////////////////
+void ScaleAxis::ComputeDeltaTransform()
+{
+    const osg::Vec3d origin = GetAxis( true, true );
+    const osg::Vec3d axis = GetAxis();
+
+    //Calculate the axis vector and vectors from the translation point
+    const osg::Vec3d originToAxis = axis - origin;
+    const osg::Vec3d originToStart = m_startProjectedPoint - origin;
+    const osg::Vec3d originToEnd = m_endProjectedPoint - origin;
+
+    //
+    double scale( 1.0 );
+    if( originToStart.x() > 0.0 )
+    {
+        scale = originToEnd.x() / originToStart.x();
+    }
+    //const double D = 1.0 / originToAxis.length();
+    //const double projS = ( originToStart * originToAxis ) * D;
+    //const double projE = ( originToEnd * originToAxis ) * D;
+
+
+    //Find the ratio between the projected scalar values
+    //const double ratio = projE / projS;
+
+    m_deltaScale.set( scale, scale, scale );
+
+    //Set the transform
+    //osg::Vec3d newScale =
+        //m_rootDragger->getPosition() + m_deltaTranslation;
+    //m_rootDragger->setPosition( newTranslation );
+}
+////////////////////////////////////////////////////////////////////////////////
+//See http://softsurfer.com/Archive/algorithm_0106/algorithm_0106.htm
+const bool ScaleAxis::ComputeProjectedPoint(
+    const osgUtil::LineSegmentIntersector& deviceInput,
+    osg::Vec3d& projectedPoint )
+{
+    //Get the start and end points for the dragger axis in world space
+    const osg::Vec3d startDraggerAxis = GetAxis( true, true );
+    const osg::Vec3d endDraggerAxis = GetAxis( false, true );
+
+    //Get the near and far points for the active device
+    const osg::Vec3d& startDeviceInput = deviceInput.getStart();
+    const osg::Vec3d& endDeviceInput = deviceInput.getEnd();
+
+    osg::Vec3d u = endDraggerAxis - startDraggerAxis;
+    osg::Vec3d v = endDeviceInput - startDeviceInput;
+    osg::Vec3d w = startDraggerAxis - startDeviceInput;
+
+    double a = u * u;
+    double b = u * v;
+    double c = v * v;
+    double d = u * w;
+    double e = v * w;
+
+    //If the lines are not parallel
+    double D = ( a * c ) - ( b * b );
+    double sc( 0.0 );
+    if( D > 1E-05 )
+    {
+        sc = ( b * e - c * d ) / D;
+    }
+
+    //Compute the line parameters of the two closest points
+    projectedPoint = startDraggerAxis + ( u * sc );
+
+    return true;
+}
+////////////////////////////////////////////////////////////////////////////////
+void ScaleAxis::EnableLinesAndCylinders( const bool& enable )
+{
+    if( enable )
+    {
+        m_lineAndCylinderGeode->setNodeMask( 1 );
+    }
+    else
+    {
+        m_lineAndCylinderGeode->setNodeMask( 0 );
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
 void ScaleAxis::ExpandLineVertices( const osg::Vec3& expansion )
 {
     (*m_lineVertices)[ 0 ] += expansion;
@@ -125,8 +207,11 @@ bool ScaleAxis::isSameKindAs( const osg::Object* obj ) const
 ////////////////////////////////////////////////////////////////////////////////
 void ScaleAxis::SetupDefaultGeometry()
 {
-    //The geode to add the geometry to
-    osg::ref_ptr< osg::Geode > geode = new osg::Geode();
+    //The geode to add the line and cylinder geometry to
+    m_lineAndCylinderGeode = new osg::Geode();
+
+    //The geode to add the cone geometry to
+    osg::ref_ptr< osg::Geode > boxGeode = new osg::Geode();
 
     //The unit axis
     const osg::Vec3d unitAxis = GetUnitAxis();
@@ -145,7 +230,7 @@ void ScaleAxis::SetupDefaultGeometry()
         m_positiveLineGeometry->addPrimitiveSet(
             new osg::DrawArrays( osg::PrimitiveSet::LINES, 0, 2 ) );
 
-        geode->addDrawable( m_positiveLineGeometry.get() );
+        m_lineAndCylinderGeode->addDrawable( m_positiveLineGeometry.get() );
 
         //Set StateSet
         osg::ref_ptr< osg::StateSet > stateSet =
@@ -160,14 +245,6 @@ void ScaleAxis::SetupDefaultGeometry()
         lineWidth->setWidth( 2.0 );
         stateSet->setAttributeAndModes(
             lineWidth.get(), osg::StateAttribute::ON );
-
-        //Set line hints
-        stateSet->setMode( GL_LINE_SMOOTH,
-            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
-        osg::ref_ptr< osg::Hint > hint =
-            new osg::Hint( GL_LINE_SMOOTH_HINT, GL_NICEST );
-        stateSet->setAttributeAndModes( hint.get(),
-            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
 
         //Set line stipple
         osg::ref_ptr< osg::LineStipple > lineStipple = new osg::LineStipple();
@@ -186,19 +263,11 @@ void ScaleAxis::SetupDefaultGeometry()
             (*m_lineVertices)[ 1 ] + BOX_CENTER, BOX_WIDTH );
 
         m_positiveBoxDrawable = new osg::ShapeDrawable( m_positiveBox.get() );
-        geode->addDrawable( m_positiveBoxDrawable.get() );
+        boxGeode->addDrawable( m_positiveBoxDrawable.get() );
 
         //Set StateSet
         osg::ref_ptr< osg::StateSet > stateSet =
             m_positiveBoxDrawable->getOrCreateStateSet();
-
-        //Set polygon hints
-        stateSet->setMode( GL_POLYGON_SMOOTH,
-            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
-        osg::ref_ptr< osg::Hint > hint =
-            new osg::Hint( GL_POLYGON_SMOOTH_HINT, GL_NICEST );
-        stateSet->setAttributeAndModes( hint.get(),
-            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
     }
 
     /*
@@ -214,7 +283,7 @@ void ScaleAxis::SetupDefaultGeometry()
             new osg::ShapeDrawable( cylinder.get() );
 
         SetDrawableToAlwaysCull( *shapeDrawable.get() );
-        geode->addDrawable( shapeDrawable.get() );
+        m_lineAndCylinderGeode->addDrawable( shapeDrawable.get() );
     }
     */
 
@@ -226,7 +295,7 @@ void ScaleAxis::SetupDefaultGeometry()
         m_negativeLineGeometry->addPrimitiveSet(
             new osg::DrawArrays( osg::PrimitiveSet::LINES, 2, 2 ) );
 
-        geode->addDrawable( m_negativeLineGeometry.get() );
+        m_lineAndCylinderGeode->addDrawable( m_negativeLineGeometry.get() );
 
         //Set StateSet
         osg::ref_ptr< osg::StateSet > stateSet =
@@ -241,14 +310,6 @@ void ScaleAxis::SetupDefaultGeometry()
         lineWidth->setWidth( 2.0 );
         stateSet->setAttributeAndModes(
             lineWidth.get(), osg::StateAttribute::ON );
-
-        //Set line hints
-        stateSet->setMode( GL_LINE_SMOOTH,
-            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
-        osg::ref_ptr< osg::Hint > hint =
-            new osg::Hint( GL_LINE_SMOOTH_HINT, GL_NICEST );
-        stateSet->setAttributeAndModes( hint.get(),
-            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
 
         //Set line stipple
         osg::ref_ptr< osg::LineStipple > lineStipple = new osg::LineStipple();
@@ -267,19 +328,11 @@ void ScaleAxis::SetupDefaultGeometry()
             (*m_lineVertices)[ 3 ] + BOX_CENTER, -BOX_WIDTH );
 
         m_negativeBoxDrawable = new osg::ShapeDrawable( m_negativeBox.get() );
-        geode->addDrawable( m_negativeBoxDrawable.get() );
+        boxGeode->addDrawable( m_negativeBoxDrawable.get() );
 
         //Set StateSet
         osg::ref_ptr< osg::StateSet > stateSet =
             m_negativeBoxDrawable->getOrCreateStateSet();
-
-        //Set polygon hints
-        stateSet->setMode( GL_POLYGON_SMOOTH,
-            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
-        osg::ref_ptr< osg::Hint > hint =
-            new osg::Hint( GL_POLYGON_SMOOTH_HINT, GL_NICEST );
-        stateSet->setAttributeAndModes( hint.get(),
-            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
     }
 
     /*
@@ -295,11 +348,14 @@ void ScaleAxis::SetupDefaultGeometry()
             new osg::ShapeDrawable( cylinder.get() );
 
         SetDrawableToAlwaysCull( *shapeDrawable.get() );
-        geode->addDrawable( shapeDrawable.get() );
+        m_lineAndCylinderGeode->addDrawable( shapeDrawable.get() );
     }
     */
 
     //Add lines and cones to the scene
-    addChild( geode.get() );
+    addChild( m_lineAndCylinderGeode.get() );
+
+    //Add boxes to this
+    addChild( boxGeode.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////

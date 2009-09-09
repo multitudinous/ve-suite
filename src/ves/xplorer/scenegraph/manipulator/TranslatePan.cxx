@@ -35,7 +35,6 @@
 #include <ves/xplorer/scenegraph/manipulator/TranslatePan.h>
 
 // --- OSG Includes --- //
-#include <osg/Hint>
 #include <osg/Geode>
 #include <osg/Geometry>
 #include <osg/LineWidth>
@@ -159,14 +158,6 @@ void TranslatePan::SetupDefaultGeometry()
         lineWidth->setWidth( 2.0 );
         stateSet->setAttributeAndModes(
             lineWidth.get(), osg::StateAttribute::ON );
-
-        //Set line hints
-        stateSet->setMode( GL_LINE_SMOOTH,
-            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
-        osg::ref_ptr< osg::Hint > hint =
-            new osg::Hint( GL_LINE_SMOOTH_HINT, GL_NICEST );
-        stateSet->setAttributeAndModes( hint.get(),
-            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
     }
 
     //Create invisible triangle fan to select the translate pan dragger

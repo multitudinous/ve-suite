@@ -35,20 +35,21 @@
 #include <ves/xplorer/scenegraph/manipulator/RotateTwist.h>
 
 // --- OSG Includes --- //
-#include <osg/Hint>
-#include <osg/Stencil>
-#include <osg/ColorMask>
 #include <osg/Geode>
 #include <osg/Geometry>
 #include <osg/LineWidth>
-#include <osg/PolygonStipple>
+#include <osg/ClipNode>
+#include <osg/ClipPlane>
+
+#include <osgUtil/CullVisitor>
 
 using namespace ves::xplorer::scenegraph::manipulator;
 
 ////////////////////////////////////////////////////////////////////////////////
 RotateTwist::RotateTwist()
     :
-    Dragger( TransformationType::ROTATE_TWIST )
+    Dragger( TransformationType::ROTATE_TWIST ),
+    m_clipNode( NULL )
 {
     //If desktop mode
     //setAutoRotateMode( osg::AutoTransform::ROTATE_TO_SCREEN );
@@ -56,12 +57,18 @@ RotateTwist::RotateTwist()
     setAutoRotateMode( osg::AutoTransform::ROTATE_TO_CAMERA );
 
     SetupDefaultGeometry();
+
+    //Set up the clipping plane
+    m_clipNode = new osg::ClipNode();
+    m_clipNode->addClipPlane( new osg::ClipPlane( 0, GetPlane( false ) ) );
+    addChild( m_clipNode.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 RotateTwist::RotateTwist(
     const RotateTwist& rotateTwist, const osg::CopyOp& copyop )
     :
-    Dragger( rotateTwist, copyop )
+    Dragger( rotateTwist, copyop ),
+    m_clipNode( rotateTwist.m_clipNode.get() )
 {
     ;
 }
@@ -88,7 +95,7 @@ osg::Object* RotateTwist::cloneType() const
 ////////////////////////////////////////////////////////////////////////////////
 void RotateTwist::ComputeDeltaTransform()
 {
-    const osg::Vec3d& origin = m_rootDragger->getPosition();
+    const osg::Vec3d origin = GetAxis( true, true );
 
     //Get the direction vectors of the rotation origin to start and end points
     osg::Vec3d originToStart = m_startProjectedPoint - origin;
@@ -146,6 +153,11 @@ const bool RotateTwist::ComputeProjectedPoint(
     return true;
 }
 ////////////////////////////////////////////////////////////////////////////////
+const osg::ClipNode* const RotateTwist::GetClipNode() const
+{
+    return m_clipNode;
+}
+////////////////////////////////////////////////////////////////////////////////
 bool RotateTwist::isSameKindAs( const osg::Object* obj ) const
 {
     return dynamic_cast< const RotateTwist* >( obj ) != NULL;
@@ -188,14 +200,6 @@ void RotateTwist::SetupDefaultGeometry()
         lineWidth->setWidth( 2.0 );
         stateSet->setAttributeAndModes(
             lineWidth.get(), osg::StateAttribute::ON );
-
-        //Set line hints
-        stateSet->setMode( GL_LINE_SMOOTH,
-            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
-        osg::ref_ptr< osg::Hint > hint =
-            new osg::Hint( GL_LINE_SMOOTH_HINT, GL_NICEST );
-        stateSet->setAttributeAndModes( hint.get(),
-            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
     }
 
     //Create invisible triangle strip for picking the rotation twist axis
@@ -258,43 +262,8 @@ void RotateTwist::SetupDefaultGeometry()
         //Set StateSet
         osg::ref_ptr< osg::StateSet > stateSet =
             geometry->getOrCreateStateSet();
-
-        //Set polygon stipple
-        osg::ref_ptr< osg::PolygonStipple > polygonStipple =
-            new osg::PolygonStipple();
-        GLubyte halftone[] =
-        {
-            0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
-            0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
-            0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
-            0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
-            0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
-            0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
-            0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
-            0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
-            0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
-            0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
-            0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
-            0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
-            0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
-            0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
-            0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
-            0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55
-        };
-        polygonStipple->setMask( halftone );
-        stateSet->setAttributeAndModes( polygonStipple.get(),
-            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
-
-        //Set polygon hints
-        stateSet->setMode( GL_POLYGON_SMOOTH,
-            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
-        osg::ref_ptr< osg::Hint > hint =
-            new osg::Hint( GL_POLYGON_SMOOTH_HINT, GL_NICEST );
-        stateSet->setAttributeAndModes( hint.get(),
-            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
     }
 
-    //Create a clipping circle
     //Create the clipping circle with line loops
     {
         osg::ref_ptr< osg::Geometry > geometry = new osg::Geometry();
@@ -331,16 +300,9 @@ void RotateTwist::SetupDefaultGeometry()
         lineWidth->setWidth( 2.0 );
         stateSet->setAttributeAndModes(
             lineWidth.get(), osg::StateAttribute::ON );
-
-        //Set line hints
-        stateSet->setMode( GL_LINE_SMOOTH,
-            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
-        osg::ref_ptr< osg::Hint > hint =
-            new osg::Hint( GL_LINE_SMOOTH_HINT, GL_NICEST );
-        stateSet->setAttributeAndModes( hint.get(),
-            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
     }
 
+    /*
     //Create a triangle fan to act as the invisible clipping circle
     {
         osg::ref_ptr< osg::Geometry > geometry = new osg::Geometry();
@@ -369,13 +331,8 @@ void RotateTwist::SetupDefaultGeometry()
         //Set StateSet
         osg::ref_ptr< osg::StateSet > stateSet =
             geometry->getOrCreateStateSet();
-
-        //Turn color writes off
-        osg::ref_ptr< osg::ColorMask > colorMask =
-            new osg::ColorMask( false, false, false, false );
-        stateSet->setAttributeAndModes( colorMask.get(),
-            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
     }
+    */
 
     //Add rotation axis to the scene
     addChild( geode.get() );

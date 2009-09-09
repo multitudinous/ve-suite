@@ -35,12 +35,11 @@
 #include <ves/xplorer/scenegraph/technique/SelectTechnique.h>
 
 // --- OSG Includes --- //
-#include <osg/Stencil>
-#include <osg/Hint>
 #include <osg/Point>
 #include <osg/LineWidth>
 #include <osg/PolygonMode>
 #include <osg/Depth>
+#include <osg/Stencil>
 
 using namespace ves::xplorer::scenegraph::technique;
 
@@ -134,13 +133,6 @@ void SelectTechnique::DefinePasses()
         stateset->setAttributeAndModes( linewidth.get(),
             osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
 
-        stateset->setMode( GL_LINE_SMOOTH,
-            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
-        osg::ref_ptr< osg::Hint > hint =
-            new osg::Hint( GL_LINE_SMOOTH_HINT, GL_NICEST );
-        stateset->setAttributeAndModes( hint.get(),
-            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
-
         AddPass( stateset.get() );
     }
 
@@ -166,13 +158,6 @@ void SelectTechnique::DefinePasses()
             osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
 
         stateset->setAttribute( new osg::Point( m_lineAndPointSize ),
-            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
-
-        stateset->setMode( GL_POINT_SMOOTH,
-            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
-        osg::ref_ptr< osg::Hint > hint =
-            new osg::Hint( GL_POINT_SMOOTH_HINT, GL_NICEST );
-        stateset->setAttributeAndModes( hint.get(),
             osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
 
         AddPass( stateset.get() );

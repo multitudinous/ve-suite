@@ -35,7 +35,6 @@
 #include <ves/xplorer/scenegraph/manipulator/ScaleUniform.h>
 
 // --- OSG Includes --- //
-#include <osg/Hint>
 #include <osg/Geode>
 #include <osg/Geometry>
 #include <osg/ShapeDrawable>
