@@ -52,14 +52,19 @@ namespace vxs = ves::xplorer::scenegraph;
 TranslateAxis::TranslateAxis()
     :
     Dragger( TransformationType::TRANSLATE_AXIS ),
-    m_lineExplodeVector( GetUnitAxis() * TRANSLATE_PAN_RADIUS ),
+    m_explodeDistance( TRANSLATE_PAN_RADIUS ),
     m_lineVertices( NULL ),
-    m_lineGeometry( NULL ),
-    m_lineAndCylinderGeode( NULL ),
-    m_cone( NULL ),
-    m_cylinder( NULL ),
-    m_coneDrawable( NULL ),
-    m_cylinderDrawable( NULL )
+    m_positiveCone( NULL ),
+    m_negativeCone( NULL ),
+    m_positiveCylinder( NULL ),
+    m_negativeCylinder( NULL ),
+    m_positiveLineGeometry( NULL ),
+    m_negativeLineGeometry( NULL ),
+    m_positiveConeDrawable( NULL ),
+    m_negativeConeDrawable( NULL ),
+    m_positiveCylinderDrawable( NULL ),
+    m_negativeCylinderDrawable( NULL ),
+    m_lineAndCylinderGeode( NULL )
 {
     SetupDefaultGeometry();
 }
@@ -68,14 +73,19 @@ TranslateAxis::TranslateAxis(
     const TranslateAxis& translateAxis, const osg::CopyOp& copyop )
     :
     Dragger( translateAxis, copyop ),
-    m_lineExplodeVector( translateAxis.m_lineExplodeVector ),
+    m_explodeDistance( translateAxis.m_explodeDistance ),
     m_lineVertices( translateAxis.m_lineVertices.get() ),
-    m_lineGeometry( translateAxis.m_lineGeometry.get() ),
-    m_lineAndCylinderGeode( translateAxis.m_lineAndCylinderGeode.get() ),
-    m_cone( translateAxis.m_cone.get() ),
-    m_cylinder( translateAxis.m_cylinder.get() ),
-    m_coneDrawable( translateAxis.m_coneDrawable.get() ),
-    m_cylinderDrawable( translateAxis.m_cylinderDrawable.get() )
+    m_positiveCone( translateAxis.m_positiveCone.get() ),
+    m_negativeCone( translateAxis.m_negativeCone.get() ),
+    m_positiveCylinder( translateAxis.m_positiveCylinder.get() ),
+    m_negativeCylinder( translateAxis.m_negativeCylinder.get() ),
+    m_positiveLineGeometry( translateAxis.m_positiveLineGeometry.get() ),
+    m_negativeLineGeometry( translateAxis.m_negativeLineGeometry.get() ),
+    m_positiveConeDrawable( translateAxis.m_positiveConeDrawable.get() ),
+    m_negativeConeDrawable( translateAxis.m_negativeConeDrawable.get() ),
+    m_positiveCylinderDrawable( translateAxis.m_positiveCylinderDrawable.get() ),
+    m_negativeCylinderDrawable( translateAxis.m_negativeCylinderDrawable.get() ),
+    m_lineAndCylinderGeode( translateAxis.m_lineAndCylinderGeode.get() )
 {
     ;
 }
@@ -115,20 +125,33 @@ void TranslateAxis::ComboForm()
     //Call base method
     Dragger::ComboForm();
 
-    //Move the line in from the origin and unit axis
-    (*m_lineVertices)[ 0 ] += m_lineExplodeVector;
+    osg::Vec3d explodeVector = GetUnitAxis() * m_explodeDistance;
 
-    m_lineGeometry->dirtyDisplayList();
-    m_lineGeometry->dirtyBound();
+    //Move the line in from the origin and unit axis
+    (*m_lineVertices)[ 0 ] += explodeVector;
+    m_positiveLineGeometry->dirtyDisplayList();
+    m_positiveLineGeometry->dirtyBound();
+
+    (*m_lineVertices)[ 2 ] -= explodeVector;
+    m_negativeLineGeometry->dirtyDisplayList();
+    m_negativeLineGeometry->dirtyBound();
 
     //Move the invisible cylinder to match the new line position
+    m_positiveCylinder->setCenter(
+        m_positiveCylinder->getCenter() + ( explodeVector * 0.5 ) );
+    m_positiveCylinder->setHeight(
+        m_positiveCylinder->getHeight() - TRANSLATE_PAN_RADIUS );
 
-    m_cylinder->setCenter(
-        m_cylinder->getCenter() + ( m_lineExplodeVector * 0.5 ) );
-    m_cylinder->setHeight( m_cylinder->getHeight() - TRANSLATE_PAN_RADIUS );
+    m_positiveCylinderDrawable->dirtyDisplayList();
+    m_positiveCylinderDrawable->dirtyBound();
 
-    m_cylinderDrawable->dirtyDisplayList();
-    m_cylinderDrawable->dirtyBound();
+    m_negativeCylinder->setCenter(
+        m_negativeCylinder->getCenter() - ( explodeVector * 0.5 ) );
+    m_negativeCylinder->setHeight(
+        m_negativeCylinder->getHeight() + TRANSLATE_PAN_RADIUS );
+
+    m_negativeCylinderDrawable->dirtyDisplayList();
+    m_negativeCylinderDrawable->dirtyBound();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void TranslateAxis::DefaultForm()
@@ -141,25 +164,45 @@ void TranslateAxis::DefaultForm()
     //Call base method
     Dragger::DefaultForm();
 
-    //Move the line back to the origin and unit axis
-    (*m_lineVertices)[ 0 ] -= m_lineExplodeVector;
+    osg::Vec3d explodeVector = GetUnitAxis() * m_explodeDistance;
 
-    m_lineGeometry->dirtyDisplayList();
-    m_lineGeometry->dirtyBound();
+    //Move the line back to the origin and unit axis
+    (*m_lineVertices)[ 0 ] -= explodeVector;
+    m_positiveLineGeometry->dirtyDisplayList();
+    m_positiveLineGeometry->dirtyBound();
+
+    (*m_lineVertices)[ 2 ] += explodeVector;
+    m_negativeLineGeometry->dirtyDisplayList();
+    m_negativeLineGeometry->dirtyBound();
 
     //Move the invisible cylinder to match the new line position
-    m_cylinder->setCenter(
-        m_cylinder->getCenter() - ( m_lineExplodeVector * 0.5 ) );
-    m_cylinder->setHeight( m_cylinder->getHeight() + TRANSLATE_PAN_RADIUS );
+    m_positiveCylinder->setCenter(
+        m_positiveCylinder->getCenter() - ( explodeVector * 0.5 ) );
+    m_positiveCylinder->setHeight(
+        m_positiveCylinder->getHeight() + TRANSLATE_PAN_RADIUS );
 
-    m_cylinderDrawable->dirtyDisplayList();
-    m_cylinderDrawable->dirtyBound();
+    m_positiveCylinderDrawable->dirtyDisplayList();
+    m_positiveCylinderDrawable->dirtyBound();
+
+    m_negativeCylinder->setCenter(
+        m_negativeCylinder->getCenter() + ( explodeVector * 0.5 ) );
+    m_negativeCylinder->setHeight(
+        m_negativeCylinder->getHeight() - TRANSLATE_PAN_RADIUS );
+
+    m_negativeCylinderDrawable->dirtyDisplayList();
+    m_negativeCylinderDrawable->dirtyBound();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void TranslateAxis::DirtyCone()
+void TranslateAxis::EnableLinesAndCylinders( const bool& enable )
 {
-    m_coneDrawable->dirtyDisplayList();
-    m_coneDrawable->dirtyBound();
+    if( enable )
+    {
+        m_lineAndCylinderGeode->setNodeMask( 1 );
+    }
+    else
+    {
+        m_lineAndCylinderGeode->setNodeMask( 0 );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void TranslateAxis::ComputeDeltaTransform()
@@ -210,14 +253,15 @@ const bool TranslateAxis::ComputeProjectedPoint(
     return true;
 }
 ////////////////////////////////////////////////////////////////////////////////
-osg::Geode* const TranslateAxis::GetLineAndCylinderGeode() const
+void TranslateAxis::ConeCenterOffset( const osg::Vec3& offset )
 {
-    return m_lineAndCylinderGeode.get();
-}
-////////////////////////////////////////////////////////////////////////////////
-osg::Cone* const TranslateAxis::GetCone() const
-{
-    return m_cone.get();
+    m_positiveCone->setCenter( m_positiveCone->getCenter() + offset );
+    m_positiveConeDrawable->dirtyDisplayList();
+    m_positiveConeDrawable->dirtyBound();
+
+    m_negativeCone->setCenter( m_negativeCone->getCenter() - offset );
+    m_negativeConeDrawable->dirtyDisplayList();
+    m_negativeConeDrawable->dirtyBound();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void TranslateAxis::SetupDefaultGeometry()
@@ -230,24 +274,26 @@ void TranslateAxis::SetupDefaultGeometry()
 
     //The unit axis
     const osg::Vec3d unitAxis = GetUnitAxis();
-    m_lineVertices = new osg::Vec3dArray();
-    m_lineVertices->resize( 2 );
+    m_lineVertices = new osg::Vec3Array();
+    m_lineVertices->resize( 4 );
     (*m_lineVertices)[ 0 ] = osg::Vec3d( 0.0, 0.0, 0.0 );
-    (*m_lineVertices)[ 1 ] = unitAxis;
+    (*m_lineVertices)[ 1 ] =  unitAxis;
+    (*m_lineVertices)[ 2 ] = osg::Vec3d( 0.0, 0.0, 0.0 );
+    (*m_lineVertices)[ 3 ] = -unitAxis;
 
     //Create a positive line
     {
-        m_lineGeometry = new osg::Geometry();
+        m_positiveLineGeometry = new osg::Geometry();
 
-        m_lineGeometry->setVertexArray( m_lineVertices.get() );
-        m_lineGeometry->addPrimitiveSet(
+        m_positiveLineGeometry->setVertexArray( m_lineVertices.get() );
+        m_positiveLineGeometry->addPrimitiveSet(
             new osg::DrawArrays( osg::PrimitiveSet::LINES, 0, 2 ) );
 
-        m_lineAndCylinderGeode->addDrawable( m_lineGeometry.get() );
+        m_lineAndCylinderGeode->addDrawable( m_positiveLineGeometry.get() );
 
         //Set StateSet
         osg::ref_ptr< osg::StateSet > stateSet =
-            m_lineGeometry->getOrCreateStateSet();
+            m_positiveLineGeometry->getOrCreateStateSet();
 
         //Set line width
         osg::ref_ptr< osg::LineWidth > lineWidth = new osg::LineWidth();
@@ -269,15 +315,15 @@ void TranslateAxis::SetupDefaultGeometry()
         osg::Vec3d CONE_CENTER = unitAxis * CONE_HEIGHT;
         (*m_lineVertices)[ 1 ] -= CONE_CENTER;
         CONE_CENTER *= 0.25;
-        m_cone = new osg::Cone(
+        m_positiveCone = new osg::Cone(
             (*m_lineVertices)[ 1 ] + CONE_CENTER, CONE_RADIUS, CONE_HEIGHT );
 
-        m_coneDrawable = new osg::ShapeDrawable( m_cone.get() );
-        coneGeode->addDrawable( m_coneDrawable.get() );
+        m_positiveConeDrawable = new osg::ShapeDrawable( m_positiveCone.get() );
+        coneGeode->addDrawable( m_positiveConeDrawable.get() );
 
         //Set StateSet
         osg::ref_ptr< osg::StateSet > stateSet =
-            m_coneDrawable->getOrCreateStateSet();
+            m_positiveConeDrawable->getOrCreateStateSet();
 
         //Set polygon hints
         stateSet->setMode( GL_POLYGON_SMOOTH,
@@ -290,16 +336,83 @@ void TranslateAxis::SetupDefaultGeometry()
 
     //Create an invisible cylinder for picking the positive line
     {
-        m_cylinder = new osg::Cylinder(
+        m_positiveCylinder = new osg::Cylinder(
             (*m_lineVertices)[ 1 ] * 0.5,
             PICK_RADIUS,
             (*m_lineVertices)[ 1 ].length() );
-        m_cylinderDrawable = new osg::ShapeDrawable( m_cylinder.get() );
+        m_positiveCylinderDrawable =
+            new osg::ShapeDrawable( m_positiveCylinder.get() );
 
-        SetDrawableToAlwaysCull( *m_cylinderDrawable.get() );
-        m_lineAndCylinderGeode->addDrawable( m_cylinderDrawable.get() );
+        SetDrawableToAlwaysCull( *m_positiveCylinderDrawable.get() );
+        m_lineAndCylinderGeode->addDrawable( m_positiveCylinderDrawable.get() );
     }
-    
+
+    //Create a negative line
+    {
+        m_negativeLineGeometry = new osg::Geometry();
+
+        m_negativeLineGeometry->setVertexArray( m_lineVertices.get() );
+        m_negativeLineGeometry->addPrimitiveSet(
+            new osg::DrawArrays( osg::PrimitiveSet::LINES, 2, 2 ) );
+
+        m_lineAndCylinderGeode->addDrawable( m_negativeLineGeometry.get() );
+
+        //Set StateSet
+        osg::ref_ptr< osg::StateSet > stateSet =
+            m_negativeLineGeometry->getOrCreateStateSet();
+
+        //Set line width
+        osg::ref_ptr< osg::LineWidth > lineWidth = new osg::LineWidth();
+        lineWidth->setWidth( LINE_WIDTH );
+        stateSet->setAttributeAndModes(
+            lineWidth.get(), osg::StateAttribute::ON );
+
+        //Set line hints
+        stateSet->setMode( GL_LINE_SMOOTH,
+            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+        osg::ref_ptr< osg::Hint > hint =
+            new osg::Hint( GL_LINE_SMOOTH_HINT, GL_NICEST );
+        stateSet->setAttributeAndModes( hint.get(),
+            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+    }
+
+    //Create a negative cone
+    {
+        osg::Vec3d CONE_CENTER = -unitAxis * CONE_HEIGHT;
+        (*m_lineVertices)[ 3 ] -= CONE_CENTER;
+        CONE_CENTER *= 0.25;
+        m_negativeCone = new osg::Cone(
+            (*m_lineVertices)[ 3 ] + CONE_CENTER, CONE_RADIUS, -CONE_HEIGHT );
+
+        m_negativeConeDrawable = new osg::ShapeDrawable( m_negativeCone.get() );
+        coneGeode->addDrawable( m_negativeConeDrawable.get() );
+
+        //Set StateSet
+        osg::ref_ptr< osg::StateSet > stateSet =
+            m_negativeConeDrawable->getOrCreateStateSet();
+
+        //Set polygon hints
+        stateSet->setMode( GL_POLYGON_SMOOTH,
+            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+        osg::ref_ptr< osg::Hint > hint =
+            new osg::Hint( GL_POLYGON_SMOOTH_HINT, GL_NICEST );
+        stateSet->setAttributeAndModes( hint.get(),
+            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+    }
+
+    //Create an invisible cylinder for picking the negative line
+    {
+        m_negativeCylinder = new osg::Cylinder(
+            (*m_lineVertices)[ 3 ] * 0.5,
+            PICK_RADIUS,
+            -(*m_lineVertices)[ 3 ].length() );
+        m_negativeCylinderDrawable =
+            new osg::ShapeDrawable( m_negativeCylinder.get() );
+
+        SetDrawableToAlwaysCull( *m_negativeCylinderDrawable.get() );
+        m_lineAndCylinderGeode->addDrawable( m_negativeCylinderDrawable.get() );
+    }
+
     //Add line and invisible cylinder to this
     addChild( m_lineAndCylinderGeode.get() );
 

@@ -118,14 +118,30 @@ void TranslatePlane::SetupDefaultGeometry()
     //The geode to add the line and cylinder geometry to
     osg::ref_ptr< osg::Geode > geode = new osg::Geode();
 
-    //The unit axis
-    const osg::Vec3d unitAxis = GetUnitAxis();
+    //
+    const double innerDistance = 0.45;
+    const double outerDistance = 0.55;
     m_triangleVertices = new osg::Vec3Array();
-    m_triangleVertices->resize( 4 );
-    (*m_triangleVertices)[ 0 ] = osg::Vec3d( 0.0, 0.4, 0.0 );
-    (*m_triangleVertices)[ 1 ] = osg::Vec3d( 0.4, 0.0, 0.0 );
-    (*m_triangleVertices)[ 2 ] = osg::Vec3d( 0.0, 0.6, 0.0 );
-    (*m_triangleVertices)[ 3 ] = osg::Vec3d( 0.6, 0.0, 0.0 );
+    m_triangleVertices->resize( 16 );
+    (*m_triangleVertices)[  0 ] = osg::Vec3d( 0.0,  innerDistance, 0.0 );
+    (*m_triangleVertices)[  1 ] = osg::Vec3d(  innerDistance, 0.0, 0.0 );
+    (*m_triangleVertices)[  2 ] = osg::Vec3d( 0.0,  outerDistance, 0.0 );
+    (*m_triangleVertices)[  3 ] = osg::Vec3d(  outerDistance, 0.0, 0.0 );
+
+    (*m_triangleVertices)[  4 ] = osg::Vec3d(  innerDistance, 0.0, 0.0 );
+    (*m_triangleVertices)[  5 ] = osg::Vec3d( 0.0, -innerDistance, 0.0 );
+    (*m_triangleVertices)[  6 ] = osg::Vec3d(  outerDistance, 0.0, 0.0 );
+    (*m_triangleVertices)[  7 ] = osg::Vec3d( 0.0, -outerDistance, 0.0 );
+
+    (*m_triangleVertices)[  8 ] = osg::Vec3d( 0.0, -innerDistance, 0.0 );
+    (*m_triangleVertices)[  9 ] = osg::Vec3d( -innerDistance, 0.0, 0.0 );
+    (*m_triangleVertices)[ 10 ] = osg::Vec3d( 0.0, -outerDistance, 0.0 );
+    (*m_triangleVertices)[ 11 ] = osg::Vec3d( -outerDistance, 0.0, 0.0 );
+
+    (*m_triangleVertices)[ 12 ] = osg::Vec3d( -innerDistance, 0.0, 0.0 );
+    (*m_triangleVertices)[ 13 ] = osg::Vec3d( 0.0,  innerDistance, 0.0 );
+    (*m_triangleVertices)[ 14 ] = osg::Vec3d( -outerDistance, 0.0, 0.0 );
+    (*m_triangleVertices)[ 15 ] = osg::Vec3d( 0.0,  outerDistance, 0.0 );
 
     //Create a triangle
     {
@@ -140,6 +156,75 @@ void TranslatePlane::SetupDefaultGeometry()
         //Set StateSet
         osg::ref_ptr< osg::StateSet > stateSet =
             m_triangleGeometry->getOrCreateStateSet();
+
+        //Set polygon hints
+        stateSet->setMode( GL_POLYGON_SMOOTH,
+            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+        osg::ref_ptr< osg::Hint > hint =
+            new osg::Hint( GL_POLYGON_SMOOTH_HINT, GL_NICEST );
+        stateSet->setAttributeAndModes( hint.get(),
+            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+    }
+
+    //Create a triangle
+    {
+        osg::ref_ptr< osg::Geometry > geometry = new osg::Geometry();
+
+        geometry->setVertexArray( m_triangleVertices.get() );
+        geometry->addPrimitiveSet(
+            new osg::DrawArrays( osg::PrimitiveSet::TRIANGLE_STRIP, 4, 4 ) );
+
+        geode->addDrawable( geometry.get() );
+
+        //Set StateSet
+        osg::ref_ptr< osg::StateSet > stateSet =
+            geometry->getOrCreateStateSet();
+
+        //Set polygon hints
+        stateSet->setMode( GL_POLYGON_SMOOTH,
+            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+        osg::ref_ptr< osg::Hint > hint =
+            new osg::Hint( GL_POLYGON_SMOOTH_HINT, GL_NICEST );
+        stateSet->setAttributeAndModes( hint.get(),
+            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+    }
+
+    //Create a triangle
+    {
+        osg::ref_ptr< osg::Geometry > geometry = new osg::Geometry();
+
+        geometry->setVertexArray( m_triangleVertices.get() );
+        geometry->addPrimitiveSet(
+            new osg::DrawArrays( osg::PrimitiveSet::TRIANGLE_STRIP, 8, 4 ) );
+
+        geode->addDrawable( geometry.get() );
+
+        //Set StateSet
+        osg::ref_ptr< osg::StateSet > stateSet =
+            geometry->getOrCreateStateSet();
+
+        //Set polygon hints
+        stateSet->setMode( GL_POLYGON_SMOOTH,
+            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+        osg::ref_ptr< osg::Hint > hint =
+            new osg::Hint( GL_POLYGON_SMOOTH_HINT, GL_NICEST );
+        stateSet->setAttributeAndModes( hint.get(),
+            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+    }
+
+    //Create a triangle
+    {
+        osg::ref_ptr< osg::Geometry > geometry = new osg::Geometry();
+
+        geometry->setVertexArray( m_triangleVertices.get() );
+        geometry->addPrimitiveSet(
+            new osg::DrawArrays( osg::PrimitiveSet::TRIANGLE_STRIP, 12, 4 ) );
+
+        geode->addDrawable( geometry.get() );
+
+        //Set StateSet
+        osg::ref_ptr< osg::StateSet > stateSet =
+            geometry->getOrCreateStateSet();
 
         //Set polygon hints
         stateSet->setMode( GL_POLYGON_SMOOTH,

@@ -111,26 +111,20 @@ void TranslateCompound::ComboForm()
     Dragger::ComboForm();
 
     osg::Vec3d explodeVector;
-    osg::Geode* geode( NULL );
-    osg::Cone* cone( NULL );
     for( unsigned int i = 0; i < getNumChildren(); ++i )
     {
         TranslateAxis* translateAxis =
             dynamic_cast< TranslateAxis* >( GetChild( i ) );
         if( translateAxis )
         {
+            //Turn off line and cylinder geometry
+            translateAxis->EnableLinesAndCylinders( false );
+
             //Get the explode vector
             explodeVector = translateAxis->GetUnitAxis() * m_explodeDistance;
 
-            //Turn off line and cylinder geometry
-            geode = translateAxis->GetLineAndCylinderGeode();
-            geode->setNodeMask( 0 );
-
             //Move the cones out from the unit axis
-            cone = translateAxis->GetCone();
-            cone->setCenter( cone->getCenter() + explodeVector );
-            //Update the geometry's display list
-            translateAxis->DirtyCone();
+            translateAxis->ConeCenterOffset( explodeVector );
         }
     }
 }
@@ -146,26 +140,20 @@ void TranslateCompound::DefaultForm()
     Dragger::DefaultForm();
 
     osg::Vec3d explodeVector;
-    osg::Geode* geode( NULL );
-    osg::Cone* cone( NULL );
     for( unsigned int i = 0; i < getNumChildren(); ++i )
     {
         TranslateAxis* translateAxis =
             dynamic_cast< TranslateAxis* >( GetChild( i ) );
         if( translateAxis )
         {
+            //Turn on line and cylinder geometry
+            translateAxis->EnableLinesAndCylinders( true );
+
             //Get the explode vector
             explodeVector = translateAxis->GetUnitAxis() * m_explodeDistance;
 
-            //Turn on line and cylinder geometry
-            geode = translateAxis->GetLineAndCylinderGeode();
-            geode->setNodeMask( 1 );
-
             //Move the cones back to the unit axis
-            cone = translateAxis->GetCone();
-            cone->setCenter( cone->getCenter() - explodeVector );
-            //Update the geometry's display list
-            translateAxis->DirtyCone();
+            translateAxis->ConeCenterOffset( -explodeVector );
         }
     }
 }

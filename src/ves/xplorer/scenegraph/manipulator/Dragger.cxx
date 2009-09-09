@@ -69,7 +69,7 @@ Dragger::Dragger( const TransformationType::Enum& transformationType )
 {
     m_rootDragger = this;
 
-    m_colorMap[ Color::DEFAULT ] = osg::Vec4f( 0.7, 0.7, 0.7, 1.0 );
+    m_colorMap[ Color::DEFAULT ] = osg::Vec4f( 1.0, 0.75, 0.0, 1.0 );
     m_colorMap[ Color::FOCUS ] = osg::Vec4f( 1.0, 1.0, 0.0, 1.0 );
     m_colorMap[ Color::ACTIVE ] = osg::Vec4f( 1.0, 0.0, 1.0, 1.0 );
     m_colorMap[ Color::DISABLED ] = osg::Vec4f( 0.6, 0.6, 0.6, 1.0 );

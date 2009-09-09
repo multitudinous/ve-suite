@@ -49,9 +49,12 @@ ScaleAxis::ScaleAxis()
     :
     Dragger( TransformationType::SCALE_AXIS ),
     m_lineVertices( NULL ),
-    m_lineGeometry( NULL ),
-    m_box( NULL ),
-    m_shapeDrawable( NULL )
+    m_positiveBox( NULL ),
+    m_negativeBox( NULL ),
+    m_positiveLineGeometry( NULL ),
+    m_negativeLineGeometry( NULL ),
+    m_positiveBoxDrawable( NULL ),
+    m_negativeBoxDrawable( NULL )
 {
     SetupDefaultGeometry();
 }
@@ -61,9 +64,12 @@ ScaleAxis::ScaleAxis(
     :
     Dragger( scaleAxis, copyop ),
     m_lineVertices( scaleAxis.m_lineVertices.get() ),
-    m_lineGeometry( scaleAxis.m_lineGeometry.get()  ),
-    m_box( scaleAxis.m_box.get()  ),
-    m_shapeDrawable( scaleAxis.m_shapeDrawable.get() )
+    m_positiveBox( scaleAxis.m_positiveBox.get() ),
+    m_negativeBox( scaleAxis.m_negativeBox.get() ),
+    m_positiveLineGeometry( scaleAxis.m_positiveLineGeometry.get() ),
+    m_negativeLineGeometry( scaleAxis.m_negativeLineGeometry.get() ),
+    m_positiveBoxDrawable( scaleAxis.m_positiveBoxDrawable.get() ),
+    m_negativeBoxDrawable( scaleAxis.m_negativeBoxDrawable.get() )
 {
     ;
 }
@@ -71,6 +77,17 @@ ScaleAxis::ScaleAxis(
 ScaleAxis::~ScaleAxis()
 {
     ;
+}
+////////////////////////////////////////////////////////////////////////////////
+void ScaleAxis::BoxCenterOffset( const osg::Vec3& offset )
+{
+    m_positiveBox->setCenter( m_positiveBox->getCenter() + offset );
+    m_positiveBoxDrawable->dirtyDisplayList();
+    m_positiveBoxDrawable->dirtyBound();
+
+    m_negativeBox->setCenter( m_negativeBox->getCenter() - offset );
+    m_negativeBoxDrawable->dirtyDisplayList();
+    m_negativeBoxDrawable->dirtyBound();
 }
 ////////////////////////////////////////////////////////////////////////////////
 const char* ScaleAxis::className() const
@@ -88,28 +105,22 @@ osg::Object* ScaleAxis::cloneType() const
     return new ScaleAxis();
 }
 ////////////////////////////////////////////////////////////////////////////////
+void ScaleAxis::ExpandLineVertices( const osg::Vec3& expansion )
+{
+    (*m_lineVertices)[ 0 ] += expansion;
+    (*m_lineVertices)[ 1 ] -= expansion;
+    m_positiveLineGeometry->dirtyDisplayList();
+    m_positiveLineGeometry->dirtyBound();
+
+    (*m_lineVertices)[ 2 ] -= expansion;
+    (*m_lineVertices)[ 3 ] += expansion;
+    m_negativeLineGeometry->dirtyDisplayList();
+    m_negativeLineGeometry->dirtyBound();
+}
+////////////////////////////////////////////////////////////////////////////////
 bool ScaleAxis::isSameKindAs( const osg::Object* obj ) const
 {
     return dynamic_cast< const ScaleAxis* >( obj ) != NULL;
-}
-////////////////////////////////////////////////////////////////////////////////
-void ScaleAxis::DirtyGeometry()
-{
-    m_lineGeometry->dirtyDisplayList();
-    m_lineGeometry->dirtyBound();
-
-    m_shapeDrawable->dirtyDisplayList();
-    m_shapeDrawable->dirtyBound();
-}
-////////////////////////////////////////////////////////////////////////////////
-osg::Box* const ScaleAxis::GetBox() const
-{
-    return m_box.get();
-}
-////////////////////////////////////////////////////////////////////////////////
-osg::Vec3dArray* const ScaleAxis::GetLineVertices() const
-{
-    return m_lineVertices.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void ScaleAxis::SetupDefaultGeometry()
@@ -119,24 +130,26 @@ void ScaleAxis::SetupDefaultGeometry()
 
     //The unit axis
     const osg::Vec3d unitAxis = GetUnitAxis();
-    m_lineVertices = new osg::Vec3dArray;
-    m_lineVertices->resize( 2 );
+    m_lineVertices = new osg::Vec3Array;
+    m_lineVertices->resize( 4 );
     (*m_lineVertices)[ 0 ] = osg::Vec3d( 0.0, 0.0, 0.0 );
-    (*m_lineVertices)[ 1 ] = unitAxis;
+    (*m_lineVertices)[ 1 ] =  unitAxis;
+    (*m_lineVertices)[ 2 ] = osg::Vec3d( 0.0, 0.0, 0.0 );
+    (*m_lineVertices)[ 3 ] = -unitAxis;
 
     //Create a positive line
     {
-        m_lineGeometry = new osg::Geometry();
+        m_positiveLineGeometry = new osg::Geometry();
 
-        m_lineGeometry->setVertexArray( m_lineVertices.get() );
-        m_lineGeometry->addPrimitiveSet(
+        m_positiveLineGeometry->setVertexArray( m_lineVertices.get() );
+        m_positiveLineGeometry->addPrimitiveSet(
             new osg::DrawArrays( osg::PrimitiveSet::LINES, 0, 2 ) );
 
-        geode->addDrawable( m_lineGeometry.get() );
+        geode->addDrawable( m_positiveLineGeometry.get() );
 
         //Set StateSet
         osg::ref_ptr< osg::StateSet > stateSet =
-            m_lineGeometry->getOrCreateStateSet();
+            m_positiveLineGeometry->getOrCreateStateSet();
 
         //Override color uniform
         stateSet->addUniform(
@@ -169,14 +182,15 @@ void ScaleAxis::SetupDefaultGeometry()
         osg::Vec3d BOX_CENTER = unitAxis * BOX_WIDTH;
         (*m_lineVertices)[ 1 ] -= BOX_CENTER;
         BOX_CENTER *= 0.5;
-        m_box = new osg::Box( (*m_lineVertices)[ 1 ] + BOX_CENTER, BOX_WIDTH );
+        m_positiveBox = new osg::Box(
+            (*m_lineVertices)[ 1 ] + BOX_CENTER, BOX_WIDTH );
 
-        m_shapeDrawable = new osg::ShapeDrawable( m_box.get() );
-        geode->addDrawable( m_shapeDrawable.get() );
+        m_positiveBoxDrawable = new osg::ShapeDrawable( m_positiveBox.get() );
+        geode->addDrawable( m_positiveBoxDrawable.get() );
 
         //Set StateSet
         osg::ref_ptr< osg::StateSet > stateSet =
-            m_shapeDrawable->getOrCreateStateSet();
+            m_positiveBoxDrawable->getOrCreateStateSet();
 
         //Set polygon hints
         stateSet->setMode( GL_POLYGON_SMOOTH,
@@ -195,6 +209,87 @@ void ScaleAxis::SetupDefaultGeometry()
                 (*m_lineVertices)[ 1 ] * 0.5,
                 PICK_RADIUS,
                 (*m_lineVertices)[ 1 ].length() );
+
+        osg::ref_ptr< osg::ShapeDrawable > shapeDrawable =
+            new osg::ShapeDrawable( cylinder.get() );
+
+        SetDrawableToAlwaysCull( *shapeDrawable.get() );
+        geode->addDrawable( shapeDrawable.get() );
+    }
+    */
+
+    //Create a negative line
+    {
+        m_negativeLineGeometry = new osg::Geometry();
+
+        m_negativeLineGeometry->setVertexArray( m_lineVertices.get() );
+        m_negativeLineGeometry->addPrimitiveSet(
+            new osg::DrawArrays( osg::PrimitiveSet::LINES, 2, 2 ) );
+
+        geode->addDrawable( m_negativeLineGeometry.get() );
+
+        //Set StateSet
+        osg::ref_ptr< osg::StateSet > stateSet =
+            m_negativeLineGeometry->getOrCreateStateSet();
+
+        //Override color uniform
+        stateSet->addUniform(
+            new osg::Uniform( "color", GetColor( Color::DISABLED ) ) );
+
+        //Set line width
+        osg::ref_ptr< osg::LineWidth > lineWidth = new osg::LineWidth();
+        lineWidth->setWidth( 2.0 );
+        stateSet->setAttributeAndModes(
+            lineWidth.get(), osg::StateAttribute::ON );
+
+        //Set line hints
+        stateSet->setMode( GL_LINE_SMOOTH,
+            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+        osg::ref_ptr< osg::Hint > hint =
+            new osg::Hint( GL_LINE_SMOOTH_HINT, GL_NICEST );
+        stateSet->setAttributeAndModes( hint.get(),
+            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+
+        //Set line stipple
+        osg::ref_ptr< osg::LineStipple > lineStipple = new osg::LineStipple();
+        lineStipple->setFactor( 1 );
+        lineStipple->setPattern( 0xAAAA );
+        stateSet->setAttributeAndModes( lineStipple.get(),
+            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+    }
+
+    //Create a negative box
+    {
+        osg::Vec3d BOX_CENTER = -unitAxis * BOX_WIDTH;
+        (*m_lineVertices)[ 3 ] -= BOX_CENTER;
+        BOX_CENTER *= 0.5;
+        m_negativeBox = new osg::Box(
+            (*m_lineVertices)[ 3 ] + BOX_CENTER, -BOX_WIDTH );
+
+        m_negativeBoxDrawable = new osg::ShapeDrawable( m_negativeBox.get() );
+        geode->addDrawable( m_negativeBoxDrawable.get() );
+
+        //Set StateSet
+        osg::ref_ptr< osg::StateSet > stateSet =
+            m_negativeBoxDrawable->getOrCreateStateSet();
+
+        //Set polygon hints
+        stateSet->setMode( GL_POLYGON_SMOOTH,
+            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+        osg::ref_ptr< osg::Hint > hint =
+            new osg::Hint( GL_POLYGON_SMOOTH_HINT, GL_NICEST );
+        stateSet->setAttributeAndModes( hint.get(),
+            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+    }
+
+    /*
+    //Create an invisible cylinder for picking the negative line
+    {
+        osg::ref_ptr< osg::Cylinder > cylinder =
+            new osg::Cylinder(
+                (*m_lineVertices)[ 3 ] * 0.5,
+                PICK_RADIUS,
+                -(*m_lineVertices)[ 3 ].length() );
 
         osg::ref_ptr< osg::ShapeDrawable > shapeDrawable =
             new osg::ShapeDrawable( cylinder.get() );

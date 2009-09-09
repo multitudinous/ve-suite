@@ -91,24 +91,22 @@ public:
     virtual osg::Object* cloneType() const;
 
     ///
-    ///\param obj
-    ///\return
-    virtual bool isSameKindAs( const osg::Object* obj ) const;
+    virtual void ComboForm();
 
     ///
-    virtual void ComboForm();
+    ///\param offset
+    void ConeCenterOffset( const osg::Vec3& offset );
 
     ///
     virtual void DefaultForm();
 
     ///
-    void DirtyCone();
+    void EnableLinesAndCylinders( const bool& enable );
 
     ///
-    osg::Geode* const GetLineAndCylinderGeode() const;
-
-    ///
-    osg::Cone* const GetCone() const;
+    ///\param obj
+    ///\return
+    virtual bool isSameKindAs( const osg::Object* obj ) const;
 
 protected:
     ///
@@ -127,28 +125,43 @@ protected:
 
 private:
     ///
-    osg::Vec3d m_lineExplodeVector;
+    const double m_explodeDistance;
 
     ///
-    osg::ref_ptr< osg::Vec3dArray > m_lineVertices;
+    osg::ref_ptr< osg::Vec3Array > m_lineVertices;
 
     ///
-    osg::ref_ptr< osg::Geometry > m_lineGeometry;
+    osg::ref_ptr< osg::Cone > m_positiveCone;
+
+    ///
+    osg::ref_ptr< osg::Cone > m_negativeCone;
+
+    ///
+    osg::ref_ptr< osg::Cylinder > m_positiveCylinder;
+
+    ///
+    osg::ref_ptr< osg::Cylinder > m_negativeCylinder;
+
+    ///
+    osg::ref_ptr< osg::Geometry > m_positiveLineGeometry;
+
+    ///
+    osg::ref_ptr< osg::Geometry > m_negativeLineGeometry;
+
+    ///
+    osg::ref_ptr< osg::ShapeDrawable > m_positiveConeDrawable;
+
+    ///
+    osg::ref_ptr< osg::ShapeDrawable > m_negativeConeDrawable;
+
+    ///
+    osg::ref_ptr< osg::ShapeDrawable > m_positiveCylinderDrawable;
+
+    ///
+    osg::ref_ptr< osg::ShapeDrawable > m_negativeCylinderDrawable;
 
     ///
     osg::ref_ptr< osg::Geode > m_lineAndCylinderGeode;
-
-    ///
-    osg::ref_ptr< osg::Cone > m_cone;
-
-    ///
-    osg::ref_ptr< osg::Cylinder > m_cylinder;
-
-    ///
-    osg::ref_ptr< osg::ShapeDrawable > m_coneDrawable;
-
-    ///
-    osg::ref_ptr< osg::ShapeDrawable > m_cylinderDrawable;
 
 };
 } //end manipulator

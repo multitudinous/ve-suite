@@ -46,7 +46,7 @@ using namespace ves::xplorer::scenegraph::manipulator;
 ScaleCompound::ScaleCompound()
     :
     CompoundDragger( TransformationType::SCALE_COMPOUND ),
-    m_explodeDistance( 0.2 ),
+    m_explodeDistance( TRANSLATE_PAN_RADIUS ),
     m_xScaleAxis( NULL ),
     m_yScaleAxis( NULL ),
     m_zScaleAxis( NULL ),
@@ -104,8 +104,6 @@ void ScaleCompound::ComboForm()
     Dragger::ComboForm();
 
     osg::Vec3d explodeVector;
-    osg::Vec3dArray* lineVertices( NULL );
-    osg::Box* box( NULL );
     for( unsigned int i = 0; i < getNumChildren(); ++i )
     {
         ScaleAxis* scaleAxis = dynamic_cast< ScaleAxis* >( GetChild( i ) );
@@ -115,16 +113,10 @@ void ScaleCompound::ComboForm()
             explodeVector = scaleAxis->GetUnitAxis() * m_explodeDistance;
 
             //Move the lines and cylinders in from the origin and unit axis
-            lineVertices = scaleAxis->GetLineVertices();
-            (*lineVertices)[ 0 ] += explodeVector;
-            (*lineVertices)[ 1 ] -= explodeVector;
+            scaleAxis->ExpandLineVertices( explodeVector );
 
             //Move the boxes in from the unit axis
-            box = scaleAxis->GetBox();
-            box->setCenter( box->getCenter() - explodeVector );
-            
-            //Update the geometry's display list
-            scaleAxis->DirtyGeometry();
+            scaleAxis->BoxCenterOffset( -explodeVector );
         }
     }
 }
@@ -140,8 +132,6 @@ void ScaleCompound::DefaultForm()
     Dragger::DefaultForm();
 
     osg::Vec3d explodeVector;
-    osg::Vec3dArray* lineVertices( NULL );
-    osg::Box* box( NULL );
     for( unsigned int i = 0; i < getNumChildren(); ++i )
     {
         ScaleAxis* scaleAxis = dynamic_cast< ScaleAxis* >( GetChild( i ) );
@@ -151,16 +141,10 @@ void ScaleCompound::DefaultForm()
             explodeVector = scaleAxis->GetUnitAxis() * m_explodeDistance;
 
             //Move the lines and cylinders back to the origin and unit axis
-            lineVertices = scaleAxis->GetLineVertices();
-            (*lineVertices)[ 0 ] -= explodeVector;
-            (*lineVertices)[ 1 ] += explodeVector;
+            scaleAxis->ExpandLineVertices( -explodeVector );
 
             //Move the boxes back to the unit axis
-            box = scaleAxis->GetBox();
-            box->setCenter( box->getCenter() + explodeVector );
-
-            //Update the geometry's display list
-            scaleAxis->DirtyGeometry();
+            scaleAxis->BoxCenterOffset( explodeVector );
         }
     }
 }

@@ -76,6 +76,10 @@ public:
         const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
 
     ///
+    ///\param offset
+    void BoxCenterOffset( const osg::Vec3& offset );
+
+    ///
     ///\return
     virtual const char* className() const;
 
@@ -89,21 +93,12 @@ public:
     virtual osg::Object* cloneType() const;
 
     ///
+    void ExpandLineVertices( const osg::Vec3& expansion );
+
+    ///
     ///\param obj
     ///\return
     virtual bool isSameKindAs( const osg::Object* obj ) const;
-
-    ///
-    void DirtyGeometry();
-
-    ///
-    osg::Box* const GetBox() const;
-
-    ///
-    osg::Vec3dArray* const GetLineVertices() const;
-
-    ///
-    //virtual void UseColor( Color::Enum colorTag );
 
 protected:
     ///
@@ -114,16 +109,25 @@ protected:
 
 private:
     ///
-    osg::ref_ptr< osg::Vec3dArray > m_lineVertices;
+    osg::ref_ptr< osg::Vec3Array > m_lineVertices;
 
     ///
-    osg::ref_ptr< osg::Geometry > m_lineGeometry;
+    osg::ref_ptr< osg::Box > m_positiveBox;
 
     ///
-    osg::ref_ptr< osg::Box > m_box;
+    osg::ref_ptr< osg::Box > m_negativeBox;
 
     ///
-    osg::ref_ptr< osg::ShapeDrawable > m_shapeDrawable;
+    osg::ref_ptr< osg::Geometry > m_positiveLineGeometry;
+
+    ///
+    osg::ref_ptr< osg::Geometry > m_negativeLineGeometry;
+
+    ///
+    osg::ref_ptr< osg::ShapeDrawable > m_positiveBoxDrawable;
+
+    ///
+    osg::ref_ptr< osg::ShapeDrawable > m_negativeBoxDrawable;
 
 };
 } //end manipulator
