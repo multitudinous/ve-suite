@@ -102,34 +102,17 @@ const bool TranslatePan::ComputeProjectedPoint(
     const osgUtil::LineSegmentIntersector& deviceInput,
     osg::Vec3d& projectedPoint )
 {
-    //Get the start and end points for the dragger axis in world space
-    const osg::Vec3d startDraggerAxis = GetAxis( true, true );
-    const osg::Vec3d endDraggerAxis = GetAxis( false, true );
-
     //Get the near and far points for the active device
-    const osg::Vec3d& startDeviceInput = deviceInput.getStart();
-    const osg::Vec3d& endDeviceInput = deviceInput.getEnd();
+    const osg::Vec3d& lineStart = deviceInput.getStart();
+    const osg::Vec3d& lineEnd = deviceInput.getEnd();
 
-    osg::Vec3d u = endDraggerAxis - startDraggerAxis;
-    osg::Vec3d v = endDeviceInput - startDeviceInput;
-    osg::Vec3d w = startDraggerAxis - startDeviceInput;
-
-    double a = u * u;
-    double b = u * v;
-    double c = v * v;
-    double d = u * w;
-    double e = v * w;
-
-    //If the lines are not parallel
-    double D = ( a * c ) - ( b * b );
-    if( D == 0.0 )
+    //Exit if the intersection is invalid
+    double intersectDistance;
+    if( !GetLinePlaneIntersection(
+            lineStart, lineEnd, GetPlane(), projectedPoint ) )
     {
         return false;
     }
-
-    //Compute the line parameters of the two closest points
-    double sc = ( b * e - c * d ) / D;
-    projectedPoint = startDraggerAxis + ( u * sc );
 
     return true;
 }
