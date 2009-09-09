@@ -579,8 +579,8 @@ void Dragger::UpdateAssociations()
             btRB->activate();
             //btRB->setGravity( btVector3( 0, 0, -32.174 ) );
             btRB->setGravity( btVector3( 0, 0, 0 ) );
-            //btRB->setLinearVelocity( btVector3( 0.0, 0.0, 0.0 ) );
-            //btRB->setAngularVelocity( btVector3( 0.0, 0.0, 0.0 ) );
+            btRB->setLinearVelocity( btVector3( 0.0, 0.0, 0.0 ) );
+            btRB->setAngularVelocity( btVector3( 0.0, 0.0, 0.0 ) );
 
             continue;
         }
