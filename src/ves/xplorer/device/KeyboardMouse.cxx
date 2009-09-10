@@ -1533,10 +1533,14 @@ void KeyboardMouse::Zoom45( double dy )
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::Pan( double dx, double dz )
 {
+    /*
 #if __GADGET_version >= 1003023
     gmtl::Matrix44d vpwMatrix = m_currentGLTransformInfo->GetVPWMatrix();
 
     gmtl::Point3d position = vpwMatrix * *mCenterPoint;
+    std::cout << vpwMatrix << std::endl;
+    std::cout << *mCenterPoint << std::endl;
+    std::cout << std::endl;
     position.mData[ 0 ] += dx * mWidth;
     position.mData[ 1 ] += dz * mHeight;
     position = gmtl::invert( vpwMatrix ) * position;
@@ -1544,6 +1548,7 @@ void KeyboardMouse::Pan( double dx, double dz )
     mDeltaTranslation = position - *mCenterPoint;
     *mCenterPoint = position;
 #else
+    */
     double d = mCenterPoint->mData[ 1 ];
     double theta = mFoVZ * 0.5 ;
     double b = 2.0 * d * tan( theta );
@@ -1564,7 +1569,7 @@ void KeyboardMouse::Pan( double dx, double dz )
 
     mCenterPoint->mData[ 0 ] += dwx;
     mCenterPoint->mData[ 2 ] += dwz;
-#endif //__GADGET_version >= 1003023
+//#endif //__GADGET_version >= 1003023
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::Rotate( double angle, gmtl::Vec3d axis )
