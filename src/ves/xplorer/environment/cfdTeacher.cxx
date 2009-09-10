@@ -171,11 +171,8 @@ void cfdTeacher::RecordScene()
     std::string pfb_filename;
     std::ostringstream dirStringStream;
     dirStringStream << this->directory << "/stored_scene_"
-#ifdef _PERFORMER
-    << pfbFileNames.size() << ".pfb";
-#elif _OSG
-    << pfbFileNames.size() << ".ive";
-#endif
+        << pfbFileNames.size() << ".ive";
+
     std::string dirString = dirStringStream.str();
     pfb_filename = dirString.c_str();
     pfbFileNames.push_back( pfb_filename );
@@ -186,21 +183,7 @@ void cfdTeacher::RecordScene()
     // store the world DCS matrix..
     if( mModelRoot.valid() )
     {
-        //gmtl::Matrix44d m = this->_worldDCS->GetMat();
-
-        //temporarily reset the world DCS matrix to the identity
-        //gmtl::Matrix44d I;
-
-        // Make an identity matrix
-        //gmtl::identity( I );
-        //this->_worldDCS->SetMat( I );
-        //ves::xplorer::scenegraph::Clone* graphToWrite = new ves::xplorer::scenegraph::Clone(_worldDCS.get());
-
-        writePFBFile( mModelRoot.get(), pfb_filename );
-
-        //delete graphToWrite;
-        //graphToWrite = 0;
-        //this->_worldDCS->SetMat( m );
+        writePFBFile( ves::xplorer::scenegraph::SceneManager::instance()->GetModelRoot(), pfb_filename );
     }
     else
     {
@@ -245,7 +228,15 @@ void cfdTeacher::writePFBFile( osg::Node* graph, std::string fileName )
 {
     osgUtil::Optimizer optimizer;
     optimizer.optimize( graph );
-    osgDB::writeNodeFile( *graph, fileName );
+    bool status = osgDB::writeNodeFile( *graph, fileName );
+    if( status )
+    {
+        std::cout << "|\tSuccessfully written " << fileName << std::endl;
+    }
+    else
+    {
+        std::cout << "|\tThere were errors writing " << fileName << std::endl;
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdTeacher::Reset()
