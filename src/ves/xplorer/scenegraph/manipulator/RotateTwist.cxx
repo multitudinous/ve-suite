@@ -155,7 +155,7 @@ const bool RotateTwist::ComputeProjectedPoint(
 ////////////////////////////////////////////////////////////////////////////////
 const osg::ClipNode* const RotateTwist::GetClipNode() const
 {
-    return m_clipNode;
+    return m_clipNode.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool RotateTwist::isSameKindAs( const osg::Object* obj ) const

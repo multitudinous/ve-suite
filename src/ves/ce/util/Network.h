@@ -79,7 +79,7 @@ protected:
     std::vector<Module*> _module_ptrs;
     /// This map should be used in the future. This would allow
     /// easy access to modules from conductor ids.
-    std::map< int, Module* > moduleIDMap;
+    std::map< unsigned int, Module* > moduleIDMap;
     /// Holder of the network
     ves::open::xml::model::NetworkPtr veNetwork;
     ///Holds the top level system for the current network
