@@ -59,11 +59,10 @@
 using namespace ves::xplorer;
 using namespace ves::xplorer::scenegraph;
 
-#ifdef _OSG
 #include <osgDB/WriteFile>
 #include <osg/Node>
 #include <osgUtil/Optimizer>
-#endif
+#include <osgDB/FileNameUtils>
 
 ////////////////////////////////////////////////////////////////////////////////
 cfdTeacher::cfdTeacher( std::string specifiedDir, osg::Group* worldDCS )
@@ -235,6 +234,14 @@ void cfdTeacher::writePFBFile( osg::Node* graph, std::string fileName )
     }
     else
     {
+        osgDB::getNameLessExtension( fileName );
+        fileName += ".osg";
+        status = osgDB::writeNodeFile( *graph, fileName );
+        if( status )
+        {
+            std::cout << "|\tSuccessfully written " << fileName << std::endl;
+            return;
+        }
         std::cout << "|\tThere were errors writing " << fileName << std::endl;
     }
 }
