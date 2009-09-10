@@ -1244,7 +1244,7 @@ void SceneRenderToTexture::SetImageCameraCallback( bool capture, const std::stri
     {
         if( capture )
         {
-            (*iter)->setPostDrawCallback( new CameraImageCaptureCallback( filename, w, h ) );
+            (*iter)->setPostDrawCallback( new scenegraph::CameraImageCaptureCallback( filename, w, h ) );
         }
         else
         {
