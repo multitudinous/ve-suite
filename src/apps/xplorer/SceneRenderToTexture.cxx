@@ -39,6 +39,7 @@
 #include <ves/xplorer/environment/cfdDisplaySettings.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
+#include <ves/xplorer/scenegraph/CameraImageCaptureCallback.h>
 
 #include <ves/xplorer/scenegraph/rtt/Processor.h>
 #include <ves/xplorer/scenegraph/rtt/UnitCameraAttachmentBypass.h>
@@ -103,6 +104,12 @@ SceneRenderToTexture::~SceneRenderToTexture()
 ////////////////////////////////////////////////////////////////////////////////
 void SceneRenderToTexture::InitScene( osg::Camera* const sceneViewCamera )
 {
+    if( !ves::xplorer::scenegraph::SceneManager::instance()->IsRTTOn() )
+    {
+        m_updateList.push_back( sceneViewCamera );
+        return;
+    }
+
     //Get window and viewport information
 #if __VJ_version >= 2003000
     vrj::opengl::DrawManager* glDrawManager = vrj::opengl::DrawManager::instance();
@@ -1190,13 +1197,10 @@ void SceneRenderToTexture::WriteLowResImageFile(
         rttCameraList->setColorMask( oldcamera->getColorMask() );
         rttCameraList->setTransformOrder( oldcamera->getTransformOrder() );
         rttCameraList->setViewMatrix( oldcamera->getViewMatrix() );
-        
         // set view
         rttCameraList->setReferenceFrame( osg::Transform::ABSOLUTE_RF );
-        
         // set the camera to render before after the main camera.
         rttCameraList->setRenderOrder( osg::Camera::PRE_RENDER );
-        
         // tell the camera to use OpenGL frame buffer object where supported.
         rttCameraList->setRenderTargetImplementation( osg::Camera::FRAME_BUFFER_OBJECT );
         // add subgraph to render
@@ -1227,4 +1231,24 @@ void SceneRenderToTexture::WriteLowResImageFile(
 
     //This would work, too:
     osgDB::writeImageFile( *( shot.get() ), filename );
+}
+////////////////////////////////////////////////////////////////////////////////
+void SceneRenderToTexture::SetImageCameraCallback( bool capture, const std::string& filename )
+{
+    std::pair< int, int > screenDims = EnvironmentHandler::instance()->GetDisplaySettings()->GetScreenResolution();
+    int w = 0; int  h = 0; int m = 1;
+    w = screenDims.first;
+    h = screenDims.second;
+    
+    for( std::vector< osg::Camera* >::iterator iter = m_updateList.begin(); iter != m_updateList.end(); ++iter )
+    {
+        if( capture )
+        {
+            (*iter)->setPostDrawCallback( new CameraImageCaptureCallback( filename, w, h ) );
+        }
+        else
+        {
+            (*iter)->setPostDrawCallback( 0 );
+        }
+    }
 }

@@ -497,6 +497,7 @@ void App::latePreFrame()
         captureNextFrameForWeb = true;
         m_vjobsWrapper->GetXMLCommand()->
             GetDataValuePair( "Filename" )->GetData( m_filename );
+        mSceneRenderToTexture->SetImageCameraCallback( true, m_filename );
     }
 
     {
@@ -654,6 +655,13 @@ void App::postFrame()
     cfdExecutive::instance()->PostFrameUpdate();
 
     this->m_vjobsWrapper->GetCfdStateVariables();
+    
+    if( captureNextFrameForWeb )
+    {
+        mSceneRenderToTexture->SetImageCameraCallback( false, "" );
+        captureNextFrameForWeb = false;
+    }
+
     vprDEBUG( vesDBG, 3 ) << "|End postFrame" << std::endl << vprDEBUG_FLUSH;
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -669,9 +677,9 @@ void App::contextPreDraw()
         if( jccl::ConfigManager::instance()->isPendingStale() )
         {            
             vpr::Guard< vpr::Mutex > val_guard( mValueLock );
+            mSceneRenderToTexture->InitScene( (*sceneViewer)->getCamera() );
             if( mRTT )
             {
-                mSceneRenderToTexture->InitScene( (*sceneViewer)->getCamera() );
                 *m_skipDraw = true;
             }
             *mViewportsChanged = true;
@@ -854,13 +862,13 @@ void App::draw()
     }
 
     //Screen capture code
-    if( captureNextFrameForWeb )
+    /*if( captureNextFrameForWeb )
     {
         vpr::Guard< vpr::Mutex > val_guard( mValueLock );
         mSceneRenderToTexture->WriteLowResImageFile(
             getScene(), sv.get(), m_filename );
         captureNextFrameForWeb = false;
-    }
+    }*/
 
     glMatrixMode( GL_PROJECTION );
     glPopMatrix();

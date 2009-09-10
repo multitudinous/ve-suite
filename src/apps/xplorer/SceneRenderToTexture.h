@@ -147,6 +147,8 @@ public:
     //Update function to traverse 
     void Update( osg::NodeVisitor* updateVisitor );
 
+    ///capture image callback
+    void SetImageCameraCallback( bool capture, const std::string& filename );
 protected:
 
 private:
