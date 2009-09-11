@@ -1263,7 +1263,7 @@ void VTKDataToTexture::writeVelocityTexture(int whichVector)
 	    std::cout << "...so we made it for you..." << std::endl;
 	}
     nameString.clear();
-    nameString.append( "/" );
+    //nameString.append( "/" );
     nameString.append(vectorPath.string());
     nameString.append( "/" );
     nameString.append( _vectorNames[whichVector] );
@@ -1330,7 +1330,7 @@ void VTKDataToTexture::writeScalarTexture(int whichScalar)
 	}   
 
     nameString.clear();
-    nameString.append( "/" );
+    //nameString.append( "/" );
     nameString.append(scalarPath.string());
     nameString.append( "/" );
     nameString.append( _scalarNames[whichScalar] );
