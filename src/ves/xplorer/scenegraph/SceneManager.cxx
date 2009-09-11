@@ -115,7 +115,8 @@ SceneManager::SceneManager()
     m_clrNode( NULL ),
     mFrameStamp( NULL ),
     mCharacterController( NULL ),
-    m_isRTTOn( false )
+    m_isRTTOn( false ),
+    m_isDesktopMode( false )
 {
     ;
 }
@@ -515,5 +516,15 @@ bool SceneManager::IsRTTOn()
 void SceneManager::SetRTT( bool isRTTOn )
 {
     m_isRTTOn = isRTTOn;
+}
+////////////////////////////////////////////////////////////////////////////////
+bool SceneManager::IsDesktopMode()
+{
+    return m_isDesktopMode;
+}
+////////////////////////////////////////////////////////////////////////////////
+void SceneManager::SetDesktopMode( bool isDesktopMode )
+{
+    m_isDesktopMode = isDesktopMode;
 }
 ////////////////////////////////////////////////////////////////////////////////

@@ -256,7 +256,8 @@ void App::contextInit()
         new_sv->getCamera()->setName( "SV Camera" );
         if( !mRTT )
         {
-            new_sv->setSceneData( getScene() );
+            //new_sv->setSceneData( getScene() );
+            new_sv->getCamera()->addChild( getScene() );
         }
         else
         {
@@ -329,6 +330,8 @@ void App::configSceneView( osgUtil::SceneView* newSceneViewer )
         newSceneViewer->getGlobalStateSet()->setAttributeAndModes(
             light_model_0.get(), osg::StateAttribute::ON );
 
+        //newSceneViewer->getCamera()->addChild( light_source_0.get() );
+        
         newSceneViewer->setSmallFeatureCullingPixelSize( 10 );
     }
 
@@ -402,10 +405,6 @@ void App::initScene()
     ves::xplorer::scenegraph::SceneManager::instance()->
         SetFrameStamp( mFrameStamp.get() );
 
-    getScene()->addChild( light_source_0.get() );
-    getScene()->getOrCreateStateSet()->setAttributeAndModes(
-        light_model_0.get(), osg::StateAttribute::ON );
-
     // modelHandler stores the arrow and holds all data and geometry
     ModelHandler::instance()->SetXMLCommand( m_vjobsWrapper->GetXMLCommand() );
     ModelHandler::instance()->InitScene();
@@ -419,6 +418,8 @@ void App::initScene()
         {
             EnvironmentHandler::instance()->
                 SetDesktopSize( atoi( argv[ i + 1 ] ), atoi( argv[ i + 2 ] ) );
+            ves::xplorer::scenegraph::SceneManager::instance()->
+                SetDesktopMode( true );
         }
         else if( std::string( argv[ i ] ) == std::string( "-VESCluster" ) )
         {

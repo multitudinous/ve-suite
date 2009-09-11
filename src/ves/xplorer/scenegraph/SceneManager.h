@@ -190,6 +190,11 @@ public:
     ///Set the RTT flag on
     void SetRTT( bool isRTTOn );
     
+    ///Set if we are in desktop mode
+    void SetDesktopMode( bool isDesktopMode );
+    ///Tell if we are in Desktop mode
+    bool IsDesktopMode();
+    
 protected:
     ///Create the model for the logo
     void _createLogo();
@@ -274,6 +279,9 @@ private:
     
     ///Flag to tell if RTT is off or on
     bool m_isRTTOn;
+
+    ///Flag to tell if we are in Desktop mode
+    bool m_isDesktopMode;
 
     ///This containes a map to context specific data given a viewport
     ///This map should never be returned to the user as the map
