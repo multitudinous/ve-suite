@@ -156,8 +156,8 @@ App::App( int argc, char* argv[], bool enableRTT )
     light_0->setDiffuse( osg::Vec4d( 0.88627, 0.88500, 0.88500, 1.0 ) );
     light_0->setSpecular( osg::Vec4d( 0.49019, 0.48872, 0.48872, 1.0 ) );
     //We are in openGL space
-    light_0->setPosition( osg::Vec4d( 0.0, -10000.0, 10000.0, 0.0 ) );
-    light_0->setDirection( osg::Vec3d( 0.0, 1.0, -1.0 ) );
+    light_0->setPosition( osg::Vec4d( 0.0, 10000.0, 10000.0, 0.0 ) );
+    //light_0->setDirection( osg::Vec3d( 0.0, 1.0, -1.0 ) );
 
     light_source_0->setLight( light_0.get() );
     light_source_0->setLocalStateSetModes( osg::StateAttribute::ON );
@@ -330,7 +330,7 @@ void App::configSceneView( osgUtil::SceneView* newSceneViewer )
         newSceneViewer->getGlobalStateSet()->setAttributeAndModes(
             light_model_0.get(), osg::StateAttribute::ON );
 
-        //newSceneViewer->getCamera()->addChild( light_source_0.get() );
+        newSceneViewer->getCamera()->addChild( light_source_0.get() );
         
         newSceneViewer->setSmallFeatureCullingPixelSize( 10 );
     }
