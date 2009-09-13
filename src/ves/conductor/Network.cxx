@@ -63,7 +63,7 @@
 #include <ves/open/xml/User.h>
 #include <ves/open/xml/StateInfo.h>
 #include <ves/open/xml/StateInfoPtr.h>
-#include <ves/open/xml/StateInfoPtr.h>
+#include <ves/open/xml/Transform.h>
 
 #include <ves/open/xml/cad/CADAssembly.h>
 
@@ -107,19 +107,21 @@ BEGIN_EVENT_TABLE( Network, wxEvtHandler )
     EVT_MENU( UIPLUGINBASE_DELETE_PORT, Network::OnDelPort )
     EVT_MENU( LINK_DEL, Network::OnDelLink )
     EVT_UPDATE_UI( UIPLUGINBASE_DIALOG_PLUGIN_UPDATE, Network::OnDeletePlugins )
+    EVT_TIMER( NETWORK_UPDATE_TIMER_ID, Network::OnTimer )
 END_EVENT_TABLE()
 ////////////////////////////////////////////////////////////////////////////////
 Network::Network( wxWindow* parent, 
                  ves::conductor::util::CORBAServiceList* serviceList,
                  ves::conductor::XMLDataBufferEngine* dataBufferEngine,
                  ves::conductor::UserPreferencesDataBuffer* userPrefBuffer ):
-        wxEvtHandler(),
-        tryingLink( false ),
-        isLoading( false ),
-        mServiceList( serviceList ),
-        mDataBufferEngine( dataBufferEngine ),
-        mUserPrefBuffer( userPrefBuffer ),
-        mMouseOverPlugin( -1 )
+    wxEvtHandler(),
+    tryingLink( false ),
+    isLoading( false ),
+    mServiceList( serviceList ),
+    mDataBufferEngine( dataBufferEngine ),
+    mUserPrefBuffer( userPrefBuffer ),
+    mMouseOverPlugin( -1 ),
+    m_timer( this, NETWORK_UPDATE_TIMER_ID )
 {
     modules.clear();
     links.clear();
@@ -153,6 +155,8 @@ Network::Network( wxWindow* parent,
     systemPtr = mDataBufferEngine->GetXMLSystemDataObject(
                     mDataBufferEngine->GetTopSystemId() );
     networkDeleteEvent.SetId( NETWORK_DELETE_NETWORK );
+    
+    m_timer.Start( 500 );
 }
 ////////////////////////////////////////////////////////////////////////////////
 Network::~Network()
@@ -204,7 +208,7 @@ void Network::OnMLeftDown( wxMouseEvent& event )
 
     if( m_selMod >= 0 )
     {
-        std::map< int, Module >::iterator iter;
+        std::map< unsigned int, Module >::iterator iter;
         iter = modules.find( m_selMod );
         iter->second.GetPlugin()->SetHighlightFlag( true );
         //Select the ports for a plugin
@@ -699,7 +703,7 @@ void Network::OnDelMod( wxCommandEvent& event )
     }
 
     //Now delete the plugin from the module and then remove from the map
-    std::map< int, Module >::iterator iter;
+    std::map< unsigned int, Module >::iterator iter;
     iter = modules.find( *selMod );
     if( iter != modules.end() )
     {
@@ -779,7 +783,7 @@ int Network::SelectMod( int x, int y, wxDC &dc )
     wxPoint temp;
     temp.x = x;
     temp.y = y;
-    for( std::map< int, Module >::iterator iter = modules.begin();
+    for( std::map< unsigned int, Module >::iterator iter = modules.begin();
             iter != modules.end(); iter++ )
     {
         //if( iter->second.GetPlugin()->GetPolygon()->inside( temp ) )
@@ -796,7 +800,7 @@ int Network::SelectMod( int x, int y, wxDC &dc )
 ////////////////////////////////////////////////////////////////////////////////
 void Network::UnSelectMod( )
 {
-    for( std::map<int, Module>::iterator iter = modules.begin();
+    for( std::map<unsigned int, Module>::iterator iter = modules.begin();
             iter != modules.end(); ++iter )
     {
         iter->second.GetPlugin()->SetHighlightFlag( false );
@@ -1090,7 +1094,7 @@ void Network::TryLink( int x, int y, int mod, int pt, wxDC& dc, bool flag )
     y = static_cast< int >( y / userScale.second );
     temp.x = x;//dc.LogicalToDeviceX( x );
     temp.y = y;//dc.LogicalToDeviceY( y );
-    for( std::map< int, Module >::iterator iter = 
+    for( std::map< unsigned int, Module >::iterator iter = 
         modules.begin(); iter != modules.end(); iter++ )
     {
         //if( iter->second.GetPlugin()->GetPolygon()->inside( temp ) ) //&& mMouseOverPlugin != mod )
@@ -1161,7 +1165,7 @@ void Network::DropLink( int x, int y, int mod, int pt, wxDC &dc, bool flag )
     wxRect bbox;
     wxPoint temp;
     int dest_mod, dest_port;
-    std::map< int, Module >::iterator iter;
+    std::map< unsigned int, Module >::iterator iter;
 
     dest_mod = dest_port = -1;
     temp.x = x;
@@ -1697,8 +1701,8 @@ void Network::AddtoNetwork( UIPluginBase *cur_module, std::string cls_name )
     POLY tmpPoly;
     int num;
 
-    int id;
-    std::map<int, Module>::iterator mit;
+    unsigned int id;
+    std::map<unsigned int, Module>::iterator mit;
     while( 1 )
     {
         id = wxNewId();
@@ -1751,7 +1755,7 @@ void Network::AddtoNetwork( UIPluginBase *cur_module, std::string cls_name )
 void Network::DrawNetwork( wxDC &dc )
 {
     // redraw all the active plugins
-    for( std::map<int, Module>::iterator iter = modules.begin();
+    for( std::map<unsigned int, Module>::iterator iter = modules.begin();
             iter != modules.end(); iter++ )
     {
         iter->second.GetPlugin()->DrawPlugin( &dc );
@@ -2078,7 +2082,7 @@ wxPoint Network::GetPointForSelectedPlugin( unsigned long moduleID, unsigned int
 ////////////////////////////////////////////////////////////////////////////////
 void Network::SetIDOnAllActiveModules( void )
 {
-    std::map< int, Module >::iterator iter;
+    std::map< unsigned int, Module >::iterator iter;
     for( iter = modules.begin(); iter != modules.end(); ++iter )
     {
         std::string moduleName = ConvertUnicode( iter->second.GetPlugin()->GetName().c_str() );
@@ -2157,7 +2161,7 @@ void Network::PushAllEvents( )
         parent->PushEventHandler( &tags.at( i ) );
     }
 
-    for( std::map< int, Module >::iterator iter
+    for( std::map< unsigned int, Module >::iterator iter
             = modules.begin(); iter != modules.end(); iter++ )
     {
         parent->PushEventHandler( iter->second.GetPlugin() );
@@ -2176,7 +2180,7 @@ void Network::RemoveAllEvents()
         parent->RemoveEventHandler( &tags.at( i ) );
     }
 
-    for( std::map< int, Module >::iterator iter
+    for( std::map< unsigned int, Module >::iterator iter
             = modules.begin(); iter != modules.end(); iter++ )
     {
         parent->RemoveEventHandler( iter->second.GetPlugin() );
@@ -2187,7 +2191,7 @@ void Network::RemovePluginDialogs()
 {
     //If there are no dialogs present then go ahead and send the kill
     // command to this class
-    for( std::map< int, Module >::iterator iter
+    for( std::map< unsigned int, Module >::iterator iter
         = modules.begin(); iter != modules.end(); ++iter )
     {
         iter->second.GetPlugin()->CheckPluginMapOnExit();
@@ -2204,7 +2208,7 @@ void Network::RemovePluginDialogs()
 ////////////////////////////////////////////////////////////////////////////////
 void Network::ClearXplorer()
 {
-    for( std::map<int, Module>::iterator iter =
+    for( std::map<unsigned int, Module>::iterator iter =
                 modules.begin(); iter != modules.end(); ++iter )
     {
         DataValuePairPtr dataValuePair( new DataValuePair( "UNSIGNED INT" ) );
@@ -2221,7 +2225,7 @@ void Network::ClearXplorer()
 void Network::Update()
 {
     //Models
-    for( std::map< int, Module >::iterator iter = modules.begin();
+    for( std::map< unsigned int, Module >::iterator iter = modules.begin();
             iter != modules.end(); ++iter )
     {
         iter->second.GetPlugin()->GetVEModel();
@@ -2250,7 +2254,7 @@ void Network::OnDeletePlugins( wxUpdateUIEvent& event )
         idBeingDeleted = pluginData->first;
     }
 
-    std::map< int, Module >::iterator iter;
+    std::map< unsigned int, Module >::iterator iter;
     iter = modules.find( idBeingDeleted );
     modules.erase( iter );
     //std::cout << " erasing the module" << std::endl;
@@ -2285,9 +2289,71 @@ std::pair< int, int > Network::GetScrollPosition()
 {
     return scrollPos;
 }
-///////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void Network::SetScrollPosition( int x, int y )
 {
     scrollPos.first = x;
     scrollPos.second = y;
 }
+////////////////////////////////////////////////////////////////////////////////
+void Network::UpdateInternalPluginData()
+{
+    ///Get command
+    const CommandPtr viewPointData = CORBAServiceList::instance()->
+        GetGUIUpdateCommands( "MODEL_DATA_UPDATE" );
+    if( viewPointData->GetCommandName() == "NULL" )
+    {
+        return;
+    }
+    
+    // See if this is the system
+    std::string uuidSystem;
+    viewPointData->GetDataValuePair( "PARENT_SYSTEM_ID" )->GetData( uuidSystem );
+    if( networkID != uuidSystem )
+    {
+        return;
+    }
+    
+    // Iff it is the system then find the plugin
+    std::string uuidPlugin;
+    viewPointData->GetDataValuePair( "PLUGIN_ID" )->GetData( uuidPlugin );
+    const ves::open::xml::CommandPtr pluginCommand = 
+        boost::dynamic_pointer_cast< ves::open::xml::Command >(
+        viewPointData->GetDataValuePair( "PLUGIN_DATA" )->GetDataXMLObject() );
+    for( std::map< unsigned int, Module >::iterator iter = 
+        modules.begin(); iter != modules.end(); ++iter )
+    {
+        // once the plugin is found get the ve model
+        const ves::open::xml::model::ModelPtr model = 
+            iter->second.GetPlugin()->GetVEModel();
+        if( model->GetID() == uuidPlugin )
+        {
+            std::string uuidPart;
+            pluginCommand->GetDataValuePair( "CAD_ID" )->GetData( uuidPart ); 
+            // update the ve model with whatever data xplorer is sending
+            const ves::open::xml::cad::CADNodePtr tempPart = 
+                boost::dynamic_pointer_cast< ves::open::xml::cad::CADAssembly >( 
+                model->GetGeometry() )->SearchAllChildren( uuidPart );
+            ves::open::xml::TransformPtr transform = 
+                boost::dynamic_pointer_cast< ves::open::xml::Transform >( 
+                pluginCommand->GetDataValuePair( "CAD_TRANSFORM" )->
+                GetDataXMLObject()  );
+            tempPart->SetTransform( transform );
+            break;
+        }
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void Network::OnTimer( wxTimerEvent& WXUNUSED( event ) )
+{
+    //only update the gui when it is in focus and is being used
+    //another method would be the wxTopLevelWindow::IsActive
+    //or an wxIdleEvent may need to be used here
+    //we will have to do testing to figure out the best methods
+    //wxInternalIdle was called too often
+    //if( IsShown() )
+    {
+        UpdateInternalPluginData();
+    }
+}
+////////////////////////////////////////////////////////////////////////////////

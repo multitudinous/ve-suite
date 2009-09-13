@@ -107,6 +107,11 @@ public:
     ///\param name The of the child name to search for.
     ves::open::xml::cad::CADNodePtr GetChild( const std::string& name );
 
+    ///Search this assembly and all sub assemblies for the child of interest
+    ///\param uuid The identifier for the node of interest
+    ///\return The node of interest
+    ves::open::xml::cad::CADNodePtr SearchAllChildren( const std::string& uuid );
+    
     ///Copy constructor
     //\param rhs The CADPart to copy
     ///\param clone Create a clone of this node

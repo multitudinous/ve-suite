@@ -99,12 +99,12 @@ bool CADAssembly::RemoveChild( const std::string& whichChildID )
     }
     return false;
 }
-///////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 unsigned int CADAssembly::GetNumberOfChildren()
 {
     return mChildren.size();
 }
-/////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 ves::open::xml::cad::CADNodePtr CADAssembly::GetChild( const std::string& name )
 {
     for( size_t i = 0; i < mChildren.size(); i++ )
@@ -116,12 +116,36 @@ ves::open::xml::cad::CADNodePtr CADAssembly::GetChild( const std::string& name )
     }
     return ves::open::xml::cad::CADNodePtr();
 }
-///////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 ves::open::xml::cad::CADNodePtr CADAssembly::GetChild( unsigned int whichChild )
 {
     return mChildren.at( whichChild );
 }
-///////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+ves::open::xml::cad::CADNodePtr CADAssembly::SearchAllChildren( const std::string& uuid )
+{
+    for( size_t i = 0; i < mChildren.size(); i++ )
+    {
+        ves::open::xml::cad::CADNodePtr tempNode = mChildren.at( i );
+        if( tempNode->GetID() == uuid )
+        {
+            return tempNode;
+        }
+        
+        ves::open::xml::cad::CADAssemblyPtr tempAssem = 
+            boost::dynamic_pointer_cast< ves::open::xml::cad::CADAssembly >( tempNode );
+        if( tempAssem )
+        {
+            tempNode = tempAssem->SearchAllChildren( uuid );
+            if( tempNode )
+            {
+                return tempNode;
+            }
+        }
+    }
+    return ves::open::xml::cad::CADNodePtr();
+}
+////////////////////////////////////////////////////////////////////////////////
 void CADAssembly::_updateChildren()
 {
     DOMElement* childList = mRootDocument->createElement(

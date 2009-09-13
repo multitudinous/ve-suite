@@ -331,7 +331,6 @@ void EnvironmentHandler::PreFrameUpdate()
 
     ves::xplorer::cfdQuatCamHandler::instance()->PreFrameUpdate();
     ves::xplorer::NavigationAnimationEngine::instance()->PreFrameUpdate();
-
 }
 ////////////////////////////////////////////////////////////////////////////////
 void EnvironmentHandler::LatePreFrameUpdate()

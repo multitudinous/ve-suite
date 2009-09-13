@@ -1442,7 +1442,7 @@ void AppFrame::FindBlocks( wxCommandEvent& WXUNUSED( event ) )
     //alphabetize map
     //std::map< std::string, unsigned int > alphaMap;
     std::multimap< std::string, unsigned int > alphaMap;
-    for( std::map<int, Module>::iterator iter = network->modules.begin();
+    for( std::map<unsigned int, Module>::iterator iter = network->modules.begin();
         iter != network->modules.end(); ++iter )
     {
         if( iter->second.GetPlugin()->GetNameFlag() )
@@ -1660,7 +1660,7 @@ void AppFrame::ViewResult( wxCommandEvent& WXUNUSED( event ) )
     
     char* result = 0;
     //char buf[80];
-    std::map<int, Module>::iterator iter;
+    std::map<unsigned int, Module>::iterator iter;
     std::vector<wxString> titles;
     //TextResultDialog * result_dlg;
     SummaryResultDialog * result_dlg = 0;

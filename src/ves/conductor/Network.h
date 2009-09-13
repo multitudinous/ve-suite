@@ -46,6 +46,7 @@ Network API
 #include <ves/conductor/Module.h>
 #include <ves/open/xml/model/SystemPtr.h>
 
+#include <wx/timer.h>
 #include <wx/event.h>
 #include <wx/scrolwin.h>
 #include <wx/textdlg.h>
@@ -136,7 +137,7 @@ public:
     void HighlightCenter( int modId );
     void SetSelectedLink( int link );
     void HighlightCenterLink( int linkId );
-    std::map< int, ves::conductor::Module > modules; //The list of modules;
+    std::map< unsigned int, ves::conductor::Module > modules; //The list of modules;
     //The list of links between the nodes of moduls.
     std::vector< ves::conductor::util::Link > links;
     //void ReDraw(wxDC &dc);
@@ -197,6 +198,11 @@ protected:
     //Used to keep track of the network size
     void SetNetworkSize(int x, int y);
 
+    ///Internal update to process commands coming from xplorer
+    void UpdateInternalPluginData();
+    ///Handle regularly occuring events
+    void OnTimer( wxTimerEvent& event );
+    
     int m_selMod; // selected module
     int m_selFrPort; // selected From port
     int m_selToPort; // selected To port;
@@ -259,6 +265,8 @@ private:
     std::pair< unsigned int, unsigned int > numUnit;
     std::pair< int, int > networkSize;
     std::pair< int, int > scrollPos;
+
+    wxTimer m_timer;
 
     std::string ConvertUnicode( const wxChar* data )
     {
