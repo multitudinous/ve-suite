@@ -143,7 +143,7 @@ protected:
     ///\param slicePlaneNormal The normal to the slices
     ///\param extremeIndicies The indicies of the closest and furthest bbox corner
     void _findBBoxMinMaxIndicies( osg::ref_ptr<osg::Vec4Array> rotatedBBox,
-                                  osg::Vec4 slicePlaneNormal,
+                                  osg::Vec3 slicePlaneNormal,
                                   unsigned int extremeIndicies[] )const;
 
     ///Calculate the sample distance
@@ -158,8 +158,8 @@ protected:
     ///\param currentDelta The current slice distance
     ///\param deltaRatio The ratio of the current slice distance to the original slice distance
     void _calculateEdgeIntersections( osg::State& currentState,
-                                      osg::Vec4 initialSlicePoint,
-                                      osg::Vec4 slicePlaneNormal,
+                                      osg::Vec3 initialSlicePoint,
+                                      osg::Vec3 slicePlaneNormal,
                                       unsigned int extremaIndicies[],
                                       float currentDelta,
                                       float deltaRatio )const;
@@ -173,9 +173,9 @@ protected:
     ///\param slicePlaneNormal Slice plane normal
     ///\param extremaIndicies The indicies of the closest and furthest bbox corner
     void _calculateVertsAndTextureCoordinates( unsigned int currentEdgeIndex,
-                                               osg::Vec4 frontSlicePoint,
-                                               osg::Vec4 backSlicePoint,
-                                               osg::Vec4 slicePlaneNormal,
+                                               osg::Vec3 frontSlicePoint,
+                                               osg::Vec3 backSlicePoint,
+                                               osg::Vec3 slicePlaneNormal,
                                                unsigned int extremaIndicies[],
                                                float* verts,
                                                float* frontTCoords,
