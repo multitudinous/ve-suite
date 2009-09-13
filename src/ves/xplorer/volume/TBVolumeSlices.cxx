@@ -346,7 +346,7 @@ void TextureBasedVolumeSlices::drawImplementation( osg::State& renderState ) con
         _cameraLocation.set( eye.x(), eye.y(), eye.z(), 1.0 );
         osg::Vec4d yupCenter( _center.x(), _center.z(), -_center.y(), 1 );
         //std::cout << modelViewMatrix << std::endl;
-        _eyeCenter = yupCenter * modelViewMatrix;
+        _eyeCenter = _center * modelViewMatrix;
         osg::Vec4 tempEye( _eyeCenter.x(), -_eyeCenter.z(), _eyeCenter.y(), 1.0 );
         _eyeCenter = tempEye;
         
@@ -375,7 +375,7 @@ void TextureBasedVolumeSlices::drawImplementation( osg::State& renderState ) con
         //std::cout << _center << " " << _eyeCenter << " " << _cameraLocation << std::endl;
         //std::cout << slicePlaneNormalTemp << std::endl;
         osg::Vec3 slicePlaneNormal( slicePlaneNormalTemp.x(), slicePlaneNormalTemp.y(), slicePlaneNormalTemp.z() );//0.0, -1.0, 0.0 );
-        slicePlaneNormal.set( 0.0, -1.0, 0.0, 0.0 );
+        slicePlaneNormal.set( 0.0, -1.0, 0.0 );
         slicePlaneNormal.normalize();
         //std::cout << slicePlaneNormal << std::endl;
 
