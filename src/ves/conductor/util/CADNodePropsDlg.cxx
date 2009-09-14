@@ -736,7 +736,6 @@ void CADNodePropertiesDlg::_editAttribute( wxListEvent& event )
     {
         ClearInstructions();
         wxString attributeName = event.GetText();
-        //std::cout<<"Editting attribute"<<attributeName<<std::endl;
         if( _attributeType->GetValue() == wxString( "Materials", wxConvUTF8 ) )
         {
             CADMaterialEditMenu* materialMenu = new CADMaterialEditMenu();
@@ -1214,7 +1213,6 @@ void CADNodePropertiesDlg::_showFaceSelectDialog( wxCommandEvent& WXUNUSED( even
 
         if( faceSelector.ShowModal() == wxID_OK )
         {
-            //std::cout<<"Selecting face: "<<faceSelector.GetStringSelection()<<std::endl;
             material->SetFace( ConvertUnicode( faceSelector.GetStringSelection().GetData() ) );
             //send the data to Xplorer
             ClearInstructions();
@@ -1276,7 +1274,6 @@ void CADNodePropertiesDlg::_showColorModeSelectDialog( wxCommandEvent& WXUNUSED(
 
         if( colorSelector.ShowModal() == wxID_OK )
         {
-            //std::cout<<"Selecting color mode: "<<colorSelector.GetStringSelection()<<std::endl;
             material->SetColorMode( ConvertUnicode( colorSelector.GetStringSelection().GetData() ) );
 
             //send the data to Xplorer
@@ -1470,7 +1467,6 @@ void CADNodePropertiesDlg::_updateGeographic ( wxSpinEvent& event )
 ///////////////////////////////////////////////////
 void CADNodePropertiesDlg::_sendCommandsToXplorer()
 {
-    //std::cout<<"---Sending commands to Xplorer---"<<std::endl;
     ves::open::xml::CommandPtr cadCommand( new ves::open::xml::Command() );
 
     for( size_t i = 0; i < _instructions.size(); i++ )
@@ -1487,7 +1483,6 @@ void CADNodePropertiesDlg::_sendCommandsToXplorer()
     {
         wxMessageBox( _( "Send data to VE-Xplorer failed. Probably need to disconnect and reconnect." ),
                       _( "Communication Failure" ), wxOK | wxICON_INFORMATION );
-        //delete [] tempDoc;
     }
 }
 #endif

@@ -1591,6 +1591,12 @@ void AppFrame::SubmitToServer( wxCommandEvent& WXUNUSED( event ) )
         serviceList->SendCommandStringToXplorer( veCommand );
         //enable the menus now
         run_menu->Enable( APPFRAME_V21ID_START_CALC, true );
+        //if there is only one module make it active right away
+        if( network->modules.size() == 1 )
+        {
+            network->modules.begin()->second.GetPlugin()->SetActiveModel();
+        }
+        
     }
     catch ( CORBA::Exception& )
     {
