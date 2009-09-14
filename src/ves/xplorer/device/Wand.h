@@ -126,7 +126,7 @@ public:
     ///Set the start and end position
     ///\param startPoint The start position
     ///\param endPoint The end position
-    void SetupStartEndPoint( osg::Vec3d* startPoint, osg::Vec3d* endPoint );
+    void SetupStartEndPoint( osg::Vec3d& startPoint, osg::Vec3d& endPoint );
 
     ///Performs translation through scene
     void TranslateObject();

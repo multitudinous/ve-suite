@@ -57,6 +57,7 @@
 #include <osg/MatrixTransform>
 #include <osg/Array>
 #include <osg/NodeVisitor>
+#include <osg/Matrix>
 
 // --- C/C++ Libraries --- //
 #include <iostream>
@@ -209,8 +210,16 @@ void Wand::ProcessEvents()
         rotationStepSize = 0.001333f * powf(( cfdIso_value * 0.5f ), 2.2f );
     }
 
+    //Process a selection event from a toggle off event just like in KM
+    //if( buttonData[ 0 ] == gadget::Digital::TOGGLE_OFF ) //&&
+       //( buttonData[ 2 ] == gadget::Digital::TOGGLE_ON ||
+       // buttonData[ 2 ] == gadget::Digital::ON )
+   {
+       UpdateObjectHandler();
+   }
+
     //Free rotation
-    if (( buttonData[ 1 ] == gadget::Digital::TOGGLE_ON ) ||
+    if(( buttonData[ 1 ] == gadget::Digital::TOGGLE_ON ) ||
             ( buttonData[ 1 ] == gadget::Digital::ON ) )
     {
         m_buttonPushed = true;
@@ -301,7 +310,7 @@ void Wand::SetVECommand( CommandPtr veCommand )
 void Wand::SelectObject()
 {
     osg::Vec3d startPoint, endPoint;
-    SetupStartEndPoint( &startPoint, &endPoint );
+    SetupStartEndPoint( startPoint, endPoint );
 
     beamLineSegment->set( startPoint, endPoint );
 
@@ -483,21 +492,21 @@ void Wand::DrawLine( osg::Vec3d start, osg::Vec3d end )
 //using gestures from a glove.
 void Wand::UpdateObjectHandler()
 {
-    vprDEBUG( vesDBG, 3 ) << "|\tStart Wand::UpdateObjectHandler"
-    << std::endl << vprDEBUG_FLUSH;
-
-    //Update the juggler location of the wand
-    UpdateWandLocalDirection();
-    UpdateWandGlobalLocation();
-    //UpdateDeltaWandPosition();
-
-    //Now draw the new line location and setup the data for the hit list pointer
-    osg::Vec3d startPoint, endPoint;
-    SetupStartEndPoint( &startPoint, &endPoint );
-    DrawLine( startPoint, endPoint );
-
+    //When the user is holding down button 0 then draw the selection ray
+    if( digital[ 0 ]->getData() == gadget::Digital::ON )
+    {
+        //Update the juggler location of the wand
+        UpdateWandLocalDirection();
+        UpdateWandGlobalLocation();
+        //UpdateDeltaWandPosition();
+        
+        //Now draw the new line location and setup the data for the hit list pointer
+        osg::Vec3d startPoint, endPoint;
+        SetupStartEndPoint( startPoint, endPoint );
+        DrawLine( startPoint, endPoint );        
+    }
     //Now select and object based on the new wand location
-    if( digital[ 0 ]->getData() == gadget::Digital::TOGGLE_ON )
+    else if( digital[ 0 ]->getData() == gadget::Digital::TOGGLE_OFF )
     {
         SelectObject();
         //Set delta back to 0 so that it is not moved
@@ -513,12 +522,9 @@ void Wand::UpdateObjectHandler()
         TranslateObject();
     }
     */
-
-    vprDEBUG( vesDBG, 3 ) << "|\tEnd Wand::UpdateObjectHandler"
-    << std::endl << vprDEBUG_FLUSH;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Wand::SetupStartEndPoint( osg::Vec3d * startPoint, osg::Vec3d * endPoint )
+void Wand::SetupStartEndPoint( osg::Vec3d& startPoint, osg::Vec3d& endPoint )
 {
     double* wandPosition = GetObjLocation();
     double* wandDirection = GetDirection();
@@ -529,8 +535,18 @@ void Wand::SetupStartEndPoint( osg::Vec3d * startPoint, osg::Vec3d * endPoint )
         wandEndPoint[ i ] = ( wandDirection [ i ] * distance );
     }
 
-    startPoint->set( wandPosition[ 0 ], wandPosition[ 1 ], wandPosition[ 2 ] );
-    endPoint->set( wandEndPoint[ 0 ], wandEndPoint[ 1 ], wandEndPoint[ 2 ] );
+    startPoint.set( wandPosition[ 0 ], wandPosition[ 1 ], wandPosition[ 2 ] );
+    endPoint.set( wandEndPoint[ 0 ], wandEndPoint[ 1 ], wandEndPoint[ 2 ] );
+    
+    //Need to negate the the camera transform that is multiplied into the view
+    {
+        osg::Matrixd inverseCameraTransform(
+            ves::xplorer::scenegraph::SceneManager::instance()->
+            GetInvertedWorldDCS().getData() );
+        
+        startPoint = startPoint * inverseCameraTransform;
+        endPoint = endPoint * inverseCameraTransform;
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::TranslateObject()
