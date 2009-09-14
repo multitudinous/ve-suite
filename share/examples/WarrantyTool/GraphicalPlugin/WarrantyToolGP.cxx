@@ -101,6 +101,7 @@ m_groupedTextTextures( 0 )
 ////////////////////////////////////////////////////////////////////////////////
 WarrantyToolGP::~WarrantyToolGP()
 {
+    std::cout << " here 1 " << std::endl;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void WarrantyToolGP::InitializeNode(
@@ -701,7 +702,18 @@ void WarrantyToolGP::CreateDBQuery( ves::open::xml::DataValuePairPtr dvp )
 void WarrantyToolGP::RemoveSelfFromSG()
 {
     PluginBase::RemoveSelfFromSG();
-    Poco::Data::SQLite::Connector::unregisterConnector();
+    try
+    {
+        Poco::Data::SQLite::Connector::unregisterConnector();
+    }
+    catch( Poco::Data::DataException& ex )
+    {
+        std::cout << ex.displayText() << std::endl;
+    }
+    catch( Poco::AssertionViolationException& ex )
+    {
+        std::cout << ex.displayText() << std::endl;
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void WarrantyToolGP::StripDollarCharacters( std::string& data )
