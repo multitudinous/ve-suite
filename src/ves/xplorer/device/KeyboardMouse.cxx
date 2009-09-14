@@ -75,13 +75,11 @@
 // --- vrJuggler Includes --- //
 #include <vrj/vrjParam.h>
 
-#include <gadget/Devices/KeyboardMouseDevice/InputArea.h>
 #if __VJ_version >= 2003000
 #include <vrj/Draw/OpenGL/Window.h>
 #if defined VPR_OS_Darwin
 #include <vrj/Draw/OpenGL/WindowCocoa.h>
 #include <gadget/Devices/KeyboardMouseDevice/InputAreaCocoa.h>
-#include <gadget/Devices/KeyboardMouseDevice/InputWindowCocoa.h>
 #elif defined VPR_OS_Windows
 #include <vrj/Draw/OpenGL/WindowWin32.h>
 #include <gadget/Devices/KeyboardMouseDevice/InputAreaWin32.h>
@@ -191,13 +189,27 @@ KeyboardMouse::~KeyboardMouse()
 void KeyboardMouse::SetStartEndPoint(
     osg::Vec3d& startPoint, osg::Vec3d& endPoint )
 {
-/*#if __GADGET_version >= 1003023
+#if __GADGET_version >= 1003023
     osg::Matrixd inverseMVPW = m_currentGLTransformInfo->GetOSGMVPWMatrix();
     inverseMVPW.invert( inverseMVPW );
 
     startPoint = osg::Vec3d( mX, mY, 0.0 ) * inverseMVPW;
     endPoint = osg::Vec3d( mX, mY, 1.0 ) * inverseMVPW;
-#else*/
+
+    /*
+    std::cout << "near_point: "
+              << "( " << startPoint.x()
+              << ", " << startPoint.y()
+              << ", " << startPoint.z()
+              << " )" << std::endl;
+
+    std::cout << "far_point: "
+              << "( " << endPoint.x()
+              << ", " << endPoint.y()
+              << ", " << endPoint.z()
+              << " )" << std::endl;
+     */
+#else
     //Meters to feet conversion
     double m2ft = 3.2808399;
 
@@ -278,7 +290,7 @@ void KeyboardMouse::SetStartEndPoint(
               << ", " << endPoint.z()
               << " )" << std::endl;
     */
-//#endif //__GADGET_version >= 1003023
+#endif //__GADGET_version >= 1003023
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::DrawLine( osg::Vec3d startPoint, osg::Vec3d endPoint )
@@ -357,7 +369,7 @@ void KeyboardMouse::ProcessEvents()
         const gadget::EventPtr event = *i;
 #if __GADGET_version >= 1003023
         //Get the current display from the event
-        //vrj::DisplayPtr currentDisplay = GetCurrentDisplay( event );
+        vrj::DisplayPtr currentDisplay = GetCurrentDisplay( event );
 #endif //__GADGET_version >= 1003023
 
         const gadget::EventType eventType = event->type();
@@ -372,9 +384,9 @@ void KeyboardMouse::ProcessEvents()
 
 #if __GADGET_version >= 1003023
             //Set the current GLTransfromInfo from the event
-            //if( !SetCurrentGLTransformInfo( currentDisplay, true ) )
+            if( !SetCurrentGLTransformInfo( currentDisplay, true ) )
             {
-            //    return;
+                return;
             }
 #endif //__GADGET_version >= 1003023
 
@@ -391,9 +403,9 @@ void KeyboardMouse::ProcessEvents()
 
 #if __GADGET_version >= 1003023
             //Set the current GLTransfromInfo from the event
-            //if( !SetCurrentGLTransformInfo( currentDisplay, true ) )
+            if( !SetCurrentGLTransformInfo( currentDisplay, true ) )
             {
-            //    return;
+                return;
             }
 #endif //__GADGET_version >= 1003023
 
@@ -413,9 +425,9 @@ void KeyboardMouse::ProcessEvents()
 
 #if __GADGET_version >= 1003023
             //Set the current GLTransfromInfo from the event
-            //if( !SetCurrentGLTransformInfo( currentDisplay, false ) )
+            if( !SetCurrentGLTransformInfo( currentDisplay, false ) )
             {
-            //    return;
+                return;
             }
 #endif //__GADGET_version >= 1003023
 
@@ -435,9 +447,9 @@ void KeyboardMouse::ProcessEvents()
 
 #if __GADGET_version >= 1003023
             //Set the current GLTransfromInfo from the event
-            //if( !SetCurrentGLTransformInfo( currentDisplay, false ) )
+            if( !SetCurrentGLTransformInfo( currentDisplay, false ) )
             {
-            //    return;
+                return;
             }
 #endif //__GADGET_version >= 1003023
 
@@ -455,9 +467,9 @@ void KeyboardMouse::ProcessEvents()
 
 #if __GADGET_version >= 1003023
             //Set the current GLTransfromInfo from the event
-            //if( !SetCurrentGLTransformInfo( currentDisplay, false ) )
+            if( !SetCurrentGLTransformInfo( currentDisplay, false ) )
             {
-            //    return;
+                return;
             }
 #endif //__GADGET_version >= 1003023
 
@@ -1807,23 +1819,12 @@ gadget::KeyboardMousePtr KeyboardMouse::GetKeyboardMouseVRJDevice()
 vrj::DisplayPtr const KeyboardMouse::GetCurrentDisplay(
     const gadget::EventPtr event )
 {
-    gadget::InputArea* inputArea = const_cast< gadget::InputArea* >( event->getSource() );
+    const gadget::InputArea* inputArea = event->getSource();
     const vrj::opengl::Window* window( NULL );
 #if defined VPR_OS_Darwin
     //downcast
-    gadget::InputAreaCocoa* inputAreaCocoa =
-        static_cast< gadget::InputAreaCocoa* >( inputArea );
-        
-    gadget::InputWindowCocoa* inputWindowCocoa =
-        static_cast< gadget::InputWindowCocoa* >( inputArea );
-    
-    vrj::opengl::WindowCocoa* windowCocoa =
-        static_cast< vrj::opengl::WindowCocoa* >( inputAreaCocoa );
-    if( !windowCocoa )
-    {
-        //This is probably a standalone input window
-        return vrj::DisplayPtr();
-    }
+    const vrj::opengl::WindowCocoa* windowCocoa =
+        static_cast< const vrj::opengl::WindowCocoa* >( inputArea );
     //upcast
     window = dynamic_cast< const vrj::opengl::Window* >( windowCocoa );
 #elif defined VPR_OS_Windows
