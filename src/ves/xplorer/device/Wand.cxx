@@ -329,6 +329,9 @@ void Wand::SelectObject()
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits )
 {
+    //Unselect the previous selected DCS
+    DeviceHandler::instance()->UnselectObjects();
+
     osgUtil::Hit objectHit;
     selectedGeometry = 0;
     
@@ -367,20 +370,30 @@ void Wand::ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits )
     osg::ref_ptr< osg::Node > parentNode = parentVisitor.GetParentNode();
     if( parentNode.valid() )
     {
+        scenegraph::DCS* newSelectedDCS =
+            static_cast< scenegraph::DCS* >( parentNode.get() );
+        
         vprDEBUG( vesDBG, 1 ) << "|\tObjects has name "
-        << parentNode->getName() << std::endl << vprDEBUG_FLUSH;
+            << parentNode->getName() << std::endl << vprDEBUG_FLUSH;
 
         vprDEBUG( vesDBG, 1 ) << "|\tObjects descriptors "
-        << parentNode->getDescriptions().at( 1 )
-        << std::endl << vprDEBUG_FLUSH;
+            << parentNode->getDescriptions().at( 1 )
+            << std::endl << vprDEBUG_FLUSH;
 
-        ves::xplorer::DeviceHandler::instance()->SetActiveDCS(
-            dynamic_cast< ves::xplorer::scenegraph::DCS* >( parentNode.get() ) );
+        //ves::xplorer::DeviceHandler::instance()->SetActiveDCS( newSelectedDCS );
+            
+        if( ves::xplorer::scenegraph::SceneManager::instance()->IsRTTOn() )
+        {
+            newSelectedDCS->SetTechnique( "Glow" );
+        }
+        else
+        {
+            newSelectedDCS->SetTechnique( "Select" );
+        }
+        DeviceHandler::instance()->SetSelectedDCS( newSelectedDCS );
     }
     else
     {
-        selectedGeometry = objectHit._geode;
-
         vprDEBUG( vesDBG, 1 ) << "|\tObject does not have name parent name "
         << objectHit._geode->getParents().front()->getName()
         << std::endl << vprDEBUG_FLUSH;
