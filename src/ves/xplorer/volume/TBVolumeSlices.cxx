@@ -329,10 +329,7 @@ void TextureBasedVolumeSlices::drawImplementation( osg::State& renderState ) con
     else if( _sliceRenderMethod == "VIEW_ALIGNED_POLYGON_INTERSECT" )
     {
         //Calculate the camera position
-        //osg::Matrixf inverseModelView;
         osg::Matrixf modelViewMatrix = currentState.getModelViewMatrix();
-
-        //inverseModelView.invert( modelViewMatrix );
 
         ///calculate slice normal in eyespace then transform it back
         ///to world space
@@ -349,17 +346,12 @@ void TextureBasedVolumeSlices::drawImplementation( osg::State& renderState ) con
         _eyeCenter = _center * modelViewMatrix;
         osg::Vec4 tempEye( _eyeCenter.x(), -_eyeCenter.z(), _eyeCenter.y(), 1.0 );
         _eyeCenter = tempEye;
-        
-        //correct the x position of the camera due to left eye rendering
-        //what happens for this in stereo???
-        //_cameraLocation[0] -= ( 0.034 * 3.280839 );
 
         _extremaIndicies[0] = 0;
         _extremaIndicies[1] = 7;
 
-        //_rotatedBBox->clear();
-        osg::ref_ptr<osg::Vec4Array> rotatedBBox = new osg::Vec4Array( 8 );
         ///transform the bbox into camera space
+        osg::ref_ptr<osg::Vec4Array> rotatedBBox = new osg::Vec4Array( 8 );
         rotatedBBox->push_back( _coordTransformedBBox->at( 0 )*modelViewMatrix );
         rotatedBBox->push_back( _coordTransformedBBox->at( 1 )*modelViewMatrix );
         rotatedBBox->push_back( _coordTransformedBBox->at( 2 )*modelViewMatrix );
@@ -368,7 +360,6 @@ void TextureBasedVolumeSlices::drawImplementation( osg::State& renderState ) con
         rotatedBBox->push_back( _coordTransformedBBox->at( 5 )*modelViewMatrix );
         rotatedBBox->push_back( _coordTransformedBBox->at( 6 )*modelViewMatrix );
         rotatedBBox->push_back( _coordTransformedBBox->at( 7 )*modelViewMatrix );
-
 
         //osg::Vec4 slicePlaneNormal = _cameraLocation - _center;
         osg::Vec4 slicePlaneNormalTemp =  _cameraLocation - _eyeCenter;
