@@ -319,19 +319,7 @@ void App::configSceneView( osgUtil::SceneView* newSceneViewer )
     {
         vpr::Guard<vpr::Mutex> val_guard( mValueLock );
         // Needed for stereo to work.
-        newSceneViewer->setDrawBufferValue( GL_NONE );
-
-        newSceneViewer->getGlobalStateSet()->setAssociatedModes(
-            light_0.get(), osg::StateAttribute::ON );
-
-        newSceneViewer->getGlobalStateSet()->setMode(
-            GL_LIGHTING, osg::StateAttribute::ON );
-
-        newSceneViewer->getGlobalStateSet()->setAttributeAndModes(
-            light_model_0.get(), osg::StateAttribute::ON );
-
-        newSceneViewer->getCamera()->addChild( light_source_0.get() );
-        
+        newSceneViewer->setDrawBufferValue( GL_NONE );        
         newSceneViewer->setSmallFeatureCullingPixelSize( 10 );
     }
 
@@ -405,6 +393,18 @@ void App::initScene()
     ves::xplorer::scenegraph::SceneManager::instance()->
         SetFrameStamp( mFrameStamp.get() );
 
+    //Setup the light
+    osg::ref_ptr< osg::StateSet > lightStateSet = 
+        getScene()->getOrCreateStateSet();
+    lightStateSet->setAssociatedModes( light_0.get(), osg::StateAttribute::ON );
+    
+    lightStateSet->setMode( GL_LIGHTING, osg::StateAttribute::ON );
+    
+    lightStateSet->
+        setAttributeAndModes( light_model_0.get(), osg::StateAttribute::ON );
+    
+    getScene()->addChild( light_source_0.get() );
+    
     // modelHandler stores the arrow and holds all data and geometry
     ModelHandler::instance()->SetXMLCommand( m_vjobsWrapper->GetXMLCommand() );
     ModelHandler::instance()->InitScene();
