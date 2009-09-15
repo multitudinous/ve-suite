@@ -75,16 +75,20 @@
 // --- vrJuggler Includes --- //
 #include <vrj/vrjParam.h>
 
+#include <gadget/Devices/KeyboardMouseDevice/InputArea.h>
 #if __VJ_version >= 2003000
 #include <vrj/Draw/OpenGL/Window.h>
 #if defined VPR_OS_Darwin
 #include <vrj/Draw/OpenGL/WindowCocoa.h>
+#include <gadget/Devices/KeyboardMouseDevice/InputWindowCocoa.h>
 #include <gadget/Devices/KeyboardMouseDevice/InputAreaCocoa.h>
 #elif defined VPR_OS_Windows
 #include <vrj/Draw/OpenGL/WindowWin32.h>
+#include <gadget/Devices/KeyboardMouseDevice/InputWindowWin32.h>
 #include <gadget/Devices/KeyboardMouseDevice/InputAreaWin32.h>
 #elif defined VPR_OS_Linux
 #include <vrj/Draw/OpenGL/WindowXWin.h>
+#include <gadget/Devices/KeyboardMouseDevice/InputWindowXWin.h>
 #include <gadget/Devices/KeyboardMouseDevice/InputAreaXWin.h>
 #endif
 #else
@@ -196,19 +200,9 @@ void KeyboardMouse::SetStartEndPoint(
     startPoint = osg::Vec3d( mX, mY, 0.0 ) * inverseMVPW;
     endPoint = osg::Vec3d( mX, mY, 1.0 ) * inverseMVPW;
 
-    /*
-    std::cout << "near_point: "
-              << "( " << startPoint.x()
-              << ", " << startPoint.y()
-              << ", " << startPoint.z()
-              << " )" << std::endl;
-
-    std::cout << "far_point: "
-              << "( " << endPoint.x()
-              << ", " << endPoint.y()
-              << ", " << endPoint.z()
-              << " )" << std::endl;
-     */
+    //std::cout << "startPoint: " << startPoint << std::endl;
+    //std::cout << "endPoint: " << endPoint << std::endl;
+    
 #else
     //Meters to feet conversion
     double m2ft = 3.2808399;
@@ -277,19 +271,9 @@ void KeyboardMouse::SetStartEndPoint(
         endPoint = endPoint * inverseCameraTransform;
     }
 
-    /*
-    std::cout << "startPoint: "
-              << "( " << startPoint.x()
-              << ", " << startPoint.y()
-              << ", " << startPoint.z()
-              << " )" << std::endl;
-
-    std::cout << "endPoint: "
-              << "( " << endPoint.x()
-              << ", " << endPoint.y()
-              << ", " << endPoint.z()
-              << " )" << std::endl;
-    */
+    
+    //std::cout << "startPoint: " << startPoint << std::endl;
+    //std::cout << "endPoint: " << endPoint << std::endl;
 #endif //__GADGET_version >= 1003023
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -1822,18 +1806,36 @@ vrj::DisplayPtr const KeyboardMouse::GetCurrentDisplay(
     const gadget::InputArea* inputArea = event->getSource();
     const vrj::opengl::Window* window( NULL );
 #if defined VPR_OS_Darwin
+    const gadget::InputWindowCocoa* inputWindowCocoa =
+        dynamic_cast< const gadget::InputWindowCocoa* >( inputArea );
+    if( inputWindowCocoa )
+    {
+        return vrj::DisplayPtr();
+    }
     //downcast
     const vrj::opengl::WindowCocoa* windowCocoa =
         static_cast< const vrj::opengl::WindowCocoa* >( inputArea );
     //upcast
-    window = dynamic_cast< const vrj::opengl::Window* >( windowCocoa );
+    window = static_cast< const vrj::opengl::Window* >( windowCocoa );
 #elif defined VPR_OS_Windows
+    const gadget::InputWindoWin32* inputWindowWin32 =
+        dynamic_cast< const gadget::InputWindoWin32* >( inputArea );
+    if( inputWindowWin32 )
+    {
+        return vrj::DisplayPtr();
+    }
     //downcast
     const vrj::opengl::WindowWin32* windowWin32 =
         static_cast< const vrj::opengl::WindowWin32* >( inputArea );
     //upcast
     window = dynamic_cast< const vrj::opengl::Window* >( windowWin32 );
 #elif defined VPR_OS_Linux
+    const gadget::InputWindoXWin* inputWindowXWin =
+        dynamic_cast< const gadget::inputWindowXWin* >( inputArea );
+    if( inputWindowXWin )
+    {
+        return vrj::DisplayPtr();
+    }
     //downcast
     const vrj::opengl::WindowXWin* windowXWin =
         static_cast< const vrj::opengl::WindowXWin* >( inputArea );
