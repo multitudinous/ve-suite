@@ -18,6 +18,7 @@ exampleSubdirs = Split("""
     WarrantyTool
     simple_physics
     input_animation
+    sensor_overlay
 """)
 #VascularSimViewer
 
