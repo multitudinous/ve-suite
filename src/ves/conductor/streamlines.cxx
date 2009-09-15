@@ -108,7 +108,7 @@ bool Streamlines::Create( wxWindow* parent,
     seedPointDialog = 0;
     
     _lastIntegrationStepSize = 1000.0;
-    _lastPropagationSize = 1.0;
+    _lastPropagationSize = 100.0;
     _lastLineDiameter = 0.0;
     _lastSphereArrowParticleSize = 1.0;
     _lastSeedPtFlag = false;

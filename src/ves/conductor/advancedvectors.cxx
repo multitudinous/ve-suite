@@ -135,7 +135,7 @@ void AdvancedVectors::CreateControls()
     wxStaticText* itemStaticText18 = new wxStaticText( itemDialog1, wxID_STATIC, _T( "Sparse" ), wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT );
     itemBoxSizer16->Add( itemStaticText18, 1, wxALIGN_TOP | wxLEFT | wxRIGHT | wxBOTTOM | wxADJUST_MINSIZE, 5 );
 
-    _scaleByMagCheck = new wxCheckBox( itemDialog1, ADVANCEDVECTORS_SCALAR_BY_VECTOR_CHK, _T( "Scalar by Vector Magnitude" ), wxDefaultPosition, wxDefaultSize, 0 );
+    _scaleByMagCheck = new wxCheckBox( itemDialog1, ADVANCEDVECTORS_SCALAR_BY_VECTOR_CHK, _T( "Scale by Vector Magnitude" ), wxDefaultPosition, wxDefaultSize, 0 );
     _scaleByMagCheck->SetValue( false );
     itemStaticBoxSizer3->Add( _scaleByMagCheck, 0, wxALIGN_LEFT | wxALL, 5 );
 

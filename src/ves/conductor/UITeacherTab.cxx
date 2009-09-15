@@ -58,7 +58,7 @@ using namespace ves::conductor::util;
 //Constructor//
 ///////////////
 UITeacherTab::UITeacherTab( wxWindow* tControl )
-        : wxDialog( tControl, -1, _( "Stored Scenes" ),
+        : wxDialog( tControl, -1, _( "Record Scenes" ),
                     wxDefaultPosition, wxDefaultSize,
                     ( wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxMAXIMIZE_BOX | wxMINIMIZE_BOX ) & ~ wxSTAY_ON_TOP )
 {
