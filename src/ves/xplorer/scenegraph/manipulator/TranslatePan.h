@@ -69,6 +69,9 @@ public:
         const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
 
     ///
+    virtual TranslatePan* AsTranslatePan();
+
+    ///
     ///\return
     virtual const char* className() const;
 

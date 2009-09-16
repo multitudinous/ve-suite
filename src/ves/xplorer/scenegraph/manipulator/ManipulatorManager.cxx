@@ -36,6 +36,7 @@
 #include <ves/xplorer/scenegraph/manipulator/RotateTwist.h>
 #include <ves/xplorer/scenegraph/manipulator/TransformManipulator.h>
 #include <ves/xplorer/scenegraph/manipulator/Dragger.h>
+#include <ves/xplorer/scenegraph/manipulator/HelpCircle.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
 
@@ -103,8 +104,34 @@ ManipulatorManager::~ManipulatorManager()
 ////////////////////////////////////////////////////////////////////////////////
 bool ManipulatorManager::addChild( Dragger* child )
 {
+    //Initialize root dragger
     child->SetScale( 64.0 );
     child->setAutoScaleToScreen( true );
+
+    //If rotation-type dragger, create a help circle
+    if( child->GetTransformationType() & TransformationType::ROTATE_COMPOUND )
+    {
+        //Insert help circle to front so it gets traversed first
+        osg::ref_ptr< HelpCircle > helpCircle = new HelpCircle();
+        child->insertChild( 0, helpCircle.get() );
+
+        CompoundDragger* compoundDragger = child->AsCompoundDragger();
+        if( compoundDragger )
+        {
+            compoundDragger->SetHelpCircle( helpCircle );
+            //Reset geometry
+            compoundDragger->SetEnabledModes(
+                compoundDragger->GetEnabledModes() );
+        }
+        else
+        {
+            Rotate* rotate = child->AsRotate();
+            if( rotate )
+            {
+                rotate->SetHelpCircle( helpCircle );
+            }
+        }
+    }
 
     return osg::Group::addChild( child );
 }

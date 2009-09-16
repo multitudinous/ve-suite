@@ -32,138 +32,125 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
 // --- VE-Suite Includes --- //
-#include <ves/xplorer/scenegraph/manipulator/RotateAxis.h>
 #include <ves/xplorer/scenegraph/manipulator/HelpCircle.h>
 
 // --- OSG Includes --- //
-#include <osg/io_utils>
 #include <osg/Geode>
 #include <osg/Geometry>
 #include <osg/LineWidth>
 #include <osg/ClipNode>
+#include <osg/ClipPlane>
 
-// --- STL Includes --- //
-#include <iostream>
+#include <osgUtil/CullVisitor>
 
 using namespace ves::xplorer::scenegraph::manipulator;
 
 ////////////////////////////////////////////////////////////////////////////////
-RotateAxis::RotateAxis()
+HelpCircle::HelpCircle()
     :
-    Rotate( TransformationType::ROTATE_AXIS )
+    Dragger( TransformationType::HELP_CIRCLE ),
+    m_clipNode( NULL )
 {
+    //If desktop mode
+    //setAutoRotateMode( osg::AutoTransform::ROTATE_TO_SCREEN );
+    //If cave mode
+    setAutoRotateMode( osg::AutoTransform::ROTATE_TO_CAMERA );
+
     SetupDefaultGeometry();
+
+    //Set up the clipping plane
+    m_clipNode = new osg::ClipNode();
+    m_clipNode->addClipPlane( new osg::ClipPlane( 0, GetPlane( false ) ) );
+    addChild( m_clipNode.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
-RotateAxis::RotateAxis(
-    const RotateAxis& rotateAxis, const osg::CopyOp& copyop )
+HelpCircle::HelpCircle(
+    const HelpCircle& rotateTwist, const osg::CopyOp& copyop )
     :
-    Rotate( rotateAxis, copyop )
+    Dragger( rotateTwist, copyop ),
+    m_clipNode( rotateTwist.m_clipNode.get() )
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-RotateAxis::~RotateAxis()
+HelpCircle::~HelpCircle()
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-RotateAxis* RotateAxis::AsRotateAxis()
+const char* HelpCircle::className() const
 {
-    return this;
+    return "HelpCircle";
 }
 ////////////////////////////////////////////////////////////////////////////////
-const char* RotateAxis::className() const
+osg::Object* HelpCircle::clone( const osg::CopyOp& copyop ) const
 {
-    return "RotateAxis";
+    return new HelpCircle( *this, copyop );
 }
 ////////////////////////////////////////////////////////////////////////////////
-osg::Object* RotateAxis::clone( const osg::CopyOp& copyop ) const
+osg::Object* HelpCircle::cloneType() const
 {
-    return new RotateAxis( *this, copyop );
+    return new HelpCircle();
 }
 ////////////////////////////////////////////////////////////////////////////////
-osg::Object* RotateAxis::cloneType() const
+const osg::ClipNode* const HelpCircle::GetClipNode() const
 {
-    return new RotateAxis();
+    return m_clipNode.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool RotateAxis::isSameKindAs( const osg::Object* obj ) const
+bool HelpCircle::isSameKindAs( const osg::Object* obj ) const
 {
-    return dynamic_cast< const RotateAxis* >( obj ) != NULL;
+    return dynamic_cast< const HelpCircle* >( obj ) != NULL;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void RotateAxis::SetHelpCircle( HelpCircle* const helpCircle )
+Dragger* HelpCircle::Release( osg::NodePath::iterator& npItr )
 {
-    Rotate::SetHelpCircle( helpCircle );
+    //Remove Show() function from Dragger::Release
 
-    if( !m_helpCircle.valid() )
-    {
-        //Error output
-        return;
-    }
-
-    osg::ref_ptr< osg::StateSet > stateSet = getOrCreateStateSet();
-    m_helpCircle->GetClipNode()->setStateSetModes( 
-        *stateSet.get(), osg::StateAttribute::ON );
+    return NULL;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void RotateAxis::SetupDefaultGeometry()
+void HelpCircle::SetupDefaultGeometry()
 {
     //The geode to add the geometry to
     osg::ref_ptr< osg::Geode > geode = new osg::Geode();
 
-    //Create invisible torus for picking the rotation axis
+    //Create the clipping circle with line loops
     {
         osg::ref_ptr< osg::Geometry > geometry = new osg::Geometry();
         osg::ref_ptr< osg::Vec3Array > vertices = new osg::Vec3Array();
-
-        unsigned int numVerticesPerSegment = 2 * ( NUM_CIRCLE_SIDES + 1 );
-
-        double theta( 0.0 );
-        double cosTheta( 1.0 );
-        double sinTheta( 0.0 );
-        for( size_t i = 0; i < NUM_CIRCLE_SEGMENTS; ++i )
+        for( unsigned int i = 0; i < NUM_CIRCLE_SEGMENTS; ++i )
         {
-            double phi( 0.0 );
-            double newTheta( theta + DELTA_SEGMENT_ANGLE );
-            double newCosTheta( cos( newTheta ) );
-            double newSinTheta( sin( newTheta ) );
-            for( unsigned int j = 0; j <= NUM_CIRCLE_SIDES; ++j )
-            {
-                phi += DELTA_SIDE_ANGLE;
-                double cosPhi( cos( phi ) );
-                double sinPhi( sin( phi ) );
-                double dist( ROTATE_AXIS_RADIUS + PICK_RADIUS * cosPhi );
+            double rot( i * DELTA_SEGMENT_ANGLE );
+            double cosVal( cos( rot ) );
+            double sinVal( sin( rot ) );
 
-                double s = PICK_RADIUS * sinPhi;
-                double t1 = newCosTheta * dist;
-                double p1 = -newSinTheta * dist;
-                double t2 = cosTheta * dist;
-                double p2 = -sinTheta * dist;
+            double s( CLIPPING_CIRCLE_RADIUS * cosVal );
+            double t( CLIPPING_CIRCLE_RADIUS * sinVal );
 
-                vertices->push_back( osg::Vec3( t1, p1, s ) );
-                vertices->push_back( osg::Vec3( t2, p2, s ) );
-            }
-
-            theta = newTheta;
-            cosTheta = newCosTheta;
-            sinTheta = newSinTheta;
+            vertices->push_back( osg::Vec3d( s, t, 0.0 ) );
         }
 
         geometry->setVertexArray( vertices.get() );
-        for( unsigned int i = 0; i < NUM_CIRCLE_SEGMENTS; ++i )
-        {
-            geometry->addPrimitiveSet(
-                new osg::DrawArrays(
-                    osg::PrimitiveSet::TRIANGLE_STRIP,
-                    i * numVerticesPerSegment,
-                    numVerticesPerSegment ) );
-        }
+        geometry->addPrimitiveSet(
+            new osg::DrawArrays(
+                osg::PrimitiveSet::LINE_LOOP, 0, vertices->size() ) );
 
-        SetDrawableToAlwaysCull( *geometry.get() );
-        SetComputeBBCallback( *geometry.get() );
         geode->addDrawable( geometry.get() );
+
+        //Set StateSet
+        osg::ref_ptr< osg::StateSet > stateSet =
+            geometry->getOrCreateStateSet();
+
+        //Override color uniform
+        stateSet->addUniform(
+            new osg::Uniform( "color", GetColor( Color::DISABLED ) ) );
+
+        //Set line width
+        osg::ref_ptr< osg::LineWidth > lineWidth = new osg::LineWidth();
+        lineWidth->setWidth( 2.0 );
+        stateSet->setAttributeAndModes(
+            lineWidth.get(), osg::StateAttribute::ON );
     }
 
     //Add rotation axis to the scene

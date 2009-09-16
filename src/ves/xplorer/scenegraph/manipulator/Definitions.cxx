@@ -81,11 +81,49 @@ private:
 
 };
 ////////////////////////////////////////////////////////////////////////////////
+struct RotateAxisBBCallback : public osg::Drawable::ComputeBoundingBoxCallback
+{
+    RotateAxisBBCallback()
+        :
+        osg::Drawable::ComputeBoundingBoxCallback()
+    {
+        ;
+    }
+
+    RotateAxisBBCallback(
+        const RotateAxisBBCallback& rotateAxisBBCallback,
+        const osg::CopyOp& copyOp )
+        :
+        osg::Drawable::ComputeBoundingBoxCallback(
+            rotateAxisBBCallback, copyOp )
+    {
+        ;
+    }
+
+    META_Object( ves::xplorer::scenegraph::manipulator, RotateAxisBBCallback );
+
+    virtual osg::BoundingBox computeBound( const osg::Drawable& drawable ) const
+    {
+        osg::BoundingBox bb = drawable.computeBound();
+
+        //bb.yMax() = 0.0;
+
+        return bb;
+    }
+};
+////////////////////////////////////////////////////////////////////////////////
 void ves::xplorer::scenegraph::manipulator::SetDrawableToAlwaysCull(
     osg::Drawable& drawable )
 {
     osg::ref_ptr< ForceCullCallback > fcc = new ForceCullCallback();
     drawable.setCullCallback( fcc.get() );
+}
+////////////////////////////////////////////////////////////////////////////////
+void ves::xplorer::scenegraph::manipulator::SetComputeBBCallback(
+    osg::Drawable& drawable )
+{
+    osg::ref_ptr< RotateAxisBBCallback > rabbc = new RotateAxisBBCallback();
+    drawable.setComputeBoundingBoxCallback( rabbc.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 const bool ves::xplorer::scenegraph::manipulator::GetLinePlaneIntersection(

@@ -94,6 +94,11 @@ TranslateAxis::~TranslateAxis()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
+TranslateAxis* TranslateAxis::AsTranslateAxis()
+{
+    return this;
+}
+////////////////////////////////////////////////////////////////////////////////
 const char* TranslateAxis::className() const
 {
     return "TranslateAxis";
@@ -338,7 +343,7 @@ void TranslateAxis::SetupDefaultGeometry()
         m_negativeLineGeometry->addPrimitiveSet(
             new osg::DrawArrays( osg::PrimitiveSet::LINES, 2, 2 ) );
 
-        m_lineAndCylinderGeode->addDrawable( m_negativeLineGeometry.get() );
+        //m_lineAndCylinderGeode->addDrawable( m_negativeLineGeometry.get() );
 
         //Set StateSet
         osg::ref_ptr< osg::StateSet > stateSet =
@@ -360,7 +365,7 @@ void TranslateAxis::SetupDefaultGeometry()
             (*m_lineVertices)[ 3 ] + CONE_CENTER, CONE_RADIUS, -CONE_HEIGHT );
 
         m_negativeConeDrawable = new osg::ShapeDrawable( m_negativeCone.get() );
-        coneGeode->addDrawable( m_negativeConeDrawable.get() );
+        //coneGeode->addDrawable( m_negativeConeDrawable.get() );
 
         //Set StateSet
         osg::ref_ptr< osg::StateSet > stateSet =
@@ -377,7 +382,7 @@ void TranslateAxis::SetupDefaultGeometry()
             new osg::ShapeDrawable( m_negativeCylinder.get() );
 
         SetDrawableToAlwaysCull( *m_negativeCylinderDrawable.get() );
-        m_lineAndCylinderGeode->addDrawable( m_negativeCylinderDrawable.get() );
+        //m_lineAndCylinderGeode->addDrawable( m_negativeCylinderDrawable.get() );
     }
 
     //Add line and invisible cylinder to this

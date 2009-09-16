@@ -35,9 +35,7 @@
 #include <ves/xplorer/scenegraph/manipulator/RotateCompound.h>
 #include <ves/xplorer/scenegraph/manipulator/RotateAxis.h>
 #include <ves/xplorer/scenegraph/manipulator/RotateTwist.h>
-
-// --- OSG Includes --- //
-#include <osg/ClipNode>
+#include <ves/xplorer/scenegraph/manipulator/HelpCircle.h>
 
 using namespace ves::xplorer::scenegraph::manipulator;
 
@@ -104,14 +102,6 @@ void RotateCompound::SetupDefaultGeometry()
     m_zRotateAxis->SetColor(
         Color::DEFAULT, osg::Vec4f( 0.0, 0.0, 1.0, 1.0 ), true );
 
-    //Set z-axis stateset
-    {
-        osg::ref_ptr< osg::StateSet > stateSet =
-            m_zRotateAxis->getOrCreateStateSet();
-        m_rotateTwist->GetClipNode()->setStateSetModes( 
-            *stateSet.get(), osg::StateAttribute::ON );
-    }
-
     addChild( m_zRotateAxis.get() );
 
     //Create translate y-axis dragger
@@ -126,14 +116,6 @@ void RotateCompound::SetupDefaultGeometry()
         m_yRotateAxis->setRotation( rotation );
     }
 
-    //Set y-axis stateset
-    {
-        osg::ref_ptr< osg::StateSet > stateSet =
-            m_yRotateAxis->getOrCreateStateSet();
-        m_rotateTwist->GetClipNode()->setStateSetModes( 
-            *stateSet.get(), osg::StateAttribute::ON );
-    }
-
     addChild( m_yRotateAxis.get() );
 
     //Create translate x-axis dragger
@@ -146,14 +128,6 @@ void RotateCompound::SetupDefaultGeometry()
         osg::Quat rotation;
         rotation.makeRotate( GetUnitAxis(), osg::Vec3d( 1.0, 0.0, 0.0 ) );
         m_xRotateAxis->setRotation( rotation );
-    }
-
-    //Set x-axis stateset
-    {
-        osg::ref_ptr< osg::StateSet > stateSet =
-            m_xRotateAxis->getOrCreateStateSet();
-        m_rotateTwist->GetClipNode()->setStateSetModes( 
-            *stateSet.get(), osg::StateAttribute::ON );
     }
 
     addChild( m_xRotateAxis.get() );

@@ -110,13 +110,13 @@ void ScaleCompound::ComboForm()
         if( scaleAxis )
         {
             //Turn off line and cylinder geometry
-            scaleAxis->EnableLinesAndCylinders( false );
+            //scaleAxis->EnableLinesAndCylinders( false );
 
             //Get the explode vector
             explodeVector = scaleAxis->GetUnitAxis() * m_explodeDistance;
 
             //Move the lines and cylinders in from the origin and unit axis
-            //scaleAxis->ExpandLineVertices( explodeVector );
+            scaleAxis->ExpandLineVertices( explodeVector );
 
             //Move the boxes in from the unit axis
             scaleAxis->BoxCenterOffset( -explodeVector );
@@ -141,13 +141,13 @@ void ScaleCompound::DefaultForm()
         if( scaleAxis )
         {
             //Turn on line and cylinder geometry
-            scaleAxis->EnableLinesAndCylinders( true );
+            //scaleAxis->EnableLinesAndCylinders( true );
 
             //Get the explode vector
             explodeVector = scaleAxis->GetUnitAxis() * m_explodeDistance;
 
             //Move the lines and cylinders back to the origin and unit axis
-            //scaleAxis->ExpandLineVertices( -explodeVector );
+            scaleAxis->ExpandLineVertices( -explodeVector );
 
             //Move the boxes back to the unit axis
             scaleAxis->BoxCenterOffset( explodeVector );

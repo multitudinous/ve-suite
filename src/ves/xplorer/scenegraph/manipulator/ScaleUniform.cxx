@@ -64,6 +64,11 @@ ScaleUniform::~ScaleUniform()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
+ScaleUniform* ScaleUniform::AsScaleUniform()
+{
+    return this;
+}
+////////////////////////////////////////////////////////////////////////////////
 const char* ScaleUniform::className() const
 {
     return "ScaleUniform";
@@ -96,6 +101,15 @@ void ScaleUniform::SetupDefaultGeometry()
 
         geode->addDrawable( new osg::ShapeDrawable( box.get() ) );
     }
+
+    /*
+    //Create a sphere
+    {
+        osg::ref_ptr< osg::Sphere > sphere =
+            new osg::Sphere( osg::Vec3d( 0.0, 0.0, 0.0 ), BOX_WIDTH );
+        geode->addDrawable( new osg::ShapeDrawable( sphere.get() ) );
+    }
+    */
 
     //Add box to the scene
     addChild( geode.get() );

@@ -50,13 +50,16 @@ class Vec3d;
 
 //Define manipulator constants
 const unsigned int NUM_CIRCLE_SEGMENTS = 64;
+const unsigned int NUM_GHOST_DISK_SEGMENTS = 16;
+const unsigned int NUM_CIRCLE_SIDES = 8;
 const double DELTA_SEGMENT_ANGLE = gmtl::Math::TWO_PI / NUM_CIRCLE_SEGMENTS;
+const double DELTA_SIDE_ANGLE = gmtl::Math::TWO_PI / NUM_CIRCLE_SIDES;
 
 const double BOX_WIDTH = 0.1;
 const double CONE_HEIGHT = 0.2;
 const double CONE_RADIUS = 0.05;
-const double PICK_RADIUS = CONE_RADIUS;
-const double LINE_WIDTH = 2.0;
+const double PICK_RADIUS = 0.05;
+const double LINE_WIDTH = 1.0;
 const double ROTATE_AXIS_RADIUS = 1.0;
 const double CLIPPING_CIRCLE_RADIUS = ROTATE_AXIS_RADIUS;
 const double ROTATE_TWIST_RADIUS = 1.2;
@@ -72,31 +75,6 @@ namespace scenegraph
 namespace manipulator
 {
 
-/*
-///
-namespace AxesFlag
-{
-    enum Enum
-    {
-        NONE = 0x0,
-
-        X = 0x1,
-        Y = 0x2,
-        Z = 0x4,
-
-        XY = X | Y,
-        XZ = X | Z,
-        YZ = Y | Z,
-
-        XYZ = X | Y | Z,
-
-        BILLBOARD = 0x8,
-
-        ALL = XYZ | BILLBOARD
-    };
-}
-*/
-
 ///Defines transformation type associations with the draggers
 namespace TransformationType
 {
@@ -110,7 +88,8 @@ namespace TransformationType
         TRANSLATE_COMPOUND = TRANSLATE_AXIS | TRANSLATE_PLANE | TRANSLATE_PAN,
         ROTATE_AXIS = 0x010,
         ROTATE_TWIST = 0x020,
-        ROTATE_COMPOUND = ROTATE_AXIS | ROTATE_TWIST,
+        HELP_CIRCLE = 0x040,
+        ROTATE_COMPOUND = ROTATE_AXIS | ROTATE_TWIST | HELP_CIRCLE,
         SCALE_AXIS = 0x100,
         SCALE_UNIFORM = 0x200,
         SCALE_COMPOUND = SCALE_AXIS | SCALE_UNIFORM,
@@ -124,9 +103,9 @@ namespace VectorSpace
 {
     enum Enum
     {
-        GLOBAL,
-        LOCAL,
-        VIEW
+        GLOBAL = 0x1,
+        LOCAL = 0x2,
+        VIEW = 0x4
     };
 }
 
@@ -147,11 +126,11 @@ namespace Color
 {
     enum Enum
     {
-        DEFAULT,
-        FOCUS,
-        ACTIVE,
-        DISABLED,
-        OTHER
+        DEFAULT = 0x01,
+        FOCUS = 0x02,
+        ACTIVE = 0x04,
+        DISABLED = 0x08,
+        OTHER = 0x10
     };
 }
 
@@ -160,16 +139,21 @@ namespace Event
 {
     enum Enum
     {
-        FOCUS,
-        PUSH,
-        DRAG,
-        RELEASE
+        NONE = 0x0,
+        FOCUS = 0x1,
+        PUSH = 0x2,
+        DRAG = 0x4,
+        RELEASE = 0x8
     };
 }
 
 ///
 ///\param drawable
 void VE_SCENEGRAPH_EXPORTS SetDrawableToAlwaysCull( osg::Drawable& drawable );
+
+///
+///\param drawable
+void VE_SCENEGRAPH_EXPORTS SetComputeBBCallback( osg::Drawable& drawable );
 
 ///
 ///\param lineStart

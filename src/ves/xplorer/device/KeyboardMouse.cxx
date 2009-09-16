@@ -1790,7 +1790,7 @@ void KeyboardMouse::ProcessSelection()
     scenegraph::LocalToWorldNodePath::NodeAndPath nap = npl.at( 0 );
     osg::Matrixd localToWorld = osg::computeLocalToWorld( nap.second );
     osg::Vec3d newCenter = newSelectedDCS->getBound().center() * localToWorld;
-    rotateTwist->setPosition( newCenter );
+    //rotateTwist->setPosition( newCenter );
     sceneManipulator->setPosition( newCenter );
 }
 ////////////////////////////////////////////////////////////////////////////////

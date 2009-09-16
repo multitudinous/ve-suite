@@ -37,10 +37,7 @@
 // --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
 
-#include <ves/xplorer/scenegraph/manipulator/Dragger.h>
-
-// --- OSG Includes --- //
-
+#include <ves/xplorer/scenegraph/manipulator/Rotate.h>
 
 namespace ves
 {
@@ -57,7 +54,7 @@ namespace manipulator
 /*!\class ves::xplorer::scenegraph::RotateAxis
  *
  */
-class VE_SCENEGRAPH_EXPORTS RotateAxis : public Dragger
+class VE_SCENEGRAPH_EXPORTS RotateAxis : public Rotate
 {
 public:
     ///
@@ -67,6 +64,9 @@ public:
     RotateAxis(
         const RotateAxis& rotateAxis,
         const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
+
+    ///
+    virtual RotateAxis* AsRotateAxis();
 
     ///
     ///\return
@@ -86,17 +86,12 @@ public:
     ///\return
     virtual bool isSameKindAs( const osg::Object* obj ) const;
 
+    ///
+    virtual void SetHelpCircle( HelpCircle* const helpCircle );
+
 protected:
     ///
     virtual ~RotateAxis();
-
-    ///
-    virtual void ComputeDeltaTransform();
-
-    ///
-    virtual const bool ComputeProjectedPoint(
-        const osgUtil::LineSegmentIntersector& deviceInput,
-        osg::Vec3d& projectedPoint );
 
     ///
     virtual void SetupDefaultGeometry();

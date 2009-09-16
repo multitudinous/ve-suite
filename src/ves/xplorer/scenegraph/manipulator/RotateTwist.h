@@ -37,15 +37,7 @@
 // --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
 
-#include <ves/xplorer/scenegraph/manipulator/Dragger.h>
-
-// --- OSG Includes --- //
-#include <osg/ref_ptr>
-
-namespace osg
-{
-class ClipNode;
-}
+#include <ves/xplorer/scenegraph/manipulator/Rotate.h>
 
 namespace ves
 {
@@ -62,7 +54,7 @@ namespace manipulator
 /*!\class ves::xplorer::scenegraph::RotateTwist
  *
  */
-class VE_SCENEGRAPH_EXPORTS RotateTwist : public Dragger
+class VE_SCENEGRAPH_EXPORTS RotateTwist : public Rotate
 {
 public:
     ///
@@ -72,6 +64,9 @@ public:
     RotateTwist(
         const RotateTwist& rotateTwist,
         const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
+
+    ///
+    virtual RotateTwist* AsRotateTwist();
 
     ///
     ///\return
@@ -87,31 +82,38 @@ public:
     virtual osg::Object* cloneType() const;
 
     ///
-    const osg::ClipNode* const GetClipNode() const;
-
-    ///
     ///\param obj
     ///\return
     virtual bool isSameKindAs( const osg::Object* obj ) const;
+
+    ///
+    void SetLineEndPoint( const osg::Vec3& endPoint );
 
 protected:
     ///
     virtual ~RotateTwist();
 
     ///
-    virtual void ComputeDeltaTransform();
+    virtual void CustomPushAction();
 
     ///
-    virtual const bool ComputeProjectedPoint(
-        const osgUtil::LineSegmentIntersector& deviceInput,
-        osg::Vec3d& projectedPoint );
+    virtual void CustomDragAction();
+
+    ///
+    virtual void CustomReleaseAction();
 
     ///
     virtual void SetupDefaultGeometry();
 
 private:
     ///
-    osg::ref_ptr< osg::ClipNode > m_clipNode;
+    osg::ref_ptr< osg::Vec3Array > m_lineVertices;
+
+    ///
+    osg::ref_ptr< osg::Geometry > m_lineGeometry;
+
+    ///
+    osg::ref_ptr< osg::Geode > m_lineGeode;
 
 };
 } //end manipulator

@@ -38,10 +38,10 @@
 #include <ves/xplorer/scenegraph/LocalToWorldNodePath.h>
 
 // --- OSG Includes --- //
+#include <osg/io_utils>
 #include <osg/PositionAttitudeTransform>
 #include <osg/MatrixTransform>
 #include <osg/AutoTransform>
-#include <osg/io_utils>
 #include <osgUtil/CullVisitor>
 
 // --- osgBullet Includes --- //
@@ -59,7 +59,7 @@ Dragger::Dragger( const TransformationType::Enum& transformationType )
     osg::AutoTransform(),
     m_transformationType( transformationType ),
     m_vectorSpace( VectorSpace::GLOBAL ),
-    m_axisDirection( AxisDirection::ALL ),
+    m_axisDirection( AxisDirection::POSITIVE ),
     m_enabled( false ),
     m_comboForm( false ),
     m_startProjectedPoint( 0.0, 0.0, 0.0 ),
@@ -68,6 +68,7 @@ Dragger::Dragger( const TransformationType::Enum& transformationType )
     m_deltaRotation( 0.0, 0.0, 0.0, 0.0 ),
     m_deltaTranslation( 0.0, 0.0, 0.0 ),
     m_deltaScale( 0.0, 0.0, 0.0 ),
+    m_isRootDragger( true ),
     m_color( NULL )
 {
     m_rootDragger = this;
@@ -88,6 +89,7 @@ Dragger::Dragger( const Dragger& dragger, const osg::CopyOp& copyop )
     osg::AutoTransform( dragger, copyop ),
     m_transformationType( dragger.m_transformationType ),
     m_vectorSpace( dragger.m_vectorSpace ),
+    m_axisDirection( dragger.m_axisDirection ),
     m_enabled( dragger.m_enabled ),
     m_comboForm( dragger.m_comboForm ),
     m_startProjectedPoint( dragger.m_startProjectedPoint ),
@@ -96,6 +98,7 @@ Dragger::Dragger( const Dragger& dragger, const osg::CopyOp& copyop )
     m_deltaRotation( dragger.m_deltaRotation ),
     m_deltaTranslation( dragger.m_deltaTranslation ),
     m_deltaScale( dragger.m_deltaScale ),
+    m_isRootDragger( dragger.m_isRootDragger ),
     m_colorMap( dragger.m_colorMap ),
     m_color( dragger.m_color )
 {
@@ -114,7 +117,7 @@ void Dragger::accept( osg::NodeVisitor& nv )
         return;
     }
 
-    if( ( this != m_rootDragger ) && ( getAutoRotateMode() == NO_ROTATION ) )
+    if( !m_isRootDragger && ( getAutoRotateMode() == NO_ROTATION ) )
     {
         //Now do the proper accept
         osg::Transform::accept( nv );
@@ -122,16 +125,12 @@ void Dragger::accept( osg::NodeVisitor& nv )
         return;
     }
 
-    //If app traversal update the frame count
-    if( nv.getVisitorType() == osg::NodeVisitor::UPDATE_VISITOR )
-    {
-        ;
-    }
-    else if( nv.getVisitorType() == osg::NodeVisitor::CULL_VISITOR )
+    if( nv.getVisitorType() == osg::NodeVisitor::CULL_VISITOR )
     {
         osg::CullStack* cs = dynamic_cast< osg::CullStack* >( &nv );
         if( cs )
         {
+            /*
             osg::Viewport::value_type width = _previousWidth;
             osg::Viewport::value_type height = _previousHeight;
 
@@ -141,6 +140,7 @@ void Dragger::accept( osg::NodeVisitor& nv )
                 width = viewport->width();
                 height = viewport->height();
             }
+            */
 
             osg::Vec3d eyePoint = cs->getEyeLocal();
             osg::Vec3d localUp = cs->getUpLocal();
@@ -165,10 +165,12 @@ void Dragger::accept( osg::NodeVisitor& nv )
                 {
                     doUpdate = true;
                 }
+                /*
                 else if( width != _previousWidth || height != _previousHeight )
                 {
                     doUpdate = true;
                 }
+                */
                 else if( projection != _previousProjection )
                 {
                     doUpdate = true;
@@ -203,6 +205,7 @@ void Dragger::accept( osg::NodeVisitor& nv )
                     osg::Vec3d ps = center * mvpwMatrix;
                     osg::Vec3d pe = osg::Vec3d( 1.0, 0.0, 0.0 ) * mvpwMatrix;
                     double size = 1.0 / ( pe - ps ).length();
+                    /*
                     if( _autoScaleTransitionWidthRatio > 0.0 )
                     {
                         if( _minimumScale > 0.0 )
@@ -237,6 +240,7 @@ void Dragger::accept( osg::NodeVisitor& nv )
                             else if( size > m ) size = a + b * size + c * ( size * size );
                         }
                     }
+                    */
 
                     setScale( m_scale * size );
                 }
@@ -256,6 +260,7 @@ void Dragger::accept( osg::NodeVisitor& nv )
                 {
                     osg::Vec3d PosToEye = getPosition() - eyePoint;
                     osg::Matrix lookto = osg::Matrix::lookAt(
+                        //osg::Vec3d( 0.0, 0.0, 0.0 ), -eyePoint, localUp );
                         osg::Vec3d( 0.0, 0.0, 0.0 ), PosToEye, localUp );
                     osg::Quat q;
                     q.set( osg::Matrix::inverse( lookto ) );
@@ -264,8 +269,8 @@ void Dragger::accept( osg::NodeVisitor& nv )
 
                 _previousEyePoint = eyePoint;
                 _previousLocalUp = localUp;
-                _previousWidth = width;
-                _previousHeight = height;
+                //_previousWidth = width;
+                //_previousHeight = height;
                 _previousProjection = projection;
                 _previousPosition = position;
 
@@ -276,6 +281,51 @@ void Dragger::accept( osg::NodeVisitor& nv )
 
     //Now do the proper accept
     osg::Transform::accept( nv );
+}
+////////////////////////////////////////////////////////////////////////////////
+TranslateAxis* Dragger::AsTranslateAxis()
+{
+    return NULL;
+}
+////////////////////////////////////////////////////////////////////////////////
+TranslatePlane* Dragger::AsTranslatePlane()
+{
+    return NULL;
+}
+////////////////////////////////////////////////////////////////////////////////
+TranslatePan* Dragger::AsTranslatePan()
+{
+    return NULL;
+}
+////////////////////////////////////////////////////////////////////////////////
+Rotate* Dragger::AsRotate()
+{
+    return NULL;
+}
+////////////////////////////////////////////////////////////////////////////////
+RotateAxis* Dragger::AsRotateAxis()
+{
+    return NULL;
+}
+////////////////////////////////////////////////////////////////////////////////
+RotateTwist* Dragger::AsRotateTwist()
+{
+    return NULL;
+}
+////////////////////////////////////////////////////////////////////////////////
+ScaleAxis* Dragger::AsScaleAxis()
+{
+    return NULL;
+}
+////////////////////////////////////////////////////////////////////////////////
+ScaleUniform* Dragger::AsScaleUniform()
+{
+    return NULL;
+}
+////////////////////////////////////////////////////////////////////////////////
+CompoundDragger* Dragger::AsCompoundDragger()
+{
+    return NULL;
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool Dragger::isSameKindAs( const osg::Object* obj ) const
@@ -350,14 +400,16 @@ void Dragger::Enable( const bool& enable )
 Dragger* Dragger::Drag( const osgUtil::LineSegmentIntersector& deviceInput )
 {
     //Get the end projected point
-    if( !ComputeProjectedPoint( deviceInput, m_endProjectedPoint ) )
-    {
-        return this;
-    }
+    ComputeProjectedPoint( deviceInput, m_endProjectedPoint );
 
+    //Compute the delta transform for the drag
     ComputeDeltaTransform();
 
+    //Update all associated matrices with the delta transform
     UpdateAssociations();
+
+    //Custom Event::Drag functionality
+    CustomDragAction();
 
     //Reset
     m_startProjectedPoint = m_endProjectedPoint;
@@ -371,13 +423,20 @@ Dragger* Dragger::Focus( osg::NodePath::iterator& npItr )
     osg::Node* node = *npItr;
     if( this == node )
     {
+        //Use focused color if this is focused
         UseColor( Color::FOCUS );
 
+        //Custom Event::Focus functionality
+        CustomFocusAction();
+
+        //This is in the node path
         return this;
     }
 
+    //Use default color if this is not focused
     UseColor( Color::DEFAULT );
 
+    //This is not in the node path
     return NULL;
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -395,28 +454,33 @@ Dragger* Dragger::Push(
     osg::Node* node = *npItr;
     if( this == node )
     {
+        //Tell root dragger to stop auto scaling
+        m_rootDragger->setAutoScaleToScreen( false );
+
+        //Use active color is this is active
         UseColor( Color::ACTIVE );
 
-        //Compute local to world and world to local matrices for dragger
+        //Compute local to world and world to local matrices for this
         m_localToWorld = osg::computeLocalToWorld( np );
         m_worldToLocal = osg::Matrix::inverse( m_localToWorld );
 
-        //Get the start projected point
-        if( !ComputeProjectedPoint( deviceInput, m_startProjectedPoint ) )
-        {
-            return this;
-        }
-
-        //Compute the association matrices
+        //Compute the associated ltw and wtl matrices
         ComputeAssociationMatrices();
 
-        m_rootDragger->setAutoScaleToScreen( false );
+        //Get the start projected point
+        ComputeProjectedPoint( deviceInput, m_startProjectedPoint );
 
+        //Custom Event::Push functionality
+        CustomPushAction();
+
+        //This is in the node path
         return this;
     }
 
+    //Hide if this is not active
     Hide();
 
+    //This is not in the node path
     return NULL;
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -426,23 +490,35 @@ Dragger* Dragger::Release( osg::NodePath::iterator& npItr )
     osg::Node* node = *npItr;
     if( this == node )
     {
+        //Tell root dragger to auto scale
+        m_rootDragger->setAutoScaleToScreen( true );
+        //Force update now on release event for this frame
+        m_rootDragger->setAutoRotateMode( m_rootDragger->getAutoRotateMode() );
+
+        //Use default color is this is active
         UseColor( Color::DEFAULT );
+
+        //Custom Event::Release functionality
+        CustomReleaseAction();
 
         //Clear the associated matrices
         m_associationMatricesMap.clear();
 
-        m_rootDragger->setAutoScaleToScreen( true );
-        //Force update now on release event for this frame
-        m_rootDragger->setAutoRotateMode( m_rootDragger->getAutoRotateMode() );
-        
+        //Reset the start and end points
+        m_startProjectedPoint.set( 0.0, 0.0, 0.0 );
+        m_endProjectedPoint.set( 0.0, 0.0, 0.0 );
+
         //Turn gravity back on for the selected objects
         ResetPhysics();
-        
+
+        //This is in the node path
         return this;
     }
 
+    //Show if this is not active
     Show();
 
+    //This is not in the node path
     return NULL;
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -669,7 +745,7 @@ osg::Vec4& Dragger::GetColor( Color::Enum colorTag )
     return itr->second;
 }
 ////////////////////////////////////////////////////////////////////////////////
-const osg::Plane Dragger::GetPlane( const bool& transform ) const
+const osg::Plane Dragger::GetPlane( const bool& parallel ) const
 {
     //The unit plane
     //| i   j   k  |
@@ -680,9 +756,16 @@ const osg::Plane Dragger::GetPlane( const bool& transform ) const
     //N = P1P2 x P1P3 = ( 1, 0, 0 ) x ( 0, 0, 1 ) = ( 0, -1, 0 )
     //-y + d = 0 : d = 0
 
-    osg::Plane plane( GetUnitAxis(), 0.0 );
-    if( transform )
+    osg::Plane plane;
+    if( parallel )
     {
+        plane.set(
+            m_rootDragger->getPosition() - m_rootDragger->GetPreviousEyePoint(),
+            m_rootDragger->getPosition() );
+    }
+    else
+    {
+        plane.set( GetUnitAxis(), 0.0 );
         plane.transformProvidingInverse( m_worldToLocal );
     }
 
@@ -706,6 +789,16 @@ const osg::Vec3d Dragger::GetAxis(
     return m_localToWorld * axis;
 }
 ////////////////////////////////////////////////////////////////////////////////
+const osg::Vec3d Dragger::GetPreviousEyePoint() const
+{
+    return _previousEyePoint;
+}
+////////////////////////////////////////////////////////////////////////////////
+const osg::Vec3d Dragger::GetPreviousLocalUp() const
+{
+    return _previousLocalUp;
+}
+////////////////////////////////////////////////////////////////////////////////
 const osg::Vec3d Dragger::GetUnitAxis() const
 {
     osg::Vec3d unitAxis( 0.0, 0.0, 1.0 );
@@ -713,19 +806,26 @@ const osg::Vec3d Dragger::GetUnitAxis() const
     return unitAxis;
 }
 ////////////////////////////////////////////////////////////////////////////////
+const osg::Plane Dragger::GetUnitPlane() const
+{
+    osg::Plane plane( GetUnitAxis(), 0.0 );
+
+    return plane;
+}
+////////////////////////////////////////////////////////////////////////////////
 const VectorSpace::Enum& Dragger::GetVectorSpace() const
 {
     return m_vectorSpace;
 }
 ////////////////////////////////////////////////////////////////////////////////
-const bool Dragger::IsCompound() const
-{
-    return false;
-}
-////////////////////////////////////////////////////////////////////////////////
 const bool& Dragger::IsEnabled() const
 {
     return m_enabled;
+}
+////////////////////////////////////////////////////////////////////////////////
+void Dragger::SetAxisDirection( const AxisDirection::Enum& axisDirection )
+{
+    m_axisDirection = axisDirection;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Dragger::SetColor( Color::Enum colorTag, osg::Vec4 newColor, bool use )
@@ -746,7 +846,11 @@ void Dragger::SetColor( Color::Enum colorTag, osg::Vec4 newColor, bool use )
 ////////////////////////////////////////////////////////////////////////////////
 void Dragger::SetRootDragger( Dragger* rootDragger )
 {
-    m_rootDragger = rootDragger;
+    if( this != rootDragger )
+    {
+        m_rootDragger = rootDragger;
+        m_isRootDragger = false;
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Dragger::SetScale( const double scale )
@@ -832,3 +936,4 @@ void Dragger::ResetPhysics()
         }
     }    
 }
+////////////////////////////////////////////////////////////////////////////////

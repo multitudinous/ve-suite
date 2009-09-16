@@ -39,7 +39,6 @@
 #include <osg/Geometry>
 #include <osg/ShapeDrawable>
 #include <osg/LineWidth>
-#include <osg/LineStipple>
 
 using namespace ves::xplorer::scenegraph::manipulator;
 
@@ -50,10 +49,14 @@ ScaleAxis::ScaleAxis()
     m_lineVertices( NULL ),
     m_positiveBox( NULL ),
     m_negativeBox( NULL ),
+    m_positiveCylinder( NULL ),
+    m_negativeCylinder( NULL ),
     m_positiveLineGeometry( NULL ),
     m_negativeLineGeometry( NULL ),
     m_positiveBoxDrawable( NULL ),
     m_negativeBoxDrawable( NULL ),
+    m_positiveCylinderDrawable( NULL ),
+    m_negativeCylinderDrawable( NULL ),
     m_lineAndCylinderGeode( NULL )
 {
     SetupDefaultGeometry();
@@ -66,10 +69,14 @@ ScaleAxis::ScaleAxis(
     m_lineVertices( scaleAxis.m_lineVertices.get() ),
     m_positiveBox( scaleAxis.m_positiveBox.get() ),
     m_negativeBox( scaleAxis.m_negativeBox.get() ),
+    m_positiveCylinder( scaleAxis.m_positiveCylinder.get() ),
+    m_negativeCylinder( scaleAxis.m_negativeCylinder.get() ),
     m_positiveLineGeometry( scaleAxis.m_positiveLineGeometry.get() ),
     m_negativeLineGeometry( scaleAxis.m_negativeLineGeometry.get() ),
     m_positiveBoxDrawable( scaleAxis.m_positiveBoxDrawable.get() ),
     m_negativeBoxDrawable( scaleAxis.m_negativeBoxDrawable.get() ),
+    m_positiveCylinderDrawable( scaleAxis.m_positiveCylinderDrawable.get() ),
+    m_negativeCylinderDrawable( scaleAxis.m_negativeCylinderDrawable.get() ),
     m_lineAndCylinderGeode( scaleAxis.m_lineAndCylinderGeode.get() )
 {
     ;
@@ -78,6 +85,11 @@ ScaleAxis::ScaleAxis(
 ScaleAxis::~ScaleAxis()
 {
     ;
+}
+////////////////////////////////////////////////////////////////////////////////
+ScaleAxis* ScaleAxis::AsScaleAxis()
+{
+    return this;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void ScaleAxis::BoxCenterOffset( const osg::Vec3& offset )
@@ -130,7 +142,7 @@ void ScaleAxis::ComputeDeltaTransform()
     //Find the ratio between the projected scalar values
     //const double ratio = projE / projS;
 
-    m_deltaScale.set( scale, scale, scale );
+    //m_deltaScale.set( scale, scale, scale );
 
     //Set the transform
     //osg::Vec3d newScale =
@@ -194,10 +206,26 @@ void ScaleAxis::ExpandLineVertices( const osg::Vec3& expansion )
     m_positiveLineGeometry->dirtyDisplayList();
     m_positiveLineGeometry->dirtyBound();
 
+    //m_positiveCylinder->setCenter(
+        //m_positiveCylinder->getCenter() + ( expansion * 0.5 ) );
+    m_positiveCylinder->setHeight(
+        m_positiveCylinder->getHeight() - expansion.length() );
+
+    m_positiveCylinderDrawable->dirtyDisplayList();
+    m_positiveCylinderDrawable->dirtyBound();
+
     (*m_lineVertices)[ 2 ] -= expansion;
     (*m_lineVertices)[ 3 ] += expansion;
     m_negativeLineGeometry->dirtyDisplayList();
     m_negativeLineGeometry->dirtyBound();
+
+    //m_negativeCylinder->setCenter(
+        //m_negativeCylinder->getCenter() - ( expansion * 0.5 ) );
+    m_negativeCylinder->setHeight(
+        m_negativeCylinder->getHeight() + expansion.length() );
+
+    m_negativeCylinderDrawable->dirtyDisplayList();
+    m_negativeCylinderDrawable->dirtyBound();
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool ScaleAxis::isSameKindAs( const osg::Object* obj ) const
@@ -237,21 +265,14 @@ void ScaleAxis::SetupDefaultGeometry()
             m_positiveLineGeometry->getOrCreateStateSet();
 
         //Override color uniform
-        stateSet->addUniform(
-            new osg::Uniform( "color", GetColor( Color::DISABLED ) ) );
+        //stateSet->addUniform(
+            //new osg::Uniform( "color", GetColor( Color::DISABLED ) ) );
 
         //Set line width
         osg::ref_ptr< osg::LineWidth > lineWidth = new osg::LineWidth();
-        lineWidth->setWidth( 2.0 );
+        lineWidth->setWidth( LINE_WIDTH );
         stateSet->setAttributeAndModes(
             lineWidth.get(), osg::StateAttribute::ON );
-
-        //Set line stipple
-        osg::ref_ptr< osg::LineStipple > lineStipple = new osg::LineStipple();
-        lineStipple->setFactor( 1 );
-        lineStipple->setPattern( 0xAAAA );
-        stateSet->setAttributeAndModes( lineStipple.get(),
-            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
     }
 
     //Create a positive box
@@ -270,22 +291,19 @@ void ScaleAxis::SetupDefaultGeometry()
             m_positiveBoxDrawable->getOrCreateStateSet();
     }
 
-    /*
     //Create an invisible cylinder for picking the positive line
     {
-        osg::ref_ptr< osg::Cylinder > cylinder =
-            new osg::Cylinder(
-                (*m_lineVertices)[ 1 ] * 0.5,
-                PICK_RADIUS,
-                (*m_lineVertices)[ 1 ].length() );
+        m_positiveCylinder = new osg::Cylinder(
+            (*m_lineVertices)[ 1 ] * 0.5,
+            PICK_RADIUS,
+            (*m_lineVertices)[ 1 ].length() );
 
-        osg::ref_ptr< osg::ShapeDrawable > shapeDrawable =
-            new osg::ShapeDrawable( cylinder.get() );
+        m_positiveCylinderDrawable =
+            new osg::ShapeDrawable( m_positiveCylinder.get() );
 
-        SetDrawableToAlwaysCull( *shapeDrawable.get() );
-        m_lineAndCylinderGeode->addDrawable( shapeDrawable.get() );
+        SetDrawableToAlwaysCull( *m_positiveCylinderDrawable.get() );
+        m_lineAndCylinderGeode->addDrawable( m_positiveCylinderDrawable.get() );
     }
-    */
 
     //Create a negative line
     {
@@ -295,28 +313,21 @@ void ScaleAxis::SetupDefaultGeometry()
         m_negativeLineGeometry->addPrimitiveSet(
             new osg::DrawArrays( osg::PrimitiveSet::LINES, 2, 2 ) );
 
-        m_lineAndCylinderGeode->addDrawable( m_negativeLineGeometry.get() );
+        //m_lineAndCylinderGeode->addDrawable( m_negativeLineGeometry.get() );
 
         //Set StateSet
         osg::ref_ptr< osg::StateSet > stateSet =
             m_negativeLineGeometry->getOrCreateStateSet();
 
         //Override color uniform
-        stateSet->addUniform(
-            new osg::Uniform( "color", GetColor( Color::DISABLED ) ) );
+        //stateSet->addUniform(
+            //new osg::Uniform( "color", GetColor( Color::DISABLED ) ) );
 
         //Set line width
         osg::ref_ptr< osg::LineWidth > lineWidth = new osg::LineWidth();
-        lineWidth->setWidth( 2.0 );
+        lineWidth->setWidth( LINE_WIDTH );
         stateSet->setAttributeAndModes(
             lineWidth.get(), osg::StateAttribute::ON );
-
-        //Set line stipple
-        osg::ref_ptr< osg::LineStipple > lineStipple = new osg::LineStipple();
-        lineStipple->setFactor( 1 );
-        lineStipple->setPattern( 0xAAAA );
-        stateSet->setAttributeAndModes( lineStipple.get(),
-            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
     }
 
     //Create a negative box
@@ -328,29 +339,26 @@ void ScaleAxis::SetupDefaultGeometry()
             (*m_lineVertices)[ 3 ] + BOX_CENTER, -BOX_WIDTH );
 
         m_negativeBoxDrawable = new osg::ShapeDrawable( m_negativeBox.get() );
-        boxGeode->addDrawable( m_negativeBoxDrawable.get() );
+        //boxGeode->addDrawable( m_negativeBoxDrawable.get() );
 
         //Set StateSet
         osg::ref_ptr< osg::StateSet > stateSet =
             m_negativeBoxDrawable->getOrCreateStateSet();
     }
 
-    /*
     //Create an invisible cylinder for picking the negative line
     {
-        osg::ref_ptr< osg::Cylinder > cylinder =
-            new osg::Cylinder(
-                (*m_lineVertices)[ 3 ] * 0.5,
-                PICK_RADIUS,
-                -(*m_lineVertices)[ 3 ].length() );
+        m_negativeCylinder = new osg::Cylinder(
+            (*m_lineVertices)[ 3 ] * 0.5,
+            PICK_RADIUS,
+            -(*m_lineVertices)[ 3 ].length() );
 
-        osg::ref_ptr< osg::ShapeDrawable > shapeDrawable =
-            new osg::ShapeDrawable( cylinder.get() );
+        m_negativeCylinderDrawable =
+            new osg::ShapeDrawable( m_negativeCylinder.get() );
 
-        SetDrawableToAlwaysCull( *shapeDrawable.get() );
-        m_lineAndCylinderGeode->addDrawable( shapeDrawable.get() );
+        SetDrawableToAlwaysCull( *m_negativeCylinderDrawable.get() );
+        //m_lineAndCylinderGeode->addDrawable( m_negativeCylinderDrawable.get() );
     }
-    */
 
     //Add lines and cones to the scene
     addChild( m_lineAndCylinderGeode.get() );

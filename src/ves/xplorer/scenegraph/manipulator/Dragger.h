@@ -57,6 +57,16 @@ namespace scenegraph
 {
 namespace manipulator
 {
+class TranslateAxis;
+class TranslatePlane;
+class TranslatePan;
+class Rotate;
+class RotateAxis;
+class RotateTwist;
+class ScaleAxis;
+class ScaleUniform;
+class CompoundDragger;
+
 /*!\file Dragger.h
  * Dragger API
  */
@@ -77,6 +87,33 @@ public:
 
     ///
     virtual void accept( osg::NodeVisitor& nv );
+
+    ///
+    virtual TranslateAxis* AsTranslateAxis();
+
+    ///
+    virtual TranslatePlane* AsTranslatePlane();
+
+    ///
+    virtual TranslatePan* AsTranslatePan();
+
+    ///
+    virtual Rotate* AsRotate();
+
+    ///
+    virtual RotateAxis* AsRotateAxis();
+
+    ///
+    virtual RotateTwist* AsRotateTwist();
+
+    ///
+    virtual ScaleAxis* AsScaleAxis();
+
+    ///
+    virtual ScaleUniform* AsScaleUniform();
+
+    ///
+    virtual CompoundDragger* AsCompoundDragger();
 
     ///
     ///\return
@@ -113,7 +150,7 @@ public:
     virtual Dragger* Focus( osg::NodePath::iterator& npItr );
 
     ///
-    const osg::Plane GetPlane( const bool& transform = true ) const;
+    const osg::Plane GetPlane( const bool& parallel = false ) const;
 
     ///
     ///\return
@@ -124,16 +161,22 @@ public:
         const bool& zero = false, const bool& premultiply = false ) const;
 
     ///
+    const osg::Vec3d GetPreviousEyePoint() const;
+
+    ///
+    const osg::Vec3d GetPreviousLocalUp() const;
+
+    ///
     const osg::Vec3d GetUnitAxis() const;
+
+    ///
+    const osg::Plane GetUnitPlane() const;
 
     ///
     const VectorSpace::Enum& GetVectorSpace() const;
 
     ///
     virtual void Hide();
-
-    ///
-    const bool IsCompound() const;
 
     ///
     const bool& IsEnabled() const;
@@ -155,6 +198,9 @@ public:
 
     ///
     virtual Dragger* Release( osg::NodePath::iterator& npItr );
+
+    ///
+    virtual void SetAxisDirection( const AxisDirection::Enum& axisDirection );
 
     ///
     virtual void SetColor(
@@ -195,6 +241,18 @@ protected:
         osg::Vec3d& projectedPoint ){return false;}
 
     ///
+    virtual void CustomFocusAction(){;}
+
+    ///
+    virtual void CustomPushAction(){;}
+
+    ///
+    virtual void CustomDragAction(){;}
+
+    ///
+    virtual void CustomReleaseAction(){;}
+
+    ///
     osg::Vec4& GetColor( Color::Enum colorTag );
 
     ///Pure virtual
@@ -226,13 +284,6 @@ protected:
     Dragger* m_rootDragger;
 
     ///
-    osg::Transform* m_activeAssociation;
-
-    ///
-    typedef std::set< osg::Transform* > AssociationSet;
-    AssociationSet m_associationSet;
-
-    ///
     osg::Quat m_deltaRotation;
 
     ///
@@ -243,6 +294,12 @@ protected:
 
     ///
     osg::Vec3d m_scale;
+
+    ///
+    osg::Matrixd m_localToWorld;
+
+    ///
+    osg::Matrixd m_worldToLocal;
 
 private:
     ///
@@ -258,21 +315,25 @@ private:
     void UpdateAssociations();
 
     ///
-    ColorMap m_colorMap;
+    bool m_isRootDragger;
+
+        ///
+    osg::Transform* m_activeAssociation;
 
     ///
-    osg::ref_ptr< osg::Uniform > m_color;
-
-    ///
-    osg::Matrixd m_localToWorld;
-
-    ///
-    osg::Matrixd m_worldToLocal;
+    typedef std::set< osg::Transform* > AssociationSet;
+    AssociationSet m_associationSet;
 
     ///
     typedef std::map< osg::Transform*,
             std::pair< osg::Matrixd, osg::Matrixd > > AssociationMatricesMap;
     AssociationMatricesMap m_associationMatricesMap;
+
+    ///
+    ColorMap m_colorMap;
+
+    ///
+    osg::ref_ptr< osg::Uniform > m_color;
 
 };
 

@@ -33,6 +33,7 @@
 
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/manipulator/CompoundDragger.h>
+#include <ves/xplorer/scenegraph/manipulator/Rotate.h>
 
 using namespace ves::xplorer::scenegraph::manipulator;
 
@@ -56,6 +57,11 @@ CompoundDragger::CompoundDragger(
 CompoundDragger::~CompoundDragger()
 {
     ;
+}
+////////////////////////////////////////////////////////////////////////////////
+CompoundDragger* CompoundDragger::AsCompoundDragger()
+{
+    return this;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CompoundDragger::ComboForm()
@@ -221,6 +227,11 @@ Dragger* CompoundDragger::GetChild( unsigned int i )
     return static_cast< Dragger* >( Dragger::getChild( i ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
+const TransformationType::Enum& CompoundDragger::GetEnabledModes() const
+{
+    return m_enabledModes;
+}
+////////////////////////////////////////////////////////////////////////////////
 bool CompoundDragger::insertChild( unsigned int index, Dragger* child )
 {
     return Dragger::insertChild( index, child );
@@ -236,6 +247,17 @@ bool CompoundDragger::setChild( unsigned int i, Dragger* node )
     return Dragger::setChild( i, node );
 }
 ////////////////////////////////////////////////////////////////////////////////
+void CompoundDragger::SetAxisDirection(
+    const AxisDirection::Enum& axisDirection )
+{
+    for( unsigned int i = 0; i < getNumChildren(); ++i )
+    {
+        GetChild( i )->SetAxisDirection( axisDirection );
+    }
+
+    Dragger::SetAxisDirection( axisDirection );
+}
+////////////////////////////////////////////////////////////////////////////////
 void CompoundDragger::SetColor(
     Color::Enum colorTag, osg::Vec4& newColor, bool use )
 {
@@ -247,10 +269,13 @@ void CompoundDragger::SetColor(
 ////////////////////////////////////////////////////////////////////////////////
 void CompoundDragger::SetEnabledModes( TransformationType::Enum value )
 {
+    //We don't want to do this since this function is used to show/hide geometry
+    /*
     if( m_enabledModes == value )
     {
         return;
     }
+    */
 
     m_enabledModes = value;
 
@@ -264,6 +289,30 @@ void CompoundDragger::SetEnabledModes( TransformationType::Enum value )
         else
         {
             dragger->Hide();
+        }
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void CompoundDragger::SetHelpCircle( HelpCircle* const helpCircle )
+{
+    for( unsigned int i = 0; i < getNumChildren(); ++i )
+    {
+        Dragger* dragger = GetChild( i );
+
+        CompoundDragger* compoundDragger = dragger->AsCompoundDragger();
+        if( compoundDragger )
+        {
+            compoundDragger->SetHelpCircle( helpCircle );
+
+            continue;
+        }
+
+        Rotate* rotate = dragger->AsRotate();
+        if( rotate )
+        {
+            rotate->SetHelpCircle( helpCircle );
+
+            continue;
         }
     }
 }

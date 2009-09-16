@@ -69,6 +69,9 @@ public:
         const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
 
     ///
+    virtual ScaleUniform* AsScaleUniform();
+
+    ///
     ///\return
     virtual const char* className() const;
 

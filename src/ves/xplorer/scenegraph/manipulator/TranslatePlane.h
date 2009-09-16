@@ -76,6 +76,9 @@ public:
         const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
 
     ///
+    virtual TranslatePlane* AsTranslatePlane();
+
+    ///
     ///\return
     virtual const char* className() const;
 

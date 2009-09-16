@@ -41,7 +41,6 @@
 
 // --- OSG Includes --- //
 
-
 namespace ves
 {
 namespace xplorer
@@ -50,6 +49,8 @@ namespace scenegraph
 {
 namespace manipulator
 {
+class HelpCircle;
+
 /*!\file CompoundDragger.h
  * CompoundDragger API
  */
@@ -70,6 +71,9 @@ public:
 
     ///Override the addChild function to only accept Draggers
     virtual bool addChild( Dragger* child );
+
+    ///
+    virtual CompoundDragger* AsCompoundDragger();
 
     ///
     ///\return
@@ -107,6 +111,9 @@ public:
     ///Can't override the getChild function, so create our own
     Dragger* GetChild( unsigned int i );
 
+    ///Gets the transformation modes enabled on the manipulator
+    const TransformationType::Enum& GetEnabledModes() const;
+
     ///
     virtual Dragger* Push(
         const osgUtil::LineSegmentIntersector& deviceInput,
@@ -122,6 +129,9 @@ public:
     ///Override the replaceChild function to only accept Draggers
     virtual bool replaceChild( Dragger* origChild, Dragger* newChild );
 
+    ///
+    virtual void SetAxisDirection( const AxisDirection::Enum& axisDirection );
+
     ///Override the setChild function to only accept Draggers
     virtual bool setChild( unsigned int i, Dragger* node );
 
@@ -131,6 +141,9 @@ public:
 
     ///Sets the transformation modes enabled on the manipulator
     void SetEnabledModes( TransformationType::Enum value );
+
+    ///
+    virtual void SetHelpCircle( HelpCircle* const helpCircle );
 
     ///
     virtual void SetRootDragger( Dragger* rootDragger );

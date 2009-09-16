@@ -31,8 +31,8 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
-#ifndef VES_XPLORER_SCENEGRAPH_MANIPULATOR_TRANSLATE_AXIS_H
-#define VES_XPLORER_SCENEGRAPH_MANIPULATOR_TRANSLATE_AXIS_H
+#ifndef VES_XPLORER_SCENEGRAPH_MANIPULATOR_ROTATE_H
+#define VES_XPLORER_SCENEGRAPH_MANIPULATOR_ROTATE_H
 
 // --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
@@ -46,9 +46,6 @@ namespace osg
 {
 class Geode;
 class Geometry;
-class Cone;
-class Cylinder;
-class ShapeDrawable;
 }
 
 namespace ves
@@ -59,26 +56,28 @@ namespace scenegraph
 {
 namespace manipulator
 {
-/*!\file TranslateAxis.h
- * TranslateAxis API
+class HelpCircle;
+
+/*!\file Rotate.h
+ * Rotate API
  */
 
-/*!\class ves::xplorer::scenegraph::TranslateAxis
- *
+/*!\class ves::xplorer::scenegraph::Rotate
+ * Abstract class
  */
-class VE_SCENEGRAPH_EXPORTS TranslateAxis : public Dragger
+class VE_SCENEGRAPH_EXPORTS Rotate : public Dragger
 {
 public:
     ///
-    TranslateAxis();
+    Rotate( const TransformationType::Enum& transformationType );
 
     ///Copy constructor using CopyOp to manage deep vs shallow copy
-    TranslateAxis(
-        const TranslateAxis& translateAxis,
+    Rotate(
+        const Rotate& rotateAxis,
         const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
 
     ///
-    virtual TranslateAxis* AsTranslateAxis();
+    virtual Rotate* AsRotate();
 
     ///
     ///\return
@@ -94,26 +93,22 @@ public:
     virtual osg::Object* cloneType() const;
 
     ///
-    virtual void ComboForm();
+    void CreateGhostDisk();
 
     ///
-    ///\param offset
-    void ConeCenterOffset( const osg::Vec3& offset );
-
-    ///
-    virtual void DefaultForm();
-
-    ///
-    void EnableLinesAndCylinders( const bool& enable );
+    const HelpCircle* const GetHelpCircle() const;
 
     ///
     ///\param obj
     ///\return
     virtual bool isSameKindAs( const osg::Object* obj ) const;
 
+    ///
+    virtual void SetHelpCircle( HelpCircle* const helpCircle );
+
 protected:
     ///
-    virtual ~TranslateAxis();
+    virtual ~Rotate();
 
     ///
     virtual void ComputeDeltaTransform();
@@ -124,47 +119,38 @@ protected:
         osg::Vec3d& projectedPoint );
 
     ///
+    virtual void CustomPushAction();
+
+    ///
+    virtual void CustomDragAction();
+
+    ///
+    virtual void CustomReleaseAction();
+
+    ///
     virtual void SetupDefaultGeometry();
+
+    ///
+    osg::ref_ptr< HelpCircle > m_helpCircle;
 
 private:
     ///
-    const double m_explodeDistance;
+    osg::Vec3d m_localStartPoint;
 
     ///
-    osg::ref_ptr< osg::Vec3Array > m_lineVertices;
+    double m_startAngle;
 
     ///
-    osg::ref_ptr< osg::Cone > m_positiveCone;
+    double m_angle;
 
     ///
-    osg::ref_ptr< osg::Cone > m_negativeCone;
+    osg::ref_ptr< osg::Vec3Array > m_ghostDiskVertices;
 
     ///
-    osg::ref_ptr< osg::Cylinder > m_positiveCylinder;
+    osg::ref_ptr< osg::Geometry > m_ghostDiskGeometry;
 
     ///
-    osg::ref_ptr< osg::Cylinder > m_negativeCylinder;
-
-    ///
-    osg::ref_ptr< osg::Geometry > m_positiveLineGeometry;
-
-    ///
-    osg::ref_ptr< osg::Geometry > m_negativeLineGeometry;
-
-    ///
-    osg::ref_ptr< osg::ShapeDrawable > m_positiveConeDrawable;
-
-    ///
-    osg::ref_ptr< osg::ShapeDrawable > m_negativeConeDrawable;
-
-    ///
-    osg::ref_ptr< osg::ShapeDrawable > m_positiveCylinderDrawable;
-
-    ///
-    osg::ref_ptr< osg::ShapeDrawable > m_negativeCylinderDrawable;
-
-    ///
-    osg::ref_ptr< osg::Geode > m_lineAndCylinderGeode;
+    osg::ref_ptr< osg::Geode > m_ghostDiskGeode;
 
 };
 } //end manipulator
@@ -172,4 +158,4 @@ private:
 } //end xplorer
 } //end ves
 
-#endif //VES_XPLORER_SCENEGRAPH_MANIPULATOR_TRANSLATE_AXIS_H
+#endif //VES_XPLORER_SCENEGRAPH_MANIPULATOR_ROTATE_H

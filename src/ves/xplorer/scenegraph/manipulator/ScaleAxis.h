@@ -76,6 +76,9 @@ public:
         const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
 
     ///
+    virtual ScaleAxis* AsScaleAxis();
+
+    ///
     ///\param offset
     void BoxCenterOffset( const osg::Vec3& offset );
 
@@ -129,6 +132,12 @@ private:
     osg::ref_ptr< osg::Box > m_negativeBox;
 
     ///
+    osg::ref_ptr< osg::Cylinder > m_positiveCylinder;
+
+    ///
+    osg::ref_ptr< osg::Cylinder > m_negativeCylinder;
+
+    ///
     osg::ref_ptr< osg::Geometry > m_positiveLineGeometry;
 
     ///
@@ -139,6 +148,12 @@ private:
 
     ///
     osg::ref_ptr< osg::ShapeDrawable > m_negativeBoxDrawable;
+
+    ///
+    osg::ref_ptr< osg::ShapeDrawable > m_positiveCylinderDrawable;
+
+    ///
+    osg::ref_ptr< osg::ShapeDrawable > m_negativeCylinderDrawable;
 
     ///
     osg::ref_ptr< osg::Geode > m_lineAndCylinderGeode;

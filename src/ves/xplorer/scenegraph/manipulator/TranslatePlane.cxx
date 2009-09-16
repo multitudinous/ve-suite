@@ -61,6 +61,11 @@ TranslatePlane::~TranslatePlane()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
+TranslatePlane* TranslatePlane::AsTranslatePlane()
+{
+    return this;
+}
+////////////////////////////////////////////////////////////////////////////////
 const char* TranslatePlane::className() const
 {
     return "TranslatePlane";
@@ -165,7 +170,7 @@ void TranslatePlane::SetupDefaultGeometry()
         geometry->addPrimitiveSet(
             new osg::DrawArrays( osg::PrimitiveSet::TRIANGLE_STRIP, 4, 4 ) );
 
-        geode->addDrawable( geometry.get() );
+        //geode->addDrawable( geometry.get() );
 
         //Set StateSet
         osg::ref_ptr< osg::StateSet > stateSet =
@@ -180,7 +185,7 @@ void TranslatePlane::SetupDefaultGeometry()
         geometry->addPrimitiveSet(
             new osg::DrawArrays( osg::PrimitiveSet::TRIANGLE_STRIP, 8, 4 ) );
 
-        geode->addDrawable( geometry.get() );
+        //geode->addDrawable( geometry.get() );
 
         //Set StateSet
         osg::ref_ptr< osg::StateSet > stateSet =
@@ -195,7 +200,7 @@ void TranslatePlane::SetupDefaultGeometry()
         geometry->addPrimitiveSet(
             new osg::DrawArrays( osg::PrimitiveSet::TRIANGLE_STRIP, 12, 4 ) );
 
-        geode->addDrawable( geometry.get() );
+        //geode->addDrawable( geometry.get() );
 
         //Set StateSet
         osg::ref_ptr< osg::StateSet > stateSet =
