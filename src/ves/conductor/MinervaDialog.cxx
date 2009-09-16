@@ -67,6 +67,7 @@
 #include <wx/settings.h>
 #include <wx/sizer.h>
 #include <wx/statbox.h>
+#include <wx/filename.h>
 
 const wxString WINDOW_TITLE( wxT( "Minerva Properties" ) );
 
@@ -215,8 +216,15 @@ void MinervaDialog::AddElevationLayerFileSystem( wxCommandEvent& event )
     wxFileDialog dialog( this, _("Open") );
     if( wxID_OK == dialog.ShowModal() )
     {
-        wxString filename( dialog.GetFilename() );
-        MinervaDialog::_addLayerFileSystem( ves::util::commands::ADD_ELEVATION_LAYER, ConvertUnicode( filename.c_str() ), _elevationLayersList, _elevationLayers );
+        wxFileName vegFileName( dialog.GetPath() );
+        vegFileName.MakeRelativeTo( ::wxGetCwd() );
+        wxString vegFileNamePath( vegFileName.GetFullPath() );
+        vegFileNamePath.Replace( _( "\\" ), _( "/" ), true );
+
+        MinervaDialog::_addLayerFileSystem( 
+            ves::util::commands::ADD_ELEVATION_LAYER, 
+            ConvertUnicode( vegFileNamePath.c_str() ), 
+            _elevationLayersList, _elevationLayers );
     }
 }
 ///////////////////////////////////////////////////////////////////////////////
@@ -243,10 +251,15 @@ void MinervaDialog::AddRasterLayerFileSystem( wxCommandEvent& event )
     wxFileDialog dialog( this, _("Open") );
     if( wxID_OK == dialog.ShowModal() )
     {
-        const std::string directory( ConvertUnicode( dialog.GetDirectory().c_str() ) );
-        const std::string filename( ConvertUnicode( dialog.GetFilename().c_str() ) );
-        const std::string fullPath( directory + "/" + filename );
-        MinervaDialog::_addLayerFileSystem( ves::util::commands::ADD_RASTER_LAYER, fullPath, _rasterLayersList, _rasterLayers );
+        wxFileName vegFileName( dialog.GetPath() );
+        vegFileName.MakeRelativeTo( ::wxGetCwd() );
+        wxString vegFileNamePath( vegFileName.GetFullPath() );
+        vegFileNamePath.Replace( _( "\\" ), _( "/" ), true );
+        
+        MinervaDialog::_addLayerFileSystem( 
+            ves::util::commands::ADD_RASTER_LAYER,  
+            ConvertUnicode( vegFileNamePath.c_str() ), 
+            _rasterLayersList, _rasterLayers );
     }
 }
 ///////////////////////////////////////////////////////////////////////////////
