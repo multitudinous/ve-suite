@@ -118,7 +118,7 @@ bool ManipulatorManager::addChild( Dragger* child )
         CompoundDragger* compoundDragger = child->AsCompoundDragger();
         if( compoundDragger )
         {
-            compoundDragger->SetHelpCircle( helpCircle );
+            compoundDragger->SetHelpCircle( helpCircle.get() );
             //Reset geometry
             compoundDragger->SetEnabledModes(
                 compoundDragger->GetEnabledModes() );
@@ -128,7 +128,7 @@ bool ManipulatorManager::addChild( Dragger* child )
             Rotate* rotate = child->AsRotate();
             if( rotate )
             {
-                rotate->SetHelpCircle( helpCircle );
+                rotate->SetHelpCircle( helpCircle.get() );
             }
         }
     }
@@ -208,8 +208,9 @@ bool ManipulatorManager::Handle(
         }
         case Event::PUSH:
         {
-            return m_leafDragger =
+            m_leafDragger =
                 m_rootDragger->Push( *m_deviceInput, m_nodePath, m_nodePathItr );
+            return m_leafDragger;
         }
         case Event::DRAG:
         {
