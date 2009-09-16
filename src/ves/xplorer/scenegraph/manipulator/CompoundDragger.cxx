@@ -124,16 +124,6 @@ const char* CompoundDragger::className() const
     return "CompoundDragger";
 }
 ////////////////////////////////////////////////////////////////////////////////
-osg::Object* CompoundDragger::clone( const osg::CopyOp& copyop ) const
-{
-    return new CompoundDragger( *this, copyop );
-}
-////////////////////////////////////////////////////////////////////////////////
-osg::Object* CompoundDragger::cloneType() const
-{
-    return new CompoundDragger( m_transformationType );
-}
-////////////////////////////////////////////////////////////////////////////////
 Dragger* CompoundDragger::Focus( osg::NodePath::iterator& npItr )
 {
     //Get the active dragger

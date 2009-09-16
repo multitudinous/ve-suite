@@ -120,15 +120,6 @@ public:
     virtual const char* className() const;
 
     ///
-    ///\param copyop
-    ///\return
-    virtual osg::Object* clone( const osg::CopyOp& copyop ) const;
-
-    ///
-    ///\return
-    virtual osg::Object* cloneType() const;
-
-    ///
     virtual void ComboForm();
 
     ///
@@ -255,9 +246,8 @@ protected:
     ///
     osg::Vec4& GetColor( Color::Enum colorTag );
 
-    ///Pure virtual
     ///
-    virtual void SetupDefaultGeometry(){;}
+    virtual void SetupDefaultGeometry() = NULL;
 
     ///
     const TransformationType::Enum m_transformationType;
@@ -317,7 +307,7 @@ private:
     ///
     bool m_isRootDragger;
 
-        ///
+    ///
     osg::Transform* m_activeAssociation;
 
     ///

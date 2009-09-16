@@ -88,6 +88,11 @@ osg::Object* RotateAxis::cloneType() const
     return new RotateAxis();
 }
 ////////////////////////////////////////////////////////////////////////////////
+const double& RotateAxis::GetRadius() const
+{
+    return ROTATE_AXIS_RADIUS;
+}
+////////////////////////////////////////////////////////////////////////////////
 bool RotateAxis::isSameKindAs( const osg::Object* obj ) const
 {
     return dynamic_cast< const RotateAxis* >( obj ) != NULL;
@@ -103,13 +108,17 @@ void RotateAxis::SetHelpCircle( HelpCircle* const helpCircle )
         return;
     }
 
-    osg::ref_ptr< osg::StateSet > stateSet = getOrCreateStateSet();
+    osg::ref_ptr< osg::StateSet > stateSet =
+        m_rotateGeode->getOrCreateStateSet();
     m_helpCircle->GetClipNode()->setStateSetModes( 
         *stateSet.get(), osg::StateAttribute::ON );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void RotateAxis::SetupDefaultGeometry()
 {
+    //
+    Rotate::SetupDefaultGeometry();
+
     //The geode to add the geometry to
     osg::ref_ptr< osg::Geode > geode = new osg::Geode();
 

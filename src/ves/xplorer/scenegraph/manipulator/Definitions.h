@@ -61,7 +61,7 @@ const double CONE_RADIUS = 0.05;
 const double PICK_RADIUS = 0.05;
 const double LINE_WIDTH = 1.0;
 const double ROTATE_AXIS_RADIUS = 1.0;
-const double CLIPPING_CIRCLE_RADIUS = ROTATE_AXIS_RADIUS;
+const double HELP_CIRCLE_RADIUS = ROTATE_AXIS_RADIUS;
 const double ROTATE_TWIST_RADIUS = 1.2;
 const double TRANSLATE_PAN_RADIUS = 0.2;
 

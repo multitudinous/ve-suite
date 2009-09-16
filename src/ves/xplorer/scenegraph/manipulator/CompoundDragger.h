@@ -80,15 +80,6 @@ public:
     virtual const char* className() const;
 
     ///
-    ///\param copyop
-    ///\return
-    virtual osg::Object* clone( const osg::CopyOp& copyop ) const;
-
-    ///
-    ///\return
-    virtual osg::Object* cloneType() const;
-
-    ///
     void ComboForm();
 
     ///
@@ -157,6 +148,9 @@ public:
 protected:
     ///
     virtual ~CompoundDragger();
+
+    ///
+    virtual void SetupDefaultGeometry() = NULL;
 
     ///
     TransformationType::Enum m_enabledModes;

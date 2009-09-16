@@ -33,7 +33,6 @@
 
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/manipulator/RotateTwist.h>
-#include <ves/xplorer/scenegraph/manipulator/HelpCircle.h>
 
 // --- OSG Includes --- //
 #include <osg/io_utils>
@@ -95,23 +94,21 @@ osg::Object* RotateTwist::cloneType() const
 void RotateTwist::CustomPushAction()
 {
     Rotate::CustomPushAction();
-
-    SetLineEndPoint( m_startProjectedPoint );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void RotateTwist::CustomDragAction()
 {
     Rotate::CustomDragAction();
-
-    SetLineEndPoint( m_endProjectedPoint );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void RotateTwist::CustomReleaseAction()
 {
     Rotate::CustomReleaseAction();
-
-    //Turn ghost disk geode off
-    m_lineGeode->setNodeMask( 0 );
+}
+////////////////////////////////////////////////////////////////////////////////
+const double& RotateTwist::GetRadius() const
+{
+    return ROTATE_TWIST_RADIUS;
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool RotateTwist::isSameKindAs( const osg::Object* obj ) const
@@ -119,52 +116,13 @@ bool RotateTwist::isSameKindAs( const osg::Object* obj ) const
     return dynamic_cast< const RotateTwist* >( obj ) != NULL;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void RotateTwist::SetLineEndPoint( const osg::Vec3& endPoint )
-{
-    (*m_lineVertices)[ 1 ] = endPoint * m_worldToLocal;
-    (*m_lineVertices)[ 1 ].normalize();
-    (*m_lineVertices)[ 1 ] *= ROTATE_TWIST_RADIUS;
-
-    m_lineGeode->setNodeMask( 1 );
-    m_lineGeometry->dirtyDisplayList();
-    m_lineGeometry->dirtyBound();
-}
-////////////////////////////////////////////////////////////////////////////////
 void RotateTwist::SetupDefaultGeometry()
 {
+    //
+    Rotate::SetupDefaultGeometry();
+
     //The geode to add the geometry to
     osg::ref_ptr< osg::Geode > geode = new osg::Geode();
-
-    //The geode to add the line geometry to
-    m_lineGeode = new osg::Geode();
-
-    //The unit axis
-    m_lineVertices = new osg::Vec3Array();
-    m_lineVertices->resize( 2 );
-    (*m_lineVertices)[ 0 ] = osg::Vec3d( 0.0, 0.0, 0.0 );
-    (*m_lineVertices)[ 1 ] =  osg::Vec3d( 0.0, 0.0, 0.0 );
-
-    //Create a line
-    {
-        m_lineGeometry = new osg::Geometry();
-
-        m_lineGeometry->setVertexArray( m_lineVertices.get() );
-        m_lineGeometry->addPrimitiveSet(
-            new osg::DrawArrays( osg::PrimitiveSet::LINES, 0, 2 ) );
-
-        m_lineGeode->addDrawable( m_lineGeometry.get() );
-        m_lineGeode->setNodeMask( 0 );
-
-        //Set StateSet
-        osg::ref_ptr< osg::StateSet > stateSet =
-            m_lineGeometry->getOrCreateStateSet();
-
-        //Set line width
-        osg::ref_ptr< osg::LineWidth > lineWidth = new osg::LineWidth();
-        lineWidth->setWidth( LINE_WIDTH );
-        stateSet->setAttributeAndModes(
-            lineWidth.get(), osg::StateAttribute::ON );
-    }
 
     //Create invisible triangle strip for picking the rotation twist axis
     {
@@ -200,8 +158,5 @@ void RotateTwist::SetupDefaultGeometry()
 
     //Add rotation axis to the scene
     addChild( geode.get() );
-
-    //Add line to this
-    addChild( m_lineGeode.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////

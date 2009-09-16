@@ -84,15 +84,6 @@ public:
     virtual const char* className() const;
 
     ///
-    ///\param copyop
-    ///\return
-    virtual osg::Object* clone( const osg::CopyOp& copyop ) const;
-
-    ///
-    ///\return
-    virtual osg::Object* cloneType() const;
-
-    ///
     void CreateGhostDisk();
 
     ///
@@ -133,7 +124,16 @@ protected:
     ///
     osg::ref_ptr< HelpCircle > m_helpCircle;
 
+    ///
+    osg::ref_ptr< osg::Geode > m_rotateGeode;
+
 private:
+    ///
+    virtual const double& GetRadius() const = NULL;
+
+    ///
+    void SetLineEndPoint( const osg::Vec3& endPoint );
+
     ///
     osg::Vec3d m_localStartPoint;
 
@@ -144,10 +144,19 @@ private:
     double m_angle;
 
     ///
+    osg::ref_ptr< osg::Vec3Array > m_lineVertices;
+
+    ///
     osg::ref_ptr< osg::Vec3Array > m_ghostDiskVertices;
 
     ///
+    osg::ref_ptr< osg::Geometry > m_lineGeometry;
+
+    ///
     osg::ref_ptr< osg::Geometry > m_ghostDiskGeometry;
+
+    ///
+    osg::ref_ptr< osg::Geode > m_lineGeode;
 
     ///
     osg::ref_ptr< osg::Geode > m_ghostDiskGeode;

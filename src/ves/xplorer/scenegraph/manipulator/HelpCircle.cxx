@@ -125,8 +125,8 @@ void HelpCircle::SetupDefaultGeometry()
             double cosVal( cos( rot ) );
             double sinVal( sin( rot ) );
 
-            double s( CLIPPING_CIRCLE_RADIUS * cosVal );
-            double t( CLIPPING_CIRCLE_RADIUS * sinVal );
+            double s( HELP_CIRCLE_RADIUS * cosVal );
+            double t( HELP_CIRCLE_RADIUS * sinVal );
 
             vertices->push_back( osg::Vec3d( s, t, 0.0 ) );
         }

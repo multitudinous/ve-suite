@@ -200,42 +200,42 @@ bool ManipulatorManager::Handle(
 
     switch( event )
     {
-        case Event::FOCUS:
-        {
-            m_leafDragger = m_rootDragger->Focus( m_nodePathItr );
+    case Event::FOCUS:
+    {
+        m_leafDragger = m_rootDragger->Focus( m_nodePathItr );
 
-            return m_leafDragger;
-        }
-        case Event::PUSH:
+        return m_leafDragger;
+    }
+    case Event::PUSH:
+    {
+        m_leafDragger =
+            m_rootDragger->Push( *m_deviceInput, m_nodePath, m_nodePathItr );
+        return m_leafDragger;
+    }
+    case Event::DRAG:
+    {
+        if( !m_leafDragger )
         {
-            m_leafDragger =
-                m_rootDragger->Push( *m_deviceInput, m_nodePath, m_nodePathItr );
-            return m_leafDragger;
-        }
-        case Event::DRAG:
-        {
-            if( !m_leafDragger )
-            {
-                return false;
-            }
-
-            m_leafDragger->Drag( *m_deviceInput );
-
-            return m_leafDragger;
-        }
-        case Event::RELEASE:
-        {
-            m_leafDragger = NULL;
-
-            return m_rootDragger->Release( m_nodePathItr );
-        }
-        default:
-        {
-            m_leafDragger = NULL;
-
             return false;
         }
+
+        m_leafDragger->Drag( *m_deviceInput );
+
+        return m_leafDragger;
     }
+    case Event::RELEASE:
+    {
+        m_leafDragger = NULL;
+
+        return m_rootDragger->Release( m_nodePathItr );
+    }
+    default:
+    {
+        m_leafDragger = NULL;
+
+        return false;
+    }
+    } //end switch( event )
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool ManipulatorManager::insertChild( unsigned int index, Dragger* child )

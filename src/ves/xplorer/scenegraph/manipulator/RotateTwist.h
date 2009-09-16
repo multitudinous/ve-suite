@@ -86,9 +86,6 @@ public:
     ///\return
     virtual bool isSameKindAs( const osg::Object* obj ) const;
 
-    ///
-    void SetLineEndPoint( const osg::Vec3& endPoint );
-
 protected:
     ///
     virtual ~RotateTwist();
@@ -107,13 +104,7 @@ protected:
 
 private:
     ///
-    osg::ref_ptr< osg::Vec3Array > m_lineVertices;
-
-    ///
-    osg::ref_ptr< osg::Geometry > m_lineGeometry;
-
-    ///
-    osg::ref_ptr< osg::Geode > m_lineGeode;
+    virtual const double& GetRadius() const;
 
 };
 } //end manipulator

@@ -97,6 +97,8 @@ protected:
     virtual void SetupDefaultGeometry();
 
 private:
+    ///
+    virtual const double& GetRadius() const;
 
 };
 } //end manipulator

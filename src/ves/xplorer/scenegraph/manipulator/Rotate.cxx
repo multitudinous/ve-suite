@@ -54,7 +54,7 @@ Rotate::Rotate(
     :
     Dragger( transformationType )
 {
-    SetupDefaultGeometry();
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 Rotate::Rotate(
@@ -78,16 +78,6 @@ Rotate* Rotate::AsRotate()
 const char* Rotate::className() const
 {
     return "Rotate";
-}
-////////////////////////////////////////////////////////////////////////////////
-osg::Object* Rotate::clone( const osg::CopyOp& copyop ) const
-{
-    return new Rotate( *this, copyop );
-}
-////////////////////////////////////////////////////////////////////////////////
-osg::Object* Rotate::cloneType() const
-{
-    return new Rotate( m_transformationType );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Rotate::CreateGhostDisk()
@@ -114,8 +104,7 @@ void Rotate::CreateGhostDisk()
         (*m_ghostDiskVertices)[ i ].set( s, t, 0.0 );
     }
 
-    //Turn ghost disk geode on and reset the ghost disk geometry
-    m_ghostDiskGeode->setNodeMask( 1 );
+    //Reset the ghost disk geometry
     m_ghostDiskGeometry->dirtyDisplayList();
     m_ghostDiskGeometry->dirtyBound();
 }
@@ -254,15 +243,25 @@ void Rotate::CustomPushAction()
 
     m_localStartPoint = m_startProjectedPoint * m_worldToLocal;
     m_localStartPoint.normalize();
-    m_localStartPoint *= ROTATE_AXIS_RADIUS;
+    m_localStartPoint *= GetRadius();
     m_startAngle = acos( osg::Vec3d( 1.0, 0.0, 0.0 ) * m_localStartPoint );
 
     //std::cout << "m_startAngle: " << m_startAngle << std::endl;
     //std::cout << "m_localStartPoint: " << m_localStartPoint << std::endl;
+
+    SetLineEndPoint( m_startProjectedPoint );
+
+    //Turn line geode on
+    m_lineGeode->setNodeMask( 1 );
+
+    //Turn ghost disk geode on
+    m_ghostDiskGeode->setNodeMask( 1 );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Rotate::CustomDragAction()
 {
+    SetLineEndPoint( m_endProjectedPoint );
+
     //CreateGhostDisk();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -270,31 +269,66 @@ void Rotate::CustomReleaseAction()
 {
     m_angle = 0.0;
 
+    //Turn line geode off
+    m_lineGeode->setNodeMask( 0 );
+
     //Turn ghost disk geode off
     m_ghostDiskGeode->setNodeMask( 0 );
+}
+////////////////////////////////////////////////////////////////////////////////
+void Rotate::SetLineEndPoint( const osg::Vec3& endPoint )
+{
+    (*m_lineVertices)[ 1 ] = endPoint * m_worldToLocal;
+    (*m_lineVertices)[ 1 ].normalize();
+    (*m_lineVertices)[ 1 ] *= GetRadius();
+
+    m_lineGeometry->dirtyDisplayList();
+    m_lineGeometry->dirtyBound();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Rotate::SetupDefaultGeometry()
 {
     //The geode to add the geometry to
-    osg::ref_ptr< osg::Geode > geode = new osg::Geode();
+    m_rotateGeode = new osg::Geode();
 
+    //The geode to add the line geometry to
+    m_lineGeode = new osg::Geode();
+
+    //The geode to add the ghost disk to
     m_ghostDiskGeode = new osg::Geode();
 
-    double radius( 0.0 );
-    switch( m_transformationType )
-    {
-    case TransformationType::ROTATE_TWIST:
-    {
-        radius = ROTATE_TWIST_RADIUS;
+    //The unit axis
+    m_lineVertices = new osg::Vec3Array();
+    m_lineVertices->resize( 2 );
+    (*m_lineVertices)[ 0 ] = osg::Vec3d( 0.0, 0.0, 0.0 );
+    (*m_lineVertices)[ 1 ] =  osg::Vec3d( 0.0, 0.0, 0.0 );
 
-        break;
-    }
-    default:
+    //Create a line
     {
-        radius = ROTATE_AXIS_RADIUS;
+        m_lineGeometry = new osg::Geometry();
+
+        m_lineGeometry->setVertexArray( m_lineVertices.get() );
+        m_lineGeometry->addPrimitiveSet(
+            new osg::DrawArrays( osg::PrimitiveSet::LINES, 0, 2 ) );
+
+        m_lineGeode->addDrawable( m_lineGeometry.get() );
+        m_lineGeode->setNodeMask( 0 );
+
+        //Set StateSet
+        osg::ref_ptr< osg::StateSet > stateSet =
+            m_lineGeometry->getOrCreateStateSet();
+        stateSet->setRenderBinDetails( 11, std::string( "RenderBin" ) );
+
+        //Override color uniform
+        stateSet->addUniform(
+            new osg::Uniform( "color", osg::Vec4( 1.0, 1.0, 1.0, 1.0 ) ) );
+
+        //Set line width
+        osg::ref_ptr< osg::LineWidth > lineWidth = new osg::LineWidth();
+        lineWidth->setWidth( LINE_WIDTH );
+        stateSet->setAttributeAndModes(
+            lineWidth.get(), osg::StateAttribute::ON );
     }
-    } //switch( m_transformationType )
 
     //Create the rotation twist axis with line loops
     {
@@ -306,8 +340,8 @@ void Rotate::SetupDefaultGeometry()
             double cosVal( cos( rot ) );
             double sinVal( sin( rot ) );
 
-            double s( radius * cosVal );
-            double t( radius * sinVal );
+            double s( GetRadius() * cosVal );
+            double t( GetRadius() * sinVal );
 
             vertices->push_back( osg::Vec3( s, t, 0.0 ) );
         }
@@ -317,7 +351,7 @@ void Rotate::SetupDefaultGeometry()
             new osg::DrawArrays(
                 osg::PrimitiveSet::LINE_LOOP, 0, vertices->size() ) );
 
-        geode->addDrawable( geometry.get() );
+        m_rotateGeode->addDrawable( geometry.get() );
 
         //Set StateSet
         osg::ref_ptr< osg::StateSet > stateSet =
@@ -369,8 +403,12 @@ void Rotate::SetupDefaultGeometry()
     }
 
     //Add rotation axis to the scene
-    addChild( geode.get() );
+    addChild( m_rotateGeode.get() );
 
+    //Add line to this
+    addChild( m_lineGeode.get() );
+
+    //Add ghost disk to this
     addChild( m_ghostDiskGeode.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////

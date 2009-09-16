@@ -338,16 +338,6 @@ const char* Dragger::className() const
     return "Dragger";
 }
 ////////////////////////////////////////////////////////////////////////////////
-osg::Object* Dragger::clone( const osg::CopyOp& copyop ) const
-{
-    return new Dragger( *this, copyop );
-}
-////////////////////////////////////////////////////////////////////////////////
-osg::Object* Dragger::cloneType() const
-{
-    return new Dragger( m_transformationType );
-}
-////////////////////////////////////////////////////////////////////////////////
 const char* Dragger::libraryName() const
 {
     return "ves::xplorer::scenegraph::manipulator";
