@@ -18,6 +18,7 @@
 #include <ves/xplorer/minerva/NavigateToModel.h>
 #include <ves/xplorer/minerva/ModelWrapper.h>
 
+#include <Minerva/Config.h>
 #include <Minerva/Core/Data/Camera.h>
 #include <Minerva/Core/TileEngine/Body.h>
 #include <Minerva/Core/Functions/MakeBody.h>
@@ -32,6 +33,7 @@
 #include <Usul/Functions/SafeCall.h>
 #include <Usul/Pointers/Functions.h>
 #include <Usul/Jobs/Manager.h>
+#include <Usul/System/Environment.h>
 
 #include <ves/util/commands/Minerva.h>
 #include <ves/open/xml/Command.h>
@@ -39,12 +41,25 @@
 #include <ves/xplorer/ModelHandler.h>
 #include <ves/xplorer/scenegraph/SceneManager.h>
 
+#include <osg/CoordinateSystemNode>
+
 #include <boost/bind.hpp>
 
 using namespace ves::xplorer::minerva;
 
 vprSingletonImp ( MinervaManager );
 
+namespace Detail
+{
+  void setenv ( const std::string& variable, const std::string& value )
+  {
+#ifdef _MSC_VER
+    ::_putenv_s ( variable.c_str(), value.c_str() );
+#else
+    ::setenv ( variable.c_str(), value.c_str(), 0 );
+#endif
+  }
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -60,6 +75,8 @@ MinervaManager::MinervaManager() :
   _scene ( 0x0 ),
   _models()
 {
+  Detail::setenv ( MINERVA_DATA_DIR_VARIABLE, Usul::System::Environment::get ( "XPLORER_DATA_DIR" ) + "/minerva" );
+  
   // Set the program name since the cache is based on this.
   Usul::App::Application::instance().program ( "Minerva" );
 
@@ -183,7 +200,17 @@ void MinervaManager::AddEarthToScene()
   this->Clear();
 
   _manager = new Usul::Jobs::Manager ( "VE-Suite Minerva Job Manager", 4 );
-  _body = Minerva::Core::Functions::makeEarth ( _manager );
+
+  using Minerva::Core::TileEngine::MeshSize;
+  using Minerva::Core::TileEngine::ImageSize;
+
+  const MeshSize meshSize ( 32, 32 );
+  const ImageSize imageSize ( 256, 256 );
+  //const ImageSize imageSize ( 512, 512 );
+  const double splitDistance ( osg::WGS_84_RADIUS_EQUATOR * 3.0 );
+
+  _body = Minerva::Core::Functions::makeEarth ( _manager, meshSize, imageSize, splitDistance );
+
   Usul::Pointers::reference ( _body );
 
   _scene = _body->scene();
