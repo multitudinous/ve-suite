@@ -33,10 +33,10 @@
 								<flag>wxALIGN_CENTER_VERTICAL|wxALIGN_LEFT|wxALL</flag>
 								<border>5</border>
 								<object class="wxFilePickerCtrl" name="m_productDataLoader">
-									<value></value>
+									<value>::wxGetCwd()</value>
 									<message>Select a file</message>
 									<wildcard>*.*</wildcard>
-									<style>wxFLP_DEFAULT_STYLE</style>
+									<style>wxFLP_DEFAULT_STYLE|wxFLP_FILE_MUST_EXIST</style>
 									<size>300,-1</size>
 									<font>
 										<family>default</family>
@@ -97,6 +97,7 @@
 										<flag>wxALL</flag>
 										<border>5</border>
 										<object class="wxTextCtrl" name="m_textInput00">
+											<style>wxTE_PROCESS_ENTER</style>
 											<value></value>
 											<maxlength>0</maxlength>
 										</object>
@@ -150,6 +151,7 @@
 										<flag>wxALL</flag>
 										<border>5</border>
 										<object class="wxTextCtrl" name="m_textInput01">
+											<style>wxTE_PROCESS_ENTER</style>
 											<value></value>
 											<maxlength>0</maxlength>
 										</object>
@@ -203,6 +205,7 @@
 										<flag>wxALL</flag>
 										<border>5</border>
 										<object class="wxTextCtrl" name="m_textInput02">
+											<style>wxTE_PROCESS_ENTER</style>
 											<value></value>
 											<maxlength>0</maxlength>
 										</object>
@@ -256,6 +259,7 @@
 										<flag>wxALL</flag>
 										<border>5</border>
 										<object class="wxTextCtrl" name="m_textInput03">
+											<style>wxTE_PROCESS_ENTER</style>
 											<value></value>
 											<maxlength>0</maxlength>
 										</object>
@@ -274,6 +278,7 @@
 										<flag>wxEXPAND</flag>
 										<border>5</border>
 										<object class="wxTextCtrl" name="m_queryTextCommandCtrl">
+											<style>wxTE_PROCESS_ENTER</style>
 											<value></value>
 											<maxlength>0</maxlength>
 										</object>
@@ -373,6 +378,7 @@
 								<flag>wxEXPAND|wxLEFT</flag>
 								<border>5</border>
 								<object class="wxTextCtrl" name="m_partTextEntry">
+									<style>wxTE_PROCESS_ENTER</style>
 									<size>200,-1</size>
 									<value></value>
 									<maxlength>0</maxlength>

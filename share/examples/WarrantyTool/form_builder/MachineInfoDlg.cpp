@@ -27,7 +27,7 @@ MachineInfoDlg::MachineInfoDlg( wxWindow* parent, wxWindowID id, const wxString&
 	
 	bSizer3->Add( m_dataLoadButton, 0, wxALIGN_CENTER_VERTICAL|wxALIGN_LEFT|wxALL, 5 );
 	
-	m_productDataLoader = new wxFilePickerCtrl( this, wxID_ANY, wxEmptyString, wxT("Select a file"), wxT("*.*"), wxDefaultPosition, wxSize( 300,-1 ), wxFLP_DEFAULT_STYLE );
+	m_productDataLoader = new wxFilePickerCtrl( this, wxID_ANY, wxT("::wxGetCwd()"), wxT("Select a file"), wxT("*.*"), wxDefaultPosition, wxSize( 300,-1 ), wxFLP_DEFAULT_STYLE|wxFLP_FILE_MUST_EXIST );
 	m_productDataLoader->SetFont( wxFont( wxNORMAL_FONT->GetPointSize(), 70, 90, 90, false, wxEmptyString ) );
 	m_productDataLoader->SetMinSize( wxSize( 300,-1 ) );
 	
@@ -57,7 +57,7 @@ MachineInfoDlg::MachineInfoDlg( wxWindow* parent, wxWindowID id, const wxString&
 	m_variableLogicOperator00->SetSelection( 0 );
 	bSizer2->Add( m_variableLogicOperator00, 0, wxALL, 5 );
 	
-	m_textInput00 = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	m_textInput00 = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER );
 	bSizer2->Add( m_textInput00, 0, wxALL, 5 );
 	
 	bSizer5->Add( bSizer2, 1, wxEXPAND, 5 );
@@ -82,7 +82,7 @@ MachineInfoDlg::MachineInfoDlg( wxWindow* parent, wxWindowID id, const wxString&
 	m_variableLogicOperator01->SetSelection( 0 );
 	bSizer21->Add( m_variableLogicOperator01, 0, wxALL, 5 );
 	
-	m_textInput01 = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	m_textInput01 = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER );
 	bSizer21->Add( m_textInput01, 0, wxALL, 5 );
 	
 	bSizer5->Add( bSizer21, 1, wxEXPAND, 5 );
@@ -107,7 +107,7 @@ MachineInfoDlg::MachineInfoDlg( wxWindow* parent, wxWindowID id, const wxString&
 	m_variableLogicOperator02->SetSelection( 0 );
 	bSizer22->Add( m_variableLogicOperator02, 0, wxALL, 5 );
 	
-	m_textInput02 = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	m_textInput02 = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER );
 	bSizer22->Add( m_textInput02, 0, wxALL, 5 );
 	
 	bSizer5->Add( bSizer22, 1, wxEXPAND, 5 );
@@ -132,7 +132,7 @@ MachineInfoDlg::MachineInfoDlg( wxWindow* parent, wxWindowID id, const wxString&
 	m_variableLogicOperator03->SetSelection( 0 );
 	bSizer221->Add( m_variableLogicOperator03, 0, wxALL, 5 );
 	
-	m_textInput03 = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	m_textInput03 = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER );
 	bSizer221->Add( m_textInput03, 0, wxALL, 5 );
 	
 	bSizer5->Add( bSizer221, 1, wxEXPAND, 5 );
@@ -140,7 +140,7 @@ MachineInfoDlg::MachineInfoDlg( wxWindow* parent, wxWindowID id, const wxString&
 	wxStaticBoxSizer* queryTextCommandSizer;
 	queryTextCommandSizer = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT("Query Command") ), wxVERTICAL );
 	
-	m_queryTextCommandCtrl = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	m_queryTextCommandCtrl = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER );
 	queryTextCommandSizer->Add( m_queryTextCommandCtrl, 0, wxEXPAND, 5 );
 	
 	bSizer5->Add( queryTextCommandSizer, 0, wxEXPAND|wxTOP, 5 );
@@ -191,7 +191,7 @@ MachineInfoDlg::MachineInfoDlg( wxWindow* parent, wxWindowID id, const wxString&
 	m_manualPartSelectionChoice->SetSelection( 0 );
 	bSizer4->Add( m_manualPartSelectionChoice, 0, wxRIGHT, 5 );
 	
-	m_partTextEntry = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 200,-1 ), 0 );
+	m_partTextEntry = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 200,-1 ), wxTE_PROCESS_ENTER );
 	bSizer4->Add( m_partTextEntry, 0, wxEXPAND|wxLEFT, 5 );
 	
 	sbSizer3->Add( bSizer4, 0, wxALL|wxEXPAND, 5 );
@@ -216,18 +216,22 @@ MachineInfoDlg::MachineInfoDlg( wxWindow* parent, wxWindowID id, const wxString&
 	m_productDataLoader->Connect( wxEVT_COMMAND_FILEPICKER_CHANGED, wxFileDirPickerEventHandler( MachineInfoDlg::OnDataLoad ), NULL, this );
 	m_variableChoice00->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MachineInfoDlg::OnVariableAndLogicalChoice ), NULL, this );
 	m_variableLogicOperator00->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MachineInfoDlg::OnVariableAndLogicalChoice ), NULL, this );
+	m_textInput00->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( MachineInfoDlg::OnCreateInputText ), NULL, this );
 	m_textInput00->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( MachineInfoDlg::OnCreateInputText ), NULL, this );
 	m_logicOperator00->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MachineInfoDlg::OnVariableAndLogicalChoice ), NULL, this );
 	m_variableChoice01->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MachineInfoDlg::OnVariableAndLogicalChoice ), NULL, this );
 	m_variableLogicOperator01->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MachineInfoDlg::OnVariableAndLogicalChoice ), NULL, this );
+	m_textInput01->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( MachineInfoDlg::OnCreateInputText ), NULL, this );
 	m_textInput01->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( MachineInfoDlg::OnCreateInputText ), NULL, this );
 	m_logicOperator01->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MachineInfoDlg::OnVariableAndLogicalChoice ), NULL, this );
 	m_variableChoice02->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MachineInfoDlg::OnVariableAndLogicalChoice ), NULL, this );
 	m_variableLogicOperator02->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MachineInfoDlg::OnVariableAndLogicalChoice ), NULL, this );
+	m_textInput02->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( MachineInfoDlg::OnCreateInputText ), NULL, this );
 	m_textInput02->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( MachineInfoDlg::OnCreateInputText ), NULL, this );
 	m_logicOperator02->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MachineInfoDlg::OnVariableAndLogicalChoice ), NULL, this );
 	m_variableChoice03->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MachineInfoDlg::OnVariableAndLogicalChoice ), NULL, this );
 	m_variableLogicOperator03->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MachineInfoDlg::OnVariableAndLogicalChoice ), NULL, this );
+	m_textInput03->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( MachineInfoDlg::OnCreateInputText ), NULL, this );
 	m_textInput03->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( MachineInfoDlg::OnCreateInputText ), NULL, this );
 	m_queryTextCommandCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( MachineInfoDlg::OnTextQueryEnter ), NULL, this );
 	m_manualPartSelectionChoice->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MachineInfoDlg::OnPartSelection ), NULL, this );
@@ -243,18 +247,22 @@ MachineInfoDlg::~MachineInfoDlg()
 	m_productDataLoader->Disconnect( wxEVT_COMMAND_FILEPICKER_CHANGED, wxFileDirPickerEventHandler( MachineInfoDlg::OnDataLoad ), NULL, this );
 	m_variableChoice00->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MachineInfoDlg::OnVariableAndLogicalChoice ), NULL, this );
 	m_variableLogicOperator00->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MachineInfoDlg::OnVariableAndLogicalChoice ), NULL, this );
+	m_textInput00->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( MachineInfoDlg::OnCreateInputText ), NULL, this );
 	m_textInput00->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( MachineInfoDlg::OnCreateInputText ), NULL, this );
 	m_logicOperator00->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MachineInfoDlg::OnVariableAndLogicalChoice ), NULL, this );
 	m_variableChoice01->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MachineInfoDlg::OnVariableAndLogicalChoice ), NULL, this );
 	m_variableLogicOperator01->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MachineInfoDlg::OnVariableAndLogicalChoice ), NULL, this );
+	m_textInput01->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( MachineInfoDlg::OnCreateInputText ), NULL, this );
 	m_textInput01->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( MachineInfoDlg::OnCreateInputText ), NULL, this );
 	m_logicOperator01->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MachineInfoDlg::OnVariableAndLogicalChoice ), NULL, this );
 	m_variableChoice02->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MachineInfoDlg::OnVariableAndLogicalChoice ), NULL, this );
 	m_variableLogicOperator02->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MachineInfoDlg::OnVariableAndLogicalChoice ), NULL, this );
+	m_textInput02->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( MachineInfoDlg::OnCreateInputText ), NULL, this );
 	m_textInput02->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( MachineInfoDlg::OnCreateInputText ), NULL, this );
 	m_logicOperator02->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MachineInfoDlg::OnVariableAndLogicalChoice ), NULL, this );
 	m_variableChoice03->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MachineInfoDlg::OnVariableAndLogicalChoice ), NULL, this );
 	m_variableLogicOperator03->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MachineInfoDlg::OnVariableAndLogicalChoice ), NULL, this );
+	m_textInput03->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( MachineInfoDlg::OnCreateInputText ), NULL, this );
 	m_textInput03->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( MachineInfoDlg::OnCreateInputText ), NULL, this );
 	m_queryTextCommandCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( MachineInfoDlg::OnTextQueryEnter ), NULL, this );
 	m_manualPartSelectionChoice->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MachineInfoDlg::OnPartSelection ), NULL, this );
