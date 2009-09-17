@@ -247,7 +247,7 @@ protected:
     osg::Vec4& GetColor( Color::Enum colorTag );
 
     ///
-    virtual void SetupDefaultGeometry() = NULL;
+    virtual void SetupDefaultGeometry() = 0;
 
     ///
     const TransformationType::Enum m_transformationType;

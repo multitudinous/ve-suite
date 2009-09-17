@@ -161,12 +161,12 @@ void ManipulatorManager::Enable( const bool& enable )
 ////////////////////////////////////////////////////////////////////////////////
 Dragger* ManipulatorManager::ConvertNodeToDragger( osg::Node* node )
 {
-    return static_cast< Dragger* >( node );
+    return dynamic_cast< Dragger* >( node );
 }
 ////////////////////////////////////////////////////////////////////////////////
 Dragger* ManipulatorManager::GetChild( unsigned int i )
 {
-    return static_cast< Dragger* >( osg::Group::getChild( i ) );
+    return dynamic_cast< Dragger* >( osg::Group::getChild( i ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 RotateTwist* const ManipulatorManager::GetTwistManipulator() const
@@ -184,6 +184,7 @@ bool ManipulatorManager::Handle(
     osgUtil::LineSegmentIntersector* lineSegmentIntersector )
 {
     //If we want to test for dragger intersections
+    //For the release and drag events we do not need to test for intersections
     if( lineSegmentIntersector )
     {
         if( !TestForIntersections( lineSegmentIntersector ) )
@@ -203,7 +204,6 @@ bool ManipulatorManager::Handle(
     case Event::FOCUS:
     {
         m_leafDragger = m_rootDragger->Focus( m_nodePathItr );
-
         return m_leafDragger;
     }
     case Event::PUSH:
@@ -220,7 +220,6 @@ bool ManipulatorManager::Handle(
         }
 
         m_leafDragger->Drag( *m_deviceInput );
-
         return m_leafDragger;
     }
     case Event::RELEASE:

@@ -61,7 +61,11 @@ class Group;
 class Vec4d;
 class Vec3d;
 class MatrixTransform;
-class LineSegment;
+}
+
+namespace osgUtil
+{
+class LineSegmentIntersector;
 }
 
 namespace ves
@@ -114,11 +118,10 @@ public:
     void SetSubZeroFlag( int input );
 
     ///Identifies selection chosen by wand
-    void SelectObject();
+    void UpdateSelectionLine( bool drawLine = true );
 
     ///Process if selection is valid
-    ///\param listOfHits A vector containing CAD hit in selection process
-    void ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits );
+    void ProcessHit();
 
     ///Update the events done by wand
     void UpdateObjectHandler();
@@ -146,7 +149,7 @@ public:
     void UpdateWandGlobalLocation();
 
     ///Find translation difference from last position to current
-    void UpdateDeltaWandPosition();
+    //void UpdateDeltaWandPosition();
     ///Get the plane equation constants normal to the wand in world space
     double* GetPlaneEquationConstantsNormalToWand();
 
@@ -200,13 +203,15 @@ private:
 
     osg::ref_ptr< osg::Geode > beamGeode;///<do not know what this does
     osg::ref_ptr< osg::Geometry > beamGeometry;///<do not know what this does
-    osg::ref_ptr< osg::LineSegment > beamLineSegment;///<do not know what this does
+    osg::ref_ptr< osgUtil::LineSegmentIntersector > m_beamLineSegment;///<do not know what this does
     ///See if a button has been pushed
     bool m_buttonPushed;
     ///Quat used every frame to store and rotational increments
     osg::Quat m_rotIncrement;
     ///Array to hold work translation
     double m_worldTrans[ 3 ];
+    ///
+    bool m_manipulatorSelected;
 
 };
 } //end device

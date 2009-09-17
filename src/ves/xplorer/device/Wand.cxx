@@ -44,6 +44,14 @@
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/FindParentsVisitor.h>
+#include <ves/xplorer/scenegraph/LocalToWorldNodePath.h>
+
+#include <ves/xplorer/scenegraph/manipulator/RotateTwist.h>
+#include <ves/xplorer/scenegraph/manipulator/TransformManipulator.h>
+
+// --- osgBullet Includes --- //
+#include <osgBullet/AbsoluteModelTransform.h>
+#include <osgBullet/RigidBody.h>
 
 // --- vrJuggler Includes --- //
 #include <gmtl/Xforms.h>
@@ -51,7 +59,7 @@
 #include <gmtl/Misc/MatrixConvert.h>
 
 // --- OSG Includes --- //
-#include <osg/LineSegment>
+#include <osgUtil/LineSegmentIntersector>
 #include <osg/Group>
 #include <osg/Geometry>
 #include <osg/MatrixTransform>
@@ -78,7 +86,8 @@ Wand::Wand()
     cursorLen( 1.0 ),
     translationStepSize( 0.75 ),
     rotationStepSize( 1.0 ),
-    m_buttonPushed( false )
+    m_buttonPushed( false ),
+    m_manipulatorSelected( false )
 {
     command = ves::open::xml::CommandPtr();
     wand.init( "VJWand" );
@@ -96,7 +105,8 @@ Wand::Wand()
     // 9 o'clock -- exit streamer while loop
     digital[ 5 ].init( "VJButton5" );
 
-    beamLineSegment = new osg::LineSegment();
+    m_beamLineSegment = new osgUtil::LineSegmentIntersector(
+        osg::Vec3( 0.0, 0.0, 0.0 ), osg::Vec3( 0.0, 0.0, 0.0 ) );
     Initialize();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -138,6 +148,7 @@ void Wand::ProcessEvents()
 
     //Update the wand direction every frame
     UpdateWandLocalDirection();
+    UpdateWandGlobalLocation();
 
     buttonData[ 0 ] = digital[ 0 ]->getData();
     buttonData[ 1 ] = digital[ 1 ]->getData();
@@ -307,35 +318,56 @@ void Wand::SetVECommand( CommandPtr veCommand )
     command = veCommand;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Wand::SelectObject()
+void Wand::UpdateSelectionLine( bool drawLine )
 {
     osg::Vec3d startPoint, endPoint;
     SetupStartEndPoint( startPoint, endPoint );
-
-    beamLineSegment->set( startPoint, endPoint );
-
-    osgUtil::IntersectVisitor objectBeamIntersectVisitor;
-    objectBeamIntersectVisitor.addLineSegment( beamLineSegment.get() );
-
-    //Add the IntersectVisitor to the root Node so that all all geometry will be
-    //checked and no transforms are done to the Line segement.
-    rootNode->accept( objectBeamIntersectVisitor );
-
-    osgUtil::IntersectVisitor::HitList beamHitList;
-    beamHitList = objectBeamIntersectVisitor.getHitList( beamLineSegment.get() );
-
-    ProcessHit( beamHitList );
+    m_beamLineSegment->reset();
+    m_beamLineSegment->setStart( startPoint );
+    m_beamLineSegment->setEnd( endPoint );
+    
+    if( drawLine )
+    {
+        DrawLine( startPoint, endPoint );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Wand::ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits )
+void Wand::ProcessHit()
 {
+    osgUtil::IntersectionVisitor objectBeamIntersectVisitor( m_beamLineSegment.get() );
+
+    rootNode->accept( objectBeamIntersectVisitor );
+
     //Unselect the previous selected DCS
     DeviceHandler::instance()->UnselectObjects();
 
-    osgUtil::Hit objectHit;
-    selectedGeometry = 0;
+    osgUtil::LineSegmentIntersector::Intersections& intersections =
+        m_beamLineSegment->getIntersections();
     
-    if( listOfHits.empty() )
+    //Now find the new selected DCS
+    if( intersections.empty() )
+    {
+        vprDEBUG( vesDBG, 1 )
+        << "|\Wand::ProcessHit No object selected"
+        << std::endl << vprDEBUG_FLUSH;
+        
+        return;
+    }
+    
+    //Search for first item that is not the laser
+    osg::Node* objectHit( NULL );
+    for( osgUtil::LineSegmentIntersector::Intersections::iterator itr = 
+        intersections.begin(); itr != intersections.end(); ++itr )
+    {
+        objectHit = *( itr->nodePath.rbegin() );
+        if( objectHit->getName() != "Laser" &&
+           objectHit->getName() != "Root Node" )
+        {
+            break;
+        }
+    }        
+    
+    if( !objectHit )
     {
         vprDEBUG( vesDBG, 1 ) << "|\tWand::ProcessHit No object selected"
         << std::endl << vprDEBUG_FLUSH;
@@ -346,27 +378,9 @@ void Wand::ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits )
         return;
     }
 
-    //Search for first item that is not the laser
-    for( size_t i = 0; i <  listOfHits.size(); ++i )
-    {
-        objectHit = listOfHits[ i ];
-        //std::cout << i << " " <<  objectHit._geode->getName() << std::endl;
-        if (( objectHit._geode->getName() != laserName ) &&
-                ( objectHit._geode->getName() != "Root Node" ) )
-        {
-            break;
-        }
-    }
-
-    //Make sure it is good
-    if( !objectHit._geode.valid() )
-    {
-        return;
-    }
-
     //Now find the id for the cad
-    selectedGeometry = objectHit._geode;
-    ves::xplorer::scenegraph::FindParentsVisitor parentVisitor( selectedGeometry.get() );
+    //selectedGeometry = objectHit._geode;
+    ves::xplorer::scenegraph::FindParentsVisitor parentVisitor( objectHit );
     osg::ref_ptr< osg::Node > parentNode = parentVisitor.GetParentNode();
     if( parentNode.valid() )
     {
@@ -391,11 +405,55 @@ void Wand::ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits )
             newSelectedDCS->SetTechnique( "Select" );
         }
         DeviceHandler::instance()->SetSelectedDCS( newSelectedDCS );
+        
+        //Set the connection between the scene manipulator and the selected dcs
+        scenegraph::manipulator::TransformManipulator* sceneManipulator =
+        m_manipulatorManager.GetSceneManipulator();
+        scenegraph::manipulator::RotateTwist* rotateTwist =
+        m_manipulatorManager.GetTwistManipulator();
+        rotateTwist->Disconnect();
+        sceneManipulator->Disconnect();
+        //Check and see if the selected node has an attached physics mesh
+        bool hasAPhysicsMesh( false );
+        osg::ref_ptr< osgBullet::AbsoluteModelTransform > tempAMT = 
+        dynamic_cast< osgBullet::AbsoluteModelTransform* >( 
+                                                           newSelectedDCS->getParent( 0 ) );
+        if( tempAMT )
+        {
+            osgBullet::RigidBody* tempRB = 
+            dynamic_cast< osgBullet::RigidBody* >( tempAMT->getUserData() );
+            if( tempRB )
+            {
+                hasAPhysicsMesh = true;
+            }
+        }
+        
+        if( hasAPhysicsMesh )
+        {
+            rotateTwist->Connect( tempAMT.get() );
+            sceneManipulator->Connect( tempAMT.get() );
+        }
+        else
+        {
+            rotateTwist->Connect( newSelectedDCS );
+            sceneManipulator->Connect( newSelectedDCS );
+        }
+        
+        //Move the scene manipulator to the center point
+        scenegraph::LocalToWorldNodePath nodePath(
+                                                  newSelectedDCS, m_sceneManager.GetModelRoot() );
+        scenegraph::LocalToWorldNodePath::NodeAndPathList npl =
+        nodePath.GetLocalToWorldNodePath();
+        scenegraph::LocalToWorldNodePath::NodeAndPath nap = npl.at( 0 );
+        osg::Matrixd localToWorld = osg::computeLocalToWorld( nap.second );
+        osg::Vec3d newCenter = newSelectedDCS->getBound().center() * localToWorld;
+        //rotateTwist->setPosition( newCenter );
+        sceneManipulator->setPosition( newCenter );        
     }
     else
     {
         vprDEBUG( vesDBG, 1 ) << "|\tObject does not have name parent name "
-        << objectHit._geode->getParents().front()->getName()
+        << objectHit->getParents().front()->getName()
         << std::endl << vprDEBUG_FLUSH;
 
         ves::xplorer::DeviceHandler::instance()->SetActiveDCS(
@@ -505,26 +563,64 @@ void Wand::DrawLine( osg::Vec3d start, osg::Vec3d end )
 //using gestures from a glove.
 void Wand::UpdateObjectHandler()
 {
-    //When the user is holding down button 0 then draw the selection ray
+    //Update the juggler location of the wand
     if( digital[ 0 ]->getData() == gadget::Digital::ON )
-    {
-        //Update the juggler location of the wand
-        UpdateWandLocalDirection();
-        UpdateWandGlobalLocation();
-        //UpdateDeltaWandPosition();
+    {        
+        UpdateSelectionLine( true );
+
+#ifdef TRANSFORM_MANIPULATOR
+        if( m_manipulatorManager.IsEnabled() && m_manipulatorSelected )
+        {
+            if( m_manipulatorManager.Handle(
+                scenegraph::manipulator::Event::DRAG ) )
+            {
+                return;
+            }
+        }
+#endif //TRANSFORM_MANIPULATOR
         
-        //Now draw the new line location and setup the data for the hit list pointer
-        osg::Vec3d startPoint, endPoint;
-        SetupStartEndPoint( startPoint, endPoint );
-        DrawLine( startPoint, endPoint );        
+#ifdef TRANSFORM_MANIPULATOR
+        if( m_manipulatorManager.IsEnabled() && !m_manipulatorSelected )
+        {
+            if( m_manipulatorManager.Handle(
+                scenegraph::manipulator::Event::FOCUS,
+                m_beamLineSegment.get() ) )
+            {
+                ;
+            }
+        }
+#endif //TRANSFORM_MANIPULATOR
     }
     //Now select and object based on the new wand location
     else if( digital[ 0 ]->getData() == gadget::Digital::TOGGLE_OFF )
     {
-        SelectObject();
-        //Set delta back to 0 so that it is not moved
-        //by the old delta from the previous frame
-        //UpdateDeltaWandPosition();
+        UpdateSelectionLine( false );
+
+#ifdef TRANSFORM_MANIPULATOR
+        if( m_manipulatorManager.IsEnabled() && m_manipulatorSelected )
+        {
+            if( m_manipulatorManager.Handle(
+                scenegraph::manipulator::Event::RELEASE ) )
+            {
+                m_manipulatorSelected = false;
+                return;
+            }
+        }
+#endif //TRANSFORM_MANIPULATOR
+        
+#ifdef TRANSFORM_MANIPULATOR
+        if( m_manipulatorManager.IsEnabled() )
+        {
+            if( m_manipulatorManager.Handle(
+                scenegraph::manipulator::Event::PUSH,
+                m_beamLineSegment.get() ) )
+            {
+                m_manipulatorSelected = true;
+                return;
+            }
+        }
+#endif //TRANSFORM_MANIPULATOR
+        ProcessHit();
     }
 
     /*
@@ -634,13 +730,13 @@ double* Wand::GetDirection()
     return dir;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Wand::UpdateDeltaWandPosition()
+/*void Wand::UpdateDeltaWandPosition()
 {
     for( size_t i = 0; i < 3; ++i )
     {
         deltaTrans[ i ] = objLoc[ i ] - LastWandPosition[ i ];
     }
-}
+}*/
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::SetSubZeroFlag( int input )
 {

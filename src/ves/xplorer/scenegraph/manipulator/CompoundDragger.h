@@ -150,7 +150,7 @@ protected:
     virtual ~CompoundDragger();
 
     ///
-    virtual void SetupDefaultGeometry() = NULL;
+    virtual void SetupDefaultGeometry(){ ; }
 
     ///
     TransformationType::Enum m_enabledModes;
