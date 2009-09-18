@@ -49,12 +49,18 @@
 #include <set>
 #include <map>
 
+class btRigidBody;
+class btTypedConstraint;
+
 namespace ves
 {
 namespace xplorer
 {
 namespace scenegraph
 {
+class PhysicsSimulator;
+class SceneManager;
+
 namespace manipulator
 {
 class TranslateAxis;
@@ -249,6 +255,13 @@ protected:
     ///
     virtual void SetupDefaultGeometry() = 0;
 
+    ///Create physics point constraint
+    bool CreatePointConstraint();
+    ///Clear point constraint
+    void ClearPointConstraint();
+    ///Update point constraint
+    void UpdatePointConstraint();
+    
     ///
     const TransformationType::Enum m_transformationType;
 
@@ -291,6 +304,12 @@ protected:
     ///
     osg::Matrixd m_worldToLocal;
 
+    ///
+    ves::xplorer::scenegraph::PhysicsSimulator& m_physicsSimulator;
+    
+    ///
+    ves::xplorer::scenegraph::SceneManager& m_sceneManager;
+    
 private:
     ///
     typedef std::map< Color::Enum, osg::Vec4 > ColorMap;
@@ -324,7 +343,16 @@ private:
 
     ///
     osg::ref_ptr< osg::Uniform > m_color;
-
+    
+    ///The rigid body that has been selected during physics mouse picking
+    btRigidBody* m_pickedBody;
+    
+    ///Bullet constraint used for physics mouse picking
+    btTypedConstraint* m_pickConstraint; 
+    
+    ///The distance from the head position to the picked btRigidBody point
+    ///Used to calculate point to point constraints for physics picking
+    double m_prevPhysicsRayPos;
 };
 
 } //end manipulator

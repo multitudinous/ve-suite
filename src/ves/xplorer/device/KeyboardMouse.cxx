@@ -898,63 +898,9 @@ void KeyboardMouse::OnMousePress()
         //Mod key shift
         else if( mKeyShift )
         {
-            //Add a point to point constraint for picking
-            if( m_physicsSimulator.GetIdle() )
+            if( !CreatePointConstraint() )
             {
                 break;
-            }
-
-            osg::Vec3d startPoint, endPoint;
-            SetStartEndPoint( startPoint, endPoint );
-
-            btVector3 rayFromWorld, rayToWorld;
-            rayFromWorld.setValue(
-                startPoint.x(), startPoint.y(), startPoint.z() );
-            rayToWorld.setValue(
-                endPoint.x(), endPoint.y(), endPoint.z() );
-
-            btCollisionWorld::ClosestRayResultCallback rayCallback(
-                rayFromWorld, rayToWorld );
-            m_physicsSimulator.GetDynamicsWorld()->rayTest(
-                rayFromWorld, rayToWorld, rayCallback );
-
-            if( !rayCallback.hasHit() )
-            {
-                break;
-            }
-
-            btRigidBody* body = btRigidBody::upcast(
-                rayCallback.m_collisionObject );
-            if( !body )
-            {
-                break;
-            }
-
-            //Other exclusions
-            if( !( body->isStaticObject() ||
-                   body->isKinematicObject() ) )
-            {
-                mPickedBody = body;
-                mPickedBody->setActivationState(
-                    DISABLE_DEACTIVATION );
-
-                btVector3 pickPos = rayCallback.m_hitPointWorld;
-
-                btVector3 localPivot =
-                    body->getCenterOfMassTransform().inverse() *
-                    pickPos;
-
-                btPoint2PointConstraint* p2p =
-                    new btPoint2PointConstraint(
-                        *body, localPivot );
-                m_physicsSimulator.GetDynamicsWorld()->addConstraint( p2p );
-                mPickConstraint = p2p;
-
-                mPrevPhysicsRayPos =
-                    ( pickPos - rayFromWorld ).length();
-
-                //Very weak constraint for picking
-                p2p->m_setting.m_tau = 0.1;
             }
         }
         else if( mKeyAlt )
@@ -1024,17 +970,8 @@ void KeyboardMouse::OnMouseRelease()
     case gadget::MBUTTON1:
     {
         //Do not require mod key depending on what the user did
-        if( mPickConstraint )
-        {
-            m_physicsSimulator.GetDynamicsWorld()->removeConstraint( mPickConstraint );
-            delete mPickConstraint;
-            mPickConstraint = NULL;
-
-            mPickedBody->forceActivationState( ACTIVE_TAG );
-            mPickedBody->setDeactivationTime( 0.0 );
-            mPickedBody = NULL;
-        }
-
+        ClearPointConstraint();
+        
 #ifdef TRANSFORM_MANIPULATOR
         if( m_manipulatorManager.IsEnabled() )
         {
@@ -1200,31 +1137,7 @@ void KeyboardMouse::OnMouseMotionDown()
         //Mod key shift
         else if( mKeyShift )
         {
-            if( !m_physicsSimulator.GetIdle() && mPickConstraint )
-            {
-                //Move the constraint pivot
-                btPoint2PointConstraint* p2p =
-                    static_cast< btPoint2PointConstraint* >( mPickConstraint );
-                if( p2p )
-                {
-                    osg::Vec3d startPoint, endPoint;
-                    SetStartEndPoint( startPoint, endPoint );
-
-                    btVector3 rayFromWorld, rayToWorld;
-                    rayFromWorld.setValue(
-                        startPoint.x(), startPoint.y(), startPoint.z() );
-                    rayToWorld.setValue(
-                        endPoint.x(), endPoint.y(), endPoint.z() );
-
-                    //Keep it at the same picking distance
-                    btVector3 dir = rayToWorld - rayFromWorld;
-                    dir.normalize();
-                    dir *= mPrevPhysicsRayPos;
-
-                    btVector3 newPos = rayFromWorld + dir;
-                    p2p->setPivotB( newPos );
-                }
-            }
+            UpdatePointConstraint();
         }
 
         break;
@@ -1914,3 +1827,110 @@ osgUtil::LineSegmentIntersector* KeyboardMouse::GetLineSegmentIntersector()
     return mLineSegmentIntersector.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
+bool KeyboardMouse::CreatePointConstraint()
+{
+    //Add a point to point constraint for picking
+    if( m_physicsSimulator.GetIdle() )
+    {
+        return false;
+    }
+    
+    osg::Vec3d startPoint, endPoint;
+    SetStartEndPoint( startPoint, endPoint );
+    
+    btVector3 rayFromWorld, rayToWorld;
+    rayFromWorld.setValue(
+                          startPoint.x(), startPoint.y(), startPoint.z() );
+    rayToWorld.setValue(
+                        endPoint.x(), endPoint.y(), endPoint.z() );
+    
+    btCollisionWorld::ClosestRayResultCallback rayCallback(
+                                                           rayFromWorld, rayToWorld );
+    m_physicsSimulator.GetDynamicsWorld()->rayTest(
+                                                   rayFromWorld, rayToWorld, rayCallback );
+    
+    if( !rayCallback.hasHit() )
+    {
+        return false;
+    }
+    
+    btRigidBody* body = btRigidBody::upcast( rayCallback.m_collisionObject );
+    if( !body )
+    {
+        return false;
+    }
+    
+    //Other exclusions
+    if( !( body->isStaticObject() ||
+          body->isKinematicObject() ) )
+    {
+        mPickedBody = body;
+        mPickedBody->setActivationState(
+                                        DISABLE_DEACTIVATION );
+        
+        btVector3 pickPos = rayCallback.m_hitPointWorld;
+        
+        btVector3 localPivot =
+        body->getCenterOfMassTransform().inverse() *
+        pickPos;
+        
+        btPoint2PointConstraint* p2p =
+        new btPoint2PointConstraint(
+                                    *body, localPivot );
+        m_physicsSimulator.GetDynamicsWorld()->addConstraint( p2p );
+        mPickConstraint = p2p;
+        
+        mPrevPhysicsRayPos =
+        ( pickPos - rayFromWorld ).length();
+        
+        //Very weak constraint for picking
+        p2p->m_setting.m_tau = 0.1;
+    }
+    return true;
+}
+////////////////////////////////////////////////////////////////////////////////
+void KeyboardMouse::UpdatePointConstraint()
+{
+    if( !m_physicsSimulator.GetIdle() && mPickConstraint )
+    {
+        //Move the constraint pivot
+        btPoint2PointConstraint* p2p =
+        static_cast< btPoint2PointConstraint* >( mPickConstraint );
+        if( p2p )
+        {
+            osg::Vec3d startPoint, endPoint;
+            SetStartEndPoint( startPoint, endPoint );
+            
+            btVector3 rayFromWorld, rayToWorld;
+            rayFromWorld.setValue(
+                                  startPoint.x(), startPoint.y(), startPoint.z() );
+            rayToWorld.setValue(
+                                endPoint.x(), endPoint.y(), endPoint.z() );
+            
+            //Keep it at the same picking distance
+            btVector3 dir = rayToWorld - rayFromWorld;
+            dir.normalize();
+            dir *= mPrevPhysicsRayPos;
+            
+            btVector3 newPos = rayFromWorld + dir;
+            p2p->setPivotB( newPos );
+        }
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void KeyboardMouse::ClearPointConstraint()
+{
+    //Do not require mod key depending on what the user did
+    if( mPickConstraint )
+    {
+        m_physicsSimulator.GetDynamicsWorld()->removeConstraint( mPickConstraint );
+        delete mPickConstraint;
+        mPickConstraint = NULL;
+        
+        mPickedBody->forceActivationState( ACTIVE_TAG );
+        mPickedBody->setDeactivationTime( 0.0 );
+        mPickedBody = NULL;
+    }
+}
+
+

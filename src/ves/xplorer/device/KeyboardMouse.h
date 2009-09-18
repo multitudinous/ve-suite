@@ -225,6 +225,13 @@ private:
         const vrj::DisplayPtr display, bool isKeyEvent );
 #endif //__GADGET_version >= 1003023
 
+    ///Create physics point constraint
+    bool CreatePointConstraint();
+    ///Clear point constraint
+    void ClearPointConstraint();
+    ///Update point constraint
+    void UpdatePointConstraint();
+    
     ///Is no key pushed
     bool mKeyNone;
 
