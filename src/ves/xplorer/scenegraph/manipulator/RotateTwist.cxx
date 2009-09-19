@@ -38,7 +38,6 @@
 #include <osg/io_utils>
 #include <osg/Geode>
 #include <osg/Geometry>
-#include <osg/LineWidth>
 
 // --- STL Includes --- //
 #include <iostream>

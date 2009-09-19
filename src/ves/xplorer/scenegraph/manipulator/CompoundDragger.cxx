@@ -224,6 +224,8 @@ const TransformationType::Enum& CompoundDragger::GetEnabledModes() const
 ////////////////////////////////////////////////////////////////////////////////
 bool CompoundDragger::insertChild( unsigned int index, Dragger* child )
 {
+    child->SetRootDragger( this );
+
     return Dragger::insertChild( index, child );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -234,6 +236,8 @@ bool CompoundDragger::replaceChild( Dragger* origChild, Dragger* newChild )
 ////////////////////////////////////////////////////////////////////////////////
 bool CompoundDragger::setChild( unsigned int i, Dragger* node )
 {
+    node->SetRootDragger( this );
+
     return Dragger::setChild( i, node );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -255,6 +259,16 @@ void CompoundDragger::SetColor(
     {
         GetChild( i )->SetColor( colorTag, newColor, use );
     }
+}
+////////////////////////////////////////////////////////////////////////////////
+void CompoundDragger::SetConstraintMap( ConstraintMap& constraintMap )
+{
+    for( unsigned int i = 0; i < getNumChildren(); ++i )
+    {
+        GetChild( i )->SetConstraintMap( constraintMap );
+    }
+
+    Dragger::SetConstraintMap( constraintMap );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CompoundDragger::SetEnabledModes( TransformationType::Enum value )

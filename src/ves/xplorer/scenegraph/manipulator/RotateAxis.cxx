@@ -39,7 +39,6 @@
 #include <osg/io_utils>
 #include <osg/Geode>
 #include <osg/Geometry>
-#include <osg/LineWidth>
 #include <osg/ClipNode>
 
 // --- STL Includes --- //

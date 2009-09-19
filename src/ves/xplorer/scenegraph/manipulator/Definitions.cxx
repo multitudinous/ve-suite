@@ -38,6 +38,9 @@
 #include <osg/Drawable>
 #include <osg/Plane>
 
+// --- STL Includes --- //
+#include <cmath>
+
 using namespace ves::xplorer::scenegraph::manipulator;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -159,5 +162,27 @@ const bool ves::xplorer::scenegraph::manipulator::GetLinePlaneIntersection(
     intersection = lineStart + ( direction * intersectDistance );
 
     return true;
+}
+////////////////////////////////////////////////////////////////////////////////
+const bool ves::xplorer::scenegraph::manipulator::IsFiniteNumber(
+    const double& number )
+{
+    return ( number <= DBL_MAX && number >= -DBL_MAX );
+}
+////////////////////////////////////////////////////////////////////////////////
+const double ves::xplorer::scenegraph::manipulator::SignedAngle(
+    const osg::Vec3d& v1,
+    const osg::Vec3d& v2,
+    const osg::Vec3d& reference )
+{
+    osg::Vec3d c = v1 ^ v2;
+    double angle = std::atan2( c.length(), v1 * v2 );
+
+    if( ( c * reference ) < 0.0 )
+    {
+        angle *= -1.0;
+    }
+
+    return angle;
 }
 ////////////////////////////////////////////////////////////////////////////////

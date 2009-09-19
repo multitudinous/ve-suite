@@ -49,16 +49,14 @@
 using namespace ves::xplorer::scenegraph::manipulator;
 
 ////////////////////////////////////////////////////////////////////////////////
-Rotate::Rotate(
-    const TransformationType::Enum& transformationType )
+Rotate::Rotate( const TransformationType::Enum& transformationType )
     :
     Dragger( transformationType )
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-Rotate::Rotate(
-    const Rotate& rotateAxis, const osg::CopyOp& copyop )
+Rotate::Rotate( const Rotate& rotateAxis, const osg::CopyOp& copyop )
     :
     Dragger( rotateAxis, copyop )
 {
@@ -82,22 +80,29 @@ const char* Rotate::className() const
 ////////////////////////////////////////////////////////////////////////////////
 void Rotate::CreateGhostDisk()
 {
-    //Set variables and initial ghost disk vertex
-    double rot = m_startAngle;
-    double cosVal( 0.0 );
-    double sinVal( 0.0 );
-    double s( 0.0 );
-    double t( 0.0 );
-    (*m_ghostDiskVertices)[ 1 ] = m_localStartPoint;
+    //Get the start disk point in local coordinates
+    osg::Vec3d diskStart = m_startPlaneIntersection * m_worldToLocal;
+    diskStart.normalize();
+    diskStart *= ROTATE_AXIS_RADIUS;
 
-    //Set rest of ghost disk vertices
-    const double deltaSegmentAngle = m_angle / NUM_GHOST_DISK_SEGMENTS;
-    //std::cout << "deltaSegmentAngle: " << deltaSegmentAngle << std::endl;
+    //Get the end disk point in local coordinates
+    osg::Vec3d diskEnd = m_endPlaneIntersection * m_worldToLocal;
+    diskEnd.normalize();
+    diskEnd *= ROTATE_AXIS_RADIUS;
+
+    //Declare variables
+    double angle, cosVal, sinVal, s, t;
+    angle = acos( diskStart * diskEnd );
+    //angle = SignedAngle( diskStart, diskEnd, osg::Vec3d( 1.0, 0.0, 0.0 ) );
+
+    //Set the ghost disk vertices
+    (*m_ghostDiskVertices)[ 1 ] = diskStart;
+    const double deltaSegmentAngle = angle / NUM_GHOST_DISK_SEGMENTS;
     for( unsigned int i = 2; i < m_ghostDiskVertices->size(); ++i )
     {
-        rot += deltaSegmentAngle;
-        cosVal = cos( rot );
-        sinVal = sin( rot );
+        angle += deltaSegmentAngle;
+        cosVal = cos( deltaSegmentAngle );
+        sinVal = sin( deltaSegmentAngle );
         s = ROTATE_AXIS_RADIUS * cosVal;
         t = ROTATE_AXIS_RADIUS * sinVal;
 
@@ -107,11 +112,6 @@ void Rotate::CreateGhostDisk()
     //Reset the ghost disk geometry
     m_ghostDiskGeometry->dirtyDisplayList();
     m_ghostDiskGeometry->dirtyBound();
-}
-////////////////////////////////////////////////////////////////////////////////
-const HelpCircle* const Rotate::GetHelpCircle() const
-{
-    return m_helpCircle.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool Rotate::isSameKindAs( const osg::Object* obj ) const
@@ -129,78 +129,21 @@ void Rotate::SetHelpCircle( HelpCircle* const helpCircle )
 ////////////////////////////////////////////////////////////////////////////////
 void Rotate::ComputeDeltaTransform()
 {
-    const osg::Vec3d origin = GetAxis( true, true );
+    //Get the origin in world space
+    const osg::Vec3d origin = osg::Vec3d( 0.0, 0.0, 0.0 ) * m_localToWorld;
 
-    //Get the direction vectors of the rotation origin to start and end points
-    osg::Vec3d originToStart = m_startProjectedPoint - origin;
-    originToStart.normalize();
-    osg::Vec3d originToEnd = m_endProjectedPoint - origin;
-    originToEnd.normalize();
+    //Get the projected vectors
+    const osg::Vec3d startProject = m_startProjectedPoint - origin;
+    const osg::Vec3d endProject = m_endProjectedPoint - origin;
 
-    /*
-    osg::Vec3d localPoint = m_endProjectedPoint * m_worldToLocal;
-    localPoint.normalize();
-    localPoint *= ROTATE_AXIS_RADIUS;
-    m_endAngle = acos( m_localStartPoint * localPoint );
+    //Get the plane vectors
+    const osg::Vec3d startPlane = m_startPlaneIntersection - origin;
+    const osg::Vec3d endPlane = m_endPlaneIntersection - origin;
 
-    std::cout << "m_endAngle: " << m_endAngle << std::endl;
-    */
-
-    //Calculate cross products of the direction vectors with rotation axis
-    osg::Vec3d rotationAxis = originToStart ^ originToEnd;
-    rotationAxis.normalize();
-    osg::Vec3d crossRotStart = rotationAxis ^ originToStart;
-    crossRotStart.normalize();
-    osg::Vec3d crossRotEnd = rotationAxis ^ originToEnd;
-    crossRotEnd.normalize();
-
-    //Calculate the cross product of the above start and end cross products
-    osg::Vec3d crossStartEnd = crossRotStart ^ crossRotEnd;
-    crossStartEnd.normalize();
-
-    //Dot the two direction vectors and get the arccos of the dot product to get
-    //the angle between them, then multiply it by the sign of the dot product
-    //of the derived cross product calculated above to obtain the direction
-    //by which we should rotate with the angle
-    double dot = originToStart * originToEnd;
-    //Protect against zero movement
-    if( dot < -1.0 || dot > 1.0 )
-    {
-        return;
-    }
-
-    //Create a normalized quaternion representing the rotation from the start to end points
-    double rotationAngle;
-    switch( m_transformationType )
-    {
-    case TransformationType::ROTATE_TWIST:
-    {
-        rotationAngle =
-            acos( dot ) * osg::sign( rotationAxis * crossStartEnd );
-        m_deltaRotation.makeRotate( rotationAngle, rotationAxis );
-
-        break;
-    }
-    default:
-    {
-        rotationAngle =
-            acos( dot ) * osg::sign( GetAxis() * crossStartEnd );
-        m_deltaRotation.makeRotate( rotationAngle, GetAxis() );
-    }
-    } //switch( m_transformationType )
-    //m_deltaRotation /= m_deltaRotation.length();
-
-    /*
-    //Add the calculated rotation to the current rotation
-    osg::Quat newRotation = m_deltaRotation * m_rootDragger->getRotation();
-    if( m_vectorSpace == VectorSpace::LOCAL )
-    {
-        m_rootDragger->setRotation( newRotation );
-    }
-    */
-
-    //std::cout << "rotationAngle: " << rotationAngle << std::endl;
-    m_angle += rotationAngle;
+    //Get the delta angle
+    const osg::Vec3d axis = startPlane ^ endPlane;
+    double angle = SignedAngle( startProject, endProject, axis );
+    m_deltaRotation.makeRotate( angle, axis );
 }
 ////////////////////////////////////////////////////////////////////////////////
 const bool Rotate::ComputeProjectedPoint(
@@ -211,28 +154,36 @@ const bool Rotate::ComputeProjectedPoint(
     const osg::Vec3d& lineStart = deviceInput.getStart();
     const osg::Vec3d& lineEnd = deviceInput.getEnd();
 
-    //Exit if the intersection is invalid
-    switch( m_transformationType )
-    {
-    case TransformationType::ROTATE_TWIST:
-    {
-        if( !GetLinePlaneIntersection(
-                lineStart, lineEnd, GetPlane(), projectedPoint ) )
-        {
-            return false;
-        }
+    //Get intersection on plane aligned with screen or camera
+    osg::Plane plane1 = GetPlane( true );
+    osg::Plane plane2 = GetPlane();
+    GetLinePlaneIntersection( lineStart, lineEnd, plane1, projectedPoint );
 
-        break;
-    }
-    default:
+    //Tranform planes into hessian form
+    plane1.makeUnitLength();
+    plane2.makeUnitLength();
+
+    //Get the normals in hessian form
+    osg::Vec3d n1 = plane1.getNormal();
+    osg::Vec3d n2 = plane2.getNormal();
+
+    //Get the angle of rotation
+    double angle = acos( n1 * n2 );
+
+    //Get the axis of rotation
+    osg::Vec3d axis = n1 ^ n2;
+    axis.normalize();
+
+    osg::Quat quat( angle, axis );
+    osg::Matrix transform( quat );
+
+    osg::Vec3 origin = GetAxis( true, true );
+    if( !IsFiniteNumber( angle ) )
     {
-        if( !GetLinePlaneIntersection(
-                lineStart, lineEnd, GetPlane( true ), projectedPoint ) )
-        {
-            return false;
-        }
+        m_endPlaneIntersection = projectedPoint;
     }
-    } //switch( m_transformationType )
+    m_endPlaneIntersection = ( projectedPoint - origin ) * transform;
+    m_endPlaneIntersection += origin;
 
     return true;
 }
@@ -241,13 +192,7 @@ void Rotate::CustomPushAction()
 {
     m_helpCircle->Show();
 
-    m_localStartPoint = m_startProjectedPoint * m_worldToLocal;
-    m_localStartPoint.normalize();
-    m_localStartPoint *= GetRadius();
-    m_startAngle = acos( osg::Vec3d( 1.0, 0.0, 0.0 ) * m_localStartPoint );
-
-    //std::cout << "m_startAngle: " << m_startAngle << std::endl;
-    //std::cout << "m_localStartPoint: " << m_localStartPoint << std::endl;
+    m_startPlaneIntersection = m_endPlaneIntersection;
 
     SetLineEndPoint( m_startProjectedPoint );
 
@@ -267,13 +212,27 @@ void Rotate::CustomDragAction()
 ////////////////////////////////////////////////////////////////////////////////
 void Rotate::CustomReleaseAction()
 {
-    m_angle = 0.0;
+    m_startPlaneIntersection.set( 0.0, 0.0, 0.0 );
+    m_endPlaneIntersection.set( 0.0, 0.0, 0.0 );
 
     //Turn line geode off
     m_lineGeode->setNodeMask( 0 );
 
     //Turn ghost disk geode off
+    ResetGhostDisk();
     m_ghostDiskGeode->setNodeMask( 0 );
+}
+////////////////////////////////////////////////////////////////////////////////
+void Rotate::ResetGhostDisk()
+{
+    for( unsigned int i = 0; i < m_ghostDiskVertices->size(); ++i )
+    {
+        (*m_ghostDiskVertices)[ i ].set( 0.0, 0.0, 0.0 );
+    }
+
+    //Reset the ghost disk geometry
+    m_ghostDiskGeometry->dirtyDisplayList();
+    m_ghostDiskGeometry->dirtyBound();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Rotate::SetLineEndPoint( const osg::Vec3& endPoint )

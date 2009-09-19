@@ -84,12 +84,6 @@ public:
     virtual const char* className() const;
 
     ///
-    void CreateGhostDisk();
-
-    ///
-    const HelpCircle* const GetHelpCircle() const;
-
-    ///
     ///\param obj
     ///\return
     virtual bool isSameKindAs( const osg::Object* obj ) const;
@@ -129,19 +123,25 @@ protected:
 
 private:
     ///
-    virtual const double& GetRadius() const = NULL;
+    void CreateGhostDisk();
+
+    ///
+    virtual const double& GetRadius() const = 0;
+
+    ///
+    //virtual const osg::Vec3d GetRotationAxis() const = 0;
+
+    ///
+    void ResetGhostDisk();
 
     ///
     void SetLineEndPoint( const osg::Vec3& endPoint );
 
     ///
-    osg::Vec3d m_localStartPoint;
+    osg::Vec3d m_startPlaneIntersection;
 
     ///
-    double m_startAngle;
-
-    ///
-    double m_angle;
+    osg::Vec3d m_endPlaneIntersection;
 
     ///
     osg::ref_ptr< osg::Vec3Array > m_lineVertices;

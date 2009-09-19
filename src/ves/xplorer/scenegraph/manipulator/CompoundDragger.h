@@ -130,6 +130,9 @@ public:
     virtual void SetColor(
         Color::Enum colorTag, osg::Vec4& newColor, bool use = false );
 
+    ///
+    virtual void SetConstraintMap( ConstraintMap& constraintMap );
+
     ///Sets the transformation modes enabled on the manipulator
     void SetEnabledModes( TransformationType::Enum value );
 

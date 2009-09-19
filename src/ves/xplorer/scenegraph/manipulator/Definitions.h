@@ -167,6 +167,15 @@ const bool VE_SCENEGRAPH_EXPORTS GetLinePlaneIntersection(
     const osg::Plane& plane,
     osg::Vec3d& intersection );
 
+///
+const bool VE_SCENEGRAPH_EXPORTS IsFiniteNumber( const double& number );
+
+///
+const double VE_SCENEGRAPH_EXPORTS SignedAngle(
+    const osg::Vec3d& v1,
+    const osg::Vec3d& v2,
+    const osg::Vec3d& reference );
+
 } //end manipulator
 } //end scenegraph
 } //end xplorer

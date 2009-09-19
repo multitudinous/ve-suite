@@ -45,12 +45,14 @@
 
 #include <osgUtil/LineSegmentIntersector>
 
+// --- Bullet Includes --- //
+class btRigidBody;
+class btTypedConstraint;
+class btPoint2PointConstraint;
+
 // --- C/C++ Includes --- //
 #include <set>
 #include <map>
-
-class btRigidBody;
-class btTypedConstraint;
 
 namespace ves
 {
@@ -72,6 +74,8 @@ class RotateTwist;
 class ScaleAxis;
 class ScaleUniform;
 class CompoundDragger;
+
+typedef std::map< btRigidBody*, btPoint2PointConstraint* > ConstraintMap;
 
 /*!\file Dragger.h
  * Dragger API
@@ -138,10 +142,10 @@ public:
     virtual void Disconnect();
 
     ///
-    void Enable( const bool& enable = true );
+    Dragger* Drag( const osgUtil::LineSegmentIntersector& deviceInput );
 
     ///
-    Dragger* Drag( const osgUtil::LineSegmentIntersector& deviceInput );
+    void Enable( const bool& enable = true );
 
     ///
     virtual Dragger* Focus( osg::NodePath::iterator& npItr );
@@ -204,6 +208,9 @@ public:
         Color::Enum colorTag, osg::Vec4 newColor, bool use = false );
 
     ///
+    virtual void SetConstraintMap( ConstraintMap& constraintMap );
+
+    ///
     virtual void SetRootDragger( Dragger* rootDragger );
 
     ///
@@ -222,8 +229,8 @@ public:
     virtual void UseColor( Color::Enum colorTag );
 
     ///
-    void ResetPhysics();
-    
+    //void ResetPhysics();
+
 protected:
     ///
     virtual ~Dragger();
@@ -255,13 +262,6 @@ protected:
     ///
     virtual void SetupDefaultGeometry() = 0;
 
-    ///Create physics point constraint
-    bool CreatePointConstraint();
-    ///Clear point constraint
-    void ClearPointConstraint();
-    ///Update point constraint
-    void UpdatePointConstraint();
-    
     ///
     const TransformationType::Enum m_transformationType;
 
@@ -306,19 +306,22 @@ protected:
 
     ///
     ves::xplorer::scenegraph::PhysicsSimulator& m_physicsSimulator;
-    
+
     ///
     ves::xplorer::scenegraph::SceneManager& m_sceneManager;
-    
+
 private:
-    ///
-    typedef std::map< Color::Enum, osg::Vec4 > ColorMap;
+    ///Clear point constraint
+    void ClearPointConstraint();
 
     ///
     void ComputeAssociationMatrices();
 
     ///
     void CreateDefaultShader();
+
+    ///Create physics point constraint
+    const bool CreatePointConstraint( btRigidBody& btRB );
 
     ///
     void UpdateAssociations();
@@ -339,20 +342,17 @@ private:
     AssociationMatricesMap m_associationMatricesMap;
 
     ///
+    typedef std::map< Color::Enum, osg::Vec4 > ColorMap;
+
+    ///
     ColorMap m_colorMap;
 
     ///
     osg::ref_ptr< osg::Uniform > m_color;
-    
-    ///The rigid body that has been selected during physics mouse picking
-    btRigidBody* m_pickedBody;
-    
-    ///Bullet constraint used for physics mouse picking
-    btTypedConstraint* m_pickConstraint; 
-    
-    ///The distance from the head position to the picked btRigidBody point
-    ///Used to calculate point to point constraints for physics picking
-    double m_prevPhysicsRayPos;
+
+    ///
+    ConstraintMap* m_constraintMap;
+
 };
 
 } //end manipulator

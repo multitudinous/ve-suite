@@ -80,14 +80,11 @@ Dragger::Dragger( const TransformationType::Enum& transformationType )
     m_isRootDragger( true ),
     m_color( NULL ),
     m_physicsSimulator( *vxs::PhysicsSimulator::instance() ),
-    m_sceneManager( *vxs::SceneManager::instance() ),
-    m_pickConstraint( 0 ),
-    m_pickedBody( 0 )
-    
+    m_sceneManager( *vxs::SceneManager::instance() )
 {
     m_rootDragger = this;
 
-    m_colorMap[ Color::DEFAULT ] = osg::Vec4f( 1.0, 0.75, 0.0, 1.0 );
+    m_colorMap[ Color::DEFAULT ] = osg::Vec4f( 1.0, 0.0, 0.0, 1.0 );
     m_colorMap[ Color::FOCUS ] = osg::Vec4f( 1.0, 1.0, 0.0, 1.0 );
     m_colorMap[ Color::ACTIVE ] = osg::Vec4f( 1.0, 0.0, 1.0, 1.0 );
     m_colorMap[ Color::DISABLED ] = osg::Vec4f( 0.6, 0.6, 0.6, 1.0 );
@@ -374,24 +371,33 @@ bool Dragger::Connect( osg::Transform* activeAssociation )
     //Store the active association
     m_activeAssociation = activeAssociation;
 
-    //Associate transform with this dragger
-    m_associationSet.insert( activeAssociation );
-
     //If we have a physics enabled transform then we need to add a 
     //constraint for non static objects
     osgBullet::AbsoluteModelTransform* amt =
         dynamic_cast< osgBullet::AbsoluteModelTransform* >( activeAssociation );
-    if( amt )
+    if( !amt )
     {
-        osgBullet::RigidBody* rb = 
-            static_cast< osgBullet::RigidBody* >( amt->getUserData() );
-        m_pickedBody = rb->getRigidBody();
-        if( !m_pickedBody->isStaticObject() )
-        {
-            CreatePointConstraint();
-        }
+        //Associate transform with this dragger
+        m_associationSet.insert( activeAssociation );
+
+        return true;
     }
-        
+
+    //If this is the root dragger, create point constraint
+    if( m_isRootDragger )
+    {
+        osgBullet::RigidBody* rb =
+            static_cast< osgBullet::RigidBody* >( amt->getUserData() );
+        btRigidBody* btRB = rb->getRigidBody();
+        if( !btRB )
+        {
+            //Error output
+            return false;
+        }
+
+        CreatePointConstraint( *btRB );
+    }
+
     return true;
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -407,10 +413,11 @@ void Dragger::DefaultForm()
 ////////////////////////////////////////////////////////////////////////////////
 void Dragger::Disconnect()
 {
-    //Turn gravity back on for the selected objects
-    //ResetPhysics();
-    ClearPointConstraint();
-    
+    if( m_isRootDragger )
+    {
+        ClearPointConstraint();
+    }
+
     m_associationSet.clear();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -479,7 +486,7 @@ Dragger* Dragger::Push(
         //Tell root dragger to stop auto scaling
         m_rootDragger->setAutoScaleToScreen( false );
 
-        //Use active color is this is active
+        //Use active color if this is active
         UseColor( Color::ACTIVE );
 
         //Compute local to world and world to local matrices for this
@@ -517,7 +524,7 @@ Dragger* Dragger::Release( osg::NodePath::iterator& npItr )
         //Force update now on release event for this frame
         m_rootDragger->setAutoRotateMode( m_rootDragger->getAutoRotateMode() );
 
-        //Use default color is this is active
+        //Use default color if this is active
         UseColor( Color::DEFAULT );
 
         //Custom Event::Release functionality
@@ -530,10 +537,6 @@ Dragger* Dragger::Release( osg::NodePath::iterator& npItr )
         m_startProjectedPoint.set( 0.0, 0.0, 0.0 );
         m_endProjectedPoint.set( 0.0, 0.0, 0.0 );
 
-        //Turn gravity back on for the selected objects
-        //ResetPhysics();
-        //ClearPointConstraint();
-        
         //This is in the node path
         return this;
     }
@@ -592,18 +595,64 @@ void Dragger::CreateDefaultShader()
 ////////////////////////////////////////////////////////////////////////////////
 void Dragger::UpdateAssociations()
 {
-    //If no associations, return
-    if( m_associationSet.empty() )
+    //Update physics first
+    ConstraintMap::const_iterator cmItr = (*m_constraintMap).begin();
+    for( cmItr; cmItr != (*m_constraintMap).end(); ++cmItr )
     {
-        //Error output
-        return;
+        btRigidBody* btRB = cmItr->first;
+        if( btRB->isStaticObject() || btRB->isKinematicObject() )
+        {
+            continue;
+        }
+
+        const bool physicsOn = !m_physicsSimulator.GetIdle();
+
+        osgBullet::MotionState* ms = static_cast< osgBullet::MotionState* >(
+            btRB->getMotionState() );
+        btTransform currentMatrix;
+        ms->getWorldTransform( currentMatrix );
+        if( m_transformationType & TransformationType::TRANSLATE_COMPOUND )
+        {
+            btVector3 deltaTranslation(
+                m_deltaTranslation.x(),
+                m_deltaTranslation.y(),
+                m_deltaTranslation.z() );
+
+            currentMatrix.setOrigin(
+                deltaTranslation + currentMatrix.getOrigin() );
+
+            btPoint2PointConstraint* p2p = cmItr->second;
+            if( p2p )
+            {
+                //Move the constraint pivot
+                const btVector3& currentLocation = p2p->getPivotInB();
+                btVector3 newPos = currentLocation + deltaTranslation;
+                p2p->setPivotB( newPos );
+            }
+        }
+        else if( m_transformationType & TransformationType::ROTATE_COMPOUND )
+        {
+            btQuaternion deltaRotation(
+                m_deltaRotation.x(), m_deltaRotation.y(),
+                m_deltaRotation.z(), m_deltaRotation.w() );
+            currentMatrix.setRotation(
+                deltaRotation * currentMatrix.getRotation() );
+        }
+
+        if( physicsOn )
+        {
+            btRB->setWorldTransform( currentMatrix );
+            btRB->setInterpolationWorldTransform( currentMatrix );
+        }
+
+        ms->setWorldTransform( currentMatrix );
     }
 
     //Set all associated transforms
-    AssociationSet::const_iterator itr = m_associationSet.begin();
-    for( itr; itr != m_associationSet.end(); ++itr )
+    AssociationSet::const_iterator asItr = m_associationSet.begin();
+    for( asItr; asItr != m_associationSet.end(); ++asItr )
     {
-        osg::Transform* transform = *itr;
+        osg::Transform* transform = *asItr;
         AssociationMatricesMap::const_iterator ammItr =
             m_associationMatricesMap.find( transform );
         if( ammItr == m_associationMatricesMap.end() )
@@ -655,16 +704,7 @@ void Dragger::UpdateAssociations()
             continue;
         }
 
-        //Test for AMTs 2nd
-        osgBullet::AbsoluteModelTransform* amt =
-            dynamic_cast< osgBullet::AbsoluteModelTransform* >( transform );
-        if( amt )
-        {
-            UpdatePointConstraint();
-            continue;
-        }
-
-        //Test for MTs 3rd
+        //Test for MTs 2nd
         osg::MatrixTransform* mt = transform->asMatrixTransform();
         if( mt )
         {
@@ -685,7 +725,7 @@ void Dragger::UpdateAssociations()
             continue;
         }
 
-        //Test for ATs 4th
+        //Test for ATs 3rd
         osg::AutoTransform* at =
             dynamic_cast< osg::AutoTransform* >( transform );
         if( at )
@@ -745,7 +785,7 @@ const osg::Plane Dragger::GetPlane( const bool& parallel ) const
     if( parallel )
     {
         plane.set(
-            m_rootDragger->getPosition() - m_rootDragger->GetPreviousEyePoint(),
+            m_rootDragger->GetPreviousEyePoint() - m_rootDragger->getPosition(),
             m_rootDragger->getPosition() );
     }
     else
@@ -829,6 +869,11 @@ void Dragger::SetColor( Color::Enum colorTag, osg::Vec4 newColor, bool use )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
+void Dragger::SetConstraintMap( ConstraintMap& constraintMap )
+{
+    m_constraintMap = &constraintMap;
+}
+////////////////////////////////////////////////////////////////////////////////
 void Dragger::SetRootDragger( Dragger* rootDragger )
 {
     if( this != rootDragger )
@@ -872,6 +917,7 @@ void Dragger::UseColor( Color::Enum colorTag )
     m_color->set( GetColor( colorTag ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
+/*
 void Dragger::ResetPhysics()
 {
     AssociationSet::const_iterator itr = m_associationSet.begin();
@@ -919,130 +965,44 @@ void Dragger::ResetPhysics()
         {
             continue;
         }
-    }    
+    }
 }
+*/
 ////////////////////////////////////////////////////////////////////////////////
-bool Dragger::CreatePointConstraint()
+const bool Dragger::CreatePointConstraint( btRigidBody& btRB )
 {
-    //Add a point to point constraint for picking
-    /*if( m_physicsSimulator.GetIdle() )
-    {
-        return false;
-    }*/
-    
-    //osg::Vec3d startPoint, endPoint;
-    /*
-    SetStartEndPoint( startPoint, endPoint );
-    
-    btVector3 rayFromWorld, rayToWorld;
-    rayFromWorld.setValue(
-                          startPoint.x(), startPoint.y(), startPoint.z() );
-    rayToWorld.setValue(
-                        endPoint.x(), endPoint.y(), endPoint.z() );
-    
-    btCollisionWorld::ClosestRayResultCallback rayCallback(
-                                                           rayFromWorld, rayToWorld );
-    m_physicsSimulator.GetDynamicsWorld()->rayTest(
-                                                   rayFromWorld, rayToWorld, rayCallback );
-    
-    if( !rayCallback.hasHit() )
-    {
-        return false;
-    }*/
-    
-    /*btRigidBody* body;
-    if( !body )
-    {
-        return false;
-    }*/
-    
-    //Other exclusions
-    if( !( m_pickedBody->isStaticObject() || 
-        m_pickedBody->isKinematicObject() ) )
-    {
-        m_pickedBody->setActivationState( DISABLE_DEACTIVATION );
+    btRB.setActivationState( DISABLE_DEACTIVATION );
 
-        btVector3 localPivot(0,0,0);
-        
-        btPoint2PointConstraint* p2p =
-            new btPoint2PointConstraint( *m_pickedBody, localPivot );
-        m_physicsSimulator.GetDynamicsWorld()->addConstraint( p2p );
-        m_pickConstraint = p2p;
-        
-        //Very weak constraint for picking
-        p2p->m_setting.m_tau = 0.1;
-    }
+    btPoint2PointConstraint* p2p =
+        new btPoint2PointConstraint( btRB, btVector3( 0.0, 0.0, 0.0 ) );
+    //Very weak constraint for picking
+    p2p->m_setting.m_tau = 0.1;
+
+    m_physicsSimulator.GetDynamicsWorld()->addConstraint( p2p );
+    (*m_constraintMap)[ &btRB ] = p2p;
+
     return true;
-}
-////////////////////////////////////////////////////////////////////////////////
-void Dragger::UpdatePointConstraint()
-{
-    if( !m_physicsSimulator.GetIdle() && m_pickConstraint )
-    {
-        //Move the constraint pivot
-        btPoint2PointConstraint* p2p =
-            static_cast< btPoint2PointConstraint* >( m_pickConstraint );
-        if( p2p )
-        {
-            const btVector3& currentLocation = p2p->getPivotInB();
-            
-            btVector3 deltaTranslation(
-                                       m_deltaTranslation.x(),
-                                       m_deltaTranslation.y(),
-                                       m_deltaTranslation.z() );
-            
-            btVector3 newPos = currentLocation + deltaTranslation;
-            p2p->setPivotB( newPos );
-        }
-    }
-    else if( m_physicsSimulator.GetIdle() && m_pickConstraint )
-    {
-        if( m_pickedBody->isStaticObject() )
-        {
-            return;
-        }
-        
-        //m_pickedBody = btRB;
-        osgBullet::MotionState* ms = 
-            static_cast< osgBullet::MotionState* >( m_pickedBody->getMotionState() );
-        btTransform currentMatrix;
-        ms->getWorldTransform( currentMatrix );
-        if( m_transformationType & TransformationType::TRANSLATE_COMPOUND )
-        {
-            btVector3 deltaTranslation(
-                                       m_deltaTranslation.x(),
-                                       m_deltaTranslation.y(),
-                                       m_deltaTranslation.z() );
-            currentMatrix.setOrigin(
-                                    deltaTranslation + currentMatrix.getOrigin() );
-        }
-        else if( m_transformationType & TransformationType::ROTATE_COMPOUND )
-        {
-            btQuaternion deltaRotation(
-                                       m_deltaRotation.x(), m_deltaRotation.y(),
-                                       m_deltaRotation.z(), m_deltaRotation.w() );
-            currentMatrix.setRotation(
-                                      deltaRotation * currentMatrix.getRotation() );
-        }
-        //Do we need to update the point 2 point constraint????????
-        ms->setWorldTransform( currentMatrix );
-        m_pickedBody->setWorldTransform( currentMatrix );
-        m_pickedBody->setInterpolationWorldTransform( currentMatrix );
-    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Dragger::ClearPointConstraint()
 {
-    //Do not require mod key depending on what the user did
-    if( m_pickConstraint )
+    ConstraintMap::const_iterator itr = (*m_constraintMap).begin();
+    for( itr; itr != (*m_constraintMap).end(); ++itr )
     {
-        m_physicsSimulator.GetDynamicsWorld()->removeConstraint( m_pickConstraint );
-        delete m_pickConstraint;
-        m_pickConstraint = NULL;
-        
-        m_pickedBody->forceActivationState( ACTIVE_TAG );
-        m_pickedBody->setDeactivationTime( 0.0 );
-        m_pickedBody = NULL;
+        btPoint2PointConstraint* p2p = itr->second;
+        if( p2p )
+        {
+            m_physicsSimulator.GetDynamicsWorld()->removeConstraint( p2p );
+            delete p2p;
+            p2p = NULL;
+
+            btRigidBody* btRB = itr->first;
+            btRB->forceActivationState( ACTIVE_TAG );
+            btRB->setDeactivationTime( 0.0 );
+            btRB = NULL;
+        }
     }
+
+    (*m_constraintMap).clear();
 }
 ////////////////////////////////////////////////////////////////////////////////

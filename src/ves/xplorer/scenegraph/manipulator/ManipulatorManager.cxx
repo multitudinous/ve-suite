@@ -75,7 +75,7 @@ ManipulatorManager::ManipulatorManager()
     m_rotateTwist->SetColor(
         Color::DEFAULT, osg::Vec4f( 1.0, 1.0, 1.0, 1.0 ), true );
     m_rotateTwist->Hide();
-    addChild( m_rotateTwist.get() );
+    //addChild( m_rotateTwist.get() );
 
     m_sceneManipulator = new TransformManipulator();
     //Turn off the scene manipulator until requested by user
@@ -104,16 +104,13 @@ ManipulatorManager::~ManipulatorManager()
 ////////////////////////////////////////////////////////////////////////////////
 bool ManipulatorManager::addChild( Dragger* child )
 {
-    //Initialize root dragger
-    child->SetScale( 64.0 );
-    child->setAutoScaleToScreen( true );
-
     //If rotation-type dragger, create a help circle
     if( child->GetTransformationType() & TransformationType::ROTATE_COMPOUND )
     {
         //Insert help circle to front so it gets traversed first
         osg::ref_ptr< HelpCircle > helpCircle = new HelpCircle();
         child->insertChild( 0, helpCircle.get() );
+        helpCircle->SetRootDragger( child );
 
         CompoundDragger* compoundDragger = child->AsCompoundDragger();
         if( compoundDragger )
@@ -132,6 +129,12 @@ bool ManipulatorManager::addChild( Dragger* child )
             }
         }
     }
+
+    //Initialize root dragger
+    child->SetScale( 64.0 );
+    child->setAutoScaleToScreen( true );
+    ConstraintMap* constraintMap = new ConstraintMap();
+    child->SetConstraintMap( *constraintMap );
 
     return osg::Group::addChild( child );
 }
