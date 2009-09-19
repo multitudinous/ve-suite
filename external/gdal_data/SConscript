@@ -1,0 +1,15 @@
+##sets up the minerva data
+import os, sys, string
+pj = os.path.join
+import SConsAddons.Util as sca_util
+
+Import('ves_pkg buildDir RootDir GetPlatform')
+
+ptConfigFile = ves_pkg.createFileBundle( pj('share','vesuite','xplorer','minverva') )
+fontFile = sca_util.getFilesRecursiveByExt( pj(RootDir, 'external','gdal_data','data'), ['.csv'] )
+fontFile += sca_util.getFilesRecursiveByExt( pj(RootDir, 'external','gdal_data','data'), ['.wkt'] )
+fontFile += sca_util.getFilesRecursiveByExt( pj(RootDir, 'external','gdal_data','data'), ['.png'] )
+fontFile += sca_util.getFilesRecursiveByExt( pj(RootDir, 'external','gdal_data','data'), ['.svg'] )
+fontFile = map(lambda s: pj('data', s), fontFile)
+
+ptConfigFile.addFiles( fontFile, useRelPath=False)

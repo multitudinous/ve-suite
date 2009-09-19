@@ -590,7 +590,7 @@ if not SConsAddons.Util.hasHelpFlag():
     #installerSubdirs = pj(buildDir,'VE_Installer' )
     shareSubdirs = pj(buildDir,'share')
     lokiSubdirs = pj( buildDir, 'external', lokiBaseVar )
-    #osgOQSubdirs = pj( buildDir, 'external', 'osgOQ')
+    minervaDataSubdirs = pj( buildDir, 'external', 'gdal_data')
     #osgPPUSubdirs = pj( buildDir, 'external', 'osgPPU')
     osgEphemerisSubdirs = pj( buildDir, 'external', 'osgEphemeris')
     osgBulletSubdirs = pj( buildDir, 'external', 'osgBullet')
@@ -599,7 +599,7 @@ if not SConsAddons.Util.hasHelpFlag():
 
     ves_dirs = [vesSubdirs, distSubdirs, osgEphemerisSubdirs,
                shareSubdirs, lokiSubdirs, 
-               osgBulletSubdirs, bullet ]
+               osgBulletSubdirs, bullet, minervaDataSubdirs ]
 
     #build applications in test/ directory
     if baseEnv[ 'buildTests' ] == 'yes':
