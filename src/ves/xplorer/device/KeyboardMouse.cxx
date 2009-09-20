@@ -1743,8 +1743,8 @@ vrj::DisplayPtr const KeyboardMouse::GetCurrentDisplay(
     //upcast
     window = dynamic_cast< const vrj::opengl::Window* >( windowWin32 );
 #elif defined VPR_OS_Linux
-    const gadget::InputWindoXWin* inputWindowXWin =
-        dynamic_cast< const gadget::inputWindowXWin* >( inputArea );
+    const gadget::InputWindowXWin* inputWindowXWin =
+        dynamic_cast< const gadget::InputWindowXWin* >( inputArea );
     if( inputWindowXWin )
     {
         return vrj::DisplayPtr();

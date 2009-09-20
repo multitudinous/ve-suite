@@ -348,7 +348,7 @@ void Wand::ProcessHit()
     if( intersections.empty() )
     {
         vprDEBUG( vesDBG, 1 )
-        << "|\Wand::ProcessHit No object selected"
+        << "|\tWand::ProcessHit No object selected"
         << std::endl << vprDEBUG_FLUSH;
         
         return;
