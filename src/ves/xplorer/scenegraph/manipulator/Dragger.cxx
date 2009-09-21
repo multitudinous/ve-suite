@@ -39,6 +39,8 @@
 
 #include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
 
+//#include <ves/xplorer/CommandHandler.h>
+
 // --- OSG Includes --- //
 #include <osg/io_utils>
 #include <osg/PositionAttitudeTransform>
@@ -58,6 +60,10 @@
 #include <osgBullet/MotionState.h>
 #include <osgBullet/RigidBody.h>
 #include <osgBullet/Utils.h>
+
+#include <ves/open/xml/XMLObject.h>
+#include <ves/open/xml/Command.h>
+#include <ves/open/xml/DataValuePair.h>
 
 using namespace ves::xplorer::scenegraph::manipulator;
 namespace vxs = ves::xplorer::scenegraph;
@@ -701,6 +707,15 @@ void Dragger::UpdateAssociations()
                 pat->setScale( scale );
             }
 
+            if( m_rootDragger )
+            {
+                vxs::DCS* tempDCS = dynamic_cast< vxs::DCS* >( pat );
+                if( tempDCS )
+                {
+                    UpdateConductorData();
+                }
+            }
+            
             continue;
         }
 
@@ -1004,5 +1019,40 @@ void Dragger::ClearPointConstraint()
     }
 
     (*m_constraintMap).clear();
+}
+////////////////////////////////////////////////////////////////////////////////
+void Dragger::UpdateConductorData()
+{
+    ///Get command
+    ves::open::xml::CommandPtr modelUpdateData( new ves::open::xml::Command() );
+    modelUpdateData->SetCommandName( "MODEL_DATA_UPDATE" );
+
+    //Create the uuid for the model of the transform
+    ves::open::xml::DataValuePairPtr parentSystemId( new ves::open::xml::DataValuePair() );
+    parentSystemId->SetData( "PARENT_SYSTEM_ID", "1234" );
+    modelUpdateData->AddDataValuePair( parentSystemId );
+    
+    //Create the uuid for the plugin of the transform
+    ves::open::xml::DataValuePairPtr pluginId( new ves::open::xml::DataValuePair() );
+    pluginId->SetData( "PLUGIN_ID", "1234" );
+    modelUpdateData->AddDataValuePair( pluginId );
+
+    ves::open::xml::CommandPtr transformData( new ves::open::xml::Command() );
+    transformData->SetCommandName( "MODEL_DATA" );
+
+    ves::open::xml::DataValuePairPtr cadTransformDVP( new ves::open::xml::DataValuePair() );
+    cadTransformDVP->SetData( "CAD_TRANSFORM", "1234" );//transformPtr );
+    transformData->AddDataValuePair( cadTransformDVP );
+
+    ves::open::xml::DataValuePairPtr cadIdDVP( new ves::open::xml::DataValuePair() );
+    cadIdDVP->SetData( "CAD_ID", "1234" );
+    transformData->AddDataValuePair( cadIdDVP );
+
+    ves::open::xml::DataValuePairPtr pluginDataDVP( new ves::open::xml::DataValuePair() );
+    pluginDataDVP->SetData( "PLUGIN_DATA", transformData );
+
+    modelUpdateData->AddDataValuePair( pluginDataDVP );
+
+    //ves::xplorer::CommandHandler::instance()->SetXMLCommand( modelUpdateData );
 }
 ////////////////////////////////////////////////////////////////////////////////

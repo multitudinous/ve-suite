@@ -261,6 +261,8 @@ protected:
 
     ///
     virtual void SetupDefaultGeometry() = 0;
+    
+    void UpdateConductorData();
 
     ///
     const TransformationType::Enum m_transformationType;
