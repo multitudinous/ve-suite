@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#include <ves/xplorer/CommandHandler.h>
+#include <ves/xplorer/communication/CommandHandler.h>
 
 #include <ves/open/xml/XMLReaderWriter.h>
 #include <ves/open/xml/DataValuePair.h>

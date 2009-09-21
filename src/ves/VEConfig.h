@@ -37,7 +37,7 @@
 
 #define VES_MAJOR_VERSION    1
 #define VES_MINOR_VERSION    1
-#define VES_PATCH_VERSION    7
+#define VES_PATCH_VERSION    9
 
 #if defined(_MSC_VER)
 //#pragma warning( disable : 4244 )
@@ -68,6 +68,12 @@
 #  else
 #    define VE_XPLORER_EXPORTS   __declspec(dllimport)
 #  endif /* VE_XPLORER_LIBRARY */
+
+#  ifdef VE_XPLORER_COMM_LIBRARY
+#    define VE_XPLORER_COMM_EXPORTS   __declspec(dllexport)
+#  else
+#    define VE_XPLORER_COMM_EXPORTS   __declspec(dllimport)
+#  endif /* VE_XPLORER_COMM_LIBRARY */
 
 #  ifdef VE_CONDUCTOR_LIBRARY
 #    define VE_CONDUCTOR_EXPORTS   __declspec(dllexport)
@@ -181,6 +187,7 @@
 #  define VE_SCENEGRAPH_EXPORTS
 #  define VE_UTIL_EXPORTS
 #  define VE_XPLORER_EXPORTS
+#  define VE_XPLORER_COMM_EXPORTS
 #  define VE_CONDUCTOR_EXPORTS
 #  define VE_GUIPLUGINS_EXPORTS
 #  define VE_DEFAULT_PLUGIN_EXPORTS

@@ -38,9 +38,9 @@
 *
 */
 #include <ves/VEConfig.h>
-#include <ves/xplorer/CommandHandlerPtr.h>
+#include <ves/xplorer/communication/CommandHandlerPtr.h>
 
-#include <ves/xplorer/Xplorer_i.h>
+#include <ves/xplorer/communication/Xplorer_i.h>
 
 #include <ves/open/xml/CommandPtr.h>
 
@@ -50,7 +50,7 @@ namespace ves
 {
 namespace xplorer
 {
-class VE_XPLORER_EXPORTS CommandHandler
+class VE_XPLORER_COMM_EXPORTS CommandHandler
 {
 private:
     CommandHandler( void );

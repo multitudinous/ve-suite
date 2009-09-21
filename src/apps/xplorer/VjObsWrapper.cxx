@@ -41,10 +41,10 @@
 #include "VjObsWrapper.h"
 #include "VjObs_i.h"     //added for corba stuff
 
-#include <ves/xplorer/Xplorer_i.h>
+#include <ves/xplorer/communication/Xplorer_i.h>
 #include <ves/xplorer/EnvironmentHandler.h>
 #include <ves/xplorer/ModelHandler.h>
-#include <ves/xplorer/CommandHandler.h>
+#include <ves/xplorer/communication/CommandHandler.h>
 
 #include <ves/xplorer/Debug.h>
 

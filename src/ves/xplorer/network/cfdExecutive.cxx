@@ -37,7 +37,7 @@
 #include <ves/xplorer/network/UpdateNetworkEventHandler.h>
 #include <ves/xplorer/plugin/PluginBase.h>
 #include <ves/xplorer/ModelHandler.h>
-#include <ves/xplorer/CommandHandler.h>
+#include <ves/xplorer/communication/CommandHandler.h>
 #include <ves/xplorer/EnvironmentHandler.h>
 #include <ves/xplorer/Model.h>
 #include <ves/xplorer/network/NetworkSystemView.h>

@@ -32,7 +32,7 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
 // --- VE-Suite Includes --- //
-#include <ves/xplorer/CommandHandler.h>    //This needs to be first
+#include <ves/xplorer/communication/CommandHandler.h>    //This needs to be first
 #include <ves/xplorer/Debug.h>
 #include <ves/xplorer/ModelHandler.h>
 #include <ves/xplorer/DeviceHandler.h>

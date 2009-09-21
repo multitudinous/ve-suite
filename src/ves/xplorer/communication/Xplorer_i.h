@@ -34,7 +34,7 @@
 #define _XPLORER_I_H_
 
 #include <ves/open/moduleS.h>
-#include <ves/xplorer/Body_AMI_UIHandler_i.h>
+#include <ves/xplorer/communication/Body_AMI_UIHandler_i.h>
 
 #undef _REENTRANT
 #include <vpr/Sync/Mutex.h>
@@ -54,7 +54,6 @@
 #include <plugins/ApplicationDataManager/UserData.h>
 
 #include <ves/VEConfig.h>
-#include <ves/xplorer/ModelHandlerPtr.h>
 
 #include <ves/open/xml/CommandPtr.h>
 
@@ -62,7 +61,7 @@
 #include <map>
 #include <iostream>
 
-class VE_XPLORER_EXPORTS Body_VEXplorer_i
+class VE_XPLORER_COMM_EXPORTS Body_VEXplorer_i
             : public virtual POA_Body::VEXplorer
 {
 public:
@@ -103,10 +102,6 @@ public:
     ACE_THROW_SPEC(( ::CORBA::SystemException, ::Error::EUnknown ) );
 
     void PreFrameUpdate( void );
-    ///Initialize cluster stuff depending on cluster mode
-    void InitCluster( void );
-    ///Called in post frame to get variables
-    void GetUpdateClusterStateVariables( void );
     /// Frame sync variables used by osg only at this point
     float GetSetAppTime( float );
     ///Get/Set the frame number

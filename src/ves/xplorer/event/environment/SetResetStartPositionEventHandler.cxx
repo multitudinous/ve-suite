@@ -31,7 +31,7 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/xplorer/event/environment/SetResetStartPositionEventHandler.h>
-#include <ves/xplorer/CommandHandler.h>
+#include <ves/xplorer/communication/CommandHandler.h>
 #include <ves/xplorer/DeviceHandler.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>

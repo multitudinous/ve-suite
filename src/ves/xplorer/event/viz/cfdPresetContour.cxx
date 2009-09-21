@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#include <ves/xplorer/CommandHandler.h>
+#include <ves/xplorer/communication/CommandHandler.h>
 #include <ves/xplorer/event/viz/cfdPresetContour.h>
 
 #include <ves/xplorer/event/viz/cfdCuttingPlane.h>
