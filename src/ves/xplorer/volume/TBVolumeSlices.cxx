@@ -327,8 +327,6 @@ void TextureBasedVolumeSlices::drawImplementation( osg::State& renderState ) con
 #elif ( ( OSG_VERSION_MAJOR <= 1 ) && ( OSG_VERSION_MINOR <= 2 ) )
     osg::State& currentState = renderState;
 #endif
-    ///transform center to current eye space
-    //_eyeCenter = _center * currentState.getModelViewMatrix();
     if( _sliceRenderMethod == "VIEW_ALIGNED_QUADS" )
     {
         ///transform center to current eye space
@@ -343,54 +341,33 @@ void TextureBasedVolumeSlices::drawImplementation( osg::State& renderState ) con
         inverseMV.invert( modelViewMatrix );
 
         ///calculate slice normal in eyespace then transform it back
-        ///to world space
-        //osg::Vec3d eye;
-        //osg::Vec3d center;
-        //osg::Vec3d up;
-        
-        //renderState.getCurrentCamera()->getViewMatrixAsLookAt( eye, center, up );
-        //eye *= -1.0;
-        //_cameraLocation = eye * inverseModelView;
-        //_cameraLocation.set( eye.x(), eye.y(), eye.z(), 1.0 );
-        //osg::Vec4d yupCenter( _center.x(), _center.z(), -_center.y(), 1 );
-        //std::cout << modelViewMatrix << std::endl;
-        //_eyeCenter = _center * modelViewMatrix;
-        //osg::Vec4 tempEye( _eyeCenter.x(), -_eyeCenter.z(), _eyeCenter.y(), 1.0 );
-        //_eyeCenter = tempEye;
-
         _cameraLocation = inverseMV.getTrans();
-        //std::cout << "_cameraLocation: " << _cameraLocation << std::endl;
         _eyeCenter = _center * modelViewMatrix;
-        //std::cout << "_center: " << _center << std::endl;
-        //std::cout << "_eyeCenter: " << _eyeCenter << std::endl;
-        //std::cout << std::endl;
 
         _extremaIndicies[ 0 ] = 0;
         _extremaIndicies[ 1 ] = 7;
 
         ///transform the bbox into camera space
         osg::ref_ptr< osg::Vec4Array > rotatedBBox = new osg::Vec4Array( 8 );
-        rotatedBBox->push_back( _coordTransformedBBox->at( 0 )* modelViewMatrix );
-        rotatedBBox->push_back( _coordTransformedBBox->at( 1 )* modelViewMatrix );
-        rotatedBBox->push_back( _coordTransformedBBox->at( 2 )* modelViewMatrix );
-        rotatedBBox->push_back( _coordTransformedBBox->at( 3 )* modelViewMatrix );
-        rotatedBBox->push_back( _coordTransformedBBox->at( 4 )* modelViewMatrix );
-        rotatedBBox->push_back( _coordTransformedBBox->at( 5 )* modelViewMatrix );
-        rotatedBBox->push_back( _coordTransformedBBox->at( 6 )* modelViewMatrix );
-        rotatedBBox->push_back( _coordTransformedBBox->at( 7 )* modelViewMatrix );
-
-        //osg::Vec4 slicePlaneNormal = _cameraLocation - _center;
-        //osg::Vec4d slicePlaneNormalTemp =  _cameraLocation - _eyeCenter;
-        //std::cout << _center << " " << _eyeCenter << " " << _cameraLocation << std::endl;
-        //std::cout << slicePlaneNormalTemp << std::endl;
-        //osg::Vec3d slicePlaneNormal( slicePlaneNormalTemp.x(), slicePlaneNormalTemp.y(), slicePlaneNormalTemp.z() );//0.0, -1.0, 0.0 );
-        //slicePlaneNormal.set( 0.0, -1.0, 0.0 );
-        //slicePlaneNormal.normalize();
-        //std::cout << slicePlaneNormal << std::endl;
+        rotatedBBox->
+            push_back( _coordTransformedBBox->at( 0 ) * modelViewMatrix );
+        rotatedBBox->
+            push_back( _coordTransformedBBox->at( 1 ) * modelViewMatrix );
+        rotatedBBox->
+            push_back( _coordTransformedBBox->at( 2 ) * modelViewMatrix );
+        rotatedBBox->
+            push_back( _coordTransformedBBox->at( 3 ) * modelViewMatrix );
+        rotatedBBox->
+            push_back( _coordTransformedBBox->at( 4 ) * modelViewMatrix );
+        rotatedBBox->
+            push_back( _coordTransformedBBox->at( 5 ) * modelViewMatrix );
+        rotatedBBox->
+            push_back( _coordTransformedBBox->at( 6 ) * modelViewMatrix );
+        rotatedBBox->
+            push_back( _coordTransformedBBox->at( 7 ) * modelViewMatrix );
 
         osg::Vec3d slicePlaneNormal = _cameraLocation - _center;
         slicePlaneNormal.normalize();
-        //std::cout << "slicePlaneNormal: " << slicePlaneNormal << std::endl;
 
         //update the min max indicies for the bbox
         unsigned int extremaIndicies[ 2 ] = { 0, 7 };
@@ -426,14 +403,13 @@ void TextureBasedVolumeSlices::_calculateEdgeIntersections(
 {
     osg::Vec3d sliceDelta = slicePlaneNormal * currentDelta;
     osg::Vec3d backSlicePoint = initialSlicePoint;
-    osg::GL2Extensions* gl2extensions = osg::GL2Extensions::Get( currentState.getContextID(), true );
+    osg::GL2Extensions* gl2extensions = 
+        osg::GL2Extensions::Get( currentState.getContextID(), true );
     int dsLocation = currentState.getUniformLocation( "viewRay" );
     int alphaRatioLocation = currentState.getUniformLocation( "alphaRatio" );
-    //int datacenterLocation = currentState.getUniformLocation( "datacenter" );
-    //gl2extensions->glUniform3f( datacenterLocation, _center[0], _center[1], _center[2] );
 
-
-    gl2extensions->glUniform3f( dsLocation, sliceDelta[ 0 ], sliceDelta[ 1 ], sliceDelta[ 2 ] );
+    gl2extensions->glUniform3f( dsLocation, sliceDelta[ 0 ], 
+                               sliceDelta[ 1 ], sliceDelta[ 2 ] );
     gl2extensions->glUniform1f( alphaRatioLocation, deltaRatio );
 
     glDisable( GL_TEXTURE_GEN_S );
