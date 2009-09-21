@@ -363,7 +363,7 @@ void TextureBasedVolumeSlices::drawImplementation( osg::State& renderState ) con
         _eyeCenter = _center * modelViewMatrix;
         //std::cout << "_center: " << _center << std::endl;
         //std::cout << "_eyeCenter: " << _eyeCenter << std::endl;
-        std::cout << std::endl;
+        //std::cout << std::endl;
 
         _extremaIndicies[ 0 ] = 0;
         _extremaIndicies[ 1 ] = 7;

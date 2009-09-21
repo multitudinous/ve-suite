@@ -2740,7 +2740,7 @@ void AppFrame::OnDataLogging( wxCommandEvent& event )
         std::string vemFilename = ConvertUnicode( vesFileName.GetFullName().c_str() );
         ves::conductor::util::DataLoggerEngine::instance()->SetMovieFilename( vemFilename );
 
-        std::cout << " file to open " << vemFilename << std::endl;  
+        Log( std::string( "Opening " + vemFilename + " movie file.").c_str() );
     }
     else
     {
