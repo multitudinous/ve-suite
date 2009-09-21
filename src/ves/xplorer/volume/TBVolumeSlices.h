@@ -66,7 +66,7 @@ namespace volume
 /*!\class ves::xplorer::volume::TextureBasedVolumeSlices
  * Class defining slices for texture-based volume rendering.
  */
-class  VE_TEXTURE_BASED_EXPORTS TextureBasedVolumeSlices : public osg::Drawable
+class VE_TEXTURE_BASED_EXPORTS TextureBasedVolumeSlices : public osg::Drawable
 {
 public:
     ///Constructor
@@ -75,12 +75,14 @@ public:
     ///Constructor
     ///\param dataBoundingBox The data bounding box
     ///\param minNumberOfSlices The minimum number of slices to use.\n Lowest is 32.
-    TextureBasedVolumeSlices( float* dataBoundingBox,
-                              unsigned int minNumberOfSlices = 32 );
+    TextureBasedVolumeSlices(
+        float* dataBoundingBox,
+        unsigned int minNumberOfSlices = 32 );
 
     ///Copy constructor
-    TextureBasedVolumeSlices( const TextureBasedVolumeSlices& slices,
-                              const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
+    TextureBasedVolumeSlices(
+        const TextureBasedVolumeSlices& slices,
+        const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
 
     META_Object( VE_TextureBased, ves::xplorer::volume::TextureBasedVolumeSlices )
 
@@ -102,10 +104,11 @@ public:
     ///\param x The y resolution
     ///\param x The z resolution
     void SetTextureDimensions( unsigned int x, unsigned int y, unsigned int z );
-    // of OpenGL primitives.
-#if ((OSG_VERSION_MAJOR>=1) && (OSG_VERSION_MINOR>2) || (OSG_VERSION_MAJOR>=2))
+
+    ///OpenGL primitives
+#if ( ( OSG_VERSION_MAJOR >= 1 ) && ( OSG_VERSION_MINOR > 2 ) || ( OSG_VERSION_MAJOR >= 2 ) )
     virtual void drawImplementation( osg::RenderInfo& currentState ) const;
-#elif ((OSG_VERSION_MAJOR<=1) && (OSG_VERSION_MINOR<=2))
+#elif ( ( OSG_VERSION_MAJOR <= 1) && ( OSG_VERSION_MINOR <= 2 ) )
     virtual void drawImplementation( osg::State& currentState ) const;
 #endif
 
@@ -116,19 +119,20 @@ public:
 protected:
     ///Draw a quad along the lookAtVector of the camera at position z
     ///\param zPosition Distance along the lookAtVector to draw the slice
-    void _drawQuadSlice( float zPosition )const;
+    void _drawQuadSlice( double zPosition )const;
 
     ///Make sure the slice spacing is up to date
     ///\param extremaIndicies The indicies of the closest and furthest bbox corner
     ///\param delta The slice distance
     ///\param deltaRatio The ratio of the current slice distance to the original slice distance
-    void _ensureSliceDelta( unsigned int extremaIndicies[],
-                            float& delta,
-                            float& deltaRatio )const;
+    void _ensureSliceDelta(
+        unsigned int extremaIndicies[],
+        double& delta,
+        double& deltaRatio ) const;
 
     //These all need to be in a higher level class
     ///Draw a stack of view aligned quads
-    void _drawViewAlignedQuadSlices()const;
+    void _drawViewAlignedQuadSlices() const;
 
     ///Initialize the bbox intersecting slices vertex program.
     void _initBBoxIntersectionSlicesVertexProgram();
@@ -142,13 +146,14 @@ protected:
     ///\param rotatedBBox The transformed bbox
     ///\param slicePlaneNormal The normal to the slices
     ///\param extremeIndicies The indicies of the closest and furthest bbox corner
-    void _findBBoxMinMaxIndicies( osg::ref_ptr<osg::Vec4Array> rotatedBBox,
-                                  osg::Vec3 slicePlaneNormal,
-                                  unsigned int extremeIndicies[] )const;
+    void _findBBoxMinMaxIndicies(
+        osg::ref_ptr< osg::Vec4Array > rotatedBBox,
+        osg::Vec3d slicePlaneNormal,
+        unsigned int extremeIndicies[] )const;
 
     ///Calculate the sample distance
     ///\param iModelView Inverse modelview matrix
-    float _calculateSampleDistance( osg::Matrixf iModelView ) const;
+    double _calculateSampleDistance( osg::Matrixd iModelView ) const;
 
     ///Calculate the slice polygon and edge intersections
     ///\param currentState The current opengl state
@@ -157,12 +162,13 @@ protected:
     ///\param extremaIndicies The indicies of the closest and furthest bbox corner
     ///\param currentDelta The current slice distance
     ///\param deltaRatio The ratio of the current slice distance to the original slice distance
-    void _calculateEdgeIntersections( osg::State& currentState,
-                                      osg::Vec3 initialSlicePoint,
-                                      osg::Vec3 slicePlaneNormal,
-                                      unsigned int extremaIndicies[],
-                                      float currentDelta,
-                                      float deltaRatio )const;
+    void _calculateEdgeIntersections(
+        osg::State& currentState,
+        osg::Vec3d initialSlicePoint,
+        osg::Vec3d slicePlaneNormal,
+        unsigned int extremaIndicies[],
+        double currentDelta,
+        double deltaRatio ) const;
 
     ///Calculate the intersection verticies and assosiated texture coordinates
     ///\param currentEdgeIndex The current edge we are calculationg intersection with
@@ -172,40 +178,75 @@ protected:
     ///\param backTCoords The texture coordinates for the back intersecting polygon
     ///\param slicePlaneNormal Slice plane normal
     ///\param extremaIndicies The indicies of the closest and furthest bbox corner
-    void _calculateVertsAndTextureCoordinates( unsigned int currentEdgeIndex,
-                                               osg::Vec3 frontSlicePoint,
-                                               osg::Vec3 backSlicePoint,
-                                               osg::Vec3 slicePlaneNormal,
-                                               unsigned int extremaIndicies[],
-                                               float* verts,
-                                               float* frontTCoords,
-                                               float* backTCoords )const;
+    void _calculateVertsAndTextureCoordinates(
+        unsigned int currentEdgeIndex,
+        osg::Vec3d frontSlicePoint,
+        osg::Vec3d backSlicePoint,
+        osg::Vec3d slicePlaneNormal,
+        unsigned int extremaIndicies[],
+        double* verts,
+        double* frontTCoords,
+        double* backTCoords )const;
 
     ///Calculate the sample distance
     ///\param minimum Minimum z distance
     ///\param maximum Maximum z distance
-    float _calculateDelta( /*osg::Vec3 minimum,osg::Vec3 maximum*/ )const;
+    double _calculateDelta( /*osg::Vec3 minimum,osg::Vec3 maximum*/ ) const;
 
-    std::string _sliceRenderMethod;///<Method for rendering intersection polygons
-    std::string _bboxSlicer;///<Source code for creating intersecting bbox slices vertex program.
-    mutable unsigned int _nSlices;///<The number of slices to render.
-    mutable float _deltaZ[2];///<The slice spacing.
-    mutable float _sliceDeltaRatio;///<The ratio of the original spacing to the new spacing base on increased slicing.
-    float _diagonal;///<The length of the diagonal
-    osg::BoundingBox _bbox;///<The bbox constructed from the diagonal of the data
-    mutable osg::Vec3 _dimensions;///<The dimensions width-X,depth-Y,height-Z
-    mutable osg::Vec4 _center;///<The center of the data
-    mutable osg::Vec4 _cameraLocation;///<The camera location in the world
-    mutable osg::Vec4 _eyeCenter;///<The center of the data in eye space.
+    ///Method for rendering intersection polygons
+    std::string _sliceRenderMethod;
+    ///Source code for creating intersecting bbox slices vertex program
+    std::string _bboxSlicer;
+
+    ///The number of slices to render.
+    mutable unsigned int _nSlices;
+
+    ///Holder for the closest and furthest corner of the bbox
+    mutable unsigned int _extremaIndicies[ 2 ];
+
+    ///The slice spacing
+    mutable double _deltaZ[ 2 ];
+
+    ///The ratio of the original spacing to the new spacing base on increased slicing
+    mutable double _sliceDeltaRatio;
+
+    ///The length of the diagonal
+    double _diagonal;
+
+    ///The bbox constructed from the diagonal of the data
+    osg::BoundingBox _bbox;
+
+    ///The dimensions width-X,depth-Y,height-Z
+    mutable osg::Vec3d _dimensions;
+
+    ///The center of the data
+    mutable osg::Vec3d _center;
+
+    ///The camera location in the world
+    mutable osg::Vec3d _cameraLocation;
+
+    ///The center of the data in eye space
+    mutable osg::Vec3d _eyeCenter;
 
     ///These should be moved to a class that handles brick management
-    mutable osg::BoundingBox _eyeSpaceBBox;///<The bbox in eyespace
-    mutable osg::Vec4 _slicePlaneNormal;///<The negated view vector
-    mutable unsigned int _extremaIndicies[2];///<Holder for the closest and furthest corner of the bbox
-    mutable osg::ref_ptr<osg::Vec4Array> _rotatedBBox;///<The rotated bbox.
-    mutable osg::ref_ptr<osg::Vec4Array> _coordTransformedBBox;///<The rotated bbox.
-    mutable osg::ref_ptr<osg::Vec4Array> _tcoordBBox;///<The rotated bbox.
-    mutable gadget::PositionInterface head;///<vjPosInterface Head Position from Juggler;
+
+    ///The negated view vector
+    mutable osg::Vec3d _slicePlaneNormal;
+
+    ///The bbox in eyespace
+    mutable osg::BoundingBox _eyeSpaceBBox;
+
+    ///The rotated bbox
+    mutable osg::ref_ptr< osg::Vec4Array > _rotatedBBox;
+
+    ///The rotated bbox
+    mutable osg::ref_ptr< osg::Vec4Array > _coordTransformedBBox;
+
+    ///The rotated bbox
+    mutable osg::ref_ptr< osg::Vec4Array > _tcoordBBox;
+
+    ///vjPosInterface Head Position from Juggler
+    mutable gadget::PositionInterface head;
 
 };
 } //end volume
