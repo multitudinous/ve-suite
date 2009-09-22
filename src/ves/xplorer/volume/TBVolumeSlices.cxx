@@ -335,9 +335,9 @@ void TextureBasedVolumeSlices::drawImplementation( osg::State& renderState ) con
     }
     else if( _sliceRenderMethod == "VIEW_ALIGNED_POLYGON_INTERSECT" )
     {
+        osg::Matrixd modelViewMatrix = currentState.getModelViewMatrix();
         //Calculate the camera position
-        osg::Matrixf modelViewMatrix = currentState.getModelViewMatrix();
-        osg::Matrixf inverseMV;
+        osg::Matrixd inverseMV;
         inverseMV.invert( modelViewMatrix );
 
         ///calculate slice normal in eyespace then transform it back
@@ -366,8 +366,14 @@ void TextureBasedVolumeSlices::drawImplementation( osg::State& renderState ) con
         rotatedBBox->
             push_back( _coordTransformedBBox->at( 7 ) * modelViewMatrix );
 
-        osg::Vec3d slicePlaneNormal = _cameraLocation - _center;
+        //Screen aligned
+        osg::Vec3d vec1( 0.0, 0.0, 1.0 );
+        vec1 = vec1 * osg::Matrix::rotate( inverseMV.getRotate() );
+        osg::Vec3d slicePlaneNormal = vec1;
+        //View aligned
+        //osg::Vec3d slicePlaneNormal = _cameraLocation - _center;
         slicePlaneNormal.normalize();
+        //std::cout << slicePlaneNormal << std::endl;
 
         //update the min max indicies for the bbox
         unsigned int extremaIndicies[ 2 ] = { 0, 7 };
