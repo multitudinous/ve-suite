@@ -135,13 +135,13 @@ const bool ves::xplorer::scenegraph::manipulator::GetLinePlaneIntersection(
     const osg::Plane& plane,
     osg::Vec3d& intersection )
 {
-    const double error = -1E-05;
+    const double epsilon = -1E-05;
 
     osg::Vec3d direction = lineEnd - lineStart;
     direction.normalize();
 
     const double num2 = plane.dotProductNormal( direction );
-    if( fabs( num2 ) < error )
+    if( fabs( num2 ) < epsilon )
     {
         return false;
     }
@@ -150,7 +150,7 @@ const bool ves::xplorer::scenegraph::manipulator::GetLinePlaneIntersection(
     double intersectDistance = ( -plane[ 3 ] - num3 ) / num2;
     if( intersectDistance < 0.0 )
     {
-        if( intersectDistance < error )
+        if( intersectDistance < epsilon )
         {
             return false;
         }
@@ -175,10 +175,10 @@ osg::Vec3d ves::xplorer::scenegraph::manipulator::ProjectPointOntoPlane(
     const osg::Vec3d& planePoint,
     const osg::Vec3d& planeNormal )
 {
-    osg::Vec3d U =
+    osg::Vec3d u =
         point - planeNormal * ( ( point - planePoint ) * planeNormal );
 
-    return U;
+    return u;
 }
 ////////////////////////////////////////////////////////////////////////////////
 const double ves::xplorer::scenegraph::manipulator::SignedAngle(

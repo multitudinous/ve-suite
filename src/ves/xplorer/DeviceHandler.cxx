@@ -315,6 +315,7 @@ void DeviceHandler::UnselectObjects()
         if( sceneManipulator->IsEnabled() )
         {
             sceneManipulator->Hide();
+            sceneManipulator->Disconnect();
         }
     }
 }

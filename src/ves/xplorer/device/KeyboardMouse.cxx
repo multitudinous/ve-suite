@@ -1667,8 +1667,7 @@ void KeyboardMouse::ProcessSelection()
         m_manipulatorManager.GetSceneManipulator();
     scenegraph::manipulator::RotateTwist* rotateTwist =
         m_manipulatorManager.GetTwistManipulator();
-    //rotateTwist->Disconnect();
-    sceneManipulator->Disconnect();
+
     //Check and see if the selected node has an attached physics mesh
     bool hasAPhysicsMesh( false );
     osg::ref_ptr< osgBullet::AbsoluteModelTransform > tempAMT = 

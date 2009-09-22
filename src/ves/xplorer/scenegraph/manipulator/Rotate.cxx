@@ -94,20 +94,19 @@ void Rotate::CreateGhostDisk()
     (*m_ghostDiskVertices)[ NUM_GHOST_DISK_SEGMENTS + 1 ] = diskEnd;
 
     //Get the start angle, total angle of rotation, and delta segment rotation
-    double angle = SignedAngle( osg::Vec3d( 1.0, 0.0, 0.0 ), diskStart, GetUnitAxis() );
+    double angle =
+        SignedAngle( osg::Vec3d( 1.0, 0.0, 0.0 ), diskStart, GetUnitAxis() );
     double totalAngle = SignedAngle( diskStart, diskEnd, GetUnitAxis() );
     const double deltaSegmentAngle = totalAngle / NUM_GHOST_DISK_SEGMENTS;
 
     //Set remaining ghost disk vertices
-    double cosVal, sinVal, s, t;
     for( unsigned int i = 2; i <= NUM_GHOST_DISK_SEGMENTS; ++i )
     {
         angle += deltaSegmentAngle;
-        cosVal = cos( angle );
-        sinVal = sin( angle );
-        s = ROTATE_AXIS_RADIUS * cosVal;
-        t = ROTATE_AXIS_RADIUS * sinVal;
-
+        double cosVal = cos( angle );
+        double sinVal = sin( angle );
+        double s = ROTATE_AXIS_RADIUS * cosVal;
+        double t = ROTATE_AXIS_RADIUS * sinVal;
         (*m_ghostDiskVertices)[ i ].set( s, t, 0.0 );
     }
 
@@ -160,6 +159,7 @@ const bool Rotate::ComputeProjectedPoint(
     osg::Plane plane = GetPlane( true );
     GetLinePlaneIntersection( lineStart, lineEnd, plane, projectedPoint );
 
+    //deviceInput.getFirstIntersection().getWorldIntersectPoint();
     //Project the intersection onto the selected plane
     const osg::Vec3d origin = m_localToWorld.getTrans();
     m_endPlaneIntersection =
@@ -174,7 +174,7 @@ void Rotate::CustomPushAction()
 
     m_startPlaneIntersection = m_endPlaneIntersection;
 
-    //SetLineEndPoint( m_startProjectedPoint );
+    SetLineEndPoint( m_startProjectedPoint );
 
     CreateGhostDisk();
 
@@ -187,7 +187,7 @@ void Rotate::CustomPushAction()
 ////////////////////////////////////////////////////////////////////////////////
 void Rotate::CustomDragAction()
 {
-    //SetLineEndPoint( m_endProjectedPoint );
+    SetLineEndPoint( m_endProjectedPoint );
 
     CreateGhostDisk();
 }
