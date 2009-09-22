@@ -1,0 +1,40 @@
+##Builds communication library for explorer
+import os, sys, string
+import SConsAddons.Util as sca_util
+pj = os.path.join
+
+Import('baseEnv ves_pkg LIBDIR osg_options vtk_options RootDir buildDir xerces_options GetPlatform bulletBaseVar')
+Import('gmtl_options tao_options vpr_options gadgeteer_options vrjuggler_options osgal_options osg_options')
+
+srcDir = os.path.abspath( pj(RootDir, 'src', 'ves', 'xplorer','communication') )
+sources = sca_util.getSourcesRecursive( srcDir )
+headers = sca_util.getHeadersRecursive( srcDir )
+
+lib_env = ves_pkg.getEnv().Clone()
+
+#lib_env.Append(CPPPATH = [pj('#','external','osgBullet','include'),
+#                          pj('#','external', bulletBaseVar,'Extras'),
+#                          pj('#','external', bulletBaseVar,'src')])
+lib_env.Append(LIBS = ['ves_open_xml','ves_open_module'])
+
+lib_env.Append(LIBPATH = [pj('#', buildDir, 'src', 'ves', 'open'),
+                        pj('#', buildDir, 'src', 'ves', 'open','xml')])
+
+vpr_options.apply( lib_env )
+xerces_options.apply( lib_env )
+tao_options.apply( lib_env )
+osg_options.apply( lib_env )
+   
+lib_env.Append( CPPDEFINES = ['VE_XPLORER_COMM_LIBRARY'])
+
+if baseEnv['StaticLibs'] == "yes":
+   lib = ves_pkg.createStaticAndSharedLibrary('ves_xplorer_communication',
+                                                        lib_env,
+                                                        installPrefix = LIBDIR)
+else:
+   lib = ves_pkg.createSharedLibrary('ves_xplorer_communication', lib_env,
+                                               installPrefix = LIBDIR)
+   
+lib.addSources(sources)
+lib.addHeaders(headers,  pj( 'ves', 'xplorer', 'communication'))
+lib.build()
