@@ -171,9 +171,21 @@ const bool VE_SCENEGRAPH_EXPORTS GetLinePlaneIntersection(
 const bool VE_SCENEGRAPH_EXPORTS IsFiniteNumber( const double& number );
 
 ///
+///\param point The point to project onto the plane
+///\param planePoint Any point that lies on the plane
+///\param planeNormal The normal of the plane; must be normalized
+osg::Vec3d VE_SCENEGRAPH_EXPORTS ProjectPointOntoPlane(
+    const osg::Vec3d& point,
+    const osg::Vec3d& planePoint,
+    const osg::Vec3d& planeNormal );
+
+///
+///\param source
+///\param destination
+///\param reference
 const double VE_SCENEGRAPH_EXPORTS SignedAngle(
-    const osg::Vec3d& v1,
-    const osg::Vec3d& v2,
+    const osg::Vec3d& source,
+    const osg::Vec3d& destination,
     const osg::Vec3d& reference );
 
 } //end manipulator

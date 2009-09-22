@@ -93,16 +93,10 @@ void Rotate::CreateGhostDisk()
     diskEnd *= ROTATE_AXIS_RADIUS;
     (*m_ghostDiskVertices)[ NUM_GHOST_DISK_SEGMENTS + 1 ] = diskEnd;
 
-    //
-    osg::Vec3d ref = diskStart ^ diskEnd;
-    ref.normalize();
-    std::cout << "ref: " << ref << std::endl;
+    //Get the start angle, total angle of rotation, and delta segment rotation
     double angle = SignedAngle( osg::Vec3d( 1.0, 0.0, 0.0 ), diskStart, GetUnitAxis() );
-    std::cout << "angle: " << angle << std::endl;
     double totalAngle = SignedAngle( diskStart, diskEnd, GetUnitAxis() );
-    std::cout << "totalAngle: " << totalAngle << std::endl;
     const double deltaSegmentAngle = totalAngle / NUM_GHOST_DISK_SEGMENTS;
-    std::cout << std::endl;
 
     //Set remaining ghost disk vertices
     double cosVal, sinVal, s, t;
@@ -162,39 +156,14 @@ const bool Rotate::ComputeProjectedPoint(
     const osg::Vec3d& lineStart = deviceInput.getStart();
     const osg::Vec3d& lineEnd = deviceInput.getEnd();
 
-    //Get planes in hessian form
-    osg::Plane plane1 = GetPlane( true );
-    osg::Plane plane2 = GetPlane();
-    plane1.makeUnitLength();
-    plane2.makeUnitLength();
+    //Get intersection with selection line and screen/eye aligned plane
+    osg::Plane plane = GetPlane( true );
+    GetLinePlaneIntersection( lineStart, lineEnd, plane, projectedPoint );
 
-    //Get intersection on screen/eye aligned plane
-    GetLinePlaneIntersection( lineStart, lineEnd, plane1, projectedPoint );
-
-    //Get the normals in hessian form
-    osg::Vec3d n1 = plane1.getNormal();
-    osg::Vec3d n2 = plane2.getNormal();
-
-    //Get the angle of rotation
-    double angle = acos( n1 * n2 );
-    if( IsFiniteNumber( angle ) )
-    {
-        //Get the axis of rotation
-        osg::Vec3d axis = n1 ^ n2;
-        axis.normalize();
-
-        osg::Quat quat( angle, axis );
-        osg::Matrix transform( quat );
-
-        //Get intersection point on selected plane
-        const osg::Vec3d origin = m_localToWorld.getTrans();
-        m_endPlaneIntersection = ( projectedPoint - origin ) * transform;
-        m_endPlaneIntersection += origin;
-    }
-    else
-    {
-        m_endPlaneIntersection = projectedPoint;
-    }
+    //Project the intersection onto the selected plane
+    const osg::Vec3d origin = m_localToWorld.getTrans();
+    m_endPlaneIntersection =
+        ProjectPointOntoPlane( projectedPoint, origin, GetPlane().getNormal() );
 
     return true;
 }
@@ -205,9 +174,9 @@ void Rotate::CustomPushAction()
 
     m_startPlaneIntersection = m_endPlaneIntersection;
 
-    SetLineEndPoint( m_startProjectedPoint );
+    //SetLineEndPoint( m_startProjectedPoint );
 
-    //CreateGhostDisk();
+    CreateGhostDisk();
 
     //Turn line geode on
     m_lineGeode->setNodeMask( 1 );
@@ -218,7 +187,7 @@ void Rotate::CustomPushAction()
 ////////////////////////////////////////////////////////////////////////////////
 void Rotate::CustomDragAction()
 {
-    SetLineEndPoint( m_endProjectedPoint );
+    //SetLineEndPoint( m_endProjectedPoint );
 
     CreateGhostDisk();
 }

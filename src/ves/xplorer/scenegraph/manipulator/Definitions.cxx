@@ -170,14 +170,24 @@ const bool ves::xplorer::scenegraph::manipulator::IsFiniteNumber(
     return ( number <= DBL_MAX && number >= -DBL_MAX );
 }
 ////////////////////////////////////////////////////////////////////////////////
+osg::Vec3d ves::xplorer::scenegraph::manipulator::ProjectPointOntoPlane(
+    const osg::Vec3d& point,
+    const osg::Vec3d& planePoint,
+    const osg::Vec3d& planeNormal )
+{
+    osg::Vec3d U =
+        point - planeNormal * ( ( point - planePoint ) * planeNormal );
+
+    return U;
+}
+////////////////////////////////////////////////////////////////////////////////
 const double ves::xplorer::scenegraph::manipulator::SignedAngle(
-    const osg::Vec3d& v1,
-    const osg::Vec3d& v2,
+    const osg::Vec3d& source,
+    const osg::Vec3d& destination,
     const osg::Vec3d& reference )
 {
-    //signed_angle = atan2(  N * ( V1 x V2 ), V1 * V2  );
-    osg::Vec3d c = v1 ^ v2;
-    double angle = std::atan2( c.length(), v1 * v2 );
+    osg::Vec3d c = source ^ destination;
+    double angle = std::atan2( c.length(), source * destination );
 
     if( ( c * reference ) < 0.0 )
     {
