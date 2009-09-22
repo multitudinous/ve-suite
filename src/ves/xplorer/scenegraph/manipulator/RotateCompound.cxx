@@ -112,7 +112,7 @@ void RotateCompound::SetupDefaultGeometry()
     //Rotate y-axis dragger appropriately
     {
         osg::Quat rotation;
-        rotation.makeRotate( GetUnitAxis(), osg::Vec3d( 0.0, 1.0, 0.0 ) );
+        rotation.makeRotate( GetUnitAxis(), osg::Vec3d( 0.0, -1.0, 0.0 ) );
         m_yRotateAxis->setRotation( rotation );
     }
 

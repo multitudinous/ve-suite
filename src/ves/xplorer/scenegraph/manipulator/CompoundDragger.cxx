@@ -231,6 +231,8 @@ bool CompoundDragger::insertChild( unsigned int index, Dragger* child )
 ////////////////////////////////////////////////////////////////////////////////
 bool CompoundDragger::replaceChild( Dragger* origChild, Dragger* newChild )
 {
+    newChild->SetRootDragger( this );
+
     return Dragger::replaceChild( origChild, newChild );
 }
 ////////////////////////////////////////////////////////////////////////////////

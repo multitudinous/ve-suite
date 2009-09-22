@@ -175,6 +175,7 @@ const double ves::xplorer::scenegraph::manipulator::SignedAngle(
     const osg::Vec3d& v2,
     const osg::Vec3d& reference )
 {
+    //signed_angle = atan2(  N * ( V1 x V2 ), V1 * V2  );
     osg::Vec3d c = v1 ^ v2;
     double angle = std::atan2( c.length(), v1 * v2 );
 

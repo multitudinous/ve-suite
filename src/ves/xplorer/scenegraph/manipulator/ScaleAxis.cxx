@@ -120,7 +120,7 @@ osg::Object* ScaleAxis::cloneType() const
 ////////////////////////////////////////////////////////////////////////////////
 void ScaleAxis::ComputeDeltaTransform()
 {
-    const osg::Vec3d origin = GetAxis( true, true );
+    const osg::Vec3d origin = m_localToWorld.getTrans();
     const osg::Vec3d axis = GetAxis();
 
     //Calculate the axis vector and vectors from the translation point
@@ -156,8 +156,8 @@ const bool ScaleAxis::ComputeProjectedPoint(
     osg::Vec3d& projectedPoint )
 {
     //Get the start and end points for the dragger axis in world space
-    const osg::Vec3d startDraggerAxis = GetAxis( true, true );
-    const osg::Vec3d endDraggerAxis = GetAxis( false, true );
+    const osg::Vec3d startDraggerAxis = m_localToWorld.getTrans();
+    const osg::Vec3d endDraggerAxis = GetAxis( true );
 
     //Get the near and far points for the active device
     const osg::Vec3d& startDeviceInput = deviceInput.getStart();

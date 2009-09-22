@@ -129,12 +129,6 @@ private:
     virtual const double& GetRadius() const = 0;
 
     ///
-    //virtual const osg::Vec3d GetRotationAxis() const = 0;
-
-    ///
-    void ResetGhostDisk();
-
-    ///
     void SetLineEndPoint( const osg::Vec3& endPoint );
 
     ///

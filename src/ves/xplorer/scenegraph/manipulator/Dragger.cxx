@@ -424,6 +424,8 @@ void Dragger::Disconnect()
         ClearPointConstraint();
     }
 
+    m_activeAssociation = NULL;
+
     m_associationSet.clear();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -611,8 +613,6 @@ void Dragger::UpdateAssociations()
             continue;
         }
 
-        const bool physicsOn = !m_physicsSimulator.GetIdle();
-
         osgBullet::MotionState* ms = static_cast< osgBullet::MotionState* >(
             btRB->getMotionState() );
         btTransform currentMatrix;
@@ -645,13 +645,9 @@ void Dragger::UpdateAssociations()
                 deltaRotation * currentMatrix.getRotation() );
         }
 
-        if( physicsOn )
-        {
-            btRB->setWorldTransform( currentMatrix );
-            btRB->setInterpolationWorldTransform( currentMatrix );
-        }
-
         ms->setWorldTransform( currentMatrix );
+        btRB->setWorldTransform( currentMatrix );
+        btRB->setInterpolationWorldTransform( currentMatrix );
     }
 
     //Set all associated transforms
@@ -707,15 +703,12 @@ void Dragger::UpdateAssociations()
                 pat->setScale( scale );
             }
 
-            if( m_rootDragger )
+            vxs::DCS* tempDCS = dynamic_cast< vxs::DCS* >( pat );
+            if( tempDCS )
             {
-                vxs::DCS* tempDCS = dynamic_cast< vxs::DCS* >( pat );
-                if( tempDCS )
-                {
-                    UpdateConductorData();
-                }
+                UpdateConductorData();
             }
-            
+
             continue;
         }
 
@@ -812,15 +805,9 @@ const osg::Plane Dragger::GetPlane( const bool& parallel ) const
     return plane;
 }
 ////////////////////////////////////////////////////////////////////////////////
-const osg::Vec3d Dragger::GetAxis(
-    const bool& zero, const bool& premultiply ) const
+const osg::Vec3d Dragger::GetAxis( const bool& premultiply ) const
 {
-    osg::Vec3d axis( 0.0, 0.0, 0.0 );
-    if( !zero )
-    {
-        axis = GetUnitAxis();
-    }
-
+    osg::Vec3d axis = GetUnitAxis();
     if( premultiply )
     {
         return axis * m_localToWorld;

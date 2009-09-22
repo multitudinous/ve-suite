@@ -44,6 +44,7 @@
 #include <osg/BlendFunc>
 
 // --- STL Includes --- //
+#include <cmath>
 #include <iostream>
 
 using namespace ves::xplorer::scenegraph::manipulator;
@@ -84,25 +85,32 @@ void Rotate::CreateGhostDisk()
     osg::Vec3d diskStart = m_startPlaneIntersection * m_worldToLocal;
     diskStart.normalize();
     diskStart *= ROTATE_AXIS_RADIUS;
+    (*m_ghostDiskVertices)[ 1 ] = diskStart;
 
     //Get the end disk point in local coordinates
     osg::Vec3d diskEnd = m_endPlaneIntersection * m_worldToLocal;
     diskEnd.normalize();
     diskEnd *= ROTATE_AXIS_RADIUS;
+    (*m_ghostDiskVertices)[ NUM_GHOST_DISK_SEGMENTS + 1 ] = diskEnd;
 
-    //Declare variables
-    double angle, cosVal, sinVal, s, t;
-    angle = acos( diskStart * diskEnd );
-    //angle = SignedAngle( diskStart, diskEnd, osg::Vec3d( 1.0, 0.0, 0.0 ) );
+    //
+    osg::Vec3d ref = diskStart ^ diskEnd;
+    ref.normalize();
+    std::cout << "ref: " << ref << std::endl;
+    double angle = SignedAngle( osg::Vec3d( 1.0, 0.0, 0.0 ), diskStart, GetUnitAxis() );
+    std::cout << "angle: " << angle << std::endl;
+    double totalAngle = SignedAngle( diskStart, diskEnd, GetUnitAxis() );
+    std::cout << "totalAngle: " << totalAngle << std::endl;
+    const double deltaSegmentAngle = totalAngle / NUM_GHOST_DISK_SEGMENTS;
+    std::cout << std::endl;
 
-    //Set the ghost disk vertices
-    (*m_ghostDiskVertices)[ 1 ] = diskStart;
-    const double deltaSegmentAngle = angle / NUM_GHOST_DISK_SEGMENTS;
-    for( unsigned int i = 2; i < m_ghostDiskVertices->size(); ++i )
+    //Set remaining ghost disk vertices
+    double cosVal, sinVal, s, t;
+    for( unsigned int i = 2; i <= NUM_GHOST_DISK_SEGMENTS; ++i )
     {
         angle += deltaSegmentAngle;
-        cosVal = cos( deltaSegmentAngle );
-        sinVal = sin( deltaSegmentAngle );
+        cosVal = cos( angle );
+        sinVal = sin( angle );
         s = ROTATE_AXIS_RADIUS * cosVal;
         t = ROTATE_AXIS_RADIUS * sinVal;
 
@@ -130,7 +138,7 @@ void Rotate::SetHelpCircle( HelpCircle* const helpCircle )
 void Rotate::ComputeDeltaTransform()
 {
     //Get the origin in world space
-    const osg::Vec3d origin = osg::Vec3d( 0.0, 0.0, 0.0 ) * m_localToWorld;
+    const osg::Vec3d origin = m_localToWorld.getTrans();
 
     //Get the projected vectors
     const osg::Vec3d startProject = m_startProjectedPoint - origin;
@@ -154,14 +162,14 @@ const bool Rotate::ComputeProjectedPoint(
     const osg::Vec3d& lineStart = deviceInput.getStart();
     const osg::Vec3d& lineEnd = deviceInput.getEnd();
 
-    //Get intersection on plane aligned with screen or camera
+    //Get planes in hessian form
     osg::Plane plane1 = GetPlane( true );
     osg::Plane plane2 = GetPlane();
-    GetLinePlaneIntersection( lineStart, lineEnd, plane1, projectedPoint );
-
-    //Tranform planes into hessian form
     plane1.makeUnitLength();
     plane2.makeUnitLength();
+
+    //Get intersection on screen/eye aligned plane
+    GetLinePlaneIntersection( lineStart, lineEnd, plane1, projectedPoint );
 
     //Get the normals in hessian form
     osg::Vec3d n1 = plane1.getNormal();
@@ -169,21 +177,24 @@ const bool Rotate::ComputeProjectedPoint(
 
     //Get the angle of rotation
     double angle = acos( n1 * n2 );
+    if( IsFiniteNumber( angle ) )
+    {
+        //Get the axis of rotation
+        osg::Vec3d axis = n1 ^ n2;
+        axis.normalize();
 
-    //Get the axis of rotation
-    osg::Vec3d axis = n1 ^ n2;
-    axis.normalize();
+        osg::Quat quat( angle, axis );
+        osg::Matrix transform( quat );
 
-    osg::Quat quat( angle, axis );
-    osg::Matrix transform( quat );
-
-    osg::Vec3 origin = GetAxis( true, true );
-    if( !IsFiniteNumber( angle ) )
+        //Get intersection point on selected plane
+        const osg::Vec3d origin = m_localToWorld.getTrans();
+        m_endPlaneIntersection = ( projectedPoint - origin ) * transform;
+        m_endPlaneIntersection += origin;
+    }
+    else
     {
         m_endPlaneIntersection = projectedPoint;
     }
-    m_endPlaneIntersection = ( projectedPoint - origin ) * transform;
-    m_endPlaneIntersection += origin;
 
     return true;
 }
@@ -196,6 +207,8 @@ void Rotate::CustomPushAction()
 
     SetLineEndPoint( m_startProjectedPoint );
 
+    //CreateGhostDisk();
+
     //Turn line geode on
     m_lineGeode->setNodeMask( 1 );
 
@@ -207,7 +220,7 @@ void Rotate::CustomDragAction()
 {
     SetLineEndPoint( m_endProjectedPoint );
 
-    //CreateGhostDisk();
+    CreateGhostDisk();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Rotate::CustomReleaseAction()
@@ -219,20 +232,7 @@ void Rotate::CustomReleaseAction()
     m_lineGeode->setNodeMask( 0 );
 
     //Turn ghost disk geode off
-    ResetGhostDisk();
     m_ghostDiskGeode->setNodeMask( 0 );
-}
-////////////////////////////////////////////////////////////////////////////////
-void Rotate::ResetGhostDisk()
-{
-    for( unsigned int i = 0; i < m_ghostDiskVertices->size(); ++i )
-    {
-        (*m_ghostDiskVertices)[ i ].set( 0.0, 0.0, 0.0 );
-    }
-
-    //Reset the ghost disk geometry
-    m_ghostDiskGeometry->dirtyDisplayList();
-    m_ghostDiskGeometry->dirtyBound();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Rotate::SetLineEndPoint( const osg::Vec3& endPoint )

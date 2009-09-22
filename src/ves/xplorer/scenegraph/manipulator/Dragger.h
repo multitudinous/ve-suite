@@ -88,41 +88,54 @@ class VE_SCENEGRAPH_EXPORTS Dragger : public osg::AutoTransform
 {
 public:
     ///
+    ///\param transformationType
     Dragger( const TransformationType::Enum& transformationType );
 
     ///Copy constructor using CopyOp to manage deep vs shallow copy
+    ///\param dragger
+    ///\param copyop
     Dragger(
         const Dragger& dragger,
         const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
 
     ///
+    ///\param nv
     virtual void accept( osg::NodeVisitor& nv );
 
     ///
+    ///\return
     virtual TranslateAxis* AsTranslateAxis();
 
     ///
+    ///\return
     virtual TranslatePlane* AsTranslatePlane();
 
     ///
+    ///\return
     virtual TranslatePan* AsTranslatePan();
 
     ///
+    ///\return
     virtual Rotate* AsRotate();
 
     ///
+    ///\return
     virtual RotateAxis* AsRotateAxis();
 
     ///
+    ///\return
     virtual RotateTwist* AsRotateTwist();
 
     ///
+    ///\return
     virtual ScaleAxis* AsScaleAxis();
 
     ///
+    ///\return
     virtual ScaleUniform* AsScaleUniform();
 
     ///
+    ///\return
     virtual CompoundDragger* AsCompoundDragger();
 
     ///
@@ -133,6 +146,7 @@ public:
     virtual void ComboForm();
 
     ///
+    ///\return
     virtual bool Connect( osg::Transform* activeAssociation );
 
     ///
@@ -142,15 +156,18 @@ public:
     virtual void Disconnect();
 
     ///
+    ///\return
     Dragger* Drag( const osgUtil::LineSegmentIntersector& deviceInput );
 
     ///
     void Enable( const bool& enable = true );
 
     ///
+    ///\return
     virtual Dragger* Focus( osg::NodePath::iterator& npItr );
 
     ///
+    ///\return
     const osg::Plane GetPlane( const bool& parallel = false ) const;
 
     ///
@@ -158,28 +175,34 @@ public:
     const TransformationType::Enum GetTransformationType() const;
 
     ///
-    const osg::Vec3d GetAxis(
-        const bool& zero = false, const bool& premultiply = false ) const;
+    ///\return
+    const osg::Vec3d GetAxis( const bool& premultiply = false ) const;
 
     ///
+    ///\return
     const osg::Vec3d GetPreviousEyePoint() const;
 
     ///
+    ///\return
     const osg::Vec3d GetPreviousLocalUp() const;
 
     ///
+    ///\return
     const osg::Vec3d GetUnitAxis() const;
 
     ///
+    ///\return
     const osg::Plane GetUnitPlane() const;
 
     ///
+    ///\return
     const VectorSpace::Enum& GetVectorSpace() const;
 
     ///
     virtual void Hide();
 
     ///
+    ///\return
     const bool& IsEnabled() const;
 
     ///
@@ -192,12 +215,14 @@ public:
     virtual const char* libraryName() const;
 
     ///
+    ///\return
     virtual Dragger* Push(
         const osgUtil::LineSegmentIntersector& deviceInput,
         const osg::NodePath& np,
         osg::NodePath::iterator& npItr );
 
     ///
+    ///\return
     virtual Dragger* Release( osg::NodePath::iterator& npItr );
 
     ///
@@ -240,6 +265,7 @@ protected:
 
     ///Will be pure virtual eventually
     ///
+    ///\return
     virtual const bool ComputeProjectedPoint(
         const osgUtil::LineSegmentIntersector& deviceInput,
         osg::Vec3d& projectedPoint ){return false;}
@@ -257,14 +283,14 @@ protected:
     virtual void CustomReleaseAction(){;}
 
     ///
+    ///\return
     osg::Vec4& GetColor( Color::Enum colorTag );
 
     ///
     virtual void SetupDefaultGeometry() = 0;
-    
-    void UpdateConductorData();
 
     ///
+    ///\return
     const TransformationType::Enum m_transformationType;
 
     ///
@@ -327,6 +353,9 @@ private:
 
     ///
     void UpdateAssociations();
+
+    ///
+    void UpdateConductorData();
 
     ///
     bool m_isRootDragger;

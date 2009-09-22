@@ -60,7 +60,7 @@ HelpCircle::HelpCircle()
 
     //Set up the clipping plane
     m_clipNode = new osg::ClipNode();
-    m_clipNode->addClipPlane( new osg::ClipPlane( 0, GetPlane( false ) ) );
+    m_clipNode->addClipPlane( new osg::ClipPlane( 0, GetUnitPlane() ) );
     addChild( m_clipNode.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
