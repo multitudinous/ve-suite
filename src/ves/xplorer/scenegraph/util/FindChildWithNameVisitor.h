@@ -65,7 +65,7 @@ public:
     ///\param node The node to be traversed
     ///\param nodeName The name of the parent you want to find
     FindChildWithNameVisitor( osg::Node* node, const std::string& nodeName, 
-                             bool exactNameMatch = true );
+                             bool exactNameMatch = true, bool ignoreCase = false );
 
     ///Destructor
     virtual ~FindChildWithNameVisitor();
@@ -81,12 +81,16 @@ public:
 private:
     ///Name of parent node to search for
     std::string mParentName;
+    ///Lower case name
+    std::string m_lowerCaseNodeName;
     ///Pointer to the found parent node
     osg::ref_ptr< osg::Node > parentNode;
     ///Match the name exactly
     bool m_exactNameMatch;
     ///Found a node
     bool m_foundMatch;
+    ///Ignore case
+    bool m_ignoreCase;
 };
 }
 }

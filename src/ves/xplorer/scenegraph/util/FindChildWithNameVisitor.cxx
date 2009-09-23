@@ -33,18 +33,29 @@
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/util/FindChildWithNameVisitor.h>
 
+//#include <algorithm>
+//#include <locale>
+#include <boost/algorithm/string/case_conv.hpp>
+
 using namespace ves::xplorer::scenegraph::util;
 
 ////////////////////////////////////////////////////////////////////////////////
 FindChildWithNameVisitor::FindChildWithNameVisitor( osg::Node* node, 
-    const std::string& nodeName, bool exactNameMatch )
+    const std::string& nodeName, bool exactNameMatch, bool ignoreCase )
     :
     NodeVisitor( TRAVERSE_ALL_CHILDREN ),
     parentNode( 0 ),
     mParentName( nodeName ),
     m_foundMatch( false ),
-    m_exactNameMatch( exactNameMatch )
+    m_exactNameMatch( exactNameMatch ),
+    m_ignoreCase( ignoreCase )
 {
+    if( m_ignoreCase )
+    {
+        boost::algorithm::to_lower( mParentName );
+        //std::transform( mParentName.begin(), mParentName.end(), 
+        //    mParentName.begin(), std::tolower);
+    }
     node->accept( *this );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -60,10 +71,18 @@ bool FindChildWithNameVisitor::FoundChild()
 ////////////////////////////////////////////////////////////////////////////////
 void FindChildWithNameVisitor::apply( osg::Node& node )
 {
+    std::string nodeName = node.getName();
+    if( m_ignoreCase )
+    {
+        boost::algorithm::to_lower( nodeName );
+        //std::transform( nodeName.begin(), nodeName.end(), 
+        //    nodeName.begin(), std::tolower);
+    }
+
     if( m_exactNameMatch )
     {
         //Find the parent node with the specified name
-        if( node.getName() == mParentName )
+        if( nodeName == mParentName )
         {
             m_foundMatch = true;
             parentNode = &node;
@@ -75,7 +94,6 @@ void FindChildWithNameVisitor::apply( osg::Node& node )
         std::string name = node.getName();
         size_t found = name.find( mParentName );
         if( found != std::string::npos )
-        //if( !name.compare( 0, mNodeName.size(), mNodeName ) )
         {
             m_foundMatch = true;
             parentNode = &node;

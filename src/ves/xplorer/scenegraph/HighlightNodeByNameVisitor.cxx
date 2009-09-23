@@ -35,18 +35,28 @@
 #include <ves/xplorer/scenegraph/util/OpacityVisitor.h>
 
 #include <iostream>
+//#include <algorithm>
+//#include <cctype>
+#include <boost/algorithm/string/case_conv.hpp>
 
 using namespace ves::xplorer::scenegraph;
 using namespace ves::xplorer::scenegraph::util;
 
 ////////////////////////////////////////////////////////////////////////////////
-HighlightNodeByNameVisitor::HighlightNodeByNameVisitor( osg::Node* node, std::string nodeName, bool addGlow, osg::Vec4 glowColor )
+HighlightNodeByNameVisitor::HighlightNodeByNameVisitor( osg::Node* node, std::string nodeName, bool addGlow, bool ignoreCase, osg::Vec4 glowColor )
         :
         NodeVisitor( TRAVERSE_ALL_CHILDREN ),
         mNodeName( nodeName ),
         mAddGlow( addGlow ),
-        m_glowColor( glowColor )
+        m_glowColor( glowColor ),
+        m_ignoreCase( ignoreCase )
 {
+    if( m_ignoreCase )
+    {
+        boost::algorithm::to_lower( mNodeName );
+        //std::transform( mNodeName.begin(), mNodeName.end(), 
+        //    mNodeName.begin(), std::tolower);
+    }
     node->accept( *this );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -59,6 +69,13 @@ void HighlightNodeByNameVisitor::apply( osg::Node& node )
 {
     std::string name = node.getName();
     bool foundNode = false;
+
+    if( m_ignoreCase )
+    {
+        boost::algorithm::to_lower( name );
+        //std::transform( name.begin(), name.end(), 
+        //    name.begin(), std::tolower);
+    }
 
     if( mAddGlow )
     {

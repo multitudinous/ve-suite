@@ -80,6 +80,8 @@ using namespace warrantytool;
 #include <vector>
 
 #include <boost/lexical_cast.hpp>
+#include <boost/algorithm/string/trim.hpp>
+#include <boost/algorithm/string/replace.hpp>
 
 using namespace Poco::Data;
 
@@ -101,7 +103,6 @@ m_groupedTextTextures( 0 )
 ////////////////////////////////////////////////////////////////////////////////
 WarrantyToolGP::~WarrantyToolGP()
 {
-    std::cout << " here 1 " << std::endl;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void WarrantyToolGP::InitializeNode(
@@ -200,11 +201,11 @@ void WarrantyToolGP::PreFrameUpdate()
                 //m_groupedTextTextures->AddTextTexture( it->get<0>(), tempText );
 
                 ves::xplorer::scenegraph::HighlightNodeByNameVisitor
-                    highlight( tempModelNodes, (*it), true, osg::Vec4( 0.57255, 0.34118, 1.0, 1.0 ) );
+                    highlight( tempModelNodes, (*it), true, true, osg::Vec4( 0.57255, 0.34118, 1.0, 1.0 ) );
             }
 
             ves::xplorer::scenegraph::HighlightNodeByNameVisitor
-                highlight( tempModelNodes, partName, true,
+                highlight( tempModelNodes, partName, true, true,
                           osg::Vec4( 0.34118, 1.0, 0.57255, 1.0 ) );
         }
     }
@@ -228,7 +229,7 @@ void WarrantyToolGP::SetCurrentCommand( ves::open::xml::CommandPtr command )
         if( dvp->GetDataName() == "RESET" )
         {
             ves::xplorer::scenegraph::HighlightNodeByNameVisitor 
-            highlight2( mDCS.get(), "", false );
+            highlight2( mDCS.get(), "", false, true );
             //Make everything opaque
             ves::xplorer::scenegraph::util::OpacityVisitor 
             opVisitor( mDCS.get(), false, false, 1.0f );
@@ -247,7 +248,7 @@ void WarrantyToolGP::SetCurrentCommand( ves::open::xml::CommandPtr command )
             //Highlight part
             m_lastPartNumber = dvp->GetDataString();
             ves::xplorer::scenegraph::HighlightNodeByNameVisitor 
-            highlight( mDCS.get(), m_lastPartNumber );
+                highlight( mDCS.get(), m_lastPartNumber, true, true );
             RenderTextualDisplay( true );
         }
         else if( dvp->GetDataName() == "CLEAR" )
@@ -256,16 +257,15 @@ void WarrantyToolGP::SetCurrentCommand( ves::open::xml::CommandPtr command )
             opVisitor1( mDCS.get(), false, true, 0.3f );
             
             ves::xplorer::scenegraph::HighlightNodeByNameVisitor 
-            highlight2( mDCS.get(), "", false );
+            highlight2( mDCS.get(), "", false, true );
         }
         else if( dvp->GetDataName() == "WARRANTY_FILE" )
         {
-            //std::vector< std::string > prts;
             ParseDataFile( dvp->GetDataString() );
             for( size_t i = 0; i < mLoadedPartNumbers.size(); ++i )
             {
                 ves::xplorer::scenegraph::util::FindChildWithNameVisitor 
-                childVisitor( mDCS.get(), mLoadedPartNumbers.at( i ), false );
+                    childVisitor( mDCS.get(), mLoadedPartNumbers.at( i ), false, true );
                 if( childVisitor.FoundChild() )
                 {
                     std::cout << "Found graphics node match for " << mLoadedPartNumbers.at( i ) << std::endl;
@@ -337,6 +337,7 @@ void WarrantyToolGP::ParseDataFile( const std::string& csvFilename )
     size_t columnCount = 0;
     std::map< int, std::vector< std::string > > csvDataMap;
     
+    size_t partNumberColumn = 0;
     while( parser.getPos() < sLine.size() )
     {
         parser >> sCol1; // Feed the line to the parser
@@ -352,6 +353,10 @@ void WarrantyToolGP::ParseDataFile( const std::string& csvFilename )
         data.push_back( sCol1 );
         //std::vector< std::string > data;
         csvDataMap[ columnCount ] = data;
+        if( "Part_Number" == sCol1 )
+        {
+            partNumberColumn = columnCount;
+        }
         columnCount += 1;
     }
     
@@ -359,7 +364,7 @@ void WarrantyToolGP::ParseDataFile( const std::string& csvFilename )
     {
         std::getline(iss, sLine); // Get a line
         if (sLine == "")
-            continue;
+            break;
         
         parser << sLine; // Feed the line to the parser
         //std::cout << sLine << std::endl;
@@ -371,10 +376,8 @@ void WarrantyToolGP::ParseDataFile( const std::string& csvFilename )
         }
     }
     //iss.close();
-    //std::vector< std::string > prtnumbers = csvDataMap[ 2 ];
-    mPartNumberDescriptions = csvDataMap[ 3 ];
-    mLoadedPartNumbers = csvDataMap[ 2 ];
-    
+
+    mLoadedPartNumbers = csvDataMap[ partNumberColumn ];
     for( size_t i = 1; i < mLoadedPartNumbers.size(); ++i )
     {
         std::vector< std::pair< std::string, std::string > > partData;
@@ -383,7 +386,7 @@ void WarrantyToolGP::ParseDataFile( const std::string& csvFilename )
             partData.push_back( std::pair< std::string, std::string >( csvDataMap[ j ].at( 0 ), csvDataMap[ j ].at( i ) ) );
             //std::cout << csvDataMap[ j ].at( 0 ) << " " <<  csvDataMap[ j ].at( i ) << std::endl;
         }
-        m_dataMap[ csvDataMap[ 2 ].at( i ) ] = partData;
+        m_dataMap[ mLoadedPartNumbers.at( i ) ] = partData;
     }
     
     
@@ -495,6 +498,7 @@ void WarrantyToolGP::CreateDB()
     catch( Poco::Data::DataException& ex )
     {
         std::cout << ex.displayText() << std::endl;
+        return;
     }
 
     std::ostringstream insertCommand;
@@ -585,7 +589,7 @@ void WarrantyToolGP::CreateDBQuery( ves::open::xml::DataValuePairPtr dvp )
     m_assemblyPartNumbers.clear();
     
     ves::xplorer::scenegraph::HighlightNodeByNameVisitor 
-        highlight2( mDCS.get(), "", false );
+        highlight2( mDCS.get(), "", false, true );
 
     //select << "SELECT Part_Number, Description, Claims FROM Parts",
     //select << "SELECT Part_Number, Description, Claims FROM Parts WHERE Claims > 10 AND Claims_Cost > 1000",
@@ -599,9 +603,15 @@ void WarrantyToolGP::CreateDBQuery( ves::open::xml::DataValuePairPtr dvp )
         select << queryString.c_str(),now;
         select.execute();
     }
+    catch( Poco::Data::DataException& ex )
+    {
+        std::cout << ex.displayText() << std::endl;
+        return;
+    }
     catch( ... )
     {
-        ;
+        std::cout << "Query is bad." << std::endl;
+        return;
     }
 
     bool removed = m_textTrans->removeChild( m_groupedTextTextures.get() );
@@ -640,7 +650,7 @@ void WarrantyToolGP::CreateDBQuery( ves::open::xml::DataValuePairPtr dvp )
         m_groupedTextTextures->AddTextTexture( partNumber, tempText );
         
         ves::xplorer::scenegraph::HighlightNodeByNameVisitor 
-            highlight( mDCS.get(), partNumber, true, osg::Vec4( 0.57255, 0.34118, 1.0, 1.0 ) );
+            highlight( mDCS.get(), partNumber, true, true, osg::Vec4( 0.57255, 0.34118, 1.0, 1.0 ) );
 
 		more = rs.moveNext();
 	}
@@ -725,7 +735,8 @@ void WarrantyToolGP::StripDollarCharacters( std::string& data )
         return;
     }
 
-    for ( size_t index = 0; index < data.length(); )
+    boost::algorithm::replace_all( data, "$", "" );
+    /*for ( size_t index = 0; index < data.length(); )
     {
         index = data.find( '$', index );
         if ( index != std::string::npos )
@@ -733,9 +744,10 @@ void WarrantyToolGP::StripDollarCharacters( std::string& data )
             //data.replace( index, 1, "" );
             data.erase( index, 1 );
         }
-    }
+    }*/
 
-    for ( size_t index = 0; index < data.length(); )
+    boost::algorithm::replace_all( data, ",", "" );
+    /*for ( size_t index = 0; index < data.length(); )
     {
         index = data.find( ',', index );
         if ( index != std::string::npos )
@@ -743,11 +755,14 @@ void WarrantyToolGP::StripDollarCharacters( std::string& data )
             //data.replace( index, 1, "" );
             data.erase( index, 1 );
         }
-    }
+    }*/
 }
 ////////////////////////////////////////////////////////////////////////////////
 void WarrantyToolGP::ReplaceSpacesCharacters( std::string& data )
 {
+    boost::algorithm::trim( data );
+    boost::algorithm::replace_all( data, " ", "_" );
+/*
     for ( size_t index = 0; index < data.length(); )
     {
         index = data.find( ' ', index );
@@ -757,5 +772,6 @@ void WarrantyToolGP::ReplaceSpacesCharacters( std::string& data )
             //data.erase( index, 1 );
         }
     }
+*/
 }
 ////////////////////////////////////////////////////////////////////////////////

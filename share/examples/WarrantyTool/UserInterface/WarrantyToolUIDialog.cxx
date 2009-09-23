@@ -69,6 +69,9 @@
 
 #include <fstream>
 
+#include <boost/algorithm/string/trim.hpp>
+#include <boost/algorithm/string/replace.hpp>
+
 using namespace warrantytool;
 using namespace ves::open::xml;
 
@@ -377,6 +380,8 @@ void WarrantyToolUIDialog::ParseDataFile( const std::string& csvFilename )
     parser << sLine; // Feed the line to the parser
     size_t columnCount = 0;
     std::map< int, std::vector< std::string > > csvDataMap;
+    std::string tempColumnName;
+    size_t partNumberColumn = 0;
 
     while( parser.getPos() < sLine.size() )
     {
@@ -389,9 +394,14 @@ void WarrantyToolUIDialog::ParseDataFile( const std::string& csvFilename )
             headerTemp << "N/A " << columnCount;
             sCol1 = headerTemp.str();
         }
+        boost::algorithm::trim( sCol1 );
+        boost::algorithm::replace_all( sCol1, " ", "_" );
         data.push_back( sCol1 );
-        //std::vector< std::string > data;
         csvDataMap[ columnCount ] = data;
+        if( tempColumnName == "Part_Number" )
+        {
+            partNumberColumn = columnCount;
+        }
         columnCount += 1;
     }
 
@@ -399,10 +409,10 @@ void WarrantyToolUIDialog::ParseDataFile( const std::string& csvFilename )
     {
         std::getline(iss, sLine); // Get a line
         if (sLine == "")
-            continue;
+            break;
         
         parser << sLine; // Feed the line to the parser
-        std::cout << sLine << std::endl;
+        //std::cout << sLine << std::endl;
         for( size_t i = 0; i < columnCount; ++i )
         {
             parser >> sCol1;
@@ -413,17 +423,17 @@ void WarrantyToolUIDialog::ParseDataFile( const std::string& csvFilename )
     for( size_t i = 0; i < columnCount; ++i )
     {
         wxString columnNames = wxString( csvDataMap[ i ].at( 0 ).c_str(), wxConvUTF8 );
-        columnNames.Replace( wxT(" "), wxT("_") );
+        //columnNames.Replace( wxT(" "), wxT("_") );
         m_columnStrings.Add( columnNames );
     }
 
     //iss.close();
-    std::vector< std::string > prtnumbers = csvDataMap[ 2 ];
-    mPartNumberDescriptions = csvDataMap[ 3 ];
-    mLoadedPartNumbers = csvDataMap[ 2 ];
+    std::vector< std::string > prtnumbers = csvDataMap[ partNumberColumn ];
+    //mPartNumberDescriptions = csvDataMap[ 3 ];
+    //mLoadedPartNumbers = csvDataMap[ 2 ];
     //wxArrayString tempString;
 
-    for( size_t i = 0; i < prtnumbers.size(); ++i )
+    for( size_t i = 1; i < prtnumbers.size(); ++i )
     {
         m_partNumberStrings.Add( wxString( prtnumbers.at( i ).c_str(), wxConvUTF8 ) );
         //std::cout << prtnumbers.at( i ) << std::endl;
