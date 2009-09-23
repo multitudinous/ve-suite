@@ -54,7 +54,7 @@
 #include <vpr/System.h>
 #include <vpr/Util/Debug.h>
 
-#include <jccl/RTRC/ConfigManager.h>
+//#include <jccl/RTRC/ConfigManager.h>
 
 //using namespace ves::xplorer;
 using namespace ves::open::xml;
@@ -132,7 +132,7 @@ ACE_THROW_SPEC(( ::CORBA::SystemException, ::Error::EUnknown ) )
 void Body_VEXplorer_i::SetCommand( const char* command )
 ACE_THROW_SPEC(( ::CORBA::SystemException, ::Error::EUnknown ) )
 {
-    //When starting xplorer it is possible to connect and send a command before
+    /*//When starting xplorer it is possible to connect and send a command before
     // xplorer is ready to receive it
     while( !jccl::ConfigManager::instance()->isPendingStale() )
     {
@@ -160,7 +160,7 @@ ACE_THROW_SPEC(( ::CORBA::SystemException, ::Error::EUnknown ) )
     for( size_t i = 0; i < objectVector.size(); ++i )
     {
         commandVectorQueue.push_back( boost::dynamic_pointer_cast<ves::open::xml::Command>(  objectVector.at( i ) ) );
-    }
+    }*/
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Body_VEXplorer_i::RegisterUI( const char* UIName, ::Body::UI_ptr ui )

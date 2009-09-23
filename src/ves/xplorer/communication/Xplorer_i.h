@@ -41,18 +41,6 @@
 #include <vpr/Sync/Guard.h>
 #include <vpr/IO/SerializableObject.h>
 
-#include <cluster/ClusterManager.h>
-#include <cluster/ClusterNetwork.h>
-
-#include <ves/xplorer/StateInfo.h>
-
-#include <vrj/vrjParam.h>
-#if __VJ_version <= 2000003
-#include <cluster/ClusterNode.h>
-#endif
-
-#include <plugins/ApplicationDataManager/UserData.h>
-
 #include <ves/VEConfig.h>
 
 #include <ves/open/xml/CommandPtr.h>
@@ -130,7 +118,6 @@ protected:
 
     vpr::Mutex mValueLock;  ///< A mutex to protect variables accesses
 
-    cluster::UserData< vpr::SerializableObjectMixin< ClusterVariables::StateVariables > >  mStates;
     bool isCluster;///<cluster mode
 
     float time_since_start;///< start time
