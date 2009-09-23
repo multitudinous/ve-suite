@@ -270,6 +270,10 @@ void WarrantyToolGP::SetCurrentCommand( ves::open::xml::CommandPtr command )
                 {
                     std::cout << "Found graphics node match for " << mLoadedPartNumbers.at( i ) << std::endl;
                 }
+                else
+                {
+                    std::cout << "Did not find graphics node for " << mLoadedPartNumbers.at( i ) << std::endl;
+                }
             }
         }
     }

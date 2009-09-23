@@ -380,7 +380,6 @@ void WarrantyToolUIDialog::ParseDataFile( const std::string& csvFilename )
     parser << sLine; // Feed the line to the parser
     size_t columnCount = 0;
     std::map< int, std::vector< std::string > > csvDataMap;
-    std::string tempColumnName;
     size_t partNumberColumn = 0;
 
     while( parser.getPos() < sLine.size() )
@@ -398,7 +397,7 @@ void WarrantyToolUIDialog::ParseDataFile( const std::string& csvFilename )
         boost::algorithm::replace_all( sCol1, " ", "_" );
         data.push_back( sCol1 );
         csvDataMap[ columnCount ] = data;
-        if( tempColumnName == "Part_Number" )
+        if( sCol1 == "Part_Number" )
         {
             partNumberColumn = columnCount;
         }
@@ -621,7 +620,7 @@ const std::string WarrantyToolUIDialog::GetTextFromChoice( wxChoice* variable,
     }
     else if( logicString == "Equal" )
     {
-        logicString = "==";
+        logicString = "=";
     }
     else if( logicString == "Not Equal" )
     {
@@ -629,7 +628,11 @@ const std::string WarrantyToolUIDialog::GetTextFromChoice( wxChoice* variable,
     }
     
     std::string inputString = ConvertUnicode( textInput->GetValue().c_str() );
-    
+    double tempData;
+    if( !textInput->GetValue().ToDouble( &tempData ) )
+    {
+        inputString = "'" + inputString + "'";
+    }
     std::string queryCommand = variableString + " " + logicString + " " + inputString;
     
     return queryCommand;
