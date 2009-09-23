@@ -293,12 +293,12 @@ void AddVTKDataSetEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xml
         //Load texture datasets
         vprDEBUG( vesDBG, 0 ) << "|\tCreating texture dataset."
             << std::endl << vprDEBUG_FLUSH;
-        DataValuePairPtr tempDVP = boost::dynamic_pointer_cast<DataValuePair>( command->GetDataValuePair( "ADD_SURFACE_DATA_DIR" )->GetDataXMLObject() );
         _activeModel->CreateTextureDataSet();
-        //DataValuePairPtr tempDVP = boost::dynamic_pointer_cast<DataValuePair>( tempDVP->GetDataValuePair( "VTK_TEXTURE_DIR_PATH" )->GetDataXMLObject() );
+        DataValuePairPtr tempDVP = boost::dynamic_pointer_cast<DataValuePair>( command->GetDataValuePair( "ADD_TEXTURE_DATA_DIR" )->GetDataXMLObject() );
         _activeModel->AddDataSetToTextureDataSet( 0, tempDVP->GetDataString() );
 
         std::ostringstream textId;
+        //VTK_TEXTURE_DIR_PATH
         textId << "VTK_SURFACE_DIR_PATH_" << tempDVP->GetID();
         DataSet* tempDataSet = _activeModel->GetCfdDataSet( _activeModel->GetIndexOfDataSet( dataSetName ) );
         tempDataSet->SetUUID( textId.str(), tempDVP->GetID() );
