@@ -134,6 +134,9 @@ public:
     ///\return Returns the osg class that manages the line interesection tests
     osgUtil::LineSegmentIntersector* GetLineSegmentIntersector();
 
+    ///Set wether the keyboardmouse device should select things
+    void SetProcessSelection( bool processSelection );
+
 protected:
     ///Set the start and end point
     ///\param startPoint The start point
@@ -241,8 +244,11 @@ private:
     ///Is alt pushed
     bool mKeyAlt;
 
-    ///
-    bool mSelect;
+    ///Process selection from a mouse pick
+    bool m_processSelection;
+
+    ///Are we in selection or nav mode
+    bool m_mousePickEvent;
 
     ///Width of the window
     unsigned int mWidth;

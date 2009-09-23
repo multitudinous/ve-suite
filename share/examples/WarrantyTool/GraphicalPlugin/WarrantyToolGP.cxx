@@ -268,13 +268,14 @@ void WarrantyToolGP::SetCurrentCommand( ves::open::xml::CommandPtr command )
                     childVisitor( mDCS.get(), mLoadedPartNumbers.at( i ), false, true );
                 if( childVisitor.FoundChild() )
                 {
-                    std::cout << "Found graphics node match for " << mLoadedPartNumbers.at( i ) << std::endl;
+                    ;//std::cout << "Found graphics node match for " << mLoadedPartNumbers.at( i ) << std::endl;
                 }
                 else
                 {
                     std::cout << "Did not find graphics node for " << mLoadedPartNumbers.at( i ) << std::endl;
                 }
             }
+            m_keyboard->SetProcessSelection( false );
         }
     }
     else if( commandName == "WARRANTY_TOOL_DB_TOOLS" )
@@ -716,6 +717,7 @@ void WarrantyToolGP::CreateDBQuery( ves::open::xml::DataValuePairPtr dvp )
 void WarrantyToolGP::RemoveSelfFromSG()
 {
     PluginBase::RemoveSelfFromSG();
+    m_keyboard->SetProcessSelection( true );
     try
     {
         Poco::Data::SQLite::Connector::unregisterConnector();

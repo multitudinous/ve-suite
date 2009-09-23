@@ -132,7 +132,8 @@ KeyboardMouse::KeyboardMouse()
     mKeyShift( false ),
     mKeyAlt( false ),
 
-    mSelect( false ),
+    m_mousePickEvent( false ),
+    m_processSelection( true ),
 
     mWidth( 1 ),
     mHeight( 1 ),
@@ -908,14 +909,14 @@ void KeyboardMouse::OnMousePress()
             ;
         }
 
-        mSelect = true;
+        m_mousePickEvent = true;
 
         break;
     }
     //Middle mouse button
     case gadget::MBUTTON2:
     {
-        mSelect = true;
+        m_mousePickEvent = true;
 
         break;
     }
@@ -929,7 +930,7 @@ void KeyboardMouse::OnMousePress()
             m_characterController.SetCharacterRotationFromCamera();
         }
 
-        mSelect = true;
+        m_mousePickEvent = true;
 
         break;
     }
@@ -1057,12 +1058,14 @@ void KeyboardMouse::OnMouseRelease()
     }
     } //end switch( mButton )
 
-    if( mSelect )
+    if( m_mousePickEvent )
     {
         UpdateSelectionLine();
-        ProcessSelection();
-
-        mSelect = false;
+        if( m_processSelection )
+        {
+            ProcessSelection();
+        }
+        m_mousePickEvent = false;
     }
 
     mPrevPos.first = mCurrPos.first;
@@ -1077,7 +1080,7 @@ void KeyboardMouse::OnMouseMotionDown()
     double xDelta = mCurrPos.first - mPrevPos.first;
     double yDelta = mCurrPos.second - mPrevPos.second;
 
-    if( mSelect )
+    if( m_mousePickEvent )
     {
         m_xMotionPixels += abs( static_cast< int >( xDelta ) );
         m_yMotionPixels += abs( static_cast< int >( yDelta ) );
@@ -1169,10 +1172,10 @@ void KeyboardMouse::OnMouseMotionDown()
     } //end switch( mButton )
 
     //If delta mouse motion is less than m_pickCushion, do selection
-    if( mSelect && ( ( m_xMotionPixels > m_pickCushion ) ||
+    if( m_mousePickEvent && ( ( m_xMotionPixels > m_pickCushion ) ||
                      ( m_yMotionPixels > m_pickCushion ) ) )
     {
-        mSelect = false;
+        m_mousePickEvent = false;
     }
 
     mPrevPos.first = mCurrPos.first;
@@ -1923,5 +1926,10 @@ void KeyboardMouse::ClearPointConstraint()
         mPickedBody->setDeactivationTime( 0.0 );
         mPickedBody = NULL;
     }
+}
+////////////////////////////////////////////////////////////////////////////////
+void KeyboardMouse::SetProcessSelection( bool processSelection )
+{
+    m_processSelection = processSelection;
 }
 ////////////////////////////////////////////////////////////////////////////////

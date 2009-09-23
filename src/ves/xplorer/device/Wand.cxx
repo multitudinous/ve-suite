@@ -393,8 +393,6 @@ void Wand::ProcessHit()
         vprDEBUG( vesDBG, 1 ) << "|\tObjects descriptors "
             << parentNode->getDescriptions().at( 1 )
             << std::endl << vprDEBUG_FLUSH;
-
-        //ves::xplorer::DeviceHandler::instance()->SetActiveDCS( newSelectedDCS );
             
         if( ves::xplorer::scenegraph::SceneManager::instance()->IsRTTOn() )
         {
@@ -408,11 +406,11 @@ void Wand::ProcessHit()
         
         //Set the connection between the scene manipulator and the selected dcs
         scenegraph::manipulator::TransformManipulator* sceneManipulator =
-        m_manipulatorManager.GetSceneManipulator();
-        scenegraph::manipulator::RotateTwist* rotateTwist =
-        m_manipulatorManager.GetTwistManipulator();
-        rotateTwist->Disconnect();
-        sceneManipulator->Disconnect();
+            m_manipulatorManager.GetSceneManipulator();
+        //scenegraph::manipulator::RotateTwist* rotateTwist =
+        //    m_manipulatorManager.GetTwistManipulator();
+        //rotateTwist->Disconnect();
+        //sceneManipulator->Disconnect();
         //Check and see if the selected node has an attached physics mesh
         bool hasAPhysicsMesh( false );
         osg::ref_ptr< osgBullet::AbsoluteModelTransform > tempAMT = 
@@ -430,12 +428,12 @@ void Wand::ProcessHit()
         
         if( hasAPhysicsMesh )
         {
-            rotateTwist->Connect( tempAMT.get() );
+            //rotateTwist->Connect( tempAMT.get() );
             sceneManipulator->Connect( tempAMT.get() );
         }
         else
         {
-            rotateTwist->Connect( newSelectedDCS );
+            //rotateTwist->Connect( newSelectedDCS );
             sceneManipulator->Connect( newSelectedDCS );
         }
         
@@ -449,6 +447,8 @@ void Wand::ProcessHit()
         osg::Vec3d newCenter = newSelectedDCS->getBound().center() * localToWorld;
         //rotateTwist->setPosition( newCenter );
         sceneManipulator->setPosition( newCenter );        
+        vprDEBUG( vesDBG, 1 ) << "|\tEnd Selection "
+            << std::endl << vprDEBUG_FLUSH;
     }
     else
     {
