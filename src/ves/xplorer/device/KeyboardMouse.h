@@ -137,6 +137,9 @@ public:
     ///Set wether the keyboardmouse device should select things
     void SetProcessSelection( bool processSelection );
 
+    ///
+    bool GetMousePickEvent();
+
 protected:
     ///Set the start and end point
     ///\param startPoint The start point

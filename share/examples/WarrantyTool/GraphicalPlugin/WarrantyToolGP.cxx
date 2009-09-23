@@ -141,12 +141,29 @@ void WarrantyToolGP::PreFrameUpdate()
     //If the keymbaord mouse selected something
     //std::cout << " here 1 " << std::endl;
     //ves::xplorer::device::KeyboardMouse* kbMouse = dynamic_cast< ves::xplorer::device::KeyboardMouse* >( mDevice );
-    if( m_keyboard )
+    if( !m_keyboard )
+    {
+        return;
+    }
+
+    if( !m_keyboard->GetMousePickEvent() )
+    {
+        return;
+    }
+
+    if( m_groupedTextTextures.valid() )
     {
         //Get the intersection visitor from keyboard mouse or the wand
         osg::ref_ptr< osgUtil::LineSegmentIntersector > intersectorSegment = 
             m_keyboard->GetLineSegmentIntersector();
         
+        osgUtil::IntersectionVisitor intersectionVisitor(
+            intersectorSegment.get() );
+
+        //Add the IntersectVisitor to the root Node so that all geometry will be
+        //checked and no transforms are done to the line segement
+        m_textTrans->accept( intersectionVisitor );
+
         osgUtil::LineSegmentIntersector::Intersections& intersections =
             intersectorSegment->getIntersections();
         //figure out which text texutre we found
