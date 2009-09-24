@@ -839,6 +839,7 @@ void App::draw()
     //osgUtil::SceneView::update() is in vrj::OsgApp::update()
     //Profile the cull call
     {
+        //vpr::Guard< vpr::Mutex > sv_guard( mValueLock );
         VPR_PROFILE_GUARD_HISTORY( "App::draw sv->cull", 20 );
         //Not sure if it should be used - came from osgViewer::Renderer::cull/draw
         //sv->inheritCullSettings( *(sv->getCamera()) );
@@ -917,9 +918,9 @@ void App::update()
     // update the scene by traversing it with the the update visitor which will
     // call all node update callbacks and animations. This is equivalent to calling
     // SceneView::update
-    getScene()->accept( *mUpdateVisitor.get() );
+    //getScene()->accept( *mUpdateVisitor.get() );
     
-    if( mRTT )
+    //if( mRTT )
     {
         mSceneRenderToTexture->Update( mUpdateVisitor.get() );
     }
