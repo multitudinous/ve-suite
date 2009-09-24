@@ -32,14 +32,14 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
 // --- VE-Suite Includes --- //
+#include <ves/xplorer/communication/CommandHandler.h>
+
 #include <ves/xplorer/scenegraph/manipulator/Dragger.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/LocalToWorldNodePath.h>
 
 #include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
-
-//#include <ves/xplorer/communication/CommandHandler.h>
 
 // --- OSG Includes --- //
 #include <osg/io_utils>
@@ -1040,6 +1040,6 @@ void Dragger::UpdateConductorData()
 
     modelUpdateData->AddDataValuePair( pluginDataDVP );
 
-    //ves::xplorer::CommandHandler::instance()->SetXMLCommand( modelUpdateData );
+    ves::xplorer::CommandHandler::instance()->SetXMLCommand( modelUpdateData );
 }
 ////////////////////////////////////////////////////////////////////////////////

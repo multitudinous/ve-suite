@@ -2305,7 +2305,9 @@ void Network::UpdateInternalPluginData()
     {
         return;
     }
-    
+    //std::ostringstream msg;
+    //        msg << "Get xplorer data. " << std::endl;
+    //        wxLogMessage( wxString( msg.str().c_str(), wxConvUTF8 ) );
     // See if this is the system
     std::string uuidSystem;
     viewPointData->GetDataValuePair( "PARENT_SYSTEM_ID" )->GetData( uuidSystem );
@@ -2353,6 +2355,7 @@ void Network::OnTimer( wxTimerEvent& WXUNUSED( event ) )
     //wxInternalIdle was called too often
     //if( IsShown() )
     {
+
         UpdateInternalPluginData();
     }
 }
