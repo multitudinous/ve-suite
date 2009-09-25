@@ -47,6 +47,9 @@
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/SceneNode.h>
 
+#include <ves/open/xml/cad/CADNodePtr.h>
+#include <ves/open/xml/model/ModelPtr.h>
+
 namespace ves
 {
 namespace xplorer
@@ -222,12 +225,29 @@ public:
     ///\param rigidBody The btRigidBody*
     void SetPhysicsRigidBody( PhysicsRigidBody* physicsRigidBody );
 
+    ///Set the VE-Open CAD Part
+    void SetCADPart( ves::open::xml::cad::CADNodePtr tempCADData );
+
+    ///Set the VE-Open CAD Part
+    void SetModelData( ves::open::xml::model::ModelPtr tempModelData );
+
+    ///Set the VE-Open CAD Part
+    ves::open::xml::cad::CADNodePtr GetCADPart();
+
+    ///Set the VE-Open CAD Part
+    ves::open::xml::model::ModelPtr GetModelData();
+
 protected:
     double m_Rotation[ 3 ];///<The rotation array
     double m_Translation[ 3 ];///<The translation array
     double m_Scale[ 3 ];///<The scale array
 
     PhysicsRigidBody* mPhysicsRigidBody;///<The rigid body to access the respective btTransform
+
+    ///Pointer to the underlying VE-Open data for the DCS
+    ves::open::xml::cad::CADNodePtr m_partVEOpenData;
+    ///Pointer to the underlying VE-Open data for the DCS
+    ves::open::xml::model::ModelPtr m_modelVEOpenData;
 
 private:
     ///Update the bullet matrix with the matrix from the osg node

@@ -403,6 +403,10 @@ void PluginBase::SetXMLModel( ves::open::xml::model::ModelPtr& tempModel )
 
     }
 
+    if( mModel )
+    {
+        mModel->SetModelData( mXmlModel );
+    }
     //process inputs
     /*if( mXmlModel->GetNumberOfInputs() > 0 )
     {

@@ -44,6 +44,11 @@
 #include <ves/xplorer/scenegraph/technique/SelectTechnique.h>
 #include <ves/xplorer/scenegraph/technique/GlowTechnique.h>
 
+#include <ves/open/xml/model/Model.h>
+#include <ves/open/xml/cad/CADNode.h>
+#include <ves/open/xml/cad/CADPart.h>
+#include <ves/open/xml/cad/CADAssembly.h>
+
 // --- OSG Includes --- //
 #include <osg/Vec3d>
 #include <osg/MatrixTransform>
@@ -516,5 +521,25 @@ void DCS::InheritedTraverse( osg::NodeVisitor& nv )
 {
     typedef osg::PositionAttitudeTransform inherited;
     inherited::traverse( nv );
+}
+////////////////////////////////////////////////////////////////////////////////
+void DCS::SetCADPart( ves::open::xml::cad::CADNodePtr tempCADData )
+{
+    m_partVEOpenData = tempCADData;
+}
+////////////////////////////////////////////////////////////////////////////////
+void DCS::SetModelData( ves::open::xml::model::ModelPtr tempModelData )
+{
+    m_modelVEOpenData = tempModelData;
+}
+////////////////////////////////////////////////////////////////////////////////
+ves::open::xml::cad::CADNodePtr DCS::GetCADPart()
+{
+    return m_partVEOpenData;
+}
+////////////////////////////////////////////////////////////////////////////////
+ves::open::xml::model::ModelPtr DCS::GetModelData()
+{
+    return m_modelVEOpenData;
 }
 ////////////////////////////////////////////////////////////////////////////////

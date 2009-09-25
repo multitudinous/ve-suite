@@ -187,6 +187,8 @@ void CADEventHandler::_setTransformOnNode( CADNodePtr activeNode )
     }
     if( transform )
     {
+        transform->SetCADPart( activeNode );
+        transform->SetModelData( m_activeModel->GetModelData() );
         transform->SetTranslationArray( activeNode->GetTransform()->GetTranslationArray()->GetArray() );
         transform->SetRotationArray( activeNode->GetTransform()->GetRotationArray()->GetArray() );
         transform->SetScaleArray( activeNode->GetTransform()->GetScaleArray()->GetArray() );

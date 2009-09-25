@@ -61,6 +61,8 @@
 
 #include <ves/open/xml/shader/ShaderCreator.h>
 
+#include <ves/open/xml/model/Model.h>
+
 #include <osg/StateSet>
 #include <ves/xplorer/volume/cfdTextureDataSet.h>
 using namespace ves::xplorer::volume;
@@ -768,6 +770,16 @@ void Model::RenderTextualDisplay( bool onOff )
             mModelText->setNodeMask( 0 );
         }
     }
+}
+////////////////////////////////////////////////////////////////////////////////
+ves::open::xml::model::ModelPtr Model::GetModelData()
+{
+    return m_modelVEOpenData;
+}
+////////////////////////////////////////////////////////////////////////////////
+void Model::SetModelData( ves::open::xml::model::ModelPtr tempModelData )
+{
+    m_modelVEOpenData = tempModelData;
 }
 ////////////////////////////////////////////////////////////////////////////////
 } // end xplorer

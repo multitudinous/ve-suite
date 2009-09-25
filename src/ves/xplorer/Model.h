@@ -48,6 +48,8 @@
 #include <ves/xplorer/scenegraph/Group.h>
 #include <ves/xplorer/scenegraph/Switch.h>
 
+#include <ves/open/xml/model/ModelPtr.h>
+
 #include <vrj/vrjParam.h>
 
 #include <vpr/Sync/Mutex.h>
@@ -216,6 +218,12 @@ public:
     ves::xplorer::volume::cfdTextureDataSet* GetTextureDataSet( unsigned int index );
     ves::xplorer::volume::cfdTextureDataSet* GetActiveTextureDataSet();
     ///////////////////////////////////////////////////
+    ///Get the VE-Open Model for this Model
+    ves::open::xml::model::ModelPtr GetModelData();
+
+    ///Set the VE-Open Model for this Model
+    void SetModelData( ves::open::xml::model::ModelPtr tempModelData );
+    ///////////////////////////////////////////////////
 
 //Dynamically load data from unit
 public:
@@ -285,6 +293,8 @@ private:
     ves::xplorer::ModelDatasetHandler* m_datasetHandler;
     ///Text texture
     osg::ref_ptr< ves::xplorer::scenegraph::TextTexture > mModelText;
+    ///The VE-Open Model data for this model
+    ves::open::xml::model::ModelPtr m_modelVEOpenData;
 };
 }
 }
