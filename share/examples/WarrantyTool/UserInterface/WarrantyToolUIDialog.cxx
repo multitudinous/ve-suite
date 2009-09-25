@@ -404,11 +404,16 @@ void WarrantyToolUIDialog::ParseDataFile( const std::string& csvFilename )
         columnCount += 1;
     }
 
-    while (!iss.eof()) 
+    while( iss.good() )
     {
         std::getline(iss, sLine); // Get a line
-        if (sLine == "")
+        if( !iss.good() )
+        {
             break;
+        }
+
+        if (sLine == "")
+            continue;
         
         parser << sLine; // Feed the line to the parser
         //std::cout << sLine << std::endl;
@@ -573,12 +578,35 @@ void WarrantyToolUIDialog::OnPartSelection( wxCommandEvent& event )
 	// TODO: Implement OnPartSelection
     //When the user selects a part number submit it and update the associated 
     //text entry box
+    m_partTextEntry->SetValue( m_manualPartSelectionChoice->GetStringSelection() );
+    ves::open::xml::DataValuePairSharedPtr cameraGeometryOnOffDVP(
+        new ves::open::xml::DataValuePair() );
+    //mPartNumberList.push_back(
+    //        ConvertUnicode( m_manualPartSelectionChoice->GetValue().c_str() ) );
+    cameraGeometryOnOffDVP->SetData( "ADD", ConvertUnicode( m_manualPartSelectionChoice->GetStringSelection().c_str() ) );
+
+    ves::open::xml::CommandPtr command( new ves::open::xml::Command() );
+    command->AddDataValuePair( cameraGeometryOnOffDVP );
+    std::string mCommandName = "WARRANTY_TOOL_PART_TOOLS";
+    command->SetCommandName( mCommandName );
+    mServiceList->SendCommandStringToXplorer( command );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void WarrantyToolUIDialog::OnPartNumberEntry( wxCommandEvent& event )
 {
 	// TODO: Implement OnPartNumberEntry
     //When a user types in a part number to find submit it and go find it
+        //mPartNumberList.push_back(
+    //        ConvertUnicode( m_partTextEntry->GetValue().c_str() ) );
+    ves::open::xml::DataValuePairSharedPtr cameraGeometryOnOffDVP(
+        new ves::open::xml::DataValuePair() );
+    cameraGeometryOnOffDVP->SetData( "ADD", ConvertUnicode( m_partTextEntry->GetValue().c_str() ) );
+
+    ves::open::xml::CommandPtr command( new ves::open::xml::Command() );
+    command->AddDataValuePair( cameraGeometryOnOffDVP );
+    std::string mCommandName = "WARRANTY_TOOL_PART_TOOLS";
+    command->SetCommandName( mCommandName );
+    mServiceList->SendCommandStringToXplorer( command );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void WarrantyToolUIDialog::OnQueryApply( wxCommandEvent& event )
@@ -633,7 +661,7 @@ const std::string WarrantyToolUIDialog::GetTextFromChoice( wxChoice* variable,
     {
         inputString = "'" + inputString + "'";
     }
-    std::string queryCommand = variableString + " " + logicString + " " + inputString;
+    std::string queryCommand = "'" + variableString + "' " + logicString + " " + inputString;
     
     return queryCommand;
 }

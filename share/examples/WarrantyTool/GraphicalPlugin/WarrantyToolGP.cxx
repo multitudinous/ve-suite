@@ -279,7 +279,7 @@ void WarrantyToolGP::SetCurrentCommand( ves::open::xml::CommandPtr command )
         else if( dvp->GetDataName() == "WARRANTY_FILE" )
         {
             ParseDataFile( dvp->GetDataString() );
-            for( size_t i = 0; i < mLoadedPartNumbers.size(); ++i )
+            for( size_t i = 1; i < mLoadedPartNumbers.size(); ++i )
             {
                 ves::xplorer::scenegraph::util::FindChildWithNameVisitor 
                     childVisitor( mDCS.get(), mLoadedPartNumbers.at( i ), false, true );
@@ -382,14 +382,19 @@ void WarrantyToolGP::ParseDataFile( const std::string& csvFilename )
         columnCount += 1;
     }
     
-    while( !iss.eof() ) 
+    while( iss.good() )
     {
         std::getline(iss, sLine); // Get a line
-        if (sLine == "")
+
+        if( !iss.good() )
+        {
             break;
+        }
+        
+        if (sLine == "")
+            continue;
         
         parser << sLine; // Feed the line to the parser
-        //std::cout << sLine << std::endl;
         for( size_t i = 0; i < columnCount; ++i )
         {
             parser >> sCol1;
@@ -406,7 +411,6 @@ void WarrantyToolGP::ParseDataFile( const std::string& csvFilename )
         for( size_t j = 0; j < columnCount; ++j )
         {
             partData.push_back( std::pair< std::string, std::string >( csvDataMap[ j ].at( 0 ), csvDataMap[ j ].at( i ) ) );
-            //std::cout << csvDataMap[ j ].at( 0 ) << " " <<  csvDataMap[ j ].at( i ) << std::endl;
         }
         m_dataMap[ mLoadedPartNumbers.at( i ) ] = partData;
     }
@@ -415,7 +419,7 @@ void WarrantyToolGP::ParseDataFile( const std::string& csvFilename )
     if( !mAddingParts )
     {
         ves::xplorer::scenegraph::util::OpacityVisitor 
-        opVisitor1( mDCS.get(), false, true, 0.3f );
+            opVisitor1( mDCS.get(), false, true, 0.3f );
         mAddingParts = true;
     }
     
@@ -423,7 +427,6 @@ void WarrantyToolGP::ParseDataFile( const std::string& csvFilename )
     //Add data
     //close connection
     CreateTextTextures();
-
     CreateDB();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -434,19 +437,25 @@ void WarrantyToolGP::RenderTextualDisplay( bool onOff )
         //add 3d blocks
         if( !mModelText.valid() )
         {
-            CreateTextTextures();
+            mModelText = new ves::xplorer::scenegraph::TextTexture();
+            m_textTrans->addChild( mModelText.get() );
         }
         else
         {
             mModelText->setNodeMask( 1 );
         }
-        
+        bool removed = m_textTrans->removeChild( m_groupedTextTextures.get() );
+
         std::string displayString;
         std::pair< std::string, std::string > displayPair;
         std::vector< std::pair< std::string, std::string > > displayVector;
         std::map< std::string, std::vector< std::pair< std::string, std::string > > >::iterator iter;
         iter = m_dataMap.find( m_lastPartNumber );
-        displayVector = ( iter->second );
+        if( iter == m_dataMap.end() )
+        {
+            return;
+        }
+        displayVector = iter->second;
         for( size_t i = 0; i < displayVector.size(); ++i )
         {
             displayPair = displayVector.at( i );
@@ -470,7 +479,7 @@ void WarrantyToolGP::CreateDB()
 {
     // register SQLite connector
     Poco::Data::SQLite::Connector::registerConnector();
-	
+
     // create a session
     Poco::Data::Session session("SQLite", "sample.db");
     
@@ -586,13 +595,10 @@ void WarrantyToolGP::CreateTextTextures()
 {
 
     m_textTrans = 
-    new ves::xplorer::scenegraph::DCS();
+        new ves::xplorer::scenegraph::DCS();
     m_textTrans->getOrCreateStateSet()->addUniform(
         new osg::Uniform( "glowColor", osg::Vec4( 0.0, 0.0, 0.0, 1.0 ) ) );
-    
-    mModelText = new ves::xplorer::scenegraph::TextTexture();
-    //m_textTrans->addChild( mModelText.get() );
-    
+        
     mDCS->addChild( m_textTrans.get() );
 
     //mModelText->setUpdateCallback( 
@@ -636,6 +642,7 @@ void WarrantyToolGP::CreateDBQuery( ves::open::xml::DataValuePairPtr dvp )
         return;
     }
 
+    RenderTextualDisplay( false );
     bool removed = m_textTrans->removeChild( m_groupedTextTextures.get() );
     
     m_groupedTextTextures = 

@@ -281,7 +281,7 @@ void TextTexture::CreateText()
     /////////////////////////////
     //Set the body text
     m_bodyText = new osgText::Text();
-    m_bodyText->setMaximumHeight( 3.5f );
+    m_bodyText->setMaximumHeight( 3.3f );
     m_bodyText->setMaximumWidth( 1.75f );
     m_bodyText->setAxisAlignment( osgText::TextBase::XZ_PLANE );
     m_bodyText->setAlignment( osgText::Text::LEFT_TOP );

@@ -81,7 +81,6 @@ void HighlightNodeByNameVisitor::apply( osg::Node& node )
     {
         size_t found = name.find( mNodeName );
         if( found != std::string::npos )
-        //if( !name.compare( 0, mNodeName.size(), mNodeName ) )
         {
             //std::cout << " changing parts " << name << " " 
             //    << mNodeName.size() << " " << mNodeName << std::endl;
@@ -107,8 +106,6 @@ void HighlightNodeByNameVisitor::apply( osg::Node& node )
         if( uniList.size() )
         {
             geode_stateset->removeUniform( "glowColor" );
-            //geode_stateset->removeUniform( "gloColor" );
-            //std::cout << uniList.size() << std::endl;
         }
     }
 

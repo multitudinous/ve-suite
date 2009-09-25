@@ -37,6 +37,7 @@
 //#include <locale>
 #include <boost/algorithm/string/case_conv.hpp>
 
+#include <iostream>
 using namespace ves::xplorer::scenegraph::util;
 
 ////////////////////////////////////////////////////////////////////////////////

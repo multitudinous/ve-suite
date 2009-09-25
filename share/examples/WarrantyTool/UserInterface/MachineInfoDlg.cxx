@@ -149,7 +149,7 @@ MachineInfoDlg::MachineInfoDlg( wxWindow* parent, wxWindowID id, const wxString&
 	
 	sbSizer2->Add( bSizer5, 1, wxEXPAND, 5 );
 	
-	bSizer1->Add( sbSizer2, 0, wxALIGN_LEFT|wxALL, 5 );
+	bSizer1->Add( sbSizer2, 0, wxALIGN_LEFT|wxALL|wxEXPAND, 5 );
 	
 	wxStaticBoxSizer* sbSizer5;
 	sbSizer5 = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT("Color Selection") ), wxVERTICAL );
