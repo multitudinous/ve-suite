@@ -54,6 +54,8 @@
 #include <vtkPassThroughFilter.h>
 #include <vtkXMLPolyDataWriter.h>
 
+#include "OSGStage.h"
+
 using namespace ves::xplorer;
 using namespace ves::xplorer::scenegraph;
 
@@ -189,24 +191,49 @@ void cfdPresetVector::Update( void )
             << " : " << GetVectorRatioFactor() << std::endl << vprDEBUG_FLUSH;
     }
 
-    vtkActor* temp = vtkActor::New();
-    temp->SetMapper( this->mapper );
-    temp->GetProperty()->SetSpecularPower( 20.0f );
-
-    try
+    //if( usePreCalcData )
     {
-        osg::ref_ptr<ves::xplorer::scenegraph::Geode > tempGeode = new ves::xplorer::scenegraph::Geode();
-        tempGeode->TranslateToGeode( temp );
-        geodes.push_back( tempGeode );
-        this->updateFlag = true;
-    }
-    catch ( std::bad_alloc )
-    {
-        mapper->Delete();
-        mapper = vtkPolyDataMapper::New();
-        vprDEBUG( vesDBG, 0 ) << "|\tMemory allocation failure : cfdPresetVectors "
+        vtkActor* temp = vtkActor::New();
+        temp->SetMapper( this->mapper );
+        temp->GetProperty()->SetSpecularPower( 20.0f );
+        
+        try
+        {
+            osg::ref_ptr<ves::xplorer::scenegraph::Geode > tempGeode = new ves::xplorer::scenegraph::Geode();
+            tempGeode->TranslateToGeode( temp );
+            geodes.push_back( tempGeode.get() );
+            this->updateFlag = true;
+        }
+        catch( std::bad_alloc )
+        {
+            mapper->Delete();
+            mapper = vtkPolyDataMapper::New();
+            vprDEBUG( vesDBG, 0 ) << "|\tMemory allocation failure : cfdPresetVectors "
             << std::endl << vprDEBUG_FLUSH;
+        }
+        temp->Delete();
     }
-    temp->Delete();
+    /*else
+    {
+        try
+        {
+            OSGStage* tempStage = new OSGStage();
+            
+            osg::ref_ptr<ves::xplorer::scenegraph::Geode > tempGeode = 
+                tempStage->createInstanced( ptmask->GetOutput(), 
+                GetActiveDataSet()->GetActiveVectorName(),  
+                GetActiveDataSet()->GetActiveScalarName() );
+
+            geodes.push_back( tempGeode.get() );
+            this->updateFlag = true;
+        }
+        catch( std::bad_alloc )
+        {
+            mapper->Delete();
+            mapper = vtkPolyDataMapper::New();
+            vprDEBUG( vesDBG, 0 ) << "|\tMemory allocation failure : cfdPresetVectors "
+                << std::endl << vprDEBUG_FLUSH;
+        }        
+    }*/
 }
 
