@@ -5,7 +5,7 @@ import SConsAddons.Util as sca_util
 
 Import('ves_pkg buildDir RootDir GetPlatform')
 
-ptConfigFile = ves_pkg.createFileBundle( pj('share','vesuite','xplorer','minverva') )
+ptConfigFile = ves_pkg.createFileBundle( pj('share','vesuite','xplorer','minerva') )
 fontFile = sca_util.getFilesRecursiveByExt( pj(RootDir, 'external','gdal_data','data'), ['.csv'] )
 fontFile += sca_util.getFilesRecursiveByExt( pj(RootDir, 'external','gdal_data','data'), ['.wkt'] )
 fontFile += sca_util.getFilesRecursiveByExt( pj(RootDir, 'external','gdal_data','data'), ['.png'] )

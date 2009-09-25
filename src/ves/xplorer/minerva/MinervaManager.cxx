@@ -44,6 +44,8 @@
 #include <osg/CoordinateSystemNode>
 
 #include <boost/bind.hpp>
+#include <boost/filesystem/operations.hpp>
+#include <boost/filesystem/path.hpp>
 
 using namespace ves::xplorer::minerva;
 
@@ -67,31 +69,52 @@ namespace Detail
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-MinervaManager::MinervaManager() : 
-  _eventHandlers(),
-  _currentCommand ( CommandPtr() ),
-  _body ( 0x0 ),
-  _manager ( 0x0 ),
-  _scene ( 0x0 ),
-  _models()
+MinervaManager::MinervaManager()
+    : 
+    _eventHandlers(),
+    _currentCommand( CommandPtr() ),
+    _body( 0x0 ),
+    _manager( 0x0 ),
+    _scene( 0x0 ),
+    _models()
 {
-  Detail::setenv ( MINERVA_DATA_DIR_VARIABLE, Usul::System::Environment::get ( "XPLORER_DATA_DIR" ) + "/minerva" );
-  
-  // Set the program name since the cache is based on this.
-  Usul::App::Application::instance().program ( "Minerva" );
+    std::string xplorerDataDir = Usul::System::Environment::get ( "XPLORER_DATA_DIR" );
+    std::string minervaDir = xplorerDataDir + std::string( "/minerva" );
+    std::cout << minervaDir << std::endl;
+    bool vesuiteHomeDefined = false;
+    try
+    {
+        boost::filesystem::path minervaDirPath( 
+            minervaDir, boost::filesystem::no_check );
+        if( boost::filesystem::is_directory( minervaDirPath ) )
+        {
+            vesuiteHomeDefined = true;
+            std::cout << "Directory for minerva exists" << std::endl;
+        }
+    }
+    catch( const std::exception& ex )
+    {
+        vprDEBUG( vesDBG, 1 ) << ex.what()
+            << std::endl
+            << vprDEBUG_FLUSH;
+    }    
+    Detail::setenv ( MINERVA_DATA_DIR_VARIABLE, minervaDir );
 
-  _eventHandlers[ves::util::commands::ADD_EARTH_COMMAND_NAME] = new AddEarthHandler;
-  _eventHandlers[ves::util::commands::REMOVE_EARTH_COMMAND_NAME] = new RemoveEarthHandler;
-  _eventHandlers[ves::util::commands::SET_GEOGRAPHIC_PROPERTIERS] = new PropertiesHandler;
-  _eventHandlers["CAD_TRANSFORM_UPDATE"] = new TransformHandler;
-  //_eventHandlers["CAD_DELETE_NODE"] = new DeleteHandler;
-  _eventHandlers["Move to cad"] = new NavigateToModel;
-  _eventHandlers[ves::util::commands::ADD_ELEVATION_LAYER] = new AddElevationLayerHandler;
-  _eventHandlers[ves::util::commands::ADD_RASTER_LAYER] = new AddRasterLayerHandler;
-  _eventHandlers[ves::util::commands::REMOVE_ELEVATION_LAYER] = new RemoveElevationLayerHandler;
-  _eventHandlers[ves::util::commands::REMOVE_RASTER_LAYER] = new RemoveRasterLayerHandler;
+    // Set the program name since the cache is based on this.
+    Usul::App::Application::instance().program ( "Minerva" );
 
-  Usul::Functions::safeCall( boost::bind( &MinervaManager::_loadPlugins, this ) );
+    _eventHandlers[ves::util::commands::ADD_EARTH_COMMAND_NAME] = new AddEarthHandler;
+    _eventHandlers[ves::util::commands::REMOVE_EARTH_COMMAND_NAME] = new RemoveEarthHandler;
+    _eventHandlers[ves::util::commands::SET_GEOGRAPHIC_PROPERTIERS] = new PropertiesHandler;
+    _eventHandlers["CAD_TRANSFORM_UPDATE"] = new TransformHandler;
+    //_eventHandlers["CAD_DELETE_NODE"] = new DeleteHandler;
+    _eventHandlers["Move to cad"] = new NavigateToModel;
+    _eventHandlers[ves::util::commands::ADD_ELEVATION_LAYER] = new AddElevationLayerHandler;
+    _eventHandlers[ves::util::commands::ADD_RASTER_LAYER] = new AddRasterLayerHandler;
+    _eventHandlers[ves::util::commands::REMOVE_ELEVATION_LAYER] = new RemoveElevationLayerHandler;
+    _eventHandlers[ves::util::commands::REMOVE_RASTER_LAYER] = new RemoveRasterLayerHandler;
+
+    Usul::Functions::safeCall( boost::bind( &MinervaManager::_loadPlugins, this ) );
 }
 
 
