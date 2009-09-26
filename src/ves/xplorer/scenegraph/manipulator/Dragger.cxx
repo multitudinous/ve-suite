@@ -64,6 +64,12 @@
 #include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>
+#include <ves/open/xml/model/Model.h>
+#include <ves/open/xml/cad/CADNode.h>
+#include <ves/open/xml/cad/CADPart.h>
+#include <ves/open/xml/cad/CADAssembly.h>
+#include <ves/open/xml/model/System.h>
+#include <ves/open/xml/Transform.h>
 
 using namespace ves::xplorer::scenegraph::manipulator;
 namespace vxs = ves::xplorer::scenegraph;
@@ -706,7 +712,7 @@ void Dragger::UpdateAssociations()
             vxs::DCS* tempDCS = dynamic_cast< vxs::DCS* >( pat );
             if( tempDCS )
             {
-                UpdateConductorData();
+                UpdateConductorData( tempDCS );
             }
 
             continue;
@@ -1008,31 +1014,46 @@ void Dragger::ClearPointConstraint()
     (*m_constraintMap).clear();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Dragger::UpdateConductorData()
+void Dragger::UpdateConductorData( ves::xplorer::scenegraph::DCS* dcs )
 {
+    ves::open::xml::model::ModelPtr model = dcs->GetModelData();
+    ves::open::xml::cad::CADNodePtr cadNode = dcs->GetCADPart();
+    ves::open::xml::TransformPtr tempTransform = cadNode->GetTransform();
+    if( !model )
+    {
+        std::cout << "Null Model " << std::endl;
+        return;
+    }
+    
+    if( !model->GetParentSystem() )
+    {
+        std::cout << "Null System " << std::endl;
+        return;
+    }
+    
     ///Get command
     ves::open::xml::CommandPtr modelUpdateData( new ves::open::xml::Command() );
     modelUpdateData->SetCommandName( "MODEL_DATA_UPDATE" );
 
     //Create the uuid for the model of the transform
     ves::open::xml::DataValuePairPtr parentSystemId( new ves::open::xml::DataValuePair() );
-    parentSystemId->SetData( "PARENT_SYSTEM_ID", "1234" );
+    parentSystemId->SetData( "PARENT_SYSTEM_ID", model->GetParentSystem()->GetID() );
     modelUpdateData->AddDataValuePair( parentSystemId );
     
     //Create the uuid for the plugin of the transform
     ves::open::xml::DataValuePairPtr pluginId( new ves::open::xml::DataValuePair() );
-    pluginId->SetData( "PLUGIN_ID", "1234" );
+    pluginId->SetData( "PLUGIN_ID", model->GetID() );
     modelUpdateData->AddDataValuePair( pluginId );
 
     ves::open::xml::CommandPtr transformData( new ves::open::xml::Command() );
     transformData->SetCommandName( "MODEL_DATA" );
 
     ves::open::xml::DataValuePairPtr cadTransformDVP( new ves::open::xml::DataValuePair() );
-    cadTransformDVP->SetData( "CAD_TRANSFORM", "1234" );//transformPtr );
+    cadTransformDVP->SetData( "CAD_TRANSFORM", tempTransform );
     transformData->AddDataValuePair( cadTransformDVP );
 
     ves::open::xml::DataValuePairPtr cadIdDVP( new ves::open::xml::DataValuePair() );
-    cadIdDVP->SetData( "CAD_ID", "1234" );
+    cadIdDVP->SetData( "CAD_ID", cadNode->GetID() );
     transformData->AddDataValuePair( cadIdDVP );
 
     ves::open::xml::DataValuePairPtr pluginDataDVP( new ves::open::xml::DataValuePair() );

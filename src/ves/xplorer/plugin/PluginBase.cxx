@@ -319,7 +319,11 @@ Model* PluginBase::GetCFDModel()
 void PluginBase::SetXMLModel( ves::open::xml::model::ModelPtr& tempModel )
 {
     mXmlModel = tempModel;
-
+    if( mModel )
+    {
+        mModel->SetModelData( mXmlModel );
+    }
+ 
     {
         bool hasID = false;
         osg::Node::DescriptionList descriptList;
@@ -403,10 +407,6 @@ void PluginBase::SetXMLModel( ves::open::xml::model::ModelPtr& tempModel )
 
     }
 
-    if( mModel )
-    {
-        mModel->SetModelData( mXmlModel );
-    }
     //process inputs
     /*if( mXmlModel->GetNumberOfInputs() > 0 )
     {

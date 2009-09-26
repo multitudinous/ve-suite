@@ -42,6 +42,8 @@
 
 #include <xercesc/dom/DOM.hpp>
 
+#include <boost/enable_shared_from_this.hpp>
+
 #include <string>
 #include <vector>
 
@@ -60,7 +62,8 @@ namespace model
 /*!\class ves::open::xml::model::System
  *Class that manages the system network for conductor.
  */
-class VE_MODEL_EXPORTS System : public ves::open::xml::XMLObject
+class VE_MODEL_EXPORTS System : public ves::open::xml::XMLObject,
+                               public boost::enable_shared_from_this<System>
 {
 public:
     ///Constructor
@@ -107,7 +110,7 @@ public:
     ModelPtr GetParentModel();
     ///Remove the model from the system
     bool RemoveModel( ModelPtr parent );
- 
+
 protected:
     ///Internally update the data.
     ///\param tagName The tag name of this element.
@@ -118,6 +121,7 @@ private:
     NetworkPtr mNetwork;
     ///The vector of models for this system
     std::vector< ModelPtr > mModels;
+    ///The model that is above this system
     ModelSharedPtr mParentModel;
 };
 

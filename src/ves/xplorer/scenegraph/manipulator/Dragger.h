@@ -62,6 +62,7 @@ namespace scenegraph
 {
 class PhysicsSimulator;
 class SceneManager;
+class DCS;
 
 namespace manipulator
 {
@@ -355,7 +356,7 @@ private:
     void UpdateAssociations();
 
     ///
-    void UpdateConductorData();
+    void UpdateConductorData( ves::xplorer::scenegraph::DCS* dcs );
 
     ///
     bool m_isRootDragger;

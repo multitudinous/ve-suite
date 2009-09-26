@@ -48,6 +48,7 @@
 #include <ves/open/xml/cad/CADNode.h>
 #include <ves/open/xml/cad/CADPart.h>
 #include <ves/open/xml/cad/CADAssembly.h>
+#include <ves/open/xml/Transform.h>
 
 // --- OSG Includes --- //
 #include <osg/Vec3d>
@@ -535,6 +536,22 @@ void DCS::SetModelData( ves::open::xml::model::ModelPtr tempModelData )
 ////////////////////////////////////////////////////////////////////////////////
 ves::open::xml::cad::CADNodePtr DCS::GetCADPart()
 {
+    float temp[ 3 ];
+    temp[ 0 ] = getScale()[ 0 ];
+    temp[ 1 ] = getScale()[ 1 ];
+    temp[ 2 ] = getScale()[ 2 ];
+    
+    m_partVEOpenData->GetTransform()->SetScale( temp );
+    GetRotationArray();
+    temp[ 0 ] = m_Rotation[ 0 ];
+    temp[ 1 ] = m_Rotation[ 1 ];
+    temp[ 2 ] = m_Rotation[ 2 ];
+    m_partVEOpenData->GetTransform()->SetRotation( temp );
+    temp[ 0 ] = getPosition()[ 0 ];
+    temp[ 1 ] = getPosition()[ 1 ];
+    temp[ 2 ] = getPosition()[ 2 ];
+    m_partVEOpenData->GetTransform()->SetTranslation( temp );
+
     return m_partVEOpenData;
 }
 ////////////////////////////////////////////////////////////////////////////////

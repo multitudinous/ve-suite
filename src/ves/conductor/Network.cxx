@@ -156,7 +156,7 @@ Network::Network( wxWindow* parent,
                     mDataBufferEngine->GetTopSystemId() );
     networkDeleteEvent.SetId( NETWORK_DELETE_NETWORK );
     
-    m_timer.Start( 500 );
+    m_timer.Start( 250 );
 }
 ////////////////////////////////////////////////////////////////////////////////
 Network::~Network()
@@ -2305,18 +2305,17 @@ void Network::UpdateInternalPluginData()
     {
         return;
     }
-    //std::ostringstream msg;
-    //        msg << "Get xplorer data. " << std::endl;
-    //        wxLogMessage( wxString( msg.str().c_str(), wxConvUTF8 ) );
+
     // See if this is the system
     std::string uuidSystem;
-    viewPointData->GetDataValuePair( "PARENT_SYSTEM_ID" )->GetData( uuidSystem );
+    viewPointData->
+        GetDataValuePair( "PARENT_SYSTEM_ID" )->GetData( uuidSystem );
     if( networkID != uuidSystem )
     {
         return;
     }
-    
-    // Iff it is the system then find the plugin
+
+    // If it is the system then find the plugin
     std::string uuidPlugin;
     viewPointData->GetDataValuePair( "PLUGIN_ID" )->GetData( uuidPlugin );
     const ves::open::xml::CommandPtr pluginCommand = 
@@ -2328,6 +2327,7 @@ void Network::UpdateInternalPluginData()
         // once the plugin is found get the ve model
         const ves::open::xml::model::ModelPtr model = 
             iter->second.GetPlugin()->GetVEModel();
+
         if( model->GetID() == uuidPlugin )
         {
             std::string uuidPart;
@@ -2339,7 +2339,7 @@ void Network::UpdateInternalPluginData()
             ves::open::xml::TransformPtr transform = 
                 boost::dynamic_pointer_cast< ves::open::xml::Transform >( 
                 pluginCommand->GetDataValuePair( "CAD_TRANSFORM" )->
-                GetDataXMLObject()  );
+                GetDataXMLObject() );
             tempPart->SetTransform( transform );
             break;
         }

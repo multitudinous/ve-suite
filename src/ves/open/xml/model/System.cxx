@@ -60,12 +60,13 @@ System::~System()
     for( size_t i = 0; i < mModels.size(); ++i )
     {
         mModels.at( i )->SetParentModel( ModelPtr() );
+        mModels.at( i )->SetParentSystem( SystemPtr() );
     }
     mModels.clear();
 }
 ////////////////////////////////////////////////////////////////////////////////
 System::System( const System& input )
-        : XMLObject( input )
+        : XMLObject( input ), boost::enable_shared_from_this<System>( input )
 {
     mNetwork = NetworkPtr( new Network( *(  input.mNetwork ) ) );
 
@@ -155,6 +156,7 @@ void System::SetObjectFromXMLData( DOMNode* element )
                     static_cast< DOMElement* >( subElements->item( i ) );
                 ves::open::xml::model::ModelSharedPtr newModel( new Model() );
                 newModel->SetParentModel( mParentModel );
+                newModel->SetParentSystem( shared_from_this() );
                 mModels.push_back( newModel );
                 mModels.back()->SetObjectFromXMLData( dataValueStringName );
             }

@@ -281,7 +281,13 @@ public:
     ///Get the parent model pointer of this class
     ///\return The pointer to the parent model, may be null
     ModelPtr GetParentModel();
-    
+
+    ///Set the parent system for this model
+    void SetParentSystem( SystemPtr system );
+
+    ///Get the parent system for this model
+    SystemPtr GetParentSystem();
+
     ///Print operator to help debug veopen issues
     friend std::ostream& operator<<( std::ostream& os, const ModelPtr model )
     {
@@ -347,7 +353,11 @@ private:
     unsigned int mIconMirror;
     ///The sub network for this model
     ves::open::xml::model::SystemPtr mSubSystem;
+    ///The model that is above this model
     ModelWeakPtr mParentModel;
+    ///The system that holds this model
+    SystemSharedPtr m_parentSystem;
+
 };
 }
 }

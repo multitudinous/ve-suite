@@ -58,7 +58,8 @@ Model::Model()
         mIconHiddenFlag( 0 ),
         mModelAttribute( CommandPtr() ),
         mParentModel( ModelPtr() ),
-        mGeometry( CADAssemblyPtr() )
+        mGeometry( CADAssemblyPtr() ),
+        m_parentSystem( SystemPtr() )
 {
     mIconLocation = PointPtr( new Point() );
     SetObjectType( "Model" );
@@ -72,6 +73,8 @@ Model::~Model()
         mSubSystem->SetParentModel( ModelPtr() );
     }
     mSubSystem = SystemPtr();
+    m_parentSystem = SystemPtr();
+    
     mPorts.clear();
 
     mResults.clear();
@@ -100,6 +103,8 @@ Model::Model( const Model& input )
         mSubSystem = SystemPtr( input.mSubSystem );
     }
 
+    m_parentSystem = input.m_parentSystem;
+    
     mPorts.clear();
     std::copy( input.mPorts.begin(),
                input.mPorts.end(),
@@ -162,6 +167,8 @@ Model& Model::operator=( const Model& input )
         {
             mSubSystem = SystemPtr( input.mSubSystem );
         }
+
+        m_parentSystem = input.m_parentSystem;
 
         mPorts.clear();
         std::copy( input.mPorts.begin(),
@@ -965,5 +972,15 @@ const std::vector< CommandPtr > Model::GetInputs()
         tempResults.push_back( iter->second );
     }
     return tempResults;
+}
+////////////////////////////////////////////////////////////////////////////////
+void Model::SetParentSystem( SystemPtr system )
+{
+    m_parentSystem = system;
+}
+////////////////////////////////////////////////////////////////////////////////
+SystemPtr Model::GetParentSystem()
+{
+    return m_parentSystem;
 }
 ////////////////////////////////////////////////////////////////////////////////
