@@ -8,7 +8,7 @@ int main( int argc,
     std::cout << "creating vtk pipeline" << std::endl;
     VTKStage* vtkStage = new VTKStage( argv[ 1 ]);
 	//VTKStage vtkStage( argv[ 1 ]);
-	vtkStage->Update( atoi( argv[ 2 ]) ); //only use every 100th data
+    //	vtkStage->Update( atoi( argv[ 2 ]) ); //only use every 100th data
 	//vtkStage.Dump("C:\\Dougm\\testyang.vtk");
     std::cout << "end vtk pipeline" << std::endl;
     std::cout << "creating osg pipeline" << std::endl;
