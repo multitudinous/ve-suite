@@ -53,7 +53,6 @@
 #include <vtkCellDataToPointData.h>
 #include <vtkPassThroughFilter.h>
 #include <vtkXMLPolyDataWriter.h>
-#include <ves/xplorer/event/viz/OSGStageAlt.h>
 
 #include "OSGStage.h"
 
@@ -74,12 +73,6 @@ cfdPresetVector::~cfdPresetVector()
 
 void cfdPresetVector::Update( void )
 {
-
-	// temporary Boolean variable to
-	// test the GPU based rendering    
-	bool gpustuff = true;   
-
- 
     vprDEBUG( vesDBG, 1 ) << "|\tcfdPresetVector::ActiveDataSet = "
         << this->GetActiveDataSet()
         << std::endl << vprDEBUG_FLUSH;
@@ -171,19 +164,18 @@ void cfdPresetVector::Update( void )
         this->ptmask->SetOnRatio( this->GetVectorRatioFactor() );
         this->ptmask->Update();
 
-
         this->SetGlyphWithThreshold();
         this->SetGlyphAttributes();
         //this->glyph->Update();
 
-        
-          //  vtkXMLPolyDataWriter* writer = vtkXMLPolyDataWriter::New();
-          //  writer->SetInput( glyph->GetOutput() );
-          //  writer->SetDataModeToAscii();
-          //  writer->SetFileName( "testvecglyphs.vtp" );
-          //  writer->Write();
-          //  writer->Delete();
-        
+        /*{
+            vtkXMLPolyDataWriter* writer = vtkXMLPolyDataWriter::New();
+            writer->SetInput( glyph->GetOutput() );
+            writer->SetDataModeToAscii();
+            writer->SetFileName( "testvecglyphs.vtp" );
+            writer->Write();
+            writer->Delete();
+        }*/
         
         mapper->SetInputConnection( glyph->GetOutputPort() );
         mapper->SetScalarModeToUsePointFieldData();
@@ -193,29 +185,22 @@ void cfdPresetVector::Update( void )
         mapper->SetLookupTable( GetActiveDataSet()->GetLookupTable() );
         mapper->Update();
 
-
         c2p->Delete();
         vprDEBUG( vesDBG, 1 )
             << "|\t\tNo Precalc : " << this->cursorType << " : " << usePreCalcData
             << " : " << GetVectorRatioFactor() << std::endl << vprDEBUG_FLUSH;
     }
 
-
-    vtkActor* temp = vtkActor::New();
-    temp->SetMapper( this->mapper );
-    temp->GetProperty()->SetSpecularPower( 20.0f );
-
-    
-   
+    //if( usePreCalcData )
+    {
+        vtkActor* temp = vtkActor::New();
+        temp->SetMapper( this->mapper );
+        temp->GetProperty()->SetSpecularPower( 20.0f );
+        
         try
         {
             osg::ref_ptr<ves::xplorer::scenegraph::Geode > tempGeode = new ves::xplorer::scenegraph::Geode();
-
-            if (gpustuff) tempGeode->StageToGeode( this->ptmask->GetOutput() );
-	    else tempGeode->TranslateToGeode( temp );
-
- //           tempGeode->TranslateToGeode( temp );
-
+            tempGeode->TranslateToGeode( temp );
             geodes.push_back( tempGeode.get() );
             this->updateFlag = true;
         }
@@ -226,11 +211,29 @@ void cfdPresetVector::Update( void )
             vprDEBUG( vesDBG, 0 ) << "|\tMemory allocation failure : cfdPresetVectors "
             << std::endl << vprDEBUG_FLUSH;
         }
-    
+        temp->Delete();
+    }
+    /*else
+    {
+        try
+        {
+            OSGStage* tempStage = new OSGStage();
+            
+            osg::ref_ptr<ves::xplorer::scenegraph::Geode > tempGeode = 
+                tempStage->createInstanced( ptmask->GetOutput(), 
+                GetActiveDataSet()->GetActiveVectorName(),  
+                GetActiveDataSet()->GetActiveScalarName() );
 
-  
-
-    temp->Delete();
-
+            geodes.push_back( tempGeode.get() );
+            this->updateFlag = true;
+        }
+        catch( std::bad_alloc )
+        {
+            mapper->Delete();
+            mapper = vtkPolyDataMapper::New();
+            vprDEBUG( vesDBG, 0 ) << "|\tMemory allocation failure : cfdPresetVectors "
+                << std::endl << vprDEBUG_FLUSH;
+        }        
+    }*/
 }
 

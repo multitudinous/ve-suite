@@ -43,8 +43,6 @@
 
 // --- VTK Includes --- //
 class vtkActor;
-class vtkPolyData;
-
 
 namespace ves
 {
@@ -92,9 +90,6 @@ public:
     ///This function implements the respective translate vtkActorToGeode
     ///\param actor The VTK actor to be translated to a geode
     void TranslateToGeode( vtkActor* actor );
-
-    void StageToGeode( vtkPolyData* notglyph );
-
 
     void StreamLineToGeode( vtkActor* actor );
 

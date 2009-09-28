@@ -4,8 +4,6 @@
 #include <vtkCellData.h>
 #include <vtkXMLPolyDataReader.h>
 #include <vtkXMLStructuredGridReader.h>
-#include <vtkPolyDataReader.h>
-#include <vtkPolyDataWriter.h>
 #include <vtkStructuredGrid.h>
 
 VTKStage::VTKStage(void)
@@ -67,28 +65,31 @@ VTKStage::~VTKStage(void)
 
 vtkPolyData* VTKStage::GetOutput()
 {
-
 	return mask->GetOutput();
 }
 
 void VTKStage::Update(int n)
 {
+	//Not sure why we need this, but I am leaving this alone. CYANG 07/10/09
 	if (polydataReader)
 		polydataReader->Delete();
-
-	polydataReader = vtkXMLUnstructuredGridReader::New();
+	//polydataReader = vtkXMLUnstructuredGridReader::New();
+	//polydataReader->SetFileName(xmlPolydateFname.c_str());//("C:\\Dougm\\testvecglyphs_large.vtp");
+    //polydataReader->Update();
+	//vtkDataSet* dataset = static_cast< vtkXMLUnstructuredGridReader* >( polydataReader )->GetOutput();
+	polydataReader = vtkXMLStructuredGridReader::New();
 	polydataReader->SetFileName(xmlPolydateFname.c_str());//("C:\\Dougm\\testvecglyphs_large.vtp");
     polydataReader->Update();
-	vtkDataSet* dataset = static_cast< vtkXMLUnstructuredGridReader* >( polydataReader )->GetOutput();
-
-	
+	vtkDataSet* dataset = static_cast< vtkXMLStructuredGridReader* >( polydataReader )->GetOutput();
+	//polydataReader = vtkXMLPolyDataReader::New();
+	//polydataReader->SetFileName(xmlPolydateFname.c_str());//("C:\\Dougm\\testvecglyphs_large.vtp");
+    //polydataReader->Update();
+	//vtkDataSet* dataset = static_cast< vtkXMLPolyDataReader* >( polydataReader )->GetOutput();
 
     //dataset->GetPointData()->SetActiveVectors( "steve's_vector" );
     //dataset->GetPointData()->SetActiveScalars( "first-scalar" );
     //dataset->GetCellData()->SetActiveVectors( "steve's_vector" );
     //dataset->GetCellData()->SetActiveScalars( "first-scalar" );
-
-
 	if (c2p)
 		c2p->Delete();
     c2p = vtkCellDataToPointData::New();
@@ -146,13 +147,6 @@ void VTKStage::Update(int n)
         double _vectorThreshHoldValues[ 2 ] = { 0, 1 };
         //dataset->GetRange( currentScalarRange );
 		//dataset->GetScalarRange(currentScalarRange );
-
-
-
-
-
-
-
         
         /*if( _vectorThreshHoldValues[ 0 ] > currentScalarRange[ 0 ] &&
            _vectorThreshHoldValues[ 1 ] < currentScalarRange[ 1 ] )
@@ -195,11 +189,6 @@ void VTKStage::Update(int n)
             glyph->SetInputConnection( mask->GetOutputPort() );
         }
         else*/
-
-
-
-
-
         {
 			mask->SetInputConnection( m_geometryFilter->GetOutputPort() );
             mask->Update();
@@ -241,17 +230,7 @@ void VTKStage::Update(int n)
         }*/
     }
     
-    /*    
-        vtkPolyData* polydata = vtkPolyData::New();
-	//       polydata = (vtkPolyData*)mask->GetOutput();
-       polydata = mask->GetOutput();
-
- 	vtkPolyDataWriter *writer=vtkPolyDataWriter::New();
-
- 	writer->SetInput(polydata);
- 	writer->SetFileName("theone.vtk");
- 	writer->Write();
-    */
+    
    
    //file dumping is turned off 
    /*{

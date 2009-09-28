@@ -25,8 +25,6 @@
 #include <vtkXMLUnstructuredGridReader.h>
 #include <vtkDataSet.h>
 #include <vtkDataSetReader.h>
-#include <vtkPolyDataReader.h>
-#include <vtkPolyDataWriter.h>
 #include <vtkXMLDataReader.h>
 
 #include <vtkCutter.h>
@@ -72,8 +70,6 @@ private:
 
 	//all variable allocated by VTK New and not release immediately
 	vtkXMLDataReader* polydataReader;
-	vtkPolyDataReader* polydataReader1;
-	vtkPolyDataReader* vpdr;
 	vtkCellDataToPointData* c2p;
 	vtkCompositeDataGeometryFilter* m_multiGroupGeomFilter;
 	vtkGeometryFilter* m_geometryFilter;

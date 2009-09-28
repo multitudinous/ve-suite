@@ -33,7 +33,6 @@
 
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/Geode.h>
-#include <ves/xplorer/event/viz/OSGStageAlt.h>
 #include <ves/xplorer/scenegraph/vtkActorToOSG.h>
 #include <ves/xplorer/scenegraph/vtkActorToStreamLine.h>
 
@@ -100,17 +99,6 @@ void Geode::TranslateToGeode( vtkActor* actor )
                        osgUtil::Optimizer::MERGE_GEODES |
                        osgUtil::Optimizer::STATIC_OBJECT_DETECTION );
 }
-////////////////////////////////////////////////////////////////////////////////
-
-
-void Geode::StageToGeode( vtkPolyData* notglyph )
-{
-	OSGStageAlt osgStageAlt;
-    osgStageAlt.createInstanced(notglyph, "", "", this);
-
-}
-
-
 ////////////////////////////////////////////////////////////////////////////////
 void Geode::StreamLineToGeode( vtkActor* actor )
 {

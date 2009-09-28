@@ -107,7 +107,6 @@ float* OSGStage::createPositionArray( int m, int n , vtkPoints* points)
     float* posI = pos;
 
 	int np = points->GetNumberOfPoints();
-	cout <<"number of points is " << np << "\n";
 	double x[3];
     float y[3];
 	for (int i=0; i<m*n; i++)
@@ -121,7 +120,6 @@ float* OSGStage::createPositionArray( int m, int n , vtkPoints* points)
             //y[ 0 ] = x[0];
             //y[ 1 ] = x[1];
             //y[ 2 ] = x[2];
-			//	cout <<"this is " << i << "\n";
 		}
 		else
 		{
@@ -277,7 +275,7 @@ osg::Node* OSGStage::createInstanced(vtkPolyData* glyph, string vectorName, stri
     if (scalarArray==NULL)
     {
         std::cout << " scalars are null " << std::endl;
-	//		return NULL;
+		return NULL;
     }
 	
 	if ((vectorArray==NULL) && (scalarArray==NULL))
@@ -310,79 +308,6 @@ osg::Node* OSGStage::createInstanced(vtkPolyData* glyph, string vectorName, stri
     //OSG does bounds xmin, ymin, zmin, xmax, ymax,...
 	osg::BoundingBox bb(bounds[0],bounds[2],bounds[4],bounds[1],bounds[3],bounds[5]);
     geom->setInitialBound( bb );
-
-
-    osg::StateSet* ss = geom->getOrCreateStateSet();
-    
-
-
-	//set size
-    osg::ref_ptr< osg::Uniform > sizesUniform =
-        new osg::Uniform( "sizes", osg::Vec2( (float)tm, (float)tn ) );
-    ss->addUniform( sizesUniform.get() );
-
-	//now set the arrays
-	
-	//First set the point position array
-	float* pos = createPositionArray( tm, tn, points);
-
-
-
-    osg::Image* iPos = new osg::Image;
-    iPos->setImage( tm, tn, 1, GL_RGB32F_ARB, GL_RGB, GL_FLOAT,
-        (unsigned char*) pos, osg::Image::USE_NEW_DELETE );
-    osg::Texture2D* texPos = new osg::Texture2D( iPos );
-    texPos->setFilter( osg::Texture2D::MIN_FILTER, osg::Texture2D::NEAREST );
-    texPos->setFilter( osg::Texture2D::MAG_FILTER, osg::Texture2D::NEAREST );
-
-
-    ss->setTextureAttribute( 0, texPos );
- 
-
-    osg::ref_ptr< osg::Uniform > texPosUniform =
-        new osg::Uniform( "texPos", 0 );
-    ss->addUniform( texPosUniform.get() );
-
-    //set attitude array
-	if (vectorArray!=NULL)
-	{
-		float* att = createAttitudeArray( tm, tn, vectorArray);
-
-		osg::Image* iAtt = new osg::Image;
-		iAtt->setImage( tm, tn, 1, GL_RGB32F_ARB, GL_RGB, GL_FLOAT,
-			(unsigned char*)att, osg::Image::USE_NEW_DELETE );
-		osg::Texture2D* texAtt = new osg::Texture2D( iAtt );
-		texAtt->setFilter( osg::Texture2D::MIN_FILTER, osg::Texture2D::NEAREST );
-		texAtt->setFilter( osg::Texture2D::MAG_FILTER, osg::Texture2D::NEAREST );
-
-		ss->setTextureAttribute( 1, texAtt );
-
-		osg::ref_ptr< osg::Uniform > texAttUniform =
-			new osg::Uniform( "texAtt", 1 );
-		ss->addUniform( texAttUniform.get() );
-	}
-   
-	
-	
-	//set scalar array
-	if (scalarArray!=NULL)
-	{
-		float* sca = createScalarArray( tm, tn, scalarArray);
-
-		osg::Image* iSca = new osg::Image;
-		iSca->setImage( tm, tn, 1, GL_RGB32F_ARB, GL_RGB, GL_FLOAT,
-			(unsigned char*)sca, osg::Image::USE_NEW_DELETE );
-		osg::Texture2D* texSca = new osg::Texture2D( iSca );
-		texSca->setFilter( osg::Texture2D::MIN_FILTER, osg::Texture2D::NEAREST );
-		texSca->setFilter( osg::Texture2D::MAG_FILTER, osg::Texture2D::NEAREST );
-
-		ss->setTextureAttribute( 2, texSca );
-
-		osg::ref_ptr< osg::Uniform > texScaUniform =
-			new osg::Uniform( "texSca", 2 );
-		ss->addUniform( texScaUniform.get() );
-	}
-	
 
 	//Create the rendering shader
     std::string vertexSource =
@@ -423,14 +348,74 @@ osg::Node* OSGStage::createInstanced(vtkPolyData* glyph, string vectorName, stri
     osg::ref_ptr< osg::Shader > vertexShader = new osg::Shader();
     vertexShader->setType( osg::Shader::VERTEX );
     vertexShader->setShaderSource( vertexSource );
-   
-    osg::ref_ptr< osg::Program > program = new osg::Program();
 
+    osg::ref_ptr< osg::Program > program = new osg::Program();
+    program->addShader( vertexShader.get() );
+
+    osg::StateSet* ss = geode->getOrCreateStateSet();
     ss->setAttribute( program.get(),
         osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
-    
-    program->addShader( vertexShader.get() );
-    
+
+	//set size
+    osg::ref_ptr< osg::Uniform > sizesUniform =
+        new osg::Uniform( "sizes", osg::Vec2( (float)tm, (float)tn ) );
+    ss->addUniform( sizesUniform.get() );
+
+	//now set the arrays
+	
+	//First set the point position array
+	float* pos = createPositionArray( tm, tn, points);
+
+    osg::Image* iPos = new osg::Image;
+    iPos->setImage( tm, tn, 1, GL_RGB32F_ARB, GL_RGB, GL_FLOAT,
+        (unsigned char*) pos, osg::Image::USE_NEW_DELETE );
+    osg::Texture2D* texPos = new osg::Texture2D( iPos );
+    texPos->setFilter( osg::Texture2D::MIN_FILTER, osg::Texture2D::NEAREST );
+    texPos->setFilter( osg::Texture2D::MAG_FILTER, osg::Texture2D::NEAREST );
+
+    ss->setTextureAttribute( 0, texPos );
+
+    osg::ref_ptr< osg::Uniform > texPosUniform =
+        new osg::Uniform( "texPos", 0 );
+    ss->addUniform( texPosUniform.get() );
+
+    //set attitude array
+	if (vectorArray!=NULL)
+	{
+		float* att = createAttitudeArray( tm, tn, vectorArray);
+
+		osg::Image* iAtt = new osg::Image;
+		iAtt->setImage( tm, tn, 1, GL_RGB32F_ARB, GL_RGB, GL_FLOAT,
+			(unsigned char*)att, osg::Image::USE_NEW_DELETE );
+		osg::Texture2D* texAtt = new osg::Texture2D( iAtt );
+		texAtt->setFilter( osg::Texture2D::MIN_FILTER, osg::Texture2D::NEAREST );
+		texAtt->setFilter( osg::Texture2D::MAG_FILTER, osg::Texture2D::NEAREST );
+
+		ss->setTextureAttribute( 1, texAtt );
+
+		osg::ref_ptr< osg::Uniform > texAttUniform =
+			new osg::Uniform( "texAtt", 1 );
+		ss->addUniform( texAttUniform.get() );
+	}
+	
+	//set scalar array
+	if (scalarArray!=NULL)
+	{
+		float* sca = createScalarArray( tm, tn, scalarArray);
+
+		osg::Image* iSca = new osg::Image;
+		iSca->setImage( tm, tn, 1, GL_RGB32F_ARB, GL_RGB, GL_FLOAT,
+			(unsigned char*)sca, osg::Image::USE_NEW_DELETE );
+		osg::Texture2D* texSca = new osg::Texture2D( iSca );
+		texSca->setFilter( osg::Texture2D::MIN_FILTER, osg::Texture2D::NEAREST );
+		texSca->setFilter( osg::Texture2D::MAG_FILTER, osg::Texture2D::NEAREST );
+
+		ss->setTextureAttribute( 2, texSca );
+
+		osg::ref_ptr< osg::Uniform > texScaUniform =
+			new osg::Uniform( "texSca", 2 );
+		ss->addUniform( texScaUniform.get() );
+	}
 
     return grp;
 }
