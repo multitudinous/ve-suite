@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter version="5.0" xmlns="http://docbook.org/ns/docbook"
+         xmlns:xlink="http://www.w3.org/1999/xlink"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         xmlns:svg="http://www.w3.org/2000/svg"
+         xmlns:m="http://www.w3.org/1998/Math/MathML"
+         xmlns:html="http://www.w3.org/1999/xhtml"
+         xmlns:db="http://docbook.org/ns/docbook">
+  <title>Installation and Setup</title>
+
+  <para>Support is provided at the following locations:</para>
+
+  <itemizedlist>
+    <listitem>
+      <para><link
+      xlink:href="https://subversion.vrac.iastate.edu/Subversion/TSVEG/Bugzilla/">VE-Suite
+      Bugzilla</link>, VE-Suite's interface for bug tracking. Users and
+      developers can view and submit bugs.</para>
+    </listitem>
+
+    <listitem>
+      <para>An email list for VE-Suite users will be set up soon</para>
+    </listitem>
+  </itemizedlist>
+
+  <para>Installation of VE-Suite is fairly straightforward. Visit the <link
+  xlink:href="http://www.vesuite.org/download.php">Downloads</link> section
+  and locate your operating system.</para>
+
+  <para><emphasis role="bold">Windows:</emphasis> Two installers are provided
+  for Windows. Each installer will guide you through the process of selecting
+  various options. One installer, <code>vesuite#.#.#_####.exe</code>, contains
+  the core VE-Suite binaries and <code>.dll</code> files. The dependencies
+  installer, <code>vesuite_deps#.#.#.exe</code>, contains the binaries and
+  <code>.dll</code> files of VE-Suite's dependencies, arranged to include
+  <code>bin</code>, <code>lib</code>, and <code>share</code>
+  subdirectories.</para>
+
+  <para><emphasis role="bold">Unix:</emphasis> A <code>tar.gz</code> file of
+  the current release of VE-Suite is provided. You can extract the
+  <code>VE-Suite.#.#.#</code> directory from it. Instead of one central
+  dependencies directory, we provide the dependencies' rpm files. Be sure to
+  install the necessary dependencies before running VE-Suite.</para>
+
+  <section>
+    <title>Windows Installation</title>
+
+    <para>Installing VE-Suite and its dependencies follows the same procedures
+    as other installations. The user chooses which components to install,
+    their locations, their Start Menu folder, and whether to add an icon to
+    the desktop.</para>
+
+    <figure>
+      <title>Installing VE-Suite</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata contentdepth="" contentwidth="" depth=""
+                     fileref="images/windowsinstallsetup.png" scalefit="1"
+                     width=""></imagedata>
+        </imageobject>
+      </mediaobject>
+    </figure>
+
+    <para>One important consideration is which components to install. In large
+    setups, certain computers will run the NameServer while others will handle
+    VE-Conductor and VE-Xplorer. To run VE-Suite on a single desktop, leave
+    all of the checkboxes checked to install everything.</para>
+
+    <para>Go through the same process for VE-Suite's dependencies.</para>
+  </section>
+
+  <section>
+    <title>Unix Installation</title>
+
+    <para>On Unix, the installers are compressed <code>tar.gz</code> files.
+    Open them using these commands:</para>
+
+    <itemizedlist>
+      <listitem>
+        <para>Using GNU tar: <code>gtar xvzf
+        vesuite_#.#.#_RHEL_4.tar.gz</code></para>
+      </listitem>
+
+      <listitem>
+        <para>Using gzip: <code>gunzip &lt; vesuite_#.#.#_RHEL_4.tar.gz | tar
+        xvf –</code></para>
+      </listitem>
+    </itemizedlist>
+
+    <para><emphasis role="bold">NOTE: </emphasis>These examples use
+    <code>vesuite_#.#.#</code> as a general placeholder for any version of
+    VE-Suite. Be sure to change the version number to the specific version you
+    are installing.</para>
+  </section>
+
+  <section>
+    <title>Setting the Runtime Environment</title>
+
+    <para>In previous versions, VE-Suite's runtime environment was set through
+    text scripts. Now it uses VE-Launcher to set up the environment. Most of
+    it is automated, but you should be aware of two important variables it
+    sets: VE-Suite's directory and VE-Suite's dependencies directory.</para>
+
+    <para>VE-Launcher automatically determines VE-Suite's directory from the
+    current working directory. <emphasis role="bold">Moving VE-Launcher out of
+    VE-Suite's directory or starting it from a different directory will pass
+    the wrong value to VE-Suite, causing errors.</emphasis></para>
+
+    <para>The dependencies directory is the only variable that needs to be set
+    manually. The first time you start VE-Launcher, you will be asked to find
+    the dependencies directory. On Windows, the dependencies directory is
+    <code>VE_Suite.#.#.#_Dependencies</code>.</para>
+
+    <figure>
+      <title>Setting dependencies on Windows</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="images/01-browse.jpg"></imagedata>
+        </imageobject>
+      </mediaobject>
+    </figure>
+
+    <para>On UNIX/Linux, multiple dependencies can be chosen. The only one
+    that needs to be specifically selected is VR Juggler's directory.</para>
+
+    <figure>
+      <title>Setting dependencies on UNIX/Linux</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="images/01-linux-set-deps.jpg"></imagedata>
+        </imageobject>
+      </mediaobject>
+    </figure>
+
+    <para>If you are upgrading from an earlier version of VE-Suite, the
+    dependencies' directories can be changed by selecting the dependency and
+    clicking the Delete button, or clicking the Add button and selecting a new
+    directory.</para>
+  </section>
+
+  <section>
+    <title>Setting Menus, Icons, and Filetypes on Linux</title>
+
+    <para>VE-Suite comes with a <code>vesuiteConfig.sh</code> script to set up
+    menus, icons, and filetypes for VE-Suite on Linux desktop systems. The
+    script works for Gnome 2.8+ and KDE.</para>
+
+    <para>To run it, go to its directory and enter
+    <code>./vesuiteConfig.sh</code>, followed by the arguments. The script
+    accepts these arguments:</para>
+
+    <orderedlist>
+      <listitem>
+        <para><code>--gnome</code> or <code>--kde</code>: Sets Gnome or KDE as
+        a primary desktop. If you do not provide either argument, Gnome will
+        be chosen as the default primary desktop.</para>
+      </listitem>
+
+      <listitem>
+        <para><code>--both</code>: Installs on both Gnome and KDE.
+        <code>--gnome</code> or <code>--kde</code> still needs to be provided
+        to set the primary desktop, because on most dual-desktop systems, one
+        desktop inherits some preferences from the other.</para>
+      </listitem>
+
+      <listitem>
+        <para><code>--user</code> or <code>--global</code>: Sets the
+        installations to either user-only or all-users. If you do not provide
+        either argument, all-users will be chosen if you have root access.
+        Otherwise, only the current user (user-only) is chosen.</para>
+      </listitem>
+
+      <listitem>
+        <para><code>--uninstall</code>: Uninstalls the setup defined by the
+        other arguments on the command line. For example, <code>--gnome
+        --global --uninstall</code> would uninstall the setup created by
+        providing <code>--gnome --global</code>.</para>
+      </listitem>
+    </orderedlist>
+  </section>
+</chapter>

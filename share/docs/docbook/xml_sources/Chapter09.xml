@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<chapter id="Trouble_Shooting_Guide">
-  <title>Trouble Shooting Guide</title>
+<chapter version="5.0" xmlns="http://docbook.org/ns/docbook"
+         xmlns:xlink="http://www.w3.org/1999/xlink"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         xmlns:svg="http://www.w3.org/2000/svg"
+         xmlns:m="http://www.w3.org/1998/Math/MathML"
+         xmlns:html="http://www.w3.org/1999/xhtml"
+         xmlns:db="http://docbook.org/ns/docbook">
+  <title>Troubleshooting Guide</title>
 
-  <section id="Trouble_Launching">
+  <section>
     <title>Launching</title>
 
     <orderedlist>
@@ -17,26 +23,26 @@
           </listitem>
 
           <listitem>
-            <para>Ensure that Xplorer is selected on the Custom page of the
-            launcher.</para>
+            <para>Ensure that Xplorer is selected on the Custom page of
+            VE-Launcher.</para>
           </listitem>
 
           <listitem>
-            <para>Ensure that "Cluster" is selected on the Custom page of the
-            launcher in the Xplorer Mode box.</para>
+            <para>Ensure that "Cluster" is selected on the Custom page of
+            VE-Launcher in the Xplorer Mode box.</para>
           </listitem>
 
           <listitem>
             <para>Ensure that all of the nodes launched. If you see any errors
             in the Conductor log stating "Unable to connect to VES Server" ,
             one or more of the nodes did not connect properly. Kill all
-            project_tao_osg_vep processes on all nodes and restart
-            velauncher.py.</para>
+            <code>project_tao_osg_vep</code> processes on all nodes and
+            restart <code>velauncher.py</code>.</para>
           </listitem>
 
           <listitem>
             <para>Ensure that the correct IP addresses are listed on the
-            Cluster Nodes dialog of velauncher. Also ensure that the correct
+            Cluster Nodes dialog of VE-Launcher. Also ensure that the correct
             name is listed for the master (cavehead) in the MASTER field of
             the Cluster Nodes dialog.</para>
           </listitem>
@@ -44,50 +50,53 @@
       </listitem>
 
       <listitem>
-        <para>I see "Error: can't open display on device":</para>
+        <para>I see the error message "Error: can't open display on
+        device":</para>
 
         <orderedlist>
           <listitem>
-            <para>Issue the "xhost +" command on all the nodes of the cluster.
-            For example, from the command line type "ssh drone1", then type
-            "xhost +" (Note the space between xhost and +)</para>
+            <para>Issue the <code>xhost +</code> command on all the nodes of
+            the cluster. For example, from the command line type <code>ssh
+            drone1</code>, then type <code>xhost +</code> (Note the space
+            between <code>xhost</code> and <code>+</code>)</para>
           </listitem>
 
           <listitem>
-            <para>Ensure that you have read permissions on the graphics card.
-            ls -ltr /dev/nvidia*. If you do not have read permissions, ask the
-            system admininstrator to enable read permissions.</para>
+            <para>Ensure that you have read permissions on the graphics card
+            by typing <code>ls -ltr /dev/nvidia*</code>. If you do not have
+            read permissions, ask the system admininstrator to enable read
+            permissions.</para>
           </listitem>
         </orderedlist>
       </listitem>
 
       <listitem>
-        <para>I see and error "Could not connect to the Name Server..."</para>
+        <para>I see the error message "Could not connect to the Name
+        Server..."</para>
 
         <orderedlist>
           <listitem>
             <para>Ensure that the correct IP address is listed on the CE name
-            of the velauncher dialog (currently 10.10.20.241)</para>
+            of the VE-Launcher dialog (currently 10.10.20.241)</para>
           </listitem>
         </orderedlist>
       </listitem>
 
       <listitem>
-        <para>velauncher.py is not available in my shell</para>
+        <para><code>velauncher.py</code> is not available in my shell</para>
 
         <orderedlist>
           <listitem>
             <para>This probably means that the environment for your account
-            has not been setup properly; ask the system admininstrator to
-            double check the configuration of the user account
-            environment.</para>
+            has not been setup properly. Ask the system admininstrator to
+            check the configuration of the user account environment.</para>
           </listitem>
         </orderedlist>
       </listitem>
     </orderedlist>
   </section>
 
-  <section id="Trouble_Tracking">
+  <section>
     <title>Tracking</title>
 
     <orderedlist>
@@ -104,24 +113,25 @@
           </listitem>
 
           <listitem>
-            <para>Ensure that trackd is NOT running. Check your processes to
-            see if trackd is listed: ps -ef |grep trackd. If you see it
-            running, try to kill the process (killall trackd). If trackd is
-            still running, ask the system administrator to issue the killall
-            trackd command.</para>
+            <para>Ensure that <code>trackd</code> is NOT running. Check your
+            processes to see if <code>trackd</code> is listed by typing
+            <code>ps -ef |grep trackd</code>. If you see it running, try to
+            kill the process by typing <code>killall trackd</code>. If
+            <code>trackd</code> is still running, ask the system administrator
+            to issue the <code>killall trackd</code> command.</para>
           </listitem>
 
           <listitem>
-            <para>Ensure that you have read permissions on the tracking
-            device. ls -ltr /dev/ttyS2. If you do not have permission, ask the
-            system administrator to change the permissions on the device.
-            chmod 777 /dev/ttyS2</para>
+            <para>Ensure that you have read permissions on the tracking device
+            by typing <code>ls -ltr /dev/ttyS2</code>. If you do not have
+            permission, ask the system administrator to change the permissions
+            on the device: <code>chmod 777 /dev/ttyS2</code></para>
           </listitem>
         </orderedlist>
       </listitem>
 
       <listitem>
-        <para>I see the head and wand models in the display of the master but
+        <para>I see the head and wand models in the display of the master, but
         the graphics are not responding to my movements.</para>
 
         <orderedlist>
@@ -138,35 +148,35 @@
       </listitem>
 
       <listitem>
-        <para>My wand navigation is too slow/fast</para>
+        <para>My wand navigation is too slow/fast.</para>
 
         <orderedlist>
           <listitem>
             <para>Change the translation and/or rotation step size on the
             Navigation pane on VE-Condutor. From the VE-Conductor menu, go to
-            the VE-Xplorer menu and select "Navigation Pane". Adjust the
-            Translation and/or Rotation Step size slider/s until the desired
+            the VE-Xplorer menu and select Navigation Pane. Adjust the
+            Translation and/or Rotation Step size slider(s) until the desired
             navigation speeds are achieved.</para>
           </listitem>
         </orderedlist>
       </listitem>
 
       <listitem>
-        <para>Rotations are around an arbitrary axis</para>
+        <para>Rotations are around an arbitrary axis.</para>
 
         <orderedlist>
           <listitem>
             <para>Change the rotations to be about the user's head. On the
             VE-Conductor main menu, go to the VE-Xplorer menu and select the
-            Navigation pane. Ensure that the check box marked "Rotate About
-            User's Head" is checked.</para>
+            Navigation pane. Ensure that the check box marked Rotate About
+            User's Head is checked.</para>
           </listitem>
         </orderedlist>
       </listitem>
     </orderedlist>
   </section>
 
-  <section id="Trouble_Sync">
+  <section>
     <title>Sync</title>
 
     <orderedlist>
@@ -196,7 +206,7 @@
     </orderedlist>
   </section>
 
-  <section id="Trouble_Flex_Configurations">
+  <section>
     <title>Flex Configurations</title>
 
     <orderedlist>
@@ -207,36 +217,34 @@
           <listitem>
             <para>Make sure you are using the proper configuration files for
             your configuration. Currently there are three config files:
-            acenet_closed_tracked, acenet_45_tracked, acenet_3_wide_tracked.
-            These are the configuration files for running with the cave
-            closed, open to 45 degrees and fully open respectively. The files
-            are located at /opt/vesuite/ in directories acenet_configs/
-            (closed), acenet_configs_45 (open 45 degrees) and
-            acenet_configs_3_wide (fully open).</para>
+            <code>acenet_closed_tracked</code>,
+            <code>acenet_45_tracked</code>, and
+            <code>acenet_3_wide_tracked</code>. These are the configuration
+            files for running your cave in a specific instance: with the cave
+            closed (<code>acenet_closed_tracked</code>), open to 45 degrees
+            (<code>acenet_45_tracked</code>), and fully open
+            (<code>acenet_3_wide_tracked</code>). The files are located at
+            <code>/opt/vesuite/</code> in directories
+            <code>acenet_configs/</code> (closed),
+            <code>acenet_configs_45</code> (open 45 degrees) and
+            <code>acenet_configs_3_wide</code> (fully open).</para>
           </listitem>
         </orderedlist>
       </listitem>
     </orderedlist>
   </section>
 
-  <section id="Trouble_General_VE-Suite_Help">
+  <section>
     <title>General VE-Suite Help</title>
 
     <orderedlist>
       <listitem>
-        <para>Online Resources</para>
+        <para>Bugs: <link
+        xlink:href="https://subversion.vrac.iastate.edu/Subversion/TSVEG/Bugzilla/">https://subversion.vrac.iastate.edu/Subversion/TSVEG/Bugzilla/</link></para>
+      </listitem>
 
-        <orderedlist>
-          <listitem>
-            <para>Forums: <ulink
-            url="http://www.vesuite.org/forum/">http://www.vesuite.org/forum/</ulink></para>
-          </listitem>
-
-          <listitem>
-            <para>Bugs: <ulink
-            url="https://subversion.vrac.iastate.edu/Subversion/TSVEG/Bugzilla/">https://subversion.vrac.iastate.edu/Subversion/TSVEG/Bugzilla/</ulink></para>
-          </listitem>
-        </orderedlist>
+      <listitem>
+        <para>An email list for VE-Suite users will be set up soon.</para>
       </listitem>
     </orderedlist>
   </section>

@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<chapter id="Description_of_the_Engines">
+<chapter version="5.0" xmlns="http://docbook.org/ns/docbook"
+         xmlns:xlink="http://www.w3.org/1999/xlink"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         xmlns:svg="http://www.w3.org/2000/svg"
+         xmlns:m="http://www.w3.org/1998/Math/MathML"
+         xmlns:html="http://www.w3.org/1999/xhtml"
+         xmlns:db="http://docbook.org/ns/docbook">
   <title>Description of the Engines</title>
 
   <para>VE-Suite is composed of three main software engines that coordinate
@@ -7,13 +13,17 @@
   The following sections will detail the design of each of these engines and
   describe how they contribute to the overall framework functionality.</para>
 
-  <mediaobject>
-    <imageobject>
-      <imagedata fileref="../veimages/descriptionofengines1.jpg" />
-    </imageobject>
-  </mediaobject>
+  <figure>
+    <title>VE-Suite's software engines</title>
 
-  <section id="gui_veconductor">
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="images/10-descriptionofengines-01.jpg"></imagedata>
+      </imageobject>
+    </mediaobject>
+  </figure>
+
+  <section>
     <title>Graphical User Interface (VE-Conductor)</title>
 
     <para>To achieve the goals outlined for the project, a powerful and
@@ -21,34 +31,37 @@
     two-dimensional UI (VE-Conductor) are described in the following
     sections.</para>
 
-    <mediaobject>
-      <imageobject>
-        <imagedata fileref="../veimages/conductorTri.jpg" />
-      </imageobject>
-    </mediaobject>
+    <figure>
+      <title>Graphical user interface (VE-Conductor)</title>
 
-    <section id="conductor_multiplatform_support">
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="images/10-conductorTri-02.jpg"></imagedata>
+        </imageobject>
+      </mediaobject>
+    </figure>
+
+    <section>
       <title>Multi-Platform Support</title>
 
       <para>The UI makes use of platform independent libraries to enable the
       software to run on a wide range of computer hardware and operating
-      systems. These platforms range from Unix workstations to Pocket PCs and
+      systems. These platforms range from UNIX workstations to Pocket PCs and
       PDAs. This functionality is ideal for the virtual engineering-based
       system since users will frequently make use of handheld computing
       devices inside of immersive environments (e.g., cave-like systems at
       ISU-VRAC and NETL).</para>
 
-      <para>After reviewing a number of different UI libraries, <ulink
-      url="www.wxwidgets.org">WxWidgets</ulink> was chosen. WxWidgets is one
-      of the best cross-platform GUI packages available. It is
-      well-maintained, has a large user base, and has ports for Windows,
-      Unix/X11, Unix/Motif, OS2, Mac, and GTK. It also has an alpha version of
-      a Windows CE port, which is under active development. This ensures that
-      the user interface will run on all major platforms and even on Pocket
-      PC-based PDAs.</para>
+      <para>After reviewing a number of different UI libraries, WxWidgets was
+      chosen. WxWidgets is one of the best cross-platform GUI packages
+      available. It is well-maintained, has a large user base, and has ports
+      for Windows, UNIX/X11, UNIX/Motif, OS2, Mac, and GTK. It also has an
+      alpha version of a Windows CE port, which is under active development.
+      This ensures that the user interface will run on all major platforms and
+      even on Pocket PC-based PDAs.</para>
     </section>
 
-    <section id="conductor_detachable_location_transparency">
+    <section>
       <title>Detachable/Location Transparency</title>
 
       <para>The UI exists independently from the computational engine as a
@@ -79,7 +92,7 @@
       emissions data).</para>
     </section>
 
-    <section id="conductor_extensibility">
+    <section>
       <title>Extensibility</title>
 
       <para>Another important consideration for the UI design is
@@ -91,7 +104,7 @@
 
       <para>The dynamic discover and load capability is accomplished by
       loading user developed module UIs from dynamic link libraries (DLL in
-      Windows) or shared libraries (SO lib in Linux/Unix). A plugin C++ base
+      Windows) or shared libraries (SO lib in Linux/UNIX). A plugin C++ base
       class defining this UI-module interface is provided to all module
       developers. Developers can inherit from this class to create their own
       module UIs and then compile the resulting code into a DLL/shared
@@ -101,7 +114,7 @@
       binaries.</para>
     </section>
 
-    <section id="conductor_unified_control">
+    <section>
       <title>Unified Control</title>
 
       <para>Another feature of the UI is unified control for all user
@@ -123,15 +136,19 @@
       the window, while the main canvas area shows the current simulation
       network.</para>
 
-      <mediaobject>
-        <imageobject>
-          <imagedata fileref="../veimages/descriptionofengines2.jpg" />
-        </imageobject>
-      </mediaobject>
+      <figure>
+        <title>Two-dimensional GUI</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="images/10-descriptionofengines-03.jpg"></imagedata>
+          </imageobject>
+        </mediaobject>
+      </figure>
     </section>
   </section>
 
-  <section id="computational_engine_vece">
+  <section>
     <title>Computational Engine (VE-CE)</title>
 
     <para>The computational engine (VE-CE) is the core of the framework. Its
@@ -152,13 +169,17 @@
     relationship to models. Each of these is described in detail in the
     following sections.</para>
 
-    <mediaobject>
-      <imageobject>
-        <imagedata fileref="../veimages/compengTri.jpg" />
-      </imageobject>
-    </mediaobject>
+    <figure>
+      <title>Computational engine (VE-CE)</title>
 
-    <section id="vece_plant_configuration">
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="images/10-compengTri-04.jpg"></imagedata>
+        </imageobject>
+      </mediaobject>
+    </figure>
+
+    <section>
       <title>Plant Configuration</title>
 
       <para>The configuration of the plant, provided by a detachable UI, is
@@ -167,7 +188,7 @@
       allocation depend on this topology.</para>
     </section>
 
-    <section id="vece_data_handling">
+    <section>
       <title>Data Handling</title>
 
       <para>Since there is an unlimited number of possible models capable of
@@ -179,7 +200,7 @@
       data.</para>
     </section>
 
-    <section id="vece_error_handling">
+    <section>
       <title>Error Handling</title>
 
       <para>With the computational engine being the centralized intelligence
@@ -192,7 +213,7 @@
       UI are handled locally.</para>
     </section>
 
-    <section id="vece_relationship_to_detachable_ui">
+    <section>
       <title>Relationship to Detachable UI</title>
 
       <para>The computational engine is a CORBA server into which a detachable
@@ -206,7 +227,7 @@
       modify, or monitor the simulation of a given plant configuration.</para>
     </section>
 
-    <section id="vece_scheduling">
+    <section>
       <title>Scheduling</title>
 
       <para>The computational engine makes use of advanced scheduling
@@ -215,7 +236,7 @@
       transient simulation runs.</para>
     </section>
 
-    <section id="vece_relationship_to_models">
+    <section>
       <title>Relationship to Models</title>
 
       <para>The computational engine, with its CORBA interface, is able to
@@ -227,19 +248,19 @@
     </section>
   </section>
 
-  <section id="graphical_engine_vexplorer">
+  <section>
     <title>Graphical Engine (VE-Xplorer)</title>
 
     <para>The graphical engine (VE-Xplorer) provides the core functionality
     for the virtual engineering aspect of the framework. VE-Xplorer enables
     the engineering analysis and design process to take place in a virtual
     environment. For maximum graphical performance on multiple operating
-    systems, it is built upon <ulink
-    url="www.vrjuggler.org">VRJuggler</ulink>, <ulink url="www.sgi.com">OpenGL
-    Performer</ulink>, and <ulink url="www.kitware.com">Kitware’s
-    Visualization ToolKit</ulink>. This visual interface, controlled by the UI
-    and the computational engine, is a graphical representation of the
-    simulation under review.</para>
+    systems, it is built upon <link xlink:href="www.vrjuggler.org">VR
+    Juggler</link>, <link xlink:href="www.sgi.com">OpenGL Performer</link>,
+    and <link xlink:href="www.kitware.com">Kitware's Visualization
+    ToolKit</link>. This visual interface, controlled by the UI and the
+    computational engine, is a graphical representation of the simulation
+    under review.</para>
 
     <para>The graphical engine is generalized to load data not only from
     comprehensive models, but also from other engineering sources, including
@@ -265,10 +286,14 @@
     This represents a significant capability since the graphical engine has no
     a priori knowledge of the system under interrogation.</para>
 
-    <mediaobject>
-      <imageobject>
-        <imagedata fileref="../veimages/xplorerTri.jpg" />
-      </imageobject>
-    </mediaobject>
+    <figure>
+      <title>Graphical engine (VE-Xplorer)</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="images/10-xplorerTri-05.jpg"></imagedata>
+        </imageobject>
+      </mediaobject>
+    </figure>
   </section>
 </chapter>

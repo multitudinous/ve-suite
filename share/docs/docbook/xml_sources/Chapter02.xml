@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter version="5.0" xmlns="http://docbook.org/ns/docbook"
+         xmlns:xlink="http://www.w3.org/1999/xlink"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         xmlns:svg="http://www.w3.org/2000/svg"
+         xmlns:m="http://www.w3.org/1998/Math/MathML"
+         xmlns:html="http://www.w3.org/1999/xhtml"
+         xmlns:db="http://docbook.org/ns/docbook">
+  <title>Starting VE-Suite</title>
+
+  <para>VE-Suite contains three programs that users can run:</para>
+
+  <itemizedlist>
+    <listitem>
+      <para>Name Service, which allows users to connect to the computational
+      engine (VE-CE)</para>
+    </listitem>
+
+    <listitem>
+      <para>VE-Conductor, which provides the controls</para>
+    </listitem>
+
+    <listitem>
+      <para>VE-Xplorer, which displays the scene</para>
+    </listitem>
+  </itemizedlist>
+
+  <para>All three can be launched from VE-Launcher in a synchronized manner to
+  make running VE-Suite easier for the user.</para>
+
+  <section>
+    <title>Starting VE-Suite</title>
+
+    <para>VE-Launcher is the gateway to VE-Suite. To open VE-Launcher, Windows
+    users can double-click on the VE-Suite desktop icon or on
+    <code>velauncher.exe</code> in the <code>VE-Suite/bin</code> directory.
+    UNIX/Linux users should navigate by terminal into VE-Suite’s
+    <code>/bin</code> directory and enter
+    <code>python.velauncher.py</code>.</para>
+
+    <figure>
+      <title>VE-Launcher window</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="images/03-launcher.png"></imagedata>
+        </imageobject>
+      </mediaobject>
+    </figure>
+
+    <para>If this is the first time VE-Launcher has been run after
+    installation, you will be asked for the dependencies directory (see
+    Chapter 1.3, Setting the Runtime Environment) before you are shown the
+    main window.</para>
+
+    <!-- TODO: add olink for Chapter 1.3, Setting the Runtime Environment -->
+
+    <para>VE-Launcher's more advanced commands are discussed in Chapter 13,
+    Launcher. For now, make sure Desktop Mode is selected and click the Launch
+    button. VE-Launcher will launch the Name Service, VE-Conductor, and
+    VE-Xplorer in Desktop Mode.</para>
+
+    <!-- TODO: add olink for Chapter 8 -->
+
+    <para>For more information about VE-Launcher, read Chapter 13.</para>
+
+    <!-- TODO: add olink for Chapter 8 -->
+
+    <section>
+      <title>Xplorer from the Command Line</title>
+
+      <para>Users who want to customize how Xplorer starts can launch it from
+      the command line. Here is how the command should be set up:</para>
+
+      <orderedlist>
+        <listitem>
+          <para><code>ves_xplorer</code> : Executable call. The name may vary,
+          depending on how VE-Suite was built.</para>
+        </listitem>
+
+        <listitem>
+          <para><code>-ORBInitRefNameService=corbaloc:iiop:localhost:1239/NameService</code>
+          : CORBA arguments. Xplorer accepts any CORBA arguments passed to
+          it.</para>
+        </listitem>
+
+        <listitem>
+          <para><code>/home/users/mgroves/VE-Suite1.0.3/RHEL_4/share/stereo_desktop/desktop.jconf</code>
+          : Juggler configuration files. If a file is passed to Xplorer, it is
+          read as a Juggler configuration file.</para>
+        </listitem>
+
+        <listitem>
+          <para><code>-VESDesktop 1280 1024</code> : Two flags can be set for
+          Xplorer:</para>
+
+          <orderedlist>
+            <listitem>
+              <para><code>-VESDesktop [height][width]</code>: Runs Xplorer in
+              Desktop Mode. <code>[height]</code> and <code>[width]</code> are
+              the screen's dimensions.</para>
+            </listitem>
+
+            <listitem>
+              <para><code>-VESCluster [master computer name]:</code> Runs
+              Xplorer in cluster mode. <code>[master computer name]</code>
+              should be the computer name of the master in the graphics
+              cluster.</para>
+            </listitem>
+          </orderedlist>
+        </listitem>
+      </orderedlist>
+
+      <para>This method of launching Xplorer is only needed in rare
+      cases.</para>
+    </section>
+  </section>
+</chapter>

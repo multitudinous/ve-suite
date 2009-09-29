@@ -1,0 +1,2604 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter version="5.0" xmlns="http://docbook.org/ns/docbook"
+         xmlns:xlink="http://www.w3.org/1999/xlink"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         xmlns:svg="http://www.w3.org/2000/svg"
+         xmlns:m="http://www.w3.org/1998/Math/MathML"
+         xmlns:html="http://www.w3.org/1999/xhtml"
+         xmlns:db="http://docbook.org/ns/docbook">
+  <title>Testing Matrix</title>
+
+  <section>
+    <title>Installation/Download</title>
+
+    <para>Please set environment var on Linux to limit coredump size to
+    10000000000</para>
+
+    <table>
+      <title>All Directories Extracted Correctly</title>
+
+      <tgroup cols="5">
+        <tbody>
+          <row>
+            <entry></entry>
+
+            <entry>Windows</entry>
+
+            <entry>RHEL_4</entry>
+
+            <entry>SuSE_32</entry>
+
+            <entry>SuSE_64</entry>
+          </row>
+
+          <row>
+            <entry>bin</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>lib</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>share</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>include</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </table>
+  </section>
+
+  <section>
+    <title>VE-Launcher</title>
+
+    <para></para>
+
+    <table>
+      <title>Initialization</title>
+
+      <tgroup cols="5">
+        <tbody>
+          <row>
+            <entry></entry>
+
+            <entry>Windows</entry>
+
+            <entry>RHEL_4</entry>
+
+            <entry>SuSE_32</entry>
+
+            <entry>SuSE_64</entry>
+          </row>
+
+          <row>
+            <entry>Display all imagery correctly similar to
+            documentation</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </table>
+
+    <table>
+      <title>Desktop Shortcuts</title>
+
+      <tgroup cols="5">
+        <tbody>
+          <row>
+            <entry></entry>
+
+            <entry>Windows</entry>
+
+            <entry>RHEL_4</entry>
+
+            <entry>SuSE_32</entry>
+
+            <entry>SuSE_64</entry>
+          </row>
+
+          <row>
+            <entry>Creates Launcher in Start menu after running
+            scripts</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>Creates desktop icons</entry>
+
+            <entry></entry>
+
+            <entry>n/a</entry>
+
+            <entry>n/a</entry>
+
+            <entry>n/a</entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </table>
+
+    <table>
+      <title>Configurations</title>
+
+      <tgroup cols="5">
+        <tbody>
+          <row>
+            <entry></entry>
+
+            <entry>Windows</entry>
+
+            <entry>RHEL_4</entry>
+
+            <entry>SuSE_32</entry>
+
+            <entry>SuSE_64</entry>
+          </row>
+
+          <row>
+            <entry>Allows setting of dependencies</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>Allows multiple dependency settings</entry>
+
+            <entry>n/a</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>Saves configurations</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>Load configurations</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </table>
+
+    <table>
+      <title>Launching</title>
+
+      <tgroup cols="5">
+        <tbody>
+          <row>
+            <entry></entry>
+
+            <entry>Windows</entry>
+
+            <entry>RHEL_4</entry>
+
+            <entry>SuSE_32</entry>
+
+            <entry>SuSE_64</entry>
+          </row>
+
+          <row>
+            <entry>Choose any working directory</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>Loads simple <code>.ves</code> file from share/examples
+            directory</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>Stores file name in recent file menu</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>Loads file stored in recent file menu</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>[Shell option correctly sets the environment] Launch
+            shell</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>[Shell option correctly sets the environment] at command
+            prompt type: whatIsScalarRange</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>[Modes] Desktop launches all component</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>[Modes] Tablet launches ONLY Conductor</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>[Modes] Visualization launches only Xplorer</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>[Modes] Computation launches only CE</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>[Modes][Custom] Under mode settings check Xplorer and
+            NameServer only.</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>[Modes][Custom] Launch Xplorer and NameServer</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>[Modes][Cluster Mode] Able to launch in cluster
+            mode</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry>n/a</entry>
+
+            <entry>n/a</entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </table>
+
+    <table>
+      <title>Shutting Down VE-Suite</title>
+
+      <tgroup cols="5">
+        <tbody>
+          <row>
+            <entry></entry>
+
+            <entry>Windows</entry>
+
+            <entry>RHEL_4</entry>
+
+            <entry>SuSE_32</entry>
+
+            <entry>SuSE_64</entry>
+          </row>
+
+          <row>
+            <entry>Desktop Mode-File-&gt;Quit closes Conductor and
+            Xplorer</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>VE-Xplorer-&gt;Shutdown Xplorer closes Xplorer</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>All Windows dialogs close</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </table>
+  </section>
+
+  <section>
+    <title>Conductor</title>
+
+    <table>
+      <title>Initial Material</title>
+
+      <tgroup cols="5">
+        <tbody>
+          <row>
+            <entry></entry>
+
+            <entry>Windows</entry>
+
+            <entry>RHEL_4</entry>
+
+            <entry>SuSE_32</entry>
+
+            <entry>SuSE_64</entry>
+          </row>
+
+          <row>
+            <entry>Open/Load <code>share/exampleDatasets/simple.ves</code>
+            file</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>Create New network</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>Add Default Plugin to Design Canvas</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>Submit Job (under dropdown menu and icon)</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>Recent file menu updated correctly</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>Close and repeat file opening with icons</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </table>
+
+    <table>
+      <title>CAD (Geom Config Dialog)</title>
+
+      <tgroup cols="5">
+        <tbody>
+          <row>
+            <entry></entry>
+
+            <entry>Windows</entry>
+
+            <entry>RHEL_4</entry>
+
+            <entry>SuSE_32</entry>
+
+            <entry>SuSE_64</entry>
+          </row>
+
+          <row>
+            <entry>Add Geometry Surface.0.75.stl</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>Clone Geometry Surface.0.75.stl</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>Rotate Clone (40,40,0)</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>Translate Clone (-4,0,0)</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>Add Brick Shader to Clone</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>Add <code>eightCorners.stl</code></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>Add Material (red) to <code>eightCorners.stl</code></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>Toggle each geometry on and off</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>Create assembly with any of these CAD files</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>Translate assembly</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>Add chrome shader to assembly</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>Toggle assembly on and off</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </table>
+
+    <table>
+      <title>Dataset (Dataset Dialog)</title>
+
+      <tgroup cols="5">
+        <tbody>
+          <row>
+            <entry></entry>
+
+            <entry>Windows</entry>
+
+            <entry>RHEL_4</entry>
+
+            <entry>SuSE_32</entry>
+
+            <entry>SuSE_64</entry>
+          </row>
+
+          <row>
+            <entry>Add Steady State Data</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>Add Dataset <code>3scl.vtu</code></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>Load dataset</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>Translate, rotate and scale dataset</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </table>
+
+    <table>
+      <title>Navigation</title>
+
+      <tgroup cols="5">
+        <tbody>
+          <row>
+            <entry></entry>
+
+            <entry>Windows</entry>
+
+            <entry>RHEL_4</entry>
+
+            <entry>SuSE_32</entry>
+
+            <entry>SuSE_64</entry>
+          </row>
+
+          <row>
+            <entry>Translate along all three axes</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>Rotate along three axes</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>Translation step size slider varies</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>Rotation slider varies</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>Alternate rotate about users head</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>Reset navigation position</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </table>
+
+    <table>
+      <title>Record Scene</title>
+
+      <tgroup cols="5">
+        <tbody>
+          <row>
+            <entry></entry>
+
+            <entry>Windows</entry>
+
+            <entry>RHEL_4</entry>
+
+            <entry>SuSE_32</entry>
+
+            <entry>SuSE_64</entry>
+          </row>
+
+          <row>
+            <entry>Create stored scene</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>See if it updates the list</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>Load stored scene</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </table>
+
+    <table>
+      <title>Attributes</title>
+
+      <tgroup cols="5">
+        <tbody>
+          <row>
+            <entry></entry>
+
+            <entry>Windows</entry>
+
+            <entry>RHEL_4</entry>
+
+            <entry>SuSE_32</entry>
+
+            <entry>SuSE_64</entry>
+          </row>
+
+          <row>
+            <entry>Add material to any geometry</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>Add shader to geometry</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>Change color to geometry</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>Change background color</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </table>
+
+    <table>
+      <title>Viewpoints</title>
+
+      <tgroup cols="5">
+        <tbody>
+          <row>
+            <entry></entry>
+
+            <entry>Windows</entry>
+
+            <entry>RHEL_4</entry>
+
+            <entry>SuSE_32</entry>
+
+            <entry>SuSE_64</entry>
+          </row>
+
+          <row>
+            <entry>Create 3-6 viewpoints</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>Fly to viewpoint</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>Save viewpoint</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>Load viewpoint</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>Delete viewpoint</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>Create a flythrough with viewpoints</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>Start flythrough</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>Change movement speed control</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>Stop flythrough</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>Delete flythrough</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </table>
+
+    <table>
+      <title>User Preferences (these are accessed by going to the File menu,
+      then selecting Preferences, then Xplorer Settings)</title>
+
+      <tgroup cols="5">
+        <tbody>
+          <row>
+            <entry></entry>
+
+            <entry>Windows</entry>
+
+            <entry>RHEL_4</entry>
+
+            <entry>SuSE_32</entry>
+
+            <entry>SuSE_64</entry>
+          </row>
+
+          <row>
+            <entry>Ability to set a preference to have navigation pane open
+            when launched</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>Reopen with navigation pane on when launched, with
+            <code>.ves</code> file</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>Repeat with changing background color</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>Repeat with Shut Down Xplorer option</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </table>
+  </section>
+
+  <section>
+    <title>VE-Xplorer</title>
+
+    <table>
+      <title>Simple Dataset (located at
+      <code>$INSTALL_DIR/share/vesuite/examples/simple</code>)</title>
+
+      <tgroup cols="5">
+        <tbody>
+          <row>
+            <entry></entry>
+
+            <entry>Windows</entry>
+
+            <entry>RHEL_4</entry>
+
+            <entry>SuSE_32</entry>
+
+            <entry>SuSE_64</entry>
+          </row>
+
+          <row>
+            <entry>Open <code>simple.ves</code></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>Open Visualization Tab</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>Select first-scalar</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>[Select Scalar Contour Generate] Contour at 45 in X
+            direction</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>[Select Scalar Contour Generate] Generate Contour at 45 in
+            Y direction</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>[Select Scalar Contour Generate] Generate Contour at 45 in
+            Z direction</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>Select steve's_vector</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>[Select Vector Contour] Select Advanced</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>[Select Vector Contour] Make the vectors more
+            "Dense"</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>[Select Vector Contour]</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>[Select Vector Contour] Generate Vector at 50 in X
+            direction</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>[Select Vector Contour] Generate Vector at 50 in Y
+            direction</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>[Select Vector Contour] Generate Contour at 20 in Z
+            direction</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>[Select 200_to_1000] Select Isosurface</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>[Select 200_to_1000] Select Advanced</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>[Select 200_to_1000] Select first-scalar</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>[Select 200_to_1000] Compute an isosurface at 35</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>[Select Streamlines] Select Seed Points</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>[Select Streamlines] Change number of seed points in each
+            direction</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>[Select Streamlines] Compute Streamlines</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>[Select Streamlines] Select Advanced</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>[Select Streamlines] Change the Line Diameter</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>[Select Streamlines] Compute Streamlines</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>Polydata Datasets</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>[Mouse Navigation (Desktop configuration)] Pan</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>[Mouse Navigation (Desktop configuration)] Rotate</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>[Mouse Navigation (Desktop configuration)] Zoom</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>[Mouse Navigation (Desktop configuration)] Display polydata
+            dataset</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>Free of coredumps (Check in working dir)</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </table>
+
+    <table>
+      <title>Texture Based Datasets</title>
+
+      <tgroup cols="5">
+        <tbody>
+          <row>
+            <entry></entry>
+
+            <entry>Windows</entry>
+
+            <entry>RHEL_4</entry>
+
+            <entry>SuSE_32</entry>
+
+            <entry>SuSE_64</entry>
+          </row>
+
+          <row>
+            <entry>Open sample texture based dataset</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>Bring up scalar tools window</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>Display with texture scalar range of 41 to 92</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>Enable isosurface</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>Test timesteps</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </table>
+
+    <table>
+      <title>Engine (located at
+      <code>/home/vr/Applications/TSVEG/Test_Data/EngineTest</code>)</title>
+
+      <tgroup cols="5">
+        <tbody>
+          <row>
+            <entry></entry>
+
+            <entry>Windows</entry>
+
+            <entry>RHEL_4</entry>
+
+            <entry>SuSE_32</entry>
+
+            <entry>SuSE_64</entry>
+          </row>
+
+          <row>
+            <entry>Open the <code>EngineTest.ves</code> file</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>Open Visualization Tab</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>Select Velocity Magnitude scalar</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>[Select Scalar Contour] Generate Contour at 45 in X
+            direction</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>[Select Scalar Contour] Generate Contour at 45 in Y
+            direction</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>[Select Scalar Contour] Generate Contour at 45 in Z
+            direction</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>Select Velocity Vector</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>[Select Vector] Select Advanced</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>[Select Vector] Make the vectors more "Dense"</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>[Select Vector]</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>[Select Vector] Generate Vector at 50 in X
+            direction</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>[Select Vector] Generate Vector at 50 in Y
+            direction</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>[Select Vector] Generate Contour at 20 in Z
+            direction</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>[Select Streamlines] Select Seed Points</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>[Select Streamlines] Change number of seed points in each
+            direction</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>[Select Streamlines] Compute Streamlines</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>[Select Streamlines] Select Advanced</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>[Select Streamlines] Change the Line Diameter</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>[Select Streamlines] Compute Streamlines</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>[Re-create the <code>EngineTest.ves</code> file on your
+            own](Base this upon the <code>engine.param</code> file)</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>[Re-create the <code>EngineTest.ves</code> file on your
+            own] Load in all geometry (translate and scale)</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>[Re-create the <code>EngineTest.ves</code> file on your
+            own] Translate and rotate geometry properly</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>[Re-create the <code>EngineTest.ves</code> file on your
+            own] Load in dataset</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>[Re-create the <code>EngineTest.ves</code> file on your
+            own] Translate and rotate dataset properly</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>[Re-create the <code>EngineTest.ves</code> file on your
+            own] Save your created file as <code>[user].ves</code></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>[Re-create the <code>EngineTest.ves</code> file on your
+            own] Exit VE-Suite and re-open with new ves file</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>Free of coredumps (Check in working dir)</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </table>
+  </section>
+
+  <section>
+    <title>VE-Builder</title>
+
+    <para></para>
+
+    <table>
+      <title>Simple Datasets (located at
+      <code>/home/vr/Applications/TSVEG/Test_Data</code>)</title>
+
+      <tgroup cols="5">
+        <tbody>
+          <row>
+            <entry></entry>
+
+            <entry>Windows</entry>
+
+            <entry>RHEL_4</entry>
+
+            <entry>SuSE_32</entry>
+
+            <entry>SuSE_64</entry>
+          </row>
+
+          <row>
+            <entry>[StarCD 4.* Dataset] Translate dataset</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>[StarCD 4.* Dataset] Preprocess cutting planes</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>[StarCD 3.2* Dataset] Translate dataset</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>[StarCD 3.2* Dataset] Preprocess cutting planes</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>[Fluent (AVS) Dataset] Translate dataset</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>[Fluent (AVS) Dataset] Preprocess cutting planes</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>[Ensight (ens)] Translate dataset</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>[Ensight (ens)] Preprocess cutting planes</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>[Ansys Dataset] Translate dataset</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>[Ansys Dataset] Preprocess cutting planes</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>[Texture Based Dataset] Translate dataset</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>[Texture Based Dataset] Preprocess cutting planes</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>[REI (BANFDB)] Translate dataset</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>[REI (BANFDB)] Preprocess cutting planes</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>[Dicom (dcm)] Translate dataset</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>[Dicom (dcm)] Preprocess cutting planes</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>[MFIX (mfix)] Translate dataset</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>[MFIX (mfix)] Preprocess cutting planes</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>[Plot3D] Translate dataset</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>[Plot3D] Preprocess cutting planes</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </table>
+
+    <table>
+      <title>Builder Utilities</title>
+
+      <tgroup cols="5">
+        <tbody>
+          <row>
+            <entry></entry>
+
+            <entry>Windows</entry>
+
+            <entry>RHEL_4</entry>
+
+            <entry>SuSE_32</entry>
+
+            <entry>SuSE_64</entry>
+          </row>
+
+          <row>
+            <entry>These should be tested</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>whatIsScalarRange</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>vtkTo3DTexture</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>removeVtkPointData</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>removeVtkCellsOutsideBox</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>meshViewer</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>mergeVertices</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>makeVtkSurface</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>createMiniFlowData</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>convertVTK2Binary</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>convertVTK2Ascii</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>convertSurfaceFileToStl</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>compareScalars</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>combineFluentParticleFile</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>appendVTK</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>addNormals2Poly</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>May still be in use (but do not know what data to test
+            with)</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>appendVTK</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>combineFluentParticleFile</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>Outdated (but keep in build)</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>moveFieldToPointData</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>convertCellDataToPointData</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </table>
+  </section>
+</chapter>

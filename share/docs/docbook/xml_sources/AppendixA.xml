@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE appendix PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
-"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
-<appendix>
+<appendix version="5.0" xmlns="http://docbook.org/ns/docbook"
+          xmlns:xlink="http://www.w3.org/1999/xlink"
+          xmlns:xi="http://www.w3.org/2001/XInclude"
+          xmlns:svg="http://www.w3.org/2000/svg"
+          xmlns:m="http://www.w3.org/1998/Math/MathML"
+          xmlns:html="http://www.w3.org/1999/xhtml"
+          xmlns:db="http://docbook.org/ns/docbook">
   <title>Object-Centered Engineering</title>
 
   <section>
@@ -92,10 +96,10 @@
     <para>The schema is composed of a few key XML element types. The first
     type is the veXMLObject element:</para>
 
-    <literallayout>&lt;xs:complexType name="veXMLObject"&gt;
-      &lt;xs:attribute name="objectType" type="xs:string" use="optional" /&gt;
-      &lt;xs:attribute name="id" type="xs:ID" use="optional" /&gt;
-&lt;/xs:complexType&gt;</literallayout>
+    <para><literallayout>&lt;xs:complexType name="veXMLObject"&gt; 
+      &lt;xs:attribute name="objectType" type="xs:string" use="optional" /&gt; 
+      &lt;xs:attribute name="id" type="xs:ID" use="optional" /&gt; 
+&lt;/xs:complexType&gt;</literallayout></para>
 
     <para>This element type is the basis for all other elements within the
     VE-Open schema, enabling any other element type within the schema to be
@@ -110,19 +114,16 @@
 
     <para>The second element type is the veDataValuePair:</para>
 
-    <literallayout>  &lt;xs:complexType name="veDataValuePair"&gt;
-      &lt;xs:complexContent&gt;
-         &lt;xs:extension base="veXMLObject"&gt;
-            &lt;xs:sequence&gt;
-               &lt;xs:element name="dataName" type="xs:string" maxOccurs="1" minOccurs="1" /&gt;
-               &lt;xs:choice maxOccurs="1" minOccurs="1"&gt;
-                  &lt;xs:element name="dataValue" type="xs:anyType" /&gt;
-                  &lt;xs:element name="genericObject" type="veXMLObject" /&gt;
-               &lt;/xs:choice&gt;
-            &lt;/xs:sequence&gt;
-         &lt;/xs:extension&gt;
-      &lt;/xs:complexContent&gt;
-   &lt;/xs:complexType&gt;</literallayout>
+    <para><literallayout> &lt;xs:complexType name="vecommand"&gt; 
+    &lt;xs:complexContent&gt; 
+       &lt;xs:extension base="veXMLObject"&gt; 
+          &lt;xs:sequence&gt; 
+             &lt;xs:element name="command" type="xs:string" /&gt; 
+             &lt;xs:element name="parameter" type="veDataValuePair" minOccurs="0" maxOccurs="unbounded" /&gt; 
+          &lt;/xs:sequence&gt; 
+       &lt;/xs:extension&gt; 
+   &lt;/xs:complexContent&gt; 
+&lt;/xs:complexType&gt;</literallayout></para>
 
     <para>The veDataValuePair type holds a descriptive name about the data it
     contains as well as a veXMLObject or raw xs:anyType. This flexibility
@@ -134,16 +135,16 @@
 
     <para>The third element type is veCommand:</para>
 
-    <literallayout>  &lt;xs:complexType name="vecommand"&gt;
-      &lt;xs:complexContent&gt;
-         &lt;xs:extension base="veXMLObject"&gt;
-            &lt;xs:sequence&gt;
-               &lt;xs:element name="command" type="xs:string" /&gt;
-               &lt;xs:element name="parameter" type="veDataValuePair" minOccurs="0" maxOccurs="unbounded" /&gt;
-            &lt;/xs:sequence&gt;
-         &lt;/xs:extension&gt;
-      &lt;/xs:complexContent&gt;
-   &lt;/xs:complexType&gt;</literallayout>
+    <para><literallayout> &lt;xs:complexType name="vecommand"&gt; 
+    &lt;xs:complexContent&gt; 
+       &lt;xs:extension base="veXMLObject"&gt; 
+          &lt;xs:sequence&gt; 
+             &lt;xs:element name="command" type="xs:string" /&gt; 
+             &lt;xs:element name="parameter" type="veDataValuePair" minOccurs="0" maxOccurs="unbounded" /&gt; 
+          &lt;/xs:sequence&gt; 
+       &lt;/xs:extension&gt; 
+    &lt;/xs:complexContent&gt; 
+ &lt;/xs:complexType&gt;</literallayout></para>
 
     <para>This element type contains a descriptive name for the command in
     addition to an xs:sequence of veDataValuePairs. The command is constructed
@@ -162,29 +163,31 @@
     veParameterBlock is a general component that contains information about
     general information sources within VE-Suite:</para>
 
-    <literallayout>&lt;xs:complexType name="veParameterBlock"&gt;
-      &lt;xs:complexContent&gt;
-         &lt;xs:extension base="veXMLObject"&gt;
-            &lt;xs:sequence&gt;
-               &lt;xs:element name="blockID" type="xs:unsignedInt" maxOccurs="1" minOccurs="1" /&gt;
-               &lt;xs:element name="blockName" type="xs:string" /&gt;
-               &lt;xs:element name="transform" type="veTransform" minOccurs="0" maxOccurs="1" /&gt;
-               &lt;xs:element name="properties" type="veDataValuePair" minOccurs="0" maxOccurs="unbounded" /&gt;
-            &lt;/xs:sequence&gt;
-         &lt;/xs:extension&gt;
-      &lt;/xs:complexContent&gt;
-   &lt;/xs:complexType&gt;</literallayout>
+    <para><literallayout>&lt;xs:complexType name="veParameterBlock"&gt; 
+    &lt;xs:complexContent&gt; 
+       &lt;xs:extension base="veXMLObject"&gt; 
+          &lt;xs:sequence&gt; 
+             &lt;xs:element name="blockID" type="xs:unsignedInt" maxOccurs="1" minOccurs="1" /&gt; 
+             &lt;xs:element name="blockName" type="xs:string" /&gt; 
+             &lt;xs:element name="transform" type="veTransform" minOccurs="0" maxOccurs="1" /&gt; 
+             &lt;xs:element name="properties" type="veDataValuePair" minOccurs="0" maxOccurs="unbounded" /&gt; 
+          &lt;/xs:sequence&gt; 
+       &lt;/xs:extension&gt; 
+    &lt;/xs:complexContent&gt; 
+ &lt;/xs:complexType&gt;</literallayout></para>
 
     <para>An example of a parameter block would be a reference to a VTK
     dataset. The property element is configured to maintain a list of custom
     elements for describing a particular information source. This list of
     elements may also contain a list of hardware specifications for a sensor
-    array or for a CFD solver configuration. </para>
+    array or for a CFD solver configuration.</para>
 
     <para>CADNode describes the geometrical representations that are stored
     for a particular object.</para>
 
-    <literallayout>&lt;xs:complexType name="CADNode"&gt;
+<!-- xxxxxx -->
+
+    <para><literallayout>&lt;xs:complexType name="CADNode"&gt;
     &lt;xs:complexContent&gt;
       &lt;xs:extension base="veXMLObject"&gt;
         &lt;xs:sequence&gt;
@@ -202,7 +205,7 @@
         &lt;xs:attribute name="makeTransparentOnVis" type="xs:boolean" default="true" /&gt;
       &lt;/xs:extension&gt;
     &lt;/xs:complexContent&gt;
-  &lt;/xs:complexType&gt;</literallayout>
+  &lt;/xs:complexType&gt;</literallayout></para>
 
     <para>The CADNode contains two unique features. First, the CADNode does
     not maintain its own geometrical information, but references a file that

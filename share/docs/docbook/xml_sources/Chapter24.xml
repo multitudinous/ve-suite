@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter version="5.0" xmlns="http://docbook.org/ns/docbook"
+         xmlns:xlink="http://www.w3.org/1999/xlink"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         xmlns:svg="http://www.w3.org/2000/svg"
+         xmlns:m="http://www.w3.org/1998/Math/MathML"
+         xmlns:html="http://www.w3.org/1999/xhtml"
+         xmlns:db="http://docbook.org/ns/docbook">
+  <title>Using VE-PSI</title>
+
+  <para>The new tools created to integrate VE-Suite will be described in this
+  document. The assumptions are that users have access to Aspen and that they
+  are familiar with general VE-Suite operations.</para>
+
+  <para>First, use the instructions outlined in Chapter 3, Creating Content in
+  VE-Suite to launch VE-Suite.</para>
+
+  <!-- TODO: add olink to Chapter 3 -->
+
+  <para>In VE-Conductor, go to the File menu and click on Run ..</para>
+
+  <figure>
+    <title>Click Run .. in VE-Conductor's File menu</title>
+
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="images/VEPSIRun.png"></imagedata>
+      </imageobject>
+    </mediaobject>
+  </figure>
+
+  <para>Navigate to VE-Suite's <code>bin</code> directory. In Files of type,
+  select Executable files (*.exe), click on ves_psi.exe, and click
+  Open.</para>
+
+  <figure>
+    <title>Load ves_psi.exe to start VE-PSI</title>
+
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="images/VEPSIexeopen.png"></imagedata>
+      </imageobject>
+    </mediaobject>
+  </figure>
+
+  <para>In the VE-PSI dialog box that opens, click Start.</para>
+
+  <figure>
+    <title>VE-PSI dialog box</title>
+
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="images/VEPSIStart.png"></imagedata>
+      </imageobject>
+    </mediaobject>
+  </figure>
+
+  <para>VE-Conductor will will display "Successfully registered ASPENUNIT" if
+  everything performed correctly</para>
+
+  <figure>
+    <title>VE-Conductor will display "Successfully registered
+    ASPENUNIT"</title>
+
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="images/VEPSISuccessfullyRegistered.png"></imagedata>
+      </imageobject>
+    </mediaobject>
+  </figure>
+
+  <para>In the VE-Conductor window, double-click on the Aspen Unit icon to
+  create a plugin.</para>
+
+  <figure>
+    <title>Aspen Unit icon</title>
+
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="images/VEPSICreateAPPlugin.png"></imagedata>
+      </imageobject>
+    </mediaobject>
+  </figure>
+
+  <para>Right-click on the APPlugin icon, go to Aspen, and click Open.</para>
+
+  <figure>
+    <title>Click Open under the Aspen menu</title>
+
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="images/VEPSIPlugin.png"></imagedata>
+      </imageobject>
+    </mediaobject>
+  </figure>
+
+  <para>Ensure that both a <code>.apw </code>and <code>.bkp</code> file have
+  been created, then use the dialog box to load the Aspen Plus project.</para>
+
+  <figure>
+    <title>Load an Aspen Plus project</title>
+
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="images/VEPSIloadAPproject.png"></imagedata>
+      </imageobject>
+    </mediaobject>
+  </figure>
+
+  <para>Once the project has been chosen, you will see a network diagram of
+  the Aspen flowsheet similar to what you see in Aspen.</para>
+
+  <figure>
+    <title>Network diagram of an Aspen flowsheet</title>
+
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="images/VEPSInetworkdiagram.jpg"></imagedata>
+      </imageobject>
+    </mediaobject>
+  </figure>
+
+  <para>The Aspen flowsheet will also be displayed and available.</para>
+
+  <figure>
+    <title>Aspen flowsheet</title>
+
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="images/VEPSIflowsheet.jpg"></imagedata>
+      </imageobject>
+    </mediaobject>
+  </figure>
+
+  <para>Once you have loaded the Aspen flowsheet, you will be able to work
+  with Aspen through the VE-Suite right-click menus.</para>
+
+  <figure>
+    <title>Aspen can be accessed through VE-Suite's right-click menus</title>
+
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="images/VEPSIrightclickmenus.jpg"></imagedata>
+      </imageobject>
+    </mediaobject>
+  </figure>
+
+  <para>The Aspen operation name is shown below.</para>
+
+  <figure>
+    <title>Aspen operation name</title>
+
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="images/VEPSIoperationname.jpg"></imagedata>
+      </imageobject>
+    </mediaobject>
+  </figure>
+
+  <para>When you choose to investigate input variables, the parameters dialog
+  allows any variable to be viewed for a specific unit operation and modified.
+  This is also true for the results, except that the user is unable to change
+  the results.</para>
+
+  <figure>
+    <title>Parameters dialog</title>
+
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="images/VEPSIparamsdialog.png"></imagedata>
+      </imageobject>
+    </mediaobject>
+  </figure>
+
+  <para>Inputs:</para>
+
+  <figure>
+    <title>Parameters dialog: inputs</title>
+
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="images/VEPSIparamsdialoginput.png"></imagedata>
+      </imageobject>
+    </mediaobject>
+  </figure>
+
+  <para>Results:</para>
+
+  <figure>
+    <title>Parameters dialog: results</title>
+
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="images/VEPSIparamsdialog03.png"></imagedata>
+      </imageobject>
+    </mediaobject>
+  </figure>
+
+  <para>Once you change an input, the flowsheet can be run in Aspen by
+  right-clicking on the APPlugin in the VE-Conductor network window, selecting
+  Aspen, and clicking on Run.</para>
+
+  <figure>
+    <title>To run the flowshet in Aspen, select Run under the Aspen
+    menu</title>
+
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="images/VEPSIAspenRun.png"></imagedata>
+      </imageobject>
+    </mediaobject>
+  </figure>
+
+  <para>In addition to being able to run the Aspen flowsheet in traditional
+  modes, there is also a three-dimensional mode that can be viewed by going to
+  the VE-Xplorer menu in VE-Conductor, selecting Graphical View, and clicking
+  on Network.</para>
+
+  <figure>
+    <title>To view the three-dimensional mode, select Network under the
+    Graphical View menu</title>
+
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="images/VEPSIgraphicalview.png"></imagedata>
+      </imageobject>
+    </mediaobject>
+  </figure>
+
+  <figure>
+    <title>Three-dimensional mode</title>
+
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="images/VEPSIgraphicalviewnetwork.jpg"></imagedata>
+      </imageobject>
+    </mediaobject>
+  </figure>
+</chapter>

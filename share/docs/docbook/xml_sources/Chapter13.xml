@@ -1,0 +1,586 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter version="5.0" xmlns="http://docbook.org/ns/docbook"
+         xmlns:xlink="http://www.w3.org/1999/xlink"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         xmlns:svg="http://www.w3.org/2000/svg"
+         xmlns:m="http://www.w3.org/1998/Math/MathML"
+         xmlns:html="http://www.w3.org/1999/xhtml"
+         xmlns:db="http://docbook.org/ns/docbook">
+  <title>VE-Builder</title>
+
+  <section>
+    <title>Introduction</title>
+
+    <para>VE-Builder is a set of tools for modifying three-dimensional data
+    files for VE-Suite.</para>
+  </section>
+
+  <section>
+    <title>Launching VE-Builder</title>
+
+    <para>A VE-Suite shell environment is necessary to run VE-Builder. To run
+    VE-Builder tools from VE-Launcher, select the Shell Mode.</para>
+
+    <figure>
+      <title>Select Shell Mode in VE-Launcher</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="images/05-launcher.png"></imagedata>
+        </imageobject>
+      </mediaobject>
+    </figure>
+  </section>
+
+  <section>
+    <title>Importing Files</title>
+
+    <para>The <code>loaderToVtkd</code> program transforms prepared
+    three-dimensional data files from other programs into VE-Suite files.
+    First, prepare the environment for it by launching a Builder shell from
+    VE-Launcher, as described in the previous section. Then the
+    <code>loaderToVtkd</code> can be used to import files into VE-Suite
+    formats. The general syntax of the program is:</para>
+
+    <para><code>loaderToVtkd -singleFile &lt;input filename&gt; -loader
+    &lt;loader type&gt;</code></para>
+
+    <para><code>-o &lt;full path to the output directory&gt; -w file COMMAND
+    FOR THE NAME OF THE OUTPUT FILE</code></para>
+
+    <para>To see loaderToVtkd options, type in <code>loaderToVtkd</code>.
+    <code>loaderToVtkd</code> supports the following loader types:</para>
+
+    <itemizedlist>
+      <listitem>
+        <para>REI (BANFDB)</para>
+      </listitem>
+
+      <listitem>
+        <para>AVS (avs)</para>
+      </listitem>
+
+      <listitem>
+        <para>Dicom (dcm)</para>
+      </listitem>
+
+      <listitem>
+        <para>EnSight (ens)</para>
+      </listitem>
+
+      <listitem>
+        <para>MFIX (mfix)</para>
+      </listitem>
+
+      <listitem>
+        <para>StarCD (star)</para>
+      </listitem>
+    </itemizedlist>
+
+    <para>It also supports Plot3D, but with this syntax:</para>
+
+    <para><code>loaderToVtkd -geometryFileXYZ [input filename] -dataFileQ
+    [input filename2] </code></para>
+
+    <para><code>-o [full path to the output directory] -multiGrid Flag [0:1]
+    -iblankFlag [0:1] -numberofDimensions [0:1] </code></para>
+
+    <para><code>-outFileName [output file] -loader xyz -w file </code></para>
+
+    <para>The following sections include detailed instructions for preparing
+    and importing data files from StarCD (Section 9.4) and Fluent (AVS)
+    (Section 9.5).</para>
+
+    <!-- TODO: add olinks for Section 5.4 and Section 5.5 -->
+  </section>
+
+  <section>
+    <title>Importing from StarCD</title>
+
+    <section>
+      <title>Preparing the StarCD files</title>
+
+      <para>First, get the <code>star.cel</code>, <code>star.vrt</code>, and
+      <code>star.usr</code> files from StarCD. Instructions for doing this can
+      be found in Building Files from StarCD, Section 9.10 (below).</para>
+
+      <!-- TODO: add olink for Section 5.10 -->
+
+      <para>Next, make a <code>star.param</code> file to point to the
+      <code>star.cel</code>, <code>star.vrt</code>, and <code>star.usr</code>
+      files. Save the <link
+      xlink:href="http://www.vesuite.org/File/star.param">template</link> to
+      the working directory and follow these instructions to modify it for
+      your data.</para>
+
+      <para>Set these points to the appropriate <code>.cel</code>,
+      <code>.vrt</code>, and <code>.usr</code> files:</para>
+
+      <para><code>STARCEL=/your_directory/star.cel // a *.cel file is required
+      </code></para>
+
+      <para><code>STARVRT=/your_directory/star.vrt // a *.vrt file is required
+      </code></para>
+
+      <para><code>STARUSR=/your_directory/star.usr // a *.usr file is
+      required</code></para>
+
+      <para>Change these lines to their respective scalars:</para>
+
+      <para><code>VECTORNAME=Velocity // the columns of the *.usr file must be
+      labeled</code></para>
+
+      <para><code>SCALARNAME=scalar1 // the columns of the *.usr file must be
+      labeled </code></para>
+
+      <para><code>SCALARNAME=scalar2 // the columns of the *.usr file must be
+      labeled </code></para>
+
+      <para><code>SCALARNAME=scalar3 // the columns of the *.usr file must be
+      labeled</code></para>
+
+      <para><code>SCALEINDEX=1 // optional: uses integer indices defined in
+      translateToVtk.cpp to set scale factor </code></para>
+
+      <para>Enter an integer option on the <code>SCALEINDEX</code>:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para><code>0</code>: No scale, corresponding to a scale of
+          1.0</para>
+        </listitem>
+
+        <listitem>
+          <para><code>1</code>: Custom scale, indicating that the SCALEFACTOR
+          tag will be used to specify a scale factor</para>
+        </listitem>
+
+        <listitem>
+          <para><code>2</code>: Meters to feet, corresponding to a scale
+          factor of 3.28</para>
+        </listitem>
+
+        <listitem>
+          <para><code>3</code>: Millimeters to feet, corresponding to a scale
+          factor of 3.28e-3</para>
+        </listitem>
+
+        <listitem>
+          <para><code>4</code>: Inches to feet, corresponding to a scale
+          factor of 1.0/12.0</para>
+        </listitem>
+
+        <listitem>
+          <para><code>5</code>: Meters (1:12) scale to feet, corresponding to
+          a scale factor of 12.0*3.28</para>
+        </listitem>
+      </itemizedlist>
+
+      <para><code>SCALEFACTOR=.083333333 // optional: the scale factor
+      (default = 1, unless SCALEINDEX &gt;1)</code></para>
+
+      <para>VR space is always in feet, so the scale factor tag must be in
+      feet. If using a <code>SCALEINDEX</code> of <code>0</code> or
+      <code>1</code>, comment out this line:</para>
+
+      <para><code>WRITEOPTION=1 // optional: 0=let vtk write the
+      file(default), 1=directly write ascii to disk </code></para>
+
+      <para>The <code>Writeoption</code> is no longer needed. Set it to
+      <code>0</code> or remove it.</para>
+    </section>
+
+    <section>
+      <title>Converting from StarCD to <code>.vtu</code></title>
+
+      <para>Use VE-Launcher to start a Builder shell. Set the working
+      directory to the directory where <code>star.param</code> is located,
+      then enter the following code:</para>
+
+      <para><code>loaderToVtkd -singleFile star.param -loader star -o [full
+      path to the output directory] -w file COMMAND TO SET FILE IN COMMAND
+      LINE OR STAR.PARAM FILE</code></para>
+
+      <para>After the code executes, it will dump a <code>.vtu</code> file of
+      the data into the specified directory.</para>
+    </section>
+  </section>
+
+  <section>
+    <title>Importing from Fluent (<code>.avs</code>)</title>
+
+    <para>First, write out an <code>.avs</code> file for the post-processed
+    data from Fluent and place it into the working directory. Use VE-Launcher
+    to open a Builder shell (see Section 9.2), making sure to set the working
+    directory to the directory where the <code>.avs</code> file is located.
+    Use this command to convert it.</para>
+
+    <!-- TODO: add olink to Section 5.2 -->
+
+    <para><code>loaderToVtkd –singleFile [AVS filename] –loader avs –o
+    [working directory] –w file</code></para>
+
+    <section>
+      <title>Converting from Fluent (<code>.cas</code>) to
+      <code>.vtu</code></title>
+
+      <para>You will need to write out a <code>.cas</code> file for the
+      post-processed data from Fluent. Place it into your working directory.
+      Open a Builder shell from VE-Launcher. Be sure to set the working
+      directory to the <code>.cas</code> file's directory. You can convert the
+      fluent output file to a <code>.vtu</code> file with this command:</para>
+
+      <para><code>loaderToVtkd -singleFile [CAS filename] -o [working
+      directory] -outFileName [name of output filename] -loader cas -w
+      file</code></para>
+    </section>
+  </section>
+
+  <section>
+    <title>Displaying FEA Data</title>
+
+    <para>VE-Suite has the capability to display FEA datasets in the virtual
+    environment, much like CFD datasets. However, the FEA data is primarily
+    displayed as a surface on the object(s) of interest.</para>
+
+    <para>To display FEA data from an FEA dataset, select the Polydata icon
+    and select the desired scalar for the FEA data.</para>
+  </section>
+
+  <section>
+    <title>Creating Preprocessed Data</title>
+
+    <para>You will need a <code>.vtu</code> file to create preprocessed data.
+    Start a Builder shell from VE-Launcher, being sure to set the working
+    directory to the <code>.vtu</code> file's directory. Verify that there is
+    a directory called <code>POST_DATA</code> in the same directory as the
+    <code>.vtu</code> file. If there is not, create one. Once the
+    <code>POST_DATA</code> directory is ready, type in
+    <code>preprocessor</code>. The first prompt will ask for a filename. Type
+    in the <code>.vtu</code> file's name. The second prompt will ask for a
+    directory to dump the data into. Type in the full path to the directory
+    where you want to put the preprocessed data. The program will then ask you
+    what you want to process. Your choices include:</para>
+
+    <itemizedlist>
+      <listitem>
+        <para>Decompose Octrees:</para>
+      </listitem>
+
+      <listitem>
+        <para>Extract Surfaces:</para>
+      </listitem>
+
+      <listitem>
+        <para>Extract Isosurfaces:</para>
+      </listitem>
+
+      <listitem>
+        <para>Extract Cutting Planes:</para>
+      </listitem>
+    </itemizedlist>
+
+    <para>Once you have made your choices, the program will execute and
+    produce your preprocessed data.</para>
+  </section>
+
+  <section>
+    <title>Specify Cutting Planes in a <code>.txt</code> File</title>
+
+    <para>If you want to extract cutting planes, you can specify the planes in
+    a <code>.txt</code> file instead of manually typing them in each time.
+    First, create a <code>.txt</code> file in the same directory as the
+    <code>.vtu</code> file and write your cutting planes in it using this
+    format:</para>
+
+    <para><code>1 //Number of x cuts</code></para>
+
+    <para><code>0.0 //X cuts</code></para>
+
+    <para><code>1 //Number of y cuts</code></para>
+
+    <para><code>0.0 //Y cuts</code></para>
+
+    <para><code>4 //Number of z cuts</code></para>
+
+    <para><code>3.26 3.39 3.42 3.73 //Z cuts</code></para>
+
+    <para>When you run the preprocessor, enter <code>(1)Yes</code> to extract
+    cutting planes. You will be asked how to set the number of cuts. Select
+    <code>(2)Specify text file</code>, then enter the name of your
+    <code>.txt</code> file. The preprocessor will pull the values for the
+    cutting planes from it.</para>
+  </section>
+
+  <section>
+    <title>Creating Texture-Based Datasets</title>
+
+    <para>Launch a Builder shell from VE-Launcher. In the VE-Launcher Shell
+    window, enter the following:</para>
+
+    <para><code>vtkTo3DTexture</code></para>
+
+    <para>This will launch the translator interface:</para>
+
+    <figure>
+      <title>Translator interface</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="images/05-translator-interface-cropped.jpg"></imagedata>
+        </imageobject>
+      </mediaobject>
+    </figure>
+
+    <para>Select the desired parameters from the GUI and click Translate.
+    Input parameters include:</para>
+
+    <itemizedlist>
+      <listitem>
+        <para>Input directory: Directory containing the input
+        <code>.vtk</code> dataset files</para>
+      </listitem>
+
+      <listitem>
+        <para>Output directory: Directory to write out the texture data and
+        the texture description files</para>
+      </listitem>
+
+      <listitem>
+        <para>Texture dimension: The resolution (~sampling rate) of the output
+        textures</para>
+      </listitem>
+
+      <listitem>
+        <para>Grid type: Input <code>.vtk</code> dataset grid structure</para>
+      </listitem>
+    </itemizedlist>
+
+    <para>A progress dialog will appear as the input <code>.vtk</code> files
+    are translated to three-dimensional texture data files that are usable in
+    VE-Suite.</para>
+
+    <figure>
+      <title>Translation progress</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="images/05-translation.jpg"></imagedata>
+        </imageobject>
+      </mediaobject>
+    </figure>
+
+    <para><emphasis role="bold">Batch Mode</emphasis></para>
+
+    <para>The translator can also be run in a batch mode. To run in batch
+    mode, enter this on the command line:</para>
+
+    <para><code>vtkTo3DTexture -i /home/users/mcdoe/LTN/3D_Jets_Test/vtk -o /
+    home/users/mcdoe/LTN/3D_Jets_Test/jets_vti -x 32 -y 64 -z 32 /
+    home/users/mcdoe/LTN/3D_Jets_Test/Jets_Data</code></para>
+
+    <para>where:</para>
+
+    <itemizedlist>
+      <listitem>
+        <para><code>-i</code> specifies the <code>vtk/vtu</code> files' input
+        directory</para>
+      </listitem>
+
+      <listitem>
+        <para><code>-o</code> specifies the output directory for the
+        three-dimensional <code>vti</code> texture files</para>
+      </listitem>
+
+      <listitem>
+        <para><code>-x</code> is the x resolution for the texture</para>
+      </listitem>
+
+      <listitem>
+        <para><code>-y</code> is the y resolution for the texture</para>
+      </listitem>
+
+      <listitem>
+        <para><code>-z</code> is the z resolution for the texture</para>
+      </listitem>
+
+      <listitem>
+        <para>The last argument is the data input directory for
+        <code>vt(u,k,s)</code> files</para>
+      </listitem>
+    </itemizedlist>
+
+    <para>The batch mode also supports parallel processing (MPI), which is
+    convenient for large transient datasets. To run in batch mode with MPI,
+    you must first install the MPI library. We recommend <link
+    xlink:href="http://www.lam-mpi.org/7.1/download.php">LAM/MPI</link>. This
+    is available for most Linux platforms. To run with LAM/MPI, a script
+    should be created similar to:</para>
+
+    <para><code>#/bin/tcsh</code></para>
+
+    <para><code>setenv VE_SUITE_HOME /home/users/mcdoe/svn_VE_Suite/VE_Suite
+    &amp;&amp; source $VE_SUITE_HOME/VE_Installer/setup.tsh </code></para>
+
+    <para><code>vtkTo3DTextureMPI -i /home/users/mcdoe/LTN/3D_Jets_Test/vtk -o
+    / home/users/mcdoe/LTN/3D_Jets_Test/jets_vti -x 32 -y 64 -z 32 /
+    home/users/mcdoe/LTN/3D_Jets_Test/Jets_Data </code></para>
+
+    <para>which should then be executed as follows:</para>
+
+    <para><code>mpirun -np 2 ./</code></para>
+  </section>
+
+  <section>
+    <title>Building Files from StarCD</title>
+
+    <para>If you need to write out <code>star.cel</code>,
+    <code>star.vrt</code>, and <code>star.usr</code> files from StarCD, follow
+    these instructions:</para>
+
+    <orderedlist>
+      <listitem>
+        <para>Launch StarCD</para>
+      </listitem>
+
+      <listitem>
+        <para>Ensure that a <code>*.vrt</code> and <code>*.cel</code> file are
+        written of the region of interest. This region can either be a
+        complete CFD model or a subsection of the model</para>
+      </listitem>
+
+      <listitem>
+        <para>Analyze data</para>
+      </listitem>
+
+      <listitem>
+        <para>Post-processing--&gt;Load data</para>
+
+        <orderedlist>
+          <listitem>
+            <para>In the "File(s)" tab, click "open post file"</para>
+          </listitem>
+
+          <listitem>
+            <para>In the "Data" tab:</para>
+
+            <orderedlist>
+              <listitem>
+                <para>Scalar Data--&gt;Turb Kinetic Energy</para>
+              </listitem>
+
+              <listitem>
+                <para>Vector Data--&gt;Velocity Components UVW</para>
+              </listitem>
+            </orderedlist>
+          </listitem>
+        </orderedlist>
+      </listitem>
+
+      <listitem>
+        <para>Click Get Data</para>
+      </listitem>
+
+      <listitem>
+        <para>Click View Post Registers</para>
+      </listitem>
+
+      <listitem>
+        <para>To add other scalar values to store:</para>
+
+        <orderedlist>
+          <listitem>
+            <para>Click Operate at the bottom of the Post Registers
+            window</para>
+          </listitem>
+
+          <listitem>
+            <para>Function--&gt;Load vertex data--&gt;turbulent energy
+            (Registers 1-3 must contain vector data. Registers 4-6 must
+            contain scalar data.)</para>
+          </listitem>
+
+          <listitem>
+            <para>Select register</para>
+
+            <para><emphasis role="bold">NOTE:</emphasis>Although it is
+            necessary to use vertex data rather than cell data, using vertex
+            data might return an error. To solve this problem, copy the
+            previous command line and add the register number (e.g., enter
+            <code>oper, getv, te, 5,</code>)</para>
+          </listitem>
+
+          <listitem>
+            <para>Ensure that "using relative values" is selected</para>
+          </listitem>
+
+          <listitem>
+            <para>Click Apply to put data in an empty register</para>
+          </listitem>
+
+          <listitem>
+            <para>Click Update list</para>
+          </listitem>
+
+          <listitem>
+            <para>Repeat the previous steps to add data to registers 5 and 6
+            (pressure and viscosity)</para>
+          </listitem>
+        </orderedlist>
+      </listitem>
+
+      <listitem>
+        <para>The data is now stored. In the pro-STAR window:</para>
+
+        <orderedlist>
+          <listitem>
+            <para>Post--&gt;save user data</para>
+          </listitem>
+
+          <listitem>
+            <para>Registers: all</para>
+          </listitem>
+
+          <listitem>
+            <para>File type: coded</para>
+          </listitem>
+
+          <listitem>
+            <para>Range: all vertices</para>
+          </listitem>
+
+          <listitem>
+            <para>Click Apply</para>
+          </listitem>
+
+          <listitem>
+            <para>Click Close</para>
+          </listitem>
+        </orderedlist>
+      </listitem>
+
+      <listitem>
+        <para>Manually close file (enter close <code>*.usr</code>)</para>
+      </listitem>
+
+      <listitem>
+        <para>File--&gt;save as coded</para>
+      </listitem>
+
+      <listitem>
+        <para>Unclick boundary file</para>
+      </listitem>
+
+      <listitem>
+        <para>Click Apply</para>
+
+        <para><emphasis role="bold">NOTE:</emphasis> Checked files are written
+        out</para>
+      </listitem>
+
+      <listitem>
+        <para>Enter <code>Close All</code></para>
+      </listitem>
+    </orderedlist>
+  </section>
+</chapter>

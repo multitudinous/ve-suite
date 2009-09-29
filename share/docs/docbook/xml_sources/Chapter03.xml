@@ -1,0 +1,903 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter version="5.0" xmlns="http://docbook.org/ns/docbook"
+         xmlns:xlink="http://www.w3.org/1999/xlink"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         xmlns:svg="http://www.w3.org/2000/svg"
+         xmlns:m="http://www.w3.org/1998/Math/MathML"
+         xmlns:html="http://www.w3.org/1999/xhtml"
+         xmlns:db="http://docbook.org/ns/docbook">
+  <title>Creating Content in VE-Suite</title>
+
+  <section>
+    <title>Loading Data and Connecting</title>
+
+    <para>VE-Suite loads objects through plugins. This section describes how
+    to load a geometry file through a plugin. Other data files may be loaded
+    in the same manner.</para>
+
+    <para>Plugins are set up through the Available Objects window. Click on
+    the New Document button to make sure the design space is clear.</para>
+
+    <figure>
+      <title>Clearing the design space</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="images/03-cleardesignspace.png"></imagedata>
+        </imageobject>
+      </mediaobject>
+    </figure>
+
+    <para>To create a new plugin, double-click on the DefaultPlugin directory
+    below the Available Plugins directory in the VE-Conductor Network
+    window.</para>
+
+    <figure>
+      <title>VE-Conductor Network window</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="images/03-plugins03.png"></imagedata>
+        </imageobject>
+      </mediaobject>
+    </figure>
+
+    <para>Right-click on the gray DefaultPlugin box that appears in the pane
+    on the right side of the window to access the plugin's menu, and select
+    the Geometry Config option.</para>
+
+    <figure>
+      <title>Select the Geometry Config option</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="images/03-plugins04.png"></imagedata>
+        </imageobject>
+      </mediaobject>
+    </figure>
+
+    <para>A new window, the CADTree Manager, will open. This holds the objects
+    that are inserted into the plugin. To select a geometry file, right-click
+    on the Model_Geometry icon and select Add Node..., then Load CAD
+    file...</para>
+
+    <figure>
+      <title>To select a geometry file, click Load CAD file...</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="images/03-plugins06.png"></imagedata>
+        </imageobject>
+      </mediaobject>
+    </figure>
+
+    <para>In the dialog box that opens, choose the appropriate file type, then
+    select the file and click the Open button.</para>
+
+    <figure>
+      <title>Loading a CAD file</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="images/03-plugins07.png"></imagedata>
+        </imageobject>
+      </mediaobject>
+    </figure>
+
+    <para>Name the object you loaded, then click the OK button to insert it
+    into the plugin.</para>
+
+    <figure>
+      <title>Name the CAD object</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="images/03-plugins08.png"></imagedata>
+        </imageobject>
+      </mediaobject>
+    </figure>
+
+    <para>Click Close on the CADTree Manager.</para>
+
+    <figure>
+      <title>Close the CADTree Manager before loading the plugin
+      information</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="images/03-plugins09.png"></imagedata>
+        </imageobject>
+      </mediaobject>
+    </figure>
+
+    <para>To load the information for the plugin's node into the rest of
+    VE-Suite, click on the Connection menu and select Submit Job.</para>
+
+    <figure>
+      <title>Click Submit Job to load the information into the rest of
+      VE-Suite</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="images/03-plugins10.png"></imagedata>
+        </imageobject>
+      </mediaobject>
+    </figure>
+
+    <para>The starting logo in Xplorer should be replaced by the objects in
+    the plugins you submitted.</para>
+
+    <figure>
+      <title>Use the keyboard or mouse to manipulate the camera and bring the
+      object into view</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="images/03-plugins11-cropped.png"></imagedata>
+        </imageobject>
+      </mediaobject>
+    </figure>
+
+    <para>If the object is not initially visible in the Xplorer window, it may
+    be outside the viewing region. Hold down the right mouse button and drag
+    up in the Xplorer window to pull back the camera. Continue doing so until
+    the scene is visible in the Xplorer window.</para>
+  </section>
+
+  <section>
+    <title>Geometry In Depth</title>
+
+    <para>In addition to allowing users to load multiple geometry objects,
+    VE-Suite also allows objects to be transformed, shaded, and
+    textured.</para>
+
+    <section>
+      <title>Loading Objects and Assemblies</title>
+
+      <para>To load multiple geometry objects in VE-Suite, continue adding CAD
+      file nodes in the same way that you loaded a single CAD file.</para>
+
+      <figure>
+        <title>To load multiple geometry objects, continue adding CAD file
+        nodes</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="images/03-plugins06.png"></imagedata>
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para>If you want to load multiple instances of the same object, its CAD
+      file can be loaded multiple times. However, that wastes memory. A better
+      way to load multiple instances of the same object is to load the object
+      into the scene one time, then clone the other instances from it to save
+      memory. To clone an object, right-click on it and select Clone
+      Node…</para>
+
+      <figure>
+        <title>To load multiple instances of the sae object, select Clone
+        Node...</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="images/03-clone-node.png"></imagedata>
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para>New assemblies can also be created for grouping geometry objects.
+      Right-click the appropriate assembly, then select Add Node..., then
+      Create New Assembly...</para>
+
+      <figure>
+        <title>New assemblies can be created for grouping geometry
+        objects</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="images/03-create-new-assembly.png"></imagedata>
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para>To quickly populate an assembly, the entire geometry object tree
+      can be loaded from another project. First, select the appropriate
+      geometry tree in the CADTree Manger, then click the Save As... button to
+      save it as a <code>.veg</code> file.</para>
+
+      <figure>
+        <title>Loading a geometry object tree</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="images/03-save-as-veg.png"></imagedata>
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para>Next, open the geometry tree where the first geometry tree is to
+      be moved, right-click the assembly where it is to be moved, then select
+      Add Node, then Load VEG file.</para>
+    </section>
+
+    <section>
+      <title>Transforming Geometric Objects</title>
+
+      <para>Geometric objects can be moved, rotated, and scaled in the scene
+      by using the Transformation dialog. To open the Transformation dialog,
+      open the CADTree Manager, right-click on the object to be transformed,
+      and select Properties. This will open the CAD Properties window. The
+      Transformation dialog is the first tab in the CAD Properties
+      window.</para>
+
+      <figure>
+        <title>CAD Properties window</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="images/03-transform-dialog.png"></imagedata>
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para>When you edit the Transform properties, the scene is updated in
+      real time. Once the object's size and placement are satisfactory, click
+      OK.</para>
+
+      <para>An assembly's transform properties can also be edited, but keep in
+      mind that an assembly’s transformation also affects its members. See the
+      Chapter 3.2, Geometry In-Depth, for more information on
+      assemblies.</para>
+
+      <!-- TODO: add olink for Chapter 3 -->
+    </section>
+
+    <section>
+      <title>Toggling Geometric Objects</title>
+
+      <para>You can toggle the visibility of geometric objects on and off. To
+      do so, right-click the object in the CADTree Manager and select Toggle
+      Node, then On or Off.</para>
+    </section>
+
+    <section>
+      <title>Materials and Shaders</title>
+
+      <para>You can apply custom materials and shaders to geometric objects.
+      Right-click the object and select Properties. When the CAD Properties
+      window opens, select the Attributes tab. Choose Materials or Shaders,
+      then click Add....</para>
+
+      <para>If you choose Materials, you will be asked to name the material.
+      Once it is in the list, you can apply it to the object by left-clicking
+      it. To change a material's properties, right-click its name. A menu will
+      appear with options to change its lighting, shininess, opacity, and how
+      the lighting and material are applied to the object.</para>
+
+      <figure>
+        <title>Applying materials and shaders to geometric objects</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="images/03-cadproperties-attributes.png"></imagedata>
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para>If you choose Shaders, you will be asked to load a shader .
+      Example shaders can be found in the
+      <code>VE-Suite_x.x.x\share\vesuite\shaders</code> directory. You can
+      apply a shader by clicking on its name, the clicking the Open
+      button.</para>
+
+      <para>A material and a shader cannot both be added to an object at the
+      same time. To remove a material or shader from an object, click Restore
+      Defaults. To remove a material or shader from the Available Attributes
+      list, select its name and click the Remove... button.</para>
+    </section>
+
+    <section>
+      <title>Coloring Geometric Objects</title>
+
+      <para>The geometry's color is determined by its Material attribute. To
+      change the Material attribute, open the geometry's Properties, go to the
+      Attributes tab, and right-click the Material attribute to be
+      changed.</para>
+
+      <para>On Windows, the color dialog box looks like this:</para>
+
+      <figure>
+        <title>Windows color dialog box</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="images/03-windows-palette.png"></imagedata>
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para>A color can be chosen from the Basic colors palette, or the color
+      map and luminosity slider can help you create custom colors. Custom
+      colors do not need to be added to the Custom colors palette. They will
+      be forgotten once the dialog is closed.</para>
+
+      <para>When creating a custom color, make sure to check the luminosity
+      slider as well as the Color/Solid preview box next to the Hue/Sat/Lum
+      values. The color will appear as black or white if the luminosity slider
+      is set too high or too low.</para>
+
+      <para>Click OK to set the new color.</para>
+
+      <para>On non-Windows systems, the color dialog box looks like
+      this:</para>
+
+      <figure>
+        <title>Non-Windows color dialog box</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="images/03-non-windows-colorwheel.jpg"></imagedata>
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para>A color can be chosen from the Palette, or the color ring and
+      triangle can be used to create a custom color. The bar below the color
+      ring shows the current color on the left and the new color on the
+      right.</para>
+
+      <para>To make a custom color, choose its hue by clicking in the color
+      ring, then choose its saturation and value by clicking in the color
+      triangle. Click OK to set the new color.</para>
+    </section>
+
+    <section>
+      <title>Using Assemblies</title>
+
+      <para>Assemblies group geometric objects together so they can all be
+      modified at once. An assembly's properties are passed to its members and
+      can change its members in the following ways:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>Transformation: Member translations are relative to their
+          assembly's axes, not the world's axes. Member scalings are relative
+          to their assembly's scalings (e.g., if you double the scale of a
+          member whose assembly is already double-scaled, the member will be
+          scaled to four times the original size). Assemblies rotate around
+          the assembly's origin point, not members' origin points.</para>
+        </listitem>
+
+        <listitem>
+          <para>Materials and Shaders: Materials and shaders applied to
+          assemblies are applied to its members. If a member is assigned a
+          material or shader as well, the member's material or shader
+          overrides its assembly's material or shader.</para>
+        </listitem>
+
+        <listitem>
+          <para>Toggle node: Toggling an assembly Off hides all of its
+          members. Toggling an assembly On shows any members that are toggled
+          On. If a member is toggled Off, togging its assembly On will not
+          reveal that member.</para>
+        </listitem>
+      </itemizedlist>
+    </section>
+  </section>
+
+  <section>
+    <title>Navigation</title>
+
+    <para>There are two ways to manipulate VE-Suite's view using just the
+    mouse: dragging in the Xplorer window itself or using the Navigation Pane.
+    A RemotePoint RF wand can also be used to navigate VE-Suite.</para>
+
+    <section>
+      <title>Xplorer Window</title>
+
+      <para>A three-button mouse will enable a user to do every translation
+      and rotation within the Xplorer window itself.</para>
+
+      <figure>
+        <title>Rotating a scene</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="images/03-3button-nav.gif"></imagedata>
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para>To rotate the scene, drag along the screen while holding the left
+      button. To rotate along the X- and Z-axes, drag in the center of the
+      screen. To rotate along the Y-axis, drag along the border of the
+      screen.</para>
+
+      <para>The right mouse button handles Y-axis translations. Hold the right
+      button and drag the mouse up or down to push the scene away or pull it
+      closer.</para>
+
+      <para>The mouse wheel button handles the other translations. Hold it
+      down to drag the scene left, right, up, or down across the
+      screen.</para>
+
+      <para><emphasis role="bold">NOTE:</emphasis> Returning to the original
+      orientation after rotating the scene may be difficult. This is because
+      the mouse controls rotate around an arbitrary axis that allows rotation
+      in all three dimensions, but it can be difficult to return to a previous
+      orientation. To return to a standard orientation, select the View
+      submenu under the VE-Xplorer menu, then click on either Reset or Frame
+      All.</para>
+    </section>
+
+    <section>
+      <title>Navigation Pane</title>
+
+      <para>To open the Navigation Pane, select it from the VE-Xplorer
+      menu.</para>
+
+      <figure>
+        <title>Select Navigation Pane from the VE-Xplorer menu</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="images/03-navpane-01.png"></imagedata>
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para>The Navigation Pane looks like this:</para>
+
+      <figure>
+        <title>Navigation Pane</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="images/03-navpane-02.png"></imagedata>
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para>Experiment with the movement buttons (the ones with arrows on
+      them) to see how they change the scene. Note that they move the camera,
+      not the object. Clicking the X-axis button, for example, will move the
+      camera left, making the object shift right.</para>
+
+      <para>Most of the other controls modify how the movement buttons
+      act:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>The Step Size sliders control the speed of translations and
+          rotations. The farther to the right they are, the faster
+          translations and rotations occur.</para>
+        </listitem>
+
+        <listitem>
+          <para>The Rotate About Users Head checkbox controls how the camera
+          reacts to Yaw Rotation commands. If it is checked, the camera
+          rotates in place. If it is not, the camera rotates around the
+          environment center, like roll and pitch rotations.</para>
+        </listitem>
+
+        <listitem>
+          <para>The Rest Nav Position button resets the camera to its initial
+          position.</para>
+        </listitem>
+
+        <listitem>
+          <para>The Lower Limit checkbox sets whether movement in the
+          z-direction can be negative.</para>
+        </listitem>
+
+        <listitem>
+          <para>The Store Start Position button allows an initial position to
+          be stored for the model.</para>
+        </listitem>
+      </itemizedlist>
+    </section>
+
+    <section>
+      <title>Wands</title>
+
+      <para>With the proper Juggler configuration, wands can be used to
+      navigate VE-Suite. Once the wand is set up, pressing the Nav button and
+      holding the wand moves you in that direction. Holding down the Left
+      Shoulder button and pointing to the left will rotate the camera to its
+      left.</para>
+
+      <figure>
+        <title>Wands can be used to navigate VE-Suite</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="images/03-remotediagram.jpg"></imagedata>
+          </imageobject>
+        </mediaobject>
+      </figure>
+    </section>
+
+    <section>
+      <title>Keyboard/Mouse Navigation Scheme</title>
+
+      <para>A keyboard/mouse navigation scheme can also be used to navigate in
+      VE-Suite.</para>
+
+      <table>
+        <title>Axes</title>
+
+        <tgroup cols="2">
+          <tbody>
+            <row>
+              <entry>x-axis</entry>
+
+              <entry>left to right</entry>
+            </row>
+
+            <row>
+              <entry>y-axis</entry>
+
+              <entry>near to far</entry>
+            </row>
+
+            <row>
+              <entry>z-axis</entry>
+
+              <entry>bottom to top</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </table>
+
+      <table>
+        <title>Modifier Keys</title>
+
+        <tgroup cols="2">
+          <tbody>
+            <row>
+              <entry>None</entry>
+
+              <entry>Yes</entry>
+            </row>
+
+            <row>
+              <entry>Shift</entry>
+
+              <entry>Yes</entry>
+            </row>
+
+            <row>
+              <entry>Ctrl</entry>
+
+              <entry>No</entry>
+            </row>
+
+            <row>
+              <entry>Alt</entry>
+
+              <entry>No</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </table>
+
+      <para><emphasis role="bold">Trackball Mode:</emphasis></para>
+
+      <table>
+        <title>Keyboard Commands</title>
+
+        <tgroup cols="2">
+          <tbody>
+            <row>
+              <entry>R</entry>
+
+              <entry>Reset the center point and camera transform</entry>
+            </row>
+
+            <row>
+              <entry>F</entry>
+
+              <entry>Frame all geometry within the current viewing
+              frustum</entry>
+            </row>
+
+            <row>
+              <entry>A</entry>
+
+              <entry><emphasis>not currently used</emphasis></entry>
+            </row>
+
+            <row>
+              <entry>S</entry>
+
+              <entry><emphasis>not currently used</emphasis></entry>
+            </row>
+
+            <row>
+              <entry>W</entry>
+
+              <entry><emphasis>not currently used</emphasis></entry>
+            </row>
+
+            <row>
+              <entry>D</entry>
+
+              <entry><emphasis>not currently used</emphasis></entry>
+            </row>
+
+            <row>
+              <entry>C</entry>
+
+              <entry><emphasis>not currently used</emphasis></entry>
+            </row>
+
+            <row>
+              <entry>Space Bar</entry>
+
+              <entry><emphasis>not currently used</emphasis></entry>
+            </row>
+
+            <row>
+              <entry>K</entry>
+
+              <entry>SkyCam() function</entry>
+            </row>
+
+            <row>
+              <entry>Up Arrow</entry>
+
+              <entry>Positive zoom in the yz-axes 45 degrees</entry>
+            </row>
+
+            <row>
+              <entry>Down Arrow</entry>
+
+              <entry>Negative zoom in the yz-axes 45 degrees</entry>
+            </row>
+
+            <row>
+              <entry>Left Arrow</entry>
+
+              <entry>Negative pan in the x-axis</entry>
+            </row>
+
+            <row>
+              <entry>Right Arrow</entry>
+
+              <entry>Positive pan in the x-axis</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </table>
+
+      <table>
+        <title>Mouse Commands</title>
+
+        <tgroup cols="2">
+          <tbody>
+            <row>
+              <entry>Left mouse button - mod:none</entry>
+
+              <entry>Rotate about the xz-axes</entry>
+            </row>
+
+            <row>
+              <entry>Left mouse button - mod:none; on edges of window</entry>
+
+              <entry>Twist about the y-axis</entry>
+            </row>
+
+            <row>
+              <entry>Middle mouse button - Scroll Up</entry>
+
+              <entry><emphasis>not currently used</emphasis></entry>
+            </row>
+
+            <row>
+              <entry>Middle mouse button</entry>
+
+              <entry>Pan in the xz-axes</entry>
+            </row>
+
+            <row>
+              <entry>Middle mouse button - Scroll Down</entry>
+
+              <entry><emphasis>not currently used</emphasis></entry>
+            </row>
+
+            <row>
+              <entry>Right mouse button</entry>
+
+              <entry>Zoom in/out along the y-axis</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </table>
+
+      <para><emphasis role="bold">Character Mode (1st- and 3rd-person
+      views):</emphasis></para>
+
+      <table>
+        <title>Keyboard Commands</title>
+
+        <tgroup cols="2">
+          <tbody>
+            <row>
+              <entry>A</entry>
+
+              <entry>Strafe left</entry>
+            </row>
+
+            <row>
+              <entry>S</entry>
+
+              <entry>Walk/Run backward</entry>
+            </row>
+
+            <row>
+              <entry>W</entry>
+
+              <entry>Walk/Run forward</entry>
+            </row>
+
+            <row>
+              <entry>D</entry>
+
+              <entry>Strafe right</entry>
+            </row>
+
+            <row>
+              <entry>C</entry>
+
+              <entry>Fly down (not implemented)</entry>
+            </row>
+
+            <row>
+              <entry>Space Bar</entry>
+
+              <entry>Jump/Fly up (not implemented)</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </table>
+
+      <table>
+        <title>Mouse Commands</title>
+
+        <tgroup cols="2">
+          <tbody>
+            <row>
+              <entry>Left mouse button</entry>
+
+              <entry>Rotate the camera about the xz-axes</entry>
+            </row>
+
+            <row>
+              <entry>Left mouse button - mod:shift</entry>
+
+              <entry>Physics picking using Bullet p2p constraint</entry>
+            </row>
+
+            <row>
+              <entry>Middle mouse button - Scroll Up</entry>
+
+              <entry>Zoom in to the character</entry>
+            </row>
+
+            <row>
+              <entry>Middle mouse button</entry>
+
+              <entry><emphasis>not currently used</emphasis></entry>
+            </row>
+
+            <row>
+              <entry>Middle mouse button - Scroll Down</entry>
+
+              <entry>Zoom out from the character</entry>
+            </row>
+
+            <row>
+              <entry>Right mouse button</entry>
+
+              <entry>Rotate the camera and the character about the
+              xz-axes</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </table>
+    </section>
+  </section>
+
+  <section>
+    <title>Viewpoints Pane</title>
+
+    <para>To store multiple viewpoints and switch between them, use the
+    Viewpoints Pane under the VE-Xplorer menu.</para>
+
+    <figure>
+      <title>Viewpoints Pane</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="images/03-viewpoints-pane.png"></imagedata>
+        </imageobject>
+      </mediaobject>
+    </figure>
+
+    <para>When the Viewpoints Pane starts, no viewpoints are loaded. As the
+    user adds them to the pane, they appear in the Move to a Viewpoint
+    dropdown menu, which can be used to select the viewpoint the user wants to
+    switch to.</para>
+
+    <para>To add a viewpoint, position the camera the way you want it in the
+    viewpoint, then click the Add Location button. The viewpoint will be added
+    to the dropdown menu.</para>
+
+    <para>Viewpoints can be deleted by clicking the Delete Location(s) button,
+    selecting the appropriate viewpoint from the window that opens, and
+    clicking OK.</para>
+
+    <para>Once a viewpoint is added, the
+    <code>stored_viewpts_flythroughs.vel</code> file in the working directory
+    is updated. It is automatically updated when a viewpoint is added or
+    deleted. Saved viewpoints can be restored later by clicking the Load
+    button.</para>
+
+    <para>To move to a viewpoint, select it from the dropdown menu in the
+    Flythrough Control section of the Viewpoints Pane. The camera will fly to
+    that viewpoint at the speed set in the speed scroller.</para>
+
+    <para>Viewpoints can also be cycled through a flythrough. Click on the
+    Start button below Automate Flythrough to begin a flythrough between each
+    viewpoint in successive order. The flythrough will start at the first
+    viewpoint, then hit each successive viewpoint, going at the speed
+    specified by the speed scroller. When it reaches the last viewpoint, it
+    will go back to the first one and repeat the flythrough. To stop the
+    flythrough at any time, click the Stop button.</para>
+  </section>
+
+  <section>
+    <title>Xplorer Displays</title>
+
+    <para>A frames-per-second (FPS) counter and a coordinate compass can be
+    displayed in the VE-Xplorer window.</para>
+
+    <para>To display the FPS counter, go to the VE-Xplorer menu and select
+    Display, then Frame Rate. VE-Xplorer will display the FPS in the lower
+    right corner of its window.</para>
+
+    <figure>
+      <title>Displaying the frame rate</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="images/03-frame-rate.png"></imagedata>
+        </imageobject>
+      </mediaobject>
+    </figure>
+
+    <para>To display the coordinate compass, go to the VE-Xplorer menu and
+    select Display, then Coord System. VE-Xplorer will display the coordinate
+    compass in the upper left corner of its window.</para>
+  </section>
+
+  <section>
+    <title>Quitting VE-Suite</title>
+
+    <para>Ending a VE-Suite session requires two steps:</para>
+
+    <orderedlist>
+      <listitem>
+        <para>Select Quit from VE-Conductor's File menu. This quits
+        VE-Conductor and VE-Xplorer.</para>
+      </listitem>
+
+      <listitem>
+        <para>Select the shell window running the Name Server. Click the
+        Shutdown Name Server button or press Ctrl+C to close the
+        program.</para>
+      </listitem>
+    </orderedlist>
+  </section>
+</chapter>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter version="5.0" xmlns="http://docbook.org/ns/docbook"
+         xmlns:xlink="http://www.w3.org/1999/xlink"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         xmlns:svg="http://www.w3.org/2000/svg"
+         xmlns:m="http://www.w3.org/1998/Math/MathML"
+         xmlns:html="http://www.w3.org/1999/xhtml"
+         xmlns:db="http://docbook.org/ns/docbook">
+  <title>DocBook Information</title>
+
+  <section>
+    <para>This documentation was created using DocBook and the XML editor
+    XMLmind. To use XMLmind:</para>
+
+    <orderedlist>
+      <listitem>
+        <para>If Java is already installed on your system, download and
+        install the standard edition of XMLmind free of charge <link
+        xlink:href="http://www.xmlmind.com/xmleditor/download.shtml">here</link>.
+        If you do not have Java, you can download the standard edition bundled
+        with Java.</para>
+      </listitem>
+
+      <listitem>
+        <para>Start XMLmind.</para>
+      </listitem>
+
+      <listitem>
+        <para>Go to the File menu and select New...</para>
+      </listitem>
+    </orderedlist>
+
+    <para>The VE-Suite documentation was created as a modular DocBook v5+
+    document separated by chapter. To create a new chapter, choose Chapter
+    from the DocBook v5+ template list.</para>
+
+    <para>User guides and online help for XMLmind can be found <link
+    xlink:href="http://www.xmlmind.com/xmleditor/documentation.shtml">here</link>.</para>
+
+    <para>The following DocBook manuals are also available free of charge
+    online:</para>
+
+    <para>
+      <link
+      xlink:href="http://oreilly.com/catalog/docbook/chapter/book/docbook.html">http://www.oreilly.com/catalog/docbook/chapter/book/docbook.html</link>
+    </para>
+
+    <para>
+      <link
+      xlink:href="http://www.sagehill.net/docbookxsl/">http://www.sagehill.net/docbookxsl/</link>
+    </para>
+
+    <para>See Chapter 11.10, Docbook Documentation, for more DocBook coding
+    guidelines specific to this document.</para>
+
+    <!--TODO: add olink for Section 15 of Chapter 6 -->
+  </section>
+</chapter>

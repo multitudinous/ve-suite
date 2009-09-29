@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter version="5.0" xmlns="http://docbook.org/ns/docbook"
+         xmlns:xlink="http://www.w3.org/1999/xlink"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         xmlns:svg="http://www.w3.org/2000/svg"
+         xmlns:m="http://www.w3.org/1998/Math/MathML"
+         xmlns:html="http://www.w3.org/1999/xhtml"
+         xmlns:db="http://docbook.org/ns/docbook">
+  <title>Setting the Environment</title>
+
+  <para>To specify the build/run environment, perform a one-time edit of the
+  environment variables that are defined in the setup file,
+  <code>setup.bat</code> on Windows and <code>setup.tsh/setup.sh</code> on
+  UNIX/Linux platforms. If the paths of your environment variables contain
+  spaces, you need to put the directory containing the spaces in quotation
+  marks.</para>
+
+  <para>Example:</para>
+
+  <para><code>set VTK_HOME=C:/"Documents and
+  Settings"/user/Desktop/vtk</code></para>
+
+  <para>Important variables include:</para>
+
+  <itemizedlist>
+    <listitem>
+      <para><code>VE_SUITE_HOME</code> : The location of the top-level
+      VE-Suite directory</para>
+    </listitem>
+
+    <listitem>
+      <para><code>VJ_BASE_DIR</code> : The location of VR Juggler</para>
+    </listitem>
+
+    <listitem>
+      <para><code>VJ_DEPS_DIR</code> : The location of VR Juggler's
+      dependencies</para>
+    </listitem>
+
+    <listitem>
+      <para><code>VTK_HOME</code> : Visualization ToolKit (VTK)
+      directory</para>
+    </listitem>
+
+    <listitem>
+      <para><code>WX_HOME</code> : The wxWidgets install</para>
+    </listitem>
+
+    <listitem>
+      <para><code>XERCESROOT</code> : The location of the xerces build</para>
+    </listitem>
+
+    <listitem>
+      <para><code>WX_ROOT</code> : The location of wxWidgets install (should
+      be same as <code>WX_HOME</code>)</para>
+    </listitem>
+
+    <listitem>
+      <para><code>OSGHOME</code> : The location of OpenSceneGraph (if OSG
+      version is built)</para>
+    </listitem>
+
+    <listitem>
+      <para><code>ACE_HOME</code> : The location of the
+      <code>ACE_wrappers</code> directory</para>
+    </listitem>
+
+    <listitem>
+      <para><code>TAO_HOME</code> : TAO location within ACE/TAO</para>
+    </listitem>
+  </itemizedlist>
+
+  <para>Important variables for UNIX/Linux platforms only:</para>
+
+  <itemizedlist>
+    <listitem>
+      <para><code>SCENE_GRAPH</code> : Always set to OSG. Defines which scene
+      graph to build for VE-Xplorer</para>
+    </listitem>
+
+    <listitem>
+      <para><code>TAO_BUILD</code> : Always set to TRUE. In the future this
+      flag can be sued to support other CORBA ORBs as well</para>
+    </listitem>
+
+    <listitem>
+      <para><code>CLUSTER_APP</code> : Set to TRUE if VE-Xplorer will be used
+      on a graphics cluster</para>
+    </listitem>
+  </itemizedlist>
+</chapter>

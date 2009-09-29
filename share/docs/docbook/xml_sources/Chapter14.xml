@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<chapter id="Dependencies">
+<chapter version="5.0" xmlns="http://docbook.org/ns/docbook"
+         xmlns:xlink="http://www.w3.org/1999/xlink"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         xmlns:svg="http://www.w3.org/2000/svg"
+         xmlns:m="http://www.w3.org/1998/Math/MathML"
+         xmlns:html="http://www.w3.org/1999/xhtml"
+         xmlns:db="http://docbook.org/ns/docbook">
   <title>Dependencies</title>
 
   <para>The following is a list of links for the VE-Suite dependencies.
@@ -7,34 +13,45 @@
   links or the pre-compiled binaries can be installed from the download
   page.</para>
 
-  <para><ulink url="http://www.openscenegraph.org/">OpenSceneGraph
-  (OSG)</ulink> is used to manage the scenegraph. (version 1.2+)</para>
+  <para><link
+  xlink:href="http://www.openscenegraph.org/projects/osg">OpenSceneGraph
+  (OSG)</link> is used to manage the scenegraph (verson 1.2+)</para>
 
-  <para><ulink url="http://vtk.org/get-software.php#interim">VTK</ulink> is
-  used to render the visualization objects. (version 5.0+)</para>
+  <para><link
+  xlink:href="http://www.vtk.org/VTK/resources/software.html#interim">VTK</link>
+  is used to render the visualization objects (version 5.0+)</para>
 
-  <para><ulink url="http://www.cmake.org/HTML/Index.html">CMake</ulink> is
-  needed to build the VTK.</para>
+  <para><link xlink:href="http://www.cmake.org/HTML/Index.html">CMake</link>
+  is needed to build the VTK</para>
 
-  <para><ulink
-  url="http://sourceforge.net/project/showfiles.php?group_id=8041">VRJuggler</ulink>
-  is used for management of the virtual environment. (version 2.0.1+)</para>
+  <para><link xlink:href="http://sourceforge.net/projects/vrjuggler/files/">VR
+  Juggler</link> is used for management of the virtual environment (version
+  2.0.1+)</para>
 
   <para>The dependencies are best installed in the following order:</para>
 
-  <para>1. CMake</para>
+  <orderedlist>
+    <listitem>
+      <para>CMake</para>
+    </listitem>
 
-  <para>2. VRJuggler</para>
+    <listitem>
+      <para>VR Juggler</para>
+    </listitem>
 
-  <para>3. OpenSceneGraph</para>
+    <listitem>
+      <para>OpenSceneGraph</para>
+    </listitem>
 
-  <para>4. VTK</para>
+    <listitem>
+      <para>VTK</para>
+    </listitem>
+  </orderedlist>
 
-  <para><ulink
-  url="http://sourceforge.net/project/showfiles.php?group_id=8041">VRJuggler
-  dependencies zip file</ulink></para>
+  <para><link xlink:href="http://sourceforge.net/projects/vrjuggler/files/">VR
+  Juggler dependencies zip file</link></para>
 
-  <para>VRJuggler has its own set of dependencies if you are building it
+  <para>VR Juggler has its own set of dependencies if you are building it
   yourself:</para>
 
   <itemizedlist>
@@ -43,7 +60,7 @@
     </listitem>
 
     <listitem>
-      <para>Boost 1.33.1+</para>
+      <para>Boost 1.33 1+</para>
     </listitem>
 
     <listitem>
@@ -63,48 +80,45 @@
     </listitem>
   </itemizedlist>
 
-  <para><ulink url="http://java.sun.com/j2se/1.4.2/download.html">Java 2
-  SDK</ulink> is needed for Juggler's java-based VRJconfig program.</para>
+  <para><link xlink:href="http://java.sun.com/j2se/1.4.2/download.html">Java 2
+  SDK</link> is needed for Juggler's java-based VRJconfig program.</para>
 
-  <para><ulink url="http://www.wxwidgets.org/">wxWidgets</ulink> is used to
-  compile and run the GUI. (Click "download" on the left side menu to get to
-  the files.) (version 2.6.2+)</para>
+  <para><link xlink:href="http://www.wxwidgets.org/">wxWidgets</link> is used
+  to compile and run the GUI. (Click "download" on the left side menu to get
+  to the files.) (version 2.6.2+)</para>
 
-  <para><ulink
-  url="http://xml.apache.org/xerces-c/download.cgi">Xerces</ulink> is used to
-  read and write XML. (Download <ulink
-  url="http://xml.apache.org/xerces-c/download.cgi">xerces-c-current</ulink>)
+  <para><link xlink:href="http://xerces.apache.org/">Xerces</link> is used to
+  read and write XML. (Download <link
+  xlink:href="http://xerces.apache.org/xerces-c/download.cgi">xerces-c-current</link>)
   (version 2.7.0+)</para>
 
-  <para><ulink url="http://deuce.doc.wustl.edu/Download.html">ACE/TAO</ulink>
+  <para><link xlink:href="http://download.dre.vanderbilt.edu/">ACE/TAO</link>
   is used for cross-platform communications. (ACE version 5.5+, TAO version
   1.5+)</para>
 
-  <para><ulink url="http://apr.apache.org/">APR</ulink> is used to generate
-  the GUIDs. (version 1.2.8)</para>
+  <para><link xlink:href="http://apr.apache.org/">APR</link> is used to
+  generate the GUIDs. (version 1.2.8)</para>
 
-  <para><ulink
-  url="http://ox.slug.louisville.edu/~o0lozi01/opal_wiki/index.php/Main_Page">OPAL</ulink>
-  (Open Physics Abstraction Layer) is used as a wrapper to ODE for physics
+  <para><link xlink:href="http://opal.sourceforge.net/">OPAL</link> (Open
+  Physics Abstraction Layer) is used as a wrapper to ODE for physics
   integration. (version 0.4.0)</para>
 
-  <para><ulink url="http://sourceforge.net/projects/opende/">ODE</ulink> (Open
-  Dynamics Engine) is used for physics integration. (version 0.7)</para>
+  <para><link xlink:href="http://sourceforge.net/projects/opende/">ODE</link>
+  (Open Dynamics Engine) is used for physics integration. (version 0.7)</para>
 
-  <para>VE-Launcher was coded using <ulink
-  url="http://www.python.org/">Python</ulink>. It can run in Python2.3 or
-  higher. If you are running it from Python, you need to install these
+  <para>VE-Launcher was coded using <link
+  xlink:href="http://www.python.org/">Python</link>. It can run in Python2.3
+  or higher. If you are running it from Python, you need to install these
   extensions for Python as well:</para>
 
-  <para>Windows: VE-Launcher requires these <ulink
-  url="https://sourceforge.net/project/showfiles.php?group_id=78018">Win32
-  extensions</ulink> if you are running it in Python for Windows.</para>
+  <para>Windows: VE-Launcher requires these <link
+  xlink:href="http://sourceforge.net/projects/pywin32/files/">Win32</link>
+  extensions if you are running it in Python for Windows.</para>
 
-  <para>VE-Launcher requires <ulink
-  url="http://wxpython.org/">wxPython</ulink> 2.6.3.3 if you are running it in
-  Python.</para>
+  <para>VE-Launcher requires <link xlink:href="http://wxpython.org/">wxPython
+  2.6.3.3 </link>if you are running it in Python.</para>
 
-  <section id="development_dependencies_guidelines">
+  <section>
     <title>Development Dependency Guidelines</title>
 
     <para>To avoid dependencies problems during development, we have provided
@@ -112,7 +126,7 @@
     the main VE-Suite development group follows and are provided as
     suggestions for other users.</para>
 
-    <para><emphasis role="bold">Windows:</emphasis></para>
+    <para>Windows:</para>
 
     <orderedlist>
       <listitem>
@@ -135,7 +149,7 @@
       </listitem>
     </orderedlist>
 
-    <para><emphasis role="bold">Linux:</emphasis></para>
+    <para>Linux:</para>
 
     <orderedlist>
       <listitem>
@@ -151,14 +165,14 @@
       </listitem>
 
       <listitem>
-        <para>On Linux platforms the dependency directory structure will be
+        <para>On Linux platforms, the dependency directory structure will be
         assumed to be include, bin, lib, and share as is the case for most
         libraries when the install target is used on a build system.</para>
       </listitem>
     </orderedlist>
   </section>
 
-  <section id="building_dependencies_on_windows">
+  <section>
     <title>Building Dependencies on Windows</title>
 
     <para>It is best to read the specific installation/build instructions for
@@ -168,25 +182,23 @@
     <para>VE-Suite and its dependencies are currently built and tested using
     Visual Studio 8.0(2005).</para>
 
-    <para>You can find the development libraries at <ulink
-    url="http://www.vrac.iastate.edu/~biv/vesuite_install/prebuiltDeps/win32">www.vrac.iastate.edu/~biv/vesuite_install/prebuiltDeps/win32</ulink>.</para>
+    <para>You can find the development libraries at <link
+    xlink:href="http://www.vesuite.org/external/deps/non-admin/">http://www.vesuite.org/external/deps/non-admin/</link>.</para>
 
-    <para><emphasis role="bold">Notes on installation of
-    dependencies</emphasis></para>
+    <para>Notes on installing dependencies:</para>
 
     <itemizedlist>
       <listitem>
-        <para><ulink url="http://tortoisesvn.tigris.org/">TortoiseSVN</ulink>
-        - Used to check out and update VE-Suite from ISU's code
-        repository.</para>
+        <para><link
+        xlink:href="http://tortoisesvn.tigris.org/">TortoiseSVN</link> - Used
+        to check out and update VE-Suite from ISU's code repository.</para>
       </listitem>
 
       <listitem>
         <para>After TortoiseSVN is installed, you can check out the code if
         you have an account registered with ISU's repository. Create a
-        VE-Suite folder. Right-click on the VE-Suite folder and choose
-        "Checkout...". For URL, enter <ulink
-        url="https://subversion.vrac.iastate.edu/svn/TSVEG/VE_Suite">https://subversion.vrac.iastate.edu/svn/TSVEG/VE_Suite</ulink>.</para>
+        VE-Suite directory. Right-click on the VE-Suite directory and choose
+        "Checkout..."</para>
       </listitem>
 
       <listitem>
@@ -198,14 +210,14 @@
 
       <listitem>
         <para>While the default locations for installations will work, we
-        recommend creating a directory in the root (C:) directory to minimize
-        the path lengths and the accompanying potential for typos when
-        configuring environment settings.</para>
+        recommend creating a directory in the root (<code>C:</code>) directory
+        to minimize the path lengths and the accompanying potential for typos
+        when configuring environment settings.</para>
       </listitem>
     </itemizedlist>
   </section>
 
-  <section id="vesuite_component_dependencies">
+  <section>
     <title>VE-Suite Component Dependencies</title>
 
     <para>If you are installing individual components of VE-Suite on different
@@ -213,7 +225,9 @@
     specific component. Below is a table listing the individual components and
     their specific dependencies.</para>
 
-    <informaltable>
+    <table>
+      <title>Component Dependencies</title>
+
       <tgroup cols="2">
         <tbody>
           <row>
@@ -231,18 +245,18 @@
           <row>
             <entry>VE-Xplorer</entry>
 
-            <entry>ACE/TAO, OpenSceneGraph, VTK, VRJuggler</entry>
+            <entry>ACE/TAO, OpenSceneGraph, VTK, VR Juggler</entry>
           </row>
         </tbody>
       </tgroup>
-    </informaltable>
+    </table>
   </section>
 
-  <section id="vesuite_other_requirements">
+  <section>
     <title>Other Requirements</title>
 
     <para>Computers running VE-Suite must be able to run all of the
-    dependencies listed above. They must also have shader support; VE-Suite
+    dependencies listed above. They must also have shader support. VE-Suite
     will not run properly without shader support.</para>
   </section>
 </chapter>

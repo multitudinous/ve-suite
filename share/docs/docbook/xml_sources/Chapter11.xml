@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter version="5.0" xmlns="http://docbook.org/ns/docbook"
+         xmlns:xlink="http://www.w3.org/1999/xlink"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         xmlns:svg="http://www.w3.org/2000/svg"
+         xmlns:m="http://www.w3.org/1998/Math/MathML"
+         xmlns:html="http://www.w3.org/1999/xhtml"
+         xmlns:db="http://docbook.org/ns/docbook">
+  <title>Building VE-Suite</title>
+
+  <para>Before attempting to build VE-Suite, be sure to build/install the
+  dependencies (see Chapter 14, Dependencies) and set the environment
+  variables (see Chapter 15, Setting the Environment).</para>
+
+  <!-- TODO: Add olinks to Chapter 8, Dependencies and Chapter 9, Setting the Environment -->
+
+  <section>
+    <title>UNIX/Linux Build Instructions</title>
+
+    <para>VE-Suite, as well as its dependencies, is currently being bested on
+    a broad range of UNIX/Linux platforms including IRIX 6.5, SuSE, and RedHat
+    Enterprise.</para>
+
+    <para>Set the environment variables (see Chapter 15, Setting the
+    Environment) and source the setup file included with the VE-Suite project:
+    <code>$(VE_SUITE_HOME)/VE_Installer/setup. {.sh,tsh}</code>. Once this
+    file has been properly edited, type <code>gmake</code>. The UNIX build
+    system is based on Doozer, which is included with VR Juggler.</para>
+
+    <!-- TODO: Add olink to Chapter 9, Setting the Environment-->
+
+    <para>Supported base configurations available:</para>
+
+    <orderedlist>
+      <listitem>
+        <para><code>tao_osg_dbg</code> - OpenSceneGraph based application
+        supporting released features</para>
+      </listitem>
+
+      <listitem>
+        <para><code>tao_osg_vep_dbg</code> - OpenSceneGraph based application
+        supporting released and new features from current research</para>
+      </listitem>
+    </orderedlist>
+
+    <para>There are also cluster variants of each of the above
+    configurations:</para>
+
+    <orderedlist>
+      <listitem>
+        <para><code>tao_osg_cluster_dbg</code></para>
+      </listitem>
+
+      <listitem>
+        <para><code>tao_osg_vep_cluster_dbg</code></para>
+      </listitem>
+    </orderedlist>
+
+    <para>To change any of the configurations described above, open the setup
+    file and set <code>SCENE_GRAPH</code>, <code>CLUSTER_APP</code>,
+    <code>VE_PATENTED</code> accordingly.</para>
+  </section>
+
+  <section>
+    <title>Windows Build Instructions</title>
+
+    <para>VE-Suite, as well as its dependencies, is currently built and tested
+    using Visual Studio 7.1(2003).</para>
+
+    <section>
+      <title>Building VE-Suite</title>
+
+      <para>Set the environment variables (see Chapter 15, Setting the
+      Environment) and launch a session of Visual Studio with the VE-Suite
+      project loaded, then run the batch file:</para>
+
+      <!-- TODO: Add olink to Chapter 9, Setting the Environment-->
+
+      <para><code> $(VE_SUITE_HOME)VE_Installerbuild.bat </code></para>
+
+      <para>Supported base configurations available:</para>
+
+      <orderedlist>
+        <listitem>
+          <para><code>tao_osg_dbg</code> - OpenSceneGraph based application
+          supporting released features</para>
+        </listitem>
+
+        <listitem>
+          <para><code>tao_osg_vep_dbg</code> - OpenSceneGraph based
+          application supporting released and new features from current
+          research</para>
+        </listitem>
+      </orderedlist>
+
+      <para>There are also cluster variants of each of the above
+      configurations:</para>
+
+      <orderedlist>
+        <listitem>
+          <para><code># tao_osg_cluster_dbg</code></para>
+        </listitem>
+
+        <listitem>
+          <para><code># tao_osg_vep_cluster_dbg</code></para>
+        </listitem>
+      </orderedlist>
+    </section>
+
+    <section>
+      <title>Debugging VE-Xplorer</title>
+
+      <para>To run VE-Xplorer from within the Visual Studio debugger, change
+      the working directory in the Configuration Properties tab to point to
+      the directory where your VE-Suite parameter file is located (for
+      example, change the working directory to
+      <code>$VE_SUITE_HOME)VE_TestSuite)</code>.</para>
+
+      <para>You will also need to pass in your VR Juggler config files as
+      command arguments on the configuration properties tab. With the two
+      projects still open, right-click on the VE_Xplorer project file and
+      select Properties. For simulation mode, add the following to your
+      command arguments section:</para>
+
+      <para><code> $(VJ_BASE_DIR)sharevrjugglerdataconfigFiles sim.base.jconf
+      </code></para>
+
+      <para><code>$(VJ_BASE_DIR)sharevrjugglerdataconfigFiles
+      sim.wand.mixin.jconf </code></para>
+
+      <para>After you enter a parameter file name and the scene loads, double
+      click on <code>$(VE_SUITE_HOME)bin runWinClient.bat</code> to bring up
+      the gui.</para>
+    </section>
+
+    <section>
+      <title>Running VE-Suite from a CD</title>
+
+      <para>You can build a working version of VE-Suite you can run from a CD
+      by following these instructions:</para>
+
+      <orderedlist>
+        <listitem>
+          <para>Create a folder to hold the CD's contents. We will call this
+          the CD folder.</para>
+        </listitem>
+
+        <listitem>
+          <para>Build VE-Suite and its dependencies. Make sure you build them
+          without library or header files; these optional files will make
+          VE-Suite too large to fit on a CD. Once they are built, copy them to
+          the CD folder.</para>
+        </listitem>
+
+        <listitem>
+          <para>Add the <code>autorun.inf</code> and <code>VE_icon.ico</code>
+          files (found in the
+          <code>VE_Installer/installer/StandAloneCDreate</code> directory) to
+          the CD folder. (<emphasis role="bold">NOTE:</emphasis> Make sure the
+          path to VE-Launcher listed in <code>autorun.inf</code> matches the
+          path in your version of VE-Suite.)</para>
+        </listitem>
+
+        <listitem>
+          <para>Add the models you want to include on the CD to the CD folder.
+          We recommend putting them in
+          <code>VE_Suite.1.0.3/share/exampleDatasets</code> with the sample
+          datasets.</para>
+        </listitem>
+
+        <listitem>
+          <para>Write the contents of the CD folder to the CD.</para>
+        </listitem>
+      </orderedlist>
+
+      <para>Reminders:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>Make sure the contents of the CD folder will fit on the CD
+          before you write it</para>
+        </listitem>
+
+        <listitem>
+          <para>While running VE-Suite from a CD, make sure the dependencies
+          directories and working directory are located on the CD. Otherwise,
+          the program will not run properly. Also, you can only use the
+          <code>.ves</code> (model) files located on the CD itself.</para>
+        </listitem>
+      </itemizedlist>
+    </section>
+  </section>
+</chapter>

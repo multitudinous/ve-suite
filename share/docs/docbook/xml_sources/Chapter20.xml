@@ -1,49 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
-"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
-<chapter id="VESuite_Beginners_Guide">
+<chapter version="5.0" xmlns="http://docbook.org/ns/docbook"
+         xmlns:xlink="http://www.w3.org/1999/xlink"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         xmlns:svg="http://www.w3.org/2000/svg"
+         xmlns:m="http://www.w3.org/1998/Math/MathML"
+         xmlns:html="http://www.w3.org/1999/xhtml"
+         xmlns:db="http://docbook.org/ns/docbook">
   <title>VE-Suite Beginner's Guide</title>
 
-  <section id="vesuite_beginners_guide_getting_started">
-    <title>Getting started</title>
+  <section>
+    <title>Getting Started</title>
 
     <para>There are four programs that have to be built and installed to run
-    VE-Suite. Consult the install chapter for the current version
-    requirements. In order of install they are:</para>
+    VE-Suite. Consult Chapter 1, Installation and Setup, for the current
+    version requirements. In order of install they are:</para>
+
+    <!-- TODO: add olink for install chapter -->
 
     <orderedlist>
       <listitem>
-        <para><ulink
-        url="http://www.vrjuggler.org/download.php">VRJuggler</ulink></para>
+        <para><link xlink:href="http://www.vrjuggler.org/download.php">VR
+        Juggler</link></para>
       </listitem>
 
       <listitem>
-        <para><ulink
-        url="http://www.openscenegraph.org/projects/osg/wiki/Downloads">OpenSceneGraph</ulink>
-        (OSG)</para>
+        <para><link
+        xlink:href="http://www.openscenegraph.org/projects/osg/wiki/Downloads">OpenSceneGraph
+        (OSG)</link></para>
       </listitem>
 
       <listitem>
-        <para><ulink
-        url="http://download.dre.vanderbilt.edu/">Ace+Tao</ulink></para>
+        <para><link
+        xlink:href="http://download.dre.vanderbilt.edu/">Ace+Tao</link></para>
       </listitem>
 
       <listitem>
-        <para><ulink
-        url="http://www.vtk.org/get-software.php">VTK</ulink></para>
+        <para><link
+        xlink:href="http://www.vtk.org/VTK/resources/software.html">VTK</link></para>
       </listitem>
     </orderedlist>
 
     <para>We recommend reading the README files before compiling these
     programs.</para>
 
-    <para>Raw code files for Unix will generally be in the .tar format. A TAR
-    file has to be unpacked after it is downloaded. For help with this
-    process, refer to the instructions in the VRJuggler <ulink
-    url="http://developer.vrjuggler.org/docs/vrjuggler/2.2/getting.started.guide/getting.started.guide.html#d0e63">tutorial</ulink>
-    "Getting Started". There is a section on TAR files that lists several
-    different possible commands for the command line invocation. The two most
-    common commands are:</para>
+    <para>Raw code files for UNIX will generally be in the <code>.tar</code>
+    format. A <code>.tar</code> file has to be unpacked after it is
+    downloaded. For help with this process, refer to the instructions in the
+    VR Juggler tutorial "Getting Started". There is a section on
+    <code>.tar</code> files that lists several different possible commands for
+    the command line invocation. The two most common commands are:</para>
 
     <itemizedlist>
       <listitem>
@@ -104,7 +109,8 @@
 
     <para>Some downloads may not be available as compressed files.
     Occasionally you will have to download code from an SVN server. There is a
-    continuously updated <ulink url="http://svnbook.red-bean.com/">online
-    book</ulink> that is useful for this.</para>
+    continuously updated <link
+    xlink:href="http://svnbook.red-bean.com/">online book</link> that is
+    useful for this.</para>
   </section>
 </chapter>
