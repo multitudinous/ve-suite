@@ -175,14 +175,14 @@ void cfdPresetVector::Update( void )
         this->SetGlyphAttributes();
         //this->glyph->Update();
 
-        
-          //  vtkXMLPolyDataWriter* writer = vtkXMLPolyDataWriter::New();
-          //  writer->SetInput( glyph->GetOutput() );
-          //  writer->SetDataModeToAscii();
-          //  writer->SetFileName( "testvecglyphs.vtp" );
-          //  writer->Write();
-          //  writer->Delete();
-        
+        /*{
+            vtkXMLPolyDataWriter* writer = vtkXMLPolyDataWriter::New();
+            writer->SetInput( glyph->GetOutput() );
+            writer->SetDataModeToAscii();
+            writer->SetFileName( "testvecglyphs.vtp" );
+            writer->Write();
+            writer->Delete();
+        }*/        
         
         mapper->SetInputConnection( glyph->GetOutputPort() );
         mapper->SetScalarModeToUsePointFieldData();
@@ -203,27 +203,21 @@ void cfdPresetVector::Update( void )
     vtkActor* temp = vtkActor::New();
     temp->SetMapper( this->mapper );
     temp->GetProperty()->SetSpecularPower( 20.0f );
-
-    
    
 	try
 	{
 		osg::ref_ptr<ves::xplorer::scenegraph::Geode > tempGeode = new ves::xplorer::scenegraph::Geode();
 
-
-		OSGStage osgStage;
-
 		if( gpustuff )
 		{ 
-			osgStage.createInstanced( this->ptmask->GetOutput(), "", "", tempGeode );
+            OSGStage osgStage;
+			osgStage.createInstanced( this->ptmask->GetOutput(), 
+                std::string(""), std::string(""), tempGeode.get() );
 		}
 		else
 		{
 			tempGeode->TranslateToGeode( temp );
 		}
-
-
-//      tempGeode->TranslateToGeode( temp );
 
 		geodes.push_back( tempGeode.get() );
 		this->updateFlag = true;
@@ -233,13 +227,8 @@ void cfdPresetVector::Update( void )
 		mapper->Delete();
 		mapper = vtkPolyDataMapper::New();
 		vprDEBUG( vesDBG, 0 ) << "|\tMemory allocation failure : cfdPresetVectors "
-		<< std::endl << vprDEBUG_FLUSH;
+            << std::endl << vprDEBUG_FLUSH;
 	}
-    
-
-  
-
     temp->Delete();
-
 }
 
