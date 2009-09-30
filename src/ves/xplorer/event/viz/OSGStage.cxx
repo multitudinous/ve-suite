@@ -1,13 +1,13 @@
-#include "OSGStage.h"
+#include <ves/xplorer/event/viz/OSGStage.h>
 #include <vtkLookupTable.h>
-#include <vtkPolyData.h>
-
 #include <string>
+#include <cmath>
+#include <ves/xplorer/event/viz/cfdPresetVector.h>
 #include <iostream>
 
-#include <ves/xplorer/scenegraph/Geode.h>
-
 using namespace std;
+
+using namespace ves::xplorer::scenegraph;
 
 OSGStage::OSGStage(void)
 {
@@ -112,6 +112,7 @@ float* OSGStage::createPositionArray( int m, int n , vtkPoints* points)
     float* posI = pos;
 
 	int np = points->GetNumberOfPoints();
+	cout <<"number of points is " << np << "\n";
 	double x[3];
     float y[3];
 	for (int i=0; i<m*n; i++)
@@ -125,6 +126,7 @@ float* OSGStage::createPositionArray( int m, int n , vtkPoints* points)
             //y[ 0 ] = x[0];
             //y[ 1 ] = x[1];
             //y[ 2 ] = x[2];
+		//	cout <<"this is " << i << "\n";
 		}
 		else
 		{
@@ -235,18 +237,20 @@ int OSGStage::mypow2(unsigned x)
     return l;
 }
 
-ves::xplorer::scenegraph::Geode* OSGStage::createInstanced(vtkPolyData* glyph, string vectorName, string scalarName)
+// changed the type and return value of below method to osg::Geode and 
+// introduced a fourth argument of type osg::Geode.
+osg::Geode* OSGStage::createInstanced(vtkPolyData* notglyph, string vectorName, string scalarName, osg::Geode* geode)
 {
     std::cout << "creating osg planes" << std::endl;
 	//Now pull in the vtk data
-	if (glyph==NULL)
+	if (notglyph==NULL)
     {
-        std::cout << " glyph is null " << std::endl;
+        std::cout << " notglyph is null " << std::endl;
         		return NULL;
     }
 	//glyph->Update();
 	
-	vtkPolyData *polyData = glyph;//->GetOutput();
+	vtkPolyData *polyData = notglyph;//->GetOutput();
 	if (polyData==NULL)
     {
         std::cout << "pd is null " << std::endl;
@@ -268,9 +272,8 @@ ves::xplorer::scenegraph::Geode* OSGStage::createInstanced(vtkPolyData* glyph, s
         std::cout << " points are null " << std::endl;
 		return NULL;
     }
-    
-    vtkDataArray *vectorArray = pointData->GetVectors(vectorName.c_str());//("GlyphVector");
-    vtkDataArray *scalarArray = pointData->GetScalars(scalarName.c_str());
+        vtkDataArray *vectorArray = pointData->GetVectors(vectorName.c_str());//("GlyphVector");
+	vtkDataArray *scalarArray = pointData->GetScalars(scalarName.c_str());
 
     if (vectorArray==NULL)
     {
@@ -281,11 +284,10 @@ ves::xplorer::scenegraph::Geode* OSGStage::createInstanced(vtkPolyData* glyph, s
     if (scalarArray==NULL)
     {
         std::cout << " scalars are null " << std::endl;
-		return NULL;
+//		return NULL;
     }
 	
-	if ((vectorArray==NULL) && (scalarArray==NULL))
-		return NULL;
+	if ((vectorArray==NULL) && (scalarArray==NULL)) return NULL;
 
 	//calculate texture dimension
 	int numPoints = points->GetNumberOfPoints();
@@ -297,17 +299,26 @@ ves::xplorer::scenegraph::Geode* OSGStage::createInstanced(vtkPolyData* glyph, s
 	tn = mypow2(nn);
     std::cout << tm << " "<< tn << std::endl;
 
-	//create the Geometry Node with arrows
-    //osg::Group* grp = new osg::Group;
-    //osg::Geode* geode = new osg::Geode;
-    ves::xplorer::scenegraph::Geode* geode = new ves::xplorer::scenegraph::Geode();
+
+
+	/* commented out below statment since geode is now of type osg::Geode  */
+
+    //ves::xplorer::scenegraph::Geode* geode = new ves::xplorer::scenegraph::Geode();
+
+
+	// geode here is declared of type osg::Geode in the function arguments list 
+	// creating new geode
+    if( !geode )
+    {
+        geode = new osg::Geode();
+    }
+
     osg::Geometry* geom = new osg::Geometry;
     
 	geom->setUseDisplayList( false );
     geom->setUseVertexBufferObjects( true );
     createArrow( *geom, numPoints);//tm*tn );
     geode->addDrawable( geom );
-    //grp->addChild( geode );
 
 	double bounds[6];
 	points->GetBounds(bounds);
@@ -315,6 +326,14 @@ ves::xplorer::scenegraph::Geode* OSGStage::createInstanced(vtkPolyData* glyph, s
     //OSG does bounds xmin, ymin, zmin, xmax, ymax,...
 	osg::BoundingBox bb(bounds[0],bounds[2],bounds[4],bounds[1],bounds[3],bounds[5]);
     geom->setInitialBound( bb );
+
+
+
+	/* setting stateset to geom instead of geode since 
+	   taking stateset from geode does not seem to work  */
+
+//    osg::StateSet* ss = geode->getOrCreateStateSet();
+    osg::StateSet* ss = geom->getOrCreateStateSet();
 
 	//Create the rendering shader
     std::string vertexSource =
@@ -356,12 +375,14 @@ ves::xplorer::scenegraph::Geode* OSGStage::createInstanced(vtkPolyData* glyph, s
     vertexShader->setType( osg::Shader::VERTEX );
     vertexShader->setShaderSource( vertexSource );
 
-    osg::ref_ptr< osg::Program > program = new osg::Program();
-    program->addShader( vertexShader.get() );
 
-    osg::StateSet* ss = geode->getOrCreateStateSet();
-    ss->setAttribute( program.get(),
-        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+    osg::ref_ptr< osg::Program > program1 = new osg::Program();
+    ss->setAttribute( program1.get(),
+        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED);
+
+    program1->addShader( vertexShader.get() );
+
+
 
 	//set size
     osg::ref_ptr< osg::Uniform > sizesUniform =
@@ -373,6 +394,7 @@ ves::xplorer::scenegraph::Geode* OSGStage::createInstanced(vtkPolyData* glyph, s
 	//First set the point position array
 	float* pos = createPositionArray( tm, tn, points);
 
+   
     osg::Image* iPos = new osg::Image;
     iPos->setImage( tm, tn, 1, GL_RGB32F_ARB, GL_RGB, GL_FLOAT,
         (unsigned char*) pos, osg::Image::USE_NEW_DELETE );
@@ -386,10 +408,12 @@ ves::xplorer::scenegraph::Geode* OSGStage::createInstanced(vtkPolyData* glyph, s
         new osg::Uniform( "texPos", 0 );
     ss->addUniform( texPosUniform.get() );
 
+
     //set attitude array
 	if (vectorArray!=NULL)
 	{
 		float* att = createAttitudeArray( tm, tn, vectorArray);
+
 
 		osg::Image* iAtt = new osg::Image;
 		iAtt->setImage( tm, tn, 1, GL_RGB32F_ARB, GL_RGB, GL_FLOAT,
@@ -404,6 +428,7 @@ ves::xplorer::scenegraph::Geode* OSGStage::createInstanced(vtkPolyData* glyph, s
 			new osg::Uniform( "texAtt", 1 );
 		ss->addUniform( texAttUniform.get() );
 	}
+
 	
 	//set scalar array
 	if (scalarArray!=NULL)
@@ -424,5 +449,11 @@ ves::xplorer::scenegraph::Geode* OSGStage::createInstanced(vtkPolyData* glyph, s
 		ss->addUniform( texScaUniform.get() );
 	}
 
+
+
     return geode;
 }
+
+
+
+
