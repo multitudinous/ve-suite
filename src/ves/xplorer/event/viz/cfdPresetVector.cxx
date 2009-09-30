@@ -76,7 +76,7 @@ void cfdPresetVector::Update( void )
 
 	// temporary Boolean variable to
 	// test the GPU based rendering    
-	bool gpustuff = true;   
+	bool gpustuff = false;   
 
  
     vprDEBUG( vesDBG, 1 ) << "|\tcfdPresetVector::ActiveDataSet = "
