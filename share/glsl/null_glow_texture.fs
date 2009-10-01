@@ -6,7 +6,7 @@ void main()
 {
     vec4 colorTex = texture2D(tex, gl_TexCoord[0].st);
     //colorTex.a = opacityVal;
-    gl_FragData[ 0 ] = colorTex;
+    gl_FragData[ 0 ] = colorTex * gl_Color;
     
     //To handle the glow 
     vec4 color = glowColor;

@@ -1,20 +1,21 @@
 uniform sampler2D tex;
 uniform float opacityVal;
 uniform vec4 glowColor;
+uniform bool ignoreWhite;
 
 //This shader is specifically setup to ignore the white part of the texture
 //in the vesuite textual display dialog.
 void main()
 {
     vec4 texColor = texture2D(tex, gl_TexCoord[0].st);
+    texColor.a = opacityVal;
     //Ignore the white color in the texture
-    if( texColor.r == 1.0 &&  texColor.g == 1.0 &&  texColor.b == 1.0 )
+    if( ignoreWhite )
     {
-        texColor.a = 1.0;
-    }
-    else
-    {
-        texColor.a = opacityVal;
+        if( texColor.r == 1.0 && texColor.g == 1.0 && texColor.b == 1.0 )
+        {
+            texColor.a = 1.0;
+        }
     }
 	gl_FragData[ 0 ] = texColor;
 
