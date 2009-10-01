@@ -125,6 +125,7 @@ protected:
 	void OnTextQueryEnter( wxCommandEvent& event );
 	void OnPartSelection( wxCommandEvent& event );
 	void OnPartNumberEntry( wxCommandEvent& event );
+    void OnTextChkListToggle( wxCommandEvent& event );
 	void OnQueryApply( wxCommandEvent& event );
 	void OnDialogCancel( wxCommandEvent& event );
 	void OnQueryOK( wxCommandEvent& event );

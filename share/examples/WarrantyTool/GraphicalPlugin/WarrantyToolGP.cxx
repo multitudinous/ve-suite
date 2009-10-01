@@ -41,6 +41,7 @@
 #include <ves/open/xml/model/Model.h>
 #include <ves/open/xml/DataValuePair.h>
 #include <ves/open/xml/Command.h>
+#include <ves/open/xml/OneDStringArray.h>
 
 #include <ves/xplorer/scenegraph/util/OpacityVisitor.h>
 #include <ves/xplorer/scenegraph/util/MaterialInitializer.h>
@@ -248,8 +249,11 @@ void WarrantyToolGP::SetCurrentCommand( ves::open::xml::CommandPtr command )
     {
         return;
     }
-    const std::string commandName = command->GetCommandName();
-    ves::open::xml::DataValuePairPtr dvp = command->GetDataValuePair( 0 );
+    m_currentCommand = command;
+    
+    const std::string commandName = m_currentCommand->GetCommandName();
+    ves::open::xml::DataValuePairPtr dvp = 
+        m_currentCommand->GetDataValuePair( 0 );
     //Before anything else remove the glow if there is glow
     if( commandName == "WARRANTY_TOOL_PART_TOOLS" )
     {
@@ -307,6 +311,7 @@ void WarrantyToolGP::SetCurrentCommand( ves::open::xml::CommandPtr command )
     }
     else if( commandName == "WARRANTY_TOOL_DB_TOOLS" )
     {
+        dvp = command->GetDataValuePair( "QUERY_STRING" );
         CreateDBQuery( dvp );
     }
 }
@@ -623,6 +628,13 @@ void WarrantyToolGP::CreateTextTextures()
 ////////////////////////////////////////////////////////////////////////////////
 void WarrantyToolGP::CreateDBQuery( ves::open::xml::DataValuePairPtr dvp )
 {
+    ves::open::xml::DataValuePairPtr stringDvp = 
+        m_currentCommand->GetDataValuePair( "DISPLAY_TEXT_FIELDS" );
+    
+    std::vector<std::string> stringArray = 
+        boost::static_pointer_cast<ves::open::xml::OneDStringArray>( 
+        stringDvp->GetDataXMLObject() )->GetArray();
+    
     // a simple query
     std::string queryString = dvp->GetDataString();
     //m_selectedAssembly.clear();
@@ -686,15 +698,22 @@ void WarrantyToolGP::CreateDBQuery( ves::open::xml::DataValuePairPtr dvp )
             }
 
 			//std::cout << rs[col].convert<std::string>() << " ";
-            tempTextData
-                << rs.columnName(col) << ": " << rs[col].convert<std::string>() << "\n";
+            std::vector< std::string >::const_iterator iter = 
+                std::find( stringArray.begin(), stringArray.end(), rs.columnName(col) );
+            
+            if( iter != stringArray.end() )
+            {
+                tempTextData << rs.columnName(col) << ": " 
+                    << rs[col].convert<std::string>() << "\n";
+            }
 		}
         std::string partText = tempTextData.str();
         tempText->UpdateText( partText );
         m_groupedTextTextures->AddTextTexture( partNumber, tempText );
         
         ves::xplorer::scenegraph::HighlightNodeByNameVisitor 
-            highlight( mDCS.get(), partNumber, true, true, osg::Vec4( 0.57255, 0.34118, 1.0, 1.0 ) );
+            highlight( mDCS.get(), partNumber, true, true, 
+            osg::Vec4( 0.57255, 0.34118, 1.0, 1.0 ) );
 
 		more = rs.moveNext();
 	}

@@ -27,7 +27,7 @@ MachineInfoDlg::MachineInfoDlg( wxWindow* parent, wxWindowID id, const wxString&
 	
 	bSizer3->Add( m_dataLoadButton, 0, wxALIGN_CENTER_VERTICAL|wxALIGN_LEFT|wxALL, 5 );
 	
-	m_productDataLoader = new wxFilePickerCtrl( this, wxID_ANY, wxT("::wxGetCwd()"), wxT("Select a file"), wxT("*.*"), wxDefaultPosition, wxSize( 300,-1 ), wxFLP_DEFAULT_STYLE|wxFLP_FILE_MUST_EXIST );
+	m_productDataLoader = new wxFilePickerCtrl( this, wxID_ANY, ::wxGetCwd(), wxT("Select a file"), wxT("*.*"), wxDefaultPosition, wxSize( 300,-1 ), wxFLP_DEFAULT_STYLE|wxFLP_FILE_MUST_EXIST );
 	m_productDataLoader->SetFont( wxFont( wxNORMAL_FONT->GetPointSize(), 70, 90, 90, false, wxEmptyString ) );
 	m_productDataLoader->SetMinSize( wxSize( 300,-1 ) );
 	
@@ -147,7 +147,7 @@ MachineInfoDlg::MachineInfoDlg( wxWindow* parent, wxWindowID id, const wxString&
 	
 	sbSizer2->Add( bSizer5, 1, wxEXPAND, 5 );
 	
-	bSizer1->Add( sbSizer2, 0, wxALIGN_LEFT|wxALL, 5 );
+	bSizer1->Add( sbSizer2, 0, wxALIGN_LEFT|wxALL|wxEXPAND, 5 );
 	
 	wxStaticBoxSizer* sbSizer5;
 	sbSizer5 = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT("Color Selection") ), wxVERTICAL );
@@ -198,6 +198,15 @@ MachineInfoDlg::MachineInfoDlg( wxWindow* parent, wxWindowID id, const wxString&
 	
 	bSizer1->Add( sbSizer3, 0, wxALIGN_LEFT|wxALL|wxEXPAND, 5 );
 	
+	wxStaticBoxSizer* sbSizer8;
+	sbSizer8 = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT("Text Display Selection") ), wxVERTICAL );
+	
+	wxArrayString m_displayTextChkListChoices;
+	m_displayTextChkList = new wxCheckListBox( this, wxID_ANY, wxDefaultPosition, wxSize( -1,100 ), m_displayTextChkListChoices, wxLB_ALWAYS_SB|wxLB_EXTENDED );
+	sbSizer8->Add( m_displayTextChkList, 0, wxALIGN_CENTER|wxEXPAND, 5 );
+	
+	bSizer1->Add( sbSizer8, 1, wxALL|wxEXPAND, 5 );
+	
 	m_dialogButtons = new wxStdDialogButtonSizer();
 	m_dialogButtonsOK = new wxButton( this, wxID_OK );
 	m_dialogButtons->AddButton( m_dialogButtonsOK );
@@ -236,6 +245,7 @@ MachineInfoDlg::MachineInfoDlg( wxWindow* parent, wxWindowID id, const wxString&
 	m_queryTextCommandCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( MachineInfoDlg::OnTextQueryEnter ), NULL, this );
 	m_manualPartSelectionChoice->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MachineInfoDlg::OnPartSelection ), NULL, this );
 	m_partTextEntry->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( MachineInfoDlg::OnPartNumberEntry ), NULL, this );
+	m_displayTextChkList->Connect( wxEVT_COMMAND_CHECKLISTBOX_TOGGLED, wxCommandEventHandler( MachineInfoDlg::OnTextChkListToggle ), NULL, this );
 	m_dialogButtonsApply->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MachineInfoDlg::OnQueryApply ), NULL, this );
 	m_dialogButtonsCancel->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MachineInfoDlg::OnDialogCancel ), NULL, this );
 	m_dialogButtonsOK->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MachineInfoDlg::OnQueryOK ), NULL, this );
@@ -267,6 +277,7 @@ MachineInfoDlg::~MachineInfoDlg()
 	m_queryTextCommandCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( MachineInfoDlg::OnTextQueryEnter ), NULL, this );
 	m_manualPartSelectionChoice->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MachineInfoDlg::OnPartSelection ), NULL, this );
 	m_partTextEntry->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( MachineInfoDlg::OnPartNumberEntry ), NULL, this );
+	m_displayTextChkList->Disconnect( wxEVT_COMMAND_CHECKLISTBOX_TOGGLED, wxCommandEventHandler( MachineInfoDlg::OnTextChkListToggle ), NULL, this );
 	m_dialogButtonsApply->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MachineInfoDlg::OnQueryApply ), NULL, this );
 	m_dialogButtonsCancel->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MachineInfoDlg::OnDialogCancel ), NULL, this );
 	m_dialogButtonsOK->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MachineInfoDlg::OnQueryOK ), NULL, this );

@@ -19,6 +19,7 @@
 #include <wx/statbox.h>
 #include <wx/choice.h>
 #include <wx/textctrl.h>
+#include <wx/checklst.h>
 #include <wx/dialog.h>
 
 ///////////////////////////////////////////////////////////////////////////
@@ -28,7 +29,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 /// Class MachineInfoDlg
 ///////////////////////////////////////////////////////////////////////////////
-class MachineInfoDlg : public ves::conductor::UIDialog 
+class MachineInfoDlg : public ves::conductor::UIDialog
 {
 	private:
 	
@@ -56,6 +57,7 @@ class MachineInfoDlg : public ves::conductor::UIDialog
 		wxTextCtrl* m_textCtrl19;
 		wxChoice* m_manualPartSelectionChoice;
 		wxTextCtrl* m_partTextEntry;
+		wxCheckListBox* m_displayTextChkList;
 		wxStdDialogButtonSizer* m_dialogButtons;
 		wxButton* m_dialogButtonsOK;
 		wxButton* m_dialogButtonsApply;
@@ -68,6 +70,7 @@ class MachineInfoDlg : public ves::conductor::UIDialog
 		virtual void OnTextQueryEnter( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnPartSelection( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnPartNumberEntry( wxCommandEvent& event ){ event.Skip(); }
+		virtual void OnTextChkListToggle( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnQueryApply( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnDialogCancel( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnQueryOK( wxCommandEvent& event ){ event.Skip(); }

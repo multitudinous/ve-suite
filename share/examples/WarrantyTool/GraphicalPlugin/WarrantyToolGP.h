@@ -37,6 +37,7 @@
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/plugin/PluginBase.h>
 #include <ves/open/xml/DataValuePairPtr.h>
+#include <ves/open/xml/CommandPtr.h>
 
 #include <Poco/Tuple.h>
 
@@ -108,6 +109,8 @@ private:
     std::vector< std::string > m_assemblyPartNumbers;
     // insert some rows
 	Assembly m_selectedAssembly;
+    ///Command being processed
+    ves::open::xml::CommandPtr m_currentCommand;
 };
 
 CREATE_VES_XPLORER_PLUGIN_ENTRY_POINT( WarrantyToolGP )

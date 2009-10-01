@@ -52,7 +52,7 @@
 			</object>
 			<object class="sizeritem">
 				<option>0</option>
-				<flag>wxALIGN_LEFT|wxALL</flag>
+				<flag>wxALIGN_LEFT|wxALL|wxEXPAND</flag>
 				<border>5</border>
 				<object class="wxStaticBoxSizer">
 					<orient>wxVERTICAL</orient>
@@ -384,6 +384,25 @@
 									<maxlength>0</maxlength>
 								</object>
 							</object>
+						</object>
+					</object>
+				</object>
+			</object>
+			<object class="sizeritem">
+				<option>1</option>
+				<flag>wxALL|wxEXPAND</flag>
+				<border>5</border>
+				<object class="wxStaticBoxSizer">
+					<orient>wxVERTICAL</orient>
+					<label>Text Display Selection</label>
+					<object class="sizeritem">
+						<option>0</option>
+						<flag>wxALIGN_CENTER|wxEXPAND</flag>
+						<border>5</border>
+						<object class="wxCheckListBox" name="m_displayTextChkList">
+							<style>wxLB_ALWAYS_SB|wxLB_EXTENDED</style>
+							<size>-1,100</size>
+							<content />
 						</object>
 					</object>
 				</object>
