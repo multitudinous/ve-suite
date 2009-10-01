@@ -213,6 +213,8 @@ protected:
     double normal[ 3 ];///<stores normal values.
     double box_size[ 6 ];///<stores size of box.
     float scale;///<store scale factor.
+    ///Used to control wether GPU tools are used
+    bool m_gpuTools;
 private:
 };
 }

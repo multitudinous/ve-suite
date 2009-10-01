@@ -49,6 +49,7 @@
 using namespace ves::xplorer::scenegraph;
 using namespace ves::xplorer;
 
+////////////////////////////////////////////////////////////////////////////////
 cfdObjects::cfdObjects( void ):
         pointSource( 0 ),
         vtkToPFDebug( 0 ),
@@ -58,7 +59,8 @@ cfdObjects::cfdObjects( void ):
         requestedValue( 0 ),
         objectType( 0 ),
         cursorType( 0 ),
-        scale( 0 )
+        scale( 0 ),
+        m_gpuTools( false )
 {
     for( size_t i = 0; i < 3; ++i )
     {
@@ -75,30 +77,30 @@ cfdObjects::cfdObjects( void ):
     m_multiGroupGeomFilter = vtkCompositeDataGeometryFilter::New();
     m_geometryFilter = vtkGeometryFilter::New();
 }
-
+////////////////////////////////////////////////////////////////////////////////
 cfdObjects::cfdObjects( const cfdObjects& src )
         : GlobalBase( src )
 {
     this->objectType = src.objectType;
     this->pointSource = src.pointSource;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 cfdObjects::~cfdObjects( void )
 {
     m_multiGroupGeomFilter->Delete();
     m_geometryFilter->Delete();
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void cfdObjects::SetObjectType( int type )
 {
     this->objectType = type;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 std::vector< osg::ref_ptr< ves::xplorer::scenegraph::Geode > > cfdObjects::GetGeodes( void )
 {
     return geodes;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void cfdObjects::ClearGeodes( void )
 {
     /*
@@ -110,7 +112,7 @@ void cfdObjects::ClearGeodes( void )
 
     geodes.clear();
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void cfdObjects::SetOrigin( float o[ 3 ] )
 {
     for( int i = 0; i < 3; i++ )
@@ -118,12 +120,12 @@ void cfdObjects::SetOrigin( float o[ 3 ] )
         this->origin[ i ] = o[ i ];
     }
 }
-
+////////////////////////////////////////////////////////////////////////////////
 double * cfdObjects::GetOrigin()
 {
     return this->origin;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void cfdObjects::GetOrigin( double o[ 3 ] )
 {
     for( int i = 0; i < 3; i++ )
@@ -131,7 +133,7 @@ void cfdObjects::GetOrigin( double o[ 3 ] )
         o[ i ] = this->origin[ i ];
     }
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void cfdObjects::SetNormal( double n[ 3 ] )
 {
     for( int i = 0; i < 3; i++ )
@@ -139,7 +141,7 @@ void cfdObjects::SetNormal( double n[ 3 ] )
         this->normal[ i ] = n[ i ];
     }
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void cfdObjects::SetBoxSize( double b[ 6 ] )
 {
     for( int i = 0; i < 6; i++ )
@@ -151,20 +153,20 @@ void cfdObjects::SetBoxSize( double b[ 6 ] )
     this->center[1] = ( this->box_size[2] + this->box_size[3] ) / 2;
     this->center[2] = ( this->box_size[4] + this->box_size[5] ) / 2;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void cfdObjects::SetSourcePoints( vtkPolyData* pointSource )
 {
     this->pointSource = pointSource;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void cfdObjects::UpdateCommand()
 {
     ;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void cfdObjects::UpdateActors()
 {}
-
+////////////////////////////////////////////////////////////////////////////////
 vtkAlgorithmOutput* cfdObjects::ApplyGeometryFilterNew( vtkAlgorithmOutput* input )
 {
     if( this->activeDataSet->GetDataSet()->IsA( "vtkCompositeDataSet" ) )
@@ -178,12 +180,12 @@ vtkAlgorithmOutput* cfdObjects::ApplyGeometryFilterNew( vtkAlgorithmOutput* inpu
         return m_geometryFilter->GetOutputPort();
     }
 }
-
+////////////////////////////////////////////////////////////////////////////////
 DataSet* cfdObjects::GetActiveDataSet()
 {
     return activeDataSet;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void cfdObjects::SetActiveDataSet( DataSet* dataset )
 {
     /*vprDEBUG(vesDBG, 4)
@@ -192,3 +194,4 @@ void cfdObjects::SetActiveDataSet( DataSet* dataset )
 
     activeDataSet = dataset;
 }
+////////////////////////////////////////////////////////////////////////////////

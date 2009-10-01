@@ -36,6 +36,8 @@
 #include <ves/xplorer/event/viz/cfdPlanes.h>
 #include <ves/xplorer/event/viz/cfdCuttingPlane.h>
 
+#include <ves/xplorer/event/viz/OSGVectorStage.h>
+
 #include <ves/xplorer/Debug.h>
 
 #include <ves/open/xml/Command.h>
@@ -53,24 +55,23 @@
 #include <vtkCellDataToPointData.h>
 #include <vtkPassThroughFilter.h>
 #include <vtkXMLPolyDataWriter.h>
-#include <ves/xplorer/event/viz/OSGStage.h>
-
 
 using namespace ves::xplorer;
 using namespace ves::xplorer::scenegraph;
 
 // this class requires that the dataset has a vector field.
+////////////////////////////////////////////////////////////////////////////////
 cfdPresetVector::cfdPresetVector( const int xyz, const int numSteps )
 {
     this->xyz = xyz;
     this->numSteps = numSteps;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 cfdPresetVector::~cfdPresetVector()
 {
     ;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void cfdPresetVector::Update( void )
 {
 
@@ -199,36 +200,52 @@ void cfdPresetVector::Update( void )
             << " : " << GetVectorRatioFactor() << std::endl << vprDEBUG_FLUSH;
     }
 
-
-    vtkActor* temp = vtkActor::New();
-    temp->SetMapper( this->mapper );
-    temp->GetProperty()->SetSpecularPower( 20.0f );
-   
-	try
-	{
-		osg::ref_ptr<ves::xplorer::scenegraph::Geode > tempGeode = new ves::xplorer::scenegraph::Geode();
-
-		if( gpustuff )
-		{ 
-            OSGStage osgStage;
-			osgStage.createInstanced( this->ptmask->GetOutput(), 
-                std::string(""), std::string(""), tempGeode.get() );
-		}
-		else
-		{
-			tempGeode->TranslateToGeode( temp );
-		}
-
-		geodes.push_back( tempGeode.get() );
-		this->updateFlag = true;
-	}
-	catch( std::bad_alloc )
-	{
-		mapper->Delete();
-		mapper = vtkPolyDataMapper::New();
-		vprDEBUG( vesDBG, 0 ) << "|\tMemory allocation failure : cfdPresetVectors "
+    if( !m_gpuTools )
+    {
+        vtkActor* temp = vtkActor::New();
+        temp->SetMapper( this->mapper );
+        temp->GetProperty()->SetSpecularPower( 20.0f );
+        
+        try
+        {
+            osg::ref_ptr<ves::xplorer::scenegraph::Geode > tempGeode = 
+                new ves::xplorer::scenegraph::Geode();
+            tempGeode->TranslateToGeode( temp );
+            geodes.push_back( tempGeode.get() );
+            this->updateFlag = true;
+        }
+        catch( std::bad_alloc )
+        {
+            mapper->Delete();
+            mapper = vtkPolyDataMapper::New();
+            vprDEBUG( vesDBG, 0 ) << "|\tMemory allocation failure : cfdPresetVectors "
             << std::endl << vprDEBUG_FLUSH;
-	}
-    temp->Delete();
-}
+        }
+        temp->Delete();
+    }
+    else
+    {
+        try
+        {
+            OSGVectorStage* tempStage = new OSGVectorStage();
+            
+            osg::ref_ptr<ves::xplorer::scenegraph::Geode > tempGeode = 
+                tempStage->createInstanced( ptmask->GetOutput(), 
+                GetActiveDataSet()->GetActiveVectorName(),  
+                GetActiveDataSet()->GetActiveScalarName() );
 
+            delete tempStage;
+
+            geodes.push_back( tempGeode.get() );
+            this->updateFlag = true;
+        }
+        catch( std::bad_alloc )
+        {
+            mapper->Delete();
+            mapper = vtkPolyDataMapper::New();
+            vprDEBUG( vesDBG, 0 ) << "|\tMemory allocation failure : cfdPresetVectors "
+                << std::endl << vprDEBUG_FLUSH;
+        }        
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
