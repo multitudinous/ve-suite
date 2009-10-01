@@ -209,6 +209,10 @@ void VjObsWrapper::init( CosNaming::NamingContext* input,
         _vjObs->SetClusterMode( false );
     }
 
+    //If we are on the master or this is desktop mode we are going to connect
+    //both the old vjobs interface into conductor and we are going to connect
+    //the new interface to conductor. These interfaces only need to be called
+    //by the master to conductor as the master does all the data sync for ves.
     if( isMaster || !isCluster )
     {
         //This is the old way of communication
