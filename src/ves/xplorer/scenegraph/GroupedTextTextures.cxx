@@ -55,7 +55,12 @@ using namespace ves::xplorer::scenegraph;
 ////////////////////////////////////////////////////////////////////////////////
 GroupedTextTextures::GroupedTextTextures( std::string fontFile )
     :
-    osg::Group()
+    osg::Group(),
+    m_yStartLocation( 0.0f ),
+    m_selectedTexture( 0 ),
+    m_currentTexture( 0 ),
+    m_animationComplete( true ),
+    m_animateTextures( true )
 {
     _font = fontFile;
     //getOrCreateStateSet()->setAttributeAndModes( 
@@ -97,7 +102,6 @@ void GroupedTextTextures::MakeTextureActive( const std::string& tempKey )
 void GroupedTextTextures::MakeTextureActive( const TextTexture* tempKey )
 {
     //std::map< std::string, osg::ref_ptr< DCS > >::iterator iter = m_groupedTextures.find( tempKey->getParent( 0 ) );
-    
     //if( iter != m_groupedTextures.end() )
     {
         //find dcs in list
@@ -124,11 +128,26 @@ void GroupedTextTextures::MakeTextureActive( const TextTexture* tempKey )
             std::cout << "Not in list " << std::endl;
             return;
         }
-        //make this dcs the first one in the list
-        m_transformList.insert( m_transformList.begin(), listIter, m_transformList.end() );
-        m_transformList.erase( listIter, m_transformList.end() );
-        //Now update all the positions of the other textures
-        UpdateListPositions();
+
+        if( m_animateTextures )
+        {
+            m_selectedTexture = tempParent;
+            m_currentTexture = (*m_transformList.begin());
+            m_animationComplete = false;
+            m_yStartLocation = 0.0f;
+            static_cast< TextTexture* >( m_currentTexture->getChild( 0 ) )->
+                GetTextureGeode()->getStateSet()->
+                getUniform( "ignoreWhite" )->set( false );
+        }
+        else
+        {
+            //make this dcs the first one in the list
+            m_transformList.insert( m_transformList.begin(), listIter, m_transformList.end() );
+            m_transformList.erase( listIter, m_transformList.end() );
+            //Now update all the positions of the other textures
+            UpdateListPositions();
+        }
+
     }
     //else
     //{
@@ -139,7 +158,7 @@ void GroupedTextTextures::MakeTextureActive( const TextTexture* tempKey )
 void GroupedTextTextures::MakeTextureActive( const ves::xplorer::scenegraph::DCS* tempKey )
 {
     //std::map< std::string, osg::ref_ptr< DCS > >::iterator iter = m_groupedTextures.find( tempKey->getParent( 0 ) );
-    
+    //m_yStartLocation = 0.0f;
     //if( iter != m_groupedTextures.end() )
     {
         //find dcs in list
@@ -176,11 +195,25 @@ void GroupedTextTextures::MakeTextureActive( const ves::xplorer::scenegraph::DCS
             std::cout << "Not in list " << std::endl;
             return;
         }
-        //make this dcs the first one in the list
-        m_transformList.insert( m_transformList.begin(), listIter, m_transformList.end() );
-        m_transformList.erase( listIter, m_transformList.end() );
-        //Now update all the positions of the other textures
-        UpdateListPositions();
+        
+        if( m_animateTextures )
+        {
+            m_selectedTexture = (*listIter);
+            m_currentTexture = (*m_transformList.begin());
+            m_animationComplete = false;
+            m_yStartLocation = 0.0f;
+            static_cast< TextTexture* >( m_currentTexture->getChild( 0 ) )->
+                GetTextureGeode()->getStateSet()->
+                getUniform( "ignoreWhite" )->set( false );
+        }
+        else
+        {
+            //make this dcs the first one in the list
+            m_transformList.insert( m_transformList.begin(), listIter, m_transformList.end() );
+            m_transformList.erase( listIter, m_transformList.end() );
+            //Now update all the positions of the other textures
+            UpdateListPositions();
+        }
     }
     //else
     //{
@@ -216,6 +249,7 @@ void GroupedTextTextures::UpdateListPositions()
 void GroupedTextTextures::UpdateDCSPosition( DCS* tempDCS, size_t i )
 {
     //y = ax + b
+    
     double b = 0.0f;
     double a = 0.4f;
     double x = 0.0f;
@@ -223,12 +257,13 @@ void GroupedTextTextures::UpdateDCSPosition( DCS* tempDCS, size_t i )
     double y = 0.0f;
     double z = 0.0f;
     i+=1;
-    x = i * -0.30f;
-    y = i * deltaX;
-    z = a * y + b;
+    //x = i * -0.30f;
+    y = (i * deltaX) + m_yStartLocation;
+    x = y * -0.30f;
+    z = (a * y) + b;
     
     double pos[ 3 ];
-    pos[ 0 ] = x;//0.0f;//-i;// * 0.0f;
+    pos[ 0 ] = x;
     pos[ 1 ] = y;
     pos[ 2 ] = z;
 
@@ -261,3 +296,85 @@ const std::string& GroupedTextTextures::GetKeyForTexture( const ves::xplorer::sc
 
     return std::string();
 }
+////////////////////////////////////////////////////////////////////////////////
+void GroupedTextTextures::AnimateTextureMovement()
+{
+    osg::StateSet* stateset = 
+        static_cast< TextTexture* >( m_currentTexture->getChild( 0 ) )->
+        GetTextureGeode()->getStateSet();
+
+    m_yStartLocation = m_yStartLocation - 0.1;
+    //std::cout << m_yStartLocation << std::endl;
+    //if front texture all faded out and ready to move then move it to the back
+    //once a texture reaches the front re-adjust the list of textures in the list
+    if( m_yStartLocation <= -1.01f )
+    {
+        std::list< DCS* >::iterator listIter = m_transformList.begin();
+        //shift textures around in the list
+        m_transformList.push_back( (*listIter) );
+        m_transformList.pop_front();
+        //Now the current one is on the back so reset it
+        stateset->getUniform( "ignoreWhite" )->set( true );
+        stateset->getUniform( "opacityVal" )->set( float( 0.85 ) );
+        float tempColor[ 4 ] = { 0.0, 0.0, 0.0, 1.0 };
+        static_cast< TextTexture* >( m_currentTexture->getChild( 0 ) )->
+            SetTextColor( tempColor );
+        
+        m_currentTexture = (*m_transformList.begin());
+
+        m_yStartLocation = 0.0f;
+        static_cast< TextTexture* >( m_currentTexture->getChild( 0 ) )->
+            GetTextureGeode()->getStateSet()->
+            getUniform( "ignoreWhite" )->set( false );
+        static_cast< TextTexture* >( m_currentTexture->getChild( 0 ) )->
+            GetTextureGeode()->getStateSet()->
+            getUniform( "opacityVal" )->set( float( 0.85 ) );
+        tempColor[ 3 ] = 0.85;
+        static_cast< TextTexture* >( m_currentTexture->getChild( 0 ) )->
+            SetTextColor( tempColor );
+        
+        if( m_selectedTexture == m_currentTexture )
+        {
+            osg::StateSet* stateset = 
+            static_cast< TextTexture* >( m_currentTexture->getChild( 0 ) )->
+                GetTextureGeode()->getStateSet();
+            
+            stateset->getUniform( "ignoreWhite" )->set( true );
+            stateset->getUniform( "opacityVal" )->set( float( 0.85 ) );
+            float tempColor[ 4 ] = { 0.0, 0.0, 0.0, 1.0 };
+            static_cast< TextTexture* >( m_currentTexture->getChild( 0 ) )->
+                SetTextColor( tempColor );
+            
+            //stop moving things
+            m_animationComplete = true;
+        }
+    }
+    //if not then just continue to animate things
+    else
+    {
+        float tempOpacity = 0.85 + (m_yStartLocation*0.85);
+        stateset->getUniform( "opacityVal" )->set( tempOpacity );
+        float tempColor[ 4 ] = { 0.0, 0.0, 0.0, 1.0 };
+        tempColor[ 3 ] = tempOpacity;
+        static_cast< TextTexture* >( m_currentTexture->getChild( 0 ) )->
+            SetTextColor( tempColor );
+    }
+    //tag all of the textures before the texture of interest
+    //figure out when those textures are in front
+    
+    //move them
+    //figure out when to move them back
+    //move it forward - pass in dt to move things forward
+    UpdateListPositions();
+}
+////////////////////////////////////////////////////////////////////////////////
+void GroupedTextTextures::UpdateTexturePosition()
+{
+    AnimateTextureMovement();
+}
+////////////////////////////////////////////////////////////////////////////////
+bool GroupedTextTextures::AnimationComplete()
+{
+    return m_animationComplete;
+}
+////////////////////////////////////////////////////////////////////////////////

@@ -79,7 +79,7 @@
                     <property name="border">5</property>
                     <property name="flag">wxALIGN_LEFT|wxALL|wxEXPAND</property>
                     <property name="proportion">0</property>
-                    <object class="wxStaticBoxSizer" expanded="1">
+                    <object class="wxStaticBoxSizer" expanded="0">
                         <property name="id">wxID_ANY</property>
                         <property name="label">Data Load</property>
                         <property name="minimum_size"></property>
@@ -209,7 +209,7 @@
                     <property name="border">5</property>
                     <property name="flag">wxALIGN_LEFT|wxALL|wxEXPAND</property>
                     <property name="proportion">0</property>
-                    <object class="wxStaticBoxSizer" expanded="1">
+                    <object class="wxStaticBoxSizer" expanded="0">
                         <property name="id">wxID_ANY</property>
                         <property name="label">Query Composition</property>
                         <property name="minimum_size"></property>
@@ -1342,7 +1342,7 @@
                     <property name="border">5</property>
                     <property name="flag">wxALIGN_LEFT|wxALL|wxEXPAND</property>
                     <property name="proportion">0</property>
-                    <object class="wxStaticBoxSizer" expanded="1">
+                    <object class="wxStaticBoxSizer" expanded="0">
                         <property name="id">wxID_ANY</property>
                         <property name="label">Part Selction</property>
                         <property name="minimum_size"></property>
@@ -1465,6 +1465,73 @@
                                         <event name="OnUpdateUI"></event>
                                     </object>
                                 </object>
+                            </object>
+                        </object>
+                    </object>
+                </object>
+                <object class="sizeritem" expanded="1">
+                    <property name="border">5</property>
+                    <property name="flag">wxALL|wxEXPAND</property>
+                    <property name="proportion">1</property>
+                    <object class="wxStaticBoxSizer" expanded="0">
+                        <property name="id">wxID_ANY</property>
+                        <property name="label">Text Display Selection</property>
+                        <property name="minimum_size"></property>
+                        <property name="name">sbSizer8</property>
+                        <property name="orient">wxVERTICAL</property>
+                        <property name="permission">none</property>
+                        <event name="OnUpdateUI"></event>
+                        <object class="sizeritem" expanded="1">
+                            <property name="border">5</property>
+                            <property name="flag">wxALIGN_CENTER|wxEXPAND</property>
+                            <property name="proportion">0</property>
+                            <object class="wxCheckListBox" expanded="1">
+                                <property name="bg"></property>
+                                <property name="choices"></property>
+                                <property name="context_help"></property>
+                                <property name="enabled">1</property>
+                                <property name="fg"></property>
+                                <property name="font"></property>
+                                <property name="hidden">0</property>
+                                <property name="id">wxID_ANY</property>
+                                <property name="maximum_size"></property>
+                                <property name="minimum_size"></property>
+                                <property name="name">m_displayTextChkList</property>
+                                <property name="permission">protected</property>
+                                <property name="pos"></property>
+                                <property name="size">-1,100</property>
+                                <property name="style">wxLB_ALWAYS_SB|wxLB_EXTENDED</property>
+                                <property name="subclass"></property>
+                                <property name="tooltip"></property>
+                                <property name="window_extra_style"></property>
+                                <property name="window_name"></property>
+                                <property name="window_style"></property>
+                                <event name="OnChar"></event>
+                                <event name="OnCheckListBox"></event>
+                                <event name="OnCheckListBoxDClick"></event>
+                                <event name="OnCheckListBoxToggled">OnTextChkListToggle</event>
+                                <event name="OnEnterWindow"></event>
+                                <event name="OnEraseBackground"></event>
+                                <event name="OnKeyDown"></event>
+                                <event name="OnKeyUp"></event>
+                                <event name="OnKillFocus"></event>
+                                <event name="OnLeaveWindow"></event>
+                                <event name="OnLeftDClick"></event>
+                                <event name="OnLeftDown"></event>
+                                <event name="OnLeftUp"></event>
+                                <event name="OnMiddleDClick"></event>
+                                <event name="OnMiddleDown"></event>
+                                <event name="OnMiddleUp"></event>
+                                <event name="OnMotion"></event>
+                                <event name="OnMouseEvents"></event>
+                                <event name="OnMouseWheel"></event>
+                                <event name="OnPaint"></event>
+                                <event name="OnRightDClick"></event>
+                                <event name="OnRightDown"></event>
+                                <event name="OnRightUp"></event>
+                                <event name="OnSetFocus"></event>
+                                <event name="OnSize"></event>
+                                <event name="OnUpdateUI"></event>
                             </object>
                         </object>
                     </object>

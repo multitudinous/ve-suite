@@ -661,7 +661,7 @@ const std::string WarrantyToolUIDialog::GetTextFromChoice( wxChoice* variable,
     {
         inputString = "'" + inputString + "'";
     }
-    std::string queryCommand = "'" + variableString + "' " + logicString + " " + inputString;
+    std::string queryCommand = "\"" + variableString + "\" " + logicString + " " + inputString;
     
     return queryCommand;
 }

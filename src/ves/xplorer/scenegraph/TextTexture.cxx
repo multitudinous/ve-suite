@@ -186,19 +186,19 @@ void TextTexture::CreateTexturedQuad()
     
 
     //Set the stateset for the quad
-    osg::Geode* texttureGeode = new osg::Geode();
-    texttureGeode->setCullingActive( false );
-    texttureGeode->addDrawable( quadGeometry.get() );
+    m_textureGeode = new osg::Geode();
+    m_textureGeode->setCullingActive( false );
+    m_textureGeode->addDrawable( quadGeometry.get() );
     
     osg::ref_ptr< osg::StateSet > stateset =
-        texttureGeode->getOrCreateStateSet();
+        m_textureGeode->getOrCreateStateSet();
     stateset->setMode( GL_LIGHTING, osg::StateAttribute::OFF );    
 #ifndef VES_SRTT_DEBUG
     stateset->setTextureAttributeAndModes(
           0, _texture.get(), osg::StateAttribute::ON );
 #endif
     
-    addChild( texttureGeode );
+    addChild( m_textureGeode.get() );
 
     getOrCreateStateSet()->addUniform(
         new osg::Uniform( "glowColor", osg::Vec4( 0.0, 0.0, 0.0, 1.0) ) );
@@ -213,8 +213,9 @@ void TextTexture::CreateTexturedQuad()
     stateset->setAttributeAndModes( program.get(),
         osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
     
-    stateset->addUniform(
-        new osg::Uniform( "opacityVal", 0.85f ) );
+    stateset->addUniform( new osg::Uniform( "opacityVal", 0.85f ) );
+
+    stateset->addUniform( new osg::Uniform( "ignoreWhite", true ) );
 
     stateset->addUniform( new osg::Uniform( "tex", 0 ) );
 }
@@ -261,7 +262,9 @@ void TextTexture::CreateText()
         drawable_stateset->setRenderBinDetails( 22, std::string( "DepthSortedBin" ) );
         drawable_stateset->setNestRenderBins( false );
         
-        std::string shaderName = osgDB::findDataFile( "null_glow_texture.fs" );
+        //std::string shaderName = osgDB::findDataFile( "opacity.fs" );
+        //std::string shaderName = osgDB::findDataFile( "null_glow_texture.fs" );
+        std::string shaderName = osgDB::findDataFile( "opacity_osgText.fs" );
         osg::ref_ptr< osg::Shader > fragShader = 
         osg::Shader::readShaderFile( osg::Shader::FRAGMENT, shaderName );
         
@@ -271,7 +274,7 @@ void TextTexture::CreateText()
         drawable_stateset->setAttributeAndModes( program.get(),
                                        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
         
-        //stateset->addUniform( new osg::Uniform( "opacityVal", 0.70f ) );
+        drawable_stateset->addUniform( new osg::Uniform( "opacityVal", 1.0f ) );
         
         drawable_stateset->addUniform( new osg::Uniform( "tex", 0 ) );
         
@@ -313,7 +316,9 @@ void TextTexture::CreateText()
         drawable_stateset->setRenderBinDetails( 22, std::string( "DepthSortedBin" ) );
         drawable_stateset->setNestRenderBins( false );
         
-        std::string shaderName = osgDB::findDataFile( "null_glow_texture.fs" );
+        //std::string shaderName = osgDB::findDataFile( "opacity.fs" );
+        //std::string shaderName = osgDB::findDataFile( "null_glow_texture.fs" );
+        std::string shaderName = osgDB::findDataFile( "opacity_osgText.fs" );
         osg::ref_ptr< osg::Shader > fragShader = 
         osg::Shader::readShaderFile( osg::Shader::FRAGMENT, shaderName );
         
@@ -323,7 +328,7 @@ void TextTexture::CreateText()
         drawable_stateset->setAttributeAndModes( program.get(),
                                        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
         
-        //stateset->addUniform( new osg::Uniform( "opacityVal", 0.70f ) );
+        drawable_stateset->addUniform( new osg::Uniform( "opacityVal", 1.0f ) );
         
         drawable_stateset->addUniform( new osg::Uniform( "tex", 0 ) );
         
@@ -366,3 +371,35 @@ void TextTexture::SetTitle( const std::string& title )
     m_titleText->setText( m_title );
 }
 ////////////////////////////////////////////////////////////////////////////////
+osg::Geode* TextTexture::GetTextureGeode()
+{
+    return m_textureGeode.get();
+}
+////////////////////////////////////////////////////////////////////////////////
+osgText::Text* TextTexture::GetBodyText()
+{
+    return m_bodyText.get();
+}
+////////////////////////////////////////////////////////////////////////////////
+osgText::Text* TextTexture::GetTitleText()
+{
+    return m_titleText.get();
+}
+////////////////////////////////////////////////////////////////////////////////
+void TextTexture::SetTextColor( float* color )
+{
+    m_titleText->setColor( osg::Vec4( color[ 0 ], 
+                                     color[ 1 ],
+                                     color[ 2 ], 
+                                     color[ 3 ] ) );
+    m_bodyText->setColor( osg::Vec4( color[ 0 ],
+                                    color[ 1 ],
+                                    color[ 2 ],
+                                    color[ 3 ] ) );    
+    _textColor[ 0 ] = color[ 0 ]; 
+    _textColor[ 1 ] = color[ 1 ]; 
+    _textColor[ 2 ] = color[ 2 ]; 
+    _textColor[ 3 ] = color[ 3 ]; 
+    
+    //m_titleText->setText( m_title );
+}

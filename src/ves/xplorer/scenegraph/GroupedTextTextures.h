@@ -114,10 +114,17 @@ public:
 
     const std::string& GetKeyForTexture( const ves::xplorer::scenegraph::DCS* tempKey );
 
+    ///Return if the animation is still being processed
+    bool AnimationComplete();
+    ///Update position of all of the attached textures
+    void UpdateTexturePosition();
+    
 protected:
     ///Destructor
     virtual ~GroupedTextTextures();
-
+    ///Animate the texture position
+    void AnimateTextureMovement();
+    
     ///The color of the text, default is black
     float _textColor[ 4 ];
 
@@ -129,6 +136,16 @@ protected:
     osg::ref_ptr< DCS > m_activeDCS;
     
     std::list< DCS* > m_transformList;
+    ///Start location for lerp animation functions
+    double m_yStartLocation;
+    ///Selected DCS
+    DCS* m_selectedTexture;
+    ///Current DCS 
+    DCS* m_currentTexture;
+    ///Tell if the animation is still running
+    bool m_animationComplete;
+    ///Determine if this group should animate dialog movement
+    bool m_animateTextures;
 };
 }
 }

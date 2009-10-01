@@ -140,10 +140,20 @@ void WarrantyToolGP::PreFrameUpdate()
 {
     //If the keymbaord mouse selected something
     //std::cout << " here 1 " << std::endl;
-    //ves::xplorer::device::KeyboardMouse* kbMouse = dynamic_cast< ves::xplorer::device::KeyboardMouse* >( mDevice );
+    //ves::xplorer::device::KeyboardMouse* kbMouse = dynamic_cast< ves::xplorer::device::KeyboardMouse* >( mDevice );    
     if( !m_keyboard )
     {
         return;
+    }
+    
+    if( !m_groupedTextTextures.valid() )
+    {
+        return;
+    }
+
+    if( !m_groupedTextTextures->AnimationComplete() )
+    {
+        m_groupedTextTextures->UpdateTexturePosition();
     }
 
     if( !m_keyboard->GetMousePickEvent() )
@@ -151,7 +161,7 @@ void WarrantyToolGP::PreFrameUpdate()
         return;
     }
 
-    if( m_groupedTextTextures.valid() )
+    //if( m_groupedTextTextures.valid() )
     {
         //Get the intersection visitor from keyboard mouse or the wand
         osg::ref_ptr< osgUtil::LineSegmentIntersector > intersectorSegment = 
@@ -438,6 +448,8 @@ void WarrantyToolGP::RenderTextualDisplay( bool onOff )
         if( !mModelText.valid() )
         {
             mModelText = new ves::xplorer::scenegraph::TextTexture();
+            float textColor[ 4 ] = { 0.0, 0.0, 0.0, 1.0 };
+            mModelText->SetTextColor( textColor );
             m_textTrans->addChild( mModelText.get() );
         }
         else
@@ -657,6 +669,9 @@ void WarrantyToolGP::CreateDBQuery( ves::open::xml::DataValuePairPtr dvp )
 	{
         ves::xplorer::scenegraph::TextTexture* tempText = 
             new ves::xplorer::scenegraph::TextTexture();
+        float textColor[ 4 ] = { 0.0, 0.0, 0.0, 1.0 };
+        tempText->SetTextColor( textColor );
+
         std::ostringstream tempTextData;
         std::string partNumber;
 		for (std::size_t col = 0; col < cols; ++col)

@@ -94,7 +94,7 @@ public:
 
     ///Set the color of the text
     ///\param color Text color
-    void SetTextColor( float color[ 4 ] );
+    void SetTextColor( float* color );
 
     ///Set the font
     ///\param fontFile The file containing the font to use
@@ -119,6 +119,15 @@ public:
     ///Get the title for the dialog
     const std::string& GetTitle();
     
+    ///Get texture geode
+    osg::Geode* GetTextureGeode();
+
+    ///Get texture geode
+    osgText::Text* GetBodyText();
+
+    ///Get texture geode
+    osgText::Text* GetTitleText();
+
 protected:
     ///Destructor
     virtual ~TextTexture();
@@ -153,6 +162,9 @@ protected:
     //The update callback
     //osg::ref_ptr< TextUpdateCallback > _ttUpdateCallback;
     osgBullet::Chart* m_chartSurface;
+    
+    ///The texture geode for the texture
+    osg::ref_ptr< osg::Geode > m_textureGeode;
 };
 }
 }
