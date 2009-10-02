@@ -139,7 +139,7 @@ void cfdVectorBase::UpdateCommand()
     {
         SetPreCalcFlag( false );
     }
-
+    
     //Extract the advanced settings from the commands
     activeModelDVP = objectCommand->GetDataValuePair( "Advanced Vector Settings" );
     objectCommand = boost::dynamic_pointer_cast<ves::open::xml::Command>( activeModelDVP->GetDataXMLObject() );
@@ -165,6 +165,18 @@ void cfdVectorBase::UpdateCommand()
     unsigned int scaleByMagnitude;
     activeModelDVP->GetData( scaleByMagnitude );
     SetScaleByVectorFlag( static_cast< int >( scaleByMagnitude ) );
+    
+    activeModelDVP = objectCommand->GetDataValuePair( "GPU Tools" );
+    if( activeModelDVP )
+    {
+        unsigned int gpuFlag;
+        activeModelDVP->GetData( gpuFlag );
+        m_gpuTools = gpuFlag;
+    }
+    else
+    {
+        m_gpuTools = false;
+    }    
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdVectorBase::SetVectorScale( float x )

@@ -103,13 +103,6 @@ std::vector< osg::ref_ptr< ves::xplorer::scenegraph::Geode > > cfdObjects::GetGe
 ////////////////////////////////////////////////////////////////////////////////
 void cfdObjects::ClearGeodes( void )
 {
-    /*
-    for(unsigned int i = 0; i < geodes.size(); ++i )
-    {
-       delete geodes.at( i );
-    }
-    */
-
     geodes.clear();
 }
 ////////////////////////////////////////////////////////////////////////////////

@@ -179,9 +179,6 @@ void cfdContour::Update( void )
     vtkActor* temp = vtkActor::New();
     temp->SetMapper( this->mapper );
     temp->GetProperty()->SetSpecularPower( 20.0f );
-    //geodes.push_back( new ves::xplorer::scenegraph::Geode() );
-    //geodes.back()->TranslateToGeode( temp );
-    //temp->Delete();
 
     try
     {

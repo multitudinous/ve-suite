@@ -365,7 +365,7 @@ void cfdStreamers::Update()
         tempGeode->TranslateToGeode( temp );
         //tempGeode->StreamLineToGeode( temp );
 
-        geodes.push_back( tempGeode );
+        geodes.push_back( tempGeode.get() );
         updateFlag = true;
     }
     catch ( std::bad_alloc )

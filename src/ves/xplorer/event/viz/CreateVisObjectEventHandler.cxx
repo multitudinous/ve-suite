@@ -437,19 +437,6 @@ CreateVisObjectEventHandler::CreateVisObjectEventHandler()
     /*this->image = new cfdImage( _param );
     this->image->SetObjectType( IMAGE_EX );
     this->dataList.push_back( this->image ); */
-    //
-    // Initiate the Performer objects.
-    //
-    //std::cout << "| 51. Initializing........................................ pfGeodes |" << std::endl;
-
-    //for ( int i = 0; i < (int)this->dataList.size(); i++ )
-    /*std::map< int, cfdObjects* >::iterator iter;
-    for(iter = visObjectMap.begin(); iter != viObjectMap.end(); ++iter )
-    {
-       // Initialize all the geode creation flags and dcs flags for all the geodes
-       iter->SetUpdateFlag( false );
-       iter->SetActiveDataSet( ModelHandler::instance()->GetActiveDataSet() );
-    }*/
     
     std::cout << "| Finished Initializing Viz Methods................................ |" << std::endl;
 }
