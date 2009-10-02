@@ -98,6 +98,7 @@ public:
         ADD_ANIMATION,///<The add attribute button ID.
         UNIFORM_SCALE,///<The scale uniformly checkbox ID.
         GEOGRAPHIC_PANEL_ID,
+        GEOCODE_ID,
         CULLING_PANEL_ID,
         CULLING_SETTINGS
     };
@@ -187,6 +188,9 @@ protected:
 
     ///Update the geographic information.
     void _updateGeographic ( wxSpinEvent& event );
+
+    ///Set geographic information from geocode event.
+    void _onGeocodeEvent ( wxCommandEvent& event );
 
     ///Update the active attribute.
     ///\param event The wxListEvent event.
@@ -318,6 +322,7 @@ protected:
     wxButton* _addAnimationButton;///<The button for adding attributes.
     wxButton* _removeAnimationButton;///<The button for adding attributes.
 
+    wxTextCtrl* _geocodeTextControl;
     wxSpinCtrlDbl* _longitudeControl;
     wxSpinCtrlDbl* _latitudeControl;
     

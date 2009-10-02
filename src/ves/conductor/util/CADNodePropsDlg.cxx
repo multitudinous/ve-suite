@@ -80,6 +80,7 @@
 #include <ves/open/xml/shader/Program.h>
 
 #include <ves/util/commands/Minerva.h>
+#include <Minerva/Core/Utilities/GeoCode.h>
 
 using namespace ves::open::xml::cad;
 using namespace ves::open::xml::shader;
@@ -108,6 +109,7 @@ BEGIN_EVENT_TABLE( CADNodePropertiesDlg, wxDialog )
     EVT_MENU( CADMaterialEditMenu::OPACITY_ID, CADNodePropertiesDlg::_showOpacityDialog )
     EVT_CHECKBOX( UNIFORM_SCALE, CADNodePropertiesDlg::UpdateUniformScale )
     EVT_SPINCTRL( GEOGRAPHIC_PANEL_ID, CADNodePropertiesDlg::_updateGeographic )
+    EVT_BUTTON( GEOCODE_ID, CADNodePropertiesDlg::_onGeocodeEvent )
 END_EVENT_TABLE()
 ////////////////////////////////////////////////////
 //Here is the constructor with passed in pointers //
@@ -1397,6 +1399,9 @@ void CADNodePropertiesDlg::_buildGeographicPanel()
   _geographicPanel = new wxPanel ( _propertyTabs, GEOGRAPHIC_PANEL_ID );
   wxStaticBox* outerStaticBox = new wxStaticBox ( _geographicPanel, -1, wxT ( "Geographic Properties" ) );
 
+  _geocodeTextControl = new wxTextCtrl ( _geographicPanel, -1 );
+  wxButton* button ( new wxButton ( _geographicPanel, GEOCODE_ID, "Geocode" ) );
+
   _longitudeControl = new wxSpinCtrlDbl ( _geographicPanel, GEOGRAPHIC_PANEL_ID );
   _longitudeControl->SetValue( 0 );
   _longitudeControl->SetRange( -180.0, 180.0 );
@@ -1418,6 +1423,8 @@ void CADNodePropertiesDlg::_buildGeographicPanel()
   wxStaticBoxSizer* sizer ( new wxStaticBoxSizer ( outerStaticBox, wxVERTICAL ) );
   wxGridSizer *grid ( new wxGridSizer ( 2, 2, 5, 5 ) );
 
+  grid->Add ( _geocodeTextControl, 0, 0, 0 );
+  grid->Add ( button, 0, 0, 0 );
   grid->Add ( new wxStaticText ( _geographicPanel, wxID_ANY, wxT ( "Longitude" ) ), 0 );
   grid->Add ( _longitudeControl, 0, 0, 0 );
   grid->Add ( new wxStaticText ( _geographicPanel, wxID_ANY, wxT ( "Latitude" ) ), 0 );
@@ -1537,4 +1544,22 @@ void CADNodePropertiesDlg::UpdateCullingSettings( wxCommandEvent& event )
     _sendCommandsToXplorer();
     ClearInstructions();
 }
+///////////////////////////////////////////////////////////////////////////////
+void CADNodePropertiesDlg::_onGeocodeEvent ( wxCommandEvent& event )
+{
+  std::string location ( _geocodeTextControl->GetValue().ToAscii() );
 
+  if ( false == location.empty() )
+  {
+    Minerva::Core::Utilities::GeoCode geocode;
+    Minerva::Core::Utilities::GeoCode::Result result ( geocode ( location ) );
+
+    if ( result.success )
+    {
+      _longitudeControl->SetValue ( result.location[0] );
+      _latitudeControl->SetValue  ( result.location[1] );
+
+      this->_updateGeographic ( wxSpinEvent() );
+    }
+  }
+}
