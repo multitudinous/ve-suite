@@ -157,8 +157,10 @@ protected:
 
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON
     void _onAdvanced( wxCommandEvent& event );
-
+    ///Update plane slider
     void UpdatePlaneSlider( wxCommandEvent& event );
+    ///Turn GPU tools off and on
+    void OnGPUCheckTools( wxCommandEvent& event );
     
     std::string _dataType;///<Scalar or vector data
     std::string _activeScalar;///Active scalar name
@@ -169,6 +171,7 @@ protected:
     wxCheckBox*    _cyclePrecomputedCBox;
     wxRadioButton* _singlePlaneRButton;
     wxCheckBox*    _nearestPrecomputedCBox;
+    wxCheckBox* m_gpuToolsChkBox;
     wxSlider*      _planePositonSlider;
     wxButton*      itemButton16;
     wxButton*      itemButton17;

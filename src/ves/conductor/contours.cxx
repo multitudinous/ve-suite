@@ -70,6 +70,7 @@ BEGIN_EVENT_TABLE( Contours, wxDialog )
     EVT_CHECKBOX( CONTOURS_MULTIPLE_PRECONTOUR_CHK,     Contours::_onCyclePlanes )
     EVT_RADIOBUTTON( CONTOURS_SINGLE_PRECONTOUR_RBUTTON,   Contours::_onSinglePlane )
     EVT_CHECKBOX( CONTOURS_SINGLE_PRECONTOUR_CHK,       Contours::_onPrecomputedPlane )
+    EVT_CHECKBOX( CONTOURS_GPU_TOOLS_CHK, Contours::OnGPUCheckTools )
     EVT_SLIDER( CONTOURS_PLANE_SLIDER,        Contours::_onPlane )
     EVT_BUTTON( CONTOURS_ADD_CONTOUR_PLANE_BUTTON,    Contours::_onAddPlane )
     EVT_BUTTON( CONTOURS_ADVANCED_CONTOUR_BUTTON,     Contours::_onAdvanced )
@@ -94,6 +95,7 @@ bool Contours::Create( wxWindow* parent, wxWindowID id, const wxString& caption,
                        long style )
 {
     _directionRBox = 0;
+    m_gpuToolsChkBox = 0;
     //_contourTypeRBox = 0;
     _allPrecomputedRButton = 0;
     _cyclePrecomputedCBox = 0;
@@ -126,15 +128,6 @@ bool Contours::Create( wxWindow* parent, wxWindowID id, const wxString& caption,
     GetSizer()->SetSizeHints( this );
     Centre();
     SetIcon( ve_icon32x32_xpm );
-    
-    /*if( _dataType == "SCALAR" )
-    {
-        SetTitle( _( "Scalar Contour" ) );
-    }
-    else if( _dataType == "VECTOR" )
-    {
-        SetTitle( _( "Vector Contour" ) );
-    }*/
     
     return true;
 }
@@ -191,36 +184,61 @@ void Contours::CreateControls()
     }
     itemBoxSizer4->Add( _directionRBox, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
-    wxStaticBox* itemStaticBoxSizer7Static = new wxStaticBox( itemDialog1, wxID_ANY, _T( "Multiple Planes" ) );
-    wxStaticBoxSizer* itemStaticBoxSizer7 = new wxStaticBoxSizer( itemStaticBoxSizer7Static, wxVERTICAL );
-    itemStaticBoxSizer3->Add( itemStaticBoxSizer7, 0, wxGROW | wxALL, 5 );
+    //////////////////////////
 
-    _allPrecomputedRButton = new wxRadioButton( itemDialog1, CONTOURS_MULTIPLE_PRECONTOUR_RBUTTON, _T( "All Precomputed Surfaces" ), wxDefaultPosition, wxDefaultSize, 0 );
-    _allPrecomputedRButton->SetValue( false );
-    itemStaticBoxSizer7->Add( _allPrecomputedRButton, 0, wxALIGN_LEFT | wxALL, 5 );
+    {
+        wxStaticBox* itemStaticBoxSizer7Static = new wxStaticBox( itemDialog1, wxID_ANY, _T( "Multiple Planes" ) );
+        wxStaticBoxSizer* itemStaticBoxSizer7 = new wxStaticBoxSizer( itemStaticBoxSizer7Static, wxVERTICAL );
+        itemStaticBoxSizer3->Add( itemStaticBoxSizer7, 0, wxGROW | wxALL, 5 );
+        
+        _allPrecomputedRButton = new wxRadioButton( itemDialog1, CONTOURS_MULTIPLE_PRECONTOUR_RBUTTON, _T( "All Precomputed Surfaces" ), wxDefaultPosition, wxDefaultSize, 0 );
+        _allPrecomputedRButton->SetValue( false );
+        itemStaticBoxSizer7->Add( _allPrecomputedRButton, 0, wxALIGN_LEFT | wxALL, 5 );
+        
+        _cyclePrecomputedCBox = new wxCheckBox( itemDialog1, CONTOURS_MULTIPLE_PRECONTOUR_CHK, _T( "Cycle Precomputed Surfaces" ), wxDefaultPosition, wxDefaultSize, 0 );
+        _cyclePrecomputedCBox->SetValue( false );
+        _cyclePrecomputedCBox->Enable( false );
+        itemStaticBoxSizer7->Add( _cyclePrecomputedCBox, 0, wxALIGN_LEFT | wxALL, 5 );
+        
+    }
 
-    _cyclePrecomputedCBox = new wxCheckBox( itemDialog1, CONTOURS_MULTIPLE_PRECONTOUR_CHK, _T( "Cycle Precomputed Surfaces" ), wxDefaultPosition, wxDefaultSize, 0 );
-    _cyclePrecomputedCBox->SetValue( false );
-    _cyclePrecomputedCBox->Enable( false );
-    itemStaticBoxSizer7->Add( _cyclePrecomputedCBox, 0, wxALIGN_LEFT | wxALL, 5 );
+    //////////////////////////
 
-    wxStaticBox* itemStaticBoxSizer10Static = new wxStaticBox( itemDialog1, wxID_ANY, _T( "Single Plane" ) );
-    wxStaticBoxSizer* itemStaticBoxSizer10 = new wxStaticBoxSizer( itemStaticBoxSizer10Static, wxVERTICAL );
-    itemStaticBoxSizer3->Add( itemStaticBoxSizer10, 0, wxGROW | wxALL, 5 );
+    {
+        wxStaticBox* itemStaticBoxSizer10Static = new wxStaticBox( itemDialog1, wxID_ANY, _T( "Single Plane" ) );
+        wxStaticBoxSizer* itemStaticBoxSizer10 = new wxStaticBoxSizer( itemStaticBoxSizer10Static, wxVERTICAL );
+        itemStaticBoxSizer3->Add( itemStaticBoxSizer10, 0, wxGROW | wxALL, 5 );
+        
+        _singlePlaneRButton = new wxRadioButton( itemDialog1, CONTOURS_SINGLE_PRECONTOUR_RBUTTON, _T( "Specify a Single Plane" ), wxDefaultPosition, wxDefaultSize, 0 );
+        _singlePlaneRButton->SetValue( true );
+        itemStaticBoxSizer10->Add( _singlePlaneRButton, 0, wxALIGN_LEFT | wxALL, 5 );
+        
+        _nearestPrecomputedCBox = new wxCheckBox( itemDialog1, CONTOURS_SINGLE_PRECONTOUR_CHK, _T( "Use Nearest Precomputed Plane" ), wxDefaultPosition, wxDefaultSize, 0 );
+        _nearestPrecomputedCBox->SetValue( false );
+        itemStaticBoxSizer10->Add( _nearestPrecomputedCBox, 0, wxALIGN_LEFT | wxALL, 5 );
+    }
 
-    _singlePlaneRButton = new wxRadioButton( itemDialog1, CONTOURS_SINGLE_PRECONTOUR_RBUTTON, _T( "Specify a Single Plane" ), wxDefaultPosition, wxDefaultSize, 0 );
-    _singlePlaneRButton->SetValue( true );
-    itemStaticBoxSizer10->Add( _singlePlaneRButton, 0, wxALIGN_LEFT | wxALL, 5 );
-
-    _nearestPrecomputedCBox = new wxCheckBox( itemDialog1, CONTOURS_SINGLE_PRECONTOUR_CHK, _T( "Use Nearest Precomputed Plane" ), wxDefaultPosition, wxDefaultSize, 0 );
-    _nearestPrecomputedCBox->SetValue( false );
-    itemStaticBoxSizer10->Add( _nearestPrecomputedCBox, 0, wxALIGN_LEFT | wxALL, 5 );
-
-    wxStaticText* itemStaticText13 = new wxStaticText( itemDialog1, wxID_STATIC, _T( "Plane" ), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStaticBoxSizer3->Add( itemStaticText13, 0, wxALIGN_LEFT | wxLEFT | wxRIGHT | wxTOP | wxADJUST_MINSIZE, 5 );
-
+    //////////////////////////
+    //Setup GPU tools
+    if( _dataType == "SCALAR" )
+    {
+        ;//Nothing yet for scalars
+    }
+    else if( _dataType == "VECTOR" )
+    {
+        wxStaticBox* gpuToolsStaticSizer = new wxStaticBox( itemDialog1, wxID_ANY, _T( "GPU Tools" ) );
+        wxStaticBoxSizer* itemStaticBoxSizer10 = new wxStaticBoxSizer( gpuToolsStaticSizer, wxVERTICAL );
+        itemStaticBoxSizer3->Add( itemStaticBoxSizer10, 0, wxGROW | wxALL, 5 );
+        
+        m_gpuToolsChkBox = new wxCheckBox( itemDialog1, CONTOURS_GPU_TOOLS_CHK, _T( "Use GPU Tools" ), wxDefaultPosition, wxDefaultSize, 0 );
+        m_gpuToolsChkBox->SetValue( false );
+        itemStaticBoxSizer10->Add( m_gpuToolsChkBox, 0, wxALIGN_LEFT | wxALL, 5 );
+    }
+    
     //////////////////////////    
     //Add a spinner before the slider
+    wxStaticText* itemStaticText13 = new wxStaticText( itemDialog1, wxID_STATIC, _T( "Plane" ), wxDefaultPosition, wxDefaultSize, 0 );
+    itemStaticBoxSizer3->Add( itemStaticText13, 0, wxALIGN_LEFT | wxLEFT | wxRIGHT | wxTOP | wxADJUST_MINSIZE, 5 );
     wxBoxSizer* placementSliderSizer = new wxBoxSizer( wxHORIZONTAL );
     m_positionSpinner = new wxSpinCtrlDbl( *itemDialog1, CONTOURS_PLANE_SPINNER, 
         wxEmptyString, wxDefaultPosition, wxDefaultSize, 
@@ -479,6 +497,11 @@ void Contours::_updateAdvancedSettings()
             scaleByMagFlag->SetDataValue( static_cast<unsigned int>( 0 ) );
         }
         _advancedSettings.push_back( scaleByMagFlag );
+        
+        unsigned int checkBox = m_gpuToolsChkBox->IsChecked();
+        ves::open::xml::DataValuePairPtr gpuToolsDVP( new ves::open::xml::DataValuePair() );
+        gpuToolsDVP->SetData( "GPU Tools", checkBox );
+        _advancedSettings.push_back( gpuToolsDVP );
     }
     else
     {
@@ -590,3 +613,7 @@ void Contours::UpdatePlaneSlider( wxCommandEvent& WXUNUSED( event ) )
     _planePositonSlider->SetValue( _planePosition );
 }
 ////////////////////////////////////////////////////////////////////////////////
+void Contours::OnGPUCheckTools( wxCommandEvent& WXUNUSED( event ) )
+{
+    ;
+}
