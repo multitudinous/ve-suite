@@ -317,10 +317,20 @@ if GetPlatform() == 'win32':
 		                              compileTest = True, headerToCheck = "Poco/Poco.h" )
 else:
     poco_options = SConsAddons.Options.StandardPackageOption("POCO",
-      "POCO library options, default : POCO_incdir=<POCO>/include POCO_libdir=<xercesc>/lib(64)", 
+      "POCO library options, default : POCO_incdir=<POCO>/include POCO_libdir=<POCO>/lib(64)", 
       pj('Poco','Data','SQLite','SQLite.h'), library=['PocoFoundation','PocoData',
       'PocoNet','PocoSQLite','PocoUtil','PocoXML','PocoZip'], symbol="main", required=False)
 
+# Setup osgWorks library
+if GetPlatform() == 'win32':
+    osgworks_options = fp_option.FlagPollBasedOption( "osgWorks", "osgWorks", "0.1", True, True, None,
+		                              compileTest = True, headerToCheck = "osgWorks/Version.h" )
+else:
+    osgworks_options = SConsAddons.Options.StandardPackageOption("osgWorks",
+      "osgWorks utility library, default : osgWorks_incdir=<osgWorks>/include osgWorks_libdir=<osgWorks>/lib(64)", 
+      pj('osgTools','Version.h'), library=['osgTools'], symbol="main", required=True)
+
+#Setup minerva library
 minerva_options = fp_option.FlagPollBasedOption( "Minerva", "Minerva", "1.0", False, True, None, 
 									  compileTest = False, headerToCheck = "Minerva/Core/Data/Object.h" )
 									  
@@ -337,6 +347,7 @@ opts.AddOption( vrjuggler_options )
 opts.AddOption( osgal_options )
 opts.AddOption( poco_options )
 opts.AddOption( minerva_options )
+opts.AddOption( osgworks_options )
 
 Export( 'opts', 'vtk_options', 'osg_options', 
         'xerces_options','wxwidgets_options',
@@ -350,7 +361,7 @@ Export( 'opts', 'vtk_options', 'osg_options',
         'vrjuggler_options', 'boost_options',
         'gmtl_options', 'vpr_options',
         'gadgeteer_options', 'osgal_options',
-        'poco_options',
+        'poco_options', 'osgworks_options',
 		'minerva_options' )
 
 ##Display some help
@@ -508,6 +519,7 @@ if not SConsAddons.Util.hasHelpFlag():
     baseEnv.AppendUnique( CPPDEFINES = ['BULLET_MAJOR_VERSION=%i' %bulletVersion[ 0 ],
                   'BULLET_MINOR_VERSION=%i' %bulletVersion[ 1 ] ] )  
     baseEnv.AppendUnique(CPPPATH = [pj(RootDir,'external','osgBullet','include')])
+    baseEnv.AppendUnique(CPPPATH = [pj(RootDir,'external','osgBulletPlus','include')])
     baseEnv.AppendUnique(CPPPATH = [pj(RootDir,'external', bulletBaseVar,'src')])
     if GetArch() == 'x64':
         baseEnv.AppendUnique( CPPDEFINES = ['USE_ADDR64=1'] )
@@ -594,11 +606,12 @@ if not SConsAddons.Util.hasHelpFlag():
     #osgPPUSubdirs = pj( buildDir, 'external', 'osgPPU')
     osgEphemerisSubdirs = pj( buildDir, 'external', 'osgEphemeris')
     osgBulletSubdirs = pj( buildDir, 'external', 'osgBullet')
+    osgBulletPlusSubdirs = pj( buildDir, 'external', 'osgBulletPlus')
     bullet = pj( buildDir, 'external', bulletBaseVar)
     test = pj( buildDir, 'test', 'osg')
 
     ves_dirs = [vesSubdirs, distSubdirs, osgEphemerisSubdirs,
-               shareSubdirs, lokiSubdirs, 
+               shareSubdirs, lokiSubdirs, osgBulletPlusSubdirs,
                osgBulletSubdirs, bullet, minervaDataSubdirs ]
 
     #build applications in test/ directory

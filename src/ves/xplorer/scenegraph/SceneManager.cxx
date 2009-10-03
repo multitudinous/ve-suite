@@ -171,6 +171,11 @@ void SceneManager::InitScene()
         << std::endl;
 
     //mRootNode = new ves::xplorer::scenegraph::Group();
+    if( !mRootNode.valid() )
+    {
+        std::cout << " big problems " << std::endl;
+        exit( 1 );
+    }
     mRootNode->setName( "Root Node" );
     mRootNode->setThreadSafeRefUnref( true );
 

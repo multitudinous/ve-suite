@@ -50,8 +50,8 @@
 #include <ves/xplorer/scenegraph/manipulator/TransformManipulator.h>
 
 // --- osgBullet Includes --- //
-#include <osgBullet/AbsoluteModelTransform.h>
-#include <osgBullet/RigidBody.h>
+#include <osgTools/AbsoluteModelTransform.h>
+#include <osgBullet/RefRigidBody.h>
 
 // --- vrJuggler Includes --- //
 #include <gmtl/Xforms.h>
@@ -413,13 +413,13 @@ void Wand::ProcessHit()
         //sceneManipulator->Disconnect();
         //Check and see if the selected node has an attached physics mesh
         bool hasAPhysicsMesh( false );
-        osg::ref_ptr< osgBullet::AbsoluteModelTransform > tempAMT = 
-        dynamic_cast< osgBullet::AbsoluteModelTransform* >( 
+        osg::ref_ptr< osgTools::AbsoluteModelTransform > tempAMT = 
+        dynamic_cast< osgTools::AbsoluteModelTransform* >( 
                                                            newSelectedDCS->getParent( 0 ) );
         if( tempAMT )
         {
-            osgBullet::RigidBody* tempRB = 
-            dynamic_cast< osgBullet::RigidBody* >( tempAMT->getUserData() );
+            osgBullet::RefRigidBody* tempRB = 
+            dynamic_cast< osgBullet::RefRigidBody* >( tempAMT->getUserData() );
             if( tempRB )
             {
                 hasAPhysicsMesh = true;

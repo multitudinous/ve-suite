@@ -56,9 +56,9 @@
 #include <BulletDynamics/ConstraintSolver/btPoint2PointConstraint.h>
 
 // --- osgBullet Includes --- //
-#include <osgBullet/AbsoluteModelTransform.h>
+#include <osgTools/AbsoluteModelTransform.h>
 #include <osgBullet/MotionState.h>
-#include <osgBullet/RigidBody.h>
+#include <osgBullet/RefRigidBody.h>
 #include <osgBullet/Utils.h>
 
 #include <ves/open/xml/XMLObject.h>
@@ -385,8 +385,8 @@ bool Dragger::Connect( osg::Transform* activeAssociation )
 
     //If we have a physics enabled transform then we need to add a 
     //constraint for non static objects
-    osgBullet::AbsoluteModelTransform* amt =
-        dynamic_cast< osgBullet::AbsoluteModelTransform* >( activeAssociation );
+    osgTools::AbsoluteModelTransform* amt =
+        dynamic_cast< osgTools::AbsoluteModelTransform* >( activeAssociation );
     if( !amt )
     {
         //Associate transform with this dragger
@@ -398,8 +398,8 @@ bool Dragger::Connect( osg::Transform* activeAssociation )
     //If this is the root dragger, create point constraint
     if( m_isRootDragger )
     {
-        osgBullet::RigidBody* rb =
-            static_cast< osgBullet::RigidBody* >( amt->getUserData() );
+        osgBullet::RefRigidBody* rb =
+            static_cast< osgBullet::RefRigidBody* >( amt->getUserData() );
         btRigidBody* btRB = rb->getRigidBody();
         if( !btRB )
         {
@@ -1062,5 +1062,6 @@ void Dragger::UpdateConductorData( ves::xplorer::scenegraph::DCS* dcs )
     modelUpdateData->AddDataValuePair( pluginDataDVP );
 
     ves::xplorer::CommandHandler::instance()->SetXMLCommand( modelUpdateData );
+    //std::cout << "Sent updated data to ves." << std::endl;
 }
 ////////////////////////////////////////////////////////////////////////////////

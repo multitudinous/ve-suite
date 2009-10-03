@@ -1400,7 +1400,7 @@ void CADNodePropertiesDlg::_buildGeographicPanel()
   wxStaticBox* outerStaticBox = new wxStaticBox ( _geographicPanel, -1, wxT ( "Geographic Properties" ) );
 
   _geocodeTextControl = new wxTextCtrl ( _geographicPanel, -1 );
-  wxButton* button ( new wxButton ( _geographicPanel, GEOCODE_ID, "Geocode" ) );
+  wxButton* button ( new wxButton ( _geographicPanel, GEOCODE_ID, _("Geocode") ) );
 
   _longitudeControl = new wxSpinCtrlDbl ( _geographicPanel, GEOGRAPHIC_PANEL_ID );
   _longitudeControl->SetValue( 0 );
@@ -1435,7 +1435,7 @@ void CADNodePropertiesDlg::_buildGeographicPanel()
   _geographicPanel->SetSizer ( sizer );
 }
 /////////////////////////////////////////////////////////////
-void CADNodePropertiesDlg::_updateGeographic ( wxSpinEvent& event )
+void CADNodePropertiesDlg::_updateGeographic( wxSpinEvent& event )
 {
   if( _cadNode )
   {
@@ -1545,21 +1545,22 @@ void CADNodePropertiesDlg::UpdateCullingSettings( wxCommandEvent& event )
     ClearInstructions();
 }
 ///////////////////////////////////////////////////////////////////////////////
-void CADNodePropertiesDlg::_onGeocodeEvent ( wxCommandEvent& event )
+void CADNodePropertiesDlg::_onGeocodeEvent( wxCommandEvent& event )
 {
-  std::string location ( _geocodeTextControl->GetValue().ToAscii() );
+    std::string location( _geocodeTextControl->GetValue().ToAscii() );
 
-  if ( false == location.empty() )
-  {
-    Minerva::Core::Utilities::GeoCode geocode;
-    Minerva::Core::Utilities::GeoCode::Result result ( geocode ( location ) );
-
-    if ( result.success )
+    if( false == location.empty() )
     {
-      _longitudeControl->SetValue ( result.location[0] );
-      _latitudeControl->SetValue  ( result.location[1] );
+        Minerva::Core::Utilities::GeoCode geocode;
+        Minerva::Core::Utilities::GeoCode::Result result( geocode ( location ) );
 
-      this->_updateGeographic ( wxSpinEvent() );
+        if( result.success )
+        {
+            _longitudeControl->SetValue ( result.location[0] );
+            _latitudeControl->SetValue  ( result.location[1] );
+
+            wxSpinEvent spinEvent;
+            _updateGeographic( spinEvent );
+        }
     }
-  }
 }

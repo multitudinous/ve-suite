@@ -50,11 +50,10 @@
 #include <btBulletDynamicsCommon.h>
 #include <btBulletCollisionCommon.h>
 
-#include <osgBullet/RigidBody.h>
+#include <osgBullet/RefRigidBody.h>
 #include <osgBullet/OSGToCollada.h>
 #include <osgBullet/MotionState.h>
 #include <osgBullet/Utils.h>
-#include <osgBullet/DebugBullet.h>
 #include <osgBullet/GLDebugDrawer.h>
 
 // --- C/C++ Libraries --- //
@@ -247,8 +246,8 @@ void PhysicsSimulator::InitializePhysicsSimulation()
     m_debugDrawerGroup->setName( "osgBullet::DebugDrawer Root" );
     SceneManager::instance()->GetRootNode()->
         addChild( m_debugDrawerGroup.get() );
-    m_debugDrawer = 
-        new osgBullet::GLDebugDrawer( m_debugDrawerGroup.get() );
+    m_debugDrawer = new osgBullet::GLDebugDrawer();
+    m_debugDrawerGroup->addChild( m_debugDrawer->getSceneGraph() );
     m_debugDrawerGroup->setNodeMask( 0 );
     //CreateGroundPlane();
 }
@@ -609,7 +608,7 @@ void PhysicsSimulator::CreateGroundPlane()
     cen[ 2 ] -= 1.5;
     osg::ref_ptr< osg::Node > ground = CreateGround( dim, dim, cen );
     ves::xplorer::scenegraph::SceneManager::instance()->GetModelRoot()->addChild( ground.get() );
-    osgBullet::RigidBody* body = dynamic_cast< osgBullet::RigidBody* >( ground->getUserData() );
+    osgBullet::RefRigidBody* body = dynamic_cast< osgBullet::RefRigidBody* >( ground->getUserData() );
     mDynamicsWorld->addRigidBody( body->getRigidBody() );    
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -649,7 +648,7 @@ osg::Node* PhysicsSimulator::CreateGround( float w, float h, const osg::Vec3& ce
     motion->setParentTransform( m );
     body->setWorldTransform( osgBullet::asBtTransform( m ) );
     
-    ground->setUserData( new osgBullet::RigidBody( body ) );
+    ground->setUserData( new osgBullet::RefRigidBody( body ) );
     
     return ground;
 }

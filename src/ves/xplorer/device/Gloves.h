@@ -56,7 +56,7 @@
 #include <osg/Geometry>
 #include <osg/Matrix>
 
-#include <osgBullet/HandNode.h>
+#include <osgBulletPlus/HandNode.h>
 
 #include <osgUtil/IntersectVisitor>
 
@@ -231,8 +231,8 @@ private:
     ///A flag to control bullet debug info
     bool mDebugInfo;
     
-    osg::ref_ptr< osgBullet::HandNode > mLeftHand;
-    osg::ref_ptr< osgBullet::HandNode > mRightHand;
+    osg::ref_ptr< osgBulletPlus::HandNode > mLeftHand;
+    osg::ref_ptr< osgBulletPlus::HandNode > mRightHand;
 
     gadget::AnalogInterface      mRightThumbMCP;
     gadget::AnalogInterface      mRightThumbPIP;

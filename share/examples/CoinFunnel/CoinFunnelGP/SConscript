@@ -8,7 +8,7 @@ pj = os.path.join
 
 host_type = distutils.util.get_platform()
 
-Import( 'baseEnv ves_pkg buildDir RootDir GetPlatform bulletBaseVar' )
+Import( 'baseEnv ves_pkg buildDir RootDir GetPlatform bulletBaseVar osgworks_options' )
 Import( 'xerces_options vtk_options gmtl_options vrjuggler_options osg_options osgal_options' )
 openDir = os.path.abspath( pj( RootDir, 'share', 'examples', 'CoinFunnel', 'CoinFunnelGP' ) )
 sources = sca_util.getSourcesRecursive( openDir )
@@ -33,6 +33,7 @@ vtk_options.apply( lib_env )
 gmtl_options.apply( lib_env )
 vrjuggler_options.apply( lib_env )
 osg_options.apply( lib_env )
+osgworks_options.apply( lib_env )
 if osgal_options.isAvailable():
    osgal_options.apply( lib_env )
 

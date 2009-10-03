@@ -49,15 +49,13 @@
 #include <BulletCollision/CollisionShapes/btBvhTriangleMeshShape.h>
 #include <BulletCollision/CollisionShapes/btConvexTriangleMeshShape.h>
 
-#include <osgBullet/CollisionShape.h>
 #include <osgBullet/CollisionShapes.h>
 #include <osgBullet/MotionState.h>
-#include <osgBullet/AbsoluteModelTransform.h>
+#include <osgTools/AbsoluteModelTransform.h>
 #include <osgBullet/OSGToCollada.h>
-#include <osgBullet/DebugBullet.h>
 #include <osgBullet/ColladaUtils.h>
 #include <osgBullet/Utils.h>
-#include <osgBullet/RigidBody.h>
+#include <osgBullet/RefRigidBody.h>
 
 #include <osg/io_utils>
 #include <osg/ComputeBoundsVisitor>
@@ -472,11 +470,11 @@ void PhysicsRigidBody::CustomShape( const BroadphaseNativeTypes shapeType, const
     }
     
     osg::Group* parent = stopNode->getParent( 0 );
-    osg::ref_ptr< osgBullet::AbsoluteModelTransform > amt = 
-        dynamic_cast< osgBullet::AbsoluteModelTransform* >( parent );
+    osg::ref_ptr< osgTools::AbsoluteModelTransform > amt = 
+        dynamic_cast< osgTools::AbsoluteModelTransform* >( parent );
     if( !amt.valid() )
     {
-        amt = new osgBullet::AbsoluteModelTransform();
+        amt = new osgTools::AbsoluteModelTransform();
         amt->setName( "Physics AMT" );
         amt->setDataVariance( osg::Object::DYNAMIC );
         amt->addChild( mOSGToBullet.get() );
@@ -489,7 +487,7 @@ void PhysicsRigidBody::CustomShape( const BroadphaseNativeTypes shapeType, const
     {
         amt->setName( "AMT_" + dcsName );
     }
-    osg::ref_ptr< osgBullet::RigidBody > tempRB = new osgBullet::RigidBody( mRB );
+    osg::ref_ptr< osgBullet::RefRigidBody > tempRB = new osgBullet::RefRigidBody( mRB );
     amt->setUserData( tempRB.get() );
 
     mRB->setRestitution( mRestitution );

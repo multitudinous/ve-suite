@@ -5,7 +5,7 @@ import glob
 import SConsAddons.Util as sca_util
 
 Import('baseEnv buildDir RootDir ves_pkg vtk_options osg_options xerces_options LIBDIR bulletBaseVar')
-Import('tao_options boost_options vrjuggler_options osgal_options GetPlatform')
+Import('tao_options boost_options vrjuggler_options osgal_options GetPlatform osgworks_options')
 Import('minerva_options')
 
 xplorerSubdirs = Split("""
@@ -89,6 +89,7 @@ if osgal_options.isAvailable():
    osgal_options.apply( lib_env )
 vtk_options.apply( lib_env )
 osg_options.apply( lib_env )
+osgworks_options.apply( lib_env )
 xerces_options.apply( lib_env )
 
 #bulletVersion = (int(2), int(72))
@@ -104,6 +105,9 @@ lib_env.Append(LIBPATH = [pj('#',buildDir,'external','osgEphemeris')])
 #lib_env.Append(CPPPATH = [pj(RootDir,'external','osgBullet','include')])
 lib_env.Append(LIBS = ['osgBullet'])
 lib_env.Append(LIBPATH = [pj('#',buildDir,'external','osgBullet')])
+
+lib_env.Append(LIBS = ['osgBulletPlus'])
+lib_env.Append(LIBPATH = [pj('#',buildDir,'external','osgBulletPlus')])
 
 #lib_env.Append(CPPPATH = [pj(RootDir,'external', bulletBaseVar,'src')])
 lib_env.Append(LIBS = ['bullet'])
