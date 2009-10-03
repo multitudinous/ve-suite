@@ -80,8 +80,9 @@
 #include <ves/open/xml/shader/Program.h>
 
 #include <ves/util/commands/Minerva.h>
+#ifdef MINERVA_GIS_SUPPORT
 #include <Minerva/Core/Utilities/GeoCode.h>
-
+#endif
 using namespace ves::open::xml::cad;
 using namespace ves::open::xml::shader;
 using namespace ves::conductor::util;
@@ -1551,9 +1552,10 @@ void CADNodePropertiesDlg::_onGeocodeEvent( wxCommandEvent& event )
 
     if( false == location.empty() )
     {
+#ifdef MINERVA_GIS_SUPPORT
         Minerva::Core::Utilities::GeoCode geocode;
         Minerva::Core::Utilities::GeoCode::Result result( geocode ( location ) );
-
+        
         if( result.success )
         {
             _longitudeControl->SetValue ( result.location[0] );
@@ -1562,5 +1564,6 @@ void CADNodePropertiesDlg::_onGeocodeEvent( wxCommandEvent& event )
             wxSpinEvent spinEvent;
             _updateGeographic( spinEvent );
         }
+#endif
     }
 }
