@@ -323,8 +323,8 @@ else:
 
 # Setup osgWorks library
 if GetPlatform() == 'win32':
-    osgworks_options = fp_option.FlagPollBasedOption( "osgWorks", "osgWorks", "0.1", True, True, None,
-		                              compileTest = True, headerToCheck = "osgWorks/Version.h" )
+    osgworks_options = fp_option.FlagPollBasedOption( "osgWorks", "osgWorks", "1.0.0", True, True, None,
+		                              compileTest = True, headerToCheck = "osgTools/Version.h" )
 else:
     osgworks_options = SConsAddons.Options.StandardPackageOption("osgWorks",
       "osgWorks utility library, default : osgWorks_incdir=<osgWorks>/include osgWorks_libdir=<osgWorks>/lib(64)", 
