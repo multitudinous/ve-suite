@@ -1,7 +1,0 @@
-ADD_SUBDIRECTORY( basicdemo )
-ADD_SUBDIRECTORY( CadDemo )
-ADD_SUBDIRECTORY( colladaread )
-ADD_SUBDIRECTORY( DecimatorDemo )
-ADD_SUBDIRECTORY( dice )
-ADD_SUBDIRECTORY( fountain )
-ADD_SUBDIRECTORY( solver )
