@@ -8,7 +8,7 @@ host_type = distutils.util.get_platform()
 
 Import( 'baseEnv ves_pkg buildDir RootDir gmtl_options' )
 Import( 'vrjuggler_options osg_options osgal_options' )
-Import( 'xerces_options vtk_options GetPlatform bulletBaseVar' )
+Import( 'xerces_options vtk_options GetPlatform bulletBaseVar osgworks_options' )
 openDir = os.path.abspath( pj( RootDir, 'share', 'examples', 'ConstructionBots', 'ConstructionBotsGP' ) )
 sources = sca_util.getSourcesRecursive( openDir )
 headers = sca_util.getHeadersRecursive( openDir )
@@ -32,6 +32,7 @@ if osgal_options.isAvailable():
    osgal_options.apply( lib_env )
 xerces_options.apply( lib_env )
 vtk_options.apply( lib_env )
+osgworks_options.apply( lib_env )
 
 lib_env.Append( CPPDEFINES = [ ] )
 if GetPlatform() == 'win32':
