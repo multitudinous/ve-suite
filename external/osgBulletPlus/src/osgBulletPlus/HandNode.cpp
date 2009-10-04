@@ -309,6 +309,7 @@ public:
             ai._btChildIdx = _cs->getNumChildShapes() - 1;
 
             osg::Node* debugNode = osgBullet::osgNodeFromBtCollisionShape( shape );
+
             ai._debugIdx = _debugBullet->addStatic( debugNode );
         }
     }
@@ -361,7 +362,6 @@ protected:
         osg::ComputeBoundsVisitor visitor;
         tempRoot->accept( visitor );
         bbox = visitor.getBoundingBox();
-
         return osgBullet::btBoxCollisionShapeFromOSG( tempRoot.get(), &bbox );
     }
 

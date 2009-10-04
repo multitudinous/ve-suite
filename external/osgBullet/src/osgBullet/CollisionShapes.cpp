@@ -190,45 +190,46 @@ btConvexHullShape* btConvexHullCollisionShapeFromOSG( osg::Node* node )
 
 osg::Node* osgNodeFromBtCollisionShape( const btCollisionShape* btShape, const btTransform& trans )
 {
+    
     if( btShape->getShapeType() == BOX_SHAPE_PROXYTYPE )
     {
-        const btBoxShape* btBox = dynamic_cast< const btBoxShape* >( btShape );
+        const btBoxShape* btBox = static_cast< const btBoxShape* >( btShape );
         return( osgNodeFromBtCollisionShape( btBox, trans ) );
     }
     else if( btShape->getShapeType() == SPHERE_SHAPE_PROXYTYPE )
     {
-        const btSphereShape* btSphere = dynamic_cast< const btSphereShape* >( btShape );
+        const btSphereShape* btSphere = static_cast< const btSphereShape* >( btShape );
         return( osgNodeFromBtCollisionShape( btSphere, trans ) );
     }
     else if( btShape->getShapeType() == CYLINDER_SHAPE_PROXYTYPE )
     {
-        const btCylinderShape* btCylinder = dynamic_cast< const btCylinderShape* >( btShape );
+        const btCylinderShape* btCylinder = static_cast< const btCylinderShape* >( btShape );
         return( osgNodeFromBtCollisionShape( btCylinder, trans ) );
     }
     else if( btShape->getShapeType() == TRIANGLE_MESH_SHAPE_PROXYTYPE )
     {
-        const btBvhTriangleMeshShape* btTriMesh = dynamic_cast< const btBvhTriangleMeshShape* >( btShape );
+        const btBvhTriangleMeshShape* btTriMesh = static_cast< const btBvhTriangleMeshShape* >( btShape );
         // Do NOT pass in a transform. Unlike cylinder, sphere, and box,
         // tri meshes are always in absolute space.
         return( osgNodeFromBtCollisionShape( btTriMesh ) );
     }
     else if( btShape->getShapeType() == CONVEX_TRIANGLEMESH_SHAPE_PROXYTYPE )
     {
-        const btConvexTriangleMeshShape* btConvexTriMesh = dynamic_cast< const btConvexTriangleMeshShape* >( btShape );
+        const btConvexTriangleMeshShape* btConvexTriMesh = static_cast< const btConvexTriangleMeshShape* >( btShape );
         // Do NOT pass in a transform. Unlike cylinder, sphere, and box,
         // tri meshes are always in absolute space.
         return( osgNodeFromBtCollisionShape( btConvexTriMesh ) );
     }
     else if( btShape->getShapeType() == CONVEX_HULL_SHAPE_PROXYTYPE )
     {
-        const btConvexHullShape* convexHull = dynamic_cast< const btConvexHullShape* >( btShape );
+        const btConvexHullShape* convexHull = static_cast< const btConvexHullShape* >( btShape );
         // Do NOT pass in a transform. Unlike cylinder, sphere, and box,
         // tri meshes are always in absolute space.
         return( osgNodeFromBtCollisionShape( convexHull ) );
     }
     else if( btShape->getShapeType() == COMPOUND_SHAPE_PROXYTYPE )
     {
-        const btCompoundShape* masterShape = dynamic_cast< const btCompoundShape* >( btShape );
+        const btCompoundShape* masterShape = static_cast< const btCompoundShape* >( btShape );
         osg::Group* grp = new osg::Group;
         int idx;
         for (idx=0; idx< masterShape->getNumChildShapes(); idx++)
@@ -250,6 +251,10 @@ osg::Node* osgNodeFromBtCollisionShape( const btCollisionShape* btShape, const b
 
 osg::Node* osgNodeFromBtCollisionShape( const btBoxShape* btBox, const btTransform& trans )
 {
+    if( !btBox )
+    {
+        std::cout << "Problems " << std::endl;
+    }
     btVector3 halfs = btBox->getHalfExtentsWithMargin();
 
     osg::Box* box = new osg::Box();
