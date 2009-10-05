@@ -622,6 +622,8 @@ osg::Geode* SceneRenderToTexture::CreateTexturedQuad(
     osg::Geode* quadGeode = new osg::Geode();
     quadGeode->setCullingActive( false );
     quadGeode->addDrawable( quadGeometry.get() );
+    quadGeode->getOrCreateStateSet()->setMode( GL_LIGHTING, osg::StateAttribute::OFF );
+
 #ifdef VES_SRTT_DEBUG
     quadGeode->setNodeMask( 0 );
 #endif

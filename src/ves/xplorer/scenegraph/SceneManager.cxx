@@ -116,7 +116,8 @@ SceneManager::SceneManager()
     mFrameStamp( NULL ),
     mCharacterController( NULL ),
     m_isRTTOn( false ),
-    m_isDesktopMode( false )
+    m_isDesktopMode( false ),
+    m_screenAlignedNormals( true )
 {
     ;
 }
@@ -533,3 +534,12 @@ void SceneManager::SetDesktopMode( bool isDesktopMode )
     m_isDesktopMode = isDesktopMode;
 }
 ////////////////////////////////////////////////////////////////////////////////
+void SceneManager::SetScreenAlignedNormals( bool isScreenAligned )
+{
+    m_screenAlignedNormals = isScreenAligned;
+}
+////////////////////////////////////////////////////////////////////////////////
+bool SceneManager::IsScreenAligned()
+{
+    return m_screenAlignedNormals;
+}

@@ -52,6 +52,7 @@
 #include <ves/xplorer/event/device/DeviceEH.h>
 #include <ves/xplorer/event/device/DeviceModeEH.h>
 #include <ves/xplorer/event/device/CenterPointEventHandler.h>
+#include <ves/xplorer/event/device/DraggerScalingEventHandler.h>
 #include <ves/xplorer/event/cad/UnselectObjectsEventHandler.h>
 #include <ves/xplorer/event/environment/NavigationDataEventHandler.h>
 
@@ -114,6 +115,8 @@ DeviceHandler::DeviceHandler()
         new event::CenterPointEventHandler();
     mEventHandlers[ "Navigation_Data" ] =
         new event::NavigationDataEventHandler();
+    mEventHandlers[ "DRAGGER_SCALING_VALUE" ] =
+        new event::DraggerScalingEventHandler();
     
     mResetPosition.resize( 3 );
 }

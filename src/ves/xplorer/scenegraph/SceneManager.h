@@ -194,6 +194,11 @@ public:
     void SetDesktopMode( bool isDesktopMode );
     ///Tell if we are in Desktop mode
     bool IsDesktopMode();
+   
+    ///Set if we are in desktop mode
+    void SetScreenAlignedNormals( bool isScreenAligned );
+    ///Tell if we are in Desktop mode
+    bool IsScreenAligned();
     
 protected:
     ///Create the model for the logo
@@ -282,6 +287,9 @@ private:
 
     ///Flag to tell if we are in Desktop mode
     bool m_isDesktopMode;
+
+    ///Flag to tell if we are using screen aligned normals
+    bool m_screenAlignedNormals;
 
     ///This containes a map to context specific data given a viewport
     ///This map should never be returned to the user as the map

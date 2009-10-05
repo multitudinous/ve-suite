@@ -141,8 +141,13 @@ public:
     void OnNearFarCheck( wxCommandEvent& event );
     void OnNearFarRatio( wxCommandEvent& event );
     void OnPhysicsDebuggerCheck( wxCommandEvent& event );
-
-    /// Should we show tooltips?
+    ///View aligned check
+    void OnViewAlignedCheck( wxCommandEvent& event );
+    ///On dragger scaling
+    void OnDraggerScalingCheck( wxCommandEvent& event );
+    ///The scaling values
+    void OnDraggerScalingValue( wxCommandEvent& event );
+    ///Should we show tooltips?
     static bool ShowToolTips();
 
     ///Returns the chosen background color
@@ -156,7 +161,11 @@ private:
     wxButton* backgroundColorButton;///<To choose background color
 
     wxColourData* xplorerWxColor;
+    ///Text control for near far plane
     wxTextCtrl* m_nearFarEntry;
+    ///Text control for dragger scaling
+    wxTextCtrl* m_draggerScalingEntry;
+    
     std::vector<double> xplorerColor;
     double m_nearFar;
 

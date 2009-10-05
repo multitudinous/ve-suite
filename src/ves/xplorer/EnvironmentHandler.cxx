@@ -68,6 +68,7 @@
 #include <ves/xplorer/event/environment/SetResetStartPositionEventHandler.h>
 #include <ves/xplorer/event/environment/PhysicsSimulationEventHandler.h>
 #include <ves/xplorer/event/environment/ManipulatorEventHandler.h>
+#include <ves/xplorer/event/environment/ScreenAlignedNormalsEventHandler.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/Group.h>
@@ -168,6 +169,8 @@ m_lodScale( 0.01 )
         new ves::xplorer::event::GeometryLODScaleEventHandler();
     _eventHandlers[ std::string( "Navigation_Data" )] =
         new ves::xplorer::event::SetResetStartPositionEventHandler();
+    _eventHandlers[ std::string( "SCENE_STATE_INFORMATION" )] =
+        new ves::xplorer::event::ScreenAlignedNormalsEventHandler();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void EnvironmentHandler::Initialize()
