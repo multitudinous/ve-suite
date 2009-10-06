@@ -332,7 +332,7 @@ else:
 
 #Setup minerva library
 minerva_options = fp_option.FlagPollBasedOption( "Minerva", "Minerva", "1.0", False, True, None, 
-									  compileTest = False, headerToCheck = "Minerva/Core/Data/Object.h" )
+									  compileTest = True, headerToCheck = "Minerva/Core/Data/Object.h" )
 									  
 opts.AddOption( apr_options )
 opts.AddOption( apu_options )
