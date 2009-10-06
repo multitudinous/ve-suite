@@ -174,6 +174,13 @@ void TranslateCompound::SetupDefaultGeometry()
         Color::DEFAULT, osg::Vec4f( 0.0, 1.0, 0.0, 1.0 ), true );
     m_yTranslateAxis->ComboForm();
 
+    //Rotate y-axis dragger appropriately
+    {
+        osg::Quat rotation;
+        rotation.makeRotate( GetUnitAxis(), osg::Vec3d( 0.0, 1.0, 0.0 ) );
+        m_yTranslateAxis->SetRotation( rotation );
+    }
+
     addChild( m_yTranslateAxis.get() );
 
     //Create translate x-axis dragger
@@ -181,6 +188,13 @@ void TranslateCompound::SetupDefaultGeometry()
     m_xTranslateAxis->SetColor(
         Color::DEFAULT, osg::Vec4f( 1.0, 0.0, 0.0, 1.0 ), true );
     m_xTranslateAxis->ComboForm();
+
+    //Rotate x-axis dragger appropriately
+    {
+        osg::Quat rotation;
+        rotation.makeRotate( GetUnitAxis(), osg::Vec3d( 1.0, 0.0, 0.0 ) );
+        m_xTranslateAxis->SetRotation( rotation );
+    }
 
     addChild( m_xTranslateAxis.get() );
 
@@ -198,6 +212,13 @@ void TranslateCompound::SetupDefaultGeometry()
         Color::DEFAULT, osg::Vec4f( 0.0, 1.0, 0.0, 1.0 ), true );
     m_xzTranslatePlane->ComboForm();
 
+    //Rotate xz-plane dragger appropriately
+    {
+        osg::Quat rotation;
+        rotation.makeRotate( GetUnitAxis(), osg::Vec3d( 0.0, -1.0, 0.0 ) );
+        m_xzTranslatePlane->SetRotation( rotation );
+    }
+
     addChild( m_xzTranslatePlane.get() );
 
     //Create translate yz-plane dragger
@@ -205,6 +226,13 @@ void TranslateCompound::SetupDefaultGeometry()
     m_yzTranslatePlane->SetColor(
         Color::DEFAULT, osg::Vec4f( 1.0, 0.0, 0.0, 1.0 ), true );
     m_yzTranslatePlane->ComboForm();
+
+    //Rotate yz-plane dragger appropriately
+    {
+        osg::Quat rotation;
+        rotation.makeRotate( GetUnitAxis(), osg::Vec3d( -1.0, 0.0, 0.0 ) );
+        m_yzTranslatePlane->SetRotation( -rotation );
+    }
 
     addChild( m_yzTranslatePlane.get() );
 
@@ -214,33 +242,5 @@ void TranslateCompound::SetupDefaultGeometry()
         Color::DEFAULT, osg::Vec4f( 1.0, 1.0, 1.0, 1.0 ), true );
 
     addChild( m_translatePan.get() );
-
-    //Rotate y-axis dragger appropriately
-    {
-        osg::Quat rotation;
-        rotation.makeRotate( GetUnitAxis(), osg::Vec3d( 0.0, 1.0, 0.0 ) );
-        m_yTranslateAxis->setRotation( rotation );
-    }
-
-    //Rotate xz-plane dragger appropriately
-    {
-        osg::Quat rotation;
-        rotation.makeRotate( GetUnitAxis(), osg::Vec3d( 0.0, -1.0, 0.0 ) );
-        m_xzTranslatePlane->setRotation( rotation );
-    }
-
-    //Rotate x-axis dragger appropriately
-    {
-        osg::Quat rotation;
-        rotation.makeRotate( GetUnitAxis(), osg::Vec3d( 1.0, 0.0, 0.0 ) );
-        m_xTranslateAxis->setRotation( rotation );
-    }
-
-    //Rotate yz-plane dragger appropriately
-    {
-        osg::Quat rotation;
-        rotation.makeRotate( GetUnitAxis(), osg::Vec3d( -1.0, 0.0, 0.0 ) );
-        m_yzTranslatePlane->setRotation( -rotation );
-    }
 }
 ////////////////////////////////////////////////////////////////////////////////

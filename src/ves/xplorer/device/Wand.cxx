@@ -446,7 +446,7 @@ void Wand::ProcessHit()
         osg::Matrixd localToWorld = osg::computeLocalToWorld( nap.second );
         osg::Vec3d newCenter = newSelectedDCS->getBound().center() * localToWorld;
         //rotateTwist->setPosition( newCenter );
-        sceneManipulator->setPosition( newCenter );        
+        sceneManipulator->SetPosition( newCenter );        
         vprDEBUG( vesDBG, 1 ) << "|\tEnd Selection "
             << std::endl << vprDEBUG_FLUSH;
     }

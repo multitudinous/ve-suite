@@ -216,8 +216,8 @@ void TranslateAxis::ComputeDeltaTransform()
     
     //Set the transform
     osg::Vec3d newTranslation =
-        m_rootDragger->getPosition() + m_deltaTranslation;
-    m_rootDragger->setPosition( newTranslation );
+        m_rootDragger->GetPosition() + m_deltaTranslation;
+    m_rootDragger->SetPosition( newTranslation );
 }
 ////////////////////////////////////////////////////////////////////////////////
 //See http://softsurfer.com/Archive/algorithm_0106/algorithm_0106.htm

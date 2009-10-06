@@ -113,7 +113,7 @@ void RotateCompound::SetupDefaultGeometry()
     {
         osg::Quat rotation;
         rotation.makeRotate( GetUnitAxis(), osg::Vec3d( 0.0, -1.0, 0.0 ) );
-        m_yRotateAxis->setRotation( rotation );
+        m_yRotateAxis->SetRotation( rotation );
     }
 
     addChild( m_yRotateAxis.get() );
@@ -127,7 +127,7 @@ void RotateCompound::SetupDefaultGeometry()
     {
         osg::Quat rotation;
         rotation.makeRotate( GetUnitAxis(), osg::Vec3d( 1.0, 0.0, 0.0 ) );
-        m_xRotateAxis->setRotation( rotation );
+        m_xRotateAxis->SetRotation( rotation );
     }
 
     addChild( m_xRotateAxis.get() );

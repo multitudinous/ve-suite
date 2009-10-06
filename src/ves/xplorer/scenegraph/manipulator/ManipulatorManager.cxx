@@ -133,7 +133,7 @@ bool ManipulatorManager::addChild( Dragger* child )
 
     //Initialize root dragger
     child->SetScale( m_draggerSize );
-    child->setAutoScaleToScreen( true );
+    child->SetAutoScaleToScreen( true );
     ConstraintMap* constraintMap = new ConstraintMap();
     child->SetConstraintMap( *constraintMap );
 

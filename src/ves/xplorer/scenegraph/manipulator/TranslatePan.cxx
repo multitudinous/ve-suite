@@ -47,9 +47,9 @@ TranslatePan::TranslatePan()
     Dragger( TransformationType::TRANSLATE_PAN )
 {
     //If desktop mode
-    //setAutoRotateMode( osg::AutoTransform::ROTATE_TO_SCREEN );
+    //SetAutoRotateMode( AutoTransform::ROTATE_TO_SCREEN );
     //If cave mode
-    setAutoRotateMode( osg::AutoTransform::ROTATE_TO_CAMERA );
+    SetAutoRotateMode( AutoTransform::ROTATE_TO_CAMERA );
 
     osg::ref_ptr< osg::StateSet > stateSet = getOrCreateStateSet();
     stateSet->setRenderBinDetails( 11, std::string( "RenderBin" ) );
@@ -97,8 +97,8 @@ void TranslatePan::ComputeDeltaTransform()
 
     //Set the transform
     osg::Vec3d newTranslation =
-        m_rootDragger->getPosition() + m_deltaTranslation;
-    m_rootDragger->setPosition( newTranslation );
+        m_rootDragger->GetPosition() + m_deltaTranslation;
+    m_rootDragger->SetPosition( newTranslation );
 }
 ////////////////////////////////////////////////////////////////////////////////
 //See http://softsurfer.com/Archive/algorithm_0106/algorithm_0106.htm

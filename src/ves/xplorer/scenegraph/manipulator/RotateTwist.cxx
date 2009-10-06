@@ -50,9 +50,9 @@ RotateTwist::RotateTwist()
     Rotate( TransformationType::ROTATE_TWIST )
 {
     //If desktop mode
-    //setAutoRotateMode( osg::AutoTransform::ROTATE_TO_SCREEN );
+    //SetAutoRotateMode( AutoTransform::ROTATE_TO_SCREEN );
     //If cave mode
-    setAutoRotateMode( osg::AutoTransform::ROTATE_TO_CAMERA );
+    SetAutoRotateMode( AutoTransform::ROTATE_TO_CAMERA );
 
     SetupDefaultGeometry();
 }

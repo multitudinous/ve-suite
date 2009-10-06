@@ -77,7 +77,7 @@ namespace vxs = ves::xplorer::scenegraph;
 ////////////////////////////////////////////////////////////////////////////////
 Dragger::Dragger( const TransformationType::Enum& transformationType )
     :
-    osg::AutoTransform(),
+    AutoTransform(),
     m_transformationType( transformationType ),
     m_vectorSpace( VectorSpace::GLOBAL ),
     m_axisDirection( AxisDirection::POSITIVE ),
@@ -109,7 +109,7 @@ Dragger::Dragger( const TransformationType::Enum& transformationType )
 ////////////////////////////////////////////////////////////////////////////////
 Dragger::Dragger( const Dragger& dragger, const osg::CopyOp& copyop )
     :
-    osg::AutoTransform( dragger, copyop ),
+    AutoTransform( dragger, copyop ),
     m_transformationType( dragger.m_transformationType ),
     m_vectorSpace( dragger.m_vectorSpace ),
     m_axisDirection( dragger.m_axisDirection ),
@@ -137,12 +137,7 @@ Dragger::~Dragger()
 ////////////////////////////////////////////////////////////////////////////////
 void Dragger::accept( osg::NodeVisitor& nv )
 {
-    if( !nv.validNodeMask( *this ) )
-    {
-        return;
-    }
-
-    if( !m_isRootDragger && ( getAutoRotateMode() == NO_ROTATION ) )
+    if( !m_isRootDragger && ( GetAutoRotateMode() == NO_ROTATION ) )
     {
         //Now do the proper accept
         osg::Transform::accept( nv );
@@ -150,162 +145,8 @@ void Dragger::accept( osg::NodeVisitor& nv )
         return;
     }
 
-    if( nv.getVisitorType() == osg::NodeVisitor::CULL_VISITOR )
-    {
-        osg::CullStack* cs = dynamic_cast< osg::CullStack* >( &nv );
-        if( cs )
-        {
-            /*
-            osg::Viewport::value_type width = _previousWidth;
-            osg::Viewport::value_type height = _previousHeight;
-
-            osg::Viewport* viewport = cs->getViewport();
-            if( viewport )
-            {
-                width = viewport->width();
-                height = viewport->height();
-            }
-            */
-
-            osg::Vec3d eyePoint = cs->getEyeLocal();
-            osg::Vec3d localUp = cs->getUpLocal();
-            osg::Vec3d position = getPosition();
-
-            const osg::Matrix& projection = *(cs->getProjectionMatrix());
-
-            bool doUpdate = _firstTimeToInitEyePoint;
-            if( !_firstTimeToInitEyePoint )
-            {
-                osg::Vec3d dv = _previousEyePoint - eyePoint;
-                if( dv.length2() >
-                    getAutoUpdateEyeMovementTolerance() *
-                    ( eyePoint - position ).length2() )
-                {
-                    doUpdate = true;
-                }
-                osg::Vec3d dupv = _previousLocalUp - localUp;
-                //Rotating the camera only affects ROTATE_TO_*
-                if( _autoRotateMode &&
-                    dupv.length2() > getAutoUpdateEyeMovementTolerance() )
-                {
-                    doUpdate = true;
-                }
-                /*
-                else if( width != _previousWidth || height != _previousHeight )
-                {
-                    doUpdate = true;
-                }
-                */
-                else if( projection != _previousProjection )
-                {
-                    doUpdate = true;
-                }
-                else if( position != _previousPosition )
-                {
-                    doUpdate = true;
-                }
-            }
-            _firstTimeToInitEyePoint = false;
-
-            if( doUpdate )
-            {
-                if( getAutoScaleToScreen() )
-                {
-                    //Need code to set pixel size based off distance from screen
-                    //Flat screen mode
-                    /*
-
-                    */
-                    //This is code to set pixel size based off distance from eye
-                    //Cave mode
-                    osg::Matrixd modelViewMatrix = *(cs->getModelViewMatrix());
-                    modelViewMatrix.invert( modelViewMatrix );
-                    osg::Vec3d eye = modelViewMatrix.getTrans() - getPosition();
-                    eye = osg::Vec3d( 0.0, 1.0, 0.0 ) * eye.length();
-                    osg::Vec3d center( 0.0, 0.0, 0.0 );
-                    osg::Matrixd scaleView = osg::Matrixd::lookAt(
-                        eye, center, osg::Vec3d( 0.0, 0.0, 1.0 ) );
-                    osg::Matrixd mvpwMatrix = scaleView *
-                        *(cs->getProjectionMatrix()) * cs->getWindowMatrix();
-                    osg::Vec3d ps = center * mvpwMatrix;
-                    osg::Vec3d pe = osg::Vec3d( 1.0, 0.0, 0.0 ) * mvpwMatrix;
-                    double size = 1.0 / ( pe - ps ).length();
-                    /*
-                    if( _autoScaleTransitionWidthRatio > 0.0 )
-                    {
-                        if( _minimumScale > 0.0 )
-                        {
-                            double j = _minimumScale;
-                            double i = ( _maximumScale < DBL_MAX ) ? 
-                                _minimumScale + ( _maximumScale - _minimumScale ) *
-                                _autoScaleTransitionWidthRatio :
-                                _minimumScale * ( 1.0 + _autoScaleTransitionWidthRatio );
-                            double c = 1.0 / ( 4.0 * ( i - j ) );
-                            double b = 1.0 - 2.0 * c * i;
-                            double a = j + b * b / ( 4.0 * c );
-                            double k = -b / ( 2.0 * c );
-
-                            if( size < k ) size = _minimumScale;
-                            else if( size < i ) size = a + b * size + c * ( size * size );
-                        }
-
-                        if( _maximumScale < DBL_MAX )
-                        {
-                            double n = _maximumScale;
-                            double m = ( _minimumScale > 0.0 ) ?
-                                _maximumScale + ( _minimumScale-_maximumScale ) *
-                                _autoScaleTransitionWidthRatio :
-                                _maximumScale * ( 1.0 - _autoScaleTransitionWidthRatio );
-                            double c = 1.0 / ( 4.0 * ( m - n ) );
-                            double b = 1.0 - 2.0 * c * m;
-                            double a = n + b * b / ( 4.0 * c );
-                            double p = -b / ( 2.0 * c );
-
-                            if( size > p ) size = _maximumScale;
-                            else if( size > m ) size = a + b * size + c * ( size * size );
-                        }
-                    }
-                    */
-
-                    setScale( m_scale * size );
-                }
-
-                if( _autoRotateMode == ROTATE_TO_SCREEN )
-                {
-                    osg::Vec3d translation;
-                    osg::Quat rotation;
-                    osg::Vec3d scale;
-                    osg::Quat so;
-                    cs->getModelViewMatrix()->decompose(
-                        translation, rotation, scale, so );
-
-                    setRotation( rotation.inverse() );
-                }
-                else if( _autoRotateMode == ROTATE_TO_CAMERA )
-                {
-                    osg::Vec3d PosToEye = getPosition() - eyePoint;
-                    osg::Matrix lookto = osg::Matrix::lookAt(
-                        //osg::Vec3d( 0.0, 0.0, 0.0 ), -eyePoint, localUp );
-                        osg::Vec3d( 0.0, 0.0, 0.0 ), PosToEye, localUp );
-                    osg::Quat q;
-                    q.set( osg::Matrix::inverse( lookto ) );
-                    setRotation( q );
-                }
-
-                _previousEyePoint = eyePoint;
-                _previousLocalUp = localUp;
-                //_previousWidth = width;
-                //_previousHeight = height;
-                _previousProjection = projection;
-                _previousPosition = position;
-
-                _matrixDirty = true;
-            }
-        }
-    }
-
     //Now do the proper accept
-    osg::Transform::accept( nv );
+    AutoTransform::accept( nv );
 }
 ////////////////////////////////////////////////////////////////////////////////
 TranslateAxis* Dragger::AsTranslateAxis()
@@ -498,7 +339,7 @@ Dragger* Dragger::Push(
     if( this == node )
     {
         //Tell root dragger to stop auto scaling
-        m_rootDragger->setAutoScaleToScreen( false );
+        m_rootDragger->SetAutoScaleToScreen( false );
 
         //Use active color if this is active
         UseColor( Color::ACTIVE );
@@ -534,9 +375,9 @@ Dragger* Dragger::Release( osg::NodePath::iterator& npItr )
     if( this == node )
     {
         //Tell root dragger to auto scale
-        m_rootDragger->setAutoScaleToScreen( true );
+        m_rootDragger->SetAutoScaleToScreen( true );
         //Force update now on release event for this frame
-        m_rootDragger->setAutoRotateMode( m_rootDragger->getAutoRotateMode() );
+        m_rootDragger->SetAutoRotateMode( m_rootDragger->GetAutoRotateMode() );
 
         //Use default color if this is active
         UseColor( Color::DEFAULT );
@@ -799,8 +640,17 @@ const osg::Plane Dragger::GetPlane( const bool& parallel ) const
     if( parallel )
     {
         plane.set(
-            m_rootDragger->GetPreviousEyePoint() - m_rootDragger->getPosition(),
-            m_rootDragger->getPosition() );
+            m_rootDragger->GetPreviousEyePoint() - m_rootDragger->GetPosition(),
+            m_rootDragger->GetPosition() );
+
+        //osg::Vec3d translation;
+        //osg::Quat rotation;
+        //osg::Vec3d scale;
+        //osg::Quat so;
+        //cs->getModelViewMatrix()->decompose(
+            //translation, rotation, scale, so );
+
+        //SetRotation( rotation.inverse() );
     }
     else
     {
@@ -820,16 +670,6 @@ const osg::Vec3d Dragger::GetAxis( const bool& premultiply ) const
     }
 
     return m_localToWorld * axis;
-}
-////////////////////////////////////////////////////////////////////////////////
-const osg::Vec3d Dragger::GetPreviousEyePoint() const
-{
-    return _previousEyePoint;
-}
-////////////////////////////////////////////////////////////////////////////////
-const osg::Vec3d Dragger::GetPreviousLocalUp() const
-{
-    return _previousLocalUp;
 }
 ////////////////////////////////////////////////////////////////////////////////
 const osg::Vec3d Dragger::GetUnitAxis() const
@@ -889,20 +729,6 @@ void Dragger::SetRootDragger( Dragger* rootDragger )
         m_rootDragger = rootDragger;
         m_isRootDragger = false;
     }
-}
-////////////////////////////////////////////////////////////////////////////////
-void Dragger::SetScale( const double scale )
-{
-    osg::Vec3d temp( scale, scale, scale );
-    SetScale( temp );
-}
-////////////////////////////////////////////////////////////////////////////////
-void Dragger::SetScale( const osg::Vec3d& scale )
-{
-    m_scale = scale;
-
-    //Force scale update
-    setAutoRotateMode( getAutoRotateMode() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Dragger::SetVectorSpace( const VectorSpace::Enum& vectorSpace )

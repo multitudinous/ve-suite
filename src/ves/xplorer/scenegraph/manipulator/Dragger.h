@@ -37,10 +37,11 @@
 // --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
 
+#include <ves/xplorer/scenegraph/AutoTransform.h>
+
 #include <ves/xplorer/scenegraph/manipulator/Definitions.h>
 
 // --- OSG Includes --- //
-#include <osg/AutoTransform>
 #include <osg/Plane>
 
 #include <osgUtil/LineSegmentIntersector>
@@ -87,7 +88,7 @@ typedef std::map< btRigidBody*, btPoint2PointConstraint* > ConstraintMap;
 /*!\class ves::xplorer::scenegraph::Dragger
  * Abstract Class
  */
-class VE_SCENEGRAPH_EXPORTS Dragger : public osg::AutoTransform
+class VE_SCENEGRAPH_EXPORTS Dragger : public AutoTransform
 {
 public:
     ///
@@ -149,6 +150,7 @@ public:
     virtual void ComboForm();
 
     ///
+    ///\param activeAssociation
     ///\return
     virtual bool Connect( osg::Transform* activeAssociation );
 
@@ -159,17 +161,21 @@ public:
     virtual void Disconnect();
 
     ///
+    ///\param deviceInput
     ///\return
     Dragger* Drag( const osgUtil::LineSegmentIntersector& deviceInput );
 
     ///
+    ///\param enable
     void Enable( const bool& enable = true );
 
     ///
+    ///\param npItr
     ///\return
     virtual Dragger* Focus( osg::NodePath::iterator& npItr );
 
     ///
+    ///\param parallel
     ///\return
     const osg::Plane GetPlane( const bool& parallel = false ) const;
 
@@ -178,16 +184,9 @@ public:
     const TransformationType::Enum GetTransformationType() const;
 
     ///
+    ///\param premultiply
     ///\return
     const osg::Vec3d GetAxis( const bool& premultiply = false ) const;
-
-    ///
-    ///\return
-    const osg::Vec3d GetPreviousEyePoint() const;
-
-    ///
-    ///\return
-    const osg::Vec3d GetPreviousLocalUp() const;
 
     ///
     ///\return
@@ -218,6 +217,9 @@ public:
     virtual const char* libraryName() const;
 
     ///
+    ///\param deviceInput
+    ///\param np
+    ///\param npItr
     ///\return
     virtual Dragger* Push(
         const osgUtil::LineSegmentIntersector& deviceInput,
@@ -225,35 +227,38 @@ public:
         osg::NodePath::iterator& npItr );
 
     ///
+    ///\param npItr
     ///\return
     virtual Dragger* Release( osg::NodePath::iterator& npItr );
 
     ///
+    ///\param axisDirction
     virtual void SetAxisDirection( const AxisDirection::Enum& axisDirection );
 
     ///
+    ///\param colorTag
+    ///\param newColor
+    ///\param use
     virtual void SetColor(
         Color::Enum colorTag, osg::Vec4 newColor, bool use = false );
 
     ///
+    ///\param constraintMap
     virtual void SetConstraintMap( ConstraintMap& constraintMap );
 
     ///
+    ///\param rootDragger
     virtual void SetRootDragger( Dragger* rootDragger );
 
     ///
-    void SetScale( const double scale );
-
-    ///
-    void SetScale( const osg::Vec3d& scale );
-
-    ///
+    ///\param vectorSpace
     virtual void SetVectorSpace( const VectorSpace::Enum& vectorSpace );
 
     ///
     virtual void Show();
 
     ///
+    ///\param colorTag
     virtual void UseColor( Color::Enum colorTag );
 
     ///
@@ -268,6 +273,8 @@ protected:
 
     ///Will be pure virtual eventually
     ///
+    ///\param deviceInput
+    ///\param projectedPoint
     ///\return
     virtual const bool ComputeProjectedPoint(
         const osgUtil::LineSegmentIntersector& deviceInput,
@@ -291,6 +298,7 @@ protected:
     virtual void CustomReleaseAction(){;}
 
     ///
+    ///\param colorTag
     ///\return
     osg::Vec4& GetColor( Color::Enum colorTag );
 
@@ -332,9 +340,6 @@ protected:
     osg::Vec3d m_deltaScale;
 
     ///
-    osg::Vec3d m_scale;
-
-    ///
     osg::Matrixd m_localToWorld;
 
     ///
@@ -357,12 +362,14 @@ private:
     void CreateDefaultShader();
 
     ///Create physics point constraint
+    ///\param btRB
     const bool CreatePointConstraint( btRigidBody& btRB );
 
     ///
     void UpdateAssociations();
 
     ///
+    ///\param dcs
     void UpdateConductorData( ves::xplorer::scenegraph::DCS* dcs );
 
     ///
