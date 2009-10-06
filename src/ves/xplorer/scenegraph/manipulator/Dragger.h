@@ -54,6 +54,8 @@ class btPoint2PointConstraint;
 #include <set>
 #include <map>
 
+#include <boost/concept_check.hpp>
+
 namespace ves
 {
 namespace xplorer
@@ -269,7 +271,12 @@ protected:
     ///\return
     virtual const bool ComputeProjectedPoint(
         const osgUtil::LineSegmentIntersector& deviceInput,
-        osg::Vec3d& projectedPoint ){return false;}
+        osg::Vec3d& projectedPoint )
+    {
+        boost::ignore_unused_variable_warning( deviceInput );
+        boost::ignore_unused_variable_warning( projectedPoint );
+        return false;
+    }
 
     ///
     virtual void CustomFocusAction(){;}
