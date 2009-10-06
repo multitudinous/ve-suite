@@ -441,7 +441,7 @@ void CharacterController::UpdateCamera()
     up.normalize();
     
     //Get the backward direction of the camera
-	btVector3 backward = -characterWorldTrans.getBasis()[ 1 ];
+    btVector3 backward = -characterWorldTrans.getBasis()[ 1 ];
     backward.normalize();
 
     //Get the center of the character
