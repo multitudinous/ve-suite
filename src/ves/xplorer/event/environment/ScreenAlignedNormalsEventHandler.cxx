@@ -68,27 +68,27 @@ ScreenAlignedNormalsEventHandler::operator=( const ScreenAlignedNormalsEventHand
 /////////////////////////////////////////////////////////////////////////////////////
 void ScreenAlignedNormalsEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xmlObject )
 {
-    /*try
+    try
     {
-        ves::open::xml::CommandPtr geometryLODScaleCmd = boost::dynamic_pointer_cast<ves::open::xml::Command>( xmlObject );
+        ves::open::xml::CommandPtr geometryLODScaleCmd = 
+            boost::dynamic_pointer_cast<ves::open::xml::Command>( xmlObject );
         if(  geometryLODScaleCmd )
         {
             ves::open::xml::DataValuePairPtr scaleValue =
-                geometryLODScaleCmd->GetDataValuePair( "Geometry LOD Scale" );
+                geometryLODScaleCmd->
+                GetDataValuePair( "Screen Aligned Toggle Value" );
             long alpha = 0;
             scaleValue->GetData( alpha );
 
-            double scale = .0001*exp( alpha * .18420680745);
-            ves::xplorer::EnvironmentHandler::instance()->SetGlobalLODScale( scale );
+            ves::xplorer::scenegraph::SceneManager::instance()->
+                SetScreenAlignedNormals( alpha );
         }
     }
     catch ( ... )
     {
         m_activeModel = 0;
-        std::cout << "Invalid command passed to EphemerisAutoDateTimeEventHandler!!" << std::endl;
-
-
-    }*/
+        std::cout << "Invalid command passed to ScreenAlignedNormalsEventHandler!!" << std::endl;
+    }
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////
 void ScreenAlignedNormalsEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* baseObject )

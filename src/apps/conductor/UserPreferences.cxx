@@ -83,7 +83,8 @@ UserPreferences::UserPreferences( )
     :
     m_lodScale( 1 ),
     m_nearFarEntry( 0 ),
-    m_nearFar( 0.000005 )
+    m_nearFar( 0.000005 ),
+    m_draggerScalingValue( 64.0 )
 {
     xplorerColor.push_back( 0.0f );
     xplorerColor.push_back( 0.0f );
@@ -107,7 +108,8 @@ UserPreferences::UserPreferences( wxWindow* parent,
     :
     m_lodScale( 1 ),
     m_nearFarEntry( 0 ),
-    m_nearFar( 0.000005 )
+    m_nearFar( 0.000005 ),
+    m_draggerScalingValue( 64.0 )
 {
     Create( parent, id, caption, pos, size, style );
 }
@@ -190,8 +192,11 @@ void UserPreferences::CreateControls()
     shutdownModeChkBx = new wxCheckBox( panel, USERPREFENCES_SHUTDOWN_XPLORER, wxT( "Shut Down Xplorer Option" ), wxDefaultPosition, wxDefaultSize, wxCHK_2STATE );
     wxBoxSizer* nearFarSizer = new wxBoxSizer( wxHORIZONTAL );
     wxCheckBox* nearFarChkBx = new wxCheckBox( panel, USERPREFENCES_NEAR_FAR_CHKBX, wxT( "Set Near-Far Ratio" ), wxDefaultPosition, wxDefaultSize, wxCHK_2STATE );
+    //Need to set near far ratio
+    wxString nearFarData;
+    nearFarData << m_nearFar;
     m_nearFarEntry = new wxTextCtrl( panel, USERPREFENCES_NEAR_FAR_RATIO,
-                                      _( "0.000005" ), wxDefaultPosition,
+                                      nearFarData.c_str(), wxDefaultPosition,
                                       wxDefaultSize, wxTE_PROCESS_ENTER );
     nearFarSizer->Add( nearFarChkBx, 1, wxEXPAND | wxALIGN_CENTER_HORIZONTAL );
     nearFarSizer->Add( m_nearFarEntry, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
@@ -204,15 +209,19 @@ void UserPreferences::CreateControls()
     wxBoxSizer* draggerScalingSizer = new wxBoxSizer( wxHORIZONTAL );
     wxCheckBox* draggerScalingChkBx = 
         new wxCheckBox( panel, USERPREFENCES_DRAGGER_SCALING_CHKBX, 
-        wxT( "Dragger Scaling" ), wxDefaultPosition, 
-        wxDefaultSize, wxCHK_2STATE );
-    m_draggerScalingEntry = new wxTextCtrl( panel, USERPREFENCES_DRAGGER_SCALING_VALUE,
-                                    _( "100.0" ), wxDefaultPosition,
-                                    wxDefaultSize, wxTE_PROCESS_ENTER );
-    draggerScalingSizer->Add( draggerScalingChkBx, 1, wxEXPAND | wxALIGN_CENTER_HORIZONTAL );
-    draggerScalingSizer->Add( m_draggerScalingEntry, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
+                   wxT( "Dragger Scaling" ), wxDefaultPosition, 
+                   wxDefaultSize, wxCHK_2STATE );
+    {
+        //Need to set dragger scaling
+        wxString draggerScalingData;
+        draggerScalingData << m_draggerScalingValue;
+        m_draggerScalingEntry = new wxTextCtrl( panel, USERPREFENCES_DRAGGER_SCALING_VALUE,
+                                               draggerScalingData.c_str(), wxDefaultPosition,
+                                               wxDefaultSize, wxTE_PROCESS_ENTER );
+        draggerScalingSizer->Add( draggerScalingChkBx, 1, wxEXPAND | wxALIGN_CENTER_HORIZONTAL );
+        draggerScalingSizer->Add( m_draggerScalingEntry, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
+    }
 
-    
     backgroundColorChkBx->SetValue( preferenceMap[ "Use Preferred Background Color" ] );
     backgroundColorChkBx->IsChecked();
     navigationChkBx->SetValue( preferenceMap[ "Auto Launch Nav Pane" ] );
@@ -501,6 +510,15 @@ void UserPreferences::ReadConfiguration( void )
                           _T( "NearFarRatio" ),
                           &m_nearFar );
             }            
+            else if( iter->first == "Dragger Scaling" )
+            {
+                cfg->Read( key +
+                          _T( "/" ) +
+                          _T( "DraggerScaling" ) +
+                          _T( "/" ) +
+                          _T( "DraggerScalingValue" ),
+                          &m_draggerScalingValue );
+            }            
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -560,6 +578,15 @@ void UserPreferences::WriteConfiguration( void )
                           _T( "NearFarRatio" ),
                           m_nearFar );
             }            
+            else if( iter->first == "Dragger Scaling" )
+            {
+                cfg->Write( key +
+                           _T( "/" ) +
+                           _T( "DraggerScaling" ) +
+                           _T( "/" ) +
+                           _T( "DraggerScalingValue" ),
+                           m_draggerScalingValue );
+            }            
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -591,23 +618,31 @@ void UserPreferences::OnDraggerScalingCheck( wxCommandEvent& event )
     wxString mode = dynamic_cast< wxControl* >( event.GetEventObject() )->GetLabelText();
     preferenceMap[ ConvertUnicode( mode.c_str() ) ] = event.IsChecked();
     
-    double m_draggerScaling;
-    m_draggerScalingEntry->GetValue().ToDouble( &m_draggerScaling );
+    if( event.IsChecked() )
+    {
+        m_draggerScalingEntry->Enable();
+        OnDraggerScalingValue( event );
+    }
+    else
+    {
+        m_draggerScalingValue = 64.0;
+        m_draggerScalingEntry->Disable();
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void UserPreferences::OnDraggerScalingValue( wxCommandEvent& event )
+{
+    m_draggerScalingEntry->GetValue().ToDouble( &m_draggerScalingValue );
 
     // Create the command and data value pairs
     DataValuePairPtr dataValuePair( new DataValuePair() );
-    dataValuePair->SetData( "Dragger Scaling Toggle Value", m_draggerScaling );
+    dataValuePair->SetData( "Dragger Scaling Toggle Value", m_draggerScalingValue );
     CommandPtr veCommand( new Command() );
     veCommand->SetCommandName( std::string( "DRAGGER_SCALING_VALUE" ) );
     veCommand->AddDataValuePair( dataValuePair );
     
     CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
     
-    UserPreferencesDataBuffer::instance()->SetCommand( "DRAGGER_SCALING_VALUE", veCommand );
-}
-////////////////////////////////////////////////////////////////////////////////
-void UserPreferences::OnDraggerScalingValue( wxCommandEvent& event )
-{
-    ;
+    UserPreferencesDataBuffer::instance()->SetCommand( "DRAGGER_SCALING_VALUE", veCommand );    
 }
 ////////////////////////////////////////////////////////////////////////////////

@@ -120,6 +120,9 @@ public:
     ///Override the setChild function to only accept Manipulators
     virtual bool setChild( unsigned int i, Dragger* node );
 
+    ///
+    void SetDraggerScale( double draggerScale );
+    
 protected:
     ///Destructor
     virtual ~ManipulatorManager();
@@ -158,6 +161,9 @@ private:
 
     ///
     osg::ref_ptr< TransformManipulator > m_sceneManipulator;
+    
+    ///Scale the dragger size
+    double m_draggerSize;
 
 public:
     //friend class Dragger;

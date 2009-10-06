@@ -35,6 +35,9 @@
 #include <ves/xplorer/DeviceHandler.h>
 #include <ves/xplorer/Model.h>
 #include <ves/xplorer/ModelHandler.h>
+#include <ves/xplorer/scenegraph/SceneManager.h>
+#include <ves/xplorer/scenegraph/manipulator/ManipulatorManager.h>
+#include <ves/xplorer/scenegraph/manipulator/TransformManipulator.h>
 
 #include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/Command.h>
@@ -68,28 +71,30 @@ DraggerScalingEventHandler::operator=( const DraggerScalingEventHandler& rhs )
 /////////////////////////////////////////////////////////////////////////////////////
 void DraggerScalingEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xmlObject )
 {
-   /* try
+    try
     {
-        ves::open::xml::CommandPtr geometryLODScaleCmd = boost::dynamic_pointer_cast<ves::open::xml::Command>( xmlObject );
+        ves::open::xml::CommandPtr geometryLODScaleCmd = 
+            boost::dynamic_pointer_cast<ves::open::xml::Command>( xmlObject );
         if(  geometryLODScaleCmd )
         {
             ves::open::xml::DataValuePairPtr scaleValue =
-                geometryLODScaleCmd->GetDataValuePair( "Geometry LOD Scale" );
-            long alpha = 0;
+                geometryLODScaleCmd->GetDataValuePair( "Dragger Scaling Toggle Value" );
+            double alpha = 0;
             scaleValue->GetData( alpha );
-
-            double scale = .0001*exp( alpha * .18420680745);
-            ves::xplorer::EnvironmentHandler::instance()->SetGlobalLODScale( scale );
+            
+            ves::xplorer::scenegraph::SceneManager::instance()->
+                GetManipulatorManager()->SetDraggerScale( alpha );
+            ves::xplorer::scenegraph::SceneManager::instance()->
+                GetManipulatorManager()->GetSceneManipulator()->SetScale( alpha );
         }
     }
     catch ( ... )
     {
         m_activeModel = 0;
-        std::cout << "Invalid command passed to EphemerisAutoDateTimeEventHandler!!" << std::endl;
+        std::cout << "Invalid command passed to DraggerScalingEventHandler!!" << std::endl;
 
 
     }
-*/
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////
 void DraggerScalingEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* baseObject )

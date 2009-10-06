@@ -167,7 +167,10 @@ private:
     wxTextCtrl* m_draggerScalingEntry;
     
     std::vector<double> xplorerColor;
+    ///Near far ratio
     double m_nearFar;
+    ///Dragger scaling value
+    double m_draggerScalingValue;
 
     wxSlider* m_lodScaleSlider;///<Slider for the global Geometry LOD scale
     ves::conductor::util::CORBAServiceList* serviceList;

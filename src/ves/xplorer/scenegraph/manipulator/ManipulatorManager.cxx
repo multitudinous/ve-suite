@@ -56,7 +56,8 @@ ManipulatorManager::ManipulatorManager()
     m_nodeMask( 0xfffffffe ),
     m_rootDragger( NULL ),
     m_leafDragger( NULL ),
-    m_sceneManipulator( NULL )
+    m_sceneManipulator( NULL ),
+    m_draggerSize( 64.0 )
 {
     osg::ref_ptr< osg::StateSet > stateSet = getOrCreateStateSet();
     stateSet->setRenderBinDetails( 11, std::string( "DepthSortedBin" ) );
@@ -131,7 +132,7 @@ bool ManipulatorManager::addChild( Dragger* child )
     }
 
     //Initialize root dragger
-    child->SetScale( 64.0 );
+    child->SetScale( m_draggerSize );
     child->setAutoScaleToScreen( true );
     ConstraintMap* constraintMap = new ConstraintMap();
     child->SetConstraintMap( *constraintMap );
@@ -296,5 +297,10 @@ bool ManipulatorManager::TestForIntersections(
     m_rootDragger = ConvertNodeToDragger( *m_nodePathItr );
 
     return true;
+}
+////////////////////////////////////////////////////////////////////////////////
+void ManipulatorManager::SetDraggerScale( double draggerScale )
+{
+    m_draggerSize = draggerScale;
 }
 ////////////////////////////////////////////////////////////////////////////////
