@@ -1765,9 +1765,9 @@ vrj::DisplayPtr const KeyboardMouse::GetCurrentDisplay(
     else
     {
         //Error output, this should never happen
-        std::cerr 
+        vprDEBUG( vesDBG, 2 ) 
             << "VPR OS is not defined properly in KeyboardMouse::GetCurrentDisplay." 
-            << std::endl;
+            << std::endl << vprDEBUG_FLUSH;
         return vrj::DisplayPtr();
     }
 }
