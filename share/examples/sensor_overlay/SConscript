@@ -6,16 +6,26 @@ pj = os.path.join
 Import( 'RootDir ves_pkg' )
 
 fileBundle = ves_pkg.createFileBundle( pj( 'share', 'vesuite', 'examples', 'sensor_overlay' ) )
-fermentorDemoDir = pj( RootDir, 'share', 'examples', 'sensor_overlay' )
-#iveFile = sca_util.getFilesRecursiveByExt( fermentorDemoDir, [ '.ive' ] )
+sensor_overlayDir = pj( RootDir, 'share', 'examples', 'sensor_overlay' )
+#iveFile = sca_util.getFilesRecursiveByExt( sensor_overlayDir, [ '.ive' ] )
 
 #fileBundle.addFiles( iveFile )
 # fileBundle.addFiles( [ 'Icons/fermentor.jpg' ] )
 # fileBundle.addFiles( [ 'fermentor.ves' ] )
-fermentorSubdirs = Split("""
+sensor_overlaySubdirs = Split("""
     sensor_displayGP
+    sensor_overlayUNIT
+    sensor_overlayUI
 """)
 
+fileBundle.addFiles( 'Run_sensor_overlayUNIT.sh')
+
 ##Run SConscript files in all of these folders.
-for d in fermentorSubdirs:
+for d in sensor_overlaySubdirs:
    SConscript( dirs = d )
+
+#add plplot includes
+   CPPPATH= '/Users/adams/mySoftware/plplot5.9.5/include/plplot'
+ 
+   LIBPATH= '/Users/adams/mySoftware/plplot5.9.5/lib'
+   LIBS= ['csirocsa', 'plplotcxxd', 'plplotd', 'qsastime']

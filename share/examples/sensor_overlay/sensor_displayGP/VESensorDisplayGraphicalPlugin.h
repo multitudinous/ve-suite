@@ -35,6 +35,22 @@
 #define VE_SENSOR_DISPLAY_GRAPHICAL_PLUGIN_H
 
 // --- My Includes --- //
+#include <osg/MatrixTransform>
+#include <osg/AnimationPath>
+#include <osg/ShapeDrawable>
+#include <osg/Sequence>
+
+#include <osgText/Text>
+
+#include <osgDB/ReadFile>
+
+#include <osgSim/ColorRange>
+#include <osg/Vec3d>
+
+#include <osg/Billboard>
+
+#include <osg/BlendFunc>
+
 class Shaders;
 
 namespace display
@@ -75,26 +91,33 @@ public:
 
     virtual void InitializeNode( osg::Group* veworldDCS );
     virtual void PreFrameUpdate(); 
+	
+	osg::Drawable* VESensorDisplayGraphicalPlugin::createQuad(osg::StateSet* bbState);
+	void VESensorDisplayGraphicalPlugin::setTexture();
+	//void VESensorDisplayGraphicalPlugin::FileExists(std::string strFilename);
+	
        
 private:
     ves::xplorer::device::KeyboardMouse* m_keyboard;
-/*
-    osg::ref_ptr< osg::Node > _fermentorGeometry;
-    osg::ref_ptr< osg::Node > _impellerGeometry;
-    osg::ref_ptr< osg::Node > _tankGeometry;
 
-    osg::ref_ptr< osg::MatrixTransform > _roomGeometry;
-    osg::ref_ptr< osg::MatrixTransform > fermentorGroup;
-
-    osg::ref_ptr< osg::MatrixTransform > transform_ferm;
-    osg::ref_ptr< osg::MatrixTransform > transform_imp;
-    osg::ref_ptr< osg::MatrixTransform > transform_tank;
-*/
-    osg::ref_ptr< osg::Node > m_idleGeometry;
-    osg::ref_ptr< osg::Node > m_openGeometry;
-    osg::ref_ptr< osg::Node > m_closeGeometry;
-    osg::ref_ptr< osg::Switch > m_valueAnimation;
-    int mButton;
+ 
+	
+	osg::Drawable* quadDrawable;
+	osg::Drawable* quad1Drawable;
+	osg::Drawable* quad2Drawable;
+	osg::Drawable* quad3Drawable;
+	
+	osg::Texture2D* texture;
+	osg::Texture2D* texture1;
+	osg::Texture2D* texture2;
+	osg::Texture2D* texture3;
+	
+	osg::StateSet* billBoardStateSet;
+	osg::StateSet* billBoardStateSet1;
+	osg::StateSet* billBoardStateSet2;
+	osg::StateSet* billBoardStateSet3;
+	int iterator;
+	
 
 
 };
