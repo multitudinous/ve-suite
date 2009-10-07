@@ -12,6 +12,12 @@ openDir = os.path.abspath( pj( RootDir, 'share', 'examples', 'WarrantyTool', 'Us
 sources = sca_util.getSourcesRecursive( openDir )
 headers = sca_util.getHeadersRecursive( openDir )
 
+glslBundle = ves_pkg.createFileBundle( pj('share', 'vesuite','examples', 'WarrantyTool') )
+glslFile = sca_util.getFilesRecursiveByExt( openDir, ['.png'] )
+#glslFile = map(lambda s: pj('data', s), glslFile)
+glslBundle.addFiles( glslFile, useRelPath=True )
+print glslFile
+
 lib_env = ves_pkg.getEnv().Clone()
 lib_env.Append( LIBS = ['ves_conductor_plugin',
                         'ves_open_xml' ] )

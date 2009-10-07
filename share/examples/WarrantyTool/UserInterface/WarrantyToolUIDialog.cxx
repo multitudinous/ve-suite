@@ -108,6 +108,7 @@ WarrantyToolUIDialog::WarrantyToolUIDialog(
     m_textInput03->Disable();
     
     CenterOnParent();
+    SetTitle( _("Deere Analytics Dialog") );
 }
 ////////////////////////////////////////////////////////////////////////////////
 WarrantyToolUIDialog::~WarrantyToolUIDialog()

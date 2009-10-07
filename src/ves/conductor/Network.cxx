@@ -1724,7 +1724,8 @@ void Network::AddtoNetwork( UIPluginBase *cur_module, std::string cls_name )
     bbox = cur_module->GetBBox();
     modules[id].SetPlugin( cur_module );
 
-    modules[id].GetPlugin()->SetName( wxString( cls_name.c_str(), wxConvUTF8 ) );
+    //This name is now set in the plugin by the user
+    //modules[id].GetPlugin()->SetName( wxString( cls_name.c_str(), wxConvUTF8 ) );
     modules[id].GetPlugin()->SetID( id );
     modules[id].GetPlugin()->SetCORBAService( mServiceList );
     modules[id].GetPlugin()->SetXMLDataBufferEngine( mDataBufferEngine );

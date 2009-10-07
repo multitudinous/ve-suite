@@ -35,8 +35,6 @@
 #include "WarrantyToolUI.h"
 #include "WarrantyToolUIDialog.h"
 
-#include "Icons/camera.xpm"
-
 // --- wxWidgets Includes --- //
 #include <wx/wx.h>
 
@@ -47,11 +45,11 @@ IMPLEMENT_DYNAMIC_CLASS( WarrantyToolUI, ves::conductor::UIPluginBase )
 ////////////////////////////////////////////////////////////////////////////////
 WarrantyToolUI::WarrantyToolUI()
 {
-    mPluginName = wxT( "WarrantyToolUI" );
+    mPluginName = wxT( "DeereAnalytics" );
 
-    wxImage my_img( camera_xpm );
+    wxImage my_img( _("Icons/TractorIcon.png") );
     SetImage( my_img );
-    mDescription = wxT( "The generic tool to display warranty data." );
+    mDescription = wxT( "The generic tool to display product data." );
 }
 ////////////////////////////////////////////////////////////////////////////////
 WarrantyToolUI::~WarrantyToolUI()
@@ -81,18 +79,13 @@ ves::conductor::UIDialog* WarrantyToolUI::UI( wxWindow* parent )
 ////////////////////////////////////////////////////////////////////////////////
 wxString WarrantyToolUI::GetConductorName()
 {         
-    wxString result = wxT( "WarrantyToolUI" );
+    wxString result = wxT( "DeereAnalytics" );
 
     return result;
 }
 ////////////////////////////////////////////////////////////////////////////////
 wxString WarrantyToolUI::GetName()
 {
-    if( mPluginName.IsEmpty() )
-    {
-        mPluginName = wxT( "PleaseDefineClassName" );
-    }
-
     return mPluginName;
 }
 ////////////////////////////////////////////////////////////////////////////////
