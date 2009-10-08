@@ -92,8 +92,8 @@ public:
     virtual void InitializeNode( osg::Group* veworldDCS );
     virtual void PreFrameUpdate(); 
 	
-	osg::Drawable* VESensorDisplayGraphicalPlugin::createQuad(osg::StateSet* bbState);
-	void VESensorDisplayGraphicalPlugin::setTexture();
+	osg::Drawable* createQuad(osg::StateSet* bbState);
+	void setTexture();
 	//void VESensorDisplayGraphicalPlugin::FileExists(std::string strFilename);
 	
        
