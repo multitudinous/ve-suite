@@ -673,7 +673,7 @@ void App::contextPreDraw()
     //std::cout << "----------contextPreDraw-----------" << std::endl;
     VPR_PROFILE_GUARD_HISTORY( "App::contextPreDraw", 20 );
 
-    if( !(*mViewportsChanged) && (_frameNumber > 5) )
+    if( !(*mViewportsChanged) && (_frameNumber > 3) )
     {
         if( jccl::ConfigManager::instance()->isPendingStale() )
         {            
@@ -804,7 +804,7 @@ void App::draw()
         const osg::Matrixd osgModelViewMatrix = glTI->GetOSGModelViewMatrix();
 
         if( mRTT )
-        {
+        {            
             sv->setViewport(
                 0, 0, glTI->GetWindowWidth(), glTI->GetWindowHeight() );
             sv->setProjectionMatrix(
@@ -850,7 +850,17 @@ void App::draw()
     //Profile the draw call
     {
         VPR_PROFILE_GUARD_HISTORY( "App::draw sv->draw", 20 );
-        sv->draw();
+        if( *m_skipDraw )
+        {
+            *m_skipDraw = false;
+            //return;
+            vpr::Guard< vpr::Mutex > sv_guard( mValueLock );
+            sv->draw();
+        }
+        else
+        {
+            sv->draw();
+        }
     }
 
     if( glTI )

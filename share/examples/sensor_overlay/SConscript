@@ -14,9 +14,10 @@ sensor_overlayDir = pj( RootDir, 'share', 'examples', 'sensor_overlay' )
 # fileBundle.addFiles( [ 'fermentor.ves' ] )
 sensor_overlaySubdirs = Split("""
     sensor_displayGP
-    sensor_overlayUNIT
     sensor_overlayUI
 """)
+
+#sensor_overlayUNIT
 
 fileBundle.addFiles( 'Run_sensor_overlayUNIT.sh')
 

@@ -458,7 +458,7 @@ void MinervaDialog::_initializeFromCommand (
             std::string guid;
             guidDVP->GetData ( guid );
 
-            layersList->Append ( name.c_str() );
+            layersList->Append( wxString( name.c_str(), wxConvUTF8 ) );
             guids.push_back ( guid );
           }
         }

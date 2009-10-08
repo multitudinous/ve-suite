@@ -492,6 +492,7 @@ vxsr::Processor* SceneRenderToTexture::CreatePipelineProcessor(
 
     //Perform final color operations and blends
     osg::ref_ptr< vxsr::UnitInOut > final = new vxsr::UnitInOut();
+    //vxsr::UnitInOut* final = new vxsr::UnitInOut();
     {
         //Set name and indicies
         final->setName( "Final" );
