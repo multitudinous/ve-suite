@@ -31,6 +31,8 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
+#include <ves/xplorer/communication/CommandHandler.h>
+
 // --- My Includes --- //
 #include "WarrantyToolGP.h"
 #include "csvparser.h"
@@ -294,7 +296,7 @@ void WarrantyToolGP::SetCurrentCommand( ves::open::xml::CommandPtr command )
         else if( dvp->GetDataName() == "WARRANTY_FILE" )
         {
             ParseDataFile( dvp->GetDataString() );
-            for( size_t i = 1; i < mLoadedPartNumbers.size(); ++i )
+            /*for( size_t i = 1; i < mLoadedPartNumbers.size(); ++i )
             {
                 ves::xplorer::scenegraph::util::FindChildWithNameVisitor 
                     childVisitor( mDCS.get(), mLoadedPartNumbers.at( i ), false, true );
@@ -306,7 +308,7 @@ void WarrantyToolGP::SetCurrentCommand( ves::open::xml::CommandPtr command )
                 {
                     std::cout << "Did not find graphics node for " << mLoadedPartNumbers.at( i ) << std::endl;
                 }
-            }
+            }*/
             m_keyboard->SetProcessSelection( false );
         }
     }
@@ -502,6 +504,8 @@ void WarrantyToolGP::RenderTextualDisplay( bool onOff )
 ////////////////////////////////////////////////////////////////////////////////
 void WarrantyToolGP::CreateDB()
 {
+    mCommandHandler->SendConductorMessage( "Creating DB..." );
+
     // register SQLite connector
     Poco::Data::SQLite::Connector::registerConnector();
 
@@ -616,6 +620,7 @@ void WarrantyToolGP::CreateDB()
     
 	//insert << "INSERT INTO Parts VALUES(?, ?, ?, ?, ?, ?, ?)",
     //    use(assem), now;
+    mCommandHandler->SendConductorMessage( "Finished creating DB..." );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void WarrantyToolGP::CreateTextTextures()
@@ -638,6 +643,7 @@ void WarrantyToolGP::CreateTextTextures()
 ////////////////////////////////////////////////////////////////////////////////
 void WarrantyToolGP::CreateDBQuery( ves::open::xml::DataValuePairPtr dvp )
 {
+    mCommandHandler->SendConductorMessage( "Creating DB query..." );
     ves::open::xml::DataValuePairPtr stringDvp = 
         m_currentCommand->GetDataValuePair( "DISPLAY_TEXT_FIELDS" );
     
@@ -691,6 +697,11 @@ void WarrantyToolGP::CreateDBQuery( ves::open::xml::DataValuePairPtr dvp )
 	// create a RecordSet 
 	Poco::Data::RecordSet rs(select);
 	std::size_t cols = rs.columnCount();
+    size_t numQueries = rs.rowCount();
+    std::ostringstream outString;
+    outString << "Number of parts found " << numQueries;
+    mCommandHandler->SendConductorMessage( outString.str() );
+
 	// iterate over all rows and columns
 	bool more = rs.moveFirst();
 	while (more)
@@ -730,11 +741,16 @@ void WarrantyToolGP::CreateDBQuery( ves::open::xml::DataValuePairPtr dvp )
         ves::xplorer::scenegraph::HighlightNodeByNameVisitor 
             highlight( mDCS.get(), partNumber, true, true, 
             osg::Vec4( 0.57255, 0.34118, 1.0, 1.0 ) );
-
+        
 		more = rs.moveNext();
 	}
     m_textTrans->addChild( m_groupedTextTextures.get() );
-
+    
+    ves::xplorer::scenegraph::HighlightNodeByNameVisitor
+        highlight( mDCS.get(), m_assemblyPartNumbers.at( 0 ), true, true,
+        osg::Vec4( 0.34118, 1.0, 0.57255, 1.0 ) );
+    
+    mCommandHandler->SendConductorMessage( "Finished DB query..." );
 /*
     //ves::xplorer::scenegraph::util::OpacityVisitor 
     //    opVisitor1( mDCS.get(), false, true, 0.3f );

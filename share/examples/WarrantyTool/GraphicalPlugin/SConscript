@@ -7,7 +7,7 @@ pj = os.path.join
 host_type = distutils.util.get_platform()
 
 Import( 'baseEnv ves_pkg buildDir RootDir gmtl_options vrjuggler_options osg_options poco_options' )
-Import( 'osgal_options xerces_options vtk_options GetPlatform' )
+Import( 'osgal_options xerces_options vtk_options GetPlatform tao_options' )
 
 openDir = os.path.abspath( pj( RootDir, 'share', 'examples', 'WarrantyTool', 'GraphicalPlugin' ) )
 sources = sca_util.getSourcesRecursive( openDir )
@@ -16,10 +16,12 @@ headers = sca_util.getHeadersRecursive( openDir )
 lib_env = ves_pkg.getEnv().Clone()
 lib_env.Append( LIBS = [ 'ves_open_xml',
                          'ves_xplorer',
-                         'ves_xplorer_scenegraph' ] )
+                         'ves_xplorer_scenegraph',
+                         'ves_xplorer_communication' ] )
 lib_env.Append( LIBPATH = [ pj( '#', buildDir, 'src', 'ves', 'open', 'xml' ),
                             pj( '#', buildDir, 'src', 'ves', 'xplorer' ),
-                            pj( '#', buildDir, 'src', 'ves', 'xplorer', 'scenegraph' ) ] )
+                            pj( '#', buildDir, 'src', 'ves', 'xplorer', 'scenegraph' ),
+                            pj( '#', buildDir, 'src', 'ves', 'xplorer', 'communication' ) ] )
 lib_env.Append( CPPPATH = [ pj( RootDir,'external','osgEphemeris','include' ) ] )
 lib_env.Append( CPPDEFINES = [ 'VE_USER_PLUGIN_LIBRARY' ] )
 
@@ -29,6 +31,7 @@ osg_options.apply( lib_env )
 xerces_options.apply( lib_env )
 vtk_options.apply( lib_env )
 poco_options.apply( lib_env )
+tao_options.apply( lib_env )
 
 if GetPlatform() == 'win32':
    lib_env['no_import_lib'] = 1
