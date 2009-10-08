@@ -81,6 +81,7 @@ using namespace warrantytool;
 #include <vector>
 
 #include <boost/lexical_cast.hpp>
+#include <boost/concept_check.hpp>
 #include <boost/algorithm/string/trim.hpp>
 #include <boost/algorithm/string/replace.hpp>
 
@@ -409,6 +410,8 @@ void WarrantyToolGP::ParseDataFile( const std::string& csvFilename )
         if (sLine == "")
             continue;
         
+        boost::algorithm::replace_all( sLine, "'", "" );
+
         parser << sLine; // Feed the line to the parser
         for( size_t i = 0; i < columnCount; ++i )
         {
@@ -427,7 +430,11 @@ void WarrantyToolGP::ParseDataFile( const std::string& csvFilename )
         {
             partData.push_back( std::pair< std::string, std::string >( csvDataMap[ j ].at( 0 ), csvDataMap[ j ].at( i ) ) );
         }
-        m_dataMap[ mLoadedPartNumbers.at( i ) ] = partData;
+
+        if( !mLoadedPartNumbers.at( i ).empty() )
+        {
+            m_dataMap[ mLoadedPartNumbers.at( i ) ] = partData;
+        }
     }
     
     
@@ -462,6 +469,7 @@ void WarrantyToolGP::RenderTextualDisplay( bool onOff )
             mModelText->setNodeMask( 1 );
         }
         bool removed = m_textTrans->removeChild( m_groupedTextTextures.get() );
+        boost::ignore_unused_variable_warning( removed );
 
         std::string displayString;
         std::pair< std::string, std::string > displayPair;
@@ -514,11 +522,13 @@ void WarrantyToolGP::CreateDB()
         bool isString = false;
         try
         {
-            double test = boost::lexical_cast<double>( tempData.at( i ).second );      
+            double test = boost::lexical_cast<double>( tempData.at( i ).second );
+            boost::ignore_unused_variable_warning( test );   
         }
         catch( boost::bad_lexical_cast& ex )
         {
             std::cout << "Is string data " << tempData.at( i ).first << std::endl;
+            std::cout << "Data is " << tempData.at( i ).second << std::endl;
             std::cout << ex.what() << std::endl;
             isString = true;
         }
@@ -640,8 +650,13 @@ void WarrantyToolGP::CreateDBQuery( ves::open::xml::DataValuePairPtr dvp )
     //m_selectedAssembly.clear();
     m_assemblyPartNumbers.clear();
     
-    ves::xplorer::scenegraph::HighlightNodeByNameVisitor 
-        highlight2( mDCS.get(), "", false, true );
+    {
+        ves::xplorer::scenegraph::HighlightNodeByNameVisitor 
+            highlight2( mDCS.get(), "", false, true );
+        
+        ves::xplorer::scenegraph::util::OpacityVisitor 
+            opVisitor1( mDCS.get(), false, true, 0.3f );
+    }
 
     //select << "SELECT Part_Number, Description, Claims FROM Parts",
     //select << "SELECT Part_Number, Description, Claims FROM Parts WHERE Claims > 10 AND Claims_Cost > 1000",
@@ -668,7 +683,8 @@ void WarrantyToolGP::CreateDBQuery( ves::open::xml::DataValuePairPtr dvp )
 
     RenderTextualDisplay( false );
     bool removed = m_textTrans->removeChild( m_groupedTextTextures.get() );
-    
+    boost::ignore_unused_variable_warning( removed );
+
     m_groupedTextTextures = 
         new ves::xplorer::scenegraph::GroupedTextTextures();
         
@@ -826,6 +842,7 @@ void WarrantyToolGP::ReplaceSpacesCharacters( std::string& data )
 {
     boost::algorithm::trim( data );
     boost::algorithm::replace_all( data, " ", "_" );
+
 /*
     for ( size_t index = 0; index < data.length(); )
     {

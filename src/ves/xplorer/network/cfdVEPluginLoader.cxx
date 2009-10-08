@@ -78,6 +78,7 @@ cfdVEPluginLoader::~cfdVEPluginLoader()
             }
             catch(...)
             {
+                ;
             }
         }
     }
