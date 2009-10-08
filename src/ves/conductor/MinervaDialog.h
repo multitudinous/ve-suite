@@ -42,6 +42,8 @@
 
 #include <ves/VEConfig.h>
 
+#include <ves/open/xml/CommandPtr.h>
+
 #include <wx/dialog.h>
 
 #include <vector>
@@ -69,24 +71,36 @@ public:
     void AddRasterLayerFileSystem ( wxCommandEvent& event );
     void RemoveRasterLayer ( wxCommandEvent& event );
 
+    void InitalizeFromCommands ( ves::open::xml::CommandPtr elevationGroupCommand, ves::open::xml::CommandPtr rasterGroupCommand );
+
 private:
 
     typedef std::vector<std::string> LayerIds;
 
     static void _addLayerFileSystem ( 
-    const std::string& commandName, 
-    const std::string& filename,
-    wxListBox *layersList, 
-    LayerIds &guids );
+      const std::string& commandName, 
+      const std::string& filename,
+      wxListBox *layersList, 
+      LayerIds &guids,
+      ves::open::xml::CommandPtr groupCommand );
     static void _addLayer ( 
-    const std::string& commandName, 
-    const std::string& server, 
-    const std::string& layers, 
-    const std::string& styles, 
-    const std::string& format,
-    wxListBox *layersList, 
-    LayerIds &guids );
-    static void _removeLayer ( const std::string& commandName, wxListBox *layersList, LayerIds &guids );
+      const std::string& commandName, 
+      const std::string& server, 
+      const std::string& layers, 
+      const std::string& styles, 
+      const std::string& format,
+      wxListBox *layersList, 
+      LayerIds &guids,
+      ves::open::xml::CommandPtr groupCommand );
+    static void _removeLayer ( 
+      const std::string& commandName, 
+      wxListBox *layersList, 
+      LayerIds &guids,
+      ves::open::xml::CommandPtr groupCommand );
+    static void _initializeFromCommand (
+      ves::open::xml::CommandPtr groupCommand,
+      wxListBox *layersList, 
+      LayerIds &guids );
 
     wxListBox* _elevationLayersList;
     wxButton* _addElevationLayerButton;
@@ -101,6 +115,8 @@ private:
     LayerIds _elevationLayers;
     LayerIds _rasterLayers;
 
+    ves::open::xml::CommandPtr _rasterGroupCommand;
+    ves::open::xml::CommandPtr _elevationGroupCommand;
     
     std::string ConvertUnicode( const wxChar* data )
     {

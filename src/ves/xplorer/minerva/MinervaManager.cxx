@@ -9,7 +9,9 @@
 #include <ves/xplorer/minerva/EventHandler.h>
 #include <ves/xplorer/minerva/AddEarthHandler.h>
 #include <ves/xplorer/minerva/AddElevationLayerHandler.h>
+#include <ves/xplorer/minerva/AddElevationGroupHandler.h>
 #include <ves/xplorer/minerva/AddRasterLayerHandler.h>
+#include <ves/xplorer/minerva/AddRasterGroupHandler.h>
 #include <ves/xplorer/minerva/RemoveEarthHandler.h>
 #include <ves/xplorer/minerva/RemoveElevationLayerHandler.h>
 #include <ves/xplorer/minerva/RemoveRasterLayerHandler.h>
@@ -110,7 +112,9 @@ MinervaManager::MinervaManager()
     //_eventHandlers["CAD_DELETE_NODE"] = new DeleteHandler;
     _eventHandlers["Move to cad"] = new NavigateToModel;
     _eventHandlers[ves::util::commands::ADD_ELEVATION_LAYER] = new AddElevationLayerHandler;
+    _eventHandlers[ves::util::commands::ADD_ELEVATION_GROUP] = new AddElevationGroupHandler;
     _eventHandlers[ves::util::commands::ADD_RASTER_LAYER] = new AddRasterLayerHandler;
+    _eventHandlers[ves::util::commands::ADD_RASTER_GROUP] = new AddRasterGroupHandler;
     _eventHandlers[ves::util::commands::REMOVE_ELEVATION_LAYER] = new RemoveElevationLayerHandler;
     _eventHandlers[ves::util::commands::REMOVE_RASTER_LAYER] = new RemoveRasterLayerHandler;
 

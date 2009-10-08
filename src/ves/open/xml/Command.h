@@ -81,6 +81,8 @@ public:
     ///\param commandValuePair The data value pair representing command information.
     void AddDataValuePair( DataValuePairPtr commandValuePair );
 
+    void RemoveDataValuePair ( const std::string& dataValueName );
+
     ///Populate the Command data from an XML element.
     ///\param xmlInput The element to populate the command data from.
     virtual void SetObjectFromXMLData( XERCES_CPP_NAMESPACE_QUALIFIER DOMNode* xmlInput );

@@ -32,6 +32,9 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>
+
+#include <boost/lambda/lambda.hpp>
+
 XERCES_CPP_NAMESPACE_USE
 #include <iostream>
 using namespace ves::open::xml;
@@ -116,6 +119,16 @@ void Command::AddDataValuePair( DataValuePairPtr commandValuePair )
         mDataValuePairs.push_back( commandValuePair );
     }
  }
+////////////////////////////////////////////////////////////////////////////////
+void Command::RemoveDataValuePair ( const std::string& dataValueName )
+{
+  std::map< std::string, DataValuePairPtr >::iterator iter ( mNameToDataValuePairMap.find ( dataValueName ) );
+  if ( iter != mNameToDataValuePairMap.end() )
+  {
+    mDataValuePairs.erase ( std::find_if ( mDataValuePairs.begin(), mDataValuePairs.end(), boost::lambda::_1 == iter->second ) );
+    mNameToDataValuePairMap.erase ( iter );
+  }
+}
 ////////////////////////////////////////////////////////////////////////////////
 void Command::_updateVEElement( const std::string& input )
 {

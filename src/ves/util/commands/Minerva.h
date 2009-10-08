@@ -20,7 +20,9 @@ namespace commands {
   const std::string SET_GEOGRAPHIC_PROPERTIERS ( "Set Geographic Properties" );
 
   const std::string ADD_ELEVATION_LAYER ( "Add Elevation Layer" );
+  const std::string ADD_ELEVATION_GROUP ( "Add Elevation Group" );
   const std::string ADD_RASTER_LAYER ( "Add Raster Layer" );
+  const std::string ADD_RASTER_GROUP ( "Add Raster Group" );
 
   const std::string REMOVE_ELEVATION_LAYER ( "Remove Elevation Layer" );
   const std::string REMOVE_RASTER_LAYER ( "Remove Raster Layer" );

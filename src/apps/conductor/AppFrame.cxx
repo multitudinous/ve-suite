@@ -2603,6 +2603,31 @@ void AppFrame::LoadNewNetwork( wxUpdateUIEvent& WXUNUSED( event )  )
         bool connected = serviceList->SendCommandStringToXplorer( veCommand );
     }    
     
+    // Initialze Minerva.
+    {
+      CommandPtr earthCommand ( UserPreferencesDataBuffer::instance()->GetCommand ( ves::util::commands::ADD_EARTH_COMMAND_NAME ) );
+      if ( earthCommand )
+      {
+        serviceList->SendCommandStringToXplorer( earthCommand );
+
+        CommandPtr rasterGroupCommand ( UserPreferencesDataBuffer::instance()->GetCommand ( ves::util::commands::ADD_RASTER_GROUP ) );
+        CommandPtr elevationGroupCommand ( UserPreferencesDataBuffer::instance()->GetCommand ( ves::util::commands::ADD_ELEVATION_GROUP ) );
+
+        if ( rasterGroupCommand )
+        {
+          serviceList->SendCommandStringToXplorer( rasterGroupCommand );
+        }
+
+        if ( elevationGroupCommand )
+        {
+          serviceList->SendCommandStringToXplorer( elevationGroupCommand );
+        }
+
+        MinervaDialog* dialog ( this->GetMinervaDialog() );
+        dialog->InitalizeFromCommands ( elevationGroupCommand, rasterGroupCommand );
+      }
+    }
+
     newCanvas = false;
 }
 ///////////////////////////////////////////////////////////////////////////////
@@ -2641,6 +2666,8 @@ void AppFrame::OnAddPlanet ( wxCommandEvent& event )
   dataValuePair->SetData( "dummy", "dummy" );
   veCommand->AddDataValuePair( dataValuePair );
 
+  ves::conductor::UserPreferencesDataBuffer::instance()->SetCommand ( ves::util::commands::ADD_EARTH_COMMAND_NAME, veCommand );
+
   serviceList->SendCommandStringToXplorer ( veCommand );
 
   MinervaDialog *dialog ( this->GetMinervaDialog() );
@@ -2656,6 +2683,8 @@ void AppFrame::OnRemovePlanet ( wxCommandEvent& event )
   DataValuePairPtr dataValuePair ( new DataValuePair );
   dataValuePair->SetData( "dummy", "dummy" );
   veCommand->AddDataValuePair( dataValuePair );
+
+  ves::conductor::UserPreferencesDataBuffer::instance()->SetCommand ( ves::util::commands::ADD_EARTH_COMMAND_NAME, CommandPtr() );
 
   serviceList->SendCommandStringToXplorer ( veCommand );
 }
