@@ -655,13 +655,17 @@ void WarrantyToolGP::CreateDBQuery( ves::open::xml::DataValuePairPtr dvp )
     std::string queryString = dvp->GetDataString();
     //m_selectedAssembly.clear();
     m_assemblyPartNumbers.clear();
+    ves::xplorer::scenegraph::DCS* tempModelNodes = 
+        mModel->GetModelCADHandler()->
+        GetAssembly( mModel->GetModelCADHandler()->GetRootCADNodeID() );
+
     
     {
         ves::xplorer::scenegraph::HighlightNodeByNameVisitor 
-            highlight2( mDCS.get(), "", false, true );
+            highlight2( tempModelNodes, "", false, true );
         
         ves::xplorer::scenegraph::util::OpacityVisitor 
-            opVisitor1( mDCS.get(), false, true, 0.3f );
+            opVisitor1( tempModelNodes, false, true, 0.3f );
     }
 
     //select << "SELECT Part_Number, Description, Claims FROM Parts",
@@ -739,7 +743,7 @@ void WarrantyToolGP::CreateDBQuery( ves::open::xml::DataValuePairPtr dvp )
         m_groupedTextTextures->AddTextTexture( partNumber, tempText );
         
         ves::xplorer::scenegraph::HighlightNodeByNameVisitor 
-            highlight( mDCS.get(), partNumber, true, true, 
+            highlight( tempModelNodes, partNumber, true, true, 
             osg::Vec4( 0.57255, 0.34118, 1.0, 1.0 ) );
         
 		more = rs.moveNext();
@@ -747,7 +751,7 @@ void WarrantyToolGP::CreateDBQuery( ves::open::xml::DataValuePairPtr dvp )
     m_textTrans->addChild( m_groupedTextTextures.get() );
     
     ves::xplorer::scenegraph::HighlightNodeByNameVisitor
-        highlight( mDCS.get(), m_assemblyPartNumbers.at( 0 ), true, true,
+        highlight( tempModelNodes, m_assemblyPartNumbers.at( 0 ), true, true,
         osg::Vec4( 0.34118, 1.0, 0.57255, 1.0 ) );
     
     mCommandHandler->SendConductorMessage( "Finished DB query..." );

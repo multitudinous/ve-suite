@@ -679,6 +679,8 @@ void App::contextPreDraw()
         {            
             vpr::Guard< vpr::Mutex > val_guard( mValueLock );
             mSceneRenderToTexture->InitScene( (*sceneViewer)->getCamera() );
+            this->update();
+
             if( mRTT )
             {
                 *m_skipDraw = true;
@@ -724,11 +726,11 @@ void App::draw()
             return;
         }
         
-        if( *m_skipDraw )
+        /*if( *m_skipDraw )
         {
             *m_skipDraw = false;
             return;
-        }
+        }*/
     }
     
     //std::cout << "----------Draw-----------" << std::endl;
