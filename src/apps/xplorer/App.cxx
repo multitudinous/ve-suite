@@ -679,10 +679,11 @@ void App::contextPreDraw()
         {            
             vpr::Guard< vpr::Mutex > val_guard( mValueLock );
             mSceneRenderToTexture->InitScene( (*sceneViewer)->getCamera() );
-            this->update();
+            update();
 
             if( mRTT )
             {
+                vpr::System::msleep( 200 );  // thenth-second delay
                 *m_skipDraw = true;
             }
             *mViewportsChanged = true;
@@ -850,17 +851,7 @@ void App::draw()
     //Profile the draw call
     {
         VPR_PROFILE_GUARD_HISTORY( "App::draw sv->draw", 20 );
-        if( *m_skipDraw )
-        {
-            *m_skipDraw = false;
-            //return;
-            vpr::Guard< vpr::Mutex > sv_guard( mValueLock );
-            sv->draw();
-        }
-        else
-        {
-            sv->draw();
-        }
+        sv->draw();
     }
 
     if( glTI )
@@ -903,7 +894,7 @@ void App::update()
 {
     vprDEBUG( vesDBG, 3 ) <<  "|\tApp LatePreframe Update" 
         << std::endl << vprDEBUG_FLUSH;
-    const std::string tempCommandName = 
+    /*const std::string tempCommandName = 
         m_vjobsWrapper->GetXMLCommand()->GetCommandName();
     // This code came from osgViewer::Viewer::setSceneData
     // The resize stuff is what is critical not sure how important it is
@@ -917,7 +908,7 @@ void App::update()
         // memory for the graphics contexts that will be using it.
         getScene()->resizeGLObjectBuffers( 
             osg::DisplaySettings::instance()->getMaxNumberOfGraphicsContexts() );
-    }
+    }*/
     // Update the frame stamp with information from this frame
     //frameStamp->setFrameNumber( getFrameNumber() );
     //frameStamp->setReferenceTime( getFrameTime().secd() );
@@ -934,7 +925,7 @@ void App::update()
     
     //if( mRTT )
     {
-        mSceneRenderToTexture->Update( mUpdateVisitor.get() );
+        mSceneRenderToTexture->Update( mUpdateVisitor.get(), m_vjobsWrapper->GetXMLCommand() );
     }
     // now force a recompute of the bounding volume while we are still in
     // the read/write app phase, this should prevent the need to recompute

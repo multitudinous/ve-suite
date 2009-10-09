@@ -49,6 +49,8 @@
 #include <ves/xplorer/scenegraph/rtt/ShaderAttribute.h>
 #include <ves/xplorer/Debug.h>
 
+#include <ves/open/xml/Command.h>
+
 // ---  VR Juggler Includes --- //
 #if __VJ_version >= 2003000
 #include <vrj/Draw/OpenGL/Window.h>
@@ -94,7 +96,63 @@ SceneRenderToTexture::SceneRenderToTexture()
     mRootGroup( new osg::Group() ),
     mScaleFactor( 1 )
 {
-    ;
+    osg::ref_ptr< osgDB::ReaderWriter::Options > vertexOptions =
+        new osgDB::ReaderWriter::Options( "vertex" );
+    osg::ref_ptr< osgDB::ReaderWriter::Options > fragmentOptions =
+        new osgDB::ReaderWriter::Options( "fragment" );
+
+    try
+    {
+        m_finalShader = 
+            osgDB::readShaderFile( "glsl/final_fp.glsl", fragmentOptions.get() );
+    }
+    catch( ... )
+    {
+        std::cerr << "Could not load shader files!" << std::endl;
+    }
+    
+    try
+    {
+        m_1dxVP = 
+            osgDB::readShaderFile( "glsl/gauss_convolution_1Dx_vp.glsl",
+                                         vertexOptions.get() );
+        m_1dxFP = 
+            osgDB::readShaderFile( "glsl/gauss_convolution_1Dx_fp.glsl",
+                                         fragmentOptions.get() );
+    }
+    catch( ... )
+    {
+        std::cerr << "Could not load shader files!" << std::endl;
+    }    
+    
+    try
+    {
+        m_1dyVP = osgDB::readShaderFile( "glsl/gauss_convolution_1Dy_vp.glsl",
+                                         vertexOptions.get() );
+        m_1dyFP = osgDB::readShaderFile( "glsl/gauss_convolution_1Dy_fp.glsl",
+                                         fragmentOptions.get() );
+    }
+    catch( ... )
+    {
+        std::cerr << "Could not load shader files!" << std::endl;
+    }    
+    
+    //Setup the MRT shader to make glow work correctly
+    m_topLevelGlow = new osg::Shader();
+    std::string fragmentSource =
+        "uniform vec4 glowColor; \n"
+        
+        "void main() \n"
+        "{ \n"
+        "vec4 color = glowColor; \n"
+        "color.a = gl_Color.a; \n"
+        
+        "gl_FragData[ 0 ] = gl_Color; \n"
+        "gl_FragData[ 1 ] = color; \n"
+        "} \n";    
+    m_topLevelGlow->setType( osg::Shader::FRAGMENT );
+    m_topLevelGlow->setShaderSource( fragmentSource );
+    m_topLevelGlow->setName( "Top Level Glow" );
 }
 ////////////////////////////////////////////////////////////////////////////////
 SceneRenderToTexture::~SceneRenderToTexture()
@@ -197,6 +255,17 @@ void SceneRenderToTexture::InitScene( osg::Camera* const sceneViewCamera )
         sceneViewCamera->addChild( camera.get() );
     }
     sceneViewCamera->addChild( rttPipelines.get() );
+    
+    // make sure that existing scene graph objects are 
+    // allocated with thread safe ref/unref
+    sceneViewCamera->setThreadSafeRefUnref(true);
+    
+    // update the scene graph so that it has enough GL object buffer 
+    // memory for the graphics contexts that will be using it.
+    sceneViewCamera->resizeGLObjectBuffers( 
+                                   osg::DisplaySettings::instance()->
+                                   getMaxNumberOfGraphicsContexts() );
+    
     m_updateList.push_back( sceneViewCamera );
 
     *mCamerasConfigured = true;
@@ -213,7 +282,7 @@ osg::Camera* SceneRenderToTexture::CreatePipelineCamera(
         GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT );
     tempCamera->setClearColor( osg::Vec4( 0.0, 0.0, 1.0, 1.0 ) );
     tempCamera->setRenderTargetImplementation(
-        osg::Camera::FRAME_BUFFER_OBJECT );
+        osg::Camera::FRAME_BUFFER_OBJECT, osg::Camera::FRAME_BUFFER );
     tempCamera->setViewport( viewport );
     tempCamera->setViewMatrix( osg::Matrix::identity() );
     tempCamera->setProjectionMatrix( osg::Matrix::identity() );
@@ -279,26 +348,11 @@ osg::Camera* SceneRenderToTexture::CreatePipelineCamera(
     //clearNode->setClearMask( GL_STENCIL_BUFFER_BIT );
     //tempCamera->addChild( clearNode.get() );
 
-    //Setup the MRT shader to make glow work correctly
-    std::string fragmentSource =
-    "uniform vec4 glowColor; \n"
-
-    "void main() \n"
-    "{ \n"
-        "vec4 color = glowColor; \n"
-        "color.a = gl_Color.a; \n"
-
-        "gl_FragData[ 0 ] = gl_Color; \n"
-        "gl_FragData[ 1 ] = color; \n"
-    "} \n";
-
     osg::ref_ptr< osg::StateSet > stateset = tempCamera->getOrCreateStateSet();
-    osg::ref_ptr< osg::Shader > fragmentShader = new osg::Shader();
-    fragmentShader->setType( osg::Shader::FRAGMENT );
-    fragmentShader->setShaderSource( fragmentSource );
 
     osg::ref_ptr< osg::Program > program = new osg::Program();
-    program->addShader( fragmentShader.get() );
+    program->addShader( m_topLevelGlow.get() );
+    program->setName( "Top Level Glow" );
 
     stateset->setAttributeAndModes( program.get(),
         osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
@@ -343,11 +397,6 @@ vxsr::Processor* SceneRenderToTexture::CreatePipelineProcessor(
 #endif
 {
     //This is the code for the post-processing pipeline
-    osg::ref_ptr< osgDB::ReaderWriter::Options > vertexOptions =
-        new osgDB::ReaderWriter::Options( "vertex" );
-    osg::ref_ptr< osgDB::ReaderWriter::Options > fragmentOptions =
-        new osgDB::ReaderWriter::Options( "fragment" );
-
     vxsr::Processor* tempProcessor = new vxsr::Processor();
     tempProcessor->SetCamera( camera );
 
@@ -398,24 +447,10 @@ vxsr::Processor* SceneRenderToTexture::CreatePipelineProcessor(
 
         osg::ref_ptr< vxsr::ShaderAttribute > gaussX =
             new vxsr::ShaderAttribute();
-        osg::ref_ptr< osg::Shader > vhShader, fhShader;
-        try
-        {
-            vhShader = osgDB::readShaderFile(
-                "glsl/gauss_convolution_1Dx_vp.glsl",
-                vertexOptions.get() );
-            fhShader = osgDB::readShaderFile(
-                "glsl/gauss_convolution_1Dx_fp.glsl",
-                fragmentOptions.get() );
-        }
-        catch( ... )
-        {
-            std::cerr << "Could not load shader files!" << std::endl;
-        }
 
         //Setup horizontal blur shaders
-        gaussX->addShader( vhShader.get() );
-        gaussX->addShader( fhShader.get() );
+        gaussX->addShader( m_1dxVP.get() );
+        gaussX->addShader( m_1dxFP.get() );
         gaussX->setName( "BlurHorizontalShader" );
 
         gaussX->add( "quadScreenSize", osg::Uniform::FLOAT_VEC2 );
@@ -448,24 +483,10 @@ vxsr::Processor* SceneRenderToTexture::CreatePipelineProcessor(
 
         osg::ref_ptr< vxsr::ShaderAttribute > gaussY =
             new vxsr::ShaderAttribute();
-        osg::ref_ptr< osg::Shader > vvShader, fvShader;
-        try
-        {
-            vvShader = osgDB::readShaderFile(
-                "glsl/gauss_convolution_1Dy_vp.glsl",
-                vertexOptions.get() );
-            fvShader = osgDB::readShaderFile(
-                "glsl/gauss_convolution_1Dy_fp.glsl",
-                fragmentOptions.get() );
-        }
-        catch( ... )
-        {
-            std::cerr << "Could not load shader files!" << std::endl;
-        }
 
         //Setup vertical blur shaders
-        gaussY->addShader( vvShader.get() );
-        gaussY->addShader( fvShader.get() );
+        gaussY->addShader( m_1dyVP.get() );
+        gaussY->addShader( m_1dyFP.get() );
         gaussY->setName( "BlurVerticalShader" );
 
         gaussY->add( "quadScreenSize", osg::Uniform::FLOAT_VEC2 );
@@ -499,19 +520,9 @@ vxsr::Processor* SceneRenderToTexture::CreatePipelineProcessor(
 
         osg::ref_ptr< vxsr::ShaderAttribute > finalShader =
             new vxsr::ShaderAttribute();
-        osg::ref_ptr< osg::Shader > vShader;
-        try
-        {
-            vShader = osgDB::readShaderFile(
-                "glsl/final_fp.glsl", fragmentOptions.get() );
-        }
-        catch( ... )
-        {
-            std::cerr << "Could not load shader files!" << std::endl;
-        }
 
         //Setup vertical blur shaders
-        finalShader->addShader( vShader.get() );
+        finalShader->addShader( m_finalShader.get() );
         finalShader->setName( "FinalShader" );
 
         finalShader->add( "glowStrength", osg::Uniform::FLOAT );
@@ -1125,11 +1136,27 @@ void SceneRenderToTexture::InitializeRTT()
     *mCamerasConfigured = false;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void SceneRenderToTexture::Update( osg::NodeVisitor* updateVisitor )
+void SceneRenderToTexture::Update( osg::NodeVisitor* updateVisitor, ves::open::xml::CommandPtr tempCommand )
 {
+    const std::string tempCommandName = tempCommand->GetCommandName();
     for( std::vector< osg::Camera* >::iterator iter = m_updateList.begin(); iter != m_updateList.end(); ++iter )
     {
         (*iter)->accept( *updateVisitor );
+
+        // This code came from osgViewer::Viewer::setSceneData
+        // The resize stuff is what is critical not sure how important it is
+        if( !tempCommandName.compare( "veNetwork Update" ) )
+        {
+            // make sure that existing scene graph objects are 
+            // allocated with thread safe ref/unref
+            (*iter)->setThreadSafeRefUnref(true);
+            
+            // update the scene graph so that it has enough GL object buffer 
+            // memory for the graphics contexts that will be using it.
+            (*iter)->resizeGLObjectBuffers( 
+                osg::DisplaySettings::instance()->
+                getMaxNumberOfGraphicsContexts() );
+        }
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

@@ -37,6 +37,8 @@
 // --- VE-Suite Includes --- //
 #include "SceneRenderToTexturePtr.h"
 
+#include <ves/open/xml/CommandPtr.h>
+
 // ---  VR Juggler Includes --- //
 #include <vrj/vrjParam.h>
 #if __VJ_version >= 2003000
@@ -145,7 +147,7 @@ public:
         osg::Group* root, osgUtil::SceneView* sv, std::string& filename );
 
     //Update function to traverse 
-    void Update( osg::NodeVisitor* updateVisitor );
+    void Update( osg::NodeVisitor* updateVisitor, ves::open::xml::CommandPtr tempCommand );
 
     ///capture image callback
     void SetImageCameraCallback( bool capture, const std::string& filename );
@@ -211,7 +213,13 @@ private:
     ///The root group that everything gets added to
     ///Is the same for all contexts
     osg::ref_ptr< osg::Group > mRootGroup;
-
+    ///Shader pointers
+    osg::ref_ptr< osg::Shader > m_finalShader;
+    osg::ref_ptr< osg::Shader > m_1dxVP;
+    osg::ref_ptr< osg::Shader > m_1dxFP;
+    osg::ref_ptr< osg::Shader > m_1dyVP;
+    osg::ref_ptr< osg::Shader > m_1dyFP;
+    osg::ref_ptr< osg::Shader > m_topLevelGlow;
 };
 } //end xplorer
 } //end ves
