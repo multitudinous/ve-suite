@@ -60,7 +60,7 @@ cfdObjects::cfdObjects( void ):
         objectType( 0 ),
         cursorType( 0 ),
         scale( 0 ),
-        m_gpuTools( true )
+        m_gpuTools( false )
 {
     for( size_t i = 0; i < 3; ++i )
     {
