@@ -20,4 +20,9 @@ To run VE-Suite, \
 \
   1. Navigate to your /Applications/VE-Suite directory.\
 \
-  2. Double-click on the VE-Suite icon.}]]></resource></locale></resources><flags/><item type="file">01include.xml</item><item type="file">02lib.xml</item><item type="file">03bin.xml</item><item type="file">04library.xml</item><item type="file">05ve.xml</item><item type="file">06dependencies.xml</item><item type="file">07bin.xml</item><item type="file">08lib.xml</item><item type="file">09share.xml</item><item type="file">10examples.xml</item><mod>properties.customizeOption</mod><mod>properties.userDomain</mod><mod>properties.title</mod><mod>description</mod><mod>properties.systemDomain</mod><mod>properties.anywhereDomain</mod></pkmkdoc>
+  2. Double-click on the VE-Suite icon.\
+\
+  3. Set your working directory to \
+        /Applications/VE-Suite/examples.\
+\
+  4. Click the "Launch VE Suite" button.}]]></resource></locale></resources><flags/><item type="file">01include.xml</item><item type="file">02lib.xml</item><item type="file">03bin.xml</item><item type="file">04library.xml</item><item type="file">05ve.xml</item><item type="file">06dependencies.xml</item><item type="file">07bin.xml</item><item type="file">08lib.xml</item><item type="file">09share.xml</item><item type="file">10examples.xml</item><mod>properties.customizeOption</mod><mod>properties.userDomain</mod><mod>properties.title</mod><mod>description</mod><mod>properties.systemDomain</mod><mod>properties.anywhereDomain</mod></pkmkdoc>
