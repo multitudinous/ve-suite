@@ -250,6 +250,11 @@ void PhysicsSimulator::InitializePhysicsSimulation()
     m_debugDrawerGroup->addChild( m_debugDrawer->getSceneGraph() );
     m_debugDrawerGroup->setNodeMask( 0 );
     //CreateGroundPlane();
+    
+    //Setup multi threaded work
+    //osgBullet::PhysicsThread pt( bulletWorld, &tBuf );
+    //pt.setProcessorAffinity( 0 );
+    //pt.start();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsSimulator::UpdatePhysics( float dt )
@@ -276,6 +281,9 @@ void PhysicsSimulator::UpdatePhysics( float dt )
 
     //Now update the simulation by all bullet objects new positions
     mDynamicsWorld->stepSimulation( dt );
+    
+    //osgBullet::TripleBufferMotionStateUpdate( m_motionStateList, 
+    //                                         &m_tripleDataBuffer );
 
     //Now that the character has been moved AND the simulation has calculated
     //the new position update the camera matrix with the new view data

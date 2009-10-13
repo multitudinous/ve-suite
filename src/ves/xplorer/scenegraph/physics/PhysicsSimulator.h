@@ -46,6 +46,9 @@
 #include <osg/ref_ptr>
 #include <osg/Vec3>
 
+#include <osgBullet/TripleBuffer.h>
+#include <osgBullet/MotionState.h>
+
 namespace osg
 {
 class Transform;
@@ -222,6 +225,11 @@ private:
     ///A group node to better control when debug info is displayed for
     ///the osgBullet::GLDebugDrawer
     osg::ref_ptr< osg::Group > m_debugDrawerGroup;
+    
+    ///Tools for running the physics simulation on a seperate thread
+    osgBullet::TripleBuffer m_tripleDataBuffer;
+    ///List of every motion state created
+    osgBullet::MotionStateList m_motionStateList;
 };
 }
 }
