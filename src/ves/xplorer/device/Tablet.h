@@ -77,8 +77,13 @@ class VE_XPLORER_EXPORTS Tablet : public Device
 public:
     ///Constructor
     Tablet();
+
     ///Destructor
     virtual ~Tablet();
+
+    ///
+    ///\return
+    virtual Tablet* AsTablet();
 
     ///Initialize some variables in the class
     virtual void Initialize();

@@ -89,6 +89,10 @@ public:
     ///Destructor
     ~KeyboardMouse();
 
+    ///
+    ///\return
+    virtual KeyboardMouse* AsKeyboardMouse();
+
     ///Processes keyboard events
     virtual void ProcessEvents();
 

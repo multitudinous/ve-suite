@@ -79,7 +79,7 @@ using namespace ves::open::xml;
 ////////////////////////////////////////////////////////////////////////////////
 Wand::Wand()
     :
-    Device(),
+    Device( WAND ),
     subzeroFlag( 0 ),
     rotationFlag( 1 ),
     distance( 1000 ),
@@ -108,6 +108,11 @@ Wand::Wand()
     m_beamLineSegment = new osgUtil::LineSegmentIntersector(
         osg::Vec3( 0.0, 0.0, 0.0 ), osg::Vec3( 0.0, 0.0, 0.0 ) );
     Initialize();
+}
+////////////////////////////////////////////////////////////////////////////////
+Wand* Wand::AsWand()
+{
+    return this;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::Initialize()

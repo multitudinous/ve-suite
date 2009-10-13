@@ -75,28 +75,37 @@ DeviceHandler::DeviceHandler()
     mResetCenterPointPosition( 0.0, 0.1, 0.0 ),
     mCenterPoint( mResetCenterPointPosition ),
     mCenterPointThreshold( 0.1 ),
-    mCenterPointJump( 10.0 )
+    mCenterPointJump( 10.0 ),
+    m_deviceBeingProcessed( NULL )
 {
-    //Initialize Devices
-    mKMDevice = new device::KeyboardMouse();
-    mKMDevice->Enable();
-    mWandDevice = new device::Wand();
-    mWandDevice->Enable();
-    mTabletDevice = new device::Tablet();
-    mTabletDevice->Enable();
-    mGlovesDevice = new device::Gloves();
+    //Initialize glove device
+    device::Device* device( NULL );
+    device = new device::Gloves();
+    m_deviceMap[ device::Device::GLOVES ] = device;
 
-    mDevices[ "KeyboardMouse" ] = mKMDevice;
-    mDevices[ "Wand" ] = mWandDevice;
-    mDevices[ "Tablet" ] = mTabletDevice;
-    mDevices[ "Gloves" ] = mGlovesDevice;
-    
+    //Initialize keyboard mouse device
+    device = new device::KeyboardMouse();
+    device->Enable();
+    m_deviceMap[ device::Device::KEYBOARD_MOUSE ] = device;
+
+    //Initialize tablet device
+    device = new device::Wand();
+    device->Enable();
+    m_deviceMap[ device::Device::TABLET ] = device;
+
+    //Initialize eand device
+    device = new device::Tablet();
+    device->Enable();
+    m_deviceMap[ device::Device::WAND ] = device;
+
+    device = NULL;
+
     //Set properties in Devices
     scenegraph::CharacterController* characterController =
         scenegraph::SceneManager::instance()->GetCharacterController();
     characterController->Initialize();
-    std::map< const std::string, device::Device* >::const_iterator itr;
-    for( itr = mDevices.begin(); itr != mDevices.end(); ++itr )
+    DeviceMap::const_iterator itr = m_deviceMap.begin();
+    for( itr; itr != m_deviceMap.end(); ++itr )
     {
         device::Device* device = itr->second;
         device->SetCenterPoint( &mCenterPoint );
@@ -123,22 +132,21 @@ DeviceHandler::DeviceHandler()
 ////////////////////////////////////////////////////////////////////////////////
 DeviceHandler::~DeviceHandler()
 {
-    //Delete mDevices in map
-    std::map< const std::string, device::Device* >::iterator itr;
-    for( itr = mDevices.begin(); itr != mDevices.end(); ++itr )
+    //Delete m_deviceMap in map
+    DeviceMap::iterator itr = m_deviceMap.begin();
+    for( itr; itr != m_deviceMap.end(); ++itr )
     {
         delete itr->second;
     }
 
-    mDevices.clear();
+    m_deviceMap.clear();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DeviceHandler::EnableDevice(
-    const std::string& deviceName, const bool& enable )
+    const device::Device::Type& type, const bool& enable )
 {
-    std::map< const std::string, device::Device* >::const_iterator itr =
-        mDevices.find( deviceName );
-    if( itr != mDevices.end() )
+    DeviceMap::const_iterator itr = m_deviceMap.find( type );
+    if( itr != m_deviceMap.end() )
     {
         device::Device* device = itr->second;
         device->Enable( enable );
@@ -162,8 +170,8 @@ void DeviceHandler::ExecuteCommands()
     }
 
     event::EventHandler* tempEvent = ehItr->second;
-    std::map< const std::string, device::Device* >::const_iterator itr;
-    for( itr = mDevices.begin(); itr != mDevices.end(); ++itr )
+    DeviceMap::const_iterator itr = m_deviceMap.begin();
+    for( itr; itr != m_deviceMap.end(); ++itr )
     {
         device::Device* device = itr->second;
         if( device->IsEnabled() )
@@ -175,9 +183,21 @@ void DeviceHandler::ExecuteCommands()
 }
 ////////////////////////////////////////////////////////////////////////////////
 device::Device* const DeviceHandler::GetDevice(
-    const std::string& deviceName ) const
+    const device::Device::Type& type ) const
 {
-    return mDevices.find( deviceName )->second;
+    DeviceMap::const_iterator itr = m_deviceMap.find( type );
+    if( itr == m_deviceMap.end() )
+    {
+        //Error output
+        return NULL;
+    }
+
+    return itr->second;
+}
+////////////////////////////////////////////////////////////////////////////////
+device::Device* const DeviceHandler::GetDeviceBeingProcessed() const
+{
+    return m_deviceBeingProcessed;
 }
 ////////////////////////////////////////////////////////////////////////////////
 scenegraph::DCS* const DeviceHandler::GetActiveDCS() const
@@ -203,15 +223,17 @@ void DeviceHandler::ProcessDeviceEvents()
     ExecuteCommands();
 
     //Process device events
-    std::map< const std::string, device::Device* >::const_iterator itr;
-    for( itr = mDevices.begin(); itr != mDevices.end(); ++itr )
+    DeviceMap::const_iterator itr = m_deviceMap.begin();
+    for( itr; itr != m_deviceMap.end(); ++itr )
     {
-        device::Device* device = itr->second;
-        if( device->IsEnabled() )
+        m_deviceBeingProcessed = itr->second;
+        if( m_deviceBeingProcessed->IsEnabled() )
         {
-            device->ProcessEvents();
+            m_deviceBeingProcessed->ProcessEvents();
         }
     }
+
+    m_deviceBeingProcessed = NULL;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DeviceHandler::ResetCenterPoint()
@@ -278,8 +300,8 @@ void DeviceHandler::SetResetWorldPosition(
     mResetPosition = pos;
     
     /*
-    std::map< const std::string, device::Device* >::const_iterator itr;
-    for( itr = mDevices.begin(); itr != mDevices.end(); ++itr )
+    DeviceMap::const_iterator itr;
+    for( itr = m_deviceMap.begin(); itr != m_deviceMap.end(); ++itr )
     {
         itr->second->SetResetWorldPosition( mResetAxis, mResetPosition );
     }

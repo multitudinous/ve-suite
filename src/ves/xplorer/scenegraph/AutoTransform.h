@@ -37,10 +37,11 @@
 // --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
 
+#include <ves/xplorer/scenegraph/GLTransformInfoPtr.h>
+
 // --- OSG Includes --- //
 #include <osg/Transform>
 #include <osg/Quat>
-#include <osg/Viewport>
 
 namespace ves
 {
@@ -69,6 +70,9 @@ public:
         const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
 
     ///
+    //META_Node( ves::xplorer::scenegraph, AutoTransform );
+
+    ///
     enum AutoRotateMode
     {
         NO_ROTATION,
@@ -80,14 +84,8 @@ public:
     ///\param nv
     virtual void accept( osg::NodeVisitor& nv );
 
-    /*
     ///
-    virtual AutoTransform* asAutoTransform();
-
-    ///
-    virtual const AutoTransform* asAutoTransform() const;
-    */
-
+    ///\return
     virtual const char* className() const;
 
     ///
@@ -106,12 +104,14 @@ public:
     ///
     ///\param matrix
     ///\param nv
+    ///\return
     virtual bool computeLocalToWorldMatrix(
         osg::Matrix& matrix, osg::NodeVisitor* nv ) const;
 
     ///
     ///\param matrix
     ///\param nv
+    ///\return
     virtual bool computeWorldToLocalMatrix(
         osg::Matrix& matrix, osg::NodeVisitor* nv ) const;
 
@@ -120,18 +120,18 @@ public:
     AutoRotateMode GetAutoRotateMode() const;
 
     ///
+    ///\return
     bool GetAutoScaleToScreen() const;
 
     ///
-    //double GetAutoScaleTransitionWidthRatio() const;
+    //scenegraph::GLTransformInfoPtr GetCurrentGLTransformInfo() const;
 
     ///
-    //double GetAutoUpdateEyeMovementTolerance() const;
-
-    ///
+    ///\return
     double GetMaximumScale() const;
 
     ///
+    ///\return
     double GetMinimumScale() const;
 
     ///
@@ -176,46 +176,52 @@ public:
     void SetAutoScaleToScreen( bool autoScaleToScreen );
 
     ///
-    ///\param ratio
-    //void SetAutoScaleTransitionWidthRatio( double ratio );
+    ///\param
+    virtual void SetCurrentGLTransformInfo(
+        GLTransformInfoPtr currentGLTransformInfo );
 
     ///
-    ///\param tolerance
-    //void SetAutoUpdateEyeMovementTolerance( double tolerance );
-
-    ///
+    ///\param maximumScale
     void SetMaximumScale( double maximumScale );
 
     ///
+    ///\param minimumScale
     void SetMinimumScale( double minimumScale );
 
     ///
+    ///\param pivotPoint
     void SetPivotPoint( const osg::Vec3d& pivotPoint );
 
     ///
+    ///\param position
     void SetPosition( const osg::Vec3d& position );
 
     ///
+    ///\param rotation
     void SetRotation( const osg::Quat& rotation );
 
     ///
+    ///\param scale
     void SetScale( const double& scale );
 
     ///
+    ///\param scale
     void SetScale( const osg::Vec3d& scale );
 
 protected:
     ///Destructor
     virtual ~AutoTransform();
 
+    ///
+    GLTransformInfoPtr m_currentGLTransformInfo;
+
 private:
     ///
-    void computeMatrix() const;
-
-    ///
+    ///\param scale
     void setScale( const double& scale );
 
     ///
+    ///\param scale
     void setScale( const osg::Vec3d& scale );
 
     ///
@@ -227,26 +233,14 @@ private:
     ///
     mutable bool _firstTimeToInitEyePoint;
 
-    ///
+    /// 
     mutable bool _matrixDirty;
-
-    ///
-    //double _autoScaleTransitionWidthRatio;
-
-    ///
-    //double _autoUpdateEyeMovementTolerance;
 
     ///
     double _maximumScale;
 
     ///
     double _minimumScale;
-
-    ///
-    //mutable osg::Viewport::value_type _previousWidth;
-
-    ///
-    //mutable osg::Viewport::value_type _previousHeight;
 
     ///
     mutable osg::Vec3 _previousEyePoint;

@@ -54,9 +54,11 @@ using namespace ves::xplorer;
 using namespace ves::xplorer::device;
 
 ////////////////////////////////////////////////////////////////////////////////
-Device::Device()
+Device::Device( const Device::Type& type )
     :
+    GlobalBase(),
     m_enabled( false ),
+    m_type( type ),
     mCenterPoint( NULL ),
     mCenterPointThreshold( NULL ),
     mCenterPointJump( NULL ),
@@ -70,9 +72,46 @@ Device::Device()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
+Device::Device( const Device& device )
+    :
+    GlobalBase( device ),
+    m_type( device.m_type ),
+    m_physicsSimulator( device.m_physicsSimulator ),
+    m_sceneManager( device.m_sceneManager ),
+    m_characterController( device.m_characterController ),
+    m_manipulatorManager( device.m_manipulatorManager )
+{
+    ;
+}
+////////////////////////////////////////////////////////////////////////////////
 Device::~Device()
 {
     ;
+}
+////////////////////////////////////////////////////////////////////////////////
+Gloves* Device::AsGloves()
+{
+    return NULL;
+}
+////////////////////////////////////////////////////////////////////////////////
+KeyboardMouse* Device::AsKeyboardMouse()
+{
+    return NULL;
+}
+////////////////////////////////////////////////////////////////////////////////
+Tablet* Device::AsTablet()
+{
+    return NULL;
+}
+////////////////////////////////////////////////////////////////////////////////
+Wand* Device::AsWand()
+{
+    return NULL;
+}
+////////////////////////////////////////////////////////////////////////////////
+const Device::Type& Device::GetType() const
+{
+    return m_type;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Device::SetVECommand( ves::open::xml::CommandPtr command )

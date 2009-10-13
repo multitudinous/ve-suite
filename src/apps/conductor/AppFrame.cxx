@@ -2030,30 +2030,30 @@ void AppFrame::ChangeDevice( wxCommandEvent& event )
 {
     int deviceMenuItem = event.GetId();
     
-    std::vector< std::string > data;
+    std::vector< long > data;
     switch( deviceMenuItem )
     {
-    case APPFRAME_KEYBOARD_MOUSE:
+    case APPFRAME_GLOVES:
     {
-        data.push_back( "KeyboardMouse" );
+        data.push_back( 1 );
 
         break;
     }
-    case APPFRAME_WAND:
+    case APPFRAME_KEYBOARD_MOUSE:
     {
-        data.push_back( "Wand" );
+        data.push_back( 2 );
 
         break;
     }
     case APPFRAME_TABLET:
     {
-        data.push_back( "Tablet" );
+        data.push_back( 3 );
 
         break;
     }
-    case APPFRAME_GLOVES:
+    case APPFRAME_WAND:
     {
-        data.push_back( "Gloves" );
+        data.push_back( 4 );
 
         break;
     }
@@ -2066,11 +2066,11 @@ void AppFrame::ChangeDevice( wxCommandEvent& event )
 
     if( xplorerDeviceMenu->IsChecked( deviceMenuItem ) )
     {
-        data.push_back( "true" );
+        data.push_back( 1 );
     }
     else
     {
-        data.push_back( "false" );
+        data.push_back( 0 );
     }
     
     //Create the command and data value pairs

@@ -51,7 +51,7 @@ class btRigidBody;
 class btTypedConstraint;
 class btPoint2PointConstraint;
 
-// --- C/C++ Includes --- //
+// --- STL Includes --- //
 #include <set>
 #include <map>
 

@@ -653,8 +653,8 @@ void cfdExecutive::ParseSystem( ves::open::xml::model::SystemPtr system,
             temp->SetSceneManager( ves::xplorer::scenegraph::SceneManager::instance() );
             temp->SetResourceManager( ves::xplorer::scenegraph::ResourceManager::instance() );
             temp->SetCommandHandler( ves::xplorer::CommandHandler::instance() );
-            temp->SetInteractionDevice( ves::xplorer::DeviceHandler::instance()
-                                       ->GetDevice( "KeyboardMouse" ) );
+            temp->SetInteractionDevice( DeviceHandler::instance()->GetDevice(
+                device::Device::KEYBOARD_MOUSE ) );
             
             temp->InitializeNode( parentNode );
             temp->AddSelfToSG();

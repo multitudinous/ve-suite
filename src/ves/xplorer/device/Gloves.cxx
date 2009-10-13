@@ -72,7 +72,7 @@ using namespace ves::open::xml;
 ////////////////////////////////////////////////////////////////////////////////
 Gloves::Gloves()
     :
-    Device(),
+    Device( GLOVES ),
     subzeroFlag( 0 ),
     rotationFlag( 1 ),
     distance( 1000 ),
@@ -143,6 +143,11 @@ Gloves::Gloves()
         ves::xplorer::scenegraph::SceneManager::instance()->GetRootNode();
 
     Initialize();
+}
+////////////////////////////////////////////////////////////////////////////////
+Gloves* Gloves::AsGloves()
+{
+    return this;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Gloves::Enable( const bool& enable )

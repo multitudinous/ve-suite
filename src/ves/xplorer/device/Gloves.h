@@ -104,6 +104,10 @@ public:
     virtual ~Gloves();
 
     ///
+    ///\return
+    virtual Gloves* AsGloves();
+
+    ///
     ///\param
     virtual void Enable( const bool& enable = true );
 

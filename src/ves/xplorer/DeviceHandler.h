@@ -41,6 +41,8 @@
 
 #include <ves/xplorer/scenegraph/DCS.h>
 
+#include <ves/xplorer/device/Device.h>
+
 // --- vrJuggler Includes --- //
 #include <vpr/Util/Singleton.h>
 
@@ -95,7 +97,7 @@ public:
     ///
     ///\param deviceName
     ///\param enable
-    void EnableDevice( const std::string& deviceName, const bool& enable );
+    void EnableDevice( const device::Device::Type& type, const bool& enable );
 
     ///Execute navigation commands from active device
     void ExecuteCommands();
@@ -106,7 +108,12 @@ public:
     ///Get a device
     ///\param deviceName The device name
     ///\return Get the device being requested
-    device::Device* const GetDevice( const std::string& deviceName ) const;
+    device::Device* const GetDevice( const device::Device::Type& type ) const;
+
+    ///Get the device currently being processed
+    ///Note: Will only return valid device during ProcessDeviceEvents() function
+    ///\return Get the device being processed
+    device::Device* const GetDeviceBeingProcessed() const;
 
     ///Get the reset location of the world
     ///\param quat
@@ -176,7 +183,8 @@ private:
     std::string mDeviceMode;
 
     ///A map of all the devices
-    std::map< const std::string, device::Device* > mDevices;
+    typedef std::map< const device::Device::Type, device::Device* > DeviceMap;
+    DeviceMap m_deviceMap;
 
     ///A map of all the event handlers
     std::map< std::string, event::EventHandler* > mEventHandlers;
@@ -187,17 +195,8 @@ private:
     ///The current selected DCS
     osg::ref_ptr< scenegraph::DCS > mSelectedDCS;
     
-    ///Tablet convenience device pointer
-    device::Device* mTabletDevice;
-
-    ///Tablet convenience device pointer
-    device::Device* mGlovesDevice;
-
-    ///Tablet convenience device pointer
-    device::Device* mWandDevice;
-
-    ///Tablet convenience device pointer
-    device::Device* mKMDevice;
+    ///
+    device::Device* m_deviceBeingProcessed;
 
 };
 } //end xplorer

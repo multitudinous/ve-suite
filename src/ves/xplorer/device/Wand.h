@@ -96,8 +96,13 @@ class VE_XPLORER_EXPORTS Wand : public Device
 public:
     ///Constructor
     Wand();
+
     ///Destructor
     virtual ~Wand();
+
+    ///
+    ///\return
+    virtual Wand* AsWand();
 
     ///Initialize some variables in the class
     virtual void Initialize();

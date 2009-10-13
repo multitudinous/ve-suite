@@ -82,30 +82,34 @@ void ViewEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* modelHandl
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void ViewEventHandler::Execute( const ves::open::xml::XMLObjectPtr& veXMLObject )
+void ViewEventHandler::Execute(
+    const ves::open::xml::XMLObjectPtr& veXMLObject )
 {
-    CommandPtr command = boost::dynamic_pointer_cast<ves::open::xml::Command>( veXMLObject );
+    ves::open::xml::CommandPtr command =
+        boost::dynamic_pointer_cast< ves::open::xml::Command >( veXMLObject );
+
+    ves::open::xml::DataValuePairPtr viewDVP = command->GetDataValuePair( "View" );
+    if( !viewDVP )
+    {
+        return;
+    }
 
     std::string view;
-    command->GetDataValuePair( "View" )->GetData( view );
-
+    viewDVP->GetData( view );
+    device::KeyboardMouse* keyboardMouse =
+        DeviceHandler::instance()->GetDevice(
+            device::Device::KEYBOARD_MOUSE )->AsKeyboardMouse();
     if( view == "Frame All" )
     {
-        static_cast< ves::xplorer::device::KeyboardMouse* >
-        ( ves::xplorer::DeviceHandler::instance()->
-          GetDevice( "KeyboardMouse" ) )->FrameAll();
+        keyboardMouse->FrameAll();
     }
     else if( view == "Frame Selection" )
     {
-        static_cast< ves::xplorer::device::KeyboardMouse* >
-        ( ves::xplorer::DeviceHandler::instance()->
-          GetDevice( "KeyboardMouse" ) )->FrameSelection();
+        keyboardMouse->FrameSelection();
     }
     else if( view == "Reset" )
     {
-        static_cast< ves::xplorer::device::KeyboardMouse* >
-        ( ves::xplorer::DeviceHandler::instance()->
-          GetDevice( "KeyboardMouse" ) )->ResetTransforms();
+        keyboardMouse->ResetTransforms();
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

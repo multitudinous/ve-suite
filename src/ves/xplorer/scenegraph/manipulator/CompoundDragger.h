@@ -133,6 +133,11 @@ public:
     ///
     virtual void SetConstraintMap( ConstraintMap& constraintMap );
 
+    ///
+    ///\param
+    virtual void SetCurrentGLTransformInfo(
+        GLTransformInfoPtr currentGLTransformInfo );
+
     ///Sets the transformation modes enabled on the manipulator
     void SetEnabledModes( TransformationType::Enum value );
 

@@ -83,6 +83,11 @@ class ManipulatorManager;
 
 namespace device
 {
+class Gloves;
+class KeyboardMouse;
+class Tablet;
+class Wand;
+
 /*!\file Device.h
  * Device API
  */
@@ -93,11 +98,44 @@ namespace device
 class VE_XPLORER_EXPORTS Device : public GlobalBase
 {
 public:
+    ///
+    enum Type
+    {
+        NONE = 0,
+        GLOVES = 1,
+        KEYBOARD_MOUSE = 2,
+        TABLET = 3,
+        WAND = 4
+    };
+
     ///Constructor
-    Device();
+    Device( const Device::Type& type = NONE );
+
+    ///Copy Constructor
+    Device( const Device& device );
 
     ///Destructor
     virtual ~Device();
+
+    ///
+    ///\return
+    virtual Gloves* AsGloves();
+
+    ///
+    ///\return
+    virtual KeyboardMouse* AsKeyboardMouse();
+
+    ///
+    ///\return
+    virtual Tablet* AsTablet();
+
+    ///
+    ///\return
+    virtual Wand* AsWand();
+
+    ///
+    ///\return
+    const Device::Type& GetType() const;
 
     ///Processes device events
     ///This should be pure virtual, but isn't because of GlobalBase
@@ -155,6 +193,9 @@ protected:
 
     ///
     bool m_enabled;
+
+    ///enum
+    const Device::Type m_type;
 
     ///Triggers a center point jump after this distance has been breached
     ///Do not allocate memory 'new' for this pointer

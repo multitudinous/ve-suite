@@ -38,6 +38,7 @@
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/LocalToWorldNodePath.h>
+#include <ves/xplorer/scenegraph/GLTransformInfo.h>
 
 #include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
 
@@ -639,18 +640,19 @@ const osg::Plane Dragger::GetPlane( const bool& parallel ) const
     osg::Plane plane;
     if( parallel )
     {
-        plane.set(
-            m_rootDragger->GetPreviousEyePoint() - m_rootDragger->GetPosition(),
-            m_rootDragger->GetPosition() );
+        //If rotate to screen
+        osg::Vec3d t, s;
+        osg::Quat r, so;
+        m_currentGLTransformInfo->GetOSGModelViewMatrix().decompose(
+            t, r, s, so );
+        osg::Vec3d normal = GetUnitAxis() * osg::Matrix::rotate( r.inverse() );
+        normal.normalize();
+        plane.set( normal, m_rootDragger->GetPosition() );
 
-        //osg::Vec3d translation;
-        //osg::Quat rotation;
-        //osg::Vec3d scale;
-        //osg::Quat so;
-        //cs->getModelViewMatrix()->decompose(
-            //translation, rotation, scale, so );
-
-        //SetRotation( rotation.inverse() );
+        //If rotate to eye
+        //plane.set(
+            //m_rootDragger->GetPreviousEyePoint() - m_rootDragger->GetPosition(),
+            //m_rootDragger->GetPosition() );
     }
     else
     {

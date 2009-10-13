@@ -90,19 +90,11 @@ void DeviceEventHandler::Execute(
         return;
     }
 
-    std::vector< std::string > data;
+    std::vector< long > data;
     deviceDVP->GetData( data );
-    bool enable;
-    if( data.back() == "true" )
-    {
-        enable = true;
-    }
-    else
-    {
-        enable = false;
-    }
-
-    DeviceHandler::instance()->EnableDevice( data.front(), enable );
+    device::Device::Type type =
+        static_cast< device::Device::Type >( data.front() );
+    DeviceHandler::instance()->EnableDevice( type, data.back() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 DeviceEventHandler& DeviceEventHandler::operator=(

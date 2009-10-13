@@ -47,9 +47,9 @@ TranslatePan::TranslatePan()
     Dragger( TransformationType::TRANSLATE_PAN )
 {
     //If desktop mode
-    //SetAutoRotateMode( AutoTransform::ROTATE_TO_SCREEN );
+    SetAutoRotateMode( AutoTransform::ROTATE_TO_SCREEN );
     //If cave mode
-    SetAutoRotateMode( AutoTransform::ROTATE_TO_CAMERA );
+    //SetAutoRotateMode( AutoTransform::ROTATE_TO_CAMERA );
 
     osg::ref_ptr< osg::StateSet > stateSet = getOrCreateStateSet();
     stateSet->setRenderBinDetails( 11, std::string( "RenderBin" ) );

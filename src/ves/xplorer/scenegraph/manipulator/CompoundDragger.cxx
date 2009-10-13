@@ -35,6 +35,8 @@
 #include <ves/xplorer/scenegraph/manipulator/CompoundDragger.h>
 #include <ves/xplorer/scenegraph/manipulator/Rotate.h>
 
+#include <ves/xplorer/scenegraph/GLTransformInfo.h>
+
 using namespace ves::xplorer::scenegraph::manipulator;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -271,6 +273,17 @@ void CompoundDragger::SetConstraintMap( ConstraintMap& constraintMap )
     }
 
     Dragger::SetConstraintMap( constraintMap );
+}
+////////////////////////////////////////////////////////////////////////////////
+void CompoundDragger::SetCurrentGLTransformInfo(
+    ves::xplorer::scenegraph::GLTransformInfoPtr currentGLTransformInfo )
+{
+    for( unsigned int i = 0; i < getNumChildren(); ++i )
+    {
+        GetChild( i )->SetCurrentGLTransformInfo( currentGLTransformInfo );
+    }
+
+    Dragger::SetCurrentGLTransformInfo( currentGLTransformInfo );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CompoundDragger::SetEnabledModes( TransformationType::Enum value )

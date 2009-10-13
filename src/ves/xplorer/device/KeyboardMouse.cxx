@@ -126,7 +126,7 @@ using namespace ves::xplorer::device;
 ////////////////////////////////////////////////////////////////////////////////
 KeyboardMouse::KeyboardMouse()
     :
-    Device(),
+    Device( KEYBOARD_MOUSE ),
 
     mKeyNone( false ),
     mKeyShift( false ),
@@ -189,6 +189,11 @@ KeyboardMouse::KeyboardMouse()
 KeyboardMouse::~KeyboardMouse()
 {
     ;
+}
+////////////////////////////////////////////////////////////////////////////////
+KeyboardMouse* KeyboardMouse::AsKeyboardMouse()
+{
+    return this;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::SetStartEndPoint(
@@ -1781,6 +1786,8 @@ bool KeyboardMouse::SetCurrentGLTransformInfo(
         return false;
     }
 
+    scenegraph::manipulator::TransformManipulator* sceneManipulator =
+        m_manipulatorManager.GetSceneManipulator();
     vrj::ViewportPtr viewport;
     //Iterate over the viewports
     for( unsigned int i = 0; i < display->getNumViewports(); ++i )
@@ -1816,6 +1823,9 @@ bool KeyboardMouse::SetCurrentGLTransformInfo(
             ( mX <= viewportOriginX + viewportWidth ) &&
             ( mY <= viewportOriginY + viewportHeight ) )
         {
+            sceneManipulator->SetCurrentGLTransformInfo(
+                m_currentGLTransformInfo );
+
             return true;
         }
     }
