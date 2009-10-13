@@ -44,6 +44,7 @@ namespace osg
 {
 class Texture;
 class FrameBufferObject;
+class Camera;
 }
 
 namespace ves
@@ -73,7 +74,7 @@ public:
 
     ///Get framebuffer object used by this ppu
     ///\return
-    osg::FrameBufferObject* GetFrameBufferObject();
+    //osg::FrameBufferObject* GetFrameBufferObject();
 
     ///The types can be used to specify the type of the output texture
     enum TextureType
@@ -128,6 +129,7 @@ protected:
 private:
     ///Framebuffer object where results are written
     osg::ref_ptr< osg::FrameBufferObject > mFBO;
+    osg::ref_ptr< osg::Camera > m_fboCamera;
 
     ///Output texture type
     TextureType mOutputType;

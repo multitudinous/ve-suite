@@ -88,6 +88,7 @@ UnitInOut::UnitInOut()
     :
     Unit(),
     mFBO( new osg::FrameBufferObject() ),
+    //m_fboCamera( new osg::Camera() ),
     mOutputType( TEXTURE_2D ),
     mOutputInternalFormat( GL_RGBA16F_ARB )
 {
@@ -98,6 +99,7 @@ UnitInOut::UnitInOut( const UnitInOut& unitInOut, const osg::CopyOp& copyop )
     :
     Unit( unitInOut, copyop ),
     mFBO( unitInOut.mFBO ),
+    //m_fboCamera( unitInOut.m_fboCamera ),
     mOutputType( unitInOut.mOutputType ),
     mOutputInternalFormat( unitInOut.mOutputInternalFormat )
 {
@@ -127,10 +129,10 @@ void UnitInOut::Initialize()
     AssignFBO();
 }
 ////////////////////////////////////////////////////////////////////////////////
-osg::FrameBufferObject* UnitInOut::GetFrameBufferObject()
+/*osg::FrameBufferObject* UnitInOut::GetFrameBufferObject()
 {
     return mFBO.get();
-}
+}*/
 ////////////////////////////////////////////////////////////////////////////////
 void UnitInOut::SetOutputTextureType( UnitInOut::TextureType textureType )
 {
@@ -280,6 +282,17 @@ void UnitInOut::AssignOutputTexture()
             mFBO->setAttachment( osg::Camera::BufferComponent(
                 osg::Camera::COLOR_BUFFER0 ),
                 osg::FrameBufferAttachment( texture2D ) );
+            /*m_fboCamera->setRenderOrder( osg::Camera::PRE_RENDER );
+            m_fboCamera->setReferenceFrame( osg::Camera::ABSOLUTE_RF );
+            m_fboCamera->setViewMatrix( osg::Matrix::identity() );
+            m_fboCamera->setProjectionMatrix( osg::Matrix::identity() );
+            m_fboCamera->setClearMask( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT );
+            m_fboCamera->setRenderTargetImplementation( osg::Camera::FRAME_BUFFER_OBJECT );
+            m_fboCamera->setClearColor( osg::Vec4( 0.0, 1.0, 1.0, 1.0 ) );
+            m_fboCamera->attach( osg::Camera::COLOR_BUFFER0, texture2D );
+            m_fboCamera->setViewport( mViewport );
+            //m_fboCamera->setComputeNearFarMode(
+            //                                  osg::CullSettings::COMPUTE_NEAR_FAR_USING_BOUNDING_VOLUMES );*/
             return;
         }
 
@@ -297,5 +310,6 @@ void UnitInOut::AssignFBO()
     getOrCreateStateSet()->setAttribute(
         mFBO.get(),
         osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+    //addChild( m_fboCamera.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
