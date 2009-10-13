@@ -38,6 +38,7 @@
 // --- OSG Includes --- //
 #include <osg/CullStack>
 #include <osg/Notify>
+#include <osg/FrameStamp>
 #include <osg/io_utils>
 
 #include <osgUtil/CullVisitor>
@@ -113,29 +114,62 @@ void AutoTransform::accept( osg::NodeVisitor& nv )
             dynamic_cast< osgUtil::IntersectionVisitor* >( &nv );
         if( iv && m_currentGLTransformInfo != GLTransformInfoPtr() )
         {
+            const osg::Matrixd& modelViewMatrix =
+                m_currentGLTransformInfo->GetOSGModelViewMatrix();
+            const osg::Matrixd& projectionMatrix =
+                m_currentGLTransformInfo->GetOSGProjectionMatrix();
+            const osg::Matrixd windowMatrix =
+                m_currentGLTransformInfo->GetOSGWindowMatrix();
+
+            osg::Vec3d eye, center, up;
+            modelViewMatrix.getLookAt( eye, center, up );
+
             if( _autoScaleToScreen )
             {
-                //Need code to set pixel size based off distance from screen
-                //Flat screen mode
+                //osg::Matrixd scaleView;
+                if( 1 )
+                {
+                    double left, right, bottom, top, near, far;
+                    projectionMatrix.getFrustum( left, right, bottom, top, near, far );
+                    osg::Matrixd ortho =
+                        osg::Matrixd::ortho2D( left, right, bottom, top );
+                    osg::Matrixd mvpwMatrix =
+                        modelViewMatrix * ortho * windowMatrix;
 
-                //This is code to set pixel size based off distance from eye
-                //Cave mode
-                osg::Matrixd modelViewMatrix =
-                    m_currentGLTransformInfo->GetOSGModelViewMatrix();
-                modelViewMatrix.invert( modelViewMatrix );
-                osg::Vec3d eye = modelViewMatrix.getTrans() - GetPosition();
-                eye = osg::Vec3d( 0.0, 1.0, 0.0 ) * eye.length();
-                osg::Vec3d center( 0.0, 0.0, 0.0 );
-                osg::Matrixd scaleView = osg::Matrixd::lookAt(
-                    eye, center, osg::Vec3d( 0.0, 0.0, 1.0 ) );
-                osg::Matrixd mvpwMatrix = scaleView *
-                    m_currentGLTransformInfo->GetOSGProjectionMatrix() *
-                    m_currentGLTransformInfo->GetOSGWindowMatrix();
-                osg::Vec3d ps = center * mvpwMatrix;
-                osg::Vec3d pe = osg::Vec3d( 1.0, 0.0, 0.0 ) * mvpwMatrix;
-                double size = 1.0 / ( pe - ps ).length();
+                    osg::Vec3d screenPosition = _position * mvpwMatrix;
+                    screenPosition.z() = 0.0;
+                    mvpwMatrix.invert( mvpwMatrix );
+                    screenPosition = screenPosition * mvpwMatrix;
 
-                setScale( m_scale * size );;
+                    osg::Vec3d eye = screenPosition - _position;
+                    //std::cout << "screenPosition: " << screenPosition << std::endl;
+                    //std::cout << "_position: " << _position << std::endl;
+                    //std::cout << "eye.length() IV: " << eye.length() << std::endl;
+                    //std::cout << std::endl;
+                    eye = osg::Vec3d( 0.0, 1.0, 0.0 ) * eye.length();
+                    osg::Vec3d center( 0.0, 0.0, 0.0 );
+                    osg::Matrixd scaleView = osg::Matrixd::lookAt(
+                        eye, center, osg::Vec3d( 0.0, 0.0, 1.0 ) );
+                    mvpwMatrix = scaleView * projectionMatrix * windowMatrix;
+                    osg::Vec3d ps = center * mvpwMatrix;
+                    osg::Vec3d pe = osg::Vec3d( 1.0, 0.0, 0.0 ) * mvpwMatrix;
+                    double size = 1.0 / ( pe - ps ).length();
+                    setScale( m_scale * size );
+                }
+                else
+                {
+                    eye = eye - _position;
+                    eye = osg::Vec3d( 0.0, 1.0, 0.0 ) * eye.length();
+                    osg::Vec3d center( 0.0, 0.0, 0.0 );
+                    osg::Matrixd scaleView = osg::Matrixd::lookAt(
+                        eye, center, osg::Vec3d( 0.0, 0.0, 1.0 ) );
+                    osg::Matrixd mvpwMatrix =
+                        scaleView * projectionMatrix * windowMatrix;
+                    osg::Vec3d ps = center * mvpwMatrix;
+                    osg::Vec3d pe = osg::Vec3d( 1.0, 0.0, 0.0 ) * mvpwMatrix;
+                    double size = 1.0 / ( pe - ps ).length();
+                    setScale( m_scale * size );
+                }
             }
 
             switch( _autoRotateMode )
@@ -148,8 +182,7 @@ void AutoTransform::accept( osg::NodeVisitor& nv )
             {
                 osg::Vec3d t, s;
                 osg::Quat r, so;
-                m_currentGLTransformInfo->GetOSGModelViewMatrix().decompose(
-                    t, r, s, so );
+                modelViewMatrix.decompose( t, r, s, so );
 
                 SetRotation( r.inverse() );
 
@@ -157,12 +190,12 @@ void AutoTransform::accept( osg::NodeVisitor& nv )
             }
             case ROTATE_TO_CAMERA:
             {
-                //osg::Vec3d PosToEye = GetPosition() - eyePoint;
-                //osg::Matrix lookto = osg::Matrix::lookAt(
-                    //osg::Vec3d( 0.0, 0.0, 0.0 ), PosToEye, localUp );
-                //osg::Quat q;
-                //q.set( osg::Matrix::inverse( lookto ) );
-                //SetRotation( q );
+                osg::Vec3d posToEye = _position - eye;
+                osg::Matrix lookto = osg::Matrix::lookAt(
+                    osg::Vec3d( 0.0, 0.0, 0.0 ), posToEye, up );
+                osg::Quat q;
+                q.set( osg::Matrix::inverse( lookto ) );
+                SetRotation( q );
 
                 break;
             }
@@ -221,101 +254,109 @@ bool AutoTransform::computeLocalToWorldMatrix(
 
     if( nv )
     {
-    switch( nv->getVisitorType() )
-    {
-    case osg::NodeVisitor::CULL_VISITOR:
-    {
-        osgUtil::CullVisitor* cv = dynamic_cast< osgUtil::CullVisitor* >( nv );
-        osg::Camera* currentCamera = cv->getCurrentCamera();
-        osg::CullStack* cs = dynamic_cast< osg::CullStack* >( nv );
-        if( cs )
+        switch( nv->getVisitorType() )
         {
-            osg::Vec3d eyePoint = cs->getEyeLocal();
-            osg::Vec3d localUp = cs->getUpLocal();
-
-            if( _autoScaleToScreen )
+        case osg::NodeVisitor::CULL_VISITOR:
+        {
+            osgUtil::CullVisitor* cv = dynamic_cast< osgUtil::CullVisitor* >( nv );
+            osg::Camera* camera = cv->getCurrentCamera();
+            if( camera )
             {
-                /*
-                osg::Vec3d t, s;
-                osg::Quat r, so;
-                cs->getModelViewMatrix()->decompose( t, r, s, so );
-                r = r.inverse();
+                //const osg::FrameStamp& frameStamp = *(cv->getFrameStamp());
+                //int frameNumber = frameStamp.getFrameNumber();
 
-                std::cout << "t: " << _position * << std::endl;
+                const osg::Matrixd& modelViewMatrix =
+                    camera->getViewMatrix();
+                const osg::Matrixd& projectionMatrix =
+                    camera->getProjectionMatrix();
+                const osg::Matrixd windowMatrix =
+                    camera->getViewport()->computeWindowMatrix();
 
-                osg::Matrixd mvpwMatrix =
-                    *(cs->getModelViewMatrix()) *
-                    *(cs->getProjectionMatrix()) *
-                    cs->getWindowMatrix();
+                osg::Vec3d eye, center, up;
+                modelViewMatrix.getLookAt( eye, center, up );
 
-                osg::Vec3d screenPosition = _position * mvpwMatrix;
-                screenPosition.z() = 0.0;
-                mvpwMatrix.invert( mvpwMatrix );
-                screenPosition = screenPosition * mvpwMatrix;
+                if( _autoScaleToScreen )
+                {
+                    //osg::Matrixd scaleView;
+                    if( 1 )
+                    {
+                        double left, right, bottom, top, near, far;
+                        projectionMatrix.getFrustum( left, right, bottom, top, near, far );
+                        osg::Matrixd ortho =
+                            osg::Matrixd::ortho2D( left, right, bottom, top );
+                        osg::Matrixd mvpwMatrix =
+                            modelViewMatrix * ortho * windowMatrix;
 
-                osg::Vec3d eye = screenPosition - _position;
-                std::cout << "eye.length(): " << eye.length() << std::endl;
-                eye = osg::Vec3d( 0.0, 1.0, 0.0 ) * eye.length();
-                osg::Vec3d center( 0.0, 0.0, 0.0 );
-                osg::Matrixd scaleView = osg::Matrixd::lookAt(
-                    eye, center, osg::Vec3d( 0.0, 0.0, 1.0 ) );
-                mvpwMatrix = scaleView *
-                    *(cs->getProjectionMatrix()) * cs->getWindowMatrix();
-                osg::Vec3d ps = center * mvpwMatrix;
-                osg::Vec3d pe = osg::Vec3d( 1.0, 0.0, 0.0 ) * mvpwMatrix;
-                double size = 1.0 / ( pe - ps ).length();
-                scale = m_scale * size;
-                */
+                        osg::Vec3d screenPosition = _position * mvpwMatrix;
+                        screenPosition.z() = 0.0;
+                        mvpwMatrix.invert( mvpwMatrix );
+                        screenPosition = screenPosition * mvpwMatrix;
 
-                osg::Matrixd modelViewMatrix = *(cs->getModelViewMatrix());
-                modelViewMatrix.invert( modelViewMatrix );
-                osg::Vec3d eye = modelViewMatrix.getTrans() - _position;
-                eye = osg::Vec3d( 0.0, 1.0, 0.0 ) * eye.length();
-                osg::Vec3d center( 0.0, 0.0, 0.0 );
-                osg::Matrixd scaleView = osg::Matrixd::lookAt(
-                    eye, center, osg::Vec3d( 0.0, 0.0, 1.0 ) );
-                osg::Matrixd mvpwMatrix = scaleView *
-                    *(cs->getProjectionMatrix()) * cs->getWindowMatrix();
-                osg::Vec3d ps = center * mvpwMatrix;
-                osg::Vec3d pe = osg::Vec3d( 1.0, 0.0, 0.0 ) * mvpwMatrix;
-                double size = 1.0 / ( pe - ps ).length();
-                scale = m_scale * size;
+                        osg::Vec3d eye = screenPosition - _position;
+                        //std::cout << "screenPosition: " << screenPosition << std::endl;
+                        //std::cout << "_position: " << _position << std::endl;
+                        //std::cout << "eye.length() CV-" << frameNumber << ": " << eye.length() << std::endl;
+                        //std::cout << std::endl;
+                        eye = osg::Vec3d( 0.0, 1.0, 0.0 ) * eye.length();
+                        osg::Vec3d center( 0.0, 0.0, 0.0 );
+                        osg::Matrixd scaleView = osg::Matrixd::lookAt(
+                            eye, center, osg::Vec3d( 0.0, 0.0, 1.0 ) );
+                        mvpwMatrix = scaleView * projectionMatrix * windowMatrix;
+                        osg::Vec3d ps = center * mvpwMatrix;
+                        osg::Vec3d pe = osg::Vec3d( 1.0, 0.0, 0.0 ) * mvpwMatrix;
+                        double size = 1.0 / ( pe - ps ).length();
+                        scale = m_scale * size;
+                    }
+                    else
+                    {
+                        eye = eye - _position;
+                        eye = osg::Vec3d( 0.0, 1.0, 0.0 ) * eye.length();
+                        osg::Vec3d center( 0.0, 0.0, 0.0 );
+                        osg::Matrixd scaleView = osg::Matrixd::lookAt(
+                            eye, center, osg::Vec3d( 0.0, 0.0, 1.0 ) );
+                        osg::Matrixd mvpwMatrix =
+                            scaleView * projectionMatrix * windowMatrix;
+                        osg::Vec3d ps = center * mvpwMatrix;
+                        osg::Vec3d pe = osg::Vec3d( 1.0, 0.0, 0.0 ) * mvpwMatrix;
+                        double size = 1.0 / ( pe - ps ).length();
+                        scale = m_scale * size;
+                    }
+                }
+
+                switch( _autoRotateMode )
+                {
+                case NO_ROTATION:
+                {
+                    break;
+                }
+                case ROTATE_TO_SCREEN:
+                {
+                    osg::Vec3d t, s;
+                    osg::Quat r, so;
+                    modelViewMatrix.decompose( t, r, s, so );
+                    rotation = r.inverse();
+
+                    break;
+                }
+                case ROTATE_TO_CAMERA:
+                {
+                    osg::Vec3d posToEye = _position - eye;
+                    osg::Matrix lookto = osg::Matrix::lookAt(
+                        osg::Vec3d( 0.0, 0.0, 0.0 ), posToEye, up );
+                    rotation.set( osg::Matrix::inverse( lookto ) );
+
+                    break;
+                }
+                } //end switch( _autoRotateMode )
             }
 
-            switch( _autoRotateMode )
-            {
-            case NO_ROTATION:
-            {
-                break;
-            }
-            case ROTATE_TO_SCREEN:
-            {
-                osg::Vec3d t, s;
-                osg::Quat r, so;
-                cs->getModelViewMatrix()->decompose( t, r, s, so );
-                rotation = r.inverse();
-
-                break;
-            }
-            case ROTATE_TO_CAMERA:
-            {
-                osg::Vec3d posToEye = _position - eyePoint;
-                osg::Matrix lookto = osg::Matrix::lookAt(
-                    osg::Vec3d( 0.0, 0.0, 0.0 ), posToEye, localUp );
-                rotation.set( osg::Matrix::inverse( lookto ) );
-
-                break;
-            }
-            } //end switch( _autoRotateMode )
+            break;
         }
-
-        break;
-    }
-    default:
-    {
-        break;
-    }
-    } //end switch( nv->getVisitorType() )
+        default:
+        {
+            break;
+        }
+        } //end switch( nv->getVisitorType() )
     }
 
     if( _referenceFrame == RELATIVE_RF )
