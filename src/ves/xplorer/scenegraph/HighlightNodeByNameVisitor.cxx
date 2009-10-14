@@ -97,6 +97,7 @@ void HighlightNodeByNameVisitor::apply( osg::Node& node )
             geode_stateset->addUniform( new osg::Uniform( "glowColor", m_glowColor ) );
             //geode_stateset->addUniform( new osg::Uniform( "gloColor", m_glowColor ) );
             //osg::StateSet::UniformList uniList = geode_stateset->getUniformList();
+            m_foundNodes.push_back( &node );
         }
     }
     else
@@ -114,5 +115,10 @@ void HighlightNodeByNameVisitor::apply( osg::Node& node )
     {
         osg::NodeVisitor::traverse( node );
     }
+}
+////////////////////////////////////////////////////////////////////////////////
+std::vector< osg::ref_ptr< osg::Node > > HighlightNodeByNameVisitor::GetFoundNodes()
+{
+    return m_foundNodes;
 }
 ////////////////////////////////////////////////////////////////////////////////
