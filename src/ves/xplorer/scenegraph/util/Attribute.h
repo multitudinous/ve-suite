@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #ifndef VE_SCENE_GRAPH_ATTRIBUTE_H
 #define VE_SCENE_GRAPH_ATTRIBUTE_H
