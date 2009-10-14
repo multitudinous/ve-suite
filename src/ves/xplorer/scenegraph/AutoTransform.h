@@ -70,7 +70,7 @@ public:
         const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
 
     ///
-    //META_Node( ves::xplorer::scenegraph, AutoTransform );
+    META_Node( ves::xplorer::scenegraph, AutoTransform );
 
     ///
     enum AutoRotateMode
@@ -79,23 +79,6 @@ public:
         ROTATE_TO_SCREEN,
         ROTATE_TO_CAMERA
     };
-
-    ///
-    ///\param nv
-    virtual void accept( osg::NodeVisitor& nv );
-
-    ///
-    ///\return
-    virtual const char* className() const;
-
-    ///
-    ///\return
-    virtual osg::Object* cloneType() const;
-
-    ///
-    ///\param copyop
-    ///\return
-    virtual osg::Object* clone( const osg::CopyOp& copyop ) const;
 
     ///
     ///\return
@@ -157,15 +140,6 @@ public:
     ///
     ///\return
     const osg::Vec3d& GetScale() const;
-
-    ///
-    ///\param obj
-    ///\return
-    virtual bool isSameKindAs( const osg::Object* obj ) const;
-
-    ///
-    ///\return
-    virtual const char* libraryName() const;
 
     ///
     ///\param mode
@@ -234,7 +208,7 @@ private:
     mutable bool _firstTimeToInitEyePoint;
 
     /// 
-    mutable bool _matrixDirty;
+    //mutable bool _matrixDirty;
 
     ///
     double _maximumScale;
@@ -255,9 +229,6 @@ private:
     osg::Vec3d _position;
 
     ///
-    mutable osg::Vec3d _previousPosition;
-
-    ///
     mutable osg::Vec3d _scale;
 
     ///
@@ -267,10 +238,7 @@ private:
     mutable osg::Quat _rotation;
 
     ///
-    mutable osg::Matrixd _cachedMatrix;
-
-    ///
-    mutable osg::Matrixd _previousProjection;
+    //mutable osg::Matrixd _cachedMatrix;
 
 };
 } //end scenegraph

@@ -62,6 +62,8 @@ ManipulatorManager::ManipulatorManager()
     osg::ref_ptr< osg::StateSet > stateSet = getOrCreateStateSet();
     stateSet->setRenderBinDetails( 11, std::string( "DepthSortedBin" ) );
 
+    setCullingActive( false );
+
     osg::ref_ptr< osg::Depth > depth = new osg::Depth();
     depth->setFunction( osg::Depth::ALWAYS );
     depth->setWriteMask( false );

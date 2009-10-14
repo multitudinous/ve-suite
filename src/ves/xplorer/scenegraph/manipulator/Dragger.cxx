@@ -138,14 +138,6 @@ Dragger::~Dragger()
 ////////////////////////////////////////////////////////////////////////////////
 void Dragger::accept( osg::NodeVisitor& nv )
 {
-    if( !m_isRootDragger && ( GetAutoRotateMode() == NO_ROTATION ) )
-    {
-        //Now do the proper accept
-        osg::Transform::accept( nv );
-
-        return;
-    }
-
     //Now do the proper accept
     AutoTransform::accept( nv );
 }
@@ -340,7 +332,7 @@ Dragger* Dragger::Push(
     if( this == node )
     {
         //Tell root dragger to stop auto scaling
-        m_rootDragger->SetAutoScaleToScreen( false );
+        //m_rootDragger->SetAutoScaleToScreen( false );
 
         //Use active color if this is active
         UseColor( Color::ACTIVE );
@@ -376,7 +368,7 @@ Dragger* Dragger::Release( osg::NodePath::iterator& npItr )
     if( this == node )
     {
         //Tell root dragger to auto scale
-        m_rootDragger->SetAutoScaleToScreen( true );
+        //m_rootDragger->SetAutoScaleToScreen( true );
         //Force update now on release event for this frame
         m_rootDragger->SetAutoRotateMode( m_rootDragger->GetAutoRotateMode() );
 
