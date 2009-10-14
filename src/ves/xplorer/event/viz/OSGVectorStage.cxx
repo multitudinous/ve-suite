@@ -95,10 +95,10 @@ void OSGVectorStage::createArrow( osg::Geometry& geom, int nInstances )
     (*n)[ 8 ] = osg::Vec3( 1., 0., 0. );
     (*n)[ 9 ] = osg::Vec3( 1., 0., 0. );
 
-    if( nInstances > 1 )
+    //if( nInstances > 1 )
         geom.addPrimitiveSet( new osg::DrawArrays( GL_QUAD_STRIP, 0, 10, nInstances ) );
-    else
-        geom.addPrimitiveSet( new osg::DrawArrays( GL_QUAD_STRIP, 0, 10 ) );
+    //else
+    //    geom.addPrimitiveSet( new osg::DrawArrays( GL_QUAD_STRIP, 0, 10 ) );
 
     // Head
     (*v)[ 10 ] = osg::Vec3( hD, -hD, sh );
@@ -137,10 +137,10 @@ void OSGVectorStage::createArrow( osg::Geometry& geom, int nInstances )
     (*n)[ 20 ] = norm;
     (*n)[ 21 ] = norm;
 
-    if( nInstances > 1 )
+    //if( nInstances > 1 )
         geom.addPrimitiveSet( new osg::DrawArrays( GL_TRIANGLES, 10, 12, nInstances ) );
-    else
-        geom.addPrimitiveSet( new osg::DrawArrays( GL_TRIANGLES, 10, 12 ) );
+    //else
+    //    geom.addPrimitiveSet( new osg::DrawArrays( GL_TRIANGLES, 10, 12 ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 float* OSGVectorStage::createPositionArray( int m, int n , vtkPoints* points)
@@ -464,5 +464,82 @@ ves::xplorer::scenegraph::Geode* OSGVectorStage::createInstanced(vtkPolyData* gl
     }
 
     return geode;
+    
+    
+    
+    
+    /*
+     osg::Group* grp = new osg::Group;
+     
+     osg::Geode* geode = new osg::Geode;
+     osg::Geometry* geom = new osg::Geometry;
+     geom->setUseDisplayList( false );
+     geom->setUseVertexBufferObjects( true );
+     
+     createArrow( *geom, vf.getDataCount() );
+     geode->addDrawable( geom );
+     grp->addChild( geode );
+     
+     geom->setInitialBound( vf.getBoundingBox() );
+     
+     
+     
+     osg::ref_ptr< osg::Shader > vertexShader = new osg::Shader( osg::Shader::VERTEX );
+     vertexShader->loadShaderSourceFromFile( osgDB::findDataFile( "vectorfield.vs" ) );
+     
+     osg::ref_ptr< osg::Program > program = new osg::Program();
+     program->addShader( vertexShader.get() );
+     
+     osg::StateSet* ss = geode->getOrCreateStateSet();
+     ss->setAttribute( program.get(),
+     osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+     
+     
+     
+     // Posidion array.
+     ss->setTextureAttribute( 0, vf.getPositionTexture() );
+     osg::ref_ptr< osg::Uniform > texPosUniform =
+     new osg::Uniform( "texPos", 0 );
+     ss->addUniform( texPosUniform.get() );
+     
+     // Direction array.
+     ss->setTextureAttribute( 1, vf.getDirectionTexture() );
+     osg::ref_ptr< osg::Uniform > texDirUniform =
+     new osg::Uniform( "texDir", 1 );
+     ss->addUniform( texDirUniform.get() );
+     
+     // Scalar array.
+     ss->setTextureAttribute( 2, vf.getScalarTexture() );
+     osg::ref_ptr< osg::Uniform > texScalarUniform =
+     new osg::Uniform( "scalar", 2 );
+     ss->addUniform( texScalarUniform.get() );
+     
+     {
+     // Pass the 3D texture dimensions to the shader as a "sizes" uniform.
+     osg::Vec3s ts( vf.getTextureSizes() );
+     osg::ref_ptr< osg::Uniform > sizesUniform =
+     new osg::Uniform( "sizes", osg::Vec3( (float)ts.x(), (float)ts.y(), (float)ts.z() ) );
+     ss->addUniform( sizesUniform.get() );
+     }
+     
+     
+     // Set up the color spectrum.
+     osg::Image* iColorScale = new osg::Image;
+     iColorScale->setImage( 8, 1, 1, GL_RGBA, GL_RGB, GL_FLOAT,
+     (unsigned char*)colorScale, osg::Image::NO_DELETE );
+     osg::Texture1D* texCS = new osg::Texture1D( iColorScale );
+     texCS->setFilter( osg::Texture::MIN_FILTER, osg::Texture2D::LINEAR);
+     texCS->setFilter( osg::Texture::MAG_FILTER, osg::Texture2D::LINEAR );
+     
+     ss->setTextureAttribute( 3, texCS );
+     osg::ref_ptr< osg::Uniform > texCSUniform =
+     new osg::Uniform( "texCS", 3 );
+     ss->addUniform( texCSUniform.get() );
+     
+     
+     //delete[] pos, dir, scalar;
+     
+     return grp;
+    */
 }
 ////////////////////////////////////////////////////////////////////////////////
