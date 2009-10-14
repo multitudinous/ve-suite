@@ -32,6 +32,7 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #ifndef VES_XPLORER_SCENEGRAPH_VECTOR_FIELD_DATA_H
 #define VES_XPLORER_SCENEGRAPH_VECTOR_FIELD_DATA_H
+#include <ves/VEConfig.h>
 
 #include <osg/Geometry>
 #include <osg/Texture3D>
@@ -46,7 +47,7 @@ namespace xplorer
 namespace scenegraph
 {
 // Base class for abstracting vector field data storage
-class VectorFieldData : public osg::Referenced
+class VE_SCENEGRAPH_EXPORTS VectorFieldData : public osg::Referenced
 {
 public:
     VectorFieldData();

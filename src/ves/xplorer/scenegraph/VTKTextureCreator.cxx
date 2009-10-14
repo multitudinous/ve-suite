@@ -87,9 +87,12 @@ void VTKTextureCreator::internalLoad()
     
     // Allocate memory for data.
     unsigned int size( getDataCount() );
-    _pos = new float[ size * 3 ];
-    _dir = new float[ size * 3 ];
-    _scalar = new float[ size ];
+    //_pos = new float[ size * 3 ];
+    //_dir = new float[ size * 3 ];
+    //_scalar = new float[ size * 3 ];
+    _pos = new float[ s * t * p * 3 ];
+    _dir = new float[ s * t * p * 3 ];
+    _scalar = new float[ s * t * p * 3 ];
     
     // TBD You would replace this line with code to load the data from file.
     // In this example, we just generate test data.
@@ -97,7 +100,7 @@ void VTKTextureCreator::internalLoad()
     
     _texPos = makeFloatTexture( (unsigned char*)_pos, 3, osg::Texture2D::NEAREST );
     _texDir = makeFloatTexture( (unsigned char*)_dir, 3, osg::Texture2D::NEAREST );
-    _texScalar = makeFloatTexture( (unsigned char*)_scalar, 1, osg::Texture2D::NEAREST );
+    _texScalar = makeFloatTexture( (unsigned char*)_scalar, 3, osg::Texture2D::NEAREST );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void VTKTextureCreator::createDataArrays( float* pos, float* dir, float* scalar )
@@ -125,33 +128,51 @@ void VTKTextureCreator::createDataArrays( float* pos, float* dir, float* scalar 
     double val;
     double rgb[3];
     unsigned int maxData = getDataCount();
-    for( size_t i = 0; i < maxData; ++i )
+    unsigned int texSize = _texSizes.x() * _texSizes.y() * _texSizes.z();
+    for( size_t i = 0; i < texSize; ++i )
     {
-        //Get Position data
-        points->GetPoint( i, x );
-        *posI++ = (float)x[0];
-        *posI++ = (float)x[1];
-        *posI++ = (float)x[2]; 
-
-        if( scalarArray )
+        if( i < maxData )
         {
-            //Setup the color array
-            scalarArray->GetTuple( i, &val );
-            lut->GetColor( val, rgb );
-            *scalarI++ = rgb[0];
-            *scalarI++ = rgb[1];
-            *scalarI++ = rgb[2];
+            //Get Position data
+            points->GetPoint( i, x );
+            *posI++ = (float)x[0];
+            *posI++ = (float)x[1];
+            *posI++ = (float)x[2]; 
+
+            if( scalarArray )
+            {
+                //Setup the color array
+                scalarArray->GetTuple( i, &val );
+                lut->GetColor( val, rgb );
+                *scalarI++ = rgb[0];
+                *scalarI++ = rgb[1];
+                *scalarI++ = rgb[2];
+            }
+
+            if( vectorArray )
+            {
+                //Get Vector data
+                vectorArray->GetTuple( i, x );
+                osg::Vec3 v( x[0], x[1], x[2] );
+                v.normalize();
+                *dirI++ = v.x();
+                *dirI++ = v.y();
+                *dirI++ = v.z();
+            }
         }
-
-        if( vectorArray )
+        else
         {
-            //Get Vector data
-            vectorArray->GetTuple( i, x );
-            osg::Vec3 v( x[0], x[1], x[2] );
-            v.normalize();
-            *dirI++ = v.x();
-            *dirI++ = v.y();
-            *dirI++ = v.z();
+            *posI++ = 0.0;
+            *posI++ = 0.0;
+            *posI++ = 0.0; 
+
+            *scalarI++ = 0.0;
+            *scalarI++ = 0.0;
+            *scalarI++ = 0.0;
+
+            *dirI++ = 0.0;
+            *dirI++ = 0.0;
+            *dirI++ = 0.0;
         }
     }
     lut->Delete();

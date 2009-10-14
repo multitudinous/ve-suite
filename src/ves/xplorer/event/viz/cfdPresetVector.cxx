@@ -178,12 +178,12 @@ void cfdPresetVector::Update( void )
 
         /*{
             vtkXMLPolyDataWriter* writer = vtkXMLPolyDataWriter::New();
-            writer->SetInput( glyph->GetOutput() );
+            writer->SetInput( ptmask->GetOutput() );
             writer->SetDataModeToAscii();
             writer->SetFileName( "testvecglyphs.vtp" );
             writer->Write();
             writer->Delete();
-        }*/        
+        }*/      
         
         mapper->SetInputConnection( glyph->GetOutputPort() );
         mapper->SetScalarModeToUsePointFieldData();

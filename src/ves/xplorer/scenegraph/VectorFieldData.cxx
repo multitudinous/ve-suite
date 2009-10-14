@@ -77,13 +77,7 @@ unsigned int VectorFieldData::getDataCount()
 ////////////////////////////////////////////////////////////////////////////////
 VectorFieldData::~VectorFieldData()
 {
-    if( _pos != NULL )
-        delete[] _pos;
-    if( _dir != NULL )
-        delete[] _dir;
-    if( _scalar != NULL )
-        delete[] _scalar;
-    _pos = _dir = _scalar = NULL;
+	;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void VectorFieldData::internalLoad()
@@ -172,8 +166,9 @@ osg::Texture3D* VectorFieldData::makeFloatTexture( unsigned char* data, int numC
         pixFormat = GL_RGB;
     }
     osg::Image* image = new osg::Image;
+    //We will let osg manage the raw image data
     image->setImage( s, t, p, intFormat, pixFormat, GL_FLOAT,
-                    data, osg::Image::NO_DELETE );
+        data, osg::Image::USE_NEW_DELETE );
     osg::Texture3D* texture = new osg::Texture3D( image );
     texture->setFilter( osg::Texture::MIN_FILTER, filter );
     texture->setFilter( osg::Texture::MAG_FILTER, filter );

@@ -35,6 +35,8 @@
 
 #include <ves/xplorer/scenegraph/VectorFieldData.h>
 
+#include <ves/VEConfig.h>
+
 #include <osg/Vec3>
 
 class vtkPolyData;
@@ -46,7 +48,7 @@ namespace xplorer
 namespace scenegraph
 {
 // Derived class for testing purposes. generates data at runtime.
-class VTKTextureCreator : public VectorFieldData
+class VE_SCENEGRAPH_EXPORTS VTKTextureCreator : public VectorFieldData
 {
 public:
     VTKTextureCreator();
