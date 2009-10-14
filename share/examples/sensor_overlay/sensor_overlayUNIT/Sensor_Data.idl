@@ -1,0 +1,14 @@
+//
+// Sensor_Data.idl Adam J. Shuttleworth 10August2009
+//
+
+interface Sensor_Data
+  {
+    
+    short setup_files (in string node_name); //setup file names based on each sensor node
+    short write_temperature_to_file (in string node_name, in short DAQBox, in short channel, in double temperature, in double time); //write data to file
+    double send_temperature (in string node_name, in short DAQBox, in short channel, in double temperature, in double time); // write the temperature to std::cout
+	void createPLPLOT(in string node_name, in short channel, in short numberOfChannels); //generate a plot
+
+  };
+
