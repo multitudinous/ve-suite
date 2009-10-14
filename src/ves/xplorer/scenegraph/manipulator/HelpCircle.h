@@ -94,9 +94,6 @@ public:
     ///\return
     virtual bool isSameKindAs( const osg::Object* obj ) const;
 
-    ///
-    virtual Dragger* Release( osg::NodePath::iterator& npItr );
-
 protected:
     ///
     virtual ~HelpCircle();

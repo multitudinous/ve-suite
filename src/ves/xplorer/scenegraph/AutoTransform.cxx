@@ -52,14 +52,15 @@ using namespace ves::xplorer::scenegraph;
 AutoTransform::AutoTransform()
     :
     osg::Transform(),
-    _autoRotateMode( NO_ROTATION ),
-    _autoScaleToScreen( false ),
-    _maximumScale( DBL_MAX ),
-    _minimumScale( 0.0 ),
-    _pivotPoint( 0.0, 0.0, 0.0 ),
-    _position( 0.0, 0.0, 0.0 ),
+    m_autoRotateMode( NO_ROTATION ),
+    m_autoScaleToScreen( false ),
+    m_maximumScale( DBL_MAX ),
+    m_minimumScale( 0.0 ),
+    m_pivotPoint( 0.0, 0.0, 0.0 ),
+    m_position( 0.0, 0.0, 0.0 ),
     _scale( 1.0, 1.0, 1.0 ),
-    _rotation( 0.0, 0.0, 0.0, 1.0 ),
+    m_scale( 1.0, 1.0, 1.0 ),
+    m_rotation( 0.0, 0.0, 0.0, 1.0 ),
     m_currentGLTransformInfo( GLTransformInfoPtr() )
 {
     ;
@@ -70,14 +71,15 @@ AutoTransform::AutoTransform(
     const osg::CopyOp& copyop )
     :
     osg::Transform( autoTransform, copyop ),
-    _autoRotateMode( autoTransform._autoRotateMode ),
-    _autoScaleToScreen( autoTransform._autoScaleToScreen ),
-    _maximumScale( autoTransform._maximumScale ),
-    _minimumScale( autoTransform._minimumScale ),
-    _pivotPoint( autoTransform._pivotPoint ),
-    _position( autoTransform._position ),
+    m_autoRotateMode( autoTransform.m_autoRotateMode ),
+    m_autoScaleToScreen( autoTransform.m_autoScaleToScreen ),
+    m_maximumScale( autoTransform.m_maximumScale ),
+    m_minimumScale( autoTransform.m_minimumScale ),
+    m_pivotPoint( autoTransform.m_pivotPoint ),
+    m_position( autoTransform.m_position ),
     _scale( autoTransform._scale ),
-    _rotation( autoTransform._rotation ),
+    m_scale( autoTransform.m_scale ),
+    m_rotation( autoTransform.m_rotation ),
     m_currentGLTransformInfo( GLTransformInfoPtr() )
 {
     ;
@@ -103,17 +105,17 @@ bool AutoTransform::computeLocalToWorldMatrix(
     {
         //Do compute Bound stuff if desired in future
         //This may not work with multiple contexts
-        std::cout << "AutoTransform::computeLocalToWorldMatrix: NULL nv";
-        std::cout << std::endl;
+        std::cout << "AutoTransform::computeLocalToWorldMatrix: NULL nv"
+                  << std::endl;
 
         return true;
     }
 
     //Grab transform variables as they exist
-    osg::Vec3d position( _position );
-    osg::Quat rotation( _rotation );
+    osg::Vec3d position( m_position );
+    osg::Quat rotation( m_rotation );
     osg::Vec3d scale( _scale );
-    osg::Vec3d pivotPoint( _pivotPoint );
+    osg::Vec3d pivotPoint( m_pivotPoint );
 
     //Declare matrix state variables
     const osg::Matrixd* modelView( NULL );
@@ -152,9 +154,8 @@ bool AutoTransform::computeLocalToWorldMatrix(
     default:
     {
         //Error output
-        std::cout << "AutoTransform::computeLocalToWorldMatrix: ";
-        std::cout << nv->getVisitorType();
-        std::cout << std::endl;
+        std::cout << "AutoTransform::computeLocalToWorldMatrix: "
+                  << nv->getVisitorType() << std::endl;
 
         return true;
     }
@@ -163,7 +164,7 @@ bool AutoTransform::computeLocalToWorldMatrix(
     osg::Vec3d eye, center, up;
     modelView->getLookAt( eye, center, up );
 
-    if( _autoScaleToScreen )
+    if( m_autoScaleToScreen )
     {
         osg::Vec3d eyeVector;
         if( 1 )
@@ -174,16 +175,16 @@ bool AutoTransform::computeLocalToWorldMatrix(
                 osg::Matrixd::ortho2D( left, right, bottom, top );
             osg::Matrixd mvpwMatrix = (*modelView) * ortho * window;
 
-            osg::Vec3d screenPosition = _position * mvpwMatrix;
+            osg::Vec3d screenPosition = m_position * mvpwMatrix;
             screenPosition.z() = 0.0;
             mvpwMatrix.invert( mvpwMatrix );
             screenPosition = screenPosition * mvpwMatrix;
 
-            eyeVector = screenPosition - _position;
+            eyeVector = screenPosition - m_position;
         }
         else
         {
-            eyeVector = eye - _position;
+            eyeVector = eye - m_position;
         }
 
         eyeVector = osg::Vec3d( 0.0, 1.0, 0.0 ) * eyeVector.length();
@@ -197,7 +198,7 @@ bool AutoTransform::computeLocalToWorldMatrix(
         scale = m_scale * size;
     }
 
-    switch( _autoRotateMode )
+    switch( m_autoRotateMode )
     {
     case NO_ROTATION:
     {
@@ -214,14 +215,14 @@ bool AutoTransform::computeLocalToWorldMatrix(
     }
     case ROTATE_TO_CAMERA:
     {
-        osg::Vec3d posToEye = _position - eye;
+        osg::Vec3d posToEye = m_position - eye;
         osg::Matrix lookto =
             osg::Matrix::lookAt( osg::Vec3d( 0.0, 0.0, 0.0 ), posToEye, up );
         rotation.set( osg::Matrix::inverse( lookto ) );
 
         break;
     }
-    } //end switch( _autoRotateMode )
+    } //end switch( m_autoRotateMode )
 
     if( _referenceFrame == RELATIVE_RF )
     {
@@ -251,17 +252,17 @@ bool AutoTransform::computeWorldToLocalMatrix(
 
     if( _referenceFrame == RELATIVE_RF )
     {
-        matrix.postMultTranslate( -_position );
-        matrix.postMultRotate( _rotation.inverse() );
+        matrix.postMultTranslate( -m_position );
+        matrix.postMultRotate( m_rotation.inverse() );
         matrix.postMultScale( osg::Vec3d( 1.0 /_scale.x(), 1.0 / _scale.y(), 1.0 / _scale.z() ) );
-        matrix.postMultTranslate( _pivotPoint );
+        matrix.postMultTranslate( m_pivotPoint );
     }
     else //absolute
     {
-        matrix.makeRotate( _rotation.inverse() );
-        matrix.preMultTranslate( -_position );
+        matrix.makeRotate( m_rotation.inverse() );
+        matrix.preMultTranslate( -m_position );
         matrix.postMultScale( osg::Vec3d( 1.0 / _scale.x(), 1.0 / _scale.y(), 1.0 / _scale.z() ) );
-        matrix.postMultTranslate( _pivotPoint );
+        matrix.postMultTranslate( m_pivotPoint );
     }
 
     return true;
@@ -269,37 +270,37 @@ bool AutoTransform::computeWorldToLocalMatrix(
 ////////////////////////////////////////////////////////////////////////////////
 AutoTransform::AutoRotateMode AutoTransform::GetAutoRotateMode() const
 {
-    return _autoRotateMode;
+    return m_autoRotateMode;
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool AutoTransform::GetAutoScaleToScreen() const
 {
-    return _autoScaleToScreen;
+    return m_autoScaleToScreen;
 }
 ////////////////////////////////////////////////////////////////////////////////
 double AutoTransform::GetMaximumScale() const
 {
-    return _maximumScale;
+    return m_maximumScale;
 }
 ////////////////////////////////////////////////////////////////////////////////
 double AutoTransform::GetMinimumScale() const
 {
-    return _minimumScale;
+    return m_minimumScale;
 }
 ////////////////////////////////////////////////////////////////////////////////
 const osg::Vec3d& AutoTransform::GetPivotPoint() const
 {
-    return _pivotPoint;
+    return m_pivotPoint;
 }
 ////////////////////////////////////////////////////////////////////////////////
 const osg::Vec3d& AutoTransform::GetPosition() const
 {
-    return _position;
+    return m_position;
 }
 ////////////////////////////////////////////////////////////////////////////////
 const osg::Quat& AutoTransform::GetRotation() const
 {
-    return _rotation;
+    return m_rotation;
 }
 ////////////////////////////////////////////////////////////////////////////////
 const osg::Vec3d& AutoTransform::GetScale() const
@@ -309,12 +310,12 @@ const osg::Vec3d& AutoTransform::GetScale() const
 ////////////////////////////////////////////////////////////////////////////////
 void AutoTransform::SetAutoRotateMode( AutoRotateMode mode )
 {
-    _autoRotateMode = mode;
+    m_autoRotateMode = mode;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AutoTransform::SetAutoScaleToScreen( bool autoScaleToScreen )
 {
-    _autoScaleToScreen = autoScaleToScreen;
+    m_autoScaleToScreen = autoScaleToScreen;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AutoTransform::SetCurrentGLTransformInfo(
@@ -325,31 +326,31 @@ void AutoTransform::SetCurrentGLTransformInfo(
 ////////////////////////////////////////////////////////////////////////////////
 void AutoTransform::SetMaximumScale( double maximumScale )
 {
-    _maximumScale = maximumScale;
+    m_maximumScale = maximumScale;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AutoTransform::SetMinimumScale( double minimumScale )
 {
-    _minimumScale = minimumScale;
+    m_minimumScale = minimumScale;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AutoTransform::SetPivotPoint( const osg::Vec3d& pivotPoint )
 {
-    _pivotPoint = pivotPoint;
+    m_pivotPoint = pivotPoint;
 
     dirtyBound();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AutoTransform::SetPosition( const osg::Vec3d& position )
 {
-    _position = position;
+    m_position = position;
 
     dirtyBound();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AutoTransform::SetRotation( const osg::Quat& rotation )
 {
-    _rotation = rotation;
+    m_rotation = rotation;
 
     dirtyBound();
 }
@@ -374,30 +375,30 @@ void AutoTransform::setScale( const osg::Vec3d& scale )
 {
     _scale = scale;
 
-    if( _scale.x() < _minimumScale )
+    if( _scale.x() < m_minimumScale )
     {
-        _scale.x() = _minimumScale;
+        _scale.x() = m_minimumScale;
     }
-    if( _scale.y() < _minimumScale )
+    if( _scale.y() < m_minimumScale )
     {
-        _scale.y() = _minimumScale;
+        _scale.y() = m_minimumScale;
     }
-    if( _scale.z() < _minimumScale )
+    if( _scale.z() < m_minimumScale )
     {
-        _scale.z() = _minimumScale;
+        _scale.z() = m_minimumScale;
     }
 
-    if( _scale.x() > _maximumScale )
+    if( _scale.x() > m_maximumScale )
     {
-        _scale.x() = _maximumScale;
+        _scale.x() = m_maximumScale;
     }
-    if( _scale.y() > _maximumScale )
+    if( _scale.y() > m_maximumScale )
     {
-        _scale.y() = _maximumScale;
+        _scale.y() = m_maximumScale;
     }
-    if( _scale.z() > _maximumScale )
+    if( _scale.z() > m_maximumScale )
     {
-        _scale.z() = _maximumScale;
+        _scale.z() = m_maximumScale;
     }
 
     dirtyBound();

@@ -73,6 +73,10 @@ public:
 
     ///
     ///\return
+    virtual RotateCompound* AsRotateCompound();
+
+    ///
+    ///\return
     virtual const char* className() const;
 
     ///

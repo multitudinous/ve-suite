@@ -33,9 +33,10 @@
 
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/manipulator/ManipulatorManager.h>
-#include <ves/xplorer/scenegraph/manipulator/RotateTwist.h>
 #include <ves/xplorer/scenegraph/manipulator/TransformManipulator.h>
-#include <ves/xplorer/scenegraph/manipulator/Dragger.h>
+#include <ves/xplorer/scenegraph/manipulator/RotateCompound.h>
+#include <ves/xplorer/scenegraph/manipulator/RotateTwist.h>
+#include <ves/xplorer/scenegraph/manipulator/Rotate.h>
 #include <ves/xplorer/scenegraph/manipulator/HelpCircle.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
@@ -112,13 +113,19 @@ bool ManipulatorManager::addChild( Dragger* child )
     {
         //Insert help circle to front so it gets traversed first
         osg::ref_ptr< HelpCircle > helpCircle = new HelpCircle();
-        child->insertChild( 0, helpCircle.get() );
         helpCircle->SetRootDragger( child );
 
         CompoundDragger* compoundDragger = child->AsCompoundDragger();
         if( compoundDragger )
         {
             compoundDragger->SetHelpCircle( helpCircle.get() );
+            RotateCompound* rotateCompound =
+                compoundDragger->AsRotateCompound();
+            if( rotateCompound )
+            {
+                rotateCompound->insertChild( 0, helpCircle.get() );
+            }
+
             //Reset geometry
             compoundDragger->SetEnabledModes(
                 compoundDragger->GetEnabledModes() );
@@ -129,6 +136,7 @@ bool ManipulatorManager::addChild( Dragger* child )
             if( rotate )
             {
                 rotate->SetHelpCircle( helpCircle.get() );
+                child->insertChild( 0, helpCircle.get() );
             }
         }
     }

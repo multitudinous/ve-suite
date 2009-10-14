@@ -196,22 +196,22 @@ private:
     void setScale( const osg::Vec3d& scale );
 
     ///
-    AutoRotateMode _autoRotateMode;
+    AutoRotateMode m_autoRotateMode;
 
     ///
-    bool _autoScaleToScreen;
+    bool m_autoScaleToScreen;
 
     ///
-    double _maximumScale;
+    double m_maximumScale;
 
     ///
-    double _minimumScale;
+    double m_minimumScale;
 
     ///
-    osg::Vec3d _pivotPoint;
+    osg::Vec3d m_pivotPoint;
 
     ///
-    osg::Vec3d _position;
+    osg::Vec3d m_position;
 
     ///
     osg::Vec3d _scale;
@@ -220,7 +220,7 @@ private:
     osg::Vec3d m_scale;
 
     ///
-    osg::Quat _rotation;
+    osg::Quat m_rotation;
 
 };
 } //end scenegraph

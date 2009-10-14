@@ -50,6 +50,7 @@ namespace scenegraph
 namespace manipulator
 {
 class HelpCircle;
+class RotateCompound;
 
 /*!\file CompoundDragger.h
  * CompoundDragger API
@@ -73,7 +74,12 @@ public:
     virtual bool addChild( Dragger* child );
 
     ///
+    ///\return
     virtual CompoundDragger* AsCompoundDragger();
+
+    ///
+    ///\return
+    virtual RotateCompound* AsRotateCompound();
 
     ///
     ///\return

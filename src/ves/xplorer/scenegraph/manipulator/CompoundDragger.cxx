@@ -33,7 +33,9 @@
 
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/manipulator/CompoundDragger.h>
+#include <ves/xplorer/scenegraph/manipulator/RotateCompound.h>
 #include <ves/xplorer/scenegraph/manipulator/Rotate.h>
+#include <ves/xplorer/scenegraph/manipulator/HelpCircle.h>
 
 #include <ves/xplorer/scenegraph/GLTransformInfo.h>
 
@@ -64,6 +66,11 @@ CompoundDragger::~CompoundDragger()
 CompoundDragger* CompoundDragger::AsCompoundDragger()
 {
     return this;
+}
+////////////////////////////////////////////////////////////////////////////////
+RotateCompound* CompoundDragger::AsRotateCompound()
+{
+    return NULL;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CompoundDragger::ComboForm()
@@ -322,6 +329,12 @@ void CompoundDragger::SetHelpCircle( HelpCircle* const helpCircle )
         if( compoundDragger )
         {
             compoundDragger->SetHelpCircle( helpCircle );
+            RotateCompound* rotateCompound =
+                compoundDragger->AsRotateCompound();
+            if( rotateCompound )
+            {
+                rotateCompound->insertChild( 0, helpCircle );
+            }
 
             continue;
         }

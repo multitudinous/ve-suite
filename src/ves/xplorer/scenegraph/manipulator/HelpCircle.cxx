@@ -103,13 +103,6 @@ bool HelpCircle::isSameKindAs( const osg::Object* obj ) const
     return dynamic_cast< const HelpCircle* >( obj ) != NULL;
 }
 ////////////////////////////////////////////////////////////////////////////////
-Dragger* HelpCircle::Release( osg::NodePath::iterator& npItr )
-{
-    //Remove Show() function from Dragger::Release
-
-    return NULL;
-}
-////////////////////////////////////////////////////////////////////////////////
 void HelpCircle::SetupDefaultGeometry()
 {
     //The geode to add the geometry to
