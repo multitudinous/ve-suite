@@ -370,7 +370,7 @@ Dragger* Dragger::Release( osg::NodePath::iterator& npItr )
         //Tell root dragger to auto scale
         //m_rootDragger->SetAutoScaleToScreen( true );
         //Force update now on release event for this frame
-        m_rootDragger->SetAutoRotateMode( m_rootDragger->GetAutoRotateMode() );
+        //m_rootDragger->SetAutoRotateMode( m_rootDragger->GetAutoRotateMode() );
 
         //Use default color if this is active
         UseColor( Color::DEFAULT );

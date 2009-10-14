@@ -107,9 +107,6 @@ public:
     bool GetAutoScaleToScreen() const;
 
     ///
-    //scenegraph::GLTransformInfoPtr GetCurrentGLTransformInfo() const;
-
-    ///
     ///\return
     double GetMaximumScale() const;
 
@@ -205,22 +202,10 @@ private:
     bool _autoScaleToScreen;
 
     ///
-    mutable bool _firstTimeToInitEyePoint;
-
-    /// 
-    //mutable bool _matrixDirty;
-
-    ///
     double _maximumScale;
 
     ///
     double _minimumScale;
-
-    ///
-    mutable osg::Vec3 _previousEyePoint;
-
-    ///
-    mutable osg::Vec3 _previousLocalUp;
 
     ///
     osg::Vec3d _pivotPoint;
@@ -229,16 +214,13 @@ private:
     osg::Vec3d _position;
 
     ///
-    mutable osg::Vec3d _scale;
+    osg::Vec3d _scale;
 
     ///
     osg::Vec3d m_scale;
 
     ///
-    mutable osg::Quat _rotation;
-
-    ///
-    //mutable osg::Matrixd _cachedMatrix;
+    osg::Quat _rotation;
 
 };
 } //end scenegraph
