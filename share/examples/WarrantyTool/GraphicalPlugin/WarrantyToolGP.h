@@ -83,7 +83,10 @@ private:
     void CreateTextTextures();
     ///Strip characters from datafile
     void StripCharacters( std::string& data, const std::string& character );
+    ///PArse the csv file
     void ParseDataFile( const std::string& csvFilename );
+    ///Parse the db file selected by the user
+    void ParseDataBase( const std::string& csvFilename );
     void RenderTextualDisplay( bool onOff );
     void CreateDBQuery( ves::open::xml::DataValuePairPtr dvp );
     void StripDollarCharacters( std::string& data );
@@ -111,6 +114,8 @@ private:
 	Assembly m_selectedAssembly;
     ///Command being processed
     ves::open::xml::CommandPtr m_currentCommand;
+    ///db filename
+    std::string m_dbFilename;
 };
 
 CREATE_VES_XPLORER_PLUGIN_ENTRY_POINT( WarrantyToolGP )

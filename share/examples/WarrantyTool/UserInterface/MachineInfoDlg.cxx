@@ -29,7 +29,7 @@ MachineInfoDlg::MachineInfoDlg( wxWindow* parent, wxWindowID id, const wxString&
 	
 	bSizer3->Add( m_dataLoadButton, 0, wxALIGN_CENTER_VERTICAL|wxALIGN_LEFT|wxALL, 5 );
 	
-	m_productDataLoader = new wxFilePickerCtrl( this, wxID_ANY, ::wxGetCwd(), wxT("Select a file"), wxT("*.*"), wxDefaultPosition, wxSize( 300,-1 ), wxFLP_DEFAULT_STYLE|wxFLP_FILE_MUST_EXIST );
+	m_productDataLoader = new wxFilePickerCtrl( this, wxID_ANY, wxEmptyString, wxT("Select a file"), wxT("Warranty data file (*.csv;*.tsv;*.db)|*.csv;*.tsv;*.db"), wxDefaultPosition, wxSize( 300,-1 ), wxFLP_DEFAULT_STYLE|wxFLP_FILE_MUST_EXIST );
 	m_productDataLoader->SetFont( wxFont( wxNORMAL_FONT->GetPointSize(), 70, 90, 90, false, wxEmptyString ) );
 	m_productDataLoader->SetMinSize( wxSize( 300,-1 ) );
 	
@@ -53,7 +53,7 @@ MachineInfoDlg::MachineInfoDlg( wxWindow* parent, wxWindowID id, const wxString&
 	m_variableChoice00->SetSelection( 0 );
 	bSizer2->Add( m_variableChoice00, 0, wxALL, 5 );
 	
-	wxString m_variableLogicOperator00Choices[] = { wxT("Less Than"), wxT("Greater Than"), wxT("Equal"), wxT("Not Equal") };
+	wxString m_variableLogicOperator00Choices[] = { wxT("Less Than"), wxT("Greater Than"), wxT("Equal"), wxT("Not Equal"), wxT("Like") };
 	int m_variableLogicOperator00NChoices = sizeof( m_variableLogicOperator00Choices ) / sizeof( wxString );
 	m_variableLogicOperator00 = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_variableLogicOperator00NChoices, m_variableLogicOperator00Choices, 0 );
 	m_variableLogicOperator00->SetSelection( 0 );
@@ -78,7 +78,7 @@ MachineInfoDlg::MachineInfoDlg( wxWindow* parent, wxWindowID id, const wxString&
 	m_variableChoice01->SetSelection( 0 );
 	bSizer21->Add( m_variableChoice01, 0, wxALL, 5 );
 	
-	wxString m_variableLogicOperator01Choices[] = { wxT("Less Than"), wxT("Greater Than"), wxT("Equal"), wxT("Not Equal") };
+	wxString m_variableLogicOperator01Choices[] = { wxT("Less Than"), wxT("Greater Than"), wxT("Equal"), wxT("Not Equal"), wxT("Like") };
 	int m_variableLogicOperator01NChoices = sizeof( m_variableLogicOperator01Choices ) / sizeof( wxString );
 	m_variableLogicOperator01 = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_variableLogicOperator01NChoices, m_variableLogicOperator01Choices, 0 );
 	m_variableLogicOperator01->SetSelection( 0 );
@@ -103,7 +103,7 @@ MachineInfoDlg::MachineInfoDlg( wxWindow* parent, wxWindowID id, const wxString&
 	m_variableChoice02->SetSelection( 0 );
 	bSizer22->Add( m_variableChoice02, 0, wxALL, 5 );
 	
-	wxString m_variableLogicOperator02Choices[] = { wxT("Less Than"), wxT("Greater Than"), wxT("Equal"), wxT("Not Equal") };
+	wxString m_variableLogicOperator02Choices[] = { wxT("Less Than"), wxT("Greater Than"), wxT("Equal"), wxT("Not Equal"), wxT("Like") };
 	int m_variableLogicOperator02NChoices = sizeof( m_variableLogicOperator02Choices ) / sizeof( wxString );
 	m_variableLogicOperator02 = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_variableLogicOperator02NChoices, m_variableLogicOperator02Choices, 0 );
 	m_variableLogicOperator02->SetSelection( 0 );
@@ -128,7 +128,7 @@ MachineInfoDlg::MachineInfoDlg( wxWindow* parent, wxWindowID id, const wxString&
 	m_variableChoice03->SetSelection( 0 );
 	bSizer221->Add( m_variableChoice03, 0, wxALL, 5 );
 	
-	wxString m_variableLogicOperator03Choices[] = { wxT("Less Than"), wxT("Greater Than"), wxT("Equal"), wxT("Not Equal") };
+	wxString m_variableLogicOperator03Choices[] = { wxT("Less Than"), wxT("Greater Than"), wxT("Equal"), wxT("Not Equal"), wxT("Like") };
 	int m_variableLogicOperator03NChoices = sizeof( m_variableLogicOperator03Choices ) / sizeof( wxString );
 	m_variableLogicOperator03 = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_variableLogicOperator03NChoices, m_variableLogicOperator03Choices, 0 );
 	m_variableLogicOperator03->SetSelection( 0 );
@@ -151,7 +151,7 @@ MachineInfoDlg::MachineInfoDlg( wxWindow* parent, wxWindowID id, const wxString&
 	
 	bSizer1->Add( sbSizer2, 0, wxALIGN_LEFT|wxALL|wxEXPAND, 5 );
 	
-	wxStaticBoxSizer* sbSizer5;
+	/*wxStaticBoxSizer* sbSizer5;
 	sbSizer5 = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT("Color Selection") ), wxVERTICAL );
 	
 	wxBoxSizer* bSizer9;
@@ -180,7 +180,7 @@ MachineInfoDlg::MachineInfoDlg( wxWindow* parent, wxWindowID id, const wxString&
 	
 	sbSizer5->Add( bSizer9, 1, wxEXPAND, 5 );
 	
-	bSizer1->Add( sbSizer5, 0, wxALL|wxEXPAND, 5 );
+	bSizer1->Add( sbSizer5, 0, wxALL|wxEXPAND, 5 );*/
 	
 	wxStaticBoxSizer* sbSizer3;
 	sbSizer3 = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT("Part Selction") ), wxVERTICAL );
@@ -204,10 +204,24 @@ MachineInfoDlg::MachineInfoDlg( wxWindow* parent, wxWindowID id, const wxString&
 	sbSizer8 = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT("Text Display Selection") ), wxVERTICAL );
 	
 	wxArrayString m_displayTextChkListChoices;
-	m_displayTextChkList = new wxCheckListBox( this, wxID_ANY, wxDefaultPosition, wxSize( -1,100 ), m_displayTextChkListChoices, wxLB_ALWAYS_SB|wxLB_EXTENDED );
+	m_displayTextChkList = new wxCheckListBox( this, wxID_ANY, wxDefaultPosition, wxSize( -1,75 ), m_displayTextChkListChoices, wxLB_ALWAYS_SB|wxLB_EXTENDED );
 	sbSizer8->Add( m_displayTextChkList, 0, wxALIGN_CENTER|wxEXPAND, 5 );
 	
-	bSizer1->Add( sbSizer8, 1, wxALL|wxEXPAND, 5 );
+	bSizer1->Add( sbSizer8, 0, wxALL|wxEXPAND, 5 );
+	
+	wxStaticBoxSizer* sbSizer10;
+	sbSizer10 = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT("Controls") ), wxHORIZONTAL );
+	
+	m_toggleUnselected = new wxCheckBox( this, wxID_ANY, wxT("Toggle Unselected"), wxDefaultPosition, wxSize( -1,20 ), wxCHK_2STATE );
+	
+	sbSizer10->Add( m_toggleUnselected, 0, wxALL, 5 );
+	
+	m_button2 = new wxButton( this, wxID_ANY, wxT("Clear"), wxDefaultPosition, wxSize( -1,20 ), 0 );
+	m_button2->SetMaxSize( wxSize( -1,20 ) );
+	
+	sbSizer10->Add( m_button2, 0, wxALL, 5 );
+	
+	bSizer1->Add( sbSizer10, 0, wxALL|wxEXPAND, 5 );
 	
 	m_dialogButtons = new wxStdDialogButtonSizer();
 	m_dialogButtonsOK = new wxButton( this, wxID_OK );
@@ -248,6 +262,8 @@ MachineInfoDlg::MachineInfoDlg( wxWindow* parent, wxWindowID id, const wxString&
 	m_manualPartSelectionChoice->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MachineInfoDlg::OnPartSelection ), NULL, this );
 	m_partTextEntry->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( MachineInfoDlg::OnPartNumberEntry ), NULL, this );
 	m_displayTextChkList->Connect( wxEVT_COMMAND_CHECKLISTBOX_TOGGLED, wxCommandEventHandler( MachineInfoDlg::OnTextChkListToggle ), NULL, this );
+	m_toggleUnselected->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MachineInfoDlg::OnToggleUnselected ), NULL, this );
+	m_button2->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MachineInfoDlg::OnClearData ), NULL, this );
 	m_dialogButtonsApply->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MachineInfoDlg::OnQueryApply ), NULL, this );
 	m_dialogButtonsCancel->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MachineInfoDlg::OnDialogCancel ), NULL, this );
 	m_dialogButtonsOK->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MachineInfoDlg::OnQueryOK ), NULL, this );
@@ -280,6 +296,8 @@ MachineInfoDlg::~MachineInfoDlg()
 	m_manualPartSelectionChoice->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MachineInfoDlg::OnPartSelection ), NULL, this );
 	m_partTextEntry->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( MachineInfoDlg::OnPartNumberEntry ), NULL, this );
 	m_displayTextChkList->Disconnect( wxEVT_COMMAND_CHECKLISTBOX_TOGGLED, wxCommandEventHandler( MachineInfoDlg::OnTextChkListToggle ), NULL, this );
+	m_toggleUnselected->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MachineInfoDlg::OnToggleUnselected ), NULL, this );
+	m_button2->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MachineInfoDlg::OnClearData ), NULL, this );
 	m_dialogButtonsApply->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MachineInfoDlg::OnQueryApply ), NULL, this );
 	m_dialogButtonsCancel->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MachineInfoDlg::OnDialogCancel ), NULL, this );
 	m_dialogButtonsOK->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MachineInfoDlg::OnQueryOK ), NULL, this );

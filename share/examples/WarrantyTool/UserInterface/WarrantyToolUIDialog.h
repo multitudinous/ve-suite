@@ -92,8 +92,6 @@ protected:
 private:
     void StripCharacters( std::string& data, const std::string& character );
 
-    void ParseDataFile( const std::string& csvFilename );
-
     void GetTextInput( wxCommandEvent& event );
 
     void BuildGUI();
@@ -129,7 +127,9 @@ protected:
 	void OnQueryApply( wxCommandEvent& event );
 	void OnDialogCancel( wxCommandEvent& event );
 	void OnQueryOK( wxCommandEvent& event );
-    
+    void OnToggleUnselected( wxCommandEvent& event );
+    void OnClearData( wxCommandEvent& event );
+
     const std::string GetTextFromChoice( wxChoice* variable,
                                         wxChoice* logicOperator,
                                         wxTextCtrl* textInput );
@@ -140,7 +140,10 @@ protected:
     
     void UpdateQueryDisplay();
     
-    
+    void ParseDataBase( const std::string& csvFilename );
+
+    void ParseDataFile( const std::string& csvFilename );
+
     //DECLARE_EVENT_TABLE()
 };
 

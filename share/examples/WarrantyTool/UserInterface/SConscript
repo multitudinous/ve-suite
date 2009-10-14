@@ -7,7 +7,7 @@ pj = os.path.join
 host_type = distutils.util.get_platform()
 
 Import( 'baseEnv ves_pkg buildDir RootDir vpr_options wxwidgets_options' )
-Import( 'tao_options xerces_options GetPlatform' )
+Import( 'tao_options xerces_options GetPlatform poco_options' )
 openDir = os.path.abspath( pj( RootDir, 'share', 'examples', 'WarrantyTool', 'UserInterface' ) )
 sources = sca_util.getSourcesRecursive( openDir )
 headers = sca_util.getHeadersRecursive( openDir )
@@ -28,6 +28,7 @@ vpr_options.apply( lib_env )
 wxwidgets_options.apply( lib_env )
 tao_options.apply( lib_env )
 xerces_options.apply( lib_env )
+poco_options.apply( lib_env )
 
 if GetPlatform() == 'win32':
    lib_env['no_import_lib'] = 1

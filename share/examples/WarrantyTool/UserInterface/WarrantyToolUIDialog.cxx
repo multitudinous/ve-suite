@@ -73,6 +73,16 @@
 #include <boost/algorithm/string/trim.hpp>
 #include <boost/algorithm/string/replace.hpp>
 
+#include <Poco/SharedPtr.h>
+#include <Poco/Tuple.h>
+#include <Poco/Data/SessionFactory.h>
+#include <Poco/Data/Session.h>
+#include <Poco/Data/RecordSet.h>
+#include <Poco/Data/SQLite/Connector.h>
+
+using namespace Poco::Data;
+
+
 using namespace warrantytool;
 using namespace ves::open::xml;
 
@@ -293,7 +303,7 @@ void WarrantyToolUIDialog::OpenWarrantyFile( wxCommandEvent& event )
                         _T( "Open File" ),
                         ::wxGetCwd(),
                         _T( "" ),
-                        _T( "Warranty data file (*.csv;*.tsv)|*.csv;*.tsv;" ),
+                        _T( "Warranty data file (*.csv;*.tsv;*.db)|*.csv;*.tsv;*.db" ),
                         wxOPEN | wxFILE_MUST_EXIST | wxFD_PREVIEW,
                         wxDefaultPosition );
     dialog.CentreOnParent();
@@ -311,7 +321,14 @@ void WarrantyToolUIDialog::OpenWarrantyFile( wxCommandEvent& event )
         ///_commandName = "QC_LOAD_STORED_POINTS";
         //SendCommandsToXplorer();
         std::string csvFilename = ConvertUnicode( viewPtsFilename.GetFullPath().c_str() );
-        ParseDataFile( csvFilename );
+        if( viewPtsFilename.GetExt() == _("csv") )
+        {
+            ParseDataFile( csvFilename );
+        }
+        else if( viewPtsFilename.GetExt() == _("db") )
+        {
+            ParseDataBase( csvFilename );
+        }
         
         ves::open::xml::DataValuePairSharedPtr cameraGeometryOnOffDVP(
             new ves::open::xml::DataValuePair() );
@@ -464,7 +481,15 @@ void WarrantyToolUIDialog::OnDataLoad( wxFileDirPickerEvent& event )
         std::string csvFilename = 
         ConvertUnicode( viewPtsFilename.GetFullPath().c_str() );
         //Parse the csv file
-        ParseDataFile( csvFilename );
+        if( viewPtsFilename.GetExt() == _("csv") )
+        {
+            ParseDataFile( csvFilename );
+        }
+        else if( viewPtsFilename.GetExt() == _("db") )
+        {
+            ParseDataBase( csvFilename );
+        }
+        
         
         //tell ves to load
         ves::open::xml::DataValuePairSharedPtr cameraGeometryOnOffDVP(
@@ -586,7 +611,7 @@ void WarrantyToolUIDialog::OnPartSelection( wxCommandEvent& event )
         new ves::open::xml::DataValuePair() );
     //mPartNumberList.push_back(
     //        ConvertUnicode( m_manualPartSelectionChoice->GetValue().c_str() ) );
-    cameraGeometryOnOffDVP->SetData( "ADD", ConvertUnicode( m_manualPartSelectionChoice->GetStringSelection().c_str() ) );
+    cameraGeometryOnOffDVP->SetData( "SCROLL", ConvertUnicode( m_manualPartSelectionChoice->GetStringSelection().c_str() ) );
 
     ves::open::xml::CommandPtr command( new ves::open::xml::Command() );
     command->AddDataValuePair( cameraGeometryOnOffDVP );
@@ -662,13 +687,26 @@ const std::string WarrantyToolUIDialog::GetTextFromChoice( wxChoice* variable,
     {
         logicString = "!=";
     }
+    else if( logicString == "Like" )
+    {
+        logicString = "LIKE";
+    }
     
     std::string inputString = ConvertUnicode( textInput->GetValue().c_str() );
     double tempData;
     if( !textInput->GetValue().ToDouble( &tempData ) )
     {
-        inputString = "'" + inputString + "'";
+        //If it is a string and we are doing a wild card search
+        if( logicString == "LIKE" )
+        {
+            inputString = "'%" + inputString + "%'";
+        }
+        else
+        {
+            inputString = "'" + inputString + "'";
+        }
     }
+
     std::string queryCommand = "\"" + variableString + "\" " + logicString + " " + inputString;
     
     return queryCommand;
@@ -787,5 +825,143 @@ void WarrantyToolUIDialog::UpdateQueryDisplay()
     
     //The update the text display box
     m_queryTextCommandCtrl->ChangeValue( wxString( queryCommand.c_str(), wxConvUTF8 ) );    
+}
+////////////////////////////////////////////////////////////////////////////////
+void WarrantyToolUIDialog::ParseDataBase( const std::string& csvFilename )
+{
+    // register SQLite connector
+    Poco::Data::SQLite::Connector::registerConnector();
+
+    Poco::Data::Session session("SQLite", csvFilename );
+
+    Statement select( session );
+    
+    ///////////////////////////////////////////
+    //Get the column names
+    try
+    {
+        //std::string queryString = "DESCRIBE Parts";
+        std::string queryString = "SELECT * FROM Parts WHERE rowid = 1";
+        select << queryString.c_str(),now;
+        //select.execute();
+    }
+    catch( Poco::Data::DataException& ex )
+    {
+        std::cout << ex.displayText() << std::endl;
+        return;
+    }
+    catch( ... )
+    {
+        std::cout << "Query is bad." << std::endl;
+        return;
+    }
+
+	// create a RecordSet 
+	Poco::Data::RecordSet rs(select);
+	std::size_t cols = rs.columnCount();
+    size_t numQueries = rs.rowCount();
+    //std::cout << cols << " " << numQueries << std::endl;
+    //std::cout <<  cols << " " << rs.columnName( 0 ) << std::endl;
+
+	// iterate over all rows and columns
+	/*bool more = false;
+    try
+    {
+        more = rs.moveFirst();
+    }
+    catch( ... )
+    {
+        return;
+    }*/
+    
+    for( size_t i = 0; i < cols; ++i )
+    {
+        wxString columnNames = wxString( rs.columnName( i ).c_str(), wxConvUTF8 );
+        m_columnStrings.Add( columnNames );
+    }
+    /*while (more)
+	{
+        wxString columnNames = wxString( rs[0].convert<std::string>().c_str(), wxConvUTF8 );
+        m_columnStrings.Add( columnNames );
+        
+		more = rs.moveNext();
+	}*/
+    ///////////////////////////////////////////
+
+    ///////////////////////////////////////////
+    //Get the partnumber from the db
+    Statement select2( session );
+
+    //select.reset( session );
+    try
+    {
+        std::string queryString = "SELECT Part_Number FROM Parts";
+        select2 << queryString.c_str(),now;
+        //select.execute();
+    }
+    catch( Poco::Data::DataException& ex )
+    {
+        std::cout << ex.displayText() << std::endl;
+        return;
+    }
+    catch( ... )
+    {
+        std::cout << "Query is bad." << std::endl;
+        return;
+    }
+    
+	// create a RecordSet 
+	Poco::Data::RecordSet partRS(select2);
+	cols = partRS.columnCount();
+    numQueries = partRS.rowCount();
+    
+	// iterate over all rows and columns
+    bool more = false;
+    try
+    {
+        more = partRS.moveFirst();
+    }
+    catch( ... )
+    {
+        return;
+    }
+    
+    while (more)
+	{
+        wxString partNames = wxString( partRS[0].convert<std::string>().c_str(), wxConvUTF8 );
+        m_partNumberStrings.Add( partNames );
+        
+		more = partRS.moveNext();
+	}
+    
+    try
+    {
+        Poco::Data::SQLite::Connector::unregisterConnector();
+    }
+    catch( Poco::Data::DataException& ex )
+    {
+        std::cout << ex.displayText() << std::endl;
+    }
+    catch( Poco::AssertionViolationException& ex )
+    {
+        std::cout << ex.displayText() << std::endl;
+    }    
+}
+////////////////////////////////////////////////////////////////////////////////
+void WarrantyToolUIDialog::OnToggleUnselected( wxCommandEvent& event )
+{ 
+    ves::open::xml::DataValuePairSharedPtr cameraGeometryOnOffDVP(
+                                                                  new ves::open::xml::DataValuePair() );
+    cameraGeometryOnOffDVP->SetData( "TOGGLE_PARTS", static_cast< unsigned int >( event.IsChecked() ) );
+    
+    ves::open::xml::CommandPtr command( new ves::open::xml::Command() );
+    command->AddDataValuePair( cameraGeometryOnOffDVP );
+    std::string mCommandName = "WARRANTY_TOOL_PART_TOOLS";
+    command->SetCommandName( mCommandName );
+    mServiceList->SendCommandStringToXplorer( command );
+}
+////////////////////////////////////////////////////////////////////////////////
+void WarrantyToolUIDialog::OnClearData( wxCommandEvent& event )
+{ 
 }
 ////////////////////////////////////////////////////////////////////////////////
