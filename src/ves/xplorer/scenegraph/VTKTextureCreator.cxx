@@ -77,7 +77,7 @@ void VTKTextureCreator::internalLoad()
     // Actual data size would come from file.
     // NOTE: Crash in NVIDIA friver if total _dataSize
     // is > 32768.
-    vtkPoints *points = m_rawVTKData->GetPoints();    
+    vtkPoints* points = m_rawVTKData->GetPoints();    
     _dataSize = points->GetNumberOfPoints();
 
     // Determine optimal 3D texture dimensions.
