@@ -46,6 +46,8 @@
 
 #include <iostream>
 
+#define VES_USE_FBO_CAMERA 0
+
 using namespace ves::xplorer::scenegraph::rtt;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -87,8 +89,11 @@ public:
 UnitInOut::UnitInOut()
     :
     Unit(),
+#if VES_USE_FBO_CAMERA
+    m_fboCamera( new osg::Camera() ),
+#else
     mFBO( new osg::FrameBufferObject() ),
-    //m_fboCamera( new osg::Camera() ),
+#endif
     mOutputType( TEXTURE_2D ),
     mOutputInternalFormat( GL_RGBA16F_ARB )
 {
@@ -98,8 +103,11 @@ UnitInOut::UnitInOut()
 UnitInOut::UnitInOut( const UnitInOut& unitInOut, const osg::CopyOp& copyop )
     :
     Unit( unitInOut, copyop ),
+#if VES_USE_FBO_CAMERA
+    m_fboCamera( unitInOut.m_fboCamera ),
+#else
     mFBO( unitInOut.mFBO ),
-    //m_fboCamera( unitInOut.m_fboCamera ),
+#endif
     mOutputType( unitInOut.mOutputType ),
     mOutputInternalFormat( unitInOut.mOutputInternalFormat )
 {
@@ -149,8 +157,8 @@ void UnitInOut::SetOutputInternalFormat( GLenum format )
     mOutputInternalFormat = format;
 
     //Now generate output texture's and assign them to fbo
-    TextureMap::iterator itr = mOutputTextures.begin();
-    for( itr; itr != mOutputTextures.end(); ++itr )
+    for( TextureMap::iterator itr = mOutputTextures.begin(); 
+        itr != mOutputTextures.end(); ++itr )
     {
         if( itr->second.valid() )
         {
@@ -279,20 +287,24 @@ void UnitInOut::AssignOutputTexture()
         osg::Texture2D* texture2D = dynamic_cast< osg::Texture2D* >( texture );
         if( texture2D != NULL )
         {
+#if !VES_USE_FBO_CAMERA
             mFBO->setAttachment( osg::Camera::BufferComponent(
                 osg::Camera::COLOR_BUFFER0 ),
                 osg::FrameBufferAttachment( texture2D ) );
-            /*m_fboCamera->setRenderOrder( osg::Camera::PRE_RENDER );
+#else
+            m_fboCamera->setRenderOrder( osg::Camera::POST_RENDER );
             m_fboCamera->setReferenceFrame( osg::Camera::ABSOLUTE_RF );
             m_fboCamera->setViewMatrix( osg::Matrix::identity() );
-            m_fboCamera->setProjectionMatrix( osg::Matrix::identity() );
+            m_fboCamera->setProjectionMatrix(
+                osg::Matrix::ortho( 0.0, 1.0, 0.0, 1.0, 0.0, 1.0 ) );
             m_fboCamera->setClearMask( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT );
             m_fboCamera->setRenderTargetImplementation( osg::Camera::FRAME_BUFFER_OBJECT );
             m_fboCamera->setClearColor( osg::Vec4( 0.0, 1.0, 1.0, 1.0 ) );
             m_fboCamera->attach( osg::Camera::COLOR_BUFFER0, texture2D );
             m_fboCamera->setViewport( mViewport );
             //m_fboCamera->setComputeNearFarMode(
-            //                                  osg::CullSettings::COMPUTE_NEAR_FAR_USING_BOUNDING_VOLUMES );*/
+            //  osg::CullSettings::COMPUTE_NEAR_FAR_USING_BOUNDING_VOLUMES );
+#endif
             return;
         }
 
@@ -307,9 +319,12 @@ void UnitInOut::AssignOutputTexture()
 ////////////////////////////////////////////////////////////////////////////////
 void UnitInOut::AssignFBO()
 {
+#if !VES_USE_FBO_CAMERA
     getOrCreateStateSet()->setAttribute(
         mFBO.get(),
         osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
-    //addChild( m_fboCamera.get() );
+#else
+    addChild( m_fboCamera.get() );
+#endif
 }
 ////////////////////////////////////////////////////////////////////////////////
