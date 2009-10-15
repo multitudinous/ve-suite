@@ -277,14 +277,7 @@ ves::xplorer::scenegraph::Geode* OSGVectorStage::createInstanced(vtkPolyData* gl
 {
     std::cout << "creating osg planes" << std::endl;
     //Now pull in the vtk data
-    if (glyph==NULL)
-    {
-        std::cout << " glyph is null " << std::endl;
-        return NULL;
-    }
-    //glyph->Update();
-    
-    vtkPolyData *polyData = glyph;//->GetOutput();
+    vtkPolyData *polyData = glyph;
     if (polyData==NULL)
     {
         std::cout << "pd is null " << std::endl;
@@ -298,7 +291,7 @@ ves::xplorer::scenegraph::Geode* OSGVectorStage::createInstanced(vtkPolyData* gl
         std::cout << " pd point data is null " << std::endl;
         return NULL;
     }
-    pointData->Update();
+    //pointData->Update();
 
     vtkPoints *points = polyData->GetPoints();    
     if (points==NULL)
@@ -307,7 +300,7 @@ ves::xplorer::scenegraph::Geode* OSGVectorStage::createInstanced(vtkPolyData* gl
         return NULL;
     }
     
-    vtkDataArray *vectorArray = pointData->GetVectors(vectorName.c_str());//("GlyphVector");
+    vtkDataArray *vectorArray = pointData->GetVectors(vectorName.c_str());
     vtkDataArray *scalarArray = pointData->GetScalars(scalarName.c_str());
 
     if (vectorArray==NULL)
@@ -321,10 +314,8 @@ ves::xplorer::scenegraph::Geode* OSGVectorStage::createInstanced(vtkPolyData* gl
         std::cout << " scalars are null " << std::endl;
         return NULL;
     }
-    
-    //if ((vectorArray==NULL) && (scalarArray==NULL))
-    //    return NULL;
-#if 1
+
+#if 0
     //calculate texture dimension
     int numPoints = points->GetNumberOfPoints();
     std::cout << "number of points " << numPoints << std::endl;
@@ -519,8 +510,8 @@ ves::xplorer::scenegraph::Geode* OSGVectorStage::createInstanced(vtkPolyData* gl
     geom->setUseDisplayList( false );
     geom->setUseVertexBufferObjects( true );
 
-    //osg::ref_ptr< ves::xplorer::scenegraph::VTKTextureCreator > 
-    ves::xplorer::scenegraph::VTKTextureCreator* rawVTKData = new ves::xplorer::scenegraph::VTKTextureCreator();
+    osg::ref_ptr< ves::xplorer::scenegraph::VTKTextureCreator > rawVTKData = new ves::xplorer::scenegraph::VTKTextureCreator();
+    //ves::xplorer::scenegraph::VTKTextureCreator* rawVTKData = new ves::xplorer::scenegraph::VTKTextureCreator();
     rawVTKData->SetPolyData( glyph );
     rawVTKData->SetActiveVectorAndScalar( vectorName, scalarName );
     rawVTKData->loadData();
