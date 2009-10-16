@@ -117,6 +117,9 @@ protected:
     wxButton* _advancedButton;///<Display the color by scalar dialog
     wxButton* _computeButton;///<Compute the iso-surface
 
+    ///Check box to control gpu tools
+    wxCheckBox* m_gpuToolsChkBox;
+
     void _onPolydata( wxCommandEvent& event );
 
     /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX
@@ -130,6 +133,7 @@ protected:
 
     ///wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON1
     void _onAdvanced( wxCommandEvent& event );
+
 
     std::string ConvertUnicode( const wxChar* data )
     {

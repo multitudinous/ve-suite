@@ -114,12 +114,21 @@ void Polydata::CreateControls()
     _useWarpedSurfaceCheckBox->SetValue( false );
     itemStaticBoxSizer3->Add( _useWarpedSurfaceCheckBox, 0, wxGROW | wxALL, 5 );
 
+    /////////////////////////////////////////
     wxStaticText* itemStaticText6 = new wxStaticText( itemDialog1, wxID_STATIC, _T( "Scale Factor" ), wxDefaultPosition, wxDefaultSize, 0 );
     itemStaticBoxSizer3->Add( itemStaticText6, 0, wxALIGN_LEFT | wxALL | wxADJUST_MINSIZE, 5 );
 
     _polydataSlider = new wxSlider( itemDialog1, POLYDATA_PLANE_SLIDER, 0, 0, 100, wxDefaultPosition, wxSize( 300, -1 ), wxSL_HORIZONTAL | wxSL_LABELS );
     itemStaticBoxSizer3->Add( _polydataSlider, 0, wxGROW | wxALL, 5 );
-
+    /////////////////////////////////////////
+    wxStaticBox* gpuToolsStaticSizer = new wxStaticBox( itemDialog1, wxID_ANY, _T( "GPU Tools" ) );
+    wxStaticBoxSizer* itemStaticBoxSizer10 = new wxStaticBoxSizer( gpuToolsStaticSizer, wxVERTICAL );
+    itemStaticBoxSizer3->Add( itemStaticBoxSizer10, 0, wxGROW | wxALL, 5 );
+    
+    m_gpuToolsChkBox = new wxCheckBox( itemDialog1, wxID_ANY, _T( "Use GPU Tools" ), wxDefaultPosition, wxDefaultSize, 0 );
+    m_gpuToolsChkBox->SetValue( false );
+    itemStaticBoxSizer10->Add( m_gpuToolsChkBox, 0, wxALIGN_LEFT | wxALL, 5 );
+    ////////////////////////////////////////
     wxBoxSizer* itemBoxSizer8 = new wxBoxSizer( wxHORIZONTAL );
     itemStaticBoxSizer3->Add( itemBoxSizer8, 0, wxALIGN_CENTER_HORIZONTAL | wxALL, 5 );
 
@@ -208,6 +217,11 @@ void Polydata::_onAddPolydata( wxCommandEvent& WXUNUSED( event ) )
     }
     newCommand->AddDataValuePair( warpSurface );
 
+    unsigned int checkBox = m_gpuToolsChkBox->IsChecked();
+    ves::open::xml::DataValuePairPtr useGPUTools( new ves::open::xml::DataValuePair() );
+    useGPUTools->SetData( "GPU Tools", checkBox );
+    newCommand->AddDataValuePair( useGPUTools );
+    
     try
     {
         dynamic_cast<Vistab*>( GetParent() )->SendUpdatedSettingsToXplorer( newCommand );
