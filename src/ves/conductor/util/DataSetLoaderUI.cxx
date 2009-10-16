@@ -419,7 +419,7 @@ void DataSetLoaderUI::OnLoadFile( wxCommandEvent& WXUNUSED( event ) )
                          _T( "Open Data Set File" ),
                          ::wxGetCwd(),
                          _T( "" ),
-                         _T( "VTK DataSet Files (*.vtk;*.vtu;*.vts;*.vti;*.vtm)|*.vtk;*.vtu;*.vts;*.vti;*.vtm;|StarCD Parameter File (*.param)|*.param;|EnSight(*.ens;*.case)|*.ens;*.case;|MFIX (*.mfix)|*.mfix;|Fluent (*.cas)|*.cas;|AVS (*.avs)|*.avs;|Dicom (*.dcm)|*.dcm;|All Files (*.*)|*.*" ),
+                         _T( "VTK DataSet Files (*.vtk;*.vtu;*.vts;*.vti;*.vtm;*.vtp;*.vtr;)|*.vtk;*.vtu;*.vts;*.vti;*.vtm;*.vtp;*.vtr;|StarCD Parameter File (*.param)|*.param;|EnSight(*.ens;*.case)|*.ens;*.case;|MFIX (*.mfix)|*.mfix;|Fluent (*.cas)|*.cas;|AVS (*.avs)|*.avs;|Dicom (*.dcm)|*.dcm;|All Files (*.*)|*.*" ),
                          wxOPEN | wxFILE_MUST_EXIST | wxFD_PREVIEW,
                          wxDefaultPosition );
     dialog.CentreOnParent();
