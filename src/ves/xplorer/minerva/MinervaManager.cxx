@@ -19,6 +19,7 @@
 #include <ves/xplorer/minerva/TransformHandler.h>
 #include <ves/xplorer/minerva/NavigateToModel.h>
 #include <ves/xplorer/minerva/ModelWrapper.h>
+#include <ves/xplorer/minerva/Log.h>
 
 #include <Minerva/Config.h>
 #include <Minerva/Core/Data/Camera.h>
@@ -240,6 +241,9 @@ void MinervaManager::AddEarthToScene()
 
   Usul::Pointers::reference ( _body );
 
+  // Set the log to print to vprDBG.
+  _body->logSet ( new Log );
+
   _scene = _body->scene();
 
   _scene->getOrCreateStateSet()->setRenderBinDetails ( -100, "RenderBin" );
@@ -277,11 +281,17 @@ void MinervaManager::Clear()
     // Clean up job manager.
     if( 0x0 != _manager )
     {
+        vprDEBUG( vesDBG, 0 ) << "|Minerva manager canceling all threads." << std::endl << vprDEBUG_FLUSH;
+        
         // Remove all queued jobs and cancel running jobs.
         _manager->cancel();
 
+        vprDEBUG( vesDBG, 0 ) << "|Minerva manager waiting for threads to finish." << std::endl << vprDEBUG_FLUSH;
+
         // Wait for remaining jobs to finish.
         _manager->wait();
+
+        vprDEBUG( vesDBG, 0 ) << "|Minerva manager all threads finished." << std::endl << vprDEBUG_FLUSH;
 
         // Delete the manager.
         delete _manager;
