@@ -30,71 +30,73 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#ifndef CFD_POLYDATA_H
-#define CFD_POLYDATA_H
+#pragma once
+//This class wraps the OSG Vertex Shader based rendering
+//the Testure2D data is used as away to transfer data into the shader
+//It acts as a raw array instead of 2D data
 
-#include <ves/xplorer/event/viz/cfdObjects.h>
+#ifdef WIN32
+#include <windows.h>
+#endif
 
-class vtkPolyDataMapper;
-class vtkWarpVector;
+#include <osgDB/ReadFile>
+#include <osg/Geometry>
+#include <osg/PositionAttitudeTransform>
+//#include "VTKStage.h"
+#include <vtkPointData.h>
+#include <math.h>
+
+#include <osg/Geometry>
+#include <osg/io_utils>
+#include <osg/Math>
+
+class vtkPolyData;
 
 namespace ves
 {
 namespace xplorer
 {
-/*!\file cfdPolyData.h
-cfdPolyData API
-*/
-/*!\class ves::xplorer::cfdPolyData
-*
-*/
-class VE_XPLORER_EXPORTS cfdPolyData : public cfdObjects
+namespace scenegraph
+{
+class Geode;
+}
+}
+}
+
+namespace ves
+{
+namespace xplorer
+{
+namespace event
+{
+namespace viz
+{
+class OSGWarpedSurfaceStage
 {
 public:
-    ///Constructor.
-    ///\param op_val Set to 1.0.
-    cfdPolyData( float op_val = 1.0 );
+	OSGWarpedSurfaceStage(void);
+	~OSGWarpedSurfaceStage(void);
 
-    ///Destructor.
-    virtual ~cfdPolyData();
-
-    ///Update.
-    virtual void Update( void );
-
-    ///In future, multi-threaded apps will make a copy of VjObs_i commandArray.
-    virtual void UpdateCommand();
-
-    ///Assigns particle option.
-    ///\param option
-    void SetParticleOption( unsigned int option );
-
-    ///Gets particle option.
-    unsigned int GetParticleOption();
-
-    ///Sets particle scale.
-    ///\param x
-    void SetParticleScale( float x );
-
-    ///Gets particle scale.
-    float GetParticleScale();
+	//create a osgNode
+	//polydata is supposed to be triangle strips
+	//displacement is the vetice displacemnet vector for each of the point data in polydata
+	//colorScalar is the scalar for the point data in polydata used to color the result
+	ves::xplorer::scenegraph::Geode* createMesh(vtkPolyData* polydata, std::string displacement, std::string colorScalar);
 
 private:
-    ///Sphere scaling.
-    float GetSphereScaleFactor();
-    ///String to hold color by scalar.
-    std::string colorByScalar;
-    ///Map for vtk.
-    vtkPolyDataMapper *map;
-    ///Warper for vtk.
-    vtkWarpVector* warper;
-    bool warpSurface;///Test for warped surface.
-    double warpedContourScale;///<warped contour scale value
 
-    ///point cloud or variably sized spheres.
-    unsigned int  _particleOption;
-    ///particle scale.
-    float _particleScale;
-};
+	//an m x n texture is used to transfer data
+	int tm; 
+	int tn;
+
+	//two utility functions used to determine tm and tn, since texture dimension needs to be 2^n
+	int mylog2(unsigned x);
+	int mypow2(unsigned x);
+		
+	void createMeshData( osg::Geometry* geom, vtkPolyData* polydata, 
+                        std::string displacement, std::string colorScalar);
+};    
 }
 }
-#endif
+}
+}

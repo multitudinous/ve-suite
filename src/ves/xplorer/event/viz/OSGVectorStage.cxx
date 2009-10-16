@@ -588,18 +588,18 @@ ves::xplorer::scenegraph::Geode* OSGVectorStage::createInstanced(vtkPolyData* gl
         "void main() \n"
         "{ \n"
         "    float fiid = gl_InstanceID; \n"
-            // Generate stp texture coords from the instance ID.
+        // Generate stp texture coords from the instance ID.
         "    vec3 tC = generateTexCoord( fiid ); \n"
 
         // Create orthonormal basis to position and orient this instance.
-        "vec4 newZ = texture3D( texDir, tC ); \n"
-        "vec3 newX = cross( newZ.xyz, vec3( 0,0,1 ) ); \n"
-        "normalize( newX ); \n"
-        "vec3 newY = cross( newZ.xyz, newX ); \n"
-        "normalize( newY ); \n"
-        "vec4 pos = texture3D( texPos, tC ); \n"
-        "mat4 mV = mat4( newX.x, newX.y, newX.z, 0., newY.x, newY.y, newY.z, 0., newZ.x, newZ.y, newZ.z, 0., pos.x, pos.y, pos.z, 1. ); \n"
-        "gl_Position = (gl_ModelViewProjectionMatrix * mV * gl_Vertex); \n"
+        "   vec4 newZ = texture3D( texDir, tC ); \n"
+        "   vec3 newX = cross( newZ.xyz, vec3( 0,0,1 ) ); \n"
+        "   normalize( newX ); \n"
+        "   vec3 newY = cross( newZ.xyz, newX ); \n"
+        "   normalize( newY ); \n"
+        "   vec4 pos = texture3D( texPos, tC ); \n"
+        "   mat4 mV = mat4( newX.x, newX.y, newX.z, 0., newY.x, newY.y, newY.z, 0., newZ.x, newZ.y, newZ.z, 0., pos.x, pos.y, pos.z, 1. ); \n"
+        "   gl_Position = (gl_ModelViewProjectionMatrix * mV * gl_Vertex); \n"
         //"   vec4 pos = texture3D( texPos, tC ); \n"
         // Create an orientation matrix. Orient/transform the arrow.
         //"   const mat3 orientMat = makeOrientMat( tC ); \n"

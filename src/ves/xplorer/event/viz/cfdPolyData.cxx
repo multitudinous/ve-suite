@@ -31,6 +31,8 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/xplorer/event/viz/cfdPolyData.h>
+#include <ves/xplorer/event/viz/OSGWarpedSurfaceStage.h>
+
 #include <ves/xplorer/DataSet.h>
 #include <ves/xplorer/environment/cfdEnum.h>
 
@@ -55,6 +57,7 @@
 
 using namespace ves::xplorer;
 using namespace ves::xplorer::scenegraph;
+using namespace ves::xplorer::event::viz;
 
 cfdPolyData::cfdPolyData( float op_val )
 {
@@ -193,7 +196,7 @@ void cfdPolyData::Update()
               GetParticleOption() == 0 )
     {
         vprDEBUG( vesDBG, 1 ) << " IS VERTEX-BASED: point cloud"
-        << std::endl << vprDEBUG_FLUSH;
+            << std::endl << vprDEBUG_FLUSH;
         this->map->SetColorModeToMapScalars();
         this->map->SetInput( pd );
         temp->GetProperty()->SetRepresentationToPoints();
@@ -202,8 +205,12 @@ void cfdPolyData::Update()
     else
     {
         vprDEBUG( vesDBG, 1 ) << " IS POLYDATA SURFACE"
-        << std::endl << vprDEBUG_FLUSH;
-        if( warpSurface )
+            << std::endl << vprDEBUG_FLUSH;
+        if( m_gpuTools )
+        {
+            ;
+        }
+        else if( warpSurface )
         {
             this->warper->SetInput( pd );
             this->warper->SetScaleFactor( this->warpedContourScale );
@@ -256,18 +263,31 @@ void cfdPolyData::Update()
         }
     }
 
-    map->SetScalarModeToUsePointFieldData();
-    map->UseLookupTableScalarRangeOn();
-    map->SelectColorArray( GetActiveDataSet()->
-        GetActiveScalarName().c_str() );
-    map->Update();
-
-    temp->SetMapper( this->map );
-    temp->GetProperty()->SetSpecularPower( 20.0f );
-    geodes.push_back( new ves::xplorer::scenegraph::Geode() );
-    geodes.back()->TranslateToGeode( temp );
-    temp->Delete();
-    this->updateFlag = true;
+    if( !m_gpuTools )
+    {
+        map->SetScalarModeToUsePointFieldData();
+        map->UseLookupTableScalarRangeOn();
+        map->SelectColorArray( GetActiveDataSet()->
+                              GetActiveScalarName().c_str() );
+        map->Update();
+        
+        temp->SetMapper( this->map );
+        temp->GetProperty()->SetSpecularPower( 20.0f );
+        geodes.push_back( new ves::xplorer::scenegraph::Geode() );
+        geodes.back()->TranslateToGeode( temp );
+        temp->Delete();
+        this->updateFlag = true;
+    }
+    else
+    {
+        OSGWarpedSurfaceStage* surface = new OSGWarpedSurfaceStage();
+        geodes.push_back( surface->createMesh( pd, 
+            GetActiveDataSet()->GetActiveVectorName(), 
+            GetActiveDataSet()->GetActiveScalarName() ) );
+        delete surface;
+        updateFlag = true;
+        temp->Delete();
+    }
 }
 
 //////////////////////////////////////////////////////////
@@ -327,9 +347,10 @@ void cfdPolyData::UpdateCommand()
         warpSurface = false;
     }
 
-//   warpsurface = surface;
-//   SetRequestedValue( static_cast< int >( surface ) );
-
+    activeModelDVP = objectCommand->GetDataValuePair( "GPU Tools" );
+    unsigned int gpuTools;
+    activeModelDVP->GetData( gpuTools );
+    m_gpuTools = gpuTools;
 }
 
 float cfdPolyData::GetSphereScaleFactor()
