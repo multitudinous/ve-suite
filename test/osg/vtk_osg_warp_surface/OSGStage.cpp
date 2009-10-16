@@ -301,15 +301,15 @@ void OSGStage::createMeshData( osg::Geometry* geom, vtkPolyData* polydata, strin
         "void main() \n"
         "{ \n"
 
-			"float a = mod( osg_SimulationTime*100, 314.) * 0.01f; \n"
-			"float scalar =  sin(a) * 100.0f;\n"
+			"float a = mod( osg_SimulationTime*100.0, 314.0) * 0.01; \n"
+			"float scalar =  sin(a) * 100.0;\n"
             "vec4 vecOff = scalar * texture2D( texVec, gl_MultiTexCoord0.st ); \n"
 			"vec4 color = texture2D( texColor, gl_MultiTexCoord0.st ); \n"
             "vec4 position = vec4( (gl_Vertex.xyz + vecOff.xyz), gl_Vertex.w ); \n"
 			
             "gl_Position = gl_ProjectionMatrix * gl_ModelViewMatrix * position; \n"
 
-            "color[3]=1.0f; \n"
+            "color[3]=1.0; \n"
 			"gl_FrontColor = color; \n"
 
         "} \n";

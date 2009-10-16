@@ -3,7 +3,9 @@
 //the Testure2D data is used as away to transfer data into the shader
 //It acts as a raw array instead of 2D data
 
+#ifdef WIN32
 #include <windows.h>
+#endif
 
 #include <osgDB/ReadFile>
 #include <osgViewer/Viewer>

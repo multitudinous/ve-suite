@@ -1,0 +1,25 @@
+##Builds osg vtk test app
+import os, sys, string
+import SConsAddons.Util as sca_util
+
+pj = os.path.join
+
+Import('RootDir ves_pkg LIBDIR GetPlatform buildDir osg_options vtk_options')
+
+srcDir = os.path.abspath( pj(RootDir, 'test', 'osg', 'vtk_osg_warp_surface') )
+srcs = sca_util.getSourcesRecursive( srcDir )
+header = sca_util.getHeadersRecursive( srcDir )
+
+
+env = ves_pkg.getEnv().Clone()
+
+osg_options.apply( env )
+vtk_options.apply( env )
+
+multiblock = ves_pkg.createProgram('warpSurfaceVTKOSGTApp' + env["PROGSUFFIX"], env, 'bin')
+#prog = ves_pkg.createProgram('ves_xplorer' + env["PROGSUFFIX"], env, 'bin',
+#    True,resources,pj( RootDir, 'src', 'apps', 'xplorer','Info.plist'),
+#    pj( RootDir, 'dist', 'darwin', 'PkgInfo'))
+
+multiblock.addSources( srcs )
+multiblock.build()
