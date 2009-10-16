@@ -46,7 +46,7 @@
 #include <ves/xplorer/scenegraph/rtt/UnitInOut.h>
 #include <ves/xplorer/scenegraph/rtt/UnitInResampleOut.h>
 #include <ves/xplorer/scenegraph/rtt/UnitOut.h>
-#include <ves/xplorer/scenegraph/rtt/ShaderAttribute.h>
+//#include <ves/xplorer/scenegraph/rtt/ShaderAttribute.h>
 #include <ves/xplorer/Debug.h>
 
 #include <ves/open/xml/Command.h>
@@ -445,34 +445,58 @@ vxsr::Processor* SceneRenderToTexture::CreatePipelineProcessor(
         //Set name and indicies
         blurX->setName( "BlurHorizontal" );
 
-        osg::ref_ptr< vxsr::ShaderAttribute > gaussX =
-            new vxsr::ShaderAttribute();
+        //osg::ref_ptr< vxsr::ShaderAttribute > gaussX =
+            //new vxsr::ShaderAttribute();
+        osg::ref_ptr< osg::Program > gaussX = new osg::Program();
 
         //Setup horizontal blur shaders
         gaussX->addShader( m_1dxVP.get() );
         gaussX->addShader( m_1dxFP.get() );
         gaussX->setName( "BlurHorizontalShader" );
 
-        gaussX->add( "quadScreenSize", osg::Uniform::FLOAT_VEC2 );
-        gaussX->add( "WT9_0", osg::Uniform::FLOAT );
-        gaussX->add( "WT9_1", osg::Uniform::FLOAT );
-        gaussX->add( "WT9_2", osg::Uniform::FLOAT );
-        gaussX->add( "WT9_3", osg::Uniform::FLOAT );
-        gaussX->add( "WT9_4", osg::Uniform::FLOAT );
-        gaussX->add( "glowMap", osg::Uniform::SAMPLER_2D );
+        //gaussX->add( "quadScreenSize", osg::Uniform::FLOAT_VEC2 );
+        //gaussX->add( "WT9_0", osg::Uniform::FLOAT );
+        //gaussX->add( "WT9_1", osg::Uniform::FLOAT );
+        //gaussX->add( "WT9_2", osg::Uniform::FLOAT );
+        //gaussX->add( "WT9_3", osg::Uniform::FLOAT );
+        //gaussX->add( "WT9_4", osg::Uniform::FLOAT );
+        //gaussX->add( "glowMap", osg::Uniform::SAMPLER_2D );
+        osg::ref_ptr< osg::Uniform > quadScreenSizeUniform =
+            new osg::Uniform( "quadScreenSize", quadScreenSize );
+        osg::ref_ptr< osg::Uniform > WT9_0Uniform =
+            new osg::Uniform( "WT9_0", static_cast< float >( 0.5 ) );
+        osg::ref_ptr< osg::Uniform > WT9_1Uniform =
+            new osg::Uniform( "WT9_1", static_cast< float >( 0.4 ) );
+        osg::ref_ptr< osg::Uniform > WT9_2Uniform =
+            new osg::Uniform( "WT9_2", static_cast< float >( 0.3 ) );
+        osg::ref_ptr< osg::Uniform > WT9_3Uniform =
+            new osg::Uniform( "WT9_3", static_cast< float >( 0.2 ) );
+        osg::ref_ptr< osg::Uniform > WT9_4Uniform =
+            new osg::Uniform( "WT9_4", static_cast< float >( 0.1 ) );
 
-        gaussX->set( "quadScreenSize", quadScreenSize );
-        gaussX->set( "WT9_0", static_cast< float >( 0.5 ) );
-        gaussX->set( "WT9_1", static_cast< float >( 0.4 ) );
-        gaussX->set( "WT9_2", static_cast< float >( 0.3 ) );
-        gaussX->set( "WT9_3", static_cast< float >( 0.2 ) );
-        gaussX->set( "WT9_4", static_cast< float >( 0.1 ) );
-        gaussX->set( "glowMap", 0 );
+        //gaussX->set( "quadScreenSize", quadScreenSize );
+        //gaussX->set( "WT9_0", static_cast< float >( 0.5 ) );
+        //gaussX->set( "WT9_1", static_cast< float >( 0.4 ) );
+        //gaussX->set( "WT9_2", static_cast< float >( 0.3 ) );
+        //gaussX->set( "WT9_3", static_cast< float >( 0.2 ) );
+        //gaussX->set( "WT9_4", static_cast< float >( 0.1 ) );
+        //gaussX->set( "glowMap", 0 );
 
-        blurX->getOrCreateStateSet()->setAttributeAndModes( gaussX.get() );
+        //blurX->getOrCreateStateSet()->setAttributeAndModes( gaussX.get() );
+        osg::ref_ptr< osg::StateSet > stateSet = blurX->getOrCreateStateSet();
+        stateSet->setAttribute(
+            gaussX.get(),
+            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+        stateSet->addUniform( quadScreenSizeUniform.get() );
+        stateSet->addUniform( WT9_0Uniform.get() );
+        stateSet->addUniform( WT9_1Uniform.get() );
+        stateSet->addUniform( WT9_2Uniform.get() );
+        stateSet->addUniform( WT9_3Uniform.get() );
+        stateSet->addUniform( WT9_4Uniform.get() );
+        blurX->SetInputToUniform( glowDownSample.get(), "glowMap", true );
         blurX->SetInputTextureIndexForViewportReference( 0 );
     }
-    glowDownSample->addChild( blurX.get() );
+    //glowDownSample->addChild( blurX.get() );
     blurX->Update();
 
     //Perform vertical 1D gauss convolution
@@ -481,34 +505,58 @@ vxsr::Processor* SceneRenderToTexture::CreatePipelineProcessor(
         //Set name and indicies
         blurY->setName( "BlurVertical" );
 
-        osg::ref_ptr< vxsr::ShaderAttribute > gaussY =
-            new vxsr::ShaderAttribute();
+        //osg::ref_ptr< vxsr::ShaderAttribute > gaussY =
+            //new vxsr::ShaderAttribute();
+        osg::ref_ptr< osg::Program > gaussY = new osg::Program();
 
         //Setup vertical blur shaders
         gaussY->addShader( m_1dyVP.get() );
         gaussY->addShader( m_1dyFP.get() );
         gaussY->setName( "BlurVerticalShader" );
 
-        gaussY->add( "quadScreenSize", osg::Uniform::FLOAT_VEC2 );
-        gaussY->add( "WT9_0", osg::Uniform::FLOAT );
-        gaussY->add( "WT9_1", osg::Uniform::FLOAT );
-        gaussY->add( "WT9_2", osg::Uniform::FLOAT );
-        gaussY->add( "WT9_3", osg::Uniform::FLOAT );
-        gaussY->add( "WT9_4", osg::Uniform::FLOAT );
-        gaussY->add( "glowMap", osg::Uniform::SAMPLER_2D );
+        //gaussY->add( "quadScreenSize", osg::Uniform::FLOAT_VEC2 );
+        //gaussY->add( "WT9_0", osg::Uniform::FLOAT );
+        //gaussY->add( "WT9_1", osg::Uniform::FLOAT );
+        //gaussY->add( "WT9_2", osg::Uniform::FLOAT );
+        //gaussY->add( "WT9_3", osg::Uniform::FLOAT );
+        //gaussY->add( "WT9_4", osg::Uniform::FLOAT );
+        //gaussY->add( "glowMap", osg::Uniform::SAMPLER_2D );
+        osg::ref_ptr< osg::Uniform > quadScreenSizeUniform =
+            new osg::Uniform( "quadScreenSize", quadScreenSize );
+        osg::ref_ptr< osg::Uniform > WT9_0Uniform =
+            new osg::Uniform( "WT9_0", static_cast< float >( 0.5 ) );
+        osg::ref_ptr< osg::Uniform > WT9_1Uniform =
+            new osg::Uniform( "WT9_1", static_cast< float >( 0.4 ) );
+        osg::ref_ptr< osg::Uniform > WT9_2Uniform =
+            new osg::Uniform( "WT9_2", static_cast< float >( 0.3 ) );
+        osg::ref_ptr< osg::Uniform > WT9_3Uniform =
+            new osg::Uniform( "WT9_3", static_cast< float >( 0.2 ) );
+        osg::ref_ptr< osg::Uniform > WT9_4Uniform =
+            new osg::Uniform( "WT9_4", static_cast< float >( 0.1 ) );
 
-        gaussY->set( "quadScreenSize", quadScreenSize );
-        gaussY->set( "WT9_0", static_cast< float >( 0.5 ) );
-        gaussY->set( "WT9_1", static_cast< float >( 0.4 ) );
-        gaussY->set( "WT9_2", static_cast< float >( 0.3 ) );
-        gaussY->set( "WT9_3", static_cast< float >( 0.2 ) );
-        gaussY->set( "WT9_4", static_cast< float >( 0.1 ) );
-        gaussY->set( "glowMap", 0 );
+        //gaussY->set( "quadScreenSize", quadScreenSize );
+        //gaussY->set( "WT9_0", static_cast< float >( 0.5 ) );
+        //gaussY->set( "WT9_1", static_cast< float >( 0.4 ) );
+        //gaussY->set( "WT9_2", static_cast< float >( 0.3 ) );
+        //gaussY->set( "WT9_3", static_cast< float >( 0.2 ) );
+        //gaussY->set( "WT9_4", static_cast< float >( 0.1 ) );
+        //gaussY->set( "glowMap", 0 );
 
-        blurY->getOrCreateStateSet()->setAttributeAndModes( gaussY.get() );
+        //blurY->getOrCreateStateSet()->setAttributeAndModes( gaussY.get() );
+        osg::ref_ptr< osg::StateSet > stateSet = blurY->getOrCreateStateSet();
+        stateSet->setAttribute(
+            gaussY.get(),
+            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+        stateSet->addUniform( quadScreenSizeUniform.get() );
+        stateSet->addUniform( WT9_0Uniform.get() );
+        stateSet->addUniform( WT9_1Uniform.get() );
+        stateSet->addUniform( WT9_2Uniform.get() );
+        stateSet->addUniform( WT9_3Uniform.get() );
+        stateSet->addUniform( WT9_4Uniform.get() );
+        blurY->SetInputToUniform( blurX.get(), "glowMap", true );
         blurY->SetInputTextureIndexForViewportReference( 0 );
     }
-    blurX->addChild( blurY.get() );
+    //blurX->addChild( blurY.get() );
     blurY->Update();
 
     //Perform final color operations and blends
@@ -518,17 +566,26 @@ vxsr::Processor* SceneRenderToTexture::CreatePipelineProcessor(
         //Set name and indicies
         final->setName( "Final" );
 
-        osg::ref_ptr< vxsr::ShaderAttribute > finalShader =
-            new vxsr::ShaderAttribute();
+        //osg::ref_ptr< vxsr::ShaderAttribute > finalShader =
+            //new vxsr::ShaderAttribute();
+        osg::ref_ptr< osg::Program > finalShader = new osg::Program();
 
         //Setup vertical blur shaders
         finalShader->addShader( m_finalShader.get() );
         finalShader->setName( "FinalShader" );
 
-        finalShader->add( "glowStrength", osg::Uniform::FLOAT );
-        finalShader->set( "glowStrength", static_cast< float >( 6.0 ) );
+        //finalShader->add( "glowStrength", osg::Uniform::FLOAT );
+        //finalShader->set( "glowStrength", static_cast< float >( 6.0 ) );
 
-        final->getOrCreateStateSet()->setAttributeAndModes( finalShader.get() );
+        osg::ref_ptr< osg::Uniform > glowStrengthUniform =
+            new osg::Uniform( "glowStrength", static_cast< float >( 6.0 ) );
+
+        //final->getOrCreateStateSet()->setAttributeAndModes( finalShader.get() );
+        osg::ref_ptr< osg::StateSet > stateSet = final->getOrCreateStateSet();
+        stateSet->setAttribute(
+            finalShader.get(),
+            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+        stateSet->addUniform( glowStrengthUniform.get() );
         final->SetInputToUniform( colorBuffer0.get(), "baseMap", false );
         final->SetInputToUniform( colorBuffer1.get(), "stencilMap", false );
         final->SetInputToUniform( blurY.get(), "glowMap", true );
