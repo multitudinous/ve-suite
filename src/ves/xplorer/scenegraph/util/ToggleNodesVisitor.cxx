@@ -60,8 +60,6 @@ ToggleNodesVisitor::ToggleNodesVisitor( osg::Node* osg_node, bool toggle,
         osg::NodePath tempPath = iter->second;
         for( size_t i = 0; i < tempPath.size(); ++i )
         {
-            std::cout << " here 2 " << std::endl;
-
             tempPath.at( i )->setNodeMask( 1 );
         }
     }
