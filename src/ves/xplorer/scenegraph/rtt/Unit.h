@@ -34,6 +34,8 @@
 #ifndef UNIT_H
 #define UNIT_H
 
+#define VES_USE_FBO_CAMERA 0
+
 // --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
 

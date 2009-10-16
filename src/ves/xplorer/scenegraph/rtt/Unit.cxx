@@ -137,7 +137,9 @@ Unit::Unit()
     //Create default geode
     mGeode = new osg::Geode();
     mGeode->setCullingActive( false );
+#if !VES_USE_FBO_CAMERA
     addChild( mGeode.get() );
+#endif
 
     //Initialze projection matrix
     mProjectionMatrix =
@@ -540,7 +542,9 @@ void Unit::CreateTexturedQuadDrawable(
         GL_LIGHTING,
         osg::StateAttribute::OFF | osg::StateAttribute::PROTECTED );
 
+#if !VES_USE_FBO_CAMERA
     quadGeometry->setDrawCallback( new Unit::DrawCallback( this ) );
+#endif
     /*osg::Vec3 maxCorner( corner + widthVec + heightVec );
     osg::Vec3 minCorner( corner );
     minCorner[ 2 ] -= 1;

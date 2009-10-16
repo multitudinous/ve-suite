@@ -43,10 +43,7 @@
 #include <osg/FrameBufferObject>
 
 // --- C/C++ Includes --- //
-
 #include <iostream>
-
-#define VES_USE_FBO_CAMERA 0
 
 using namespace ves::xplorer::scenegraph::rtt;
 
@@ -304,6 +301,7 @@ void UnitInOut::AssignOutputTexture()
             m_fboCamera->setViewport( mViewport );
             //m_fboCamera->setComputeNearFarMode(
             //  osg::CullSettings::COMPUTE_NEAR_FAR_USING_BOUNDING_VOLUMES );
+            m_fboCamera->addChild( mGeode.get() );
 #endif
             return;
         }
