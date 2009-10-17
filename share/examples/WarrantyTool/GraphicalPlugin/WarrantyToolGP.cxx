@@ -891,10 +891,20 @@ void WarrantyToolGP::CreateDBQuery( ves::open::xml::DataValuePairPtr dvp )
         return;
     }
 
+    bool failedLoad = false;
     while (more)
 	{
-        ves::xplorer::scenegraph::TextTexture* tempText = 
-            new ves::xplorer::scenegraph::TextTexture();
+        ves::xplorer::scenegraph::TextTexture* tempText = 0;
+        try
+        {
+            tempText = 
+                new ves::xplorer::scenegraph::TextTexture();
+        }
+        catch(...)
+        {
+            failedLoad = true;
+            break;
+        }
         float textColor[ 4 ] = { 0.0, 0.0, 0.0, 1.0 };
         tempText->SetTextColor( textColor );
 
@@ -935,11 +945,16 @@ void WarrantyToolGP::CreateDBQuery( ves::open::xml::DataValuePairPtr dvp )
         
 		more = rs.moveNext();
 	}
-    m_textTrans->addChild( m_groupedTextTextures.get() );
+
+    if( !failedLoad )
+    {
+        m_textTrans->addChild( m_groupedTextTextures.get() );
     
-    ves::xplorer::scenegraph::HighlightNodeByNameVisitor
-        highlight( m_cadRootNode, m_assemblyPartNumbers.at( 0 ), true, true );//,
-        //osg::Vec4( 0.34118, 1.0, 0.57255, 1.0 ) );
+        ves::xplorer::scenegraph::HighlightNodeByNameVisitor
+            highlight( m_cadRootNode, m_assemblyPartNumbers.at( 0 ), true, true );//,
+            //osg::Vec4( 0.34118, 1.0, 0.57255, 1.0 ) );
+    }
+
     
     mCommandHandler->SendConductorMessage( "Finished DB query..." );
 /*
