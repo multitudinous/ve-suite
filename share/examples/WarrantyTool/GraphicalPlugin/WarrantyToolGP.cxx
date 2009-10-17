@@ -482,7 +482,7 @@ void WarrantyToolGP::ParseDataFile( const std::string& csvFilename )
             continue;
         
         boost::algorithm::replace_all( sLine, "'", "" );
-        boost::algorithm::replace_all( data, "%", "" );
+        boost::algorithm::replace_all( sLine, "%", "" );
 
         parser << sLine; // Feed the line to the parser
         for( size_t i = 0; i < columnCount; ++i )
