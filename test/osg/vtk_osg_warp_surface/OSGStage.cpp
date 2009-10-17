@@ -148,8 +148,8 @@ void OSGStage::createMeshData( osg::Geometry* geom, vtkPolyData* polydata, strin
 	//Since same point can appear in different triangle strip. 
 	
 	int numVetex= 0;
-	int *pts;
-	int cStripNp;	
+	vtkIdType *pts;
+	vtkIdType cStripNp;	
 	int stripNum=0;
 
     for (strips->InitTraversal(); ((stripNum<numStrips) && (strips->GetNextCell(cStripNp, pts))); stripNum++)

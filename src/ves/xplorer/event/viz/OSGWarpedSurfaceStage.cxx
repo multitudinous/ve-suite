@@ -119,7 +119,7 @@ void OSGWarpedSurfaceStage::createMeshData( osg::Geometry* geom, vtkPolyData* po
     polydata = triangleStripper->GetOutput();
     
 	int numStrips = polydata->GetNumberOfStrips();
-	int numPts = polydata->GetNumberOfPoints();
+	//int numPts = polydata->GetNumberOfPoints();
 	vtkPointData *pointData = polydata->GetPointData();
 
 	if (pointData==NULL)
@@ -155,15 +155,15 @@ void OSGWarpedSurfaceStage::createMeshData( osg::Geometry* geom, vtkPolyData* po
 	osg::Vec3Array* colors = new osg::Vec3Array;
     osg::Vec2Array* tc = new osg::Vec2Array;
 
-	int numCells = polydata->GetNumberOfCells();
+	//int numCells = polydata->GetNumberOfCells();
 	vtkCellArray* strips = polydata->GetStrips();
 
 	//Number of vertex is potentially bigger than number of points, 
 	//Since same point can appear in different triangle strip. 
 	
 	int numVetex= 0;
-	int *pts;
-	int cStripNp;	
+	vtkIdType *pts;
+	vtkIdType cStripNp;	
 	int stripNum=0;
 
     for (strips->InitTraversal(); ((stripNum<numStrips) && (strips->GetNextCell(cStripNp, pts))); stripNum++)
@@ -222,7 +222,7 @@ void OSGWarpedSurfaceStage::createMeshData( osg::Geometry* geom, vtkPolyData* po
 		}
 	}
 	
-	int cs = colors->size();
+	//int cs = colors->size();
 	// No data for the Destination normals, not sure what to do. I don't think Paul calculation for his mesh works here
 
     geom->setVertexArray( v );

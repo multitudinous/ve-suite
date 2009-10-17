@@ -78,6 +78,6 @@ private:
 	int mylog2(unsigned x);
 	int mypow2(unsigned x);
 		
-	void OSGStage::createMeshData( osg::Geometry* geom, vtkPolyData* polydata, string displacement, string colorScalar);
+	void createMeshData( osg::Geometry* geom, vtkPolyData* polydata, string displacement, string colorScalar);
 
 };
