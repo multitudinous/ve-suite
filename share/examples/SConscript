@@ -2,6 +2,7 @@
 #import os, sys, string
 #pj = os.path.join
 #import SConsAddons.Util as sca_util
+Import( 'poco_options' )
 
 exampleSubdirs = Split("""
     CameraPlacementTool
@@ -15,12 +16,15 @@ exampleSubdirs = Split("""
     garage
     golf_game
     SimpleNetwork
-    WarrantyTool
     simple_physics
     input_animation
 """)
 #VascularSimViewer
 #    sensor_overlay
+
+if poco_options.isAvailable():
+    exampleSubdirs.append( 'WarrantyTool' )
+
 ##Run SConscript files in all of those folders.
 for d in exampleSubdirs:
    SConscript( dirs = d )

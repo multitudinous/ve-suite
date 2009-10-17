@@ -14,11 +14,8 @@ fileBundle.addFiles( iveFile )
 
 WarrantyToolSubdirs = Split("""
     UserInterface
+    GraphicalPlugin
 """)
-
-if poco_options.isAvailable():
-    WarrantyToolSubdirs.append( 'GraphicalPlugin' )
-
 
 ##Run SConscript files in all of these folders.
 for d in WarrantyToolSubdirs:
