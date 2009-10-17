@@ -287,8 +287,27 @@ void WarrantyToolUIDialog::GetTextInput( wxCommandEvent& event )
         cameraGeometryOnOffDVP->SetData( "ADD", ConvertUnicode( mPartListCMB->GetValue().c_str() ) );
     }
 
+    unsigned int numStrings = m_displayTextChkList->GetCount();
+    //wxArrayInt selections;
+    //numStrings = m_displayTextChkList->GetSelections( selections );
+    
+    ves::open::xml::OneDStringArrayPtr textFields( 
+        new ves::open::xml::OneDStringArray() );
+    for( unsigned int i = 0; i < numStrings; ++i )
+    {
+        if( m_displayTextChkList->IsChecked( i ) )
+        {
+            textFields->AddElementToArray( 
+                ConvertUnicode( m_displayTextChkList->GetString( i ).c_str() ) );
+        }
+    }
+    ves::open::xml::DataValuePairPtr displayText( 
+        new ves::open::xml::DataValuePair() );
+    displayText->SetData( "DISPLAY_TEXT_FIELDS", textFields );
+    
     ves::open::xml::CommandPtr command( new ves::open::xml::Command() ); 
     command->AddDataValuePair( cameraGeometryOnOffDVP );
+    command->AddDataValuePair( displayText );
     std::string mCommandName = "CAMERA_GEOMETRY_ON_OFF";
     command->SetCommandName( mCommandName );
     mServiceList->SendCommandStringToXplorer( command );

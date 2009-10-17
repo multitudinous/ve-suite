@@ -116,6 +116,8 @@ private:
     ves::open::xml::CommandPtr m_currentCommand;
     ///db filename
     std::string m_dbFilename;
+    ///Root of the CAD models
+    ves::xplorer::scenegraph::DCS* m_cadRootNode;
 };
 
 CREATE_VES_XPLORER_PLUGIN_ENTRY_POINT( WarrantyToolGP )
