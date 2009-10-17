@@ -74,26 +74,26 @@ namespace viz
 class OSGWarpedSurfaceStage
 {
 public:
-	OSGWarpedSurfaceStage(void);
-	~OSGWarpedSurfaceStage(void);
+    OSGWarpedSurfaceStage(void);
+    ~OSGWarpedSurfaceStage(void);
 
-	//create a osgNode
-	//polydata is supposed to be triangle strips
-	//displacement is the vetice displacemnet vector for each of the point data in polydata
-	//colorScalar is the scalar for the point data in polydata used to color the result
-	ves::xplorer::scenegraph::Geode* createMesh(vtkPolyData* polydata, std::string displacement, std::string colorScalar);
+    //create a osgNode
+    //polydata is supposed to be triangle strips
+    //displacement is the vetice displacemnet vector for each of the point data in polydata
+    //colorScalar is the scalar for the point data in polydata used to color the result
+    ves::xplorer::scenegraph::Geode* createMesh(vtkPolyData* polydata, std::string displacement, std::string colorScalar);
 
 private:
 
-	//an m x n texture is used to transfer data
-	int tm; 
-	int tn;
+    //an m x n texture is used to transfer data
+    int tm; 
+    int tn;
 
-	//two utility functions used to determine tm and tn, since texture dimension needs to be 2^n
-	int mylog2(unsigned x);
-	int mypow2(unsigned x);
-		
-	void createMeshData( osg::Geometry* geom, vtkPolyData* polydata, 
+    //two utility functions used to determine tm and tn, since texture dimension needs to be 2^n
+    int mylog2(unsigned x);
+    int mypow2(unsigned x);
+        
+    void createMeshData( osg::Geometry* geom, vtkPolyData* polydata, 
                         std::string displacement, std::string colorScalar);
 };    
 }

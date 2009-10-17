@@ -902,6 +902,7 @@ void WarrantyToolGP::CreateDBQuery( ves::open::xml::DataValuePairPtr dvp )
         }
         catch(...)
         {
+            m_groupedTextTextures = 0;
             failedLoad = true;
             break;
         }
@@ -910,11 +911,11 @@ void WarrantyToolGP::CreateDBQuery( ves::open::xml::DataValuePairPtr dvp )
 
         std::ostringstream tempTextData;
         std::string partNumber;
-
+        std::string partNumberHeader;
+        
 		for (std::size_t col = 0; col < cols; ++col)
 		{
-            const std::string partNumberHeader = rs.columnName(col);
-            //std::cout << rs.columnName(col) << std::endl;
+            partNumberHeader = rs.columnName(col);
             if( partNumberHeader == "Part_Number" )
             {
                 partNumber = rs[col].convert<std::string>();
@@ -922,7 +923,6 @@ void WarrantyToolGP::CreateDBQuery( ves::open::xml::DataValuePairPtr dvp )
                 m_assemblyPartNumbers.push_back( partNumber );
             }
 
-			//std::cout << rs[col].convert<std::string>() << " ";
             std::vector< std::string >::const_iterator iter = 
                 std::find( stringArray.begin(), stringArray.end(), rs.columnName(col) );
             
