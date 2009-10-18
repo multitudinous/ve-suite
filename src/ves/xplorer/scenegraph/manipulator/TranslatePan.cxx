@@ -34,6 +34,8 @@
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/manipulator/TranslatePan.h>
 
+#include <ves/xplorer/scenegraph/SceneManager.h>
+
 // --- OSG Includes --- //
 #include <osg/Geode>
 #include <osg/Geometry>
@@ -46,11 +48,17 @@ TranslatePan::TranslatePan()
     :
     Dragger( TransformationType::TRANSLATE_PAN )
 {
-    //If desktop mode
-    SetAutoRotateMode( AutoTransform::ROTATE_TO_SCREEN );
-    //If cave mode
-    //SetAutoRotateMode( AutoTransform::ROTATE_TO_CAMERA );
-
+    if( ves::xplorer::scenegraph::SceneManager::instance()->IsDesktopMode() )
+    {
+        //If desktop mode
+        SetAutoRotateMode( AutoTransform::ROTATE_TO_SCREEN );
+    }
+    else
+    {
+        //If cave mode
+        SetAutoRotateMode( AutoTransform::ROTATE_TO_CAMERA );
+    }
+    
     osg::ref_ptr< osg::StateSet > stateSet = getOrCreateStateSet();
     stateSet->setRenderBinDetails( 11, std::string( "RenderBin" ) );
 

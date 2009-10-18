@@ -34,6 +34,8 @@
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/manipulator/HelpCircle.h>
 
+#include <ves/xplorer/scenegraph/SceneManager.h>
+
 // --- OSG Includes --- //
 #include <osg/Geode>
 #include <osg/Geometry>
@@ -51,10 +53,16 @@ HelpCircle::HelpCircle()
     Dragger( TransformationType::HELP_CIRCLE ),
     m_clipNode( NULL )
 {
-    //If desktop mode
-    SetAutoRotateMode( AutoTransform::ROTATE_TO_SCREEN );
-    //If cave mode
-    //SetAutoRotateMode( AutoTransform::ROTATE_TO_CAMERA );
+    if( ves::xplorer::scenegraph::SceneManager::instance()->IsDesktopMode() )
+    {
+        //If desktop mode
+        SetAutoRotateMode( AutoTransform::ROTATE_TO_SCREEN );
+    }
+    else
+    {
+        //If cave mode
+        SetAutoRotateMode( AutoTransform::ROTATE_TO_CAMERA );
+    }
 
     SetupDefaultGeometry();
 

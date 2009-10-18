@@ -162,9 +162,23 @@ bool AutoTransform::computeLocalToWorldMatrix(
     } //end switch( nv->getVisitorType() )
 
     osg::Vec3d eye, center, up;
-    modelView->getLookAt( eye, center, up );
+    if( !modelView )
+    {
+        scale = m_scale * 2.0;
+        up.set( 0.0, 0.0, 1.0 );
+        eye.set(0.0, 0.0, 5.0 );
+        /*mHead.init( "VJHead" );
+        gmtl::Matrix44d vjHeadMat =
+        gmtl::convertTo< double >( mHead->getData() );
+        gmtl::Point3d jugglerHeadPoint =
+        gmtl::makeTrans< gmtl::Point3d >( vjHeadMat );*/
+    }
+    else
+    {
+        modelView->getLookAt( eye, center, up );
+    }
 
-    if( m_autoScaleToScreen )
+    if( m_autoScaleToScreen && modelView )
     {
         osg::Vec3d eyeVector;
         if( 1 )
