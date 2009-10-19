@@ -2613,12 +2613,12 @@ void AppFrame::LoadNewNetwork( wxUpdateUIEvent& WXUNUSED( event )  )
         CommandPtr rasterGroupCommand ( UserPreferencesDataBuffer::instance()->GetCommand ( ves::util::commands::ADD_RASTER_GROUP ) );
         CommandPtr elevationGroupCommand ( UserPreferencesDataBuffer::instance()->GetCommand ( ves::util::commands::ADD_ELEVATION_GROUP ) );
 
-        if ( rasterGroupCommand )
+        if ( rasterGroupCommand && rasterGroupCommand->GetNumberOfDataValuePairs() > 0  )
         {
           serviceList->SendCommandStringToXplorer( rasterGroupCommand );
         }
 
-        if ( elevationGroupCommand )
+        if ( elevationGroupCommand && elevationGroupCommand->GetNumberOfDataValuePairs() > 0 )
         {
           serviceList->SendCommandStringToXplorer( elevationGroupCommand );
         }
