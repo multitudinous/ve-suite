@@ -81,6 +81,8 @@ public:
     ///\param commandValuePair The data value pair representing command information.
     void AddDataValuePair( DataValuePairPtr commandValuePair );
 
+    ///Remove a data value pair from the command.
+    ///\param dataValueName The name of the data value pair to remove.
     void RemoveDataValuePair ( const std::string& dataValueName );
 
     ///Populate the Command data from an XML element.
