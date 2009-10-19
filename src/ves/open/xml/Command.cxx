@@ -120,7 +120,7 @@ void Command::AddDataValuePair( DataValuePairPtr commandValuePair )
     }
  }
 ////////////////////////////////////////////////////////////////////////////////
-void Command::RemoveDataValuePair ( const std::string& dataValueName )
+void Command::RemoveDataValuePair( const std::string& dataValueName )
 {
   std::map< std::string, DataValuePairPtr >::iterator iter ( mNameToDataValuePairMap.find ( dataValueName ) );
   if ( iter != mNameToDataValuePairMap.end() )
