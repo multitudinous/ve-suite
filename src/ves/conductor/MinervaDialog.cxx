@@ -108,7 +108,7 @@ enum
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_EVENT_TABLE( MinervaDialog, wxDialog )
+BEGIN_EVENT_TABLE( MinervaDialog, MinervaDialog::BaseClass )
     EVT_BUTTON( MINERVA_DIALOG_ADD_ELEVATION_WMS_LAYER, MinervaDialog::AddElevationLayerWMS )
     EVT_BUTTON( MINERVA_DIALOG_ADD_ELEVATION_LAYER_FILE_SYSTEM, MinervaDialog::AddElevationLayerFileSystem )
     EVT_BUTTON( MINERVA_DIALOG_REMOVE_ELEVATION_LAYER, MinervaDialog::RemoveElevationLayer )
@@ -121,7 +121,7 @@ END_EVENT_TABLE()
 ///////////////////////////////////////////////////////////////////////////////
 MinervaDialog::MinervaDialog( 
   wxWindow *parent, 
-  wxWindowID id ) : BaseClass( parent, id, WINDOW_TITLE, wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE ),
+  wxWindowID id ) : BaseClass( parent, id, WINDOW_TITLE, wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER ),
   _elevationLayersList( 0x0 ),
 	_addElevationLayerButton( 0x0 ),
 	_removeElevationLayerButton( 0x0 ),
@@ -153,7 +153,7 @@ MinervaDialog::MinervaDialog(
 	  elevationSizer = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT("Elevation") ), wxVERTICAL );
   	
 	  _elevationLayersList = new wxListBox( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, NULL, 0 ); 
-	  elevationSizer->Add( _elevationLayersList, 0, wxALL, 5 );
+	  elevationSizer->Add( _elevationLayersList, 0, wxALL | wxEXPAND, 5 );
   	
 	  wxGridSizer* buttonSizer;
     buttonSizer = new wxGridSizer( 3, 2, 0, 0 );
@@ -178,7 +178,7 @@ MinervaDialog::MinervaDialog(
 	  rasterSizer = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT("Raster") ), wxVERTICAL );
   	
 	  _rasterLayersList = new wxListBox( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, NULL, 0 ); 
-	  rasterSizer->Add( _rasterLayersList, 0, wxALL, 5 );
+	  rasterSizer->Add( _rasterLayersList, 0, wxALL | wxEXPAND, 5 );
   	
 	  wxGridSizer* buttonSizer;
 	  buttonSizer = new wxGridSizer( 3, 2, 0, 0 );
@@ -408,17 +408,19 @@ void MinervaDialog::_removeLayer(
     }
 }
 ///////////////////////////////////////////////////////////////////////////////
-void MinervaDialog::InitalizeFromCommands ( ves::open::xml::CommandPtr elevationGroupCommand, ves::open::xml::CommandPtr rasterGroupCommand )
+void MinervaDialog::InitalizeFromCommands( ves::open::xml::CommandPtr elevationGroupCommand, ves::open::xml::CommandPtr rasterGroupCommand )
 {
   if ( elevationGroupCommand )
   {
     _elevationGroupCommand = elevationGroupCommand;
+    ves::conductor::UserPreferencesDataBuffer::instance()->SetCommand ( _elevationGroupCommand->GetCommandName(), _elevationGroupCommand );
     MinervaDialog::_initializeFromCommand ( elevationGroupCommand, _elevationLayersList, _elevationLayers );
   }
 
   if ( rasterGroupCommand )
   {
     _rasterGroupCommand = rasterGroupCommand;
+    ves::conductor::UserPreferencesDataBuffer::instance()->SetCommand ( _rasterGroupCommand->GetCommandName(), _rasterGroupCommand );
     MinervaDialog::_initializeFromCommand ( rasterGroupCommand, _rasterLayersList, _rasterLayers );
   }
 }
