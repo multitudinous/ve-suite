@@ -157,11 +157,17 @@ void UnitInOut::SetOutputInternalFormat( GLenum format )
     for( TextureMap::iterator itr = mOutputTextures.begin(); 
         itr != mOutputTextures.end(); ++itr )
     {
-        if( itr->second.valid() )
+        /*if( itr->second.valid() )
         {
             itr->second->setInternalFormat( mOutputInternalFormat );
             itr->second->setSourceFormat(
                 CreateSourceTextureFormat( mOutputInternalFormat ) );
+        }*/
+        osg::Texture* texture = itr->get();
+        if( texture )
+        {
+            texture->setInternalFormat( mOutputInternalFormat );
+            texture->setSourceFormat( CreateSourceTextureFormat( mOutputInternalFormat ) );
         }
     }
 }
@@ -171,31 +177,36 @@ GLenum UnitInOut::GetOutputInternalFormat() const
     return mOutputInternalFormat;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UnitInOut::SetOutputTexture( osg::Texture* outputTexture, int mrt )
+/*void UnitInOut::SetOutputTexture( osg::Texture* outputTexture, int mrt )
 {
     if( outputTexture )
     {
-        mOutputTextures[ mrt ] = outputTexture;
+        mOutputTextures.push_back( outputTexture );
+        //mOutputTextures[ mrt ] = outputTexture;
     }
-}
+}*/
 ////////////////////////////////////////////////////////////////////////////////
 osg::Texture* UnitInOut::CreateOutputTexture( int mrt )
 {
     //If already exists, then return back
     osg::Texture* newTexture( 0 );
-    if( mOutputTextures.find( mrt ) !=  mOutputTextures.end() )
+    /*if( mOutputTextures.find( mrt ) !=  mOutputTextures.end() )
     {
         newTexture = mOutputTextures[ mrt ].get();
 
         return newTexture;
+    }*/
+    if( mrt < mOutputTextures.size() )
+    {
+        return mOutputTextures.at( mrt ).get();
     }
 
     //If not exists, then do allocate it
     if( mOutputType == TEXTURE_2D )
     {
         newTexture = new osg::Texture2D();
-        dynamic_cast< osg::Texture2D* >( newTexture )->setSubloadCallback(
-            new Subload2DCallback() );
+        //dynamic_cast< osg::Texture2D* >( newTexture )->setSubloadCallback(
+        //    new Subload2DCallback() );
         if( mViewport.valid() )
         {
             dynamic_cast< osg::Texture2D* >( newTexture )->setTextureSize(
@@ -214,16 +225,18 @@ osg::Texture* UnitInOut::CreateOutputTexture( int mrt )
     }
 
     //Setup texture parameters
-    newTexture->setResizeNonPowerOfTwoHint( false );
+    //newTexture->setResizeNonPowerOfTwoHint( false );
     newTexture->setWrap( osg::Texture::WRAP_S, osg::Texture::CLAMP_TO_EDGE );
     newTexture->setWrap( osg::Texture::WRAP_T, osg::Texture::CLAMP_TO_EDGE );
-    newTexture->setWrap( osg::Texture::WRAP_R, osg::Texture::CLAMP_TO_EDGE );
+    //newTexture->setWrap( osg::Texture::WRAP_R, osg::Texture::CLAMP_TO_EDGE );
     newTexture->setBorderColor( osg::Vec4d( 0.0, 0.0, 0.0, 0.0 ) );
     newTexture->setInternalFormat( GetOutputInternalFormat() );
     newTexture->setSourceFormat(
         CreateSourceTextureFormat( GetOutputInternalFormat() ) );
+    newTexture->setSourceType( GL_UNSIGNED_BYTE );
+
     //newTexture->setSourceType(
-        //osg::Image::computeFormatDataType( GetOutputInternalFormat() ) );
+    //    osg::Image::computeFormatDataType( GetOutputInternalFormat() ) );
 
     //Check if the input texture was in nearest mode
     if( GetInputTexture( 0 ) && GetInputTexture( 0 )->getFilter(
@@ -251,7 +264,8 @@ osg::Texture* UnitInOut::CreateOutputTexture( int mrt )
     }
 
     //Set new texture
-    mOutputTextures[ mrt ] = newTexture;
+    //mOutputTextures[ mrt ] = newTexture;
+    mOutputTextures.push_back( newTexture );
 
     return newTexture;
 }

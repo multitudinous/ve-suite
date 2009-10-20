@@ -195,14 +195,14 @@ bool Unit::SetInputToUniform(
     }
 
     //Add the uniform
-    mInputToUniformMap[ unit ] =
-        std::pair< std::string, unsigned int >(
-            uniform, mInputToUniformMap.size() );
-
+    //mInputToUniformMap[ unit ] =
+    //    std::pair< std::string, unsigned int >(
+    //        uniform, mInputToUniformMap.size() );
+    mInputToUniformMap.push_back( std::pair< std::string, osg::ref_ptr< Unit > >( uniform, unit ) );
     return true;  
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Unit::RemoveInputToUniform( Unit* parent, bool remove )
+/*void Unit::RemoveInputToUniform( Unit* parent, bool remove )
 {
     InputToUniformMap::iterator itr = mInputToUniformMap.find( parent );
     if( itr != mInputToUniformMap.end() )
@@ -237,7 +237,7 @@ void Unit::RemoveInputToUniform( Unit* parent, bool remove )
                   << parent->getName()
                   << " not found in mInputToUniformMap!" << std::endl;
     }
-}
+}*/
 ////////////////////////////////////////////////////////////////////////////////
 const Unit::InputToUniformMap& Unit::GetInputToUniformMap() const
 {
@@ -246,11 +246,15 @@ const Unit::InputToUniformMap& Unit::GetInputToUniformMap() const
 ////////////////////////////////////////////////////////////////////////////////
 osg::Texture* const Unit::GetInputTexture( int inputIndex ) const
 {
-    TextureMap::const_iterator itr = mInputTextures.find( inputIndex );
+    if( inputIndex < mInputTextures.size() )
+    {
+        return mInputTextures.at( inputIndex ).get();
+    }
+    /*TextureMap::const_iterator itr = mInputTextures.find( inputIndex );
     if( itr != mInputTextures.end() )
     {
         return itr->second.get();
-    }
+    }*/
     
     std::cout << "Unit::GetInputTexture: "
               << "texture " << inputIndex
@@ -267,11 +271,15 @@ const Unit::TextureMap& Unit::GetInputTextureMap() const
 ////////////////////////////////////////////////////////////////////////////////
 osg::Texture* const Unit::GetOutputTexture( int mrt ) const
 {
-    TextureMap::const_iterator itr = mOutputTextures.find( mrt );
+    if( mrt < mOutputTextures.size() )
+    {
+        return mOutputTextures.at( mrt ).get();
+    }
+    /*TextureMap::const_iterator itr = mOutputTextures.find( mrt );
     if( itr != mOutputTextures.end() )
     {
         return itr->second.get();
-    }
+    }*/
 
     std::cout << "Unit::GetOutputTexture: "
               << "texture " << mrt
@@ -328,7 +336,7 @@ void Unit::Update()
     UpdateUniforms();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Unit::SetViewport( osg::Viewport* viewport )
+/*void Unit::SetViewport( osg::Viewport* viewport )
 {
     //If viewport is valid and we have to ignore new settings
     if( viewport == NULL )
@@ -345,7 +353,7 @@ void Unit::SetViewport( osg::Viewport* viewport )
             mViewport.get(),
             osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
     }
-}
+}*/
 ////////////////////////////////////////////////////////////////////////////////
 void Unit::SetInputTextureIndexForViewportReference( int index )
 {
@@ -379,7 +387,8 @@ void Unit::SetInputTexturesFromParents()
     Unit::InputToUniformMap::iterator itumItr = mInputToUniformMap.begin();
     for( itumItr; itumItr != mInputToUniformMap.end(); ++itumItr )
     {
-        unit = itumItr->first.get();
+        //unit = itumItr->first.get();
+        unit = itumItr->second.get();
         if( unit )
         {
             //Add each found texture as input
@@ -387,11 +396,13 @@ void Unit::SetInputTexturesFromParents()
             Unit::TextureMap::const_iterator tmItr = textureMap.begin();
             for( tmItr; tmItr != textureMap.end(); ++tmItr )
             {
-                osg::Texture* texture = tmItr->second.get();
+                //osg::Texture* texture = tmItr->second.get();
+                osg::Texture* texture = tmItr->get();
                 if( texture )
                 {
-                    mInputTextures[ mInputTextures.size() ] =
-                        tmItr->second.get();
+                    //mInputTextures[ mInputTextures.size() ] =
+                    //    tmItr->second.get();
+                    mInputTextures.push_back( texture );
                 }
                 else
                 {
@@ -403,14 +414,22 @@ void Unit::SetInputTexturesFromParents()
                 }
             }
         }
+        else
+        {
+            osg::notify( osg::WARN )
+                << "rtt::Unit::SetInputTexturesFromParents(): "
+                << "This is a bad unit."
+                << std::endl;
+        }
     }
-
+/*
     //Scan all parents and look for units
     for( unsigned int i = 0; i < getNumParents(); ++i )
     {
         unit = dynamic_cast< rtt::Unit* >( getParent( i ) );
         if( unit )
         {
+            std::cout << "This could be a problem. If you are here you have not explicitly set up the parents uniforms as inputs" << std::endl;
             if( mInputToUniformMap.find( unit ) == mInputToUniformMap.end() )
             {
                 //Add each found texture as input
@@ -437,6 +456,7 @@ void Unit::SetInputTexturesFromParents()
             }
         }
     }
+    */
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Unit::UpdateUniforms()
@@ -448,15 +468,20 @@ void Unit::UpdateUniforms()
     for( itr; itr != mInputToUniformMap.end(); ++itr )
     {
         //Only valid inputs
-        if( itr->first.valid() )
+        //if( itr->first.valid() )
+        if( itr->second.valid() )
         {
+            size_t index = itr - mInputToUniformMap.begin();
             //Setup uniform
             osg::Uniform* texture = stateset->getOrCreateUniform(
-                itr->second.first,
+                //itr->second.first,
+                itr->first,
                 rtt::ConvertTextureToUniformType(
-                    itr->first->GetOutputTexture( 0 ) ) );
+                    //itr->first->GetOutputTexture( 0 ) ) );
+                    itr->second->GetOutputTexture( 0 ) ) );
 
-            texture->set( static_cast< int >( itr->second.second ) );
+            //texture->set( static_cast< int >( itr->second.second ) );
+            texture->set( static_cast< int >( index ) );
         }
     }
 }
@@ -467,14 +492,17 @@ void Unit::NoticeChangeViewport()
     TextureMap::iterator itr = mOutputTextures.begin();
     for( itr; itr != mOutputTextures.end(); ++itr )
     {
-        if( itr->second.valid() )
+        //if( itr->second.valid() )
+        if( itr->valid() )
         {
             //If texture type is a 2D texture
-            if( dynamic_cast< osg::Texture2D* >( itr->second.get() ) != NULL )
+            //if( dynamic_cast< osg::Texture2D* >( itr->second.get() ) != NULL )
+            if( dynamic_cast< osg::Texture2D* >( itr->get() ) != NULL )
             {
                 //Change size
                 osg::Texture2D* texture =
-                    dynamic_cast< osg::Texture2D* >( itr->second.get() );
+                    //dynamic_cast< osg::Texture2D* >( itr->second.get() );
+                    dynamic_cast< osg::Texture2D* >( itr->get() );
                 texture->setTextureSize(
                     static_cast< int >( mViewport->width() ),
                     static_cast< int >( mViewport->height() ) );
@@ -493,10 +521,13 @@ void Unit::AssignInputTexture()
     for( itr; itr != mInputTextures.end(); ++itr )
     {
         //Set texture if it is valid
-        if( itr->second.valid() )
+        //if( itr->second.valid() )
+        if( itr->valid() )
         {
+            size_t index = itr - mInputTextures.begin();
             stateset->setTextureAttributeAndModes(
-                itr->first, itr->second.get(),
+                //itr->first, itr->second.get(),
+                index, itr->get(),
                 osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
         }
     }

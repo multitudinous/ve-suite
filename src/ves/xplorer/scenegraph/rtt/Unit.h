@@ -53,6 +53,7 @@ class Viewport;
 
 // --- C/C++ Includes --- //
 #include <map>
+#include <vector>
 
 namespace ves
 {
@@ -66,9 +67,12 @@ class VE_SCENEGRAPH_EXPORTS Unit : public osg::Group
 {
 public:
     ///
-    typedef std::map< unsigned int, osg::ref_ptr< osg::Texture > > TextureMap;
-    typedef std::map< osg::ref_ptr< Unit >,
-        std::pair< std::string, unsigned int > > InputToUniformMap;
+    //typedef std::map< unsigned int, osg::ref_ptr< osg::Texture > > TextureMap;
+    //typedef std::map< osg::ref_ptr< Unit >,
+    //    std::pair< std::string, unsigned int > > InputToUniformMap;
+    
+    typedef std::vector< osg::ref_ptr< osg::Texture > > TextureMap;
+    typedef std::vector< std::pair< std::string, osg::ref_ptr< Unit > > > InputToUniformMap;
     
     ///Constructor
     Unit();
@@ -92,7 +96,9 @@ public:
     ///Remove an assigned parent output uniform
     ///\param parent Pointer to the parent node
     ///\param remove Should this unit be removed from parent
-    void RemoveInputToUniform( Unit* parent, bool remove = false );
+    ///Removed this function because we are using vectors for storage
+    ///This function is not used at this time in any event
+    //void RemoveInputToUniform( Unit* parent, bool remove = false );
 
     ///Get the map which maps uniform to input units
     ///\return
@@ -209,6 +215,12 @@ protected:
     virtual void UpdateUniforms();
 
     ///Set the input textures based on the parents
+    ///This does NOT scan parents for any uniforms. If a uniform is needed for 
+    ///this unit it must explicitly be configured through the SetInputToUniform
+    ///interface. 
+    ///This function should really be a pure virtual because every unit is going
+    ///to have a different implementation. This default implementation
+    ///in specifically for UnitInOut's.
     virtual void SetInputTexturesFromParents();
 
     ///Notice underlying classes, that viewport size is changed

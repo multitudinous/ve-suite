@@ -85,6 +85,9 @@ public:
 
     ///Set y resampling factor
     void SetFactorY( float yFactor );
+    
+    ///Override because this unit does not have uniforms set on it
+    virtual void SetInputTexturesFromParents();
 
 protected:
     ///Destructor

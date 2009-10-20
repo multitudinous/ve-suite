@@ -102,7 +102,8 @@ void UnitCameraAttachmentBypass::SetInputTexturesFromParents()
             {
                 //Set the input textures
                 mInputTextures.clear();
-                mInputTextures[ 0 ] = input;
+                //mInputTextures[ 0 ] = input;
+                mInputTextures.push_back( input );
                 mOutputTextures = mInputTextures;
             }
         }
