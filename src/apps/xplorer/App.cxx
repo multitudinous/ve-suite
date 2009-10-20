@@ -681,11 +681,10 @@ void App::contextPreDraw()
             mSceneRenderToTexture->InitScene( (*sceneViewer)->getCamera() );
             update();
 
-            if( mRTT )
+            /*if( mRTT )
             {
-                vpr::System::msleep( 200 );  // thenth-second delay
                 *m_skipDraw = true;
-            }
+            }*/
             *mViewportsChanged = true;
         }
     }
