@@ -583,7 +583,20 @@ void cfdStreamers::UpdateCommand()
         activeModelDVP = objectCommand->GetDataValuePair( "Num_Z_Points" );
         activeModelDVP->GetData( zValue );
         vprDEBUG( vesDBG, 0 ) << "|\t\tZ Points : " << zValue << std::endl << vprDEBUG_FLUSH;
+    }    
+
+    /////////////////////
+    activeModelDVP = objectCommand->GetDataValuePair( "GPU Tools" );
+    if( activeModelDVP )
+    {
+        unsigned int gpuFlag;
+        activeModelDVP->GetData( gpuFlag );
+        m_gpuTools = gpuFlag;
     }
+    else
+    {
+        m_gpuTools = false;
+    }    
 
     CreateSeedPoints();
 }

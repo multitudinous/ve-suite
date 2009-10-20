@@ -70,6 +70,7 @@ BEGIN_EVENT_TABLE( Streamlines, wxDialog )
     EVT_BUTTON( STREAMLINES_COMPUTE_STREAMLINE_BUTTON, Streamlines::_onCompute )
     EVT_BUTTON( STREAMLINES_SET_SEED_POINTS_BUTTON, Streamlines::SetSeedPoints )
     EVT_BUTTON( wxID_OK, Streamlines::OnClose )
+	EVT_CHECKBOX( STREAMLINES_GPU_TOOLS_CHK, Streamlines::OnGPUCheckTools )
 END_EVENT_TABLE()
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -94,6 +95,7 @@ bool Streamlines::Create( wxWindow* parent,
                           long style )
 {
     _cursorRBox = 0;
+    m_gpuToolsChkBox = 0;
     _directionRBox = 0;
     _integrationRBox = 0;
     _sizeSlider = 0;
@@ -207,6 +209,16 @@ void Streamlines::CreateControls()
 
     wxButton* _closeButton = new wxButton( itemDialog1, wxID_OK, _T( "Close" ), wxDefaultPosition, wxDefaultSize, 0 );
     itemBoxSizer12->Add( _closeButton, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
+	
+    {
+        wxStaticBox* gpuToolsStaticSizer = new wxStaticBox( itemDialog1, wxID_ANY, _T( "GPU Tools" ) );
+        wxStaticBoxSizer* itemStaticBoxSizer10 = new wxStaticBoxSizer( gpuToolsStaticSizer, wxVERTICAL );
+        itemBoxSizer4->Add( itemStaticBoxSizer10, 0, wxGROW | wxALL, 5 );
+        
+        m_gpuToolsChkBox = new wxCheckBox( itemDialog1, CONTOURS_GPU_TOOLS_CHK, _T( "Use GPU Tools" ), wxDefaultPosition, wxDefaultSize, 0 );
+        m_gpuToolsChkBox->SetValue( false );
+        itemStaticBoxSizer10->Add( m_gpuToolsChkBox, 0, wxALIGN_LEFT | wxALL, 5 );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool Streamlines::ShowToolTips()
@@ -288,6 +300,14 @@ void Streamlines::_updateAdvancedSettings()
         }
         _advancedSettings.push_back( streamRibbon );
     }
+    
+    {
+	    unsigned int checkBox = m_gpuToolsChkBox->IsChecked();
+	    ves::open::xml::DataValuePairPtr gpuToolsDVP( new ves::open::xml::DataValuePair() );
+	    gpuToolsDVP->SetData( "GPU Tools", checkBox );
+	    _advancedSettings.push_back( gpuToolsDVP );
+    }
+
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Streamlines::_updateStreamlineInformation()
@@ -569,4 +589,9 @@ void Streamlines::OnClose( wxCommandEvent& event )
 void Streamlines::SetActiveDataSetName( std::string name )
 {
     dataSetName = name;
+}
+////////////////////////////////////////////////////////////////////////////////
+void Streamlines::OnGPUCheckTools( wxCommandEvent& WXUNUSED( event ) )
+{
+    ;
 }

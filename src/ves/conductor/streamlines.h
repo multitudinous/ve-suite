@@ -123,6 +123,8 @@ protected:
     void SetSeedPoints( wxCommandEvent& event );
     void OnClose( wxCommandEvent& event );
 
+    ///Turn GPU tools off and on
+    void OnGPUCheckTools( wxCommandEvent& event );
     ///Update the streamlines information
     void _updateStreamlineInformation();
     ///Update the advanced settings
@@ -134,6 +136,7 @@ protected:
     wxSlider* _sizeSlider;
     wxSlider* _nPointsSlider;
     wxButton* itemButton13;
+    wxCheckBox* m_gpuToolsChkBox;
 
     std::vector< ves::open::xml::DataValuePairPtr > _advancedSettings;///<The advanced settings.
     std::vector< ves::open::xml::DataValuePairPtr > _streamlineInformation;///<The streamline setting data
