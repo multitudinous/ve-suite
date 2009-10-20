@@ -632,8 +632,27 @@ void WarrantyToolUIDialog::OnPartSelection( wxCommandEvent& event )
     //        ConvertUnicode( m_manualPartSelectionChoice->GetValue().c_str() ) );
     cameraGeometryOnOffDVP->SetData( "SCROLL", ConvertUnicode( m_manualPartSelectionChoice->GetStringSelection().c_str() ) );
 
-    ves::open::xml::CommandPtr command( new ves::open::xml::Command() );
+    unsigned int numStrings = m_displayTextChkList->GetCount();
+    //wxArrayInt selections;
+    //numStrings = m_displayTextChkList->GetSelections( selections );
+    
+    ves::open::xml::OneDStringArrayPtr textFields( 
+                                                  new ves::open::xml::OneDStringArray() );
+    for( unsigned int i = 0; i < numStrings; ++i )
+    {
+        if( m_displayTextChkList->IsChecked( i ) )
+        {
+            textFields->AddElementToArray( 
+                                          ConvertUnicode( m_displayTextChkList->GetString( i ).c_str() ) );
+        }
+    }
+    ves::open::xml::DataValuePairPtr displayText( 
+                                                 new ves::open::xml::DataValuePair() );
+    displayText->SetData( "DISPLAY_TEXT_FIELDS", textFields );
+    
+    ves::open::xml::CommandPtr command( new ves::open::xml::Command() ); 
     command->AddDataValuePair( cameraGeometryOnOffDVP );
+    command->AddDataValuePair( displayText );
     std::string mCommandName = "WARRANTY_TOOL_PART_TOOLS";
     command->SetCommandName( mCommandName );
     mServiceList->SendCommandStringToXplorer( command );
@@ -649,8 +668,27 @@ void WarrantyToolUIDialog::OnPartNumberEntry( wxCommandEvent& event )
         new ves::open::xml::DataValuePair() );
     cameraGeometryOnOffDVP->SetData( "ADD", ConvertUnicode( m_partTextEntry->GetValue().c_str() ) );
 
-    ves::open::xml::CommandPtr command( new ves::open::xml::Command() );
+    unsigned int numStrings = m_displayTextChkList->GetCount();
+    //wxArrayInt selections;
+    //numStrings = m_displayTextChkList->GetSelections( selections );
+    
+    ves::open::xml::OneDStringArrayPtr textFields( 
+                                                  new ves::open::xml::OneDStringArray() );
+    for( unsigned int i = 0; i < numStrings; ++i )
+    {
+        if( m_displayTextChkList->IsChecked( i ) )
+        {
+            textFields->AddElementToArray( 
+                                          ConvertUnicode( m_displayTextChkList->GetString( i ).c_str() ) );
+        }
+    }
+    ves::open::xml::DataValuePairPtr displayText( 
+                                                 new ves::open::xml::DataValuePair() );
+    displayText->SetData( "DISPLAY_TEXT_FIELDS", textFields );
+    
+    ves::open::xml::CommandPtr command( new ves::open::xml::Command() ); 
     command->AddDataValuePair( cameraGeometryOnOffDVP );
+    command->AddDataValuePair( displayText );
     std::string mCommandName = "WARRANTY_TOOL_PART_TOOLS";
     command->SetCommandName( mCommandName );
     mServiceList->SendCommandStringToXplorer( command );
