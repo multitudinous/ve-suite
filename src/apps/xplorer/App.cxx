@@ -261,7 +261,7 @@ void App::contextInit()
         }
         else
         {
-            *m_skipDraw = false;
+            //*m_skipDraw = false;
         }
         *mViewportsChanged = false;
         m_sceneGLTransformInfo->Initialize();
@@ -681,10 +681,11 @@ void App::contextPreDraw()
             mSceneRenderToTexture->InitScene( (*sceneViewer)->getCamera() );
             update();
 
-            /*if( mRTT )
+            if( mRTT )
             {
-                *m_skipDraw = true;
-            }*/
+                vpr::System::msleep( 200 );  // thenth-second delay
+                //*m_skipDraw = true;
+            }
             *mViewportsChanged = true;
         }
     }
