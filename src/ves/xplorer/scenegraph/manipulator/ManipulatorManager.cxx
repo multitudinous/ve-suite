@@ -143,7 +143,16 @@ bool ManipulatorManager::addChild( Dragger* child )
 
     //Initialize root dragger
     child->SetScale( m_draggerSize );
-    child->SetAutoScaleToScreen( true );
+    if( ves::xplorer::scenegraph::SceneManager::instance()->IsDesktopMode() )
+    {
+        //If desktop mode
+        child->SetAutoScaleToScreen( true );
+    }
+    else
+    {
+        //If cave mode
+        child->SetAutoScaleToScreen( false );
+    }
     ConstraintMap* constraintMap = new ConstraintMap();
     child->SetConstraintMap( *constraintMap );
 

@@ -56,7 +56,7 @@ TranslatePan::TranslatePan()
     else
     {
         //If cave mode
-        SetAutoRotateMode( AutoTransform::ROTATE_TO_CAMERA );
+        SetAutoRotateMode( AutoTransform::NO_ROTATION );
     }
     
     osg::ref_ptr< osg::StateSet > stateSet = getOrCreateStateSet();

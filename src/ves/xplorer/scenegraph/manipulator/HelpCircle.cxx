@@ -61,7 +61,7 @@ HelpCircle::HelpCircle()
     else
     {
         //If cave mode
-        SetAutoRotateMode( AutoTransform::ROTATE_TO_CAMERA );
+        SetAutoRotateMode( AutoTransform::NO_ROTATION );
     }
 
     SetupDefaultGeometry();

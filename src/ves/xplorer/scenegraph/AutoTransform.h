@@ -39,6 +39,8 @@
 
 #include <ves/xplorer/scenegraph/GLTransformInfoPtr.h>
 
+#include <gadget/Type/PositionInterface.h>
+
 // --- OSG Includes --- //
 #include <osg/Transform>
 #include <osg/Quat>
@@ -221,6 +223,8 @@ private:
 
     ///
     osg::Quat m_rotation;
+    ///VRJuggler's head positional interface
+    gadget::PositionInterface m_headPosition; 
 
 };
 } //end scenegraph
