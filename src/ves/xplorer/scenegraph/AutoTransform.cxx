@@ -173,34 +173,22 @@ bool AutoTransform::computeLocalToWorldMatrix(
     osg::Vec3d eye, center, up;
     if( !modelView )
     {
-        //scale = m_scale * 2.0;
         up.set( 0.0, 0.0, 1.0 );
-        //eye.set(0.0, -15.0, 5.0 );
-        /*mHead.init( "VJHead" );
-        gmtl::Matrix44d vjHeadMat =
-        gmtl::convertTo< double >( mHead->getData() );
-        gmtl::Point3d jugglerHeadPoint =
-        gmtl::makeTrans< gmtl::Point3d >( vjHeadMat );*/
+
         Matrix44d vjMat = gmtl::convertTo< double >( m_headPosition->getData() );
         gmtl::Point3d jugglerHeadPoint =
             gmtl::makeTrans< gmtl::Point3d >( vjMat );
-        //std::cout << jugglerHeadPoint << std::endl;
+        //Make it z up
         gmtl::Point3d jugglerHeadPointTrans( jugglerHeadPoint[ 0 ], -jugglerHeadPoint[ 2 ], jugglerHeadPoint[ 1 ] );
         
         ///Transform from juggler space to world space
         gmtl::Point3d worldWandMat =
             ves::xplorer::scenegraph::SceneManager::instance()->GetInvertedWorldDCS() * jugglerHeadPointTrans;
-        //gmtl::Vec4d headPos = gmtl::makeTrans< gmtl::Vec4d >( worldWandMat );
-        std::cout << worldWandMat << std::endl;
         eye.set( worldWandMat[ 0 ], worldWandMat[ 1 ], worldWandMat[ 2 ] );
-
-        //std::cout << worldWandMat << std::endl;
-        //std::cout << "Model view is null" << std::endl;
     }
     else
     {
         modelView->getLookAt( eye, center, up );
-        //std::cout << "Model view is not null " << eye << " " << up << std::endl;
     }
 
     if( m_autoScaleToScreen && modelView )
@@ -273,7 +261,6 @@ bool AutoTransform::computeLocalToWorldMatrix(
         matrix.preMultRotate( rotation );
         matrix.preMultScale( scale );
         matrix.preMultTranslate( -pivotPoint );
-        //std::cout << position << "  :  " << rotation << "  :  " << scale << std::endl;
     }
     else //absolute
     {

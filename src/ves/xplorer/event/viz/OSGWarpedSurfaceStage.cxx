@@ -130,7 +130,7 @@ void OSGWarpedSurfaceStage::createMeshData( osg::Geometry* geom, vtkPolyData* po
 
     vtkDataArray *vectorArray = pointData->GetVectors(disp.c_str());
     vtkPoints *points = polydata->GetPoints();
-    vtkDataArray *normals = pointData->GetNormals();
+    vtkDataArray *normals = pointData->GetVectors( "Normals" );
                         
     vtkDataArray* dataArray = pointData->GetScalars(colorScalar.c_str());
     double dataRange[2]; 
