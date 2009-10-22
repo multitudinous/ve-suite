@@ -225,6 +225,7 @@ void cfdPresetVector::Update( void )
     }
     else
     {
+	    float scaleFactor = GetVectorScaleFactor() ;
         try
         {
             OSGVectorStage* tempStage = new OSGVectorStage();
@@ -232,7 +233,7 @@ void cfdPresetVector::Update( void )
             osg::ref_ptr<ves::xplorer::scenegraph::Geode > tempGeode = 
                 tempStage->createInstanced( ptmask->GetOutput(), 
                 GetActiveDataSet()->GetActiveVectorName(),  
-                GetActiveDataSet()->GetActiveScalarName() );
+                GetActiveDataSet()->GetActiveScalarName(), scaleFactor );
 
             delete tempStage;
 

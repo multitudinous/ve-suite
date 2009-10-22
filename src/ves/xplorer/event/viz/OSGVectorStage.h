@@ -62,7 +62,7 @@ public:
     ~OSGVectorStage(void);
 
     //create a osgNode
-    ves::xplorer::scenegraph::Geode* createInstanced( vtkPolyData* glyph, std::string vectorName="GlyphVector", std::string scalarName="");
+    ves::xplorer::scenegraph::Geode* createInstanced( vtkPolyData* glyph, std::string vectorName="GlyphVector", std::string scalarName="", float scale1=1.0 );
 
 private:
 
@@ -75,7 +75,7 @@ private:
     int mypow2(unsigned x);
 
     //create the glyph arrow in OSG
-    void createArrow( osg::Geometry& geom, int nInstances=1 );
+    void createArrow( osg::Geometry& geom, int nInstances=1, float scale2=1.0 );
 
     //create the position array based on the passed in VTK points
     float* createPositionArray( int m, int n , vtkPoints* points);

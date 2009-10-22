@@ -58,12 +58,17 @@ OSGVectorStage::~OSGVectorStage(void)
 {
 }
 ////////////////////////////////////////////////////////////////////////////////
-void OSGVectorStage::createArrow( osg::Geometry& geom, int nInstances )
+void OSGVectorStage::createArrow( osg::Geometry& geom, int nInstances, float scaleFactor )
 {
-    const float sD( .05 ); // shaft diameter
-    const float hD( .075 ); // head diameter
-    const float len( 1. ); // length
-    const float sh( .65 ); // length from base to start of head
+    float sD( .05 ); // shaft diameter
+    float hD( .075 ); // head diameter
+    float len( 1. ); // length
+    float sh( .65 ); // length from base to start of head
+
+	sD = scaleFactor * sD;
+	hD = scaleFactor * hD;
+	len = scaleFactor * len;
+	sh = scaleFactor * sh;
 
     osg::Vec3Array* v = new osg::Vec3Array;
     v->resize( 22 );
@@ -273,7 +278,7 @@ int OSGVectorStage::mypow2(unsigned x)
     return l;
 }
 ////////////////////////////////////////////////////////////////////////////////
-ves::xplorer::scenegraph::Geode* OSGVectorStage::createInstanced(vtkPolyData* glyph, std::string vectorName, std::string scalarName)
+ves::xplorer::scenegraph::Geode* OSGVectorStage::createInstanced(vtkPolyData* glyph, std::string vectorName, std::string scalarName, float scaleFactor )
 {
     std::cout << "creating osg planes" << std::endl;
     //Now pull in the vtk data
@@ -516,7 +521,7 @@ ves::xplorer::scenegraph::Geode* OSGVectorStage::createInstanced(vtkPolyData* gl
     rawVTKData->SetActiveVectorAndScalar( vectorName, scalarName );
     rawVTKData->loadData();
 
-    createArrow( *geom, rawVTKData->getDataCount() );
+    createArrow( *geom, rawVTKData->getDataCount(), scaleFactor );
     geode->addDrawable( geom );
     //grp->addChild( geode );
 
