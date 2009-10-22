@@ -35,18 +35,34 @@
 #include "Manager.h"
 #include "ApplicationEventMonitor.h"
 #include "StringList.h"
+
 #include <iostream>
+#include <fstream>
 
 #include <vtkUnstructuredGrid.h>        // -lvtkFiltering
 #include <vtkPoints.h>                  // -lvtkCommon
 #include <vtkCellType.h>
 #include <vtkFloatArray.h>
 #include <vtkPointData.h>
-#include <vtkUnstructuredGridWriter.h>  // -lvtkIO
+#include <vtkCellData.h>
+#include <vtkXMLUnstructuredGridWriter.h>  // -lvtkIO
+
+#include <boost/lexical_cast.hpp>
 
 using namespace tecplot::sdk::integration;
 using namespace tecplot::toolbox;
 using namespace std;
+
+int isFileReadable( const std::string filename )
+{
+    std::ifstream fileIn( filename.c_str(), std::ios::in );
+    if( ! fileIn.good() )
+    {
+        return 0;
+    }
+    fileIn.close();
+    return 1;
+}
 
 string extractFileNameFromFullPath( const string& s )
 {
@@ -62,7 +78,7 @@ string extractFileNameFromFullPath( const string& s )
         return( s.substr(i+1, s.length() - i) );
     }
 
-    return( "" );
+    return( s );
 } 
 
 string replaceExtension( const string& s, const string& newextension )
@@ -91,9 +107,9 @@ string getExtension( const string& s )
     return( "" );
 } 
 
-double * readVariable( EntIndex_t currentZone, int varNumber, char * varName )
+vtkFloatArray * readVariable( EntIndex_t currentZone, int varNumber, char * varName, int nodeOffset )
 {
-    double * array = NULL;
+    vtkFloatArray * parameterData = NULL;
 
     // Read a single variable from the current zone...
     if( varNumber )
@@ -101,20 +117,19 @@ double * readVariable( EntIndex_t currentZone, int varNumber, char * varName )
         FieldData_pa FieldData = TecUtilDataValueGetReadableNativeRef( currentZone, varNumber ); //1-based
         if( FieldData )
         {
-            LgIndex_t NumValues = TecUtilDataValueGetCountByRef( FieldData );
-            array = new double [ NumValues ];
+            LgIndex_t numValues = TecUtilDataValueGetCountByRef( FieldData );
 
-/*
-            if( NumValues != numDataPoints )
+            parameterData = vtkFloatArray::New();
+            parameterData->SetName( varName );
+            parameterData->SetNumberOfTuples( numValues );
+            parameterData->SetNumberOfComponents( 1 );
+
+            cout << "   Reading Variable '" << varName << "', numValues = " << numValues << endl;
+            for( int i = 0; i < numValues; i++ )
             {
-                cout << "NumValues != numDataPoints" << endl;
-            }
-*/
-            cout << "   Reading Variable " << varName << endl;
-            for( int i = 0; i < NumValues; i++ )
-            {
-                array[ i ] = TecUtilDataValueGetByRef( FieldData, i+1 ); //GetByRef function is 1-based
-                //cout << "   " << varName << "[" << i+1 << "] = " << array[ i ] << endl;
+                //GetByRef function is 1-based
+                parameterData->SetTuple1( i+nodeOffset, TecUtilDataValueGetByRef( FieldData, i+1 ) );
+                //cout << "   " << varName << "[" << i+1 << "] = " << parameterData[ i ] << endl;
             }
         }
         else
@@ -126,7 +141,7 @@ double * readVariable( EntIndex_t currentZone, int varNumber, char * varName )
     {
         // will return a NULL array pointer
     }
-    return array;
+    return parameterData;
 }
 
 void convertTecplotToVTK( string inputFileNameAndPath )
@@ -149,10 +164,10 @@ void convertTecplotToVTK( string inputFileNameAndPath )
 
     char *dataset_title = NULL;
     EntIndex_t numZones, numVars;
-    TecUtilDataSetGetInfo(&dataset_title, &numZones, &numVars);
+    TecUtilDataSetGetInfo( &dataset_title, &numZones, &numVars );
     cout << "The dataset_title is \"" << dataset_title << "\"" << endl;
     cout << "Number of zones is " << numZones << " and number of variables is " << numVars << endl;
-    TecUtilStringDealloc(&dataset_title);
+    TecUtilStringDealloc( &dataset_title );
 
     VarName_t * varName = new VarName_t [ numVars ];
     int xIndex = 0;
@@ -162,8 +177,11 @@ void convertTecplotToVTK( string inputFileNameAndPath )
 
     for( int i = 0; i < numVars; i++ )
     {
+        // Read ith variable name...
         TecUtilVarGetName( i+1, &varName[ i ] ); // variable numbers are 1-based
         cout << "The name of Variable " << i+1 << " is \"" << varName[ i ] << "\"" << endl;
+
+        // If this variable name corresponds to coordinate data, then record the index...
         if( strcmp( varName[ i ], "X" ) == 0 )
         {
             xIndex = i+1;
@@ -183,19 +201,27 @@ void convertTecplotToVTK( string inputFileNameAndPath )
         }
     }
 
-    //cout << "xIndex is " << xIndex << ", yIndex is " << yIndex << ", zIndex is " << zIndex << endl;
+    cout << "xIndex is " << xIndex << ", yIndex is " << yIndex << ", zIndex is " << zIndex << endl;
     cout << "numNonCoordNodalParameters is " << numNonCoordNodalParameters << endl;
 
-    // Is data shared across zones (usually coordinate data)
+    // Prepare to count the number of non-coordinate parameter arrays
     int numParameterArrays = 0;
+
+    int coordDataSharedAcrossZones = 0;
+    EntIndex_t connectivityShareCount;
+
+    // Is data shared across zones? (usually coordinate data)
     for( EntIndex_t currentZone = 1; currentZone < numZones+1; currentZone++ ) // zone numbers are 1-based
     {
+        connectivityShareCount = TecUtilDataConnectGetShareCount( currentZone );
+        cout << "Connectivity share count of current zone is " << connectivityShareCount << endl;
+
         for( int i = 0; i < numVars; i++ )
         {
             EntIndex_t dataShareCount = TecUtilDataValueGetShareCount( currentZone, i+1 );
-            //cout << "for var " << i+1 << ", dataShareCount is " << dataShareCount << endl;
+            cout << "for var " << i+1 << ", dataShareCount is " << dataShareCount << endl;
             
-            // See if any coordinate data is shared across zones
+            // If variable name corresponds to one of the coordinate labels...
             if( strcmp( varName[ i ], "X" ) == 0 ||
                 strcmp( varName[ i ], "Y" ) == 0 ||
                 strcmp( varName[ i ], "Z" ) == 0 )
@@ -203,10 +229,12 @@ void convertTecplotToVTK( string inputFileNameAndPath )
                 if( dataShareCount == numZones )
                 {
                     // coordinate data is shared across zones
+                    coordDataSharedAcrossZones = 1;
                     numParameterArrays = numNonCoordNodalParameters * numZones;
                 }
                 else
                 {
+                    // coordinate data is specified for each zone
                     numParameterArrays = numNonCoordNodalParameters;
                 }
             }
@@ -214,24 +242,53 @@ void convertTecplotToVTK( string inputFileNameAndPath )
     }
 
     cout << "numParameterArrays = " << numParameterArrays << endl;
-    // set up arrays to store scalar nodal data over entire mesh...
-    vtkFloatArray ** parameterData = new vtkFloatArray * [ numParameterArrays ];
 
-    vtkUnstructuredGrid *ugrid = vtkUnstructuredGrid::New();
-    vtkPoints *vertex = vtkPoints::New();
+    // set up arrays to store scalar nodal & element data over entire mesh...
+    vtkFloatArray ** parameterData = NULL;
+    vtkUnstructuredGrid *ugrid = NULL;
+    vtkPoints *vertex = NULL;
 
-    bool shouldReadCoords = true;
+    // if n zones, with n sets of coordinate data, and shared connectivity, then write vtk
+    if( numZones > 1 && !coordDataSharedAcrossZones && connectivityShareCount == numZones )
+    {
+        cout << "writing multiple vtk files" << endl;
+    }
+    else
+    {
+        cout << "writing single vtk file" << endl;
+        ugrid = vtkUnstructuredGrid::New();
+        vertex = vtkPoints::New();
+        parameterData = new vtkFloatArray * [ numParameterArrays ];
+    }
+
     int ii = 0;
 
     int nodeOffset = 0;
-    int numDataPoints = 0;
+    int numNodalPoints = 0;
+    LgIndex_t numElements = 0;
     VarName_t * zoneName = new VarName_t [ numZones ];
+
+    // define flag to control printing of unique error message to a single time...
+    int undefinedZoneType[ 8 ] = {1,1,1,1,1,1,1,1};
 
     for( EntIndex_t currentZone = 1; currentZone < numZones+1; currentZone++ ) // zone numbers are 1-based
     {
+        if( numZones > 1 && !coordDataSharedAcrossZones && connectivityShareCount == numZones )
+        {
+            cout << "writing multiple vtk files" << endl;
+            ugrid = vtkUnstructuredGrid::New();
+            vertex = vtkPoints::New();
+            parameterData = new vtkFloatArray * [ numParameterArrays ];
+            ii = 0;
+        }
+        else
+        {
+            cout << "writing single vtk file" << endl;
+        }
+
         if( TecUtilZoneGetName( currentZone, &zoneName[ currentZone ] ) )
         {
-            cout << "For Zone " << currentZone << ", zoneName is \"" << zoneName[ currentZone ] << "\" and zoneType is ";
+            cout << "For Zone " << currentZone << ", zoneName is \"" << zoneName[ currentZone ] << "\"" << endl;
         }
 /*
         Set_pa MySet = TecUtilConnectGetShareZoneSet( currentZone );
@@ -239,18 +296,19 @@ void convertTecplotToVTK( string inputFileNameAndPath )
         for( SetIndex_t Position = 1; Position <= Count; Position++ )
         {
             SetIndex_t Member = TecUtilSetGetMember( MySet, Position );
-            cout << "Member is \"" << Member << "\"" << endl;
+            cout << "   Member is \"" << Member << "\"" << endl;
         }
         TecUtilSetDealloc( &MySet );
-        
-        EntIndex_t shareCount = TecUtilDataConnectGetShareCount( currentZone );
-        cout << "shareCount is " << shareCount << endl;
+
+        EntIndex_t connectivityShareCount = TecUtilDataConnectGetShareCount( currentZone );
+        cout << "Connectivity share count of current zone is " << connectivityShareCount << endl;
 */
-        if( shouldReadCoords )
+
+        // read zoneType, numNodalPoints, numElements, nodal connectivity
+        if( currentZone == 1 || (  currentZone > 1 && !coordDataSharedAcrossZones && connectivityShareCount == numZones ) )
         {
-            numDataPoints = 0;
             ZoneType_e zoneType = TecUtilZoneGetType( currentZone );
-            switch( zoneType )
+            switch( zoneType )  // compare to those defined in GLOBAL.h
             {
                 case ZoneType_Ordered:
                     cout << "Ordered" << endl;
@@ -310,7 +368,6 @@ void convertTecplotToVTK( string inputFileNameAndPath )
 
             int numNodesPerElement = 0;
             int numFacesPerCell = 0;
-            LgIndex_t numElements = 0;
 
             if( zoneType == ZoneType_Ordered )
             {
@@ -339,8 +396,8 @@ void convertTecplotToVTK( string inputFileNameAndPath )
             }
             else if( zoneType > ZoneType_Ordered && zoneType < END_ZoneType_e )
             {
-                numDataPoints = IMax;
-                cout << "   The number of data points is " << numDataPoints << endl;
+                numNodalPoints = IMax;  // tecplot called this 'number of data points' but that is misleading
+                cout << "   The number of nodal points is " << numNodalPoints << endl;
 
                 numElements = JMax;
                 cout << "   The number of elements is " << numElements << endl;
@@ -366,12 +423,12 @@ void convertTecplotToVTK( string inputFileNameAndPath )
             if( numNodesPerElement == 0 )
                 cout << "!!! The number of nodes per element is " << numNodesPerElement << endl;
 
+            // For each tecplot element in current zone, read connectivity and construct corresponding VTK element
             NodeMap_pa nm = TecUtilDataNodeGetReadableRef( currentZone );
             if( nm )
             {
                 for( LgIndex_t elemNum = 1; elemNum < numElements+1; elemNum++ ) // element numbers are 1-based
                 {
-
                     // Node information (connectivity)
                     // NOTE - You could use the "RawPtr" functions if speed is a critical issue
                     NodeMap_t nodeArray[ numNodesPerElement ];
@@ -385,11 +442,7 @@ void convertTecplotToVTK( string inputFileNameAndPath )
                     }
                     //cout << endl;
 
-                    if( zoneType == ZoneType_FEBrick )
-                    {
-                        ugrid->InsertNextCell( VTK_HEXAHEDRON, numNodesPerElement, nodeArray );
-                    }
-                    else if( zoneType == ZoneType_FETriangle )
+                    if( zoneType == ZoneType_FETriangle )
                     {
                         ugrid->InsertNextCell( VTK_TRIANGLE, numNodesPerElement, nodeArray );
                     }
@@ -397,10 +450,22 @@ void convertTecplotToVTK( string inputFileNameAndPath )
                     {
                         ugrid->InsertNextCell( VTK_QUAD, numNodesPerElement, nodeArray );
                     }
+                    else if( zoneType == ZoneType_FETetra )
+                    {
+                        ugrid->InsertNextCell( VTK_TETRA, numNodesPerElement, nodeArray );
+                    }
+                    else if( zoneType == ZoneType_FEBrick )
+                    {
+                        ugrid->InsertNextCell( VTK_HEXAHEDRON, numNodesPerElement, nodeArray );
+                    }
                     else
                     {
-                        cout << "Note: Can not yet handle element type " << zoneType
-                             << ", numNodesPerElement = " << numNodesPerElement << endl;
+                        if( undefinedZoneType[ zoneType ] )
+                        {
+                            cerr << "Error: Can not yet handle element type " << zoneType
+                                 << ", numNodesPerElement = " << numNodesPerElement << endl;
+                            undefinedZoneType[ zoneType ] = 0;  // set flag so as to not print more than one error msg
+                        }
 
                         ugrid->InsertNextCell( VTK_EMPTY_CELL, 0, NULL );
                     }
@@ -412,48 +477,59 @@ void convertTecplotToVTK( string inputFileNameAndPath )
             }
 
             // Read the nodal coordinates from the current zone...
-            double * x = readVariable( currentZone, xIndex, "X" );
+            // If any turn out to be non-existent (e.g., planar description), then set to zero for 3D coordinates.
+            vtkFloatArray * x = readVariable( currentZone, xIndex, "X", 0 );
             if( x == 0 )
             {
-                x = new double [ numDataPoints ];
-                for( int i = 0; i < numDataPoints; i++ )
-                    x[ i ] = 0.0;
+                x = vtkFloatArray::New();
+                x->SetName( "X" );
+                x->SetNumberOfTuples( numNodalPoints );
+                x->SetNumberOfComponents( 1 );
+                for( int i = 0; i < numNodalPoints; i++ )
+                    x->SetValue( i, 0.0 );
             }
 
-            double * y = readVariable( currentZone, yIndex, "Y" );
+            vtkFloatArray * y = readVariable( currentZone, yIndex, "Y", 0 );
             if( y == 0 )
             {
-                y = new double [ numDataPoints ];
-                for( int i = 0; i < numDataPoints; i++ )
-                    y[ i ] = 0.0;
+                y = vtkFloatArray::New();
+                y->SetName( "Y" );
+                y->SetNumberOfTuples( numNodalPoints );
+                y->SetNumberOfComponents( 1 );
+                for( int i = 0; i < numNodalPoints; i++ )
+                    y->SetValue( i, 0.0 );
             }
 
-            double * z = readVariable( currentZone, zIndex, "Z" );
+            vtkFloatArray * z = readVariable( currentZone, zIndex, "Z", 0 );
             if( z == 0 )
             {
-                z = new double [ numDataPoints ];
-                for( int i = 0; i < numDataPoints; i++ )
-                    z[ i ] = 0.0;
+                cout << "creating z" << endl;
+                z = vtkFloatArray::New();
+                z->SetName( "Z" );
+                z->SetNumberOfTuples( numNodalPoints );
+                z->SetNumberOfComponents( 1 );
+                for( int i = 0; i < numNodalPoints; i++ )
+                    z->SetValue( i, 0.0 );
             }
 
-            //cout << "vertex->InsertNextPoint" << endl;
-            for( int i = 0; i < numDataPoints; i++ )
+            // Populate all the points to vtk...
+            for( int i = 0; i < numNodalPoints; i++ )
             {
-                vertex->InsertNextPoint( x[ i ], y[ i ], z[ i ] );
+                vertex->InsertNextPoint( x->GetValue( i ), y->GetValue( i ), z->GetValue( i ) );
             }
 
-            delete [] x;
-            delete [] y;
-            delete [] z;
+            x->Delete();
+            y->Delete();
+            z->Delete();
 
-        } // shouldReadCoords
+        } // finished reading zoneType, numNodalPoints, numElements, nodal connectivity
 
         double * tempArray;
         for( int i = 0; i < numVars; i++ )
         {
             EntIndex_t dataShareCount = TecUtilDataValueGetShareCount( currentZone, i+1 );
-            //cout << "for var " << i+1 << ", dataShareCount is " << dataShareCount << endl;
- /*           
+            cout << "for var " << i+1 << ", dataShareCount is " << dataShareCount << endl;
+/*           
             Set_pa MySet = TecUtilDataValueGetShareZoneSet( currentZone, i+1 );
             SetIndex_t Count = TecUtilSetGetMemberCount( MySet );
             for( SetIndex_t Position = 1; Position <= Count; Position++ )
@@ -462,100 +538,163 @@ void convertTecplotToVTK( string inputFileNameAndPath )
                 cout << "Member is \"" << Member << "\"" << endl;
             }
             TecUtilSetDealloc( &MySet );
- */
+*/
             
             if( strcmp( varName[ i ], "X" ) == 0 ||
                 strcmp( varName[ i ], "Y" ) == 0 ||
                 strcmp( varName[ i ], "Z" ) == 0 )
             {
                 // nodal coordinates already processed
-
-                if( dataShareCount == numZones )
-                {
-                    //set flag to prevent reading redundant nodal coordinates in future
-                    shouldReadCoords = false;
-                }
             }
             else
             {
-                // Read the parameter data from the current zone...
-                tempArray = readVariable( currentZone, i+1, varName[ i ] );    //variable index is 1-based, names aren't
-/*
-                cout << "ugrid->GetPointData()->GetNumberOfArrays() = " << ugrid->GetPointData()->GetNumberOfArrays() << endl;
                 cout << "ii = " << ii << endl;
-                cout << "numDataPoints = " << numDataPoints << endl;
-*/
-                parameterData[ ii ] = vtkFloatArray::New();
-                parameterData[ ii ]->SetNumberOfTuples( numDataPoints );
 
-                //dirStringStream << "displacement mag " << currentDataSetSolution << " " << displacementUnits;
-                if( ! shouldReadCoords && numZones > 1 )
+                // If data is shared, read data from first zone.
+                // Otherwise, read the parameter data from the current zone.
+                // variable index is 1-based, names aren't
+                if( dataShareCount == numZones )
                 {
-                    parameterData[ ii ]->SetName( zoneName[ currentZone ] ); //dirStringStream.str().c_str() );
+                    cout << "reading parameter " << i+1 << " from zone 1" << endl;
+                    parameterData[ ii ] = readVariable( 1, i+1, varName[ i ], nodeOffset );
                 }
                 else
                 {
-                    parameterData[ ii ]->SetName( varName[ i ] ); //dirStringStream.str().c_str() );
+                    cout << "reading parameter " << i+1 << " from zone " << currentZone << endl;
+                    parameterData[ ii ] = readVariable( currentZone, i+1, varName[ i ], nodeOffset );
                 }
 
-                parameterData[ ii ]->SetNumberOfComponents( 1 );
-                //dirStringStream.str( "" );
-
-                for( int j = 0; j < numDataPoints; j++ )
+                if( numZones > 1 && coordDataSharedAcrossZones )
                 {
-                    //cout << "parameterData[ " << ii << " ]->SetTuple1( " << j+nodeOffset << ", tempArray[ " << j << " ] );" << endl;
-                    parameterData[ ii ]->SetTuple1( j+nodeOffset, tempArray[ j ] );
+                    char str[80];
+                    strcpy( str, zoneName[ currentZone ] );
+                    strcat(str, varName[ i ] );
+                    parameterData[ ii ]->SetName( str );
                 }
-                delete [] tempArray;
 
                 ii++;
             }
 
         } // for each variable
 
-        if( shouldReadCoords )
+        if( numZones > 1 && !coordDataSharedAcrossZones && connectivityShareCount == 1 )
         {
-            nodeOffset += numDataPoints;
+            cout << "incrementing nodeOffset" << endl;
+            nodeOffset += numNodalPoints;
             ii = 0;
+        }
+
+        // if n zones, with n sets of coordinate data, and shared connectivity, then write vtk
+        if( numZones > 1 && !coordDataSharedAcrossZones && connectivityShareCount == numZones )
+        {
+            cout << "writing multiple vtk files" << endl;
+            cout << "ugrid->SetPoints( vertex );" << endl;
+            ugrid->SetPoints( vertex );
+            vertex->Delete();
+
+            for( int i = 0; i < numParameterArrays; i++ )
+            {
+                cout << "ugrid = " << ugrid << endl;
+                cout << "ugrid->GetPointData() = " << ugrid->GetPointData() << endl;
+                cout << "parameterData[ " << i << " ] = " << parameterData[ i ] << endl;
+                cout << "parameterData[ i ]->GetNumberOfTuples() = " << parameterData[ i ]->GetNumberOfTuples() << endl;
+                if( parameterData[ i ]->GetNumberOfTuples() == numNodalPoints )
+                {
+                    cout << "ugrid->GetPointData()->AddArray( parameterData[ " << i << " ] );" << endl;
+                    ugrid->GetPointData()->AddArray( parameterData[ i ] );
+                }
+                else if( parameterData[ i ]->GetNumberOfTuples() == numElements )
+                {
+                    cout << "ugrid->GetCellData()->AddArray( parameterData[ " << i << " ] );" << endl;
+                    ugrid->GetCellData()->AddArray( parameterData[ i ] );
+                }
+                else
+                {
+                    cerr << "Error: Don't know what to do! parameterData[ " << i << " ]->GetNumberOfTuples() = " << parameterData[ i ]->GetNumberOfTuples() << endl;
+                }
+                parameterData[ i ]->Delete();
+            }
+            delete [] parameterData;
+
+            // create a *.vtu output filename to be written to current location...
+            // Use boost for number-to-string conversion:
+            string outputFileName = replaceExtension( extractFileNameFromFullPath( inputFileNameAndPath ),
+                                                        boost::lexical_cast<string>(currentZone)+".vtu" );
+            cout << "Writing to file \"" << outputFileName << "\"" << endl;
+
+            vtkXMLUnstructuredGridWriter *writer = vtkXMLUnstructuredGridWriter::New();
+            writer->SetInput( ugrid );
+            writer->SetFileName( outputFileName.c_str() );
+            writer->SetDataModeToAscii();
+            writer->Write();
+            writer->Delete();
+
+            ugrid->Delete();
+        }
+        else
+        {
+            cout << "writing single vtk file" << endl;
         }
 
     } // for each zone
 
-    //cout << "ugrid->SetPoints( vertex );" << endl;
-    ugrid->SetPoints( vertex );
-    vertex->Delete();
-
-    for( int i = 0; i < numParameterArrays; i++ )
+    // if n zones, with n sets of coordinate data, and shared connectivity, then write vtk
+    if( numZones > 1 && !coordDataSharedAcrossZones && connectivityShareCount == numZones )
     {
-        //cout << "ugrid->GetPointData()->AddArray( parameterData[ " << i << " ] );" << endl;
-        ugrid->GetPointData()->AddArray( parameterData[ i ] );
-        parameterData[ i ]->Delete();
+        cout << "writing multiple vtk files" << endl;
     }
-    delete [] parameterData;
+    else
+    {
+        cout << "writing single vtk file" << endl;
+        cout << "ugrid->SetPoints( vertex );" << endl;
+        ugrid->SetPoints( vertex );
+        vertex->Delete();
 
-    // create a *.vt *.vtkk output filename to be written to current location...
-    string outputFileName = replaceExtension( extractFileNameFromFullPath( inputFileNameAndPath ), "vtk" );
-    cout << "Writing to file \"" << outputFileName << "\"" << endl;
+        for( int i = 0; i < numParameterArrays; i++ )
+        {
+            if( parameterData[ i ]->GetNumberOfTuples() == numNodalPoints )
+            {
+                cout << "ugrid->GetPointData()->AddArray( parameterData[ " << i << " ] );" << endl;
+                ugrid->GetPointData()->AddArray( parameterData[ i ] );
+            }
+            else if( parameterData[ i ]->GetNumberOfTuples() == numElements )
+            {
+                cout << "ugrid->GetCellData()->AddArray( parameterData[ " << i << " ] );" << endl;
+                ugrid->GetCellData()->AddArray( parameterData[ i ] );
+            }
+            else
+            {
+                cerr << "Error: Don't know what to do! parameterData[ " << i << " ]->GetNumberOfTuples() = " << parameterData[ i ]->GetNumberOfTuples() << endl;
+            }
+            parameterData[ i ]->Delete();
+        }
+        delete [] parameterData;
 
-    vtkUnstructuredGridWriter *writer = vtkUnstructuredGridWriter::New();
-    writer->SetInput( ugrid );
-    writer->SetFileType( VTK_ASCII );
-    writer->SetFileName( outputFileName.c_str() );
-    writer->Write();
-    writer->Delete();
+        // create a *.vtu output filename to be written to current location...
+        string outputFileName = replaceExtension( extractFileNameFromFullPath( inputFileNameAndPath ), "vtu" );
+        cout << "Writing to file \"" << outputFileName << "\"" << endl;
 
-    ugrid->Delete();
+        vtkXMLUnstructuredGridWriter *writer = vtkXMLUnstructuredGridWriter::New();
+        writer->SetInput( ugrid );
+        writer->SetFileName( outputFileName.c_str() );
+        writer->SetDataModeToAscii();
+        writer->Write();
+        writer->Delete();
+
+        ugrid->Delete();
+    }
 
     for( int i = 0; i < numVars; i++ )
     {
         TecUtilStringDealloc( &varName[ i ] );
     }
 
+    //cerr << "deleting zoneName" << endl;
     for( int i = 0; i < numZones; i++ )
     {
         //TecUtilStringDealloc( &zoneName[ i ] );
     }
-
+    //cerr << "returning to main" << endl;
 }
 
 int main( int argc, char** argv )
@@ -565,8 +704,7 @@ int main( int argc, char** argv )
         cout << "Need at least one argument specifying a tecplot filename!" << endl;
         cout << "Usage: " << argv[ 0 ] << " file1 file2 ..." << endl;
         cout << "Note: If get segmentation fault right away, verify that Tecplot SDK evaluation license" << endl;
-        cout << "      file 'sdkeval.lic' is at location specified by environment variable TECSDKHOME." << endl;
-        cout << endl;
+        cout << "      file 'sdkeval.lic' is at location specified by environment variable TECSDKHOME.\n" << endl;
         return( 1 );
     }
 /*
@@ -616,16 +754,23 @@ int main( int argc, char** argv )
         for( int i = 1; i < argc; i++ ) // argument array is 0-based, but we won't use the zeroth one (program name)
         {
             string inputFileNameAndPath( argv[ i ] );
-            cout << "\nPreparing to read file: " << inputFileNameAndPath << endl;
 
             string extension = getExtension( inputFileNameAndPath );
-            if( extension.compare("tec") == 0 || extension.compare("plt") == 0 )
+            if( extension.compare("dat") != 0 && extension.compare("tec") != 0 && extension.compare("plt") != 0 )
             {
-	            convertTecplotToVTK( inputFileNameAndPath );
+                cerr << "\nWarning: Different extension than expected on input file '" << inputFileNameAndPath << "'.  ";
+                cerr << "Ascii tecplot files typically have extensions '.dat' or '.tec', ";
+                cerr << "while binary tecplot files typically with extension '.plt'." << endl;
+            }
+
+            if( isFileReadable( inputFileNameAndPath ) )
+            {
+                cout << "\nReading file '" << inputFileNameAndPath << "'" << endl;
+                convertTecplotToVTK( inputFileNameAndPath );
             }
             else
             {
-                cout << "Error: This program can only convert tecplot filenames with extensions '.tec' or '.plt'" << endl;
+                cerr << "Error: input file does not exist or is not readable.\n" << endl;
             }
         }
 
@@ -634,7 +779,7 @@ int main( int argc, char** argv )
         if( ret == Manager::ManagerStartReturnCode_Ok )
             manager->stop();
         else
-            fprintf(stderr, "Tecplot SDK Starup Error: %d\n", ret);
+            fprintf(stderr, "Tecplot SDK Startup Error: %d\n", ret);
     }
     else
     {

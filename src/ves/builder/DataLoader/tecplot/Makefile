@@ -1,11 +1,15 @@
 # need to point to home of 64-bit vtk install
-DEPS_HOME = ${HOME}/vr/dependencies
+VTK_LIB_HOME = ${HOME}/vr/lib64/vtk-5.4
+VTK_INCLUDE_HOME = ${HOME}/vr/dependencies/include/vtk-5.4
+
+# boost is in the macports install
+MACPORTS_HOME=/opt/local
 
 # C++ compiler 
 CXX = g++
 
 # Standard flags for C++ 
-CXXFLAGS ?= -arch x86_64 -isysroot /Developer/SDKs/MacOSX10.5.sdk -g
+CXXFLAGS ?= -arch x86_64 -isysroot /Developer/SDKs/MacOSX10.5.sdk -g -Wno-deprecated
 
 # Standard preprocessor flags (common for CC and CXX)
 # ENGINE is for TecUtilParentLockXXX
@@ -17,7 +21,7 @@ CPPFLAGS ?= -DENGINE -DDARWIN -DMAC64
 LDFLAGS ?= -arch x86_64 -isysroot /Developer/SDKs/MacOSX10.5.sdk -g \
         -L${TECSDKHOME}/lib/macix64.105 \
         -ltpsdkbase -ltpsdkintegrationmanager -ltptoolbox \
-        -L${DEPS_HOME}/lib64/vtk-5.4 \
+        -L${VTK_LIB_HOME} \
         -lvtkCommon -lvtkFiltering -lvtkIO
 
 ### Variables: ###
@@ -33,7 +37,8 @@ COMPILE_CXXFLAGS =  -I. \
                     -I${TECSDKHOME}/include/sdk/integrationmanager \
                     -I${TECSDKHOME}/include/sdk/integrationmanager/services \
                     -I${TECSDKHOME}/include/toolbox \
-                    -I${DEPS_HOME}/include/vtk-5.4 \
+                    -I${VTK_INCLUDE_HOME} \
+                    -I${MACPORTS_HOME}/include \
                      $(CPPFLAGS) $(CXXFLAGS)
 CPPDEPS = -MT$@ -MF$(shell echo $@ | sed -e 's,\.o$$,.d,') -MD -MP
 
