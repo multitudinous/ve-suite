@@ -48,6 +48,7 @@
 #include <osg/CullStack>
 #include <osg/Notify>
 #include <osg/io_utils>
+#include <osg/Matrix>
 
 #include <osgUtil/CullVisitor>
 #include <osgUtil/IntersectionVisitor>
@@ -196,10 +197,10 @@ bool AutoTransform::computeLocalToWorldMatrix(
         osg::Vec3d eyeVector;
         if( 1 )
         {
-            double left, right, bottom, top, near, far;
-            projection->getFrustum( left, right, bottom, top, near, far );
+            double fLeft, fRight, fBottom, fTop, fNear, fFar;
+            projection->getFrustum( fLeft, fRight, fBottom, fTop, fNear, fFar );
             osg::Matrixd ortho =
-                osg::Matrixd::ortho2D( left, right, bottom, top );
+                osg::Matrixd::ortho2D(  fLeft, fRight, fBottom, fTop );
             osg::Matrixd mvpwMatrix = (*modelView) * ortho * window;
 
             osg::Vec3d screenPosition = m_position * mvpwMatrix;
