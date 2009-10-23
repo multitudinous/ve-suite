@@ -345,7 +345,7 @@ void OSGStreamlineStage::createStreamLines(vtkPolyData* polyData, ves::xplorer::
 
                 // Get position from the texture.
                 "vec4 pos = texture2D( texPos, tC ); \n"
-                "pos.x *= 2.; \n" // Huh? x seems to be half the value I expect...
+                //"pos.x *= 2.; \n" // Huh? x seems to be half the value I expect...
                 "vec4 v = gl_ModelViewMatrix * ( gl_Vertex + pos ); \n"
                 "gl_Position = gl_ProjectionMatrix * v; \n"
 
