@@ -213,7 +213,7 @@ void cfdPolyData::Update()
         else if( warpSurface )
         {
             this->warper->SetInput( pd );
-            this->warper->SetScaleFactor( this->warpedContourScale );
+            this->warper->SetScaleFactor( warpedContourScale );
             this->warper->Update();//can this go???
             this->map->SetInputConnection( warper->GetOutputPort() );
             warpSurface = false;
@@ -281,6 +281,7 @@ void cfdPolyData::Update()
     else
     {
         OSGWarpedSurfaceStage* surface = new OSGWarpedSurfaceStage();
+        surface->SetSurfaceWarpScale( warpedContourScale );
         geodes.push_back( surface->createMesh( pd, 
             GetActiveDataSet()->GetActiveVectorName(), 
             GetActiveDataSet()->GetActiveScalarName() ) );
@@ -328,9 +329,9 @@ void cfdPolyData::UpdateCommand()
 
     //Extract the isosurface value
     activeModelDVP = objectCommand->GetDataValuePair( "Polydata Value" );
-    double planePosition;
-    activeModelDVP->GetData( planePosition );
-    SetRequestedValue( static_cast< int >( planePosition ) );
+    //double planePosition;
+    activeModelDVP->GetData( warpedContourScale );
+    //SetRequestedValue( static_cast< int >( planePosition ) );
 
     activeModelDVP = objectCommand->GetDataValuePair( "Color By Scalar" );
     activeModelDVP->GetData( colorByScalar );

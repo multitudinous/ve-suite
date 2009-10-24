@@ -129,7 +129,7 @@ protected:
 	void OnQueryOK( wxCommandEvent& event );
     void OnToggleUnselected( wxCommandEvent& event );
     void OnClearData( wxCommandEvent& event );
-
+    
     const std::string GetTextFromChoice( wxChoice* variable,
                                         wxChoice* logicOperator,
                                         wxTextCtrl* textInput );

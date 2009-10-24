@@ -83,12 +83,16 @@ public:
     //colorScalar is the scalar for the point data in polydata used to color the result
     ves::xplorer::scenegraph::Geode* createMesh(vtkPolyData* polydata, std::string displacement, std::string colorScalar);
 
+    void SetSurfaceWarpScale( float surfaceScale );
+
 private:
 
     //an m x n texture is used to transfer data
     int tm; 
     int tn;
 
+    float m_surfaceWarpScale;
+    
     //two utility functions used to determine tm and tn, since texture dimension needs to be 2^n
     int mylog2(unsigned x);
     int mypow2(unsigned x);

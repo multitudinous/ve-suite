@@ -123,140 +123,12 @@ WarrantyToolUIDialog::WarrantyToolUIDialog(
 ////////////////////////////////////////////////////////////////////////////////
 WarrantyToolUIDialog::~WarrantyToolUIDialog()
 {
-    /*Disconnect( GLOW_RESET, wxEVT_COMMAND_BUTTON_CLICKED,
-            wxCommandEventHandler( WarrantyToolUIDialog::GetTextInput ) );
-    Disconnect( GLOW_CLEAR, wxEVT_COMMAND_BUTTON_CLICKED,
-            wxCommandEventHandler( WarrantyToolUIDialog::GetTextInput ) );
-    Disconnect( GLOW_ADD, wxEVT_COMMAND_BUTTON_CLICKED,
-            wxCommandEventHandler( WarrantyToolUIDialog::GetTextInput ) );
-    Disconnect( OPEN_WARRANTY_FILE, wxEVT_COMMAND_BUTTON_CLICKED,
-               wxCommandEventHandler( WarrantyToolUIDialog::OpenWarrantyFile ) );*/
+    ;
 }
-////////////////////////////////////////////////////////////////////////////////
-/*void WarrantyToolUIDialog::BuildGUI()
-{
-    SetSizeHints( wxDefaultSize, wxDefaultSize );
-    SetFont( wxFont(
-        wxNORMAL_FONT->GetPointSize(), 70, 90, 90, false, wxEmptyString ) );
-
-    wxBoxSizer* mainSizer = 0;
-    mainSizer = new wxBoxSizer( wxVERTICAL );
-
-    ///////////////////////////////////////////////////////////
-    wxBoxSizer* projectionEffectOpacitySizer = 0;
-    projectionEffectOpacitySizer = new wxBoxSizer( wxVERTICAL );
-    mainSizer->Add( projectionEffectOpacitySizer, 1, wxGROW );
-
-    wxStaticText* projectionEffectOpacityText = 0;
-    projectionEffectOpacityText = new wxStaticText(
-            this, wxID_ANY, wxT( "Part Number_static" ),
-            wxDefaultPosition, wxDefaultSize, 0 );
-            
-    projectionEffectOpacityText->Wrap( -1 );
-    projectionEffectOpacitySizer->Add( projectionEffectOpacityText, 1, wxALL, 5 );
-        
-    // add text input for axes
-    //wxBoxSizer* axesTextBS = new wxBoxSizer( wxHORIZONTAL );
-    //dataSetSBSizer->Add( axesTextBS, 0, wxGROW );
-    mPartNumberEntry = new wxTextCtrl( this, wxID_ANY,//ID_DATA_UPDATE_AXES,
-                                _( "Part Number_xtxt_crtl" ), wxDefaultPosition,
-                                wxDefaultSize, wxTE_PROCESS_ENTER );
-    projectionEffectOpacitySizer->Add( mPartNumberEntry, 1, wxALL, 5 );
-    mPartNumberEntry->Raise();
-    
-    //Put the buttons on
-    //wxStdDialogButtonSizer* stdDialogButtonSizer;
-    //stdDialogButtonSizer = new wxStdDialogButtonSizer();
-    //stdDialogButtonSizer->Realize();
-    wxBoxSizer* buttonSizer = 0;
-    buttonSizer = new wxBoxSizer( wxHORIZONTAL );
-    //Ok
-    {
-        wxButton* stdDialogButtonOK = 0;
-        stdDialogButtonOK = new wxButton( this, wxID_OK );
-        buttonSizer->Add( stdDialogButtonOK, 0, wxALL, 5 );
-    }
-    //Cancel
-    {
-        wxButton* stdDialogButtonCancel = 0;
-        stdDialogButtonCancel = new wxButton( this, wxID_CANCEL );
-        buttonSizer->Add( stdDialogButtonCancel, 0, wxALL, 5 );
-    }
-   //Reset
-    {
-        wxButton* stdDialogButtonReset = 0;
-        stdDialogButtonReset = new wxButton( this, GLOW_RESET, _("Reset") );
-        buttonSizer->Add( stdDialogButtonReset, 0, wxALL, 5 );
-    }
-  //Clear
-    {
-        wxButton* stdDialogButtonClear = 0;
-        stdDialogButtonClear = new wxButton( this, GLOW_CLEAR, _("Clear") );
-        buttonSizer->Add( stdDialogButtonClear, 0, wxALL, 5 );
-    }
-   //Add
-    {
-        wxButton* stdDialogButtonAdd = 0;
-        stdDialogButtonAdd = new wxButton( this, GLOW_ADD, _("Add") );
-        buttonSizer->Add( stdDialogButtonAdd, 0, wxALL, 5 );
-    }
-    
-    wxBoxSizer* warrantyDialogSizer = 0;
-    warrantyDialogSizer = new wxBoxSizer( wxHORIZONTAL );
-
-    //Open
-    {
-        wxButton* stdDialogButtonAdd = 0;
-        stdDialogButtonAdd = new wxButton( this, OPEN_WARRANTY_FILE, _("Open") );
-        warrantyDialogSizer->Add( stdDialogButtonAdd, 0, wxALL, 5 );
-    }
-    //Warranty file
-    {
-        //mTabDialog = new wxFixWidthImportCtrl( this, OPEN_WARRANTY_FILE );
-        //buttonSizer->Add( mTabDialog, 0, wxALL, 5 );
-        wxArrayString choices;
-        mPartListCMB = new wxComboBox( this, 
-                   PART_SELECTION, 
-                   wxString(), 
-                   wxDefaultPosition, 
-                   wxDefaultSize, 
-                   choices, 
-                   wxCB_DROPDOWN, 
-                   wxDefaultValidator );
-        warrantyDialogSizer->Add( mPartListCMB, 0, wxALL, 5 );
-   }
-
-    mainSizer->Add( warrantyDialogSizer, 0, wxALL | wxEXPAND, 5 );
-    mainSizer->Add( buttonSizer, 0, wxALL | wxEXPAND, 5 );
-
-    Connect( GLOW_RESET, wxEVT_COMMAND_BUTTON_CLICKED,
-        wxCommandEventHandler( WarrantyToolUIDialog::GetTextInput ) );
-    Connect( GLOW_CLEAR, wxEVT_COMMAND_BUTTON_CLICKED,
-        wxCommandEventHandler( WarrantyToolUIDialog::GetTextInput ) );
-    Connect( GLOW_ADD, wxEVT_COMMAND_BUTTON_CLICKED,
-        wxCommandEventHandler( WarrantyToolUIDialog::GetTextInput ) );
-    Connect( OPEN_WARRANTY_FILE, wxEVT_COMMAND_BUTTON_CLICKED,
-        wxCommandEventHandler( WarrantyToolUIDialog::OpenWarrantyFile ) );
-    ///////////////////////////////////////////////////////////
-
-    SetSizer( mainSizer );
-    Layout();
-    mainSizer->Fit( this );
-    CenterOnParent();
-}*/
 ////////////////////////////////////////////////////////////////////////////////
 void WarrantyToolUIDialog::SendCommandsToXplorer()
 {
-    ves::open::xml::CommandPtr command( new ves::open::xml::Command() ); 
-
-    /*for( size_t i = 0; i < mInstructions.size(); ++i )
-    {
-        command->AddDataValuePair( mInstructions.at( i ) );
-    }
-
-    command->SetCommandName( mCommandName );*/
-
-    mServiceList->SendCommandStringToXplorer( command );
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void WarrantyToolUIDialog::GetTextInput( wxCommandEvent& event )
@@ -313,51 +185,8 @@ void WarrantyToolUIDialog::GetTextInput( wxCommandEvent& event )
     mServiceList->SendCommandStringToXplorer( command );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void WarrantyToolUIDialog::OpenWarrantyFile( wxCommandEvent& event )
+void WarrantyToolUIDialog::OpenWarrantyFile( wxCommandEvent& WXUNUSED( event ) )
 {
-    //wxString fileName( _("C:/dev/test_data/tab_delimited/0904-RIDesktop.txt") );
-    //mTabDialog->SetTabSize( 7 );
-    //mTabDialog->LoadFile( fileName );
-    wxFileDialog dialog( this,
-                        _T( "Open File" ),
-                        ::wxGetCwd(),
-                        _T( "" ),
-                        _T( "Warranty data file (*.csv;*.tsv;*.db)|*.csv;*.tsv;*.db" ),
-                        wxOPEN | wxFILE_MUST_EXIST | wxFD_PREVIEW,
-                        wxDefaultPosition );
-    dialog.CentreOnParent();
-    
-    if( dialog.ShowModal() == wxID_OK )
-    {
-        wxFileName viewPtsFilename( dialog.GetPath() );
-        //viewPtsFilename.MakeRelativeTo( ::wxGetCwd(), wxPATH_NATIVE );
-        wxString relativeViewLocationsPath( wxString( "./", wxConvUTF8 ) + viewPtsFilename.GetFullPath() );
-        
-        DataValuePairPtr velFileName( new DataValuePair() );
-        velFileName->SetData( "View Locations file", ConvertUnicode( relativeViewLocationsPath.c_str() ) );
-        //_dataValuePairList.push_back( velFileName );
-        
-        ///_commandName = "QC_LOAD_STORED_POINTS";
-        //SendCommandsToXplorer();
-        std::string csvFilename = ConvertUnicode( viewPtsFilename.GetFullPath().c_str() );
-        if( viewPtsFilename.GetExt() == _("csv") )
-        {
-            ParseDataFile( csvFilename );
-        }
-        else if( viewPtsFilename.GetExt() == _("db") )
-        {
-            ParseDataBase( csvFilename );
-        }
-        
-        ves::open::xml::DataValuePairSharedPtr cameraGeometryOnOffDVP(
-            new ves::open::xml::DataValuePair() );
-        cameraGeometryOnOffDVP->SetData( "WARRANTY_FILE", csvFilename );
-        ves::open::xml::CommandPtr command( new ves::open::xml::Command() ); 
-        command->AddDataValuePair( cameraGeometryOnOffDVP );
-        std::string mCommandName = "CAMERA_GEOMETRY_ON_OFF";
-        command->SetCommandName( mCommandName );
-        mServiceList->SendCommandStringToXplorer( command );        
-    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void WarrantyToolUIDialog::StripCharacters( std::string& data, const std::string& character )
@@ -606,21 +435,21 @@ void WarrantyToolUIDialog::OnVariableAndLogicalChoice( wxCommandEvent& event )
     UpdateQueryDisplay();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void WarrantyToolUIDialog::OnCreateInputText( wxCommandEvent& event )
+void WarrantyToolUIDialog::OnCreateInputText( wxCommandEvent& WXUNUSED( event ) )
 {
 	// TODO: Implement OnCreateInputText
     //Get the text from the user and update the query text display
     UpdateQueryDisplay();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void WarrantyToolUIDialog::OnTextQueryEnter( wxCommandEvent& event )
+void WarrantyToolUIDialog::OnTextQueryEnter( wxCommandEvent& WXUNUSED( event ) )
 {
 	// TODO: Implement OnTextQueryEnter
     //When the user types in their on text entry submit the query
     SubmitQueryCommand();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void WarrantyToolUIDialog::OnPartSelection( wxCommandEvent& event )
+void WarrantyToolUIDialog::OnPartSelection( wxCommandEvent& WXUNUSED( event ) )
 {
 	// TODO: Implement OnPartSelection
     //When the user selects a part number submit it and update the associated 
@@ -658,7 +487,7 @@ void WarrantyToolUIDialog::OnPartSelection( wxCommandEvent& event )
     mServiceList->SendCommandStringToXplorer( command );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void WarrantyToolUIDialog::OnPartNumberEntry( wxCommandEvent& event )
+void WarrantyToolUIDialog::OnPartNumberEntry( wxCommandEvent& WXUNUSED( event ) )
 {
 	// TODO: Implement OnPartNumberEntry
     //When a user types in a part number to find submit it and go find it
@@ -694,26 +523,26 @@ void WarrantyToolUIDialog::OnPartNumberEntry( wxCommandEvent& event )
     mServiceList->SendCommandStringToXplorer( command );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void WarrantyToolUIDialog::OnTextChkListToggle( wxCommandEvent& event )
+void WarrantyToolUIDialog::OnTextChkListToggle( wxCommandEvent& WXUNUSED( event ) )
 {
-	// TODO: Implement OnTextChkListToggle
+    UpdateQueryDisplay();    
 }
 ////////////////////////////////////////////////////////////////////////////////
-void WarrantyToolUIDialog::OnQueryApply( wxCommandEvent& event )
+void WarrantyToolUIDialog::OnQueryApply( wxCommandEvent& WXUNUSED( event ) )
 {
 	// TODO: Implement OnQueryApply
     //Submit the command currently in the query text box
     SubmitQueryCommand();    
 }
 ////////////////////////////////////////////////////////////////////////////////
-void WarrantyToolUIDialog::OnDialogCancel( wxCommandEvent& event )
+void WarrantyToolUIDialog::OnDialogCancel( wxCommandEvent& WXUNUSED( event ) )
 {
 	// TODO: Implement OnDialogCancel
     //Do not do anything and close the dialog
     Close();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void WarrantyToolUIDialog::OnQueryOK( wxCommandEvent& event )
+void WarrantyToolUIDialog::OnQueryOK( wxCommandEvent& WXUNUSED( event ) )
 {
 	// TODO: Implement OnQueryOK
     //Submit the command currently in the query text box and close the dialog
@@ -830,9 +659,20 @@ void WarrantyToolUIDialog::SubmitQueryCommand()
 void WarrantyToolUIDialog::UpdateQueryDisplay()
 {
     //Setup first variable
-    std::string queryCommand = "SELECT * FROM Parts WHERE ";
+    std::string queryCommand = "SELECT ";
+    unsigned int numStrings = m_displayTextChkList->GetCount();
+    for( unsigned int i = 0; i < numStrings; ++i )
+    {
+        if( m_displayTextChkList->IsChecked( i ) )
+        {
+            queryCommand += "\"" + ConvertUnicode( m_displayTextChkList->GetString( i ).c_str() ) + "\"" + ", ";
+        }
+    }
+    queryCommand += "\"Part_Number\" ";
+    queryCommand += "FROM Parts WHERE ";
+
     queryCommand += 
-    GetTextFromChoice( m_variableChoice00, m_variableLogicOperator00, 
+        GetTextFromChoice( m_variableChoice00, m_variableLogicOperator00, 
                       m_textInput00 );
     
     //Setup second variable
@@ -1018,7 +858,38 @@ void WarrantyToolUIDialog::OnToggleUnselected( wxCommandEvent& event )
     mServiceList->SendCommandStringToXplorer( command );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void WarrantyToolUIDialog::OnClearData( wxCommandEvent& event )
+void WarrantyToolUIDialog::OnClearData( wxCommandEvent& WXUNUSED( event ) )
 { 
+    ves::open::xml::DataValuePairSharedPtr cameraGeometryOnOffDVP(
+        new ves::open::xml::DataValuePair() );
+    //Clear all the glow
+    cameraGeometryOnOffDVP->SetData( "CLEAR", "CLEAR" );
+    mPartNumberList.clear();
+
+    unsigned int numStrings = m_displayTextChkList->GetCount();
+    //wxArrayInt selections;
+    //numStrings = m_displayTextChkList->GetSelections( selections );
+
+    ves::open::xml::OneDStringArrayPtr textFields( 
+        new ves::open::xml::OneDStringArray() );
+
+    for( unsigned int i = 0; i < numStrings; ++i )
+    {
+        if( m_displayTextChkList->IsChecked( i ) )
+        {
+            textFields->AddElementToArray( 
+                                          ConvertUnicode( m_displayTextChkList->GetString( i ).c_str() ) );
+        }
+    }
+    ves::open::xml::DataValuePairPtr displayText( 
+                                                 new ves::open::xml::DataValuePair() );
+    displayText->SetData( "DISPLAY_TEXT_FIELDS", textFields );
+    
+    ves::open::xml::CommandPtr command( new ves::open::xml::Command() ); 
+    command->AddDataValuePair( cameraGeometryOnOffDVP );
+    command->AddDataValuePair( displayText );
+    std::string mCommandName = "WARRANTY_TOOL_PART_TOOLS";
+    command->SetCommandName( mCommandName );
+    mServiceList->SendCommandStringToXplorer( command );
 }
 ////////////////////////////////////////////////////////////////////////////////

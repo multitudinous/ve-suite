@@ -54,8 +54,11 @@ using namespace ves::xplorer::event::viz;
 
 ////////////////////////////////////////////////////////////////////////////////
 OSGWarpedSurfaceStage::OSGWarpedSurfaceStage(void)
+    :
+    tm( 0 ),
+    tn( 0 ),
+    m_surfaceWarpScale( 50 )
 {
-    tm=tn=0;
 }
 ////////////////////////////////////////////////////////////////////////////////
 OSGWarpedSurfaceStage::~OSGWarpedSurfaceStage(void)
@@ -301,21 +304,50 @@ void OSGWarpedSurfaceStage::createMeshData( osg::Geometry* geom, vtkPolyData* po
     texColors->setFilter( osg::Texture2D::MAG_FILTER, osg::Texture2D::NEAREST );
     ss->setTextureAttribute( 1, texColors );
     
-    osg::ref_ptr< osg::Uniform > texColorUniform =
-        new osg::Uniform( "texColor", 1 );
-    ss->addUniform( texColorUniform.get() );
+    {
+        osg::ref_ptr< osg::Uniform > texColorUniform =
+            new osg::Uniform( "texColor", 1 );
+        ss->addUniform( texColorUniform.get() );
+    }
 
+    {
+        osg::ref_ptr< osg::Uniform > surfaceWarpUniform =
+            new osg::Uniform( "surfaceWarpScale", m_surfaceWarpScale );
+        ss->addUniform( surfaceWarpUniform.get() );
+    }
+    
+    /*std::string vSource(
+                        "varying vec3 color;\n"
+                        "varying vec3 lightPos;\n"
+                        "varying vec3 objPos;\n"
+                        "varying vec3 eyePos;\n"
+                        "varying vec3 normal;\n"
+                        "void main()\n"
+                        "{\n"
+                        "        gl_Position=ftransform();\n"
+                        
+                        "        color=gl_Color.xyz;\n"
+                        "                objPos=gl_Vertex.xyz;\n"
+                        "        eyePos=vec3(gl_ModelViewMatrix*gl_Vertex);\n"
+                        "                lightPos=gl_LightSource[0].position.xyz;\n"
+                        "        normal=vec3(gl_NormalMatrix*gl_Normal);\n"
+                        "        gl_FrontSecondaryColor=vec4(1.0);\n"
+                        "        gl_BackSecondaryColor=vec4(0.0);\n"
+                        "}\n"
+                        );*/
+                
     std::string vertexSource =
 
         "uniform sampler2D texVec; \n"
         "uniform sampler2D texColor; \n"
         "uniform float osg_SimulationTime; \n"
-
+        "uniform float surfaceWarpScale; \n"
+    
         "void main() \n"
         "{ \n"
 
             "float a = mod( osg_SimulationTime*100.0, 314.0) * 0.01; \n"
-            "float scalar =  sin(a) * 100.0;\n"
+            "float scalar =  sin(a) * surfaceWarpScale;\n"
             "vec4 vecOff = scalar * texture2D( texVec, gl_MultiTexCoord0.st ); \n"
             "vec4 color = texture2D( texColor, gl_MultiTexCoord0.st ); \n"
             "vec4 position = vec4( (gl_Vertex.xyz + vecOff.xyz), gl_Vertex.w ); \n"
@@ -326,7 +358,47 @@ void OSGWarpedSurfaceStage::createMeshData( osg::Geometry* geom, vtkPolyData* po
             "gl_FrontColor = color; \n"
 
         "} \n";
-
+    
+    /*std::string fSource(
+                        "uniform vec3 ambientMaterial;\n"
+                        "uniform vec3 diffuseMaterial;\n"
+                        "uniform vec3 specularMaterial;\n"
+                        "uniform float specularPower;\n"
+                        
+                        "varying vec3 color;\n"
+                        "varying vec3 lightPos;\n"
+                        "varying vec3 objPos;\n"
+                        "varying vec3 eyePos;\n"
+                        "varying vec3 normal;\n"
+                        
+                        "void main()\n"
+                        "{\n"
+                        "    ambientMaterial = vec3( 0.368627, 0.368421, 0.368421 );\n"
+                        "    diffuseMaterial = vec3( 0.886275, 0.885003, 0.885003 );\n"
+                        "    specularMaterial = vec3( 0.490196, 0.488722, 0.488722 );\n"
+                        "    specularPower = 20.0;\n"
+                        "\n"
+                        "    vec3 N=normalize(normal);\n"
+                        "    if(gl_SecondaryColor.r < .5)\n"
+                        "    {\n"
+                        "       N=-N; \n"
+                        "    }\n"
+                        "    vec3 L=normalize(lightPos);\n"
+                        "    float NDotL=max(dot(N,L),0.0);\n"
+                        
+                        "    vec3 V=normalize(eyePos);\n"
+                        "    vec3 R=reflect(V,N);\n"
+                        "    float RDotL=max(dot(R,L),0.0);\n"
+                        
+                        "    vec3 TotalAmbient=gl_LightSource[0].ambient.rgb*ambientMaterial*color;\n"
+                        "    vec3 TotalDiffuse=gl_LightSource[0].diffuse.rgb*diffuseMaterial*color*NDotL;\n"
+                        "    vec3 TotalSpecular=gl_LightSource[0].specular.rgb*specularMaterial*pow(RDotL,specularPower);\n"
+                        
+                        "    gl_FragColor=vec4(TotalAmbient+TotalDiffuse+TotalSpecular,1.0);\n"
+                        " }\n"
+                        
+                        );*/
+    
     osg::ref_ptr< osg::Shader > vertexShader = new osg::Shader();
     vertexShader->setType( osg::Shader::VERTEX );
     vertexShader->setShaderSource( vertexSource );
@@ -339,5 +411,10 @@ void OSGWarpedSurfaceStage::createMeshData( osg::Geometry* geom, vtkPolyData* po
     triangleStripper->Delete();
     triangleFilter->Delete();
     lut->Delete();
+}
+////////////////////////////////////////////////////////////////////////////////
+void OSGWarpedSurfaceStage::SetSurfaceWarpScale( float surfaceScale )
+{
+    m_surfaceWarpScale = surfaceScale;
 }
 ////////////////////////////////////////////////////////////////////////////////

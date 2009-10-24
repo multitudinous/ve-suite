@@ -317,10 +317,13 @@ void WarrantyToolGP::SetCurrentCommand( ves::open::xml::CommandPtr command )
         else if( dvp->GetDataName() == "CLEAR" )
         {
             ves::xplorer::scenegraph::util::OpacityVisitor 
-            opVisitor1( m_cadRootNode, false, true, 0.3f );
+                opVisitor1( m_cadRootNode, false, true, 0.3f );
             
+            bool removed = m_textTrans->removeChild( m_groupedTextTextures.get() );
+            RenderTextualDisplay( false );
+
             ves::xplorer::scenegraph::HighlightNodeByNameVisitor 
-            highlight2( m_cadRootNode, "", false, true );
+                highlight2( m_cadRootNode, "", false, true );
         }
         else if( dvp->GetDataName() == "TOGGLE_PARTS" )
         {
@@ -581,11 +584,17 @@ void WarrantyToolGP::RenderTextualDisplay( bool onOff )
             Statement select( session );
             try
             {
-                //select << queryString.c_str(),
-                //into( m_selectedAssembly ),
-                //now;
+                std::string queryString = "SELECT ";
+                for( size_t i = 0; i < stringArray.size(); ++i )
+                {
+                    queryString += "\"" + stringArray.at( i ) + "\"" + ", ";
+                }
+                queryString += "\"Part_Number\" ";
+                queryString += "FROM Parts WHERE ";
+                
                 // a simple query
-                std::string queryString = "SELECT * FROM Parts WHERE \"Part_Number\" = '" + m_lastPartNumber +"'";
+                //std::string queryString = "SELECT * FROM Parts WHERE \"Part_Number\" = '" + m_lastPartNumber +"'";
+                queryString +=  "\"Part_Number\" = '" + m_lastPartNumber +"'";
                 select << queryString.c_str(),now;
                 //select.execute();
             }
@@ -636,10 +645,11 @@ void WarrantyToolGP::RenderTextualDisplay( bool onOff )
                         m_assemblyPartNumbers.push_back( partNumber );
                     }
                     
-                    std::vector< std::string >::const_iterator iter = 
-                        std::find( stringArray.begin(), stringArray.end(), rs.columnName(col) );
+                    //std::vector< std::string >::const_iterator iter = 
+                    //    std::find( stringArray.begin(), stringArray.end(), rs.columnName(col) );
                     
-                    if( iter != stringArray.end() )
+                    //if( iter != stringArray.end() )
+                    else
                     {
                         tempTextData << rs.columnName(col) << ": " 
                             << rs[col].convert<std::string>() << "\n";
@@ -892,6 +902,9 @@ void WarrantyToolGP::CreateDBQuery( ves::open::xml::DataValuePairPtr dvp )
     }
 
     bool failedLoad = false;
+    float textColor[ 4 ] = { 0.0, 0.0, 0.0, 1.0 };
+    std::string partNumber;
+    std::string partNumberHeader;
     while (more)
 	{
         ves::xplorer::scenegraph::TextTexture* tempText = 0;
@@ -906,12 +919,9 @@ void WarrantyToolGP::CreateDBQuery( ves::open::xml::DataValuePairPtr dvp )
             failedLoad = true;
             break;
         }
-        float textColor[ 4 ] = { 0.0, 0.0, 0.0, 1.0 };
         tempText->SetTextColor( textColor );
 
         std::ostringstream tempTextData;
-        std::string partNumber;
-        std::string partNumberHeader;
         
 		for (std::size_t col = 0; col < cols; ++col)
 		{
@@ -923,10 +933,11 @@ void WarrantyToolGP::CreateDBQuery( ves::open::xml::DataValuePairPtr dvp )
                 m_assemblyPartNumbers.push_back( partNumber );
             }
 
-            std::vector< std::string >::const_iterator iter = 
-                std::find( stringArray.begin(), stringArray.end(), rs.columnName(col) );
+            //std::vector< std::string >::const_iterator iter = 
+            //    std::find( stringArray.begin(), stringArray.end(), rs.columnName(col) );
             
-            if( iter != stringArray.end() )
+            //if( iter != stringArray.end() )
+            else
             {
                 tempTextData << rs.columnName(col) << ": " 
                     << rs[col].convert<std::string>() << "\n";
