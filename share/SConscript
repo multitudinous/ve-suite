@@ -14,6 +14,7 @@ ptConfigFile.addFiles( ['ptconfigfile.txt'] )
 ptConfigFile.addFiles( ['Draft2.png'] )
 ptConfigFile.addFiles( ['Info_Panel.png'] )
 ptConfigFile.addFiles( ['Info_Panel-No_Title.png'] )
+ptConfigFile.addFiles( ['splotch.png'] )
 
 shareSubdirs = Split("""
     glsl
