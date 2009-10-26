@@ -62,7 +62,6 @@ void DynParser::OpenFile(const char * file)
     NewParseFile( ( workingDir + fileName + dynfExt ).c_str());
     CString filename = file;
     dyndoc->Open( ( workingDir + fileName + dynfExt ).c_str());
-
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1204,7 +1203,7 @@ std::string DynParser::CreateNetwork( void )
         tempModel->
             SetIconFilename(BlockInfoList["_main_sheet"][blockIter->first].type
             +"_"+BlockInfoList["_main_sheet"][blockIter->first].type+"_"
-            +BlockInfoList["_main_sheet"][blockIter->first].icon);
+            +BlockInfoList["_main_sheet"][blockIter->first].icon + ".xpm" );
         tempModel->
             SetIconRotation(BlockInfoList["_main_sheet"][blockIter->first].
             rotation);
@@ -1358,7 +1357,7 @@ void DynParser::ParseSubSystem( ves::open::xml::model::ModelPtr model,
         tempModel->
             SetIconFilename(BlockInfoList[networkName][blockIter->first].type +
             "_" + BlockInfoList[networkName][blockIter->first].type+"_" +
-            BlockInfoList[networkName][blockIter->first].icon );
+            BlockInfoList[networkName][blockIter->first].icon + ".xpm");
         tempModel->
             SetIconRotation(
             BlockInfoList[networkName][blockIter->first].rotation );
