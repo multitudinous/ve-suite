@@ -36,6 +36,8 @@
 #include <ves/xplorer/scenegraph/manipulator/RotateTwist.h>
 #include <ves/xplorer/scenegraph/manipulator/HelpCircle.h>
 
+#include <ves/xplorer/scenegraph/SceneManager.h>
+
 // --- OSG Includes --- //
 #include <osg/io_utils>
 #include <osg/Geode>
@@ -156,7 +158,15 @@ const bool Rotate::ComputeProjectedPoint(
     const osg::Vec3d& lineEnd = deviceInput.getEnd();
 
     //Get intersection with selection line and screen/eye aligned plane
-    osg::Plane plane = GetPlane( true );
+    osg::Plane plane;
+    if( m_sceneManager.IsDesktopMode() )
+    {
+        plane = GetPlane( true );
+    }
+    else
+    {
+        plane = GetPlane( false );
+    }
     GetLinePlaneIntersection( lineStart, lineEnd, plane, projectedPoint );
 
     //deviceInput.getFirstIntersection().getWorldIntersectPoint();
