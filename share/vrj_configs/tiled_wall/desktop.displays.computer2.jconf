@@ -18,14 +18,14 @@
             </display_system>
          </display_system>
          <display_windows>
-            <display_window name="Computer 2 - Row 1" version="5">
+            <display_window name="Computer 2 - Row 1" version="6">
                <origin>0</origin>
                <origin>0</origin>
                <size>4096</size>
                <size>1280</size>
                <pipe>0</pipe>
                <frame_buffer_config>
-                  <opengl_frame_buffer_config name="GL Frame Buffer" version="3">
+                  <opengl_frame_buffer_config name="GL Frame Buffer" version="4">
                      <visual_id>-1</visual_id>
                      <red_size>8</red_size>
                      <green_size>8</green_size>
@@ -40,6 +40,10 @@
                      <accum_alpha_size>0</accum_alpha_size>
                      <num_sample_buffers>1</num_sample_buffers>
                      <num_samples>2</num_samples>
+                     <use_create_context_attribs>false</use_create_context_attribs>
+                     <gl_context_major_version>3</gl_context_major_version>
+                     <gl_context_minor_version>0</gl_context_minor_version>
+                     <gl_context_flags>0</gl_context_flags>
                   </opengl_frame_buffer_config>
                </frame_buffer_config>
                <stereo>false</stereo>
@@ -99,20 +103,21 @@
                   </surface_viewport>
                </surface_viewports>
                <keyboard_mouse_device_name>Keyboard KM Dev</keyboard_mouse_device_name>
+               <allow_mouse_locking>true</allow_mouse_locking>
                <lock_key>KEY_NONE</lock_key>
                <start_locked>false</start_locked>
                <sleep_time>23</sleep_time>
             </display_window>
          </display_windows>
          <display_windows>
-            <display_window name="Computer 2 - Row 2" version="5">
+            <display_window name="Computer 2 - Row 2" version="6">
                <origin>0</origin>
                <origin>0</origin>
                <size>4096</size>
                <size>1280</size>
                <pipe>6</pipe>
                <frame_buffer_config>
-                  <opengl_frame_buffer_config name="GL Frame Buffer" version="3">
+                  <opengl_frame_buffer_config name="GL Frame Buffer" version="4">
                      <visual_id>-1</visual_id>
                      <red_size>8</red_size>
                      <green_size>8</green_size>
@@ -127,6 +132,10 @@
                      <accum_alpha_size>0</accum_alpha_size>
                      <num_sample_buffers>1</num_sample_buffers>
                      <num_samples>2</num_samples>
+                     <use_create_context_attribs>false</use_create_context_attribs>
+                     <gl_context_major_version>3</gl_context_major_version>
+                     <gl_context_minor_version>0</gl_context_minor_version>
+                     <gl_context_flags>0</gl_context_flags>
                   </opengl_frame_buffer_config>
                </frame_buffer_config>
                <stereo>false</stereo>
@@ -186,20 +195,21 @@
                   </surface_viewport>
                </surface_viewports>
                <keyboard_mouse_device_name>Keyboard KM Dev</keyboard_mouse_device_name>
+               <allow_mouse_locking>true</allow_mouse_locking>
                <lock_key>KEY_NONE</lock_key>
                <start_locked>false</start_locked>
                <sleep_time>23</sleep_time>
             </display_window>
          </display_windows>
          <display_windows>
-            <display_window name="Computer 2 - Row 3" version="5">
+            <display_window name="Computer 2 - Row 3" version="6">
                <origin>0</origin>
                <origin>0</origin>
                <size>4096</size>
                <size>1280</size>
                <pipe>2</pipe>
                <frame_buffer_config>
-                  <opengl_frame_buffer_config name="GL Frame Buffer" version="3">
+                  <opengl_frame_buffer_config name="GL Frame Buffer" version="4">
                      <visual_id>-1</visual_id>
                      <red_size>8</red_size>
                      <green_size>8</green_size>
@@ -214,6 +224,10 @@
                      <accum_alpha_size>0</accum_alpha_size>
                      <num_sample_buffers>1</num_sample_buffers>
                      <num_samples>2</num_samples>
+                     <use_create_context_attribs>false</use_create_context_attribs>
+                     <gl_context_major_version>3</gl_context_major_version>
+                     <gl_context_minor_version>0</gl_context_minor_version>
+                     <gl_context_flags>0</gl_context_flags>
                   </opengl_frame_buffer_config>
                </frame_buffer_config>
                <stereo>false</stereo>
@@ -273,20 +287,21 @@
                   </surface_viewport>
                </surface_viewports>
                <keyboard_mouse_device_name>Keyboard KM Dev</keyboard_mouse_device_name>
+               <allow_mouse_locking>true</allow_mouse_locking>
                <lock_key>KEY_NONE</lock_key>
                <start_locked>false</start_locked>
                <sleep_time>23</sleep_time>
             </display_window>
          </display_windows>
          <display_windows>
-            <display_window name="Computer 2 - Row 4" version="5">
+            <display_window name="Computer 2 - Row 4" version="6">
                <origin>0</origin>
                <origin>0</origin>
                <size>4096</size>
                <size>1280</size>
                <pipe>4</pipe>
                <frame_buffer_config>
-                  <opengl_frame_buffer_config name="GL Frame Buffer" version="3">
+                  <opengl_frame_buffer_config name="GL Frame Buffer" version="4">
                      <visual_id>-1</visual_id>
                      <red_size>8</red_size>
                      <green_size>8</green_size>
@@ -301,6 +316,10 @@
                      <accum_alpha_size>0</accum_alpha_size>
                      <num_sample_buffers>1</num_sample_buffers>
                      <num_samples>2</num_samples>
+                     <use_create_context_attribs>false</use_create_context_attribs>
+                     <gl_context_major_version>3</gl_context_major_version>
+                     <gl_context_minor_version>0</gl_context_minor_version>
+                     <gl_context_flags>0</gl_context_flags>
                   </opengl_frame_buffer_config>
                </frame_buffer_config>
                <stereo>false</stereo>
@@ -360,13 +379,14 @@
                   </surface_viewport>
                </surface_viewports>
                <keyboard_mouse_device_name>Keyboard KM Dev</keyboard_mouse_device_name>
+               <allow_mouse_locking>true</allow_mouse_locking>
                <lock_key>KEY_NONE</lock_key>
                <start_locked>false</start_locked>
                <sleep_time>23</sleep_time>
             </display_window>
          </display_windows>
          <listen_port>0</listen_port>
-         <host_name>the-wall-2.vrac.iastate.edu</host_name>
+         <host_name>display-wall-1.vrac.iastate.edu</host_name>
       </cluster_node>
    </elements>
 </configuration>

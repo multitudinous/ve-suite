@@ -4,7 +4,7 @@
    <include>desktop.base.sim.jconf</include>
    <include>desktop.displays.computer1.jconf</include>
    <include>desktop.displays.computer2.jconf</include>
-   <!--include>desktop.displays.computer3.jconf</include-->
+   <include>desktop.displays.computer3.jconf</include>
    <include>the-wall.jconf</include>
    <elements />
 </configuration>
