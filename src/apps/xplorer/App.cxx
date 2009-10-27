@@ -385,7 +385,17 @@ void App::initScene()
     std::cout << std::endl;
     std::cout << "| ***************************************************************** |" << std::endl;
     m_vjobsWrapper->InitCluster();
-    // define the rootNode, worldDCS, and lighting
+    //Need this loop here so manipulators know whether we are in desktop mode
+    for( int i = 1; i < argc; ++i )
+    {
+        if( ( std::string( argv[ i ] ) == std::string( "-VESDesktop" ) ) && 
+            ( argc >= i + 2 ) )
+        {
+            ves::xplorer::scenegraph::SceneManager::instance()->
+                SetDesktopMode( true );
+        }
+    }
+    //Define the rootNode, worldDCS, and lighting
     ves::xplorer::scenegraph::SceneManager::instance()->SetRootNode(
             mSceneRenderToTexture->GetGroup() );
     ves::xplorer::scenegraph::SceneManager::instance()->InitScene();
