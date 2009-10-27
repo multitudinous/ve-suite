@@ -837,17 +837,22 @@ void Dragger::ClearPointConstraint()
 void Dragger::UpdateConductorData( ves::xplorer::scenegraph::DCS* dcs )
 {
     ves::open::xml::model::ModelPtr model = dcs->GetModelData();
-    ves::open::xml::cad::CADNodePtr cadNode = dcs->GetCADPart();
-    ves::open::xml::TransformPtr tempTransform = cadNode->GetTransform();
     if( !model )
     {
-        std::cout << "Null Model " << std::endl;
+        //std::cout << "Null Model " << std::endl;
         return;
     }
-    
+    ves::open::xml::cad::CADNodePtr cadNode = dcs->GetCADPart();
+    if( !cadNode )
+    {
+        //std::cout << "Null CAD Node " << std::endl;
+        return;
+    }
+    ves::open::xml::TransformPtr tempTransform = cadNode->GetTransform();
+
     if( !model->GetParentSystem() )
     {
-        std::cout << "Null System " << std::endl;
+        //std::cout << "Null System " << std::endl;
         return;
     }
     
