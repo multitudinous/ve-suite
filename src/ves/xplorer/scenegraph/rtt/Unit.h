@@ -155,62 +155,6 @@ protected:
     ///Destructor
     virtual ~Unit();
 
-    ///This draw callback is used for customized drawing
-    class DrawCallback : public osg::Drawable::DrawCallback
-    {
-    public:
-        ///Default Constructor
-        DrawCallback();
-
-        ///Constructor
-        DrawCallback( Unit* parent );
-
-        ///Copy Constructor
-        DrawCallback(
-            const DrawCallback& drawCallback,
-            const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
-
-        ///
-        META_Object( rtt, DrawCallback );
-
-        ///Do customized draw code
-        virtual void drawImplementation(
-            osg::RenderInfo& ri, const osg::Drawable* dr ) const;
-
-    protected:
-        ///Destructor
-        ~DrawCallback();
-
-    private:
-        ///
-        osg::ref_ptr< Unit > mParent;
-    };
-
-
-        ///This draw callback is used for customized drawing
-    class CullCallback : public osg::Drawable::CullCallback
-    {
-    public:
-        ///Default Constructor
-        CullCallback();
-
-        ///Copy Constructor
-        CullCallback(
-            const CullCallback& drawCallback,
-            const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
-
-            virtual bool cull(osg::NodeVisitor*, osg::Drawable*, osg::State*) const;
-        ///
-        META_Object( rtt, CullCallback );
-            virtual bool cull(osg::NodeVisitor* nv, osg::Drawable* drawable, osg::RenderInfo* renderInfo) const;
-
-    protected:
-        ///Destructor
-        virtual ~CullCallback();
-
-    private:
-    };
-
     ///Use this method in derived classes to implement unit specific uniforms
     virtual void UpdateUniforms();
 
@@ -252,12 +196,6 @@ protected:
 
     ///Store the viewport of the camera
     osg::ref_ptr< osg::Viewport > mViewport;
-
-    ///Projection matrix of the ppu (default: 2D ortho view)
-    osg::ref_ptr< osg::RefMatrix > mProjectionMatrix;
-
-    ///Modelview matrix of the ppu (default: identity matrix)
-    osg::ref_ptr< osg::RefMatrix > mModelViewMatrix;
 
 private:
 

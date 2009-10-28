@@ -53,73 +53,6 @@
 using namespace ves::xplorer::scenegraph::rtt;
 
 ////////////////////////////////////////////////////////////////////////////////
-Unit::DrawCallback::DrawCallback()
-    :
-    osg::Drawable::DrawCallback(),
-    mParent( NULL )
-{
-    ;
-}
-////////////////////////////////////////////////////////////////////////////////
-Unit::DrawCallback::DrawCallback( Unit* parent )
-    :
-    osg::Drawable::DrawCallback(),
-    mParent( parent )
-{
-    ;
-}
-////////////////////////////////////////////////////////////////////////////////
-Unit::DrawCallback::DrawCallback(
-    const Unit::DrawCallback& drawCallback, const osg::CopyOp& copyop )
-    :
-    osg::Drawable::DrawCallback( drawCallback, copyop ),
-    mParent( drawCallback.mParent )
-{
-    ;
-}
-////////////////////////////////////////////////////////////////////////////////
-Unit::DrawCallback::~DrawCallback()
-{
-    ;
-}
-////////////////////////////////////////////////////////////////////////////////
-void Unit::DrawCallback::drawImplementation(
-    osg::RenderInfo& ri, const osg::Drawable* dr ) const
-{
-    //Set matricies used for the unit
-    ri.getState()->applyProjectionMatrix( mParent->mProjectionMatrix.get() );
-    ri.getState()->applyModelViewMatrix( mParent->mModelViewMatrix.get() );
-
-    //Now render the drawable geometry
-    dr->drawImplementation( ri );
-}
-////////////////////////////////////////////////////////////////////////////////
-Unit::CullCallback::CullCallback()
-{
-    ;
-}
-////////////////////////////////////////////////////////////////////////////////
-Unit::CullCallback::~CullCallback()
-{
-    ;
-}
-////////////////////////////////////////////////////////////////////////////////
-Unit::CullCallback::CullCallback(
-    const Unit::CullCallback& drawCallback, const osg::CopyOp& copyop )
-{
-    ;
-}
-////////////////////////////////////////////////////////////////////////////////
-bool Unit::CullCallback::cull(osg::NodeVisitor*, osg::Drawable*, osg::State*) const 
-{ return false; }
-////////////////////////////////////////////////////////////////////////////////
-bool Unit::CullCallback::cull(osg::NodeVisitor* nv, osg::Drawable* drawable, osg::RenderInfo* renderInfo) const 
-{ 
-    bool testFlag = static_cast< osgUtil::CullVisitor* >( nv )->isCulled( *drawable->getParent( 0 ) );
-    bool cullFalg = cull(nv, drawable, renderInfo? renderInfo->getState():0 );
-    return  cullFalg;
-}
-////////////////////////////////////////////////////////////////////////////////
 Unit::Unit()
     :
     osg::Group(),
@@ -127,9 +60,7 @@ Unit::Unit()
     mInputTextureIndexForViewportReference( 0 ),
     mGeode( NULL ),
     mDrawable( NULL ),
-    mViewport( NULL ),
-    mProjectionMatrix( NULL ),
-    mModelViewMatrix( NULL )
+    mViewport( NULL )
 {
     //Set default name
     setName( "Nameless_PPU" );
@@ -140,14 +71,7 @@ Unit::Unit()
 #if !VES_USE_FBO_CAMERA
     addChild( mGeode.get() );
 #endif
-
-    //Initialze projection matrix
-    mProjectionMatrix =
-        new osg::RefMatrix(
-            osg::Matrix::ortho( 0.0, 1.0, 0.0, 1.0, 0.0, 1.0 ) );
-
-    //Setup default modelview matrix
-    mModelViewMatrix = new osg::RefMatrix( osg::Matrixd::identity() );
+    //mModelViewMatrix = new osg::RefMatrix( osg::Matrixd::identity() );
 
     //No culling, because we do not need it
     setCullingActive( false );
@@ -168,9 +92,7 @@ Unit::Unit( const Unit& unit, const osg::CopyOp& copyop )
     mOutputTextures( unit.mOutputTextures ),
     mGeode( unit.mGeode ),
     mDrawable( unit.mDrawable ),
-    mViewport( unit.mViewport ),
-    mProjectionMatrix( unit.mProjectionMatrix ),
-    mModelViewMatrix( unit.mModelViewMatrix )
+    mViewport( unit.mViewport )
 {
     ;
 }
@@ -336,25 +258,6 @@ void Unit::Update()
     UpdateUniforms();
 }
 ////////////////////////////////////////////////////////////////////////////////
-/*void Unit::SetViewport( osg::Viewport* viewport )
-{
-    //If viewport is valid and we have to ignore new settings
-    if( viewport == NULL )
-    {
-        return;
-    }
-
-    //Otherwise setup new viewport
-    mViewport = new osg::Viewport( *viewport );
-
-    if( mViewport.valid() )
-    {
-        getOrCreateStateSet()->setAttribute(
-            mViewport.get(),
-            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
-    }
-}*/
-////////////////////////////////////////////////////////////////////////////////
 void Unit::SetInputTextureIndexForViewportReference( int index )
 {
     if( index != mInputTextureIndexForViewportReference )
@@ -422,41 +325,6 @@ void Unit::SetInputTexturesFromParents()
                 << std::endl;
         }
     }
-/*
-    //Scan all parents and look for units
-    for( unsigned int i = 0; i < getNumParents(); ++i )
-    {
-        unit = dynamic_cast< rtt::Unit* >( getParent( i ) );
-        if( unit )
-        {
-            std::cout << "This could be a problem. If you are here you have not explicitly set up the parents uniforms as inputs" << std::endl;
-            if( mInputToUniformMap.find( unit ) == mInputToUniformMap.end() )
-            {
-                //Add each found texture as input
-                const Unit::TextureMap& textureMap =
-                    unit->GetOutputTextureMap();
-                Unit::TextureMap::const_iterator itr = textureMap.begin();
-                for( itr; itr != textureMap.end(); ++itr )
-                {
-                    osg::Texture* texture = itr->second.get();
-                    if( texture )
-                    {
-                        mInputTextures[ mInputTextures.size() ] =
-                            itr->second.get();
-                    }
-                    else
-                    {
-                        osg::notify( osg::WARN )
-                            << "rtt::Unit::SetInputTexturesFromParents(): "
-                            << unit->getName()
-                            << " has invalid output texture!"
-                            << std::endl;
-                    }
-                }
-            }
-        }
-    }
-    */
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Unit::UpdateUniforms()
@@ -573,16 +441,6 @@ void Unit::CreateTexturedQuadDrawable(
         GL_LIGHTING,
         osg::StateAttribute::OFF | osg::StateAttribute::PROTECTED );
 
-#if !VES_USE_FBO_CAMERA
-    quadGeometry->setDrawCallback( new Unit::DrawCallback( this ) );
-#endif
-    /*osg::Vec3 maxCorner( corner + widthVec + heightVec );
-    osg::Vec3 minCorner( corner );
-    minCorner[ 2 ] -= 1;
-    maxCorner[ 2 ] += 1;
-    osg::BoundingBox bbox( minCorner,  maxCorner );
-    quadGeometry->setInitialBound( bbox );*/
-    //quadGeometry->setComputeBoundingBoxCallback( ComputeBoundingBoxCallback *callback )
     mDrawable = quadGeometry;
 }
 ////////////////////////////////////////////////////////////////////////////////
