@@ -56,6 +56,11 @@
 #include <vtkPassThroughFilter.h>
 #include <vtkXMLPolyDataWriter.h>
 
+#define WRITE_IMAGE_DATA 0
+#if WRITE_IMAGE_DATA
+#include <osgDB/WriteFile>
+#endif
+
 using namespace ves::xplorer;
 using namespace ves::xplorer::scenegraph;
 
@@ -238,6 +243,9 @@ void cfdPresetVector::Update( void )
             delete tempStage;
 
             geodes.push_back( tempGeode.get() );
+#if WRITE_IMAGE_DATA            
+            osgDB::writeNodeFile( *(tempGeode.get()), "gpu_vector_field.ive" );
+#endif
             this->updateFlag = true;
         }
         catch( std::bad_alloc )
