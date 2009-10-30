@@ -59,6 +59,7 @@
 #include <osg/MatrixTransform>
 #include <osg/Array>
 #include <osg/NodeVisitor>
+#include <osgDB/ReadFile>
 
 // --- C/C++ Libraries --- //
 #include <iostream>
@@ -189,6 +190,15 @@ void Gloves::Initialize()
     
     float length = 0.8;
 
+    /////////
+    osg::ref_ptr< osg::Node > handFile = osgDB::readNodeFile( "handR.ive" );
+    
+    if( !handFile.valid() )
+    {
+        osg::notify( osg::FATAL ) << "HandNode: Can't load handR.ive. Check osgDB data file search path." << std::endl;
+        return;
+    }
+    
     mRightHand = new osgBulletPlus::HandNode( ves::xplorer::scenegraph::PhysicsSimulator::instance()->GetDynamicsWorld(), osgBulletPlus::HandNode::RIGHT, length );
 
     if( !mRightHand.valid() )
@@ -200,6 +210,16 @@ void Gloves::Initialize()
     mRightHand->setPosition( pos );
     mRightHand->setAttitude( quat );
     mRightHand->setDebug( mDebugInfo );
+    /////////
+    
+    /////////
+    handFile = osgDB::readNodeFile( "handL.ive" );
+    
+    if( !handFile.valid() )
+    {
+        osg::notify( osg::FATAL ) << "HandNode: Can't load handL.ive. Check osgDB data file search path." << std::endl;
+        return;
+    }
     
     mLeftHand = new osgBulletPlus::HandNode( ves::xplorer::scenegraph::PhysicsSimulator::instance()->GetDynamicsWorld(), osgBulletPlus::HandNode::LEFT, length );
 
@@ -212,6 +232,7 @@ void Gloves::Initialize()
     mLeftHand->setPosition( pos );
     mLeftHand->setAttitude( quat );
     mLeftHand->setDebug( mDebugInfo );
+    /////////
 
     std::cout << "|\tInitialize Gloves" << std::endl;
 }
