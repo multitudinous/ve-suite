@@ -57,10 +57,10 @@
 #include <BulletDynamics/ConstraintSolver/btPoint2PointConstraint.h>
 
 // --- osgBullet Includes --- //
-#include <osgTools/AbsoluteModelTransform.h>
-#include <osgBullet/MotionState.h>
-#include <osgBullet/RefRigidBody.h>
-#include <osgBullet/Utils.h>
+#include <osgwTools/AbsoluteModelTransform.h>
+#include <osgbBullet/MotionState.h>
+#include <osgbBullet/RefRigidBody.h>
+#include <osgbBullet/Utils.h>
 
 #include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/Command.h>
@@ -219,8 +219,8 @@ bool Dragger::Connect( osg::Transform* activeAssociation )
 
     //If we have a physics enabled transform then we need to add a 
     //constraint for non static objects
-    osgTools::AbsoluteModelTransform* amt =
-        dynamic_cast< osgTools::AbsoluteModelTransform* >( activeAssociation );
+    osgwTools::AbsoluteModelTransform* amt =
+        dynamic_cast< osgwTools::AbsoluteModelTransform* >( activeAssociation );
     if( !amt )
     {
         //Associate transform with this dragger
@@ -232,8 +232,8 @@ bool Dragger::Connect( osg::Transform* activeAssociation )
     //If this is the root dragger, create point constraint
     if( m_isRootDragger )
     {
-        osgBullet::RefRigidBody* rb =
-            static_cast< osgBullet::RefRigidBody* >( amt->getUserData() );
+        osgbBullet::RefRigidBody* rb =
+            static_cast< osgbBullet::RefRigidBody* >( amt->getUserData() );
         btRigidBody* btRB = rb->getRigidBody();
         if( !btRB )
         {
@@ -453,7 +453,7 @@ void Dragger::UpdateAssociations()
             continue;
         }
 
-        osgBullet::MotionState* ms = static_cast< osgBullet::MotionState* >(
+        osgbBullet::MotionState* ms = static_cast< osgbBullet::MotionState* >(
             btRB->getMotionState() );
         btTransform currentMatrix;
         ms->getWorldTransform( currentMatrix );
@@ -762,12 +762,12 @@ void Dragger::ResetPhysics()
         }
         
         //Test for AMTs 2nd
-        osgBullet::AbsoluteModelTransform* amt =
-            dynamic_cast< osgBullet::AbsoluteModelTransform* >( transform );
+        osgbBullet::AbsoluteModelTransform* amt =
+            dynamic_cast< osgbBullet::AbsoluteModelTransform* >( transform );
         if( amt )
         {
-            osgBullet::RigidBody* rb = 
-            static_cast< osgBullet::RigidBody* >( amt->getUserData() );
+            osgbBullet::RigidBody* rb = 
+            static_cast< osgbBullet::RigidBody* >( amt->getUserData() );
             btRigidBody* btRB = rb->getRigidBody();
             if( btRB->isStaticObject() )
             {
