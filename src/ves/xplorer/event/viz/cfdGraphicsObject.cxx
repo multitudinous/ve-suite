@@ -210,7 +210,7 @@ void cfdGraphicsObject::SetGeodes( ves::xplorer::cfdObjects* input )
             geodes.push_back( geodeList.at( i ) );
         }
 
-        if( !isStreamLine )
+        if( !isStreamLine && !input->IsGPUTools() )
         {
             //Add phong shading to the geodes
             osg::ref_ptr< osg::StateSet > geodeProperties = geodes.at( i )->getOrCreateStateSet();

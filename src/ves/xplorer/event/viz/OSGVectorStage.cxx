@@ -320,194 +320,6 @@ ves::xplorer::scenegraph::Geode* OSGVectorStage::createInstanced(vtkPolyData* gl
         return NULL;
     }
 
-#if 0
-    //calculate texture dimension
-    int numPoints = points->GetNumberOfPoints();
-    std::cout << "number of points " << numPoints << std::endl;
-    int am = mylog2(numPoints)+1;
-    int mm = am/2;
-    int nn = am -am/2;
-    tm = mypow2(mm);
-    tn = mypow2(nn);
-    std::cout << tm << " "<< tn << std::endl;
-
-    //create the Geometry Node with arrows
-    //osg::Group* grp = new osg::Group;
-    //osg::Geode* geode = new osg::Geode;
-    ves::xplorer::scenegraph::Geode* geode = new ves::xplorer::scenegraph::Geode();
-    osg::Geometry* geom = new osg::Geometry;
-    
-    geom->setUseDisplayList( false );
-    geom->setUseVertexBufferObjects( true );
-    createArrow( *geom, numPoints);//tm*tn );
-    geode->addDrawable( geom );
-    //grp->addChild( geode );
-
-    double bounds[6];
-    points->GetBounds(bounds);
-    //VTK does bounds xmin, xmax,....
-    //OSG does bounds xmin, ymin, zmin, xmax, ymax,...
-    osg::BoundingBox bb(bounds[0],bounds[2],bounds[4],bounds[1],bounds[3],bounds[5]);
-    geom->setInitialBound( bb );
-
-    //Create the rendering shader
-    std::string vertexSource =
-
-        "uniform vec2 sizes; \n"
-        "uniform sampler2D texPos; \n"
-        "uniform sampler2D texAtt; \n"
-        "uniform sampler2D texSca; \n"
-        " \n"
-        "vec4 \n"
-        "simpleLighting( const in vec4 color, const in vec3 normal, const in float diffCont, const in float ambCont ) \n"
-        "{ \n"
-        "    const vec4 amb = color * ambCont; \n"
-        "    const vec3 eyeVec = vec3( 0.0, 0.0, 1.0 ); \n"
-        "    const float dotVal = max( dot( normal, eyeVec ), 0.0 ); \n"
-        "    const vec4 diff = color * dotVal * diffCont; \n"
-        "    return( amb + diff ); \n"
-        "} \n"
-        " \n"
-        "mat3 \n"
-        "makeOrientMat( const in vec2 tC ) \n"
-        "{ \n"
-        "   const vec4 dir = texture2D( texAtt, tC ); \n"
-
-        // Compute a vector at a right angle to the direction.
-        // First try projection direction into xy rotated -90 degrees.
-        // If that gives us almost the same vector we started with,
-        // then project into yz instead, rotated 90 degrees.
-        "   vec3 c = vec3( dir.y, -dir.x, 0.0 ); \n"
-        "   if( dot( c, c ) < 0.1 ) \n"
-        "   { \n"
-        "       c = vec3( 0.0, dir.z, -dir.y ); \n"
-        "   } \n"
-        "   normalize( c ); \n"
-        " \n"
-        "   const vec3 up = cross( c.xyz, dir.xyz ); \n"
-        " \n"
-        // Orientation uses the cross product vector as x,
-        // the up vector as y, and the direction vector as z.
-        "   return( mat3( c, up, dir.xyz ) ); \n"
-        "} \n"
-        " \n"
-        "void main() \n"
-        "{ \n"
-        // Using the instance ID, generate "texture coords" for this instance.
-        "   const float r = gl_InstanceID / sizes.x; \n"
-        "   vec2 tC; \n"
-        "   tC.s = fract( r ); tC.t = floor( r ) / sizes.y; \n"
-
-        // Create orthonormal basis to position and orient this instance.
-        "vec4 newZ = texture2D( texAtt, tC ); \n"
-        "vec3 newX = cross( newZ.xyz, vec3( 0,0,1 ) ); \n"
-        "normalize( newX ); \n"
-        "vec3 newY = cross( newZ.xyz, newX ); \n"
-        "normalize( newY ); \n"
-        "vec4 pos = texture2D( texPos, tC ); \n"
-        "mat4 mV = mat4( newX.x, newX.y, newX.z, 0., newY.x, newY.y, newY.z, 0., newZ.x, newZ.y, newZ.z, 0., pos.x, pos.y, pos.z, 1. ); \n"
-        "gl_Position = (gl_ModelViewProjectionMatrix * mV * gl_Vertex); \n"
-        //"   vec4 pos = texture2D( texPos, tC ); \n"
-        // Create an orientation matrix. Orient/transform the arrow.
-        //"   const mat3 orientMat = makeOrientMat( tC ); \n"
-        //"   const vec3 oVec = orientMat * gl_Vertex.xyz; \n"
-        //"   vec4 hoVec = vec4( oVec + pos, 1.0 ); \n"
-        //"   gl_Position = gl_ModelViewProjectionMatrix * hoVec; \n"
-
-        // Use just the orientation components to transform the normal.
-        "   mat3 mN = mat3( newX, newY, newZ ); \n"
-        "   vec3 norm = normalize(gl_NormalMatrix * mN * gl_Normal); \n"
-        // Orient the normal.
-        //"   const vec3 norm = normalize( gl_NormalMatrix * orientMat * gl_Normal ); \n"
-        // Diffuse lighting with light at the eyepoint.
-        "   vec4 color = texture2D( texSca, tC ); \n"
-        //"   color = color * dot( norm, vec3( 0, 0, 1 ) ); \n"
-        //"   color[3]=1; \n"
-        //"   gl_FrontColor = vec4( color ); \n"
-        // Compute color and lighting.
-        //const vec4 scalarV = texture3D( scalar, tC );
-        //const vec4 oColor = texture1D( texCS, scalarV.a );
-        "   gl_FrontColor = simpleLighting( color, norm, 0.7, 0.3 ); \n"
-        "} \n";
-
-    osg::ref_ptr< osg::Shader > vertexShader = new osg::Shader();
-    vertexShader->setType( osg::Shader::VERTEX );
-    vertexShader->setShaderSource( vertexSource );
-
-    osg::ref_ptr< osg::Program > program = new osg::Program();
-    program->addShader( vertexShader.get() );
-
-    //We need to use the drawable stateset here since we use the geode stateset for other 
-    //shaders. In the future we will need to figure out how to manage these shaders
-    //when multiple shaders are involved on objects.
-    osg::StateSet* ss = geom->getOrCreateStateSet();
-    ss->setAttribute( program.get(),
-        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
-
-    //set size
-    osg::ref_ptr< osg::Uniform > sizesUniform =
-        new osg::Uniform( "sizes", osg::Vec2( (float)tm, (float)tn ) );
-    ss->addUniform( sizesUniform.get() );
-
-    //now set the arrays
-    
-    //First set the point position array
-    float* pos = createPositionArray( tm, tn, points);
-
-    osg::Image* iPos = new osg::Image;
-    iPos->setImage( tm, tn, 1, GL_RGB32F_ARB, GL_RGB, GL_FLOAT,
-        (unsigned char*) pos, osg::Image::USE_NEW_DELETE );
-    osg::Texture2D* texPos = new osg::Texture2D( iPos );
-    texPos->setFilter( osg::Texture2D::MIN_FILTER, osg::Texture2D::NEAREST );
-    texPos->setFilter( osg::Texture2D::MAG_FILTER, osg::Texture2D::NEAREST );
-
-    ss->setTextureAttribute( 0, texPos );
-
-    osg::ref_ptr< osg::Uniform > texPosUniform =
-        new osg::Uniform( "texPos", 0 );
-    ss->addUniform( texPosUniform.get() );
-
-    //set attitude array
-    if (vectorArray!=NULL)
-    {
-        float* att = createAttitudeArray( tm, tn, vectorArray);
-
-        osg::Image* iAtt = new osg::Image;
-        iAtt->setImage( tm, tn, 1, GL_RGB32F_ARB, GL_RGB, GL_FLOAT,
-            (unsigned char*)att, osg::Image::USE_NEW_DELETE );
-        osg::Texture2D* texAtt = new osg::Texture2D( iAtt );
-        texAtt->setFilter( osg::Texture2D::MIN_FILTER, osg::Texture2D::NEAREST );
-        texAtt->setFilter( osg::Texture2D::MAG_FILTER, osg::Texture2D::NEAREST );
-
-        ss->setTextureAttribute( 1, texAtt );
-
-        osg::ref_ptr< osg::Uniform > texAttUniform =
-            new osg::Uniform( "texAtt", 1 );
-        ss->addUniform( texAttUniform.get() );
-    }
-    
-    //set scalar array
-    if (scalarArray!=NULL)
-    {
-        float* sca = createScalarArray( tm, tn, scalarArray);
-
-        osg::Image* iSca = new osg::Image;
-        iSca->setImage( tm, tn, 1, GL_RGB32F_ARB, GL_RGB, GL_FLOAT,
-            (unsigned char*)sca, osg::Image::USE_NEW_DELETE );
-        osg::Texture2D* texSca = new osg::Texture2D( iSca );
-        texSca->setFilter( osg::Texture2D::MIN_FILTER, osg::Texture2D::NEAREST );
-        texSca->setFilter( osg::Texture2D::MAG_FILTER, osg::Texture2D::NEAREST );
-
-        ss->setTextureAttribute( 2, texSca );
-
-        osg::ref_ptr< osg::Uniform > texScaUniform =
-            new osg::Uniform( "texSca", 2 );
-        ss->addUniform( texScaUniform.get() );
-    }
-
-    return geode;
-    
-#else    
     //osg::Group* grp = new osg::Group;
     //osg::Geode* geode = new osg::Geode;
     ves::xplorer::scenegraph::Geode* geode = new ves::xplorer::scenegraph::Geode();
@@ -597,26 +409,26 @@ ves::xplorer::scenegraph::Geode* OSGVectorStage::createInstanced(vtkPolyData* gl
         "    vec3 tC = generateTexCoord( fiid ); \n"
 
         // Create orthonormal basis to position and orient this instance.
-        "   vec4 newZ = texture3D( texDir, tC ); \n"
-        "   vec3 newX = cross( newZ.xyz, vec3( 0,0,1 ) ); \n"
-        "   normalize( newX ); \n"
-        "   vec3 newY = cross( newZ.xyz, newX ); \n"
-        "   normalize( newY ); \n"
-        "   vec4 pos = texture3D( texPos, tC ); \n"
-        "   mat4 mV = mat4( newX.x, newX.y, newX.z, 0., newY.x, newY.y, newY.z, 0., newZ.x, newZ.y, newZ.z, 0., pos.x, pos.y, pos.z, 1. ); \n"
-        "   gl_Position = (gl_ModelViewProjectionMatrix * mV * gl_Vertex); \n"
+        //"   vec4 newZ = texture3D( texDir, tC ); \n"
+        //"   vec3 newX = cross( newZ.xyz, vec3( 0,0,1 ) ); \n"
+        //"   normalize( newX ); \n"
+        //"   vec3 newY = cross( newZ.xyz, newX ); \n"
+        //"   normalize( newY ); \n"
         //"   vec4 pos = texture3D( texPos, tC ); \n"
+        //"   mat4 mV = mat4( newX.x, newX.y, newX.z, 0., newY.x, newY.y, newY.z, 0., newZ.x, newZ.y, newZ.z, 0., pos.x, pos.y, pos.z, 1. ); \n"
+        //"   gl_Position = (gl_ModelViewProjectionMatrix * mV * gl_Vertex); \n"
+        "   vec4 pos = texture3D( texPos, tC ); \n"
         // Create an orientation matrix. Orient/transform the arrow.
-        //"   const mat3 orientMat = makeOrientMat( tC ); \n"
-        //"   const vec3 oVec = orientMat * gl_Vertex.xyz; \n"
-        //"   vec4 hoVec = vec4( oVec + pos, 1.0 ); \n"
-        //"   gl_Position = gl_ModelViewProjectionMatrix * hoVec; \n"
+        "   const mat3 orientMat = makeOrientMat( tC ); \n"
+        "   const vec3 oVec = orientMat * gl_Vertex.xyz; \n"
+        "   vec4 hoVec = vec4( oVec + pos, 1.0 ); \n"
+        "   gl_Position = gl_ModelViewProjectionMatrix * hoVec; \n"
 
         // Use just the orientation components to transform the normal.
-        "   mat3 mN = mat3( newX, newY, newZ ); \n"
-        "   vec3 norm = normalize(gl_NormalMatrix * mN * gl_Normal); \n"
+        //"   mat3 mN = mat3( newX, newY, newZ ); \n"
+        //"   vec3 norm = normalize(gl_NormalMatrix * mN * gl_Normal); \n"
         // Orient the normal.
-        //"   const vec3 norm = normalize( gl_NormalMatrix * orientMat * gl_Normal ); \n"
+        "   const vec3 norm = normalize( gl_NormalMatrix * orientMat * gl_Normal ); \n"
         // Diffuse lighting with light at the eyepoint.
         "   vec4 color = texture3D( scalar, tC ); \n"
         //"   color = color * dot( norm, vec3( 0, 0, 1 ) ); \n"
@@ -679,6 +491,5 @@ ves::xplorer::scenegraph::Geode* OSGVectorStage::createInstanced(vtkPolyData* gl
     //ss->addUniform( texCSUniform.get() );
 
     return geode;
-#endif
 }
 ////////////////////////////////////////////////////////////////////////////////

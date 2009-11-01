@@ -191,6 +191,9 @@ public:
     ///Gets the active dataset.
     DataSet* GetActiveDataSet( void );
 
+    ///Get gpu tools active
+    bool IsGPUTools();
+
 protected:
     DataSet* activeDataSet;///<active dataset.
 
