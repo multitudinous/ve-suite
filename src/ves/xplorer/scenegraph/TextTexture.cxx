@@ -43,7 +43,7 @@
 #include <osgDB/ReadFile>
 #include <osgDB/FileUtils>
 
-#include <osgBullet/Chart.h>
+#include <osgbBullet/Chart.h>
 
 using namespace ves::xplorer::scenegraph;
 
@@ -338,7 +338,7 @@ void TextTexture::CreateText()
 ////////////////////////////////////////////////////////////////////////////////
 void TextTexture::CreateChart()
 {
-    m_chartSurface = new osgBullet::Chart();
+    m_chartSurface = new osgbBullet::Chart();
     osg::Vec4 bg( 1.f, 0.f, 0.f, .33f );
     m_chartSurface->setBackgroundColor( bg );
     osg::Vec4 fg( 1.f, 1.f, 0.f, .5f );
@@ -349,7 +349,7 @@ void TextTexture::CreateChart()
     //addChild( m_chartSurface->get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
-osgBullet::Chart* TextTexture::GetChart()
+osgbBullet::Chart* TextTexture::GetChart()
 {
     return m_chartSurface;
 }

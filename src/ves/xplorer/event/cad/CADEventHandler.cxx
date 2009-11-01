@@ -372,7 +372,8 @@ void CADEventHandler::_addNodeToNode( std::string parentID,
                 partNode->GetPhysicsRigidBody()->CreateRigidBody( 
                     newPart->GetPhysicsLODType(), 
                     newPart->GetPhysicsMotionType(), 
-                    newPart->GetPhysicsMeshType() );
+                    newPart->GetPhysicsMeshType(),
+                    newPart->GetPhysicsDecimationValue() );
 
                 vprDEBUG( vesDBG, 1 ) 
                     << "|\t---End Part Physics Properties---" 

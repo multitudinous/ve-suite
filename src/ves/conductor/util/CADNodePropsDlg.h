@@ -314,6 +314,8 @@ protected:
     wxRadioBox* mMotionProperties;
     ///LOD control
     wxRadioBox* mLODProperties;
+    ///Decimation value
+    wxRadioBox* m_decimationRB;
 
     ///Animation panel controls
     wxArrayString _animationFiles;///<The animation file names.

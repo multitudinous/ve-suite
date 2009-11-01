@@ -67,6 +67,7 @@ CADNode::CADNode( const std::string& name )
         m_friction( 1.0f ),
         m_restitution( 0.0f ),
         mPhysicsMesh( "Bounding Box" ),
+        m_decimationValue( "Exact" ),
         mOpacity( 1.f ),
         m_name( name ),
         m_longitude( 0.0 ),
@@ -234,6 +235,16 @@ const std::string& CADNode::GetPhysicsMeshType()
     return mPhysicsMeshType;
 }
 ////////////////////////////////////////////////////////////////////////////////
+void CADNode::SetPhysicsDecimationValue( const std::string& decimationValue )
+{
+    m_decimationValue = decimationValue;
+}
+////////////////////////////////////////////////////////////////////////////////
+const std::string& CADNode::GetPhysicsDecimationValue()
+{
+    return m_decimationValue;
+}
+////////////////////////////////////////////////////////////////////////////////
 std::string CADNode::GetNodeType()
 {
     return m_type;
@@ -320,7 +331,7 @@ void CADNode::_updateVEElement( const std::string& input )
         SetAttribute( "physicsLOD", mPhysicsLODType );
         SetAttribute( "physicsMotion", mPhysicsMotionType );
         SetAttribute( "physicsMesh", mPhysicsMeshType );
-        //SetAttribute( "physics mesh", m_physicsMesh );
+        SetAttribute( "physicsDecimation", m_decimationValue );
     }
   
     SetAttribute( "opacity", mOpacity );
@@ -460,6 +471,11 @@ void CADNode::SetObjectFromXMLData( DOMNode* xmlNode )
         XMLObject::GetAttribute( currentElement, "physicsLOD", mPhysicsLODType );
         XMLObject::GetAttribute( currentElement, "physicsMotion", mPhysicsMotionType );
         XMLObject::GetAttribute( currentElement, "physicsMesh", mPhysicsMeshType );
+        XMLObject::GetAttribute( currentElement, "physicsDecimation", m_decimationValue );
+        if( m_decimationValue.empty() )
+        {
+            m_decimationValue = "Exact";
+        }
 
         /*if( currentElement->getAttributeNode(
          Convert( "physics mesh" ).toXMLString() ) )
@@ -637,6 +653,7 @@ CADNode::CADNode( const CADNode& rhs, bool clone )
     mPhysicsMeshType = rhs.mPhysicsMeshType;
     mPhysicsMotionType = rhs.mPhysicsMotionType;
     mPhysicsLODType = rhs.mPhysicsLODType;
+    m_decimationValue = rhs.m_decimationValue;
     
     m_longitude = rhs.m_longitude;
     m_latitude = rhs.m_latitude;
@@ -688,6 +705,7 @@ CADNode& CADNode::operator=( const CADNode& rhs )
         mPhysicsMeshType = rhs.mPhysicsMeshType;
         mPhysicsMotionType = rhs.mPhysicsMotionType;
         mPhysicsLODType = rhs.mPhysicsLODType;
+        m_decimationValue = rhs.m_decimationValue;
 
         mMakeTransparentOnVis = rhs.mMakeTransparentOnVis;
         

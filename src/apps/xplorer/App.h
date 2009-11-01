@@ -196,13 +196,9 @@ private:
     ///Are we in cluster mode
     bool isCluster;
     ///Not sure what this is for
-    bool runWebImageSaveThread;
+    bool m_captureNextFrame;
     ///Not sure what this is for
-    bool readyToWriteWebImage;
-    ///Not sure what this is for
-    bool writingWebImageNow;
-    ///Not sure what this is for
-    bool captureNextFrameForWeb;
+    bool m_captureMovie;
     ///Turn off/on RTT
     bool mRTT;
 

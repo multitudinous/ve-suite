@@ -48,11 +48,6 @@
 using namespace ves::open::xml;
 using namespace ves::conductor::util;
 
-/*BEGIN_EVENT_TABLE( ExportMenu, wxMenu )
-    EVT_MENU( ExportMenu::EXPORT_SCREEN_SHOT, ExportMenu::OnScreenShot )
-    EVT_MENU( ExportMenu::EXPORT_DOT_FILE, ExportMenu::OnDOTFile )
-END_EVENT_TABLE()*/
-
 ////////////////////////////////////////////////////////////////////////////////
 ExportMenu::ExportMenu() : wxMenu()
 {
@@ -67,39 +62,76 @@ ExportMenu::~ExportMenu()
 void ExportMenu::CreateExportMenu()
 {
     Append( EXPORTMENU_SCREEN_SHOT, _( "Screen Shot" ) );
+    Append( EXPORTMENU_MOVIE_CAPTURE, _( "Movie Capture On" ) );
+    Append( EXPORTMENU_MOVIE_CAPTURE_OFF, _( "Movie Capture Off" ) );
     Append( EXPORTMENU_DOT_FILE, _( "OSG Graph File" ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void ExportMenu::OnScreenShot( wxCommandEvent& event )
 {
-    wxFileDialog dialog( NULL, _T( "Save Screen Shot..." ),
-                         ::wxGetCwd(),
-                         _T( "xploreScreenCap.jpg" ),
-                         _T( "JPG Image (*.jpg)|*.jpg" ),
-                         wxFD_SAVE | wxFD_OVERWRITE_PROMPT
-                       );
-
-    if( dialog.ShowModal() != wxID_OK )
+    wxFileName vesFileName;
+    if( event.GetId() == EXPORTMENU_SCREEN_SHOT )
     {
-        return;
+        wxFileDialog dialog( NULL, _T( "Save Screen Shot..." ),
+                            ::wxGetCwd(),
+                            _T( "xploreScreenCap" ),
+                            _T( "JPG Image (*.jpg;*.png)|*.jpg;*.png" ),
+                            wxFD_SAVE | wxFD_OVERWRITE_PROMPT
+                            );
+        
+        if( dialog.ShowModal() != wxID_OK )
+        {
+            return;
+        }
+        
+        vesFileName = dialog.GetPath();
+    }
+    else if( event.GetId() == EXPORTMENU_MOVIE_CAPTURE )
+    {
+        wxFileDialog dialog( NULL, _T( "Save Movie Capture..." ),
+                            ::wxGetCwd(),
+                            _T( "xplorer_movie_capture" ),
+                            _T( "JPG Image (*.jpg;*.png)|*.jpg;*.png" ),
+                            wxFD_SAVE | wxFD_OVERWRITE_PROMPT
+                            );
+        
+        if( dialog.ShowModal() != wxID_OK )
+        {
+            return;
+        }
+        
+        vesFileName = dialog.GetPath();
     }
 
-    wxFileName vesFileName( dialog.GetPath() );
-    vesFileName.ClearExt();
-    vesFileName.SetExt( _( "jpg" ) );
-    bool success = vesFileName.MakeRelativeTo( ::wxGetCwd() );
-    if( !success )
+    if( event.GetId() != EXPORTMENU_MOVIE_CAPTURE_OFF )
     {
-        wxMessageBox( _( "Can't save the screen capture on another drive." ),
-                      _( "JPG Write Error" ), wxOK | wxICON_INFORMATION );
-        return;
+        vesFileName.ClearExt();
+        //vesFileName.SetExt( _( "jpg" ) );
+        bool success = vesFileName.MakeRelativeTo( ::wxGetCwd() );
+        if( !success )
+        {
+            wxMessageBox( _( "Can't save the screen capture on another drive." ),
+                         _( "JPG Write Error" ), wxOK | wxICON_INFORMATION );
+            return;
+        }
     }
 
     DataValuePairPtr dvp( new DataValuePair() );
     CommandPtr command( new Command() );
     std::string mode = ConvertUnicode( vesFileName.GetFullPath().c_str() );
     dvp->SetData( std::string( "Filename" ), mode );
-    command->SetCommandName( std::string( "SCREEN_SHOT" ) );
+    if( event.GetId() == EXPORTMENU_SCREEN_SHOT )
+    {
+        command->SetCommandName( std::string( "SCREEN_SHOT" ) );
+    }
+    else if( event.GetId() == EXPORTMENU_MOVIE_CAPTURE )
+    {
+        command->SetCommandName( std::string( "MOVIE_CAPTURE" ) );
+    }
+    else if( event.GetId() == EXPORTMENU_MOVIE_CAPTURE_OFF )
+    {
+        command->SetCommandName( std::string( "MOVIE_CAPTURE_OFF" ) );
+    }
     command->AddDataValuePair( dvp );
 
     CORBAServiceList::instance()->

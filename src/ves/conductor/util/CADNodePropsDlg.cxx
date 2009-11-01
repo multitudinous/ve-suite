@@ -136,7 +136,8 @@ _nShaders( 0 ),
 _nMaterials( 0 ),
 m_occlusionPanel( 0 ),
 _cadNode( activeNode ),
-m_cullingRB( 0 )
+m_cullingRB( 0 ),
+m_decimationRB( 0 )
 {
     tempX = 1.0;
     tempY = 1.0;
@@ -511,6 +512,12 @@ void CADNodePropertiesDlg::_buildPhysicsPanel()
                                      wxDefaultPosition, wxDefaultSize, 5,
                                      meshStrings, 0, wxRA_SPECIFY_ROWS );
     physicsMeshSizer->Add( mMeshProperties, 1, wxALIGN_CENTER | wxALL, 5 );
+
+    wxString deciStrings[] = { _T( "Exact" ),_T( "Low" ), _T( "Medium" ), _( "High" ) };
+    m_decimationRB = new wxRadioBox( _physicsPanel, PHYSICS_MESH_ID, wxT( "Mesh Decimation" ),
+                                     wxDefaultPosition, wxDefaultSize, 4,
+                                     deciStrings, 0, wxRA_SPECIFY_ROWS );
+    physicsMeshSizer->Add( m_decimationRB, 1, wxALIGN_CENTER | wxALL, 5 );
     
     if( _cadNode )
     {
@@ -521,6 +528,7 @@ void CADNodePropertiesDlg::_buildPhysicsPanel()
         mMeshProperties->SetStringSelection( wxString( _cadNode->GetPhysicsMeshType().c_str(), wxConvUTF8 ) );
         mMotionProperties->SetStringSelection( wxString( _cadNode->GetPhysicsMotionType().c_str(), wxConvUTF8 ) );
         mLODProperties->SetStringSelection( wxString( _cadNode->GetPhysicsLODType().c_str(), wxConvUTF8 ) );
+        m_decimationRB->SetStringSelection( wxString( _cadNode->GetPhysicsDecimationValue().c_str(), wxConvUTF8 ) );
     }
 
     physicsPanelSizer->Add( physicsPropSizer, 1, wxALIGN_CENTER );
@@ -1183,6 +1191,13 @@ void CADNodePropertiesDlg::_updatePhysicsMesh( wxCommandEvent& event )
     _cadNode->SetPhysicsMotionType( ConvertUnicode( mMotionProperties->GetStringSelection() ) );
     _instructions.push_back( motionType );
 
+    ves::open::xml::DataValuePairPtr decimationDVP( new ves::open::xml::DataValuePair() );
+    decimationDVP->SetDataType( "STRING" );
+    decimationDVP->SetDataName( std::string( "Decimation Value" ) );
+    decimationDVP->SetDataString( ConvertUnicode( m_decimationRB->GetStringSelection() ) );
+    _cadNode->SetPhysicsDecimationValue( ConvertUnicode( m_decimationRB->GetStringSelection() ) );
+    _instructions.push_back( decimationDVP );
+    
     _sendCommandsToXplorer();
     ClearInstructions();
 }

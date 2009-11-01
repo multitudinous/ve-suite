@@ -53,7 +53,7 @@
 #include <osg/Version>
 #include <osg/Geode>
 #include <osg/Group>
-namespace osgBullet
+namespace osgbBullet
 {
     class Chart;
 }
@@ -111,7 +111,7 @@ public:
     void CreateChart();
 
     ///Get the data display chart
-    osgBullet::Chart* GetChart();
+    osgbBullet::Chart* GetChart();
     
     ///Set the title for the dialog
     void SetTitle( const std::string& title );
@@ -161,7 +161,7 @@ protected:
 
     //The update callback
     //osg::ref_ptr< TextUpdateCallback > _ttUpdateCallback;
-    osgBullet::Chart* m_chartSurface;
+    osgbBullet::Chart* m_chartSurface;
     
     ///The texture geode for the texture
     osg::ref_ptr< osg::Geode > m_textureGeode;

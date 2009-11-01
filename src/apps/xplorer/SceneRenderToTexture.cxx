@@ -81,6 +81,8 @@
 #include <osgUtil/SceneView>
 #include <osgUtil/UpdateVisitor>
 
+#include <osgwTools/ScreenCapture.h>
+
 // --- C/C++ Libraries --- //
 #include <iostream>
 
@@ -165,6 +167,8 @@ void SceneRenderToTexture::InitScene( osg::Camera* const sceneViewCamera )
     if( !ves::xplorer::scenegraph::SceneManager::instance()->IsRTTOn() )
     {
         m_updateList.push_back( sceneViewCamera );
+        m_captureTools[ sceneViewCamera ] = 
+            new osgwTools::ScreenCapture( "test_image", ".png", true );
         return;
     }
 
@@ -267,6 +271,8 @@ void SceneRenderToTexture::InitScene( osg::Camera* const sceneViewCamera )
                                    getMaxNumberOfGraphicsContexts() );
     
     m_updateList.push_back( sceneViewCamera );
+    m_captureTools[ sceneViewCamera ] = 
+        new osgwTools::ScreenCapture( "test_image", ".png", true );
 
     *mCamerasConfigured = true;
 }
@@ -1322,16 +1328,29 @@ void SceneRenderToTexture::WriteLowResImageFile(
 ////////////////////////////////////////////////////////////////////////////////
 void SceneRenderToTexture::SetImageCameraCallback( bool capture, const std::string& filename )
 {
-    std::pair< int, int > screenDims = EnvironmentHandler::instance()->GetDisplaySettings()->GetScreenResolution();
-    int w = 0; int  h = 0; int m = 1;
-    w = screenDims.first;
-    h = screenDims.second;
+    //std::pair< int, int > screenDims = EnvironmentHandler::instance()->GetDisplaySettings()->GetScreenResolution();
+    //int w = 0; int  h = 0; int m = 1;
+    //w = screenDims.first;
+    //h = screenDims.second;
     
-    for( std::vector< osg::Camera* >::iterator iter = m_updateList.begin(); iter != m_updateList.end(); ++iter )
+    for( std::vector< osg::Camera* >::iterator iter = m_updateList.begin(); 
+        iter != m_updateList.end(); ++iter )
     {
+        osgwTools::ScreenCapture* capTools = m_captureTools[ *iter ].get();
+        capTools->setCapture( capture );
+
         if( capture )
         {
-            (*iter)->setPostDrawCallback( new scenegraph::CameraImageCaptureCallback( filename, w, h ) );
+            std::ostringstream ostr;
+            ostr << *iter;
+            
+            std::string name = filename;
+            name += "_";
+            name += ostr.str();
+            name += "_";
+
+            capTools->setRootName( name );
+            (*iter)->setPostDrawCallback( capTools );
         }
         else
         {

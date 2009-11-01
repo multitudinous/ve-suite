@@ -177,13 +177,13 @@ public:
     ///Get the physics mesh type
     ///\return The physics mesh type container
     const std::string& GetPhysicsMeshType();
+    ///Set the physics decimation value
+    ///\param decimationValue The decimation value Exact, Medium, Low
+    void SetPhysicsDecimationValue( const std::string& decimationValue );
+    ///Get physics decimation value
+    ///\return The decimation value
+    const std::string& GetPhysicsDecimationValue();
     
-    ///Set the physics mesh of this CAD node.
-    //void SetPhysicsMesh( const std::string& physicsMesh );
-
-    ///Get the physics mesh of this CAD node.
-    //std::string GetPhysicsMesh();
-
     ///Get the transform of this CAD node.
     ves::open::xml::TransformPtr GetTransform();
 
@@ -289,6 +289,8 @@ protected:
     std::string mPhysicsMotionType;
     ///Node physics mesh.
     std::string mPhysicsMesh;
+    ///Physics decimation
+    std::string m_decimationValue;
     ///Opacity value for this node
     float mOpacity;
     ///Tells xplorer whether or not to change this node transparent when

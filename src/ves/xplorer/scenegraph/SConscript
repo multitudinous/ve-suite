@@ -19,12 +19,13 @@ if baseEnv[ 'TransformManipulator' ] != 'no':
 lib_env.Append(CPPPATH = [pj('#','external','osgBullet','include'),
                           pj('#','external', bulletBaseVar,'Extras'),
                           pj('#','external', bulletBaseVar,'src')])
-lib_env.Append(LIBS = ['ves_open_xml','ves_xplorer_communication','ves_xplorer_util','bullet','osgBullet','BulletColladaConverter','COLLADA_DOM','XML'])
+lib_env.Append(LIBS = ['ves_open_xml','ves_xplorer_communication','ves_xplorer_util','bullet','osgBulletPlus','osgBullet','BulletColladaConverter','COLLADA_DOM','XML'])
 
 lib_env.Append(LIBPATH = [pj('#', buildDir, 'src', 'ves', 'open','xml'),
                           pj('#', buildDir, 'src', 'ves', 'xplorer','util'),
                           pj('#', buildDir, 'src', 'ves', 'xplorer','communication'),
                           pj('#', buildDir, 'external', bulletBaseVar),
+                          pj('#', buildDir, 'external', 'osgBulletPlus'),
                           pj('#', buildDir, 'external', 'osgBullet')])
 
 gmtl_options.apply( lib_env )
@@ -39,11 +40,6 @@ osgworks_options.apply( lib_env )
 
 if osgal_options.isAvailable():
    osgal_options.apply( lib_env )
-
-#bulletVersion = (int(2), int(72))
-
-#lib_env.Append( CPPDEFINES = ['BULLET_MAJOR_VERSION=%i' %bulletVersion[ 0 ],
-#                  'BULLET_MINOR_VERSION=%i' %bulletVersion[ 1 ] ] )  
    
 lib_env.Append( CPPDEFINES = ['VE_SCENEGRAPH_LIBRARY','VE_SCENEGRAPH_UTILS_LIBRARY','VE_NURBS_LIBRARY','VE_NURBS_UTILS_LIBRARY'])
 

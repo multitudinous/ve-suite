@@ -93,10 +93,11 @@ void CADPhysicsMeshEventHandler::_operateOnNode( XMLObjectPtr xmlObject )
         const std::string mesh = meshType->GetDataString();
         const std::string lod = lodType->GetDataString();
         const std::string motion = motionType->GetDataString();
-
+        const std::string decimation = command->GetDataValuePair( "Decimation Value" )->GetDataString();
+        
         m_cadHandler->GetPart( nodeID->GetDataString() )->
             GetPhysicsRigidBody()->
-            CreateRigidBody( lod, motion, mesh );
+            CreateRigidBody( lod, motion, mesh, decimation );
 
         vprDEBUG( vesDBG, 1 ) << "|\tChanged Physics Mesh: " 
             << m_cadHandler->GetPart( nodeID->GetDataString() )->GetFilename() 

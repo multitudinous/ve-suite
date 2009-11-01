@@ -199,7 +199,7 @@ void Gloves::Initialize()
         return;
     }
     
-    mRightHand = new osgBulletPlus::HandNode( ves::xplorer::scenegraph::PhysicsSimulator::instance()->GetDynamicsWorld(), osgBulletPlus::HandNode::RIGHT, length );
+    mRightHand = new osgbBulletPlus::HandNode( ves::xplorer::scenegraph::PhysicsSimulator::instance()->GetDynamicsWorld(), osgbBulletPlus::HandNode::RIGHT, length );
 
     if( !mRightHand.valid() )
     {
@@ -221,7 +221,7 @@ void Gloves::Initialize()
         return;
     }
     
-    mLeftHand = new osgBulletPlus::HandNode( ves::xplorer::scenegraph::PhysicsSimulator::instance()->GetDynamicsWorld(), osgBulletPlus::HandNode::LEFT, length );
+    mLeftHand = new osgbBulletPlus::HandNode( ves::xplorer::scenegraph::PhysicsSimulator::instance()->GetDynamicsWorld(), osgbBulletPlus::HandNode::LEFT, length );
 
     if( !mLeftHand.valid() )
     {
@@ -864,22 +864,22 @@ void Gloves::UpdateHandModel()
      {
      if (ea.getKey()==osgGA::GUIEventAdapter::KEY_Home)
      {
-     _hand->setPose( osgBullet::HandNode::POSE_DEFAULT );
+     _hand->setPose( osgbBullet::HandNode::POSE_DEFAULT );
      return true;
      }
      else if (ea.getKey()==osgGA::GUIEventAdapter::KEY_End)
      {
-     _hand->setPose( osgBullet::HandNode::POSE_HOOK );
+     _hand->setPose( osgbBullet::HandNode::POSE_HOOK );
      return true;
      }
      else if (ea.getKey()==osgGA::GUIEventAdapter::KEY_Page_Up)
      {
-     _hand->setPose( osgBullet::HandNode::POSE_POINT );
+     _hand->setPose( osgbBullet::HandNode::POSE_POINT );
      return true;
      }
      else if (ea.getKey()==osgGA::GUIEventAdapter::KEY_Page_Down)
      {
-     _hand->setPose( osgBullet::HandNode::POSE_FIST );
+     _hand->setPose( osgbBullet::HandNode::POSE_FIST );
      return true;
      }
      else if (ea.getKey()==osgGA::GUIEventAdapter::KEY_Delete)
@@ -889,42 +889,42 @@ void Gloves::UpdateHandModel()
      }
      else if (ea.getKey()==osgGA::GUIEventAdapter::KEY_F1)
      {
-     _mode = osgBullet::HandNode::FINGER_0_TRANSLATE;
+     _mode = osgbBullet::HandNode::FINGER_0_TRANSLATE;
      return true;
      }
      else if (ea.getKey()==osgGA::GUIEventAdapter::KEY_F2)
      {
-     _mode = osgBullet::HandNode::FINGER_1_TRANSLATE;
+     _mode = osgbBullet::HandNode::FINGER_1_TRANSLATE;
      return true;
      }
      else if (ea.getKey()==osgGA::GUIEventAdapter::KEY_F3)
      {
-     _mode = osgBullet::HandNode::FINGER_2_TRANSLATE;
+     _mode = osgbBullet::HandNode::FINGER_2_TRANSLATE;
      return true;
      }
      else if (ea.getKey()==osgGA::GUIEventAdapter::KEY_F4)
      {
-     _mode = osgBullet::HandNode::FINGER_3_TRANSLATE;
+     _mode = osgbBullet::HandNode::FINGER_3_TRANSLATE;
      return true;
      }
      else if (ea.getKey()==osgGA::GUIEventAdapter::KEY_F5)
      {
-     _mode = osgBullet::HandNode::FINGER_4_TRANSLATE;
+     _mode = osgbBullet::HandNode::FINGER_4_TRANSLATE;
      return true;
      }
      else if (ea.getKey()==osgGA::GUIEventAdapter::KEY_F6)
      {
-     _mode = osgBullet::HandNode::MAX_ARTICULATIONS;
+     _mode = osgbBullet::HandNode::MAX_ARTICULATIONS;
      return true;
      }
      
      else if (ea.getKey()==osgGA::GUIEventAdapter::KEY_Left)
      {
-     if( _mode == osgBullet::HandNode::MAX_ARTICULATIONS )
+     if( _mode == osgbBullet::HandNode::MAX_ARTICULATIONS )
      {
-     osgBullet::HandNode::Articulation art;
-     for( art=osgBullet::HandNode::FINGER_0_TRANSLATE;
-     art<=osgBullet::HandNode::FINGER_4_TRANSLATE; art++ )
+     osgbBullet::HandNode::Articulation art;
+     for( art=osgbBullet::HandNode::FINGER_0_TRANSLATE;
+     art<=osgbBullet::HandNode::FINGER_4_TRANSLATE; art++ )
      {
      _hand->setArticulation( art,
      _hand->getArticulation( art ) + 0.1 );
@@ -937,11 +937,11 @@ void Gloves::UpdateHandModel()
      }
      else if (ea.getKey()==osgGA::GUIEventAdapter::KEY_Right)
      {
-     if( _mode == osgBullet::HandNode::MAX_ARTICULATIONS )
+     if( _mode == osgbBullet::HandNode::MAX_ARTICULATIONS )
      {
-     osgBullet::HandNode::Articulation art;
-     for( art=osgBullet::HandNode::FINGER_0_TRANSLATE;
-     art<=osgBullet::HandNode::FINGER_4_TRANSLATE; art++ )
+     osgbBullet::HandNode::Articulation art;
+     for( art=osgbBullet::HandNode::FINGER_0_TRANSLATE;
+     art<=osgbBullet::HandNode::FINGER_4_TRANSLATE; art++ )
      {
      _hand->setArticulation( art,
      _hand->getArticulation( art ) - 0.1 );
@@ -968,11 +968,11 @@ void Gloves::UpdateHandModel()
      if (sm == osgGA::GUIEventAdapter::SCROLL_UP)
      delta = -delta;
      
-     if( _mode == osgBullet::HandNode::MAX_ARTICULATIONS )
+     if( _mode == osgbBullet::HandNode::MAX_ARTICULATIONS )
      {
-     osgBullet::HandNode::Articulation art;
-     for( art=osgBullet::HandNode::FINGER_0_TRANSLATE;
-     art<=osgBullet::HandNode::FINGER_4_TRANSLATE; art++ )
+     osgbBullet::HandNode::Articulation art;
+     for( art=osgbBullet::HandNode::FINGER_0_TRANSLATE;
+     art<=osgbBullet::HandNode::FINGER_4_TRANSLATE; art++ )
      {
      if (k0) _hand->setArticulation( art + 5 , _hand->getArticulation( art+5  ) + delta );
      if (k1) _hand->setArticulation( art + 10, _hand->getArticulation( art+10 ) + delta );
@@ -1042,17 +1042,17 @@ void Gloves::UpdateRightHandGlove()
     float pi_over_2 = 3.14 / 180.0;
     float mcp_scale = 80.f * pi_over_2;
     float pip_scale = 110.f * pi_over_2;
-    mRightHand->setArticulation( osgBulletPlus::HandNode::FINGER_0_ROTATE_INNER, mRightThumbMCP->getData() * mcp_scale );
-    mRightHand->setArticulation( osgBulletPlus::HandNode::FINGER_1_ROTATE_INNER, mRightIndexMCP->getData() * mcp_scale );
-    mRightHand->setArticulation( osgBulletPlus::HandNode::FINGER_2_ROTATE_INNER, mRightMiddleMCP->getData() * mcp_scale );
-    mRightHand->setArticulation( osgBulletPlus::HandNode::FINGER_3_ROTATE_INNER, mRightRingMCP->getData() * mcp_scale );
-    mRightHand->setArticulation( osgBulletPlus::HandNode::FINGER_4_ROTATE_INNER, mRightPinkyMCP->getData() * mcp_scale );
+    mRightHand->setArticulation( osgbBulletPlus::HandNode::FINGER_0_ROTATE_INNER, mRightThumbMCP->getData() * mcp_scale );
+    mRightHand->setArticulation( osgbBulletPlus::HandNode::FINGER_1_ROTATE_INNER, mRightIndexMCP->getData() * mcp_scale );
+    mRightHand->setArticulation( osgbBulletPlus::HandNode::FINGER_2_ROTATE_INNER, mRightMiddleMCP->getData() * mcp_scale );
+    mRightHand->setArticulation( osgbBulletPlus::HandNode::FINGER_3_ROTATE_INNER, mRightRingMCP->getData() * mcp_scale );
+    mRightHand->setArticulation( osgbBulletPlus::HandNode::FINGER_4_ROTATE_INNER, mRightPinkyMCP->getData() * mcp_scale );
 
-    mRightHand->setArticulation( osgBulletPlus::HandNode::FINGER_0_ROTATE_OUTER, mRightThumbPIP->getData() * pip_scale );
-    mRightHand->setArticulation( osgBulletPlus::HandNode::FINGER_1_ROTATE_OUTER, mRightIndexPIP->getData() * pip_scale );
-    mRightHand->setArticulation( osgBulletPlus::HandNode::FINGER_2_ROTATE_OUTER, mRightMiddlePIP->getData() * pip_scale );
-    mRightHand->setArticulation( osgBulletPlus::HandNode::FINGER_3_ROTATE_OUTER, mRightRingPIP->getData() * pip_scale );
-    mRightHand->setArticulation( osgBulletPlus::HandNode::FINGER_4_ROTATE_OUTER, mRightPinkyPIP->getData() * pip_scale );
+    mRightHand->setArticulation( osgbBulletPlus::HandNode::FINGER_0_ROTATE_OUTER, mRightThumbPIP->getData() * pip_scale );
+    mRightHand->setArticulation( osgbBulletPlus::HandNode::FINGER_1_ROTATE_OUTER, mRightIndexPIP->getData() * pip_scale );
+    mRightHand->setArticulation( osgbBulletPlus::HandNode::FINGER_2_ROTATE_OUTER, mRightMiddlePIP->getData() * pip_scale );
+    mRightHand->setArticulation( osgbBulletPlus::HandNode::FINGER_3_ROTATE_OUTER, mRightRingPIP->getData() * pip_scale );
+    mRightHand->setArticulation( osgbBulletPlus::HandNode::FINGER_4_ROTATE_OUTER, mRightPinkyPIP->getData() * pip_scale );
 
     //float thumb_scale = 60.f * pi_over_2;
     //float abduction_scale = 30.f * pi_over_2;
@@ -1062,11 +1062,11 @@ void Gloves::UpdateRightHandGlove()
     //float angle4 = mRightMiddleRingAbduction->getData() * abduction_scale;
     //float angle5 = mRightRingPinkyAbduction->getData() * abduction_scale;
 
-    //mRightHand->setArticulation( osgBullet::HandNode::FINGER_0_TRANSLATE, angle1 );
-    //mRightHand->setArticulation( osgBullet::HandNode::FINGER_1_TRANSLATE, angle2 );
-    //mRightHand->setArticulation( osgBullet::HandNode::FINGER_2_TRANSLATE, angle3 );
-    //mRightHand->setArticulation( osgBullet::HandNode::FINGER_3_TRANSLATE, -angle4 );
-    //mRightHand->setArticulation( osgBullet::HandNode::FINGER_4_TRANSLATE, -angle5 );
+    //mRightHand->setArticulation( osgbBullet::HandNode::FINGER_0_TRANSLATE, angle1 );
+    //mRightHand->setArticulation( osgbBullet::HandNode::FINGER_1_TRANSLATE, angle2 );
+    //mRightHand->setArticulation( osgbBullet::HandNode::FINGER_2_TRANSLATE, angle3 );
+    //mRightHand->setArticulation( osgbBullet::HandNode::FINGER_3_TRANSLATE, -angle4 );
+    //mRightHand->setArticulation( osgbBullet::HandNode::FINGER_4_TRANSLATE, -angle5 );
 
     //mRightHand->setArticulation( _mode, mRightHand->getArticulation( _mode ) + 0.1 );
     //mLeftHand->setArticulation( _mode, mLeftHand->getArticulation( _mode ) + 0.1 );
@@ -1134,17 +1134,17 @@ void Gloves::UpdateLeftHandGlove()
     float pi_over_2 = 3.14 / 180.0;
     float mcp_scale = 80.f * pi_over_2;
     float pip_scale = 110.f * pi_over_2;
-    mLeftHand->setArticulation( osgBulletPlus::HandNode::FINGER_0_ROTATE_INNER, mLeftThumbMCP->getData() * mcp_scale );
-    mLeftHand->setArticulation( osgBulletPlus::HandNode::FINGER_1_ROTATE_INNER, mLeftIndexMCP->getData() * mcp_scale );
-    mLeftHand->setArticulation( osgBulletPlus::HandNode::FINGER_2_ROTATE_INNER, mLeftMiddleMCP->getData() * mcp_scale );
-    mLeftHand->setArticulation( osgBulletPlus::HandNode::FINGER_3_ROTATE_INNER, mLeftRingMCP->getData() * mcp_scale );
-    mLeftHand->setArticulation( osgBulletPlus::HandNode::FINGER_4_ROTATE_INNER, mLeftPinkyMCP->getData() * mcp_scale );
+    mLeftHand->setArticulation( osgbBulletPlus::HandNode::FINGER_0_ROTATE_INNER, mLeftThumbMCP->getData() * mcp_scale );
+    mLeftHand->setArticulation( osgbBulletPlus::HandNode::FINGER_1_ROTATE_INNER, mLeftIndexMCP->getData() * mcp_scale );
+    mLeftHand->setArticulation( osgbBulletPlus::HandNode::FINGER_2_ROTATE_INNER, mLeftMiddleMCP->getData() * mcp_scale );
+    mLeftHand->setArticulation( osgbBulletPlus::HandNode::FINGER_3_ROTATE_INNER, mLeftRingMCP->getData() * mcp_scale );
+    mLeftHand->setArticulation( osgbBulletPlus::HandNode::FINGER_4_ROTATE_INNER, mLeftPinkyMCP->getData() * mcp_scale );
 
-    mLeftHand->setArticulation( osgBulletPlus::HandNode::FINGER_0_ROTATE_OUTER, mLeftThumbPIP->getData() * pip_scale );
-    mLeftHand->setArticulation( osgBulletPlus::HandNode::FINGER_1_ROTATE_OUTER, mLeftIndexPIP->getData() * pip_scale );
-    mLeftHand->setArticulation( osgBulletPlus::HandNode::FINGER_2_ROTATE_OUTER, mLeftMiddlePIP->getData() * pip_scale );
-    mLeftHand->setArticulation( osgBulletPlus::HandNode::FINGER_3_ROTATE_OUTER, mLeftRingPIP->getData() * pip_scale );
-    mLeftHand->setArticulation( osgBulletPlus::HandNode::FINGER_4_ROTATE_OUTER, mLeftPinkyPIP->getData() * pip_scale );
+    mLeftHand->setArticulation( osgbBulletPlus::HandNode::FINGER_0_ROTATE_OUTER, mLeftThumbPIP->getData() * pip_scale );
+    mLeftHand->setArticulation( osgbBulletPlus::HandNode::FINGER_1_ROTATE_OUTER, mLeftIndexPIP->getData() * pip_scale );
+    mLeftHand->setArticulation( osgbBulletPlus::HandNode::FINGER_2_ROTATE_OUTER, mLeftMiddlePIP->getData() * pip_scale );
+    mLeftHand->setArticulation( osgbBulletPlus::HandNode::FINGER_3_ROTATE_OUTER, mLeftRingPIP->getData() * pip_scale );
+    mLeftHand->setArticulation( osgbBulletPlus::HandNode::FINGER_4_ROTATE_OUTER, mLeftPinkyPIP->getData() * pip_scale );
 
     //float thumb_scale = 60.f * pi_over_2;
     //float abduction_scale = 30.f * pi_over_2;
@@ -1154,11 +1154,11 @@ void Gloves::UpdateLeftHandGlove()
     //float angle4 = mRightMiddleRingAbduction->getData() * abduction_scale;
     //float angle5 = mRightRingPinkyAbduction->getData() * abduction_scale;
 
-    //mRightHand->setArticulation( osgBullet::HandNode::FINGER_0_TRANSLATE, angle1 );
-    //mRightHand->setArticulation( osgBullet::HandNode::FINGER_1_TRANSLATE, angle2 );
-    //mRightHand->setArticulation( osgBullet::HandNode::FINGER_2_TRANSLATE, angle3 );
-    //mRightHand->setArticulation( osgBullet::HandNode::FINGER_3_TRANSLATE, -angle4 );
-    //mRightHand->setArticulation( osgBullet::HandNode::FINGER_4_TRANSLATE, -angle5 );
+    //mRightHand->setArticulation( osgbBullet::HandNode::FINGER_0_TRANSLATE, angle1 );
+    //mRightHand->setArticulation( osgbBullet::HandNode::FINGER_1_TRANSLATE, angle2 );
+    //mRightHand->setArticulation( osgbBullet::HandNode::FINGER_2_TRANSLATE, angle3 );
+    //mRightHand->setArticulation( osgbBullet::HandNode::FINGER_3_TRANSLATE, -angle4 );
+    //mRightHand->setArticulation( osgbBullet::HandNode::FINGER_4_TRANSLATE, -angle5 );
 
     //mRightHand->setArticulation( _mode, mRightHand->getArticulation( _mode ) + 0.1 );
     //mLeftHand->setArticulation( _mode, mLeftHand->getArticulation( _mode ) + 0.1 );

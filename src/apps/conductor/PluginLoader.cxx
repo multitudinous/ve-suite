@@ -88,8 +88,9 @@ bool PluginLoader::LoadPlugins( wxString lib_dir )
     wxString pluginsDirStr;
     ::wxGetEnv( wxString( "CONDUCTOR_PLUGINS_DIR", wxConvUTF8 ), &pluginsDirStr );
     wxDir pluginsDir( pluginsDirStr );
-    wxString filename;
     const wxString ext = wxString( "*", wxConvUTF8 ) + wxPluginLibrary::GetDllExt();
+    //std::cout << "try Loaded " << ConvertUnicode( ext.c_str() ) << " "
+    //    << ConvertUnicode( pluginsDirStr.c_str() ) << std::endl;
     if( !wxDir::Exists( pluginsDirStr ) )
     {
         // deal with the error here - wxDir would already log an error
@@ -107,10 +108,12 @@ bool PluginLoader::LoadPlugins( wxString lib_dir )
         wxLogMessage( _( "Loading error [%s]" ), msg.c_str() );
         // deal with the error here - wxDir would already log an error
         // message explaining the exact reason of the failure
+        std::cout << " Not Opened" << std::endl;
         //return FALSE;
     }
 
     //Load default plugins for VE-Suite
+    wxString filename;
     {
         bool cont = pluginsDir.GetFirst( &filename, ext, wxDIR_FILES );
         while( cont )

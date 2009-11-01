@@ -130,9 +130,8 @@ App::App( int argc, char* argv[], bool enableRTT )
 #else
     vrj::OsgApp( vrj::Kernel::instance() ),
 #endif
-    readyToWriteWebImage( false ),
-    writingWebImageNow( false ),
-    captureNextFrameForWeb( false ),
+    m_captureNextFrame( false ),
+    m_captureMovie( false ),
     isCluster( false ),
     mRTT( enableRTT ),
     mLastFrame( 0 ),
@@ -395,6 +394,7 @@ void App::initScene()
                 SetDesktopMode( true );
         }
     }
+
     //Define the rootNode, worldDCS, and lighting
     ves::xplorer::scenegraph::SceneManager::instance()->SetRootNode(
             mSceneRenderToTexture->GetGroup() );
@@ -505,12 +505,24 @@ void App::latePreFrame()
     }
     else if( !tempCommandName.compare( "SCREEN_SHOT" ) )
     {
-        captureNextFrameForWeb = true;
+        m_captureNextFrame = true;
         m_vjobsWrapper->GetXMLCommand()->
             GetDataValuePair( "Filename" )->GetData( m_filename );
         mSceneRenderToTexture->SetImageCameraCallback( true, m_filename );
     }
-
+    else if( !tempCommandName.compare( "MOVIE_CAPTURE" ) )
+    {
+        m_captureMovie = true;
+        m_vjobsWrapper->GetXMLCommand()->
+            GetDataValuePair( "Filename" )->GetData( m_filename );
+        mSceneRenderToTexture->SetImageCameraCallback( m_captureMovie, m_filename );
+    }
+    else if( !tempCommandName.compare( "MOVIE_CAPTURE_OFF" ) )
+    {
+        m_captureMovie = false;
+        mSceneRenderToTexture->SetImageCameraCallback( m_captureMovie, "" );
+    }
+    
     {
         VPR_PROFILE_GUARD_HISTORY( "App::latePreFrame Framerate Calculations", 20 );
         float current_time = this->m_vjobsWrapper->GetSetAppTime( -1 );
@@ -667,10 +679,10 @@ void App::postFrame()
 
     this->m_vjobsWrapper->GetCfdStateVariables();
     
-    if( captureNextFrameForWeb )
+    if( m_captureNextFrame )
     {
         mSceneRenderToTexture->SetImageCameraCallback( false, "" );
-        captureNextFrameForWeb = false;
+        m_captureNextFrame = false;
     }
 
     vprDEBUG( vesDBG, 3 ) << "|End postFrame" << std::endl << vprDEBUG_FLUSH;
@@ -875,15 +887,6 @@ void App::draw()
         //Recalculate the projection matrix from the new frustum values
         glTI->UpdateFrustumValues( l, r, b, t, n, f );
     }
-
-    //Screen capture code
-    /*if( captureNextFrameForWeb )
-    {
-        vpr::Guard< vpr::Mutex > val_guard( mValueLock );
-        mSceneRenderToTexture->WriteLowResImageFile(
-            getScene(), sv.get(), m_filename );
-        captureNextFrameForWeb = false;
-    }*/
 
     glMatrixMode( GL_PROJECTION );
     glPopMatrix();

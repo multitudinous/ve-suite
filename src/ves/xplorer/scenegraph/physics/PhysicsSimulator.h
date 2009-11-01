@@ -46,8 +46,8 @@
 #include <osg/ref_ptr>
 #include <osg/Vec3>
 
-#include <osgBullet/TripleBuffer.h>
-#include <osgBullet/MotionState.h>
+#include <osgbBullet/TripleBuffer.h>
+#include <osgbBullet/MotionState.h>
 
 namespace osg
 {
@@ -68,7 +68,7 @@ class btRigidBody;
 class btCollisionShape;
 
 // --- osgBullet Includes --- //
-namespace osgBullet
+namespace osgbBullet
 {
 class GLDebugDrawer;
 }
@@ -221,15 +221,15 @@ private:
     bool mDebugBulletFlag;
     
     ///THe debug drawer for the bullet physics simulator
-    osgBullet::GLDebugDrawer* m_debugDrawer;
+    osgbBullet::GLDebugDrawer* m_debugDrawer;
     ///A group node to better control when debug info is displayed for
     ///the osgBullet::GLDebugDrawer
     osg::ref_ptr< osg::Group > m_debugDrawerGroup;
     
     ///Tools for running the physics simulation on a seperate thread
-    osgBullet::TripleBuffer m_tripleDataBuffer;
+    osgbBullet::TripleBuffer m_tripleDataBuffer;
     ///List of every motion state created
-    osgBullet::MotionStateList m_motionStateList;
+    osgbBullet::MotionStateList m_motionStateList;
 };
 }
 }

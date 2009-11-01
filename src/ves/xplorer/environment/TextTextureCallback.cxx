@@ -35,7 +35,7 @@
 
 #include <ves/xplorer/scenegraph/TextTexture.h>
 
-#include <osgBullet/Chart.h>
+#include <osgbBullet/Chart.h>
 
 // --- OSG Includes --- //
 #include <osg/Geode>

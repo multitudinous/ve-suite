@@ -49,13 +49,13 @@
 #include <BulletCollision/CollisionShapes/btBvhTriangleMeshShape.h>
 #include <BulletCollision/CollisionShapes/btConvexTriangleMeshShape.h>
 
-#include <osgBullet/CollisionShapes.h>
-#include <osgBullet/MotionState.h>
-#include <osgTools/AbsoluteModelTransform.h>
-#include <osgBullet/OSGToCollada.h>
-#include <osgBullet/ColladaUtils.h>
-#include <osgBullet/Utils.h>
-#include <osgBullet/RefRigidBody.h>
+#include <osgbBullet/CollisionShapes.h>
+#include <osgbBullet/MotionState.h>
+#include <osgwTools/AbsoluteModelTransform.h>
+#include <osgbBulletPlus/OSGToCollada.h>
+#include <osgbBullet/ColladaUtils.h>
+#include <osgbBullet/Utils.h>
+#include <osgbBullet/RefRigidBody.h>
 
 #include <osg/io_utils>
 #include <osg/ComputeBoundsVisitor>
@@ -70,34 +70,16 @@ using namespace ves::xplorer::scenegraph;
 ////////////////////////////////////////////////////////////////////////////////
 PhysicsRigidBody::PhysicsRigidBody( osg::Node* node,
                                     PhysicsSimulator* physicsSimulator )
-        :
-        mStoreCollisions( false ),
-        mMass( 1.0 ),
-        mFriction( 0.5 ),
-        mRestitution( 0.5 ),
-        mPhysicsSimulator( physicsSimulator ),
-        mOSGToBullet( node ),
-        mRB( 0 ),
-        mDebugBoundaries( false )
-        /*,
-#if ( BULLET_MAJOR_VERSION >= 2 ) && ( BULLET_MINOR_VERSION > 65 )
-        btRigidBody( btRigidBody::btRigidBodyConstructionInfo(
-                     btScalar( mMass ),                         //mass
-                     mVESMotionState = new osgBullet::MotionState(),    //motionState
-                     0,                                         //collisionShape
-                     btVector3( 0.0f, 0.0f, 0.0f ) ) )          //localInertia
-#else
-        btRigidBody( btScalar( mMass ),                         //mass
-                     mVESMotionState = new osgBullet::MotionState(),    //motionState
-                     0,                                         //collisionShape
-                     btVector3( 0.0f, 0.0f, 0.0f ),             //localInertia
-                     btScalar( 0.0f ),                          //linearDamping
-                     btScalar( 0.0f ),                          //angularDamping
-                     btScalar( 0.5f ),                          //friction
-                     btScalar( 0.0f ) )                         //restitution
-#endif*/
+    :
+    mStoreCollisions( false ),
+    mMass( 1.0 ),
+    mFriction( 0.5 ),
+    mRestitution( 0.5 ),
+    mPhysicsSimulator( physicsSimulator ),
+    mOSGToBullet( node ),
+    mRB( 0 ),
+    mDebugBoundaries( false )
 {
-    //BoundingBoxShape();
     std::cout << "|\tPhysicsRigidBody: Just initializing physics variables." 
         << std::endl;
     std::cout << "|\t\tNode name: " << mOSGToBullet->getName() << std::endl;
@@ -217,19 +199,6 @@ void PhysicsRigidBody::CleanRigidBody()
         btDynamicsWorld* dw = mPhysicsSimulator->GetDynamicsWorld();
         //remove the rigidbodies from the dynamics world and delete them
         dw->removeRigidBody( mRB );
-
-        /*if( mDebugBoundaries )
-        {
-            osgBullet::MotionState* motion = 
-                static_cast< osgBullet::MotionState* >( mRB->getMotionState() );
-            osg::ref_ptr< osg::Transform > dbgNode = 
-                motion->getDebugTransform();
-            if( dbgNode.valid() )
-            {
-                mPhysicsSimulator->GetDebugBullet()->
-                        remove( dbgNode.get() );
-            }
-        }*/
         
         {
             btCollisionShape* tempShape = mRB->getCollisionShape();
@@ -250,65 +219,11 @@ void PhysicsRigidBody::CleanRigidBody()
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsRigidBody::BoundingBoxShape()
 {
-    /*if( this )
-    {
-        mPhysicsSimulator->GetDynamicsWorld()->removeRigidBody( this );
-    }
-
-    if( m_collisionShape )
-    {
-        delete m_collisionShape;
-        m_collisionShape = 0;
-    }
-
-    osg::BoundingBox bb = mOSGToBullet->GetBoundingBox();
-    m_collisionShape = new btBoxShape(
-                           btVector3( ( bb.xMax() - bb.xMin() ) * 0.5f,
-                                      ( bb.yMax() - bb.yMin() ) * 0.5f,
-                                      ( bb.zMax() - bb.zMin() ) * 0.5f ) );
-
-    SetMassProps();
-
-    if( mMass != 0 )
-    {
-        setActivationState( DISABLE_DEACTIVATION );
-    }
-
-    mPhysicsSimulator->GetDynamicsWorld()->addRigidBody( this );*/
     CustomShape( BOX_SHAPE_PROXYTYPE, true );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsRigidBody::SphereShape( double radius )
 {
-    /*if( this )
-    {
-        mPhysicsSimulator->GetDynamicsWorld()->removeRigidBody( this );
-    }
-
-    if( m_collisionShape )
-    {
-        delete m_collisionShape;
-        m_collisionShape = 0;
-    }
-
-    if( radius == 0 )
-    {
-        m_collisionShape = new btSphereShape( mOSGToBullet->GetBoundingSphere().radius() );
-    }
-    else
-    {
-        m_collisionShape = new btSphereShape( radius );
-    }
-
-    SetMassProps();
-
-    if( mMass != 0 )
-    {
-        setActivationState( DISABLE_DEACTIVATION );
-    }
-
-    mPhysicsSimulator->GetDynamicsWorld()->addRigidBody( this );*/
-    
     if( radius == 0 )
     {
         CustomShape( SPHERE_SHAPE_PROXYTYPE, true );
@@ -336,7 +251,7 @@ void PhysicsRigidBody::UserDefinedShape( btCollisionShape* collisionShape )
     mRB = new btRigidBody( 
             btRigidBody::btRigidBodyConstructionInfo(
             btScalar( mMass ),                              //mass
-            new osgBullet::MotionState(),                   //motionState
+            new osgbBullet::MotionState(),                   //motionState
             collisionShape,                                 //collisionShape
             localInertia ) );                               //localInertia
                                                           
@@ -360,76 +275,20 @@ void PhysicsRigidBody::RegisterRigidBody( btRigidBody* rigidBody )
     //rigidBody->setActivationState( DISABLE_DEACTIVATION );
 
     mPhysicsSimulator->GetDynamicsWorld()->addRigidBody( rigidBody );
-    
-    /*if( mDebugBoundaries )
-    {
-        //Setup debug display
-        // Add visual rep of Bullet Collision shape.
-        osg::Node* visNode = 
-        osgBullet::osgNodeFromBtCollisionShape( rigidBody->getCollisionShape() );
-        if( visNode != NULL )
-        {
-            osgBullet::MotionState* motion = 
-            static_cast< osgBullet::MotionState* >( rigidBody->getMotionState() );
-            osgBullet::AbsoluteModelTransform* dmt = 
-            new osgBullet::AbsoluteModelTransform();
-            dmt->addChild( visNode );
-            motion->setDebugTransform( dmt );
-            mPhysicsSimulator->GetDebugBullet()->addDynamic( dmt );
-            motion->resetTransform();
-        }
-    }*/
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsRigidBody::StaticConcaveShape()
 {
-    /*if( this )
-    {
-        mPhysicsSimulator->GetDynamicsWorld()->removeRigidBody( this );
-    }
-
-    if( m_collisionShape )
-    {
-        delete m_collisionShape;
-        m_collisionShape = 0;
-    }
-
-    m_collisionShape = new btBvhTriangleMeshShape( mOSGToBullet->GetTriangleMesh(), false );
-
-    SetMassProps( false );
-
-    mPhysicsSimulator->GetDynamicsWorld()->addRigidBody( this );*/
     mMass = 0.0f;
     CustomShape( TRIANGLE_MESH_SHAPE_PROXYTYPE, false );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsRigidBody::ConvexShape()
 {
-    /*if( this )
-    {
-        mPhysicsSimulator->GetDynamicsWorld()->removeRigidBody( this );
-    }
-
-    if( m_collisionShape )
-    {
-        delete m_collisionShape;
-        m_collisionShape = 0;
-    }
-
-    m_collisionShape = new btConvexTriangleMeshShape( mOSGToBullet->GetTriangleMesh() );
-
-    SetMassProps();
-
-    if( mMass != 0 )
-    {
-        setActivationState( DISABLE_DEACTIVATION );
-    }
-
-    mPhysicsSimulator->GetDynamicsWorld()->addRigidBody( this );*/
     CustomShape( CONVEX_TRIANGLEMESH_SHAPE_PROXYTYPE, false );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void PhysicsRigidBody::CustomShape( const BroadphaseNativeTypes shapeType, const bool overall )
+void PhysicsRigidBody::CustomShape( const BroadphaseNativeTypes shapeType, const bool overall, const std::string& decimation )
 {
     CleanRigidBody();
 
@@ -456,12 +315,29 @@ void PhysicsRigidBody::CustomShape( const BroadphaseNativeTypes shapeType, const
         osg::ref_ptr< osg::PositionAttitudeTransform > tempSubgraph = 
             new osg::PositionAttitudeTransform( *static_cast< osg::PositionAttitudeTransform* >( mOSGToBullet.get() ), 
             osg::CopyOp::DEEP_COPY_ALL );            
-        osgBullet::OSGToCollada converter;
+        osgbBulletPlus::OSGToCollada converter;
         converter.setSceneGraph( tempSubgraph.get() );
         converter.setShapeType( shapeType );
         converter.setMass( mMass );
         converter.setOverall( overall );
-        //converter.setSimplifyPercent( simplifyPercent );
+        if( (shapeType == CONVEX_TRIANGLEMESH_SHAPE_PROXYTYPE) || 
+            (shapeType == TRIANGLE_MESH_SHAPE_PROXYTYPE) )
+        {
+            //If decimation is exact we do nothing
+            if( decimation == "High" )
+            {
+                converter.setDecimateParamaters( 0.10 );
+            }
+            else if( decimation == "Medium" )
+            {
+                converter.setDecimateParamaters( 0.45 );
+            }
+            else if( decimation == "Low" )
+            {
+                converter.setDecimateParamaters( 0.80 );
+            }
+            //converter.setSimplifyPercent( simplifyPercent );
+        }
         //converter.setAxis( axis );
         converter.convert("");
        
@@ -470,11 +346,11 @@ void PhysicsRigidBody::CustomShape( const BroadphaseNativeTypes shapeType, const
     }
     
     osg::Group* parent = stopNode->getParent( 0 );
-    osg::ref_ptr< osgTools::AbsoluteModelTransform > amt = 
-        dynamic_cast< osgTools::AbsoluteModelTransform* >( parent );
+    osg::ref_ptr< osgwTools::AbsoluteModelTransform > amt = 
+        dynamic_cast< osgwTools::AbsoluteModelTransform* >( parent );
     if( !amt.valid() )
     {
-        amt = new osgTools::AbsoluteModelTransform();
+        amt = new osgwTools::AbsoluteModelTransform();
         amt->setName( "Physics AMT" );
         amt->setDataVariance( osg::Object::DYNAMIC );
         amt->addChild( mOSGToBullet.get() );
@@ -487,14 +363,14 @@ void PhysicsRigidBody::CustomShape( const BroadphaseNativeTypes shapeType, const
     {
         amt->setName( "AMT_" + dcsName );
     }
-    osg::ref_ptr< osgBullet::RefRigidBody > tempRB = new osgBullet::RefRigidBody( mRB );
+    osg::ref_ptr< osgbBullet::RefRigidBody > tempRB = new osgbBullet::RefRigidBody( mRB );
     amt->setUserData( tempRB.get() );
 
     mRB->setRestitution( mRestitution );
     mRB->setFriction( mFriction );
     
-    osgBullet::MotionState* motion = new osgBullet::MotionState();
-    //osgBullet::MotionState* motion = dynamic_cast< osgBullet::MotionState* >( mRB->getMotionState() );
+    osgbBullet::MotionState* motion = new osgbBullet::MotionState();
+    //osgbBullet::MotionState* motion = dynamic_cast< osgbBullet::MotionState* >( mRB->getMotionState() );
     motion->setTransform( amt.get() );
 
     osg::BoundingSphere bs = mOSGToBullet->getBound();
@@ -508,10 +384,10 @@ void PhysicsRigidBody::CustomShape( const BroadphaseNativeTypes shapeType, const
     std::cout << bs.center() << std::endl;
     std::cout << bs.radius() << std::endl;*/
     // Add visual rep of Bullet Collision shape.
-    /*osg::Node* visNode = osgBullet::osgNodeFromBtCollisionShape( rb->getCollisionShape() );
+    /*osg::Node* visNode = osgbBullet::osgNodeFromBtCollisionShape( rb->getCollisionShape() );
     if( visNode != NULL )
     {
-    osgBullet::AbsoluteModelTransform* dmt = new osgBullet::AbsoluteModelTransform;
+    osgbBullet::AbsoluteModelTransform* dmt = new osgbBullet::AbsoluteModelTransform;
     dmt->addChild( visNode );
     motion->setDebugTransform( dmt );
     _debugBullet.addDynamic( dmt );
@@ -526,7 +402,7 @@ void PhysicsRigidBody::CustomShape( const BroadphaseNativeTypes shapeType, const
     //osg::Vec3d tempScale = m.getScale();
     motion->setParentTransform( m );
     motion->setCenterOfMass( bs.center() );
-    osgBullet::MotionState* tempMS = dynamic_cast< osgBullet::MotionState* >( mRB->getMotionState() );
+    osgbBullet::MotionState* tempMS = dynamic_cast< osgbBullet::MotionState* >( mRB->getMotionState() );
     if( tempMS )
     {
         std::cout << "|\tDeleting old motion state. " << std::endl;
@@ -549,10 +425,10 @@ void PhysicsRigidBody::CustomShape( const BroadphaseNativeTypes shapeType, const
     RegisterRigidBody( mRB );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void PhysicsRigidBody::CreateRigidBody( const std::string& lod, const std::string& motion, const std::string& mesh )
+void PhysicsRigidBody::CreateRigidBody( const std::string& lod, const std::string& motion, const std::string& mesh, const std::string& decimation )
 {
     std::cout << "|\tPhysics parameters : " 
-        << lod << " " << motion << " " << mesh << std::endl;
+        << lod << " " << motion << " " << mesh << " " << decimation << std::endl;
 
     bool overall = false;
     if( lod == "Overall" )
@@ -568,25 +444,25 @@ void PhysicsRigidBody::CreateRigidBody( const std::string& lod, const std::strin
     
     if( mesh == "Box" )
     {
-        CustomShape( BOX_SHAPE_PROXYTYPE, overall );
+        CustomShape( BOX_SHAPE_PROXYTYPE, overall, decimation );
     }
     else if( mesh == "Sphere" )
     {
-        CustomShape( SPHERE_SHAPE_PROXYTYPE, overall );
+        CustomShape( SPHERE_SHAPE_PROXYTYPE, overall, decimation );
     }
     else if( mesh == "Cylinder" )
     {
-        CustomShape( CYLINDER_SHAPE_PROXYTYPE, overall );
+        CustomShape( CYLINDER_SHAPE_PROXYTYPE, overall, decimation );
     }
     else
     {
         if( motion == "Static" )
         {
-            CustomShape( TRIANGLE_MESH_SHAPE_PROXYTYPE, overall );
+            CustomShape( TRIANGLE_MESH_SHAPE_PROXYTYPE, overall, decimation );
         }
         else
         {
-            CustomShape( CONVEX_TRIANGLEMESH_SHAPE_PROXYTYPE, overall );
+            CustomShape( CONVEX_TRIANGLEMESH_SHAPE_PROXYTYPE, overall, decimation );
         }
     }
 }

@@ -56,7 +56,7 @@ class Geode;
 class btCompoundShape;
 class btCollisionShape;
 
-namespace osgBullet
+namespace osgbBullet
 {
 class MotionState;
 }
@@ -120,7 +120,7 @@ public:
     ///\param lod Can be Overall or Compound
     ///\param motion Can be Dynamic or Static
     ///\param mesh Cane be Box, Sphere, Cylinder, Mesh
-    void CreateRigidBody( const std::string& lod, const std::string& motion, const std::string& mesh );
+    void CreateRigidBody( const std::string& lod, const std::string& motion, const std::string& mesh, const std::string& decimation = std::string( "Exact" ) );
     
     void SetStoreCollisions( bool storeCollisions );
 
@@ -145,7 +145,7 @@ private:
     ///Modify the mass, friction, restitution, and inertia for the rigidbody
     void SetMassProps( bool dynamic = true );
     ///Create a btRigidBody with different shape types
-    void CustomShape( const BroadphaseNativeTypes shapeType, const bool overall );
+    void CustomShape( const BroadphaseNativeTypes shapeType, const bool overall, const std::string& decimation = std::string( "Exact" ) );
     ///Register the rigid body with the ves engine and perform other uniform
     ///operations on the rigidbody
     ///\param rigidBody The btRigidBody to register with ves

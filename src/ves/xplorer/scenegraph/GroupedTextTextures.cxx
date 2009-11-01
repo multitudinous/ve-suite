@@ -46,7 +46,7 @@
 #include <osgDB/ReadFile>
 #include <osgDB/FileUtils>
 
-#include <osgBullet/Chart.h>
+//#include <osgbBullet/Chart.h>
 
 #include <iostream>
 

@@ -199,7 +199,10 @@ BEGIN_EVENT_TABLE( AppFrame, wxFrame )
     EVT_MENU( APPFRAME_XPLORER_DATALOGGING_LOOPING, AppFrame::OnDataLoggingSettings )
     
     EVT_MENU( EXPORTMENU_SCREEN_SHOT, ExportMenu::OnScreenShot )
+    EVT_MENU( EXPORTMENU_MOVIE_CAPTURE, ExportMenu::OnScreenShot )
+    EVT_MENU( EXPORTMENU_MOVIE_CAPTURE_OFF, ExportMenu::OnScreenShot )
     EVT_MENU( EXPORTMENU_DOT_FILE, ExportMenu::OnDOTFile )
+    
     EVT_MENU( UIPLUGINBASE_DEL_MOD, AppFrame::OnDelMod )
     EVT_MENU( UIPLUGINBASE_MAKE_HIER, AppFrame::OnMakeIntoHierarchy )
     EVT_MENU( UIPLUGINBASE_SET_UI_PLUGIN_NAME, AppFrame::SetTreeItemName )

@@ -65,6 +65,11 @@ class NodeVisitor;
 class SceneView;
 }
 
+namespace osgwTools
+{
+class ScreenCapture;
+}
+
 // --- C/C++ Libraries --- //
 #include <map>
 #include <string>
@@ -209,6 +214,9 @@ private:
     vrj::GlContextData< PipelineMap > mPipelines;
 #endif
     std::vector< osg::Camera* > m_updateList;
+
+    ///
+    std::map< osg::Camera*, osg::ref_ptr< osgwTools::ScreenCapture > > m_captureTools;
 
     ///The root group that everything gets added to
     ///Is the same for all contexts

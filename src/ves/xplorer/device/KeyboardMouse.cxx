@@ -114,8 +114,8 @@
 //#include <osg/PolygonStipple>
 
 // --- osgBullet Includes --- //
-#include <osgTools/AbsoluteModelTransform.h>
-#include <osgBullet/RefRigidBody.h>
+#include <osgwTools/AbsoluteModelTransform.h>
+#include <osgbBullet/RefRigidBody.h>
 
 // --- C/C++ Libraries --- //
 #include <iostream>
@@ -1678,13 +1678,13 @@ void KeyboardMouse::ProcessSelection()
 
     //Check and see if the selected node has an attached physics mesh
     bool hasAPhysicsMesh( false );
-    osg::ref_ptr< osgTools::AbsoluteModelTransform > tempAMT = 
-        dynamic_cast< osgTools::AbsoluteModelTransform* >( 
+    osg::ref_ptr< osgwTools::AbsoluteModelTransform > tempAMT = 
+        dynamic_cast< osgwTools::AbsoluteModelTransform* >( 
             newSelectedDCS->getParent( 0 ) );
     if( tempAMT )
     {
-        osgBullet::RefRigidBody* tempRB = 
-            dynamic_cast< osgBullet::RefRigidBody* >( tempAMT->getUserData() );
+        osgbBullet::RefRigidBody* tempRB = 
+            dynamic_cast< osgbBullet::RefRigidBody* >( tempAMT->getUserData() );
         if( tempRB )
         {
             hasAPhysicsMesh = true;

@@ -9,6 +9,13 @@ SetOption('max_drift', 1)
 ###
 from SCons.Defaults import SharedCheck, ProgScan
 from SCons.Script.SConscript import SConsEnvironment
+
+
+import os, sys, string, copy, re
+import SCons.Environment
+import SCons.Platform
+import SCons
+
 import fnmatch
 ###
 
@@ -238,14 +245,12 @@ opts.AddOption( wxwidgets_options )
 
 opts.Add('AprVersion', 'Set the APR version so that the proper apr pkg-config files can be found', '1.0')
 opts.Add('VRJugglerVersion', 'Set the VRJuggler version so that the proper flagpoll files can be found', '2.0.2')
-#opts.Add('BoostVersion', 'Set the Boost version so that the proper Boost flagpoll files can be found', '1.31')
 opts.Add('VPRVersion', 'Set the VPR version so that the proper VPR flagpoll files can be found', '1.0.2')
 opts.Add('VPRProfile', 'If "yes", build applications with VPR profiling enabled', 'no')
 opts.Add('prefix', 'Installation prefix', '/usr/local')
 ##opts.Add('build_test', 'Build the test programs', 'yes')
 opts.Add('StaticLibs', 'If yes then build static libraries too', 'no')
 opts.Add('MakeDist', 'If "yes", make the distribution packages as part of the build', 'no')
-#opts.Add('Patented', 'If "yes", make the patented version of VE-Suite', 'no')
 opts.Add('UseMPI', 'If "yes", make 3D texture creator with MPI support', 'no')
 opts.Add('validate', 'If "no", do not validate flagpoll packages. Should help speed up the build', 'yes')
 opts.Add('buildTests', 'If "yes", Build tests applications', 'no')
@@ -257,7 +262,7 @@ opts.Add('MakeAspenSupport', 'If "yes", make aspen support', 'no')
 opts.Add('MakeDynSimSupport', 'If "yes", make dynsim support', 'no')
 opts.Add('MakePowersimSupport', 'If "yes", make powersim support', 'no')
 opts.Add('MakeMinervaSupport', 'If "yes", add GIS support with minerva', 'no')
-##opts.Add('arch', 'CPU architecture (ia32, x86_64, or ppc)', cpu_arch_default)
+opts.Add('ARCH', 'CPU architecture (ia32, x64)', GetArch() )
 if GetPlatform() == 'win32':
     opts.Add('MSVS_ARCH', 'CPU architecture (x86, amd64)', 'x86')
     opts.Add('MSVS_VERSION', 'MSVS version (9.0,8.0)', '8.0')
@@ -325,11 +330,11 @@ else:
 # Setup osgWorks library
 if GetPlatform() == 'win32':
     osgworks_options = fp_option.FlagPollBasedOption( "osgWorks", "osgWorks", "1.0.0", True, True, None,
-		                              compileTest = True, headerToCheck = "osgTools/Version.h" )
+		                              compileTest = True, headerToCheck = "osgwTools/Version.h" )
 else:
     osgworks_options = SConsAddons.Options.StandardPackageOption("osgWorks",
       "osgWorks utility library, default : osgWorks_incdir=<osgWorks>/include osgWorks_libdir=<osgWorks>/lib(64)", 
-      pj('osgTools','Version.h'), library=['osgTools'], symbol="main", required=True)
+      pj('osgwTools','Version.h'), library=['osgwTools'], symbol="main", required=True)
 
 #Setup minerva library
 minerva_options = fp_option.FlagPollBasedOption( "Minerva", "Minerva", "1.0", False, True, None, 
@@ -432,19 +437,26 @@ This file will be loaded each time.  Note: Options are cached in the file
 # to setup the proper build tool. This should be done BEFORE
 # the buildEnvironment call is made.
 tempEnv = dict(ENV=os.environ)
+
+# Manually read the options file so that we can determine some options
+# that are needed to setup the build environment
+tempArchWinEnv = dict(ENV=os.environ)
+if os.path.exists(options_cache):
+    execfile(options_cache, tempArchWinEnv)
+
 # setup common windows specific variables for the build
 if GetPlatform() == 'win32':
     if ARGUMENTS.has_key("MSVS_VERSION"):
         tempEnv[ 'MSVS_VERSION' ] = ARGUMENTS[ 'MSVS_VERSION' ]
-    #elif opts.GetOption( "MSVS_VERSION" ) != None:
-    #    tempEnv[ 'MSVS_VERSION' ] = opts.GetOption( "MSVS_VERSION" ).getValue()
+    elif tempArchWinEnv.has_key[ "MSVS_VERSION" ] != None:
+        tempEnv[ 'MSVS_VERSION' ] = tempArchWinEnv[ "MSVS_VERSION" ]
     else:
         tempEnv[ 'MSVS_VERSION' ] = "8.0"
 
     if ARGUMENTS.has_key("MSVS_ARCH"):
         tempEnv[ 'MSVS_ARCH' ] = ARGUMENTS[ 'MSVS_ARCH' ]
-    #elif opts.GetOption( "MSVS_ARCH" ) != None:
-    #    tempEnv[ 'MSVS_ARCH' ] = opts.GetOption( "MSVS_ARCH" ).getValue()
+    elif tempArchWinEnv[ "MSVS_ARCH" ] != None:
+        tempEnv[ 'MSVS_ARCH' ] = tempArchWinEnv[ "MSVS_ARCH" ]
     else:
         tempEnv[ 'MSVS_ARCH' ] = "x86"
 
@@ -456,9 +468,16 @@ if GetPlatform() == 'win32':
 ## Create Environment builder from scons addons
 ## At this point the scons tool is initialized (e.g msvc, g++,...)
 base_bldr = EnvironmentBuilder()
-## Add debug options in for vesuite from SConsAddons
+## Add options for environment creation
 base_bldr.addOptions( opts )
-base_bldr.setCpuArch()
+## Setup the cpu architecture
+if ARGUMENTS.has_key("ARCH"):
+    base_bldr.setCpuArch( ARGUMENTS[ 'ARCH' ] )
+elif tempArchWinEnv.has_key("ARCH"):
+    base_bldr.setCpuArch( tempArchWinEnv[ 'ARCH' ] )
+else:
+    base_bldr.setCpuArch()
+## Finally get the environment
 baseEnv = base_bldr.buildEnvironment(None,None,**tempEnv)
 ## Now build commands will be colored
 #col = colorizer()
@@ -522,7 +541,7 @@ if not SConsAddons.Util.hasHelpFlag():
     baseEnv.AppendUnique(CPPPATH = [pj(RootDir,'external','osgBullet','include')])
     baseEnv.AppendUnique(CPPPATH = [pj(RootDir,'external','osgBulletPlus','include')])
     baseEnv.AppendUnique(CPPPATH = [pj(RootDir,'external', bulletBaseVar,'src')])
-    if GetArch() == 'x64':
+    if baseEnv[ 'ARCH' ] == 'x64':
         baseEnv.AppendUnique( CPPDEFINES = ['USE_ADDR64=1'] )
 
     baseEnv.AppendUnique( CPPPATH = [pj(RootDir,'src'),pj(RootDir,buildDir,'src')] )
@@ -574,7 +593,7 @@ if not SConsAddons.Util.hasHelpFlag():
     if baseEnv.has_key('libdir'):
         LIBDIR = baseEnv['libdir']
     else:
-        if GetArch() == 'x64':
+        if baseEnv['ARCH'] == 'x64':
             LIBDIR = 'lib64'
         else:
             LIBDIR = 'lib'
