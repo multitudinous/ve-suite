@@ -7,10 +7,10 @@
 #define MyAppVerName "osgPTExporter"
 #define MyAppPublisher "Virtural Engineering Research Group"
 #define MyAppURL "www.vesuite.org"
-#define VEVERSION "1.0.0"
+#define VEVERSION "1.1.0"
 #define SVNVERSION "11902"
-#define OSGHOME "D:\garberc\Vesuite_win_deps\OSG_2.6.1_Pre-Compile_vc8.0_SP1"
-#define OSGPTEXPORTERHOME "D:\devEnv\VES-Deps_1.1\source\skewmatrix\osgPT\trunk\OSGExport"
+#define OSGHOME "C:\dev\ves_deps\OSG_2.8.2_msvc-8.0-sp1-x86"
+#define OSGPTEXPORTERHOME "C:\dev\TSVEG\skewmatrix\osgPT\trunk\OSGExport"
 [Setup]
 AppName={#MyAppName}
 AppVerName={#MyAppVerName}
@@ -39,7 +39,7 @@ ChangesAssociations=true
 WindowStartMaximized=false
 BackColor=$0080ff
 BackColor2=$ff0000
-SetupIconFile={#VEDEVHOME}\dist\installerImages\Ve_icon.ico
+SetupIconFile={#VEDEVHOME}\dist\installerImages\ves_icon.ico
 CreateAppDir=true
 AppID={{365078F8-DD03-4AC5-A7AF-F4CBD7593651}
 AppVersion={#VEVERSION}
@@ -60,21 +60,21 @@ Name: osgPTExporter; Description: Installs the OpenSceneGraph PolyTrans exporter
 ;Name: desktopVELauncherIcon; Description: VE-Launcher; GroupDescription: Create Desktop Icon
 
 [Files]
-Source: {#OSGHOME}\lib\osg48-osg.dll; DestDir: {app}; Components: 
-Source: {#OSGHOME}\lib\osg48-osgUtil.dll; DestDir: {app}; Components: 
-Source: {#OSGHOME}\lib\osg48-osgSim.dll; DestDir: {app}; Components: 
-Source: {#OSGHOME}\lib\osg48-osgDB.dll; DestDir: {app}; Components: 
-Source: {#OSGHOME}\lib\osg48-osgFX.dll; DestDir: {app}; Components: 
-Source: {#OSGHOME}\lib\osg48-osgText.dll; DestDir: {app}; Components: 
-Source: {#OSGHOME}\lib\osg48-osgTerrain.dll; DestDir: {app}; Components: 
+Source: {#OSGHOME}\lib\osg55-osg.dll; DestDir: {app}; Components: 
+Source: {#OSGHOME}\lib\osg55-osgUtil.dll; DestDir: {app}; Components: 
+Source: {#OSGHOME}\lib\osg55-osgSim.dll; DestDir: {app}; Components: 
+Source: {#OSGHOME}\lib\osg55-osgDB.dll; DestDir: {app}; Components: 
+Source: {#OSGHOME}\lib\osg55-osgFX.dll; DestDir: {app}; Components: 
+Source: {#OSGHOME}\lib\osg55-osgText.dll; DestDir: {app}; Components: 
+Source: {#OSGHOME}\lib\osg55-osgTerrain.dll; DestDir: {app}; Components: 
 Source: {#OSGHOME}\lib\ot11-OpenThreads.dll; DestDir: {app}; Components: 
-Source: {#OSGHOME}\lib\osgPlugins-2.6.1\osgdb_ive.dll; DestDir: {app}; Components: ; Flags: overwritereadonly ignoreversion
-Source: {#OSGHOME}\lib\osgPlugins-2.6.1\osgdb_jpeg.dll; DestDir: {app}; Components: ; Flags: overwritereadonly ignoreversion
-Source: {#OSGHOME}\lib\osgPlugins-2.6.1\osgdb_gif.dll; DestDir: {app}; Components: ; Flags: overwritereadonly ignoreversion
-Source: {#OSGHOME}\lib\osgPlugins-2.6.1\osgdb_png.dll; DestDir: {app}; Components: ; Flags: overwritereadonly ignoreversion
-Source: {#OSGHOME}\lib\osgPlugins-2.6.1\osgdb_osg.dll; DestDir: {app}; Components: ; Flags: overwritereadonly ignoreversion
-Source: {#OSGHOME}\lib\osgPlugins-2.6.1\osgdb_rgb.dll; DestDir: {app}; Components: ; Flags: overwritereadonly ignoreversion
-Source: {#OSGHOME}\lib\osgPlugins-2.6.1\osgdb_tiff.dll; DestDir: {app}; Components: ; Flags: overwritereadonly ignoreversion
+Source: {#OSGHOME}\lib\osgPlugins-2.8.2\osgdb_ive.dll; DestDir: {app}; Components: ; Flags: overwritereadonly ignoreversion
+Source: {#OSGHOME}\lib\osgPlugins-2.8.2\osgdb_jpeg.dll; DestDir: {app}; Components: ; Flags: overwritereadonly ignoreversion
+Source: {#OSGHOME}\lib\osgPlugins-2.8.2\osgdb_gif.dll; DestDir: {app}; Components: ; Flags: overwritereadonly ignoreversion
+Source: {#OSGHOME}\lib\osgPlugins-2.8.2\osgdb_png.dll; DestDir: {app}; Components: ; Flags: overwritereadonly ignoreversion
+Source: {#OSGHOME}\lib\osgPlugins-2.8.2\osgdb_osg.dll; DestDir: {app}; Components: ; Flags: overwritereadonly ignoreversion
+Source: {#OSGHOME}\lib\osgPlugins-2.8.2\osgdb_rgb.dll; DestDir: {app}; Components: ; Flags: overwritereadonly ignoreversion
+Source: {#OSGHOME}\lib\osgPlugins-2.8.2\osgdb_tiff.dll; DestDir: {app}; Components: ; Flags: overwritereadonly ignoreversion
 Source: {#OSGPTEXPORTERHOME}\exp_isu_osg.dll; DestDir: {app}\vcplugin; Components: ; Flags: overwritereadonly ignoreversion
 Source: {#OSGPTEXPORTERHOME}\EXP_ISU_OSG.RTI; DestDir: {app}\vcplugin; Components: ; Flags: overwritereadonly ignoreversion
 Source: {#OSGPTEXPORTERHOME}\EXP_ISU_OSG.HLP; DestDir: {app}\vcplugin; Components: ; Flags: overwritereadonly ignoreversion

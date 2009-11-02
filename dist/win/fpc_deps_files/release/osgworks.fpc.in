@@ -8,7 +8,7 @@ Description: osgWorks release pre-compiled for VES
 Provides: osgWorks
 Requires: OpenSceneGraph OpenThreads
 Version: 1.0.0
-Libs: /libpath:"${libdir}" osgTools.lib
+Libs: /libpath:"${libdir}" osgwTools.lib
 Cflags: /I"${includedir}"
 Arch: noarch
 

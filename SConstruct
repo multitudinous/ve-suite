@@ -448,14 +448,14 @@ if os.path.exists(options_cache):
 if GetPlatform() == 'win32':
     if ARGUMENTS.has_key("MSVS_VERSION"):
         tempEnv[ 'MSVS_VERSION' ] = ARGUMENTS[ 'MSVS_VERSION' ]
-    elif tempArchWinEnv[ "MSVS_VERSION" ] != None:
+    elif "MSVS_VERSION" in tempArchWinEnv:
         tempEnv[ 'MSVS_VERSION' ] = tempArchWinEnv[ "MSVS_VERSION" ]
     else:
         tempEnv[ 'MSVS_VERSION' ] = "8.0"
 
     if ARGUMENTS.has_key("MSVS_ARCH"):
         tempEnv[ 'MSVS_ARCH' ] = ARGUMENTS[ 'MSVS_ARCH' ]
-    elif tempArchWinEnv[ "MSVS_ARCH" ] != None:
+    elif "MSVS_ARCH" in tempArchWinEnv:
         tempEnv[ 'MSVS_ARCH' ] = tempArchWinEnv[ "MSVS_ARCH" ]
     else:
         tempEnv[ 'MSVS_ARCH' ] = "x86"
