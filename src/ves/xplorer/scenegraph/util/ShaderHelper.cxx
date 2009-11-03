@@ -192,7 +192,10 @@ void ShaderHelper::LoadGLSLProgram( ProgramPtr glslProgram )
     }
     ///two-sided lighting hack until gl_FrontFacing works in glsl...
     ///only works if the shader implements it though...
-    m_ss->setMode( GL_VERTEX_PROGRAM_TWO_SIDE, osg::StateAttribute::ON );
+    if( m_twoSidedLighting )
+    {
+        m_ss->setMode( GL_VERTEX_PROGRAM_TWO_SIDE, osg::StateAttribute::ON );
+    }
     _attachGLSLProgramToStateSet();
 }
 ///////////////////////////////////////////////////////////////

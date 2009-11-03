@@ -420,7 +420,7 @@ ves::xplorer::scenegraph::Geode* OSGVectorStage::createInstanced(vtkPolyData* gl
         // Sample (look up) direction vector and obtain the scale factor
         "   vec4 dir = texture3D( texDir, tC );\n"
         "   float scale = length( dir );\n"
-        "   const mat3 orientMat = makeOrientMat( dir ); \n"
+        "   const mat3 orientMat = makeOrientMat( normalize( dir ) ); \n"
         "   const vec3 oVec = orientMat * (scale * gl_Vertex.xyz);\n"
         "   vec4 hoVec = vec4( oVec + pos, 1.0 ); \n"
         "   gl_Position = gl_ModelViewProjectionMatrix * hoVec; \n"
