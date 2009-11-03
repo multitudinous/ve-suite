@@ -86,7 +86,7 @@ public:
 
     ///Load and create the stateset for transparency shader
     void LoadTransparencyProgram();
-#ifdef _OSG
+
     ///Get the created state set representing the shader
     osg::StateSet* GetProgramStateSet();
 
@@ -94,12 +94,13 @@ public:
     ///\param shader The state set representing the shader.
     void SetStateSet( osg::StateSet* shader );
 
-#elif _PERFORMER
-#endif
     ///Update a uniform.
     ///\param The uniform to update.
     void UpdateUniform( ves::open::xml::shader::UniformPtr uniformToUpdate );
 
+    ///Set wether to use two sided lighting
+    void SetTwoSidedLighting( bool twoSided );
+    
     ///Equal operator
     ///\param rhs Right hand side.
     ShaderHelper& operator=( const ShaderHelper& rhs );
@@ -121,7 +122,6 @@ protected:
     ///\param textureImage The texture image data.
     void _extractTextureFromShader( ves::open::xml::shader::TextureImagePtr textureImage );
 
-#ifdef _OSG
     ///Extract the wrap modes for the texture images
     ///\param texture The texture.
     ///\param param The wrap parameter
@@ -129,16 +129,14 @@ protected:
     void _setWrapOnTexture( osg::Texture* texture,
                             osg::Texture::WrapParameter param,
                             std::string wrapMode );
-#endif
+
     std::vector<std::string> m_vertexUniformNames;///<Vertex program uniform names.
     std::vector<std::string> m_fragmentUniformNames;///<Fragment program uniform names.
-#ifdef _OSG
     osg::ref_ptr<osg::Shader> m_vshader;///<The vertex shader.
     osg::ref_ptr<osg::Shader> m_fshader;///<The fragment shader.
     osg::ref_ptr<osg::Program> m_glslProgram;///<The GLSL program.
     osg::ref_ptr<osg::StateSet> m_ss;///<The stateset representing the GLSL program.
-#elif _PERFORMER
-#endif
+    bool m_twoSidedLighting;
 };
 }
 }

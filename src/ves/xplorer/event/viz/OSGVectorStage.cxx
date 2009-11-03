@@ -380,10 +380,8 @@ ves::xplorer::scenegraph::Geode* OSGVectorStage::createInstanced(vtkPolyData* gl
         "} \n" //25
         " \n"
         "mat3 \n"
-        "makeOrientMat( const in vec3 tC ) \n"
+        "makeOrientMat( const in vec4 dir ) \n"
         "{ \n"
-        "   vec4 dir = texture3D( texDir, tC ); \n"
-
         // Compute a vector at a right angle to the direction.
         // First try projection direction into xy rotated -90 degrees.
         // If that gives us almost the same vector we started with,
@@ -395,7 +393,7 @@ ves::xplorer::scenegraph::Geode* OSGVectorStage::createInstanced(vtkPolyData* gl
         "   } \n"
         "   normalize( c ); \n"
         " \n"
-        "   const vec3 up = cross( c.xyz, dir.xyz ); \n"
+        "   const vec3 up = normalize( cross( c.xyz, dir.xyz ) ); \n"
         " \n"
         // Orientation uses the cross product vector as x,
         // the up vector as y, and the direction vector as z.
@@ -419,8 +417,11 @@ ves::xplorer::scenegraph::Geode* OSGVectorStage::createInstanced(vtkPolyData* gl
         //"   gl_Position = (gl_ModelViewProjectionMatrix * mV * gl_Vertex); \n"
         "   vec4 pos = texture3D( texPos, tC ); \n"
         // Create an orientation matrix. Orient/transform the arrow.
-        "   const mat3 orientMat = makeOrientMat( tC ); \n"
-        "   const vec3 oVec = orientMat * gl_Vertex.xyz; \n"
+        // Sample (look up) direction vector and obtain the scale factor
+        "   vec4 dir = texture3D( texDir, tC );\n"
+        "   float scale = length( dir );\n"
+        "   const mat3 orientMat = makeOrientMat( dir ); \n"
+        "   const vec3 oVec = orientMat * (scale * gl_Vertex.xyz);\n"
         "   vec4 hoVec = vec4( oVec + pos, 1.0 ); \n"
         "   gl_Position = gl_ModelViewProjectionMatrix * hoVec; \n"
 

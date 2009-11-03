@@ -44,8 +44,9 @@
 
 // --- OSG Includes --- //
 #include <osg/BlendFunc>
-//#include <osgDB/WriteFile>
 #include <osg/Sequence>
+
+#include <osgDB/WriteFile>
 
 using namespace ves::xplorer;
 
@@ -210,13 +211,18 @@ void cfdGraphicsObject::SetGeodes( ves::xplorer::cfdObjects* input )
             geodes.push_back( geodeList.at( i ) );
         }
 
-        if( !isStreamLine && !input->IsGPUTools() )
+        if( !isStreamLine )
         {
             //Add phong shading to the geodes
             osg::ref_ptr< osg::StateSet > geodeProperties = geodes.at( i )->getOrCreateStateSet();
             ves::xplorer::scenegraph::util::PhongLoader phongShader;
+            if( !input->IsGPUTools() )
+            {
+                phongShader.SetTwoSidedLighting( false );
+            }
             phongShader.SetStateSet( geodeProperties.get() );
             phongShader.SyncShaderAndStateSet();
+            osgDB::writeNodeFile( *(geodes.at(i).get()), "gpu_vector_field_phong.ive" );
         }
     }
 }

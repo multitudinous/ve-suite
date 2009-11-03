@@ -67,10 +67,6 @@ PhongLoader::~PhongLoader()
 /////////////////////////////////////////////////////////////////////////////////
 void PhongLoader::_loadShader( std::string vertexSource, std::string fragmentSource )
 {
-#ifdef _OSG
-    //std::cout<<"Loading shader!!"<<std::endl;
-    //std::cout<<"vertex shader!!"<<std::endl<<vertexSource<<std::endl;
-    //std::cout<<"frag shader!!"<<std::endl<<fragmentSource<<std::endl;
     ShaderPtr vertShader(  new Shader() );
     vertShader->SetShaderType( "Vertex" );
     vertShader->SetShaderSource( vertexSource );
@@ -129,9 +125,10 @@ void PhongLoader::_loadShader( std::string vertexSource, std::string fragmentSou
     LoadGLSLProgram( glslProgram );
 
     //enable 2 sided lighting fix
-    m_ss->setMode( GL_VERTEX_PROGRAM_TWO_SIDE, osg::StateAttribute::ON );
-#elif _PERFORMER
-#endif
+    if( m_twoSidedLighting )
+    {
+        m_ss->setMode( GL_VERTEX_PROGRAM_TWO_SIDE, osg::StateAttribute::ON );
+    }
 }
 /////////////////////////////////////////
 void PhongLoader::SyncShaderAndStateSet()
@@ -191,3 +188,4 @@ void PhongLoader::SyncShaderAndStateSet()
     );
     _loadShader( vSource, fSource );
 }
+////////////////////////////////////////////////////////////////////////////////
