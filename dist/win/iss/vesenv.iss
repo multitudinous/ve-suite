@@ -2,20 +2,20 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 #define VEVERSION "1.1.9"
 #define SVNVERSION "13703"
-#define MSVCVERSION "msvc-8.0-sp1-x86"
+#define MSVCVERSION "msvc-9.0-sp1-x86"
 ; Define the group name for all the windows links to be
 ; installed under for the Start Menu
 #define VESGROUPNAME "VE-Suite"
 ; Location where all of the ves dependencies are installed
-#define DEPENDSINSTALLHOME "C:\dev\ves_deps"
+#define DEPENDSINSTALLHOME "C:\Projects"
 ; Location where you want innosetup to build the installers
-#define INSTALLERINSTALLLOCATION "C:\dev\VE_Suite\dist\win\iss"
+#define INSTALLERINSTALLLOCATION "C:\Projects\VE_Suite\dist\win\iss"
 ; Install prefix of ves
-#define VEINSTALLHOME "C:\dev\VE_Suite\install-debug"
+#define VEINSTALLHOME "C:\Projects\VE_Suite\install-debug"
 ; Source root location for ves
-#define VEDEVHOME "C:\dev\VE_Suite"
+#define VEDEVHOME "C:\Projects\VE_Suite"
 ; Location if the Microsoft redistributable executable
-#define MSREDISTRIBUTABLE "C:\dev\ves_deps\vcredist_x86.exe"
+#define MSREDISTRIBUTABLE "C:\Projects\vcredist_x86.exe"
 ; Directory names for all VES dependencies
 #define ACETAOHOME "ACETAO_5.6.8_Pre-Compile_vc8.0_SP1"
 #define VTKHOME "VTK_5.2.0"

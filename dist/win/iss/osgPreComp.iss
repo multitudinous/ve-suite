@@ -6,10 +6,10 @@
 #define MyAppVerName "OSG"
 #define MyAppPublisher "VERG"
 #define MyAppURL "www.vesuite.org"
-#define OSGSRCHOME "C:\dev\ves_deps\OpenSceneGraph-2.8.2\install-win32"
+#define OSGSRCHOME "C:\Projects\OpenSceneGraph"
 ; #define SIMAGEHOME "D:\devEnv\VES-Deps_1.1\prebuiltInstalls\simage-1.6.1"
-#define COINHOME "C:\dev\ves_deps\Coind3D-2.3.0-0"
-#define OSG3RDPARTY "C:\dev\ves_deps\3rdParty\3rdParty_win32binaries_vs80sp1"
+#define COINHOME "C:\Projects\ves_windows\coin"
+#define OSG3RDPARTY "C:\Projects\ves-windows\OpenSceneGraph-2.8.2\3rdParty"
 
 [Setup]
 AppName={#MyAppName}
@@ -64,9 +64,9 @@ Source: {#OSG3RDPARTY}\bin\*.dll; DestDir: {app}\lib; Flags: ignoreversion recur
 Source: {#OSG3RDPARTY}\lib\*.lib; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: {#OSG3RDPARTY}\include\*.h; DestDir: {app}\include; Flags: ignoreversion recursesubdirs createallsubdirs
 ;Coin libraries
-Source: {#COINHOME}\bin\*.dll; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: {#COINHOME}\lib\*.lib; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: {#COINHOME}\include\*.h; DestDir: {app}\include; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: {#COINHOME}\bin\*.dll; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs skipifsourcedoesntexist
+Source: {#COINHOME}\lib\*.lib; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs skipifsourcedoesntexist
+Source: {#COINHOME}\include\*.h; DestDir: {app}\include; Flags: ignoreversion recursesubdirs createallsubdirs skipifsourcedoesntexist
 ;FPC file integration
 Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\OSG.fpc.in; DestDir: {app}\lib\flagpoll; DestName: OSG.fpc; Languages: ; Flags: ignoreversion
 

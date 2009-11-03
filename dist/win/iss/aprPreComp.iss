@@ -2,28 +2,28 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #include <vesenv.iss>
-#define APRVERSION "1.3"
+#define MyAppVer "1.3"
 #define MyAppName "APR Pre-Compile"
-#define MyAppVerName "apr_{#APRVERSION}  Pre-Compile_vc{#MSVCVERSION}"
+#define MyAppVerName "APR"
 #define MyAppPublisher "VERG"
 #define MyAppURL "www.vesuite.org"
 ;The directory below contains all each apr, apr-iconv, and apr-util
 ;The versioned directories have been copied to be easier to build
 ;and less version dependent when running this installer
-#define APRINSTALL "C:\dev\ves_deps\apr"
+#define APRINSTALL "C:\Projects\ves-windows\workapr"
 
 [Setup]
 AppName={#MyAppName}
-AppVerName=apr_{#APRVERSION} Pre-Compile_vc{#MSVCVERSION}
+AppVerName={#MyAppVerName}_{#MyAppVer}_{#MSVCVERSION}
 AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
-DefaultDirName=C:\apr_{#APRVERSION}_Pre-Compile
-DefaultGroupName={#VESGROUPNAME}
+DefaultDirName=C:\{#MyAppVerName}_{#MyAppVer}_{#MSVCVERSION}
+DefaultGroupName={#VESGROUPNAME}\Uninstallers
 AllowNoIcons=true
-OutputBaseFilename=apr_PreCompile_{#APRVERSION}
-SetupIconFile={#VEDEVHOME}\dist\installerImages\Ve_icon.ico
+OutputBaseFilename={#MyAppVerName}_{#MyAppVer}_{#MSVCVERSION}
+SetupIconFile={#VEDEVHOME}\dist\installerImages\ves_icon.ico
 Compression=lzma
 SolidCompression=true
 WindowVisible=true
@@ -34,11 +34,18 @@ WizardImageBackColor=clWhite
 WizardSmallImageFile={#VEDEVHOME}\dist\installerImages\ve_icon.bmp
 WizardImageStretch=false
 OutputDir={#INSTALLERINSTALLLOCATION}
+AllowRootDirectory=true
+EnableDirDoesntExistWarning=true
 PrivilegesRequired=none
+RestartIfNeededByRun=false
 UsePreviousGroup=false
-
+AppendDefaultGroupName=true
+TimeStampsInUTC=true
+DisableProgramGroupPage=false
+Uninstallable=true
 [Languages]
-Name: english; MessagesFile: compiler:Default.isl
+Name: eng; MessagesFile: compiler:Default.isl
+
 
 [Files]
 Source: {#APRINSTALL}\apr-util\Release\*.dll; DestDir: {app}\lib; Flags: ignoreversion
@@ -53,5 +60,6 @@ Source: {#APRINSTALL}\apr-iconv\include\*.h; DestDir: {app}\include; Flags: igno
 ;FPC file integration
 Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\apr-1.pc.in; DestDir: {app}\lib\flagpoll; DestName: apr-1.fpc; Languages: ; Flags: ignoreversion
 Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\apr-util-1.pc.in; DestDir: {app}\lib\flagpoll; DestName: apr-util-1.fpc; Languages: ; Flags: ignoreversion
-;[Icons]
-;Name: {group}\{cm:UninstallProgram,{#MyAppName}}; Filename: {uninstallexe}; Languages:
+
+[Icons]
+Name: {group}\{cm:UninstallProgram,{#MyAppName}}; Filename: {uninstallexe}; Languages:

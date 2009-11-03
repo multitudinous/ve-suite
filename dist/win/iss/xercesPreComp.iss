@@ -2,24 +2,24 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #include <vesenv.iss>
-#define XERCESVERSION "2.8"
+#define MyAppVer "2.8"
 #define MyAppName "Xerces-c Pre-Compile"
-#define MyAppVerName "Xerces-c_{#XERCESVERSION}  Pre-Compile_vc{#MSVCVERSION}"
+#define MyAppVerName "Xerces"
 #define MyAppPublisher "VERG"
 #define MyAppURL "www.vesuite.org"
-#define XERCESSRCINSTALL "C:\dev\ves_deps\xerces-c_2_8_0-x86-windows-vc_8_0"
+#define XERCESSRCINSTALL "C:\Projects\ves-windows\xerces-c_2_8_0\xerces-c_2_8_0-x86-windows-vc_8_0"
 [Setup]
 AppName={#MyAppName}
-AppVerName=Xerces-c_{#XERCESVERSION} Pre-Compile_vc{#MSVCVERSION}
+AppVerName={#MyAppVerName}_{#MyAppVer}_{#MSVCVERSION}
 AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
-DefaultDirName=C:\Xerces-c_{#XERCESVERSION}_Pre-Compile
-DefaultGroupName={#VESGROUPNAME}
-AllowNoIcons=false
-OutputBaseFilename=xerces-c_PreCompile_{#XERCESVERSION}
-SetupIconFile={#VEDEVHOME}\dist\installerImages\Ve_icon.ico
+DefaultDirName=C:\{#MyAppVerName}_{#MyAppVer}_{#MSVCVERSION}
+DefaultGroupName={#VESGROUPNAME}\Uninstallers
+AllowNoIcons=true
+OutputBaseFilename={#MyAppVerName}_{#MyAppVer}_{#MSVCVERSION}
+SetupIconFile={#VEDEVHOME}\dist\installerImages\ves_icon.ico
 Compression=lzma
 SolidCompression=true
 WindowVisible=true
@@ -30,11 +30,17 @@ WizardImageBackColor=clWhite
 WizardSmallImageFile={#VEDEVHOME}\dist\installerImages\ve_icon.bmp
 WizardImageStretch=false
 OutputDir={#INSTALLERINSTALLLOCATION}
+AllowRootDirectory=true
+EnableDirDoesntExistWarning=true
 PrivilegesRequired=none
+RestartIfNeededByRun=false
 UsePreviousGroup=false
-
+AppendDefaultGroupName=true
+TimeStampsInUTC=true
+DisableProgramGroupPage=false
+Uninstallable=true
 [Languages]
-Name: english; MessagesFile: compiler:Default.isl
+Name: eng; MessagesFile: compiler:Default.isl
 
 [Files]
 ;Data for source build

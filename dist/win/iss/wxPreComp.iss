@@ -2,24 +2,24 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #include <vesenv.iss>
-#define WXVERSION "2.8.9"
-#define MyAppName "WxWidgets Pre-Compile"
-#define MyAppVerName "WxWidgets_{#WXVERSION} Pre-Compile_vc{#MSVCVERSION}"
+#define MyAppVer "2.8.10"
+#define MyAppName "WXWidgets Pre-Compile"
+#define MyAppVerName "WXWidgets"
 #define MyAppPublisher "Virtual Engineering Research Group, Iowa State University"
 #define MyAppURL "www.vesuite.org"
-#define WXSRCINSTALL "C:\dev\ves_deps\wxWidgets-2.8.9"
+#define WXSRCINSTALL "C:\wxWidgets-2.8.10"
 [Setup]
-AppName=WxWidgets Pre-Compile
-AppVerName=WxWidgets_{#WXVERSION} Pre-Compile_vc{#MSVCVERSION}
+AppName={#MyAppName}
+AppVerName={#MyAppVerName}_{#MyAppVer}_{#MSVCVERSION}
 AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
-DefaultDirName=C:\WxWidgets_{#WXVERSION}_Pre-Compile_vc{#MSVCVERSION}
-DefaultGroupName={#VESGROUPNAME}
+DefaultDirName=C:\{#MyAppVerName}_{#MyAppVer}_{#MSVCVERSION}
+DefaultGroupName={#VESGROUPNAME}\Uninstallers
 AllowNoIcons=true
-OutputBaseFilename=wx{#WXVERSION}-precompile_{#MSVCVERSION}
-SetupIconFile={#VEDEVHOME}\dist\installerImages\Ve_icon.ico
+OutputBaseFilename={#MyAppVerName}_{#MyAppVer}_{#MSVCVERSION}
+SetupIconFile={#VEDEVHOME}\dist\installerImages\ves_icon.ico
 Compression=lzma
 SolidCompression=true
 WindowVisible=true
@@ -30,9 +30,15 @@ WizardImageBackColor=clWhite
 WizardSmallImageFile={#VEDEVHOME}\dist\installerImages\ve_icon.bmp
 WizardImageStretch=false
 OutputDir={#INSTALLERINSTALLLOCATION}
-AppVersion={#WXVERSION}_{#VEVERSION}
+AllowRootDirectory=true
+EnableDirDoesntExistWarning=true
 PrivilegesRequired=none
+RestartIfNeededByRun=false
 UsePreviousGroup=false
+AppendDefaultGroupName=true
+TimeStampsInUTC=true
+DisableProgramGroupPage=false
+Uninstallable=true
 [Languages]
 Name: eng; MessagesFile: compiler:Default.isl
 
