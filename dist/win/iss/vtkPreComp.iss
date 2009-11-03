@@ -48,3 +48,6 @@ Source: {#VTKSRCHOME}\bin\*.dll; DestDir: {app}\lib; Flags: ignoreversion recurs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 ;FPC file integration
 Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\VTK.fpc.in; DestDir: {app}\lib\flagpoll; DestName: VTK.fpc; Languages: ; Flags: ignoreversion
+
+[Icons]
+Name: {group}\{cm:UninstallProgram,{#MyAppName}}; Filename: {uninstallexe}; Languages:

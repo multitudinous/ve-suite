@@ -3,8 +3,8 @@
 
 #include <vesenv.iss>
 #define MyAppVer "2.8.10"
-#define MyAppName "WXWidgets Pre-Compile"
-#define MyAppVerName "WXWidgets"
+#define MyAppName "wxWidgets Pre-Compile"
+#define MyAppVerName "wxWidgets"
 #define MyAppPublisher "Virtual Engineering Research Group, Iowa State University"
 #define MyAppURL "www.vesuite.org"
 #define WXSRCINSTALL "C:\wxWidgets-2.8.10"
@@ -51,3 +51,6 @@ Source: {#WXSRCINSTALL}\lib\vc_dll\*.lib; DestDir: {app}\lib\vc_dll\; Flags: ign
 Source: {#WXSRCINSTALL}\lib\vc_dll\*.h; DestDir: {app}\lib\vc_dll\; Flags: ignoreversion recursesubdirs createallsubdirs
 ;FPC file integration
 Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\wxWidgets.fpc.in; DestDir: {app}\lib\vc_dll\flagpoll; DestName: wxWidgets.fpc; Languages: ; Flags: ignoreversion
+
+[Icons]
+Name: {group}\{cm:UninstallProgram,{#MyAppName}}; Filename: {uninstallexe}; Languages:

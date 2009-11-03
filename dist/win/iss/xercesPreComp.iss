@@ -55,3 +55,6 @@ Source: {#XERCESSRCINSTALL}\include\*.h*; DestDir: {app}\include; Flags: ignorev
 Source: {#XERCESSRCINSTALL}\include\*.c; DestDir: {app}\include; Flags: ignoreversion recursesubdirs createallsubdirs
 ;FPC file integration
 Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\xerces.fpc.in; DestDir: {app}\lib\flagpoll; DestName: xerces.fpc; Languages: ; Flags: ignoreversion
+
+[Icons]
+Name: {group}\{cm:UninstallProgram,{#MyAppName}}; Filename: {uninstallexe}; Languages:
