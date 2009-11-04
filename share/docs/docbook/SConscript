@@ -2,6 +2,7 @@ import os, sys, string
 import SConsAddons.Util
 from SCons.Util import WhereIs
 pj = os.path.join
+import SConsAddons.Util as sca_util
 
 Import('ves_pkg', 'RootDir')
 env = ves_pkg.getEnv().Clone()
@@ -122,6 +123,21 @@ env.htmlChunk(target = htmlChunkTargets, source = resolvedSrcs)
 
 env.Depends( pdfTargets, foedSrcs)
 env.pdf(target = pdfTargets, source = foedSrcs)
+
+# now install everything
+docsBundle = ves_pkg.createFileBundle( pj('share','vesuite','docs') )
+docsFile = sca_util.getFilesRecursiveByExt( pj(RootDir, 'share','docs','docbook'), ['.html'] )
+pdfFile = sca_util.getFilesRecursiveByExt( pj(RootDir, 'share','docs','docbook'), ['.pdf'] )
+imagesFile = sca_util.getFilesRecursiveByExt( pj(RootDir, 'share','docs','docbook','xml_sources'), ['.jpg'] )
+imagesFile += sca_util.getFilesRecursiveByExt( pj(RootDir, 'share','docs','docbook','xml_sources'), ['.png'] )
+imagesFile += sca_util.getFilesRecursiveByExt( pj(RootDir, 'share','docs','docbook','xml_sources'), ['.gif'] )
+
+imagesFile = map(lambda s: pj( 'xml_sources', s), imagesFile)
+
+docsBundle.addFiles( docsFile )
+docsBundle.addFiles( pdfFile )
+docsBundle.addFiles( imagesFile, prefix=pj('vesuite_docs','images'), useRelPath=False )
+docsBundle.addFiles( imagesFile, prefix=pj('vesuite_docs-multipage','images'), useRelPath=False )
 
 ##Extra cleaning
 #for chunkTarget in htmlChunkTargets:

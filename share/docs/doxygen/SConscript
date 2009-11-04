@@ -18,6 +18,13 @@ else:
     sys.stdout.write("Found doxygen\n")
     sys.stdout.write("Generating doxygen files....\n")
 
-os.popen(doxygen_cmd)
+#os.popen(doxygen_cmd)
+
+doxyAction = doxygen_cmd
+
+doxyBuilder = Builder(action = doxyAction, single_source = True,
+                            suffix = ".html")
+
+env.Append(BUILDERS = {'doxyResolve': doxyBuilder})
 
 sys.stdout.write("Done generating documentation\n")

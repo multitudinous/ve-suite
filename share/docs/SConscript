@@ -6,22 +6,22 @@ import SConsAddons.Util as sca_util
 Import('ves_pkg', 'RootDir')
 env = ves_pkg.getEnv().Clone()
 
-launcherBundle = ves_pkg.createFileBundle( pj('share','vesuite') )
+#launcherBundle = ves_pkg.createFileBundle( pj('share','vesuite') )
 ##Move Docbook files to PREFIX(Install Directory) if it exists.
 docbookDirectory = pj(RootDir, 'share','docs','docbook','vesuite_docs')
 
-docsFile = sca_util.getFilesRecursiveByExt( '.', ['.pdf'] )
-docsFile += sca_util.getFilesRecursiveByExt( '.', ['.html'] )
-docsFile += sca_util.getFilesRecursiveByExt( '.', ['.jpg'] )
-docsFile += sca_util.getFilesRecursiveByExt( '.', ['.gif'] )
-docsFile += sca_util.getFilesRecursiveByExt( '.', ['.png'] )
+#docsFile = sca_util.getFilesRecursiveByExt( '.', ['.pdf'] )
+#docsFile += sca_util.getFilesRecursiveByExt( '.', ['.html'] )
+#docsFile += sca_util.getFilesRecursiveByExt( '.', ['.jpg'] )
+#docsFile += sca_util.getFilesRecursiveByExt( '.', ['.gif'] )
+#docsFile += sca_util.getFilesRecursiveByExt( '.', ['.png'] )
 
-if os.path.exists(docbookDirectory):
-    print "Checking for Docbook files... [OK]"
-    launcherBundle.addFiles( docsFile )
-else:
-    print "Checking for Docbook files... [NO]"
-    print "*** If you want to generate the docbook files, please run \"scons docs\" option first. ***"
+#if os.path.exists(docbookDirectory):
+#    print "Checking for Docbook files... [OK]"
+#    launcherBundle.addFiles( docsFile )
+#else:
+#    print "Checking for Docbook files... [NO]"
+#    print "*** If you want to generate the docbook files, please run \"scons docs\" option first. ***"
 
 docSubdirs = Split("""
     docbook
