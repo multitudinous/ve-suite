@@ -40,6 +40,7 @@
 
 #include <vtkLookupTable.h>
 #include <vtkPolyData.h>
+#include <vtkCleanPolyData.h>
 
 #include <iostream>
 
@@ -267,11 +268,18 @@ float* OSGStreamlineStage::createScalarArray( vtkIdType numPoints , int mult, vt
 
 void OSGStreamlineStage::createStreamLines(vtkPolyData* polyData, ves::xplorer::scenegraph::Geode* geode, int mult, const char* scalarName)
 {
-    int numOfLine = polyData->GetNumberOfLines();
-    vtkCellArray* lines = polyData->GetLines();
+    vtkCleanPolyData* cleanPD = vtkCleanPolyData::New();
+    cleanPD->PointMergingOn();
+    cleanPD->SetInput( polyData );
+    cleanPD->Update();
+    vtkPolyData* streamlinePD = cleanPD->GetOutput();
 
-    vtkPointData *pointData = polyData->GetPointData();
-    vtkPoints *points = polyData->GetPoints();
+    int numOfLine = streamlinePD->GetNumberOfLines();
+    std::cout << numOfLine << std::endl;
+    vtkCellArray* lines = streamlinePD->GetLines();
+
+    vtkPointData *pointData = streamlinePD->GetPointData();
+    vtkPoints *points = streamlinePD->GetPoints();
     double x[3];
     double bounds[6];
     points->GetBounds(bounds);
@@ -313,8 +321,8 @@ void OSGStreamlineStage::createStreamLines(vtkPolyData* polyData, ves::xplorer::
         int tn=0;
         
         float* pos = createPositionArray( cLineNp , mult, points, pts, tm, tn);
-//        commented out scalararray as it crashes
-//        float* sca = createScalarArray( cLineNp , mult, pointData, pts, tm, tn, scalarName);
+        //commented out scalararray as it crashes
+        float* sca = createScalarArray( cLineNp , mult, pointData, pts, tm, tn, scalarName);
 
         osg::StateSet* ss = geom->getOrCreateStateSet();
 
@@ -350,7 +358,7 @@ void OSGStreamlineStage::createStreamLines(vtkPolyData* polyData, ves::xplorer::
                 "gl_Position = gl_ProjectionMatrix * v; \n"
 
                 // TBD. Need to make this configurable from a uniform.
-                "gl_PointSize = -2000. / v.z; \n"
+                "gl_PointSize = -500. / v.z; \n"
 
                 // Compute a time offset from the InstanceID to
                 // emulate motion.
@@ -441,21 +449,19 @@ void OSGStreamlineStage::createStreamLines(vtkPolyData* polyData, ves::xplorer::
 
         // specify the position texture. The vertex shader will index into
         // this texture to obtain position values for each streamline point.
-        
         osg::Image* iPos = new osg::Image;
         iPos->setImage( tm, tn, 1, GL_RGB32F_ARB, GL_RGB, GL_FLOAT,
             (unsigned char*) pos, osg::Image::USE_NEW_DELETE );
         osg::Texture2D* texPos = new osg::Texture2D( iPos );
         texPos->setFilter( osg::Texture2D::MIN_FILTER, osg::Texture2D::NEAREST );
         texPos->setFilter( osg::Texture2D::MAG_FILTER, osg::Texture2D::NEAREST );
+        //NOTE: Texture slot 1 is used by the splotch.png image
         ss->setTextureAttribute( 0, texPos );
 
         osg::ref_ptr< osg::Uniform > texPosUniform =
             new osg::Uniform( "texPos", 0 );
         ss->addUniform( texPosUniform.get() );
         
-//        commenting out scalararray related stuff
-/*
         //send down rgb using texture
         osg::Image* iSca = new osg::Image;
         iSca->setImage( tm, tn, 1, GL_RGB32F_ARB, GL_RGB, GL_FLOAT,
@@ -463,13 +469,12 @@ void OSGStreamlineStage::createStreamLines(vtkPolyData* polyData, ves::xplorer::
         osg::Texture2D* texSca = new osg::Texture2D( iSca );
         texSca->setFilter( osg::Texture2D::MIN_FILTER, osg::Texture2D::NEAREST );
         texSca->setFilter( osg::Texture2D::MAG_FILTER, osg::Texture2D::NEAREST );
-
+        //NOTE: Texture slot 1 is used by the splotch.png image
         ss->setTextureAttribute( 2, texSca );
 
         osg::ref_ptr< osg::Uniform > texScaUniform =
             new osg::Uniform( "texSca", 2 );
         ss->addUniform( texScaUniform.get() );
-*/
     }
    
 }
@@ -517,5 +522,218 @@ ves::xplorer::scenegraph::Geode* OSGStreamlineStage::createInstanced( vtkPolyDat
     
     return geode;
 }
+/*
+void cfdAnimatedStreamlineCone::Update( void )
+{
+    m_streamlines.clear();
+    
+    vtkIdType cellId;        //vtkIdType
+    vtkIdType npts;          //vtkIdType
+    vtkPoints * points;
+    vtkPoints **pointsArray;
 
+    vprDEBUG( vesDBG, 1 )
+        << "|\tNumber of Cells : " << this->polyData->GetNumberOfCells()
+        << std::endl << vprDEBUG_FLUSH;
+    vprDEBUG( vesDBG, 1 )
+        << "|\tNumber of Lines : " << this->polyData->GetNumberOfLines()
+        << std::endl << vprDEBUG_FLUSH;
+    vprDEBUG( vesDBG, 1 )
+        << "|\tNumber of Points : " << this->polyData->GetNumberOfPoints()
+        << std::endl << vprDEBUG_FLUSH;
+    
+    int numberOfStreamLines;
+    numberOfStreamLines = this->polyData->GetNumberOfLines();
+
+    if( numberOfStreamLines == 0 )
+    {
+        std::cout << "|\tcfdAnimatedStreamlineCone::Update : Number of streamlines is 0 " << std::endl;
+        return;
+    }
+
+    // Find the maximum number of points in one streamline
+    int maxNpts = 0;
+    int minNpts = 1000000;
+
+    vtkPoints* points2 = 0;
+    double x2[ 3 ];
+    double x1[ 3 ];
+    for( cellId = 0; cellId < numberOfStreamLines; ++cellId )
+    {
+        points = this->polyData->GetCell( cellId )->GetPoints();
+        points->GetPoint( 0, x1 );
+        npts = points->GetNumberOfPoints();
+
+        bool foundmatch = false;
+        for( vtkIdType cellId2 = cellId + 1; cellId2 < numberOfStreamLines; ++cellId2 )
+        {
+            points2 = this->polyData->GetCell( cellId2 )->GetPoints();
+            points2->GetPoint( 0, x2 );
+            if( (x1[ 0 ] == x2[ 0 ]) && (x1[ 1 ] == x2[ 1 ]) && (x1[ 2 ] == x2[ 2 ]) )
+            {
+                m_streamlines.push_back( std::make_pair< vtkIdType, vtkIdType >( cellId, cellId2 ) );
+                foundmatch = true;
+                npts += points2->GetNumberOfPoints();
+                break;
+            }
+        }
+
+        vprDEBUG( vesDBG, 1 ) << "|\t\tNumber of points in cell " << cellId
+            << " = " << npts << std::endl << vprDEBUG_FLUSH;
+        if( maxNpts < npts )
+            maxNpts = npts;
+        
+        if( minNpts > npts )
+            minNpts = npts;
+        
+        if( !foundmatch )
+        {
+            bool foundstandalone = true;
+            //std::cout << "did not find match " << cellId << std::endl;
+            
+            for( size_t i = 0; i < m_streamlines.size(); ++i )
+            {
+                if( (m_streamlines.at( i ).first == cellId) || (m_streamlines.at( i ).second == cellId) )
+                {
+                    foundstandalone = false;
+                    break;
+                }
+            }
+            
+            if( !foundstandalone )
+            {
+                continue;
+            }
+            
+            bool isBackwards = IsStreamlineBackwards( cellId );
+
+            if( isBackwards )
+            {
+                //Is a backward integrated line
+                std::cout << " Use backward" << std::endl;
+                m_streamlines.push_back( std::make_pair< vtkIdType, vtkIdType >( -1, cellId ) );
+            }
+            else
+            {
+                std::cout << " Use forward" << std::endl;
+                m_streamlines.push_back( std::make_pair< vtkIdType, vtkIdType >( cellId, -1 ) );
+            }
+        }
+    }
+
+    // Define the points at each integration time step
+    pointsArray = new vtkPoints*[ maxNpts ];
+    for( size_t i = 0; i < maxNpts;  i++ )
+    {
+        pointsArray[ i ] = vtkPoints::New();
+    }
+
+    double *x;
+
+    for( size_t i = 0; i < m_streamlines.size(); ++i )
+    {
+        cellId = m_streamlines.at( i ).first;
+        // For forward integrated points
+        int forwardPoints = 0;
+        if( cellId != -1 )
+        {
+            points = polyData->GetCell( cellId )->GetPoints();
+            forwardPoints = points->GetNumberOfPoints();
+            vprDEBUG( vesDBG, 1 )
+                << "|\t\tNumber of Forward points = " << forwardPoints
+                << std::endl << vprDEBUG_FLUSH;
+            for( size_t j = 0; j < forwardPoints; ++j )
+            {
+                x = points->GetPoint( j );
+                vprDEBUG( vesDBG, 3 )
+                    << "|\t\tx[ " << j << " ] = " << x[ 0 ] << " : "
+                    << x[ 1 ] << " : " << x[ 2 ] << std::endl << vprDEBUG_FLUSH;
+                pointsArray[ j ]->InsertNextPoint( x );
+            }
+        }
+        
+        cellId = m_streamlines.at( i ).second;
+        // For backward integrated points
+        if( cellId != -1 )
+        {
+            points = polyData->GetCell( cellId )->GetPoints();
+            npts = points->GetNumberOfPoints();
+            vprDEBUG( vesDBG, 1 ) << "|\t\tNumber of Backward points = " << npts
+                << std::endl << vprDEBUG_FLUSH;
+            for( int j = npts - 1; j >= 0; j-- )
+            {
+                x = points->GetPoint( j );
+                vprDEBUG( vesDBG, 3 )
+                    << " x[ " << j << " ] = " << x[ 0 ] << " : "
+                    << x[ 1 ] << " : " << x[ 2 ] << std::endl << vprDEBUG_FLUSH;
+                pointsArray[( npts - 1 ) - j + forwardPoints]->InsertNextPoint( x );
+            }
+        }
+    }
+
+    this->sphere->SetRadius( m_streamers->GetArrowDiameter() );
+    this->sphere->SetThetaResolution( 3 );
+    this->sphere->SetPhiResolution( 3 );
+    this->sphere->Update();
+
+    vprDEBUG( vesDBG, 1 ) << "|\t\tmaxNpts = " 
+        << maxNpts << std::endl << vprDEBUG_FLUSH;
+    vprDEBUG( vesDBG, 1 ) << "|\t\tminNpts = " 
+        << minNpts << std::endl << vprDEBUG_FLUSH;
+    int w = maxNpts;
+    double decimalRatio = ( double )w / 150.0;
+    int ratio = ( int )ceil( decimalRatio );
+
+    for( size_t i = 0; i < w; i += ratio )
+    {
+        //Make ploydata from the points
+        vprDEBUG( vesDBG, 2 ) << "|\t\tcfdAnimatedStreamlineCone:: begin loop " << i << std::endl << vprDEBUG_FLUSH;
+        this->polydata->SetPoints( pointsArray[ i ] );
+        //polydata->Update();
+        //polydata->Print( cout );
+
+        //Map spheres to the polydata
+        //vprDEBUG( vesDBG, 2 ) << "|\t\tcfdAnimatedStreamlineCone:: begin loop1" << std::endl << vprDEBUG_FLUSH;
+        glyph->SetSource( this->sphere->GetOutput() );
+        glyph->SetInput( this->polydata );
+        glyph->SetScaleModeToDataScalingOff();
+        //glyph->Update();
+
+        //vprDEBUG( vesDBG, 2 ) << "|\t\tcfdAnimatedStreamlineCone:: begin loop2" << std::endl << vprDEBUG_FLUSH;
+        this->mapper->SetInput( this->glyph->GetOutput() );
+        //this->mapper->Update();
+
+
+        //vprDEBUG( vesDBG, 2 ) << "|\t\tcfdAnimatedStreamlineCone:: begin loop3" << std::endl << vprDEBUG_FLUSH;
+        vtkActor* temp = vtkActor::New();
+        temp->SetMapper( this->mapper );
+        temp->GetProperty()->SetSpecularPower( 20.0f );
+        temp->GetProperty()->SetColor( 1.0f, 0.5f, 0.15f );
+        
+        geodes.push_back( new ves::xplorer::scenegraph::Geode() );
+        geodes.back()->TranslateToGeode( temp );
+        temp->Delete();
+
+        //Make geodes from each polydata
+        //vprDEBUG( vesDBG, 2 ) << "|\t\tcfdAnimatedStreamlineCone:: begin loop4" << std::endl << vprDEBUG_FLUSH;
+        //this->_sequence->CreateGeodeVector( this->actor );
+
+        // Reset polydata to its intial state and release all memory
+        //polydata->Reset();
+        this->polydata->Initialize();
+        //vprDEBUG( vesDBG, 2 ) << "|\t\tcfdAnimatedStreamlineCone:: end loop" << std::endl << vprDEBUG_FLUSH;
+    }
+
+    //vprDEBUG( vesDBG, 1 ) << "|\t\tDeleting Point Array" << std::endl << vprDEBUG_FLUSH;
+    for( size_t i = 0; i < maxNpts;  i++ )
+    {
+        pointsArray[ i ]->Delete();
+    }
+
+    delete [] pointsArray;
+    //vprDEBUG( vesDBG, 1 ) << "|\t\tDeleting Point Array" << std::endl << vprDEBUG_FLUSH;
+
+    this->updateFlag = true;
+    vprDEBUG( vesDBG, 1 ) << "|\tExiting cfdStreamers Update " << std::endl << vprDEBUG_FLUSH;
+}*/
 

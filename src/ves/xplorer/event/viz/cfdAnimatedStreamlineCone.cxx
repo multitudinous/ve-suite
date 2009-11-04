@@ -100,12 +100,12 @@ void cfdAnimatedStreamlineCone::Update( void )
     polyData->DeepCopy( cleanPD->GetOutput() );
     cleanPD->Delete();
     
-    vtkXMLPolyDataWriter *writer = vtkXMLPolyDataWriter::New();
+    /*vtkXMLPolyDataWriter *writer = vtkXMLPolyDataWriter::New();
      writer->SetInput( polyData );
      writer->SetFileName( "outPut.vtk" );
      writer->SetDataModeToAscii();
      writer->Write();
-     writer->Delete();
+     writer->Delete();*/
     
     m_streamlines.clear();
     
