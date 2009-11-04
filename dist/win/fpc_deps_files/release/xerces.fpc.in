@@ -7,8 +7,8 @@ Name: xerces-c
 Description: xerces-c release pre-compiled for VES
 Provides: xerces-c
 Requires:
-Version: 2.7
-Libs: /libpath:"${libdir}" xerces-c_2.lib xerces-depdom_2.lib
+Version: 3.0.1
+Libs: /libpath:"${libdir}" xerces-c_3.lib xerces-depdom_3.lib
 Cflags: /I"${includedir}"
 Arch: noarch
 
