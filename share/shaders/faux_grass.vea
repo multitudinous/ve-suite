@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no" ?>
+<!-- Taken from 3Dlabs.com example granite shader-->
+
+<Program>
+   <name>Concrete</name>
+   <vertexShader>
+      <type>Vertex</type>
+      <uniform>
+         <name>Scale</name>
+         <type>Float</type>
+         <size>1</size>
+         <value>1.0</value>
+      </uniform>
+      <shaderCode>
+          varying vec3 lightPos;
+          varying vec3 eyePos;
+          varying vec3 normal;
+          varying float LightIntensity;
+          varying vec3  MCposition;
+          uniform float Scale;
+
+          void main()
+          {
+              vec3 ECposition = vec3(gl_ModelViewMatrix * gl_Vertex);
+              MCposition      = vec3(gl_Vertex) * Scale;
+              normal      = normalize(vec3(gl_NormalMatrix * gl_Normal));
+	      eyePos=vec3(gl_ModelViewMatrix*gl_Vertex);
+              lightPos = gl_LightSource[0].position.xyz;
+              LightIntensity  = dot(normalize(lightPos - ECposition), normal);
+              LightIntensity *= 1.5;
+              gl_FrontSecondaryColor=vec4(1.0);
+              gl_BackSecondaryColor=vec4(0.0);
+              gl_Position     = ftransform();
+          }
+      </shaderCode>
+   </vertexShader>
+   <fragmentShader>
+      <type>Fragment</type>
+      <uniform>
+          <name>Noise</name>
+	    <type>Sampler</type>
+	    <size>1</size>
+	    <textureUnit>0</textureUnit>
+      </uniform>
+      <textureImage>
+        <textureDescriptionData commandName="Texture Image Data">
+          <parameter dataName="Dimension" id="0180d9f7-0bea-4443-84c6-d1688f6ac224">
+            <dataValue type="xs:unsignedInt">3</dataValue>
+          </parameter>
+          <parameter dataName="Unit" id="ba25effc-1708-4ed1-a20d-f58b95e5ce51">
+            <dataValue type="xs:unsignedInt">0</dataValue>
+          </parameter>
+          <parameter dataName="Type" id="463e86b8-d051-4dc7-bf98-a59e22199a60">
+            <dataValue type="xs:string">Perlin Noise</dataValue>
+          </parameter>
+          <parameter dataName="Minification" id="d5596672-146b-429f-a1d5-76bb0e6566b5">
+            <dataValue type="xs:string">Linear</dataValue>
+          </parameter>
+          <parameter dataName="Magnification" id="97f0f174-1603-4856-bf60-5ed975fd65df">
+            <dataValue type="xs:string">Linear</dataValue>
+          </parameter>
+          <parameter dataName="Wrap S" id="a17c8c5f-b8c3-4ed3-a2d0-4ff5eed6044d">
+            <dataValue type="xs:string">Repeat</dataValue>
+          </parameter>
+          <parameter dataName="Wrap T" id="27d5b8dd-adfb-462b-84c6-cd3ce082c4ed">
+            <dataValue type="xs:string">Repeat</dataValue>
+          </parameter>
+          <parameter dataName="Wrap R" id="1607d172-163f-4524-b0e8-358967918268">
+            <dataValue type="xs:string">Repeat</dataValue>
+          </parameter>
+        </textureDescriptionData>
+      </textureImage>
+     <uniform>
+        <name>NoiseScale</name>
+        <type>Float</type>
+        <size>1</size>
+        <value>1.0</value>
+     </uniform>
+     <shaderCode>
+         varying vec3 lightPos;
+         varying vec3 eyePos;
+         varying vec3 normal;
+         varying float LightIntensity;
+         varying vec3  MCposition;
+
+         uniform sampler3D Noise;
+         uniform float NoiseScale;
+
+         void main()
+         {
+         float specularPower = 10.0;
+         vec4  noisevec  = texture3D(Noise, NoiseScale * MCposition);
+         float intensity = min(1.0, noisevec[3] * 18.0);
+         float greenColor = min( 0.5, intensity * LightIntensity );
+         vec3 graniteColor = vec3(0,greenColor,0);
+
+         vec3 N=(step(gl_SecondaryColor.r,.5)== 1.0 )?-normalize(normal):normalize(normal);
+
+         vec3 L=normalize(lightPos);
+         float NDotL=max(dot(N,L),0.0);
+
+         vec3 V=normalize(eyePos);
+         vec3 R=reflect(V,N);
+         float RDotL=max(dot(R,L),0.0);
+
+         vec3 TotalAmbient=gl_LightSource[0].ambient.rgb*graniteColor;
+         vec3 TotalDiffuse=gl_LightSource[0].diffuse.rgb*graniteColor*NDotL;
+         vec3 TotalSpecular=gl_LightSource[0].specular.rgb*vec3(.1,.1,.1)*pow(RDotL,specularPower);
+         gl_FragColor    = vec4(TotalAmbient+TotalDiffuse+TotalSpecular, 1.0);
+         }
+     </shaderCode>
+  </fragmentShader>
+</Program>
+
+
