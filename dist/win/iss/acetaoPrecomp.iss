@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 #include <vesenv.iss>
 #define MyAppVer "5.7.0"
-#define MyAppName "ACE/TAO Pre-Compile"
+#define MyAppName "ACE-TAO Pre-Compile"
 #define MyAppVerName "ACETAO"
 #define MyAppPublisher "VERG"
 #define MyAppURL "www.vesuite.org"
@@ -15,7 +15,7 @@ AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
 DefaultDirName=C:\{#MyAppVerName}_{#MyAppVer}_{#MSVCVERSION}
-DefaultGroupName={#VESGROUPNAME}\Uninstallers
+DefaultGroupName={#VESGROUPNAME}\Uninstallers_{#MSVCVERSION}
 AllowNoIcons=true
 OutputBaseFilename={#MyAppVerName}_{#MyAppVer}_{#MSVCVERSION}
 SetupIconFile={#VEDEVHOME}\dist\installerImages\ves_icon.ico
