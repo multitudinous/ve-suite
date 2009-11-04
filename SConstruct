@@ -1,6 +1,5 @@
 #!python
 EnsureSConsVersion(1,2)
-SConsignFile()
 # See this page for more information about these options
 # http://scons.org/wiki/GoFastButton
 SetOption('max_drift', 1)
@@ -189,6 +188,9 @@ if ARGUMENTS.has_key("options_file"):
 
 opts = SConsAddons.Options.Options(files = [options_cache, 'options.custom'],
                                    args= ARGUMENTS)
+options_cache+=".dblite"
+SConsignFile(options_cache)
+
 
 if GetPlatform() == 'win32':
     vtk_options = fp_option.FlagPollBasedOption("VTK",
