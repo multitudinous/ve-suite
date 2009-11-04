@@ -188,9 +188,8 @@ if ARGUMENTS.has_key("options_file"):
 
 opts = SConsAddons.Options.Options(files = [options_cache, 'options.custom'],
                                    args= ARGUMENTS)
-options_cache+=".dblite"
-SConsignFile(options_cache)
-
+options_db_cache = options_cache + ".dblite"
+SConsignFile(options_db_cache)
 
 if GetPlatform() == 'win32':
     vtk_options = fp_option.FlagPollBasedOption("VTK",
