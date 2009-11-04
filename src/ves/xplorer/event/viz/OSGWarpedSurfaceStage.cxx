@@ -315,26 +315,6 @@ void OSGWarpedSurfaceStage::createMeshData( osg::Geometry* geom, vtkPolyData* po
             new osg::Uniform( "surfaceWarpScale", m_surfaceWarpScale );
         ss->addUniform( surfaceWarpUniform.get() );
     }
-    
-    /*std::string vSource(
-                        "varying vec3 color;\n"
-                        "varying vec3 lightPos;\n"
-                        "varying vec3 objPos;\n"
-                        "varying vec3 eyePos;\n"
-                        "varying vec3 normal;\n"
-                        "void main()\n"
-                        "{\n"
-                        "        gl_Position=ftransform();\n"
-                        
-                        "        color=gl_Color.xyz;\n"
-                        "                objPos=gl_Vertex.xyz;\n"
-                        "        eyePos=vec3(gl_ModelViewMatrix*gl_Vertex);\n"
-                        "                lightPos=gl_LightSource[0].position.xyz;\n"
-                        "        normal=vec3(gl_NormalMatrix*gl_Normal);\n"
-                        "        gl_FrontSecondaryColor=vec4(1.0);\n"
-                        "        gl_BackSecondaryColor=vec4(0.0);\n"
-                        "}\n"
-                        );*/
                 
     std::string vertexSource =
 
@@ -342,28 +322,45 @@ void OSGWarpedSurfaceStage::createMeshData( osg::Geometry* geom, vtkPolyData* po
         "uniform sampler2D texColor; \n"
         "uniform float osg_SimulationTime; \n"
         "uniform float surfaceWarpScale; \n"
-    
+        //Phong shading variables
+        "varying vec3 color; \n"
+        "varying vec3 lightPos; \n"
+        "varying vec3 objPos; \n"
+        "varying vec3 eyePos; \n"
+        "varying vec3 normal; \n"
+        
         "void main() \n"
         "{ \n"
 
             "float a = mod( osg_SimulationTime*100.0, 314.0) * 0.01; \n"
             "float scalar =  sin(a) * surfaceWarpScale;\n"
             "vec4 vecOff = scalar * texture2D( texVec, gl_MultiTexCoord0.st ); \n"
-            "vec4 color = texture2D( texColor, gl_MultiTexCoord0.st ); \n"
+            "vec4 tempColor = texture2D( texColor, gl_MultiTexCoord0.st ); \n"
             "vec4 position = vec4( (gl_Vertex.xyz + vecOff.xyz), gl_Vertex.w ); \n"
             
             "gl_Position = gl_ProjectionMatrix * gl_ModelViewMatrix * position; \n"
 
-            "color[3]=1.0; \n"
-            "gl_FrontColor = color; \n"
-
+            "tempColor[3]=1.0; \n"
+            "gl_FrontColor = tempColor; \n"
+        //Initialize phong shading variables
+        "   color=tempColor.rgb; \n"
+        "   objPos=gl_Vertex.xyz; \n"
+        "   eyePos=vec3(gl_ModelViewMatrix*gl_Vertex); \n"
+        "   lightPos=gl_LightSource[0].position.xyz; \n"
+        "   normal=vec3(gl_NormalMatrix*gl_Normal); \n"
+        "   gl_FrontSecondaryColor=vec4(1.0);\n"
+        "   gl_BackSecondaryColor=vec4(0.0);\n"
         "} \n";
     
-    /*std::string fSource(
-                        "uniform vec3 ambientMaterial;\n"
-                        "uniform vec3 diffuseMaterial;\n"
-                        "uniform vec3 specularMaterial;\n"
-                        "uniform float specularPower;\n"
+    osg::ref_ptr< osg::Shader > vertexShader = new osg::Shader();
+    vertexShader->setType( osg::Shader::VERTEX );
+    vertexShader->setShaderSource( vertexSource );
+    
+    std::string fragmentSource(
+                        //"uniform vec3 ambientMaterial;\n"
+                        //"uniform vec3 diffuseMaterial;\n"
+                        //"uniform vec3 specularMaterial;\n"
+                        //"uniform float specularPower;\n"
                         
                         "varying vec3 color;\n"
                         "varying vec3 lightPos;\n"
@@ -373,10 +370,10 @@ void OSGWarpedSurfaceStage::createMeshData( osg::Geometry* geom, vtkPolyData* po
                         
                         "void main()\n"
                         "{\n"
-                        "    ambientMaterial = vec3( 0.368627, 0.368421, 0.368421 );\n"
-                        "    diffuseMaterial = vec3( 0.886275, 0.885003, 0.885003 );\n"
-                        "    specularMaterial = vec3( 0.490196, 0.488722, 0.488722 );\n"
-                        "    specularPower = 20.0;\n"
+                        "    vec3 ambientMaterial = vec3( 0.368627, 0.368421, 0.368421 );\n"
+                        "    vec3 diffuseMaterial = vec3( 0.886275, 0.885003, 0.885003 );\n"
+                        "    vec3 specularMaterial = vec3( 0.490196, 0.488722, 0.488722 );\n"
+                        "    float specularPower = 20.0;\n"
                         "\n"
                         "    vec3 N=normalize(normal);\n"
                         "    if(gl_SecondaryColor.r < .5)\n"
@@ -397,14 +394,15 @@ void OSGWarpedSurfaceStage::createMeshData( osg::Geometry* geom, vtkPolyData* po
                         "    gl_FragColor=vec4(TotalAmbient+TotalDiffuse+TotalSpecular,1.0);\n"
                         " }\n"
                         
-                        );*/
+                        );
     
-    osg::ref_ptr< osg::Shader > vertexShader = new osg::Shader();
-    vertexShader->setType( osg::Shader::VERTEX );
-    vertexShader->setShaderSource( vertexSource );
+    osg::ref_ptr< osg::Shader > fragmentShader = new osg::Shader();
+    fragmentShader->setType( osg::Shader::FRAGMENT );
+    fragmentShader->setShaderSource( fragmentSource );
 
     osg::ref_ptr< osg::Program > program = new osg::Program();
     program->addShader( vertexShader.get() );
+    program->addShader( fragmentShader.get() );
     ss->setAttribute( program.get(),
         osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
     
