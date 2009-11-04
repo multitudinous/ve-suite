@@ -2,12 +2,12 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #include <vesenv.iss>
-#define MyAppVer "2.8"
+#define MyAppVer "3.0.1"
 #define MyAppName "Xerces-c Pre-Compile"
 #define MyAppVerName "Xerces"
 #define MyAppPublisher "VERG"
 #define MyAppURL "www.vesuite.org"
-#define XERCESSRCINSTALL "C:\Projects\ves-windows\xerces-c_2_8_0\xerces-c_2_8_0-x86-windows-vc_8_0"
+#define XERCESSRCINSTALL "C:\Projects\ves-windows\xerces-c-3.0.1-x86-windows-vc-9.0"
 [Setup]
 AppName={#MyAppName}
 AppVerName={#MyAppVerName}_{#MyAppVer}_{#MSVCVERSION}
