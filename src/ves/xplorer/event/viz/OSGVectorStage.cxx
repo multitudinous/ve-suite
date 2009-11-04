@@ -380,7 +380,7 @@ ves::xplorer::scenegraph::Geode* OSGVectorStage::createInstanced(vtkPolyData* gl
         "} \n" //25
         " \n"
         "mat3 \n"
-        "makeOrientMat( const in vec4 dir ) \n"
+        "makeOrientMat( const in vec3 dir ) \n"
         "{ \n"
         // Compute a vector at a right angle to the direction.
         // First try projection direction into xy rotated -90 degrees.
@@ -391,13 +391,15 @@ ves::xplorer::scenegraph::Geode* OSGVectorStage::createInstanced(vtkPolyData* gl
         "   { \n"
         "       c = vec3( 0.0, dir.z, -dir.y ); \n"
         "   } \n"
-        "   normalize( c ); \n"
+        //normalize( c.xyz );
+        "   float l = length( c );\n"
+        "   c /= l;\n"    
         " \n"
-        "   const vec3 up = normalize( cross( c.xyz, dir.xyz ) ); \n"
+        "   const vec3 up = normalize( cross( dir, c ) ); \n"
         " \n"
         // Orientation uses the cross product vector as x,
         // the up vector as y, and the direction vector as z.
-        "   return( mat3( c, up, dir.xyz ) ); \n"
+        "   return( mat3( c, up, dir ) ); \n"
         "} \n"
         " \n"
         "void main() \n"
@@ -419,9 +421,9 @@ ves::xplorer::scenegraph::Geode* OSGVectorStage::createInstanced(vtkPolyData* gl
         // Create an orientation matrix. Orient/transform the arrow.
         // Sample (look up) direction vector and obtain the scale factor
         "   vec4 dir = texture3D( texDir, tC );\n"
-        "   float scale = length( dir );\n"
-        "   const mat3 orientMat = makeOrientMat( normalize( dir ) ); \n"
-        "   const vec3 oVec = orientMat * (scale * gl_Vertex.xyz);\n"
+        "   float scale = length( dir.xyz );\n"
+        "   mat3 orientMat = makeOrientMat( normalize( dir.xyz ) ); \n"
+        "   vec3 oVec = orientMat * (scale * gl_Vertex.xyz);\n"
         "   vec4 hoVec = vec4( oVec + pos, 1.0 ); \n"
         "   gl_Position = gl_ModelViewProjectionMatrix * hoVec; \n"
 
@@ -429,7 +431,7 @@ ves::xplorer::scenegraph::Geode* OSGVectorStage::createInstanced(vtkPolyData* gl
         //"   mat3 mN = mat3( newX, newY, newZ ); \n"
         //"   vec3 norm = normalize(gl_NormalMatrix * mN * gl_Normal); \n"
         // Orient the normal.
-        "   const vec3 norm = normalize( gl_NormalMatrix * orientMat * gl_Normal ); \n"
+        "   vec3 norm = normalize( gl_NormalMatrix * orientMat * gl_Normal ); \n"
         // Diffuse lighting with light at the eyepoint.
         "   vec4 color = texture3D( scalar, tC ); \n"
         //"   color = color * dot( norm, vec3( 0, 0, 1 ) ); \n"
