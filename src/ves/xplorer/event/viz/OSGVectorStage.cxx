@@ -157,7 +157,7 @@ float* OSGVectorStage::createPositionArray( int m, int n , vtkPoints* points)
 
     int np = points->GetNumberOfPoints();
     double x[3];
-    float y[3];
+    //float y[3];
     for (int i=0; i<m*n; i++)
     {
         if (i<np)
@@ -333,7 +333,7 @@ ves::xplorer::scenegraph::Geode* OSGVectorStage::createInstanced(vtkPolyData* gl
     rawVTKData->SetActiveVectorAndScalar( vectorName, scalarName );
     rawVTKData->loadData();
 
-    createArrow( *geom, rawVTKData->getDataCount(), scaleFactor );
+    createArrow( *geom, rawVTKData->getDataCount(), 1.0f );//scaleFactor );
     geode->addDrawable( geom );
     //grp->addChild( geode );
 
@@ -352,6 +352,7 @@ ves::xplorer::scenegraph::Geode* OSGVectorStage::createInstanced(vtkPolyData* gl
         "uniform sampler3D texPos; \n"
         "uniform sampler3D texDir; \n"
         "uniform sampler3D scalar; \n"
+        "uniform float userScale;\n"
         " \n"
         // Based on the global 'sizes' uniform that contains the 3D stp texture dimensions,
         // and the input parameter current instances, generate an stp texture coord that
@@ -421,8 +422,8 @@ ves::xplorer::scenegraph::Geode* OSGVectorStage::createInstanced(vtkPolyData* gl
         // Create an orientation matrix. Orient/transform the arrow.
         // Sample (look up) direction vector and obtain the scale factor
         "   vec4 dir = texture3D( texDir, tC );\n"
-        "   float scale = length( dir.xyz );\n"
         "   mat3 orientMat = makeOrientMat( normalize( dir.xyz ) ); \n"
+        "   float scale = userScale * length( dir.xyz );\n"
         "   vec3 oVec = orientMat * (scale * gl_Vertex.xyz);\n"
         "   vec4 hoVec = vec4( oVec + pos, 1.0 ); \n"
         "   gl_Position = gl_ModelViewProjectionMatrix * hoVec; \n"
@@ -474,13 +475,20 @@ ves::xplorer::scenegraph::Geode* OSGVectorStage::createInstanced(vtkPolyData* gl
     ss->addUniform( texScalarUniform.get() );
 
     {
-    // Pass the 3D texture dimensions to the shader as a "sizes" uniform.
-    osg::Vec3s ts( rawVTKData->getTextureSizes() );
-    osg::ref_ptr< osg::Uniform > sizesUniform =
-    new osg::Uniform( "sizes", osg::Vec3( (float)ts.x(), (float)ts.y(), (float)ts.z() ) );
-    ss->addUniform( sizesUniform.get() );
+        // Pass the 3D texture dimensions to the shader as a "sizes" uniform.
+        osg::Vec3s ts( rawVTKData->getTextureSizes() );
+        osg::ref_ptr< osg::Uniform > sizesUniform =
+            new osg::Uniform( "sizes", osg::Vec3( (float)ts.x(), (float)ts.y(), (float)ts.z() ) );
+        ss->addUniform( sizesUniform.get() );
     }
 
+    {
+        // Pass the scale to the  "scaleUniform" uniform.
+        osg::ref_ptr< osg::Uniform > scaleUniform =
+            new osg::Uniform( "userScale", scaleFactor );
+        ss->addUniform( scaleUniform.get() );
+    }
+    
     // Set up the color spectrum.
     //osg::Image* iColorScale = new osg::Image;
     //iColorScale->setImage( 8, 1, 1, GL_RGBA, GL_RGB, GL_FLOAT,
