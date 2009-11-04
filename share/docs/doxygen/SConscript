@@ -13,7 +13,6 @@ doxygen_cmd = WhereIs('doxygen')
 if None == doxygen_cmd:
     sys.stdout.write("Could not find doxygen. Please make sure doxygen is in your PATH.\n")
     sys.exit(0)
-
 else:
     sys.stdout.write("Found doxygen\n")
     sys.stdout.write("Generating doxygen files....\n")
@@ -26,5 +25,7 @@ doxyBuilder = Builder(action = doxyAction, single_source = True,
                             suffix = ".html")
 
 env.Append(BUILDERS = {'doxyResolve': doxyBuilder})
+
+#env.doxyResolve(target = pdfTargets, source = foedSrcs)
 
 sys.stdout.write("Done generating documentation\n")
