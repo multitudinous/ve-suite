@@ -371,7 +371,7 @@ void cfdStreamers::Update()
 	        geodes.push_back( tempGeode.get() );
 	        updateFlag = true;
 	    }
-	    catch ( std::bad_alloc )
+	    catch( std::bad_alloc )
 	    {
 	        streamTracer->Delete();
 	        streamTracer = vtkStreamTracer::New();
@@ -396,7 +396,8 @@ void cfdStreamers::Update()
             
             osg::ref_ptr<ves::xplorer::scenegraph::Geode > tempGeode1 = 
                 tempStage->createInstanced( cleanPD->GetOutput(), mult, 
-                GetActiveDataSet()->GetActiveScalarName().c_str() );
+                GetActiveDataSet()->GetActiveScalarName().c_str(),
+                GetActiveDataSet()->GetActiveVectorName().c_str() );
 
             delete tempStage;
 
@@ -405,11 +406,12 @@ void cfdStreamers::Update()
         }
         catch( std::bad_alloc )
         {
-//            mapper->Delete();
-//            mapper = vtkPolyDataMapper::New();
+            mapper->Delete();
+            mapper = vtkPolyDataMapper::New();
             vprDEBUG( vesDBG, 0 ) << "|\tMemory allocation failure : cfdStreamers "
                 << std::endl << vprDEBUG_FLUSH;
-        }        
+        }
+        c2p->Delete(); 
     }
 
     vprDEBUG( vesDBG, 0 ) << "|\tcfdStreamers::Update End" << std::endl << vprDEBUG_FLUSH;
