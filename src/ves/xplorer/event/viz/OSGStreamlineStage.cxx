@@ -577,7 +577,7 @@ void OSGStreamlineStage::ProcessStreamLines( vtkPolyData* polydata )
         streamlineCells.push_back( vtkIdList::New() );
         streamlineCells.back()->DeepCopy( origVertList ); 
         vtkIdList* tempVertList = streamlineCells.back();
-        bool backwards = IsStreamlineBackwards( cellId, polydata );
+        //bool backwards = IsStreamlineBackwards( cellId, polydata );
         //std::cout << "Is a backwards streamline " << backwards << std::endl;
         //for( size_t i = 0; i < tempVertList->GetNumberOfIds(); ++i )
         //{
@@ -586,18 +586,36 @@ void OSGStreamlineStage::ProcessStreamLines( vtkPolyData* polydata )
         //std::cout << std::endl;
         
         bool foundMatch = false;
+        vtkIdList* oldVertList = 0;
+        vtkIdList* newComboVertList = vtkIdList::New();
         for(size_t i = 0; i < streamlineCells.size() - 1; ++ i )
         {
-            vtkIdType matchId = streamlineCells.at( i )->IsId( tempVertList->GetId( 0 ) );
+            oldVertList = streamlineCells.at( i );
+            vtkIdType matchId = oldVertList->IsId( tempVertList->GetId( 0 ) );
             if( matchId > -1 )
             {
+                //std::cout << "orig ";
+                //for( size_t j = 0; j < oldVertList->GetNumberOfIds(); ++j )
+                //{
+                    //std::cout << " " << oldVertList->GetId( j );
+                //}
+                //std::cout << std::endl;
                 foundMatch = true;
-                vtkIdList* oldVertList = streamlineCells.at( i );
                 vtkIdType numVerts = tempVertList->GetNumberOfIds();
-                for( size_t j = 1; j < numVerts; ++j )
+                for( vtkIdType j = numVerts-1; j >= 0; --j )
                 {
-                    oldVertList->InsertId( 0, tempVertList->GetId( j ) );
+                    //std::cout << " " << tempVertList->GetId( j );
+                    //oldVertList->InsertId( 0, tempVertList->GetId( j ) );
+                    newComboVertList->InsertNextId( tempVertList->GetId( j ) );
                 }
+                //std::cout << std::endl;
+                for( size_t j = 1; j < oldVertList->GetNumberOfIds(); ++j )
+                {
+                    //std::cout << " " << oldVertList->GetId( j );
+                    newComboVertList->InsertNextId( oldVertList->GetId( j ) );
+                }
+                //std::cout << std::endl;
+
                 //std::cout << "Streamline " <<  m_streamlineCells.size() - 1 
                 //    << " has a point in line " << i << " at index " 
                 //    << matchId << std::endl;
@@ -607,11 +625,24 @@ void OSGStreamlineStage::ProcessStreamLines( vtkPolyData* polydata )
 
         if( foundMatch )
         {
+            //std::cout << "Is a backwards streamline " << backwards << std::endl;
+            //for( size_t i = 0; i < newComboVertList->GetNumberOfIds(); ++i )
+            //{
+            //    std::cout << " " << newComboVertList->GetId( i );
+            //}
+            //std::cout << std::endl;
+
+            oldVertList->DeepCopy( newComboVertList );
+            tempVertList->Delete();
+            newComboVertList->Delete();
             streamlineCells.pop_back();
             continue;
         }
+        
+        newComboVertList->Delete();
+
         //If it is a standalone backwards line then reorder the points
-        if( backwards )
+        if( IsStreamlineBackwards( cellId, polydata ) )
         {
             vtkIdType numVerts = origVertList->GetNumberOfIds();
             for( size_t i = 0; i < numVerts; ++i )
