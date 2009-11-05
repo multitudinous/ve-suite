@@ -112,7 +112,9 @@ float* OSGStreamlineStage::createPositionArray( int numPoints, int mult, std::de
     //calculate texture dimension
     //std::cout << "number of points " << numPoints << std::endl;
     //std::cout << "number of total points (including multiplier)" << numPoints*mult << std::endl;
-    int am = mylog2(numPoints*mult)+1;
+    //We subtract 1 because we have to ignore the end points of the line
+    int totalNumPoints = (numPoints - 1)*mult;
+    int am = mylog2(totalNumPoints)+1;
     int mm = am/2;
     int nn = am -am/2;
     tm = mypow2(mm);
@@ -120,7 +122,7 @@ float* OSGStreamlineStage::createPositionArray( int numPoints, int mult, std::de
     //std::cout << tm << " "<< tn << std::endl;
 
     int texSize = tm * tn;
-    int totalNumPoints = numPoints*mult;
+    //int totalNumPoints = numPoints*mult;
     float* pos = new float[ texSize * 3 ];
     float* posI = pos;
 
@@ -199,7 +201,8 @@ int OSGStreamlineStage::mypow2(unsigned x)
 ////////////////////////////////////////////////////////////////////////////////
 float* OSGStreamlineStage::createScalarArray( vtkIdType numPoints, int mult, vtkPointData* pointData, std::deque< Point > pointList, int &tm, int &tn, const char* scalarName)
 {
-    int am = mylog2(numPoints*mult)+1;
+    int totalNumPoints = (numPoints - 1)*mult;
+    int am = mylog2(totalNumPoints)+1;
     int mm = am/2;
     int nn = am -am/2;
     tm = mypow2(mm);
@@ -230,7 +233,7 @@ float* OSGStreamlineStage::createScalarArray( vtkIdType numPoints, int mult, vtk
     int j=0;
     for (int i=0; i<tm*tn; i++)
     {
-        if (i<numPoints*mult)
+        if (i<totalNumPoints)
         {    
             int mod = i%mult;
             if (mod == 0)
@@ -309,6 +312,15 @@ void OSGStreamlineStage::createStreamLines( vtkPolyData* polyData,
         x[ 1 ] = tempPoint.x[ 1 ];
         x[ 2 ] = tempPoint.x[ 2 ];
 
+        int tm=0;
+        int tn=0;
+        
+        //float* pos = createPositionArray( cLineNp , mult, points, pts, tm, tn);
+        float* pos = createPositionArray( tempLine.size(), mult, tempLine, tm, tn);
+        //commented out scalararray as it crashes
+        float* sca = createScalarArray(  tempLine.size(), mult, pointData, tempLine, tm, tn, scalarName);
+        
+        int texSizeIndex = tm * tn;
         osg::Geometry* geom = new osg::Geometry;
         // Note:
         // Display Lists and draw instanced are mutually exclusive. Disable
@@ -317,21 +329,14 @@ void OSGStreamlineStage::createStreamLines( vtkPolyData* polyData,
         geom->setUseVertexBufferObjects( true );
         osg::Vec3 loc(x[0], x[1], x[2] );
         //createSLPoint( *geom, cLineNp * mult, loc, osg::Vec4( .5, 1., .6, 1.) );
-        createSLPoint( *geom, tempLine.size() * mult, loc, osg::Vec4( .5, 1., .6, 1.) );
+        int totalNumberOfPoints = (tempLine.size()-1) * mult;
+        createSLPoint( *geom, totalNumberOfPoints, loc, osg::Vec4( .5, 1., .6, 1.) );
         geode->addDrawable( geom );
         
         // Note:
         // OSG has no idea where our vertex shader will render the points. For proper culling
         // and near/far computation, set an approximate initial bounding box.
         geom->setInitialBound( bb );
-        
-        int tm=0;
-        int tn=0;
-        
-        //float* pos = createPositionArray( cLineNp , mult, points, pts, tm, tn);
-        float* pos = createPositionArray( tempLine.size(), mult, tempLine, tm, tn);
-        //commented out scalararray as it crashes
-        float* sca = createScalarArray(  tempLine.size(), mult, pointData, tempLine, tm, tn, scalarName);
 
         osg::StateSet* ss = geom->getOrCreateStateSet();
 
@@ -379,8 +384,10 @@ void OSGStreamlineStage::createStreamLines( vtkPolyData* polyData,
                 //color.a *= alpha;
                 "vec4 color = texture2D( texSca, tC ); \n"
                 "color[3]=alpha; \n"
+                //"gl_FrontColor = vec4( pos.z/3.0, pos.z/3.0, pos.z/3.0, 1.0 ); \n"
+                //"gl_FrontColor = vec4( gl_Position.y/3.0, gl_Position.y/3.0, gl_Position.y/3.0, 1.0 ); \n"
+                //"gl_FrontColor = vec4( v.z/3.0, v.z/3.0, v.z/3.0, 1.0 ); \n"
                 "gl_FrontColor = color; \n"
-
             "} \n";
 
         osg::ref_ptr< osg::Shader > vertexShader = new osg::Shader();
@@ -500,7 +507,14 @@ ves::xplorer::scenegraph::Geode* OSGStreamlineStage::createInstanced(
     }
     polyData->Update();
 
-    vtkPointData* pointData = polyData->GetPointData();
+    vtkCleanPolyData* cleanPD = vtkCleanPolyData::New();
+    cleanPD->PointMergingOn();
+    cleanPD->SetTolerance( 0.0f );
+    cleanPD->SetInput( polyData );
+    cleanPD->Update();
+    vtkPolyData* streamlinePD = cleanPD->GetOutput();
+
+    vtkPointData* pointData = streamlinePD->GetPointData();
     if( pointData==NULL )
     {
         std::cout << " pd point data is null " << std::endl;
@@ -508,19 +522,12 @@ ves::xplorer::scenegraph::Geode* OSGStreamlineStage::createInstanced(
     }
     //pointData->Update();
 
-    vtkPoints* points = polyData->GetPoints();    
+    vtkPoints* points = streamlinePD->GetPoints();    
     if( points==NULL )
     {
         std::cout << " points are null " << std::endl;
         return NULL;
     }
-
-    vtkCleanPolyData* cleanPD = vtkCleanPolyData::New();
-    cleanPD->PointMergingOn();
-    cleanPD->SetTolerance( 0.0f );
-    cleanPD->SetInput( polyData );
-    cleanPD->Update();
-    vtkPolyData* streamlinePD = cleanPD->GetOutput();
     
     //vtkXMLPolyDataWriter *writer = vtkXMLPolyDataWriter::New();
     //writer->SetInput( streamlinePD );
