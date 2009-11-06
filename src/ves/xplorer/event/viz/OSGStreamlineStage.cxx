@@ -277,9 +277,6 @@ float* OSGStreamlineStage::createScalarArray( vtkIdType numPoints, int mult, vtk
 void OSGStreamlineStage::createStreamLines( vtkPolyData* polyData, 
     ves::xplorer::scenegraph::Geode* geode, int mult, const char* scalarName)
 {
-    //int numOfLine = polyData->GetNumberOfLines();
-    //vtkCellArray* lines = polyData->GetLines();
-
     vtkPointData* pointData = polyData->GetPointData();
     vtkPoints* points = polyData->GetPoints();
     double x[3];
@@ -288,24 +285,10 @@ void OSGStreamlineStage::createStreamLines( vtkPolyData* polyData,
     //VTK does bounds xmin, xmax,....
     //OSG does bounds xmin, ymin, zmin, xmax, ymax,...
     osg::BoundingBox bb(bounds[0],bounds[2],bounds[4],bounds[1],bounds[3],bounds[5]);
-    //vtkIdType cLineNp;
-    //vtkIdType* pts;
-    //for (int i=0; i< numOfLine; i++)
-    //int lineNum=0;
+
     size_t numStreamLines = m_streamlineList.size();
-    //std::cout << numStreamLines << std::endl;
-    //for(lines->InitTraversal(); ((lineNum<numOfLine) && (lines->GetNextCell(cLineNp, pts))); lineNum++)
     for( size_t i = 0; i < numStreamLines; ++i )
     {
-        //double dLineNp= lines->GetComponent(0,i); //number of point in line i
-        //int cLineNp = (int) dLineNp;
-
-        //if (cLineNp<=1)
-        //    continue;
-
-        //double dfirstP = lines->GetComponent(1,i); //first Point index of line i
-        //int firstP = pts[0];
-        //points->GetPoint(firstP, x);
         std::deque< Point > tempLine = m_streamlineList.at( i );
         Point tempPoint = tempLine.at( 0 );
         x[ 0 ] = tempPoint.x[ 0 ];
@@ -315,10 +298,8 @@ void OSGStreamlineStage::createStreamLines( vtkPolyData* polyData,
         int tm=0;
         int tn=0;
         
-        //float* pos = createPositionArray( cLineNp , mult, points, pts, tm, tn);
-        float* pos = createPositionArray( tempLine.size(), mult, tempLine, tm, tn);
-        //commented out scalararray as it crashes
-        float* sca = createScalarArray(  tempLine.size(), mult, pointData, tempLine, tm, tn, scalarName);
+        float* pos = createPositionArray( tempLine.size(), mult, tempLine, tm, tn );
+        float* sca = createScalarArray( tempLine.size(), mult, pointData, tempLine, tm, tn, scalarName );
         
         int texSizeIndex = tm * tn;
         osg::Geometry* geom = new osg::Geometry;
@@ -340,11 +321,8 @@ void OSGStreamlineStage::createStreamLines( vtkPolyData* polyData,
 
         osg::StateSet* ss = geom->getOrCreateStateSet();
 
-
-//        osg::ref_ptr< osg::Shader > vertexShader = osg::Shader::readShaderFile(
-//            osg::Shader::VERTEX, osgDB::findDataFile( "streamline.vs" ) );
-
-
+        //osg::ref_ptr< osg::Shader > vertexShader = osg::Shader::readShaderFile(
+        //    osg::Shader::VERTEX, osgDB::findDataFile( "streamline.vs" ) );
 
         //Apply the shader code here instead of calling it from a file as above
         std::string vertexSource =
@@ -367,9 +345,11 @@ void OSGStreamlineStage::createStreamLines( vtkPolyData* polyData,
 
                 // Get position from the texture.
                 "vec4 pos = texture2D( texPos, tC ); \n"
-                //"pos.x *= 2.; \n" // Huh? x seems to be half the value I expect...
+                //Set to 0 to have proper addition with gl_Vertex
+                "pos.w = 0.; \n" 
                 "vec4 v = gl_ModelViewMatrix * ( gl_Vertex + pos ); \n"
                 "gl_Position = gl_ProjectionMatrix * v; \n"
+                //"gl_Position = gl_ModelViewProjectionMatrix * ( gl_Vertex + pos ); \n"
 
                 // TBD. Need to make this configurable from a uniform.
                 "gl_PointSize = -500. / v.z; \n"
@@ -379,21 +359,16 @@ void OSGStreamlineStage::createStreamLines( vtkPolyData* polyData,
                 "float timeOffset = ( ((float)gl_InstanceID) / totalInstances ) * repeatTime; \n"
                 "float repTimer = mod( ( osg_SimulationTime - timeOffset ), repeatTime ); \n"
                 "float alpha = fadeTime - min( repTimer, fadeTime ); \n"
-                //vec4 color = gl_Color;
 
                 //color.a *= alpha;
                 "vec4 color = texture2D( texSca, tC ); \n"
                 "color[3]=alpha; \n"
-                //"gl_FrontColor = vec4( pos.z/3.0, pos.z/3.0, pos.z/3.0, 1.0 ); \n"
-                //"gl_FrontColor = vec4( gl_Position.y/3.0, gl_Position.y/3.0, gl_Position.y/3.0, 1.0 ); \n"
-                //"gl_FrontColor = vec4( v.z/3.0, v.z/3.0, v.z/3.0, 1.0 ); \n"
                 "gl_FrontColor = color; \n"
             "} \n";
 
         osg::ref_ptr< osg::Shader > vertexShader = new osg::Shader();
         vertexShader->setType( osg::Shader::VERTEX );
         vertexShader->setShaderSource( vertexSource );
-
 
         osg::ref_ptr< osg::Program > program = new osg::Program();
         program->addShader( vertexShader.get() );
