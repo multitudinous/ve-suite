@@ -290,10 +290,12 @@ void OSGStreamlineStage::createStreamLines( vtkPolyData* polyData,
     for( size_t i = 0; i < numStreamLines; ++i )
     {
         std::deque< Point > tempLine = m_streamlineList.at( i );
-        Point tempPoint = tempLine.at( 0 );
-        x[ 0 ] = tempPoint.x[ 0 ];
-        x[ 1 ] = tempPoint.x[ 1 ];
-        x[ 2 ] = tempPoint.x[ 2 ];
+        //Point tempPoint = tempLine.at( 0 );
+        //We must set these to 0 becuase we do not want to doubly offset
+        //our starting location of the vertecies
+        x[ 0 ] = 0.;//tempPoint.x[ 0 ];
+        x[ 1 ] = 0.;//tempPoint.x[ 1 ];
+        x[ 2 ] = 0.;//tempPoint.x[ 2 ];
 
         int tm=0;
         int tn=0;
@@ -338,32 +340,32 @@ void OSGStreamlineStage::createStreamLines( vtkPolyData* polyData,
 
             "void main() \n"
             "{ \n"
-                // Using the instance ID, generate "texture coords" for this instance.
-                "const float r = ((float)gl_InstanceID) / sizes.x; \n"
-                "vec2 tC; \n"
-                "tC.s = fract( r ); tC.t = floor( r ) / sizes.y; \n"
+            // Using the instance ID, generate "texture coords" for this instance.
+            "   const float r = ((float)gl_InstanceID) / sizes.x; \n"
+            "   vec2 tC; \n"
+            "   tC.s = fract( r ); tC.t = floor( r ) / sizes.y; \n"
 
-                // Get position from the texture.
-                "vec4 pos = texture2D( texPos, tC ); \n"
-                //Set to 0 to have proper addition with gl_Vertex
-                "pos.w = 0.; \n" 
-                "vec4 v = gl_ModelViewMatrix * ( gl_Vertex + pos ); \n"
-                "gl_Position = gl_ProjectionMatrix * v; \n"
-                //"gl_Position = gl_ModelViewProjectionMatrix * ( gl_Vertex + pos ); \n"
+            // Get position from the texture.
+            "   vec4 pos = texture2D( texPos, tC ); \n"
+            //Set to 0 to have proper addition with gl_Vertex
+            "   pos.w = 0.; \n" 
+            "   vec4 newPos = vec4( gl_Vertex.xyz + pos.xyz, 1.0 );\n"
+            "   vec4 v = gl_ModelViewMatrix * newPos; \n"
+            "   gl_Position = gl_ProjectionMatrix * v; \n"
+            //" gl_Position = gl_ModelViewProjectionMatrix * ( gl_Vertex + pos ); \n"
 
-                // TBD. Need to make this configurable from a uniform.
-                "gl_PointSize = -500. / v.z; \n"
+            // TBD. Need to make this configurable from a uniform.
+            "   gl_PointSize = -500. / v.z; \n"
 
-                // Compute a time offset from the InstanceID to
-                // emulate motion.
-                "float timeOffset = ( ((float)gl_InstanceID) / totalInstances ) * repeatTime; \n"
-                "float repTimer = mod( ( osg_SimulationTime - timeOffset ), repeatTime ); \n"
-                "float alpha = fadeTime - min( repTimer, fadeTime ); \n"
+            // Compute a time offset from the InstanceID to
+            // emulate motion.
+            "   float timeOffset = ( ((float)gl_InstanceID) / totalInstances ) * repeatTime; \n"
+            "   float repTimer = mod( ( osg_SimulationTime - timeOffset ), repeatTime ); \n"
+            "   float alpha = fadeTime - min( repTimer, fadeTime ); \n"
 
-                //color.a *= alpha;
-                "vec4 color = texture2D( texSca, tC ); \n"
-                "color[3]=alpha; \n"
-                "gl_FrontColor = color; \n"
+            "   vec4 color = texture2D( texSca, tC ); \n"
+            "   color[3]=alpha; \n"
+            "   gl_FrontColor = color; \n"
             "} \n";
 
         osg::ref_ptr< osg::Shader > vertexShader = new osg::Shader();
