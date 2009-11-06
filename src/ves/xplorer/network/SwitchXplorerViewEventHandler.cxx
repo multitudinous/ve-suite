@@ -36,6 +36,7 @@
 #include <ves/xplorer/ModelHandler.h>
 #include <ves/xplorer/DeviceHandler.h>
 #include <ves/xplorer/device/Device.h>
+#include <ves/xplorer/device/KeyboardMouse.h>
 
 #include <ves/xplorer/network/cfdExecutive.h>
 #include <ves/xplorer/network/NetworkSystemView.h>
@@ -123,6 +124,12 @@ void SwitchXplorerViewEventHandler::Execute( const ves::open::xml::XMLObjectPtr&
         {
             UpdateNetworkView( command );
             SceneManager::instance()->SetActiveSwitchNode( 2 );
+
+            //centers the network view            
+            device::KeyboardMouse* keyboardMouse =
+                DeviceHandler::instance()->GetDevice(
+                    device::Device::KEYBOARD_MOUSE )->AsKeyboardMouse();
+            keyboardMouse->FrameAll();
         }
         else if( viewData == "CHANGE_XPLORER_VIEW_CAD" )
         {
