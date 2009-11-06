@@ -45,7 +45,8 @@
 using namespace ves::open::xml::cad;
 using namespace ves::conductor::util;
 BEGIN_EVENT_TABLE( CADOpacitySliderDlg, wxDialog )
-    EVT_COMMAND_SCROLL( OPACITY_SLIDER, CADOpacitySliderDlg::_onSlider )
+    //EVT_COMMAND_SCROLL( OPACITY_SLIDER, CADOpacitySliderDlg::_onSlider )
+    EVT_COMMAND_SCROLL_CHANGED( OPACITY_SLIDER, CADOpacitySliderDlg::_onSlider )
     EVT_CHECKBOX( ID_TRANSPARENT_ON_VIS, CADOpacitySliderDlg::OnChkBox )
 END_EVENT_TABLE()
 //////////////////////////////////////////////////////////////////
