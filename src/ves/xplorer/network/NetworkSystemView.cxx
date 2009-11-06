@@ -136,9 +136,16 @@ osg::Group* NetworkSystemView::DrawNetwork( std::string netId )
             std::string dataPrefix;
             vpr::System::getenv( "XPLORER_DATA_DIR", dataPrefix );
             //try default location first
+
+            //removes the file extension
+            std::string iconFilename = model->GetIconFilename().substr(
+                0, model->GetIconFilename().rfind(".",model->GetIconFilename()
+                .size()));
+
+
             osg::ref_ptr<osg::Node> loadedModel = 
                 osgDB::readNodeFile( dataPrefix + "/3DIcons/" + 
-                    model->GetIconFilename() + ".ive" );
+                    iconFilename + ".ive" );
 
             //add red block id if block .ive file is not found
             if( !loadedModel.valid() )
