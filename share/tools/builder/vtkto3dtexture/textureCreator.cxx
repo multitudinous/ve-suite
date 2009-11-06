@@ -683,8 +683,21 @@ void VTKDataToTexture::_createValidityTexture()
    int nX = _resolution[0];
    int nY = _resolution[1];
 
+   //an attempt to correct issues with 512 textures on windows
    int nPixels = _resolution[0]*_resolution[1]*_resolution[2];
-   _validPt.resize( nPixels );
+   size_t maxS = _validPt.max_size();
+   std::pair< bool, std::pair< int, double* > > tempPair =
+       std::make_pair< bool, std::pair< int, double* > >
+       ( false, std::make_pair< int, double* >( 0, 0 ) );
+   try
+   {
+  // _validPt.resize( nPixels, tempPair );
+   _validPt.assign( nPixels, tempPair );
+   }
+   catch( std::exception & ex )
+   {
+       int test = 1;
+   }
    long lasttime = (long)time( NULL );
 
 #ifdef OMPWIN32
