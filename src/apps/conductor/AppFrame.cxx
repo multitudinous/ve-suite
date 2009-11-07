@@ -392,6 +392,10 @@ AppFrame::~AppFrame()
     {
         wxProcess::Kill( pids[i] );
     }
+    
+    delete appToolBar;
+    appToolBar = 0;
+    SetToolBar( 0 );
 }
 ////////////////////////////////////////////////////////////////////////////////
 std::string AppFrame::GetDisplayMode()
