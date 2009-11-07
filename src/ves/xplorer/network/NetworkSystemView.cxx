@@ -73,6 +73,12 @@
 #include <iostream>
 #include <fstream>
 
+#include <boost/filesystem/operations.hpp>
+#include <boost/filesystem/path.hpp>
+#include <boost/version.hpp>
+
+namespace fs = boost::filesystem;
+
 using namespace ves::xplorer;
 using namespace ves::open::xml;
 using namespace ves::open::xml::model;
@@ -134,18 +140,23 @@ osg::Group* NetworkSystemView::DrawNetwork( std::string netId )
         {
             //add 3d blocks
             std::string dataPrefix;
-            vpr::System::getenv( "XPLORER_DATA_DIR", dataPrefix );
             //try default location first
+            vpr::System::getenv( "XPLORER_DATA_DIR", dataPrefix );
 
             //removes the file extension
-            std::string iconFilename = model->GetIconFilename().substr(
-                0, model->GetIconFilename().rfind(".",model->GetIconFilename()
-                .size()));
-
-
+#if BOOST_VERSION > 103301
+            fs::path file_name( model->GetIconFilename(), fs::native );
+            file_name.replace_extension( "ive" );
+            std::string iconFilename = file_name.string();
+#else
+            std::string iconFilename = model->GetIconFilename().
+                substr( 0, model->GetIconFilename().
+                rfind(".",model->GetIconFilename().size()));
+            iconFilename += ".ive";
+#endif
+            
             osg::ref_ptr<osg::Node> loadedModel = 
-                osgDB::readNodeFile( dataPrefix + "/3DIcons/" + 
-                    iconFilename + ".ive" );
+                osgDB::readNodeFile( dataPrefix + "/3DIcons/" + iconFilename );
 
             //add red block id if block .ive file is not found
             if( !loadedModel.valid() )
@@ -352,7 +363,6 @@ void NetworkSystemView::LoadVESData( std::string xmlNetwork )
         //typeid
         //If the file is a new xml file with a system element
         if( objectVector.at( 0 )->GetObjectType() == "System" )
-        //if( tempSystem )
         {
             tempSystem = 
                 boost::dynamic_pointer_cast<ves::open::xml::model::System>(
