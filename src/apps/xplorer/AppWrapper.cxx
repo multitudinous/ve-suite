@@ -36,6 +36,8 @@
 #include "App.h"
 #include "VjObsWrapper.h"
 
+#include <osgDB/Registry>
+
 // --- VR Juggler Includes --- //
 #include <vrj/Kernel/Kernel.h>
 
@@ -95,6 +97,7 @@ AppWrapper::~AppWrapper()
     delete m_vjObsWrapper;
     m_vjObsWrapper = NULL;
     m_jugglerIsRunning = false;
+    osgDB::Registry::instance( true );
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool AppWrapper::JugglerIsRunning()
