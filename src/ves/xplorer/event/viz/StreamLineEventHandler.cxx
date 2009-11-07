@@ -45,16 +45,6 @@
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>
 
-// --- Juggler Includes --- //
-#include <boost/filesystem/operations.hpp>   //includes boost/filesystem/path.hpp
-#include <boost/filesystem/path.hpp>
-
-#ifdef WIN32
-#include <direct.h>
-#else
-#include <unistd.h>
-#endif
-
 // --- C/C++ Libraries --- //
 #include <vector>
 
