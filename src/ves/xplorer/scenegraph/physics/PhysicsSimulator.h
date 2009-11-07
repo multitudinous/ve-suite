@@ -196,7 +196,7 @@ private:
     bool mCreatedGroundPlane;
     
     ///The head in vr juggler
-    gadget::PositionInterface head;
+    gadget::PositionInterface* head;
 
     ///
     std::vector< ves::xplorer::scenegraph::CADEntity* > mBoxVector;

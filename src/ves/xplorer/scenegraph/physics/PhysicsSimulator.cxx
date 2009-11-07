@@ -93,7 +93,8 @@ PhysicsSimulator::PhysicsSimulator()
     mDebugBulletFlag( false ),
     m_debugDrawer( 0 )
 {
-    head.init( "VJHead" );
+    head = new gadget::DeviceInterface<class gadget::PositionProxy>;
+    head->init( "VJHead" );
 
     InitializePhysicsSimulation();
 }
@@ -104,6 +105,9 @@ PhysicsSimulator::~PhysicsSimulator()
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsSimulator::ExitPhysics()
 {
+    delete head;
+    head = 0;
+
     for( size_t i = 0; i < mBoxVector.size(); ++i )
     {
         delete mBoxVector.at( i );
