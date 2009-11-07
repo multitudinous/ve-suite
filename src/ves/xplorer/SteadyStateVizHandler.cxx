@@ -172,13 +172,6 @@ std::vector< cfdGraphicsObject* > SteadyStateVizHandler::GetGraphicsObjectsOfTyp
     return cfdGraphicsObjects;
 }
 ////////////////////////////////////////////////////////////////////////////////
-/*
-ves::xplorer::scenegraph::cfdTempAnimation* SteadyStateVizHandler::GetActiveAnimation()
-{
-    return _activeTempAnimation;
-}
-*/
-////////////////////////////////////////////////////////////////////////////////
 void SteadyStateVizHandler::SetActiveVisObject( cfdObjects* tempObject )
 {
     _activeObject = tempObject;
