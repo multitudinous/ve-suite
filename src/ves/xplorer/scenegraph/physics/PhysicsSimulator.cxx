@@ -75,7 +75,7 @@ namespace vx = ves::xplorer;
 namespace vxs = ves::xplorer::scenegraph;
 
 //vprSingletonImp( PhysicsSimulator );
-vprSingletonImpLifetime( PhysicsSimulator, 25 );
+vprSingletonImpLifetime( PhysicsSimulator, 13 );
 
 ////////////////////////////////////////////////////////////////////////////////
 PhysicsSimulator::PhysicsSimulator()

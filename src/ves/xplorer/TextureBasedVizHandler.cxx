@@ -56,9 +56,6 @@
 
 #include <ves/open/xml/Command.h>
 
-#ifdef _PERFORMER
-#elif _OPENSG
-#elif _OSG
 #include <ves/xplorer/volume/cfdVolumeVisNodeHandler.h>
 #include <ves/xplorer/volume/cfdTextureDataSet.h>
 #include <ves/xplorer/volume/cfdTextureManager.h>
@@ -67,13 +64,9 @@
 #include <osg/State>
 //#include <osgUtil/SceneView>
 #include <osgDB/WriteFile>
-#endif
-
 
 #include <fstream>
-#ifdef _PERFORMER
-#elif _OPENSG
-#elif _OSG
+
 #include <ves/xplorer/volume/cfdScalarVolumeVisHandler.h>
 #include <ves/xplorer/volume/cfdScalarShaderManager.h>
 #include <ves/xplorer/volume/cfdOSGTransferShaderManager.h>
@@ -81,7 +74,7 @@
 #include <ves/xplorer/volume/cfdVectorVolumeVisHandler.h>
 #include <ves/xplorer/volume/cfdOSGAdvectionShaderManager.h>
 
-vprSingletonImpLifetime( ves::xplorer::TextureBasedVizHandler, 140 );
+vprSingletonImpLifetime( ves::xplorer::TextureBasedVizHandler, 8 );
 using namespace ves::xplorer::volume;
 using namespace ves::xplorer;
 //////////////////////////////////////////////////////////
@@ -801,5 +794,3 @@ void TextureBasedVizHandler::ViewTextureBasedVis( bool trueFalse )
 {
     _textureBaseSelected = trueFalse;
 }
-#endif
-

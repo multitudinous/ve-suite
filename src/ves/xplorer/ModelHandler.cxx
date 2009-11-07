@@ -100,17 +100,7 @@ using namespace ves::xplorer::volume;
 #include <sstream>
 #include <algorithm>
 
-
-#ifndef WIN32
-// Needed for irix
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/dir.h>
-#endif
-
-#ifdef WIN32
-#include <direct.h>
-#endif
+#include <osgDB/Registry>
 
 vprSingletonImpLifetime( ves::xplorer::ModelHandler, 11 );
 using namespace ves::xplorer;
@@ -208,6 +198,8 @@ ModelHandler::~ModelHandler( void )
     _eventHandlers.clear();
     //vprDEBUG(vesDBG,2) << "ModelHandler end destructor"
     //   << std::endl << vprDEBUG_FLUSH;
+    
+    osgDB::Registry::instance( true );
 }
 
 ///////////////////////

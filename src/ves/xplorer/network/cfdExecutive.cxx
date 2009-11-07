@@ -87,7 +87,7 @@ using namespace ves::open::xml;
 using namespace ves::xplorer::plugin;
 using namespace ves::xplorer::network;
 ////////////////////////////////////////////////////////////////////////////////
-vprSingletonImpLifetime( ves::xplorer::network::cfdExecutive, 15 );
+vprSingletonImpLifetime( ves::xplorer::network::cfdExecutive, 11 );
 ////////////////////////////////////////////////////////////////////////////////
 cfdExecutive::cfdExecutive()
     :

@@ -38,7 +38,7 @@ namespace xplorer
 {
 namespace scenegraph
 {
-vprSingletonImpLifetime( ResourceManager, 14 );
+vprSingletonImpLifetime( ResourceManager, 11 );
 
 ResourceManager::ResourceManager()
 {
