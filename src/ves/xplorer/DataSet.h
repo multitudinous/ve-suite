@@ -324,6 +324,9 @@ public:
     ///Set the model for this dataset
     void SetModel( ves::xplorer::Model* model );
     
+    ///Create a surface wrap of this dataset
+    void CreateSurfaceWrap();
+
 private:
     ///Temporary model pointer
     ves::xplorer::Model* m_tempModel;

@@ -43,6 +43,7 @@
 #include <vtkPointData.h>
 #include <vtkTriangleFilter.h>
 #include <vtkStripper.h>
+#include <vtkPolyDataNormals.h>
 
 #include <iostream>
 
@@ -110,10 +111,28 @@ ves::xplorer::scenegraph::Geode* OSGWarpedSurfaceStage::createMesh(vtkPolyData* 
 void OSGWarpedSurfaceStage::createMeshData( osg::Geometry* geom, vtkPolyData* polydata, std::string disp, std::string colorScalar)
 {
     polydata->Update();
-
+    vtkPointData* pointData = polydata->GetPointData();
+    vtkDataArray* normals = pointData->GetVectors( "Normals" );
     vtkTriangleFilter* triangleFilter = vtkTriangleFilter::New();
-    triangleFilter->SetInput( polydata );
-    triangleFilter->Update();
+
+    if( !normals )
+    {
+        vtkPolyDataNormals* normalGen = vtkPolyDataNormals::New();
+        normalGen->SetInput( polydata );
+        normalGen->NonManifoldTraversalOn();
+        normalGen->AutoOrientNormalsOn();
+        normalGen->ConsistencyOn();
+        normalGen->SplittingOn();
+
+        triangleFilter->SetInput( normalGen->GetOutput() );
+        triangleFilter->Update();
+        normalGen->Delete();
+    }
+    else
+    {
+        triangleFilter->SetInput( polydata );
+        triangleFilter->Update();
+    }
     
     vtkStripper* triangleStripper = vtkStripper::New();
     triangleStripper->SetInput(triangleFilter->GetOutput());
@@ -123,9 +142,10 @@ void OSGWarpedSurfaceStage::createMeshData( osg::Geometry* geom, vtkPolyData* po
     
     int numStrips = polydata->GetNumberOfStrips();
     //int numPts = polydata->GetNumberOfPoints();
-    vtkPointData *pointData = polydata->GetPointData();
+    pointData = polydata->GetPointData();
+    normals = pointData->GetVectors( "Normals" );
 
-    if (pointData==NULL)
+    if( pointData==NULL )
     {
         std::cout << " pd point data is null " << std::endl;
         return;
@@ -133,7 +153,6 @@ void OSGWarpedSurfaceStage::createMeshData( osg::Geometry* geom, vtkPolyData* po
 
     vtkDataArray *vectorArray = pointData->GetVectors(disp.c_str());
     vtkPoints *points = polydata->GetPoints();
-    vtkDataArray *normals = pointData->GetVectors( "Normals" );
                         
     vtkDataArray* dataArray = pointData->GetScalars(colorScalar.c_str());
     double dataRange[2]; 

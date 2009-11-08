@@ -1921,5 +1921,48 @@ void DataSet::CreateCompositeDataSets()
     mgdIterator = 0;
 }    
 ////////////////////////////////////////////////////////////////////////////////
+void DataSet::CreateSurfaceWrap()
+{
+    vtkCellDataToPointData* c2p = vtkCellDataToPointData::New();
+    if( GetDataSet()->IsA( "vtkCompositeDataSet" ) )
+    {
+        vtkCompositeDataGeometryFilter* wireframe = vtkCompositeDataGeometryFilter::New();
+        wireframe->SetInput( GetDataSet() );
+        
+        c2p->SetInputConnection( wireframe->GetOutputPort() );
+        
+        wireframe->Delete();
+    }
+    else
+    {
+        vtkGeometryFilter* wireframe = vtkGeometryFilter::New();
+        wireframe->SetInput( GetDataSet() );
+        
+        c2p->SetInputConnection( wireframe->GetOutputPort() );
+        
+        wireframe->Delete();
+    }
+    
+    c2p->Update();
+    vtkDataSet* currentDataset = vtkPolyData::New();
+    currentDataset->ShallowCopy( c2p->GetOutput() );
+    c2p->Delete();
+
+    m_tempModel->CreateCfdDataSet();
+    ves::xplorer::DataSet* tempDataset = 
+        m_tempModel->GetCfdDataSet( -1 );
+    //set dcs
+    tempDataset->SetDCS( GetDCS() );
+    //set filename     
+    std::ostringstream filenameStream;
+    filenameStream << GetFileName() << "-surface";
+    std::string subfilename = filenameStream.str();
+    tempDataset->SetFileName( subfilename );
+    //set the vector arrow
+    tempDataset->SetArrow( arrow );
+    //Load Data sort of
+    tempDataset->LoadData( currentDataset, false );
+    m_childDataSets.push_back( tempDataset );
+}
 } // end xplorer
 } // end ves

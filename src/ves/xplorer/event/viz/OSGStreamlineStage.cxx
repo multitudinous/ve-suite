@@ -86,7 +86,7 @@ void OSGStreamlineStage::createSLPoint( osg::Geometry& geom, int nInstances, con
     osg::StateSet* ss = geom.getOrCreateStateSet();
 
     osg::Point* point = new osg::Point;
-    point->setSize( 40. );
+    point->setSize( 10. );
     // Use of shader (required for draw instanced) disables fixed-funxtion point parameters.
     // I'll need to investigate how to mimic this functionality in a shader.
     //point->setDistanceAttenuation( osg::Vec3( 0., 0., 0.05f) );

@@ -56,20 +56,17 @@ DataSetLoaderUI API
  * Forward declarations
  */
 
-////@begin forward declarations
 class wxComboBox;
 class wxTextCtrl;
 class wxButton;
 class wxListBox;
 class wxStaticBox;
-
-////@end forward declarations
+class wxCheckBox;
 
 /*!
  * Control identifiers
  */
 
-////@begin control identifiers
 #define ID_DIALOG 10000
 #define SYMBOL_DATASETLOADERUI_STYLE wxDEFAULT_DIALOG_STYLE|wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX|wxMAXIMIZE_BOX|wxMINIMIZE_BOX
 #define SYMBOL_DATASETLOADERUI_TITLE _("DataSetLoader")
@@ -77,7 +74,6 @@ class wxStaticBox;
 #define SYMBOL_DATASETLOADERUI_SIZE wxSize(-1, 500)
 #define SYMBOL_DATASETLOADERUI_POSITION wxDefaultPosition
 
-////@end control identifiers
 
 /*!
  * Compatibility
@@ -133,7 +129,8 @@ public:
         ID_INFORMATION_PACKET_CHANGE_NAME,
         ID_INFORMATION_PACKET_ADD_NAME,
         ID_ADD_DATASET,
-        ID_DELETE_DATASET
+        ID_DELETE_DATASET,
+        ID_CREATE_SURFACE_WRAP
     };
 
     /// Creation
@@ -183,6 +180,8 @@ public:
     /// wxEVT_COMMAND_TEXT_UPDATED event handler for ID_INFORMATION_PACKET_ADD_NAME
     void OnInformationPacketChangeName( wxCommandEvent& event );
 
+    void OnSurfaceWrapCheckBox( wxCommandEvent& event );
+    
     std::string GetActiveDataSetName();
     ves::open::xml::ParameterBlockPtr GetParamBlock();
 
@@ -227,6 +226,8 @@ private:
     wxStaticBox* itemStaticBoxSizer12Static;
     wxStaticBox* itemStaticBoxSizer15Static;
     wxStaticBox* itemStaticBoxSizer19Static;
+    
+    wxCheckBox* m_surfaceWrapChkBox;
     std::set< wxString > textureDirs;
 
     ves::open::xml::model::ModelPtr m_veModel;

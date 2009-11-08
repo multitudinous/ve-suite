@@ -267,6 +267,20 @@ void AddVTKDataSetEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xml
                     }
                 }
             }
+            //////////////////////////////////////////////////////////////
+            if( tempInfoPacket->GetProperty( "Create Surface Wrap" ) )
+            {
+                unsigned int surfaceToggle = 0;
+                tempInfoPacket->GetProperty( "Create Surface Wrap" )->GetData( surfaceToggle );
+                if( surfaceToggle )
+                {
+                    //Create surface
+                    lastDataAdded->CreateSurfaceWrap();
+                }
+                //lastDataAdded->SetPrecomputedSurfaceDir( precomputedSurfaceDir );
+                //lastDataAdded->SetUUID( "VTK_SURFACE_DIR_PATH", tempInfoPacket->GetProperty( "VTK_SURFACE_DIR_PATH" )->GetID() );
+            }
+            
         }
     }
     else if( command->GetDataValuePair( "ADD_PRECOMPUTED_DATA_DIR" ) )
@@ -309,6 +323,26 @@ void AddVTKDataSetEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xml
             command->GetDataValuePair( "DELETE_DATASET" );
         _activeModel->DeleteDataSet( tempDVP->GetDataString() );
         _activeModel->SetActiveDataSet( 0 );
+    }
+    else if( command->GetDataValuePair( "Update Surface Wrap" ) )
+    {
+        DataValuePairSharedPtr tempDVP = boost::dynamic_pointer_cast<DataValuePair>( command->GetDataValuePair( "Update Surface Wrap" )->GetDataXMLObject() );
+        unsigned int surfaceToggle = 0;
+        tempDVP->GetData( surfaceToggle );
+        DataSet* tempDataSet = _activeModel->GetCfdDataSet( _activeModel->GetIndexOfDataSet( dataSetName ) );
+        if( surfaceToggle )
+        {
+            //Create surface
+            tempDataSet->CreateSurfaceWrap();
+        }
+        else
+        {
+            //delete surface
+            std::string surfaceFilename = 
+                tempDataSet->GetFileName() + "-surface";
+            _activeModel->DeleteDataSet( surfaceFilename );
+            //_activeModel->SetActiveDataSet( 0 );
+        }
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -384,5 +418,7 @@ void AddVTKDataSetEventHandler::LoadSurfaceFiles( std::string precomputedSurface
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AddVTKDataSetEventHandler::Load3DTextureDirectories( std::string dirToLoad )
-{}
+{
+    dirToLoad = dirToLoad;
+}
 ////////////////////////////////////////////////////////////////////////////////

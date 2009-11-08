@@ -47,6 +47,7 @@
 #include <wx/textdlg.h>
 #include <wx/string.h>
 #include <wx/log.h>
+#include <wx/checkbox.h>
 
 #include <ves/conductor/util/DataSetLoaderUI.h>
 #include <ves/conductor/util/TransformUI.h>
@@ -88,8 +89,7 @@ BEGIN_EVENT_TABLE( DataSetLoaderUI, wxDialog )
     EVT_COMBOBOX( ID_COMBOBOX, DataSetLoaderUI::OnInformationPacketChange ) // this will refresh all the widgets for the given dataset
     //EVT_TEXT( ID_COMBOBOX, DataSetLoaderUI::OnInformationPacketChangeName ) // change the name of a given data set, will also need to change the name seen by xplorer
     //EVT_TEXT_ENTER( ID_COMBOBOX, DataSetLoaderUI::OnInformationPacketAdd ) // add a name to the list once enter is pushed, also add new information block
-    ////@end DataSetLoaderUI event table entries
-
+    EVT_CHECKBOX( ID_CREATE_SURFACE_WRAP, DataSetLoaderUI::OnSurfaceWrapCheckBox )
 END_EVENT_TABLE()
 
 /*!
@@ -131,6 +131,7 @@ bool DataSetLoaderUI::Create( wxWindow* parent, wxWindowID id, const wxString& c
     itemStaticBoxSizer12Static = 0;
     itemStaticBoxSizer15Static = 0;
     itemStaticBoxSizer19Static = 0;
+    m_surfaceWrapChkBox = 0;
 ////@end DataSetLoaderUI member initialisation
 
 ////@begin DataSetLoaderUI creation
@@ -277,6 +278,12 @@ void DataSetLoaderUI::CreateControls()
         scalarButton->SetToolTip( _( "Future Use" ) );
     scalarButton->Enable( false );
     itemStaticBoxSizer15->Add( scalarButton, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
+    
+    m_surfaceWrapChkBox = new wxCheckBox( itemDialog1, ID_CREATE_SURFACE_WRAP, _T( "Create Surface Wrap" ), wxDefaultPosition, wxDefaultSize, 0 );
+    m_surfaceWrapChkBox->SetValue( false );
+    m_surfaceWrapChkBox->SetHelpText( _( "Create a surface from the 3D dataset" ) );
+    itemStaticBoxSizer15->Add( m_surfaceWrapChkBox, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
+    
     transformButton->Raise();
     ///////////////////////////////////////////////////////
     itemStaticBoxSizer19Static = new wxStaticBox( itemDialog1, wxID_ANY, _( "Volumetric Data Directories" ) );
@@ -366,6 +373,13 @@ void DataSetLoaderUI::SetTextCtrls( void )
             {
                 //clear...then append
                 preComputDirTextEntry->SetValue( wxString( tempDVP->GetDataString().c_str(), wxConvUTF8 ) );
+            }
+            else if( tempDVP->GetDataName() == "Create Surface Wrap" )
+            {
+                //clear...then append
+                unsigned int tempData = 0;
+                tempDVP->GetData( tempData );
+                m_surfaceWrapChkBox->SetValue( tempData );
             }
         }
     }
@@ -636,22 +650,19 @@ void DataSetLoaderUI::OnLoadTextureFile( wxCommandEvent& WXUNUSED( event ) )
 void DataSetLoaderUI::OnListboxSelected( wxCommandEvent& WXUNUSED( event ) )
 {
     // When the list box is selected
-////@begin wxEVT_COMMAND_LISTBOX_SELECTED event handler for ID_LISTBOX in DataSetLoaderUI.
     size_t numProperties = mParamBlock->GetNumberOfProperties();
     for( size_t i = 0; i < numProperties; ++i )
     {
         ves::open::xml::DataValuePairPtr tempDVP = mParamBlock->GetProperty( i );
         std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( itemListBox24->GetStringSelection().c_str() ) ) );
-        if (( tempDVP->GetDataName() == "VTK_TEXTURE_DIR_PATH" ) &&
-                ( tempDVP->GetDataString() == tempStr )
-           )
+        if( ( tempDVP->GetDataName() == "VTK_TEXTURE_DIR_PATH" ) &&
+                ( tempDVP->GetDataString() == tempStr ) )
         {
             mParamBlock->RemoveProperty( i );
             itemListBox24->Delete( itemListBox24->GetSelection() );
             return;
         }
     }
-////@end wxEVT_COMMAND_LISTBOX_SELECTED event handler for ID_LISTBOX in DataSetLoaderUI.
 }
 //////////////////////////////////////////////////////////////////////////////
 void DataSetLoaderUI::OnInformationPacketChange( wxCommandEvent& WXUNUSED( event ) )
@@ -826,3 +837,25 @@ void DataSetLoaderUI::SendCommandToXplorer(
     //Now send the command
     CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
 }
+////////////////////////////////////////////////////////////////////////////////
+void DataSetLoaderUI::OnSurfaceWrapCheckBox( wxCommandEvent& WXUNUSED( event ) )
+{
+    ves::open::xml::DataValuePairPtr surfaceDVP = 
+        mParamBlock->GetProperty( "Create Surface Wrap" );
+    if( !surfaceDVP )
+    {
+        ves::open::xml::DataValuePairSharedPtr dataValuePair(
+            new ves::open::xml::DataValuePair() );
+        mParamBlock->AddProperty( dataValuePair );
+        surfaceDVP = dataValuePair;
+    }
+    unsigned int chkValue = m_surfaceWrapChkBox->GetValue();
+    surfaceDVP->SetData( "Create Surface Wrap", chkValue );
+
+    ves::open::xml::DataValuePairSharedPtr dataValuePair(
+        new ves::open::xml::DataValuePair() );
+    dataValuePair->SetData( "Update Surface Wrap", surfaceDVP );
+
+    SendCommandToXplorer( dataValuePair );
+}
+////////////////////////////////////////////////////////////////////////////////
