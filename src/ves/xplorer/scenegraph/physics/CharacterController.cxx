@@ -33,11 +33,11 @@
 
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/physics/CharacterController.h>
+#include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
+#include <ves/xplorer/scenegraph/physics/KinematicCharacterController.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/FindParentWithNameVisitor.h>
-
-#include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
 
 // --- OSG Includes --- //
 #include <osg/Geode>
@@ -50,8 +50,6 @@
 // --- Bullet Includes --- //
 #include <btBulletDynamicsCommon.h>
 #include <BulletDynamics/Dynamics/btDynamicsWorld.h>
-
-#include <BulletDynamics/Character/btKinematicCharacterController.h>
 
 #include <BulletCollision/CollisionDispatch/btGhostObject.h>
 
@@ -83,7 +81,7 @@ CharacterController::CharacterController()
     mBufferSize( 0 ),
     mCharacterWidth( 1.83 ),
     //The average height of a male in the U.S. is 5.83 ft
-    mCharacterHeight( 6/*5.83*/ ),
+    mCharacterHeight( 6.0/*5.83*/ ),
     mLookAtOffsetZ( mCharacterHeight * 2.0 ),
     mCameraDistance( 50.0 ),
     mOccludeDistance( 50.0 ),
@@ -155,7 +153,7 @@ void CharacterController::Initialize()
 
     btScalar stepHeight = btScalar( 1.0 );
     mCharacter =
-        new btKinematicCharacterController(
+        new KinematicCharacterController(
             mGhostObject, capsuleShape, stepHeight );
 
     mCharacter->setUpAxis( 2 );
@@ -279,6 +277,9 @@ void CharacterController::Jump()
     {
         return;
     }
+    
+
+    mCharacter->set
 
     btTransform xform;
     mRigidBody->getMotionState()->getWorldTransform( xform );
@@ -580,6 +581,7 @@ void CharacterController::EyeToCenterRayTest(
     */
 
     //OSG implementation: works for all geometry regardless
+    ///Need to fix center to be at the head position for the character
     osg::Vec3d startPoint( center.x(), center.y(), center.z() );
     osg::Vec3d endPoint( eye.x(), eye.y(), eye.z() );
     mLineSegmentIntersector->reset();
@@ -698,7 +700,7 @@ void CharacterController::LookAt(
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CharacterController::SetBufferSizeAndWeights(
-    size_t bufferSize, double weightModifier )
+    unsigned int bufferSize, double weightModifier )
 {
     //Set
     mBufferSize = bufferSize;
@@ -715,7 +717,7 @@ void CharacterController::SetBufferSizeAndWeights(
     mWeights.at( 0 ) = 1.0;
     mTotalWeight += mWeights.at( 0 );
     //Assign other weights based off weight modifier
-    for( size_t i = 1; i < mBufferSize; ++i )
+    for( unsigned int i = 1; i < mBufferSize; ++i )
     {
         mWeights.at( i ) = mWeights.at( i - 1 ) * mWeightModifier;
         mTotalWeight += mWeights.at( i );
@@ -739,7 +741,7 @@ std::pair< double, double > CharacterController::UpdateHistoryBuffer()
     //Use a weighted average for the history buffer contents
     double totalValueX( 0.0 );
     double totalValueZ( 0.0 );
-    for( size_t i = 0; i < mBufferSize; ++i )
+    for( unsigned int i = 0; i < mBufferSize; ++i )
     {
         totalValueX += mHistoryBuffer.at( i ).first * mWeights.at( i );
         totalValueZ += mHistoryBuffer.at( i ).second * mWeights.at( i );

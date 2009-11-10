@@ -53,11 +53,10 @@ class Switch;
 #include <LinearMath/btTransform.h>
 
 class btDynamicsWorld;
-class btKinematicCharacterController;
 class btPairCachingGhostObject;
 class btCollisionObject;
 
-// --- C/C++ Includes --- //
+// --- STL Includes --- //
 #include <vector>
 #include <deque>
 
@@ -67,6 +66,7 @@ namespace xplorer
 {
 namespace scenegraph
 {
+class KinematicCharacterController;
 
 /*!\file CharacterController.h
  *
@@ -176,7 +176,8 @@ private:
     ///Sets the buffer size & weight modifier to calculate device input damping
     ///\param bufferSize The size of the history buffer
     ///\param weightModifier The value of the weight modifier
-    void SetBufferSizeAndWeights( size_t bufferSize, double weightModifier );
+    void SetBufferSizeAndWeights(
+        unsigned int bufferSize, double weightModifier );
 
     ///
     ///\return Returns the delta device input for the frame
@@ -315,7 +316,7 @@ private:
     double mTotalWeight;
 
     ///
-    size_t mBufferSize;
+    unsigned int mBufferSize;
 
     ///
     std::vector< double > mWeights;
@@ -333,7 +334,7 @@ private:
     btQuaternion mCameraRotationZ;
 
     ///
-    btKinematicCharacterController* mCharacter;
+    KinematicCharacterController* mCharacter;
 
     ///
     btPairCachingGhostObject* mGhostObject;
