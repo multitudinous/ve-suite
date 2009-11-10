@@ -6,8 +6,8 @@
 #define MyAppVerName "POCO"
 #define MyAppPublisher "VERG"
 #define MyAppURL "www.vesuite.org"
-#define POCOHOME "C:\dev\ves_deps\poco-1.3.5-all\poco-1.3.5-all"
-#define SQLITEHOME "C:\dev\ves_deps\sqlitedll-3_6_17"
+#define POCOHOME "C:\Projects\ves-windows\poco-1.3.5-all"
+#define SQLITEHOME "C:\Projects\ves-windows\sqlitedll-3_6_20"
 
 [Setup]
 AppName={#MyAppName}
