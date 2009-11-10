@@ -102,9 +102,6 @@ NetworkSystemView::NetworkSystemView( const NetworkSystemView& input )
 ////////////////////////////////////////////////////////////////////////////////
 NetworkSystemView::~NetworkSystemView( void )
 {
-    ves::xplorer::scenegraph::SceneManager::instance()->GetNetworkDCS()->
-        removeChildren( 0, ves::xplorer::scenegraph::SceneManager::instance()->
-        GetNetworkDCS()->getNumChildren() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 NetworkSystemView& NetworkSystemView::operator=( const NetworkSystemView& input )
@@ -124,6 +121,10 @@ osg::Group* NetworkSystemView::DrawNetwork( std::string netId )
     {
         return 0;
     }
+
+    ves::xplorer::scenegraph::SceneManager::instance()->GetNetworkDCS()->
+        removeChildren( 0, ves::xplorer::scenegraph::SceneManager::instance()->
+        GetNetworkDCS()->getNumChildren() );
 
     osg::ref_ptr<osg::Group> loadedModels = new osg::Group();
     // now lets create a list of them

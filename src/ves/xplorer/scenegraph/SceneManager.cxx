@@ -90,7 +90,7 @@
 using namespace ves::xplorer::scenegraph;
 namespace vxs = ves::xplorer::scenegraph;
 
-vprSingletonImpLifetime( SceneManager, 12 );
+vprSingletonImpLifetime( SceneManager, 9 );
 
 ////////////////////////////////////////////////////////////////////////////////
 SceneManager::SceneManager()
