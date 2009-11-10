@@ -3,7 +3,7 @@
 
 #include <vesenv.iss>
 #define MyAppName "VE-Suite"
-#define MyAppVerName "VE-Suite 1.1.7"
+#define MyAppVerName "VE-Suite 2.1.0"
 #define MyAppPublisher "Virtural Engineering Research Group"
 #define MyAppURL "www.vesuite.org"
 #define VELauncher "velauncher.exe"
@@ -35,7 +35,7 @@ WizardImageBackColor=clWhite
 ChangesAssociations=true
 BackColor=$a16502
 BackColor2=$1b84f7
-SetupIconFile={#VEDEVHOME}\dist\installerImages\Ve_icon.ico
+SetupIconFile={#VEDEVHOME}\dist\installerImages\ves_icon.ico
 PrivilegesRequired=none
 UsePreviousGroup=false
 VersionInfoCompany=SMDS Program
@@ -60,7 +60,7 @@ Root: HKCU; Subkey: Software\VE-Conductor; ValueType: none; Components: " exampl
 Root: HKCR; SubKey: .ves; ValueType: string; ValueData: VESNetworkfile; Flags: uninsdeletekey createvalueifdoesntexist
 Root: HKCR; SubKey: VESNetworkfile; ValueType: string; ValueData: VE-Suite Network file; Flags: uninsdeletekey
 Root: HKCR; SubKey: VESNetworkfile\shell\open\command; ValueType: string; ValueData: """{app}\bin\velauncher.exe"" ""%1"""; Flags: uninsdeletevalue
-Root: HKCR; Subkey: VESNetworkfile\DefaultIcon; ValueType: string; ValueData: {app}\bin\installerImages\Ve_document.ico; Flags: uninsdeletevalue; Components: ; Tasks: 
+Root: HKCR; Subkey: VESNetworkfile\DefaultIcon; ValueType: string; ValueData: {app}\bin\installerImages\ves_document.ico; Flags: uninsdeletevalue; Components: ; Tasks: 
 Root: HKCR; Subkey: VESNetworkfile\shell\OpenWithVELauncher; ValueType: string; ValueData: Open with &VE-Launcher
 Root: HKCR; Subkey: VESNetworkfile\shell\OpenWithVELauncher\command; ValueType: string; ValueData: """{app}\bin\velauncher.exe"" ""%1"""; Flags: createvalueifdoesntexist uninsdeletekey
 [Tasks]
@@ -80,11 +80,11 @@ Source: {#VEINSTALLHOME}\bin\velauncher.exe; DestDir: {app}\bin
 
 [Icons]
 Name: {group}\Uninstallers\{cm:UninstallProgram,{#MyAppName}}; Filename: {uninstallexe}
-Name: {group}\VE-Suite-{#VEVERSION}; Filename: {app}\bin\{#VELauncher}; WorkingDir: {app}; IconFilename: {app}\bin\installerImages\VE_icon.ico
-Name: {commondesktop}\VE-Suite-{#VEVERSION}; Filename: {app}\bin\velauncher.exe; WorkingDir: {app}; IconFilename: {app}\bin\installerImages\VE_icon.ico; Tasks: desktopVELauncherIcon
+Name: {group}\VE-Suite-{#VEVERSION}; Filename: {app}\bin\{#VELauncher}; WorkingDir: {app}; IconFilename: {app}\bin\installerImages\ves_icon.ico
+Name: {commondesktop}\VE-Suite-{#VEVERSION}; Filename: {app}\bin\velauncher.exe; WorkingDir: {app}; IconFilename: {app}\bin\installerImages\ves_icon.ico; Tasks: desktopVELauncherIcon
 
 [Run]
-Filename: {tmp}\vcredist_x86.exe; Description: Install Microsoft Runtime Redistributable for SP1 (NOTE: This is REQIURED to run VE-Suite if Microsoft Visual Studio SP1 compatible runtime libraries are not already installed); StatusMsg: Installing Microsoft Runtime Redistributable for SP1...; Flags: postinstall unchecked; Components: 
+;Filename: {tmp}\vcredist_x86.exe; Description: Install Microsoft Runtime Redistributable for SP1 (NOTE: This is REQIURED to run VE-Suite if Microsoft Visual Studio SP1 compatible runtime libraries are not already installed); StatusMsg: Installing Microsoft Runtime Redistributable for SP1...; Flags: postinstall unchecked; Components:
 [_ISToolPreCompile]
 ;Name: D:\devEnv\VES\share\scripts\win\buildVELauncher.exe.bat; Parameters: ; Flags: abortonerror
 [_ISTool]

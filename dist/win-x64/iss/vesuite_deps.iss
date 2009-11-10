@@ -2,8 +2,8 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #include <vesenv.iss>
-#define MyAppName "VE_Suite_Dependencies"
-#define MyAppVerName "VE_Suite.1.1_Dependencies"
+#define MyAppName "VE-Suite_Dependencies"
+#define MyAppVerName "VE-Suite-2.1.0_Dependencies"
 #define MyAppPublisher "Virtual Engineering Research Group"
 #define MyAppURL "www.vesuite.org"
 
@@ -47,6 +47,8 @@ Name: juggler; Description: vrJuggler; Types: full
 Name: apr; Description: Apache APR; Types: full
 Name: osgal; Description: osgAL; Types: full
 Name: minerva; Description: Minerva; Types: full
+Name: poco; Description: POCO; Types: full
+Name: osgworks; Description: osgWorks; Types: full
 Name: depsbuildenv; Description: Headers and Libs
 
 [Files]
@@ -115,6 +117,13 @@ Source: {#DEPENDSINSTALLHOME}\{#MINERVAHOME}\include\*.h; DestDir: {app}\include
 Source: {#DEPENDSINSTALLHOME}\{#MINERVAHOME}\lib\*.lib; DestDir: {app}\lib; Flags: ignoreversion skipifsourcedoesntexist; Components: depsbuildenv
 Source: {#DEPENDSINSTALLHOME}\{#MINERVAHOME}\lib\*.dll; DestDir: {app}\lib; Flags: ignoreversion skipifsourcedoesntexist; Components: minerva
 Source: {#DEPENDSINSTALLHOME}\{#MINERVAHOME}\lib\*.plug; DestDir: {app}\lib; Flags: ignoreversion skipifsourcedoesntexist; Components: minerva
+
+; osgWorks Files
+Source: {#DEPENDSINSTALLHOME}\{#OSGWORKSHOME}\include\*.h; DestDir: {app}\include; Flags: ignoreversion recursesubdirs; Components: depsbuildenv
+Source: {#DEPENDSINSTALLHOME}\{#OSGWORKSHOME}\lib\*.lib; DestDir: {app}\lib; Flags: ignoreversion; Components: depsbuildenv
+Source: {#DEPENDSINSTALLHOME}\{#OSGWORKSHOME}\lib\*.fpc; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs; Components: depsbuildenv
+Source: {#DEPENDSINSTALLHOME}\{#OSGWORKSHOME}\lib\*.dll; DestDir: {app}\lib; Flags: ignoreversion; Components: osgworks
+Source: {#DEPENDSINSTALLHOME}\{#OSGWORKSHOME}\bin\*; DestDir: {app}\bin; Flags: ignoreversion; Components: osgworks; Languages: 
 
 ; README setup for depends info
 Source: {#VEDEVHOME}\dist\win\iss\dependencies.txt; DestDir: {app}; Flags: isreadme; DestName: README.txt; Components: ; Languages: 
