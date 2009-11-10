@@ -1,8 +1,8 @@
 ; osgAL iss installer
 #include <vesenv.iss>
-#define OSGALVERSION "0.6.1-74"
+#define MyAppVer "0.6.1-76"
 #define MyAppName "osgAL Pre-Compile"
-#define MyAppVerName "osgAL_{#OSGALVERSION} Pre-Compile_vc{#MSVCVERSION}"
+#define MyAppVerName "osgAL"
 #define MyAppPublisher "VERG"
 #define MyAppURL "www.vesuite.org"
 #define LIBOGGHOME "C:\dev\ves_deps\osgAL_Test\libvorbis-1.2.0\ogg"
@@ -13,27 +13,27 @@
 
 [Setup]
 AppName={#MyAppName}
-AppVerName=osgAL_{#OSGALVERSION} Pre-Compile_vc{#MSVCVERSION}
+AppVerName={#MyAppVerName}_{#MyAppVer}_{#MSVCVERSION}
 AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
-DefaultDirName=C:\osgAL_{#OSGALVERSION}_Pre-Compile_vc{#MSVCVERSION}
+DefaultDirName=C:\{#MyAppVerName}_{#MyAppVer}_{#MSVCVERSION}
 DefaultGroupName={#VESGROUPNAME}\Uninstallers_{#MSVCVERSION}
 AllowNoIcons=true
-OutputBaseFilename=osgAL_{#OSGALVERSION}-precompile_{#MSVCVERSION}
+OutputBaseFilename={#MyAppVerName}_{#MyAppVer}_{#MSVCVERSION}
+SetupIconFile={#VEDEVHOME}\dist\installerImages\ves_icon.ico
 Compression=lzma
 SolidCompression=true
-OutputDir={#INSTALLERINSTALLLOCATION}
 WindowVisible=true
 WizardImageFile={#VEDEVHOME}\dist\installerImages\velauncher_banner.bmp
 BackColor=$a16502
 BackColor2=$1b84f7
+WizardImageBackColor=clWhite
 WizardSmallImageFile={#VEDEVHOME}\dist\installerImages\ve_icon.bmp
 WizardImageStretch=false
+OutputDir={#INSTALLERINSTALLLOCATION}
 AllowRootDirectory=true
-WizardImageBackColor=clWhite
-SetupIconFile={#VEDEVHOME}\dist\installerImages\ve_icon.ico
 EnableDirDoesntExistWarning=true
 PrivilegesRequired=none
 RestartIfNeededByRun=false
@@ -43,7 +43,7 @@ TimeStampsInUTC=true
 DisableProgramGroupPage=false
 Uninstallable=true
 [Languages]
-Name: english; MessagesFile: compiler:Default.isl
+Name: eng; MessagesFile: compiler:Default.isl
 
 [Files]
 ; includes

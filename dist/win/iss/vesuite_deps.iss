@@ -3,7 +3,7 @@
 
 #include <vesenv.iss>
 #define MyAppName "VE-Suite_Dependencies"
-#define MyAppVerName "VE_Suite.1.1_Dependencies"
+#define MyAppVerName "VE-Suite-2.1.0_Dependencies"
 #define MyAppPublisher "Virtual Engineering Research Group"
 #define MyAppURL "www.vesuite.org"
 
