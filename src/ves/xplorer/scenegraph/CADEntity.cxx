@@ -218,3 +218,20 @@ void CADEntity::SetOpacityValue( float opacity )
     mOpacity = opacity;
 }
 ////////////////////////////////////////////////////////////////////////////////
+void CADEntity::Save()
+{
+    if( mPhysicsRigidBody )
+    {
+        // Add to PhysicsSata for save/restore.
+        /*osg::ref_ptr< osgbBullet::PhysicsData > pd = new osgbBullet::PhysicsData;
+        pd->_cr = converter.getOrCreateCreationRecord();
+        pd->_body = rb;
+        std::ostringstream ostr;
+        ostr << "id" << id++;
+        osg::ref_ptr< osgwTools::RefID > rid = new osgwTools::RefID( ostr.str() );
+        ps.addPhysicsData( rid.get(), pd.get() );
+        
+        osgbBulletPlus::savePhysics( mFileName, mDCS->getParent( 0 ).get(), ps );*/
+    }
+}
+////////////////////////////////////////////////////////////////////////////////

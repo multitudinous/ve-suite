@@ -143,6 +143,8 @@ public:
     ///Set the opacity value for this file
     ///\param opacity
     void SetOpacityValue( float opacity );
+    
+    void Save();
 
 protected:
     ///The current state of physics for CADEntity
