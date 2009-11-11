@@ -42,9 +42,6 @@
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
 
-#include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
-#include <ves/xplorer/scenegraph/physics/CharacterController.h>
-
 #include <ves/xplorer/scenegraph/manipulator/ManipulatorManager.h>
 #include <ves/xplorer/scenegraph/manipulator/TransformManipulator.h>
 
@@ -101,9 +98,6 @@ DeviceHandler::DeviceHandler()
     device = NULL;
 
     //Set properties in Devices
-    scenegraph::CharacterController* characterController =
-        scenegraph::SceneManager::instance()->GetCharacterController();
-    characterController->Initialize();
     DeviceMap::const_iterator itr = m_deviceMap.begin();
     for( itr; itr != m_deviceMap.end(); ++itr )
     {
