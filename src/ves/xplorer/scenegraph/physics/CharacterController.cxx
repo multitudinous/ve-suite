@@ -66,12 +66,9 @@ using namespace ves::xplorer::scenegraph;
 CharacterController::CharacterController()
     :
     KinematicCharacterController(),
+    m_translateType( TranslateType::NONE ),
     mActive( false ),
     m1stPersonMode( false ),
-    mStepForward( false ),
-    mStepBackward( false ),
-    mStrafeLeft( false ),
-    mStrafeRight( false ),
     mFlying( false ),
     mCameraDistanceLERP( false ),
     mCameraRotationSLERP( false ),
@@ -94,11 +91,13 @@ CharacterController::CharacterController()
     mFromOccludeDistance( 0.0 ),
     mToOccludeDistance( 0.0 ),
     //This is the speed of the character in ft/s
-    mSpeed( 15.0 ),
+    m_forwardBackwardSpeedModifier( 15.0 ),
+    m_leftRightSpeedModifier( 15.0 ),
+    m_upDownSpeedModifier( 100.0 ),
     //Slow walk speed is 5 km/h ~ 1.0 ft/s
-    mMinSpeed( 1.0 ),
+    //mMinSpeed( 1.0 ),
     //Usain Bolt's top 10m split 10m/0.82s ~ 40 ft/s
-    mMaxSpeed( 40.0 ),
+    //mMaxSpeed( 40.0 ),
     mTurnAngleX( 0.0 ),
     mTurnAngleZ( 0.0 ),
     mDeltaTurnAngleX( 0.0 ),
@@ -258,62 +257,110 @@ void CharacterController::Jump()
 ////////////////////////////////////////////////////////////////////////////////
 void CharacterController::StepForward( bool onOff )
 {
-    mStepForward = onOff;
-#ifdef VES_USE_ANIMATED_CHARACTER
     if( onOff )
     {
+        m_translateType = m_translateType | TranslateType::STEP_FORWARD;
+#ifdef VES_USE_ANIMATED_CHARACTER
         mCharacterAnimations->setSingleChildOn( 1 );
+#endif
     }
     else
     {
+        m_translateType = m_translateType ^ TranslateType::STEP_FORWARD;
+#ifdef VES_USE_ANIMATED_CHARACTER
         mCharacterAnimations->setSingleChildOn( 0 );
-    }
 #endif
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CharacterController::StepBackward( bool onOff )
 {
-    mStepBackward = onOff;
-#ifdef VES_USE_ANIMATED_CHARACTER
     if( onOff )
     {
+        m_translateType = m_translateType | TranslateType::STEP_BACKWARD;
+#ifdef VES_USE_ANIMATED_CHARACTER
         mCharacterAnimations->setSingleChildOn( 2 );
+#endif
     }
     else
     {
+        m_translateType = m_translateType ^ TranslateType::STEP_BACKWARD;
+#ifdef VES_USE_ANIMATED_CHARACTER
         mCharacterAnimations->setSingleChildOn( 0 );
-    }
 #endif
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CharacterController::StrafeLeft( bool onOff )
 {
-    mStrafeLeft = onOff;
-#ifdef VES_USE_ANIMATED_CHARACTER
     if( onOff )
     {
+        m_translateType = m_translateType | TranslateType::STRAFE_LEFT;
+#ifdef VES_USE_ANIMATED_CHARACTER
         mCharacterAnimations->setSingleChildOn( 3 );
+#endif
     }
     else
     {
+        m_translateType = m_translateType ^ TranslateType::STRAFE_LEFT;
+#ifdef VES_USE_ANIMATED_CHARACTER
         mCharacterAnimations->setSingleChildOn( 0 );
-    }
 #endif
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CharacterController::StrafeRight( bool onOff )
 {
-    mStrafeRight = onOff;
-#ifdef VES_USE_ANIMATED_CHARACTER
     if( onOff )
     {
+        m_translateType = m_translateType | TranslateType::STRAFE_RIGHT;
+#ifdef VES_USE_ANIMATED_CHARACTER
         mCharacterAnimations->setSingleChildOn( 4 );
+#endif
     }
     else
     {
+        m_translateType = m_translateType ^ TranslateType::STRAFE_RIGHT;
+#ifdef VES_USE_ANIMATED_CHARACTER
         mCharacterAnimations->setSingleChildOn( 0 );
-    }
 #endif
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void CharacterController::StepUp( bool onOff )
+{
+    if( onOff )
+    {
+        m_translateType = m_translateType | TranslateType::STEP_UP;
+#ifdef VES_USE_ANIMATED_CHARACTER
+        //mCharacterAnimations->setSingleChildOn( 4 );
+#endif
+    }
+    else
+    {
+        m_translateType = m_translateType ^ TranslateType::STEP_UP;
+#ifdef VES_USE_ANIMATED_CHARACTER
+        //mCharacterAnimations->setSingleChildOn( 0 );
+#endif
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void CharacterController::StepDown( bool onOff )
+{
+    if( onOff )
+    {
+        m_translateType = m_translateType | TranslateType::STEP_DOWN;
+#ifdef VES_USE_ANIMATED_CHARACTER
+        //mCharacterAnimations->setSingleChildOn( 4 );
+#endif
+    }
+    else
+    {
+        m_translateType = m_translateType ^ TranslateType::STEP_DOWN;
+#ifdef VES_USE_ANIMATED_CHARACTER
+        //mCharacterAnimations->setSingleChildOn( 0 );
+#endif
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CharacterController::Rotate( double dx, double dy )
@@ -752,47 +799,65 @@ void CharacterController::UpdateCharacterRotation()
 void CharacterController::UpdateCharacterTranslation( btScalar dt )
 {
     //Calculate character translation
-    btVector3 direction( 0.0, 0.0, 0.0 );
-    btScalar speed = mSpeed * dt;
-    if( mStepForward || mStepBackward || mStrafeLeft || mStrafeRight )
+    btVector3 velocity( 0.0, 0.0, 0.0 );
+    if( m_translateType | TranslateType::NONE )
     {
         //Get current character transform
         btTransform xform = m_ghostObject->getWorldTransform();
         xform.setRotation( xform.getRotation().inverse() );
 
-        btVector3 strafeDir = xform.getBasis()[ 0 ];
-        strafeDir.normalize();
-
-        btVector3 forwardDir = xform.getBasis()[ 1 ];
-        forwardDir.normalize();
-
-        btVector3 upDir = xform.getBasis()[ 2 ];
-        upDir.normalize();
-
-        if( mStepForward )
+        if( m_translateType & TranslateType::STEP_FORWARD_BACKWARD )
         {
-            direction += forwardDir;
+            btVector3 forwardBackwardVelocity( 0.0, 0.0, 0.0 );
+            btVector3 forwardDir = xform.getBasis()[ 1 ];
+            forwardDir.normalize();
+            if( m_translateType & TranslateType::STEP_FORWARD )
+            {
+                forwardBackwardVelocity += forwardDir;
+            }
+            if( m_translateType & TranslateType::STEP_BACKWARD )
+            {
+                forwardBackwardVelocity -= forwardDir;
+            }
+
+            forwardBackwardVelocity *= dt * m_forwardBackwardSpeedModifier;
+            velocity += forwardBackwardVelocity;
         }
 
-        if( mStepBackward )
+        if( m_translateType & TranslateType::STRAFE_LEFT_RIGHT )
         {
-            direction -= forwardDir;
+            btVector3 leftRightVelocity( 0.0, 0.0, 0.0 );
+            btVector3 strafeDir = xform.getBasis()[ 0 ];
+            strafeDir.normalize();
+            if( m_translateType & TranslateType::STRAFE_LEFT )
+            {
+                leftRightVelocity -= strafeDir;
+            }
+            if( m_translateType & TranslateType::STRAFE_RIGHT )
+            {
+                leftRightVelocity += strafeDir;
+            }
+
+            leftRightVelocity *= dt * m_leftRightSpeedModifier;
+            velocity += leftRightVelocity;
         }
 
-        if( mStrafeLeft )
+        if( m_translateType & TranslateType::STEP_UP_DOWN )
         {
-            direction -= strafeDir;
-        }
+            btVector3 upDownVelocity( 0.0, 0.0, 0.0 );
+            btVector3 upDir = xform.getBasis()[ 2 ];
+            upDir.normalize();
+            if( m_translateType & TranslateType::STEP_UP )
+            {
+                upDownVelocity += upDir;
+            }
+            if( m_translateType & TranslateType::STEP_DOWN )
+            {
+                upDownVelocity -= upDir;
+            }
 
-        if( mStrafeRight )
-        {
-            direction += strafeDir;
-        }
-
-        //Normalize the movement
-        if( direction.length() > 0.0 )
-        {
-            direction = direction.normalize();
+            upDownVelocity *= dt * m_upDownSpeedModifier;
+            velocity += upDownVelocity;
         }
 
         //slerp mCameraRotation if necessary
@@ -802,80 +867,7 @@ void CharacterController::UpdateCharacterTranslation( btScalar dt )
         }
     }
 
-    setWalkDirection( direction * speed );
-
-    /*
-    //Calculate character translation
-    btVector3 displacement = m_defaultGravity;
-
-    //Compute horizontal displacement
-    btScalar speed = mSpeed * dt;
-    if( mStepForward || mStepBackward || mStrafeLeft || mStrafeRight )
-    {
-        //Get current character transform
-        btTransform xform = m_ghostObject->getWorldTransform();
-        xform.setRotation( xform.getRotation().inverse() );
-
-        btVector3 strafeDir = xform.getBasis()[ 0 ];
-        strafeDir.normalize();
-
-        btVector3 forwardDir = xform.getBasis()[ 1 ];
-        forwardDir.normalize();
-
-        btVector3 upDir = xform.getBasis()[ 2 ];
-        upDir.normalize();
-
-        btVector3 horizontalDisplacement( 0.0, 0.0, 0.0 );
-        if( mStepForward )
-        {
-            horizontalDisplacement += forwardDir;
-        }
-
-        if( mStepBackward )
-        {
-            horizontalDisplacement -= forwardDir;
-        }
-
-        if( mStrafeLeft )
-        {
-            horizontalDisplacement -= strafeDir;
-        }
-
-        if( mStrafeRight )
-        {
-            horizontalDisplacement += strafeDir;
-        }
-
-        //Normalize the movement
-        if( horizontalDisplacement.length() > 0.0 )
-        {
-            horizontalDisplacement = horizontalDisplacement.normalize();
-            displacement += horizontalDisplacement * speed;
-        }
-
-        //slerp mCameraRotation if necessary
-        if( mCameraRotationSLERP )
-        {
-            CameraRotationSLERP();
-        }
-    }
-
-    //Compute vertical displacement
-    displacement *= dt;
-    double height = GetHeight( dt );
-    if( height != 0.0 )
-    {
-        displacement.setZ( displacement.z() + height );
-    }
-
-    if( 0 )
-    {
-        StopJump();
-    }
-
-    //m_character->setWalkDirection( displacement );
-    setWalkDirection( displacement );
-    */
+    setWalkDirection( velocity );
 }
 ////////////////////////////////////////////////////////////////////////////////
 CharacterController::CharacterTransformCallback::CharacterTransformCallback(

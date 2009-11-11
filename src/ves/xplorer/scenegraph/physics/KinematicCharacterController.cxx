@@ -153,7 +153,7 @@ KinematicCharacterController::KinematicCharacterController()
     m_stepHeight( 1.0 ),
     m_currentStepOffset( 0.0 ),
     m_addedMargin( 0.02 ),
-    m_walkDirection( 0.0, 0.0, 0.0 ),
+    m_direction( 0.0, 0.0, 0.0 ),
     m_normalizedDirection( 0.0, 0.0, 0.0 ),
     m_currentPosition( 0.0, 0.0, 0.0 ),
     m_targetPosition( 0.0, 0.0, 0.0 ),
@@ -255,7 +255,6 @@ bool KinematicCharacterController::recoverFromPenetration(
                     {
                         maxPen = pt.getDistance();
                         m_touchingNormal = pt.m_normalWorldOnB * directionSign;//??
-
                     }
 
                     m_currentPosition += pt.m_normalWorldOnB * directionSign * pt.getDistance() * btScalar( 0.2 );
@@ -266,7 +265,7 @@ bool KinematicCharacterController::recoverFromPenetration(
                     ;
                 }
             }
-            
+
             //manifold->clearManifold();
         }
     }
@@ -285,8 +284,8 @@ void KinematicCharacterController::stepUp( btCollisionWorld* world )
     m_targetPosition =
         m_currentPosition + upAxisDirection[ m_upAxis ] * m_stepHeight;
 
-    start.setIdentity ();
-    end.setIdentity ();
+    start.setIdentity();
+    end.setIdentity();
 
     /* FIXME: Handle penetration properly */
     start.setOrigin( m_currentPosition + upAxisDirection[ m_upAxis ] * btScalar( 0.1 ) );
@@ -380,7 +379,7 @@ void KinematicCharacterController::stepForwardAndStrafe(
 
     int maxIter = 10;
 
-    while( fraction > btScalar( 0.01 ) && maxIter-- > 0 )
+    while( fraction > btScalar( 0.01 ) && --maxIter > 0 )
     {
         start.setOrigin( m_currentPosition );
         end.setOrigin( m_targetPosition );
@@ -397,12 +396,14 @@ void KinematicCharacterController::stepForwardAndStrafe(
         if( m_useGhostObjectSweepTest )
         {
             m_ghostObject->convexSweepTest(
-                m_convexShape, start, end, callback, collisionWorld->getDispatchInfo().m_allowedCcdPenetration);
+                m_convexShape, start, end, callback,
+                collisionWorld->getDispatchInfo().m_allowedCcdPenetration );
         }
         else
         {
             collisionWorld->convexSweepTest(
-                m_convexShape, start, end, callback, collisionWorld->getDispatchInfo().m_allowedCcdPenetration);
+                m_convexShape, start, end, callback,
+                collisionWorld->getDispatchInfo().m_allowedCcdPenetration );
         }
 
         m_convexShape->setMargin( margin );
@@ -411,17 +412,19 @@ void KinematicCharacterController::stepForwardAndStrafe(
 
         if( callback.hasHit() )
         {
-            // we moved only a fraction
-            btScalar hitDistance = (callback.m_hitPointWorld - m_currentPosition).length();
+            //We moved only a fraction
+            btScalar hitDistance =
+                ( callback.m_hitPointWorld - m_currentPosition ).length();
             if( hitDistance < 0.0 )
             {
                 ;
             }
 
-            /* If the distance is farther than the collision margin, move */
+            //If the distance is farther than the collision margin, move
             if( hitDistance > m_addedMargin )
             {
-                m_currentPosition.setInterpolate3 (m_currentPosition, m_targetPosition, callback.m_closestHitFraction);
+                m_currentPosition.setInterpolate3(
+                    m_currentPosition, m_targetPosition, callback.m_closestHitFraction );
             }
 
             updateTargetPositionBasedOnCollision( callback.m_hitNormalWorld );
@@ -430,7 +433,8 @@ void KinematicCharacterController::stepForwardAndStrafe(
             if( distance2 > SIMD_EPSILON )
             {
                 currentDir.normalize();
-                /* See Quake2: "If velocity is against original velocity, stop ead to avoid tiny oscilations in sloping corners." */
+                //See Quake2: If velocity is against original velocity,
+                //stop ead to avoid tiny oscilations in sloping corners
                 if( currentDir.dot( m_normalizedDirection ) <= btScalar( 0.0 ) )
                 {
                     break;
@@ -458,9 +462,9 @@ void KinematicCharacterController::stepDown(
     btTransform start, end;
 
     //Phase 3: down
-    btVector3 step_drop = upAxisDirection[m_upAxis] * m_currentStepOffset;
-    btVector3 gravity_drop = upAxisDirection[m_upAxis] * m_stepHeight;
-    m_targetPosition -= (step_drop + gravity_drop);
+    btVector3 step_drop = upAxisDirection[ m_upAxis ] * m_currentStepOffset;
+    btVector3 gravity_drop = upAxisDirection[ m_upAxis ] * m_stepHeight;
+    m_targetPosition -= step_drop + gravity_drop;
 
     start.setIdentity ();
     end.setIdentity ();
@@ -504,16 +508,16 @@ void KinematicCharacterController::setWalkDirection(
     const btVector3& walkDirection )
 {
     m_useWalkDirection = true;
-    m_walkDirection = walkDirection;
-    m_normalizedDirection = getNormalizedVector( m_walkDirection );
+    m_direction = walkDirection;
+    m_normalizedDirection = getNormalizedVector( m_direction );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KinematicCharacterController::setVelocityForTimeInterval(
     const btVector3& velocity, btScalar timeInterval )
 {
     m_useWalkDirection = false;
-    m_walkDirection = velocity;
-    m_normalizedDirection = getNormalizedVector( m_walkDirection );
+    m_direction = velocity;
+    m_normalizedDirection = getNormalizedVector( m_direction );
     m_velocityTimeInterval = timeInterval;
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -573,7 +577,7 @@ void KinematicCharacterController::playerStep(
 
     if( m_useWalkDirection )
     {
-        stepForwardAndStrafe( collisionWorld, m_walkDirection );
+        stepForwardAndStrafe( collisionWorld, m_direction );
     }
     else
     {
@@ -583,7 +587,7 @@ void KinematicCharacterController::playerStep(
         m_velocityTimeInterval -= dt;
 
         //How far will we move while we are moving?
-        btVector3 move = m_walkDirection * dtMoving;
+        btVector3 move = m_direction * dtMoving;
 
         //Okay, step
         stepForwardAndStrafe( collisionWorld, move );

@@ -246,7 +246,7 @@ protected:
     btScalar m_addedMargin;
 
     ///This is the desired walk direction, set by the user
-    btVector3 m_walkDirection;
+    btVector3 m_direction;
 
     ///
     btVector3 m_normalizedDirection;

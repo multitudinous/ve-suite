@@ -68,6 +68,24 @@ namespace xplorer
 {
 namespace scenegraph
 {
+
+namespace TranslateType
+{
+enum Enum
+{
+    NONE = 0x00,                                          //0b000000
+    STEP_FORWARD = 0x01,                                  //0b000001
+    STEP_BACKWARD = 0x02,                                 //0b000010
+    STEP_FORWARD_BACKWARD = STEP_FORWARD | STEP_BACKWARD, //0b000011
+    STRAFE_LEFT = 0x04,                                   //0b000100
+    STRAFE_RIGHT = 0x08,                                  //0b001000
+    STRAFE_LEFT_RIGHT = STRAFE_LEFT | STRAFE_RIGHT,       //0b001100
+    STEP_UP = 0x10,                                       //0b010000
+    STEP_DOWN = 0x20,                                     //0b100000
+    STEP_UP_DOWN = STEP_UP | STEP_DOWN                    //0b110000
+};
+} //end TranslateType
+
 //class KinematicCharacterController;
 
 /*!\file CharacterController.h
@@ -120,16 +138,28 @@ public:
     void FirstPersonMode( bool onOff );
 
     ///Move the character forward
+    ///\param
     void StepForward( bool onOff );
 
     ///Move the character backward
+    ///\param
     void StepBackward( bool onOff );
 
     ///Bank the character to the left
+    ///\param
     void StrafeLeft( bool onOff );
 
     ///Bank the character to the right
+    ///\param
     void StrafeRight( bool onOff );
+
+    ///When flying, move the character up
+    ///\param
+    void StepUp( bool onOff );
+
+    ///When flying, move the character down
+    ///\param
+    void StepDown( bool onOff );
 
     ///Rotate the character and/or the camera
     void Rotate( double dx, double dy );
@@ -204,18 +234,6 @@ private:
     bool m1stPersonMode;
 
     ///
-    bool mStepForward;
-
-    ///
-    bool mStepBackward;
-
-    ///
-    bool mStrafeLeft;
-
-    ///
-    bool mStrafeRight;
-
-    ///
     bool mFlying;
 
     ///
@@ -232,6 +250,9 @@ private:
 
     ///
     unsigned int mBufferSize;
+
+    ///
+    unsigned int m_translateType;
 
     ///The distance the camera is from the "look at" point
     double mCameraDistance;
@@ -279,13 +300,19 @@ private:
     double mToOccludeDistance;
 
     ///
-    double mSpeed;
+    double m_forwardBackwardSpeedModifier;
 
     ///
-    double mMinSpeed;
+    double m_leftRightSpeedModifier;
 
     ///
-    double mMaxSpeed;
+    double m_upDownSpeedModifier;
+
+    ///
+    //double mMinSpeed;
+
+    ///
+    //double mMaxSpeed;
 
     ///
     double mTurnAngleX;

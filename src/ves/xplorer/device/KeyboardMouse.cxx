@@ -744,11 +744,11 @@ void KeyboardMouse::OnKeyPress()
 
         break;
     }
-    case gadget::KEY_C:
+    case gadget::KEY_X:
     {
         if( !m_physicsSimulator.GetIdle() && m_characterController.IsActive() )
         {
-            //m_characterController
+            m_characterController.StepDown( true );
         }
 
         break;
@@ -757,7 +757,7 @@ void KeyboardMouse::OnKeyPress()
     {
         if( !m_physicsSimulator.GetIdle() && m_characterController.IsActive() )
         {
-            m_characterController.Jump();
+            m_characterController.StepUp( true );
         }
 
         break;
@@ -840,20 +840,20 @@ void KeyboardMouse::OnKeyRelease()
 
         break;
     }
-    case gadget::KEY_SPACE:
+    case gadget::KEY_X:
     {
         if( !m_physicsSimulator.GetIdle() && m_characterController.IsActive() )
         {
-            //m_characterController.Jump();
+            m_characterController.StepDown( false );
         }
 
         break;
     }
-    case gadget::KEY_C:
+    case gadget::KEY_SPACE:
     {
         if( !m_physicsSimulator.GetIdle() && m_characterController.IsActive() )
         {
-            //m_characterController
+            m_characterController.StepUp( false );
         }
 
         break;
@@ -1442,16 +1442,18 @@ void KeyboardMouse::Pan( double dx, double dz )
 #if __GADGET_version >= 1003023
     gmtl::Matrix44d vpwMatrix = m_currentGLTransformInfo->GetVPWMatrix();
 
+    //std::cout << "mCenterPoint: " << *mCenterPoint << std::endl;
     gmtl::Point3d position = vpwMatrix * *mCenterPoint;
-    std::cout << vpwMatrix << std::endl;
-    std::cout << *mCenterPoint << std::endl;
-    std::cout << std::endl;
+    //std::cout << "vpwMatrix * *mCenterPoint: " << position << std::endl;
     position.mData[ 0 ] += dx * mWidth;
     position.mData[ 1 ] += dz * mHeight;
     position = gmtl::invert( vpwMatrix ) * position;
+    //std::cout << "gmtl::invert( vpwMatrix ) * position: " << position << std::endl;
 
     mDeltaTranslation = position - *mCenterPoint;
     *mCenterPoint = position;
+
+    //std::cout << std::endl;
 #else
     */
     double d = mCenterPoint->mData[ 1 ];
