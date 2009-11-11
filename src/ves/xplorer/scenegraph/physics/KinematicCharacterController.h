@@ -72,14 +72,16 @@ class VE_SCENEGRAPH_EXPORTS KinematicCharacterController :
 {
 public:
     ///Constructor
-    KinematicCharacterController(
-        btPairCachingGhostObject* ghostObject,
-        btConvexShape* convexShape,
-        btScalar stepHeight,
-        int upAxis = 1 );
+    KinematicCharacterController();
 
     ///Destructor
     ~KinematicCharacterController();
+
+    ///
+    btPairCachingGhostObject* const GetGhostObject() const;
+
+    ///
+    void SetConvexShape( btConvexShape* convexShape );
 
     ///btActionInterface interface
     virtual void updateAction(
@@ -115,16 +117,15 @@ public:
     /// This call will reset any velocity set by setVelocityForTimeInterval().
     virtual void setWalkDirection( const btVector3& walkDirection );
 
-    /// Caller provides a velocity with which the character should move for
-    ///   the given time period.  After the time period, velocity is reset
-    ///   to zero.
-    /// This call will reset any walk direction set by setWalkDirection().
-    /// Negative time intervals will result in no motion.
+    ///Caller provides a velocity with which the character should move for
+    ///the given time period. After the time period, velocity is reset to zero
+    ///This call will reset any walk direction set by setWalkDirection().
+    ///Negative time intervals will result in no motion.
     virtual void setVelocityForTimeInterval(
         const btVector3& velocity, btScalar timeInterval );
 
     ///
-    void reset();
+    void Reset();
 
     ///
     void warp( const btVector3& origin );
@@ -148,21 +149,15 @@ public:
     bool canJump() const;
 
     ///
-    void jump();
-
-    ///
-    btPairCachingGhostObject* getGhostObject();
-
-    ///
     void setUseGhostSweepTest( bool useGhostObjectSweepTest )
     {
         m_useGhostObjectSweepTest = useGhostObjectSweepTest;
     }
 
-    bool onGround () const;
+    ///
+    bool onGround() const;
 
 protected:
-
     ///Returns the reflection direction of a ray going 'direction' hitting a surface with normal 'normal'
     ///From: http://www-cs-students.stanford.edu/~adityagp/final/node3.html
     btVector3 computeReflectionDirection(
@@ -196,50 +191,92 @@ protected:
     void stepDown( btCollisionWorld* collisionWorld, btScalar dt );
 
     ///
-    btScalar m_halfHeight;
+    bool m_jump;
 
-    btPairCachingGhostObject* m_ghostObject;
-
-    btConvexShape* m_convexShape;//is also in m_ghostObject, but it needs to be convex, so we store it here to avoid upcast
-
-    btScalar m_fallSpeed;
-
-    btScalar m_jumpSpeed;
-
-    btScalar m_maxJumpHeight;
-
-    btScalar m_turnAngle;
-
-    btScalar m_stepHeight;
-
-    btScalar m_addedMargin;//@todo: remove this and fix the code
-
-    ///this is the desired walk direction, set by the user
-    btVector3 m_walkDirection;
-
-    btVector3 m_normalizedDirection;
-
-    //some internal variables
-    btVector3 m_currentPosition;
-
-    btScalar  m_currentStepOffset;
-
-    btVector3 m_targetPosition;
-
-    ///keep track of the contact manifolds
-    btManifoldArray m_manifoldArray;
-
+    ///
     bool m_touchingContact;
 
-    btVector3 m_touchingNormal;
-
+    ///
     bool m_useGhostObjectSweepTest;
 
+    ///
     bool m_useWalkDirection;
 
-    float m_velocityTimeInterval;
-
+    ///
     int m_upAxis;
+
+    ///
+    double m_velocityTimeInterval;
+
+    ///
+    double m_vo;
+
+    ///
+    double m_jumpTime;
+
+    ///
+    //btScalar m_halfHeight;
+
+    ///
+    btPairCachingGhostObject* m_ghostObject;
+
+    ///Is also in m_ghostObject, but it needs to be convex,
+    ///so we store it here to avoid upcast
+    btConvexShape* m_convexShape;
+
+    ///
+    btScalar m_fallSpeed;
+
+    ///
+    btScalar m_jumpSpeed;
+
+    ///
+    btScalar m_maxJumpHeight;
+
+    ///
+    //btScalar m_turnAngle;
+
+    ///
+    btScalar m_stepHeight;
+
+    ///
+    btScalar  m_currentStepOffset;
+
+    ///@todo: remove this and fix the code
+    btScalar m_addedMargin;
+
+    ///This is the desired walk direction, set by the user
+    btVector3 m_walkDirection;
+
+    ///
+    btVector3 m_normalizedDirection;
+
+    ///Some internal variables
+    btVector3 m_currentPosition;
+
+    ///
+    btVector3 m_targetPosition;
+
+    ///
+    btVector3 m_touchingNormal;
+
+    ///Keep track of the contact manifolds
+    btManifoldArray m_manifoldArray;
+
+    ///
+    double GetHeight( double elapsedTime );
+
+    ///
+    void StartJump( double vo );
+
+    ///
+    void StopJump();
+
+    ///
+    double m_characterWidth;
+
+    ///
+    double m_characterHeight;
 
 private:
 

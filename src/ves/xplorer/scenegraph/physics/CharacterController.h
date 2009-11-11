@@ -37,6 +37,8 @@
 // --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
 
+#include <ves/xplorer/scenegraph/physics/KinematicCharacterController.h>
+
 // --- OSG Includes --- //
 #include <osg/ref_ptr>
 #include <osg/NodeCallback>
@@ -66,7 +68,7 @@ namespace xplorer
 {
 namespace scenegraph
 {
-class KinematicCharacterController;
+//class KinematicCharacterController;
 
 /*!\file CharacterController.h
  *
@@ -77,7 +79,8 @@ class KinematicCharacterController;
 /*!\namespace ves::xplorer::scenegraph
  *
  */
-class VE_SCENEGRAPH_EXPORTS CharacterController
+class VE_SCENEGRAPH_EXPORTS CharacterController :
+    public KinematicCharacterController
 {
 public:
     ///Constructor
@@ -85,6 +88,14 @@ public:
 
     ///Destructor
     ~CharacterController();
+
+    ///btActionInterface interface
+    virtual void updateAction(
+        btCollisionWorld* collisionWorld, btScalar deltaTime )
+    {
+        preStep( collisionWorld );
+        playerStep( collisionWorld, deltaTime );
+    }
 
     ///Advance the character in time
     ///\post Call the bullet simulation step function
@@ -104,9 +115,6 @@ public:
 
     ///Returns if the character controller is active
     bool IsActive();
-
-    ///Reset the character controller
-    void Reset();
 
     ///
     void FirstPersonMode( bool onOff );
@@ -208,9 +216,6 @@ private:
     bool mStrafeRight;
 
     ///
-    bool mJump;
-
-    ///
     bool mFlying;
 
     ///
@@ -226,13 +231,7 @@ private:
     bool mPreviousOccluder;
 
     ///
-    double mCharacterWidth;
-
-    ///
-    double mCharacterHeight;
-
-    ///Used to offset the "look at" point from center of the character transform
-    double mLookAtOffsetZ;
+    unsigned int mBufferSize;
 
     ///The distance the camera is from the "look at" point
     double mCameraDistance;
@@ -316,13 +315,13 @@ private:
     double mTotalWeight;
 
     ///
-    unsigned int mBufferSize;
-
-    ///
     std::vector< double > mWeights;
 
     ///
     std::deque< std::pair< double, double > > mHistoryBuffer;
+
+    ///Used to offset the "look at" point from center of the character transform
+    btVector3 mLookAtOffsetZ;
 
     ///
     btQuaternion mCameraRotation;
@@ -334,10 +333,7 @@ private:
     btQuaternion mCameraRotationZ;
 
     ///
-    KinematicCharacterController* mCharacter;
-
-    ///
-    btPairCachingGhostObject* mGhostObject;
+    //KinematicCharacterController* m_character;
 
     ///For character animations
     osg::ref_ptr< osg::Switch > mCharacterAnimations;

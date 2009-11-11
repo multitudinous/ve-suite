@@ -34,7 +34,6 @@
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/physics/CharacterController.h>
 #include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
-#include <ves/xplorer/scenegraph/physics/KinematicCharacterController.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/FindParentWithNameVisitor.h>
@@ -59,30 +58,26 @@
 #include <iostream>
 
 #define VES_USE_ANIMATED_CHARACTER 1
+const btVector3 m_defaultGravity( 0.0, 0.0, -9.8 );
 
 using namespace ves::xplorer::scenegraph;
-namespace vxs = ves::xplorer::scenegraph;
 
 ////////////////////////////////////////////////////////////////////////////////
 CharacterController::CharacterController()
     :
+    KinematicCharacterController(),
     mActive( false ),
     m1stPersonMode( false ),
     mStepForward( false ),
     mStepBackward( false ),
     mStrafeLeft( false ),
     mStrafeRight( false ),
-    mJump( false ),
     mFlying( false ),
     mCameraDistanceLERP( false ),
     mCameraRotationSLERP( false ),
     mOccludeDistanceLERP( false ),
     mPreviousOccluder( false ),
     mBufferSize( 0 ),
-    mCharacterWidth( 1.83 ),
-    //The average height of a male in the U.S. is 5.83 ft
-    mCharacterHeight( 6.0/*5.83*/ ),
-    mLookAtOffsetZ( mCharacterHeight * 2.0 ),
     mCameraDistance( 50.0 ),
     mOccludeDistance( 50.0 ),
     mMinCameraDistance( 0.1 ),
@@ -113,16 +108,16 @@ CharacterController::CharacterController()
     mTurnSpeed( 7.0 ),
     mWeightModifier( 0.0 ),
     mTotalWeight( 0.0 ),
+    mLookAtOffsetZ( 0.0, 0.0, m_characterHeight * 0.5 ),
     mCameraRotation( 0.0, 0.0, 0.0, 1.0 ),
     mCameraRotationX( 1.0, 0.0, 0.0, 1.0 ),
     mCameraRotationZ( 0.0, 0.0, 1.0, 1.0 ),
-    mCharacter( NULL ),
-    mGhostObject( NULL ),
+    //m_character( NULL ),
     mCharacterAnimations( NULL ),
     mMatrixTransform( NULL ),
     mLineSegmentIntersector( NULL )
 {
-    SetBufferSizeAndWeights( 10, 0.6 );
+    Initialize();
 }
 ////////////////////////////////////////////////////////////////////////////////
 CharacterController::~CharacterController()
@@ -132,34 +127,18 @@ CharacterController::~CharacterController()
 ////////////////////////////////////////////////////////////////////////////////
 void CharacterController::Initialize()
 {
-    btDynamicsWorld* dynamicsWorld =
-        vxs::PhysicsSimulator::instance()->GetDynamicsWorld();
+    SetBufferSizeAndWeights( 10, 0.6 );
 
-    //Create physics mesh representation
-    btBroadphaseInterface* broadphase = dynamicsWorld->getBroadphase();
-    broadphase->getOverlappingPairCache()->setInternalGhostPairCallback(
-        new btGhostPairCallback() );
+    //btScalar stepHeight = btScalar( 1.0 );
+    //m_character =
+        //new KinematicCharacterController(
+            //m_ghostObject, capsuleShape, stepHeight );
 
-    btTransform startTransform;
-    startTransform.setIdentity();
-
-    mGhostObject = new btPairCachingGhostObject();
-    mGhostObject->setWorldTransform( startTransform );
-
-    btConvexShape* capsuleShape =
-        new btCapsuleShapeZ( mCharacterWidth, mCharacterHeight );
-    mGhostObject->setCollisionShape( capsuleShape );
-    mGhostObject->setCollisionFlags( btCollisionObject::CF_CHARACTER_OBJECT );
-
-    btScalar stepHeight = btScalar( 1.0 );
-    mCharacter =
-        new KinematicCharacterController(
-            mGhostObject, capsuleShape, stepHeight );
-
-    mCharacter->setUpAxis( 2 );
+    //m_character->setUpAxis( 2 );
+    //setUpAxis( 2 );
     //No gravity by default
     //This has no effect and has not been implemented in bullet yet
-    mCharacter->setFallSpeed( 0.0 );
+    //m_character->setFallSpeed( 0.0 );
 
     mMatrixTransform = new osg::MatrixTransform();
 #ifdef VES_USE_ANIMATED_CHARACTER
@@ -203,7 +182,7 @@ void CharacterController::Initialize()
     osg::ref_ptr< osg::Capsule > capsule =
         new osg::Capsule(
             osg::Vec3( 0.0, 0.0, 0.0 ),
-            mCharacterWidth, mCharacterHeight );
+            m_characterWidth, m_characterHeight );
     osg::ref_ptr< osg::TessellationHints > hints = new osg::TessellationHints();
     hints->setDetailRatio( 1.0 );
     osg::ref_ptr< osg::ShapeDrawable > shapeDrawable =
@@ -214,11 +193,10 @@ void CharacterController::Initialize()
 
     //mMatrixTransform->addChild( geode.get() );
 #endif
-    vxs::SceneManager::instance()->GetModelRoot()->addChild(
-        mMatrixTransform.get() );
+    SceneManager::instance()->GetModelRoot()->addChild( mMatrixTransform.get() );
 
     mMatrixTransform->setUpdateCallback(
-        new CharacterTransformCallback( mGhostObject ) );
+        new CharacterTransformCallback( m_ghostObject ) );
 
     mMatrixTransform->setNodeMask( 0 );
 
@@ -243,13 +221,14 @@ void CharacterController::TurnOn()
     mMatrixTransform->setNodeMask( 1 );
 
     btDynamicsWorld* dynamicsWorld =
-        vxs::PhysicsSimulator::instance()->GetDynamicsWorld();
+        PhysicsSimulator::instance()->GetDynamicsWorld();
 
     dynamicsWorld->addCollisionObject(
-        mGhostObject, btBroadphaseProxy::CharacterFilter,
+        m_ghostObject, btBroadphaseProxy::CharacterFilter,
         btBroadphaseProxy::StaticFilter | btBroadphaseProxy::DefaultFilter );
 
-    dynamicsWorld->addCharacter( mCharacter );
+    //dynamicsWorld->addCharacter( m_character );
+    dynamicsWorld->addCharacter( this );
 
     Reset();
 
@@ -261,50 +240,20 @@ void CharacterController::TurnOff()
     mMatrixTransform->setNodeMask( 0 );
 
     btDynamicsWorld* dynamicsWorld =
-        vxs::PhysicsSimulator::instance()->GetDynamicsWorld();
+        PhysicsSimulator::instance()->GetDynamicsWorld();
 
-    dynamicsWorld->removeCollisionObject( mGhostObject );
+    dynamicsWorld->removeCollisionObject( m_ghostObject );
 
-    dynamicsWorld->removeCharacter( mCharacter );
+    //dynamicsWorld->removeCharacter( m_character );
+    dynamicsWorld->removeCharacter( this );
 
     mActive = false;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CharacterController::Jump()
 {
-    /*
-    if( !CanJump() )
-    {
-        return;
-    }
-    
-
-    mCharacter->set
-
-    btTransform xform;
-    mRigidBody->getMotionState()->getWorldTransform( xform );
-    btVector3 up = xform.getBasis()[ 2 ];
-    up.normalize();
-
-    btScalar magnitude =
-        ( btScalar( 1.0 ) / mRigidBody->getInvMass() ) * btScalar( 8.0 );
-    mRigidBody->applyCentralImpulse( up * magnitude );
-    */
-}
-////////////////////////////////////////////////////////////////////////////////
-void CharacterController::Reset()
-{
-    btDynamicsWorld* dynamicsWorld =
-        vxs::PhysicsSimulator::instance()->GetDynamicsWorld();
-    btDispatcher* dispatcher = dynamicsWorld->getDispatcher();
-    btBroadphaseInterface* broadphase = dynamicsWorld->getBroadphase();
-    broadphase->getOverlappingPairCache()->cleanProxyFromPairs(
-        mGhostObject->getBroadphaseHandle(), dispatcher );
-
-    mCharacter->reset();
-
-    //Move the character so that its entire body is above the zero ground plane
-    mCharacter->warp( btVector3( 0.0, 0.0, mCharacterHeight ) );
+    //m_character->StartJump( 15.0 );
+    StartJump( 15.0 );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CharacterController::StepForward( bool onOff )
@@ -401,7 +350,7 @@ void CharacterController::SetCameraRotationSLERP( bool onOff )
 void CharacterController::SetCharacterRotationFromCamera()
 {
     //Get current character transform
-    btTransform xform = mGhostObject->getWorldTransform();
+    btTransform xform = m_ghostObject->getWorldTransform();
     if( mFlying )
     {
         xform.setRotation( mCameraRotation.inverse() );
@@ -410,7 +359,7 @@ void CharacterController::SetCharacterRotationFromCamera()
     {
         xform.setRotation( mCameraRotationZ.inverse() );
     }
-    mGhostObject->setWorldTransform( xform );
+    m_ghostObject->setWorldTransform( xform );
 
     mToTurnAngleZ = mTurnAngleZ;
 }
@@ -433,7 +382,7 @@ void CharacterController::UpdateCamera()
     }
 
     //Get the current character transform
-    btTransform characterWorldTrans = mGhostObject->getWorldTransform();
+    btTransform characterWorldTrans = m_ghostObject->getWorldTransform();
     //Set the rotation with the camera's rotation
     characterWorldTrans.setRotation( mCameraRotation );
 
@@ -446,7 +395,7 @@ void CharacterController::UpdateCamera()
     backward.normalize();
 
     //Get the center of the character
-    btVector3 center = characterWorldTrans.getOrigin();
+    btVector3 center = characterWorldTrans.getOrigin() + mLookAtOffsetZ;
     //Calculate where the position of the eye is w/ no occluders
     btVector3 eye = center + backward * mCameraDistance;
 
@@ -568,12 +517,12 @@ void CharacterController::EyeToCenterRayTest(
     /*
     btCollisionWorld::RayResultCallback rayCallback( eye, center );
     btDynamicsWorld* dynamicsWorld =
-        vxs::PhysicsSimulator::instance()->GetDynamicsWorld();
+        PhysicsSimulator::instance()->GetDynamicsWorld();
     dynamicsWorld->rayTest( center, eye, rayCallback );
     if( rayCallback.hasHit() )
     {
         btCollisionObject* collisionObject = rayCallback.m_collisionObject;
-        if( collisionObject != mGhostObject )
+        if( collisionObject != m_ghostObject )
         {
             btVector3( rayCallback.m_hitPointWorld - center ).length();
         }
@@ -594,11 +543,10 @@ void CharacterController::EyeToCenterRayTest(
     //function validNodeMask in NodeVisitor:
     //return ( getTraversalMask() & ( getNodeMaskOverride() | node.getNodeMask() ) ) != 0
     unsigned int traversalMask =
-        ~vxs::SceneManager::instance()->GetManipulatorManager()->getNodeMask();
+        ~SceneManager::instance()->GetManipulatorManager()->getNodeMask();
     intersectionVisitor.setTraversalMask( traversalMask );
 
-    vxs::SceneManager::instance()->GetModelRoot()->accept(
-        intersectionVisitor );
+    SceneManager::instance()->GetModelRoot()->accept( intersectionVisitor );
 
     osgUtil::LineSegmentIntersector::Intersections& intersections =
         mLineSegmentIntersector->getIntersections();
@@ -618,8 +566,7 @@ void CharacterController::EyeToCenterRayTest(
         }
 #else
         osg::Node* tempCharacter = objectHit->getParent( 0 );
-        vxs::FindParentWithNameVisitor findParent(
-            tempCharacter, "Character" );
+        FindParentWithNameVisitor findParent( tempCharacter, "Character" );
         osg::ref_ptr< osg::Node > tempParent = findParent.GetParentNode();
         if( !tempParent.valid() )
         {
@@ -696,7 +643,7 @@ void CharacterController::LookAt(
     matrix.mData[ 14 ] = -uVector.dot( eye );
     matrix.mData[ 15 ] =  1.0;
 
-    vxs::SceneManager::instance()->GetActiveNavSwitchNode()->SetMat( matrix );
+    SceneManager::instance()->GetActiveNavSwitchNode()->SetMat( matrix );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CharacterController::SetBufferSizeAndWeights(
@@ -810,7 +757,7 @@ void CharacterController::UpdateCharacterTranslation( btScalar dt )
     if( mStepForward || mStepBackward || mStrafeLeft || mStrafeRight )
     {
         //Get current character transform
-        btTransform xform = mGhostObject->getWorldTransform();
+        btTransform xform = m_ghostObject->getWorldTransform();
         xform.setRotation( xform.getRotation().inverse() );
 
         btVector3 strafeDir = xform.getBasis()[ 0 ];
@@ -855,7 +802,80 @@ void CharacterController::UpdateCharacterTranslation( btScalar dt )
         }
     }
 
-    mCharacter->setWalkDirection( direction * speed );
+    setWalkDirection( direction * speed );
+
+    /*
+    //Calculate character translation
+    btVector3 displacement = m_defaultGravity;
+
+    //Compute horizontal displacement
+    btScalar speed = mSpeed * dt;
+    if( mStepForward || mStepBackward || mStrafeLeft || mStrafeRight )
+    {
+        //Get current character transform
+        btTransform xform = m_ghostObject->getWorldTransform();
+        xform.setRotation( xform.getRotation().inverse() );
+
+        btVector3 strafeDir = xform.getBasis()[ 0 ];
+        strafeDir.normalize();
+
+        btVector3 forwardDir = xform.getBasis()[ 1 ];
+        forwardDir.normalize();
+
+        btVector3 upDir = xform.getBasis()[ 2 ];
+        upDir.normalize();
+
+        btVector3 horizontalDisplacement( 0.0, 0.0, 0.0 );
+        if( mStepForward )
+        {
+            horizontalDisplacement += forwardDir;
+        }
+
+        if( mStepBackward )
+        {
+            horizontalDisplacement -= forwardDir;
+        }
+
+        if( mStrafeLeft )
+        {
+            horizontalDisplacement -= strafeDir;
+        }
+
+        if( mStrafeRight )
+        {
+            horizontalDisplacement += strafeDir;
+        }
+
+        //Normalize the movement
+        if( horizontalDisplacement.length() > 0.0 )
+        {
+            horizontalDisplacement = horizontalDisplacement.normalize();
+            displacement += horizontalDisplacement * speed;
+        }
+
+        //slerp mCameraRotation if necessary
+        if( mCameraRotationSLERP )
+        {
+            CameraRotationSLERP();
+        }
+    }
+
+    //Compute vertical displacement
+    displacement *= dt;
+    double height = GetHeight( dt );
+    if( height != 0.0 )
+    {
+        displacement.setZ( displacement.z() + height );
+    }
+
+    if( 0 )
+    {
+        StopJump();
+    }
+
+    //m_character->setWalkDirection( displacement );
+    setWalkDirection( displacement );
+    */
 }
 ////////////////////////////////////////////////////////////////////////////////
 CharacterController::CharacterTransformCallback::CharacterTransformCallback(

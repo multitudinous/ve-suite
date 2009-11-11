@@ -270,7 +270,8 @@ void PhysicsSimulator::UpdatePhysics( float dt )
 
     if( mDebugBulletFlag )
     {
-        static_cast< osgbBullet::GLDebugDrawer* >( mDynamicsWorld->getDebugDrawer() )->BeginDraw();
+        static_cast< osgbBullet::GLDebugDrawer* >(
+            mDynamicsWorld->getDebugDrawer() )->BeginDraw();
     }
 
     vxs::CharacterController* characterController =
