@@ -110,7 +110,6 @@ CharacterController::CharacterController()
     mCameraRotation( 0.0, 0.0, 0.0, 1.0 ),
     mCameraRotationX( 1.0, 0.0, 0.0, 1.0 ),
     mCameraRotationZ( 0.0, 0.0, 1.0, 1.0 ),
-    //m_character( NULL ),
     mCharacterAnimations( NULL ),
     mMatrixTransform( NULL ),
     mLineSegmentIntersector( NULL )
@@ -127,18 +126,8 @@ void CharacterController::Initialize()
 {
     SetBufferSizeAndWeights( 10, 0.6 );
 
-    //btScalar stepHeight = btScalar( 1.0 );
-    //m_character =
-        //new KinematicCharacterController(
-            //m_ghostObject, capsuleShape, stepHeight );
-
-    //m_character->setUpAxis( 2 );
-    //setUpAxis( 2 );
-    //No gravity by default
-    //This has no effect and has not been implemented in bullet yet
-    //m_character->setFallSpeed( 0.0 );
-
     mMatrixTransform = new osg::MatrixTransform();
+
 #ifdef VES_USE_ANIMATED_CHARACTER
     //create animated character
     //idle
@@ -171,7 +160,8 @@ void CharacterController::Initialize()
     osg::ref_ptr< osg::AutoTransform > scaleDown = new osg::AutoTransform(); 
     scaleDown->addChild( mCharacterAnimations.get() );
     scaleDown->setScale( 0.055 );
-    scaleDown->setRotation( osg::Quat( osg::DegreesToRadians( 180.0 ), osg::Vec3f( 0.0, 0.0, 1.0)  ) );
+    scaleDown->setRotation( osg::Quat(
+        osg::DegreesToRadians( 180.0 ), osg::Vec3f( 0.0, 0.0, 1.0 ) ) );
 
     mMatrixTransform->addChild( scaleDown.get() );
 #else
@@ -191,7 +181,8 @@ void CharacterController::Initialize()
 
     //mMatrixTransform->addChild( geode.get() );
 #endif
-    SceneManager::instance()->GetModelRoot()->addChild( mMatrixTransform.get() );
+    SceneManager::instance()->GetModelRoot()->addChild(
+        mMatrixTransform.get() );
 
     mMatrixTransform->setUpdateCallback(
         new CharacterTransformCallback( m_ghostObject ) );
@@ -238,14 +229,12 @@ void CharacterController::Enable( const bool& enable )
 
         dynamicsWorld->removeCollisionObject( m_ghostObject );
 
-        //dynamicsWorld->removeCharacter( m_character );
         dynamicsWorld->removeCharacter( this );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CharacterController::Jump()
 {
-    //m_character->StartJump( 15.0 );
     StartJump( 15.0 );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -258,7 +247,7 @@ void CharacterController::StepForward( bool onOff )
         mCharacterAnimations->setSingleChildOn( 1 );
 #endif
     }
-    else
+    else if( m_translateType & TranslateType::STEP_FORWARD )
     {
         m_translateType = m_translateType ^ TranslateType::STEP_FORWARD;
 #ifdef VES_USE_ANIMATED_CHARACTER
@@ -276,7 +265,7 @@ void CharacterController::StepBackward( bool onOff )
         mCharacterAnimations->setSingleChildOn( 2 );
 #endif
     }
-    else
+    else if( m_translateType & TranslateType::STEP_BACKWARD )
     {
         m_translateType = m_translateType ^ TranslateType::STEP_BACKWARD;
 #ifdef VES_USE_ANIMATED_CHARACTER
@@ -294,7 +283,7 @@ void CharacterController::StrafeLeft( bool onOff )
         mCharacterAnimations->setSingleChildOn( 3 );
 #endif
     }
-    else
+    else if( m_translateType & TranslateType::STRAFE_LEFT )
     {
         m_translateType = m_translateType ^ TranslateType::STRAFE_LEFT;
 #ifdef VES_USE_ANIMATED_CHARACTER
@@ -312,7 +301,7 @@ void CharacterController::StrafeRight( bool onOff )
         mCharacterAnimations->setSingleChildOn( 4 );
 #endif
     }
-    else
+    else if( m_translateType & TranslateType::STRAFE_RIGHT )
     {
         m_translateType = m_translateType ^ TranslateType::STRAFE_RIGHT;
 #ifdef VES_USE_ANIMATED_CHARACTER
@@ -330,7 +319,7 @@ void CharacterController::StepUp( bool onOff )
         //mCharacterAnimations->setSingleChildOn( 4 );
 #endif
     }
-    else
+    else if( m_translateType & TranslateType::STEP_UP )
     {
         m_translateType = m_translateType ^ TranslateType::STEP_UP;
 #ifdef VES_USE_ANIMATED_CHARACTER
@@ -348,7 +337,7 @@ void CharacterController::StepDown( bool onOff )
         //mCharacterAnimations->setSingleChildOn( 4 );
 #endif
     }
-    else
+    else if( m_translateType & TranslateType::STEP_DOWN )
     {
         m_translateType = m_translateType ^ TranslateType::STEP_DOWN;
 #ifdef VES_USE_ANIMATED_CHARACTER

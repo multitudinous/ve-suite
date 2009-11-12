@@ -353,9 +353,6 @@ private:
     ///
     btQuaternion mCameraRotationZ;
 
-    ///
-    //KinematicCharacterController* m_character;
-
     ///For character animations
     osg::ref_ptr< osg::Switch > mCharacterAnimations;
 
@@ -374,7 +371,7 @@ private:
 
         ///Copy Constructor
         CharacterTransformCallback( const CharacterTransformCallback& ctc );
-        
+
         ///Destructor
         virtual ~CharacterTransformCallback();
 

@@ -748,7 +748,10 @@ void KeyboardMouse::OnKeyPress()
     {
         if( m_characterController.IsEnabled() )
         {
-            m_characterController.StepDown( true );
+            if( m_characterController.CanFly() )
+            {
+                m_characterController.StepDown( true );
+            }
         }
 
         break;
@@ -757,7 +760,14 @@ void KeyboardMouse::OnKeyPress()
     {
         if( m_characterController.IsEnabled() )
         {
-            m_characterController.StepUp( true );
+            if( m_characterController.CanFly() )
+            {
+                m_characterController.StepUp( true );
+            }
+            else
+            {
+                m_characterController.Jump();
+            }
         }
 
         break;
@@ -844,7 +854,14 @@ void KeyboardMouse::OnKeyRelease()
     {
         if( m_characterController.IsEnabled() )
         {
-            m_characterController.StepDown( false );
+            if( m_characterController.CanFly() )
+            {
+                m_characterController.StepDown( false );
+            }
+            else
+            {
+                ;
+            }
         }
 
         break;
@@ -853,7 +870,14 @@ void KeyboardMouse::OnKeyRelease()
     {
         if( m_characterController.IsEnabled() )
         {
-            m_characterController.StepUp( false );
+            if( m_characterController.CanFly() )
+            {
+                m_characterController.StepUp( false );
+            }
+            else
+            {
+                ;
+            }
         }
 
         break;
@@ -1153,8 +1177,15 @@ void KeyboardMouse::OnMouseMotionDown()
     //Middle mouse button
     case gadget::MBUTTON2:
     {
-        Pan( xDelta, yDelta );
-        ProcessNavigation();
+        if( m_characterController.IsEnabled() )
+        {
+            ;
+        }
+        else
+        {
+            Pan( xDelta, yDelta );
+            ProcessNavigation();
+        }
 
         break;
     }
