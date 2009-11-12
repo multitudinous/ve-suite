@@ -128,6 +128,9 @@ public:
     void Reset();
 
     ///
+    void EnableFlying( const bool& canFly = true );
+
+    ///
     void warp( const btVector3& origin );
 
     ///
@@ -144,6 +147,9 @@ public:
 
     ///
     void setMaxJumpHeight( btScalar maxJumpHeight );
+
+    ///
+    const bool CanFly() const;
 
     ///
     bool canJump() const;
@@ -189,6 +195,9 @@ protected:
 
     ///
     void stepDown( btCollisionWorld* collisionWorld, btScalar dt );
+
+    ///
+    bool m_fly;
 
     ///
     bool m_jump;

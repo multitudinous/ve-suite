@@ -67,9 +67,8 @@ CharacterController::CharacterController()
     :
     KinematicCharacterController(),
     m_translateType( TranslateType::NONE ),
-    mActive( false ),
+    m_enabled( false ),
     m1stPersonMode( false ),
-    mFlying( false ),
     mCameraDistanceLERP( false ),
     mCameraRotationSLERP( false ),
     mOccludeDistanceLERP( false ),
@@ -215,38 +214,33 @@ void CharacterController::FirstPersonMode( bool onOff )
     m1stPersonMode = onOff;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CharacterController::TurnOn()
+void CharacterController::Enable( const bool& enable )
 {
-    mMatrixTransform->setNodeMask( 1 );
+    m_enabled = enable;
 
     btDynamicsWorld* dynamicsWorld =
         PhysicsSimulator::instance()->GetDynamicsWorld();
+    if( m_enabled )
+    {
+        mMatrixTransform->setNodeMask( 1 );
 
-    dynamicsWorld->addCollisionObject(
-        m_ghostObject, btBroadphaseProxy::CharacterFilter,
-        btBroadphaseProxy::StaticFilter | btBroadphaseProxy::DefaultFilter );
+        dynamicsWorld->addCollisionObject(
+            m_ghostObject, btBroadphaseProxy::CharacterFilter,
+            btBroadphaseProxy::StaticFilter | btBroadphaseProxy::DefaultFilter );
 
-    //dynamicsWorld->addCharacter( m_character );
-    dynamicsWorld->addCharacter( this );
+        dynamicsWorld->addCharacter( this );
 
-    Reset();
+        Reset();
+    }
+    else
+    {
+        mMatrixTransform->setNodeMask( 0 );
 
-    mActive = true;
-}
-////////////////////////////////////////////////////////////////////////////////
-void CharacterController::TurnOff()
-{
-    mMatrixTransform->setNodeMask( 0 );
+        dynamicsWorld->removeCollisionObject( m_ghostObject );
 
-    btDynamicsWorld* dynamicsWorld =
-        PhysicsSimulator::instance()->GetDynamicsWorld();
-
-    dynamicsWorld->removeCollisionObject( m_ghostObject );
-
-    //dynamicsWorld->removeCharacter( m_character );
-    dynamicsWorld->removeCharacter( this );
-
-    mActive = false;
+        //dynamicsWorld->removeCharacter( m_character );
+        dynamicsWorld->removeCharacter( this );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CharacterController::Jump()
@@ -398,7 +392,7 @@ void CharacterController::SetCharacterRotationFromCamera()
 {
     //Get current character transform
     btTransform xform = m_ghostObject->getWorldTransform();
-    if( mFlying )
+    if( m_fly )
     {
         xform.setRotation( mCameraRotation.inverse() );
     }
@@ -492,9 +486,9 @@ void CharacterController::Zoom( bool inOut )
     mCameraDistanceLERP = true;
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool CharacterController::IsActive()
+const bool CharacterController::IsEnabled() const
 {
-    return mActive;
+    return m_enabled;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CharacterController::CameraDistanceLERP()
@@ -799,7 +793,7 @@ void CharacterController::UpdateCharacterRotation()
 void CharacterController::UpdateCharacterTranslation( btScalar dt )
 {
     //Calculate character translation
-    btVector3 velocity( 0.0, 0.0, 0.0 );
+    btVector3 displacement( 0.0, 0.0, 0.0 );
     if( m_translateType | TranslateType::NONE )
     {
         //Get current character transform
@@ -808,56 +802,56 @@ void CharacterController::UpdateCharacterTranslation( btScalar dt )
 
         if( m_translateType & TranslateType::STEP_FORWARD_BACKWARD )
         {
-            btVector3 forwardBackwardVelocity( 0.0, 0.0, 0.0 );
+            btVector3 forwardBackwardDisplacement( 0.0, 0.0, 0.0 );
             btVector3 forwardDir = xform.getBasis()[ 1 ];
             forwardDir.normalize();
             if( m_translateType & TranslateType::STEP_FORWARD )
             {
-                forwardBackwardVelocity += forwardDir;
+                forwardBackwardDisplacement += forwardDir;
             }
             if( m_translateType & TranslateType::STEP_BACKWARD )
             {
-                forwardBackwardVelocity -= forwardDir;
+                forwardBackwardDisplacement -= forwardDir;
             }
 
-            forwardBackwardVelocity *= dt * m_forwardBackwardSpeedModifier;
-            velocity += forwardBackwardVelocity;
+            forwardBackwardDisplacement *= dt * m_forwardBackwardSpeedModifier;
+            displacement += forwardBackwardDisplacement;
         }
 
         if( m_translateType & TranslateType::STRAFE_LEFT_RIGHT )
         {
-            btVector3 leftRightVelocity( 0.0, 0.0, 0.0 );
+            btVector3 leftRightDisplacement( 0.0, 0.0, 0.0 );
             btVector3 strafeDir = xform.getBasis()[ 0 ];
             strafeDir.normalize();
             if( m_translateType & TranslateType::STRAFE_LEFT )
             {
-                leftRightVelocity -= strafeDir;
+                leftRightDisplacement -= strafeDir;
             }
             if( m_translateType & TranslateType::STRAFE_RIGHT )
             {
-                leftRightVelocity += strafeDir;
+                leftRightDisplacement += strafeDir;
             }
 
-            leftRightVelocity *= dt * m_leftRightSpeedModifier;
-            velocity += leftRightVelocity;
+            leftRightDisplacement *= dt * m_leftRightSpeedModifier;
+            displacement += leftRightDisplacement;
         }
 
         if( m_translateType & TranslateType::STEP_UP_DOWN )
         {
-            btVector3 upDownVelocity( 0.0, 0.0, 0.0 );
+            btVector3 upDownDisplacement( 0.0, 0.0, 0.0 );
             btVector3 upDir = xform.getBasis()[ 2 ];
             upDir.normalize();
             if( m_translateType & TranslateType::STEP_UP )
             {
-                upDownVelocity += upDir;
+                upDownDisplacement += upDir;
             }
             if( m_translateType & TranslateType::STEP_DOWN )
             {
-                upDownVelocity -= upDir;
+                upDownDisplacement -= upDir;
             }
 
-            upDownVelocity *= dt * m_upDownSpeedModifier;
-            velocity += upDownVelocity;
+            upDownDisplacement *= dt * m_upDownSpeedModifier;
+            displacement += upDownDisplacement;
         }
 
         //slerp mCameraRotation if necessary
@@ -867,7 +861,7 @@ void CharacterController::UpdateCharacterTranslation( btScalar dt )
         }
     }
 
-    setWalkDirection( velocity );
+    setWalkDirection( displacement );
 }
 ////////////////////////////////////////////////////////////////////////////////
 CharacterController::CharacterTransformCallback::CharacterTransformCallback(

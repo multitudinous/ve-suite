@@ -30,10 +30,10 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#ifndef PHYSICS_SIMULATION_EVENT_HANDLER_H
-#define PHYSICS_SIMULATION_EVENT_HANDLER_H
+#ifndef VES_XPLORER_EVENT_CHARACTER_EVENT_HANDLER_H
+#define VES_XPLORER_EVENT_CHARACTER_EVENT_HANDLER_H
 
-#include <ves/xplorer/event/environment/PhysicsSimulationEventHandlerPtr.h>
+#include <ves/xplorer/event/environment/CharacterEventHandlerPtr.h>
 #include <ves/xplorer/event/EventHandler.h>
 
 namespace ves
@@ -42,30 +42,30 @@ namespace xplorer
 {
 namespace event
 {
-/*!\file PhysicsSimulationEventHandler.h
-*/
+/*!\file CharacterEventHandler.h
+ */
 
-/*!\class PhysicsSimulationEventHandler
-*Class for changing physics simulation events
-*/
+/*!\class CharacterEventHandler
+ * Class for changing character events
+ */
 
 /*!\namespace ves::xplorer::event
-*
-*/
-class PhysicsSimulationEventHandler : public EventHandler
+ *
+ */
+class CharacterEventHandler : public EventHandler
 {
 public:
     ///Constructor
-    PhysicsSimulationEventHandler();
+    CharacterEventHandler();
 
     ///Copy Constructor
-    PhysicsSimulationEventHandler( const PhysicsSimulationEventHandler& ceh );
+    CharacterEventHandler( const CharacterEventHandler& ceh );
 
     ///Destructor
-    virtual ~PhysicsSimulationEventHandler();
+    virtual ~CharacterEventHandler();
 
     ///Equal operator
-    PhysicsSimulationEventHandler& operator=( const PhysicsSimulationEventHandler& rhs );
+    CharacterEventHandler& operator=( const CharacterEventHandler& rhs );
 
     ///Set the cfdModel
     ///\param modelHandler The ModelHandler to execute the Command on
@@ -79,8 +79,8 @@ protected:
 
 };
 
-}
-}
-}
+} //end event
+} //end xplorer
+} //end ves
 
-#endif //PHYSICS_SIMULATION_EVENT_HANDLER_H
+#endif //VES_XPLORER_EVENT_CHARACTER_EVENT_HANDLER_H

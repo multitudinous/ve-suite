@@ -710,7 +710,7 @@ void KeyboardMouse::OnKeyPress()
     }
     case gadget::KEY_A:
     {
-        if( !m_physicsSimulator.GetIdle() && m_characterController.IsActive() )
+        if( m_characterController.IsEnabled() )
         {
             m_characterController.StrafeLeft( true );
         }
@@ -719,7 +719,7 @@ void KeyboardMouse::OnKeyPress()
     }
     case gadget::KEY_S:
     {
-        if( !m_physicsSimulator.GetIdle() && m_characterController.IsActive() )
+        if( m_characterController.IsEnabled() )
         {
             m_characterController.StepBackward( true );
         }
@@ -728,7 +728,7 @@ void KeyboardMouse::OnKeyPress()
     }
     case gadget::KEY_W:
     {
-        if( !m_physicsSimulator.GetIdle() && m_characterController.IsActive() )
+        if( m_characterController.IsEnabled() )
         {
             m_characterController.StepForward( true );
         }
@@ -737,7 +737,7 @@ void KeyboardMouse::OnKeyPress()
     }
     case gadget::KEY_D:
     {
-        if( !m_physicsSimulator.GetIdle() && m_characterController.IsActive() )
+        if( m_characterController.IsEnabled() )
         {
             m_characterController.StrafeRight( true );
         }
@@ -746,7 +746,7 @@ void KeyboardMouse::OnKeyPress()
     }
     case gadget::KEY_X:
     {
-        if( !m_physicsSimulator.GetIdle() && m_characterController.IsActive() )
+        if( m_characterController.IsEnabled() )
         {
             m_characterController.StepDown( true );
         }
@@ -755,7 +755,7 @@ void KeyboardMouse::OnKeyPress()
     }
     case gadget::KEY_SPACE:
     {
-        if( !m_physicsSimulator.GetIdle() && m_characterController.IsActive() )
+        if( m_characterController.IsEnabled() )
         {
             m_characterController.StepUp( true );
         }
@@ -806,7 +806,7 @@ void KeyboardMouse::OnKeyRelease()
     {
     case gadget::KEY_A:
     {
-        if( !m_physicsSimulator.GetIdle() && m_characterController.IsActive() )
+        if( m_characterController.IsEnabled() )
         {
             m_characterController.StrafeLeft( false );
         }
@@ -815,7 +815,7 @@ void KeyboardMouse::OnKeyRelease()
     }
     case gadget::KEY_S:
     {
-        if( !m_physicsSimulator.GetIdle() && m_characterController.IsActive() )
+        if( m_characterController.IsEnabled() )
         {
             m_characterController.StepBackward( false );
         }
@@ -824,7 +824,7 @@ void KeyboardMouse::OnKeyRelease()
     }
     case gadget::KEY_D:
     {
-        if( !m_physicsSimulator.GetIdle() && m_characterController.IsActive() )
+        if( m_characterController.IsEnabled() )
         {
             m_characterController.StrafeRight( false );
         }
@@ -833,7 +833,7 @@ void KeyboardMouse::OnKeyRelease()
     }
     case gadget::KEY_W:
     {
-        if( !m_physicsSimulator.GetIdle() && m_characterController.IsActive() )
+        if( m_characterController.IsEnabled() )
         {
             m_characterController.StepForward( false );
         }
@@ -842,7 +842,7 @@ void KeyboardMouse::OnKeyRelease()
     }
     case gadget::KEY_X:
     {
-        if( !m_physicsSimulator.GetIdle() && m_characterController.IsActive() )
+        if( m_characterController.IsEnabled() )
         {
             m_characterController.StepDown( false );
         }
@@ -851,7 +851,7 @@ void KeyboardMouse::OnKeyRelease()
     }
     case gadget::KEY_SPACE:
     {
-        if( !m_physicsSimulator.GetIdle() && m_characterController.IsActive() )
+        if( m_characterController.IsEnabled() )
         {
             m_characterController.StepUp( false );
         }
@@ -875,7 +875,7 @@ void KeyboardMouse::OnMousePress()
     case gadget::MBUTTON1:
     {
         //Rotate just the camera "3rd person view:
-        if( !m_physicsSimulator.GetIdle() && m_characterController.IsActive() )
+        if( m_characterController.IsEnabled() )
         {
             m_characterController.FirstPersonMode( false );
         }
@@ -896,7 +896,7 @@ void KeyboardMouse::OnMousePress()
             }
 #endif //TRANSFORM_MANIPULATOR
 
-            if( !m_physicsSimulator.GetIdle() && m_characterController.IsActive() )
+            if( m_characterController.IsEnabled() )
             {
                 m_characterController.SetCameraRotationSLERP( false );
             }
@@ -928,7 +928,7 @@ void KeyboardMouse::OnMousePress()
     //Right mouse button
     case gadget::MBUTTON3:
     {
-        if( !m_physicsSimulator.GetIdle() && m_characterController.IsActive() )
+        if( m_characterController.IsEnabled() )
         {
             m_characterController.FirstPersonMode( true );
             m_characterController.SetCameraRotationSLERP( false );
@@ -942,7 +942,7 @@ void KeyboardMouse::OnMousePress()
     //Scroll wheel up
     case gadget::MBUTTON4:
     {
-        if( !m_physicsSimulator.GetIdle() && m_characterController.IsActive() )
+        if( m_characterController.IsEnabled() )
         {
             m_characterController.Zoom( true );
         }
@@ -952,7 +952,7 @@ void KeyboardMouse::OnMousePress()
     //Scroll wheel down
     case gadget::MBUTTON5:
     {
-        if( !m_physicsSimulator.GetIdle() && m_characterController.IsActive() )
+        if( m_characterController.IsEnabled() )
         {
             m_characterController.Zoom( false );
         }
@@ -989,7 +989,7 @@ void KeyboardMouse::OnMouseRelease()
         }
 #endif //TRANSFORM_MANIPULATOR
 
-        if( !m_physicsSimulator.GetIdle() && m_characterController.IsActive() )
+        if( m_characterController.IsEnabled() )
         {
             m_characterController.SetCameraRotationSLERP( true );
         }
@@ -1118,7 +1118,7 @@ void KeyboardMouse::OnMouseMotionDown()
 #endif //TRANSFORM_MANIPULATOR
 
             //Rotate just the camera "3rd person view:
-            if( !m_physicsSimulator.GetIdle() && m_characterController.IsActive() )
+            if( m_characterController.IsEnabled() )
             {
                 m_characterController.Rotate( xDelta, yDelta );
             }
@@ -1162,7 +1162,7 @@ void KeyboardMouse::OnMouseMotionDown()
     case gadget::MBUTTON3:
     {
         //Rotate the character and camera at the same time
-        if( !m_physicsSimulator.GetIdle() && m_characterController.IsActive() )
+        if( m_characterController.IsEnabled() )
         {
             m_characterController.Rotate( xDelta, yDelta );
         }

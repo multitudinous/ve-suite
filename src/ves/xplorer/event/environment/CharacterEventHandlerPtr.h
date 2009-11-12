@@ -30,19 +30,12 @@
 * -----------------------------------------------------------------
 *
 *************** <auto-copyright.rb END do not edit this line> ***************/
-#ifndef VE_XPLORER_PHYSICS_SIMULATION_EVENT_HANDLER_PTR_H
-#define VE_XPLORER_PHYSICS_SIMULATION_EVENT_HANDLER_PTR_H
 
+#ifndef VES_XPLORER_EVENT_CHARACTER_EVENT_HANDLER_PTR_H
+#define VES_XPLORER_EVENT_CHARACTER_EVENT_HANDLER_PTR_H
+
+// --- VE-Suite Includes --- //
 #include <ves/util/PointerTypes.h>
-
-/**
- * \file
- *
- * Include this file to get a forward declaration of the type
- * ves::xplorer:event::PhysicsSimulationEventHandler and its pointer types.
- * For the full declaration of ves::xplorer::event::PhysicsSimulationEventHandler
- * ves/xplorer/event/environment/PhysicsSimulationEventHandler.h must be included, too.
- */
 
 namespace ves
 {
@@ -50,13 +43,19 @@ namespace xplorer
 {
 namespace event
 {
-class PhysicsSimulationEventHandler;
-/// Typedef for the SmartPtr types.
-typedef ves::util::ClassPtrDef<PhysicsSimulationEventHandler>::type  PhysicsSimulationEventHandlerPtr;
-typedef ves::util::SharedPtrDef<PhysicsSimulationEventHandler>::type PhysicsSimulationEventHandlerSharedPtr;
-typedef ves::util::WeakPtrDef<PhysicsSimulationEventHandler>::type   PhysicsSimulationEventHandlerWeakPtr;
-typedef ves::util::ScopedPtrDef<PhysicsSimulationEventHandler>::type PhysicsSimulationEventHandlerScopedPtr;
-}
-}
-}
-#endif
+class CharacterEventHandler;
+
+typedef ves::util::ClassPtrDef< CharacterEventHandler >::type
+    CharacterEventHandlerPtr;
+typedef ves::util::SharedPtrDef< CharacterEventHandler >::type
+    CharacterEventHandlerSharedPtr;
+typedef ves::util::WeakPtrDef< CharacterEventHandler >::type
+    CharacterEventHandlerWeakPtr;
+typedef ves::util::ScopedPtrDef< CharacterEventHandler >::type
+    CharacterEventHandlerScopedPtr;
+
+} //end event
+} //end xplorer
+} //end ves
+
+#endif //VES_XPLORER_EVENT_CHARACTER_EVENT_HANDLER_PTR_H

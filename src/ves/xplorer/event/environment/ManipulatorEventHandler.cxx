@@ -118,18 +118,13 @@ void ManipulatorEventHandler::Execute(
         {
             sceneManipulator->Show();
         }
-
-        return;
     }
     else if( data == "DISABLE" )
     {
         sceneManipulator->Enable( false );
         sceneManipulator->Hide();
-
-        return;
     }
-
-    if( data == "TRANSLATE" )
+    else if( data == "TRANSLATE" )
     {
         sceneManipulator->SetEnabledModes(
             vxsm::TransformationType::TRANSLATE_COMPOUND );

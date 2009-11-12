@@ -125,6 +125,9 @@ public:
     ///Free memory for CharacterController
     void Destroy();
 
+    ///
+    void Enable( const bool& enable = true );
+
     ///Make the character jump
     void Jump();
 
@@ -132,7 +135,7 @@ public:
     void Initialize();
 
     ///Returns if the character controller is active
-    bool IsActive();
+    const bool IsEnabled() const;
 
     ///
     void FirstPersonMode( bool onOff );
@@ -170,12 +173,6 @@ public:
 
     ///
     void SetCharacterRotationFromCamera();
-
-    ///Activate the character controller
-    void TurnOn();
-
-    ///Deactivate the character controller
-    void TurnOff();
 
     ///Position the camera relative to the character
     ///\pre Call the bullet simulation step function
@@ -228,13 +225,10 @@ private:
     void UpdateCharacterTranslation( btScalar dt );
 
     ///Tracks the on/off status of the character controller
-    bool mActive;
+    bool m_enabled;
 
     ///Tracks if the character controller is in 1st person mode
     bool m1stPersonMode;
-
-    ///
-    bool mFlying;
 
     ///
     bool mCameraDistanceLERP;

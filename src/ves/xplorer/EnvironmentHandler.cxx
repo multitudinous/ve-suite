@@ -66,8 +66,9 @@
 #include <ves/xplorer/event/environment/EphemerisDisplayToggleEventHandler.h>
 #include <ves/xplorer/event/environment/GeometryLODScaleEventHandler.h>
 #include <ves/xplorer/event/environment/SetResetStartPositionEventHandler.h>
-#include <ves/xplorer/event/environment/PhysicsSimulationEventHandler.h>
 #include <ves/xplorer/event/environment/ManipulatorEventHandler.h>
+#include <ves/xplorer/event/environment/CharacterEventHandler.h>
+#include <ves/xplorer/event/environment/PhysicsEventHandler.h>
 #include <ves/xplorer/event/environment/ScreenAlignedNormalsEventHandler.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
@@ -133,43 +134,45 @@ m_lodScale( 0.01 )
     _seedPointsDCS->SetName( "Seed Points DCS" );
     _seedPointsDCS->addChild( _seedPoints.get() );
 
-    _eventHandlers[ std::string( "MANIPULATOR_COMMAND" )] =
+    _eventHandlers[ std::string( "MANIPULATOR_COMMAND" ) ] =
         new ves::xplorer::event::ManipulatorEventHandler();
-    _eventHandlers[ std::string( "PHYSICS_SIMULATION" )] =
-        new ves::xplorer::event::PhysicsSimulationEventHandler();
-    _eventHandlers[ std::string( "VIEW_SELECTION" )] =
+    _eventHandlers[ std::string( "CHARACTER_COMMAND" ) ] =
+        new ves::xplorer::event::CharacterEventHandler();
+    _eventHandlers[ std::string( "PHYSICS_COMMAND" ) ] =
+        new ves::xplorer::event::PhysicsEventHandler();
+    _eventHandlers[ std::string( "VIEW_SELECTION" ) ] =
         new ves::xplorer::event::ViewEventHandler();
-    //_eventHandlers[ std::string( "VISUALIZATION_SETTINGS" )] =
+    //_eventHandlers[ std::string( "VISUALIZATION_SETTINGS" ) ] =
     //    new ves::xplorer::event::ChangeCursorEventHandler();
-    _eventHandlers[ std::string( "Stored Scenes" )] =
+    _eventHandlers[ std::string( "Stored Scenes" ) ] =
         new ves::xplorer::event::StoredSceneEventHandler();
-    _eventHandlers[ std::string( "Change Working Directory" )] =
+    _eventHandlers[ std::string( "Change Working Directory" ) ] =
         new ves::xplorer::event::ChangeWorkingDirectoryEventHandler();
-    _eventHandlers[ std::string( "CHANGE_BACKGROUND_COLOR" )] =
+    _eventHandlers[ std::string( "CHANGE_BACKGROUND_COLOR" ) ] =
         new ves::xplorer::event::ChangeBackgroundColorEventHandler();
-    _eventHandlers[ std::string( "DISPLAY_SELECTION" )] =
+    _eventHandlers[ std::string( "DISPLAY_SELECTION" ) ] =
         new ves::xplorer::event::DisplayEventHandler();
-    _eventHandlers[ std::string( "Display Seed Points" )] =
+    _eventHandlers[ std::string( "Display Seed Points" ) ] =
         new ves::xplorer::event::SeedPointActivateEventHandler();
-    _eventHandlers[ std::string( "Seed Points Bounds" )] =
+    _eventHandlers[ std::string( "Seed Points Bounds" ) ] =
         new ves::xplorer::event::SeedPointBoundsEventHandler();
-    _eventHandlers[ std::string( "Seed Points Dimensions" )] =
+    _eventHandlers[ std::string( "Seed Points Dimensions" ) ] =
         new ves::xplorer::event::SeedPointDimensionsEventHandler();
-    _eventHandlers[ std::string( "DOT_FILE" )] =
+    _eventHandlers[ std::string( "DOT_FILE" ) ] =
         new ves::xplorer::event::ExportDOTFileEventHandler();
-    _eventHandlers[ std::string( "Ephemeris Data" )] =
+    _eventHandlers[ std::string( "Ephemeris Data" ) ] =
         new ves::xplorer::event::EphemerisDataEventHandler();
-    _eventHandlers[ std::string( "Ephemeris Auto Date and Time" )] =
+    _eventHandlers[ std::string( "Ephemeris Auto Date and Time" ) ] =
         new ves::xplorer::event::EphemerisAutoDateTimeEventHandler();
-    _eventHandlers[ std::string( "Ephemeris Height Map" )] =
+    _eventHandlers[ std::string( "Ephemeris Height Map" ) ] =
         new ves::xplorer::event::EphemerisHeightMapEventHandler();
-    _eventHandlers[ std::string( "Ephemeris Toggle" )] =
+    _eventHandlers[ std::string( "Ephemeris Toggle" ) ] =
         new ves::xplorer::event::EphemerisDisplayToggleEventHandler();
-    _eventHandlers[ std::string( "Update LOD Scale" )] =
+    _eventHandlers[ std::string( "Update LOD Scale" ) ] =
         new ves::xplorer::event::GeometryLODScaleEventHandler();
-    _eventHandlers[ std::string( "Navigation_Data" )] =
+    _eventHandlers[ std::string( "Navigation_Data" ) ] =
         new ves::xplorer::event::SetResetStartPositionEventHandler();
-    _eventHandlers[ std::string( "SCENE_STATE_INFORMATION" )] =
+    _eventHandlers[ std::string( "SCENE_STATE_INFORMATION" ) ] =
         new ves::xplorer::event::ScreenAlignedNormalsEventHandler();
 }
 ////////////////////////////////////////////////////////////////////////////////

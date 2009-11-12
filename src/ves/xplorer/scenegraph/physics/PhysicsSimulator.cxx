@@ -279,7 +279,7 @@ void PhysicsSimulator::UpdatePhysics( float dt )
     //If the character controller is being used - manipulate the character
     //by the keyboard, head, or wand first. This should affect the 
     //character bullet matrix directly
-    if( characterController->IsActive() )
+    if( characterController->IsEnabled() )
     {
         characterController->Advance( dt );
     }
@@ -293,7 +293,7 @@ void PhysicsSimulator::UpdatePhysics( float dt )
     //Now that the character has been moved AND the simulation has calculated
     //the new position update the camera matrix with the new view data
     //based on what the character has done
-    if( characterController->IsActive() )
+    if( characterController->IsEnabled() )
     {
         characterController->UpdateCamera();
     }
@@ -457,7 +457,7 @@ void PhysicsSimulator::ResetScene()
 
     vxs::CharacterController* characterController =
         vxs::SceneManager::instance()->GetCharacterController();
-    if( characterController->IsActive() )
+    if( characterController->IsEnabled() )
     {
         characterController->Reset();
     }

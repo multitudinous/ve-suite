@@ -73,11 +73,14 @@
 #include <ves/conductor/xpm/ToolBar/ManipulatorComboButtonSelect.xpm>
 #include <ves/conductor/xpm/ToolBar/ManipulatorComboButtonDisabled.xpm>
 
-#include <ves/conductor/xpm/ToolBar/PhysicsButton.xpm>
-#include <ves/conductor/xpm/ToolBar/PhysicsButtonSelect.xpm>
 #include <ves/conductor/xpm/ToolBar/CharacterButton.xpm>
 #include <ves/conductor/xpm/ToolBar/CharacterButtonSelect.xpm>
-#include <ves/conductor/xpm/ToolBar/CharacterButtonDisabled.xpm>
+#include <ves/conductor/xpm/ToolBar/CharacterFlyButton.xpm>
+#include <ves/conductor/xpm/ToolBar/CharacterFlyButtonSelect.xpm>
+#include <ves/conductor/xpm/ToolBar/CharacterFlyButtonDisabled.xpm>
+
+#include <ves/conductor/xpm/ToolBar/PhysicsButton.xpm>
+#include <ves/conductor/xpm/ToolBar/PhysicsButtonSelect.xpm>
 #include <ves/conductor/xpm/ToolBar/ResetButton.xpm>
 #include <ves/conductor/xpm/ToolBar/ResetButtonDisabled.xpm>
 #include <ves/conductor/xpm/ToolBar/PauseButton.xpm>
@@ -140,13 +143,14 @@ EVT_MENU( APP_TOOL_BAR_BB_CENTER_POINT_JUMP, AppToolBar::OnCenterPointUpdate )
 
 EVT_MENU( APP_TOOL_BAR_RESET_CENTER_POINT, AppToolBar::OnResetCenterPoint )
 
-EVT_MENU( APP_TOOL_BAR_PHYSICS, AppToolBar::OnPhysicsState )
+EVT_MENU( APP_TOOL_BAR_CHARACTER, AppToolBar::OnCharacterState )
+EVT_MENU( APP_TOOL_BAR_CHARACTER_FLY, AppToolBar::OnCharacterFly )
 
-EVT_MENU( APP_TOOL_BAR_PHYSICS_CHARACTER, AppToolBar::OnCharacterState )
-EVT_MENU( APP_TOOL_BAR_PHYSICS_RESET, AppToolBar::OnPhysicsSimulation )
-EVT_MENU( APP_TOOL_BAR_PHYSICS_PAUSE, AppToolBar::OnPhysicsSimulation )
-EVT_MENU( APP_TOOL_BAR_PHYSICS_PLAY, AppToolBar::OnPhysicsSimulation )
-EVT_MENU( APP_TOOL_BAR_PHYSICS_STEP, AppToolBar::OnPhysicsSimulation )
+EVT_MENU( APP_TOOL_BAR_PHYSICS, AppToolBar::OnPhysicsState )
+EVT_MENU( APP_TOOL_BAR_PHYSICS_RESET, AppToolBar::OnPhysics )
+EVT_MENU( APP_TOOL_BAR_PHYSICS_PAUSE, AppToolBar::OnPhysics )
+EVT_MENU( APP_TOOL_BAR_PHYSICS_PLAY, AppToolBar::OnPhysics )
+EVT_MENU( APP_TOOL_BAR_PHYSICS_STEP, AppToolBar::OnPhysics )
 
 EVT_MENU( APP_TOOL_BAR_SUMMIT_JOB, AppToolBar::OnSummitJob )
 
@@ -162,9 +166,10 @@ AppToolBar::AppToolBar( wxWindow* parent )
         wxDefaultSize,
         wxTB_FLAT | wxTB_NODIVIDER | wxTB_HORIZONTAL | wxNO_BORDER,
         wxT( "ToolBar" ) ),
-    m_physicsState( false ),
-    m_characterState( false ),
     m_manipulatorState( false ),
+    m_characterState( false ),
+    m_characterFlyState( false ),
+    m_physicsState( false ),
     m_prevDeviceMode( APP_TOOL_BAR_NULL ),
     m_prevCenterPoint( APP_TOOL_BAR_NULL ),
     m_prevPhysicsSimulation( APP_TOOL_BAR_NULL ),
@@ -248,16 +253,26 @@ void AppToolBar::LoadToolBarBitmaps()
     m_toolbarBitmaps[ APP_TOOL_BAR_RESET_CENTER_POINT ] =
         wxBitmap( ResetCenterPointButton_xpm );
 
+    m_toolbarBitmaps[ APP_TOOL_BAR_CHARACTER ] =
+        wxBitmap( CharacterButton_xpm );
+    m_toolbarBitmaps[ APP_TOOL_BAR_CHARACTER_SELECT ] =
+        wxBitmap( CharacterButtonSelect_xpm );
+
+    m_toolbarBitmaps[ APP_TOOL_BAR_CHARACTER ] =
+        wxBitmap( CharacterButton_xpm );
+    m_toolbarBitmaps[ APP_TOOL_BAR_CHARACTER_SELECT ] =
+        wxBitmap( CharacterButtonSelect_xpm );
+    m_toolbarBitmaps[ APP_TOOL_BAR_CHARACTER_FLY ] =
+        wxBitmap( CharacterFlyButton_xpm );
+    m_toolbarBitmaps[ APP_TOOL_BAR_CHARACTER_FLY_SELECT ] =
+        wxBitmap( CharacterFlyButtonSelect_xpm );
+    m_toolbarBitmaps[ APP_TOOL_BAR_CHARACTER_FLY_DISABLED ] =
+        wxBitmap( CharacterFlyButtonDisabled_xpm );
+
     m_toolbarBitmaps[ APP_TOOL_BAR_PHYSICS ] =
         wxBitmap( PhysicsButton_xpm );
     m_toolbarBitmaps[ APP_TOOL_BAR_PHYSICS_SELECT ] =
         wxBitmap( PhysicsButtonSelect_xpm );
-    m_toolbarBitmaps[ APP_TOOL_BAR_PHYSICS_CHARACTER ] =
-        wxBitmap( CharacterButton_xpm );
-    m_toolbarBitmaps[ APP_TOOL_BAR_PHYSICS_CHARACTER_SELECT ] =
-        wxBitmap( CharacterButtonSelect_xpm );
-    m_toolbarBitmaps[ APP_TOOL_BAR_PHYSICS_CHARACTER_DISABLED ] =
-        wxBitmap( CharacterButtonDisabled_xpm );
     m_toolbarBitmaps[ APP_TOOL_BAR_PHYSICS_RESET ] =
         wxBitmap( ResetButton_xpm );
     m_toolbarBitmaps[ APP_TOOL_BAR_PHYSICS_RESET_DISABLED ] =
@@ -382,17 +397,24 @@ void AppToolBar::CreateAppToolBar()
 
     AddSeparator();
 
+#ifdef CHARACTER_CONTROLLER
+    AddTool(
+        APP_TOOL_BAR_CHARACTER, wxEmptyString,
+        m_toolbarBitmaps[ APP_TOOL_BAR_CHARACTER ],
+        wxT( "Character Controller On/Off" ), wxITEM_CHECK );
+    AddTool(
+        APP_TOOL_BAR_CHARACTER_FLY, wxEmptyString,
+        m_toolbarBitmaps[ APP_TOOL_BAR_CHARACTER_FLY ],
+        m_toolbarBitmaps[ APP_TOOL_BAR_CHARACTER_FLY_DISABLED ],
+        wxITEM_CHECK, wxT( "Fly Mode On/Off" ) );
+#endif //CHARACTER_CONTROLLER
+
+    AddSeparator();
+
     AddTool(
         APP_TOOL_BAR_PHYSICS, wxEmptyString,
         m_toolbarBitmaps[ APP_TOOL_BAR_PHYSICS ],
         wxT( "Physics On/Off" ), wxITEM_CHECK );
-#ifdef CHARACTER_CONTROLLER
-    AddTool(
-        APP_TOOL_BAR_PHYSICS_CHARACTER, wxEmptyString,
-        m_toolbarBitmaps[ APP_TOOL_BAR_PHYSICS_CHARACTER ],
-        m_toolbarBitmaps[ APP_TOOL_BAR_PHYSICS_CHARACTER_DISABLED ],
-        wxITEM_CHECK, wxT( "Character Controller" ) );
-#endif //CHARACTER_CONTROLLER
     AddTool(
         APP_TOOL_BAR_PHYSICS_RESET, wxEmptyString,
         m_toolbarBitmaps[ APP_TOOL_BAR_PHYSICS_RESET ],
@@ -431,47 +453,17 @@ void AppToolBar::CreateAppToolBar()
     m_prevCenterPoint = APP_TOOL_BAR_SMALL_CENTER_POINT_JUMP;
     m_prevManipulatorMode = APP_TOOL_BAR_MANIPULATOR_TRANSLATE;
 
-    EnableTool( APP_TOOL_BAR_PHYSICS_CHARACTER, false );
-    EnableTool( APP_TOOL_BAR_PHYSICS_RESET, false );
-    EnableTool( APP_TOOL_BAR_PHYSICS_PAUSE, false );
-    EnableTool( APP_TOOL_BAR_PHYSICS_PLAY, false );
-    EnableTool( APP_TOOL_BAR_PHYSICS_STEP, false );
     EnableTool( APP_TOOL_BAR_MANIPULATOR_TRANSLATE, false );
     EnableTool( APP_TOOL_BAR_MANIPULATOR_ROTATE, false );
     EnableTool( APP_TOOL_BAR_MANIPULATOR_SCALE, false );
     EnableTool( APP_TOOL_BAR_MANIPULATOR_COMBO, false );
-}
-////////////////////////////////////////////////////////////////////////////////
-void AppToolBar::OnCharacterState( wxCommandEvent& event )
-{
-    std::string value;
-    int currentSelection = event.GetId();
-    m_characterState = GetToolState( currentSelection );
-    if( m_characterState )
-    {
-        value = "CharacterControllerOn";
 
-        SetToolNormalBitmap(
-            currentSelection,
-            m_toolbarBitmaps[ APP_TOOL_BAR_PHYSICS_CHARACTER_SELECT ] );
-    }
-    else
-    {
-        value = "CharacterControllerOff";
+    EnableTool( APP_TOOL_BAR_CHARACTER_FLY, false );
 
-        SetToolNormalBitmap(
-            currentSelection,
-            m_toolbarBitmaps[ currentSelection ] );
-    }
-
-    DataValuePairPtr dvp( new DataValuePair() );
-    dvp->SetData( "PHYSICS_SIMULATION_DVP", value );
-
-    CommandSharedPtr command( new ves::open::xml::Command() );
-    command->SetCommandName( "PHYSICS_SIMULATION" );
-    command->AddDataValuePair( dvp );
-
-    CORBAServiceList::instance()->SendCommandStringToXplorer( command );
+    EnableTool( APP_TOOL_BAR_PHYSICS_RESET, false );
+    EnableTool( APP_TOOL_BAR_PHYSICS_PAUSE, false );
+    EnableTool( APP_TOOL_BAR_PHYSICS_PLAY, false );
+    EnableTool( APP_TOOL_BAR_PHYSICS_STEP, false );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppToolBar::OnEraseBackGround( wxEraseEvent& event )
@@ -615,6 +607,82 @@ void AppToolBar::OnManipulatorState( wxCommandEvent& event )
 
     CommandSharedPtr command( new ves::open::xml::Command() );
     command->SetCommandName( "MANIPULATOR_COMMAND" );
+    command->AddDataValuePair( dvp );
+
+    CORBAServiceList::instance()->SendCommandStringToXplorer( command );
+}
+////////////////////////////////////////////////////////////////////////////////
+void AppToolBar::OnCharacterFly( wxCommandEvent& event )
+{
+    std::string data;
+    int currentSelection = event.GetId();
+    m_characterFlyState = GetToolState( currentSelection );
+    if( m_characterFlyState )
+    {
+        data = "ENABLE_FLY";
+
+        SetToolNormalBitmap(
+            currentSelection,
+            m_toolbarBitmaps[ APP_TOOL_BAR_CHARACTER_FLY_SELECT ] );
+    }
+    else
+    {
+        data = "DISABLE_FLY";
+
+        SetToolNormalBitmap(
+            currentSelection,
+            m_toolbarBitmaps[ currentSelection ] );
+    }
+
+    DataValuePairPtr dvp( new DataValuePair() );
+    dvp->SetData( "CHARACTER_DVP", data );
+
+    CommandSharedPtr command( new ves::open::xml::Command() );
+    command->SetCommandName( "CHARACTER_COMMAND" );
+    command->AddDataValuePair( dvp );
+
+    CORBAServiceList::instance()->SendCommandStringToXplorer( command );
+}
+////////////////////////////////////////////////////////////////////////////////
+void AppToolBar::OnCharacterState( wxCommandEvent& event )
+{
+    std::string data;
+    int currentSelection = event.GetId();
+    m_characterState = GetToolState( currentSelection );
+    if( m_characterState )
+    {
+        data = "ENABLE";
+
+        SetToolNormalBitmap(
+            currentSelection,
+            m_toolbarBitmaps[ APP_TOOL_BAR_CHARACTER_SELECT ] );
+
+        if( m_characterFlyState )
+        {
+            ToggleTool( APP_TOOL_BAR_CHARACTER_FLY, true );
+        }
+    }
+    else
+    {
+        data = "DISABLE";
+
+        SetToolNormalBitmap(
+            currentSelection,
+            m_toolbarBitmaps[ currentSelection ] );
+
+        if( m_characterFlyState )
+        {
+            ToggleTool( APP_TOOL_BAR_CHARACTER_FLY, false );
+        }
+    }
+
+    EnableTool( APP_TOOL_BAR_CHARACTER_FLY, m_characterState );
+
+    DataValuePairPtr dvp( new DataValuePair() );
+    dvp->SetData( "CHARACTER_DVP", data );
+
+    CommandSharedPtr command( new ves::open::xml::Command() );
+    command->SetCommandName( "CHARACTER_COMMAND" );
     command->AddDataValuePair( dvp );
 
     CORBAServiceList::instance()->SendCommandStringToXplorer( command );
@@ -778,7 +846,7 @@ void AppToolBar::OnPhysicsState( wxCommandEvent& event )
             m_toolbarBitmaps[ currentSelection ] );
 
         event.SetId( APP_TOOL_BAR_PHYSICS_PAUSE );
-        OnPhysicsSimulation( event );
+        OnPhysics( event );
     }
 
     if( m_prevPhysicsSimulation == APP_TOOL_BAR_PHYSICS_PAUSE )
@@ -786,19 +854,13 @@ void AppToolBar::OnPhysicsState( wxCommandEvent& event )
         ToggleTool( APP_TOOL_BAR_PHYSICS_PAUSE, m_physicsState );
     }
 
-    if( m_characterState )
-    {
-        ToggleTool( APP_TOOL_BAR_PHYSICS_CHARACTER, m_physicsState );
-    }
-
-    EnableTool( APP_TOOL_BAR_PHYSICS_CHARACTER, m_physicsState );
     EnableTool( APP_TOOL_BAR_PHYSICS_RESET, m_physicsState );
     EnableTool( APP_TOOL_BAR_PHYSICS_PAUSE, m_physicsState );
     EnableTool( APP_TOOL_BAR_PHYSICS_PLAY, m_physicsState );
     EnableTool( APP_TOOL_BAR_PHYSICS_STEP, m_physicsState );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AppToolBar::OnPhysicsSimulation( wxCommandEvent& event )
+void AppToolBar::OnPhysics( wxCommandEvent& event )
 {
     int currentSelection = event.GetId();
     if( m_prevPhysicsSimulation == currentSelection &&
@@ -880,10 +942,10 @@ void AppToolBar::OnPhysicsSimulation( wxCommandEvent& event )
     m_prevPhysicsSimulation = currentSelection;
 
     DataValuePairPtr dvp( new DataValuePair() );
-    dvp->SetData( "PHYSICS_SIMULATION_DVP", value );
+    dvp->SetData( "PHYSICS_DVP", value );
 
     ves::open::xml::CommandPtr command( new ves::open::xml::Command() );
-    command->SetCommandName( "PHYSICS_SIMULATION" );
+    command->SetCommandName( "PHYSICS_COMMAND" );
     command->AddDataValuePair( dvp );
 
     CORBAServiceList::instance()->SendCommandStringToXplorer( command );

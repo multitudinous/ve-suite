@@ -135,6 +135,7 @@ protected:
 KinematicCharacterController::KinematicCharacterController()
     :
     btActionInterface(),
+    m_fly( false ),
     m_jump( false ),
     m_touchingContact( false ),
     m_useGhostObjectSweepTest( true ),
@@ -534,6 +535,11 @@ void KinematicCharacterController::Reset()
     warp( btVector3( 0.0, 0.0, m_characterHeight ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
+void KinematicCharacterController::EnableFlying( const bool& canFly )
+{
+    m_fly = canFly;
+}
+////////////////////////////////////////////////////////////////////////////////
 void KinematicCharacterController::warp( const btVector3& origin )
 {
     btTransform xform;
@@ -612,6 +618,11 @@ void KinematicCharacterController::setJumpSpeed( btScalar jumpSpeed )
 void KinematicCharacterController::setMaxJumpHeight( btScalar maxJumpHeight )
 {
     m_maxJumpHeight = maxJumpHeight;
+}
+////////////////////////////////////////////////////////////////////////////////
+const bool KinematicCharacterController::CanFly() const
+{
+    return m_fly;
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool KinematicCharacterController::canJump() const

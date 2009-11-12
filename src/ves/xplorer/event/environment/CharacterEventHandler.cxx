@@ -32,7 +32,7 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
 // --- VE-Suite Includes --- //
-#include <ves/xplorer/event/environment/PhysicsSimulationEventHandler.h>
+#include <ves/xplorer/event/environment/CharacterEventHandler.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
 
@@ -57,31 +57,30 @@
 #endif
 
 using namespace ves::xplorer::event;
-namespace vxs = ves::xplorer::scenegraph;
 
 ////////////////////////////////////////////////////////////////////////////////
-PhysicsSimulationEventHandler::PhysicsSimulationEventHandler()
+CharacterEventHandler::CharacterEventHandler()
     :
     ves::xplorer::event::EventHandler()
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-PhysicsSimulationEventHandler::PhysicsSimulationEventHandler(
-    const PhysicsSimulationEventHandler& rhs )
+CharacterEventHandler::CharacterEventHandler(
+    const CharacterEventHandler& rhs )
     :
     ves::xplorer::event::EventHandler()
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-PhysicsSimulationEventHandler::~PhysicsSimulationEventHandler()
+CharacterEventHandler::~CharacterEventHandler()
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-PhysicsSimulationEventHandler& PhysicsSimulationEventHandler::operator=(
-    const PhysicsSimulationEventHandler& rhs )
+CharacterEventHandler& CharacterEventHandler::operator=(
+    const CharacterEventHandler& rhs )
 {
     if( this != &rhs )
     {
@@ -91,64 +90,45 @@ PhysicsSimulationEventHandler& PhysicsSimulationEventHandler::operator=(
     return *this;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void PhysicsSimulationEventHandler::SetGlobalBaseObject(
+void CharacterEventHandler::SetGlobalBaseObject(
     ves::xplorer::GlobalBase* modelHandler )
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void PhysicsSimulationEventHandler::Execute(
+void CharacterEventHandler::Execute(
     const ves::open::xml::XMLObjectPtr& veXMLObject )
 {
     ves::open::xml::CommandPtr command =
         boost::dynamic_pointer_cast< ves::open::xml::Command >( veXMLObject );
 
-    if( command->GetDataValuePair( "Physics Debugger Toggle Value" ) )
-    {
-        unsigned int toggle = 0;
-        command->GetDataValuePair( "Physics Debugger Toggle Value" )->
-            GetData( toggle );
-        vxs::PhysicsSimulator::instance()->SetDebuggingOn( toggle );
-    }
-
-    ves::open::xml::DataValuePairPtr physicsDVP =
-        command->GetDataValuePair( "PHYSICS_SIMULATION_DVP" );
-    if( !physicsDVP )
+    ves::open::xml::DataValuePairPtr characterDVP =
+        command->GetDataValuePair( "CHARACTER_DVP" );
+    if( !characterDVP )
     {
         return;
     }
 
-    std::string value;
-    physicsDVP->GetData( value );
-    if( value == "CharacterControllerOn" )
+    scenegraph::CharacterController* characterController =
+        scenegraph::SceneManager::instance()->GetCharacterController();
+
+    std::string data;
+    characterDVP->GetData( data );
+    if( data == "ENABLE" )
     {
-        vxs::CharacterController* characterController =
-            vxs::SceneManager::instance()->GetCharacterController();
-        characterController->TurnOn();
+        characterController->Enable();
     }
-    else if( value == "CharacterControllerOff" )
+    else if( data == "DISABLE" )
     {
-        vxs::CharacterController* characterController =
-            vxs::SceneManager::instance()->GetCharacterController();
-        characterController->TurnOff();
+        characterController->Enable( false );
     }
-    else if( value == "ResetPhysicsSimulation" )
+    else if( data == "ENABLE_FLY" )
     {
-        vxs::PhysicsSimulator::instance()->SetIdle( true );
-        vxs::PhysicsSimulator::instance()->ResetScene();
+        characterController->EnableFlying();
     }
-    else if( value == "PausePhysicsSimulation" )
+    else if( data == "DISABLE_FLY" )
     {
-        vxs::PhysicsSimulator::instance()->SetIdle( true );
-    }
-    else if( value == "StartPhysicsSimulation" )
-    {
-        vxs::PhysicsSimulator::instance()->SetIdle( false );
-    }
-    else if( value == "StepPhysicsSimulation" )
-    {
-        vxs::PhysicsSimulator::instance()->SetIdle( true );
-        vxs::PhysicsSimulator::instance()->StepSimulation();
+        characterController->EnableFlying( false );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

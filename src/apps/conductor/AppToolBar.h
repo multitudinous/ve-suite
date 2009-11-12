@@ -83,6 +83,10 @@ private:
 
     ///
     ///\param
+    void OnCharacterFly( wxCommandEvent& event );
+
+    ///
+    ///\param
     void OnCharacterState( wxCommandEvent& event );
 
     ///
@@ -107,7 +111,7 @@ private:
 
     ///Handles events for the physics simulation
     ///\param event The wxCommand event
-    void OnPhysicsSimulation( wxCommandEvent& event );
+    void OnPhysics( wxCommandEvent& event );
 
     ///Handles event for physics state
     ///\param event The wxCommand event
@@ -130,13 +134,16 @@ private:
     void OnUnselectObjects( wxCommandEvent& event );
 
     ///
-    bool m_physicsState;
+    bool m_manipulatorState;
 
     ///
     bool m_characterState;
 
     ///
-    bool m_manipulatorState;
+    bool m_characterFlyState;
+
+    ///
+    bool m_physicsState;
 
     ///
     unsigned int m_prevDeviceMode;
