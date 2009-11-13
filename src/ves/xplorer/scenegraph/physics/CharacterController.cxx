@@ -201,8 +201,7 @@ void CharacterController::Enable( const bool& enable )
 {
     m_enabled = enable;
 
-    btDynamicsWorld* dynamicsWorld =
-        PhysicsSimulator::instance()->GetDynamicsWorld();
+    btDynamicsWorld* dynamicsWorld = m_physicsSimulator.GetDynamicsWorld();
     if( m_enabled )
     {
         mMatrixTransform->setNodeMask( 1 );
@@ -242,6 +241,8 @@ void CharacterController::StepForward( bool onOff )
     else if( m_translateType & TranslateType::STEP_FORWARD )
     {
         m_translateType = m_translateType ^ TranslateType::STEP_FORWARD;
+        //Need to look at this!!!
+        SetRotationFromCamera();
 #ifdef VES_USE_ANIMATED_CHARACTER
         mCharacterAnimations->setSingleChildOn( 0 );
 #endif
@@ -260,6 +261,8 @@ void CharacterController::StepBackward( bool onOff )
     else if( m_translateType & TranslateType::STEP_BACKWARD )
     {
         m_translateType = m_translateType ^ TranslateType::STEP_BACKWARD;
+        //Need to look at this!!!
+        SetRotationFromCamera();
 #ifdef VES_USE_ANIMATED_CHARACTER
         mCharacterAnimations->setSingleChildOn( 0 );
 #endif
@@ -369,11 +372,11 @@ void CharacterController::SetCameraRotationSLERP( bool onOff )
     mCameraRotationSLERPdt = 0.0;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CharacterController::SetCharacterRotationFromCamera()
+void CharacterController::SetRotationFromCamera()
 {
     //Get current character transform
     btTransform xform = m_ghostObject->getWorldTransform();
-    if( m_fly )
+    if( m_fly && ( m_translateType & TranslateType::STEP_FORWARD_BACKWARD ) )
     {
         xform.setRotation( mCameraRotation.inverse() );
     }
@@ -394,10 +397,10 @@ void CharacterController::Move( btScalar dt )
     }
 
     //Update the character rotation
-    UpdateCharacterRotation();
+    UpdateRotation();
 
     //Update the character translation
-    UpdateCharacterTranslation( dt );
+    UpdateTranslation( dt );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CharacterController::UpdateCamera()
@@ -548,8 +551,7 @@ void CharacterController::EyeToCenterRayTest(
     //Bullet implementation: only works for geometry w/ active physics
     /*
     btCollisionWorld::RayResultCallback rayCallback( eye, center );
-    btDynamicsWorld* dynamicsWorld =
-        PhysicsSimulator::instance()->GetDynamicsWorld();
+    btDynamicsWorld* dynamicsWorld = m_physicsSimulator.GetDynamicsWorld();
     dynamicsWorld->rayTest( center, eye, rayCallback );
     if( rayCallback.hasHit() )
     {
@@ -732,7 +734,7 @@ std::pair< double, double > CharacterController::UpdateHistoryBuffer()
     return std::make_pair( totalValueX, totalValueZ );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CharacterController::UpdateCharacterRotation()
+void CharacterController::UpdateRotation()
 {
     //Update the device input history buffer
     std::pair< double, double > deltaDeviceInput = UpdateHistoryBuffer();
@@ -776,12 +778,12 @@ void CharacterController::UpdateCharacterRotation()
 
         if( m1stPersonMode )
         {
-            SetCharacterRotationFromCamera();
+            SetRotationFromCamera();
         }
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CharacterController::UpdateCharacterTranslation( btScalar dt )
+void CharacterController::UpdateTranslation( btScalar dt )
 {
     btVector3 displacement( 0.0, 0.0, 0.0 );
 
@@ -856,7 +858,7 @@ void CharacterController::UpdateCharacterTranslation( btScalar dt )
         CameraRotationSLERP();
     }
 
-    if( PhysicsSimulator::instance()->GetIdle() )
+    if( m_physicsSimulator.GetIdle() )
     {
         xform.setRotation( xform.getRotation().inverse() );
         xform.setOrigin( xform.getOrigin() + displacement );

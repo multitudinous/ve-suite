@@ -956,7 +956,7 @@ void KeyboardMouse::OnMousePress()
         {
             m_characterController.FirstPersonMode( true );
             m_characterController.SetCameraRotationSLERP( false );
-            m_characterController.SetCharacterRotationFromCamera();
+            m_characterController.SetRotationFromCamera();
         }
 
         m_mousePickEvent = true;

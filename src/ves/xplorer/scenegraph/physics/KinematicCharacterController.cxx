@@ -168,10 +168,10 @@ KinematicCharacterController::KinematicCharacterController()
     m_touchingNormal( 0.0, 0.0, 0.0 ),
     m_characterWidth( 1.83 ),
     //The average height of a male in the U.S. is 5.83 ft
-    m_characterHeight( 6.0/*5.83*/ )
+    m_characterHeight( 6.0/*5.83*/ ),
+    m_physicsSimulator( *PhysicsSimulator::instance() )
 {
-    btDynamicsWorld* dynamicsWorld =
-        PhysicsSimulator::instance()->GetDynamicsWorld();
+    btDynamicsWorld* dynamicsWorld = m_physicsSimulator.GetDynamicsWorld();
 
     btBroadphaseInterface* broadphase = dynamicsWorld->getBroadphase();
     broadphase->getOverlappingPairCache()->setInternalGhostPairCallback(
@@ -531,8 +531,7 @@ void KinematicCharacterController::setVelocityForTimeInterval(
 ////////////////////////////////////////////////////////////////////////////////
 void KinematicCharacterController::Reset()
 {
-    btDynamicsWorld* dynamicsWorld =
-        PhysicsSimulator::instance()->GetDynamicsWorld();
+    btDynamicsWorld* dynamicsWorld = m_physicsSimulator.GetDynamicsWorld();
     btDispatcher* dispatcher = dynamicsWorld->getDispatcher();
     btBroadphaseInterface* broadphase = dynamicsWorld->getBroadphase();
     broadphase->getOverlappingPairCache()->cleanProxyFromPairs(

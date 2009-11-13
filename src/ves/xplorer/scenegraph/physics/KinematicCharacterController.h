@@ -57,6 +57,7 @@ namespace xplorer
 {
 namespace scenegraph
 {
+class PhysicsSimulator;
 
 /*!\file KinematicCharacterController.h
  *
@@ -298,6 +299,9 @@ protected:
 
     ///
     double m_characterHeight;
+
+    ///
+    PhysicsSimulator& m_physicsSimulator;
 
 private:
 

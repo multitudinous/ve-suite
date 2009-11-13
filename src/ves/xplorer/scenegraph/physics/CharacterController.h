@@ -164,7 +164,7 @@ public:
     void SetCameraRotationSLERP( bool onOff );
 
     ///
-    void SetCharacterRotationFromCamera();
+    void SetRotationFromCamera();
 
     ///Position the camera relative to the character
     ///\pre Call the bullet simulation step function
@@ -211,10 +211,10 @@ private:
     std::pair< double, double > UpdateHistoryBuffer();
 
     ///
-    void UpdateCharacterRotation();
+    void UpdateRotation();
 
     ///
-    void UpdateCharacterTranslation( btScalar dt );
+    void UpdateTranslation( btScalar dt );
 
     ///Tracks the on/off status of the character controller
     bool m_enabled;

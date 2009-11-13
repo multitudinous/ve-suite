@@ -116,7 +116,7 @@ public:
     ///Set debugging data to be rendered
     ///\param toggle Either true or false
     void SetDebuggingOn( bool toggle );
-    
+
     ///Set whether physics is idle or not
     ///\param state State on or idle
     void SetIdle( bool state );
@@ -188,7 +188,7 @@ private:
 
     ///Is the ground plane created
     bool mCreatedGroundPlane;
-    
+
     ///The head in vr juggler
     gadget::PositionInterface* head;
 
