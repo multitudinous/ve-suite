@@ -220,7 +220,7 @@ private:
 
     ///
     void UpdateCharacterRotation();
-    
+
     ///
     void UpdateCharacterTranslation( btScalar dt );
 
@@ -292,21 +292,6 @@ private:
 
     ///
     double mToOccludeDistance;
-
-    ///
-    double m_forwardBackwardSpeedModifier;
-
-    ///
-    double m_leftRightSpeedModifier;
-
-    ///
-    double m_upDownSpeedModifier;
-
-    ///
-    //double mMinSpeed;
-
-    ///
-    //double mMaxSpeed;
 
     ///
     double mTurnAngleX;

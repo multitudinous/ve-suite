@@ -263,8 +263,17 @@ void PhysicsSimulator::InitializePhysicsSimulation()
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsSimulator::UpdatePhysics( float dt )
 {
+    vxs::CharacterController* characterController =
+        vxs::SceneManager::instance()->GetCharacterController();
+
     if( !mDynamicsWorld || mIdle )
     {
+        if( characterController->IsEnabled() )
+        {
+            characterController->UpdateCamera();
+            characterController->Advance( dt );
+        }
+
         return;
     }
 
@@ -274,8 +283,6 @@ void PhysicsSimulator::UpdatePhysics( float dt )
             mDynamicsWorld->getDebugDrawer() )->BeginDraw();
     }
 
-    vxs::CharacterController* characterController =
-        vxs::SceneManager::instance()->GetCharacterController();
     //If the character controller is being used - manipulate the character
     //by the keyboard, head, or wand first. This should affect the 
     //character bullet matrix directly

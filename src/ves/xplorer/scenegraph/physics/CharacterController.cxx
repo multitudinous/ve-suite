@@ -89,14 +89,6 @@ CharacterController::CharacterController()
     mToCameraDistance( 0.0 ),
     mFromOccludeDistance( 0.0 ),
     mToOccludeDistance( 0.0 ),
-    //This is the speed of the character in ft/s
-    m_forwardBackwardSpeedModifier( 15.0 ),
-    m_leftRightSpeedModifier( 15.0 ),
-    m_upDownSpeedModifier( 100.0 ),
-    //Slow walk speed is 5 km/h ~ 1.0 ft/s
-    //mMinSpeed( 1.0 ),
-    //Usain Bolt's top 10m split 10m/0.82s ~ 40 ft/s
-    //mMaxSpeed( 40.0 ),
     mTurnAngleX( 0.0 ),
     mTurnAngleZ( 0.0 ),
     mDeltaTurnAngleX( 0.0 ),
@@ -782,75 +774,86 @@ void CharacterController::UpdateCharacterRotation()
 void CharacterController::UpdateCharacterTranslation( btScalar dt )
 {
     //Calculate character translation
-    btVector3 displacement( 0.0, 0.0, 0.0 );
-    if( m_translateType | TranslateType::NONE )
+    if( !m_translateType )
     {
-        //Get current character transform
-        btTransform xform = m_ghostObject->getWorldTransform();
-        xform.setRotation( xform.getRotation().inverse() );
-
-        if( m_translateType & TranslateType::STEP_FORWARD_BACKWARD )
-        {
-            btVector3 forwardBackwardDisplacement( 0.0, 0.0, 0.0 );
-            btVector3 forwardDir = xform.getBasis()[ 1 ];
-            forwardDir.normalize();
-            if( m_translateType & TranslateType::STEP_FORWARD )
-            {
-                forwardBackwardDisplacement += forwardDir;
-            }
-            if( m_translateType & TranslateType::STEP_BACKWARD )
-            {
-                forwardBackwardDisplacement -= forwardDir;
-            }
-
-            forwardBackwardDisplacement *= dt * m_forwardBackwardSpeedModifier;
-            displacement += forwardBackwardDisplacement;
-        }
-
-        if( m_translateType & TranslateType::STRAFE_LEFT_RIGHT )
-        {
-            btVector3 leftRightDisplacement( 0.0, 0.0, 0.0 );
-            btVector3 strafeDir = xform.getBasis()[ 0 ];
-            strafeDir.normalize();
-            if( m_translateType & TranslateType::STRAFE_LEFT )
-            {
-                leftRightDisplacement -= strafeDir;
-            }
-            if( m_translateType & TranslateType::STRAFE_RIGHT )
-            {
-                leftRightDisplacement += strafeDir;
-            }
-
-            leftRightDisplacement *= dt * m_leftRightSpeedModifier;
-            displacement += leftRightDisplacement;
-        }
-
-        if( m_translateType & TranslateType::STEP_UP_DOWN )
-        {
-            btVector3 upDownDisplacement( 0.0, 0.0, 0.0 );
-            btVector3 upDir = xform.getBasis()[ 2 ];
-            upDir.normalize();
-            if( m_translateType & TranslateType::STEP_UP )
-            {
-                upDownDisplacement += upDir;
-            }
-            if( m_translateType & TranslateType::STEP_DOWN )
-            {
-                upDownDisplacement -= upDir;
-            }
-
-            upDownDisplacement *= dt * m_upDownSpeedModifier;
-            displacement += upDownDisplacement;
-        }
-
-        //slerp mCameraRotation if necessary
-        if( mCameraRotationSLERP )
-        {
-            CameraRotationSLERP();
-        }
+        return;
     }
 
-    setWalkDirection( displacement );
+    btVector3 displacement( 0.0, 0.0, 0.0 );
+    btTransform xform = m_ghostObject->getWorldTransform();
+    xform.setRotation( xform.getRotation().inverse() );
+
+    if( m_translateType & TranslateType::STEP_FORWARD_BACKWARD )
+    {
+        btVector3 forwardBackwardDisplacement( 0.0, 0.0, 0.0 );
+        btVector3 forwardDir = xform.getBasis()[ 1 ];
+        forwardDir.normalize();
+        if( m_translateType & TranslateType::STEP_FORWARD )
+        {
+            forwardBackwardDisplacement += forwardDir;
+        }
+        if( m_translateType & TranslateType::STEP_BACKWARD )
+        {
+            forwardBackwardDisplacement -= forwardDir;
+        }
+
+        forwardBackwardDisplacement *= dt * m_forwardBackwardSpeedModifier;
+        displacement += forwardBackwardDisplacement;
+    }
+
+    if( m_translateType & TranslateType::STRAFE_LEFT_RIGHT )
+    {
+        btVector3 leftRightDisplacement( 0.0, 0.0, 0.0 );
+        btVector3 strafeDir = xform.getBasis()[ 0 ];
+        strafeDir.normalize();
+        if( m_translateType & TranslateType::STRAFE_LEFT )
+        {
+            leftRightDisplacement -= strafeDir;
+        }
+        if( m_translateType & TranslateType::STRAFE_RIGHT )
+        {
+            leftRightDisplacement += strafeDir;
+        }
+
+        leftRightDisplacement *= dt * m_leftRightSpeedModifier;
+        displacement += leftRightDisplacement;
+    }
+
+    if( m_translateType & TranslateType::STEP_UP_DOWN )
+    {
+        btVector3 upDownDisplacement( 0.0, 0.0, 0.0 );
+        btVector3 worldUpDir( 0.0, 0.0, 1.0 );
+        //btVector3 upDir = xform.getBasis()[ 2 ];
+        //upDir.normalize();
+        if( m_translateType & TranslateType::STEP_UP )
+        {
+            upDownDisplacement += worldUpDir;
+        }
+        if( m_translateType & TranslateType::STEP_DOWN )
+        {
+            upDownDisplacement -= worldUpDir;
+        }
+
+        upDownDisplacement *= dt * m_upDownSpeedModifier;
+        displacement += upDownDisplacement;
+    }
+
+    //slerp mCameraRotation if necessary
+    if( mCameraRotationSLERP )
+    {
+        CameraRotationSLERP();
+    }
+
+    if( PhysicsSimulator::instance()->GetIdle() )
+    {
+        xform = m_ghostObject->getWorldTransform();
+        xform.setOrigin( xform.getOrigin() + displacement );
+        m_ghostObject->setWorldTransform( xform );
+    }
+    else
+    {
+        setWalkDirection( displacement );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 CharacterController::CharacterTransformCallback::CharacterTransformCallback(

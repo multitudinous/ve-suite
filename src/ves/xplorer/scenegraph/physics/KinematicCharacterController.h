@@ -215,6 +215,18 @@ protected:
     int m_upAxis;
 
     ///
+    double m_forwardBackwardSpeedModifier;
+
+    ///
+    double m_leftRightSpeedModifier;
+
+    ///
+    double m_upDownSpeedModifier;
+
+    ///
+    double m_flySpeedModifier;
+
+    ///
     double m_velocityTimeInterval;
 
     ///

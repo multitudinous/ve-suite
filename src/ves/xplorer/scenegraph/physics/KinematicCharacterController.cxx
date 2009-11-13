@@ -141,6 +141,13 @@ KinematicCharacterController::KinematicCharacterController()
     m_useGhostObjectSweepTest( true ),
     m_useWalkDirection( true ),//Use walk direction by default, legacy behavior
     m_upAxis( 2 ),
+    //This is the speed of the character in ft/s
+    //Slow walk speed is 5 km/h ~ 1.0 ft/s
+    //Usain Bolt's top 10m split 10m/0.82s ~ 40 ft/s
+    m_forwardBackwardSpeedModifier( 15.0 ),
+    m_leftRightSpeedModifier( 15.0 ),
+    m_upDownSpeedModifier( 15.0 ),
+    m_flySpeedModifier( 4.0 ),
     m_velocityTimeInterval( 0.0 ),
     m_vo( 0.0 ),
     m_jumpTime( 0.0 ),
@@ -368,7 +375,7 @@ void KinematicCharacterController::stepForwardAndStrafe(
     end.setIdentity ();
 
     btScalar fraction = 1.0;
-    btScalar distance2 = (m_currentPosition-m_targetPosition).length2();
+    btScalar distance2 = ( m_currentPosition-m_targetPosition ).length2();
 
     if( m_touchingContact )
     {
@@ -467,11 +474,11 @@ void KinematicCharacterController::stepDown(
     btVector3 gravity_drop = upAxisDirection[ m_upAxis ] * m_stepHeight;
     m_targetPosition -= step_drop + gravity_drop;
 
-    start.setIdentity ();
-    end.setIdentity ();
+    start.setIdentity();
+    end.setIdentity();
 
-    start.setOrigin (m_currentPosition);
-    end.setOrigin (m_targetPosition);
+    start.setOrigin( m_currentPosition );
+    end.setOrigin( m_targetPosition );
 
     btKinematicClosestNotMeConvexResultCallback callback( m_ghostObject );
     callback.m_collisionFilterGroup =
@@ -538,6 +545,19 @@ void KinematicCharacterController::Reset()
 void KinematicCharacterController::EnableFlying( const bool& canFly )
 {
     m_fly = canFly;
+    if( m_fly )
+    {
+        m_forwardBackwardSpeedModifier *= m_flySpeedModifier;
+        m_leftRightSpeedModifier *= m_flySpeedModifier;
+        m_upDownSpeedModifier *= m_flySpeedModifier;
+    }
+    else
+    {
+        double speedModifier = 1.0 / m_flySpeedModifier;
+        m_forwardBackwardSpeedModifier *= speedModifier;
+        m_leftRightSpeedModifier *= speedModifier;
+        m_upDownSpeedModifier *= speedModifier;
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KinematicCharacterController::warp( const btVector3& origin )
@@ -579,7 +599,10 @@ void KinematicCharacterController::playerStep(
     btTransform xform;
     xform = m_ghostObject->getWorldTransform();
 
-    stepUp( collisionWorld );
+    if( !m_fly )
+    {
+        stepUp( collisionWorld );
+    }
 
     if( m_useWalkDirection )
     {
@@ -599,7 +622,10 @@ void KinematicCharacterController::playerStep(
         stepForwardAndStrafe( collisionWorld, move );
     }
 
-    stepDown( collisionWorld, dt );
+    if( !m_fly )
+    {
+        stepDown( collisionWorld, dt );
+    }
 
     xform.setOrigin( m_currentPosition );
     m_ghostObject->setWorldTransform( xform );
