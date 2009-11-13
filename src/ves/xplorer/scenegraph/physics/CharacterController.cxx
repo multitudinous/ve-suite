@@ -386,8 +386,13 @@ void CharacterController::SetCharacterRotationFromCamera()
     mToTurnAngleZ = mTurnAngleZ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CharacterController::Advance( btScalar dt )
+void CharacterController::Move( btScalar dt )
 {
+    if( !m_enabled )
+    {
+        return;
+    }
+
     //Update the character rotation
     UpdateCharacterRotation();
 
@@ -397,6 +402,11 @@ void CharacterController::Advance( btScalar dt )
 ////////////////////////////////////////////////////////////////////////////////
 void CharacterController::UpdateCamera()
 {
+    if( !m_enabled )
+    {
+        return;
+    }
+
     //lerp mCameraDistance if necessary
     if( mCameraDistanceLERP )
     {
@@ -773,13 +783,15 @@ void CharacterController::UpdateCharacterRotation()
 ////////////////////////////////////////////////////////////////////////////////
 void CharacterController::UpdateCharacterTranslation( btScalar dt )
 {
+    btVector3 displacement( 0.0, 0.0, 0.0 );
+
     //Calculate character translation
     if( !m_translateType )
     {
+        setWalkDirection( displacement );
         return;
     }
 
-    btVector3 displacement( 0.0, 0.0, 0.0 );
     btTransform xform = m_ghostObject->getWorldTransform();
     xform.setRotation( xform.getRotation().inverse() );
 
@@ -822,16 +834,16 @@ void CharacterController::UpdateCharacterTranslation( btScalar dt )
     if( m_translateType & TranslateType::STEP_UP_DOWN )
     {
         btVector3 upDownDisplacement( 0.0, 0.0, 0.0 );
-        btVector3 worldUpDir( 0.0, 0.0, 1.0 );
+        btVector3 upDir( 0.0, 0.0, 1.0 );
         //btVector3 upDir = xform.getBasis()[ 2 ];
         //upDir.normalize();
         if( m_translateType & TranslateType::STEP_UP )
         {
-            upDownDisplacement += worldUpDir;
+            upDownDisplacement += upDir;
         }
         if( m_translateType & TranslateType::STEP_DOWN )
         {
-            upDownDisplacement -= worldUpDir;
+            upDownDisplacement -= upDir;
         }
 
         upDownDisplacement *= dt * m_upDownSpeedModifier;
@@ -846,7 +858,7 @@ void CharacterController::UpdateCharacterTranslation( btScalar dt )
 
     if( PhysicsSimulator::instance()->GetIdle() )
     {
-        xform = m_ghostObject->getWorldTransform();
+        xform.setRotation( xform.getRotation().inverse() );
         xform.setOrigin( xform.getOrigin() + displacement );
         m_ghostObject->setWorldTransform( xform );
     }

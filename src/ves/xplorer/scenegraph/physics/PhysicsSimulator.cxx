@@ -263,17 +263,8 @@ void PhysicsSimulator::InitializePhysicsSimulation()
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsSimulator::UpdatePhysics( float dt )
 {
-    vxs::CharacterController* characterController =
-        vxs::SceneManager::instance()->GetCharacterController();
-
     if( !mDynamicsWorld || mIdle )
     {
-        if( characterController->IsEnabled() )
-        {
-            characterController->UpdateCamera();
-            characterController->Advance( dt );
-        }
-
         return;
     }
 
@@ -283,30 +274,11 @@ void PhysicsSimulator::UpdatePhysics( float dt )
             mDynamicsWorld->getDebugDrawer() )->BeginDraw();
     }
 
-    //If the character controller is being used - manipulate the character
-    //by the keyboard, head, or wand first. This should affect the 
-    //character bullet matrix directly
-    if( characterController->IsEnabled() )
-    {
-        characterController->Advance( dt );
-    }
-
     //Now update the simulation by all bullet objects new positions
     mDynamicsWorld->stepSimulation( dt );
     
     //osgbBullet::TripleBufferMotionStateUpdate( m_motionStateList, 
     //                                         &m_tripleDataBuffer );
-
-    //Now that the character has been moved AND the simulation has calculated
-    //the new position update the camera matrix with the new view data
-    //based on what the character has done
-    if( characterController->IsEnabled() )
-    {
-        characterController->UpdateCamera();
-    }
-    //Now that we are finished updating the view on the character and controller
-    //the update callback on the character will be called to update the 
-    //OSG rep for the character
 
     //Sample debug code
     /*
@@ -331,11 +303,12 @@ void PhysicsSimulator::UpdatePhysics( float dt )
             std::cout << "Lifetime = " << pt.getLifeTime() << std::endl;
         }
     }*/
-    
+
     if( mDebugBulletFlag )
     {
         mDynamicsWorld->debugDrawWorld();
-        dynamic_cast< osgbBullet::GLDebugDrawer* >( mDynamicsWorld->getDebugDrawer() )->EndDraw();
+        dynamic_cast< osgbBullet::GLDebugDrawer* >(
+            mDynamicsWorld->getDebugDrawer() )->EndDraw();
     }
 
     if( !mCollisionInformation )
@@ -345,14 +318,16 @@ void PhysicsSimulator::UpdatePhysics( float dt )
 
     for( int i = 0; i < mDynamicsWorld->getNumCollisionObjects(); ++i )
     {
-        void* tempUserData = mDynamicsWorld->getCollisionObjectArray()[ i ]->getUserPointer();
+        void* tempUserData =
+            mDynamicsWorld->getCollisionObjectArray()[ i ]->getUserPointer();
         if( tempUserData )
         {
-            PhysicsRigidBody* obj = static_cast< PhysicsRigidBody* >( tempUserData );
+            PhysicsRigidBody* obj =
+                static_cast< PhysicsRigidBody* >( tempUserData );
             obj->ClearCollisions();
         }
     }
-        
+
     int numManifolds = mDispatcher->getNumManifolds();
     for( int i = 0; i < numManifolds; ++i )
     {
@@ -360,7 +335,7 @@ void PhysicsSimulator::UpdatePhysics( float dt )
             mDispatcher->getManifoldByIndexInternal( i );
         //contactManifold->refreshContactPoints(
             //bodyA->getWorldTransform(), bodyB->getWorldTransform() );
-        
+
         int numContacts = contactManifold->getNumContacts();
         for( int j = 0; j < numContacts; ++j )
         {
@@ -383,11 +358,13 @@ void PhysicsSimulator::UpdatePhysics( float dt )
                 bodyB = static_cast< PhysicsRigidBody* >( tempBodyB );
                 continue;
             }
+
             if( bodyA->IsStoringCollisions() )
             {
                 btVector3 ptA = pt.getPositionWorldOnA();
                 bodyA->PushBackCollision( bodyB, ptA );
             }
+
             if( bodyB->IsStoringCollisions() )
             {
                 btVector3 ptB = pt.getPositionWorldOnB();

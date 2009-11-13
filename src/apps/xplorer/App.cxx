@@ -51,6 +51,7 @@
 #include <ves/xplorer/scenegraph/GLTransformInfo.h>
 
 #include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
+#include <ves/xplorer/scenegraph/physics/CharacterController.h>
 
 #include <ves/xplorer/environment/cfdQuatCamHandler.h>
 
@@ -579,9 +580,32 @@ void App::latePreFrame()
         }
     }
     ///////////////////////
+    vxs::CharacterController* characterController =
+        vxs::SceneManager::instance()->GetCharacterController();
+    {
+        VPR_PROFILE_GUARD_HISTORY(
+            "App::latePreFrame CharacterController::Move", 20 );
+        //If the character controller is being used - manipulate the character
+        //by the keyboard, head, or wand first. This should affect the 
+        //character bullet matrix directly
+        characterController->Move( mFrameDT );
+    }
+    ///////////////////////
     {
         VPR_PROFILE_GUARD_HISTORY( "App::latePreFrame PhysicsSimulator", 20 );
         vxs::PhysicsSimulator::instance()->UpdatePhysics( mFrameDT );
+    }
+    ///////////////////////
+    {
+        VPR_PROFILE_GUARD_HISTORY(
+            "App::latePreFrame CharacterController::UpdateCamera", 20 );
+        //Now that the character has been moved AND the simulation has calculated
+        //the new position update the camera matrix with the new view data
+        //based on what the character has done
+        characterController->UpdateCamera();
+        //Now that we are finished updating the view on the character and controller
+        //the update callback on the character will be called to update the 
+        //OSG rep for the character
     }
     ///////////////////////
     {
@@ -632,7 +656,7 @@ void App::latePreFrame()
     //profile the update call
     {
         VPR_PROFILE_GUARD_HISTORY( "App::latePreFrame update", 20 );
-        this->update();
+        update();
     }
 
     ///Increment framenumber now that we are done using it everywhere

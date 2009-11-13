@@ -120,7 +120,7 @@ public:
     ///\note This function MUST be called BEFORE the bullet simulation is stepped
     ///in time so that the new position change requested by the user
     ///is considered in the respective simulation step.
-    void Advance( btScalar dt );
+    void Move( btScalar dt );
 
     ///Free memory for CharacterController
     void Destroy();
