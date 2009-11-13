@@ -27,8 +27,6 @@
 #include <Minerva/Core/Functions/MakeBody.h>
 #include <Minerva/Core/Layers/RasterLayerWms.h>
 
-#include <OsgTools/Convert/Matrix.h>
-
 #include <Usul/App/Application.h>
 #include <Usul/Components/Manager.h>
 #include <Usul/DLL/LibraryPool.h>
@@ -406,7 +404,7 @@ void MinervaManager::GetViewMatrix ( Minerva::Core::Data::Camera* camera, osg::M
   typedef Minerva::Core::Data::Camera::Matrix Matrix;
   Matrix m ( camera->viewMatrix ( landModel.get() ) );
 
-  Usul::Convert::Type<Matrix,osg::Matrixd>::convert ( m, matrix );
+  matrix.set ( &m[0] );
   matrix = osg::Matrixd::inverse ( matrix );
 }
 
