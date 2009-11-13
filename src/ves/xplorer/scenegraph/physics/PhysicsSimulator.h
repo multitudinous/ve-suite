@@ -31,8 +31,8 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
-#ifndef VE_PHYSICS_SIMULATOR_H
-#define VE_PHYSICS_SIMULATOR_H
+#ifndef VES_XPLORER_SCENEGRAPH_PHYSICS_SIMULATOR_H
+#define VES_XPLORER_SCENEGRAPH_PHYSICS_SIMULATOR_H
 
 // --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
@@ -73,7 +73,7 @@ namespace osgbBullet
 class GLDebugDrawer;
 }
 
-// --- C/C++ Libraries --- //
+// --- STL Includes --- //
 #include <vector>
 
 namespace ves
@@ -82,9 +82,7 @@ namespace xplorer
 {
 namespace scenegraph
 {
-
 class CADEntity;
-
 
 /*!\class ves::xplorer::scenegraph::PhysicsSimulator PhysicsSimulator.h ves/xplorer/scenegraph/physics/PhysicsSimulator.h
  * Runs the bullet simulator
@@ -111,10 +109,6 @@ public:
 
     ///Reset the physics simulation
     void ResetScene();
-
-    ///Shoot a box from the head position
-    ///\param destination
-    void ShootBox( const btVector3& destination );
 
     ///Set the debug mode to use with the bullet debugger
     void SetDebugMode( int mode );
@@ -151,7 +145,7 @@ public:
 
     ///Returns the dynamics world
     btDynamicsWorld* const GetDynamicsWorld() const;
-    
+
     ///Create flat ground plane for the world
     void CreateGroundPlane();
 
@@ -179,7 +173,7 @@ private:
     ///\param center x,y,z center of the plane
     ///\return OSG node for the plane
     osg::Node* CreateGround( float w, float h, const osg::Vec3& center );
-    
+
     ///The debug level for bullet physics
     int mDebugMode;
 
@@ -198,9 +192,6 @@ private:
     ///The head in vr juggler
     gadget::PositionInterface* head;
 
-    ///
-    std::vector< ves::xplorer::scenegraph::CADEntity* > mBoxVector;
-
     ///Implements dynamics - basic, discrete, parallel, and continuous
     btDynamicsWorld* mDynamicsWorld;
 
@@ -216,23 +207,27 @@ private:
 
     ///A physics solver which sequentially applies impulses
     btSequentialImpulseConstraintSolver* mSolver;
-    
+
     ///Debug bullet
     bool mDebugBulletFlag;
-    
+
     ///THe debug drawer for the bullet physics simulator
     osgbBullet::GLDebugDrawer* m_debugDrawer;
+
     ///A group node to better control when debug info is displayed for
     ///the osgBullet::GLDebugDrawer
     osg::ref_ptr< osg::Group > m_debugDrawerGroup;
-    
+
     ///Tools for running the physics simulation on a seperate thread
     osgbBullet::TripleBuffer m_tripleDataBuffer;
+
     ///List of every motion state created
     osgbBullet::MotionStateList m_motionStateList;
-};
-}
-}
-}
 
-#endif //VE_PHYSICS_SIMULATOR_H
+};
+
+} //end scenegraph
+} //end xplorer
+} //end ves
+
+#endif //VES_XPLORER_SCENEGRAPH_PHYSICS_SIMULATOR_H

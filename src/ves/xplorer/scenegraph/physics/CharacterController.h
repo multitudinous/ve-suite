@@ -107,14 +107,6 @@ public:
     ///Destructor
     ~CharacterController();
 
-    ///btActionInterface interface
-    virtual void updateAction(
-        btCollisionWorld* collisionWorld, btScalar deltaTime )
-    {
-        preStep( collisionWorld );
-        playerStep( collisionWorld, deltaTime );
-    }
-
     ///Advance the character in time
     ///\post Call the bullet simulation step function
     ///\note This function MUST be called BEFORE the bullet simulation is stepped

@@ -30,6 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
+
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
 #include <ves/xplorer/scenegraph/physics/vesMotionState.h>
@@ -56,7 +57,7 @@
 #include <osgbBullet/Utils.h>
 #include <osgbBullet/GLDebugDrawer.h>
 
-// --- C/C++ Libraries --- //
+// --- STL Includes --- //
 #include <sstream>
 #include <string>
 
@@ -71,8 +72,6 @@ const int maxProxies = 32766;
 //#define REGISTER_CUSTOM_COLLISION_ALGORITHM 1
 
 using namespace ves::xplorer::scenegraph;
-namespace vx = ves::xplorer;
-namespace vxs = ves::xplorer::scenegraph;
 
 //vprSingletonImp( PhysicsSimulator );
 vprSingletonImpLifetime( PhysicsSimulator, 13 );
@@ -80,18 +79,18 @@ vprSingletonImpLifetime( PhysicsSimulator, 13 );
 ////////////////////////////////////////////////////////////////////////////////
 PhysicsSimulator::PhysicsSimulator()
     :
-    mDynamicsWorld( 0 ),
-    mCollisionConfiguration( 0 ),
-    mDispatcher( 0 ),
-    mBroadphase( 0 ),
-    mSolver( 0 ),
+    mDynamicsWorld( NULL ),
+    mCollisionConfiguration( NULL ),
+    mDispatcher( NULL ),
+    mBroadphase( NULL ),
+    mSolver( NULL ),
     mDebugMode( 0 ),
     mIdle( true ),
     mCollisionInformation( false ),
-    shoot_speed( 50.0f ),
+    shoot_speed( 50.0 ),
     mCreatedGroundPlane( false ),
     mDebugBulletFlag( false ),
-    m_debugDrawer( 0 )
+    m_debugDrawer( NULL )
 {
     head = new gadget::DeviceInterface<class gadget::PositionProxy>;
     head->init( "VJHead" );
@@ -101,19 +100,13 @@ PhysicsSimulator::PhysicsSimulator()
 ////////////////////////////////////////////////////////////////////////////////
 PhysicsSimulator::~PhysicsSimulator()
 {
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsSimulator::ExitPhysics()
 {
     delete head;
     head = 0;
-
-    for( size_t i = 0; i < mBoxVector.size(); ++i )
-    {
-        delete mBoxVector.at( i );
-    }
-
-    mBoxVector.clear();
 
     delete m_debugDrawer;
     m_debugDrawer = 0;
@@ -236,7 +229,7 @@ void PhysicsSimulator::InitializePhysicsSimulation()
     mSolver->setRandSeed( 20090108 );
 #endif
 
-#if (BULLET_MAJOR_VERSION >= 2) && (BULLET_MINOR_VERSION > 63)
+#if ( BULLET_MAJOR_VERSION >= 2 ) && ( BULLET_MINOR_VERSION > 63 )
     mDynamicsWorld = new btDiscreteDynamicsWorld(
         mDispatcher, mBroadphase, mSolver, mCollisionConfiguration );
 #else
@@ -254,7 +247,7 @@ void PhysicsSimulator::InitializePhysicsSimulation()
     m_debugDrawerGroup->addChild( m_debugDrawer->getSceneGraph() );
     m_debugDrawerGroup->setNodeMask( 0 );
     //CreateGroundPlane();
-    
+
     //Setup multi threaded work
     //osgbBullet::PhysicsThread pt( bulletWorld, &tBuf );
     //pt.setProcessorAffinity( 0 );
@@ -378,7 +371,7 @@ void PhysicsSimulator::StepSimulation()
 {
     if( mIdle )
     {
-        mDynamicsWorld->stepSimulation( 1.0f / 60.0f, 0 );
+        mDynamicsWorld->stepSimulation( 1.0 / 60.0, 0 );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -395,7 +388,7 @@ void PhysicsSimulator::ResetScene()
     //Demos/OpenGL/DemoApplication.cpp
     if( mDynamicsWorld )
     {
-        mDynamicsWorld->stepSimulation( 1.0f / 60.0f, 0 );
+        mDynamicsWorld->stepSimulation( 1.0 / 60.0, 0 );
     }
 
     int numObjects = mDynamicsWorld->getNumCollisionObjects();
@@ -439,93 +432,11 @@ void PhysicsSimulator::ResetScene()
         }
     }
 
-    vxs::CharacterController* characterController =
-        vxs::SceneManager::instance()->GetCharacterController();
+    CharacterController* characterController =
+        SceneManager::instance()->GetCharacterController();
     if( characterController->IsEnabled() )
     {
         characterController->Reset();
-    }
-}
-////////////////////////////////////////////////////////////////////////////////
-void PhysicsSimulator::ShootBox( const btVector3& destination )
-{
-    if( mDynamicsWorld )
-    {
-        //Create osg::Box to visually represent rigid body
-        osg::ref_ptr< osg::Geode > geode = new osg::Geode;
-        osg::ref_ptr< osg::Geometry > box = new osg::Geometry;
-        osg::ref_ptr< osg::Vec3Array > vertices = new osg::Vec3Array;
-
-        //Left
-        vertices->push_back( osg::Vec3( -0.5f,  0.5f,  0.5f ) );
-        vertices->push_back( osg::Vec3( -0.5f,  0.5f, -0.5f ) );
-        vertices->push_back( osg::Vec3( -0.5f, -0.5f, -0.5f ) );
-        vertices->push_back( osg::Vec3( -0.5f, -0.5f,  0.5f ) );
-        //Near
-        vertices->push_back( osg::Vec3( -0.5f, -0.5f,  0.5f ) );
-        vertices->push_back( osg::Vec3( -0.5f, -0.5f, -0.5f ) );
-        vertices->push_back( osg::Vec3(  0.5f, -0.5f, -0.5f ) );
-        vertices->push_back( osg::Vec3(  0.5f, -0.5f,  0.5f ) );
-        //Right
-        vertices->push_back( osg::Vec3( 0.5f, -0.5f,  0.5f ) );
-        vertices->push_back( osg::Vec3( 0.5f, -0.5f, -0.5f ) );
-        vertices->push_back( osg::Vec3( 0.5f,  0.5f, -0.5f ) );
-        vertices->push_back( osg::Vec3( 0.5f,  0.5f,  0.5f ) );
-        //Far
-        vertices->push_back( osg::Vec3(  0.5f, 0.5f,  0.5f ) );
-        vertices->push_back( osg::Vec3(  0.5f, 0.5f, -0.5f ) );
-        vertices->push_back( osg::Vec3( -0.5f, 0.5f, -0.5f ) );
-        vertices->push_back( osg::Vec3( -0.5f, 0.5f,  0.5f ) );
-        //Top
-        vertices->push_back( osg::Vec3( -0.5f,  0.5f, 0.5f ) );
-        vertices->push_back( osg::Vec3( -0.5f, -0.5f, 0.5f ) );
-        vertices->push_back( osg::Vec3(  0.5f, -0.5f, 0.5f ) );
-        vertices->push_back( osg::Vec3(  0.5f,  0.5f, 0.5f ) );
-        //Bottom
-        vertices->push_back( osg::Vec3( -0.5f, -0.5f, -0.5f ) );
-        vertices->push_back( osg::Vec3( -0.5f,  0.5f, -0.5f ) );
-        vertices->push_back( osg::Vec3(  0.5f,  0.5f, -0.5f ) );
-        vertices->push_back( osg::Vec3(  0.5f, -0.5f, -0.5f ) );
-
-        box->setVertexArray( vertices.get() );
-
-        osg::ref_ptr< osg::Vec4Array > colors = new osg::Vec4Array;
-        colors->push_back( osg::Vec4( 0.0, 1.0, 0.0, 1.0 ) );
-        box->setColorArray( colors.get() );
-        box->setColorBinding( osg::Geometry::BIND_OVERALL );
-
-        osg::ref_ptr< osg::Vec3Array > normals = new osg::Vec3Array;
-        normals->push_back( osg::Vec3( -1.0f,  0.0f,  0.0f ) );
-        normals->push_back( osg::Vec3(  0.0f, -1.0f,  0.0f ) );
-        normals->push_back( osg::Vec3(  1.0f,  0.0f,  0.0f ) );
-        normals->push_back( osg::Vec3(  0.0f,  1.0f,  0.0f ) );
-        normals->push_back( osg::Vec3(  0.0f,  0.0f,  1.0f ) );
-        normals->push_back( osg::Vec3(  0.0f,  0.0f, -1.0f ) );
-        box->setNormalArray( normals.get() );
-        box->setNormalBinding( osg::Geometry::BIND_PER_PRIMITIVE );
-
-        box->addPrimitiveSet( new osg::DrawArrays(
-            osg::PrimitiveSet::QUADS, 0, vertices.get()->size() ) );
-
-        geode->addDrawable( box.get() );
-
-        ves::xplorer::scenegraph::CADEntity* boxEntity =
-            new ves::xplorer::scenegraph::CADEntity( geode.get(),
-                ves::xplorer::scenegraph::SceneManager::instance()->
-                GetWorldDCS(), this );
-
-        osg::Node::DescriptionList descriptorsList;
-        descriptorsList.push_back( "VE_XML_ID" );
-        descriptorsList.push_back( "" );
-
-        boxEntity->GetDCS()->setDescriptions( descriptorsList );
-        //boxEntity->GetDCS()->setName(  );
-        //boxEntity->GetDCS()->SetTranslationArray(  );
-        boxEntity->InitPhysics();
-        boxEntity->GetPhysicsRigidBody()->GetbtRigidBody()->setFriction( 1.0 );
-        boxEntity->GetPhysicsRigidBody()->BoundingBoxShape();
-
-        mBoxVector.push_back( boxEntity );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -564,7 +475,7 @@ btRigidBody* PhysicsSimulator::CreateRigidBody(
     float mass, const btTransform& startTransform, btCollisionShape* shape )
 {
     //RigidBody is dynamic if and only if mass is non zero, otherwise static
-    bool dynamic = ( mass != 0.0f );
+    bool dynamic = ( mass != 0.0 );
 
     btVector3 localInertia( 0 , 0, 0 );
     if( dynamic )
