@@ -312,20 +312,22 @@ void UserPreferences::OnNearFarCheck( wxCommandEvent& event )
 ////////////////////////////////////////////////////////////////////////////////
 void UserPreferences::OnPhysicsDebuggerCheck( wxCommandEvent& event )
 {
-    wxString mode = dynamic_cast< wxControl* >( event.GetEventObject() )->GetLabelText();
+    wxString mode =
+        dynamic_cast< wxControl* >( event.GetEventObject() )->GetLabelText();
     preferenceMap[ ConvertUnicode( mode.c_str() ) ] = event.IsChecked();
-    
+
     // Create the command and data value pairs
     DataValuePairPtr dataValuePair( new DataValuePair() );
     dataValuePair->SetData( "Physics Debugger Toggle Value", 
         static_cast< unsigned int >( event.IsChecked() ) );
     CommandPtr veCommand( new Command() );
-    veCommand->SetCommandName( std::string( "PHYSICS_SIMULATION" ) );
+    veCommand->SetCommandName( std::string( "PHYSICS_COMMAND" ) );
     veCommand->AddDataValuePair( dataValuePair );
-    
+
     CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
-    
-    UserPreferencesDataBuffer::instance()->SetCommand( "PHYSICS_SIMULATION", veCommand );
+
+    UserPreferencesDataBuffer::instance()->SetCommand(
+        "PHYSICS_COMMAND", veCommand );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UserPreferences::OnNearFarRatio( wxCommandEvent& event )
