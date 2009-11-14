@@ -500,6 +500,8 @@ void App::latePreFrame()
     {
         std::cout << "|\tShutting down xplorer." << std::endl;
         VPR_PROFILE_RESULTS();
+        vxs::PhysicsSimulator::instance()->SetIdle( true );
+
         // exit App was selected
         vrj::Kernel::instance()->stop(); // Stopping kernel
         m_vjobsWrapper->Cleanup();
