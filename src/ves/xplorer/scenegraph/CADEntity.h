@@ -144,6 +144,7 @@ public:
     ///\param opacity
     void SetOpacityValue( float opacity );
     
+    ///Save the current physics state and scenegraph information
     void Save();
 
 protected:

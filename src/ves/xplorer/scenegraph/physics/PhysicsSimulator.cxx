@@ -56,6 +56,7 @@
 #include <osgbBullet/MotionState.h>
 #include <osgbBullet/Utils.h>
 #include <osgbBullet/GLDebugDrawer.h>
+#include <osgbBullet/PhysicsThread.h>
 
 // --- STL Includes --- //
 #include <sstream>
@@ -73,6 +74,7 @@ const int maxProxies = 32766;
 
 using namespace ves::xplorer::scenegraph;
 
+#define MULTITHREADED_OSGBULLET 0
 //vprSingletonImp( PhysicsSimulator );
 vprSingletonImpLifetime( PhysicsSimulator, 13 );
 
@@ -90,7 +92,8 @@ PhysicsSimulator::PhysicsSimulator()
     shoot_speed( 50.0 ),
     mCreatedGroundPlane( false ),
     mDebugBulletFlag( false ),
-    m_debugDrawer( NULL )
+    m_debugDrawer( 0 ),
+    m_physicsThread( 0 )
 {
     head = new gadget::DeviceInterface<class gadget::PositionProxy>;
     head->init( "VJHead" );
@@ -105,6 +108,13 @@ PhysicsSimulator::~PhysicsSimulator()
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsSimulator::ExitPhysics()
 {
+#if MULTITHREADED_OSGBULLET
+    if( m_physicsThread )
+    {
+        m_physicsThread->stopPhysics();
+        m_physicsThread->join();
+    }
+#endif
     delete head;
     head = 0;
 
@@ -248,10 +258,13 @@ void PhysicsSimulator::InitializePhysicsSimulation()
     m_debugDrawerGroup->setNodeMask( 0 );
     //CreateGroundPlane();
 
+#if MULTITHREADED_OSGBULLET
     //Setup multi threaded work
-    //osgbBullet::PhysicsThread pt( bulletWorld, &tBuf );
-    //pt.setProcessorAffinity( 0 );
-    //pt.start();
+    m_physicsThread = new osgbBullet::PhysicsThread( mDynamicsWorld, &m_tripleDataBuffer );
+    m_physicsThread->setProcessorAffinity( 0 );
+    m_physicsThread->start();
+    m_physicsThread->pause( true );
+#endif
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsSimulator::UpdatePhysics( float dt )
@@ -261,6 +274,10 @@ void PhysicsSimulator::UpdatePhysics( float dt )
         return;
     }
 
+#if MULTITHREADED_OSGBULLET
+    SetIdle( true );
+#endif
+
     if( mDebugBulletFlag )
     {
         static_cast< osgbBullet::GLDebugDrawer* >(
@@ -268,11 +285,12 @@ void PhysicsSimulator::UpdatePhysics( float dt )
     }
 
     //Now update the simulation by all bullet objects new positions
+#if !MULTITHREADED_OSGBULLET
     mDynamicsWorld->stepSimulation( dt );
-    
-    //osgbBullet::TripleBufferMotionStateUpdate( m_motionStateList, 
-    //                                         &m_tripleDataBuffer );
-
+#else
+    osgbBullet::TripleBufferMotionStateUpdate( m_motionStateList, 
+                                             &m_tripleDataBuffer );
+#endif
     //Sample debug code
     /*
     int numManifolds1 = mDispatcher->getNumManifolds();
@@ -306,6 +324,9 @@ void PhysicsSimulator::UpdatePhysics( float dt )
 
     if( !mCollisionInformation )
     {
+#if MULTITHREADED_OSGBULLET
+        SetIdle( false );
+#endif
         return;
     }
 
@@ -365,13 +386,17 @@ void PhysicsSimulator::UpdatePhysics( float dt )
             }
         }
     }
+#if MULTITHREADED_OSGBULLET
+    SetIdle( false );
+#endif
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsSimulator::StepSimulation()
 {
     if( mIdle )
     {
-        mDynamicsWorld->stepSimulation( 1.0 / 60.0, 0 );
+        //no need to pause simulation since the simulation is alreayd paused
+        mDynamicsWorld->stepSimulation( 1.0f / 60.0f, 0 );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -383,6 +408,7 @@ void PhysicsSimulator::ResetScene()
     gNumGjkChecks = 0;
     #endif
     */
+    SetIdle( true );
 
     //This code is take from Bullet in
     //Demos/OpenGL/DemoApplication.cpp
@@ -438,6 +464,7 @@ void PhysicsSimulator::ResetScene()
     {
         characterController->Reset();
     }
+    SetIdle( false );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsSimulator::SetDebugMode( int mode )
@@ -448,6 +475,16 @@ void PhysicsSimulator::SetDebugMode( int mode )
 void PhysicsSimulator::SetIdle( bool state )
 {
     mIdle = state;
+#if MULTITHREADED_OSGBULLET
+    if( mIdle )
+    {
+        m_physicsThread->pause( true );
+    }
+    else
+    {
+        m_physicsThread->pause( false );
+    }
+#endif
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsSimulator::SetCollisionInformation( bool collisionInformation )
@@ -563,6 +600,7 @@ osg::Node* PhysicsSimulator::CreateGround( float w, float h, const osg::Vec3& ce
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsSimulator::SetDebuggingOn( bool toggle )
 {
+    SetIdle( true );
     mDebugBulletFlag = toggle;
     
     if( mDebugBulletFlag )
@@ -578,5 +616,22 @@ void PhysicsSimulator::SetDebuggingOn( bool toggle )
         m_debugDrawer->BeginDraw();
         m_debugDrawerGroup->setNodeMask( 0 );
     }
+    SetIdle( false );
+}
+////////////////////////////////////////////////////////////////////////////////
+void PhysicsSimulator::RegisterMotionState( osgbBullet::MotionState* motionState )
+{
+    SetIdle( true );
+    m_motionStateList.push_back( motionState );
+    SetIdle( false );
+}
+////////////////////////////////////////////////////////////////////////////////
+void PhysicsSimulator::UnregisterMotionState( osgbBullet::MotionState* motionState )
+{
+    SetIdle( true );
+    std::vector< osgbBullet::MotionState* >::iterator iter = 
+        std::find( m_motionStateList.begin(), m_motionStateList.end(), motionState );
+    m_motionStateList.erase( iter );
+    SetIdle( false );
 }
 ////////////////////////////////////////////////////////////////////////////////

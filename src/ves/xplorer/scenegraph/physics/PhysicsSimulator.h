@@ -71,6 +71,7 @@ class btCollisionShape;
 namespace osgbBullet
 {
 class GLDebugDrawer;
+class PhysicsThread;
 }
 
 // --- STL Includes --- //
@@ -149,6 +150,12 @@ public:
     ///Create flat ground plane for the world
     void CreateGroundPlane();
 
+    ///Register a motionstate for the triple buffer to enable threaded physics
+    void RegisterMotionState( osgbBullet::MotionState* motionState );
+
+    ///Register a motionstate for the triple buffer to enable threaded physics
+    void UnregisterMotionState( osgbBullet::MotionState* motionState );
+
 private:
     ///Base constructor
     PhysicsSimulator();
@@ -224,6 +231,8 @@ private:
     ///List of every motion state created
     osgbBullet::MotionStateList m_motionStateList;
 
+    ///Physics thread for running solver
+    osgbBullet::PhysicsThread* m_physicsThread;
 };
 
 } //end scenegraph

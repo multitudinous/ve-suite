@@ -298,20 +298,20 @@ void CADEntityHelper::LoadFile( const std::string& filename,
             if( boost::filesystem::exists( fullPathFilename ) )
             {
                 fullPath = fullPathFilename.native_file_string();
-            }
-            //tempCADNode = osgDB::readNodeFile( fullPath );
-            osgbBulletPlus::RestorePhysics restorPhysics;
-            restorPhysics.restore( fullPath, NULL );
-            while( restorPhysics.status() == osgbBulletPlus::RestorePhysics::RESTORE_IN_PROGRESS )
-            {
-                OpenThreads::Thread::microSleep( 50 );
-                if( restorPhysics.status() == osgbBulletPlus::RestorePhysics::RESTORE_ERROR )
+                //tempCADNode = osgDB::readNodeFile( fullPath );
+                osgbBulletPlus::RestorePhysics restorPhysics;
+                restorPhysics.restore( fullPath, NULL );
+                while( restorPhysics.status() == osgbBulletPlus::RestorePhysics::RESTORE_IN_PROGRESS )
                 {
-                    break;
+                    OpenThreads::Thread::microSleep( 50 );
+                    if( restorPhysics.status() == osgbBulletPlus::RestorePhysics::RESTORE_ERROR )
+                    {
+                        break;
+                    }
                 }
+                tempCADNode = restorPhysics.getSceneGraph();                
             }
-            tempCADNode = restorPhysics.getSceneGraph();                
-            
+                        
             ///Check for cached file when reloading file with ves file
             //osgDB::fileExists( destFile );
             //osgDB::Registry::instance()->getReaderWriterForExtension( "osg" );
@@ -325,19 +325,19 @@ void CADEntityHelper::LoadFile( const std::string& filename,
                 if( !ptFileTest.empty() )
                 {
                     fullPath = ptFileTest;
-                }
-                //tempCADNode = osgDB::readNodeFile( fullPath );
-                //osgbBulletPlus::RestorePhysics restorPhysics;
-                restorPhysics.restore( fullPath, NULL );
-                while( restorPhysics.status() == osgbBulletPlus::RestorePhysics::RESTORE_IN_PROGRESS )
-                {
-                    OpenThreads::Thread::microSleep( 50 );
-                    if( restorPhysics.status() == osgbBulletPlus::RestorePhysics::RESTORE_ERROR )
+                    //tempCADNode = osgDB::readNodeFile( fullPath );
+                    osgbBulletPlus::RestorePhysics restorPhysics;
+                    restorPhysics.restore( fullPath, NULL );
+                    while( restorPhysics.status() == osgbBulletPlus::RestorePhysics::RESTORE_IN_PROGRESS )
                     {
-                        break;
-                    }                    
-                }
-                tempCADNode = restorPhysics.getSceneGraph();                
+                        OpenThreads::Thread::microSleep( 50 );
+                        if( restorPhysics.status() == osgbBulletPlus::RestorePhysics::RESTORE_ERROR )
+                        {
+                            break;
+                        }                    
+                    }
+                    tempCADNode = restorPhysics.getSceneGraph();     
+                }           
             }
         }
     }

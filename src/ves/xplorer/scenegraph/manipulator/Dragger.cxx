@@ -452,6 +452,7 @@ void Dragger::UpdateAssociations()
         {
             continue;
         }
+        m_physicsSimulator.SetIdle( true );
 
         osgbBullet::MotionState* ms = static_cast< osgbBullet::MotionState* >(
             btRB->getMotionState() );
@@ -488,6 +489,7 @@ void Dragger::UpdateAssociations()
         ms->setWorldTransform( currentMatrix );
         btRB->setWorldTransform( currentMatrix );
         btRB->setInterpolationWorldTransform( currentMatrix );
+        m_physicsSimulator.SetIdle( false );
     }
 
     //Set all associated transforms
@@ -799,6 +801,8 @@ void Dragger::ResetPhysics()
 ////////////////////////////////////////////////////////////////////////////////
 const bool Dragger::CreatePointConstraint( btRigidBody& btRB )
 {
+    m_physicsSimulator.SetIdle( true );
+
     btRB.setActivationState( DISABLE_DEACTIVATION );
 
     btPoint2PointConstraint* p2p =
@@ -808,12 +812,13 @@ const bool Dragger::CreatePointConstraint( btRigidBody& btRB )
 
     m_physicsSimulator.GetDynamicsWorld()->addConstraint( p2p );
     (*m_constraintMap)[ &btRB ] = p2p;
-
+    m_physicsSimulator.SetIdle( false );
     return true;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Dragger::ClearPointConstraint()
 {
+    m_physicsSimulator.SetIdle( true );
     ConstraintMap::const_iterator itr = (*m_constraintMap).begin();
     for( itr; itr != (*m_constraintMap).end(); ++itr )
     {
@@ -832,6 +837,7 @@ void Dragger::ClearPointConstraint()
     }
 
     (*m_constraintMap).clear();
+    m_physicsSimulator.SetIdle( false );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Dragger::UpdateConductorData( ves::xplorer::scenegraph::DCS* dcs )
