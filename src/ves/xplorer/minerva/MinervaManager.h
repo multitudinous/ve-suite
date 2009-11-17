@@ -48,6 +48,8 @@
 #include "osg/Node"
 #include "osg/ref_ptr"
 
+#include <gmtl/Matrix.h>
+
 #include <string>
 #include <map>
 
@@ -83,7 +85,7 @@ public:
   ModelWrapper* GetModel ( const std::string& guid ) const;
   bool HasModel ( const std::string& guid ) const;
 
-  void GetViewMatrix ( Minerva::Core::Data::Camera* camera, osg::Matrix& matrix ) const;
+  void GetViewMatrix ( Minerva::Core::Data::Camera* camera, gmtl::Matrix44d& matrix ) const;
 
   void PreFrameUpdate();
 

@@ -20,6 +20,7 @@
 #include <Minerva/Core/Data/Camera.h>
 
 #include <gmtl/Math.h>
+#include <gmtl/Generate.h>
 
 using namespace ves::xplorer::minerva;
 
@@ -83,20 +84,18 @@ void NavigateToModel::Execute ( CommandPtr command, MinervaManager& manager )
 
   osg::BoundingSphere boundingSphere ( dcs->getBound() );
   osg::Vec3d location ( modelWrapper->location() );
-  const double altitudeOffset ( gmtl::Math::Max( double( boundingSphere.radius() * 2 ), 30000.0 ) );
+  const double altitudeOffset ( gmtl::Math::Max( double( boundingSphere.radius() * 2 ), 3000.0 ) );
 
   Minerva::Core::Data::Camera::RefPtr camera ( new Minerva::Core::Data::Camera );
   camera->longitude ( location[0] );
   camera->latitude ( location[1] );
   camera->altitude ( location[2] + altitudeOffset );
 
-  osg::Matrixd osgViewMatrix;
-  manager.GetViewMatrix ( camera.get(), osgViewMatrix );
+  gmtl::Matrix44d viewMatrix;
+  manager.GetViewMatrix ( camera.get(), viewMatrix );
 
-  osg::Quat rotation;
-  osgViewMatrix.get ( rotation );
-
-  osg::Vec3d translate ( osgViewMatrix.getTrans() );
+  gmtl::Quat<double> rotation; gmtl::setRot ( rotation, viewMatrix );
+  gmtl::Vec3d translate; gmtl::setTrans ( translate, viewMatrix );
 
   /// Tell the animation engine to set the world dcs.
   ves::xplorer::NavigationAnimationEngine::instance()->SetDCS(
@@ -104,7 +103,5 @@ void NavigateToModel::Execute ( CommandPtr command, MinervaManager& manager )
     
   /// Tell the animation engine where to go.
   ves::xplorer::NavigationAnimationEngine::instance()->SetAnimationEndPoints(
-    gmtl::Vec3d ( translate[0], translate[1], translate[2] ), 
-    gmtl::Quatd ( rotation[0], rotation[1], rotation[2], rotation[3] ), 
-    false, dcs );
+    translate, rotation, true, dcs );
 }

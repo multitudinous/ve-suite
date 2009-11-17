@@ -44,6 +44,8 @@
 
 #include <osg/CoordinateSystemNode>
 
+#include <gmtl/Generate.h>
+
 #include <boost/bind.hpp>
 #include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/path.hpp>
@@ -392,7 +394,7 @@ void MinervaManager::RemoveModel ( const std::string& guid )
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-void MinervaManager::GetViewMatrix ( Minerva::Core::Data::Camera* camera, osg::Matrix& matrix ) const
+void MinervaManager::GetViewMatrix ( Minerva::Core::Data::Camera* camera, gmtl::Matrix44d& matrix ) const
 {
   if ( 0x0 == _body || 0x0 == camera )
     return;
@@ -405,7 +407,13 @@ void MinervaManager::GetViewMatrix ( Minerva::Core::Data::Camera* camera, osg::M
   Matrix m ( camera->viewMatrix ( landModel.get() ) );
 
   matrix.set ( &m[0] );
-  matrix = osg::Matrixd::inverse ( matrix );
+
+  gmtl::AxisAngled axisAngle ( -osg::PI_2, 1, 0, 0 );
+  gmtl::Matrix44d R;
+  gmtl::setRot( R, gmtl::make< gmtl::Quatd >( axisAngle ) );
+
+  gmtl::postMult( matrix, R );
+  gmtl::invert( matrix );
 }
 
 
