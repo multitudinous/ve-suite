@@ -52,6 +52,7 @@
 #include <vtkGlyph3D.h>
 #include <vtkSphereSource.h>
 #include <vtkPointData.h>
+#include <vtkPolyDataNormals.h>
 
 #include <ves/xplorer/Debug.h>
 
@@ -206,21 +207,38 @@ void cfdPolyData::Update()
     {
         vprDEBUG( vesDBG, 1 ) << " IS POLYDATA SURFACE"
             << std::endl << vprDEBUG_FLUSH;
+        
         if( m_gpuTools )
         {
             ;
         }
         else if( warpSurface )
         {
-            this->warper->SetInput( pd );
+            vtkPolyDataNormals* normalGen = vtkPolyDataNormals::New();
+            normalGen->SetInput( pd );
+            normalGen->NonManifoldTraversalOn();
+            normalGen->AutoOrientNormalsOn();
+            normalGen->ConsistencyOn();
+            normalGen->SplittingOn();
+
+            this->warper->SetInput( normalGen->GetOutput()  );
             this->warper->SetScaleFactor( warpedContourScale );
             this->warper->Update();//can this go???
             this->map->SetInputConnection( warper->GetOutputPort() );
             warpSurface = false;
+            normalGen->Delete();
         }
         else
         {
-            this->map->SetInput( pd );
+            vtkPolyDataNormals* normalGen = vtkPolyDataNormals::New();
+            normalGen->SetInput( pd );
+            normalGen->NonManifoldTraversalOn();
+            normalGen->AutoOrientNormalsOn();
+            normalGen->ConsistencyOn();
+            normalGen->SplittingOn();
+
+            this->map->SetInput( normalGen->GetOutput() );
+            normalGen->Delete();
         }
         temp->GetProperty()->SetRepresentationToSurface();
     }

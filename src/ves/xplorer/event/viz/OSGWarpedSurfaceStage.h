@@ -81,7 +81,8 @@ public:
     //polydata is supposed to be triangle strips
     //displacement is the vetice displacemnet vector for each of the point data in polydata
     //colorScalar is the scalar for the point data in polydata used to color the result
-    ves::xplorer::scenegraph::Geode* createMesh(vtkPolyData* polydata, std::string displacement, std::string colorScalar);
+    ves::xplorer::scenegraph::Geode* createMesh(vtkPolyData* polydata, 
+        const std::string displacement, const std::string colorScalar);
 
     void SetSurfaceWarpScale( float surfaceScale );
 
@@ -98,7 +99,8 @@ private:
     int mypow2(unsigned x);
         
     void createMeshData( osg::Geometry* geom, vtkPolyData* polydata, 
-                        std::string displacement, std::string colorScalar);
+                        const std::string displacement, 
+                        const std::string colorScalar);
 };    
 }
 }

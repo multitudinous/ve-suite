@@ -247,6 +247,7 @@ void SteadyStateVizHandler::PreFrameUpdate()
             cfdGraphicsObject* temp = new cfdGraphicsObject();
             temp->SetTypeOfViz( cfdGraphicsObject::CLASSIC );
             temp->SetParentNode( tempVisObject->GetActiveDataSet()->GetDCS() );
+            temp->SetDataSet( tempVisObject->GetActiveDataSet() );
             temp->SetActiveModel( ModelHandler::instance()->GetActiveModel() );
             temp->SetWorldNode( ModelHandler::instance()->GetActiveModel()->GetDCS() );
             temp->SetGeodes( tempVisObject );

@@ -52,16 +52,20 @@ using namespace ves::xplorer;
 
 ////////////////////////////////////////////////////////////////////////////////
 cfdGraphicsObject::cfdGraphicsObject()
+    :
+    m_dataset( 0 ),
+    parentNode( 0 ),
+    worldNode( 0 ),
+    type( OTHER ),
+    model( 0 )
 {
-    parentNode = 0;
-    worldNode = 0;
-    type = OTHER;
-    model = 0;
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 cfdGraphicsObject::~cfdGraphicsObject()
 {
     type = OTHER;
+    m_dataset = 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
 cfdGraphicsObject::cfdGraphicsObject( const cfdGraphicsObject& input )
@@ -89,12 +93,15 @@ void cfdGraphicsObject::SetWorldNode( ves::xplorer::scenegraph::DCS* input )
     worldNode = input;
 }
 ////////////////////////////////////////////////////////////////////////////////
-/*
-ves::xplorer::scenegraph::cfdTempAnimation* cfdGraphicsObject::GetAnimation()
+void cfdGraphicsObject::SetDataSet( ves::xplorer::DataSet* dataset )
 {
-    return animation;
+    m_dataset = dataset;
 }
-*/
+////////////////////////////////////////////////////////////////////////////////
+ves::xplorer::DataSet* cfdGraphicsObject::GetDataSet()
+{
+    return m_dataset;
+}
 ////////////////////////////////////////////////////////////////////////////////
 void cfdGraphicsObject::AddGraphicsObjectToSceneGraph()
 {

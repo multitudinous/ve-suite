@@ -50,6 +50,7 @@
 #include <osg/Vec3>
 #include <osg/Image>
 #include <osg/Texture2D>
+#include <osg/Texture1D>
 
 using namespace ves::xplorer::event::viz;
 
@@ -89,7 +90,7 @@ int OSGWarpedSurfaceStage::mypow2(unsigned x)
     return l;
 }
 ////////////////////////////////////////////////////////////////////////////////
-ves::xplorer::scenegraph::Geode* OSGWarpedSurfaceStage::createMesh(vtkPolyData* polydata, std::string displacement, std::string colorScalar)
+ves::xplorer::scenegraph::Geode* OSGWarpedSurfaceStage::createMesh(vtkPolyData* polydata, const std::string displacement, const std::string colorScalar)
 {
     //osg::ref_ptr< osg::Group > grp = new osg::Group;
     ves::xplorer::scenegraph::Geode* geode = new ves::xplorer::scenegraph::Geode();
@@ -108,12 +109,17 @@ ves::xplorer::scenegraph::Geode* OSGWarpedSurfaceStage::createMesh(vtkPolyData* 
     return geode;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void OSGWarpedSurfaceStage::createMeshData( osg::Geometry* geom, vtkPolyData* polydata, std::string disp, std::string colorScalar)
+void OSGWarpedSurfaceStage::createMeshData( osg::Geometry* geom, 
+    vtkPolyData* polydata, 
+    const std::string disp, 
+    const std::string colorScalar)
 {
     polydata->Update();
-    vtkPointData* pointData = polydata->GetPointData();
-    vtkDataArray* normals = pointData->GetVectors( "Normals" );
     vtkTriangleFilter* triangleFilter = vtkTriangleFilter::New();
+    vtkPointData* pointData = polydata->GetPointData();
+    vtkDataArray* normals = 0;
+    /*
+    vtkDataArray* normals = pointData->GetVectors( "Normals" );
 
     if( !normals )
     {
@@ -128,7 +134,7 @@ void OSGWarpedSurfaceStage::createMeshData( osg::Geometry* geom, vtkPolyData* po
         triangleFilter->Update();
         normalGen->Delete();
     }
-    else
+    else*/
     {
         triangleFilter->SetInput( polydata );
         triangleFilter->Update();
@@ -151,8 +157,8 @@ void OSGWarpedSurfaceStage::createMeshData( osg::Geometry* geom, vtkPolyData* po
         return;
     }
 
-    vtkDataArray *vectorArray = pointData->GetVectors(disp.c_str());
-    vtkPoints *points = polydata->GetPoints();
+    vtkDataArray* vectorArray = pointData->GetVectors(disp.c_str());
+    vtkPoints* points = polydata->GetPoints();
                         
     vtkDataArray* dataArray = pointData->GetScalars(colorScalar.c_str());
     double dataRange[2]; 
@@ -160,19 +166,43 @@ void OSGWarpedSurfaceStage::createMeshData( osg::Geometry* geom, vtkPolyData* po
     dataArray->GetRange(dataRange);
     
     //Here we build a color look up table
-    vtkLookupTable *lut = vtkLookupTable::New(); 
-    lut->SetHueRange (0.667, 0);
+    vtkLookupTable* lut = vtkLookupTable::New(); 
+    lut->SetHueRange(0.667, 0);
     lut->SetRange(dataRange);
     lut->SetRampToLinear();
     //lut->SetRampToSCurve();
     //lut->SetRampToSQRT();
     lut->Build();
-
+    //lut->Print( std::cout );
+    vtkIdType numTuples = lut->GetTable()->GetNumberOfTuples();
+    vtkIdType numComponents = lut->GetTable()->GetNumberOfComponents();
+    unsigned char* charLut = 0;
+    //std::cout << " rgb " << lut->GetTable()->GetNumberOfTuples() << " " << lut->GetTable()->GetNumberOfComponents() << " " << charLut << std::endl;
+   //unsigned char* charLut2= lut->GetPointer( 0 );
+    //std::cout << sizeof( charLut2 ) << std::endl;
+    float* newScalarLutArray = new float[ numTuples * 3 ];
+    for( size_t i = 0; i < numTuples; ++i )
+    {
+        int numLuts = (i*numComponents);
+        int numColorIndex = (i*3);
+        charLut = lut->GetTable()->WritePointer( numLuts, 0 );
+        //std::cout << sizeof( charLut ) << " " << charLut<<  " " << (double*)charLut << std::endl;
+        newScalarLutArray[  numColorIndex + 0 ] = float( charLut[ 0 ] )/255.0f;
+        newScalarLutArray[  numColorIndex + 1 ] = float( charLut[ 1 ] )/255.0f;
+        newScalarLutArray[  numColorIndex + 2 ] = float( charLut[ 2 ] )/255.0f;
+        //newScalarLutArray[  numLuts + 3 ] = float( charLut[ 3 ] )/255.0f;
+        //std::cout << newScalarLutArray[  numLuts + 0 ] << " " 
+        //    << newScalarLutArray[  numLuts + 1 ] << " "
+        //    << newScalarLutArray[  numLuts + 2 ] << " " 
+        //    << newScalarLutArray[  numLuts + 3 ] << std::endl;
+    }
+    //std::string tempString( charLut );
     double cVal;
     double curColor[3];
     
     osg::Vec3Array* v = new osg::Vec3Array;
     osg::ref_ptr< osg::Vec3Array> vDest = new osg::Vec3Array;
+    std::vector< double > scalarArray;
     osg::Vec3Array* n = new osg::Vec3Array;
     osg::Vec3Array* colors = new osg::Vec3Array;
     osg::Vec2Array* tc = new osg::Vec2Array;
@@ -184,12 +214,16 @@ void OSGWarpedSurfaceStage::createMeshData( osg::Geometry* geom, vtkPolyData* po
     //Since same point can appear in different triangle strip. 
     
     int numVetex= 0;
-    vtkIdType *pts;
+    vtkIdType* pts;
     vtkIdType cStripNp;    
     int stripNum=0;
 
-    for (strips->InitTraversal(); ((stripNum<numStrips) && (strips->GetNextCell(cStripNp, pts))); stripNum++)
-        numVetex+=cStripNp;
+    for( strips->InitTraversal(); 
+        ((stripNum<numStrips) && (strips->GetNextCell(cStripNp, pts))); 
+        ++stripNum )
+    {
+        numVetex += cStripNp;
+    }
 
     int am = mylog2(numVetex)+1;
     int mm = am/2;
@@ -209,40 +243,60 @@ void OSGWarpedSurfaceStage::createMeshData( osg::Geometry* geom, vtkPolyData* po
     double cnormal[3];
     double displacement[3];
     
-    stripNum=0;
-    
-    for (strips->InitTraversal(); ((stripNum<numStrips) && (strips->GetNextCell(cStripNp, pts))); stripNum++)
     {
-        for (int i=0; i<cStripNp; i++)
+        osg::Vec3 destVec;
+        osg::Vec3 ccolor;
+        osg::Vec3 startVec;
+        osg::Vec3 normal;
+        osg::Vec2 coord;
+        
+        stripNum=0;
+        
+        for( strips->InitTraversal(); 
+            (stripNum<numStrips) && (strips->GetNextCell(cStripNp, pts)); 
+            stripNum++)
         {
-            points->GetPoint(pts[i], x);
-            osg::Vec3 startVec( x[0], x[1], x[2] );
-            normals->GetTuple(pts[i], cnormal);
-            osg::Vec3 normal(cnormal[0],cnormal[1],cnormal[2]);
-            
-            v->push_back( startVec );
-            n->push_back( normal );
-            
-            cVal = dataArray->GetTuple1(pts[i]);
-            lut->GetColor(cVal,curColor);
-            
-            osg::Vec3 ccolor(curColor[0],curColor[1],curColor[2]);
-            colors->push_back( ccolor);
-
-            //coord is the cord in the texture for strip x and vertex y in the "scale term" of s and t
-
-            int xx = (v->size()-1)%s;
-            int yy = (v->size()-1)/s;
-            osg::Vec2 coord( ((float)(xx)/s), ((float)(yy)/t));
-
-            tc->push_back( coord );
-
-            vectorArray->GetTuple(pts[i], displacement);
-            osg::Vec3 destVec( x[0]+displacement[0], x[1]+displacement[1], x[2]+displacement[2] );
-            vDest->push_back( destVec );
+            for( int i=0; i<cStripNp; ++i )
+            {
+                points->GetPoint(pts[i], x);
+                startVec.set( x[0], x[1], x[2] );
+                normals->GetTuple(pts[i], cnormal);
+                normal.set(cnormal[0],cnormal[1],cnormal[2]);
+                
+                v->push_back( startVec );
+                n->push_back( normal );
+                
+                cVal = dataArray->GetTuple1(pts[i]);
+                scalarArray.push_back( cVal );
+                lut->GetColor(cVal,curColor);
+                
+                ccolor.set(curColor[0],curColor[1],curColor[2]);
+                colors->push_back( ccolor);
+                
+                //coord is the cord in the texture for strip x and vertex y in the "scale term" of s and t
+                
+                int xx = (v->size()-1)%s;
+                int yy = (v->size()-1)/s;
+                coord.set( ((float)(xx)/s), ((float)(yy)/t));
+                
+                tc->push_back( coord );
+                
+                if( vectorArray )
+                {
+                    vectorArray->GetTuple(pts[i], displacement);
+                }
+                else
+                {
+                    displacement[ 0 ] = 0.;
+                    displacement[ 1 ] = 0.;
+                    displacement[ 2 ] = 0.;
+                }
+                destVec.set( x[0]+displacement[0], x[1]+displacement[1], x[2]+displacement[2] );
+                vDest->push_back( destVec );
+            }
         }
     }
-    
+        
     //int cs = colors->size();
     // No data for the Destination normals, not sure what to do. I don't think Paul calculation for his mesh works here
 
@@ -261,8 +315,10 @@ void OSGWarpedSurfaceStage::createMeshData( osg::Geometry* geom, vtkPolyData* po
 
         osg::ref_ptr< osg::DrawElementsUInt > deui = new osg::DrawElementsUInt( GL_TRIANGLE_STRIP, 0 );
         
-        for (int i=0; i<cStripNp; i++)
+        for (int i=0; i<cStripNp; ++i)
+        {    
             deui->push_back( (unsigned int)(startVertexIdx+i));
+        }
         
         startVertexIdx+=cStripNp;
 
@@ -272,20 +328,22 @@ void OSGWarpedSurfaceStage::createMeshData( osg::Geometry* geom, vtkPolyData* po
     osg::StateSet* ss = geom->getOrCreateStateSet();
 
     // Compute the difference between vDest and v. There are the offset vectors.
-    float* vecs = new float[ s * t * 3 ];
+    int texFinalSize = s*t;
+    float* vecs = new float[ texFinalSize * 3 ];
     float* vecsPtr = vecs;
-    float* vcolors = new float[ s * t * 3 ];
+    float* vcolors = new float[ texFinalSize ];
+    //float* vcolors = new float[ texFinalSize * 3 ];
     float* colsPtr = vcolors;
 
-    for( int i=0; i<s*t; i++ )
+    for( int i=0; i< texFinalSize; i++ )
     {
         if( i >= numVetex )
         {
             *vecsPtr++ = 0.;
             *vecsPtr++ = 0.;
             *vecsPtr++ = 0.;
-            *colsPtr++ = 0.;
-            *colsPtr++ = 0.;
+            //*colsPtr++ = 0.;
+            //*colsPtr++ = 0.;
             *colsPtr++ = 0.;
         }
         else
@@ -294,9 +352,10 @@ void OSGWarpedSurfaceStage::createMeshData( osg::Geometry* geom, vtkPolyData* po
             *vecsPtr++ = vector.x();
             *vecsPtr++ = vector.y();
             *vecsPtr++ = vector.z();
-            *colsPtr++ = (*colors)[i].x();
-            *colsPtr++ = (*colors)[i].y();
-            *colsPtr++ = (*colors)[i].z();
+            //*colsPtr++ = (*colors)[i].x();
+            //*colsPtr++ = (*colors)[i].y();
+            //*colsPtr++ = (*colors)[i].z();
+            *colsPtr++ = scalarArray.at( i );
         }
    }
 
@@ -314,18 +373,22 @@ void OSGWarpedSurfaceStage::createMeshData( osg::Geometry* geom, vtkPolyData* po
         new osg::Uniform( "texVec", 0 );
     ss->addUniform( texVecUniform.get() );
 
-    // specify the color texture.
-    osg::Image* iColors = new osg::Image;
-    iColors->setImage( s, t, 1, GL_RGB32F_ARB, GL_RGB, GL_FLOAT,
-        (unsigned char*) vcolors, osg::Image::USE_NEW_DELETE );
-    osg::Texture2D* texColors = new osg::Texture2D( iColors );
-    texColors->setFilter( osg::Texture2D::MIN_FILTER, osg::Texture2D::NEAREST );
-    texColors->setFilter( osg::Texture2D::MAG_FILTER, osg::Texture2D::NEAREST );
-    ss->setTextureAttribute( 1, texColors );
-    
     {
+        // specify the color texture.
+        osg::Image* iColors = new osg::Image;
+        //iColors->setImage( s, t, 1, GL_RGB32F_ARB, GL_RGB, GL_FLOAT,
+        //                  (unsigned char*) vcolors, osg::Image::USE_NEW_DELETE );
+        iColors->setImage( s, t, 1, GL_ALPHA32F_ARB, GL_ALPHA, GL_FLOAT,
+                          (unsigned char*) vcolors, osg::Image::USE_NEW_DELETE );
+        osg::Texture2D* texColors = new osg::Texture2D( iColors );
+        texColors->setFilter( osg::Texture2D::MIN_FILTER, osg::Texture2D::NEAREST );
+        texColors->setFilter( osg::Texture2D::MAG_FILTER, osg::Texture2D::NEAREST );
+        ss->setTextureAttribute( 1, texColors );
+
+        //osg::ref_ptr< osg::Uniform > texColorUniform =
+        //    new osg::Uniform( "texColor", 1 );
         osg::ref_ptr< osg::Uniform > texColorUniform =
-            new osg::Uniform( "texColor", 1 );
+            new osg::Uniform( "scalar", 1 );
         ss->addUniform( texColorUniform.get() );
     }
 
@@ -334,35 +397,84 @@ void OSGWarpedSurfaceStage::createMeshData( osg::Geometry* geom, vtkPolyData* po
             new osg::Uniform( "surfaceWarpScale", m_surfaceWarpScale );
         ss->addUniform( surfaceWarpUniform.get() );
     }
-                
+               
+    {
+        // Pass the min/max for the scalar range into the shader as a uniform.
+        osg::Vec2s ts( dataRange[ 0 ], dataRange[ 1 ] );//- (dataRange[ 1 ]*0.10) );
+        osg::ref_ptr< osg::Uniform > scalarMinMaxUniform =
+            new osg::Uniform( "scalarMinMax", osg::Vec2( (float)ts.x(), (float)ts.y() ) );
+        ss->addUniform( scalarMinMaxUniform.get() );
+    }
+    
+    {        
+        // Set up the color spectrum.
+        osg::Image* iColorScale = new osg::Image;
+        iColorScale->setImage( int( numTuples ), 1, 1, GL_RGB32F_ARB, GL_RGB, GL_FLOAT,
+                              (unsigned char*)newScalarLutArray, osg::Image::NO_DELETE );
+        osg::Texture1D* texCS = new osg::Texture1D( iColorScale );
+        texCS->setFilter( osg::Texture::MIN_FILTER, osg::Texture2D::LINEAR);
+        texCS->setFilter( osg::Texture::MAG_FILTER, osg::Texture2D::LINEAR );
+        texCS->setWrap( osg::Texture::WRAP_S, osg::Texture::CLAMP_TO_EDGE );
+        
+        ss->setTextureAttribute( 2, texCS );
+        osg::ref_ptr< osg::Uniform > texCSUniform = 
+            new osg::Uniform( "texCS", 2 );
+        ss->addUniform( texCSUniform.get() );        
+    }
+
     std::string vertexSource =
 
         "uniform sampler2D texVec; \n"
+        "uniform sampler1D texCS; \n"
+        //"uniform sampler2D texColor; \n"
         "uniform sampler2D texColor; \n"
+        "uniform sampler2D scalar;\n"
         "uniform float osg_SimulationTime; \n"
         "uniform float surfaceWarpScale; \n"
+        "uniform vec2 scalarMinMax;\n"
+
         //Phong shading variables
         "varying vec3 color; \n"
         "varying vec3 lightPos; \n"
-        "varying vec3 objPos; \n"
+        //"varying vec3 objPos; \n"
         "varying vec3 eyePos; \n"
         "varying vec3 normal; \n"
         
         "void main() \n"
         "{ \n"
 
-            "float a = mod( osg_SimulationTime*100.0, 314.0) * 0.01; \n"
-            "float scalar =  sin(a) * surfaceWarpScale;\n"
-            "vec4 vecOff = scalar * texture2D( texVec, gl_MultiTexCoord0.st ); \n"
-            "vec4 tempColor = texture2D( texColor, gl_MultiTexCoord0.st ); \n"
-            "vec4 position = vec4( (gl_Vertex.xyz + vecOff.xyz), gl_Vertex.w ); \n"
+        "   float a = mod( osg_SimulationTime*100.0, 314.0) * 0.01; \n"
+        "   float warpScale =  sin(a) * surfaceWarpScale;\n"
+        "   vec4 vecOff = warpScale * texture2D( texVec, gl_MultiTexCoord0.st ); \n"
+        "   vec4 position = vec4( (gl_Vertex.xyz + vecOff.xyz), gl_Vertex.w ); \n"
             
-            "gl_Position = gl_ProjectionMatrix * gl_ModelViewMatrix * position; \n"
+        "   gl_Position = gl_ProjectionMatrix * gl_ModelViewMatrix * position; \n"
 
-            "tempColor[3]=1.0; \n"
-            "gl_FrontColor = tempColor; \n"
+        //"   vec4 tempColor = texture2D( texColor, gl_MultiTexCoord0.st ); \n"
+        //"   tempColor[3]=1.0; \n"
+        //"   gl_FrontColor = tempColor; \n"
         //Initialize phong shading variables
-        "   color=tempColor.rgb; \n"
+        //"   color=tempColor.rgb; \n"
+            
+        "   // Scalar texture containg key to color table. \n"
+        "   vec4 activeScalar = texture2D( scalar, gl_MultiTexCoord0.st );\n"
+        "   float normScalarVal = 0.;\n"
+        "   normScalarVal = (activeScalar.a - scalarMinMax.x) / (scalarMinMax.y - scalarMinMax.x);\n"
+
+        "   if( normScalarVal < 0. )\n"
+        "   {\n"
+        "       normScalarVal = 0.;\n"
+        "   }\n"
+        "   if( normScalarVal > 1. )\n"
+        "   {\n"
+        "       normScalarVal = 1.;\n"
+        "   }\n"
+        "   vec4 colorResult = texture1D( texCS, normScalarVal );\n"
+        "   colorResult[3]=1.0; \n"
+        "   gl_FrontColor = colorResult; \n"
+        "   color = colorResult.rgb; \n"
+
+        "   // Setup varying variables. \n"
         "   objPos=gl_Vertex.xyz; \n"
         "   eyePos=vec3(gl_ModelViewMatrix*gl_Vertex); \n"
         "   lightPos=gl_LightSource[0].position.xyz; \n"

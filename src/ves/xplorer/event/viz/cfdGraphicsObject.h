@@ -52,7 +52,7 @@ namespace ves
 {
 namespace xplorer
 {
-
+class DataSet;
 class cfdObjects;
 
 namespace scenegraph
@@ -105,6 +105,13 @@ public:
     ///\param input
     void SetActiveModel( Model* input );
 
+    ///Set the dataset used for this viz options
+    ///\param dataset The dataset for this viz object
+    void SetDataSet( ves::xplorer::DataSet* dataset );
+
+    ///Get dataset for this viz option
+    ves::xplorer::DataSet* GetDataSet();
+
     ///add "child node" to scene graph
     void AddGraphicsObjectToSceneGraph();
 
@@ -125,7 +132,8 @@ public:
     std::vector< osg::ref_ptr< ves::xplorer::scenegraph::Geode > > GetGeodes();
 
 protected:
-    std::vector< osg::ref_ptr< ves::xplorer::scenegraph::Geode > > geodes;///<SceneGraph Geode.
+    ///SceneGraph Geode
+    std::vector< osg::ref_ptr< ves::xplorer::scenegraph::Geode > > geodes;
     ves::xplorer::scenegraph::DCS* parentNode;///<SceneGraph parent node.
     ves::xplorer::scenegraph::DCS* worldNode;///<SceneGraph world node.
     VizType type;///<Type of viz: trans, classic, texture.
@@ -134,6 +142,8 @@ protected:
     // animated features
     osg::ref_ptr< osg::Sequence > m_animation;
     ves::xplorer::Model* model;///<Xplorer cfd model.
+    ///The dataset used for this viz option
+    ves::xplorer::DataSet* m_dataset;
 };
 }
 }
