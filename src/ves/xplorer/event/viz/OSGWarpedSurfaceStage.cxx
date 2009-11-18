@@ -51,6 +51,7 @@
 #include <osg/Image>
 #include <osg/Texture2D>
 #include <osg/Texture1D>
+#include <osg/BlendFunc>
 
 using namespace ves::xplorer::event::viz;
 
@@ -397,7 +398,19 @@ void OSGWarpedSurfaceStage::createMeshData( osg::Geometry* geom,
             new osg::Uniform( "surfaceWarpScale", m_surfaceWarpScale );
         ss->addUniform( surfaceWarpUniform.get() );
     }
-               
+
+    {
+        osg::ref_ptr< osg::Uniform > opacityUniform =
+            new osg::Uniform( "opacityVal", float( 1.) );
+        ss->addUniform( opacityUniform.get() );
+        
+        osg::ref_ptr< osg::BlendFunc > bf = new osg::BlendFunc();
+        bf->setFunction( osg::BlendFunc::SRC_ALPHA, 
+                        osg::BlendFunc::ONE_MINUS_SRC_ALPHA );
+        ss->setMode( GL_BLEND, osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+        ss->setAttributeAndModes( bf.get(), osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+    }
+    
     {
         // Pass the min/max for the scalar range into the shader as a uniform.
         osg::Vec2s ts( dataRange[ 0 ], dataRange[ 1 ] );//- (dataRange[ 1 ]*0.10) );
@@ -471,7 +484,7 @@ void OSGWarpedSurfaceStage::createMeshData( osg::Geometry* geom,
         "   }\n"
         "   vec4 colorResult = texture1D( texCS, normScalarVal );\n"
         "   colorResult[3]=1.0; \n"
-        "   gl_FrontColor = colorResult; \n"
+        //"   gl_FrontColor = colorResult; \n"
         "   color = colorResult.rgb; \n"
 
         "   // Setup varying variables. \n"
@@ -489,44 +502,44 @@ void OSGWarpedSurfaceStage::createMeshData( osg::Geometry* geom,
     vertexShader->setShaderSource( vertexSource );
     
     std::string fragmentSource(
-                        //"uniform vec3 ambientMaterial;\n"
-                        //"uniform vec3 diffuseMaterial;\n"
-                        //"uniform vec3 specularMaterial;\n"
-                        //"uniform float specularPower;\n"
-                        
-                        "varying vec3 color;\n"
-                        "varying vec3 lightPos;\n"
-                        //"varying vec3 objPos;\n"
-                        "varying vec3 eyePos;\n"
-                        "varying vec3 normal;\n"
-                        
-                        "void main()\n"
-                        "{\n"
-                        "    vec3 ambientMaterial = vec3( 0.368627, 0.368421, 0.368421 );\n"
-                        "    vec3 diffuseMaterial = vec3( 0.886275, 0.885003, 0.885003 );\n"
-                        "    vec3 specularMaterial = vec3( 0.490196, 0.488722, 0.488722 );\n"
-                        "    float specularPower = 20.0;\n"
-                        "\n"
-                        "    vec3 N=normalize(normal);\n"
-                        "    if(gl_SecondaryColor.r < .5)\n"
-                        "    {\n"
-                        "       N=-N; \n"
-                        "    }\n"
-                        "    vec3 L=normalize(lightPos);\n"
-                        "    float NDotL=max(dot(N,L),0.0);\n"
-                        
-                        "    vec3 V=normalize(eyePos);\n"
-                        "    vec3 R=reflect(V,N);\n"
-                        "    float RDotL=max(dot(R,L),0.0);\n"
-                        
-                        "    vec3 TotalAmbient=gl_LightSource[0].ambient.rgb*ambientMaterial*color;\n"
-                        "    vec3 TotalDiffuse=gl_LightSource[0].diffuse.rgb*diffuseMaterial*color*NDotL;\n"
-                        "    vec3 TotalSpecular=gl_LightSource[0].specular.rgb*specularMaterial*pow(RDotL,specularPower);\n"
-                        
-                        "    gl_FragColor=vec4(TotalAmbient+TotalDiffuse+TotalSpecular,1.0);\n"
-                        " }\n"
-                        
-                        );
+        //"uniform vec3 ambientMaterial;\n"
+        //"uniform vec3 diffuseMaterial;\n"
+        //"uniform vec3 specularMaterial;\n"
+        //"uniform float specularPower;\n"
+        "uniform float opacityVal;\n"
+        
+        "varying vec3 color;\n"
+        "varying vec3 lightPos;\n"
+        //"varying vec3 objPos;\n"
+        "varying vec3 eyePos;\n"
+        "varying vec3 normal;\n"
+        "\n"
+        "void main()\n"
+        "{\n"
+        "    vec3 ambientMaterial = vec3( 0.368627, 0.368421, 0.368421 );\n"
+        "    vec3 diffuseMaterial = vec3( 0.886275, 0.885003, 0.885003 );\n"
+        "    vec3 specularMaterial = vec3( 0.490196, 0.488722, 0.488722 );\n"
+        "    float specularPower = 20.0;\n"
+        "\n"
+        "    vec3 N=normalize(normal);\n"
+        "    if(gl_SecondaryColor.r < .5)\n"
+        "    {\n"
+        "       N=-N; \n"
+        "    }\n"
+        "    vec3 L=normalize(lightPos);\n"
+        "    float NDotL=max(dot(N,L),0.0);\n"
+        "\n"
+        "    vec3 V=normalize(eyePos);\n"
+        "    vec3 R=reflect(V,N);\n"
+        "    float RDotL=max(dot(R,L),0.0);\n"
+        "\n"
+        "    vec3 TotalAmbient=gl_LightSource[0].ambient.rgb*ambientMaterial*color;\n"
+        "    vec3 TotalDiffuse=gl_LightSource[0].diffuse.rgb*diffuseMaterial*color*NDotL;\n"
+        "    vec3 TotalSpecular=gl_LightSource[0].specular.rgb*specularMaterial*pow(RDotL,specularPower);\n"
+        "\n"
+        "    gl_FragColor = vec4(TotalAmbient+TotalDiffuse+TotalSpecular,opacityVal);\n"
+        " }\n"
+        );
     
     osg::ref_ptr< osg::Shader > fragmentShader = new osg::Shader();
     fragmentShader->setType( osg::Shader::FRAGMENT );

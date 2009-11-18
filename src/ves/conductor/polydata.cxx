@@ -59,6 +59,7 @@ BEGIN_EVENT_TABLE( Polydata, wxDialog )
     EVT_RADIOBUTTON( POLYDATA_RBUTTON,          Polydata::_onPolydata )
     EVT_CHECKBOX( POLYDATA_WARPED_SURFACE_CHK,        Polydata::_onWarpedSurface )
     EVT_SLIDER( POLYDATA_PLANE_SLIDER,     Polydata::_onPolydataPlane )
+    EVT_SLIDER( POLYDATA_OPACITY_SLIDER, Polydata::OnPolydataOpacity )
     EVT_BUTTON( POLYDATA_ADD_POLYDATA_BUTTON,       Polydata::_onAddPolydata )
     EVT_BUTTON( POLYDATA_ADVANCED_POLYDATA_BUTTON,  Polydata::_onAdvanced )
     ////@end polydata event table entries
@@ -87,6 +88,7 @@ bool Polydata::Create( wxWindow* parent, wxWindowID id,
     _polydataSlider = 0;
     _advancedButton = 0;
     _computeButton = 0;
+    m_opacitySlider = 0;
 
     SetExtraStyle( GetExtraStyle() | wxWS_EX_BLOCK_EVENTS );
     wxDialog::Create( parent, id, caption, pos, size, style );
@@ -115,7 +117,6 @@ void Polydata::CreateControls()
     _useWarpedSurfaceCheckBox = new wxCheckBox( itemDialog1, POLYDATA_WARPED_SURFACE_CHK, _T( "Use Warped Surface" ), wxDefaultPosition, wxDefaultSize, 0 );
     _useWarpedSurfaceCheckBox->SetValue( false );
     itemStaticBoxSizer3->Add( _useWarpedSurfaceCheckBox, 0, wxGROW | wxALL, 5 );
-
     /////////////////////////////////////////
     wxStaticText* itemStaticText6 = new wxStaticText( itemDialog1, wxID_STATIC, _T( "Scale Factor" ), wxDefaultPosition, wxDefaultSize, 0 );
     itemStaticBoxSizer3->Add( itemStaticText6, 0, wxALIGN_LEFT | wxALL | wxADJUST_MINSIZE, 5 );
@@ -130,6 +131,12 @@ void Polydata::CreateControls()
     m_gpuToolsChkBox = new wxCheckBox( itemDialog1, wxID_ANY, _T( "Use GPU Tools" ), wxDefaultPosition, wxDefaultSize, 0 );
     m_gpuToolsChkBox->SetValue( false );
     itemStaticBoxSizer10->Add( m_gpuToolsChkBox, 0, wxALIGN_LEFT | wxALL, 5 );
+    /////////////////////////////////////////
+    wxStaticText* opacityStaticText = new wxStaticText( itemDialog1, wxID_STATIC, _T( "Opacity" ), wxDefaultPosition, wxDefaultSize, 0 );
+    itemStaticBoxSizer3->Add( opacityStaticText, 0, wxALIGN_LEFT | wxALL | wxADJUST_MINSIZE, 5 );
+    
+    m_opacitySlider = new wxSlider( itemDialog1, POLYDATA_OPACITY_SLIDER, 100, 0, 100, wxDefaultPosition, wxSize( 300, -1 ), wxSL_HORIZONTAL | wxSL_LABELS );
+    itemStaticBoxSizer3->Add( m_opacitySlider, 0, wxGROW | wxALL, 5 );    
     ////////////////////////////////////////
     wxBoxSizer* itemBoxSizer8 = new wxBoxSizer( wxHORIZONTAL );
     itemStaticBoxSizer3->Add( itemBoxSizer8, 0, wxALIGN_CENTER_HORIZONTAL | wxALL, 5 );
@@ -188,6 +195,22 @@ void Polydata::_onWarpedSurface( wxCommandEvent& WXUNUSED( event ) )
     {
         _polydataSlider->Enable( true );
     }
+}
+/////////////////////////////////////////////////////////////
+void Polydata::OnPolydataOpacity( wxCommandEvent& WXUNUSED( event ) )
+{
+    if( !m_gpuToolsChkBox->IsChecked() )
+    {
+        return;
+    }
+    ves::open::xml::CommandPtr newCommand( new ves::open::xml::Command() );
+    newCommand->SetCommandName( "LIVE_POLYDATA_UPDATE" );
+    
+    ves::open::xml::DataValuePairPtr warpSurface( new ves::open::xml::DataValuePair() );
+    warpSurface->SetData( "opacity", static_cast<double>(( m_opacitySlider->GetValue() ) ) );
+    newCommand->AddDataValuePair( warpSurface );
+    
+    ves::conductor::util::CORBAServiceList::instance()->SendCommandStringToXplorer( newCommand );
 }
 /////////////////////////////////////////////////////////////
 void Polydata::_onPolydataPlane( wxCommandEvent& WXUNUSED( event ) )

@@ -121,6 +121,43 @@ void PolydataSurfaceEventHandler::Execute( const ves::open::xml::XMLObjectPtr& v
             }
         }
     }
+    
+    if( opacityDVP && !graphicsObject.empty() )
+    {
+        double opacityVal = 0;
+        opacityDVP->GetData( opacityVal );
+        opacityVal *= 0.01;
+        for( size_t i = 0; i < graphicsObject.size(); ++i )
+        {
+            std::vector< osg::ref_ptr< ves::xplorer::scenegraph::Geode > > 
+                geodes = graphicsObject.at( i )->GetGeodes();
+            for( size_t j = 0; j < geodes.size(); ++j )
+            {
+                osg::ref_ptr< osg::Uniform > warpScaleUniform =
+                    geodes.at( j )->getDrawable( 0 )->
+                    getStateSet()->getUniform( "opacityVal" );
+                if( warpScaleUniform.valid() )
+                {
+                    warpScaleUniform->set( static_cast< float >( opacityVal ) );
+                    if( opacityVal < 1.0 )
+                    {
+                        geodes.at( j )->getDrawable( 0 )->
+                            getStateSet()->setRenderBinDetails( 10, std::string( "DepthSortedBin" ) );
+                        geodes.at( j )->getDrawable( 0 )->
+                            getStateSet()->setNestRenderBins( false );
+                    }   
+                    else
+                    {
+                        geodes.at( j )->getDrawable( 0 )->
+                            getStateSet()->setRenderBinDetails( 0, std::string( "RenderBin" ) );
+                        geodes.at( j )->getDrawable( 0 )->
+                            getStateSet()->setNestRenderBins( true );
+                    }
+                }
+            }
+        }
+    }
+    
     /*
     if( glowDVP && !cfdGraphicsObject.empty() )
     {

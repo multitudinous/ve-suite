@@ -114,14 +114,20 @@ protected:
     wxArrayString _scalarNames;///<The available scalars.
     wxCheckBox* _useWarpedSurfaceCheckBox;
     wxSlider* _polydataSlider;///<Set the value of the iso-surface
+    ///Control the opacity of the slider
+    wxSlider* m_opacitySlider;
     wxButton* _advancedButton;///<Display the color by scalar dialog
     wxButton* _computeButton;///<Compute the iso-surface
 
     ///Check box to control gpu tools
     wxCheckBox* m_gpuToolsChkBox;
 
+    ///Set the opacity warp control
     void _onPolydata( wxCommandEvent& event );
 
+    ///Set the opacity for the surface
+    void OnPolydataOpacity( wxCommandEvent& event );
+    
     /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX
     void _onWarpedSurface( wxCommandEvent& event );
 
