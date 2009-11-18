@@ -192,7 +192,9 @@ Vistab::Vistab( VjObs::Model_var activeModel,
     _activeVectorName = ConvertUnicode( _vectorSelection->GetStringSelection() );
     _activeScalarRange = _originalScalarRanges[_activeScalarName];
 
-
+    //Now that we have an active dataset, scalar, and vectors
+    // lets update the dialog widgets
+    UpdateSpinControls();
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 bool Vistab::Create( wxWindow* parent, wxWindowID id, const wxString& caption, const wxPoint& pos, const wxSize& size, long style )
@@ -1019,9 +1021,9 @@ void Vistab::_onMinSpinCtrl( wxScrollEvent& WXUNUSED( event ) )
 //   double range = _activeScalarRange.at(1) - _activeScalarRange.at(0);
     double minValue = 0;
 
-    if( _activeScalarName.empty() && _activeVectorName.empty() )
+    if( _activeScalarName.empty() )
     {
-        wxMessageBox( _( "Select a scalar or vector" ), _( "Dataset Failure" ),
+        wxMessageBox( _( "Select a scalar" ), _( "Dataset Failure" ),
                       wxOK | wxICON_INFORMATION );
         _minSpinner->SetValue( 0 );
         return;
@@ -1053,9 +1055,9 @@ void Vistab::_onMaxSpinCtrl( wxScrollEvent& WXUNUSED( event ) )
 //   double range = _activeScalarRange.at(1) - _activeScalarRange.at(0);
     double maxValue = 100;
 
-    if( _activeScalarName.empty() && _activeVectorName.empty() )
+    if( _activeScalarName.empty() )
     {
-        wxMessageBox( _( "Select a scalar or vector" ), _( "Dataset Failure" ),
+        wxMessageBox( _( "Select a scalar" ), _( "Dataset Failure" ),
                       wxOK | wxICON_INFORMATION );
         _maxSpinner->SetValue( 100 );
         return;
@@ -1282,9 +1284,9 @@ void Vistab::UpdateMinSlider( wxCommandEvent& event )
 //   double range = _activeScalarRange.at(1) - _activeScalarRange.at(0);
     double minValue = 0;
 
-    if( _activeScalarName.empty() && _activeVectorName.empty() )
+    if( _activeScalarName.empty() )
     {
-        wxMessageBox( _( "Select a scalar or vector" ), _( "Dataset Failure" ),
+        wxMessageBox( _( "Select a scalar." ), _( "Dataset Failure" ),
                       wxOK | wxICON_INFORMATION );
         _minSpinner->SetValue( 0 );
         return;
@@ -1386,7 +1388,7 @@ void Vistab::UpdateSpinControls()
     //double minValue = 0;
     //double maxValue = 100;
 
-    if( _activeScalarName.empty() && _activeVectorName.empty() )
+    if( _activeScalarName.empty() )
     {
         wxMessageBox( _( "Select a scalar or vector" ), _( "Dataset Failure" ),
                       wxOK | wxICON_INFORMATION );
