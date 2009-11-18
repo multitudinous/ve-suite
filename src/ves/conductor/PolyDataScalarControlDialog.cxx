@@ -52,6 +52,13 @@ PolyDataScalarControlDialog::PolyDataScalarControlDialog( wxWindow* parent )
 ScalarControlDialog( parent )
 {
     m_scalarRange = dynamic_cast<Vistab*>( parent->GetParent() )->GetActiveScalarRange();
+    std::ostringstream maxInput;
+    maxInput << m_scalarRange.second;
+    m_maxTextControl->SetValue( wxString( maxInput.str().c_str(), wxConvUTF8 ) );
+
+    std::ostringstream minInput;
+    minInput << m_scalarRange.first;
+    m_minTextCtrl->SetValue( wxString( minInput.str().c_str(), wxConvUTF8 ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PolyDataScalarControlDialog::OnMinTextInput( wxCommandEvent& event )
