@@ -209,9 +209,6 @@ public:
     void SetActiveVector( const std::string& vectorName );
     int GetActiveVector();
 
-    // Update the geometrical properties of the mesh
-    void UpdatePropertiesForNewMesh();
-
     static void AutoComputeUserRange( const double rawRange[2],
                                       double prettyRange[2] );
 
@@ -341,9 +338,6 @@ private:
     DataSet* parent;
     double m_bounds[6];///The bounding box data;
     int isNewlyActivated;
-
-    int CountNumberOfParameters( const int numComponents );
-    std::vector<std::string> GetParameterNames( const int numComponents, const int numParameters );
 
     double* range;          // Range of scalar.
 

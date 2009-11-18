@@ -53,6 +53,8 @@
 #include <ves/xplorer/util/ProcessScalarRangeCallback.h>
 #include <ves/xplorer/util/ActiveDataInformationCallback.h>
 #include <ves/xplorer/util/CreateDataObjectBBoxActorsCallback.h>
+#include <ves/xplorer/util/ComputeVectorMagnitudeAndScalarsCallback.h>
+
 #include <ves/builder/DataLoader/DataLoader.h>
 #include <ves/builder/cfdTranslatorToVTK/cfdTranslatorToVTK.h>
 
@@ -156,6 +158,7 @@ DataSet::DataSet( ) :
     m_dataObjectOps["Scalar Range Information"] = new ves::xplorer::util::ProcessScalarRangeCallback();
     m_dataObjectOps["Active Data Information"] = new ves::xplorer::util::ActiveDataInformationCallback();
     m_dataObjectOps["Create BBox Actors"] = new ves::xplorer::util::CreateDataObjectBBoxActorsCallback();
+    m_dataObjectOps["Compute Vector Mag and Scalars"] = new ves::xplorer::util::ComputeVectorMagnitudeAndScalarsCallback();
 }
 
 DataSet::~DataSet()
@@ -352,57 +355,57 @@ float DataSet::GetMeanCellLength()
 {
    return this->meanCellBBLength;
 }*/
-
+////////////////////////////////////////////////////////////////////////////////
 void DataSet::SetStepLength( float sLen )
 {
     this->stepLength = sLen;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void DataSet::GetStepLength( float &sLen )
 {
     sLen = this->stepLength;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 float DataSet::GetStepLength()
 {
     return this->stepLength;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void DataSet::SetMaxTime( float mT )
 {
     this->maxTime = mT;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void DataSet::GetMaxTime( float &mT )
 {
     mT = this->maxTime;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 float DataSet::GetMaxTime()
 {
     return this->maxTime;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void DataSet::SetTimeStep( float tStep )
 {
     this->timeStep = tStep;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void DataSet::GetTimeStep( float &tStep )
 {
     tStep = this->timeStep;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 float DataSet::GetTimeStep()
 {
     return this->timeStep;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 vtkLookupTable * DataSet::GetLookupTable()
 {
     return this->lut;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 vtkUnstructuredGrid * DataSet::GetUnsData()
 {
     if( ! this->m_dataSet )
@@ -421,7 +424,7 @@ vtkUnstructuredGrid * DataSet::GetUnsData()
 
     return ( vtkUnstructuredGrid* )this->m_dataSet;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 vtkPolyData * DataSet::GetPolyData()
 {
     if( ! this->m_dataSet )
@@ -440,12 +443,12 @@ vtkPolyData * DataSet::GetPolyData()
 
     return ( vtkPolyData* )this->m_dataSet;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 vtkDataObject* DataSet::GetDataSet()
 {
     return this->m_dataSet;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void DataSet::SetType()
 {
     // this code only needs to be done once for each dataset...
@@ -478,36 +481,36 @@ void DataSet::SetType()
     vprDEBUG( vesDBG, 1 ) << "|\t\tdatasetType: " << this->datasetType
     << std::endl << vprDEBUG_FLUSH;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void DataSet::SetType( int type )
 {
     if( 0 <= type && type < 3 )
         this->datasetType = type;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 int DataSet::GetType()
 {
     return this->datasetType;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 #ifdef USE_OMP
 vtkUnstructuredGrid * DataSet::GetData( int i )
 {
     return this->data[i];
 }
-
+////////////////////////////////////////////////////////////////////////////////
 int DataSet::GetNoOfDataForProcs()
 {
     return this->noOfData;
 }
 #endif
-
+////////////////////////////////////////////////////////////////////////////////
 /*void DataSet::LoadData( const std::string filename )
 {
     SetFileName( filename );
     LoadData();
 }*/
-
+////////////////////////////////////////////////////////////////////////////////
 void DataSet::LoadData( vtkUnstructuredGrid* dataset, int datasetindex )
 {
     std::cout << "[DBG]...Inside LoadData of DataSet" << std::endl;
@@ -531,7 +534,7 @@ void DataSet::LoadData( vtkUnstructuredGrid* dataset, int datasetindex )
     writeVtkThing( pointset, this->fileName, 1 );
     this->LoadData();
 }
-///////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void DataSet::LoadData()
 {
     if( this->m_dataSet != NULL )
@@ -622,9 +625,15 @@ void DataSet::LoadData()
     {
         m_dataObjectHandler = new ves::xplorer::util::DataObjectHandler();
     }
-    m_dataObjectHandler->OperateOnAllDatasetsInObject( m_dataSet );
+    //m_dataObjectHandler->OperateOnAllDatasetsInObject( m_dataSet );
 
+    //Now create vector mag and vector scalars
+    m_dataObjectHandler->SetDatasetOperatorCallback( m_dataObjectOps["Compute Vector Mag and Scalars"] );
+    m_dataObjectHandler->OperateOnAllDatasetsInObject( m_dataSet );
+    
     //Need to get number of pda
+    m_dataObjectHandler->SetDatasetOperatorCallback( 0 );
+    m_dataObjectHandler->OperateOnAllDatasetsInObject( m_dataSet );
     this->numPtDataArrays = m_dataObjectHandler->GetNumberOfDataArrays();
 
 #ifdef USE_OMP
@@ -708,7 +717,7 @@ void DataSet::LoadData()
     //Register this dataset with the modeldatahandler
     CreateCompositeDataSets();
 }
-///////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void DataSet::LoadData( vtkDataSet* tempDataset, bool isPartOfCompositeDataset )
 {
     if( this->m_dataSet != NULL )
@@ -783,7 +792,7 @@ void DataSet::LoadData( vtkDataSet* tempDataset, bool isPartOfCompositeDataset )
         ->SendConductorMessage( "Loaded file: " + fileName );
     //Register this dataset with the modeldatahandler
 }    
-////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 unsigned int DataSet::GetNumberOfPoints()
 {
     if( m_dataObjectHandler )
@@ -798,13 +807,13 @@ unsigned int DataSet::GetNumberOfPoints()
     }
     return 0;
 }
-/////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 double* DataSet::GetBounds()
 {
     GetBounds( m_bounds );
     return m_bounds;
 }
-//////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void DataSet::GetBounds( double* bounds )
 {
     if( m_dataObjectHandler )
@@ -818,24 +827,6 @@ void DataSet::GetBounds( double* bounds )
         this->bbDiagonal = boundsCallback->GetDataObjectBoundsDiagonal();
     }
 }
-//////////////////////////////////////////////////////////////////
-int DataSet::CountNumberOfParameters( const int numComponents )
-{
-    int numParameters = 0;
-    return numParameters;
-}
-
-std::vector<std::string> DataSet::GetParameterNames( const int numComponents,
-                                                     const int numParameters )
-{
-
-    std::vector<std::string> name;
-
-    return name;
-}
-
-void DataSet::UpdatePropertiesForNewMesh()
-{}
 ////////////////////////////////////////////////////////////////////////////////
 void DataSet::SetActiveScalar( const std::string& tempActiveScalar )
 {

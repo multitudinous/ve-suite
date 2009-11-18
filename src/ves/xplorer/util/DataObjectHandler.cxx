@@ -105,12 +105,12 @@ void DataObjectHandler::OperateOnAllDatasetsInObject( vtkDataObject* dataObject 
 
 void DataObjectHandler::_convertCellDataToPointData( vtkDataSet* dataSet )
 {
-    if( dataSet->GetPointData()->GetNumberOfArrays() > m_numberOfPointDataArrays )
+    //if( dataSet->GetPointData()->GetNumberOfArrays() > m_numberOfPointDataArrays )
     {
         m_numberOfPointDataArrays = dataSet->GetPointData()
                                     ->GetNumberOfArrays();
     }
-    if( dataSet->GetCellData()->GetNumberOfArrays() > m_numberOfCellDataArrays )
+    //if( dataSet->GetCellData()->GetNumberOfArrays() > m_numberOfCellDataArrays )
     {
         m_numberOfCellDataArrays = dataSet->GetCellData()->GetNumberOfArrays();
     }
@@ -121,7 +121,7 @@ void DataObjectHandler::_convertCellDataToPointData( vtkDataSet* dataSet )
 
         vtkCellDataToPointData* converter = vtkCellDataToPointData::New();
         converter->SetInput( 0, dataSet );
-        converter->PassCellDataOn();
+        converter->PassCellDataOff();
         converter->Update();
 
         ///Why do we need to do this only for unstructured grids?
@@ -143,17 +143,27 @@ void DataObjectHandler::_convertCellDataToPointData( vtkDataSet* dataSet )
                 << "DataObjectHandler::_convertCellDataToPointData" << std::endl;
             exit( 1 );
         }
-        if( dataSet->GetPointData()->GetNumberOfArrays() > m_numberOfPointDataArrays )
+        /*if( dataSet->GetPointData()->GetNumberOfArrays() > m_numberOfPointDataArrays )
         {
             m_numberOfPointDataArrays = dataSet->GetPointData()
                                         ->GetNumberOfArrays();
-        }
+        }*/
     }
     return;
 }
 
 unsigned int DataObjectHandler::GetNumberOfDataArrays( bool isPointData )
 {
+    //if( dataSet->GetPointData()->GetNumberOfArrays() > m_numberOfPointDataArrays )
+    {
+        m_numberOfPointDataArrays = dataSet->GetPointData()
+        ->GetNumberOfArrays();
+    }
+    //if( dataSet->GetCellData()->GetNumberOfArrays() > m_numberOfCellDataArrays )
+    {
+        m_numberOfCellDataArrays = dataSet->GetCellData()->GetNumberOfArrays();
+    }
+
     return ( isPointData ) ? m_numberOfPointDataArrays : m_numberOfCellDataArrays;
 }
 
