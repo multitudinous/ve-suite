@@ -78,6 +78,8 @@ void DataObjectHandler::OperateOnAllDatasetsInObject( vtkDataObject* dataObject 
                 {
                     m_datasetOperator->OperateOnDataset( currentDataset );
                 }
+                UpdateNumberOfPDArrays( currentDataset );
+                
                 mgdIterator->GoToNextItem();
             }
             if( mgdIterator )
@@ -99,21 +101,14 @@ void DataObjectHandler::OperateOnAllDatasetsInObject( vtkDataObject* dataObject 
         {
             m_datasetOperator->OperateOnDataset( currentDataset );
         }
+        UpdateNumberOfPDArrays( currentDataset );
     }
 
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void DataObjectHandler::_convertCellDataToPointData( vtkDataSet* dataSet )
 {
-    //if( dataSet->GetPointData()->GetNumberOfArrays() > m_numberOfPointDataArrays )
-    {
-        m_numberOfPointDataArrays = dataSet->GetPointData()
-                                    ->GetNumberOfArrays();
-    }
-    //if( dataSet->GetCellData()->GetNumberOfArrays() > m_numberOfCellDataArrays )
-    {
-        m_numberOfCellDataArrays = dataSet->GetCellData()->GetNumberOfArrays();
-    }
+    UpdateNumberOfPDArrays( dataSet );
     if( m_numberOfCellDataArrays > 0 && m_numberOfPointDataArrays  == 0 )
     {
         std::cout << "|\tThe dataset has no point data -- "
@@ -143,31 +138,31 @@ void DataObjectHandler::_convertCellDataToPointData( vtkDataSet* dataSet )
                 << "DataObjectHandler::_convertCellDataToPointData" << std::endl;
             exit( 1 );
         }
-        /*if( dataSet->GetPointData()->GetNumberOfArrays() > m_numberOfPointDataArrays )
-        {
-            m_numberOfPointDataArrays = dataSet->GetPointData()
-                                        ->GetNumberOfArrays();
-        }*/
     }
     return;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 unsigned int DataObjectHandler::GetNumberOfDataArrays( bool isPointData )
 {
-    //if( dataSet->GetPointData()->GetNumberOfArrays() > m_numberOfPointDataArrays )
-    {
-        m_numberOfPointDataArrays = dataSet->GetPointData()
-        ->GetNumberOfArrays();
-    }
-    //if( dataSet->GetCellData()->GetNumberOfArrays() > m_numberOfCellDataArrays )
-    {
-        m_numberOfCellDataArrays = dataSet->GetCellData()->GetNumberOfArrays();
-    }
-
     return ( isPointData ) ? m_numberOfPointDataArrays : m_numberOfCellDataArrays;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void DataObjectHandler::SetDatasetOperatorCallback( DatasetOperatorCallback* dsoCbk )
 {
     m_datasetOperator = dsoCbk;
 }
+////////////////////////////////////////////////////////////////////////////////
+void DataObjectHandler::UpdateNumberOfPDArrays( vtkDataSet* dataSet )
+{
+    unsigned int numberOfPointDataArrays = dataSet->GetPointData()->GetNumberOfArrays();
+    if( numberOfPointDataArrays > m_numberOfPointDataArrays )
+    {
+        m_numberOfPointDataArrays = numberOfPointDataArrays;
+    }
+    unsigned int numberOfCellDataArrays = dataSet->GetCellData()->GetNumberOfArrays();
+    if( numberOfCellDataArrays > m_numberOfCellDataArrays )
+    {
+        m_numberOfCellDataArrays = numberOfCellDataArrays;
+    }
+}
+////////////////////////////////////////////////////////////////////////////////

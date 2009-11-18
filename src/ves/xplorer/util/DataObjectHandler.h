@@ -93,6 +93,10 @@ protected:
     ///\param dataset The vtkDataSet
     void _convertCellDataToPointData( vtkDataSet* dataset );
 
+    ///Update the variables for PD arrays for the respective dataset
+    ///\param dataSet The current dataset
+    void UpdateNumberOfPDArrays( vtkDataSet* dataSet );
+
     ///<Number of point data arrays
     unsigned int m_numberOfPointDataArrays;
     ///<Number of cell data arrays
