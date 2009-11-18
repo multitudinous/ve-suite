@@ -475,7 +475,7 @@ void OSGWarpedSurfaceStage::createMeshData( osg::Geometry* geom,
         "   color = colorResult.rgb; \n"
 
         "   // Setup varying variables. \n"
-        "   objPos=gl_Vertex.xyz; \n"
+        //"   objPos=gl_Vertex.xyz; \n"
         "   eyePos=vec3(gl_ModelViewMatrix*gl_Vertex); \n"
         "   lightPos=gl_LightSource[0].position.xyz; \n"
         //"   normal=vec3(gl_NormalMatrix*(gl_Normal+ normalize(vecOff.xyz) ) ); \n"
@@ -496,7 +496,7 @@ void OSGWarpedSurfaceStage::createMeshData( osg::Geometry* geom,
                         
                         "varying vec3 color;\n"
                         "varying vec3 lightPos;\n"
-                        "varying vec3 objPos;\n"
+                        //"varying vec3 objPos;\n"
                         "varying vec3 eyePos;\n"
                         "varying vec3 normal;\n"
                         

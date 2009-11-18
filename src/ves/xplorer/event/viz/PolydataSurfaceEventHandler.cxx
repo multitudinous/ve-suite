@@ -78,34 +78,50 @@ void PolydataSurfaceEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase*
 void PolydataSurfaceEventHandler::Execute( const ves::open::xml::XMLObjectPtr& veXMLObject )
 {
     ves::open::xml::CommandPtr command = boost::dynamic_pointer_cast<ves::open::xml::Command>( veXMLObject );
-    ves::open::xml::DataValuePairPtr sizeDVP = command->GetDataValuePair( "Size" );
-    ves::open::xml::DataValuePairPtr glowDVP = command->GetDataValuePair( "Glow" );
-
-    double size, glow;
-    std::vector< ves::xplorer::cfdGraphicsObject* > cfdGraphicsObject =
-        ves::xplorer::SteadyStateVizHandler::instance()->
-        GetGraphicsObjectsOfType( STREAMLINES );
-
-    if( sizeDVP && !cfdGraphicsObject.empty() )
+    ves::open::xml::DataValuePairPtr opacityDVP = command->GetDataValuePair( "opacity" );
+    ves::open::xml::DataValuePairPtr warpScaleDVP = command->GetDataValuePair( "warpScale" );
+    ves::open::xml::DataValuePairPtr minMaxDVP = command->GetDataValuePair( "minMax" );
+    /*
     {
-        sizeDVP->GetData( size );
-        size /= 200.0;
-        for( size_t i = 0; i < cfdGraphicsObject.size(); ++i )
+        osg::ref_ptr< osg::Uniform > surfaceWarpUniform =
+        new osg::Uniform( "surfaceWarpScale", m_surfaceWarpScale );
+        ss->addUniform( surfaceWarpUniform.get() );
+    }
+    
+    {
+        // Pass the min/max for the scalar range into the shader as a uniform.
+        osg::Vec2s ts( dataRange[ 0 ], dataRange[ 1 ] );//- (dataRange[ 1 ]*0.10) );
+        osg::ref_ptr< osg::Uniform > scalarMinMaxUniform =
+        new osg::Uniform( "scalarMinMax", osg::Vec2( (float)ts.x(), (float)ts.y() ) );
+        ss->addUniform( scalarMinMaxUniform.get() );
+    }
+    */    
+    std::vector< ves::xplorer::cfdGraphicsObject* > graphicsObject =
+        ves::xplorer::SteadyStateVizHandler::instance()->
+        GetGraphicsObjectsOfType( POLYDATA );
+
+    if( warpScaleDVP && !graphicsObject.empty() )
+    {
+        double warpScale = 0;
+        warpScaleDVP->GetData( warpScale );
+
+        for( size_t i = 0; i < graphicsObject.size(); ++i )
         {
-            std::vector< osg::ref_ptr< ves::xplorer::scenegraph::Geode > > geodes =
-                cfdGraphicsObject.at( i )->GetGeodes();
+            std::vector< osg::ref_ptr< ves::xplorer::scenegraph::Geode > > 
+                geodes = graphicsObject.at( i )->GetGeodes();
             for( size_t j = 0; j < geodes.size(); ++j )
             {
-                osg::ref_ptr< osg::Uniform > parSize =
-                    geodes.at( j )->getDrawable( 0 )->getStateSet()->getUniform( "particleSize" );
-                if( parSize.valid() )
+                osg::ref_ptr< osg::Uniform > warpScaleUniform =
+                    geodes.at( j )->getDrawable( 0 )->
+                    getStateSet()->getUniform( "surfaceWarpScale" );
+                if( warpScaleUniform.valid() )
                 {
-                    parSize->set( static_cast< float >( size ) );
+                    warpScaleUniform->set( static_cast< float >( warpScale ) );
                 }
             }
         }
     }
-
+    /*
     if( glowDVP && !cfdGraphicsObject.empty() )
     {
         glowDVP->GetData( glow );
@@ -125,6 +141,7 @@ void PolydataSurfaceEventHandler::Execute( const ves::open::xml::XMLObjectPtr& v
             }
         }
     }
+    */
 }
 ////////////////////////////////////////////////////////////////////////////////
 PolydataSurfaceEventHandler& PolydataSurfaceEventHandler::operator=( const PolydataSurfaceEventHandler& rhs )

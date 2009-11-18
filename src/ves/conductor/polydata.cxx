@@ -30,6 +30,8 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
+#include <ves/conductor/util/CORBAServiceList.h>
+
 #include <ves/conductor/vistab.h>
 #include <ves/conductor/polydata.h>
 #include <ves/conductor/ConductorLibEnums.h>
@@ -189,7 +191,20 @@ void Polydata::_onWarpedSurface( wxCommandEvent& WXUNUSED( event ) )
 }
 /////////////////////////////////////////////////////////////
 void Polydata::_onPolydataPlane( wxCommandEvent& WXUNUSED( event ) )
-{}
+{
+    if( !_useWarpedSurfaceCheckBox->GetValue() && !m_gpuToolsChkBox->IsChecked() )
+    {
+        return;
+    }
+    ves::open::xml::CommandPtr newCommand( new ves::open::xml::Command() );
+    newCommand->SetCommandName( "LIVE_POLYDATA_UPDATE" );
+
+    ves::open::xml::DataValuePairPtr warpSurface( new ves::open::xml::DataValuePair() );
+    warpSurface->SetData( "warpScale", static_cast<double>(( _polydataSlider->GetValue() ) ) );
+    newCommand->AddDataValuePair( warpSurface );
+
+    ves::conductor::util::CORBAServiceList::instance()->SendCommandStringToXplorer( newCommand );
+}
 ///////////////////////////////////////////////////////////
 void Polydata::_onAddPolydata( wxCommandEvent& WXUNUSED( event ) )
 {
