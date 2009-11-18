@@ -440,7 +440,7 @@ void OSGWarpedSurfaceStage::createMeshData( osg::Geometry* geom,
         "uniform sampler2D texVec; \n"
         "uniform sampler1D texCS; \n"
         //"uniform sampler2D texColor; \n"
-        "uniform sampler2D texColor; \n"
+        //"uniform sampler2D texColor; \n"
         "uniform sampler2D scalar;\n"
         "uniform float osg_SimulationTime; \n"
         "uniform float surfaceWarpScale; \n"

@@ -35,6 +35,7 @@
 #include <ves/conductor/vistab.h>
 #include <ves/conductor/polydata.h>
 #include <ves/conductor/ConductorLibEnums.h>
+#include <ves/conductor/PolyDataScalarControlDialog.h>
 
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>
@@ -62,6 +63,7 @@ BEGIN_EVENT_TABLE( Polydata, wxDialog )
     EVT_SLIDER( POLYDATA_OPACITY_SLIDER, Polydata::OnPolydataOpacity )
     EVT_BUTTON( POLYDATA_ADD_POLYDATA_BUTTON,       Polydata::_onAddPolydata )
     EVT_BUTTON( POLYDATA_ADVANCED_POLYDATA_BUTTON,  Polydata::_onAdvanced )
+    EVT_BUTTON( POLYDATA_SCALAR_CONTROL_BUTTON,  Polydata::OnScalarButton )
     ////@end polydata event table entries
 END_EVENT_TABLE()
 Polydata::Polydata( )
@@ -96,7 +98,7 @@ bool Polydata::Create( wxWindow* parent, wxWindowID id,
     CreateControls();
     GetSizer()->Fit( this );
     GetSizer()->SetSizeHints( this );
-    Centre();
+    CentreOnParent();
 
     _polydataSlider->Enable( false );
 
@@ -125,12 +127,15 @@ void Polydata::CreateControls()
     itemStaticBoxSizer3->Add( _polydataSlider, 0, wxGROW | wxALL, 5 );
     /////////////////////////////////////////
     wxStaticBox* gpuToolsStaticSizer = new wxStaticBox( itemDialog1, wxID_ANY, _T( "GPU Tools" ) );
-    wxStaticBoxSizer* itemStaticBoxSizer10 = new wxStaticBoxSizer( gpuToolsStaticSizer, wxVERTICAL );
+    wxStaticBoxSizer* itemStaticBoxSizer10 = new wxStaticBoxSizer( gpuToolsStaticSizer, wxHORIZONTAL );
     itemStaticBoxSizer3->Add( itemStaticBoxSizer10, 0, wxGROW | wxALL, 5 );
     
     m_gpuToolsChkBox = new wxCheckBox( itemDialog1, wxID_ANY, _T( "Use GPU Tools" ), wxDefaultPosition, wxDefaultSize, 0 );
     m_gpuToolsChkBox->SetValue( false );
     itemStaticBoxSizer10->Add( m_gpuToolsChkBox, 0, wxALIGN_LEFT | wxALL, 5 );
+    
+    wxButton* scalarButton = new wxButton( itemDialog1, POLYDATA_SCALAR_CONTROL_BUTTON, _T( "Scalar Control" ), wxDefaultPosition, wxDefaultSize, 0 );
+    itemStaticBoxSizer10->Add( scalarButton, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
     /////////////////////////////////////////
     wxStaticText* opacityStaticText = new wxStaticText( itemDialog1, wxID_STATIC, _T( "Opacity" ), wxDefaultPosition, wxDefaultSize, 0 );
     itemStaticBoxSizer3->Add( opacityStaticText, 0, wxALIGN_LEFT | wxALL | wxADJUST_MINSIZE, 5 );
@@ -271,7 +276,7 @@ void Polydata::_onAddPolydata( wxCommandEvent& WXUNUSED( event ) )
                           wxOK | wxICON_INFORMATION );
     }
 }
-//////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void Polydata::_onAdvanced( wxCommandEvent& WXUNUSED( event ) )
 {
     int selectionIndex = 0;
@@ -285,7 +290,6 @@ void Polydata::_onAdvanced( wxCommandEvent& WXUNUSED( event ) )
     }
     wxSingleChoiceDialog scalarSelector( this, _T( "Select Scalar to color Polydata by." ), _T( "Color by Scalar" ),
                                          _scalarNames );
-
 
     scalarSelector.SetSize( GetRect() );
     scalarSelector.SetSelection( selectionIndex );
@@ -309,4 +313,12 @@ void Polydata::_onAdvanced( wxCommandEvent& WXUNUSED( event ) )
         _colorByScalarName = ConvertUnicode( scalarSelector.GetStringSelection() );
     }
 }
+////////////////////////////////////////////////////////////////////////////////
+void Polydata::OnScalarButton( wxCommandEvent& WXUNUSED( event ) )
+{
+    PolyDataScalarControlDialog scalarDialog( this );
+    scalarDialog.CentreOnParent();
+    scalarDialog.ShowModal();
+}
+////////////////////////////////////////////////////////////////////////////////
 

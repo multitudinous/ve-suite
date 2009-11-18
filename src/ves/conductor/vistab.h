@@ -156,11 +156,13 @@ public:
     void SetButtonStatus( std::string buttonName, bool onOff );
 
     ///Get active scalar name
-    std::string GetActiveScalarName();
+    const std::string& GetActiveScalarName();
     ///Get active vector name
-    std::string GetActiveVectorName();
+    const std::string& GetActiveVectorName();
     ///Get active dataset name
-    std::string GetActiveDatasetName();
+    const std::string& GetActiveDatasetName();
+    ///Get scalar range for active scalar
+    std::pair< double, double > GetActiveScalarRange();
 
     ///Make sure all the dataset check boxes are unchecked.\n
     ///This occurs when loading a new network

@@ -140,6 +140,7 @@ protected:
     ///wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON1
     void _onAdvanced( wxCommandEvent& event );
 
+    void OnScalarButton( wxCommandEvent& event );
 
     std::string ConvertUnicode( const wxChar* data )
     {

@@ -888,17 +888,17 @@ void Vistab::_OnMaxSlider(wxSpinEvent& WXUNUSED(event))
 }
 */
 //////////////////////////////////////////
-std::string Vistab::GetActiveScalarName()
+const std::string& Vistab::GetActiveScalarName()
 {
     return _activeScalarName;
 }
 //////////////////////////////////////////
-std::string Vistab::GetActiveVectorName()
+const std::string& Vistab::GetActiveVectorName()
 {
     return _activeVectorName;
 }
 //////////////////////////////////////////
-std::string Vistab::GetActiveDatasetName()
+const std::string& Vistab::GetActiveDatasetName()
 {
     return _activeDataSetName;
 }
@@ -1093,9 +1093,9 @@ void Vistab::_onMaxSpinCtrl( wxScrollEvent& WXUNUSED( event ) )
 //////////////////////////////////////////////////////////////////////////
 void Vistab::_onMinSlider( wxScrollEvent& WXUNUSED( event ) )
 {
-    if( _activeScalarName.empty() && _activeVectorName.empty() )
+    if( _activeScalarName.empty() )
     {
-        wxMessageBox( _( "Select a scalar or vector" ), _( "Dataset Failure" ),
+        wxMessageBox( _( "Select a scalar." ), _( "Dataset Failure" ),
                       wxOK | wxICON_INFORMATION );
         _minSlider->SetValue( 0 );
         return;
@@ -1114,9 +1114,9 @@ void Vistab::_onMinSlider( wxScrollEvent& WXUNUSED( event ) )
 //////////////////////////////////////////////////////////////////////////
 void Vistab::_onMaxSlider( wxScrollEvent& WXUNUSED( event ) )
 {
-    if( _activeScalarName.empty() && _activeVectorName.empty() )
+    if( _activeScalarName.empty() )
     {
-        wxMessageBox( _( "Select a scalar or vector" ), _( "Dataset Failure" ),
+        wxMessageBox( _( "Select a scalar." ), _( "Dataset Failure" ),
                       wxOK | wxICON_INFORMATION );
         _maxSlider->SetValue( 100 );
         return;
@@ -1395,7 +1395,7 @@ void Vistab::UpdateSpinControls()
         return;
     }
 }
-////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void Vistab::SetButtonStatus( std::string buttonName, bool onOff )
 {
     //std::map<std::string, VISTAB_IDS>::iterator buttonIterator;
@@ -1449,3 +1449,12 @@ void Vistab::SetButtonStatus( std::string buttonName, bool onOff )
     //    }
     //}
 }
+////////////////////////////////////////////////////////////////////////////////
+std::pair< double, double > Vistab::GetActiveScalarRange()
+{
+    std::pair< double, double > tempPair = 
+        std::make_pair< double, double >( 
+        _activeScalarRange.at( 0 ), _activeScalarRange.at( 1 ) );
+    return tempPair;
+}
+////////////////////////////////////////////////////////////////////////////////
