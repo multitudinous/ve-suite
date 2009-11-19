@@ -116,37 +116,40 @@ void OSGWarpedSurfaceStage::createMeshData( osg::Geometry* geom,
     const std::string colorScalar)
 {
     polydata->Update();
+
     vtkTriangleFilter* triangleFilter = vtkTriangleFilter::New();
-    vtkPointData* pointData = polydata->GetPointData();
-    vtkDataArray* normals = 0;
-    /*
-    vtkDataArray* normals = pointData->GetVectors( "Normals" );
-
-    if( !normals )
-    {
-        vtkPolyDataNormals* normalGen = vtkPolyDataNormals::New();
-        normalGen->SetInput( polydata );
-        normalGen->NonManifoldTraversalOn();
-        normalGen->AutoOrientNormalsOn();
-        normalGen->ConsistencyOn();
-        normalGen->SplittingOn();
-
-        triangleFilter->SetInput( normalGen->GetOutput() );
-        triangleFilter->Update();
-        normalGen->Delete();
-    }
-    else*/
-    {
-        triangleFilter->SetInput( polydata );
-        triangleFilter->Update();
-    }
+    triangleFilter->SetInput( polydata );
+    triangleFilter->PassVertsOff();
+    triangleFilter->PassLinesOff();
+    //triangleFilter->Update();
     
     vtkStripper* triangleStripper = vtkStripper::New();
     triangleStripper->SetInput(triangleFilter->GetOutput());
-    triangleStripper->Update();
+    int stripLength = triangleStripper->GetMaximumLength();
+    triangleStripper->SetMaximumLength( stripLength * 1000 );
+    //triangleStripper->Update();
     
-    polydata = triangleStripper->GetOutput();
+    vtkPolyDataNormals* normalGen = vtkPolyDataNormals::New();
+    normalGen->SetInput( triangleStripper->GetOutput() );
+    normalGen->NonManifoldTraversalOn();
+    normalGen->AutoOrientNormalsOn();
+    normalGen->ConsistencyOn();
+    normalGen->SplittingOn();
     
+    vtkStripper* reTriangleStripper = vtkStripper::New();
+    reTriangleStripper->SetInput( normalGen->GetOutput() );
+    reTriangleStripper->SetMaximumLength( stripLength * 1000 );
+    reTriangleStripper->Update();
+    
+    normalGen->Delete();
+    triangleFilter->Delete();
+    triangleStripper->Delete();
+    
+    polydata = reTriangleStripper->GetOutput();
+    
+    vtkPointData* pointData = polydata->GetPointData();
+    vtkDataArray* normals = 0;
+
     int numStrips = polydata->GetNumberOfStrips();
     //int numPts = polydata->GetNumberOfPoints();
     pointData = polydata->GetPointData();
@@ -569,8 +572,7 @@ void OSGWarpedSurfaceStage::createMeshData( osg::Geometry* geom,
     ss->setAttribute( program.get(),
         osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
     
-    triangleStripper->Delete();
-    triangleFilter->Delete();
+    reTriangleStripper->Delete();
     lut->Delete();
 }
 ////////////////////////////////////////////////////////////////////////////////
