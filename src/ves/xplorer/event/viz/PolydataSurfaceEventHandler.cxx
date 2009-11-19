@@ -87,6 +87,8 @@ void PolydataSurfaceEventHandler::Execute( const ves::open::xml::XMLObjectPtr& v
         command->GetDataValuePair( "minValue" );
     ves::open::xml::DataValuePairPtr maxValueDVP = 
         command->GetDataValuePair( "maxValue" );
+    ves::open::xml::DataValuePairPtr twoSidedLightingDVP = 
+        command->GetDataValuePair( "twoSidedLighting" );
 
     std::vector< ves::xplorer::cfdGraphicsObject* > graphicsObject =
         ves::xplorer::SteadyStateVizHandler::instance()->
@@ -191,6 +193,39 @@ void PolydataSurfaceEventHandler::Execute( const ves::open::xml::XMLObjectPtr& v
             }
         }
     }
+    
+    //Setup scalar control
+    if( twoSidedLightingDVP )
+    {
+        unsigned int twoSidedLightingVal = 0;
+        twoSidedLightingDVP->GetData( twoSidedLightingVal );
+        
+        for( size_t i = 0; i < graphicsObject.size(); ++i )
+        {
+            std::vector< osg::ref_ptr< ves::xplorer::scenegraph::Geode > > 
+            geodes = graphicsObject.at( i )->GetGeodes();
+            for( size_t j = 0; j < geodes.size(); ++j )
+            {
+                osg::ref_ptr< osg::Uniform > warpScaleUniform =
+                    geodes.at( j )->getDrawable( 0 )->
+                    getStateSet()->getUniform( "twoSideLighting" );
+                if( warpScaleUniform.valid() )
+                {
+                    warpScaleUniform->set( static_cast< bool >( twoSidedLightingVal ) );
+                    if( twoSidedLightingVal )
+                    {
+                        geodes.at( j )->getDrawable( 0 )->
+                        getStateSet()->setMode( GL_VERTEX_PROGRAM_TWO_SIDE, osg::StateAttribute::ON );
+                    }
+                    else
+                    {
+                        geodes.at( j )->getDrawable( 0 )->
+                        getStateSet()->setMode( GL_VERTEX_PROGRAM_TWO_SIDE, osg::StateAttribute::OFF );
+                    }
+                }
+            }
+        }
+    }    
 }
 ////////////////////////////////////////////////////////////////////////////////
 PolydataSurfaceEventHandler& PolydataSurfaceEventHandler::operator=( const PolydataSurfaceEventHandler& rhs )

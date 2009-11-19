@@ -57,13 +57,14 @@ using namespace ves::conductor;
 ///////////////////////////
 BEGIN_EVENT_TABLE( Polydata, wxDialog )
     ////@begin polydata event table entries
-    EVT_RADIOBUTTON( POLYDATA_RBUTTON,          Polydata::_onPolydata )
-    EVT_CHECKBOX( POLYDATA_WARPED_SURFACE_CHK,        Polydata::_onWarpedSurface )
-    EVT_SLIDER( POLYDATA_PLANE_SLIDER,     Polydata::_onPolydataPlane )
-    EVT_SLIDER( POLYDATA_OPACITY_SLIDER, Polydata::OnPolydataOpacity )
+    EVT_RADIOBUTTON( POLYDATA_RBUTTON,              Polydata::_onPolydata )
+    EVT_CHECKBOX( POLYDATA_WARPED_SURFACE_CHK,      Polydata::_onWarpedSurface )
+    EVT_CHECKBOX( POLYDATA_TWO_SIDED_LIGHTING_CHK,  Polydata::OnTwoSidedLightingChk )
+    EVT_SLIDER( POLYDATA_PLANE_SLIDER,              Polydata::_onPolydataPlane )
+    EVT_SLIDER( POLYDATA_OPACITY_SLIDER,            Polydata::OnPolydataOpacity )
     EVT_BUTTON( POLYDATA_ADD_POLYDATA_BUTTON,       Polydata::_onAddPolydata )
     EVT_BUTTON( POLYDATA_ADVANCED_POLYDATA_BUTTON,  Polydata::_onAdvanced )
-    EVT_BUTTON( POLYDATA_SCALAR_CONTROL_BUTTON,  Polydata::OnScalarButton )
+    EVT_BUTTON( POLYDATA_SCALAR_CONTROL_BUTTON,     Polydata::OnScalarButton )
     ////@end polydata event table entries
 END_EVENT_TABLE()
 Polydata::Polydata( )
@@ -91,7 +92,8 @@ bool Polydata::Create( wxWindow* parent, wxWindowID id,
     _advancedButton = 0;
     _computeButton = 0;
     m_opacitySlider = 0;
-
+    m_twoSidedLighting = 0;
+    
     SetExtraStyle( GetExtraStyle() | wxWS_EX_BLOCK_EVENTS );
     wxDialog::Create( parent, id, caption, pos, size, style );
 
@@ -136,6 +138,10 @@ void Polydata::CreateControls()
     
     wxButton* scalarButton = new wxButton( itemDialog1, POLYDATA_SCALAR_CONTROL_BUTTON, _T( "Scalar Control" ), wxDefaultPosition, wxDefaultSize, 0 );
     itemStaticBoxSizer10->Add( scalarButton, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
+    
+    m_twoSidedLighting = new wxCheckBox( itemDialog1, POLYDATA_TWO_SIDED_LIGHTING_CHK, _T( "Two Sided Lighting" ), wxDefaultPosition, wxDefaultSize, 0 );
+    m_twoSidedLighting->SetValue( false );
+    itemStaticBoxSizer10->Add( m_twoSidedLighting, 0, wxALIGN_LEFT | wxALL, 5 );
     /////////////////////////////////////////
     wxStaticText* opacityStaticText = new wxStaticText( itemDialog1, wxID_STATIC, _T( "Opacity" ), wxDefaultPosition, wxDefaultSize, 0 );
     itemStaticBoxSizer3->Add( opacityStaticText, 0, wxALIGN_LEFT | wxALL | wxADJUST_MINSIZE, 5 );
@@ -321,4 +327,19 @@ void Polydata::OnScalarButton( wxCommandEvent& WXUNUSED( event ) )
     scalarDialog.ShowModal();
 }
 ////////////////////////////////////////////////////////////////////////////////
-
+void Polydata::OnTwoSidedLightingChk( wxCommandEvent& WXUNUSED( event ) )
+{
+    if( !m_gpuToolsChkBox->IsChecked() )
+    {
+        return;
+    }
+    ves::open::xml::CommandPtr newCommand( new ves::open::xml::Command() );
+    newCommand->SetCommandName( "LIVE_POLYDATA_UPDATE" );
+    
+    ves::open::xml::DataValuePairPtr warpSurface( new ves::open::xml::DataValuePair() );
+    warpSurface->SetData( "twoSidedLighting", static_cast<unsigned int>( m_twoSidedLighting->GetValue() ) );
+    newCommand->AddDataValuePair( warpSurface );
+    
+    ves::conductor::util::CORBAServiceList::instance()->SendCommandStringToXplorer( newCommand );
+}
+////////////////////////////////////////////////////////////////////////////////

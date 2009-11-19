@@ -182,7 +182,7 @@ void OSGWarpedSurfaceStage::createMeshData( osg::Geometry* geom,
    //unsigned char* charLut2= lut->GetPointer( 0 );
     //std::cout << sizeof( charLut2 ) << std::endl;
     float* newScalarLutArray = new float[ numTuples * 3 ];
-    for( size_t i = 0; i < numTuples; ++i )
+    for( int i = 0; i < numTuples; ++i )
     {
         int numLuts = (i*numComponents);
         int numColorIndex = (i*3);
@@ -400,6 +400,12 @@ void OSGWarpedSurfaceStage::createMeshData( osg::Geometry* geom,
     }
 
     {
+        osg::ref_ptr< osg::Uniform > surfaceWarpUniform =
+        new osg::Uniform( "twoSideLighting", false );
+        ss->addUniform( surfaceWarpUniform.get() );
+    }
+    
+    {
         osg::ref_ptr< osg::Uniform > opacityUniform =
             new osg::Uniform( "opacityVal", float( 1.) );
         ss->addUniform( opacityUniform.get() );
@@ -445,6 +451,7 @@ void OSGWarpedSurfaceStage::createMeshData( osg::Geometry* geom,
         "uniform float osg_SimulationTime; \n"
         "uniform float surfaceWarpScale; \n"
         "uniform vec2 scalarMinMax;\n"
+        "uniform float opacityVal;\n"
 
         //Phong shading variables
         "varying vec3 color; \n"
@@ -485,16 +492,18 @@ void OSGWarpedSurfaceStage::createMeshData( osg::Geometry* geom,
         "   vec4 colorResult = texture1D( texCS, normScalarVal );\n"
         "   colorResult[3]=1.0; \n"
         //"   gl_FrontColor = colorResult; \n"
-        "   color = colorResult.rgb; \n"
+        "     color = colorResult.rgb; \n"
 
-        "   // Setup varying variables. \n"
+        "     // Setup varying variables. \n"
         //"   objPos=gl_Vertex.xyz; \n"
-        "   eyePos=vec3(gl_ModelViewMatrix*gl_Vertex); \n"
-        "   lightPos=gl_LightSource[0].position.xyz; \n"
+        "     eyePos=vec3(gl_ModelViewMatrix*gl_Vertex); \n"
+        "     lightPos=gl_LightSource[0].position.xyz; \n"
         //"   normal=vec3(gl_NormalMatrix*(gl_Normal+ normalize(vecOff.xyz) ) ); \n"
-        "   normal=vec3(gl_NormalMatrix * gl_Normal); \n"
-        "   gl_FrontSecondaryColor=vec4(1.0);\n"
-        "   gl_BackSecondaryColor=vec4(0.0);\n"
+        "     normal=vec3(gl_NormalMatrix * gl_Normal); \n"
+        "     gl_FrontSecondaryColor=vec4(1.0);\n"
+        "     gl_BackSecondaryColor=vec4(0.0);\n"
+        "     gl_BackColor = vec4( color, opacityVal);\n"
+        "     gl_FrontColor = vec4( color, opacityVal);\n"
         "} \n";
     
     osg::ref_ptr< osg::Shader > vertexShader = new osg::Shader();
@@ -523,6 +532,7 @@ void OSGWarpedSurfaceStage::createMeshData( osg::Geometry* geom,
         "\n"
         "    vec3 N=normalize(normal);\n"
         "    if(gl_SecondaryColor.r < .5)\n"
+        //"    if( !gl_FrontFacing )\n"
         "    {\n"
         "       N=-N; \n"
         "    }\n"
@@ -537,8 +547,17 @@ void OSGWarpedSurfaceStage::createMeshData( osg::Geometry* geom,
         "    vec3 TotalDiffuse=gl_LightSource[0].diffuse.rgb*diffuseMaterial*color*NDotL;\n"
         "    vec3 TotalSpecular=gl_LightSource[0].specular.rgb*specularMaterial*pow(RDotL,specularPower);\n"
         "\n"
-        "    gl_FragColor = vec4(TotalAmbient+TotalDiffuse+TotalSpecular,opacityVal);\n"
-        " }\n"
+        "    vec4 newColor = vec4(TotalAmbient+TotalDiffuse+TotalSpecular,opacityVal);\n"
+        "    gl_FragColor = newColor;\n"
+        /*"    if(gl_SecondaryColor.r < .5)\n"
+        "    {\n"
+        "         gl_BackColor = newColor;\n"
+        "    }\n"
+        "    else\n"
+        "    {\n"
+        "         gl_FrontColor = newColor;\n"
+        "    }\n"*/
+        "}\n"
         );
     
     osg::ref_ptr< osg::Shader > fragmentShader = new osg::Shader();

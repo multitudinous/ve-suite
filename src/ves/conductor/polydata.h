@@ -122,6 +122,9 @@ protected:
     ///Check box to control gpu tools
     wxCheckBox* m_gpuToolsChkBox;
 
+    ///Check box to control two sided lighting
+    wxCheckBox* m_twoSidedLighting;
+    
     ///Set the opacity warp control
     void _onPolydata( wxCommandEvent& event );
 
@@ -142,6 +145,8 @@ protected:
 
     void OnScalarButton( wxCommandEvent& event );
 
+    void OnTwoSidedLightingChk( wxCommandEvent& event );
+    
     std::string ConvertUnicode( const wxChar* data )
     {
         std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( data ) ) );
