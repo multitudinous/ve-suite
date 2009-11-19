@@ -48,6 +48,8 @@
 // --- C/C++ Libraries --- //
 #include <vector>
 
+//#include <osgDB/WriteFile>
+
 using namespace ves::xplorer::event;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -156,6 +158,7 @@ void PolydataSurfaceEventHandler::Execute( const ves::open::xml::XMLObjectPtr& v
                         geodes.at( j )->getDrawable( 0 )->
                             getStateSet()->setNestRenderBins( true );
                     }
+                    //osgDB::writeNodeFile( *(geodes.at( j ).get()), "gpu_surface_test.ive" );
                 }
             }
         }

@@ -60,6 +60,7 @@ BEGIN_EVENT_TABLE( Polydata, wxDialog )
     EVT_RADIOBUTTON( POLYDATA_RBUTTON,              Polydata::_onPolydata )
     EVT_CHECKBOX( POLYDATA_WARPED_SURFACE_CHK,      Polydata::_onWarpedSurface )
     EVT_CHECKBOX( POLYDATA_TWO_SIDED_LIGHTING_CHK,  Polydata::OnTwoSidedLightingChk )
+    EVT_CHECKBOX( POLYDATA_GPU_TOOLS_CHK,           Polydata::_onAddPolydata )
     EVT_SLIDER( POLYDATA_PLANE_SLIDER,              Polydata::_onPolydataPlane )
     EVT_SLIDER( POLYDATA_OPACITY_SLIDER,            Polydata::OnPolydataOpacity )
     EVT_BUTTON( POLYDATA_ADD_POLYDATA_BUTTON,       Polydata::_onAddPolydata )
@@ -132,7 +133,7 @@ void Polydata::CreateControls()
     wxStaticBoxSizer* itemStaticBoxSizer10 = new wxStaticBoxSizer( gpuToolsStaticSizer, wxHORIZONTAL );
     itemStaticBoxSizer3->Add( itemStaticBoxSizer10, 0, wxGROW | wxALL, 5 );
     
-    m_gpuToolsChkBox = new wxCheckBox( itemDialog1, wxID_ANY, _T( "Use GPU Tools" ), wxDefaultPosition, wxDefaultSize, 0 );
+    m_gpuToolsChkBox = new wxCheckBox( itemDialog1, POLYDATA_GPU_TOOLS_CHK, _T( "Use GPU Tools" ), wxDefaultPosition, wxDefaultSize, 0 );
     m_gpuToolsChkBox->SetValue( false );
     itemStaticBoxSizer10->Add( m_gpuToolsChkBox, 0, wxALIGN_LEFT | wxALL, 5 );
     

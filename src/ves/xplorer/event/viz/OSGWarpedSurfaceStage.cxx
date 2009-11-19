@@ -165,7 +165,6 @@ void OSGWarpedSurfaceStage::createMeshData( osg::Geometry* geom,
     double dataRange[2]; 
     
     dataArray->GetRange(dataRange);
-    
     //Here we build a color look up table
     vtkLookupTable* lut = vtkLookupTable::New(); 
     lut->SetHueRange(0.667, 0);
@@ -419,7 +418,7 @@ void OSGWarpedSurfaceStage::createMeshData( osg::Geometry* geom,
     
     {
         // Pass the min/max for the scalar range into the shader as a uniform.
-        osg::Vec2s ts( dataRange[ 0 ], dataRange[ 1 ] );//- (dataRange[ 1 ]*0.10) );
+        osg::Vec2 ts( dataRange[ 0 ], dataRange[ 1 ] );//- (dataRange[ 1 ]*0.10) );
         osg::ref_ptr< osg::Uniform > scalarMinMaxUniform =
             new osg::Uniform( "scalarMinMax", osg::Vec2( (float)ts.x(), (float)ts.y() ) );
         ss->addUniform( scalarMinMaxUniform.get() );
