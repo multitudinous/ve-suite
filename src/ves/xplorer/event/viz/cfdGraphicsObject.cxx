@@ -229,7 +229,7 @@ void cfdGraphicsObject::SetGeodes( ves::xplorer::cfdObjects* input )
             }
             phongShader.SetStateSet( geodeProperties.get() );
             phongShader.SyncShaderAndStateSet();
-            osgDB::writeNodeFile( *(geodes.at(i).get()), "gpu_vector_field_phong.ive" );
+            //osgDB::writeNodeFile( *(geodes.at(i).get()), "gpu_vector_field_phong.ive" );
         }
         //osgDB::writeNodeFile( *(geodes.at(i).get()), "gpu_vector_field_phong.ive" );
     }
