@@ -78,6 +78,9 @@ using namespace warrantytool;
 
 #include <Poco/SharedPtr.h>
 #include <Poco/Tuple.h>
+#include <Poco/DateTimeFormatter.h>
+#include <Poco/DateTimeParser.h>
+
 #include <Poco/Data/SessionFactory.h>
 #include <Poco/Data/Session.h>
 #include <Poco/Data/RecordSet.h>
@@ -90,6 +93,8 @@ using namespace warrantytool;
 #include <boost/algorithm/string/replace.hpp>
 #include <boost/algorithm/string/case_conv.hpp>
 #include <boost/filesystem.hpp>
+#include <boost/algorithm/string/find.hpp>
+#include <boost/algorithm/string/predicate.hpp>
 
 using namespace Poco::Data;
 
@@ -450,6 +455,7 @@ void WarrantyToolGP::ParseDataFile( const std::string& csvFilename )
     std::map< int, std::vector< std::string > > csvDataMap;
     
     size_t partNumberColumn = 0;
+    m_promiseDateColumn = 0;
     while( parser.getPos() < sLine.size() )
     {
         parser >> sCol1; // Feed the line to the parser
@@ -469,9 +475,18 @@ void WarrantyToolGP::ParseDataFile( const std::string& csvFilename )
         {
             partNumberColumn = columnCount;
         }
+        
+        //if( boost::algorithm::ifind_first( sCol1, "promise_date" ) )
+        if( boost::algorithm::iequals( sCol1, "promise_date" ) )
+        {
+            m_promiseDateColumn = columnCount;
+        }
         columnCount += 1;
     }
-    
+
+    std::cout << "Part Number Column = " << partNumberColumn 
+        << " Promise Date Column = " << m_promiseDateColumn << std::endl;
+
     while( iss.good() )
     {
         std::getline(iss, sLine); // Get a line
@@ -493,6 +508,23 @@ void WarrantyToolGP::ParseDataFile( const std::string& csvFilename )
             parser >> sCol1;
             StripDollarCharacters( sCol1 );
             boost::algorithm::trim( sCol1 );
+            if( i == m_promiseDateColumn )
+            {
+                //convert date to uniform string
+                try
+                {
+                    int timeDifValue = 0;
+                    std::string fmt = "%e-%b-%y";
+                    Poco::DateTime tempDateTime = Poco::DateTimeParser::parse( fmt, sCol1, timeDifValue );
+                    std::string newDateTime = Poco::DateTimeFormatter::format( tempDateTime, "%Y.%m.%d" );
+                    sCol1 = newDateTime;
+                }
+                catch( Poco::SyntaxException& ex )
+                {
+                    std::cout << ex.displayText() << std::endl
+                        << "The actual string is " << sCol1 << std::endl;
+                }
+            }
             csvDataMap[ i ].push_back( sCol1 );
         }
     }
@@ -709,6 +741,7 @@ void WarrantyToolGP::CreateDB()
     for( size_t i = 0; i < tempData.size(); ++i )
     {
         bool isString = false;
+        bool isDate = false;
         try
         {
             double test = boost::lexical_cast<double>( tempData.at( i ).second );
@@ -720,11 +753,21 @@ void WarrantyToolGP::CreateDB()
             std::cout << "Data is " << tempData.at( i ).second << std::endl;
             std::cout << ex.what() << std::endl;
             isString = true;
+
+            if( i == m_promiseDateColumn )
+            {
+                isString = false;
+                isDate = true;
+            }
         }
         
         if( isString )
         {
             createCommand << "'" << tempData.at( i ).first << "' VARCHAR";
+        }
+        else if( isDate )
+        {
+            createCommand << "'" << tempData.at( i ).first << "' DATE";
         }
         else
         {
@@ -757,6 +800,7 @@ void WarrantyToolGP::CreateDB()
         for( size_t i = 0; i < tempData.size(); ++i )
         {
             bool isString = false;
+            bool isDate = false;
             double tempDouble = 0;
             try
             {
@@ -767,9 +811,19 @@ void WarrantyToolGP::CreateDB()
                 //std::cout << "Bad Field " << tempData.at( i ).first << std::endl;
                 //std::cout << ex.what() << std::endl;
                 isString = true;
+                
+                if( i == m_promiseDateColumn )
+                {
+                    isString = false;
+                    isDate = true;
+                }
             }
             
             if( isString )
+            {
+                insertCommand << "'"<< tempData.at( i ).second << "'";
+            }
+            else if( isDate )
             {
                 insertCommand << "'"<< tempData.at( i ).second << "'";
             }

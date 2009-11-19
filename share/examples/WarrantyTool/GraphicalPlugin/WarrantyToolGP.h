@@ -118,6 +118,8 @@ private:
     std::string m_dbFilename;
     ///Root of the CAD models
     ves::xplorer::scenegraph::DCS* m_cadRootNode;
+    
+    size_t m_promiseDateColumn;
 };
 
 CREATE_VES_XPLORER_PLUGIN_ENTRY_POINT( WarrantyToolGP )
