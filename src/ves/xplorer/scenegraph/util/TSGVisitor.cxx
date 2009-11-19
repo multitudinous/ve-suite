@@ -39,18 +39,26 @@
 
 #include <osgUtil/TangentSpaceGenerator>
 
-// --- C/C++ Includes --- //
+// --- STL Includes --- //
 #include <iostream>
 
 using namespace ves::xplorer::scenegraph::util;
-namespace vxsu = ves::xplorer::scenegraph::util;
 
 ////////////////////////////////////////////////////////////////////////////////
-TSGVisitor::TSGVisitor()
+TSGVisitor::TSGVisitor(
+    osg::Node* const node,
+    unsigned int normalMapTexUnit,
+    unsigned int tangentIndex,
+    unsigned int binormalIndex,
+    unsigned int normalIndex )
     :
-    osg::NodeVisitor( osg::NodeVisitor::TRAVERSE_ALL_CHILDREN )
+    osg::NodeVisitor( osg::NodeVisitor::TRAVERSE_ALL_CHILDREN ),
+    m_normalMapTexUnit( normalMapTexUnit ),
+    m_tangentIndex( tangentIndex ),
+    m_binormalIndex( binormalIndex ),
+    m_normalIndex( normalIndex )
 {
-    ;
+    node->accept( *this );
 }
 ////////////////////////////////////////////////////////////////////////////////
 TSGVisitor::~TSGVisitor()
@@ -62,69 +70,64 @@ void TSGVisitor::apply( osg::Geode& geode )
 {
     for( unsigned int i = 0; i < geode.getNumDrawables(); ++i )
     {
-        osg::Geometry* geo =
+        osg::Geometry* geometry =
             dynamic_cast< osg::Geometry* >( geode.getDrawable( i ) );
-        if( geo )
+        if( geometry )
         {
-            //_bm->prepareGeometry( geo );
+            PrepareGeometry( geometry );
         }
     }
 
     osg::NodeVisitor::apply( geode );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void TSGVisitor::GenerateTangentSpaceData(
-    unsigned int tangentIndex,
-    unsigned int binormalIndex,
-    unsigned int normalIndex )
+void TSGVisitor::PrepareGeometry( osg::Geometry* const geometry )
 {
-    /*
     //Create the tangent, binormal, and normal array data
     osg::ref_ptr< osgUtil::TangentSpaceGenerator > tsg =
         new osgUtil::TangentSpaceGenerator;
-    tsg->generate( geo, _normal_unit );
+    tsg->generate( geometry, m_normalMapTexUnit );
 
     //Assign the tangent array data
-    if( !geo->getVertexAttribArray( tangentIndex ) )
+    if( !geometry->getVertexAttribArray( m_tangentIndex ) )
     {
-        geo->setVertexAttribData(
-            tangentIndex,
+        geometry->setVertexAttribData(
+            m_tangentIndex,
             osg::Geometry::ArrayData(
                 tsg->getTangentArray(),
                 osg::Geometry::BIND_PER_VERTEX, GL_FALSE ) );
     }
     else
     {
-
+        ;
     }
 
     //Assign the binormal array data
-    if( !geo->getVertexAttribArray( binormalIndex ) )
+    if( !geometry->getVertexAttribArray( m_binormalIndex ) )
     {
-        geo->setVertexAttribData(
-            binormalIndex,
+        geometry->setVertexAttribData(
+            m_binormalIndex,
             osg::Geometry::ArrayData(
                 tsg->getBinormalArray(),
                 osg::Geometry::BIND_PER_VERTEX, GL_FALSE ) );
     }
     else
     {
-
+        ;
     }
 
     //Assign the normal array data
-    if( !geo->getVertexAttribArray( normalIndex ) )
+    if( !geometry->getVertexAttribArray( m_normalIndex ) )
     {
-        geo->setVertexAttribData(
-            normalIndex,
+        geometry->setVertexAttribData(
+            m_normalIndex,
             osg::Geometry::ArrayData(
                 tsg->getNormalArray(),
                 osg::Geometry::BIND_PER_VERTEX, GL_FALSE ) );
     }
     else
     {
-
+        ;
     }
-    */
 }
 ////////////////////////////////////////////////////////////////////////////////

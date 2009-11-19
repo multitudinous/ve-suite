@@ -31,8 +31,8 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
-#ifndef TSG_VISITOR_H
-#define TSG_VISITOR_H
+#ifndef VES_XPLORER_SCENEGRAPH_UTIL_TSG_VISITOR_H
+#define VES_XPLORER_SCENEGRAPH_UTIL_TSG_VISITOR_H
 
 // --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
@@ -40,6 +40,13 @@
 // --- OSG Includes --- //
 #include <osg/ref_ptr>
 #include <osg/NodeVisitor>
+
+namespace osg
+{
+class Node;
+class Geode;
+class Geometry;
+}
 
 namespace ves
 {
@@ -65,13 +72,18 @@ class VE_SCENEGRAPH_UTILS_EXPORTS TSGVisitor : public osg::NodeVisitor
 {
 public:
     ///Constructor
-    TSGVisitor();
-
-    ///
-    //META_NodeVisitor( ves::xplorer::scenegraph::util, TSGVisitor );
+    TSGVisitor(
+        osg::Node* const node,
+        unsigned int normalMapTexUnit,
+        unsigned int tangentIndex = 6,
+        unsigned int binormalIndex = 7,
+        unsigned int normalIndex = 15 );
 
     ///Destructor
     virtual ~TSGVisitor();
+
+    ///
+    META_NodeVisitor( ves::xplorer::scenegraph::util, TSGVisitor );
 
     ///
     virtual void apply( osg::Geode& geode );
@@ -80,16 +92,25 @@ protected:
 
 private:
     ///
-    void GenerateTangentSpaceData(
-        unsigned int tangentIndex = 6,
-        unsigned int binormalIndex = 7,
-        unsigned int normalIndex = 15 );
+    void PrepareGeometry( osg::Geometry* const geometry );
 
+    ///
+    unsigned int m_normalMapTexUnit;
+
+    ///
+    unsigned int m_tangentIndex;
+
+    ///
+    unsigned int m_binormalIndex;
+
+    ///
+    unsigned int m_normalIndex;
 
 };
+
 } //end util
 } //end scenegraph
 } //end xplorer
 } //end ves
 
-#endif //TSG_VISITOR_H
+#endif //VES_XPLORER_SCENEGRAPH_UTIL_TSG_VISITOR_H
