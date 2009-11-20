@@ -71,7 +71,7 @@ void TSGVisitor::apply( osg::Geode& geode )
     for( unsigned int i = 0; i < geode.getNumDrawables(); ++i )
     {
         osg::Geometry* geometry =
-            dynamic_cast< osg::Geometry* >( geode.getDrawable( i ) );
+            static_cast< osg::Geometry* >( geode.getDrawable( i ) );
         if( geometry )
         {
             PrepareGeometry( geometry );
