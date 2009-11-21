@@ -84,7 +84,7 @@ The tecplot files I have seen thus far include:
 
 4) Zones represent sub-parts of a single part
     n zones
-    n sets of nodal coordinates                              1 vtk unstructured grid with m variables
+    n sets of nodal coordinates                             1 vtk unstructured grid with m variables
     n nodal connectivity arrays                           
     m variables in addition to nodal coordinates
 
@@ -188,6 +188,7 @@ vtkFloatArray * readVariable( EntIndex_t currentZone, int varNumber, char * varN
     }
     return parameterData;
 }
+
 vtkFloatArray * zeroArray( string varName, int numTuples )
 {
     cout << "setting parameter '" << varName << "' to zero" << endl;
@@ -221,6 +222,77 @@ void readVectorNameAndUpdateIndex( int currentIndex, int currentVar, string s, s
             vectorIndex[ 0 ] = vectorIndex[ 1 ] = vectorIndex[ 2 ] = 0;
             vecName = s.substr( 2, s.length() );
             vectorIndex[ currentIndex ] = currentVar + 1;
+        }
+    }
+    return;
+}
+
+void processAnyVectorData( int numVars, VarName_t * varName, int xIndex, int yIndex, int zIndex, int numNodalPoints, vtkFloatArray ** parameterData, int dimension, vtkUnstructuredGrid *ugrid )
+{
+    // Now see if any variable names appear to be representing vector quantities...
+    int vectorIndex[ 3 ] = { 0, 0, 0 };
+
+    string vecName;
+
+    // Look for parameters that are part of a vector quantity...
+    for( int i = 0; i < numVars; i++ )
+    {
+        string s( varName[ i ] );
+
+        // if the beginning of the variable name looks like a vector component, then...
+        if( s.substr( 0, 2 ) == "X " )
+        {
+            readVectorNameAndUpdateIndex( 0, i, s, vecName, vectorIndex );
+        }
+        else if( s.substr( 0, 2 ) == "Y " )
+        {
+            readVectorNameAndUpdateIndex( 1, i, s, vecName, vectorIndex );
+        }
+        else if( s.substr( 0, 2 ) == "Z " )
+        {
+            readVectorNameAndUpdateIndex( 2, i, s, vecName, vectorIndex );
+        }
+
+        // when have enough information to confirm fully populated vector
+        if( xIndex == 0 && yIndex == 0 && zIndex == 0 )
+        {
+            cerr << "Error: No coordinate data provided" << endl;
+        }
+        else if( ( vectorIndex[ 0 ] > 0 || xIndex == 0) &&
+                 ( vectorIndex[ 1 ] > 0 || yIndex == 0) &&
+                 ( vectorIndex[ 2 ] > 0 || zIndex == 0) )
+        {
+            cout << "Found vector '" << vecName << "'" << endl;
+
+            vtkFloatArray * vector = vtkFloatArray::New();
+            vector->SetName( vecName.c_str() );
+            vector->SetNumberOfTuples( numNodalPoints );
+            vector->SetNumberOfComponents( 3 );
+
+            for( int i = 0; i < numNodalPoints; i++ )
+            {
+                for( int j = 0; j < 3; j++ )
+                {
+                    if( vectorIndex[ j ] == 0 )
+                    {
+                        vector->InsertComponent( i, j, 0.0 );
+                    }
+                    else
+                    {
+                        //cout << "copying data from " << parameterData[ vectorIndex[ j ]-1-dimension ]->GetName() << ", value = " << parameterData[ vectorIndex[ j ]-1-dimension ]->GetValue( i ) << endl;
+                        vector->InsertComponent( i, j, parameterData[ vectorIndex[ j ]-1-dimension ]->GetValue( i ) );
+                    }
+                }
+            }
+
+            ugrid->GetPointData()->AddArray( vector );
+            vector->Delete();
+
+            // reset vectorIndex to look for next vector
+            for( int j = 0; j < 3; j++ )
+            {
+                vectorIndex[ j ] = 0;
+            }
         }
     }
     return;
@@ -678,72 +750,7 @@ void convertTecplotToVTK( string inputFileNameAndPath )
                 }
             }
 
-            // Now see if any variable names appear to be representing vector quantities...
-            int vectorIndex[ 3 ] = { 0, 0, 0 };
-
-            string vecName;
-
-            // Look for parameters that are part of a vector quantity...
-            for( int i = 0; i < numVars; i++ )
-            {
-                string s( varName[ i ] );
-
-                // if the beginning of the variable name looks like a vector component, then...
-                if( s.substr( 0, 2 ) == "X " )
-                {
-                    readVectorNameAndUpdateIndex( 0, i, s, vecName, vectorIndex );
-                }
-                else if( s.substr( 0, 2 ) == "Y " )
-                {
-                    readVectorNameAndUpdateIndex( 1, i, s, vecName, vectorIndex );
-                }
-                else if( s.substr( 0, 2 ) == "Z " )
-                {
-                    readVectorNameAndUpdateIndex( 2, i, s, vecName, vectorIndex );
-                }
-
-                // when have enough information to confirm fully populated vector
-                if( xIndex == 0 && yIndex == 0 && zIndex == 0 )
-                {
-                    cerr << "Error: No coordinate data provided" << endl;
-                }
-                else if( ( vectorIndex[ 0 ] > 0 || xIndex == 0) &&
-                         ( vectorIndex[ 1 ] > 0 || yIndex == 0) &&
-                         ( vectorIndex[ 2 ] > 0 || zIndex == 0) )
-                {
-                    cout << "Found vector '" << vecName << "'" << endl;
-
-                    vtkFloatArray * vector = vtkFloatArray::New();
-                    vector->SetName( vecName.c_str() );
-                    vector->SetNumberOfTuples( numNodalPoints );
-                    vector->SetNumberOfComponents( 3 );
-
-                    for( int i = 0; i < numNodalPoints; i++ )
-                    {
-                        for( int j = 0; j < 3; j++ )
-                        {
-                            if( vectorIndex[ j ] == 0 )
-                            {
-                                vector->InsertComponent( i, j, 0.0 );
-                            }
-                            else
-                            {
-                                //cout << "copying data from " << parameterData[ vectorIndex[ j ]-1-dimension ]->GetName() << ", value = " << parameterData[ vectorIndex[ j ]-1-dimension ]->GetValue( i ) << endl;
-                                vector->InsertComponent( i, j, parameterData[ vectorIndex[ j ]-1-dimension ]->GetValue( i ) );
-                            }
-                        }
-                    }
-
-                    ugrid->GetPointData()->AddArray( vector );
-                    vector->Delete();
-
-                    // reset vectorIndex to look for next vector
-                    for( int j = 0; j < 3; j++ )
-                    {
-                        vectorIndex[ j ] = 0;
-                    }
-                }
-            }
+            processAnyVectorData( numVars, varName, xIndex, yIndex, zIndex, numNodalPoints, parameterData, dimension, ugrid );
 
             for( int i = 0; i < numParameterArrays; i++ )
             {
@@ -801,6 +808,12 @@ void convertTecplotToVTK( string inputFileNameAndPath )
             {
                 cerr << "Error: Don't know what to do! parameterData[ " << i << " ]->GetNumberOfTuples() = " << parameterData[ i ]->GetNumberOfTuples() << endl;
             }
+        }
+
+        processAnyVectorData( numVars, varName, xIndex, yIndex, zIndex, numNodalPoints, parameterData, dimension, ugrid );
+
+        for( int i = 0; i < numParameterArrays; i++ )
+        {
             parameterData[ i ]->Delete();
         }
         delete [] parameterData;
