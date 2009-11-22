@@ -17,6 +17,7 @@
 #include <ves/xplorer/minerva/RemoveRasterLayerHandler.h>
 #include <ves/xplorer/minerva/PropertiesHandler.h>
 #include <ves/xplorer/minerva/TransformHandler.h>
+#include <ves/xplorer/minerva/NavigateToLayer.h>
 #include <ves/xplorer/minerva/NavigateToModel.h>
 #include <ves/xplorer/minerva/ModelWrapper.h>
 #include <ves/xplorer/minerva/Log.h>
@@ -26,6 +27,7 @@
 #include <Minerva/Core/TileEngine/Body.h>
 #include <Minerva/Core/Functions/MakeBody.h>
 #include <Minerva/Core/Layers/RasterLayerWms.h>
+#include <Minerva/Core/Visitor.h>
 
 #include <Usul/App/Application.h>
 #include <Usul/Components/Manager.h>
@@ -112,6 +114,7 @@ MinervaManager::MinervaManager()
     _eventHandlers["CAD_TRANSFORM_UPDATE"] = new TransformHandler;
     //_eventHandlers["CAD_DELETE_NODE"] = new DeleteHandler;
     _eventHandlers["Move to cad"] = new NavigateToModel;
+    _eventHandlers[ves::util::commands::NAVIGATE_TO_LAYER] = new NavigateToLayer;
     _eventHandlers[ves::util::commands::ADD_ELEVATION_LAYER] = new AddElevationLayerHandler;
     _eventHandlers[ves::util::commands::ADD_ELEVATION_GROUP] = new AddElevationGroupHandler;
     _eventHandlers[ves::util::commands::ADD_RASTER_LAYER] = new AddRasterLayerHandler;
@@ -581,4 +584,31 @@ void MinervaManager::_unloadPlugins()
 {
   Usul::DLL::LibraryPool::instance().clear ( 0x0 );
   Usul::Components::Manager::instance().clear ( 0x0 );
+}
+///////////////////////////////////////////////////////////////////////////////
+namespace {
+  struct FindLayer : public Minerva::Core::Visitor
+  {
+    FindLayer ( const std::string& guid ) : Minerva::Core::Visitor(), guid ( guid ), layer ( 0x0 ){}
+    virtual ~FindLayer() {}
+    virtual void visit ( Minerva::Core::Layers::RasterLayer & currentLayer )
+    {
+      if ( guid == currentLayer.guid() )
+      {
+        layer = &currentLayer;
+      }
+    }
+    std::string guid;
+    Minerva::Core::Layers::RasterLayer::RefPtr layer;
+  };
+}
+///////////////////////////////////////////////////////////////////////////////
+Minerva::Core::Layers::RasterLayer* MinervaManager::GetLayer( const std::string& guid ) const
+{
+  if ( 0x0 == _body )
+    return 0x0;
+
+  ::FindLayer visitor ( guid );
+  _body->accept ( visitor );
+  return visitor.layer.get();
 }

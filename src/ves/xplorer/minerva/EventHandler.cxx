@@ -24,6 +24,9 @@
 
 #include <Minerva/Interfaces/IFeature.h>
 
+#include <boost/algorithm/string/classification.hpp>
+#include <boost/algorithm/string/split.hpp>
+
 using namespace ves::xplorer::minerva;
 
 
@@ -163,6 +166,27 @@ EventHandler::RasterLayer* EventHandler::_createWMSLayerFromCommand ( CommandPtr
     options["srs"] = "EPSG:4326";
     options["version"] = "1.1.1";
 
+    std::string::iterator i ( std::find ( server.begin(), server.end(), '?' ) );
+    if ( server.end() != i )
+    {
+      // Split the sub-string to the right of the '?'
+      typedef std::vector<std::string> StringList;
+      StringList arguments;
+      boost::algorithm::split ( arguments, server, boost::algorithm::is_any_of ( "&" ) );
+      for ( StringList::const_iterator j = arguments.begin(); j != arguments.end(); ++j )
+      {
+        StringList argument;
+        boost::algorithm::split ( argument, *j, boost::algorithm::is_any_of ( "=" ) );
+        if ( 2 == argument.size() )
+        {
+          options[argument.at(0)] = argument.at(1);
+        }
+      }
+
+      // Reset the server url.
+      server = std::string ( server.begin(), i );
+    }
+
     RasterLayerWms::RefPtr layer ( new RasterLayerWms ( extents, server, options ) );
     layer->objectId ( guid );
 
@@ -203,6 +227,8 @@ EventHandler::RasterLayer* EventHandler::_createFileSystemLayerFromCommand ( Com
       unknown = static_cast<Usul::Interfaces::IUnknown*> ( 0x0 );
       iFeature = static_cast<Minerva::Interfaces::IFeature*> ( 0x0 );
       feature = 0x0;
+
+      rasterLayer->objectId ( guid );
       return rasterLayer.release();
     }
   }

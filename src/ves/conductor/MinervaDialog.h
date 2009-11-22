@@ -73,6 +73,9 @@ public:
 
     void InitalizeFromCommands ( ves::open::xml::CommandPtr elevationGroupCommand, ves::open::xml::CommandPtr rasterGroupCommand );
 
+    void NavigateToElevationLayer( wxCommandEvent& event );
+    void NavigateToRasterLayer( wxCommandEvent& event );
+
 private:
 
     typedef std::vector<std::string> LayerIds;

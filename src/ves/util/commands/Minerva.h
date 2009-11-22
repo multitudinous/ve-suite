@@ -27,6 +27,8 @@ namespace commands {
   const std::string REMOVE_ELEVATION_LAYER ( "Remove Elevation Layer" );
   const std::string REMOVE_RASTER_LAYER ( "Remove Raster Layer" );
 
+  const std::string NAVIGATE_TO_LAYER ( "Navigate To Layer" );
+
 }
 
 namespace names {

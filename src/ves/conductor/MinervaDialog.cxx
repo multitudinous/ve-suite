@@ -98,7 +98,9 @@ enum
   MINERVA_DIALOG_REMOVE_ELEVATION_LAYER,
   MINERVA_DIALOG_ADD_RASTER_WMS_LAYER,
   MINERVA_DIALOG_ADD_RASTER_LAYER_FILE_SYSTEM,
-  MINERVA_DIALOG_REMOVE_RASTER_LAYER
+  MINERVA_DIALOG_REMOVE_RASTER_LAYER,
+  MINERVA_DIALOG_ELEVATION_LAYER_LIST,
+  MINERVA_DIALOG_RASTER_LAYER_LIST
 };
 
 
@@ -115,6 +117,8 @@ BEGIN_EVENT_TABLE( MinervaDialog, MinervaDialog::BaseClass )
     EVT_BUTTON( MINERVA_DIALOG_ADD_RASTER_WMS_LAYER, MinervaDialog::AddRasterLayerWMS )
     EVT_BUTTON( MINERVA_DIALOG_ADD_RASTER_LAYER_FILE_SYSTEM, MinervaDialog::AddRasterLayerFileSystem )
     EVT_BUTTON( MINERVA_DIALOG_REMOVE_RASTER_LAYER, MinervaDialog::RemoveRasterLayer )
+    EVT_LISTBOX_DCLICK( MINERVA_DIALOG_ELEVATION_LAYER_LIST, MinervaDialog::NavigateToElevationLayer )
+    EVT_LISTBOX_DCLICK( MINERVA_DIALOG_RASTER_LAYER_LIST, MinervaDialog::NavigateToRasterLayer )
 END_EVENT_TABLE()
 
 
@@ -152,7 +156,7 @@ MinervaDialog::MinervaDialog(
 	  wxStaticBoxSizer* elevationSizer;
 	  elevationSizer = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT("Elevation") ), wxVERTICAL );
   	
-	  _elevationLayersList = new wxListBox( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, NULL, 0 ); 
+	  _elevationLayersList = new wxListBox( this, MINERVA_DIALOG_ELEVATION_LAYER_LIST, wxDefaultPosition, wxDefaultSize, 0, NULL, 0 ); 
 	  elevationSizer->Add( _elevationLayersList, 0, wxALL | wxEXPAND, 5 );
   	
 	  wxGridSizer* buttonSizer;
@@ -177,7 +181,7 @@ MinervaDialog::MinervaDialog(
 	  wxStaticBoxSizer* rasterSizer;
 	  rasterSizer = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT("Raster") ), wxVERTICAL );
   	
-	  _rasterLayersList = new wxListBox( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, NULL, 0 ); 
+	  _rasterLayersList = new wxListBox( this, MINERVA_DIALOG_RASTER_LAYER_LIST, wxDefaultPosition, wxDefaultSize, 0, NULL, 0 ); 
 	  rasterSizer->Add( _rasterLayersList, 0, wxALL | wxEXPAND, 5 );
   	
 	  wxGridSizer* buttonSizer;
@@ -467,4 +471,46 @@ void MinervaDialog::_initializeFromCommand (
       }
     }
   }
+}
+///////////////////////////////////////////////////////////////////////////////
+void MinervaDialog::NavigateToElevationLayer( wxCommandEvent& event )
+{
+    wxArrayInt selectedIndices;
+    _elevationLayersList->GetSelections( selectedIndices );
+
+    if( selectedIndices.Count() > 0 )
+    {
+        int index( selectedIndices[0] );
+        std::string guid( _elevationLayers.at( index ) );
+
+        ves::open::xml::CommandPtr command( new ves::open::xml::Command );
+        command->SetCommandName( ves::util::commands::NAVIGATE_TO_LAYER );
+
+        ves::open::xml::DataValuePairPtr guidData( new ves::open::xml::DataValuePair );
+        guidData->SetData( ves::util::names::UNIQUE_ID, guid );
+        command->AddDataValuePair( guidData );
+
+        ves::conductor::util::CORBAServiceList::instance()->SendCommandStringToXplorer( command );
+    }
+}
+///////////////////////////////////////////////////////////////////////////////
+void MinervaDialog::NavigateToRasterLayer( wxCommandEvent& event )
+{
+    wxArrayInt selectedIndices;
+    _rasterLayersList->GetSelections( selectedIndices );
+
+    if( selectedIndices.Count() > 0 )
+    {
+        int index( selectedIndices[0] );
+        std::string guid( _rasterLayers.at( index ) );
+
+        ves::open::xml::CommandPtr command( new ves::open::xml::Command );
+        command->SetCommandName( ves::util::commands::NAVIGATE_TO_LAYER );
+
+        ves::open::xml::DataValuePairPtr guidData( new ves::open::xml::DataValuePair );
+        guidData->SetData( ves::util::names::UNIQUE_ID, guid );
+        command->AddDataValuePair( guidData );
+
+        ves::conductor::util::CORBAServiceList::instance()->SendCommandStringToXplorer( command );
+    }
 }

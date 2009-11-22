@@ -82,6 +82,8 @@ public:
 
   void Clear();
 
+  Minerva::Core::Layers::RasterLayer* GetLayer( const std::string& guid ) const;
+
   ModelWrapper* GetModel ( const std::string& guid ) const;
   bool HasModel ( const std::string& guid ) const;
 

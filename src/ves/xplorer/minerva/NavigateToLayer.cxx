@@ -5,9 +5,8 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#include <ves/xplorer/minerva/NavigateToModel.h>
+#include <ves/xplorer/minerva/NavigateToLayer.h>
 #include <ves/xplorer/minerva/MinervaManager.h>
-#include <ves/xplorer/minerva/ModelWrapper.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/CADEntity.h>
@@ -16,8 +15,10 @@
 
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>
+#include <ves/util/commands/Minerva.h>
 
 #include <Minerva/Core/Data/Camera.h>
+#include <Minerva/Core/Layers/RasterLayer.h>
 
 #include <gmtl/Math.h>
 #include <gmtl/Generate.h>
@@ -31,7 +32,7 @@ using namespace ves::xplorer::minerva;
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-NavigateToModel::NavigateToModel() : BaseClass()
+NavigateToLayer::NavigateToLayer() : BaseClass()
 {
 }
 
@@ -42,54 +43,47 @@ NavigateToModel::NavigateToModel() : BaseClass()
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-NavigateToModel::~NavigateToModel()
+NavigateToLayer::~NavigateToLayer()
 {
 }
 
 
 ///////////////////////////////////////////////////////////////////////////////
 //
-//  Navigate to the model.  Implementation modified from ves::xplorer::event::cad::NavigateToEventHandler
+//  Navigate to the layer.  Implementation modified from ves::xplorer::event::cad::NavigateToEventHandler
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-void NavigateToModel::Execute ( CommandPtr command, MinervaManager& manager )
+void NavigateToLayer::Execute ( CommandPtr command, MinervaManager& manager )
 {
-  ves::open::xml::DataValuePairPtr activeModelDVP ( command->GetDataValuePair( "NAVIGATE_TO" ) );
+  ves::open::xml::DataValuePairPtr guidDVP ( command->GetDataValuePair( ves::util::names::UNIQUE_ID ) );
 
-  if( !activeModelDVP )
+  if( !guidDVP )
   {
     return;
   }
 
-  std::string nodeId;
-  activeModelDVP->GetData ( nodeId );
+  std::string layerId;
+  guidDVP->GetData( layerId );
 
-  ModelWrapper::RefPtr modelWrapper ( 0x0 );
-  if ( manager.HasModel ( nodeId ) )
+  Minerva::Core::Layers::RasterLayer::RefPtr layer ( manager.GetLayer( layerId ) );
+  if ( !layer )
   {
-    modelWrapper = manager.GetModel ( nodeId );
+    std::cout << "Could not find layer." << std::endl;
+    return;
   }
 
-  if ( !modelWrapper.valid() )
-    return;
-
-  ves::xplorer::scenegraph::CADEntity *cadEntity ( modelWrapper->GetCADEntity() );
-  if ( 0x0 == cadEntity )
-    return;
-
-  ves::xplorer::scenegraph::DCS *dcs ( cadEntity->GetDCS() );
-  if ( 0x0 == dcs )
-    return;
-
-  osg::BoundingSphere boundingSphere ( dcs->getBound() );
-  osg::Vec3d location ( modelWrapper->location() );
-  const double altitudeOffset ( gmtl::Math::Max( double( boundingSphere.radius() * 2 ), 1000.0 ) );
+  Minerva::Core::Extents<osg::Vec2d> extents ( layer->extents() );
+  osg::Vec2d center ( extents.center() );
+  const double diameter ( 2.0 * osg::PI * 6378137.0 );
+  const double metersPerDegree ( diameter / 360.0 );
+  const double length ( ( extents.maximum() - extents.minimum() ).length() );
+  const double altitude ( length * metersPerDegree );
 
   Minerva::Core::Data::Camera::RefPtr camera ( new Minerva::Core::Data::Camera );
-  camera->longitude ( location[0] );
-  camera->latitude ( location[1] );
-  camera->altitude ( location[2] + altitudeOffset );
+  camera->longitude ( center[0] );
+  camera->latitude ( center[1] );
+  camera->altitude ( altitude );
 
   gmtl::Matrix44d viewMatrix;
   manager.GetViewMatrix ( camera.get(), viewMatrix );
@@ -103,5 +97,5 @@ void NavigateToModel::Execute ( CommandPtr command, MinervaManager& manager )
     
   /// Tell the animation engine where to go.
   ves::xplorer::NavigationAnimationEngine::instance()->SetAnimationEndPoints(
-    translate, rotation, true, dcs );
+    translate, rotation, true, ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS() );
 }
