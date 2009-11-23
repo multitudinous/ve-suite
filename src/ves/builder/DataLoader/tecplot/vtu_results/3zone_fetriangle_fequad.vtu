@@ -3,6 +3,12 @@
   <UnstructuredGrid>
     <Piece NumberOfPoints="19" NumberOfCells="12">
       <PointData>
+        <DataArray type="Float32" Name="scalar" format="ascii" RangeMin="100" RangeMax="180">
+          100 150 100 120 140 100
+          120 180 110 160 140 100
+          170 150 140 130 120 110
+          100
+        </DataArray>
       </PointData>
       <CellData>
       </CellData>

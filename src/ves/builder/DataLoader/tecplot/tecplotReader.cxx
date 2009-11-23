@@ -150,10 +150,8 @@ string getExtension( const string& s )
     return( "" );
 } 
 
-vtkFloatArray * readVariable( EntIndex_t currentZone, int varNumber, char * varName, int nodeOffset )
+void readVariable( EntIndex_t currentZone, int varNumber, char * varName, int nodeOffset, vtkFloatArray *& parameterData )
 {
-    vtkFloatArray * parameterData = NULL;
-
     // Read a single variable from the current zone...
     if( varNumber )
     {
@@ -162,17 +160,21 @@ vtkFloatArray * readVariable( EntIndex_t currentZone, int varNumber, char * varN
         {
             LgIndex_t numValues = TecUtilDataValueGetCountByRef( FieldData );
 
-            parameterData = vtkFloatArray::New();
-            parameterData->SetName( varName );
-            parameterData->SetNumberOfTuples( numValues );
-            parameterData->SetNumberOfComponents( 1 );
+            if( parameterData == NULL )
+            {
+                parameterData = vtkFloatArray::New();
+                parameterData->SetName( varName );
+                //parameterData->SetNumberOfTuples( numValues );
+                parameterData->SetNumberOfComponents( 1 );
+            }
 
             cout << "reading parameter " << varNumber << " '" << varName << "' from zone " << currentZone 
                  << ", numValues = " << numValues << endl;
             for( int i = 0; i < numValues; i++ )
             {
                 //GetByRef function is 1-based
-                parameterData->SetTuple1( i+nodeOffset, TecUtilDataValueGetByRef( FieldData, i+1 ) );
+                //parameterData->SetTuple1( i+nodeOffset , TecUtilDataValueGetByRef( FieldData, i+1 ) );
+                parameterData->InsertNextValue( TecUtilDataValueGetByRef( FieldData, i+1 ) );
             }
         }
         else
@@ -186,7 +188,7 @@ vtkFloatArray * readVariable( EntIndex_t currentZone, int varNumber, char * varN
         //cerr << "Error: variable number " << varNumber << " does not exist or can not be read" << endl;
         // will return a NULL array pointer
     }
-    return parameterData;
+    return;
 }
 
 vtkFloatArray * zeroArray( string varName, int numTuples )
@@ -227,7 +229,8 @@ void readVectorNameAndUpdateIndex( int currentIndex, int currentVar, string s, s
     return;
 }
 
-void processAnyVectorData( int numVars, VarName_t * varName, int xIndex, int yIndex, int zIndex, int numNodalPoints, vtkFloatArray ** parameterData, int dimension, vtkUnstructuredGrid *ugrid )
+void processAnyVectorData( int numVars, VarName_t * varName, int xIndex, int yIndex, int zIndex, int numNodalPointsInZone, 
+                           vtkFloatArray ** parameterData, int dimension, vtkUnstructuredGrid *ugrid )
 {
     // Now see if any variable names appear to be representing vector quantities...
     int vectorIndex[ 3 ] = { 0, 0, 0 };
@@ -266,10 +269,10 @@ void processAnyVectorData( int numVars, VarName_t * varName, int xIndex, int yIn
 
             vtkFloatArray * vector = vtkFloatArray::New();
             vector->SetName( vecName.c_str() );
-            vector->SetNumberOfTuples( numNodalPoints );
+            vector->SetNumberOfTuples( numNodalPointsInZone );
             vector->SetNumberOfComponents( 3 );
 
-            for( int i = 0; i < numNodalPoints; i++ )
+            for( int i = 0; i < numNodalPointsInZone; i++ )
             {
                 for( int j = 0; j < 3; j++ )
                 {
@@ -419,13 +422,20 @@ void convertTecplotToVTK( string inputFileNameAndPath )
         ugrid = vtkUnstructuredGrid::New();
         vertex = vtkPoints::New();
         parameterData = new vtkFloatArray * [ numParameterArrays ];
+        for( int i = 0; i < numParameterArrays; i++ )
+        {
+            parameterData[ i ] = NULL;
+        }
     }
 
     int ii = 0;
 
     int nodeOffset = 0;
-    int numNodalPoints = 0;
-    LgIndex_t numElements = 0;
+    int elementOffset = 0;
+    int totalNumberOfNodalPoints = 0;
+    int numNodalPointsInZone = 0;
+    int totalNumberOfElements = 0;
+    LgIndex_t numElementsInZone = 0;
     VarName_t * zoneName = new VarName_t [ numZones ];
 
     // define flag to control printing of unique error message to a single time...
@@ -439,6 +449,10 @@ void convertTecplotToVTK( string inputFileNameAndPath )
             ugrid = vtkUnstructuredGrid::New();
             vertex = vtkPoints::New();
             parameterData = new vtkFloatArray * [ numParameterArrays ];
+            for( int i = 0; i < numParameterArrays; i++ )
+            {
+                parameterData[ i ] = NULL;
+            }
             ii = 0;
         }
         else
@@ -468,7 +482,7 @@ void convertTecplotToVTK( string inputFileNameAndPath )
         cout << "Connectivity share count of current zone is " << connectivityShareCount << endl;
 */
 
-        // read zoneType, numNodalPoints, numElements, nodal connectivity
+        // read zoneType, numNodalPointsInZone, numElementsInZone, nodal connectivity
         // (read it again, even if it was shared and you read it already)
         ZoneType_e zoneType = TecUtilZoneGetType( currentZone );
         switch( zoneType )  // compare to those defined in GLOBAL.h
@@ -559,11 +573,11 @@ void convertTecplotToVTK( string inputFileNameAndPath )
         }
         else if( zoneType > ZoneType_Ordered && zoneType < END_ZoneType_e )
         {
-            numNodalPoints = IMax;  // tecplot called this 'number of data points' but that is misleading
-            cout << "   The number of nodal points is " << numNodalPoints << endl;
+            numNodalPointsInZone = IMax;  // tecplot called this 'number of data points' but that is misleading
+            cout << "   The number of nodal points in this zone is " << numNodalPointsInZone << endl;
 
-            numElements = JMax;
-            cout << "   The number of elements is " << numElements << endl;
+            numElementsInZone = JMax;
+            cout << "   The number of elements in this zone is " << numElementsInZone << endl;
 
             if( zoneType == ZoneType_FEPolygon || zoneType == ZoneType_FEPolyhedron )
             {
@@ -583,6 +597,17 @@ void convertTecplotToVTK( string inputFileNameAndPath )
             cout << "ZoneType not known. Not supposed to get here." << endl;
         }
 
+        if( currentZone > 1 && numZones > 1 && !coordDataSharedAcrossZones && connectivityShareCount == 1 )
+        {
+            totalNumberOfNodalPoints += numNodalPointsInZone;
+            totalNumberOfElements += numElementsInZone;
+        }
+        else
+        {
+            totalNumberOfNodalPoints = numNodalPointsInZone;
+            totalNumberOfElements = numElementsInZone;
+        }
+
         if( numNodesPerElement == 0 )
             cout << "!!! The number of nodes per element is " << numNodesPerElement << endl;
 
@@ -590,7 +615,7 @@ void convertTecplotToVTK( string inputFileNameAndPath )
         NodeMap_pa nm = TecUtilDataNodeGetReadableRef( currentZone );
         if( nm )
         {
-            for( LgIndex_t elemNum = 1; elemNum < numElements+1; elemNum++ ) // element numbers are 1-based
+            for( LgIndex_t elemNum = 1; elemNum < numElementsInZone+1; elemNum++ ) // element numbers are 1-based
             {
                 // Node information (connectivity)
                 // NOTE - You could use the "RawPtr" functions if speed is a critical issue
@@ -641,26 +666,29 @@ void convertTecplotToVTK( string inputFileNameAndPath )
 
         // Read the nodal coordinates from the current zone...
         // If any turn out to be non-existent (e.g., planar description), then set to zero for 3D coordinates.
-        vtkFloatArray * x = readVariable( currentZone, xIndex, "X", 0 );
-        if( x == 0 )
+        vtkFloatArray * x = NULL;
+        readVariable( currentZone, xIndex, "X", 0, x );
+        if( x == NULL )
         {
-            x = zeroArray( "X", numNodalPoints );
+            x = zeroArray( "X", numNodalPointsInZone );
         }
 
-        vtkFloatArray * y = readVariable( currentZone, yIndex, "Y", 0 );
-        if( y == 0 )
+        vtkFloatArray * y = NULL;
+        readVariable( currentZone, yIndex, "Y", 0, y );
+        if( y == NULL )
         {
-            y = zeroArray( "Y", numNodalPoints );
+            y = zeroArray( "Y", numNodalPointsInZone );
         }
 
-        vtkFloatArray * z = readVariable( currentZone, zIndex, "Z", 0 );
-        if( z == 0 )
+        vtkFloatArray * z = NULL;
+        readVariable( currentZone, zIndex, "Z", 0, z );
+        if( z == NULL )
         {
-            z = zeroArray( "Z", numNodalPoints );
+            z = zeroArray( "Z", numNodalPointsInZone );
         }
 
         // Populate all the points to vtk...
-        for( int i = 0; i < numNodalPoints; i++ )
+        for( int i = 0; i < numNodalPointsInZone; i++ )
         {
             vertex->InsertNextPoint( x->GetValue( i ), y->GetValue( i ), z->GetValue( i ) );
         }
@@ -699,11 +727,11 @@ void convertTecplotToVTK( string inputFileNameAndPath )
                 // variable index is 1-based, names aren't
                 if( dataShareCount == numZones )
                 {
-                    parameterData[ ii ] = readVariable( 1, i+1, varName[ i ], nodeOffset );
+                    readVariable( 1, i+1, varName[ i ], nodeOffset, parameterData[ ii ] );
                 }
                 else
                 {
-                    parameterData[ ii ] = readVariable( currentZone, i+1, varName[ i ], nodeOffset );
+                    readVariable( currentZone, i+1, varName[ i ], nodeOffset, parameterData[ ii ] );
                 }
 /*
                 if( numZones > 1 && coordDataSharedAcrossZones )
@@ -720,8 +748,9 @@ void convertTecplotToVTK( string inputFileNameAndPath )
 
         if( numZones > 1 && !coordDataSharedAcrossZones && connectivityShareCount == 1 )
         {
-            cout << "incrementing nodeOffset" << endl;
-            nodeOffset += numNodalPoints;
+            cout << "incrementing nodeOffset and elementOffset" << endl;
+            nodeOffset += numNodalPointsInZone;
+            elementOffset += numElementsInZone;
             ii = 0;
         }
 
@@ -734,23 +763,24 @@ void convertTecplotToVTK( string inputFileNameAndPath )
 
             for( int i = 0; i < numParameterArrays; i++ )
             {
-                if( parameterData[ i ]->GetNumberOfTuples() == numNodalPoints )
+                if( parameterData[ i ]->GetNumberOfTuples() == totalNumberOfNodalPoints )
                 {
                     //cout << "ugrid->GetPointData()->AddArray( parameterData[ " << i << " ] );" << endl;
                     ugrid->GetPointData()->AddArray( parameterData[ i ] );
                 }
-                else if( parameterData[ i ]->GetNumberOfTuples() == numElements )
+                else if( parameterData[ i ]->GetNumberOfTuples() == totalNumberOfElements )
                 {
                     //cout << "ugrid->GetCellData()->AddArray( parameterData[ " << i << " ] );" << endl;
                     ugrid->GetCellData()->AddArray( parameterData[ i ] );
                 }
                 else
                 {
-                    cerr << "Error: Don't know what to do! parameterData[ " << i << " ]->GetNumberOfTuples() = " << parameterData[ i ]->GetNumberOfTuples() << endl;
+                    cerr << "Error: Don't know what to do! parameterData[ " << i << " ]->GetNumberOfTuples() = " << parameterData[ i ]->GetNumberOfTuples() << ", totalNumberOfNodalPoints = " << totalNumberOfNodalPoints << ", totalNumberOfElements = " << totalNumberOfElements << endl;
                 }
             }
 
-            processAnyVectorData( numVars, varName, xIndex, yIndex, zIndex, numNodalPoints, parameterData, dimension, ugrid );
+            processAnyVectorData( numVars, varName, xIndex, yIndex, zIndex, numNodalPointsInZone,
+                                  parameterData, dimension, ugrid );
 
             for( int i = 0; i < numParameterArrays; i++ )
             {
@@ -794,23 +824,24 @@ void convertTecplotToVTK( string inputFileNameAndPath )
 
         for( int i = 0; i < numParameterArrays; i++ )
         {
-            if( parameterData[ i ]->GetNumberOfTuples() == numNodalPoints )
+            if( parameterData[ i ]->GetNumberOfTuples() == totalNumberOfNodalPoints )
             {
                 //cout << "ugrid->GetPointData()->AddArray( parameterData[ " << i << " ] );" << endl;
                 ugrid->GetPointData()->AddArray( parameterData[ i ] );
             }
-            else if( parameterData[ i ]->GetNumberOfTuples() == numElements )
+            else if( parameterData[ i ]->GetNumberOfTuples() == totalNumberOfElements )
             {
                 //cout << "ugrid->GetCellData()->AddArray( parameterData[ " << i << " ] );" << endl;
                 ugrid->GetCellData()->AddArray( parameterData[ i ] );
             }
             else
             {
-                cerr << "Error: Don't know what to do! parameterData[ " << i << " ]->GetNumberOfTuples() = " << parameterData[ i ]->GetNumberOfTuples() << endl;
+                cerr << "Error: Don't know what to do! parameterData[ " << i << " ]->GetNumberOfTuples() = " << parameterData[ i ]->GetNumberOfTuples() << ", totalNumberOfNodalPoints = " << totalNumberOfNodalPoints << ", totalNumberOfElements = " << totalNumberOfElements << endl;
             }
         }
 
-        processAnyVectorData( numVars, varName, xIndex, yIndex, zIndex, numNodalPoints, parameterData, dimension, ugrid );
+        processAnyVectorData( numVars, varName, xIndex, yIndex, zIndex, numNodalPointsInZone,
+                              parameterData, dimension, ugrid );
 
         for( int i = 0; i < numParameterArrays; i++ )
         {
