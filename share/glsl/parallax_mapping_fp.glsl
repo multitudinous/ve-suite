@@ -1,39 +1,42 @@
 uniform sampler2D baseMap;
-uniform sampler2D bumpMap;
+uniform sampler2D normalMap;
+uniform sampler2D heightMap;
 
-varying vec3 vLightVector;
-varying vec3 vHalfAngle;
+varying vec3 v_lightVector;
+varying vec3 v_viewVector;
 
 void main()
 {
-    vec3 base = texture2D( baseMap, gl_TexCoord[ 0 ].xy ).xyz;
-    vec3 bump = texture2D( bumpMap, gl_TexCoord[ 0 ].xy ).xyz;
+    //
+    float height = texture2D( heightMap, gl_TexCoord[ 0 ].st ).r;
+    vec2 scaleBias = vec2( 0.06, 0.03 );
+    float v = height * scaleBias.s - scaleBias.t;
+    vec3 V = normalize( v_viewVector );
+    vec2 texCoords = gl_TexCoord[ 0 ].st + ( V.xy * v );
 
-    vec3 normalized_light_vector = normalize( vLightVector );
-    vec3 normalized_half_angle   = normalize( vHalfAngle );
-
-    vec3 smoothOut = vec3( 0.5, 0.5, 1.0 );
-
+    //
     float bumpiness = 1.0;
-    bump = mix( smoothOut, bump, bumpiness );
-    bump = normalize( ( bump * 2.0 ) - 1.0 );
+    vec3 smoothOut = vec3( 0.5, 0.5, 1.0 );
+    vec3 N = texture2D( normalMap, texCoords ).rgb;
+    N = mix( smoothOut, N, bumpiness );
+    N = normalize( ( N * 2.0 ) - 1.0 );
 
-    vec3 n_dot_l = vec3( dot( bump, normalized_light_vector ) );
-    vec3 n_dot_h = vec3( dot( bump, normalized_half_angle ) );
+    //
+    vec3 L = normalize( v_lightVector );
+    float NdotL = max( dot( N, L ), 0.0 );
 
-    float Ka = 0.3;
-    float Kd = 1.0;
-    float Ks = 1.0;
-    float specular_power = 64.0;
-    vec4 ambient = vec4( 0.9255, 0.9380, 0.9380, 1.0 );
-    vec4 diffuse = vec4( 0.8392, 0.8623, 0.8904, 1.0 );
-    vec4 specular = vec4( 1.0, 0.9567, 0.6704, 1.0 );
-    vec3 color0 =
-        ( base * ambient.xyz * Ka ) +
-        ( base * diffuse.xyz * Kd * max( vec3( 0.0 ), n_dot_l ) ) +
-        ( specular.xyz * Ks * pow( max( vec3( 0.0 ), n_dot_h ), vec3( specular_power ) ) );
+    //
+    vec3 R = reflect( V, N );
+    float RdotL = max( dot( R, L ), 0.0 );
 
-    float color0_a = 1.0;
+    //
+    float specularPower = 16.0;
+    vec3 base = texture2D( baseMap, texCoords ).rgb;
+    vec3 ambient = vec3( 0.368627, 0.368421, 0.368421 ) * base;
+    vec3 diffuse = vec3( 0.886275, 0.885003, 0.885003 ) * base * NdotL;
+    vec3 specular = vec3( 0.490196, 0.488722, 0.488722 ) * pow( RdotL, specularPower );
+    vec3 color = ambient + diffuse + specular;
 
-    gl_FragColor = vec4( color0, color0_a );
+    //
+    gl_FragColor = vec4( color, 1.0 );
 }
