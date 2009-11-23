@@ -116,9 +116,9 @@ void ParallaxMapping::DefinePasses()
             new osgDB::ReaderWriter::Options( "fragment" );
 
         osg::ref_ptr< osg::Shader > vertexShader = osgDB::readShaderFile(
-            "glsl/relief_mapping_vp.glsl", vertexOptions.get() );
+            "glsl/parallax_mapping_vp.glsl", vertexOptions.get() );
         osg::ref_ptr< osg::Shader > fragmentShader = osgDB::readShaderFile(
-            "glsl/bump_mapping_fp.glsl", fragmentOptions.get() );
+            "glsl/parallax_mapping_fp.glsl", fragmentOptions.get() );
 
         osg::ref_ptr< osg::Program > program = new osg::Program();
         program->addShader( vertexShader.get() );
