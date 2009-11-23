@@ -1,0 +1,42 @@
+#dev/src/plugins/PDU/PDURealm/GraphicalPlugin/SConscript
+import os, sys, string
+import SConsAddons.Util as sca_util
+import distutils.util
+pj = os.path.join
+
+host_type = distutils.util.get_platform()
+
+Import( 'baseEnv GetPlatform buildDir RootDir ves_pkg' )
+Import( 'vtk_options osg_options gmtl_options' )
+Import( 'vrjuggler_options xerces_options osgal_options' )
+openDir = os.path.abspath( pj( RootDir, 'share', 'examples', 'ParallaxMapping', 'GraphicalPlugin' ) )
+sources = sca_util.getSourcesRecursive( openDir )
+headers = sca_util.getHeadersRecursive( openDir )
+
+env = ves_pkg.getEnv().Clone()
+env.Append( LIBS = [ 'ves_open_xml',
+                     'ves_xplorer',
+                     'ves_xplorer_scenegraph' ] )
+env.Append( LIBPATH = [ pj( '#', buildDir, 'src', 'ves', 'open', 'xml' ),
+                        pj( '#', buildDir, 'src', 'ves', 'xplorer' ),
+                        pj( '#', buildDir, 'src', 'ves', 'xplorer', 'scenegraph' ) ] )
+env.Append( CPPPATH = [ pj( RootDir,'external','osgEphemeris','include' ) ] )
+env.Append( CPPDEFINES = [ 'VE_USER_PLUGIN_LIBRARY' ] )
+
+vtk_options.apply( env )
+osg_options.apply( env )
+gmtl_options.apply( env )
+vrjuggler_options.apply( env )
+xerces_options.apply( env )
+if osgal_options.isAvailable():
+    osgal_options.apply( env )
+
+if GetPlatform() == 'win32':
+    env[ 'no_import_lib' ] = 1
+    env[ 'WINDOWS_INSERT_MANIFEST' ] = False
+
+lib = ves_pkg.createLoadableModule( 'ParallaxMappingGP', env,
+    installPrefix = pj( 'share', 'vesuite', 'examples', 'ParallaxMapping', 'Plugins', 'GE', host_type ) )
+
+lib.addSources( sources )
+lib.build()

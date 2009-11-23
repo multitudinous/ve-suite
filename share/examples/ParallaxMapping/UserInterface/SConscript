@@ -1,0 +1,36 @@
+#dev/src/plugins/PDU/PDURealm/UserInterface/SConscript
+import os, sys, string
+import SConsAddons.Util as sca_util
+import distutils.util
+pj = os.path.join
+
+host_type = distutils.util.get_platform()
+
+Import( 'baseEnv GetPlatform buildDir RootDir ves_pkg' )
+Import( 'tao_options', 'vpr_options', 'xerces_options', 'wxwidgets_options' )
+openDir = os.path.abspath( pj( RootDir, 'share', 'examples', 'ParallaxMapping', 'UserInterface' ) )
+sources = sca_util.getSourcesRecursive( openDir )
+headers = sca_util.getHeadersRecursive( openDir )
+
+env = ves_pkg.getEnv().Clone()
+env.Append( LIBS = [ 'ves_conductor_plugin',
+                     'ves_open_xml' ] )
+env.Append( LIBPATH = [ pj( '#', buildDir, 'src','ves','conductor' ),
+                        pj( '#', buildDir, 'src','ves','open', 'xml' ) ] )
+#env.Append( CPPPATH = [] )
+#env.Append( CPPDEFINES = [] )
+
+tao_options.apply( env )
+vpr_options.apply( env )
+xerces_options.apply( env )
+wxwidgets_options.apply( env )
+
+if GetPlatform() == 'win32':
+    env[ 'no_import_lib' ] = 1
+    env[ 'WINDOWS_INSERT_MANIFEST' ] = False
+
+lib = ves_pkg.createLoadableModule( 'ParallaxMappingUI', env,
+    installPrefix = pj( 'share', 'vesuite', 'examples', 'ParallaxMapping', 'Plugins', 'UI', host_type ) )
+
+lib.addSources( sources )
+lib.build()
