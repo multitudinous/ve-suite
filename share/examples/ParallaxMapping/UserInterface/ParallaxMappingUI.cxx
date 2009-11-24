@@ -20,7 +20,7 @@ ParallaxMappingUI::ParallaxMappingUI()
 
     wxImage image( parallax_mapping_xpm );
 
-    float scale = 0.10;
+    float scale = 0.20;
     int iconW = static_cast< int >( ( image.GetWidth() - 1 ) * scale );
     int iconH = static_cast< int >( ( image.GetHeight() - 1 ) * scale );
 
