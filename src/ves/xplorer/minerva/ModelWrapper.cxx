@@ -24,8 +24,13 @@ USUL_IMPLEMENT_IUNKNOWN_MEMBERS ( ModelWrapper, ModelWrapper::BaseClass );
 ///////////////////////////////////////////////////////////////////////////////
 
 ModelWrapper::ModelWrapper() : BaseClass(),
-  _cadEntity ( 0x0 )
+  _cadEntity ( 0x0 ),
+  _offset ( 0.0, 0.0, 0.0 )
 {
+  // ves units are in feet.  Add the conversion to meters.
+  this->toMeters ( 0.3048 );
+
+  this->altitudeMode ( Minerva::Core::Data::Geometry::RELATIVE_TO_GROUND );
 }
 
 
@@ -74,10 +79,21 @@ bool ModelWrapper::elevationChangedNotify (
 
   if ( e.intersects ( extents ) )
   {
+    Guard guard ( this->mutex() );
+
+    osg::Vec3d location ( this->location() );
+    osg::Vec3d tempLocation ( location );
+    tempLocation[2] += _offset[2];
+
+    this->location ( tempLocation );
+
     Usul::Interfaces::IPlanetCoordinates::QueryPtr planet ( caller );
     Usul::Interfaces::IElevationDatabase::QueryPtr elevation ( caller );
     this->UpdateMatrix ( planet.get(), elevation.get() );
-    
+
+    this->location ( location );
+
+    return true;
   }
 
   return false;
@@ -131,4 +147,17 @@ void ModelWrapper::UpdateMatrix ( Usul::Interfaces::IPlanetCoordinates* planet, 
       dcs->SetMat ( theMatrix );
     }
   }
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+//
+//  Set the translation offset of cad in feet.
+//
+///////////////////////////////////////////////////////////////////////////////
+
+void ModelWrapper::setTranslationOffset ( double x, double y, double z )
+{
+  Guard guard ( this->mutex() );
+  _offset.set ( x, y, z );
 }

@@ -256,6 +256,16 @@ void MinervaManager::AddEarthToScene()
   {
     root->addChild ( _scene.get() );
   }
+
+  for ( Models::iterator iter = _models.begin(); iter != _models.end(); ++iter )
+  {
+    ModelWrapper::RefPtr model ( iter->second );
+    if ( model.valid() )
+    {
+      _body->vectorData()->add ( Usul::Interfaces::IUnknown::QueryPtr ( model.get() ) );
+      this->UpdateModel ( model );
+    }
+  }
 }
 
 
@@ -311,16 +321,17 @@ void MinervaManager::Clear()
 
 void MinervaManager::AddModel ( const std::string& guid, ModelWrapper* model )
 {
+  // Unreference anything we may have.
+  Usul::Pointers::unreference ( _models[guid] );
+  
+  // Add the model to our map, even though the body may be null.
+  // When the body is created, add the models.
+  Usul::Pointers::reference ( model );
+  _models[guid] = model;
+
   if ( 0x0 != _body )
   {
     _body->vectorData()->add ( Usul::Interfaces::IUnknown::QueryPtr ( model ) );
-    
-    // Unreference anything we may have.
-    Usul::Pointers::unreference ( _models[guid] );
-    
-    // Add the model to our map.
-    Usul::Pointers::reference ( model );
-    _models[guid] = model;
 
     this->UpdateModel ( model );
   }

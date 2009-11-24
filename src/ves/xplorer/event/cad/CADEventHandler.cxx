@@ -57,6 +57,11 @@
 
 #include <ves/xplorer/Debug.h>
 
+#ifdef MINERVA_GIS_SUPPORT
+# include <ves/xplorer/minerva/MinervaManager.h>
+# include <ves/xplorer/minerva/ModelWrapper.h>
+#endif
+
 #include <boost/filesystem/path.hpp>
 #include <iostream>
 
@@ -384,6 +389,32 @@ void CADEventHandler::_addNodeToNode( std::string parentID,
             //so that visitors and other internal osg visitors will
             //travers the node even if it is turned off
             partNode->GetDCS()->ToggleDisplay( newPart->GetVisibility() );
+
+#ifdef MINERVA_GIS_SUPPORT
+            // Add the part to the MinervaManager so the cad is placed at the right place on the planet if it's added.
+            const double longitude ( newPart->GetLongitude() );
+            const double latitude ( newPart->GetLatitude() );
+            const std::string id ( newPart->GetID() );
+
+            ves::xplorer::minerva::ModelWrapper::RefPtr modelWrapper ( new ves::xplorer::minerva::ModelWrapper );
+            modelWrapper->SetCADEntity ( partNode );
+
+            modelWrapper->location ( osg::Vec3d ( longitude, latitude, 0.0 ) );
+
+            ves::open::xml::TransformPtr transform ( newPart->GetTransform() );
+            if ( transform )
+            {
+              ves::open::xml::FloatArrayPtr scaleArray ( transform->GetScaleArray() );
+              ves::open::xml::FloatArrayPtr rotationArray ( transform->GetRotationArray() );
+              ves::open::xml::FloatArrayPtr translationArray ( transform->GetTranslationArray() );
+
+              modelWrapper->scale ( osg::Vec3d ( scaleArray->GetElement ( 0 ), scaleArray->GetElement ( 1 ), scaleArray->GetElement ( 2 ) ) );
+              modelWrapper->orientation ( rotationArray->GetElement ( 0 ), rotationArray->GetElement ( 1 ), rotationArray->GetElement ( 2 ) );
+              modelWrapper->setTranslationOffset ( translationArray->GetElement ( 0 ), translationArray->GetElement ( 1 ), translationArray->GetElement ( 2 ) );
+            }
+
+            ves::xplorer::minerva::MinervaManager::instance()->AddModel ( id, modelWrapper.get() );
+#endif
         }
         else
         {

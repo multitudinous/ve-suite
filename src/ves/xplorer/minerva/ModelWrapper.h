@@ -13,6 +13,8 @@
 #include <Minerva/Core/Data/Model.h>
 #include <Minerva/Interfaces/IElevationChangedListener.h>
 
+#include <osg/Vec3d>
+
 namespace ves { namespace xplorer { namespace scenegraph { class CADEntity; } } }
 
 namespace ves {
@@ -48,6 +50,9 @@ public:
 
   void UpdateMatrix ( Usul::Interfaces::IPlanetCoordinates* planet, Usul::Interfaces::IElevationDatabase* elevation );
 
+  // Set the translation offset of cad in feet.
+  void setTranslationOffset ( double x, double y, double z );
+
 protected:
 
   virtual ~ModelWrapper();
@@ -56,6 +61,7 @@ private:
 
   CADEntity *_cadEntity;
 
+  osg::Vec3d _offset;
 };
 
 

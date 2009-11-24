@@ -106,11 +106,11 @@ void TransformHandler::Execute ( CommandPtr command, MinervaManager& manager )
 
   ves::open::xml::FloatArrayPtr scaleArray ( transform->GetScaleArray() );
   ves::open::xml::FloatArrayPtr rotationArray ( transform->GetRotationArray() );
+  ves::open::xml::FloatArrayPtr translationArray ( transform->GetTranslationArray() );
 
   modelWrapper->scale ( osg::Vec3d ( scaleArray->GetElement ( 0 ), scaleArray->GetElement ( 1 ), scaleArray->GetElement ( 2 ) ) );
   modelWrapper->orientation ( rotationArray->GetElement ( 0 ), rotationArray->GetElement ( 1 ), rotationArray->GetElement ( 2 ) );
-
-  // TODO: Handle translation from cad transform.
+  modelWrapper->setTranslationOffset ( translationArray->GetElement ( 0 ), translationArray->GetElement ( 1 ), translationArray->GetElement ( 2 ) );
 
   manager.UpdateModel ( modelWrapper.get() );
 }

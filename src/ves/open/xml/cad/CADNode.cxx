@@ -355,6 +355,9 @@ void CADNode::_updateVEElement( const std::string& input )
     {
         SetSubElements( "animation", m_animations );
     }
+
+    SetAttribute( "latitude", m_latitude );
+    SetAttribute( "longitude", m_longitude );
 }
 ///////////////////////////////
 void CADNode::_updateNodeName()
@@ -573,6 +576,9 @@ void CADNode::SetObjectFromXMLData( DOMNode* xmlNode )
         }
         m_transform->SetObjectFromXMLData( transformNode );
     }
+
+    XMLObject::GetAttribute( currentElement, "latitude", m_latitude );
+    XMLObject::GetAttribute( currentElement, "longitude", m_longitude );
 }
 ///////////////////////////////////////
 void CADNode::SetVisibility( bool onOff )
