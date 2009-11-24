@@ -40,6 +40,7 @@
 #include <osg/Texture2D>
 
 #include <osgDB/ReadFile>
+#include <osgDB/FileUtils>
 
 using namespace ves::xplorer::scenegraph::technique;
 
@@ -110,15 +111,22 @@ void ParallaxMapping::DefinePasses()
             new osg::Uniform( "heightMap", 2 );
         m_stateSet->addUniform( heightMapUniform.get() );
 
-        osg::ref_ptr< osgDB::ReaderWriter::Options > vertexOptions =
-            new osgDB::ReaderWriter::Options( "vertex" );
-        osg::ref_ptr< osgDB::ReaderWriter::Options > fragmentOptions =
-            new osgDB::ReaderWriter::Options( "fragment" );
+        //osg::ref_ptr< osgDB::ReaderWriter::Options > vertexOptions =
+        //    new osgDB::ReaderWriter::Options( "vertex" );
+        //osg::ref_ptr< osgDB::ReaderWriter::Options > fragmentOptions =
+        //    new osgDB::ReaderWriter::Options( "fragment" );
 
-        osg::ref_ptr< osg::Shader > vertexShader = osgDB::readShaderFile(
-            "glsl/parallax_mapping_vp.glsl", vertexOptions.get() );
-        osg::ref_ptr< osg::Shader > fragmentShader = osgDB::readShaderFile(
-            "glsl/parallax_mapping_fp.glsl", fragmentOptions.get() );
+        //osg::ref_ptr< osg::Shader > vertexShader = osgDB::readShaderFile(
+        //    "glsl/parallax_mapping.vs", vertexOptions.get() );
+        //osg::ref_ptr< osg::Shader > fragmentShader = osgDB::readShaderFile(
+        //    "glsl/parallax_mapping.fs", fragmentOptions.get() );
+
+        std::string shaderName = osgDB::findDataFile( "parallax_mapping.fs" );
+        osg::ref_ptr< osg::Shader > fragmentShader = 
+            osg::Shader::readShaderFile( osg::Shader::FRAGMENT, shaderName );
+        shaderName = osgDB::findDataFile( "parallax_mapping.vs" );
+        osg::ref_ptr< osg::Shader > vertexShader = 
+            osg::Shader::readShaderFile( osg::Shader::VERTEX, shaderName );
 
         osg::ref_ptr< osg::Program > program = new osg::Program();
         program->addShader( vertexShader.get() );
