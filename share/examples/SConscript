@@ -12,6 +12,7 @@ exampleSubdirs = Split("""
     HyperLab
     InteractiveStove
     nurbs
+    ParallaxMapping
     simple
     garage
     golf_game

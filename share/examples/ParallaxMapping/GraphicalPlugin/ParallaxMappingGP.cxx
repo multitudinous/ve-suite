@@ -85,7 +85,7 @@ void ParallaxMappingGP::InitializeNode( osg::Group* veworldDCS )
     */
 
     m_cadEntity = new ves::xplorer::scenegraph::CADEntity(
-        "Models/OBJs/sphere.obj", mDCS.get() );
+        "Models/IVEs/sphere.ive", mDCS.get() );
 
     osg::Node::DescriptionList descriptorsList;
     descriptorsList.push_back( "VE_XML_ID" );
