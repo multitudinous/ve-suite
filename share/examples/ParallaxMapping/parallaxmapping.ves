@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no" ?>
+<network name="Network" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="verg_model.xsd">
+
+  <veSystem id="ad94b35b-b5e6-ad48-8206-aece7ddbcd2e">
+    <network>
+      <conductorState dataName="m_xUserScale" id="8936b2a6-ad97-1742-9618-c85d1ee4d4fc">
+        <dataValue type="xs:double">1</dataValue>
+      </conductorState>
+      <conductorState dataName="m_yUserScale" id="27c6348e-ce7e-8b41-b518-549983eb42b6">
+        <dataValue type="xs:double">1</dataValue>
+      </conductorState>
+      <conductorState dataName="nPixX" id="5f2721df-89f5-ec44-9c1e-40522b0d0cfc">
+        <dataValue type="xs:integer">1</dataValue>
+      </conductorState>
+      <conductorState dataName="nPixY" id="47d37dc9-79db-8d43-9a6f-ab5594f49057">
+        <dataValue type="xs:integer">1</dataValue>
+      </conductorState>
+      <conductorState dataName="nUnitX" id="c14dc349-91fa-c64b-b2a8-58784872d6e8">
+        <dataValue type="xs:integer">1</dataValue>
+      </conductorState>
+      <conductorState dataName="nUnitY" id="5c16733b-b6f2-f24c-a83a-b7236e18518d">
+        <dataValue type="xs:integer">1</dataValue>
+      </conductorState>
+    </network>
+    <model ID="106" id="30c9d0c3-f2c1-0542-8146-1836db91a9ce" name="ParallaxMapping" plugintype="ParallaxMapping" vendorUnit="ParallaxMapping">
+      <icon iconHidden="0" iconMirror="0" iconRotation="0" iconScale="1" type="xs:string">DefaultPlugin</icon>
+      <iconLocation xLocation="58" yLocation="49"/>
+      <ports>
+        <number type="xs:unsignedInt">1</number>
+        <dataFlow type="xs:string">input</dataFlow>
+        <portLocation xLocation="9" yLocation="24"/>
+        <portType type="xs:string"></portType>
+      </ports>
+      <ports>
+        <number type="xs:unsignedInt">2</number>
+        <dataFlow type="xs:string">output</dataFlow>
+        <portLocation xLocation="39" yLocation="24"/>
+        <portType type="xs:string"></portType>
+      </ports>
+    </model>
+  </veSystem>
+
+  <User id="69720d58-889b-6344-ae1d-f43305e22244" userID="User" veControlStatus="MASTER">
+    <stateInfo>
+      <Command commandName="CHANGE_BACKGROUND_COLOR">
+        <parameter dataName="Background Color" id="287921ae-0123-5e4e-8eb4-4dc5da33948f">
+          <genericObject objectType="OneDDoubleArray">
+            <data>0</data>
+            <data>0</data>
+            <data>0</data>
+            <data>1</data>
+          </genericObject>
+        </parameter>
+      </Command>
+    </stateInfo>
+  </User>
+
+</network>

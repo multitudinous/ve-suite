@@ -13,10 +13,11 @@ pngFile = sca_util.getFilesRecursiveByExt( parallaxMappingDir, [ '.png' ] )
 
 fileBundle.addFiles( iveFile )
 fileBundle.addFiles( pngFile )
+fileBundle.addFiles( [ 'parallaxmapping.ves' ] )
 
 parallaxMappingSubdirs= Split("""
     GraphicalPlugin
-	UserInterface
+    UserInterface
 """)
 
 #Run SConscript files in all of these folders
