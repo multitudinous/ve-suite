@@ -1604,7 +1604,7 @@ void DataSet::StoreScalarInfo()
         for( int i = 0; i < this->numScalars; ++i )
         {
             processScalarRangeCbk->GetScalarRange( GetScalarName( i ), actualScalarRange[i] );
-            this->AutoComputeUserRange(
+            AutoComputeUserRange(
                 this->GetParent()->GetActualScalarRange( i ),
                 this->displayedScalarRange[ i ] );
         }

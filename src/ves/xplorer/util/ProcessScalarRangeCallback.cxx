@@ -77,16 +77,27 @@ void ProcessScalarRangeCallback::OperateOnDataset( vtkDataSet* dataset )
             //unique scalars---This may be incorrect because
             //each dataset in the multiblock may have it's own scalar range but
             //it's not clear if that is the case...
+            double tempRange[ 2 ] = { 0.0f, 0.0f };
+            array->GetRange( tempRange );
+            if( abs( tempRange[ 0 ] ) < 1e-100 )
+            {
+                tempRange[ 0 ] = 0.0f;
+            }
+            if( abs( tempRange[ 1 ] ) < 1e-100 )
+            {
+                tempRange[ 0 ] = 0.0f;
+            }
+            
             scalarRangeInfo = m_scalarRanges.find( array->GetName() );
             if( scalarRangeInfo == m_scalarRanges.end() )
             {
                 m_scalarRanges[array->GetName()] = new double[2];
-                array->GetRange( m_scalarRanges[array->GetName()] );
+                m_scalarRanges[array->GetName()][ 0 ] = tempRange[ 0 ];
+                m_scalarRanges[array->GetName()][ 1 ] = tempRange[ 1 ];
+                //array->GetRange( m_scalarRanges[array->GetName()] );
             }
             else
             {
-                double tempRange[ 2 ] = { 0.0f, 0.0f };
-                array->GetRange( tempRange );
                 if( scalarRangeInfo->second[ 0 ] > tempRange[ 0 ] )
                 {
                     scalarRangeInfo->second[ 0 ] = tempRange[ 0 ];
