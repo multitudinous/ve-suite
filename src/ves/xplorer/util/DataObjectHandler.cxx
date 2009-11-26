@@ -82,6 +82,7 @@ void DataObjectHandler::OperateOnAllDatasetsInObject( vtkDataObject* dataObject 
                 
                 mgdIterator->GoToNextItem();
             }
+
             if( mgdIterator )
             {
                 mgdIterator->Delete();
@@ -90,7 +91,8 @@ void DataObjectHandler::OperateOnAllDatasetsInObject( vtkDataObject* dataObject 
         }
         catch ( ... )
         {
-            std::cout << "Invalid Dataset: " << dataObject->GetClassName() << std::endl;
+            std::cout << "*********** Invalid Dataset: " 
+                << dataObject->GetClassName() << " ***********" << std::endl;
         }
     }
     else //Assume this is a regular vtkdataset
@@ -108,8 +110,8 @@ void DataObjectHandler::OperateOnAllDatasetsInObject( vtkDataObject* dataObject 
 ////////////////////////////////////////////////////////////////////////////////
 void DataObjectHandler::_convertCellDataToPointData( vtkDataSet* dataSet )
 {
-    UpdateNumberOfPDArrays( dataSet );
-    if( m_numberOfCellDataArrays > 0 && m_numberOfPointDataArrays  == 0 )
+    //UpdateNumberOfPDArrays( dataSet );
+    if( dataSet->GetCellData()->GetNumberOfArrays() > 0 ) //&& m_numberOfPointDataArrays  == 0 )
     {
         std::cout << "|\tThe dataset has no point data -- "
             << "will try to convert cell data to point data" << std::endl;

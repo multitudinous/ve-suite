@@ -37,6 +37,8 @@
 #include <vtkDataArray.h>
 #include <vtkFloatArray.h>
 
+#include <iostream>
+
 using namespace ves::xplorer::util;
 
 //////////////////////////////////////////////////////////////////////
@@ -54,25 +56,28 @@ void ComputeVectorMagnitudeAndScalarsCallback::OperateOnDataset( vtkDataSet* dat
     //this portion is to grab scalar data out of the vectors and rewrite it back
     //into the VTK file
     int numArrays = dataset->GetPointData()->GetNumberOfArrays();
+    //std::cout << "Number of arrays " << numArrays << std::endl;
     int numComponents;
     int numOfTuples;
     std::string name;
     std::string scalName;
     double component;
     double velMag;
-    for(int i=0;i<numArrays; i++ ) //loop pver number of arrays
+    for(int i=0;i<numArrays; ++i ) //loop pver number of arrays
     {
         numComponents = dataset->GetPointData()->GetArray(i)->GetNumberOfComponents();
+        //std::cout << "Number of components " << numComponents << std::endl;
+        vtkDataArray* activeDataArray = dataset->GetPointData()->GetArray(i);
         if(numComponents > 1 ) //it is a vector
         {
             vtkFloatArray** scalarsFromVector;
 
             scalarsFromVector = new vtkFloatArray* [ numComponents+1 ];
-            name = dataset->GetPointData()->GetArray(i)->GetName();
-            numOfTuples = dataset->GetPointData()->GetArray(i)->GetNumberOfTuples();
-            //if ( debug ) std::cout<<" Name :" << name <<std::endl
-            //                      <<" Number of Tuples :"<< numOfTuples <<std::endl;
-            for(int compLoop=0;compLoop<numComponents; compLoop++ )
+            name = activeDataArray->GetName();
+            numOfTuples = activeDataArray->GetNumberOfTuples();
+            //std::cout<<" Name :" << name <<std::endl
+            //    <<" Number of Tuples :"<< numOfTuples <<std::endl;
+            for(int compLoop=0; compLoop<numComponents; ++compLoop )
             {
                 scalName = name;
                 if(compLoop == 0 )
@@ -84,16 +89,15 @@ void ComputeVectorMagnitudeAndScalarsCallback::OperateOnDataset( vtkDataSet* dat
                 scalarsFromVector[ compLoop ] = vtkFloatArray::New();
                 scalarsFromVector[ compLoop ]->SetNumberOfComponents( 1 );
                 scalarsFromVector[ compLoop ]->SetNumberOfTuples( numOfTuples );
-                //if ( debug )
-                //   std::cout << "Scalar name " <<scalName <<std::endl;
+                //std::cout << "Scalar name " <<scalName <<std::endl;
                 scalarsFromVector[ compLoop ]->SetName( scalName.c_str() );
                 scalName.clear();
-                for(int tupLoop=0;tupLoop<numOfTuples; tupLoop++ )
+                for(int tupLoop=0;tupLoop<numOfTuples; ++tupLoop )
                 {
                     //get the component data
-                    component = dataset->GetPointData()->GetArray(i)
-                        ->GetComponent( tupLoop, compLoop );
-                    scalarsFromVector[ compLoop ] ->SetComponent( tupLoop, 0, component );
+                    component = 
+                        activeDataArray->GetComponent( tupLoop, compLoop );
+                    scalarsFromVector[ compLoop ]->SetComponent( tupLoop, 0, component );
                 }
             }
             //now calculate magnitude of the vector
@@ -102,16 +106,15 @@ void ComputeVectorMagnitudeAndScalarsCallback::OperateOnDataset( vtkDataSet* dat
             scalName.append("_magnitude");
             scalarsFromVector[ numComponents ]->SetNumberOfComponents( 1 );
             scalarsFromVector[ numComponents ]->SetNumberOfTuples( numOfTuples );
-            //if ( debug )
-            //   std::cout << "Scalar name " <<scalName <<std::endl;
+            //std::cout << "Scalar name " <<scalName <<std::endl;
             scalarsFromVector[ numComponents ]->SetName( scalName.c_str() );
             for(int tupLoop=0;tupLoop<numOfTuples; tupLoop++ )
             {
-                velMag = (double)(0);
+                velMag = double(0);
                 for(int compLoop=0;compLoop<numComponents; compLoop++ )
                 {
-                    component = dataset->GetPointData()->GetArray(i)
-                        ->GetComponent( tupLoop, compLoop );
+                    component = 
+                        activeDataArray->GetComponent( tupLoop, compLoop );
                     velMag = velMag + component*component;
                 }
                 velMag = sqrt( velMag );
@@ -121,12 +124,9 @@ void ComputeVectorMagnitudeAndScalarsCallback::OperateOnDataset( vtkDataSet* dat
             for(int j=0; j<numComponents+1; j++ )
             {
                 dataset->GetPointData()->AddArray( scalarsFromVector[ j ] );
+                scalarsFromVector[ j ]->Delete();
             }
-            // deleting the allocated memory
-            for(int c=0;c<numComponents+1;c++ )
-            {
-                scalarsFromVector[ c ]->Delete();
-            }
+
             delete [] scalarsFromVector;
             scalarsFromVector = NULL;
         }  //end if loop
