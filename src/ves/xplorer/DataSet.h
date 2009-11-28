@@ -323,7 +323,9 @@ public:
     
     ///Create a surface wrap of this dataset
     void CreateSurfaceWrap();
-
+    ///Set the active data arrays to load
+    void SetActiveDataArrays( std::vector< std::string > activeArrays );
+    
 private:
     ///Temporary model pointer
     ves::xplorer::Model* m_tempModel;
@@ -402,10 +404,12 @@ private:
     bool m_isPartOfCompositeDataset;
     ///List of child datasets for this dataset
     std::vector< DataSet* > m_childDataSets;
+    ///Set the active data arrays to load
+    std::vector< std::string > m_activeDataArrays;
 #ifdef USE_OMP
     unsigned int noOfData;   // Total no. of octants.
-    vtkUnstructuredGridReader *dataReader[MAX_DATA];
-    vtkUnstructuredGrid *data[MAX_DATA];
+    vtkUnstructuredGridReader* dataReader[MAX_DATA];
+    vtkUnstructuredGrid* data[MAX_DATA];
 #endif
 };
 }

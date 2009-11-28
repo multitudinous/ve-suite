@@ -43,6 +43,7 @@
 #include <ves/VEConfig.h>
 #include <string>
 #include <map>
+#include <vector>
 
 class vtkDataObject;
 
@@ -87,11 +88,21 @@ public:
     ///\param inputData The file name of the data to be loaded.
     vtkDataObject* GetVTKDataSet( int argc, char** argv );
 
+    ///Set the data arrays to load for the translator
+    ///\param activeArrays The active arrays to load for the translators
+    void SetScalarsAndVectorsToRead( std::vector< std::string > activeArrays );
+    
 private:
-    std::string inputDataName;///<The name of the data file.
-    std::string inputDataDir;///<The name of the input data dir.
-    ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK* activeLoader;///<The pointer to the active loader
-    std::map< std::string, ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK* > translatorMap;///<Map the translators to a filename or extension, must be unique
+    ///The name of the data file.
+    std::string inputDataName;
+    ///The name of the input data dir.
+    std::string inputDataDir;
+    ///The pointer to the active loader
+    ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK* activeLoader;
+    ///Map the translators to a filename or extension, must be unique
+    std::map< std::string, ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK* > translatorMap;
+    ///The active scalars to load
+    std::vector< std::string > m_activeArrays;
 };
 }
 }

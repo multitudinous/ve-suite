@@ -3,7 +3,7 @@ import os, sys, string
 import SConsAddons.Util as sca_util
 pj = os.path.join
 
-Import('baseEnv ves_pkg LIBDIR buildDir xerces_options wxwidgets_options RootDir tao_options vpr_options GetPlatform')
+Import('baseEnv ves_pkg LIBDIR buildDir xerces_options wxwidgets_options RootDir tao_options vpr_options GetPlatform vtk_options')
 Import('minerva_options')
 
 srcDir = os.path.abspath( pj(RootDir, 'src', 'ves', 'conductor') )
@@ -11,8 +11,9 @@ sources = sca_util.getSourcesRecursive( srcDir )
 headers = sca_util.getHeadersRecursive( srcDir )
 
 lib_env = ves_pkg.getEnv().Clone()
-lib_env.Append(LIBS = ['ves_open_xml','ves_open_module'])
+lib_env.Append(LIBS = ['ves_open_xml','ves_open_module','ves_xplorer_util'])
 lib_env.Append(LIBPATH = [
+                           pj('#', buildDir, 'src', 'ves', 'xplorer', 'util'),
                            pj('#', buildDir, 'src', 'ves', 'open'),
                            pj('#', buildDir, 'src', 'ves', 'open','xml')
                          ])
@@ -21,6 +22,8 @@ tao_options.apply( lib_env )
 xerces_options.apply( lib_env )
 wxwidgets_options.apply( lib_env )
 vpr_options.apply( lib_env )
+vtk_options.apply( lib_env )
+
 lib_env.Append( CPPDEFINES = ['VE_GUIPLUGINS_LIBRARY','VE_CONDUCTOR_UTILS_LIBRARY'])
 
 #see if we need to compile minerva in

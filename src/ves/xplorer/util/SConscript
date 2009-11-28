@@ -16,8 +16,6 @@ sources.pop(index)
 index = sources.index(pj('Logo_Maker','xpmMaker.cxx') )
 sources.pop(index)
 
-##srcs = map(lambda s: pj('#', 'VE_Xplorer', 'Utilities', s), util_srcs)
-
 lib_env = ves_pkg.getEnv().Clone()
 
 vtk_options.apply( lib_env )

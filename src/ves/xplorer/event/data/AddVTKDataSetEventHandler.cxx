@@ -44,6 +44,7 @@
 #include <ves/open/xml/Transform.h>
 #include <ves/open/xml/DataValuePair.h>
 #include <ves/open/xml/ParameterBlock.h>
+#include <ves/open/xml/OneDStringArray.h>
 
 #include <ves/open/xml/model/Model.h>
 
@@ -202,6 +203,15 @@ void AddVTKDataSetEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xml
             lastDataAdded->SetFileName( vtk_filein );
             lastDataAdded->SetUUID( "VTK_DATA_FILE", 
                 tempInfoPacket->GetProperty( "VTK_DATA_FILE" )->GetID() );
+            ves::open::xml::DataValuePairPtr stringDVP = tempInfoPacket->GetProperty( "VTK_ACTIVE_DATA_ARRAYS" );
+            std::vector< std::string > vecStringArray;
+            if( stringDVP )
+            {
+                ves::open::xml::OneDStringArrayPtr stringArray = 
+                    boost::dynamic_pointer_cast< ves::open::xml::OneDStringArray >( stringDVP->GetDataXMLObject() );
+                vecStringArray = stringArray->GetArray();
+                lastDataAdded->SetActiveDataArrays( vecStringArray );
+            }
             
             //////////////////////////////////////////////////////////////
             if( tempInfoPacket->GetProperty( "VTK_PRECOMPUTED_DIR_PATH" ) )

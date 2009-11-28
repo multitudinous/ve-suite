@@ -138,6 +138,7 @@ vtkDataObject* DataLoader::GetVTKDataSet( int argc, char** argv )
         activeLoader->SetInputDirectory( inputDataDir );
         activeLoader->AddFoundFile( inputDataName );
     }
+    activeLoader->SetScalarsAndVectorsToRead( m_activeArrays );
     activeLoader->TranslateToVTK( argc, argv );
     vtkDataObject* tempDataset = 0;
     std::string writeOption;
@@ -149,15 +150,20 @@ vtkDataObject* DataLoader::GetVTKDataSet( int argc, char** argv )
 
     return tempDataset;
 }
-///////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void DataLoader::SetInputData( std::string inputData, std::string inputDir )
 {
     inputDataName = inputData;
     inputDataDir = inputDir;
 }
-///////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 cfdTranslatorToVTK* DataLoader::GetActiveTranslator( void )
 {
     return activeLoader;
 }
-
+////////////////////////////////////////////////////////////////////////////////
+void DataLoader::SetScalarsAndVectorsToRead( std::vector< std::string > activeArrays )
+{
+    m_activeArrays = activeArrays;
+}
+////////////////////////////////////////////////////////////////////////////////

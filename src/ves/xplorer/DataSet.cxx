@@ -95,34 +95,41 @@ namespace ves
 namespace xplorer
 {
 
-DataSet::DataSet( ) :
-        parent( this ),
-        m_dataSet( 0 ),
-        x_planes( 0 ),
-        y_planes( 0 ),
-        z_planes( 0 ),
-        activeScalar( -1 ),
-        activeVector( -1 ),
-        numScalars( 0 ),
-        numVectors( 0 ),
-        partOfTransientSeries( 0 ),
-        datasetType( -1 ),
-        vectorMagRange( 0 ),
-        actualScalarRange( 0 ),
-        displayedScalarRange( 0 ),
-        meanCellBBLength( 0.0 ),
-        dataSetAxes( 0 ),
-        dataSetScalarBar( 0 ),
-        _vtkFHndlr( 0 ),
-        m_externalFileLoader( 0 ),
-        m_dataObjectHandler( 0 ),
-        mDataReader( 0 ),
-        arrow( 0 ),
-        lut( vtkLookupTable::New() ),
-        maxTime( 1000 ),
-        bbDiagonal( 10 ),
-        isNewlyActivated( 0 ),
-        m_isPartOfCompositeDataset( false )
+DataSet::DataSet( ) 
+    :
+    m_tempModel( 0 ),
+    actualScalarRange( 0 ),
+    displayedScalarRange( 0 ),
+    parent( this ),
+    isNewlyActivated( 0 ),
+    range( 0 ),
+    definedRange( 0 ),
+    vectorMagRange( 0 ),
+    bbDiagonal( 10 ),
+    meanCellBBLength( 0.0 ),
+    stepLength( 0.0 ),
+    maxTime( 1000 ),
+    timeStep( 1 ),
+    lut( vtkLookupTable::New() ),
+    m_dataSet( 0 ),
+    mDataReader( 0 ),
+    datasetType( -1 ),
+    activeScalar( -1 ),
+    activeVector( -1 ),
+    x_planes( 0 ),
+    y_planes( 0 ),
+    z_planes( 0 ),
+    arrow( 0 ),
+    numPtDataArrays( 0 ),
+    numScalars( 0 ),
+    numVectors( 0 ),
+    dataSetAxes( 0 ),
+    dataSetScalarBar( 0 ),
+    _vtkFHndlr( 0 ),
+    m_dataObjectHandler( 0 ),
+    partOfTransientSeries( 0 ),
+    m_externalFileLoader( 0 ),
+    m_isPartOfCompositeDataset( false )
 {
     this->range = new double [ 2 ];
     this->range[ 0 ] = 0.0f;
@@ -537,10 +544,10 @@ void DataSet::LoadData( vtkUnstructuredGrid* dataset, int datasetindex )
 ////////////////////////////////////////////////////////////////////////////////
 void DataSet::LoadData()
 {
-    if( this->m_dataSet != NULL )
+    if( m_dataSet != NULL )
     {
         vprDEBUG( vesDBG, 1 ) << "|\tAlready have loaded the data for "
-        << this->fileName
+        << fileName
         << std::endl << vprDEBUG_FLUSH;
         return;
     }
@@ -558,7 +565,7 @@ void DataSet::LoadData()
     {
         extension = "star";
     }
-    if (( extension == "case" ) )
+    if( extension == "case" )
     {
         extension = "ens";
     }
@@ -573,7 +580,7 @@ void DataSet::LoadData()
         {
             _vtkFHndlr = new cfdVTKFileHandler();
         }
-
+        _vtkFHndlr->SetScalarsAndVectorsToRead( m_activeDataArrays );
         m_dataSet = _vtkFHndlr->GetDataSetFromFile( fileName );
     }
     else
@@ -583,6 +590,7 @@ void DataSet::LoadData()
             m_externalFileLoader = new DataLoader();
         }
         m_externalFileLoader->SetInputData( "something", "somedir" );
+        m_externalFileLoader->SetScalarsAndVectorsToRead( m_activeDataArrays );
         unsigned int nParams = 7;
         char** parameters = new char*[nParams];
         parameters[0] = new char[strlen( "loaderToVtk" ) + 1];
@@ -1620,6 +1628,7 @@ double* DataSet::GetScalarRange( const std::string& scalarName )
             return this->actualScalarRange[i];
         }
     }
+    return NULL;
 }
 /////////////////////////////
 void DataSet::Print()
@@ -1954,6 +1963,11 @@ void DataSet::CreateSurfaceWrap()
     //Load Data sort of
     tempDataset->LoadData( currentDataset, false );
     m_childDataSets.push_back( tempDataset );
+}
+////////////////////////////////////////////////////////////////////////////////
+void DataSet::SetActiveDataArrays( std::vector< std::string > activeArrays )
+{
+    m_activeDataArrays = activeArrays;
 }
 } // end xplorer
 } // end ves

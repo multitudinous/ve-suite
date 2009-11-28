@@ -43,9 +43,11 @@ class vtkXMLFileReadTester;
 class vtkDataSet;
 class vtkDataObject;
 class vtkAlgorithm;
+class vtkXMLReader;
 
 #include <ves/VEConfig.h>
 #include <string>
+#include <vector>
 
 namespace ves
 {
@@ -83,6 +85,9 @@ public:
     void SetVTKOutFileType( OutFileType type );
     ///Set the output file mode. Default is CFD_BINARY
     void SetOutFileWriteMode( OutFileMode mode );
+    ///Set scalars to read
+    ///\param activeArrays The names of the vectors and scalars to activate
+    void SetScalarsAndVectorsToRead( std::vector< std::string > activeArrays );
 
     ///\param vtkFileName The fileName of the vtkDataSet to read in.
     ///vtkDataSet* GetDataSetFromFile(std::string vtkFileName);
@@ -92,7 +97,7 @@ public:
     vtkDataObject* GetDataSetFromFile( const std::string& vtkFileName );
     ///Get the vtkAlgorithm for the reader being used
     //vtkAlgorithm* GetAlgorithm();
-    
+    std::vector< std::string > GetDataSetArraysFromFile( const std::string& vtkFileName );
     ///Write the DataObject to file
     ///\param dataObject The vtkDataObject to write
     ///\param outFileName The output filename.
@@ -122,6 +127,8 @@ protected:
     ///Write old style(non-XML) vtk file
     void _writeClassicVTKFile( vtkDataObject * vtkThing,
                                std::string vtkFilename, int binaryFlag = 0 );
+    ///Update the xml reader with the active arrays
+    void UpdateReaderActiveArrays( vtkXMLReader* reader );
 
     OutFileType _outFileType;///<output XML or classic
     OutFileMode _outFileMode;///<output binary/ascii
@@ -133,6 +140,8 @@ protected:
     vtkDataObject* _dataSet;///<The vtk data.
     ///Hold a pointer to the raw reader
     vtkAlgorithm* mDataReader;
+    ///THe scalars and vectors to activate
+    std::vector< std::string > m_activeArrays;
 };
 }// end of util namesapce
 }// end of xplorer namesapce

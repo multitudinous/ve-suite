@@ -33,6 +33,7 @@
 #include <ves/builder/DataLoader/EnSightTranslator.h>
 
 #include <ves/builder/DataLoader/converter.h>
+#include <ves/xplorer/util/cfdVTKFileHandler.h>
 
 #include <vtkDataSet.h>
 #include <vtkGenericEnSightReader.h>          // will open any ensight file
@@ -45,8 +46,7 @@
 #include <vtkDataArray.h>
 #include <vtkCompositeDataIterator.h>
 #include <vtkCharArray.h>
-
-#include <ves/xplorer/util/cfdVTKFileHandler.h>
+#include <vtkDataArraySelection.h>
 #include <vtkMultiBlockDataSet.h>
 #include <vtkDataObject.h>
 
@@ -86,10 +86,39 @@ void EnSightTranslator::EnSightTranslateCbk::Translate( vtkDataObject*& outputDa
         return;
     }
 
+    std::vector< std::string > activeArrays = toVTK->GetActiveArrays();
+    
     vtkGenericEnSightReader* reader = vtkGenericEnSightReader::New();
     //reader->DebugOn();
     reader->SetCaseFileName( EnSightToVTK->GetFile( 0 ).c_str() );
     reader->Update();
+    
+    if( !activeArrays.empty() )
+    {
+        //Disable user choosen arrays
+        vtkDataArraySelection* arraySelector = 
+            reader->GetPointDataArraySelection();
+        arraySelector->DisableAllArrays();
+        for( size_t i = 0; i < activeArrays.size(); ++i )
+        {
+            std::cout << "Passed arrays are: " 
+                << activeArrays[ i ] << std::endl;
+            arraySelector->EnableArray( activeArrays[ i ].c_str() );
+        }
+        
+        arraySelector = 
+            reader->GetCellDataArraySelection();
+        arraySelector->DisableAllArrays();
+        for( size_t i = 0; i < activeArrays.size(); ++i )
+        {
+            std::cout << "Passed arrays are: " 
+                << activeArrays[ i ] << std::endl;
+            arraySelector->EnableArray( activeArrays[ i ].c_str() );
+        }
+        //Need to update again before the output of the reader is read
+        reader->Update();         
+    }
+    
     vtkDataArrayCollection* tempArray = reader->GetTimeSets();
     //this must be an int because i goes negative
     if( tempArray->GetNumberOfItems() == 0 )

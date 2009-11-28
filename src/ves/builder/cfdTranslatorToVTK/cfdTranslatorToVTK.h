@@ -161,8 +161,12 @@ public:
     vtkDataObject* GetVTKFile( unsigned int whichFile );
     ///Get the reader for this translator
     vtkAlgorithm* GetVTKAlgorithm();
-
+    ///
     void SetIsTransient();
+    ///
+    void SetScalarsAndVectorsToRead( std::vector< std::string > activeArrays );
+    ///
+    std::vector< std::string > GetActiveArrays();
 protected:
     bool _writeToVTK( unsigned int whichFile );
     ///Write the file to memory so that it is accessible
@@ -186,6 +190,7 @@ protected:
     vtkDataObject* _outputDataset;
     vtkAlgorithm* mVTKReader;
     bool isTransient;
+    std::vector< std::string > m_activeArrays;
 };
 }
 }

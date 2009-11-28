@@ -62,6 +62,9 @@
 #include <boost/math/special_functions/round.hpp>
 #endif
 
+#include <vtkCompositeDataPipeline.h>
+#include <vtkAlgorithm.h>
+
 using namespace ves::open::xml;
 using namespace ves::conductor;
 using namespace ves::conductor::util;
@@ -149,6 +152,10 @@ Canvas::Canvas( wxWindow* parent, int id )
     cleanEvent.SetId( CANVAS_UPDATE_NETWORK_DATA );
     
     Refresh( true );
+    
+    //vtkCompositeDataPipeline* prototype = vtkCompositeDataPipeline::New();
+    //vtkAlgorithm::SetDefaultExecutivePrototype( prototype );
+    //prototype->Delete();    
 }
 ///////////////////////////////////////////////////////////////////////////////
 Canvas::Canvas()

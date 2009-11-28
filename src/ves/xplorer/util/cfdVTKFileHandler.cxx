@@ -38,6 +38,7 @@
 #include <vtkXMLStructuredGridReader.h>
 #include <vtkXMLRectilinearGridReader.h>
 #include <vtkXMLImageDataReader.h>
+#include <vtkDataArraySelection.h>
 #include <vtkImageData.h>
 #include <vtkPolyDataReader.h>
 #include <vtkDataSetReader.h>
@@ -53,8 +54,8 @@
 #include <vtkStructuredGridWriter.h>
 #include <vtkRectilinearGridWriter.h>
 #include <vtkPolyDataWriter.h>
-#include <iostream>
 #include <vtkUnstructuredGridReader.h>
+#include <vtkGenericEnSightReader.h>
 
 #include <vtkXMLHierarchicalBoxDataReader.h>
 #include <vtkXMLCompositeDataReader.h>
@@ -72,6 +73,7 @@
 #include <vtkGenericDataObjectReader.h>
 #include <vtkGenericDataObjectWriter.h>
 #include <fstream>
+#include <iostream>
 
 //#include <boost/filesystem.hpp>
 #include <boost/filesystem/operations.hpp>
@@ -86,9 +88,9 @@ using namespace ves::xplorer::util;
 //Constructors                      //
 //////////////////////////////////////
 cfdVTKFileHandler::cfdVTKFileHandler():
-    mDataReader( 0 ),
     _xmlTester( 0 ),
-    _dataSet( 0 )
+    _dataSet( 0 ),
+    mDataReader( 0 )
 {
     _outFileType = CFD_XML;
     _outFileMode = CFD_BINARY;
@@ -276,6 +278,7 @@ void cfdVTKFileHandler::_getXMLMultiGroupDataSet( bool isMultiBlock )
     }
     mgdReader->SetFileName( _inFileName.c_str() );
     mgdReader->Update();
+    UpdateReaderActiveArrays( mgdReader );
     _dataSet->ShallowCopy( mgdReader->GetOutput() );
     mgdReader->Delete();
 }
@@ -287,6 +290,7 @@ void cfdVTKFileHandler::GetXMLHierarchicalDataSet()
     _dataSet = vtkHierarchicalBoxDataSet::New();
     mgdReader->SetFileName( _inFileName.c_str() );
     mgdReader->Update();
+    UpdateReaderActiveArrays( mgdReader );
     _dataSet->ShallowCopy( mgdReader->GetOutput() );
     mgdReader->Delete();
 }
@@ -297,6 +301,7 @@ void cfdVTKFileHandler::_getXMLUGrid()
         = vtkXMLUnstructuredGridReader::New();
     ugReader->SetFileName( _inFileName.c_str() );
     ugReader->Update();
+    UpdateReaderActiveArrays( ugReader );
     _dataSet = ugReader->GetOutput();
     _dataSet->Register( ugReader->GetOutput() );
     //_dataSet = vtkUnstructuredGrid::New();
@@ -310,6 +315,7 @@ void cfdVTKFileHandler::_getXMLSGrid()
     = vtkXMLStructuredGridReader::New();
     sgReader->SetFileName( _inFileName.c_str() );
     sgReader->Update();
+    UpdateReaderActiveArrays( sgReader );
     _dataSet = vtkStructuredGrid::New();
     _dataSet->ShallowCopy( sgReader->GetOutput() );
     sgReader->Delete();
@@ -321,6 +327,7 @@ void cfdVTKFileHandler::_getXMLRGrid()
     = vtkXMLRectilinearGridReader::New();
     rgReader->SetFileName( _inFileName.c_str() );
     rgReader->Update();
+    UpdateReaderActiveArrays( rgReader );
     _dataSet = vtkRectilinearGrid::New();
     _dataSet->ShallowCopy( rgReader->GetOutput() );
     rgReader->Delete();
@@ -329,9 +336,10 @@ void cfdVTKFileHandler::_getXMLRGrid()
 void cfdVTKFileHandler::_getXMLPolyData()
 {
     vtkXMLPolyDataReader* pdReader
-    = vtkXMLPolyDataReader::New();
+        = vtkXMLPolyDataReader::New();
     pdReader->SetFileName( _inFileName.c_str() );
     pdReader->Update();
+    UpdateReaderActiveArrays( pdReader );
     _dataSet = vtkPolyData::New();
     _dataSet->ShallowCopy( pdReader->GetOutput() );
     pdReader->Delete();
@@ -525,7 +533,7 @@ void cfdVTKFileHandler::_writeClassicVTKFile( vtkDataObject * vtkThing,
 
     std::cout << "... done\n" << std::endl;
 }
-////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 cfdVTKFileHandler& cfdVTKFileHandler::operator=( const cfdVTKFileHandler& fh )
 {
     if( this != &fh )
@@ -544,3 +552,233 @@ cfdVTKFileHandler& cfdVTKFileHandler::operator=( const cfdVTKFileHandler& fh )
     }
     return *this;
 }
+////////////////////////////////////////////////////////////////////////////////
+void cfdVTKFileHandler::SetScalarsAndVectorsToRead( std::vector< std::string > activeArrays )
+{
+    m_activeArrays = activeArrays;
+}
+////////////////////////////////////////////////////////////////////////////////
+void cfdVTKFileHandler::UpdateReaderActiveArrays( vtkXMLReader* reader )
+{
+    if( !m_activeArrays.empty() )
+    {
+        vtkDataArraySelection* arraySelector = 
+            reader->GetPointDataArraySelection();
+        arraySelector->DisableAllArrays();
+        for( size_t i = 0; i < m_activeArrays.size(); ++i )
+        {
+            std::cout << "Passed arrays are: " 
+                << m_activeArrays[ i ] << std::endl;
+            arraySelector->EnableArray( m_activeArrays[ i ].c_str() );
+        }
+        //Need to update again before the output of the reader is read
+        reader->Update();         
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+std::vector< std::string > cfdVTKFileHandler::GetDataSetArraysFromFile( const std::string& vtkFileName )
+{
+    if( vtkFileName.empty() )
+    {
+        return m_activeArrays;
+    }
+    _inFileName = vtkFileName;
+    fs::path file_name( _inFileName, fs::native );
+
+    std::cout << "|\tLoading " << _inFileName
+        << " and extension " << file_name.extension() << std::endl;;
+
+    if( !_xmlTester )
+    {
+        _xmlTester = vtkXMLFileReadTester::New();
+    }
+    _xmlTester->SetFileName( _inFileName.c_str() );
+    
+    //Test for ensight file to activate scalars
+    if( file_name.extension() == ".case" )
+    {
+        vtkGenericEnSightReader* reader = vtkGenericEnSightReader::New();
+        reader->SetCaseFileName( _inFileName.c_str() );
+        reader->Update();
+        
+        vtkDataArraySelection* arraySelector = 
+            reader->GetCellDataArraySelection();
+        int numArrays = arraySelector->GetNumberOfArrays();
+        for( int i = 0; i < numArrays; ++i )
+        {
+            std::string arrayName = arraySelector->GetArrayName( i );
+            //std::cout << arrayName << std::endl;
+            m_activeArrays.push_back( arrayName );
+        }
+        arraySelector = reader->GetPointDataArraySelection();
+        numArrays = arraySelector->GetNumberOfArrays();
+        for( int i = 0; i < numArrays; ++i )
+        {
+            std::string arrayName = arraySelector->GetArrayName( i );
+            //std::cout << arrayName << std::endl;
+            m_activeArrays.push_back( arrayName );
+        }
+        reader->Delete();
+        _xmlTester->Delete();
+        _xmlTester = 0;
+        return m_activeArrays;    
+    }
+    else if( !_xmlTester->TestReadFile() )
+    {
+        _xmlTester->Delete();
+        _xmlTester = 0;
+        return m_activeArrays;
+    }
+
+    vtkXMLReader* reader = 0;
+    std::cout << "|\t\tXML " << _xmlTester->GetFileDataType() << std::endl;
+    //process xml file
+    if( !std::strcmp( _xmlTester->GetFileDataType(), "UnstructuredGrid" ) )
+    {
+        reader = vtkXMLUnstructuredGridReader::New();
+    }
+    else if( !std::strcmp( _xmlTester->GetFileDataType(), "StructuredGrid" ) )
+    {
+        reader = vtkXMLStructuredGridReader::New();
+    }
+    else if( !std::strcmp( _xmlTester->GetFileDataType(), "RectilinearGrid" ) )
+    {
+        reader = vtkXMLRectilinearGridReader::New();
+    }
+    else if( !std::strcmp( _xmlTester->GetFileDataType(), "PolyData" ) )
+    {
+        reader = vtkXMLPolyDataReader::New();
+    }
+    else if( !std::strcmp( _xmlTester->GetFileDataType(), "ImageData" ) )
+    {
+        reader = vtkXMLImageDataReader::New();
+    }
+    else if( !std::strcmp( _xmlTester->GetFileDataType(), "vtkMultiBlockDataSet" ) )
+    {
+        reader = vtkXMLMultiBlockDataReader::New();
+    }
+    else if( !std::strcmp( _xmlTester->GetFileDataType(), "vtkMultiGroupDataSet" ) )
+    {
+        reader = vtkXMLMultiGroupDataReader::New();
+    }
+    else if( !std::strcmp( _xmlTester->GetFileDataType(), "vtkHierarchicalDataSet" ) )
+    {
+        reader = vtkXMLHierarchicalDataReader::New();
+    }
+    
+    _xmlTester->Delete();
+    _xmlTester = 0;
+    reader->SetFileName( _inFileName.c_str() );
+    reader->Update();
+
+    vtkDataArraySelection* arraySelector = 
+        reader->GetCellDataArraySelection();
+    int numArrays = arraySelector->GetNumberOfArrays();
+    for( int i = 0; i < numArrays; ++i )
+    {
+        std::string arrayName = arraySelector->GetArrayName( i );
+        //std::cout << arrayName << std::endl;
+        m_activeArrays.push_back( arrayName );
+    }
+    arraySelector = reader->GetPointDataArraySelection();
+    numArrays = arraySelector->GetNumberOfArrays();
+    for( int i = 0; i < numArrays; ++i )
+    {
+        std::string arrayName = arraySelector->GetArrayName( i );
+        //std::cout << arrayName << std::endl;
+        m_activeArrays.push_back( arrayName );
+    }
+    reader->Delete();
+    
+    return m_activeArrays;
+}
+////////////////////////////////////////////////////////////////////////////////
+/*
+ void cfdVTKFileHandler::OperateOnAllDatasetsInObject( vtkDataObject* dataObject )
+ {
+ vtkDataSet* currentDataset = 0;
+ if( dataObject->IsA( "vtkCompositeDataSet" ) )
+ {
+ try
+ {
+ vtkCompositeDataSet* mgd = dynamic_cast<vtkCompositeDataSet*>( dataObject );
+ vtkCompositeDataIterator* mgdIterator = vtkCompositeDataIterator::New();
+ mgdIterator->SetDataSet( mgd );
+ ///For traversal of nested multigroupdatasets
+ mgdIterator->VisitOnlyLeavesOn();
+ mgdIterator->GoToFirstItem();
+ 
+ while( !mgdIterator->IsDoneWithTraversal() )
+ {
+ currentDataset = dynamic_cast<vtkDataSet*>( mgdIterator->GetCurrentDataObject() );
+ _convertCellDataToPointData( currentDataset );
+ if( m_datasetOperator )
+ {
+ m_datasetOperator->OperateOnDataset( currentDataset );
+ }
+ UpdateNumberOfPDArrays( currentDataset );
+ 
+ mgdIterator->GoToNextItem();
+ }
+ 
+ if( mgdIterator )
+ {
+ mgdIterator->Delete();
+ mgdIterator = 0;
+ }
+ }
+ catch ( ... )
+ {
+ std::cout << "*********** Invalid Dataset: " 
+ << dataObject->GetClassName() << " ***********" << std::endl;
+ }
+ }
+ else //Assume this is a regular vtkdataset
+ {
+ currentDataset = dynamic_cast<vtkDataSet*>( dataObject );
+ _convertCellDataToPointData( currentDataset );
+ if( m_datasetOperator )
+ {
+ m_datasetOperator->OperateOnDataset( currentDataset );
+ }
+ UpdateNumberOfPDArrays( currentDataset );
+ }
+ 
+ }
+ ////////////////////////////////////////////////////////////////////////////////
+ void DataObjectHandler::_convertCellDataToPointData( vtkDataSet* dataSet )
+ {
+ //UpdateNumberOfPDArrays( dataSet );
+ if( dataSet->GetCellData()->GetNumberOfArrays() > 0 ) //&& m_numberOfPointDataArrays  == 0 )
+ {
+ std::cout << "|\tThe dataset has no point data -- "
+ << "will try to convert cell data to point data" << std::endl;
+ 
+ vtkCellDataToPointData* converter = vtkCellDataToPointData::New();
+ converter->SetInput( 0, dataSet );
+ converter->PassCellDataOff();
+ converter->Update();
+ 
+ ///Why do we need to do this only for unstructured grids?
+ if( dataSet->GetDataObjectType() == VTK_UNSTRUCTURED_GRID )
+ {
+ dataSet->DeepCopy( converter->GetUnstructuredGridOutput() );
+ converter->Delete();
+ }
+ else if( dataSet->GetDataObjectType() == VTK_POLY_DATA )
+ {
+ dataSet->DeepCopy( converter->GetPolyDataOutput() );
+ converter->Delete();
+ }
+ else
+ {
+ converter->Delete();
+ std::cout << "\nAttempt failed: can not currently handle "
+ << "this type of data - " 
+ << "DataObjectHandler::_convertCellDataToPointData" << std::endl;
+ exit( 1 );
+ }
+ }
+ return;
+ }
+*/

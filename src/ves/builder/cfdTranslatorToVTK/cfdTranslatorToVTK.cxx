@@ -398,3 +398,14 @@ bool cfdTranslatorToVTK::_extractOptionFromCmdLine( int argc, char** argv,
     }
     return false;
 }
+////////////////////////////////////////////////////////////////////////////////
+void cfdTranslatorToVTK::SetScalarsAndVectorsToRead( std::vector< std::string > activeArrays )
+{
+    m_activeArrays = activeArrays;
+}
+////////////////////////////////////////////////////////////////////////////////
+std::vector< std::string > cfdTranslatorToVTK::GetActiveArrays()
+{
+    return m_activeArrays;
+}
+////////////////////////////////////////////////////////////////////////////////

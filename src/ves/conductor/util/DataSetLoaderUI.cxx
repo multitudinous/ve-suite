@@ -52,12 +52,17 @@
 #include <ves/conductor/util/DataSetLoaderUI.h>
 #include <ves/conductor/util/TransformUI.h>
 
+#include <ves/conductor/util/DataSetDataArrayChoiceDialog.h>
+
 #include <ves/open/xml/ParameterBlock.h>
 #include <ves/open/xml/DataValuePair.h>
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/model/Model.h>
 #include <ves/open/xml/XMLReaderWriter.h>
 #include <ves/open/xml/Transform.h>
+#include <ves/open/xml/OneDStringArray.h>
+
+#include <ves/xplorer/util/cfdVTKFileHandler.h>
 
 #include <iostream>
 
@@ -445,18 +450,48 @@ void DataSetLoaderUI::OnLoadFile( wxCommandEvent& WXUNUSED( event ) )
         wxString relativeDataSetPath( datasetFilename.GetFullPath() );
         relativeDataSetPath.Replace( _( "\\" ), _( "/" ), true );
         dataSetTextEntry->SetValue( relativeDataSetPath );
-        ves::open::xml::DataValuePairPtr tempDVP = mParamBlock->GetProperty( "VTK_DATA_FILE" );
-        if( !tempDVP )
+        std::string tempStr;
         {
-            tempDVP = mParamBlock->GetProperty( -1 );
+            ves::open::xml::DataValuePairPtr tempDVP = 
+                mParamBlock->GetProperty( "VTK_DATA_FILE" );
+            if( !tempDVP )
+            {
+                tempDVP = mParamBlock->GetProperty( -1 );
+            }
+            tempStr = static_cast< const char* >( 
+                wxConvCurrent->cWX2MB( relativeDataSetPath.c_str() ) );
+            tempDVP->SetData( "VTK_DATA_FILE", tempStr );
         }
-        std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( relativeDataSetPath.c_str() ) ) );
-        tempDVP->SetData( "VTK_DATA_FILE", tempStr );
 
-        ves::open::xml::DataValuePairSharedPtr dataValuePair(
-         new ves::open::xml::DataValuePair() );
+        ves::xplorer::util::cfdVTKFileHandler tempHandler;
+        std::vector< std::string > dataArrayList = 
+            tempHandler.GetDataSetArraysFromFile( tempStr );
+        
+        if( !dataArrayList.empty() )
+        {
+            //open dialog to choose scalars to load
+            DataSetDataArrayChoiceDialog choiceDialog( this );
+            choiceDialog.SetDataArrays( dataArrayList );
+            if( choiceDialog.ShowModal() == wxID_OK )
+            {
+                dataArrayList = choiceDialog.GetUserActiveArrays();
+                ves::open::xml::DataValuePairPtr arraysDVP = 
+                    mParamBlock->GetProperty( "VTK_ACTIVE_DATA_ARRAYS" );
+                if( !arraysDVP )
+                {
+                    arraysDVP = mParamBlock->GetProperty( -1 );
+                }
+                ves::open::xml::OneDStringArrayPtr 
+                    stringArray( new ves::open::xml::OneDStringArray() );
+                stringArray->SetArray( dataArrayList );
+                arraysDVP->SetData( "VTK_ACTIVE_DATA_ARRAYS", stringArray );
+            }
+        }
+        ves::open::xml::DataValuePairSharedPtr 
+            dataValuePair( new ves::open::xml::DataValuePair() );
         dataValuePair->SetData( "CREATE_NEW_DATASETS",
-                                ves::open::xml::model::ModelPtr( new ves::open::xml::model::Model( *m_veModel ) ) );
+            ves::open::xml::model::ModelPtr( 
+            new ves::open::xml::model::Model( *m_veModel ) ) );
         SendCommandToXplorer( dataValuePair );
     }
 }
@@ -549,7 +584,6 @@ void DataSetLoaderUI::OnTransformDataset( wxCommandEvent& WXUNUSED( event ) )
     if( mParamBlock )
     {
         mainSizer->Add( transformPanel, -1, wxEXPAND | wxALIGN_CENTER_HORIZONTAL );
-
     }
     else
     {
@@ -706,6 +740,7 @@ void DataSetLoaderUI::OnInformationPacketAdd( wxCommandEvent& WXUNUSED( event ) 
         return;
     }
     
+    
     if( dataSetList->FindString( newDataSetName.GetValue() ) != wxNOT_FOUND )
     {
         wxMessageBox( _( "Data with this name is already loaded." ),
@@ -720,6 +755,7 @@ void DataSetLoaderUI::OnInformationPacketAdd( wxCommandEvent& WXUNUSED( event ) 
         mParamBlock = m_veModel->GetInformationPacket( -1 );
         std::string tempStr;
         tempStr = ( static_cast< const char* >( wxConvCurrent->cWX2MB( newDataSetName.GetValue() ) ) );
+        
         mParamBlock->SetName( tempStr );
         EnableUI( true );
         SetTextCtrls();
