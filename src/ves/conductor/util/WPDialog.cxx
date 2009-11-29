@@ -85,15 +85,16 @@ void WPDialog::_buildGUI()
     wxStaticBoxSizer* mainSizer = new wxStaticBoxSizer( dualSliderGroup, wxVERTICAL );
 
     _createDualSliders();
-    wxBoxSizer* xdualSizer = new wxBoxSizer( wxHORIZONTAL );
-    xdualSizer->Add( _xBounds, 1, wxALIGN_CENTER | wxEXPAND );
+    //wxBoxSizer* xdualSizer = new wxBoxSizer( wxHORIZONTAL );
+    mainSizer->Add( _xBounds, 0, wxALIGN_CENTER | wxEXPAND );
 
-    wxBoxSizer* ydualSizer = new wxBoxSizer( wxHORIZONTAL );
-    ydualSizer->Add( _yBounds, 1, wxALIGN_CENTER | wxEXPAND );
+    //wxBoxSizer* ydualSizer = new wxBoxSizer( wxHORIZONTAL );
+    mainSizer->Add( _yBounds, 0, wxALIGN_CENTER | wxEXPAND );
 
-    wxBoxSizer* zdualSizer = new wxBoxSizer( wxHORIZONTAL );
-    zdualSizer->Add( _zBounds, 1, wxALIGN_CENTER | wxEXPAND );
+    //wxBoxSizer* zdualSizer = new wxBoxSizer( wxHORIZONTAL );
+    mainSizer->Add( _zBounds, 0, wxALIGN_CENTER | wxEXPAND );
 
+    ////////////////
     wxBoxSizer* spinnerXRowSizer = new wxBoxSizer( wxVERTICAL );
     numXPointsSpinner = new wxSpinCtrl( static_cast< wxWindow* >( this ), WPDialog::DIMENSION_SPINNER_ID,
                                         wxEmptyString,
@@ -132,16 +133,16 @@ void WPDialog::_buildGUI()
     wxStaticBox* seedPointGroup = new wxStaticBox( this, -1, wxT( "Seed Points" ) );
     wxStaticBoxSizer* spinnerRowSizer = new wxStaticBoxSizer( seedPointGroup, wxHORIZONTAL );
 
-    spinnerRowSizer->Add( spinnerXRowSizer, 0, wxALIGN_LEFT, 5 );
-    spinnerRowSizer->Add( spinnerYRowSizer, 0, wxALIGN_LEFT, 5 );
-    spinnerRowSizer->Add( spinnerZRowSizer, 0, wxALIGN_LEFT, 5 );
+    spinnerRowSizer->Add( spinnerXRowSizer, 0, wxALIGN_CENTER );
+    spinnerRowSizer->Add( spinnerYRowSizer, 0, wxALIGN_CENTER );
+    spinnerRowSizer->Add( spinnerZRowSizer, 0, wxALIGN_CENTER );
 
     wxButton* _closeButton = new wxButton( this, wxID_OK, _T( "Close" ), wxDefaultPosition, wxDefaultSize, 0 );
 
-    mainSizer->Add( xdualSizer, 1, wxALIGN_CENTER | wxEXPAND );
-    mainSizer->Add( ydualSizer, 1, wxALIGN_CENTER | wxEXPAND );
-    mainSizer->Add( zdualSizer, 1, wxALIGN_CENTER | wxEXPAND );
-    mainSizer->Add( spinnerRowSizer, 1, wxALIGN_CENTER | wxEXPAND );
+    //mainSizer->Add( xdualSizer, 1, wxALIGN_CENTER | wxEXPAND );
+    //mainSizer->Add( ydualSizer, 1, wxALIGN_CENTER | wxEXPAND );
+    ///mainSizer->Add( zdualSizer, 1, wxALIGN_CENTER | wxEXPAND );
+    mainSizer->Add( spinnerRowSizer, 0, wxALIGN_CENTER | wxEXPAND );
 
     mainSizer->Add( _closeButton, 0, wxALIGN_CENTER | wxALL, 5 );
     _xBounds->Raise();
@@ -339,18 +340,18 @@ wxSizer* WPDialog::_buildSpecificWidgets()
     wxStaticBoxSizer* mainSizer = new wxStaticBoxSizer( dualSliderGroup, wxVERTICAL );
 
     _createDualSliders();
-    wxBoxSizer* xdualSizer = new wxBoxSizer( wxHORIZONTAL );
-    xdualSizer->Add( _xBounds, 1, wxALIGN_CENTER | wxEXPAND );
+    //wxBoxSizer* xdualSizer = new wxBoxSizer( wxHORIZONTAL );
+    mainSizer->Add( _xBounds, 0, wxALIGN_CENTER | wxEXPAND );
 
-    wxBoxSizer* ydualSizer = new wxBoxSizer( wxHORIZONTAL );
-    ydualSizer->Add( _yBounds, 1, wxALIGN_CENTER | wxEXPAND );
+    //wxBoxSizer* ydualSizer = new wxBoxSizer( wxHORIZONTAL );
+    mainSizer->Add( _yBounds, 0, wxALIGN_CENTER | wxEXPAND );
 
-    wxBoxSizer* zdualSizer = new wxBoxSizer( wxHORIZONTAL );
-    zdualSizer->Add( _zBounds, 1, wxALIGN_CENTER | wxEXPAND );
+    //wxBoxSizer* zdualSizer = new wxBoxSizer( wxHORIZONTAL );
+    mainSizer->Add( _zBounds, 0, wxALIGN_CENTER | wxEXPAND );
 
-    mainSizer->Add( xdualSizer, 1, wxALIGN_CENTER | wxEXPAND );
-    mainSizer->Add( ydualSizer, 1, wxALIGN_CENTER | wxEXPAND );
-    mainSizer->Add( zdualSizer, 1, wxALIGN_CENTER | wxEXPAND );
+    //mainSizer->Add( xdualSizer, 1, wxALIGN_CENTER | wxEXPAND );
+    //mainSizer->Add( ydualSizer, 1, wxALIGN_CENTER | wxEXPAND );
+    //mainSizer->Add( zdualSizer, 1, wxALIGN_CENTER | wxEXPAND );
 
     return mainSizer;
 }

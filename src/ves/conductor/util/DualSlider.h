@@ -44,6 +44,8 @@
  */
 #include <wx/panel.h>
 #include <wx/slider.h>
+#include <wx/spinctrl.h>
+
 #include <map>
 
 namespace ves
@@ -52,6 +54,8 @@ namespace conductor
 {
 namespace util
 {
+class wxSpinCtrlDbl;
+
 class VE_CONDUCTOR_UTILS_EXPORTS DualSlider: public wxPanel
 {
 public:
@@ -104,15 +108,15 @@ public:
     int GetSliderBuffer();
 
     ///Get the slider maximum value.
-    int GetSliderMaximum();
+    double GetSliderMaximum();
 
     ///Get the slider minimum value.
-    int GetSliderMinimum();
+    double GetSliderMinimum();
 
     ///Get the value of the minimum slider
-    int GetMinSliderValue();
+    double GetMinSliderValue();
     ///Get the value of the maximum slider
-    int GetMaxSliderValue();
+    double GetMaxSliderValue();
 
     /*!\class DualSlider::SliderCallback
      *Class that allows the user to do operations based on slider events 
@@ -161,16 +165,31 @@ protected:
     ///Handle stop events on the sliders
     ///\param event wxScollEvent
     void _onStop( wxScrollEvent& event );
+    
+    ///Handle events for spinners
+    void UpdateSlider( wxCommandEvent& event );
+
+    ///Handle events for spinners
+    void UpdateSpinners( wxSpinEvent& event );
 
     ///Ensure that sliders don't cross over.
     ///\param activeSliderID The slider on the dial that's moving
     bool _ensureSliders( int activeSliderID );
 
+    ///Ensure that sliders don't cross over.
+    ///\param callbackID The slider on the dial that's moving
+    void UpdateSpinnerValues( int callbackID );
+    
     int _range[2];///<Slider value bounds.
     unsigned int _buffer;///<Set the minimum space between sliders
     wxSlider* _minSlider;///<Minimum slider.\m Displayed on the top of the pair
     wxSlider* _maxSlider;///<Maximum slider.\m Displayed on the bottom of the pair.
 
+    ///Min double spinner
+    wxSpinCtrlDbl* m_minSpinner;
+    ///Max double spinner
+    wxSpinCtrlDbl* m_maxSpinner;
+    
     std::map<int, SliderCallback*> _callbacks;///<Map for the slider callbacks.
 
     DECLARE_EVENT_TABLE()

@@ -31,17 +31,31 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/conductor/util/DualSlider.h>
+
+#include <ves/conductor/ConductorLibEnums.h>
+
+#include <ves/conductor/util/spinctld.h>
+
 #include <wx/slider.h>
-#include <iostream>
-#include <cmath>
 #include <wx/sizer.h>
 #include <wx/statbox.h>
+#include <wx/textctrl.h>
+
+#include <iostream>
+#include <cmath>
+
 using namespace ves::conductor::util;
 BEGIN_EVENT_TABLE( DualSlider, wxPanel )
     EVT_COMMAND_SCROLL_THUMBTRACK( MIN_SLIDER, DualSlider::_onSlider )
     EVT_COMMAND_SCROLL_THUMBTRACK( MAX_SLIDER, DualSlider::_onSlider )
     EVT_COMMAND_SCROLL_THUMBRELEASE( MIN_SLIDER, DualSlider::_onStop )
     EVT_COMMAND_SCROLL_THUMBRELEASE( MAX_SLIDER, DualSlider::_onStop )
+    EVT_TEXT_ENTER( DUAL_SLIDER_MIN_SPINNER, DualSlider::UpdateSlider )
+    EVT_TEXT( DUAL_SLIDER_MIN_SPINNER, DualSlider::UpdateSlider )
+    EVT_SPINCTRL( DUAL_SLIDER_MIN_SPINNER, DualSlider::UpdateSpinners )
+    EVT_TEXT_ENTER( DUAL_SLIDER_MAX_SPINNER, DualSlider::UpdateSlider )
+    EVT_TEXT( DUAL_SLIDER_MAX_SPINNER, DualSlider::UpdateSlider )
+    EVT_SPINCTRL( DUAL_SLIDER_MAX_SPINNER, DualSlider::UpdateSpinners )
 END_EVENT_TABLE()
 ////////////////////////////////////////////////////////////////////////
 DualSlider::DualSlider( wxWindow* parent, wxWindowID id,
@@ -52,12 +66,26 @@ DualSlider::DualSlider( wxWindow* parent, wxWindowID id,
                         const wxSize& size,
                         long style,
                         const wxString& name )
-        : wxPanel( parent, id, pos, size, wxTAB_TRAVERSAL, name )
+    : 
+    wxPanel( parent, id, pos, size, wxTAB_TRAVERSAL, name ),
+    m_maxSpinner( 0 )
 {
     wxBoxSizer* dualSliderPanelSizer = new wxBoxSizer( wxVERTICAL );
-    wxStaticBox* dualSliderGroup = new wxStaticBox( this, -1, name );
+    wxStaticBox* dualSliderGroup = new wxStaticBox( this, wxID_ANY, name );
     wxStaticBoxSizer* dualSliderSizer = new wxStaticBoxSizer( dualSliderGroup, wxVERTICAL );
 
+    wxBoxSizer* maxComboSizer = new wxBoxSizer( wxHORIZONTAL );
+    m_maxSpinner = new wxSpinCtrlDbl( *this, DUAL_SLIDER_MAX_SPINNER, 
+        wxEmptyString, wxDefaultPosition, wxSize( 75, -1 ), 
+        wxSP_ARROW_KEYS, 0, 100, 100, 0.1, -1, wxEmptyString );
+    maxComboSizer->Add( m_maxSpinner, 0, wxALIGN_LEFT | wxLEFT | wxRIGHT, 5 );
+
+    wxBoxSizer* minComboSizer = new wxBoxSizer( wxHORIZONTAL );
+    m_minSpinner = new wxSpinCtrlDbl( *this, DUAL_SLIDER_MIN_SPINNER, 
+        wxEmptyString, wxDefaultPosition,  wxSize( 75, -1 ), 
+        wxSP_ARROW_KEYS, 0, 100, 0, 0.1, -1, wxEmptyString );
+    minComboSizer->Add( m_minSpinner, 0, wxALIGN_LEFT | wxLEFT | wxRIGHT, 5 );    
+    
     _buffer = buffer;
     _range[0] = minRange;
     _range[1] = maxRange;
@@ -75,8 +103,12 @@ DualSlider::DualSlider( wxWindow* parent, wxWindowID id,
     _maxSlider = new wxSlider( this, MAX_SLIDER, maxSliderValue , _range[0], _range[1], wxDefaultPosition,
                                wxDefaultSize, style, wxDefaultValidator, _( "maxSlider" ) );
     _ensureSliders( MIN_SLIDER );
-    dualSliderSizer->Add( _minSlider, 1, wxALIGN_CENTER | wxEXPAND );
-    dualSliderSizer->Add( _maxSlider, 1, wxALIGN_CENTER | wxEXPAND );
+
+    minComboSizer->Add( _minSlider, 0, wxALIGN_CENTER | wxEXPAND );
+    dualSliderSizer->Add( minComboSizer, 0, wxALIGN_CENTER );
+
+    maxComboSizer->Add( _maxSlider, 0, wxALIGN_CENTER | wxEXPAND );
+    dualSliderSizer->Add( maxComboSizer, 0, wxALIGN_CENTER );
 
     dualSliderPanelSizer->Add( dualSliderSizer, 1, wxEXPAND | wxALIGN_CENTER );
     _minSlider->Raise();
@@ -139,14 +171,14 @@ void DualSlider::SetSliderBuffer( int buffer )
     }
 }
 ///////////////////////////////////
-int DualSlider::GetMinSliderValue()
+double DualSlider::GetMinSliderValue()
 {
-    return _minSlider->GetValue();
+    return m_minSpinner->GetValue();
 }
 ///////////////////////////////////
-int DualSlider::GetMaxSliderValue()
+double DualSlider::GetMaxSliderValue()
 {
-    return _maxSlider->GetValue();
+    return m_maxSpinner->GetValue();
 }
 /////////////////////////////////
 int DualSlider::GetSliderBuffer()
@@ -154,12 +186,12 @@ int DualSlider::GetSliderBuffer()
     return _buffer;
 }
 //////////////////////////////////
-int DualSlider::GetSliderMaximum()
+double DualSlider::GetSliderMaximum()
 {
     return _range[1];
 }
 //////////////////////////////////
-int DualSlider::GetSliderMinimum()
+double DualSlider::GetSliderMinimum()
 {
     return _range[0];
 }
@@ -204,24 +236,29 @@ void DualSlider::SetBothSliderUpdateCallback( SliderCallback* bothSCbk )
 {
     _callbacks[BOTH_SLIDERS] = bothSCbk;
 }
-/////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void DualSlider::SetMinSliderCallback( DualSlider::SliderCallback* minCbk )
 {
     _callbacks[MIN_SLIDER] = minCbk;
 }
-/////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void DualSlider::SetMaxSliderCallback( DualSlider::SliderCallback* maxCbk )
 {
     _callbacks[MAX_SLIDER] = maxCbk;
 }
-////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void DualSlider::_onSlider( wxScrollEvent& event )
 {
     int callbackID = event.GetId();
+
     if( _ensureSliders( callbackID ) )
     {
         callbackID = BOTH_SLIDERS;
     }
+    
+    m_minSpinner->SetValue( _minSlider->GetValue() );
+    m_maxSpinner->SetValue( _maxSlider->GetValue() );
+
     try
     {
         std::map<int, DualSlider::SliderCallback*>::iterator activeCallback;
@@ -237,10 +274,14 @@ void DualSlider::_onSlider( wxScrollEvent& event )
         std::cout << "Callback not found: " << callbackID << std::endl;
     }
 }
-////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void DualSlider::_onStop( wxScrollEvent& event )
 {
     int callbackID = event.GetId();
+
+    m_minSpinner->SetValue( _minSlider->GetValue() );
+    m_maxSpinner->SetValue( _maxSlider->GetValue() );
+
     try
     {
         std::map<int, DualSlider::SliderCallback*>::iterator activeCallback;
@@ -256,3 +297,53 @@ void DualSlider::_onStop( wxScrollEvent& event )
         std::cout << "Callback not found: " << callbackID << std::endl;
     }
 }
+////////////////////////////////////////////////////////////////////////////////
+void DualSlider::UpdateSlider( wxCommandEvent& event )
+{
+    int callbackID = event.GetId();
+    UpdateSpinnerValues( callbackID );
+}
+////////////////////////////////////////////////////////////////////////////////
+void DualSlider::UpdateSpinners( wxSpinEvent& event )
+{
+    int callbackID = event.GetId();
+    UpdateSpinnerValues( callbackID );
+}
+////////////////////////////////////////////////////////////////////////////////
+void DualSlider::UpdateSpinnerValues( int callbackID )
+{
+    if( callbackID == DUAL_SLIDER_MAX_SPINNER )
+    {
+        callbackID = MAX_SLIDER;
+    }
+    else
+    {
+        callbackID = MIN_SLIDER;
+    }
+    
+    _minSlider->SetValue( m_minSpinner->GetValue() );
+    _maxSlider->SetValue( m_maxSpinner->GetValue() );
+    
+    if( _ensureSliders( callbackID ) )
+    {
+        callbackID = BOTH_SLIDERS;
+        m_minSpinner->SetValue( _minSlider->GetValue() );
+        m_maxSpinner->SetValue( _maxSlider->GetValue() );
+    }
+    
+    try
+    {
+        std::map<int, DualSlider::SliderCallback*>::iterator activeCallback;
+        activeCallback = _callbacks.find( callbackID );
+        if( activeCallback != _callbacks.end() )
+        {
+            activeCallback->second->SetDualSlider( this );
+            activeCallback->second->SliderOperation();
+        }
+    }
+    catch ( ... )
+    {
+        std::cout << "Callback not found: " << callbackID << std::endl;
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
