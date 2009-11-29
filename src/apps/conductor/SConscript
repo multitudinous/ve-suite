@@ -27,11 +27,12 @@ if baseEnv[ 'MakeMinervaSupport' ] != 'no':
    #osg_options.apply( env )
 
 env.Append(LIBS = ['ves_conductor_plugin', 'ves_open_xml',
-                   'ves_open_module'])
+                   'ves_open_module','ves_xplorer_util'])
 env.Append(LIBPATH = [
                         pj('#', buildDir, 'src','ves','conductor'),
                         pj('#', buildDir, 'src','ves','open'),
-                        pj('#', buildDir, 'src','ves','open','xml')
+                        pj('#', buildDir, 'src','ves','open','xml'),
+                        pj('#', buildDir, 'src','ves','xplorer','util')
                      ])
 
 xerces_options.apply( env )
