@@ -105,11 +105,11 @@ DualSlider::DualSlider( wxWindow* parent, wxWindowID id,
                                wxDefaultSize, style, wxDefaultValidator, _( "maxSlider" ) );
     _ensureSliders( MIN_SLIDER );
 
-    minComboSizer->Add( _minSlider, 0, wxALIGN_CENTER | wxEXPAND );
-    dualSliderSizer->Add( minComboSizer, 0, wxALIGN_CENTER );
+    minComboSizer->Add( _minSlider, 1, wxALIGN_CENTER | wxEXPAND );
+    dualSliderSizer->Add( minComboSizer, 0, wxALIGN_CENTER | wxEXPAND );
 
-    maxComboSizer->Add( _maxSlider, 0, wxALIGN_CENTER | wxEXPAND );
-    dualSliderSizer->Add( maxComboSizer, 0, wxALIGN_CENTER );
+    maxComboSizer->Add( _maxSlider, 1, wxALIGN_CENTER | wxEXPAND );
+    dualSliderSizer->Add( maxComboSizer, 0, wxALIGN_CENTER | wxEXPAND );
 
     dualSliderPanelSizer->Add( dualSliderSizer, 1, wxEXPAND | wxALIGN_CENTER );
     _minSlider->Raise();
