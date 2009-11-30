@@ -68,7 +68,8 @@ DualSlider::DualSlider( wxWindow* parent, wxWindowID id,
                         const wxString& name )
     : 
     wxPanel( parent, id, pos, size, wxTAB_TRAVERSAL, name ),
-    m_maxSpinner( 0 )
+    m_maxSpinner( 0 ),
+    m_minSpinner( 0 )
 {
     wxBoxSizer* dualSliderPanelSizer = new wxBoxSizer( wxVERTICAL );
     wxStaticBox* dualSliderGroup = new wxStaticBox( this, wxID_ANY, name );
@@ -251,6 +252,11 @@ void DualSlider::_onSlider( wxScrollEvent& event )
 {
     int callbackID = event.GetId();
 
+    if( !m_minSpinner || !m_maxSpinner )
+    {
+        return;
+    }
+
     if( _ensureSliders( callbackID ) )
     {
         callbackID = BOTH_SLIDERS;
@@ -278,6 +284,11 @@ void DualSlider::_onSlider( wxScrollEvent& event )
 void DualSlider::_onStop( wxScrollEvent& event )
 {
     int callbackID = event.GetId();
+
+    if( !m_minSpinner || !m_maxSpinner )
+    {
+        return;
+    }
 
     m_minSpinner->SetValue( _minSlider->GetValue() );
     m_maxSpinner->SetValue( _maxSlider->GetValue() );
@@ -312,6 +323,11 @@ void DualSlider::UpdateSpinners( wxSpinEvent& event )
 ////////////////////////////////////////////////////////////////////////////////
 void DualSlider::UpdateSpinnerValues( int callbackID )
 {
+    if( !m_minSpinner || !m_maxSpinner )
+    {
+        return;
+    }
+
     if( callbackID == DUAL_SLIDER_MAX_SPINNER )
     {
         callbackID = MAX_SLIDER;
