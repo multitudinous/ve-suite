@@ -14,7 +14,7 @@ import os, sys, string, copy, re
 import SCons.Environment
 import SCons.Platform
 import SCons
-
+import SCons.dblite
 import fnmatch
 ###
 
@@ -188,7 +188,8 @@ if ARGUMENTS.has_key("options_file"):
 
 opts = SConsAddons.Options.Options(files = [options_cache, 'options.custom'],
                                    args= ARGUMENTS)
-options_db_cache = options_cache + ".dblite"
+
+options_db_cache = options_cache + SCons.dblite.dblite_suffix
 SConsignFile(options_db_cache)
 
 if GetPlatform() == 'win32':
@@ -280,8 +281,8 @@ apu_options = fp_option.FlagPollBasedOption("Apache Portable Runtime Utils",
 #bullet_options = fp_option.FlagPollBasedOption("Bullet Physics SDK",
 #                                               "bullet", "0.1", True, True, helpText=None, compileTest=True,
 #                                               headerToCheck="btBulletCollisionCommon.h")
-bulletVersion = (int(2), int(74))
-bulletBaseVar = 'bullet-2.74'
+bulletVersion = (int(2), int(75))
+bulletBaseVar = 'bullet-2.75'
 
 tao_options = fp_option.FlagPollBasedOption("ACE TAO libraries",
                      "ACE TAO_Valuetype TAO_CosNaming TAO_Svc_Utils TAO_IORTable TAO_Messaging TAO_PortableServer TAO_BiDirGIOP TAO_AnyTypeCode TAO",
@@ -492,6 +493,10 @@ baseEnv.SourceCode('.', None)
 # Add doxygen builder to the base environment
 doxygen.generate(baseEnv)
 
+# Setup a configure build directory for each unique build type
+baseEnv['CONFIGUREDIR'] = "." + options_cache + "_temp_dir"
+
+# Setup help text
 help_text += opts.GenerateHelpText(baseEnv)
 baseEnv.Help(help_text)
 
