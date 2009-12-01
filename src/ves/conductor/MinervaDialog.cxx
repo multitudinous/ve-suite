@@ -242,18 +242,23 @@ void MinervaDialog::AddElevationLayerWMS( wxCommandEvent& event )
 ///////////////////////////////////////////////////////////////////////////////
 void MinervaDialog::AddElevationLayerFileSystem( wxCommandEvent& event )
 {
-    wxFileDialog dialog( this, _("Open") );
+    wxFileDialog dialog( this, _("Open"), wxEmptyString, wxEmptyString, wxFileSelectorDefaultWildcardStr, wxFD_MULTIPLE );
     if( wxID_OK == dialog.ShowModal() )
     {
-        wxFileName vegFileName( dialog.GetPath() );
-        vegFileName.MakeRelativeTo( ::wxGetCwd() );
-        wxString vegFileNamePath( vegFileName.GetFullPath() );
-        vegFileNamePath.Replace( _( "\\" ), _( "/" ), true );
+        wxArrayString paths;
+        dialog.GetPaths( paths );
+        for( size_t i = 0; i < paths.size(); ++i )
+        {
+            wxFileName vegFileName( paths.Item( i ) );
+            vegFileName.MakeRelativeTo( ::wxGetCwd() );
+            wxString vegFileNamePath( vegFileName.GetFullPath() );
+            vegFileNamePath.Replace( _( "\\" ), _( "/" ), true );
 
-        MinervaDialog::_addLayerFileSystem( 
-            ves::util::commands::ADD_ELEVATION_LAYER, 
-            ConvertUnicode( vegFileNamePath.c_str() ), 
-            _elevationLayersList, _elevationLayers, _elevationGroupCommand );
+            MinervaDialog::_addLayerFileSystem( 
+                ves::util::commands::ADD_ELEVATION_LAYER, 
+                ConvertUnicode( vegFileNamePath.c_str() ), 
+                _elevationLayersList, _elevationLayers, _elevationGroupCommand );
+        }
     }
 }
 ///////////////////////////////////////////////////////////////////////////////
@@ -278,18 +283,23 @@ void MinervaDialog::AddRasterLayerWMS( wxCommandEvent& event )
 ///////////////////////////////////////////////////////////////////////////////
 void MinervaDialog::AddRasterLayerFileSystem( wxCommandEvent& event )
 {
-    wxFileDialog dialog( this, _("Open") );
+    wxFileDialog dialog( this, _("Open"), wxEmptyString, wxEmptyString, wxFileSelectorDefaultWildcardStr, wxFD_MULTIPLE );
     if( wxID_OK == dialog.ShowModal() )
     {
-        wxFileName vegFileName( dialog.GetPath() );
-        vegFileName.MakeRelativeTo( ::wxGetCwd() );
-        wxString vegFileNamePath( vegFileName.GetFullPath() );
-        vegFileNamePath.Replace( _( "\\" ), _( "/" ), true );
-        
-        MinervaDialog::_addLayerFileSystem( 
-            ves::util::commands::ADD_RASTER_LAYER,  
-            ConvertUnicode( vegFileNamePath.c_str() ), 
-            _rasterLayersList, _rasterLayers, _rasterGroupCommand );
+        wxArrayString paths;
+        dialog.GetPaths( paths );
+        for( size_t i = 0; i < paths.size(); ++i )
+        {
+            wxFileName vegFileName( paths.Item( i ) );
+            vegFileName.MakeRelativeTo( ::wxGetCwd() );
+            wxString vegFileNamePath( vegFileName.GetFullPath() );
+            vegFileNamePath.Replace( _( "\\" ), _( "/" ), true );
+            
+            MinervaDialog::_addLayerFileSystem( 
+                ves::util::commands::ADD_RASTER_LAYER,  
+                ConvertUnicode( vegFileNamePath.c_str() ), 
+                _rasterLayersList, _rasterLayers, _rasterGroupCommand );
+        }
     }
 }
 ///////////////////////////////////////////////////////////////////////////////
