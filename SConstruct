@@ -494,7 +494,7 @@ baseEnv.SourceCode('.', None)
 doxygen.generate(baseEnv)
 
 # Setup a configure build directory for each unique build type
-baseEnv['CONFIGUREDIR'] = "." + options_cache + "_temp_dir"
+baseEnv['CONFIGUREDIR'] = options_cache + "_cache_dir"
 
 # Setup help text
 help_text += opts.GenerateHelpText(baseEnv)
