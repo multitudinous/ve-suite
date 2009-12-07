@@ -49,7 +49,6 @@
 #include <vector>
 #include <iostream>
 #include <string>
-#include <cstdlib>
 
 using namespace ves::xplorer::volume;
 

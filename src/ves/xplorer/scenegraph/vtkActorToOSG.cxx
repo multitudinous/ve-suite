@@ -55,7 +55,6 @@
 #include <osg/Vec3>
 #include <osg/LineWidth>
 #include <iostream>
-#include <cstring>
 
 using namespace ves::xplorer::scenegraph;
 

@@ -44,7 +44,6 @@
 
 // --- C/C++ Includes --- //
 #include <iostream>
-#include <cstring>
 
 using namespace ves::xplorer::scenegraph::rtt;
 

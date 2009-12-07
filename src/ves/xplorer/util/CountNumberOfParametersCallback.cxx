@@ -38,7 +38,6 @@
 #include <vtkCellData.h>
 
 #include <algorithm>
-#include <cstring>
 
 using namespace ves::xplorer::util;
 

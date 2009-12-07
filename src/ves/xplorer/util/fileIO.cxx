@@ -39,7 +39,6 @@
 #include <iostream>
 #include <fstream>
 #include <list>
-#include <cstring>
 namespace fs = boost::filesystem;
 
 using namespace ves::xplorer::util;
@@ -551,12 +550,12 @@ std::vector<std::string> fileIO::GetFilesInDirectory( std::string dir, std::stri
             {
                 try
                 {
-                    if( strstr( dir_itr->path().leaf().c_str(), extension.c_str() ) )
+                    if( strstr( dir_itr->leaf().c_str(), extension.c_str() ) )
                     {
                         std::string pathAndFileName;
                         pathAndFileName.assign( dir_path.string() );
                         pathAndFileName.append( "/" );
-                        pathAndFileName.append( dir_itr->path().leaf() );
+                        pathAndFileName.append( dir_itr->leaf() );
 
 
                         filesInDir.push_back( pathAndFileName );
