@@ -51,6 +51,7 @@
 
 // --- C/C++ Libraries --- //
 #include <iostream>
+#include <cstring>
 
 using namespace ves::xplorer::scenegraph;
 

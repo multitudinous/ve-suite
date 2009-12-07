@@ -36,6 +36,7 @@
 #include <iomanip>
 #include <cmath>
 #include <sstream>
+#include <cstring>
 #ifndef WIN32
 #include <netinet/in.h>
 #endif

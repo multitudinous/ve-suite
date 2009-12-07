@@ -38,6 +38,7 @@
 #include <converter.h>
 #include <cmath>
 #include <ctime>
+#include <cstdlib>
 
 fluentParticles::fluentParticles( void )
 {

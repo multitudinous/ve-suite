@@ -38,6 +38,7 @@
 
 #include <iostream>
 #include <fstream>
+#include <cstring>
 
 #include <vtkUnstructuredGrid.h>        // -lvtkFiltering
 #include <vtkPoints.h>                  // -lvtkCommon

@@ -39,6 +39,7 @@
 
 // --- C/C++ Includes --- //
 #include <iostream>
+#include <cstdlib>
 
 using namespace ves::xplorer::volume;
 

@@ -37,6 +37,7 @@
 // --- OSG Includes --- //
 #include <osg/Image>
 #include <osg/State>
+#include <string.h>
 
 using namespace ves::xplorer::volume;
 

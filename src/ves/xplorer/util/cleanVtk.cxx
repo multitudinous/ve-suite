@@ -35,6 +35,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <cstring>
 
 #include <vtkPoints.h>
 #include <vtkUnstructuredGrid.h>
