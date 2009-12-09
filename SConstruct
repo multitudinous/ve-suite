@@ -284,17 +284,12 @@ apu_options = fp_option.FlagPollBasedOption("Apache Portable Runtime Utils",
 bulletVersion = (int(2), int(75))
 bulletBaseVar = 'bullet-2.75'
 
+#need to do a flagpoll check to see if TAO pc or fpc files are available
 tao_options = fp_option.FlagPollBasedOption("ACE TAO libraries",
                      "ACE TAO_Valuetype TAO_CosNaming TAO_Svc_Utils TAO_IORTable TAO_Messaging TAO_PortableServer TAO_BiDirGIOP TAO_AnyTypeCode TAO",
                                                "1.5", True, True, helpText=None, compileTest=True,
                                                headerToCheck="ace/ACE.h")
-#if GetPlatform() != 'win32':
-#    boost_options = SConsAddons.Options.Boost.Boost("boost", "1.32.0",
-#                                                libs = ['filesystem','system'],
-#                                                required = True,
-#                                                useVersion = True,
-#                                                autoLink = True)
-#else:
+
 boost_options = fp_option.FlagPollBasedOption("Boost Libraries",
         "Boost.Filesystem", "1.32.0", True, True, helpText=None, compileTest=True)
 

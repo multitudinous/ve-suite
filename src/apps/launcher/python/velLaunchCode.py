@@ -45,7 +45,7 @@ from velDepsArray import *
 import string
 import subprocess
 import platform
-
+import signal
 #used to work with the windows registrey
 #import _winreg
 
@@ -174,10 +174,10 @@ class Launch:
             sleep(1)
             print "Starting Name Server."
             #Checking existence of executable file first before calling it
-            exe = "Naming_Service" + self.windowsSuffix
+            exe = self.NameServiceCall()
             pids = []
             try:
-                pids.append(subprocess.Popen(self.NameServiceCall(), 
+                pids.append(subprocess.Popen(exe, 
                                              stdin = self.inputSource, 
                                              stdout = self.outputDestination, 
                                              stderr = self.outputDestination).pid)
@@ -284,10 +284,10 @@ class Launch:
         if self.settings["NameServer"]:
             sleep(2)
             print "Starting Name Server."
-            exe = "Naming_Service"
+            exe = self.NameServiceCall()
             pids = []
             try:
-                pids.append(subprocess.Popen(self.NameServiceCall(),
+                pids.append(subprocess.Popen(exe,
                                              stdout = self.outputDestination, stderr = subprocess.STDOUT).pid)
             except OSError:
                 print "Naming Service call error, \"%s\" not found on your environment." % exe
@@ -387,6 +387,25 @@ class Launch:
         exe = "Naming_Service"
         if windows:
             exe += ".exe"
+        else:
+            try:
+                pid = subprocess.Popen(exe, stdin = self.inputSource,
+                    stdout = self.outputDestination, 
+                    stderr = self.outputDestination).pid
+                os.kill( pid, signal.SIGKILL )
+            except OSError:
+                print "Naming Service call error, \"%s\" not found on your environment." % exe
+                # this is for use on suse linux where tao is available
+                # from a third party repo
+                exe = "tao_cosnaming"
+                try:
+                    pid = subprocess.Popen(exe, stdin = self.inputSource,
+                        stdout = self.outputDestination, 
+                        stderr = self.outputDestination).pid
+                    os.kill( pid, signal.SIGKILL )
+                except OSError:
+                    print "Naming Service call error, \"%s\" not found on your environment." % exe
+
         c = [exe, "-ORBEndPoint", "iiop://%s" %self.TaoPair()]
         return c
 
@@ -637,7 +656,7 @@ class Launch:
         """Brings up the system error encountered during [step]."""
         ##Arrays of names/errors for comparison below.
         fileNotFoundErrors = ["[Errno 2] The system cannot find the file specified"]
-        namingServiceNames = ["Naming_Service", "Naming_Service.exe"]
+        namingServiceNames = [ self.NameServiceCall() ]
         if step == "psexec":
             stepName = "PsExec for cluster"
         elif step in namingServiceNames:
