@@ -818,8 +818,13 @@ const bool Dragger::CreatePointConstraint( btRigidBody& btRB )
 ////////////////////////////////////////////////////////////////////////////////
 void Dragger::ClearPointConstraint()
 {
-    m_physicsSimulator.SetIdle( true );
     ConstraintMap::const_iterator itr = (*m_constraintMap).begin();
+    if( itr == (*m_constraintMap).end() )
+    {
+        return;
+    }
+    m_physicsSimulator.SetIdle( true );
+
     for( itr; itr != (*m_constraintMap).end(); ++itr )
     {
         btPoint2PointConstraint* p2p = itr->second;
