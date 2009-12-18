@@ -15,7 +15,7 @@ sources = map(lambda s: pj('src', s),
 
 lib_env = ves_pkg.getEnv().Clone()
 
-lib_env.Append( CPPDEFINES = ['LOKI_OBJECT_LEVEL_THREADING'] )
+lib_env.Append( CPPDEFINES = ['LOKI_OBJECT_LEVEL_THREADING','LOKI_ENABLE_FUNCTION'] )
 if GetPlatform() == "win32":
    lib_env.Append( CPPDEFINES = ['LOKI_MAKE_DLL'] )
    lib_env.Append( CPPDEFINES = ['_WINDLL'] )

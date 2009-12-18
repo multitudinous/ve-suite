@@ -17,23 +17,24 @@ srcs = Split("""
    SpeechNavigator.cxx
 """)
 
-loki_srcs = Split("""
-   SmallObj.cpp
-   Singleton.cpp
-   SmartPtr.cpp
-""")
-loki_srcs = map(lambda s: pj('#', 'external', lokiBaseVar, 'src', s),
-                loki_srcs)
-srcs.extend(loki_srcs)
+#loki_srcs = Split("""
+#   SmallObj.cpp
+#   Singleton.cpp
+#   SmartPtr.cpp
+#""")
+#loki_srcs = map(lambda s: pj(RootDir , 'external', lokiBaseVar, 'src', s),
+#                loki_srcs)
+#srcs.extend(loki_srcs)
 
 env.AppendUnique( CPPPATH = [pj('#', 'external', 'cxxtest-3.10.1'),
                              pj('#', 'external', lokiBaseVar, 'include'),
                              pj('#', 'src'),
                              '#'],
                   LIBPATH = [pj('#', buildDir, 'src', 'ves', 'open'),
-                             pj('#', buildDir, 'src', 'ves', 'open', 'xml')],
-                  LIBS = ['ves_open_module', 'ves_open_xml'],
-                  CPPDEFINES = ['LOKI_ENABLE_FUNCTION',
+                             pj('#', buildDir, 'src', 'ves', 'open', 'xml'),
+                             pj('#', buildDir, 'external', lokiBaseVar)],
+                  LIBS = ['ves_open_module', 'ves_open_xml', 'loki.0.1.7'],
+                  CPPDEFINES = ['LOKI_ENABLE_FUNCTION','LOKI_OBJECT_LEVEL_THREADING','LOKI_DLL',
                                 'LOKI_FUNCTOR_IS_NOT_A_SMALLOBJECT'])
 
 app = ves_pkg.createProgram('JuliusSpeechNavigator' + env["PROGSUFFIX"], env, 'bin')
