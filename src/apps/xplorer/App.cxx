@@ -88,6 +88,9 @@
 #include <osg/DeleteHandler>
 
 #include <osgDB/WriteFile>
+#include <osgDB/ReadFile>
+#include <osgDB/Registry>
+#include <osgDB/ReaderWriter>
 
 #include <osgUtil/SceneView>
 #include <osgUtil/UpdateVisitor>
@@ -381,6 +384,20 @@ void App::initScene()
     XMLObjectFactory::Instance()->RegisterObjectCreator( "Shader", new shader::ShaderCreator() );
     XMLObjectFactory::Instance()->RegisterObjectCreator( "Model", new model::ModelCreator() );
     XMLObjectFactory::Instance()->RegisterObjectCreator( "CAD", new cad::CADCreator() );
+    //Check and see if we have osg plugins available
+    {
+        osgDB::ReaderWriter* osgReaderWriter = 
+            osgDB::Registry::instance()->getReaderWriterForExtension( "osg" );
+        osgDB::Registry::ReaderWriterList readerlist = 
+            osgDB::Registry::instance()->getReaderWriterList();
+        if( (readerlist.size() == 0) || !osgReaderWriter )
+        {
+            std::cerr << 
+            "OpenSceneGraph plugins are not available. Please make sure the OSG loaders are in your path." 
+            << std::endl;
+            exit();
+        }
+    }
 
     std::cout << std::endl;
     std::cout << "| ***************************************************************** |" << std::endl;
