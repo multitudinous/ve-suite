@@ -304,7 +304,8 @@ class ConfigReaderWriter : public osg::Referenced
 public:
     ConfigReaderWriter( btDynamicsWorld* dw )
       : _dw( dw ),
-      _up( osg::Vec3( 0, 0, -1 ) )
+      _up( osg::Vec3( 0, 0, -1 ) ),
+      _useGroupPlane( true )
     {}
 
     bool read( const std::string& fileName )
@@ -319,7 +320,8 @@ public:
 
         short filterGroup( 0 );
         short filterWith( 0 );
-        std::string node, dae;
+        std::string node, dae, daeModel;
+        bool matchAllNodes = true;
         char bufCh[ 1024 ];
         in.getline( bufCh, 1024 );
         std::string buf( bufCh );
@@ -341,6 +343,10 @@ public:
             {
                 istr >> _up;
             }
+            else if( key == std::string( "GroupPlane:" ) )
+            {
+                istr >> _useGroupPlane;
+            }
             else if( key == std::string( "HandNode:" ) )
             {
                 osg::Vec3 pos;
@@ -361,36 +367,65 @@ public:
             {
                 istr >> _model;
             }
+            else if( key == std::string( "DAEModel:" ) )
+            {
+                istr >> daeModel;
+            }
             else if( key == std::string( "Node:" ) )
             {
                 istr >> node;
+            }
+            else if( key == std::string( "MatchAllNodes:" ) )
+            {
+                istr >> matchAllNodes;
             }
             else if( key == std::string( "DAE:" ) )
             {
                 NodeInfo ni;
                 ni._name = node;
+                ni._daeModel = daeModel;
+                ni._matchAllNodes = matchAllNodes;
                 ni._filterGroup = filterGroup;
                 ni._filterWith = filterWith;
                 istr >> dae;
                 _nodeDaeMap[ ni ] = dae;
+                
+                //Reset all variables
+                node = "";
+                daeModel = "";
+                matchAllNodes = true;
             }
             else if( key == std::string( "CreateDAE:" ) )
             {
                 istr >> node;
                 NodeInfo ni;
                 ni._name = node;
+                ni._daeModel = daeModel;
+                ni._matchAllNodes = matchAllNodes;
                 ni._filterGroup = filterGroup;
                 ni._filterWith = filterWith;
                 _nodeCreateList.push_back( ni );
+                
+                //Reset all variables
+                node = "";
+                daeModel = "";
+                matchAllNodes = true;                
             }
             else if( key == std::string( "CreateDAE-tm:" ) )
             {
                 istr >> node;
                 NodeInfo ni;
                 ni._name = node;
+                ni._daeModel = daeModel;
+                ni._matchAllNodes = matchAllNodes;
                 ni._filterGroup = filterGroup;
                 ni._filterWith = filterWith;
                 _nodeCreateTMList.push_back( ni );
+                
+                //Reset all variables
+                node = "";
+                daeModel = "";
+                matchAllNodes = true;                
             }
 
             else if( key == std::string( "Hinge:" ) )
@@ -448,6 +483,8 @@ public:
 
     typedef struct NodeInfo {
         std::string _name;
+        std::string _daeModel;
+        bool _matchAllNodes;
         short _filterGroup, _filterWith;
 
         bool operator<( const NodeInfo& rhs ) const
@@ -464,6 +501,7 @@ public:
     NodeCreateList _nodeCreateList;
     NodeCreateList _nodeCreateTMList;
     osg::Vec3 _up;
+    bool _useGroupPlane;
 
     typedef struct {
         std::string _nodeA;
@@ -572,15 +610,34 @@ main( int argc,
     for( itr = crw->_nodeDaeMap.begin(); itr != crw->_nodeDaeMap.end(); itr++ )
     {
         ConfigReaderWriter::NodeInfo ni( itr->first );
-        osgwTools::FindNamedNode fnn( ni._name );
-        orient->accept( fnn );
+        //First lets see if the user has loaded a specific model with the 
+        //DAEModel: tag to be associated with this dae file. If so then use 
+        //this to match the dae model and not the Model: file
+        osg::ref_ptr< osg::Node > daeSearchNode = orient.get();
 
-        unsigned int idx;
+        if( !ni._daeModel.empty() )
+        {
+            osg::ref_ptr< osg::Node > daeOsgModel;
+            osg::ref_ptr< osg::Group > parentNode = new osg::Group();
+            daeOsgModel = osgDB::readNodeFile( ni._daeModel );
+            parentNode->addChild( daeOsgModel.get() );
+            orient->addChild( parentNode.get() );
+            daeSearchNode = parentNode.get();
+        }
+        //Now lets find the node that matches the Node: tag
+        osgwTools::FindNamedNode fnn( ni._name );
+        daeSearchNode->accept( fnn );
+
+        //Now we are going to match everything up and create the rigid body 
+        //from the DAE: tag file
+        unsigned int idx = 0;
         for( idx=0; idx<fnn._napl.size(); idx++ )
         {
             osgwTools::FindNamedNode::NodeAndPath& nap( fnn._napl[ idx ] );
             osg::Node* subgraph = nap.first;
             osg::NodePath& np = nap.second;
+            np.erase( np.end() - 1 );
+            
             osgwTools::AbsoluteModelTransform* amt = new osgwTools::AbsoluteModelTransform;
             osg::Group* parent = subgraph->getParent( 0 );
             parent->addChild( amt );
@@ -594,6 +651,13 @@ main( int argc,
             else
                 bulletWorld->addRigidBody( rb->getRigidBody(), ni._filterGroup, ni._filterWith );
             amt->setUserData( rb );
+            
+            //If we do not want to create physics for all the nodes with the 
+            //name on the node path list then break out of the for loop
+            if( !ni._matchAllNodes )
+            {
+                break;
+            }
         }
     }
 
@@ -846,13 +910,16 @@ main( int argc,
         }
     }
 
-
-    float thin = .1;
-    osg::MatrixTransform* ground = createOSGBox( osg::Vec3( 10, 10, thin ) );
-    root->addChild( ground );
-    btRigidBody* groundBody = createBTBox( ground, osg::Vec3( 0, 0, -1*up[2]*thin ) );
-    bulletWorld->addRigidBody( groundBody );
-
+    if( crw->_useGroupPlane )
+    {
+        float thin = .1;
+        osg::MatrixTransform* ground = 
+            createOSGBox( osg::Vec3( 10, 10, thin ) );
+        root->addChild( ground );
+        btRigidBody* groundBody = 
+            createBTBox( ground, osg::Vec3( 0, 0, -1*up[2]*thin ) );
+        bulletWorld->addRigidBody( groundBody );
+    }
 
     osgViewer::Viewer viewer;
     viewer.setSceneData( root );

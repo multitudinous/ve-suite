@@ -78,26 +78,29 @@ handFile.addFiles( pj( openDir, 'data','handR.ive'), useRelPath=False )
 
 ###############################################################
 ##Builds caddemo
-#openDir = os.path.abspath( pj(RootDir, 'external', 'osgBullet') )
-#sources2 = sca_util.getSourcesRecursive( pj( openDir, 'examples','CadDemo' ) )
-#sources2 = map(lambda s: pj('examples','CadDemo', s), sources2)
+openDir = os.path.abspath( pj(RootDir, 'external', 'osgBulletPlus') )
+sources2 = sca_util.getSourcesRecursive( pj( openDir, 'examples','CadDemo' ) )
+sources2 = map(lambda s: pj('examples','CadDemo', s), sources2)
 
-#lib_env2 = ves_pkg.getEnv().Clone()
-#lib_env2.Append( CPPPATH = [pj(openDir, 'include' )] )
-#lib_env2.Append( CPPPATH = [pj(RootDir, 'external', bulletBaseVar,'src' ) ] )
-#lib_env2.Append( CPPPATH = [pj(RootDir, 'external', bulletBaseVar,'Extras') ] )
-#lib_env2.Append( LIBS = ['osgBullet','BulletColladaConverter','bullet','COLLADA_DOM','XML'] )
-#lib_env2.Append( LIBPATH = [pj('#', buildDir,'external', bulletBaseVar)] )
-#lib_env2.Append( LIBPATH = [pj('#', buildDir,'external', 'osgBullet')] )
+lib_env2 = ves_pkg.getEnv().Clone()
+lib_env2.Append( CPPPATH = [pj(openDir, 'include' )] )
+lib_env2.Append( CPPPATH = [pj(RootDir, 'external', 'osgBullet','include' )] )
+lib_env2.Append( CPPPATH = [pj(RootDir, 'external', bulletBaseVar,'src' ) ] )
+lib_env2.Append( CPPPATH = [pj(RootDir, 'external', bulletBaseVar,'Extras') ] )
+lib_env2.Append( LIBS = ['osgBullet','BulletColladaConverter','bullet','COLLADA_DOM','XML','osgBulletPlus'] )
+lib_env2.Append( LIBPATH = [pj('#', buildDir,'external', bulletBaseVar)] )
+lib_env2.Append( LIBPATH = [pj('#', buildDir,'external', 'osgBullet')] )
+lib_env2.Append( LIBPATH = [pj('#', buildDir,'external', 'osgBulletPlus')] )
 
-#osg_options.apply( lib_env2 )
+osg_options.apply( lib_env2 )
+osgworks_options.apply( lib_env2 )
 
-#if GetPlatform() == 'linux':
-#    lib_env2.Append( CXXFLAGS=['-fPIC'])
+if GetPlatform() == 'linux':
+    lib_env2.Append( CXXFLAGS=['-fPIC'])
 
-#multiblock = ves_pkg.createProgram('caddemo' + lib_env["PROGSUFFIX"], lib_env2, 'bin')
-#multiblock.addSources(sources2)
-#multiblock.build()
+multiblock = ves_pkg.createProgram('caddemo' + lib_env["PROGSUFFIX"], lib_env2, 'bin')
+multiblock.addSources(sources2)
+multiblock.build()
 
 ###############################################################
 ##Builds decimator demo
