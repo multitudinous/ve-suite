@@ -4,6 +4,8 @@
 #include <osgDB/WriteFile>
 #include <osgDB/FileUtils>
 #include <osgViewer/Viewer>
+#include <osgViewer/ViewerEventHandlers>
+#include <osgGA/StateSetManipulator>
 #include <osg/BoundingSphere>
 #include <osg/MatrixTransform>
 #include <osgGA/TrackballManipulator>
@@ -927,6 +929,16 @@ main( int argc,
     tb->setHomePosition( osg::Vec3( 0, 35, 0 ), osg::Vec3( 0, 0, 0 ), up );
     viewer.setCameraManipulator( tb );
     viewer.addEventHandler( new HandManipulator( hn.get() ) );
+
+    // Add osgviewer-style event handlers.
+    viewer.addEventHandler( new osgGA::StateSetManipulator(viewer.getCamera()->getOrCreateStateSet()) );
+    viewer.addEventHandler(new osgViewer::ThreadingHandler);
+    viewer.addEventHandler(new osgViewer::WindowSizeHandler);
+    viewer.addEventHandler(new osgViewer::StatsHandler);
+    //viewer.addEventHandler(new osgViewer::HelpHandler(arguments.getApplicationUsage()));
+    viewer.addEventHandler(new osgViewer::RecordCameraPathHandler);
+    viewer.addEventHandler(new osgViewer::LODScaleHandler);
+    viewer.addEventHandler(new osgViewer::ScreenCaptureHandler);
 
     double currSimTime = viewer.getFrameStamp()->getSimulationTime();
     double prevSimTime = viewer.getFrameStamp()->getSimulationTime();
