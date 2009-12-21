@@ -96,6 +96,13 @@ osgworks_options.apply( lib_env )
 if GetPlatform() == 'linux':
     lib_env.Append( CXXFLAGS=['-fPIC'])
 
+if GetPlatform() == 'win32':
+   lib_env['no_import_lib'] = 1
+   #lib_env['SHLINKFLAGS'] = '$LINKFLAGS /dll /MANIFEST:NO'
+   lib_env['WINDOWS_INSERT_MANIFEST'] = False
+   #if lib_env['default_debug_level'] != EnvironmentBuilder.NONE:
+   #   lib_env['PDB'] = True
+
 libosgb = ves_pkg.createSharedLibrary('osgbBullet', lib_env,
                                                installPrefix = LIBDIR)
    
