@@ -6,7 +6,7 @@ pj = os.path.join
 
 host_type = distutils.util.get_platform()
 
-Import( 'baseEnv ves_pkg buildDir RootDir gmtl_options vrjuggler_options osg_options osgal_options xerces_options vtk_options GetPlatform' )
+Import( 'baseEnv ves_pkg buildDir RootDir gmtl_options vrjuggler_options osg_options osgal_options xerces_options vtk_options GetPlatform ApplyBulletVars' )
 openDir = os.path.abspath( pj( RootDir, 'share', 'examples', 'HyperLab', 'HyperLabGP' ) )
 sources = sca_util.getSourcesRecursive( openDir )
 headers = sca_util.getHeadersRecursive( openDir )
@@ -27,6 +27,8 @@ if osgal_options.isAvailable():
    osgal_options.apply( lib_env )
 xerces_options.apply( lib_env )
 vtk_options.apply( lib_env )
+
+ApplyBulletVars(lib_env)
 
 if GetPlatform() == 'win32':
    lib_env['no_import_lib'] = 1

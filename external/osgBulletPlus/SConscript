@@ -4,7 +4,7 @@ import os, sys, string
 pj = os.path.join
 import SConsAddons.Util as sca_util
 
-Import('baseEnv ves_pkg LIBDIR RootDir buildDir osg_options GetPlatform bulletBaseVar osgworks_options')
+Import('baseEnv ves_pkg LIBDIR RootDir buildDir osg_options GetPlatform bulletBaseVar osgworks_options ApplyBulletVars')
 Import('wxwidgets_options')
 openDir = os.path.abspath( pj(RootDir, 'external', 'osgBulletPlus') )
 sources = sca_util.getSourcesRecursive( pj( openDir, 'src', 'osgbBulletPlus' ) )
@@ -16,6 +16,7 @@ sources = map(lambda s: pj('src', 'osgbBulletPlus', s),
 
 lib_env = ves_pkg.getEnv().Clone()
 lib_env.Append( CPPPATH = [pj(openDir, 'include' )] )
+lib_env.Append( CPPPATH = [pj(RootDir, 'external', 'osgBullet','include') ] )
 lib_env.Append( CPPPATH = [pj(RootDir, 'external', bulletBaseVar,'src' ) ] )
 lib_env.Append( CPPPATH = [pj(RootDir, 'external', bulletBaseVar,'Extras') ] )
 lib_env.Append( CPPDEFINES  = ['OSGBBULLETPLUS_LIBRARY'] )

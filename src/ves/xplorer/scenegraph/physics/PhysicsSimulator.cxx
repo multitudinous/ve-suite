@@ -50,6 +50,7 @@
 // --- Bullet Includes --- //
 #include <btBulletDynamicsCommon.h>
 #include <btBulletCollisionCommon.h>
+#include <LinearMath/btQuickprof.h>
 
 #include <osgbBullet/RefRigidBody.h>
 #include <osgbBullet/OSGToCollada.h>
@@ -107,7 +108,7 @@ PhysicsSimulator::~PhysicsSimulator()
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsSimulator::ExitPhysics()
-{
+{    
 #if MULTITHREADED_OSGBULLET
     if( m_physicsThread )
     {
@@ -170,36 +171,70 @@ void PhysicsSimulator::ExitPhysics()
 //But, you can override it using mDispatcher->setNearCallback()
 void customNearCallback( btBroadphasePair& collisionPair,
                          btCollisionDispatcher& mDispatcher,
-                         btDispatcherInfo& dispatchInfo )
+                         const btDispatcherInfo& dispatchInfo )
 {
+    BT_PROFILE("::customNearCallback");
+
     btCollisionObject* colObj0 =
         ( btCollisionObject* )collisionPair.m_pProxy0->m_clientObject;
     btCollisionObject* colObj1 =
         ( btCollisionObject* )collisionPair.m_pProxy1->m_clientObject;
-
+    
     if( mDispatcher.needsCollision( colObj0, colObj1 ) )
     {
+        /*if( colObj0->getCollisionShape()->isCompound() && !colObj0->isStaticObject() && (static_cast< btRigidBody* >( colObj0 )->getInvMass() < 1.0f) )
+        {
+            std::cout << "have a compound shape" << std::endl;
+            btTransform t;
+            btVector3 aabbMin;
+            btVector3 aabbMax;
+            colObj0->getCollisionShape()->getAabb( t, aabbMin, aabbMax );
+            //std::cout << aabbMin.x() << " " << aabbMin.y() << " "<< aabbMin.z() << std::endl 
+            //    << aabbMax.x() << " " << aabbMax.y() << " " << aabbMax.z() << std::endl;
+            //colObj0->setActivationState( DISABLE_SIMULATION );
+            btScalar diag = aabbMin.distance( aabbMax );
+            int collisionFlags = colObj0->getCollisionFlags();
+
+            if( diag > 10.0f )
+            {
+                std::cout << "have a large object " << std::endl;
+                
+                //collisionFlags &= 
+                collisionFlags = btCollisionObject::CF_STATIC_OBJECT;
+                colObj0->setCollisionFlags( collisionFlags );
+                btVector3 localInertia( 0, 0, 0 );
+                static_cast< btRigidBody* >( colObj0 )->setMassProps( 0.0f, localInertia );
+                mDynamicsWorld->removeCollisionObject( colObj0 );
+                //return;
+            }
+        }*/
+        
         //Dispatcher will keep algorithms persistent in the collision pair
         if( !collisionPair.m_algorithm )
         {
+            BT_PROFILE("dispatcher.findAlgorithm");
             collisionPair.m_algorithm =
                 mDispatcher.findAlgorithm( colObj0, colObj1 );
         }
 
         if( collisionPair.m_algorithm )
         {
+            BT_PROFILE("collisionPair.m_algorithm");
+
             btManifoldResult contactPointResult( colObj0, colObj1 );
 
             if( dispatchInfo.m_dispatchFunc ==
                 btDispatcherInfo::DISPATCH_DISCRETE )
             {
                 //Discrete collision detection query
+                BT_PROFILE("collisionPair.m_algorithm->processCollision");
                 collisionPair.m_algorithm->processCollision(
                     colObj0, colObj1, dispatchInfo, &contactPointResult );
             }
 
             else
             {
+                BT_PROFILE("collisionPair.m_algorithm->calculateTimeOfImpact");
                 //Continuous collision detection query, time of impact( toi )
                 float toi = collisionPair.m_algorithm->calculateTimeOfImpact(
                     colObj0, colObj1, dispatchInfo, &contactPointResult );
@@ -212,6 +247,101 @@ void customNearCallback( btBroadphasePair& collisionPair,
         }
     }
 }
+////////////////////////////////////////////////////////////////////////////////
+struct YourOwnFilterCallback : public btOverlapFilterCallback
+{
+    btDynamicsWorld* mDynamicsWorld;
+    
+    void SetDynamicsWorld( btDynamicsWorld* dynamicsWorld )
+    {
+        mDynamicsWorld = dynamicsWorld;
+    }
+	// return true when pairs need collision
+	virtual bool needBroadphaseCollision(btBroadphaseProxy* proxy0,btBroadphaseProxy* proxy1) const
+	{
+		bool collides = (proxy0->m_collisionFilterGroup & proxy1->m_collisionFilterMask) != 0;
+		collides = collides && (proxy1->m_collisionFilterGroup & proxy0->m_collisionFilterMask);
+        
+        /*btCollisionObject* colObj0 =
+            ( btCollisionObject* )( proxy0->m_clientObject );
+        btCollisionObject* colObj1 =
+            (btCollisionObject* )( proxy1->m_clientObject );
+        
+        if( colObj0 )
+        {
+        btRigidBody* tempRB = btRigidBody::upcast(colObj0);
+
+        if( colObj0->getCollisionShape()->isCompound() && !colObj0->isStaticObject() && (tempRB->getInvMass() < 1.0f) )
+        {
+            //if( colObj0->getCollisionShape()->isCompound() && !colObj0->isStaticObject() && (static_cast< btRigidBody* >( colObj0 )->getInvMass() < 1.0f) )
+            {
+                btTransform t;
+                btVector3 aabbMin;
+                btVector3 aabbMax;
+                colObj0->getCollisionShape()->getAabb( t, aabbMin, aabbMax );
+                //std::cout << aabbMin.x() << " " << aabbMin.y() << " "<< aabbMin.z() << std::endl 
+                //    << aabbMax.x() << " " << aabbMax.y() << " " << aabbMax.z() << std::endl;
+                //colObj0->setActivationState( DISABLE_SIMULATION );
+                btScalar diag = aabbMin.distance( aabbMax );
+                //int collisionFlags = colObj0->getCollisionFlags();
+                
+                if( diag > 10.0f )
+                {
+                    std::cout << "have a large object " << std::endl;
+                    mDynamicsWorld->removeRigidBody( tempRB );
+
+                    //collisionFlags &= 
+                    //collisionFlags = btCollisionObject::CF_STATIC_OBJECT;
+                    colObj0->setCollisionFlags( btCollisionObject::CF_STATIC_OBJECT );
+                    btVector3 localInertia( 0, 0, 0 );
+                    tempRB->setMassProps( 0.0f, localInertia );
+                    mDynamicsWorld->addRigidBody( tempRB );
+                    //return;
+                }
+            }
+        }
+            
+        }
+
+        if( colObj1 )
+        {         
+        btRigidBody* tempRB1 = btRigidBody::upcast(colObj1);
+
+        if( colObj1->getCollisionShape()->isCompound() && !colObj1->isStaticObject() && (tempRB1->getInvMass() < 1.0f) )
+        {
+            //if( colObj0->getCollisionShape()->isCompound() && !colObj0->isStaticObject() && (static_cast< btRigidBody* >( colObj0 )->getInvMass() < 1.0f) )
+            {
+                btTransform t;
+                btVector3 aabbMin;
+                btVector3 aabbMax;
+                colObj1->getCollisionShape()->getAabb( t, aabbMin, aabbMax );
+                //std::cout << aabbMin.x() << " " << aabbMin.y() << " "<< aabbMin.z() << std::endl 
+                //    << aabbMax.x() << " " << aabbMax.y() << " " << aabbMax.z() << std::endl;
+                //colObj0->setActivationState( DISABLE_SIMULATION );
+                btScalar diag = aabbMin.distance( aabbMax );
+                //int collisionFlags = colObj0->getCollisionFlags();
+                
+                if( diag > 15.0f )
+                {
+                    std::cout << "have a large object " << std::endl;
+                    mDynamicsWorld->removeRigidBody( tempRB1 );
+                    
+                    //collisionFlags &= 
+                    //collisionFlags = btCollisionObject::CF_STATIC_OBJECT;
+                    colObj1->setCollisionFlags( btCollisionObject::CF_STATIC_OBJECT );
+                    btVector3 localInertia( 0, 0, 0 );
+                    tempRB1->setMassProps( 0.0f, localInertia );
+                    mDynamicsWorld->addRigidBody( tempRB1 );
+                    //return;
+                }
+            }
+        }
+        }*/
+        
+		//add some additional logic here that modified 'collides'
+		return collides;
+	}
+};
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsSimulator::InitializePhysicsSimulation()
 {
@@ -239,13 +369,15 @@ void PhysicsSimulator::InitializePhysicsSimulation()
     mSolver->setRandSeed( 20090108 );
 #endif
 
-#if ( BULLET_MAJOR_VERSION >= 2 ) && ( BULLET_MINOR_VERSION > 63 )
     mDynamicsWorld = new btDiscreteDynamicsWorld(
         mDispatcher, mBroadphase, mSolver, mCollisionConfiguration );
-#else
-    mDynamicsWorld = new btDiscreteDynamicsWorld(
-        mDispatcher, mBroadphase, mSolver );
-#endif
+    //mDynamicsWorld->getDispatchInfo().m_useConvexConservativeDistanceUtil = true;
+    //mDynamicsWorld->getDispatchInfo().m_convexConservativeDistanceThreshold = 0.0001f;
+
+    //YourOwnFilterCallback* filterCallback = new YourOwnFilterCallback();
+    //filterCallback->SetDynamicsWorld( mDynamicsWorld );
+    //mDynamicsWorld->getPairCache()->setOverlapFilterCallback(filterCallback);
+
     //mDynamicsWorld->getDispatchInfo().m_enableSPU = true;
     mDynamicsWorld->setGravity( btVector3( 0, 0, -32.174 ) );
 
@@ -291,6 +423,11 @@ void PhysicsSimulator::UpdatePhysics( float dt )
     osgbBullet::TripleBufferMotionStateUpdate( m_motionStateList, 
                                              &m_tripleDataBuffer );
 #endif
+
+#ifndef BT_NO_PROFILE
+    CProfileManager::dumpAll();
+#endif
+
     //Sample debug code
     /*
     int numManifolds1 = mDispatcher->getNumManifolds();

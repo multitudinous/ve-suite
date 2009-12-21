@@ -147,6 +147,24 @@ def CreateConfig(target, source, env):
       open(targets[0], 'w').write(contents)
       os.chmod(targets[0], 0755)
    return 0
+################################################################################
+## Apply Bullet vars
+def ApplyBulletVars(env, bulletOnly = False ):
+    "apply bullet library info"
+
+    # Bullet defines
+    env.AppendUnique(CPPPATH = [pj(RootDir,'external', bulletBaseVar,'src')])
+    if env[ 'ARCH' ] == 'x64':
+        env.AppendUnique( CPPDEFINES = ['USE_ADDR64=1'] )
+
+    if bulletOnly:
+        return 0
+    #env.AppendUnique( CPPDEFINES = ['BULLET_MAJOR_VERSION=%i' %bulletVersion[ 0 ],
+    #              'BULLET_MINOR_VERSION=%i' %bulletVersion[ 1 ] ] )  
+    env.AppendUnique(CPPPATH = [pj(RootDir,'external','osgBullet','include')])
+    env.AppendUnique(CPPPATH = [pj(RootDir,'external','osgBulletPlus','include')])
+
+Export('ApplyBulletVars')
 
 ##See scons users guide section 15 on variant builds
 ##Setup some project defaults
@@ -536,16 +554,9 @@ if not SConsAddons.Util.hasHelpFlag():
 
     # VTK defines
     baseEnv.AppendUnique( CPPDEFINES = ['VTK_STREAMS_FWD_ONLY'] )
-    # Bullet defines
-    baseEnv.AppendUnique( CPPDEFINES = ['BULLET_MAJOR_VERSION=%i' %bulletVersion[ 0 ],
-                  'BULLET_MINOR_VERSION=%i' %bulletVersion[ 1 ] ] )  
-    baseEnv.AppendUnique(CPPPATH = [pj(RootDir,'external','osgBullet','include')])
-    baseEnv.AppendUnique(CPPPATH = [pj(RootDir,'external','osgBulletPlus','include')])
-    baseEnv.AppendUnique(CPPPATH = [pj(RootDir,'external', bulletBaseVar,'src')])
-    if baseEnv[ 'ARCH' ] == 'x64':
-        baseEnv.AppendUnique( CPPDEFINES = ['USE_ADDR64=1'] )
-
+    # basic ves include info
     baseEnv.AppendUnique( CPPPATH = [pj(RootDir,'src'),pj(RootDir,buildDir,'src')] )
+    # OSG defines
     baseEnv.AppendUnique( CPPDEFINES = ['_OSG'] )
 
     if GetPlatform() == 'darwin':
@@ -677,4 +688,3 @@ if not SConsAddons.Util.hasHelpFlag():
          
     baseEnv.Alias('install', PREFIX)
     Default('.')
-    

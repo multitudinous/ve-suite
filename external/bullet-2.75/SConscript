@@ -4,7 +4,7 @@
 import os, sys, string
 pj = os.path.join
 import SConsAddons.Util as sca_util
-Import('baseEnv ves_pkg LIBDIR RootDir buildDir osg_options GetPlatform bulletBaseVar')
+Import('baseEnv ves_pkg LIBDIR RootDir buildDir osg_options GetPlatform bulletBaseVar ApplyBulletVars')
 
 openDir = os.path.abspath( pj(RootDir, 'external', bulletBaseVar) )
 sources = sca_util.getSourcesRecursive( pj( openDir, 'src' ) )
@@ -18,6 +18,8 @@ lib_env.Append( CPPPATH = [pj(openDir, 'src' ),
 
 if GetPlatform() == 'linux':
     lib_env.Append( CCFLAGS=['-fPIC'])
+
+ApplyBulletVars( lib_env, True )
 
 #if baseEnv['StaticLibs'] == "yes":
 lib = ves_pkg.createStaticLibrary('bullet', lib_env,
@@ -43,6 +45,8 @@ libDB_env.Append( CPPPATH = [pj(openDir, 'Extras','COLLADA_DOM','include','1.4')
 libDB_env.Append( CPPPATH = [pj(openDir, 'src' )] )
 libDB_env.Append( LIBS = ['bullet','XML','COLLADA_DOM'] )
 libDB_env.Append( LIBPATH = [pj('#', buildDir,'external', bulletBaseVar)] )
+ApplyBulletVars( libDB_env, True )
+
 #osg_options.apply( libDB_env )
 if GetPlatform() == 'linux':
     libDB_env.Append( CCFLAGS=['-fPIC'])
@@ -69,6 +73,8 @@ libDB_env = ves_pkg.getEnv().Clone()
 #libDB_env.Append( LIBPATH = [pj('#', buildDir,'external', bulletBaseVar)] )
 if GetPlatform() == 'linux':
     libDB_env.Append( CCFLAGS=['-fPIC'])
+
+ApplyBulletVars( libDB_env, True )
 
 #if baseEnv['StaticLibs'] == "yes":
 libDB = ves_pkg.createStaticLibrary('ConvexDecomposition', libDB_env,
@@ -97,6 +103,8 @@ lib_env.Append( LIBPATH = [pj('#', buildDir,'external', bulletBaseVar)] )
 if GetPlatform() == 'linux':
     lib_env.Append( CCFLAGS=['-fPIC'])
 
+ApplyBulletVars( lib_env, True )
+
 #if baseEnv['StaticLibs'] == "yes":
 lib = ves_pkg.createStaticLibrary('COLLADA_DOM', lib_env,
                                                installPrefix = LIBDIR)
@@ -121,6 +129,8 @@ lib_env.Append( CPPPATH = [pj(openDir, 'Extras','LibXML','include' )] )
 #lib_env.Append( CPPDEFINES  = ['LIBXML_MODULES_ENABLED'] )
 if GetPlatform() == 'linux':
     lib_env.Append( CCFLAGS=['-fPIC'])
+
+ApplyBulletVars( lib_env, True )
 
 #if baseEnv['StaticLibs'] == "yes":
 lib = ves_pkg.createStaticLibrary('XML', lib_env,

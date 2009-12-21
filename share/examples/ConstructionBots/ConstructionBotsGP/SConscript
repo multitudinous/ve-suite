@@ -7,7 +7,7 @@ pj = os.path.join
 host_type = distutils.util.get_platform()
 
 Import( 'baseEnv ves_pkg buildDir RootDir gmtl_options' )
-Import( 'vrjuggler_options osg_options osgal_options' )
+Import( 'vrjuggler_options osg_options osgal_options ApplyBulletVars' )
 Import( 'xerces_options vtk_options GetPlatform bulletBaseVar osgworks_options' )
 openDir = os.path.abspath( pj( RootDir, 'share', 'examples', 'ConstructionBots', 'ConstructionBotsGP' ) )
 sources = sca_util.getSourcesRecursive( openDir )
@@ -24,6 +24,7 @@ lib_env.Append( LIBPATH = [ pj( '#', buildDir, 'src', 'ves', 'open', 'xml' ),
 lib_env.Append(LIBS = ['bullet'])
 lib_env.Append(LIBPATH = [pj('#',buildDir,'external',bulletBaseVar)])
 lib_env.Append( CPPDEFINES = [ 'VE_USER_PLUGIN_LIBRARY' ] )
+ApplyBulletVars(lib_env)
 
 gmtl_options.apply( lib_env )
 vrjuggler_options.apply( lib_env )

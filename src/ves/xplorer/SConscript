@@ -5,7 +5,7 @@ import glob
 import SConsAddons.Util as sca_util
 
 Import('baseEnv buildDir RootDir ves_pkg vtk_options osg_options xerces_options LIBDIR bulletBaseVar')
-Import('tao_options boost_options vrjuggler_options osgal_options GetPlatform osgworks_options')
+Import('tao_options boost_options vrjuggler_options osgal_options GetPlatform osgworks_options ApplyBulletVars')
 Import('minerva_options')
 
 xplorerSubdirs = Split("""
@@ -92,10 +92,6 @@ osg_options.apply( lib_env )
 osgworks_options.apply( lib_env )
 xerces_options.apply( lib_env )
 
-#bulletVersion = (int(2), int(72))
-#lib_env.Append( CPPDEFINES = ['BULLET_MAJOR_VERSION=%i' %bulletVersion[ 0 ],
-#                 'BULLET_MINOR_VERSION=%i' %bulletVersion[ 1 ] ] )  
-
 lib_env.Append(CPPPATH = [pj(RootDir,'external','osgEphemeris','include')])
 
 lib_env.Append(LIBS = ['osgEphemeris'])
@@ -113,6 +109,7 @@ lib_env.Append(LIBPATH = [pj('#',buildDir,'external','osgBulletPlus')])
 lib_env.Append(LIBS = ['bullet'])
 lib_env.Append(LIBPATH = [pj('#',buildDir,'external', bulletBaseVar)])
 #libBulletColladaConverter.a libCOLLADA_DOM.a libXML.a libbullet.a
+ApplyBulletVars(lib_env)
 
 if GetPlatform() == 'win32':
    lib_env.Append( CPPDEFINES = ['_WIN32_WINNT=0x400'] )

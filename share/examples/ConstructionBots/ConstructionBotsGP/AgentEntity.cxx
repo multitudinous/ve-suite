@@ -473,13 +473,8 @@ void AgentEntity::SetConstraints( int gridSize )
     frameInA = btTransform::getIdentity();
     frameInB = btTransform::getIdentity();
 
-#if ( BULLET_MAJOR_VERSION >= 2 ) && ( BULLET_MINOR_VERSION > 61 )
     mConstraint = new btGeneric6DofConstraint(
         *mPhysicsRigidBody->GetbtRigidBody(), *fixedBody, frameInA, frameInB, false );
-#else
-    mConstraint = new btGeneric6DofConstraint(
-        *mPhysicsRigidBody, *fixedBody, frameInA, frameInB );
-#endif
 
     //Fix the translation range for the agents
     //Give 0.5 units extra in xy plane for agent/wall collision
