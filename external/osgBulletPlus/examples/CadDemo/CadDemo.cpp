@@ -28,6 +28,7 @@
 
 #include <btBulletDynamicsCommon.h>
 #include <BulletColladaConverter/ColladaConverter.h>
+#include <LinearMath/btQuickprof.h>
 
 #include <list>
 #include <map>
@@ -965,6 +966,9 @@ main( int argc,
 
         currSimTime = viewer.getFrameStamp()->getSimulationTime();
         bulletWorld->stepSimulation( currSimTime - prevSimTime );
+#ifndef BT_NO_PROFILE
+        CProfileManager::dumpAll();
+#endif
         float dt = currSimTime - prevSimTime;
         prevSimTime = currSimTime;
 
