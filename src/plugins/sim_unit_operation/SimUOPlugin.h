@@ -54,7 +54,7 @@ public:
     wxString GetConductorName();
     virtual wxMenu* GetPluginPopupMenu( wxMenu* baseMenu );
 
-    wxMenu* mAspenMenu;
+    wxMenu* mSimMenu;
     DECLARE_EVENT_TABLE()
 };
 }

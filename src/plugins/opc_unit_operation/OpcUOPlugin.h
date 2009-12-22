@@ -60,14 +60,12 @@ public:
     ///Defualt constructor
     OpcUOPlugin();
     virtual ~OpcUOPlugin();
-    void OnShowAspenName( wxCommandEvent& event );
-    void OnQueryDynamics( wxCommandEvent& event );
     void OnShowValue( wxCommandEvent& event );
     wxString GetConductorName();
     virtual wxMenu* GetPluginPopupMenu( wxMenu* baseMenu );
     void DrawPlugin( wxDC* dc );
 
-    wxMenu* mAspenMenu;
+    wxMenu* mOpcMenu;
     DECLARE_EVENT_TABLE()
 };
 }

@@ -55,7 +55,7 @@ IMPLEMENT_DYNAMIC_CLASS( SimUOPlugin, UIPluginBase )
 /////////////////////////////////////////////////////////////////////////////
 SimUOPlugin::SimUOPlugin() :
     UIPluginBase(),
-    mAspenMenu( 0 )
+    mSimMenu( 0 )
 {
     mPluginName = wxString( "SimUO", wxConvUTF8 );
     mDescription = wxString( "Sim Unit Operation Plugin", wxConvUTF8 );
@@ -74,16 +74,16 @@ wxString SimUOPlugin::GetConductorName()
 ////////////////////////////////////////////////////////////////////////////////
 wxMenu* SimUOPlugin::GetPluginPopupMenu( wxMenu* baseMenu )
 {
-    if( mAspenMenu )
+    if( mSimMenu )
     {
         return baseMenu;
     }
     
     baseMenu->Enable( UIPLUGINBASE_CONDUCTOR_MENU, false );
 
-    mAspenMenu = new wxMenu();
-    baseMenu->Insert( 0, SIMUOPLUGIN_SIM_MENU,   _( "Aspen" ), mAspenMenu,
-                    _( "Used in conjunction with Aspen" ) );
+    mSimMenu = new wxMenu();
+    baseMenu->Insert( 0, SIMUOPLUGIN_SIM_MENU,   _( "Sim" ), mSimMenu,
+                    _( "Used in conjunction with Sim" ) );
     baseMenu->Enable( SIMUOPLUGIN_SIM_MENU, true );
     return baseMenu;
 }
