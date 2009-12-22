@@ -222,7 +222,7 @@ public:
     ///Draw function to handle all drawing for a plugin
     ///All draw functions for the plugin should be called in this function
     ///\param dc DC to draw on for the plugin
-    void DrawPlugin( wxDC* dc );
+    virtual void DrawPlugin( wxDC* dc );
     ///Draw the highlight for this plugin
     void HighlightSelectedIcon( wxDC* dc );
     ///Draw the ports for this plugin
@@ -414,13 +414,16 @@ protected:
     ///The string used to provide a description of the plugin
     wxString mDescription;
 
+protected:
+    ///Number of points in the polygon
+    int n_pts;    
+	///The outline polygon points list
+    wxPoint* poly; 
+
 private:
     ///That's the for default implementation of the DrawIcon. 
     ///Not part of the general interface
-    ///The outline polygon points list
-    wxPoint* poly; 
-    ///Number of points in the polygon
-    int n_pts;
+
     ///The pointer for the icon that will be rendered in conductor
     wxBitmap* mMyIcon;
     ///The width and height of the icon

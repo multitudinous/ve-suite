@@ -90,6 +90,17 @@ enum
     APUOPLUGIN_ASPEN_MENU,
 
     //
+    //SIMUOPlugin.h
+    //
+    SIMUOPLUGIN_SIM_MENU,
+
+    //
+    //OPCUOPlugin.h
+    //
+    OPCUOPLUGIN_SHOW_VALUE,
+    OPCUOPLUGIN_SIM_MENU,
+
+    //
     //PSPlugin.h
     //
     PS_PLUGIN_OPEN,
