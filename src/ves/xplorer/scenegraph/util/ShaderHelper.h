@@ -42,7 +42,6 @@
 #include <ves/VEConfig.h>
 #include <ves/open/xml/shader/ShaderPtr.h>
 ///\todo This class still needs to be implemented for performer
-#ifdef _OSG
 #include <osg/StateSet>
 
 namespace osg
@@ -51,8 +50,7 @@ class Shader;
 class Program;
 }
 #include <osg/Texture>
-#elif _PERFORMER
-#endif
+
 #include <ves/open/xml/shader/TextureImagePtr.h>
 #include <ves/open/xml/shader/ProgramPtr.h>
 #include <ves/open/xml/shader/UniformPtr.h>

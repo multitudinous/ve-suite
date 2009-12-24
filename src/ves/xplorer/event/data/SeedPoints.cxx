@@ -30,7 +30,6 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#ifdef _OSG
 #include <ves/xplorer/event/data/SeedPoints.h>
 #include <osg/StateSet>
 #include <osg/Shader>
@@ -334,5 +333,4 @@ void SeedPoints::PointsDrawable::drawImplementation( osg::State& renderState ) c
     }
     glEnd();
 }
-#endif
 

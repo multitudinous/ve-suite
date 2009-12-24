@@ -203,12 +203,10 @@ private:
     //cfdSoundHandler* _soundHandler;///<Handle the sound.
     cfdQuatCamHandler* _camHandler;///<Handle quat cam functionality.
 
-#ifdef _OSG
     HeadsUpDisplay* mHeadsUpDisplay;///<???
 
     ///Flag for active geometry picking.
     bool _activeGeomPicking;
-#endif //_OSG
 
     ves::xplorer::device::cfdCursor* cursor;///<The cursor.
 

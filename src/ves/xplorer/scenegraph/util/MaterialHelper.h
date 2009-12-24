@@ -42,15 +42,12 @@
 #include <ves/VEConfig.h>
 
 ///\todo Still need to implement the performer side
-#ifdef _OSG
 #include <osg/StateSet>
 namespace osg
 {
 class StateSet;
 class Material;
 }
-#elif _PERFORMER
-#endif
 #include <ves/open/xml/cad/CADMaterial.h>
 #include <string>
 ///////////////////////////////////////////////////////////////////////
@@ -74,21 +71,15 @@ public:
 
     ///Load and create the stateset from the input XML data
     void LoadMaterial( ves::open::xml::cad::CADMaterialPtr material );
-#ifdef _OSG
     ///The state set that we want to load the material into
     ///\param materialThe state set representing the material.
     void SetStateSet( osg::StateSet* material );
 
     ///Get the created state set representing the shader
     osg::ref_ptr<osg::StateSet> GetMaterialStateSet();
-#elif _PERFORMER
-#endif
 protected:
-#ifdef _OSG
     osg::ref_ptr<osg::Material> m_material;///<The GLSL program.
     osg::ref_ptr<osg::StateSet> m_ss;///<The stateset representing the GLSL program.
-#elif _PERFORMER
-#endif
 };
 }
 }

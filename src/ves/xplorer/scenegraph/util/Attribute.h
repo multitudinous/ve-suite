@@ -36,18 +36,9 @@
 #include <string>
 #include <vector>
 
-
-#ifdef _PERFORMER
-#include <Performer/pr/pfMaterial.h>
-#include <Performer/pf.h>
-#include <Performer/pfdu.h>
-#include <Performer/pfutil.h>
-#include <Performer/pf/pfNode.h>
-#elif _OSG
 #include <osg/StateSet>
 #include <osg/ref_ptr>
-#elif _OPENSG
-#endif
+
 #include <ves/open/xml/shader/UniformPtr.h>
 #include <ves/open/xml/cad/CADAttributePtr.h>
 #include <ves/VEConfig.h>
@@ -61,17 +52,11 @@ namespace scenegraph
 {
 namespace util
 {
-#ifdef _OSG
 class VE_SCENEGRAPH_UTILS_EXPORTS Attribute : public osg::StateSet
 {
-#elif _PERFORMER
-class VE_SCENEGRAPH_UTILS_EXPORTS Attribute: public pfGeoState
-{
-#endif
 public:
     ///Constructor
     Attribute();
-#ifdef _OSG
     ///Copy Constructor for OpenSceneGraph object
     Attribute( const Attribute& pbQuad,
                const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
@@ -79,19 +64,6 @@ public:
     ///OSG defines this macro
     META_Object( ves::xplorer::scenegraph::util, Attribute );
     Attribute& operator=( const osg::StateSet& rhs );
-#elif _PERFORMER
-    Attribute( const Attribute& cfdSeq );
-    //to make this a performer class
-    static void init();
-
-    static pfType* getClassType( void )
-    {
-        return _classType;
-    }
-    Attribute& operator=( const Attribute& rhs );
-    Attribute& operator=( const pfGeoState& rhs );
-
-#endif
 
     ///Destructor
     virtual ~Attribute();
@@ -119,9 +91,6 @@ public:
     ///\param mode The mode to set
     void UpdateMaterialMode( std::string type, std::string mode );
 protected:
-#ifdef _PERFORMER
-    static pfType* _classType;
-#endif
 
 };
 }

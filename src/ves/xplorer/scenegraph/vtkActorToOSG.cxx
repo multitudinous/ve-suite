@@ -36,7 +36,6 @@
 
 // this is a workaround for compiling VTK with stlport
 // stlport is required for compiling OSG on MSVS60 - (try .NET?)
-#ifdef _OSG
 //#define _INC_STRSTREAM
 //#include <strstream.h>
 // workaround end
@@ -305,5 +304,3 @@ osg::Geometry* ves::xplorer::scenegraph::processPrimitive( vtkActor *actor, vtkC
     geom->setStateSet( stateset.get() );
     return geom;
 }
-
-#endif

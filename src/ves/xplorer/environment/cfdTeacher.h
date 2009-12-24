@@ -45,10 +45,7 @@ cfdTeacher API
 
 #include <ves/xplorer/GlobalBase.h>
 
-#ifdef _OSG
 #include <osg/ref_ptr>
-#elif _PERFORMER
-#endif
 
 namespace ves
 {

@@ -48,7 +48,6 @@ namespace scenegraph
 {
 class PhysicsRigidBody;
 
-#ifdef _OSG
 /*!\file TransferPhysicsDataCallback.h
  *
  */
@@ -86,9 +85,6 @@ protected:
     PhysicsRigidBody* mPhysicsRigidBody;///<Pointer to the physics rigid body
 
 };
-#elif _OPENSG
-#endif
-
 } // end scenegraph
 } // end xplorer
 } // end ves

@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #ifndef PHONG_LOADER_H
 #define PHONG_LOADER_H
@@ -44,7 +42,6 @@
 #include <ves/VEConfig.h>
 #include <ves/xplorer/scenegraph/util/ShaderHelper.h>
 ///\todo This class still needs to be implemented for performer
-#ifdef _OSG
 
 #include <string>
 #include <vector>
@@ -87,5 +84,4 @@ protected:
 }
 }
 }
-#endif
 #endif// PHONG_LOADER_H

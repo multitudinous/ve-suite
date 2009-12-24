@@ -35,34 +35,12 @@ using namespace ves::xplorer::scenegraph::util;
 using namespace ves::open::xml::cad;
 using namespace ves::open::xml::shader;
 
-#ifdef _PERFORMER
-#include <Performer/pf.h>
-#include <Performer/pfdu.h>
-#include <Performer/pfutil.h>
-#include <Performer/pf/pfNode.h>
-//Performer static member for performer compliance
-//it allows performer to determine the class type
-
-pfType* ves::xplorer::scenegraph::util::Attribute::_classType = NULL;
-//initialize our class w/ performer at run time
-void ves::xplorer::scenegraph::util::Attribute::init( void )
-{
-    if( _classType == 0 )
-    {
-        //initialize the parent
-        pfGeoState::init();
-        //create the new class type
-        _classType = new pfType( pfGeoState::getClassType(), "Attribute" );
-    }
-}
-#endif
 #include <ves/open/xml/cad/CADAttribute.h>
 #include <ves/open/xml/shader/Uniform.h>
 #include <ves/open/xml/shader/Program.h>
 #include <ves/xplorer/scenegraph/util/MaterialHelper.h>
 #include <ves/xplorer/scenegraph/util/ShaderHelper.h>
 
-#ifdef _OSG
 //why is this needed
 #include <osg/Material>
 #include <osg/BlendFunc>
@@ -72,42 +50,27 @@ void ves::xplorer::scenegraph::util::Attribute::init( void )
 #include <osg/TextureRectangle>
 
 #include <set>
-#elif _PERFORMER
-#endif
-
 
 //////////////////////
 ///Constructor      //
 //////////////////////
 Attribute::Attribute()
-#ifdef _OSG
         :
         osg::StateSet()
-#elif _PERFORMER
-        :
-        pfGeoState()
-#endif
 {
-#ifdef _PERFORMER
-    init();
-    setType( _classType );
-#endif
-
+    ;
 }
-#ifdef _OSG
 //////////////////////////////////////////////////////////
 Attribute::Attribute( const Attribute& veAttribute,
                       const osg::CopyOp& copyop )
         : osg::StateSet( veAttribute, copyop )
 {}
-#endif
 ///////////////////////
 Attribute::~Attribute()
 {}
 //////////////////////////////////////////////////////////////////////
 void Attribute::UpdateMaterialMode( std::string type, std::string mode )
 {
-#ifdef _OSG
     osg::ref_ptr<osg::Material> material = dynamic_cast<osg::Material*>( this->getAttribute( osg::StateAttribute::MATERIAL ) );
     if( material.valid() )
     {
@@ -143,22 +106,18 @@ void Attribute::UpdateMaterialMode( std::string type, std::string mode )
         else if( type == "Face" )
         {}
     }
-#endif
 }
 ////////////////////////////////////////////////////////////////////////
 void Attribute::UpdateShaderUniform( UniformPtr uniformToUpdate )
 {
-#ifdef _OSG
     ShaderHelper shaderHelper;
     shaderHelper.SetStateSet( this );
     shaderHelper.UpdateUniform( uniformToUpdate );
-#endif
 }
 ////////////////////////////////////////////////////////////////
 void Attribute::UpdateMaterial( std::string componentName, std::string face,
                                 std::vector<double> values )
 {
-#ifdef _OSG
     osg::Material::Face faceMode = osg::Material::FRONT_AND_BACK;
     if( face == "Back" )
     {
@@ -202,12 +161,10 @@ void Attribute::UpdateMaterial( std::string componentName, std::string face,
     {
         std::cout << "Node doesn't contian a material!!" << std::endl;
     }
-#endif
 }
 ////////////////////////////////////////////
 void Attribute::CreateTransparencyStateSet()
 {
-#ifdef _OSG
     ShaderHelper shaderHelper;
     shaderHelper.SetStateSet( this );
     shaderHelper.LoadTransparencyProgram();
@@ -217,9 +174,6 @@ void Attribute::CreateTransparencyStateSet()
     setRenderBinDetails( 10, std::string( "DepthSortedBin" ) );
     setMode( GL_BLEND, osg::StateAttribute::ON );
     setAttributeAndModes( bf.get(), osg::StateAttribute::ON );
-
-#elif _PERFORMER
-#endif
 }
 ////////////////////////////////////////////////////////////////////////////
 void Attribute::CreateStateSetFromAttribute( CADAttributePtr attribute )
@@ -229,17 +183,12 @@ void Attribute::CreateStateSetFromAttribute( CADAttributePtr attribute )
 
     if( attributeType == std::string( "Material" ) )
     {
-#ifdef _OSG
         MaterialHelper materialHelper;
         materialHelper.SetStateSet( this );
         materialHelper.LoadMaterial( attribute->GetMaterial() );
-#elif _PERFORMER
-#endif
     }
     else if( attributeType == std::string( "Program" ) )
     {
-#ifdef _OSG
-
         ShaderHelper shaderHelper;
         shaderHelper.SetStateSet( this );
         shaderHelper.LoadGLSLProgram( attribute->GetGLSLProgram() );
@@ -259,11 +208,8 @@ void Attribute::CreateStateSetFromAttribute( CADAttributePtr attribute )
             setMode( GL_BLEND, osg::StateAttribute::ON );
         }
         setAttributeAndModes( bf.get(), osg::StateAttribute::ON );
-#elif _PERFORMER
-#endif
     }
 }
-#ifdef _OSG
 /////////////////////////////////////////////////////
 Attribute& Attribute::operator=( const osg::StateSet& rhs )
 {
@@ -273,4 +219,3 @@ Attribute& Attribute::operator=( const osg::StateSet& rhs )
     }
     return *this;
 }
-#endif

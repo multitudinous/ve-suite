@@ -37,10 +37,7 @@
 
 #include <ves/xplorer/scenegraph/DCS.h>
 
-#ifdef _OSG
 #include <osg/ref_ptr>
-#elif _PERFORMER
-#endif
 
 class vtkPolyDataMapper;
 class vtkPolyData;

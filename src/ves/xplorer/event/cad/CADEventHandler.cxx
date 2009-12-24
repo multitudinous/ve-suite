@@ -58,16 +58,15 @@
 #include <ves/xplorer/Debug.h>
 
 #ifdef MINERVA_GIS_SUPPORT
-# include <ves/xplorer/minerva/MinervaManager.h>
-# include <ves/xplorer/minerva/ModelWrapper.h>
+    #include <ves/xplorer/minerva/MinervaManager.h>
+    #include <ves/xplorer/minerva/ModelWrapper.h>
 #endif
 
 #include <boost/filesystem/path.hpp>
 #include <iostream>
 
-#ifdef _OSG
 #include <osg/Node>
-#endif
+
 using namespace ves::xplorer::event;
 using namespace ves::open::xml::cad;
 using namespace ves::open::xml;

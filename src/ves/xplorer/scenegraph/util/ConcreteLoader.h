@@ -41,7 +41,6 @@
  */
 #include <ves/VEConfig.h>
 #include <ves/xplorer/scenegraph/util/ShaderHelper.h>
-#ifdef _OSG
 
 #include <string>
 #include <vector>
@@ -88,6 +87,4 @@ protected:
 }
 }
 }
-
-#endif
 #endif// PHONG_LOADER_H

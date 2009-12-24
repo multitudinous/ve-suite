@@ -2578,12 +2578,16 @@ void AppFrame::LoadNewNetwork( wxUpdateUIEvent& WXUNUSED( event )  )
             UserPreferencesDataBuffer::instance()->
             GetCommand( "Navigation_Data" );
         
-        serviceList->SendCommandStringToXplorer( tempCommand );
-
+        if( tempCommand->GetCommandName().compare( "NULL" ) )
+        {
+            serviceList->SendCommandStringToXplorer( tempCommand );
+        }
+        
         // Create the command and data value pairs
         tempCommand = 
             UserPreferencesDataBuffer::instance()->
             GetCommand( "CHANGE_NEAR_FAR_RATIO" );
+        
         if( tempCommand->GetCommandName().compare( "NULL" ) )
         {
             serviceList->SendCommandStringToXplorer( tempCommand );

@@ -15,11 +15,6 @@ headers = sca_util.getHeadersRecursive( srcDir )
 
 env = ves_pkg.getEnv().Clone()
 env.Append( CPPDEFINES = [ GetSVNVersion( srcDir ) ] )
-if baseEnv[ 'CharacterController' ] != 'no':
-    env.Append( CPPDEFINES = [ 'CHARACTER_CONTROLLER' ] )
-if baseEnv[ 'TransformManipulator' ] != 'no':
-    env.Append( CPPDEFINES = [ 'TRANSFORM_MANIPULATOR' ] )
-
 # See if we need to turn on the Minerva sub-menu.
 if baseEnv[ 'MakeMinervaSupport' ] != 'no':
    env.Append( CPPDEFINES = ['MINERVA_GIS_SUPPORT'] )

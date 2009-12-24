@@ -69,9 +69,7 @@ class cfdGraphicsObject;
 
 #include <vector>
 #include <map>
-#ifdef _PERFORMER
-#elif _OPENSG
-#elif _OSG
+
 #include <osg/ref_ptr>
 
 namespace ves
@@ -238,5 +236,4 @@ private:
 };
 }
 }
-#endif //OSG
 #endif// CFD_TEXTURE_BASED_VIZ_HANDLER_H

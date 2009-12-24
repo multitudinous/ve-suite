@@ -55,9 +55,7 @@
 #include <vpr/Util/Singleton.h>
 
 // --- OSG Includes --- //
-#ifdef _OSG
 #include <osg/ref_ptr>
-#endif
 
 // --- VTK Includes --- //
 class vtkPolyData;

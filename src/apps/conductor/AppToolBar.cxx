@@ -333,7 +333,6 @@ void AppToolBar::CreateAppToolBar()
 
     AddSeparator();
 
-#ifdef TRANSFORM_MANIPULATOR
     AddTool(
         APP_TOOL_BAR_MANIPULATOR, wxEmptyString,
         m_toolbarBitmaps[ APP_TOOL_BAR_MANIPULATOR ],
@@ -372,7 +371,6 @@ void AppToolBar::CreateAppToolBar()
 	AddControl( manipulatorChoice );
 
     AddSeparator();
-#endif //TRANSFORM_MANIPULATOR
 
     AddTool(
         APP_TOOL_BAR_SMALL_CENTER_POINT_JUMP, wxEmptyString,
@@ -397,7 +395,6 @@ void AppToolBar::CreateAppToolBar()
 
     AddSeparator();
 
-#ifdef CHARACTER_CONTROLLER
     AddTool(
         APP_TOOL_BAR_CHARACTER, wxEmptyString,
         m_toolbarBitmaps[ APP_TOOL_BAR_CHARACTER ],
@@ -407,7 +404,6 @@ void AppToolBar::CreateAppToolBar()
         m_toolbarBitmaps[ APP_TOOL_BAR_CHARACTER_FLY ],
         m_toolbarBitmaps[ APP_TOOL_BAR_CHARACTER_FLY_DISABLED ],
         wxITEM_CHECK, wxT( "Fly Mode On/Off" ) );
-#endif //CHARACTER_CONTROLLER
 
     AddSeparator();
 

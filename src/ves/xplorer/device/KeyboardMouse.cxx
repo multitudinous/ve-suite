@@ -907,7 +907,6 @@ void KeyboardMouse::OnMousePress()
         //No modifier key
         if( mKeyNone )
         {
-#ifdef TRANSFORM_MANIPULATOR
             if( m_manipulatorManager.IsEnabled() )
             {
                 UpdateSelectionLine();
@@ -918,7 +917,6 @@ void KeyboardMouse::OnMousePress()
                     break;
                 }
             }
-#endif //TRANSFORM_MANIPULATOR
 
             if( m_characterController.IsEnabled() )
             {
@@ -1002,7 +1000,6 @@ void KeyboardMouse::OnMouseRelease()
         //Do not require mod key depending on what the user did
         ClearPointConstraint();
         
-#ifdef TRANSFORM_MANIPULATOR
         if( m_manipulatorManager.IsEnabled() )
         {
             if( m_manipulatorManager.Handle(
@@ -1011,7 +1008,6 @@ void KeyboardMouse::OnMouseRelease()
                 break;
             }
         }
-#endif //TRANSFORM_MANIPULATOR
 
         if( m_characterController.IsEnabled() )
         {
@@ -1128,8 +1124,6 @@ void KeyboardMouse::OnMouseMotionDown()
         //No modifier key
         if( mKeyNone )
         {
-
-#ifdef TRANSFORM_MANIPULATOR
             if( m_manipulatorManager.IsEnabled() )
             {
                 UpdateSelectionLine();
@@ -1139,7 +1133,6 @@ void KeyboardMouse::OnMouseMotionDown()
                     break;
                 }
             }
-#endif //TRANSFORM_MANIPULATOR
 
             //Rotate just the camera "3rd person view:
             if( m_characterController.IsEnabled() )
@@ -1220,7 +1213,6 @@ void KeyboardMouse::OnMouseMotionDown()
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::OnMouseMotionUp()
 {
-#ifdef TRANSFORM_MANIPULATOR
     if( m_manipulatorManager.IsEnabled() )
     {
         UpdateSelectionLine();
@@ -1231,7 +1223,6 @@ void KeyboardMouse::OnMouseMotionUp()
             ;
         }
     }
-#endif //TRANSFORM_MANIPULATOR
 }
 ////////////////////////////////////////////////////////////////////////////////
 /*

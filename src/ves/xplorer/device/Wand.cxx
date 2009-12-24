@@ -49,6 +49,8 @@
 #include <ves/xplorer/scenegraph/manipulator/RotateTwist.h>
 #include <ves/xplorer/scenegraph/manipulator/TransformManipulator.h>
 
+#include <ves/xplorer/scenegraph/physics/CharacterController.h>
+
 // --- osgBullet Includes --- //
 #include <osgwTools/AbsoluteModelTransform.h>
 #include <osgbBullet/RefRigidBody.h>
@@ -281,7 +283,7 @@ void Wand::ProcessEvents()
     }
 
     ///If we actually pushed a button then move things
-    if( m_buttonPushed )
+    if( m_buttonPushed && !m_characterController.IsEnabled() )
     {
         //Set the DCS postion based off of previous
         //manipulation of the worldTrans array
@@ -302,6 +304,10 @@ void Wand::ProcessEvents()
         activeDCS->SetTranslationArray( m_worldTrans );
         world_quat *= m_rotIncrement;
         activeDCS->SetQuat( world_quat );
+    }
+    else if( m_characterController.IsEnabled() )
+    {
+        
     }
 
     vprDEBUG( vesDBG, 3 ) << "|\tEnd Navigate" << std::endl << vprDEBUG_FLUSH;
@@ -573,7 +579,6 @@ void Wand::UpdateObjectHandler()
     {        
         UpdateSelectionLine( true );
 
-#ifdef TRANSFORM_MANIPULATOR
         if( m_manipulatorManager.IsEnabled() && m_manipulatorSelected )
         {
             if( m_manipulatorManager.Handle(
@@ -582,9 +587,7 @@ void Wand::UpdateObjectHandler()
                 return;
             }
         }
-#endif //TRANSFORM_MANIPULATOR
         
-#ifdef TRANSFORM_MANIPULATOR
         if( m_manipulatorManager.IsEnabled() && !m_manipulatorSelected )
         {
             if( m_manipulatorManager.Handle(
@@ -594,14 +597,12 @@ void Wand::UpdateObjectHandler()
                 ;
             }
         }
-#endif //TRANSFORM_MANIPULATOR
     }
     //Now select and object based on the new wand location
     else if( digital[ 0 ]->getData() == gadget::Digital::TOGGLE_OFF )
     {
         UpdateSelectionLine( false );
 
-#ifdef TRANSFORM_MANIPULATOR
         if( m_manipulatorManager.IsEnabled() && m_manipulatorSelected )
         {
             if( m_manipulatorManager.Handle(
@@ -611,9 +612,7 @@ void Wand::UpdateObjectHandler()
                 return;
             }
         }
-#endif //TRANSFORM_MANIPULATOR
-        
-#ifdef TRANSFORM_MANIPULATOR
+
         if( m_manipulatorManager.IsEnabled() )
         {
             if( m_manipulatorManager.Handle(
@@ -624,7 +623,7 @@ void Wand::UpdateObjectHandler()
                 return;
             }
         }
-#endif //TRANSFORM_MANIPULATOR
+
         ProcessHit();
     }
 

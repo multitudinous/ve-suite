@@ -75,6 +75,9 @@ public:
     std::map< std::string, ves::open::xml::CommandPtr > GetCommandMap( void );
     ///Set all the commands
     void SetCommandMap( const std::map< std::string, ves::open::xml::CommandPtr >& tempMap );
+    ///Print the current user data buffer map to std out
+    void Print( void );
+
 private:
     ///Mapp to hold all the preference data to be written to the ves file
     std::map< std::string, ves::open::xml::CommandPtr > commandMap;

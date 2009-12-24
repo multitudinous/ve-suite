@@ -200,10 +200,7 @@ double* DCS::GetScaleArray()
 ////////////////////////////////////////////////////////////////////////////////
 void DCS::SetTranslationArray( std::vector< double > transArray )
 {
-#ifdef _OSG
     setPosition( osg::Vec3d( transArray[0], transArray[1], transArray[2] ) );
-#elif _OPENSG
-#endif
 
     UpdatePhysicsTransform();
 }

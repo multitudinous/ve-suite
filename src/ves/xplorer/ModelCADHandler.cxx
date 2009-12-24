@@ -392,7 +392,6 @@ void ModelCADHandler::RemoveAttributeFromNode( const std::string& nodeID,
                                                const std::string& nodeType,
                                                const std::string& attributeName )
 {
-#ifdef _OSG
     std::map < std::string,
     std::vector < std::pair < std::string,
     osg::ref_ptr< osg::StateSet > > > >::iterator attributeList;
@@ -437,14 +436,12 @@ void ModelCADHandler::RemoveAttributeFromNode( const std::string& nodeID,
         << attributeName << std::endl
         << vprDEBUG_FLUSH;
     }
-#endif
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
 void ModelCADHandler::AddAttributeToNode( const std::string& nodeID,
                                           ves::open::xml::cad::CADAttributePtr
                                           newAttribute )
 {
-#ifdef _OSG
     vprDEBUG( vesDBG, 1 ) << "|\tModelCADHandler::AddAttributeToNode()---" << std::endl << vprDEBUG_FLUSH;
     osg::ref_ptr<ves::xplorer::scenegraph::util::Attribute> attribute;
     std::map<std::string, osg::ref_ptr<osg::StateSet> >::iterator
@@ -486,7 +483,6 @@ void ModelCADHandler::AddAttributeToNode( const std::string& nodeID,
     }
     vprDEBUG( vesDBG, 1 ) << "|\tend ModelCADHandler::AddAttributeToNode()---"
     << std::endl << vprDEBUG_FLUSH;
-#endif
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
 void ModelCADHandler::UpdateMaterialMode( const std::string& nodeID,
@@ -494,7 +490,6 @@ void ModelCADHandler::UpdateMaterialMode( const std::string& nodeID,
                                           const std::string& type,
                                           const std::string& mode )
 {
-#ifdef _OSG
     std::map< std::string, std::vector< std::pair< std::string, osg::ref_ptr< osg::StateSet > > > >::iterator attributeList;
     attributeList = m_nodeAttributes.find( nodeID );
 
@@ -524,7 +519,6 @@ void ModelCADHandler::UpdateMaterialMode( const std::string& nodeID,
             }
         }
     }
-#endif
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
 void ModelCADHandler::UpdateMaterialComponent( const std::string& nodeID,

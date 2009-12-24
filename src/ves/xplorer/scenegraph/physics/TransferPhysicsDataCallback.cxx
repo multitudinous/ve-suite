@@ -50,8 +50,6 @@ namespace xplorer
 {
 namespace scenegraph
 {
-
-#ifdef _OSG
 ////////////////////////////////////////////////////////////////////////////////
 TransferPhysicsDataCallback::TransferPhysicsDataCallback()
         :
@@ -98,8 +96,6 @@ void TransferPhysicsDataCallback::operator()( osg::Node* node, osg::NodeVisitor*
     traverse( node, nv );
 }
 ////////////////////////////////////////////////////////////////////////////////
-#endif
-
 } // end scenegraph
 } // end xplorer
 } // end ves

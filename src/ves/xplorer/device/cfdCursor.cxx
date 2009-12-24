@@ -39,13 +39,7 @@
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>
 
-#ifdef _PERFORMER
-#include <Performer/pfdu.h>
-#include <Performer/pf/pfNode.h>
-#include <vrj/Draw/Pf/PfUtil.h>
-#elif _OSG
 #include <osg/Node>
-#endif
 
 #include <vtkPolyData.h>
 #include <vtkPolyDataSource.h>
@@ -755,15 +749,9 @@ void cfdCursor::GetLocalLocationVector( void )
 
     // store the global location in a performer vector...
     gmtl::Vec4d jugglerVec;
-#ifdef _PERFORMER
-    jugglerVec[ 0 ] = this->loc[ 0 ];
-    jugglerVec[ 1 ] = this->loc[ 2 ];
-    jugglerVec[ 2 ] = -this->loc[ 1 ];
-#elif _OSG
     jugglerVec[ 0 ] = this->loc[ 0 ];
     jugglerVec[ 1 ] = this->loc[ 1 ];
     jugglerVec[ 2 ] = this->loc[ 2 ];
-#endif
     jugglerVec[ 3 ] = 1.0f;
 
     // get juggler Matrix of worldDCS
@@ -791,15 +779,9 @@ void cfdCursor::GetLocalLocationVector( void )
     pfLocXX = activeDataSetMatInv * localVector;
 
     // Set class member location
-#ifdef _PERFORMER
-    this->localLocation[ 0 ] = ( double )pfLocXX[ 0 ];
-    this->localLocation[ 2 ] = ( double )pfLocXX[ 1 ];
-    this->localLocation[ 1 ] =  -( double )pfLocXX[ 2 ];
-#elif _OSG
     this->localLocation[ 0 ] = ( double )pfLocXX[ 0 ];
     this->localLocation[ 2 ] = ( double )pfLocXX[ 2 ];
     this->localLocation[ 1 ] = ( double )pfLocXX[ 1 ];
-#endif
     vprDEBUG( vesDBG, 1 ) << " NOTE : local position rel to Juggler: "
     << this->localLocation[ 0 ] << " : "
     << this->localLocation[ 1 ] << " : "

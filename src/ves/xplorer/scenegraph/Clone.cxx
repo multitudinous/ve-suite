@@ -35,12 +35,9 @@
 #include <ves/xplorer/scenegraph/Group.h>
 
 // --- OSG Includes --- //
-#ifdef _OSG
 #include <osg/Geode>
 #include <osg/CopyOp>
 #include <osg/MatrixTransform>
-#elif _OPENSG
-#endif
 
 // --- C/C++ Libraries --- //
 #include <typeinfo>

@@ -641,14 +641,12 @@ void CreateVisObjectEventHandler::SetActiveDataSet( ves::open::xml::XMLObjectPtr
         << "|\tCreateVisObjectEventHandler CHANGE_STEADYSTATE_DATASET " << i
         << std::endl << vprDEBUG_FLUSH;
     //update active texture dataset if it exists
-#ifdef _OSG
     unsigned int nTextureDataSets = activeModel->GetNumberOfTextureDataSets();
     if( ( nTextureDataSets ) && ( i < nTextureDataSets ) )
     {
         cfdTextureDataSet* activeTDSet = activeModel->GetTextureDataSet( i );
         activeModel->SetActiveTextureDataSet( activeTDSet );
     }
-#endif
     if( i < activeModel->GetNumberOfCfdDataSets() )
     {
         vprDEBUG( vesDBG, 0 ) << "|\tCreateVisObjectEventHandler::SetActiveDataSet dataset = "

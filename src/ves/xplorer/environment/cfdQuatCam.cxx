@@ -32,13 +32,10 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
 #include <ves/xplorer/environment/cfdQuatCam.h>
-#ifdef _OSG
 #include <osg/MatrixTransform>
 #include <osg/Matrix>
 #include <osg/Vec3d>
 #include <osg/NodeVisitor>
-#elif _OPENSG
-#endif
 using namespace gmtl;
 using namespace ves::xplorer::scenegraph;
 using namespace ves::xplorer;

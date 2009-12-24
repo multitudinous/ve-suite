@@ -287,8 +287,8 @@ if GetPlatform() == 'win32':
     opts.Add('MSVS_ARCH', 'CPU architecture (x86, amd64)', 'x86')
     opts.Add('MSVS_VERSION', 'MSVS version (9.0,8.0)', '8.0')
 
-opts.Add( 'CharacterController', 'If "yes", then integrate CharacterController into the build', 'no' )
-opts.Add( 'TransformManipulator', 'If "yes", then integrate TransformManipulator into the build', 'no' )
+#opts.Add( 'CharacterController', 'If "yes", then integrate CharacterController into the build', 'no' )
+#opts.Add( 'TransformManipulator', 'If "yes", then integrate TransformManipulator into the build', 'no' )
 
 apr_options = fp_option.FlagPollBasedOption("Apache Portable Runtime",
                                             "apr-1", "1.0", True, True, helpText=None, compileTest=True, headerToCheck="apr.h")
@@ -556,8 +556,6 @@ if not SConsAddons.Util.hasHelpFlag():
     baseEnv.AppendUnique( CPPDEFINES = ['VTK_STREAMS_FWD_ONLY'] )
     # basic ves include info
     baseEnv.AppendUnique( CPPPATH = [pj(RootDir,'src'),pj(RootDir,buildDir,'src')] )
-    # OSG defines
-    baseEnv.AppendUnique( CPPDEFINES = ['_OSG'] )
 
     if GetPlatform() == 'darwin':
         baseEnv.AppendUnique( CPPDEFINES = ['_DARWIN'] )

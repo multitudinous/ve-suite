@@ -36,7 +36,6 @@
 
 #ifndef VTKACTORTOOSG_H
 #define VTKACTORTOOSG_H
-#ifdef _OSG
 #include <osg/Geode>
 #include <osg/Geometry>
 #include <osg/ref_ptr>
@@ -60,6 +59,4 @@ osg::Geometry* processPrimitive( vtkActor *a, vtkCellArray *prims, int pType, in
 }
 }
 }
-
-#endif
 #endif

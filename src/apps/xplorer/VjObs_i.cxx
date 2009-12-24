@@ -52,13 +52,11 @@
 #include <ves/open/xml/DataValuePair.h>
 #include <ves/open/xml/XMLReaderWriter.h>
 
-#ifdef _OSG
 #include <ves/xplorer/TextureBasedVizHandler.h>
 #include <ves/xplorer/volume/cfdVolumeVisualization.h>
 #include <ves/xplorer/volume/cfdTextureManager.h>
 
 using namespace ves::xplorer::volume;
-#endif
 
 #include <vpr/System.h>
 #include <vpr/Util/Debug.h>

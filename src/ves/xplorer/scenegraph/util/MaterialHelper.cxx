@@ -30,13 +30,10 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#ifdef _OSG
 #include <osg/StateSet>
 #include <osg/Material>
 #include <osg/BlendFunc>
 #include <osg/ShadeModel>
-#elif _PERFORMER
-#endif
 
 #include <ves/xplorer/scenegraph/util/MaterialHelper.h>
 
@@ -59,7 +56,6 @@ MaterialHelper::~MaterialHelper()
 ////////////////////////////////////////////////////////////////
 void MaterialHelper::LoadMaterial( CADMaterialPtr material )
 {
-#ifdef _OSG
     if( !m_material.valid() )
     {
         m_material = new osg::Material();
@@ -94,23 +90,23 @@ void MaterialHelper::LoadMaterial( CADMaterialPtr material )
     }
     else if( colorMode == std::string( "Ambient" ) )
     {
-        osg::Material::AMBIENT;
+        //osg::Material::AMBIENT;
     }
     else if( colorMode == std::string( "Emissive" ) )
     {
-        osg::Material::EMISSION;
+        //osg::Material::EMISSION;
     }
     else if( colorMode == std::string( "Specular" ) )
     {
-        osg::Material::SPECULAR;
+        //osg::Material::SPECULAR;
     }
     else if( colorMode == std::string( "Ambient_and_Diffuse" ) )
     {
-        osg::Material::AMBIENT_AND_DIFFUSE;
+        //osg::Material::AMBIENT_AND_DIFFUSE;
     }
     else if( colorMode == std::string( "Off" ) )
     {
-        osg::Material::OFF;
+        //osg::Material::OFF;
     }
     else
     {
@@ -169,11 +165,7 @@ void MaterialHelper::LoadMaterial( CADMaterialPtr material )
     }
     m_ss->setAttributeAndModes( bf.get(), osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
     m_ss->setAttributeAndModes( m_material.get(), osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
-#elif _PERFORMER
-    std::cout << "Material Loader Not implemented for Performer version yet!!!!!!" << std::endl;
-#endif
 }
-#ifdef _OSG
 /////////////////////////////////////////////////////////////////
 osg::ref_ptr<osg::StateSet> MaterialHelper::GetMaterialStateSet()
 {
@@ -188,8 +180,3 @@ void MaterialHelper::SetStateSet( osg::StateSet* material )
 {
     m_ss = material;
 }
-#elif _PERFORMER
-#endif
-
-
-

@@ -33,7 +33,6 @@
 #ifndef VE_SEED_POINTS_H
 #define VE_SEED_POINTS_H
 
-#ifdef _OSG
 #include <osg/Geode>
 #include <osg/Geometry>
 #include <ves/VEConfig.h>
@@ -201,5 +200,4 @@ class PointsDrawable: public osg::Geometry
 };
 }
 }
-#endif//_OSG
 #endif// VE_SEED_POINTS_H
