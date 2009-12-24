@@ -111,15 +111,15 @@ lib_env.Append(LIBPATH = [pj('#',buildDir,'external', bulletBaseVar)])
 #libBulletColladaConverter.a libCOLLADA_DOM.a libXML.a libbullet.a
 ApplyBulletVars(lib_env)
 
-if GetPlatform() == 'win32':
-   lib_env.Append( CPPDEFINES = ['_WIN32_WINNT=0x400'] )
+#if GetPlatform() == 'win32':
+#   lib_env.Append( CPPDEFINES = ['_WIN32_WINNT=0x400'] )
    
 if GetPlatform() == 'darwin':
-    lib_env.Append( CPPDEFINES  = ['_DARWIN'] )
+    lib_env.AppendUnique( CPPDEFINES  = ['_DARWIN'] )
 
 #see if we need to compile minerva in
 if baseEnv[ 'MakeMinervaSupport' ] != 'no':
-	lib_env.Append( CPPDEFINES = ['MINERVA_GIS_SUPPORT'] )
+	lib_env.AppendUnique( CPPDEFINES = ['MINERVA_GIS_SUPPORT'] )
 	srcDir = os.path.abspath( pj(RootDir, 'src', 'ves', 'xplorer','minerva') )
 	base_plugin_srcs = sca_util.getSourcesRecursive( srcDir )
 	base_header_srcs = sca_util.getHeadersRecursive( srcDir )
@@ -127,7 +127,7 @@ if baseEnv[ 'MakeMinervaSupport' ] != 'no':
 	headers += map(lambda s: pj('minerva', s), base_header_srcs)
 	minerva_options.apply( lib_env )
 
-lib_env.Append( CPPDEFINES = ['VE_XPLORER_LIBRARY','VE_XPLORER_NETWORK_LIBRARY','VE_GRAPHICALPLUGINS_LIBRARY'])
+lib_env.AppendUnique( CPPDEFINES = ['VE_XPLORER_LIBRARY','VE_XPLORER_NETWORK_LIBRARY','VE_GRAPHICALPLUGINS_LIBRARY'])
 
 if baseEnv['StaticLibs'] == "yes":
    lib = ves_pkg.createStaticAndSharedLibrary('ves_xplorer',
