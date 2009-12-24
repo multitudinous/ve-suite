@@ -1,5 +1,7 @@
 // Copyright (c) 2008 Blue Newt Software LLC and Skew Matrix Software LLC. All rights reserved.
 
+#include <osgUtil/Optimizer>
+
 #include <osgDB/ReadFile>
 #include <osgDB/WriteFile>
 #include <osgDB/FileUtils>
@@ -591,7 +593,12 @@ main( int argc,
 
     osg::Vec3& up( crw->_up );
     bulletWorld->setGravity( osgbBullet::asBtVector3( up * -9.8 ) );
-
+    //This is the default value for the island deactivation time. The smaller this
+    //value is the sooner the island will be put to sleep. I believe this number is
+    //in seconds. It can be located in btRigidBody.cpp.
+    //btScalar	gDeactivationTime = btScalar(2.);
+    gDeactivationTime = btScalar(1.);
+    
     //osg::Quat q( osg::PI, osg::Vec3f( 0, 1, 0 ) );
     //crw->_hn->setAttitude( q );
     //crw->_hn->setPosition( osg::Vec3( -2, 6, -3 ) );
@@ -957,6 +964,12 @@ main( int argc,
     bool first( true );
 #endif
 
+    osg::ref_ptr< osg::Node > foo( viewer.getSceneData() );
+    osgUtil::Optimizer opt;
+    opt.optimize( foo.get(),
+        osgUtil::Optimizer::DEFAULT_OPTIMIZATIONS &
+        ~osgUtil::Optimizer::REMOVE_REDUNDANT_NODES &
+        ~osgUtil::Optimizer::FLATTEN_STATIC_TRANSFORMS );
 
     while( /*count-- &&*/ !viewer.done() )
     {
