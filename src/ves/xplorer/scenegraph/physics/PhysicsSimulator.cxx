@@ -397,6 +397,12 @@ void PhysicsSimulator::InitializePhysicsSimulation()
     m_physicsThread->start();
     m_physicsThread->pause( true );
 #endif
+
+    //This is the default value for the island deactivation time. The smaller this
+    //value is the sooner the island will be put to sleep. I believe this number is
+    //in seconds.
+    //btScalar	gDeactivationTime = btScalar(2.);
+    gDeactivationTime = btScalar(1.);
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsSimulator::UpdatePhysics( float dt )
