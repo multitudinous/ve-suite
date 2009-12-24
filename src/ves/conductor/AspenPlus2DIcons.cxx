@@ -582,7 +582,7 @@
 #include <ves/conductor/xpm/AspenPlus2DIcons/valve_valve_valve4.xpm>                                                    
 #include <ves/conductor/xpm/AspenPlus2DIcons/vscrub_vscrub_block.xpm>                                                   
 #include <ves/conductor/xpm/AspenPlus2DIcons/vscrub_vscrub_icon.xpm>                                                    
-#include <ves/conductor/xpm/AspenPlus2DIcons/sim.xpm>                                                    
+//#include <ves/conductor/xpm/AspenPlus2DIcons/sim.xpm>                                                    
 
 std::map< std::string, char** > GetAspenPlusIconMap()
 {
@@ -1167,7 +1167,7 @@ std::map< std::string, char** > GetAspenPlusIconMap()
     tempIconMap[ "valve_valve_valve4.xpm"] =                                  valve_valve_valve4;                        
     tempIconMap[ "vscrub_vscrub_block.xpm"] =                                 vscrub_vscrub_block;                       
     tempIconMap[ "vscrub_vscrub_icon.xpm"] =                                  vscrub_vscrub_icon;                        
-    tempIconMap[ "sim.xpm"] =                                                  sim;                       
+//    tempIconMap[ "sim.xpm"] =                                                  sim;                       
     
     return tempIconMap;
 }

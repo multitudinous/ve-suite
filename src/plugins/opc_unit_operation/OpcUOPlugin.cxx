@@ -182,8 +182,8 @@ void OpcUOPlugin::DrawValue( wxDC* dc )
     x = x / n_pts;
     y = y / n_pts;
 
-    dc->GetTextExtent( dynValue.c_str(), &w, &h );
-    dc->DrawText( dynValue.c_str(), int( x - w / 2 + xoff ), pos.y + int( y * 2.5 ) );
+    dc->GetTextExtent( wxString( dynValue.c_str(), wxConvUTF8), &w, &h );
+    dc->DrawText( wxString( dynValue.c_str(), wxConvUTF8 ), int( x - w / 2 + xoff ), pos.y + int( y * 2.5 ) );
 }
 
 void OpcUOPlugin::ReadValue( )

@@ -143,7 +143,7 @@ void DynamicDataDlg::ReadValue( )
         ( objectVector.at( 0 ) );
     ves::open::xml::DataValuePairPtr pair = cmd->GetDataValuePair( 0 );	
 
-    WxEdit1->SetValue( pair->GetDataString().c_str() );
+    WxEdit1->SetValue( wxString( pair->GetDataString().c_str(), wxConvUTF8 ) );
 }
 
 

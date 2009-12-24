@@ -38,7 +38,7 @@
 #include <plugins/ConductorPluginEnums.h>
 #include <ves/conductor/ConductorLibEnums.h>
 
-#include <ves/conductor/xpm/AspenPlus2DIcons/sim.xpm>
+//#include <ves/conductor/xpm/AspenPlus2DIcons/sim.xpm>
 #include <ves/conductor/UserPreferencesDataBuffer.h>
 #include <ves/conductor/XMLDataBufferEngine.h>
 #include <ves/conductor/Network.h>
@@ -86,8 +86,8 @@ SDPlugin::SDPlugin() :
     GetVEModel()->SetVendorName( "ASPENUNIT" );
 
     iconFilename = "sim";
-    wxImage my_img( sim );
-    SetImage( my_img );
+    //wxImage my_img( sim );
+    //SetImage( my_img );
 }
 ////////////////////////////////////////////////////////////////////////////////
 SDPlugin::~SDPlugin()
