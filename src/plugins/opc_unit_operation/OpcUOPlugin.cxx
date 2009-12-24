@@ -229,7 +229,7 @@ void OpcUOPlugin::OnTimer( wxTimerEvent& event )
     //UIPLUGIN_CHECKID( event )
 	//ReadValue();
 	//DrawValue( wxDC* dc );
-    m_canvas->Refresh( true );
+    //m_canvas->Refresh( true );
 }
 
 void OpcUOPlugin::DrawPlugin( wxDC* dc )
