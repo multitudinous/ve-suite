@@ -452,6 +452,7 @@ void Dragger::UpdateAssociations()
         {
             continue;
         }
+        bool currentIdle = m_physicsSimulator.GetIdle();
         m_physicsSimulator.SetIdle( true );
 
         osgbBullet::MotionState* ms = static_cast< osgbBullet::MotionState* >(
@@ -489,7 +490,7 @@ void Dragger::UpdateAssociations()
         ms->setWorldTransform( currentMatrix );
         btRB->setWorldTransform( currentMatrix );
         btRB->setInterpolationWorldTransform( currentMatrix );
-        m_physicsSimulator.SetIdle( false );
+        m_physicsSimulator.SetIdle( currentIdle );
     }
 
     //Set all associated transforms
@@ -801,6 +802,8 @@ void Dragger::ResetPhysics()
 ////////////////////////////////////////////////////////////////////////////////
 const bool Dragger::CreatePointConstraint( btRigidBody& btRB )
 {
+    bool currentIdle = m_physicsSimulator.GetIdle();
+    
     m_physicsSimulator.SetIdle( true );
 
     btRB.setActivationState( DISABLE_DEACTIVATION );
@@ -812,7 +815,7 @@ const bool Dragger::CreatePointConstraint( btRigidBody& btRB )
 
     m_physicsSimulator.GetDynamicsWorld()->addConstraint( p2p );
     (*m_constraintMap)[ &btRB ] = p2p;
-    m_physicsSimulator.SetIdle( false );
+    m_physicsSimulator.SetIdle( currentIdle );
     return true;
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -823,6 +826,7 @@ void Dragger::ClearPointConstraint()
     {
         return;
     }
+    bool currentIdle = m_physicsSimulator.GetIdle();
     m_physicsSimulator.SetIdle( true );
 
     for( itr; itr != (*m_constraintMap).end(); ++itr )
@@ -836,13 +840,13 @@ void Dragger::ClearPointConstraint()
 
             btRigidBody* btRB = itr->first;
             btRB->forceActivationState( ACTIVE_TAG );
-            btRB->setDeactivationTime( 0.0 );
+            //btRB->setDeactivationTime( 0.0 );
             btRB = NULL;
         }
     }
 
     (*m_constraintMap).clear();
-    m_physicsSimulator.SetIdle( false );
+    m_physicsSimulator.SetIdle( currentIdle );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Dragger::UpdateConductorData( ves::xplorer::scenegraph::DCS* dcs )
