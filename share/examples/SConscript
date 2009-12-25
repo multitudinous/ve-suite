@@ -19,9 +19,9 @@ exampleSubdirs = Split("""
     SimpleNetwork
     simple_physics
     input_animation
-    sensor_overlay
 """)
 #VascularSimViewer
+#sensor_overlay
 
 if poco_options.isAvailable():
     exampleSubdirs.append( 'WarrantyTool' )
