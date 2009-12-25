@@ -47,6 +47,7 @@
 
 // --- C/C++ Libraries --- //
 #include <vector>
+#include <iostream>
 
 using namespace ves::xplorer::event;
 
@@ -82,27 +83,45 @@ void StreamLineEventHandler::Execute( const ves::open::xml::XMLObjectPtr& veXMLO
     ves::open::xml::DataValuePairPtr glowDVP = command->GetDataValuePair( "Glow" );
 
     double size, glow;
+    unsigned int numdraw;
     std::vector< ves::xplorer::cfdGraphicsObject* > cfdGraphicsObject =
         ves::xplorer::SteadyStateVizHandler::instance()->
         GetGraphicsObjectsOfType( STREAMLINES );
+    
+    if( cfdGraphicsObject.empty() )
+    {
+        return;
+    }
 
-    if( sizeDVP && !cfdGraphicsObject.empty() )
+    if( sizeDVP )
     {
         sizeDVP->GetData( size );
-        size /= 200.0;
+    	float range = 2.5f;
+   	int diameter = static_cast< int >( size );
+    	float localLineDiameter = exp( diameter / ( 100.0 / range ) ) * 1.0f * 0.001f;
+
+    	// this is to normalize -100 to 100 on the GUI  to  1-21 for diameters
+    	// note that multiplying by 0.005 is the same as dividing by 200, or the range
+    	size = ( diameter + 110 ) * 0.005 *  20;
+
+//        size /= 200.0;
         for( size_t i = 0; i < cfdGraphicsObject.size(); ++i )
         {
             std::vector< osg::ref_ptr< ves::xplorer::scenegraph::Geode > > geodes =
                 cfdGraphicsObject.at( i )->GetGeodes();
             for( size_t j = 0; j < geodes.size(); ++j )
             {
-                osg::ref_ptr< osg::Uniform > parSize =
-                    geodes.at( j )->getDrawable( 0 )->getStateSet()->getUniform( "particleSize" );
-                if( parSize.valid() )
-                {
-                    parSize->set( static_cast< float >( size ) );
-                }
-            }
+	    	numdraw = geodes.at( j )->getNumDrawables ();
+            	for( size_t k = 0; k < numdraw; ++k )
+            	{
+                    osg::ref_ptr< osg::Uniform > parSize =
+                    geodes.at( j )->getDrawable( k )->getStateSet()->getUniform( "particleSize" );
+                    if( parSize.valid() )
+                    {
+                    	parSize->set( static_cast< float >( size ) );
+                    }
+            	}
+	    }
         }
     }
 

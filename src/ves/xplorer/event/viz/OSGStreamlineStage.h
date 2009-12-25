@@ -80,6 +80,8 @@ public:
     ves::xplorer::scenegraph::Geode* createInstanced(vtkPolyData* polyData, 
         int mult, const char* scalarName, const std::string& activeVector );
 
+    void SetParticleDiameter( int pDiameter );
+
 private:
     struct Point
     {
@@ -114,5 +116,7 @@ private:
     std::vector< std::deque< Point > > m_streamlineList;
     
     std::string m_activeVector;
+
+    float m_particleDiameter;
 
 };

@@ -107,6 +107,7 @@ private:
     float integrationStepLength;
     float lineDiameter;
     double arrowDiameter;
+    float particleDiameter;
 
     unsigned int xValue;///>number of points for x direction
     unsigned int yValue;///>number of points for y direction

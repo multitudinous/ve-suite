@@ -79,6 +79,7 @@ cfdStreamers::cfdStreamers()
         propagationTime( -1 ),
         integrationStepLength( -1 ),
         lineDiameter( 1.0f ),
+        particleDiameter( 1.0f ),
         arrowDiameter( 1 ),
         streamArrows( 0 ),
         xValue( 4 ),
@@ -390,6 +391,7 @@ void cfdStreamers::Update()
         try
         {
             OSGStreamlineStage* tempStage = new OSGStreamlineStage();
+            tempStage->SetParticleDiameter( particleDiameter );
 			//This is a multiplier to create extra points using 
 			//linear interplation to smooth out the animation
 			int mult=10;  
@@ -535,6 +537,7 @@ void cfdStreamers::UpdateCommand()
     // this is to normalize -100 to 100 on the GUI  to  1-21 for diameters
     // note that multiplying by 0.005 is the same as dividing by 200, or the range
     lineDiameter = ( diameter + 110 ) * 0.005 *  20;
+    particleDiameter = lineDiameter;
 
     vprDEBUG( vesDBG, 1 ) << "|\t\tNew Streamline Diameter : "
         << lineDiameter << std::endl << vprDEBUG_FLUSH;

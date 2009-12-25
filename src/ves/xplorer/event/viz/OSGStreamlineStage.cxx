@@ -53,6 +53,8 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 OSGStreamlineStage::OSGStreamlineStage(void)
+    :
+    m_particleDiameter( 1 )
 {
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -323,6 +325,12 @@ void OSGStreamlineStage::createStreamLines( vtkPolyData* polyData,
 
         osg::StateSet* ss = geom->getOrCreateStateSet();
 
+    	{
+            osg::ref_ptr< osg::Uniform > particlesizeUniform =
+            new osg::Uniform( "particleSize", m_particleDiameter );
+            ss->addUniform( particlesizeUniform.get() );
+    	}
+
         //osg::ref_ptr< osg::Shader > vertexShader = osg::Shader::readShaderFile(
         //    osg::Shader::VERTEX, osgDB::findDataFile( "streamline.vs" ) );
 
@@ -337,6 +345,7 @@ void OSGStreamlineStage::createStreamLines( vtkPolyData* polyData,
             "uniform float totalInstances; \n"
             "uniform float fadeTime; \n"
             "uniform float repeatTime; \n"
+            "uniform float particleSize; \n"
 
             "void main() \n"
             "{ \n"
@@ -355,7 +364,7 @@ void OSGStreamlineStage::createStreamLines( vtkPolyData* polyData,
             //" gl_Position = gl_ModelViewProjectionMatrix * ( gl_Vertex + pos ); \n"
 
             // TBD. Need to make this configurable from a uniform.
-            "   gl_PointSize = -500. / v.z; \n"
+            "   gl_PointSize = (-50. / v.z) * particleSize; \n"
 
             // Compute a time offset from the InstanceID to
             // emulate motion.
@@ -708,6 +717,11 @@ bool OSGStreamlineStage::IsStreamlineBackwards( vtkIdType cellId, vtkPolyData* p
     }
     
     return isBackwards;
+}
+////////////////////////////////////////////////////////////////////////////////
+void OSGStreamlineStage::SetParticleDiameter( int pDiameter )
+{
+    m_particleDiameter = pDiameter;
 }
 ////////////////////////////////////////////////////////////////////////////////
 
