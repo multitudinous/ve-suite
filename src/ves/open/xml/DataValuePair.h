@@ -255,6 +255,19 @@ public:
         return os;
     }
     
+    ///Helper function to make it more compact to create a DataValuePair
+    ///\param name String of the name of the DataValuePair
+    ///\param value The templated value that the user would like to add
+    ///\return A new DataValuePair
+    template<class T>
+    inline DataValuePairPtr MakeDVP( const std::string& name, T value )
+    {
+        ves::open::xml::DataValuePairPtr 
+            dvp( new ves::open::xml::DataValuePair );
+        dvp->SetData ( name, value );
+        return dvp;
+    }
+    
 protected:
     ///Internally update the data.
     ///\param tagName The tag name of this element.

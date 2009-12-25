@@ -33,6 +33,9 @@
 
 #include <ves/open/xml/StateInfo.h>
 #include <ves/open/xml/Command.h>
+
+#include <boost/concept_check.hpp>
+
 #include <algorithm>
 
 XERCES_CPP_NAMESPACE_USE
@@ -62,6 +65,7 @@ void StateInfo::ClearState()
 ////////////////////////////////////////////////////////////////////////////////
 void StateInfo::_updateVEElement( const std::string& input )
 {
+    boost::ignore_unused_variable_warning( input );
     //Be sure to set the number of children (_nChildren) either here or in the updating subElements code
     //this will be based on the number of commands stored in the state
 
@@ -85,7 +89,7 @@ void StateInfo::SetObjectFromXMLData( DOMNode* xmlInput )
     DOMElement* currentElement = 0;
     if( xmlInput->getNodeType() == DOMNode::ELEMENT_NODE )
     {
-        currentElement = dynamic_cast<DOMElement*>( xmlInput );
+        currentElement = static_cast<DOMElement*>( xmlInput );
     }
 
     //get variables by tags
@@ -97,13 +101,13 @@ void StateInfo::SetObjectFromXMLData( DOMNode* xmlInput )
     unsigned int nCmdsIn = subElements->getLength();
 
     //read in new commands
-    for( unsigned int i = 0; i < nCmdsIn; i++ )
+    for( unsigned int i = 0; i < nCmdsIn; ++i )
     {
-        DOMElement* vecmdIn = dynamic_cast<DOMElement*>( subElements->item( i ) );
-        if( vecmdIn )
+        cmdsIn = static_cast<DOMElement*>( subElements->item( i ) );
+        //if( vecmdIn )
         {
             CommandPtr command( new Command() );
-            command->SetObjectFromXMLData( vecmdIn );
+            command->SetObjectFromXMLData( cmdsIn );
             mStateInfo.push_back( command );
         }
     }

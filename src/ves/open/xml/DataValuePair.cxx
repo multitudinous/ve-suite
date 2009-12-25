@@ -44,6 +44,8 @@
 #include <ves/open/xml/TwoDStringArray.h>
 #include <ves/open/xml/XMLObjectFactory.h>
 
+#include <boost/concept_check.hpp>
+
 #include <iostream>
 #include <sstream>
 XERCES_CPP_NAMESPACE_USE
@@ -199,6 +201,7 @@ void DataValuePair::SetData( const std::string& dataName, XMLObjectPtr vexmlObje
 ///////////////////////////////////////
 void DataValuePair::_updateVEElement( const std::string& input )
 {
+    boost::ignore_unused_variable_warning( input );
     //fill in datavalue pairs, via xerces, according to schema
     //Add code here to update the specific sub elements
     SetAttribute( "dataName", mDataName );
@@ -329,7 +332,7 @@ void DataValuePair::SetObjectFromXMLData( DOMNode* element )
         {
             //get variables by tags
             DOMNodeList* subElements = 0;
-            DOMElement* dataElement = 0;
+            //DOMElement* dataElement = 0;
 
             if( currentElement->getElementsByTagName( ves::open::xml::Convert( "genericObject" ).toXMLString() )->getLength() )
             {

@@ -36,6 +36,8 @@
 #include <ves/open/xml/model/Model.h>
 #include <ves/open/xml/DataValuePair.h>
 
+#include <boost/concept_check.hpp>
+
 XERCES_CPP_NAMESPACE_USE
 using namespace ves::open::xml;
 using namespace ves::open::xml::model;
@@ -116,6 +118,7 @@ const std::string& Link::GetLinkName( void )
 ///////////////////////////////////////
 void Link::_updateVEElement( const std::string& input )
 {
+    boost::ignore_unused_variable_warning( input );
     // write all the elements according to verg_model.xsd
     SetAttribute( "name", mLinkName );
     if( mType != -9999 )

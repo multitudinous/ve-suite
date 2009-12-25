@@ -34,6 +34,9 @@
 #include <ves/open/xml/model/Port.h>
 #include <ves/open/xml/model/Point.h>
 #include <ves/open/xml/DataValuePair.h>
+
+#include <boost/concept_check.hpp>
+
 #include <iostream>
 #include <sstream>
 XERCES_CPP_NAMESPACE_USE
@@ -121,6 +124,7 @@ void Port::SetPortType( const std::string& portType )
 ////////////////////////////////////////////////////////////////////////////////
 void Port::_updateVEElement( const std::string& input )
 {
+    boost::ignore_unused_variable_warning( input );
     // write all the elements according to verg_model.xsd
     SetSubElement( "number", mPortNumber );
     SetSubElement( "dataFlow", mDataFlow );

@@ -34,6 +34,8 @@
 #include <ves/open/xml/model/Network.h>
 #include <ves/open/xml/model/Model.h>
 
+#include <boost/concept_check.hpp>
+
 #include <ves/open/xml/DataValuePair.h>
 
 XERCES_CPP_NAMESPACE_USE
@@ -97,6 +99,7 @@ System& System::operator=( const System& input )
 ////////////////////////////////////////////////////////////////////////////////
 void System::_updateVEElement( const std::string& input )
 {
+    boost::ignore_unused_variable_warning( input );
     // write all the elements according to verg_model.xsd
     SetAttribute( "id", mUuid );
     SetSubElement<ves::open::xml::XMLObjectPtr>( "network", mNetwork );

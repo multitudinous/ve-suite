@@ -34,6 +34,9 @@
 #include <ves/open/xml/ParameterBlock.h>
 #include <ves/open/xml/Transform.h>
 #include <ves/open/xml/DataValuePair.h>
+
+#include <boost/concept_check.hpp>
+
 XERCES_CPP_NAMESPACE_USE
 #include <iostream>
 
@@ -156,6 +159,7 @@ void ParameterBlock::SetObjectFromXMLData( XERCES_CPP_NAMESPACE_QUALIFIER DOMNod
 ////////////////////////////////////////
 void ParameterBlock::_updateVEElement( const std::string& input )
 {
+    boost::ignore_unused_variable_warning( input );
     //Add code here to update the specific sub elements
     SetSubElement( "blockID", mId );
     SetSubElement( "blockName", mParamName );

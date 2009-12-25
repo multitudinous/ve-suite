@@ -34,6 +34,7 @@
 #include <ves/open/xml/DataValuePair.h>
 
 #include <boost/lambda/lambda.hpp>
+#include <boost/concept_check.hpp>
 
 XERCES_CPP_NAMESPACE_USE
 #include <iostream>
@@ -132,6 +133,8 @@ void Command::RemoveDataValuePair( const std::string& dataValueName )
 ////////////////////////////////////////////////////////////////////////////////
 void Command::_updateVEElement( const std::string& input )
 {
+    boost::ignore_unused_variable_warning( input );
+
     //Be sure to set the number of children (_nChildren) either here or in the updating subElements code
     //_nChildren will be the number of dvPairs + the name of the command but we have to call the
     //update functions below to get the ndvPairs before we can calculate _nChildren
@@ -209,14 +212,15 @@ void Command::SetObjectFromXMLData( DOMNode* xmlInput )
         //read in new data value pairs
         for( unsigned int i = 0; i < nDVPairsIn; ++i )
         {
-            DOMElement* dvPairIn = static_cast<DOMElement*>( subElements->item( i ) );
-            if( dvPairIn->getParentNode() == currentElement )
+            dataValuePairIn = static_cast<DOMElement*>( subElements->item( i ) );
+            if( dataValuePairIn->getParentNode() == currentElement )
             {
                 DataValuePairPtr veDvp( new DataValuePair() );
-                veDvp->SetObjectFromXMLData( dvPairIn );
+                veDvp->SetObjectFromXMLData( dataValuePairIn );
                 mDataValuePairs.push_back( veDvp );
                 mNameToDataValuePairMap[ veDvp->GetDataName()] = veDvp;
             }
+            dataValuePairIn = 0;
         }
     }
 }

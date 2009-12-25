@@ -39,6 +39,8 @@
 #include <ves/open/xml/cad/CADAssembly.h>
 #include <ves/open/xml/model/System.h>
 
+#include <boost/concept_check.hpp>
+
 #include <sstream>
 
 XERCES_CPP_NAMESPACE_USE
@@ -51,14 +53,15 @@ using namespace ves::open::xml::model;
 Model::Model()
         : 
         XMLObject(),
+        boost::enable_shared_from_this<Model>(),
         mUniqueModelID( 0 ),
+        mGeometry( CADAssemblyPtr() ),
+        mModelAttribute( CommandPtr() ),
         mIconScale( 1.0f ),
         mIconRotation( 0.0f ),
-        mIconMirror( 0 ),
         mIconHiddenFlag( 0 ),
-        mModelAttribute( CommandPtr() ),
+        mIconMirror( 0 ),
         mParentModel( ModelPtr() ),
-        mGeometry( CADAssemblyPtr() ),
         m_parentSystem( SystemPtr() )
 {
     mIconLocation = PointPtr( new Point() );
@@ -85,7 +88,9 @@ Model::~Model()
 }
 ///////////////////////////////////////////
 Model::Model( const Model& input )
-        : XMLObject( input )
+        : 
+        XMLObject( input ),
+        boost::enable_shared_from_this<Model>( input )
 {
     mPluginName = input.mPluginName;
     mPluginType = input.mPluginType;
@@ -773,6 +778,7 @@ void Model::RemoveInformationPacket( const std::string& name )
 ////////////////////////////////////////////////////////////////////////////////
 void Model::_updateVEElement( const std::string& input )
 {
+    boost::ignore_unused_variable_warning( input );
     // write all the elements according to verg_model.xsd    
     SetAttribute( "name", mPluginName );
 

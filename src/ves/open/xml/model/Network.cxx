@@ -37,6 +37,8 @@
 
 #include <ves/open/xml/DataValuePair.h>
 
+#include <boost/concept_check.hpp>
+
 XERCES_CPP_NAMESPACE_USE
 using namespace ves::open::xml;
 using namespace ves::open::xml::model;
@@ -117,6 +119,7 @@ Network& Network::operator=( const Network& input )
 ////////////////////////////////////////////////////////////////////////////////
 void Network::_updateVEElement( const std::string& input )
 {
+    boost::ignore_unused_variable_warning( input );
     // write all the elements according to verg_model.xsd
     SetSubElements( "link", mLinks );
 
@@ -138,8 +141,11 @@ LinkPtr Network::GetLink( int i )
     }
     catch ( ... )
     {
-        ;
+        std::cerr << " Network::GetLink The element request "
+            << "is out of sequence. Please ask for a lower number point."
+            << std::endl;
     }
+    return LinkPtr();
 }
 ////////////////////////////////////////////////////////////////////////////////
 size_t Network::GetNumberOfLinks( void )
