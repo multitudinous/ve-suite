@@ -23,19 +23,19 @@
 const wxString WINDOW_TITLE ( wxT( "Add WMS Server" ) );
 
 
-MinervaWmsDialog::MinervaWmsDialog ( 
-  wxWindow *parent, 
-  wxWindowID id ) : BaseClass ( parent, id, WINDOW_TITLE, wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE ),
-  _serverTextCtrl ( 0x0 ),
-	_layersTextCtrl ( 0x0 ),
-	_stylesTextCtrl ( 0x0 ),
-	_jpegRadioBtn ( 0x0 ),
-	_pngRadioBtn ( 0x0 ),
-	_tiffRadioBtn ( 0x0 ),
-	_transparentCheckBox ( 0x0 ),
-	_sdbSizer ( 0x0 ),
-	_sdbSizerOK ( 0x0 ),
-	_sdbSizerCancel ( 0x0 )
+MinervaWmsDialog::MinervaWmsDialog ( wxWindow *parent, wxWindowID id ) 
+    : 
+    BaseClass ( parent, id, WINDOW_TITLE, wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE ),
+    _serverTextCtrl ( 0x0 ),
+    _layersTextCtrl ( 0x0 ),
+    _stylesTextCtrl ( 0x0 ),
+    _jpegRadioBtn ( 0x0 ),
+    _pngRadioBtn ( 0x0 ),
+    _tiffRadioBtn ( 0x0 ),
+    _transparentCheckBox ( 0x0 ),
+    _sdbSizer ( 0x0 ),
+    _sdbSizerOK ( 0x0 ),
+    _sdbSizerCancel ( 0x0 )
 {
   this->SetSizeHints( wxDefaultSize, wxDefaultSize );
 	
