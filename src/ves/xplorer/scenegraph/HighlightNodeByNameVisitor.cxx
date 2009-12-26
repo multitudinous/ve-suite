@@ -82,11 +82,14 @@ void HighlightNodeByNameVisitor::apply( osg::Node& node )
         size_t found = name.find( mNodeName );
         if( found != std::string::npos )
         {
-            //std::cout << " changing parts " << name << " " 
-            //    << mNodeName.size() << " " << mNodeName << std::endl;
             foundNode = true;
             osg::ref_ptr< osg::StateSet > geode_stateset = node.getOrCreateStateSet();
-
+            //I think we need to check and see if the stateset has any parents
+            if( geode_stateset->getNumParents() > 1 )
+            {
+                //deep copy the stateset and then add it back to the geode
+                std::cout << "StateSet is shared." << std::endl;
+            }
             //Now highlight the node
             ves::xplorer::scenegraph::util::OpacityVisitor 
                 opVisitor( &node, false, false, 1.0f );
@@ -102,11 +105,15 @@ void HighlightNodeByNameVisitor::apply( osg::Node& node )
     }
     else
     {
-        osg::ref_ptr< osg::StateSet > geode_stateset = node.getOrCreateStateSet();
-        osg::StateSet::UniformList uniList = geode_stateset->getUniformList();
-        if( uniList.size() )
+        osg::ref_ptr< osg::StateSet > geode_stateset = node.getStateSet();
+        if( geode_stateset.valid() )
         {
-            geode_stateset->removeUniform( "glowColor" );
+            osg::StateSet::UniformList uniList = 
+                geode_stateset->getUniformList();
+            if( uniList.size() )
+            {
+                geode_stateset->removeUniform( "glowColor" );
+            }
         }
     }
 

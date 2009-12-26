@@ -68,18 +68,19 @@ OpacityVisitor::~OpacityVisitor()
 ////////////////////////////////////////////////////////////////////////////////
 void OpacityVisitor::apply( osg::Geode& node )
 {
-    osg::ref_ptr< osg::StateSet > geode_stateset = node.getOrCreateStateSet();
-    osg::ref_ptr< osg::Material > geode_material = 
-        static_cast< osg::Material* >( geode_stateset->
-        getAttribute( osg::StateAttribute::MATERIAL ) );
-
-    if( geode_material.valid() )
+    osg::ref_ptr< osg::StateSet > geode_stateset = node.getStateSet();
+    if( geode_stateset.valid() )
     {
-        //if( geode_material->getAmbient( osg::Material::FRONT_AND_BACK ).a() == 1.0f )
+        osg::ref_ptr< osg::Material > geode_material = 
+            static_cast< osg::Material* >( geode_stateset->
+            getAttribute( osg::StateAttribute::MATERIAL ) );
+        
+        if( geode_material.valid() )
         {
-            geode_material->setAlpha( osg::Material::FRONT_AND_BACK, double( m_alpha ) );
+            geode_material->setAlpha( osg::Material::FRONT_AND_BACK, 
+                                     double( m_alpha ) );
             geode_stateset->setAttribute( geode_material.get(), 
-                                         osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+                osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
             //The stateset only needs set at the part level in VE-Suite.
             //The alpha an material information can be set at the higher level
             //because otherwise the renderbins end up being nested and cause odd
@@ -92,7 +93,24 @@ void OpacityVisitor::apply( osg::Geode& node )
     {
         //Stateset for the drawable
         osg::ref_ptr< osg::StateSet > drawable_stateset = 
-            node.getDrawable( i )->getOrCreateStateSet();
+            node.getDrawable( i )->getStateSet();
+        if( mStoreState && !drawable_stateset.valid() )
+        {
+            //if the drawable does not have a stateset and all we want to do
+            //is store the stateset then lets move on to the next drawable
+            continue;
+        }
+        
+        if( transparent && !drawable_stateset.valid() )
+        {
+            drawable_stateset = node.getDrawable( i )->getOrCreateStateSet();
+        }
+        else if( !drawable_stateset.valid() )
+        {
+            //If we are trying to make something go opaque then and we do not 
+            //have a stateset then lets continue
+            continue;
+        }
 
         //Material from the stateset
         osg::ref_ptr< osg::Material > drawable_material = 
@@ -277,7 +295,13 @@ void OpacityVisitor::apply( osg::Geode& node )
 ////////////////////////////////////////////////////////////////////////////////
 void OpacityVisitor::apply( osg::Group& node )
 {
-    osg::ref_ptr< osg::StateSet > stateset = node.getOrCreateStateSet();
+    osg::ref_ptr< osg::StateSet > stateset = node.getStateSet();
+    if( !stateset.valid() )
+    {
+        osg::NodeVisitor::traverse( node );
+        return;
+    }
+
     osg::ref_ptr< osg::Material > material = 
         static_cast< osg::Material* >( stateset->
             getAttribute( osg::StateAttribute::MATERIAL ) );

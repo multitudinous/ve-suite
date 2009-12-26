@@ -110,6 +110,7 @@ void NormalizeVisitor::apply( osg::PositionAttitudeTransform& node )
     {
         osg::ref_ptr< osg::StateSet > stateset = node.getOrCreateStateSet();
         SetupNormalizeForStateSet( stateset.get(), &node );
+        //return;
     }
 
     osg::NodeVisitor::traverse( node );
