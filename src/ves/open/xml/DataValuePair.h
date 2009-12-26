@@ -98,7 +98,7 @@ public:
 
     ///Set the float data
     ///\param data The float data.
-    void SetDataValue( double data );
+    void SetDataValue( const double& data );
 
     ///set the Unsigned int data
     ///\param data The unsigned data.
@@ -217,10 +217,10 @@ public:
     void GetData( std::vector< long >& data );
     ///Helper functions to get data easily
     ///\param data Name of the data being passed in
-    void GetData( std::vector< std::vector< long > > & data );
+    void GetData( std::vector< std::vector< long > >& data );
     ///Helper functions to get data easily
     ///\param data Name of the data being passed in
-    void GetData( std::vector< std::vector< std::vector< long > > > & data );
+    void GetData( std::vector< std::vector< std::vector< long > > >& data );
 
     ///Helper functions to get data easily
     ///\param data Name of the data being passed in
@@ -260,11 +260,11 @@ public:
     ///\param value The templated value that the user would like to add
     ///\return A new DataValuePair
     template<class T>
-    inline DataValuePairPtr MakeDVP( const std::string& name, T value )
+    inline DataValuePairPtr MakeDVP( const std::string& name, T& value )
     {
         ves::open::xml::DataValuePairPtr 
             dvp( new ves::open::xml::DataValuePair );
-        dvp->SetData ( name, value );
+        dvp->SetData( name, value );
         return dvp;
     }
     

@@ -173,7 +173,7 @@ void DataValuePair::SetDataString( const std::string& data )
     }
 }
 ///////////////////////////////////////////////
-void DataValuePair::SetDataValue( double data )
+void DataValuePair::SetDataValue( const double& data )
 {
     if( mDataType != std::string( "FLOAT" ) )
     {
