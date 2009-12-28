@@ -49,7 +49,9 @@ using namespace ves::conductor::util;
 
 BEGIN_EVENT_TABLE( OpcUOPlugin, UIPluginBase )
     EVT_MENU( OPCUOPLUGIN_SHOW_VALUE, OpcUOPlugin::OnShowValue )
-	EVT_TIMER( TIMER_ID, OpcUOPlugin::OnTimer )
+	EVT_TIMER( OPCUOPLUGIN_TIMER_ID, OpcUOPlugin::OnTimer )
+	EVT_MENU( OPCUOPLUGIN_START_TIMER, OpcUOPlugin::StartTimer )
+	EVT_MENU( OPCUOPLUGIN_STOP_TIMER, OpcUOPlugin::StopTimer )
 END_EVENT_TABLE()
 
 IMPLEMENT_DYNAMIC_CLASS( OpcUOPlugin, UIPluginBase )
@@ -62,9 +64,7 @@ OpcUOPlugin::OpcUOPlugin() :
     mPluginName = wxString( "OpcUO", wxConvUTF8 );
     mDescription = wxString( "OPC Unit Operation Plugin", wxConvUTF8 );
     GetVEModel()->SetPluginType( "OpcUOPlugin" );
-	m_timer = new wxTimer(this, TIMER_ID);
-	m_timer->Start(4000);
-	dynValue = "ERROR";
+	dynValue = "Ready";
 }
 ////////////////////////////////////////////////////////////////////////////////
 OpcUOPlugin::~OpcUOPlugin()
@@ -156,9 +156,11 @@ wxMenu* OpcUOPlugin::GetPluginPopupMenu( wxMenu* baseMenu )
     mOpcMenu = new wxMenu();
     //mOpcMenu->Append( OPCUOPLUGIN_SHOW_VALUE, _( "Value" ) );
     //mOpcMenu->Enable( OPCUOPLUGIN_SHOW_VALUE, true );
-    //mOpcMenu->Append( OpcUOPlugin_QUERY_DYNAMICS, _( "All Variables" ) );
-    //mOpcMenu->Enable( OpcUOPlugin_QUERY_DYNAMICS, true );
-    baseMenu->Insert( 0, OPCUOPLUGIN_SIM_MENU,   _( "OPC" ), mOpcMenu,
+    mOpcMenu->Append( OPCUOPLUGIN_START_TIMER, _( "Start Timer" ) );
+    mOpcMenu->Enable( OPCUOPLUGIN_START_TIMER, true );
+    mOpcMenu->Append( OPCUOPLUGIN_STOP_TIMER, _( "Stop Timer" ) );
+    mOpcMenu->Enable( OPCUOPLUGIN_STOP_TIMER, true );
+    baseMenu->Insert( 0, OPCUOPLUGIN_START_TIMER,   _( "OPC" ), mOpcMenu,
                     _( "Used in conjunction with OPC" ) );
     baseMenu->Enable( OPCUOPLUGIN_SIM_MENU, true );
     return baseMenu;
@@ -226,10 +228,10 @@ void OpcUOPlugin::ReadValue( )
 
 void OpcUOPlugin::OnTimer( wxTimerEvent& event )
 {
-    //UIPLUGIN_CHECKID( event )
-	//ReadValue();
+    UIPLUGIN_CHECKID( event )
+	ReadValue();
 	//DrawValue( wxDC* dc );
-    //m_canvas->Refresh( true );
+    m_canvas->Refresh( true );
 }
 
 void OpcUOPlugin::DrawPlugin( wxDC* dc )
@@ -252,4 +254,21 @@ void OpcUOPlugin::DrawPlugin( wxDC* dc )
         }
         DrawPorts( true, dc );
     }
+}
+
+
+//void OpcUOPlugin::SetTimer( float msec )
+void OpcUOPlugin::StartTimer( wxCommandEvent& event )
+{
+    UIPLUGIN_CHECKID( event )
+	m_timer = new wxTimer( this, OPCUOPLUGIN_TIMER_ID );
+	m_timer->Start( 4000 );
+	//m_timer->Start(msec);
+	dynValue = "Initializing";
+}
+
+void OpcUOPlugin::StopTimer( wxCommandEvent& event )
+{
+    UIPLUGIN_CHECKID( event )
+	m_timer->Stop( );
 }

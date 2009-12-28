@@ -7,8 +7,8 @@ openSubdirs = Split("""
     powersim
     sim
     sim_unit_operation
-""")
-#    opc_unit_operation
+    opc_unit_operation
+""")    
 
 
 ##Run SConscript files in all of those folders.

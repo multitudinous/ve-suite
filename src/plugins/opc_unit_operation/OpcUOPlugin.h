@@ -56,11 +56,13 @@ private:
 	std::string dynValue;
 	void DrawValue( wxDC* dc );
 	void ReadValue( );
+	void StartTimer( wxCommandEvent& event  );
+	void StopTimer( wxCommandEvent& event  );
+    void OnShowValue( wxCommandEvent& event );
 public:
     ///Defualt constructor
     OpcUOPlugin();
     virtual ~OpcUOPlugin();
-    void OnShowValue( wxCommandEvent& event );
     wxString GetConductorName();
     virtual wxMenu* GetPluginPopupMenu( wxMenu* baseMenu );
     void DrawPlugin( wxDC* dc );
