@@ -560,6 +560,8 @@ if not SConsAddons.Util.hasHelpFlag():
     if GetPlatform() == 'darwin':
         baseEnv.AppendUnique( CPPDEFINES = ['_DARWIN'] )
         baseEnv.AppendUnique( LINKFLAGS = ['-Wl,-bind_at_load'] )
+        #Needed for mac osx 10.6.2 and wxWidgets-2.9.0 w/ cocoa support
+        #baseEnv.AppendUnique( LINKFLAGS = ['-framework', 'CoreFoundation'] )
         baseEnv['LDMODULESUFFIX'] = '.bundle'
         #baseEnv['LDMODULEFLAGS'] = '$LDMODULEFLAGS -bundle -flat_namespace -undefined suppress'
 
