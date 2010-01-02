@@ -158,7 +158,11 @@ void StarCDTranslator::FileName( wxCommandEvent& event )
                          _T( "" ),
                          _T( "" ),
                          _T( "StarCD Post Files (*.ccmt)|*.ccmt;|All Files (*.*)|*.*" ),
+#if wxCHECK_VERSION( 2, 9, 0 )
+                         wxFD_OPEN | wxFD_FILE_MUST_EXIST,
+#else
                          wxOPEN | wxFILE_MUST_EXIST,
+#endif
                          wxDefaultPosition );
     dialog.CentreOnParent();
     

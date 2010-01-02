@@ -516,10 +516,18 @@ void TCFrame::_chooseDirectory(int style, int browseID)
       {
          //_gridFiles.Clear();
          _numFiles = 0;
+#if wxCHECK_VERSION( 2, 9, 0 )
+         _inputDir = _dirDialog->GetPath();
+#else
          _inputDir = wxString(_dirDialog->GetPath().c_str(), wxConvUTF8);
+#endif
          
          //make the output dir == to the current input directory
+#if wxCHECK_VERSION( 2, 9, 0 )
+         _outputDir = _inputDir;
+#else
          _outputDir = wxString(_inputDir.c_str(), wxConvUTF8);
+#endif
          inputFileDirectory.Open(wxString(_inputDir));
          if ( inputFileDirectory.IsOpened() )
          {
@@ -533,7 +541,11 @@ void TCFrame::_chooseDirectory(int style, int browseID)
       }
       else
       {
+#if wxCHECK_VERSION( 2, 9, 0 )
+         _outputDir = _dirDialog->GetPath();
+#else
          _outputDir = wxString(_dirDialog->GetPath().c_str(), wxConvUTF8);
+#endif
          _outputDirBox->SetValue(_outputDir);
       }
    }

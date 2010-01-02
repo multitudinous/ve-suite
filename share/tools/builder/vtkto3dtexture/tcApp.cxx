@@ -115,19 +115,62 @@ void TCApp::OnInitCmdLine(wxCmdLineParser& parser)
 #endif
    static const wxCmdLineEntryDesc cmdLineOpts[] = 
    {
+#if wxCHECK_VERSION( 2, 9, 0 )
+      { wxCMD_LINE_SWITCH, wxS("v"), wxS("verbose"), wxS("be verbose") },
+      { wxCMD_LINE_SWITCH, wxS("q"), wxS("quiet"),   wxS("be quiet") },
+      { wxCMD_LINE_SWITCH, wxS("h"), wxS("help"), wxS("print help") },
+      
+      { wxCMD_LINE_OPTION,
+        wxS("o"), wxS("odir"),
+        wxS("Directory to write results,defaults to input directory. Default is current dir.")},
+      
+      
+      { wxCMD_LINE_OPTION,
+        wxS("g"), wxS("gridType"),
+        wxS("VTK input dataset grid type\n r == Rectilinear\n s == Structured\n u ==Unstructured")},
+      
+      { wxCMD_LINE_OPTION,
+        wxS("x"), wxS("xRes"),
+        wxS("x texture resolution specified in power of two. Default is 32."),
+        wxCMD_LINE_VAL_NUMBER },
+
+      { wxCMD_LINE_OPTION,
+        wxS("y"), wxS("yRes"),
+        wxS("y texture resolution specified in power of two. Default is 32."),
+       wxCMD_LINE_VAL_NUMBER },
+
+      { wxCMD_LINE_OPTION,
+        wxS("z"), wxS("zRes"),
+        wxS("z texture resolution specified in power of two. Default is 32."),
+        wxCMD_LINE_VAL_NUMBER},
+
+      { wxCMD_LINE_OPTION,
+        wxS("tgp"), wxS("tGridProp"),
+        wxS("Transient Grid Property (Static=0,Dynamic=1). Default is 0(Static)."),
+        wxCMD_LINE_VAL_NUMBER},
+
+      { wxCMD_LINE_OPTION,
+        wxS("ms"), wxS("minStep"),
+        wxS("Minimum Time Step to begin translations.  Default is 0."),
+        wxCMD_LINE_VAL_NUMBER},
+       
+      { wxCMD_LINE_OPTION,//wxCMD_LINE_PARAM,
+        wxS("i"), wxS("inputDir"),
+        wxS("Input directory"),
+        wxCMD_LINE_VAL_STRING },
+#else
       { wxCMD_LINE_SWITCH, _T("v"), _T("verbose"), _T("be verbose") },
       { wxCMD_LINE_SWITCH, _T("q"), _T("quiet"),   _T("be quiet") },
       { wxCMD_LINE_SWITCH, _T("h"), _T("help"), _T("print help") },
-      
+
       { wxCMD_LINE_OPTION,
         _T("o"), _T("odir"),
         _T("Directory to write results,defaults to input directory. Default is current dir.")},
-      
-      
+
       { wxCMD_LINE_OPTION,
         _T("g"), _T("gridType"),
         _T("VTK input dataset grid type\n r == Rectilinear\n s == Structured\n u ==Unstructured")},
-      
+
       { wxCMD_LINE_OPTION,
         _T("x"), _T("xRes"),
         _T("x texture resolution specified in power of two. Default is 32."),
@@ -152,17 +195,16 @@ void TCApp::OnInitCmdLine(wxCmdLineParser& parser)
         _T("ms"), _T("minStep"),
         _T("Minimum Time Step to begin translations.  Default is 0."),
         wxCMD_LINE_VAL_NUMBER},
-       
+
       { wxCMD_LINE_OPTION,//wxCMD_LINE_PARAM,
         _T("i"), _T("inputDir"),
         _T("Input directory"),
         wxCMD_LINE_VAL_STRING },
-      
-     
+#endif
+
       {wxCMD_LINE_NONE}
    };
    parser.SetDesc(cmdLineOpts);
-   
 }
 ////////////////////////////////////////////////////
 bool TCApp::OnCmdLineParsed(wxCmdLineParser& parser)

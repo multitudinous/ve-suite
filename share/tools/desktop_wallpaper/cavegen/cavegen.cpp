@@ -3,6 +3,7 @@
 // All rights reserved.
 //
 
+#include <osg/Version>
 #include <osgDB/WriteFile>
 #include <osgGA/GUIEventHandler>
 #include <osgGA/TrackballManipulator>
@@ -138,7 +139,11 @@ public:
                 if( ea.getKey()=='4' )
                 {
                     osgGA::TerrainManipulator* tm = new osgGA::TerrainManipulator;
+#if ( ( OSG_VERSION_MAJOR >= 2 ) && ( OSG_VERSION_MINOR >= 9 ) && ( OSG_VERSION_PATCH >= 6 ) )
+                    ;
+#else
                     tm->setRotationMode( osgGA::TerrainManipulator::ELEVATION_AZIM_ROLL );
+#endif
                     rtt_.setManipulator( tm );
                     return( true );
                 }
