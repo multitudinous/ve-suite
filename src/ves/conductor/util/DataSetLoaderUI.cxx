@@ -439,7 +439,11 @@ void DataSetLoaderUI::OnLoadFile( wxCommandEvent& WXUNUSED( event ) )
                          ::wxGetCwd(),
                          _T( "" ),
                          _T( "VTK DataSet Files (*.vtk;*.vtu;*.vts;*.vti;*.vtm;*.vtp;*.vtr;)|*.vtk;*.vtu;*.vts;*.vti;*.vtm;*.vtp;*.vtr;|StarCD Parameter File (*.param)|*.param;|EnSight(*.ens;*.case)|*.ens;*.case;|MFIX (*.mfix)|*.mfix;|Fluent (*.cas)|*.cas;|AVS (*.avs)|*.avs;|Dicom (*.dcm)|*.dcm;|All Files (*.*)|*.*" ),
+#if wxCHECK_VERSION( 2, 9, 0 )
+                         wxFD_OPEN | wxFD_FILE_MUST_EXIST | wxFD_PREVIEW,
+#else
                          wxOPEN | wxFILE_MUST_EXIST | wxFD_PREVIEW,
+#endif
                          wxDefaultPosition );
     dialog.CentreOnParent();
 
@@ -452,21 +456,21 @@ void DataSetLoaderUI::OnLoadFile( wxCommandEvent& WXUNUSED( event ) )
         dataSetTextEntry->SetValue( relativeDataSetPath );
         std::string tempStr;
         {
-            ves::open::xml::DataValuePairPtr tempDVP = 
+            ves::open::xml::DataValuePairPtr tempDVP =
                 mParamBlock->GetProperty( "VTK_DATA_FILE" );
             if( !tempDVP )
             {
                 tempDVP = mParamBlock->GetProperty( -1 );
             }
-            tempStr = static_cast< const char* >( 
+            tempStr = static_cast< const char* >(
                 wxConvCurrent->cWX2MB( relativeDataSetPath.c_str() ) );
             tempDVP->SetData( "VTK_DATA_FILE", tempStr );
         }
 
         ves::xplorer::util::cfdVTKFileHandler tempHandler;
-        std::vector< std::string > dataArrayList = 
+        std::vector< std::string > dataArrayList =
             tempHandler.GetDataSetArraysFromFile( tempStr );
-        
+
         if( !dataArrayList.empty() )
         {
             //open dialog to choose scalars to load
@@ -475,22 +479,22 @@ void DataSetLoaderUI::OnLoadFile( wxCommandEvent& WXUNUSED( event ) )
             if( choiceDialog.ShowModal() == wxID_OK )
             {
                 dataArrayList = choiceDialog.GetUserActiveArrays();
-                ves::open::xml::DataValuePairPtr arraysDVP = 
+                ves::open::xml::DataValuePairPtr arraysDVP =
                     mParamBlock->GetProperty( "VTK_ACTIVE_DATA_ARRAYS" );
                 if( !arraysDVP )
                 {
                     arraysDVP = mParamBlock->GetProperty( -1 );
                 }
-                ves::open::xml::OneDStringArrayPtr 
+                ves::open::xml::OneDStringArrayPtr
                     stringArray( new ves::open::xml::OneDStringArray() );
                 stringArray->SetArray( dataArrayList );
                 arraysDVP->SetData( "VTK_ACTIVE_DATA_ARRAYS", stringArray );
             }
         }
-        ves::open::xml::DataValuePairSharedPtr 
+        ves::open::xml::DataValuePairSharedPtr
             dataValuePair( new ves::open::xml::DataValuePair() );
         dataValuePair->SetData( "CREATE_NEW_DATASETS",
-            ves::open::xml::model::ModelPtr( 
+            ves::open::xml::model::ModelPtr(
             new ves::open::xml::model::Model( *m_veModel ) ) );
         SendCommandToXplorer( dataValuePair );
     }
@@ -511,7 +515,11 @@ void DataSetLoaderUI::OnLoadSurfaceFile( wxCommandEvent& event )
                          ::wxGetCwd(),
                          _T( "" ),
                          _T( "VTK Surface Files (*.vtk;*.vtp)|*.vtk;*.vtp;" ),
+#if wxCHECK_VERSION( 2, 9, 0 )
+                         wxFD_OPEN | wxFD_FILE_MUST_EXIST | wxFD_PREVIEW,
+#else
                          wxOPEN | wxFILE_MUST_EXIST | wxFD_PREVIEW,
+#endif
                          wxDefaultPosition );
     dialog.CentreOnParent();
 
@@ -638,7 +646,11 @@ void DataSetLoaderUI::OnLoadTextureFile( wxCommandEvent& WXUNUSED( event ) )
                              ::wxGetCwd(),
                              _T( "" ),
                              _T( "VTK Texture Files (*.vti)|*.vti;" ),
+#if wxCHECK_VERSION( 2, 9, 0 )
+                             wxFD_OPEN | wxFD_FILE_MUST_EXIST | wxFD_PREVIEW,
+#else
                              wxOPEN | wxFILE_MUST_EXIST | wxFD_PREVIEW,
+#endif
                              wxDefaultPosition );
         dialog.CentreOnParent();
         
@@ -740,7 +752,7 @@ void DataSetLoaderUI::OnInformationPacketAdd( wxCommandEvent& WXUNUSED( event ) 
         return;
     }
     
-    
+
     if( dataSetList->FindString( newDataSetName.GetValue() ) != wxNOT_FOUND )
     {
         wxMessageBox( _( "Data with this name is already loaded." ),
@@ -755,7 +767,7 @@ void DataSetLoaderUI::OnInformationPacketAdd( wxCommandEvent& WXUNUSED( event ) 
         mParamBlock = m_veModel->GetInformationPacket( -1 );
         std::string tempStr;
         tempStr = ( static_cast< const char* >( wxConvCurrent->cWX2MB( newDataSetName.GetValue() ) ) );
-        
+
         mParamBlock->SetName( tempStr );
         EnableUI( true );
         SetTextCtrls();

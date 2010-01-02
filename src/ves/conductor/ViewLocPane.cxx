@@ -120,7 +120,11 @@ void ViewLocPane::_onLoadStoredPointsFile( wxCommandEvent& event )
                          ::wxGetCwd(),
                          _T( "" ),
                          _T( "View Location files (*.vel;*.dat)|*.vel;*.dat;" ),
+#if wxCHECK_VERSION( 2, 9, 0 )
+                         wxFD_OPEN | wxFD_FILE_MUST_EXIST | wxFD_PREVIEW,
+#else
                          wxOPEN | wxFILE_MUST_EXIST | wxFD_PREVIEW,
+#endif
                          wxDefaultPosition );
     dialog.CentreOnParent();
     

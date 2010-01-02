@@ -2203,8 +2203,12 @@ void Network::RemovePluginDialogs()
     if( modules.empty() )
     {
         networkDeleteEvent.SetClientData( &networkID );
-        parent->AddPendingEvent( networkDeleteEvent );    
-    }    
+#if wxCHECK_VERSION( 2, 9, 0 )
+        parent->GetEventHandler()->AddPendingEvent( networkDeleteEvent );
+#else
+        parent->AddPendingEvent( networkDeleteEvent );
+#endif
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Network::ClearXplorer()
@@ -2267,7 +2271,11 @@ void Network::OnDeletePlugins( wxUpdateUIEvent& event )
     }
     
     networkDeleteEvent.SetClientData( &networkID );
-    parent->AddPendingEvent( networkDeleteEvent );    
+#if wxCHECK_VERSION( 2, 9, 0 )
+    parent->GetEventHandler()->AddPendingEvent( networkDeleteEvent );
+#else
+    parent->AddPendingEvent( networkDeleteEvent );
+#endif
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Network::SetNetworkID( std::string id )

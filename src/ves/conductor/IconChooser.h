@@ -33,18 +33,20 @@
 #ifndef ICONCHOOSER_H
 #define ICONCHOOSER_H
 
+// ---  VE-Suite Includes --- //
 #include <ves/VEConfig.h>
 
+// --- wxWidgets Includes --- //
 #include <wx/frame.h>
-#include <wx/dirdlg.h>
-#include <wx/menu.h>
-#include <wx/button.h>
-#include <wx/textctrl.h>
-#include <wx/notebook.h>
-#include <wx/panel.h>
-#include <wx/bmpbuttn.h>
-#include <wx/choice.h>
-#include <wx/scrolwin.h>
+
+class wxButton;
+class wxDirDialog;
+class wxMenuBar;
+class wxNotebook;
+class wxPanel;
+class wxChoice;
+
+// --- STL Includes --- //
 #include <map>
 #include <string>
 
@@ -88,7 +90,7 @@ private:
     wxPanel* WxPanel;
     wxChoice* WxChoice;
     wxArrayString choices;
-	wxWindow* canvas;
+    wxWindow* canvas;
     //wxArrayString componentList;
     int maxRows;
     std::pair< unsigned int, std::string > iconInfo;
@@ -105,6 +107,7 @@ private:
 };
 }
 }
+
 //Form to get the function for aspen plus icons
 //GetVESuite_Valve_Valve_VALVE1
 #define GET_ICON_STREAM(name)  \

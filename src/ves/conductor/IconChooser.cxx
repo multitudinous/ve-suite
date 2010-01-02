@@ -30,16 +30,28 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> **************/
-#include <ves/conductor/IconChooser.h>
-#include <ves/conductor/ConductorLibEnums.h>
 
+// --- wxWidgets Includes --- //
 #include <wx/dir.h>
 #include <wx/image.h>
 #include <wx/sstream.h>
 #include <wx/tokenzr.h>
+#include <wx/dirdlg.h>
+#include <wx/menu.h>
+#include <wx/button.h>
+#include <wx/textctrl.h>
+#include <wx/notebook.h>
+#include <wx/panel.h>
+#include <wx/bmpbuttn.h>
+#include <wx/choice.h>
+#include <wx/scrolwin.h>
 
+    // --- VE-Suite Includes --- //
+#include <ves/conductor/IconChooser.h>
+#include <ves/conductor/ConductorLibEnums.h>
 #include <ves/conductor/UIPluginBase.h>
 #include <ves/conductor/AspenPlus2DIcons.h>
+
 #include <ves/conductor/xpm/contour.xpm>
 #include <ves/conductor/xpm/cad_tree_selected.xpm>
 #include <ves/conductor/xpm/cad_tree_unselected.xpm>
@@ -50,8 +62,6 @@
 #include <ves/conductor/xpm/streamlines.xpm>
 #include <ves/conductor/xpm/vector.xpm>
 #include <ves/conductor/xpm/vectortb.xpm>
-
-
 
 using namespace ves::conductor;
 

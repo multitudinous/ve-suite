@@ -423,8 +423,16 @@ void NavigationPane::BuildPane( void )
 
     navCol->Add( topSizer, 5, wxALIGN_CENTER_HORIZONTAL | wxALL );
 
-    wxStaticBitmap* coordpic = new wxStaticBitmap( scrollWindow, -1, wxBitmap( *_imagecoord ), wxDefaultPosition,
-                                                   wxSize( 110, 112 ), wxMINIMIZE_BOX | wxTHICK_FRAME );
+    wxStaticBitmap* coordpic =
+        new wxStaticBitmap(
+            scrollWindow, -1, wxBitmap( *_imagecoord ),
+            wxDefaultPosition, wxSize( 110, 112 ),
+#if wxCHECK_VERSION( 2, 9, 0 )
+            wxMINIMIZE_BOX );
+#else
+            wxMINIMIZE_BOX | wxTHICK_FRAME );
+#endif
+
     wxGridSizer* picSizer = new wxGridSizer( 1, 1 );
     picSizer->Add( coordpic, 1, wxALIGN_CENTER_HORIZONTAL );
 

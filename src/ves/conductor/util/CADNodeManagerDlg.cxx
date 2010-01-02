@@ -521,7 +521,11 @@ void CADNodeManagerDlg::_addNodeFromVEGFile( wxCommandEvent& WXUNUSED( event ) )
                          ::wxGetCwd(),
                          _T( "" ),
                          _T( "VE-Geometry files (*.veg)|*.veg;" ),
+#if wxCHECK_VERSION( 2, 9, 0 )
+                         wxFD_OPEN | wxFD_FILE_MUST_EXIST | wxFD_MULTIPLE,//|wxFD_CHANGE_DIR,
+#else
                          wxOPEN | wxFILE_MUST_EXIST | wxMULTIPLE,//|wxCHANGE_DIR,
+#endif
                          wxDefaultPosition );
 
     if( dialog.ShowModal() == wxID_OK )
@@ -649,7 +653,11 @@ void CADNodeManagerDlg::_addNodeFromCADFile( wxCommandEvent& WXUNUSED( event ) )
                          _T( "" ),
                          _T( "All Supported Files (*.osg;*.ive;*.stl;*.wrl;*.iv;*.obj;*.pfb;*.flt;*.dxf;*.3ds)|*.osg;*.ive;*.stl;*.wrl;*.iv;*.obj;*.pfb;*.flt;*.dxf;*.3ds|OSG files (*.osg;*.ive)|*.osg;*.ive;|STL files (*.stl)|*.stl;|VRML/Inventor files (*.wrl;*.iv)|*.wrl;*.iv;|OBJ files (*.obj)|*.obj;|Performer Binary files (*.pfb)|*.pfb;|Flight files (*.flt)|*.flt;|DXF files (*.dxf)|*.dxf;|3DS files (*.3ds)|*.3ds;|All Files (*.*)|*.*" ),
                          //"BMP and GIF files (*.bmp;*.gif)|*.bmp;*.gif|PNG files (*.png)|*.png"
+#if wxCHECK_VERSION( 2, 9, 0 )
+                         wxFD_OPEN | wxFD_FILE_MUST_EXIST | wxFD_MULTIPLE,
+#else
                          wxOPEN | wxFILE_MUST_EXIST | wxMULTIPLE,
+#endif
                          wxDefaultPosition );
 
     if( dialog.ShowModal() == wxID_OK )

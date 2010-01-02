@@ -121,12 +121,20 @@ void TextureBasedToolBar::SetScalars( wxArrayString scalarNames )
         if( scalarNames[i] != wxString( "", wxConvUTF8 ) )
         {
             wxFileName fName( scalarNames[i] );
+#if wxCHECK_VERSION( 2, 9, 0 )
+            _availableScalars.Add( fName.GetName() );
+#else
             _availableScalars.Add( wxString( fName.GetName(), wxConvUTF8 ) );
+#endif
         }
         else
         {
             std::cout << "Scalar..." << std::endl;
+#if wxCHECK_VERSION( 2, 9, 0 )
+            std::cout << scalarNames[ i ].mb_str() << std::endl;
+#else
             std::cout << scalarNames[i] << std::endl;
+#endif
         }
     }
 }
@@ -136,18 +144,25 @@ void TextureBasedToolBar::SetVectors( wxArrayString vectorNames )
     size_t nVectors = vectorNames.Count();
     _availableVectors.Clear();
 
-
-    for( size_t i = 0; i < nVectors; i++ )
+    for( size_t i = 0; i < nVectors; ++i )
     {
         if( vectorNames[i] != wxString( "", wxConvUTF8 ) )
         {
-            wxFileName fName( vectorNames[i] );
+            wxFileName fName( vectorNames[ i ] );
+#if wxCHECK_VERSION( 2, 9, 0 )
+            _availableVectors.Add( fName.GetName() );
+#else
             _availableVectors.Add( wxString( fName.GetName(), wxConvUTF8 ) );
+#endif
         }
         else
         {
             std::cout << "Vector..." << std::endl;
+#if wxCHECK_VERSION( 2, 9, 0 )
+            std::cout << vectorNames[ i ].mb_str() << std::endl;
+#else
             std::cout << vectorNames[i] << std::endl;
+#endif
         }
     }
 }

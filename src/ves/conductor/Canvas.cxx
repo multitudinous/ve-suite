@@ -152,10 +152,10 @@ Canvas::Canvas( wxWindow* parent, int id )
     cleanEvent.SetId( CANVAS_UPDATE_NETWORK_DATA );
     
     Refresh( true );
-    
+
     //vtkCompositeDataPipeline* prototype = vtkCompositeDataPipeline::New();
     //vtkAlgorithm::SetDefaultExecutivePrototype( prototype );
-    //prototype->Delete();    
+    //prototype->Delete();
 }
 ///////////////////////////////////////////////////////////////////////////////
 Canvas::Canvas()
@@ -551,7 +551,11 @@ void Canvas::OnDelNetwork( wxUpdateUIEvent& event )
     
     if( networks.empty() )
     {
+#if wxCHECK_VERSION( 2, 9, 0 )
+        mainFrame->GetEventHandler()->AddPendingEvent( cleanEvent );
+#else
         mainFrame->AddPendingEvent( cleanEvent );
+#endif
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

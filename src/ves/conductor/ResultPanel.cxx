@@ -30,14 +30,20 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
+
+// --- VE-Suite Includes --- //
 #include <ves/conductor/ResultPanel.h>
 #include <ves/conductor/ConductorLibEnums.h>
+
+// --- wxWidgets Includes --- //
 #include <wx/combobox.h>
 #include <wx/stattext.h>
 #include <wx/statbox.h>
 #include <wx/sizer.h>
 #include <wx/button.h>
 #include <wx/intl.h>
+#include <wx/textctrl.h>
+
 using namespace ves::conductor;
 
 

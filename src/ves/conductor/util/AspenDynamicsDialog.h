@@ -48,7 +48,11 @@
 #include <vector>
 
 #undef AspenDynamicsDialog_STYLE
+#if wxCHECK_VERSION( 2, 9, 0 )
+#define AspenDynamicsDialog_STYLE wxCAPTION | wxRESIZE_BORDER | wxSYSTEM_MENU | wxDIALOG_NO_PARENT | wxMINIMIZE_BOX | wxMAXIMIZE_BOX | wxCLOSE_BOX
+#else
 #define AspenDynamicsDialog_STYLE wxCAPTION | wxRESIZE_BORDER | wxSYSTEM_MENU | wxTHICK_FRAME | wxDIALOG_NO_PARENT | wxMINIMIZE_BOX | wxMAXIMIZE_BOX | wxCLOSE_BOX
+#endif
 
 class AspenDynamicsDialog : public wxDialog
 {

@@ -336,14 +336,22 @@ void wxSpinCtrlDbl::OnChar( wxKeyEvent &event )
             DoSendEvent();
             break;
         }
+#if wxCHECK_VERSION( 2, 9, 0 )
+        case WXK_PAGEUP :  // pg-up
+#else
         case WXK_PRIOR :  // pg-up
+#endif
         {
             if( m_textCtrl && m_textCtrl->IsModified() ) SyncSpinToText( FALSE );
             SetValue( m_value + m_increment * 10.0 * modifier );
             DoSendEvent();
             break;
         }
+#if wxCHECK_VERSION( 2, 9, 0 )
+        case WXK_PAGEDOWN :  // pg-up
+#else
         case WXK_NEXT :  // pg-down
+#endif
         {
             if( m_textCtrl && m_textCtrl->IsModified() ) SyncSpinToText( FALSE );
             SetValue( m_value - m_increment * 10.0 * modifier );

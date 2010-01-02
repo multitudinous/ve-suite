@@ -124,7 +124,11 @@ void SoundsPane::_onLoadAndUpdate( wxCommandEvent& WXUNUSED( event ) )
                          ::wxGetCwd(),
                          _T( "" ),
                          _T( "Wave files (*.wav)|*.wav;|MP3 files (*.mp3)|*.mp3;|All Files (*.*)|*.*" ),
+#if wxCHECK_VERSION( 2, 9, 0 )
+                         wxFD_OPEN | wxFD_FILE_MUST_EXIST | wxFD_MULTIPLE | wxFD_PREVIEW,
+#else
                          wxOPEN | wxFILE_MUST_EXIST | wxMULTIPLE | wxFD_PREVIEW,
+#endif
                          wxDefaultPosition );
     dialog.CentreOnParent();
     
