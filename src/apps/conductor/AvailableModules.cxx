@@ -188,8 +188,12 @@ void AvailableModules::Instantiate( wxTreeEvent& WXUNUSED( event ) ) //Double cl
     wxClassInfo* info = item_data->pl_clsi;
     if( info )
     {
-        UIPluginBase* object = 
+        UIPluginBase* object =
+#if wxCHECK_VERSION( 2, 9, 0 )
+            dynamic_cast< UIPluginBase* >( (info->GetConstructor())() );
+#else
             dynamic_cast< UIPluginBase* >( info->m_objectConstructor() );
+#endif
         object->SetCanvas( canvas );
         object->SetNetwork( canvas->GetActiveNetwork() );
         object->SetDCScale( canvas->GetActiveNetwork()->GetUserScale() );

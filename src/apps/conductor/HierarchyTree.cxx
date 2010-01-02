@@ -437,8 +437,12 @@ void HierarchyTree::AddtoTree( UIPluginBase* cur_module )
     AddtoImageList( wxBitmap( cur_module->GetIconImage()->ConvertToImage().
         Rescale( iconsize, iconsize ) ) );
 
-    wxTreeItemId leaf = AppendItem( m_currentLevelId, 
-        wxString( cur_module->GetName().c_str(), wxConvUTF8 ), 
+    wxTreeItemId leaf = AppendItem( m_currentLevelId,
+#if wxCHECK_VERSION( 2, 9, 0 )
+        cur_module->GetName(),
+#else
+        wxString( cur_module->GetName().c_str(), wxConvUTF8 ),
+#endif
                 images->GetImageCount() - 1, -1, modData );
 
     //SetItemBold( leaf );

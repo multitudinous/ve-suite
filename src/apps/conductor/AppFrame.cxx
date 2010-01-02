@@ -30,25 +30,16 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
+
 // --- VE-Suite Includes --- //
 #include <ves/conductor/util/CORBAServiceList.h>
 
 #include "AppFrame.h"
 #include "ConductorAppEnums.h"
+
+#include <ves/VEConfig.h>
+
 #include <ves/conductor/ConductorLibEnums.h>
-
-#include <wx/imaglist.h>
-#include <wx/artprov.h>
-#include <wx/msgdlg.h>
-#include <wx/textctrl.h>
-#include <wx/image.h>
-#include <wx/sizer.h>
-#include <wx/splitter.h>
-#include <wx/dialog.h>
-#include <wx/filename.h>
-#include <wx/config.h>
-#include <wx/msgdlg.h>
-
 #include <ves/conductor/ResultPanel.h>
 #include <ves/conductor/util/OrbThread.h>
 #include <ves/conductor/FinancialDialog.h>
@@ -66,19 +57,10 @@
 #include <ves/conductor/NavigationPane.h>
 #include <ves/conductor/EphemerisDialog.h>
 #include <ves/conductor/ViewLocPane.h>
-
-#include "ConductorApp.h"
-#include "UserPreferences.h"
-#include "AvailableModules.h"
-#include "HierarchyTree.h"
-#include "DeviceProperties.h"
-#include "Splitter.h"
-#include "AppToolBar.h"
-#include "ExportMenu.h"
-
-#include <ves/conductor/util/CADNodeManagerDlg.h>
 #include <ves/conductor/IconChooser.h>
 #include <ves/conductor/Module.h>
+
+#include <ves/conductor/util/CADNodeManagerDlg.h>
 #include <ves/conductor/util/Tag.h>
 #include <ves/conductor/util/DataLoggerEngine.h>
 
@@ -99,7 +81,22 @@
 #include <ves/open/xml/User.h>
 #include <ves/open/xml/OneDDoubleArray.h>
 
+#include <ves/util/commands/Minerva.h>
+
+#include <ves/util/icons/ve_icon64x64.xpm>
+#include <ves/util/icons/ve_icon32x32.xpm>
+
+#include "ConductorApp.h"
+#include "UserPreferences.h"
+#include "AvailableModules.h"
+#include "HierarchyTree.h"
+#include "DeviceProperties.h"
+#include "Splitter.h"
+#include "AppToolBar.h"
+#include "ExportMenu.h"
+
 // --- wxWidgets Includes --- //
+#include <wx/process.h>
 #include <wx/image.h>
 #include <wx/bitmap.h>
 #include <wx/splash.h>
@@ -110,13 +107,20 @@
 #include <wx/docview.h>
 #include <wx/dirdlg.h>
 #include <wx/aboutdlg.h>
+#include <wx/imaglist.h>
+#include <wx/artprov.h>
+#include <wx/msgdlg.h>
+#include <wx/textctrl.h>
+#include <wx/image.h>
+#include <wx/sizer.h>
+#include <wx/splitter.h>
+#include <wx/dialog.h>
+#include <wx/filename.h>
+#include <wx/config.h>
+#include <wx/msgdlg.h>
+#include <wx/notebook.h>
 
-#include <ves/util/commands/Minerva.h>
-#include <ves/util/icons/ve_icon64x64.xpm>
-#include <ves/util/icons/ve_icon32x32.xpm>
-#include <ves/VEConfig.h>
-
-// --- C/C++ Libraries --- //
+// --- STL Includes --- //
 #include <sstream>
 #include <iomanip>
 
@@ -126,134 +130,133 @@ using namespace ves::open::xml;
 using namespace ves::open::xml::cad;
 using namespace ves::open::xml::shader;
 
-
 BEGIN_EVENT_TABLE( AppFrame, wxFrame )
-    EVT_TIMER( APPFRAME_TIMER_ID, AppFrame::OnTimer )
-    //EVT_CLOSE( AppFrame::OnFrameClose )
-    EVT_MENU( APPFRAME_V21ID_ZOOMIN, AppFrame::ZoomIn )
-    EVT_MENU( APPFRAME_V21ID_ZOOMOUT, AppFrame::ZoomOut )
-    EVT_MENU( APPFRAME_V21ID_ZOOMALL, AppFrame::ZoomAll )
-    EVT_CHAR( AppFrame::OnKeyPress )
-    EVT_MENU( APPFRAME_SAVE, AppFrame::Save )
-    EVT_MENU( APPFRAME_SAVEAS, AppFrame::SaveAs )
-    EVT_MENU( APPFRAME_NEW, AppFrame::NewCanvas )
-    //This is probably a bug and needs to be fixed
-    EVT_MENU( wxID_EXIT, AppFrame::FrameClose )
-    EVT_MENU( APPFRAME_PREFERENCES, AppFrame::OnPreferences )
-    EVT_MENU( APPFRAME_CLEAR_RECENT_FILES, AppFrame::OnClearRecentFiles )
-    EVT_MENU( APPFRAME_OPEN, AppFrame::Open )
-    EVT_MENU( APPFRAME_START_DATALOGGING, AppFrame::OnDataLogging )
-    EVT_MENU( APPFRAME_STOP_DATALOGGING, AppFrame::OnDataLogging )
+EVT_TIMER( APPFRAME_TIMER_ID, AppFrame::OnTimer )
+//EVT_CLOSE( AppFrame::OnFrameClose )
+EVT_MENU( APPFRAME_V21ID_ZOOMIN, AppFrame::ZoomIn )
+EVT_MENU( APPFRAME_V21ID_ZOOMOUT, AppFrame::ZoomOut )
+EVT_MENU( APPFRAME_V21ID_ZOOMALL, AppFrame::ZoomAll )
+EVT_CHAR( AppFrame::OnKeyPress )
+EVT_MENU( APPFRAME_SAVE, AppFrame::Save )
+EVT_MENU( APPFRAME_SAVEAS, AppFrame::SaveAs )
+EVT_MENU( APPFRAME_NEW, AppFrame::NewCanvas )
+//This is probably a bug and needs to be fixed
+EVT_MENU( wxID_EXIT, AppFrame::FrameClose )
+EVT_MENU( APPFRAME_PREFERENCES, AppFrame::OnPreferences )
+EVT_MENU( APPFRAME_CLEAR_RECENT_FILES, AppFrame::OnClearRecentFiles )
+EVT_MENU( APPFRAME_OPEN, AppFrame::Open )
+EVT_MENU( APPFRAME_START_DATALOGGING, AppFrame::OnDataLogging )
+EVT_MENU( APPFRAME_STOP_DATALOGGING, AppFrame::OnDataLogging )
 
-    EVT_MENU( APPFRAME_RUN, AppFrame::Run )
-    EVT_MENU( APPFRAME_CHANGE_WORKING_DIRECTORY, AppFrame::OnChangeWorkingDirectory )
+EVT_MENU( APPFRAME_RUN, AppFrame::Run )
+EVT_MENU( APPFRAME_CHANGE_WORKING_DIRECTORY, AppFrame::OnChangeWorkingDirectory )
 
-    EVT_MENU_RANGE( wxID_FILE1, wxID_FILE9  , AppFrame::OpenRecentFile )
+EVT_MENU_RANGE( wxID_FILE1, wxID_FILE9  , AppFrame::OpenRecentFile )
 
-    EVT_MENU( APPFRAME_V21ID_LOAD, AppFrame::LoadFromServer )
-    EVT_MENU( APPFRAME_QUERY_FROM_SERVER, AppFrame::QueryFromServer )
-    EVT_MENU( APPFRAME_V21ID_SUBMIT, AppFrame::SubmitToServer )
-    //EVT_MENU( APPFRAME_V21ID_CONNECT, AppFrame::ConExeServer )
-    EVT_MENU( APPFRAME_V21ID_DISCONNECT, AppFrame::DisConExeServer )
-    EVT_MENU( APPFRAME_V21ID_DISCONNECT_VE, AppFrame::DisConVEServer )
-    //EVT_MENU( APPFRAME_V21ID_CONNECT_VE, AppFrame::ConVEServer )
-    EVT_MENU( APPFRAME_V21ID_START_CALC, AppFrame::StartCalc )
-    EVT_MENU( APPFRAME_V21ID_STOP_CALC, AppFrame::StopCalc )
-    EVT_MENU( APPFRAME_V21ID_PAUSE_CALC, AppFrame::PauseCalc )
-    EVT_MENU( APPFRAME_V21ID_RESUME_CALC, AppFrame::ResumeCalc )
+EVT_MENU( APPFRAME_V21ID_LOAD, AppFrame::LoadFromServer )
+EVT_MENU( APPFRAME_QUERY_FROM_SERVER, AppFrame::QueryFromServer )
+EVT_MENU( APPFRAME_V21ID_SUBMIT, AppFrame::SubmitToServer )
+//EVT_MENU( APPFRAME_V21ID_CONNECT, AppFrame::ConExeServer )
+EVT_MENU( APPFRAME_V21ID_DISCONNECT, AppFrame::DisConExeServer )
+EVT_MENU( APPFRAME_V21ID_DISCONNECT_VE, AppFrame::DisConVEServer )
+//EVT_MENU( APPFRAME_V21ID_CONNECT_VE, AppFrame::ConVEServer )
+EVT_MENU( APPFRAME_V21ID_START_CALC, AppFrame::StartCalc )
+EVT_MENU( APPFRAME_V21ID_STOP_CALC, AppFrame::StopCalc )
+EVT_MENU( APPFRAME_V21ID_PAUSE_CALC, AppFrame::PauseCalc )
+EVT_MENU( APPFRAME_V21ID_RESUME_CALC, AppFrame::ResumeCalc )
 
-    EVT_MENU( APPFRAME_V21ID_HELP, AppFrame::ViewHelp )
-    EVT_MENU( APPFRAME_V21ID_ABOUT, AppFrame::ViewAbout )
-    //EVT_MENU( APPFRAME_V21ID_REVISION, AppFrame::ViewRevision )
-    EVT_MENU( APPFRAME_V21ID_CONTACTS, AppFrame::ViewContacts )
-    EVT_MENU( APPFRAME_V21ID_PLATFORM, AppFrame::ViewPlatformInfo )
+EVT_MENU( APPFRAME_V21ID_HELP, AppFrame::ViewHelp )
+EVT_MENU( APPFRAME_V21ID_ABOUT, AppFrame::ViewAbout )
+//EVT_MENU( APPFRAME_V21ID_REVISION, AppFrame::ViewRevision )
+EVT_MENU( APPFRAME_V21ID_CONTACTS, AppFrame::ViewContacts )
+EVT_MENU( APPFRAME_V21ID_PLATFORM, AppFrame::ViewPlatformInfo )
 
-    EVT_MENU( APPFRAME_V21ID_VIEW_RESULT, AppFrame::ViewResult )
+EVT_MENU( APPFRAME_V21ID_VIEW_RESULT, AppFrame::ViewResult )
 
-    EVT_MENU( APPFRAME_KEYBOARD_MOUSE, AppFrame::ChangeDevice )
-    EVT_MENU( APPFRAME_WAND, AppFrame::ChangeDevice )
-    EVT_MENU( APPFRAME_TABLET, AppFrame::ChangeDevice )
-    EVT_MENU( APPFRAME_GLOVES, AppFrame::ChangeDevice )
+EVT_MENU( APPFRAME_KEYBOARD_MOUSE, AppFrame::ChangeDevice )
+EVT_MENU( APPFRAME_WAND, AppFrame::ChangeDevice )
+EVT_MENU( APPFRAME_TABLET, AppFrame::ChangeDevice )
+EVT_MENU( APPFRAME_GLOVES, AppFrame::ChangeDevice )
 
-    EVT_MENU( APPFRAME_DEVICE_PROPERTIES, AppFrame::LaunchDeviceProperties )
+EVT_MENU( APPFRAME_DEVICE_PROPERTIES, AppFrame::LaunchDeviceProperties )
 
-    EVT_MENU( APPFRAME_FRAME_RATE, AppFrame::DisplaySelection )
-    EVT_MENU( APPFRAME_COORDINATE_SYSTEM, AppFrame::DisplaySelection )
+EVT_MENU( APPFRAME_FRAME_RATE, AppFrame::DisplaySelection )
+EVT_MENU( APPFRAME_COORDINATE_SYSTEM, AppFrame::DisplaySelection )
 
-    EVT_MENU( APPFRAME_FRAME_ALL, AppFrame::ViewSelection )
-    EVT_MENU( APPFRAME_FRAME_SELECTION, AppFrame::ViewSelection )
-    EVT_MENU( APPFRAME_RESET, AppFrame::ViewSelection )
+EVT_MENU( APPFRAME_FRAME_ALL, AppFrame::ViewSelection )
+EVT_MENU( APPFRAME_FRAME_SELECTION, AppFrame::ViewSelection )
+EVT_MENU( APPFRAME_RESET, AppFrame::ViewSelection )
 
-    EVT_MENU( APPFRAME_XPLORER_NAVIGATION, AppFrame::LaunchNavigationPane )
-    EVT_MENU( APPFRAME_XPLORER_VIEWPOINTS, AppFrame::LaunchViewpointsPane )
-    EVT_MENU( APPFRAME_XPLORER_SCENES, AppFrame::LaunchRecordScenes )
-    EVT_MENU( APPFRAME_XPLORER_COLOR, AppFrame::SetBackgroundColor )
-    EVT_MENU( APPFRAME_XPLORER_EPHEMERIS, AppFrame::SetEphemerisData )
-    EVT_MENU( APPFRAME_XPLORER_EXIT, AppFrame::OnExitXplorer )
-    EVT_MENU( APPFRAME_JUGGLER_STEREO, AppFrame::JugglerSettings )
-    EVT_MENU( APPFRAME_JUGGLER_MONO, AppFrame::JugglerSettings )
-    EVT_MENU( APPFRAME_CONDUCTOR_FIND, AppFrame::FindBlocks )
-    EVT_MENU( APPFRAME_CHANGE_XPLORER_VIEW_NETWORK, AppFrame::ChangeXplorerViewSettings )
-    EVT_MENU( APPFRAME_CHANGE_XPLORER_VIEW_CAD, AppFrame::ChangeXplorerViewSettings )
-    EVT_MENU( APPFRAME_CHANGE_XPLORER_VIEW_LOGO, AppFrame::ChangeXplorerViewSettings )
-    EVT_MENU( APPFRAME_XPLORER_DATALOGGING_LOOPING, AppFrame::OnDataLoggingSettings )
-    
-    EVT_MENU( EXPORTMENU_SCREEN_SHOT, ExportMenu::OnScreenShot )
-    EVT_MENU( EXPORTMENU_MOVIE_CAPTURE, ExportMenu::OnScreenShot )
-    EVT_MENU( EXPORTMENU_MOVIE_CAPTURE_OFF, ExportMenu::OnScreenShot )
-    EVT_MENU( EXPORTMENU_DOT_FILE, ExportMenu::OnDOTFile )
-    
-    EVT_MENU( UIPLUGINBASE_DEL_MOD, AppFrame::OnDelMod )
-    EVT_MENU( UIPLUGINBASE_MAKE_HIER, AppFrame::OnMakeIntoHierarchy )
-    EVT_MENU( UIPLUGINBASE_SET_UI_PLUGIN_NAME, AppFrame::SetTreeItemName )
-	EVT_MENU( UIPLUGINBASE_SHOW_ICON_CHOOSER, AppFrame::OnShowIconChooser )
-	
-    EVT_MENU( APPFRAME_UPDATE_HIER_TREE, AppFrame::UpdateHierarchyTree )
+EVT_MENU( APPFRAME_XPLORER_NAVIGATION, AppFrame::LaunchNavigationPane )
+EVT_MENU( APPFRAME_XPLORER_VIEWPOINTS, AppFrame::LaunchViewpointsPane )
+EVT_MENU( APPFRAME_XPLORER_SCENES, AppFrame::LaunchRecordScenes )
+EVT_MENU( APPFRAME_XPLORER_COLOR, AppFrame::SetBackgroundColor )
+EVT_MENU( APPFRAME_XPLORER_EPHEMERIS, AppFrame::SetEphemerisData )
+EVT_MENU( APPFRAME_XPLORER_EXIT, AppFrame::OnExitXplorer )
+EVT_MENU( APPFRAME_JUGGLER_STEREO, AppFrame::JugglerSettings )
+EVT_MENU( APPFRAME_JUGGLER_MONO, AppFrame::JugglerSettings )
+EVT_MENU( APPFRAME_CONDUCTOR_FIND, AppFrame::FindBlocks )
+EVT_MENU( APPFRAME_CHANGE_XPLORER_VIEW_NETWORK, AppFrame::ChangeXplorerViewSettings )
+EVT_MENU( APPFRAME_CHANGE_XPLORER_VIEW_CAD, AppFrame::ChangeXplorerViewSettings )
+EVT_MENU( APPFRAME_CHANGE_XPLORER_VIEW_LOGO, AppFrame::ChangeXplorerViewSettings )
+EVT_MENU( APPFRAME_XPLORER_DATALOGGING_LOOPING, AppFrame::OnDataLoggingSettings )
 
-    EVT_MENU( APPFRAME_MINERVA_ADD_PLANET, AppFrame::OnAddPlanet )
-    EVT_MENU( APPFRAME_MINERVA_REMOVE_PLANET, AppFrame::OnRemovePlanet )
-    EVT_MENU( APPFRAME_MINERVA_SHOW_DIALOG, AppFrame::ShowMinervaDialog )
+EVT_MENU( EXPORTMENU_SCREEN_SHOT, ExportMenu::OnScreenShot )
+EVT_MENU( EXPORTMENU_MOVIE_CAPTURE, ExportMenu::OnScreenShot )
+EVT_MENU( EXPORTMENU_MOVIE_CAPTURE_OFF, ExportMenu::OnScreenShot )
+EVT_MENU( EXPORTMENU_DOT_FILE, ExportMenu::OnDOTFile )
 
-    EVT_WINDOW_CREATE( AppFrame::OnChildCreate ) 
-	EVT_BUTTON( ICONCHOOSER_OK, AppFrame::OnChangeIcon )
-    EVT_UPDATE_UI( CANVAS_UPDATE_NETWORK_DATA, AppFrame::LoadNewNetwork )
+EVT_MENU( UIPLUGINBASE_DEL_MOD, AppFrame::OnDelMod )
+EVT_MENU( UIPLUGINBASE_MAKE_HIER, AppFrame::OnMakeIntoHierarchy )
+EVT_MENU( UIPLUGINBASE_SET_UI_PLUGIN_NAME, AppFrame::SetTreeItemName )
+EVT_MENU( UIPLUGINBASE_SHOW_ICON_CHOOSER, AppFrame::OnShowIconChooser )
+
+EVT_MENU( APPFRAME_UPDATE_HIER_TREE, AppFrame::UpdateHierarchyTree )
+
+EVT_MENU( APPFRAME_MINERVA_ADD_PLANET, AppFrame::OnAddPlanet )
+EVT_MENU( APPFRAME_MINERVA_REMOVE_PLANET, AppFrame::OnRemovePlanet )
+EVT_MENU( APPFRAME_MINERVA_SHOW_DIALOG, AppFrame::ShowMinervaDialog )
+
+EVT_WINDOW_CREATE( AppFrame::OnChildCreate ) 
+EVT_BUTTON( ICONCHOOSER_OK, AppFrame::OnChangeIcon )
+EVT_UPDATE_UI( CANVAS_UPDATE_NETWORK_DATA, AppFrame::LoadNewNetwork )
 END_EVENT_TABLE()
 
 ////////////////////////////////////////////////////////////////////////////////
-AppFrame::AppFrame( wxWindow * parent, wxWindowID id, const wxString& title )
-        :
-        wxFrame(
-            parent,
-            id,
-            title,
-            wxDefaultPosition,
-            wxDefaultSize ),
-        xplorerMenu( 0 ),
-        recordScenes( 0 ),
-        canvas( 0 ),
-        hierarchyTree(),
-        _treeView( 0 ),
-        deviceProperties( 0 ),
-        navPane( 0 ),
-        viewlocPane( 0 ),
-        m_ephemeris( 0 ),
-        iconChooser( 0 ),
-        wx_log_splitter( 0 ),
-        wx_ve_splitter( 0 ),
-        wx_nw_splitter( 0 ),
-        menubar( 0 ),
-        appToolBar( 0 ),
-        serviceList( CORBAServiceList::instance() ),
-        newCanvas( false ),
-        mTimer( this, APPFRAME_TIMER_ID ),
-        _minervaDialog ( 0x0 ),
-        mDestoryFrame( false ),
-        f_financial( true ),
-        f_geometry( true ),
-        f_visualization( true )
+AppFrame::AppFrame()
+{
+    ;
+}
+////////////////////////////////////////////////////////////////////////////////
+AppFrame::AppFrame( wxWindow* parent, wxWindowID id, const wxString& title )
+    :
+    wxFrame( parent, id, title ),
+    xplorerMenu( 0 ),
+    recordScenes( 0 ),
+    canvas( 0 ),
+    hierarchyTree(),
+    _treeView( 0 ),
+    deviceProperties( 0 ),
+    navPane( 0 ),
+    viewlocPane( 0 ),
+    m_ephemeris( 0 ),
+    iconChooser( 0 ),
+    wx_log_splitter( 0 ),
+    wx_ve_splitter( 0 ),
+    wx_nw_splitter( 0 ),
+    menubar( 0 ),
+    appToolBar( 0 ),
+    serviceList( CORBAServiceList::instance() ),
+    newCanvas( false ),
+    mTimer( this, APPFRAME_TIMER_ID ),
+    _minervaDialog ( 0x0 ),
+    mDestoryFrame( false ),
+    f_financial( true ),
+    f_geometry( true ),
+    f_visualization( true )
 {
     char** tempArray = new char*[ ::wxGetApp().argc ];
-    for( unsigned int i = 0; i < ::wxGetApp().argc; ++i )
+    for( int i = 0; i < ::wxGetApp().argc; ++i )
     {
         tempArray[ i ] = new char[ strlen( ConvertUnicode( ::wxGetApp().argv[ i ] ).c_str() ) + 1 ];
         strcpy( tempArray[ i ], ConvertUnicode( ::wxGetApp().argv[ i ] ).c_str() );
@@ -388,9 +391,9 @@ AppFrame::~AppFrame()
     
     delete m_recentVESFiles;
     m_recentVESFiles = 0;
-    for( int i = 0; i < pids.size(); i++ )
+    for( int i = 0; i < pids.size(); ++i )
     {
-        wxProcess::Kill( pids[i] );
+        wxProcess::Kill( pids[ i ] );
     }
     
     delete appToolBar;
@@ -561,14 +564,22 @@ void AppFrame::_detectDisplayAndCreate()
     if( GetDisplayMode() == "Desktop" )
     {
         _configureDesktop();
+#if wxCHECK_VERSION( 2, 9, 0 )
+        SetWindowStyle( wxDEFAULT_FRAME_STYLE | wxRESIZE_BORDER | wxMAXIMIZE_BOX );
+#else
         SetWindowStyle( wxDEFAULT_FRAME_STYLE | wxRESIZE_BORDER | wxRESIZE_BOX | wxMAXIMIZE_BOX );
+#endif
         //Set min size so all buttons still show and message window displays at least one line
         SetMinSize( wxSize( 600, 100 ) );
     }
     else if( GetDisplayMode() == "Tablet" )
     {
         _configureTablet();
+#if wxCHECK_VERSION( 2, 9, 0 )
+        SetWindowStyle( wxDEFAULT_FRAME_STYLE | wxRESIZE_BORDER | wxMAXIMIZE_BOX );
+#else
         SetWindowStyle( wxDEFAULT_FRAME_STYLE | wxRESIZE_BORDER | wxRESIZE_BOX | wxMAXIMIZE_BOX );
+#endif
         //set min size so all buttons still show and message window displays three lines and canvas
         SetMinSize( wxSize( 600, 260 ) );
     }
@@ -1168,7 +1179,11 @@ void AppFrame::Open( wxCommandEvent& WXUNUSED( event ) )
         ::wxGetCwd(),
         mVESFileName,
         _T( "System files (*.ves)|*.ves|Script files (*.vem)|*.vem" ),
+#if wxCHECK_VERSION( 2, 9, 0 )
+        wxFD_OPEN | wxFD_FILE_MUST_EXIST
+#else
         wxOPEN | wxFILE_MUST_EXIST | wxFD_PREVIEW
+#endif
     );
 
     if( dialog.ShowModal() != wxID_OK )
@@ -1247,7 +1262,11 @@ void AppFrame::Run( wxCommandEvent& WXUNUSED( event ) )
         wxT( "" ),
         wxT( "" ),
         wxT( "Exe files (*.exe)|*.exe" ),
+#if wxCHECK_VERSION( 2, 9, 0 )
+        wxFD_OPEN | wxFD_FILE_MUST_EXIST
+#else
         wxOPEN | wxFILE_MUST_EXIST | wxFD_PREVIEW
+#endif
     );
 
     if( dialog.ShowModal() != wxID_OK )
@@ -1256,7 +1275,7 @@ void AppFrame::Run( wxCommandEvent& WXUNUSED( event ) )
     }
 
     //::wxExecute( dialog.GetPath(), wxEXEC_ASYNC, process );
-    wxProcess * process = wxProcess::Open( dialog.GetPath() );
+    wxProcess* process = wxProcess::Open( dialog.GetPath() );
     pids.push_back( process->GetPid() );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -2582,12 +2601,12 @@ void AppFrame::LoadNewNetwork( wxUpdateUIEvent& WXUNUSED( event )  )
         {
             serviceList->SendCommandStringToXplorer( tempCommand );
         }
-        
+
         // Create the command and data value pairs
         tempCommand = 
             UserPreferencesDataBuffer::instance()->
             GetCommand( "CHANGE_NEAR_FAR_RATIO" );
-        
+
         if( tempCommand->GetCommandName().compare( "NULL" ) )
         {
             serviceList->SendCommandStringToXplorer( tempCommand );

@@ -37,6 +37,7 @@
 #include <wx/intl.h>
 #include <wx/filename.h>
 #include <wx/string.h>
+#include <wx/config.h>
 
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/XMLString.hpp>
@@ -82,7 +83,7 @@ bool ConductorApp::OnInit()
 
 int ConductorApp::OnExit()
 {
-    delete wxConfigBase::Set(( wxConfigBase * ) NULL );
+    delete wxConfigBase::Set(( wxConfigBase* ) NULL );
     XMLPlatformUtils::Terminate();
     return 0;
 }

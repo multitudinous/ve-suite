@@ -30,18 +30,11 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
+
 #ifndef APP_FRAME_H
 #define APP_FRAME_H
 
-/*!\file Frame.h
-*/
-
-/*!\class Frame
-* Main wx frame for conductor
-*/
-
 // --- VE-Suite Includes --- //
-
 namespace ves
 {
 namespace conductor
@@ -69,14 +62,10 @@ class DeviceProperties;
 class EphemerisDialog;
 class MinervaDialog;
 
-
 // --- wxWidgets Includes --- //
 #include <wx/frame.h>
-#include <wx/config.h>
 #include <wx/filename.h>
-#include <wx/notebook.h>
 #include <wx/timer.h>
-#include <wx/process.h>
 
 class wxTextCtrl;
 class wxImage;
@@ -86,8 +75,9 @@ class wxSplitterWindow;
 class wxColourData;
 class wxMenu;
 class wxFileHistory;
+class wxNotebook;
 
-// --- C/C++ Includes --- //
+// --- STL Includes --- //
 #include <vector>
 #include <string>
 
@@ -105,14 +95,21 @@ const wxString F_GEOMETRY = _T( "Geometry" );
 const wxString F_VISUALIZATION = _T( "Visualization" );
 const wxString RECENT_FILE = _T( "Recent_File" );
 
+/*!\file AppFrame.h
+ *
+ */
+
+/*!\class AppFrame
+ * Main wx frame for conductor
+ */
+
 class AppFrame : public wxFrame
 {
 public:
-    AppFrame()
-    {
-        ;
-    }
+    AppFrame();
+
     AppFrame( wxWindow* parent, wxWindowID id, const wxString& title );
+
     virtual ~AppFrame();
 
     ///Process the close event
