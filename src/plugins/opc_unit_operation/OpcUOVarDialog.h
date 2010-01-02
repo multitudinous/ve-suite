@@ -48,7 +48,11 @@
 #include <vector>
 
 #undef OpcUOVarDialog_STYLE
+#if wxCHECK_VERSION( 2, 9, 0 )
+#define OpcUOVarDialog_STYLE wxCAPTION | wxRESIZE_BORDER | wxSYSTEM_MENU | wxDIALOG_NO_PARENT | wxMINIMIZE_BOX | wxMAXIMIZE_BOX | wxCLOSE_BOX
+#else
 #define OpcUOVarDialog_STYLE wxCAPTION | wxRESIZE_BORDER | wxSYSTEM_MENU | wxTHICK_FRAME | wxDIALOG_NO_PARENT | wxMINIMIZE_BOX | wxMAXIMIZE_BOX | wxCLOSE_BOX
+#endif
 
 namespace ves
 {
