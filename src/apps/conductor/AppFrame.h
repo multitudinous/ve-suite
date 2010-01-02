@@ -63,9 +63,9 @@ class EphemerisDialog;
 class MinervaDialog;
 
 // --- wxWidgets Includes --- //
-#include <wx/frame.h>
-#include <wx/filename.h>
 #include <wx/timer.h>
+#include <wx/filename.h>
+#include <wx/frame.h>
 
 class wxTextCtrl;
 class wxImage;
