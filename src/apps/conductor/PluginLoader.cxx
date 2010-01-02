@@ -206,6 +206,22 @@ void PluginLoader::RegisterPlugins()
     plugins.clear();
     plugin_cls.clear();
 
+#if wxCHECK_VERSION( 2, 9, 0 )
+    //This code is currently broken and needs to be fixed
+    //due to the changes for wxClassInfo in wxWidgets-2.9.0
+    //Also, RegisterPlugin() function needs to be uncommented
+    for( const wxClassInfo* classInfo = wxClassInfo::GetFirst(); classInfo;
+         classInfo = classInfo->GetNext() )
+    {
+        if( wxString( classInfo->GetBaseClassName1() ) ==
+                wxString( "UIPluginBase", wxConvUTF8 ) )
+        {
+            //RegisterPlugin( classInfo );
+            wxLogMessage(
+                _( "|\tRegister plugins : %s" ), classInfo->GetClassName() );
+        }
+    }
+#else
     wxClassInfo::sm_classTable->BeginFind();
 
     /*
@@ -231,13 +247,19 @@ void PluginLoader::RegisterPlugins()
         }
         node = wxClassInfo::sm_classTable->Next();
     }
+#endif
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PluginLoader::RegisterPlugin( wxClassInfo* info )
 {
     if( info )
     {
-        UIPluginBase* object = ( UIPluginBase* )( info->m_objectConstructor() );
+        UIPluginBase* object =
+#if wxCHECK_VERSION( 2, 9, 0 )
+            static_cast< UIPluginBase* >( (info->GetConstructor())() );
+#else
+            static_cast< UIPluginBase* >( info->m_objectConstructor() );
+#endif
         plugins.push_back( object );
         plugin_cls.push_back( info );
     }
