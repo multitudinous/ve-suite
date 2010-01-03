@@ -135,9 +135,14 @@ void cfdUpdateTextureCallback::load( const osg::Texture3D& texture, osg::State& 
     unsigned char* dataMinusOffset=0;
     unsigned char* dataPlusOffset=0;
     const unsigned int contextID = state.getContextID();
-    if (m_pbo.valid() && m_pbo->isPBOSupported(contextID) )
+    if( m_pbo.valid() && m_pbo->isPBOSupported( contextID ) )
     {
-        if ( m_pbo->isDirty( contextID ) )
+#if ( ( OSG_VERSION_MAJOR >= 2 ) && ( OSG_VERSION_MINOR >= 9 ) && ( OSG_VERSION_PATCH >= 6 ) )
+        m_pbo->compileBuffer( state );
+        
+        //dataPlusOffset = reinterpret_cast< unsigned char* >( m_pbo->offset() );
+#else
+        if( m_pbo->isDirty( contextID ) )
         {
              m_pbo->compileBuffer( state );
         }
@@ -145,9 +150,12 @@ void cfdUpdateTextureCallback::load( const osg::Texture3D& texture, osg::State& 
         {
              m_pbo->bindBuffer( contextID );
         }
+
+        dataPlusOffset = reinterpret_cast< unsigned char* >( m_pbo->offset() );
+#endif
         dataMinusOffset = _tm->dataField( 0 ) ;
-        dataPlusOffset = reinterpret_cast<unsigned char*>(m_pbo->offset());
     }
+
     if( _isLuminance )
     {
         texture.getExtensions( contextID, false )->glTexImage3D( GL_TEXTURE_3D, 0,
@@ -171,7 +179,7 @@ void cfdUpdateTextureCallback::load( const osg::Texture3D& texture, osg::State& 
                 GL_UNSIGNED_BYTE,
                 ( unsigned char* )_tm->dataField( 0 ) -dataMinusOffset+dataPlusOffset);
     }
-    if ( m_pbo.valid() )
+    if( m_pbo.valid() )
     {
         m_pbo->unbindBuffer( contextID );
     }
@@ -203,15 +211,26 @@ void cfdUpdateTextureCallback::subload( const osg::Texture3D& texture, osg::Stat
         unsigned char* dataMinusOffset=0;
         unsigned char* dataPlusOffset=0;
         const unsigned int contextID = state.getContextID();
-
-        if ( m_pbo.valid() && m_pbo->isPBOSupported( contextID ) )
+        if( m_pbo.valid() && m_pbo->isPBOSupported( contextID ) )
         {
+#if ( ( OSG_VERSION_MAJOR >= 2 ) && ( OSG_VERSION_MINOR >= 9 ) && ( OSG_VERSION_PATCH >= 6 ) )
             m_pbo->UpdateData( _tm->getCurrentField() );
             {
-                 m_pbo->compileBuffer( state );
+                m_pbo->compileBuffer( state );
             }
+            
+            //dataPlusOffset =
+                //reinterpret_cast< unsigned char* >( m_pbo->offset() );
+#else
+            m_pbo->UpdateData( _tm->getCurrentField() );
+            {
+                m_pbo->compileBuffer( state );
+            }
+
+            dataPlusOffset =
+                reinterpret_cast< unsigned char* >( m_pbo->offset() );
+#endif
             dataMinusOffset = _tm->getCurrentField();
-            dataPlusOffset = reinterpret_cast<unsigned char*>( m_pbo->offset() );
         }
         //std::cout<<"current frame master: "<<_tm->GetCurrentFrame()<<std::endl;
 

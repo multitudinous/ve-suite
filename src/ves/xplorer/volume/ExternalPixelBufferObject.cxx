@@ -41,109 +41,229 @@
 using namespace ves::xplorer::volume;
 
 ////////////////////////////////////////////////////////////////////////////////
-ExternalPixelBufferObject::ExternalPixelBufferObject(osg::Image* image):
-    BufferObject()
+ExternalPixelBufferObject::ExternalPixelBufferObject( osg::Image* image )
+    :
+    osg::BufferObject()
 {
+#if ( ( OSG_VERSION_MAJOR >= 2 ) && ( OSG_VERSION_MINOR >= 9 ) && ( OSG_VERSION_PATCH >= 6 ) )
+    setTarget( GL_PIXEL_UNPACK_BUFFER_ARB );
+    setUsage( GL_STREAM_DRAW_ARB );
+
+    osg::notify( osg::INFO )
+        << "Constructing PixelBufferObject for image=" << image << std::endl;
+
+    setBufferData( 0, image );
+#else
     _target = GL_PIXEL_UNPACK_BUFFER_ARB;
     _usage = GL_STREAM_DRAW_ARB;
     _bufferEntryImagePair.second = image;
+#endif
     m_useExternalData = false;
     m_data = 0;
 }
-
+////////////////////////////////////////////////////////////////////////////////Í
 /** Copy constructor using CopyOp to manage deep vs shallow copy.*/
-ExternalPixelBufferObject::ExternalPixelBufferObject(const ExternalPixelBufferObject& buffer,
-                                                     const osg::CopyOp& copyop):
-osg::BufferObject(buffer,copyop),
-_bufferEntryImagePair(buffer._bufferEntryImagePair)
+ExternalPixelBufferObject::ExternalPixelBufferObject(
+    const ExternalPixelBufferObject& pbo,
+    const osg::CopyOp& copyop )
+    :
+#if !( ( OSG_VERSION_MAJOR >= 2 ) && ( OSG_VERSION_MINOR >= 9 ) && ( OSG_VERSION_PATCH >= 6 ) )
+    _bufferEntryImagePair( pbo._bufferEntryImagePair ),
+#endif
+    osg::BufferObject( pbo, copyop )
 {
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 ExternalPixelBufferObject::~ExternalPixelBufferObject()
 {
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void ExternalPixelBufferObject::setImage(osg::Image* image)
+#if ( ( OSG_VERSION_MAJOR >= 2 ) && ( OSG_VERSION_MINOR >= 9 ) && ( OSG_VERSION_PATCH >= 6 ) )
+bool ExternalPixelBufferObject::isPBOSupported( unsigned int contextID ) const
 {
-    if (_bufferEntryImagePair.second == image) return;
+    return _glBufferObjects[ contextID ]->isPBOSupported();
+}
+////////////////////////////////////////////////////////////////////////////////
+void ExternalPixelBufferObject::unbindBuffer( unsigned int contextID ) const
+{
+    osg::GLBufferObject::Extensions* extensions =
+        osg::GLBufferObject::getExtensions( contextID, true );
+
+    switch( _mode[ contextID ] )
+    {
+    /*
+    case READ:
+    {
+        extensions->glBindBuffer( GL_PIXEL_UNPACK_BUFFER_ARB, 0 );
+        break;
+    }
+    case WRITE:
+    {
+        extensions->glBindBuffer( GL_PIXEL_PACK_BUFFER_ARB, 0 );
+        break;
+    }
+    */
+    default:
+    {
+        extensions->glBindBuffer( _profile._target, 0 );
+        break;
+    }
+    }
+
+    _mode[ contextID ] = 0;
+}
+////////////////////////////////////////////////////////////////////////////////
+#else
+unsigned int ExternalPixelBufferObject::offset() const
+{
+    return _bufferEntryImagePair.first.offset;
+}
+#endif
+////////////////////////////////////////////////////////////////////////////////
+void ExternalPixelBufferObject::compileBuffer( osg::State& state ) const
+{
+#if ( ( OSG_VERSION_MAJOR >= 2 ) && ( OSG_VERSION_MINOR >= 9 ) && ( OSG_VERSION_PATCH >= 6 ) )
+    unsigned int contextID = state.getContextID();
+    if( _profile._size == 0 )
+    {
+        return;
+    }
+
+    osg::GLBufferObject* bo = getOrCreateGLBufferObject( contextID );
+    if( !bo || !bo->isDirty() )
+    {
+        return;
+    }
+    else
+    {
+         bo->bindBuffer();
+    }
+
+    bo->_extensions->glBindBuffer( _profile._target, bo->getGLObjectID() );
+    bo->_extensions->glBufferData(
+        _profile._target, _profile._size, NULL, _profile._usage );
+    bo->_extensions->glBindBuffer( _profile._target, 0 );
+#else
+    unsigned int contextID = state.getContextID();
+
+    _compiledList[ contextID ] = 1;
+
+    osg::Image* image = _bufferEntryImagePair.second;
+
+    _bufferEntryImagePair.first.modifiedCount[ contextID ] =
+        image->getModifiedCount();
+    if( !image->valid() )
+    {
+        return;
+    }
+    
+    osg::GLBufferObject::Extensions* extensions =
+        getExtensions( contextID, true );
+
+    GLuint& pbo = buffer( contextID );
+    if( pbo == 0 )
+    {
+        //Building for the first time
+        _totalSize = image->getTotalSizeInBytes();
+
+        //Don't generate buffer if size is zero
+        if( _totalSize == 0 )
+        {
+            return;
+        }
+
+        extensions->glGenBuffers( 1, &pbo );
+        extensions->glBindBuffer( _target, pbo );
+        extensions->glBufferData( _target, _totalSize, NULL, _usage );
+    }
+    else
+    {
+        extensions->glBindBuffer( _target, pbo );
+
+        if( _totalSize != image->getTotalSizeInBytes() )
+        {
+            //Resize PBO
+            _totalSize = image->getTotalSizeInBytes();
+            extensions->glBufferData( _target, _totalSize, NULL, _usage );
+        }
+    }
+
+    //osg::Timer_t start_tick = osg::Timer::instance()->tick();
+
+    void* pboMemory = extensions->glMapBuffer( _target, GL_WRITE_ONLY_ARB );
+
+    //Copy data across
+    if( m_useExternalData )
+    {
+        memcpy( pboMemory, m_data, _totalSize );
+        _bufferEntryImagePair.first.modifiedCount[ contextID ] = 1;
+    }
+    else
+    {
+        memcpy( pboMemory, image->data(), _totalSize );
+        _bufferEntryImagePair.first.modifiedCount[ contextID ] =
+            image->getModifiedCount();
+    }
+
+    //Unmap the texture image buffer
+    extensions->glUnmapBuffer( _target );
+
+    //osg::notify( osg::NOTICE )
+        //<< "pbo _totalSize = " << _totalSize << std::endl;
+    //osg::notify( osg::NOTICE )
+        //<< "pbo " << osg::Timer::instance()->delta_m(
+            //start_tick, osg::Timer::instance()->tick() ) << "ms" << std::endl;
+#endif
+}
+////////////////////////////////////////////////////////////////////////////////
+void ExternalPixelBufferObject::resizeGLObjectBuffers( unsigned int maxSize )
+{
+#if ( ( OSG_VERSION_MAJOR >= 2 ) && ( OSG_VERSION_MINOR >= 9 ) && ( OSG_VERSION_PATCH >= 6 ) )
+    osg::BufferObject::resizeGLObjectBuffers( maxSize );
+
+    _mode.resize( maxSize );
+#else
+    osg::BufferObject::resizeGLObjectBuffers( maxSize );
+    _bufferEntryImagePair.first.modifiedCount.resize( maxSize );
+#endif
+}
+////////////////////////////////////////////////////////////////////////////////
+void ExternalPixelBufferObject::setImage( osg::Image* image )
+{
+#if ( ( OSG_VERSION_MAJOR >= 2 ) && ( OSG_VERSION_MINOR >= 9 ) && ( OSG_VERSION_PATCH >= 6 ) )
+    setBufferData( 0, image );
+#else
+    if( _bufferEntryImagePair.second == image )
+    {
+        return;
+    }
 
     _bufferEntryImagePair.second = image;
 
     dirty();
+#endif
 }
 ////////////////////////////////////////////////////////////////////////////////
-void ExternalPixelBufferObject::compileBuffer(osg::State& state) const
+osg::Image* ExternalPixelBufferObject::getImage()
 {
-    unsigned int contextID = state.getContextID();
-
-    _compiledList[contextID] = 1;
-
-    osg::Image* image = _bufferEntryImagePair.second;
-
-    _bufferEntryImagePair.first.modifiedCount[contextID] = image->getModifiedCount();
-    if (!image->valid()) return;
-
-    osg::BufferObject::Extensions* extensions = getExtensions(contextID,true);
-
-    GLuint& pbo = buffer(contextID);
-    if (pbo==0)
-    {
-        // building for the first time.
-
-        _totalSize = image->getTotalSizeInBytes();
-
-        // don't generate buffer if size is zero.
-        if (_totalSize==0) return;
-
-        extensions->glGenBuffers(1, &pbo);
-        extensions->glBindBuffer(_target, pbo);
-        extensions->glBufferData(_target, _totalSize, NULL, _usage);
-
-    }
-    else
-    {
-        extensions->glBindBuffer(_target, pbo);
-
-        if (_totalSize != image->getTotalSizeInBytes())
-        {
-            // resize PBO.
-            _totalSize = image->getTotalSizeInBytes();
-            extensions->glBufferData(_target, _totalSize, NULL, _usage);
-        }
-    }
-
-//    osg::Timer_t start_tick = osg::Timer::instance()->tick();
-
-    void* pboMemory = extensions->glMapBuffer(_target,
-                 GL_WRITE_ONLY_ARB);
-
-    // copy data across
-    if( m_useExternalData )
-    {
-        memcpy( pboMemory, m_data, _totalSize );
-        _bufferEntryImagePair.first.modifiedCount[contextID] = 1;
-    }
-    else
-    {
-        memcpy(pboMemory, image->data(), _totalSize);
-        _bufferEntryImagePair.first.modifiedCount[contextID] = image->getModifiedCount();
-    }
-
-    // Unmap the texture image buffer
-    extensions->glUnmapBuffer(_target);
-
-
-//    osg::notify(osg::NOTICE)<<"pbo _totalSize="<<_totalSize<<std::endl;
-//    osg::notify(osg::NOTICE)<<"pbo "<<osg::Timer::instance()->delta_m(start_tick,osg::Timer::instance()->tick())<<"ms"<<std::endl;
+#if ( ( OSG_VERSION_MAJOR >= 2 ) && ( OSG_VERSION_MINOR >= 9 ) && ( OSG_VERSION_PATCH >= 6 ) )
+    return dynamic_cast< osg::Image* >( getBufferData( 0 ) );
+#else
+    return _bufferEntryImagePair.second;
+#endif
 }
 ////////////////////////////////////////////////////////////////////////////////
-void ExternalPixelBufferObject::resizeGLObjectBuffers(unsigned int maxSize)
+const osg::Image* ExternalPixelBufferObject::getImage() const
 {
-    osg::BufferObject::resizeGLObjectBuffers(maxSize);
-
-    _bufferEntryImagePair.first.modifiedCount.resize(maxSize);
+#if ( ( OSG_VERSION_MAJOR >= 2 ) && ( OSG_VERSION_MINOR >= 9 ) && ( OSG_VERSION_PATCH >= 6 ) )
+    return dynamic_cast< const osg::Image* >( getBufferData( 0 ) );
+#else
+    return _bufferEntryImagePair.second;
+#endif
 }
-/////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void ExternalPixelBufferObject::UpdateData( unsigned char* data )
 {
     m_data = data;

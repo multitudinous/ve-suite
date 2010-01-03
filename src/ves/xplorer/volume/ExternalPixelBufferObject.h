@@ -38,6 +38,7 @@
 #include <ves/VEConfig.h>
 
 // --- OSG Includes --- //
+#include <osg/Version>
 #include <osg/BufferObject>
 
 namespace osg
@@ -58,41 +59,73 @@ namespace volume
 /*!\class ves::xplorer::volume::ExternalPixelBufferObject
  *
  */
-class VE_TEXTURE_BASED_EXPORTS ExternalPixelBufferObject :
+class VE_TEXTURE_BASED_EXPORTS ExternalPixelBufferObject
+    :
     public osg::BufferObject
 {
     public:
+        ///
+        ExternalPixelBufferObject( osg::Image* image = 0 );
 
-        ExternalPixelBufferObject(osg::Image* image=0);
+        ///Copy constructor using CopyOp to manage deep vs shallow copy
+        ExternalPixelBufferObject(
+            const ExternalPixelBufferObject& pbo,
+            const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
 
-        /** Copy constructor using CopyOp to manage deep vs shallow copy.*/
-        ExternalPixelBufferObject( const ExternalPixelBufferObject& pbo,
-                           const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY);
+        ///
+        META_Object( ves::xplorer::volume, ExternalPixelBufferObject );
 
-        META_Object(osg,ExternalPixelBufferObject);
+#if ( ( OSG_VERSION_MAJOR >= 2 ) && ( OSG_VERSION_MINOR >= 9 ) && ( OSG_VERSION_PATCH >= 6 ) )
+        ///
+        bool isPBOSupported( unsigned int contextID ) const;
 
+        ///Unbind the buffer
+        virtual void unbindBuffer( unsigned int contextID ) const;
+#else
+        ///
         typedef std::pair< osg::BufferObject::BufferEntry, osg::Image* > BufferEntryImagePair;
 
-        void setImage(osg::Image* image);
+        ///
+        unsigned int offset() const;
+#endif
+        ///
+        virtual void compileBuffer( osg::State& state ) const;
+
+        ///Resize any per context GLObject buffers to specified size
+        virtual void resizeGLObjectBuffers( unsigned int maxSize );
+
+        ///
+        void setImage( osg::Image* image );
+
+        ///
+        osg::Image* getImage();
+
+        ///
+        const osg::Image* getImage() const;
+
+        ///
         void UpdateData( unsigned char* data );
 
-        osg::Image* getImage() { return _bufferEntryImagePair.second; }
-        const osg::Image* getImage() const { return _bufferEntryImagePair.second; }
-
-        unsigned int offset() const { return _bufferEntryImagePair.first.offset; }
-
-        virtual void compileBuffer(osg::State& state) const;
-
-        /** Resize any per context GLObject buffers to specified size. */
-        virtual void resizeGLObjectBuffers(unsigned int maxSize);
-
     protected:
+        ///
+        virtual ~ExternalPixelBufferObject();
+        
+        ///
         unsigned char* m_data;
+
+        ///
         bool m_useExternalData;
 
-        virtual ~ExternalPixelBufferObject();
+#if ( ( OSG_VERSION_MAJOR >= 2 ) && ( OSG_VERSION_MINOR >= 9 ) && ( OSG_VERSION_PATCH >= 6 ) )
+        ///
+        typedef osg::buffered_value< unsigned int > ModeList;
 
+        ///
+        mutable ModeList _mode;
+#else
+        ///
         BufferEntryImagePair _bufferEntryImagePair;
+#endif
 
 };
 } //end volume
