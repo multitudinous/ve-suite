@@ -38,6 +38,13 @@
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/FindParentWithNameVisitor.h>
 
+// --- VRJuggler Includes --- //
+#include <gmtl/Misc/MatrixConvert.h>
+#include <gmtl/Xforms.h>
+#include <gmtl/Generate.h>
+
+#include <gadget/Type/Position.h>
+
 // --- OSG Includes --- //
 #include <osg/Geode>
 #include <osg/Switch>
@@ -66,7 +73,6 @@ using namespace ves::xplorer::scenegraph;
 CharacterController::CharacterController()
     :
     KinematicCharacterController(),
-    m_translateType( TranslateType::NONE ),
     m_enabled( false ),
     m1stPersonMode( false ),
     mCameraDistanceLERP( false ),
@@ -74,6 +80,7 @@ CharacterController::CharacterController()
     mOccludeDistanceLERP( false ),
     mPreviousOccluder( false ),
     mBufferSize( 0 ),
+    m_translateType( TranslateType::NONE ),
     mCameraDistance( 50.0 ),
     mOccludeDistance( 50.0 ),
     mMinCameraDistance( 0.1 ),
@@ -106,6 +113,8 @@ CharacterController::CharacterController()
     mMatrixTransform( NULL ),
     mLineSegmentIntersector( NULL )
 {
+    head.init( "VJHead" );
+    wand.init( "VJWand" );
     Initialize();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -396,11 +405,45 @@ void CharacterController::Move( btScalar dt )
         return;
     }
 
-    //Update the character rotation
-    UpdateRotation();
-
-    //Update the character translation
-    UpdateTranslation( dt );
+    bool headTracked = false;
+    if( headTracked )
+    {
+        //const gadget::Position::SampleBuffer_t::buffer_t headSampleBuffer = 
+        //    head->getPositionPtr()->getPositionDataBuffer();
+        //we have access to 5000 previous samples if needed
+        const buffer_type& headSampleBuffer = 
+            head->getPositionPtr()->getPositionDataBuffer();
+        iter_type cur_frame_iter = headSampleBuffer.rbegin();
+        iter_type prev_frame_iter = cur_frame_iter + 1;
+        
+        if( (cur_frame_iter != headSampleBuffer.rend()) && 
+           (prev_frame_iter != headSampleBuffer.rend()) )
+        {
+            const unsigned int dev_num(head->getUnit());
+            m_vjHeadMat1 = 
+                gmtl::convertTo<double>((*cur_frame_iter)[dev_num].getPosition());
+            m_vjHeadMat2 = 
+                gmtl::convertTo<double>((*prev_frame_iter)[dev_num].getPosition());
+            //m_vjHeadMat1 = 
+            //    gmtl::convertTo<double>( headSampleBuffer[ 0 ][ 0 ].getPosition() );
+            //m_vjHeadMat2 = 
+            //    gmtl::convertTo<double>( headSampleBuffer[ 0 ][ 1 ].getPosition() );
+        }
+                
+        //Update the character rotation
+        UpdateRotationTrackedHead();
+        
+        //Update the character translation
+        UpdateTranslationTrackedHead();        
+    }
+    else
+    {
+        //Update the character rotation
+        UpdateRotation();
+        
+        //Update the character translation
+        UpdateTranslation( dt );        
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CharacterController::UpdateCamera()
@@ -588,7 +631,8 @@ void CharacterController::EyeToCenterRayTest(
     osg::Drawable* objectHit( NULL );
     osgUtil::LineSegmentIntersector::Intersections::iterator itr =
         intersections.begin();
-    for( itr; itr != intersections.end(); ++itr )
+    for( osgUtil::LineSegmentIntersector::Intersections::iterator itr =
+        intersections.begin(); itr != intersections.end(); ++itr )
     {
         objectHit = itr->drawable.get();
 
@@ -858,6 +902,143 @@ void CharacterController::UpdateTranslation( btScalar dt )
         CameraRotationSLERP();
     }
 
+    if( m_physicsSimulator.GetIdle() )
+    {
+        xform.setRotation( xform.getRotation().inverse() );
+        xform.setOrigin( xform.getOrigin() + displacement );
+        m_ghostObject->setWorldTransform( xform );
+    }
+    else
+    {
+        setWalkDirection( displacement );
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void CharacterController::UpdateRotationTrackedHead()
+{
+    //Set the new delta turn angles based on the current 
+    //and previous head locations
+    gmtl::Quatd jugglerHeadRot1 = 
+        gmtl::make< gmtl::Quatd >( m_vjHeadMat1 );
+    //Now get the second point
+    gmtl::Quatd jugglerHeadRot2 = 
+        gmtl::make< gmtl::Quatd >( m_vjHeadMat2 );
+
+    mDeltaTurnAngleX += 0.0f;
+    mDeltaTurnAngleZ += jugglerHeadRot1[ 1 ] - jugglerHeadRot2[ 1 ];
+
+    //Update the device input history buffer
+    std::pair< double, double > deltaDeviceInput = UpdateHistoryBuffer();
+    
+    //Calculate character rotation
+    if( deltaDeviceInput.first != 0.0 || deltaDeviceInput.second != 0.0 )
+    {
+        mTurnAngleX += deltaDeviceInput.first;
+        //Restrict movement about the x-axis from -PI/2 to PI/2
+        if( mTurnAngleX < -gmtl::Math::PI_OVER_2 )
+        {
+            mTurnAngleX = -gmtl::Math::PI_OVER_2;
+        }
+        else if( mTurnAngleX > gmtl::Math::PI_OVER_2 )
+        {
+            mTurnAngleX = gmtl::Math::PI_OVER_2;
+        }
+        
+        mTurnAngleZ += deltaDeviceInput.second;
+        //Restrict angles about the z-axis from 0 to 2PI
+        if( mTurnAngleZ >= gmtl::Math::TWO_PI )
+        {
+            mTurnAngleZ -= gmtl::Math::TWO_PI;
+            
+        }
+        else if( mTurnAngleZ < 0.0 )
+        {
+            mTurnAngleZ += gmtl::Math::TWO_PI;
+        }
+        
+        //Set the camera rotation about the x-axis
+        mCameraRotationX.setX( sin( 0.5 * mTurnAngleX ) );
+        mCameraRotationX.setW( cos( 0.5 * mTurnAngleX ) );
+        
+        //Set the camera rotation about the z-axis
+        mCameraRotationZ.setZ( sin( 0.5 * mTurnAngleZ ) );
+        mCameraRotationZ.setW( cos( 0.5 * mTurnAngleZ ) );
+        
+        //Set the total camera rotation
+        mCameraRotation = mCameraRotationX * mCameraRotationZ;
+        
+        if( m1stPersonMode )
+        {
+            SetRotationFromCamera();
+        }
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void CharacterController::UpdateTranslationTrackedHead()
+{
+    //We will populate the translate vector based on information from the 
+    //tracker VJHead position
+    btVector3 displacement( 0.0, 0.0, 0.0 );
+
+    btTransform xform = m_ghostObject->getWorldTransform();
+    xform.setRotation( xform.getRotation().inverse() );
+    
+    if( m_translateType & TranslateType::STEP_FORWARD_BACKWARD )
+    {
+        /*btVector3 forwardBackwardDisplacement( 0.0, 0.0, 0.0 );
+        btVector3 forwardDir = xform.getBasis()[ 1 ];
+        forwardDir.normalize();
+        if( m_translateType & TranslateType::STEP_FORWARD )
+        {
+            forwardBackwardDisplacement += forwardDir;
+        }
+        if( m_translateType & TranslateType::STEP_BACKWARD )
+        {
+            forwardBackwardDisplacement -= forwardDir;
+        }
+        
+        forwardBackwardDisplacement *= dt * m_forwardBackwardSpeedModifier;
+        displacement += forwardBackwardDisplacement;*/
+        gmtl::Vec3d vjVec;
+        vjVec.set( 0.0f, 0.0f, -1.0f );
+        gmtl::Matrix44d vjMat = gmtl::convertTo< double >( wand->getData() );
+        
+        gmtl::xform( vjVec, vjMat, vjVec );
+        gmtl::normalize( vjVec );
+        
+        //Transform from juggler to osg...
+        double dir[ 3 ];
+        dir[0] =  vjVec[ 0 ];
+        dir[1] = -vjVec[ 2 ];
+        dir[2] =  vjVec[ 1 ];
+        double translationStepSize = 0.75;
+        for( int i = 0; i < 3; ++i )
+        {
+            //Update the translation movement for the objects
+            //How much object should move
+            displacement[ i ] += dir[ i ] * translationStepSize;
+        }        
+    }
+    
+    //Take the difference between the current head location 
+    //and the previous location. We could average these points in the future
+    //since we actually have the sample buffer for the head
+    gmtl::Point3d jugglerHeadPoint1 = 
+        gmtl::makeTrans< gmtl::Point3d >( m_vjHeadMat1 );
+    //Now get the second point
+    gmtl::Point3d jugglerHeadPoint2 = 
+        gmtl::makeTrans< gmtl::Point3d >( m_vjHeadMat2 );
+    
+    displacement[ 0 ] += (jugglerHeadPoint1[ 0 ] - jugglerHeadPoint2[ 0 ]);
+    displacement[ 1 ] += (jugglerHeadPoint1[ 1 ] - jugglerHeadPoint2[ 1 ]);
+    displacement[ 2 ] += (jugglerHeadPoint1[ 2 ] - jugglerHeadPoint2[ 2 ]);
+
+    //slerp mCameraRotation if necessary
+    if( mCameraRotationSLERP )
+    {
+        CameraRotationSLERP();
+    }
+    
     if( m_physicsSimulator.GetIdle() )
     {
         xform.setRotation( xform.getRotation().inverse() );

@@ -39,6 +39,11 @@
 
 #include <ves/xplorer/scenegraph/physics/KinematicCharacterController.h>
 
+// --- VRJuggler Includes --- //
+#include <gadget/Type/PositionInterface.h>
+
+#include <gmtl/Matrix.h>
+
 // --- OSG Includes --- //
 #include <osg/ref_ptr>
 #include <osg/NodeCallback>
@@ -210,11 +215,17 @@ private:
     ///\return Returns the delta device input for the frame
     std::pair< double, double > UpdateHistoryBuffer();
 
-    ///
+    ///Update the proposed delta rotation for the character
     void UpdateRotation();
 
-    ///
+    ///Update the displacement vector for the proposed character position
     void UpdateTranslation( btScalar dt );
+
+    ///Update the displacement vector from the head tracker data
+    void UpdateTranslationTrackedHead();
+
+    ///Update the proposed delta rotation for the character from the head tracker
+    void UpdateRotationTrackedHead();
 
     ///Tracks the on/off status of the character controller
     bool m_enabled;
@@ -338,8 +349,26 @@ private:
 
     ///
     osg::ref_ptr< osgUtil::LineSegmentIntersector > mLineSegmentIntersector;
+    
+    ///Type defs to help create samples for the head position when using 
+    ///tracking data
+    typedef gadget::Position::SampleBuffer_t::buffer_t buffer_type;
+    typedef buffer_type::const_reverse_iterator iter_type;
 
-    ///
+    ///Head matrix for point 1 
+    gmtl::Matrix44d m_vjHeadMat1; 
+
+    ///Head matrix for point 2 
+    gmtl::Matrix44d m_vjHeadMat2; 
+
+    ///Head object that will help track the character for head position
+    ///VRJuggler's head positional interface
+    gadget::PositionInterface head;
+
+    ///Wand object that will help track the character for wand position
+    ///VRJuggler's wand positional interface
+    gadget::PositionInterface wand;
+    
     class CharacterTransformCallback : public osg::NodeCallback
     {
     public:
