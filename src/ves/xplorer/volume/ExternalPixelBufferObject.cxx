@@ -159,8 +159,7 @@ void ExternalPixelBufferObject::compileBuffer( osg::State& state ) const
         return;
     }
     
-    osg::GLBufferObject::Extensions* extensions =
-        getExtensions( contextID, true );
+    osg::BufferObject::Extensions* extensions = getExtensions(contextID,true);
 
     GLuint& pbo = buffer( contextID );
     if( pbo == 0 )
