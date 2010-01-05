@@ -793,19 +793,19 @@ class Launch:
         self.EnvFill("NO_RTRC_PLUGIN", "TRUE")
 
         ##Juggler dependencies
+        ##Can get rid of? - mccdo
         ##These are currently set relative to VE-Suite's install
-        vjBaseDir = os.getenv("VJ_BASE_DIR")
-        self.EnvFill("JCCL_BASE_DIR", vjBaseDir)
-        if not windows:
-            self.EnvFill("JCCL_DEFINITION_PATH",
-                         os.path.join(os.getenv("JCCL_BASE_DIR"), "definitions"))
-        else:
-            self.EnvFill("JCCL_DEFINITION_PATH",
-                         os.path.join(os.getenv("JCCL_BASE_DIR"),
-                                      "share", "definitions"))
+        #vjBaseDir = os.getenv("VJ_BASE_DIR")
+        #self.EnvFill("JCCL_BASE_DIR", vjBaseDir)
+        #if not windows:
+        #    self.EnvFill("JCCL_DEFINITION_PATH",
+        #                 os.path.join(os.getenv("JCCL_BASE_DIR"), "definitions"))
+        #else:
+        #    self.EnvFill("JCCL_DEFINITION_PATH",
+        #                 os.path.join(os.getenv("JCCL_BASE_DIR"),
+        #                              "share", "definitions"))
         ##self.EnvFill("VJ_CFG_PATH", os.path.join(vjBaseDir, "definitions")) ##Can get rid of?
-
-        self.EnvFill("SNX_BASE_DIR", vjBaseDir)
+        #self.EnvFill("SNX_BASE_DIR", vjBaseDir)
         
         ##Append OSG_FILE_PATH
         self.EnvAppend("OSG_FILE_PATH", [
@@ -984,9 +984,11 @@ class Launch:
             ##Put var in clusterScript
             self.WriteToClusterScript(var)
         else:
-            os.environ[var] = default
-            ##Put var in clusterScript
-            self.WriteToClusterScript(var)
+            if default not "None":
+                os.environ[var] = default
+                ##Put var in clusterScript
+                self.WriteToClusterScript(var)
+                
         ##Debug printout.
         if self.settings["Debug"]:
 ##            print "%s: %s" %(var, os.getenv(var))
