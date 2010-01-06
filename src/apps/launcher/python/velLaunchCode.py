@@ -984,7 +984,7 @@ class Launch:
             ##Put var in clusterScript
             self.WriteToClusterScript(var)
         else:
-            if default not "None":
+            if default != "None":
                 os.environ[var] = default
                 ##Put var in clusterScript
                 self.WriteToClusterScript(var)
