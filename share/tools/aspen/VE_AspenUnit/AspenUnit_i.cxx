@@ -1075,15 +1075,32 @@ void Body_Unit_i::SetParams (CORBA::Long id,
         networkWriter.GetLoadedXMLObjects();
 
     //this part would need rewrite later
-    for( size_t i=0; i<objectVector.size(); i++)
+    for( size_t i = 0; i < objectVector.size(); ++i )
     {
-        ves::open::xml::CommandPtr param = 
+        ves::open::xml::CommandPtr paramCmd = 
             boost::dynamic_pointer_cast<ves::open::xml::Command>( 
             objectVector.at( i ) );
-        std::string paramName = param->GetCommandName();
+        std::string paramName = paramCmd->GetCommandName();
 
         //insert code here to resolve how upwind data is passed to aspen unit
         //when it is included in a network
+        size_t numDVP = boost::dynamic_pointer_cast< ves::open::xml::Command >(
+            paramCmd->GetDataValuePair( "setParam" )->GetDataXMLObject())->
+            GetNumberOfDataValuePairs();
+ 
+        for( size_t j = 0; j < numDVP; ++j )
+        {
+            ves::open::xml::DataValuePairPtr tempDVP =
+                boost::dynamic_pointer_cast< ves::open::xml::Command >(
+                paramCmd->GetDataValuePair( "setParam" )->GetDataXMLObject())->
+                GetDataValuePair( j );
+           
+            ves::open::xml::CommandPtr tempCmd =
+                boost::dynamic_pointer_cast< ves::open::xml::Command >(
+                tempDVP->GetDataXMLObject());
+
+            SetParam( tempCmd );
+        }
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

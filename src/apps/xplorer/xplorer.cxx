@@ -231,6 +231,14 @@ int main( int argc, char* argv[] )
         // If we have configuration files, load them.
         if ( vm.count("jconf") > 0 )
         {
+            {
+                //const char* jccl_dir = std::getenv("JCCL_CFG_PATH");
+                const char* vjbase_dir = std::getenv("VJ_BASE_DIR");
+                const char* vjdata_dir = std::getenv("VJ_DATA_DIR");
+                //std::cout << "JCCL_CFG_PATH=" << jccl_dir << std::endl
+                std::cout << "VJ_BASE_DIR=" << vjbase_dir << std::endl
+                    << "VJ_DATA_DIR=" << vjdata_dir << std::endl;
+            }
             std::vector<std::string> jconfs =
                 vm["jconf"].as< std::vector<std::string> >();
             
