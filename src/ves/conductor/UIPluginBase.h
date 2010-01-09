@@ -397,7 +397,7 @@ protected:
     std::map< int, bool > mDialogMemoryMap;
 
     wxRect dialogSize;
-    int activeId;
+    unsigned int activeId;
     ///Determine wether to draw the ports and highlight band
     bool highlightFlag;
     bool nameFlag;

@@ -37,7 +37,10 @@
 #include <ves/conductor/util/DataSetLoaderUI.h>
 
 #include <iostream>
+
 #include <boost/lexical_cast.hpp>
+#include <boost/concept_check.hpp>
+
 #include <ves/conductor/SummaryResultDialog.h>
 #include <ves/conductor/UIDialog.h>
 #include <ves/conductor/TextResultDialog.h>
@@ -72,9 +75,9 @@
 
 #include <ves/conductor/util/CADNodeManagerDlg.h>
 #include <ves/conductor/xpm/contour.xpm>
-#include <ves/conductor/xpm/cad_tree_selected.xpm>
-#include <ves/conductor/xpm/cad_tree_unselected.xpm>
-#include <ves/conductor/xpm/cspline.xpm>
+//#include <ves/conductor/xpm/cad_tree_selected.xpm>
+//#include <ves/conductor/xpm/cad_tree_unselected.xpm>
+//#include <ves/conductor/xpm/cspline.xpm>
 #include <ves/conductor/xpm/isosurface.xpm>
 #include <ves/conductor/xpm/ROItb.xpm>
 #include <ves/conductor/xpm/square.xpm>
@@ -138,27 +141,27 @@ IMPLEMENT_DYNAMIC_CLASS( UIPluginBase, wxEvtHandler )
 /////////////////////////////////////////////////////////////////////////////
 UIPluginBase::UIPluginBase() :
         wxEvtHandler(),
-        m_network( 0 ),
-        m_canvas( 0 ),
+        financial_dlg( 0 ),
         dlg( 0 ),
         result_dlg( 0 ),
         port_dlg( 0 ),
-        financial_dlg( 0 ),
-        inputsDialog( 0 ),
+        m_dataSetLoaderDlg( 0 ),
+        m_veModel( new Model() ),
         resultsDialog( 0 ),
         portsDialog( 0 ),
-        vistab( 0 ),
+        inputsDialog( 0 ),
+        serviceList( 0 ),
+        mDataBufferEngine( 0 ),
+        mUserPrefBuffer( 0 ),
         iconFilename( "DefaultPlugin" ),
+        m_canvas( 0 ),
+        m_network( 0 ),
         _soundsDlg( 0 ),
+        m_iconChooser( 0 ),
+        vistab( 0 ),        
         cadDialog( 0 ),
         highlightFlag( false ),
         nameFlag( true ),
-        serviceList( 0 ),
-        m_veModel( new Model() ),
-        m_dataSetLoaderDlg( 0 ),
-        m_iconChooser( 0 ),
-        mUserPrefBuffer( 0 ),
-        mDataBufferEngine( 0 ),
         mPopMenu( 0 )
 {
     pos = wxPoint( 0, 0 ); //default position
@@ -402,7 +405,7 @@ void UIPluginBase::DrawName( wxDC* dc )
     int w, h;
 
     wxCoord xoff = pos.x;
-    wxCoord yoff = pos.y;
+    //wxCoord yoff = pos.y;
 
     for( int i = 0; i < n_pts; ++i )
     {
@@ -1159,7 +1162,7 @@ void UIPluginBase::OnDClick( wxMouseEvent &event )
     CreateUserDialog( evtpos );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UIPluginBase::CreateUserDialog( wxPoint extpos )
+void UIPluginBase::CreateUserDialog( wxPoint WXUNUSED( extpos ) )
 {
     SetActiveModel();
     
@@ -1226,7 +1229,7 @@ void  UIPluginBase::OnShowResult( wxCommandEvent& event )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void  UIPluginBase::OnShowUserDialog( wxCommandEvent& event )
+void  UIPluginBase::OnShowUserDialog( wxCommandEvent& WXUNUSED( event ) )
 {
     CreateUserDialog( wxPoint(0,0) );
 }
@@ -1552,6 +1555,7 @@ void UIPluginBase::OnNavigateTo( wxCommandEvent& event )
     }
 
     bool connected = serviceList->SendCommandStringToXplorer( veCommand );
+    boost::ignore_unused_variable_warning( connected );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIPluginBase::OnGeometry( wxCommandEvent& event )
@@ -1731,6 +1735,7 @@ void UIPluginBase::OnVisualization( wxCommandEvent& event )
     if( isDataSet )
     {
         int error = vistab->Show();
+        boost::ignore_unused_variable_warning( error );
     }
     else
     {
@@ -1747,7 +1752,7 @@ void UIPluginBase::OnSetUIPluginName( wxCommandEvent& event )
     GlobalNameUpdate( event );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UIPluginBase::OnZoomSelected( wxCommandEvent& event )
+void UIPluginBase::OnZoomSelected( wxCommandEvent& WXUNUSED( event ) )
 {
     m_network->GetUserScale()->first = 1;
     m_network->GetUserScale()->second = 1;
@@ -1823,7 +1828,7 @@ void UIPluginBase::OnMRightDown( wxMouseEvent& event )
     //m_canvas->SetFocus();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UIPluginBase::OnSetActiveXplorerModel( wxCommandEvent& event )
+void UIPluginBase::OnSetActiveXplorerModel( wxCommandEvent& WXUNUSED( event ) )
 {
     SetActiveModel();
 }
@@ -1889,6 +1894,7 @@ void UIPluginBase::OnDelMod( wxCommandEvent& event )
     veCommand->SetCommandName( std::string( "DELETE_OBJECT_FROM_NETWORK" ) );
     veCommand->AddDataValuePair( dataValuePair );
     bool connected = serviceList->SendCommandStringToXplorer( veCommand );
+    boost::ignore_unused_variable_warning( connected );
     //Clean up memory
     mDataBufferEngine->RemoveModelFromSystem( m_veModel );
     RemovePluginDialogsFromCanvas();
@@ -1973,6 +1979,7 @@ void UIPluginBase::DrawPlugin( wxDC* dc )
 ////////////////////////////////////////////////////////////////////////////////
 void UIPluginBase::DrawPorts( bool flag, wxDC* dc )
 {
+    boost::ignore_unused_variable_warning( flag );
     // flag sets whether we we are erasing the ports or not
     // This function draws the input and output ports on a selected module
     // that is on the design canvas
@@ -2215,7 +2222,7 @@ void UIPluginBase::RemoveWindowFromCanvas( wxWindow* window )
     //window->DestroyChildren();
     //delete window;
     bool delFlag = window->Destroy();
-    //std::cout << delFlag << std::endl;
+    boost::ignore_unused_variable_warning( delFlag );
     window = 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -2284,6 +2291,7 @@ void UIPluginBase::TogglePlugin( wxCommandEvent& event )
             std::string( "Xplorer Toggle Plugin Events" ) );
         veCommand->AddDataValuePair( dataValuePair );
         bool connected = serviceList->SendCommandStringToXplorer( veCommand );
+        boost::ignore_unused_variable_warning( connected );
     }
     else if( event.GetId() == UIPLUGINBASE_TOGGLE_PLUGIN_ON )
     {
@@ -2295,6 +2303,7 @@ void UIPluginBase::TogglePlugin( wxCommandEvent& event )
             std::string( "Xplorer Toggle Plugin Events" ) );
         veCommand->AddDataValuePair( dataValuePair );
         bool connected = serviceList->SendCommandStringToXplorer( veCommand );
+        boost::ignore_unused_variable_warning( connected );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
