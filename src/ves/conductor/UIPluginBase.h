@@ -289,7 +289,9 @@ public:
     void SetAsHierarchy();
     ///Get the icon for this plugin
     wxBitmap* GetIconImage();
-    
+    ///Set the plugin type for the ui plugin
+    void SetPluginType( const std::string& pluginType );
+        
 protected:
     ///Add a port to the model
     ///\param tempPoint The point where to place the port. This location
@@ -413,8 +415,8 @@ protected:
 
     ///The string used to provide a description of the plugin
     wxString mDescription;
-
-protected:
+    ///This is the string version of the plugin name
+    std::string m_pluginType;
     ///Number of points in the polygon
     int n_pts;    
 	///The outline polygon points list

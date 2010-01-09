@@ -1420,7 +1420,7 @@ bool Network::IsPortCompatible( int frmod, int frport, int tomod, int toport )
     //ports.resize( num );
     ports = modules[ frmod ].GetPlugin()->GetOPorts();
     std::string type1 = "";
-    if( frport >= 0 && frport < ports.size() )
+    if( frport >= 0 && frport < int( ports.size() ) )
         type1 = ports[frport]->GetPortType();
 
     //num = modules[ tomod ].GetPlugin()->GetNumIports();
@@ -1725,12 +1725,13 @@ void Network::AddtoNetwork( UIPluginBase *cur_module, std::string cls_name )
     modules[id].SetPlugin( cur_module );
 
     //This name is now set in the plugin by the user
-    //modules[id].GetPlugin()->SetName( wxString( cls_name.c_str(), wxConvUTF8 ) );
+    modules[id].GetPlugin()->SetPluginType( cls_name );
     modules[id].GetPlugin()->SetID( id );
     modules[id].GetPlugin()->SetCORBAService( mServiceList );
     modules[id].GetPlugin()->SetXMLDataBufferEngine( mDataBufferEngine );
     modules[id].GetPlugin()->SetUserPreferencesDataBuffer( mUserPrefBuffer );
-    modules[id].GetPlugin()->SetDialogSize( parent->GetAppropriateSubDialogSize() );
+    modules[id].GetPlugin()->
+        SetDialogSize( parent->GetAppropriateSubDialogSize() );
     //Initialize ports
     PORT ports;
     //ports.resize( modules[id].GetPlugin()->GetNumIports() );
@@ -1752,8 +1753,7 @@ void Network::AddtoNetwork( UIPluginBase *cur_module, std::string cls_name )
 /////// Draw Functions /////////////////
 ////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
-//void Network::ReDraw(wxDC &dc)
-void Network::DrawNetwork( wxDC &dc )
+void Network::DrawNetwork( wxDC& dc )
 {
     // redraw all the active plugins
     for( std::map<unsigned int, Module>::iterator iter = modules.begin();
@@ -1898,6 +1898,7 @@ void Network::LoadSystem( model::SystemPtr system, Canvas* parent )
         ///Add event handler for the plugins
 //        PushEventHandler( tempPlugin );
         tempPlugin->SetName( wxString( model->GetPluginName().c_str(), wxConvUTF8 ) );
+        tempPlugin->SetPluginType( model->GetPluginType() );
         tempPlugin->SetCORBAService( mServiceList );
         tempPlugin->SetXMLDataBufferEngine( mDataBufferEngine );
         tempPlugin->SetUserPreferencesDataBuffer( mUserPrefBuffer );

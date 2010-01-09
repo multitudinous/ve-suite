@@ -503,6 +503,7 @@ ModelPtr UIPluginBase::GetVEModel( void )
     }
 
     m_veModel->SetPluginName( ConvertUnicode( mPluginName.c_str() ) );
+    m_veModel->SetPluginType( m_pluginType.c_str() );
     m_veModel->SetModelID( id );
     m_veModel->SetIconFilename( iconFilename );
     m_veModel->GetIconLocation()->SetPoint( std::pair< unsigned int, unsigned int >( pos.x, pos.y ) );
@@ -2435,8 +2436,14 @@ wxMenu* UIPluginBase::SetupPluginBasePopupMenu()
     
     return mPopMenu;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void UIPluginBase::MessageLog( const char* msg )
 {
     ::wxLogMessage(  wxString( msg, wxConvUTF8 ) );
 }
+////////////////////////////////////////////////////////////////////////////////
+void UIPluginBase::SetPluginType( const std::string& pluginType )
+{
+    m_pluginType = pluginType;
+}
+////////////////////////////////////////////////////////////////////////////////
