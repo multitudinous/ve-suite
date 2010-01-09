@@ -454,8 +454,8 @@ void WarrantyToolGP::ParseDataFile( const std::string& csvFilename )
     size_t columnCount = 0;
     std::map< int, std::vector< std::string > > csvDataMap;
     
-    size_t partNumberColumn = 0;
-    m_promiseDateColumn = 0;
+    m_partNumberColumn = 0;
+    m_promiseDateColumn = -1;
     while( parser.getPos() < sLine.size() )
     {
         parser >> sCol1; // Feed the line to the parser
@@ -473,7 +473,7 @@ void WarrantyToolGP::ParseDataFile( const std::string& csvFilename )
         csvDataMap[ columnCount ] = data;
         if( "Part_Number" == sCol1 )
         {
-            partNumberColumn = columnCount;
+            m_partNumberColumn = columnCount;
         }
         
         //if( boost::algorithm::ifind_first( sCol1, "promise_date" ) )
@@ -484,7 +484,7 @@ void WarrantyToolGP::ParseDataFile( const std::string& csvFilename )
         columnCount += 1;
     }
 
-    std::cout << "Part Number Column = " << partNumberColumn 
+    std::cout << "Part Number Column = " << m_partNumberColumn 
         << " Promise Date Column = " << m_promiseDateColumn << std::endl;
 
     while( iss.good() )
@@ -530,7 +530,7 @@ void WarrantyToolGP::ParseDataFile( const std::string& csvFilename )
     }
     //iss.close();
 
-    mLoadedPartNumbers = csvDataMap[ partNumberColumn ];
+    mLoadedPartNumbers = csvDataMap[ m_partNumberColumn ];
     for( size_t i = 1; i < mLoadedPartNumbers.size(); ++i )
     {
         std::vector< std::pair< std::string, std::string > > partData;
@@ -761,7 +761,7 @@ void WarrantyToolGP::CreateDB()
             }
         }
         
-        if( isString )
+        if( isString || (i == m_partNumberColumn) )
         {
             createCommand << "'" << tempData.at( i ).first << "' VARCHAR";
         }
@@ -804,7 +804,11 @@ void WarrantyToolGP::CreateDB()
             double tempDouble = 0;
             try
             {
-                tempDouble = boost::lexical_cast<double>( tempData.at( i ).second );      
+                tempDouble = boost::lexical_cast<double>( tempData.at( i ).second );
+                if( i == m_partNumberColumn )
+                {
+                    isString = true;
+                }
             }
             catch( boost::bad_lexical_cast& ex )
             {

@@ -119,7 +119,9 @@ private:
     ///Root of the CAD models
     ves::xplorer::scenegraph::DCS* m_cadRootNode;
     
-    size_t m_promiseDateColumn;
+    int m_promiseDateColumn;
+    
+    size_t m_partNumberColumn;
 };
 
 CREATE_VES_XPLORER_PLUGIN_ENTRY_POINT( WarrantyToolGP )
