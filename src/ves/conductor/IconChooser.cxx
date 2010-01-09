@@ -53,12 +53,12 @@
 #include <ves/conductor/AspenPlus2DIcons.h>
 
 #include <ves/conductor/xpm/contour.xpm>
-#include <ves/conductor/xpm/cad_tree_selected.xpm>
-#include <ves/conductor/xpm/cad_tree_unselected.xpm>
-#include <ves/conductor/xpm/cspline.xpm>
+//#include <ves/conductor/xpm/cad_tree_selected.xpm>
+//#include <ves/conductor/xpm/cad_tree_unselected.xpm>
+//#include <ves/conductor/xpm/cspline.xpm>
 #include <ves/conductor/xpm/isosurface.xpm>
 #include <ves/conductor/xpm/ROItb.xpm>
-#include <ves/conductor/xpm/square.xpm>
+//#include <ves/conductor/xpm/square.xpm>
 #include <ves/conductor/xpm/streamlines.xpm>
 #include <ves/conductor/xpm/vector.xpm>
 #include <ves/conductor/xpm/vectortb.xpm>
