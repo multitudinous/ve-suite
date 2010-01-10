@@ -71,10 +71,9 @@ Source: {#DEPENDSINSTALLHOME}\{#WXHOME}\lib\vc_dll\*.dll; DestDir: {app}\lib; Co
 Source: {#DEPENDSINSTALLHOME}\{#WXHOME}\lib\vc_dll\*.h; DestDir: {app}\include\wx; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion; Components: depsbuildenv
 
 ; Juggler Files
-Source: {#DEPENDSINSTALLHOME}\{#JUGGLERINSTHOME}\lib\*.dll; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs; Components: juggler
-Source: {#DEPENDSINSTALLHOME}\{#JUGGLERINSTHOME}\lib\*.lib; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs; Components: depsbuildenv; Languages: 
-Source: {#DEPENDSINSTALLHOME}\{#JUGGLERINSTHOME}\share\vrjuggler\data\configFiles\*; DestDir: {app}\share\configFiles; Flags: ignoreversion recursesubdirs; Components: juggler
-Source: {#DEPENDSINSTALLHOME}\{#JUGGLERINSTHOME}\share\vrjuggler\data\definitions\*; DestDir: {app}\share\definitions; Flags: ignoreversion recursesubdirs createallsubdirs; Components: juggler
+Source: {#DEPENDSINSTALLHOME}\{#JUGGLERINSTHOME}\bin\*; DestDir: {app}\bin; Flags: ignoreversion recursesubdirs; Components: juggler
+Source: {#DEPENDSINSTALLHOME}\{#JUGGLERINSTHOME}\lib\*; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs; Components: depsbuildenv; Languages: 
+Source: {#DEPENDSINSTALLHOME}\{#JUGGLERINSTHOME}\share\*; DestDir: {app}\share; Flags: ignoreversion recursesubdirs createallsubdirs; Components: juggler
 Source: {#DEPENDSINSTALLHOME}\{#JUGGLERINSTHOME}\include\*; DestDir: {app}\include; Flags: ignoreversion recursesubdirs createallsubdirs; Components: depsbuildenv; Languages: 
 
 ; Xerces Files
@@ -117,6 +116,12 @@ Source: {#DEPENDSINSTALLHOME}\{#MINERVAHOME}\include\*.h; DestDir: {app}\include
 Source: {#DEPENDSINSTALLHOME}\{#MINERVAHOME}\lib\*.lib; DestDir: {app}\lib; Flags: ignoreversion skipifsourcedoesntexist; Components: depsbuildenv
 Source: {#DEPENDSINSTALLHOME}\{#MINERVAHOME}\lib\*.dll; DestDir: {app}\lib; Flags: ignoreversion skipifsourcedoesntexist; Components: minerva
 Source: {#DEPENDSINSTALLHOME}\{#MINERVAHOME}\lib\*.plug; DestDir: {app}\lib; Flags: ignoreversion skipifsourcedoesntexist; Components: minerva
+Source: {#DEPENDSINSTALLHOME}\{#MINERVAHOME}\share\*; DestDir: {app}\share; Flags: ignoreversion skipifsourcedoesntexist; Components: minerva
+
+; POCO Files
+Source: {#DEPENDSINSTALLHOME}\{#POCOHOME}\include\*.h; DestDir: {app}\include; Flags: ignoreversion recursesubdirs skipifsourcedoesntexist; Components: depsbuildenv
+Source: {#DEPENDSINSTALLHOME}\{#POCOHOME}\lib\*.lib; DestDir: {app}\lib; Flags: ignoreversion skipifsourcedoesntexist; Components: depsbuildenv
+Source: {#DEPENDSINSTALLHOME}\{#POCOHOME}\lib\*.dll; DestDir: {app}\lib; Flags: ignoreversion skipifsourcedoesntexist; Components: poco; Languages: 
 
 ; osgWorks Files
 Source: {#DEPENDSINSTALLHOME}\{#OSGWORKSHOME}\include\*.h; DestDir: {app}\include; Flags: ignoreversion recursesubdirs; Components: depsbuildenv
