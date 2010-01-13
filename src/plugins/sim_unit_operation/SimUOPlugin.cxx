@@ -37,6 +37,7 @@
 #include <ves/conductor/ConductorLibEnums.h>
 //#include "SimUOVarDialog.h"
 //#include "DynamicDataDlg.h"
+//#include "DynamicDataDlg.h"
 
 #include <ves/conductor/xpm/square.xpm>
 
@@ -70,7 +71,6 @@ wxString SimUOPlugin::GetConductorName()
 {
     return wxString( "Sim_SimUnitOp", wxConvUTF8 );
 }
-
 ////////////////////////////////////////////////////////////////////////////////
 wxMenu* SimUOPlugin::GetPluginPopupMenu( wxMenu* baseMenu )
 {

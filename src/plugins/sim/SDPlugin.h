@@ -36,6 +36,7 @@
 #include <ves/conductor/UIPluginBase.h>
 
 #include <wx/event.h>
+#include <wx/wx.h>
 
 class wxMenu;
 
@@ -52,6 +53,9 @@ public:
     SDPlugin();
     virtual ~SDPlugin();
     wxString GetConductorName();
+	std::vector< std::string > GetAvailableVariables();
+	std::vector< std::string > GetSelectVariables();
+	void SetSelectVariables( std::vector< std::string> selectedVariables );
 
 protected:
     virtual wxMenu* GetPluginPopupMenu( wxMenu* baseMenu );
@@ -69,7 +73,12 @@ protected:
     void OnCloseAspenSimulation( wxCommandEvent& event );
     void OnDisconnectAspenSimulation( wxCommandEvent& event );
     bool IsBKPOpen();
+	void OnCreateOPCList( wxCommandEvent& event );
+	void OnMonitor( wxCommandEvent& event );
     wxMenu* mAspenMenu;
+	std::vector< std::string > m_opcList;
+	std::vector< std::string > m_selectedOpcList;
+	//wxArrayString *m_selectedOpcList;
 
     DECLARE_EVENT_TABLE()
 };

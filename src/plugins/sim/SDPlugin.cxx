@@ -34,6 +34,7 @@
 
 #include "SDPlugin.h"
 #include "SDOpenDialog.h"
+#include "OPCDlg.h"
 
 #include <plugins/ConductorPluginEnums.h>
 #include <ves/conductor/ConductorLibEnums.h>
@@ -71,6 +72,8 @@ BEGIN_EVENT_TABLE( SDPlugin, ves::conductor::UIPluginBase )
     EVT_MENU( SDPLUGIN_STEP_ASPEN_NETWORK, SDPlugin::StepAspenNetwork )
     EVT_MENU( SDPLUGIN_SAVE_SIMULATION, SDPlugin::SaveSimulation )
     EVT_MENU( SDPLUGIN_SAVEAS_SIMULATION, SDPlugin::SaveAsSimulation )
+    EVT_MENU( SDPLUGIN_CREATE_OPC_LIST, SDPlugin::OnCreateOPCList )
+	EVT_MENU( SDPLUGIN_MONITOR, SDPlugin::OnMonitor )
 END_EVENT_TABLE()
 
 IMPLEMENT_DYNAMIC_CLASS( SDPlugin, ves::conductor::UIPluginBase )
@@ -223,7 +226,24 @@ void SDPlugin::OnOpen( wxCommandEvent& event )
     //set parent model on topmost level
     for( int modelCount = 0; modelCount < tempSystem->GetNumberOfModels(); modelCount++)
     {
-        tempSystem->GetModel( modelCount )->SetParentModel( aspenPlusModel );
+        ModelPtr tempModel = tempSystem->GetModel( modelCount );
+		tempModel->SetParentModel( aspenPlusModel );
+		
+		//go through models to find opc
+		SystemPtr tempSubSystem = tempModel->GetSubSystem();
+		for( int subModelCount = 0; 
+			subModelCount < tempSubSystem->GetNumberOfModels(); 
+			subModelCount++)
+		{
+			//add OPC plugins to a list
+			std::string tempType = tempSubSystem->GetModel( subModelCount )->
+				GetPluginType( );
+			if(tempType.compare("OpcUOPlugin") == 0)
+			{
+				m_opcList.push_back(tempSubSystem->GetModel( subModelCount )->
+					GetPluginName());
+			}
+		}
     }
 
     //aspenPlusModel->SetSubSystem( tempSystem );
@@ -236,6 +256,9 @@ void SDPlugin::OnOpen( wxCommandEvent& event )
     //{
     //network->Load( nw_str, true );
     m_canvas->AddSubNetworks( );
+
+	//m_subNetwork = m_canvas->GetNetwork( );
+
 #if 0
     std::ofstream netdump ("netdump.txt");
     netdump << nw_str;
@@ -546,6 +569,10 @@ wxMenu* SDPlugin::GetPluginPopupMenu( wxMenu* baseMenu )
     mAspenMenu->Append( SDPLUGIN_OPEN_SIM, _( "Open" ) );
         mAspenMenu->Enable( SDPLUGIN_OPEN_SIM, true );
     //mAspenMenu->Append( SDPLUGIN_CLOSE_ASPEN_SIMULATION, _( "Close" ) );
+    mAspenMenu->Append( SDPLUGIN_CREATE_OPC_LIST, _( "Create List") );
+    mAspenMenu->Enable( SDPLUGIN_CREATE_OPC_LIST, true );
+    mAspenMenu->Append( SDPLUGIN_MONITOR, _( "Start Monitor") );
+    mAspenMenu->Enable( SDPLUGIN_MONITOR, true );
     mAspenMenu->Append( SDPLUGIN_DISCONNECT_ASPEN_SIMULATION, _( "Disconnect" ) );
     mAspenMenu->Append( SDPLUGIN_SHOW_ASPEN_SIMULATION, _( "Show" ) );
     mAspenMenu->Append( SDPLUGIN_HIDE_ASPEN_SIMULATION, _( "Hide" ) );
@@ -584,4 +611,85 @@ wxMenu* SDPlugin::GetPluginPopupMenu( wxMenu* baseMenu )
         mAspenMenu->Enable( SDPLUGIN_SAVEAS_SIMULATION, false );
     }
     return baseMenu;
+}
+////////////////////////////////////////////////////////////////////////////////
+void SDPlugin::OnCreateOPCList( wxCommandEvent& event )
+{
+	//create dialog with list of available opc variables
+	OPCDlg * opcDlg = new OPCDlg( m_canvas );
+
+	//populate the dialog with available variables and selected
+	//opcDlg->PopulateLists( m_opcList, m_selectedOpcList );
+	opcDlg->SetParentPlugin( this );
+
+	//display the dialog
+	opcDlg->ShowModal();
+}
+////////////////////////////////////////////////////////////////////////////////
+void SDPlugin::OnMonitor( wxCommandEvent& event )
+{
+    std::string compName = GetVEModel()->GetPluginName();
+    //compName = "Data.Blocks." + compName;
+
+    //ves::open::xml::CommandPtr monitor( new ves::open::xml::Command() );
+    //monitor->SetCommandName( "monitorValues" );
+    
+	/*ves::open::xml::DataValuePairPtr variables[ m_selectedOpcList->size( ) ];
+    for (int i = 0; i < m_selectedOpcList->size( ); i++)
+    {
+        variables[i] = ves::open::xml::DataValuePairPtr( new ves::open::xml::DataValuePair() );
+        variables[i]->SetDataType("STRING");
+		variables[i]->SetDataName("Name");
+		variables[i]->SetDataString( m_selectedOpcList->c_str( ) );
+        monitor->AddDataValuePair( variables[i] );
+    }
+
+	//ves::open::xml::DataValuePairPtr data( new ves::open::xml::DataValuePair() );
+    //data->SetData( std::string( "ModuleName" ), compName );
+    //returnState->AddDataValuePair( data );
+
+
+    std::vector< std::pair< XMLObjectPtr, std::string > > nodes;
+    nodes.push_back( std::pair< XMLObjectPtr, std::string >( returnState, "vecommand" ) );
+
+    XMLReaderWriter commandWriter;
+    std::string status = "returnString";
+    commandWriter.UseStandaloneDOMDocumentManager();
+    commandWriter.WriteXMLDocument( nodes, status, "Command" );
+	*/
+	
+	ves::open::xml::CommandPtr monitor( new ves::open::xml::Command() );
+    monitor->SetCommandName("monitorValues");
+
+    ves::open::xml::DataValuePairPtr
+        variables( new ves::open::xml::DataValuePair() );
+    variables->SetData( "variables", m_selectedOpcList );
+    monitor->AddDataValuePair( variables );
+
+    std::vector< std::pair< ves::open::xml::XMLObjectPtr, std::string > >
+        nodes;
+    nodes.push_back( std::pair< ves::open::xml::XMLObjectPtr,
+		std::string >( monitor, "vecommand" ) );
+
+    ves::open::xml::XMLReaderWriter commandWriter;
+    std::string status="returnString";
+    commandWriter.UseStandaloneDOMDocumentManager();
+    commandWriter.WriteXMLDocument( nodes, status, "Command" );
+
+    std::string nw_str = serviceList->Query( status );
+}
+
+std::vector< std::string > SDPlugin::GetAvailableVariables()
+{
+	return m_opcList;
+}
+
+std::vector< std::string > SDPlugin::GetSelectVariables()
+{
+	return m_selectedOpcList;
+}
+
+void SDPlugin::SetSelectVariables( std::vector< std::string> selectedVariables )
+{
+	m_selectedOpcList = selectedVariables;
 }
