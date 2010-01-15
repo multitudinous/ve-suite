@@ -229,8 +229,8 @@ void MinervaDialog::AddDefaultLayers()
   //const std::string server( "http://onearth.jpl.nasa.gov/wms.cgi" );
   //MinervaDialog::_addLayer( ves::util::commands::ADD_RASTER_LAYER, server, "BMNG,global_mosaic", "Jul,visual", "image/jpeg", _rasterLayersList, _rasterLayers, _rasterGroupCommand );
 
-  const std::string server( "http://hypercube.telascience.org/cgi-bin/landsat7" );
-  MinervaDialog::_addLayer( ves::util::commands::ADD_RASTER_LAYER, server, "landsat7", "", "image/jpeg", _rasterLayersList, _rasterLayers, _rasterGroupCommand );
+  //const std::string server( "http://hypercube.telascience.org/cgi-bin/landsat7" );
+  //MinervaDialog::_addLayer( ves::util::commands::ADD_RASTER_LAYER, server, "landsat7", "", "image/jpeg", _rasterLayersList, _rasterLayers, _rasterGroupCommand );
 }
 ///////////////////////////////////////////////////////////////////////////////
 void MinervaDialog::AddElevationLayerWMS( wxCommandEvent& WXUNUSED( event ) )
