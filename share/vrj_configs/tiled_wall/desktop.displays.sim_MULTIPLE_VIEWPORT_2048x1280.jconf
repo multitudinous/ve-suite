@@ -17,8 +17,8 @@
       <display_window name="Computer 1 - Row 1 Col 1" version="5">
          <origin>0</origin>
          <origin>0</origin>
-         <size>2560</size>
-         <size>1600</size>
+         <size>2048</size>
+         <size>1280</size>
          <pipe>0</pipe>
          <frame_buffer_config>
             <opengl_frame_buffer_config name="GL Frame Buffer" version="3">
@@ -77,8 +77,8 @@
       <display_window name="Computer 1 - Row 1 Col 2" version="5">
          <origin>0</origin>
          <origin>0</origin>
-         <size>2560</size>
-         <size>1600</size>
+         <size>2048</size>
+         <size>1280</size>
          <pipe>1</pipe>
          <frame_buffer_config>
             <opengl_frame_buffer_config name="GL Frame Buffer" version="3">
@@ -137,8 +137,8 @@
       <display_window name="Computer 1 - Row 2 Col 1" version="5">
          <origin>0</origin>
          <origin>0</origin>
-         <size>2560</size>
-         <size>1600</size>
+         <size>2048</size>
+         <size>1280</size>
          <pipe>2</pipe>
          <frame_buffer_config>
             <opengl_frame_buffer_config name="GL Frame Buffer" version="3">
@@ -197,8 +197,8 @@
       <display_window name="Computer 1 - Row 2 Col 2" version="5">
          <origin>0</origin>
          <origin>0</origin>
-         <size>2560</size>
-         <size>1600</size>
+         <size>2048</size>
+         <size>1280</size>
          <pipe>3</pipe>
          <frame_buffer_config>
             <opengl_frame_buffer_config name="GL Frame Buffer" version="3">
@@ -257,8 +257,8 @@
       <display_window name="Computer 1 - Row 3 Col 1" version="5">
          <origin>0</origin>
          <origin>0</origin>
-         <size>2560</size>
-         <size>1600</size>
+         <size>2048</size>
+         <size>1280</size>
          <pipe>4</pipe>
          <frame_buffer_config>
             <opengl_frame_buffer_config name="GL Frame Buffer" version="3">
@@ -317,8 +317,8 @@
       <display_window name="Computer 1 - Row 3 Col 2" version="5">
          <origin>0</origin>
          <origin>0</origin>
-         <size>2560</size>
-         <size>1600</size>
+         <size>2048</size>
+         <size>1280</size>
          <pipe>5</pipe>
          <frame_buffer_config>
             <opengl_frame_buffer_config name="GL Frame Buffer" version="3">
@@ -377,8 +377,8 @@
       <display_window name="Computer 1 - Row 4 Col 1" version="5">
          <origin>0</origin>
          <origin>0</origin>
-         <size>2560</size>
-         <size>1600</size>
+         <size>2048</size>
+         <size>1280</size>
          <pipe>6</pipe>
          <frame_buffer_config>
             <opengl_frame_buffer_config name="GL Frame Buffer" version="3">
@@ -437,8 +437,8 @@
       <display_window name="Computer 1 - Row 4 Col 2" version="5">
          <origin>0</origin>
          <origin>0</origin>
-         <size>2560</size>
-         <size>1600</size>
+         <size>2048</size>
+         <size>1280</size>
          <pipe>7</pipe>
          <frame_buffer_config>
             <opengl_frame_buffer_config name="GL Frame Buffer" version="3">
