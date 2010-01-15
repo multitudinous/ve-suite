@@ -1,49 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?org-vrjuggler-jccl-settings configuration.version="3.0"?>
-<configuration xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" name="Configuration" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration.xsd">
+<configuration xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Configuration" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration.xsd">
    <elements>
       <cluster_node name="the-wall" version="1">
          <display_system>
             <display_system name="Display System" version="3">
                <number_of_pipes>8</number_of_pipes>
                <pipes>0</pipes>
-               <pipes>1</pipes>
-               <pipes>2</pipes>
-               <pipes>3</pipes>
-               <pipes>4</pipes>
                <pipes>5</pipes>
                <pipes>6</pipes>
                <pipes>7</pipes>
+               <pipes>1</pipes>
+               <pipes>2</pipes>
+               <pipes>4</pipes>
+               <pipes>3</pipes>
                <use_swap_group>false</use_swap_group>
             </display_system>
          </display_system>
          <display_windows>
-            <display_window name="Computer 1 - Row 1" version="6">
+            <display_window name="Computer 1 - Row 1 Col 1" version="5">
                <origin>0</origin>
                <origin>0</origin>
-               <size>4096</size>
-               <size>1280</size>
+               <size>2560</size>
+               <size>1600</size>
                <pipe>0</pipe>
                <frame_buffer_config>
-                  <opengl_frame_buffer_config name="GL Frame Buffer" version="4">
+                  <opengl_frame_buffer_config name="GL Frame Buffer" version="3">
                      <visual_id>-1</visual_id>
                      <red_size>8</red_size>
                      <green_size>8</green_size>
                      <blue_size>8</blue_size>
                      <alpha_size>8</alpha_size>
                      <auxiliary_buffer_count>0</auxiliary_buffer_count>
-                     <depth_buffer_size>24</depth_buffer_size>
+                     <depth_buffer_size>8</depth_buffer_size>
                      <stencil_buffer_size>1</stencil_buffer_size>
                      <accum_red_size>0</accum_red_size>
                      <accum_green_size>0</accum_green_size>
                      <accum_blue_size>0</accum_blue_size>
                      <accum_alpha_size>0</accum_alpha_size>
-                     <num_sample_buffers>1</num_sample_buffers>
-                     <num_samples>2</num_samples>
-                     <use_create_context_attribs>false</use_create_context_attribs>
-                     <gl_context_major_version>3</gl_context_major_version>
-                     <gl_context_minor_version>0</gl_context_minor_version>
-                     <gl_context_flags>0</gl_context_flags>
+                     <num_sample_buffers>0</num_sample_buffers>
+                     <num_samples>1</num_samples>
                   </opengl_frame_buffer_config>
                </frame_buffer_config>
                <stereo>false</stereo>
@@ -56,86 +52,118 @@
                   <surface_viewport name="Row 1 - Column 1" version="2">
                      <origin>0.0</origin>
                      <origin>0.0</origin>
-                     <size>0.5</size>
+                     <size>1.0</size>
                      <size>1.0</size>
                      <view>Left Eye</view>
-                     <lower_left_corner>-2.0447</lower_left_corner>
-                     <lower_left_corner>0.474663</lower_left_corner>
-                     <lower_left_corner>-2.4384</lower_left_corner>
-                     <lower_right_corner>-1.40176</lower_right_corner>
-                     <lower_right_corner>0.474663</lower_right_corner>
-                     <lower_right_corner>-2.4384</lower_right_corner>
-                     <upper_right_corner>-1.40176</upper_right_corner>
-                     <upper_right_corner>0.87789</upper_right_corner>
-                     <upper_right_corner>-2.4384</upper_right_corner>
-                     <upper_left_corner>-2.0447</upper_left_corner>
-                     <upper_left_corner>0.87789</upper_left_corner>
-                     <upper_left_corner>-2.4384</upper_left_corner>
+                     <lower_left_corner>-2.0470</lower_left_corner>
+                     <lower_left_corner>0.4750</lower_left_corner>
+                     <lower_left_corner>-1.8288</lower_left_corner>
+                     <lower_right_corner>-1.4030</lower_right_corner>
+                     <lower_right_corner>0.4750</lower_right_corner>
+                     <lower_right_corner>-1.8288</lower_right_corner>
+                     <upper_right_corner>-1.4030</upper_right_corner>
+                     <upper_right_corner>0.8780</upper_right_corner>
+                     <upper_right_corner>-1.8288</upper_right_corner>
+                     <upper_left_corner>-2.0470</upper_left_corner>
+                     <upper_left_corner>0.8780</upper_left_corner>
+                     <upper_left_corner>-1.8288</upper_left_corner>
                      <user>User1</user>
                      <active>true</active>
                      <tracked>false</tracked>
-                     <tracker_proxy />
-                  </surface_viewport>
-               </surface_viewports>
-               <surface_viewports>
-                  <surface_viewport name="Row 1 - Column 2" version="2">
-                     <origin>0.5</origin>
-                     <origin>0.0</origin>
-                     <size>0.5</size>
-                     <size>1.0</size>
-                     <view>Left Eye</view>
-                     <lower_left_corner>-1.35573</lower_left_corner>
-                     <lower_left_corner>0.474663</lower_left_corner>
-                     <lower_left_corner>-2.4384</lower_left_corner>
-                     <lower_right_corner>-0.712788</lower_right_corner>
-                     <lower_right_corner>0.474663</lower_right_corner>
-                     <lower_right_corner>-2.4384</lower_right_corner>
-                     <upper_right_corner>-0.712788</upper_right_corner>
-                     <upper_right_corner>0.87789</upper_right_corner>
-                     <upper_right_corner>-2.4384</upper_right_corner>
-                     <upper_left_corner>-1.35573</upper_left_corner>
-                     <upper_left_corner>0.87789</upper_left_corner>
-                     <upper_left_corner>-2.4384</upper_left_corner>
-                     <user>User1</user>
-                     <active>true</active>
-                     <tracked>false</tracked>
-                     <tracker_proxy />
+                     <tracker_proxy/>
                   </surface_viewport>
                </surface_viewports>
                <keyboard_mouse_device_name>Keyboard KM Dev</keyboard_mouse_device_name>
-               <allow_mouse_locking>true</allow_mouse_locking>
                <lock_key>KEY_NONE</lock_key>
                <start_locked>false</start_locked>
                <sleep_time>23</sleep_time>
             </display_window>
          </display_windows>
          <display_windows>
-            <display_window name="Computer 1 - Row 2" version="6">
+            <display_window name="Computer 1 - Row 1 Col 2" version="5">
                <origin>0</origin>
                <origin>0</origin>
-               <size>4096</size>
-               <size>1280</size>
-               <pipe>6</pipe>
+               <size>2560</size>
+               <size>1600</size>
+               <pipe>1</pipe>
                <frame_buffer_config>
-                  <opengl_frame_buffer_config name="GL Frame Buffer" version="4">
+                  <opengl_frame_buffer_config name="GL Frame Buffer" version="3">
                      <visual_id>-1</visual_id>
                      <red_size>8</red_size>
                      <green_size>8</green_size>
                      <blue_size>8</blue_size>
                      <alpha_size>8</alpha_size>
                      <auxiliary_buffer_count>0</auxiliary_buffer_count>
-                     <depth_buffer_size>24</depth_buffer_size>
+                     <depth_buffer_size>8</depth_buffer_size>
                      <stencil_buffer_size>1</stencil_buffer_size>
                      <accum_red_size>0</accum_red_size>
                      <accum_green_size>0</accum_green_size>
                      <accum_blue_size>0</accum_blue_size>
                      <accum_alpha_size>0</accum_alpha_size>
-                     <num_sample_buffers>1</num_sample_buffers>
-                     <num_samples>2</num_samples>
-                     <use_create_context_attribs>false</use_create_context_attribs>
-                     <gl_context_major_version>3</gl_context_major_version>
-                     <gl_context_minor_version>0</gl_context_minor_version>
-                     <gl_context_flags>0</gl_context_flags>
+                     <num_sample_buffers>0</num_sample_buffers>
+                     <num_samples>1</num_samples>
+                  </opengl_frame_buffer_config>
+               </frame_buffer_config>
+               <stereo>false</stereo>
+               <border>false</border>
+               <hide_mouse>false</hide_mouse>
+               <full_screen>false</full_screen>
+               <always_on_top>false</always_on_top>
+               <active>true</active>
+               <surface_viewports>
+                  <surface_viewport name="Row 1 - Column 2" version="2">
+                     <origin>0.0</origin>
+                     <origin>0.0</origin>
+                     <size>1.0</size>
+                     <size>1.0</size>
+                     <view>Left Eye</view>
+                     <lower_left_corner>-1.357</lower_left_corner>
+                     <lower_left_corner>0.4750</lower_left_corner>
+                     <lower_left_corner>-1.8288</lower_left_corner>
+                     <lower_right_corner>-0.713</lower_right_corner>
+                     <lower_right_corner>0.4750</lower_right_corner>
+                     <lower_right_corner>-1.8288</lower_right_corner>
+                     <upper_right_corner>-0.7130</upper_right_corner>
+                     <upper_right_corner>0.8780</upper_right_corner>
+                     <upper_right_corner>-1.8288</upper_right_corner>
+                     <upper_left_corner>-1.3570</upper_left_corner>
+                     <upper_left_corner>0.8780</upper_left_corner>
+                     <upper_left_corner>-1.8288</upper_left_corner>
+                     <user>User1</user>
+                     <active>true</active>
+                     <tracked>false</tracked>
+                     <tracker_proxy/>
+                  </surface_viewport>
+               </surface_viewports>
+               <keyboard_mouse_device_name>Keyboard KM Dev</keyboard_mouse_device_name>
+               <lock_key>KEY_NONE</lock_key>
+               <start_locked>false</start_locked>
+               <sleep_time>23</sleep_time>
+            </display_window>
+         </display_windows>
+         <display_windows>
+            <display_window name="Computer 1 - Row 2 Col 1" version="5">
+               <origin>0</origin>
+               <origin>0</origin>
+               <size>2560</size>
+               <size>1600</size>
+               <pipe>2</pipe>
+               <frame_buffer_config>
+                  <opengl_frame_buffer_config name="GL Frame Buffer" version="3">
+                     <visual_id>-1</visual_id>
+                     <red_size>8</red_size>
+                     <green_size>8</green_size>
+                     <blue_size>8</blue_size>
+                     <alpha_size>8</alpha_size>
+                     <auxiliary_buffer_count>0</auxiliary_buffer_count>
+                     <depth_buffer_size>8</depth_buffer_size>
+                     <stencil_buffer_size>1</stencil_buffer_size>
+                     <accum_red_size>0</accum_red_size>
+                     <accum_green_size>0</accum_green_size>
+                     <accum_blue_size>0</accum_blue_size>
+                     <accum_alpha_size>0</accum_alpha_size>
+                     <num_sample_buffers>0</num_sample_buffers>
+                     <num_samples>1</num_samples>
                   </opengl_frame_buffer_config>
                </frame_buffer_config>
                <stereo>false</stereo>
@@ -148,86 +176,118 @@
                   <surface_viewport name="Row 2 - Column 1" version="2">
                      <origin>0.0</origin>
                      <origin>0.0</origin>
-                     <size>0.5</size>
+                     <size>1.0</size>
                      <size>1.0</size>
                      <view>Left Eye</view>
-                     <lower_left_corner>-2.0447</lower_left_corner>
-                     <lower_left_corner>0.93863</lower_left_corner>
-                     <lower_left_corner>-2.4384</lower_left_corner>
-                     <lower_right_corner>-1.40176</lower_right_corner>
-                     <lower_right_corner>0.931863</lower_right_corner>
-                     <lower_right_corner>-2.4384</lower_right_corner>
-                     <upper_right_corner>-1.40176</upper_right_corner>
-                     <upper_right_corner>1.33509</upper_right_corner>
-                     <upper_right_corner>-2.4384</upper_right_corner>
-                     <upper_left_corner>-2.0447</upper_left_corner>
-                     <upper_left_corner>1.33509</upper_left_corner>
-                     <upper_left_corner>-2.4384</upper_left_corner>
+                     <lower_left_corner>-2.0470</lower_left_corner>
+                     <lower_left_corner>0.9330</lower_left_corner>
+                     <lower_left_corner>-1.8288</lower_left_corner>
+                     <lower_right_corner>-1.4030</lower_right_corner>
+                     <lower_right_corner>0.9330</lower_right_corner>
+                     <lower_right_corner>-1.8288</lower_right_corner>
+                     <upper_right_corner>-1.4030</upper_right_corner>
+                     <upper_right_corner>1.3360</upper_right_corner>
+                     <upper_right_corner>-1.8288</upper_right_corner>
+                     <upper_left_corner>-2.0470</upper_left_corner>
+                     <upper_left_corner>1.3360</upper_left_corner>
+                     <upper_left_corner>-1.8288</upper_left_corner>
                      <user>User1</user>
                      <active>true</active>
                      <tracked>false</tracked>
-                     <tracker_proxy />
-                  </surface_viewport>
-               </surface_viewports>
-               <surface_viewports>
-                  <surface_viewport name="Row 2 - Column 2" version="2">
-                     <origin>0.5</origin>
-                     <origin>0.0</origin>
-                     <size>0.5</size>
-                     <size>1.0</size>
-                     <view>Left Eye</view>
-                     <lower_left_corner>-1.35573</lower_left_corner>
-                     <lower_left_corner>0.93863</lower_left_corner>
-                     <lower_left_corner>-2.4384</lower_left_corner>
-                     <lower_right_corner>-0.712788</lower_right_corner>
-                     <lower_right_corner>0.93863</lower_right_corner>
-                     <lower_right_corner>-2.4384</lower_right_corner>
-                     <upper_right_corner>-0.712788</upper_right_corner>
-                     <upper_right_corner>1.33509</upper_right_corner>
-                     <upper_right_corner>-2.4384</upper_right_corner>
-                     <upper_left_corner>-1.35573</upper_left_corner>
-                     <upper_left_corner>1.33509</upper_left_corner>
-                     <upper_left_corner>-2.4384</upper_left_corner>
-                     <user>User1</user>
-                     <active>true</active>
-                     <tracked>false</tracked>
-                     <tracker_proxy />
+                     <tracker_proxy/>
                   </surface_viewport>
                </surface_viewports>
                <keyboard_mouse_device_name>Keyboard KM Dev</keyboard_mouse_device_name>
-               <allow_mouse_locking>true</allow_mouse_locking>
                <lock_key>KEY_NONE</lock_key>
                <start_locked>false</start_locked>
                <sleep_time>23</sleep_time>
             </display_window>
          </display_windows>
          <display_windows>
-            <display_window name="Computer 1 - Row 3" version="6">
+            <display_window name="Computer 1 - Row 2 Col 2" version="5">
                <origin>0</origin>
                <origin>0</origin>
-               <size>4096</size>
-               <size>1280</size>
-               <pipe>2</pipe>
+               <size>2560</size>
+               <size>1600</size>
+               <pipe>3</pipe>
                <frame_buffer_config>
-                  <opengl_frame_buffer_config name="GL Frame Buffer" version="4">
+                  <opengl_frame_buffer_config name="GL Frame Buffer" version="3">
                      <visual_id>-1</visual_id>
                      <red_size>8</red_size>
                      <green_size>8</green_size>
                      <blue_size>8</blue_size>
                      <alpha_size>8</alpha_size>
                      <auxiliary_buffer_count>0</auxiliary_buffer_count>
-                     <depth_buffer_size>24</depth_buffer_size>
+                     <depth_buffer_size>8</depth_buffer_size>
                      <stencil_buffer_size>1</stencil_buffer_size>
                      <accum_red_size>0</accum_red_size>
                      <accum_green_size>0</accum_green_size>
                      <accum_blue_size>0</accum_blue_size>
                      <accum_alpha_size>0</accum_alpha_size>
-                     <num_sample_buffers>1</num_sample_buffers>
-                     <num_samples>2</num_samples>
-                     <use_create_context_attribs>false</use_create_context_attribs>
-                     <gl_context_major_version>3</gl_context_major_version>
-                     <gl_context_minor_version>0</gl_context_minor_version>
-                     <gl_context_flags>0</gl_context_flags>
+                     <num_sample_buffers>0</num_sample_buffers>
+                     <num_samples>1</num_samples>
+                  </opengl_frame_buffer_config>
+               </frame_buffer_config>
+               <stereo>false</stereo>
+               <border>false</border>
+               <hide_mouse>false</hide_mouse>
+               <full_screen>false</full_screen>
+               <always_on_top>false</always_on_top>
+               <active>true</active>
+               <surface_viewports>
+                  <surface_viewport name="Row 2 - Column 2" version="2">
+                     <origin>0.0</origin>
+                     <origin>0.0</origin>
+                     <size>1.0</size>
+                     <size>1.0</size>
+                     <view>Left Eye</view>
+                     <lower_left_corner>-1.3570</lower_left_corner>
+                     <lower_left_corner>0.9330</lower_left_corner>
+                     <lower_left_corner>-1.8288</lower_left_corner>
+                     <lower_right_corner>-0.7130</lower_right_corner>
+                     <lower_right_corner>0.9330</lower_right_corner>
+                     <lower_right_corner>-1.8288</lower_right_corner>
+                     <upper_right_corner>-0.7130</upper_right_corner>
+                     <upper_right_corner>1.3360</upper_right_corner>
+                     <upper_right_corner>-1.8288</upper_right_corner>
+                     <upper_left_corner>-1.3570</upper_left_corner>
+                     <upper_left_corner>1.3360</upper_left_corner>
+                     <upper_left_corner>-1.8288</upper_left_corner>
+                     <user>User1</user>
+                     <active>true</active>
+                     <tracked>false</tracked>
+                     <tracker_proxy/>
+                  </surface_viewport>
+               </surface_viewports>
+               <keyboard_mouse_device_name>Keyboard KM Dev</keyboard_mouse_device_name>
+               <lock_key>KEY_NONE</lock_key>
+               <start_locked>false</start_locked>
+               <sleep_time>23</sleep_time>
+            </display_window>
+         </display_windows>
+         <display_windows>
+            <display_window name="Computer 1 - Row 3 Col 1" version="5">
+               <origin>0</origin>
+               <origin>0</origin>
+               <size>2560</size>
+               <size>1600</size>
+               <pipe>4</pipe>
+               <frame_buffer_config>
+                  <opengl_frame_buffer_config name="GL Frame Buffer" version="3">
+                     <visual_id>-1</visual_id>
+                     <red_size>8</red_size>
+                     <green_size>8</green_size>
+                     <blue_size>8</blue_size>
+                     <alpha_size>8</alpha_size>
+                     <auxiliary_buffer_count>0</auxiliary_buffer_count>
+                     <depth_buffer_size>8</depth_buffer_size>
+                     <stencil_buffer_size>1</stencil_buffer_size>
+                     <accum_red_size>0</accum_red_size>
+                     <accum_green_size>0</accum_green_size>
+                     <accum_blue_size>0</accum_blue_size>
+                     <accum_alpha_size>0</accum_alpha_size>
+                     <num_sample_buffers>0</num_sample_buffers>
+                     <num_samples>1</num_samples>
                   </opengl_frame_buffer_config>
                </frame_buffer_config>
                <stereo>false</stereo>
@@ -240,86 +300,118 @@
                   <surface_viewport name="Row 3 - Column 1" version="2">
                      <origin>0.0</origin>
                      <origin>0.0</origin>
-                     <size>0.5</size>
+                     <size>1.0</size>
                      <size>1.0</size>
                      <view>Left Eye</view>
-                     <lower_left_corner>-2.0447</lower_left_corner>
-                     <lower_left_corner>1.38906</lower_left_corner>
-                     <lower_left_corner>-2.4384</lower_left_corner>
-                     <lower_right_corner>-1.40176</lower_right_corner>
-                     <lower_right_corner>1.38906</lower_right_corner>
-                     <lower_right_corner>-2.4384</lower_right_corner>
-                     <upper_right_corner>-1.40176</upper_right_corner>
-                     <upper_right_corner>1.79229</upper_right_corner>
-                     <upper_right_corner>-2.4384</upper_right_corner>
-                     <upper_left_corner>-2.0447</upper_left_corner>
-                     <upper_left_corner>1.79229</upper_left_corner>
-                     <upper_left_corner>-2.4384</upper_left_corner>
+                     <lower_left_corner>-2.0470</lower_left_corner>
+                     <lower_left_corner>1.3910</lower_left_corner>
+                     <lower_left_corner>-1.8288</lower_left_corner>
+                     <lower_right_corner>-1.4030</lower_right_corner>
+                     <lower_right_corner>1.3910</lower_right_corner>
+                     <lower_right_corner>-1.8288</lower_right_corner>
+                     <upper_right_corner>-1.4030</upper_right_corner>
+                     <upper_right_corner>1.7940</upper_right_corner>
+                     <upper_right_corner>-1.8288</upper_right_corner>
+                     <upper_left_corner>-2.0470</upper_left_corner>
+                     <upper_left_corner>1.7940</upper_left_corner>
+                     <upper_left_corner>-1.8288</upper_left_corner>
                      <user>User1</user>
                      <active>true</active>
                      <tracked>false</tracked>
-                     <tracker_proxy />
-                  </surface_viewport>
-               </surface_viewports>
-               <surface_viewports>
-                  <surface_viewport name="Row 3 - Column 2" version="2">
-                     <origin>0.5</origin>
-                     <origin>0.0</origin>
-                     <size>0.5</size>
-                     <size>1.0</size>
-                     <view>Left Eye</view>
-                     <lower_left_corner>-1.35573</lower_left_corner>
-                     <lower_left_corner>1.38906</lower_left_corner>
-                     <lower_left_corner>-2.4384</lower_left_corner>
-                     <lower_right_corner>-0.712788</lower_right_corner>
-                     <lower_right_corner>1.38906</lower_right_corner>
-                     <lower_right_corner>-2.4384</lower_right_corner>
-                     <upper_right_corner>-0.712788</upper_right_corner>
-                     <upper_right_corner>1.79229</upper_right_corner>
-                     <upper_right_corner>-2.4384</upper_right_corner>
-                     <upper_left_corner>-1.35573</upper_left_corner>
-                     <upper_left_corner>1.79229</upper_left_corner>
-                     <upper_left_corner>-2.4384</upper_left_corner>
-                     <user>User1</user>
-                     <active>true</active>
-                     <tracked>false</tracked>
-                     <tracker_proxy />
+                     <tracker_proxy/>
                   </surface_viewport>
                </surface_viewports>
                <keyboard_mouse_device_name>Keyboard KM Dev</keyboard_mouse_device_name>
-               <allow_mouse_locking>true</allow_mouse_locking>
                <lock_key>KEY_NONE</lock_key>
                <start_locked>false</start_locked>
                <sleep_time>23</sleep_time>
             </display_window>
          </display_windows>
          <display_windows>
-            <display_window name="Computer 1 - Row 4" version="6">
+            <display_window name="Computer 1 - Row 3 Col 2" version="5">
                <origin>0</origin>
                <origin>0</origin>
-               <size>4096</size>
-               <size>1280</size>
-               <pipe>4</pipe>
+               <size>2560</size>
+               <size>1600</size>
+               <pipe>5</pipe>
                <frame_buffer_config>
-                  <opengl_frame_buffer_config name="GL Frame Buffer" version="4">
+                  <opengl_frame_buffer_config name="GL Frame Buffer" version="3">
                      <visual_id>-1</visual_id>
                      <red_size>8</red_size>
                      <green_size>8</green_size>
                      <blue_size>8</blue_size>
                      <alpha_size>8</alpha_size>
                      <auxiliary_buffer_count>0</auxiliary_buffer_count>
-                     <depth_buffer_size>24</depth_buffer_size>
+                     <depth_buffer_size>8</depth_buffer_size>
                      <stencil_buffer_size>1</stencil_buffer_size>
                      <accum_red_size>0</accum_red_size>
                      <accum_green_size>0</accum_green_size>
                      <accum_blue_size>0</accum_blue_size>
                      <accum_alpha_size>0</accum_alpha_size>
-                     <num_sample_buffers>1</num_sample_buffers>
-                     <num_samples>2</num_samples>
-                     <use_create_context_attribs>false</use_create_context_attribs>
-                     <gl_context_major_version>3</gl_context_major_version>
-                     <gl_context_minor_version>0</gl_context_minor_version>
-                     <gl_context_flags>0</gl_context_flags>
+                     <num_sample_buffers>0</num_sample_buffers>
+                     <num_samples>1</num_samples>
+                  </opengl_frame_buffer_config>
+               </frame_buffer_config>
+               <stereo>false</stereo>
+               <border>false</border>
+               <hide_mouse>false</hide_mouse>
+               <full_screen>false</full_screen>
+               <always_on_top>false</always_on_top>
+               <active>true</active>
+               <surface_viewports>
+                  <surface_viewport name="Row 3 - Column 2" version="2">
+                     <origin>0.0</origin>
+                     <origin>0.0</origin>
+                     <size>1.0</size>
+                     <size>1.0</size>
+                     <view>Left Eye</view>
+                     <lower_left_corner>-1.3570</lower_left_corner>
+                     <lower_left_corner>1.3910</lower_left_corner>
+                     <lower_left_corner>-1.8288</lower_left_corner>
+                     <lower_right_corner>-0.7130</lower_right_corner>
+                     <lower_right_corner>1.3910</lower_right_corner>
+                     <lower_right_corner>-1.8288</lower_right_corner>
+                     <upper_right_corner>-0.7130</upper_right_corner>
+                     <upper_right_corner>1.7940</upper_right_corner>
+                     <upper_right_corner>-1.8288</upper_right_corner>
+                     <upper_left_corner>-1.3570</upper_left_corner>
+                     <upper_left_corner>1.7940</upper_left_corner>
+                     <upper_left_corner>-1.8288</upper_left_corner>
+                     <user>User1</user>
+                     <active>true</active>
+                     <tracked>false</tracked>
+                     <tracker_proxy/>
+                  </surface_viewport>
+               </surface_viewports>
+               <keyboard_mouse_device_name>Keyboard KM Dev</keyboard_mouse_device_name>
+               <lock_key>KEY_NONE</lock_key>
+               <start_locked>false</start_locked>
+               <sleep_time>23</sleep_time>
+            </display_window>
+         </display_windows>
+         <display_windows>
+            <display_window name="Computer 1 - Row 4 Col 1" version="5">
+               <origin>0</origin>
+               <origin>0</origin>
+               <size>2560</size>
+               <size>1600</size>
+               <pipe>6</pipe>
+               <frame_buffer_config>
+                  <opengl_frame_buffer_config name="GL Frame Buffer" version="3">
+                     <visual_id>-1</visual_id>
+                     <red_size>8</red_size>
+                     <green_size>8</green_size>
+                     <blue_size>8</blue_size>
+                     <alpha_size>8</alpha_size>
+                     <auxiliary_buffer_count>0</auxiliary_buffer_count>
+                     <depth_buffer_size>8</depth_buffer_size>
+                     <stencil_buffer_size>1</stencil_buffer_size>
+                     <accum_red_size>0</accum_red_size>
+                     <accum_green_size>0</accum_green_size>
+                     <accum_blue_size>0</accum_blue_size>
+                     <accum_alpha_size>0</accum_alpha_size>
+                     <num_sample_buffers>0</num_sample_buffers>
+                     <num_samples>1</num_samples>
                   </opengl_frame_buffer_config>
                </frame_buffer_config>
                <stereo>false</stereo>
@@ -332,54 +424,90 @@
                   <surface_viewport name="Row 4 - Column 1" version="2">
                      <origin>0.0</origin>
                      <origin>0.0</origin>
-                     <size>0.5</size>
+                     <size>1.0</size>
                      <size>1.0</size>
                      <view>Left Eye</view>
-                     <lower_left_corner>-2.0447</lower_left_corner>
-                     <lower_left_corner>1.84626</lower_left_corner>
-                     <lower_left_corner>-2.4384</lower_left_corner>
-                     <lower_right_corner>-1.40176</lower_right_corner>
-                     <lower_right_corner>1.84626</lower_right_corner>
-                     <lower_right_corner>-2.4384</lower_right_corner>
-                     <upper_right_corner>-1.40176</upper_right_corner>
-                     <upper_right_corner>2.24949</upper_right_corner>
-                     <upper_right_corner>-2.4384</upper_right_corner>
-                     <upper_left_corner>-2.0447</upper_left_corner>
-                     <upper_left_corner>2.24949</upper_left_corner>
-                     <upper_left_corner>-2.4384</upper_left_corner>
+                     <lower_left_corner>-2.0470</lower_left_corner>
+                     <lower_left_corner>1.8490</lower_left_corner>
+                     <lower_left_corner>-1.8288</lower_left_corner>
+                     <lower_right_corner>-1.4030</lower_right_corner>
+                     <lower_right_corner>1.8490</lower_right_corner>
+                     <lower_right_corner>-1.8288</lower_right_corner>
+                     <upper_right_corner>-1.4030</upper_right_corner>
+                     <upper_right_corner>2.2520</upper_right_corner>
+                     <upper_right_corner>-1.8288</upper_right_corner>
+                     <upper_left_corner>-2.0470</upper_left_corner>
+                     <upper_left_corner>2.2520</upper_left_corner>
+                     <upper_left_corner>-1.8288</upper_left_corner>
                      <user>User1</user>
                      <active>true</active>
                      <tracked>false</tracked>
-                     <tracker_proxy />
-                  </surface_viewport>
-               </surface_viewports>
-               <surface_viewports>
-                  <surface_viewport name="Row 4 - Column 2" version="2">
-                     <origin>0.5</origin>
-                     <origin>0.0</origin>
-                     <size>0.5</size>
-                     <size>1.0</size>
-                     <view>Left Eye</view>
-                     <lower_left_corner>-1.35573</lower_left_corner>
-                     <lower_left_corner>1.84626</lower_left_corner>
-                     <lower_left_corner>-2.4384</lower_left_corner>
-                     <lower_right_corner>-0.712788</lower_right_corner>
-                     <lower_right_corner>1.84626</lower_right_corner>
-                     <lower_right_corner>-2.4384</lower_right_corner>
-                     <upper_right_corner>-0.712788</upper_right_corner>
-                     <upper_right_corner>2.24949</upper_right_corner>
-                     <upper_right_corner>-2.4384</upper_right_corner>
-                     <upper_left_corner>-1.35573</upper_left_corner>
-                     <upper_left_corner>2.24949</upper_left_corner>
-                     <upper_left_corner>-2.4384</upper_left_corner>
-                     <user>User1</user>
-                     <active>true</active>
-                     <tracked>false</tracked>
-                     <tracker_proxy />
+                     <tracker_proxy/>
                   </surface_viewport>
                </surface_viewports>
                <keyboard_mouse_device_name>Keyboard KM Dev</keyboard_mouse_device_name>
-               <allow_mouse_locking>true</allow_mouse_locking>
+               <lock_key>KEY_NONE</lock_key>
+               <start_locked>false</start_locked>
+               <sleep_time>23</sleep_time>
+            </display_window>
+         </display_windows>
+         <display_windows>    
+            <display_window name="Computer 1 - Row 4 Col 2" version="5">
+               <origin>0</origin>
+               <origin>0</origin>
+               <size>2560</size>
+               <size>1600</size>
+               <pipe>7</pipe>
+               <frame_buffer_config>
+                  <opengl_frame_buffer_config name="GL Frame Buffer" version="3">
+                     <visual_id>-1</visual_id>
+                     <red_size>8</red_size>
+                     <green_size>8</green_size>
+                     <blue_size>8</blue_size>
+                     <alpha_size>8</alpha_size>
+                     <auxiliary_buffer_count>0</auxiliary_buffer_count>
+                     <depth_buffer_size>8</depth_buffer_size>
+                     <stencil_buffer_size>1</stencil_buffer_size>
+                     <accum_red_size>0</accum_red_size>
+                     <accum_green_size>0</accum_green_size>
+                     <accum_blue_size>0</accum_blue_size>
+                     <accum_alpha_size>0</accum_alpha_size>
+                     <num_sample_buffers>0</num_sample_buffers>
+                     <num_samples>1</num_samples>
+                  </opengl_frame_buffer_config>
+               </frame_buffer_config>
+               <stereo>false</stereo>
+               <border>false</border>
+               <hide_mouse>false</hide_mouse>
+               <full_screen>false</full_screen>
+               <always_on_top>false</always_on_top>
+               <active>true</active>
+               <surface_viewports>
+                  <surface_viewport name="Row 4 - Column 2" version="2">
+                     <origin>0.0</origin>
+                     <origin>0.0</origin>
+                     <size>1.0</size>
+                     <size>1.0</size>
+                     <view>Left Eye</view>
+                     <lower_left_corner>-1.3570</lower_left_corner>
+                     <lower_left_corner>1.8490</lower_left_corner>
+                     <lower_left_corner>-1.8288</lower_left_corner>
+                     <lower_right_corner>-0.7130</lower_right_corner>
+                     <lower_right_corner>1.8490</lower_right_corner>
+                     <lower_right_corner>-1.8288</lower_right_corner>
+                     <upper_right_corner>-0.7130</upper_right_corner>
+                     <upper_right_corner>2.2520</upper_right_corner>
+                     <upper_right_corner>-1.8288</upper_right_corner>
+                     <upper_left_corner>-1.3570</upper_left_corner>
+                     <upper_left_corner>2.2520</upper_left_corner>
+                     <upper_left_corner>-1.8288</upper_left_corner>
+                     <user>User1</user>
+                     <active>true</active>
+                     <tracked>false</tracked>
+                     <tracker_proxy/>
+                  </surface_viewport>
+               </surface_viewports>
+               <keyboard_mouse_device_name>Keyboard KM Dev</keyboard_mouse_device_name>
                <lock_key>KEY_NONE</lock_key>
                <start_locked>false</start_locked>
                <sleep_time>23</sleep_time>
@@ -390,4 +518,3 @@
       </cluster_node>
    </elements>
 </configuration>
-
