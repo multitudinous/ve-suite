@@ -41,6 +41,7 @@
 
 #include <ves/conductor/xpm/AspenPlus2DIcons/sim.xpm>
 #include <ves/conductor/UserPreferencesDataBuffer.h>
+#include <ves/conductor/DynamicsDataBuffer.h>
 #include <ves/conductor/XMLDataBufferEngine.h>
 #include <ves/conductor/Network.h>
 #include <ves/conductor/Module.h>
@@ -73,7 +74,8 @@ BEGIN_EVENT_TABLE( SDPlugin, ves::conductor::UIPluginBase )
     EVT_MENU( SDPLUGIN_SAVE_SIMULATION, SDPlugin::SaveSimulation )
     EVT_MENU( SDPLUGIN_SAVEAS_SIMULATION, SDPlugin::SaveAsSimulation )
     EVT_MENU( SDPLUGIN_CREATE_OPC_LIST, SDPlugin::OnCreateOPCList )
-	EVT_MENU( SDPLUGIN_MONITOR, SDPlugin::OnMonitor )
+	EVT_MENU( SDPLUGIN_CONNECT, SDPlugin::OnConnect )
+	EVT_TIMER( SDPLUGIN_TIMER_ID, SDPlugin::OnTimer )
 END_EVENT_TABLE()
 
 IMPLEMENT_DYNAMIC_CLASS( SDPlugin, ves::conductor::UIPluginBase )
@@ -91,6 +93,8 @@ SDPlugin::SDPlugin() :
     iconFilename = "sim";
     wxImage my_img( sim );
     SetImage( my_img );
+
+	m_timer = new wxTimer( this, SDPLUGIN_TIMER_ID );
 }
 ////////////////////////////////////////////////////////////////////////////////
 SDPlugin::~SDPlugin()
@@ -567,12 +571,12 @@ wxMenu* SDPlugin::GetPluginPopupMenu( wxMenu* baseMenu )
 
     mAspenMenu = new wxMenu();
     mAspenMenu->Append( SDPLUGIN_OPEN_SIM, _( "Open" ) );
-        mAspenMenu->Enable( SDPLUGIN_OPEN_SIM, true );
+    mAspenMenu->Enable( SDPLUGIN_OPEN_SIM, true );
     //mAspenMenu->Append( SDPLUGIN_CLOSE_ASPEN_SIMULATION, _( "Close" ) );
     mAspenMenu->Append( SDPLUGIN_CREATE_OPC_LIST, _( "Create List") );
     mAspenMenu->Enable( SDPLUGIN_CREATE_OPC_LIST, true );
-    mAspenMenu->Append( SDPLUGIN_MONITOR, _( "Start Monitor") );
-    mAspenMenu->Enable( SDPLUGIN_MONITOR, true );
+    mAspenMenu->Append( SDPLUGIN_CONNECT, _( "Connect to OPC") );
+    mAspenMenu->Enable( SDPLUGIN_CONNECT, true );
     mAspenMenu->Append( SDPLUGIN_DISCONNECT_ASPEN_SIMULATION, _( "Disconnect" ) );
     mAspenMenu->Append( SDPLUGIN_SHOW_ASPEN_SIMULATION, _( "Show" ) );
     mAspenMenu->Append( SDPLUGIN_HIDE_ASPEN_SIMULATION, _( "Hide" ) );
@@ -626,40 +630,11 @@ void SDPlugin::OnCreateOPCList( wxCommandEvent& event )
 	opcDlg->ShowModal();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void SDPlugin::OnMonitor( wxCommandEvent& event )
+void SDPlugin::OnConnect( wxCommandEvent& event )
 {
     std::string compName = GetVEModel()->GetPluginName();
-    //compName = "Data.Blocks." + compName;
-
-    //ves::open::xml::CommandPtr monitor( new ves::open::xml::Command() );
-    //monitor->SetCommandName( "monitorValues" );
-    
-	/*ves::open::xml::DataValuePairPtr variables[ m_selectedOpcList->size( ) ];
-    for (int i = 0; i < m_selectedOpcList->size( ); i++)
-    {
-        variables[i] = ves::open::xml::DataValuePairPtr( new ves::open::xml::DataValuePair() );
-        variables[i]->SetDataType("STRING");
-		variables[i]->SetDataName("Name");
-		variables[i]->SetDataString( m_selectedOpcList->c_str( ) );
-        monitor->AddDataValuePair( variables[i] );
-    }
-
-	//ves::open::xml::DataValuePairPtr data( new ves::open::xml::DataValuePair() );
-    //data->SetData( std::string( "ModuleName" ), compName );
-    //returnState->AddDataValuePair( data );
-
-
-    std::vector< std::pair< XMLObjectPtr, std::string > > nodes;
-    nodes.push_back( std::pair< XMLObjectPtr, std::string >( returnState, "vecommand" ) );
-
-    XMLReaderWriter commandWriter;
-    std::string status = "returnString";
-    commandWriter.UseStandaloneDOMDocumentManager();
-    commandWriter.WriteXMLDocument( nodes, status, "Command" );
-	*/
-	
 	ves::open::xml::CommandPtr monitor( new ves::open::xml::Command() );
-    monitor->SetCommandName("monitorValues");
+    monitor->SetCommandName("connectWithList");
 
     ves::open::xml::DataValuePairPtr
         variables( new ves::open::xml::DataValuePair() );
@@ -676,7 +651,9 @@ void SDPlugin::OnMonitor( wxCommandEvent& event )
     commandWriter.UseStandaloneDOMDocumentManager();
     commandWriter.WriteXMLDocument( nodes, status, "Command" );
 
-    std::string nw_str = serviceList->Query( status );
+	std::string nw_str = serviceList->Query( status );
+
+	m_timer->Start( 4000 );
 }
 
 std::vector< std::string > SDPlugin::GetAvailableVariables()
@@ -692,4 +669,13 @@ std::vector< std::string > SDPlugin::GetSelectVariables()
 void SDPlugin::SetSelectVariables( std::vector< std::string> selectedVariables )
 {
 	m_selectedOpcList = selectedVariables;
+}
+
+//this is a temporary function
+//this timer event is used to update the dynamicsdatabuffer
+//this timer event would make more sense in the buffer but is a difficult task
+//in the end the buffer will be filled in another fashion
+void SDPlugin::OnTimer( wxTimerEvent& event )
+{
+	DynamicsDataBuffer::instance()->Update();
 }

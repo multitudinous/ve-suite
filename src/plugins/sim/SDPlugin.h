@@ -74,11 +74,13 @@ protected:
     void OnDisconnectAspenSimulation( wxCommandEvent& event );
     bool IsBKPOpen();
 	void OnCreateOPCList( wxCommandEvent& event );
-	void OnMonitor( wxCommandEvent& event );
+	void OnConnect( wxCommandEvent& event );
+	void OnTimer( wxTimerEvent& event );
     wxMenu* mAspenMenu;
 	std::vector< std::string > m_opcList;
 	std::vector< std::string > m_selectedOpcList;
 	//wxArrayString *m_selectedOpcList;
+	wxTimer * m_timer;
 
     DECLARE_EVENT_TABLE()
 };

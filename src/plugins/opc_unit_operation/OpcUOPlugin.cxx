@@ -33,10 +33,11 @@
 #include <ves/conductor/util/CORBAServiceList.h>
 
 #include "OpcUOPlugin.h"
-#include <plugins/ConductorPluginEnums.h>
-#include <ves/conductor/ConductorLibEnums.h>
 #include "OpcUOVarDialog.h"
 #include "DynamicDataDlg.h"
+#include <plugins/ConductorPluginEnums.h>
+#include <ves/conductor/ConductorLibEnums.h>
+#include <ves/conductor/DynamicsDataBuffer.h>
 
 #include <ves/conductor/xpm/square.xpm>
 
@@ -50,7 +51,7 @@ using namespace ves::conductor::util;
 BEGIN_EVENT_TABLE( OpcUOPlugin, UIPluginBase )
     EVT_MENU( OPCUOPLUGIN_SHOW_VALUE, OpcUOPlugin::OnShowValue )
 	EVT_TIMER( OPCUOPLUGIN_TIMER_ID, OpcUOPlugin::OnTimer )
-	EVT_MENU( OPCUOPLUGIN_START_TIMER, OpcUOPlugin::StartTimer )
+	//EVT_MENU( OPCUOPLUGIN_START_TIMER, OpcUOPlugin::StartTimer )
 	EVT_MENU( OPCUOPLUGIN_STOP_TIMER, OpcUOPlugin::StopTimer )
 END_EVENT_TABLE()
 
@@ -65,6 +66,8 @@ OpcUOPlugin::OpcUOPlugin() :
     mDescription = wxString( "OPC Unit Operation Plugin", wxConvUTF8 );
     GetVEModel()->SetPluginType( "OpcUOPlugin" );
 	dynValue = "Ready";
+
+	StartTimer( 4000 );
 }
 ////////////////////////////////////////////////////////////////////////////////
 OpcUOPlugin::~OpcUOPlugin()
@@ -156,10 +159,10 @@ wxMenu* OpcUOPlugin::GetPluginPopupMenu( wxMenu* baseMenu )
     mOpcMenu = new wxMenu();
     //mOpcMenu->Append( OPCUOPLUGIN_SHOW_VALUE, _( "Value" ) );
     //mOpcMenu->Enable( OPCUOPLUGIN_SHOW_VALUE, true );
-    mOpcMenu->Append( OPCUOPLUGIN_START_TIMER, _( "Start Timer" ) );
-    mOpcMenu->Enable( OPCUOPLUGIN_START_TIMER, true );
-    mOpcMenu->Append( OPCUOPLUGIN_STOP_TIMER, _( "Stop Timer" ) );
-    mOpcMenu->Enable( OPCUOPLUGIN_STOP_TIMER, true );
+    //mOpcMenu->Append( OPCUOPLUGIN_START_TIMER, _( "Start Timer" ) );
+    //mOpcMenu->Enable( OPCUOPLUGIN_START_TIMER, true );
+    //mOpcMenu->Append( OPCUOPLUGIN_STOP_TIMER, _( "Stop Timer" ) );
+    //mOpcMenu->Enable( OPCUOPLUGIN_STOP_TIMER, true );
     baseMenu->Insert( 0, OPCUOPLUGIN_START_TIMER,   _( "OPC" ), mOpcMenu,
                     _( "Used in conjunction with OPC" ) );
     baseMenu->Enable( OPCUOPLUGIN_SIM_MENU, true );
@@ -188,7 +191,8 @@ void OpcUOPlugin::DrawValue( wxDC* dc )
     dc->DrawText( wxString( dynValue.c_str(), wxConvUTF8 ), int( x - w / 2 + xoff ), pos.y + int( y * 2.5 ) );
 }
 
-void OpcUOPlugin::ReadValue( )
+//this function does a read by querying the unit
+/*void OpcUOPlugin::ReadValue( )
 {
     std::string compName = GetVEModel()->GetPluginName();
     //compName = "Data.Blocks." + compName;
@@ -223,15 +227,33 @@ void OpcUOPlugin::ReadValue( )
     ves::open::xml::DataValuePairPtr pair = cmd->GetDataValuePair( 0 );	
 
     dynValue = pair->GetDataString();
-}
+}*/
 
+//This functions reads by using DynamicsDataBuffer
+void OpcUOPlugin::ReadValue( )
+{	
+	//is it the active network ie is it being drawn
+	if( m_canvas->GetActiveNetworkID() == m_network->GetNetworkID() )
+	{		
+		const CommandPtr opcData =
+			DynamicsDataBuffer::instance()->GetCommand( "OPC_Data" );
+		if( opcData->GetCommandName() == "NULL" )
+		{
+			return;
+		}
+
+		std::string compName = GetVEModel()->GetPluginName();
+		std::string tempData;
+		opcData->GetDataValuePair( compName )->GetData( tempData );
+		dynValue = tempData;
+	}
+}
 
 void OpcUOPlugin::OnTimer( wxTimerEvent& event )
 {
-    //UIPLUGIN_CHECKID( event )
+	//UIPLUGIN_CHECKID( event )
 	ReadValue();
-	//DrawValue( wxDC* dc );
-    m_canvas->Refresh( true );
+	m_canvas->Refresh( true );
 }
 
 void OpcUOPlugin::DrawPlugin( wxDC* dc )
@@ -257,13 +279,13 @@ void OpcUOPlugin::DrawPlugin( wxDC* dc )
 }
 
 
-//void OpcUOPlugin::SetTimer( float msec )
-void OpcUOPlugin::StartTimer( wxCommandEvent& event )
+void OpcUOPlugin::StartTimer( float msec )
+//void OpcUOPlugin::StartTimer( wxCommandEvent& event )
 {
-    UIPLUGIN_CHECKID( event )
+    //UIPLUGIN_CHECKID( event )
 	m_timer = new wxTimer( this, OPCUOPLUGIN_TIMER_ID );
-	m_timer->Start( 4000 );
-	//m_timer->Start(msec);
+	//m_timer->Start( 4000 );
+	m_timer->Start(msec);
 	dynValue = "Initializing";
 }
 

@@ -56,7 +56,8 @@ private:
 	std::string dynValue;
 	void DrawValue( wxDC* dc );
 	void ReadValue( );
-	void StartTimer( wxCommandEvent& event  );
+	//void StartTimer( wxCommandEvent& event  );
+	void StartTimer( float msec  );
 	void StopTimer( wxCommandEvent& event  );
     void OnShowValue( wxCommandEvent& event );
 public:

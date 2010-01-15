@@ -157,6 +157,7 @@ public:
     void OnDeletePlugins( wxUpdateUIEvent& event );
     ///Set the id for this network
     void SetNetworkID( std::string id );
+	std::string GetNetworkID( );
     std::pair< int, int > GetNetworkSize( );
     std::pair< int, int > GetScrollPosition();
     void SetScrollPosition( int x, int y );
