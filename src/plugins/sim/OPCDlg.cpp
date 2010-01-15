@@ -81,7 +81,7 @@ void OPCDlg::OnSaveButton( wxCommandEvent& event )
 	std::vector< std::string > selectedVariables;
 	for(int i = 0; i < m_selectedVariables.GetCount(); i++)
 	{
-		selectedVariables.push_back( m_selectedVariables[i].c_str() );
+		selectedVariables.push_back( std::string(m_selectedVariables[i].mb_str()) );
 	}
 	m_parentPlugin->SetSelectVariables( selectedVariables );
 }
