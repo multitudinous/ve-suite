@@ -6,7 +6,6 @@
 #define MyAppVerName "ACETAO"
 #define MyAppPublisher "VERG"
 #define MyAppURL "www.vesuite.org"
-#define ACETAOSRCHOME "C:\Projects\ves-windows\ACE_wrappers"
 [Setup]
 AppName={#MyAppName}
 AppVerName={#MyAppVerName}_{#MyAppVer}_{#MSVCVERSION}

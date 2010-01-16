@@ -7,7 +7,7 @@
 #define MyAppVerName "VTK"
 #define MyAppPublisher "VERG"
 #define MyAppURL "www.vesuite.org"
-#define VTKSRCHOME "C:\dev\ves_deps\vtk-5.2.0-install"
+
 [Setup]
 AppName={#MyAppName}
 AppVerName={#MyAppVerName}_{#MyAppVer}_{#MSVCVERSION}

@@ -6,8 +6,6 @@
 #define MyAppVerName "VRJuggler"
 #define MyAppPublisher "VERG"
 #define MyAppURL "www.vesuite.org"
-#define VRJUGGLER_INST_LOCATION "C:\dev\ves_deps\vrjuggler-gc-svn\install-win32"
-#define VRJUGGLER_DEPS_INST_LOCATION "C:\dev\ves_deps\vrjuggler-gc-svn\build-win32"
 
 [Setup]
 AppName={#MyAppName}

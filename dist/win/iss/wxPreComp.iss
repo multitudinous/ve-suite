@@ -7,7 +7,7 @@
 #define MyAppVerName "wxWidgets"
 #define MyAppPublisher "Virtual Engineering Research Group, Iowa State University"
 #define MyAppURL "www.vesuite.org"
-#define WXSRCINSTALL "C:\wxWidgets-2.8.10"
+
 [Setup]
 AppName={#MyAppName}
 AppVerName={#MyAppVerName}_{#MyAppVer}_{#MSVCVERSION}

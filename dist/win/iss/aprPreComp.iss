@@ -7,11 +7,6 @@
 #define MyAppVerName "APR"
 #define MyAppPublisher "VERG"
 #define MyAppURL "www.vesuite.org"
-;The directory below contains all each apr, apr-iconv, and apr-util
-;The versioned directories have been copied to be easier to build
-;and less version dependent when running this installer
-#define APRINSTALL "C:\Projects\ves-windows\workapr"
-
 [Setup]
 AppName={#MyAppName}
 AppVerName={#MyAppVerName}_{#MyAppVer}_{#MSVCVERSION}

@@ -6,12 +6,6 @@
 #define MyAppVerName "Minerva"
 #define MyAppPublisher "VERG"
 #define MyAppURL "www.vesuite.org"
-#define MINERVASRCHOME "C:\dev\ves_deps\minerva-gis-svn\install-win32"
-; #define FWTOOLS "C:\Program Files\FWTools2.3.0"
-#define PROJHOME "C:\dev\ves_deps\proj-4.6.1\install-win32"
-#define GDALHOME "C:\dev\ves_deps\gdal-1.6.2\install-win32"
-; #define CURL_HOME "C:\dev\ves_deps\curl-7.19.5\build-win32"
-; #define OSG3RDPARTY "C:\dev\ves_deps\3rdParty\3rdParty_win32binaries_vs80sp1"
 
 [Setup]
 AppName={#MyAppName}

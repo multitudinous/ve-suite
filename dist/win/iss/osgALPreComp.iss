@@ -5,11 +5,6 @@
 #define MyAppVerName "osgAL"
 #define MyAppPublisher "VERG"
 #define MyAppURL "www.vesuite.org"
-#define LIBOGGHOME "C:\dev\ves_deps\osgAL_Test\libvorbis-1.2.0\ogg"
-#define LIBVORBISHOME "C:\dev\ves_deps\osgAL_Test\libvorbis-1.2.0\libvorbis-1.2.0"
-#define OPENALHOME "C:\dev\ves_deps\osgAL_Test"
-#define OSGALHOME "C:\dev\ves_deps\osgAL_Test\osgal\install-win32-msvs2008"
-#define ALUTSRCINSTALL "C:\dev\ves_deps\osgAL_Test\freealut-1.1.0-bin\freealut-1.1.0-bin"
 
 [Setup]
 AppName={#MyAppName}

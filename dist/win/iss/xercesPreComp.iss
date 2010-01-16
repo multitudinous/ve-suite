@@ -7,7 +7,7 @@
 #define MyAppVerName "Xerces"
 #define MyAppPublisher "VERG"
 #define MyAppURL "www.vesuite.org"
-#define XERCESSRCINSTALL "C:\Projects\ves-windows\xerces-c-3.0.1-x86-windows-vc-9.0"
+
 [Setup]
 AppName={#MyAppName}
 AppVerName={#MyAppVerName}_{#MyAppVer}_{#MSVCVERSION}

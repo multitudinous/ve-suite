@@ -7,7 +7,6 @@
 #define MyAppVerName "osgWorks"
 #define MyAppPublisher "VERG"
 #define MyAppURL "www.vesuite.org"
-#define OSGWORKSINSTLOCATION "C:\Projects\osgWorks"
 
 [Setup]
 AppName={#MyAppName}

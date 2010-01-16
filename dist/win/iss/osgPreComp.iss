@@ -6,10 +6,6 @@
 #define MyAppVerName "OSG"
 #define MyAppPublisher "VERG"
 #define MyAppURL "www.vesuite.org"
-#define OSGSRCHOME "C:\Projects\OpenSceneGraph"
-; #define SIMAGEHOME "D:\devEnv\VES-Deps_1.1\prebuiltInstalls\simage-1.6.1"
-#define COINHOME "C:\Projects\ves_windows\coin"
-#define OSG3RDPARTY "C:\Projects\ves-windows\OpenSceneGraph-2.8.2\3rdParty"
 
 [Setup]
 AppName={#MyAppName}
