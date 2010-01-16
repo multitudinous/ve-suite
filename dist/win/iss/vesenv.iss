@@ -31,6 +31,8 @@
 #define OSGALHOME "osgAL_0.6.1-76_msvc-8.0-sp1-x86"
 #define POCOHOME "POCO_1.3.5_msvc-8.0-sp1-x86"
 #define OSGWORKSHOME "osgWorks_1.0.0_msvc-8.0-sp1-x86"
+
+
 ; Source directories for compiling application specific installers
 #define ACETAOSRCHOME "C:\Projects\ves-windows\ACE_wrappers"
 ;The directory below contains all each apr, apr-iconv, and apr-util
