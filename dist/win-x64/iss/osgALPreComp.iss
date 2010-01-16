@@ -19,7 +19,7 @@ AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
 DefaultDirName=C:\osgAL_{#OSGALVERSION}_Pre-Compile_vc{#MSVCVERSION}
-DefaultGroupName={#VESGROUPNAME}\Uninstallers
+DefaultGroupName={#VESGROUPNAME}\Uninstallers_{#MSVCVERSION}
 AllowNoIcons=true
 OutputBaseFilename=osgAL_{#OSGALVERSION}-precompile_{#MSVCVERSION}
 Compression=lzma
@@ -42,6 +42,8 @@ AppendDefaultGroupName=true
 TimeStampsInUTC=true
 DisableProgramGroupPage=false
 Uninstallable=true
+UsePreviousAppDir=false
+
 [Languages]
 Name: english; MessagesFile: compiler:Default.isl
 

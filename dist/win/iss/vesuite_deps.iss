@@ -31,6 +31,8 @@ BackColor2=$1b84f7
 SetupIconFile={#VEINSTALLHOME}\bin\installerImages\ves_icon.ico
 PrivilegesRequired=none
 UsePreviousGroup=false
+UsePreviousAppDir=false
+
 [Languages]
 Name: eng; MessagesFile: compiler:Default.isl
 [Types]

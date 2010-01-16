@@ -16,7 +16,7 @@ AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
 DefaultDirName=C:\{#MyAppName}_{#VEVERSION}.{#SVNVERSION}_{#MSVCVERSION}
-DefaultGroupName={#VESGROUPNAME}
+DefaultGroupName={#VESGROUPNAME}\Uninstallers_{#MSVCVERSION}
 AllowNoIcons=true
 OutputDir={#INSTALLERINSTALLLOCATION}
 OutputBaseFilename={#MyAppName}_{#VEVERSION}.{#SVNVERSION}_{#MSVCVERSION}
@@ -41,6 +41,7 @@ UsePreviousGroup=false
 VersionInfoCompany=SMDS Program
 VersionInfoDescription=VE-Suite Installer
 UserInfoPage=false
+UsePreviousAppDir=false
 
 [Types]
 Name: full; Description: Full installation

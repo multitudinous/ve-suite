@@ -40,6 +40,8 @@ AppendDefaultGroupName=true
 TimeStampsInUTC=true
 DisableProgramGroupPage=false
 Uninstallable=true
+UsePreviousAppDir=false
+
 [Languages]
 Name: english; MessagesFile: compiler:Default.isl
 

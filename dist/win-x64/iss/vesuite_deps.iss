@@ -15,7 +15,7 @@ AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
 DefaultDirName=C:\{#MyAppName}_{#VEVERSION}_{#MSVCVERSION}
-DefaultGroupName={#VESGROUPNAME}
+DefaultGroupName={#VESGROUPNAME}\Uninstallers_{#MSVCVERSION}
 AllowNoIcons=true
 OutputBaseFilename={#MyAppName}_{#VEVERSION}_{#MSVCVERSION}
 Compression=lzma
@@ -31,6 +31,8 @@ BackColor2=$1b84f7
 SetupIconFile={#VEINSTALLHOME}\bin\installerImages\Ve_icon.ico
 PrivilegesRequired=none
 UsePreviousGroup=false
+UsePreviousAppDir=false
+
 [Languages]
 Name: eng; MessagesFile: compiler:Default.isl
 [Types]
@@ -72,7 +74,8 @@ Source: {#DEPENDSINSTALLHOME}\{#WXHOME}\lib\vc_dll\*.h; DestDir: {app}\include\w
 
 ; Juggler Files
 Source: {#DEPENDSINSTALLHOME}\{#JUGGLERINSTHOME}\bin\*; DestDir: {app}\bin; Flags: ignoreversion recursesubdirs; Components: juggler
-Source: {#DEPENDSINSTALLHOME}\{#JUGGLERINSTHOME}\lib\*; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs; Components: depsbuildenv; Languages: 
+Source: {#DEPENDSINSTALLHOME}\{#JUGGLERINSTHOME}\lib\*.lib; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs; Components: depsbuildenv; Languages: 
+Source: {#DEPENDSINSTALLHOME}\{#JUGGLERINSTHOME}\lib\*.dll; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs; Components: juggler
 Source: {#DEPENDSINSTALLHOME}\{#JUGGLERINSTHOME}\share\*; DestDir: {app}\share; Flags: ignoreversion recursesubdirs createallsubdirs; Components: juggler
 Source: {#DEPENDSINSTALLHOME}\{#JUGGLERINSTHOME}\include\*; DestDir: {app}\include; Flags: ignoreversion recursesubdirs createallsubdirs; Components: depsbuildenv; Languages: 
 

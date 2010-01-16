@@ -39,6 +39,8 @@ AppendDefaultGroupName=true
 TimeStampsInUTC=true
 DisableProgramGroupPage=false
 Uninstallable=true
+UsePreviousAppDir=false
+
 [Languages]
 Name: eng; MessagesFile: compiler:Default.isl
 
@@ -53,4 +55,4 @@ Source: {#WXSRCINSTALL}\lib\vc_dll\*.h; DestDir: {app}\lib\vc_dll\; Flags: ignor
 Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\wxWidgets.fpc.in; DestDir: {app}\lib\vc_dll\flagpoll; DestName: wxWidgets.fpc; Languages: ; Flags: ignoreversion
 
 [Icons]
-Name: {group}\{cm:UninstallProgram,{#MyAppName}}; Filename: {uninstallexe}; Languages:
+Name: {group}\{cm:UninstallProgram,{#MyAppName}}; Filename: {uninstallexe}; Languages: 

@@ -16,7 +16,7 @@ AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
 DefaultDirName=C:\{#MyAppVerName}_{#MyAppVer}_{#MSVCVERSION}
-DefaultGroupName={#VESGROUPNAME}\Uninstallers
+DefaultGroupName={#VESGROUPNAME}\Uninstallers_{#MSVCVERSION}
 AllowNoIcons=true
 OutputDir={#INSTALLERINSTALLLOCATION}
 OutputBaseFilename={#MyAppVerName}_{#MyAppVer}_{#MSVCVERSION}
@@ -34,6 +34,8 @@ EnableDirDoesntExistWarning=true
 ShowLanguageDialog=yes
 PrivilegesRequired=none
 UsePreviousGroup=false
+UsePreviousAppDir=false
+
 [Languages]
 Name: eng; MessagesFile: compiler:Default.isl
 

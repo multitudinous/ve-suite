@@ -39,6 +39,8 @@ AppendDefaultGroupName=true
 TimeStampsInUTC=true
 DisableProgramGroupPage=false
 Uninstallable=true
+UsePreviousAppDir=false
+
 [Languages]
 Name: eng; MessagesFile: compiler:Default.isl
 
@@ -57,4 +59,4 @@ Source: {#XERCESSRCINSTALL}\include\*.c; DestDir: {app}\include; Flags: ignoreve
 Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\xerces.fpc.in; DestDir: {app}\lib\flagpoll; DestName: xerces.fpc; Languages: ; Flags: ignoreversion
 
 [Icons]
-Name: {group}\{cm:UninstallProgram,{#MyAppName}}; Filename: {uninstallexe}; Languages:
+Name: {group}\{cm:UninstallProgram,{#MyAppName}}; Filename: {uninstallexe}; Languages: 

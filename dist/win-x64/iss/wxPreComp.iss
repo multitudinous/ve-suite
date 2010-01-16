@@ -17,7 +17,7 @@ AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
 DefaultDirName=C:\{#MyAppVerName}_{#MyAppVer}_{#MSVCVERSION}
-DefaultGroupName={#VESGROUPNAME}\Uninstallers
+DefaultGroupName={#VESGROUPNAME}\Uninstallers_{#MSVCVERSION}
 AllowNoIcons=true
 OutputBaseFilename={#MyAppVerName}_{#MyAppVer}_{#MSVCVERSION}
 SetupIconFile={#VEDEVHOME}\dist\installerImages\Ve_icon.ico
@@ -34,6 +34,8 @@ OutputDir={#INSTALLERINSTALLLOCATION}
 AppVersion={#WXVERSION}_{#VEVERSION}
 PrivilegesRequired=none
 UsePreviousGroup=false
+UsePreviousAppDir=false
+
 [Languages]
 Name: eng; MessagesFile: compiler:Default.isl
 

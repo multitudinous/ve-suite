@@ -19,7 +19,7 @@ AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
 DefaultDirName=C:\Minerva_{#MINERVAVERSION}_Pre-Compile_vc{#MSVCVERSION}
-DefaultGroupName={#VESGROUPNAME}\Uninstallers
+DefaultGroupName={#VESGROUPNAME}\Uninstallers_{#MSVCVERSION}
 OutputBaseFilename=minerva-{#MINERVAVERSION}-precompile_{#MSVCVERSION}
 Compression=lzma
 SolidCompression=true
@@ -37,6 +37,7 @@ EnableDirDoesntExistWarning=true
 PrivilegesRequired=none
 RestartIfNeededByRun=false
 UsePreviousGroup=false
+UsePreviousAppDir=false
 
 [Languages]
 Name: eng; MessagesFile: compiler:Default.isl
