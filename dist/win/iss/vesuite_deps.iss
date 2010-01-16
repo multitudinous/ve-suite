@@ -15,7 +15,7 @@ AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
 DefaultDirName=C:\{#MyAppName}_{#VEVERSION}_{#MSVCVERSION}
-DefaultGroupName={#VESGROUPNAME}
+DefaultGroupName={#VESGROUPNAME}\Uninstallers_{#MSVCVERSION}
 AllowNoIcons=true
 OutputBaseFilename={#MyAppName}_{#VEVERSION}_{#MSVCVERSION}
 Compression=lzma
@@ -72,7 +72,8 @@ Source: {#DEPENDSINSTALLHOME}\{#WXHOME}\lib\vc_dll\*.h; DestDir: {app}\include\w
 
 ; Juggler Files
 Source: {#DEPENDSINSTALLHOME}\{#JUGGLERINSTHOME}\bin\*; DestDir: {app}\bin; Flags: ignoreversion recursesubdirs; Components: juggler
-Source: {#DEPENDSINSTALLHOME}\{#JUGGLERINSTHOME}\lib\*; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs; Components: depsbuildenv; Languages: 
+Source: {#DEPENDSINSTALLHOME}\{#JUGGLERINSTHOME}\lib\*.lib; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs; Components: depsbuildenv; Languages: 
+Source: {#DEPENDSINSTALLHOME}\{#JUGGLERINSTHOME}\lib\*.dll; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs; Components: juggler
 Source: {#DEPENDSINSTALLHOME}\{#JUGGLERINSTHOME}\share\*; DestDir: {app}\share; Flags: ignoreversion recursesubdirs createallsubdirs; Components: juggler
 Source: {#DEPENDSINSTALLHOME}\{#JUGGLERINSTHOME}\include\*; DestDir: {app}\include; Flags: ignoreversion recursesubdirs createallsubdirs; Components: depsbuildenv; Languages: 
 
@@ -165,4 +166,4 @@ Source: {#VEDEVHOME}\dist\win\iss\dependencies.txt; DestDir: {app}; Flags: isrea
 ;Source: {#DEPENDSINSTALLHOME}\{#ACETAOHOME}\TAO\orbsvcs\Naming_Service\Naming_Service_d.exe; DestDir: {app}\bin; Components: acetao
 
 [Icons]
-Name: {group}\Uninstallers\{cm:UninstallProgram,{#MyAppName}}; Filename: {uninstallexe}
+Name: {group}\{cm:UninstallProgram,{#MyAppName}}; Filename: {uninstallexe}

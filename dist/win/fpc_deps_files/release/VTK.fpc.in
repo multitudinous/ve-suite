@@ -1,13 +1,13 @@
 prefix=${fp_file_cwd}/../..
 exec_prefix=${prefix}
-libdir=${exec_prefix}/lib/vtk-5.4
-includedir=${prefix}/include/vtk-5.4
+libdir=${exec_prefix}/lib/vtk-5.2
+includedir=${prefix}/include/vtk-5.2
 
 Name: VTK
 Description: Visualization ToolKit from Kitware release pre-compiled for VES
 Provides: VTK
 Requires:
-Version: 5.4
+Version: 5.2.0
 Libs: /libpath:"${libdir}" vtkCommon.lib vtkDICOMParser.lib vtkexoIIc.lib vtkexpat.lib vtkFiltering.lib vtkfreetype.lib vtkftgl.lib vtkGenericFiltering.lib vtkGraphics.lib vtkHybrid.lib vtkImaging.lib vtkInfovis.lib vtkIO.lib vtkjpeg.lib vtklibxml2.lib vtkmetaio.lib vtkNetCDF.lib vtkParallel.lib vtkpng.lib vtkRendering.lib vtksqlite.lib vtksys.lib vtktiff.lib vtkverdict.lib vtkViews.lib vtkVolumeRendering.lib vtkWidgets.lib vtkzlib.lib
 Cflags: -I${includedir}
 Arch: noarch
