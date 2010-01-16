@@ -3,7 +3,7 @@
 
 #include <vesenv.iss>
 #define MyAppVer "3.0.1"
-#define MyAppName "Xerces-c Pre-Compile"
+#define MyAppName "xerces-c Pre-Compile"
 #define MyAppVerName "Xerces"
 #define MyAppPublisher "VERG"
 #define MyAppURL "www.vesuite.org"
