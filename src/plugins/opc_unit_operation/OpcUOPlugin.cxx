@@ -67,7 +67,7 @@ OpcUOPlugin::OpcUOPlugin() :
     GetVEModel()->SetPluginType( "OpcUOPlugin" );
 	dynValue = "Ready";
 
-	StartTimer( 4000 );
+	StartTimer( 1000 );
 }
 ////////////////////////////////////////////////////////////////////////////////
 OpcUOPlugin::~OpcUOPlugin()
@@ -251,9 +251,12 @@ void OpcUOPlugin::ReadValue( )
 
 void OpcUOPlugin::OnTimer( wxTimerEvent& event )
 {
-	//UIPLUGIN_CHECKID( event )
-	ReadValue();
-	m_canvas->Refresh( true );
+	if( m_canvas != NULL && m_network != NULL )
+	{
+		//UIPLUGIN_CHECKID( event )
+		ReadValue();
+		m_canvas->Refresh( true );
+	}
 }
 
 void OpcUOPlugin::DrawPlugin( wxDC* dc )
