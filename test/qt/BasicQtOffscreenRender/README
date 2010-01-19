@@ -1,0 +1,7 @@
+You will need a complete Qt development installation to build this project.
+
+To build, issue in this directory:
+$ qmake
+$ make
+
+The important action takes place in mglwidget.cpp
