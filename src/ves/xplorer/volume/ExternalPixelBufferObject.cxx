@@ -38,6 +38,9 @@
 #include <osg/Image>
 #include <osg/State>
 
+// --- C/C++ Includes --- //
+#include <cstring>
+
 using namespace ves::xplorer::volume;
 
 ////////////////////////////////////////////////////////////////////////////////

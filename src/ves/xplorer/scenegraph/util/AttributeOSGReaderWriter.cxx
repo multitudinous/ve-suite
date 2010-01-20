@@ -44,6 +44,7 @@
 #include <osgDB/Output>
 
 #include <set>
+#include <cstring>
 
 #include <ves/xplorer/scenegraph/util/Attribute.h>
 using namespace osg;

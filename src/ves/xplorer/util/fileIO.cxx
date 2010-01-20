@@ -39,6 +39,7 @@
 #include <iostream>
 #include <fstream>
 #include <list>
+#include <cstring>
 namespace fs = boost::filesystem;
 
 using namespace ves::xplorer::util;

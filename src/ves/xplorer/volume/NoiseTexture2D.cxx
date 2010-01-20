@@ -43,6 +43,7 @@
 
 #include <iostream>
 #include <fstream>
+#include <cstdlib>
 
 using namespace ves::xplorer::volume;
 

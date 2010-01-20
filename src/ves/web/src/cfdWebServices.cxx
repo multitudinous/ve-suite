@@ -57,8 +57,8 @@
 #include <Network_Exec.h>
 #include <mysql++.h>
 #include <sys/stat.h>
-#include <errno.h>
-#include <stdlib.h>
+#include <cerrno>
+#include <cstdlib>
 
 
 #define AINTWORKIN

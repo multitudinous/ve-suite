@@ -74,6 +74,7 @@
 #include <vtkGenericDataObjectWriter.h>
 #include <fstream>
 #include <iostream>
+#include <cstring>
 
 //#include <boost/filesystem.hpp>
 #include <boost/filesystem/operations.hpp>
