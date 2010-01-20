@@ -21,6 +21,7 @@
 
 #include <osg/Math>
 #include <osgEphemeris/EphemerisEngine.h>
+#include <cstring>
 
 using namespace osgEphemeris;
 
