@@ -115,8 +115,7 @@ void StreamLineEventHandler::Execute( const ves::open::xml::XMLObjectPtr& veXMLO
     {
         double uniformVal = 0.0;
         glowDVP->GetData( uniformVal );
-        uniformVal *= 0.01;
-
+        uniformVal *= 0.1;
         UpdateGeodeUniform( graphicsObject, glowDVP, "fadeTime", uniformVal );
     }
 
@@ -125,7 +124,6 @@ void StreamLineEventHandler::Execute( const ves::open::xml::XMLObjectPtr& veXMLO
         double uniformVal = 0.0;
         animationSpeedDVP->GetData( uniformVal );
         uniformVal *= 0.1;
-        
         UpdateGeodeUniform( graphicsObject, animationSpeedDVP, "repeatTime", uniformVal );
     }
 }

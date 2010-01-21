@@ -101,7 +101,6 @@ void VectorEventHandler::Execute( const ves::open::xml::XMLObjectPtr& veXMLObjec
         int diameter = static_cast< int >( size );
         float range = 2.5;
         double scaleFactor = ( exp( diameter / ( 100.0 / range ) ) ) * 0.01f;
-        std::cout << scaleFactor << std::endl;
         UpdateGeodeUniform( graphicsObject, scaleDVP, "userScale", scaleFactor );
     }
 
@@ -109,7 +108,6 @@ void VectorEventHandler::Execute( const ves::open::xml::XMLObjectPtr& veXMLObjec
     {
         double uniformVal = 1.0;
         ratioDVP->GetData( uniformVal );
-
         UpdateGeodeUniform( graphicsObject, ratioDVP, "modulo", uniformVal );
     }
 }

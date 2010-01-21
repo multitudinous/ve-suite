@@ -176,7 +176,7 @@ void AdvancedStreamlines::CreateControls()
     wxStaticText* itemStaticText31 = new wxStaticText( itemDialog1, wxID_STATIC, _T( "Fade Time" ), wxDefaultPosition, wxDefaultSize, 0 );
     itemStaticBoxSizer3->Add( itemStaticText31, 0, wxALIGN_LEFT | wxLEFT | wxRIGHT | wxTOP | wxADJUST_MINSIZE, 5 );
 
-    m_fadeTime = new wxSlider( itemDialog1, ADVANCEDSTREAMLINES_FADE_SLIDER, 4, 0, 100, wxDefaultPosition, wxSize( 300, -1 ), wxSL_HORIZONTAL | wxSL_LABELS );
+    m_fadeTime = new wxSlider( itemDialog1, ADVANCEDSTREAMLINES_FADE_SLIDER, 10, 1, 100, wxDefaultPosition, wxSize( 300, -1 ), wxSL_HORIZONTAL | wxSL_LABELS );
     itemStaticBoxSizer3->Add( m_fadeTime, 0, wxGROW | wxLEFT | wxRIGHT, 5 );
 
     wxBoxSizer* itemBoxSizer33 = new wxBoxSizer( wxHORIZONTAL );
@@ -195,7 +195,7 @@ void AdvancedStreamlines::CreateControls()
     wxStaticText* itemStaticText31 = new wxStaticText( itemDialog1, wxID_STATIC, _T( "Animation Speed" ), wxDefaultPosition, wxDefaultSize, 0 );
     itemStaticBoxSizer3->Add( itemStaticText31, 0, wxALIGN_LEFT | wxLEFT | wxRIGHT | wxTOP | wxADJUST_MINSIZE, 5 );
     
-    m_animationSpeed = new wxSlider( itemDialog1, ADVANCEDSTREAMLINES_ANIMATION_SPEED_SLIDER, 3, 0, 100, wxDefaultPosition, wxSize( 300, -1 ), wxSL_HORIZONTAL | wxSL_LABELS );
+    m_animationSpeed = new wxSlider( itemDialog1, ADVANCEDSTREAMLINES_ANIMATION_SPEED_SLIDER, 30, 1, 100, wxDefaultPosition, wxSize( 300, -1 ), wxSL_HORIZONTAL | wxSL_LABELS );
     itemStaticBoxSizer3->Add( m_animationSpeed, 0, wxGROW | wxLEFT | wxRIGHT, 5 );
     
     wxBoxSizer* itemBoxSizer33 = new wxBoxSizer( wxHORIZONTAL );

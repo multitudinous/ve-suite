@@ -254,7 +254,7 @@ void AdvancedVectors::OnVectorRatio( wxCommandEvent& WXUNUSED( event ) )
     ves::open::xml::DataValuePairPtr dvp( new ves::open::xml::DataValuePair() );
     ves::open::xml::CommandSharedPtr command( new ves::open::xml::Command() );
     
-    double value = static_cast< double >( _vectorScaleSlider->GetValue() );
+    double value = static_cast< double >( _vectorRatioSlider->GetValue() );
     
     dvp->SetData( std::string( "Vector Ratio" ), value );
     
