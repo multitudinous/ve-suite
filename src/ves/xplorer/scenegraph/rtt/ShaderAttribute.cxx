@@ -37,6 +37,8 @@
 // --- OSG Includes --- //
 #include <osg/Texture>
 #include <osg/StateAttribute>
+#include <cstdio>
+#include <iostream>
 
 using namespace ves::xplorer::scenegraph::rtt;
 
@@ -295,7 +297,9 @@ bool ShaderAttribute::bindTexture(unsigned int index, const std::string& name, o
     // check if index is valid
     if (index > get(name)->getNumElements() )
     {
-        printf("You want to bind a texture to %s[%d], but there is only %d elements registered\n", name.c_str(), index, get(name)->getNumElements());
+        std::cout << "You want to bind a texture to " << name << "[" << index
+            << "], but there is only " << get(name)->getNumElements()
+            << " elements registered" << std::endl;
         return false;
     }
 
@@ -400,8 +404,13 @@ void ShaderAttribute::resetTextureUniforms()
                 // check if unit is free
                 if (units[jt->second.unit] == NULL)
                     units[jt->second.unit] = &jt->second;
-                else {
-                    printf("Shader::enable() - You have specified a unit number %d to %s in %s which is already given!\n", jt->second.unit, it->first.c_str(), getName().c_str());
+                else 
+                {
+                    std::cout << "Shader::enable() - You have specified a unit number "
+                            << jt->second.unit << " to " << it->first << " in "
+                            << getName() <<  " which is already given!"
+                            << std::endl;
+                    //printf("Shader::enable() - You have specified a unit number %d to %s in %s which is already given!\n", jt->second.unit, it->first.c_str(), getName().c_str());
                 }
             }
         }

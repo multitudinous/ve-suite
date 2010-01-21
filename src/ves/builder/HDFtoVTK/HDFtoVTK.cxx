@@ -525,13 +525,15 @@ void cfdHDFToVTK::_extractDatasetInfo( int groupID,
     dims = new hsize_t[rank];
 
     status = H5Sget_simple_extent_dims( dSpaceID, dims, NULL );
-    printf( "rank %d, dimensions %lu x %lu \n", rank,
-            ( unsigned long )( dims[0] ), ( unsigned long )( dims[1] ) );
+    std::cout << "rank " << rank 
+              << ", dimensions " << ( unsigned long )( dims[0] )
+              << " x " << ( unsigned long )( dims[1] )
+              << std::endl;
 
     typeClass = H5Tget_class( dTypeID );
 
     size = H5Tget_size( dTypeID );
-    printf( " Data size is %d \n", ( int )size );
+    std::cout << " Data size is " <<  ( int )size ) << std::endl;
 
     H5Tclose( dTypeID );
     H5Sclose( dSpaceID );

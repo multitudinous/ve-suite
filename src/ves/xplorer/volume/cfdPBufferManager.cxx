@@ -53,6 +53,7 @@ static PFNWGLCHOOSEPIXELFORMATARBPROC        wglChoosePixelFormatARB;
 
 // --- C/C++ Includes --- //
 #include <cmath>
+#include <iostream>
 
 using namespace ves::xplorer::volume;
 
@@ -276,7 +277,7 @@ bool cfdPBufferManager::initializePBuffer( int width, int height )
 
     if( !_hBuffer )
     {
-        printf( "Unable to create floating point pbuffer (wglCreatePbufferARB failed)\n" );
+        std::cout << "Unable to create floating point pbuffer (wglCreatePbufferARB failed)" << std::endl;
         return 0;
     }
 
@@ -284,14 +285,14 @@ bool cfdPBufferManager::initializePBuffer( int width, int height )
     _pBufferDeviceContext = wglGetPbufferDCARB( _hBuffer );
     if( _pBufferDeviceContext == NULL )
     {
-        printf( "Unable to retrieve handle to pbuffer device context\n" );
+        std::cout << "Unable to retrieve handle to pbuffer device context" << std::endl;;
         return 0;
     }
     //pbuffer gl context
     _pBufferGLContext = wglCreateContext( _pBufferDeviceContext );
     if( _pBufferGLContext == NULL )
     {
-        printf( "Unable to create a rendering context for the pbuffer\n" );
+        std::cout << "Unable to create a rendering context for the pbuffer" << std::endl;
         return 0;
     }
     // With sharing turned on, we can simple create our dynamic texture by

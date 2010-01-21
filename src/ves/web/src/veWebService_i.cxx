@@ -53,23 +53,23 @@ veWebService_i::~veWebService_i( void )
 // doesn't thread lock with executive CORBA calls
 std::string veWebService_i::GetNetworkString( void )
 {
-    printf( "webservice_i:  getting network string:  guarding mutex\n" );
+    std::cout << "webservice_i:  getting network string:  guarding mutex" << std::endl;
     vpr::Guard<vpr::Mutex> val_guard( stringBufferLock );
-    printf( "checking buffer\n" );
+    std::cout << "checking buffer" << std::endl;
     if( !networkStringBuffer.empty() )
     {
-        printf( "check 1\n" );
+        std::cout << "check 1" << std::endl;
         std::vector< std::string >::iterator iter;
-        printf( "check 2\n" );
+        std::cout << "check 2" << std::endl;
         iter = networkStringBuffer.begin();
         std::string temp(( *iter ) );
-        printf( "check 3\n" );
+        std::cout << "check 3" << std::endl;
         networkStringBuffer.erase( iter );
         return temp;
     }
     else
     {
-        printf( "buffer is empty\n" );
+        std::cout << "buffer is empty" << std::endl;
     }
     return "0";
 }
@@ -77,7 +77,7 @@ std::string veWebService_i::GetNetworkString( void )
 // Complimentary function to the above function
 void veWebService_i::SetNetworkString( char* temp )
 {
-    printf( "added %s to network string\n", temp );
+    std::cout << "added " << temp << " to network string" << std::endl;
     vpr::Guard<vpr::Mutex> val_guard( stringBufferLock );
     networkStringBuffer.push_back( std::string( temp ) );
 }

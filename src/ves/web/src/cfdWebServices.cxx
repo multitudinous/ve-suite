@@ -59,6 +59,7 @@
 #include <sys/stat.h>
 #include <cerrno>
 #include <cstdlib>
+#include <iostream>
 
 
 #define AINTWORKIN
@@ -148,7 +149,7 @@ cfdWebServices::cfdWebServices( CosNaming::NamingContext* inputNameContext, Port
 #else
     GetNetwork();
 #endif
-    printf( "Well, we made it through the constructor\n" );
+    std::cout << "Well, we made it through the constructor" << std::endl;
 
 }
 
@@ -156,7 +157,7 @@ cfdWebServices::cfdWebServices( CosNaming::NamingContext* inputNameContext, Port
 
 void cfdWebServices::UpdateModules( void )
 {
-    printf( "we just got told to update\n" );
+    std::cout << "we just got told to update" << std::endl;
     if( !CORBA::is_nil( this->exec ) && uii->GetCalcFlag() )
     {
         // Get Network and parse it
@@ -270,7 +271,7 @@ char* cfdWebServices::GetNetwork( void )
     std::ifstream infile( testFile.c_str() );    //try open the file
     if( !infile )
     {
-        printf( "couldn't load the file\n" );
+        std::cout << "couldn't load the file" << std::endl;
     }
 
     std::string line;
@@ -520,7 +521,8 @@ cfdWebServices::~cfdWebServices()
 
 void cfdWebServices::mysqlQuery( std::string qel )
 {
-    printf( "I'm gonna stick \n\n%s\n\n into the database\n", qel.c_str() );
+    std::cout << "I'm gonna stick \n\n" << qel << 
+                  "\n\ninto the database" << std::endl;
     mysqlpp::Connection con( mysqlpp::use_exceptions );
     try
     {
