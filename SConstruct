@@ -1,5 +1,5 @@
 #!python
-EnsureSConsVersion(1,2)
+EnsureSConsVersion(1,2,0)
 # See this page for more information about these options
 # http://scons.org/wiki/GoFastButton
 SetOption('max_drift', 1)
@@ -67,7 +67,12 @@ if GetPlatform() == 'win32':
     os.environ['PATH'] = '%s%s%s' %(local_fp_dir, os.path.pathsep, os.environ['PATH'])
     local_fp_dir = pj(os.getcwd(), 'external', 'FreezePython','upx301w') 
     os.environ['PATH'] = '%s%s%s' %(local_fp_dir, os.path.pathsep, os.environ['PATH'])
-  
+
+# If on windows make sure that you are using a newer version of scons
+if GetPlatform() == 'win32':
+   print "NOTE: Make sure that SCons 1.2.0.d20090223 or greater is being used."
+   print "      Please visit scons.org for new windows installers."
+
 # Find flagpoll
 sys.stdout.write("Searching for flagpoll...\n")
 flagpoll_cmd = WhereIs('flagpoll')
