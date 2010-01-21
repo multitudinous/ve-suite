@@ -239,6 +239,9 @@ UIPluginBase::~UIPluginBase()
         portsDialog->Destroy();
         portsDialog = 0;
     }
+    
+    m_canvas = 0;
+    m_network = 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIPluginBase::SetCanvas( wxScrolledWindow* canvas )

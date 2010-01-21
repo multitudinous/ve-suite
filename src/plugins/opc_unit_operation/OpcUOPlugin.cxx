@@ -72,6 +72,9 @@ OpcUOPlugin::OpcUOPlugin() :
 ////////////////////////////////////////////////////////////////////////////////
 OpcUOPlugin::~OpcUOPlugin()
 {
+    m_timer->Stop();
+    delete m_timer;
+    m_timer = 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
 wxString OpcUOPlugin::GetConductorName()
@@ -295,5 +298,5 @@ void OpcUOPlugin::StartTimer( float msec )
 void OpcUOPlugin::StopTimer( wxCommandEvent& event )
 {
     UIPLUGIN_CHECKID( event )
-	m_timer->Stop( );
+	m_timer->Stop();
 }
