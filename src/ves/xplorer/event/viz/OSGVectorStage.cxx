@@ -280,7 +280,7 @@ int OSGVectorStage::mypow2(unsigned x)
 ////////////////////////////////////////////////////////////////////////////////
 ves::xplorer::scenegraph::Geode* OSGVectorStage::createInstanced(vtkPolyData* glyph, std::string vectorName, std::string scalarName, float scaleFactor )
 {
-    std::cout << "creating osg planes" << std::endl;
+    //std::cout << "creating osg planes" << std::endl;
     //Now pull in the vtk data
     vtkPolyData *polyData = glyph;
     if (polyData==NULL)
@@ -353,6 +353,25 @@ ves::xplorer::scenegraph::Geode* OSGVectorStage::createInstanced(vtkPolyData* gl
         "uniform sampler3D texDir; \n"
         "uniform sampler3D scalar; \n"
         "uniform float userScale;\n"
+        "uniform float modulo;\n"
+        " \n"
+        // There is no straightforward way to "discard" a vertex in a vertex shader,
+        // (unlike discard in a fragment shader). So we use an aspect of clipping to
+        // "clip away" unwanted vertices and vectors. Here's how it works:
+        // The gl_Position output of the vertex shader is an xyzw value in clip coordinates,
+        // with -w < xyz < w. All xyz outside the range -w to w are clipped by hardware
+        // (they are outside the view volume). So, to discard an entire vector, we set all
+        // its gl_Positions to (1,1,1,0). All vertices are clipped because -0 < 1 < 0 is false.
+        // If all vertices for a given instance have this value, the entire instance is
+        // effectively discarded.
+        "bool\n"
+        "discardInstance( const in float fiid )\n"
+        "{\n"
+        "    bool discardInstance = ( mod( fiid, modulo ) > 0.0 );\n"
+        "    if( discardInstance )\n"
+        "        gl_Position = vec4( 1.0, 1.0, 1.0, 0.0 );\n"
+        "    return( discardInstance );\n"
+        "}\n"
         " \n"
         // Based on the global 'sizes' uniform that contains the 3D stp texture dimensions,
         // and the input parameter current instances, generate an stp texture coord that
@@ -406,6 +425,9 @@ ves::xplorer::scenegraph::Geode* OSGVectorStage::createInstanced(vtkPolyData* gl
         "void main() \n"
         "{ \n"
         "    float fiid = gl_InstanceID; \n"
+        "    if( discardInstance( fiid ) )\n"
+        "        return;\n"
+        "\n"
         // Generate stp texture coords from the instance ID.
         "    vec3 tC = generateTexCoord( fiid ); \n"
 
@@ -487,6 +509,13 @@ ves::xplorer::scenegraph::Geode* OSGVectorStage::createInstanced(vtkPolyData* gl
         osg::ref_ptr< osg::Uniform > scaleUniform =
             new osg::Uniform( "userScale", scaleFactor );
         ss->addUniform( scaleUniform.get() );
+    }
+    
+    {
+        osg::ref_ptr< osg::Uniform > uModulo = 
+            new osg::Uniform( "modulo", 1.0f );
+        uModulo->setDataVariance( osg::Object::DYNAMIC );
+        ss->addUniform( uModulo.get() );
     }
     
     // Set up the color spectrum.

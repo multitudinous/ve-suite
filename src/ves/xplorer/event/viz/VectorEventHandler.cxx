@@ -31,7 +31,7 @@
  *
  *************** <auto-copyright.rb END do not edit this line> **************/
 // --- VE-Suite Includes --- //
-#include <ves/xplorer/event/viz/StreamLineEventHandler.h>
+#include <ves/xplorer/event/viz/VectorEventHandler.h>
 #include <ves/xplorer/event/viz/cfdGraphicsObject.h>
 
 #include <ves/xplorer/SteadyStateVizHandler.h>
@@ -52,35 +52,35 @@
 using namespace ves::xplorer::event;
 
 ////////////////////////////////////////////////////////////////////////////////
-StreamLineEventHandler::StreamLineEventHandler()
+VectorEventHandler::VectorEventHandler()
         :
         ves::xplorer::event::EventHandler()
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-StreamLineEventHandler::StreamLineEventHandler( const StreamLineEventHandler& rhs )
+VectorEventHandler::VectorEventHandler( const VectorEventHandler& rhs )
         :
         ves::xplorer::event::EventHandler()
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-StreamLineEventHandler::~StreamLineEventHandler()
+VectorEventHandler::~VectorEventHandler()
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void StreamLineEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* modelHandler )
+void VectorEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* modelHandler )
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void StreamLineEventHandler::Execute( const ves::open::xml::XMLObjectPtr& veXMLObject )
+void VectorEventHandler::Execute( const ves::open::xml::XMLObjectPtr& veXMLObject )
 {
     std::vector< ves::xplorer::cfdGraphicsObject* > graphicsObject =
         ves::xplorer::SteadyStateVizHandler::instance()->
-        GetGraphicsObjectsOfType( STREAMLINES );
+        GetGraphicsObjectsOfType( Z_VECTOR );
     
     if( graphicsObject.empty() )
     {
@@ -89,48 +89,32 @@ void StreamLineEventHandler::Execute( const ves::open::xml::XMLObjectPtr& veXMLO
 
     ves::open::xml::CommandPtr command = 
         boost::dynamic_pointer_cast<ves::open::xml::Command>( veXMLObject );
-    ves::open::xml::DataValuePairPtr sizeDVP = 
-        command->GetDataValuePair( "Size" );
-    ves::open::xml::DataValuePairPtr glowDVP = 
-        command->GetDataValuePair( "Fade Time" );
-    ves::open::xml::DataValuePairPtr animationSpeedDVP = 
-        command->GetDataValuePair( "Animation Speed" );
+    ves::open::xml::DataValuePairPtr scaleDVP = 
+        command->GetDataValuePair( "Vector Scale" );
+    ves::open::xml::DataValuePairPtr ratioDVP = 
+        command->GetDataValuePair( "Vector Ratio" );
     
-    if( sizeDVP )
+    if( scaleDVP )
     {
         double size;
-        sizeDVP->GetData( size );
-    	float range = 2.5f;
+        scaleDVP->GetData( size );
         int diameter = static_cast< int >( size );
-    	float localLineDiameter = exp( diameter / ( 100.0 / range ) ) * 1.0f * 0.001f;
-
-    	// this is to normalize -100 to 100 on the GUI  to  1-21 for diameters
-    	// note that multiplying by 0.005 is the same as dividing by 200, or the range
-    	size = ( diameter + 110 ) * 0.005 *  20;
-
-        UpdateGeodeUniform( graphicsObject, sizeDVP, "particleSize", size );
+        float range = 2.5;
+        double scaleFactor = ( exp( diameter / ( 100.0 / range ) ) ) * 0.01f;
+        std::cout << scaleFactor << std::endl;
+        UpdateGeodeUniform( graphicsObject, scaleDVP, "userScale", scaleFactor );
     }
 
-    if( glowDVP )
+    if( ratioDVP )
     {
-        double uniformVal = 0.0;
-        glowDVP->GetData( uniformVal );
-        uniformVal *= 0.01;
+        double uniformVal = 1.0;
+        ratioDVP->GetData( uniformVal );
 
-        UpdateGeodeUniform( graphicsObject, glowDVP, "fadeTime", uniformVal );
-    }
-
-    if( animationSpeedDVP )
-    {
-        double uniformVal = 0.0;
-        animationSpeedDVP->GetData( uniformVal );
-        uniformVal *= 0.1;
-        
-        UpdateGeodeUniform( graphicsObject, animationSpeedDVP, "repeatTime", uniformVal );
+        UpdateGeodeUniform( graphicsObject, ratioDVP, "modulo", uniformVal );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-StreamLineEventHandler& StreamLineEventHandler::operator=( const StreamLineEventHandler& rhs )
+VectorEventHandler& VectorEventHandler::operator=( const VectorEventHandler& rhs )
 {
     if( this != &rhs )
     {
@@ -140,7 +124,7 @@ StreamLineEventHandler& StreamLineEventHandler::operator=( const StreamLineEvent
     return *this;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void StreamLineEventHandler::UpdateGeodeUniform( 
+void VectorEventHandler::UpdateGeodeUniform( 
     const std::vector< ves::xplorer::cfdGraphicsObject* >& graphicsObject, 
     ves::open::xml::DataValuePairPtr dvp, 
     const std::string& uniformName, double valueFactor )

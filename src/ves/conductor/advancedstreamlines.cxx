@@ -53,7 +53,8 @@ using namespace ves::conductor;
 
 BEGIN_EVENT_TABLE( AdvancedStreamlines, wxDialog )
     EVT_SLIDER( ADVANCEDSTREAMLINES_LINE_DIAMETER_SLIDER, AdvancedStreamlines::_OnLineDiameter )
-    EVT_SLIDER( ADVANCEDSTREAMLINES_GLOW_SLIDER, AdvancedStreamlines::_OnGlowStrength )
+    EVT_SLIDER( ADVANCEDSTREAMLINES_FADE_SLIDER, AdvancedStreamlines::_OnGlowStrength )
+    EVT_SLIDER( ADVANCEDSTREAMLINES_ANIMATION_SPEED_SLIDER, AdvancedStreamlines::OnAnimationSpeed )
     //EVT_BUTTON( ADVANCEDSTREAMLINES_PARTICLE_TRACKING, AdvancedStreamlines::_OnParticleTracking )
 END_EVENT_TABLE()
 
@@ -84,7 +85,8 @@ bool AdvancedStreamlines::Create( wxWindow* parent,
     _integrationSlider = 0;
     _sphereArrowParticleSlider = 0;
     _diameterSlider = 0;
-    _glowSlider = 0;
+    m_fadeTime = 0;
+    m_animationSpeed = 0;
     _lastSeedPtCheck = 0;
     _streamArrowCheck = 0;
     m_streamRibbon = 0;
@@ -148,7 +150,10 @@ void AdvancedStreamlines::CreateControls()
 
     _sphereArrowParticleSlider = new wxSlider( itemDialog1, ADVANCEDSTREAMLINES_SPHERE_SIZE_SLIDER, 5, 1, 50, wxDefaultPosition, wxSize( 300, -1 ), wxSL_HORIZONTAL | wxSL_LABELS );
     itemStaticBoxSizer3->Add( _sphereArrowParticleSlider, 0, wxGROW | wxLEFT | wxRIGHT | wxBOTTOM, 5 );
+    //////////////////////////////////
 
+    //////////////////////////////////
+    {
     wxStaticText* itemStaticText21 = new wxStaticText( itemDialog1, wxID_STATIC, _T( "Line Diameter" ), wxDefaultPosition, wxDefaultSize, 0 );
     itemStaticBoxSizer3->Add( itemStaticText21, 0, wxALIGN_LEFT | wxLEFT | wxRIGHT | wxTOP | wxADJUST_MINSIZE, 5 );
 
@@ -162,14 +167,17 @@ void AdvancedStreamlines::CreateControls()
     itemBoxSizer23->Add( itemStaticText24, 0, wxALIGN_TOP | wxLEFT | wxRIGHT | wxBOTTOM | wxADJUST_MINSIZE, 5 );
 
     wxStaticText* itemStaticText25 = new wxStaticText( itemDialog1, wxID_STATIC, _T( "Increase Size" ), wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT );
-    itemBoxSizer23->Add( itemStaticText25, 1, wxALIGN_TOP | wxLEFT | wxRIGHT | wxBOTTOM | wxADJUST_MINSIZE, 5 );
+    itemBoxSizer23->Add( itemStaticText25, 1, wxALIGN_TOP | wxLEFT | wxRIGHT | wxBOTTOM | wxADJUST_MINSIZE, 5 );        
+    }
+    //////////////////////////////////
 
-
-    wxStaticText* itemStaticText31 = new wxStaticText( itemDialog1, wxID_STATIC, _T( "Glow Strength" ), wxDefaultPosition, wxDefaultSize, 0 );
+    //////////////////////////////////
+    {
+    wxStaticText* itemStaticText31 = new wxStaticText( itemDialog1, wxID_STATIC, _T( "Fade Time" ), wxDefaultPosition, wxDefaultSize, 0 );
     itemStaticBoxSizer3->Add( itemStaticText31, 0, wxALIGN_LEFT | wxLEFT | wxRIGHT | wxTOP | wxADJUST_MINSIZE, 5 );
 
-    _glowSlider = new wxSlider( itemDialog1, ADVANCEDSTREAMLINES_GLOW_SLIDER, 4, 0, 100, wxDefaultPosition, wxSize( 300, -1 ), wxSL_HORIZONTAL | wxSL_LABELS );
-    itemStaticBoxSizer3->Add( _glowSlider, 0, wxGROW | wxLEFT | wxRIGHT, 5 );
+    m_fadeTime = new wxSlider( itemDialog1, ADVANCEDSTREAMLINES_FADE_SLIDER, 4, 0, 100, wxDefaultPosition, wxSize( 300, -1 ), wxSL_HORIZONTAL | wxSL_LABELS );
+    itemStaticBoxSizer3->Add( m_fadeTime, 0, wxGROW | wxLEFT | wxRIGHT, 5 );
 
     wxBoxSizer* itemBoxSizer33 = new wxBoxSizer( wxHORIZONTAL );
     itemStaticBoxSizer3->Add( itemBoxSizer33, 0, wxGROW | wxLEFT | wxRIGHT | wxBOTTOM, 5 );
@@ -179,8 +187,28 @@ void AdvancedStreamlines::CreateControls()
 
     wxStaticText* itemStaticText35 = new wxStaticText( itemDialog1, wxID_STATIC, _T( "Stronger" ), wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT );
     itemBoxSizer33->Add( itemStaticText35, 1, wxALIGN_TOP | wxLEFT | wxRIGHT | wxBOTTOM | wxADJUST_MINSIZE, 5 );
+    }
+    //////////////////////////////////
 
-
+    //////////////////////////////////
+    {
+    wxStaticText* itemStaticText31 = new wxStaticText( itemDialog1, wxID_STATIC, _T( "Animation Speed" ), wxDefaultPosition, wxDefaultSize, 0 );
+    itemStaticBoxSizer3->Add( itemStaticText31, 0, wxALIGN_LEFT | wxLEFT | wxRIGHT | wxTOP | wxADJUST_MINSIZE, 5 );
+    
+    m_animationSpeed = new wxSlider( itemDialog1, ADVANCEDSTREAMLINES_ANIMATION_SPEED_SLIDER, 3, 0, 100, wxDefaultPosition, wxSize( 300, -1 ), wxSL_HORIZONTAL | wxSL_LABELS );
+    itemStaticBoxSizer3->Add( m_animationSpeed, 0, wxGROW | wxLEFT | wxRIGHT, 5 );
+    
+    wxBoxSizer* itemBoxSizer33 = new wxBoxSizer( wxHORIZONTAL );
+    itemStaticBoxSizer3->Add( itemBoxSizer33, 0, wxGROW | wxLEFT | wxRIGHT | wxBOTTOM, 5 );
+    
+    wxStaticText* itemStaticText34 = new wxStaticText( itemDialog1, wxID_STATIC, _T( "Shorter" ), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT );
+    itemBoxSizer33->Add( itemStaticText34, 0, wxALIGN_TOP | wxLEFT | wxRIGHT | wxBOTTOM | wxADJUST_MINSIZE, 5 );
+    
+    wxStaticText* itemStaticText35 = new wxStaticText( itemDialog1, wxID_STATIC, _T( "Longer" ), wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT );
+    itemBoxSizer33->Add( itemStaticText35, 1, wxALIGN_TOP | wxLEFT | wxRIGHT | wxBOTTOM | wxADJUST_MINSIZE, 5 );
+    }
+    //////////////////////////////////
+    
     wxBoxSizer* itemBoxSizer26 = new wxBoxSizer( wxHORIZONTAL );
     itemStaticBoxSizer3->Add( itemBoxSizer26, 0, wxGROW | wxALL, 5 );
 
@@ -259,13 +287,21 @@ void AdvancedStreamlines::SetLineDiameter( double value )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AdvancedStreamlines::SetGlowStrength( double value )
+/*void AdvancedStreamlines::SetGlowStrength( double value )
 {
-    if( _glowSlider )
+    if( m_fadeTime )
     {
-        _glowSlider->SetValue( value );
+        m_fadeTime->SetValue( value );
     }
 }
+////////////////////////////////////////////////////////////////////////////////
+void AdvancedStreamlines::SetAnimationSpeed( double value )
+{
+    if( m_animationSpeed )
+    {
+        m_animationSpeed->SetValue( value );
+    }
+}*/
 ////////////////////////////////////////////////////////////////////////////////
 void AdvancedStreamlines::SetStreamArrow( bool value )
 {
@@ -318,11 +354,16 @@ double AdvancedStreamlines::GetLineDiameter()
 {
     return static_cast< double >( _diameterSlider->GetValue() );
 }
-////////////////////////////////////////////////////////////////////////////////
+/*////////////////////////////////////////////////////////////////////////////////
 double AdvancedStreamlines::GetGlowStrength()
 {
-    return static_cast< double >( _glowSlider->GetValue() );
+    return static_cast< double >( m_fadeTime->GetValue() );
 }
+////////////////////////////////////////////////////////////////////////////////
+double AdvancedStreamlines::GetAnimationSpeed()
+{
+    return static_cast< double >( m_animationSpeed->GetValue() );
+}*/
 ////////////////////////////////////////////////////////////////////////////////
 bool AdvancedStreamlines::GetUseLastSeedPoint()
 {
@@ -364,13 +405,28 @@ void AdvancedStreamlines::_OnGlowStrength( wxCommandEvent& WXUNUSED( event ) )
     ves::open::xml::DataValuePairPtr dvp( new ves::open::xml::DataValuePair() );
     ves::open::xml::CommandSharedPtr command( new ves::open::xml::Command() );
 
-    double value = static_cast< double >( _glowSlider->GetValue() );
+    double value = static_cast< double >( m_fadeTime->GetValue() );
 
-    dvp->SetData( std::string( "Glow" ), value );
+    dvp->SetData( std::string( "Fade Time" ), value );
 
     command->SetCommandName( std::string( "LIVE_STREAMLINE_UPDATE" ) );
     command->AddDataValuePair( dvp );
 
+    ves::conductor::util::CORBAServiceList::instance()->SendCommandStringToXplorer( command );
+}
+////////////////////////////////////////////////////////////////////////////////
+void AdvancedStreamlines::OnAnimationSpeed( wxCommandEvent& WXUNUSED( event ) )
+{
+    ves::open::xml::DataValuePairPtr dvp( new ves::open::xml::DataValuePair() );
+    ves::open::xml::CommandSharedPtr command( new ves::open::xml::Command() );
+    
+    double value = static_cast< double >( m_animationSpeed->GetValue() );
+    
+    dvp->SetData( std::string( "Animation Speed" ), value );
+    
+    command->SetCommandName( std::string( "LIVE_STREAMLINE_UPDATE" ) );
+    command->AddDataValuePair( dvp );
+    
     ves::conductor::util::CORBAServiceList::instance()->SendCommandStringToXplorer( command );
 }
 ////////////////////////////////////////////////////////////////////////////////

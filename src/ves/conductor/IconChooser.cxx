@@ -46,7 +46,7 @@
 #include <wx/choice.h>
 #include <wx/scrolwin.h>
 
-    // --- VE-Suite Includes --- //
+// --- VE-Suite Includes --- //
 #include <ves/conductor/IconChooser.h>
 #include <ves/conductor/ConductorLibEnums.h>
 #include <ves/conductor/UIPluginBase.h>

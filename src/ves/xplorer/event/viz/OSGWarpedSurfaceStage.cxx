@@ -494,7 +494,7 @@ void OSGWarpedSurfaceStage::createMeshData( osg::Geometry* geom,
         "   vec4 colorResult = texture1D( texCS, normScalarVal );\n"
         "   colorResult[3]=1.0; \n"
         //"   gl_FrontColor = colorResult; \n"
-        "     color = colorResult.rgb; \n"
+        "   color = colorResult.rgb; \n"
 
         "     // Setup varying variables. \n"
         //"   objPos=gl_Vertex.xyz; \n"

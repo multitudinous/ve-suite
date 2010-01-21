@@ -133,12 +133,18 @@ public:
     static bool ShowToolTips();
 
 protected:
+    ///The vector scale for controlling real time
+    void OnVectorScale( wxCommandEvent& WXUNUSED( event ) );
+
+    ///The vector ratio for controlling real time
+    void OnVectorRatio( wxCommandEvent& WXUNUSED( event ) );
 
     ves::conductor::util::DualSlider* vectorRange;
     wxSlider* _vectorScaleSlider;///<Slider widget for vector scale.
     wxSlider*   _vectorRatioSlider;///<Slider widget for vector ratio.
     wxCheckBox* _scaleByMagCheck;///<Check box widget for scale option.
 
+    DECLARE_EVENT_TABLE()
 };
 }
 }

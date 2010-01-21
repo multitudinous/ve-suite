@@ -30,8 +30,8 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#ifndef STREAM_LINE_EVENT_HANDLER_H
-#define STREAM_LINE_EVENT_HANDLER_H
+#ifndef VECTOR_EVENT_HANDLER_H
+#define VECTOR_EVENT_HANDLER_H
 
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/event/EventHandler.h>
@@ -48,24 +48,24 @@ namespace xplorer
 class cfdGraphicsObject;
 namespace event
 {
-/*!\file StreamLineEventHandler.h
- * StreamLineEventHandler API
+/*!\file VectorEventHandler.h
+ * VectorEventHandler API
  */
 
-/*!\class StreamLineEventHandler
+/*!\class VectorEventHandler
  * Class for changing streamline properties in xplorer
  */
-class StreamLineEventHandler : public EventHandler
+class VectorEventHandler : public EventHandler
 {
 public:
     //Constructor
-    StreamLineEventHandler();
+    VectorEventHandler();
 
     //Copy Constructor
-    StreamLineEventHandler( const StreamLineEventHandler& ceh );
+    VectorEventHandler( const VectorEventHandler& ceh );
 
     //Destructor
-    virtual ~StreamLineEventHandler();
+    virtual ~VectorEventHandler();
 
     //Set the cfdModel
     //param model The ModelHandler to execute the Command on
@@ -76,7 +76,7 @@ public:
     void Execute( const ves::open::xml::XMLObjectPtr& command );
 
     //Equal operator
-    StreamLineEventHandler& operator=( const StreamLineEventHandler& rhs );
+    VectorEventHandler& operator=( const VectorEventHandler& rhs );
 
 protected:
 
@@ -89,4 +89,4 @@ protected:
 }
 }
 
-#endif // end STREAM_LINE_EVENT_HANDLER_H
+#endif // end VECTOR_EVENT_HANDLER_H

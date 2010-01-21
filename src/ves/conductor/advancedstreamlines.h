@@ -130,6 +130,10 @@ public:
     ///\param value The strength
     void SetGlowStrength( double value );
 
+    ///Set the animation speed
+    ///\param value The speed
+    void SetAnimationSpeed( double value );
+    
     ///Set the animated particle flag
     void SetAnimatedParticle( bool animateParticle );
  
@@ -141,6 +145,9 @@ public:
 
     ///Live command for setting streamline glow strength
     void _OnGlowStrength( wxCommandEvent& WXUNUSED( event ) );
+
+    ///Live command for setting streamline glow strength
+    void OnAnimationSpeed( wxCommandEvent& WXUNUSED( event ) );
 
     ///Call particle tracking gui
     void _OnParticleTracking( wxCommandEvent& WXUNUSED( event ) );
@@ -161,6 +168,10 @@ public:
     ///\return The glow strength
     double GetGlowStrength();
 
+    ///Get the animation speed
+    ///\return The animation speed
+    double GetAnimationSpeed();
+    
     ///Get the stream arrow.
     bool GetStreamArrow();
     
@@ -192,7 +203,9 @@ protected:
     wxSlider* _integrationSlider;
     wxSlider* _sphereArrowParticleSlider;
     wxSlider* _diameterSlider;
-    wxSlider* _glowSlider;
+    wxSlider* m_fadeTime;
+    wxSlider* m_animationSpeed;
+
     wxCheckBox* _lastSeedPtCheck;
     wxCheckBox* _streamArrowCheck;
     wxCheckBox* m_particleCheck;

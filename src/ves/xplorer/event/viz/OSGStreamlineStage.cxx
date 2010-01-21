@@ -372,6 +372,24 @@ void OSGStreamlineStage::createStreamLines( vtkPolyData* polyData,
             "   float repTimer = mod( ( osg_SimulationTime - timeOffset ), repeatTime ); \n"
             "   float alpha = fadeTime - min( repTimer, fadeTime ); \n"
 
+        /*"   // Scalar texture containg key to color table. \n"
+        "   vec4 activeScalar = texture2D( scalar, gl_MultiTexCoord0.st );\n"
+        "   float normScalarVal = 0.;\n"
+        "   normScalarVal = (activeScalar.a - scalarMinMax.x) / (scalarMinMax.y - scalarMinMax.x);\n"
+        
+        "   if( normScalarVal < 0. )\n"
+        "   {\n"
+        "       normScalarVal = 0.;\n"
+        "   }\n"
+        "   if( normScalarVal > 1. )\n"
+        "   {\n"
+        "       normScalarVal = 1.;\n"
+        "   }\n"
+        "   vec4 colorResult = texture1D( texCS, normScalarVal );\n"
+        "   colorResult[3]=1.0; \n"
+        //"   gl_FrontColor = colorResult; \n"
+        "   color = colorResult.rgb; \n"*/
+        
             "   vec4 color = texture2D( texSca, tC ); \n"
             "   color[3]=alpha; \n"
             "   gl_FrontColor = color; \n"

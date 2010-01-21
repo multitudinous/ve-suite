@@ -66,6 +66,7 @@
 #include <ves/xplorer/event/viz/ClearVisObjectsEventHandler.h>
 #include <ves/xplorer/event/viz/StreamLineEventHandler.h>
 #include <ves/xplorer/event/viz/PolydataSurfaceEventHandler.h>
+#include <ves/xplorer/event/viz/VectorEventHandler.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
 
@@ -119,6 +120,8 @@ SteadyStateVizHandler::SteadyStateVizHandler()
         new ves::xplorer::event::StreamLineEventHandler();
     _eventHandlers[ std::string( "LIVE_POLYDATA_UPDATE" )] =
         new ves::xplorer::event::PolydataSurfaceEventHandler();
+    _eventHandlers[ std::string( "LIVE_VECTOR_UPDATE" )] =
+        new ves::xplorer::event::VectorEventHandler();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SteadyStateVizHandler::Initialize( std::string param )
