@@ -56,11 +56,13 @@
 #include <osgbBullet/ColladaUtils.h>
 #include <osgbBullet/Utils.h>
 #include <osgbBullet/RefRigidBody.h>
+#include <osgbBullet/PhysicsState.h>
 
 #include <osg/io_utils>
 #include <osg/ComputeBoundsVisitor>
 #include <osg/BoundingBox>
 #include <osg/PositionAttitudeTransform>
+#include <osgDB/WriteFile>
 
 // --- C/C++ Libraries --- //
 #include <iostream>
@@ -212,6 +214,9 @@ void PhysicsRigidBody::CleanRigidBody()
             std::cout << "|\tDeleting motion state. " << std::endl;
         }
         
+        std::cout << "|\tNumber of constraints " 
+            << mRB->getNumConstraintRefs() << std::endl;
+        
         delete mRB;
         mRB = 0;
     }
@@ -304,6 +309,8 @@ void PhysicsRigidBody::CustomShape( const BroadphaseNativeTypes shapeType, const
             << std::endl;
         return;
     }
+    
+    osg::ref_ptr< osgbBullet::CreationRecord > record;
     osg::Group* stopNode;
     osg::NodePath np;
     stopNode = static_cast< osg::Group* >( npl[ 0 ].first );
@@ -314,14 +321,18 @@ void PhysicsRigidBody::CustomShape( const BroadphaseNativeTypes shapeType, const
         std::cout << "|\tMake a new btRigidBody for " << mOSGToBullet->getName() << std::endl;
         osg::ref_ptr< osg::PositionAttitudeTransform > tempSubgraph = 
             new osg::PositionAttitudeTransform( *static_cast< osg::PositionAttitudeTransform* >( mOSGToBullet.get() ), 
-            osg::CopyOp::DEEP_COPY_ALL );            
+            osg::CopyOp::DEEP_COPY_ALL );
+        //std::string newNodeName = mOSGToBullet->getName() +"_test.osg";
+        //osgDB::writeNodeFile( *(tempSubgraph.get()), newNodeName );
+
         osgbBulletPlus::OSGToCollada converter;
         converter.setSceneGraph( tempSubgraph.get() );
         converter.setShapeType( shapeType );
         converter.setMass( mMass );
         converter.setOverall( overall );
         if( (shapeType == CONVEX_TRIANGLEMESH_SHAPE_PROXYTYPE) || 
-            (shapeType == TRIANGLE_MESH_SHAPE_PROXYTYPE) )
+            (shapeType == TRIANGLE_MESH_SHAPE_PROXYTYPE) ||
+            (shapeType == CONVEX_HULL_SHAPE_PROXYTYPE) )
         {
             //If decimation is exact we do nothing
             if( decimation == "High" )
@@ -340,8 +351,10 @@ void PhysicsRigidBody::CustomShape( const BroadphaseNativeTypes shapeType, const
         }
         //converter.setAxis( axis );
         converter.convert("");
-       
+        //std::string pname = mOSGToBullet->getName() + ".dae";
+        //converter.convert( pname );
         mRB = converter.getRigidBody();
+        //record = converter.getOrCreateCreationRecord();
         std::cout << "|\tJust finished creating a new btRigidBody." << std::endl;
     }
     
@@ -368,6 +381,12 @@ void PhysicsRigidBody::CustomShape( const BroadphaseNativeTypes shapeType, const
 
     mRB->setRestitution( mRestitution );
     mRB->setFriction( mFriction );
+    //These are the default values for the sleeping parameters for island 
+    //creation by the solver. By making these larger an object will go to 
+    //sleep sooner. This can have a negative affect on the fidelity of the sim.
+    //rbInfo.m_linearSleepingThreshold = btScalar(0.8);
+    //rbInfo.m_angularSleepingThreshold = btScalar(1.f);
+    mRB->setSleepingThresholds( 1.6, 2.0 );
     
     osgbBullet::MotionState* motion = new osgbBullet::MotionState();
     //osgbBullet::MotionState* motion = dynamic_cast< osgbBullet::MotionState* >( mRB->getMotionState() );
@@ -422,6 +441,16 @@ void PhysicsRigidBody::CustomShape( const BroadphaseNativeTypes shapeType, const
         setActivationState( DISABLE_DEACTIVATION );
     }*/
     
+    //std::string pname = mOSGToBullet->getName() + "_cr.osg";
+    //osg::ref_ptr< osgbBullet::PhysicsData > pd = new osgbBullet::PhysicsData();
+    //pd->_fileName = mOSGToBullet->getName();
+    //pd->_cr = record.get();
+    //pd->_body = mRB;
+    //std::ostringstream ostr;
+    //ostr << "id" << id++;
+    //osg::ref_ptr< osgwTools::RefID > rid = new osgwTools::RefID( ostr.str() );
+    //osgDB::writeObjectFile( *pd.get(), pname );
+
     RegisterRigidBody( mRB );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -459,6 +488,8 @@ void PhysicsRigidBody::CreateRigidBody( const std::string& lod, const std::strin
         if( motion == "Static" )
         {
             CustomShape( TRIANGLE_MESH_SHAPE_PROXYTYPE, overall, decimation );
+            //This method runs very slowly
+            //CustomShape( CONVEX_HULL_SHAPE_PROXYTYPE, overall, decimation );
         }
         else
         {
