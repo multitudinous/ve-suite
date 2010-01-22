@@ -7,13 +7,13 @@
             <display_system name="Display System" version="3">
                <number_of_pipes>8</number_of_pipes>
                <pipes>0</pipes>
-               <pipes>5</pipes>
+               <pipes>1</pipes>
                <pipes>6</pipes>
                <pipes>7</pipes>
-               <pipes>4</pipes>
-               <pipes>1</pipes>
+               <pipes>5</pipes>
                <pipes>2</pipes>
                <pipes>3</pipes>
+               <pipes>4</pipes>
                <use_swap_group>false</use_swap_group>
             </display_system>
          </display_system>
