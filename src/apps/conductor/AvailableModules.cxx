@@ -54,9 +54,6 @@
 
 #include <wx/intl.h>
 
-#ifdef WIN32
-#include <shellapi.h>
-#endif
 using namespace ves::conductor;
 using namespace ves::conductor::util;
 using namespace ves::open::xml;
@@ -350,23 +347,6 @@ void AvailableModules::ShowHelp( wxCommandEvent& WXUNUSED( event ) )
     }
 
     pl = item_data->plugin;
-    /*
-    fgroot = getenv("FGROOT");
-    char browser[1024];
-
-    #ifdef WIN32
-    docdir=fgroot+"\\Framework\\doc";
-    help = fgroot+"\\"+pl->GetHelp();
-    FindExecutable("index.html", docdir.c_str(), browser);
-    #endif
-    cmd="\"";
-    cmd+=browser;
-    cmd+="\" \"";
-    cmd+=help;
-    cmd+="\"";
-
-    ::wxExecute(cmd, wxEXEC_ASYNC|wxEXEC_MAKE_GROUP_LEADER);
-    */
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AvailableModules::ResetPluginTree()

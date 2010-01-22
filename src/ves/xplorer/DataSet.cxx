@@ -86,6 +86,9 @@
 #include <iostream>
 #include <sstream>
 
+//Used for strcpy to setup the data translator code
+#include <cstring>
+
 using namespace ves::xplorer::scenegraph;
 using namespace ves::xplorer::util;
 using namespace ves::builder::DataLoader;
@@ -594,19 +597,19 @@ void DataSet::LoadData()
         unsigned int nParams = 7;
         char** parameters = new char*[nParams];
         parameters[0] = new char[strlen( "loaderToVtk" ) + 1];
-        strcpy( parameters[0], "loaderToVtk" );
+        std::strcpy( parameters[0], "loaderToVtk" );
         parameters[1] = new char[strlen( "-singleFile" ) + 1];
-        strcpy( parameters[1], "-singleFile" );
+        std::strcpy( parameters[1], "-singleFile" );
         parameters[2] = new char[fileName.length()   + 1];
-        strcpy( parameters[2], fileName.c_str() );
+        std::strcpy( parameters[2], fileName.c_str() );
         parameters[3] = new char[strlen( "-loader" ) + 1];
-        strcpy( parameters[3], "-loader" );
+        std::strcpy( parameters[3], "-loader" );
         parameters[4] = new char[extension.length() + 1];
-        strcpy( parameters[4], extension.c_str() );
+        std::strcpy( parameters[4], extension.c_str() );
         parameters[5] = new char[strlen( "-o" ) + 1];
-        strcpy( parameters[5], "-o" );
+        std::strcpy( parameters[5], "-o" );
         parameters[6] = new char[strlen( "." ) + 1];
-        strcpy( parameters[6], "." );
+        std::strcpy( parameters[6], "." );
         /*parameters[7] = new char[strlen( "-w" ) + 1];
         strcpy(parameters[7], "-w" );
         parameters[8] = new char[strlen( "stream" ) + 1];

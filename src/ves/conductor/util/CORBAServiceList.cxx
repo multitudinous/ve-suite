@@ -49,6 +49,9 @@
 #include <wx/utils.h>
 #include <wx/log.h>
 
+//Used for strcpy to setup the char arrays to be handled by TAO
+#include <cstring>
+
 using namespace ves::open::xml;
 using namespace ves::conductor::util;
 
@@ -86,7 +89,7 @@ void CORBAServiceList::SetArgcArgv( int argc, char** argv )
     {
         int stringLength = strlen( argv[ i ] );
         peArgv[ i ] = new char[ stringLength + 1 ];
-        strcpy( peArgv[ i ], argv[ i ] );
+        std::strcpy( peArgv[ i ], argv[ i ] );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -279,7 +282,7 @@ bool CORBAServiceList::ConnectToNamingService( void )
     {
         int stringLength = strlen( peArgv[ i ] );
         argv[ i ] = new char[ stringLength + 1 ];
-        strcpy( argv[ i ], peArgv[ i ] );
+        std::strcpy( argv[ i ], peArgv[ i ] );
     }
 
     try

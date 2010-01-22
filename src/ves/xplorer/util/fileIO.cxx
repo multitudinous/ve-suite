@@ -347,16 +347,12 @@ std::string fileIO::StripLeadingSpaces( std::string line )
     {
         if( line[i] != ' ' )
         {
-            //shortLine = new char [ strlen(line) - i ];
-            //strcpy( shortLine, &line[i] );
             shortLine.assign( &line[i] );
-            //std::cout << "1 returning \"" << shortLine << "\"" << std::endl;
             return shortLine;
         }
     }
     shortLine = new char [ 1 ];
     shortLine[0] = '\0';
-    //std::cout << "2 returning \"" << shortLine << "\"" << std::endl;
     return shortLine;
 }
 

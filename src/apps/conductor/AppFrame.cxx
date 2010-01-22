@@ -124,6 +124,10 @@
 #include <sstream>
 #include <iomanip>
 
+//Used for strcpy to setup the arg arrays to hand to 
+//various portions of conductor
+#include <cstring>
+
 using namespace ves::conductor::util;
 using namespace ves::conductor;
 using namespace ves::open::xml;
