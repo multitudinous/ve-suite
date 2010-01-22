@@ -402,7 +402,11 @@ void PhysicsSimulator::InitializePhysicsSimulation()
     //value is the sooner the island will be put to sleep. I believe this number is
     //in seconds.
     //btScalar	gDeactivationTime = btScalar(2.);
-    gDeactivationTime = btScalar(1.);
+    //For more information on how the islands work please see these links
+    //http://bulletphysics.org/Bullet/phpBB3/viewtopic.php?f=9&t=16
+    //http://bulletphysics.org/Bullet/phpBB3/viewtopic.php?f=4&t=2124
+    //http://www.cs.cornell.edu/Courses/cs211/2006sp/Lectures/L26-MoreGraphs/lec26.html
+    gDeactivationTime = btScalar(0.5);
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsSimulator::UpdatePhysics( float dt )
