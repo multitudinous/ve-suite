@@ -806,7 +806,8 @@ const bool Dragger::CreatePointConstraint( btRigidBody& btRB )
     
     m_physicsSimulator.SetIdle( true );
 
-    btRB.setActivationState( DISABLE_DEACTIVATION );
+    //I am not sure why this is needed - mccdo
+    //btRB.setActivationState( DISABLE_DEACTIVATION );
 
     btPoint2PointConstraint* p2p =
         new btPoint2PointConstraint( btRB, btVector3( 0.0, 0.0, 0.0 ) );
@@ -839,7 +840,10 @@ void Dragger::ClearPointConstraint()
             p2p = NULL;
 
             btRigidBody* btRB = itr->first;
-            btRB->forceActivationState( ACTIVE_TAG );
+            //It does not seem we should be messing with these states
+            //If we need to we will need to figure out some other methods
+            //for getting the result we are after. - mccdo
+            //btRB->forceActivationState( ACTIVE_TAG );
             //btRB->setDeactivationTime( 0.0 );
             btRB = NULL;
         }
