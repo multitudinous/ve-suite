@@ -39,7 +39,6 @@
 
 #include <ves/conductor/Canvas.h>
 #include <ves/conductor/Network.h>
-#include <ves/conductor/StringParse.h>
 #include <ves/conductor/UIPluginBase.h>
 #include <ves/conductor/DefaultPlugin/DefaultPlugin.h>
 
@@ -53,6 +52,7 @@
 #include <ves/conductor/xpm/icon5.xpm>
 
 #include <wx/intl.h>
+#include <wx/tokenzr.h>
 
 using namespace ves::conductor;
 using namespace ves::conductor::util;
@@ -74,7 +74,7 @@ AvailableModules::AvailableModules( wxWindow *parent, const wxWindowID id,
     canvas( 0 )
 {
     int image1 = AVAILABLEMODULES_FOLDER;
-    int image2 = AVAILABLEMODULES_FOLDERSELECTED;
+    //int image2 = AVAILABLEMODULES_FOLDERSELECTED;
 
     CreateImageList();
     
@@ -230,19 +230,14 @@ void AvailableModules::ShowMenu( wxTreeItemId id, const wxPoint& pt )
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AvailableModules::getLeveledName( wxString name,
-                                   std::vector<wxString> & lnames )
+    std::vector<wxString> & lnames )
 {
-    char * s;
-    int len;
-
-    len = name.Len();
-    s = new char[len+1];
-
-    lnames.clear();
-    strcpy( s, name.mb_str() );
-    get_tokens( s, lnames, "_" );
-    delete [] s;
-
+    wxStringTokenizer tkz( name, wxT("_"));
+    while( tkz.HasMoreTokens() )
+    {
+        wxString token = tkz.GetNextToken();
+        lnames.push_back( token );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AvailableModules::CreateImageList( int size )
