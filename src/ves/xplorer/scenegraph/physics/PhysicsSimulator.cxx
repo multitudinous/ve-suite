@@ -417,6 +417,7 @@ void PhysicsSimulator::UpdatePhysics( float dt )
     }
 
 #if MULTITHREADED_OSGBULLET
+    bool currentIdle = GetIdle();
     SetIdle( true );
 #endif
 
@@ -472,7 +473,7 @@ void PhysicsSimulator::UpdatePhysics( float dt )
     if( !mCollisionInformation )
     {
 #if MULTITHREADED_OSGBULLET
-        SetIdle( false );
+        SetIdle( currentIdle );
 #endif
         return;
     }
@@ -534,7 +535,7 @@ void PhysicsSimulator::UpdatePhysics( float dt )
         }
     }
 #if MULTITHREADED_OSGBULLET
-    SetIdle( false );
+    SetIdle( currentIdle );
 #endif
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -555,6 +556,7 @@ void PhysicsSimulator::ResetScene()
     gNumGjkChecks = 0;
     #endif
     */
+    bool currentIdle = GetIdle();
     SetIdle( true );
 
     //This code is take from Bullet in
@@ -611,7 +613,7 @@ void PhysicsSimulator::ResetScene()
     {
         characterController->Reset();
     }
-    SetIdle( false );
+    SetIdle( currentIdle );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsSimulator::SetDebugMode( int mode )
@@ -747,6 +749,7 @@ osg::Node* PhysicsSimulator::CreateGround( float w, float h, const osg::Vec3& ce
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsSimulator::SetDebuggingOn( bool toggle )
 {
+    bool currentIdle = GetIdle();
     SetIdle( true );
     mDebugBulletFlag = toggle;
     
@@ -763,22 +766,24 @@ void PhysicsSimulator::SetDebuggingOn( bool toggle )
         m_debugDrawer->BeginDraw();
         m_debugDrawerGroup->setNodeMask( 0 );
     }
-    SetIdle( false );
+    SetIdle( currentIdle );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsSimulator::RegisterMotionState( osgbBullet::MotionState* motionState )
 {
+    bool currentIdle = GetIdle();
     SetIdle( true );
     m_motionStateList.push_back( motionState );
-    SetIdle( false );
+    SetIdle( currentIdle );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsSimulator::UnregisterMotionState( osgbBullet::MotionState* motionState )
 {
+    bool currentIdle = GetIdle();
     SetIdle( true );
     std::vector< osgbBullet::MotionState* >::iterator iter = 
         std::find( m_motionStateList.begin(), m_motionStateList.end(), motionState );
     m_motionStateList.erase( iter );
-    SetIdle( false );
+    SetIdle( currentIdle );
 }
 ////////////////////////////////////////////////////////////////////////////////
