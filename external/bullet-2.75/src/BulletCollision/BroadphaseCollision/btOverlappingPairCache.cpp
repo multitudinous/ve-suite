@@ -728,26 +728,6 @@ void* btHashedOverlappingPairCache::removeOverlappingPair(btBroadphaseProxy* pro
 
 }
 
-//#include <stdio.h>
-
-
-
-#include <sys/time.h>
-
-#include <stdio.h>
-
-
-
-unsigned long getMs2(){
-
-    struct timeval currentTime;
-
-    gettimeofday(&currentTime, 0);
-
-    return currentTime.tv_sec  * 1000000 + currentTime.tv_usec;
-
-}
-
 
 
 void	btHashedOverlappingPairCache::processAllOverlappingPairs(btOverlapCallback* callback,btDispatcher* dispatcher)
