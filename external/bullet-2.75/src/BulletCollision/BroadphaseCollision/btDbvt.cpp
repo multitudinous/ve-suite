@@ -24,7 +24,9 @@ typedef btAlignedObjectArray<const btDbvtNode*>	tConstNodeArray;
 struct btDbvtNodeEnumerator : btDbvt::ICollide
 {
 	tConstNodeArray	nodes;
-	void Process(const btDbvtNode* n) { nodes.push_back(n); }
+	void Process(const btDbvtNode* n) { 
+        BT_PROFILE("btDbvtNodeEnumerator : btDbvt::ICollide Process");
+nodes.push_back(n); }
 };
 
 //
@@ -735,6 +737,7 @@ struct btDbvtBenchmark
 		};
 		void Process(const btDbvtNode* leaf)
 		{
+            BT_PROFILE("P15 : btDbvt::ICollide Process");
 			Node	n;
 			n.leaf	=	leaf;
 			n.depth	=	dot(leaf->volume.Center(),m_axis);

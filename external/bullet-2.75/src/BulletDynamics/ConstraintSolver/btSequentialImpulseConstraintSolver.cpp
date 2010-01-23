@@ -16,6 +16,8 @@ subject to the following restrictions:
 //#define COMPUTE_IMPULSE_DENOM 1
 //It is not necessary (redundant) to refresh contact manifolds, this refresh has been moved to the collision algorithms.
 
+#include <iostream>
+
 #include "btSequentialImpulseConstraintSolver.h"
 #include "BulletCollision/NarrowPhaseCollision/btPersistentManifold.h"
 #include "BulletDynamics/Dynamics/btRigidBody.h"
@@ -717,7 +719,6 @@ btScalar btSequentialImpulseConstraintSolver::solveGroupCacheFriendlySetup(btCol
 
 	if (!(numConstraints + numManifolds))
 	{
-		//		printf("empty\n");
 		return 0.f;
 	}
 
@@ -920,7 +921,6 @@ btScalar btSequentialImpulseConstraintSolver::solveGroupCacheFriendlyIterations(
 	{
 		for ( iteration = 0;iteration<infoGlobal.m_numIterations;iteration++)
 		{			
-
 			int j;
 			if (infoGlobal.m_solverMode & SOLVER_RANDMIZE_ORDER)
 			{
@@ -984,7 +984,6 @@ btScalar btSequentialImpulseConstraintSolver::solveGroupCacheFriendlyIterations(
 				}
 			} else
 			{
-
 				///solve all joint constraints
 				for (j=0;j<m_tmpSolverNonContactConstraintPool.size();j++)
 				{
@@ -1087,7 +1086,10 @@ btScalar btSequentialImpulseConstraintSolver::solveGroup(btCollisionObject** bod
 	int i;
 
 	solveGroupCacheFriendlySetup( bodies, numBodies, manifoldPtr,  numManifolds,constraints, numConstraints,infoGlobal,debugDrawer, stackAlloc);
+
+
 	solveGroupCacheFriendlyIterations(bodies, numBodies, manifoldPtr,  numManifolds,constraints, numConstraints,infoGlobal,debugDrawer, stackAlloc);
+
 
 	int numPoolConstraints = m_tmpSolverContactConstraintPool.size();
 	int j;
@@ -1122,7 +1124,6 @@ btScalar btSequentialImpulseConstraintSolver::solveGroup(btCollisionObject** bod
 		}
 	}
 
-
 	m_tmpSolverBodyPool.resize(0);
 	m_tmpSolverContactConstraintPool.resize(0);
 	m_tmpSolverNonContactConstraintPool.resize(0);
@@ -1130,14 +1131,6 @@ btScalar btSequentialImpulseConstraintSolver::solveGroup(btCollisionObject** bod
 
 	return 0.f;
 }
-
-
-
-
-
-
-
-
 
 void	btSequentialImpulseConstraintSolver::reset()
 {

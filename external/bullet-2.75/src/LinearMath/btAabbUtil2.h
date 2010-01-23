@@ -21,7 +21,7 @@ subject to the following restrictions:
 #include "btVector3.h"
 #include "btMinMax.h"
 
-
+#include "LinearMath/btQuickprof.h"
 
 SIMD_FORCE_INLINE void AabbExpand (btVector3& aabbMin,
 								   btVector3& aabbMax,
@@ -36,6 +36,8 @@ SIMD_FORCE_INLINE void AabbExpand (btVector3& aabbMin,
 SIMD_FORCE_INLINE bool TestPointAgainstAabb2(const btVector3 &aabbMin1, const btVector3 &aabbMax1,
 								const btVector3 &point)
 {
+    BT_PROFILE("TestPointAgainstAabb2");
+
 	bool overlap = true;
 	overlap = (aabbMin1.getX() > point.getX() || aabbMax1.getX() < point.getX()) ? false : overlap;
 	overlap = (aabbMin1.getZ() > point.getZ() || aabbMax1.getZ() < point.getZ()) ? false : overlap;
@@ -48,6 +50,7 @@ SIMD_FORCE_INLINE bool TestPointAgainstAabb2(const btVector3 &aabbMin1, const bt
 SIMD_FORCE_INLINE bool TestAabbAgainstAabb2(const btVector3 &aabbMin1, const btVector3 &aabbMax1,
 								const btVector3 &aabbMin2, const btVector3 &aabbMax2)
 {
+    BT_PROFILE("TestAabbAgainstAabb2");
 	bool overlap = true;
 	overlap = (aabbMin1.getX() > aabbMax2.getX() || aabbMax1.getX() < aabbMin2.getX()) ? false : overlap;
 	overlap = (aabbMin1.getZ() > aabbMax2.getZ() || aabbMax1.getZ() < aabbMin2.getZ()) ? false : overlap;

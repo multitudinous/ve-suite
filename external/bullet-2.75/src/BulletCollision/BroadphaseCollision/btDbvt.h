@@ -22,6 +22,8 @@ subject to the following restrictions:
 #include "LinearMath/btTransform.h"
 #include "LinearMath/btAabbUtil2.h"
 
+#include "LinearMath/btQuickprof.h"
+
 //
 // Compile time configuration
 //
@@ -246,7 +248,7 @@ struct	btDbvt
 
 	// Constants
 	enum	{
-		SIMPLE_STACKSIZE	=	64,
+		SIMPLE_STACKSIZE	=	256,
 		DOUBLE_STACKSIZE	=	SIMPLE_STACKSIZE*2
 	};
 
@@ -515,6 +517,8 @@ DBVT_INLINE void		btDbvtAabbMm::AddSpan(const btVector3& d,btScalar& smi,btScala
 DBVT_INLINE bool		Intersect(	const btDbvtAabbMm& a,
 								  const btDbvtAabbMm& b)
 {
+    BT_PROFILE("btDbvt::Intersect");
+
 #if	DBVT_INT0_IMPL == DBVT_IMPL_SSE
 	const __m128	rt(_mm_or_ps(	_mm_cmplt_ps(_mm_load_ps(b.mx),_mm_load_ps(a.mi)),
 		_mm_cmplt_ps(_mm_load_ps(a.mx),_mm_load_ps(b.mi))));
@@ -536,6 +540,7 @@ DBVT_INLINE bool		Intersect(	const btDbvtAabbMm& a,
 DBVT_INLINE bool		Intersect(	const btDbvtAabbMm& a,
 								  const btVector3& b)
 {
+    BT_PROFILE("btDbvt::Intersect vector");
 	return(	(b.x()>=a.mi.x())&&
 		(b.y()>=a.mi.y())&&
 		(b.z()>=a.mi.z())&&
@@ -929,6 +934,7 @@ inline void		btDbvt::collideTV(	const btDbvtNode* root,
 					}
 					else
 					{
+                        BT_PROFILE("btDbvt::collideTV policy.Process");
 						policy.Process(n);
 					}
 				}
