@@ -230,7 +230,7 @@ void AvailableModules::ShowMenu( wxTreeItemId id, const wxPoint& pt )
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AvailableModules::getLeveledName( wxString name,
-    std::vector<wxString> & lnames )
+    std::vector<wxString>& lnames )
 {
     wxStringTokenizer tkz( name, wxT("_"));
     while( tkz.HasMoreTokens() )
@@ -329,19 +329,14 @@ void AvailableModules::ShowDesc( wxCommandEvent& WXUNUSED( event ) )
 ////////////////////////////////////////////////////////////////////////////////
 void AvailableModules::ShowHelp( wxCommandEvent& WXUNUSED( event ) )
 {
-    UIPluginBase* pl;
-    wxString help;
-    wxString fgroot;
-    wxString docdir;
-    wxString cmd;
-    ReiTreeItemData* item_data;
-    item_data = dynamic_cast< ReiTreeItemData* >( GetItemData( selection ) );
+    ReiTreeItemData* item_data = 
+        dynamic_cast< ReiTreeItemData* >( GetItemData( selection ) );
     if( !item_data )
     {
         return;
     }
 
-    pl = item_data->plugin;
+    //UIPluginBase* pl = item_data->plugin;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AvailableModules::ResetPluginTree()
