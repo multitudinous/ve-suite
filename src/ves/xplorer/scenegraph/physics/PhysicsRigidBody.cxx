@@ -354,7 +354,7 @@ void PhysicsRigidBody::CustomShape( const BroadphaseNativeTypes shapeType, const
         //std::string pname = mOSGToBullet->getName() + ".dae";
         //converter.convert( pname );
         mRB = converter.getRigidBody();
-        //record = converter.getOrCreateCreationRecord();
+        record = converter.getOrCreateCreationRecord();
         std::cout << "|\tJust finished creating a new btRigidBody." << std::endl;
     }
     
@@ -441,15 +441,17 @@ void PhysicsRigidBody::CustomShape( const BroadphaseNativeTypes shapeType, const
         setActivationState( DISABLE_DEACTIVATION );
     }*/
     
-    //std::string pname = mOSGToBullet->getName() + "_cr.osg";
-    //osg::ref_ptr< osgbBullet::PhysicsData > pd = new osgbBullet::PhysicsData();
-    //pd->_fileName = mOSGToBullet->getName();
-    //pd->_cr = record.get();
-    //pd->_body = mRB;
-    //std::ostringstream ostr;
-    //ostr << "id" << id++;
-    //osg::ref_ptr< osgwTools::RefID > rid = new osgwTools::RefID( ostr.str() );
-    //osgDB::writeObjectFile( *pd.get(), pname );
+    {
+        std::string pname = mOSGToBullet->getName() + "_cr.osg";
+        osg::ref_ptr< osgbBullet::PhysicsData > pd = new osgbBullet::PhysicsData();
+        pd->_fileName = mOSGToBullet->getName();
+        pd->_cr = record.get();
+        pd->_body = mRB;
+        //std::ostringstream ostr;
+        //ostr << "id" << id++;
+        //osg::ref_ptr< osgwTools::RefID > rid = new osgwTools::RefID( ostr.str() );
+        osgDB::writeObjectFile( *pd.get(), pname );
+    }
 
     RegisterRigidBody( mRB );
 }
