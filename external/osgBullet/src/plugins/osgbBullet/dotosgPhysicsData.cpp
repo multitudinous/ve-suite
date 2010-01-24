@@ -143,6 +143,20 @@ bool PhysicsData_readLocalData( osg::Object& obj, osgDB::Input& fr )
 
             osg::notify( osg::INFO ) << "OSGB: Found angular velocity " << v << std::endl;
         }
+        if( fr.matchSequence( "Friction %f" ) )
+        {
+            fr[1].getFloat( pd._friction );
+            fr += 2;
+            
+            osg::notify( osg::INFO ) << "OSGB: Found friction " << pd._friction << std::endl;
+        }
+        if( fr.matchSequence( "Restitution %f" ) )
+        {
+            fr[1].getFloat( pd._restitution );
+            fr += 2;
+            
+            osg::notify( osg::INFO ) << "OSGB: Found restitution " << pd._restitution << std::endl;
+        }
     }
     else if( fr.matchSequence( "FileName" ) )
     {
@@ -196,6 +210,10 @@ bool PhysicsData_writeLocalData( const osg::Object& obj, osgDB::Output& fw )
     fw.indent() << "Linear velocity " << lv << std::endl;
     osg::Vec3 av( osgbBullet::asOsgVec3( pd._body->getAngularVelocity() ) );
     fw.indent() << "Angular velocity " << av << std::endl;
+
+    fw.indent() << "Friction " << pd._body->getFriction() << std::endl;
+
+    fw.indent() << "Restitution " << pd._body->getRestitution() << std::endl;
 
     if( !pd._fileName.empty() )
         fw.indent() << "FileName \"" << pd._fileName << "\"" << std::endl;
