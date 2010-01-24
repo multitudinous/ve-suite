@@ -16,7 +16,7 @@ AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
 DefaultDirName=C:\{#MyAppName}_{#VEVERSION}.{#SVNVERSION}_{#MSVCVERSION}
-DefaultGroupName={#VESGROUPNAME}\Uninstallers_{#MSVCVERSION}
+DefaultGroupName={#VESGROUPNAME}
 AllowNoIcons=true
 OutputDir={#INSTALLERINSTALLLOCATION}
 OutputBaseFilename={#MyAppName}_{#VEVERSION}.{#SVNVERSION}_{#MSVCVERSION}
@@ -42,6 +42,8 @@ VersionInfoCompany=SMDS Program
 VersionInfoDescription=VE-Suite Installer
 UserInfoPage=false
 UsePreviousAppDir=false
+VersionInfoProductName=VE-Suite
+VersionInfoProductVersion=2.1.0
 
 [Types]
 Name: full; Description: Full installation
@@ -80,7 +82,7 @@ Source: {#VEINSTALLHOME}\bin\velauncher.exe; DestDir: {app}\bin
 Source: {#MSREDISTRIBUTABLE}; DestDir: {tmp}
 
 [Icons]
-Name: {group}\Uninstallers\{cm:UninstallProgram,{#MyAppName}}; Filename: {uninstallexe}
+Name: {group}\Uninstallers_{#MSVCVERSION}\{cm:UninstallProgram,{#MyAppName}}; Filename: {uninstallexe}
 Name: {group}\VE-Suite-{#VEVERSION}; Filename: {app}\bin\{#VELauncher}; WorkingDir: {app}; IconFilename: {app}\bin\installerImages\ves_icon.ico
 Name: {commondesktop}\VE-Suite-{#VEVERSION}; Filename: {app}\bin\velauncher.exe; WorkingDir: {app}; IconFilename: {app}\bin\installerImages\ves_icon.ico; Tasks: desktopVELauncherIcon
 

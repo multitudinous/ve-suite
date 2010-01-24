@@ -15,7 +15,7 @@ AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
 DefaultDirName=C:\{#MyAppName}_{#VEVERSION}_{#MSVCVERSION}
-DefaultGroupName={#VESGROUPNAME}\Uninstallers_{#MSVCVERSION}
+DefaultGroupName={#VESGROUPNAME}
 AllowNoIcons=true
 OutputBaseFilename={#MyAppName}_{#VEVERSION}_{#MSVCVERSION}
 Compression=lzma
@@ -168,4 +168,4 @@ Source: {#VEDEVHOME}\dist\win\iss\dependencies.txt; DestDir: {app}; Flags: isrea
 ;Source: {#DEPENDSINSTALLHOME}\{#ACETAOHOME}\TAO\orbsvcs\Naming_Service\Naming_Service_d.exe; DestDir: {app}\bin; Components: acetao
 
 [Icons]
-Name: {group}\Uninstallers\{cm:UninstallProgram,{#MyAppName}}; Filename: {uninstallexe}
+Name: {group}\Uninstallers_{#MSVCVERSION}\{cm:UninstallProgram,{#MyAppName}}; Filename: {uninstallexe}
