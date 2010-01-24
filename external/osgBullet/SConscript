@@ -103,9 +103,15 @@ if GetPlatform() == 'win32':
    #if lib_env['default_debug_level'] != EnvironmentBuilder.NONE:
    #   lib_env['PDB'] = True
 
+if GetPlatform() == 'darwin':
+    #print lib_env[ 'SHLIBPREFIX' ]
+    #lib_env[ 'SHLIBPREFIX' ] = ''
+    #print lib_env[ 'SHLIBSUFFIX' ]
+    lib_env[ 'SHLIBSUFFIX' ] = '.so'
+    #osgdb_osgbbullet
+
 libosgb = ves_pkg.createSharedLibrary('osgbBullet', lib_env,
                                                installPrefix = LIBDIR)
-   
 libosgb.addSources(sources)
 libosgb.build()
 ###############################################################
