@@ -171,13 +171,13 @@ TransformUI::TransformUI( wxWindow* parent, wxString dialogName, ves::open::xml:
     }
 
 
-    scaleInfo->Add( scaleSizer, 1, wxEXPAND | wxALIGN_CENTER_HORIZONTAL );
-    scaleInfo->Add( m_uniformScale, 1, wxEXPAND | wxALIGN_CENTER_HORIZONTAL );
+    scaleInfo->Add( scaleSizer, 0, wxALIGN_CENTER_HORIZONTAL );
+    scaleInfo->Add( m_uniformScale, 0, wxALIGN_CENTER_HORIZONTAL );
 
-    transformPropSizer->Add( scaleInfo, 2, wxEXPAND | wxALIGN_CENTER_HORIZONTAL );
+    transformPropSizer->Add( scaleInfo, 0, wxALIGN_CENTER_HORIZONTAL );
 
-    transformPanelSizer->Add( transformPropSizer, 1, wxEXPAND | wxALIGN_CENTER );
-    this->SetAutoLayout( true );
+    transformPanelSizer->Add( transformPropSizer, 0, wxALIGN_CENTER );
+    //this->SetAutoLayout( true );
     this->SetSizer( transformPanelSizer );
 
     tempX = 1.0;

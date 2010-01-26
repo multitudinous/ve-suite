@@ -582,31 +582,37 @@ void DataSetLoaderUI::OnTransformDataset( wxCommandEvent& WXUNUSED( event ) )
                               _( "Transform Input Window" ),
                               wxDefaultPosition,
                               wxDefaultSize,
-                              wxCAPTION | wxCLOSE_BOX | wxSYSTEM_MENU | wxRESIZE_BORDER | wxSYSTEM_MENU | wxCLOSE_BOX | wxMAXIMIZE_BOX | wxMINIMIZE_BOX );
+                              wxCAPTION | wxSYSTEM_MENU | wxCLOSE_BOX );
 
+    transformDialog.CenterOnParent();
+    
     wxBoxSizer* mainSizer = new wxBoxSizer( wxVERTICAL );
     //wxBoxSizer* notebookSizer = new wxBoxSizer(wxVERTICAL);
     //wxBoxSizer* bottomRow = new wxBoxSizer(wxHORIZONTAL);
-    ves::conductor::util::TransformUI* transformPanel = new ves::conductor::util::TransformUI( &transformDialog, _( "Transform Input" ), mParamBlock->GetTransform() );
+    ves::conductor::util::TransformUI* transformPanel = 
+        new ves::conductor::util::TransformUI( 
+        &transformDialog, _( "Transform Input" ), mParamBlock->GetTransform() );
 
     if( mParamBlock )
     {
-        mainSizer->Add( transformPanel, -1, wxEXPAND | wxALIGN_CENTER_HORIZONTAL );
+        mainSizer->Add( transformPanel, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5 );
     }
     else
     {
         mainSizer->Add( new TransformUI( &transformDialog, _( "Transform Input" ),
                         ves::open::xml::TransformPtr() ),
-                        -1, wxEXPAND | wxALIGN_CENTER_HORIZONTAL );
+                        0, wxALIGN_CENTER_HORIZONTAL | wxALL, 5 );
     }
 
-    mainSizer->Add( transformDialog.CreateStdDialogButtonSizer( wxOK | wxCANCEL ), -1, wxEXPAND | wxALIGN_CENTER_HORIZONTAL );
+    mainSizer->Add( transformDialog.CreateStdDialogButtonSizer( wxOK|wxCANCEL ), 
+        0, wxALIGN_CENTER_HORIZONTAL|wxALL, 10 );
     //set this flag and let wx handle alignment
-    transformDialog.SetAutoLayout( true );
+    //transformDialog.SetAutoLayout( true );
 
     //assign the group to the panel
     transformDialog.SetSizer( mainSizer );
     mainSizer->Fit( &transformDialog );
+    mainSizer->SetSizeHints( &transformDialog );
 
     //set parameterblock unique (GUID) id for transform GUI
     if( mParamBlock->GetProperty( "VTK_DATA_FILE" ) )
