@@ -408,8 +408,10 @@ void cfdStreamers::Update()
         }
         catch( std::bad_alloc )
         {
-            mapper->Delete();
-            mapper = vtkPolyDataMapper::New();
+	        streamTracer->Delete();
+	        streamTracer = vtkStreamTracer::New();
+	        mapper->Delete();
+	        mapper = vtkPolyDataMapper::New();
             vprDEBUG( vesDBG, 0 ) << "|\tMemory allocation failure : cfdStreamers "
                 << std::endl << vprDEBUG_FLUSH;
         }
