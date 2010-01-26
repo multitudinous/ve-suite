@@ -38,6 +38,7 @@
 #include <osg/Texture>
 #include <osg/Texture2D>
 #include <osgDB/ReadFile>
+#include <osgDB/FileUtils>
 
 #include <vtkLookupTable.h>
 #include <vtkPolyData.h>
@@ -465,19 +466,32 @@ ves::xplorer::scenegraph::Geode* OSGVectorStage::createInstanced(vtkPolyData* gl
         //const vec4 oColor = texture1D( texCS, scalarV.a );
         "   gl_FrontColor = simpleLighting( color, norm, 0.7, 0.3 ); \n"
         "} \n";
-
-    osg::ref_ptr< osg::Shader > vertexShader = new osg::Shader();
-    vertexShader->setType( osg::Shader::VERTEX );
-    vertexShader->setShaderSource( vertexSource );
-
-    osg::ref_ptr< osg::Program > program = new osg::Program();
-    program->addShader( vertexShader.get() );
-
-
     osg::StateSet* ss = geom->getOrCreateStateSet();
-    ss->setAttribute( program.get(),
-    osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
 
+    {
+        osg::ref_ptr< osg::Shader > vertexShader = new osg::Shader();
+        vertexShader->setType( osg::Shader::VERTEX );
+        vertexShader->setShaderSource( vertexSource );
+        
+        osg::ref_ptr< osg::Program > program = new osg::Program();
+        program->addShader( vertexShader.get() );
+        
+        ss->setAttribute( program.get(),
+            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+    }
+
+    {
+        std::string shaderName = osgDB::findDataFile( "null_glow.fs" );
+        osg::ref_ptr< osg::Shader > fragShader = 
+        osg::Shader::readShaderFile( osg::Shader::FRAGMENT, shaderName );
+        
+        osg::ref_ptr< osg::Program > program = new osg::Program();
+        program->addShader( fragShader.get() );
+        
+        ss->setAttributeAndModes( program.get(),
+            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+    }
+    
     // Posidion array.
     ss->setTextureAttribute( 0, rawVTKData->getPositionTexture() );
     osg::ref_ptr< osg::Uniform > texPosUniform =

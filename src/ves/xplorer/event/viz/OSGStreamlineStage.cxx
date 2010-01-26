@@ -37,6 +37,7 @@
 #include <osg/Texture>
 #include <osg/Texture2D>
 #include <osgDB/ReadFile>
+#include <osgDB/FileUtils>
 
 #include <vtkLookupTable.h>
 #include <vtkPolyData.h>
@@ -395,15 +396,29 @@ void OSGStreamlineStage::createStreamLines( vtkPolyData* polyData,
             "   gl_FrontColor = color; \n"
             "} \n";
 
-        osg::ref_ptr< osg::Shader > vertexShader = new osg::Shader();
-        vertexShader->setType( osg::Shader::VERTEX );
-        vertexShader->setShaderSource( vertexSource );
+        {
+            osg::ref_ptr< osg::Shader > vertexShader = new osg::Shader();
+            vertexShader->setType( osg::Shader::VERTEX );
+            vertexShader->setShaderSource( vertexSource );
+            
+            osg::ref_ptr< osg::Program > program = new osg::Program();
+            program->addShader( vertexShader.get() );
+            ss->setAttribute( program.get(),
+                osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+        }
 
-        osg::ref_ptr< osg::Program > program = new osg::Program();
-        program->addShader( vertexShader.get() );
-        ss->setAttribute( program.get(),
-        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
-
+        {
+            std::string shaderName = osgDB::findDataFile( "null_glow.fs" );
+            osg::ref_ptr< osg::Shader > fragShader = 
+            osg::Shader::readShaderFile( osg::Shader::FRAGMENT, shaderName );
+            
+            osg::ref_ptr< osg::Program > program = new osg::Program();
+            program->addShader( fragShader.get() );
+            
+            ss->setAttributeAndModes( program.get(),
+                osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+        }
+        
         // Note:
         // We will render the streamline points with depth test on and depth write disabled,
         // with an order independent blend. This means we need to draw the streamlines last

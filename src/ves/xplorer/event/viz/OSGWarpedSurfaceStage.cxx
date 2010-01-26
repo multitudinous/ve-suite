@@ -550,7 +550,8 @@ void OSGWarpedSurfaceStage::createMeshData( osg::Geometry* geom,
         "    vec3 TotalSpecular=gl_LightSource[0].specular.rgb*specularMaterial*pow(RDotL,specularPower);\n"
         "\n"
         "    vec4 newColor = vec4(TotalAmbient+TotalDiffuse+TotalSpecular,opacityVal);\n"
-        "    gl_FragColor = newColor;\n"
+        //"    gl_FragColor = newColor;\n"
+        "    gl_FragData[ 0 ] = newColor;\n"
         /*"    if(gl_SecondaryColor.r < .5)\n"
         "    {\n"
         "         gl_BackColor = newColor;\n"
@@ -559,6 +560,7 @@ void OSGWarpedSurfaceStage::createMeshData( osg::Geometry* geom,
         "    {\n"
         "         gl_FrontColor = newColor;\n"
         "    }\n"*/
+        "    gl_FragData[ 1 ] = vec4( 0, 0, 0, 1);\n"
         "}\n"
         );
     
