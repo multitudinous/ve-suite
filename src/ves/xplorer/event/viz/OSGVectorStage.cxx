@@ -467,30 +467,25 @@ ves::xplorer::scenegraph::Geode* OSGVectorStage::createInstanced(vtkPolyData* gl
         "   gl_FrontColor = simpleLighting( color, norm, 0.7, 0.3 ); \n"
         "} \n";
     osg::StateSet* ss = geom->getOrCreateStateSet();
+    osg::ref_ptr< osg::Program > program = new osg::Program();
 
     {
         osg::ref_ptr< osg::Shader > vertexShader = new osg::Shader();
         vertexShader->setType( osg::Shader::VERTEX );
         vertexShader->setShaderSource( vertexSource );
         
-        osg::ref_ptr< osg::Program > program = new osg::Program();
         program->addShader( vertexShader.get() );
-        
-        ss->setAttribute( program.get(),
-            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
     }
 
     {
         std::string shaderName = osgDB::findDataFile( "null_glow.fs" );
         osg::ref_ptr< osg::Shader > fragShader = 
-        osg::Shader::readShaderFile( osg::Shader::FRAGMENT, shaderName );
+            osg::Shader::readShaderFile( osg::Shader::FRAGMENT, shaderName );
         
-        osg::ref_ptr< osg::Program > program = new osg::Program();
         program->addShader( fragShader.get() );
-        
-        ss->setAttributeAndModes( program.get(),
-            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
     }
+    ss->setAttributeAndModes( program.get(),
+        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
     
     // Posidion array.
     ss->setTextureAttribute( 0, rawVTKData->getPositionTexture() );
