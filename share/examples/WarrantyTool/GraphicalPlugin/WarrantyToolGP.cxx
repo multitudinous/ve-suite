@@ -767,8 +767,11 @@ void WarrantyToolGP::CreateDB()
         }
         else if( isDate )
         {
-            createCommand << "'" << tempData.at( i ).first << "' DATE";
-        }
+            //We cannot use the date data type because DATE is not supported
+            //in sqlite
+            //createCommand << "'" << tempData.at( i ).first << "' DATE";
+            createCommand << "'" << tempData.at( i ).first << "' VARCHAR";
+       }
         else
         {
             createCommand << "'" << tempData.at( i ).first << "' DOUBLE";
@@ -846,21 +849,22 @@ void WarrantyToolGP::CreateDB()
         //insertCommand << "INSERT INTO Parts VALUES('" << tempData.at( 2 ).second << "','" << tempData.at( 3 ).second << "'," << boost::lexical_cast<int>( tempData.at( 4 ).second )
         //    << "," << boost::lexical_cast<double>( tempData.at( 5 ).second ) << "," << boost::lexical_cast<double>( tempData.at( 6 ).second )
         //    << "," <<  boost::lexical_cast<double>( tempData.at( 7 ).second ) << ",'" << tempData.at( 8 ).second << "')";
-        Statement insert( session );
-        try
         {
-            insert << insertCommand.str(), now;
+            Statement insert( session );
+            try
+            {
+                insert << insertCommand.str(), now;
+            }
+            catch( Poco::Data::DataException& ex )
+            {
+                std::cout << ex.displayText() << std::endl;
+                //std::string ses = insert.toString();
+                //std::cout << ses << std::endl;
+            }
+            insertCommand.str("");
         }
-        catch( Poco::Data::DataException& ex )
-        {
-            std::cout << ex.displayText() << std::endl;
-            //std::string ses = insert.toString();
-            //std::cout << ses << std::endl;
-        }
-        insertCommand.str("");
     }
-    
-    
+
 	//insert << "INSERT INTO Parts VALUES(?, ?, ?, ?, ?, ?, ?)",
     //    use(assem), now;
     mCommandHandler->SendConductorMessage( "Finished creating DB..." );

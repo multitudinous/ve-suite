@@ -738,7 +738,7 @@ void WarrantyToolUIDialog::ParseDataBase( const std::string& csvFilename )
     try
     {
         //std::string queryString = "DESCRIBE Parts";
-        std::string queryString = "SELECT * FROM Parts WHERE rowid = 1";
+        std::string queryString = "SELECT * FROM Parts WHERE rowid = \"1\"";
         select << queryString.c_str(),now;
         //select.execute();
     }
@@ -747,9 +747,14 @@ void WarrantyToolUIDialog::ParseDataBase( const std::string& csvFilename )
         std::cout << ex.displayText() << std::endl;
         return;
     }
+    catch( Poco::Exception& ex )
+    {
+        std::cout << ex.displayText() << std::endl;
+        return;
+    }
     catch( ... )
     {
-        std::cout << "Query is bad." << std::endl;
+        std::cout << "UI Column name query is bad." << std::endl;
         return;
     }
 
@@ -770,7 +775,6 @@ void WarrantyToolUIDialog::ParseDataBase( const std::string& csvFilename )
     {
         return;
     }*/
-    
     for( size_t i = 0; i < cols; ++i )
     {
         wxString columnNames = wxString( rs.columnName( i ).c_str(), wxConvUTF8 );
@@ -803,10 +807,10 @@ void WarrantyToolUIDialog::ParseDataBase( const std::string& csvFilename )
     }
     catch( ... )
     {
-        std::cout << "Query is bad." << std::endl;
+        std::cout << "UI Part Number query is bad." << std::endl;
         return;
     }
-    
+
 	// create a RecordSet 
 	Poco::Data::RecordSet partRS(select2);
 	cols = partRS.columnCount();
@@ -822,7 +826,7 @@ void WarrantyToolUIDialog::ParseDataBase( const std::string& csvFilename )
     {
         return;
     }
-    
+
     while (more)
 	{
         wxString partNames = wxString( partRS[0].convert<std::string>().c_str(), wxConvUTF8 );
@@ -830,7 +834,7 @@ void WarrantyToolUIDialog::ParseDataBase( const std::string& csvFilename )
         
 		more = partRS.moveNext();
 	}
-    
+
     try
     {
         Poco::Data::SQLite::Connector::unregisterConnector();
