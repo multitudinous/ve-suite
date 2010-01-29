@@ -32,7 +32,7 @@ BEGIN_MESSAGE_MAP(CDynSimUnitDlg, CDialog)
 	ON_BN_CLICKED(IDOK, &CDynSimUnitDlg::OnBnClickedOk)
 	ON_BN_CLICKED(IDCANCEL, &CDynSimUnitDlg::OnBnClickedCancel)
 	ON_BN_CLICKED(IDC_BUTTON2, &CDynSimUnitDlg::OnBnClickedButton2)
-    ON_WM_TIMER ( )
+    //ON_WM_TIMER ( )
 END_MESSAGE_MAP()
 
 
@@ -249,7 +249,7 @@ void CDynSimUnitDlg::OnBnClickedButton2()
     }
 }
 
-void CDynSimUnitDlg::OnTimer( UINT TimerVal )
-{
-    commManager->GetUnitObject()->UpdateVars();
-}
+//void CDynSimUnitDlg::OnTimer( UINT TimerVal )
+//{
+//    commManager->GetUnitObject()->UpdateVars();
+//}

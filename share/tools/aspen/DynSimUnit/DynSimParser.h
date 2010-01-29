@@ -55,8 +55,12 @@ public:
     int OpenFile( std::string filename );
     bool ConnectToOPC();
     std::vector< std::pair< std::string, std::string > > ReadVars();
+	//std::string GetOPCValue( const std::string& );
+	std::string GetOPCValues( );
+	void ConnectWithList( std::vector< std::string > list );
 
 private:
+	void ParseTreeFile( std::string );
     void InitializeParser();
     void ParseFlowsheets();
     void ParseObjects( XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* );
@@ -112,16 +116,22 @@ private:
         std::string name;
         std::string cls;
         std::map< std::string, block > blocks;
+        std::map< std::string, block > others;
         std::map< std::string, stream > streams;
     }flowsheet;
 
     std::map< std::string, block > blocks;
     std::map< std::string, stream > streams;
+    std::map< std::string, block > others;
     std::map< std::string, flowsheet > flowsheets;
+    std::vector< std::pair< std::string, std::string > > nameAndValues;
+	std::string m_opcFlowsheetName;
+	std::vector< std::string > m_opcVariables;
 
     
     CComSafeArray<long> * serverID;
     CComSafeArray<BSTR> * itemIDs;
+    CComSafeArray<long> * clientID;
     OPCItemsPtr items;
     IOPCGroupPtr group;
     IOPCGroupsPtr groups;

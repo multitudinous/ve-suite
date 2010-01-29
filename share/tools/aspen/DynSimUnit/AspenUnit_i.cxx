@@ -93,6 +93,9 @@ Body_Unit_i::Body_Unit_i( std::string name, CDynSimUnitDlg * dialog,
     mQueryCommandNames.insert( "getStreamInputModuleProperties");
     mQueryCommandNames.insert( "getStreamOutputModuleParamList");
     mQueryCommandNames.insert( "getStreamOutputModuleProperties");
+    mQueryCommandNames.insert( "getOPCValue");
+    mQueryCommandNames.insert( "getOPCValues");
+    mQueryCommandNames.insert( "connectWithList");
     mQueryCommandNames.insert( "setParam");
     mQueryCommandNames.insert( "setLinkParam");
 
@@ -471,7 +474,7 @@ char * Body_Unit_i::Query ( const char * query_str
 		returnValue = handleGetNetwork( cmd );
 		return returnValue;
 	}
-	else if( cmdname == "openSimulation" )
+	/*else if( cmdname == "openSimulation" )
 	{
 		returnValue = handleOpenSimulation( cmd );
 		return returnValue;
@@ -615,6 +618,23 @@ char * Body_Unit_i::Query ( const char * query_str
 		SetLinkParam( cmd );
 		return CORBA::string_dup( "Param Set" );
 	}
+	else if ( cmdname == "getOPCValue" )
+	{
+		returnValue = getOPCValue( cmd );
+		return returnValue;
+	}*/
+	else if ( cmdname == "getOPCValues" )
+	{
+		returnValue = getOPCValues( cmd );
+		return returnValue;
+	}
+	else if ( cmdname == "connectWithList" )
+	{
+		//returnValue = monitorValues( cmd );
+		connectWithList( cmd );
+		//return returnValue;
+		return( "NULL" );
+	}
 	else
 		return CORBA::string_dup( "NULL" );
 }
@@ -690,7 +710,7 @@ char* Body_Unit_i::handleGetNetwork(ves::open::xml::CommandPtr cmd)
     //}
 
     //hack to add some form of opc development to VE-PSI
-    connected = dynsim->ConnectToOPC();
+    //connected = dynsim->ConnectToOPC();
 
     return CORBA::string_dup( network.c_str() );
     //return NULL;
@@ -1125,9 +1145,9 @@ void Body_Unit_i::SetParams (CORBA::Long id,
    */
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Body_Unit_i::SetParam (ves::open::xml::CommandPtr cmd)
+/*void Body_Unit_i::SetParam (ves::open::xml::CommandPtr cmd)
 {
-    /*
+    
 	size_t num = cmd->GetNumberOfDataValuePairs();
 	std::string modname,paramName, paramValue;
 
@@ -1169,8 +1189,7 @@ void Body_Unit_i::SetParam (ves::open::xml::CommandPtr cmd)
                 temp_vector[2].c_str(), true );
 	    }
     }
-    */
-}
+}*/
 ////////////////////////////////////////////////////////////////////////////////
 void Body_Unit_i::SetLinkParam( ves::open::xml::CommandPtr cmd )
 {
@@ -1199,12 +1218,44 @@ void Body_Unit_i::UpdateVars( )
         std::vector< std::pair< std::string, std::string > > vars =
             dynsim->ReadVars();
 
-        //dump results to aspen log
-        for( int i = 0; i < vars.size(); i++)
-        {
-            std::string temp = vars[i].first + " " + vars[i].second +"\n";
-            AspenLog->SetSel(-1, -1);
-            AspenLog->ReplaceSel( temp.c_str() );
-        }
+		if( !vars.empty() )
+		{
+			//dump results to aspen log
+			for( int i = 0; i < vars.size(); i++)
+			{
+				std::string temp = vars[i].first + " " + vars[i].second +"\n";
+				AspenLog->SetSel(-1, -1);
+				AspenLog->ReplaceSel( temp.c_str() );
+			}
+		}
     }
+}
+///////////////////////////////////////////////////////////////////////////////
+/*char* Body_Unit_i::getOPCValue( ves::open::xml::CommandPtr cmd )
+{
+	ves::open::xml::DataValuePairPtr curPair = cmd->GetDataValuePair( 0 );
+	std::string modname = curPair->GetDataString( );
+	std::string netPak = dynsim->GetOPCValue( modname.c_str() );
+	return CORBA::string_dup( netPak.c_str( ) );
+}*/
+///////////////////////////////////////////////////////////////////////////////
+char* Body_Unit_i::getOPCValues( ves::open::xml::CommandPtr cmd )
+{
+	std::string netPak = dynsim->GetOPCValues( );
+	return CORBA::string_dup( netPak.c_str( ) );
+}
+///////////////////////////////////////////////////////////////////////////////
+void Body_Unit_i::connectWithList( ves::open::xml::CommandPtr cmd )
+{
+	//if() //not empty
+	//{
+		//create variable list
+		ves::open::xml::DataValuePairPtr pair = cmd->GetDataValuePair( 0 );
+
+		std::vector< std::string > list;
+		pair->GetData( list );
+		dynsim->ConnectWithList( list );
+		//connected = dynsim->ConnectToOPC();
+	//}
+	//return CORBA::string_dup( netPak.c_str( ) );
 }

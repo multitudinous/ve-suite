@@ -74,6 +74,7 @@ DynSimParser::DynSimParser()
 
 std::string DynSimParser::CreateNetwork( std::string filename )
 {
+	ParseTreeFile( filename + ".tree" );
     m_fileName = filename + ".xml";
     InitializeParser();
     ParseFlowsheets();
@@ -81,6 +82,49 @@ std::string DynSimParser::CreateNetwork( std::string filename )
     return CreateVESNetwork();
 }
 
+
+void DynSimParser::ParseTreeFile( std::string treeFilename )
+{
+	std::ifstream inFile( treeFilename.c_str(), std::ifstream::in );
+    if(!inFile.is_open())
+    {
+        std::cerr << "Could not open file : " << treeFilename.c_str() << std::endl;
+        return;
+}
+	
+	std::string temp;
+	std::string name;
+	std::vector< std::string > entries;
+	getline(inFile, temp);
+	int opcEntryCount = 0;
+	while( !inFile.eof() )
+	{
+		opcEntryCount++;
+        
+		//get the variable name
+		std::stringstream opcTokenizer( temp );
+        opcTokenizer >> name;
+
+		//if( name.find(".") != std::string::npos )
+		//{
+			name = name.substr( 0, name.find(".") );
+		//}
+		entries.push_back( name );
+        
+		getline(inFile, temp);
+	}
+
+	//parse out opc sheet name and variables
+	m_opcFlowsheetName = entries[0].substr( 0, entries[0].find_first_of("_") );
+
+	int underScorePos;
+	for( int i = 0; i < entries.size(); i++)
+	{
+		underScorePos = entries[i].find_first_of("_");
+		m_opcVariables.push_back( entries[i].substr( underScorePos + 1, 
+			entries[0].size() - underScorePos ) );
+	}
+}
 
 int DynSimParser::OpenFile( std::string filename )
 {
@@ -195,10 +239,12 @@ void DynSimParser::ParseFlowsheets( )
         flowsheets[name].id = i;
         flowsheets[name].blocks = blocks;
         flowsheets[name].streams = streams;
+		flowsheets[name].others = others;
         flowsheets[name].cls = "Flowsheet";
 
         blocks.clear();
         streams.clear();
+        others.clear();
     }
 }
 
@@ -266,6 +312,11 @@ void DynSimParser::PopulateBlocks( DOMElement* sys_element )
         DOMNodeList* childList = node->getChildNodes();
         DOMElement* element =
             dynamic_cast<DOMElement*> ( childList->item( 3 ) );
+		XMLCh* nameEntry = XMLString::transcode("GMBE_NAME");
+
+		//test for GMBE_NAME Entry - if not don't add to list
+		if( XMLString::compareString( element->getTagName(), nameEntry ) == 0 )
+		{
         DOMText* rawText =
                 dynamic_cast< DOMText* >
                 ( element->getFirstChild() );
@@ -276,7 +327,12 @@ void DynSimParser::PopulateBlocks( DOMElement* sys_element )
         if( blocks.find( name ) != blocks.end() )  
         {
             //id
-            blocks[name].id = blockCount++;
+            element = dynamic_cast<DOMElement*> ( childList->item( 1 ) );
+            rawText = dynamic_cast< DOMText* >
+                    ( element->getFirstChild() );
+            int id = XERCES_CPP_NAMESPACE_QUALIFIER
+                XMLString::parseInt( rawText->getData() );
+            blocks[name].id = id;
 
             //loc x
             element = dynamic_cast<DOMElement*> ( childList->item( 9 ) );
@@ -483,6 +539,166 @@ void DynSimParser::PopulateBlocks( DOMElement* sys_element )
                 streams[name].vtx.push_back( tempVtx );
             }
         }
+		else  
+        {
+            //id
+            element = dynamic_cast<DOMElement*> ( childList->item( 1 ) );
+            rawText = dynamic_cast< DOMText* >
+                    ( element->getFirstChild() );
+            int id = XERCES_CPP_NAMESPACE_QUALIFIER
+                XMLString::parseInt( rawText->getData() );
+            others[name].id = id;
+
+			element =
+				dynamic_cast<DOMElement*> ( childList->item( 5 ) );
+			rawText =
+					dynamic_cast< DOMText* >
+					( element->getFirstChild() );
+			fUnicodeForm =
+				XMLString::transcode( rawText->getData() );
+			std::string cls( fUnicodeForm );
+
+            others[name].name = name;
+            std::transform(cls.begin(), cls.end(), cls.begin(), std::tolower);
+            others[name].cls = cls;
+
+            //loc x
+            element = dynamic_cast<DOMElement*> ( childList->item( 9 ) );
+            rawText = dynamic_cast< DOMText* >
+                    ( element->getFirstChild() );
+            int x = XERCES_CPP_NAMESPACE_QUALIFIER
+                XMLString::parseInt( rawText->getData() );
+            others[name].x = x;
+            
+            //loc y
+            element = dynamic_cast<DOMElement*> ( childList->item( 11 ) );
+            rawText = dynamic_cast< DOMText* >
+                    ( element->getFirstChild() );
+            int y = XERCES_CPP_NAMESPACE_QUALIFIER
+                XMLString::parseInt( rawText->getData() );
+            others[name].y = y;
+            
+            //width
+            element = dynamic_cast<DOMElement*> ( childList->item( 13 ) );
+            rawText = dynamic_cast< XERCES_CPP_NAMESPACE_QUALIFIER DOMText* >
+                    ( element->getFirstChild() );
+            int width = XERCES_CPP_NAMESPACE_QUALIFIER
+                XMLString::parseInt( rawText->getData() );
+            others[name].width = width;
+            
+            //height
+            element = dynamic_cast<DOMElement*> ( childList->item( 15 ) );
+            rawText = dynamic_cast< XERCES_CPP_NAMESPACE_QUALIFIER DOMText* >
+                    ( element->getFirstChild() );
+            int height = XERCES_CPP_NAMESPACE_QUALIFIER
+                XMLString::parseInt( rawText->getData() );
+            others[name].height = height;   
+    
+            DOMElement* tempElement = dynamic_cast<DOMElement*> ( node );
+            /*//Ports
+            DOMNodeList *gmbePortList = 
+                tempElement->getElementsByTagName( 
+                XMLString::transcode("GMBE_PORT") );
+            int portNum = gmbePortList->getLength();
+            for(int j = 0; j < portNum; j++)
+            {
+                DOMNode* tempNode = gmbePortList->item( j );
+                DOMNodeList* childList = tempNode->getChildNodes();
+                port tempPort;
+                tempPort.id = portCount++;
+
+                //model id / name
+                tempPort.modelId = blocks[name].id;
+                tempPort.modelName = name;
+
+                //type / dataFlow
+                element = dynamic_cast<DOMElement*> ( childList->item( 3 ) );
+                rawText = dynamic_cast< DOMText* >
+                        ( element->getFirstChild() );
+                char* fUnicodeForm =
+                    XMLString::transcode( rawText->getData() );
+                std::string dataFlow( fUnicodeForm );
+                if( !dataFlow.compare( "FeedPort" ) )
+                {
+                    tempPort.dataFlow = "input";
+                }
+                else if( !dataFlow.compare( "ProductPort" ) )
+                {
+                    tempPort.dataFlow = "output";
+                }
+                else
+                {
+                    tempPort.dataFlow = "InvalidName";
+                }
+
+                //stream name
+                element = dynamic_cast<DOMElement*> ( childList->item( 7 ) );
+                rawText = dynamic_cast< DOMText* >
+                        ( element->getFirstChild() );
+                fUnicodeForm =
+                    XMLString::transcode( rawText->getData() );
+                std::string streamName( fUnicodeForm );
+                tempPort.streamName = streamName;
+
+                //loc x
+                element = dynamic_cast<DOMElement*> ( childList->item( 13 ) );
+                rawText = dynamic_cast< DOMText* >
+                        ( element->getFirstChild() );
+                int portx = XERCES_CPP_NAMESPACE_QUALIFIER
+                    XMLString::parseInt( rawText->getData() );
+                tempPort.x = portx - x;
+                
+                //loc y
+                element = dynamic_cast<DOMElement*> ( childList->item( 15 ) );
+                rawText = dynamic_cast< DOMText* >
+                        ( element->getFirstChild() );
+                int porty = XERCES_CPP_NAMESPACE_QUALIFIER
+                    XMLString::parseInt( rawText->getData() );
+                tempPort.y = porty - y;
+
+                blocks[name].ports.push_back( tempPort );
+                streams[streamName].ports.push_back( tempPort );
+            }*/
+            //Params
+            //find imageType
+            DOMNodeList *paramList = 
+                tempElement->getElementsByTagName( 
+                XMLString::transcode("PARAMS") );
+            int paramNum = paramList->getLength();
+            for(int j = 0; j < paramNum; j++)
+            {
+                //look for imageType
+                DOMNode* tempNode = paramList->item( j );
+                DOMNodeList* childList = tempNode->getChildNodes();
+
+                //read "name" 
+                element = dynamic_cast<DOMElement*> ( childList->item( 1 ) );
+                rawText = dynamic_cast< DOMText* >
+                        ( element->getFirstChild() );
+                fUnicodeForm =
+                    XMLString::transcode( rawText->getData() );
+                std::string paramName( fUnicodeForm );
+
+                // compare name with "imageType"
+                if( !paramName.compare( "imageType" ) )
+                {
+                    //imageType
+                    //Parse CDATA section
+                    element = dynamic_cast<DOMElement*> ( childList->item( 3 ) );
+                    DOMCDATASection * cdata = dynamic_cast< DOMCDATASection* >
+                            ( element->getFirstChild() );
+                    fUnicodeForm =
+                        XMLString::transcode( cdata->getData() );
+                    std::string imageType( fUnicodeForm );
+                    
+                    others[name].imageType = imageType;
+
+                    //imageType located exit loop
+                    break;
+                }
+            }
+		}
+		}
     }
 }
 
@@ -533,7 +749,7 @@ std::string DynSimParser::CreateVESNetwork()
         flowSheetModel( new ves::open::xml::model::Model() );
         flowSheetModel->SetModelID( sheetIter->second.id );
         flowSheetModel->SetPluginName( sheetIter->second.name );
-        flowSheetModel->SetPluginType( "SDPlugin" );
+		flowSheetModel->SetPluginType( "SimUOPlugin" );
         flowSheetModel->SetVendorName( "DYNSIMUNIT" );
         flowSheetModel->SetIconFilename( "C:/SIMSCI/DSS43/GUI/Images/ClassIcons/" + sheetIter->second.cls + ".gif" );
         //flowSheetModel->SetIconFilename( sheetIter->second.cls );
@@ -606,9 +822,22 @@ std::string DynSimParser::CreateVESNetwork()
             ves::open::xml::model::ModelPtr
                 tempModel( new ves::open::xml::model::Model() );
             tempModel->SetModelID( blockIter->second.id );
-            tempModel->SetPluginName( blockIter->second.name );
-            tempModel->SetPluginType( "SDPlugin" );
-            tempModel->SetVendorName( "DYNSIMUNIT" );
+            tempModel->SetPluginName( blockIter->second.name );		
+			
+			//check opc vector
+			std::vector< std::string >::iterator iter;
+			iter = find( m_opcVariables.begin(), m_opcVariables.end(),
+				blockIter->second.name );
+			if ( iter == m_opcVariables.end() )    
+			{
+				tempModel->SetPluginType( "SimUOPlugin" );
+			}
+			else
+			{
+				tempModel->SetPluginType( "OpcUOPlugin" );
+			}
+            
+			tempModel->SetVendorName( "DYNSIMUNIT" );
             //tempModel->SetIconFilename( blockIter->second.cls );
             tempModel->SetIconFilename( GetDynSimIconPath( blockIter->second.cls, blockIter->second.imageType ) );
             tempModel->SetIconRotation( 0 );
@@ -632,7 +861,59 @@ std::string DynSimParser::CreateVESNetwork()
                     ( blockIter->second.ports[i].x, blockIter->second.ports[i].y) );
             }
             subSystem->AddModel(tempModel);
+        
+		}
+
+		//create other
+        std::map< std::string, block >::iterator otherIter;
+        for ( otherIter = sheetIter->second.others.begin();
+            otherIter != sheetIter->second.others.end();
+            ++otherIter )
+        {
+            ves::open::xml::model::ModelPtr
+                tempModel( new ves::open::xml::model::Model() );
+            tempModel->SetModelID( otherIter->second.id );
+            tempModel->SetPluginName( otherIter->second.name );
+
+			//check opc vector
+			std::vector< std::string >::iterator iter;
+			iter = find( m_opcVariables.begin(), m_opcVariables.end(),
+				otherIter->second.name );
+			if ( iter == m_opcVariables.end() )    
+			{
+				tempModel->SetPluginType( "SimUOPlugin" );
+			}
+			else
+			{
+				tempModel->SetPluginType( "OpcUOPlugin" );
+			}
+            
+			tempModel->SetVendorName( "DYNSIMUNIT" );
+            tempModel->SetIconFilename( "sim.xpm" );
+            tempModel->SetIconRotation( 0 );
+            tempModel->SetIconScale( 1 );
+            tempModel->SetIconMirror( 0 );
+            tempModel->GetIconLocation()->SetPoint( std::pair< unsigned int, unsigned int >(
+                otherIter->second.x, otherIter->second.y ) );
+            tempModel->SetIconHiddenFlag( 0 );
+            
+            /*int portNum = blockIter->second.ports.size();
+            for( size_t i = 0; i < portNum; i++)
+            {
+                ves::open::xml::model::PortPtr tempPort =
+                    tempModel->GetPort(-1);
+                // inputs are to ports
+                tempPort->
+                    SetPortNumber( blockIter->second.ports[i].id );
+                tempPort->SetDataFlowDirection( blockIter->second.ports[i].dataFlow );
+                tempPort->
+                    GetPortLocation()->SetPoint( std::pair< unsigned int, unsigned int >
+                    ( blockIter->second.ports[i].x, blockIter->second.ports[i].y) );
+            }
+			*/
+            subSystem->AddModel(tempModel);
         }
+
         //add the sub system to the flowsheet model
         flowSheetModel->SetSubSystem(subSystem);
 
@@ -723,6 +1004,70 @@ std::string DynSimParser::GetDynSimIconPath( std::string xmlName, std::string im
     return ( dynsimIconPath + gifName );
 }
 
+void DynSimParser::ConnectWithList( std::vector< std::string > list )
+{
+	HRESULT hr;
+    //server
+    IOPCAutoServerPtr server( __uuidof(OPCServer) );
+    server.AddRef();
+    hr = server->Connect(_T("OPC.Gateway.Server.DA") );
+    
+    //if( FAILED( hr ) )
+    //{
+    //    return false;
+    //}
+	
+    //groups
+    groups = server->GetOPCGroups();
+    groups.AddRef();
+    groups->DefaultGroupIsActive = true;
+    groups->DefaultGroupDeadband = 0;
+
+    //group
+    group = groups->Add( _T( "Group" ) );
+    group.AddRef();
+    group->UpdateRate = 100;
+
+    //Browser
+    OPCBrowserPtr browser = server->CreateBrowser();
+    browser.AddRef();
+    browser->ShowLeafs();
+
+    //items
+    items = group->GetOPCItems();
+    items.AddRef();
+    items->DefaultIsActive = true;
+
+    itemIDs = new CComSafeArray<BSTR>( list.size() + 1 );
+    clientID = new CComSafeArray<long>( list.size() + 1 );
+	serverID = new CComSafeArray<long>();
+    serverID->Create();
+    CComSafeArray<long> * errors;
+    errors = new CComSafeArray<long>();
+    errors->Create();
+
+	for( int i = 1; i <= list.size(); i++)
+	{
+		std::string modnameOPC = m_opcFlowsheetName + "_" + list[i-1]+".POS";
+        _bstr_t itemName = modnameOPC.c_str();
+        itemIDs->SetAt( i, browser->GetItemID( modnameOPC.c_str() ) );
+        clientID->SetAt( i, i );
+	}
+
+	hr = items->AddItems(list.size(), itemIDs->GetSafeArrayPtr(), clientID->GetSafeArrayPtr(),
+        serverID->GetSafeArrayPtr(), errors->GetSafeArrayPtr());
+
+    if( FAILED( hr ) )
+    {
+        return;
+    }
+
+    group->IsSubscribed = true;
+    group->IsActive = true;
+
+	//server->Disconnect();
+}
+
 bool DynSimParser::ConnectToOPC()
 {
         // TODO: Add your control notification handler code here
@@ -739,6 +1084,7 @@ bool DynSimParser::ConnectToOPC()
         return false;
     }
 
+	
     //groups
     groups = server->GetOPCGroups();
     groups.AddRef();
@@ -785,7 +1131,7 @@ bool DynSimParser::ConnectToOPC()
         //items->AddItem( browser->GetItemID(itemName), i);
         //pLB->InsertString( -1 , itemName );
     }
-    
+
     hr = items->AddItems(browserCount, itemIDs->GetSafeArrayPtr(), clientID->GetSafeArrayPtr(),
         serverID->GetSafeArrayPtr(), errors->GetSafeArrayPtr());
 
@@ -820,20 +1166,6 @@ bool DynSimParser::ConnectToOPC()
 
 std::vector< std::pair< std::string, std::string > > DynSimParser::ReadVars()
 {
-
-    //VARIANT bItem;
-	//::VariantInit(&bItem);
-    //bItem.vt = VT_BSTR;
-    //bItem.bstrVal = text.AllocSysString();
-
-    //items->DefaultIsActive = true;
-
-    //OPCItemPtr item = items->Item( bItem );
-
-   // CComSafeArray<long> * handles;
-   // handles = new CComSafeArray<long>(2, 0);
-   // handles->SetAt(1, item->ServerHandle);
-
     CComSafeArray<VARIANT> * values;
     values = new CComSafeArray<VARIANT>();
     values->Create();
@@ -854,23 +1186,98 @@ std::vector< std::pair< std::string, std::string > > DynSimParser::ReadVars()
     group->SyncRead( OPCDataSource::OPCDevice, count, serverID->GetSafeArrayPtr(),
         values->GetSafeArrayPtr(), errors->GetSafeArrayPtr(), &quality, &timestamp );
 
-    std::vector< std::pair< std::string, std::string > > nameAndValues;
+    //std::vector< std::pair< std::string, std::string > > nameAndValues;
+	nameAndValues.clear();
 
     for( int i = 1; i <= count; i++)
     {
-        //itemIDs->GetAt(i).ChangeType(VT_BSTR);
         values->GetAt(i).ChangeType(VT_BSTR);
         std::pair< std::string, std::string > nameNval;
-        nameNval.first = _bstr_t( itemIDs->GetAt(i) );
-        nameNval.second = _bstr_t( values->GetAt(i).bstrVal );
 
+		//this entry has the opc prefix appended
+        //nameNval.first = _bstr_t( itemIDs->GetAt(i) );
+		//this one doesn't - +1 is for the "_"
+		std::string temp = _bstr_t( itemIDs->GetAt(i) );
+		nameNval.first = temp.substr( m_opcFlowsheetName.size() + 1,
+			temp.size() - (m_opcFlowsheetName.size() + 1) - (temp.size() - temp.find(".") ) );
+        
+		nameNval.second = _bstr_t( values->GetAt(i).bstrVal );
         nameAndValues.push_back( nameNval );
     }
 
     return nameAndValues;
+}
+///////////////////////////////////////////////////////////////////////////////
+/*std::string DynSimParser::GetOPCValue( const std::string& modname )
+{
+	ReadVars();
 
+	//append the flowsheet name
+	std::string modnameOPC = m_opcFlowsheetName + "_" + modname;
 
-    //CEdit* e1 = (CEdit*) GetDlgItem( IDC_EDIT1 );
-    //values->GetAt(1).ChangeType(VT_BSTR);
-    //e1->SetWindowTextW( values->GetAt(1).bstrVal );
+    ves::open::xml::CommandPtr params( new ves::open::xml::Command() );
+    std::vector<std::string> paramList;
+    //input variables;
+    params->SetCommandName((modnameOPC+"OPCValue").c_str());
+    
+	std::vector< std::pair <std::string, std::string> >::iterator nameValueIter;
+	std::string opcValue = "ERROR";
+    for( nameValueIter = nameAndValues.begin();
+        nameValueIter != nameAndValues.end();
+        ++nameValueIter )
+	{
+		if( !nameValueIter->first.compare( modnameOPC ) )
+		{
+			opcValue = nameValueIter->second;
+			break;
+		}
+	}
+
+    ves::open::xml::DataValuePairPtr
+        inpParams( new ves::open::xml::DataValuePair() );
+    inpParams->SetData("opcvalue", opcValue );
+    params->AddDataValuePair( inpParams );
+
+    std::vector< std::pair< ves::open::xml::XMLObjectPtr, std::string > >
+        nodes;
+    nodes.push_back( 
+    std::pair< ves::open::xml::XMLObjectPtr, std::string >
+    ( params, "vecommand" ) );
+
+    ves::open::xml::XMLReaderWriter commandWriter;
+    std::string status="returnString";
+    commandWriter.UseStandaloneDOMDocumentManager();
+    commandWriter.WriteXMLDocument( nodes, status, "Command" );
+    return status;
+}*/
+
+//depending on the end desires for the code this function can be combine with ReadVars()
+std::string DynSimParser::GetOPCValues( )
+{
+	ReadVars();
+
+	//append the flowsheet name
+    ves::open::xml::CommandPtr varAndValues( new ves::open::xml::Command() );
+    varAndValues->SetCommandName("OPCData");
+    
+	//loop over the variables and add as dvps
+	for( int i = 0; i < nameAndValues.size(); i++ )
+	{
+		 ves::open::xml::DataValuePairPtr
+			 entry( new ves::open::xml::DataValuePair() );
+		entry->SetData( nameAndValues[i].first, nameAndValues[i].second );
+		varAndValues->AddDataValuePair( entry );
+	}
+
+    std::vector< std::pair< ves::open::xml::XMLObjectPtr, std::string > >
+        nodes;
+    nodes.push_back( 
+    std::pair< ves::open::xml::XMLObjectPtr, std::string >
+    ( varAndValues, "vecommand" ) );
+
+    ves::open::xml::XMLReaderWriter commandWriter;
+    std::string status="returnString";
+    commandWriter.UseStandaloneDOMDocumentManager();
+    commandWriter.WriteXMLDocument( nodes, status, "Command" );
+    return status;
 }
