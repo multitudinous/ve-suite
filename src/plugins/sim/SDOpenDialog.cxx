@@ -59,7 +59,7 @@ void SDOpenDialog::SetPopulateFilenames( )
     wxString filename;
 
     //***
-    wxString ext = wxString( "*.***", wxConvUTF8 );
+    wxString ext = wxString( "*.s4m", wxConvUTF8 );
     std::vector< wxString > simList;
     bool cont = pluginsDir.GetFirst( &filename, ext, wxDIR_FILES );
     while( cont )
