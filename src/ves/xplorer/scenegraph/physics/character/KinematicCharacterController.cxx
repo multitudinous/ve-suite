@@ -32,7 +32,7 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
 // --- VE-Suite Includes --- //
-#include <ves/xplorer/scenegraph/physics/KinematicCharacterController.h>
+#include <ves/xplorer/scenegraph/physics/character/KinematicCharacterController.h>
 #include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
 
 // --- Bullet Includes --- //
@@ -289,14 +289,15 @@ void KinematicCharacterController::stepUp( btCollisionWorld* world )
 {
     //Phase 1: up
     btTransform start, end;
-    m_targetPosition =
-        m_currentPosition + upAxisDirection[ m_upAxis ] * m_stepHeight;
-
     start.setIdentity();
     end.setIdentity();
 
+    m_targetPosition =
+        m_currentPosition + upAxisDirection[ m_upAxis ] * m_stepHeight;
+
     /* FIXME: Handle penetration properly */
-    start.setOrigin( m_currentPosition + upAxisDirection[ m_upAxis ] * btScalar( 0.1 ) );
+    start.setOrigin(
+        m_currentPosition + upAxisDirection[ m_upAxis ] * btScalar( 0.1 ) );
     end.setOrigin( m_targetPosition );
 
     btKinematicClosestNotMeConvexResultCallback callback( m_ghostObject );
@@ -320,7 +321,8 @@ void KinematicCharacterController::stepUp( btCollisionWorld* world )
     {
         //We moved up only a fraction of the step height
         m_currentStepOffset = m_stepHeight * callback.m_closestHitFraction;
-        m_currentPosition.setInterpolate3( m_currentPosition, m_targetPosition, callback.m_closestHitFraction);
+        m_currentPosition.setInterpolate3(
+            m_currentPosition, m_targetPosition, callback.m_closestHitFraction );
     }
     else
     {
@@ -338,7 +340,8 @@ void KinematicCharacterController::updateTargetPositionBasedOnCollision(
     {
         movementDirection.normalize();
 
-        btVector3 reflectDir = computeReflectionDirection( movementDirection, hitNormal );
+        btVector3 reflectDir =
+            computeReflectionDirection( movementDirection, hitNormal );
         reflectDir.normalize();
 
         btVector3 parallelDir, perpindicularDir;
@@ -349,13 +352,15 @@ void KinematicCharacterController::updateTargetPositionBasedOnCollision(
         m_targetPosition = m_currentPosition;
         if( 0 )//tangentMag != 0.0 )
         {
-            btVector3 parComponent = parallelDir * btScalar( tangentMag * movementLength );
+            btVector3 parComponent =
+                parallelDir * btScalar( tangentMag * movementLength );
             m_targetPosition +=  parComponent;
         }
 
         if( normalMag != 0.0 )
         {
-            btVector3 perpComponent = perpindicularDir * btScalar( normalMag * movementLength );
+            btVector3 perpComponent =
+                perpindicularDir * btScalar( normalMag * movementLength );
             m_targetPosition += perpComponent;
         }
     }

@@ -58,7 +58,7 @@
 
 #include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
 #include <ves/xplorer/scenegraph/physics/PhysicsRigidBody.h>
-#include <ves/xplorer/scenegraph/physics/CharacterController.h>
+#include <ves/xplorer/scenegraph/physics/character/CharacterController.h>
 
 #include <ves/xplorer/scenegraph/manipulator/RotateTwist.h>
 #include <ves/xplorer/scenegraph/manipulator/TransformManipulator.h>

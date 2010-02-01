@@ -73,7 +73,6 @@
 #include <ves/open/xml/Transform.h>
 
 using namespace ves::xplorer::scenegraph::manipulator;
-namespace vxs = ves::xplorer::scenegraph;
 
 ////////////////////////////////////////////////////////////////////////////////
 Dragger::Dragger( const TransformationType::Enum& transformationType )
@@ -92,8 +91,8 @@ Dragger::Dragger( const TransformationType::Enum& transformationType )
     m_deltaScale( 0.0, 0.0, 0.0 ),
     m_isRootDragger( true ),
     m_color( NULL ),
-    m_physicsSimulator( *vxs::PhysicsSimulator::instance() ),
-    m_sceneManager( *vxs::SceneManager::instance() )
+    m_physicsSimulator( *scenegraph::PhysicsSimulator::instance() ),
+    m_sceneManager( *scenegraph::SceneManager::instance() )
 {
     m_rootDragger = this;
 
@@ -125,8 +124,8 @@ Dragger::Dragger( const Dragger& dragger, const osg::CopyOp& copyop )
     m_isRootDragger( dragger.m_isRootDragger ),
     m_colorMap( dragger.m_colorMap ),
     m_color( dragger.m_color ),
-    m_physicsSimulator( *vxs::PhysicsSimulator::instance() ),
-    m_sceneManager( *vxs::SceneManager::instance() )
+    m_physicsSimulator( *scenegraph::PhysicsSimulator::instance() ),
+    m_sceneManager( *scenegraph::SceneManager::instance() )
 {
     ;
 }
@@ -546,7 +545,7 @@ void Dragger::UpdateAssociations()
                 pat->setScale( scale );
             }
 
-            vxs::DCS* tempDCS = dynamic_cast< vxs::DCS* >( pat );
+            scenegraph::DCS* tempDCS = dynamic_cast< scenegraph::DCS* >( pat );
             if( tempDCS )
             {
                 UpdateConductorData( tempDCS );

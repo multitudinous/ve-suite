@@ -51,7 +51,7 @@
 #include <ves/xplorer/scenegraph/GLTransformInfo.h>
 
 #include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
-#include <ves/xplorer/scenegraph/physics/CharacterController.h>
+#include <ves/xplorer/scenegraph/physics/character/CharacterController.h>
 
 #include <ves/xplorer/environment/cfdQuatCamHandler.h>
 

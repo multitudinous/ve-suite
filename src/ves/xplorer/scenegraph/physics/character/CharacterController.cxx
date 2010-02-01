@@ -32,7 +32,7 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
 // --- VE-Suite Includes --- //
-#include <ves/xplorer/scenegraph/physics/CharacterController.h>
+#include <ves/xplorer/scenegraph/physics/character/CharacterController.h>
 #include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>

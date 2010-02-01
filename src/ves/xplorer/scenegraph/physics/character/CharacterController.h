@@ -31,13 +31,13 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
-#ifndef CHARACTER_CONTROLLER_H
-#define CHARACTER_CONTROLLER_H
+#ifndef VES_XPLORER_SCENEGRAPH_CHARACTER_CONTROLLER_H
+#define VES_XPLORER_SCENEGRAPH_CHARACTER_CONTROLLER_H
 
 // --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
 
-#include <ves/xplorer/scenegraph/physics/KinematicCharacterController.h>
+#include <ves/xplorer/scenegraph/physics/character/KinematicCharacterController.h>
 
 // --- VRJuggler Includes --- //
 #include <gadget/Type/PositionInterface.h>
@@ -196,7 +196,6 @@ private:
     ///Tests if there is an occluder between the camera and character positions
     ///\param eye The eye vector
     ///\param center The character vector
-    ///\return 
     void EyeToCenterRayTest( btVector3& eye, btVector3& center );
 
     ///
@@ -398,4 +397,4 @@ private:
 } // end xplorer
 } // end ves
 
-#endif //CHARACTER_CONTROLLER_H
+#endif //VES_XPLORER_SCENEGRAPH_CHARACTER_CONTROLLER_H

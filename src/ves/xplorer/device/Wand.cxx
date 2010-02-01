@@ -49,7 +49,7 @@
 #include <ves/xplorer/scenegraph/manipulator/RotateTwist.h>
 #include <ves/xplorer/scenegraph/manipulator/TransformManipulator.h>
 
-#include <ves/xplorer/scenegraph/physics/CharacterController.h>
+#include <ves/xplorer/scenegraph/physics/character/CharacterController.h>
 
 // --- osgBullet Includes --- //
 #include <osgwTools/AbsoluteModelTransform.h>

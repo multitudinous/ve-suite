@@ -53,7 +53,7 @@
 #include <ves/xplorer/scenegraph/logo/VE.h>
 #include <ves/xplorer/scenegraph/logo/Suite.h>
 
-#include <ves/xplorer/scenegraph/physics/CharacterController.h>
+#include <ves/xplorer/scenegraph/physics/character/CharacterController.h>
 
 #include <ves/xplorer/scenegraph/manipulator/ManipulatorManager.h>
 

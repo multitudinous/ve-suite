@@ -37,7 +37,7 @@
 #include <ves/xplorer/scenegraph/SceneManager.h>
 
 #include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
-#include <ves/xplorer/scenegraph/physics/CharacterController.h>
+#include <ves/xplorer/scenegraph/physics/character/CharacterController.h>
 
 #include <ves/xplorer/scenegraph/manipulator/ManipulatorManager.h>
 
