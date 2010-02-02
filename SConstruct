@@ -283,6 +283,7 @@ opts.Add('buildLog', 'Provide a file name for the build log if you would like a 
 opts.Add('options_file', 'Provide a file name for the options caches', '')
 opts.Add('build_dir', 'Provide an alternate build directory for variants', buildDir)
 opts.Add('SVN_Previous_Date', 'Previous Date to create a change log from. Should be of the form yyyy-mm-dd','')
+opts.Add('MakeQtSupport', 'If "yes", add Qt UI controls to Xplorer', 'no')
 opts.Add('MakeAspenSupport', 'If "yes", make aspen support', 'no')
 opts.Add('MakeDynSimSupport', 'If "yes", make dynsim support', 'no')
 opts.Add('MakePowersimSupport', 'If "yes", make powersim support', 'no')

@@ -36,9 +36,13 @@ if env['VPRProfile'] == 'no':
    env.Append( CPPDEFINES = ['DISABLE_VPR_PROFILE'] )
 
 #see if we need to compile minerva in
-if baseEnv[ 'MakeMinervaSupport' ] != 'no':
+if env[ 'MakeMinervaSupport' ] != 'no':
    env.Append( CPPDEFINES = ['MINERVA_GIS_SUPPORT'] )
    minerva_options.apply( env )
+
+#see if we need to compile Qt in
+if env[ 'MakeQtSupport' ] != 'no':
+   env.Append( CPPDEFINES = ['QT_UI_SUPPORT'] )
 
 env.Append( CPPDEFINES = [ GetSVNVersion( srcDir ) ] )
 env.Append(CPPPATH = [pj('#','external','osgEphemeris','include')])
