@@ -44,8 +44,8 @@
 #include <atlbase.h>
 #include <atlcom.h>
 #include <comdef.h>
-//#import "gbda_aut.tlb"
-//using namespace GBDAAutomation;
+#import "gbda_aut.tlb"
+using namespace GBDAAutomation;
 
 class DynSimParser
 {
