@@ -30,34 +30,46 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#ifndef SimUOPlugin_H
-#define SimUOPlugin_H
+#ifndef DSOPENDIALOG_H
+#define DSOPENDIALOG_H
 
-#include <ves/conductor/UIPluginBase.h>
+#include <wx/wx.h>
+#include <wx/dialog.h>
+#include <wx/stattext.h>
+#include <wx/button.h>
+#include <wx/combobox.h>
+#include <wx/dir.h>
 
-#include <wx/event.h>
+#undef DSOpenDialog_STYLE
+#define DSOpenDialog_STYLE wxCAPTION | wxSYSTEM_MENU | wxDIALOG_NO_PARENT | wxMINIMIZE_BOX | wxCLOSE_BOX
 
-class wxMenu;
-
-namespace ves
+class DSOpenDialog : public wxDialog
 {
-namespace conductor
-{
-class SimUOPlugin : public UIPluginBase
-{
-    DECLARE_DYNAMIC_CLASS( SimUOPlugin )
+    private:
+        DECLARE_EVENT_TABLE();
+		
+    public:
+        DSOpenDialog(wxWindow *parent, wxWindowID id = 1,
+			const wxString &title = wxT("DynSim File"),
+			const wxPoint& pos = wxDefaultPosition,
+			const wxSize& size = wxDefaultSize,
+			long style = DSOpenDialog_STYLE);
+        
+		virtual ~DSOpenDialog();
+        void OKButtonClick(wxCommandEvent& event);
+        void CancelButtonClick(wxCommandEvent& event);
+        void SetPopulateFilenames( );
+        wxString GetFilename( );
 
-public:
-    ///Defualt constructor
-    SimUOPlugin();
-    virtual ~SimUOPlugin();
-    wxString GetConductorName();
-    virtual wxMenu* GetPluginPopupMenu( wxMenu* baseMenu );
+    private:
+        wxStaticText *Label;
+        wxButton *CancelButton;
+        wxButton *OKButton;
+        wxComboBox *ComboBox;
+        wxArrayString arrayStringFor_ComboBox;
 
-    wxMenu* mSimMenu;
-    DECLARE_EVENT_TABLE()
+        void OnClose(wxCloseEvent& event);
+        void CreateGUIControls();
 };
-}
-}
 
 #endif

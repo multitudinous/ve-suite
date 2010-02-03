@@ -28,7 +28,7 @@ if GetPlatform() == 'win32':
    lib_env['no_import_lib'] = 1
    lib_env['WINDOWS_INSERT_MANIFEST'] = False
 
-lib = ves_pkg.createLoadableModule( 'SimUOUI', lib_env,
+lib = ves_pkg.createLoadableModule( 'DynSimUOUI', lib_env,
     installPrefix = pj( LIBDIR, 'conductor', 'plugins' ) )
    
 lib.addSources( sources )

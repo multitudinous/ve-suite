@@ -32,15 +32,10 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/conductor/util/CORBAServiceList.h>
 
-#include "SimUOPlugin.h"
+#include "DSUOPlugin.h"
 #include <plugins/ConductorPluginEnums.h>
 #include <ves/conductor/ConductorLibEnums.h>
-//#include "SimUOVarDialog.h"
-//#include "DynamicDataDlg.h"
-//#include "DynamicDataDlg.h"
-
 #include <ves/conductor/xpm/square.xpm>
-
 #include <ves/open/xml/model/Model.h>
 
 using namespace ves::open::xml::model;
@@ -48,42 +43,42 @@ using namespace ves::open::xml;
 using namespace ves::conductor;
 using namespace ves::conductor::util;
 
-BEGIN_EVENT_TABLE( SimUOPlugin, UIPluginBase )
+BEGIN_EVENT_TABLE( DSUOPlugin, UIPluginBase )
 END_EVENT_TABLE()
 
-IMPLEMENT_DYNAMIC_CLASS( SimUOPlugin, UIPluginBase )
+IMPLEMENT_DYNAMIC_CLASS( DSUOPlugin, UIPluginBase )
 
-/////////////////////////////////////////////////////////////////////////////
-SimUOPlugin::SimUOPlugin() :
+///////////////////////////////////////////////////////////////////////////////
+DSUOPlugin::DSUOPlugin() :
     UIPluginBase(),
-    mSimMenu( 0 )
+    mDynSimMenu( 0 )
 {
-    mPluginName = wxString( "SimUO", wxConvUTF8 );
-    mDescription = wxString( "Sim Unit Operation Plugin", wxConvUTF8 );
-    GetVEModel()->SetPluginType( "SimUOPlugin" );
+    mPluginName = wxString( "DSUO", wxConvUTF8 );
+    mDescription = wxString( "DynSim Unit Operation Plugin", wxConvUTF8 );
+    GetVEModel()->SetPluginType( "DSUOPlugin" );
 }
 ////////////////////////////////////////////////////////////////////////////////
-SimUOPlugin::~SimUOPlugin()
+DSUOPlugin::~DSUOPlugin()
 {
 }
 ////////////////////////////////////////////////////////////////////////////////
-wxString SimUOPlugin::GetConductorName()
+wxString DSUOPlugin::GetConductorName()
 {
-    return wxString( "Sim_SimUnitOp", wxConvUTF8 );
+    return wxString( "DynSim_DSUnitOp", wxConvUTF8 );
 }
 ////////////////////////////////////////////////////////////////////////////////
-wxMenu* SimUOPlugin::GetPluginPopupMenu( wxMenu* baseMenu )
+wxMenu* DSUOPlugin::GetPluginPopupMenu( wxMenu* baseMenu )
 {
-    if( mSimMenu )
+    if( mDynSimMenu )
     {
         return baseMenu;
     }
     
     baseMenu->Enable( UIPLUGINBASE_CONDUCTOR_MENU, false );
 
-    mSimMenu = new wxMenu();
-    baseMenu->Insert( 0, SIMUOPLUGIN_SIM_MENU,   _( "Sim" ), mSimMenu,
+    mDynSimMenu = new wxMenu();
+    baseMenu->Insert( 0, DSUOPLUGIN_DYNSIM_MENU,   _( "DynSim" ), mDynSimMenu,
                     _( "Used in conjunction with Sim" ) );
-    baseMenu->Enable( SIMUOPLUGIN_SIM_MENU, true );
+    baseMenu->Enable( DSUOPLUGIN_DYNSIM_MENU, true );
     return baseMenu;
 }

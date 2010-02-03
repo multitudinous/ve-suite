@@ -30,13 +30,12 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#ifndef SDPLUGIN_H
-#define SDPLUGIN_H
+#ifndef DSUOPLUGIN_H
+#define DSUOPLUGIN_H
 
 #include <ves/conductor/UIPluginBase.h>
 
 #include <wx/event.h>
-#include <wx/wx.h>
 
 class wxMenu;
 
@@ -44,44 +43,18 @@ namespace ves
 {
 namespace conductor
 {
-class SDPlugin : public UIPluginBase
+class DSUOPlugin : public UIPluginBase
 {
-    DECLARE_DYNAMIC_CLASS( SDPlugin )
+    DECLARE_DYNAMIC_CLASS( DSUOPlugin )
 
 public:
     ///Defualt constructor
-    SDPlugin();
-    virtual ~SDPlugin();
+    DSUOPlugin();
+    virtual ~DSUOPlugin();
     wxString GetConductorName();
-	std::vector< std::string > GetAvailableVariables();
-	std::vector< std::string > GetSelectVariables();
-	void SetSelectVariables( std::vector< std::string> selectedVariables );
-
-protected:
     virtual wxMenu* GetPluginPopupMenu( wxMenu* baseMenu );
 
-    void OnOpen( wxCommandEvent& event );
-    void ShowAspenSimulation( wxCommandEvent& event );
-    void HideAspenSimulation( wxCommandEvent& event );
-    void CloseAspenSimulation( void );
-    void DisconnectAspenSimulation( void );
-    void RunAspenNetwork( wxCommandEvent& event );
-    void ReinitializeAspenSimulation( wxCommandEvent& event );
-    void StepAspenNetwork( wxCommandEvent& event );
-    void SaveSimulation( wxCommandEvent& event );
-    void SaveAsSimulation( wxCommandEvent& event );
-    void OnCloseAspenSimulation( wxCommandEvent& event );
-    void OnDisconnectAspenSimulation( wxCommandEvent& event );
-    bool IsBKPOpen();
-	void OnCreateOPCList( wxCommandEvent& event );
-	void OnConnect( wxCommandEvent& event );
-	void OnTimer( wxTimerEvent& event );
-    wxMenu* mAspenMenu;
-	std::vector< std::string > m_opcList;
-	std::vector< std::string > m_selectedOpcList;
-	//wxArrayString *m_selectedOpcList;
-	wxTimer * m_timer;
-
+    wxMenu* mDynSimMenu;
     DECLARE_EVENT_TABLE()
 };
 }

@@ -79,7 +79,7 @@ OpcUOPlugin::~OpcUOPlugin()
 ////////////////////////////////////////////////////////////////////////////////
 wxString OpcUOPlugin::GetConductorName()
 {
-    return wxString( "Opc_OpcUnitOp", wxConvUTF8 );
+    return wxString( "DynSim_OpcUnitOp", wxConvUTF8 );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void  OpcUOPlugin::OnShowValue( wxCommandEvent& event )
@@ -191,7 +191,7 @@ void OpcUOPlugin::DrawValue( wxDC* dc )
     y = y / n_pts;
 
     dc->GetTextExtent( wxString( dynValue.c_str(), wxConvUTF8), &w, &h );
-    dc->DrawText( wxString( dynValue.c_str(), wxConvUTF8 ), int( x - w / 2 + xoff ), pos.y + int( y * 2.5 ) );
+    dc->DrawText( wxString( dynValue.c_str(), wxConvUTF8 ), int( x - w / 2 + xoff ), pos.y + int( y * 4.0 ) );
 }
 
 //this function does a read by querying the unit

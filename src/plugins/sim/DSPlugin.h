@@ -30,19 +30,13 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#ifndef OPCDLG_H
-#define OPCDLG_H
+#ifndef DSPLUGIN_H
+#define DSPLUGIN_H
 
+#include <ves/conductor/UIPluginBase.h>
+
+#include <wx/event.h>
 #include <wx/wx.h>
-#include <wx/dialog.h>
-#include <wx/button.h>
-#include <wx/listbox.h>
-#include <vector>
-#include <string>
-#include "DSPlugin.h"
-
-#undef OPCDlg_STYLE
-#define OPCDlg_STYLE wxDIALOG_NO_PARENT | wxCLOSE_BOX | wxCAPTION | wxCLOSE_BOX | wxSYSTEM_MENU
 
 class wxMenu;
 
@@ -50,58 +44,33 @@ namespace ves
 {
 namespace conductor
 {
-class OPCDlg : public wxDialog
+class DSPlugin : public UIPluginBase
 {
-	private:
-		
-		DECLARE_EVENT_TABLE();
-		
-	public:
-		
-		OPCDlg(wxWindow *parent, wxWindowID id = 1,
-			const wxString &title = wxT("OPCDialog"),
-			const wxPoint& pos = wxDefaultPosition,
-			const wxSize& size = wxDefaultSize,long style = OPCDlg_STYLE);
+    DECLARE_DYNAMIC_CLASS( DSPlugin )
 
-		virtual ~OPCDlg();
-	
-	private:
-		
-		wxButton *WxButton4;
-		wxButton *WxButton3;
-		wxButton *WxButton2;
-		wxButton *WxButton1;
-		wxListBox *WxListBox3;
-		wxListBox *WxListBox1;
-		wxArrayString m_availableVariables;
-		wxArrayString m_selectedVariables;
-		DSPlugin * m_parentPlugin;
-		
-	private:
-		enum
-		{
-			ID_WXBUTTON4 = 1008,
-			ID_WXBUTTON3 = 1007,
-			ID_WXBUTTON2 = 1006,
-			ID_WXBUTTON1 = 1004,
-			ID_WXLISTBOX3 = 1003,
-			ID_WXLISTBOX1 = 1001,
-			ID_DUMMY_VALUE_
-		};
-	
-	private:
-		void OnClose(wxCloseEvent& event);
-		void CreateGUIControls();
-		void OnSaveButton( wxCommandEvent& event );
-		void OnCancelButton( wxCommandEvent& event );
-		void OnAddButton( wxCommandEvent& event );
-		void OnRemoveButton( wxCommandEvent& event );
-		bool SearchArrayList( wxArrayString arrayList, wxString entry );
+public:
+    ///Defualt constructor
+    DSPlugin();
+    virtual ~DSPlugin();
+    wxString GetConductorName();
+	std::vector< std::string > GetAvailableVariables();
+	std::vector< std::string > GetSelectVariables();
+	void SetSelectVariables( std::vector< std::string> selectedVariables );
 
-	public:
-		//void PopulateLists( std::vector< std::string > list,
-		    //wxArrayString *selected);
-		void SetParentPlugin( DSPlugin * parent );
+protected:
+    virtual wxMenu* GetPluginPopupMenu( wxMenu* baseMenu );
+
+    void OnOpen( wxCommandEvent& event );
+	void OnCreateOPCList( wxCommandEvent& event );
+	void OnConnect( wxCommandEvent& event );
+	void OnTimer( wxTimerEvent& event );
+    wxMenu* mDynSimMenu;
+	std::vector< std::string > m_opcList;
+	std::vector< std::string > m_selectedOpcList;
+	//wxArrayString *m_selectedOpcList;
+	wxTimer * m_timer;
+
+    DECLARE_EVENT_TABLE()
 };
 }
 }
