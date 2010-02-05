@@ -65,8 +65,6 @@
 class btRigidBody;
 class btTypedConstraint;
 
-// --- C/C++ Includes --- //
-
 namespace ves
 {
 namespace xplorer
@@ -126,13 +124,13 @@ public:
 
     ///Resets the scene to original position
     void ResetTransforms();
- 
+
     ///Update the start and end points for the line
     void UpdateSelectionLine();
-    
+
     ///Get raw vrjuggler keyboardmouse ptr
     gadget::KeyboardMousePtr GetKeyboardMouseVRJDevice();
-    
+
     ///Get the line segment intersector
     ///\pre UpdateSelectionLine must be called first
     ///\return Returns the osg class that manages the line interesection tests
@@ -237,11 +235,13 @@ private:
 
     ///Create physics point constraint
     bool CreatePointConstraint();
+
     ///Clear point constraint
     void ClearPointConstraint();
+
     ///Update point constraint
     void UpdatePointConstraint();
-    
+
     ///Is no key pushed
     bool mKeyNone;
 

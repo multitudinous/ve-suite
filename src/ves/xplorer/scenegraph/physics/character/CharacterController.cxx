@@ -65,7 +65,6 @@
 #include <iostream>
 
 #define VES_USE_ANIMATED_CHARACTER 1
-const btVector3 m_defaultGravity( 0.0, 0.0, -9.8 );
 
 using namespace ves::xplorer::scenegraph;
 
@@ -73,6 +72,8 @@ using namespace ves::xplorer::scenegraph;
 CharacterController::CharacterController()
     :
     KinematicCharacterController(),
+    m_gravity( m_dynamicsWorld.getGravity() ),
+    m_G( m_gravity.z() ),
     m_enabled( false ),
     m1stPersonMode( false ),
     mCameraDistanceLERP( false ),
@@ -210,16 +211,15 @@ void CharacterController::Enable( const bool& enable )
 {
     m_enabled = enable;
 
-    btDynamicsWorld* dynamicsWorld = m_physicsSimulator.GetDynamicsWorld();
     if( m_enabled )
     {
         mMatrixTransform->setNodeMask( 1 );
 
-        dynamicsWorld->addCollisionObject(
+        m_dynamicsWorld.addCollisionObject(
             m_ghostObject, btBroadphaseProxy::CharacterFilter,
             btBroadphaseProxy::StaticFilter | btBroadphaseProxy::DefaultFilter );
 
-        dynamicsWorld->addCharacter( this );
+        m_dynamicsWorld.addCharacter( this );
 
         Reset();
     }
@@ -227,15 +227,25 @@ void CharacterController::Enable( const bool& enable )
     {
         mMatrixTransform->setNodeMask( 0 );
 
-        dynamicsWorld->removeCollisionObject( m_ghostObject );
+        m_dynamicsWorld.removeCollisionObject( m_ghostObject );
 
-        dynamicsWorld->removeCharacter( this );
+        m_dynamicsWorld.removeCharacter( this );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CharacterController::Jump()
 {
-    StartJump( 15.0 );
+    if( canJump() )
+    {
+        //15 ft/s equals a vertical of ~40 inches
+        //StartJump( 15.0 );
+
+        m_jumpTime = 0.0;
+        //m_vo = vo;
+        m_vo = 15.0;
+        //m_jump = true;
+        m_translateType = m_translateType | TranslateType::STEP_FORWARD;
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CharacterController::StepForward( bool onOff )
@@ -408,41 +418,41 @@ void CharacterController::Move( btScalar dt )
     bool headTracked = false;
     if( headTracked )
     {
-        //const gadget::Position::SampleBuffer_t::buffer_t headSampleBuffer = 
+        //const gadget::Position::SampleBuffer_t::buffer_t headSampleBuffer =
         //    head->getPositionPtr()->getPositionDataBuffer();
         //we have access to 5000 previous samples if needed
-        const buffer_type& headSampleBuffer = 
+        const buffer_type& headSampleBuffer =
             head->getPositionPtr()->getPositionDataBuffer();
         iter_type cur_frame_iter = headSampleBuffer.rbegin();
         iter_type prev_frame_iter = cur_frame_iter + 1;
-        
-        if( (cur_frame_iter != headSampleBuffer.rend()) && 
+
+        if( (cur_frame_iter != headSampleBuffer.rend()) &&
            (prev_frame_iter != headSampleBuffer.rend()) )
         {
             const unsigned int dev_num(head->getUnit());
-            m_vjHeadMat1 = 
+            m_vjHeadMat1 =
                 gmtl::convertTo<double>((*cur_frame_iter)[dev_num].getPosition());
-            m_vjHeadMat2 = 
+            m_vjHeadMat2 =
                 gmtl::convertTo<double>((*prev_frame_iter)[dev_num].getPosition());
-            //m_vjHeadMat1 = 
+            //m_vjHeadMat1 =
             //    gmtl::convertTo<double>( headSampleBuffer[ 0 ][ 0 ].getPosition() );
-            //m_vjHeadMat2 = 
+            //m_vjHeadMat2 =
             //    gmtl::convertTo<double>( headSampleBuffer[ 0 ][ 1 ].getPosition() );
         }
-                
+
         //Update the character rotation
         UpdateRotationTrackedHead();
-        
+
         //Update the character translation
-        UpdateTranslationTrackedHead();        
+        UpdateTranslationTrackedHead();
     }
     else
     {
         //Update the character rotation
         UpdateRotation();
-        
+
         //Update the character translation
-        UpdateTranslation( dt );        
+        UpdateTranslation( dt );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -569,23 +579,19 @@ void CharacterController::CameraRotationSLERP()
     mCameraRotation = mCameraRotationX * mCameraRotationZ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CharacterController::OccludeDistanceLERP()
+double CharacterController::GetJumpHeight( double elapsedTime )
 {
-    if( mOccludeDistanceLERPdt < ( 1.0 - mDeltaOccludeDistanceLERP ) )
-    {
-        mOccludeDistanceLERPdt += mDeltaOccludeDistanceLERP;
+    //if( !m_jump )
+    //{
+        //return 0.0;
+    //}
 
-        mOccludeDistance =
-            mFromOccludeDistance +
-            ( mToOccludeDistance - mFromOccludeDistance ) *
-            mOccludeDistanceLERPdt;
-    }
-    else
-    {
-        mOccludeDistance = mToOccludeDistance;
+    //vt = vo + G * t
+    double vt = m_vo + m_G * m_jumpTime;
+    m_jumpTime += elapsedTime;
 
-        mOccludeDistanceLERP = false;
-    }
+    //s = vt * t + 1/2G * t^2
+    return vt * elapsedTime + 0.5 * m_G * elapsedTime * elapsedTime;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CharacterController::EyeToCenterRayTest(
@@ -594,8 +600,7 @@ void CharacterController::EyeToCenterRayTest(
     //Bullet implementation: only works for geometry w/ active physics
     /*
     btCollisionWorld::RayResultCallback rayCallback( eye, center );
-    btDynamicsWorld* dynamicsWorld = m_physicsSimulator.GetDynamicsWorld();
-    dynamicsWorld->rayTest( center, eye, rayCallback );
+    m_dynamicsWorld.rayTest( center, eye, rayCallback );
     if( rayCallback.hasHit() )
     {
         btCollisionObject* collisionObject = rayCallback.m_collisionObject;
@@ -724,6 +729,25 @@ void CharacterController::LookAt(
     SceneManager::instance()->GetActiveNavSwitchNode()->SetMat( matrix );
 }
 ////////////////////////////////////////////////////////////////////////////////
+void CharacterController::OccludeDistanceLERP()
+{
+    if( mOccludeDistanceLERPdt < ( 1.0 - mDeltaOccludeDistanceLERP ) )
+    {
+        mOccludeDistanceLERPdt += mDeltaOccludeDistanceLERP;
+
+        mOccludeDistance =
+            mFromOccludeDistance +
+            ( mToOccludeDistance - mFromOccludeDistance ) *
+            mOccludeDistanceLERPdt;
+    }
+    else
+    {
+        mOccludeDistance = mToOccludeDistance;
+
+        mOccludeDistanceLERP = false;
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
 void CharacterController::SetBufferSizeAndWeights(
     unsigned int bufferSize, double weightModifier )
 {
@@ -747,6 +771,16 @@ void CharacterController::SetBufferSizeAndWeights(
         mWeights.at( i ) = mWeights.at( i - 1 ) * mWeightModifier;
         mTotalWeight += mWeights.at( i );
     }
+}
+////////////////////////////////////////////////////////////////////////////////
+void CharacterController::StartJump( double vo )
+{
+    
+}
+////////////////////////////////////////////////////////////////////////////////
+void CharacterController::StopJump()
+{
+    m_jump = false;
 }
 ////////////////////////////////////////////////////////////////////////////////
 std::pair< double, double > CharacterController::UpdateHistoryBuffer()
@@ -784,46 +818,48 @@ void CharacterController::UpdateRotation()
     std::pair< double, double > deltaDeviceInput = UpdateHistoryBuffer();
 
     //Calculate character rotation
-    if( deltaDeviceInput.first != 0.0 || deltaDeviceInput.second != 0.0 )
+    if( deltaDeviceInput.first == 0.0 && deltaDeviceInput.second == 0.0 )
     {
-        mTurnAngleX += deltaDeviceInput.first;
-        //Restrict movement about the x-axis from -PI/2 to PI/2
-        if( mTurnAngleX < -gmtl::Math::PI_OVER_2 )
-        {
-            mTurnAngleX = -gmtl::Math::PI_OVER_2;
-        }
-        else if( mTurnAngleX > gmtl::Math::PI_OVER_2 )
-        {
-            mTurnAngleX = gmtl::Math::PI_OVER_2;
-        }
+        return;
+    }
 
-        mTurnAngleZ += deltaDeviceInput.second;
-        //Restrict angles about the z-axis from 0 to 2PI
-        if( mTurnAngleZ >= gmtl::Math::TWO_PI )
-        {
-            mTurnAngleZ -= gmtl::Math::TWO_PI;
+    mTurnAngleX += deltaDeviceInput.first;
+    //Restrict movement about the x-axis from -PI/2 to PI/2
+    if( mTurnAngleX < -gmtl::Math::PI_OVER_2 )
+    {
+        mTurnAngleX = -gmtl::Math::PI_OVER_2;
+    }
+    else if( mTurnAngleX > gmtl::Math::PI_OVER_2 )
+    {
+        mTurnAngleX = gmtl::Math::PI_OVER_2;
+    }
 
-        }
-        else if( mTurnAngleZ < 0.0 )
-        {
-            mTurnAngleZ += gmtl::Math::TWO_PI;
-        }
+    mTurnAngleZ += deltaDeviceInput.second;
+    //Restrict angles about the z-axis from 0 to 2PI
+    if( mTurnAngleZ >= gmtl::Math::TWO_PI )
+    {
+        mTurnAngleZ -= gmtl::Math::TWO_PI;
 
-        //Set the camera rotation about the x-axis
-        mCameraRotationX.setX( sin( 0.5 * mTurnAngleX ) );
-        mCameraRotationX.setW( cos( 0.5 * mTurnAngleX ) );
+    }
+    else if( mTurnAngleZ < 0.0 )
+    {
+        mTurnAngleZ += gmtl::Math::TWO_PI;
+    }
 
-        //Set the camera rotation about the z-axis
-        mCameraRotationZ.setZ( sin( 0.5 * mTurnAngleZ ) );
-        mCameraRotationZ.setW( cos( 0.5 * mTurnAngleZ ) );
+    //Set the camera rotation about the x-axis
+    mCameraRotationX.setX( sin( 0.5 * mTurnAngleX ) );
+    mCameraRotationX.setW( cos( 0.5 * mTurnAngleX ) );
 
-        //Set the total camera rotation
-        mCameraRotation = mCameraRotationX * mCameraRotationZ;
+    //Set the camera rotation about the z-axis
+    mCameraRotationZ.setZ( sin( 0.5 * mTurnAngleZ ) );
+    mCameraRotationZ.setW( cos( 0.5 * mTurnAngleZ ) );
 
-        if( m1stPersonMode )
-        {
-            SetRotationFromCamera();
-        }
+    //Set the total camera rotation
+    mCameraRotation = mCameraRotationX * mCameraRotationZ;
+
+    if( m1stPersonMode )
+    {
+        SetRotationFromCamera();
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -834,7 +870,7 @@ void CharacterController::UpdateTranslation( btScalar dt )
     //Calculate character translation
     if( !m_translateType )
     {
-        setWalkDirection( displacement );
+        setDisplacement( displacement );
         return;
     }
 
@@ -855,7 +891,7 @@ void CharacterController::UpdateTranslation( btScalar dt )
             forwardBackwardDisplacement -= forwardDir;
         }
 
-        forwardBackwardDisplacement *= dt * m_forwardBackwardSpeedModifier;
+        forwardBackwardDisplacement *= m_forwardBackwardSpeedModifier;
         displacement += forwardBackwardDisplacement;
     }
 
@@ -873,7 +909,7 @@ void CharacterController::UpdateTranslation( btScalar dt )
             leftRightDisplacement += strafeDir;
         }
 
-        leftRightDisplacement *= dt * m_leftRightSpeedModifier;
+        leftRightDisplacement *= m_leftRightSpeedModifier;
         displacement += leftRightDisplacement;
     }
 
@@ -881,8 +917,6 @@ void CharacterController::UpdateTranslation( btScalar dt )
     {
         btVector3 upDownDisplacement( 0.0, 0.0, 0.0 );
         btVector3 upDir( 0.0, 0.0, 1.0 );
-        //btVector3 upDir = xform.getBasis()[ 2 ];
-        //upDir.normalize();
         if( m_translateType & TranslateType::STEP_UP )
         {
             upDownDisplacement += upDir;
@@ -892,8 +926,20 @@ void CharacterController::UpdateTranslation( btScalar dt )
             upDownDisplacement -= upDir;
         }
 
-        upDownDisplacement *= dt * m_upDownSpeedModifier;
+        upDownDisplacement *= m_upDownSpeedModifier;
         displacement += upDownDisplacement;
+    }
+
+    displacement *= dt;
+
+    //if( m_translateType & TranslateType::JUMP )
+    if( 0 )
+    {
+        btVector3 upDownDisplacement( 0.0, 0.0, 0.0 );
+        btVector3 upDir( 0.0, 0.0, 1.0 );
+        double height = GetJumpHeight( dt );
+        displacement += upDir * height;
+        std::cout << "JUMP!!!!!!!!!!!!!!!" << std::endl;
     }
 
     //slerp mCameraRotation if necessary
@@ -910,7 +956,7 @@ void CharacterController::UpdateTranslation( btScalar dt )
     }
     else
     {
-        setWalkDirection( displacement );
+        setDisplacement( displacement );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -918,10 +964,10 @@ void CharacterController::UpdateRotationTrackedHead()
 {
     //Set the new delta turn angles based on the current 
     //and previous head locations
-    gmtl::Quatd jugglerHeadRot1 = 
+    gmtl::Quatd jugglerHeadRot1 =
         gmtl::make< gmtl::Quatd >( m_vjHeadMat1 );
     //Now get the second point
-    gmtl::Quatd jugglerHeadRot2 = 
+    gmtl::Quatd jugglerHeadRot2 =
         gmtl::make< gmtl::Quatd >( m_vjHeadMat2 );
 
     mDeltaTurnAngleX += 0.0f;
@@ -943,30 +989,29 @@ void CharacterController::UpdateRotationTrackedHead()
         {
             mTurnAngleX = gmtl::Math::PI_OVER_2;
         }
-        
+
         mTurnAngleZ += deltaDeviceInput.second;
         //Restrict angles about the z-axis from 0 to 2PI
         if( mTurnAngleZ >= gmtl::Math::TWO_PI )
         {
             mTurnAngleZ -= gmtl::Math::TWO_PI;
-            
         }
         else if( mTurnAngleZ < 0.0 )
         {
             mTurnAngleZ += gmtl::Math::TWO_PI;
         }
-        
+
         //Set the camera rotation about the x-axis
         mCameraRotationX.setX( sin( 0.5 * mTurnAngleX ) );
         mCameraRotationX.setW( cos( 0.5 * mTurnAngleX ) );
-        
+
         //Set the camera rotation about the z-axis
         mCameraRotationZ.setZ( sin( 0.5 * mTurnAngleZ ) );
         mCameraRotationZ.setW( cos( 0.5 * mTurnAngleZ ) );
-        
+
         //Set the total camera rotation
         mCameraRotation = mCameraRotationX * mCameraRotationZ;
-        
+
         if( m1stPersonMode )
         {
             SetRotationFromCamera();
@@ -982,7 +1027,7 @@ void CharacterController::UpdateTranslationTrackedHead()
 
     btTransform xform = m_ghostObject->getWorldTransform();
     xform.setRotation( xform.getRotation().inverse() );
-    
+
     if( m_translateType & TranslateType::STEP_FORWARD_BACKWARD )
     {
         /*btVector3 forwardBackwardDisplacement( 0.0, 0.0, 0.0 );
@@ -996,16 +1041,16 @@ void CharacterController::UpdateTranslationTrackedHead()
         {
             forwardBackwardDisplacement -= forwardDir;
         }
-        
+
         forwardBackwardDisplacement *= dt * m_forwardBackwardSpeedModifier;
         displacement += forwardBackwardDisplacement;*/
         gmtl::Vec3d vjVec;
         vjVec.set( 0.0f, 0.0f, -1.0f );
         gmtl::Matrix44d vjMat = gmtl::convertTo< double >( wand->getData() );
-        
+
         gmtl::xform( vjVec, vjMat, vjVec );
         gmtl::normalize( vjVec );
-        
+
         //Transform from juggler to osg...
         double dir[ 3 ];
         dir[0] =  vjVec[ 0 ];
@@ -1017,18 +1062,18 @@ void CharacterController::UpdateTranslationTrackedHead()
             //Update the translation movement for the objects
             //How much object should move
             displacement[ i ] += dir[ i ] * translationStepSize;
-        }        
+        }
     }
-    
-    //Take the difference between the current head location 
+
+    //Take the difference between the current head location
     //and the previous location. We could average these points in the future
     //since we actually have the sample buffer for the head
-    gmtl::Point3d jugglerHeadPoint1 = 
+    gmtl::Point3d jugglerHeadPoint1 =
         gmtl::makeTrans< gmtl::Point3d >( m_vjHeadMat1 );
     //Now get the second point
-    gmtl::Point3d jugglerHeadPoint2 = 
+    gmtl::Point3d jugglerHeadPoint2 =
         gmtl::makeTrans< gmtl::Point3d >( m_vjHeadMat2 );
-    
+
     displacement[ 0 ] += (jugglerHeadPoint1[ 0 ] - jugglerHeadPoint2[ 0 ]);
     displacement[ 1 ] += (jugglerHeadPoint1[ 1 ] - jugglerHeadPoint2[ 1 ]);
     displacement[ 2 ] += (jugglerHeadPoint1[ 2 ] - jugglerHeadPoint2[ 2 ]);
@@ -1038,7 +1083,7 @@ void CharacterController::UpdateTranslationTrackedHead()
     {
         CameraRotationSLERP();
     }
-    
+
     if( m_physicsSimulator.GetIdle() )
     {
         xform.setRotation( xform.getRotation().inverse() );
@@ -1047,7 +1092,7 @@ void CharacterController::UpdateTranslationTrackedHead()
     }
     else
     {
-        setWalkDirection( displacement );
+        setDisplacement( displacement );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

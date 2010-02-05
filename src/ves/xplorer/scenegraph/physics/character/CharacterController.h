@@ -78,20 +78,19 @@ namespace TranslateType
 {
 enum Enum
 {
-    NONE = 0x00,                                          //0b000000
-    STEP_FORWARD = 0x01,                                  //0b000001
-    STEP_BACKWARD = 0x02,                                 //0b000010
-    STEP_FORWARD_BACKWARD = STEP_FORWARD | STEP_BACKWARD, //0b000011
-    STRAFE_LEFT = 0x04,                                   //0b000100
-    STRAFE_RIGHT = 0x08,                                  //0b001000
-    STRAFE_LEFT_RIGHT = STRAFE_LEFT | STRAFE_RIGHT,       //0b001100
-    STEP_UP = 0x10,                                       //0b010000
-    STEP_DOWN = 0x20,                                     //0b100000
-    STEP_UP_DOWN = STEP_UP | STEP_DOWN                    //0b110000
+    NONE = 0x00,                                          //0b0000000
+    STEP_FORWARD = 0x01,                                  //0b0000001
+    STEP_BACKWARD = 0x02,                                 //0b0000010
+    STEP_FORWARD_BACKWARD = STEP_FORWARD | STEP_BACKWARD, //0b0000011
+    STRAFE_LEFT = 0x04,                                   //0b0000100
+    STRAFE_RIGHT = 0x08,                                  //0b0001000
+    STRAFE_LEFT_RIGHT = STRAFE_LEFT | STRAFE_RIGHT,       //0b0001100
+    STEP_UP = 0x10,                                       //0b0010000
+    STEP_DOWN = 0x20,                                     //0b0100000
+    STEP_UP_DOWN = STEP_UP | STEP_DOWN,                   //0b0110000
+    JUMP = 0x40                                           //0b1000000
 };
 } //end TranslateType
-
-//class KinematicCharacterController;
 
 /*!\file CharacterController.h
  *
@@ -190,8 +189,8 @@ private:
     ///Spherically interpolate the camera's rotation about the character
     void CameraRotationSLERP();
 
-    ///Linearly interpolate the camera from the character
-    void OccludeDistanceLERP();
+    ///
+    double GetJumpHeight( double elapsedTime );
 
     ///Tests if there is an occluder between the camera and character positions
     ///\param eye The eye vector
@@ -204,11 +203,20 @@ private:
     ///\param up
     void LookAt( btVector3& eye, btVector3& center, btVector3& up );
 
+    ///Linearly interpolate the camera from the character
+    void OccludeDistanceLERP();
+
     ///Sets the buffer size & weight modifier to calculate device input damping
     ///\param bufferSize The size of the history buffer
     ///\param weightModifier The value of the weight modifier
     void SetBufferSizeAndWeights(
         unsigned int bufferSize, double weightModifier );
+
+    ///
+    void StartJump( double vo );
+
+    ///
+    void StopJump();
 
     ///
     ///\return Returns the delta device input for the frame
@@ -249,6 +257,9 @@ private:
 
     ///
     unsigned int m_translateType;
+
+    ///
+    const double m_G;
 
     ///The distance the camera is from the "look at" point
     double mCameraDistance;
@@ -330,6 +341,9 @@ private:
 
     ///Used to offset the "look at" point from center of the character transform
     btVector3 mLookAtOffsetZ;
+
+    ///gravity vector
+    const btVector3 m_gravity;
 
     ///
     btQuaternion mCameraRotation;

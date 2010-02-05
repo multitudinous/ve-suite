@@ -44,12 +44,20 @@
 
 #include <BulletCollision/BroadphaseCollision/btCollisionAlgorithm.h>
 
+class btDynamicsWorld;
 class btCollisionShape;
 class btRigidBody;
 class btCollisionWorld;
 class btCollisionDispatcher;
 class btPairCachingGhostObject;
 class btConvexShape;
+
+#include <osg/ref_ptr>
+#include <osg/Vec3d>
+namespace osg
+{
+class Geode;
+}
 
 namespace ves
 {
@@ -88,6 +96,7 @@ public:
     virtual void updateAction(
         btCollisionWorld* collisionWorld, btScalar deltaTime )
     {
+        //Recover from penetrations
         preStep( collisionWorld );
         playerStep( collisionWorld, deltaTime );
     }
@@ -116,7 +125,7 @@ public:
     ///   increment the position each simulation iteration, regardless
     ///   of dt.
     /// This call will reset any velocity set by setVelocityForTimeInterval().
-    virtual void setWalkDirection( const btVector3& walkDirection );
+    virtual void setDisplacement( const btVector3& displacement );
 
     ///Caller provides a velocity with which the character should move for
     ///the given time period. After the time period, velocity is reset to zero
@@ -137,7 +146,8 @@ public:
     ///
     void preStep( btCollisionWorld* collisionWorld );
 
-    ///
+    ///Do sweep tests above the character, to the side the character is moving,
+    ///and below the character, depending on the character's velocity
     void playerStep( btCollisionWorld* collisionWorld, btScalar dt );
 
     ///
@@ -198,10 +208,19 @@ protected:
     void stepDown( btCollisionWorld* collisionWorld, btScalar dt );
 
     ///
-    bool m_fly;
+    PhysicsSimulator& m_physicsSimulator;
 
     ///
+    btDynamicsWorld& m_dynamicsWorld;
+
+    ///Is the character flying?
+    bool m_fly;
+
+    ///Is the character jumping?
     bool m_jump;
+
+    ///Is the character supported by object?
+    bool m_supported;
 
     ///
     bool m_touchingContact;
@@ -234,7 +253,16 @@ protected:
     double m_vo;
 
     ///
+    double m_jumpHeight;
+
+    ///
     double m_jumpTime;
+
+    ///
+    double m_characterWidth;
+
+    ///
+    double m_characterHeight;
 
     ///
     //btScalar m_halfHeight;
@@ -261,14 +289,14 @@ protected:
     ///
     btScalar m_stepHeight;
 
-    ///
+    ///The amount we test above the character for collision
     btScalar  m_currentStepOffset;
 
     ///@todo: remove this and fix the code
     btScalar m_addedMargin;
 
     ///This is the desired walk direction, set by the user
-    btVector3 m_direction;
+    btVector3 m_displacement;
 
     ///
     btVector3 m_normalizedDirection;
@@ -285,26 +313,15 @@ protected:
     ///Keep track of the contact manifolds
     btManifoldArray m_manifoldArray;
 
-    ///
-    double GetHeight( double elapsedTime );
-
-    ///
-    void StartJump( double vo );
-
-    ///
-    void StopJump();
-
-    ///
-    double m_characterWidth;
-
-    ///
-    double m_characterHeight;
-
-    ///
-    PhysicsSimulator& m_physicsSimulator;
-
 private:
+    ///
+    void DrawLine( osg::Vec3d startPoint, osg::Vec3d endPoint );
 
+    ///
+    osg::ref_ptr< osg::Geode > m_lineGeode;
+
+    ///
+    double m_elapsedFallTime;
 };
 
 } // end scenegraph
