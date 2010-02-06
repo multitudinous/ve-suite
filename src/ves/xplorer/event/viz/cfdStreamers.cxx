@@ -326,11 +326,9 @@ void cfdStreamers::Update()
     }
     else
     {
-        
         if( ribbon )
         {
             mapper->SetInputConnection( ribbon->GetOutputPort() );
-            ribbon->Delete();
         }
         else
         {
@@ -344,7 +342,6 @@ void cfdStreamers::Update()
              }*/
             mapper->SetInputConnection( cleanPD->GetOutputPort() );
         }
-        cleanPD->Delete();
     }
 
     mapper->SetColorModeToMapScalars();
@@ -417,7 +414,11 @@ void cfdStreamers::Update()
         }
         c2p->Delete(); 
     }
-
+    cleanPD->Delete();
+    if( ribbon )
+    {
+        ribbon->Delete();
+    }
     vprDEBUG( vesDBG, 0 ) << "|\tcfdStreamers::Update End" << std::endl << vprDEBUG_FLUSH;
 }
 //////////////////////////////////////////////////////////////////////////////////
