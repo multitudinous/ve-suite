@@ -2,18 +2,18 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 #define VEVERSION "2.1.0"
 #define SVNVERSION "14040"
-#define MSVCVERSION "msvc-8.0-sp1-x86"
+#define MSVCVERSION "msvc-9.0-sp1-x86"
 ; Define the group name for all the windows links to be
 ; installed under for the Start Menu
 #define VESGROUPNAME "VE-Suite"
 ; Location where all of the ves dependencies are installed
 #define DEPENDSINSTALLHOME "C:\dev\ves_deps"
 ; Location where you want innosetup to build the installers
-#define INSTALLERINSTALLLOCATION "C:\dev\VE_Suite\dist\win\iss"
+#define INSTALLERINSTALLLOCATION "C:\dev\TSVEG\VE_Suite\dist\win\iss"
 ; Install prefix of ves
-#define VEINSTALLHOME "C:\dev\VE_Suite\install-debug"
+#define VEINSTALLHOME "C:\dev\TSVEG\VE_Suite\install-win32"
 ; Source root location for ves
-#define VEDEVHOME "C:\dev\VE_Suite"
+#define VEDEVHOME "C:\dev\TSVEG\VE_Suite"
 ; Location if the Microsoft redistributable executable
 #define MSREDISTRIBUTABLE "C:\dev\ves_deps\vcredist_x86.exe"
 ; Directory names for all VES dependencies
@@ -53,10 +53,10 @@
 #define OSGALSRCHOME "C:\dev\ves_deps\osgAL_Test\osgal\install-win32-msvs2008"
 #define ALUTSRCINSTALL "C:\dev\ves_deps\osgAL_Test\freealut-1.1.0-bin\freealut-1.1.0-bin"
 ; OSG deps
-#define OSGSRCHOME "C:\Projects\OpenSceneGraph"
+#define OSGSRCHOME "C:\dev\deps\OpenSceneGraph-2.8.2\install-win32"
 ; #define SIMAGEHOME "D:\devEnv\VES-Deps_1.1\prebuiltInstalls\simage-1.6.1"
-#define COINHOME "C:\Projects\ves_windows\coin"
-#define OSG3RDPARTY "C:\Projects\ves-windows\OpenSceneGraph-2.8.2\3rdParty"
+#define COINHOME "C:\dev\deps\Coin3D"
+#define OSG3RDPARTY "C:\dev\deps\3rdParty_Win32Binaries_vc90sp1\3rdParty"
 ; osgWorks deps
 #define OSGWORKSINSTLOCATION "C:\Projects\osgWorks"
 ; POCO deps

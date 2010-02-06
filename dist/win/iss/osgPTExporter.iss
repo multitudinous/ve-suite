@@ -8,8 +8,8 @@
 #define MyAppPublisher "Virtural Engineering Research Group"
 #define MyAppURL "www.vesuite.org"
 #define VEVERSION "1.1.0"
-#define SVNVERSION "13889"
-#define OSGHOME "C:\dev\ves_deps\OSG_2.8.2_msvc-8.0-sp1-x86"
+#define SVNVERSION "14010"
+#define OSGHOME "C:\dev\deps\OSG_2.8.2_msvc-9.0-sp1-x86"
 #define OSGPTEXPORTERHOME "C:\dev\TSVEG\skewmatrix\osgPT\trunk\OSGExport"
 [Setup]
 AppName={#MyAppName}
@@ -68,6 +68,7 @@ Source: {#OSGHOME}\lib\osg55-osgFX.dll; DestDir: {app}; Components:
 Source: {#OSGHOME}\lib\osg55-osgText.dll; DestDir: {app}; Components: 
 Source: {#OSGHOME}\lib\osg55-osgTerrain.dll; DestDir: {app}; Components: 
 Source: {#OSGHOME}\lib\ot11-OpenThreads.dll; DestDir: {app}; Components: 
+Source: {#OSGHOME}\lib\zlib1.dll; DestDir: {app}; Components: 
 Source: {#OSGHOME}\lib\osgPlugins-2.8.2\osgdb_ive.dll; DestDir: {app}; Components: ; Flags: overwritereadonly ignoreversion
 Source: {#OSGHOME}\lib\osgPlugins-2.8.2\osgdb_jpeg.dll; DestDir: {app}; Components: ; Flags: overwritereadonly ignoreversion
 Source: {#OSGHOME}\lib\osgPlugins-2.8.2\osgdb_gif.dll; DestDir: {app}; Components: ; Flags: overwritereadonly ignoreversion
