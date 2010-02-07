@@ -118,10 +118,12 @@ private:
     std::string m_dbFilename;
     ///Root of the CAD models
     ves::xplorer::scenegraph::DCS* m_cadRootNode;
-    
+    ///Column number for the promise date
     int m_promiseDateColumn;
-    
+    //Column number for the part numbers
     size_t m_partNumberColumn;
+    ///Vector map to be used to create the DB
+    std::map< int, std::vector< std::string > > m_csvDataMap;
 };
 
 CREATE_VES_XPLORER_PLUGIN_ENTRY_POINT( WarrantyToolGP )

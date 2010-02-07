@@ -529,7 +529,7 @@ void WarrantyToolGP::ParseDataFile( const std::string& csvFilename )
         }
     }
     //iss.close();
-
+    m_csvDataMap = csvDataMap;
     mLoadedPartNumbers = csvDataMap[ m_partNumberColumn ];
     for( size_t i = 1; i < mLoadedPartNumbers.size(); ++i )
     {
@@ -858,8 +858,6 @@ void WarrantyToolGP::CreateDB()
             catch( Poco::Data::DataException& ex )
             {
                 std::cout << ex.displayText() << std::endl;
-                //std::string ses = insert.toString();
-                //std::cout << ses << std::endl;
             }
             insertCommand.str("");
         }
