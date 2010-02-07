@@ -418,6 +418,7 @@ void CharacterController::Move( btScalar dt )
     bool headTracked = false;
     if( headTracked )
     {
+        //std::cout << " Move character with head position" << std::endl;
         //const gadget::Position::SampleBuffer_t::buffer_t headSampleBuffer =
         //    head->getPositionPtr()->getPositionDataBuffer();
         //we have access to 5000 previous samples if needed
@@ -425,21 +426,34 @@ void CharacterController::Move( btScalar dt )
             head->getPositionPtr()->getPositionDataBuffer();
         iter_type cur_frame_iter = headSampleBuffer.rbegin();
         iter_type prev_frame_iter = cur_frame_iter + 1;
+        const unsigned int dev_num(head->getUnit());
+        m_vjHeadMat2 = m_vjHeadMat1;
+        m_vjHeadMat1 =
+            gmtl::convertTo<double>((*cur_frame_iter)[dev_num].getPosition());
 
-        if( (cur_frame_iter != headSampleBuffer.rend()) &&
+        //Every time swap buffers is called the main VR Juggler buffer
+        //is cleared and thus all of the history data is lost. We will have to 
+        //keep all of the history ourselves with the buffer_type datatype.
+        //std::cout << m_vjHeadMat1 << " " << m_vjHeadMat2 << std::endl;
+        //std::cout << headSampleBuffer.size() << std::endl;
+        /*if( (cur_frame_iter != headSampleBuffer.rend()) &&
            (prev_frame_iter != headSampleBuffer.rend()) )
         {
-            const unsigned int dev_num(head->getUnit());
             m_vjHeadMat1 =
                 gmtl::convertTo<double>((*cur_frame_iter)[dev_num].getPosition());
             m_vjHeadMat2 =
                 gmtl::convertTo<double>((*prev_frame_iter)[dev_num].getPosition());
+            std::cout << m_vjHeadMat1 << " " << m_vjHeadMat2 << std::endl;
             //m_vjHeadMat1 =
             //    gmtl::convertTo<double>( headSampleBuffer[ 0 ][ 0 ].getPosition() );
             //m_vjHeadMat2 =
             //    gmtl::convertTo<double>( headSampleBuffer[ 0 ][ 1 ].getPosition() );
         }
-
+        else
+        {
+            std::cout << "We do not have a stable VJHead buffer to "
+                << "sample for the character position." << std::endl;
+        }*/
         //Update the character rotation
         UpdateRotationTrackedHead();
 
@@ -1027,7 +1041,7 @@ void CharacterController::UpdateTranslationTrackedHead()
 
     btTransform xform = m_ghostObject->getWorldTransform();
     xform.setRotation( xform.getRotation().inverse() );
-
+    //std::cout << " UpdateTranslationTrackedHead " << std::endl;
     if( m_translateType & TranslateType::STEP_FORWARD_BACKWARD )
     {
         /*btVector3 forwardBackwardDisplacement( 0.0, 0.0, 0.0 );
@@ -1074,10 +1088,12 @@ void CharacterController::UpdateTranslationTrackedHead()
     gmtl::Point3d jugglerHeadPoint2 =
         gmtl::makeTrans< gmtl::Point3d >( m_vjHeadMat2 );
 
-    displacement[ 0 ] += (jugglerHeadPoint1[ 0 ] - jugglerHeadPoint2[ 0 ]);
-    displacement[ 1 ] += (jugglerHeadPoint1[ 1 ] - jugglerHeadPoint2[ 1 ]);
-    displacement[ 2 ] += (jugglerHeadPoint1[ 2 ] - jugglerHeadPoint2[ 2 ]);
+    displacement[ 0 ] += ( jugglerHeadPoint1[ 0 ] - jugglerHeadPoint2[ 0 ]);
+    displacement[ 1 ] += (-jugglerHeadPoint1[ 2 ] + jugglerHeadPoint2[ 2 ]);
+    displacement[ 2 ] += ( jugglerHeadPoint1[ 1 ] - jugglerHeadPoint2[ 1 ]);
 
+    //std::cout << displacement[ 0 ] << " " << displacement[ 1 ] 
+    //    << " " << displacement[ 2 ] << " " << std::endl;
     //slerp mCameraRotation if necessary
     if( mCameraRotationSLERP )
     {
