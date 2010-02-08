@@ -6,8 +6,8 @@ includedir=${prefix}/include/cadkit
 Name: Minerva
 Description: Minerva GIS
 Provides: Minerva
-Requires: OpenSceneGraph OpenThreads
+Requires: OpenSceneGraph OpenThreads Boost.Filesystem 
 Version: 1.0
-Libs: /libpath:"${libdir}" Minerva.lib Usul.lib
+Libs: /libpath:"${libdir}" Minerva.lib Usul.lib MinervaDataSource.lib  SerializeXML.lib  XmlTree.lib  MinervaOsgTools.lib  
 Cflags: /I"${includedir}"
 Arch: noarch
