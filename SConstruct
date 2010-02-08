@@ -665,11 +665,12 @@ if not SConsAddons.Util.hasHelpFlag():
         ves_dirs.append( veiFreezeSubdirs )
         baseEnv.Alias('freeze', veiFreezeSubdirs) 
     
-    if 'issBuild' in  COMMAND_LINE_TARGETS and GetPlatform() == 'win32':
-        ves_dirs.append( issBuilder )
-    else:
-        print "The issBuild build option is only available on Windows."
-        sys.exit(0)
+    if 'issBuild' in  COMMAND_LINE_TARGETS:
+        if GetPlatform() == 'win32':
+            ves_dirs.append( issBuilder )
+        else:
+            print "The issBuild build option is only available on Windows."
+            sys.exit(0)
 
     # Build the test suite if asked.
     if 'testsuite' in COMMAND_LINE_TARGETS:
