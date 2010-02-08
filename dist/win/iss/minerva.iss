@@ -8,7 +8,7 @@
 #define MyAppURL "www.vesuite.org"
 
 [Setup]
-AppName={#MyAppName}
+AppName={#MyAppName}_{#MyAppVer}_{#MSVCVERSION}
 AppVerName={#MyAppVerName}_{#MyAppVer}_{#MSVCVERSION}
 AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
@@ -76,4 +76,4 @@ Source: {#GDALHOME}\html\*; DestDir: {app}\share\gdal\html; Flags: ignoreversion
 Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\Minerva.fpc.in; DestDir: {app}\lib\flagpoll; DestName: Minerva.fpc; Languages: ; Flags: ignoreversion
 
 [Icons]
-Name: {group}\{cm:UninstallProgram,{#MyAppName}}; Filename: {uninstallexe}; Languages: 
+Name: {group}\{cm:UninstallProgram,{#MyAppName}_{#MyAppVer}_{#MSVCVERSION}}; Filename: {uninstallexe}; Languages: 

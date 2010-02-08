@@ -40,10 +40,10 @@
 ;and less version dependent when running this installer
 #define APRINSTALL "C:\Projects\ves-windows\workapr"
 ; Minerva deps
-#define MINERVASRCHOME "C:\dev\ves_deps\minerva-gis-svn\install-win32"
+#define MINERVASRCHOME "C:\dev\deps\minervagis-svn\install-win32"
 ; #define FWTOOLS "C:\Program Files\FWTools2.3.0"
-#define PROJHOME "C:\dev\ves_deps\proj-4.6.1\install-win32"
-#define GDALHOME "C:\dev\ves_deps\gdal-1.6.2\install-win32"
+#define PROJHOME "C:\dev\deps\proj-4.7.0\install-win32"
+#define GDALHOME "C:\dev\deps\gdal-1.6.3\install-win32"
 ; #define CURL_HOME "C:\dev\ves_deps\curl-7.19.5\build-win32"
 ; #define OSG3RDPARTY "C:\dev\ves_deps\3rdParty\3rdParty_win32binaries_vs80sp1"
 ; osgAL deps
@@ -63,8 +63,8 @@
 #define POCOSRCHOME "C:\Projects\ves-windows\poco-1.3.5-all"
 #define SQLITEHOME "C:\Projects\ves-windows\sqlitedll-3_6_20"
 ; VR Juggler deps
-#define VRJUGGLER_INST_LOCATION "C:\dev\ves_deps\vrjuggler-gc-svn\install-win32"
-#define VRJUGGLER_DEPS_INST_LOCATION "C:\dev\ves_deps\vrjuggler-gc-svn\build-win32"
+#define VRJUGGLER_INST_LOCATION "C:\dev\deps\juggler-gc-svn\install-win32"
+#define VRJUGGLER_DEPS_INST_LOCATION "C:\dev\deps\juggler-gc-svn\deps-install-win32"
 ; VTK deps
 #define VTKSRCHOME "C:\dev\ves_deps\vtk-5.2.0-install"
 ; WX deps

@@ -7,7 +7,7 @@
 #define MyAppPublisher "VERG"
 #define MyAppURL "www.vesuite.org"
 [Setup]
-AppName={#MyAppName}
+AppName={#MyAppName}_{#MyAppVer}_{#MSVCVERSION}
 AppVerName={#MyAppVerName}_{#MyAppVer}_{#MSVCVERSION}
 AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
@@ -142,4 +142,4 @@ Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\ACE_TMCast.pc.in; DestDir: 
 Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\ACE_HTBP.pc.in; DestDir: {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName: ACE_HTBP.pc
 
 [Icons]
-Name: {group}\{cm:UninstallProgram,{#MyAppName}}; Filename: {uninstallexe}
+Name: {group}\{cm:UninstallProgram,{#MyAppName}_{#MyAppVer}_{#MSVCVERSION}}; Filename: {uninstallexe}

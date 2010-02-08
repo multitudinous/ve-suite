@@ -8,7 +8,7 @@
 #define MyAppURL "www.vesuite.org"
 
 [Setup]
-AppName={#MyAppName}
+AppName={#MyAppName}_{#MyAppVer}_{#MSVCVERSION}
 AppVerName={#MyAppVerName}_{#MyAppVer}_{#MSVCVERSION}
 AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
@@ -69,4 +69,4 @@ Source: {#VRJUGGLER_DEPS_INST_LOCATION}\share\*.fpc; DestDir: {app}\lib; Flags: 
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
-Name: {group}\{cm:UninstallProgram,{#MyAppName}}; Filename: {uninstallexe}; Languages: 
+Name: {group}\{cm:UninstallProgram,{#MyAppName}_{#MyAppVer}_{#MSVCVERSION}}; Filename: {uninstallexe}; Languages: 

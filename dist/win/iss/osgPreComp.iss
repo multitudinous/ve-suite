@@ -8,7 +8,7 @@
 #define MyAppURL "www.vesuite.org"
 
 [Setup]
-AppName={#MyAppName}
+AppName={#MyAppName}_{#MyAppVer}_{#MSVCVERSION}
 AppVerName={#MyAppVerName}_{#MyAppVer}_{#MSVCVERSION}
 AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
@@ -69,4 +69,4 @@ Source: {#COINHOME}\include\*.h; DestDir: {app}\include; Flags: ignoreversion re
 Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\OSG.fpc.in; DestDir: {app}\lib\flagpoll; DestName: OSG.fpc; Languages: ; Flags: ignoreversion
 
 [Icons]
-Name: {group}\{cm:UninstallProgram,{#MyAppName}}; Filename: {uninstallexe}; Languages: 
+Name: {group}\{cm:UninstallProgram,{#MyAppName}_{#MyAppVer}_{#MSVCVERSION}}; Filename: {uninstallexe}; Languages: 

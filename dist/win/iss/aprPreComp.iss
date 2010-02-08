@@ -8,7 +8,7 @@
 #define MyAppPublisher "VERG"
 #define MyAppURL "www.vesuite.org"
 [Setup]
-AppName={#MyAppName}
+AppName={#MyAppName}_{#MyAppVer}_{#MSVCVERSION}
 AppVerName={#MyAppVerName}_{#MyAppVer}_{#MSVCVERSION}
 AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
@@ -59,4 +59,4 @@ Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\apr-1.pc.in; DestDir: {app}
 Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\apr-util-1.pc.in; DestDir: {app}\lib\flagpoll; DestName: apr-util-1.fpc; Languages: ; Flags: ignoreversion
 
 [Icons]
-Name: {group}\{cm:UninstallProgram,{#MyAppName}}; Filename: {uninstallexe}; Languages: 
+Name: {group}\{cm:UninstallProgram,{#MyAppName}_{#MyAppVer}_{#MSVCVERSION}}; Filename: {uninstallexe}; Languages: 
