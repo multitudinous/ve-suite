@@ -6,7 +6,7 @@ import os.path
 from SCons.Defaults import SharedCheck, ProgScan
 from SCons.Script.SConscript import SConsEnvironment
 import glob
-tools_verbose = True
+#tools_verbose = True
 #import filter
 
 #########################################################################
@@ -39,5 +39,5 @@ def exists(env):
     return env.WhereIs("iscc");
     
 #Example of how to use it
-installer=env.InnoInstaller(target='setup_x64',source='setup_x64.iss',ISCCDEFINES=['APP_NAME="Your App Name"','APP_VERSION="10.4"']);
-env.Depends(installer,ALL_THE_DEPENDENCIES); # need to do this manually since there is no dep scanner yet
+#installer=env.InnoInstaller(target='setup_x64',source='setup_x64.iss',ISCCDEFINES=['APP_NAME="Your App Name"','APP_VERSION="10.4"']);
+#env.Depends(installer,ALL_THE_DEPENDENCIES); # need to do this manually since there is no dep scanner yet

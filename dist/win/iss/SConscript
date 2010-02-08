@@ -1,0 +1,13 @@
+import os, sys, string
+import SConsAddons.Util
+from SCons.Util import WhereIs
+pj = os.path.join
+import SConsAddons.Util as sca_util
+
+Import('ves_pkg', 'RootDir')
+env = ves_pkg.getEnv().Clone()
+
+##Build the docs.
+installer=env.InnoInstaller(target='vesuite_x86',source='vesuite.iss')
+# need to do this manually since there is no dep scanner yet
+#env.Depends(installer,ALL_THE_DEPENDENCIES)

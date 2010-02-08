@@ -56,6 +56,8 @@ import doxygen
 sys.path.append(pj(os.getcwd(), 'share', 'python'))
 import HDF5
 import HDF4
+import InnoSetup
+
 # Pull in scolorizer files
 #sys.path.append(pj(os.getcwd(), 'share', 'python','scolorizer-0.2'))
 #from colorizer import colorizer
@@ -511,6 +513,8 @@ baseEnv.SourceCode('.', None)
 
 # Add doxygen builder to the base environment
 doxygen.generate(baseEnv)
+# Add InnoSetup builder to the base environment
+InnoSetup.generate(baseEnv)
 
 # Setup a configure build directory for each unique build type
 baseEnv['CONFIGUREDIR'] = options_cache + "_cache_dir"
@@ -635,9 +639,6 @@ if not SConsAddons.Util.hasHelpFlag():
     ##Tack on path prefixes to subdirs specified above.
     vesSubdirs=pj(buildDir, 'src' )
     distSubdirs = pj(buildDir,'dist','installerImages')
-    #veiDistSubdirs = pj(buildDir,'VE_Installer','installer', 'dist')
-    #fpcSubdirs = pj(buildDir,'VE_Installer','fpc')
-    #installerSubdirs = pj(buildDir,'VE_Installer' )
     shareSubdirs = pj(buildDir,'share')
     lokiSubdirs = pj( buildDir, 'external', lokiBaseVar )
     minervaDataSubdirs = pj( buildDir, 'external', 'gdal_data')
@@ -647,10 +648,11 @@ if not SConsAddons.Util.hasHelpFlag():
     osgBulletPlusSubdirs = pj( buildDir, 'external', 'osgBulletPlus')
     bullet = pj( buildDir, 'external', bulletBaseVar)
     test = pj( buildDir, 'test', 'osg')
+    issBuilder = pj(buildDir,'dist','win','iss')
 
     ves_dirs = [vesSubdirs, distSubdirs, osgEphemerisSubdirs,
                shareSubdirs, lokiSubdirs, osgBulletPlusSubdirs,
-               osgBulletSubdirs, bullet, minervaDataSubdirs ]
+               osgBulletSubdirs, bullet, minervaDataSubdirs]
 
     #build applications in test/ directory
     if baseEnv[ 'buildTests' ] == 'yes':
@@ -662,7 +664,10 @@ if not SConsAddons.Util.hasHelpFlag():
         veiFreezeSubdirs = pj(buildDir,'dist', 'build', 'freeze')
         ves_dirs.append( veiFreezeSubdirs )
         baseEnv.Alias('freeze', veiFreezeSubdirs) 
-     
+    
+    if 'issBuild' in  COMMAND_LINE_TARGETS and GetPlatform() == 'win32':
+        ves_dirs.append( issBuilder )
+
     # Build the test suite if asked.
     if 'testsuite' in COMMAND_LINE_TARGETS:
         ves_dirs.append(pj('#', 'test'))
