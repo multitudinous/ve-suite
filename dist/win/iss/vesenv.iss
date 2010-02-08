@@ -58,7 +58,7 @@
 #define COINHOME "C:\dev\deps\Coin3D"
 #define OSG3RDPARTY "C:\dev\deps\3rdParty_Win32Binaries_vc90sp1\3rdParty"
 ; osgWorks deps
-#define OSGWORKSINSTLOCATION "C:\Projects\osgWorks"
+#define OSGWORKSINSTLOCATION "C:\dev\deps\osgworks-gc-svn\install-win32"
 ; POCO deps
 #define POCOSRCHOME "C:\Projects\ves-windows\poco-1.3.5-all"
 #define SQLITEHOME "C:\Projects\ves-windows\sqlitedll-3_6_20"

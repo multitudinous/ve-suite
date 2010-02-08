@@ -9,7 +9,7 @@
 #define MyAppURL "www.vesuite.org"
 #define VEVERSION "1.1.0"
 #define SVNVERSION "14010"
-#define OSGHOME "C:\dev\ves_deps\OSG_2.8.2_msvc-8.0-sp1-x86"
+#define OSGHOME "C:\dev\deps\OSG_2.8.2_msvc-9.0-sp1-x86"
 #define OSGPTEXPORTERHOME "C:\dev\TSVEG\skewmatrix\osgPT\trunk\OSGExport"
 [Setup]
 AppName={#MyAppName}
