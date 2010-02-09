@@ -37,7 +37,7 @@
 #include <ves/xplorer/ModelCADHandler.h>
 #include <ves/xplorer/ModelDatasetHandler.h>
 
-#include <ves/xplorer/environment/cfdSound.h>
+//#include <ves/xplorer/environment/cfdSound.h>
 #include <ves/xplorer/environment/HeadPositionCallback.h>
 #include <ves/xplorer/environment/TextTextureCallback.h>
 
@@ -178,7 +178,7 @@ Model::~Model()
 
     //vprDEBUG(vesDBG,2) << "Model destructor finished"
     //                       << std::endl << vprDEBUG_FLUSH;
-    _availableSounds.clear();
+    //_availableSounds.clear();
 
     if( m_cadHandler )
     {
@@ -665,20 +665,20 @@ const std::string Model::MakeSurfaceFile( vtkDataSet* ugrid, int datasetindex )
 void Model::AddNewSound( std::string soundName,
                          std::string filename )
 {
-    cfdSound newSound;
+    /*cfdSound newSound;
     newSound.fileName = filename;
     newSound.soundName = soundName;
 
     if( newSound.initSound() )
     {
         _availableSounds[soundName] = newSound;
-    }
+    }*/
 
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Model::ActivateSound( std::string soundName )
 {
-    try
+    /*try
     {
         _availableSounds[soundName].playSound();
     }
@@ -686,12 +686,12 @@ void Model::ActivateSound( std::string soundName )
     {
         std::cout << "Invalid sound: " << soundName << std::endl;
         std::cout << "Model::ActivateSound" << std::endl;
-    }
+    }*/
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Model::DeactivateSound( std::string soundName )
 {
-    try
+    /*try
     {
         _availableSounds[soundName].stopSound();
     }
@@ -699,7 +699,7 @@ void Model::DeactivateSound( std::string soundName )
     {
         std::cout << "Invalid sound: " << soundName << std::endl;
         std::cout << "Model::ActivateSound" << std::endl;
-    }
+    }*/
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Model::DeleteDataSet( std::string dataSetName )

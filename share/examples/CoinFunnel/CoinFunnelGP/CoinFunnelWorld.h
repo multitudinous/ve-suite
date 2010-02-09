@@ -54,7 +54,7 @@ namespace scenegraph
 
 // --- osgAL Includes --- //
 #ifdef VE_SOUND
-namespace osgAL
+namespace osgAudio
 {
     class SoundManager;
 }
@@ -80,7 +80,7 @@ public:
         ves::xplorer::scenegraph::ResourceManager* resourceManager
 #ifdef VE_SOUND
         ,
-        osgAL::SoundManager* soundManager
+        osgAudio::SoundManager* soundManager
 #endif
         );
 
@@ -99,7 +99,7 @@ private:
     ves::xplorer::scenegraph::ResourceManager* mResourceManager;
 
 #ifdef VE_SOUND
-    osgAL::SoundManager* mSoundManager;
+    osgAudio::SoundManager* mSoundManager;
 #endif
 
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > mPluginDCS;

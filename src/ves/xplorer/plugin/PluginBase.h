@@ -43,7 +43,7 @@
 
 #ifdef VE_SOUND
 // --- osgAL Includes --- //
-namespace osgAL
+namespace osgAudio
 {
 class SoundManager;
 }
@@ -199,7 +199,7 @@ public:
     void SetCommandHandler( ves::xplorer::CommandHandler* commandHandler ); 
     
 #ifdef VE_SOUND
-    void SetSoundManager( osgAL::SoundManager* soundManager );
+    void SetSoundManager( osgAudio::SoundManager* soundManager );
 #endif
 
     ///Set the VE_Model to be used by this plugin
@@ -238,7 +238,7 @@ protected:
     ///Singleton pointers
     ves::xplorer::scenegraph::PhysicsSimulator* mPhysicsSimulator;
 #ifdef VE_SOUND
-    osgAL::SoundManager* mSoundManager;
+    osgAudio::SoundManager* mSoundManager;
 #endif
 
     ///This is the base DCS pointer that all content for a plugin

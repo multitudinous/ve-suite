@@ -70,10 +70,10 @@
 
 #ifdef VE_SOUND
 // --- osgAL Includes --- //
-#include <osgAL/SoundManager>
-#include <osgAL/SoundRoot>
-#include <osgAL/SoundNode>
-#include <osgAL/SoundState>
+#include <osgAudio/SoundManager.h>
+#include <osgAudio/SoundRoot.h>
+#include <osgAudio/SoundNode.h>
+#include <osgAudio/SoundState.h>
 #endif //VE_SOUND
 
 // --- VR Juggler Includes --- //
@@ -191,13 +191,13 @@ void SceneManager::InitScene()
 #ifdef VE_SOUND
     try
     {
-        osgAL::SoundManager::instance()->init( 32 );
-        osgAL::SoundManager::instance()->getEnvironment()->
-            setDistanceModel( openalpp::InverseDistance );
-        osgAL::SoundManager::instance()->getEnvironment()->
+        osgAudio::SoundManager::instance()->init( 32 );
+        osgAudio::SoundManager::instance()->getEnvironment()->
+            setDistanceModel( osgAudio::InverseDistance );
+        osgAudio::SoundManager::instance()->getEnvironment()->
             setDopplerFactor( 1 );
         
-        osg::ref_ptr< osgAL::SoundRoot > soundRoot = new osgAL::SoundRoot();
+        osg::ref_ptr< osgAudio::SoundRoot > soundRoot = new osgAudio::SoundRoot();
         soundRoot->setName( "Sound Root" );
         mRootNode->addChild( soundRoot.get() );
     }
@@ -495,7 +495,7 @@ void SceneManager::SetBackgroundColor( std::vector< double > color )
 void SceneManager::Shutdown()
 {
 #ifdef VE_SOUND
-    osgAL::SoundManager::instance()->shutdown();
+    osgAudio::SoundManager::instance()->shutdown();
 #endif
 }
 ////////////////////////////////////////////////////////////////////////////////

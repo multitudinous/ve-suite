@@ -46,15 +46,11 @@ namespace osg
 class Geode;
 }
 
-namespace osgAL
+namespace osgAudio
 {
 class SoundManager;
 class SoundNode;
 class SoundState;
-}
-
-namespace openalpp
-{
 class Sample;
 }
 
@@ -89,7 +85,7 @@ public:
     ///This will prevent multiple instances of the osgAL::SoundManager singleton.
     Sound( const std::string& name,
            ves::xplorer::scenegraph::DCS* parentDCS,
-           osgAL::SoundManager* soundManager );
+           osgAudio::SoundManager* soundManager );
 
     ~Sound();
 
@@ -105,17 +101,17 @@ public:
     void Play();
     void Stop();
 
-    osgAL::SoundState* GetSoundState();
+    osgAudio::SoundState* GetSoundState();
 
 private:
-    osgAL::SoundManager* m_soundManager;
+    osgAudio::SoundManager* m_soundManager;
 
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > mDCS;
     osg::ref_ptr< osg::Geode > m_soundGeode;
 
-    osg::ref_ptr< openalpp::Sample > m_sample;
-    osg::ref_ptr< osgAL::SoundState > m_soundState;
-    osg::ref_ptr< osgAL::SoundNode > m_soundNode;
+    osg::ref_ptr< osgAudio::Sample > m_sample;
+    osg::ref_ptr< osgAudio::SoundState > m_soundState;
+    osg::ref_ptr< osgAudio::SoundNode > m_soundNode;
 
     std::string m_fileName;
 

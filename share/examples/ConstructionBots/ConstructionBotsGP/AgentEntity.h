@@ -64,7 +64,7 @@ class Sound;
 
 // --- osgAL Includes --- //
 #ifdef VE_SOUND
-namespace osgAL
+namespace osgAudio
 {
     class SoundManager;
 }
@@ -89,7 +89,7 @@ public:
         bots::Agent* agent,
         ves::xplorer::scenegraph::DCS* pluginDCS,
 #ifdef VE_SOUND
-        osgAL::SoundManager* soundManager,
+        osgAudio::SoundManager* soundManager,
 #endif
         ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator );
 

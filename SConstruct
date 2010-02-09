@@ -338,7 +338,7 @@ vrjuggler_options = SConsAddons.Options.VRJuggler.VRJ.VRJ("VR Juggler", "2.0.2")
 
 osgal_options = fp_option.FlagPollBasedOption("osgAL", "osgAL", "0.6.1", False, True, 
                                               None, 
-                                              compileTest=True, headerToCheck="osgAL/SoundNode")
+                                              compileTest=True, headerToCheck="osgAudio/SoundNode.h")
 
 # Setup POCO library
 if GetPlatform() == 'win32':

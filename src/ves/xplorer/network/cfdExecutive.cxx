@@ -63,7 +63,7 @@
 
 #ifdef VE_SOUND
 // --- osgAL Includes --- //
-#include <osgAL/SoundManager>
+#include <osgAudio/SoundManager.h>
 #endif
 
 #include <iostream>
@@ -646,7 +646,7 @@ void cfdExecutive::ParseSystem( ves::open::xml::model::SystemPtr system,
             temp->SetPhysicsSimulator( ves::xplorer::scenegraph::
                 PhysicsSimulator::instance() );
 #ifdef VE_SOUND
-            temp->SetSoundManager( osgAL::SoundManager::instance() );
+            temp->SetSoundManager( osgAudio::SoundManager::instance() );
 #endif
             temp->SetEnvironmentHandler( EnvironmentHandler::instance() );
             temp->SetModelHandler( ves::xplorer::ModelHandler::instance() );

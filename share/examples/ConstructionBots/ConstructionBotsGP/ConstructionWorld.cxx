@@ -55,7 +55,7 @@
 
 // --- osgAL Includes --- //
 #ifdef VE_SOUND
-#include <osgAL/SoundState>
+#include <osgAudio/SoundState.h>
 #endif
 
 // --- Bullet Includes --- //
@@ -77,7 +77,7 @@ const double oneEightyDivPI = 57.2957795;
 ConstructionWorld::ConstructionWorld(
     ves::xplorer::scenegraph::DCS* pluginDCS,
 #ifdef VE_SOUND
-    osgAL::SoundManager* soundManager,
+    osgAudio::SoundManager* soundManager,
 #endif
     ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator )
     :

@@ -40,7 +40,7 @@
 #include <ves/xplorer/ModelCADHandlerPtr.h>
 #include <ves/xplorer/DataSetPtr.h>
 
-#include <ves/xplorer/environment/cfdSound.h>
+//#include <ves/xplorer/environment/cfdSound.h>
 
 #include <ves/xplorer/event/EventHandlerPtr.h>
 
@@ -252,7 +252,6 @@ private:
     std::string currentsurfacefilename;
     bool mirrorDataFlag;
 
-private:
     //ves::xplorer::scenegraph::cfdTempAnimation* animation;
     osg::ref_ptr< ves::xplorer::scenegraph::Switch > switchNode;
     osg::ref_ptr< ves::xplorer::scenegraph::Group > classic;
@@ -284,7 +283,7 @@ private:
     std::string modelID;
 
 
-    std::map<std::string, cfdSound> _availableSounds;///<The available sounds for this model.
+    //std::map<std::string, cfdSound> _availableSounds;///<The available sounds for this model.
     std::map< std::string, std::vector< std::pair< std::string, osg::ref_ptr< osg::StateSet > > > > _nodeAttributes;///<The map of node attributes.
 
     ///The CADHandler for this model.

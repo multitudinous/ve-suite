@@ -63,7 +63,7 @@ class ResourceManager;
 
 // --- osgAL Includes --- //
 #ifdef VE_SOUND
-namespace osgAL
+namespace osgAudio
 {
     class SoundManager;
 }
@@ -82,7 +82,7 @@ public:
                 ves::xplorer::scenegraph::ResourceManager* resourceManager
 #ifdef VE_SOUND
                  ,
-                 osgAL::SoundManager* soundManager
+                 osgAudio::SoundManager* soundManager
 #endif
                 );
 

@@ -42,7 +42,7 @@
 
 // --- osgAL Includes --- //
 #ifdef VE_SOUND
-#include <osgAL/SoundState>
+#include <osgAudio/SoundState.h>
 #endif
 
 // --- OSG Includes --- //
@@ -61,7 +61,7 @@ WaterEntity::WaterEntity( std::string geomFile,
                           ves::xplorer::scenegraph::ResourceManager* resourceManager
 #ifdef VE_SOUND
                           ,
-                          osgAL::SoundManager* soundManager
+                          osgAudio::SoundManager* soundManager
 #endif
                           )
 :

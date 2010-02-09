@@ -56,7 +56,7 @@ namespace scenegraph
 
 // --- osgAL Includes --- //
 #ifdef VE_SOUND
-namespace osgAL
+namespace osgAudio
 {
     class SoundManager;
 }
@@ -82,7 +82,7 @@ public:
     ConstructionWorld(
         ves::xplorer::scenegraph::DCS* pluginDCS,
 #ifdef VE_SOUND
-        osgAL::SoundManager* soundManager,
+        osgAudio::SoundManager* soundManager,
 #endif
         ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator );
 
@@ -152,7 +152,7 @@ private:
 
 #ifdef VE_SOUND
     ///A pointer to the sound manager for this plugin
-    osgAL::SoundManager* mSoundManager;
+    osgAudio::SoundManager* mSoundManager;
     ///The ambient sound played for this simulation
     ves::xplorer::scenegraph::Sound* mAmbientSound;
 #endif

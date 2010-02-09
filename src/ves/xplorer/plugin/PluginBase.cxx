@@ -64,7 +64,7 @@
 
 #ifdef VE_SOUND
 // --- osgAL Includes --- //
-#include <osgAL/SoundManager>
+#include <osgAudio/SoundManager.h>
 #endif
 
 // --- C/C++ Libraries
@@ -252,7 +252,7 @@ void PluginBase::SetPhysicsSimulator(
 }
 ////////////////////////////////////////////////////////////////////////////////
 #ifdef VE_SOUND
-void PluginBase::SetSoundManager( osgAL::SoundManager* soundManager )
+void PluginBase::SetSoundManager( osgAudio::SoundManager* soundManager )
 {
     mSoundManager = soundManager;
 }

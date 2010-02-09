@@ -43,10 +43,10 @@
 
 // --- osgAL Includes --- //
 #ifdef VE_SOUND
-#include <osgAL/SoundRoot>
-#include <osgAL/SoundManager>
-#include <osgAL/SoundNode>
-#include <osgAL/SoundState>
+#include <osgAudio/SoundRoot.h>
+#include <osgAudio/SoundManager.h>
+#include <osgAudio/SoundNode.h>
+#include <osgAudio/SoundState.h>
 #endif
 
 // --- OSG Includes --- //

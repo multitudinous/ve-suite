@@ -41,9 +41,9 @@
 #include <osg/ShapeDrawable>
 
 // --- osgAL Includes --- //
-#include <osgAL/SoundManager>
-#include <osgAL/SoundNode>
-#include <osgAL/SoundState>
+#include <osgAudio/SoundManager.h>
+#include <osgAudio/SoundNode.h>
+#include <osgAudio/SoundState.h>
 
 // --- C/C++ Libraries --- //
 #include <iostream>
@@ -59,12 +59,12 @@ namespace scenegraph
 Sound::Sound( const std::string& name,
               ves::xplorer::scenegraph::DCS* parentDCS )
         :
-        m_soundManager( osgAL::SoundManager::instance() ),
+        m_soundManager( osgAudio::SoundManager::instance() ),
         mDCS( new ves::xplorer::scenegraph::DCS() ),
         m_soundGeode( new osg::Geode() ),
         m_sample( 0 ),
-        m_soundState( new osgAL::SoundState( name ) ),
-        m_soundNode( new osgAL::SoundNode( m_soundState.get() ) )
+        m_soundState( new osgAudio::SoundState( name ) ),
+        m_soundNode( new osgAudio::SoundNode( m_soundState.get() ) )
 {
     parentDCS->AddChild( mDCS.get() );
     mDCS->addChild( m_soundNode.get() );
@@ -73,14 +73,14 @@ Sound::Sound( const std::string& name,
 ////////////////////////////////////////////////////////////////////////////////
 Sound::Sound( const std::string& name,
               ves::xplorer::scenegraph::DCS* parentDCS,
-              osgAL::SoundManager* soundManager )
+              osgAudio::SoundManager* soundManager )
         :
         m_soundManager( soundManager ),
         mDCS( new ves::xplorer::scenegraph::DCS() ),
         m_soundGeode( new osg::Geode() ),
         m_sample( 0 ),
-        m_soundState( new osgAL::SoundState( name, m_soundManager ) ),
-        m_soundNode( new osgAL::SoundNode( m_soundState.get(), m_soundManager ) )
+        m_soundState( new osgAudio::SoundState( name, m_soundManager ) ),
+        m_soundNode( new osgAudio::SoundNode( m_soundState.get(), m_soundManager ) )
 {
     parentDCS->AddChild( mDCS.get() );
     mDCS->addChild( m_soundNode.get() );
@@ -129,7 +129,7 @@ void Sound::LoadFile( const std::string fileName )
     bool addToCache = false;
 
     //m_sample = m_soundManager->getSample( fileName, addToCache );
-    m_sample = new openalpp::Sample( fileName );
+    m_sample = new osgAudio::Sample( fileName );
 
     //Create a new soundstate, give it the name of the file we loaded.
     m_soundState->setSample( m_sample.get() );
@@ -153,9 +153,9 @@ void Sound::LoadFile( const std::string fileName )
 ////////////////////////////////////////////////////////////////////////////////
 void Sound::PushSoundEvent( int priority )
 {
-    osg::ref_ptr< osgAL::SoundState > temp = 
-        //new osgAL::SoundState( "temp", m_soundManager );
-        new osgAL::SoundState( *m_soundState.get() );
+    osg::ref_ptr< osgAudio::SoundState > temp = 
+        //new osgAudio::SoundState( "temp", m_soundManager );
+        new osgAudio::SoundState( *m_soundState.get() );
     //temp->setSample( m_sample.get() );
     //temp->setPosition( m_soundState->getPosition() );
     //temp->setSoundCone( 0.0, 360.0, 1.0 );
@@ -168,7 +168,7 @@ void Sound::PushSoundEvent( int priority )
 ////////////////////////////////////////////////////////////////////////////////
 void Sound::Pause()
 {
-    m_soundState->setStopMethod( openalpp::Paused );
+    m_soundState->setStopMethod( osgAudio::Paused );
     m_soundState->setPlay( false );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -179,11 +179,11 @@ void Sound::Play()
 ////////////////////////////////////////////////////////////////////////////////
 void Sound::Stop()
 {
-    m_soundState->setStopMethod( openalpp::Stopped );
+    m_soundState->setStopMethod( osgAudio::Stopped );
     m_soundState->setPlay( false );
 }
 ////////////////////////////////////////////////////////////////////////////////
-osgAL::SoundState* Sound::GetSoundState()
+osgAudio::SoundState* Sound::GetSoundState()
 {
     return m_soundState.get();
 }

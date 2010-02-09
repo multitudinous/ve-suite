@@ -50,7 +50,7 @@
 
 // --- osgAL Includes --- //
 #ifdef VE_SOUND
-#include <osgAL/SoundState>
+#include <osgAudio/SoundState.h>
 #endif
 
 // --- Bullet Includes --- //
@@ -69,7 +69,7 @@ AgentEntity::AgentEntity(
     bots::Agent* agent,
     ves::xplorer::scenegraph::DCS* pluginDCS,
 #ifdef VE_SOUND
-    osgAL::SoundManager* soundManager,
+    osgAudio::SoundManager* soundManager,
 #endif
     ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator  )
     :

@@ -41,7 +41,7 @@
 #include <ves/xplorer/device/cfdCursor.h>
 #include <ves/xplorer/device/KeyboardMouse.h>
 
-#include <ves/xplorer/environment/cfdSoundHandler.h>
+//#include <ves/xplorer/environment/cfdSoundHandler.h>
 #include <ves/xplorer/environment/cfdEnum.h>
 #include <ves/xplorer/environment/cfdTeacher.h>
 #include <ves/xplorer/environment/cfdQuatCamHandler.h>
