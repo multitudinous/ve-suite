@@ -359,7 +359,8 @@ void KeyboardMouse::ProcessEvents()
     {
         const gadget::EventPtr event = *i;
         const gadget::EventType eventType = event->type();
-        const gadget::InputArea* inputArea = event->getSource();
+        const gadget::InputArea& inputAreaMem = event->getSource();
+        const gadget::InputArea* inputArea = &(inputAreaMem);
 #if __GADGET_version >= 1003023
         //Get the current display from the input area
         vrj::DisplayPtr currentDisplay = GetCurrentDisplay( inputArea );
