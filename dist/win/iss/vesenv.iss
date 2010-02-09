@@ -47,11 +47,11 @@
 ; #define CURL_HOME "C:\dev\ves_deps\curl-7.19.5\build-win32"
 ; #define OSG3RDPARTY "C:\dev\ves_deps\3rdParty\3rdParty_win32binaries_vs80sp1"
 ; osgAL deps
-#define LIBOGGHOME "C:\dev\ves_deps\osgAL_Test\libvorbis-1.2.0\ogg"
-#define LIBVORBISHOME "C:\dev\ves_deps\osgAL_Test\libvorbis-1.2.0\libvorbis-1.2.0"
-#define OPENALHOME "C:\dev\ves_deps\osgAL_Test"
-#define OSGALSRCHOME "C:\dev\ves_deps\osgAL_Test\osgal\install-win32-msvs2008"
-#define ALUTSRCINSTALL "C:\dev\ves_deps\osgAL_Test\freealut-1.1.0-bin\freealut-1.1.0-bin"
+#define LIBOGGHOME "C:\dev\deps\libogg"
+#define LIBVORBISHOME "C:\dev\deps\vorbis-svn"
+#define OPENALHOME "C:\dev\deps\openalsdk"
+#define OSGALSRCHOME "C:\dev\deps\osgAudio-svn\install-win32"
+#define ALUTSRCINSTALL "C:\dev\deps\freealut-1.1.0-bin"
 ; OSG deps
 #define OSGSRCHOME "C:\dev\deps\OpenSceneGraph-2.8.2\install-win32"
 ; #define SIMAGEHOME "D:\devEnv\VES-Deps_1.1\prebuiltInstalls\simage-1.6.1"
