@@ -418,6 +418,9 @@ void KeyboardMouse::ProcessEvents()
             m_currMouse = mouse_evt->getButton();
             m_keys.set( m_currMouse );
 
+            m_x = mouse_evt->getX();
+            m_y = mouse_evt->getY();
+
 #if __GADGET_version >= 1003023
             //Set the current GLTransfromInfo from the event
             if( !SetCurrentGLTransformInfo( currentDisplay, false ) )
@@ -425,9 +428,6 @@ void KeyboardMouse::ProcessEvents()
                 return;
             }
 #endif //__GADGET_version >= 1003023
-
-            m_x = mouse_evt->getX();
-            m_y = mouse_evt->getY();
 
             OnMousePress();
 
@@ -444,6 +444,9 @@ void KeyboardMouse::ProcessEvents()
             m_currMouse = mouse_evt->getButton();
             m_keys.reset( m_currMouse );
 
+            m_x = mouse_evt->getX();
+            m_y = mouse_evt->getY();
+
 #if __GADGET_version >= 1003023
             //Set the current GLTransfromInfo from the event
             if( !SetCurrentGLTransformInfo( currentDisplay, false ) )
@@ -451,9 +454,6 @@ void KeyboardMouse::ProcessEvents()
                 return;
             }
 #endif //__GADGET_version >= 1003023
-
-            m_x = mouse_evt->getX();
-            m_y = mouse_evt->getY();
 
             OnMouseRelease();
 
@@ -468,6 +468,9 @@ void KeyboardMouse::ProcessEvents()
             const gadget::MouseEventPtr mouse_evt =
                 boost::static_pointer_cast< gadget::MouseEvent >( event );
 
+            m_x = mouse_evt->getX();
+            m_y = mouse_evt->getY();
+
 #if __GADGET_version >= 1003023
             //Set the current GLTransfromInfo from the event
             if( !SetCurrentGLTransformInfo( currentDisplay, false ) )
@@ -475,9 +478,6 @@ void KeyboardMouse::ProcessEvents()
                 return;
             }
 #endif //__GADGET_version >= 1003023
-
-            m_x = mouse_evt->getX();
-            m_y = mouse_evt->getY();
 
             if( !m_keys.at( m_currMouse ) )
             {
