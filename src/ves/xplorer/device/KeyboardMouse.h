@@ -56,6 +56,11 @@
 
 #include <gadget/Type/KeyboardMouse/EventPtr.h>
 
+namespace gadget
+{
+class InputArea;
+}
+
 // --- OSG Includes --- //
 #include <osg/Geode>
 
@@ -64,6 +69,9 @@
 // --- Bullet Includes --- //
 class btRigidBody;
 class btTypedConstraint;
+
+// --- STL Includes --- //
+#include <bitset>
 
 namespace ves
 {
@@ -226,7 +234,8 @@ private:
 
 #if __GADGET_version >= 1003023
     ///
-    vrj::DisplayPtr const GetCurrentDisplay( const gadget::EventPtr event );
+    vrj::DisplayPtr const GetCurrentDisplay(
+        const gadget::InputArea* inputArea );
 
     ///
     bool SetCurrentGLTransformInfo(
@@ -257,6 +266,12 @@ private:
     ///Are we in selection or nav mode
     bool m_mousePickEvent;
 
+    ///Holds the value of the current key being used
+    gadget::Keys m_currKey;
+
+    ///
+    gadget::Keys m_currMouse;
+
     ///Width of the window
     unsigned int mWidth;
 
@@ -272,20 +287,11 @@ private:
     ///
     unsigned int m_yMotionPixels;
 
-    ///Holds the value of the key being used
-    int mKey;
-
-    ///Holds the value of the mouse button being used
-    int mButton;
-
-    ///Determines if mouse button is pressed or released
-    bool mState;
-
     ///x position of the mouse
-    int mX;
+    int m_x;
 
     ///y position of the mouse
-    int mY;
+    int m_y;
 
     ///Aspect ratio of window
     double mAspectRatio;
@@ -398,6 +404,9 @@ private:
         Rotate( tbAxis[ 0 ], tbAxis[ 1 ], tbAxis[ 2 ], angle );
     }
     */
+
+    ///
+    std::bitset< gadget::LAST_KEY > m_keys;
 
 };
 } //end device

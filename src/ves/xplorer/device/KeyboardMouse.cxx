@@ -135,17 +135,17 @@ KeyboardMouse::KeyboardMouse()
     m_mousePickEvent( false ),
     m_processSelection( true ),
 
+    m_currKey( gadget::KEY_NONE ),
+    m_currMouse( gadget::KEY_NONE ),
+
     mWidth( 1 ),
     mHeight( 1 ),
     m_pickCushion( 1 ),
     m_xMotionPixels( 0 ),
     m_yMotionPixels( 0 ),
 
-    mKey( -1 ),
-    mButton( -1 ),
-    mState( false ),
-    mX( 0 ),
-    mY( 0 ),
+    m_x( 0 ),
+    m_y( 0 ),
 
     mAspectRatio( 0.0 ),
     mFoVZ( 0.0 ),
@@ -180,7 +180,8 @@ KeyboardMouse::KeyboardMouse()
     m_currentGLTransformInfo( scenegraph::GLTransformInfoPtr() ),
 
     mPickedBody( NULL ),
-    mPickConstraint( NULL )
+    mPickConstraint( NULL ),
+    m_keys()
 {
     mKeyboardMouse.init( "VJKeyboard" );
     mHead.init( "VJHead" );
@@ -203,8 +204,8 @@ void KeyboardMouse::SetStartEndPoint(
     osg::Matrixd inverseMVPW = m_currentGLTransformInfo->GetOSGMVPWMatrix();
     inverseMVPW.invert( inverseMVPW );
 
-    startPoint = osg::Vec3d( mX, mY, 0.0 ) * inverseMVPW;
-    endPoint = osg::Vec3d( mX, mY, 1.0 ) * inverseMVPW;
+    startPoint = osg::Vec3d( m_x, m_y, 0.0 ) * inverseMVPW;
+    endPoint = osg::Vec3d( m_x, m_y, 1.0 ) * inverseMVPW;
 
     //std::cout << "startPoint: " << startPoint << std::endl;
     //std::cout << "endPoint: " << endPoint << std::endl;
@@ -221,7 +222,7 @@ void KeyboardMouse::SetStartEndPoint(
         gmtl::Point3d jugglerHeadPoint =
             gmtl::makeTrans< gmtl::Point3d >( vjHeadMat );
 
-        //We have to offset negative mX because the
+        //We have to offset negative m_x because the
         //view and frustum are drawn for the left eye
         startPoint.set(
             jugglerHeadPoint.mData[ 0 ] - ( 0.0345 * m2ft ),
@@ -239,11 +240,11 @@ void KeyboardMouse::SetStartEndPoint(
 
         //Get the mouse position in juggler world coordinates
         osg::Vec3d jugglerMousePosition(
-            mXMinScreen + ( mX * xScreenRatio ),
+            mXMinScreen + ( m_x * xScreenRatio ),
 #if __VJ_version >= 2003000
-            mYMinScreen + ( mY * yScreenRatio ),
+            mYMinScreen + ( m_y * yScreenRatio ),
 #else
-            mYMinScreen - ( mY * yScreenRatio ),
+            mYMinScreen - ( m_y * yScreenRatio ),
 #endif
             mZValScreen );
 
@@ -357,39 +358,45 @@ void KeyboardMouse::ProcessEvents()
     for( i = evt_queue.begin(); i != evt_queue.end(); ++i )
     {
         const gadget::EventPtr event = *i;
+        const gadget::EventType eventType = event->type();
+        const gadget::InputArea* inputArea = event->getSource();
 #if __GADGET_version >= 1003023
-        //Get the current display from the event
-        vrj::DisplayPtr currentDisplay = GetCurrentDisplay( event );
+        //Get the current display from the input area
+        vrj::DisplayPtr currentDisplay = GetCurrentDisplay( inputArea );
 #endif //__GADGET_version >= 1003023
 
-        const gadget::EventType eventType = event->type();
         switch( eventType )
         {
         case gadget::KeyPressEvent:
         {
             const gadget::KeyEventPtr keyEvt =
-                boost::dynamic_pointer_cast< gadget::KeyEvent >( event );
+                boost::static_pointer_cast< gadget::KeyEvent >( event );
 
-            mKey = keyEvt->getKey();
+            //Protect against rapid key press events when key is held down
+            m_currKey = keyEvt->getKey();
+            if( !m_keys.at( m_currKey ) )
+            {
+                m_keys.set( m_currKey );
 
 #if __GADGET_version >= 1003023
-            //Set the current GLTransfromInfo from the event
-            if( !SetCurrentGLTransformInfo( currentDisplay, true ) )
-            {
-                return;
-            }
+                //Set the current GLTransfromInfo from the event
+                if( !SetCurrentGLTransformInfo( currentDisplay, true ) )
+                {
+                    return;
+                }
 #endif //__GADGET_version >= 1003023
 
-            OnKeyPress();
+                OnKeyPress();
+            }
 
             break;
         }
         case gadget::KeyReleaseEvent:
         {
             const gadget::KeyEventPtr keyEvt =
-                boost::dynamic_pointer_cast< gadget::KeyEvent >( event );
-
-            mKey = keyEvt->getKey();
+                boost::static_pointer_cast< gadget::KeyEvent >( event );
+            m_currKey = keyEvt->getKey();
+            m_keys.reset( m_currKey );
 
 #if __GADGET_version >= 1003023
             //Set the current GLTransfromInfo from the event
@@ -406,12 +413,9 @@ void KeyboardMouse::ProcessEvents()
         case gadget::MouseButtonPressEvent:
         {
             const gadget::MouseEventPtr mouse_evt =
-                boost::dynamic_pointer_cast< gadget::MouseEvent >( event );
-
-            mButton = mouse_evt->getButton();
-            mState = true;
-            mX = mouse_evt->getX();
-            mY = mouse_evt->getY();
+                boost::static_pointer_cast< gadget::MouseEvent >( event );
+            m_currMouse = mouse_evt->getButton();
+            m_keys.set( m_currMouse );
 
 #if __GADGET_version >= 1003023
             //Set the current GLTransfromInfo from the event
@@ -421,19 +425,23 @@ void KeyboardMouse::ProcessEvents()
             }
 #endif //__GADGET_version >= 1003023
 
+            m_x = mouse_evt->getX();
+            m_y = mouse_evt->getY();
+
             OnMousePress();
+
+#if __GADGET_version >= 1003025
+            //const_cast< gadget::InputArea* >( inputArea )->lockMouse();
+#endif //__GADGET_version >= 1003023
 
             break;
         }
         case gadget::MouseButtonReleaseEvent:
         {
             const gadget::MouseEventPtr mouse_evt =
-                boost::dynamic_pointer_cast< gadget::MouseEvent >( event );
-
-            mButton = mouse_evt->getButton();
-            mState = false;
-            mX = mouse_evt->getX();
-            mY = mouse_evt->getY();
+                boost::static_pointer_cast< gadget::MouseEvent >( event );
+            m_currMouse = mouse_evt->getButton();
+            m_keys.reset( m_currMouse );
 
 #if __GADGET_version >= 1003023
             //Set the current GLTransfromInfo from the event
@@ -443,17 +451,21 @@ void KeyboardMouse::ProcessEvents()
             }
 #endif //__GADGET_version >= 1003023
 
+            m_x = mouse_evt->getX();
+            m_y = mouse_evt->getY();
+
             OnMouseRelease();
+
+#if __GADGET_version >= 1003025
+            //const_cast< gadget::InputArea* >( inputArea )->unlockMouse();
+#endif //__GADGET_version >= 1003023
 
             break;
         }
         case gadget::MouseMoveEvent:
         {
             const gadget::MouseEventPtr mouse_evt =
-                boost::dynamic_pointer_cast< gadget::MouseEvent >( event );
-
-            mX = mouse_evt->getX();
-            mY = mouse_evt->getY();
+                boost::static_pointer_cast< gadget::MouseEvent >( event );
 
 #if __GADGET_version >= 1003023
             //Set the current GLTransfromInfo from the event
@@ -463,7 +475,10 @@ void KeyboardMouse::ProcessEvents()
             }
 #endif //__GADGET_version >= 1003023
 
-            if( !mState )
+            m_x = mouse_evt->getX();
+            m_y = mouse_evt->getY();
+
+            if( !m_keys.at( m_currMouse ) )
             {
                 OnMouseMotionUp();
             }
@@ -471,6 +486,10 @@ void KeyboardMouse::ProcessEvents()
             {
                 OnMouseMotionDown();
             }
+
+#if __GADGET_version >= 1003025
+            //const_cast< gadget::InputArea* >( inputArea )->lockMouse();
+#endif //__GADGET_version >= 1003023
 
             break;
         }
@@ -584,7 +603,7 @@ void KeyboardMouse::FrameAll()
         gmtl::Point3d jugglerHeadPoint =
             gmtl::makeTrans< gmtl::Point3d >( vjHeadMat );
 
-        //We have to offset negative mX because the
+        //We have to offset negative m_x because the
         //view and frustum are drawn for the left eye
         startPoint.set(
             jugglerHeadPoint.mData[ 0 ] - ( 0.0345 * m2ft ),
@@ -694,7 +713,7 @@ void KeyboardMouse::SkyCam()
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::OnKeyPress()
 {
-    switch( mKey )
+    switch( m_currKey )
     {
     case gadget::KEY_R:
     {
@@ -807,12 +826,12 @@ void KeyboardMouse::OnKeyPress()
 
         break;
     }
-    } //end switch( mKey )
+    } //end switch( m_currKey )
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::OnKeyRelease()
 {
-    switch( mKey )
+    switch( m_currKey )
     {
     case gadget::KEY_A:
     {
@@ -882,18 +901,18 @@ void KeyboardMouse::OnKeyRelease()
 
         break;
     }
-    } //end switch( mKey )
+    } //end switch( m_currKey )
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::OnMousePress()
 {
-    mCurrPos.first = mX;
-    mCurrPos.second = mY;
+    mCurrPos.first = m_x;
+    mCurrPos.second = m_y;
 
     m_xMotionPixels = 0;
     m_yMotionPixels = 0;
 
-    switch( mButton )
+    switch( m_currMouse )
     {
     //Left mouse button
     case gadget::MBUTTON1:
@@ -981,7 +1000,7 @@ void KeyboardMouse::OnMousePress()
 
         break;
     }
-    } //end switch( mButton )
+    } //end switch( m_currKey )
 
     mPrevPos.first = mCurrPos.first;
     mPrevPos.second = mCurrPos.second;
@@ -989,10 +1008,10 @@ void KeyboardMouse::OnMousePress()
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::OnMouseRelease()
 {
-    mCurrPos.first = mX;
-    mCurrPos.second = mY;
+    mCurrPos.first = m_x;
+    mCurrPos.second = m_y;
 
-    switch( mButton )
+    switch( m_currMouse )
     {
     //Left mouse button
     case gadget::MBUTTON1:
@@ -1081,7 +1100,7 @@ void KeyboardMouse::OnMouseRelease()
     {
         break;
     }
-    } //end switch( mButton )
+    } //end switch( m_currKey )
 
     if( m_mousePickEvent )
     {
@@ -1099,8 +1118,8 @@ void KeyboardMouse::OnMouseRelease()
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::OnMouseMotionDown()
 {
-    mCurrPos.first = mX;
-    mCurrPos.second = mY;
+    mCurrPos.first = m_x;
+    mCurrPos.second = m_y;
 
     double xDelta = mCurrPos.first - mPrevPos.first;
     double yDelta = mCurrPos.second - mPrevPos.second;
@@ -1116,7 +1135,7 @@ void KeyboardMouse::OnMouseMotionDown()
 
     mMagnitude = sqrt( xDelta * xDelta + yDelta * yDelta );
 
-    switch( mButton )
+    switch( m_currMouse )
     {
     //Left mouse button
     case gadget::MBUTTON1:
@@ -1141,8 +1160,8 @@ void KeyboardMouse::OnMouseMotionDown()
             }
             else
             {
-                if( ( mX > 0.1 * mWidth ) && ( mX < 0.9 * mWidth ) &&
-                    ( mY > 0.1 * mHeight ) && ( mY < 0.9 * mHeight ) )
+                if( ( m_x > 0.1 * mWidth ) && ( m_x < 0.9 * mWidth ) &&
+                    ( m_y > 0.1 * mHeight ) && ( m_y < 0.9 * mHeight ) )
                 {
                     double angle = mMagnitude * 7.0;
 #if __VJ_version >= 2003000
@@ -1198,7 +1217,7 @@ void KeyboardMouse::OnMouseMotionDown()
 
         break;
     }
-    } //end switch( mButton )
+    } //end switch( m_currKey )
 
     //If delta mouse motion is less than m_pickCushion, do selection
     if( m_mousePickEvent && ( ( m_xMotionPixels > m_pickCushion ) ||
@@ -1239,7 +1258,7 @@ void KeyboardMouse::SelOnMousePress()
 {
     UpdateSelectionLine();
 
-    switch( mButton )
+    switch( m_currKey )
     {
         //Left mouse button
         case gadget::MBUTTON1:
@@ -1270,7 +1289,7 @@ void KeyboardMouse::SelOnMouseRelease()
 {
     UpdateSelectionLine();
 
-    switch( mButton )
+    switch( m_currKey )
     {
         //Left mouse button
         case gadget::MBUTTON1:
@@ -1299,7 +1318,7 @@ void KeyboardMouse::SelOnMouseRelease()
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::SelOnMouseMotion( std::pair< double, double > delta )
 {
-    switch( mButton )
+    switch( m_currKey )
     {
         //Left mouse button
         case gadget::MBUTTON1:
@@ -1745,9 +1764,8 @@ gadget::KeyboardMousePtr KeyboardMouse::GetKeyboardMouseVRJDevice()
 ////////////////////////////////////////////////////////////////////////////////
 #if __GADGET_version >= 1003023
 vrj::DisplayPtr const KeyboardMouse::GetCurrentDisplay(
-    const gadget::EventPtr event )
+    const gadget::InputArea* inputArea )
 {
-    const gadget::InputArea* inputArea = event->getSource();
     const vrj::opengl::Window* window( NULL );
 #if defined VPR_OS_Darwin
     const gadget::InputWindowCocoa* inputWindowCocoa =
@@ -1842,10 +1860,10 @@ bool KeyboardMouse::SetCurrentGLTransformInfo(
         const int& viewportHeight = m_currentGLTransformInfo->GetViewportHeight();
 
         //Check if mouse is inside viewport
-        if( ( mX >= viewportOriginX ) &&
-            ( mY >= viewportOriginY ) &&
-            ( mX <= viewportOriginX + viewportWidth ) &&
-            ( mY <= viewportOriginY + viewportHeight ) )
+        if( ( m_x >= viewportOriginX ) &&
+            ( m_y >= viewportOriginY ) &&
+            ( m_x <= viewportOriginX + viewportWidth ) &&
+            ( m_y <= viewportOriginY + viewportHeight ) )
         {
             sceneManipulator->SetCurrentGLTransformInfo(
                 m_currentGLTransformInfo );
