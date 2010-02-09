@@ -226,10 +226,8 @@ private:
     void Pan( double dx, double dz );
 
     ///Handles rotation of the scene
-    ///\param x
-    ///\param y
-    ///\param z
     ///\param angle
+    ///\param axis
     void Rotate( double angle, gmtl::Vec3d axis );
 
 #if __GADGET_version >= 1003023
@@ -273,10 +271,10 @@ private:
     gadget::Keys m_currMouse;
 
     ///Width of the window
-    unsigned int mWidth;
+    unsigned int m_windowWidth;
 
     ///Height of the window
-    unsigned int mHeight;
+    unsigned int m_windowHeight;
 
     ///
     const unsigned int m_pickCushion;
@@ -340,10 +338,10 @@ private:
     double mPrevPhysicsRayPos;
 
     ///The current mouse position
-    std::pair< int, int > mCurrPos;
+    std::pair< int, int > m_currMousePos;
 
     ///The previous mouse position
-    std::pair< int, int > mPrevPos;
+    std::pair< int, int > m_prevMousePos;
 
     /*
     Note: osg::Matrix multiplication is reverse of gmtl::Matrix multiplication

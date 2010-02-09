@@ -138,8 +138,8 @@ KeyboardMouse::KeyboardMouse()
     m_currKey( gadget::KEY_NONE ),
     m_currMouse( gadget::KEY_NONE ),
 
-    mWidth( 1 ),
-    mHeight( 1 ),
+    m_windowWidth( 1 ),
+    m_windowHeight( 1 ),
     m_pickCushion( 1 ),
     m_xMotionPixels( 0 ),
     m_yMotionPixels( 0 ),
@@ -167,8 +167,8 @@ KeyboardMouse::KeyboardMouse()
 
     mPrevPhysicsRayPos( 0.0 ),
 
-    mCurrPos( 0, 0 ),
-    mPrevPos( 0, 0 ),
+    m_currMousePos( 0, 0 ),
+    m_prevMousePos( 0, 0 ),
 
     mDeltaRotation( 0.0, 0.0, 0.0, 1.0 ),
     mDeltaTranslation( 0.0, 0.0, 0.0 ),
@@ -181,6 +181,7 @@ KeyboardMouse::KeyboardMouse()
 
     mPickedBody( NULL ),
     mPickConstraint( NULL ),
+
     m_keys()
 {
     mKeyboardMouse.init( "VJKeyboard" );
@@ -232,11 +233,11 @@ void KeyboardMouse::SetStartEndPoint(
 
     //Set the end point
     {
-        //Be sure mWidth and mHeight are set before calling this function
+        //Be sure m_windowWidth and m_windowHeight are set before calling this function
         double xScreenRatio =
-            ( mXMaxScreen - mXMinScreen ) / static_cast< double >( mWidth );
+            ( mXMaxScreen - mXMinScreen ) / static_cast< double >( m_windowWidth );
         double yScreenRatio =
-            ( mYMaxScreen - mYMinScreen ) / static_cast< double >( mHeight );
+            ( mYMaxScreen - mYMinScreen ) / static_cast< double >( m_windowHeight );
 
         //Get the mouse position in juggler world coordinates
         osg::Vec3d jugglerMousePosition(
@@ -278,7 +279,6 @@ void KeyboardMouse::SetStartEndPoint(
         endPoint = endPoint * inverseCameraTransform;
     }
 
-    
     //std::cout << "startPoint: " << startPoint << std::endl;
     //std::cout << "endPoint: " << endPoint << std::endl;
 #endif //__GADGET_version >= 1003023
@@ -359,12 +359,15 @@ void KeyboardMouse::ProcessEvents()
     {
         const gadget::EventPtr event = *i;
         const gadget::EventType eventType = event->type();
-        const gadget::InputArea& inputAreaMem = event->getSource();
-        const gadget::InputArea* inputArea = &(inputAreaMem);
-#if __GADGET_version >= 1003023
+
         //Get the current display from the input area
+#if __GADGET_version >= 1003026
+        gadget::InputArea& inputArea = event->getSource();
+        vrj::DisplayPtr currentDisplay = GetCurrentDisplay( &inputArea );
+#elif __GADGET_version >= 1003023
+        const gadget::InputArea* inputArea = event->getSource();
         vrj::DisplayPtr currentDisplay = GetCurrentDisplay( inputArea );
-#endif //__GADGET_version >= 1003023
+#endif //__GADGET_version
 
         switch( eventType )
         {
@@ -431,8 +434,8 @@ void KeyboardMouse::ProcessEvents()
 
             OnMousePress();
 
-#if __GADGET_version >= 1003025
-            //const_cast< gadget::InputArea* >( inputArea )->lockMouse();
+#if __GADGET_version >= 1003026
+            //inputArea.lockMouse();
 #endif //__GADGET_version >= 1003023
 
             break;
@@ -455,11 +458,10 @@ void KeyboardMouse::ProcessEvents()
             }
 #endif //__GADGET_version >= 1003023
 
-            OnMouseRelease();
-
-#if __GADGET_version >= 1003025
-            //const_cast< gadget::InputArea* >( inputArea )->unlockMouse();
+#if __GADGET_version >= 1003026
+            //inputArea.unlockMouse();
 #endif //__GADGET_version >= 1003023
+            OnMouseRelease();
 
             break;
         }
@@ -486,11 +488,10 @@ void KeyboardMouse::ProcessEvents()
             else
             {
                 OnMouseMotionDown();
-            }
-
-#if __GADGET_version >= 1003025
-            //const_cast< gadget::InputArea* >( inputArea )->lockMouse();
+#if __GADGET_version >= 1003026
+                //inputArea.lockMouse();
 #endif //__GADGET_version >= 1003023
+            }
 
             break;
         }
@@ -562,11 +563,11 @@ void KeyboardMouse::ProcessNavigation()
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::SetWindowValues( unsigned int w, unsigned int h )
 {
-    mWidth = w;
-    mHeight = h;
+    m_windowWidth = w;
+    m_windowHeight = h;
 
     mAspectRatio =
-        static_cast< double >( mWidth ) / static_cast< double >( mHeight );
+        static_cast< double >( m_windowWidth ) / static_cast< double >( m_windowHeight );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::SetFrustumValues(
@@ -615,16 +616,16 @@ void KeyboardMouse::FrameAll()
     //Set the end point
     osg::Vec3d endPoint( 0.0, 0.0, 0.0 );
     {
-        //Be sure mWidth and mHeight are set before calling this function
+        //Be sure m_windowWidth and m_windowHeight are set before calling this function
         double xScreenRatio =
-            ( mXMaxScreen - mXMinScreen ) / static_cast< double >( mWidth );
+            ( mXMaxScreen - mXMinScreen ) / static_cast< double >( m_windowWidth );
         double yScreenRatio =
-            ( mYMaxScreen - mYMinScreen ) / static_cast< double >( mHeight );
+            ( mYMaxScreen - mYMinScreen ) / static_cast< double >( m_windowHeight );
 
         //Get the center screen position in juggler world coordinates
         osg::Vec3d vrjCenterScreenPosition( 
-            mXMinScreen + 0.5 * static_cast< double >( mWidth ) * xScreenRatio,
-            mYMinScreen + 0.5 * static_cast< double >( mHeight ) * yScreenRatio,
+            mXMinScreen + 0.5 * static_cast< double >( m_windowWidth ) * xScreenRatio,
+            mYMinScreen + 0.5 * static_cast< double >( m_windowHeight ) * yScreenRatio,
             mZValScreen );
 
         //Convert meters to feet
@@ -907,8 +908,8 @@ void KeyboardMouse::OnKeyRelease()
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::OnMousePress()
 {
-    mCurrPos.first = m_x;
-    mCurrPos.second = m_y;
+    m_currMousePos.first = m_x;
+    m_currMousePos.second = m_y;
 
     m_xMotionPixels = 0;
     m_yMotionPixels = 0;
@@ -1003,14 +1004,14 @@ void KeyboardMouse::OnMousePress()
     }
     } //end switch( m_currKey )
 
-    mPrevPos.first = mCurrPos.first;
-    mPrevPos.second = mCurrPos.second;
+    m_prevMousePos.first = m_currMousePos.first;
+    m_prevMousePos.second = m_currMousePos.second;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::OnMouseRelease()
 {
-    mCurrPos.first = m_x;
-    mCurrPos.second = m_y;
+    m_currMousePos.first = m_x;
+    m_currMousePos.second = m_y;
 
     switch( m_currMouse )
     {
@@ -1113,17 +1114,17 @@ void KeyboardMouse::OnMouseRelease()
         m_mousePickEvent = false;
     }
 
-    mPrevPos.first = mCurrPos.first;
-    mPrevPos.second = mCurrPos.second;
+    m_prevMousePos.first = m_currMousePos.first;
+    m_prevMousePos.second = m_currMousePos.second;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::OnMouseMotionDown()
 {
-    mCurrPos.first = m_x;
-    mCurrPos.second = m_y;
+    m_currMousePos.first = m_x;
+    m_currMousePos.second = m_y;
 
-    double xDelta = mCurrPos.first - mPrevPos.first;
-    double yDelta = mCurrPos.second - mPrevPos.second;
+    double xDelta = m_currMousePos.first - m_prevMousePos.first;
+    double yDelta = m_currMousePos.second - m_prevMousePos.second;
 
     if( m_mousePickEvent )
     {
@@ -1131,8 +1132,8 @@ void KeyboardMouse::OnMouseMotionDown()
         m_yMotionPixels += abs( static_cast< int >( yDelta ) );
     }
 
-    xDelta /= mWidth;
-    yDelta /= mHeight;
+    xDelta /= m_windowWidth;
+    yDelta /= m_windowHeight;
 
     mMagnitude = sqrt( xDelta * xDelta + yDelta * yDelta );
 
@@ -1161,8 +1162,8 @@ void KeyboardMouse::OnMouseMotionDown()
             }
             else
             {
-                if( ( m_x > 0.1 * mWidth ) && ( m_x < 0.9 * mWidth ) &&
-                    ( m_y > 0.1 * mHeight ) && ( m_y < 0.9 * mHeight ) )
+                if( ( m_x > 0.1 * m_windowWidth ) && ( m_x < 0.9 * m_windowWidth ) &&
+                    ( m_y > 0.1 * m_windowHeight ) && ( m_y < 0.9 * m_windowHeight ) )
                 {
                     double angle = mMagnitude * 7.0;
 #if __VJ_version >= 2003000
@@ -1227,8 +1228,8 @@ void KeyboardMouse::OnMouseMotionDown()
         m_mousePickEvent = false;
     }
 
-    mPrevPos.first = mCurrPos.first;
-    mPrevPos.second = mCurrPos.second;
+    m_prevMousePos.first = m_currMousePos.first;
+    m_prevMousePos.second = m_currMousePos.second;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::OnMouseMotionUp()
@@ -1299,7 +1300,7 @@ void KeyboardMouse::SelOnMouseRelease()
             {
                 scenegraph::SetStateOnNURBSNodeVisitor(
                     m_sceneManager.GetActiveSwitchNode(), false,
-                    false, mCurrPos, std::pair< double, double >( 0.0, 0.0 ) );
+                    false, m_currMousePos, std::pair< double, double >( 0.0, 0.0 ) );
             }
 
             break;
@@ -1326,7 +1327,7 @@ void KeyboardMouse::SelOnMouseMotion( std::pair< double, double > delta )
         {
             scenegraph::SetStateOnNURBSNodeVisitor(
                 m_sceneManager.GetActiveSwitchNode(),
-                true, true, mCurrPos, delta );
+                true, true, m_currMousePos, delta );
 
             break;
         }
@@ -1359,15 +1360,15 @@ void KeyboardMouse::ResetTransforms()
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::Twist()
 {
-    double xTheta = mPrevPos.first;
-    xTheta /= mWidth;
-    double yTheta = mPrevPos.second;
-    yTheta /= mHeight;
+    double xTheta = m_prevMousePos.first;
+    xTheta /= m_windowWidth;
+    double yTheta = m_prevMousePos.second;
+    yTheta /= m_windowHeight;
     double theta = atan2( xTheta - 0.5, yTheta - 0.5 );
-    xTheta = mCurrPos.first;
-    xTheta /= mWidth;
-    yTheta = mCurrPos.second;
-    yTheta /= mHeight;
+    xTheta = m_currMousePos.first;
+    xTheta /= m_windowWidth;
+    yTheta = m_currMousePos.second;
+    yTheta /= m_windowHeight;
     double newTheta = atan2( xTheta - 0.5, yTheta - 0.5 );
 #if __VJ_version >= 2003000
     double angle = newTheta - theta;
@@ -1487,8 +1488,8 @@ void KeyboardMouse::Pan( double dx, double dz )
     //std::cout << "mCenterPoint: " << *mCenterPoint << std::endl;
     gmtl::Point3d position = vpwMatrix * *mCenterPoint;
     //std::cout << "vpwMatrix * *mCenterPoint: " << position << std::endl;
-    position.mData[ 0 ] += dx * mWidth;
-    position.mData[ 1 ] += dz * mHeight;
+    position.mData[ 0 ] += dx * m_windowWidth;
+    position.mData[ 1 ] += dz * m_windowHeight;
     position = gmtl::invert( vpwMatrix ) * position;
     //std::cout << "gmtl::invert( vpwMatrix ) * position: " << position << std::endl;
 
