@@ -158,14 +158,17 @@ std::map< std::string, ves::xplorer::plugin::PluginBase* >*
 ////////////////////////////////////////////////////////////////////////////////
 cfdExecutive::~cfdExecutive()
 {
-    /*delete mAvailableModules;
-    mAvailableModules = 0;
+    if( mAvailableModules )
+    {
+        delete mAvailableModules;
+        mAvailableModules = 0;
+    }
 
     mPluginsMap.clear();
     _id_map.clear();
     //idToModel.clear();
     pluginEHMap.clear();
-    _eventHandlers.clear();*/
+    _eventHandlers.clear();
 
     if(netSystemView)
     {
