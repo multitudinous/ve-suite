@@ -523,6 +523,7 @@ void App::latePreFrame()
         vrj::Kernel::instance()->stop(); // Stopping kernel
         m_vjobsWrapper->Cleanup();
         cfdExecutive::instance()->UnloadPlugins();
+        ves::xplorer::scenegraph::SceneManager::instance()->Shutdown();
     }
     else if( !tempCommandName.compare( "SCREEN_SHOT" ) )
     {
