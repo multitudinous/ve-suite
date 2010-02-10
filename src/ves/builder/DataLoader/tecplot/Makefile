@@ -1,3 +1,5 @@
+VES_BASE_DIR=${HOME}/vr
+
 # need to point to home of 64-bit vtk install
 VTK_LIB_HOME = ${HOME}/vr/lib64/vtk-5.4
 VTK_INCLUDE_HOME = ${HOME}/vr/dependencies/include/vtk-5.4
@@ -22,12 +24,12 @@ LDFLAGS ?= -arch x86_64 -isysroot /Developer/SDKs/MacOSX10.5.sdk -g \
         -L${TECSDKHOME}/lib/macix64.105 \
         -ltpsdkbase -ltpsdkintegrationmanager -ltptoolbox \
         -L${VTK_LIB_HOME} \
-        -lvtkCommon -lvtkFiltering -lvtkIO
+        -lvtkCommon -lvtkFiltering -lvtkIO -lvtkGraphics
 
 ### Variables: ###
 
 SOURCES=tecplotReader.cxx Manager.cxx ApplicationEventMonitor.cxx 
-OBJECTS=$(SOURCES:.cxx=.o)
+OBJECTS=$(SOURCES:.cxx=.o) main.o
 HEADERS=$(SOURCES:.cxx=.h)
 EXECUTABLE=tecplotReader
 
@@ -39,6 +41,7 @@ COMPILE_CXXFLAGS =  -I. \
                     -I${TECSDKHOME}/include/toolbox \
                     -I${VTK_INCLUDE_HOME} \
                     -I${MACPORTS_HOME}/include \
+                    -I${VES_BASE_DIR}/VE_Suite/src \
                      $(CPPFLAGS) $(CXXFLAGS)
 CPPDEPS = -MT$@ -MF$(shell echo $@ | sed -e 's,\.o$$,.d,') -MD -MP
 
@@ -46,10 +49,8 @@ CPPDEPS = -MT$@ -MF$(shell echo $@ | sed -e 's,\.o$$,.d,') -MD -MP
 
 all: $(EXECUTABLE)
 	
-$(EXECUTABLE): $(OBJECTS) Makefile
+$(EXECUTABLE): $(OBJECTS) Makefile main.cxx
 	$(CXX) -o $@ $(OBJECTS) $(LDFLAGS)
-
-#$(OBJECTS): $(HEADERS) makefile_mac
 
 %.o: %.cxx
 	$(CXX) -c -o $@ $(COMPILE_CXXFLAGS) $(CPPDEPS) $<
