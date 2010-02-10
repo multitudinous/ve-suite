@@ -515,12 +515,21 @@ void App::latePreFrame()
     //Exit - must be called AFTER m_vjobsWrapper->PreFrameUpdate();
     if( tempCommandName == "EXIT_XPLORER" )
     {
+        // exit App was selected
         std::cout << "|\tShutting down xplorer." << std::endl;
         VPR_PROFILE_RESULTS();
         vxs::PhysicsSimulator::instance()->SetIdle( true );
 
-        // exit App was selected
-        vrj::Kernel::instance()->stop(); // Stopping kernel
+        // Very important to call before end of main!
+	    if( osg::Referenced::getDeleteHandler() ) 
+        {
+		    osg::Referenced::getDeleteHandler()->
+                setNumFramesToRetainObjects(0);
+		    osg::Referenced::getDeleteHandler()->flushAll();
+	    }
+
+        // Stopping kernel
+        vrj::Kernel::instance()->stop(); 
         m_vjobsWrapper->Cleanup();
         cfdExecutive::instance()->UnloadPlugins();
         ves::xplorer::scenegraph::SceneManager::instance()->Shutdown();
