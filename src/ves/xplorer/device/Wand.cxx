@@ -281,7 +281,14 @@ void Wand::ProcessEvents()
             mCenterPoint->mData[ i ] = 0.0f;
         }
     }
-
+    else if( buttonData[ 2 ] == gadget::Digital::TOGGLE_OFF )
+    {
+        if( m_characterController.IsEnabled() )
+        {
+            m_characterController.StepForward( false );
+        }
+    }
+    
     ///If we actually pushed a button then move things
     if( m_buttonPushed && !m_characterController.IsEnabled() )
     {
@@ -305,9 +312,42 @@ void Wand::ProcessEvents()
         world_quat *= m_rotIncrement;
         activeDCS->SetQuat( world_quat );
     }
-    else if( m_characterController.IsEnabled() )
+    else if( m_characterController.IsEnabled() && m_buttonPushed )
     {
+        //Set the DCS postion based off of previous
+        //manipulation of the worldTrans array
+        for( unsigned int i = 0; i < 3; ++i )
+        {
+            m_worldTrans[ i ] = -m_worldTrans[ i ];
+        }
         
+        //Do not allow translation below z = 0 plane
+        if( subzeroFlag )
+        {
+            if( m_worldTrans[ 2 ] > 0 )
+            {
+                m_worldTrans[ 2 ] = 0;
+            }
+        }
+        
+        activeDCS->SetTranslationArray( m_worldTrans );
+        world_quat *= m_rotIncrement;
+        activeDCS->SetQuat( world_quat );
+        //If the z axis is positive then rotate by a specific dz
+        if( m_rotIncrement[ 3 ] > 0 )
+        {
+            m_characterController.Rotate( 0., osg::DegreesToRadians( -rotationStepSize ) );
+        }
+        else
+        {
+            m_characterController.Rotate( 0., osg::DegreesToRadians( rotationStepSize ) );
+        }
+        
+        if( buttonData[ 2 ] == gadget::Digital::TOGGLE_ON ||
+           buttonData[ 2 ] == gadget::Digital::ON )
+        {
+            m_characterController.StepForward( true );
+        }
     }
 
     vprDEBUG( vesDBG, 3 ) << "|\tEnd Navigate" << std::endl << vprDEBUG_FLUSH;
