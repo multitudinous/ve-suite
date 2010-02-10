@@ -173,7 +173,9 @@ public:
     ///Unregister in the executive from the ce. This should be called before the
     /// destrucutor is called.
     void UnRegisterExecutive();
-    
+    ///Clean up plugins
+    void UnloadPlugins();
+
 private:
     ///Connect function so that we can connect at run time if needed
     void ConnectToCE();

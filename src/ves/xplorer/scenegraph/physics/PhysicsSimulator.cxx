@@ -77,7 +77,7 @@ using namespace ves::xplorer::scenegraph;
 
 #define MULTITHREADED_OSGBULLET 0
 //vprSingletonImp( PhysicsSimulator );
-vprSingletonImpLifetime( PhysicsSimulator, 13 );
+vprSingletonImpLifetime( PhysicsSimulator, 1 );
 
 ////////////////////////////////////////////////////////////////////////////////
 PhysicsSimulator::PhysicsSimulator()

@@ -102,7 +102,7 @@ using namespace ves::xplorer::volume;
 
 #include <osgDB/Registry>
 
-vprSingletonImpLifetime( ves::xplorer::ModelHandler, 11 );
+vprSingletonImpLifetime( ves::xplorer::ModelHandler, 1 );
 using namespace ves::xplorer;
 using namespace ves::xplorer::scenegraph;
 using namespace ves::xplorer::util;

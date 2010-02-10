@@ -74,7 +74,7 @@
 #include <ves/xplorer/volume/cfdVectorVolumeVisHandler.h>
 #include <ves/xplorer/volume/cfdOSGAdvectionShaderManager.h>
 
-vprSingletonImpLifetime( ves::xplorer::TextureBasedVizHandler, 8 );
+vprSingletonImpLifetime( ves::xplorer::TextureBasedVizHandler, 1 );
 using namespace ves::xplorer::volume;
 using namespace ves::xplorer;
 //////////////////////////////////////////////////////////

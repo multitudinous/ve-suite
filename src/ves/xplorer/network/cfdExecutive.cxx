@@ -87,7 +87,7 @@ using namespace ves::open::xml;
 using namespace ves::xplorer::plugin;
 using namespace ves::xplorer::network;
 ////////////////////////////////////////////////////////////////////////////////
-vprSingletonImpLifetime( ves::xplorer::network::cfdExecutive, 11 );
+vprSingletonImpLifetime( ves::xplorer::network::cfdExecutive, 0 );
 ////////////////////////////////////////////////////////////////////////////////
 cfdExecutive::cfdExecutive()
     :
@@ -156,7 +156,27 @@ std::map< std::string, ves::xplorer::plugin::PluginBase* >*
     return &mPluginsMap;
 }
 ////////////////////////////////////////////////////////////////////////////////
-cfdExecutive::~cfdExecutive( void )
+cfdExecutive::~cfdExecutive()
+{
+    /*delete mAvailableModules;
+    mAvailableModules = 0;
+
+    mPluginsMap.clear();
+    _id_map.clear();
+    //idToModel.clear();
+    pluginEHMap.clear();
+    _eventHandlers.clear();*/
+
+    if(netSystemView)
+    {
+        delete netSystemView;
+    }
+
+    delete ui_i;
+    ui_i = 0;
+}
+////////////////////////////////////////////////////////////////////////////////
+void cfdExecutive::UnloadPlugins()
 {
     delete mAvailableModules;
     mAvailableModules = 0;
@@ -166,14 +186,6 @@ cfdExecutive::~cfdExecutive( void )
     //idToModel.clear();
     pluginEHMap.clear();
     _eventHandlers.clear();
-
-    if(netSystemView)
-    {
-        delete netSystemView;
-    }
-
-    delete ui_i;
-    ui_i = 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdExecutive::UnRegisterExecutive()

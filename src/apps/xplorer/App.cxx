@@ -522,6 +522,7 @@ void App::latePreFrame()
         // exit App was selected
         vrj::Kernel::instance()->stop(); // Stopping kernel
         m_vjobsWrapper->Cleanup();
+        cfdExecutive::instance()->UnloadPlugins();
     }
     else if( !tempCommandName.compare( "SCREEN_SHOT" ) )
     {

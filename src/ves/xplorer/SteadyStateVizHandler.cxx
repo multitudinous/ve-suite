@@ -86,7 +86,7 @@
 #include <vtkCompositeDataPipeline.h>
 #include <vtkAlgorithm.h>
 
-vprSingletonImpLifetime( ves::xplorer::SteadyStateVizHandler, 10 );
+vprSingletonImpLifetime( ves::xplorer::SteadyStateVizHandler, 1 );
 
 namespace ves
 {

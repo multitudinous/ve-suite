@@ -34,8 +34,6 @@
 #ifndef WIN32
 #include <sys/types.h>
 //biv--check here if build/run problems occur
-#else
-//#include <windows.h>
 #endif
 
 // --- VE-Suite Includes --- //
@@ -90,7 +88,7 @@
 using namespace ves::xplorer::scenegraph;
 namespace vxs = ves::xplorer::scenegraph;
 
-vprSingletonImpLifetime( SceneManager, 9 );
+vprSingletonImpLifetime( SceneManager, 1 );
 
 ////////////////////////////////////////////////////////////////////////////////
 SceneManager::SceneManager()

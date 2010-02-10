@@ -89,7 +89,7 @@
 #include <fstream>
 #include <cstdlib>
 
-vprSingletonImpLifetime( ves::xplorer::EnvironmentHandler, 11 );
+vprSingletonImpLifetime( ves::xplorer::EnvironmentHandler, 1 );
 
 using namespace ves::xplorer::scenegraph;
 using namespace ves::xplorer::util;
