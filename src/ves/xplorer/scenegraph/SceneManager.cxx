@@ -127,6 +127,17 @@ void SceneManager::Initialize()
 ////////////////////////////////////////////////////////////////////////////////
 SceneManager::~SceneManager()
 {
+#ifdef VE_SOUND
+    try
+    {
+        osgAudio::SoundManager::instance()->shutdown();
+    }
+    catch( ... )
+    {
+        std::cerr << "|\tosgAL::SoundManager is unable to shutdown." 
+            << std::endl;
+    }
+#endif
     //Do nothing right now
     if( m_blueArrow )
     {
