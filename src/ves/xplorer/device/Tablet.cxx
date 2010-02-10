@@ -39,6 +39,8 @@
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
 
+#include <ves/xplorer/scenegraph/physics/character/CharacterController.h>
+
 #include <ves/xplorer/Debug.h>
 
 #include <ves/open/xml/Command.h>
@@ -524,6 +526,18 @@ void Tablet::ProcessEvents()
     world->SetTranslationArray( worldTrans );
     world->SetQuat( world_quat );
 
+    if( m_characterController.IsEnabled() )
+    {
+        if( rot_quat[ 3 ] > 0 )
+        {
+            m_characterController.Rotate( 0., osg::DegreesToRadians( -rotationStepSize ) );
+        }
+        else
+        {
+            m_characterController.Rotate( 0., osg::DegreesToRadians( rotationStepSize ) );
+        }        
+    }
+    
     vprDEBUG( vesDBG, 3 ) << "|\tEnd Tablet Navigate" << std::endl << vprDEBUG_FLUSH;
 }
 ////////////////////////////////////////////////////////////////////////////////
