@@ -378,7 +378,7 @@ void KeyboardMouse::ProcessEvents()
 
             //Protect against rapid key press events when key is held down
             m_currKey = keyEvt->getKey();
-            if( !m_keys.at( m_currKey ) )
+            if( !m_keys[ m_currKey ] )
             {
                 m_keys.set( m_currKey );
 
@@ -481,7 +481,7 @@ void KeyboardMouse::ProcessEvents()
             }
 #endif //__GADGET_version >= 1003023
 
-            if( !m_keys.at( m_currMouse ) )
+            if( !m_keys[ m_currMouse ] )
             {
                 OnMouseMotionUp();
             }
