@@ -210,10 +210,10 @@ void SceneManager::InitScene()
         soundRoot->setName( "Sound Root" );
         mRootNode->addChild( soundRoot.get() );
     }
-    catch( ... )
+    catch( std::exception& ex )
     {
-        std::cerr << "|\tosgAL::SoundManager is unable to initialize." 
-            << std::endl;
+        std::cerr << "|\tosgAudio::SoundManager is unable to initialize: " 
+            << ex.what() << std::endl;
     }
 #endif
     mNavSwitch = new ves::xplorer::scenegraph::Switch();
