@@ -82,6 +82,10 @@ Source: {#OSGALSRCHOME}\bin\*.dll; DestDir: {app}\lib; Flags: ignoreversion
 Source: {#ALUTSRCINSTALL}\lib\*.dll; DestDir: {app}\lib; Flags: ignoreversion
 ; exe
 Source: {#OPENALHOME}\redist\oalinst.exe; DestDir: {app}\share; Flags: ignoreversion
+Source: {#OSGALSRCHOME}\bin\*.exe; DestDir: {app}\bin; Flags: ignoreversion
+; data
+Source: {#OSGAUDIOROOTHOME}\data\*; DestDir: {app}\share\data; Flags: ignoreversion
+
 ;FPC file integration
 Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\osgAL.fpc.in; DestDir: {app}\lib\flagpoll; DestName: osgAL.fpc; Languages: ; Flags: ignoreversion
 [Icons]

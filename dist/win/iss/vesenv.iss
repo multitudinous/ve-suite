@@ -51,6 +51,7 @@
 #define LIBVORBISHOME "C:\dev\deps\vorbis-svn"
 #define OPENALHOME "C:\dev\deps\openalsdk"
 #define OSGALSRCHOME "C:\dev\deps\osgAudio-svn\install-win32"
+#define OSGAUDIOROOTHOME "C:\dev\deps\osgAudio-svn"
 #define ALUTSRCINSTALL "C:\dev\deps\freealut-1.1.0-bin"
 ; OSG deps
 #define OSGSRCHOME "C:\dev\deps\OpenSceneGraph-2.8.2\install-win32"
