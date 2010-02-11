@@ -521,12 +521,12 @@ void App::latePreFrame()
         vxs::PhysicsSimulator::instance()->SetIdle( true );
 
         // Very important to call before end of main!
-	    if( osg::Referenced::getDeleteHandler() ) 
+        if( osg::Referenced::getDeleteHandler() ) 
         {
-		    osg::Referenced::getDeleteHandler()->
+            osg::Referenced::getDeleteHandler()->
                 setNumFramesToRetainObjects(0);
-		    osg::Referenced::getDeleteHandler()->flushAll();
-	    }
+            osg::Referenced::getDeleteHandler()->flushAll();
+        }
 
         // Stopping kernel
         vrj::Kernel::instance()->stop(); 
