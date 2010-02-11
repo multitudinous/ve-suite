@@ -77,7 +77,7 @@ Source: {#LIBVORBISHOME}\win32\VS2008\Win32\Release\*.dll; DestDir: {app}\lib; F
 ; Source: {#LIBVORBISHOME}\win32\*.dll; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs
 ;Source: {#LIBVORBISHOME}\win32\VorbisFile_Dynamic_Debug\*.dll; DestDir: {app}\lib; Flags: ignoreversion
 ; Source: {#LIBVORBISHOME}\win32\*.dll; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs
-Source: {#OPENALHOME}\libs\Win32\*.dll; DestDir: {app}\lib; Flags: ignoreversion
+; Source: {#OPENALHOME}\libs\Win32\*.dll; DestDir: {app}\lib; Flags: ignoreversion
 Source: {#OSGALSRCHOME}\bin\*.dll; DestDir: {app}\lib; Flags: ignoreversion
 Source: {#ALUTSRCINSTALL}\lib\*.dll; DestDir: {app}\lib; Flags: ignoreversion
 ; exe
