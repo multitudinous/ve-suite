@@ -200,7 +200,7 @@ void SceneManager::InitScene()
 #ifdef VE_SOUND
     try
     {
-        osgAudio::SoundManager::instance()->init( 32 );
+        osgAudio::SoundManager::instance()->init( 16 );
         osgAudio::SoundManager::instance()->getEnvironment()->
             setDistanceModel( osgAudio::InverseDistance );
         osgAudio::SoundManager::instance()->getEnvironment()->
