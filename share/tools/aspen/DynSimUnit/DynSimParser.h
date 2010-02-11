@@ -53,14 +53,18 @@ public:
     DynSimParser();
     std::string CreateNetwork( std::string filename );
     int OpenFile( std::string filename );
-    bool ConnectToOPC();
+    //bool ConnectToOPC();
     std::vector< std::pair< std::string, std::string > > ReadVars();
 	//std::string GetOPCValue( const std::string& );
 	std::string GetOPCValues( );
-	void ConnectWithList( std::vector< std::string > list );
+	//void ConnectWithList( std::vector< std::string > list );
+	bool ConnectToOPCServer( );
+	std::string GetAllOPCVariables( const std::string& );
+	void AddOPCVariable( const std::string& );
 
 private:
 	void ParseTreeFile( std::string );
+	void DynSimParser::UpdateOPCList( );
     void InitializeParser();
     void ParseFlowsheets();
     void ParseObjects( XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* );
@@ -126,12 +130,14 @@ private:
     std::map< std::string, flowsheet > flowsheets;
     std::vector< std::pair< std::string, std::string > > nameAndValues;
 	std::string m_opcFlowsheetName;
+	std::vector< std::string > m_opcBlocks;
 	std::vector< std::string > m_opcVariables;
 
     
     CComSafeArray<long> * serverID;
     CComSafeArray<BSTR> * itemIDs;
     CComSafeArray<long> * clientID;
+	IOPCAutoServerPtr m_server;
     OPCItemsPtr items;
     IOPCGroupPtr group;
     IOPCGroupsPtr groups;

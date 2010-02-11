@@ -207,6 +207,9 @@ public:
   char* getOPCValues( ves::open::xml::CommandPtr cmd );
   //void monitorValues( ves::open::xml::CommandPtr cmd );
   void connectWithList( ves::open::xml::CommandPtr cmd );
+  void connectToOPC( ves::open::xml::CommandPtr cmd );
+  void addVariable( ves::open::xml::CommandPtr cmd );
+  char* getAllOPCVariables( ves::open::xml::CommandPtr cmd );
   void UpdateVars( );
   bool connected;
 

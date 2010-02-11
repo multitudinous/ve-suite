@@ -57,6 +57,7 @@
 
 XERCES_CPP_NAMESPACE_USE
 
+///////////////////////////////////////////////////////////////////////////////
 DynSimParser::DynSimParser()
 {
     try
@@ -71,7 +72,7 @@ DynSimParser::DynSimParser()
     //    return 1;
     }
 }
-
+///////////////////////////////////////////////////////////////////////////////
 std::string DynSimParser::CreateNetwork( std::string filename )
 {
 	ParseTreeFile( filename + ".tree" );
@@ -81,8 +82,7 @@ std::string DynSimParser::CreateNetwork( std::string filename )
     //PopulateStreams();
     return CreateVESNetwork();
 }
-
-
+///////////////////////////////////////////////////////////////////////////////
 void DynSimParser::ParseTreeFile( std::string treeFilename )
 {
 	std::ifstream inFile( treeFilename.c_str(), std::ifstream::in );
@@ -121,11 +121,11 @@ void DynSimParser::ParseTreeFile( std::string treeFilename )
 	for( int i = 0; i < entries.size(); i++)
 	{
 		underScorePos = entries[i].find_first_of("_");
-		m_opcVariables.push_back( entries[i].substr( underScorePos + 1, 
+		m_opcBlocks.push_back( entries[i].substr( underScorePos + 1, 
 			entries[0].size() - underScorePos ) );
 	}
 }
-
+///////////////////////////////////////////////////////////////////////////////
 int DynSimParser::OpenFile( std::string filename )
 {
     std::string tempFilename = filename;
@@ -144,7 +144,7 @@ int DynSimParser::OpenFile( std::string filename )
     //make the call
     return system( command.c_str() );
 }
-
+///////////////////////////////////////////////////////////////////////////////
 void DynSimParser::InitializeParser( )
 {
     //initialize parser
@@ -202,7 +202,7 @@ void DynSimParser::InitializeParser( )
         return;
     }
 }
-
+///////////////////////////////////////////////////////////////////////////////
 void DynSimParser::ParseFlowsheets( )
 {
     //get flowsheet entry
@@ -247,7 +247,7 @@ void DynSimParser::ParseFlowsheets( )
         others.clear();
     }
 }
-
+///////////////////////////////////////////////////////////////////////////////
 void DynSimParser::ParseObjects( DOMElement* sys_element )
 {        
     //get obj entries
@@ -293,7 +293,7 @@ void DynSimParser::ParseObjects( DOMElement* sys_element )
         }
     }
 }
-
+///////////////////////////////////////////////////////////////////////////////
 void DynSimParser::PopulateBlocks( DOMElement* sys_element )
 {
     //
@@ -705,7 +705,7 @@ void DynSimParser::PopulateBlocks( DOMElement* sys_element )
 //void DynSimParser::PopulateStreams()
 //{
 //}
-
+///////////////////////////////////////////////////////////////////////////////
 std::string DynSimParser::CreateVESNetwork()
 {
     //loop over blocks
@@ -826,9 +826,9 @@ std::string DynSimParser::CreateVESNetwork()
 			
 			//check opc vector
 			std::vector< std::string >::iterator iter;
-			iter = find( m_opcVariables.begin(), m_opcVariables.end(),
+			iter = find( m_opcBlocks.begin(), m_opcBlocks.end(),
 				blockIter->second.name );
-			if ( iter == m_opcVariables.end() )    
+			if ( iter == m_opcBlocks.end() )    
 			{
 				tempModel->SetPluginType( "SimUOPlugin" );
 			}
@@ -877,9 +877,9 @@ std::string DynSimParser::CreateVESNetwork()
 
 			//check opc vector
 			std::vector< std::string >::iterator iter;
-			iter = find( m_opcVariables.begin(), m_opcVariables.end(),
+			iter = find( m_opcBlocks.begin(), m_opcBlocks.end(),
 				otherIter->second.name );
-			if ( iter == m_opcVariables.end() )    
+			if ( iter == m_opcBlocks.end() )    
 			{
 				tempModel->SetPluginType( "SimUOPlugin" );
 			}
@@ -934,7 +934,7 @@ std::string DynSimParser::CreateVESNetwork()
     output.close();
     return fileName;
 }
-
+///////////////////////////////////////////////////////////////////////////////
 std::string DynSimParser::GetDynSimIconPath( std::string xmlName, std::string imageType )
 {
     std::string dynsimInstallPath( "C:/SIMSCI" );
@@ -1003,8 +1003,8 @@ std::string DynSimParser::GetDynSimIconPath( std::string xmlName, std::string im
     //return the full path
     return ( dynsimIconPath + gifName );
 }
-
-void DynSimParser::ConnectWithList( std::vector< std::string > list )
+///////////////////////////////////////////////////////////////////////////////
+/*void DynSimParser::ConnectWithList( std::vector< std::string > list )
 {
 	HRESULT hr;
     //server
@@ -1066,9 +1066,9 @@ void DynSimParser::ConnectWithList( std::vector< std::string > list )
     group->IsActive = true;
 
 	//server->Disconnect();
-}
-
-bool DynSimParser::ConnectToOPC()
+}*/
+///////////////////////////////////////////////////////////////////////////////
+/*bool DynSimParser::ConnectToOPC()
 {
         // TODO: Add your control notification handler code here
     //OnOK();
@@ -1162,8 +1162,196 @@ bool DynSimParser::ConnectToOPC()
 
     //server->Disconnect();
     //server.Release();
-}
+}*/
+///////////////////////////////////////////////////////////////////////////////
+bool DynSimParser::ConnectToOPCServer()
+{
+	//Connect to the OPC Server
+    HRESULT hr;
+	IOPCAutoServerPtr server( __uuidof(OPCServer) );
+    m_server = server;
+    m_server.AddRef();
+    hr = m_server->Connect(_T("OPC.Gateway.Server.DA") );
+    
+    if( FAILED( hr ) )
+    {
+        return false;
+    }
 
+	return true;
+}
+///////////////////////////////////////////////////////////////////////////////
+std::string DynSimParser::GetAllOPCVariables( const std::string& modname )
+{
+	//initialize necessary OPC structures
+    groups = m_server->GetOPCGroups();
+    groups.AddRef();
+    groups->DefaultGroupIsActive = true;
+    groups->DefaultGroupDeadband = 0;
+
+    group = groups->Add( _T( "Group" ) );
+    group.AddRef();
+    group->UpdateRate = 100;
+
+    items = group->GetOPCItems();
+    items.AddRef();
+    items->DefaultIsActive = true;
+
+	//Get a list of the available OPC variables for a given unit op
+    OPCBrowserPtr browser = m_server->CreateBrowser();
+    browser.AddRef();
+    browser->ShowLeafs();
+    long browserCount = browser->GetCount();
+
+	std::vector< std::string > tempVars;
+    for( long i = 1; i <= browserCount; i++ )
+	{
+        _bstr_t itemName = browser->Item( i );
+		std::string temp = itemName;
+		if( temp.find( modname ) != std::string::npos )
+		{
+			tempVars.push_back( temp );
+		}
+	}
+
+    itemIDs = new CComSafeArray<BSTR>( tempVars.size() + 1 );
+    clientID = new CComSafeArray<long>( tempVars.size() + 1 );
+	serverID = new CComSafeArray<long>( );
+    serverID->Create();
+    CComSafeArray<long> * errors;
+    errors = new CComSafeArray<long>();
+    errors->Create();
+
+	//base 1 for safearray
+	for( long i = 0; i < tempVars.size(); i++)
+	{
+			//add all the new variables to the itemIDs for reading values
+			itemIDs->SetAt( i + 1, browser->GetItemID( tempVars[i].c_str() ) );
+			clientID->SetAt( i + 1, i + 1 );
+	}
+
+	//HRESULT hr = items->AddItems(opcVariables.size(), itemIDs->GetSafeArrayPtr(),
+	//	clientID->GetSafeArrayPtr(), serverID->GetSafeArrayPtr(),
+	//	errors->GetSafeArrayPtr());
+	HRESULT hr = items->AddItems( tempVars.size(), itemIDs->GetSafeArrayPtr(),
+		clientID->GetSafeArrayPtr(), serverID->GetSafeArrayPtr(),
+		errors->GetSafeArrayPtr());
+
+    //if( FAILED( hr ) )
+    //{
+    //    return;
+    //}
+
+    CComSafeArray<VARIANT> * values;
+    values = new CComSafeArray<VARIANT>();
+    values->Create();
+
+    VARIANT quality;
+    VariantInit(&quality);
+
+    VARIANT timestamp;
+    VariantInit(&timestamp);
+
+    long count = serverID->GetUpperBound();
+    //This function reads the value, quality and timestamp information for one
+    //or more items in a group.
+    group->SyncRead( OPCDataSource::OPCDevice, count, serverID->GetSafeArrayPtr(),
+        values->GetSafeArrayPtr(), errors->GetSafeArrayPtr(), &quality, &timestamp );
+
+    std::vector< std::pair< std::string, std::string > > varsAndVals;
+
+    for( int i = 1; i <= count; i++)
+    {
+        values->GetAt(i).ChangeType(VT_BSTR);
+        std::pair< std::string, std::string > varAndVal;
+		std::string temp = _bstr_t( itemIDs->GetAt(i) );
+		//remove everything but the variable ie remove the unit name
+		//everything before the "."
+		varAndVal.first = temp.substr( temp.find(".") + 1, temp.size() - temp.find(".") + 1 );
+		varAndVal.second = _bstr_t( values->GetAt(i).bstrVal );
+        varsAndVals.push_back( varAndVal );
+	}
+
+	//append the flowsheet name
+    ves::open::xml::CommandPtr varsAndValues( new ves::open::xml::Command() );
+    varsAndValues->SetCommandName("OPCData");
+	//compose return packet
+	//loop over the variables and add as dvps
+	for( int i = 0; i < varsAndVals.size(); i++ )
+	{
+		 ves::open::xml::DataValuePairPtr
+			 entry( new ves::open::xml::DataValuePair() );
+		entry->SetData( varsAndVals[i].first, varsAndVals[i].second );
+		varsAndValues->AddDataValuePair( entry );
+	}
+
+    std::vector< std::pair< ves::open::xml::XMLObjectPtr, std::string > >
+        nodes;
+    nodes.push_back( std::pair< ves::open::xml::XMLObjectPtr, std::string >
+		( varsAndValues, "vecommand" ) );
+
+    ves::open::xml::XMLReaderWriter commandWriter;
+    std::string status="returnString";
+    commandWriter.UseStandaloneDOMDocumentManager();
+    commandWriter.WriteXMLDocument( nodes, status, "Command" );
+    return status;
+}
+///////////////////////////////////////////////////////////////////////////////
+void DynSimParser::AddOPCVariable( const std::string& var )
+{
+	m_opcVariables.push_back( var );
+	UpdateOPCList();
+}
+///////////////////////////////////////////////////////////////////////////////
+void DynSimParser::UpdateOPCList( )
+{
+    groups = m_server->GetOPCGroups();
+    groups.AddRef();
+    groups->DefaultGroupIsActive = true;
+    groups->DefaultGroupDeadband = 0;
+
+    group = groups->Add( _T( "Group" ) );
+    group.AddRef();
+    group->UpdateRate = 100;
+
+    OPCBrowserPtr browser = m_server->CreateBrowser();
+    browser.AddRef();
+    browser->ShowLeafs();
+
+    items = group->GetOPCItems();
+    items.AddRef();
+    items->DefaultIsActive = true;
+
+    itemIDs = new CComSafeArray<BSTR>( m_opcVariables.size() + 1 );
+    clientID = new CComSafeArray<long>( m_opcVariables.size() + 1 );
+	serverID = new CComSafeArray<long>();
+    serverID->Create();
+    CComSafeArray<long> * errors;
+    errors = new CComSafeArray<long>();
+    errors->Create();
+
+	for( int i = 1; i <= m_opcVariables.size(); i++)
+	{
+		std::string modnameOPC =
+			m_opcFlowsheetName + "_" + m_opcVariables[i-1]+".POS";
+        _bstr_t itemName = modnameOPC.c_str();
+        itemIDs->SetAt( i, browser->GetItemID( modnameOPC.c_str() ) );
+        clientID->SetAt( i, i );
+	}
+
+	HRESULT hr = items->AddItems(m_opcVariables.size(), itemIDs->GetSafeArrayPtr(),
+		clientID->GetSafeArrayPtr(), serverID->GetSafeArrayPtr(),
+		errors->GetSafeArrayPtr());
+
+    if( FAILED( hr ) )
+    {
+        return;
+    }
+
+    group->IsSubscribed = true;
+    group->IsActive = true;
+}
+///////////////////////////////////////////////////////////////////////////////
 std::vector< std::pair< std::string, std::string > > DynSimParser::ReadVars()
 {
     CComSafeArray<VARIANT> * values;
@@ -1250,7 +1438,7 @@ std::vector< std::pair< std::string, std::string > > DynSimParser::ReadVars()
     commandWriter.WriteXMLDocument( nodes, status, "Command" );
     return status;
 }*/
-
+///////////////////////////////////////////////////////////////////////////////
 //depending on the end desires for the code this function can be combine with ReadVars()
 std::string DynSimParser::GetOPCValues( )
 {
