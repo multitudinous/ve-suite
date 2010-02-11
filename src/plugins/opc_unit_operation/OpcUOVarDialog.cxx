@@ -84,9 +84,10 @@ void OpcUOVarDialog::CreateGUIControls()
 	GetSizer()->SetSizeHints(this);
 	Center();
 	
-	WxGrid->SetColLabelValue( 0, _("Description") );
-	WxGrid->SetColLabelValue( 1, _("Value") );
-	WxGrid->SetColLabelValue( 2, _("Units") );
+	WxGrid->SetColLabelValue( 0, _("Value") );
+	//WxGrid->SetColLabelValue( 0, _("Description") );
+	//WxGrid->SetColLabelValue( 1, _("Value") );
+	//WxGrid->SetColLabelValue( 2, _("Units") );
 
     //this should be done dynamically
     WxGrid->SetRowLabelSize( 500 );
@@ -155,7 +156,7 @@ void OpcUOVarDialog::SetButtonClick(wxCommandEvent& event)
     commandWriter.WriteXMLDocument( nodes, status, "Command" );
     ServiceList->Query( status );
 
-    wxMessageDialog popup( this, _("Data has been sent to Sim") );
+    wxMessageDialog popup( this, _("Data has been sent to Aspen Dynamics") );
     popup.ShowModal(); 
 }
 

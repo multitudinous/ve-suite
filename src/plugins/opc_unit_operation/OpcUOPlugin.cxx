@@ -53,6 +53,8 @@ BEGIN_EVENT_TABLE( OpcUOPlugin, UIPluginBase )
 	EVT_TIMER( OPCUOPLUGIN_TIMER_ID, OpcUOPlugin::OnTimer )
 	//EVT_MENU( OPCUOPLUGIN_START_TIMER, OpcUOPlugin::StartTimer )
 	EVT_MENU( OPCUOPLUGIN_STOP_TIMER, OpcUOPlugin::StopTimer )
+	//EVT_MENU( OPCUOPLUGIN_ALL_VAR, OpcUOPlugin::OnShowAllVar )
+	EVT_MENU( OPCUOPLUGIN_ALL_VAR, OpcUOPlugin::QueryForAllVariables )
 END_EVENT_TABLE()
 
 IMPLEMENT_DYNAMIC_CLASS( OpcUOPlugin, UIPluginBase )
@@ -166,6 +168,8 @@ wxMenu* OpcUOPlugin::GetPluginPopupMenu( wxMenu* baseMenu )
     //mOpcMenu->Enable( OPCUOPLUGIN_START_TIMER, true );
     //mOpcMenu->Append( OPCUOPLUGIN_STOP_TIMER, _( "Stop Timer" ) );
     //mOpcMenu->Enable( OPCUOPLUGIN_STOP_TIMER, true );
+    mOpcMenu->Append( OPCUOPLUGIN_ALL_VAR, _( "ALL VAR" ) );
+    mOpcMenu->Enable( OPCUOPLUGIN_ALL_VAR, true );
     baseMenu->Insert( 0, OPCUOPLUGIN_START_TIMER,   _( "OPC" ), mOpcMenu,
                     _( "Used in conjunction with OPC" ) );
     baseMenu->Enable( OPCUOPLUGIN_SIM_MENU, true );
@@ -231,10 +235,10 @@ void OpcUOPlugin::DrawValue( wxDC* dc )
 
     dynValue = pair->GetDataString();
 }*/
-
-//This functions reads by using DynamicsDataBuffer
+///////////////////////////////////////////////////////////////////////////////
 void OpcUOPlugin::ReadValue( )
 {	
+	//This functions reads data through DynamicsDataBuffer
 	//is it the active network ie is it being drawn
 	if( m_canvas->GetActiveNetworkID() == m_network->GetNetworkID() )
 	{		
@@ -251,7 +255,7 @@ void OpcUOPlugin::ReadValue( )
 		dynValue = tempData;
 	}
 }
-
+///////////////////////////////////////////////////////////////////////////////
 void OpcUOPlugin::OnTimer( wxTimerEvent& event )
 {
 	if( m_canvas != NULL && m_network != NULL )
@@ -261,7 +265,7 @@ void OpcUOPlugin::OnTimer( wxTimerEvent& event )
 		m_canvas->Refresh( true );
 	}
 }
-
+///////////////////////////////////////////////////////////////////////////////
 void OpcUOPlugin::DrawPlugin( wxDC* dc )
 {
     //if hidden
@@ -283,20 +287,76 @@ void OpcUOPlugin::DrawPlugin( wxDC* dc )
         DrawPorts( true, dc );
     }
 }
-
-
+///////////////////////////////////////////////////////////////////////////////
 void OpcUOPlugin::StartTimer( float msec )
-//void OpcUOPlugin::StartTimer( wxCommandEvent& event )
 {
     //UIPLUGIN_CHECKID( event )
 	m_timer = new wxTimer( this, OPCUOPLUGIN_TIMER_ID );
-	//m_timer->Start( 4000 );
 	m_timer->Start(msec);
 	dynValue = "Initializing";
 }
-
+///////////////////////////////////////////////////////////////////////////////
 void OpcUOPlugin::StopTimer( wxCommandEvent& event )
 {
     UIPLUGIN_CHECKID( event )
 	m_timer->Stop();
+}
+///////////////////////////////////////////////////////////////////////////////
+void OpcUOPlugin::QueryForAllVariables( wxCommandEvent& event )
+{
+	//Query Unit for all opc variables available
+	std::string compName = GetVEModel()->GetPluginName();
+    ves::open::xml::CommandPtr returnState( new ves::open::xml::Command() );
+    returnState->SetCommandName( "getAllOPCVariables" );
+    ves::open::xml::DataValuePairPtr data( new ves::open::xml::DataValuePair() );
+	data->SetData( std::string( "ModuleName" ), compName );
+    returnState->AddDataValuePair( data );
+    std::vector< std::pair< XMLObjectPtr, std::string > > nodes;
+    nodes.push_back( std::pair< XMLObjectPtr, std::string >( returnState, "vecommand" ) );
+    XMLReaderWriter commandWriter;
+    std::string status = "returnString";
+    commandWriter.UseStandaloneDOMDocumentManager();
+    commandWriter.WriteXMLDocument( nodes, status, "Command" );
+
+    std::string nw_str = serviceList->Query( status );
+
+    /*ves::open::xml::XMLReaderWriter networkReader;
+    networkReader.UseStandaloneDOMDocumentManager();
+    networkReader.ReadFromString();
+    networkReader.ReadXMLData( nw_str, "Command", "vecommand" );
+    std::vector< ves::open::xml::XMLObjectPtr > objectVector =
+        networkReader.GetLoadedXMLObjects();
+    ves::open::xml::CommandPtr cmd =
+        boost::dynamic_pointer_cast<ves::open::xml::Command>
+        ( objectVector.at( 0 ) );
+    ves::open::xml::DataValuePairPtr pair = cmd->GetDataValuePair( 0 );	
+
+    dynValue = pair->GetDataString();
+	*/
+
+    OpcUOVarDialog* params = new OpcUOVarDialog( GetPluginParent() );
+	//populate dialog
+    params->ShowModal();
+    params->Destroy();
+
+}
+///////////////////////////////////////////////////////////////////////////////
+void OpcUOPlugin::OnShowAllVar( wxCommandEvent& event )
+{
+    OpcUOVarDialog* params = new OpcUOVarDialog( GetPluginParent() );
+    //params->SetComponentName( wxString( compName.c_str(), wxConvUTF8 ) );
+    //params->SetServiceList( serviceList );
+    //int numdvps = cmd->GetNumberOfDataValuePairs();
+    //for( size_t i = 0; i < numdvps; i++ )
+    //{
+    //    ves::open::xml::DataValuePairPtr pair = cmd->GetDataValuePair( i );
+    //    std::vector< std::string > temp_vector;
+    //    pair->GetData( temp_vector );
+    //    params->SetData( wxString( temp_vector[0].c_str(), wxConvUTF8 ), wxString( temp_vector[1].c_str(), wxConvUTF8 ),
+    //        wxString( temp_vector[2].c_str(), wxConvUTF8 ), wxString( temp_vector[3].c_str(), wxConvUTF8 ) );
+    //    //params->SetData( wxString( temp_vector[0].c_str(), wxConvUTF8 ) );
+    //}
+    //params->UpdateSizes();
+    params->ShowModal();
+    params->Destroy();
 }

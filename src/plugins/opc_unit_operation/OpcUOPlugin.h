@@ -59,7 +59,9 @@ private:
 	//void StartTimer( wxCommandEvent& event  );
 	void StartTimer( float msec  );
 	void StopTimer( wxCommandEvent& event  );
-    void OnShowValue( wxCommandEvent& event );
+	void OnShowValue( wxCommandEvent& event );
+	void OnShowAllVar( wxCommandEvent& event );
+	void QueryForAllVariables( wxCommandEvent& event );
 public:
     ///Defualt constructor
     OpcUOPlugin();

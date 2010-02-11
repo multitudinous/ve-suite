@@ -30,8 +30,8 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#ifndef OpcUOVarDialog_H
-#define OpcUOVarDialog_H
+#ifndef OPCUOVARDIALOG_H
+#define OPCUOVARDIALOG_H
 
 #include <ves/conductor/util/CORBAServiceList.h>
 #include <ves/open/xml/Command.h>
@@ -96,7 +96,6 @@ class OpcUOVarDialog : public wxDialog
             return tempStr;
         }
         wxString prefix;
-    
     
 	private:
 		enum

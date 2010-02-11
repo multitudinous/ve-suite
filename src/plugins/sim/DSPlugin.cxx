@@ -66,7 +66,8 @@ BEGIN_EVENT_TABLE( DSPlugin, ves::conductor::UIPluginBase )
     EVT_MENU( DSPLUGIN_OPEN_SIM, DSPlugin::OnOpen )
     EVT_MENU( DSPLUGIN_CREATE_OPC_LIST, DSPlugin::OnCreateOPCList )
 	EVT_MENU( DSPLUGIN_CONNECT, DSPlugin::OnConnect )
-	EVT_TIMER( DSPLUGIN_TIMER_ID, DSPlugin::OnTimer )
+	//EVT_TIMER( DSPLUGIN_TIMER_ID, DSPlugin::OnTimer )
+	EVT_MENU( DSPLUGIN_ADDVAR, DSPlugin::OnAddVariable )
 END_EVENT_TABLE()
 
 IMPLEMENT_DYNAMIC_CLASS( DSPlugin, ves::conductor::UIPluginBase )
@@ -85,11 +86,12 @@ DSPlugin::DSPlugin() :
     wxImage my_img( sim );
     SetImage( my_img );
 
-	m_timer = new wxTimer( this, DSPLUGIN_TIMER_ID );
+	//m_timer = new wxTimer( this, DSPLUGIN_TIMER_ID );
 }
 ////////////////////////////////////////////////////////////////////////////////
 DSPlugin::~DSPlugin()
 {
+	//DynamicsDataBuffer::instance()->CleanUp();
 }
 ////////////////////////////////////////////////////////////////////////////////
 wxString DSPlugin::GetConductorName()
@@ -255,6 +257,8 @@ wxMenu* DSPlugin::GetPluginPopupMenu( wxMenu* baseMenu )
     mDynSimMenu->Enable( DSPLUGIN_CREATE_OPC_LIST, true );
     mDynSimMenu->Append( DSPLUGIN_CONNECT, _( "Connect to OPC") );
     mDynSimMenu->Enable( DSPLUGIN_CONNECT, true );
+    mDynSimMenu->Append( DSPLUGIN_ADDVAR, _( "ADD VAR") );
+    mDynSimMenu->Enable( DSPLUGIN_ADDVAR, true );
     baseMenu->Insert( 0, DSPLUGIN_DYNSIM_MENU,   _( "DynSim" ), mDynSimMenu,
                     _( "Used in conjunction with DynSim" ) );
     baseMenu->Enable( DSPLUGIN_DYNSIM_MENU, true );
@@ -278,12 +282,12 @@ void DSPlugin::OnConnect( wxCommandEvent& event )
 {
     std::string compName = GetVEModel()->GetPluginName();
 	ves::open::xml::CommandPtr monitor( new ves::open::xml::Command() );
-    monitor->SetCommandName("connectWithList");
+    monitor->SetCommandName("connectToOPC");
 
-    ves::open::xml::DataValuePairPtr
-        variables( new ves::open::xml::DataValuePair() );
-    variables->SetData( "variables", m_selectedOpcList );
-    monitor->AddDataValuePair( variables );
+    //ves::open::xml::DataValuePairPtr
+    //    variables( new ves::open::xml::DataValuePair() );
+    //variables->SetData( "variables", m_selectedOpcList );
+    //monitor->AddDataValuePair( variables );
 
     std::vector< std::pair< ves::open::xml::XMLObjectPtr, std::string > >
         nodes;
@@ -297,24 +301,51 @@ void DSPlugin::OnConnect( wxCommandEvent& event )
 
 	std::string nw_str = serviceList->Query( status );
 
-	m_timer->Start( 4000 );
-}
+	//DynamicsDataBuffer::instance()->Enable();
 
+	//m_timer->Start( 4000 );
+}
+////////////////////////////////////////////////////////////////////////////////
+void DSPlugin::OnAddVariable( wxCommandEvent& event )
+{
+    std::string compName = GetVEModel()->GetPluginName();
+	ves::open::xml::CommandPtr monitor( new ves::open::xml::Command() );
+    monitor->SetCommandName("addVariable");
+
+    ves::open::xml::DataValuePairPtr
+        variables( new ves::open::xml::DataValuePair() );
+    variables->SetData( "variable", m_selectedOpcList[0] );
+    monitor->AddDataValuePair( variables );
+
+    std::vector< std::pair< ves::open::xml::XMLObjectPtr, std::string > >
+        nodes;
+    nodes.push_back( std::pair< ves::open::xml::XMLObjectPtr,
+		std::string >( monitor, "vecommand" ) );
+
+    ves::open::xml::XMLReaderWriter commandWriter;
+    std::string status="returnString";
+    commandWriter.UseStandaloneDOMDocumentManager();
+    commandWriter.WriteXMLDocument( nodes, status, "Command" );
+
+	std::string nw_str = serviceList->Query( status );
+	DynamicsDataBuffer::instance()->Enable();
+}
+///////////////////////////////////////////////////////////////////////////////
 std::vector< std::string > DSPlugin::GetAvailableVariables()
 {
 	return m_opcList;
 }
-
+///////////////////////////////////////////////////////////////////////////////
 std::vector< std::string > DSPlugin::GetSelectVariables()
 {
 	return m_selectedOpcList;
 }
-
+///////////////////////////////////////////////////////////////////////////////
 void DSPlugin::SetSelectVariables( std::vector< std::string> selectedVariables )
 {
 	m_selectedOpcList = selectedVariables;
 }
-
+/*
 //this is a temporary function
 //this timer event is used to update the dynamicsdatabuffer
 //this timer event would make more sense in the buffer but is a difficult task
@@ -322,4 +353,4 @@ void DSPlugin::SetSelectVariables( std::vector< std::string> selectedVariables )
 void DSPlugin::OnTimer( wxTimerEvent& event )
 {
 	DynamicsDataBuffer::instance()->Update();
-}
+}*/
