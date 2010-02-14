@@ -48,6 +48,9 @@ Body_UI_i API
 #include <string>
 #include <vector>
 
+///Boost includes
+#include <boost/concept_check.hpp>
+
 namespace ves
 {
 namespace xplorer

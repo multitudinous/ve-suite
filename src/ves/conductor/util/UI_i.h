@@ -38,18 +38,23 @@ Body_UI_i API
 /*!\class Body_UI_i
 *
 */
+///TAO includes
 #include <ves/open/moduleS.h>
+
+///C++ includes
 #include <iostream>
 #include <string>
 #include <vector>
 #include <map>
 
+///VE-Suite includes
 #include <ves/open/xml/CommandPtr.h>
 #include <ves/open/xml/DataValuePairPtr.h>
 #include <ves/open/xml/XMLObjectPtr.h>
 
+///Boost includes
+#include <boost/concept_check.hpp>
 
-//Class Body_UI_i
 #include <ves/VEConfig.h>
 
 namespace ves

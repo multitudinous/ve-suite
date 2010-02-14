@@ -444,9 +444,10 @@ void Body_Executive_i::execute_next_mod( long module_id )
         }
         execute( _network->GetModule( rt )->GetModuleName() );
     }
-    catch ( CORBA::Exception & )
+    catch ( CORBA::Exception& ex )
     {
-        std::cerr << "VE-CE : Cannot contact Module " << module_id << std::endl;
+        std::cerr << "VE-CE : Cannot contact Module " << module_id 
+            << std::endl << ex._info().c_str() << std::endl;
     }
 }
 ////////////////////////////////////////////////////////////////////////////
@@ -473,11 +474,11 @@ std::string Body_Executive_i::GetResults( int rt )
     CommandPtr modelResults( new Command() );
     modelResults->SetCommandName( "Upstream Model Results" );
     // Now, look upstream for results data...
-    int numInputPorts = nextModule->numIPorts();
-    for( size_t i = 0;i < numInputPorts; ++i )
+    unsigned int numInputPorts = nextModule->numIPorts();
+    for( size_t i = 0; i < numInputPorts; ++i )
     {
         IPort* iport = nextModule->getIPort( i );
-        int numConnections = iport->nconnections();
+        unsigned int numConnections = iport->nconnections();
         for( size_t j=0; j<numConnections; ++j )
         {
             Connection* conn = iport->connection( j );
@@ -562,6 +563,7 @@ ACE_THROW_SPEC((
                    , Error::EUnknown
                ) )
 {
+    boost::ignore_unused_variable_warning( module_id );
     // send a unit message to all uis
     //std::string message = std::string( "SetModuleMessage ") + std::string( msg );
     std::string message = std::string( msg );
@@ -606,6 +608,7 @@ ACE_THROW_SPEC((
                    , Error::EUnknown
                ) )
 {
+    boost::ignore_unused_variable_warning( module_id );
     std::cout << "VE-CE : Body_Executive_i::GetModuleResult has been replaced with the query function." << std::endl;
     return CORBA::string_dup( "" );
 }
@@ -667,7 +670,7 @@ ACE_THROW_SPEC((
 
     if( xmlNetwork.empty() )
     {
-        uis_[ moduleName ]->Raise( "No Current VE-Suite Network Present In VE-CE.\n" );
+        m_uiMap[ moduleName ]->Raise( "No Current VE-Suite Network Present In VE-CE.\n" );
         //ClientMessage( "No Current VES Network Present In VE-CE.\n" );
     }
 
@@ -820,10 +823,11 @@ ACE_THROW_SPEC((
                 ClientMessage( "No Module Units connected to the VE-CE, skipping execution\n" );
             }
         }
-        catch ( CORBA::Exception & )
+        catch ( CORBA::Exception& ex )
         {
             std::cerr << "Initial Execute, cannot contact Module "
-                << _network->GetModule( rt )->GetModuleName() << std::endl;
+                << _network->GetModule( rt )->GetModuleName() 
+                << std::endl << ex._info().c_str() << std::endl;
         }
     }
 
@@ -851,7 +855,6 @@ ACE_THROW_SPEC((
         }
         catch ( CORBA::Exception & )
         {
-            // std::cout << iter->first <<" is obsolete." << std::endl;
             // it seems this call should be blocked as we are messing with
             // a map that is used everywhere
             UnRegisterUnit( iter->first.c_str() );
@@ -1046,7 +1049,7 @@ ACE_THROW_SPEC((
         if( CORBA::is_nil( ui ) )
             std::cerr << "NULL UI" << std::endl;
 
-        uis_[ tempName ] = ui;
+        m_uiMap[ tempName ] = ui;
 
         _mutex.release();
         std::string msg = tempName + " Connected to VE-CE\n";
@@ -1054,7 +1057,7 @@ ACE_THROW_SPEC((
         //ClientMessage( msg.c_str() );
         std::cerr << tempName << " : registered a UI" << std::endl;
     }
-    catch ( CORBA::Exception &ex )
+    catch ( CORBA::Exception& ex )
     {
         std::cerr << "Can't call UI name " << tempName
         << " " << ex._info().c_str() << std::endl;
@@ -1144,10 +1147,10 @@ ACE_THROW_SPEC((
     // Add your implementation here
     std::string strUI( UIName );    
     //delete UIName;
-    iter = uis_.find( strUI );
-    if( iter != uis_.end() )
+    iter = m_uiMap.find( strUI );
+    if( iter != m_uiMap.end() )
     {
-        uis_.erase( iter );
+        m_uiMap.erase( iter );
         std::cout << "VE-CE : " << strUI << " Unregistered!\n";
     }  
     _mutex.release();
@@ -1273,14 +1276,44 @@ ACE_THROW_SPEC((
                    ::Error::EUnknown
                ) )
 {
-    // Add your implementation here
+    ///We are going to abuse this function for the moment to try out sending
+    ///data asynchronously to condcutor and xplorer from the units
+    ///to try dynamic data passing to xplorer and conductor.
+
+    ///AMI call
+    Body::AMI_UIHandler_var uiComAMIHandler = m_uiAMIHandler._this();
+    for( std::map<std::string, Body::UI_var>::iterator
+        iter = m_uiMap.begin(); iter != m_uiMap.end(); )
+    {
+        try
+        {
+            iter->second->_non_existent();
+            //iter->second->SetCommand( param );
+            iter->second->sendc_SetCommand( uiComAMIHandler.in(), param );
+            ++iter;
+        }
+        catch( CORBA::Exception&  ex )
+        {
+            std::cout << "VE-CE::SetParams : " << iter->first 
+                << " is obsolete." << std::endl
+                << ex._info().c_str() << std::endl;
+            // it seems this call should be blocked as we are messing with
+            // a map that is used everywhere
+            m_uiMap.erase( iter++ );
+        }
+        catch( std::exception& ex )
+        {
+            std::cout << "VE-CE::SetParams : another kind of exception " 
+            << std::endl << ex.what() << std::endl;
+        }
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Body_Executive_i::ClientMessage( const char *msg )
 {
     std::cout << "VE-CE : Output = " << msg;
     for( std::map<std::string, Body::UI_var>::iterator
-            iter = uis_.begin(); iter != uis_.end(); )
+            iter = m_uiMap.begin(); iter != m_uiMap.end(); )
     {
         std::cout << "VE-CE : " << msg << " to -> " << iter->first << std::endl;
         try
@@ -1289,16 +1322,19 @@ void Body_Executive_i::ClientMessage( const char *msg )
             iter->second->Raise( msg );
             ++iter;
         }
-        catch ( CORBA::Exception & )
+        catch( CORBA::Exception& ex )
         {
-            std::cout << "VE-CE : " << iter->first << " is obsolete." << std::endl;
+            std::cout << "VE-CE : " << iter->first 
+                << " is obsolete." << std::endl
+                << ex._info().c_str() << std::endl;
             // it seems this call should be blocked as we are messing with
             // a map that is used everywhere
-            uis_.erase( iter++ );
+            m_uiMap.erase( iter++ );
         }
-        catch ( ... )
+        catch( std::exception& ex )
         {
-            std::cout << "VE-CE : another kind of exception " << std::endl;
+            std::cout << "VE-CE : another kind of exception " 
+                << std::endl << ex.what() << std::endl;
         }
     }
 }

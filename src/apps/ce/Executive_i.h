@@ -42,21 +42,14 @@
 
 #include <ves/open/moduleS.h>
 
+#include <ves/open/idl/Body_AMI_UIHandler_i.h>
+
 #include <string>
 #include <vector>
 #include <map>
+
 #include <orbsvcs/CosNamingC.h>
-/*
-#if !defined (ACE_LACKS_PRAGMA_ONCE)
-#pragma once
-#endif *//* ACE_LACKS_PRAGMA_ONCE */
-/*
-typedef struct {
-  CORBA::Long module_id;
-  std::vector<std::string> data;
-  std::string msg;
-} MODULE_DATA;
-*/
+
 //Class Body_Executive_i
 
 class QueryThread;
@@ -81,11 +74,16 @@ protected:
     void execute( std::string );
 
     std::map< std::string, Body::Unit_var > _mod_units;
+
     std::map< std::string, Execute_Thread* > _exec_thread;
     std::map< std::string, QueryThread* > queryThreads;
 
     CosNaming::NamingContext_var naming_context_;
-    std::map<std::string, Body::UI_var> uis_;
+    ///Map to store connections from all of the VE-Xplorer and VE-Conductor
+    ///UI interfaces
+    std::map<std::string, Body::UI_var> m_uiMap;
+    ///AMI handler for asynchronous calls to conductor
+    Body_AMI_UIHandler_i m_uiAMIHandler;
 
     VE_CE::Utilities::Network*   _network;
     VE_CE::Utilities::Scheduler* _scheduler;

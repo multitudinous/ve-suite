@@ -123,7 +123,9 @@ protected:
     float time_since_start;///< start time
     long frameNumber;///< frame number
 
-    std::map<std::string, Body::UI_var> uiCom;///<The conductor interfaces
-    Body_AMI_UIHandler_i m_xplorerAMIHandler;///<AMI handler for asynchronous calls to conductor
+    ///The conductor interfaces
+    std::map<std::string, Body::UI_var> uiCom;
+    ///AMI handler for asynchronous calls to conductor
+    Body_AMI_UIHandler_i m_xplorerAMIHandler;
 };
 #endif
