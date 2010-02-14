@@ -223,3 +223,30 @@ void Body_UI_i::GetNetworkFromCE( void )
         std::cerr << "Bod_UI_i::GetNetworkFromCE : no exec found! " << std::endl;
     }
 }
+////////////////////////////////////////////////////////////////////////////////
+void SetCommand( const char* openXMLCommand )
+{ 
+    //boost::ignore_unused_variable_warning( openXMLCommand ); 
+    std::string tempString( const_cast<char*>( openXMLCommand ) );
+    ves::open::xml::XMLReaderWriter networkReader;
+    networkReader.UseStandaloneDOMDocumentManager();
+    networkReader.ReadFromString();
+    networkReader.ReadXMLData( tempString, "Command", "vecommand" );
+    
+    std::vector<ves::open::xml::XMLObjectPtr> xmlObjects;
+    xmlObjects = networkReader.GetLoadedXMLObjects();
+    
+    ves::open::xml::CommandPtr temp = 
+    boost::dynamic_pointer_cast< ves::open::xml::Command >( 
+                                                           xmlObjects.at( 0 ) );
+    if( !temp )
+    {
+        std::cout << "NULL command from ce" << std::endl;
+    }
+    
+    ///Pass data off to xplorer if the command is one from
+    ///ce about data
+    //m_commandNameMap[ temp->GetCommandName()] = temp;
+    xmlObjects.clear();
+}
+////////////////////////////////////////////////////////////////////////////////
