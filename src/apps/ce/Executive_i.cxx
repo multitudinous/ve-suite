@@ -48,6 +48,8 @@
 
 #include <ace/OS.h>
 
+///Boost includes
+#include <boost/concept_check.hpp>
 #include <boost/lexical_cast.hpp>
 
 #include <iostream>
@@ -934,7 +936,6 @@ char *  Body_Executive_i::Query( const char * command
                                )
 ACE_THROW_SPEC(( CORBA::SystemException, Error::EUnknown ) )
 {
-//std::cout << command << std::endl;
     _mutex.acquire();
     // read the command to get the module name and module id
     XMLReaderWriter networkWriter;
@@ -1076,6 +1077,7 @@ ACE_THROW_SPEC((
                    , Error::EUnknown
                ) )
 {
+    boost::ignore_unused_variable_warning( flag );
     // When this is called, a unit is already binded to the name service,
     // so this call can get it's reference from the name service
     std::string strUnitName( UnitName );
@@ -1205,11 +1207,7 @@ ACE_THROW_SPEC((
                    , Error::EUnknown
                ) )
 {
-    _mutex.acquire();
-
-    // Add your implementation here
-
-    _mutex.release();
+    boost::ignore_unused_variable_warning( ids );
 
     return CORBA::Long( 0 );
 }
@@ -1263,6 +1261,8 @@ ACE_THROW_SPEC((
                    ::Error::EUnknown
                ) )
 {
+    boost::ignore_unused_variable_warning( moduleName );
+    boost::ignore_unused_variable_warning( module_id );
     // Add your implementation here
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -1276,6 +1276,8 @@ ACE_THROW_SPEC((
                    ::Error::EUnknown
                ) )
 {
+    boost::ignore_unused_variable_warning( moduleName );
+    boost::ignore_unused_variable_warning( module_id );
     ///We are going to abuse this function for the moment to try out sending
     ///data asynchronously to condcutor and xplorer from the units
     ///to try dynamic data passing to xplorer and conductor.
