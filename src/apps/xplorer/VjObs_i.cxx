@@ -74,13 +74,13 @@ using namespace ves::open::xml;
 
 VjObs_i::VjObs_i()
     :
-    m_storeCommands( false ),
-    isCluster( false ),
-    numOfClientInfo( 0 ),
     _models( 0 ),
-    frameNumber( 0 ),
+    numOfClientInfo( 0 ),
     time_since_start( 0 ),
-    m_commandTimer( new vpr::Timer() )
+    frameNumber( 0 ),
+    m_storeCommands( false ),
+    m_commandTimer( new vpr::Timer() ),
+    isCluster( false )
 {
     teacher_name   = new VjObs::scalar_p();
 

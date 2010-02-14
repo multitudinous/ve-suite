@@ -134,13 +134,13 @@ App::App( int argc, char* argv[], bool enableRTT )
 #else
     vrj::OsgApp( vrj::Kernel::instance() ),
 #endif
+    isCluster( false ),
     m_captureNextFrame( false ),
     m_captureMovie( false ),
-    isCluster( false ),
     mRTT( enableRTT ),
+    mProfileCounter( 0 ),
     mLastFrame( 0 ),
-    mLastTime( 0 ),
-    mProfileCounter( 0 )
+    mLastTime( 0 )
 {
     osg::Referenced::setThreadSafeReferenceCounting( true );
     osg::DisplaySettings::instance()->setMaxNumberOfGraphicsContexts( 20 );
@@ -519,20 +519,12 @@ void App::latePreFrame()
         std::cout << "|\tShutting down xplorer." << std::endl;
         VPR_PROFILE_RESULTS();
         vxs::PhysicsSimulator::instance()->SetIdle( true );
-
-        // Very important to call before end of main!
-        if( osg::Referenced::getDeleteHandler() ) 
-        {
-            osg::Referenced::getDeleteHandler()->
-                setNumFramesToRetainObjects(0);
-            osg::Referenced::getDeleteHandler()->flushAll();
-        }
-
-        // Stopping kernel
-        vrj::Kernel::instance()->stop(); 
         m_vjobsWrapper->Cleanup();
         cfdExecutive::instance()->UnloadPlugins();
         ves::xplorer::scenegraph::SceneManager::instance()->Shutdown();
+
+        // Stopping kernel
+        vrj::Kernel::instance()->stop(); 
     }
     else if( !tempCommandName.compare( "SCREEN_SHOT" ) )
     {
