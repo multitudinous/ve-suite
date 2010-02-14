@@ -31,7 +31,14 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/xplorer/network/VE_i.h>
+
+#include <ves/open/xml/XMLReaderWriter.h>
+#include <ves/open/xml/DataValuePair.h>
+#include <ves/open/xml/Command.h>
+#include <ves/open/xml/model/Model.h>
+
 #include <iostream>
+
 #include <vpr/Sync/Guard.h>
 
 using namespace ves::xplorer::network;
