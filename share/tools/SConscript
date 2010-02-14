@@ -1,27 +1,23 @@
-#Builds VE-Suite Libraries
-#import os
-#pj = os.path.join
-
+#Builds VE-Suite plugin utilies for simulators
 Import( 'GetPlatform baseEnv ves_pkg' )
 
 toolsSubdirs = Split("""
     builder
     vea
-    desktop_wallpaper
 """)
+# not needed anymore since we have screen capture working in xplorer
+#desktop_wallpaper
 
-#Should Aspen support be built
 if GetPlatform() == 'win32':
+    #Should Aspen support be built
     if baseEnv[ 'MakeAspenSupport' ] != 'no':
         toolsSubdirs.append( "aspen" )
 
-#Should DynSim support be built
-if GetPlatform() == 'win32':
+    #Should DynSim support be built
     if baseEnv[ 'MakeDynSimSupport' ] != 'no':
         toolsSubdirs.append( "DynSimUnit" )
 
-#Should Powersim support be built
-if GetPlatform() == 'win32':
+    #Should Powersim support be built
     if baseEnv[ 'MakePowersimSupport' ] != 'no':
         toolsSubdirs.append( "powersim" )
 
