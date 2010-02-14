@@ -33,7 +33,7 @@
 #ifndef BODY_AMI_UI_HANDLER_I_H
 #define BODY_AMI_UI_HANDLER_I_H
 /*!\file Body_AMI_UIHandler_i.h
-*Interface for sending information from Xplorer Asynchronously to Condutor
+*Interface for sending information from Xplorer/CE Asynchronously to Condutor
 */
 
 /*!\class Body_AMI_UIHandler_i
@@ -42,7 +42,9 @@
 
 #include <ves/open/moduleS.h>
 
-class Body_AMI_UIHandler_i: public virtual POA_Body::AMI_UIHandler
+#include <ves/VEConfig.h>
+
+class VE_OPEN_MODULE_EXPORTS Body_AMI_UIHandler_i: public virtual POA_Body::AMI_UIHandler
 {
 public:
     ///Constructor
@@ -150,5 +152,14 @@ public:
     ACE_THROW_SPEC((
                        ::CORBA::SystemException
                    ) );
+                   
+    virtual
+    void SetCommand (
+                     void);
+    
+    virtual
+    void SetCommand_excep (
+                           ::Messaging::ExceptionHolder * excep_holder);
+    
 };
 #endif// BODY_AMI_UI_HANDLER_I_H

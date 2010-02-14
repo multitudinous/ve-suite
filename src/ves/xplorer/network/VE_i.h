@@ -135,6 +135,11 @@ protected:
     {
         ;
     }
+
+    virtual
+    void SetCommand(
+                    const char * openXMLCommand){ ; }
+
 };
 }
 }

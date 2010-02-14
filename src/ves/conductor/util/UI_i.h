@@ -133,6 +133,11 @@ public:
                        ::CORBA::SystemException,
                        ::Error::EUnknown
                    ) );
+    
+    virtual
+    void SetCommand(
+                     const char * openXMLCommand){ ; }
+    
 
     std::map<int, std::string> m_idToModelName;
     std::map<std::string, ves::open::xml::XMLObjectPtr > m_objectToModel;

@@ -135,6 +135,8 @@ module Body{
       //This is to update the graphics relevant data in conductor
       //such as CAD data, dataset info, and navigation information
       void SetXplorerData( in string xplorerData ) raises( Error::EUnknown );
+      //This is to set a command from any client at any time
+      void SetCommand( in string openXMLCommand ) raises( Error::EUnknown );
    };
 
   interface Executive { // This is the Excutive Engine;
@@ -216,7 +218,7 @@ module Body{
     void SetID(in string moduleName, in long id) raises(Error::EUnknown);	
 
     void DeleteModuleInstance(in string moduleName, in long module_id) raises(Error::EUnknown);
-	
+	//Use to send commands to UI's (conductor, xplorer,...)
     void SetParams(in string moduleName, in long module_id, in string param) raises(Error::EUnknown);
 
   };

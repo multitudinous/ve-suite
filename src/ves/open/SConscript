@@ -10,10 +10,13 @@ sources = Split("""
    VjObsC.cpp
    VjObsS.cpp
 """)
-##srcs = map(lambda s: pj('#', 'VE_Open', 'skel', s), srcs)
+
+sources.append( pj('idl','Body_AMI_UIHandler_i.cxx') )
+
 headers  = glob.glob(pj(RootDir, buildDir, 'src','ves','open','*.cpp'))
 headers += glob.glob(pj(RootDir, buildDir, 'src','ves','open','*.h'))
 headers += glob.glob(pj(RootDir, buildDir, 'src','ves','open','*.inl'))
+headers += glob.glob(pj('idl','Body_AMI_UIHandler_i.h'))
 
 lib_env = ves_pkg.getEnv().Clone()
 

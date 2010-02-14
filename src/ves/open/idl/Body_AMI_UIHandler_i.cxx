@@ -31,7 +31,7 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
-#include <ves/xplorer/communication/Body_AMI_UIHandler_i.h>
+#include <ves/open/idl/Body_AMI_UIHandler_i.h>
 
 ////////////////////////////////////////////////////////////////////////////////
 Body_AMI_UIHandler_i::Body_AMI_UIHandler_i( void )
@@ -105,7 +105,7 @@ ACE_THROW_SPEC((
     throw CORBA::NO_IMPLEMENT();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Body_AMI_UIHandler_i::UpdateLinkContent( )
+void Body_AMI_UIHandler_i::UpdateLinkContent()
 ACE_THROW_SPEC((
                    ::CORBA::SystemException,
                    ::Error::EUnknown
@@ -126,7 +126,7 @@ ACE_THROW_SPEC((
     throw CORBA::NO_IMPLEMENT();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Body_AMI_UIHandler_i::Raise( )
+void Body_AMI_UIHandler_i::Raise()
 ACE_THROW_SPEC((
                    ::CORBA::SystemException,
                    ::Error::EUnknown
@@ -147,7 +147,7 @@ ACE_THROW_SPEC((
     throw CORBA::NO_IMPLEMENT();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Body_AMI_UIHandler_i::SetXplorerData( )
+void Body_AMI_UIHandler_i::SetXplorerData()
 ACE_THROW_SPEC((
                    ::CORBA::SystemException,
                    ::Error::EUnknown
@@ -167,5 +167,15 @@ ACE_THROW_SPEC((
     // Add your implementation here
     throw CORBA::NO_IMPLEMENT();
 }
-
-
+////////////////////////////////////////////////////////////////////////////////
+void Body_AMI_UIHandler_i::SetCommand()
+{ 
+    throw CORBA::NO_IMPLEMENT();
+}
+////////////////////////////////////////////////////////////////////////////////
+void Body_AMI_UIHandler_i::SetCommand_excep( 
+    ::Messaging::ExceptionHolder * excep_holder)
+{
+    throw CORBA::NO_IMPLEMENT();
+}
+////////////////////////////////////////////////////////////////////////////////
