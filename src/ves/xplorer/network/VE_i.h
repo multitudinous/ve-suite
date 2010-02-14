@@ -138,7 +138,8 @@ protected:
 
     virtual
     void SetCommand(
-                    const char * openXMLCommand){ ; }
+                    const char * openXMLCommand)
+        { boost::ignore_unused_variable_warning( openXMLCommand ); }
 
 };
 }
