@@ -231,7 +231,7 @@ void Body_UI_i::GetNetworkFromCE( void )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void SetCommand( const char* openXMLCommand )
+void Body_UI_i::SetCommand( const char* openXMLCommand )
 { 
     //boost::ignore_unused_variable_warning( openXMLCommand ); 
     std::string tempString( const_cast<char*>( openXMLCommand ) );
