@@ -49,11 +49,13 @@
 using namespace ves::xplorer;
 
 ////////////////////////////////////////////////////////////////////////////////
-AppWrapper::AppWrapper( int argc,  char* argv[], VjObsWrapper* input ):
-    m_argc( argc ),
-    m_argv( argv ),
+AppWrapper::AppWrapper( int argc,  char* argv[], VjObsWrapper* input )
+    :
+    m_cfdApp( 0 ),
+    m_jugglerIsRunning( false ),
     m_vjObsWrapper( input ),
-    m_jugglerIsRunning( false )
+    m_argc( argc ),
+    m_argv( argv )
 {
     bool enableRTT = false;
     for( int i = 1;i < argc;++i )
