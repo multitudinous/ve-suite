@@ -39,17 +39,17 @@ BEGIN_EVENT_TABLE( VarDialog, wxDialog )
 	EVT_BUTTON( ID_SETBUTTON, VarDialog::SetButtonClick )
     EVT_GRID_CELL_CHANGE( VarDialog::WxGridCellChange )
 END_EVENT_TABLE()
-
+////////////////////////////////////////////////////////////////////////////////
 VarDialog::VarDialog(wxWindow *parent, wxWindowID id, const wxString &title, const wxPoint &position, const wxSize& size, long style)
 : wxDialog(parent, id, title, position, size, style)
 {
 	CreateGUIControls();
 }
-
+////////////////////////////////////////////////////////////////////////////////
 VarDialog::~VarDialog()
 {
 } 
-
+////////////////////////////////////////////////////////////////////////////////
 void VarDialog::CreateGUIControls()
 {
 	WxFlexGridSizer = new wxFlexGridSizer(0, 1, 0, 0);
@@ -99,21 +99,21 @@ void VarDialog::CreateGUIControls()
 	WxFlexGridSizer->AddGrowableCol(0);
 	WxFlexGridSizer->AddGrowableRow(0);
 }
-
+////////////////////////////////////////////////////////////////////////////////
 //for closing
-void VarDialog::OnClose(wxCloseEvent& /*event*/)
+void VarDialog::OnClose( wxCloseEvent& WXUNUSED( event ) )
 {
-	this->Destroy();
+	Destroy();
 }
-
+////////////////////////////////////////////////////////////////////////////////
 //CancelButtonClick
-void VarDialog::CancelButtonClick(wxCommandEvent& event)
+void VarDialog::CancelButtonClick( wxCommandEvent& WXUNUSED( event ) )
 {
-    this->Destroy();
+    Destroy();
 }
-
+////////////////////////////////////////////////////////////////////////////////
 // SetButtonClick
-void VarDialog::SetButtonClick(wxCommandEvent& event)
+void VarDialog::SetButtonClick( wxCommandEvent& WXUNUSED( event ) )
 {  
     ves::open::xml::CommandPtr params( new ves::open::xml::Command() );
     //input variables;
@@ -158,7 +158,7 @@ void VarDialog::SetButtonClick(wxCommandEvent& event)
     wxMessageDialog popup( this, _("Data has been sent to Aspen Dynamics") );
     popup.ShowModal(); 
 }
-
+////////////////////////////////////////////////////////////////////////////////
 // SetData
 void VarDialog::SetData( wxString name, wxString description,
                                      wxString value, wxString units )
@@ -178,28 +178,29 @@ void VarDialog::SetData( wxString name, wxString description,
 	WxGrid->SetCellValue( index, 1, value );
 	WxGrid->SetCellValue( index, 2, units );
 }
-
+////////////////////////////////////////////////////////////////////////////////
 //Update the grid size to match data size
 void VarDialog::UpdateSizes()
 {
 	WxGrid->AutoSize();
     WxGrid->SetRowLabelAlignment( wxALIGN_LEFT, wxALIGN_CENTRE );
 }
-
+////////////////////////////////////////////////////////////////////////////////
 //WxGridCellChange
 void VarDialog::WxGridCellChange(wxGridEvent& event)
 {
 	rowsChanged.push_back( event.GetRow() );
 }
-
+////////////////////////////////////////////////////////////////////////////////
 //WxGridCellChange
 void VarDialog::SetComponentName( wxString name )
 {
 	CompName = name;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void VarDialog::SetServiceList(
     ves::conductor::util::CORBAServiceList * serviceList )
 {
     this->ServiceList = serviceList;
 }
+////////////////////////////////////////////////////////////////////////////////

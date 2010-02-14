@@ -140,9 +140,7 @@ public:
                    ) );
     
     virtual
-    void SetCommand(
-                     const char * openXMLCommand)
-        { boost::ignore_unused_variable_warning( openXMLCommand ); }
+    void SetCommand( const char * openXMLCommand );
     
 
     std::map<int, std::string> m_idToModelName;

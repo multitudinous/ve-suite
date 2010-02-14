@@ -174,7 +174,7 @@ ACE_THROW_SPEC((
     xmlObjects = networkReader.GetLoadedXMLObjects();
 
     //std::cout << xmlObjects.size() << std::endl;
-    std::vector< ves::open::xml::XMLObjectPtr >::iterator iter;
+    //std::vector< ves::open::xml::XMLObjectPtr >::iterator iter;
     //Not sure why this is not working...
     //for( iter = xmlObjects.begin(); iter != xmlObjects.end(); ++iter )
     {
@@ -198,7 +198,7 @@ void Body_UI_i::SetLogWindow( PEThread* logWindow )
 {
     this->logWindow = logWindow;
 }
-///////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 const ves::open::xml::CommandPtr Body_UI_i::GetXplorerData( const std::string& commandName )
 {
     std::map< std::string, ves::open::xml::CommandPtr >::iterator iter;
@@ -211,3 +211,30 @@ const ves::open::xml::CommandPtr Body_UI_i::GetXplorerData( const std::string& c
     m_commandNameMap.erase( iter );
     return temp;
 }
+////////////////////////////////////////////////////////////////////////////////
+void Body_UI_i::SetCommand( const char * openXMLCommand )
+{
+    //boost::ignore_unused_variable_warning( openXMLCommand ); 
+    std::string tempString( const_cast<char*>( openXMLCommand ) );
+    ves::open::xml::XMLReaderWriter networkReader;
+    networkReader.UseStandaloneDOMDocumentManager();
+    networkReader.ReadFromString();
+    networkReader.ReadXMLData( tempString, "Command", "vecommand" );
+    
+    std::vector<ves::open::xml::XMLObjectPtr> xmlObjects;
+    xmlObjects = networkReader.GetLoadedXMLObjects();
+
+    ves::open::xml::CommandPtr temp = 
+        boost::dynamic_pointer_cast< ves::open::xml::Command >( 
+        xmlObjects.at( 0 ) );
+    if( !temp )
+    {
+        ::wxLogMessage( wxString( "NULL Command", wxConvUTF8 ) );
+    }
+    
+    ///Pass data off to dynamic data buffer engine if the command is one from
+    ///ce about data
+    //m_commandNameMap[ temp->GetCommandName()] = temp;
+    xmlObjects.clear();
+}
+////////////////////////////////////////////////////////////////////////////////
