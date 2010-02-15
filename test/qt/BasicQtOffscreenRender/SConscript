@@ -1,0 +1,76 @@
+##Builds idl skeleton files for veopen
+import os, sys, string
+pj = os.path.join
+
+Import('baseEnv buildDir GetPlatform')
+
+env = baseEnv.Clone()
+
+# Find tao_idl exectuable
+sys.stdout.write("Searching for uic...\n")
+taoidl_cmd = WhereIs('uic')
+
+if None == taoidl_cmd:
+    sys.stdout.write("Could not find uic. Please make sure uic is in your PATH.\n")
+    sys.exit(0)
+else:
+    sys.stdout.write("Found uic %s\n" % taoidl_cmd )
+
+# Find tao_idl exectuable
+sys.stdout.write("Searching for moc...\n")
+taoidl_cmd = WhereIs('moc')
+
+if None == taoidl_cmd:
+    sys.stdout.write("Could not find moc. Please make sure uic is in your PATH.\n")
+    sys.exit(0)
+else:
+    sys.stdout.write("Found moc %s\n" % taoidl_cmd )
+
+def qtTargetBuilder( target, source, env ):
+    #print target.path
+    #print source.abspath
+    targets = []
+    #print os.path.dirname( source )
+    #print os.path.basename( source )
+    #print os.path.split( source )
+    # need to ensure sources is a list or is made into a list
+    for targets in target:
+        print targets
+    for sources in source: 
+        print sources
+    #    basename = os.path.splitext(os.path.basename(sources))[0]
+    #    basedir = os.path.dirname( sources )
+        #targets.append( pj( basedir, prefix + basename + suffix ) )
+    return (target + targets, source )
+    #return targets
+
+uic ='uic'
+# Setup uic
+uicCmd = '%s ${SOURCES} -o ${TARGET}' %(uic) 
+bld = Builder(action = uicCmd, prefix = "ui_", suffix = ".h", single_source = True )
+env.Append(BUILDERS = {'qt_uic': bld})
+
+moc ='moc'
+# setup moc
+mocCmd = '%s ${SOURCES} -o ${TARGET}' %(moc) 
+bld = Builder(action = mocCmd, prefix = "moc_", suffix = ".cxx", single_source = True)
+env.Append(BUILDERS = {'qt_moc': bld})
+
+##########################
+
+source = [pj('#',buildDir,'test','qt','BasicQtOffscreenRender','mydialog.ui')]
+#headers = qtTargetBuilder( source, "ui_", ".h" )
+env.qt_uic(source)
+
+# first file
+source = [pj('#',buildDir,'test','qt','BasicQtOffscreenRender','mglwidget.h')]
+#sourceDeps = qtTargetBuilder( source, "moc_", ".cxx" )
+env.qt_moc(source)
+
+# second file
+source = [pj('#',buildDir,'test','qt','BasicQtOffscreenRender','mydialog.h')]
+#sourceDeps += qtTargetBuilder( source, "moc_", ".cxx" )
+env.qt_moc(source)
+
+#print headers
+#print sourceDeps
