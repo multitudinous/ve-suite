@@ -66,6 +66,7 @@
 ; VR Juggler deps
 #define VRJUGGLER_INST_LOCATION "C:\dev\deps\juggler-gc-svn\install-win32"
 #define VRJUGGLER_DEPS_INST_LOCATION "C:\dev\deps\juggler-gc-svn\deps-install-win32"
+#define TRACKDAPIHOME "C:\dev\deps\trackdAPI"
 ; VTK deps
 #define VTKSRCHOME "C:\dev\ves_deps\vtk-5.2.0-install"
 ; WX deps
