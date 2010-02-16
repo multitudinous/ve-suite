@@ -649,11 +649,14 @@ if not SConsAddons.Util.hasHelpFlag():
     bullet = pj( buildDir, 'external', bulletBaseVar)
     test = pj( buildDir, 'test', 'osg')
     issBuilder = pj(buildDir,'dist','win','iss')
+    qtTestBuilder = pj(buildDir,'test','qt','BasicQtOffscreenRender')
 
     ves_dirs = [vesSubdirs, distSubdirs, osgEphemerisSubdirs,
                shareSubdirs, lokiSubdirs, osgBulletPlusSubdirs,
                osgBulletSubdirs, bullet, minervaDataSubdirs]
 
+    #ves_dirs.append( qtTestBuilder )
+    
     #build applications in test/ directory
     if baseEnv[ 'buildTests' ] == 'yes':
         testDir = [test,  pj(buildDir,'test','vtk')] #[ pj(buildDir,'test','testNURBS') ]
