@@ -1,8 +1,8 @@
 #ifndef MGLWIDGET_H
 #define MGLWIDGET_H
 
-#include <QtOpenGL>
-#include <QGLWidget>
+#include <QtOpenGL/QtOpenGL>
+#include <QtOpenGL/QGLWidget>
 #include "mydialog.h"
 
 class mGLWidget : public QGLWidget

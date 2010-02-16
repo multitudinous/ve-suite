@@ -1,8 +1,9 @@
 ##Builds idl skeleton files for veopen
 import os, sys, string
 pj = os.path.join
+import SConsAddons.Util as sca_util
 
-Import('baseEnv buildDir GetPlatform')
+Import('baseEnv buildDir GetPlatform RootDir ves_pkg')
 
 env = baseEnv.Clone()
 
@@ -59,18 +60,39 @@ env.Append(BUILDERS = {'qt_moc': bld})
 ##########################
 
 source = [pj('#',buildDir,'test','qt','BasicQtOffscreenRender','mydialog.ui')]
-#headers = qtTargetBuilder( source, "ui_", ".h" )
-env.qt_uic(source)
+cppSources = env.qt_uic(source)
 
 # first file
 source = [pj('#',buildDir,'test','qt','BasicQtOffscreenRender','mglwidget.h')]
-#sourceDeps = qtTargetBuilder( source, "moc_", ".cxx" )
-env.qt_moc(source)
+cppSources += env.qt_moc(source)
 
 # second file
 source = [pj('#',buildDir,'test','qt','BasicQtOffscreenRender','mydialog.h')]
-#sourceDeps += qtTargetBuilder( source, "moc_", ".cxx" )
-env.qt_moc(source)
+cppSources += env.qt_moc(source)
 
-#print headers
-#print sourceDeps
+openDir = os.path.abspath( pj(RootDir,buildDir,'test','qt','BasicQtOffscreenRender') )
+cppSources1 = map(lambda s: pj(openDir, '%s' ) %(s), cppSources)
+
+sources2 = sca_util.getSourcesRecursive( pj(RootDir,'test','qt','BasicQtOffscreenRender') )
+sources2+=cppSources1
+
+lib_env2 = ves_pkg.getEnv().Clone()
+if GetPlatform() == 'linux':
+    lib_env2.Append( CXXFLAGS=['-fPIC'])
+
+lib_env2.AppendUnique( CPPPATH = [pj(openDir)] )
+
+if GetPlatform() == 'win32':
+   lib_env2['no_import_lib'] = 1
+   lib_env2['WINDOWS_INSERT_MANIFEST'] = False
+#   lib_env2.AppendUnique( LIBS = ['opengl'])
+elif GetPlatform() == 'darwin':
+   lib_env2.Append( LINKFLAGS = ['-framework','QtCore', '-framework','QtGui','-framework','QtOpenGL','-framework','OpenGL'])
+   lib_env2.AppendUnique( CXXFLAGS =['-F/Library/Frameworks/QtOpenGL.framework','-F/Library/Frameworks/QtCore.framework','-F/Library/Frameworks/QtGui.framework'] )
+else:
+   lib_env2.AppendUnique( LIBS = ['opengl'])
+
+qtprog = ves_pkg.createProgram('BasicQtOffscreenRender' + lib_env2["PROGSUFFIX"], lib_env2, 'bin')
+qtprog.addSources(sources2)
+qtprog.build()
+

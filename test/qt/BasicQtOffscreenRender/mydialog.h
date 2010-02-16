@@ -2,7 +2,7 @@
 #define MYDIALOG_H
 
 #include <QtGui/QDialog>
-#include <QMouseEvent>
+#include <QtGui/QMouseEvent>
 
 namespace Ui
 {
