@@ -13,6 +13,8 @@ Import('baseEnv ves_pkg LIBDIR vtk_options buildDir RootDir boost_options')
 #C:\dev\TSVEG\VE_Suite\src\ves\builder\DataLoader\tecplot
 sources_list = glob.glob(pj(RootDir, 'src','ves','builder','DataLoader','tecplot','*.cxx'))
 sources = map(lambda s: os.path.basename(s), sources_list)
+sources.remove( "tecplotReader.cxx" )
+sources.remove( "TecplotTranslator.cxx" )
 
 #headers_list = glob.glob(pj(RootDir, 'src','ves','xplorer','*.h'))
 
