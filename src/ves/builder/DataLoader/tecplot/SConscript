@@ -12,6 +12,8 @@ Import('baseEnv ves_pkg LIBDIR vtk_options buildDir RootDir boost_options')
 #base_header_srcs = sca_util.getHeaders()
 #C:\dev\TSVEG\VE_Suite\src\ves\builder\DataLoader\tecplot
 sources_list = glob.glob(pj(RootDir, 'src','ves','builder','DataLoader','tecplot','*.cxx'))
+sources = map(lambda s: os.path.basename(s), sources_list)
+
 #headers_list = glob.glob(pj(RootDir, 'src','ves','xplorer','*.h'))
 
 lib_env = ves_pkg.getEnv().Clone()
@@ -25,7 +27,7 @@ lib_env.Append( LIBPATH = [pj(TECSDKHOME,'lib','win32')],
                     pj(TECSDKHOME,'include','sdk'),
                     pj(TECSDKHOME,'include','sdk','integrationmanager'),
                     pj(TECSDKHOME,'include','toolbox')],
-                CPPDEFINES = ['ENGINE']
+                CPPDEFINES = ['ENGINE','VE_USER_BUILDER_LIBRARY']
               )
 
 #boost_options.apply( lib_env )
@@ -33,5 +35,5 @@ lib_env.Append( LIBPATH = [pj(TECSDKHOME,'lib','win32')],
 vtk_options.apply( lib_env )
 
 prog = ves_pkg.createProgram('tecplotReader' + lib_env["PROGSUFFIX"], lib_env, 'bin')
-prog.addSources( sources_list )
+prog.addSources( sources )
 prog.build()
