@@ -268,7 +268,7 @@ m variables = numVars - dimension.
 
 coordDataSharedAcrossZones == 1 means that there is 1 set of nodal coordinates, shared across all zones
 
-if this->connectivityShareCount == numZones, then there is just 1 nodal connectivity array
+if connectivityShareCount == numZones, then there is just 1 nodal connectivity array
 */
 
 std::string tecplotReader::getExtension( const std::string& s )
@@ -655,7 +655,7 @@ void tecplotReader::processZone( EntIndex_t currentZone )
             break;
         default:
             std::cout << "ZoneType not recognized. Not supposed to get here." << std::endl;
-    } 	
+    }
 
     // Obtain information about the current zone.
     // If the frame mode is XY the handles must be passed in as NULL. 
@@ -749,13 +749,13 @@ void tecplotReader::processZone( EntIndex_t currentZone )
         std::cout << "!!! The number of nodes per element is " << numNodesPerElement << std::endl;
             
     NodeMap_pa nm = TecUtilDataNodeGetReadableRef( currentZone );
-    /*if( nm && (numNodesPerElement > 0) )
+    if( nm && (numNodesPerElement > 0) )
     {
         for( LgIndex_t elemNum = 1; elemNum < numElementsInZone+1; elemNum++ ) // element numbers are 1-based
         {
             // Node information (connectivity)
             // NOTE - You could use the "RawPtr" functions if speed is a critical issue
-            NodeMap_t nodeArray[ numNodesPerElement ];
+            NodeMap_t * nodeArray = new NodeMap_t [ numNodesPerElement ];
 
             //cout << "For element " << elemNum << ", nodes =";
             for( int i = 0; i < numNodesPerElement; i++ ) 
@@ -793,12 +793,13 @@ void tecplotReader::processZone( EntIndex_t currentZone )
 
                 this->ugrid->InsertNextCell( VTK_EMPTY_CELL, 0, NULL );
             }
+            delete[] nodeArray;            
         }
     }
     else
     {
         std::cerr << "Error: Unable to get node map" << std::endl;
-    }*/
+    }
 
     // Read the nodal coordinates from the current zone...
     // If any turn out to be non-existent (e.g., planar description), then set to zero for 3D coordinates.
