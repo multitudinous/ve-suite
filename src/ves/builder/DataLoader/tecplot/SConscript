@@ -1,129 +1,37 @@
 ##Builds DataLoaderLib
 import os, sys, string
+import glob
+
 pj = os.path.join
+import SConsAddons.Util as sca_util
 
-Import('baseEnv ves_pkg LIBDIR vtk_options buildDir boost_options')
+Import('baseEnv ves_pkg LIBDIR vtk_options buildDir RootDir boost_options')
 
-sources = Split("""
-    DataLoader.cxx
-    EnSightTranslator.cxx
-    AVSTranslator.cxx
-    cfdDICOMTranslator.cxx
-    cfdREITranslator.cxx
-    converter.cxx
-    gridConversion.cxx
-    plot3dReader.cxx
-    StarCDTranslator.cxx
-    starReader.cxx
-    AnsysTranslator.cxx
-    ansysReader.cxx
-    FluentTranslator.cxx
-    MFIXTranslator.cxx
-""")
-
-headers = Split("""
-    DataLoader.h
-    EnSightTranslator.h
-    AVSTranslator.h
-    cfdDICOMTranslator.h
-    cfdREITranslator.h
-    converter.h
-    gridConversion.h
-    plot3dReader.h
-    StarCDTranslator.h
-    starReader.h
-    AnsysTranslator.h
-    ansysReader.h
-    FluentTranslator.h
-    MFIXTranslator.h
-""")
-
-##srcs = map(lambda s: pj('#', 'VE_Builder', 'Translator', 'DataLoader', s), srcs)
+#srcDir = os.path.abspath( pj(RootDir, 'src', 'ves', 'xplorer','plugin') )
+#base_plugin_srcs = sca_util.getSources()
+#base_header_srcs = sca_util.getHeaders()
+#C:\dev\TSVEG\VE_Suite\src\ves\builder\DataLoader\tecplot
+sources_list = glob.glob(pj(RootDir, 'src','ves','builder','DataLoader','tecplot','*.cxx'))
+#headers_list = glob.glob(pj(RootDir, 'src','ves','xplorer','*.h'))
 
 lib_env = ves_pkg.getEnv().Clone()
-lib_env.Append(LIBPATH = [pj('#', buildDir,'src','ves','xplorer','util'),
-                          pj('#', buildDir, 'src','ves','builder','cfdTranslatorToVTK') ],
-               LIBS = ['ves_xplorer_util', 'ves_builder_translator_base'])
-               
-boost_options.apply( lib_env )
+
+# For windows with tecplot
+TECSDKHOME = "C:\Program Files (x86)\Tecplot\TecSDK 1.1"
+lib_env.Append( LIBPATH = [pj(TECSDKHOME,'lib','win32')],
+                LIBS = ['tpsdkbase', 'tpsdkintegrationmanager','tptoolbox'],
+                CPPPATH = [ pj(TECSDKHOME,'include'),
+                    pj(TECSDKHOME,'include','sdk','integrationmanager','services'),
+                    pj(TECSDKHOME,'include','sdk'),
+                    pj(TECSDKHOME,'include','sdk','integrationmanager'),
+                    pj(TECSDKHOME,'include','toolbox')],
+                CPPDEFINES = ['ENGINE']
+              )
+
+#boost_options.apply( lib_env )
+
 vtk_options.apply( lib_env )
 
-lib_env.Append( CPPDEFINES = ['VE_USER_BUILDER_LIBRARY'])
-
-if baseEnv['StaticLibs'] == "yes":
-   lib = ves_pkg.createStaticAndSharedLibrary('ves_builder_dataloader',
-                                                        lib_env,
-                                                        installPrefix = LIBDIR)
-else:
-   lib = ves_pkg.createSharedLibrary('ves_builder_dataloader', lib_env,
-                                               installPrefix = LIBDIR)
-   
-lib.addSources(sources)
-lib.addHeaders(headers,  pj( 'ves', 'builder', 'DataLoader'))
-lib.build()
-
-############################################################################
-############################################################################
-
-srcs = Split("""
-   main.cxx
-""")
-#srcs = map(lambda s: pj('#', buildDir, 'src', 'ves', 'builder', 'DataLoader', s), srcs)
-
-env = ves_pkg.getEnv().Clone()
-env.Append(LIBPATH = [pj('#', buildDir, 'src','ves','xplorer','util'),
-                      pj('#', buildDir, 'src','ves','builder','cfdTranslatorToVTK'),
-                      pj('#', buildDir, 'src','ves','builder','DataLoader') ],
-           LIBS = ['ves_xplorer_util', 'ves_builder_dataloader', 'ves_builder_translator_base'])
-
-boost_options.apply( env )
-vtk_options.apply( env )
-prog = ves_pkg.createProgram('loaderToVtk' + env["PROGSUFFIX"], env, 'bin')
-prog.addSources( srcs )
+prog = ves_pkg.createProgram('tecplotReader' + lib_env["PROGSUFFIX"], lib_env, 'bin')
+prog.addSources( sources_list )
 prog.build()
-
-
-# need to point to home of 64-bit vtk install
-VTK_LIB_HOME = ${HOME}/vr/lib64/vtk-5.4
-VTK_INCLUDE_HOME = ${HOME}/vr/dependencies/include/vtk-5.4
-
-# boost is in the macports install
-MACPORTS_HOME=/opt/local
-
-# C++ compiler 
-CXX = g++
-
-# Standard flags for C++ 
-CXXFLAGS ?= -arch x86_64 -isysroot /Developer/SDKs/MacOSX10.5.sdk -g -Wno-deprecated
-
-# Standard preprocessor flags (common for CC and CXX)
-# ENGINE is for TecUtilParentLockXXX
-# UNIXX and ENGINE are needed for Widget of TECUTILS.h. See MASTER.h.
-# DARWIN will activate UNIXX
-CPPFLAGS ?= -DENGINE -DDARWIN -DMAC64
-
-# Standard linker flags 
-LDFLAGS ?= -arch x86_64 -isysroot /Developer/SDKs/MacOSX10.5.sdk -g \
-        -L${TECSDKHOME}/lib/macix64.105 \
-        -ltpsdkbase -ltpsdkintegrationmanager -ltptoolbox \
-        -L${VTK_LIB_HOME} \
-        -lvtkCommon -lvtkFiltering -lvtkIO -lvtkGraphics
-
-### Variables: ###
-
-SOURCES=tecplotReader.cxx Manager.cxx ApplicationEventMonitor.cxx 
-OBJECTS=$(SOURCES:.cxx=.o) main.o
-HEADERS=$(SOURCES:.cxx=.h)
-EXECUTABLE=tecplotReader
-
-COMPILE_CXXFLAGS =  -I. \
-                    -I${TECSDKHOME}/include \
-                    -I${TECSDKHOME}/include/sdk \
-                    -I${TECSDKHOME}/include/sdk/integrationmanager \
-                    -I${TECSDKHOME}/include/sdk/integrationmanager/services \
-                    -I${TECSDKHOME}/include/toolbox \
-                    -I${VTK_INCLUDE_HOME} \
-                    -I${MACPORTS_HOME}/include \
-                    -I${VES_BASE_DIR}/VE_Suite/src \
-                     $(CPPFLAGS) $(CXXFLAGS)
-CPPDEPS = -MT$@ -MF$(shell echo $@ | sed -e 's,\.o$$,.d,') -MD -MP

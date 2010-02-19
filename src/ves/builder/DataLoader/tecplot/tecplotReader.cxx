@@ -45,6 +45,9 @@
 #include <vtkCellData.h>
 //#include <vtkExtractUnstructuredGrid.h>
 
+#include <fstream>
+#include <iostream>
+
 using namespace tecplot::sdk::integration;
 using namespace tecplot::toolbox;
 using namespace ves::builder::DataLoader;
@@ -746,7 +749,7 @@ void tecplotReader::processZone( EntIndex_t currentZone )
         std::cout << "!!! The number of nodes per element is " << numNodesPerElement << std::endl;
             
     NodeMap_pa nm = TecUtilDataNodeGetReadableRef( currentZone );
-    if( nm )
+    /*if( nm && (numNodesPerElement > 0) )
     {
         for( LgIndex_t elemNum = 1; elemNum < numElementsInZone+1; elemNum++ ) // element numbers are 1-based
         {
@@ -795,7 +798,7 @@ void tecplotReader::processZone( EntIndex_t currentZone )
     else
     {
         std::cerr << "Error: Unable to get node map" << std::endl;
-    }
+    }*/
 
     // Read the nodal coordinates from the current zone...
     // If any turn out to be non-existent (e.g., planar description), then set to zero for 3D coordinates.

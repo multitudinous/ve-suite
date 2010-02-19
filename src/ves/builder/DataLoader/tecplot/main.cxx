@@ -57,7 +57,7 @@ std::string extractFileNameFromFullPath( const std::string& s )
     char sep = '/';
 
 #ifdef WIN32
-    sep = '\';
+    sep = '\\';
 #endif
 
     size_t i = s.rfind(sep, s.length());
