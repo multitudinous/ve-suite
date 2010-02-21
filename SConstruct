@@ -290,6 +290,8 @@ opts.Add('MakeAspenSupport', 'If "yes", make aspen support', 'no')
 opts.Add('MakeDynSimSupport', 'If "yes", make dynsim support', 'no')
 opts.Add('MakePowersimSupport', 'If "yes", make powersim support', 'no')
 opts.Add('MakeMinervaSupport', 'If "yes", add GIS support with minerva', 'no')
+opts.Add('tecplot_sdk', 'Provide the directory to the root of the Tecplot SDK.', '')
+
 opts.Add('ARCH', 'CPU architecture (ia32, x64)', GetArch() )
 if GetPlatform() == 'win32':
     opts.Add('MSVS_ARCH', 'CPU architecture (x86, amd64)', 'x86')

@@ -1,4 +1,5 @@
 ##Builds DataLoaderLib
+#!python
 import os, sys, string
 pj = os.path.join
 

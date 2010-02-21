@@ -58,7 +58,8 @@ Source: {#OSGSRCHOME}\bin\osgPlugins-{#MyAppVer}\osgdb_qt.dll; DestDir: {app}\li
 ; Source: {#SIMAGEHOME}\bin\simage*.dll; DestDir: {app}\bin; Flags: ignoreversion recursesubdirs createallsubdirs
 
 ;OSG 3rd Party libs
-Source: {#OSG3RDPARTY}\bin\*.dll; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: {#OSG3RDPARTY}\bin\*.dll; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs skipifsourcedoesntexist
+Source: {#OSG3RDPARTY}\lib\*.dll; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs skipifsourcedoesntexist
 Source: {#OSG3RDPARTY}\lib\*.lib; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: {#OSG3RDPARTY}\include\*.h; DestDir: {app}\include; Flags: ignoreversion recursesubdirs createallsubdirs
 ;Coin libraries

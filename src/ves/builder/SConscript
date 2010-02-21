@@ -1,8 +1,18 @@
-##Builds CE Libraries
+##Builds Builder Libraries
+#!python
+import os, sys, string
+pj = os.path.join
+
+Import('baseEnv ves_pkg GetPlatform')
+
 openSubdirs = Split("""
     cfdTranslatorToVTK
     DataLoader
 """)
+
+if GetPlatform() == 'win32':
+	if baseEnv['tecplot_sdk'] != '':
+		openSubdirs.append( pj( 'DataLoader','tecplot' ) )
 
 ##Run SConscript files in all of those folders.
 for d in openSubdirs:
