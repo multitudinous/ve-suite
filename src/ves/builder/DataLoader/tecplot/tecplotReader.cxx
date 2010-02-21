@@ -44,6 +44,7 @@
 #include <vtkPointData.h>
 #include <vtkCellData.h>
 //#include <vtkExtractUnstructuredGrid.h>
+#include <vtkIdList.h>
 
 #include <fstream>
 #include <iostream>
@@ -751,36 +752,45 @@ void tecplotReader::processZone( EntIndex_t currentZone )
     NodeMap_pa nm = TecUtilDataNodeGetReadableRef( currentZone );
     if( nm && (numNodesPerElement > 0) )
     {
+        vtkIdList* tempIdList = vtkIdList::New();
+        tempIdList->SetNumberOfIds( numNodesPerElement );
+        vtkIdType nodeValue;
+
         for( LgIndex_t elemNum = 1; elemNum < numElementsInZone+1; elemNum++ ) // element numbers are 1-based
         {
             // Node information (connectivity)
             // NOTE - You could use the "RawPtr" functions if speed is a critical issue
-            NodeMap_t * nodeArray = new NodeMap_t [ numNodesPerElement ];
-
+            //NodeMap_t * nodeArray = new NodeMap_t [ numNodesPerElement ];
             //cout << "For element " << elemNum << ", nodes =";
             for( int i = 0; i < numNodesPerElement; i++ ) 
             {
                 // node numbers in tecplot are 1-based, 0-based in VTK
-                nodeArray[ i ] = TecUtilDataNodeGetByRef( nm, elemNum, i+1 ) - 1 + this->nodeOffset;
+                //nodeArray[ i ] = TecUtilDataNodeGetByRef( nm, elemNum, i+1 ) - 1 + this->nodeOffset;
+                nodeValue = TecUtilDataNodeGetByRef( nm, elemNum, i+1 ) - 1 + this->nodeOffset;
                 //cout << " " << nodeArray[ i ];
+                tempIdList->SetId( i, nodeValue );
             }
             //cout << std::endl;
 
             if( zoneType == ZoneType_FETriangle )
             {
-                this->ugrid->InsertNextCell( VTK_TRIANGLE, numNodesPerElement, nodeArray );
+                //this->ugrid->InsertNextCell( VTK_TRIANGLE, numNodesPerElement, nodeArray );
+                this->ugrid->InsertNextCell( VTK_TRIANGLE, tempIdList );
             }
             else if( zoneType == ZoneType_FEQuad )
             {
-                this->ugrid->InsertNextCell( VTK_QUAD, numNodesPerElement, nodeArray );
+                //this->ugrid->InsertNextCell( VTK_QUAD, numNodesPerElement, nodeArray );
+                this->ugrid->InsertNextCell( VTK_QUAD, tempIdList );
             }
             else if( zoneType == ZoneType_FETetra )
             {
-                this->ugrid->InsertNextCell( VTK_TETRA, numNodesPerElement, nodeArray );
+                //this->ugrid->InsertNextCell( VTK_TETRA, numNodesPerElement, nodeArray );
+                this->ugrid->InsertNextCell( VTK_TETRA, tempIdList );
             }
             else if( zoneType == ZoneType_FEBrick )
             {
-                this->ugrid->InsertNextCell( VTK_HEXAHEDRON, numNodesPerElement, nodeArray );
+                //this->ugrid->InsertNextCell( VTK_HEXAHEDRON, numNodesPerElement, nodeArray );
+                this->ugrid->InsertNextCell( VTK_HEXAHEDRON, tempIdList );
             }
             else
             {
@@ -793,7 +803,7 @@ void tecplotReader::processZone( EntIndex_t currentZone )
 
                 this->ugrid->InsertNextCell( VTK_EMPTY_CELL, 0, NULL );
             }
-            delete[] nodeArray;            
+            //delete[] nodeArray;            
         }
     }
     else
