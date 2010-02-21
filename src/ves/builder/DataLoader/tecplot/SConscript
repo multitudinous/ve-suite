@@ -5,7 +5,7 @@ import glob
 pj = os.path.join
 import SConsAddons.Util as sca_util
 
-Import('baseEnv ves_pkg LIBDIR vtk_options buildDir RootDir boost_options')
+Import('ves_pkg LIBDIR vtk_options buildDir RootDir boost_options')
 
 #srcDir = os.path.abspath( pj(RootDir, 'src', 'ves', 'xplorer','plugin') )
 #base_plugin_srcs = sca_util.getSources()
@@ -20,8 +20,12 @@ sources.remove("TecplotTranslator.cxx")
 lib_env = ves_pkg.getEnv().Clone()
 
 # For windows with tecplot
-TECSDKHOME = "C:\Program Files (x86)\Tecplot\TecSDK 1.1"
-lib_env.Append( LIBPATH = [pj(TECSDKHOME,'lib','win32')],
+#TECSDKHOME = "C:\Program Files (x86)\Tecplot\TecSDK 1.1"
+TECSDKHOME = lib_env[ 'tecplot_sdk']
+libdir = 'win32'
+if lib_env['ARCH'] == 'x64':
+	libdir = 'x64'
+lib_env.Append( LIBPATH = [pj(TECSDKHOME,'lib',libdir)],
                 LIBS = ['tpsdkbase', 'tpsdkintegrationmanager','tptoolbox'],
                 CPPPATH = [ pj(TECSDKHOME,'include'),
                     pj(TECSDKHOME,'include','sdk','integrationmanager','services'),
