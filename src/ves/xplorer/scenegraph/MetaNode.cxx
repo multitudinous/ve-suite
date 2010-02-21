@@ -49,7 +49,8 @@ MetaNode::~MetaNode()
     for( ResourceMapIterator iter = mResourceMap.begin(); iter != mResourceMap.end();)
     {
         mResourceMap.erase( iter++ );
-    }/*
+    }
+    /*
     try
     {
         mResourceMap.clear();
@@ -60,7 +61,7 @@ MetaNode::~MetaNode()
     }*/
 }
 ////////////////////////////////////////////////////////////////////////////////
-void MetaNode::add(const std::string& resourceName, boost::any& resourceValue)
+void MetaNode::add(const std::string& resourceName, const boost::any& resourceValue)
 {
    ResourcePair resource_pair(resourceName, resourceValue);
    mResourceMap.insert(resource_pair);
@@ -76,7 +77,27 @@ bool MetaNode::remove(const std::string& resourceName )
     }
     return false;
 }
-        
+////////////////////////////////////////////////////////////////////////////////
+/*const char* MetaNode::className() const
+{
+    return "MetaNode";
+}
+////////////////////////////////////////////////////////////////////////////////
+osg::Object* MetaNode::clone( const osg::CopyOp& copyop ) const
+{
+    return new MetaNode( *this, copyop );
+}
+////////////////////////////////////////////////////////////////////////////////
+osg::Object* MetaNode::cloneType() const
+{
+    return new MetaNode();
+}
+////////////////////////////////////////////////////////////////////////////////
+bool MetaNode::isSameKindAs( const osg::Object* obj ) const
+{
+    return dynamic_cast< const MetaNode* >( obj ) != NULL;
+}*/
+////////////////////////////////////////////////////////////////////////////////
 } // end scenegraph
 } // end xplorer
 } // end ves

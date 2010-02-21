@@ -65,19 +65,32 @@ namespace scenegraph
 /*!\namespace ves::xplorer::scenegraph
 *
 */
-class VE_SCENEGRAPH_EXPORTS MetaNode : public osg::Referenced
+class VE_SCENEGRAPH_EXPORTS MetaNode : public osg::Object
 {
 protected:
-    typedef std::pair<std::string, boost::any> ResourcePair;
-    typedef std::map<std::string, boost::any> ResourceMap;
+    typedef std::pair<const std::string, const boost::any> ResourcePair;
+    typedef std::map<const std::string, const boost::any> ResourceMap;
+    typedef ResourceMap::const_iterator ResourceMapConstIterator;
     typedef ResourceMap::iterator ResourceMapIterator;
 
 public:
     ///Base Constructor
     MetaNode();
+    MetaNode( const MetaNode& rhs, osg::CopyOp copyop=osg::CopyOp::SHALLOW_COPY )
+        : 
+        osg::Object( rhs )
+    {
+        *this = rhs;
+    }
+    
+    MetaNode& operator=( const MetaNode& rhs ){
+        return *this;
+    }
+
+    META_Object(ves::xplorer::scenegraph,MetaNode);
 
     /* Looks up resource and creates new if not available yet! */
-    template<typename T, template< typename > class Container >
+    /*template<typename T, template< typename > class Container >
     const Container<T> get( const std::string& resourceName)
     {
         ResourceMapIterator iter = mResourceMap.find( resourceName );
@@ -91,20 +104,54 @@ public:
         mResourceMap.insert( ResourcePair( resourceName, real_val) );
         return real_val;
     }
-
+    */
+    template<class T >
+    T get( const std::string& resourceName) const
+    {
+        ResourceMapConstIterator iter = mResourceMap.find( resourceName );
+        if( iter != mResourceMap.end() )
+        {
+            T tempVar = boost::any_cast<T>(iter->second);
+            return tempVar;
+        }
+        // Was not found. So, lets make it!
+        /*T real_val = createResource<T>( resourceName );
+        boost::any to_append = real_val;
+        mResourceMap.insert( ResourcePair( resourceName, real_val) );
+        return real_val;*/
+    }
+    
     /* Explicitly add a resource. */
-    void add( const std::string& resourceName, boost::any& value );
+    void add( const std::string& resourceName, const boost::any& value );
 
     /* Explicitly remove a resource. */
     bool remove( const std::string& resourceName );
-        
+
+    /*///
+    ///\return
+    virtual const char* className() const;
+    
+    ///
+    ///\param copyop
+    ///\return
+    virtual osg::Object* clone( const osg::CopyOp& copyop ) const;
+    
+    ///
+    ///\return
+    virtual osg::Object* cloneType() const;
+    
+    ///
+    ///\param obj
+    ///\return
+    virtual bool isSameKindAs( const osg::Object* obj ) const;
+    */
 protected:
-    template<typename T, template< typename > class Container >
+    /*template<typename T, template< typename > class Container >
     Container<T> createResource( const std::string& resourceName)
     {
         //return Container<T>( new T( resourceName ) );
         return Container<T>( new T( ) );
-    }
+    }*/
 
 private:
     ///Destructor

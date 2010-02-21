@@ -1,0 +1,46 @@
+################################################################################
+##Builds osgBullet
+#!python
+
+import os, sys, string
+pj = os.path.join
+import SConsAddons.Util as sca_util
+
+Import('baseEnv ves_pkg LIBDIR RootDir buildDir osg_options GetPlatform bulletBaseVar osgworks_options ApplyBulletVars')
+Import('wxwidgets_options')
+
+sources = Split("""
+   dotosgMetaNode.cxx
+""")
+
+lib_env = ves_pkg.getEnv().Clone()
+
+#lib_env.Append( CPPPATH = [pj(openDir, 'include' )] )
+#lib_env.Append( CPPDEFINES  = ['OSGBBULLET_LIBRARY'] )
+#lib_env.Append( CPPDEFINES  = ['OSG_LIBRARY_STATIC' ] )
+lib_env.Append( LIBS = ['ves_xplorer_scenegraph'] )
+lib_env.Append( LIBPATH = [pj('#', buildDir,'src','ves','xplorer','scenegraph')] )
+
+osg_options.apply( lib_env )
+
+if GetPlatform() == 'linux':
+    lib_env.Append( CXXFLAGS=['-fPIC'])
+
+if GetPlatform() == 'win32':
+   lib_env['no_import_lib'] = 1
+   #lib_env['SHLINKFLAGS'] = '$LINKFLAGS /dll /MANIFEST:NO'
+   lib_env['WINDOWS_INSERT_MANIFEST'] = False
+   #if lib_env['default_debug_level'] != EnvironmentBuilder.NONE:
+   #   lib_env['PDB'] = True
+
+if GetPlatform() == 'darwin':
+    #print lib_env[ 'SHLIBPREFIX' ]
+    #lib_env[ 'SHLIBPREFIX' ] = ''
+    #print lib_env[ 'SHLIBSUFFIX' ]
+    lib_env[ 'SHLIBSUFFIX' ] = '.so'
+    #osgdb_osgbbullet
+
+libosgb = ves_pkg.createSharedLibrary('uvesVES', lib_env,
+                                               installPrefix = LIBDIR)
+libosgb.addSources(sources)
+libosgb.build()
