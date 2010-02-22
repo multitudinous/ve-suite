@@ -79,6 +79,15 @@ int main( int argc, char** argv )
         std::cout << "      file 'sdkeval.lic' is at location specified by environment variable TECSDKHOME.\n" << std::endl;
         return( 1 );
     }
+    
+    if( argv[ 1 ] == "--help" )
+    {
+        //std::string helpAboutString; 
+        //Manager& manager = Manager::getInstance(); 
+        //helpAboutString  = manager.getHelpAbout(); 
+        //std::cout << helpAboutString << std::endl;
+        return( 0 );
+    }
 
     for( int i = 1; i < argc; i++ ) // argument array is 0-based, but we won't use the zeroth one (program name)
     {
