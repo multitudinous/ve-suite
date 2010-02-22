@@ -12,6 +12,9 @@
 
 #include <Minerva/Core/Data/Model.h>
 #include <Minerva/Interfaces/IElevationChangedListener.h>
+//#include <Minerva/Core/Data/Polygon.h>
+#include <Usul/Interfaces/IElevationDatabase.h>
+#include <Usul/Interfaces/IPlanetCoordinates.h>
 
 #include <osg/Vec3d>
 

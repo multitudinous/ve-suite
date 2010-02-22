@@ -155,11 +155,18 @@ public:
                    
     virtual
     void SetCommand (
-                     void);
+                     void)
+    ACE_THROW_SPEC ((
+      ::CORBA::SystemException,
+      ::Error::EUnknown
+    ));
     
     virtual
     void SetCommand_excep (
-                           ::Messaging::ExceptionHolder * excep_holder);
+                           ::Messaging::ExceptionHolder * excep_holder)
+    ACE_THROW_SPEC ((
+      ::CORBA::SystemException
+    ));
     
 };
 #endif// BODY_AMI_UI_HANDLER_I_H
