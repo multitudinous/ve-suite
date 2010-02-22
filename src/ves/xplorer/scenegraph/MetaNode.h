@@ -87,7 +87,7 @@ public:
         return *this;
     }
 
-    META_Object(ves::xplorer::scenegraph,MetaNode);
+    META_Object(dot_osg_ves_xplorer_scenegraph,MetaNode);
 
     /* Looks up resource and creates new if not available yet! */
     /*template<typename T, template< typename > class Container >

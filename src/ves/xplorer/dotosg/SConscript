@@ -40,7 +40,7 @@ if GetPlatform() == 'darwin':
     lib_env[ 'SHLIBSUFFIX' ] = '.so'
     #osgdb_osgbbullet
 
-libosgb = ves_pkg.createSharedLibrary('uvesVES', lib_env,
+libosgb = ves_pkg.createSharedLibrary('dot_osg_ves_xplorer_scenegraph', lib_env,
                                                installPrefix = LIBDIR)
 libosgb.addSources(sources)
 libosgb.build()
