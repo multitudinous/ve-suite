@@ -359,7 +359,7 @@ if GetPlatform() == 'win32':
 else:
     osgworks_options = SConsAddons.Options.StandardPackageOption("osgWorks",
       "osgWorks utility library, default : osgWorks_incdir=<osgWorks>/include osgWorks_libdir=<osgWorks>/lib(64)", 
-      pj('osgwTools','Version.h'), library=['osgwTools'], symbol="main", required=True)
+      pj('osgwTools','Export.h'), library=['osgwTools'], symbol="main", required=True)
 
 #Setup minerva library
 minerva_options = fp_option.FlagPollBasedOption( "Minerva", "Minerva", "1.0", False, True, None, 
