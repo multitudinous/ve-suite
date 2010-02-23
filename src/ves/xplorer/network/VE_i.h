@@ -141,7 +141,11 @@ protected:
 
     virtual
     void SetCommand(
-                    const char * openXMLCommand);
+                    const char * openXMLCommand)  
+    ACE_THROW_SPEC ((
+      ::CORBA::SystemException,
+      ::Error::EUnknown
+    ));
 };
 }
 }

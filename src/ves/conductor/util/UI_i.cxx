@@ -213,6 +213,10 @@ const ves::open::xml::CommandPtr Body_UI_i::GetXplorerData( const std::string& c
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Body_UI_i::SetCommand( const char * openXMLCommand )
+ACE_THROW_SPEC((
+                   ::CORBA::SystemException,
+                   ::Error::EUnknown
+               ) )
 {
     //boost::ignore_unused_variable_warning( openXMLCommand ); 
     std::string tempString( const_cast<char*>( openXMLCommand ) );

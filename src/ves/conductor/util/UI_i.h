@@ -140,7 +140,11 @@ public:
                    ) );
     
     virtual
-    void SetCommand( const char * openXMLCommand );
+    void SetCommand( const char * openXMLCommand )
+    ACE_THROW_SPEC((
+                       ::CORBA::SystemException,
+                       ::Error::EUnknown
+                   ) );
     
 
     std::map<int, std::string> m_idToModelName;

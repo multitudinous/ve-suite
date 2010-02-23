@@ -169,12 +169,19 @@ ACE_THROW_SPEC((
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Body_AMI_UIHandler_i::SetCommand()
+ACE_THROW_SPEC((
+                   ::CORBA::SystemException,
+                   ::Error::EUnknown
+               ) )
 { 
     throw CORBA::NO_IMPLEMENT();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Body_AMI_UIHandler_i::SetCommand_excep( 
     ::Messaging::ExceptionHolder * excep_holder)
+ACE_THROW_SPEC((
+                   ::CORBA::SystemException
+               ) )
 {
     throw CORBA::NO_IMPLEMENT();
 }
