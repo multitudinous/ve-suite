@@ -10,11 +10,17 @@
 
 #include <ves/VEConfig.h>
 
+#include <Minerva/Version.h>
 #include <Minerva/Core/Data/Model.h>
 #include <Minerva/Interfaces/IElevationChangedListener.h>
 //#include <Minerva/Core/Data/Polygon.h>
+#if MINERVA_VERSION < 10100
 #include <Usul/Interfaces/IElevationDatabase.h>
 #include <Usul/Interfaces/IPlanetCoordinates.h>
+#else
+#include <Minerva/Interfaces/IElevationDatabase.h>
+#include <Minerva/Interfaces/IPlanetCoordinates.h>
+#endif
 
 #include <osg/Vec3d>
 
@@ -51,7 +57,7 @@ public:
   void SetCADEntity ( CADEntity * );
   CADEntity* GetCADEntity() const;
 
-  void UpdateMatrix ( Usul::Interfaces::IPlanetCoordinates* planet, Usul::Interfaces::IElevationDatabase* elevation );
+  void UpdateMatrix ( Minerva::Interfaces::IPlanetCoordinates* planet, Minerva::Interfaces::IElevationDatabase* elevation );
 
   // Set the translation offset of cad in feet.
   void setTranslationOffset ( double x, double y, double z );

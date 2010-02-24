@@ -7,15 +7,19 @@
 
 #include <ves/xplorer/minerva/ModelWrapper.h>
 
-#include <Usul/Interfaces/IPlanetCoordinates.h>
-#include <Usul/Interfaces/IElevationDatabase.h>
-
 #include <ves/xplorer/scenegraph/CADEntity.h>
 
 using namespace ves::xplorer::minerva;
 
 USUL_IMPLEMENT_IUNKNOWN_MEMBERS ( ModelWrapper, ModelWrapper::BaseClass );
 
+#if MINERVA_VERSION < 10100
+typedef Usul::Interfaces::IPlanetCoordinates IPlanetCoordinates;
+typedef Usul::Interfaces::IElevationDatabase IElevationDatabase;
+#else
+typedef Minerva::Interfaces::IPlanetCoordinates IPlanetCoordinates;
+typedef Minerva::Interfaces::IElevationDatabase IElevationDatabase;
+#endif
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -87,8 +91,8 @@ bool ModelWrapper::elevationChangedNotify (
 
     this->location ( tempLocation );
 
-    Usul::Interfaces::IPlanetCoordinates::QueryPtr planet ( caller );
-    Usul::Interfaces::IElevationDatabase::QueryPtr elevation ( caller );
+    IPlanetCoordinates::QueryPtr planet ( caller );
+    IElevationDatabase::QueryPtr elevation ( caller );
     this->UpdateMatrix ( planet.get(), elevation.get() );
 
     this->location ( location );
@@ -132,7 +136,7 @@ ModelWrapper::CADEntity* ModelWrapper::GetCADEntity() const
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-void ModelWrapper::UpdateMatrix ( Usul::Interfaces::IPlanetCoordinates* planet, Usul::Interfaces::IElevationDatabase* elevation )
+void ModelWrapper::UpdateMatrix ( Minerva::Interfaces::IPlanetCoordinates* planet, Minerva::Interfaces::IElevationDatabase* elevation )
 {
   Matrix matrix ( this->matrix ( planet, elevation ) );
 

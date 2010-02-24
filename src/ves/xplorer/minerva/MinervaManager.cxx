@@ -23,6 +23,7 @@
 #include <ves/xplorer/minerva/Log.h>
 
 #include <Minerva/Config.h>
+#include <Minerva/Version.h>
 #include <Minerva/Core/Data/Camera.h>
 #include <Minerva/Core/TileEngine/Body.h>
 #include <Minerva/Core/Functions/MakeBody.h>
@@ -68,6 +69,19 @@ namespace Detail
   }
 }
 
+#if MINERVA_VERSION < 10100
+typedef Usul::Interfaces::IRasterLayer IRasterLayer;
+typedef Usul::Interfaces::ILayer ILayer;
+typedef Usul::Interfaces::ILayerExtents ILayerExtents;
+typedef Usul::Interfaces::IPlanetCoordinates IPlanetCoordinates;
+typedef Usul::Interfaces::IElevationDatabase IElevationDatabase;
+#else
+typedef Minerva::Interfaces::IRasterLayer IRasterLayer;
+typedef Minerva::Interfaces::ILayer ILayer;
+typedef Minerva::Interfaces::ILayerExtents ILayerExtents;
+typedef Minerva::Interfaces::IPlanetCoordinates IPlanetCoordinates;
+typedef Minerva::Interfaces::IElevationDatabase IElevationDatabase;
+#endif
 ///////////////////////////////////////////////////////////////////////////////
 //
 //  Constructor.
@@ -374,8 +388,8 @@ void MinervaManager::UpdateModel ( ModelWrapper* model )
 {
   if ( 0x0 != model && 0x0 != _body )
   {
-    Usul::Interfaces::IPlanetCoordinates::QueryPtr planet ( _body );
-    Usul::Interfaces::IElevationDatabase::QueryPtr elevation ( _body );
+    IPlanetCoordinates::QueryPtr planet ( _body );
+    IElevationDatabase::QueryPtr elevation ( _body );
     model->UpdateMatrix ( planet.get(), elevation.get() );
   }
 }
@@ -442,7 +456,8 @@ void MinervaManager::AddElevationLayer ( Minerva::Core::Layers::RasterLayer* lay
   if ( 0x0 == _body || 0x0 == layer )
     return;
 
-  _body->elevationAppend ( Usul::Interfaces::IRasterLayer::QueryPtr ( layer ) );
+
+  _body->elevationAppend ( IRasterLayer::QueryPtr ( layer ) );
 }
 
 
@@ -457,7 +472,7 @@ void MinervaManager::AddRasterLayer ( Minerva::Core::Layers::RasterLayer* layer 
   if ( 0x0 == _body || 0x0 == layer )
     return;
 
-  _body->rasterAppend ( Usul::Interfaces::IRasterLayer::QueryPtr ( layer ) );
+  _body->rasterAppend ( IRasterLayer::QueryPtr ( layer ) );
 }
 
 
@@ -526,7 +541,7 @@ bool MinervaManager::_removeLayer ( Minerva::Core::Layers::RasterGroup *group, c
         group->layers ( layers );
         for ( Layers::iterator iter = layers.begin(); iter != layers.end(); ++iter )
         {
-            Usul::Interfaces::ILayer::QueryPtr layer ( *iter );
+            ILayer::QueryPtr layer ( *iter );
             if ( layer.valid() && guid == layer->guid() )
             {
                 layerToRemove = *iter;
@@ -538,7 +553,7 @@ bool MinervaManager::_removeLayer ( Minerva::Core::Layers::RasterGroup *group, c
         {
             group->remove ( layerToRemove.get() );
 
-            Usul::Interfaces::ILayerExtents::QueryPtr le ( layerToRemove );
+            ILayerExtents::QueryPtr le ( layerToRemove );
             const double minLon ( le.valid() ? le->minLon() : -180.0 );
             const double minLat ( le.valid() ? le->minLat() : -90.0 );
             const double maxLon ( le.valid() ? le->maxLon() : 180.0 );
