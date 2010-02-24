@@ -22,7 +22,7 @@ sys.stdout.write("Searching for moc...\n")
 taoidl_cmd = WhereIs('moc')
 
 if None == taoidl_cmd:
-    sys.stdout.write("Could not find moc. Please make sure uic is in your PATH.\n")
+    sys.stdout.write("Could not find moc. Please make sure moc is in your PATH.\n")
     sys.exit(0)
 else:
     sys.stdout.write("Found moc %s\n" % taoidl_cmd )
@@ -63,8 +63,8 @@ source = [pj('#',buildDir,'test','qt','BasicQtOffscreenRender','mydialog.ui')]
 cppSources = env.qt_uic(source)
 
 # first file
-source = [pj('#',buildDir,'test','qt','BasicQtOffscreenRender','mglwidget.h')]
-cppSources += env.qt_moc(source)
+#source = [pj('#',buildDir,'test','qt','BasicQtOffscreenRender','mglwidget.h')]
+#cppSources += env.qt_moc(source)
 
 # second file
 source = [pj('#',buildDir,'test','qt','BasicQtOffscreenRender','mydialog.h')]
@@ -90,7 +90,7 @@ elif GetPlatform() == 'darwin':
    lib_env2.Append( LINKFLAGS = ['-framework','QtCore', '-framework','QtGui','-framework','QtOpenGL','-framework','OpenGL'])
    lib_env2.AppendUnique( CXXFLAGS =['-F/Library/Frameworks/QtOpenGL.framework','-F/Library/Frameworks/QtCore.framework','-F/Library/Frameworks/QtGui.framework'] )
 else:
-   lib_env2.AppendUnique( LIBS = ['opengl'])
+    lib_env2.AppendUnique( LIBS= ['QtCore','QtGui','QtOpenGL'] )
 
 qtprog = ves_pkg.createProgram('BasicQtOffscreenRender' + lib_env2["PROGSUFFIX"], lib_env2, 'bin')
 qtprog.addSources(sources2)
