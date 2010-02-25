@@ -34,6 +34,8 @@ def qtTargetBuilder( target, source, env ):
     #return targets
 
 def generate(env,**kw):
+    if sca_util.GetPlatform() == 'win32':
+        return None
     # Find qt tools exectuable
     sys.stdout.write("Searching for uic...\n")
     taoidl_cmd = env.WhereIs('uic')

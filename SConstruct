@@ -57,8 +57,7 @@ sys.path.append(pj(os.getcwd(), 'share', 'python'))
 import HDF5
 import HDF4
 import InnoSetup
-if GetPlatform() != 'win32':
-    import qt46
+import qt46
 
 # Pull in scolorizer files
 #sys.path.append(pj(os.getcwd(), 'share', 'python','scolorizer-0.2'))
