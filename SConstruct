@@ -52,11 +52,13 @@ Export('GetArch')
 sys.path.append(pj(os.getcwd(), 'dist', 'build', 'tools'))
 import doxygen
 
-# Pull in HDF options files
+# Pull in extra scons helpers
 sys.path.append(pj(os.getcwd(), 'share', 'python'))
 import HDF5
 import HDF4
 import InnoSetup
+if GetPlatform() != 'win32':
+    import qt46
 
 # Pull in scolorizer files
 #sys.path.append(pj(os.getcwd(), 'share', 'python','scolorizer-0.2'))
@@ -517,6 +519,8 @@ baseEnv.SourceCode('.', None)
 doxygen.generate(baseEnv)
 # Add InnoSetup builder to the base environment
 InnoSetup.generate(baseEnv)
+# Add qt Tools
+qt46.generate(baseEnv)
 
 # Setup a configure build directory for each unique build type
 baseEnv['CONFIGUREDIR'] = options_cache + "_cache_dir"
@@ -657,7 +661,9 @@ if not SConsAddons.Util.hasHelpFlag():
                shareSubdirs, lokiSubdirs, osgBulletPlusSubdirs,
                osgBulletSubdirs, bullet, minervaDataSubdirs]
 
-    #ves_dirs.append( qtTestBuilder )
+    if GetPlatform() != 'win32':
+        if baseEnv[ 'MakeQtSupport' ] == 'yes':
+            ves_dirs.append( qtTestBuilder )
     
     #build applications in test/ directory
     if baseEnv[ 'buildTests' ] == 'yes':
