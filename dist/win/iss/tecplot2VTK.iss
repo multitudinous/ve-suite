@@ -22,7 +22,7 @@ DefaultDirName=C:\{#MyAppName}_{#VEVERSION}.{#SVNVERSION}_{#MSVCVERSION}
 DefaultGroupName={#VESGROUPNAME}
 AllowNoIcons=true
 OutputDir={#INSTALLERINSTALLLOCATION}
-OutputBaseFilename=tecplot2VTK{#VEVERSION}_{#SVNVERSION}
+OutputBaseFilename=tecplot2VTK_{#VEVERSION}_{#SVNVERSION}
 Compression=lzma
 SolidCompression=true
 ChangesEnvironment=false
@@ -41,13 +41,18 @@ BackColor=$0080ff
 BackColor2=$ff0000
 SetupIconFile={#VEDEVHOME}\dist\installerImages\ves_icon.ico
 CreateAppDir=true
-AppID={{33FA9BA1-2C6D-440D-AA00-8EC3CE3A5C70}
+AppID={{59141459-A0E6-4E73-8925-7EAF045F0936}
 AppVersion={#VEVERSION}
 UninstallDisplayName=tecplot2VTK
 DisableDirPage=true
 UsePreviousAppDir=false
 DirExistsWarning=no
 AppendDefaultDirName=false
+VersionInfoVersion={#VEVERSION}
+VersionInfoCompany={#MyAppPublisher}
+VersionInfoProductName={#MyAppName}
+VersionInfoProductVersion={#VEVERSION}
+UninstallDisplayIcon={app}\bin\installerImages\{#VesIcon}
 
 [Types]
 Name: full; Description: Full installation
