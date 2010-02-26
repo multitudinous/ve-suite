@@ -9,11 +9,7 @@ import re
 import os, sys, string
 pj = os.path.join
 import SConsAddons.Util as sca_util
-import SCons.Environment
-import SCons.Platform
-import SCons
-from SCons.Defaults import SharedCheck, ProgScan
-from SCons.Script.SConscript import SConsEnvironment
+from SCons.Script import *  # the usual scons stuff you get in a SConscript
 
 def qtTargetBuilder( target, source, env ):
     #print target.path
@@ -38,7 +34,7 @@ def generate(env,**kw):
         return None
     # Find qt tools exectuable
     sys.stdout.write("Searching for uic...\n")
-    taoidl_cmd = env.WhereIs('uic')
+    taoidl_cmd = WhereIs('uic')
 
     if None == taoidl_cmd:
         sys.stdout.write("Could not find uic. Please make sure uic is in your PATH.\n")
@@ -48,7 +44,7 @@ def generate(env,**kw):
 
     # Find tao_idl exectuable
     sys.stdout.write("Searching for moc...\n")
-    taoidl_cmd = env.WhereIs('moc')
+    taoidl_cmd = WhereIs('moc')
 
     if None == taoidl_cmd:
         sys.stdout.write("Could not find moc. Please make sure moc is in your PATH.\n")
@@ -59,13 +55,13 @@ def generate(env,**kw):
     uic ='uic'
     # Setup uic
     uicCmd = '%s ${SOURCES} -o ${TARGET}' %(uic) 
-    bld = env.Builder(action = uicCmd, prefix = "ui_", suffix = ".h", single_source = True )
+    bld = Builder(action = uicCmd, prefix = "ui_", suffix = ".h", single_source = True )
     env.Append(BUILDERS = {'qt_uic': bld})
 
     moc ='moc'
     # setup moc
     mocCmd = '%s ${SOURCES} -o ${TARGET}' %(moc) 
-    bld = env.Builder(action = mocCmd, prefix = "moc_", suffix = ".cxx", single_source = True)
+    bld = Builder(action = mocCmd, prefix = "moc_", suffix = ".cxx", single_source = True)
     env.Append(BUILDERS = {'qt_moc': bld})
 
 def applyQtBuildFlags(env):
