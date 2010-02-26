@@ -80,10 +80,9 @@ int main( int argc, char** argv )
     
     if( (std::string)argv[ 1 ] == "--help" )
     {
-        //std::string helpAboutString; 
-        //Manager& manager = Manager::getInstance(); 
-        //helpAboutString  = manager.getHelpAbout(); 
-        //std::cout << helpAboutString << std::endl;
+        tecplot::sdk::integration::Manager* manager = new tecplot::sdk::integration::Manager(); 
+        std::string helpAboutString  = manager->getHelpAbout(); 
+        std::cout << helpAboutString << std::endl;
         std::cout << "Converts ascii and binary tecplot files to vtk format" << std::endl;
         std::cout << "Usage: " << argv[ 0 ] << " tecplot_file1 tecplot_file2 ..." << std::endl;
         std::cout << "Use flag --outputToCurrentDir to write converted files to current directory rather than to location specified in filename path" << std::endl;

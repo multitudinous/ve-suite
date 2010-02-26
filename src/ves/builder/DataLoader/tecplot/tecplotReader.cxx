@@ -70,13 +70,10 @@ tecplotReader::tecplotReader( std::string inputFileNameAndPath )
     this->elementOffset = 0;
     this->vertex = NULL;
     this->parameterData = NULL;
-
-    if( ! this->tecplotIsStarted )
-    {
-        this->OneTimeSetup();
-    }
+    this->manager = new Manager();
     
-    if( this->tecplotIsStarted )
+    this->OneTimeSetup();
+
     {
         std::string extension = getExtension( this->inputFileNameAndPath );
         if( extension.compare("dat") != 0 && extension.compare("tec") != 0 && extension.compare("plt") != 0 )
@@ -154,7 +151,6 @@ void tecplotReader::OneTimeSetup()
 {
     Manager::ManagerStartReturnCode_e ret;
 
-    this->manager = new Manager();
     this->manager->setApplicationEventMonitor( new ApplicationEventMonitor() );
 
     char* tecSDKHomeDir = getenv("TECSDKHOME");
@@ -166,8 +162,11 @@ void tecplotReader::OneTimeSetup()
     }
     else
     {
-        std::cerr << "The environment variable TECSDKHOME must be defined to run Tecplot SDK applications.\n" << std::endl;
-        ret = Manager::ManagerStartReturnCode_HomeDirectoryNotSpecified;
+        std::string tempHome(".\\");
+        //std::cout << "TECSDKHOME=" << tempHome << std::endl;
+        ret = this->manager->init( tempHome );
+        //std::cerr << "The environment variable TECSDKHOME must be defined to run Tecplot SDK applications.\n" << std::endl;
+        //ret = Manager::ManagerStartReturnCode_HomeDirectoryNotSpecified;
     }
 
     if( ret == Manager::ManagerStartReturnCode_Ok )
@@ -178,6 +177,7 @@ void tecplotReader::OneTimeSetup()
     else
     {
         std::cerr << "Unable to initialize the this->manager\n" << std::endl;
+        exit( 0 );
     }
 
     if( ret == Manager::ManagerStartReturnCode_Ok )
@@ -187,8 +187,6 @@ void tecplotReader::OneTimeSetup()
         // Tecplot starts up "pageless/frameless".
         // Create a Page, and get a Frame, which is required to load data.
         TecUtilPageCreateNew();
-
-        this->tecplotIsStarted = 1;
     }
     else
     {

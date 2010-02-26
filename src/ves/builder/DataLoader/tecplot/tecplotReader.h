@@ -65,7 +65,6 @@ private:
     std::string inputFileNameAndPath;
     vtkUnstructuredGrid * ugrid;
     int numberOfOutputFiles;
-    int tecplotIsStarted;
     tecplot::sdk::integration::Manager* manager;
     EntIndex_t numZones;
     EntIndex_t connectivityShareCount;
