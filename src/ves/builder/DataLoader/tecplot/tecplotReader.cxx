@@ -82,7 +82,7 @@ tecplotReader::tecplotReader( std::string inputFileNameAndPath )
         if( extension.compare("dat") != 0 && extension.compare("tec") != 0 && extension.compare("plt") != 0 )
         {
             std::cerr << "\nWarning: Different extension than expected on input file '" << this->inputFileNameAndPath << "'.  ";
-            std::cerr << "Ascthis->ii tecplot files typically have extensions '.dat' or '.tec', ";
+            std::cerr << "Ascii tecplot files typically have extensions '.dat' or '.tec', ";
             std::cerr << "while binary tecplot files typically with extension '.plt'." << std::endl;
         }
 
@@ -102,7 +102,9 @@ tecplotReader::tecplotReader( std::string inputFileNameAndPath )
 
 tecplotReader::~tecplotReader()
 {
+#ifdef PRINT_HEADERS
     std::cerr << "deleting tecplotReader" << std::endl;
+#endif // PRINT_HEADERS
     if( this->ugrid )
     {
         this->ugrid->Delete();
@@ -314,8 +316,10 @@ void tecplotReader::readVariable( EntIndex_t currentZone, int varNumber, char * 
                 parameterData->SetNumberOfComponents( 1 );
             }
 
+#ifdef PRINT_HEADERS
             std::cout << "reading parameter " << varNumber << " '" << varName << "' from zone " << currentZone 
                  << ", numValues = " << numValues << std::endl;
+#endif // PRINT_HEADERS
             for( int i = 0; i < numValues; i++ )
             {
                 //GetByRef function is 1-based
@@ -339,7 +343,9 @@ void tecplotReader::readVariable( EntIndex_t currentZone, int varNumber, char * 
 
 vtkFloatArray * tecplotReader::zeroArray( std::string varName, int numTuples )
 {
+#ifdef PRINT_HEADERS
     std::cout << "setting parameter '" << varName << "' to zero" << std::endl;
+#endif // PRINT_HEADERS
     vtkFloatArray * zero = vtkFloatArray::New();
     zero->SetName( varName.c_str() );
     zero->SetNumberOfTuples( numTuples );
@@ -410,7 +416,9 @@ void tecplotReader::processAnyVectorData( int numNodalPointsInZone, vtkFloatArra
                  ( vectorIndex[ 1 ] > 0 || this->yIndex == 0) &&
                  ( vectorIndex[ 2 ] > 0 || this->zIndex == 0) )
         {
+#ifdef PRINT_HEADERS
             std::cout << "Found vector '" << vecName << "'" << std::endl;
+#endif // PRINT_HEADERS
 
             vtkFloatArray * vector = vtkFloatArray::New();
             vector->SetName( vecName.c_str() );
@@ -466,24 +474,26 @@ void tecplotReader::computeNumberOfOutputFiles()
 
     char *dataset_title = NULL;
     TecUtilDataSetGetInfo( &dataset_title, &this->numZones, &this->numVars );
+#ifdef PRINT_HEADERS
     std::cout << "The dataset_title is \"" << dataset_title << "\"" << std::endl;
     std::cout << "Number of zones is " << this->numZones << " and number of variables is " << this->numVars << std::endl;
+#endif // PRINT_HEADERS
     TecUtilStringDealloc( &dataset_title );
 
     // Is data shared across zones? (typically coordinate data or cell data)
     // Appear to get same result regardless of zone, so just look at first zone
     this->connectivityShareCount = TecUtilDataConnectGetShareCount( 1 );
+#ifdef PRINT_HEADERS
     std::cout << "Connectivity share count of zone 1 is " << this->connectivityShareCount << std::endl;
+#endif // PRINT_HEADERS
 
     // if n zones and shared connectivity, then write vtk
     if( this->numZones > 1 && this->connectivityShareCount == this->numZones )
     {
-        //cout << "writing multiple vtk files" << std::endl;
         this->numberOfOutputFiles = this->numZones;
     }
     else
     {
-        //cout << "writing single vtk file" << std::endl;
         this->numberOfOutputFiles = 1;
     }
 }
@@ -498,7 +508,9 @@ void tecplotReader::computeDimension()
     {
         // Read ith variable name...
         TecUtilVarGetName( i+1, &this->varName[ i ] ); // variable numbers are 1-based
+#ifdef PRINT_HEADERS
         std::cout << "The name of Variable " << i+1 << " is \"" << this->varName[ i ] << "\"" << std::endl;
+#endif // PRINT_HEADERS
 
         // If this variable name corresponds to coordinate data, then record the 1-based index...
         if( strcmp( this->varName[ i ], "X" ) == 0 )
@@ -522,12 +534,17 @@ void tecplotReader::computeDimension()
             numNonCoordinateParameters++;
         }
     }
+
+#ifdef PRINT_HEADERS
     std::cout << "dimension is " << this->dimension  << ", xIndex is " << this->xIndex << ", yIndex is " << this->yIndex << ", zIndex is " << this->zIndex << std::endl;
     std::cout << "numNonCoordinateParameters is " << numNonCoordinateParameters << std::endl;
+#endif // PRINT_HEADERS
 
     // Prepare to count the number of non-coordinate parameter arrays
     this->numParameterArrays = numNonCoordinateParameters;
+#ifdef PRINT_HEADERS
     std::cout << "numParameterArrays = " << this->numParameterArrays << std::endl;
+#endif // PRINT_HEADERS
 }
 
 void tecplotReader::seeIfDataSharedAcrossZones()
@@ -542,7 +559,9 @@ void tecplotReader::seeIfDataSharedAcrossZones()
         for( int i = 0; i < this->numVars; i++ )
         {
             EntIndex_t dataShareCount = TecUtilDataValueGetShareCount( currentZone, i+1 );
+#ifdef PRINT_HEADERS
             std::cout << "for var " << i+1 << ", dataShareCount is " << dataShareCount << std::endl;
+#endif // PRINT_HEADERS
             
             // If variable name corresponds to one of the coordinate labels...
             if( strcmp( this->varName[ i ], "X" ) == 0 ||
@@ -588,7 +607,6 @@ void tecplotReader::processZone( EntIndex_t currentZone )
 
         if( this->numberOfOutputFiles > 1 )
         {
-            //cout << "writing multiple vtk files" << std::endl;
             this->ii = 0;
         }
     }
@@ -598,7 +616,9 @@ void tecplotReader::processZone( EntIndex_t currentZone )
 
     if( TecUtilZoneGetName( currentZone, &zoneName[ currentZone ] ) )
     {
+#ifdef PRINT_HEADERS
         std::cout << "For Zone " << currentZone << ", zoneName is \"" << zoneName[ currentZone ] << "\", zoneType is ";
+#endif // PRINT_HEADERS
     }
     else
     {
@@ -625,37 +645,60 @@ void tecplotReader::processZone( EntIndex_t currentZone )
     switch( zoneType )  // compare to those defined in GLOBAL.h
     {
         case ZoneType_Ordered:
+#ifdef PRINT_HEADERS
             std::cout << "Ordered" << std::endl;
+#endif // PRINT_HEADERS
             break;
         case ZoneType_FETriangle:
+#ifdef PRINT_HEADERS
             std::cout << "FETriangle" << std::endl;
+#endif // PRINT_HEADERS
             break;
         case ZoneType_FEQuad:
+#ifdef PRINT_HEADERS
             std::cout << "FEQuad" << std::endl;
+#endif // PRINT_HEADERS
             break;
         case ZoneType_FETetra:
+#ifdef PRINT_HEADERS
             std::cout << "FETetra" << std::endl;
+#endif // PRINT_HEADERS
             break;
         case ZoneType_FEBrick:
+#ifdef PRINT_HEADERS
             std::cout << "FEBrick" << std::endl;
+#endif // PRINT_HEADERS
             break;
         case ZoneType_FELineSeg:
+#ifdef PRINT_HEADERS
             std::cout << "FELineSeg" << std::endl;
+#endif // PRINT_HEADERS
             break;
         case ZoneType_FEPolygon:
+#ifdef PRINT_HEADERS
             std::cout << "FEPolygon" << std::endl;
+#endif // PRINT_HEADERS
             break;
         case ZoneType_FEPolyhedron:
+#ifdef PRINT_HEADERS
             std::cout << "FEPolyhedron" << std::endl;
+#endif // PRINT_HEADERS
             break;
         case END_ZoneType_e:
+#ifdef PRINT_HEADERS
             std::cout << "END_ZoneType_e" << std::endl;
+#endif // PRINT_HEADERS
             break;
         case ZoneType_Invalid:
+#ifdef PRINT_HEADERS
             std::cout << "Invalid" << std::endl;
+#endif // PRINT_HEADERS
             break;
         default:
+#ifdef PRINT_HEADERS
             std::cout << "ZoneType not recognized. Not supposed to get here." << std::endl;
+#endif // PRINT_HEADERS
+            break;
     }
 
     // Obtain information about the current zone.
@@ -686,9 +729,11 @@ void tecplotReader::processZone( EntIndex_t currentZone )
 
     if( zoneType == ZoneType_Ordered )
     {
+#ifdef PRINT_HEADERS
         std::cout << "   The I-dimension for ordered data is " << IMax << std::endl;
         std::cout << "   The J-dimension for ordered data is " << JMax << std::endl;
         std::cout << "   The K-dimension for ordered data is " << KMax << std::endl;
+#endif // PRINT_HEADERS
         if( IMax > 0  && JMax > 0 && KMax > 0 )
         {
             numNodesPerElement = 8;
@@ -705,34 +750,44 @@ void tecplotReader::processZone( EntIndex_t currentZone )
         }
         else
         {
+#ifdef PRINT_HEADERS
             std::cout << "IMax = JMax = KMax = 0. Not supposed to get here." << std::endl;
+#endif // PRINT_HEADERS
             numNodesPerElement = 0;
         }
     }
     else if( zoneType > ZoneType_Ordered && zoneType < END_ZoneType_e )
     {
         numNodalPointsInZone = IMax;  // tecplot called this 'number of data points' but that is misleading
+#ifdef PRINT_HEADERS
         std::cout << "   The number of nodal points in this zone is " << numNodalPointsInZone << std::endl;
+#endif // PRINT_HEADERS
 
         numElementsInZone = JMax;
+#ifdef PRINT_HEADERS
         std::cout << "   The number of elements in this zone is " << numElementsInZone << std::endl;
+#endif // PRINT_HEADERS
 
         if( zoneType == ZoneType_FEPolygon || zoneType == ZoneType_FEPolyhedron )
         {
             // face-based FE-data
             numFacesPerCell = KMax;
+#ifdef PRINT_HEADERS
             std::cout << "   The number of faces per cell is " << numFacesPerCell << std::endl;
+#endif // PRINT_HEADERS
         }
         else
         {
             // cell-based FE-data
             numNodesPerElement = KMax;
+#ifdef PRINT_HEADERS
             std::cout << "   The number of nodes per cell is " << numNodesPerElement << std::endl;
+#endif // PRINT_HEADERS
         }
     }
     else
     {
-        std::cout << "ZoneType not known. Not supposed to get here." << std::endl;
+        std::cerr << "ZoneType not known. Not supposed to get here." << std::endl;
     }
 
     if( currentZone > 1 && this->numZones > 1 && !this->coordDataSharedAcrossZones && this->connectivityShareCount == 1 )
@@ -747,7 +802,11 @@ void tecplotReader::processZone( EntIndex_t currentZone )
     }
 
     if( numNodesPerElement == 0 )
+    {
+#ifdef PRINT_HEADERS
         std::cout << "!!! The number of nodes per element is " << numNodesPerElement << std::endl;
+#endif // PRINT_HEADERS
+    }
             
     NodeMap_pa nm = TecUtilDataNodeGetReadableRef( currentZone );
     if( nm && (numNodesPerElement > 0) )
@@ -895,7 +954,9 @@ void tecplotReader::processZone( EntIndex_t currentZone )
 
     if( this->numZones > 1 && !this->coordDataSharedAcrossZones && this->connectivityShareCount == 1 )
     {
-        std::cout << "incrementing this->nodeOffset and this->elementOffset" << std::endl;
+#ifdef PRINT_HEADERS
+        std::cout << "incrementing nodeOffset and elementOffset" << std::endl;
+#endif // PRINT_HEADERS
         this->nodeOffset += numNodalPointsInZone;
         this->elementOffset += numElementsInZone;
         this->ii = 0;

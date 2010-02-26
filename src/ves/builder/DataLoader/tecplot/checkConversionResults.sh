@@ -3,7 +3,7 @@
 # convert each file in the ascii_data directory...
 foreach file ( ./ascii_data/* )
     #echo $file 
-    ./tecplotReader $file
+    ./tecplotReader --outputToCurrentDir $file
 end
 
 # drop down into the directory with the solution files...
@@ -18,8 +18,8 @@ foreach file ( *.vtu )
     diff $file ../$file
 end
 
-# if the call to this script uses a single argument then delete the newly converted files...
-if ( $# == 1 ) then
+# if the call to this script uses no arguments then delete the newly converted files...
+if ( $# == 0 ) then
     echo ""
     echo "Deleting newly converted vtu files"
     foreach file ( *.vtu )

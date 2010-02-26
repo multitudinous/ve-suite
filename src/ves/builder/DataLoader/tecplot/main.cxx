@@ -74,30 +74,48 @@ int main( int argc, char** argv )
     if( argc < 2 )
     {
         std::cout << "Error: Need at least one argument specifying a tecplot filename!" << std::endl;
-        std::cout << "Usage: " << argv[ 0 ] << " tecplot_file1 tecplot_file2 ..." << std::endl;
-        std::cout << "Note: If get segmentation fault right away, verify that Tecplot SDK evaluation license" << std::endl;
-        std::cout << "      file 'sdkeval.lic' is at location specified by environment variable TECSDKHOME.\n" << std::endl;
+        std::cout << "For more information enter: " << argv[ 0 ] << " --help" << std::endl;
         return( 1 );
     }
     
-    if( argv[ 1 ] == "--help" )
+    if( (std::string)argv[ 1 ] == "--help" )
     {
         //std::string helpAboutString; 
         //Manager& manager = Manager::getInstance(); 
         //helpAboutString  = manager.getHelpAbout(); 
         //std::cout << helpAboutString << std::endl;
+        std::cout << "Converts ascii and binary tecplot files to vtk format" << std::endl;
+        std::cout << "Usage: " << argv[ 0 ] << " tecplot_file1 tecplot_file2 ..." << std::endl;
+        std::cout << "Use flag --outputToCurrentDir to write converted files to current directory rather than to location specified in filename path" << std::endl;
+        std::cout << "Note: If get segmentation fault right away, verify that Tecplot SDK evaluation license" << std::endl;
+        std::cout << "      file 'sdkeval.lic' is at location specified by environment variable TECSDKHOME.\n" << std::endl;
         return( 0 );
+    }
+
+    // Look for flag that specifies to output to current directory (used mainly for testing)
+    int outputToCurrentDir = 0;
+    for( int i = 1; i < argc; i++ ) // argument array is 0-based, but we won't use the zeroth one (program name)
+    {
+        if( (std::string)argv[ i ] == "--outputToCurrentDir" )
+        {
+            outputToCurrentDir = 1;
+        }
     }
 
     for( int i = 1; i < argc; i++ ) // argument array is 0-based, but we won't use the zeroth one (program name)
     {
+        if( (std::string)argv[ i ] == "--outputToCurrentDir" )
+        {
+            continue;
+        }
+
         std::string inputFileNameAndPath( argv[ i ] );
 
         //std::cout << "\nAttempting to process file '" << inputFileNameAndPath << "'" << std::endl;
         tecplotReader* reader = new tecplotReader( inputFileNameAndPath );
 
         int numFiles = reader->GetNumberOfOutputFiles();
-        std::cout << "reader->GetNumberOfOutputFiles() = " << numFiles << std::endl;
+        //std::cout << "reader->GetNumberOfOutputFiles() = " << numFiles << std::endl;
 
         for( int i = 0; i < numFiles; i++ )
         {
@@ -106,17 +124,23 @@ int main( int argc, char** argv )
             std::string outputFileName;
             if( numFiles == 1 )
             {
-                // create a *.vtu output filename to be written to current location...
-                outputFileName = stripExtension( extractFileNameFromFullPath( inputFileNameAndPath ) ) + ".vtu";
+                // create a *.vtu output filename...
+                outputFileName = stripExtension( inputFileNameAndPath ) + ".vtu";
             }
             else
             {
-                // Using a zero-based incremental naming scheme, create a *.vtu output filename to be written to current location...
+                // Using a zero-based incremental naming scheme, create a *.vtu output filename...
                 // Use boost for number-to-string conversion:
-                outputFileName = stripExtension( extractFileNameFromFullPath( inputFileNameAndPath ) ) 
-                                        + "-" + boost::lexical_cast<std::string>( i ) + ".vtu";
+                outputFileName = stripExtension( inputFileNameAndPath ) + "-" + boost::lexical_cast<std::string>( i ) + ".vtu";
             }
-            std::cout << "Writing to file \"" << outputFileName << "\"\n" << std::endl;
+
+            // If flag was set, then write to current location...
+            if( outputToCurrentDir )
+            {
+                outputFileName = extractFileNameFromFullPath( outputFileName );
+            }
+
+            std::cout << "Writing to file \"" << outputFileName << "\"" << std::endl;
 
             vtkXMLUnstructuredGridWriter *writer = vtkXMLUnstructuredGridWriter::New();
             writer->SetInput( ugrid );
@@ -125,6 +149,7 @@ int main( int argc, char** argv )
             writer->Write();
             writer->Delete();
         }
+        std::cout << std::endl;
 
         delete reader;
     }
