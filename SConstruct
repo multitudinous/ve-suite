@@ -589,6 +589,11 @@ if not SConsAddons.Util.hasHelpFlag():
         # As noted below WINVER will be defined as 0x0502
         # http://msdn.microsoft.com/en-us/library/aa383745(VS.85).aspx
         baseEnv.AppendUnique( CPPDEFINES = ['WINVER=0x0502','_WIN32_WINNT=0x0502'] )
+        # setup the windows compilers to compile in the manifest files
+        # Embed .manifest into .DLL and .EXE
+        baseEnv['LINKCOM'] = [baseEnv['LINKCOM'], 'mt -nologo -manifest ${TARGET}.manifest -outputresource:$TARGET;1']
+        baseEnv['SHLINKCOM'] = [baseEnv['SHLINKCOM'], 'mt -nologo -manifest ${TARGET}.manifest -outputresource:$TARGET;2']
+
 
     baseEnv = base_bldr.applyToEnvironment( baseEnv.Clone() )
 
