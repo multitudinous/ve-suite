@@ -53,6 +53,8 @@ VersionInfoCompany={#MyAppPublisher}
 VersionInfoProductName={#MyAppName}
 VersionInfoProductVersion={#VEVERSION}
 UninstallDisplayIcon={app}\bin\installerImages\{#VesIcon}
+Password=data2vtk2viz
+Encryption=true
 
 [Types]
 Name: full; Description: Full installation
