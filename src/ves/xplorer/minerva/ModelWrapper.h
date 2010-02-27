@@ -56,9 +56,11 @@ public:
   /// Set/get the cad entity.
   void SetCADEntity ( CADEntity * );
   CADEntity* GetCADEntity() const;
-
+#if MINERVA_VERSION < 10100
+  void UpdateMatrix ( Usul::Interfaces::IPlanetCoordinates* planet, Usul::Interfaces::IElevationDatabase* elevation );
+#else
   void UpdateMatrix ( Minerva::Interfaces::IPlanetCoordinates* planet, Minerva::Interfaces::IElevationDatabase* elevation );
-
+#endif
   // Set the translation offset of cad in feet.
   void setTranslationOffset ( double x, double y, double z );
 

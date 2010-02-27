@@ -136,7 +136,7 @@ ModelWrapper::CADEntity* ModelWrapper::GetCADEntity() const
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-void ModelWrapper::UpdateMatrix ( Minerva::Interfaces::IPlanetCoordinates* planet, Minerva::Interfaces::IElevationDatabase* elevation )
+void ModelWrapper::UpdateMatrix ( IPlanetCoordinates* planet, IElevationDatabase* elevation )
 {
   Matrix matrix ( this->matrix ( planet, elevation ) );
 
