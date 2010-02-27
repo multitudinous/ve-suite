@@ -17,7 +17,7 @@ CXXFLAGS ?= -arch x86_64 -isysroot /Developer/SDKs/MacOSX10.5.sdk -g -Wno-deprec
 # ENGINE is for TecUtilParentLockXXX
 # UNIXX and ENGINE are needed for Widget of TECUTILS.h. See MASTER.h.
 # DARWIN will activate UNIXX
-CPPFLAGS ?= -DENGINE -DDARWIN -DMAC64
+CPPFLAGS ?= -DENGINE -DDARWIN -DMAC64 #-DPRINT_HEADERS
 
 # Standard linker flags 
 LDFLAGS ?= -arch x86_64 -isysroot /Developer/SDKs/MacOSX10.5.sdk -g \

@@ -55,8 +55,6 @@ public:
 
     ~tecplotReader();
 
-    //vtkUnstructuredGrid * GetUGrid();
-
     int GetNumberOfOutputFiles();
     
     vtkUnstructuredGrid * GetOutputFile( int );

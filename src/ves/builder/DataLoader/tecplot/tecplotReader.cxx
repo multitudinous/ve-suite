@@ -74,26 +74,31 @@ tecplotReader::tecplotReader( std::string inputFileNameAndPath )
     
     this->OneTimeSetup();
 
+    std::string extension = getExtension( this->inputFileNameAndPath );
+    if( extension.compare("dat") != 0 && extension.compare("tec") != 0 && extension.compare("plt") != 0 )
     {
-        std::string extension = getExtension( this->inputFileNameAndPath );
-        if( extension.compare("dat") != 0 && extension.compare("tec") != 0 && extension.compare("plt") != 0 )
-        {
-            std::cerr << "\nWarning: Different extension than expected on input file '" << this->inputFileNameAndPath << "'.  ";
-            std::cerr << "Ascii tecplot files typically have extensions '.dat' or '.tec', ";
-            std::cerr << "while binary tecplot files typically with extension '.plt'." << std::endl;
-        }
+        std::cerr << "\nWarning: Different extension than expected on input file '" << this->inputFileNameAndPath << "'.  ";
+        std::cerr << "Ascii tecplot files typically have extensions '.dat' or '.tec', ";
+        std::cerr << "while binary tecplot files typically with extension '.plt'." << std::endl;
+    }
 
-        if( isFileReadable( this->inputFileNameAndPath ) )
+    if( isFileReadable( this->inputFileNameAndPath ) )
+    {
+        std::cout << "\nReading file '" << this->inputFileNameAndPath << "'" << std::endl;
+        this->computeNumberOfOutputFiles();
+        this->computeDimension();
+        if( this->dimension == 0 )
         {
-            std::cout << "\nReading file '" << this->inputFileNameAndPath << "'" << std::endl;
-            this->computeNumberOfOutputFiles();
-            this->computeDimension();
-            this->seeIfDataSharedAcrossZones();
+            std::cerr << "Error: input file did not contain coordinate data." << std::endl;            
+            //set numberOfOutputFiles to zero so program will gracefully exit
+            this->numberOfOutputFiles = 0;
+            return;
         }
-        else
-        {
-            std::cerr << "Error: input file does not exist or is not readable.\n" << std::endl;
-        }
+        this->seeIfDataSharedAcrossZones();
+    }
+    else
+    {
+        std::cerr << "Error: input file does not exist or is not readable." << std::endl;
     }
 }
 
@@ -126,6 +131,7 @@ int tecplotReader::GetNumberOfOutputFiles()
 
 vtkUnstructuredGrid * tecplotReader::GetOutputFile( int i )
 {
+    // i should be a zero-based integer
     if( i < 0 || i > this->numberOfOutputFiles - 1 )
     {
         std::cerr << "Error: invalid request" << std::endl;
@@ -201,33 +207,6 @@ void tecplotReader::OneTimeCleanup()
     TecUtilParentLockFinish();
     this->manager->stop();
 }
-
-/*
-vtkUnstructuredGrid * tecplotReader::GetUGrid()
-{
-    std::cout << "\nMerging coincident points in the unstructured grid..." << std::endl;
-    vtkExtractUnstructuredGrid *extunsgrid = vtkExtractUnstructuredGrid::New();
-    //extunsgrid->DebugOn();
-    extunsgrid->BreakOnError();
-    extunsgrid->PointClippingOn();
-    extunsgrid->CellClippingOff();
-    extunsgrid->ExtentClippingOff();
-    extunsgrid->MergingOn();
-
-    int numPoints = this->ugrid->GetNumberOfPoints();
-    std::cout << "numPoints = " << numPoints << std::endl;
-    extunsgrid->SetInput( this->ugrid );
-    extunsgrid->SetPointMinimum( 0 );
-    extunsgrid->SetPointMaximum( numPoints );
-    extunsgrid->Update();
-    this->ugrid->Delete();
-
-    vtkUnstructuredGrid * cleanedGrid = vtkUnstructuredGrid::New();
-    cleanedGrid->ShallowCopy( extunsgrid->GetOutput() );
-    extunsgrid->Delete();
-    return cleanedGrid;
-}
-*/
 
 /*
 Tecplot files can have one or more zones. Each zone contains a single element type (bricks, tetrahedrons, etc).
@@ -406,13 +385,9 @@ void tecplotReader::processAnyVectorData( int numNodalPointsInZone, vtkFloatArra
         }
 
         // when have enough information to confirm fully populated vector
-        if( this->xIndex == 0 && this->yIndex == 0 && this->zIndex == 0 )
-        {
-            std::cerr << "Error: No coordinate data provided" << std::endl;
-        }
-        else if( ( vectorIndex[ 0 ] > 0 || this->xIndex == 0) &&
-                 ( vectorIndex[ 1 ] > 0 || this->yIndex == 0) &&
-                 ( vectorIndex[ 2 ] > 0 || this->zIndex == 0) )
+        if( ( vectorIndex[ 0 ] > 0 || this->xIndex == 0) &&
+            ( vectorIndex[ 1 ] > 0 || this->yIndex == 0) &&
+            ( vectorIndex[ 2 ] > 0 || this->zIndex == 0) )
         {
 #ifdef PRINT_HEADERS
             std::cout << "Found vector '" << vecName << "'" << std::endl;
@@ -534,7 +509,7 @@ void tecplotReader::computeDimension()
     }
 
 #ifdef PRINT_HEADERS
-    std::cout << "dimension is " << this->dimension  << ", xIndex is " << this->xIndex << ", yIndex is " << this->yIndex << ", zIndex is " << this->zIndex << std::endl;
+    std::cout << "dimension is " << this->dimension << ", xIndex is " << this->xIndex << ", yIndex is " << this->yIndex << ", zIndex is " << this->zIndex << std::endl;
     std::cout << "numNonCoordinateParameters is " << numNonCoordinateParameters << std::endl;
 #endif // PRINT_HEADERS
 
@@ -974,7 +949,7 @@ void tecplotReader::processZone( EntIndex_t currentZone )
             }
             else
             {
-                std::cerr << "Error: Don't know what to do! this->parameterData[ " << i << " ]->GetNumberOfTuples() = " << this->parameterData[ i ]->GetNumberOfTuples() << ", this->totalNumberOfNodalPoints = " << this->totalNumberOfNodalPoints << ", this->totalNumberOfElements = " << this->totalNumberOfElements << std::endl;
+                std::cerr << "Error: Don't know what to do! parameterData[ " << i << " ]->GetNumberOfTuples() = " << this->parameterData[ i ]->GetNumberOfTuples() << ", totalNumberOfNodalPoints = " << this->totalNumberOfNodalPoints << ", totalNumberOfElements = " << this->totalNumberOfElements << std::endl;
             }
         }
 
