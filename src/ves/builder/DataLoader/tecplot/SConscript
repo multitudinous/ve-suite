@@ -39,6 +39,6 @@ lib_env.Append( LIBPATH = [pj(TECSDKHOME,'lib',libdir)],
 
 vtk_options.apply( lib_env )
 
-prog = ves_pkg.createProgram('tecplotReader' + lib_env["PROGSUFFIX"], lib_env, 'bin')
+prog = ves_pkg.createProgram('tecplot2VTK' + lib_env["PROGSUFFIX"], lib_env, 'bin')
 prog.addSources( sources )
 prog.build()

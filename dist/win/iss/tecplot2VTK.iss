@@ -10,6 +10,7 @@
 #define VEVERSION "0.5.0"
 #define SVNVERSION "14230"
 #define VesIcon "ves_icon.ico"
+#define LIBDIR "win32"
 
 [Setup]
 AppName={#MyAppName}
@@ -69,6 +70,7 @@ Name: desktopVELauncherIcon; Description: tecplot2VTK; GroupDescription: Create 
 Name: {group}\Uninstallers\{cm:UninstallProgram,{#MyAppName}}; Filename: {uninstallexe}
 Name: {group}\{#MyAppName}; Filename: {app}\bin\tecplotReader.exe; WorkingDir: {app}\bin; IconFilename: {app}\bin\installerImages\{#VesIcon}
 Name: {commondesktop}\{#MyAppName}; Filename: {app}\bin\tecplotReader.exe; WorkingDir: {app}\bin; IconFilename: {app}\bin\installerImages\{#VesIcon}; Tasks: desktopVELauncherIcon
+Name: {group}\{#MyAppName} About & Help; Filename: {app}\bin\tecplotReader.exe; WorkingDir: {app}\bin; IconFilename: {app}\bin\installerImages\{#VesIcon}; Parameters: --help; Flags: dontcloseonexit; Components: ; Tasks: 
 
 [Run]
 Filename: {tmp}\vcredist_x64.exe; Description: Install Microsoft Runtime Redistributable; StatusMsg: Installing Microsoft Runtime Redistributable...; Flags: postinstall unchecked; Tasks: 
@@ -87,13 +89,13 @@ Source: {#DEPENDSINSTALLHOME}\{#VTKHOME}\lib\vtkexpat.dll; DestDir: {app}\bin; C
 Source: {#DEPENDSINSTALLHOME}\{#VTKHOME}\lib\vtkDICOMParser.dll; DestDir: {app}\bin; Components: ; Flags: overwritereadonly ignoreversion
 Source: {#DEPENDSINSTALLHOME}\{#VTKHOME}\lib\vtkCommon.dll; DestDir: {app}\bin; Components: ; Flags: overwritereadonly ignoreversion
 
-Source: {#TECPLOTSDKHOME}\bin\x64\tptoolbox.dll; DestDir: {app}\bin; Components: ; Flags: overwritereadonly ignoreversion
-Source: {#TECPLOTSDKHOME}\bin\x64\tpsdkintegrationmanager.dll; DestDir: {app}\bin; Components: ; Flags: overwritereadonly ignoreversion
-Source: {#TECPLOTSDKHOME}\bin\x64\tpsdkbase.dll; DestDir: {app}\bin; Components: ; Flags: overwritereadonly ignoreversion
-Source: {#TECPLOTSDKHOME}\bin\x64\tecio.dll; DestDir: {app}\bin; Components: ; Flags: overwritereadonly ignoreversion
-Source: {#TECPLOTSDKHOME}\bin\x64\pthreadVC.dll; DestDir: {app}\bin; Components: ; Flags: overwritereadonly ignoreversion
-Source: {#TECPLOTSDKHOME}\bin\x64\libtec.dll; DestDir: {app}\bin; Components: ; Flags: overwritereadonly ignoreversion
-Source: {#TECPLOTSDKHOME}\bin\x64\gltt.dll; DestDir: {app}\bin; Components: ; Flags: overwritereadonly ignoreversion
+Source: {#TECPLOTSDKHOME}\bin\{#LIBDIR}\tptoolbox.dll; DestDir: {app}\bin; Components: ; Flags: overwritereadonly ignoreversion
+Source: {#TECPLOTSDKHOME}\bin\{#LIBDIR}\tpsdkintegrationmanager.dll; DestDir: {app}\bin; Components: ; Flags: overwritereadonly ignoreversion
+Source: {#TECPLOTSDKHOME}\bin\{#LIBDIR}\tpsdkbase.dll; DestDir: {app}\bin; Components: ; Flags: overwritereadonly ignoreversion
+Source: {#TECPLOTSDKHOME}\bin\{#LIBDIR}\tecio.dll; DestDir: {app}\bin; Components: ; Flags: overwritereadonly ignoreversion
+Source: {#TECPLOTSDKHOME}\bin\{#LIBDIR}\pthreadVC.dll; DestDir: {app}\bin; Components: ; Flags: overwritereadonly ignoreversion
+Source: {#TECPLOTSDKHOME}\bin\{#LIBDIR}\libtec.dll; DestDir: {app}\bin; Components: ; Flags: overwritereadonly ignoreversion
+Source: {#TECPLOTSDKHOME}\bin\{#LIBDIR}\gltt.dll; DestDir: {app}\bin; Components: ; Flags: overwritereadonly ignoreversion
 Source: {#TECPLOTSDKHOME}\tecplot.fnt; DestDir: {app}\bin; Components: ; Flags: overwritereadonly ignoreversion
 Source: {#TECPLOTSDKHOME}\tecplot.cfg; DestDir: {app}\bin; Components: ; Flags: overwritereadonly ignoreversion
 Source: {#TECPLOTSDKHOME}\pub\*; DestDir: {app}\pub; Components: ; Flags: overwritereadonly ignoreversion recursesubdirs
