@@ -83,27 +83,36 @@ int main( int argc, char** argv )
         tecplot::sdk::integration::Manager* manager = new tecplot::sdk::integration::Manager(); 
         std::string helpAboutString  = manager->getHelpAbout(); 
         std::cout << helpAboutString << std::endl;
-        std::cout << "Converts ascii and binary tecplot files to vtk format" << std::endl;
+        std::cout << "Description: This program converts ascii and binary tecplot files to vtk format" << std::endl;
         std::cout << "Usage: " << argv[ 0 ] << " tecplot_file1 tecplot_file2 ..." << std::endl;
         std::cout << "Use flag --outputToCurrentDir to write converted files to current directory rather than to location specified in filename path" << std::endl;
+        std::cout << "Use flag --ascii to write converted files as plain text" << std::endl;
         std::cout << "Note: If get segmentation fault right away, verify that Tecplot SDK evaluation license" << std::endl;
         std::cout << "      file 'sdkeval.lic' is at location specified by environment variable TECSDKHOME.\n" << std::endl;
         return( 0 );
     }
 
-    // Look for flag that specifies to output to current directory (used mainly for testing)
+    // Examine commandline flags...
     int outputToCurrentDir = 0;
-    for( int i = 1; i < argc; i++ ) // argument array is 0-based, but we won't use the zeroth one (program name)
+    int asciiOutput = 0;
+    for( int i = 1; i < argc; i++ ) // argument array is 0-based, but we won't look at the zeroth one (program name)
     {
+        // Look for flag that specifies to output to current directory (used mainly for testing)
         if( (std::string)argv[ i ] == "--outputToCurrentDir" )
         {
             outputToCurrentDir = 1;
         }
+        // Look for flag that specifies ascii output (used mainly for testing)
+        else if( (std::string)argv[ i ] == "--ascii" )
+        {
+            asciiOutput = 1;
+        }
     }
 
-    for( int i = 1; i < argc; i++ ) // argument array is 0-based, but we won't use the zeroth one (program name)
+    for( int i = 1; i < argc; i++ ) // argument array is 0-based, but we won't look at the zeroth one (program name)
     {
-        if( (std::string)argv[ i ] == "--outputToCurrentDir" )
+        if( (std::string)argv[ i ] == "--outputToCurrentDir" ||
+            (std::string)argv[ i ] == "--ascii" )
         {
             continue;
         }
@@ -133,7 +142,7 @@ int main( int argc, char** argv )
                 outputFileName = stripExtension( inputFileNameAndPath ) + "-" + boost::lexical_cast<std::string>( i ) + ".vtu";
             }
 
-            // If flag was set, then write to current location...
+            // If outputToCurrentDir flag was set, then write to current location...
             if( outputToCurrentDir )
             {
                 outputFileName = extractFileNameFromFullPath( outputFileName );
@@ -144,7 +153,10 @@ int main( int argc, char** argv )
             vtkXMLUnstructuredGridWriter *writer = vtkXMLUnstructuredGridWriter::New();
             writer->SetInput( ugrid );
             writer->SetFileName( outputFileName.c_str() );
-            writer->SetDataModeToAscii();
+            if( asciiOutput )
+            {
+                writer->SetDataModeToAscii();
+            }
             writer->Write();
             writer->Delete();
         }

@@ -3,7 +3,7 @@
 # convert each file in the ascii_data directory...
 foreach file ( ./ascii_data/* )
     #echo $file 
-    ./tecplotReader --outputToCurrentDir $file
+    ./tecplotReader --outputToCurrentDir --ascii $file
 end
 
 # drop down into the directory with the solution files...
