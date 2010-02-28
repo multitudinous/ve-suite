@@ -78,9 +78,9 @@ int main( int argc, char** argv )
         return( 1 );
     }
     
-    tecplot::sdk::integration::Manager& manager = tecplot::sdk::integration::Manager::instance(); 
+    tecplot::sdk::integration::Manager& manager = 
+        tecplot::sdk::integration::Manager::instance(); 
 
-    
     if( !std::string("--help").compare( argv[ 1 ] ) )
     {
         std::string helpAboutString  = manager.getHelpAbout(); 
@@ -97,14 +97,13 @@ int main( int argc, char** argv )
     // Examine commandline flags...
     int outputToCurrentDir = 0;
     int asciiOutput = 0;
-    for( int i = 1; i < argc; i++ ) // argument array is 0-based, but we won't look at the zeroth one (program name)
+    for( int i = 1; i < argc; ++i ) // argument array is 0-based, but we won't look at the zeroth one (program name)
     {
         // Look for flag that specifies to output to current directory (used mainly for testing)
         if( !std::string( "--outputToCurrentDir" ).compare( argv[ i ] ) )
         {
             outputToCurrentDir = 1;
         }
-
         // Look for flag that specifies ascii output (used mainly for testing)
         else if( !std::string( "--ascii" ).compare( argv[ i ] ) )
         {
@@ -115,8 +114,8 @@ int main( int argc, char** argv )
     //Call this once to start the manager before we create and instance 
     //of the reader
     manager.OneTimeSetup();
-    
-    for( int i = 1; i < argc; i++ ) // argument array is 0-based, but we won't look at the zeroth one (program name)
+    // argument array is 0-based, but we won't look at the zeroth one (program name)
+    for( int i = 1; i < argc; ++i )
     {
         if( !std::string("--outputToCurrentDir").compare( argv[ i ] ) || 
             !std::string("--ascii").compare( argv[ i ] ) )
@@ -126,27 +125,30 @@ int main( int argc, char** argv )
 
         std::string inputFileNameAndPath( argv[ i ] );
 
-        //std::cout << "\nAttempting to process file '" << inputFileNameAndPath << "'" << std::endl;
+        //std::cout << "\nAttempting to process file '" 
+        //    << inputFileNameAndPath << "'" << std::endl;
         tecplotReader* reader = new tecplotReader( inputFileNameAndPath );
 
         int numFiles = reader->GetNumberOfOutputFiles();
-        //std::cout << "reader->GetNumberOfOutputFiles() = " << numFiles << std::endl;
-
-        for( int i = 0; i < numFiles; i++ )
+        //std::cout << "reader->GetNumberOfOutputFiles() = " 
+        //    << numFiles << std::endl;
+        for( int j = 0; j < numFiles; ++j )
         {
-            vtkUnstructuredGrid * ugrid = reader->GetOutputFile( i );
+            vtkUnstructuredGrid* ugrid = reader->GetOutputFile( j );
 
             std::string outputFileName;
             if( numFiles == 1 )
             {
                 // create a *.vtu output filename...
-                outputFileName = stripExtension( inputFileNameAndPath ) + ".vtu";
+                outputFileName = 
+                    stripExtension( inputFileNameAndPath ) + ".vtu";
             }
             else
             {
                 // Using a zero-based incremental naming scheme, create a *.vtu output filename...
                 // Use boost for number-to-string conversion:
-                outputFileName = stripExtension( inputFileNameAndPath ) + "-" + boost::lexical_cast<std::string>( i ) + ".vtu";
+                outputFileName = stripExtension( inputFileNameAndPath ) + 
+                    "-" + boost::lexical_cast<std::string>( j ) + ".vtu";
             }
 
             // If outputToCurrentDir flag was set, then write to current location...
@@ -155,9 +157,11 @@ int main( int argc, char** argv )
                 outputFileName = extractFileNameFromFullPath( outputFileName );
             }
 
-            std::cout << "Writing to file \"" << outputFileName << "\"" << std::endl;
+            std::cout << "Writing to file \"" << outputFileName 
+                << "\"" << std::endl;
 
-            vtkXMLUnstructuredGridWriter *writer = vtkXMLUnstructuredGridWriter::New();
+            vtkXMLUnstructuredGridWriter* writer = 
+                vtkXMLUnstructuredGridWriter::New();
             writer->SetInput( ugrid );
             writer->SetFileName( outputFileName.c_str() );
             if( asciiOutput )
