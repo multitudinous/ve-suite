@@ -126,7 +126,7 @@ int tecplotReader::GetNumberOfOutputFiles()
     return this->numberOfOutputFiles;
 }
 
-vtkUnstructuredGrid * tecplotReader::GetOutputFile( int i )
+vtkUnstructuredGrid * tecplotReader::GetOutputFile( const int i )
 {
     // i should be a zero-based integer
     if( i < 0 || i > this->numberOfOutputFiles - 1 )
@@ -219,7 +219,7 @@ int tecplotReader::isFileReadable( const std::string filename )
     return 1;
 }
 
-void tecplotReader::readVariable( EntIndex_t currentZone, int varNumber, char * varName, vtkFloatArray *& parameterData )
+void tecplotReader::readVariable( EntIndex_t currentZone, int varNumber, char * varName, vtkFloatArray *& scalarData )
 {
     // Read a single variable from the current zone...
     if( varNumber )
@@ -229,12 +229,12 @@ void tecplotReader::readVariable( EntIndex_t currentZone, int varNumber, char * 
         {
             LgIndex_t numValues = TecUtilDataValueGetCountByRef( FieldData );
 
-            if( parameterData == NULL )
+            if( scalarData == NULL )
             {
-                parameterData = vtkFloatArray::New();
-                parameterData->SetName( varName );
-                //parameterData->SetNumberOfTuples( numValues );
-                parameterData->SetNumberOfComponents( 1 );
+                scalarData = vtkFloatArray::New();
+                scalarData->SetName( varName );
+                //scalarData->SetNumberOfTuples( numValues );
+                scalarData->SetNumberOfComponents( 1 );
             }
 
 #ifdef PRINT_HEADERS
@@ -245,7 +245,7 @@ void tecplotReader::readVariable( EntIndex_t currentZone, int varNumber, char * 
             {
                 //GetByRef function is 1-based
                 //parameterData->SetTuple1( i+this->nodeOffset , TecUtilDataValueGetByRef( FieldData, i+1 ) );
-                parameterData->InsertNextValue( TecUtilDataValueGetByRef( FieldData, i+1 ) );
+                scalarData->InsertNextValue( TecUtilDataValueGetByRef( FieldData, i+1 ) );
             }
         }
         else
@@ -256,10 +256,10 @@ void tecplotReader::readVariable( EntIndex_t currentZone, int varNumber, char * 
     }
     else 
     {
-        //cerr << "Error: variable number " << varNumber << " does not exist or can not be read" << std::endl;
+        std::cerr << "Error: variable number " << varNumber << " does not exist or can not be read" << std::endl;
         // will return a NULL array pointer
     }
-    return;
+    //return;
 }
 
 vtkFloatArray * tecplotReader::zeroArray( std::string varName, int numTuples )
@@ -302,7 +302,7 @@ void tecplotReader::readVectorNameAndUpdateIndex( int currentIndex, int currentV
     return;
 }
 
-void tecplotReader::processAnyVectorData( int numNodalPointsInZone, vtkFloatArray ** parameterData )
+void tecplotReader::processAnyVectorData( int numNodalPointsInZone, vtkFloatArray ** vectorData )
 {
     // Now see if any variable names appear to be representing vector quantities...
     int vectorIndex[ 3 ] = { 0, 0, 0 };
@@ -342,18 +342,18 @@ void tecplotReader::processAnyVectorData( int numNodalPointsInZone, vtkFloatArra
             vector->SetNumberOfTuples( numNodalPointsInZone );
             vector->SetNumberOfComponents( 3 );
 
-            for( int i = 0; i < numNodalPointsInZone; i++ )
+            for( int j = 0; j < numNodalPointsInZone; j++ )
             {
-                for( int j = 0; j < 3; j++ )
+                for( int k = 0; k < 3; k++ )
                 {
                     if( vectorIndex[ j ] == 0 )
                     {
-                        vector->InsertComponent( i, j, 0.0 );
+                        vector->InsertComponent( j, k, 0.0 );
                     }
                     else
                     {
-                        //cout << "copying data from " << parameterData[ vectorIndex[ j ]-1-this->dimension ]->GetName() << ", value = " << parameterData[ vectorIndex[ j ]-1-this->dimension ]->GetValue( i ) << std::endl;
-                        vector->InsertComponent( i, j, parameterData[ vectorIndex[ j ]-1-this->dimension ]->GetValue( i ) );
+                        //cout << "copying data from " << vectorData[ vectorIndex[ j ]-1-this->dimension ]->GetName() << ", value = " << parameterData[ vectorIndex[ j ]-1-this->dimension ]->GetValue( i ) << std::endl;
+                        vector->InsertComponent( j, k, vectorData[ vectorIndex[ k ]-1-this->dimension ]->GetValue( j ) );
                     }
                 }
             }
@@ -863,7 +863,7 @@ void tecplotReader::processZone( EntIndex_t currentZone )
 
     } // for each variable
 
-    if( this->numZones > 1 && !this->coordDataSharedAcrossZones && this->connectivityShareCount == 1 )
+    if( (this->numZones > 1) && !this->coordDataSharedAcrossZones && (this->connectivityShareCount == 1) )
     {
 #ifdef PRINT_HEADERS
         std::cout << "incrementing nodeOffset and elementOffset" << std::endl;
@@ -874,36 +874,43 @@ void tecplotReader::processZone( EntIndex_t currentZone )
     }
 
     // Is it time to create the ugrid?
-    if( ( this->numberOfOutputFiles == 1 && currentZone == this->numZones ) || this->numberOfOutputFiles > 1 )
+    if( ( (this->numberOfOutputFiles == 1) && (currentZone == this->numZones) ) || (this->numberOfOutputFiles > 1) )
     {
         this->ugrid->SetPoints( this->vertex );
         this->vertex->Delete();
-
+        
+        if( numParameterArrays == 0 )
+        {
+            return;
+        }
+        
         for( int i = 0; i < this->numParameterArrays; i++ )
         {
             if( this->parameterData[ i ]->GetNumberOfTuples() == this->totalNumberOfNodalPoints )
             {
-                //cout << "ugrid->GetPointData()->AddArray( this->parameterData[ " << i << " ] );" << std::endl;
+                //std::cout << "ugrid->GetPointData()->AddArray( this->parameterData[ " << i << " ] );" << std::endl;
                 this->ugrid->GetPointData()->AddArray( this->parameterData[ i ] );
             }
             else if( this->parameterData[ i ]->GetNumberOfTuples() == this->totalNumberOfElements )
             {
-                //cout << "ugrid->GetCellData()->AddArray( this->parameterData[ " << i << " ] );" << std::endl;
-                this->ugrid->GetCellData()->AddArray( this->parameterData[ i ] );
+                //std::cout << "ugrid->GetCellData()->AddArray( this->parameterData[ " << i << " ] );" << std::endl;
+                vtkCellData* data = this->ugrid->GetCellData();
+                data->AddArray( this->parameterData[ i ] );
             }
             else
             {
                 std::cerr << "Error: Don't know what to do! parameterData[ " << i << " ]->GetNumberOfTuples() = " << this->parameterData[ i ]->GetNumberOfTuples() << ", totalNumberOfNodalPoints = " << this->totalNumberOfNodalPoints << ", totalNumberOfElements = " << this->totalNumberOfElements << std::endl;
             }
         }
-
+ 
         processAnyVectorData( numNodalPointsInZone, this->parameterData );
-
+ 
         for( int i = 0; i < this->numParameterArrays; i++ )
         {
             this->parameterData[ i ]->Delete();
         }
         delete [] this->parameterData;
+        parameterData = 0;
     }
 }
 

@@ -57,7 +57,7 @@ public:
 
     int GetNumberOfOutputFiles();
     
-    vtkUnstructuredGrid * GetOutputFile( int );
+    vtkUnstructuredGrid * GetOutputFile( const int i );
 
 private:
     std::string inputFileNameAndPath;
@@ -89,13 +89,13 @@ private:
 
     int isFileReadable( const std::string filename );
 
-    void readVariable( EntIndex_t currentZone, int varNumber, char * varName, vtkFloatArray *& parameterData );
+    void readVariable( EntIndex_t currentZone, int varNumber, char * varName, vtkFloatArray *& scalarData );
 
     vtkFloatArray * zeroArray( std::string varName, int numTuples );
 
     void readVectorNameAndUpdateIndex( int currentIndex, int currentVar, std::string s, std::string & vecName, int * vectorIndex );
 
-    void processAnyVectorData( int numNodalPointsInZone, vtkFloatArray ** parameterData );
+    void processAnyVectorData( int numNodalPointsInZone, vtkFloatArray ** vectorData );
 
     void computeNumberOfOutputFiles();
 
