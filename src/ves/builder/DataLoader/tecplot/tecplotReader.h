@@ -70,7 +70,7 @@ private:
     int xIndex;
     int yIndex;
     int zIndex;
-    VarName_t * m_varName;
+    VarName_t* m_varName;
     int numParameterArrays;
     int coordDataSharedAcrossZones;
     int totalNumberOfElements;
@@ -89,7 +89,7 @@ private:
 
     int isFileReadable( const std::string filename );
 
-    void readVariable( EntIndex_t currentZone, int varNumber, char * varName, vtkFloatArray *& scalarData );
+    void readVariable( EntIndex_t currentZone, int varNumber, const char* varName, vtkFloatArray* scalarData );
 
     vtkFloatArray * zeroArray( std::string varName, int numTuples );
 
