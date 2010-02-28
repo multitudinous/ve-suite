@@ -30,11 +30,9 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-
 #include <ves/builder/DataLoader/tecplot/tecplotReader.h>
 
 #include "TecIntegrationManager.h"
-#include "ApplicationEventMonitor.h"
 #include "StringList.h"
 
 #include <vtkUnstructuredGrid.h>
@@ -70,9 +68,8 @@ tecplotReader::tecplotReader( std::string inputFileNameAndPath )
     this->elementOffset = 0;
     this->vertex = NULL;
     this->parameterData = NULL;
-    this->manager = new Manager();
     
-    this->OneTimeSetup();
+    //Before anything can be run the manager must have been started
 
     std::string extension = getExtension( this->inputFileNameAndPath );
     if( extension.compare("dat") != 0 && extension.compare("tec") != 0 && extension.compare("plt") != 0 )
@@ -118,10 +115,10 @@ tecplotReader::~tecplotReader()
     }
 
     //std::cerr << "deleting zoneName" << std::endl;
-    for( int i = 0; i < this->numZones; i++ )
+    /*for( int i = 0; i < this->numZones; i++ )
     {
         //TecUtilStringDealloc( &zoneName[ i ] );
-    }
+    }*/
 }
 
 int tecplotReader::GetNumberOfOutputFiles()
@@ -153,60 +150,7 @@ vtkUnstructuredGrid * tecplotReader::GetOutputFile( int i )
     return NULL;
 }
 
-void tecplotReader::OneTimeSetup()
-{
-    Manager::ManagerStartReturnCode_e ret;
 
-    this->manager->setApplicationEventMonitor( new ApplicationEventMonitor() );
-
-    char* tecSDKHomeDir = getenv("TECSDKHOME");
-    if( tecSDKHomeDir )
-    {
-        //std::cout << "TECSDKHOME=" << tecSDKHomeDir << std::endl;
-        // the following produces screen output showing tecplot version and location of your tecplot.cfg
-        ret = this->manager->init( tecSDKHomeDir );
-    }
-    else
-    {
-        std::string tempHome(".\\");
-        //std::cout << "TECSDKHOME=" << tempHome << std::endl;
-        ret = this->manager->init( tempHome );
-        //std::cerr << "The environment variable TECSDKHOME must be defined to run Tecplot SDK applications.\n" << std::endl;
-        //ret = Manager::ManagerStartReturnCode_HomeDirectoryNotSpecified;
-    }
-
-    if( ret == Manager::ManagerStartReturnCode_Ok )
-    {
-        // the following produces screen output showing location of tecplot executable and tecplot home dir
-        ret = this->manager->start();
-    }
-    else
-    {
-        std::cerr << "Unable to initialize the this->manager\n" << std::endl;
-        exit( 0 );
-    }
-
-    if( ret == Manager::ManagerStartReturnCode_Ok )
-    {
-        TecUtilParentLockStart();
-
-        // Tecplot starts up "pageless/frameless".
-        // Create a Page, and get a Frame, which is required to load data.
-        TecUtilPageCreateNew();
-    }
-    else
-    {
-        std::cerr << "Failed to initialize the Tecplot SDK: " << this->manager->returnCodeString(ret).c_str() << std::endl;
-    }
-
-    //return ((ret == Manager::ManagerStartReturnCode_Ok) ? 0 : 1);
-}
-
-void tecplotReader::OneTimeCleanup()
-{
-    TecUtilParentLockFinish();
-    this->manager->stop();
-}
 
 /*
 Tecplot files can have one or more zones. Each zone contains a single element type (bricks, tetrahedrons, etc).

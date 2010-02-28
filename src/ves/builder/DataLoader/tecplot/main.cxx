@@ -78,10 +78,12 @@ int main( int argc, char** argv )
         return( 1 );
     }
     
-    if( (std::string)argv[ 1 ] == "--help" )
+    tecplot::sdk::integration::Manager& manager = tecplot::sdk::integration::Manager::instance(); 
+
+    
+    if( !std::string("--help").compare( argv[ 1 ] ) )
     {
-        tecplot::sdk::integration::Manager* manager = new tecplot::sdk::integration::Manager(); 
-        std::string helpAboutString  = manager->getHelpAbout(); 
+        std::string helpAboutString  = manager.getHelpAbout(); 
         std::cout << helpAboutString << std::endl;
         std::cout << "Description: This program converts ascii and binary tecplot files to vtk format" << std::endl;
         std::cout << "Usage: " << argv[ 0 ] << " tecplot_file1 tecplot_file2 ..." << std::endl;
@@ -98,21 +100,26 @@ int main( int argc, char** argv )
     for( int i = 1; i < argc; i++ ) // argument array is 0-based, but we won't look at the zeroth one (program name)
     {
         // Look for flag that specifies to output to current directory (used mainly for testing)
-        if( (std::string)argv[ i ] == "--outputToCurrentDir" )
+        if( !std::string( "--outputToCurrentDir" ).compare( argv[ i ] ) )
         {
             outputToCurrentDir = 1;
         }
+
         // Look for flag that specifies ascii output (used mainly for testing)
-        else if( (std::string)argv[ i ] == "--ascii" )
+        else if( !std::string( "--ascii" ).compare( argv[ i ] ) )
         {
             asciiOutput = 1;
         }
     }
 
+    //Call this once to start the manager before we create and instance 
+    //of the reader
+    manager.OneTimeSetup();
+    
     for( int i = 1; i < argc; i++ ) // argument array is 0-based, but we won't look at the zeroth one (program name)
     {
-        if( (std::string)argv[ i ] == "--outputToCurrentDir" ||
-            (std::string)argv[ i ] == "--ascii" )
+        if( !std::string("--outputToCurrentDir").compare( argv[ i ] ) || 
+            !std::string("--ascii").compare( argv[ i ] ) )
         {
             continue;
         }
@@ -164,7 +171,8 @@ int main( int argc, char** argv )
 
         delete reader;
     }
-
+    //Now lets shut the manager down
+    manager.OneTimeCleanup();
     return( 0 );
 }
 

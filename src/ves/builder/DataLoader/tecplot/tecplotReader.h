@@ -36,7 +36,7 @@
 #include <iostream>
 #include "MASTER.h"
 #include "GLOBAL.h"
-#include "Manager.h"
+#include <ves/builder/DataLoader/tecplot/Manager.h>
 
 class vtkUnstructuredGrid;
 class vtkFloatArray;
@@ -63,7 +63,6 @@ private:
     std::string inputFileNameAndPath;
     vtkUnstructuredGrid * ugrid;
     int numberOfOutputFiles;
-    tecplot::sdk::integration::Manager* manager;
     EntIndex_t numZones;
     EntIndex_t connectivityShareCount;
     EntIndex_t numVars;
