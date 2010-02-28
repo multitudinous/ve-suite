@@ -541,6 +541,12 @@ void tecplotReader::processZone( EntIndex_t currentZone )
     {
         std::cerr << "Error: Unable to get name of zone " << currentZone << std::endl;
     }
+
+    //for( int i = 0; i < this->numZones; i++ )
+    //{
+    TecUtilStringDealloc( &zoneName[ currentZone ] );
+    //}
+
 /*
     Set_pa MySet = TecUtilConnectGetShareZoneSet( currentZone );
     SetIndex_t Count = TecUtilSetGetMemberCount( MySet );
@@ -888,12 +894,16 @@ void tecplotReader::processZone( EntIndex_t currentZone )
         {
             if( this->parameterData[ i ]->GetNumberOfTuples() == this->totalNumberOfNodalPoints )
             {
-                //std::cout << "ugrid->GetPointData()->AddArray( this->parameterData[ " << i << " ] );" << std::endl;
+#ifdef PRINT_HEADERS
+                std::cout << "ugrid->GetPointData()->AddArray( this->parameterData[ " << i << " ] );" << std::endl;
+#endif
                 this->ugrid->GetPointData()->AddArray( this->parameterData[ i ] );
             }
             else if( this->parameterData[ i ]->GetNumberOfTuples() == this->totalNumberOfElements )
             {
-                //std::cout << "ugrid->GetCellData()->AddArray( this->parameterData[ " << i << " ] );" << std::endl;
+#ifdef PRINT_HEADERS
+                std::cout << "ugrid->GetCellData()->AddArray( this->parameterData[ " << i << " ] );" << std::endl;
+#endif
                 vtkCellData* data = this->ugrid->GetCellData();
                 //data->Print( std::cout );
                 //parameterData[ i ]->Print( std::cout );
