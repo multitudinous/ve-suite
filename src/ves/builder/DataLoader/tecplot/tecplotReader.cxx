@@ -111,7 +111,7 @@ tecplotReader::~tecplotReader()
 
     for( int i = 0; i < this->numVars; i++ )
     {
-        TecUtilStringDealloc( &this->varName[ i ] );
+        TecUtilStringDealloc( &this->m_varName[ i ] );
     }
 
     //std::cerr << "deleting zoneName" << std::endl;
@@ -219,7 +219,7 @@ int tecplotReader::isFileReadable( const std::string filename )
     return 1;
 }
 
-void tecplotReader::readVariable( EntIndex_t currentZone, int varNumber, char * varName, vtkFloatArray *& scalarData )
+void tecplotReader::readVariable( EntIndex_t currentZone, int varNumber, char * varName, vtkFloatArray*& scalarData )
 {
     // Read a single variable from the current zone...
     if( varNumber )
@@ -312,7 +312,7 @@ void tecplotReader::processAnyVectorData( int numNodalPointsInZone, vtkFloatArra
     // Look for parameters that are part of a vector quantity...
     for( int i = 0; i < this->numVars; i++ )
     {
-        std::string s( this->varName[ i ] );
+        std::string s( this->m_varName[ i ] );
 
         // if the beginning of the variable name looks like a vector component, then...
         if( s.substr( 0, 2 ) == "X " )
@@ -346,7 +346,7 @@ void tecplotReader::processAnyVectorData( int numNodalPointsInZone, vtkFloatArra
             {
                 for( int k = 0; k < 3; k++ )
                 {
-                    if( vectorIndex[ j ] == 0 )
+                    if( vectorIndex[ k ] == 0 )
                     {
                         vector->InsertComponent( j, k, 0.0 );
                     }
@@ -419,28 +419,28 @@ void tecplotReader::computeDimension()
 {
     int numNonCoordinateParameters = 0;
 
-    this->varName = new VarName_t [ this->numVars ];
+    this->m_varName = new VarName_t [ this->numVars ];
 
     for( int i = 0; i < this->numVars; i++ )
     {
         // Read ith variable name...
-        TecUtilVarGetName( i+1, &this->varName[ i ] ); // variable numbers are 1-based
+        TecUtilVarGetName( i+1, &this->m_varName[ i ] ); // variable numbers are 1-based
 #ifdef PRINT_HEADERS
-        std::cout << "The name of Variable " << i+1 << " is \"" << this->varName[ i ] << "\"" << std::endl;
+        std::cout << "The name of Variable " << i+1 << " is \"" << this->m_varName[ i ] << "\"" << std::endl;
 #endif // PRINT_HEADERS
 
         // If this variable name corresponds to coordinate data, then record the 1-based index...
-        if( strcmp( this->varName[ i ], "X" ) == 0 )
+        if( strcmp( this->m_varName[ i ], "X" ) == 0 )
         {
             this->xIndex = i+1;
             this->dimension++;
         }
-        else if( strcmp( this->varName[ i ], "Y" ) == 0 )
+        else if( strcmp( this->m_varName[ i ], "Y" ) == 0 )
         {
             this->yIndex = i+1;
             this->dimension++;
         }
-        else if( strcmp( this->varName[ i ], "Z" ) == 0 )
+        else if( strcmp( this->m_varName[ i ], "Z" ) == 0 )
         {
             this->zIndex = i+1;
             this->dimension++;
@@ -481,9 +481,9 @@ void tecplotReader::seeIfDataSharedAcrossZones()
 #endif // PRINT_HEADERS
             
             // If variable name corresponds to one of the coordinate labels...
-            if( strcmp( this->varName[ i ], "X" ) == 0 ||
-                strcmp( this->varName[ i ], "Y" ) == 0 ||
-                strcmp( this->varName[ i ], "Z" ) == 0 )
+            if( strcmp( this->m_varName[ i ], "X" ) == 0 ||
+                strcmp( this->m_varName[ i ], "Y" ) == 0 ||
+                strcmp( this->m_varName[ i ], "Z" ) == 0 )
             {
                 if( dataShareCount == this->numZones )
                 {
@@ -829,9 +829,9 @@ void tecplotReader::processZone( EntIndex_t currentZone )
         TecUtilSetDealloc( &MySet );
 */
         
-        if( strcmp( this->varName[ i ], "X" ) == 0 ||
-            strcmp( this->varName[ i ], "Y" ) == 0 ||
-            strcmp( this->varName[ i ], "Z" ) == 0 )
+        if( strcmp( this->m_varName[ i ], "X" ) == 0 ||
+            strcmp( this->m_varName[ i ], "Y" ) == 0 ||
+            strcmp( this->m_varName[ i ], "Z" ) == 0 )
         {
             // nodal coordinates already processed
         }
@@ -844,11 +844,11 @@ void tecplotReader::processZone( EntIndex_t currentZone )
             // variable index is 1-based, names aren't
             if( dataShareCount == this->numZones )
             {
-                readVariable( 1, i+1, this->varName[ i ], this->parameterData[ this->ii ] );
+                readVariable( 1, i+1, this->m_varName[ i ], this->parameterData[ this->ii ] );
             }
             else
             {
-                readVariable( currentZone, i+1, this->varName[ i ], this->parameterData[ this->ii ] );
+                readVariable( currentZone, i+1, this->m_varName[ i ], this->parameterData[ this->ii ] );
             }
 /*
             if( this->numZones > 1 && this->coordDataSharedAcrossZones )
@@ -895,6 +895,8 @@ void tecplotReader::processZone( EntIndex_t currentZone )
             {
                 //std::cout << "ugrid->GetCellData()->AddArray( this->parameterData[ " << i << " ] );" << std::endl;
                 vtkCellData* data = this->ugrid->GetCellData();
+                //data->Print( std::cout );
+                //parameterData[ i ]->Print( std::cout );
                 data->AddArray( this->parameterData[ i ] );
             }
             else

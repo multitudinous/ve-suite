@@ -70,7 +70,7 @@ private:
     int xIndex;
     int yIndex;
     int zIndex;
-    VarName_t * varName;
+    VarName_t * m_varName;
     int numParameterArrays;
     int coordDataSharedAcrossZones;
     int totalNumberOfElements;
