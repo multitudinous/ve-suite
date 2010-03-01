@@ -59,11 +59,11 @@ public:
 
     int GetNumberOfOutputFiles();
     
-    vtkUnstructuredGrid * GetOutputFile( const int i );
+    vtkUnstructuredGrid* GetOutputFile( const int i );
 
 private:
     std::string inputFileNameAndPath;
-    vtkUnstructuredGrid * ugrid;
+    vtkUnstructuredGrid* ugrid;
     int numberOfOutputFiles;
     int numberOfZonesPerOutputFile;
     EntIndex_t numZones;
@@ -81,8 +81,8 @@ private:
     int ii;
     int nodeOffset;
     int elementOffset;
-    vtkPoints *vertex;
-    vtkFloatArray ** parameterData;
+    vtkPoints* vertex;
+    vtkFloatArray** parameterData;
 
     void OneTimeSetup();
 
@@ -94,11 +94,11 @@ private:
 
     void readVariable( EntIndex_t currentZone, int varNumber, const char* varName, vtkFloatArray* scalarData );
 
-    vtkFloatArray * zeroArray( std::string varName, int numTuples );
+    vtkFloatArray* zeroArray( std::string varName, int numTuples );
 
-    void readVectorNameAndUpdateIndex( int currentIndex, int currentVar, std::string s, std::string & vecName, int * vectorIndex );
+    void readVectorNameAndUpdateIndex( int currentIndex, int currentVar, std::string s, std::string& vecName, int* vectorIndex );
 
-    void processAnyVectorData( int numNodalPointsInZone, vtkFloatArray ** vectorData );
+    void processAnyVectorData( int numNodalPointsInZone, vtkFloatArray** vectorData );
 
     void computeNumberOfOutputFiles();
 
