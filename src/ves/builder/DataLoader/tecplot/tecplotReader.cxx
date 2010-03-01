@@ -144,7 +144,6 @@ vtkUnstructuredGrid * tecplotReader::GetOutputFile( const int i )
     std::cerr << "Error: should not be here" << std::endl;
     return NULL;
 }
-
 /*
 Tecplot files can have one or more zones. Each zone contains a single element type (bricks, tetrahedrons, etc).
 Each zone will have the same list of variable names (which will include 1d, 2d, or 3d coordinate data).
@@ -370,14 +369,20 @@ void tecplotReader::processAnyVectorData( int numNodalPointsInZone, vtkFloatArra
 void tecplotReader::LookAtZoneNamesForTransientData()
 {
     //This code will cause a crash in the translator at random times
-    VarName_t * zoneName = new VarName_t [ this->numZones ];
-
+    ///Need to allocate 1 more than the numZones because we are using 
+    ///1 based counters
+    VarName_t* zoneName = new VarName_t [ this->numZones+1 ];
+    zoneName[ 0 ] = 0;
     for( EntIndex_t currentZone = 1; currentZone < this->numZones+1; currentZone++ ) // zone numbers are 1-based
     {
+        zoneName[ currentZone ] = 0;
+        zoneName[ currentZone ] = TecUtilStringAlloc( 256, "error message string" );
         if( TecUtilZoneGetName( currentZone, &zoneName[ currentZone ] ) )
         {
 #ifdef PRINT_HEADERS
-            std::cout << "LookAtZoneNamesForTransientData: For Zone " << currentZone << ", zoneName is \"" << zoneName[ currentZone ] << "\"" << std::endl;
+            std::cout << "LookAtZoneNamesForTransientData: For Zone " 
+                << currentZone << ", zoneName is \"" 
+                << zoneName[ currentZone ] << "\"" << std::endl;
 #endif // PRINT_HEADERS
 
             this->numberOfOutputFiles = 1;
@@ -402,8 +407,11 @@ void tecplotReader::LookAtZoneNamesForTransientData()
     }
 
     this->numberOfZonesPerOutputFile = this->numZones / this->numberOfOutputFiles;
+    delete [] zoneName;
 #ifdef PRINT_HEADERS
-    std::cout << "Due to repeated zone names, numberOfOutputFiles = " << this->numberOfOutputFiles << ", numberOfZonesPerOutputFile = " << this->numberOfZonesPerOutputFile << std::endl;
+    std::cout << "Due to repeated zone names, numberOfOutputFiles = " 
+        << this->numberOfOutputFiles << ", numberOfZonesPerOutputFile = " 
+        << this->numberOfZonesPerOutputFile << std::endl;
 #endif // PRINT_HEADERS
 }
 
