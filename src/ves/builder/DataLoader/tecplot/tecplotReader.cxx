@@ -123,16 +123,43 @@ int tecplotReader::GetNumberOfOutputFiles()
 
 vtkUnstructuredGrid * tecplotReader::GetOutputFile( const int i )
 {
-    // i should be a zero-based integer
+    // Verify that i is an appropriate zero-based integer
     if( i < 0 || i > this->numberOfOutputFiles - 1 )
     {
         std::cerr << "Error: invalid request" << std::endl;
         return NULL;
     }
 
+    // Loop among the zones until we get to the grid that was requested...
     for( EntIndex_t currentZone = 1; currentZone < this->numZones+1; currentZone++ ) // zone numbers are 1-based
     {
-        this->processZone( currentZone );
+        // Initialize the ugrid if working on first zone of a new grid
+        if( ( this->numberOfOutputFiles == 1 && currentZone == 1 ) || this->numberOfOutputFiles > 1 )
+        {
+            this->initializeVtkData( currentZone );
+        }
+        LgIndex_t numElementsInZone;
+        int numNodesPerElement, numFacesPerCell, numNodalPointsInZone;
+        ZoneType_e zoneType;
+
+        this->ReadElementInfoInZone( currentZone, zoneType, numElementsInZone, numNodesPerElement, numFacesPerCell, numNodalPointsInZone );
+        this->ReadZoneName( currentZone );
+        this->AddCellsToGrid( currentZone, zoneType, numElementsInZone, numNodesPerElement, numNodalPointsInZone );
+        this->ReadNodalCoordinates( currentZone, numNodalPointsInZone );
+        this->ReadNodeAndCellData( currentZone, numElementsInZone, numNodalPointsInZone );
+
+        // Is it time to create the ugrid?
+        int remainder = currentZone % this->numberOfZonesPerOutputFile;
+#ifdef PRINT_HEADERS
+        std::cout << "currentZone " << currentZone << ", numberOfZonesPerOutputFile = " << this->numberOfZonesPerOutputFile << std::endl;
+        std::cout << "remainder: " << remainder << std::endl;
+#endif // PRINT_HEADERS
+
+        if( ( (this->numberOfOutputFiles == 1) && (currentZone == this->numZones) ) ||
+            ( (this->numberOfOutputFiles > 1) && (remainder == 0) ) )
+        {
+            this->AttachPointsAndDataToGrid( numNodalPointsInZone );
+        }
 
         if( ( i == this->numberOfOutputFiles - 1  && this->numberOfOutputFiles == 1 && currentZone == this->numZones ) ||
             ( i == currentZone -1 && this->numberOfOutputFiles > 1 ) )
@@ -144,6 +171,7 @@ vtkUnstructuredGrid * tecplotReader::GetOutputFile( const int i )
     std::cerr << "Error: should not be here" << std::endl;
     return NULL;
 }
+
 /*
 Tecplot files can have one or more zones. Each zone contains a single element type (bricks, tetrahedrons, etc).
 Each zone will have the same list of variable names (which will include 1d, 2d, or 3d coordinate data).
@@ -179,8 +207,8 @@ The tecplot files I have seen thus far include:
     n nodal connectivity arrays
     m variables in addition to nodal coordinates
 
-5) Zones represent sub-parts of a single part, and zoneNames are repeated k times to indicate transient data
-    k*n zones
+5) Zones represent sub-parts of a single part, and zoneNames are repeated n times to indicate transient data
+    k*n zones, each timestep comprising k zones
     n sets of nodal coordinates                             n vtk unstructured grids, each with m variables
     n nodal connectivity arrays
     m variables in addition to nodal coordinates
@@ -235,7 +263,7 @@ void tecplotReader::readVariable( EntIndex_t currentZone, int varNumber, const c
             }*/
 
 #ifdef PRINT_HEADERS
-            std::cout << "reading parameter " << varNumber << " '" 
+            std::cout << "reading parameter " << varNumber << " '"
                 << varName << "' from zone " << currentZone
                 << ", numValues = " << numValues << std::endl;
 #endif // PRINT_HEADERS
@@ -368,11 +396,11 @@ void tecplotReader::processAnyVectorData( int numNodalPointsInZone, vtkFloatArra
 
 void tecplotReader::LookAtZoneNamesForTransientData()
 {
-    //This code will cause a crash in the translator at random times
-    ///Need to allocate 1 more than the numZones because we are using 
-    ///1 based counters
+    //Need to allocate 1 more than numZones because we are using 1-based counters
     VarName_t* zoneName = new VarName_t [ this->numZones+1 ];
     zoneName[ 0 ] = 0;
+
+    // This first loop takes a "guess" at the number of times that the zoneNames are repeated
     for( EntIndex_t currentZone = 1; currentZone < this->numZones+1; currentZone++ ) // zone numbers are 1-based
     {
         zoneName[ currentZone ] = 0;
@@ -380,8 +408,8 @@ void tecplotReader::LookAtZoneNamesForTransientData()
         if( TecUtilZoneGetName( currentZone, &zoneName[ currentZone ] ) )
         {
 #ifdef PRINT_HEADERS
-            std::cout << "LookAtZoneNamesForTransientData: For Zone " 
-                << currentZone << ", zoneName is \"" 
+            std::cout << "LookAtZoneNamesForTransientData: For Zone "
+                << currentZone << ", zoneName is \""
                 << zoneName[ currentZone ] << "\"" << std::endl;
 #endif // PRINT_HEADERS
 
@@ -398,19 +426,42 @@ void tecplotReader::LookAtZoneNamesForTransientData()
         else
         {
             std::cerr << "Error: Unable to get name of zone " << currentZone << std::endl;
+            return;
         }
     }
 
+    this->numberOfZonesPerOutputFile = this->numZones / this->numberOfOutputFiles;
+
+    // This loop verifies that zoneNames are repeated as hypothesized by previous loop
+    if( this->numberOfOutputFiles > 1 )
+    {
+        for( EntIndex_t currentZone = this->numberOfZonesPerOutputFile+1;
+             currentZone < this->numZones+1; currentZone += this->numberOfZonesPerOutputFile )
+        {
+            for( EntIndex_t i = 1; i <= this->numberOfZonesPerOutputFile; i++ )
+            {
+                //std::cout << "comparing currentZone= " << currentZone+i-1 << " and i= " << i << std::endl;
+                if( strcmp( zoneName[ i ], zoneName[ currentZone+i-1 ] ) )
+                {
+                    //std::cout << "not a match" << std::endl;
+                    this->numberOfOutputFiles = 1;
+                    //this->numberOfZonesPerOutputFile = 1;
+                }
+            }
+        }
+    }
+
+    //TODO: should currentZone begin at 0?
     for( EntIndex_t currentZone = 1; currentZone < this->numZones+1; currentZone++ ) // zone numbers are 1-based
     {
         TecUtilStringDealloc( &zoneName[ currentZone ] );
     }
 
-    this->numberOfZonesPerOutputFile = this->numZones / this->numberOfOutputFiles;
     delete [] zoneName;
+
 #ifdef PRINT_HEADERS
-    std::cout << "Due to repeated zone names, numberOfOutputFiles = " 
-        << this->numberOfOutputFiles << ", numberOfZonesPerOutputFile = " 
+    std::cout << "Due to repeated zone names, numberOfOutputFiles = "
+        << this->numberOfOutputFiles << ", numberOfZonesPerOutputFile = "
         << this->numberOfZonesPerOutputFile << std::endl;
 #endif // PRINT_HEADERS
 }
@@ -505,17 +556,17 @@ void tecplotReader::computeDimension()
     }
 
 #ifdef PRINT_HEADERS
-    std::cout << "dimension is " << this->dimension << ", xIndex is " 
-        << this->xIndex << ", yIndex is " << this->yIndex 
+    std::cout << "dimension is " << this->dimension << ", xIndex is "
+        << this->xIndex << ", yIndex is " << this->yIndex
         << ", zIndex is " << this->zIndex << std::endl;
-    std::cout << "numNonCoordinateParameters is " 
+    std::cout << "numNonCoordinateParameters is "
         << numNonCoordinateParameters << std::endl;
 #endif // PRINT_HEADERS
 
     // Prepare to count the number of non-coordinate parameter arrays
     this->numParameterArrays = numNonCoordinateParameters;
 #ifdef PRINT_HEADERS
-    std::cout << "numParameterArrays = " 
+    std::cout << "numParameterArrays = "
         << this->numParameterArrays << std::endl;
 #endif // PRINT_HEADERS
 }
@@ -557,80 +608,55 @@ void tecplotReader::seeIfDataSharedAcrossZones()
     }
 }
 
-void tecplotReader::processZone( EntIndex_t currentZone )
+void tecplotReader::initializeVtkData( EntIndex_t currentZone )
 {
-    // define flag to control printing of unique error message to a single time...
-    int undefinedZoneType[ 8 ] = {1,1,1,1,1,1,1,1};
-
     // Initialize the ugrid
-    if( ( this->numberOfOutputFiles == 1 && currentZone == 1 ) || this->numberOfOutputFiles > 1 )
+    if( this->ugrid )
     {
-        // set up arrays to store scalar nodal & element data over entire mesh...
-        if( this->ugrid )
-        {
-            this->ugrid->Delete();
-            this->ugrid = NULL;
-        }
-        this->ugrid = vtkUnstructuredGrid::New();
-        this->vertex = vtkPoints::New();
-        
-        this->parameterData = new vtkFloatArray* [ this->numParameterArrays ];
-        for( int i = 0; i < this->numParameterArrays; ++i )
-        {
-            this->parameterData[ i ] = vtkFloatArray::New();
-            parameterData[ i ]->SetNumberOfComponents( 1 );
-            //parameterData[ i ]->DebugOn();
-        }
+        this->ugrid->Delete();
+        this->ugrid = NULL;
+    }
+    this->ugrid = vtkUnstructuredGrid::New();
+    this->vertex = vtkPoints::New();
 
-        int paramCounter = 0;
-        for( int i = 0; i < numVars; ++i )
-        {
-            if( (strcmp( this->m_varName[ i ], "X" ) != 0) &&
-                (strcmp( this->m_varName[ i ], "Y" ) != 0) &&
-                (strcmp( this->m_varName[ i ], "Z" ) != 0) )
-            {
-                parameterData[ paramCounter ]->SetName( m_varName[ i ] );
-                paramCounter++;
-            }
-        }
+    // set up arrays to store scalar nodal & element data over entire mesh...
+    this->parameterData = new vtkFloatArray* [ this->numParameterArrays ];
+    for( int i = 0; i < this->numParameterArrays; ++i )
+    {
+        this->parameterData[ i ] = vtkFloatArray::New();
+        parameterData[ i ]->SetNumberOfComponents( 1 );
+        //parameterData[ i ]->DebugOn();
+    }
 
-        if( this->numberOfOutputFiles > 1 )
+    int paramCounter = 0;
+    for( int i = 0; i < numVars; ++i )
+    {
+        if( (strcmp( this->m_varName[ i ], "X" ) != 0) &&
+            (strcmp( this->m_varName[ i ], "Y" ) != 0) &&
+            (strcmp( this->m_varName[ i ], "Z" ) != 0) )
         {
-            this->ii = 0;
+            parameterData[ paramCounter ]->SetName( m_varName[ i ] );
+            paramCounter++;
         }
     }
 
-    /* 
-    VarName_t currentZoneName;
-    //This code causes erratic problems with the tecplot reader. I am not sure why.
-    //This will be important with the multiblock reader. - mccdo
-    VarName_t* zoneName = new VarName_t [ this->numZones ];
-    zoneName[ currentZone ] = 0;
-    zoneName[ currentZone ] = TecUtilStringAlloc( 256, "error message string" );
-
-    if( TecUtilZoneGetName( currentZone, &zoneName[ currentZone ] ) )
+    if( this->numberOfOutputFiles > 1 )
     {
+        this->ii = 0;
+    }
+}
+
+void tecplotReader::ReadElementInfoInZone( EntIndex_t currentZone, ZoneType_e & zoneType, LgIndex_t & numElementsInZone,
+                          int & numNodesPerElement, int & numFacesPerCell, int & numNodalPointsInZone )
+{
 #ifdef PRINT_HEADERS
-        std::cout << "For Zone " << currentZone << ", zoneName is \"" << currentZoneName << "\", zoneType is ";
+    std::cout << ", zoneType is ";
 #endif // PRINT_HEADERS
-    }
-    else
-    {
-        std::cerr << "Error: Unable to get name of zone " << currentZone << std::endl;
-    }
-    TecUtilStringDealloc( &zoneName[ currentZone ] );
-    delete [] zoneName;
-    */
-
-/*
-    EntIndex_t this->connectivityShareCount = TecUtilDataConnectGetShareCount( currentZone );
-    std::cout << "Connectivity share count of current zone is " << this->connectivityShareCount << std::endl;
-*/
-
     // read zoneType, numNodalPointsInZone, numElementsInZone, nodal connectivity
     // (read it again, even if it was shared and you read it already)
-    ZoneType_e zoneType = TecUtilZoneGetType( currentZone );
-    LgIndex_t numElementsInZone = 0;
+    zoneType = TecUtilZoneGetType( currentZone );
+    numElementsInZone = 0;
+
     switch( zoneType )  // compare to those defined in GLOBAL.h
     {
         case ZoneType_Ordered:
@@ -712,9 +738,9 @@ void tecplotReader::processZone( EntIndex_t currentZone )
         NULL,           // Receives the handle to a writable field data for the contouring variable.
         NULL );         // Receives the handle to a writable field data for the scatter sizing variable.
 
-    int numNodesPerElement = 0;
-    int numFacesPerCell = 0;
-    int numNodalPointsInZone = 0;
+    numNodesPerElement = 0;
+    numFacesPerCell = 0;
+    numNodalPointsInZone = 0;
 
     if( zoneType == ZoneType_Ordered )
     {
@@ -796,8 +822,45 @@ void tecplotReader::processZone( EntIndex_t currentZone )
         std::cout << "!!! The number of nodes per element is " << numNodesPerElement << std::endl;
 #endif // PRINT_HEADERS
     }
+}
+
+void tecplotReader::ReadZoneName( EntIndex_t currentZone )
+{
+/*
+    VarName_t currentZoneName;
+    //This code causes erratic problems with the tecplot reader. I am not sure why.
+    //This will be important with the multiblock reader. - mccdo
+    VarName_t* zoneName = new VarName_t [ this->numZones ];
+    zoneName[ currentZone ] = 0;
+    zoneName[ currentZone ] = TecUtilStringAlloc( 256, "error message string" );
+
+    if( TecUtilZoneGetName( currentZone, &zoneName[ currentZone ] ) )
+    {
+#ifdef PRINT_HEADERS
+        std::cout << "For Zone " << currentZone << ", zoneName is \"" << currentZoneName << "\"";
+#endif // PRINT_HEADERS
+    }
+    else
+    {
+        std::cerr << "Error: Unable to get name of zone " << currentZone << std::endl;
+    }
+    TecUtilStringDealloc( &zoneName[ currentZone ] );
+    delete [] zoneName;
+*/
+}
+
+void tecplotReader::AddCellsToGrid( const EntIndex_t currentZone, const ZoneType_e zoneType, const LgIndex_t numElementsInZone, const int numNodesPerElement, const int numNodalPointsInZone )
+{
+/*
+    EntIndex_t this->connectivityShareCount = TecUtilDataConnectGetShareCount( currentZone );
+    std::cout << "Connectivity share count of current zone is " << this->connectivityShareCount << std::endl;
+*/
+
+    // define flag to control printing of unique error message to a single time...
+    int undefinedZoneType[ 8 ] = {1,1,1,1,1,1,1,1};
 
     // For each tecplot element in current zone, construct corresponding VTK element
+    // read nodal connectivity (read it again, even if it was shared and you read it already)
     NodeMap_pa nm = TecUtilDataNodeGetReadableRef( currentZone );
     if( nm && (numNodesPerElement > 0) )
     {
@@ -853,10 +916,13 @@ void tecplotReader::processZone( EntIndex_t currentZone )
     {
         std::cerr << "Error: Unable to get node map" << std::endl;
     }
+}
 
+void tecplotReader::ReadNodalCoordinates( const EntIndex_t currentZone, const int numNodalPointsInZone )
+{
     {
         ///Read the nodal coordinates from the current zone...
-        ///If any turn out to be non-existent (e.g., planar description), 
+        ///If any turn out to be non-existent (e.g., planar description),
         ///then set to zero for 3D coordinates.
         vtkFloatArray* x = NULL;
         if( this->xIndex )
@@ -907,7 +973,10 @@ void tecplotReader::processZone( EntIndex_t currentZone )
         y->Delete();
         z->Delete();
     }
+}
 
+void tecplotReader::ReadNodeAndCellData( const EntIndex_t currentZone, const LgIndex_t numElementsInZone, const int numNodalPointsInZone )
+{
     for( int i = 0; i < this->numVars; i++ )
     {
         EntIndex_t dataShareCount = TecUtilDataValueGetShareCount( currentZone, i+1 );
@@ -956,62 +1025,53 @@ void tecplotReader::processZone( EntIndex_t currentZone )
         this->elementOffset += numElementsInZone;
         this->ii = 0;
     }
-
-    // Is it time to create the ugrid?
-    int remainder = currentZone % this->numberOfZonesPerOutputFile;
-#ifdef PRINT_HEADERS
-    std::cout << "currentZone " << currentZone << ", numberOfZonesPerOutputFile = " << this->numberOfZonesPerOutputFile << std::endl;
-    std::cout << "remainder: " << remainder << std::endl;
-#endif // PRINT_HEADERS
-
-    if( ( (this->numberOfOutputFiles == 1) && (currentZone == this->numZones) ) ||
-        ( (this->numberOfOutputFiles > 1) && (remainder == 0) ) )
-    {
-        this->ugrid->SetPoints( this->vertex );
-        this->vertex->Delete();
-
-        if( numParameterArrays == 0 )
-        {
-            return;
-        }
-        //ugrid->DebugOn();
-
-        for( int i = 0; i < this->numParameterArrays; i++ )
-        {
-            if( this->parameterData[ i ]->GetNumberOfTuples() == this->totalNumberOfNodalPoints )
-            {
-#ifdef PRINT_HEADERS
-                std::cout << "ugrid->GetPointData()->AddArray( this->parameterData[ " << i << " ] );" << std::endl;
-#endif
-                this->ugrid->GetPointData()->AddArray( this->parameterData[ i ] );
-            }
-            else if( this->parameterData[ i ]->GetNumberOfTuples() == this->totalNumberOfElements )
-            {
-#ifdef PRINT_HEADERS
-                std::cout << "ugrid->GetCellData()->AddArray( this->parameterData[ " << i << " ] );" << std::endl;
-#endif
-                vtkCellData* data = this->ugrid->GetCellData();
-                //data->Print( std::cout );
-                //parameterData[ i ]->Print( std::cout );
-                data->AddArray( this->parameterData[ i ] );
-            }
-            else
-            {
-                std::cerr << "Error: Don't know what to do! parameterData[ " << i << " ]->GetNumberOfTuples() = " << this->parameterData[ i ]->GetNumberOfTuples() << ", totalNumberOfNodalPoints = " << this->totalNumberOfNodalPoints << ", totalNumberOfElements = " << this->totalNumberOfElements << std::endl;
-            }
-        }
-
-        processAnyVectorData( numNodalPointsInZone, this->parameterData );
-
-        for( int i = 0; i < this->numParameterArrays; i++ )
-        {
-            this->parameterData[ i ]->Delete();
-        }
-        delete [] this->parameterData;
-        parameterData = 0;
-
-        this->nodeOffset = 0;
-        this->elementOffset = 0;
-    }
 }
 
+void tecplotReader::AttachPointsAndDataToGrid( const int numNodalPointsInZone )
+{
+    this->ugrid->SetPoints( this->vertex );
+    this->vertex->Delete();
+
+    if( numParameterArrays == 0 )
+    {
+        return;
+    }
+    //ugrid->DebugOn();
+
+    for( int i = 0; i < this->numParameterArrays; i++ )
+    {
+        if( this->parameterData[ i ]->GetNumberOfTuples() == this->totalNumberOfNodalPoints )
+        {
+#ifdef PRINT_HEADERS
+            std::cout << "ugrid->GetPointData()->AddArray( this->parameterData[ " << i << " ] );" << std::endl;
+#endif
+            this->ugrid->GetPointData()->AddArray( this->parameterData[ i ] );
+        }
+        else if( this->parameterData[ i ]->GetNumberOfTuples() == this->totalNumberOfElements )
+        {
+#ifdef PRINT_HEADERS
+            std::cout << "ugrid->GetCellData()->AddArray( this->parameterData[ " << i << " ] );" << std::endl;
+#endif
+            vtkCellData* data = this->ugrid->GetCellData();
+            //data->Print( std::cout );
+            //parameterData[ i ]->Print( std::cout );
+            data->AddArray( this->parameterData[ i ] );
+        }
+        else
+        {
+            std::cerr << "Error: Don't know what to do! parameterData[ " << i << " ]->GetNumberOfTuples() = " << this->parameterData[ i ]->GetNumberOfTuples() << ", totalNumberOfNodalPoints = " << this->totalNumberOfNodalPoints << ", totalNumberOfElements = " << this->totalNumberOfElements << std::endl;
+        }
+    }
+
+    processAnyVectorData( numNodalPointsInZone, this->parameterData );
+
+    for( int i = 0; i < this->numParameterArrays; i++ )
+    {
+        this->parameterData[ i ]->Delete();
+    }
+    delete [] this->parameterData;
+    parameterData = 0;
+
+    this->nodeOffset = 0;
+    this->elementOffset = 0;
+}

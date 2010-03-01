@@ -58,7 +58,7 @@ public:
     void LookAtZoneNamesForTransientData();
 
     int GetNumberOfOutputFiles();
-    
+
     vtkUnstructuredGrid* GetOutputFile( const int i );
 
 private:
@@ -84,10 +84,6 @@ private:
     vtkPoints* vertex;
     vtkFloatArray** parameterData;
 
-    void OneTimeSetup();
-
-    void OneTimeCleanup();
-
     std::string getExtension( const std::string& s );
 
     int isFileReadable( const std::string filename );
@@ -106,7 +102,21 @@ private:
 
     void seeIfDataSharedAcrossZones();
 
-    void processZone( EntIndex_t currentZone );
+    void initializeVtkData( EntIndex_t currentZone );
+
+    void ReadElementInfoInZone( EntIndex_t currentZone, ZoneType_e & zoneType, LgIndex_t & numElementsInZone,
+                                int & numNodesPerElement, int & numFacesPerCell, int & numNodalPointsInZone );
+
+    void ReadZoneName( EntIndex_t currentZone );
+
+    void AddCellsToGrid( const EntIndex_t currentZone, const ZoneType_e zoneType, const LgIndex_t numElementsInZone,
+                         const int numNodesPerElement, const int numNodalPointsInZone );
+
+    void ReadNodalCoordinates( const EntIndex_t currentZone, const int numNodalPointsInZone );
+
+    void ReadNodeAndCellData( const EntIndex_t currentZone, const LgIndex_t numElementsInZone, const int numNodalPointsInZone );
+
+    void AttachPointsAndDataToGrid( const int numNodalPointsInZone );
 };
 }
 }
