@@ -113,14 +113,7 @@ tecplotReader::~tecplotReader()
     {
         TecUtilStringDealloc( &this->m_varName[ i ] );
     }
-
-/*
-    std::cerr << "deleting zoneName" << std::endl;
-    for( EntIndex_t currentZone = 1; currentZone < this->numZones+1; currentZone++ ) // zone numbers are 1-based
-    {
-        TecUtilStringDealloc( &zoneName[ currentZone ] );
-    }
-*/
+    delete [] m_varName;
 }
 
 int tecplotReader::GetNumberOfOutputFiles()
@@ -225,7 +218,7 @@ int tecplotReader::isFileReadable( const std::string filename )
     return 1;
 }
 
-void tecplotReader::readVariable( EntIndex_t currentZone, int varNumber, const char * varName, vtkFloatArray*& scalarData )
+void tecplotReader::readVariable( EntIndex_t currentZone, int varNumber, const char* varName, vtkFloatArray* scalarData )
 {
     // Read a single variable from the current zone...
     if( varNumber )
@@ -235,21 +228,23 @@ void tecplotReader::readVariable( EntIndex_t currentZone, int varNumber, const c
         {
             LgIndex_t numValues = TecUtilDataValueGetCountByRef( FieldData );
 
-            if( scalarData == NULL )
+            /*if( scalarData == NULL )
             {
                 scalarData = vtkFloatArray::New();
                 scalarData->SetName( varName );
                 scalarData->SetNumberOfComponents( 1 );
-            }
+            }*/
 
 #ifdef PRINT_HEADERS
-            std::cout << "reading parameter " << varNumber << " '" << varName << "' from zone " << currentZone
-                 << ", numValues = " << numValues << std::endl;
+            std::cout << "reading parameter " << varNumber << " '" 
+                << varName << "' from zone " << currentZone
+                << ", numValues = " << numValues << std::endl;
 #endif // PRINT_HEADERS
             for( LgIndex_t i = 0; i < numValues; i++ )
             {
                 //GetByRef function is 1-based
-                scalarData->InsertNextValue( TecUtilDataValueGetByRef( FieldData, i+1 ) );
+                double tempData = TecUtilDataValueGetByRef( FieldData, i+1 );
+                scalarData->InsertNextTuple( &tempData );
             }
         }
         else
@@ -338,7 +333,7 @@ void tecplotReader::processAnyVectorData( int numNodalPointsInZone, vtkFloatArra
             std::cout << "Found vector '" << vecName << "'" << std::endl;
 #endif // PRINT_HEADERS
 
-            vtkFloatArray * vector = vtkFloatArray::New();
+            vtkFloatArray* vector = vtkFloatArray::New();
             vector->SetName( vecName.c_str() );
             vector->SetNumberOfTuples( numNodalPointsInZone );
             vector->SetNumberOfComponents( 3 );
@@ -374,6 +369,7 @@ void tecplotReader::processAnyVectorData( int numNodalPointsInZone, vtkFloatArra
 
 void tecplotReader::LookAtZoneNamesForTransientData()
 {
+    //This code will cause a crash in the translator at random times
     VarName_t * zoneName = new VarName_t [ this->numZones ];
 
     for( EntIndex_t currentZone = 1; currentZone < this->numZones+1; currentZone++ ) // zone numbers are 1-based
@@ -470,6 +466,8 @@ void tecplotReader::computeDimension()
     for( int i = 0; i < this->numVars; i++ )
     {
         // Read ith variable name...
+        m_varName[ i ] = 0;
+        m_varName[ i ] = TecUtilStringAlloc( 256, "error message string" );
         TecUtilVarGetName( i+1, &this->m_varName[ i ] ); // variable numbers are 1-based
 #ifdef PRINT_HEADERS
         std::cout << "The name of Variable " << i+1 << " is \"" << this->m_varName[ i ] << "\"" << std::endl;
@@ -499,14 +497,18 @@ void tecplotReader::computeDimension()
     }
 
 #ifdef PRINT_HEADERS
-    std::cout << "dimension is " << this->dimension << ", xIndex is " << this->xIndex << ", yIndex is " << this->yIndex << ", zIndex is " << this->zIndex << std::endl;
-    std::cout << "numNonCoordinateParameters is " << numNonCoordinateParameters << std::endl;
+    std::cout << "dimension is " << this->dimension << ", xIndex is " 
+        << this->xIndex << ", yIndex is " << this->yIndex 
+        << ", zIndex is " << this->zIndex << std::endl;
+    std::cout << "numNonCoordinateParameters is " 
+        << numNonCoordinateParameters << std::endl;
 #endif // PRINT_HEADERS
 
     // Prepare to count the number of non-coordinate parameter arrays
     this->numParameterArrays = numNonCoordinateParameters;
 #ifdef PRINT_HEADERS
-    std::cout << "numParameterArrays = " << this->numParameterArrays << std::endl;
+    std::cout << "numParameterArrays = " 
+        << this->numParameterArrays << std::endl;
 #endif // PRINT_HEADERS
 }
 
@@ -563,10 +565,25 @@ void tecplotReader::processZone( EntIndex_t currentZone )
         }
         this->ugrid = vtkUnstructuredGrid::New();
         this->vertex = vtkPoints::New();
-        this->parameterData = new vtkFloatArray * [ this->numParameterArrays ];
-        for( int i = 0; i < this->numParameterArrays; i++ )
+        
+        this->parameterData = new vtkFloatArray* [ this->numParameterArrays ];
+        for( int i = 0; i < this->numParameterArrays; ++i )
         {
-            this->parameterData[ i ] = NULL;
+            this->parameterData[ i ] = vtkFloatArray::New();
+            parameterData[ i ]->SetNumberOfComponents( 1 );
+            //parameterData[ i ]->DebugOn();
+        }
+
+        int paramCounter = 0;
+        for( int i = 0; i < numVars; ++i )
+        {
+            if( (strcmp( this->m_varName[ i ], "X" ) != 0) &&
+                (strcmp( this->m_varName[ i ], "Y" ) != 0) &&
+                (strcmp( this->m_varName[ i ], "Z" ) != 0) )
+            {
+                parameterData[ paramCounter ]->SetName( m_varName[ i ] );
+                paramCounter++;
+            }
         }
 
         if( this->numberOfOutputFiles > 1 )
@@ -575,8 +592,15 @@ void tecplotReader::processZone( EntIndex_t currentZone )
         }
     }
 
+    /* 
     VarName_t currentZoneName;
-    if( TecUtilZoneGetName( currentZone, &currentZoneName ) )
+    //This code causes erratic problems with the tecplot reader. I am not sure why.
+    //This will be important with the multiblock reader. - mccdo
+    VarName_t* zoneName = new VarName_t [ this->numZones ];
+    zoneName[ currentZone ] = 0;
+    zoneName[ currentZone ] = TecUtilStringAlloc( 256, "error message string" );
+
+    if( TecUtilZoneGetName( currentZone, &zoneName[ currentZone ] ) )
     {
 #ifdef PRINT_HEADERS
         std::cout << "For Zone " << currentZone << ", zoneName is \"" << currentZoneName << "\", zoneType is ";
@@ -586,7 +610,9 @@ void tecplotReader::processZone( EntIndex_t currentZone )
     {
         std::cerr << "Error: Unable to get name of zone " << currentZone << std::endl;
     }
-    TecUtilStringDealloc( &currentZoneName );
+    TecUtilStringDealloc( &zoneName[ currentZone ] );
+    delete [] zoneName;
+    */
 
 /*
     EntIndex_t this->connectivityShareCount = TecUtilDataConnectGetShareCount( currentZone );
@@ -820,62 +846,64 @@ void tecplotReader::processZone( EntIndex_t currentZone )
         std::cerr << "Error: Unable to get node map" << std::endl;
     }
 
-    // Read the nodal coordinates from the current zone...
-    // If any turn out to be non-existent (e.g., planar description), then set to zero for 3D coordinates.
-    vtkFloatArray * x = NULL;
-    if( this->xIndex )
     {
-        readVariable( currentZone, this->xIndex, "X", x );
-    }
-    else
-    {
-        x = zeroArray( "X", numNodalPointsInZone );
-    }
+        ///Read the nodal coordinates from the current zone...
+        ///If any turn out to be non-existent (e.g., planar description), 
+        ///then set to zero for 3D coordinates.
+        vtkFloatArray* x = NULL;
+        if( this->xIndex )
+        {
+            x = vtkFloatArray::New();
+            x->SetName( "X" );
+            x->SetNumberOfComponents( 1 );
+            readVariable( currentZone, this->xIndex, "X", x );
+        }
+        else
+        {
+            x = zeroArray( "X", numNodalPointsInZone );
+        }
 
-    vtkFloatArray * y = NULL;
-    if( this->yIndex )
-    {
-        readVariable( currentZone, this->yIndex, "Y", y );
-    }
-    else
-    {
-        y = zeroArray( "Y", numNodalPointsInZone );
-    }
+        vtkFloatArray* y = NULL;
+        if( this->yIndex )
+        {
+            y = vtkFloatArray::New();
+            y->SetName( "X" );
+            y->SetNumberOfComponents( 1 );
+            readVariable( currentZone, this->yIndex, "Y", y );
+        }
+        else
+        {
+            y = zeroArray( "Y", numNodalPointsInZone );
+        }
 
-    vtkFloatArray * z = NULL;
-    if( this->zIndex )
-    {
-        readVariable( currentZone, this->zIndex, "Z", z );
-    }
-    else
-    {
-        z = zeroArray( "Z", numNodalPointsInZone );
-    }
+        vtkFloatArray* z = NULL;
+        if( this->zIndex )
+        {
+            z = vtkFloatArray::New();
+            z->SetName( "X" );
+            z->SetNumberOfComponents( 1 );
+            readVariable( currentZone, this->zIndex, "Z", z );
+        }
+        else
+        {
+            z = zeroArray( "Z", numNodalPointsInZone );
+        }
 
-    // Populate all the points to vtk...
-    for( int i = 0; i < numNodalPointsInZone; i++ )
-    {
-        this->vertex->InsertNextPoint( x->GetValue( i ), y->GetValue( i ), z->GetValue( i ) );
-    }
+        // Populate all the points to vtk...
+        for( int i = 0; i < numNodalPointsInZone; i++ )
+        {
+            this->vertex->InsertNextPoint( x->GetValue( i ), y->GetValue( i ), z->GetValue( i ) );
+        }
 
-    x->Delete();
-    y->Delete();
-    z->Delete();
+        x->Delete();
+        y->Delete();
+        z->Delete();
+    }
 
     for( int i = 0; i < this->numVars; i++ )
     {
         EntIndex_t dataShareCount = TecUtilDataValueGetShareCount( currentZone, i+1 );
         //cout << "for var " << i+1 << ", dataShareCount is " << dataShareCount << std::endl;
-/*
-        Set_pa MySet = TecUtilDataValueGetShareZoneSet( currentZone, i+1 );
-        SetIndex_t Count = TecUtilSetGetMemberCount( MySet );
-        for( SetIndex_t Position = 1; Position <= Count; Position++ )
-        {
-            SetIndex_t Member = TecUtilSetGetMember( MySet, Position );
-            std::cout << "Member is \"" << Member << "\"" << std::endl;
-        }
-        TecUtilSetDealloc( &MySet );
-*/
 
         if( strcmp( this->m_varName[ i ], "X" ) == 0 ||
             strcmp( this->m_varName[ i ], "Y" ) == 0 ||
@@ -938,6 +966,7 @@ void tecplotReader::processZone( EntIndex_t currentZone )
         {
             return;
         }
+        //ugrid->DebugOn();
 
         for( int i = 0; i < this->numParameterArrays; i++ )
         {

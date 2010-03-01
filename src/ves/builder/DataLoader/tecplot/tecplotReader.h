@@ -92,7 +92,7 @@ private:
 
     int isFileReadable( const std::string filename );
 
-    void readVariable( EntIndex_t currentZone, int varNumber, const char* varName, vtkFloatArray*& scalarData );
+    void readVariable( EntIndex_t currentZone, int varNumber, const char* varName, vtkFloatArray* scalarData );
 
     vtkFloatArray * zeroArray( std::string varName, int numTuples );
 
