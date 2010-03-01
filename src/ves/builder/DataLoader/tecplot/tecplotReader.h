@@ -104,6 +104,8 @@ private:
 
     void initializeVtkData( EntIndex_t currentZone );
 
+    void ExamineStaticOrTransient( EntIndex_t currentZone, Strand_t & strandID, double & solutionTime );
+
     void ReadElementInfoInZone( EntIndex_t currentZone, ZoneType_e & zoneType, LgIndex_t & numElementsInZone,
                                 int & numNodesPerElement, int & numFacesPerCell, int & numNodalPointsInZone );
 

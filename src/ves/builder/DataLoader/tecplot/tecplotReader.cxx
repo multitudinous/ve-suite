@@ -133,16 +133,22 @@ vtkUnstructuredGrid * tecplotReader::GetOutputFile( const int i )
     // Loop among the zones until we get to the grid that was requested...
     for( EntIndex_t currentZone = 1; currentZone < this->numZones+1; currentZone++ ) // zone numbers are 1-based
     {
+        Strand_t strandID;
+        double solutionTime;
+        this->ExamineStaticOrTransient( currentZone, strandID, solutionTime );
+
         // Initialize the ugrid if working on first zone of a new grid
         if( ( this->numberOfOutputFiles == 1 && currentZone == 1 ) || this->numberOfOutputFiles > 1 )
         {
             this->initializeVtkData( currentZone );
         }
+
         LgIndex_t numElementsInZone;
         int numNodesPerElement, numFacesPerCell, numNodalPointsInZone;
         ZoneType_e zoneType;
 
-        this->ReadElementInfoInZone( currentZone, zoneType, numElementsInZone, numNodesPerElement, numFacesPerCell, numNodalPointsInZone );
+        this->ReadElementInfoInZone( currentZone, zoneType, numElementsInZone, numNodesPerElement,
+                                     numFacesPerCell, numNodalPointsInZone );
         this->ReadZoneName( currentZone );
         this->AddCellsToGrid( currentZone, zoneType, numElementsInZone, numNodesPerElement, numNodalPointsInZone );
         this->ReadNodalCoordinates( currentZone, numNodalPointsInZone );
@@ -644,6 +650,20 @@ void tecplotReader::initializeVtkData( EntIndex_t currentZone )
     {
         this->ii = 0;
     }
+}
+
+void tecplotReader::ExamineStaticOrTransient( EntIndex_t currentZone, Strand_t & strandID, double & solutionTime )
+{
+    // Get the StrandID associated with the specified zone.
+    // 0 indicates that the zone is not part of a strand. Transient zones will have a StrandID of 1 or greater.
+    strandID = TecUtilZoneGetStrandID( currentZone );
+
+    //Get the Solution Time associated with the specified zone.
+    solutionTime = TecUtilZoneGetSolutionTime( currentZone );
+
+#ifdef PRINT_HEADERS
+    std::cout << "strandID = " << strandID << ", solutionTime = " << solutionTime << std::endl;
+#endif // PRINT_HEADERS
 }
 
 void tecplotReader::ReadElementInfoInZone( EntIndex_t currentZone, ZoneType_e & zoneType, LgIndex_t & numElementsInZone,
