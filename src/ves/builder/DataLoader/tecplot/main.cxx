@@ -111,9 +111,9 @@ int main( int argc, char** argv )
         }
     }
 
-    //Call this once to start the manager before we create and instance 
-    //of the reader
+    // Start the manager before we create an instance of the reader
     manager.OneTimeSetup();
+
     // argument array is 0-based, but we won't look at the zeroth one (program name)
     for( int i = 1; i < argc; ++i )
     {
@@ -175,7 +175,8 @@ int main( int argc, char** argv )
 
         delete reader;
     }
-    //Now lets shut the manager down
+
+    // Now lets shut the manager down
     manager.OneTimeCleanup();
     return( 0 );
 }

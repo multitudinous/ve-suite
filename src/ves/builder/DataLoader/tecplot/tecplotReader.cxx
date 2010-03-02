@@ -668,7 +668,7 @@ void tecplotReader::ReadElementInfoInZone( EntIndex_t currentZone, ZoneType_e& z
                           int& numNodesPerElement, int& numFacesPerCell, int& numNodalPointsInZone )
 {
 #ifdef PRINT_HEADERS
-    std::cout << ", zoneType is ";
+    std::cout << "zoneType is ";
 #endif // PRINT_HEADERS
     // read zoneType, numNodalPointsInZone, numElementsInZone, nodal connectivity
     // (read it again, even if it was shared and you read it already)
@@ -844,13 +844,12 @@ void tecplotReader::ReadElementInfoInZone( EntIndex_t currentZone, ZoneType_e& z
 
 void tecplotReader::ReadZoneName( EntIndex_t currentZone )
 {
-    //VarName_t currentZoneName;
     VarName_t* zoneName = new VarName_t [ this->numZones ];
     zoneName[ currentZone - 1 ] = 0;
     if( TecUtilZoneGetName( currentZone, &zoneName[ currentZone - 1 ] ) )
     {
 #ifdef PRINT_HEADERS
-        std::cout << "For Zone " << currentZone << ", zoneName is \"" << currentZoneName << "\"";
+        std::cout << "For Zone " << currentZone << ", zoneName is \"" << zoneName[ currentZone - 1 ] << "\""  << std::endl;
 #endif // PRINT_HEADERS
         TecUtilStringDealloc( &zoneName[ currentZone - 1 ] );
     }
