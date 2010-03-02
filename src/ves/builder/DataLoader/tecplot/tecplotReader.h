@@ -55,8 +55,6 @@ public:
 
     ~tecplotReader();
 
-    void LookAtZoneNamesForTransientData();
-
     int GetNumberOfOutputFiles();
 
     vtkUnstructuredGrid* GetOutputFile( const int i );
@@ -83,6 +81,8 @@ private:
     int elementOffset;
     vtkPoints* vertex;
     vtkFloatArray** parameterData;
+
+    void LookAtZoneNamesForTransientData();
 
     std::string getExtension( const std::string& s );
 

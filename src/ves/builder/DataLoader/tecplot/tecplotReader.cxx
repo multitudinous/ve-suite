@@ -410,7 +410,6 @@ void tecplotReader::LookAtZoneNamesForTransientData()
     for( EntIndex_t currentZone = 1; currentZone < this->numZones+1; currentZone++ ) // zone numbers are 1-based
     {
         zoneName[ currentZone ] = 0;
-        zoneName[ currentZone ] = TecUtilStringAlloc( 256, "error message string" );
         if( TecUtilZoneGetName( currentZone, &zoneName[ currentZone ] ) )
         {
 #ifdef PRINT_HEADERS
@@ -532,7 +531,6 @@ void tecplotReader::computeDimension()
     {
         // Read ith variable name...
         m_varName[ i ] = 0;
-        m_varName[ i ] = TecUtilStringAlloc( 256, "error message string" );
         TecUtilVarGetName( i+1, &this->m_varName[ i ] ); // variable numbers are 1-based
 #ifdef PRINT_HEADERS
         std::cout << "The name of Variable " << i+1 << " is \"" << this->m_varName[ i ] << "\"" << std::endl;
@@ -666,8 +664,8 @@ void tecplotReader::ExamineStaticOrTransient( EntIndex_t currentZone, Strand_t &
 #endif // PRINT_HEADERS
 }
 
-void tecplotReader::ReadElementInfoInZone( EntIndex_t currentZone, ZoneType_e & zoneType, LgIndex_t & numElementsInZone,
-                          int & numNodesPerElement, int & numFacesPerCell, int & numNodalPointsInZone )
+void tecplotReader::ReadElementInfoInZone( EntIndex_t currentZone, ZoneType_e& zoneType, LgIndex_t& numElementsInZone,
+                          int& numNodesPerElement, int& numFacesPerCell, int& numNodalPointsInZone )
 {
 #ifdef PRINT_HEADERS
     std::cout << ", zoneType is ";
@@ -846,27 +844,21 @@ void tecplotReader::ReadElementInfoInZone( EntIndex_t currentZone, ZoneType_e & 
 
 void tecplotReader::ReadZoneName( EntIndex_t currentZone )
 {
-/*
-    VarName_t currentZoneName;
-    //This code causes erratic problems with the tecplot reader. I am not sure why.
-    //This will be important with the multiblock reader. - mccdo
+    //VarName_t currentZoneName;
     VarName_t* zoneName = new VarName_t [ this->numZones ];
-    zoneName[ currentZone ] = 0;
-    zoneName[ currentZone ] = TecUtilStringAlloc( 256, "error message string" );
-
-    if( TecUtilZoneGetName( currentZone, &zoneName[ currentZone ] ) )
+    zoneName[ currentZone - 1 ] = 0;
+    if( TecUtilZoneGetName( currentZone, &zoneName[ currentZone - 1 ] ) )
     {
 #ifdef PRINT_HEADERS
         std::cout << "For Zone " << currentZone << ", zoneName is \"" << currentZoneName << "\"";
 #endif // PRINT_HEADERS
+        TecUtilStringDealloc( &zoneName[ currentZone - 1 ] );
     }
     else
     {
         std::cerr << "Error: Unable to get name of zone " << currentZone << std::endl;
     }
-    TecUtilStringDealloc( &zoneName[ currentZone ] );
     delete [] zoneName;
-*/
 }
 
 void tecplotReader::AddCellsToGrid( const EntIndex_t currentZone, const ZoneType_e zoneType, const LgIndex_t numElementsInZone, const int numNodesPerElement, const int numNodalPointsInZone )
@@ -940,59 +932,57 @@ void tecplotReader::AddCellsToGrid( const EntIndex_t currentZone, const ZoneType
 
 void tecplotReader::ReadNodalCoordinates( const EntIndex_t currentZone, const int numNodalPointsInZone )
 {
+    ///Read the nodal coordinates from the current zone...
+    ///If any turn out to be non-existent (e.g., planar description),
+    ///then set to zero for 3D coordinates.
+    vtkFloatArray* x = NULL;
+    if( this->xIndex )
     {
-        ///Read the nodal coordinates from the current zone...
-        ///If any turn out to be non-existent (e.g., planar description),
-        ///then set to zero for 3D coordinates.
-        vtkFloatArray* x = NULL;
-        if( this->xIndex )
-        {
-            x = vtkFloatArray::New();
-            x->SetName( "X" );
-            x->SetNumberOfComponents( 1 );
-            readVariable( currentZone, this->xIndex, "X", x );
-        }
-        else
-        {
-            x = zeroArray( "X", numNodalPointsInZone );
-        }
-
-        vtkFloatArray* y = NULL;
-        if( this->yIndex )
-        {
-            y = vtkFloatArray::New();
-            y->SetName( "X" );
-            y->SetNumberOfComponents( 1 );
-            readVariable( currentZone, this->yIndex, "Y", y );
-        }
-        else
-        {
-            y = zeroArray( "Y", numNodalPointsInZone );
-        }
-
-        vtkFloatArray* z = NULL;
-        if( this->zIndex )
-        {
-            z = vtkFloatArray::New();
-            z->SetName( "X" );
-            z->SetNumberOfComponents( 1 );
-            readVariable( currentZone, this->zIndex, "Z", z );
-        }
-        else
-        {
-            z = zeroArray( "Z", numNodalPointsInZone );
-        }
-
-        // Populate all the points to vtk...
-        for( int i = 0; i < numNodalPointsInZone; i++ )
-        {
-            this->vertex->InsertNextPoint( x->GetValue( i ), y->GetValue( i ), z->GetValue( i ) );
-        }
-
-        x->Delete();
-        y->Delete();
-        z->Delete();
+        x = vtkFloatArray::New();
+        x->SetName( "X" );
+        x->SetNumberOfComponents( 1 );
+        readVariable( currentZone, this->xIndex, "X", x );
     }
+    else
+    {
+        x = zeroArray( "X", numNodalPointsInZone );
+    }
+
+    vtkFloatArray* y = NULL;
+    if( this->yIndex )
+    {
+        y = vtkFloatArray::New();
+        y->SetName( "X" );
+        y->SetNumberOfComponents( 1 );
+        readVariable( currentZone, this->yIndex, "Y", y );
+    }
+    else
+    {
+        y = zeroArray( "Y", numNodalPointsInZone );
+    }
+
+    vtkFloatArray* z = NULL;
+    if( this->zIndex )
+    {
+        z = vtkFloatArray::New();
+        z->SetName( "X" );
+        z->SetNumberOfComponents( 1 );
+        readVariable( currentZone, this->zIndex, "Z", z );
+    }
+    else
+    {
+        z = zeroArray( "Z", numNodalPointsInZone );
+    }
+
+    // Populate all the points to vtk...
+    for( int i = 0; i < numNodalPointsInZone; i++ )
+    {
+        this->vertex->InsertNextPoint( x->GetValue( i ), y->GetValue( i ), z->GetValue( i ) );
+    }
+
+    x->Delete();
+    y->Delete();
+    z->Delete();
 }
 
 void tecplotReader::ReadNodeAndCellData( const EntIndex_t currentZone, const LgIndex_t numElementsInZone, const int numNodalPointsInZone )
