@@ -55,7 +55,6 @@ tecplotReader::tecplotReader( std::string inputFileNameAndPath )
     this->inputFileNameAndPath = inputFileNameAndPath;
     this->ugrid = NULL;
     this->numberOfOutputFiles = 0;
-    this->numberOfZonesPerOutputFile = 1;
     this->dimension = 0;
     this->xIndex = 0;
     this->yIndex = 0;
@@ -68,6 +67,7 @@ tecplotReader::tecplotReader( std::string inputFileNameAndPath )
     this->elementOffset = 0;
     this->vertex = NULL;
     this->parameterData = NULL;
+    this->timeToInitVtk = NULL;
 
     //Before anything can be run the manager must have been started
 
@@ -82,13 +82,12 @@ tecplotReader::tecplotReader( std::string inputFileNameAndPath )
     if( isFileReadable( this->inputFileNameAndPath ) )
     {
         std::cout << "\nReading file '" << this->inputFileNameAndPath << "'" << std::endl;
-        this->computeNumberOfOutputFiles();
-        this->computeDimension();
+        this->ComputeNumberOfOutputFiles();
+        this->ComputeDimension();
         if( this->dimension == 0 )
         {
             std::cerr << "Error: input file did not contain coordinate data." << std::endl;
-            //set numberOfOutputFiles to zero so program will gracefully exit
-            this->numberOfOutputFiles = 0;
+            this->numberOfOutputFiles = 0; //set to zero so program will gracefully exit
             return;
         }
         this->seeIfDataSharedAcrossZones();
@@ -114,6 +113,12 @@ tecplotReader::~tecplotReader()
         TecUtilStringDealloc( &this->m_varName[ i ] );
     }
     delete [] m_varName;
+
+    if( this->timeToInitVtk )
+    {
+        delete [] this->timeToInitVtk;
+        this->timeToInitVtk = NULL;
+    }
 }
 
 int tecplotReader::GetNumberOfOutputFiles()
@@ -121,10 +126,15 @@ int tecplotReader::GetNumberOfOutputFiles()
     return this->numberOfOutputFiles;
 }
 
-vtkUnstructuredGrid * tecplotReader::GetOutputFile( const int i )
+int * tecplotReader::GetVtkInitArray()
 {
-    // Verify that i is an appropriate zero-based integer
-    if( i < 0 || i > this->numberOfOutputFiles - 1 )
+    return this->timeToInitVtk;
+}
+
+vtkUnstructuredGrid * tecplotReader::GetOutputFile( const int fileNum )
+{
+    // Verify that fileNum is an appropriate zero-based integer...
+    if( fileNum < 0 || fileNum > this->numberOfOutputFiles - 1 )
     {
         std::cerr << "Error: invalid request" << std::endl;
         return NULL;
@@ -133,16 +143,14 @@ vtkUnstructuredGrid * tecplotReader::GetOutputFile( const int i )
     // Loop among the zones until we get to the grid that was requested...
     for( EntIndex_t currentZone = 1; currentZone < this->numZones+1; currentZone++ ) // zone numbers are 1-based
     {
-        Strand_t strandID;
-        double solutionTime;
-        this->ExamineStaticOrTransient( currentZone, strandID, solutionTime );
-
-        // Initialize the ugrid if working on first zone of a new grid
-        if( ( this->numberOfOutputFiles == 1 && currentZone == 1 ) || this->numberOfOutputFiles > 1 )
+        // Initialize the ugrid if working on first zone of a new grid...
+        if( this->timeToInitVtk[ currentZone-1 ] )
         {
             this->initializeVtkData( currentZone );
         }
 
+        // Declare some variables to be passed among the next group of functions...
+        // (Perhaps make these member variables and then argument lists will disappear)
         LgIndex_t numElementsInZone;
         int numNodesPerElement, numFacesPerCell, numNodalPointsInZone;
         ZoneType_e zoneType;
@@ -154,21 +162,14 @@ vtkUnstructuredGrid * tecplotReader::GetOutputFile( const int i )
         this->ReadNodalCoordinates( currentZone, numNodalPointsInZone );
         this->ReadNodeAndCellData( currentZone, numElementsInZone, numNodalPointsInZone );
 
-        // Is it time to create the ugrid?
-        int remainder = currentZone % this->numberOfZonesPerOutputFile;
-#ifdef PRINT_HEADERS
-        std::cout << "currentZone " << currentZone << ", numberOfZonesPerOutputFile = " << this->numberOfZonesPerOutputFile << std::endl;
-        std::cout << "remainder: " << remainder << std::endl;
-#endif // PRINT_HEADERS
-
-        if( ( (this->numberOfOutputFiles == 1) && (currentZone == this->numZones) ) ||
-            ( (this->numberOfOutputFiles > 1) && (remainder == 0) ) )
+        // Look at next zone to determine whether to attach points and point data...
+        if( this->timeToInitVtk[ currentZone ] )
         {
             this->AttachPointsAndDataToGrid( numNodalPointsInZone );
         }
 
-        if( ( i == this->numberOfOutputFiles - 1  && this->numberOfOutputFiles == 1 && currentZone == this->numZones ) ||
-            ( i == currentZone -1 && this->numberOfOutputFiles > 1 ) )
+        // Is it time to return the ugrid?
+        if( fileNum == this->GetNumberOfCompletedFiles( currentZone ) - 1 )
         {
             return this->ugrid;
         }
@@ -400,6 +401,7 @@ void tecplotReader::processAnyVectorData( int numNodalPointsInZone, vtkFloatArra
     return;
 }
 
+/*
 void tecplotReader::LookAtZoneNamesForTransientData()
 {
     //Need to allocate 1 more than numZones because we are using 1-based counters
@@ -470,8 +472,9 @@ void tecplotReader::LookAtZoneNamesForTransientData()
         << this->numberOfZonesPerOutputFile << std::endl;
 #endif // PRINT_HEADERS
 }
+*/
 
-void tecplotReader::computeNumberOfOutputFiles()
+void tecplotReader::ComputeNumberOfOutputFiles()
 {
     StringList fileName( this->inputFileNameAndPath.c_str(), NULL );
 
@@ -489,6 +492,13 @@ void tecplotReader::computeNumberOfOutputFiles()
         NULL,                      // VarNameList 	 Use NULL to load only variable names common to all data files.
         1, 1, 1 );                 // Set to 1 to load every data point in the I-direction, J-direction, & K-direction.
 
+    if( ! IsOk )
+    {
+        std::cerr << "The dataset could not be read." << std::endl;
+        this->numberOfOutputFiles = 0;
+        return;
+    }
+
     char *dataset_title = NULL;
     TecUtilDataSetGetInfo( &dataset_title, &this->numZones, &this->numVars );
 #ifdef PRINT_HEADERS
@@ -504,24 +514,40 @@ void tecplotReader::computeNumberOfOutputFiles()
     std::cout << "Connectivity share count of zone 1 is " << this->connectivityShareCount << std::endl;
 #endif // PRINT_HEADERS
 
-    // if n zones and shared connectivity, then the file type is transient
+    this->timeToInitVtk = new int [ this->numZones + 1 ];
+
+    this->CountNumberOfFilesUsingSolnTime();
+
+    // Look at a special case where StrandId is not used...
+    // If n zones and shared connectivity, then the file type is transient.
+    // Each zone will be a unique file.
     if( this->numZones > 1 && this->connectivityShareCount == this->numZones )
     {
         this->numberOfOutputFiles = this->numZones;
-    }
-    else
-    {
-        this->numberOfOutputFiles = 1;
+        for( int j = 0; j < this->numZones + 1; j++ )
+        {
+            this->timeToInitVtk[ j ] = 1;
+        }
     }
 
+#ifdef PRINT_HEADERS
+    std::cout << "NumberOfFiles = " << this->numberOfOutputFiles << std::endl;
+    for( int j = 0; j < this->numZones + 1; j++ )
+    {
+        std::cout << "timeToInitVtk = " << this->timeToInitVtk[ j ] << std::endl;
+    }
+#endif // PRINT_HEADERS
+
+/*
     // The file type is transient if zone names are consistently repeated...
     if( this->numZones > 1 &&  this->numberOfOutputFiles == 1 )
     {
         this->LookAtZoneNamesForTransientData();
     }
+*/
 }
 
-void tecplotReader::computeDimension()
+void tecplotReader::ComputeDimension()
 {
     int numNonCoordinateParameters = 0;
 
@@ -650,18 +676,56 @@ void tecplotReader::initializeVtkData( EntIndex_t currentZone )
     }
 }
 
-void tecplotReader::ExamineStaticOrTransient( EntIndex_t currentZone, Strand_t & strandID, double & solutionTime )
+void tecplotReader::CountNumberOfFilesUsingSolnTime()
 {
-    // Get the StrandID associated with the specified zone.
-    // 0 indicates that the zone is not part of a strand. Transient zones will have a StrandID of 1 or greater.
-    strandID = TecUtilZoneGetStrandID( currentZone );
+    // Get the StrandID associated with the first zone.
+    Strand_t previousStrandID = TecUtilZoneGetStrandID( 1 );
 
-    //Get the Solution Time associated with the specified zone.
-    solutionTime = TecUtilZoneGetSolutionTime( currentZone );
-
+    // Get the Solution Time associated with the first zone.
+    double previousSolutionTime = TecUtilZoneGetSolutionTime( 1 );
 #ifdef PRINT_HEADERS
-    std::cout << "strandID = " << strandID << ", solutionTime = " << solutionTime << std::endl;
+    std::cout << "for zone 1, strandID = " << previousStrandID << ", solutionTime = " << previousSolutionTime << std::endl;
 #endif // PRINT_HEADERS
+
+    this->numberOfOutputFiles = 1;
+    this->timeToInitVtk[ 0 ] = 1;
+
+    // Look at the rest of the zones...
+    for( EntIndex_t currentZone = 2; currentZone < this->numZones+1; currentZone++ ) // zone numbers are 1-based
+    {
+        this->timeToInitVtk[ currentZone-1 ] = 0;
+
+        // Get the StrandID associated with the specified zone.
+        Strand_t currentStrandID = TecUtilZoneGetStrandID( currentZone );
+
+        // Get the Solution Time associated with the specified zone.
+        double currentSolutionTime = TecUtilZoneGetSolutionTime( currentZone );
+#ifdef PRINT_HEADERS
+        std::cout << "for zone " << currentZone << ", strandID = " << currentStrandID << ", solutionTime = " << currentSolutionTime << std::endl;
+#endif // PRINT_HEADERS
+
+        // StrandID of 0 indicates that the zone is not part of a strand (a static zone).
+        // Transient zones will have a StrandID of 1 or greater. See sdkum_qt.pdf Section 15 - 11
+        // A change from static to transient (or vice versa) will be detected by ...
+        bool strandIdShowsChangeFromStaticToTransientOrViceVersa =
+            ( previousStrandID * currentStrandID ) == 0 &&      // this tests that one of the two are zero
+            ( previousStrandID + currentStrandID ) > 0;         // this tests that both are not zero
+
+        // We want to know the number of files that we will output.
+        // For transient data, we will have one file for each timestep. Each timestep may include multiple zones.
+        // In tecplot files are not just static or transient -- There may be static zones interspersed with transient zones.
+        // When go from static to transient (or vice versa) or when solution time changes between zones, increment number...
+        if( strandIdShowsChangeFromStaticToTransientOrViceVersa || previousSolutionTime != currentSolutionTime )
+        {
+            this->numberOfOutputFiles++;
+            this->timeToInitVtk[ currentZone-1 ] = 1;
+        }
+
+        // Update values from last loop...
+        previousStrandID = currentStrandID;
+        previousSolutionTime = currentSolutionTime;
+    }
+    this->timeToInitVtk[ this->numZones ] = 1;
 }
 
 void tecplotReader::ReadElementInfoInZone( EntIndex_t currentZone, ZoneType_e& zoneType, LgIndex_t& numElementsInZone,
@@ -1084,3 +1148,18 @@ void tecplotReader::AttachPointsAndDataToGrid( const int numNodalPointsInZone )
     this->nodeOffset = 0;
     this->elementOffset = 0;
 }
+
+int tecplotReader::GetNumberOfCompletedFiles( const EntIndex_t currentZone )
+{
+    int sum = 0;
+    for( int i = 0; i < currentZone + 1; i++ )
+    {
+        sum += this->timeToInitVtk[ i ];
+    }
+    sum--;
+#ifdef PRINT_HEADERS
+            std::cout << "GetNumberOfCompletedFiles = " << sum << std::endl;
+#endif
+    return( sum );
+}
+

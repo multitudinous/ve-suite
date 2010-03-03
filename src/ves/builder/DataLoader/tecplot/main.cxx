@@ -128,10 +128,8 @@ int main( int argc, char** argv )
         //std::cout << "\nAttempting to process file '" 
         //    << inputFileNameAndPath << "'" << std::endl;
         tecplotReader* reader = new tecplotReader( inputFileNameAndPath );
-
+        
         int numFiles = reader->GetNumberOfOutputFiles();
-        //std::cout << "reader->GetNumberOfOutputFiles() = " 
-        //    << numFiles << std::endl;
         for( int j = 0; j < numFiles; ++j )
         {
             vtkUnstructuredGrid* ugrid = reader->GetOutputFile( j );
