@@ -57,8 +57,6 @@ public:
 
     int GetNumberOfOutputFiles();
 
-    int * GetVtkInitArray();
-
     vtkUnstructuredGrid* GetOutputFile( const int i );
 
 private:
@@ -84,27 +82,25 @@ private:
     vtkFloatArray** parameterData;
     int * timeToInitVtk;
 
-    void LookAtZoneNamesForTransientData();
-
     std::string getExtension( const std::string& s );
 
     int isFileReadable( const std::string filename );
 
-    void readVariable( EntIndex_t currentZone, int varNumber, const char* varName, vtkFloatArray* scalarData );
+    void ReadVariable( EntIndex_t currentZone, int varNumber, const char* varName, vtkFloatArray* scalarData );
 
-    vtkFloatArray* zeroArray( std::string varName, int numTuples );
+    vtkFloatArray* ZeroArray( std::string varName, int numTuples );
 
-    void readVectorNameAndUpdateIndex( int currentIndex, int currentVar, std::string s, std::string& vecName, int* vectorIndex );
+    void ReadVectorNameAndUpdateIndex( int currentIndex, int currentVar, std::string s, std::string& vecName, int* vectorIndex );
 
-    void processAnyVectorData( int numNodalPointsInZone, vtkFloatArray** vectorData );
+    void ProcessAnyVectorData( int numNodalPointsInZone, vtkFloatArray** vectorData );
 
     void ComputeNumberOfOutputFiles();
 
     void ComputeDimension();
 
-    void seeIfDataSharedAcrossZones();
+    void SeeIfDataSharedAcrossZones();
 
-    void initializeVtkData( EntIndex_t currentZone );
+    void InitializeVtkData( EntIndex_t currentZone );
 
     void ReadElementInfoInZone( EntIndex_t currentZone, ZoneType_e & zoneType, LgIndex_t & numElementsInZone,
                                 int & numNodesPerElement, int & numFacesPerCell, int & numNodalPointsInZone );
@@ -122,7 +118,9 @@ private:
     
     void CountNumberOfFilesUsingSolnTime();
 
-    int GetNumberOfCompletedFiles( const EntIndex_t currentZone );
+    int GetStartingZoneForFile( const int fileNum );
+
+    int * GetVtkInitArray();
 };
 }
 }

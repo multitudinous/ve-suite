@@ -169,9 +169,9 @@ int main( int argc, char** argv )
             writer->Write();
             writer->Delete();
         }
-        std::cout << std::endl;
 
         delete reader;
+        std::cout << std::endl;
     }
 
     // Now lets shut the manager down
