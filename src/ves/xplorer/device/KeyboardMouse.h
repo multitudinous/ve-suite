@@ -163,17 +163,6 @@ protected:
     virtual void DrawLine( osg::Vec3d startPoint, osg::Vec3d endPoint );
 
 private:
-    ///Processes the navigation events
-    void ProcessNavigation();
-
-    ///Processes the selection events
-    virtual void ProcessSelection();
-
-    /*
-    ///Process the NURBS selection events
-    void ProcessNURBSSelectionEvents();
-    */
-
     ///Functions called on keyboard press events
     void OnKeyPress();
 
@@ -192,10 +181,19 @@ private:
     ///Functions called on mouse move events
     void OnMouseMotionUp();
 
+    ///Processes the navigation events
+    void ProcessNavigation();
+
+    ///Processes the selection events
+    virtual void ProcessSelection();
+
     //This stuff is used for the old NURBS selection events
     //In the future, NURBS should be selectable in the scene like manipulators
     //A button in the toolbar could turn NURBS points on/off like manipulators
     /*
+    ///Process the NURBS selection events
+    void ProcessNURBSSelectionEvents();
+
     ///Currently this does nothing
     void SelOnKeyboardPress();
 
@@ -285,11 +283,17 @@ private:
     ///
     unsigned int m_yMotionPixels;
 
-    ///x position of the mouse
-    int m_x;
+    ///The current X mouse position
+    int m_currX;
 
-    ///y position of the mouse
-    int m_y;
+    ///The current Y mouse position
+    int m_currY;
+
+    ///The previous X mouse position
+    int m_prevX;
+
+    ///The previous Y mouse position
+    int m_prevY;
 
     ///Aspect ratio of window
     double mAspectRatio;
@@ -336,12 +340,6 @@ private:
     ///The distance from the head position to the picked btRigidBody point
     ///Used to calculate point to point constraints for physics picking
     double mPrevPhysicsRayPos;
-
-    ///The current mouse position
-    std::pair< int, int > m_currMousePos;
-
-    ///The previous mouse position
-    std::pair< int, int > m_prevMousePos;
 
     /*
     Note: osg::Matrix multiplication is reverse of gmtl::Matrix multiplication
