@@ -209,7 +209,7 @@ void KeyboardMouse::SetStartEndPoint(
 
     //std::cout << "startPoint: " << startPoint << std::endl;
     //std::cout << "endPoint: " << endPoint << std::endl;
-    
+
 #else
     //Meters to feet conversion
     double m2ft = 3.2808399;
@@ -1500,40 +1500,60 @@ void KeyboardMouse::Rotate( double angle, gmtl::Vec3d axis )
     gmtl::AxisAngled axisAngle( angle, axis );
     mDeltaRotation = gmtl::makeRot< gmtl::Quatd >( axisAngle );
 
+    //Old way of manually computing above calculations
     /*
-    double temp = ::sqrtf( x * x + y * y + z * z );
-    if( temp != 0.0 )
+    void RotateView( double dx, double dy )
     {
-        double tempRatio = 1 / temp;
-        x *= tempRatio;
-        y *= tempRatio;
-        z *= tempRatio;
+        double tbAxis[ 3 ];
+        double angle = mMagnitude * 400.0;
+
+        gmtl::Matrix44d matrix;
+        gmtl::identity( matrix );
+
+        dy *= -1.0;
+        tbAxis[ 0 ] = matrix.mData[ 0 ] * dy + matrix.mData[  2 ] * dx;
+        tbAxis[ 1 ] = matrix.mData[ 4 ] * dy + matrix.mData[  6 ] * dx;
+        tbAxis[ 2 ] = matrix.mData[ 8 ] * dy + matrix.mData[ 10 ] * dx;
+
+        Rotate( tbAxis[ 0 ], tbAxis[ 1 ], tbAxis[ 2 ], angle );
     }
 
-    double rad = angle;
-    double cosAng = cos( rad );
-    double sinAng = sin( rad );
+    void Rotate( double x, double y, double z, double angle )
+    {
+        double temp = ::sqrtf( x * x + y * y + z * z );
+        if( temp != 0.0 )
+        {
+            double tempRatio = 1 / temp;
+            x *= tempRatio;
+            y *= tempRatio;
+            z *= tempRatio;
+        }
 
-    gmtl::zero( mDeltaTransform );
-    mDeltaTransform.mData[ 0 ]  = ( x * x ) +
-                                  ( cosAng * ( 1 - ( x * x ) ) );
-    mDeltaTransform.mData[ 1 ]  = ( y * x ) -
-                                  ( cosAng * ( y * x ) ) + ( sinAng * z );
-    mDeltaTransform.mData[ 2 ]  = ( z * x ) -
-                                  ( cosAng * ( z * x ) ) - ( sinAng * y );
-    mDeltaTransform.mData[ 4 ]  = ( x * y ) -
-                                  ( cosAng * ( x * y ) ) - ( sinAng * z );
-    mDeltaTransform.mData[ 5 ]  = ( y * y ) +
-                                  ( cosAng * ( 1 - ( y * y ) ) );
-    mDeltaTransform.mData[ 6 ]  = ( z * y ) -
-                                  ( cosAng * ( z * y ) ) + ( sinAng * x );
-    mDeltaTransform.mData[ 8 ]  = ( x * z ) -
-                                  ( cosAng * ( x * z ) ) + ( sinAng * y );
-    mDeltaTransform.mData[ 9 ]  = ( y * z ) -
-                                  ( cosAng * ( y * z ) ) - ( sinAng * x );
-    mDeltaTransform.mData[ 10 ] = ( z * z ) +
-                                  ( cosAng * ( 1 - ( z * z ) ) );
-    mDeltaTransform.mData[ 15 ] = 1.0;
+        double rad = angle;
+        double cosAng = cos( rad );
+        double sinAng = sin( rad );
+
+        gmtl::zero( mDeltaTransform );
+        mDeltaTransform.mData[ 0 ]  = ( x * x ) +
+                                      ( cosAng * ( 1 - ( x * x ) ) );
+        mDeltaTransform.mData[ 1 ]  = ( y * x ) -
+                                      ( cosAng * ( y * x ) ) + ( sinAng * z );
+        mDeltaTransform.mData[ 2 ]  = ( z * x ) -
+                                      ( cosAng * ( z * x ) ) - ( sinAng * y );
+        mDeltaTransform.mData[ 4 ]  = ( x * y ) -
+                                      ( cosAng * ( x * y ) ) - ( sinAng * z );
+        mDeltaTransform.mData[ 5 ]  = ( y * y ) +
+                                      ( cosAng * ( 1 - ( y * y ) ) );
+        mDeltaTransform.mData[ 6 ]  = ( z * y ) -
+                                      ( cosAng * ( z * y ) ) + ( sinAng * x );
+        mDeltaTransform.mData[ 8 ]  = ( x * z ) -
+                                      ( cosAng * ( x * z ) ) + ( sinAng * y );
+        mDeltaTransform.mData[ 9 ]  = ( y * z ) -
+                                      ( cosAng * ( y * z ) ) - ( sinAng * x );
+        mDeltaTransform.mData[ 10 ] = ( z * z ) +
+                                      ( cosAng * ( 1 - ( z * z ) ) );
+        mDeltaTransform.mData[ 15 ] = 1.0;
+    }
     */
 }
 ////////////////////////////////////////////////////////////////////////////////

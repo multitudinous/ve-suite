@@ -137,6 +137,7 @@ public:
     void UpdateSelectionLine();
 
     ///Get raw vrjuggler keyboardmouse ptr
+    ///\return
     gadget::KeyboardMousePtr GetKeyboardMouseVRJDevice();
 
     ///Get the line segment intersector
@@ -145,9 +146,11 @@ public:
     osgUtil::LineSegmentIntersector* GetLineSegmentIntersector();
 
     ///Set wether the keyboardmouse device should select things
+    ///\param processSelection
     void SetProcessSelection( bool processSelection );
 
     ///
+    ///\return
     bool GetMousePickEvent();
 
 protected:
@@ -230,15 +233,21 @@ private:
 
 #if __GADGET_version >= 1003023
     ///
+    ///\param
+    ///\return
     vrj::DisplayPtr const GetCurrentDisplay(
         const gadget::InputArea* inputArea );
 
     ///
+    ///\param
+    ///\param
+    ///\return
     bool SetCurrentGLTransformInfo(
         const vrj::DisplayPtr display, bool isKeyEvent );
 #endif //__GADGET_version >= 1003023
 
     ///Create physics point constraint
+    ///\return
     bool CreatePointConstraint();
 
     ///Clear point constraint
@@ -350,9 +359,6 @@ private:
                     [ 2 6 10 14 ]    [ 20 21 22 23 ]
                     [ 3 7 11 15 ]    [ 30 31 32 33 ]
     */
-    ///The change to be applied to the current transform
-    //gmtl::Matrix44d mDeltaTransform;
-
     ///
     gmtl::Quatd mDeltaRotation;
 
@@ -382,24 +388,6 @@ private:
 
     ///Bullet constraint used for physics mouse picking
     btTypedConstraint* mPickConstraint;
-
-    /*
-    void RotateView( double dx, double dy )
-    {
-        double tbAxis[ 3 ];
-        double angle = mMagnitude * 400.0;
-
-        gmtl::Matrix44d matrix;
-        gmtl::identity( matrix );
-
-        dy *= -1.0;
-        tbAxis[ 0 ] = matrix.mData[ 0 ] * dy + matrix.mData[  2 ] * dx;
-        tbAxis[ 1 ] = matrix.mData[ 4 ] * dy + matrix.mData[  6 ] * dx;
-        tbAxis[ 2 ] = matrix.mData[ 8 ] * dy + matrix.mData[ 10 ] * dx;
-
-        Rotate( tbAxis[ 0 ], tbAxis[ 1 ], tbAxis[ 2 ], angle );
-    }
-    */
 
     ///
     std::bitset< gadget::LAST_KEY > m_keys;
