@@ -86,6 +86,8 @@
 #include <osg/TextureRectangle>
 #include <osg/Texture2D>
 #include <osg/DeleteHandler>
+#include <osg/CullSettings>
+#include <osg/Version>
 
 #include <osgDB/WriteFile>
 #include <osgDB/ReadFile>
@@ -322,7 +324,22 @@ void App::configSceneView( osgUtil::SceneView* newSceneViewer )
     {
         vpr::Guard<vpr::Mutex> val_guard( mValueLock );
         // Needed for stereo to work.
-        newSceneViewer->setDrawBufferValue( GL_NONE );        
+#if ( ( OPENSCENEGRAPH_MAJOR_VERSION >= 2 ) && \
+    ( OPENSCENEGRAPH_MINOR_VERSION >= 9 ) && \
+    ( OPENSCENEGRAPH_PATCH_VERSION >= 6 ) )
+        ///This change is required because of the commit on rev 10547
+        ///and the changes to CullVisitor specifically I believe - mccdo
+        ///Hopefully a permanent solution to the problem can be found.
+        ///This code needs to be tested to see if multi-context/quad buffer stereo
+        ///and other rendering forms still work.
+        newSceneViewer->getCamera()->setDrawBuffer(GL_BACK);
+        //newSceneViewer->getCamera()->setReadBuffer(GL_BACK);
+        //newSceneViewer->getCamera()->setInheritanceMask( 
+        //newSceneViewer->getCamera()->getInheritanceMask() & 
+        //osg::CullSettings::DRAW_BUFFER );
+#else
+        newSceneViewer->getCamera()->setDrawBuffer(GL_NONE);
+#endif
         newSceneViewer->setSmallFeatureCullingPixelSize( 10 );
     }
 
@@ -554,9 +571,8 @@ void App::latePreFrame()
         //don't move above function call
         mFrameStamp->setFrameNumber( _frameNumber );
         mFrameStamp->setReferenceTime( current_time );
-#if ((OSG_VERSION_MAJOR>=1) && (OSG_VERSION_MINOR>2) || (OSG_VERSION_MAJOR>=2))
         mFrameStamp->setSimulationTime( current_time );
-#endif
+
         mFrameDT = current_time - mLastFrameTime;
         mLastFrameTime = current_time;
         //This is a frame rate calculation
