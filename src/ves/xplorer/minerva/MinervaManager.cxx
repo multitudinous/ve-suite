@@ -76,6 +76,9 @@ typedef Usul::Interfaces::ILayerExtents ILayerExtents;
 typedef Usul::Interfaces::IPlanetCoordinates IPlanetCoordinates;
 typedef Usul::Interfaces::IElevationDatabase IElevationDatabase;
 #else
+#include <Minerva/Interfaces/IRasterLayer.h>
+#include <Minerva/Interfaces/ILayer.h>
+#include <Minerva/Interfaces/ILayerExtents.h>
 typedef Minerva::Interfaces::IRasterLayer IRasterLayer;
 typedef Minerva::Interfaces::ILayer ILayer;
 typedef Minerva::Interfaces::ILayerExtents ILayerExtents;
