@@ -52,8 +52,8 @@ ExternalPixelBufferObject::ExternalPixelBufferObject( osg::Image* image )
     setTarget( GL_PIXEL_UNPACK_BUFFER_ARB );
     setUsage( GL_STREAM_DRAW_ARB );
 
-    osg::notify( osg::INFO )
-        << "Constructing PixelBufferObject for image=" << image << std::endl;
+    //osg::notify( osg::INFO )
+    //    << "Constructing PixelBufferObject for image=" << image << std::endl;
 
     setBufferData( 0, image );
 #else
