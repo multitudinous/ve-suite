@@ -17,7 +17,7 @@ xplorerSubdirs = Split("""
     dotosg
 """)
 
-if baseEnv['MakeQtSupport'] != "yes":
+if baseEnv['MakeQtSupport'] == "yes":
     xplorerSubdirs.append("data")
 
 ##Run SConscript files in all of those folders.
