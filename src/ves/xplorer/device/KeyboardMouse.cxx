@@ -33,6 +33,7 @@
 
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/device/KeyboardMouse.h>
+#include <ves/xplorer/util/InteractionEvent.h>
 
 #include <ves/xplorer/Debug.h>
 #include <ves/xplorer/Model.h>
@@ -64,6 +65,8 @@
 #include <ves/xplorer/scenegraph/manipulator/TransformManipulator.h>
 
 #include <ves/xplorer/environment/NavigationAnimationEngine.h>
+
+#include <ves/conductor/UIManager.h>
 
 // --- Bullet Includes --- //
 #include <LinearMath/btVector3.h>
@@ -375,6 +378,11 @@ void KeyboardMouse::ProcessEvents()
             const gadget::KeyEventPtr keyEvt =
                 boost::static_pointer_cast< gadget::KeyEvent >( event );
 
+            util::InteractionEvent ie( util::InteractionEvent::keyPress,
+                                keyEvt->getKey() );
+
+            m_uiManager.SendInteractionEvent( ie );
+
             //Protect against rapid key press events when key is held down
             m_currKey = keyEvt->getKey();
             if( !m_keys[ m_currKey ] )
@@ -400,6 +408,11 @@ void KeyboardMouse::ProcessEvents()
                 boost::static_pointer_cast< gadget::KeyEvent >( event );
             m_currKey = keyEvt->getKey();
             m_keys.reset( m_currKey );
+           
+            util::InteractionEvent ie( util::InteractionEvent::keyRelease,
+                                keyEvt->getKey() );
+
+            m_uiManager.SendInteractionEvent( ie );
 
 #if __GADGET_version >= 1003023
             //Set the current GLTransfromInfo from the event
@@ -419,6 +432,13 @@ void KeyboardMouse::ProcessEvents()
                 boost::static_pointer_cast< gadget::MouseEvent >( event );
             m_currMouse = mouse_evt->getButton();
             m_keys.set( m_currMouse );
+
+            util::InteractionEvent ie( util::InteractionEvent::buttonPress,
+                                0, util::InteractionEvent::button_1,
+                                util::InteractionEvent::button_1, 0.0, 0.0, 
+                                mouse_evt->getX(), mouse_evt->getY() );
+
+            m_uiManager.SendInteractionEvent( ie );
 
 #if __GADGET_version >= 1003023
             //Set the current GLTransfromInfo from the event
@@ -442,6 +462,13 @@ void KeyboardMouse::ProcessEvents()
                 boost::static_pointer_cast< gadget::MouseEvent >( event );
             m_currMouse = mouse_evt->getButton();
             m_keys.reset( m_currMouse );
+
+            util::InteractionEvent ie( util::InteractionEvent::buttonRelease,
+                                0, util::InteractionEvent::button_1,
+                                util::InteractionEvent::button_1, 0.0, 0.0,
+                                mouse_evt->getX(), mouse_evt->getY() );
+
+            m_uiManager.SendInteractionEvent( ie );
 
 #if __GADGET_version >= 1003023
             //Set the current GLTransfromInfo from the event
@@ -477,10 +504,24 @@ void KeyboardMouse::ProcessEvents()
 
             if( !m_keys[ m_currMouse ] )
             {
+                util::InteractionEvent ie( util::InteractionEvent::pointerMotion,
+                                0, util::InteractionEvent::none,
+                                util::InteractionEvent::none, 0.0, 0.0, 
+                                m_currX, m_currY );
+
+                m_uiManager.SendInteractionEvent( ie );
+                
                 OnMouseMotionUp();
             }
             else
             {
+                util::InteractionEvent ie( util::InteractionEvent::pointerMotion,
+                                0, util::InteractionEvent::none,
+                                util::InteractionEvent::button_1, 0.0, 0.0, 
+                                m_currX, m_currY );
+
+                m_uiManager.SendInteractionEvent( ie );
+
                 OnMouseMotionDown();
             }
 
@@ -853,6 +894,24 @@ void KeyboardMouse::OnKeyRelease()
         {
             m_characterController.StrafeRight( false );
         }
+
+        break;
+    }
+    case gadget::KEY_E:
+    {
+        m_uiManager.EmbedAll();
+
+        break;
+    }
+    case gadget::KEY_H:
+    {
+        m_uiManager.ToggleVisibility();
+
+        break;
+    }
+    case gadget::KEY_U:
+    {
+        m_uiManager.UnembedAll();
 
         break;
     }

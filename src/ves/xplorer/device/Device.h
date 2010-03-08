@@ -66,6 +66,11 @@ class Command;
 }
 }
 
+namespace conductor
+{
+class UIManager;
+}
+
 namespace xplorer
 {
 
@@ -228,6 +233,8 @@ protected:
 
     ///
     scenegraph::manipulator::ManipulatorManager& m_manipulatorManager;
+    
+    ves::conductor::UIManager& m_uiManager;
 
 };
 } //end device

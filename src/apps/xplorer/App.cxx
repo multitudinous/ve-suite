@@ -54,6 +54,7 @@
 #include <ves/xplorer/scenegraph/physics/character/CharacterController.h>
 
 #include <ves/xplorer/environment/cfdQuatCamHandler.h>
+#include <ves/xplorer/environment/cfdDisplaySettings.h>
 
 #include <ves/xplorer/network/cfdExecutive.h>
 
@@ -71,6 +72,8 @@
 #include <ves/open/xml/shader/ShaderCreator.h>
 #include <ves/open/xml/model/ModelCreator.h>
 #include <ves/open/xml/model/Model.h>
+
+#include <ves/conductor/UIManager.h>
 
 // --- OSG Includes --- //
 #include <osg/Group>
@@ -115,8 +118,24 @@
 
 #include <vpr/Perf/ProfileManager.h>
 #include <vpr/System.h>
+#include <vpr/Thread/Thread.h>
 
 #include <jccl/RTRC/ConfigManager.h>
+
+#ifdef QT_ON
+//// --- Qt Includes --- //
+#include <QtGui/QApplication>
+#include <QtGui/QPushButton>
+#include <QtGui/QDialog>
+#include <QtGui/QVBoxLayout>
+#include <QtGui/QPlastiqueStyle>
+
+#include <ves/conductor/qt/UIElementQt.h>
+#include <ves/conductor/qt/MainWindow.h>
+#endif // QT_ON
+
+//// --- Boost includes --- //
+#include <boost/bind.hpp>
 
 // --- C/C++ Libraries --- //
 #include <iostream>
@@ -493,6 +512,22 @@ void App::initScene()
 
     // This may need to be fixed
     this->m_vjobsWrapper->GetCfdStateVariables();
+
+    // Get or create UIManager
+    ves::conductor::UIManager* m_UIManager = ves::conductor::UIManager::instance();
+
+    // UIManager needs to know how big in pixels its projection area is
+    cfdDisplaySettings* cDS = EnvironmentHandler::instance()->GetDisplaySettings();
+    std::pair<int, int> res = cDS->GetScreenResolution();
+    m_UIManager->SetRectangle( 0, res.first, 0, res.second );
+
+    // Hand current root node UIManager so it can create UI subgraph
+    m_UIManager->Initialize( getScene() );
+
+    // Start up the UI thread
+    std::cout << "Starting UI thread" << std::endl;
+    vpr::Thread* thread;
+    thread = new vpr::Thread(boost::bind(&App::LoadUI, this));
 }
 ////////////////////////////////////////////////////////////////////////////////
 void App::preFrame()
@@ -877,6 +912,13 @@ void App::draw()
     //Set scene info associated w/ this viewport and context
     if( glTI )
     {
+        //FIXME: This is probably dangerous in a multi-context enviroment
+        {
+            osg::Matrixd inverseMVPW = glTI->GetOSGMVPWMatrix();
+            inverseMVPW.invert( inverseMVPW );
+            ves::conductor::UIManager::instance()->SetProjectionMatrix( inverseMVPW );
+        }
+
         //Get the projection matrix
         glTI->UpdateFrustumValues( l, r, b, t, n, f );
         const osg::Matrixd osgProjectionMatrix = glTI->GetOSGProjectionMatrix();
@@ -1034,5 +1076,55 @@ void App::update()
     getScene()->getBound();
     vprDEBUG( vesDBG, 3 ) <<  "|\tEnd App LatePreframe Update" 
         << std::endl << vprDEBUG_FLUSH;
+}
+////////////////////////////////////////////////////////////////////////////////
+void App::LoadUI()
+{
+    // This entire method should be run it its own thread since it blocks
+
+#ifdef QT_ON
+    // Create the Qt application event subsystem
+    QApplication::setDesktopSettingsAware(true);
+    QApplication a( argc, argv );
+
+    // FIXME: This hack will break on any system without GtkStyle
+    // Need to figure out some other way of getting proper style. Looks like crap
+    // without it. Possibly default to Plastique style, which look OK and exists on
+    // all platforms.
+    a.setStyle( new QPlastiqueStyle );
+#endif // QT_ON
+
+    // Get or create UIManager
+    ves::conductor::UIManager* m_UIManager = ves::conductor::UIManager::instance();
+
+#ifdef QT_ON
+    // Wrap the widget in a UIElement
+    ves::conductor::UIElement *element = new ves::conductor::UIElementQt();
+    QWidget* mainUIWidget = new MainWindow( static_cast< QGraphicsView* >( static_cast< ves::conductor::UIElementQt* >(element) ) );
+#endif // QT_ON
+    
+    // Since we're using an mdi-able MainWindow as the main widget, we make it
+    // take up the entire viewable area of the GL window
+    cfdDisplaySettings* cDS = EnvironmentHandler::instance()->GetDisplaySettings();
+    std::pair<int, int> res = cDS->GetScreenResolution();
+    m_UIManager->SetRectangle( 0, res.first, 0, res.second );
+
+#ifdef QT_ON
+    mainUIWidget->resize( res.first, res.second );
+
+    // Need to do this initialization *after* the above call to resize.
+    element->Initialize();
+    static_cast< ves::conductor::UIElementQt* >(element)->SetWidget( mainUIWidget );
+   
+    m_UIManager->AddElement( element );
+
+    // Start up the new UI in a hidden state. This is just for the demo.
+    m_UIManager->HideAllElements();
+
+    // Begin running the Qt subsystem
+    std::cout << "...Run Qt application" << std::endl;
+    a.exec();
+    std::cout << "...Ended Qt application" << std::endl;
+#endif // QT_ON
 }
 ////////////////////////////////////////////////////////////////////////////////

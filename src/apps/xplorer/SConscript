@@ -20,7 +20,9 @@ env.Append(
                    'ves_xplorer_volume',
                    'ves_xplorer_communication',
                    'ves_open_module',
-                   'ves_xplorer'])
+                   'ves_xplorer',
+                   'ves_conductor_plugin',
+                    ])
 
 env.Append(LIBPATH = [  pj('#', buildDir, 'src','ves','xplorer','scenegraph'),
                         pj('#', buildDir, 'src','ves','xplorer','util'),
@@ -30,7 +32,9 @@ env.Append(LIBPATH = [  pj('#', buildDir, 'src','ves','xplorer','scenegraph'),
                         pj('#', buildDir, 'src','ves','builder','DataLoader'),
                         pj('#', buildDir, 'src','ves','builder','cfdTranslatorToVTK'),
                         pj('#', buildDir, 'src','ves','open'),
-                        pj('#', buildDir, 'src','ves','open','xml')])
+                        pj('#', buildDir, 'src','ves','open','xml'),
+                        pj('#', buildDir, 'src','ves','conductor')])
+
 #disable profiling by default
 if env['VPRProfile'] == 'no':
    env.Append( CPPDEFINES = ['DISABLE_VPR_PROFILE'] )
@@ -66,6 +70,10 @@ tao_options.apply( env )
 boost_options.apply( env )
 vrjuggler_options.apply( env )
 osgworks_options.apply( env )
+
+if baseEnv['MakeQtSupport'] == "yes":
+    import qt46
+    qt46.applyQtBuildFlags( env )
 
 resources = [ pj( RootDir, 'dist', 'installerImages', 've_icon128x128.icns'), 
     pj( RootDir, 'src', 'apps', 'xplorer','vrjuggler.plist')]

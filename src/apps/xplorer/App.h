@@ -188,6 +188,9 @@ public:
     ///Update the framestamp and traverse the scenegraph
     void update();
 
+    ///Start up in-process user interface thread
+    void LoadUI( );
+
 protected:
 
 private:

@@ -1,0 +1,17 @@
+<!DOCTYPE RCC><RCC version="1.0">
+ <qresource>
+     <file>images/add.png</file>
+     <file>images/configure.png</file>
+     <file>images/ok.png</file>
+     <file>images/refresh-32.png</file>
+     <file>images/remove.png</file>
+     <file>images/contour.xpm</file>
+     <file>images/isosurface.xpm</file>
+     <file>images/new_vector.xpm</file>
+     <file>images/scalartb.xpm</file>
+     <file>images/streamlines.xpm</file>
+     <file>../../xpm/ToolBar/NewDocumentButton.xpm</file>
+     <file>../../xpm/ToolBar/OpenButton.xpm</file>
+     <file>../../xpm/ToolBar/SaveButton.xpm</file>
+ </qresource>
+ </RCC>

@@ -65,6 +65,7 @@ def generate(env,**kw):
     env.Append(BUILDERS = {'qt_moc': bld})
 
 def applyQtBuildFlags(env):
+    env.AppendUnique( CPPDEFINES = ['QT_ON'] )
     if sca_util.GetPlatform() == 'win32':
         env['no_import_lib'] = 1
         env['WINDOWS_INSERT_MANIFEST'] = "True"

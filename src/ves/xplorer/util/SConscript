@@ -18,6 +18,8 @@ sources.pop(index)
 
 lib_env = ves_pkg.getEnv().Clone()
 
+lib_env.Append( LIBS = ['PocoSQLite'])
+
 vtk_options.apply( lib_env )
 boost_options.apply( lib_env )
 
