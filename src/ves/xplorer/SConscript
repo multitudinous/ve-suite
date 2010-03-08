@@ -15,6 +15,7 @@ xplorerSubdirs = Split("""
     DefaultGraphicalPlugin
     communication
     dotosg
+    data
 """)
 
 
