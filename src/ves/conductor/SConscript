@@ -60,6 +60,10 @@ sources += sca_util.getSourcesRecursive( srcDir )
 
 # If Qt support is off, back up and remove Qt files from previous sources line
 if baseEnv['MakeQtSupport'] != "yes":
+    sources.remove( "UIManager.cxx" )
+    headers.remove( "UIManager.h" )
+    headers.remove( "UIElement.h" )
+
     qtSources = sca_util.getSourcesRecursive( os.path.abspath( 
                                 pj(RootDir, 'src', 'ves', 'conductor', 'qt') ) )
     for x in qtSources:
