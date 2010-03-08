@@ -66,8 +66,9 @@
 
 #include <ves/xplorer/environment/NavigationAnimationEngine.h>
 
+#ifdef QT_ON
 #include <ves/conductor/UIManager.h>
-
+#endif
 // --- Bullet Includes --- //
 #include <LinearMath/btVector3.h>
 
@@ -377,12 +378,12 @@ void KeyboardMouse::ProcessEvents()
         {
             const gadget::KeyEventPtr keyEvt =
                 boost::static_pointer_cast< gadget::KeyEvent >( event );
-
+#ifdef QT_ON
             util::InteractionEvent ie( util::InteractionEvent::keyPress,
                                 keyEvt->getKey() );
 
             m_uiManager.SendInteractionEvent( ie );
-
+#endif
             //Protect against rapid key press events when key is held down
             m_currKey = keyEvt->getKey();
             if( !m_keys[ m_currKey ] )
@@ -408,12 +409,12 @@ void KeyboardMouse::ProcessEvents()
                 boost::static_pointer_cast< gadget::KeyEvent >( event );
             m_currKey = keyEvt->getKey();
             m_keys.reset( m_currKey );
-           
+#ifdef QT_ON
             util::InteractionEvent ie( util::InteractionEvent::keyRelease,
                                 keyEvt->getKey() );
 
             m_uiManager.SendInteractionEvent( ie );
-
+#endif
 #if __GADGET_version >= 1003023
             //Set the current GLTransfromInfo from the event
             if( !SetCurrentGLTransformInfo( currentDisplay, true ) )
@@ -432,14 +433,14 @@ void KeyboardMouse::ProcessEvents()
                 boost::static_pointer_cast< gadget::MouseEvent >( event );
             m_currMouse = mouse_evt->getButton();
             m_keys.set( m_currMouse );
-
+#ifdef QT_ON
             util::InteractionEvent ie( util::InteractionEvent::buttonPress,
                                 0, util::InteractionEvent::button_1,
                                 util::InteractionEvent::button_1, 0.0, 0.0, 
                                 mouse_evt->getX(), mouse_evt->getY() );
 
             m_uiManager.SendInteractionEvent( ie );
-
+#endif
 #if __GADGET_version >= 1003023
             //Set the current GLTransfromInfo from the event
             if( !SetCurrentGLTransformInfo( currentDisplay, false ) )
@@ -462,14 +463,14 @@ void KeyboardMouse::ProcessEvents()
                 boost::static_pointer_cast< gadget::MouseEvent >( event );
             m_currMouse = mouse_evt->getButton();
             m_keys.reset( m_currMouse );
-
+#ifdef QT_ON
             util::InteractionEvent ie( util::InteractionEvent::buttonRelease,
                                 0, util::InteractionEvent::button_1,
                                 util::InteractionEvent::button_1, 0.0, 0.0,
                                 mouse_evt->getX(), mouse_evt->getY() );
 
             m_uiManager.SendInteractionEvent( ie );
-
+#endif
 #if __GADGET_version >= 1003023
             //Set the current GLTransfromInfo from the event
             if( !SetCurrentGLTransformInfo( currentDisplay, false ) )
@@ -504,24 +505,26 @@ void KeyboardMouse::ProcessEvents()
 
             if( !m_keys[ m_currMouse ] )
             {
+#ifdef QT_ON
                 util::InteractionEvent ie( util::InteractionEvent::pointerMotion,
                                 0, util::InteractionEvent::none,
                                 util::InteractionEvent::none, 0.0, 0.0, 
                                 m_currX, m_currY );
 
                 m_uiManager.SendInteractionEvent( ie );
-                
+#endif
                 OnMouseMotionUp();
             }
             else
             {
+#ifdef QT_ON
                 util::InteractionEvent ie( util::InteractionEvent::pointerMotion,
                                 0, util::InteractionEvent::none,
                                 util::InteractionEvent::button_1, 0.0, 0.0, 
                                 m_currX, m_currY );
 
                 m_uiManager.SendInteractionEvent( ie );
-
+#endif
                 OnMouseMotionDown();
             }
 
@@ -899,20 +902,23 @@ void KeyboardMouse::OnKeyRelease()
     }
     case gadget::KEY_E:
     {
+#ifdef QT_ON
         m_uiManager.EmbedAll();
-
+#endif
         break;
     }
     case gadget::KEY_H:
     {
+#ifdef QT_ON
         m_uiManager.ToggleVisibility();
-
+#endif
         break;
     }
     case gadget::KEY_U:
     {
+#ifdef QT_ON
         m_uiManager.UnembedAll();
-
+#endif
         break;
     }
     case gadget::KEY_W:

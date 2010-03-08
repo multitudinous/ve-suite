@@ -66,11 +66,12 @@ class Command;
 }
 }
 
+#ifdef QT_ON
 namespace conductor
 {
 class UIManager;
 }
-
+#endif
 namespace xplorer
 {
 
@@ -234,8 +235,9 @@ protected:
     ///
     scenegraph::manipulator::ManipulatorManager& m_manipulatorManager;
     
+#ifdef QT_ON
     ves::conductor::UIManager& m_uiManager;
-
+#endif
 };
 } //end device
 } //end xplorer
