@@ -76,8 +76,7 @@ if GetPlatform() == 'linux':
 
 lib_env.Append(LIBS = ['ves_open_xml',
                        'ves_open_module',
-                       'ves_xplorer_util',
-                       'ves_xplorer_data'])
+                       'ves_xplorer_util'])
 lib_env.Append(LIBPATH = [
                            pj('#', buildDir, 'src', 'ves', 'xplorer', 'util'),
                            pj('#', buildDir, 'src', 'ves', 'xplorer', 'data'),
@@ -90,10 +89,12 @@ xerces_options.apply( lib_env )
 wxwidgets_options.apply( lib_env )
 vpr_options.apply( lib_env )
 vtk_options.apply( lib_env )
-osg_options.apply( lib_env )
 
 if baseEnv['MakeQtSupport'] == "yes":
     qt46.applyQtBuildFlags( lib_env )
+    lib_env.Append(LIBS = [
+                       'ves_xplorer_data'])
+
 
 lib_env.Append( CPPDEFINES = ['VE_GUIPLUGINS_LIBRARY','VE_CONDUCTOR_UTILS_LIBRARY'])
 

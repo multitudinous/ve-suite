@@ -20,8 +20,7 @@ env.Append(
                    'ves_xplorer_volume',
                    'ves_xplorer_communication',
                    'ves_open_module',
-                   'ves_xplorer',
-                   'ves_conductor_plugin',
+                   'ves_xplorer'
                     ])
 
 env.Append(LIBPATH = [  pj('#', buildDir, 'src','ves','xplorer','scenegraph'),
@@ -32,8 +31,7 @@ env.Append(LIBPATH = [  pj('#', buildDir, 'src','ves','xplorer','scenegraph'),
                         pj('#', buildDir, 'src','ves','builder','DataLoader'),
                         pj('#', buildDir, 'src','ves','builder','cfdTranslatorToVTK'),
                         pj('#', buildDir, 'src','ves','open'),
-                        pj('#', buildDir, 'src','ves','open','xml'),
-                        pj('#', buildDir, 'src','ves','conductor')])
+                        pj('#', buildDir, 'src','ves','open','xml')])
 
 #disable profiling by default
 if env['VPRProfile'] == 'no':
@@ -46,7 +44,9 @@ if env[ 'MakeMinervaSupport' ] != 'no':
 
 #see if we need to compile Qt in
 if env[ 'MakeQtSupport' ] != 'no':
-   env.Append( CPPDEFINES = ['QT_UI_SUPPORT'] )
+    env.Append( CPPDEFINES = ['QT_UI_SUPPORT'] )
+    env.Append( LIBS = ['ves_conductor_plugin'] )
+    env.Append(LIBPATH = [ pj('#', buildDir, 'src','ves','conductor') ] )
 
 env.Append( CPPDEFINES = [ GetSVNVersion( srcDir ) ] )
 env.Append(CPPPATH = [pj('#','external','osgEphemeris','include')])

@@ -73,8 +73,6 @@
 #include <ves/open/xml/model/ModelCreator.h>
 #include <ves/open/xml/model/Model.h>
 
-#include <ves/conductor/UIManager.h>
-
 // --- OSG Includes --- //
 #include <osg/Group>
 #include <osg/FrameStamp>
@@ -123,6 +121,9 @@
 #include <jccl/RTRC/ConfigManager.h>
 
 #ifdef QT_ON
+
+#include <ves/conductor/UIManager.h>
+
 //// --- Qt Includes --- //
 #include <QtGui/QApplication>
 #include <QtGui/QPushButton>
@@ -132,10 +133,12 @@
 
 #include <ves/conductor/qt/UIElementQt.h>
 #include <ves/conductor/qt/MainWindow.h>
-#endif // QT_ON
 
 //// --- Boost includes --- //
 #include <boost/bind.hpp>
+
+#endif // QT_ON
+
 
 // --- C/C++ Libraries --- //
 #include <iostream>
@@ -512,7 +515,7 @@ void App::initScene()
 
     // This may need to be fixed
     this->m_vjobsWrapper->GetCfdStateVariables();
-
+#ifdef QT_ON
     // Get or create UIManager
     ves::conductor::UIManager* m_UIManager = ves::conductor::UIManager::instance();
 
@@ -528,6 +531,7 @@ void App::initScene()
     std::cout << "Starting UI thread" << std::endl;
     vpr::Thread* thread;
     thread = new vpr::Thread(boost::bind(&App::LoadUI, this));
+#endif
 }
 ////////////////////////////////////////////////////////////////////////////////
 void App::preFrame()
@@ -912,13 +916,14 @@ void App::draw()
     //Set scene info associated w/ this viewport and context
     if( glTI )
     {
+#ifdef QT_ON
         //FIXME: This is probably dangerous in a multi-context enviroment
         {
             osg::Matrixd inverseMVPW = glTI->GetOSGMVPWMatrix();
             inverseMVPW.invert( inverseMVPW );
             ves::conductor::UIManager::instance()->SetProjectionMatrix( inverseMVPW );
         }
-
+#endif
         //Get the projection matrix
         glTI->UpdateFrustumValues( l, r, b, t, n, f );
         const osg::Matrixd osgProjectionMatrix = glTI->GetOSGProjectionMatrix();
@@ -1092,16 +1097,13 @@ void App::LoadUI()
     // without it. Possibly default to Plastique style, which look OK and exists on
     // all platforms.
     a.setStyle( new QPlastiqueStyle );
-#endif // QT_ON
 
     // Get or create UIManager
     ves::conductor::UIManager* m_UIManager = ves::conductor::UIManager::instance();
 
-#ifdef QT_ON
     // Wrap the widget in a UIElement
     ves::conductor::UIElement *element = new ves::conductor::UIElementQt();
     QWidget* mainUIWidget = new MainWindow( static_cast< QGraphicsView* >( static_cast< ves::conductor::UIElementQt* >(element) ) );
-#endif // QT_ON
     
     // Since we're using an mdi-able MainWindow as the main widget, we make it
     // take up the entire viewable area of the GL window
@@ -1109,7 +1111,6 @@ void App::LoadUI()
     std::pair<int, int> res = cDS->GetScreenResolution();
     m_UIManager->SetRectangle( 0, res.first, 0, res.second );
 
-#ifdef QT_ON
     mainUIWidget->resize( res.first, res.second );
 
     // Need to do this initialization *after* the above call to resize.
