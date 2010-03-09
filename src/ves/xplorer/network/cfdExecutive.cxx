@@ -61,6 +61,10 @@
 #include <ves/xplorer/network/SwitchXplorerViewEventHandler.h>
 #include <ves/xplorer/network/ReloadPluginsEventHandler.h>
 
+#ifdef MINERVA_GIS_SUPPORT
+#include <ves/xplorer/minerva/MinervaManager.h>
+#endif
+
 #ifdef VE_SOUND
 // --- osgAL Includes --- //
 #include <osgAudio/SoundManager.h>
@@ -450,6 +454,10 @@ void cfdExecutive::LoadDataFromCE( void )
 
     if( ui_i->GetNetworkFlag() )
     {
+#ifdef MINERVA_GIS_SUPPORT
+        //If we have an earth we need to clear it when we load a new model
+        ves::xplorer::minerva::MinervaManager::instance()->Clear();
+#endif
         // Get Network and parse it
         GetEverything();
         ves::xplorer::scenegraph::SceneManager::instance()->ViewLogo( false );
