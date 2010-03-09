@@ -111,7 +111,7 @@ MinervaManager::MinervaManager()
         if( boost::filesystem::is_directory( minervaDirPath ) )
         {
             vesuiteHomeDefined = true;
-            std::cout << "Directory for minerva exists" << std::endl;
+            std::cout << "|\tDirectory for minerva exists" << std::endl;
         }
     }
     catch( const std::exception& ex )
@@ -180,7 +180,7 @@ MinervaManager::~MinervaManager()
 
 void MinervaManager::PreFrameUpdate()
 {
-    vprDEBUG( vesDBG, 3 ) << "|MinervaManager::LatePreFrameUpdate" 
+    vprDEBUG( vesDBG, 3 ) << "|\tMinervaManager::LatePreFrameUpdate" 
         << std::endl << vprDEBUG_FLUSH;
     ves::open::xml::CommandPtr tempCommand =
         ves::xplorer::ModelHandler::instance()->GetXMLCommand();
@@ -199,7 +199,7 @@ void MinervaManager::PreFrameUpdate()
             EventHandler *handler ( iter->second );
             if ( 0x0 != handler )
             {
-                vprDEBUG( vesDBG, 0 ) << "|Minerva manager executing: " << name << std::endl << vprDEBUG_FLUSH;
+                vprDEBUG( vesDBG, 0 ) << "|\tMinerva manager executing: " << name << std::endl << vprDEBUG_FLUSH;
                 try
                 {
                     handler->Execute ( tempCommand, *this );
@@ -297,6 +297,7 @@ void MinervaManager::Clear()
     osg::ref_ptr<osg::Group> root( ves::xplorer::scenegraph::SceneManager::instance()->GetModelRoot() );
     if( root.valid() )
     {
+        vprDEBUG( vesDBG, 0 ) << "|\tMinerva manager removing earth from the scene." << std::endl << vprDEBUG_FLUSH;
         root->removeChild( _scene.get() );
     }
     _scene = 0x0;
@@ -311,17 +312,17 @@ void MinervaManager::Clear()
     // Clean up job manager.
     if( 0x0 != _manager )
     {
-        vprDEBUG( vesDBG, 0 ) << "|Minerva manager canceling all threads." << std::endl << vprDEBUG_FLUSH;
+        vprDEBUG( vesDBG, 0 ) << "|\tMinerva manager canceling all threads." << std::endl << vprDEBUG_FLUSH;
         
         // Remove all queued jobs and cancel running jobs.
         _manager->cancel();
 
-        vprDEBUG( vesDBG, 0 ) << "|Minerva manager waiting for threads to finish." << std::endl << vprDEBUG_FLUSH;
+        vprDEBUG( vesDBG, 0 ) << "|\tMinerva manager waiting for threads to finish." << std::endl << vprDEBUG_FLUSH;
 
         // Wait for remaining jobs to finish.
         _manager->wait();
 
-        vprDEBUG( vesDBG, 0 ) << "|Minerva manager all threads finished." << std::endl << vprDEBUG_FLUSH;
+        vprDEBUG( vesDBG, 0 ) << "|\tMinerva manager all threads finished." << std::endl << vprDEBUG_FLUSH;
 
         // Delete the manager.
         delete _manager;
