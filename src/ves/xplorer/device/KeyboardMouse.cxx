@@ -150,8 +150,10 @@ KeyboardMouse::KeyboardMouse()
 
     m_currX( 0 ),
     m_currY( 0 ),
+#ifndef JUGGLER_DELTA
     m_prevX( 0 ),
     m_prevY( 0 ),
+#endif
 
     mAspectRatio( 0.0 ),
     mFoVZ( 0.0 ),
@@ -525,12 +527,24 @@ void KeyboardMouse::ProcessEvents()
 
                 m_uiManager.SendInteractionEvent( ie );
 #endif
-                OnMouseMotionDown();
+#ifdef JUGGLER_DELTA
+                double dx = mouse_evt->getScrollDeltaX();
+                double dy = mouse_evt->getScrollDeltaY();
+#else
+                double dx = m_currX - m_prevX;
+                double dy = m_currY - m_prevY;
+#endif
+
+                if( dx != 0.0 || dy != 0.0 )
+                {
+                    OnMouseMotionDown( dx, dy );
+                }
             }
 
+#ifndef JUGGLER_DELTA
             m_prevX = m_currX;
             m_prevY = m_currY;
-
+#endif
             break;
         }
         } //end switch( eventType )
@@ -1165,21 +1179,18 @@ void KeyboardMouse::OnMouseRelease()
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::OnMouseMotionDown()
+void KeyboardMouse::OnMouseMotionDown( double dx, double dy )
 {
-    double xDelta = m_currX - m_prevX;
-    double yDelta = m_currY - m_prevY;
-
     if( m_mousePickEvent )
     {
-        m_xMotionPixels += abs( static_cast< int >( xDelta ) );
-        m_yMotionPixels += abs( static_cast< int >( yDelta ) );
+        m_xMotionPixels += abs( static_cast< int >( dx ) );
+        m_yMotionPixels += abs( static_cast< int >( dy ) );
     }
 
-    xDelta /= m_windowWidth;
-    yDelta /= m_windowHeight;
+    dx /= m_windowWidth;
+    dy /= m_windowHeight;
 
-    mMagnitude = sqrt( xDelta * xDelta + yDelta * yDelta );
+    mMagnitude = sqrt( dx * dx + dy * dy );
 
     switch( m_currMouse )
     {
@@ -1202,7 +1213,7 @@ void KeyboardMouse::OnMouseMotionDown()
             //Rotate just the camera "3rd person view:
             if( m_characterController.IsEnabled() )
             {
-                m_characterController.Rotate( xDelta, yDelta );
+                m_characterController.Rotate( dx, dy );
             }
             else
             {
@@ -1213,14 +1224,14 @@ void KeyboardMouse::OnMouseMotionDown()
                 {
                     double angle = mMagnitude * 7.0;
 #if __VJ_version >= 2003000
-                    Rotate( angle, gmtl::Vec3d( -yDelta, 0.0, xDelta ) );
+                    Rotate( angle, gmtl::Vec3d( -dy, 0.0, dx ) );
 #else
-                    Rotate( angle, gmtl::Vec3d(  yDelta, 0.0, xDelta ) );
+                    Rotate( angle, gmtl::Vec3d(  dy, 0.0, dx ) );
 #endif
                 }
                 else
                 {
-                    Twist();
+                    Twist( dx, dy );
                 }
 
                 ProcessNavigation();
@@ -1243,7 +1254,7 @@ void KeyboardMouse::OnMouseMotionDown()
         }
         else
         {
-            Pan( xDelta, yDelta );
+            Pan( dx, dy );
             ProcessNavigation();
         }
 
@@ -1255,11 +1266,11 @@ void KeyboardMouse::OnMouseMotionDown()
         //Rotate the character and camera at the same time
         if( m_characterController.IsEnabled() )
         {
-            m_characterController.Rotate( xDelta, yDelta );
+            m_characterController.Rotate( dx, dy );
         }
         else
         {
-            Zoom( yDelta );
+            Zoom( dy );
             ProcessNavigation();
         }
 
@@ -1269,7 +1280,7 @@ void KeyboardMouse::OnMouseMotionDown()
 
     //If delta mouse motion is less than m_pickCushion, do selection
     if( m_mousePickEvent && ( ( m_xMotionPixels > m_pickCushion ) ||
-                     ( m_yMotionPixels > m_pickCushion ) ) )
+                              ( m_yMotionPixels > m_pickCushion ) ) )
     {
         m_mousePickEvent = false;
     }
@@ -1401,12 +1412,14 @@ void KeyboardMouse::ResetTransforms()
     worldDCS->SetTranslationArray( *mResetPosition );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::Twist()
+void KeyboardMouse::Twist( double dx, double dy )
 {
     double tempX = 1.0 / m_windowWidth;
     double tempY = 1.0 / m_windowHeight;
     double currTheta = atan2( m_currX * tempX - 0.5, m_currY * tempY - 0.5 );
-    double prevTheta = atan2( m_prevX * tempX - 0.5, m_prevY * tempY - 0.5 );
+    double prevTheta =
+        atan2( m_currX * tempX - dx - 0.5, m_currY * tempY - dy - 0.5 );
+
 #if __VJ_version >= 2003000
     double angle = currTheta - prevTheta;
 #else

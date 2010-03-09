@@ -73,6 +73,12 @@ class btTypedConstraint;
 // --- STL Includes --- //
 #include <bitset>
 
+
+//For testing new delta scroll in juggler on windows
+#ifdef VPR_OS_Windows
+//#define JUGGLER_DELTA
+#endif
+
 namespace ves
 {
 namespace xplorer
@@ -179,7 +185,7 @@ private:
     void OnMouseRelease();
 
     ///Functions called on mouse move events
-    void OnMouseMotionDown();
+    void OnMouseMotionDown( double dx, double dy );
 
     ///Functions called on mouse move events
     void OnMouseMotionUp();
@@ -211,7 +217,7 @@ private:
     */
 
     ///Rotates an object about the y-axis
-    void Twist();
+    void Twist( double dx, double dy );
 
     ///Handles movement in and out of the scene
     ///\param dy The change in the y direction
@@ -298,11 +304,14 @@ private:
     ///The current Y mouse position
     int m_currY;
 
+    //Need following variables to calculate a mouse delta for ver 1003027 or <
+#ifndef JUGGLER_DELTA
     ///The previous X mouse position
     int m_prevX;
 
     ///The previous Y mouse position
     int m_prevY;
+#endif
 
     ///Aspect ratio of window
     double mAspectRatio;
