@@ -16,7 +16,7 @@ headers = sca_util.getHeadersRecursive( srcDir )
 env = ves_pkg.getEnv().Clone()
 env.Append( CPPDEFINES = [ GetSVNVersion( srcDir ) ] )
 # See if we need to turn on the Minerva sub-menu.
-if baseEnv[ 'MakeMinervaSupport' ] != 'no':
+if minerva_options.isAvailable():
    env.Append( CPPDEFINES = ['MINERVA_GIS_SUPPORT'] )
    minerva_options.apply( env )
    #osg_options.apply( env )

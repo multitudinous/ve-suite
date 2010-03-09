@@ -122,7 +122,7 @@ if GetPlatform() == 'darwin':
     lib_env.AppendUnique( CPPDEFINES  = ['_DARWIN'] )
 
 #see if we need to compile minerva in
-if baseEnv[ 'MakeMinervaSupport' ] != 'no':
+if minerva_options.isAvailable():
 	lib_env.AppendUnique( CPPDEFINES = ['MINERVA_GIS_SUPPORT'] )
 	srcDir = os.path.abspath( pj(RootDir, 'src', 'ves', 'xplorer','minerva') )
 	base_plugin_srcs = sca_util.getSourcesRecursive( srcDir )

@@ -49,6 +49,8 @@ if baseEnv['MakeQtSupport'] == "yes":
                                      pj(openDir,'qt','propertyBrowser')] )
     
     lib_env.Append( LIBS = ['QtSolutions_PropertyBrowser-2.5'] )
+    qt46.applyQtBuildFlags( lib_env )
+    lib_env.Append(LIBS = ['ves_xplorer_data'])
 else:
     cppHeaders1 = []
     cppSources1 = []
@@ -70,7 +72,6 @@ if baseEnv['MakeQtSupport'] != "yes":
         index = sources.index( pj('qt',x) )
         sources.pop(index)
 
-
 if GetPlatform() == 'linux':
     lib_env.Append( CXXFLAGS=['-fPIC'])
 
@@ -90,23 +91,17 @@ wxwidgets_options.apply( lib_env )
 vpr_options.apply( lib_env )
 vtk_options.apply( lib_env )
 
-if baseEnv['MakeQtSupport'] == "yes":
-    qt46.applyQtBuildFlags( lib_env )
-    lib_env.Append(LIBS = [
-                       'ves_xplorer_data'])
-
-
 lib_env.Append( CPPDEFINES = ['VE_GUIPLUGINS_LIBRARY','VE_CONDUCTOR_UTILS_LIBRARY'])
 
 #see if we need to compile minerva in
-if baseEnv[ 'MakeMinervaSupport' ] != 'no':
+if minerva_options.isAvailable():
    lib_env.Append( CPPDEFINES = ['MINERVA_GIS_SUPPORT'] )
    minerva_options.apply( lib_env )
 
 if GetPlatform() == 'win32':
    lib_env.Append( CXXFLAGS = [ '/bigobj' ] )
    
-if baseEnv['StaticLibs'] == "yes":
+if lib_env['StaticLibs'] == "yes":
    lib = ves_pkg.createStaticAndSharedLibrary('ves_conductor_plugin',
                                                         lib_env,
                                                         installPrefix = LIBDIR)

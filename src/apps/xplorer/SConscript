@@ -38,7 +38,7 @@ if env['VPRProfile'] == 'no':
    env.Append( CPPDEFINES = ['DISABLE_VPR_PROFILE'] )
 
 #see if we need to compile minerva in
-if env[ 'MakeMinervaSupport' ] != 'no':
+if minerva_options.isAvailable():
    env.Append( CPPDEFINES = ['MINERVA_GIS_SUPPORT'] )
    minerva_options.apply( env )
 
