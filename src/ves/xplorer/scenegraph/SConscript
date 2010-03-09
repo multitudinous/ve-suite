@@ -37,6 +37,9 @@ osgworks_options.apply( lib_env )
 
 if osgal_options.isAvailable():
    osgal_options.apply( lib_env )
+   lib_env.Append( CPPDEFINES = [ 'VE_SOUND' ] )
+
+
    
 lib_env.Append( CPPDEFINES = ['VE_SCENEGRAPH_LIBRARY','VE_SCENEGRAPH_UTILS_LIBRARY','VE_NURBS_LIBRARY','VE_NURBS_UTILS_LIBRARY'])
 

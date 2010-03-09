@@ -20,7 +20,7 @@ lib_env.Append( LIBS = [ 'ves_open_xml',
 lib_env.Append( LIBPATH = [ pj( '#', buildDir, 'src', 'ves', 'open', 'xml' ),
                             pj( '#', buildDir, 'src', 'ves', 'xplorer' ),
                             pj( '#', buildDir, 'src', 'ves', 'xplorer', 'scenegraph' ) ] )
-#bulletVersion = bullet_options.getVersion()
+
 lib_env.Append(LIBS = ['bullet'])
 lib_env.Append(LIBPATH = [pj('#',buildDir,'external',bulletBaseVar)])
 lib_env.Append( CPPDEFINES = [ 'VE_USER_PLUGIN_LIBRARY' ] )
@@ -31,6 +31,8 @@ vrjuggler_options.apply( lib_env )
 osg_options.apply( lib_env )
 if osgal_options.isAvailable():
    osgal_options.apply( lib_env )
+   lib_env.Append( CPPDEFINES = [ 'VE_SOUND' ] )
+
 xerces_options.apply( lib_env )
 vtk_options.apply( lib_env )
 osgworks_options.apply( lib_env )

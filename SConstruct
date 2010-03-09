@@ -561,9 +561,6 @@ if not SConsAddons.Util.hasHelpFlag():
         base_bldr.enableOpt()
         base_bldr.setMsvcRuntime(EnvironmentBuilder.MSVC_MT_DLL_RT)
 
-    if osgal_options.isAvailable():
-        baseEnv.Append( CPPDEFINES = [ 'VE_SOUND' ] )
-
     if GetPlatform() != 'win32':
         base_bldr.enableWarnings( EnvironmentBuilder.MAXIMUM )
 
