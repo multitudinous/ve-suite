@@ -45,8 +45,8 @@
 
 #include <vpr/Util/Singleton.h>
 
-#include "osg/Node"
-#include "osg/ref_ptr"
+#include <osg/Node>
+#include <osg/ref_ptr>
 
 #include <gmtl/Matrix.h>
 
@@ -71,59 +71,63 @@ class VE_XPLORER_EXPORTS MinervaManager
 {
 public:
 
-  typedef ves::open::xml::CommandPtr CommandPtr;
-  typedef Minerva::Core::TileEngine::Body Body;
-  typedef Minerva::Core::Extents<osg::Vec2d> Extents;
+    typedef ves::open::xml::CommandPtr CommandPtr;
+    typedef Minerva::Core::TileEngine::Body Body;
+    typedef Minerva::Core::Extents<osg::Vec2d> Extents;
 
-  void AddEarthToScene();
-  void AddElevationLayer ( Minerva::Core::Layers::RasterLayer* );
-  void AddRasterLayer ( Minerva::Core::Layers::RasterLayer* );
-  void AddModel ( const std::string& guid, ModelWrapper* model );
+    void AddEarthToScene();
+    void AddElevationLayer ( Minerva::Core::Layers::RasterLayer* );
+    void AddRasterLayer ( Minerva::Core::Layers::RasterLayer* );
+    void AddModel ( const std::string& guid, ModelWrapper* model );
 
-  void Clear();
+    ///Get the tile engine body for minerva
+    ///\return The minerva tile engine body
+    Body* GetTileEngineBody();
+    ///Clear the earth from the scenegraph mode root
+    void Clear();
 
-  Minerva::Core::Layers::RasterLayer* GetLayer( const std::string& guid ) const;
+    Minerva::Core::Layers::RasterLayer* GetLayer( const std::string& guid ) const;
 
-  ModelWrapper* GetModel ( const std::string& guid ) const;
-  bool HasModel ( const std::string& guid ) const;
+    ModelWrapper* GetModel ( const std::string& guid ) const;
+    bool HasModel ( const std::string& guid ) const;
 
-  void GetViewMatrix ( Minerva::Core::Data::Camera* camera, gmtl::Matrix44d& matrix ) const;
+    void GetViewMatrix ( Minerva::Core::Data::Camera* camera, gmtl::Matrix44d& matrix ) const;
 
-  void PreFrameUpdate();
+    void PreFrameUpdate();
 
-  void RemoveElevationLayer ( const std::string& guid );
-  void RemoveRasterLayer ( const std::string& guid );
-  void RemoveModel ( const std::string& guid );
+    void RemoveElevationLayer ( const std::string& guid );
+    void RemoveRasterLayer ( const std::string& guid );
+    void RemoveModel ( const std::string& guid );
 
-  void SetVECommand ( CommandPtr command );
+    void SetVECommand ( CommandPtr command );
 
-  void UpdateModel ( ModelWrapper* );
+    void UpdateModel ( ModelWrapper* );
 
 private:
 
-  bool _removeLayer ( Minerva::Core::Layers::RasterGroup *group, const std::string& guid, Extents& extents );
+    bool _removeLayer ( Minerva::Core::Layers::RasterGroup *group, const std::string& guid, Extents& extents );
 
-  void _loadPlugins();
-  void _unloadPlugins();
+    void _loadPlugins();
+    void _unloadPlugins();
 
-  MinervaManager();
-  ~MinervaManager();
+    MinervaManager();
+    ~MinervaManager();
 
-  /// Do not copy.
-  //MinervaManager ( const MinervaManager& );
-  //MinervaManager& operator= ( const MinervaManager& );
+    /// Do not copy.
+    //MinervaManager ( const MinervaManager& );
+    //MinervaManager& operator= ( const MinervaManager& );
 
-  vprSingletonHeader ( MinervaManager );
+    vprSingletonHeader ( MinervaManager );
 
-  typedef std::map<std::string,EventHandler*> EventHandlers;
-  typedef std::map<std::string,ModelWrapper*> Models;
+    typedef std::map<std::string,EventHandler*> EventHandlers;
+    typedef std::map<std::string,ModelWrapper*> Models;
 
-  EventHandlers _eventHandlers;
-  CommandPtr _currentCommand;
-  Body* _body;
-  Usul::Jobs::Manager* _manager;
-  osg::ref_ptr<osg::Node> _scene;
-  Models _models; 
+    EventHandlers _eventHandlers;
+    CommandPtr _currentCommand;
+    Body* _body;
+    Usul::Jobs::Manager* _manager;
+    osg::ref_ptr<osg::Node> _scene;
+    Models _models; 
 };
 
 

@@ -51,6 +51,13 @@
 #include <gmtl/Generate.h>
 #include <gmtl/Misc/MatrixConvert.h>
 
+#ifdef MINERVA_GIS_SUPPORT
+//These includes must be below the gmlt matrix convert header
+#include <ves/xplorer/minerva/MinervaManager.h>
+#include <Minerva/Core/TileEngine/Body.h>
+#include <Minerva/Core/TileEngine/LandModel.h>
+#endif
+
 using namespace gmtl;
 using namespace gadget;
 using namespace ves::xplorer::device;
@@ -520,6 +527,27 @@ void Tablet::ProcessEvents()
             worldTrans[ 2 ] = 0;
         }
     }
+
+#ifdef MINERVA_GIS_SUPPORT
+    Minerva::Core::TileEngine::Body* tileEngineBody = 
+        ves::xplorer::minerva::MinervaManager::instance()->GetTileEngineBody();
+    if( tileEngineBody )
+    {
+        Minerva::Core::TileEngine::LandModel* landModel = 
+            tileEngineBody->landModel();
+        double lat, lon, elevation;
+        landModel->xyzToLatLonHeight( worldTrans[0], worldTrans[1], 
+            worldTrans[2], lat, lon, elevation  );
+        double earthElevation = tileEngineBody->elevationAtLatLong( lat, lon );
+        
+        if( earthElevation > elevation )
+        {
+            elevation = earthElevation;
+            landModel->latLonHeightToXYZ( lat, lon, elevation, worldTrans[0], 
+                                         worldTrans[1], worldTrans[2] );
+        }
+    }
+#endif
 
     world_quat *= rot_quat;
 

@@ -4,7 +4,6 @@
 //  Wrapper around Minerva library.
 //
 ///////////////////////////////////////////////////////////////////////////////
-
 #include <ves/xplorer/minerva/MinervaManager.h>
 #include <ves/xplorer/minerva/EventHandler.h>
 #include <ves/xplorer/minerva/AddEarthHandler.h>
@@ -641,4 +640,9 @@ Minerva::Core::Layers::RasterLayer* MinervaManager::GetLayer( const std::string&
   ::FindLayer visitor ( guid );
   _body->accept ( visitor );
   return visitor.layer.get();
+}
+////////////////////////////////////////////////////////////////////////////////
+Minerva::Core::TileEngine::Body* MinervaManager::GetTileEngineBody()
+{
+    return _body;
 }
