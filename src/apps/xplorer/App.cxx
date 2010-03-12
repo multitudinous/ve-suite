@@ -355,11 +355,13 @@ void App::configSceneView( osgUtil::SceneView* newSceneViewer )
         ///Hopefully a permanent solution to the problem can be found.
         ///This code needs to be tested to see if multi-context/quad buffer stereo
         ///and other rendering forms still work.
-        newSceneViewer->getCamera()->setDrawBuffer(GL_BACK);
+        newSceneViewer->getCamera()->setDrawBuffer( GL_NONE );
+        //newSceneViewer->getRenderStage()->setDrawBufferApplyMask( false );
+        //newSceneViewer->getRenderStage()->setDrawBuffer( GL_NONE, false );
         //newSceneViewer->getCamera()->setReadBuffer(GL_BACK);
-        //newSceneViewer->getCamera()->setInheritanceMask( 
-        //newSceneViewer->getCamera()->getInheritanceMask() & 
-        //osg::CullSettings::DRAW_BUFFER );
+        newSceneViewer->getCamera()->setInheritanceMask( 
+            newSceneViewer->getCamera()->getInheritanceMask() | 
+            osg::CullSettings::DRAW_BUFFER );
 #else
         newSceneViewer->getCamera()->setDrawBuffer(GL_NONE);
 #endif
@@ -967,30 +969,6 @@ void App::draw()
         sv->setProjectionMatrix( osgIdentityMatrix );
         sv->setViewMatrix( osgIdentityMatrix );
     }
-
-    //This code is required because on OSG rev 10547 the camera class no longer
-    //would accept GL_NONE for a draw buffer value. This means we have to keep
-    //the OSG camera in sync with what is happening in VR Juggler. Since each
-    //sv has its own camera we can change the buffer value in the draw function
-    //without worrying about causing a crash in multi context/parallel cases.
-#if ( (OPENSCENEGRAPH_MAJOR_VERSION>2) || \
-    (OPENSCENEGRAPH_MAJOR_VERSION==2 && \
-    (OPENSCENEGRAPH_MINOR_VERSION>9 || \
-    (OPENSCENEGRAPH_MINOR_VERSION==9 && \
-    OPENSCENEGRAPH_PATCH_VERSION>5))))  
-    if( !viewport->inStereo() )
-    {
-        sv->getCamera()->setDrawBuffer(GL_BACK);
-    }
-    else if( vrj::Viewport::LEFT_EYE == viewport->getView() )
-    {
-        sv->getCamera()->setDrawBuffer(GL_BACK_LEFT);
-    }
-    else if ( vrj::Viewport::RIGHT_EYE == viewport->getView() )
-    {
-        sv->getCamera()->setDrawBuffer(GL_BACK_RIGHT);
-    }
-#endif
     
     //Draw the scene
     //NOTE: It is not safe to call osgUtil::SceneView::update() here; it
