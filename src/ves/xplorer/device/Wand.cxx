@@ -60,6 +60,13 @@
 #include <gmtl/Generate.h>
 #include <gmtl/Misc/MatrixConvert.h>
 
+#ifdef MINERVA_GIS_SUPPORT
+//These includes must be below the gmlt matrix convert header
+#include <ves/xplorer/minerva/MinervaManager.h>
+#include <Minerva/Core/TileEngine/Body.h>
+#include <Minerva/Core/TileEngine/LandModel.h>
+#endif
+
 // --- OSG Includes --- //
 #include <osgUtil/LineSegmentIntersector>
 #include <osg/Group>
@@ -308,6 +315,26 @@ void Wand::ProcessEvents()
             }
         }
 
+#ifdef MINERVA_GIS_SUPPORT
+        Minerva::Core::TileEngine::Body* tileEngineBody = 
+        ves::xplorer::minerva::MinervaManager::instance()->GetTileEngineBody();
+        if( tileEngineBody )
+        {
+            Minerva::Core::TileEngine::LandModel* landModel = 
+            tileEngineBody->landModel();
+            double lat, lon, elevation;
+            landModel->xyzToLatLonHeight( m_worldTrans[0], m_worldTrans[1], 
+                                         m_worldTrans[2], lat, lon, elevation  );
+            double earthElevation = tileEngineBody->elevationAtLatLong( lat, lon );
+            
+            if( earthElevation > elevation )
+            {
+                elevation = earthElevation;
+                landModel->latLonHeightToXYZ( lat, lon, elevation, m_worldTrans[0], 
+                                             m_worldTrans[1], m_worldTrans[2] );
+            }
+        }
+#endif
         activeDCS->SetTranslationArray( m_worldTrans );
         world_quat *= m_rotIncrement;
         activeDCS->SetQuat( world_quat );
