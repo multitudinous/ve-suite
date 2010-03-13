@@ -123,6 +123,10 @@ public:
 protected:
 
 private:
+    ///Calculate the projection for the center view of the of the view matrix
+    ///This is needed because vr juggler is always calculating a 
+    ///Left/Right combo for the view
+    void CalculateCenterViewMatrix();
     ///
     const gmtl::Matrix44d m_ortho2DMatrix;
     ///

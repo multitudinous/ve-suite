@@ -41,10 +41,12 @@
 
 // ---  VR Juggler Includes --- //
 #if __VJ_version >= 2003000
+#include <vrj/Draw/OpenGL/App.h>
 #include <vrj/Draw/OpenGL/Window.h>
 #include <vrj/Draw/OpenGL/DrawManager.h>
 #include <vrj/Draw/OpenGL/ContextData.h>
 #else
+#include <vrj/Draw/OGL/App.h>
 #include <vrj/Draw/OGL/GlWindow.h>
 #include <vrj/Draw/OGL/GlDrawManager.h>
 #include <vrj/Draw/OGL/GlContextData.h>
@@ -52,6 +54,9 @@
 #include <vrj/Display/SurfaceViewport.h>
 #include <vrj/Display/Frustum.h>
 #include <vrj/Display/Projection.h>
+#include <vrj/Display/DisplayManager.h>
+
+#include <vrj/Kernel/User.h>
 
 // --- OSG Includes --- //
 
@@ -131,13 +136,12 @@ void SceneGLTransformInfo::Initialize()
         vrj::opengl::DrawManager::instance();
     vrj::opengl::UserData* userData = glDrawManager->currentUserData();
     vrj::opengl::WindowPtr glWindow = userData->getGlWindow();
-    vrj::DisplayPtr display = glWindow->getDisplay();
 #else
     vrj::GlDrawManager* glDrawManager = vrj::GlDrawManager::instance();
     vrj::GlUserData* userData = glDrawManager->currentUserData();
     vrj::GlWindowPtr glWindow = userData->getGlWindow();
-    vrj::DisplayPtr display = glWindow->getDisplay();
 #endif
+    vrj::DisplayPtr display = glWindow->getDisplay();
 
     //Get state info about the screen
     int windowOriginX, windowOriginY, windowWidth, windowHeight;
@@ -184,5 +188,41 @@ void SceneGLTransformInfo::Initialize()
     }
     vprDEBUG( vesDBG, 1 ) << "SceneGLTransformInfo::Initialize - "
         << "GLTransformInfo is initialized." << std::endl << vprDEBUG_FLUSH;
+}
+////////////////////////////////////////////////////////////////////////////////
+void SceneGLTransformInfo::CalculateCenterViewMatrix()
+{
+    vrj::DisplayManager* displayManager =
+        vrj::DisplayManager::instance();
+    const std::vector< vrj::DisplayPtr >& displays = 
+        displayManager->getActiveDisplays();
+#if __VJ_version >= 2003000
+    vrj::opengl::DrawManager* glDrawManager =
+        vrj::opengl::DrawManager::instance();
+#else
+    vrj::GlDrawManager* glDrawManager = 
+        vrj::GlDrawManager::instance();
+#endif
+    const float positionScale = glDrawManager->getApp()->getDrawScaleFactor();
+    for( size_t i = 0; i < displays.size(); ++i )
+    {
+        vrj::DisplayPtr display = displays.at( i );
+        unsigned int numViewports = displays.at( i )->getNumViewports();
+        for( unsigned int j = 0; j < numViewports; ++j )
+        {
+#if __VJ_version >= 2003000
+            vrj::ViewportPtr viewport = display->getViewport( j );
+            vrj::ProjectionPtr proj = viewport->getLeftProj();
+#else
+            vrj::Viewport* viewport = display->getViewport( j );
+            vrj::Projection* proj = viewport->getLeftProj();
+#endif
+            gmtl::Matrix44f cur_head_pos = 
+                viewport->getUser()->getHeadPosProxy()->getData(positionScale);
+
+            proj->calcViewMatrix(cur_head_pos, positionScale);
+            const gmtl::Matrix44f& projMatrix = proj->getViewMatrix();
+        }
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
