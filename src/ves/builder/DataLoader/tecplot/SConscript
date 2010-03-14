@@ -32,7 +32,7 @@ lib_env.Append( LIBPATH = [pj(TECSDKHOME,'lib',libdir)],
                     pj(TECSDKHOME,'include','sdk'),
                     pj(TECSDKHOME,'include','sdk','integrationmanager'),
                     pj(TECSDKHOME,'include','toolbox')],
-                CPPDEFINES = ['ENGINE','VE_USER_BUILDER_LIBRARY']
+                CPPDEFINES = ['ENGINE','VE_USER_BUILDER_LIBRARY']#,'PRINT_HEADERS']
               )
 
 #boost_options.apply( lib_env )
