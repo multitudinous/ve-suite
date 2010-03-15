@@ -29,8 +29,8 @@ gmtl_options.apply( env )
 vrjuggler_options.apply( env )
 xerces_options.apply( env )
 if osgal_options.isAvailable():
-   osgal_options.apply( lib_env )
-   lib_env.Append( CPPDEFINES = [ 'VE_SOUND' ] )
+   osgal_options.apply( env )
+   env.Append( CPPDEFINES = [ 'VE_SOUND' ] )
 
 if GetPlatform() == 'win32':
     env[ 'no_import_lib' ] = 1
