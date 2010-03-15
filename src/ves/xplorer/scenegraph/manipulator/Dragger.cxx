@@ -637,7 +637,7 @@ const osg::Plane Dragger::GetPlane( const bool& parallel ) const
         //If rotate to screen
         osg::Vec3d t, s;
         osg::Quat r, so;
-        m_currentGLTransformInfo->GetOSGModelViewMatrix().decompose(
+        m_currentGLTransformInfo->GetViewMatrixOSG().decompose(
             t, r, s, so );
         osg::Vec3d normal = GetUnitAxis() * osg::Matrix::rotate( r.inverse() );
         normal.normalize();

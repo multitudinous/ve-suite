@@ -913,45 +913,44 @@ void App::draw()
     //Get the GLTransformInfo associated w/ this viewport and context
     scenegraph::GLTransformInfoPtr glTI =
         m_sceneGLTransformInfo->GetGLTransformInfo( viewport );
-    const osg::Matrixd osgIdentityMatrix =
-        m_sceneGLTransformInfo->GetOSGIdentityMatrix();
+    const osg::Matrixd identityMatrixOSG =
+        m_sceneGLTransformInfo->GetIdentityMatrixOSG();
     //Set scene info associated w/ this viewport and context
     if( glTI )
     {
 #ifdef QT_ON
         //FIXME: This is probably dangerous in a multi-context enviroment
         {
-            osg::Matrixd inverseMVPW = glTI->GetOSGMVPWMatrix();
-            inverseMVPW.invert( inverseMVPW );
-            ves::conductor::UIManager::instance()->SetProjectionMatrix( inverseMVPW );
+            osg::Matrixd inverseVPW = glTI->GetVPWMatrixOSG();
+            inverseVPW.invert( inverseVPW );
+            ves::conductor::UIManager::instance()->SetProjectionMatrix( inverseVPW );
         }
 #endif
         //Get the projection matrix
         glTI->UpdateFrustumValues( l, r, b, t, n, f );
-        const osg::Matrixd osgProjectionMatrix = glTI->GetOSGProjectionMatrix();
+        const osg::Matrixd projectionMatrixOSG = glTI->GetProjectionMatrixOSG();
 
-        //Get the view matrix
-        const gmtl::Matrix44d viewMatrix =
-            gmtl::convertTo< double >( project->getViewMatrix() );
-        //Transform into z-up land (mZUp) and mul by the model matrix (mNavPosition)
-        const gmtl::Matrix44d modelViewMatrix = viewMatrix * mZUp;
-        glTI->UpdateModelViewMatrix( modelViewMatrix, mNavPosition );
-        const osg::Matrixd osgModelViewMatrix = glTI->GetOSGModelViewMatrix();
+        //Get the view matrix from vrj and transform into z-up land
+        const gmtl::Matrix44d vrjViewMatrix =
+            gmtl::convertTo< double >( project->getViewMatrix() ) * mZUp;
+        //Multiply by the camera matrix (mNavPosition)
+        glTI->UpdateViewMatrix( vrjViewMatrix, mNavPosition );
+        const osg::Matrixd viewMatrixOSG = glTI->GetViewMatrixOSG();
 
         if( mRTT )
-        {            
+        {
             sv->setViewport(
                 0, 0, glTI->GetWindowWidth(), glTI->GetWindowHeight() );
             sv->setProjectionMatrix(
-                m_sceneGLTransformInfo->GetOSGOrtho2DMatrix() );
-            sv->setViewMatrix( osgIdentityMatrix );
+                m_sceneGLTransformInfo->GetOrtho2DMatrixOSG() );
+            sv->setViewMatrix( identityMatrixOSG );
 
             osg::ref_ptr< osg::Camera > camera =
                 mSceneRenderToTexture->GetCamera( viewport );
             if( camera.valid() )
             {
-                camera->setProjectionMatrix( osgProjectionMatrix );
-                camera->setViewMatrix( osgModelViewMatrix );
+                camera->setProjectionMatrix( projectionMatrixOSG );
+                camera->setViewMatrix( viewMatrixOSG );
             }
         }
         else
@@ -959,15 +958,15 @@ void App::draw()
             sv->setViewport(
                 glTI->GetViewportOriginX(), glTI->GetViewportOriginY(),
                 glTI->GetViewportWidth(), glTI->GetViewportHeight() );
-            sv->setProjectionMatrix( osgProjectionMatrix );
-            sv->setViewMatrix( osgModelViewMatrix );
+            sv->setProjectionMatrix( projectionMatrixOSG );
+            sv->setViewMatrix( viewMatrixOSG );
         }
     }
     else
     {
         sv->setViewport( 0, 0, 1, 1 );
-        sv->setProjectionMatrix( osgIdentityMatrix );
-        sv->setViewMatrix( osgIdentityMatrix );
+        sv->setProjectionMatrix( identityMatrixOSG );
+        sv->setViewMatrix( identityMatrixOSG );
     }
     
     //Draw the scene

@@ -207,11 +207,11 @@ void KeyboardMouse::SetStartEndPoint(
     osg::Vec3d& startPoint, osg::Vec3d& endPoint )
 {
 #if __GADGET_version >= 1003023
-    osg::Matrixd inverseMVPW = m_currentGLTransformInfo->GetOSGMVPWMatrix();
-    inverseMVPW.invert( inverseMVPW );
+    osg::Matrixd inverseVPW = m_currentGLTransformInfo->GetVPWMatrixOSG();
+    inverseVPW.invert( inverseVPW );
 
-    startPoint = osg::Vec3d( m_currX, m_currY, 0.0 ) * inverseMVPW;
-    endPoint = osg::Vec3d( m_currX, m_currY, 1.0 ) * inverseMVPW;
+    startPoint = osg::Vec3d( m_currX, m_currY, 0.0 ) * inverseVPW;
+    endPoint = osg::Vec3d( m_currX, m_currY, 1.0 ) * inverseVPW;
 
     //std::cout << "startPoint: " << startPoint << std::endl;
     //std::cout << "endPoint: " << endPoint << std::endl;

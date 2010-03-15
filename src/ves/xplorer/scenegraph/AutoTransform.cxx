@@ -128,7 +128,7 @@ bool AutoTransform::computeLocalToWorldMatrix(
     osg::Vec3d pivotPoint( m_pivotPoint );
 
     //Declare matrix state variables
-    const osg::Matrixd* modelView( NULL );
+    const osg::Matrixd* view( NULL );
     const osg::Matrixd* projection( NULL );
     osg::Matrixd window;
 
@@ -141,9 +141,9 @@ bool AutoTransform::computeLocalToWorldMatrix(
             //dynamic_cast< osgUtil::IntersectionVisitor* >( nv );
         if( m_currentGLTransformInfo != GLTransformInfoPtr() )
         {
-            modelView = &(m_currentGLTransformInfo->GetOSGModelViewMatrix());
-            projection = &(m_currentGLTransformInfo->GetOSGProjectionMatrix());
-            window = m_currentGLTransformInfo->GetOSGWindowMatrix();
+            view = &(m_currentGLTransformInfo->GetViewMatrixOSG());
+            projection = &(m_currentGLTransformInfo->GetProjectionMatrixOSG());
+            window = m_currentGLTransformInfo->GetWindowMatrixOSG();
         }
 
         break;
@@ -154,7 +154,7 @@ bool AutoTransform::computeLocalToWorldMatrix(
         osg::Camera* camera = cv->getCurrentCamera();
         if( camera )
         {
-            modelView = &(camera->getViewMatrix());
+            view = &(camera->getViewMatrix());
             projection = &(camera->getProjectionMatrix());
             window = camera->getViewport()->computeWindowMatrix();
         }
@@ -172,7 +172,7 @@ bool AutoTransform::computeLocalToWorldMatrix(
     } //end switch( nv->getVisitorType() )
 
     osg::Vec3d eye, center, up;
-    if( !modelView )
+    if( !view )
     {
         up.set( 0.0, 0.0, 1.0 );
 
@@ -189,10 +189,10 @@ bool AutoTransform::computeLocalToWorldMatrix(
     }
     else
     {
-        modelView->getLookAt( eye, center, up );
+        view->getLookAt( eye, center, up );
     }
 
-    if( m_autoScaleToScreen && modelView )
+    if( m_autoScaleToScreen && view )
     {
         osg::Vec3d eyeVector;
         if( 1 )
@@ -201,7 +201,7 @@ bool AutoTransform::computeLocalToWorldMatrix(
             projection->getFrustum( fLeft, fRight, fBottom, fTop, fNear, fFar );
             osg::Matrixd ortho =
                 osg::Matrixd::ortho2D(  fLeft, fRight, fBottom, fTop );
-            osg::Matrixd mvpwMatrix = (*modelView) * ortho * window;
+            osg::Matrixd mvpwMatrix = (*view) * ortho * window;
 
             osg::Vec3d screenPosition = m_position * mvpwMatrix;
             screenPosition.z() = 0.0;
@@ -240,7 +240,7 @@ bool AutoTransform::computeLocalToWorldMatrix(
     {
         osg::Vec3d t, s;
         osg::Quat r, so;
-        modelView->decompose( t, r, s, so );
+        view->decompose( t, r, s, so );
         rotation = r.inverse();
 
         break;

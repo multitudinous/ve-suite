@@ -57,6 +57,12 @@ namespace scenegraph
 {
 
 /*!\file GLTransformInfo.h
+ * 1) Object Coordinates - [ vertex ]
+ * 2) World Coordinates - [ vertex ] [ M ]
+ * 3) Eye Coordinates - [ vertex ] [ M ] [ V ]
+ * 4) Clip Coordinates - [ vertex ] [ M ] [ V ] [ P ]
+ * 5) Normalized Device Coordinates - Perspective Division
+ * 6) Window Coordinates - [ vertex ] [ M ] [ V ] [ P ] [ W ]
  */
 
 /*!\class ves::xplorer::scenegraph::GLTransformInfo
@@ -126,46 +132,40 @@ public:
     const double& GetFarFrustum() const;
 
     ///
-    const gmtl::Matrix44d& GetModelMatrix() const;
+    const gmtl::Matrix44d& GetVrjViewMatrix() const;
 
     ///
-    const osg::Matrixd& GetOSGModelMatrix() const;
+    const osg::Matrixd& GetVrjViewMatrixOSG() const;
+
+    ///
+    const gmtl::Matrix44d& GetCameraMatrix() const;
+
+    ///
+    const osg::Matrixd& GetCameraMatrixOSG() const;
 
     ///
     const gmtl::Matrix44d& GetViewMatrix() const;
 
     ///
-    const osg::Matrixd& GetOSGViewMatrix() const;
-
-    ///
-    const gmtl::Matrix44d& GetModelViewMatrix() const;
-
-    ///
-    const osg::Matrixd& GetOSGModelViewMatrix() const;
+    const osg::Matrixd& GetViewMatrixOSG() const;
 
     ///
     const gmtl::Matrix44d& GetProjectionMatrix() const;
 
     ///
-    const osg::Matrixd& GetOSGProjectionMatrix() const;
+    const osg::Matrixd& GetProjectionMatrixOSG() const;
 
     ///
     const gmtl::Matrix44d& GetWindowMatrix() const;
 
     ///
-    const osg::Matrixd& GetOSGWindowMatrix() const;
-
-    ///
-    const gmtl::Matrix44d GetMVPWMatrix() const;
-
-    ///
-    const osg::Matrixd GetOSGMVPWMatrix() const;
+    const osg::Matrixd& GetWindowMatrixOSG() const;
 
     ///
     const gmtl::Matrix44d GetVPWMatrix() const;
 
     ///
-    const osg::Matrixd GetOSGVPWMatrix() const;
+    const osg::Matrixd GetVPWMatrixOSG() const;
 
     ///
     void UpdateFrustumValues(
@@ -174,9 +174,9 @@ public:
         const double& n, const double& f );
 
     ///
-    void UpdateModelViewMatrix(
-        const gmtl::Matrix44d& viewMatrix,
-        const gmtl::Matrix44d& modelMatrix );
+    void UpdateViewMatrix(
+        const gmtl::Matrix44d& vrjViewMatrix,
+        const gmtl::Matrix44d& cameraMatrix );
 
 protected:
 
@@ -216,34 +216,34 @@ private:
     double m_farFrustum;
 
     ///
-    gmtl::Matrix44d m_modelMatrix;
+    gmtl::Matrix44d m_vrjViewMatrix;
 
     ///
-    osg::Matrixd m_osgModelMatrix;
+    osg::Matrixd m_vrjViewMatrixOSG;
+
+    ///
+    gmtl::Matrix44d m_cameraMatrix;
+
+    ///
+    osg::Matrixd m_cameraMatrixOSG;
 
     ///
     gmtl::Matrix44d m_viewMatrix;
 
     ///
-    osg::Matrixd m_osgViewMatrix;
-
-    ///
-    gmtl::Matrix44d m_modelViewMatrix;
-
-    ///
-    osg::Matrixd m_osgModelViewMatrix;
+    osg::Matrixd m_viewMatrixOSG;
 
     ///
     gmtl::Matrix44d m_projectionMatrix;
 
     ///
-    osg::Matrixd m_osgProjectionMatrix;
+    osg::Matrixd m_projectionMatrixOSG;
 
     ///
     const gmtl::Matrix44d m_windowMatrix;
 
     ///
-    const osg::Matrixd m_osgWindowMatrix;
+    const osg::Matrixd m_windowMatrixOSG;
 
 };
 } //end scenegraph

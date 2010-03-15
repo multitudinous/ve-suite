@@ -74,9 +74,9 @@ SceneGLTransformInfo::SceneGLTransformInfo(
     const gmtl::Matrix44d& identityMatrix )
     :
     m_ortho2DMatrix( ortho2DMatrix ),
-    m_osgOrtho2DMatrix( m_ortho2DMatrix.mData ),
+    m_ortho2DMatrixOSG( m_ortho2DMatrix.mData ),
     m_identityMatrix( identityMatrix ),
-    m_osgIdentityMatrix( m_identityMatrix.mData )
+    m_identityMatrixOSG( m_identityMatrix.mData )
 {
     ;
 }
@@ -113,9 +113,9 @@ const gmtl::Matrix44d& SceneGLTransformInfo::GetOrtho2DMatrix() const
     return m_ortho2DMatrix;
 }
 ////////////////////////////////////////////////////////////////////////////////
-const osg::Matrixd& SceneGLTransformInfo::GetOSGOrtho2DMatrix() const
+const osg::Matrixd& SceneGLTransformInfo::GetOrtho2DMatrixOSG() const
 {
-    return m_osgOrtho2DMatrix;
+    return m_ortho2DMatrixOSG;
 }
 ////////////////////////////////////////////////////////////////////////////////
 const gmtl::Matrix44d& SceneGLTransformInfo::GetIdentityMatrix() const
@@ -123,9 +123,9 @@ const gmtl::Matrix44d& SceneGLTransformInfo::GetIdentityMatrix() const
     return m_identityMatrix;
 }
 ////////////////////////////////////////////////////////////////////////////////
-const osg::Matrixd& SceneGLTransformInfo::GetOSGIdentityMatrix() const
+const osg::Matrixd& SceneGLTransformInfo::GetIdentityMatrixOSG() const
 {
-    return m_osgIdentityMatrix;
+    return m_identityMatrixOSG;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SceneGLTransformInfo::Initialize()

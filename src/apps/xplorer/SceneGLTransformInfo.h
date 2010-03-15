@@ -108,13 +108,13 @@ public:
     const gmtl::Matrix44d& GetOrtho2DMatrix() const;
 
     ///
-    const osg::Matrixd& GetOSGOrtho2DMatrix() const;
+    const osg::Matrixd& GetOrtho2DMatrixOSG() const;
 
     ///
     const gmtl::Matrix44d& GetIdentityMatrix() const;
 
     ///
-    const osg::Matrixd& GetOSGIdentityMatrix() const;
+    const osg::Matrixd& GetIdentityMatrixOSG() const;
 
     ///Initialize transform info for the scene w.r.t each viewport
     ///NOTE: MUST be called AFTER EnvironmentHandler::InitScene
@@ -130,11 +130,11 @@ private:
     ///
     const gmtl::Matrix44d m_ortho2DMatrix;
     ///
-    const osg::Matrixd m_osgOrtho2DMatrix;
+    const osg::Matrixd m_ortho2DMatrixOSG;
     ///
     const gmtl::Matrix44d m_identityMatrix;
     ///
-    const osg::Matrixd m_osgIdentityMatrix;
+    const osg::Matrixd m_identityMatrixOSG;
 
 #if __VJ_version >= 2003000
     typedef std::map<
