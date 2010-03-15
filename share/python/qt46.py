@@ -38,7 +38,7 @@ def generate(env,**kw):
 
     if None == taoidl_cmd:
         sys.stdout.write("Could not find uic. Please make sure uic is in your PATH.\n")
-        sys.exit(0)
+        return None
     else:
         sys.stdout.write("Found uic %s\n" % taoidl_cmd )
 
@@ -48,7 +48,7 @@ def generate(env,**kw):
 
     if None == taoidl_cmd:
         sys.stdout.write("Could not find moc. Please make sure moc is in your PATH.\n")
-        sys.exit(0)
+        return None
     else:
         sys.stdout.write("Found moc %s\n" % taoidl_cmd )
 
