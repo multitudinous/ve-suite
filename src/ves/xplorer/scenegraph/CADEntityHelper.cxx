@@ -92,6 +92,8 @@
 
 #include <osgbBulletPlus/SaveRestore.h>
 
+#include <osgwTools/RemoveLOD.h>
+
 #include <osg/Version>
 
 //#include <ves/xplorer/scenegraph/SceneManager.h>
@@ -378,7 +380,17 @@ void CADEntityHelper::LoadFile( const std::string& filename,
         material->setAmbient( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.56862f, 0.56842f, 0.56842f, 1.0f ) );
         material->setColorMode( osg::Material::AMBIENT_AND_DIFFUSE );
         stateset->setAttribute( material.get(), osg::StateAttribute::ON );*/
-        
+    }
+
+    {
+        osg::notify( osg::INFO ) << "|\tRunning osgwTools::RemoveLOD" 
+            << std::endl;
+        //Run the LOD optimizer that will strip all LOD nodes down to one LOD
+        //This is not optimal but provides a way to remove LODs that are
+        //problematic. We often run into problem LOD nodes when working with
+        //data from the Priority 5 JT2OSG converter.
+        osgwTools::RemoveLOD removeLOD;
+        tempCADNode->accept( removeLOD );            
     }
 
     //Run the draw array optimization
