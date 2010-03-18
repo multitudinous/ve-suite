@@ -547,13 +547,12 @@ std::vector<std::string> fileIO::GetFilesInDirectory( std::string dir, std::stri
             {
                 try
                 {
-                    if( strstr( dir_itr->leaf().c_str(), extension.c_str() ) )
+                    if( dir_itr->path().extension() == extension )
                     {
                         std::string pathAndFileName;
                         pathAndFileName.assign( dir_path.string() );
                         pathAndFileName.append( "/" );
                         pathAndFileName.append( dir_itr->leaf() );
-
 
                         filesInDir.push_back( pathAndFileName );
                     }

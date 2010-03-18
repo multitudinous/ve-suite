@@ -55,7 +55,7 @@ cfdTranslatorToVTK::cfdTranslatorToVTK()
 {
 
     _baseFileName = "flowdata";
-    _fileExtension = "vtk";
+    _fileExtension = ".vtk";
     _inputDir = ".";
     _outputDir = ".";
     _outputFile = "vtkFile";
