@@ -20,10 +20,12 @@ PropertySet::PropertySet( )
     mAccumulatedChanges.clear( );
     mID = 0;
 }
+////////////////////////////////////////////////////////////////////////////////
 
 PropertySet::PropertySet( const PropertySet& orig )
 {
 }
+////////////////////////////////////////////////////////////////////////////////
 
 PropertySet::~PropertySet( )
 {
@@ -37,6 +39,7 @@ PropertySet::~PropertySet( )
 
     mPropertyMap.clear( );
 }
+////////////////////////////////////////////////////////////////////////////////
 
 void PropertySet::AddProperty( std::string propertyName,
                                boost::any value,
@@ -61,6 +64,7 @@ void PropertySet::AddProperty( std::string propertyName,
     // Connect change signals to the change accumulator
     _connectChanges( property );
 }
+////////////////////////////////////////////////////////////////////////////////
 
 bool PropertySet::PropertyExists( std::string propertyName ) const
 {
@@ -73,11 +77,13 @@ bool PropertySet::PropertyExists( std::string propertyName ) const
     }
     return result;
 }
+////////////////////////////////////////////////////////////////////////////////
 
 PropertySet::VectorOfStrings PropertySet::GetPropertyList( )
 {
     return mPropertyList;
 }
+////////////////////////////////////////////////////////////////////////////////
 
 Property* PropertySet::GetProperty( std::string propertyName )
 {
@@ -91,6 +97,7 @@ Property* PropertySet::GetProperty( std::string propertyName )
         return NULL;
     }
 }
+////////////////////////////////////////////////////////////////////////////////
 
 boost::any PropertySet::GetPropertyValue( std::string propertyName ) const
 {
@@ -104,6 +111,7 @@ boost::any PropertySet::GetPropertyValue( std::string propertyName ) const
         return boost::any( );
     }
 }
+////////////////////////////////////////////////////////////////////////////////
 
 const PropertySet::VectorOfStrings PropertySet::GetPropertyAttributeList( std::string
                                                                           propertyName
@@ -120,6 +128,7 @@ const PropertySet::VectorOfStrings PropertySet::GetPropertyAttributeList( std::s
         return VectorOfStrings( );
     }
 }
+////////////////////////////////////////////////////////////////////////////////
 
 boost::any PropertySet::GetPropertyAttribute( std::string propertyName,
                                               std::string attributeName )
@@ -134,6 +143,7 @@ boost::any PropertySet::GetPropertyAttribute( std::string propertyName,
         return boost::any( );
     }
 }
+////////////////////////////////////////////////////////////////////////////////
 
 bool PropertySet::GetPropertyEnabled( std::string propertyName ) const
 {
@@ -147,6 +157,7 @@ bool PropertySet::GetPropertyEnabled( std::string propertyName ) const
         return false;
     }
 }
+////////////////////////////////////////////////////////////////////////////////
 
 bool PropertySet::SetPropertyValue( std::string propertyName,
                                     boost::any value )
@@ -160,6 +171,7 @@ bool PropertySet::SetPropertyValue( std::string propertyName,
 
     return result;
 }
+////////////////////////////////////////////////////////////////////////////////
 
 void PropertySet::SetPropertyAttribute( std::string propertyName,
                                         std::string attributeName,
@@ -171,6 +183,7 @@ void PropertySet::SetPropertyAttribute( std::string propertyName,
         ( *iterator ).second->SetAttribute( attributeName, value );
     }
 }
+////////////////////////////////////////////////////////////////////////////////
 
 void PropertySet::SetPropertyEnabled( std::string propertyName,
                                       bool enabled )
@@ -188,6 +201,7 @@ void PropertySet::SetPropertyEnabled( std::string propertyName,
         }
     }
 }
+////////////////////////////////////////////////////////////////////////////////
 
 PropertySet::VectorOfStrings PropertySet::GetChanges( )
 {
@@ -195,102 +209,155 @@ PropertySet::VectorOfStrings PropertySet::GetChanges( )
     ClearAccumulatedChanges( );
     return changes;
 }
+////////////////////////////////////////////////////////////////////////////////
 
 void PropertySet::ClearAccumulatedChanges( )
 {
     mAccumulatedChanges.clear( );
 }
+////////////////////////////////////////////////////////////////////////////////
 
 void PropertySet::SetTableName( std::string TableName )
 {
     mTableName = TableName;
 }
+////////////////////////////////////////////////////////////////////////////////
 
 std::string PropertySet::GetTableName( )
 {
     return mTableName;
 }
+////////////////////////////////////////////////////////////////////////////////
 
 void PropertySet::SetRecordID( long unsigned int id )
 {
     mID = id;
 }
+////////////////////////////////////////////////////////////////////////////////
 
 long unsigned int PropertySet::GetRecordID( )
 {
     return mID;
 }
+////////////////////////////////////////////////////////////////////////////////
 
 bool PropertySet::DeleteFromDatabase( std::string DatabaseName )
 {
     return DeleteFromDatabase( DatabaseName, mTableName );
 }
+////////////////////////////////////////////////////////////////////////////////
 
 bool PropertySet::DeleteFromDatabase( std::string DatabaseName, std::string TableName )
 {
+    bool returnValue = false;
+
     // Open db connection and session
-    // TODO: wrap in exception handler in case db is inaccessible
-    // Also may want to use a connection pool to speed up access
-    Poco::Data::SQLite::Connector::registerConnector( );
-    Poco::Data::Session session( "SQLite", DatabaseName );
+    try
+    {
+        Poco::Data::SQLite::Connector::registerConnector( );
+        Poco::Data::Session session( "SQLite", DatabaseName );
 
-    bool returnValue = DeleteFromDatabase( &session, TableName );
+        returnValue = DeleteFromDatabase( &session, TableName );
 
-    // Close db connection
-    Poco::Data::SQLite::Connector::unregisterConnector( );
+        // Close db connection
+        Poco::Data::SQLite::Connector::unregisterConnector( );
+    }
+    catch ( Poco::Data::DataException &e )
+    {
+        std::cout << e.displayText( ) << std::endl;
+    }
+    catch ( ... )
+    {
+        std::cout << "Error writing to database." << std::endl;
+    }
 
     return returnValue;
 }
+////////////////////////////////////////////////////////////////////////////////
 
 bool PropertySet::DeleteFromDatabase( Poco::Data::Session *session )
 {
     return DeleteFromDatabase( session, mTableName );
 }
+////////////////////////////////////////////////////////////////////////////////
 
 bool PropertySet::DeleteFromDatabase( Poco::Data::Session *session, std::string TableName )
 {
-    ( *session ) << "DELETE FROM " << TableName << " WHERE id=:mID", Poco::Data::use( mID ), Poco::Data::now;
+    bool returnValue = false;
+
+    try
+    {
+        ( *session ) << "DELETE FROM " << TableName << " WHERE id=:mID", Poco::Data::use( mID ), Poco::Data::now;
+        returnValue = true;
+    }
+    catch ( Poco::Data::DataException &e )
+    {
+        std::cout << e.displayText( ) << std::endl;
+    }
+    catch ( ... )
+    {
+        std::cout << "Error writing to database." << std::endl;
+    }
+
+    return returnValue;
 }
+////////////////////////////////////////////////////////////////////////////////
 
 bool PropertySet::LoadFromDatabase( std::string DatabaseName )
 {
     return LoadFromDatabase( DatabaseName, mTableName, mID );
 }
+////////////////////////////////////////////////////////////////////////////////
 
 bool PropertySet::LoadFromDatabase( std::string DatabaseName,
                                     std::string TableName )
 {
     return LoadFromDatabase( DatabaseName, TableName, mID );
 }
+////////////////////////////////////////////////////////////////////////////////
 
 bool PropertySet::LoadFromDatabase( std::string DatabaseName,
                                     std::string TableName,
                                     long unsigned int ID )
 {
+    bool returnValue = false;
+
     // Open db connection and session
-    // TODO: wrap in exception handler in case db is inaccessible
-    // Also may want to use a connection pool to speed up access
-    Poco::Data::SQLite::Connector::registerConnector( );
-    Poco::Data::Session session( "SQLite", DatabaseName );
+    try
+    {
+        Poco::Data::SQLite::Connector::registerConnector( );
+        Poco::Data::Session session( "SQLite", DatabaseName );
 
-    bool returnValue = LoadFromDatabase( &session, TableName, ID );
+        returnValue = LoadFromDatabase( &session, TableName, ID );
 
-    // Close db connection
-    Poco::Data::SQLite::Connector::unregisterConnector( );
+        // Close db connection
+        Poco::Data::SQLite::Connector::unregisterConnector( );
+    }
+    catch ( Poco::Data::DataException &e )
+    {
+        std::cout << e.displayText( ) << std::endl;
+    }
+    catch ( ... )
+    {
+        std::cout << "Error writing to database." << std::endl;
+    }
 
     return returnValue;
 }
+////////////////////////////////////////////////////////////////////////////////
 
 bool PropertySet::LoadFromDatabase( Poco::Data::Session *session )
 {
     return LoadFromDatabase( session, mTableName, mID );
 }
+////////////////////////////////////////////////////////////////////////////////
 
 bool PropertySet::LoadFromDatabase( Poco::Data::Session *session,
                                     std::string TableName )
 {
     return LoadFromDatabase( session, TableName, mID );
 }
+////////////////////////////////////////////////////////////////////////////////
 
 bool PropertySet::LoadFromDatabase( Poco::Data::Session *session,
                                     std::string TableName,
@@ -374,35 +441,50 @@ bool PropertySet::LoadFromDatabase( Poco::Data::Session *session,
 
     return true;
 }
+////////////////////////////////////////////////////////////////////////////////
 
 bool PropertySet::WriteToDatabase( std::string DatabaseName )
 {
     bool returnValue = WriteToDatabase( DatabaseName, mTableName );
     return returnValue;
 }
+////////////////////////////////////////////////////////////////////////////////
 
 bool PropertySet::WriteToDatabase( std::string DatabaseName,
                                    std::string TableName )
 {
+    bool returnValue = false;
+
     // Open db connection and session
-    // TODO: wrap in exception handler in case db is inaccessible
-    // Also may want to use a connection pool to speed up access
-    Poco::Data::SQLite::Connector::registerConnector( );
-    Poco::Data::Session session( "SQLite", DatabaseName );
+    try
+    {
+        Poco::Data::SQLite::Connector::registerConnector( );
+        Poco::Data::Session session( "SQLite", DatabaseName );
 
-    bool returnValue = WriteToDatabase( &session, TableName );
+        returnValue = WriteToDatabase( &session, TableName );
 
-    // Close db connection
-    Poco::Data::SQLite::Connector::unregisterConnector( );
+        // Close db connection
+        Poco::Data::SQLite::Connector::unregisterConnector( );
+    }
+    catch ( Poco::Data::DataException &e )
+    {
+        std::cout << e.displayText( ) << std::endl;
+    }
+    catch ( ... )
+    {
+        std::cout << "Error writing to database." << std::endl;
+    }
 
     return returnValue;
 }
+////////////////////////////////////////////////////////////////////////////////
 
 bool PropertySet::WriteToDatabase( Poco::Data::Session *session )
 {
     bool returnValue = WriteToDatabase( session, mTableName );
     return returnValue;
 }
+////////////////////////////////////////////////////////////////////////////////
 
 bool PropertySet::WriteToDatabase( Poco::Data::Session *session,
                                    std::string TableName )
@@ -416,255 +498,212 @@ bool PropertySet::WriteToDatabase( Poco::Data::Session *session,
 
     bool returnVal = false;
 
-    // Check that we have non-empty table name
     if( m_TableName.empty( ) )
     {
         return false;
     }
 
-    // See if a table for this type already exists; if not create the table
-    //std::cout << "Checking for table..." << std::flush;
-    std::string tableExists;
+    // These two don't get used until about 150 lines down, but need to be
+    // declared outside the try{} block so memory can be properly cleaned
+    // up in case of an exception during writing to database
+    // Stores bindable wrappers for later deletion
+    std::vector< BindableAnyWrapper* > bindableVector;
+
+
     try
     {
+        // See if a table for this type already exists; if not create the table
+        std::string tableExists;
+
         ( *session ) << "SELECT name FROM sqlite_master WHERE name=:name",
                 Poco::Data::into( tableExists ),
                 Poco::Data::use( m_TableName ),
                 Poco::Data::now;
-    }
-    catch ( Poco::Data::DataException &e )
-    {
-        std::cout << e.displayText( ) << std::endl;
-    }
-    catch ( ... )
-    {
-        std::cout << "Error writing to database." << std::endl;
-    }
-    if( tableExists.empty( ) ) // Table doesn't exist
-    {
-        //std::cout << "creating table..." << std::flush;
-        std::string columnHeaderString = _buildColumnHeaderString( );
 
-        Poco::Data::Statement sm( ( *session ) );
-        sm << "CREATE TABLE " << m_TableName << " (" << columnHeaderString << ")";
-        try
+        if( tableExists.empty( ) ) // Table doesn't exist
         {
+            std::string columnHeaderString = _buildColumnHeaderString( );
+            Poco::Data::Statement sm( ( *session ) );
+            sm << "CREATE TABLE " << m_TableName << " (" << columnHeaderString << ")";
             sm.execute( );
         }
-        catch ( Poco::Data::DataException &e )
-        {
-            std::cout << e.displayText( ) << std::endl;
-        }
-        catch ( ... )
-        {
-            std::cout << "Error writing to database." << std::endl;
-        }
-    }
-    //std::cout << "done." << std::endl << std::flush;
 
-    // Determine whether a record already exists for this PropertySet.
-    // This query will return a non-zero, positive id iff the record exists
-    std::cout << "Checking for existing record with this ID..." << std::flush;
-    int idTest = 0;
-    try
-    {
+        // Determine whether a record already exists for this PropertySet.
+        // This query will return a non-zero, positive id iff the record exists
+        int idTest = 0;
+
         ( *session ) << "SELECT id FROM " << m_TableName << " WHERE id=:id",
                 Poco::Data::into( idTest ),
                 Poco::Data::use( mID ),
                 Poco::Data::now;
-    }
-    catch ( Poco::Data::DataException &e )
-    {
-        std::cout << e.displayText( ) << std::endl;
-    }
-    catch ( ... )
-    {
-        std::cout << "Error writing to database." << std::endl;
-    }
 
-    // Since the data binding part will be the same for INSERT and UPDATE
-    // operations on this PropertySet, we only need to build the string part
-    // of the query separately.
+        // Since the data binding part will be the same for INSERT and UPDATE
+        // operations on this PropertySet, we only need to build the string part
+        // of the query separately.
 
-    // Will hold the string part of any query we do.
-    std::string query;
-    // Will hold the list of fields in the order added to query.
-    std::vector< std::string > fieldNames;
+        // Will hold the string part of any query we do.
+        std::string query;
+        // Will hold the list of fields in the order added to query.
+        std::vector< std::string > fieldNames;
 
-    if( idTest == 0 ) //  Record does not exist; perform an INSERT
-    {
-        //std::cout << "record does not exist." << std::endl << std::flush;
-
-        // Build a query that looks like this:
-        // "INSERT INTO tablename (field1name_1,fieldname_2,...) VALUES (:1,:2,...)"
-        query = "INSERT INTO ";
-        query.append( m_TableName );
-        query.append( " (" );
-
-        Property *property;
-        PropertyMap::const_iterator iterator = mPropertyMap.begin( );
-        while ( iterator != mPropertyMap.end( ) )
+        if( idTest == 0 ) //  Record does not exist; perform an INSERT
         {
-            property = iterator->second;
-            // Check for a known type
-            if( ( property->IsBool( ) ) || ( property->IsDouble( ) ) ||
-                    ( property->IsFloat( ) ) || ( property->IsInt( ) ) ||
-                    ( property->IsString( ) ) )
+            // Build a query that looks like this:
+            // "INSERT INTO tablename (field1name_1,fieldname_2,...) VALUES (:1,:2,...)"
+            query = "INSERT INTO ";
+            query.append( m_TableName );
+            query.append( " (" );
+
+            Property* property;
+            PropertyMap::const_iterator iterator = mPropertyMap.begin( );
+            while ( iterator != mPropertyMap.end( ) )
             {
-                query.append( iterator->first );
+                property = iterator->second;
+                // Check for a known type
+                if( ( property->IsBool( ) ) || ( property->IsDouble( ) ) ||
+                        ( property->IsFloat( ) ) || ( property->IsInt( ) ) ||
+                        ( property->IsString( ) ) )
+                {
+                    query.append( iterator->first );
+                    query.append( "," );
+                    fieldNames.push_back( iterator->first );
+                    iterator++;
+                }
+                else // Didn't put in field name because we had an unknown type
+                {
+                    iterator++;
+                }
+            }
+
+            // There should be an extra comma at the end of the query that must be
+            // removed. Test for it and remove if it is there.
+            if( query.substr( query.size( ) - 1, query.size( ) ) == "," )
+            {
+                query.erase( --query.end( ) );
+            }
+
+            query.append( ") VALUES (" );
+
+            // Put in the binding labels (:0,:1,...) for Poco::Data
+            size_t max = fieldNames.size( );
+            for ( size_t count = 0; count < max; count++ )
+            {
+                query.append( ":" );
+                query.append( _toString( count ) );
                 query.append( "," );
-                fieldNames.push_back( iterator->first );
-                iterator++;
             }
-            else // Didn't put in field name because we had an unknown type
+            // There should be an extra comma at the end of the query that must be
+            // removed. Test for it and remove if it is there.
+            if( query.substr( query.size( ) - 1, query.size( ) ) == "," )
             {
-                iterator++;
+                query.erase( --query.end( ) );
             }
+
+            query.append( ")" );
         }
-
-        // There should be an extra comma at the end of the query that must be
-        // removed. Test for it and remove if it is there.
-        if( query.substr( query.size( ) - 1, query.size( ) ) == "," )
+        else // Record exists; perform an UPDATE
         {
-            query.erase( --query.end( ) );
-        }
+            // Build a query that looks like:
+            // "UPDATE tablename SET field_0=:0, field_1=:1 WHERE id=mID"
+            query = "UPDATE ";
+            query.append( m_TableName );
+            query.append( " SET " );
 
-        query.append( ") VALUES (" );
-
-        // Put in the binding labels (:0,:1,...) for Poco::Data
-        size_t max = fieldNames.size( );
-        for ( size_t count = 0; count < max; count++ )
-        {
-            query.append( ":" );
-            query.append( _toString( count ) );
-            query.append( "," );
-        }
-        // There should be an extra comma at the end of the query that must be
-        // removed. Test for it and remove if it is there.
-        if( query.substr( query.size( ) - 1, query.size( ) ) == "," )
-        {
-            query.erase( --query.end( ) );
-        }
-
-        query.append( ")" );
-    }
-    else // Record exists; perform an UPDATE
-    {
-        //std::cout << "record exists... doing update on id=" << _toString( mID ) << std::endl << std::flush;
-        // Build a query that looks like:
-        // "UPDATE tablename SET field_0=:0, field_1=:1 WHERE id=mID"
-        query = "UPDATE ";
-        query.append( m_TableName );
-        query.append( " SET " );
-
-        Property *property;
-        PropertyMap::const_iterator iterator = mPropertyMap.begin( );
-        while ( iterator != mPropertyMap.end( ) )
-        {
-            property = iterator->second;
-            // Check for a known type
-            if( ( property->IsBool( ) ) || ( property->IsDouble( ) ) ||
-                    ( property->IsFloat( ) ) || ( property->IsInt( ) ) ||
-                    ( property->IsString( ) ) )
+            Property* property;
+            PropertyMap::const_iterator iterator = mPropertyMap.begin( );
+            while ( iterator != mPropertyMap.end( ) )
             {
-                query.append( iterator->first );
-                query.append( "=:" );
-                query.append( _toString( fieldNames.size( ) ) );
-                query.append( "," );
+                property = iterator->second;
+                // Check for a known type
+                if( ( property->IsBool( ) ) || ( property->IsDouble( ) ) ||
+                        ( property->IsFloat( ) ) || ( property->IsInt( ) ) ||
+                        ( property->IsString( ) ) )
+                {
+                    query.append( iterator->first );
+                    query.append( "=:" );
+                    query.append( _toString( fieldNames.size( ) ) );
+                    query.append( "," );
 
-                fieldNames.push_back( iterator->first );
-                iterator++;
+                    fieldNames.push_back( iterator->first );
+                    iterator++;
+                }
+                else // Didn't put in field name because we had an unknown type
+                {
+                    iterator++;
+                }
             }
-            else // Didn't put in field name because we had an unknown type
+            // There should be an extra comma at the end of the query that must be
+            // removed. Test for it and remove if it is there.
+            if( query.substr( query.size( ) - 1, query.size( ) ) == "," )
             {
-                iterator++;
+                query.erase( --query.end( ) );
             }
+
+            query.append( " WHERE id=" );
+            query.append( _toString( mID ) );
         }
-        // There should be an extra comma at the end of the query that must be
-        // removed. Test for it and remove if it is there.
-        if( query.substr( query.size( ) - 1, query.size( ) ) == "," )
+
+        // Turn the query into a statement that can accept bound values
+        Poco::Data::Statement statement( ( *session ) );
+        statement << query;
+
+        // The data binding looks the same for either query type (INSERT or UPDATE)
+        BindableAnyWrapper* bindable; // Bindable wrapper for property data
+        Property* property;
+        std::vector<std::string>::iterator iterator = fieldNames.begin( );
+        while ( iterator != fieldNames.end( ) )
         {
-            query.erase( --query.end( ) );
+            property = mPropertyMap[ ( *iterator ) ];
+
+            bindable = new BindableAnyWrapper;
+            bindableVector.push_back( bindable );
+            // Force enums to save their associated string value
+            if( (property->IsEnum()) )
+            {
+                bindable->BindValue( &statement, property->GetAttribute("enumCurrentString"));
+            }
+            else
+            {
+                bindable->BindValue( &statement, property->GetValue( ) );
+            }
+
+            iterator++;
         }
 
-        query.append( " WHERE id=" );
-        query.append( _toString( mID ) );
-    }
-
-    // Turn the query into a statement that can accept bound values
-    Poco::Data::Statement statement( ( *session ) );
-    statement << query;
-
-    // The data binding looks the same for either query type (INSERT or UPDATE)
-
-    // Bindable wrapper for property data
-    BindableAnyWrapper *bindable;
-    // Stores wrappers for later deletion
-    std::vector< BindableAnyWrapper* > bindableVector;
-
-    Property *property;
-    std::vector<std::string>::iterator iterator = fieldNames.begin( );
-    while ( iterator != fieldNames.end( ) )
-    {
-        property = mPropertyMap[ ( *iterator ) ];
-
-        bindable = new BindableAnyWrapper;
-        bindableVector.push_back( bindable );
-        bindable->BindValue( &statement, property->GetValue( ) );
-
-        iterator++;
-    }
-
-    //std::cout << "Executing statement..." << std::endl << std::flush;
-    //std::cout << statement.toString() << std::endl << std::flush;
-    try
-    {
         statement.execute( );
-    }
-    catch ( Poco::Data::DataException &e )
-    {
-        std::cout << e.displayText( ) << std::endl;
-    }
-    catch ( ... )
-    {
-        std::cout << "Error writing to database." << std::endl;
-    }
+        // If we've made it here, we successfully wrote to database
+        returnVal = true;
 
-    // If we've made it here, then we successfully wrote to database
-    returnVal = true;
-
-    // If we just did an INSERT (mID == 0), we need to get the id of the
-    // record we just INSERTed and store it as mID.
-    if( mID == 0 )
-    {
-        try
+        // If we just did an INSERT (mID == 0), we need to get the id of the
+        // record we just INSERTed and store it as mID.
+        if( mID == 0 )
         {
             ( *session ) << "SELECT MAX(id) FROM " << TableName,
                     Poco::Data::into( mID ),
                     Poco::Data::now;
         }
-        catch ( Poco::Data::DataException &e )
-        {
-            std::cout << e.displayText( ) << std::endl;
-        }
-        catch ( ... )
-        {
-            std::cout << "Error writing to database." << std::endl;
-        }
+    }
+    catch ( Poco::Data::DataException &e )
+    {
+        std::cout << e.displayText( ) << std::endl;
+    }
+    catch ( ... )
+    {
+        std::cout << "Error writing to database." << std::endl;
     }
 
-    //std::cout << "Wrote to record with id = " << _toString( mID ) << std::endl;
-
     // Delete the BindableAnyWrapperS that were created in the binding loop
-    std::vector< BindableAnyWrapper* >::iterator biterator = bindableVector.begin( );
+    std::vector< BindableAnyWrapper* >::iterator biterator =
+            bindableVector.begin( );
     while ( biterator != bindableVector.end( ) )
     {
-        delete (*biterator );
+        delete ( *biterator );
         biterator++;
     }
 
     return returnVal;
 }
+////////////////////////////////////////////////////////////////////////////////
 
 std::string PropertySet::_buildColumnHeaderString( )
 {
@@ -686,6 +725,11 @@ std::string PropertySet::_buildColumnHeaderString( )
         if( property->IsBool( ) )
         {
             dataType = "INTEGER";
+        }
+        else if( property->IsEnum() )
+        {
+            // We treat enum persistence as a string rather than an int
+            dataType = "TEXT";
         }
         else if( property->IsInt( ) )
         {
@@ -732,6 +776,7 @@ std::string PropertySet::_buildColumnHeaderString( )
 
     return result;
 }
+////////////////////////////////////////////////////////////////////////////////
 
 void PropertySet::_connectChanges( Property* property )
 {
@@ -751,6 +796,7 @@ void PropertySet::_connectChanges( Property* property )
                                                        _changeAccumulator,
                                                        this, _1 ) );
 }
+////////////////////////////////////////////////////////////////////////////////
 
 void PropertySet::_changeAccumulator( Property* property )
 {
@@ -778,6 +824,7 @@ void PropertySet::_changeAccumulator( Property* property )
         mAccumulatedChanges.push_back( name );
     }
 }
+////////////////////////////////////////////////////////////////////////////////
 
 std::string PropertySet::_toString( int value )
 {
@@ -787,6 +834,7 @@ std::string PropertySet::_toString( int value )
     ss >> result;
     return result;
 }
+////////////////////////////////////////////////////////////////////////////////
 
 std::string PropertySet::_toString( long unsigned int value )
 {

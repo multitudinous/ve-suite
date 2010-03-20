@@ -23,6 +23,8 @@ private:
     void LockIntToZero( Property* property );
     void UpdateModeOptions( Property* property );
     bool ValidateScalarMinMax( Property* property, boost::any value );
+    void UpdateScalarDataOptions( Property* property );
+    void UpdateScalarDataRange( Property* property );
 
 
 private:
