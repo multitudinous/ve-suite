@@ -14,14 +14,15 @@
 #include <osg/NodeCallback>
 #include <osg/Material>
 
-#include <ves/conductor/UIManager.h>
-#include <ves/conductor/UIElement.h>
+#include <ves/conductor/qt/UIManager.h>
+#include <ves/conductor/qt/UIElement.h>
 
 #include <ves/xplorer/util/InteractionEvent.h>
 
 using namespace ves::conductor;
 
 vprSingletonImp( UIManager );
+////////////////////////////////////////////////////////////////////////////////
 
 UIManager::UIManager( )
 {
@@ -35,11 +36,24 @@ UIManager::UIManager( )
     mHide = false;
     mShow = false;
 }
+////////////////////////////////////////////////////////////////////////////////
 
 UIManager::~UIManager( )
 {
     // Delete all UIElements of which we've taken charge
+    // Note that these were not allocated inside this class, but the class
+    // interface specifies that it takes ownership of these objects
+    std::map< osg::ref_ptr< osg::Geode >, UIElement* >::iterator map_iterator;
+    for ( map_iterator = mElements.begin( ); map_iterator != mElements.end( );
+            ++map_iterator )
+    {
+        delete ( *map_iterator ).second;
+    }
+
+    // All other memory allocated on the heap by this class should be attached
+    // to an osg::ref_ptr and so should automatically manage its lifetime
 }
+////////////////////////////////////////////////////////////////////////////////
 
 osg::ref_ptr<osg::Geode> UIManager::AddElement( UIElement *element )
 {
@@ -138,6 +152,7 @@ osg::ref_ptr<osg::Geode> UIManager::AddElement( UIElement *element )
     mElements[ geode.get( ) ] = element;
     return geode.get( );
 }
+////////////////////////////////////////////////////////////////////////////////
 
 bool UIManager::RemoveElement( osg::ref_ptr<osg::Geode> geode )
 {
@@ -145,6 +160,7 @@ bool UIManager::RemoveElement( osg::ref_ptr<osg::Geode> geode )
     // entry from map
     return true;
 }
+////////////////////////////////////////////////////////////////////////////////
 
 void UIManager::RemoveAllElements( )
 {
@@ -158,6 +174,7 @@ void UIManager::RemoveAllElements( )
 
     mElements.clear( );
 }
+////////////////////////////////////////////////////////////////////////////////
 
 void UIManager::Update( )
 {
@@ -215,6 +232,7 @@ void UIManager::Update( )
         _repaintChildren( );
     }
 }
+////////////////////////////////////////////////////////////////////////////////
 
 void UIManager::HideAllElements( )
 {
@@ -222,6 +240,7 @@ void UIManager::HideAllElements( )
     // Set hide flag to be discovered during update
     mHide = true;
 }
+////////////////////////////////////////////////////////////////////////////////
 
 void UIManager::ShowAllElements( bool showOnlyActive )
 {
@@ -229,6 +248,7 @@ void UIManager::ShowAllElements( bool showOnlyActive )
     // Set show flag to be discovered during update
     mShow = true;
 }
+////////////////////////////////////////////////////////////////////////////////
 
 void UIManager::ToggleVisibility( )
 {
@@ -236,6 +256,7 @@ void UIManager::ToggleVisibility( )
     // Set visibility flag to be discovered during update
     mToggleVisibility = true;
 }
+////////////////////////////////////////////////////////////////////////////////
 
 void UIManager::SetRectangle( int left, int right, int bottom, int top )
 {
@@ -245,6 +266,7 @@ void UIManager::SetRectangle( int left, int right, int bottom, int top )
     mBottom = bottom;
     mTop = top;
 }
+////////////////////////////////////////////////////////////////////////////////
 
 void UIManager::Initialize( osg::ref_ptr< osg::Group > parentNode )
 {
@@ -294,6 +316,7 @@ void UIManager::Initialize( osg::ref_ptr< osg::Group > parentNode )
 
     mInitialized = true;
 }
+////////////////////////////////////////////////////////////////////////////////
 
 void UIManager::operator( )( osg::Node* node, osg::NodeVisitor* nv )
 {
@@ -303,6 +326,7 @@ void UIManager::operator( )( osg::Node* node, osg::NodeVisitor* nv )
     // Allow update traversal to continue
     traverse( node, nv );
 }
+////////////////////////////////////////////////////////////////////////////////
 
 void UIManager::SendInteractionEvent( xplorer::util::InteractionEvent &event )
 {
@@ -333,12 +357,13 @@ void UIManager::SendInteractionEvent( xplorer::util::InteractionEvent &event )
         {
             UIElement *element = ( *map_iterator ).second;
             // Flip y mouse coordinate to origin GUI expects
-            event.Y = static_cast<double>(mTop) - event.Y;
+            event.Y = static_cast < double > ( mTop ) - event.Y;
             element->SendInteractionEvent( event );
         }
     }
 
 }
+////////////////////////////////////////////////////////////////////////////////
 
 void UIManager::_insertNodesToAdd( )
 {
@@ -353,6 +378,7 @@ void UIManager::_insertNodesToAdd( )
 
     mNodesToAdd.clear( );
 }
+////////////////////////////////////////////////////////////////////////////////
 
 void UIManager::_repaintChildren( )
 {
@@ -368,30 +394,39 @@ void UIManager::_repaintChildren( )
         {
             UIElement *element = ( *map_iterator ).second;
             unsigned char *image_Data = element->RenderElementToImage( );
-            osg::StateSet *state = ( *map_iterator ).first
-                    ->getOrCreateStateSet( );
-            osg::Image *image =
-                    state->getTextureAttribute( 0, osg::StateAttribute::TEXTURE )
-                    ->asTexture( )->getImage( 0 );
-            image->setImage( element->GetImageWidth( ),
-                             element->GetImageHeight( ), 1, 4,
-                             GL_BGRA, GL_UNSIGNED_BYTE,
-                             image_Data, osg::Image::NO_DELETE );
-            image->dirty( );
+
+            // Only reset the image if element tells us it has changed since 
+            // last time
+            if( element->IsDirty( ) )
+            {
+                osg::StateSet *state = ( *map_iterator ).first
+                        ->getOrCreateStateSet( );
+                osg::Image *image =
+                        state->getTextureAttribute( 0, osg::StateAttribute::TEXTURE )
+                        ->asTexture( )->getImage( 0 );
+                image->setImage( element->GetImageWidth( ),
+                                 element->GetImageHeight( ), 1, 4,
+                                 GL_BGRA, GL_UNSIGNED_BYTE,
+                                 image_Data, osg::Image::NO_DELETE );
+                image->dirty( );
+            }
         }
     }
 }
+////////////////////////////////////////////////////////////////////////////////
 
 void UIManager::_sendEvent( )
 {
 
 }
+////////////////////////////////////////////////////////////////////////////////
 
 void UIManager::_hideAll( )
 {
     mUIGroup->setAllChildrenOff( );
     mHide = false;
 }
+////////////////////////////////////////////////////////////////////////////////
 
 void UIManager::_showAll( )
 {
@@ -409,6 +444,7 @@ void UIManager::_showAll( )
     mUIGroup->setAllChildrenOn( );
     mShow = false;
 }
+////////////////////////////////////////////////////////////////////////////////
 
 void UIManager::SetProjectionMatrix( osg::Matrixd& matrix )
 {
@@ -418,27 +454,30 @@ void UIManager::SetProjectionMatrix( osg::Matrixd& matrix )
         mTempProj = matrix;
     }
 }
+////////////////////////////////////////////////////////////////////////////////
 
-void UIManager::UnembedAll()
+void UIManager::UnembedAll( )
 {
-    HideAllElements();
+    HideAllElements( );
     std::map< osg::ref_ptr< osg::Geode >, UIElement* >::iterator map_iterator;
     for ( map_iterator = mElements.begin( ); map_iterator != mElements.end( );
             ++map_iterator )
     {
-            UIElement *element = ( *map_iterator ).second;
-            element->Unembed();
+        UIElement *element = ( *map_iterator ).second;
+        element->Unembed( );
     }
 }
+////////////////////////////////////////////////////////////////////////////////
 
-void UIManager::EmbedAll()
+void UIManager::EmbedAll( )
 {
     std::map< osg::ref_ptr< osg::Geode >, UIElement* >::iterator map_iterator;
     for ( map_iterator = mElements.begin( ); map_iterator != mElements.end( );
             ++map_iterator )
     {
-            UIElement *element = ( *map_iterator ).second;
-            element->Embed();
+        UIElement *element = ( *map_iterator ).second;
+        element->Embed( );
     }
-    ShowAllElements();
+    ShowAllElements( );
 }
+////////////////////////////////////////////////////////////////////////////////

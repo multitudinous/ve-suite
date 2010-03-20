@@ -40,6 +40,7 @@ UIElementQt::UIElementQt( QWidget *parent ) : QGraphicsView( parent )
     mGraphicsScene = NULL;
     mGraphicsProxyWidget = NULL;
     mGraphicsView = NULL;
+    mTimer = NULL;
     mImageWidth = 0;
     mImageHeight = 0;
     mWidth = 0;
@@ -50,22 +51,21 @@ UIElementQt::UIElementQt( QWidget *parent ) : QGraphicsView( parent )
     mTextureTop = 0.0f;
     mInitialized = false;
     mImageDirty = true;
+    mDirty = true;
     this->setCacheMode( QGraphicsView::CacheNone );
     setRenderHints( QPainter::NonCosmeticDefaultPen );
     QBrush brush( QColor( 0, 0, 0, 0 ) );
     brush.setStyle( Qt::SolidPattern );
     this->setBackgroundBrush( brush );
     mImageMutex = new QMutex( );
+    Initialize();
 }
 
 UIElementQt::~UIElementQt( )
 {
     _debug( "dtor" );
     FreeOldWidgets( );
-    if( mTimer )
-    {
-        delete mTimer;
-    }
+    delete mTimer;
 }
 
 void UIElementQt::Initialize( )
@@ -163,9 +163,18 @@ unsigned char* UIElementQt::RenderElementToImage( )
             ( *mImageFlipped ) = mImage->mirrored( false, true );
         } // Leave critical section
         mImageDirty = false;
+        mDirty = true;
+    }
+    else
+    {
+        mDirty = false;
     }
     return mImageFlipped->bits( );
-    //return mImage->bits();
+}
+
+bool UIElementQt::IsDirty()
+{
+    return mDirty;
 }
 
 void UIElementQt::SetWidget( QWidget *widget )
@@ -287,39 +296,20 @@ void UIElementQt::FreeOldWidgets( )
 {
     _debug( "FreeOldWidgets" );
     // ?? Should we manage deletion of the owned widget? What if
-    // something else also owns it?
-    if( mWidget )
-    {
-        delete mWidget;
-    }
+    // something else also owns it? Don't delete it. Embedding should be
+    // different from ownership.
 
-    if( mGraphicsScene )
-    {
-        delete mGraphicsScene;
-    }
+    //delete mWidget;
+    delete mGraphicsScene;
+    delete mGraphicsView;
+    delete mGraphicsProxyWidget;
 
-    if( mGraphicsView )
-    {
-        delete mGraphicsView;
-    }
+    { // Enter critical section
+        QMutexLocker locker( mImageMutex );
+        delete mImage;
+    } // Leave critical section
 
-    if( mGraphicsProxyWidget )
-    {
-        delete mGraphicsProxyWidget;
-    }
-
-    if( mImage )
-    {
-        { // Enter critical section
-            QMutexLocker locker( mImageMutex );
-            delete mImage;
-        } // Leave critical section
-    }
-
-    if( mImageFlipped )
-    {
-        delete mImageFlipped;
-    }
+    delete mImageFlipped;
 }
 
 void UIElementQt::_render( )
@@ -384,7 +374,7 @@ void UIElementQt::_calculateTextureCoordinates( )
 
 void UIElementQt::_debug( const std::string text )
 {
-    //#define UIELEMENTQT_DEBUG
+//#define UIELEMENTQT_DEBUG
 #ifdef UIELEMENTQT_DEBUG
     std::cout << "UIElementQt::" << text << std::endl << std::flush;
 #endif
@@ -451,12 +441,12 @@ void UIElementQt::_sendEvent( xplorer::util::InteractionEvent *event )
     delete event;
 }
 
-void UIElementQt::Unembed()
+void UIElementQt::Unembed( )
 {
     Q_EMIT RequestEmbed( false );
 }
 
-void UIElementQt::Embed()
+void UIElementQt::Embed( )
 {
     Q_EMIT RequestEmbed( true );
 }
@@ -465,18 +455,18 @@ void UIElementQt::_embed( bool embed )
 {
     if( embed )
     {
-        this->hide();
-        if(!mTimer->isActive())
+        this->hide( );
+        if( !mTimer->isActive( ) )
         {
-            mTimer->start(30);
+            mTimer->start( 30 );
         }
     }
     else
     {
-        if(mTimer->isActive())
+        if( mTimer->isActive( ) )
         {
-            mTimer->stop();
+            mTimer->stop( );
         }
-        this->show();
+        this->show( );
     }
 }

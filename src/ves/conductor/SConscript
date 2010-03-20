@@ -1,76 +1,60 @@
 ##Builds GUIPluginLib
 import os, sys, string
 import SConsAddons.Util as sca_util
-#import qt46
+import glob
 pj = os.path.join
 
 Import('baseEnv ves_pkg LIBDIR buildDir xerces_options wxwidgets_options RootDir tao_options vpr_options GetPlatform vtk_options osg_options')
 Import('minerva_options')
 
-srcDir = os.path.abspath( pj(RootDir, 'src', 'ves', 'conductor') )
+# Build qt stuff if specified
+if baseEnv['MakeQtSupport'] == 'yes':
+    SConscript( 'qt/SConscript' )
 
+#srcDir = os.path.abspath( pj(RootDir, 'src', 'ves', 'conductor') )
 
 lib_env = ves_pkg.getEnv().Clone()
 
-# Extra stuff to do for Qt support
-if baseEnv['MakeQtSupport'] == "yes":
-    import qt46
+sources = []
+headers = []
+sources_list = glob.glob(pj(RootDir, 'src','ves','conductor','*.cxx'))
+headers_list = glob.glob(pj(RootDir, 'src','ves','conductor','*.h'))
+sources += map(lambda s: os.path.basename(s), sources_list)
+headers += map(lambda s: os.path.basename(s), headers_list)
 
-    source = [pj('#',buildDir,'src','ves','conductor','qt','MainWindow.ui')]
-    cppHeaders = lib_env.qt_uic(source)
+srcDir = os.path.abspath( pj(RootDir, 'src', 'ves', 'conductor','util') )
+util_plugin_srcs = sca_util.getSourcesRecursive( srcDir )
+util_header_srcs = sca_util.getHeadersRecursive( srcDir )
+sources += map(lambda s: pj('util', s), util_plugin_srcs)
+headers += map(lambda s: pj('util', s), util_header_srcs)
 
-    source = [pj('#',buildDir,'src','ves','conductor', 'qt','propertyBrowser',
-                    'Visualization.ui')]
-    cppHeaders += lib_env.qt_uic(source)
+srcDir = os.path.abspath( pj(RootDir, 'src', 'ves', 'conductor','DefaultPlugin') )
+DefaultPlugin_plugin_srcs = sca_util.getSourcesRecursive( srcDir )
+DefaultPlugin_header_srcs = sca_util.getHeadersRecursive( srcDir )
+sources += map(lambda s: pj('DefaultPlugin', s), DefaultPlugin_plugin_srcs)
+headers += map(lambda s: pj('DefaultPlugin', s), DefaultPlugin_header_srcs)
 
-    source = [pj('#',buildDir,'src','ves','conductor','qt','MainWindow.h')]
-    cppSources = lib_env.qt_moc(source)
+srcDir = os.path.abspath( pj(RootDir, 'src', 'ves', 'conductor','xpm') )
+xpm_plugin_srcs = sca_util.getSourcesRecursive( srcDir )
+xpm_header_srcs = sca_util.getHeadersRecursive( srcDir )
+sources += map(lambda s: pj('xpm', s), xpm_plugin_srcs)
+headers += map(lambda s: pj('xpm', s), xpm_header_srcs)
 
-    source = [pj('#',buildDir,'src','ves','conductor','qt','UIElementQt.h')]
-    cppSources += lib_env.qt_moc(source)
+#headers = sca_util.getHeadersRecursive( srcDir )
+#sources = sca_util.getSourcesRecursive( srcDir )
 
-    source = [pj('#',buildDir,'src','ves','conductor','qt','propertyBrowser',
-                    'PropertyBrowser.h')]
-    cppSources += lib_env.qt_moc(source)
-
-    source = [pj('#',buildDir,'src','ves','conductor','qt','propertyBrowser',
-                    'Visualization.h')]
-    cppSources += lib_env.qt_moc(source)
-
-    source = [pj('#',buildDir,'src','ves','conductor','qt','propertyBrowser',
-                    'GenericPropertyBrowser.h')]
-    cppSources += lib_env.qt_moc(source)
-
-    openDir = os.path.abspath( pj(RootDir,buildDir,'src','ves','conductor') )
-    cppSources1 = map(lambda s: pj(openDir, '%s' ) %(s), cppSources)
-    cppHeaders1 = map(lambda s: pj(openDir, '%s' ) %(s), cppHeaders)
-
-    lib_env.AppendUnique( CPPPATH = [pj(openDir,'qt'),
-                                     pj(openDir,'qt','propertyBrowser')] )
-    
-    lib_env.Append( LIBS = ['QtSolutions_PropertyBrowser-2.5'] )
-    qt46.applyQtBuildFlags( lib_env )
-    lib_env.Append(LIBS = ['ves_xplorer_data'])
-else:
-    cppHeaders1 = []
-    cppSources1 = []
-
-headers = cppHeaders1
-headers += sca_util.getHeadersRecursive( srcDir )
-sources = cppSources1
-sources += sca_util.getSourcesRecursive( srcDir )
-
-# If Qt support is off, back up and remove Qt files from previous sources line
-if baseEnv['MakeQtSupport'] != "yes":
-    sources.remove( "UIManager.cxx" )
-    headers.remove( "UIManager.h" )
-    headers.remove( "UIElement.h" )
-
-    qtSources = sca_util.getSourcesRecursive( os.path.abspath( 
-                                pj(RootDir, 'src', 'ves', 'conductor', 'qt') ) )
-    for x in qtSources:
-        index = sources.index( pj('qt',x) )
-        sources.pop(index)
+# Remove everything in qt subdir from sources and headers
+#qtSources = sca_util.getSourcesRecursive( os.path.abspath( 
+#                            pj(RootDir, 'src', 'ves', 'conductor', 'qt') ) )
+#for x in qtSources:
+#    index = sources.index( pj('qt',x) )
+#    sources.pop(index)
+#
+#qtHeaders = sca_util.getHeadersRecursive( os.path.abspath( 
+#                            pj(RootDir, 'src', 'ves', 'conductor', 'qt') ) )
+#for x in qtHeaders:
+#    index = headers.index( pj('qt',x) )
+#    headers.pop(index)
 
 if GetPlatform() == 'linux':
     lib_env.Append( CXXFLAGS=['-fPIC'])
@@ -80,7 +64,6 @@ lib_env.Append(LIBS = ['ves_open_xml',
                        'ves_xplorer_util'])
 lib_env.Append(LIBPATH = [
                            pj('#', buildDir, 'src', 'ves', 'xplorer', 'util'),
-                           pj('#', buildDir, 'src', 'ves', 'xplorer', 'data'),
                            pj('#', buildDir, 'src', 'ves', 'open'),
                            pj('#', buildDir, 'src', 'ves', 'open','xml')
                          ])

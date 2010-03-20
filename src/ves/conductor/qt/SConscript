@@ -1,0 +1,77 @@
+##Builds QtUILib
+import os, sys, string
+import SConsAddons.Util as sca_util
+import qt46
+pj = os.path.join
+
+Import('baseEnv ves_pkg LIBDIR buildDir RootDir osg_options vpr_options')
+
+srcDir = os.path.abspath( pj(RootDir, 'src', 'ves', 'conductor', 'qt') )
+buildSrcDir = pj('#',buildDir,'src','ves','conductor','qt')
+
+lib_env = ves_pkg.getEnv().Clone()
+
+### uic files
+source = [pj(buildSrcDir,'MainWindow.ui')]
+cppHeaders = lib_env.qt_uic(source)
+
+source = [pj(buildSrcDir,'propertyBrowser','Visualization.ui')]
+cppHeaders += lib_env.qt_uic(source)
+####
+
+
+### moc files
+source = [pj(buildSrcDir,'MainWindow.h')]
+cppSources = lib_env.qt_moc(source)
+
+source = [pj(buildSrcDir,'UIElementQt.h')]
+cppSources += lib_env.qt_moc(source)
+
+source = [pj(buildSrcDir,'propertyBrowser','PropertyBrowser.h')]
+cppSources += lib_env.qt_moc(source)
+
+source = [pj(buildSrcDir,'propertyBrowser','Visualization.h')]
+cppSources += lib_env.qt_moc(source)
+
+source = [pj(buildSrcDir,'propertyBrowser','GenericPropertyBrowser.h')]
+cppSources += lib_env.qt_moc(source)
+###
+
+
+openDir = os.path.abspath( pj(RootDir,buildDir,'src','ves','conductor','qt') )
+cppSources1 = map(lambda s: pj(openDir, '%s' ) %(s), cppSources)
+cppHeaders1 = map(lambda s: pj(openDir, '%s' ) %(s), cppHeaders)
+
+lib_env.AppendUnique( CPPPATH = [pj(openDir), pj(openDir,'propertyBrowser')] )
+    
+headers = cppHeaders1
+headers += sca_util.getHeadersRecursive( srcDir )
+sources = cppSources1
+sources += sca_util.getSourcesRecursive( srcDir )
+
+lib_env.Append(LIBS = ['ves_xplorer_util',
+                       'ves_xplorer_data',
+                       'QtSolutions_PropertyBrowser-2.5'
+                      ])
+lib_env.Append(LIBPATH = [
+                           pj('#', buildDir, 'src', 'ves', 'xplorer', 'util'),
+                           pj('#', buildDir, 'src', 'ves', 'xplorer', 'data')
+                         ])
+
+qt46.applyQtBuildFlags( lib_env )
+osg_options.apply( lib_env )
+vpr_options.apply( lib_env )
+
+lib_env.Append( CPPDEFINES = ['VE_CONDUCTOR_UTILS_LIBRARY'])
+   
+if lib_env['StaticLibs'] == "yes":
+   lib = ves_pkg.createStaticAndSharedLibrary('ves_conductor_QtUI',
+                                                        lib_env,
+                                                        installPrefix = LIBDIR)
+else:
+   lib = ves_pkg.createSharedLibrary('ves_conductor_QtUI', lib_env,
+                                               installPrefix = LIBDIR)
+   
+lib.addSources(sources)
+lib.addHeaders(headers,  pj( 'ves', 'conductor','qt'))
+lib.build()

@@ -74,6 +74,14 @@ public:
 ////////////////////////////////////////////////////////////////////////////////
     virtual unsigned char* RenderElementToImage() = 0;
 ////////////////////////////////////////////////////////////////////////////////
+// Should return true rendered image changed in the most recent call to 
+// RenderElementToImage; otherwise false. This is intended as a way to allow
+// callers to determine whether they can use a stored copy of the previously-
+// rendered image or must update to the new one pointed to by 
+// RenderElementToImage
+////////////////////////////////////////////////////////////////////////////////
+    virtual bool IsDirty() = 0;
+////////////////////////////////////////////////////////////////////////////////
 /// Give the element a chance to do any needed initialization before we show it
 /// and begin interacting with it. Elements might use this as an opportunity to
 /// start timers, set up events, or perform other initialization tasks that are

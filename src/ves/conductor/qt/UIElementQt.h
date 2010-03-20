@@ -4,7 +4,7 @@
 #define QT_NO_KEYWORDS
 
 // Base class header
-#include <ves/conductor/UIElement.h>
+#include <ves/conductor/qt/UIElement.h>
 
 
 #include <QtCore/QObject>
@@ -51,9 +51,10 @@ public:
     const virtual osg::Vec4f GetTextureCoordinates( );
     virtual void SendInteractionEvent( xplorer::util::InteractionEvent &event );
     virtual unsigned char* RenderElementToImage( );
-    void Initialize( );
-    void Unembed( );
-    void Embed();
+    virtual bool IsDirty();
+    virtual void Initialize( );
+    virtual void Unembed( );
+    virtual void Embed();
 
     // Functions unique to this derived class
     ////////////////////////////////////////////////////////////////////////////////
@@ -102,6 +103,8 @@ private:
     bool mImageDirty; /// Flag telling whether the rendered image has changed
     QTimer *mTimer; /// Timer that causes UI to render at set intervals
     QMutex *mImageMutex; /// Mutex that is used to avoid access collisions on rendered image
+    bool mDirty; /// Flag telling outside world whether image has changed; holds
+                 /// slightly different state from mImageDirty
 
     void _calculatePower2ImageDimensions( );
     void _calculateTextureCoordinates( );
