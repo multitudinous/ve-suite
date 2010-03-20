@@ -122,7 +122,7 @@
 
 #ifdef QT_ON
 
-#include <ves/conductor/UIManager.h>
+#include <ves/conductor/qt/UIManager.h>
 
 //// --- Qt Includes --- //
 #include <QtGui/QApplication>
@@ -1062,42 +1062,34 @@ void App::update()
 ////////////////////////////////////////////////////////////////////////////////
 void App::LoadUI()
 {
-    // This entire method should be run it its own thread since it blocks
+    // This entire method should be run in its own thread since it blocks
 
 #ifdef QT_ON
     // Create the Qt application event subsystem
     QApplication::setDesktopSettingsAware(true);
     QApplication a( argc, argv );
 
-    // FIXME: This hack will break on any system without GtkStyle
-    // Need to figure out some other way of getting proper style. Looks like crap
-    // without it. Possibly default to Plastique style, which look OK and exists on
-    // all platforms.
-    a.setStyle( new QPlastiqueStyle );
-
     // Get or create UIManager
-    ves::conductor::UIManager* m_UIManager = ves::conductor::UIManager::instance();
+    ves::conductor::UIManager* m_UIManager =
+            ves::conductor::UIManager::instance();
 
     // Wrap the widget in a UIElement
     ves::conductor::UIElement *element = new ves::conductor::UIElementQt();
-    QWidget* mainUIWidget = new MainWindow( static_cast< QGraphicsView* >( static_cast< ves::conductor::UIElementQt* >(element) ) );
+    QWidget* mainUIWidget = new MainWindow(0);
     
-    // Since we're using an mdi-able MainWindow as the main widget, we make it
-    // take up the entire viewable area of the GL window
-    cfdDisplaySettings* cDS = EnvironmentHandler::instance()->GetDisplaySettings();
+    // Since we're using an mdi-able MainWindow as the main widget, we make both 
+    // it and the UIManager's projection take up the entire viewable area of
+    // the GL window
+    cfdDisplaySettings* cDS =
+                           EnvironmentHandler::instance()->GetDisplaySettings();
     std::pair<int, int> res = cDS->GetScreenResolution();
     m_UIManager->SetRectangle( 0, res.first, 0, res.second );
 
     mainUIWidget->resize( res.first, res.second );
-
-    // Need to do this initialization *after* the above call to resize.
-    element->Initialize();
-    static_cast< ves::conductor::UIElementQt* >(element)->SetWidget( mainUIWidget );
+    static_cast< ves::conductor::UIElementQt* >
+                                           (element)->SetWidget( mainUIWidget );
    
     m_UIManager->AddElement( element );
-
-    // Start up the new UI in a hidden state. This is just for the demo.
-    m_UIManager->HideAllElements();
 
     // Begin running the Qt subsystem
     std::cout << "...Run Qt application" << std::endl;

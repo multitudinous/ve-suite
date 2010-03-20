@@ -45,8 +45,8 @@ if minerva_options.isAvailable():
 #see if we need to compile Qt in
 if env[ 'MakeQtSupport' ] != 'no':
     env.Append( CPPDEFINES = ['QT_UI_SUPPORT'] )
-    env.Append( LIBS = ['ves_conductor_plugin'] )
-    env.Append(LIBPATH = [ pj('#', buildDir, 'src','ves','conductor') ] )
+    env.Append( LIBS = ['ves_conductor_QtUI'] )
+    env.Append( LIBPATH = [ pj('#', buildDir, 'src','ves','conductor','qt') ] )
 
 env.Append( CPPDEFINES = [ GetSVNVersion( srcDir ) ] )
 env.Append(CPPPATH = [pj('#','external','osgEphemeris','include')])
