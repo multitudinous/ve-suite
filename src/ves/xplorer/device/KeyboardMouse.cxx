@@ -67,7 +67,7 @@
 #include <ves/xplorer/environment/NavigationAnimationEngine.h>
 
 #ifdef QT_ON
-#include <ves/conductor/UIManager.h>
+#include <ves/conductor/qt/UIManager.h>
 #endif
 // --- Bullet Includes --- //
 #include <LinearMath/btVector3.h>

@@ -96,6 +96,10 @@ osg_options.apply( lib_env )
 osgworks_options.apply( lib_env )
 xerces_options.apply( lib_env )
 
+# Needed since Device and KeyboardMouse send events to new UI
+if baseEnv['MakeQtSupport'] == "yes":
+    lib_env.Append( CPPDEFINES = [ 'QT_ON' ] )
+
 lib_env.Append(CPPPATH = [pj(RootDir,'external','osgEphemeris','include')])
 
 lib_env.Append(LIBS = ['osgEphemeris'])

@@ -42,7 +42,7 @@
 #include <ves/xplorer/scenegraph/manipulator/ManipulatorManager.h>
 
 #ifdef QT_ON
-#include <ves/conductor/UIManager.h>
+#include <ves/conductor/qt/UIManager.h>
 #endif
 // --- OSG Includes --- //
 #include <osg/Polytope>
