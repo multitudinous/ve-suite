@@ -19,24 +19,17 @@ ui( new Ui::Visualization )
     ui->setupUi( this );
 
     mFeatureBrowser = new PropertyBrowser( this );
+    mTempSet = NULL;
+
+    // !!! This is just for testing purposes!!!
+    mDbName = "/home/penn/vestTest.db";
 }
 
 Visualization::~Visualization( )
 {
-    if( ui )
-    {
-        delete ui;
-    }
-
-    if( mFeatureBrowser )
-    {
-        delete mFeatureBrowser;
-    }
-    
-    if( mTempSet)
-    {
-        delete mTempSet;
-    }
+    delete ui;
+    delete mFeatureBrowser;
+    delete mTempSet;
 }
 
 void Visualization::changeEvent( QEvent *e )
@@ -56,25 +49,31 @@ void Visualization::on_WritePropertiesButton_clicked( )
 {
     if( mTempSet )
     {
-        mTempSet->WriteToDatabase( "/home/penn/vesTest.db" );
+        mTempSet->WriteToDatabase( mDbName );
     }
+
+    // featureType will be the list position of the currently-selected feature
+    //VisFeatureManager::instance()->update( featureType, id );
+
+    mContourFeatureMaker.update( mDbName, mTempSet->GetRecordID() );
 }
 
 void Visualization::on_RefreshPropertiesButton_clicked( )
 {
     if( mTempSet )
     {
-        mTempSet->LoadFromDatabase( "/home/penn/vesTest.db" );
-        mFeatureBrowser->RefreshAll();
+        mTempSet->LoadFromDatabase( mDbName );
+        mFeatureBrowser->RefreshAll( );
     }
 }
 
 void Visualization::on_NewFeatureButton_clicked( )
 {
     mTempSet = new xplorer::data::ContourPlanePropertySet( );
+
     if( mTempSet )
     {
-        mTempSet->WriteToDatabase( "/home/penn/vesTest.db" );
+        mTempSet->WriteToDatabase( mDbName );
         mFeatureBrowser->ParsePropertySet( mTempSet );
 
         // ui.vfpb is an instance of GenericPropertyBrowser, which knows how
@@ -90,8 +89,9 @@ void Visualization::on_DeleteFeatureButton_clicked( )
 {
     if( mTempSet )
     {
-        mTempSet->DeleteFromDatabase( "/home/penn/vesTest.db" );
+        mTempSet->DeleteFromDatabase( mDbName );
         mFeatureBrowser->ParsePropertySet( NULL );
         delete mTempSet;
+        mTempSet = NULL;
     }
 }

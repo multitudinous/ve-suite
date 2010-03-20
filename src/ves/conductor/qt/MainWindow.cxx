@@ -6,6 +6,9 @@
 
 #include <ves/conductor/qt/propertyBrowser/Visualization.h>
 
+#include <iostream>
+#include <QtGui/QPaintEvent>
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -41,4 +44,10 @@ void MainWindow::changeEvent(QEvent *e)
     default:
         break;
     }
+}
+
+void MainWindow::paintEvent ( QPaintEvent* event )
+{
+    //std::cout << "MainWindow::paintEvent\n" << std::flush;
+    QWidget::paintEvent( event );
 }

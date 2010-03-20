@@ -43,6 +43,10 @@ public:
     PropertyBrowser( QObject *parent = 0 );
 
     ///
+    /// Destructor
+    ~PropertyBrowser( );
+
+    ///
     /// Returns a list of all QtProperty this browser instance knows about
     ItemVector* GetItems( );
 
@@ -159,11 +163,6 @@ private:
 
     // Helper function to refresh the UI value of a specific Property/QtProperty
     void _refreshItem( int index );
-
-    // These two are for super-extra-debugging. Uncomment and use if
-    // things start to go very wrong
-    //void _printSet();
-    //void _printValue( boost::any value );
 };
 
 } // namespace conductor

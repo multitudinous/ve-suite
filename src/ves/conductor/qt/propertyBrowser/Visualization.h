@@ -5,6 +5,8 @@
 
 #include <QtGui/QDialog>
 
+#include <ves/conductor/qt/ContourFeatureMaker.h>
+
 // Forward declarations
 namespace ves
 {
@@ -46,10 +48,11 @@ protected Q_SLOTS:
 
 private:
     Ui::Visualization *ui;
-    PropertyBrowser* mDataBrowser;
     PropertyBrowser* mFeatureBrowser;
+    std::string mDbName;
 
     xplorer::data::PropertySet* mTempSet;
+    ContourFeatureMaker mContourFeatureMaker;
 };
 
 } // namespace conductor
