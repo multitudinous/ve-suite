@@ -98,12 +98,14 @@ xerces_options.apply( lib_env )
 
 # Needed since Device and KeyboardMouse send events to new UI
 if baseEnv['MakeQtSupport'] == "yes":
-    lib_env.Append( CPPDEFINES = [ 'QT_ON' ] )
+    lib_env.AppendUnique( CPPDEFINES = [ 'QT_ON' ] )
+    lib_env.AppendUnique(LIBS = ['ves_conductor_qtui'])
+    lib_env.AppendUnique(LIBPATH = [pj('#',buildDir,'src','ves','conductor','qt')])
 
-lib_env.Append(CPPPATH = [pj(RootDir,'external','osgEphemeris','include')])
+lib_env.AppendUnique(CPPPATH = [pj(RootDir,'external','osgEphemeris','include')])
 
-lib_env.Append(LIBS = ['osgEphemeris'])
-lib_env.Append(LIBPATH = [pj('#',buildDir,'external','osgEphemeris')])
+lib_env.AppendUnique(LIBS = ['osgEphemeris'])
+lib_env.AppendUnique(LIBPATH = [pj('#',buildDir,'external','osgEphemeris')])
 
 # New Physics work
 #lib_env.Append(CPPPATH = [pj(RootDir,'external','osgBullet','include')])

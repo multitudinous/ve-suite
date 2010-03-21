@@ -65,11 +65,11 @@ vpr_options.apply( lib_env )
 lib_env.Append( CPPDEFINES = ['VE_CONDUCTOR_UTILS_LIBRARY'])
    
 if lib_env['StaticLibs'] == "yes":
-   lib = ves_pkg.createStaticAndSharedLibrary('ves_conductor_QtUI',
+   lib = ves_pkg.createStaticAndSharedLibrary('ves_conductor_qtui',
                                                         lib_env,
                                                         installPrefix = LIBDIR)
 else:
-   lib = ves_pkg.createSharedLibrary('ves_conductor_QtUI', lib_env,
+   lib = ves_pkg.createSharedLibrary('ves_conductor_qtui', lib_env,
                                                installPrefix = LIBDIR)
    
 lib.addSources(sources)
