@@ -92,7 +92,10 @@
 
 #include <osgbBulletPlus/SaveRestore.h>
 
+#include <osgwTools/Version.h>
+#if OSGWORKS_VERSION >= 10002
 #include <osgwTools/RemoveLOD.h>
+#endif
 
 #include <osg/Version>
 
@@ -382,6 +385,7 @@ void CADEntityHelper::LoadFile( const std::string& filename,
         stateset->setAttribute( material.get(), osg::StateAttribute::ON );*/
     }
 
+#if OSGWORKS_VERSION >= 10002
     {
         osg::notify( osg::INFO ) << "|\tRunning osgwTools::RemoveLOD" 
             << std::endl;
@@ -392,7 +396,7 @@ void CADEntityHelper::LoadFile( const std::string& filename,
         osgwTools::RemoveLOD removeLOD;
         tempCADNode->accept( removeLOD );            
     }
-
+#endif
     //Run the draw array optimization
     //Notes from Paul Martz about why to use DrawElementsUInt in geometry
     //These new files use the DrawElementsUInt PrimitiveSet instead of the
