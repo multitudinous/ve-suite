@@ -606,9 +606,9 @@ if not SConsAddons.Util.hasHelpFlag():
     baseEnv.AppendUnique( CPPDEFINES = ['BOOST_ALL_DYN_LINK'] )
 
     if GetPlatform() != 'win32':
-        baseEnv.Append( LINKFLAGS = ['-g'] )
-        baseEnv.Append( CXXFLAGS = ['-g'] )
-        #baseEnv.Append( CXXFLAGS = ['-Wall', '-Wold-style-cast', '-Wundef', '-Wsign-compare', '-Wconversion', '-Wpointer-arith', '-pedantic'] )
+        baseEnv.AppendUnique( LINKFLAGS = ['-g'] )
+        baseEnv.AppendUnique( CXXFLAGS = ['-g'] )
+        #baseEnv.AppendUnique( CXXFLAGS = ['-Wall', '-Wold-style-cast', '-Wundef', '-Wsign-compare', '-Wconversion', '-Wpointer-arith', '-pedantic'] )
 
     baseEnv.Append(BUILDERS = builders)
     #setup the build dir
