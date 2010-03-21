@@ -91,8 +91,8 @@ CountsVisitor::reset()
 void
 CountsVisitor::dump()
 {
-    osg::notify( osg::INFO ) << std::endl
-            << "      OSG Object \tCount\tUnique" << std::endl
+    osg::notify( osg::INFO ) << "|\tRunning Counts utility:" << std::endl
+        << "      OSG Object \tCount\tUnique" << std::endl
         << "      ---------- \t-----\t------" << std::endl
         << "           Nodes \t" << _nodes << "\t" << _uNodes.size() << std::endl
         << "          Groups \t" << _groups << "\t" << _uGroups.size() << std::endl
