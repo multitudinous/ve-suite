@@ -316,7 +316,7 @@ void Isosurfaces::_onSpinner( wxScrollEvent& WXUNUSED( event ) )
     _isoSurfaceSlider->SetValue( spinnerValue );
 }
 //////////////////////////////////////////////////////
-void Isosurfaces::UpdateSlider( wxCommandEvent& event )
+void Isosurfaces::UpdateSlider( wxCommandEvent& WXUNUSED( event ) )
 {
     double spinnerValue = 0;
 
