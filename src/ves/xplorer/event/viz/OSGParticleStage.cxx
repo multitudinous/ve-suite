@@ -357,6 +357,16 @@ void OSGParticleStage::createStreamLines( vtkPolyData* polyData,
 
         //Apply the shader code here instead of calling it from a file as above
         std::string vertexSource =
+            "vec4 \n"
+            "simpleLighting( const in vec4 color, const in vec3 normal, const in float diffCont, const in float ambCont ) \n"
+            "{ \n"
+            "    const vec4 amb = color * ambCont; \n"
+            "    const vec3 eyeVec = vec3( 0.0, 0.0, 1.0 ); \n"
+            "    const float dotVal = max( dot( normal, eyeVec ), 0.0 ); \n"
+            "    const vec4 diff = color * dotVal * diffCont; \n"
+            "    return( amb + diff ); \n"
+            "} \n" //25
+            " \n"
             "bool\n"
             "discardInstance( const in vec4 pos )\n"
             "{\n"
@@ -393,8 +403,9 @@ void OSGParticleStage::createStreamLines( vtkPolyData* polyData,
             "       return;\n"
             "   }\n"
             //Set to 0 to have proper addition with gl_Vertex
+            "   float userScale = 0.05;\n"
             "   pos.w = 0.; \n" 
-            "   vec4 newPos = vec4( gl_Vertex.xyz + pos.xyz, 1.0 );\n"
+            "   vec4 newPos = vec4( (gl_Vertex.xyz * userScale) + pos.xyz, 1.0 );\n"
             "   vec4 v = gl_ModelViewMatrix * newPos; \n"
             "   gl_Position = gl_ProjectionMatrix * v; \n"
             //" gl_Position = gl_ModelViewProjectionMatrix * ( gl_Vertex + pos ); \n"
@@ -407,6 +418,14 @@ void OSGParticleStage::createStreamLines( vtkPolyData* polyData,
             "   float timeOffset = ( ((float)gl_InstanceID) / totalInstances ) * repeatTime; \n"
             "   float repTimer = mod( ( osg_SimulationTime - timeOffset ), repeatTime ); \n"
             "   float alpha = fadeTime - min( repTimer, fadeTime ); \n"
+            "   if( alpha < 0.95 )\n"
+            "   {\n"
+            "       alpha = 0.;\n"
+            "   }\n"
+            "   else\n"
+            "   {\n"
+            "       alpha = 1.;\n"
+            "   }\n"
 
         /*"   // Scalar texture containg key to color table. \n"
         "   vec4 activeScalar = texture2D( scalar, gl_MultiTexCoord0.st );\n"
@@ -425,8 +444,18 @@ void OSGParticleStage::createStreamLines( vtkPolyData* polyData,
         "   colorResult[3]=1.0; \n"
         //"   gl_FrontColor = colorResult; \n"
         "   color = colorResult.rgb; \n"*/
-        
-            "   vec4 color = vec4( 1.0, 0.0, 0.0, 1.0 ); //texture2D( texSca, tC ); \n"
+            // Orient the normal.
+            "   vec3 norm = normalize( gl_NormalMatrix * gl_Normal ); \n"
+            // Diffuse lighting with light at the eyepoint.
+            //"   vec4 color = texture3D( scalar, tC ); \n"
+            //"   color = color * dot( norm, vec3( 0, 0, 1 ) ); \n"
+            //"   color[3]=1; \n"
+            //"   gl_FrontColor = vec4( color ); \n"
+            // Compute color and lighting.
+            //const vec4 scalarV = texture3D( scalar, tC );
+            //const vec4 oColor = texture1D( texCS, scalarV.a );
+            "   vec4 color = simpleLighting( vec4( 1.0, 0.0, 0.0, 1.0 ), norm, 0.7, 0.3 ); \n"
+            //"   vec4 color = vec4( 1.0, 0.0, 0.0, 1.0 ); //texture2D( texSca, tC ); \n"
             "   color[3]=alpha; \n"
             "   gl_FrontColor = color; \n"
             "} \n";
