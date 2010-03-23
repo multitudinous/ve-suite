@@ -274,13 +274,13 @@ void cfdDisplaySettings::ChangeDisplayElements( bool remove,
     nodePtr->getChild( "elements" )->addChild( displayNode );
     cppdom::NodePtr elementsNode = nodePtr->getChild( "elements" );
     std::cout << "|\t Load reconfig elements, result = "
-    << configuration->loadFromElementNode( elementsNode )
-    << std::endl;
+        << configuration->loadFromElementNode( elementsNode )
+        << std::endl;
 
     if( remove )
-        {
-            jccl::ConfigManager::instance()->addConfigurationRemovals( configuration );
-        }
+    {
+        jccl::ConfigManager::instance()->addConfigurationRemovals( configuration );
+    }
     else
     {
         jccl::ConfigManager::instance()->addConfigurationAdditions( configuration );
