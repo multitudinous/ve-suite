@@ -550,8 +550,8 @@ void DataSet::LoadData()
     if( m_dataSet != NULL )
     {
         vprDEBUG( vesDBG, 1 ) << "|\tAlready have loaded the data for "
-        << fileName
-        << std::endl << vprDEBUG_FLUSH;
+            << fileName
+            << std::endl << vprDEBUG_FLUSH;
         return;
     }
     
@@ -1221,14 +1221,14 @@ void DataSet::ResetScalarBarRange( double min, double max )
 
     //Get the actual scalar range for the active scalar
     double rawRange[2];
-    this->GetParent()->GetRange( rawRange );
+    GetParent()->GetRange( rawRange );
 
     double newRawRange[2];
     newRawRange[0] = min;
     newRawRange[1] = max;
 
     double newPrettyRange[2];
-    this->AutoComputeUserRange( newRawRange, newPrettyRange );
+    AutoComputeUserRange( newRawRange, newPrettyRange );
     vprDEBUG( vesDBG, 1 ) << "|\t\tnewPrettyRange[0] = " << newPrettyRange[0]
         << ", newPrettyRange[1] = " << newPrettyRange[1]
         << std::endl << vprDEBUG_FLUSH;
@@ -1972,5 +1972,53 @@ void DataSet::SetActiveDataArrays( std::vector< std::string > activeArrays )
 {
     m_activeDataArrays = activeArrays;
 }
+////////////////////////////////////////////////////////////////////////////////
+void DataSet::LoadTransientData()
+{
+    ///Get base file name or directory
+    ///Scan directory for all of the files
+    ///Read the files and create datasets for them
+    if( !_vtkFHndlr )
+    {
+        _vtkFHndlr = new cfdVTKFileHandler();
+    }
+    
+    std::vector<std::string> transientFile = 
+        ves::xplorer::util::fileIO::GetFilesInDirectory( ".", ".vtm" );
+    
+    ///Load data for the file selected by the user for the transient series
+    LoadData();
+
+    SetAsPartOfTransientSeries();
+    
+    //not done with files in directory
+    for( size_t i = 0; i < transientFile.size(); ++i )
+    {
+        //This could be a multi block dataset
+        //Load in the dataset        
+        //Do work
+        //new dataset
+        m_tempModel->CreateCfdDataSet();
+        ves::xplorer::DataSet* tempDataset = m_tempModel->GetCfdDataSet( -1 );
+        //set dcs
+        tempDataset->SetDCS( GetDCS() );
+        //set filename     
+        tempDataset->SetFileName( transientFile.at( i ) );
+        //set the vector arrow
+        tempDataset->SetArrow( arrow );
+        //Load Data sort of
+        tempDataset->LoadData();
+
+        tempDataset->SetAsPartOfTransientSeries();
+
+        m_transientDataSets.push_back( tempDataset );
+    }    
+}
+////////////////////////////////////////////////////////////////////////////////
+const std::vector< DataSet* >& DataSet::GetTransientDataSets()
+{
+    return m_transientDataSets;
+}
+////////////////////////////////////////////////////////////////////////////////
 } // end xplorer
 } // end ves

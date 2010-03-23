@@ -325,9 +325,14 @@ public:
     void CreateSurfaceWrap();
     ///Set the active data arrays to load
     void SetActiveDataArrays( std::vector< std::string > activeArrays );
-    
+    ///Load transient data based on a file prefix or directory scan.
+    void LoadTransientData();
+    ///Get Transient vectors for dataset
+    ///\return The vector of datasets associated with this transient series
+    const std::vector< DataSet* >& GetTransientDataSets();
+
 private:
-    ///Temporary model pointer
+    ///Model pointer to the model that is holding this dataset
     ves::xplorer::Model* m_tempModel;
     
     ///Operator callbacks for DataObjectHandler
@@ -389,6 +394,7 @@ private:
     osg::ref_ptr< ves::xplorer::scenegraph::Group > m_visualBBox;
 
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > dcs;
+    ///Switch node used to control the display of TBET or classic viz
     osg::ref_ptr< ves::xplorer::scenegraph::Switch > switchNode;
     osg::ref_ptr< ves::xplorer::scenegraph::Group > classic;
     osg::ref_ptr< ves::xplorer::scenegraph::Group > textureBased;
@@ -396,9 +402,12 @@ private:
     ves::xplorer::DataSetAxis* dataSetAxes;
     ves::xplorer::DataSetScalarBar* dataSetScalarBar;
     ves::xplorer::util::cfdVTKFileHandler* _vtkFHndlr;
-    ves::xplorer::util::DataObjectHandler* m_dataObjectHandler;///<Handle vtkDataObjects
+    ///Handle vtkDataObjects
+    ves::xplorer::util::DataObjectHandler* m_dataObjectHandler;
+    ///Tell other classes that this dataset is part of a transient domain
     int partOfTransientSeries;
-    ves::builder::DataLoader::DataLoader* m_externalFileLoader;///<Translator interface
+    ///Translator interface
+    ves::builder::DataLoader::DataLoader* m_externalFileLoader;
     
     ///Easy way to tell if this dataset is a child of a composite dataset
     bool m_isPartOfCompositeDataset;
@@ -406,6 +415,8 @@ private:
     std::vector< DataSet* > m_childDataSets;
     ///Set the active data arrays to load
     std::vector< std::string > m_activeDataArrays;
+    ///List of transient datasets associated with this dataset
+    std::vector< DataSet* > m_transientDataSets;
 #ifdef USE_OMP
     unsigned int noOfData;   // Total no. of octants.
     vtkUnstructuredGridReader* dataReader[MAX_DATA];

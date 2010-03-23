@@ -176,7 +176,7 @@ void AddVTKDataSetEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xml
             if( !ves::xplorer::util::fileIO::isFileReadable( vtk_filein ) )
             {
                 std::cerr << "ERROR: unreadable vtk file = " << vtk_filein
-                    << ".  You may need to correct your param file."
+                    << ".  You may need to correct your ves file."
                     << std::endl;
                 continue;
             }
@@ -257,7 +257,16 @@ void AddVTKDataSetEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xml
                     << tempDataSetFilename
                     << std::endl;
                 lastDataAdded->SetArrow( ves::xplorer::ModelHandler::instance()->GetArrow() );
-                lastDataAdded->LoadData();
+                //Check and see if the data is part of a transient series
+                if( tempInfoPacket->GetProperty( "VTK_TRANSIENT_SERIES" ) )
+                {
+                    //std::string precomputedSurfaceDir = tempInfoPacket->GetProperty( "VTK_TRANSIENT_SERIES" )->GetDataString();
+                    lastDataAdded->LoadTransientData();
+                }
+                else
+                {
+                    lastDataAdded->LoadData();
+                }
                 //If the data load failed
                 if( !lastDataAdded->GetDataSet() )
                 {

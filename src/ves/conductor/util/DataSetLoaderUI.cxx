@@ -63,6 +63,7 @@
 #include <ves/open/xml/OneDStringArray.h>
 
 #include <ves/xplorer/util/cfdVTKFileHandler.h>
+#include <ves/xplorer/util/fileIO.h>
 
 #include <iostream>
 
@@ -465,6 +466,37 @@ void DataSetLoaderUI::OnLoadFile( wxCommandEvent& WXUNUSED( event ) )
             tempStr = static_cast< const char* >(
                 wxConvCurrent->cWX2MB( relativeDataSetPath.c_str() ) );
             tempDVP->SetData( "VTK_DATA_FILE", tempStr );
+            
+            std::string transDir =
+                ConvertUnicode( datasetFilename.GetPath().c_str() );
+            if( transDir.empty() )
+            {
+                transDir = ".";
+            }
+            std::vector<std::string> transientFile = 
+                ves::xplorer::util::fileIO::GetFilesInDirectory( 
+                transDir, ".vtm" );
+            std::cout << transientFile.size() << " " << transDir << std::endl;
+            if( transientFile.size() > 0 )
+            {
+                wxMessageDialog promptDlg( this,
+                    _( "Is this file part of a transient series?" ),
+                    _( "Transient Data Chooser" ),
+                    wxYES_NO | wxNO_DEFAULT | wxICON_QUESTION,
+                    wxDefaultPosition );
+                int answer = promptDlg.ShowModal();
+                if( answer == wxID_YES )
+                {
+                    tempDVP =
+                    mParamBlock->GetProperty( "VTK_TRANSIENT_SERIES" );
+                    if( !tempDVP )
+                    {
+                        tempDVP = mParamBlock->GetProperty( -1 );
+                    }
+                    //unsigned int translfag = 1;
+                    tempDVP->SetData( "VTK_TRANSIENT_SERIES", transDir );
+                }            
+            }
         }
 
         ves::xplorer::util::cfdVTKFileHandler tempHandler;
@@ -826,7 +858,7 @@ void DataSetLoaderUI::OnInformationPacketChangeName( wxCommandEvent& WXUNUSED( e
     {
         int selection = dataSetList->GetSelection();
         dataSetList->SetString( selection, dataSetList->GetValue() );
-        std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( dataSetList->GetValue().c_str() ) ) );
+        std::string tempStr = ConvertUnicode( dataSetList->GetValue().c_str() );
         mParamBlock->SetName( tempStr );
         //std::cout << "OnInformationPacketChangeName " << mParamBlock->GetName() << std::endl;
     }

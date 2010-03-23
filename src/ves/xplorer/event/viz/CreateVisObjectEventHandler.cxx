@@ -53,6 +53,8 @@
 #include <ves/xplorer/event/viz/cfdAnimatedImage.h>
 #include <ves/xplorer/event/viz/cfdAnimatedStreamlineCone.h>
 #include <ves/xplorer/event/viz/cfdContour.h>
+#include <ves/xplorer/event/viz/ParticleAnimation.h>
+
 #include <ves/xplorer/environment/cfdEnum.h>
 #include <ves/xplorer/EnvironmentHandler.h>
 #include <ves/xplorer/SteadyStateVizHandler.h>
@@ -75,12 +77,14 @@
 
 #include <boost/filesystem/operations.hpp> // includes boost/filesystem/path.hpp
 #include <boost/filesystem/path.hpp>
+#include <boost/concept_check.hpp>
 
 #include <vpr/System.h>
 
 #include <iostream>
 
 using namespace ves::xplorer::event;
+using namespace ves::xplorer::event::viz;
 using namespace ves::xplorer;
 using namespace ves::xplorer::scenegraph;
 using namespace ves::xplorer::volume;
@@ -414,13 +418,13 @@ CreateVisObjectEventHandler::CreateVisObjectEventHandler()
     //
     // Initiate the PolyData File
     //
-    objectType.first = std::string( "UPDATE_PARTICLE_SETTINGS" );
+    /*objectType.first = std::string( "UPDATE_PARTICLE_SETTINGS" );
     objectType.second.first = std::string( "" );
     objectType.second.second = std::string( "" );
     //std::cout << "| 41. Initializing................................... PolyData File |" << std::endl;
     this->particles = new cfdPolyData();
     this->particles->SetObjectType( PARTICLES );
-    visObjectMap[ objectType ] = this->particles;
+    visObjectMap[ objectType ] = this->particles;*/
 
     objectType.first = std::string( "UPDATE_POLYDATA_SETTINGS" );
     objectType.second.first = std::string( "" );
@@ -430,6 +434,15 @@ CreateVisObjectEventHandler::CreateVisObjectEventHandler()
     this->surface->SetObjectType( POLYDATA );
     visObjectMap[ objectType ] = this->surface;
 
+
+    objectType.first = std::string( "UPDATE_POLYDATA_SETTINGS" );
+    objectType.second.first = std::string( "PARTICLE_VIZ" );
+    objectType.second.second = std::string( "" );
+    //std::cout << "|  5. Initializing................................. Dataset surface |" << std::endl;
+    ParticleAnimation* particleAnim = new ParticleAnimation();
+    particleAnim->SetObjectType( PARTICLE_TRANSIENT );
+    visObjectMap[ objectType ] = particleAnim;
+    
     //
     // Initiate PIV data from INEL
     //
@@ -472,6 +485,7 @@ CreateVisObjectEventHandler& CreateVisObjectEventHandler::operator=( const Creat
 ////////////////////////////////////////////////////////////////////////////////
 void CreateVisObjectEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* model )
 {
+    boost::ignore_unused_variable_warning( model );
 }
 //////////////////////////////////////////////////////////////////////////
 void CreateVisObjectEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xmlObject )

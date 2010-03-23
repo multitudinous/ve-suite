@@ -125,6 +125,8 @@ protected:
     ///Check box to control two sided lighting
     wxCheckBox* m_twoSidedLighting;
     
+    ///Check box to control particle viz
+    wxCheckBox* m_particlesChk;
     ///Set the opacity warp control
     void _onPolydata( wxCommandEvent& event );
 

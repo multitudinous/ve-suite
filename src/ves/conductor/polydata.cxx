@@ -94,7 +94,7 @@ bool Polydata::Create( wxWindow* parent, wxWindowID id,
     _computeButton = 0;
     m_opacitySlider = 0;
     m_twoSidedLighting = 0;
-    
+    m_particlesChk = 0;
     SetExtraStyle( GetExtraStyle() | wxWS_EX_BLOCK_EVENTS );
     wxDialog::Create( parent, id, caption, pos, size, style );
 
@@ -119,9 +119,17 @@ void Polydata::CreateControls()
     wxStaticBoxSizer* itemStaticBoxSizer3 = new wxStaticBoxSizer( itemStaticBoxSizer3Static, wxVERTICAL );
     itemBoxSizer2->Add( itemStaticBoxSizer3, 0, wxGROW | wxALL, 5 );
 
+    wxBoxSizer* topLevelControls = new wxBoxSizer( wxHORIZONTAL );
+
     _useWarpedSurfaceCheckBox = new wxCheckBox( itemDialog1, POLYDATA_WARPED_SURFACE_CHK, _T( "Use Warped Surface" ), wxDefaultPosition, wxDefaultSize, 0 );
     _useWarpedSurfaceCheckBox->SetValue( false );
-    itemStaticBoxSizer3->Add( _useWarpedSurfaceCheckBox, 0, wxGROW | wxALL, 5 );
+    topLevelControls->Add( _useWarpedSurfaceCheckBox, 0, wxGROW | wxALL, 5 );
+    
+    m_particlesChk = new wxCheckBox( itemDialog1, POLYDATA_PARTICLES_CHK, _T( "Particles" ), wxDefaultPosition, wxDefaultSize, 0 );
+    m_particlesChk->SetValue( false );
+    topLevelControls->Add( m_particlesChk, 0, wxGROW | wxALL, 5 );
+    
+    itemStaticBoxSizer3->Add( topLevelControls, 0, wxGROW | wxALL, 5 );
     /////////////////////////////////////////
     wxStaticText* itemStaticText6 = new wxStaticText( itemDialog1, wxID_STATIC, _T( "Scale Factor" ), wxDefaultPosition, wxDefaultSize, 0 );
     itemStaticBoxSizer3->Add( itemStaticText6, 0, wxALIGN_LEFT | wxALL | wxADJUST_MINSIZE, 5 );
@@ -245,6 +253,13 @@ void Polydata::_onAddPolydata( wxCommandEvent& WXUNUSED( event ) )
 {
     ves::open::xml::CommandPtr newCommand( new ves::open::xml::Command() );
     newCommand->SetCommandName( "UPDATE_POLYDATA_SETTINGS" );
+
+    if( m_particlesChk->GetValue() )
+    {
+        ves::open::xml::DataValuePairPtr particleViz( new ves::open::xml::DataValuePair() );
+        particleViz->SetData( "Direction", "PARTICLE_VIZ" );
+        newCommand->AddDataValuePair( particleViz );
+    }
 
     ves::open::xml::DataValuePairPtr polydataValue( new ves::open::xml::DataValuePair() );
     polydataValue->SetData( "Polydata Value", static_cast<double>(( _polydataSlider->GetValue() ) ) );
