@@ -39,6 +39,8 @@
 #include <osgDB/ReadFile>
 #include <osgDB/FileUtils>
 
+#include <osgwTools/Shapes.h>
+
 #include <vtkLookupTable.h>
 #include <vtkPolyData.h>
 #include <vtkCleanPolyData.h>
@@ -71,10 +73,21 @@ void OSGParticleStage::createSLPoint( osg::Geometry& geom, int nInstances, const
 {
     // Configure a Geometry to draw a single point, but use the draw instanced PrimitiveSet
     // to draw the point multiple times.
+    /*
     osg::Vec3Array* v = new osg::Vec3Array;
     v->resize( 1 );
     geom.setVertexArray( v );
     (*v)[ 0 ] = position;
+    */
+    geom.setUseDisplayList( false );
+    geom.setUseVertexBufferObjects( true );
+
+    osgwTools::makeGeodesicSphere( 1.0, 0.0, &geom );
+    unsigned int numPrim = geom.getNumPrimitiveSets();
+    for( unsigned int i = 0; i < numPrim; ++i )
+    {
+        geom.getPrimitiveSet( i )->setNumInstances( nInstances );
+    }
 
     // Streamline color. Blending is non-saturating, so it never
     // reaches full intensity white. Alpha is modulated with the
@@ -86,19 +99,21 @@ void OSGParticleStage::createSLPoint( osg::Geometry& geom, int nInstances, const
     geom.setColorBinding( osg::Geometry::BIND_OVERALL );
     (*c)[ 0 ] = color;
 
-    geom.addPrimitiveSet( new osg::DrawArrays( GL_POINTS, 0, 1, nInstances ) );
+    //geom.addPrimitiveSet( new osg::DrawArrays( GL_POINTS, 0, 1, nInstances ) );
+    
+    //osg::StateSet* ss = geom.getOrCreateStateSet();
 
-
-    osg::StateSet* ss = geom.getOrCreateStateSet();
-
+    /*
     osg::Point* point = new osg::Point;
     point->setSize( 10. );
     // Use of shader (required for draw instanced) disables fixed-funxtion point parameters.
     // I'll need to investigate how to mimic this functionality in a shader.
     //point->setDistanceAttenuation( osg::Vec3( 0., 0., 0.05f) );
     ss->setAttributeAndModes( point );
-
+    */
+    
     // Turn on point sprites and specigy the point sprite texture.
+    /*
     osg::PointSprite *sprite = new osg::PointSprite();
     ss->setTextureAttributeAndModes( 1, sprite, osg::StateAttribute::ON );
     osg::Texture2D *tex = new osg::Texture2D();
@@ -108,6 +123,7 @@ void OSGParticleStage::createSLPoint( osg::Geometry& geom, int nInstances, const
     // Keep pixels with a significant alpha value (discard low-alpha pixels).
     osg::AlphaFunc* af = new osg::AlphaFunc( osg::AlphaFunc::GREATER, 0.05f );
     ss->setAttributeAndModes( af );
+    */
 }
 ////////////////////////////////////////////////////////////////////////////////
 //float* OSGParticleStage::createPositionArray( int numPoints, int mult, vtkPoints* points, const vtkIdType* pts, int &tm, int &tn)
@@ -341,7 +357,18 @@ void OSGParticleStage::createStreamLines( vtkPolyData* polyData,
 
         //Apply the shader code here instead of calling it from a file as above
         std::string vertexSource =
-
+            "bool\n"
+            "discardInstance( const in vec4 pos )\n"
+            "{\n"
+            "    if( pos.xyz == vec3( 0.,0.,0. ) )\n"
+            "    {\n"
+            "        gl_Position = vec4( 1.0, 1.0, 1.0, 0.0 );\n"
+            "        return true;\n"
+            "    }\n"
+            "    return false;\n"
+            "}\n"
+            " \n"
+            ///Main program
             "uniform vec2 sizes; \n"
             "uniform sampler2D texPos; \n"
             //"uniform sampler2D texSca; \n"
@@ -361,6 +388,10 @@ void OSGParticleStage::createStreamLines( vtkPolyData* polyData,
 
             // Get position from the texture.
             "   vec4 pos = texture2D( texPos, tC ); \n"
+            "   if( discardInstance( pos ) )\n"
+            "   {\n"
+            "       return;\n"
+            "   }\n"
             //Set to 0 to have proper addition with gl_Vertex
             "   pos.w = 0.; \n" 
             "   vec4 newPos = vec4( gl_Vertex.xyz + pos.xyz, 1.0 );\n"
