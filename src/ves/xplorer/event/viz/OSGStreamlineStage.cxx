@@ -142,6 +142,7 @@ float* OSGStreamlineStage::createPositionArray( int numPoints, int mult, std::de
         if( i < totalNumPoints )
         {    
             int mod = i%mult;
+            //If we can get the point directly from the vtk dataset
             if (mod == 0)
             {
                 *posI++=(float)nextPoint[0];
@@ -161,6 +162,7 @@ float* OSGStreamlineStage::createPositionArray( int numPoints, int mult, std::de
                     nextPoint[ 2 ] = pointList.at(j).x[ 2 ];
                 }
             }
+            //If we need to create points we will do a linear interpolation
             else
             {
                 mod = i%mult;
