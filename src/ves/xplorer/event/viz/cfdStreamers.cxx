@@ -75,18 +75,19 @@ using namespace ves::xplorer::scenegraph;
 //////////////////////////////////////////////////////////////////////////////////
 cfdStreamers::cfdStreamers()
         :
+        seedPoints( 0 ),
+        points( 0 ),
         integrationDirection( 0 ),
+        streamArrows( 0 ),
+        m_streamRibbons( 0 ),
         propagationTime( -1 ),
         integrationStepLength( -1 ),
         lineDiameter( 1.0f ),
-        particleDiameter( 1.0f ),
         arrowDiameter( 1 ),
-        streamArrows( 0 ),
+        particleDiameter( 1.0f ),
         xValue( 4 ),
         yValue( 4 ),
         zValue( 4 ),
-        seedPoints( 0 ),
-        points( 0 ),
         xMinBB( 0 ),
         yMinBB( 0 ),
         zMinBB( 0 ),

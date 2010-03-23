@@ -60,7 +60,7 @@ using namespace ves::xplorer;
 using namespace ves::xplorer::scenegraph;
 using namespace ves::xplorer::event::viz;
 
-cfdPolyData::cfdPolyData( float op_val )
+cfdPolyData::cfdPolyData()
 {
     this->map = vtkPolyDataMapper::New();
     this->map->SetColorModeToMapScalars();

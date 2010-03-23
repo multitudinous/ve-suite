@@ -50,17 +50,18 @@ using namespace ves::xplorer::scenegraph;
 using namespace ves::xplorer;
 
 ////////////////////////////////////////////////////////////////////////////////
-cfdObjects::cfdObjects( void ):
-        pointSource( 0 ),
-        vtkToPFDebug( 0 ),
-        usePreCalcData( false ),
-        activeDataSet( 0 ),
-        updateFlag( false ),
-        requestedValue( 0 ),
-        objectType( 0 ),
-        cursorType( 0 ),
-        scale( 0 ),
-        m_gpuTools( false )
+cfdObjects::cfdObjects( void )
+    :
+    activeDataSet( 0 ),
+    pointSource( 0 ),
+    updateFlag( false ),
+    vtkToPFDebug( 0 ),
+    objectType( 0 ),
+    requestedValue( 0 ),
+    cursorType( 0 ),
+    usePreCalcData( false ),
+    scale( 0 ),
+    m_gpuTools( false )
 {
     for( size_t i = 0; i < 3; ++i )
     {

@@ -42,13 +42,12 @@
 #include <ves/xplorer/event/viz/cfdPresetContour.h>
 #include <ves/xplorer/event/viz/cfdContours.h>
 #include <ves/xplorer/event/viz/cfdMomentum.h>
-#include <ves/xplorer/event/viz/cfdPresetMomentum.h>
 #include <ves/xplorer/event/viz/cfdMomentums.h>
+#include <ves/xplorer/event/viz/cfdPresetMomentum.h>
 #include <ves/xplorer/event/viz/cfdVector.h>
 #include <ves/xplorer/event/viz/cfdPresetVector.h>
 #include <ves/xplorer/event/viz/cfdVectors.h>
 #include <ves/xplorer/event/viz/cfdStreamers.h>
-#include <ves/xplorer/event/viz/cfdPolyData.h>
 #include <ves/xplorer/event/viz/cfdImage.h>
 #include <ves/xplorer/event/viz/cfdAnimatedImage.h>
 #include <ves/xplorer/event/viz/cfdAnimatedStreamlineCone.h>
@@ -430,7 +429,7 @@ CreateVisObjectEventHandler::CreateVisObjectEventHandler()
     objectType.second.first = std::string( "" );
     objectType.second.second = std::string( "" );
     //std::cout << "|  5. Initializing................................. Dataset surface |" << std::endl;
-    this->surface = new cfdPolyData( 1.0 );
+    this->surface = new cfdPolyData();
     this->surface->SetObjectType( POLYDATA );
     visObjectMap[ objectType ] = this->surface;
 

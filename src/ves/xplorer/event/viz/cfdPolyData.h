@@ -52,8 +52,7 @@ class VE_XPLORER_EXPORTS cfdPolyData : public cfdObjects
 {
 public:
     ///Constructor.
-    ///\param op_val Set to 1.0.
-    cfdPolyData( float op_val = 1.0 );
+    cfdPolyData();
 
     ///Destructor.
     virtual ~cfdPolyData();
