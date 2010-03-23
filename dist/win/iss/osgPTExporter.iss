@@ -8,8 +8,8 @@
 #define MyAppPublisher "Virtural Engineering Research Group"
 #define MyAppURL "www.vesuite.org"
 #define VEVERSION "1.1.0"
-#define SVNVERSION "14010"
-#define OSGHOME "C:\dev\deps\OSG_2.8.2_msvc-9.0-sp1-x86"
+#define SVNVERSION "14281"
+#define OSGHOME "C:\dev\deps\msvc90\OSG_2.8.2-1_msvc-9.0-sp1-x86"
 #define OSGPTEXPORTERHOME "C:\dev\TSVEG\skewmatrix\osgPT\trunk\OSGExport"
 [Setup]
 AppName={#MyAppName}
