@@ -179,7 +179,7 @@ void EnSightTranslator::EnSightTranslateCbk::Translate( vtkDataObject*& outputDa
             {
                 std::cout << "Translating Timestep = " << tempArray->GetItem( i )->GetTuple1( j ) << std::endl;
                 reader->SetTimeValue( tempArray->GetItem( i )->GetTuple1( j ) );
-                //reader->Update();
+                reader->Update();
                 // used for multiple part ensight files
                 /*int numberOfOutputs = reader->GetNumberOfOutputs();
                 vtkAppendFilter* appendFilter = vtkAppendFilter::New();
