@@ -414,7 +414,7 @@ void OSGParticleStage::createStreamLines( vtkPolyData* polyData,
             osg::ref_ptr< osg::Shader > fragShader = 
                 osg::Shader::readShaderFile( osg::Shader::FRAGMENT, shaderName );
             
-            program->addShader( fragShader.get() );            
+            //program->addShader( fragShader.get() );            
         }
         ss->setAttributeAndModes( program.get(),
             osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
