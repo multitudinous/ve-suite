@@ -1,0 +1,4 @@
+###############################################################
+##Builds qtpropertybrowser
+#!python
+SConscript( dirs = 'src' )
