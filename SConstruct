@@ -657,6 +657,7 @@ if not SConsAddons.Util.hasHelpFlag():
     test = pj( buildDir, 'test', 'osg')
     issBuilder = pj(buildDir,'dist','win','iss')
     qtTestBuilder = pj(buildDir,'test','qt','BasicQtOffscreenRender')
+    qtpropertybrowserSubdirs = pj( buildDir, 'external', 'qtpropertybrowser-2.5_1-opensource' )
 
     ves_dirs = [vesSubdirs, distSubdirs, osgEphemerisSubdirs,
                shareSubdirs, lokiSubdirs, osgBulletPlusSubdirs,
@@ -665,6 +666,7 @@ if not SConsAddons.Util.hasHelpFlag():
     if GetPlatform() != 'win32':
         if baseEnv[ 'MakeQtSupport' ] == 'yes':
             ves_dirs.append( qtTestBuilder )
+            ves_dirs.append( qtpropertybrowserSubdirs )
     
     #build applications in test/ directory
     if baseEnv[ 'buildTests' ] == 'yes':
