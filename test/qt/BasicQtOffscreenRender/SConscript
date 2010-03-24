@@ -32,6 +32,7 @@ if GetPlatform() == 'linux':
 lib_env2.AppendUnique( CPPPATH = [pj(openDir)] )
 
 qt46.applyQtBuildFlags( lib_env2 )
+lib_env2.AppendUnique( LIBS = 'QtOpenGL' )
 
 qtprog = ves_pkg.createProgram('BasicQtOffscreenRender' + lib_env2["PROGSUFFIX"], lib_env2, 'bin')
 qtprog.addSources(sources2)
