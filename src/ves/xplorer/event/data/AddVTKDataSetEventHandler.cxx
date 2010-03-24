@@ -130,7 +130,9 @@ void AddVTKDataSetEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xml
     {
         DataValuePairPtr veModelDVP =
             command->GetDataValuePair( "CREATE_NEW_DATASETS" );
-        xml::model::ModelPtr veModel = boost::dynamic_pointer_cast<xml::model::Model>( veModelDVP->GetDataXMLObject() );
+        xml::model::ModelPtr veModel = 
+            boost::dynamic_pointer_cast<xml::model::Model>( 
+            veModelDVP->GetDataXMLObject() );
         size_t numInfoPackets = veModel->GetNumberOfInformationPackets();
         for( size_t i = 0; i < numInfoPackets; ++i )
         {
@@ -203,12 +205,15 @@ void AddVTKDataSetEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xml
             lastDataAdded->SetFileName( vtk_filein );
             lastDataAdded->SetUUID( "VTK_DATA_FILE", 
                 tempInfoPacket->GetProperty( "VTK_DATA_FILE" )->GetID() );
-            ves::open::xml::DataValuePairPtr stringDVP = tempInfoPacket->GetProperty( "VTK_ACTIVE_DATA_ARRAYS" );
+            ves::open::xml::DataValuePairPtr stringDVP = 
+                tempInfoPacket->GetProperty( "VTK_ACTIVE_DATA_ARRAYS" );
             std::vector< std::string > vecStringArray;
             if( stringDVP )
             {
                 ves::open::xml::OneDStringArrayPtr stringArray = 
-                    boost::dynamic_pointer_cast< ves::open::xml::OneDStringArray >( stringDVP->GetDataXMLObject() );
+                    boost::dynamic_pointer_cast< 
+                    ves::open::xml::OneDStringArray >( 
+                    stringDVP->GetDataXMLObject() );
                 vecStringArray = stringArray->GetArray();
                 lastDataAdded->SetActiveDataArrays( vecStringArray );
             }
@@ -216,16 +221,25 @@ void AddVTKDataSetEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xml
             //////////////////////////////////////////////////////////////
             if( tempInfoPacket->GetProperty( "VTK_PRECOMPUTED_DIR_PATH" ) )
             {
-                std::string precomputedDataSliceDir = tempInfoPacket->GetProperty( "VTK_PRECOMPUTED_DIR_PATH" )->GetDataString();
-                lastDataAdded->SetPrecomputedDataSliceDir( precomputedDataSliceDir );
-                lastDataAdded->SetUUID( "VTK_PRECOMPUTED_DIR_PATH", tempInfoPacket->GetProperty( "VTK_PRECOMPUTED_DIR_PATH" )->GetID() );
+                std::string precomputedDataSliceDir = 
+                    tempInfoPacket->GetProperty( "VTK_PRECOMPUTED_DIR_PATH" )->
+                    GetDataString();
+                lastDataAdded->
+                    SetPrecomputedDataSliceDir( precomputedDataSliceDir );
+                lastDataAdded->SetUUID( "VTK_PRECOMPUTED_DIR_PATH", 
+                    tempInfoPacket->GetProperty( "VTK_PRECOMPUTED_DIR_PATH" )->
+                    GetID() );
             }
             //////////////////////////////////////////////////////////////
             if( tempInfoPacket->GetProperty( "VTK_SURFACE_DIR_PATH" ) )
             {
-                std::string precomputedSurfaceDir = tempInfoPacket->GetProperty( "VTK_SURFACE_DIR_PATH" )->GetDataString();
+                std::string precomputedSurfaceDir = 
+                    tempInfoPacket->GetProperty( "VTK_SURFACE_DIR_PATH" )->
+                    GetDataString();
                 lastDataAdded->SetPrecomputedSurfaceDir( precomputedSurfaceDir );
-                lastDataAdded->SetUUID( "VTK_SURFACE_DIR_PATH", tempInfoPacket->GetProperty( "VTK_SURFACE_DIR_PATH" )->GetID() );
+                lastDataAdded->SetUUID( "VTK_SURFACE_DIR_PATH", 
+                    tempInfoPacket->GetProperty( "VTK_SURFACE_DIR_PATH" )->
+                    GetID() );
             }
 
             LoadSurfaceFiles( lastDataAdded->GetPrecomputedSurfaceDir() );
@@ -233,7 +247,8 @@ void AddVTKDataSetEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xml
             //Load texture datasets
             if( tempInfoPacket->GetProperty( "VTK_TEXTURE_DIR_PATH" ) )
             {
-                vprDEBUG( vesDBG, 0 ) << "|\tCreating texture dataset." << std::endl << vprDEBUG_FLUSH;
+                vprDEBUG( vesDBG, 0 ) << "|\tCreating texture dataset." 
+                    << std::endl << vprDEBUG_FLUSH;
                 _activeModel->CreateTextureDataSet();
                 size_t numProperties = tempInfoPacket->GetNumberOfProperties();
                 for( size_t j = 0; j < numProperties; ++j )
@@ -241,10 +256,12 @@ void AddVTKDataSetEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xml
                     if( tempInfoPacket->GetProperty( j )->GetDataName() ==
                             std::string( "VTK_TEXTURE_DIR_PATH" ) )
                     {
-                        _activeModel->AddDataSetToTextureDataSet( 0, tempInfoPacket->GetProperty( j )->GetDataString() );
+                        _activeModel->AddDataSetToTextureDataSet( 0, 
+                            tempInfoPacket->GetProperty( j )->GetDataString() );
                         std::ostringstream textId;
                         textId << "VTK_SURFACE_DIR_PATH_" << j;
-                        lastDataAdded->SetUUID( textId.str(), tempInfoPacket->GetProperty( "VTK_TEXTURE_DIR_PATH" )->GetID() );
+                        lastDataAdded->SetUUID( textId.str(), tempInfoPacket->
+                            GetProperty( "VTK_TEXTURE_DIR_PATH" )->GetID() );
                     }
                 }
             }
@@ -256,11 +273,14 @@ void AddVTKDataSetEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xml
                 std::cout << "|\tLoading data for file "
                     << tempDataSetFilename
                     << std::endl;
-                lastDataAdded->SetArrow( ves::xplorer::ModelHandler::instance()->GetArrow() );
+                lastDataAdded->SetArrow( 
+                    ves::xplorer::ModelHandler::instance()->GetArrow() );
                 //Check and see if the data is part of a transient series
                 if( tempInfoPacket->GetProperty( "VTK_TRANSIENT_SERIES" ) )
                 {
-                    std::string precomputedSurfaceDir = tempInfoPacket->GetProperty( "VTK_TRANSIENT_SERIES" )->GetDataString();
+                    std::string precomputedSurfaceDir = 
+                        tempInfoPacket->GetProperty( "VTK_TRANSIENT_SERIES" )->
+                        GetDataString();
                     lastDataAdded->LoadTransientData( precomputedSurfaceDir );
                 }
                 else
@@ -290,16 +310,14 @@ void AddVTKDataSetEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xml
             if( tempInfoPacket->GetProperty( "Create Surface Wrap" ) )
             {
                 unsigned int surfaceToggle = 0;
-                tempInfoPacket->GetProperty( "Create Surface Wrap" )->GetData( surfaceToggle );
+                tempInfoPacket->GetProperty( "Create Surface Wrap" )->
+                    GetData( surfaceToggle );
                 if( surfaceToggle )
                 {
                     //Create surface
                     lastDataAdded->CreateSurfaceWrap();
                 }
-                //lastDataAdded->SetPrecomputedSurfaceDir( precomputedSurfaceDir );
-                //lastDataAdded->SetUUID( "VTK_SURFACE_DIR_PATH", tempInfoPacket->GetProperty( "VTK_SURFACE_DIR_PATH" )->GetID() );
             }
-            
         }
     }
     else if( command->GetDataValuePair( "ADD_PRECOMPUTED_DATA_DIR" ) )
@@ -360,7 +378,6 @@ void AddVTKDataSetEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xml
             std::string surfaceFilename = 
                 tempDataSet->GetFileName() + "-surface";
             _activeModel->DeleteDataSet( surfaceFilename );
-            //_activeModel->SetActiveDataSet( 0 );
         }
     }
 }
