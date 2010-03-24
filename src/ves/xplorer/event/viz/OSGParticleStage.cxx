@@ -470,11 +470,11 @@ void OSGParticleStage::createStreamLines( vtkPolyData* polyData,
         }
 
         {
-            std::string shaderName = osgDB::findDataFile( "null_glow.fs" );
+            std::string shaderName = osgDB::findDataFile( "null_glow_texture.fs" );
             osg::ref_ptr< osg::Shader > fragShader = 
                 osg::Shader::readShaderFile( osg::Shader::FRAGMENT, shaderName );
             
-            //program->addShader( fragShader.get() );            
+            program->addShader( fragShader.get() );            
         }
         ss->setAttributeAndModes( program.get(),
             osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
