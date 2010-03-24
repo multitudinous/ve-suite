@@ -12,7 +12,7 @@ headers = sca_util.getHeadersRecursive( srcDir )
 
 lib_env = ves_pkg.getEnv().Clone()
 
-lib_env.Append( LIBS = ['PocoSQLite','ves_xplorer'])
+lib_env.Append( LIBS = ['PocoSQLite'])
 
 lib_env.Append(LIBPATH = [pj('#', buildDir, 'src', 'ves', 'xplorer')])
 
