@@ -326,7 +326,7 @@ public:
     ///Set the active data arrays to load
     void SetActiveDataArrays( std::vector< std::string > activeArrays );
     ///Load transient data based on a file prefix or directory scan.
-    void LoadTransientData();
+    void LoadTransientData( const std::string& dirName );
     ///Get Transient vectors for dataset
     ///\return The vector of datasets associated with this transient series
     const std::vector< DataSet* >& GetTransientDataSets();

@@ -260,8 +260,8 @@ void AddVTKDataSetEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xml
                 //Check and see if the data is part of a transient series
                 if( tempInfoPacket->GetProperty( "VTK_TRANSIENT_SERIES" ) )
                 {
-                    //std::string precomputedSurfaceDir = tempInfoPacket->GetProperty( "VTK_TRANSIENT_SERIES" )->GetDataString();
-                    lastDataAdded->LoadTransientData();
+                    std::string precomputedSurfaceDir = tempInfoPacket->GetProperty( "VTK_TRANSIENT_SERIES" )->GetDataString();
+                    lastDataAdded->LoadTransientData( precomputedSurfaceDir );
                 }
                 else
                 {

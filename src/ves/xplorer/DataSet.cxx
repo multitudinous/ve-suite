@@ -1973,7 +1973,7 @@ void DataSet::SetActiveDataArrays( std::vector< std::string > activeArrays )
     m_activeDataArrays = activeArrays;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DataSet::LoadTransientData()
+void DataSet::LoadTransientData( const std::string& dirName )
 {
     ///Get base file name or directory
     ///Scan directory for all of the files
@@ -1984,7 +1984,7 @@ void DataSet::LoadTransientData()
     }
     
     std::vector<std::string> transientFile = 
-        ves::xplorer::util::fileIO::GetFilesInDirectory( ".", ".vtm" );
+        ves::xplorer::util::fileIO::GetFilesInDirectory( dirName, ".vtm" );
     
     ///Load data for the file selected by the user for the transient series
     LoadData();
