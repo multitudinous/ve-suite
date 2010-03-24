@@ -4,9 +4,9 @@
 #define QT_NO_KEYWORDS
 
 #include <QtCore/QObject>
-#include <QtProperty>
-#include "qtpropertymanager.h"
-#include "qteditorfactory.h"
+#include <qtpropertybrowser-2.5_1-opensource/qtpropertybrowser.h>
+#include <qtpropertybrowser-2.5_1-opensource/qtpropertymanager.h>
+#include <qtpropertybrowser-2.5_1-opensource/qteditorfactory.h>
 
 #include <vector>
 

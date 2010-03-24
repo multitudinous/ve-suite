@@ -1,7 +1,7 @@
 #define QT_NO_KEYWORDS
 
-#include "qtpropertymanager.h"
-#include "qteditorfactory.h"
+#include <qtpropertybrowser-2.5_1-opensource/qtpropertymanager.h>
+#include <qtpropertybrowser-2.5_1-opensource/qteditorfactory.h>
 
 #include <ves/conductor/qt/propertyBrowser/GenericPropertyBrowser.h>
 
