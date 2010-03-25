@@ -4,7 +4,7 @@ import SConsAddons.Util as sca_util
 import qt46
 pj = os.path.join
 
-Import('baseEnv ves_pkg LIBDIR buildDir RootDir osg_options vpr_options')
+Import('baseEnv ves_pkg LIBDIR buildDir RootDir osg_options vpr_options tao_options')
 
 srcDir = os.path.abspath( pj(RootDir, 'src', 'ves', 'conductor', 'qt') )
 buildSrcDir = pj('#',buildDir,'src','ves','conductor','qt')
@@ -41,8 +41,6 @@ cppSources += lib_env.qt_moc(source)
 openDir = os.path.abspath( pj(RootDir,buildDir,'src','ves','conductor','qt') )
 cppSources1 = map(lambda s: pj(openDir, '%s' ) %(s), cppSources)
 cppHeaders1 = map(lambda s: pj(openDir, '%s' ) %(s), cppHeaders)
-
-lib_env.AppendUnique( CPPPATH = [pj(openDir), pj(openDir,'propertyBrowser')] )
     
 headers = cppHeaders1
 headers += sca_util.getHeadersRecursive( srcDir )
@@ -61,9 +59,11 @@ lib_env.Append(LIBPATH = [
 qt46.applyQtBuildFlags( lib_env )
 osg_options.apply( lib_env )
 vpr_options.apply( lib_env )
+tao_options.apply( lib_env )
 
 lib_env.Append( CPPDEFINES = ['VE_CONDUCTOR_UTILS_LIBRARY'])
-   
+lib_env.AppendUnique( CPPPATH = [ pj(RootDir,'external','qtpropertybrowser-2.5_1-opensource','src') ] )
+
 if lib_env['StaticLibs'] == "yes":
    lib = ves_pkg.createStaticAndSharedLibrary('ves_conductor_qtui',
                                                         lib_env,

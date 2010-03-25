@@ -3,7 +3,7 @@
 
 #define QT_NO_KEYWORDS
 
-#include <qtpropertybrowser-2.5_1-opensource/qttreepropertybrowser.h>
+#include <qttreepropertybrowser.h>
 #include <ves/conductor/qt/propertyBrowser/PropertyBrowser.h>
 
 namespace ves
