@@ -82,7 +82,8 @@ void OSGParticleStage::createSLPoint( osg::Geometry& geom, int nInstances, const
     geom.setUseDisplayList( false );
     geom.setUseVertexBufferObjects( true );
 
-    osgwTools::makeGeodesicSphere( 1.0, 0.0, &geom );
+    //osgwTools::makeGeodesicSphere( 1.0, 0.0, &geom );
+    osgwTools::makeAltAzSphere( 0.5, 4., 6., &geom );
     unsigned int numPrim = geom.getNumPrimitiveSets();
     for( unsigned int i = 0; i < numPrim; ++i )
     {
@@ -93,11 +94,11 @@ void OSGParticleStage::createSLPoint( osg::Geometry& geom, int nInstances, const
     // reaches full intensity white. Alpha is modulated with the
     // point sprint texture alpha, so the value here is a maximum
     // for the "densist" part of the point sprint texture.
-    osg::Vec4Array* c = new osg::Vec4Array;
+    /*osg::Vec4Array* c = new osg::Vec4Array;
     c->resize( 1 );
     geom.setColorArray( c );
     geom.setColorBinding( osg::Geometry::BIND_OVERALL );
-    (*c)[ 0 ] = color;
+    (*c)[ 0 ] = color;*/
 
     //geom.addPrimitiveSet( new osg::DrawArrays( GL_POINTS, 0, 1, nInstances ) );
     
@@ -352,9 +353,6 @@ void OSGParticleStage::createStreamLines( vtkPolyData* polyData,
             ss->addUniform( particlesizeUniform.get() );
     	}
 
-        //osg::ref_ptr< osg::Shader > vertexShader = osg::Shader::readShaderFile(
-        //    osg::Shader::VERTEX, osgDB::findDataFile( "streamline.vs" ) );
-
         //Apply the shader code here instead of calling it from a file as above
         std::string vertexSource =
             "vec4 \n"
@@ -389,6 +387,14 @@ void OSGParticleStage::createStreamLines( vtkPolyData* polyData,
             "uniform float repeatTime; \n"
             "uniform float particleSize; \n"
 
+            //Phong shading variables
+            "varying vec3 phongColor; \n"
+            "varying vec3 lightPos; \n"
+            //"varying vec3 objPos; \n"
+            "varying vec3 eyePos; \n"
+            "varying vec3 normal; \n"
+            "varying float opacityVal;\n"
+            "\n"
             "void main() \n"
             "{ \n"
             // Using the instance ID, generate "texture coords" for this instance.
@@ -411,16 +417,18 @@ void OSGParticleStage::createStreamLines( vtkPolyData* polyData,
             //" gl_Position = gl_ModelViewProjectionMatrix * ( gl_Vertex + pos ); \n"
 
             // TBD. Need to make this configurable from a uniform.
-            "   gl_PointSize = (-50. / v.z) * particleSize; \n"
+            //"   gl_PointSize = (-50. / v.z) * particleSize; \n"
 
             // Compute a time offset from the InstanceID to
             // emulate motion.
             "   float timeOffset = ( ((float)gl_InstanceID) / totalInstances ) * repeatTime; \n"
             "   float repTimer = mod( ( osg_SimulationTime - timeOffset ), repeatTime ); \n"
             "   float alpha = fadeTime - min( repTimer, fadeTime ); \n"
-            "   if( alpha < 0.95 )\n"
+            "   if( alpha < 0.97 )\n"
             "   {\n"
             "       alpha = 0.;\n"
+            //"        gl_Position = vec4( 1.0, 1.0, 1.0, 0.0 );\n"
+            //"        return;\n"
             "   }\n"
             "   else\n"
             "   {\n"
@@ -458,6 +466,18 @@ void OSGParticleStage::createStreamLines( vtkPolyData* polyData,
             //"   vec4 color = vec4( 1.0, 0.0, 0.0, 1.0 ); //texture2D( texSca, tC ); \n"
             "   color[3]=alpha; \n"
             "   gl_FrontColor = color; \n"
+            /*"     // Setup varying variables. \n"
+            "   opacityVal = alpha;\n"
+            "     phongColor = vec3( 1.0, 0.0, 0.0 );\n"
+            //"   objPos=gl_Vertex.xyz; \n"
+            "     eyePos=vec3(gl_ModelViewMatrix*gl_Vertex); \n"
+            "     lightPos=gl_LightSource[0].position.xyz; \n"
+            //"   normal=vec3(gl_NormalMatrix*(gl_Normal+ normalize(vecOff.xyz) ) ); \n"
+            "     normal=vec3(gl_NormalMatrix * gl_Normal); \n"
+            "     gl_FrontSecondaryColor=vec4(1.0);\n"
+            "     gl_BackSecondaryColor=vec4(0.0);\n"
+            "     gl_BackColor = vec4( phongColor, opacityVal);\n"
+            "     gl_FrontColor = vec4( phongColor, opacityVal);\n"*/
             "} \n";
 
         osg::ref_ptr< osg::Program > program = new osg::Program();
@@ -471,26 +491,78 @@ void OSGParticleStage::createStreamLines( vtkPolyData* polyData,
 
         {
             std::string shaderName = osgDB::findDataFile( "null_glow.fs" );
+            /*std::string shaderName(
+        //"uniform vec3 ambientMaterial;\n"
+        //"uniform vec3 diffuseMaterial;\n"
+        //"uniform vec3 specularMaterial;\n"
+        //"uniform float specularPower;\n"
+        "varying float opacityVal;\n"
+        
+        "varying vec3 phongColor;\n"
+        "varying vec3 lightPos;\n"
+        //"varying vec3 objPos;\n"
+        "varying vec3 eyePos;\n"
+        "varying vec3 normal;\n"
+        "\n"
+        "void main()\n"
+        "{\n"
+        "    vec3 ambientMaterial = vec3( 0.368627, 0.368421, 0.368421 );\n"
+        "    vec3 diffuseMaterial = vec3( 0.886275, 0.885003, 0.885003 );\n"
+        "    vec3 specularMaterial = vec3( 0.490196, 0.488722, 0.488722 );\n"
+        "    float specularPower = 20.0;\n"
+        "\n"
+        "    vec3 N=normalize(normal);\n"
+        "    if(gl_SecondaryColor.r < .5)\n"
+        //"    if( !gl_FrontFacing )\n"
+        "    {\n"
+        "       N=-N; \n"
+        "    }\n"
+        "    vec3 L=normalize(lightPos);\n"
+        "    float NDotL=max(dot(N,L),0.0);\n"
+        "\n"
+        "    vec3 V=normalize(eyePos);\n"
+        "    vec3 R=reflect(V,N);\n"
+        "    float RDotL=max(dot(R,L),0.0);\n"
+        "\n"
+        "    vec3 TotalAmbient=gl_LightSource[0].ambient.rgb*ambientMaterial*phongColor;\n"
+        "    vec3 TotalDiffuse=gl_LightSource[0].diffuse.rgb*diffuseMaterial*phongColor*NDotL;\n"
+        "    vec3 TotalSpecular=gl_LightSource[0].specular.rgb*specularMaterial*pow(RDotL,specularPower);\n"
+        "\n"
+        "    vec4 newColor = vec4(TotalAmbient+TotalDiffuse+TotalSpecular,opacityVal);\n"
+        "    newColor.a = opacityVal;\n"
+        //"    gl_FragColor = newColor;\n"
+        "    gl_FragData[ 0 ] = newColor;\n"
+        "    gl_FragData[ 1 ] = vec4( 0, 0, 0, 1);\n"
+        "}\n"
+        );*/
             osg::ref_ptr< osg::Shader > fragShader = 
                 osg::Shader::readShaderFile( osg::Shader::FRAGMENT, shaderName );
-            ss->addUniform( new osg::Uniform( "tex", 1 ) );
-            ss->addUniform( new osg::Uniform( "texUnit", (unsigned int)1 ) );
+            //ss->addUniform( new osg::Uniform( "tex", 1 ) );
+            //ss->addUniform( new osg::Uniform( "texUnit", (unsigned int)1 ) );
+            
+            //osg::ref_ptr< osg::Shader > fragShader = new osg::Shader();
+            //fragShader->setType( osg::Shader::FRAGMENT );
+            //fragShader->setShaderSource( shaderName );
             program->addShader( fragShader.get() );            
         }
         ss->setAttributeAndModes( program.get(),
             osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
         
+        //ss->setRenderBinDetails( 0, "RenderBin" );
+        //ss->setNestRenderBins( true );
+
         // Note:
         // We will render the streamline points with depth test on and depth write disabled,
         // with an order independent blend. This means we need to draw the streamlines last
         // (so use bin # 10) but we don't need the depth sort, so use bin name "RenderBin".
-        ss->setRenderBinDetails( 10, "RenderBin" );
+        ss->setRenderBinDetails( 10, std::string( "DepthSortedBin" ) );
+        ss->setNestRenderBins( true );
 
         // Note:
         // When using a vertex shader, point size is taken from glPointSize and _not_
         // distance-attenuated. However, set the following mode ON, and then our vertex
         // shader can do its own distance attenuation and emit gl_PointSize.
-        ss->setMode( GL_VERTEX_PROGRAM_POINT_SIZE, osg::StateAttribute::ON );
+        //ss->setMode( GL_VERTEX_PROGRAM_POINT_SIZE, osg::StateAttribute::ON );
 
         // Tells the shader the dimensions of our texture: tm x tn.
         // Required to compute correct texture coordinates from the instance ID.
@@ -530,8 +602,8 @@ void OSGParticleStage::createStreamLines( vtkPolyData* polyData,
         // Leave the depth test enabled, but mask off depth writes (4th param is false).
         // This allows us to render the streamline points in any order, front to back
         // or back to front, and not lose any points by depth testing against themselves.
-        osg::ref_ptr< osg::Depth > depth = new osg::Depth( osg::Depth::LESS, 0., 1., false );
-        ss->setAttributeAndModes( depth.get() );
+        //osg::ref_ptr< osg::Depth > depth = new osg::Depth( osg::Depth::LESS, 0., 1., false );
+        //ss->setAttributeAndModes( depth.get() );
 
         // Note:
         // After drawing opaque objects, translucency can be order-independent only if
