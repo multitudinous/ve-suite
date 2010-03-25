@@ -26,7 +26,7 @@ ContourPlanePropertySet::~ContourPlanePropertySet( )
 void ContourPlanePropertySet::_createSkeleton( )
 {
     AddProperty( "DataSet", 0, "Data Set" );
-    VectorOfStrings enumValues;
+    PSVectorOfStrings enumValues;
 
     AddProperty( "DataSet_ScalarData", 0, "Scalar Data" );
     // Dummy value to ensure this gets set up as an enum
@@ -141,7 +141,7 @@ void ContourPlanePropertySet::_createSkeleton( )
 
 void ContourPlanePropertySet::UpdateScalarDataOptions( Property* property )
 {
-    VectorOfStrings enumValues;
+    PSVectorOfStrings enumValues;
     Model* model = NULL;
     model = ModelHandler::instance( )->GetActiveModel( );
     if( model )

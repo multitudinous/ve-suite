@@ -6,6 +6,7 @@
 #include <vector>
 
 #include <boost/any.hpp>
+#include <Poco/Types.h>
 
 // Forward declarations
 namespace Poco
@@ -35,7 +36,7 @@ class PropertySet
 {
 public:
     typedef std::map< std::string, Property* > PropertyMap;
-    typedef std::vector<std::string> VectorOfStrings;
+    typedef std::vector<std::string> PSVectorOfStrings;
 
     ///
     /// Constructor
@@ -64,7 +65,7 @@ public:
     /// Returns a vector containing the identifying names of all properties
     /// contained in this set. Names are in the order in which they were added
     /// to the property set.
-    virtual VectorOfStrings GetPropertyList( );
+    virtual PSVectorOfStrings GetPropertyList( );
 
     ///
     /// Returns a pointer to the property identified by propertyName
@@ -78,7 +79,7 @@ public:
     ///
     /// Returns a vector containing the identifying names of all attributes
     /// owned by property propertyName
-    virtual const VectorOfStrings GetPropertyAttributeList( std::string
+    virtual const PSVectorOfStrings GetPropertyAttributeList( std::string
                                                             propertyName )const;
 
     ///
@@ -114,7 +115,7 @@ public:
     /// Returns a list containing names of properties that have undergone a
     /// state change of some sort due to the most recent operation on a
     /// property in this set.
-    virtual VectorOfStrings GetChanges( );
+    virtual PSVectorOfStrings GetChanges( );
 
     ///
     /// Clears the internal list of all property changes that have occurred
@@ -136,7 +137,7 @@ public:
     /// Sets the record ID for this property. This should generally be used only
     /// to identify this property set before asking it to read data with a 
     /// matching record ID from the database.
-    virtual void SetRecordID( long unsigned int id );
+    virtual void SetRecordID( unsigned int id );
 
     ///
     /// Returns the record ID of this property set. The record ID is how this
@@ -146,10 +147,10 @@ public:
 
     virtual bool LoadFromDatabase( Poco::Data::Session *session );
     virtual bool LoadFromDatabase( Poco::Data::Session *session, std::string TableName );
-    virtual bool LoadFromDatabase( Poco::Data::Session *session, std::string TableName, long unsigned int ID );
+    virtual bool LoadFromDatabase( Poco::Data::Session *session, std::string TableName, Poco::UInt32 ID );
     virtual bool LoadFromDatabase( std::string DatabaseName );
     virtual bool LoadFromDatabase( std::string DatabaseName, std::string TableName );
-    virtual bool LoadFromDatabase( std::string DatabaseName, std::string TableName, long unsigned int ID );
+    virtual bool LoadFromDatabase( std::string DatabaseName, std::string TableName, unsigned int ID );
 
     virtual bool WriteToDatabase( Poco::Data::Session *session );
     virtual bool WriteToDatabase( Poco::Data::Session *session, std::string TableName );
@@ -169,11 +170,11 @@ protected:
     /// AddProperty method through a call to c_onnectChanges. Derived classes
     /// that override AddProperty should be sure to call _connectChanges if
     /// change accumulation is desired.
-    /// _changeAccumulator will accumulate a list of all properties
+    /// ChangeAccumulator will accumulate a list of all properties
     /// that have undergone a change in value, attributes, or enabled state
     /// since the last call to GetChanges or the last call to
     /// ClearAccumulatedChanges
-    virtual void _changeAccumulator( Property* property );
+    virtual void ChangeAccumulator( Property* property );
 
     ///
     /// Internal function that connects default signals to the change accumulator
@@ -187,18 +188,18 @@ protected:
     virtual std::string _buildColumnHeaderString();
 
     PropertyMap mPropertyMap; /// Map holding the collection of properties.
-    VectorOfStrings mAccumulatedChanges;
-    VectorOfStrings mPropertyList; /// Maintains a list of available properties
+    PSVectorOfStrings mAccumulatedChanges;
+    PSVectorOfStrings mPropertyList; /// Maintains a list of available properties
     // sorted by order of addition
 
     std::string mTableName;
-    long unsigned int mID;
+    Poco::UInt32 mID;
 
 
 private:
-    std::string _toString( int value );
+    //std::string _toString( int value );
     //std::string _toString( size_t value );
-    std::string _toString( long unsigned int value );
+    //std::string _toString( long unsigned int value );
 };
 
 } // namespace data

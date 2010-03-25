@@ -127,7 +127,7 @@ private:
     //    QtProperty at position X in mItems.
     PropertyVector mProperties; // Holds all instances of Property
     ItemVector mItems; // Holds all instances of QtProperty (including subproperties)
-    xplorer::data::PropertySet::VectorOfStrings mPropertyNames; // Holds the names of all the properties
+    xplorer::data::PropertySet::PSVectorOfStrings mPropertyNames; // Holds the names of all the properties
 
     ItemVector mTreedItems; // Holds only top-level instances of QtProperty
     // (ie. does not explictly hold sub-properties)

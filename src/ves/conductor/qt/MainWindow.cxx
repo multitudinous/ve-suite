@@ -1,7 +1,7 @@
 #define QT_NO_KEYWORDS
 
 #include "MainWindow.h"
-#include "ui_MainWindow.h"
+#include <ves/conductor/qt/ui_MainWindow.h>
 #include <QtGui/QMdiSubWindow>
 
 #include <ves/conductor/qt/propertyBrowser/Visualization.h>

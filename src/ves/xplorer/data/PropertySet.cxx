@@ -3,17 +3,22 @@
 #include <ves/xplorer/data/BindableAnyWrapper.h>
 
 #include <boost/bind.hpp>
-#include <sstream>
-#include <iostream>
-#include <cstdio>
+#include <boost/lexical_cast.hpp>
 
+#include <iostream>
+
+//#include <Poco/Data/Common.h>
 #include <Poco/Data/RecordSet.h>
-#include <Poco/Data/Common.h>
+#include <Poco/Data/Session.h>
 #include <Poco/Data/SQLite/Connector.h>
 #include <Poco/Data/DataException.h>
 
-using namespace ves::xplorer::data;
-
+namespace ves
+{
+namespace xplorer
+{
+namespace data
+{
 PropertySet::PropertySet( )
 {
     mPropertyMap.clear( );
@@ -79,7 +84,7 @@ bool PropertySet::PropertyExists( std::string propertyName ) const
 }
 ////////////////////////////////////////////////////////////////////////////////
 
-PropertySet::VectorOfStrings PropertySet::GetPropertyList( )
+PropertySet::PSVectorOfStrings PropertySet::GetPropertyList( )
 {
     return mPropertyList;
 }
@@ -113,7 +118,7 @@ boost::any PropertySet::GetPropertyValue( std::string propertyName ) const
 }
 ////////////////////////////////////////////////////////////////////////////////
 
-const PropertySet::VectorOfStrings PropertySet::GetPropertyAttributeList( std::string
+const PropertySet::PSVectorOfStrings PropertySet::GetPropertyAttributeList( std::string
                                                                           propertyName
                                                                           ) const
 {
@@ -125,7 +130,7 @@ const PropertySet::VectorOfStrings PropertySet::GetPropertyAttributeList( std::s
     else
     {
         // return an empty vector of strings
-        return VectorOfStrings( );
+        return PSVectorOfStrings( );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -203,9 +208,9 @@ void PropertySet::SetPropertyEnabled( std::string propertyName,
 }
 ////////////////////////////////////////////////////////////////////////////////
 
-PropertySet::VectorOfStrings PropertySet::GetChanges( )
+PropertySet::PSVectorOfStrings PropertySet::GetChanges( )
 {
-    VectorOfStrings changes = mAccumulatedChanges;
+    PSVectorOfStrings changes = mAccumulatedChanges;
     ClearAccumulatedChanges( );
     return changes;
 }
@@ -229,7 +234,7 @@ std::string PropertySet::GetTableName( )
 }
 ////////////////////////////////////////////////////////////////////////////////
 
-void PropertySet::SetRecordID( long unsigned int id )
+void PropertySet::SetRecordID( unsigned int id )
 {
     mID = id;
 }
@@ -262,11 +267,11 @@ bool PropertySet::DeleteFromDatabase( std::string DatabaseName, std::string Tabl
         // Close db connection
         Poco::Data::SQLite::Connector::unregisterConnector( );
     }
-    catch ( Poco::Data::DataException &e )
+    catch( Poco::Data::DataException& ex )
     {
-        std::cout << e.displayText( ) << std::endl;
+        std::cout << ex.displayText() << std::endl;
     }
-    catch ( ... )
+    catch( ... )
     {
         std::cout << "Error writing to database." << std::endl;
     }
@@ -318,7 +323,7 @@ bool PropertySet::LoadFromDatabase( std::string DatabaseName,
 
 bool PropertySet::LoadFromDatabase( std::string DatabaseName,
                                     std::string TableName,
-                                    long unsigned int ID )
+                                    unsigned int ID )
 {
     bool returnValue = false;
 
@@ -361,7 +366,7 @@ bool PropertySet::LoadFromDatabase( Poco::Data::Session *session,
 
 bool PropertySet::LoadFromDatabase( Poco::Data::Session *session,
                                     std::string TableName,
-                                    long unsigned int ID )
+                                    Poco::UInt32 ID )
 {
     if( !session )
     {
@@ -589,7 +594,7 @@ bool PropertySet::WriteToDatabase( Poco::Data::Session *session,
             for ( size_t count = 0; count < max; count++ )
             {
                 query.append( ":" );
-                query.append( _toString( count ) );
+                query.append( boost::lexical_cast<std::string>( count ) );
                 query.append( "," );
             }
             // There should be an extra comma at the end of the query that must be
@@ -621,7 +626,7 @@ bool PropertySet::WriteToDatabase( Poco::Data::Session *session,
                 {
                     query.append( iterator->first );
                     query.append( "=:" );
-                    query.append( _toString( fieldNames.size( ) ) );
+                    query.append( boost::lexical_cast<std::string>( fieldNames.size( ) ) );
                     query.append( "," );
 
                     fieldNames.push_back( iterator->first );
@@ -640,7 +645,7 @@ bool PropertySet::WriteToDatabase( Poco::Data::Session *session,
             }
 
             query.append( " WHERE id=" );
-            query.append( _toString( mID ) );
+            query.append( boost::lexical_cast<std::string>( mID ) );
         }
 
         // Turn the query into a statement that can accept bound values
@@ -781,36 +786,36 @@ std::string PropertySet::_buildColumnHeaderString( )
 void PropertySet::_connectChanges( Property* property )
 {
     property->SignalAttributeChanged.connect( boost::bind( &PropertySet::
-                                                           _changeAccumulator,
-                                                           this, _1 ) );
+                                                           ChangeAccumulator,
+                                                           this, ::_1 ) );
 
     property->SignalDisabled.connect( boost::bind( &PropertySet::
-                                                   _changeAccumulator,
-                                                   this, _1 ) );
+                                                   ChangeAccumulator,
+                                                   this, ::_1 ) );
 
     property->SignalEnabled.connect( boost::bind( &PropertySet::
-                                                  _changeAccumulator,
-                                                  this, _1 ) );
+                                                  ChangeAccumulator,
+                                                  this, ::_1 ) );
 
     property->SignalValueChanged.connect( boost::bind( &PropertySet::
-                                                       _changeAccumulator,
-                                                       this, _1 ) );
+                                                       ChangeAccumulator,
+                                                       this, ::_1 ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 
-void PropertySet::_changeAccumulator( Property* property )
+void PropertySet::ChangeAccumulator( Property* property )
 {
     // Ask the property for its name
-    std::string name;
-    name = boost::any_cast< std::string > ( property->GetAttribute( "nameInSet" ) );
+    std::string nameInSet;
+    nameInSet = boost::any_cast< std::string >( property->GetAttribute( "nameInSet" ) );
 
     // See if we already have changes recorded for this property
     bool found = false;
-    VectorOfStrings::const_iterator iterator = mAccumulatedChanges.begin( );
-    VectorOfStrings::const_iterator end = mAccumulatedChanges.end( );
+    PSVectorOfStrings::const_iterator iterator = mAccumulatedChanges.begin( );
+    PSVectorOfStrings::const_iterator end = mAccumulatedChanges.end( );
     while ( ( !found ) && ( iterator != end ) )
     {
-        if( ( *iterator ) == name )
+        if( ( *iterator ) == nameInSet )
         {
             found = true;
         }
@@ -821,26 +826,23 @@ void PropertySet::_changeAccumulator( Property* property )
     // restrict the size of the vector to 1000 elements.
     if( ( !found ) && ( mAccumulatedChanges.size( ) < 1000 ) )
     {
-        mAccumulatedChanges.push_back( name );
+        mAccumulatedChanges.push_back( nameInSet );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-
-std::string PropertySet::_toString( int value )
+/*
+std::string PropertySet::boost::lexical_cast<std::string>( int value )
 {
-    std::stringstream ss;
-    std::string result;
-    ss << value;
-    ss >> result;
-    return result;
+    return boost::lexical_cast<std::string>( value );
 }
 ////////////////////////////////////////////////////////////////////////////////
 
-std::string PropertySet::_toString( long unsigned int value )
+std::string PropertySet::boost::lexical_cast<std::string>( long unsigned int value )
 {
-    std::stringstream ss;
-    std::string result;
-    ss << value;
-    ss >> result;
-    return result;
+    return boost::lexical_cast<std::string>( value );
+}
+*/
+    
+}
+}
 }

@@ -2,11 +2,17 @@
 #define	_BINDABLEANYWRAPPER_H
 
 #include <string>
+#include <boost/any.hpp>
+
+namespace Poco
+{
+namespace Data
+{
+class Statement;
+}    
+}
 
 // TODO: cull include deps
-#include <boost/any.hpp>
-#include <Poco/Data/Common.h>
-#include <Poco/Data/SQLite/Connector.h>
 
 /// @file BindableAnyWrapper.h
 
@@ -29,7 +35,7 @@ public:
     BindableAnyWrapper( const BindableAnyWrapper& orig );
     virtual ~BindableAnyWrapper( );
 
-    bool BindValue( Poco::Data::Statement *statement, boost::any value );
+    bool BindValue( Poco::Data::Statement* statement, boost::any value );
 private:
     bool mBool;
     int mInt;

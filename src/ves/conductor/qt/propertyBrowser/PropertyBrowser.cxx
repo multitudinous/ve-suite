@@ -132,8 +132,8 @@ void PropertyBrowser::ParsePropertySet( xplorer::data::PropertySet* set )
 
     // Walk through properties list and store a pointer to each underlying property
     { // Bracket used to scope iterator and end
-        PropertySet::VectorOfStrings::iterator iterator;
-        PropertySet::VectorOfStrings::iterator end = mPropertyNames.end( );
+        PropertySet::PSVectorOfStrings::iterator iterator;
+        PropertySet::PSVectorOfStrings::iterator end = mPropertyNames.end( );
         for ( iterator = mPropertyNames.begin( ); iterator != end; iterator++ )
         {
             mProperties.push_back( set->GetProperty( ( *iterator ) ) );
@@ -244,11 +244,11 @@ void PropertyBrowser::_refreshItem( int index )
     {
         // Update the list of valid choices
         QStringList qEnumNames;
-        Property::VectorOfStrings enumNames =
-                boost::any_cast< Property::VectorOfStrings > (
+        Property::PSVectorOfStrings enumNames =
+                boost::any_cast< Property::PSVectorOfStrings > (
                 property->GetAttribute( "enumValues" ) );
-        Property::VectorOfStrings::iterator iterator;
-        Property::VectorOfStrings::iterator end = enumNames.end( );
+        Property::PSVectorOfStrings::iterator iterator;
+        Property::PSVectorOfStrings::iterator end = enumNames.end( );
         for ( iterator = enumNames.begin( ); iterator != end; iterator++ )
         {
             qEnumNames << QString::fromStdString( ( *iterator ) );
@@ -441,9 +441,9 @@ void PropertyBrowser::DoubleValueChanged( QtProperty* item, double value )
 void PropertyBrowser::Refresh( )
 {
     // Request list of changed properties from set
-    xplorer::data::PropertySet::VectorOfStrings changes = mSet->GetChanges( );
-    xplorer::data::PropertySet::VectorOfStrings::iterator iterator;
-    xplorer::data::PropertySet::VectorOfStrings::iterator end = changes.end( );
+    xplorer::data::PropertySet::PSVectorOfStrings changes = mSet->GetChanges( );
+    xplorer::data::PropertySet::PSVectorOfStrings::iterator iterator;
+    xplorer::data::PropertySet::PSVectorOfStrings::iterator end = changes.end( );
 
     // Walk through list and update the UI items
     for ( iterator = changes.begin( ); iterator != end; iterator++ )

@@ -37,6 +37,7 @@ source = [pj(buildSrcDir,'propertyBrowser','GenericPropertyBrowser.h')]
 cppSources += lib_env.qt_moc(source)
 ###
 
+lib_env.Depends( cppSources, cppHeaders)
 
 openDir = os.path.abspath( pj(RootDir,buildDir,'src','ves','conductor','qt') )
 cppSources1 = map(lambda s: pj(openDir, '%s' ) %(s), cppSources)

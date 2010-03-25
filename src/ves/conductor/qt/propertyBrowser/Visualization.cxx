@@ -2,7 +2,7 @@
 // THIS HEADER MUST COME FIRST
 // Header dynamically generated during build process by uic. DO NOT INSERT PATH
 // INFORMATION!
-#include "ui_Visualization.h"
+#include <ves/conductor/qt/propertyBrowser/ui_Visualization.h>
 
 #include <ves/conductor/qt/propertyBrowser/Visualization.h>
 #include <ves/conductor/qt/propertyBrowser/PropertyBrowser.h>

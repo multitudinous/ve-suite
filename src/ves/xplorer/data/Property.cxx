@@ -183,8 +183,8 @@ void Property::SetAttribute( std::string attributeName,
             // If attributeValue is empty, we don't consider this a proper enum
             if( !attributeValue.empty( ) )
             {
-                VectorOfStrings *enumValues =
-                        boost::any_cast<VectorOfStrings > ( &attributeValue );
+                PSVectorOfStrings *enumValues =
+                        boost::any_cast<PSVectorOfStrings > ( &attributeValue );
                 // If cast was successful, continue...
                 if( enumValues )
                 {
@@ -240,9 +240,9 @@ boost::any Property::GetAttribute( std::string attributeName ) const
 
 ////////////////////////////////////////////////////////////////////////////////
 
-const Property::VectorOfStrings Property::GetAttributeList( ) const
+const Property::PSVectorOfStrings Property::GetAttributeList( ) const
 {
-    VectorOfStrings attributeList;
+    PSVectorOfStrings attributeList;
     for ( AttributeMap::const_iterator iterator = mAttributeMap.begin( );
             iterator != mAttributeMap.end( );
             iterator++ )
@@ -412,9 +412,9 @@ bool Property::_checkEnumValue( boost::any value )
     // **ALLOW THE VALUE TO BE SET**
     if( !enumVector.empty( ) )
     {
-        // Attempt to cast enumVector as a VectorOfStrings
-        VectorOfStrings *castEnumVector =
-                boost::any_cast< VectorOfStrings > ( &enumVector );
+        // Attempt to cast enumVector as a PSVectorOfStrings
+        PSVectorOfStrings *castEnumVector =
+                boost::any_cast< PSVectorOfStrings > ( &enumVector );
         // If the cast returned NULL, fail out
         if( !castEnumVector )
         {
@@ -440,10 +440,10 @@ bool Property::_checkEnumValue( boost::any value )
             // Check whether value is one of the allowable strings
             std::string castValue = boost::any_cast<std::string > ( value );
             boost::any enumValues = GetAttribute( "enumValues" );
-            VectorOfStrings castEnumValues =
-                    boost::any_cast< VectorOfStrings > ( enumValues );
-            VectorOfStrings::const_iterator iterator = castEnumValues.begin( );
-            VectorOfStrings::const_iterator end = castEnumValues.end( );
+            PSVectorOfStrings castEnumValues =
+                    boost::any_cast< PSVectorOfStrings > ( enumValues );
+            PSVectorOfStrings::const_iterator iterator = castEnumValues.begin( );
+            PSVectorOfStrings::const_iterator end = castEnumValues.end( );
             bool found = false;
             while ( ( !found ) && ( iterator != end ) )
             {
@@ -474,8 +474,8 @@ void Property::_doExtraEnumSetValueProcessing( boost::any value )
         // Convert the string to the proper index to store in main value
         std::string castValue = boost::any_cast<std::string > ( value );
         boost::any enumValues = GetAttribute( "enumValues" );
-        VectorOfStrings castEnumValues =
-                boost::any_cast< VectorOfStrings > ( enumValues );
+        PSVectorOfStrings castEnumValues =
+                boost::any_cast< PSVectorOfStrings > ( enumValues );
         int max = static_cast < int > ( castEnumValues.size( ) );
         max -= 1;
         bool found = false;
@@ -494,8 +494,8 @@ void Property::_doExtraEnumSetValueProcessing( boost::any value )
     // Set the enumCurrentString attribute
     int mainValue = boost::any_cast<int>( mValue );
     boost::any enumValues = GetAttribute( "enumValues" );
-    VectorOfStrings castEnumValues =
-            boost::any_cast< VectorOfStrings > ( enumValues );
+    PSVectorOfStrings castEnumValues =
+            boost::any_cast< PSVectorOfStrings > ( enumValues );
     std::string enumString = castEnumValues[mainValue];
     SetAttribute( "enumCurrentString", enumString );
 }

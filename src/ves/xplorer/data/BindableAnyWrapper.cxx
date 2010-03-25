@@ -1,5 +1,8 @@
 #include <ves/xplorer/data/BindableAnyWrapper.h>
 
+#include <Poco/Data/Common.h>
+//#include <Poco/Data/SQLite/Connector.h>
+
 #include <iostream>
 
 using namespace ves::xplorer::data;

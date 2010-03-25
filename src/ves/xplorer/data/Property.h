@@ -1,5 +1,4 @@
-#ifndef _PROPERTY_H
-#define	_PROPERTY_H
+#pragma once
 
 #include <string>
 #include <vector>
@@ -43,11 +42,11 @@
 /// 1) The main value MUST be an integer, and it must be set before meeting
 /// the other requirements.
 /// 2) Call SetAttribute with the attribute name "enumValues" and a NON-EMPTY
-/// Property::VectorOfStrings representing the "names" of the allowable enum
+/// Property::PSVectorOfStrings representing the "names" of the allowable enum
 /// types. An attribute named "enumSize" and containing the number of items
 /// in the enumValues vector will be automatically added to the property's
 /// attributes. This attribute can be queried by callers who don't want to
-/// or cannot deal with the VectorOfStrings directly. Another attribute called
+/// or cannot deal with the PSVectorOfStrings directly. Another attribute called
 /// "enumCurrentString" will also be added. Its value will always contain
 /// the string referred to by enumValues[mainValue]. If the pre-existing main
 /// value is outside the allowable range, it will be reset to zero.
@@ -60,7 +59,7 @@
 /// 5) Although not recommended practice, it is possible to convert a
 /// pseudo-enum back to a normal integer by calling
 /// SetAttribute( "enumValues", val ), where val is anything besides a valid
-/// Property::VectorOfStrings.
+/// Property::PSVectorOfStrings.
 
 namespace ves
 {
@@ -74,7 +73,7 @@ class Property : public boost::signals::trackable
 {
 public:
 
-    typedef std::vector<std::string> VectorOfStrings;
+    typedef std::vector<std::string> PSVectorOfStrings;
     typedef std::map<std::string, boost::any> AttributeMap;
     ///
     /// Create an instance of Property.
@@ -127,7 +126,7 @@ public:
 
     ///
     /// Returns a list of all attribute names owned by this property
-    const VectorOfStrings GetAttributeList( ) const;
+    const PSVectorOfStrings GetAttributeList( ) const;
 
     ///
     /// Returns true if this property has an attribute named attributeName
@@ -266,7 +265,3 @@ private:
 } // namespace data
 } // namespace xplorer
 } // namespace ves
-
-
-#endif	/* _PROPERTY_H */
-
