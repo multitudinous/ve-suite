@@ -101,7 +101,8 @@ void OSGStreamlineStage::createSLPoint( osg::Geometry& geom, int nInstances, con
     osg::Texture2D *tex = new osg::Texture2D();
     tex->setImage( osgDB::readImageFile( "splotch.png" ) );
     ss->setTextureAttributeAndModes( 1, tex, osg::StateAttribute::ON );
-
+    ss->addUniform( new osg::Uniform( "tex", 1 ) );
+    ss->addUniform( new osg::Uniform( "texUnit", (unsigned int)1 ) );
     // Keep pixels with a significant alpha value (discard low-alpha pixels).
     osg::AlphaFunc* af = new osg::AlphaFunc( osg::AlphaFunc::GREATER, 0.05f );
     ss->setAttributeAndModes( af );

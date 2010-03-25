@@ -1,10 +1,10 @@
 uniform sampler2D tex;
 //uniform float opacityVal;
 uniform vec4 glowColor;
-
+uniform uint texUnit;
 void main()
 {
-    vec4 colorTex = texture2D(tex, gl_TexCoord[0].st);
+    vec4 colorTex = texture2D(tex, gl_TexCoord[texUnit].st);
     //colorTex.a = opacityVal;
     gl_FragData[ 0 ] = colorTex * gl_Color;
     
