@@ -12,16 +12,15 @@ headers = sca_util.getHeadersRecursive( srcDir )
 
 lib_env = ves_pkg.getEnv().Clone()
 
-lib_env.Append(LIBPATH = [pj('#', buildDir, 'src', 'ves', 'xplorer')])
-lib_env.Append( LIBS = ['ves_xplorer'])
+#lib_env.Append(LIBPATH = [pj('#', buildDir, 'src', 'ves', 'xplorer')])
+#lib_env.Append( LIBS = ['ves_xplorer'])
 
 vtk_options.apply( lib_env )
 boost_options.apply( lib_env )
-# Hack to get boost_signals-mt added to link line without specifying it directly
 vpr_options.apply( lib_env )
 gmtl_options.apply( lib_env )
 vrjuggler_options.apply( lib_env )
-osg_options.apply( lib_env )
+#osg_options.apply( lib_env )
 poco_options.apply( lib_env )
 
 lib_env.Append( CPPDEFINES = ['VE_DATA_LIBRARY'] )
