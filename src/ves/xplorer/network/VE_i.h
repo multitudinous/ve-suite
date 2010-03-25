@@ -136,7 +136,7 @@ protected:
                        ::Error::EUnknown
                    ) )
     {
-        ;
+        boost::ignore_unused_variable_warning( xplorerData );
     }
 
     virtual
