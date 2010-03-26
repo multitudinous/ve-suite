@@ -372,9 +372,9 @@ void OSGStreamlineStage::createStreamLines( vtkPolyData* polyData,
 
             // Compute a time offset from the InstanceID to
             // emulate motion.
-            "   float timeOffset = ( ((float)gl_InstanceID) / totalInstances ) * repeatTime; \n"
+            "   float timeOffset = ( ((float)gl_InstanceID) / (totalInstances - 1) ) * repeatTime; \n"
             "   float repTimer = mod( ( osg_SimulationTime - timeOffset ), repeatTime ); \n"
-            "   float alpha = fadeTime - min( repTimer, fadeTime ); \n"
+            "   float alpha = (fadeTime - min( repTimer, fadeTime ))/fadeTime; \n"
 
         /*"   // Scalar texture containg key to color table. \n"
         "   vec4 activeScalar = texture2D( scalar, gl_MultiTexCoord0.st );\n"
