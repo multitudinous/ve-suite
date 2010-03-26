@@ -1199,10 +1199,18 @@ void SceneRenderToTexture::InitializeRTT()
     *mCamerasConfigured = false;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void SceneRenderToTexture::Update( osg::NodeVisitor* updateVisitor, ves::open::xml::CommandPtr tempCommand )
+void SceneRenderToTexture::Update( osg::NodeVisitor* updateVisitor, 
+    ves::open::xml::CommandPtr tempCommand )
 {
-    const std::string tempCommandName = tempCommand->GetCommandName();
-    for( std::vector< osg::Camera* >::iterator iter = m_updateList.begin(); iter != m_updateList.end(); ++iter )
+    std::string tempCommandName;
+
+    if( tempCommand )
+    {
+        tempCommandName = tempCommand->GetCommandName();
+    }        
+    
+    for( std::vector< osg::Camera* >::iterator iter = m_updateList.begin(); 
+        iter != m_updateList.end(); ++iter )
     {
         (*iter)->accept( *updateVisitor );
 

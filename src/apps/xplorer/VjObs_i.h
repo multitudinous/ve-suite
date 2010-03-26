@@ -144,10 +144,9 @@ public:
     void CreatCommandVector( std::string commandString );
     ///Store commands for the data logger
     void StoreCommands( const std::string& commandString );
-    
-    ves::open::xml::CommandPtr bufferCommand;///< Data to hold command data
 
 protected:
+    ves::open::xml::CommandPtr bufferCommand;///< Data to hold command data
     VjObs::scalar_p_var teacher_name; ///< hold the list of teacher file names
     VjObs::Models* _models;///< fold the list of IDL models
 

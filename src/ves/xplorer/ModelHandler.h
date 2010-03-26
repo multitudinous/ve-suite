@@ -101,9 +101,6 @@ public:
     void PreFrameUpdate( void );
     ///This is called in context predraw when there is a valid context available
     void ContextPreDrawUpdate();
-    ///Set the active xml command
-    ///\param inputCommand input xml command
-    void SetXMLCommand( const ves::open::xml::CommandPtr& inputCommand );
     ///Returns the current xml command
     const ves::open::xml::CommandPtr& GetXMLCommand( void );
 
@@ -138,7 +135,6 @@ protected:
 private:
     DataSet* activeDataset;
     ves::open::xml::CommandPtr activeCommand;
-    ves::open::xml::CommandPtr nullCommand;
     Model* _activeModel;
 
     ves::xplorer::volume::cfdTextureDataSet* _activeTDSet;

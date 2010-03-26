@@ -48,29 +48,35 @@ namespace command
 ////////////////////////////////////////////////////////////////////////////////
 CommandManager::CommandManager()
 {
-
 }
 ////////////////////////////////////////////////////////////////////////////////
 CommandManager::~CommandManager()
 {
-
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CommandManager::InitScene()
 {
-
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CommandManager::PreFrameUpdate()
 {
-    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CommandManager::LatePreFrameUpdate()
 {
     vprDEBUG( vesDBG, 3 ) << "|\tCommandManager::LatePreFrameUpdate " 
         << std::endl << vprDEBUG_FLUSH;
-
+    vpr::Guard<vpr::Mutex> val_guard( m_valueLock );
+    if( m_commandVectorQueue.empty() )
+    {
+        m_activeCommand = m_nullCommand;
+        return;
+    }
+    
+    std::vector< ves::open::xml::CommandPtr >::iterator iter;
+    iter = m_commandVectorQueue.begin();
+    ( *m_activeCommand ) = ( *( *iter ) );
+    m_commandVectorQueue.erase( iter );
     vprDEBUG( vesDBG, 3 ) << "|\tEnd CommandManager::LatePreFrameUpdate " 
         << std::endl << vprDEBUG_FLUSH;
 }
@@ -82,18 +88,7 @@ void CommandManager::AddXMLCommand( const ves::open::xml::CommandPtr& commandIn 
 }
 ////////////////////////////////////////////////////////////////////////////////
 const ves::open::xml::CommandPtr& CommandManager::GetXMLCommand()
-{
-    vpr::Guard<vpr::Mutex> val_guard( m_valueLock );
-    if( m_commandVectorQueue.empty() )
-    {
-        return m_nullCommand;
-    }
-
-    std::vector< ves::open::xml::CommandPtr >::iterator iter;
-    iter = m_commandVectorQueue.begin();
-    ( *m_activeCommand ) = ( *( *iter ) );
-    m_commandVectorQueue.erase( iter );
-    
+{    
     return m_activeCommand;
 }
 ////////////////////////////////////////////////////////////////////////////////

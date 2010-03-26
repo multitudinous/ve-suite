@@ -58,6 +58,8 @@
 
 #include <ves/xplorer/network/cfdExecutive.h>
 
+#include <ves/xplorer/command/CommandManager.h>
+
 #include <ves/xplorer/volume/cfdPBufferManager.h>
 
 #ifdef MINERVA_GIS_SUPPORT
@@ -476,7 +478,6 @@ void App::initScene()
     getScene()->addChild( light_source_0.get() );
     
     // modelHandler stores the arrow and holds all data and geometry
-    ModelHandler::instance()->SetXMLCommand( m_vjobsWrapper->GetXMLCommand() );
     ModelHandler::instance()->InitScene();
 
     // navigation and cursor
@@ -558,8 +559,6 @@ void App::preFrame()
 void App::latePreFrame()
 {
     VPR_PROFILE_GUARD_HISTORY( "App::latePreFrame", 20 );
-    const std::string tempCommandName = 
-        m_vjobsWrapper->GetXMLCommand()->GetCommandName();
     vprDEBUG( vesDBG, 3 ) << "|App::latePreFrame" << std::endl << vprDEBUG_FLUSH;
     ///////////////////////
     {
@@ -571,6 +570,16 @@ void App::latePreFrame()
         //all the singletons below get the updated command
         m_vjobsWrapper->PreFrameUpdate();
     }
+    ves::xplorer::command::CommandManager::instance()->LatePreFrameUpdate();
+
+    ves::open::xml::CommandPtr tempCommandPtr = 
+        ves::xplorer::command::CommandManager::instance()->GetXMLCommand();
+    std::string tempCommandName;
+    if( tempCommandPtr )
+    {
+        tempCommandName = tempCommandPtr->GetCommandName();
+    }
+        
     //Exit - must be called AFTER m_vjobsWrapper->PreFrameUpdate();
     if( tempCommandName == "EXIT_XPLORER" )
     {
@@ -588,14 +597,14 @@ void App::latePreFrame()
     else if( !tempCommandName.compare( "SCREEN_SHOT" ) )
     {
         m_captureNextFrame = true;
-        m_vjobsWrapper->GetXMLCommand()->
+        tempCommandPtr->
             GetDataValuePair( "Filename" )->GetData( m_filename );
         mSceneRenderToTexture->SetImageCameraCallback( true, m_filename );
     }
     else if( !tempCommandName.compare( "MOVIE_CAPTURE" ) )
     {
         m_captureMovie = true;
-        m_vjobsWrapper->GetXMLCommand()->
+        tempCommandPtr->
             GetDataValuePair( "Filename" )->GetData( m_filename );
         mSceneRenderToTexture->SetImageCameraCallback( m_captureMovie, m_filename );
     }
@@ -832,13 +841,20 @@ void App::contextPreDraw()
     ///plane. (This gets around the "negative" problem.) The bottom line: The
     ///computed near plane is always at least as big as the computed far multiplied
     ///by OSG's near/far ratio (which defaults to 0.0005).
-    const std::string tempCommandName = 
-        m_vjobsWrapper->GetXMLCommand()->GetCommandName();
-    if( !tempCommandName.compare( "CHANGE_NEAR_FAR_RATIO" ) )
+    ves::open::xml::CommandPtr tempCommandPtr = 
+        ves::xplorer::command::CommandManager::instance()->GetXMLCommand();
+
+    if( tempCommandPtr )
     {
-        double nearFar;
-        m_vjobsWrapper->GetXMLCommand()->GetDataValuePair( "Near Far Ratio" )->GetData( nearFar );
-        (*sceneViewer)->setNearFarRatio( nearFar );
+        const std::string tempCommandName = 
+            tempCommandPtr->GetCommandName();
+        if( !tempCommandName.compare( "CHANGE_NEAR_FAR_RATIO" ) )
+        {
+            double nearFar;
+            tempCommandPtr->
+                GetDataValuePair( "Near Far Ratio" )->GetData( nearFar );
+            (*sceneViewer)->setNearFarRatio( nearFar );
+        }
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -1049,7 +1065,8 @@ void App::update()
     
     //if( mRTT )
     {
-        mSceneRenderToTexture->Update( mUpdateVisitor.get(), m_vjobsWrapper->GetXMLCommand() );
+        mSceneRenderToTexture->Update( mUpdateVisitor.get(), 
+            ves::xplorer::command::CommandManager::instance()->GetXMLCommand() );
     }
     // now force a recompute of the bounding volume while we are still in
     // the read/write app phase, this should prevent the need to recompute

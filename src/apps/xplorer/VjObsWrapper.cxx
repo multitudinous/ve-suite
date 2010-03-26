@@ -254,11 +254,6 @@ void VjObsWrapper::init( CosNaming::NamingContext* input,
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-const CommandPtr& VjObsWrapper::GetXMLCommand( void )
-{
-    return _vjObs->bufferCommand;
-}
-////////////////////////////////////////////////////////////////////////////////
 void VjObsWrapper::GetCfdStateVariables( void )
 {
     _vjObs->GetCfdStateVariables();

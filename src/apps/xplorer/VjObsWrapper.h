@@ -85,8 +85,6 @@ public:
     ~VjObsWrapper( void );
     ///init function to pass corba pointers arounf for registration purposes
     void init( CosNaming::NamingContext*, CORBA::ORB*, PortableServer::POA*, PortableServer::POA*, int, char** );
-    ///get xml command data
-    const ves::open::xml::CommandPtr& GetXMLCommand( void );
     ///get cfd state variables to be called by cfd app
     void GetCfdStateVariables( void );
     ///Called every frame

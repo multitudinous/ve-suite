@@ -123,10 +123,6 @@ ModelHandler::ModelHandler( void )
 
     activeCommand  = ves::open::xml::CommandPtr();
 
-    //create null command to be returned when a command is not active
-    nullCommand = ves::open::xml::CommandPtr( new ves::open::xml::Command() );
-    nullCommand->SetCommandName( "NULL" );
-
     _eventHandlers[ std::string( "SET_ROOT_CAD_NODE" )] = new ves::xplorer::event::CADSetRootNodeEventHandler();
     _eventHandlers[ std::string( "CAD_TRANSFORM_UPDATE" )] = new ves::xplorer::event::CADTransformEventHandler();
     _eventHandlers[ std::string( "CAD_ADD_NODE" )] = new ves::xplorer::event::CADAddNodeEventHandler();
@@ -208,10 +204,6 @@ ModelHandler::~ModelHandler( void )
 // Helper functions
 ///////////////////////
 /////////////////////////////////////////////////////////////
-void ModelHandler::SetXMLCommand( const ves::open::xml::CommandPtr& inputCommand )
-{
-    activeCommand = inputCommand;
-}
 /////////////////////////////////////////////////////////////
 const ves::open::xml::CommandPtr& ModelHandler::GetXMLCommand( void )
 {
