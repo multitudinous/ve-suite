@@ -1,6 +1,8 @@
 #include <ves/xplorer/data/BindableAnyWrapper.h>
+#include <Poco/Data/Binding.h>
 
-#include <Poco/Data/Common.h>
+//#include <Poco/Data/Common.h>
+#include <Poco/Data/Statement.h>
 //#include <Poco/Data/SQLite/Connector.h>
 
 #include <iostream>
@@ -19,7 +21,7 @@ BindableAnyWrapper::~BindableAnyWrapper( )
 {
 }
 
-bool BindableAnyWrapper::BindValue( Poco::Data::Statement *statement,
+bool BindableAnyWrapper::BindValue( Poco::Data::Statement* statement,
                                    boost::any value )
 {
     bool returnValue = false;

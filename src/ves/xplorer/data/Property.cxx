@@ -1,8 +1,11 @@
 #include <ves/xplorer/data/Property.h>
 
-using namespace ves::xplorer::data;
-////////////////////////////////////////////////////////////////////////////////
-
+namespace ves
+{
+namespace xplorer
+{
+namespace data
+{
 Property::Property( boost::any value, bool enabled )
 {
     mValue = value;
@@ -139,7 +142,7 @@ bool Property::GetEnabled( ) const
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void Property::SetAttribute( std::string attributeName,
+void Property::SetAttribute( const std::string& attributeName,
                              boost::any attributeValue )
 {
     // Check whether this attribute exists, and if so, compare its value to the
@@ -226,7 +229,7 @@ void Property::SetAttribute( std::string attributeName,
 
 ////////////////////////////////////////////////////////////////////////////////
 
-boost::any Property::GetAttribute( std::string attributeName ) const
+boost::any Property::GetAttribute( const std::string& attributeName ) const
 {
     // If the attribute doesn't exist, return empty value and get out
     if( !AttributeExists( attributeName ) )
@@ -240,21 +243,21 @@ boost::any Property::GetAttribute( std::string attributeName ) const
 
 ////////////////////////////////////////////////////////////////////////////////
 
-const Property::PSVectorOfStrings Property::GetAttributeList( ) const
+const Property::PSVectorOfStrings& Property::GetAttributeList( ) const
 {
-    PSVectorOfStrings attributeList;
+    mAttributeList.clear();
     for ( AttributeMap::const_iterator iterator = mAttributeMap.begin( );
             iterator != mAttributeMap.end( );
             iterator++ )
     {
-        attributeList.push_back( ( *iterator ).first );
+        mAttributeList.push_back( ( *iterator ).first );
     }
-    return attributeList;
+    return mAttributeList;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
-bool Property::AttributeExists( std::string attributeName ) const
+bool Property::AttributeExists( const std::string& attributeName ) const
 {
     bool result = false;
 
@@ -310,35 +313,35 @@ bool Property::IsEnum( )
 
 ////////////////////////////////////////////////////////////////////////////////
 
-bool Property::IsBool( const boost::any & value ) const
+bool Property::IsBool( const boost::any& value ) const
 {
     return value.type( ) == typeid ( bool );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
-bool Property::IsInt( const boost::any & value ) const
+bool Property::IsInt( const boost::any& value ) const
 {
     return value.type( ) == typeid ( int );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
-bool Property::IsFloat( const boost::any & value ) const
+bool Property::IsFloat( const boost::any& value ) const
 {
     return value.type( ) == typeid ( float );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
-bool Property::IsDouble( const boost::any & value ) const
+bool Property::IsDouble( const boost::any& value ) const
 {
     return value.type( ) == typeid ( double );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
-bool Property::IsString( const boost::any & value ) const
+bool Property::IsString( const boost::any& value ) const
 {
     return boost::any_cast<std::string > ( &value );
 }
@@ -500,7 +503,7 @@ void Property::_doExtraEnumSetValueProcessing( boost::any value )
     SetAttribute( "enumCurrentString", enumString );
 }
 
-bool Property::_valuesEqual( boost::any & one, boost::any & two )
+bool Property::_valuesEqual( boost::any& one, boost::any& two )
 {
     bool result = false;
     // Check whether the two values are of the same type
@@ -552,3 +555,7 @@ bool Property::_valuesEqual( boost::any & one, boost::any & two )
 
     return result;
 }
+
+} // namespace data
+} // namespace xplorer
+} // namespace ves

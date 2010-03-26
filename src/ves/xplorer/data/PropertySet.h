@@ -1,5 +1,4 @@
-#ifndef _PROPERTYSET_H
-#define	_PROPERTYSET_H
+#pragma once
 
 #include <map>
 #include <string>
@@ -52,70 +51,70 @@ public:
 
     ///
     /// Add a new property named propertyName with main value value to this set
-    virtual void AddProperty( std::string propertyName,
+    virtual void AddProperty( const std::string& propertyName,
                               boost::any value,
                               std::string uiLabel = "" );
 
     ///
     /// Returns true if this property set owns a property with name propertyName,
     /// false if not.
-    virtual bool PropertyExists( std::string propertyName ) const;
+    virtual bool PropertyExists( const std::string& propertyName ) const;
 
     ///
     /// Returns a vector containing the identifying names of all properties
     /// contained in this set. Names are in the order in which they were added
     /// to the property set.
-    virtual PSVectorOfStrings GetPropertyList( );
+    virtual const PSVectorOfStrings& GetPropertyList( );
 
     ///
     /// Returns a pointer to the property identified by propertyName
-    virtual Property* GetProperty( std::string propertyName );
+    virtual Property* GetProperty( const std::string& propertyName );
 
     ///
     /// Returns the boost::any main value of the property identified by
     /// propertyName
-    virtual boost::any GetPropertyValue( std::string propertyName ) const;
+    virtual boost::any GetPropertyValue( const std::string& propertyName ) const;
 
     ///
     /// Returns a vector containing the identifying names of all attributes
     /// owned by property propertyName
-    virtual const PSVectorOfStrings GetPropertyAttributeList( std::string
-                                                            propertyName )const;
+    virtual const PSVectorOfStrings& GetPropertyAttributeList( const std::string&
+                                                            propertyName );
 
     ///
     /// Returns boost::any value of the property attribute identified by
     /// attributeName and owned by property propertyName
-    virtual boost::any GetPropertyAttribute( std::string propertyName,
-                                             std::string attributeName );
+    virtual boost::any GetPropertyAttribute( const std::string& propertyName,
+                                             const std::string& attributeName );
 
     ///
     /// Returns true if the property with name propertyName is currently enabled.
-    virtual bool GetPropertyEnabled( std::string propertyName ) const;
+    virtual bool GetPropertyEnabled( const std::string& propertyName ) const;
 
     ///
     /// Sets the main value of the property indentified by propertyName to value.
-    virtual bool SetPropertyValue( std::string propertyName,
+    virtual bool SetPropertyValue( const std::string& propertyName,
                                    boost::any value );
 
     ///
     /// Sets the property attribute given by attributeName of the property
     /// propertyName to value.
-    virtual void SetPropertyAttribute( std::string propertyName,
-                                       std::string attributeName,
+    virtual void SetPropertyAttribute( const std::string& propertyName,
+                                       const std::string& attributeName,
                                        boost::any value );
 
     ///
     /// Sets the enabled status of the property identified by propertyName.
     /// If the second argument is true, the property is enabled. If the second
     /// argument is false, the property is disabled.
-    virtual void SetPropertyEnabled( std::string propertyName,
+    virtual void SetPropertyEnabled( const std::string& propertyName,
                                      bool enabled );
 
     ///
     /// Returns a list containing names of properties that have undergone a
     /// state change of some sort due to the most recent operation on a
     /// property in this set.
-    virtual PSVectorOfStrings GetChanges( );
+    virtual const PSVectorOfStrings& GetChanges( );
 
     ///
     /// Clears the internal list of all property changes that have occurred
@@ -126,48 +125,48 @@ public:
     ///
     /// Sets the name of the table this property set tries to read from
     /// and write to.
-    virtual void SetTableName( std::string TableName );
+    virtual void SetTableName( const std::string& TableName );
 
     ///
     /// Returns the name of the table this property set reads from and writes
     /// to.
-    virtual std::string GetTableName( );
+    virtual const std::string& GetTableName( ) const;
 
     ///
     /// Sets the record ID for this property. This should generally be used only
     /// to identify this property set before asking it to read data with a 
     /// matching record ID from the database.
-    virtual void SetRecordID( unsigned int id );
+    virtual void SetRecordID( long unsigned int id );
 
     ///
     /// Returns the record ID of this property set. The record ID is how this
     /// property set is distingushed from others of a similar type in the
     /// database.
-    virtual long unsigned int GetRecordID();
+    virtual unsigned int GetRecordID() const;
 
-    virtual bool LoadFromDatabase( Poco::Data::Session *session );
-    virtual bool LoadFromDatabase( Poco::Data::Session *session, std::string TableName );
-    virtual bool LoadFromDatabase( Poco::Data::Session *session, std::string TableName, Poco::UInt32 ID );
-    virtual bool LoadFromDatabase( std::string DatabaseName );
-    virtual bool LoadFromDatabase( std::string DatabaseName, std::string TableName );
-    virtual bool LoadFromDatabase( std::string DatabaseName, std::string TableName, unsigned int ID );
+    virtual bool LoadFromDatabase( Poco::Data::Session* session );
+    virtual bool LoadFromDatabase( Poco::Data::Session* session, const std::string& TableName );
+    virtual bool LoadFromDatabase( Poco::Data::Session* session, const std::string& TableName, Poco::UInt32 ID );
+    virtual bool LoadFromDatabase( const std::string& DatabaseName );
+    virtual bool LoadFromDatabase( const std::string& DatabaseName, const std::string& TableName );
+    virtual bool LoadFromDatabase( const std::string& DatabaseName, const std::string& TableName, unsigned int ID );
 
-    virtual bool WriteToDatabase( Poco::Data::Session *session );
-    virtual bool WriteToDatabase( Poco::Data::Session *session, std::string TableName );
-    virtual bool WriteToDatabase( std::string DatabaseName );
-    virtual bool WriteToDatabase( std::string DatabaseName, std::string TableName );
+    virtual bool WriteToDatabase( Poco::Data::Session* session );
+    virtual bool WriteToDatabase( Poco::Data::Session* session, const std::string& TableName );
+    virtual bool WriteToDatabase( const std::string& DatabaseName );
+    virtual bool WriteToDatabase( const std::string& DatabaseName, const std::string& TableName );
 
-    virtual bool DeleteFromDatabase( Poco::Data::Session *session );
-    virtual bool DeleteFromDatabase( Poco::Data::Session *session, std::string TableName );
-    virtual bool DeleteFromDatabase( std::string DatabaseName );
-    virtual bool DeleteFromDatabase( std::string DatabaseName, std::string TableName );
+    virtual bool DeleteFromDatabase( Poco::Data::Session* session );
+    virtual bool DeleteFromDatabase( Poco::Data::Session* session, const std::string& TableName );
+    virtual bool DeleteFromDatabase( const std::string& DatabaseName );
+    virtual bool DeleteFromDatabase( const std::string& DatabaseName, const std::string& TableName );
 
 protected:
 
     ///
     /// Slot that should be connected to any state-change signal emitted by any
     /// property in this set. This connection is taken care of in the 
-    /// AddProperty method through a call to c_onnectChanges. Derived classes
+    /// AddProperty method through a call to _connectChanges. Derived classes
     /// that override AddProperty should be sure to call _connectChanges if
     /// change accumulation is desired.
     /// ChangeAccumulator will accumulate a list of all properties
@@ -197,6 +196,11 @@ protected:
 
 
 private:
+    // Empty string to use when need to return an empty string by reference
+    std::string emptyString;
+    // Empty PSVectorOfStrings to use when need to return an empty PSVOS by reference
+    PSVectorOfStrings emptyPSVectorOfStrings;
+    PSVectorOfStrings mAccumulatedChangesReturnable;
     //std::string _toString( int value );
     //std::string _toString( size_t value );
     //std::string _toString( long unsigned int value );
@@ -205,6 +209,3 @@ private:
 } // namespace data
 } // namespace xplorer
 } // namespace ves
-
-#endif	/* _PROPERTYSET_H */
-

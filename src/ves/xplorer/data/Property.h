@@ -118,19 +118,19 @@ public:
     /// value, a maximum allowable value, etc. This allows great extensibility
     /// because pretty much any extra data that needs to travel with this
     /// property can be shoved in as an attribute.
-    void SetAttribute( std::string attributeName, boost::any attributeValue );
+    void SetAttribute( const std::string& attributeName, boost::any attributeValue );
 
     ///
     /// Returns the associated value of a given attribute
-    boost::any GetAttribute( std::string attributeName ) const;
+    boost::any GetAttribute( const std::string& attributeName ) const;
 
     ///
     /// Returns a list of all attribute names owned by this property
-    const PSVectorOfStrings GetAttributeList( ) const;
+    const PSVectorOfStrings& GetAttributeList( ) const;
 
     ///
     /// Returns true if this property has an attribute named attributeName
-    bool AttributeExists( std::string attributeName ) const;
+    bool AttributeExists( const std::string& attributeName ) const;
 
     ///
     /// Enables access to SetValue
@@ -181,11 +181,11 @@ public:
     /// Notice there is no conveneince version of IsEnum since enum
     /// status is held as a Property Attribute and is not directly discoverable
     /// from the boost::any value.
-    bool IsBool( const boost::any & value ) const;
-    bool IsInt( const boost::any & value ) const;
-    bool IsFloat( const boost::any & value ) const;
-    bool IsDouble( const boost::any & value ) const;
-    bool IsString( const boost::any & value ) const;
+    bool IsBool( const boost::any& value ) const;
+    bool IsInt( const boost::any& value ) const;
+    bool IsFloat( const boost::any& value ) const;
+    bool IsDouble( const boost::any& value ) const;
+    bool IsString( const boost::any& value ) const;
 
 private:
 
@@ -260,6 +260,8 @@ private:
     /// the attribute map every time we want to check whether this property is
     /// an enum.
     bool mIsEnum; 
+
+    mutable PSVectorOfStrings mAttributeList;
 };
 
 } // namespace data
