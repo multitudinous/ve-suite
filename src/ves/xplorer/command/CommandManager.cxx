@@ -75,7 +75,7 @@ void CommandManager::LatePreFrameUpdate()
     
     std::vector< ves::open::xml::CommandPtr >::iterator iter;
     iter = m_commandVectorQueue.begin();
-    ( *m_activeCommand ) = ( *( *iter ) );
+    m_activeCommand = ves::open::xml::CommandPtr( new ves::open::xml::Command( *( *iter ) ) );
     m_commandVectorQueue.erase( iter );
     vprDEBUG( vesDBG, 3 ) << "|\tEnd CommandManager::LatePreFrameUpdate " 
         << std::endl << vprDEBUG_FLUSH;

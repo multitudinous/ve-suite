@@ -412,7 +412,7 @@ void cfdExecutive::PreFrameUpdate( void )
            )
         {
             //Process a special plugin command
-            //if( tempCommand )
+            if( tempCommand )
             {
                 const std::string cmdName = tempCommand->GetCommandName();
                 PluginBase* const tempBase = pluginEHMap[ foundPlugin->first ][ cmdName ];
@@ -434,6 +434,8 @@ void cfdExecutive::PreFrameUpdate( void )
             foundPlugin->second->CreateCustomVizFeature( dummyVar );
         }
     }
+    vprDEBUG( vesDBG, 3 ) << "|\tcfdExecutive::PreFrameUpdate End"
+        << std::endl << vprDEBUG_FLUSH;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdExecutive::PostFrameUpdate( void )

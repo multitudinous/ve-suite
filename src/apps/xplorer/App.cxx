@@ -574,6 +574,7 @@ void App::latePreFrame()
 
     const ves::open::xml::CommandPtr tempCommandPtr = 
         ves::xplorer::command::CommandManager::instance()->GetXMLCommand();
+
     if( tempCommandPtr )
     {
         std::string tempCommandName;
