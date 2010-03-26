@@ -32,34 +32,14 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/xplorer/communication/Xplorer_i.h>
 
-//#include <ves/xplorer/ModelHandler.h>
-//#include <ves/xplorer/EnvironmentHandler.h>
-//#include <ves/xplorer/environment/cfdQuatCamHandler.h>
-//#include <ves/xplorer/SteadyStateVizHandler.h>
-//#include <ves/xplorer/Model.h>
-//#include <ves/xplorer/environment/cfdDisplaySettings.h>
-//#include <ves/xplorer/DataSet.h>
-//#include <ves/xplorer/environment/cfdEnum.h>
-
-//#include <ves/xplorer/scenegraph/SceneManager.h>
-
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>
 #include <ves/open/xml/XMLReaderWriter.h>
 
-//#include <ves/xplorer/TextureBasedVizHandler.h>
-//#include <ves/xplorer/volume/cfdVolumeVisualization.h>
-//using namespace ves::xplorer::volume;
-
 #include <vpr/System.h>
 #include <vpr/Util/Debug.h>
 
-//#include <jccl/RTRC/ConfigManager.h>
-
-//using namespace ves::xplorer;
 using namespace ves::open::xml;
-//using namespace ves::xplorer::scenegraph;
-//using namespace ves::xplorer::volume;
 
 ////////////////////////////////////////////////////////////////////////////////
 Body_VEXplorer_i::Body_VEXplorer_i( void )

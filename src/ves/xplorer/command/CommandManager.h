@@ -30,57 +30,79 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#ifndef VE_XPLORER_GLOBAL_BASE_H
-#define VE_XPLORER_GLOBAL_BASE_H
+#pragma once
 
+// --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
-#include <ves/xplorer/GlobalBasePtr.h>
-
 #include <ves/open/xml/CommandPtr.h>
+
+//do this to remove compile warning on linux platforms
+#undef _REENTRANT
+
+// --- VR Juggler Includes --- //
+#include <vpr/Util/Singleton.h>
+#include <vpr/Sync/Mutex.h>
+
+// --- C/C++ Includes --- //
+#include <vector>
 
 namespace ves
 {
 namespace xplorer
 {
-
-/*!\file GlobalBase.h
-GlobalBase API
-*/
-/*!\class ves::xplorer::GlobalBase
-* Global super class
-*/
-class VE_XPLORER_EXPORTS GlobalBase
+namespace command
 {
+/*!\file CommandManager.h
+ * CommandManager API
+ */
+
+/*!\class ves::xplorer::command::CommandManager
+ *
+ */
+class VE_XPLORER_COMMAND_EXPORTS CommandManager
+{
+private:
+    // Required so that vpr::Singleton can instantiate this class.
+    //friend class vpr::Singleton< CommandManager >;
+    //CommandManager(const CommandManager& o) { ; }
+    //CommandManager& operator=(const CommandManager& o) { ; }
+
+    ///Constructor
+    CommandManager();
+
+    ///Destructor
+    ~CommandManager();
+    vprSingletonHeader( CommandManager );
+
 public:
-    GlobalBase();
-    virtual ~GlobalBase();
-    ///copy constructor
-    GlobalBase( const GlobalBase& )
-    {
-        ;
-    }
+    ///Initialize environment.
+    void Initialize();
 
-    ///this abstract base class declares some pure virtual int functions to be
-    ///specified in concrete implementations
-    ///Process the ves::open::xml::Command that has been passed in
-    virtual void ProcessCommand()
-    {
-        ;
-    }
+    ///Add XML command to command queue
+    void AddXMLCommand( const ves::open::xml::CommandPtr& commandIn );
 
-    ///in future, multi-threaded apps will make a copy of VjObs_i commandArray
-    virtual void UpdateCommand() = 0;
+    ///Get XML command from command queue
+    const ves::open::xml::CommandPtr& GetXMLCommand();
+    
+    ///Initialize scene.
+    void InitScene();
 
-    ///Accessor to set the VECommand to be used in any class within Xplorer
-    ///\param command holds the current command to be executed
-    void SetVECommand( const ves::open::xml::CommandPtr& command );
+    ///Pre frame update.
+    void PreFrameUpdate();
 
-protected:
-
-    ves::open::xml::CommandPtr veCommand;///<cfdApp side variables declared in VjObs_i.h
+    ///Late pre-frame update
+    void LatePreFrameUpdate();
 
 private:
+    ///Command vector queue
+    std::vector< ves::open::xml::CommandPtr > m_commandVectorQueue;
+    ///A mutex to protect command queue accesses
+    vpr::Mutex m_valueLock;
+    ///Null Command Ptr
+    ves::open::xml::CommandPtr m_nullCommand;
+    ///Active Command Ptr
+    ves::open::xml::CommandPtr m_activeCommand;
 };
 }
+}    
 }
-#endif

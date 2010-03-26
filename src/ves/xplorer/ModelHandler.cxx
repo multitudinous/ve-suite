@@ -81,6 +81,8 @@
 #include <ves/xplorer/event/environment/SoundActivateEH.h>
 #include <ves/xplorer/event/environment/SoundAddNewEH.h>
 
+#include <ves/xplorer/command/CommandManager.h>
+
 #include <ves/open/xml/Command.h>
 
 #include <ves/xplorer/volume/cfdTextureDataSet.h>
@@ -493,6 +495,8 @@ void ModelHandler::InitScene( void )
 /////////////////////////////////
 void ModelHandler::PreFrameUpdate( void )
 {
+    activeCommand = 
+        ves::xplorer::command::CommandManager::instance()->GetXMLCommand();
     if( activeCommand )
     {
         vprDEBUG( vesDBG, 3 ) << "|\tModelHandler::PreFrameUpdate Command Name : "

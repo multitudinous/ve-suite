@@ -220,7 +220,7 @@ void SteadyStateVizHandler::InitScene()
 void SteadyStateVizHandler::PreFrameUpdate()
 {
     //Process the current command form the gui
-    if( ModelHandler::instance()->GetXMLCommand()->GetCommandName().compare( "wait" ) )
+    if( ModelHandler::instance()->GetXMLCommand() )
     {
         std::map< std::string, ves::xplorer::event::EventHandler* >::iterator currentEventHandler;
         ves::open::xml::CommandPtr tempCommand = ModelHandler::instance()->GetXMLCommand();

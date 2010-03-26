@@ -348,8 +348,8 @@ void EnvironmentHandler::LatePreFrameUpdate()
     if( tempCommand )
     {
         vprDEBUG( vesDBG, 3 ) << "|\tEnvironmentHandler::LatePreFrameUpdate Command Name : "
-        << tempCommand->GetCommandName()
-        << std::endl << vprDEBUG_FLUSH;
+            << tempCommand->GetCommandName()
+            << std::endl << vprDEBUG_FLUSH;
         std::map<std::string, ves::xplorer::event::EventHandler*>::iterator currentEventHandler;
         currentEventHandler = _eventHandlers.find( tempCommand->GetCommandName() );
         if( currentEventHandler != _eventHandlers.end() )

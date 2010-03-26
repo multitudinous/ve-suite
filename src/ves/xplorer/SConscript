@@ -15,6 +15,7 @@ xplorerSubdirs = Split("""
     DefaultGraphicalPlugin
     communication
     dotosg
+    command
 """)
 
 if baseEnv['MakeQtSupport'] == "yes":
@@ -72,14 +73,17 @@ lib_env.Append(LIBS = ['ves_open_xml',
                    'ves_xplorer_scenegraph',
                    'ves_xplorer_util',
                    'ves_xplorer_volume',
-                   'ves_open_module','ves_builder_dataloader',
+                   'ves_xplorer_command',
+                   'ves_open_module',
+                   'ves_builder_dataloader',
                    'ves_builder_translator_base',
                    'ves_xplorer_communication'])
 
 lib_env.Append(LIBPATH = [pj('#', buildDir, 'src', 'ves', 'xplorer', 'scenegraph'),
                         pj('#', buildDir, 'src', 'ves', 'xplorer','util'),
                         pj('#', buildDir, 'src', 'ves', 'xplorer','communication'),
-                        pj('#', buildDir, 'src', 'ves', 'xplorer', 'volume'),
+                        pj('#', buildDir, 'src', 'ves', 'xplorer','command'),
+                        pj('#', buildDir, 'src', 'ves', 'xplorer','volume'),
                         pj('#', buildDir, 'src', 'ves', 'builder','DataLoader'),
                         pj('#', buildDir, 'src', 'ves', 'builder','cfdTranslatorToVTK'),
                         pj('#', buildDir, 'src', 'ves', 'open'),

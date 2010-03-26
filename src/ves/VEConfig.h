@@ -183,6 +183,12 @@
 #  else
 #    define VE_NURBS_UTILS_EXPORTS __declspec(dllimport)
 #  endif /* VE_NURBS_UTILS_LIBRARY */
+
+#  ifdef VE_XPLORER_COMMAND_LIBRARY
+#    define VE_XPLORER_COMMAND_EXPORTS __declspec(dllexport)
+#  else
+#    define VE_XPLORER_COMMAND_EXPORTS __declspec(dllimport)
+#  endif /* VE_XPLORER_COMMAND_LIBRARY */
 #else
 #  define VE_SCENEGRAPH_EXPORTS
 #  define VE_UTIL_EXPORTS
@@ -208,6 +214,7 @@
 #  define VE_XPLORER_NETWORK_EXPORTS
 #  define VE_NURBS_EXPORTS
 #  define VE_NURBS_UTILS_EXPORTS
+#  define VE_XPLORER_COMMAND_EXPORTS
 #endif
 
 ///This is ripped straight from wxWidgets

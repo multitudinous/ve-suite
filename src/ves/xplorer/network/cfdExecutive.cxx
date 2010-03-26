@@ -369,7 +369,7 @@ void cfdExecutive::PreFrameUpdate( void )
 
     //process the current command form the gui
     const CommandPtr tempCommand = ModelHandler::instance()->GetXMLCommand();
-    if( tempCommand->GetCommandName().compare( "wait" ) )
+    if( tempCommand )
     {
         std::map< std::string, ves::xplorer::event::EventHandler* >::iterator
         currentEventHandler;

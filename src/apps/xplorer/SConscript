@@ -19,6 +19,7 @@ env.Append(
                    'ves_xplorer_util',
                    'ves_xplorer_volume',
                    'ves_xplorer_communication',
+                   'ves_xplorer_command',
                    'ves_open_module',
                    'ves_xplorer'
                     ])
@@ -27,6 +28,7 @@ env.Append(LIBPATH = [  pj('#', buildDir, 'src','ves','xplorer','scenegraph'),
                         pj('#', buildDir, 'src','ves','xplorer','util'),
                         pj('#', buildDir, 'src','ves','xplorer','volume'),
                         pj('#', buildDir, 'src','ves','xplorer','communication'),
+                        pj('#', buildDir, 'src','ves','xplorer','command'),
                         pj('#', buildDir, 'src','ves','xplorer'),
                         pj('#', buildDir, 'src','ves','builder','DataLoader'),
                         pj('#', buildDir, 'src','ves','builder','cfdTranslatorToVTK'),

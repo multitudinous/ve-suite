@@ -56,10 +56,5 @@ void GlobalBase::SetVECommand( const open::xml::CommandPtr& command )
     veCommand = command;
 }
 
-const open::xml::CommandPtr& GlobalBase::GetVECommand()
-{
-    return veCommand;
-}
-
 } // end xplorer
 } // end ves

@@ -444,6 +444,7 @@ void cfdQuatCamHandler::ProcessCommand()
 
     bool flag = false;
     std::string commandType;
+
     if( veCommand )
     {
         commandType = veCommand->GetCommandName();
@@ -624,6 +625,7 @@ void cfdQuatCamHandler::PreFrameUpdate()
         }
         else
         {
+            veCommand = tempCommand;
             ProcessCommand();
         }
     }

@@ -48,6 +48,8 @@
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/CADEntity.h>
 
+#include <ves/xplorer/command/CommandManager.h>
+
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>
 #include <ves/open/xml/XMLReaderWriter.h>
@@ -96,7 +98,7 @@ VjObs_i::VjObs_i()
 
     bufferCommand =  CommandPtr( new Command() );
     bufferCommand->AddDataValuePair( DataValuePairPtr( new DataValuePair() ) );
-    bufferCommand->SetCommandName( "wait" );
+    bufferCommand->SetCommandName( "NULL" );
     
     m_commandTimer->startTiming();
 }
@@ -731,13 +733,7 @@ void VjObs_i::PreFrameUpdate( void )
         iter = commandVectorQueue.begin();
         ( *bufferCommand ) = ( *( *iter ) );
         commandVectorQueue.erase( iter );
-        cfdQuatCamHandler::instance()->SetVECommand( bufferCommand );
-        EnvironmentHandler::instance()->GetDisplaySettings()->SetVECommand( bufferCommand );
-        ModelHandler::instance()->SetXMLCommand( bufferCommand );
-        if( ModelHandler::instance()->GetActiveModel() )
-        {
-            ModelHandler::instance()->GetActiveModel()->SetVECommand( bufferCommand );
-        }
+        ves::xplorer::command::CommandManager::instance()->AddXMLCommand( bufferCommand );
     }
     ///If the command name is null
     else if( !bufferCommand->GetCommandName().compare( "NULL" ) )
@@ -747,8 +743,10 @@ void VjObs_i::PreFrameUpdate( void )
     else
     {
         // Just reinitialize the cfdid to null essentially if it is NOT GUI_NAV
-        if( bufferCommand->GetDataValuePair( 0 )->GetDataName().compare( "GUI_NAV" ) )
-            bufferCommand->SetCommandName( "wait" );
+        if( !bufferCommand->GetDataValuePair( 0 )->GetDataName().compare( "GUI_NAV" ) )
+        {
+            ves::xplorer::command::CommandManager::instance()->AddXMLCommand( bufferCommand );
+        }
     }
 }
 
@@ -781,7 +779,6 @@ ACE_THROW_SPEC((
     }
     else
     {
-        //commandStringQueue.push_back( commandString );
         CreatCommandVector( commandString );
         if( m_storeCommands )
         {
