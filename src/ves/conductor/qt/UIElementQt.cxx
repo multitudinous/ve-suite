@@ -125,7 +125,7 @@ const osg::Vec4f UIElementQt::GetTextureCoordinates( )
 void UIElementQt::SendInteractionEvent( xplorer::util::InteractionEvent
                                         &event )
 {
-    xplorer::util::InteractionEvent *m_event =
+    xplorer::util::InteractionEvent* m_event =
             new xplorer::util::InteractionEvent( event );
 
     Q_EMIT PutSendEvent( m_event );
@@ -177,7 +177,7 @@ bool UIElementQt::IsDirty()
     return mDirty;
 }
 
-void UIElementQt::SetWidget( QWidget *widget )
+void UIElementQt::SetWidget( QWidget* widget )
 {
     _debug( "SetWidget" );
     // Exit immediately if widget is null
@@ -380,14 +380,14 @@ void UIElementQt::_debug( const std::string text )
 #endif
 }
 
-void UIElementQt::paintEvent( QPaintEvent * event )
+void UIElementQt::paintEvent( QPaintEvent* event )
 {
     _debug( "paintEvent" );
     _render( );
     QGraphicsView::paintEvent( event );
 }
 
-void UIElementQt::_sendEvent( xplorer::util::InteractionEvent *event )
+void UIElementQt::_sendEvent( xplorer::util::InteractionEvent* event )
 {
     int x = static_cast < int > ( event->X );
     int y = static_cast < int > ( event->Y );

@@ -12,7 +12,7 @@
 
 using namespace ves::conductor;
 
-Visualization::Visualization( QWidget *parent ) :
+Visualization::Visualization( QWidget* parent ) :
 QDialog( parent ),
 ui( new Ui::Visualization )
 {
@@ -32,7 +32,7 @@ Visualization::~Visualization( )
     delete mTempSet;
 }
 
-void Visualization::changeEvent( QEvent *e )
+void Visualization::changeEvent( QEvent* e )
 {
     QDialog::changeEvent( e );
     switch( e->type( ) )

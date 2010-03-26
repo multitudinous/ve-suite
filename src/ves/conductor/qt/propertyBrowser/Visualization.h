@@ -31,11 +31,11 @@ namespace Ui {
 class Visualization : public QDialog {
     Q_OBJECT
 public:
-    Visualization(QWidget *parent = 0);
+    Visualization(QWidget* parent = 0);
     ~Visualization();
 
 protected:
-    void changeEvent(QEvent *e);
+    void changeEvent(QEvent* e);
 
 protected Q_SLOTS:
     // For info on Automatic connection of signals and slots, see
@@ -47,7 +47,7 @@ protected Q_SLOTS:
 
 
 private:
-    Ui::Visualization *ui;
+    Ui::Visualization* ui;
     PropertyBrowser* mFeatureBrowser;
     std::string mDbName;
 

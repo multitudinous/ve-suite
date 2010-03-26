@@ -15,7 +15,7 @@ class GenericPropertyBrowser : public QtTreePropertyBrowser
 {
 Q_OBJECT
 public:
-    explicit GenericPropertyBrowser(QWidget *parent = 0);
+    explicit GenericPropertyBrowser(QWidget* parent = 0);
 
     void setPropertyBrowser( PropertyBrowser* browser );
     void RefreshContents();

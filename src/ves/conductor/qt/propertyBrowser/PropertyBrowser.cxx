@@ -4,7 +4,7 @@
 
 using namespace ves::conductor;
 
-PropertyBrowser::PropertyBrowser( QObject *parent ) : QObject( parent )
+PropertyBrowser::PropertyBrowser( QObject* parent ) : QObject( parent )
 {
     // Create a standard set of property managers
     mDoubleManager = new QtDoublePropertyManager( this );
@@ -148,7 +148,7 @@ void PropertyBrowser::ParsePropertySet( xplorer::data::PropertySet* set )
     for ( iterator = mProperties.begin( ); iterator != end; iterator++ )
     {
         property = ( *iterator );
-        QtProperty *item = NULL;
+        QtProperty* item = NULL;
 
         std::string propertyLabel =
                 boost::any_cast<std::string > (
@@ -211,7 +211,7 @@ void PropertyBrowser::ParsePropertySet( xplorer::data::PropertySet* set )
 
 void PropertyBrowser::RefreshAll( )
 {
-    size_t max = mProperties.size( );
+    int max = static_cast< int >( mProperties.size( ) );
     for ( int index = 0; index < max; index++ )
     {
         _refreshItem( index );
@@ -246,7 +246,7 @@ void PropertyBrowser::_refreshItem( int index )
         QStringList qEnumNames;
         Property::PSVectorOfStrings enumNames =
                 boost::any_cast< Property::PSVectorOfStrings > (
-                property->GetAttribute( "enumValues" ) );
+                property->GetAttribute( std::string("enumValues") ) );
         Property::PSVectorOfStrings::iterator iterator;
         Property::PSVectorOfStrings::iterator end = enumNames.end( );
         for ( iterator = enumNames.begin( ); iterator != end; iterator++ )

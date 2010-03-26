@@ -2,13 +2,10 @@
 
 #include <ves/xplorer/data/PropertySet.h>
 #include <ves/xplorer/data/ContourPlanePropertySet.h>
+#include <ves/xplorer/command/CommandManager.h>
 
 #include <ves/open/xml/DataValuePair.h>
 #include <ves/open/xml/Command.h>
-
-#include <ves/xplorer/communication/CommandHandler.h>
-//#include <ves/xplorer/ModelHandler.h>
-//#include <ves/xplorer/Model.h>
 
 #include <QtGui/QMessageBox>
 
@@ -31,7 +28,7 @@ ContourFeatureMaker::~ContourFeatureMaker( )
 }
 ////////////////////////////////////////////////////////////////////////////////
 
-void ContourFeatureMaker::update( std::string dbFile, long unsigned int recordID )
+void ContourFeatureMaker::update( const std::string& dbFile, unsigned int recordID )
 {
     // For now we won't worry about how to discover an existing plane that needs
     // to be deleted, moved, etc. We will just create a new one
@@ -210,11 +207,7 @@ void ContourFeatureMaker::SendUpdatedSettingsToXplorer( ves::open::xml::CommandP
     }
     newCommand->SetCommandName( _commandName );
 
-    std::cout << "ContourFeatureMaker -- About to send command..." << std::flush;
-    bool returnValue = ves::xplorer::CommandHandler::instance()->SetXMLCommand( newCommand );
-    std::cout << "sent. Returned: " << returnValue << std::endl <<std::flush;
-
-    //bool connected = ves::conductor::util::CORBAServiceList::instance( )->SendCommandStringToXplorer( newCommand );
+    ves::xplorer::command::CommandManager::instance()->AddXMLCommand( newCommand );
 }
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -236,6 +229,13 @@ void ContourFeatureMaker::_updateBaseInformation( xplorer::data::PropertySet& se
                                  ( "DataSet_ScalarData", "enumCurrentString" )
                                  ) );
     _vistabBaseInformation.push_back( activeScalar );
+
+
+//    ves::open::xml::DataValuePairPtr activeVector( new ves::open::xml::DataValuePair() );
+//    activeVector->SetDataType( "STRING" );
+//    activeVector->SetDataName( std::string( "Active Vector" ) );
+//    activeVector->SetDataString( _activeVectorName );
+//    _vistabBaseInformation.push_back( activeVector );
 
     ves::open::xml::DataValuePairPtr activeDataset( new ves::open::xml::DataValuePair( ) );
     activeDataset->SetDataType( "STRING" );
@@ -261,18 +261,22 @@ void ContourFeatureMaker::_updateBaseInformation( xplorer::data::PropertySet& se
     axes->SetData( std::string("Show Axes"), static_cast< unsigned int >( axesCB->GetValue() ) );
     _vistabBaseInformation.push_back( axes );*/
 
-    //    //Store the axes display value
-    //    ves::open::xml::DataValuePairPtr bbox( new ves::open::xml::DataValuePair( ) );
-    //    bbox->SetData( std::string( "Show Bounding Box" ), static_cast < unsigned int > ( bboxCB->GetValue( ) ) );
-    //    _vistabBaseInformation.push_back( bbox );
-    //
-    //    //Store the axes display value
-    //    ves::open::xml::DataValuePairPtr wireMesh( new ves::open::xml::DataValuePair( ) );
-    //    wireMesh->SetData( std::string( "Show Wire Mesh" ), static_cast < unsigned int > ( wireFrameCB->GetValue( ) ) );
-    //    _vistabBaseInformation.push_back( wireMesh );
-    //
-    //    //set scalar bar state
-    //    ves::open::xml::DataValuePairPtr scalarBarDVP( new ves::open::xml::DataValuePair( ) );
-    //    scalarBarDVP->SetData( "Scalar Bar State", static_cast < unsigned int > ( scalarBarCB->GetValue( ) ) );
-    //    _vistabBaseInformation.push_back( scalarBarDVP );
+    // Temporarily code-set:
+        //Store the axes display value
+        ves::open::xml::DataValuePairPtr bbox( new ves::open::xml::DataValuePair( ) );
+        //bbox->SetData( std::string( "Show Bounding Box" ), static_cast < unsigned int > ( bboxCB->GetValue( ) ) );
+        bbox->SetData( std::string( "Show Bounding Box" ), static_cast < unsigned int > ( 0 ) );
+        _vistabBaseInformation.push_back( bbox );
+    
+        //Store the axes display value
+        ves::open::xml::DataValuePairPtr wireMesh( new ves::open::xml::DataValuePair( ) );
+        //wireMesh->SetData( std::string( "Show Wire Mesh" ), static_cast < unsigned int > ( wireFrameCB->GetValue( ) ) );
+        wireMesh->SetData( std::string( "Show Wire Mesh" ), static_cast < unsigned int > ( 0 ) );
+        _vistabBaseInformation.push_back( wireMesh );
+    
+        //set scalar bar state
+        ves::open::xml::DataValuePairPtr scalarBarDVP( new ves::open::xml::DataValuePair( ) );
+        //scalarBarDVP->SetData( "Scalar Bar State", static_cast < unsigned int > ( scalarBarCB->GetValue( ) ) );
+        scalarBarDVP->SetData( "Scalar Bar State", static_cast < unsigned int > ( 0 ) );
+        _vistabBaseInformation.push_back( scalarBarDVP );
 }

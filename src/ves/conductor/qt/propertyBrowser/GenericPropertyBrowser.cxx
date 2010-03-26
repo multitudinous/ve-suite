@@ -7,7 +7,7 @@
 
 using namespace ves::conductor;
 
-GenericPropertyBrowser::GenericPropertyBrowser(QWidget *parent) :
+GenericPropertyBrowser::GenericPropertyBrowser(QWidget* parent) :
     QtTreePropertyBrowser(parent)
 {
     // Create the default editor types we want to use

@@ -36,11 +36,11 @@ class PropertyBrowser : public QObject
 
 public:
     typedef std::vector< xplorer::data::Property* > PropertyVector;
-    typedef std::vector<QtProperty*> ItemVector;
+    typedef std::vector< QtProperty* > ItemVector;
 
     ///
     /// Constructor
-    PropertyBrowser( QObject *parent = 0 );
+    PropertyBrowser( QObject* parent = 0 );
 
     ///
     /// Destructor

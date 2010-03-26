@@ -1,5 +1,4 @@
-#ifndef _UIMANAGER_H
-#define	_UIMANAGER_H
+#pragma once
 
 //#include "UIElement.h"
 
@@ -14,6 +13,10 @@
 // --- C/C++ includes --- //
 #include <string>
 #include <map>
+
+#include <osg/Node>
+#include <osg/NodeVisitor>
+#include <osg/Matrixd>
 
 namespace osg
 {
@@ -35,7 +38,7 @@ namespace xplorer
 namespace util
 {
 class InteractionEvent;
-} // namespace device
+} // namespace util
 } // namespace xplorer
 
 namespace conductor
@@ -71,7 +74,7 @@ public:
      *    |-- MatrixTransform
      *              |-- Geode
      **//////////////////////////////////////////////////////////////////////////////
-    osg::ref_ptr<osg::Geode> AddElement( UIElement *element );
+    osg::ref_ptr<osg::Geode> AddElement( UIElement* element );
 
     ////////////////////////////////////////////////////////////////////////////////
     /// Removes element associated with geode from our management.
@@ -231,6 +234,3 @@ private:
 
 } // namespace conductor 
 } // namespace ves
-
-#endif	/* _UIMANAGER_H */
-

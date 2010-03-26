@@ -55,7 +55,7 @@ UIManager::~UIManager( )
 }
 ////////////////////////////////////////////////////////////////////////////////
 
-osg::ref_ptr<osg::Geode> UIManager::AddElement( UIElement *element )
+osg::ref_ptr<osg::Geode> UIManager::AddElement( UIElement* element )
 {
     osg::ref_ptr<osg::Switch> switch_node = new osg::Switch( );
     osg::ref_ptr<osg::MatrixTransform> transform = new osg::MatrixTransform( );
@@ -306,7 +306,7 @@ void UIManager::Initialize( osg::ref_ptr< osg::Group > parentNode )
 
     // Attach a material to the UIGroup that allows us to affect the opacity of
     // all UI elements at once
-    osg::StateSet *m_UIGroupStateSet = mUIGroup->getOrCreateStateSet( );
+    osg::StateSet* m_UIGroupStateSet = mUIGroup->getOrCreateStateSet( );
     mOverallOpacity = new osg::Material;
     mOverallOpacity->setAlpha( osg::Material::FRONT_AND_BACK, 1.0f );
     m_UIGroupStateSet->setAttributeAndModes( mOverallOpacity.get( ), osg::StateAttribute::ON );
@@ -355,7 +355,7 @@ void UIManager::SendInteractionEvent( xplorer::util::InteractionEvent &event )
         if( map_iterator->first->getParent( 0 )->getParent( 0 )->asSwitch( )
                 ->getValue( 0 ) )
         {
-            UIElement *element = ( *map_iterator ).second;
+            UIElement* element = ( *map_iterator ).second;
             // Flip y mouse coordinate to origin GUI expects
             event.Y = static_cast < double > ( mTop ) - event.Y;
             element->SendInteractionEvent( event );
@@ -392,16 +392,16 @@ void UIManager::_repaintChildren( )
         if( map_iterator->first->getParent( 0 )->getParent( 0 )->asSwitch( )
                 ->getValue( 0 ) )
         {
-            UIElement *element = ( *map_iterator ).second;
-            unsigned char *image_Data = element->RenderElementToImage( );
+            UIElement* element = ( *map_iterator ).second;
+            unsigned char* image_Data = element->RenderElementToImage( );
 
             // Only reset the image if element tells us it has changed since 
             // last time
             if( element->IsDirty( ) )
             {
-                osg::StateSet *state = ( *map_iterator ).first
+                osg::StateSet* state = ( *map_iterator ).first
                         ->getOrCreateStateSet( );
-                osg::Image *image =
+                osg::Image* image =
                         state->getTextureAttribute( 0, osg::StateAttribute::TEXTURE )
                         ->asTexture( )->getImage( 0 );
                 image->setImage( element->GetImageWidth( ),
@@ -463,7 +463,7 @@ void UIManager::UnembedAll( )
     for ( map_iterator = mElements.begin( ); map_iterator != mElements.end( );
             ++map_iterator )
     {
-        UIElement *element = ( *map_iterator ).second;
+        UIElement* element = ( *map_iterator ).second;
         element->Unembed( );
     }
 }
@@ -475,7 +475,7 @@ void UIManager::EmbedAll( )
     for ( map_iterator = mElements.begin( ); map_iterator != mElements.end( );
             ++map_iterator )
     {
-        UIElement *element = ( *map_iterator ).second;
+        UIElement* element = ( *map_iterator ).second;
         element->Embed( );
     }
     ShowAllElements( );

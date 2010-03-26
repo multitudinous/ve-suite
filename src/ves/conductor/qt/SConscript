@@ -4,7 +4,7 @@ import SConsAddons.Util as sca_util
 import qt46
 pj = os.path.join
 
-Import('baseEnv ves_pkg LIBDIR buildDir RootDir osg_options vpr_options tao_options')
+Import('baseEnv ves_pkg LIBDIR buildDir RootDir osg_options vpr_options')
 
 srcDir = os.path.abspath( pj(RootDir, 'src', 'ves', 'conductor', 'qt') )
 buildSrcDir = pj('#',buildDir,'src','ves','conductor','qt')
@@ -50,17 +50,19 @@ sources += sca_util.getSourcesRecursive( srcDir )
 
 lib_env.Append(LIBS = ['ves_xplorer_util',
                        'ves_xplorer_data',
+                       'ves_xplorer_command',
                        'QtSolutions_PropertyBrowser-2.5'
                       ])
 lib_env.Append(LIBPATH = [
                            pj('#', buildDir, 'src', 'ves', 'xplorer', 'util'),
-                           pj('#', buildDir, 'src', 'ves', 'xplorer', 'data')
+                           pj('#', buildDir, 'src', 'ves', 'xplorer', 'data'),
+                           pj('#', buildDir, 'src', 'ves', 'xplorer', 'command'),
+                           pj('#', buildDir, 'external', 'qtpropertybrowser-2.5_1-opensource', 'src')
                          ])
 
 qt46.applyQtBuildFlags( lib_env )
 osg_options.apply( lib_env )
 vpr_options.apply( lib_env )
-tao_options.apply( lib_env )
 
 lib_env.Append( CPPDEFINES = ['VE_CONDUCTOR_UTILS_LIBRARY'])
 lib_env.AppendUnique( CPPPATH = [ pj(RootDir,'external','qtpropertybrowser-2.5_1-opensource','src') ] )

@@ -40,7 +40,7 @@ class UIElementQt :  public QGraphicsView, public UIElement
     Q_OBJECT
 
 public:
-    UIElementQt( QWidget *parent = 0 );
+    UIElementQt( QWidget* parent = 0 );
     virtual ~UIElementQt( );
 
     // Required overrides from UIElement; see base class for documentation
@@ -76,21 +76,21 @@ public:
     void UpdateSize( );
     
 protected:
-    void paintEvent ( QPaintEvent * event );
+    void paintEvent ( QPaintEvent* event );
 
 Q_SIGNALS:
     void RequestRender( );
-    void PutSendEvent( xplorer::util::InteractionEvent *event );
+    void PutSendEvent( xplorer::util::InteractionEvent* event );
     void RequestEmbed( bool embed );
 
 private:
     void FreeOldWidgets( );
-    QWidget *mWidget; /// Widget associated with this element
-    QImage *mImage; /// Rendered image of element
-    QImage *mImageFlipped; /// Vertically flipped image of element
-    QGraphicsScene *mGraphicsScene; /// Scene to hold widget
-    QGraphicsProxyWidget *mGraphicsProxyWidget; /// Proxy widget that handles internal event forwarding
-    QGraphicsView *mGraphicsView; /// View to display scene and allow interaction
+    QWidget* mWidget; /// Widget associated with this element
+    QImage* mImage; /// Rendered image of element
+    QImage* mImageFlipped; /// Vertically flipped image of element
+    QGraphicsScene* mGraphicsScene; /// Scene to hold widget
+    QGraphicsProxyWidget* mGraphicsProxyWidget; /// Proxy widget that handles internal event forwarding
+    QGraphicsView* mGraphicsView; /// View to display scene and allow interaction
     int mImageWidth; /// Width of rendered image
     int mImageHeight; /// Height of rendered image
     int mWidth; /// Width of widget
@@ -101,8 +101,8 @@ private:
     float mTextureTop; /// Top-most texture coordinate, on interval [0,1]
     bool mInitialized; /// Flag telling whether this element has been initialized
     bool mImageDirty; /// Flag telling whether the rendered image has changed
-    QTimer *mTimer; /// Timer that causes UI to render at set intervals
-    QMutex *mImageMutex; /// Mutex that is used to avoid access collisions on rendered image
+    QTimer* mTimer; /// Timer that causes UI to render at set intervals
+    QMutex* mImageMutex; /// Mutex that is used to avoid access collisions on rendered image
     bool mDirty; /// Flag telling outside world whether image has changed; holds
                  /// slightly different state from mImageDirty
 
@@ -112,7 +112,7 @@ private:
 
 protected Q_SLOTS:
     void _render( );
-    void _sendEvent( xplorer::util::InteractionEvent *event );
+    void _sendEvent( xplorer::util::InteractionEvent* event );
     void _embed( bool embed );
 
 };

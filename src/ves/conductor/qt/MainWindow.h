@@ -10,15 +10,15 @@ namespace Ui {
 class MainWindow : public QMainWindow {
     Q_OBJECT
 public:
-    MainWindow(QWidget *parent = 0);
+    MainWindow(QWidget* parent = 0);
     ~MainWindow();
 
 protected:
-    void changeEvent(QEvent *e);
+    void changeEvent(QEvent* e);
     void paintEvent ( QPaintEvent* event );
 
 private:
-    Ui::MainWindow *ui;
+    Ui::MainWindow* ui;
 };
 
 #endif // MAINWINDOW_H

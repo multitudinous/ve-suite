@@ -1,5 +1,4 @@
-#ifndef _CONTOURFEATUREMAKER_H
-#define	_CONTOURFEATUREMAKER_H
+#pragma once
 
 #include <ves/xplorer/data/PropertySet.h>
 
@@ -20,7 +19,7 @@ public:
     ContourFeatureMaker( );
     ContourFeatureMaker( const ContourFeatureMaker& orig );
     virtual ~ContourFeatureMaker( );
-    void update( std::string dbFile, long unsigned int recordID );
+    void update( const std::string& dbFile, unsigned int recordID );
 
 protected:
     void _addPlane( xplorer::data::PropertySet& set );
@@ -42,6 +41,3 @@ private:
 
 } // namespace conductor
 } // namespace ves
-
-#endif	/* _CONTOURFEATUREMAKER_H */
-

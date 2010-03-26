@@ -9,7 +9,7 @@
 #include <iostream>
 #include <QtGui/QPaintEvent>
 
-MainWindow::MainWindow(QWidget *parent) :
+MainWindow::MainWindow(QWidget* parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
@@ -24,8 +24,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->mdiArea->setMouseTracking( true );
     
-    ves::conductor::Visualization *visWindow = new ves::conductor::Visualization( this );
-    QMdiSubWindow *subWin = ui->mdiArea->addSubWindow( visWindow );
+    ves::conductor::Visualization* visWindow = new ves::conductor::Visualization( this );
+    QMdiSubWindow* subWin = ui->mdiArea->addSubWindow( visWindow );
     subWin->resize( 590, 489 );
 }
 
@@ -34,7 +34,7 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::changeEvent(QEvent *e)
+void MainWindow::changeEvent(QEvent* e)
 {
     QMainWindow::changeEvent(e);
     switch (e->type()) {
