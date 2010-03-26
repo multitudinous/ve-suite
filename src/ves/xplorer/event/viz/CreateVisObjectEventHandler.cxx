@@ -593,22 +593,25 @@ void CreateVisObjectEventHandler::SetActiveVector( ves::open::xml::XMLObjectPtr 
     ves::open::xml::CommandPtr command( boost::dynamic_pointer_cast<ves::open::xml::Command>( xmlObject ) );
     ves::open::xml::DataValuePairPtr activeModelDVP = command->GetDataValuePair( "Active Vector" );
     std::string activeVector;
-    activeModelDVP->GetData( activeVector );
+    if( activeModelDVP )
+    {
+        activeModelDVP->GetData( activeVector );
 
-    vprDEBUG( vesDBG, 1 ) << "|\tCreateVisObjectEventHandler::SetActiveVector Setting Active Vector = " << activeVector
+        vprDEBUG( vesDBG, 1 ) << "|\tCreateVisObjectEventHandler::SetActiveVector Setting Active Vector = " << activeVector
         << std::endl << vprDEBUG_FLUSH;
 
-    Model* activeModel = ModelHandler::instance()->GetActiveModel();
-    DataSet* activeDataset = activeModel->GetActiveDataSet();
-    // need to set the vector by name
-    activeDataset->SetActiveVector( activeVector );
-    //activeDataset->GetParent()->SetActiveVector( vectorIndex );
+        Model* activeModel = ModelHandler::instance()->GetActiveModel();
+        DataSet* activeDataset = activeModel->GetActiveDataSet();
+        // need to set the vector by name
+        activeDataset->SetActiveVector( activeVector );
+        //activeDataset->GetParent()->SetActiveVector( vectorIndex );
 
-    /*cfdTextureDataSet* activeTDSet = activeModel->GetActiveTextureDataSet();
-    if(activeTDSet )
-    {
-       activeTDSet->SetActiveVector( activeVector );
-    }*/
+        /*cfdTextureDataSet* activeTDSet = activeModel->GetActiveTextureDataSet();
+        if(activeTDSet )
+        {
+           activeTDSet->SetActiveVector( activeVector );
+        }*/
+    }
 }
 //////////////////////////////////////////////////////////////////////////////////////
 void CreateVisObjectEventHandler::SetActiveScalarAndRange( ves::open::xml::XMLObjectPtr xmlObject )
