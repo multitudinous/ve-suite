@@ -572,46 +572,46 @@ void App::latePreFrame()
     }
     ves::xplorer::command::CommandManager::instance()->LatePreFrameUpdate();
 
-    ves::open::xml::CommandPtr tempCommandPtr = 
+    const ves::open::xml::CommandPtr tempCommandPtr = 
         ves::xplorer::command::CommandManager::instance()->GetXMLCommand();
-    std::string tempCommandName;
     if( tempCommandPtr )
     {
+        std::string tempCommandName;
         tempCommandName = tempCommandPtr->GetCommandName();
-    }
         
-    //Exit - must be called AFTER m_vjobsWrapper->PreFrameUpdate();
-    if( tempCommandName == "EXIT_XPLORER" )
-    {
-        // exit App was selected
-        std::cout << "|\tShutting down xplorer." << std::endl;
-        VPR_PROFILE_RESULTS();
-        vxs::PhysicsSimulator::instance()->SetIdle( true );
-        m_vjobsWrapper->Cleanup();
-        cfdExecutive::instance()->UnloadPlugins();
-        ves::xplorer::scenegraph::SceneManager::instance()->Shutdown();
-
-        // Stopping kernel
-        vrj::Kernel::instance()->stop(); 
-    }
-    else if( !tempCommandName.compare( "SCREEN_SHOT" ) )
-    {
-        m_captureNextFrame = true;
-        tempCommandPtr->
+        //Exit - must be called AFTER m_vjobsWrapper->PreFrameUpdate();
+        if( tempCommandName == "EXIT_XPLORER" )
+        {
+            // exit App was selected
+            std::cout << "|\tShutting down xplorer." << std::endl;
+            VPR_PROFILE_RESULTS();
+            vxs::PhysicsSimulator::instance()->SetIdle( true );
+            m_vjobsWrapper->Cleanup();
+            cfdExecutive::instance()->UnloadPlugins();
+            ves::xplorer::scenegraph::SceneManager::instance()->Shutdown();
+            
+            // Stopping kernel
+            vrj::Kernel::instance()->stop(); 
+        }
+        else if( !tempCommandName.compare( "SCREEN_SHOT" ) )
+        {
+            m_captureNextFrame = true;
+            tempCommandPtr->
             GetDataValuePair( "Filename" )->GetData( m_filename );
-        mSceneRenderToTexture->SetImageCameraCallback( true, m_filename );
-    }
-    else if( !tempCommandName.compare( "MOVIE_CAPTURE" ) )
-    {
-        m_captureMovie = true;
-        tempCommandPtr->
+            mSceneRenderToTexture->SetImageCameraCallback( true, m_filename );
+        }
+        else if( !tempCommandName.compare( "MOVIE_CAPTURE" ) )
+        {
+            m_captureMovie = true;
+            tempCommandPtr->
             GetDataValuePair( "Filename" )->GetData( m_filename );
-        mSceneRenderToTexture->SetImageCameraCallback( m_captureMovie, m_filename );
-    }
-    else if( !tempCommandName.compare( "MOVIE_CAPTURE_OFF" ) )
-    {
-        m_captureMovie = false;
-        mSceneRenderToTexture->SetImageCameraCallback( m_captureMovie, "" );
+            mSceneRenderToTexture->SetImageCameraCallback( m_captureMovie, m_filename );
+        }
+        else if( !tempCommandName.compare( "MOVIE_CAPTURE_OFF" ) )
+        {
+            m_captureMovie = false;
+            mSceneRenderToTexture->SetImageCameraCallback( m_captureMovie, "" );
+        }
     }
     
     {
@@ -841,7 +841,7 @@ void App::contextPreDraw()
     ///plane. (This gets around the "negative" problem.) The bottom line: The
     ///computed near plane is always at least as big as the computed far multiplied
     ///by OSG's near/far ratio (which defaults to 0.0005).
-    ves::open::xml::CommandPtr tempCommandPtr = 
+    const ves::open::xml::CommandPtr tempCommandPtr = 
         ves::xplorer::command::CommandManager::instance()->GetXMLCommand();
 
     if( tempCommandPtr )
