@@ -30,8 +30,6 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#include <ves/xplorer/communication/CommandHandler.h>
-
 #include <ves/xplorer/ModelDatasetHandler.h>
 #include <ves/xplorer/ModelHandler.h>
 

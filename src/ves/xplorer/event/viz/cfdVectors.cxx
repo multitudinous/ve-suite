@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#include <ves/xplorer/communication/CommandHandler.h>
+#include <ves/xplorer/communication/CommunicationHandler.h>
 #include <ves/xplorer/event/viz/cfdVectors.h>
 #include <ves/xplorer/DataSet.h>
 #include <ves/xplorer/event/viz/cfdPlanes.h>
@@ -76,7 +76,7 @@ void cfdVectors::Update( void )
         vprDEBUG( vesDBG, 0 )
         << "Dataset contains no precomputed vector planes."
         << std::endl << vprDEBUG_FLUSH;
-        ves::xplorer::CommandHandler::instance()
+        ves::xplorer::communication::CommunicationHandler::instance()
         ->SendConductorMessage( "Dataset contains no precomputed vector planes.\n" );
         return;
     }

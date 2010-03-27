@@ -30,8 +30,8 @@
 * -----------------------------------------------------------------
 *
 *************** <auto-copyright.rb END do not edit this line> ***************/
-#ifndef VE_XPLORER_COMMAND_HANDLER_PTR_H
-#define VE_XPLORER_COMMAND_HANDLER_PTR_H
+#ifndef VE_XPLORER_COMMUNICATION_HANDLER_PTR_H
+#define VE_XPLORER_COMMUNICATION_HANDLER_PTR_H
 
 #include <ves/util/PointerTypes.h>
 
@@ -39,21 +39,24 @@
  * \file
  *
  * Include this file to get a forward declaration of the type
- * ves::xplorer:CommandHandler and its pointer types.
- * For the full declaration of ves::xplorer::CommandHandler
- * ves/xplorer/CommandHandler.h must be included, too.
+ * ves::xplorer::communication::CommunicationHandler and its pointer types.
+ * For the full declaration of ves::xplorer::communication::CommunicationHandler
+ * ves/xplorer/communication/CommunicationHandler.h must be included, too.
  */
 
 namespace ves
 {
 namespace xplorer
 {
-class CommandHandler;
+namespace communication
+{
+class CommunicationHandler;
 /// Typedef for the SmartPtr types.
-typedef ves::util::ClassPtrDef<CommandHandler>::type  CommandHandlerPtr;
-typedef ves::util::SharedPtrDef<CommandHandler>::type CommandHandlerSharedPtr;
-typedef ves::util::WeakPtrDef<CommandHandler>::type   CommandHandlerWeakPtr;
-typedef ves::util::ScopedPtrDef<CommandHandler>::type CommandHandlerScopedPtr;
+typedef ves::util::ClassPtrDef<CommunicationHandler>::type  CommunicationHandlerPtr;
+typedef ves::util::SharedPtrDef<CommunicationHandler>::type CommunicationHandlerSharedPtr;
+typedef ves::util::WeakPtrDef<CommunicationHandler>::type   CommunicationHandlerWeakPtr;
+typedef ves::util::ScopedPtrDef<CommunicationHandler>::type CommunicationHandlerScopedPtr;
+}
 }
 }
 #endif

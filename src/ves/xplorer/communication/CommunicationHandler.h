@@ -32,13 +32,13 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #ifndef VE_XPLORER_COMMAND_HANDLER_H
 #define VE_XPLORER_COMMAND_HANDLER_H
-/*!\file CommandHandler.h
+/*!\file CommunicationHandler.h
 */
-/*!\class ves::xplorer::CommandHandler
+/*!\class ves::xplorer::communication::CommunicationHandler
 *
 */
 #include <ves/VEConfig.h>
-#include <ves/xplorer/communication/CommandHandlerPtr.h>
+#include <ves/xplorer/communication/CommunicationHandlerPtr.h>
 
 #include <ves/xplorer/communication/Xplorer_i.h>
 
@@ -50,15 +50,17 @@ namespace ves
 {
 namespace xplorer
 {
-class VE_XPLORER_COMM_EXPORTS CommandHandler
+namespace communication
+{
+class VE_XPLORER_COMM_EXPORTS CommunicationHandler
 {
 private:
-    CommandHandler( void );
-    ~CommandHandler( void )
+    CommunicationHandler( void );
+    ~CommunicationHandler( void )
     {
         ;
     }
-    vprSingletonHeader( CommandHandler );
+    vprSingletonHeader( CommunicationHandler );
 
 public:
     ///Initialize environment.
@@ -75,7 +77,7 @@ public:
 
     ///Set command from Xplorer
     ///\param inputCommand
-    bool SetXMLCommand( ves::open::xml::CommandPtr inputCommand );
+    bool SetXMLCommand( const ves::open::xml::CommandPtr& inputCommand );
 
     ///Get command from Xplorer
     ves::open::xml::CommandPtr GetXMLCommand( void );
@@ -92,5 +94,6 @@ private:
     Body_VEXplorer_i* m_xplorer;
 };
 }
+}    
 }
 #endif //COMMAND_HANDLER_H

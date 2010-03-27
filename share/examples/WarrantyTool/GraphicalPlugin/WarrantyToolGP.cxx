@@ -31,7 +31,7 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
-#include <ves/xplorer/communication/CommandHandler.h>
+#include <ves/xplorer/communication/CommunicationHandler.h>
 
 // --- My Includes --- //
 #include "WarrantyToolGP.h"
@@ -601,7 +601,7 @@ void WarrantyToolGP::RenderTextualDisplay( bool onOff )
         //    displayString = displayString + displayPair.first + " " +  displayPair.second + "\n";
         //}
         ////////////////////////////////////////////////////////////////////////////////
-            mCommandHandler->SendConductorMessage( "Creating DB query..." );
+            mCommunicationHandler->SendConductorMessage( "Creating DB query..." );
             /*{
                 ves::xplorer::scenegraph::HighlightNodeByNameVisitor 
                     highlight2( tempModelNodes, "", false, true );
@@ -647,7 +647,7 @@ void WarrantyToolGP::RenderTextualDisplay( bool onOff )
             size_t numQueries = rs.rowCount();
             if( numQueries == 0 )
             {
-                mCommandHandler->SendConductorMessage( "No parts found." );
+                mCommunicationHandler->SendConductorMessage( "No parts found." );
                 return;
             }
         
@@ -703,7 +703,7 @@ void WarrantyToolGP::RenderTextualDisplay( bool onOff )
             //    highlight( tempModelNodes, m_assemblyPartNumbers.at( 0 ), true, true );//,
             //osg::Vec4( 0.34118, 1.0, 0.57255, 1.0 ) );
             
-            mCommandHandler->SendConductorMessage( "Finished DB query..." );
+            mCommunicationHandler->SendConductorMessage( "Finished DB query..." );
             
         //mModelText->UpdateText( displayString );
         mModelText->SetTitle( m_lastPartNumber );
@@ -721,7 +721,7 @@ void WarrantyToolGP::RenderTextualDisplay( bool onOff )
 ////////////////////////////////////////////////////////////////////////////////
 void WarrantyToolGP::CreateDB()
 {
-    mCommandHandler->SendConductorMessage( "Creating DB..." );
+    mCommunicationHandler->SendConductorMessage( "Creating DB..." );
 
     // register SQLite connector
     Poco::Data::SQLite::Connector::registerConnector();
@@ -865,7 +865,7 @@ void WarrantyToolGP::CreateDB()
 
 	//insert << "INSERT INTO Parts VALUES(?, ?, ?, ?, ?, ?, ?)",
     //    use(assem), now;
-    mCommandHandler->SendConductorMessage( "Finished creating DB..." );
+    mCommunicationHandler->SendConductorMessage( "Finished creating DB..." );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void WarrantyToolGP::CreateTextTextures()
@@ -888,7 +888,7 @@ void WarrantyToolGP::CreateTextTextures()
 ////////////////////////////////////////////////////////////////////////////////
 void WarrantyToolGP::CreateDBQuery( ves::open::xml::DataValuePairPtr dvp )
 {
-    mCommandHandler->SendConductorMessage( "Creating DB query..." );
+    mCommunicationHandler->SendConductorMessage( "Creating DB query..." );
     ves::open::xml::DataValuePairPtr stringDvp = 
         m_currentCommand->GetDataValuePair( "DISPLAY_TEXT_FIELDS" );
     
@@ -927,7 +927,7 @@ void WarrantyToolGP::CreateDBQuery( ves::open::xml::DataValuePairPtr dvp )
     }
     catch( ... )
     {
-        mCommandHandler->SendConductorMessage( "Query is bad." );
+        mCommunicationHandler->SendConductorMessage( "Query is bad." );
         return;
     }
 
@@ -944,10 +944,10 @@ void WarrantyToolGP::CreateDBQuery( ves::open::xml::DataValuePairPtr dvp )
     size_t numQueries = rs.rowCount();
     std::ostringstream outString;
     outString << "Number of parts found " << numQueries;
-    mCommandHandler->SendConductorMessage( outString.str() );
+    mCommunicationHandler->SendConductorMessage( outString.str() );
     if( numQueries == 0 )
     {
-        mCommandHandler->SendConductorMessage( "No parts found." );
+        mCommunicationHandler->SendConductorMessage( "No parts found." );
         return;
     }
 	// iterate over all rows and columns
@@ -1027,7 +1027,7 @@ void WarrantyToolGP::CreateDBQuery( ves::open::xml::DataValuePairPtr dvp )
     }
 
     
-    mCommandHandler->SendConductorMessage( "Finished DB query..." );
+    mCommunicationHandler->SendConductorMessage( "Finished DB query..." );
 /*
     //ves::xplorer::scenegraph::util::OpacityVisitor 
     //    opVisitor1( mDCS.get(), false, true, 0.3f );

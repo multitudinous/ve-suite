@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#include <ves/xplorer/communication/CommandHandler.h>
+#include <ves/xplorer/communication/CommunicationHandler.h>
 #include <ves/xplorer/event/viz/cfdPresetContour.h>
 
 #include <ves/xplorer/event/viz/cfdCuttingPlane.h>
@@ -80,7 +80,7 @@ void cfdPresetContour::Update( void )
             vprDEBUG( vesDBG, 0 )
             << "Dataset contains no precomputed contour planes."
             << std::endl << vprDEBUG_FLUSH;
-            ves::xplorer::CommandHandler::instance()
+            ves::xplorer::communication::CommunicationHandler::instance()
             ->SendConductorMessage( "Dataset contains no precomputed contour planes.\n" );
             return;
         }

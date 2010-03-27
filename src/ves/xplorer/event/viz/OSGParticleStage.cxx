@@ -419,10 +419,14 @@ void OSGParticleStage::createStreamLines( vtkPolyData* polyData,
             // TBD. Need to make this configurable from a uniform.
             //"   gl_PointSize = (-50. / v.z) * particleSize; \n"
 
-            // Compute a time offset from the InstanceID to
-            // emulate motion.
+            // Compute a time offset from the InstanceID to emulate motion.
+            ///This is just the fraction of the total time that this instance
+            ///is of the overal simulation. It varies between 0 and repeat time. 
             "   float timeOffset = ( ((float)gl_InstanceID) / totalInstances ) * repeatTime; \n"
+            ///This creates a sliding window for a number between 0 and repeatTime
+            ///Without this sliding window we get no motion in our particles.
             "   float repTimer = mod( ( osg_SimulationTime - timeOffset ), repeatTime ); \n"
+
             "   float alpha = fadeTime - min( repTimer, fadeTime ); \n"
             "   if( alpha < 0.97 )\n"
             "   {\n"

@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#include <ves/xplorer/communication/CommandHandler.h>
+#include <ves/xplorer/communication/CommunicationHandler.h>
 
 #include <ves/xplorer/ModelCADHandler.h>
 #include <ves/xplorer/ModelHandler.h>
@@ -192,7 +192,7 @@ void ModelCADHandler::CreatePart( const std::string& fileName,
                                 const std::string& parentID, 
                                 const std::string& occlusionSettings )
 {
-    ves::xplorer::CommandHandler::instance()->
+    ves::xplorer::communication::CommunicationHandler::instance()->
         SendConductorMessage( "Loading file: " + fileName );
     ves::xplorer::scenegraph::CADEntity* tempCAD =
         ModelHandler::instance()->IsCADFileLoaded( fileName );
@@ -225,7 +225,7 @@ void ModelCADHandler::CreatePart( const std::string& fileName,
     ModelHandler::instance()->RegisterCADFile( m_partList[ partID ] );
     //add key pointer to physics map for bullet rigid body
     //add data pair for transform node
-    ves::xplorer::CommandHandler::instance()->
+    ves::xplorer::communication::CommunicationHandler::instance()->
         SendConductorMessage( "Loaded file: " + fileName );
 }
 /////////////////////////////////////////////////////

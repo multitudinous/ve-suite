@@ -37,7 +37,7 @@
 #include <ves/xplorer/network/UpdateNetworkEventHandler.h>
 #include <ves/xplorer/plugin/PluginBase.h>
 #include <ves/xplorer/ModelHandler.h>
-#include <ves/xplorer/communication/CommandHandler.h>
+#include <ves/xplorer/communication/CommunicationHandler.h>
 #include <ves/xplorer/EnvironmentHandler.h>
 #include <ves/xplorer/Model.h>
 #include <ves/xplorer/network/NetworkSystemView.h>
@@ -346,7 +346,7 @@ void cfdExecutive::GetEverything( void )
         }
         // The above code is from : The C++ Standard Library by:Josuttis pg. 205
     }
-    ves::xplorer::CommandHandler::instance()
+    ves::xplorer::communication::CommunicationHandler::instance()
         ->SendConductorMessage( "Finished loading data in VE-Xplorer." );
     vprDEBUG( vesDBG, 0 ) << "|\t\tDone Getting Network From Executive"
         << std::endl << vprDEBUG_FLUSH;
@@ -677,7 +677,7 @@ void cfdExecutive::ParseSystem( ves::open::xml::model::SystemPtr system,
             temp->SetModelHandler( ves::xplorer::ModelHandler::instance() );
             temp->SetSceneManager( ves::xplorer::scenegraph::SceneManager::instance() );
             temp->SetResourceManager( ves::xplorer::scenegraph::ResourceManager::instance() );
-            temp->SetCommandHandler( ves::xplorer::CommandHandler::instance() );
+            temp->SetCommunicationHandler( ves::xplorer::communication::CommunicationHandler::instance() );
             temp->SetInteractionDevice( DeviceHandler::instance()->GetDevice(
                 device::Device::KEYBOARD_MOUSE ) );
             

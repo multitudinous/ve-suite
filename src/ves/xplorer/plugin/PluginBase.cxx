@@ -31,7 +31,7 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 // --- VE-Suite Includes --- //
-#include <ves/xplorer/communication/CommandHandler.h>
+#include <ves/xplorer/communication/CommunicationHandler.h>
 
 #include <ves/xplorer/plugin/PluginBase.h>
 
@@ -89,7 +89,7 @@ PluginBase::PluginBase():
         mEnvironmentHandler( 0 ),
         mSceneManager( 0 ),
         mResourceManager( 0 ),
-        mCommandHandler( 0 ),
+        mCommunicationHandler( 0 ),
 #ifdef VE_SOUND
         mSoundManager( 0 ),
 #endif
@@ -234,10 +234,10 @@ void PluginBase::SetResourceManager(
     mResourceManager = resourceManager;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void PluginBase::SetCommandHandler(
-    ves::xplorer::CommandHandler* commandHandler )
+void PluginBase::SetCommunicationHandler(
+    ves::xplorer::communication::CommunicationHandler* commandHandler )
 {
-    mCommandHandler = commandHandler;
+    mCommunicationHandler = commandHandler;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PluginBase::SetInteractionDevice( ves::xplorer::device::Device* device )

@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#include <ves/xplorer/communication/CommandHandler.h>
+#include <ves/xplorer/communication/CommunicationHandler.h>
 
 #include <ves/xplorer/DataSet.h>
 #include <ves/xplorer/Model.h>
@@ -557,7 +557,7 @@ void DataSet::LoadData()
     
     vprDEBUG( vesDBG, 1 ) << "|\tLoadData: filename = " << fileName
         << std::endl << vprDEBUG_FLUSH;
-    ves::xplorer::CommandHandler::instance()
+    ves::xplorer::communication::CommunicationHandler::instance()
         ->SendConductorMessage( "Loading file: " + fileName );
 
     std::string extension = ves::xplorer::util::fileIO::getExtension( fileName );
@@ -626,7 +626,7 @@ void DataSet::LoadData()
         {
             vprDEBUG( vesDBG, 1 ) << "|\tInvalid input file: " << fileName
                 << std::endl << vprDEBUG_FLUSH;
-            ves::xplorer::CommandHandler::instance()
+            ves::xplorer::communication::CommunicationHandler::instance()
                 ->SendConductorMessage( "Invalid input file: " + fileName );
             return;
         }
@@ -723,7 +723,7 @@ void DataSet::LoadData()
     }
 
     SetType();
-    ves::xplorer::CommandHandler::instance()
+    ves::xplorer::communication::CommunicationHandler::instance()
         ->SendConductorMessage( "Loaded file: " + fileName );
     //Register this dataset with the modeldatahandler
     CreateCompositeDataSets();
@@ -743,7 +743,7 @@ void DataSet::LoadData( vtkDataSet* tempDataset, bool isPartOfCompositeDataset )
     
     vprDEBUG( vesDBG, 1 ) << "|\tLoadData: filename = " << fileName
     << std::endl << vprDEBUG_FLUSH;
-    ves::xplorer::CommandHandler::instance()
+    ves::xplorer::communication::CommunicationHandler::instance()
         ->SendConductorMessage( "Loading file: " + fileName );
     
     m_dataSet = tempDataset;
@@ -799,7 +799,7 @@ void DataSet::LoadData( vtkDataSet* tempDataset, bool isPartOfCompositeDataset )
     
     SetType();
 
-    ves::xplorer::CommandHandler::instance()
+    ves::xplorer::communication::CommunicationHandler::instance()
         ->SendConductorMessage( "Loaded file: " + fileName );
     //Register this dataset with the modeldatahandler
 }    

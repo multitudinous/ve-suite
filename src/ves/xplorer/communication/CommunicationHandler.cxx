@@ -30,36 +30,36 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#include <ves/xplorer/communication/CommandHandler.h>
+#include <ves/xplorer/communication/CommunicationHandler.h>
 
 #include <ves/open/xml/XMLReaderWriter.h>
 #include <ves/open/xml/DataValuePair.h>
 #include <ves/open/xml/Command.h>
 
-vprSingletonImp( ves::xplorer::CommandHandler );
+vprSingletonImp( ves::xplorer::communication::CommunicationHandler );
 
-using namespace ves::xplorer;
+using namespace ves::xplorer::communication;
 
 ////////////////////////////////////////////////////////////////////////////////
-CommandHandler::CommandHandler():
+CommunicationHandler::CommunicationHandler():
         m_xplorer( 0 )
 {
    m_input = ves::open::xml::CommandPtr();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CommandHandler::Initialize()
+void CommunicationHandler::Initialize()
 {}
 ////////////////////////////////////////////////////////////////////////////////
-void CommandHandler::CleanUp()
+void CommunicationHandler::CleanUp()
 {}
 ////////////////////////////////////////////////////////////////////////////////
-void CommandHandler::InitScene()
+void CommunicationHandler::InitScene()
 {}
 ////////////////////////////////////////////////////////////////////////////////
-void CommandHandler::PreFrameUpdate()
+void CommunicationHandler::PreFrameUpdate()
 {}
 ////////////////////////////////////////////////////////////////////////////////
-bool CommandHandler::SetXMLCommand( ves::open::xml::CommandPtr inputCommand )
+bool CommunicationHandler::SetXMLCommand( const ves::open::xml::CommandPtr& inputCommand )
 {
     //The calling function is reponsible for deleting the incoming command
     //If in cluster mode
@@ -94,17 +94,17 @@ bool CommandHandler::SetXMLCommand( ves::open::xml::CommandPtr inputCommand )
     return true;
 }
 ////////////////////////////////////////////////////////////////////////////////
-ves::open::xml::CommandPtr CommandHandler::GetXMLCommand()
+ves::open::xml::CommandPtr CommunicationHandler::GetXMLCommand()
 {
     return m_input;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CommandHandler::SetXplorer( Body_VEXplorer_i* xplorer )
+void CommunicationHandler::SetXplorer( Body_VEXplorer_i* xplorer )
 {
     m_xplorer = xplorer;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CommandHandler::SendConductorMessage( std::string message )
+void CommunicationHandler::SendConductorMessage( std::string message )
 {
     //Now tell conductor to display text
     ves::open::xml::DataValuePairPtr dvp( new ves::open::xml::DataValuePair( std::string( "STRING" ) ) );

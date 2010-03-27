@@ -65,7 +65,10 @@ class cfdCursor;
 class EnvironmentHandler;
 class ModelHandler;
 class Model;
-class CommandHandler;
+namespace communication
+{
+class CommunicationHandler;
+}
 
 namespace device
 {
@@ -196,7 +199,7 @@ public:
 
     ///Provide the conductor communication manager for plugins
     ///\param conductorComm The conductor CORBA pointer
-    void SetCommandHandler( ves::xplorer::CommandHandler* commandHandler ); 
+    void SetCommunicationHandler( ves::xplorer::communication::CommunicationHandler* commandHandler ); 
     
 #ifdef VE_SOUND
     void SetSoundManager( osgAudio::SoundManager* soundManager );
@@ -232,7 +235,7 @@ protected:
     ///The resource manager pointer
     ves::xplorer::scenegraph::ResourceManager* mResourceManager;
     ///The command handler pointer
-    ves::xplorer::CommandHandler* mCommandHandler;
+    ves::xplorer::communication::CommunicationHandler* mCommunicationHandler;
     ///The xml model pointer for this plugin
     ves::open::xml::model::ModelPtr mXmlModel;
     ///Singleton pointers

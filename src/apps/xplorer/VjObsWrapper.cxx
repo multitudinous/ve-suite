@@ -44,7 +44,7 @@
 #include <ves/xplorer/communication/Xplorer_i.h>
 #include <ves/xplorer/EnvironmentHandler.h>
 #include <ves/xplorer/ModelHandler.h>
-#include <ves/xplorer/communication/CommandHandler.h>
+#include <ves/xplorer/communication/CommunicationHandler.h>
 
 #include <ves/xplorer/Debug.h>
 
@@ -250,7 +250,7 @@ void VjObsWrapper::init( CosNaming::NamingContext* input,
         {
             naming_context->rebind( xplorerName, xplorerCom.in() );
         }
-        ves::xplorer::CommandHandler::instance()->SetXplorer( m_xplorer );
+        ves::xplorer::communication::CommunicationHandler::instance()->SetXplorer( m_xplorer );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
