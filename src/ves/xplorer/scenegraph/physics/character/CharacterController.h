@@ -95,9 +95,11 @@ enum Enum
 /*!\file CharacterController.h
  *
  */
+
 /*!\class ves::xplorer::scenegraph::CharacterController
  *
  */
+
 /*!\namespace ves::xplorer::scenegraph
  *
  */
@@ -123,9 +125,6 @@ public:
 
     ///
     void Enable( const bool& enable = true );
-
-    ///Make the character jump
-    void Jump();
 
     ///Initialize the physics and geometric models for the character controller
     void Initialize();
@@ -189,9 +188,6 @@ private:
     ///Spherically interpolate the camera's rotation about the character
     void CameraRotationSLERP();
 
-    ///
-    double GetJumpHeight( double elapsedTime );
-
     ///Tests if there is an occluder between the camera and character positions
     ///\param eye The eye vector
     ///\param center The character vector
@@ -211,12 +207,6 @@ private:
     ///\param weightModifier The value of the weight modifier
     void SetBufferSizeAndWeights(
         unsigned int bufferSize, double weightModifier );
-
-    ///
-    void StartJump( double vo );
-
-    ///
-    void StopJump();
 
     ///
     ///\return Returns the delta device input for the frame
@@ -257,9 +247,6 @@ private:
 
     ///
     unsigned int m_translateType;
-
-    ///
-    const double m_G;
 
     ///The distance the camera is from the "look at" point
     double mCameraDistance;
@@ -342,9 +329,6 @@ private:
     ///Used to offset the "look at" point from center of the character transform
     btVector3 mLookAtOffsetZ;
 
-    ///gravity vector
-    const btVector3 m_gravity;
-
     ///
     btQuaternion mCameraRotation;
 
@@ -368,11 +352,11 @@ private:
     typedef gadget::Position::SampleBuffer_t::buffer_t buffer_type;
     typedef buffer_type::const_reverse_iterator iter_type;
 
-    ///Head matrix for point 1 
-    gmtl::Matrix44d m_vjHeadMat1; 
+    ///Head matrix for point 1
+    gmtl::Matrix44d m_vjHeadMat1;
 
-    ///Head matrix for point 2 
-    gmtl::Matrix44d m_vjHeadMat2; 
+    ///Head matrix for point 2
+    gmtl::Matrix44d m_vjHeadMat2;
 
     ///Head object that will help track the character for head position
     ///VRJuggler's head positional interface

@@ -72,8 +72,6 @@ using namespace ves::xplorer::scenegraph;
 CharacterController::CharacterController()
     :
     KinematicCharacterController(),
-    m_gravity( m_dynamicsWorld.getGravity() ),
-    m_G( m_gravity.z() ),
     m_enabled( false ),
     m1stPersonMode( false ),
     mCameraDistanceLERP( false ),
@@ -116,6 +114,7 @@ CharacterController::CharacterController()
 {
     head.init( "VJHead" );
     wand.init( "VJWand" );
+
     Initialize();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -230,21 +229,6 @@ void CharacterController::Enable( const bool& enable )
         m_dynamicsWorld.removeCollisionObject( m_ghostObject );
 
         m_dynamicsWorld.removeCharacter( this );
-    }
-}
-////////////////////////////////////////////////////////////////////////////////
-void CharacterController::Jump()
-{
-    if( canJump() )
-    {
-        //15 ft/s equals a vertical of ~40 inches
-        //StartJump( 15.0 );
-
-        m_jumpTime = 0.0;
-        //m_vo = vo;
-        m_vo = 15.0;
-        //m_jump = true;
-        m_translateType = m_translateType | TranslateType::STEP_FORWARD;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -593,21 +577,6 @@ void CharacterController::CameraRotationSLERP()
     mCameraRotation = mCameraRotationX * mCameraRotationZ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-double CharacterController::GetJumpHeight( double elapsedTime )
-{
-    //if( !m_jump )
-    //{
-        //return 0.0;
-    //}
-
-    //vt = vo + G * t
-    double vt = m_vo + m_G * m_jumpTime;
-    m_jumpTime += elapsedTime;
-
-    //s = vt * t + 1/2G * t^2
-    return vt * elapsedTime + 0.5 * m_G * elapsedTime * elapsedTime;
-}
-////////////////////////////////////////////////////////////////////////////////
 void CharacterController::EyeToCenterRayTest(
     btVector3& eye, btVector3& center )
 {
@@ -787,16 +756,6 @@ void CharacterController::SetBufferSizeAndWeights(
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CharacterController::StartJump( double vo )
-{
-    
-}
-////////////////////////////////////////////////////////////////////////////////
-void CharacterController::StopJump()
-{
-    m_jump = false;
-}
-////////////////////////////////////////////////////////////////////////////////
 std::pair< double, double > CharacterController::UpdateHistoryBuffer()
 {
     //http://www.flipcode.com/archives/Smooth_Mouse_Filtering.shtml
@@ -945,16 +904,6 @@ void CharacterController::UpdateTranslation( btScalar dt )
     }
 
     displacement *= dt;
-
-    //if( m_translateType & TranslateType::JUMP )
-    if( 0 )
-    {
-        btVector3 upDownDisplacement( 0.0, 0.0, 0.0 );
-        btVector3 upDir( 0.0, 0.0, 1.0 );
-        double height = GetJumpHeight( dt );
-        displacement += upDir * height;
-        std::cout << "JUMP!!!!!!!!!!!!!!!" << std::endl;
-    }
 
     //slerp mCameraRotation if necessary
     if( mCameraRotationSLERP )

@@ -821,7 +821,7 @@ void KeyboardMouse::OnKeyPress()
     {
         if( m_characterController.IsEnabled() )
         {
-            if( m_characterController.CanFly() )
+            if( m_characterController.IsFlying() )
             {
                 m_characterController.StepDown( true );
             }
@@ -833,13 +833,13 @@ void KeyboardMouse::OnKeyPress()
     {
         if( m_characterController.IsEnabled() )
         {
-            if( m_characterController.CanFly() )
+            if( m_characterController.IsFlying() )
             {
                 m_characterController.StepUp( true );
             }
             else
             {
-                m_characterController.Jump();
+                //m_characterController.Jump();
             }
         }
 
@@ -948,7 +948,7 @@ void KeyboardMouse::OnKeyRelease()
     {
         if( m_characterController.IsEnabled() )
         {
-            if( m_characterController.CanFly() )
+            if( m_characterController.IsFlying() )
             {
                 m_characterController.StepDown( false );
             }
@@ -964,7 +964,7 @@ void KeyboardMouse::OnKeyRelease()
     {
         if( m_characterController.IsEnabled() )
         {
-            if( m_characterController.CanFly() )
+            if( m_characterController.IsFlying() )
             {
                 m_characterController.StepUp( false );
             }

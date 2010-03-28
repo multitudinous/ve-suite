@@ -52,8 +52,10 @@ class btCollisionDispatcher;
 class btPairCachingGhostObject;
 class btConvexShape;
 
+// --- OSG Includes --- //
 #include <osg/ref_ptr>
 #include <osg/Vec3d>
+
 namespace osg
 {
 class Geode;
@@ -70,9 +72,11 @@ class PhysicsSimulator;
 /*!\file KinematicCharacterController.h
  *
  */
+
 /*!\class ves::xplorer::scenegraph::KinematicCharacterController
  *
  */
+
 /*!\namespace ves::xplorer::scenegraph
  *
  */
@@ -87,22 +91,79 @@ public:
     ~KinematicCharacterController();
 
     ///
+    bool canJump() const;
+
+    ///btActionInterface interface
+    virtual void debugDraw( btIDebugDraw* debugDrawer );
+
+    ///
+    void EnableFlying( const bool& canFly = true );
+
+    ///
     btPairCachingGhostObject* const GetGhostObject() const;
+
+    ///
+    btScalar getGravity() const;
+
+    ///
+    btScalar GetJumpHeight( btScalar elapsedTime );
+
+    ///
+    btScalar getMaxSlope() const;
+
+    ///
+    static btVector3* getUpAxisDirections();
+
+    ///
+    const bool IsFlying() const;
+
+    ///
+    void jump();
+
+    ///
+    bool onGround() const;
+
+    ///
+    void preStep( btCollisionWorld* collisionWorld );
+
+    ///Do sweep tests above the character, to the side the character is moving,
+    ///and below the character, depending on the character's velocity
+    void playerStep( btCollisionWorld* collisionWorld, btScalar dt );
+
+    ///
+    void Reset();
+
+    /// This should probably be called setPositionIncrementPerSimulatorStep.
+    /// This is neither a direction nor a velocity, but the amount to
+    ///   increment the position each simulation iteration, regardless
+    ///   of dt.
+    /// This call will reset any velocity set by setVelocityForTimeInterval().
+    virtual void setDisplacement( const btVector3& displacement );
+
+    ///Caller provides a velocity with which the character should move for
+    ///the given time period. After the time period, velocity is reset to zero
+    ///This call will reset any walk direction set by setWalkDirection().
+    ///Negative time intervals will result in no motion.
+    virtual void setVelocityForTimeInterval(
+        const btVector3& velocity, btScalar timeInterval );
 
     ///
     void SetConvexShape( btConvexShape* convexShape );
 
-    ///btActionInterface interface
-    virtual void updateAction(
-        btCollisionWorld* collisionWorld, btScalar deltaTime )
-    {
-        //Recover from penetrations
-        preStep( collisionWorld );
-        playerStep( collisionWorld, deltaTime );
-    }
+    ///
+    void setFallSpeed( btScalar fallSpeed );
 
-    ///btActionInterface interface
-    void debugDraw( btIDebugDraw* debugDrawer );
+    ///
+    void setGravity( btScalar gravity );
+
+    ///
+    void setJumpSpeed( btScalar jumpSpeed );
+
+    ///
+    void setMaxJumpHeight( btScalar maxJumpHeight );
+
+    ///
+    void setMaxSlope( btScalar slopeRadians );
 
     ///
     void setUpAxis( int axis )
@@ -120,59 +181,23 @@ public:
         m_upAxis = axis;
     }
 
-    /// This should probably be called setPositionIncrementPerSimulatorStep.
-    /// This is neither a direction nor a velocity, but the amount to
-    ///   increment the position each simulation iteration, regardless
-    ///   of dt.
-    /// This call will reset any velocity set by setVelocityForTimeInterval().
-    virtual void setDisplacement( const btVector3& displacement );
-
-    ///Caller provides a velocity with which the character should move for
-    ///the given time period. After the time period, velocity is reset to zero
-    ///This call will reset any walk direction set by setWalkDirection().
-    ///Negative time intervals will result in no motion.
-    virtual void setVelocityForTimeInterval(
-        const btVector3& velocity, btScalar timeInterval );
-
-    ///
-    void Reset();
-
-    ///
-    void EnableFlying( const bool& canFly = true );
-
-    ///
-    void warp( const btVector3& origin );
-
-    ///
-    void preStep( btCollisionWorld* collisionWorld );
-
-    ///Do sweep tests above the character, to the side the character is moving,
-    ///and below the character, depending on the character's velocity
-    void playerStep( btCollisionWorld* collisionWorld, btScalar dt );
-
-    ///
-    void setFallSpeed( btScalar fallSpeed );
-
-    ///
-    void setJumpSpeed( btScalar jumpSpeed );
-
-    ///
-    void setMaxJumpHeight( btScalar maxJumpHeight );
-
-    ///
-    const bool CanFly() const;
-
-    ///
-    bool canJump() const;
-
     ///
     void setUseGhostSweepTest( bool useGhostObjectSweepTest )
     {
         m_useGhostObjectSweepTest = useGhostObjectSweepTest;
     }
 
+    ///btActionInterface interface
+    virtual void updateAction(
+        btCollisionWorld* collisionWorld, btScalar deltaTime )
+    {
+        //Recover from penetrations
+        preStep( collisionWorld );
+        playerStep( collisionWorld, deltaTime );
+    }
+
     ///
-    bool onGround() const;
+    void warp( const btVector3& origin );
 
 protected:
     ///Returns the reflection direction of a ray going 'direction' hitting a surface with normal 'normal'
@@ -192,6 +217,13 @@ protected:
     bool recoverFromPenetration( btCollisionWorld* collisionWorld );
 
     ///
+    void stepDown( btCollisionWorld* collisionWorld, btScalar dt );
+
+    ///
+    void stepForwardAndStrafe(
+        btCollisionWorld* collisionWorld, const btVector3& walkMove );
+
+    ///
     void stepUp( btCollisionWorld* collisionWorld );
 
     ///
@@ -201,17 +233,22 @@ protected:
         btScalar normalMag = btScalar( 1.0 ) );
 
     ///
-    void stepForwardAndStrafe(
-        btCollisionWorld* collisionWorld, const btVector3& walkMove );
-
-    ///
-    void stepDown( btCollisionWorld* collisionWorld, btScalar dt );
-
-    ///
     PhysicsSimulator& m_physicsSimulator;
 
     ///
     btDynamicsWorld& m_dynamicsWorld;
+
+    ///
+    bool m_touchingContact;
+
+    ///
+    bool m_wasOnGround;
+
+    ///
+    bool m_useGhostObjectSweepTest;
+
+    ///
+    bool m_useWalkDirection;
 
     ///Is the character flying?
     bool m_fly;
@@ -220,59 +257,19 @@ protected:
     bool m_jump;
 
     ///Is the character supported by object?
-    bool m_supported;
+    //bool m_supported;
 
     ///
-    bool m_touchingContact;
+    unsigned int m_upAxis;
 
     ///
-    bool m_useGhostObjectSweepTest;
+    btScalar m_halfHeight;
 
     ///
-    bool m_useWalkDirection;
+    btScalar m_verticalVelocity;
 
     ///
-    int m_upAxis;
-
-    ///
-    double m_forwardBackwardSpeedModifier;
-
-    ///
-    double m_leftRightSpeedModifier;
-
-    ///
-    double m_upDownSpeedModifier;
-
-    ///
-    double m_flySpeedModifier;
-
-    ///
-    double m_velocityTimeInterval;
-
-    ///
-    double m_vo;
-
-    ///
-    double m_jumpHeight;
-
-    ///
-    double m_jumpTime;
-
-    ///
-    double m_characterWidth;
-
-    ///
-    double m_characterHeight;
-
-    ///
-    //btScalar m_halfHeight;
-
-    ///
-    btPairCachingGhostObject* m_ghostObject;
-
-    ///Is also in m_ghostObject, but it needs to be convex,
-    ///so we store it here to avoid upcast
-    btConvexShape* m_convexShape;
+    btScalar m_verticalOffset;
 
     ///
     btScalar m_fallSpeed;
@@ -283,17 +280,56 @@ protected:
     ///
     btScalar m_maxJumpHeight;
 
+    ///Slope angle that is set (used for returning the exact value)
+    btScalar m_maxSlopeRadians;
+
+    ///Cosine equivalent of m_maxSlopeRadians (calculated once when set, for optimization)
+    btScalar m_maxSlopeCosine;
+
     ///
-    //btScalar m_turnAngle;
+    btScalar m_gravity;
+
+    ///
+    btScalar m_turnAngle;
 
     ///
     btScalar m_stepHeight;
 
+    ///@todo: remove this and fix the code
+    btScalar m_addedMargin;
+
     ///The amount we test above the character for collision
     btScalar  m_currentStepOffset;
 
-    ///@todo: remove this and fix the code
-    btScalar m_addedMargin;
+    ///
+    btScalar m_velocityTimeInterval;
+
+    ///
+    btScalar m_forwardBackwardSpeedModifier;
+
+    ///
+    btScalar m_leftRightSpeedModifier;
+
+    ///
+    btScalar m_upDownSpeedModifier;
+
+    ///
+    btScalar m_flySpeedModifier;
+
+    ///
+    btScalar m_vo;
+
+    ///
+    btScalar m_jumpHeight;
+
+    ///
+    btScalar m_jumpTime;
+
+    ///
+    btScalar m_characterWidth;
+
+    ///
+    btScalar m_characterHeight;
 
     ///This is the desired walk direction, set by the user
     btVector3 m_displacement;
@@ -313,6 +349,13 @@ protected:
     ///Keep track of the contact manifolds
     btManifoldArray m_manifoldArray;
 
+    ///
+    btPairCachingGhostObject* m_ghostObject;
+
+    ///Is also in m_ghostObject, but it needs to be convex,
+    ///so we store it here to avoid upcast
+    btConvexShape* m_convexShape;
+
 private:
     ///
     void DrawLine( osg::Vec3d startPoint, osg::Vec3d endPoint );
@@ -320,8 +363,6 @@ private:
     ///
     osg::ref_ptr< osg::Geode > m_lineGeode;
 
-    ///
-    double m_elapsedFallTime;
 };
 
 } // end scenegraph
