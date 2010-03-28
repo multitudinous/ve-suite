@@ -554,6 +554,7 @@ void App::preFrame()
         EnvironmentHandler::instance()->PreFrameUpdate();
     }
     ///////////////////////
+    vprDEBUG( vesDBG, 3 ) << "|End App::preFrame" << std::endl << vprDEBUG_FLUSH;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void App::latePreFrame()
@@ -759,13 +760,13 @@ void App::latePreFrame()
             ves::xplorer::scenegraph::SceneManager::instance()->
                 GetActiveNavSwitchNode()->GetMat() );
 
-    vprDEBUG( vesDBG, 3 ) << "|App::End latePreFrame" 
+    vprDEBUG( vesDBG, 3 ) << "|End App::latePreFrame" 
         << std::endl << vprDEBUG_FLUSH;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void App::intraFrame()
 {
-    vprDEBUG( vesDBG, 3 ) << "|intraFrame" << std::endl << vprDEBUG_FLUSH;
+    vprDEBUG( vesDBG, 3 ) << "|App::intraFrame" << std::endl << vprDEBUG_FLUSH;
     // Do nothing here
     // Usually slows things down
 }
@@ -779,7 +780,7 @@ void App::contextPostDraw()
 void App::postFrame()
 {
     VPR_PROFILE_GUARD_HISTORY( "App::postFrame", 20 );
-    vprDEBUG( vesDBG, 3 ) << "|postFrame" << std::endl << vprDEBUG_FLUSH;
+    vprDEBUG( vesDBG, 3 ) << "|App::postFrame" << std::endl << vprDEBUG_FLUSH;
 
     time_since_start = _timer.delta_s( _start_tick, _timer.tick() );
 
@@ -799,7 +800,7 @@ void App::postFrame()
         m_captureNextFrame = false;
     }
 
-    vprDEBUG( vesDBG, 3 ) << "|End postFrame" << std::endl << vprDEBUG_FLUSH;
+    vprDEBUG( vesDBG, 3 ) << "|End App::postFrame" << std::endl << vprDEBUG_FLUSH;
 }
 ////////////////////////////////////////////////////////////////////////////////
 ///Remember that this is called in parrallel in a multiple context situation

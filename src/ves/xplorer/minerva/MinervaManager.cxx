@@ -218,8 +218,8 @@ void MinervaManager::PreFrameUpdate()
         // Remove all tiles that are ready for deletion.
         _body->purgeTiles();
     }
-    vprDEBUG( vesDBG, 3 ) << "|MinervaManager::LatePreFrameUpdate End" 
-    << std::endl << vprDEBUG_FLUSH;
+    vprDEBUG( vesDBG, 3 ) << "|\tMinervaManager::LatePreFrameUpdate End" 
+        << std::endl << vprDEBUG_FLUSH;
 }
 ///////////////////////////////////////////////////////////////////////////////
 //
