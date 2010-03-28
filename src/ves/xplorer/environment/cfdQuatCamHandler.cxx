@@ -34,7 +34,7 @@
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/communication/CommunicationHandler.h>    //This needs to be first
 #include <ves/xplorer/Debug.h>
-#include <ves/xplorer/ModelHandler.h>
+#include <ves/xplorer/command/CommandManager.h>
 
 #include <ves/xplorer/util/fileIO.h>
 
@@ -67,6 +67,7 @@
 #include <string>
 
 using namespace ves::xplorer;
+using namespace ves::xplorer::command;
 
 vprSingletonImp( cfdQuatCamHandler );
 
@@ -602,8 +603,8 @@ void cfdQuatCamHandler::PreFrameUpdate()
 {
     //If a quat is active this will move the cam to the next location
     currentFrame += 1;
-    ves::open::xml::CommandPtr tempCommand = 
-        ModelHandler::instance()->GetXMLCommand();
+    const ves::open::xml::CommandPtr tempCommand = 
+        CommandManager::instance()->GetXMLCommand();
     if( tempCommand )
     {
         vprDEBUG( vesDBG, 3 )

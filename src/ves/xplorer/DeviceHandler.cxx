@@ -33,7 +33,7 @@
 
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/DeviceHandler.h>
-#include <ves/xplorer/ModelHandler.h>
+#include <ves/xplorer/command/CommandManager.h>
 
 #include <ves/xplorer/device/KeyboardMouse.h>
 #include <ves/xplorer/device/Wand.h>
@@ -60,6 +60,7 @@
 #include <osg/BoundingSphere>
 
 using namespace ves::xplorer;
+using namespace ves::xplorer::command;
 
 vprSingletonImp( DeviceHandler );
 
@@ -150,7 +151,7 @@ void DeviceHandler::EnableDevice(
 void DeviceHandler::ExecuteCommands()
 {
     const ves::open::xml::CommandPtr tempCommand = 
-        ModelHandler::instance()->GetXMLCommand();
+        CommandManager::instance()->GetXMLCommand();
     if( !tempCommand )
     {
         return;

@@ -38,6 +38,8 @@
 #include <ves/xplorer/ModelHandler.h>
 #include <ves/xplorer/Model.h>
 
+#include <ves/xplorer/command/CommandManager.h>
+
 #include <ves/xplorer/device/cfdCursor.h>
 #include <ves/xplorer/device/KeyboardMouse.h>
 
@@ -93,6 +95,7 @@ vprSingletonImpLifetime( ves::xplorer::EnvironmentHandler, 1 );
 
 using namespace ves::xplorer::scenegraph;
 using namespace ves::xplorer::util;
+using namespace ves::xplorer::command;
 
 namespace ves
 {
@@ -344,7 +347,7 @@ void EnvironmentHandler::LatePreFrameUpdate()
     // Update Navigation variables
     vprDEBUG( vesDBG, 3 ) << "|\tEnvironmentHandler::PreFrameUpdate " << std::endl << vprDEBUG_FLUSH;
 
-    ves::open::xml::CommandPtr tempCommand = ModelHandler::instance()->GetXMLCommand();
+    const ves::open::xml::CommandPtr tempCommand = CommandManager::instance()->GetXMLCommand();
     if( tempCommand )
     {
         vprDEBUG( vesDBG, 3 ) << "|\tEnvironmentHandler::LatePreFrameUpdate Command Name : "

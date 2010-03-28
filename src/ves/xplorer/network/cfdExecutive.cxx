@@ -42,6 +42,8 @@
 #include <ves/xplorer/Model.h>
 #include <ves/xplorer/network/NetworkSystemView.h>
 
+#include <ves/xplorer/command/CommandManager.h>
+
 #include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/XMLReaderWriter.h>
 #include <ves/open/xml/Command.h>
@@ -90,6 +92,8 @@ using namespace ves::xplorer::scenegraph;
 using namespace ves::open::xml;
 using namespace ves::xplorer::plugin;
 using namespace ves::xplorer::network;
+using namespace ves::xplorer::command;
+
 ////////////////////////////////////////////////////////////////////////////////
 vprSingletonImpLifetime( ves::xplorer::network::cfdExecutive, 0 );
 ////////////////////////////////////////////////////////////////////////////////
@@ -368,7 +372,7 @@ void cfdExecutive::PreFrameUpdate( void )
     }
 
     //process the current command form the gui
-    const CommandPtr tempCommand = ModelHandler::instance()->GetXMLCommand();
+    const CommandPtr tempCommand = CommandManager::instance()->GetXMLCommand();
     if( tempCommand )
     {
         std::map< std::string, ves::xplorer::event::EventHandler* >::iterator

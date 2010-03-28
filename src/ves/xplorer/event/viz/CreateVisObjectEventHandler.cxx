@@ -31,6 +31,9 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/xplorer/event/viz/CreateVisObjectEventHandler.h>
+
+#include <ves/xplorer/command/CommandManager.h>
+
 #include <ves/xplorer/Model.h>
 #include <ves/xplorer/ModelCADHandler.h>
 #include <ves/xplorer/ModelHandler.h>
@@ -87,6 +90,7 @@ using namespace ves::xplorer::event::viz;
 using namespace ves::xplorer;
 using namespace ves::xplorer::scenegraph;
 using namespace ves::xplorer::volume;
+using namespace ves::xplorer::command;
 
 ////////////////////////////////////////////////////////////////////////////
 //Constructor                                                             //
@@ -558,7 +562,7 @@ void CreateVisObjectEventHandler::Execute( const ves::open::xml::XMLObjectPtr& x
     if( ModelHandler::instance()->GetActiveModel() && activeObject )
     {
         activeObject->SetActiveDataSet( ModelHandler::instance()->GetActiveModel()->GetActiveDataSet() );
-        activeObject->SetVECommand( ModelHandler::instance()->GetXMLCommand() );
+        activeObject->SetVECommand( CommandManager::instance()->GetXMLCommand() );
         activeObject->UpdateCommand();
         ModelHandler::instance()->GetActiveModel()->GetModelCADHandler()->MakeCADRootTransparent();
     }

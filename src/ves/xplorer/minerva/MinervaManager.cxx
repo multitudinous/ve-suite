@@ -41,7 +41,7 @@
 #include <ves/util/commands/Minerva.h>
 #include <ves/open/xml/Command.h>
 #include <ves/xplorer/Debug.h>
-#include <ves/xplorer/ModelHandler.h>
+#include <ves/xplorer/command/CommandManager.h>
 #include <ves/xplorer/scenegraph/SceneManager.h>
 
 #include <osg/CoordinateSystemNode>
@@ -181,8 +181,8 @@ void MinervaManager::PreFrameUpdate()
 {
     vprDEBUG( vesDBG, 3 ) << "|\tMinervaManager::LatePreFrameUpdate" 
         << std::endl << vprDEBUG_FLUSH;
-    ves::open::xml::CommandPtr tempCommand =
-        ves::xplorer::ModelHandler::instance()->GetXMLCommand();
+    const ves::open::xml::CommandPtr tempCommand =
+        ves::xplorer::command::CommandManager::instance()->GetXMLCommand();
     if ( tempCommand )
     {
         const std::string name ( tempCommand->GetCommandName() );

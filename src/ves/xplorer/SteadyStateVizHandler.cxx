@@ -39,6 +39,8 @@
 #include <ves/xplorer/EnvironmentHandler.h>
 #include <ves/xplorer/ModelHandler.h>
 
+#include <ves/xplorer/command/CommandManager.h>
+
 #include <ves/xplorer/device/cfdCursor.h>
 
 #include <ves/xplorer/environment/cfdEnum.h>
@@ -87,6 +89,8 @@
 #include <vtkAlgorithm.h>
 
 vprSingletonImpLifetime( ves::xplorer::SteadyStateVizHandler, 1 );
+
+using namespace ves::xplorer::command;
 
 namespace ves
 {
@@ -220,10 +224,11 @@ void SteadyStateVizHandler::InitScene()
 void SteadyStateVizHandler::PreFrameUpdate()
 {
     //Process the current command form the gui
-    if( ModelHandler::instance()->GetXMLCommand() )
+    if( CommandManager::instance()->GetXMLCommand() )
     {
         std::map< std::string, ves::xplorer::event::EventHandler* >::iterator currentEventHandler;
-        ves::open::xml::CommandPtr tempCommand = ModelHandler::instance()->GetXMLCommand();
+        const ves::open::xml::CommandPtr tempCommand = 
+            CommandManager::instance()->GetXMLCommand();
         currentEventHandler = _eventHandlers.find( tempCommand->GetCommandName() );
         if( currentEventHandler != _eventHandlers.end() )
         {

@@ -101,8 +101,6 @@ public:
     void PreFrameUpdate( void );
     ///This is called in context predraw when there is a valid context available
     void ContextPreDrawUpdate();
-    ///Returns the current xml command
-    const ves::open::xml::CommandPtr& GetXMLCommand( void );
 
     vtkPolyData* GetArrow( void );
     Model* GetModel( int );

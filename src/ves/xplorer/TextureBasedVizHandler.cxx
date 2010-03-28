@@ -32,6 +32,8 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/xplorer/TextureBasedVizHandler.h>
 
+#include <ves/xplorer/command/CommandManager.h>
+
 #include <ves/xplorer/Debug.h>
 #include <ves/xplorer/Model.h>
 #include <ves/xplorer/ModelHandler.h>
@@ -77,6 +79,8 @@
 vprSingletonImpLifetime( ves::xplorer::TextureBasedVizHandler, 1 );
 using namespace ves::xplorer::volume;
 using namespace ves::xplorer;
+using namespace ves::xplorer::command;
+
 //////////////////////////////////////////////////////////
 //Constructors                                          //
 //////////////////////////////////////////////////////////
@@ -578,10 +582,10 @@ void TextureBasedVizHandler::PreFrameUpdate()
 {
     //if ( ModelHandler::instance()->GetActiveModel() )
     {
-        if( ModelHandler::instance()->GetXMLCommand() )
+        if( CommandManager::instance()->GetXMLCommand() )
         {
             std::map<std::string, ves::xplorer::event::TextureBasedEventHandler*>::iterator currentEventHandler;
-            ves::open::xml::CommandPtr tbvizCommand = ModelHandler::instance()->GetXMLCommand();
+            const ves::open::xml::CommandPtr tbvizCommand = CommandManager::instance()->GetXMLCommand();
             currentEventHandler = _eventHandlers.find( tbvizCommand->GetCommandName() );
             if( currentEventHandler != _eventHandlers.end() )
             {
