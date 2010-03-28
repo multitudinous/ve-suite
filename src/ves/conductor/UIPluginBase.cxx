@@ -2451,7 +2451,7 @@ wxMenu* UIPluginBase::SetupPluginBasePopupMenu()
 ////////////////////////////////////////////////////////////////////////////////
 void UIPluginBase::MessageLog( const char* msg )
 {
-    ::wxLogMessage(  wxString( msg, wxConvUTF8 ) );
+    wxLogMessage(  wxString( msg, wxConvUTF8 ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIPluginBase::SetPluginType( const std::string& pluginType )

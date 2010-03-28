@@ -532,7 +532,7 @@ VjObs_ptr CORBAServiceList::GetXplorerPointer( void )
 ////////////////////////////////////////////////////////////////////////////////
 void CORBAServiceList::MessageLog( const char* msg )
 {
-    ::wxLogMessage(  wxString( msg, wxConvUTF8 ) );
+    wxLogMessage(  wxString( msg, wxConvUTF8 ) );
 /*
     if( pelog == NULL )
     {

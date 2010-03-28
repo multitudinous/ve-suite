@@ -1911,7 +1911,7 @@ void AppFrame::ViewResult( wxCommandEvent& WXUNUSED( event ) )
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::Log( const char* msg )
 {
-    ::wxLogMessage(  wxString( msg, wxConvUTF8 ) );
+    wxLogMessage(  wxString( msg, wxConvUTF8 ) );
     //serviceList->GetMessageLog()->SetMessage( msg );
 }
 ////////////////////////////////////////////////////////////////////////////////

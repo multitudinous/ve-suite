@@ -147,7 +147,7 @@ ACE_THROW_SPEC((
     {
         //_mutex.acquire();
         ///wxLogMessage is not thread safe...can cause problems
-        ::wxLogMessage( wxString( tempString.c_str(), wxConvUTF8 ) );
+        wxLogMessage( wxString( tempString.c_str(), wxConvUTF8 ) );
         //_mutex.release();
 
         //logWindow->SetMessage( tempString.c_str() );
@@ -184,7 +184,7 @@ ACE_THROW_SPEC((
         if( !temp )
         {
             //_mutex.acquire();
-            ::wxLogMessage( wxString( "NULL Command", wxConvUTF8 ) );
+            wxLogMessage( wxString( "NULL Command", wxConvUTF8 ) );
             //_mutex.release();
         }
         m_commandNameMap[ temp->GetCommandName()] = temp;
@@ -233,7 +233,7 @@ ACE_THROW_SPEC((
         xmlObjects.at( 0 ) );
     if( !temp )
     {
-        ::wxLogMessage( wxString( "NULL Command", wxConvUTF8 ) );
+        wxLogMessage( wxString( "NULL Command", wxConvUTF8 ) );
     }
     
     ///Pass data off to dynamic data buffer engine if the command is one from

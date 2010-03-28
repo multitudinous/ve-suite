@@ -827,7 +827,7 @@ void DataSetLoaderUI::OnDeleteDataset( wxCommandEvent& WXUNUSED( event ) )
 
     if( !dataFileDVP )
     {
-        ::wxLogMessage(  wxString( "This dataset has no VTK dataset.", wxConvUTF8 ) );
+        wxLogMessage(  wxString( "This dataset has no VTK dataset.", wxConvUTF8 ) );
         return;
     }
     std::string tempDataSetName =
