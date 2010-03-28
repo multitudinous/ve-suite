@@ -49,6 +49,10 @@
 #include <vtkDataArraySelection.h>
 #include <vtkMultiBlockDataSet.h>
 #include <vtkDataObject.h>
+#include <vtkIVWriter.h>
+#include <vtkTriangleFilter.h>
+#include <vtkCompositeDataGeometryFilter.h>
+#include <vtkPolyDataNormals.h>
 
 #include <iostream>
 #include <iomanip>
@@ -195,7 +199,51 @@ void EnSightTranslator::EnSightTranslateCbk::Translate( vtkDataObject*& outputDa
                 }
                 //vtkDataSet* tmpDSet = vtkUnstructuredGrid::New();
                 outputDataset->ShallowCopy( reader->GetOutput() );
-                //appendFilter->Delete();
+                
+                //Now dump geometry if it is available
+                if( toVTK->GetExtractGeometry() )
+                {
+                    vtkCompositeDataGeometryFilter* geomFilter = vtkCompositeDataGeometryFilter::New();
+                    geomFilter->SetInputConnection( reader->GetOutputPort() );
+                    //geomFilter->ExtentClippingOn();
+                    //geomFilter->PointClippingOn();
+                    //geomFilter->CellClippingOn();
+                    geomFilter->Update();
+                    
+                    
+                    vtkTriangleFilter* triFilter = vtkTriangleFilter::New();
+                    triFilter->SetInputConnection( geomFilter->GetOutputPort() );
+                    triFilter->PassVertsOn();
+                    triFilter->PassLinesOff();
+                    triFilter->Update();
+                    
+                    /*
+                    vtkPolyDataNormals* pdNormals = vtkPolyDataNormals::New();
+                    pdNormals->SplittingOff();
+                    pdNormals->ConsistencyOn();
+                    pdNormals->ComputeCellNormalsOn();
+                    pdNormals->SetInputConnection( triFilter->GetOutputPort() );
+                    pdNormals->Update();
+                    */
+                    
+                    std::ostringstream strm;
+                    strm << EnSightToVTK->GetOutputFileName()
+                        << "_"
+                        << std::setfill( '0' )
+                        << std::setw( 6 )
+                        << j << ".iv";
+                    
+                    vtkIVWriter* ivWriter = vtkIVWriter::New();
+                    ivWriter->SetInputConnection( triFilter->GetOutputPort() );
+                    ivWriter->SetFileName( strm.str().c_str() );
+                    ivWriter->Write();
+                    triFilter->Delete();
+                    //pdNormals->Delete();
+                    ivWriter->Delete();
+                    geomFilter->Delete();
+                }
+                
+                 //appendFilter->Delete();
 
                 //get the info about the data in the data set
                 /*if ( outputDataset->GetPointData()->GetNumberOfArrays() == 0 )
