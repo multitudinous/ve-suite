@@ -99,10 +99,6 @@ public:
     ///\param input Flag to insure translation does not go below zero plane
     void SetSubZeroFlag( int zero );
 
-    ///New function for new VECommand structure
-    ///\param veCommand Sets the Command used for navigation
-    void SetVECommand( ves::open::xml::CommandPtr veCommand );
-
 private:
     gadget::PositionInterface head; ///<VRJuggler's head positional interface
 

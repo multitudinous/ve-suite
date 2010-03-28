@@ -34,6 +34,8 @@
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/device/Wand.h>
 
+#include <ves/xplorer/command/CommandManager.h>
+
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>
 
@@ -84,6 +86,7 @@ using namespace gadget;
 using namespace ves::xplorer::device;
 using namespace ves::xplorer::scenegraph;
 using namespace ves::open::xml;
+using namespace ves::xplorer::command;
 
 ////////////////////////////////////////////////////////////////////////////////
 Wand::Wand()
@@ -185,6 +188,8 @@ void Wand::ProcessEvents()
     //This should be changed once our complete command structure is in place
     std::string commandType;
     std::string newCommand;
+    command = CommandManager::instance()->GetXMLCommand();
+
     if( command )
     {
         commandType = command->GetCommandName();
@@ -388,12 +393,6 @@ void Wand::SetStartEndPoint( osg::Vec3d* startPoint, osg::Vec3d* endPoint )
 void Wand::SetHeadRotationFlag( int input )
 {
     rotationFlag = input;
-}
-////////////////////////////////////////////////////////////////////////////////
-void Wand::SetVECommand( CommandPtr veCommand )
-{
-    Device::SetVECommand( veCommand );
-    command = veCommand;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::UpdateSelectionLine( bool drawLine )

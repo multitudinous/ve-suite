@@ -99,8 +99,6 @@ public:
     void RemoveRasterLayer ( const std::string& guid );
     void RemoveModel ( const std::string& guid );
 
-    void SetVECommand ( CommandPtr command );
-
     void UpdateModel ( ModelWrapper* );
 
 private:

@@ -414,12 +414,6 @@ void Gloves::SetHeadRotationFlag( int input )
     rotationFlag = input;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Gloves::SetVECommand( CommandPtr veCommand )
-{
-    Device::SetVECommand( veCommand );
-    command = veCommand;
-}
-////////////////////////////////////////////////////////////////////////////////
 void Gloves::SelectObject()
 {
     osg::Vec3d startPoint, endPoint;

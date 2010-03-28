@@ -121,10 +121,6 @@ public:
     ///\param input Indicates which rotation method is needed
     void SetHeadRotationFlag( int input );
 
-    ///New function for new VECommand structure
-    ///\param veCommand Sets the Command used for navigation
-    void SetVECommand( ves::open::xml::CommandPtr veCommand );
-
     ///Does not let the user go below the ground plane at 0,0,0
     ///\param input Flag to insure translation does not go below zero plane
     void SetSubZeroFlag( int input );

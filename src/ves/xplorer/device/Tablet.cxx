@@ -35,6 +35,8 @@
 #include <ves/xplorer/device/Tablet.h>
 #include <ves/xplorer/device/KeyboardMouse.h>
 
+#include <ves/xplorer/command/CommandManager.h>
+
 #include <ves/xplorer/environment/cfdEnum.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
@@ -63,6 +65,7 @@ using namespace gadget;
 using namespace ves::xplorer::device;
 using namespace ves::xplorer::scenegraph;
 using namespace ves::open::xml;
+using namespace ves::xplorer::command;
 
 ////////////////////////////////////////////////////////////////////////////////
 Tablet::Tablet( )
@@ -95,23 +98,18 @@ void Tablet::Initialize()
 ////////////////////////////////////////////////////////////////////////////////
 void Tablet::ProcessEvents()
 {
-    //This is NOT how we should do things.
-    //Command should allowed to be null but because we always
-    //have to have a command due to our command structure, this hack must be in here.
-    //This should be changed once our complete command structure is in place.
+    vprDEBUG( vesDBG, 3 ) << "|\tTablet Navigate ProcessEvents" 
+        << std::endl << vprDEBUG_FLUSH;
+    command = CommandManager::instance()->GetXMLCommand();
 
-    std::string commandType;
+    if( !command )
+    {
+        return;
+    }
+
+    const std::string commandType = command->GetCommandName();
+
     std::string newCommand;
-    if( command )
-    {
-        commandType = command->GetCommandName();
-    }
-    else
-    {
-        commandType = "wait";
-        newCommand = "wait";
-    }
-
     if( !commandType.compare( "Navigation_Data" ) )
     {
         DataValuePairPtr commandData = command->GetDataValuePair( 0 );
@@ -577,11 +575,5 @@ void Tablet::SetHeadRotationFlag( int input )
 void Tablet::SetSubZeroFlag( int input )
 {
     subzeroFlag = input;
-}
-////////////////////////////////////////////////////////////////////////////////
-void Tablet::SetVECommand( CommandPtr veCommand )
-{
-    Device::SetVECommand( veCommand );
-    command = veCommand;
 }
 ////////////////////////////////////////////////////////////////////////////////

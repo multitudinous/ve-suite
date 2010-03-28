@@ -147,10 +147,6 @@ public:
     ///This should be pure virtual, but isn't because of GlobalBase
     virtual void ProcessEvents(){;}
 
-    ///New function for new VECommand structure
-    ///\param veCommand Sets the Command used for navigation
-    virtual void SetVECommand( ves::open::xml::CommandPtr command );
-
     ///This is a pure virtual function from GlobalBase
     virtual void UpdateCommand();
     
