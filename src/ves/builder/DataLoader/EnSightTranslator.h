@@ -92,8 +92,6 @@ protected:
     EnSightPreTranslateCbk cmdParser;
     EnSightTranslateCbk ensightToVTK;
 };
-protected:
-    std::vector< std::string > commandLineArgs;
 }
 }
 }
