@@ -32,7 +32,7 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
 // --- VE-Suite Includes --- //
-#include <ves/xplorer/communication/CommandHandler.h>    //This needs to be first
+#include <ves/xplorer/communication/CommunicationHandler.h>    //This needs to be first
 #include <ves/xplorer/Debug.h>
 #include <ves/xplorer/ModelHandler.h>
 
@@ -595,7 +595,7 @@ void cfdQuatCamHandler::UpdateViewGUIPointData()
         viewPointGUIData->AddDataValuePair( viewPointNames );
         name.clear( );
     }
-    ves::xplorer::CommandHandler::instance()->SetXMLCommand( viewPointGUIData );
+    ves::xplorer::communication::CommunicationHandler::instance()->SetXMLCommand( viewPointGUIData );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdQuatCamHandler::PreFrameUpdate()
