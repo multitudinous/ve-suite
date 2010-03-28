@@ -401,7 +401,7 @@ void Gloves::ProcessEvents()
         activeDCS->SetQuat( world_quat );
     }
 */
-    vprDEBUG( vesDBG, 3 ) << "|\tEnd Navigate" << std::endl << vprDEBUG_FLUSH;
+    vprDEBUG( vesDBG, 3 ) << "|\tEnd Gloves::ProcessEvents" << std::endl << vprDEBUG_FLUSH;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Gloves::SetStartEndPoint( osg::Vec3d* startPoint, osg::Vec3d* endPoint )

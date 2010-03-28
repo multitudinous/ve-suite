@@ -146,6 +146,8 @@ Wand::~Wand()
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::ProcessEvents()
 {
+    vprDEBUG( vesDBG, 3 ) << "|\tWand::ProcessEvents" 
+        << std::endl << vprDEBUG_FLUSH;
     ves::xplorer::scenegraph::DCS* const activeDCS =
         ves::xplorer::DeviceHandler::instance()->GetActiveDCS();
 
@@ -382,7 +384,7 @@ void Wand::ProcessEvents()
         }
     }
 
-    vprDEBUG( vesDBG, 3 ) << "|\tEnd Navigate" << std::endl << vprDEBUG_FLUSH;
+    vprDEBUG( vesDBG, 3 ) << "|\tEnd Wand::ProcessEvents" << std::endl << vprDEBUG_FLUSH;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::SetStartEndPoint( osg::Vec3d* startPoint, osg::Vec3d* endPoint )
