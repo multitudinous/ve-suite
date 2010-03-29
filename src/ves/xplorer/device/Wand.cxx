@@ -34,8 +34,6 @@
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/device/Wand.h>
 
-#include <ves/xplorer/command/CommandManager.h>
-
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>
 
@@ -86,7 +84,6 @@ using namespace gadget;
 using namespace ves::xplorer::device;
 using namespace ves::xplorer::scenegraph;
 using namespace ves::open::xml;
-using namespace ves::xplorer::command;
 
 ////////////////////////////////////////////////////////////////////////////////
 Wand::Wand()
@@ -101,7 +98,6 @@ Wand::Wand()
     m_buttonPushed( false ),
     m_manipulatorSelected( false )
 {
-    command = ves::open::xml::CommandPtr();
     wand.init( "VJWand" );
     head.init( "VJHead" );
     // trigger (and top right button) TODO: I think this is unused ?
@@ -144,7 +140,7 @@ Wand::~Wand()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Wand::ProcessEvents()
+void Wand::ProcessEvents( ves::open::xml::CommandPtr command )
 {
     vprDEBUG( vesDBG, 3 ) << "|\tWand::ProcessEvents" 
         << std::endl << vprDEBUG_FLUSH;
@@ -190,7 +186,6 @@ void Wand::ProcessEvents()
     //This should be changed once our complete command structure is in place
     std::string commandType;
     std::string newCommand;
-    command = CommandManager::instance()->GetXMLCommand();
 
     if( command )
     {

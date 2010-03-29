@@ -89,7 +89,7 @@ public:
     virtual void Initialize();
 
     ///Processes tablet events
-    virtual void ProcessEvents();
+    virtual void ProcessEvents( ves::open::xml::CommandPtr command );
 
     ///Set the rotation method
     ///\param input Indicates which rotation method is needed
@@ -121,8 +121,6 @@ private:
 
     int rotationFlag; ///<Rotation flag
     int subzeroFlag; ///<Zero plane flag
-
-    ves::open::xml::CommandPtr command; ///<Stores xml command
 
 };
 } //end device

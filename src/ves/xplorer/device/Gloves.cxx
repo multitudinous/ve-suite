@@ -242,7 +242,7 @@ Gloves::~Gloves()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Gloves::ProcessEvents()
+void Gloves::ProcessEvents( ves::open::xml::CommandPtr command )
 {
     UpdateRightHandGlove();
     UpdateLeftHandGlove();

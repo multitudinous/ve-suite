@@ -337,7 +337,7 @@ void KeyboardMouse::SetScreenCornerValues(
     mZValScreen = values[ "zval" ];
 }
 ////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::ProcessEvents()
+void KeyboardMouse::ProcessEvents( ves::open::xml::CommandPtr command )
 {
     //Get the event queue
     gadget::KeyboardMouse::EventQueue evt_queue =

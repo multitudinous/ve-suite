@@ -35,8 +35,6 @@
 #include <ves/xplorer/device/Tablet.h>
 #include <ves/xplorer/device/KeyboardMouse.h>
 
-#include <ves/xplorer/command/CommandManager.h>
-
 #include <ves/xplorer/environment/cfdEnum.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
@@ -65,7 +63,6 @@ using namespace gadget;
 using namespace ves::xplorer::device;
 using namespace ves::xplorer::scenegraph;
 using namespace ves::open::xml;
-using namespace ves::xplorer::command;
 
 ////////////////////////////////////////////////////////////////////////////////
 Tablet::Tablet( )
@@ -74,7 +71,6 @@ Tablet::Tablet( )
 {
     head.init( "VJHead" );
 
-    command = CommandPtr();
     rotationFlag = 1;
     subzeroFlag = 0;
     Initialize();
@@ -96,11 +92,10 @@ void Tablet::Initialize()
     rotationStepSize = 1.0f;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Tablet::ProcessEvents()
+void Tablet::ProcessEvents( ves::open::xml::CommandPtr command )
 {
     vprDEBUG( vesDBG, 3 ) << "|\tTablet Navigate ProcessEvents" 
         << std::endl << vprDEBUG_FLUSH;
-    command = CommandManager::instance()->GetXMLCommand();
 
     if( !command )
     {

@@ -224,7 +224,8 @@ void DeviceHandler::ProcessDeviceEvents()
         m_deviceBeingProcessed = itr->second;
         if( m_deviceBeingProcessed->IsEnabled() )
         {
-            m_deviceBeingProcessed->ProcessEvents();
+            m_deviceBeingProcessed->ProcessEvents( 
+                CommandManager::instance()->GetXMLCommand() );
         }
     }
 

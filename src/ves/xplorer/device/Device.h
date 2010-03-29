@@ -41,6 +41,8 @@
 
 #include <ves/xplorer/scenegraph/DCS.h>
 
+#include <ves/open/xml/CommandPtr.h>
+
 // --- vrJugglerIncludes --- //
 #include <gmtl/Point.h>
 
@@ -145,7 +147,7 @@ public:
 
     ///Processes device events
     ///This should be pure virtual, but isn't because of GlobalBase
-    virtual void ProcessEvents(){;}
+    virtual void ProcessEvents( ves::open::xml::CommandPtr command ){;}
 
     ///This is a pure virtual function from GlobalBase
     virtual void UpdateCommand();

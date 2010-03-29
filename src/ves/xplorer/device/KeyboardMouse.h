@@ -106,7 +106,7 @@ public:
     virtual KeyboardMouse* AsKeyboardMouse();
 
     ///Processes keyboard events
-    virtual void ProcessEvents();
+    virtual void ProcessEvents( ves::open::xml::CommandPtr command );
 
     ///Sets the screen corner values
     ///\param values A map of strings to doubles

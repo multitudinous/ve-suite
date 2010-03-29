@@ -108,7 +108,7 @@ public:
     virtual void Initialize();
 
     ///Processes wand events
-    virtual void ProcessEvents();
+    virtual void ProcessEvents( ves::open::xml::CommandPtr command );
 
     ///Set the rotation method
     ///\param input Indicates which rotation method is needed
@@ -191,8 +191,6 @@ private:
     double m_planeConstants[ 4 ];
     int rotationFlag; ///<Rotation flag
     int subzeroFlag; ///<Zero plane flag
-
-    ves::open::xml::CommandPtr command; ///<Stores xml command
 
     double deltaTrans[ 3 ]; ///<Stores difference in translation from last position to to current
 

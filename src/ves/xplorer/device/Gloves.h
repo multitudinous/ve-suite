@@ -115,7 +115,7 @@ public:
     virtual void Initialize();
 
     ///Processes keyboard events
-    virtual void ProcessEvents();
+    virtual void ProcessEvents( ves::open::xml::CommandPtr command );
 
     ///Set the rotation method
     ///\param input Indicates which rotation method is needed
