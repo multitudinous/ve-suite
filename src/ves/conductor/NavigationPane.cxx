@@ -274,7 +274,11 @@ void NavigationPane::BuildPane( void )
 
     wxBoxSizer* navCol = new wxBoxSizer( wxVERTICAL );
 
+#if wxCHECK_VERSION( 2, 9, 1 )
+    wxGridSizer* topSizer = new wxGridSizer( 11 );
+#else
     wxGridSizer* topSizer = new wxGridSizer( 11, 4 );
+#endif
 
     //************Loading up the bitmaps
     _image1 = new wxImage( x_left_xpm );
@@ -433,7 +437,11 @@ void NavigationPane::BuildPane( void )
             wxMINIMIZE_BOX | wxTHICK_FRAME );
 #endif
 
+#if wxCHECK_VERSION( 2, 9, 1 )
+    wxGridSizer* picSizer = new wxGridSizer( 1 );
+#else
     wxGridSizer* picSizer = new wxGridSizer( 1, 1 );
+#endif
     picSizer->Add( coordpic, 1, wxALIGN_CENTER_HORIZONTAL );
 
     // add step size sliders
