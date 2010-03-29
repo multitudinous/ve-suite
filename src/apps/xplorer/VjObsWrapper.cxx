@@ -51,7 +51,9 @@
 #include <ves/open/xml/Command.h>
 
 #include <iostream>
+
 #include <boost/concept_check.hpp>
+#include <boost/algorithm/string/case_conv.hpp>
 
 #include <vpr/IO/Socket/InetAddr.h>
 #include <jccl/RTRC/ConfigManager.h>
@@ -150,10 +152,10 @@ void VjObsWrapper::init( CosNaming::NamingContext* input,
     if( isCluster )
     {
         std::cout << "----------------CLUSTER INFO-------------------"
-        << std::endl
-        << "NOTE : Be sure to specify this GUID = " << std::endl
-        << "       15c09c99-ed6d-4994-bbac-83587d4400d1 " << std::endl
-        << "       in the application data config file." << std::endl;
+            << std::endl
+            << "NOTE : Be sure to specify this GUID = " << std::endl
+            << "       15c09c99-ed6d-4994-bbac-83587d4400d1 " << std::endl
+            << "       in the application data config file." << std::endl;
 
         _vjObs->SetClusterMode( true );
         std::string name;
@@ -165,6 +167,9 @@ void VjObsWrapper::init( CosNaming::NamingContext* input,
         masterAddress.getAllLocalAddrs( tempAddrVec, false );
 #endif
 
+        ///Convert master hostname to lower case to do string compares
+        boost::algorithm::to_lower( masterhost );
+        
         std::vector<std::string> toks;
         std::string tempHostname;
         for( size_t i = 0; i < tempAddrVec.size(); ++i )
@@ -184,6 +189,9 @@ void VjObsWrapper::init( CosNaming::NamingContext* input,
 #elif __VJ_version == 2000003
             tempAddrVec.at( i ).getHostname( tempHostname );
 #endif
+            ///Convert complete computer name to lower case to do name compares
+            boost::algorithm::to_lower( tempHostname );
+
             std::cout << "Host name is " << tempHostname << std::endl;
             getStringTokens( tempHostname.c_str(), ".", toks );
             //now toks[0] will be the short host name
@@ -201,6 +209,8 @@ void VjObsWrapper::init( CosNaming::NamingContext* input,
             std::cout << "*** This is a remote graphics node. *** " 
                 << std::endl;
         }
+        std::cout << "---------------END CLUSTER INFO----------------" 
+            << std::endl;
         
     }
     else
