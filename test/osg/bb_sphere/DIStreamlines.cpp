@@ -16,8 +16,11 @@
 #include <osg/Point>
 #include <osg/PointSprite>
 #include <osg/AlphaFunc>
+#include <osg/io_utils>
 
 #include <osgwTools/Shapes.h>
+
+#include <iostream>
 
 osg::ref_ptr< osg::Group > root;
 osg::ref_ptr< osg::Group > largeSphere;
@@ -124,12 +127,16 @@ main( int argc,
     // and play/pause state.
     osg::ref_ptr< PlayStateHandler > psh = new PlayStateHandler;
     viewer.addEventHandler( psh.get() );
+    osg::BoundingSphere bs;
     
     while (!viewer.done())
     {
         // Get time from the PlayStateHandler.
         double simTime = psh->getCurrentTime();
         viewer.frame( simTime );
+        
+        bs = root->computeBound();
+        std::cout << bs.center() << " " << bs.radius() << std::endl;
     }
     
     return( 0 );
