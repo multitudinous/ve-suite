@@ -365,7 +365,15 @@ else:
 #Setup minerva library
 minerva_options = fp_option.FlagPollBasedOption( "Minerva", "Minerva", "1.0", False, True, None, 
 									  compileTest = True, headerToCheck = "Minerva/Core/Data/Object.h" )
-									  
+#Setup qt on linux
+if GetPlatform() == 'linux':
+   qt_options = fp_option.FlagPollBasedOption("Qt libraries",
+      "QtGui QtCore",
+      "4.0", False, True, helpText=None, compileTest=True,
+      headerToCheck="QtCore/qglobal.h")
+   opts.AddOption( qt_options )
+   Export('qt_options')			
+						  
 opts.AddOption( apr_options )
 opts.AddOption( apu_options )
 #opts.AddOption( bullet_options )
@@ -394,7 +402,7 @@ Export( 'opts', 'vtk_options', 'osg_options',
         'gmtl_options', 'vpr_options',
         'gadgeteer_options', 'osgal_options',
         'poco_options', 'osgworks_options',
-		'minerva_options' )
+	'minerva_options' )
 
 ##Display some help
 help_text = """--- VE-Suite Build system ---
