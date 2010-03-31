@@ -75,8 +75,10 @@ class btTypedConstraint;
 
 
 //For testing new delta scroll in juggler on windows
+#if __GADGET_version >= 1003028
 #ifdef VPR_OS_Windows
-//#define JUGGLER_DELTA
+#define JUGGLER_DELTA
+#endif
 #endif
 
 namespace ves
