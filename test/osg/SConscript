@@ -16,6 +16,7 @@ shareSubdirs = Split("""
    vtk_osg_vectors
    vtk_osg_streamlines
    vtk_osg_warp_surface
+   bb_sphere
 """)
 
 ##Run SConscript files in all of those folders.

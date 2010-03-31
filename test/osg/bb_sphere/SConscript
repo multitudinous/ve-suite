@@ -1,0 +1,19 @@
+##Builds a multitude of utilities
+import os, sys, string
+pj = os.path.join
+import SConsAddons.Util as sca_util
+
+Import('baseEnv RootDir ves_pkg LIBDIR GetPlatform buildDir osg_options osgworks_options')
+
+srcDir = os.path.abspath( pj(RootDir, 'test', 'osg', 'bb_sphere' ) )
+sources = sca_util.getSourcesRecursive( srcDir )
+headers = sca_util.getHeadersRecursive( srcDir )
+
+env = ves_pkg.getEnv().Clone()
+osg_options.apply( env )
+osgworks_options.apply( env )
+
+prog = ves_pkg.createProgram('sphereTest' + env["PROGSUFFIX"], env, 'bin')
+
+prog.addSources( sources )
+prog.build()
