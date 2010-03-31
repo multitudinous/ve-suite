@@ -715,8 +715,11 @@ osg::Transform* PhysicsSimulator::CreateOSGBox( osg::Vec3 size )
     shape->setColor( osg::Vec4( 1., 1., 1., 1. ) );
     osg::Geode* geode = new osg::Geode();
     geode->addDrawable( shape );
-    
+    geode->setName( "Ground Plane" );
+
     osg::MatrixTransform* mt = new osg::MatrixTransform();
+    mt->setName( "Physics Ground Plane Transform" );
+
     mt->addChild( geode );
     
     return( mt );
@@ -725,7 +728,6 @@ osg::Transform* PhysicsSimulator::CreateOSGBox( osg::Vec3 size )
 osg::Node* PhysicsSimulator::CreateGround( float w, float h, const osg::Vec3& center )
 {
     osg::Transform* ground = CreateOSGBox( osg::Vec3( w, h, 1.01 ) );
-    
     //TRIANGLE_MESH_SHAPE_PROXYTYPE
     osgbBullet::OSGToCollada converter;
     converter.setSceneGraph( ground );

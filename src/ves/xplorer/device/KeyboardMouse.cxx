@@ -115,7 +115,6 @@
 #include <osg/Geometry>
 #include <osg/LineWidth>
 #include <osg/AutoTransform>
-//#include <osg/PolygonStipple>
 
 // --- osgBullet Includes --- //
 #include <osgwTools/AbsoluteModelTransform.h>

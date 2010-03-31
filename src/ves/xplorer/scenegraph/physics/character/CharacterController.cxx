@@ -128,7 +128,7 @@ void CharacterController::Initialize()
     SetBufferSizeAndWeights( 10, 0.6 );
 
     mMatrixTransform = new osg::MatrixTransform();
-
+    mMatrixTransform->setName( "Character Transform" );
 #ifdef VES_USE_ANIMATED_CHARACTER
     //create animated character
     //idle
@@ -155,10 +155,11 @@ void CharacterController::Initialize()
     mCharacterAnimations->addChild( node3.get() );
     mCharacterAnimations->addChild( node4.get() );
     mCharacterAnimations->setSingleChildOn( 0 );
-    mCharacterAnimations->setName( "Character" );
+    mCharacterAnimations->setName( "Character Switch Controll" );
 
     //for scaling if necessary
     osg::ref_ptr< osg::AutoTransform > scaleDown = new osg::AutoTransform(); 
+    scaleDown->setName( "Character Auto Transform" );
     scaleDown->addChild( mCharacterAnimations.get() );
     scaleDown->setScale( 0.055 );
     scaleDown->setRotation( osg::Quat(
