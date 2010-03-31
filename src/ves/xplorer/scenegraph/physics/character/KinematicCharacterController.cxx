@@ -281,6 +281,7 @@ KinematicCharacterController::KinematicCharacterController()
         osg::StateAttribute::ON | osg::StateAttribute::OVERRIDE );
 
     m_lineGeode = new osg::Geode();
+    m_lineGeode->setName( "Kinematic Character Line Geode" );
     m_lineGeode->setStateSet( stateset.get() );
 
     osg::Group* modelRoot =

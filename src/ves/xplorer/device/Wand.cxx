@@ -546,6 +546,7 @@ void Wand::DrawLine( osg::Vec3d start, osg::Vec3d end )
     }
 
     beamGeode = new osg::Geode();
+    beamGeode->setName( "Wand Beam Geode" );
     beamGeometry = new osg::Geometry();
     beamGeode->addDrawable( beamGeometry.get() );
     beamGeode->setName( this->laserName );
