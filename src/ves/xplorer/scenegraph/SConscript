@@ -38,8 +38,14 @@ osgworks_options.apply( lib_env )
 if osgal_options.isAvailable():
    osgal_options.apply( lib_env )
    lib_env.Append( CPPDEFINES = [ 'VE_SOUND' ] )
-
-
+else:
+   headers.remove( pj( 'physics','sound','Material.h') )
+   headers.remove( pj( 'physics','sound','RemoveSoundVisitor.h') )
+   headers.remove( pj( 'physics','sound','SoundTable.h') )
+   headers.remove( pj( 'physics','sound','SoundUtilities.h') )
+   sources.remove( pj( 'physics','sound','Material.cpp') )
+   sources.remove( pj( 'physics','sound','SoundTable.cpp') )
+   sources.remove( pj( 'physics','sound','SoundUtilities.cpp') )
    
 lib_env.Append( CPPDEFINES = ['VE_SCENEGRAPH_LIBRARY','VE_SCENEGRAPH_UTILS_LIBRARY','VE_NURBS_LIBRARY','VE_NURBS_UTILS_LIBRARY'])
 
