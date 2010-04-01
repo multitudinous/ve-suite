@@ -746,7 +746,7 @@ void KinematicCharacterController::playerStep(
     {
         m_verticalVelocity = m_jumpSpeed;
     }
-    if(m_verticalVelocity < 0.0 && btFabs( m_verticalVelocity ) > btFabs( m_fallSpeed ) )
+    if( m_verticalVelocity < 0.0 && btFabs( m_verticalVelocity ) > btFabs( m_fallSpeed ) )
     {
         m_verticalVelocity = -btFabs( m_fallSpeed );
     }
@@ -884,10 +884,12 @@ btScalar KinematicCharacterController::getMaxSlope() const
 ////////////////////////////////////////////////////////////////////////////////
 bool KinematicCharacterController::onGround() const
 {
+    /*
     if( m_fly || m_jump )
     {
         return false;
     }
+    */
 
     return m_verticalVelocity == 0.0 && m_verticalOffset == 0.0;
 }

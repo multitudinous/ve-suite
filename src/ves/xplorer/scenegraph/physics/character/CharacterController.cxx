@@ -155,7 +155,7 @@ void CharacterController::Initialize()
     mCharacterAnimations->addChild( node3.get() );
     mCharacterAnimations->addChild( node4.get() );
     mCharacterAnimations->setSingleChildOn( 0 );
-    mCharacterAnimations->setName( "Character Switch Controll" );
+    mCharacterAnimations->setName( "Character Switch Control" );
 
     //for scaling if necessary
     osg::ref_ptr< osg::AutoTransform > scaleDown = new osg::AutoTransform(); 
@@ -177,7 +177,7 @@ void CharacterController::Initialize()
     hints->setDetailRatio( 1.0 );
     osg::ref_ptr< osg::ShapeDrawable > shapeDrawable =
         new osg::ShapeDrawable( capsule.get(), hints.get() );
-    shapeDrawable->setName( "Character" );
+    shapeDrawable->setName( "Character Switch Control" );
     shapeDrawable->setColor( osg::Vec4( 1.0, 1.0, 0.0, 1.0 ) );
     geode->addDrawable( shapeDrawable.get() );
 
@@ -627,13 +627,14 @@ void CharacterController::EyeToCenterRayTest(
 
         bool notTheCharacter = false;
 #ifndef VES_USE_ANIMATED_CHARACTER 
-        if( objectHit->getName() != "Character" )
+        if( objectHit->getName() != "Character Switch Control" )
         {
             notTheCharacter = true;
         }
 #else
         osg::Node* tempCharacter = objectHit->getParent( 0 );
-        FindParentWithNameVisitor findParent( tempCharacter, "Character" );
+        FindParentWithNameVisitor findParent(
+            tempCharacter, "Character Switch Control" );
         osg::ref_ptr< osg::Node > tempParent = findParent.GetParentNode();
         if( !tempParent.valid() )
         {

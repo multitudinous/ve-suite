@@ -365,7 +365,7 @@ private:
     ///Wand object that will help track the character for wand position
     ///VRJuggler's wand positional interface
     gadget::PositionInterface wand;
-    
+
     class CharacterTransformCallback : public osg::NodeCallback
     {
     public:
