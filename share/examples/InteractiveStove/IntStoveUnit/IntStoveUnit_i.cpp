@@ -27,12 +27,12 @@ using namespace ves::open::xml;
 Body_Unit_i::Body_Unit_i (Body::Executive_ptr exec, std::string name)
   : UnitWrapper(exec,name)
 {
-	UnitName_=name;
-	return_state = 0;
-	runnum = 0;
-	m_baffNum = 0;
-	m_runNum = 0;
-	New_stove = new Create_stove();
+    UnitName_=name;
+    return_state = 0;
+    runnum = 0;
+    m_baffNum = 0;
+    m_runNum = 0;
+    New_stove = new Create_stove();
 }
 ///////////////////////////////////////////////////////////////////////////////
 Body_Unit_i::~Body_Unit_i (void)
@@ -42,15 +42,15 @@ Body_Unit_i::~Body_Unit_i (void)
 void Body_Unit_i::StartCalc ( ACE_ENV_SINGLE_ARG_DECL )
   ACE_THROW_SPEC (( CORBA::SystemException , Error::EUnknown ))
 {
-	// Add your implementation here
-	std::cout<<UnitName_<<" : Starting Calculations"<<std::endl;
+    // Add your implementation here
+    std::cout<<UnitName_<<" : Starting Calculations"<<std::endl;
     std::ostringstream strm;
     strm << activeId;
 
     //system("rm -f ../star.vtu");
 
-	//ves::open::xml::model::ModelPtr model( new ves::open::xml::model::Model() );
-	//model = xmlModelMap[ strm.str() ];
+    //ves::open::xml::model::ModelPtr model( new ves::open::xml::model::Model() );
+    //model = xmlModelMap[ strm.str() ];
 
     xmlModelMap[ strm.str() ]->GetInput( "numbaffles" )->GetDataValuePair( "numbaffles" )->GetData( numbaffles );
     xmlModelMap[ strm.str() ]->GetInput( "baffle1" )->GetDataValuePair( "baffle1" )->GetData( baffle1 );
@@ -62,10 +62,10 @@ void Body_Unit_i::StartCalc ( ACE_ENV_SINGLE_ARG_DECL )
     xmlModelMap[ strm.str() ]->GetInput( "baffle7" )->GetDataValuePair( "baffle7" )->GetData( baffle7 );
     //xmlModelMap[ strm.str() ]->GetInput( "m_runNum" )->GetDataValuePair( "m_runNum" )->GetData( runNum );
 
-	runnum++;
+    runnum++;
 
-	New_stove->RunNewStove( numbaffles, baffle1, baffle2, baffle3, 
-							baffle4, baffle5, baffle6, baffle7, runnum );
+    New_stove->RunNewStove( numbaffles, baffle1, baffle2, baffle3, 
+                            baffle4, baffle5, baffle6, baffle7, runnum );
       //cout << "|--- Creating VTK Files -------------|"<<endl;
       //system( "./createvtk > /dev/null" );
 
@@ -93,33 +93,33 @@ void Body_Unit_i::StartCalc ( ACE_ENV_SINGLE_ARG_DECL )
    }*/
 
    //Package p;
-	//const char* result;
-	//const char* outport;
-	//bool rv;
+    //const char* result;
+    //const char* outport;
+    //bool rv;
 
-	//p.intfs.resize(1);
+    //p.intfs.resize(1);
 
-	//p.intfs[0].setDouble("numbaffles",numbaffles);
-	//p.intfs[0].setDouble1D("baffle1",baffle1);
-	//p.intfs[0].setDouble1D("baffle2",baffle2);
-	//p.intfs[0].setDouble1D("baffle3",baffle3);
-	//p.intfs[0].setDouble1D("baffle4",baffle4);
-	//p.intfs[0].setDouble1D("baffle5",baffle5);
-	//p.intfs[0].setDouble1D("baffle6",baffle6);
-	//p.intfs[0].setDouble1D("baffle7",baffle7);
-	//p.SetPackName("ExportData");
-	//p.SetSysId("test.xml");
-	//outport = p.Save(rv);
-	//executive_->SetExportData(id_, 0, outport);
+    //p.intfs[0].setDouble("numbaffles",numbaffles);
+    //p.intfs[0].setDouble1D("baffle1",baffle1);
+    //p.intfs[0].setDouble1D("baffle2",baffle2);
+    //p.intfs[0].setDouble1D("baffle3",baffle3);
+    //p.intfs[0].setDouble1D("baffle4",baffle4);
+    //p.intfs[0].setDouble1D("baffle5",baffle5);
+    //p.intfs[0].setDouble1D("baffle6",baffle6);
+    //p.intfs[0].setDouble1D("baffle7",baffle7);
+    //p.SetPackName("ExportData");
+    //p.SetSysId("test.xml");
+    //outport = p.Save(rv);
+    //executive_->SetExportData(id_, 0, outport);
 
-	/*p.SetPackName("result");
-	p.SetSysId("result.xml");
-	p.intfs.clear();
-	result = p.Save(rv);
-	return_state = 1;
-	executive_->SetModuleResult(id_, result); //this marks the end the execution*/
+    /*p.SetPackName("result");
+    p.SetSysId("result.xml");
+    p.intfs.clear();
+    result = p.Save(rv);
+    return_state = 1;
+    executive_->SetModuleResult(id_, result); //this marks the end the execution*/
 
-	string msg;
+    string msg;
     msg = UnitName_+" : Instant calculation, already finished\n";
     //executive_->SetModuleMessage(activeId,msg.c_str());
   }
@@ -299,6 +299,6 @@ void Body_Unit_i::error (std::string msg)
 ///////////////////////////////////////////////////////////////////////////////
 void Body_Unit_i::warning ( std::string msg )
 {
-	msg+="\n";
-	executive_->SetModuleMessage(activeId, msg.c_str());
+    msg+="\n";
+    executive_->SetModuleMessage(activeId, msg.c_str());
 }

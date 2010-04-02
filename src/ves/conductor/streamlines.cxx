@@ -70,7 +70,7 @@ BEGIN_EVENT_TABLE( Streamlines, wxDialog )
     EVT_BUTTON( STREAMLINES_COMPUTE_STREAMLINE_BUTTON, Streamlines::_onCompute )
     EVT_BUTTON( STREAMLINES_SET_SEED_POINTS_BUTTON, Streamlines::SetSeedPoints )
     EVT_BUTTON( wxID_OK, Streamlines::OnClose )
-	EVT_CHECKBOX( STREAMLINES_GPU_TOOLS_CHK, Streamlines::OnGPUCheckTools )
+    EVT_CHECKBOX( STREAMLINES_GPU_TOOLS_CHK, Streamlines::OnGPUCheckTools )
 END_EVENT_TABLE()
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -209,7 +209,7 @@ void Streamlines::CreateControls()
 
     wxButton* _closeButton = new wxButton( itemDialog1, wxID_OK, _T( "Close" ), wxDefaultPosition, wxDefaultSize, 0 );
     itemBoxSizer12->Add( _closeButton, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
-	
+    
     {
         wxStaticBox* gpuToolsStaticSizer = new wxStaticBox( itemDialog1, wxID_ANY, _T( "GPU Tools" ) );
         wxStaticBoxSizer* itemStaticBoxSizer10 = new wxStaticBoxSizer( gpuToolsStaticSizer, wxVERTICAL );
@@ -302,10 +302,10 @@ void Streamlines::_updateAdvancedSettings()
     }
     
     {
-	    unsigned int checkBox = m_gpuToolsChkBox->IsChecked();
-	    ves::open::xml::DataValuePairPtr gpuToolsDVP( new ves::open::xml::DataValuePair() );
-	    gpuToolsDVP->SetData( "GPU Tools", checkBox );
-	    _advancedSettings.push_back( gpuToolsDVP );
+        unsigned int checkBox = m_gpuToolsChkBox->IsChecked();
+        ves::open::xml::DataValuePairPtr gpuToolsDVP( new ves::open::xml::DataValuePair() );
+        gpuToolsDVP->SetData( "GPU Tools", checkBox );
+        _advancedSettings.push_back( gpuToolsDVP );
     }
 
 }

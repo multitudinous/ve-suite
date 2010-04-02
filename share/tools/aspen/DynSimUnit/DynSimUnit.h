@@ -4,10 +4,10 @@
 #pragma once
 
 #ifndef __AFXWIN_H__
-	#error "include 'stdafx.h' before including this file for PCH"
+    #error "include 'stdafx.h' before including this file for PCH"
 #endif
 
-#include "Resource.h"		// main symbols
+#include "Resource.h"        // main symbols
 
 
 // CDynSimUnitApp:
@@ -17,15 +17,15 @@
 class CDynSimUnitApp : public CWinApp
 {
 public:
-	CDynSimUnitApp();
+    CDynSimUnitApp();
 
 // Overrides
-	public:
-	virtual BOOL InitInstance();
+    public:
+    virtual BOOL InitInstance();
 
 // Implementation
 
-	DECLARE_MESSAGE_MAP()
+    DECLARE_MESSAGE_MAP()
 };
 
 extern CDynSimUnitApp theApp;

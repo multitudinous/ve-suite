@@ -516,9 +516,9 @@ void CameraPlacementToolGP::InitializeResources()
         std::string quadVertexSource =
         "void main() \n"
         "{ \n"
-	        "gl_Position = ftransform(); \n"
+            "gl_Position = ftransform(); \n"
 
-	        "gl_TexCoord[ 0 ].st = gl_MultiTexCoord0.st; \n"
+            "gl_TexCoord[ 0 ].st = gl_MultiTexCoord0.st; \n"
         "} \n";
 
         std::string quadFragmentSource =
@@ -533,44 +533,44 @@ void CameraPlacementToolGP::InitializeResources()
         "{ \n"
             "vec4 colorSum, tapColor; \n"
             "vec2 centerDepthBlur, tapCoord, tapDepthBlur; \n"
-	        "float totalContribution, tapContribution; \n"
+            "float totalContribution, tapContribution; \n"
 
-	        //Poissonian disc distribution
-	        "float dx = 1.0 / float( textureDimensions.x ); \n"
-	        "float dy = 1.0 / float( textureDimensions.y ); \n"
+            //Poissonian disc distribution
+            "float dx = 1.0 / float( textureDimensions.x ); \n"
+            "float dy = 1.0 / float( textureDimensions.y ); \n"
 
-	        "vec2 filterTaps[ 12 ]; \n"
-	        "filterTaps[ 0 ]  = vec2( -0.326212 * dx, -0.405810 * dy ); \n"
-	        "filterTaps[ 1 ]  = vec2( -0.840144 * dx, -0.073580 * dy ); \n"
-	        "filterTaps[ 2 ]  = vec2( -0.695914 * dx,  0.457137 * dy ); \n"
-	        "filterTaps[ 3 ]  = vec2( -0.203345 * dx,  0.620716 * dy ); \n"
-	        "filterTaps[ 4 ]  = vec2(  0.962340 * dx, -0.194983 * dy ); \n"
-	        "filterTaps[ 5 ]  = vec2(  0.473434 * dx, -0.480026 * dy ); \n"
-	        "filterTaps[ 6 ]  = vec2(  0.519456 * dx,  0.767022 * dy ); \n"
-	        "filterTaps[ 7 ]  = vec2(  0.185461 * dx, -0.893124 * dy ); \n"
-	        "filterTaps[ 8 ]  = vec2(  0.507431 * dx,  0.064425 * dy ); \n"
-	        "filterTaps[ 9 ]  = vec2(  0.896420 * dx,  0.412458 * dy ); \n"
-	        "filterTaps[ 10 ] = vec2( -0.321940 * dx, -0.932615 * dy ); \n"
-	        "filterTaps[ 11 ] = vec2( -0.791559 * dx, -0.597710 * dy ); \n"
+            "vec2 filterTaps[ 12 ]; \n"
+            "filterTaps[ 0 ]  = vec2( -0.326212 * dx, -0.405810 * dy ); \n"
+            "filterTaps[ 1 ]  = vec2( -0.840144 * dx, -0.073580 * dy ); \n"
+            "filterTaps[ 2 ]  = vec2( -0.695914 * dx,  0.457137 * dy ); \n"
+            "filterTaps[ 3 ]  = vec2( -0.203345 * dx,  0.620716 * dy ); \n"
+            "filterTaps[ 4 ]  = vec2(  0.962340 * dx, -0.194983 * dy ); \n"
+            "filterTaps[ 5 ]  = vec2(  0.473434 * dx, -0.480026 * dy ); \n"
+            "filterTaps[ 6 ]  = vec2(  0.519456 * dx,  0.767022 * dy ); \n"
+            "filterTaps[ 7 ]  = vec2(  0.185461 * dx, -0.893124 * dy ); \n"
+            "filterTaps[ 8 ]  = vec2(  0.507431 * dx,  0.064425 * dy ); \n"
+            "filterTaps[ 9 ]  = vec2(  0.896420 * dx,  0.412458 * dy ); \n"
+            "filterTaps[ 10 ] = vec2( -0.321940 * dx, -0.932615 * dy ); \n"
+            "filterTaps[ 11 ] = vec2( -0.791559 * dx, -0.597710 * dy ); \n"
 
-	        //Starting with center sample
-	        "colorSum = texture2D( texture0, gl_TexCoord[ 0 ].st ); \n"
-	        "totalContribution = 1.0; \n"
-	        "centerDepthBlur = texture2D( texture1, gl_TexCoord[ 0 ].st ).xy; \n"
+            //Starting with center sample
+            "colorSum = texture2D( texture0, gl_TexCoord[ 0 ].st ); \n"
+            "totalContribution = 1.0; \n"
+            "centerDepthBlur = texture2D( texture1, gl_TexCoord[ 0 ].st ).xy; \n"
 
-	        "float sizeCoC = centerDepthBlur.y * maxCoC; \n"
+            "float sizeCoC = centerDepthBlur.y * maxCoC; \n"
 
-	        "for( int i = 0; i < 12; ++i ) \n"
+            "for( int i = 0; i < 12; ++i ) \n"
             "{ \n"
-		        "tapCoord = gl_TexCoord[ 0 ].st + filterTaps[ i ] * sizeCoC; \n"
-		        "tapColor = texture2D( texture0, tapCoord ); \n"
-		        "tapDepthBlur = texture2D( texture1, tapCoord ).xy; \n"
-		        "tapContribution = ( tapDepthBlur.x > centerDepthBlur.x ) ? 1.0 : tapDepthBlur.y; \n"
-		        "colorSum += tapColor * tapContribution; \n"
-		        "totalContribution += tapContribution; \n"
-	        "} \n"
+                "tapCoord = gl_TexCoord[ 0 ].st + filterTaps[ i ] * sizeCoC; \n"
+                "tapColor = texture2D( texture0, tapCoord ); \n"
+                "tapDepthBlur = texture2D( texture1, tapCoord ).xy; \n"
+                "tapContribution = ( tapDepthBlur.x > centerDepthBlur.x ) ? 1.0 : tapDepthBlur.y; \n"
+                "colorSum += tapColor * tapContribution; \n"
+                "totalContribution += tapContribution; \n"
+            "} \n"
 
-	        "gl_FragColor = colorSum / totalContribution; \n"
+            "gl_FragColor = colorSum / totalContribution; \n"
         "} \n";
 
         osg::ref_ptr< osg::Shader > quadVertexShader = new osg::Shader();
@@ -592,9 +592,9 @@ void CameraPlacementToolGP::InitializeResources()
         std::string DoFRenderBlurVertexSource =
         "void main() \n"
         "{ \n"
-	        "gl_Position = ftransform(); \n"
+            "gl_Position = ftransform(); \n"
 
-	        "gl_TexCoord[ 0 ] = gl_MultiTexCoord0; \n"
+            "gl_TexCoord[ 0 ] = gl_MultiTexCoord0; \n"
         "} \n";
 
         std::string DoFRenderBlurFragmentSource =
@@ -602,8 +602,8 @@ void CameraPlacementToolGP::InitializeResources()
 
         "void main() \n"
         "{ \n"
-	        "vec4 blurDepth = texture2D( texture1, gl_TexCoord[ 0 ].st ); \n"
-	        "gl_FragColor = vec4( blurDepth.x * 0.03, blurDepth.y, 0.0, 1.0 ); \n"
+            "vec4 blurDepth = texture2D( texture1, gl_TexCoord[ 0 ].st ); \n"
+            "gl_FragColor = vec4( blurDepth.x * 0.03, blurDepth.y, 0.0, 1.0 ); \n"
         "} \n";
 
         osg::ref_ptr< osg::Shader > renderBlurVertexShader = new osg::Shader();

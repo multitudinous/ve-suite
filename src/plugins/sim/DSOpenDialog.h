@@ -47,15 +47,15 @@ class DSOpenDialog : public wxDialog
 {
     private:
         DECLARE_EVENT_TABLE();
-		
+        
     public:
         DSOpenDialog(wxWindow *parent, wxWindowID id = 1,
-			const wxString &title = wxT("DynSim File"),
-			const wxPoint& pos = wxDefaultPosition,
-			const wxSize& size = wxDefaultSize,
-			long style = DSOpenDialog_STYLE);
+            const wxString &title = wxT("DynSim File"),
+            const wxPoint& pos = wxDefaultPosition,
+            const wxSize& size = wxDefaultSize,
+            long style = DSOpenDialog_STYLE);
         
-		virtual ~DSOpenDialog();
+        virtual ~DSOpenDialog();
         void OKButtonClick(wxCommandEvent& event);
         void CancelButtonClick(wxCommandEvent& event);
         void SetPopulateFilenames( );

@@ -257,7 +257,7 @@ void SkyDome::_buildStateSet()
         sset->setTextureMode( _skyTextureUnit, GL_TEXTURE_GEN_R, osg::StateAttribute::OFF );
         sset->setTextureMode( _skyTextureUnit, GL_TEXTURE_GEN_Q, osg::StateAttribute::OFF );
         sset->setTextureAttributeAndModes( _skyTextureUnit, texGen, osg::StateAttribute::ON );*/
-		  
+          
         unsigned char *data = new unsigned char[SKY_DOME_X_SIZE * SKY_DOME_Y_SIZE * 3];
         unsigned char *ptr = data;
         for( int i = 0; i < SKY_DOME_X_SIZE * SKY_DOME_Y_SIZE; i++ )

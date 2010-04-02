@@ -93,8 +93,8 @@ GL_Engine::GL_Engine( wxWindow* parent,
     for( int i = 0; i < 2; ++i )
     {
         actindex[ i ] = -1;
-	    actpt1[ i ] = -1;
-	    actpt2[ i ] = -1;
+        actpt1[ i ] = -1;
+        actpt2[ i ] = -1;
     }
 
     baffleCreated = false;
@@ -119,17 +119,17 @@ void GL_Engine::_draw()
     //gridptsx = new int[ 48 ];
     //gridptsy = new int[ 32 ];
 
-	double scaleval = 0.002;
-	double offsetx =  -0.95;
-	double offsety =  -0.95;
+    double scaleval = 0.002;
+    double offsetx =  -0.95;
+    double offsety =  -0.95;
 
     for( int i = 0; i < 49; ++i )
     {
-	    gridptsx[ i ] = static_cast< float >( i ) / 25 + offsetx;
+        gridptsx[ i ] = static_cast< float >( i ) / 25 + offsetx;
     }
     for( int j = 0; j < 33; ++j )
     {
-	    gridptsy[ j ] = static_cast< float >( j ) / 17 + offsety;
+        gridptsy[ j ] = static_cast< float >( j ) / 17 + offsety;
     }
 
     glClearColor( 1.0, 1.0, 1.0, 0.0 );
@@ -143,13 +143,13 @@ void GL_Engine::_draw()
 
     for( int i = 0; i < 49; ++i )
     {
-	    for( int j = 0; j < 33; ++j )
+        for( int j = 0; j < 33; ++j )
         {
-		    if( i < 8 && j > 7 || i > 7 && j < 8 || i > 7 && j > 7 )
+            if( i < 8 && j > 7 || i > 7 && j < 8 || i > 7 && j > 7 )
             {
-			    if( i > 39 && j < 25 || i < 41 && j > 24 || i < 40 && j < 25 )
+                if( i > 39 && j < 25 || i < 41 && j > 24 || i < 40 && j < 25 )
                 {
-				    glVertex2f( gridptsx[ i ], gridptsy[ j ] );
+                    glVertex2f( gridptsx[ i ], gridptsy[ j ] );
                 }
             }
         }
@@ -159,44 +159,44 @@ void GL_Engine::_draw()
     glBegin( GL_LINES );
     for( int i = 0; i < 48; ++i )
     {
-	    for( int j = 0; j < 32; ++j )
-	    {
-		    if( i < 8 && j > 7 || i > 7 && j < 8 || i > 7 && j > 7 )
+        for( int j = 0; j < 32; ++j )
+        {
+            if( i < 8 && j > 7 || i > 7 && j < 8 || i > 7 && j > 7 )
             {
-			    if( i > 38 && j < 24 || i < 40 && j > 23 || i < 39 && j < 24 )
-			    {
-				    glVertex2f( gridptsx[ i ],     gridptsy[ j ] );
-				    glVertex2f( gridptsx[ i + 1 ], gridptsy[ j ] );
-				    glVertex2f( gridptsx[ i ],     gridptsy[ j ] );
-				    glVertex2f( gridptsx[ i ],     gridptsy[ j + 1 ] );
+                if( i > 38 && j < 24 || i < 40 && j > 23 || i < 39 && j < 24 )
+                {
+                    glVertex2f( gridptsx[ i ],     gridptsy[ j ] );
+                    glVertex2f( gridptsx[ i + 1 ], gridptsy[ j ] );
+                    glVertex2f( gridptsx[ i ],     gridptsy[ j ] );
+                    glVertex2f( gridptsx[ i ],     gridptsy[ j + 1 ] );
 
-				    if( i == 47 )
-				    {
-					    glVertex2f( gridptsx[ i + 1 ], gridptsy[ j ] );
-					    glVertex2f( gridptsx[ i + 1 ], gridptsy[ j + 1 ] );
-				    }
+                    if( i == 47 )
+                    {
+                        glVertex2f( gridptsx[ i + 1 ], gridptsy[ j ] );
+                        glVertex2f( gridptsx[ i + 1 ], gridptsy[ j + 1 ] );
+                    }
 
-				    if( j == 31 )
-				    {
-					    glVertex2f( gridptsx[ i ],     gridptsy[ j + 1 ] );
-					    glVertex2f( gridptsx[ i + 1 ], gridptsy[ j + 1 ] );
-				    }
+                    if( j == 31 )
+                    {
+                        glVertex2f( gridptsx[ i ],     gridptsy[ j + 1 ] );
+                        glVertex2f( gridptsx[ i + 1 ], gridptsy[ j + 1 ] );
+                    }
 
-				    if( i == 39 && j > 23 )
-				    {
-					    glVertex2f( gridptsx[ i + 1 ], gridptsy[ j ] );
-					    glVertex2f( gridptsx[ i + 1 ], gridptsy[ j + 1 ] );
-				    }
+                    if( i == 39 && j > 23 )
+                    {
+                        glVertex2f( gridptsx[ i + 1 ], gridptsy[ j ] );
+                        glVertex2f( gridptsx[ i + 1 ], gridptsy[ j + 1 ] );
+                    }
 
-				    if( j == 23 && i > 38 )
-				    {
-					    glVertex2f( gridptsx[ i ], gridptsy[ j + 1 ] );
-					    glVertex2f( gridptsx[ i + 1 ], gridptsy[ j + 1 ] );
-				    }
+                    if( j == 23 && i > 38 )
+                    {
+                        glVertex2f( gridptsx[ i ], gridptsy[ j + 1 ] );
+                        glVertex2f( gridptsx[ i + 1 ], gridptsy[ j + 1 ] );
+                    }
                 }
             }
-	    }
-	}
+        }
+    }
 
     glEnd();
     InletText();
@@ -218,51 +218,51 @@ void GL_Engine::_checkForMouseHitsOne( int xpos, int ypos )
     glGetDoublev( GL_MODELVIEW_MATRIX, mvmatrix );
     glGetDoublev( GL_PROJECTION_MATRIX, projmatrix );
 
-	for( int i = 0; i < 49; ++i )
+    for( int i = 0; i < 49; ++i )
     {
-		for( int j = 0; j < 33; ++j )
+        for( int j = 0; j < 33; ++j )
         {
-			if( i < 8 && j > 7 || i > 7 && j < 8 || i > 7 && j > 7 )
+            if( i < 8 && j > 7 || i > 7 && j < 8 || i > 7 && j > 7 )
             {
-			    if( i > 39 && j < 25 || i < 41 && j > 24 || i < 40 && j < 25 )
-			    {
-				    gluProject(	static_cast< GLdouble >( gridptsx[ i ] ),
-		    				    static_cast< GLdouble >( gridptsx[ j ] ),
-			    			    static_cast< GLdouble >( 0.0 ),
-							    mvmatrix,
-							    projmatrix,
-							    viewport,
-							    &sx,
-							    &sy,
-							    &sz);
+                if( i > 39 && j < 25 || i < 41 && j > 24 || i < 40 && j < 25 )
+                {
+                    gluProject(    static_cast< GLdouble >( gridptsx[ i ] ),
+                                static_cast< GLdouble >( gridptsx[ j ] ),
+                                static_cast< GLdouble >( 0.0 ),
+                                mvmatrix,
+                                projmatrix,
+                                viewport,
+                                &sx,
+                                &sy,
+                                &sz);
 
-				    double distance = ( ( sx - xpos ) * ( sx - xpos ) +
+                    double distance = ( ( sx - xpos ) * ( sx - xpos ) +
                         ( ( sy * 1.47 ) - ypos ) * ( ( sy * 1.47 ) - ypos ) );
-		    
-				    if( distance < 30 )
+            
+                    if( distance < 30 )
                     {
-					    actindex[ 0 ] = i;
-					    actindex[ 1 ] = j;
+                        actindex[ 0 ] = i;
+                        actindex[ 1 ] = j;
 
                         if( actpt1[ 0 ] == -1 )
-					    {
-						    actpt1[ 0 ] = actindex[ 0 ];
-						    actpt1[ 1 ] = actindex[ 1 ];
+                        {
+                            actpt1[ 0 ] = actindex[ 0 ];
+                            actpt1[ 1 ] = actindex[ 1 ];
 
-						    glColor3f( 0.0, 0.0, 1.0 );
-						    glPointSize( 4.0 );
-						    glBegin( GL_POINTS );
-							    glVertex2f( gridptsx[ actpt1[ 0 ] ],
+                            glColor3f( 0.0, 0.0, 1.0 );
+                            glPointSize( 4.0 );
+                            glBegin( GL_POINTS );
+                                glVertex2f( gridptsx[ actpt1[ 0 ] ],
                                             gridptsy[ actpt1[ 1 ] ] );
-						    glEnd();
+                            glEnd();
                             xp = gridptsx[ actpt1[ 0 ] ];
                             yp = gridptsy[ actpt1[ 1 ] ];
                             baffleCreated = true;
 
-						    return;
-					    }
-				    }
-			    }
+                            return;
+                        }
+                    }
+                }
             }
         }
     }
@@ -284,71 +284,71 @@ void GL_Engine::_checkForMouseHitsTwo( int xpos, int ypos )
     glGetDoublev( GL_MODELVIEW_MATRIX, mvmatrix );
     glGetDoublev( GL_PROJECTION_MATRIX, projmatrix );
 
-	for( int i = 0; i < 49; ++i )
+    for( int i = 0; i < 49; ++i )
     {
-		for( int j = 0; j < 33; ++j )
+        for( int j = 0; j < 33; ++j )
         {
-			if( i < 8 && j > 7 || i > 7 && j < 8 || i > 7 && j > 7 )
+            if( i < 8 && j > 7 || i > 7 && j < 8 || i > 7 && j > 7 )
             {
-			    if( i > 39 && j < 25 || i < 41 && j > 24 || i < 40 && j < 25 )
-			    {
-				    gluProject(	static_cast< GLdouble >( gridptsx[ i ] ),
-		    				    static_cast< GLdouble >( gridptsx[ j ] ),
-			    			    static_cast< GLdouble >( 0.0 ),
-							    mvmatrix,
-							    projmatrix,
-							    viewport,
-							    &sx,
-							    &sy,
-							    &sz );
+                if( i > 39 && j < 25 || i < 41 && j > 24 || i < 40 && j < 25 )
+                {
+                    gluProject(    static_cast< GLdouble >( gridptsx[ i ] ),
+                                static_cast< GLdouble >( gridptsx[ j ] ),
+                                static_cast< GLdouble >( 0.0 ),
+                                mvmatrix,
+                                projmatrix,
+                                viewport,
+                                &sx,
+                                &sy,
+                                &sz );
 
-				    double distance = ( ( sx - xpos ) * ( sx - xpos ) +
+                    double distance = ( ( sx - xpos ) * ( sx - xpos ) +
                         ( ( sy * 1.47 ) - ypos ) * ( ( sy * 1.47 ) - ypos ) );
-		    
-				    if( distance < 30 )
+            
+                    if( distance < 30 )
                     {
-					    actindex[ 0 ] = i;
-					    actindex[ 1 ] = j;
+                        actindex[ 0 ] = i;
+                        actindex[ 1 ] = j;
 
-						actpt2[ 0 ] = actindex[ 0 ];
-						actpt2[ 1 ] = actindex[ 1 ];
+                        actpt2[ 0 ] = actindex[ 0 ];
+                        actpt2[ 1 ] = actindex[ 1 ];
                         if( actpt2[ 0 ] == actpt1[ 0 ] ||
                             actpt2[ 1 ] == actpt1[ 1 ] )
                         {
-						    glColor3f( 0.0, 0.0, 1.0 );
-						    glPointSize( 4.0 );
-						    glBegin( GL_POINTS );
-							    glVertex2f( gridptsx[ actpt2[ 0 ] ],
+                            glColor3f( 0.0, 0.0, 1.0 );
+                            glPointSize( 4.0 );
+                            glBegin( GL_POINTS );
+                                glVertex2f( gridptsx[ actpt2[ 0 ] ],
                                             gridptsy[ actpt2[ 1 ] ] );
-						    glEnd();
+                            glEnd();
                             baffleCreated = true;
 
-						    return;
+                            return;
                          }
                          else
                          {
                             actpt1[ 0 ] = -1;
-						    actpt1[ 1 ] = -1;
+                            actpt1[ 1 ] = -1;
                             baffleCreated = false;
 
                             return;
                          }
-				    }
-			    }
+                    }
+                }
             }
         }
     }
 
     glColor3f( 0.0, 1.0, 0.0 );
-	glPointSize( 4.0 );
-	glBegin( GL_POINTS );
-	    glVertex2f( gridptsx[ actindex[ 0 ] ], gridptsy[ actindex[ 1 ] ] );
-	glEnd();
-	actpt1[ 0 ] = -1;
-	actpt1[ 1 ] = -1;
+    glPointSize( 4.0 );
+    glBegin( GL_POINTS );
+        glVertex2f( gridptsx[ actindex[ 0 ] ], gridptsy[ actindex[ 1 ] ] );
+    glEnd();
+    actpt1[ 0 ] = -1;
+    actpt1[ 1 ] = -1;
     baffleCreated = false;
 
-	return;
+    return;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void GL_Engine::_drawNewBaffle()
@@ -362,8 +362,8 @@ void GL_Engine::_drawNewBaffle()
     glLineWidth( 2.0 );
     glColor3f( 0.0, 0.0, 1.0 );
     glBegin( GL_LINES );
-	    glVertex2f( gridptsx[ actpt1[ 0 ] ], gridptsy[ actpt1[ 1 ] ] );
-	    glVertex2f( gridptsx[ actpt2[ 0 ] ], gridptsy[ actpt2[ 1 ] ] );
+        glVertex2f( gridptsx[ actpt1[ 0 ] ], gridptsy[ actpt1[ 1 ] ] );
+        glVertex2f( gridptsx[ actpt2[ 0 ] ], gridptsy[ actpt2[ 1 ] ] );
     glEnd();
     glFlush();
     
@@ -377,87 +377,87 @@ void GL_Engine::_drawNewBaffle()
 ////////////////////////////////////////////////////////////////////////////////
 void GL_Engine::_removeBaffle( int x, int y, int direction, int length )
 {
-	int x2,y2;
-	if( direction == 0 )
-	{
-		x2 = x + length;
-		y2 = y;
-	}
-	else if( direction == 1 )
-	{
-		x2 = x - length;
-		y2 = y;
-	}
-	else if( direction == 2 )
-	{
-		x2 = x;
-		y2 = y + length;
-	}
-	else if( direction == 3 )
-	{
-		x2 = x;
-		y2 = y - length;
-	}
+    int x2,y2;
+    if( direction == 0 )
+    {
+        x2 = x + length;
+        y2 = y;
+    }
+    else if( direction == 1 )
+    {
+        x2 = x - length;
+        y2 = y;
+    }
+    else if( direction == 2 )
+    {
+        x2 = x;
+        y2 = y + length;
+    }
+    else if( direction == 3 )
+    {
+        x2 = x;
+        y2 = y - length;
+    }
 
 #ifndef __WXMAC__
-	SetCurrent( *GetContext() );
+    SetCurrent( *GetContext() );
 #else
-	SetCurrent();
+    SetCurrent();
 #endif
 
-	glPointSize( 4.0 );
-	glLineWidth( 2.0 );
-	glColor3f( 0.0, 1.0, 0.0 );
-	glBegin( GL_POINTS );
-		glVertex2f( gridptsx[ x ],  gridptsy[ y ] );
-		glVertex2f( gridptsx[ x2 ], gridptsy[ y2 ] );
-	glEnd();
-	glBegin( GL_LINES );
-		glVertex2f( gridptsx[ x ],  gridptsy[ y ] );
-		glVertex2f( gridptsx[ x2 ], gridptsy[ y2 ] );
-	glEnd();
-	
+    glPointSize( 4.0 );
+    glLineWidth( 2.0 );
+    glColor3f( 0.0, 1.0, 0.0 );
+    glBegin( GL_POINTS );
+        glVertex2f( gridptsx[ x ],  gridptsy[ y ] );
+        glVertex2f( gridptsx[ x2 ], gridptsy[ y2 ] );
+    glEnd();
+    glBegin( GL_LINES );
+        glVertex2f( gridptsx[ x ],  gridptsy[ y ] );
+        glVertex2f( gridptsx[ x2 ], gridptsy[ y2 ] );
+    glEnd();
+    
     SwapBuffers();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void GL_Engine::_reDrawBaffle(
     int x, int y, int direction, int length, int index )
 {
-	int x2,y2;
-	if( direction == 0 )
-	{
-		x2 = x + length;
-		y2 = y;
-	}
-	else if( direction == 1 )
-	{
-		x2 = x - length;
-		y2 = y;
-	}
-	else if( direction == 2 )
-	{
-		x2 = x;
-		y2 = y + length;
-	}
-	else if( direction == 3 )
-	{
-		x2 = x;
-		y2 = y - length;
-	}
+    int x2,y2;
+    if( direction == 0 )
+    {
+        x2 = x + length;
+        y2 = y;
+    }
+    else if( direction == 1 )
+    {
+        x2 = x - length;
+        y2 = y;
+    }
+    else if( direction == 2 )
+    {
+        x2 = x;
+        y2 = y + length;
+    }
+    else if( direction == 3 )
+    {
+        x2 = x;
+        y2 = y - length;
+    }
 
     if( length > 0 )
     {
-	    glPointSize( 4.0 );
-	    glLineWidth( 2.0 );
-	    glColor3f( 0.0, 0.0, 1.0 );
-	    glBegin( GL_POINTS );
-		    glVertex2f( gridptsx[ x ],  gridptsy[ y ] );
-		    glVertex2f( gridptsx[ x2 ], gridptsy[ y2 ] );
-	    glEnd();
-	    glBegin( GL_LINES );
-		    glVertex2f( gridptsx[ x ],  gridptsy[ y ] );
-		    glVertex2f( gridptsx[ x2 ], gridptsy[ y2 ] );
-	    glEnd();
+        glPointSize( 4.0 );
+        glLineWidth( 2.0 );
+        glColor3f( 0.0, 0.0, 1.0 );
+        glBegin( GL_POINTS );
+            glVertex2f( gridptsx[ x ],  gridptsy[ y ] );
+            glVertex2f( gridptsx[ x2 ], gridptsy[ y2 ] );
+        glEnd();
+        glBegin( GL_LINES );
+            glVertex2f( gridptsx[ x ],  gridptsy[ y ] );
+            glVertex2f( gridptsx[ x2 ], gridptsy[ y2 ] );
+        glEnd();
         AddBaffleLabel( gridptsx[ x ], gridptsy[ y ],
                         gridptsx[ x2 ], gridptsy[ y2 ], index );
     }
@@ -467,13 +467,13 @@ void GL_Engine::_onMouse( wxMouseEvent& event )
 {
     if( event.GetEventType() == wxEVT_LEFT_DOWN )
     {
-	    event.GetPosition( &xpos2, &ypos2 );
-	    ypos2 = 600 - ypos2;
+        event.GetPosition( &xpos2, &ypos2 );
+        ypos2 = 600 - ypos2;
         xPoint = xpos2;
         yPoint = ypos2;
 
 #ifndef __WXMAC__
-	    SetCurrent( *GetContext() );
+        SetCurrent( *GetContext() );
 #else
         SetCurrent();
 #endif
@@ -502,9 +502,9 @@ void GL_Engine::_onMouse( wxMouseEvent& event )
             glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
             _draw();
             for( int i = 0; i < m_dialog->GetNumBaffles(); ++i )
-	        {
-		        m_dialog->_reDrawBaff( i );	  
-	        }
+            {
+                m_dialog->_reDrawBaff( i );      
+            }
 
             glLineWidth( 2.0 );
             glColor3f( 0.0, 0.0, 1.0 );
@@ -519,19 +519,19 @@ void GL_Engine::_onMouse( wxMouseEvent& event )
     else if( event.GetEventType() == wxEVT_LEFT_UP )
     {
         event.GetPosition( &xpos2, &ypos2 );
-	    ypos2 = 600 - ypos2;
+        ypos2 = 600 - ypos2;
         xPoint = xpos2;
         yPoint = ypos2;
 
 #ifndef __WXMAC__
-	    SetCurrent( *GetContext() );
+        SetCurrent( *GetContext() );
 #else
         SetCurrent();
 #endif
 
         _checkForMouseHitsTwo( xpos2, ypos2 );
 
-        if(	actpt2[ 0 ] == actpt1[ 0 ] && actpt2[ 1 ] == actpt1[ 1 ] )
+        if(    actpt2[ 0 ] == actpt1[ 0 ] && actpt2[ 1 ] == actpt1[ 1 ] )
         {
             m_dialog->_rebuildActBaffSel();
 

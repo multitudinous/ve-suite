@@ -133,13 +133,13 @@ int main( int argc, char *argv[] )
 
       /*if ( argc > arg )
       {
-		  B_octree = (atoi( argv[ arg ] ))?true:false;
+          B_octree = (atoi( argv[ arg ] ))?true:false;
          arg++;
       }
       else
       {
          std::cout << "\nDecompose octrees?  (0)No (1)Yes" << std::endl;
-		 B_octree = (fileIO::getIntegerBetween( 0, 1 ))?true:false;
+         B_octree = (fileIO::getIntegerBetween( 0, 1 ))?true:false;
       }
 
       if ( B_octree )

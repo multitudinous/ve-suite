@@ -65,15 +65,15 @@ public:
         ;
     }
 
-	osg::Group* DrawNetwork( std::string netId );
-	void LoadVESData( std::string xmlNetwork );
-	void ParseSystem( ves::open::xml::model::SystemPtr system );
-	std::map< std::string, ves::open::xml::model::SystemPtr > GetSystemsMap( void );
+    osg::Group* DrawNetwork( std::string netId );
+    void LoadVESData( std::string xmlNetwork );
+    void ParseSystem( ves::open::xml::model::SystemPtr system );
+    std::map< std::string, ves::open::xml::model::SystemPtr > GetSystemsMap( void );
 
 private:
     std::string network;
     osg::ref_ptr<osg::AutoTransform> worldTranslate;
-	std::map< std::string, ves::open::xml::model::SystemPtr > systems;
+    std::map< std::string, ves::open::xml::model::SystemPtr > systems;
 
 };
 }

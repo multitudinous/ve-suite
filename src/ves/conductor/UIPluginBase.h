@@ -310,7 +310,7 @@ protected:
     void RegistVar( std::string vname, std::vector< long >* var );
     void RegistVar( std::string vname, std::vector< double >* var );
     void RegistVar( std::string vname, std::vector< std::string >* var );
-	void RegistVar( std::string vname, std::vector< std::vector<std::string> >* var );
+    void RegistVar( std::string vname, std::vector< std::vector<std::string> >* var );
 
     ///Check the active id against the plugin id
     bool CheckID();
@@ -359,7 +359,7 @@ protected:
     std::map<std::string, std::vector<long>* >        _int1D;
     std::map<std::string, std::vector<double>* >      _double1D;
     std::map<std::string, std::vector<std::string>* > _string1D;
-	std::map<std::string, std::vector< std::vector<std::string> >* > _string2D;
+    std::map<std::string, std::vector< std::vector<std::string> >* > _string2D;
 
     // Dynamic input and results dialogs as well as port dialogs
     //wxDialog* inputsDialog;
@@ -419,7 +419,7 @@ protected:
     std::string m_pluginType;
     ///Number of points in the polygon
     int n_pts;    
-	///The outline polygon points list
+    ///The outline polygon points list
     wxPoint* poly; 
 
 private:

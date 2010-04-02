@@ -360,15 +360,15 @@ void AppToolBar::CreateAppToolBar()
 
     wxString manipulatorChoices[] =
         { wxT( "Global" ), wxT( "Local" ), wxT( "View" ) };
-	int numManipulatorChoices = sizeof( manipulatorChoices ) / sizeof( wxString );
-	wxChoice* manipulatorChoice = new wxChoice(
+    int numManipulatorChoices = sizeof( manipulatorChoices ) / sizeof( wxString );
+    wxChoice* manipulatorChoice = new wxChoice(
         this, wxID_ANY,
         wxDefaultPosition, wxDefaultSize,
         numManipulatorChoices, manipulatorChoices );
-	manipulatorChoice->SetSelection( 0 );
-	manipulatorChoice->SetBackgroundColour( wxColour( 255, 255, 255 ) );
-	
-	AddControl( manipulatorChoice );
+    manipulatorChoice->SetSelection( 0 );
+    manipulatorChoice->SetBackgroundColour( wxColour( 255, 255, 255 ) );
+    
+    AddControl( manipulatorChoice );
 
     AddSeparator();
 

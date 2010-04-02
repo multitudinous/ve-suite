@@ -9,7 +9,7 @@
 class CorbaUnitManager
 {
 public:
-	CorbaUnitManager(CDynSimUnitDlg *);
+    CorbaUnitManager(CDynSimUnitDlg *);
    ~CorbaUnitManager();
    void SetComputerNameUnitNameAndPort( CString dir, CString name, CString port, CString uname );
    void SetRunORBFlag( bool run );

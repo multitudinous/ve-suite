@@ -313,7 +313,7 @@ void WarrantyToolUIDialog::ParseDataFile( const std::string& csvFilename )
 ////////////////////////////////////////////////////////////////////////////////
 void WarrantyToolUIDialog::OnDataLoad( wxFileDirPickerEvent& event )
 {
-	// TODO: Implement OnDataLoad
+    // TODO: Implement OnDataLoad
     wxString fileName = event.GetPath();
     if( !fileName.IsEmpty() )
     {
@@ -363,7 +363,7 @@ void WarrantyToolUIDialog::OnDataLoad( wxFileDirPickerEvent& event )
 void WarrantyToolUIDialog::OnVariableAndLogicalChoice( wxCommandEvent& event )
 {
     wxChoice* eventChoice = dynamic_cast< wxChoice* >( event.GetEventObject() );
-	// TODO: Implement OnVariableAndLogicalChoice
+    // TODO: Implement OnVariableAndLogicalChoice
 
     //When the user selects a logical operator
     if( eventChoice == m_logicOperator00 )
@@ -437,21 +437,21 @@ void WarrantyToolUIDialog::OnVariableAndLogicalChoice( wxCommandEvent& event )
 ////////////////////////////////////////////////////////////////////////////////
 void WarrantyToolUIDialog::OnCreateInputText( wxCommandEvent& WXUNUSED( event ) )
 {
-	// TODO: Implement OnCreateInputText
+    // TODO: Implement OnCreateInputText
     //Get the text from the user and update the query text display
     UpdateQueryDisplay();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void WarrantyToolUIDialog::OnTextQueryEnter( wxCommandEvent& WXUNUSED( event ) )
 {
-	// TODO: Implement OnTextQueryEnter
+    // TODO: Implement OnTextQueryEnter
     //When the user types in their on text entry submit the query
     SubmitQueryCommand();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void WarrantyToolUIDialog::OnPartSelection( wxCommandEvent& WXUNUSED( event ) )
 {
-	// TODO: Implement OnPartSelection
+    // TODO: Implement OnPartSelection
     //When the user selects a part number submit it and update the associated 
     //text entry box
     m_partTextEntry->SetValue( m_manualPartSelectionChoice->GetStringSelection() );
@@ -489,7 +489,7 @@ void WarrantyToolUIDialog::OnPartSelection( wxCommandEvent& WXUNUSED( event ) )
 ////////////////////////////////////////////////////////////////////////////////
 void WarrantyToolUIDialog::OnPartNumberEntry( wxCommandEvent& WXUNUSED( event ) )
 {
-	// TODO: Implement OnPartNumberEntry
+    // TODO: Implement OnPartNumberEntry
     //When a user types in a part number to find submit it and go find it
         //mPartNumberList.push_back(
     //        ConvertUnicode( m_partTextEntry->GetValue().c_str() ) );
@@ -530,21 +530,21 @@ void WarrantyToolUIDialog::OnTextChkListToggle( wxCommandEvent& WXUNUSED( event 
 ////////////////////////////////////////////////////////////////////////////////
 void WarrantyToolUIDialog::OnQueryApply( wxCommandEvent& WXUNUSED( event ) )
 {
-	// TODO: Implement OnQueryApply
+    // TODO: Implement OnQueryApply
     //Submit the command currently in the query text box
     SubmitQueryCommand();    
 }
 ////////////////////////////////////////////////////////////////////////////////
 void WarrantyToolUIDialog::OnDialogCancel( wxCommandEvent& WXUNUSED( event ) )
 {
-	// TODO: Implement OnDialogCancel
+    // TODO: Implement OnDialogCancel
     //Do not do anything and close the dialog
     Close();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void WarrantyToolUIDialog::OnQueryOK( wxCommandEvent& WXUNUSED( event ) )
 {
-	// TODO: Implement OnQueryOK
+    // TODO: Implement OnQueryOK
     //Submit the command currently in the query text box and close the dialog
     SubmitQueryCommand();
     Close();
@@ -758,15 +758,15 @@ void WarrantyToolUIDialog::ParseDataBase( const std::string& csvFilename )
         return;
     }
 
-	// create a RecordSet 
-	Poco::Data::RecordSet rs(select);
-	std::size_t cols = rs.columnCount();
+    // create a RecordSet 
+    Poco::Data::RecordSet rs(select);
+    std::size_t cols = rs.columnCount();
     size_t numQueries = rs.rowCount();
     //std::cout << cols << " " << numQueries << std::endl;
     //std::cout <<  cols << " " << rs.columnName( 0 ) << std::endl;
 
-	// iterate over all rows and columns
-	/*bool more = false;
+    // iterate over all rows and columns
+    /*bool more = false;
     try
     {
         more = rs.moveFirst();
@@ -781,12 +781,12 @@ void WarrantyToolUIDialog::ParseDataBase( const std::string& csvFilename )
         m_columnStrings.Add( columnNames );
     }
     /*while (more)
-	{
+    {
         wxString columnNames = wxString( rs[0].convert<std::string>().c_str(), wxConvUTF8 );
         m_columnStrings.Add( columnNames );
         
-		more = rs.moveNext();
-	}*/
+        more = rs.moveNext();
+    }*/
     ///////////////////////////////////////////
 
     ///////////////////////////////////////////
@@ -811,12 +811,12 @@ void WarrantyToolUIDialog::ParseDataBase( const std::string& csvFilename )
         return;
     }
 
-	// create a RecordSet 
-	Poco::Data::RecordSet partRS(select2);
-	cols = partRS.columnCount();
+    // create a RecordSet 
+    Poco::Data::RecordSet partRS(select2);
+    cols = partRS.columnCount();
     numQueries = partRS.rowCount();
     
-	// iterate over all rows and columns
+    // iterate over all rows and columns
     bool more = false;
     try
     {
@@ -828,12 +828,12 @@ void WarrantyToolUIDialog::ParseDataBase( const std::string& csvFilename )
     }
 
     while (more)
-	{
+    {
         wxString partNames = wxString( partRS[0].convert<std::string>().c_str(), wxConvUTF8 );
         m_partNumberStrings.Add( partNames );
         
-		more = partRS.moveNext();
-	}
+        more = partRS.moveNext();
+    }
 
     try
     {

@@ -70,7 +70,7 @@ public:
 
     ///Add a new element to the end of this array
     ///\param newValue The new value to add.
-	void AddElementToArray( std::vector< std::string > newValue );
+    void AddElementToArray( std::vector< std::string > newValue );
 
     ///Add a new element to the end of this array
     ///\param newValue The new value to add.
@@ -78,15 +78,15 @@ public:
 
     ///Set this array from an input vector
     ///\param newArrayValues The new values to set to this array.
-	void SetArray( std::vector< std::vector< std::string > > newArrayValues );
+    void SetArray( std::vector< std::vector< std::string > > newArrayValues );
 
     ///Get a specific element
     ///\param i The i'th index of the element to return
     ///\param j The j'th index of the element to return
-	std::string GetElement( unsigned int i, unsigned int j );
+    std::string GetElement( unsigned int i, unsigned int j );
 
     ///Get the internal array.
-	std::vector< std::vector< std::string > > GetArray( void );
+    std::vector< std::vector< std::string > > GetArray( void );
 
     ///Populate the XMLObject data from an XML element.
     ///\param inputXML The input data.

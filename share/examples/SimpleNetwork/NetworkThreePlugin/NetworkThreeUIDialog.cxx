@@ -9,19 +9,19 @@
 #include <wx/button.h>
 
 BEGIN_EVENT_TABLE( NetworkThreeUIDialog, wxDialog )
-EVT_BUTTON(		wxID_OK,		NetworkThreeUIDialog::SetText )
+EVT_BUTTON(        wxID_OK,        NetworkThreeUIDialog::SetText )
 END_EVENT_TABLE()
 ///////////////////////////////////////////////////////////////////////////////
 NetworkThreeUIDialog
 ::NetworkThreeUIDialog( wxWindow* parent, int id, 
-						 ves::conductor::util::CORBAServiceList* service,
+                         ves::conductor::util::CORBAServiceList* service,
                          std::vector< std::string >* mNetworkThreeInputs)
 : UIDialog( (wxWindow*) parent, id, _("NetworkThree") ),
-		   p_mNetworkThreeInputs( mNetworkThreeInputs )
+           p_mNetworkThreeInputs( mNetworkThreeInputs )
 {
-	BuildPage();
+    BuildPage();
 
-	mServiceList = service;
+    mServiceList = service;
 }
 ///////////////////////////////////////////////////////////////////////////////
 NetworkThreeUIDialog::~NetworkThreeUIDialog()
@@ -67,21 +67,21 @@ void NetworkThreeUIDialog::BuildPage()
     mUpdateButton = new wxButton( this, wxID_OK, _("Update"), wxDefaultPosition, wxDefaultSize, 0 );
     networkThreeSizer->Add(mUpdateButton, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
 
-	SetAutoLayout( true );
-	SetSizer( mainSizer );
-	mainSizer->Fit( this );
+    SetAutoLayout( true );
+    SetSizer( mainSizer );
+    mainSizer->Fit( this );
 }
 ///////////////////////////////////////////////////////////////////////////////
 void NetworkThreeUIDialog::SetText( wxCommandEvent &event )
-{		
+{        
     (*p_mNetworkThreeInputs).clear();
 
-	(*p_mNetworkThreeInputs).push_back( ConvertUnicode( 
+    (*p_mNetworkThreeInputs).push_back( ConvertUnicode( 
         mTextCtrlOne->GetValue() ) );
     (*p_mNetworkThreeInputs).push_back( ConvertUnicode( 
         mTextCtrlTwo->GetValue() ) );
     (*p_mNetworkThreeInputs).push_back( ConvertUnicode( 
         mTextCtrlThree->GetValue() ) );
 
-	event.Skip();
+    event.Skip();
 }

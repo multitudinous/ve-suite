@@ -122,17 +122,17 @@ initPhysics()
         btThreadSupportInterface* threadSupport( NULL );
 #ifdef WIN32
         Win32ThreadSupport::Win32ThreadConstructionInfo ci(
-								    "collision",
-								    processCollisionTask,
-								    createCollisionLocalStoreMemory,
-								    numDispatchThreads );
+                                    "collision",
+                                    processCollisionTask,
+                                    createCollisionLocalStoreMemory,
+                                    numDispatchThreads );
         threadSupport = new Win32ThreadSupport( ci );
 #else
         PosixThreadSupport::ThreadConstructionInfo ci(
-								    "collision",
-								    processCollisionTask,
-								    createCollisionLocalStoreMemory,
-								    numDispatchThreads );
+                                    "collision",
+                                    processCollisionTask,
+                                    createCollisionLocalStoreMemory,
+                                    numDispatchThreads );
         threadSupport = new PosixThreadSupport( ci );
 #endif
         dispatcher = new SpuGatheringCollisionDispatcher( threadSupport, numDispatchThreads, collisionConfiguration );
@@ -157,7 +157,7 @@ initPhysics()
     else if( g_opc == Sorted )
     {
         osg::notify( osg::ALWAYS ) << "Pair cache: btSortedOverlappingPairCache" << std::endl;
-	    opc = new btSortedOverlappingPairCache();
+        opc = new btSortedOverlappingPairCache();
     }
     else
         osg::notify( osg::ALWAYS ) << "Pair cache: Default (hashed)" << std::endl;
@@ -195,8 +195,8 @@ initPhysics()
         int maxLargeProxies( 256 );
         int maxPairsPerBody( 64 );
         broadphase = new bt3DGridBroadphase( worldMin, worldMax,
-					   sizex, sizey, sizez, 
-					   maxSmallProxies, maxLargeProxies, maxPairsPerBody );
+                       sizex, sizey, sizez, 
+                       maxSmallProxies, maxLargeProxies, maxPairsPerBody );
     }
 #endif
     else if( g_broadphase == Dbvt )
@@ -219,17 +219,17 @@ initPhysics()
         btThreadSupportInterface* threadSupport( NULL );
 #ifdef WIN32
         Win32ThreadSupport::Win32ThreadConstructionInfo ci(
-								    "solver",
-								    processSolverTask,
-								    createSolverLocalStoreMemory,
-								    numSolverThreads );
+                                    "solver",
+                                    processSolverTask,
+                                    createSolverLocalStoreMemory,
+                                    numSolverThreads );
         threadSupport = new Win32ThreadSupport( ci );
 #else
         PosixThreadSupport::ThreadConstructionInfo ci(
-								    "solver",
-								    processSolverTask,
-								    createSolverLocalStoreMemory,
-								    numSolverThreads );
+                                    "solver",
+                                    processSolverTask,
+                                    createSolverLocalStoreMemory,
+                                    numSolverThreads );
         threadSupport = new PosixThreadSupport( ci );
 #endif
         solver = new btParallelSequentialImpulseSolver( threadSupport, numSolverThreads );
@@ -249,12 +249,12 @@ initPhysics()
     // Discrete (non-continuous) is the only supported dynamics world object at this time (Bullet 2.74).
     btDiscreteDynamicsWorld* dw = new btDiscreteDynamicsWorld( dispatcher, broadphase, solver, collisionConfiguration );
 
-	dw->getSolverInfo().m_numIterations = 4;
-	dw->getSolverInfo().m_friction = 500000.;
+    dw->getSolverInfo().m_numIterations = 4;
+    dw->getSolverInfo().m_friction = 500000.;
     dw->getSolverInfo().m_damping = 32.;
-	dw->getSolverInfo().m_solverMode = SOLVER_SIMD+SOLVER_USE_WARMSTARTING;
+    dw->getSolverInfo().m_solverMode = SOLVER_SIMD+SOLVER_USE_WARMSTARTING;
 
-	dw->getDispatchInfo().m_enableSPU = true;
+    dw->getDispatchInfo().m_enableSPU = true;
     dw->setGravity( btVector3( 0, 0, -9.8 ) );
 
 

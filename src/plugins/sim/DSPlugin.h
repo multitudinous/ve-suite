@@ -53,22 +53,22 @@ public:
     DSPlugin();
     virtual ~DSPlugin();
     wxString GetConductorName();
-	std::vector< std::string > GetAvailableVariables();
-	std::vector< std::string > GetSelectVariables();
-	void SetSelectVariables( std::vector< std::string> selectedVariables );
+    std::vector< std::string > GetAvailableVariables();
+    std::vector< std::string > GetSelectVariables();
+    void SetSelectVariables( std::vector< std::string> selectedVariables );
 
 protected:
     virtual wxMenu* GetPluginPopupMenu( wxMenu* baseMenu );
 
     void OnOpen( wxCommandEvent& event );
-	void OnCreateOPCList( wxCommandEvent& event );
-	void OnConnect( wxCommandEvent& event );
-	void OnAddVariable( wxCommandEvent& event );
-	void OnTimer( wxTimerEvent& event );
+    void OnCreateOPCList( wxCommandEvent& event );
+    void OnConnect( wxCommandEvent& event );
+    void OnAddVariable( wxCommandEvent& event );
+    void OnTimer( wxTimerEvent& event );
     wxMenu* mDynSimMenu;
-	std::vector< std::string > m_opcList;
-	std::vector< std::string > m_selectedOpcList;
-	wxTimer * m_timer;
+    std::vector< std::string > m_opcList;
+    std::vector< std::string > m_selectedOpcList;
+    wxTimer * m_timer;
 
     DECLARE_EVENT_TABLE()
 };

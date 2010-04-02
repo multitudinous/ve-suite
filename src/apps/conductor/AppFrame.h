@@ -280,10 +280,10 @@ protected:
 
 private:
     void ExitXplorer();
-	void CloseAspenSimulation();
+    void CloseAspenSimulation();
     void EnableCEGUIMenuItems();
     void IdleEvent( wxIdleEvent& event );
-	bool AspenSimOpen;
+    bool AspenSimOpen;
     //void TimerEvent( wxTimerEvent& event );
     NavigationPane* navPane;
     DeviceProperties* deviceProperties;
@@ -324,7 +324,7 @@ private:
     HierarchyTree* hierarchyTree;
     wxNotebook* side_pane;
     ves::conductor::Canvas* canvas;
-  	ves::conductor::IconChooser* iconChooser;
+      ves::conductor::IconChooser* iconChooser;
     AvailableModules* av_modules;
     wxString mVESFileName;
     wxString directory;

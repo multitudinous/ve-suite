@@ -171,8 +171,8 @@ FlowTexture::~FlowTexture()
 //set the resolution of the texture       //
 ////////////////////////////////////////////
 void FlowTexture::setTextureDimension(int x,
-		                      int y,
-				      int z)
+                              int y,
+                      int z)
 {
    _dims[0] = x;
    _dims[1] = y;
@@ -202,7 +202,7 @@ void FlowTexture::addPixelData(FlowPointData fpd)
 //get pixel data                          //
 ////////////////////////////////////////////
 FlowPointData& FlowTexture::pixelData(int col,
-	                               int row,
+                                   int row,
                                   int depth)
 {
    if ( !_dims[0] || !_dims[1] )

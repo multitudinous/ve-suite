@@ -48,11 +48,11 @@ class OSGEPHEMERIS_EXPORT Shmem
         /**
           Default Constructor 
           */
-	    Shmem( void ) {}
+        Shmem( void ) {}
         /** 
           Default Destructor
           */
-	    ~Shmem( void ) {}
+        ~Shmem( void ) {}
 
         /**
           new() operator.
@@ -63,16 +63,16 @@ class OSGEPHEMERIS_EXPORT Shmem
                         will be created and sized appropriately.
           */
 
-	    void *operator new( size_t size, const std::string & filename );
-	    void operator delete( void*, const std::string & filename );
+        void *operator new( size_t size, const std::string & filename );
+        void operator delete( void*, const std::string & filename );
         /**
           Detaches from shared memory segment, but does not destroy the memory mapped file.
           */
-	    void operator delete( void * );
+        void operator delete( void * );
 
     private :
         void *start;
-    	size_t length;
+        size_t length;
 };
 
 

@@ -161,7 +161,7 @@ BOOL CHyperLabUnitDlg::OnInitDialog()
     //Set small icon
     SetIcon( m_hIcon, FALSE );
 
-    //Return TRUE, unless you set the focus to a control	
+    //Return TRUE, unless you set the focus to a control    
     return TRUE;
 }
 ////////////////////////////////////////////////////////////////////////////////

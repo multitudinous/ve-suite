@@ -143,7 +143,7 @@ protected:
     void OnAddLinkCon( wxCommandEvent &event );
     void OnDelLink( wxCommandEvent &event );
     void OnDelLinkCon( wxCommandEvent &event );
-	void OnSetLinkName( wxCommandEvent &event );
+    void OnSetLinkName( wxCommandEvent &event );
     void OnMRightDown( wxMouseEvent &event );
     void OnSetActiveLinkID( wxUpdateUIEvent& event );
     bool SelectLink( int x, int y );
@@ -156,8 +156,8 @@ private:
     ///Name of the link, should be unique
     wxString linkName;
     wxEvtHandler* mPostHandler;
-	//The Type of the link
-	//for aspen material = 0, heat = 1, & work = 2 
+    //The Type of the link
+    //for aspen material = 0, heat = 1, & work = 2 
     int linkType;
     ///The active link uuid for the network
     std::string activeUUID;

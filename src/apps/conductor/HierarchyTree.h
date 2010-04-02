@@ -108,7 +108,7 @@ public:
     wxTreeItemId SearchTree( wxTreeItemId root, int id );
 
     ///change the item's image - for use with icon chooser
-	void ChangeLeafIcon( unsigned int id, std::string path );
+    void ChangeLeafIcon( unsigned int id, std::string path );
 
     ///Clear the hierarchy tree
     ///This is called by default by PopulateTree

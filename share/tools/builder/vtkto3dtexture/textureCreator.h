@@ -155,16 +155,16 @@ protected:
    //interpolate the data from the weights
    //returned by vtkCellLocator(Octtree)
    void _interpolateData(vtkGenericCell* cell,
-		      double* weights,
-		      float* vec,
-		      float& scal);
+              double* weights,
+              float* vec,
+              float& scal);
 
    ///After cleaning up scalar and vector names, reset them in the dataset
    void _applyCorrectedNamesToDataArrays();
 
    void _addOutSideCellDomainDataToFlowTexture(int index,int isScalar);
    void _interpolateDataInCell(vtkGenericCell* cell,
-		                                    double* weights,
+                                            double* weights,
                                           int component,
                                           int scalar);
    void _interpolatePixelData(FlowPointData& data,
@@ -204,7 +204,7 @@ protected:
    vtkStructuredGridReader* _sgrid;
    vtkRectilinearGridReader* _rgrid;
    std::vector < vtkCellLocator* > vectorCellLocators;
-	int numThreads;
+    int numThreads;
    std::string ConvertUnicode( const wxChar* data )
    {
       std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( data ) ) );

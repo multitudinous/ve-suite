@@ -2,7 +2,7 @@
 #include <wx/wx.h>
 
 BEGIN_EVENT_TABLE(Int_Stove_Econ_UI_Dialog, UIDialog)
-	 EVT_BUTTON			(CLOSE_EXCEL,			        Int_Stove_Econ_UI_Dialog::_onCloseExcel)
+     EVT_BUTTON            (CLOSE_EXCEL,                    Int_Stove_Econ_UI_Dialog::_onCloseExcel)
 END_EVENT_TABLE()
 
 IMPLEMENT_DYNAMIC_CLASS(Int_Stove_Econ_UI_Dialog, UIDialog);
@@ -17,11 +17,11 @@ Int_Stove_Econ_UI_Dialog
   p_cost_array(cost_array),
   p_closesheets(closesheets)
 {
-	(*p_cost_array).clear();
-	(*p_closesheets) = 0;
-	closeSheets = 0;
+    (*p_cost_array).clear();
+    (*p_closesheets) = 0;
+    closeSheets = 0;
 
-	wxStaticBox* listBox = new wxStaticBox(this, -1, _("Use the text controls to enter the input values"), wxDefaultPosition,wxDefaultSize,wxCAPTION);
+    wxStaticBox* listBox = new wxStaticBox(this, -1, _("Use the text controls to enter the input values"), wxDefaultPosition,wxDefaultSize,wxCAPTION);
 
    wxStaticText* _base_mat_cost_Label = new wxStaticText(this, -1, wxT("Enter The Base Stove Material Cost "));
    _base_mat_cost_entry = new wxTextCtrl(this, -1, wxT("100"),wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER, wxDefaultValidator);
@@ -43,9 +43,9 @@ Int_Stove_Econ_UI_Dialog
 
 
    _closeExcelButton = new wxButton(this,CLOSE_EXCEL,wxT("Close Spreadsheet"));
-	_updateButton = new wxButton(this,wxID_OK,wxT("Update"));
+    _updateButton = new wxButton(this,wxID_OK,wxT("Update"));
    wxBoxSizer* _buttonGroup  = new wxBoxSizer(wxHORIZONTAL);
-	_buttonGroup->Add(_closeExcelButton,1,wxALIGN_LEFT|wxEXPAND);
+    _buttonGroup->Add(_closeExcelButton,1,wxALIGN_LEFT|wxEXPAND);
    _buttonGroup->Add(_updateButton,1,wxALIGN_RIGHT|wxEXPAND);
 
    wxStaticBoxSizer* _listGroup = new wxStaticBoxSizer(listBox,wxVERTICAL);
@@ -61,7 +61,7 @@ Int_Stove_Econ_UI_Dialog
    SetAutoLayout(true);
    //assign the group to the panel
    SetSizer(_mainSizer);
-	_mainSizer->Fit(this);
+    _mainSizer->Fit(this);
 }
 
 /////////////////////////////////////////////////////
@@ -76,14 +76,14 @@ bool Int_Stove_Econ_UI_Dialog::TransferDataFromWindow()
 {
    wxString txt;
 
-	txt  = _base_mat_cost_entry->GetValue();
-	(*p_cost_array).push_back(atof( ConvertUnicode( txt.c_str() ).c_str() ) );
+    txt  = _base_mat_cost_entry->GetValue();
+    (*p_cost_array).push_back(atof( ConvertUnicode( txt.c_str() ).c_str() ) );
 
-	txt  = _base_const_cost_entry->GetValue();
-	(*p_cost_array).push_back(atof( ConvertUnicode( txt.c_str() ).c_str() ) );
+    txt  = _base_const_cost_entry->GetValue();
+    (*p_cost_array).push_back(atof( ConvertUnicode( txt.c_str() ).c_str() ) );
 
-	txt  = _baffle_mat_cost_entry->GetValue();
-	(*p_cost_array).push_back(atof( ConvertUnicode( txt.c_str() ).c_str() ) );
+    txt  = _baffle_mat_cost_entry->GetValue();
+    (*p_cost_array).push_back(atof( ConvertUnicode( txt.c_str() ).c_str() ) );
 
    (*p_closesheets) = closeSheets;
    closeSheets = 0;
@@ -103,6 +103,6 @@ void Int_Stove_Econ_UI_Dialog::Lock(bool l)
 
 void Int_Stove_Econ_UI_Dialog::_onCloseExcel(wxCommandEvent& event)
 {
-	closeSheets = 1;	
+    closeSheets = 1;    
 }
 

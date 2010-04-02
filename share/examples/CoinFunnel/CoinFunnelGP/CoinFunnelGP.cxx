@@ -208,12 +208,12 @@ void CoinFunnelGP::InitializeResources()
     "} \n" );
 
     std::string roomFragmentSource = std::string(
-	"uniform samplerCube envMap; \n"
+    "uniform samplerCube envMap; \n"
 
-	"void main()  \n"
-	"{  \n"
-	    "gl_FragColor = textureCube( envMap, gl_TexCoord[ 0 ].xyz ); \n"
-	"} \n" );
+    "void main()  \n"
+    "{  \n"
+        "gl_FragColor = textureCube( envMap, gl_TexCoord[ 0 ].xyz ); \n"
+    "} \n" );
 
     osg::ref_ptr< osg::Shader > roomVertexShader = new osg::Shader();
     roomVertexShader->setType( osg::Shader::VERTEX );

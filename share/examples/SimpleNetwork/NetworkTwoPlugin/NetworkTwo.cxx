@@ -11,11 +11,11 @@ IMPLEMENT_DYNAMIC_CLASS(NetworkTwo, ves::conductor::UIPluginBase)
 /////////////////////////////////////////////////////////////////////////////
 NetworkTwo::NetworkTwo()
 {
-	mPluginName = wxT("NetworkTwo");
-	
-	RegistVar("mTextTwo", &mTextTwo);
+    mPluginName = wxT("NetworkTwo");
+    
+    RegistVar("mTextTwo", &mTextTwo);
 
-	wxImage my_img( network_xpm );
+    wxImage my_img( network_xpm );
     SetImage( my_img );
     
     mDescription = _("NetworkTwo");
@@ -28,8 +28,8 @@ NetworkTwo::~NetworkTwo()
 ///////////////////////////////////////////////////////////////////////////////
 double NetworkTwo::GetVersion()
 {
-	double result=1.0;
-	return result;
+    double result=1.0;
+    return result;
 }
 ///////////////////////////////////////////////////////////////////////////////
 PORT NetworkTwo::GetIPorts()
@@ -66,28 +66,28 @@ PORT NetworkTwo::GetOPorts()
 ///////////////////////////////////////////////////////////////////////////////
 ves::conductor::UIDialog* NetworkTwo::UI(wxWindow* parent)
 {
-	if (dlg!=NULL)
-	{
-		return dlg;
-	}
+    if (dlg!=NULL)
+    {
+        return dlg;
+    }
   
-	dlg = new NetworkTwoUIDialog(parent, -1, serviceList,
-		&mTextTwo);
+    dlg = new NetworkTwoUIDialog(parent, -1, serviceList,
+        &mTextTwo);
       
-	dlg->CenterOnScreen(wxBOTH);
+    dlg->CenterOnScreen(wxBOTH);
 
-	return dlg;
+    return dlg;
 }
 ///////////////////////////////////////////////////////////////////////////////
 wxString NetworkTwo::GetName()
 {
-	wxString result(_("NetworkTwo")); //your name
-	return result;
+    wxString result(_("NetworkTwo")); //your name
+    return result;
 }
 ///////////////////////////////////////////////////////////////////////////////
 wxString NetworkTwo::GetConductorName()
 {
-	wxString result(_("SimpleNetwork_NetworkTwo")); //your name
-	return result;
+    wxString result(_("SimpleNetwork_NetworkTwo")); //your name
+    return result;
 }
 ///////////////////////////////////////////////////////////////////////////////

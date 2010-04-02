@@ -48,21 +48,21 @@ void *Shmem::operator new( size_t size, const std::string &file)
 {
 #ifdef _WIN32   // [
     HANDLE hFile = CreateFile( file.c_str(), GENERIC_READ | GENERIC_WRITE,
-    		FILE_SHARE_READ | FILE_SHARE_WRITE,
-		0,
-		OPEN_ALWAYS, 0, 0 );
+            FILE_SHARE_READ | FILE_SHARE_WRITE,
+        0,
+        OPEN_ALWAYS, 0, 0 );
 
     SetFilePointer( hFile, size, 0, FILE_BEGIN );
     DWORD bytes;
     WriteFile( hFile, &size, sizeof( size ), &bytes, 0 );
 
     HANDLE hFileMap = CreateFileMapping( hFile, 
-    			NULL, PAGE_READWRITE, 0, size, file.c_str()  );
+                NULL, PAGE_READWRITE, 0, size, file.c_str()  );
 
     CloseHandle( hFile );
 
     Shmem *shm = (Shmem *)MapViewOfFile( hFileMap, 
-    			FILE_MAP_WRITE | FILE_MAP_READ, 0, 0, 0 );
+                FILE_MAP_WRITE | FILE_MAP_READ, 0, 0, 0 );
 
 
 #else // ][
@@ -70,24 +70,24 @@ void *Shmem::operator new( size_t size, const std::string &file)
     if((access( file.c_str(), F_OK )) < 0 )
     {
         int fd;
-	    int pid = getpid();
+        int pid = getpid();
         if( (fd = creat( file.c_str(), O_RDWR | 0666 )) < 0 )
-	    {
-	        char emsg[128];
-	        printf( emsg, "Shmem: open(%s)", file.c_str() );
-    	    perror( emsg );
+        {
+            char emsg[128];
+            printf( emsg, "Shmem: open(%s)", file.c_str() );
+            perror( emsg );
             throw 3;
-	    }
-	    lseek( fd, size, 0 ); 
-	    write( fd, &pid, sizeof( pid ) );
-	    close( fd );
+        }
+        lseek( fd, size, 0 ); 
+        write( fd, &pid, sizeof( pid ) );
+        close( fd );
     }
 
     int fd;
     if( (fd = open( file.c_str(), O_RDWR )) < 0 )
     {
-	    char emsg[128];
-	    sprintf( emsg, "Shmem: open(%s)", file.c_str() );
+        char emsg[128];
+        sprintf( emsg, "Shmem: open(%s)", file.c_str() );
         perror( "OPEN");
         throw 4;
     }

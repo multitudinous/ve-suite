@@ -94,9 +94,9 @@ void ves::xplorer::util::printBounds( vtkDataObject* dataObject )
 }
 ///////////////////////////////////////////////////////////////////////////////
 vtkDataObject* ves::xplorer::util::readVtkThing( 
-	std::string vtkFilename, int printFlag )
+    std::string vtkFilename, int printFlag )
 {
-	try
+    try
     {
         if( !boost::filesystem::exists( vtkFilename ) )
         {
@@ -123,7 +123,7 @@ vtkDataObject* ves::xplorer::util::readVtkThing(
 }
 ///////////////////////////////////////////////////////////////////////////////
 bool ves::xplorer::util::writeVtkThing( 
-	vtkDataObject* vtkThing, std::string vtkFilename, int binaryFlag )
+    vtkDataObject* vtkThing, std::string vtkFilename, int binaryFlag )
 {
     cfdVTKFileHandler fileWriter;
     if( !binaryFlag )

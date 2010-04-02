@@ -58,8 +58,8 @@ int main( int argc, char *argv[] )
    else  // then get filename from user...
    {
       //char tempText[ 100 ]; 
-	  std::string tempText("the file to compute scalar/vector range");
-	  //strcpy( tempText, "the file to compute scalar/vector range" );
+      std::string tempText("the file to compute scalar/vector range");
+      //strcpy( tempText, "the file to compute scalar/vector range" );
       inFileName = fileIO::getReadableFileFromDefault( tempText, "inFile.vtk" );
    }
 
@@ -68,8 +68,8 @@ int main( int argc, char *argv[] )
    vtkDataObject* dataObject = readVtkThing( inFileName, 1 );
    if(dataObject->IsA("vtkCompositeDataSet"))
    {
-	  try
-	  {
+      try
+      {
           vtkCompositeDataSet* mgd = dynamic_cast<vtkCompositeDataSet*>( dataObject );
           //unsigned int nGroups = mgd->GetNumberOfGroups();
           unsigned int nDatasetsInGroup = 0;
@@ -89,14 +89,14 @@ int main( int argc, char *argv[] )
               mgdIterator = 0;
           }
       }
-	  catch(...)
-	  {
-		  std::cout<<"Invalid Dataset: "<<dataObject->GetClassName()<<std::endl;
-	  }
+      catch(...)
+      {
+          std::cout<<"Invalid Dataset: "<<dataObject->GetClassName()<<std::endl;
+      }
    }
    else
    {
-	   ProcessScalarRangeInfo(dataObject);
+       ProcessScalarRangeInfo(dataObject);
    }
    dataObject->Delete();
    return 0;

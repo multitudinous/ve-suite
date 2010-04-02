@@ -100,13 +100,13 @@ void StreamLineEventHandler::Execute( const ves::open::xml::XMLObjectPtr& veXMLO
     {
         double size;
         sizeDVP->GetData( size );
-    	float range = 2.5f;
+        float range = 2.5f;
         int diameter = static_cast< int >( size );
-    	float localLineDiameter = exp( diameter / ( 100.0 / range ) ) * 1.0f * 0.001f;
+        float localLineDiameter = exp( diameter / ( 100.0 / range ) ) * 1.0f * 0.001f;
 
-    	// this is to normalize -100 to 100 on the GUI  to  1-21 for diameters
-    	// note that multiplying by 0.005 is the same as dividing by 200, or the range
-    	size = ( diameter + 110 ) * 0.005 *  20;
+        // this is to normalize -100 to 100 on the GUI  to  1-21 for diameters
+        // note that multiplying by 0.005 is the same as dividing by 200, or the range
+        size = ( diameter + 110 ) * 0.005 *  20;
 
         UpdateGeodeUniform( graphicsObject, sizeDVP, "particleSize", size );
     }

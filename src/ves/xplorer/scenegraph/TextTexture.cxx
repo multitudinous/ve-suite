@@ -233,7 +233,7 @@ void TextTexture::CreateText()
     m_titleText->setMaximumWidth( 1.75f );
     m_titleText->setAxisAlignment( osgText::TextBase::XZ_PLANE );
     m_titleText->setAlignment( osgText::Text::LEFT_TOP );
-    m_titleText->setPosition(	osg::Vec3( -0.44f, -0.01f, 1.85f ) );
+    m_titleText->setPosition(    osg::Vec3( -0.44f, -0.01f, 1.85f ) );
     
     m_titleText->setFont( _font );
     m_titleText->setColor( osg::Vec4( _textColor[ 0 ],
@@ -288,7 +288,7 @@ void TextTexture::CreateText()
     m_bodyText->setMaximumWidth( 1.75f );
     m_bodyText->setAxisAlignment( osgText::TextBase::XZ_PLANE );
     m_bodyText->setAlignment( osgText::Text::LEFT_TOP );
-    m_bodyText->setPosition(	osg::Vec3( -0.86f, -0.01f, 1.5f ) );
+    m_bodyText->setPosition(    osg::Vec3( -0.86f, -0.01f, 1.5f ) );
 
     m_bodyText->setFont( _font );
     m_bodyText->setColor( osg::Vec4( _textColor[ 0 ],

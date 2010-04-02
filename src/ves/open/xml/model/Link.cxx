@@ -101,7 +101,7 @@ Link& Link::operator=( const Link& input )
         mModuleInfo.second = input.mModuleInfo.second ;
         mPortInfo = input.mPortInfo;
         mLinkName = input.mLinkName;
-		mParentModel = input.mParentModel;
+        mParentModel = input.mParentModel;
     }
     return *this;
 }

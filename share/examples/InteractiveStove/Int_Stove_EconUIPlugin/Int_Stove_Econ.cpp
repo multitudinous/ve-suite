@@ -71,7 +71,7 @@ ves::conductor::UIDialog* Int_Stove_Econ::UI(wxWindow* parent)
   
   dlg = new Int_Stove_Econ_UI_Dialog(parent, -1,
      &cost_array,
-	 &closesheets);
+     &closesheets);
       
   return dlg;
 }

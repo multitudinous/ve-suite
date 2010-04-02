@@ -233,7 +233,7 @@ void ADPlugin::OnOpen( wxCommandEvent& event )
     mAspenMenu->Enable( ADPLUGIN_SHOW_ASPEN_SIMULATION, true );
     mAspenMenu->Enable( ADPLUGIN_HIDE_ASPEN_SIMULATION, true );
     mAspenMenu->Enable( ADPLUGIN_RUN_ASPEN_NETWORK, true );
-	mAspenMenu->Enable( ADPLUGIN_REINITIALIZE_ASPEN_SIMULATION, true );
+    mAspenMenu->Enable( ADPLUGIN_REINITIALIZE_ASPEN_SIMULATION, true );
     mAspenMenu->Enable( ADPLUGIN_STEP_ASPEN_NETWORK, true );
     mAspenMenu->Enable( ADPLUGIN_SAVE_SIMULATION, true );
     mAspenMenu->Enable( ADPLUGIN_SAVEAS_SIMULATION, true );
@@ -296,7 +296,7 @@ void ADPlugin::HideAspenSimulation( wxCommandEvent& event )
 ////////////////////////////////////////////////////////////////////////////////
 void ADPlugin::CloseAspenSimulation( void )
 {    
-	//Log( "Close Simulation.\n" );
+    //Log( "Close Simulation.\n" );
     CommandPtr returnState( new Command() );
     returnState->SetCommandName( "closeSimulation" );
     DataValuePairPtr data( new DataValuePair() );
@@ -313,7 +313,7 @@ void ADPlugin::CloseAspenSimulation( void )
 
     std::string nw_str = serviceList->Query( status ) + "\n";
     //Log( nw_str.c_str() );
-	//AspenSimOpen = false;
+    //AspenSimOpen = false;
     mIsSheetOpen = false;
     SetName( _("ADPlugin") );
     wxCommandEvent event;
@@ -324,7 +324,7 @@ void ADPlugin::CloseAspenSimulation( void )
     mAspenMenu->Enable( ADPLUGIN_SHOW_ASPEN_SIMULATION, false );
     mAspenMenu->Enable( ADPLUGIN_HIDE_ASPEN_SIMULATION, false );
     mAspenMenu->Enable( ADPLUGIN_RUN_ASPEN_NETWORK, false );
-	mAspenMenu->Enable( ADPLUGIN_REINITIALIZE_ASPEN_SIMULATION, false );
+    mAspenMenu->Enable( ADPLUGIN_REINITIALIZE_ASPEN_SIMULATION, false );
     mAspenMenu->Enable( ADPLUGIN_STEP_ASPEN_NETWORK, false );
     mAspenMenu->Enable( ADPLUGIN_SAVE_SIMULATION, false );
     mAspenMenu->Enable( ADPLUGIN_SAVEAS_SIMULATION, false );
@@ -360,8 +360,8 @@ void ADPlugin::RunAspenNetwork( wxCommandEvent& event )
 void ADPlugin::ReinitializeAspenSimulation( wxCommandEvent& event )
 {
     UIPLUGIN_CHECKID( event )
-	//Log( "Reinitialize Simulation.\n" );
-	CommandPtr returnState( new Command() );
+    //Log( "Reinitialize Simulation.\n" );
+    CommandPtr returnState( new Command() );
     returnState->SetCommandName( "reinitNetwork" );
     DataValuePairPtr data( new DataValuePair() );
     data->SetData( "NetworkQuery", "reinitNetwork" );
@@ -489,7 +489,7 @@ wxMenu* ADPlugin::GetPluginPopupMenu( wxMenu* baseMenu )
     mAspenMenu->Append( ADPLUGIN_SHOW_ASPEN_SIMULATION, _( "Show" ) );
     mAspenMenu->Append( ADPLUGIN_HIDE_ASPEN_SIMULATION, _( "Hide" ) );
     mAspenMenu->Append( ADPLUGIN_RUN_ASPEN_NETWORK, _( "Run" ) );
-	mAspenMenu->Append( ADPLUGIN_REINITIALIZE_ASPEN_SIMULATION, _( "Reinitialize" ) );
+    mAspenMenu->Append( ADPLUGIN_REINITIALIZE_ASPEN_SIMULATION, _( "Reinitialize" ) );
     mAspenMenu->Append( ADPLUGIN_STEP_ASPEN_NETWORK, _( "Step" ) );
     mAspenMenu->Append( ADPLUGIN_SAVE_SIMULATION, _( "Save" ) );
     mAspenMenu->Append( ADPLUGIN_SAVEAS_SIMULATION, _( "SaveAs" ) );
@@ -503,7 +503,7 @@ wxMenu* ADPlugin::GetPluginPopupMenu( wxMenu* baseMenu )
         mAspenMenu->Enable( ADPLUGIN_SHOW_ASPEN_SIMULATION, true );
         mAspenMenu->Enable( ADPLUGIN_HIDE_ASPEN_SIMULATION, true );
         mAspenMenu->Enable( ADPLUGIN_RUN_ASPEN_NETWORK, true );
-	    mAspenMenu->Enable( ADPLUGIN_REINITIALIZE_ASPEN_SIMULATION, true );
+        mAspenMenu->Enable( ADPLUGIN_REINITIALIZE_ASPEN_SIMULATION, true );
         mAspenMenu->Enable( ADPLUGIN_STEP_ASPEN_NETWORK, true );
         mAspenMenu->Enable( ADPLUGIN_SAVE_SIMULATION, true );
         mAspenMenu->Enable( ADPLUGIN_SAVEAS_SIMULATION, true );
@@ -514,7 +514,7 @@ wxMenu* ADPlugin::GetPluginPopupMenu( wxMenu* baseMenu )
         mAspenMenu->Enable( ADPLUGIN_SHOW_ASPEN_SIMULATION, false );
         mAspenMenu->Enable( ADPLUGIN_HIDE_ASPEN_SIMULATION, false );
         mAspenMenu->Enable( ADPLUGIN_RUN_ASPEN_NETWORK, false );
-	    mAspenMenu->Enable( ADPLUGIN_REINITIALIZE_ASPEN_SIMULATION, false );
+        mAspenMenu->Enable( ADPLUGIN_REINITIALIZE_ASPEN_SIMULATION, false );
         mAspenMenu->Enable( ADPLUGIN_STEP_ASPEN_NETWORK, false );
         mAspenMenu->Enable( ADPLUGIN_SAVE_SIMULATION, false );
         mAspenMenu->Enable( ADPLUGIN_SAVEAS_SIMULATION, false );

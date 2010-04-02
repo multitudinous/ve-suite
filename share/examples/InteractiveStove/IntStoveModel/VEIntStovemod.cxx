@@ -171,31 +171,31 @@ void VEIntStovemod::InitializeNode( osg::Group* veworldDCS )
     PluginBase::InitializeNode( veworldDCS );
 
     baffleOne = new ves::xplorer::scenegraph::CADEntity(
-		"baffle_new2.stl", mDCS.get() );
+        "baffle_new2.stl", mDCS.get() );
     baffleOne->GetNode()->ToggleDisplay( false );
 
     baffleTwo = new ves::xplorer::scenegraph::CADEntity(
-		"baffle_new2.stl", mDCS.get() );
+        "baffle_new2.stl", mDCS.get() );
     baffleTwo->GetNode()->ToggleDisplay( false );
 
     baffleThree = new ves::xplorer::scenegraph::CADEntity(
-		"baffle_new2.stl", mDCS.get() );
+        "baffle_new2.stl", mDCS.get() );
     baffleThree->GetNode()->ToggleDisplay( false );
 
     baffleFour = new ves::xplorer::scenegraph::CADEntity(
-		"baffle_new2.stl", mDCS.get() );
+        "baffle_new2.stl", mDCS.get() );
     baffleFour->GetNode()->ToggleDisplay( false );
 
     baffleFive = new ves::xplorer::scenegraph::CADEntity(
-		"baffle_new2.stl", mDCS.get() );
+        "baffle_new2.stl", mDCS.get() );
     baffleFive->GetNode()->ToggleDisplay( false );
 
     baffleSix = new ves::xplorer::scenegraph::CADEntity(
-		"baffle_new2.stl", mDCS.get() );
+        "baffle_new2.stl", mDCS.get() );
     baffleSix->GetNode()->ToggleDisplay( false );
 
     baffleSeven = new ves::xplorer::scenegraph::CADEntity( 
-		"baffle_new2.stl", mDCS.get() );
+        "baffle_new2.stl", mDCS.get() );
     baffleSeven->GetNode()->ToggleDisplay( false );
 }
 ///////////////////////////////////////////////////////////////////////////////
@@ -227,7 +227,7 @@ void VEIntStovemod::SetCurrentCommand(ves::open::xml::CommandPtr command)
 
     if( command->GetCommandName() == "BAFFLE_UPDATE" )
     {
-	    command->GetDataValuePair("baffleParams")->GetData(baffleParams);
+        command->GetDataValuePair("baffleParams")->GetData(baffleParams);
 
         baffleNum = baffleParams.at(0);
         startXPos = baffleParams.at(1);
@@ -363,7 +363,7 @@ void VEIntStovemod::LoadStoveDataSet()
     tempStr = "star.vtu";
 #endif
     m_stoveData = static_cast< vtkDataSet* >
-		( ves::xplorer::util::readVtkThing( tempStr ) );
+        ( ves::xplorer::util::readVtkThing( tempStr ) );
 }
 ///////////////////////////////////////////////////////////////////////////////
 void VEIntStovemod::CreateContourPlane()

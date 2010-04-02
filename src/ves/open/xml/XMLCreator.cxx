@@ -112,7 +112,7 @@ XMLObjectPtr XMLCreator::CreateNewXMLObject( const std::string& objectType )
     {
         tmp = TwoDIntArrayPtr( new TwoDIntArray() );
     }
-	else if( objectType == "TwoDStringArray" )
+    else if( objectType == "TwoDStringArray" )
     {
         tmp = TwoDStringArrayPtr( new TwoDStringArray() );
     }
@@ -135,97 +135,97 @@ XMLObjectPtr XMLCreator::CreateNewXMLObjectCopy( const std::string& objectType,
     {
         tmp = FloatArrayPtr( new FloatArray(
             *( boost::dynamic_pointer_cast<FloatArray>( 
-			objectToCopy ) ) ) );
+            objectToCopy ) ) ) );
     }
     else if( objectType == "Command" )
     {
         tmp = CommandPtr( new Command(
             *( boost::dynamic_pointer_cast<ves::open::xml::Command>( 
-			objectToCopy ) ) ) );
+            objectToCopy ) ) ) );
     }
     else if( objectType == "vecommand" )
     {
         tmp = CommandPtr( new Command(
             *( boost::dynamic_pointer_cast<ves::open::xml::Command>( 
-			objectToCopy ) ) ) );
+            objectToCopy ) ) ) );
     }
     else if( objectType == "DataValuePair" )
     {
         tmp = DataValuePairPtr( new DataValuePair(
             *( boost::dynamic_pointer_cast<DataValuePair>( 
-			objectToCopy ) ) ) );
+            objectToCopy ) ) ) );
     }
     else if( objectType == "OneDDoubleArray" )
     {
         tmp = OneDDoubleArrayPtr( new OneDDoubleArray(
             *( boost::dynamic_pointer_cast<OneDDoubleArray>( 
-			objectToCopy ) ) ) );
+            objectToCopy ) ) ) );
     }
     else if( objectType == "OneDIntArray" )
     {
         tmp = OneDIntArrayPtr( new OneDIntArray(
             *( boost::dynamic_pointer_cast<OneDIntArray>( 
-			objectToCopy ) ) ) );
+            objectToCopy ) ) ) );
     }
     else if( objectType == "OneDStringArray" )
     {
         tmp = OneDStringArrayPtr( new OneDStringArray(
             *( boost::dynamic_pointer_cast<OneDStringArray>( 
-			objectToCopy ) ) ) );
+            objectToCopy ) ) ) );
     }
     else if( objectType == "ParameterBlock" )
     {
         tmp = ParameterBlockPtr( new ParameterBlock(
             *( boost::dynamic_pointer_cast<ParameterBlock>( 
-			objectToCopy ) ) ) );
+            objectToCopy ) ) ) );
     }
     else if( objectType == "StateInfo" )
     {
         tmp = StateInfoPtr( new StateInfo(
             *( boost::dynamic_pointer_cast<StateInfo>( 
-			objectToCopy ) ) ) );
+            objectToCopy ) ) ) );
     }
     else if( objectType == "ThreeDDoubleArray" )
     {
         tmp = ThreeDDoubleArrayPtr( new ThreeDDoubleArray(
             *( boost::dynamic_pointer_cast<ThreeDDoubleArray>( 
-			objectToCopy ) ) ) );
+            objectToCopy ) ) ) );
     }
     else if( objectType == "ThreeDIntArray" )
     {
         tmp = ThreeDIntArrayPtr( new ThreeDIntArray(
             *( boost::dynamic_pointer_cast<ThreeDIntArray>( 
-			objectToCopy ) ) ) );
+            objectToCopy ) ) ) );
     }
     else if( objectType == "Transform" )
     {
         tmp = TransformPtr( new Transform(
             *( boost::dynamic_pointer_cast<Transform>( 
-			objectToCopy ) ) ) );
+            objectToCopy ) ) ) );
     }
     else if( objectType == "TwoDDoubleArray" )
     {
         tmp = TwoDDoubleArrayPtr( new TwoDDoubleArray(
             *( boost::dynamic_pointer_cast<TwoDDoubleArray>( 
-			objectToCopy ) ) ) );
+            objectToCopy ) ) ) );
     }
     else if( objectType == "TwoDIntArray" )
     {
         tmp = TwoDIntArrayPtr( new TwoDIntArray(
             *( boost::dynamic_pointer_cast<TwoDIntArray>( 
-			objectToCopy ) ) ) );
+            objectToCopy ) ) ) );
     }
-	else if( objectType == "TwoDStringArray" )
+    else if( objectType == "TwoDStringArray" )
     {
         tmp = TwoDStringArrayPtr( new TwoDStringArray(
             *( boost::dynamic_pointer_cast<TwoDStringArray>( 
-			objectToCopy ) ) ) );
+            objectToCopy ) ) ) );
     }
     else if( objectType == "User" )
     {
         tmp = UserPtr( new User(
             *( boost::dynamic_pointer_cast<User>( 
-			objectToCopy ) ) ) );
+            objectToCopy ) ) ) );
     }
     return tmp;
 }

@@ -25,7 +25,7 @@ using namespace ves::open::xml;
 Body_Unit_i::Body_Unit_i (Body::Executive_ptr exec, std::string name)
   : UnitWrapper(exec,name)
 {
-	UnitName_ = name;
+    UnitName_ = name;
 }
 ///////////////////////////////////////////////////////////////////////////////
 Body_Unit_i::~Body_Unit_i (void)
@@ -35,18 +35,18 @@ Body_Unit_i::~Body_Unit_i (void)
 void Body_Unit_i::StartCalc (ACE_ENV_SINGLE_ARG_DECL )
   ACE_THROW_SPEC (( CORBA::SystemException, Error::EUnknown ))
 {
-	  // Add your implementation here
+      // Add your implementation here
     std::cout<<UnitName_<<" : Starting Calculations"<<std::endl;
     std::ostringstream strm;
     strm << activeId;
     xmlModelMap[ strm.str() ]->GetInput( "mNetworkThreeInputs" )->
-		GetDataValuePair( "mNetworkThreeInputs" )->
+        GetDataValuePair( "mNetworkThreeInputs" )->
         GetData( mNetworkThreeInputs );
 
     const std::vector< CommandPtr > inputsVec = 
-		xmlModelMap[ strm.str() ]->GetInputs();
+        xmlModelMap[ strm.str() ]->GetInputs();
     std::cout << "Active ID = " << activeId << " Num Inputs = " 
-		<< inputsVec.size() << std::endl;
+        << inputsVec.size() << std::endl;
 
     for( size_t i = 0; i < inputsVec.size(); ++i )
     {
@@ -63,24 +63,24 @@ void Body_Unit_i::StartCalc (ACE_ENV_SINGLE_ARG_DECL )
         }
     }
 
-	DataValuePairPtr dvp( new DataValuePair() );
-	dvp->SetData( "UNIT 3 VECTOR TEST", mNetworkThreeInputs );
+    DataValuePairPtr dvp( new DataValuePair() );
+    dvp->SetData( "UNIT 3 VECTOR TEST", mNetworkThreeInputs );
 
     ves::open::xml::CommandPtr command( new ves::open::xml::Command() );
 
     command->SetCommandName( "SimpleNetworkTest-Three Unit" );
-	command->AddDataValuePair( dvp );
+    command->AddDataValuePair( dvp );
 
     double temp = 3.0;
     DataValuePairPtr dvpNum( new DataValuePair() );
-	dvpNum->SetData( "UNIT 3 ORDER TEST", temp );
-	command->AddDataValuePair( dvpNum );
+    dvpNum->SetData( "UNIT 3 ORDER TEST", temp );
+    command->AddDataValuePair( dvpNum );
 
     xmlModelMap[ strm.str() ]->SetResult( command );
 
     std::string msg;
     msg = UnitName_+" : Instant calculation, already finished\n";
-	  //executive_->SetModuleMessage(activeId,msg.c_str());
+      //executive_->SetModuleMessage(activeId,msg.c_str());
 }
 ///////////////////////////////////////////////////////////////////////////////
 void Body_Unit_i::error (std::string msg)
@@ -90,6 +90,6 @@ void Body_Unit_i::error (std::string msg)
 ///////////////////////////////////////////////////////////////////////////////
 void Body_Unit_i::warning (std::string msg)
 {
-	msg+="\n";
-	executive_->SetModuleMessage(activeId, msg.c_str());
+    msg+="\n";
+    executive_->SetModuleMessage(activeId, msg.c_str());
 }

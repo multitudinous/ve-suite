@@ -11,11 +11,11 @@ IMPLEMENT_DYNAMIC_CLASS(NetworkThree, ves::conductor::UIPluginBase)
 /////////////////////////////////////////////////////////////////////////////
 NetworkThree::NetworkThree()
 {
-	mPluginName = wxT("NetworkThree");
-	
-	RegistVar("mNetworkThreeInputs", &mNetworkThreeInputs);
+    mPluginName = wxT("NetworkThree");
+    
+    RegistVar("mNetworkThreeInputs", &mNetworkThreeInputs);
 
-	wxImage my_img( network_xpm );
+    wxImage my_img( network_xpm );
     SetImage( my_img );
     
     mDescription = _("NetworkThree");
@@ -28,8 +28,8 @@ NetworkThree::~NetworkThree()
 ///////////////////////////////////////////////////////////////////////////////
 double NetworkThree::GetVersion()
 {
-	double result=1.0;
-	return result;
+    double result=1.0;
+    return result;
 }
 ///////////////////////////////////////////////////////////////////////////////
 PORT NetworkThree::GetIPorts()
@@ -66,28 +66,28 @@ PORT NetworkThree::GetOPorts()
 ///////////////////////////////////////////////////////////////////////////////
 ves::conductor::UIDialog* NetworkThree::UI(wxWindow* parent)
 {
-	if (dlg!=NULL)
-	{
-		return dlg;
-	}
+    if (dlg!=NULL)
+    {
+        return dlg;
+    }
   
-	dlg = new NetworkThreeUIDialog(parent, -1, serviceList,
-		&mNetworkThreeInputs);
+    dlg = new NetworkThreeUIDialog(parent, -1, serviceList,
+        &mNetworkThreeInputs);
       
-	dlg->CenterOnScreen(wxBOTH);
+    dlg->CenterOnScreen(wxBOTH);
 
-	return dlg;
+    return dlg;
 }
 ///////////////////////////////////////////////////////////////////////////////
 wxString NetworkThree::GetName()
 {
-	wxString result(_("NetworkThree")); //your name
-	return result;
+    wxString result(_("NetworkThree")); //your name
+    return result;
 }
 ///////////////////////////////////////////////////////////////////////////////
 wxString NetworkThree::GetConductorName()
 {
-	wxString result(_("SimpleNetwork_NetworkThree")); //your name
-	return result;
+    wxString result(_("SimpleNetwork_NetworkThree")); //your name
+    return result;
 }
 ///////////////////////////////////////////////////////////////////////////////

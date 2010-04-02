@@ -24,7 +24,7 @@ using namespace ves::open::xml;
 Body_Unit_i::Body_Unit_i (Body::Executive_ptr exec, std::string name)
   : UnitWrapper(exec,name)
 {
-	UnitName_ = name;
+    UnitName_ = name;
 }
 ///////////////////////////////////////////////////////////////////////////////
 Body_Unit_i::~Body_Unit_i (void)
@@ -40,14 +40,14 @@ ACE_THROW_SPEC (( CORBA::SystemException, Error::EUnknown ))
     strm << activeId;
 
     xmlModelMap[ strm.str() ]->GetInput( "mTextTwo" )->
-		GetDataValuePair( "mTextTwo" )->GetData( mTextTwo );
+        GetDataValuePair( "mTextTwo" )->GetData( mTextTwo );
 
     const std::vector< CommandPtr > inputsVec = 
-		xmlModelMap[ strm.str() ]->GetInputs();
+        xmlModelMap[ strm.str() ]->GetInputs();
     std::cout << "Active ID = " << activeId << " Num Inputs = " 
-		<< inputsVec.size() << std::endl;
-	std::cout << " model " << std::endl 
-		<< xmlModelMap[ strm.str() ] << std::endl;
+        << inputsVec.size() << std::endl;
+    std::cout << " model " << std::endl 
+        << xmlModelMap[ strm.str() ] << std::endl;
 
     for( size_t i = 0; i < inputsVec.size(); ++i )
     {
@@ -63,18 +63,18 @@ ACE_THROW_SPEC (( CORBA::SystemException, Error::EUnknown ))
             double tempDouble;
             //CommandPtr tempCommand( new Command );
             //tempCommand = boost::dynamic_pointer_cast< Command >( inputsVec.at( i )->
-			//	GetDataValuePair( j )->GetDataXMLObject() );
+            //    GetDataValuePair( j )->GetDataXMLObject() );
             /*if( boost::dynamic_pointer_cast< Command >( inputsVec.at( i )->
-				GetDataValuePair( j )->GetDataXMLObject() ) )
+                GetDataValuePair( j )->GetDataXMLObject() ) )
             {
-				boost::dynamic_pointer_cast< Command >( 
-					inputsVec.at( i )->GetDataValuePair( "SimpleNetworkTest-Three Unit" )->
-					GetDataXMLObject() )->GetDataValuePair( "UNIT 3 VECTOR TEST" )->
+                boost::dynamic_pointer_cast< Command >( 
+                    inputsVec.at( i )->GetDataValuePair( "SimpleNetworkTest-Three Unit" )->
+                    GetDataXMLObject() )->GetDataValuePair( "UNIT 3 VECTOR TEST" )->
                     GetData( mUnitThreeInputs );
 
                 boost::dynamic_pointer_cast< Command >( 
-					inputsVec.at( i )->GetDataValuePair( "SimpleNetworkTest-Three Unit" )->
-					GetDataXMLObject() )->GetDataValuePair( "UNIT 3 ORDER TEST" )->
+                    inputsVec.at( i )->GetDataValuePair( "SimpleNetworkTest-Three Unit" )->
+                    GetDataXMLObject() )->GetDataValuePair( "UNIT 3 ORDER TEST" )->
                     GetData( tempDouble );
 
                 for( size_t k=0; k<mUnitThreeInputs.size(); ++k )
@@ -84,19 +84,19 @@ ACE_THROW_SPEC (( CORBA::SystemException, Error::EUnknown ))
                 }
                 std::cout << "Order test value " << tempDouble << std::endl;
             }
-			else
-			{
-				tempString = inputsVec.at( i )->
-					GetDataValuePair( j )->GetDataString();
+            else
+            {
+                tempString = inputsVec.at( i )->
+                    GetDataValuePair( j )->GetDataString();
 
                 std::cout << "DataValuePair j = " << j << " = " 
                     << tempString << std::endl;
-			}*/
+            }*/
             if( boost::dynamic_pointer_cast< Command >( inputsVec.at( i )->
-				GetDataValuePair( j )->GetDataXMLObject() ) )
+                GetDataValuePair( j )->GetDataXMLObject() ) )
             {
                 size_t tempValue2 = boost::dynamic_pointer_cast< Command >( 
-					inputsVec.at( i )->GetDataValuePair( j )->GetDataXMLObject())->
+                    inputsVec.at( i )->GetDataValuePair( j )->GetDataXMLObject())->
                     GetNumberOfDataValuePairs();
                 for( size_t k=0; k<tempValue2; ++k )
                 {
@@ -112,28 +112,28 @@ ACE_THROW_SPEC (( CORBA::SystemException, Error::EUnknown ))
                         << " " << tempString << std::endl;
                 }
             }
-			else
-			{
-				tempString = inputsVec.at( i )->
-					GetDataValuePair( j )->GetDataString();
+            else
+            {
+                tempString = inputsVec.at( i )->
+                    GetDataValuePair( j )->GetDataString();
 
                 std::cout << "DataValuePair j = " << j << " = " 
                     << tempString << std::endl;
-			}
+            }
         }
     }
 
-	DataValuePairPtr dvp( new DataValuePair() );
-	dvp->SetData( "UNIT 2 STRING TEST", "this is test data from unit two" );
+    DataValuePairPtr dvp( new DataValuePair() );
+    dvp->SetData( "UNIT 2 STRING TEST", "this is test data from unit two" );
 
     ves::open::xml::CommandPtr command( new ves::open::xml::Command() );
     command->SetCommandName( "SimpleNetworkTest-Two Unit" );
-	command->AddDataValuePair( dvp );
+    command->AddDataValuePair( dvp );
 
     double temp = 2.0;
     DataValuePairPtr dvpNum( new DataValuePair() );
-	dvpNum->SetData( "UNIT 2 ORDER TEST", temp );
-	command->AddDataValuePair( dvpNum );
+    dvpNum->SetData( "UNIT 2 ORDER TEST", temp );
+    command->AddDataValuePair( dvpNum );
 
     xmlModelMap[ strm.str() ]->SetResult( command );
 
@@ -149,6 +149,6 @@ void Body_Unit_i::error (std::string msg)
 ///////////////////////////////////////////////////////////////////////////////
 void Body_Unit_i::warning (std::string msg)
 {
-	msg+="\n";
-	executive_->SetModuleMessage(activeId, msg.c_str());
+    msg+="\n";
+    executive_->SetModuleMessage(activeId, msg.c_str());
 }

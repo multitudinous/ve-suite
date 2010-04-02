@@ -132,7 +132,7 @@ void IntStoves_UI_Dialog::_buildPage()
     }
 
     //_numbaffsel = new wxComboBox(this, NUMBAFFSEL_COMBOBOX , wxT("Select Number of Baffles"),
-    //							wxDefaultPosition, wxDefaultSize, 7, baffnums, wxCB_DROPDOWN);
+    //                            wxDefaultPosition, wxDefaultSize, 7, baffnums, wxCB_DROPDOWN);
 
     //_designButton = new wxButton(this, DESIGN_BUTTON, wxT("Design Stove"));
 
@@ -174,7 +174,7 @@ void IntStoves_UI_Dialog::_buildPage()
         _startposy[i] = new wxTextCtrl(this, -1,wxT("0"),wxDefaultPosition,wxSize(40,25),wxTE_READONLY,wxDefaultValidator);
         _direction[i] = new wxTextCtrl(this, -1,wxT("0"),wxDefaultPosition,wxSize(40,25),wxTE_READONLY,wxDefaultValidator);
         _length[i]    = new wxTextCtrl(this, -1,wxT("0"),wxDefaultPosition,wxSize(40,25),wxTE_READONLY,wxDefaultValidator);
-        _depth[i]	  = new wxSpinCtrl(this, CHANGE_DEPTH ,wxT("1"),wxDefaultPosition,wxSize(70,25),wxSP_ARROW_KEYS|wxSP_WRAP,1,12,1);
+        _depth[i]      = new wxSpinCtrl(this, CHANGE_DEPTH ,wxT("1"),wxDefaultPosition,wxSize(70,25),wxSP_ARROW_KEYS|wxSP_WRAP,1,12,1);
         _baffGroup[i]->Add(_startposx[i], 1, wxALIGN_CENTER_HORIZONTAL);
         _baffGroup[i]->Add(_startposy[i], 1, wxALIGN_CENTER_HORIZONTAL);
         _baffGroup[i]->Add(_direction[i], 1, wxALIGN_CENTER_HORIZONTAL);
@@ -189,11 +189,11 @@ void IntStoves_UI_Dialog::_buildPage()
             _depth[i]->Enable( false );
     }
   //_activebaffsel = new wxComboBox(this, ACTBAFFSEL_COMBOBOX , wxT("Select the Active Baffle"),
-	//							wxDefaultPosition, wxDefaultSize, 7, activebaff, wxCB_DROPDOWN);
+    //                            wxDefaultPosition, wxDefaultSize, 7, activebaff, wxCB_DROPDOWN);
   //_addbafButton = new wxButton(this, ADDBAFF_BUTTON, wxT("Create New Baffle"));
   //_removebafButton = new wxButton(this, REMOVEBAFF_BUTTON, wxT("Remove Active Baffle"));
   _removebafCombo = new wxComboBox(this, REMOVEBAFF_COMBOBOX , wxT("Select the Baffle to Remove"),
-								wxDefaultPosition, wxDefaultSize, 0, activebaff, wxCB_DROPDOWN);
+                                wxDefaultPosition, wxDefaultSize, 0, activebaff, wxCB_DROPDOWN);
   _updateButton = new wxButton(this, UPDATE_PARAMS, wxT("Update"));
   m_closeButton = new wxButton(this, wxID_OK, wxT("Close"));
 
@@ -256,35 +256,35 @@ void IntStoves_UI_Dialog::Lock( bool l )
 /*
 void IntStoves_UI_Dialog::_onNumBafSel(wxCommandEvent& event)
 {
-	for ( int i=0; i<7; i++)
-	{
-	  if ( i <= _numbaffsel->GetSelection() )
-	  {
-		_baff[i]->Enable( true );
-		_startposx[i]->Enable( true );
-		_startposy[i]->Enable( true );
-		_direction[i]->Enable( true );
-		_length[i]->Enable( true );
-		_depth[i]->Enable( true );
-	  }
-	  else
-	  {
-	    if ( actbaffdrawn[i] )
-		{
-			_removeBaff(i);
-			actbaffdrawn[i] = false;
-		}
+    for ( int i=0; i<7; i++)
+    {
+      if ( i <= _numbaffsel->GetSelection() )
+      {
+        _baff[i]->Enable( true );
+        _startposx[i]->Enable( true );
+        _startposy[i]->Enable( true );
+        _direction[i]->Enable( true );
+        _length[i]->Enable( true );
+        _depth[i]->Enable( true );
+      }
+      else
+      {
+        if ( actbaffdrawn[i] )
+        {
+            _removeBaff(i);
+            actbaffdrawn[i] = false;
+        }
 
-		_baff[i]->Enable( false );
-		_startposx[i]->Enable( false );
-		_startposy[i]->Enable( false );
-		_direction[i]->Enable( false );
-		_length[i]->Enable( false );
-		_depth[i]->Enable( false );
-	  }
-	}
+        _baff[i]->Enable( false );
+        _startposx[i]->Enable( false );
+        _startposy[i]->Enable( false );
+        _direction[i]->Enable( false );
+        _length[i]->Enable( false );
+        _depth[i]->Enable( false );
+      }
+    }
 
-	_rebuildActBaffSel();
+    _rebuildActBaffSel();
 }
 */
 /*
@@ -297,9 +297,9 @@ void IntStoves_UI_Dialog::_onDesignStove(wxCommandEvent& event)
   
     for ( int i=0; i<7; i++ )
     {
-	    if ( _startposx[i]->GetLastPosition() > 0 )
+        if ( _startposx[i]->GetLastPosition() > 0 )
         {
-		    _reDrawBaff(i);	
+            _reDrawBaff(i);    
         }
     }
     _designCanvas->SwapBuffers();
@@ -313,79 +313,79 @@ void IntStoves_UI_Dialog::_onActBafSel( wxCommandEvent& event )
 }
 ////////////////////////////////////////////////////////////////////////////////
 void IntStoves_UI_Dialog::_onAddBaff()
-{	
+{    
     float* tempGrid = mCanvasWrapper->GetGridInfo();
     int* actpt1 = mCanvasWrapper->GetGridPoints( 1 );
     int* actpt2 = mCanvasWrapper->GetGridPoints( 2 );
     
-	if( tempGrid[ 0 ] != tempGrid[ 1 ]  && tempGrid[ 2 ] != tempGrid[ 3 ] )
-	{
+    if( tempGrid[ 0 ] != tempGrid[ 1 ]  && tempGrid[ 2 ] != tempGrid[ 3 ] )
+    {
         return;
     }
 
-	(m_numbaffles) += 1;
-	for ( int i=0; i<(m_numbaffles); i++ )
-	{
-		_baff[i]->Enable( true );
-		_startposx[i]->Enable( true );
-		_startposy[i]->Enable( true );
-		_direction[i]->Enable( true );
-		_length[i]->Enable( true );
-		_depth[i]->Enable( true );
-	}
-	wxString txt;
-	//if ( _designCanvas->actpt1[0] != -1 && _designCanvas->actpt2[0] != -1 && !actbaffdrawn[_activebaffsel->GetSelection()])
-	if ( actpt1[0] != -1 && actpt2[0] != -1 && !actbaffdrawn[(m_numbaffles)-1])
-	{	
+    (m_numbaffles) += 1;
+    for ( int i=0; i<(m_numbaffles); i++ )
+    {
+        _baff[i]->Enable( true );
+        _startposx[i]->Enable( true );
+        _startposy[i]->Enable( true );
+        _direction[i]->Enable( true );
+        _length[i]->Enable( true );
+        _depth[i]->Enable( true );
+    }
+    wxString txt;
+    //if ( _designCanvas->actpt1[0] != -1 && _designCanvas->actpt2[0] != -1 && !actbaffdrawn[_activebaffsel->GetSelection()])
+    if ( actpt1[0] != -1 && actpt2[0] != -1 && !actbaffdrawn[(m_numbaffles)-1])
+    {    
         if ( actpt1[0] == actpt2[0] || actpt1[1] == actpt2[1] )
-		{
-			if ( actpt1[0] < actpt2[0])
-			{
-				txt << actpt1[0];
-				_startposx[(m_numbaffles)-1]->SetValue(txt); txt.clear();
-				txt << actpt1[1];
-				_startposy[(m_numbaffles)-1]->SetValue(txt); txt.clear();
-				txt << 0;
-				_direction[(m_numbaffles)-1]->SetValue(txt); txt.clear();
-				txt <<  actpt2[0] - actpt1[0];
-				_length[(m_numbaffles)-1]->SetValue( txt ); txt.clear();
-			}
-			else if ( actpt1[0] > actpt2[0])
-			{
-				txt << actpt2[0];
-				_startposx[(m_numbaffles)-1]->SetValue(txt); txt.clear();
-				txt << actpt2[1];
-				_startposy[(m_numbaffles)-1]->SetValue(txt); txt.clear();
-				txt << 0;
-				_direction[(m_numbaffles)-1]->SetValue(txt); txt.clear();
-				txt << actpt1[0] - actpt2[0];
-				_length[(m_numbaffles)-1]->SetValue( txt ); txt.clear();
-			}
-			else if ( actpt1[1] < actpt2[1])
-			{
-				txt << actpt2[0];
-				_startposx[(m_numbaffles)-1]->SetValue(txt); txt.clear();
-				txt << actpt2[1];
-				_startposy[(m_numbaffles)-1]->SetValue(txt); txt.clear();
-				txt << 3;
-				_direction[(m_numbaffles)-1]->SetValue(txt); txt.clear();
-				txt << actpt2[1] - actpt1[1];
-				_length[(m_numbaffles)-1]->SetValue( txt ); txt.clear();
-			}
-			else if ( actpt1[1] > actpt2[1])
-			{
-				txt << actpt1[0];
-				_startposx[(m_numbaffles)-1]->SetValue(txt); txt.clear();
-				txt << actpt1[1];
-				_startposy[(m_numbaffles)-1]->SetValue(txt); txt.clear();
-				txt << 3;
-				_direction[(m_numbaffles)-1]->SetValue(txt); txt.clear();
-				txt << actpt1[1] - actpt2[1];
-				_length[(m_numbaffles)-1]->SetValue( txt ); txt.clear();
-			}
-			mCanvasWrapper->DrawNewBaffle();
-			actbaffdrawn[(m_numbaffles)-1] = true;
-		}
+        {
+            if ( actpt1[0] < actpt2[0])
+            {
+                txt << actpt1[0];
+                _startposx[(m_numbaffles)-1]->SetValue(txt); txt.clear();
+                txt << actpt1[1];
+                _startposy[(m_numbaffles)-1]->SetValue(txt); txt.clear();
+                txt << 0;
+                _direction[(m_numbaffles)-1]->SetValue(txt); txt.clear();
+                txt <<  actpt2[0] - actpt1[0];
+                _length[(m_numbaffles)-1]->SetValue( txt ); txt.clear();
+            }
+            else if ( actpt1[0] > actpt2[0])
+            {
+                txt << actpt2[0];
+                _startposx[(m_numbaffles)-1]->SetValue(txt); txt.clear();
+                txt << actpt2[1];
+                _startposy[(m_numbaffles)-1]->SetValue(txt); txt.clear();
+                txt << 0;
+                _direction[(m_numbaffles)-1]->SetValue(txt); txt.clear();
+                txt << actpt1[0] - actpt2[0];
+                _length[(m_numbaffles)-1]->SetValue( txt ); txt.clear();
+            }
+            else if ( actpt1[1] < actpt2[1])
+            {
+                txt << actpt2[0];
+                _startposx[(m_numbaffles)-1]->SetValue(txt); txt.clear();
+                txt << actpt2[1];
+                _startposy[(m_numbaffles)-1]->SetValue(txt); txt.clear();
+                txt << 3;
+                _direction[(m_numbaffles)-1]->SetValue(txt); txt.clear();
+                txt << actpt2[1] - actpt1[1];
+                _length[(m_numbaffles)-1]->SetValue( txt ); txt.clear();
+            }
+            else if ( actpt1[1] > actpt2[1])
+            {
+                txt << actpt1[0];
+                _startposx[(m_numbaffles)-1]->SetValue(txt); txt.clear();
+                txt << actpt1[1];
+                _startposy[(m_numbaffles)-1]->SetValue(txt); txt.clear();
+                txt << 3;
+                _direction[(m_numbaffles)-1]->SetValue(txt); txt.clear();
+                txt << actpt1[1] - actpt2[1];
+                _length[(m_numbaffles)-1]->SetValue( txt ); txt.clear();
+            }
+            mCanvasWrapper->DrawNewBaffle();
+            actbaffdrawn[(m_numbaffles)-1] = true;
+        }
     }
     
     _rebuildActBaffSel();
@@ -404,20 +404,20 @@ void IntStoves_UI_Dialog::_reDrawBaff(int index)
         _direction[index]->GetValue().ToLong( &temp3 );
         long int temp4;
         _length[index]->GetValue().ToLong( &temp4 );
-        mCanvasWrapper->RedrawBaffle( temp1, temp2, temp3, temp4, index);	
+        mCanvasWrapper->RedrawBaffle( temp1, temp2, temp3, temp4, index);    
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void IntStoves_UI_Dialog::_onRemoveBaff(wxCommandEvent& event)
 {
-	//if ( _activebaffsel->GetSelection() != -1)
-	if ( actbaffdrawn[_removebafCombo->GetSelection()])
-	{
-		int index = _removebafCombo->GetSelection();
-		_removeBaff(index);
-		_reOrganizeBaffs();
-		
-	}
+    //if ( _activebaffsel->GetSelection() != -1)
+    if ( actbaffdrawn[_removebafCombo->GetSelection()])
+    {
+        int index = _removebafCombo->GetSelection();
+        _removeBaff(index);
+        _reOrganizeBaffs();
+        
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void IntStoves_UI_Dialog::SetDepth( wxSpinEvent& event )
@@ -435,24 +435,24 @@ void IntStoves_UI_Dialog::_removeBaff(int index)
     _direction[index]->GetValue().ToLong( &temp3 );
     long int temp4;
     _length[index]->GetValue().ToLong( &temp4 );
-    mCanvasWrapper->RemoveBaffle( temp1, temp2, temp3, temp4 );	
+    mCanvasWrapper->RemoveBaffle( temp1, temp2, temp3, temp4 );    
 
-	_startposx[index]->Clear();
-	_startposy[index]->Clear();
-	_direction[index]->Clear();
-	_length[index]->Clear();
-	actbaffdrawn[index] = false;
+    _startposx[index]->Clear();
+    _startposy[index]->Clear();
+    _direction[index]->Clear();
+    _length[index]->Clear();
+    actbaffdrawn[index] = false;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void IntStoves_UI_Dialog::_rebuildActBaffSel()
 {
     /*
-	_rightset->Remove(_removebafCombo);
-	delete _removebafCombo;
-	_removebafCombo = new wxComboBox(this, REMOVEBAFF_COMBOBOX , wxT("Select the Baffle to Remove"),
-							wxDefaultPosition, wxDefaultSize, (m_numbaffles), activebaff, wxCB_DROPDOWN);
-	_rightset->Insert(2,_removebafCombo, 1, wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
-	Refresh();
+    _rightset->Remove(_removebafCombo);
+    delete _removebafCombo;
+    _removebafCombo = new wxComboBox(this, REMOVEBAFF_COMBOBOX , wxT("Select the Baffle to Remove"),
+                            wxDefaultPosition, wxDefaultSize, (m_numbaffles), activebaff, wxCB_DROPDOWN);
+    _rightset->Insert(2,_removebafCombo, 1, wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
+    Refresh();
 */
     _removebafCombo->Clear();
     for( int i = 0; i < m_numbaffles; ++i )
@@ -464,89 +464,89 @@ void IntStoves_UI_Dialog::_rebuildActBaffSel()
     }
     _removebafCombo->SetValue( wxT("Select the Baffle to Remove") );
 
-	static bool test = false;
-	int flag = 0;
-	if ( test )
-	{
-		flag = 1;
-		test = false;
-	}
-	else
-	{
-		flag = -1;
-		test = true;
-	}
-	   
-	wxSize temp = GetSize();
-	temp.SetHeight( temp.GetHeight()+flag );
-	temp.SetWidth( temp.GetWidth()+flag );
-	SetSize( temp );
+    static bool test = false;
+    int flag = 0;
+    if ( test )
+    {
+        flag = 1;
+        test = false;
+    }
+    else
+    {
+        flag = -1;
+        test = true;
+    }
+       
+    wxSize temp = GetSize();
+    temp.SetHeight( temp.GetHeight()+flag );
+    temp.SetWidth( temp.GetWidth()+flag );
+    SetSize( temp );
     
     mCanvasWrapper->DrawCanvas();
 /*#ifndef __WXMAC__
-	_designCanvas->SetCurrent( *(_designCanvas->GetContext()) );
+    _designCanvas->SetCurrent( *(_designCanvas->GetContext()) );
 #else
-	_designCanvas->SetCurrent();
+    _designCanvas->SetCurrent();
 #endif
-	_designCanvas->_draw();  
+    _designCanvas->_draw();  
   
-	for ( int i=0; i<m_numbaffles; i++ )
-	{
-		_reDrawBaff(i);	  
-	}
-	_designCanvas->SwapBuffers();*/
+    for ( int i=0; i<m_numbaffles; i++ )
+    {
+        _reDrawBaff(i);      
+    }
+    _designCanvas->SwapBuffers();*/
 }
 ////////////////////////////////////////////////////////////////////////////////
 void IntStoves_UI_Dialog::_reOrganizeBaffs()
 {
-	(m_numbaffles) -= 1;
+    (m_numbaffles) -= 1;
 
-	for( int i=0; i<(m_numbaffles); i++ )
-	{
-		if ( !actbaffdrawn[i] && actbaffdrawn[i+1] )
-		{
-			_startposx[i]->SetValue(_startposx[i+1]->GetValue());
-			_startposy[i]->SetValue(_startposy[i+1]->GetValue());
-			_direction[i]->SetValue(_direction[i+1]->GetValue());
-			_length[i]->SetValue( _length[i+1]->GetValue());
-			_depth[i]->SetValue( _depth[i+1]->GetValue());
-			actbaffdrawn[i] = true;
-			actbaffdrawn[i+1] = false;
-			_startposx[i+1]->Clear();
-			_startposy[i+1]->Clear();
-			_direction[i+1]->Clear();
-			_length[i+1]->Clear();
-			_depth[i+1]->SetValue(1);
-		}
-		/*else if ( i == (m_numbaffles)-1 )
-		{
-			_startposx[i]->Clear();
-			_startposy[i]->Clear();
-			_direction[i]->Clear();
-			_length[i]->Clear();
-			_depth[i]->SetValue(1);
-			actbaffdrawn[i] = false;
-		}*/
-	}
-	for ( int i=0; i<7; i++ )
-	{
-		if ( i >= (m_numbaffles) )
-		{
-			_startposx[i]->SetValue( wxT("0") );
-			_startposy[i]->SetValue( wxT("0") );
-			_direction[i]->SetValue( wxT("0") );
-			_length[i]->SetValue( wxT("0") );
-			_depth[i]->SetValue( wxT("1") );
+    for( int i=0; i<(m_numbaffles); i++ )
+    {
+        if ( !actbaffdrawn[i] && actbaffdrawn[i+1] )
+        {
+            _startposx[i]->SetValue(_startposx[i+1]->GetValue());
+            _startposy[i]->SetValue(_startposy[i+1]->GetValue());
+            _direction[i]->SetValue(_direction[i+1]->GetValue());
+            _length[i]->SetValue( _length[i+1]->GetValue());
+            _depth[i]->SetValue( _depth[i+1]->GetValue());
+            actbaffdrawn[i] = true;
+            actbaffdrawn[i+1] = false;
+            _startposx[i+1]->Clear();
+            _startposy[i+1]->Clear();
+            _direction[i+1]->Clear();
+            _length[i+1]->Clear();
+            _depth[i+1]->SetValue(1);
+        }
+        /*else if ( i == (m_numbaffles)-1 )
+        {
+            _startposx[i]->Clear();
+            _startposy[i]->Clear();
+            _direction[i]->Clear();
+            _length[i]->Clear();
+            _depth[i]->SetValue(1);
+            actbaffdrawn[i] = false;
+        }*/
+    }
+    for ( int i=0; i<7; i++ )
+    {
+        if ( i >= (m_numbaffles) )
+        {
+            _startposx[i]->SetValue( wxT("0") );
+            _startposy[i]->SetValue( wxT("0") );
+            _direction[i]->SetValue( wxT("0") );
+            _length[i]->SetValue( wxT("0") );
+            _depth[i]->SetValue( wxT("1") );
 
-			_baff[i]->Enable( false );
-			_startposx[i]->Enable( false );
-			_startposy[i]->Enable( false );
-			_direction[i]->Enable( false );
-			_length[i]->Enable( false );
-			_depth[i]->Enable( false );
-		}
-	}
-	_rebuildActBaffSel();
+            _baff[i]->Enable( false );
+            _startposx[i]->Enable( false );
+            _startposy[i]->Enable( false );
+            _direction[i]->Enable( false );
+            _length[i]->Enable( false );
+            _depth[i]->Enable( false );
+        }
+    }
+    _rebuildActBaffSel();
     SetBaffleData();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -608,49 +608,49 @@ void IntStoves_UI_Dialog::SetBaffleData()
 ////////////////////////////////////////////////////////////////////////////////
 void IntStoves_UI_Dialog::UpdateParams(wxCommandEvent& event)
 {
-	mUIPluginBase->SetActiveModel();
+    mUIPluginBase->SetActiveModel();
 
-	(*p_numbaffles) = m_numbaffles;
+    (*p_numbaffles) = m_numbaffles;
 
-	std::vector<double> temp[7];
+    std::vector<double> temp[7];
 
     long int temp1;
-	for ( int i=0; i<7; i++ )
-	{
-		temp[i].clear();
+    for ( int i=0; i<7; i++ )
+    {
+        temp[i].clear();
         _startposx[i]->GetValue().ToLong( &temp1 );
-		temp[i].push_back(temp1);
+        temp[i].push_back(temp1);
         _startposy[i]->GetValue().ToLong( &temp1 );
-		temp[i].push_back( temp1 );
+        temp[i].push_back( temp1 );
         _direction[i]->GetValue().ToLong( &temp1 );
-		temp[i].push_back( temp1 );
+        temp[i].push_back( temp1 );
         _length[i]->GetValue().ToLong( &temp1 );
-		temp[i].push_back( temp1 );
-		temp[i].push_back( _depth[i]->GetValue() );
-	}
+        temp[i].push_back( temp1 );
+        temp[i].push_back( _depth[i]->GetValue() );
+    }
 
-	(*p_baffle1).clear();
-	(*p_baffle1) = temp[0];
+    (*p_baffle1).clear();
+    (*p_baffle1) = temp[0];
 
-	(*p_baffle2).clear();
-	(*p_baffle2) = temp[1];
-	 
-	(*p_baffle3).clear();
-	(*p_baffle3) = temp[2];
-	  
-	(*p_baffle4).clear();
-	(*p_baffle4) = temp[3];
-	  
-	(*p_baffle5).clear();
-	(*p_baffle5) = temp[4];
+    (*p_baffle2).clear();
+    (*p_baffle2) = temp[1];
+     
+    (*p_baffle3).clear();
+    (*p_baffle3) = temp[2];
+      
+    (*p_baffle4).clear();
+    (*p_baffle4) = temp[3];
+      
+    (*p_baffle5).clear();
+    (*p_baffle5) = temp[4];
 
-	(*p_baffle6).clear();
-	(*p_baffle6) = temp[5];
+    (*p_baffle6).clear();
+    (*p_baffle6) = temp[5];
 
-	(*p_baffle7).clear();
-	(*p_baffle7) = temp[6];
+    (*p_baffle7).clear();
+    (*p_baffle7) = temp[6];
 
-	SetBaffleData();
+    SetBaffleData();
 }
 ////////////////////////////////////////////////////////////////////////////////
 int IntStoves_UI_Dialog::GetNumBaffles()

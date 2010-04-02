@@ -41,16 +41,16 @@ private:
         return tempStr;
     }
 
-	wxTextCtrl* _serverTextCtrl;
-	wxTextCtrl* _layersTextCtrl;
-	wxTextCtrl* _stylesTextCtrl;
-	wxRadioButton* _jpegRadioBtn;
-	wxRadioButton* _pngRadioBtn;
-	wxRadioButton* _tiffRadioBtn;
-	wxCheckBox* _transparentCheckBox;
-	wxStdDialogButtonSizer* _sdbSizer;
-	wxButton* _sdbSizerOK;
-	wxButton* _sdbSizerCancel;
+    wxTextCtrl* _serverTextCtrl;
+    wxTextCtrl* _layersTextCtrl;
+    wxTextCtrl* _stylesTextCtrl;
+    wxRadioButton* _jpegRadioBtn;
+    wxRadioButton* _pngRadioBtn;
+    wxRadioButton* _tiffRadioBtn;
+    wxCheckBox* _transparentCheckBox;
+    wxStdDialogButtonSizer* _sdbSizer;
+    wxButton* _sdbSizerOK;
+    wxButton* _sdbSizerCancel;
 };
 
 #endif // _MINERVA_WMS_DIALOG_H_

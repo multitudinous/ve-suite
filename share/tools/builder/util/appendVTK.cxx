@@ -45,9 +45,9 @@ using namespace ves::xplorer::util;
 int main( int argc, char *argv[] )
 {    
     // Read in a file containing an unstructured grid...
-	std::string inFileName1;// = 0;
-	std::string inFileName2;// = 0;
-	std::string outFileName;// = 0;
+    std::string inFileName1;// = 0;
+    std::string inFileName2;// = 0;
+    std::string outFileName;// = 0;
     if (argc > 1)
     {
         //inFileName1 = new char [100];

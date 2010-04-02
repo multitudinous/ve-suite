@@ -75,7 +75,7 @@ void Octant::GetBound( double bound[6] )
 }
 
 void Octant::GetOctantsPoints( double bound[6], 
-			       float xout[27], float yout[27], float zout[27] )
+                   float xout[27], float yout[27], float zout[27] )
 {
   int i;
   int j = 0;
@@ -104,7 +104,7 @@ void Octant::GetOctantsPoints( double bound[6],
 }
 
 void Octant::GetSiblingBound( int siblingID, float xout[], float yout[], float zout[],
-			      double bound[6] )
+                  double bound[6] )
 {
   switch ( siblingID )
     {

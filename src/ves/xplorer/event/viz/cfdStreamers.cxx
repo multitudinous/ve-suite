@@ -355,34 +355,34 @@ void cfdStreamers::Update()
 
     if( !m_gpuTools )
     {    
-	    vtkActor* temp = vtkActor::New();
-	    temp->SetMapper( mapper );
-	    temp->GetProperty()->SetSpecularPower( 20.0f );
-	    temp->GetProperty()->SetLineWidth( lineDiameter );
-	    //test to see if there is enough memory, if not, filters are deleted
-	    try
-	    {
-	        osg::ref_ptr< ves::xplorer::scenegraph::Geode > tempGeode = 
-	            new ves::xplorer::scenegraph::Geode();
-	        tempGeode->TranslateToGeode( temp );
-	        //tempGeode->StreamLineToGeode( temp );
+        vtkActor* temp = vtkActor::New();
+        temp->SetMapper( mapper );
+        temp->GetProperty()->SetSpecularPower( 20.0f );
+        temp->GetProperty()->SetLineWidth( lineDiameter );
+        //test to see if there is enough memory, if not, filters are deleted
+        try
+        {
+            osg::ref_ptr< ves::xplorer::scenegraph::Geode > tempGeode = 
+                new ves::xplorer::scenegraph::Geode();
+            tempGeode->TranslateToGeode( temp );
+            //tempGeode->StreamLineToGeode( temp );
 
-	        geodes.push_back( tempGeode.get() );
-	        updateFlag = true;
-	    }
-	    catch( std::bad_alloc )
-	    {
-	        streamTracer->Delete();
-	        streamTracer = vtkStreamTracer::New();
-	        mapper->Delete();
-	        mapper = vtkPolyDataMapper::New();
-	        vprDEBUG( vesDBG, 0 ) << "|\tMemory allocation failure : cfdStreamers "
-	            << std::endl << vprDEBUG_FLUSH;
-	    }
+            geodes.push_back( tempGeode.get() );
+            updateFlag = true;
+        }
+        catch( std::bad_alloc )
+        {
+            streamTracer->Delete();
+            streamTracer = vtkStreamTracer::New();
+            mapper->Delete();
+            mapper = vtkPolyDataMapper::New();
+            vprDEBUG( vesDBG, 0 ) << "|\tMemory allocation failure : cfdStreamers "
+                << std::endl << vprDEBUG_FLUSH;
+        }
 
-	    temp->Delete();
-	    c2p->Delete();
-	}
+        temp->Delete();
+        c2p->Delete();
+    }
     // When gpu rendering is on
     else
     {    
@@ -390,9 +390,9 @@ void cfdStreamers::Update()
         {
             OSGStreamlineStage* tempStage = new OSGStreamlineStage();
             tempStage->SetParticleDiameter( particleDiameter );
-			//This is a multiplier to create extra points using 
-			//linear interplation to smooth out the animation
-			int mult=10;  
+            //This is a multiplier to create extra points using 
+            //linear interplation to smooth out the animation
+            int mult=10;  
             
             osg::ref_ptr<ves::xplorer::scenegraph::Geode > tempGeode1 = 
                 tempStage->createInstanced( cleanPD->GetOutput(), mult, 
@@ -406,10 +406,10 @@ void cfdStreamers::Update()
         }
         catch( std::bad_alloc )
         {
-	        streamTracer->Delete();
-	        streamTracer = vtkStreamTracer::New();
-	        mapper->Delete();
-	        mapper = vtkPolyDataMapper::New();
+            streamTracer->Delete();
+            streamTracer = vtkStreamTracer::New();
+            mapper->Delete();
+            mapper = vtkPolyDataMapper::New();
             vprDEBUG( vesDBG, 0 ) << "|\tMemory allocation failure : cfdStreamers "
                 << std::endl << vprDEBUG_FLUSH;
         }

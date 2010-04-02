@@ -92,7 +92,7 @@ NetworkSystemView::NetworkSystemView()
 ////////////////////////////////////////////////////////////////////////////////
 NetworkSystemView::NetworkSystemView( std::string network )
 {
-	LoadVESData( network );
+    LoadVESData( network );
 }
 ////////////////////////////////////////////////////////////////////////////////
 NetworkSystemView::NetworkSystemView( const NetworkSystemView& input )
@@ -179,7 +179,7 @@ osg::Group* NetworkSystemView::DrawNetwork( std::string netId )
             //normalize the normals so that lighting works better
             loadedModel->getOrCreateStateSet()->setMode( GL_NORMALIZE, 
                 osg::StateAttribute::ON );
-		    //setup two sided lighting to account for poor modeling
+            //setup two sided lighting to account for poor modeling
             osg::ref_ptr< osg::LightModel > lightModel;
             lightModel = new osg::LightModel;
             lightModel->setTwoSided( true );
@@ -188,39 +188,39 @@ osg::Group* NetworkSystemView::DrawNetwork( std::string netId )
 
             //scale comp correctly
             osg::ref_ptr<osg::AutoTransform> scaledComp = new osg::AutoTransform();
-		    scaledComp->addChild( loadedModel.get() );
+            scaledComp->addChild( loadedModel.get() );
             scaledComp->setScale( iconScale );
 
             //Rotate the 3d comps 180 degrees around X axis
             //corrects issue with initial model location
             osg::ref_ptr<osg::AutoTransform> rotatedComp = new osg::AutoTransform();
-		    rotatedComp->addChild( scaledComp.get() );
-    		
-		    //move pivot point to center
-		    ves::xplorer::scenegraph::util::ComputeBoundsVisitor visitor2;
+            rotatedComp->addChild( scaledComp.get() );
+            
+            //move pivot point to center
+            ves::xplorer::scenegraph::util::ComputeBoundsVisitor visitor2;
             rotatedComp->accept( visitor2 );
             osg::BoundingBox bounds2 = visitor2.getBoundingBox();
-		    rotatedComp->setPivotPoint(bounds2.center());
-    		
-		    //rotate
+            rotatedComp->setPivotPoint(bounds2.center());
+            
+            //rotate
             rotatedComp->setRotation( osg::Quat( osg::DegreesToRadians( 180.0 ), 
                 osg::Vec3d( 1.0, 0.0, 0.0 ) ) );
 
             //rotate according to iconMirror value
             osg::ref_ptr<osg::AutoTransform> mirrorComp = new osg::AutoTransform();
-		    vprDEBUG( vesDBG, 2 ) << "PP: x="<<mirrorComp->getPivotPoint().x()
+            vprDEBUG( vesDBG, 2 ) << "PP: x="<<mirrorComp->getPivotPoint().x()
                 << " y="<<mirrorComp->getPivotPoint().y()
                 << " z="<<mirrorComp->getPivotPoint().z()
                 << std::endl << vprDEBUG_FLUSH;
             mirrorComp->addChild( rotatedComp.get() );
             
-		    //move pivot point to center
-		    ves::xplorer::scenegraph::util::ComputeBoundsVisitor visitor3;
+            //move pivot point to center
+            ves::xplorer::scenegraph::util::ComputeBoundsVisitor visitor3;
             mirrorComp->accept( visitor3 );
             osg::BoundingBox bounds3 = visitor3.getBoundingBox();
-		    mirrorComp->setPivotPoint(bounds3.center());
-    		
-		    if( mirror > 0 && mirror < 3 )
+            mirrorComp->setPivotPoint(bounds3.center());
+            
+            if( mirror > 0 && mirror < 3 )
             {
                 //horizontally
                 if( mirror == 1 )
@@ -238,14 +238,14 @@ osg::Group* NetworkSystemView::DrawNetwork( std::string netId )
             osg::ref_ptr<osg::AutoTransform> reRotatedComp = new osg::AutoTransform();
             reRotatedComp->addChild( mirrorComp.get() );
             
-		    //move pivot point to center
-		    ves::xplorer::scenegraph::util::ComputeBoundsVisitor visitor4;
+            //move pivot point to center
+            ves::xplorer::scenegraph::util::ComputeBoundsVisitor visitor4;
             reRotatedComp->accept( visitor4 );
             osg::BoundingBox bounds4 = visitor4.getBoundingBox();
-		    reRotatedComp->setPivotPoint(bounds4.center());
-    		
-		    //rotate
-		    reRotatedComp->setRotation( osg::Quat( 
+            reRotatedComp->setPivotPoint(bounds4.center());
+            
+            //rotate
+            reRotatedComp->setRotation( osg::Quat( 
                     osg::DegreesToRadians( rotation ), 
                     osg::Vec3d( 0.0, 1.0, 0.0 ) ) );
 
@@ -254,12 +254,12 @@ osg::Group* NetworkSystemView::DrawNetwork( std::string netId )
             std::pair<unsigned int, unsigned int> xyPair = iconLocation->GetPoint();
             osg::ref_ptr<osg::AutoTransform> mModelTrans = new osg::AutoTransform();
             mModelTrans->addChild( reRotatedComp.get() );
-    		
-		    //find offset from center to upper left corner
-		    ves::xplorer::scenegraph::util::ComputeBoundsVisitor visitor5;
+            
+            //find offset from center to upper left corner
+            ves::xplorer::scenegraph::util::ComputeBoundsVisitor visitor5;
             mModelTrans->accept( visitor5 );
             osg::BoundingBox bounds5 = visitor5.getBoundingBox();
-		    osg::Vec3 centerTrans = osg::Vec3( xyPair.first + 
+            osg::Vec3 centerTrans = osg::Vec3( xyPair.first + 
                 ((bounds5.xMax()-bounds5.xMin())/2), 0, xyPair.second + 
                 ((bounds5.zMax()-bounds5.zMin())/2));
             mModelTrans->setPosition( centerTrans );
@@ -271,7 +271,7 @@ osg::Group* NetworkSystemView::DrawNetwork( std::string netId )
     //Streams
     NetworkPtr veNetwork = mainSystem->GetNetwork();
     //different typed of streams material, heat, & work
-	osg::ref_ptr<osg::Vec4Array> colorBlack = new osg::Vec4Array;
+    osg::ref_ptr<osg::Vec4Array> colorBlack = new osg::Vec4Array;
     osg::ref_ptr<osg::Vec4Array> colorGreen = new osg::Vec4Array;
     osg::ref_ptr<osg::Vec4Array> colorRed = new osg::Vec4Array;
     colorBlack->push_back( osg::Vec4( 0.0f, 0.0f, 0.0f, 1.0f ) );
@@ -300,22 +300,22 @@ osg::Group* NetworkSystemView::DrawNetwork( std::string netId )
         linesGeom->setColorBinding( osg::Geometry::BIND_OVERALL );
         linesGeom->setNormalArray( shared_normals.get() );
         linesGeom->setNormalBinding( osg::Geometry::BIND_OVERALL );
-		if( veNetwork->GetLink( i )->GetLinkType() == 0 )
-		{
+        if( veNetwork->GetLink( i )->GetLinkType() == 0 )
+        {
             linesGeom->setColorArray( colorBlack.get() );
-		}
-		else if( veNetwork->GetLink( i )->GetLinkType() == 1 )
-		{
+        }
+        else if( veNetwork->GetLink( i )->GetLinkType() == 1 )
+        {
             linesGeom->setColorArray( colorRed.get() );
-		}
-		else if( veNetwork->GetLink( i )->GetLinkType() == 2 )
-		{
+        }
+        else if( veNetwork->GetLink( i )->GetLinkType() == 2 )
+        {
             linesGeom->setColorArray( colorGreen.get() );
-		}
-		else
-		{
+        }
+        else
+        {
             linesGeom->setColorArray( colorBlack.get() );
-		}
+        }
         geode->addDrawable( linesGeom );
     }
     geode->getOrCreateStateSet()->setMode( GL_LIGHTING, osg::StateAttribute::OFF );
@@ -341,8 +341,8 @@ void NetworkSystemView::LoadVESData( std::string xmlNetwork )
     networkWriter.UseStandaloneDOMDocumentManager();
     networkWriter.ReadFromString();
 
-	std::string topId;
-	std::map< std::string, ves::open::xml::model::NetworkPtr > m_networkMap;
+    std::string topId;
+    std::map< std::string, ves::open::xml::model::NetworkPtr > m_networkMap;
     std::map< std::string, std::vector< std::string > > m_networkModelMap;
     std::map< std::string, ves::open::xml::model::ModelPtr > m_modelMap;
     std::map< std::string, ves::open::xml::UserPtr > m_userMap;
@@ -371,7 +371,7 @@ void NetworkSystemView::LoadVESData( std::string xmlNetwork )
             systems[tempSystem->GetID()] = tempSystem;
             //get the main systems id
             
-			topId = tempSystem->GetID();
+            topId = tempSystem->GetID();
             m_networkMap[ "Network" ] = tempSystem->GetNetwork();
             objectIter = objectVector.begin();
             objectIter = objectVector.erase( objectIter );

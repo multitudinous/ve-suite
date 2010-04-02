@@ -134,7 +134,7 @@ class OSGEPHEMERIS_EXPORT SkyDome:  public Sphere
         double _findIncidenceLength(double);
 
         static unsigned int  _sunImageWidth;
-	static unsigned int  _sunImageHeight;
+    static unsigned int  _sunImageHeight;
         static unsigned int  _sunImageInternalTextureFormat;
         static unsigned int  _sunImagePixelFormat;
         static unsigned char _sunImageData[];

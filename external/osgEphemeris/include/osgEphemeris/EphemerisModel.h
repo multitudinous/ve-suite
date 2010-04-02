@@ -382,7 +382,7 @@ class OSGEPHEMERIS_EXPORT EphemerisModel : public osg::Group
         void _updateStars();
 
         osg::ref_ptr<osg::LightSource> _sunLightSource;
-		  osg::ref_ptr<osg::LightSource> _moonLightSource;
+          osg::ref_ptr<osg::LightSource> _moonLightSource;
         osg::ref_ptr<MoveWithEyePointTransform> _ttx;
         osg::ref_ptr<osg::MatrixTransform> _skyTx;
         osg::ref_ptr<SkyDome> _skyDome;

@@ -23,8 +23,8 @@ int main (int argc, char* argv[])
   catch(const XMLException &toCatch)
     {
       std::cerr << "Error during Xerces-c Initialization.\n"
-				<< "  Exception message:"
-				<< XMLString::transcode(toCatch.getMessage()) << std::endl;
+                << "  Exception message:"
+                << XMLString::transcode(toCatch.getMessage()) << std::endl;
       return 1;
     }
 
@@ -60,7 +60,7 @@ int main (int argc, char* argv[])
     CORBA::Object_var poa_object = orb->resolve_initial_references ("RootPOA"); // get the root poa
     PortableServer::POA_var poa = PortableServer::POA::_narrow(poa_object.in());
     PortableServer::POAManager_var poa_manager = poa->the_POAManager ();
-   	CORBA::PolicyList policies (1);
+       CORBA::PolicyList policies (1);
     policies.length (1);
 
     CORBA::Any pol;
@@ -78,16 +78,16 @@ int main (int argc, char* argv[])
 
     // Creation of childPOA is over. Destroy the Policy objects.
     for (CORBA::ULong i = 0; i < policies.length (); ++i)
-	{
+    {
        policies[i]->destroy ();
     }
 
     poa_manager->activate ();
-	  
+      
     //Create the Servant
     Body_Unit_i unit_i(exec.in(), UNITNAME);
     
-	PortableServer::ObjectId_var id =
+    PortableServer::ObjectId_var id =
         PortableServer::string_to_ObjectId (CORBA::string_dup(UNITNAME.c_str()));
 
     child_poa->activate_object_with_id (id.in (), &unit_i);

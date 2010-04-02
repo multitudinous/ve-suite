@@ -434,7 +434,7 @@ void CADEntityHelper::LoadFile( const std::string& filename,
         osgUtil::Optimizer graphOpti;
         graphOpti.optimize( tempCADNode.get(), 
                            //Had to comment out this flag because of a bug in OSG
-						   //osgUtil::Optimizer::FLATTEN_STATIC_TRANSFORMS |
+                           //osgUtil::Optimizer::FLATTEN_STATIC_TRANSFORMS |
                            //osgUtil::Optimizer::REMOVE_REDUNDANT_NODES |
                            osgUtil::Optimizer::REMOVE_LOADED_PROXY_NODES |
                            osgUtil::Optimizer::COMBINE_ADJACENT_LODS |

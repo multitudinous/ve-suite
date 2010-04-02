@@ -49,8 +49,8 @@ int main( int argc, char *argv[] )
 {    
    // If the command line contains an input vtk file name and an output file,
    // set them up.  Otherwise, get them from the user...
-	std::string inFileName;// = NULL;
-	std::string outFileName;//std::string = NULL;
+    std::string inFileName;// = NULL;
+    std::string outFileName;//std::string = NULL;
    fileIO::processCommandLineArgs( argc, argv,
                                    "convert cell-centered data file", 
                                    inFileName, outFileName );

@@ -58,9 +58,9 @@ multiPlaneVtkOutput::~multiPlaneVtkOutput()
 }
 
 void multiPlaneVtkOutput::writeMultiPlanes( vtkDataSet *unsGrid,
-				 int X_cutMaxStepRange,
-				 int Y_cutMaxStepRange,
-				 int Z_cutMaxStepRange,
+                 int X_cutMaxStepRange,
+                 int Y_cutMaxStepRange,
+                 int Z_cutMaxStepRange,
              int multiPlaneOption,
              int transientFileNumber,
              int myid, 
@@ -119,28 +119,28 @@ std::cout << zmin << " : " << zmax << std::endl;
    if ( myid < xprocs )
    {
       int pppx, xrem, begin, end;
-	   pppx = X_cutMaxStepRange/xprocs;
-	   xrem = X_cutMaxStepRange%xprocs;
-	   
+       pppx = X_cutMaxStepRange/xprocs;
+       xrem = X_cutMaxStepRange%xprocs;
+       
       if ( myid < xrem )
-	   {
-  	      pppx += 1;
-   	   begin = myid*pppx;
+       {
+            pppx += 1;
+          begin = myid*pppx;
          end = begin + pppx -1;
-	   }
-	
+       }
+    
       if ( myid >= xrem )
-	   {
-   	   begin = myid*pppx + xrem;
+       {
+          begin = myid*pppx + xrem;
          end = begin + pppx -1;
-	   }
+       }
 
       append = new vtkPolyData* [X_cutMaxStepRange];
       //append = new vtkPolyData* [ end + 1 ];
       //for (i=0; i < X_cutMaxStepRange; i++ )
       //{
-    	for (i = begin; i <= end ; i++ )
-    	{
+        for (i = begin; i <= end ; i++ )
+        {
          float position = xmin + dx * ( i + 1 );
          append[i] = MakePolyData( 0, position );
 
@@ -155,7 +155,7 @@ std::cout << zmin << " : " << zmax << std::endl;
       }
       
       for (i=0; i<X_cutMaxStepRange; i++)
-    	//for (i = 0; i <= end ; i++ )
+        //for (i = 0; i <= end ; i++ )
          append[i]->Delete();
    }
 
@@ -175,19 +175,19 @@ std::cout << zmin << " : " << zmax << std::endl;
 
    if( myid >= xprocs && myid < xprocs + yprocs )
    {
-	   int pppy, yrem, begin, end;
-	   pppy = Y_cutMaxStepRange/yprocs;
-	   yrem = Y_cutMaxStepRange%yprocs;
-	   if ( myid < xprocs + yrem)
-	   {
-   	   pppy += 1;
+       int pppy, yrem, begin, end;
+       pppy = Y_cutMaxStepRange/yprocs;
+       yrem = Y_cutMaxStepRange%yprocs;
+       if ( myid < xprocs + yrem)
+       {
+          pppy += 1;
          begin = (myid - xprocs)*pppy;
          end = begin + pppy -1;
       }
       
       if ( myid >= yrem + xprocs )
-	   {
-   	   begin = (myid - xprocs)*pppy + yrem;
+       {
+          begin = (myid - xprocs)*pppy + yrem;
          end = begin + pppy -1;
       }
 
@@ -211,7 +211,7 @@ std::cout << zmin << " : " << zmax << std::endl;
       }
       
       for (i=0; i<Y_cutMaxStepRange; i++)
-    	//for (i = 0; i <= end ; i++ )
+        //for (i = 0; i <= end ; i++ )
          append[i]->Delete();
    }
 
@@ -232,20 +232,20 @@ std::cout << zmin << " : " << zmax << std::endl;
    if( myid >= xprocs + yprocs && myid < xprocs + yprocs + zprocs )
    {
       int pppz, zrem, begin, end;
-	   pppz = Z_cutMaxStepRange/zprocs;
-	   zrem = Z_cutMaxStepRange%zprocs;
-	   if ( myid < xprocs + yprocs + zrem )
-	   {
-  	      pppz += 1;
+       pppz = Z_cutMaxStepRange/zprocs;
+       zrem = Z_cutMaxStepRange%zprocs;
+       if ( myid < xprocs + yprocs + zrem )
+       {
+            pppz += 1;
          begin = (myid - xprocs - yprocs)*pppz;
          end = begin + pppz -1;
       }
-	
+    
       if ( myid >= zrem + xprocs + yprocs )
-	   {
+       {
          begin = (myid - xprocs - yprocs)*pppz + zrem;
          end = begin + pppz -1;
-	   }
+       }
 
       append = new vtkPolyData* [Z_cutMaxStepRange];
       //append = new vtkPolyData* [ end + 1 ];
@@ -267,7 +267,7 @@ std::cout << zmin << " : " << zmax << std::endl;
       }
       
       for (i=0; i<Z_cutMaxStepRange; i++)
-    	//for (i = 0; i <= end ; i++ )
+        //for (i = 0; i <= end ; i++ )
          append[i]->Delete();
    }
 

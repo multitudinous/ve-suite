@@ -27,7 +27,7 @@ Body_Unit_i::Body_Unit_i (Body::Executive_ptr exec, std::string name)
     : 
     UnitWrapper(exec,name)
 {
-	UnitName_ = name;
+    UnitName_ = name;
 }
 ///////////////////////////////////////////////////////////////////////////////
 Body_Unit_i::~Body_Unit_i (void)
@@ -42,10 +42,10 @@ void Body_Unit_i::StartCalc (ACE_ENV_SINGLE_ARG_DECL )
     std::ostringstream strm;
     strm << activeId;
     const std::vector< CommandPtr > inputsVec = 
-		xmlModelMap[ strm.str() ]->GetInputs();
+        xmlModelMap[ strm.str() ]->GetInputs();
     std::cout << "Active ID = " << activeId << std::endl;
     std::cout << " model " << std::endl 
-		<< xmlModelMap[ strm.str() ] << std::endl;
+        << xmlModelMap[ strm.str() ] << std::endl;
 
     double inputOne;
     double inputTwo;
@@ -61,10 +61,10 @@ void Body_Unit_i::StartCalc (ACE_ENV_SINGLE_ARG_DECL )
             std::string tempString;
        
             if( boost::dynamic_pointer_cast< Command >( inputsVec.at( i )->
-				GetDataValuePair( j )->GetDataXMLObject() ) )
+                GetDataValuePair( j )->GetDataXMLObject() ) )
             {
                 size_t tempValue2 = boost::dynamic_pointer_cast< Command >( 
-					inputsVec.at( i )->GetDataValuePair( j )->GetDataXMLObject())->
+                    inputsVec.at( i )->GetDataValuePair( j )->GetDataXMLObject())->
                     GetNumberOfDataValuePairs();
                 for( size_t k=0; k<tempValue2; ++k )
                 {
@@ -80,18 +80,18 @@ void Body_Unit_i::StartCalc (ACE_ENV_SINGLE_ARG_DECL )
                         << " " << tempString << std::endl;
                 }
             }
-			else
-			{
-				tempString = inputsVec.at( i )->
-					GetDataValuePair( j )->GetDataString();
+            else
+            {
+                tempString = inputsVec.at( i )->
+                    GetDataValuePair( j )->GetDataString();
 
                 std::cout << "DataValuePair j = " << j << " = " 
                     << tempString << std::endl;
-			}
+            }
         }
     }
 
-	CommandPtr tempCommand( new Command() );
+    CommandPtr tempCommand( new Command() );
     xmlModelMap[ strm.str() ]->GetInput( "mTextOne" )->
         GetDataValuePair( "mTextOne" )->GetData( mTextOne );
     std::cout << "Input mTextOne : "<< mTextOne << std::endl;
@@ -107,6 +107,6 @@ void Body_Unit_i::error (std::string msg)
 ///////////////////////////////////////////////////////////////////////////////
 void Body_Unit_i::warning (std::string msg)
 {
-	msg+="\n";
-	executive_->SetModuleMessage(activeId, msg.c_str());
+    msg+="\n";
+    executive_->SetModuleMessage(activeId, msg.c_str());
 }

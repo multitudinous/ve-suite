@@ -62,7 +62,7 @@ class VE_CONDUCTOR_UTILS_EXPORTS ParamsDlg : public wxDialog
 {
 public:
     ParamsDlg( wxWindow *parent, wxWindowID id = 1, const wxString &title = wxT( "ParamsDialog" ), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = ParamsDlg_STYLE );
-	virtual ~ParamsDlg();
+    virtual ~ParamsDlg();
 
     enum
     {
@@ -202,7 +202,7 @@ private:
     wxTreeItemId m_rootId;
     std::map< std::string, wxTreeItemId > m_prevIds;
     wxTreeItemId m_prevSelection;
-	wxTreeItemId mParentId;
+    wxTreeItemId mParentId;
 
 private:
     //void OnClose( wxCloseEvent& event );

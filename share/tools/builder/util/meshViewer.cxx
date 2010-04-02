@@ -68,7 +68,7 @@ vtkActor * getActorFromFile( std::string vtkFilename );
 int main( const int argc, char *argv[] )
 {  
    int i;
-	std::string vtkFilename;
+    std::string vtkFilename;
    float shrinkFactor = 1.0;
    if (argc == 1)  // Process a single vtk file that will be obtained from the user...
    {
@@ -199,7 +199,7 @@ int main( const int argc, char *argv[] )
        iren->Delete();
    }
 
-	return 0;
+    return 0;
 }
 
 void viewWhatsInFile( std::string vtkFilename, const float shrinkFactor )

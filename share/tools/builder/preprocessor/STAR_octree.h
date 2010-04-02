@@ -68,8 +68,8 @@ public:
   Octree( );
   ~Octree( ){ 
               octantPnts->Delete( ); 
-	      octantGrid->Delete( );
-	      mergePoints->Delete( );
+          octantGrid->Delete( );
+          mergePoints->Delete( );
             }
 
   // Description:
@@ -186,8 +186,8 @@ void Octree::InitOctreeDecomposition( vtkUnstructuredGrid *grid, int cells )
   unsGrid->GetCellBounds( unsGrid->GetMaxCellSize( ) , bd );
 
   cellLength = sqrt( (bd[0] - bd[1]) * (bd[0] - bd[1]) +
-		     (bd[2] - bd[3]) * (bd[2] - bd[3]) +
-		     (bd[4] - bd[5]) * (bd[4] - bd[5]) );
+             (bd[2] - bd[3]) * (bd[2] - bd[3]) +
+             (bd[4] - bd[5]) * (bd[4] - bd[5]) );
 
   ExtractUnsGridBound( );
 
@@ -252,134 +252,134 @@ void Octree::Decompose( )
   while ( decompose )
   {
         decompose = 0;
-	level++;
-	height++;
-	  
-	// number of nodes at N level
-	level_N_nodes = (int) pow( (double)deg, (double)height );
+    level++;
+    height++;
+      
+    // number of nodes at N level
+    level_N_nodes = (int) pow( (double)deg, (double)height );
 
-	// indexing for the 8 children of each node
-	int j = 0;
-	int i;
+    // indexing for the 8 children of each node
+    int j = 0;
+    int i;
 
-	// at each level
-	for ( i=0; i<level_N_nodes; i++ )
-	{
-	    // node id ( in global )
-	    id++;
-	    
-	    // setting node properties
-	    // node properties are: the parent node, level, id
-	    pNode = new Node( );
-	    pNode->SetParent( theNode[ headNodeIdAtLevel[height-1] + j ] );
-	    pNode->SetLevel( level );
-	    pNode->SetID( id );
+    // at each level
+    for ( i=0; i<level_N_nodes; i++ )
+    {
+        // node id ( in global )
+        id++;
+        
+        // setting node properties
+        // node properties are: the parent node, level, id
+        pNode = new Node( );
+        pNode->SetParent( theNode[ headNodeIdAtLevel[height-1] + j ] );
+        pNode->SetLevel( level );
+        pNode->SetID( id );
 
-	    // avoid unnecessary refinement of octants
-	    if ( pNode->GetParent( )->GetOctant( )->GetNumberOfCells( ) > eachOctantCells )
-	    {
-	       if ( !siblingID )
-	       {
-		  // Get the parent boundary
-		  // Subdivide into 8 octants and return the 27 points
-		  pNode->GetParent( )->GetOctant( )->GetBound( bound );
-		  pOctant->GetOctantsPoints( bound, xout, yout, zout );
-	       }
+        // avoid unnecessary refinement of octants
+        if ( pNode->GetParent( )->GetOctant( )->GetNumberOfCells( ) > eachOctantCells )
+        {
+           if ( !siblingID )
+           {
+          // Get the parent boundary
+          // Subdivide into 8 octants and return the 27 points
+          pNode->GetParent( )->GetOctant( )->GetBound( bound );
+          pOctant->GetOctantsPoints( bound, xout, yout, zout );
+           }
 
-	       // Given each octant siblingID, and 27 points found, 
-	       // Orgnize the siblings accordingly to its boundary
-	       pOctant->GetSiblingBound( siblingID, xout, yout, zout, bound );
+           // Given each octant siblingID, and 27 points found, 
+           // Orgnize the siblings accordingly to its boundary
+           pOctant->GetSiblingBound( siblingID, xout, yout, zout, bound );
 
-	       // Find the no. of cells, given the boundary
-	       OctantNoOfCells ( bound , cellsNo );
+           // Find the no. of cells, given the boundary
+           OctantNoOfCells ( bound , cellsNo );
 
-	       // Create new octant for storing their property
-	       // Set the boundary that is retrieved from the GetSiblingBound
-	       // Set the number of cells found
-	       pOctant = new Octant();
-	       pOctant->SetBound( bound );
-	       pOctant->SetNumberOfCells( cellsNo );
+           // Create new octant for storing their property
+           // Set the boundary that is retrieved from the GetSiblingBound
+           // Set the number of cells found
+           pOctant = new Octant();
+           pOctant->SetBound( bound );
+           pOctant->SetNumberOfCells( cellsNo );
 
-		   std::cout << "Id " << i << "\t Cell no. " << cellsNo << std::endl;
+           std::cout << "Id " << i << "\t Cell no. " << cellsNo << std::endl;
 
-	       // Increment to the next sibling
-	       siblingID ++;
+           // Increment to the next sibling
+           siblingID ++;
 
-	       // If sibling equal to 8, then all siblings identified,
-	       // reset to zero for next set of children
-	       if ( siblingID == deg )
-	       {
-		  siblingID = 0;
-		  j++;
-	       }
+           // If sibling equal to 8, then all siblings identified,
+           // reset to zero for next set of children
+           if ( siblingID == deg )
+           {
+          siblingID = 0;
+          j++;
+           }
 
-	       // inserting the octant properties and the linked list
-	       pNode->SetProperties( pOctant );
-	       pRoot->Insert( pNode );
-	    }
-	    else
-	    {
-	       // Setting the properties of an octant when the
-	       // cells in octant has been reached and setting the 
-	       // descendants to have no inheritance from its parent
-	       pOctant = new Octant( );
-	       siblingID ++;
+           // inserting the octant properties and the linked list
+           pNode->SetProperties( pOctant );
+           pRoot->Insert( pNode );
+        }
+        else
+        {
+           // Setting the properties of an octant when the
+           // cells in octant has been reached and setting the 
+           // descendants to have no inheritance from its parent
+           pOctant = new Octant( );
+           siblingID ++;
 
-	       if ( siblingID == deg )
-	       {
-		  siblingID = 0;
-		  j++;
-	       }
-		
-	       pNode->SetProperties( pOctant );
-	       pRoot->Insert( pNode );		
-	    }
-	    
-	}
-	  
-	// Get the head and tail id of the node at height
-	headNodeIdAtLevel[height] = pRoot->GetNumberOfNodesAt_h_Height( height - 1 );
-	tailNodeIdAtLevel[height] = pRoot->GetNumberOfNodesAt_h_Height( height ) - 1;
+           if ( siblingID == deg )
+           {
+          siblingID = 0;
+          j++;
+           }
+        
+           pNode->SetProperties( pOctant );
+           pRoot->Insert( pNode );        
+        }
+        
+    }
+      
+    // Get the head and tail id of the node at height
+    headNodeIdAtLevel[height] = pRoot->GetNumberOfNodesAt_h_Height( height - 1 );
+    tailNodeIdAtLevel[height] = pRoot->GetNumberOfNodesAt_h_Height( height ) - 1;
 
-	// Making the nodes into an array for easy identification and retrieval
-	for ( i=headNodeIdAtLevel[height]; i<=tailNodeIdAtLevel[height]; i++ )
-	{
-	    pRoot = pRoot->GetNode();
-	    theNode[i] = pRoot;
+    // Making the nodes into an array for easy identification and retrieval
+    for ( i=headNodeIdAtLevel[height]; i<=tailNodeIdAtLevel[height]; i++ )
+    {
+        pRoot = pRoot->GetNode();
+        theNode[i] = pRoot;
 
-	    if ( theNode[i]->GetOctant( )->GetNumberOfCells( ) <= eachOctantCells &&
-		 theNode[i]->GetOctant( )->GetNumberOfCells( ) > 0 )
-	    {
-	       theNode[i]->GetOctant( )->GetBound( bound );
+        if ( theNode[i]->GetOctant( )->GetNumberOfCells( ) <= eachOctantCells &&
+         theNode[i]->GetOctant( )->GetNumberOfCells( ) > 0 )
+        {
+           theNode[i]->GetOctant( )->GetBound( bound );
 
-	       WriteOctantsData( );
+           WriteOctantsData( );
 
-	       InsertOctantsTable( );
-	    }
-	}
+           InsertOctantsTable( );
+        }
+    }
 
-	// Check the nodes at height are below the required minimum amounts
-	// If no, continue decompose
-	for ( i=headNodeIdAtLevel[height]; i<=tailNodeIdAtLevel[height]; i++ )
-	{
-	    if ( theNode[i]->GetOctant( )->GetNumberOfCells( ) > eachOctantCells )
-	    {
-	       decompose = 1;
-	       i = tailNodeIdAtLevel[height] + 1;
-	    }
-	}
+    // Check the nodes at height are below the required minimum amounts
+    // If no, continue decompose
+    for ( i=headNodeIdAtLevel[height]; i<=tailNodeIdAtLevel[height]; i++ )
+    {
+        if ( theNode[i]->GetOctant( )->GetNumberOfCells( ) > eachOctantCells )
+        {
+           decompose = 1;
+           i = tailNodeIdAtLevel[height] + 1;
+        }
+    }
 
-	// output to the screen
-	totalNumberOfNodes = pRoot->GetNumberOfNodesAt_h_Height( height );
-	for ( int k=0; k<totalNumberOfNodes; k++ )
-	{
-	    std::cout <<  "The Node " << theNode[k]->GetID( )
-		 << " Parent " << theNode[k]->GetParent( )->GetID( ) 
-		 << " Level " << theNode[k]->GetLevel( )
-		 << " Number of cells " << theNode[k]->GetOctant( )->GetNumberOfCells( ) 
-		 << std::endl;
-	}
-	std::cout << std::endl;
+    // output to the screen
+    totalNumberOfNodes = pRoot->GetNumberOfNodesAt_h_Height( height );
+    for ( int k=0; k<totalNumberOfNodes; k++ )
+    {
+        std::cout <<  "The Node " << theNode[k]->GetID( )
+         << " Parent " << theNode[k]->GetParent( )->GetID( ) 
+         << " Level " << theNode[k]->GetLevel( )
+         << " Number of cells " << theNode[k]->GetOctant( )->GetNumberOfCells( ) 
+         << std::endl;
+    }
+    std::cout << std::endl;
   }
 
   WriteOctantsTable( );
@@ -420,13 +420,13 @@ void Octree::InsertOctantsTable( )
 
       if ( ptId == -1 )
       {
-	      cellPtId[j] = ptIdx;
-	      mergePoints->InsertPoint( ptIdx, xtmp );
-	      ptIdx++;
+          cellPtId[j] = ptIdx;
+          mergePoints->InsertPoint( ptIdx, xtmp );
+          ptIdx++;
       }
       else
       {
-	      cellPtId[j] = ptId;
+          cellPtId[j] = ptId;
       }
   }
 

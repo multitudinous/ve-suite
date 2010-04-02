@@ -224,7 +224,7 @@ void cfdPresetVector::Update( void )
     }
     else
     {
-	    float scaleFactor = GetVectorScaleFactor() ;
+        float scaleFactor = GetVectorScaleFactor() ;
         try
         {
             OSGVectorStage* tempStage = new OSGVectorStage();

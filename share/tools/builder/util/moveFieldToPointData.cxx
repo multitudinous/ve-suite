@@ -45,8 +45,8 @@ using namespace ves::xplorer::util;
 int main( int argc, char *argv[] )
 {
    // Possibly read in an input vtk file name and an output file...
-	std::string inFileName;// = NULL;
-	std::string outFileName;// = NULL;
+    std::string inFileName;// = NULL;
+    std::string outFileName;// = NULL;
    fileIO::processCommandLineArgs( argc, argv, "move field to point data arrays in", inFileName, outFileName );
    if ( ! inFileName.c_str() ) return 1;
 

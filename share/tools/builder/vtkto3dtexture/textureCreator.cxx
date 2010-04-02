@@ -106,15 +106,15 @@ VTKDataToTexture::VTKDataToTexture()
    _isUGrid = false;
 
    #ifdef OMPWIN32
-	//get number of processors and set number of threads
-	numThreads = omp_get_num_procs( );
+    //get number of processors and set number of threads
+    numThreads = omp_get_num_procs( );
    numThreads = numThreads - 1;
    if ( numThreads == 0 )
    {
       numThreads = 1;
    }
 
-	omp_set_num_threads( numThreads );
+    omp_set_num_threads( numThreads );
    #else
    numThreads = 1;
    #endif
@@ -554,7 +554,7 @@ void VTKDataToTexture::createTextures()
       //build the octree
       bbLocator->BuildLocator();*/
       
-	  vectorCellLocators.resize( numThreads );
+      vectorCellLocators.resize( numThreads );
      for ( int i=0;i<numThreads;i++  )
      {
         vectorCellLocators.at( i ) = vtkCellLocator::New();
@@ -707,7 +707,7 @@ void VTKDataToTexture::_createValidityTexture()
    {
 
 #ifdef OMPWIN32
-	   int currentThread = omp_get_thread_num( );
+       int currentThread = omp_get_thread_num( );
 #else
       int currentThread = 0;
 #endif
@@ -716,11 +716,11 @@ void VTKDataToTexture::_createValidityTexture()
       // merge the map after the texture has been created. 
       // this would allow this function to be much faster. This function
       // is where the majority of the time is spent currently.
-	   
-	   //set i, j, and k based on the l values
-	   i = l % nX;
+       
+       //set i, j, and k based on the l values
+       i = l % nX;
       j = (l / nX) % nY;//(i==0)?((jInit==nY-1)?jInit=0:++jInit):jInit;
-	   k = (l/*-i-j*nX*/)/(nX*nY);
+       k = (l/*-i-j*nX*/)/(nX*nY);
 
       pt[2] = bbox[4] + k*delta[2];
       pt[1] = bbox[2] + j*delta[1];
@@ -733,10 +733,10 @@ void VTKDataToTexture::_createValidityTexture()
       //ftime( &timeOneB );
       
       //long timeOne = (long)time( NULL );
-	  //new stuff
-	  {
-		  vectorCellLocators.at( currentThread )->FindClosestPoint(pt,closestPt,cell,cellId,subId, dist);
-	  }
+      //new stuff
+      {
+          vectorCellLocators.at( currentThread )->FindClosestPoint(pt,closestPt,cell,cellId,subId, dist);
+      }
 
 
       //ftime( &timeTwoB );
@@ -870,13 +870,13 @@ void VTKDataToTexture::_resampleData(int dataValueIndex,int isScalar)
       if ( _validPt.at(l).first )
       {
          //_cLocator->FindClosestPoint(pt,closestPt,
-		   //                     cell,cellId,subId, dist);
+           //                     cell,cellId,subId, dist);
          cellId = _validPt.at(l).second.first;
          //subId = _validPt.at(l).second.second;
          _dataSet->GetCell( cellId, cell );
          weights = new double[cell->GetNumberOfPoints()];
-	      //check to see if this point is in
-	      //the returned cell
+          //check to see if this point is in
+          //the returned cell
          //cell->EvaluatePosition(pt,0,subId,pcoords,dist,weights);
          cell->EvaluateLocation(subId,_validPt.at(l).second.second ,pt,weights);
          _interpolateDataInCell(cell,weights,dataValueIndex,isScalar); 
@@ -889,7 +889,7 @@ void VTKDataToTexture::_resampleData(int dataValueIndex,int isScalar)
       else
       {
         //point isn't in a cell
-	     //so set the texture data to 0
+         //so set the texture data to 0
         _addOutSideCellDomainDataToFlowTexture(dataValueIndex,isScalar); 
       }
 
@@ -995,7 +995,7 @@ void VTKDataToTexture::_addOutSideCellDomainDataToFlowTexture(int index,
 }
 ///////////////////////////////////////////////////////////////////
 void VTKDataToTexture::_interpolateDataInCell(vtkGenericCell* cell,
-		                                    double* weights,
+                                            double* weights,
                                           int whichValue,
                                           int isScalar)
 {
@@ -1255,11 +1255,11 @@ void VTKDataToTexture::writeVelocityTexture(int whichVector)
        }
     }
     catch ( const std::exception& ex )
-  	{
-	   std::cout << ex.what() << std::endl;
+      {
+       std::cout << ex.what() << std::endl;
        boost::filesystem::create_directory( vectorPath );
-	   std::cout << "...so we made it for you..." << std::endl;
-	}
+       std::cout << "...so we made it for you..." << std::endl;
+    }
 
     vectorPath/=(_vectorNames[whichVector]);
     try
@@ -1270,11 +1270,11 @@ void VTKDataToTexture::writeVelocityTexture(int whichVector)
         }
     }
     catch ( const std::exception& ex )
-	{
-	    std::cout << ex.what() << std::endl;
+    {
+        std::cout << ex.what() << std::endl;
         boost::filesystem::create_directory( vectorPath );
-	    std::cout << "...so we made it for you..." << std::endl;
-	}
+        std::cout << "...so we made it for you..." << std::endl;
+    }
     nameString.clear();
     //nameString.append( "/" );
     nameString.append(vectorPath.string());
@@ -1321,11 +1321,11 @@ void VTKDataToTexture::writeScalarTexture(int whichScalar)
         }
     }
     catch ( const std::exception& ex )
-	{
+    {
         std::cout << ex.what() << std::endl;
         boost::filesystem::create_directory( scalarPath );
         std::cout << "...so we made it for you..." << std::endl;
-	}
+    }
 
     scalarPath/=(_scalarNames[whichScalar]);
     try
@@ -1336,11 +1336,11 @@ void VTKDataToTexture::writeScalarTexture(int whichScalar)
         }
     }
     catch ( const std::exception& ex )
-	{
-	    std::cout << ex.what() << std::endl;
+    {
+        std::cout << ex.what() << std::endl;
         boost::filesystem::create_directory( scalarPath );
-	    std::cout << "...so we made it for you..." << std::endl;
-	}   
+        std::cout << "...so we made it for you..." << std::endl;
+    }   
 
     nameString.clear();
     //nameString.append( "/" );
@@ -1364,4 +1364,4 @@ void VTKDataToTexture::writeScalarTexture(int whichScalar)
     _updateTranslationStatus( ConvertUnicode( msg.c_str() ) );
     _curScalar.at(0).writeFlowTexture( nameString, std::string( _scalarNames[whichScalar] ) );  
 }
-	
+    

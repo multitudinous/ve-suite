@@ -75,13 +75,13 @@ void GLCanvasWrapper::DrawNewBaffle()
 void GLCanvasWrapper::RemoveBaffle(
     long int temp1, long int temp2, long int temp3, long int temp4 )
 {
-    mGLEngine->_removeBaffle( temp1, temp2, temp3, temp4 );	
+    mGLEngine->_removeBaffle( temp1, temp2, temp3, temp4 );    
 }
 ////////////////////////////////////////////////////////////////////////////////
 void GLCanvasWrapper::RedrawBaffle(
     long int temp1, long int temp2, long int temp3, long int temp4, int index )
 {
-    mGLEngine->_reDrawBaffle( temp1, temp2, temp3, temp4, index );	
+    mGLEngine->_reDrawBaffle( temp1, temp2, temp3, temp4, index );    
 }
 ////////////////////////////////////////////////////////////////////////////////
 float* GLCanvasWrapper::GetGridInfo()

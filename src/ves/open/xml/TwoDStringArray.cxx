@@ -64,7 +64,7 @@ TwoDStringArray::TwoDStringArray( const TwoDStringArray& input )
     for( size_t i = 0; i < input.mOneDArray.size(); ++i )
     {
         mOneDArray.push_back( OneDStringArrayPtr( new OneDStringArray( *( 
-			input.mOneDArray.at( i ) ) ) ) );
+            input.mOneDArray.at( i ) ) ) ) );
     }
     mMinIndex = input.mMinIndex;
 }
@@ -83,7 +83,7 @@ TwoDStringArray& TwoDStringArray::operator=( const TwoDStringArray& input )
         for( size_t i = 0; i < input.mOneDArray.size(); ++i )
         {
             mOneDArray.push_back( OneDStringArrayPtr( new OneDStringArray( *( 
-				input.mOneDArray.at( i ) ) ) ) );
+                input.mOneDArray.at( i ) ) ) ) );
         }
     }
     return *this;
@@ -126,14 +126,14 @@ std::string TwoDStringArray::GetElement( unsigned int i, unsigned int j )
     {
         std::cout << " ERROR!!! " << std::endl
         << " Invalid index: " << i << "," << j 
-		<< " in TwoDStringArray::GetElement!!!" << std::endl;
+        << " in TwoDStringArray::GetElement!!!" << std::endl;
         return 0;
     }
 }
 ///////////////////////////////////////////////////////////////////////////////
 std::vector< std::vector< std::string > > TwoDStringArray::GetArray( void )
 {
-	std::vector< std::vector< std::string > > tempData;
+    std::vector< std::vector< std::string > > tempData;
     for( size_t i = 0; i < mOneDArray.size(); ++i )
     {
         tempData.push_back( mOneDArray.at( i )->GetArray() );
@@ -179,7 +179,7 @@ void TwoDStringArray::SetObjectFromXMLData( DOMNode* xmlInput )
         // do we need to delete the old one or does xerces handle this???
         //mNElements = xmlInput->getChildNodes()->getLength();
         DOMNodeList* nodeList = currentElement->getElementsByTagName( 
-			ves::open::xml::Convert( "index2" ).toXMLString() );
+            ves::open::xml::Convert( "index2" ).toXMLString() );
         XMLSize_t numNodes = nodeList->getLength();
         mNElements = numNodes;
         if( mMinIndex > numNodes )
@@ -198,7 +198,7 @@ void TwoDStringArray::SetObjectFromXMLData( DOMNode* xmlInput )
         {
             //We know this about the node so we can cast it...
             mOneDArray.push_back( OneDStringArrayPtr( 
-				new OneDStringArray( ) ) );
+                new OneDStringArray( ) ) );
             mOneDArray.back()->SetObjectFromXMLData( nodeList->item( i ) );
         }
     }
@@ -206,7 +206,7 @@ void TwoDStringArray::SetObjectFromXMLData( DOMNode* xmlInput )
     {
         std::cerr << " ERROR : TwoDStringArray::SetObjectFromXMLData :" <<
         " This node has no children which means there is probably a problem." 
-		<< std::endl;
+        << std::endl;
     }
 }
 

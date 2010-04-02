@@ -256,11 +256,11 @@ struct YourOwnFilterCallback : public btOverlapFilterCallback
     {
         mDynamicsWorld = dynamicsWorld;
     }
-	// return true when pairs need collision
-	virtual bool needBroadphaseCollision(btBroadphaseProxy* proxy0,btBroadphaseProxy* proxy1) const
-	{
-		bool collides = (proxy0->m_collisionFilterGroup & proxy1->m_collisionFilterMask) != 0;
-		collides = collides && (proxy1->m_collisionFilterGroup & proxy0->m_collisionFilterMask);
+    // return true when pairs need collision
+    virtual bool needBroadphaseCollision(btBroadphaseProxy* proxy0,btBroadphaseProxy* proxy1) const
+    {
+        bool collides = (proxy0->m_collisionFilterGroup & proxy1->m_collisionFilterMask) != 0;
+        collides = collides && (proxy1->m_collisionFilterGroup & proxy0->m_collisionFilterMask);
         
         /*btCollisionObject* colObj0 =
             ( btCollisionObject* )( proxy0->m_clientObject );
@@ -338,16 +338,16 @@ struct YourOwnFilterCallback : public btOverlapFilterCallback
         }
         }*/
         
-		//add some additional logic here that modified 'collides'
-		return collides;
-	}
+        //add some additional logic here that modified 'collides'
+        return collides;
+    }
 };
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsSimulator::InitializePhysicsSimulation()
 {
-	///collision configuration contains default setup for memory, collision setup
+    ///collision configuration contains default setup for memory, collision setup
     mCollisionConfiguration = new btDefaultCollisionConfiguration();
-	///use the default collision dispatcher. For parallel processing 
+    ///use the default collision dispatcher. For parallel processing 
     ///you can use a diffent dispatcher (see Extras/BulletMultiThreaded)
     mDispatcher = new btCollisionDispatcher( mCollisionConfiguration );
 
@@ -401,7 +401,7 @@ void PhysicsSimulator::InitializePhysicsSimulation()
     //This is the default value for the island deactivation time. The smaller this
     //value is the sooner the island will be put to sleep. I believe this number is
     //in seconds.
-    //btScalar	gDeactivationTime = btScalar(2.);
+    //btScalar    gDeactivationTime = btScalar(2.);
     //For more information on how the islands work please see these links
     //http://bulletphysics.org/Bullet/phpBB3/viewtopic.php?f=9&t=16
     //http://bulletphysics.org/Bullet/phpBB3/viewtopic.php?f=4&t=2124

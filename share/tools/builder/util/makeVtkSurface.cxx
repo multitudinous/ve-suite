@@ -87,7 +87,7 @@ int main( int argc, char *argv[] )
     prototype->Delete();
     // If the command line contains an input vtk file name and an output file,
    // set them up.  Otherwise, get them from the user...
-	std::string inFileName;// = NULL;
+    std::string inFileName;// = NULL;
    std::string outFileName;// = new char [20];
    outFileName.assign( "surface.vtk" );//strcpy(outFileName, "surface.vtk" );  //default name
    fileIO::processCommandLineArgs( argc, argv, 

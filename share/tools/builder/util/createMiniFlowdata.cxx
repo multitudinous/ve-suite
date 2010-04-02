@@ -50,10 +50,10 @@ int main( int argc, char *argv[] )
 {    
    // Possibly read in an input vtk file name and an output file...
    // there is no default input file name...
-	std::string inFileName;// = NULL;
+    std::string inFileName;// = NULL;
 
    // there is a default output file name...
-	std::string outFileName;// = new char [ strlen("miniFlowdata.vtk")+1 ];
+    std::string outFileName;// = new char [ strlen("miniFlowdata.vtk")+1 ];
    outFileName.assign( "miniFlowdata.vtk" );//strcpy( outFileName, "miniFlowdata.vtk" );
 
    fileIO::processCommandLineArgs( argc, argv,
