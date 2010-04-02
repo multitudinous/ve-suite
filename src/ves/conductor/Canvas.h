@@ -45,7 +45,6 @@ Canvas API
 #include <wx/textdlg.h>
 #include <wx/menu.h>
 #include <wx/dcclient.h>
-#include <ves/VEConfig.h>
 
 #include <vector>
 #include <map>
