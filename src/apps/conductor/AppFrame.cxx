@@ -59,6 +59,7 @@
 #include <ves/conductor/ViewLocPane.h>
 #include <ves/conductor/IconChooser.h>
 #include <ves/conductor/Module.h>
+#include <ves/conductor/CameraPlacementToolUIDialog.h>
 
 #include <ves/conductor/util/CADNodeManagerDlg.h>
 #include <ves/conductor/util/Tag.h>
@@ -194,6 +195,7 @@ EVT_MENU( APPFRAME_RESET, AppFrame::ViewSelection )
 EVT_MENU( APPFRAME_XPLORER_NAVIGATION, AppFrame::LaunchNavigationPane )
 EVT_MENU( APPFRAME_XPLORER_VIEWPOINTS, AppFrame::LaunchViewpointsPane )
 EVT_MENU( APPFRAME_XPLORER_SCENES, AppFrame::LaunchRecordScenes )
+EVT_MENU( APPFRAME_XPLORER_CPT, AppFrame::LaunchCPTPane )
 EVT_MENU( APPFRAME_XPLORER_COLOR, AppFrame::SetBackgroundColor )
 EVT_MENU( APPFRAME_XPLORER_EPHEMERIS, AppFrame::SetEphemerisData )
 EVT_MENU( APPFRAME_XPLORER_EXIT, AppFrame::OnExitXplorer )
@@ -913,6 +915,8 @@ void AppFrame::CreateMenu()
     xplorerMenu->Append( APPFRAME_XPLORER_VIEWPOINTS, _( "Viewpoints Pane" ) );
     xplorerMenu->Append( APPFRAME_XPLORER_SCENES,     _( "Record Scenes" ) );
     xplorerMenu->Append( APPFRAME_XPLORER_COLOR,      _( "Background Color" ) );
+    xplorerMenu->Append( APPFRAME_XPLORER_CPT, _( "Camera Placement Pane" ) );
+
     xplorerMenu->Append( APPFRAME_XPLORER_EPHEMERIS, _( "Ephemeris Data" ) );
     //xplorerMenu->Append( XPLORER_SOUNDS,     _("Sounds Pane") );
     //xplorerMenu->Append( XPLORER_STREAMLINE, _("Streamline Pane") );
@@ -2817,4 +2821,18 @@ void AppFrame::OnDataLoggingSettings( wxCommandEvent& event )
     {
         ves::conductor::util::DataLoggerEngine::instance()->LoopingOn( true );
     }
+}
+////////////////////////////////////////////////////////////////////////////////
+void AppFrame::LaunchCPTPane( wxCommandEvent& WXUNUSED( event ) )
+{
+    if( m_cptDialog == 0 )
+    {
+        // create pane and set appropriate vars
+        m_cptDialog = 
+            new CameraPlacementToolUIDialog( this, wxID_ANY, serviceList );
+        m_cptDialog->Connect( wxEVT_DESTROY, 
+                         wxWindowDestroyEventHandler(AppFrame::OnChildDestroy), NULL, this );
+    }
+    // now show it
+    m_cptDialog->Show();
 }

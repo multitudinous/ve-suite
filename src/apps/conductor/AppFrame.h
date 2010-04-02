@@ -42,6 +42,7 @@ namespace conductor
 class IconChooser;
 class Network;
 class Canvas;
+class CameraPlacementToolUIDialog;
 namespace util
 {
 class CADNodeManagerDlg;
@@ -219,7 +220,8 @@ protected:
     void LaunchViewpointsPane( wxCommandEvent& event );
     void LaunchStreamlinePane( wxCommandEvent& event );
     void LaunchRecordScenes( wxCommandEvent& event );
-
+    void LaunchCPTPane( wxCommandEvent& event );
+    
     void DisplaySelection( wxCommandEvent& event );
 
     void ViewSelection( wxCommandEvent& event );
@@ -287,7 +289,9 @@ private:
     DeviceProperties* deviceProperties;
     ViewLocPane* viewlocPane;
     UITeacherTab* recordScenes;
-
+    ///Pane to control camera panes
+    ves::conductor::CameraPlacementToolUIDialog* m_cptDialog;
+    
     wxDialog* _treeView;
 
     ///Desktop or Tablet
