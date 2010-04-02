@@ -415,6 +415,9 @@ void CameraEntity::CreateCameraNode()
 void CameraEntity::CreateViewFrustumGeode()
 {
     mFrustumGeode = new osg::Geode();
+    osg::ref_ptr< osg::Node::ComputeBoundingSphereCallback > cbsc =
+        new osg::Node::ComputeBoundingSphereCallback();
+    mFrustumGeode->setComputeBoundingSphereCallback( cbsc.get() );
     mFrustumGeometry = new osg::Geometry();
     mFrustumVertices = new osg::Vec3Array();
     osg::ref_ptr< osg::Vec4Array > frustumColors = new osg::Vec4Array();
