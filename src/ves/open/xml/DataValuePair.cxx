@@ -448,8 +448,8 @@ void DataValuePair::SetData( const std::string& dataName, const std::vector< std
 }
 ////////////////////////////////////////////////////////////
 void DataValuePair::SetData( const std::string& dataName, 
-							 const std::vector< std::vector< 
-							 std::string > >& data )
+                             const std::vector< std::vector< 
+                             std::string > >& data )
 {
     mDataName = dataName;
     SetDataType( std::string( "XMLOBJECT" ) );
@@ -563,7 +563,7 @@ void DataValuePair::GetData( std::vector< std::vector< std::string > >& data )
     if( mVeXMLObject->GetObjectType() == "TwoDStringArray" )
     {
         TwoDStringArrayPtr tempPtr = 
-			boost::static_pointer_cast<TwoDStringArray>( mVeXMLObject );
+            boost::static_pointer_cast<TwoDStringArray>( mVeXMLObject );
         data = tempPtr->GetArray();
     }
     else

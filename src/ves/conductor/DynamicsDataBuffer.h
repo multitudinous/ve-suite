@@ -44,6 +44,7 @@ DynamicsDataBuffer API
 #undef _REENTRANT
 #include <vpr/Util/Singleton.h>
 #include <vpr/Sync/Mutex.h>
+#include <vpr/Thread/Thread.h>
 
 #include <map>
 #include <string>
@@ -77,14 +78,20 @@ public:
     void SetCommandMap( const std::map< std::string, ves::open::xml::CommandPtr >& tempMap );
     ///Print the current user data buffer map to std out
     void Print( void );
-	void Update();
-    void Enable(){;}
+	void Update( );
+	void Enable( );
+	void Disable( );
+	void PauseUpdate( );
+	void ResumeUpdate( );
+
 private:
     ///Mapp to hold all the preference data to be written to the ves file
     std::map< std::string, ves::open::xml::CommandPtr > commandMap;
     //std::map< std::string, ves::open::xml::CommandPtr > commandMap;
     ///A mutex to protect variables accesses
     vpr::Mutex m_valueLock;
+	vpr::Thread* m_thread;
+	bool m_enabled;
 };
 }
 }

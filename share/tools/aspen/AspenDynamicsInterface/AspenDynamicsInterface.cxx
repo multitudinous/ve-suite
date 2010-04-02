@@ -35,7 +35,7 @@ void AspenDynamicsInterface::Open(CString filename)
     if (simOpened)
           Close();
     
-    ADApplication = AspenDynamicsLibrary::IAspenModelerPtr( "AD Application" );
+    ADApplication = AspenDynamicsLibrary::IAspenModelerPtr( "AD Application 2100" );
     
     VARIANT strVar;
 	::VariantInit(&strVar);

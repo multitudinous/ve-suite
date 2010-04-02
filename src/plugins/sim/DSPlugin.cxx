@@ -65,9 +65,9 @@ using namespace ves::conductor::util;
 BEGIN_EVENT_TABLE( DSPlugin, ves::conductor::UIPluginBase )
     EVT_MENU( DSPLUGIN_OPEN_SIM, DSPlugin::OnOpen )
     EVT_MENU( DSPLUGIN_CREATE_OPC_LIST, DSPlugin::OnCreateOPCList )
-	EVT_MENU( DSPLUGIN_CONNECT, DSPlugin::OnConnect )
-	//EVT_TIMER( DSPLUGIN_TIMER_ID, DSPlugin::OnTimer )
-	EVT_MENU( DSPLUGIN_ADDVAR, DSPlugin::OnAddVariable )
+    EVT_MENU( DSPLUGIN_CONNECT, DSPlugin::OnConnect )
+    //EVT_TIMER( DSPLUGIN_TIMER_ID, DSPlugin::OnTimer )
+    EVT_MENU( DSPLUGIN_ADDVAR, DSPlugin::OnAddVariable )
 END_EVENT_TABLE()
 
 IMPLEMENT_DYNAMIC_CLASS( DSPlugin, ves::conductor::UIPluginBase )
@@ -86,12 +86,12 @@ DSPlugin::DSPlugin() :
     wxImage my_img( sim );
     SetImage( my_img );
 
-	//m_timer = new wxTimer( this, DSPLUGIN_TIMER_ID );
+    //m_timer = new wxTimer( this, DSPLUGIN_TIMER_ID );
 }
 ////////////////////////////////////////////////////////////////////////////////
 DSPlugin::~DSPlugin()
 {
-	//DynamicsDataBuffer::instance()->CleanUp();
+    //DynamicsDataBuffer::instance()->CleanUp();
 }
 ////////////////////////////////////////////////////////////////////////////////
 wxString DSPlugin::GetConductorName()
@@ -103,7 +103,7 @@ void DSPlugin::OnOpen( wxCommandEvent& event )
 {
     UIPLUGIN_CHECKID( event )
 
-		DSOpenDialog fd( m_canvas );
+        DSOpenDialog fd( m_canvas );
     fd.SetPopulateFilenames( );
 
     if( fd.ShowModal() != wxID_OK )
@@ -175,23 +175,23 @@ void DSPlugin::OnOpen( wxCommandEvent& event )
     for( int modelCount = 0; modelCount < tempSystem->GetNumberOfModels(); modelCount++)
     {
         ModelPtr tempModel = tempSystem->GetModel( modelCount );
-		tempModel->SetParentModel( dynSimModel );
-		
-		//go through models to find opc
-		SystemPtr tempSubSystem = tempModel->GetSubSystem();
-		for( int subModelCount = 0; 
-			subModelCount < tempSubSystem->GetNumberOfModels(); 
-			subModelCount++)
-		{
-			//add OPC plugins to a list
-			std::string tempType = tempSubSystem->GetModel( subModelCount )->
-				GetPluginType( );
-			if(tempType.compare("OpcUOPlugin") == 0)
-			{
-				m_opcList.push_back(tempSubSystem->GetModel( subModelCount )->
-					GetPluginName());
-			}
-		}
+        tempModel->SetParentModel( dynSimModel );
+        
+        //go through models to find opc
+        SystemPtr tempSubSystem = tempModel->GetSubSystem();
+        for( int subModelCount = 0; 
+            subModelCount < tempSubSystem->GetNumberOfModels(); 
+            subModelCount++)
+        {
+            //add OPC plugins to a list
+            std::string tempType = tempSubSystem->GetModel( subModelCount )->
+                GetPluginType( );
+            if(tempType.compare("OpcUOPlugin") == 0)
+            {
+                m_opcList.push_back(tempSubSystem->GetModel( subModelCount )->
+                    GetPluginName());
+            }
+        }
     }
 
     //dynSimModel->SetSubSystem( tempSystem );
@@ -205,7 +205,7 @@ void DSPlugin::OnOpen( wxCommandEvent& event )
     //network->Load( nw_str, true );
     m_canvas->AddSubNetworks( );
 
-	//m_subNetwork = m_canvas->GetNetwork( );
+    //m_subNetwork = m_canvas->GetNetwork( );
 
 #if 0
     std::ofstream netdump ("netdump.txt");
@@ -267,21 +267,21 @@ wxMenu* DSPlugin::GetPluginPopupMenu( wxMenu* baseMenu )
 ////////////////////////////////////////////////////////////////////////////////
 void DSPlugin::OnCreateOPCList( wxCommandEvent& event )
 {
-	//create dialog with list of available opc variables
-	OPCDlg * opcDlg = new OPCDlg( m_canvas );
+    //create dialog with list of available opc variables
+    OPCDlg * opcDlg = new OPCDlg( m_canvas );
 
-	//populate the dialog with available variables and selected
-	//opcDlg->PopulateLists( m_opcList, m_selectedOpcList );
-	opcDlg->SetParentPlugin( this );
+    //populate the dialog with available variables and selected
+    //opcDlg->PopulateLists( m_opcList, m_selectedOpcList );
+    opcDlg->SetParentPlugin( this );
 
-	//display the dialog
-	opcDlg->ShowModal();
+    //display the dialog
+    opcDlg->ShowModal();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DSPlugin::OnConnect( wxCommandEvent& event )
 {
     std::string compName = GetVEModel()->GetPluginName();
-	ves::open::xml::CommandPtr monitor( new ves::open::xml::Command() );
+    ves::open::xml::CommandPtr monitor( new ves::open::xml::Command() );
     monitor->SetCommandName("connectToOPC");
 
     //ves::open::xml::DataValuePairPtr
@@ -292,24 +292,24 @@ void DSPlugin::OnConnect( wxCommandEvent& event )
     std::vector< std::pair< ves::open::xml::XMLObjectPtr, std::string > >
         nodes;
     nodes.push_back( std::pair< ves::open::xml::XMLObjectPtr,
-		std::string >( monitor, "vecommand" ) );
+        std::string >( monitor, "vecommand" ) );
 
     ves::open::xml::XMLReaderWriter commandWriter;
     std::string status="returnString";
     commandWriter.UseStandaloneDOMDocumentManager();
     commandWriter.WriteXMLDocument( nodes, status, "Command" );
 
-	std::string nw_str = serviceList->Query( status );
+    std::string nw_str = serviceList->Query( status );
 
-	//DynamicsDataBuffer::instance()->Enable();
+    //DynamicsDataBuffer::instance()->Enable();
 
-	//m_timer->Start( 4000 );
+    //m_timer->Start( 4000 );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DSPlugin::OnAddVariable( wxCommandEvent& event )
 {
     std::string compName = GetVEModel()->GetPluginName();
-	ves::open::xml::CommandPtr monitor( new ves::open::xml::Command() );
+    ves::open::xml::CommandPtr monitor( new ves::open::xml::Command() );
     monitor->SetCommandName("addVariable");
 
     ves::open::xml::DataValuePairPtr
@@ -320,30 +320,30 @@ void DSPlugin::OnAddVariable( wxCommandEvent& event )
     std::vector< std::pair< ves::open::xml::XMLObjectPtr, std::string > >
         nodes;
     nodes.push_back( std::pair< ves::open::xml::XMLObjectPtr,
-		std::string >( monitor, "vecommand" ) );
+        std::string >( monitor, "vecommand" ) );
 
     ves::open::xml::XMLReaderWriter commandWriter;
     std::string status="returnString";
     commandWriter.UseStandaloneDOMDocumentManager();
     commandWriter.WriteXMLDocument( nodes, status, "Command" );
 
-	std::string nw_str = serviceList->Query( status );
-	DynamicsDataBuffer::instance()->Enable();
+    std::string nw_str = serviceList->Query( status );
+    DynamicsDataBuffer::instance()->Enable();
 }
 ///////////////////////////////////////////////////////////////////////////////
 std::vector< std::string > DSPlugin::GetAvailableVariables()
 {
-	return m_opcList;
+    return m_opcList;
 }
 ///////////////////////////////////////////////////////////////////////////////
 std::vector< std::string > DSPlugin::GetSelectVariables()
 {
-	return m_selectedOpcList;
+    return m_selectedOpcList;
 }
 ///////////////////////////////////////////////////////////////////////////////
 void DSPlugin::SetSelectVariables( std::vector< std::string> selectedVariables )
 {
-	m_selectedOpcList = selectedVariables;
+    m_selectedOpcList = selectedVariables;
 }
 /*
 //this is a temporary function
@@ -352,5 +352,5 @@ void DSPlugin::SetSelectVariables( std::vector< std::string> selectedVariables )
 //in the end the buffer will be filled in another fashion
 void DSPlugin::OnTimer( wxTimerEvent& event )
 {
-	DynamicsDataBuffer::instance()->Update();
+    DynamicsDataBuffer::instance()->Update();
 }*/

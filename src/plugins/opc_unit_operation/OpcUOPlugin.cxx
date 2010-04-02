@@ -50,11 +50,11 @@ using namespace ves::conductor::util;
 
 BEGIN_EVENT_TABLE( OpcUOPlugin, UIPluginBase )
     EVT_MENU( OPCUOPLUGIN_SHOW_VALUE, OpcUOPlugin::OnShowValue )
-	EVT_TIMER( OPCUOPLUGIN_TIMER_ID, OpcUOPlugin::OnTimer )
-	//EVT_MENU( OPCUOPLUGIN_START_TIMER, OpcUOPlugin::StartTimer )
-	EVT_MENU( OPCUOPLUGIN_STOP_TIMER, OpcUOPlugin::StopTimer )
-	//EVT_MENU( OPCUOPLUGIN_ALL_VAR, OpcUOPlugin::OnShowAllVar )
-	EVT_MENU( OPCUOPLUGIN_ALL_VAR, OpcUOPlugin::QueryForAllVariables )
+    EVT_TIMER( OPCUOPLUGIN_TIMER_ID, OpcUOPlugin::OnTimer )
+    //EVT_MENU( OPCUOPLUGIN_START_TIMER, OpcUOPlugin::StartTimer )
+    EVT_MENU( OPCUOPLUGIN_STOP_TIMER, OpcUOPlugin::StopTimer )
+    //EVT_MENU( OPCUOPLUGIN_ALL_VAR, OpcUOPlugin::OnShowAllVar )
+    EVT_MENU( OPCUOPLUGIN_ALL_VAR, OpcUOPlugin::QueryForAllVariables )
 END_EVENT_TABLE()
 
 IMPLEMENT_DYNAMIC_CLASS( OpcUOPlugin, UIPluginBase )
@@ -67,9 +67,9 @@ OpcUOPlugin::OpcUOPlugin() :
     mPluginName = wxString( "OpcUO", wxConvUTF8 );
     mDescription = wxString( "OPC Unit Operation Plugin", wxConvUTF8 );
     GetVEModel()->SetPluginType( "OpcUOPlugin" );
-	dynValue = "Ready";
+    dynValue = "Ready";
 
-	StartTimer( 1000 );
+    StartTimer( 1000 );
 }
 ////////////////////////////////////////////////////////////////////////////////
 OpcUOPlugin::~OpcUOPlugin()
@@ -87,14 +87,14 @@ wxString OpcUOPlugin::GetConductorName()
 void  OpcUOPlugin::OnShowValue( wxCommandEvent& event )
 {
     UIPLUGIN_CHECKID( event )
-		
+        
     /*std::string compName = GetVEModel()->GetPluginName();
     //compName = "Data.Blocks." + compName;
 
     ves::open::xml::CommandPtr returnState( new ves::open::xml::Command() );
     returnState->SetCommandName( "getOPCValue" );
     ves::open::xml::DataValuePairPtr data( new ves::open::xml::DataValuePair() );
-	//hardcode the "D1_"  This will need to be parsed from the .tree file
+    //hardcode the "D1_"  This will need to be parsed from the .tree file
     data->SetData( std::string( "ModuleName" ), "D1_"+compName );
     returnState->AddDataValuePair( data );
 
@@ -117,18 +117,18 @@ void  OpcUOPlugin::OnShowValue( wxCommandEvent& event )
     ves::open::xml::CommandPtr cmd =
         boost::dynamic_pointer_cast<ves::open::xml::Command>
         ( objectVector.at( 0 ) );
-    ves::open::xml::DataValuePairPtr pair = cmd->GetDataValuePair( 0 );	
+    ves::open::xml::DataValuePairPtr pair = cmd->GetDataValuePair( 0 );    
 
     //wxString title;
     //title << wxT( "OPC Value" );
     //wxString desc( pair->GetDataString() );
     //wxMessageDialog( m_canvas, desc, title ).ShowModal();
 
-	//create updating dialog
-	DynamicDataDlg * dlg = new DynamicDataDlg( m_canvas );
-	dlg->SetCORBAServiceList ( serviceList );
-	dlg->SetName( compName );
-	dlg->ReadValue( );
+    //create updating dialog
+    DynamicDataDlg * dlg = new DynamicDataDlg( m_canvas );
+    dlg->SetCORBAServiceList ( serviceList );
+    dlg->SetName( compName );
+    dlg->ReadValue( );
     dlg->ShowModal( );*/
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -146,7 +146,7 @@ void  OpcUOPlugin::OnShowValue( wxCommandEvent& event )
     m_iconChooser->SetPlugin( this );
     //chooser->SetSize( dialogSize );
     m_iconChooser->Show();
-	*/
+    */
 //    event.SetClientData( this );
 //    ::wxPostEvent( m_canvas->GetParent(), event );
 //}
@@ -207,7 +207,7 @@ void OpcUOPlugin::DrawValue( wxDC* dc )
     ves::open::xml::CommandPtr returnState( new ves::open::xml::Command() );
     returnState->SetCommandName( "getOPCValue" );
     ves::open::xml::DataValuePairPtr data( new ves::open::xml::DataValuePair() );
-	//hardcode the "D1_"  This will need to be parsed from the .tree file
+    //hardcode the "D1_"  This will need to be parsed from the .tree file
     //data->SetData( std::string( "ModuleName" ), "D1_"+compName );
     data->SetData( std::string( "ModuleName" ), compName );
     returnState->AddDataValuePair( data );
@@ -231,39 +231,44 @@ void OpcUOPlugin::DrawValue( wxDC* dc )
     ves::open::xml::CommandPtr cmd =
         boost::dynamic_pointer_cast<ves::open::xml::Command>
         ( objectVector.at( 0 ) );
-    ves::open::xml::DataValuePairPtr pair = cmd->GetDataValuePair( 0 );	
+    ves::open::xml::DataValuePairPtr pair = cmd->GetDataValuePair( 0 );    
 
     dynValue = pair->GetDataString();
 }*/
 ///////////////////////////////////////////////////////////////////////////////
 void OpcUOPlugin::ReadValue( )
-{	
-	//This functions reads data through DynamicsDataBuffer
-	//is it the active network ie is it being drawn
-	if( m_canvas->GetActiveNetworkID() == m_network->GetNetworkID() )
-	{		
-		const CommandPtr opcData =
-			DynamicsDataBuffer::instance()->GetCommand( "OPC_Data" );
-		if( opcData->GetCommandName() == "NULL" )
-		{
-			return;
-		}
+{    
+    //This functions reads data through DynamicsDataBuffer
+    //is it the active network ie is it being drawn
+    if( m_canvas->GetActiveNetworkID() == m_network->GetNetworkID() )
+    {        
+        const CommandPtr opcData =
+            DynamicsDataBuffer::instance()->GetCommand( "OPC_Data" );
+        if( opcData->GetCommandName() == "NULL" )
+        {
+            return;
+        }
 
-		std::string compName = GetVEModel()->GetPluginName();
-		std::string tempData;
-		opcData->GetDataValuePair( compName )->GetData( tempData );
-		dynValue = tempData;
-	}
+        std::string compName = GetVEModel()->GetPluginName();
+        std::string tempData;
+        DataValuePairPtr tempDVP = opcData->GetDataValuePair( compName );
+        dynValue = "NA";
+        if( tempDVP )
+        {
+            tempDVP->GetData( tempData );
+            dynValue = tempData;
+        }
+    }
 }
 ///////////////////////////////////////////////////////////////////////////////
 void OpcUOPlugin::OnTimer( wxTimerEvent& event )
 {
-	if( m_canvas != NULL && m_network != NULL )
-	{
-		//UIPLUGIN_CHECKID( event )
-		ReadValue();
-		m_canvas->Refresh( true );
-	}
+    if( m_canvas != NULL && m_network != NULL )
+    {
+        //UIPLUGIN_CHECKID( event )
+        ReadValue();
+        m_canvas->Refresh( true );
+    }
 }
 ///////////////////////////////////////////////////////////////////////////////
 void OpcUOPlugin::DrawPlugin( wxDC* dc )
@@ -291,25 +296,25 @@ void OpcUOPlugin::DrawPlugin( wxDC* dc )
 void OpcUOPlugin::StartTimer( float msec )
 {
     //UIPLUGIN_CHECKID( event )
-	m_timer = new wxTimer( this, OPCUOPLUGIN_TIMER_ID );
-	m_timer->Start(msec);
-	dynValue = "Initializing";
+    m_timer = new wxTimer( this, OPCUOPLUGIN_TIMER_ID );
+    m_timer->Start(msec);
+    dynValue = "Initializing";
 }
 ///////////////////////////////////////////////////////////////////////////////
 void OpcUOPlugin::StopTimer( wxCommandEvent& event )
 {
     UIPLUGIN_CHECKID( event )
-	m_timer->Stop();
+    m_timer->Stop();
 }
 ///////////////////////////////////////////////////////////////////////////////
 void OpcUOPlugin::QueryForAllVariables( wxCommandEvent& event )
 {
-	//Query Unit for all opc variables available
-	std::string compName = GetVEModel()->GetPluginName();
+    //Query Unit for all opc variables available
+    std::string compName = GetVEModel()->GetPluginName();
     ves::open::xml::CommandPtr returnState( new ves::open::xml::Command() );
     returnState->SetCommandName( "getAllOPCVariables" );
     ves::open::xml::DataValuePairPtr data( new ves::open::xml::DataValuePair() );
-	data->SetData( std::string( "ModuleName" ), compName );
+    data->SetData( std::string( "ModuleName" ), compName );
     returnState->AddDataValuePair( data );
     std::vector< std::pair< XMLObjectPtr, std::string > > nodes;
     nodes.push_back( std::pair< XMLObjectPtr, std::string >( returnState, "vecommand" ) );
@@ -320,7 +325,7 @@ void OpcUOPlugin::QueryForAllVariables( wxCommandEvent& event )
 
     std::string nw_str = serviceList->Query( status );
 
-    /*ves::open::xml::XMLReaderWriter networkReader;
+    ves::open::xml::XMLReaderWriter networkReader;
     networkReader.UseStandaloneDOMDocumentManager();
     networkReader.ReadFromString();
     networkReader.ReadXMLData( nw_str, "Command", "vecommand" );
@@ -329,13 +334,22 @@ void OpcUOPlugin::QueryForAllVariables( wxCommandEvent& event )
     ves::open::xml::CommandPtr cmd =
         boost::dynamic_pointer_cast<ves::open::xml::Command>
         ( objectVector.at( 0 ) );
-    ves::open::xml::DataValuePairPtr pair = cmd->GetDataValuePair( 0 );	
-
-    dynValue = pair->GetDataString();
-	*/
 
     OpcUOVarDialog* params = new OpcUOVarDialog( GetPluginParent() );
-	//populate dialog
+
+    //loop over all pairs
+    int numdvps = cmd->GetNumberOfDataValuePairs();
+    for( size_t i = 0; i < numdvps; i++ )
+    {
+        std::string name;
+        std::string value;
+        ves::open::xml::DataValuePairPtr pair = cmd->GetDataValuePair( i );
+        name = pair->GetDataName( );
+        pair->GetData( value );
+        params->SetData( name, value );
+    }
+    
+    //populate dialog
     params->ShowModal();
     params->Destroy();
 

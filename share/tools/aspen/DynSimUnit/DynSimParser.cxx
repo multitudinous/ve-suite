@@ -75,7 +75,7 @@ DynSimParser::DynSimParser()
 ///////////////////////////////////////////////////////////////////////////////
 std::string DynSimParser::CreateNetwork( std::string filename )
 {
-	ParseTreeFile( filename + ".tree" );
+    ParseTreeFile( filename + ".tree" );
     m_fileName = filename + ".xml";
     InitializeParser();
     ParseFlowsheets();
@@ -85,45 +85,45 @@ std::string DynSimParser::CreateNetwork( std::string filename )
 ///////////////////////////////////////////////////////////////////////////////
 void DynSimParser::ParseTreeFile( std::string treeFilename )
 {
-	std::ifstream inFile( treeFilename.c_str(), std::ifstream::in );
+    std::ifstream inFile( treeFilename.c_str(), std::ifstream::in );
     if(!inFile.is_open())
     {
         std::cerr << "Could not open file : " << treeFilename.c_str() << std::endl;
         return;
 }
-	
-	std::string temp;
-	std::string name;
-	std::vector< std::string > entries;
-	getline(inFile, temp);
-	int opcEntryCount = 0;
-	while( !inFile.eof() )
-	{
-		opcEntryCount++;
+    
+    std::string temp;
+    std::string name;
+    std::vector< std::string > entries;
+    getline(inFile, temp);
+    int opcEntryCount = 0;
+    while( !inFile.eof() )
+    {
+        opcEntryCount++;
         
-		//get the variable name
-		std::stringstream opcTokenizer( temp );
+        //get the variable name
+        std::stringstream opcTokenizer( temp );
         opcTokenizer >> name;
 
-		//if( name.find(".") != std::string::npos )
-		//{
-			name = name.substr( 0, name.find(".") );
-		//}
-		entries.push_back( name );
+        //if( name.find(".") != std::string::npos )
+        //{
+            name = name.substr( 0, name.find(".") );
+        //}
+        entries.push_back( name );
         
-		getline(inFile, temp);
-	}
+        getline(inFile, temp);
+    }
 
-	//parse out opc sheet name and variables
-	m_opcFlowsheetName = entries[0].substr( 0, entries[0].find_first_of("_") );
+    //parse out opc sheet name and variables
+    m_opcFlowsheetName = entries[0].substr( 0, entries[0].find_first_of("_") );
 
-	int underScorePos;
-	for( int i = 0; i < entries.size(); i++)
-	{
-		underScorePos = entries[i].find_first_of("_");
-		m_opcBlocks.push_back( entries[i].substr( underScorePos + 1, 
-			entries[0].size() - underScorePos ) );
-	}
+    int underScorePos;
+    for( int i = 0; i < entries.size(); i++)
+    {
+        underScorePos = entries[i].find_first_of("_");
+        m_opcBlocks.push_back( entries[i].substr( underScorePos + 1, 
+            entries[0].size() - underScorePos ) );
+    }
 }
 ///////////////////////////////////////////////////////////////////////////////
 int DynSimParser::OpenFile( std::string filename )
@@ -239,7 +239,7 @@ void DynSimParser::ParseFlowsheets( )
         flowsheets[name].id = i;
         flowsheets[name].blocks = blocks;
         flowsheets[name].streams = streams;
-		flowsheets[name].others = others;
+        flowsheets[name].others = others;
         flowsheets[name].cls = "Flowsheet";
 
         blocks.clear();
@@ -312,11 +312,11 @@ void DynSimParser::PopulateBlocks( DOMElement* sys_element )
         DOMNodeList* childList = node->getChildNodes();
         DOMElement* element =
             dynamic_cast<DOMElement*> ( childList->item( 3 ) );
-		XMLCh* nameEntry = XMLString::transcode("GMBE_NAME");
+        XMLCh* nameEntry = XMLString::transcode("GMBE_NAME");
 
-		//test for GMBE_NAME Entry - if not don't add to list
-		if( XMLString::compareString( element->getTagName(), nameEntry ) == 0 )
-		{
+        //test for GMBE_NAME Entry - if not don't add to list
+        if( XMLString::compareString( element->getTagName(), nameEntry ) == 0 )
+        {
         DOMText* rawText =
                 dynamic_cast< DOMText* >
                 ( element->getFirstChild() );
@@ -539,7 +539,7 @@ void DynSimParser::PopulateBlocks( DOMElement* sys_element )
                 streams[name].vtx.push_back( tempVtx );
             }
         }
-		else  
+        else  
         {
             //id
             element = dynamic_cast<DOMElement*> ( childList->item( 1 ) );
@@ -549,14 +549,14 @@ void DynSimParser::PopulateBlocks( DOMElement* sys_element )
                 XMLString::parseInt( rawText->getData() );
             others[name].id = id;
 
-			element =
-				dynamic_cast<DOMElement*> ( childList->item( 5 ) );
-			rawText =
-					dynamic_cast< DOMText* >
-					( element->getFirstChild() );
-			fUnicodeForm =
-				XMLString::transcode( rawText->getData() );
-			std::string cls( fUnicodeForm );
+            element =
+                dynamic_cast<DOMElement*> ( childList->item( 5 ) );
+            rawText =
+                    dynamic_cast< DOMText* >
+                    ( element->getFirstChild() );
+            fUnicodeForm =
+                XMLString::transcode( rawText->getData() );
+            std::string cls( fUnicodeForm );
 
             others[name].name = name;
             std::transform(cls.begin(), cls.end(), cls.begin(), std::tolower);
@@ -697,8 +697,8 @@ void DynSimParser::PopulateBlocks( DOMElement* sys_element )
                     break;
                 }
             }
-		}
-		}
+        }
+        }
     }
 }
 
@@ -749,7 +749,7 @@ std::string DynSimParser::CreateVESNetwork()
         flowSheetModel( new ves::open::xml::model::Model() );
         flowSheetModel->SetModelID( sheetIter->second.id );
         flowSheetModel->SetPluginName( sheetIter->second.name );
-		flowSheetModel->SetPluginType( "SimUOPlugin" );
+        flowSheetModel->SetPluginType( "SimUOPlugin" );
         flowSheetModel->SetVendorName( "DYNSIMUNIT" );
         flowSheetModel->SetIconFilename( "C:/SIMSCI/DSS43/GUI/Images/ClassIcons/" + sheetIter->second.cls + ".gif" );
         //flowSheetModel->SetIconFilename( sheetIter->second.cls );
@@ -822,22 +822,22 @@ std::string DynSimParser::CreateVESNetwork()
             ves::open::xml::model::ModelPtr
                 tempModel( new ves::open::xml::model::Model() );
             tempModel->SetModelID( blockIter->second.id );
-            tempModel->SetPluginName( blockIter->second.name );		
-			
-			//check opc vector
-			std::vector< std::string >::iterator iter;
-			iter = find( m_opcBlocks.begin(), m_opcBlocks.end(),
-				blockIter->second.name );
-			if ( iter == m_opcBlocks.end() )    
-			{
-				tempModel->SetPluginType( "SimUOPlugin" );
-			}
-			else
-			{
-				tempModel->SetPluginType( "OpcUOPlugin" );
-			}
+            tempModel->SetPluginName( blockIter->second.name );        
             
-			tempModel->SetVendorName( "DYNSIMUNIT" );
+            //check opc vector
+            std::vector< std::string >::iterator iter;
+            iter = find( m_opcBlocks.begin(), m_opcBlocks.end(),
+                blockIter->second.name );
+            if ( iter == m_opcBlocks.end() )    
+            {
+                tempModel->SetPluginType( "SimUOPlugin" );
+            }
+            else
+            {
+                tempModel->SetPluginType( "OpcUOPlugin" );
+            }
+            
+            tempModel->SetVendorName( "DYNSIMUNIT" );
             //tempModel->SetIconFilename( blockIter->second.cls );
             tempModel->SetIconFilename( GetDynSimIconPath( blockIter->second.cls, blockIter->second.imageType ) );
             tempModel->SetIconRotation( 0 );
@@ -862,9 +862,9 @@ std::string DynSimParser::CreateVESNetwork()
             }
             subSystem->AddModel(tempModel);
         
-		}
+        }
 
-		//create other
+        //create other
         std::map< std::string, block >::iterator otherIter;
         for ( otherIter = sheetIter->second.others.begin();
             otherIter != sheetIter->second.others.end();
@@ -875,20 +875,20 @@ std::string DynSimParser::CreateVESNetwork()
             tempModel->SetModelID( otherIter->second.id );
             tempModel->SetPluginName( otherIter->second.name );
 
-			//check opc vector
-			std::vector< std::string >::iterator iter;
-			iter = find( m_opcBlocks.begin(), m_opcBlocks.end(),
-				otherIter->second.name );
-			if ( iter == m_opcBlocks.end() )    
-			{
-				tempModel->SetPluginType( "SimUOPlugin" );
-			}
-			else
-			{
-				tempModel->SetPluginType( "OpcUOPlugin" );
-			}
+            //check opc vector
+            std::vector< std::string >::iterator iter;
+            iter = find( m_opcBlocks.begin(), m_opcBlocks.end(),
+                otherIter->second.name );
+            if ( iter == m_opcBlocks.end() )    
+            {
+                tempModel->SetPluginType( "SimUOPlugin" );
+            }
+            else
+            {
+                tempModel->SetPluginType( "OpcUOPlugin" );
+            }
             
-			tempModel->SetVendorName( "DYNSIMUNIT" );
+            tempModel->SetVendorName( "DYNSIMUNIT" );
             tempModel->SetIconFilename( "sim.xpm" );
             tempModel->SetIconRotation( 0 );
             tempModel->SetIconScale( 1 );
@@ -910,7 +910,7 @@ std::string DynSimParser::CreateVESNetwork()
                     GetPortLocation()->SetPoint( std::pair< unsigned int, unsigned int >
                     ( blockIter->second.ports[i].x, blockIter->second.ports[i].y) );
             }
-			*/
+            */
             subSystem->AddModel(tempModel);
         }
 
@@ -1006,7 +1006,7 @@ std::string DynSimParser::GetDynSimIconPath( std::string xmlName, std::string im
 ///////////////////////////////////////////////////////////////////////////////
 /*void DynSimParser::ConnectWithList( std::vector< std::string > list )
 {
-	HRESULT hr;
+    HRESULT hr;
     //server
     IOPCAutoServerPtr server( __uuidof(OPCServer) );
     server.AddRef();
@@ -1016,7 +1016,7 @@ std::string DynSimParser::GetDynSimIconPath( std::string xmlName, std::string im
     //{
     //    return false;
     //}
-	
+    
     //groups
     groups = server->GetOPCGroups();
     groups.AddRef();
@@ -1040,21 +1040,21 @@ std::string DynSimParser::GetDynSimIconPath( std::string xmlName, std::string im
 
     itemIDs = new CComSafeArray<BSTR>( list.size() + 1 );
     clientID = new CComSafeArray<long>( list.size() + 1 );
-	serverID = new CComSafeArray<long>();
+    serverID = new CComSafeArray<long>();
     serverID->Create();
     CComSafeArray<long> * errors;
     errors = new CComSafeArray<long>();
     errors->Create();
 
-	for( int i = 1; i <= list.size(); i++)
-	{
-		std::string modnameOPC = m_opcFlowsheetName + "_" + list[i-1]+".POS";
+    for( int i = 1; i <= list.size(); i++)
+    {
+        std::string modnameOPC = m_opcFlowsheetName + "_" + list[i-1]+".POS";
         _bstr_t itemName = modnameOPC.c_str();
         itemIDs->SetAt( i, browser->GetItemID( modnameOPC.c_str() ) );
         clientID->SetAt( i, i );
-	}
+    }
 
-	hr = items->AddItems(list.size(), itemIDs->GetSafeArrayPtr(), clientID->GetSafeArrayPtr(),
+    hr = items->AddItems(list.size(), itemIDs->GetSafeArrayPtr(), clientID->GetSafeArrayPtr(),
         serverID->GetSafeArrayPtr(), errors->GetSafeArrayPtr());
 
     if( FAILED( hr ) )
@@ -1065,7 +1065,7 @@ std::string DynSimParser::GetDynSimIconPath( std::string xmlName, std::string im
     group->IsSubscribed = true;
     group->IsActive = true;
 
-	//server->Disconnect();
+    //server->Disconnect();
 }*/
 ///////////////////////////////////////////////////////////////////////////////
 /*bool DynSimParser::ConnectToOPC()
@@ -1084,7 +1084,7 @@ std::string DynSimParser::GetDynSimIconPath( std::string xmlName, std::string im
         return false;
     }
 
-	
+    
     //groups
     groups = server->GetOPCGroups();
     groups.AddRef();
@@ -1151,10 +1151,10 @@ std::string DynSimParser::GetDynSimIconPath( std::string xmlName, std::string im
 
     //hr=
     //    CoCreateInstance(__uuidof(OPCServer),NULL,CLSCTX_INPROC_SERVER,IID_IDispatch,(void**) &m_pSrc);
-    	//LPUNKNOWN m_pUnk=m_pSink->GetIDispatch(FALSE);
+        //LPUNKNOWN m_pUnk=m_pSink->GetIDispatch(FALSE);
         //LPUNKNOWN pUnkSrc;
         //hr = pUnkSrc->QueryInterface(__uuidof(OPCGroup), (void**)&group);
-	//m_dwCookie=1;
+    //m_dwCookie=1;
     //hr = AfxConnectionAdvise(group, __uuidof(DIOPCGroupEvent), m_pUnk, FALSE,
     //    &m_dwCookie);
 
@@ -1166,9 +1166,9 @@ std::string DynSimParser::GetDynSimIconPath( std::string xmlName, std::string im
 ///////////////////////////////////////////////////////////////////////////////
 bool DynSimParser::ConnectToOPCServer()
 {
-	//Connect to the OPC Server
+    //Connect to the OPC Server
     HRESULT hr;
-	IOPCAutoServerPtr server( __uuidof(OPCServer) );
+    IOPCAutoServerPtr server( __uuidof(OPCServer) );
     m_server = server;
     m_server.AddRef();
     hr = m_server->Connect(_T("OPC.Gateway.Server.DA") );
@@ -1178,12 +1178,7 @@ bool DynSimParser::ConnectToOPCServer()
         return false;
     }
 
-	return true;
-}
-///////////////////////////////////////////////////////////////////////////////
-std::string DynSimParser::GetAllOPCVariables( const std::string& modname )
-{
-	//initialize necessary OPC structures
+    //initialize necessary OPC structures
     groups = m_server->GetOPCGroups();
     groups.AddRef();
     groups->DefaultGroupIsActive = true;
@@ -1197,45 +1192,50 @@ std::string DynSimParser::GetAllOPCVariables( const std::string& modname )
     items.AddRef();
     items->DefaultIsActive = true;
 
-	//Get a list of the available OPC variables for a given unit op
+    return true;
+}
+///////////////////////////////////////////////////////////////////////////////
+std::string DynSimParser::GetAllOPCVariables( const std::string& modname )
+{
+    //Get a list of the available OPC variables for a given unit op
     OPCBrowserPtr browser = m_server->CreateBrowser();
     browser.AddRef();
     browser->ShowLeafs();
     long browserCount = browser->GetCount();
 
-	std::vector< std::string > tempVars;
+    std::vector< std::string > tempVars;
     for( long i = 1; i <= browserCount; i++ )
-	{
+    {
         _bstr_t itemName = browser->Item( i );
-		std::string temp = itemName;
-		if( temp.find( modname ) != std::string::npos )
-		{
-			tempVars.push_back( temp );
-		}
-	}
+        std::string temp = itemName;
+        if( temp.find( modname ) != std::string::npos )
+        {
+            tempVars.push_back( temp );
+        }
+    }
 
     itemIDs = new CComSafeArray<BSTR>( tempVars.size() + 1 );
     clientID = new CComSafeArray<long>( tempVars.size() + 1 );
-	serverID = new CComSafeArray<long>( );
+    serverID = new CComSafeArray<long>( );
     serverID->Create();
     CComSafeArray<long> * errors;
     errors = new CComSafeArray<long>();
     errors->Create();
 
-	//base 1 for safearray
-	for( long i = 0; i < tempVars.size(); i++)
-	{
-			//add all the new variables to the itemIDs for reading values
-			itemIDs->SetAt( i + 1, browser->GetItemID( tempVars[i].c_str() ) );
-			clientID->SetAt( i + 1, i + 1 );
-	}
+    //base 1 for safearray
+    for( long i = 0; i < tempVars.size(); i++)
+    {
+            //add all the new variables to the itemIDs for reading values
+            itemIDs->SetAt( i + 1, browser->GetItemID( tempVars[i].c_str() ) );
+            clientID->SetAt( i + 1, i + 1 );
+    }
 
-	//HRESULT hr = items->AddItems(opcVariables.size(), itemIDs->GetSafeArrayPtr(),
-	//	clientID->GetSafeArrayPtr(), serverID->GetSafeArrayPtr(),
-	//	errors->GetSafeArrayPtr());
-	HRESULT hr = items->AddItems( tempVars.size(), itemIDs->GetSafeArrayPtr(),
-		clientID->GetSafeArrayPtr(), serverID->GetSafeArrayPtr(),
-		errors->GetSafeArrayPtr());
+    //HRESULT hr = items->AddItems(opcVariables.size(), itemIDs->GetSafeArrayPtr(),
+    //    clientID->GetSafeArrayPtr(), serverID->GetSafeArrayPtr(),
+    //    errors->GetSafeArrayPtr());
+    HRESULT hr = items->AddItems( tempVars.size(), itemIDs->GetSafeArrayPtr(),
+        clientID->GetSafeArrayPtr(), serverID->GetSafeArrayPtr(),
+        errors->GetSafeArrayPtr());
 
     //if( FAILED( hr ) )
     //{
@@ -1264,31 +1264,33 @@ std::string DynSimParser::GetAllOPCVariables( const std::string& modname )
     {
         values->GetAt(i).ChangeType(VT_BSTR);
         std::pair< std::string, std::string > varAndVal;
-		std::string temp = _bstr_t( itemIDs->GetAt(i) );
-		//remove everything but the variable ie remove the unit name
-		//everything before the "."
-		varAndVal.first = temp.substr( temp.find(".") + 1, temp.size() - temp.find(".") + 1 );
-		varAndVal.second = _bstr_t( values->GetAt(i).bstrVal );
+        std::string temp = _bstr_t( itemIDs->GetAt(i) );
+        //remove everything but the variable ie remove the unit name
+        //everything before the "."
+        varAndVal.first = temp.substr( temp.find(".") + 1, temp.size() - temp.find(".") + 1 );
+        varAndVal.second = _bstr_t( values->GetAt(i).bstrVal );
         varsAndVals.push_back( varAndVal );
-	}
+    }
 
-	//append the flowsheet name
+    items->Remove( count, serverID->GetSafeArrayPtr(), errors->GetSafeArrayPtr());
+
+    //append the flowsheet name
     ves::open::xml::CommandPtr varsAndValues( new ves::open::xml::Command() );
     varsAndValues->SetCommandName("OPCData");
-	//compose return packet
-	//loop over the variables and add as dvps
-	for( int i = 0; i < varsAndVals.size(); i++ )
-	{
-		 ves::open::xml::DataValuePairPtr
-			 entry( new ves::open::xml::DataValuePair() );
-		entry->SetData( varsAndVals[i].first, varsAndVals[i].second );
-		varsAndValues->AddDataValuePair( entry );
-	}
+    //compose return packet
+    //loop over the variables and add as dvps
+    for( int i = 0; i < varsAndVals.size(); i++ )
+    {
+         ves::open::xml::DataValuePairPtr
+             entry( new ves::open::xml::DataValuePair() );
+        entry->SetData( varsAndVals[i].first, varsAndVals[i].second );
+        varsAndValues->AddDataValuePair( entry );
+    }
 
     std::vector< std::pair< ves::open::xml::XMLObjectPtr, std::string > >
         nodes;
     nodes.push_back( std::pair< ves::open::xml::XMLObjectPtr, std::string >
-		( varsAndValues, "vecommand" ) );
+        ( varsAndValues, "vecommand" ) );
 
     ves::open::xml::XMLReaderWriter commandWriter;
     std::string status="returnString";
@@ -1299,49 +1301,49 @@ std::string DynSimParser::GetAllOPCVariables( const std::string& modname )
 ///////////////////////////////////////////////////////////////////////////////
 void DynSimParser::AddOPCVariable( const std::string& var )
 {
-	m_opcVariables.push_back( var );
-	UpdateOPCList();
+    m_opcVariables.push_back( var );
+    UpdateOPCList();
 }
 ///////////////////////////////////////////////////////////////////////////////
 void DynSimParser::UpdateOPCList( )
 {
-    groups = m_server->GetOPCGroups();
-    groups.AddRef();
-    groups->DefaultGroupIsActive = true;
-    groups->DefaultGroupDeadband = 0;
+    //groups = m_server->GetOPCGroups();
+    //groups.AddRef();
+    //groups->DefaultGroupIsActive = true;
+    //groups->DefaultGroupDeadband = 0;
 
-    group = groups->Add( _T( "Group" ) );
-    group.AddRef();
-    group->UpdateRate = 100;
+    //group = groups->Add( _T( "Group" ) );
+    //group.AddRef();
+    //group->UpdateRate = 100;
 
     OPCBrowserPtr browser = m_server->CreateBrowser();
     browser.AddRef();
     browser->ShowLeafs();
 
-    items = group->GetOPCItems();
-    items.AddRef();
-    items->DefaultIsActive = true;
+    //items = group->GetOPCItems();
+    //items.AddRef();
+    //items->DefaultIsActive = true;
 
     itemIDs = new CComSafeArray<BSTR>( m_opcVariables.size() + 1 );
     clientID = new CComSafeArray<long>( m_opcVariables.size() + 1 );
-	serverID = new CComSafeArray<long>();
+    serverID = new CComSafeArray<long>();
     serverID->Create();
     CComSafeArray<long> * errors;
     errors = new CComSafeArray<long>();
     errors->Create();
 
-	for( int i = 1; i <= m_opcVariables.size(); i++)
-	{
-		std::string modnameOPC =
-			m_opcFlowsheetName + "_" + m_opcVariables[i-1]+".POS";
+    for( int i = 1; i <= m_opcVariables.size(); i++)
+    {
+        std::string modnameOPC =
+            m_opcFlowsheetName + "_" + m_opcVariables[i-1]+".POS";
         _bstr_t itemName = modnameOPC.c_str();
         itemIDs->SetAt( i, browser->GetItemID( modnameOPC.c_str() ) );
         clientID->SetAt( i, i );
-	}
+    }
 
-	HRESULT hr = items->AddItems(m_opcVariables.size(), itemIDs->GetSafeArrayPtr(),
-		clientID->GetSafeArrayPtr(), serverID->GetSafeArrayPtr(),
-		errors->GetSafeArrayPtr());
+    HRESULT hr = items->AddItems(m_opcVariables.size(), itemIDs->GetSafeArrayPtr(),
+        clientID->GetSafeArrayPtr(), serverID->GetSafeArrayPtr(),
+        errors->GetSafeArrayPtr());
 
     if( FAILED( hr ) )
     {
@@ -1375,21 +1377,21 @@ std::vector< std::pair< std::string, std::string > > DynSimParser::ReadVars()
         values->GetSafeArrayPtr(), errors->GetSafeArrayPtr(), &quality, &timestamp );
 
     //std::vector< std::pair< std::string, std::string > > nameAndValues;
-	nameAndValues.clear();
+    nameAndValues.clear();
 
     for( int i = 1; i <= count; i++)
     {
         values->GetAt(i).ChangeType(VT_BSTR);
         std::pair< std::string, std::string > nameNval;
 
-		//this entry has the opc prefix appended
+        //this entry has the opc prefix appended
         //nameNval.first = _bstr_t( itemIDs->GetAt(i) );
-		//this one doesn't - +1 is for the "_"
-		std::string temp = _bstr_t( itemIDs->GetAt(i) );
-		nameNval.first = temp.substr( m_opcFlowsheetName.size() + 1,
-			temp.size() - (m_opcFlowsheetName.size() + 1) - (temp.size() - temp.find(".") ) );
+        //this one doesn't - +1 is for the "_"
+        std::string temp = _bstr_t( itemIDs->GetAt(i) );
+        nameNval.first = temp.substr( m_opcFlowsheetName.size() + 1,
+            temp.size() - (m_opcFlowsheetName.size() + 1) - (temp.size() - temp.find(".") ) );
         
-		nameNval.second = _bstr_t( values->GetAt(i).bstrVal );
+        nameNval.second = _bstr_t( values->GetAt(i).bstrVal );
         nameAndValues.push_back( nameNval );
     }
 
@@ -1398,28 +1400,28 @@ std::vector< std::pair< std::string, std::string > > DynSimParser::ReadVars()
 ///////////////////////////////////////////////////////////////////////////////
 /*std::string DynSimParser::GetOPCValue( const std::string& modname )
 {
-	ReadVars();
+    ReadVars();
 
-	//append the flowsheet name
-	std::string modnameOPC = m_opcFlowsheetName + "_" + modname;
+    //append the flowsheet name
+    std::string modnameOPC = m_opcFlowsheetName + "_" + modname;
 
     ves::open::xml::CommandPtr params( new ves::open::xml::Command() );
     std::vector<std::string> paramList;
     //input variables;
     params->SetCommandName((modnameOPC+"OPCValue").c_str());
     
-	std::vector< std::pair <std::string, std::string> >::iterator nameValueIter;
-	std::string opcValue = "ERROR";
+    std::vector< std::pair <std::string, std::string> >::iterator nameValueIter;
+    std::string opcValue = "ERROR";
     for( nameValueIter = nameAndValues.begin();
         nameValueIter != nameAndValues.end();
         ++nameValueIter )
-	{
-		if( !nameValueIter->first.compare( modnameOPC ) )
-		{
-			opcValue = nameValueIter->second;
-			break;
-		}
-	}
+    {
+        if( !nameValueIter->first.compare( modnameOPC ) )
+        {
+            opcValue = nameValueIter->second;
+            break;
+        }
+    }
 
     ves::open::xml::DataValuePairPtr
         inpParams( new ves::open::xml::DataValuePair() );
@@ -1442,20 +1444,20 @@ std::vector< std::pair< std::string, std::string > > DynSimParser::ReadVars()
 //depending on the end desires for the code this function can be combine with ReadVars()
 std::string DynSimParser::GetOPCValues( )
 {
-	ReadVars();
+    ReadVars();
 
-	//append the flowsheet name
+    //append the flowsheet name
     ves::open::xml::CommandPtr varAndValues( new ves::open::xml::Command() );
     varAndValues->SetCommandName("OPCData");
     
-	//loop over the variables and add as dvps
-	for( int i = 0; i < nameAndValues.size(); i++ )
-	{
-		 ves::open::xml::DataValuePairPtr
-			 entry( new ves::open::xml::DataValuePair() );
-		entry->SetData( nameAndValues[i].first, nameAndValues[i].second );
-		varAndValues->AddDataValuePair( entry );
-	}
+    //loop over the variables and add as dvps
+    for( int i = 0; i < nameAndValues.size(); i++ )
+    {
+         ves::open::xml::DataValuePairPtr
+             entry( new ves::open::xml::DataValuePair() );
+        entry->SetData( nameAndValues[i].first, nameAndValues[i].second );
+        varAndValues->AddDataValuePair( entry );
+    }
 
     std::vector< std::pair< ves::open::xml::XMLObjectPtr, std::string > >
         nodes;

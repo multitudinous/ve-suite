@@ -32,7 +32,7 @@ namespace CASI
         //the default constructor sets auto release of memory so there is no 
         //need to delete this mmeory later. ReleaseDispatch must be called to
         //make this happen.
-        hAPsim = new Happ::IHappPtr(_T("apwn.document")); 
+        hAPsim = new Happ::IHappPtr(_T("apwn.document.21.0")); 
 		//BOOL bSuccess = hAPsim->CreateDispatch(_T("apwn.document"));
 		//if (!bSuccess)
         if( hAPsim == NULL )

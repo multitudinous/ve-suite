@@ -148,7 +148,7 @@ char * Body_Unit_i::GetUserData (
   ))
 {
   // Add your implementation here
-	return NULL;
+    return NULL;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Body_Unit_i::SetID (
@@ -182,7 +182,7 @@ void Body_Unit_i::SetCurID (
   ))
 {
     /*
-	return &ids_;
+    return &ids_;
     */
     return NULL;
 }
@@ -208,7 +208,7 @@ ACE_THROW_SPEC ((
   ))
 {
     /*
-	return; //do nothing;
+    return; //do nothing;
     */
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -243,20 +243,20 @@ char * Body_Unit_i::Query ( const char * query_str
     ::Error::EUnknown
   ))
 {
-	ves::open::xml::XMLReaderWriter networkWriter;
-	networkWriter.UseStandaloneDOMDocumentManager();
-	networkWriter.ReadFromString();
-	networkWriter.ReadXMLData( query_str, "Command", "vecommand" );
+    ves::open::xml::XMLReaderWriter networkWriter;
+    networkWriter.UseStandaloneDOMDocumentManager();
+    networkWriter.ReadFromString();
+    networkWriter.ReadXMLData( query_str, "Command", "vecommand" );
 
-	std::vector< ves::open::xml::XMLObjectPtr > objectVector =
+    std::vector< ves::open::xml::XMLObjectPtr > objectVector =
         networkWriter.GetLoadedXMLObjects();
 
-	ves::open::xml::CommandPtr cmd;	
-	std::string cmdname;
-	
-	cmd = boost::dynamic_pointer_cast<ves::open::xml::Command>
+    ves::open::xml::CommandPtr cmd;    
+    std::string cmdname;
+    
+    cmd = boost::dynamic_pointer_cast<ves::open::xml::Command>
         ( objectVector.at( 0 ) );
-	cmdname = cmd->GetCommandName();
+    cmdname = cmd->GetCommandName();
     
     std::set< std::string >::const_iterator commandItr
         = mQueryCommandNames.find( cmdname );
@@ -267,44 +267,44 @@ char * Body_Unit_i::Query ( const char * query_str
         return CORBA::string_dup("NULL");
     }
     
-	AspenLog->SetSel( -1, -1 );
-	AspenLog->ReplaceSel( ("Command: "+cmdname+"\r\n").c_str() );
-	char* returnValue = "empty";
+    AspenLog->SetSel( -1, -1 );
+    AspenLog->ReplaceSel( ("Command: "+cmdname+"\r\n").c_str() );
+    char* returnValue = "empty";
 
-	if ( cmdname == "getNetwork" )
-	{
-		returnValue = handleGetNetwork( cmd );
-		return returnValue;
-	}
-	else if ( cmdname == "getOPCValues" )
-	{
-		returnValue = getOPCValues( cmd );
-		return returnValue;
-	}
-	//else if ( cmdname == "connectWithList" )
-	//{
-	//	//returnValue = monitorValues( cmd );
-	//	connectWithList( cmd );
-	//	//return returnValue;
-	//	return( "NULL" );
-	//}
-	else if ( cmdname == "connectToOPC" )
-	{
-		connectToOPC( cmd );
-		return( "NULL" );
-	}
-	else if ( cmdname == "addVariable" )
-	{
-		addVariable( cmd );
-		return( "NULL" );
-	}
-	else if ( cmdname == "getAllOPCVariables" )
-	{
-		returnValue = getAllOPCVariables( cmd );
-		return returnValue;
-	}
-	else
-		return CORBA::string_dup( "NULL" );
+    if ( cmdname == "getNetwork" )
+    {
+        returnValue = handleGetNetwork( cmd );
+        return returnValue;
+    }
+    else if ( cmdname == "getOPCValues" )
+    {
+        returnValue = getOPCValues( cmd );
+        return returnValue;
+    }
+    //else if ( cmdname == "connectWithList" )
+    //{
+    //    //returnValue = monitorValues( cmd );
+    //    connectWithList( cmd );
+    //    //return returnValue;
+    //    return( "NULL" );
+    //}
+    else if ( cmdname == "connectToOPC" )
+    {
+        connectToOPC( cmd );
+        return( "NULL" );
+    }
+    else if ( cmdname == "addVariable" )
+    {
+        addVariable( cmd );
+        return( "NULL" );
+    }
+    else if ( cmdname == "getAllOPCVariables" )
+    {
+        returnValue = getAllOPCVariables( cmd );
+        return returnValue;
+    }
+    else
+        return CORBA::string_dup( "NULL" );
 }
 ///////////////////////////////////////////////////////////////////////////////
 char* Body_Unit_i::handleGetNetwork(ves::open::xml::CommandPtr cmd)
@@ -312,10 +312,10 @@ char* Body_Unit_i::handleGetNetwork(ves::open::xml::CommandPtr cmd)
     CEdit *Display;
     Display = reinterpret_cast<CEdit *>(theDialog->GetDlgItem(IDC_EDIT2));
 
-	//this command has no params
-	bool firsttime=true;
+    //this command has no params
+    bool firsttime=true;
 
-	std::string filename = cmd->GetDataValuePair(1)->GetDataString();
+    std::string filename = cmd->GetDataValuePair(1)->GetDataString();
 
     std::string extension = filename.substr( filename.size() - 4, 4 );
  
@@ -334,8 +334,8 @@ char* Body_Unit_i::handleGetNetwork(ves::open::xml::CommandPtr cmd)
         if( !xmlFile.is_open() )
         {
             //no bkp file
-	        AspenLog->SetSel(-1, -1);
-	        AspenLog->ReplaceSel("XML File Does NOT exist.\r\n");
+            AspenLog->SetSel(-1, -1);
+            AspenLog->ReplaceSel("XML File Does NOT exist.\r\n");
             return CORBA::string_dup( "XMLDNE" );
         }
         xmlFile.close();
@@ -346,16 +346,16 @@ char* Body_Unit_i::handleGetNetwork(ves::open::xml::CommandPtr cmd)
         if( !s4mFile.is_open() )
         {
             //no apw file
-	        AspenLog->SetSel(-1, -1);
-	        AspenLog->ReplaceSel("S4M File Does NOT exist.\r\n");
+            AspenLog->SetSel(-1, -1);
+            AspenLog->ReplaceSel("S4M File Does NOT exist.\r\n");
             return CORBA::string_dup( "S4MDNE" );
         }
         s4mFile.close();
 
-	    //Display->SetWindowText( ( mWorkingDir + filename ).c_str());
-	    Display->SetWindowText( ( filename ).c_str());
+        //Display->SetWindowText( ( mWorkingDir + filename ).c_str());
+        Display->SetWindowText( ( filename ).c_str());
         //go through bkp parsing procedure
-	    network = dynsim->CreateNetwork( filename );
+        network = dynsim->CreateNetwork( filename );
         //boost::fs::path( mWorkingDir, boost::fs::
         
         //this is a system call to open dynsim
@@ -363,7 +363,7 @@ char* Body_Unit_i::handleGetNetwork(ves::open::xml::CommandPtr cmd)
         //dynsim->OpenFile( mWorkingDir + filename + ".s4m" );
 
         mFileName = filename;
-	    firsttime=false;
+        firsttime=false;
     }
 
     //hack to add some form of opc development to VE-PSI
@@ -379,61 +379,61 @@ void Body_Unit_i::UpdateVars( )
         std::vector< std::pair< std::string, std::string > > vars =
             dynsim->ReadVars();
 
-		if( !vars.empty() )
-		{
-			//dump results to aspen log
-			for( int i = 0; i < vars.size(); i++)
-			{
-				std::string temp = vars[i].first + " " + vars[i].second +"\n";
-				AspenLog->SetSel(-1, -1);
-				AspenLog->ReplaceSel( temp.c_str() );
-			}
-		}
+        if( !vars.empty() )
+        {
+            //dump results to aspen log
+            for( int i = 0; i < vars.size(); i++)
+            {
+                std::string temp = vars[i].first + " " + vars[i].second +"\n";
+                AspenLog->SetSel(-1, -1);
+                AspenLog->ReplaceSel( temp.c_str() );
+            }
+        }
     }
 }
 ///////////////////////////////////////////////////////////////////////////////
 /*char* Body_Unit_i::getOPCValue( ves::open::xml::CommandPtr cmd )
 {
-	ves::open::xml::DataValuePairPtr curPair = cmd->GetDataValuePair( 0 );
-	std::string modname = curPair->GetDataString( );
-	std::string netPak = dynsim->GetOPCValue( modname.c_str() );
-	return CORBA::string_dup( netPak.c_str( ) );
+    ves::open::xml::DataValuePairPtr curPair = cmd->GetDataValuePair( 0 );
+    std::string modname = curPair->GetDataString( );
+    std::string netPak = dynsim->GetOPCValue( modname.c_str() );
+    return CORBA::string_dup( netPak.c_str( ) );
 }*/
 ///////////////////////////////////////////////////////////////////////////////
 char* Body_Unit_i::getOPCValues( ves::open::xml::CommandPtr cmd )
 {
-	std::string netPak = dynsim->GetOPCValues( );
-	return CORBA::string_dup( netPak.c_str( ) );
+    std::string netPak = dynsim->GetOPCValues( );
+    return CORBA::string_dup( netPak.c_str( ) );
 }
 ///////////////////////////////////////////////////////////////////////////////
 void Body_Unit_i::connectWithList( ves::open::xml::CommandPtr cmd )
 {
-		//create variable list
-		//ves::open::xml::DataValuePairPtr pair = cmd->GetDataValuePair( 0 );
-		//std::vector< std::string > list;
-		//pair->GetData( list );
-		//dynsim->ConnectWithList( list );
+        //create variable list
+        //ves::open::xml::DataValuePairPtr pair = cmd->GetDataValuePair( 0 );
+        //std::vector< std::string > list;
+        //pair->GetData( list );
+        //dynsim->ConnectWithList( list );
 }
 ///////////////////////////////////////////////////////////////////////////////
 void Body_Unit_i::connectToOPC( ves::open::xml::CommandPtr cmd )
 {
-	connected = dynsim->ConnectToOPCServer();
+    connected = dynsim->ConnectToOPCServer();
 }
 ///////////////////////////////////////////////////////////////////////////////
 void Body_Unit_i::addVariable( ves::open::xml::CommandPtr cmd )
 {
-	ves::open::xml::DataValuePairPtr pair = cmd->GetDataValuePair( 0 );
-	std::string var;
-	pair->GetData( var );
-	dynsim->AddOPCVariable( var.c_str() );
+    ves::open::xml::DataValuePairPtr pair = cmd->GetDataValuePair( 0 );
+    std::string var;
+    pair->GetData( var );
+    dynsim->AddOPCVariable( var.c_str() );
 }
 ///////////////////////////////////////////////////////////////////////////////
 char* Body_Unit_i::getAllOPCVariables( ves::open::xml::CommandPtr cmd )
 {
-	ves::open::xml::DataValuePairPtr curPair = cmd->GetDataValuePair( 0 );
-	std::string modname = curPair->GetDataString( );
-	std::string netPak = dynsim->GetAllOPCVariables( modname.c_str() );
-	return CORBA::string_dup( netPak.c_str( ) );
+    ves::open::xml::DataValuePairPtr curPair = cmd->GetDataValuePair( 0 );
+    std::string modname = curPair->GetDataString( );
+    std::string netPak = dynsim->GetAllOPCVariables( modname.c_str() );
+    return CORBA::string_dup( netPak.c_str( ) );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

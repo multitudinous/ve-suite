@@ -126,7 +126,7 @@ public:
     ));
   
   virtual
-	  void SetParams (CORBA::Long id,
+      void SetParams (CORBA::Long id,
       const char * param
     )
     ACE_THROW_SPEC ((
@@ -153,7 +153,7 @@ public:
     ));
   
   virtual
-	  ::Types::ArrayLong* GetID (
+      ::Types::ArrayLong* GetID (
       
     )
     ACE_THROW_SPEC ((
@@ -162,7 +162,7 @@ public:
     ));
   
   virtual
-	  ::CORBA::Long GetCurID (
+      ::CORBA::Long GetCurID (
       
     )
     ACE_THROW_SPEC ((
@@ -171,7 +171,7 @@ public:
     ));
 
   virtual void Body_Unit_i::DeleteModuleInstance(CORBA::Long id) 
-	ACE_THROW_SPEC ((
+    ACE_THROW_SPEC ((
     ::CORBA::SystemException,
     ::Error::EUnknown
   ));

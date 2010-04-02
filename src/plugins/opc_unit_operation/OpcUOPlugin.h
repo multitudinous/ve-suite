@@ -47,21 +47,21 @@ class OpcUOPlugin : public UIPluginBase
 {
     DECLARE_DYNAMIC_CLASS( OpcUOPlugin )
 private:
-	wxTimer * m_timer;
-	enum
-	{
-		TIMER_ID = 1006
-	};
-	void OnTimer( wxTimerEvent& event );
-	std::string dynValue;
-	void DrawValue( wxDC* dc );
-	void ReadValue( );
-	//void StartTimer( wxCommandEvent& event  );
-	void StartTimer( float msec  );
-	void StopTimer( wxCommandEvent& event  );
-	void OnShowValue( wxCommandEvent& event );
-	void OnShowAllVar( wxCommandEvent& event );
-	void QueryForAllVariables( wxCommandEvent& event );
+    wxTimer * m_timer;
+    enum
+    {
+        TIMER_ID = 1006
+    };
+    void OnTimer( wxTimerEvent& event );
+    std::string dynValue;
+    void DrawValue( wxDC* dc );
+    void ReadValue( );
+    //void StartTimer( wxCommandEvent& event  );
+    void StartTimer( float msec  );
+    void StopTimer( wxCommandEvent& event  );
+    void OnShowValue( wxCommandEvent& event );
+    void OnShowAllVar( wxCommandEvent& event );
+    void QueryForAllVariables( wxCommandEvent& event );
 public:
     ///Defualt constructor
     OpcUOPlugin();

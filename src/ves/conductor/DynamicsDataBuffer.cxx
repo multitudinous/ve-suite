@@ -37,6 +37,11 @@
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/XMLReaderWriter.h>
 
+#include <boost/bind.hpp>
+
+#include <vpr/vpr.h>
+#include <vpr/System.h>
+
 #include <sstream>
 #include <algorithm>
 
@@ -51,15 +56,18 @@ DynamicsDataBuffer::DynamicsDataBuffer( void )
     ves::open::xml::CommandPtr nullCommand( new Command() );
     nullCommand->SetCommandName( "NULL" );
     commandMap[ "NULL" ] = nullCommand;
+    m_thread = 0;
+    m_enabled = false;
 }
 ////////////////////////////////////////////////////////////////////////////////
 DynamicsDataBuffer::~DynamicsDataBuffer()
 {
-    ;
+    m_enabled = false;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DynamicsDataBuffer::CleanUp( void )
 {
+    Disable();
     vpr::Guard<vpr::Mutex> val_guard( m_valueLock );
     commandMap.clear();
 }
@@ -149,40 +157,72 @@ void DynamicsDataBuffer::Print( void )
         std::cout << iter->first << " " << iter->second->GetCommandName() << std::endl;
     }
 }
+///////////////////////////////////////////////////////////////////////////////
+void DynamicsDataBuffer::Enable( )
+{
+    if( !m_enabled )
+    {
+    m_enabled = true;
+        m_thread = new vpr::Thread( boost::bind( &DynamicsDataBuffer::Update, this ) );
+    }
+}
+///////////////////////////////////////////////////////////////////////////////
+void DynamicsDataBuffer::Disable( )
+{
+    m_thread->join();
+    if( m_enabled )
+    {
+        m_enabled = false;
+        delete m_thread;
+    }
+}
+///////////////////////////////////////////////////////////////////////////////
+void DynamicsDataBuffer::PauseUpdate( )
+{
+    m_thread->suspend();
+}
+///////////////////////////////////////////////////////////////////////////////
+void DynamicsDataBuffer::ResumeUpdate( )
+{
+    m_thread->resume();
+}
 ////////////////////////////////////////////////////////////////////////////////
 void DynamicsDataBuffer::Update( )
 {
-	//need check - if not return false
+    while( m_enabled )
+    {
+        //need check - if not return false
 
+        //Update the buffer by querying unit.
 
+        //request new values
+        ves::open::xml::CommandPtr returnState( new ves::open::xml::Command() );
+        returnState->SetCommandName( "getOPCValues" );
 
-	//Update the buffer by querying unit.
-	
-	//request new values
-	ves::open::xml::CommandPtr returnState( new ves::open::xml::Command() );
-    returnState->SetCommandName( "getOPCValues" );
+        std::vector< std::pair< XMLObjectPtr, std::string > > nodes;
+        nodes.push_back( std::pair< XMLObjectPtr, std::string >( returnState, "vecommand" ) );
 
-    std::vector< std::pair< XMLObjectPtr, std::string > > nodes;
-    nodes.push_back( std::pair< XMLObjectPtr, std::string >( returnState, "vecommand" ) );
+        XMLReaderWriter commandWriter;
+        std::string status = "returnString";
+        commandWriter.UseStandaloneDOMDocumentManager();
+        commandWriter.WriteXMLDocument( nodes, status, "Command" );
 
-    XMLReaderWriter commandWriter;
-    std::string status = "returnString";
-    commandWriter.UseStandaloneDOMDocumentManager();
-    commandWriter.WriteXMLDocument( nodes, status, "Command" );
+        std::string nw_str =
+            ves::conductor::util::CORBAServiceList::instance()->Query( status );
 
-	std::string nw_str =
-		ves::conductor::util::CORBAServiceList::instance()->Query( status );
+        //populate the class with the new values
+        ves::open::xml::XMLReaderWriter networkReader;
+        networkReader.UseStandaloneDOMDocumentManager();
+        networkReader.ReadFromString();
+        networkReader.ReadXMLData( nw_str, "Command", "vecommand" );
+        std::vector< ves::open::xml::XMLObjectPtr > objectVector =
+            networkReader.GetLoadedXMLObjects();
+        ves::open::xml::CommandPtr cmd =
+            boost::dynamic_pointer_cast<ves::open::xml::Command>
+            ( objectVector.at( 0 ) );
 
-	//populate the class with the new values
-    ves::open::xml::XMLReaderWriter networkReader;
-    networkReader.UseStandaloneDOMDocumentManager();
-    networkReader.ReadFromString();
-    networkReader.ReadXMLData( nw_str, "Command", "vecommand" );
-    std::vector< ves::open::xml::XMLObjectPtr > objectVector =
-        networkReader.GetLoadedXMLObjects();
-    ves::open::xml::CommandPtr cmd =
-        boost::dynamic_pointer_cast<ves::open::xml::Command>
-        ( objectVector.at( 0 ) );
-	
-	commandMap["OPC_Data"] = cmd;
+        commandMap["OPC_Data"] = cmd;
+
+        vpr::System::msleep( 10 );
+    }
 }

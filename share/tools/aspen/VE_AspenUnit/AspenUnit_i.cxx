@@ -656,6 +656,7 @@ char* Body_Unit_i::handleGetNetwork(ves::open::xml::CommandPtr cmd)
 		    std::cout << "GetNetwork Exception Aspen Unit" << std::endl;
             return NULL;
 	    }
+
 	    return CORBA::string_dup( network.c_str() );
     }
     
