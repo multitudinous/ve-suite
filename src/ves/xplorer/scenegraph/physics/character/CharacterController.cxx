@@ -219,7 +219,7 @@ void CharacterController::Enable( const bool& enable )
             m_ghostObject, btBroadphaseProxy::CharacterFilter,
             btBroadphaseProxy::StaticFilter | btBroadphaseProxy::DefaultFilter );
 
-        m_dynamicsWorld.addCharacter( this );
+        m_dynamicsWorld.addAction( this );
 
         Reset();
     }
@@ -229,7 +229,7 @@ void CharacterController::Enable( const bool& enable )
 
         m_dynamicsWorld.removeCollisionObject( m_ghostObject );
 
-        m_dynamicsWorld.removeCharacter( this );
+        m_dynamicsWorld.removeAction( this );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
