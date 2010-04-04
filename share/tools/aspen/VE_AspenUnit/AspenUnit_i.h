@@ -40,15 +40,15 @@
 
 #include <set>
 
-class  Body_Unit_i : public virtual POA_Body::Unit
+class  AspenUnit_i : public virtual POA_Body::Unit
 {
 public:
     // Constructor 
-    Body_Unit_i (std::string name, CVE_AspenUnitDlg * dialog,
+    AspenUnit_i (std::string name, CVE_AspenUnitDlg * dialog,
         CorbaUnitManager * parent, std::string dir );
-    //Body_Unit_i() {};
+    //AspenUnit_i() {};
     //Destructor 
-    virtual ~Body_Unit_i (void);
+    virtual ~AspenUnit_i (void);
 
     std::string UnitName_;
     Types::ArrayLong ids_;
@@ -177,7 +177,7 @@ public:
       ::Error::EUnknown
     ));
 
-  virtual void Body_Unit_i::DeleteModuleInstance(CORBA::Long id) 
+  virtual void AspenUnit_i::DeleteModuleInstance(CORBA::Long id) 
 	ACE_THROW_SPEC ((
     ::CORBA::SystemException,
     ::Error::EUnknown

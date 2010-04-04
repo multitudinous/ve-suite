@@ -48,7 +48,7 @@
 #include <iostream>
 
 // Implementation skeleton constructor
-Body_Unit_i::Body_Unit_i( std::string name, CVE_AspenUnitDlg * dialog, 
+AspenUnit_i::AspenUnit_i( std::string name, CVE_AspenUnitDlg * dialog, 
                          CorbaUnitManager* parent, std::string dir )
     :
     AspenLog( 0 ),
@@ -101,7 +101,7 @@ Body_Unit_i::Body_Unit_i( std::string name, CVE_AspenUnitDlg * dialog,
 }
 ////////////////////////////////////////////////////////////////////////////////
 // Implementation skeleton destructor
-Body_Unit_i::~Body_Unit_i( void )
+AspenUnit_i::~AspenUnit_i( void )
 {
     if( bkpFlag )
     {
@@ -114,7 +114,7 @@ Body_Unit_i::~Body_Unit_i( void )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Body_Unit_i::ShowAspen()
+void AspenUnit_i::ShowAspen()
 {
     if( bkpFlag )
     {
@@ -127,7 +127,7 @@ void Body_Unit_i::ShowAspen()
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Body_Unit_i::HideAspen()
+void AspenUnit_i::HideAspen()
 {
     if( bkpFlag )
     {
@@ -140,7 +140,7 @@ void Body_Unit_i::HideAspen()
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Body_Unit_i::CloseAspen()
+void AspenUnit_i::CloseAspen()
 {
     if( bkpFlag )
     {
@@ -153,7 +153,7 @@ void Body_Unit_i::CloseAspen()
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Body_Unit_i::SaveAspen( std::string filename)
+void AspenUnit_i::SaveAspen( std::string filename)
 {
     if( bkpFlag )
     {
@@ -167,7 +167,7 @@ void Body_Unit_i::SaveAspen( std::string filename)
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Body_Unit_i::StepSim()
+void AspenUnit_i::StepSim()
 {
     if( bkpFlag )
     {
@@ -180,7 +180,7 @@ void Body_Unit_i::StepSim()
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Body_Unit_i::ReinitializeAspen()
+void AspenUnit_i::ReinitializeAspen()
 {
     try
     {
@@ -201,7 +201,7 @@ void Body_Unit_i::ReinitializeAspen()
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Body_Unit_i::StartCalc (
+void AspenUnit_i::StartCalc (
     
   )
   ACE_THROW_SPEC ((
@@ -224,7 +224,7 @@ void Body_Unit_i::StartCalc (
 	return_state=0;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Body_Unit_i::StopCalc (
+void AspenUnit_i::StopCalc (
     
   )
   ACE_THROW_SPEC ((
@@ -239,7 +239,7 @@ void Body_Unit_i::StopCalc (
 
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Body_Unit_i::PauseCalc (
+void AspenUnit_i::PauseCalc (
     
   )
   ACE_THROW_SPEC ((
@@ -253,7 +253,7 @@ void Body_Unit_i::PauseCalc (
     //executive_->SetModuleMessage(cur_id_,msg.c_str());
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Body_Unit_i::Resume (
+void AspenUnit_i::Resume (
     
   )
   ACE_THROW_SPEC ((
@@ -267,7 +267,7 @@ void Body_Unit_i::Resume (
     //executive_->SetModuleMessage(cur_id_,msg.c_str());
 }
 ////////////////////////////////////////////////////////////////////////////////
-char * Body_Unit_i::GetStatusMessage (
+char * AspenUnit_i::GetStatusMessage (
     
   )
   ACE_THROW_SPEC ((
@@ -299,7 +299,7 @@ char * Body_Unit_i::GetStatusMessage (
     return CORBA::string_dup( status.c_str() );
 }
 ////////////////////////////////////////////////////////////////////////////////
-char * Body_Unit_i::GetUserData (
+char * AspenUnit_i::GetUserData (
     
   )
   ACE_THROW_SPEC ((
@@ -312,7 +312,7 @@ char * Body_Unit_i::GetUserData (
 	return result;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Body_Unit_i::SetID (
+void AspenUnit_i::SetID (
     ::CORBA::Long id
   )
   ACE_THROW_SPEC ((
@@ -325,7 +325,7 @@ void Body_Unit_i::SetID (
   std::cout << "This not implemented for the Aspen Unit" << std::endl;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Body_Unit_i::SetCurID (
+void AspenUnit_i::SetCurID (
     ::CORBA::Long id
   )
   ACE_THROW_SPEC ((
@@ -336,7 +336,7 @@ void Body_Unit_i::SetCurID (
     cur_id_ = id;
 }
 ////////////////////////////////////////////////////////////////////////////////
-::Types::ArrayLong* Body_Unit_i::GetID (
+::Types::ArrayLong* AspenUnit_i::GetID (
     
   )
   ACE_THROW_SPEC ((
@@ -347,7 +347,7 @@ void Body_Unit_i::SetCurID (
 	return &ids_;
 }
 ////////////////////////////////////////////////////////////////////////////////
-CORBA::Long Body_Unit_i::GetCurID (
+CORBA::Long AspenUnit_i::GetCurID (
     
   )
   ACE_THROW_SPEC ((
@@ -358,7 +358,7 @@ CORBA::Long Body_Unit_i::GetCurID (
     return cur_id_;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Body_Unit_i::DeleteModuleInstance(CORBA::Long id) 
+void AspenUnit_i::DeleteModuleInstance(CORBA::Long id) 
 ACE_THROW_SPEC ((
     ::CORBA::SystemException,
     ::Error::EUnknown
@@ -367,7 +367,7 @@ ACE_THROW_SPEC ((
 	return; //do nothing;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Body_Unit_i::SetName (
+void AspenUnit_i::SetName (
     const char * name
   )
   ACE_THROW_SPEC ((
@@ -379,7 +379,7 @@ void Body_Unit_i::SetName (
 	UnitName_ = std::string(name);
 }
 ////////////////////////////////////////////////////////////////////////////////
-char * Body_Unit_i::GetName (
+char * AspenUnit_i::GetName (
     
   )
   ACE_THROW_SPEC ((
@@ -390,7 +390,7 @@ char * Body_Unit_i::GetName (
     return CORBA::string_dup(UnitName_.c_str());
 }
 ////////////////////////////////////////////////////////////////////////////////
-char * Body_Unit_i::Query ( const char * query_str
+char * AspenUnit_i::Query ( const char * query_str
     
   )
   ACE_THROW_SPEC ((
@@ -579,7 +579,7 @@ char * Body_Unit_i::Query ( const char * query_str
 		return CORBA::string_dup( "NULL" );
 }
 ///////////////////////////////////////////////////////////////////////////////
-char* Body_Unit_i::handleGetNetwork(ves::open::xml::CommandPtr cmd)
+char* AspenUnit_i::handleGetNetwork(ves::open::xml::CommandPtr cmd)
 {
     CEdit *Display;
     Display = reinterpret_cast<CEdit *>(theDialog->GetDlgItem(IDC_EDIT2));
@@ -701,7 +701,7 @@ char* Body_Unit_i::handleGetNetwork(ves::open::xml::CommandPtr cmd)
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-char* Body_Unit_i::handleOpenSimulation(ves::open::xml::CommandPtr cmd)
+char* AspenUnit_i::handleOpenSimulation(ves::open::xml::CommandPtr cmd)
 {
     CEdit *Display;
     Display = reinterpret_cast<CEdit *>(theDialog->GetDlgItem(IDC_EDIT2));
@@ -770,7 +770,7 @@ char* Body_Unit_i::handleOpenSimulation(ves::open::xml::CommandPtr cmd)
 	return CORBA::string_dup("Simulation Opened.");
 }
 ////////////////////////////////////////////////////////////////////////////////
-char* Body_Unit_i::handleSaveAs(ves::open::xml::CommandPtr cmd)
+char* AspenUnit_i::handleSaveAs(ves::open::xml::CommandPtr cmd)
 {
 	AspenLog->SetSel(-1, -1);
 	AspenLog->ReplaceSel("saving...\r\n");
@@ -783,7 +783,7 @@ char* Body_Unit_i::handleSaveAs(ves::open::xml::CommandPtr cmd)
 }
 ////////////////////////////////////////////////////////////////////////////////
 //no reinitialize of block in dynamics
-void Body_Unit_i::ReinitializeBlock(ves::open::xml::CommandPtr cmd)
+void AspenUnit_i::ReinitializeBlock(ves::open::xml::CommandPtr cmd)
 {
 	size_t num = cmd->GetNumberOfDataValuePairs();
 	std::string modname;
@@ -802,7 +802,7 @@ void Body_Unit_i::ReinitializeBlock(ves::open::xml::CommandPtr cmd)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-char* Body_Unit_i::handleGetModuleParamList(ves::open::xml::CommandPtr cmd)
+char* AspenUnit_i::handleGetModuleParamList(ves::open::xml::CommandPtr cmd)
 {
 	size_t num = cmd->GetNumberOfDataValuePairs();
 	std::string modname;
@@ -827,7 +827,7 @@ char* Body_Unit_i::handleGetModuleParamList(ves::open::xml::CommandPtr cmd)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-char* Body_Unit_i::handleGetInputModuleParamList(ves::open::xml::CommandPtr cmd)
+char* AspenUnit_i::handleGetInputModuleParamList(ves::open::xml::CommandPtr cmd)
 {
 	size_t num = cmd->GetNumberOfDataValuePairs();
 	std::string modname;
@@ -854,7 +854,7 @@ char* Body_Unit_i::handleGetInputModuleParamList(ves::open::xml::CommandPtr cmd)
 	return CORBA::string_dup(netPak.c_str());
 }
 ////////////////////////////////////////////////////////////////////////////////
-char* Body_Unit_i::handleGetInputModuleProperties(ves::open::xml::CommandPtr cmd)
+char* AspenUnit_i::handleGetInputModuleProperties(ves::open::xml::CommandPtr cmd)
 {
 	size_t num = cmd->GetNumberOfDataValuePairs();
 	std::string modname,paramName;
@@ -875,7 +875,7 @@ char* Body_Unit_i::handleGetInputModuleProperties(ves::open::xml::CommandPtr cmd
 
 }
 ////////////////////////////////////////////////////////////////////////////////
-char* Body_Unit_i::handleGetOutputModuleParamList(ves::open::xml::CommandPtr cmd)
+char* AspenUnit_i::handleGetOutputModuleParamList(ves::open::xml::CommandPtr cmd)
 {
 	size_t num = cmd->GetNumberOfDataValuePairs();
 	std::string modname;
@@ -898,7 +898,7 @@ char* Body_Unit_i::handleGetOutputModuleParamList(ves::open::xml::CommandPtr cmd
 	return CORBA::string_dup(netPak.c_str());
 }
 ////////////////////////////////////////////////////////////////////////////////
-char* Body_Unit_i::handleGetOutputModuleProperties(ves::open::xml::CommandPtr cmd)
+char* AspenUnit_i::handleGetOutputModuleProperties(ves::open::xml::CommandPtr cmd)
 {
 	size_t num = cmd->GetNumberOfDataValuePairs();
 	std::string modname,paramName;
@@ -926,7 +926,7 @@ char* Body_Unit_i::handleGetOutputModuleProperties(ves::open::xml::CommandPtr cm
 
 }
 ////////////////////////////////////////////////////////////////////////////////
-char* Body_Unit_i::handleGetStreamModuleParamList(ves::open::xml::CommandPtr cmd)
+char* AspenUnit_i::handleGetStreamModuleParamList(ves::open::xml::CommandPtr cmd)
 {	
     size_t num = cmd->GetNumberOfDataValuePairs();
 	std::string modname;
@@ -954,7 +954,7 @@ char* Body_Unit_i::handleGetStreamModuleParamList(ves::open::xml::CommandPtr cmd
 	return CORBA::string_dup(netPak.c_str());
 }
 ////////////////////////////////////////////////////////////////////////////////
-char* Body_Unit_i::handleGetStreamInputModuleParamList(ves::open::xml::CommandPtr cmd)
+char* AspenUnit_i::handleGetStreamInputModuleParamList(ves::open::xml::CommandPtr cmd)
 {
 	size_t num = cmd->GetNumberOfDataValuePairs();
 	std::string modname;
@@ -980,7 +980,7 @@ char* Body_Unit_i::handleGetStreamInputModuleParamList(ves::open::xml::CommandPt
 	return CORBA::string_dup(netPak.c_str());
 }
 ////////////////////////////////////////////////////////////////////////////////
-char* Body_Unit_i::handleGetStreamInputModuleProperties(ves::open::xml::CommandPtr cmd)
+char* AspenUnit_i::handleGetStreamInputModuleProperties(ves::open::xml::CommandPtr cmd)
 {
 	size_t num = cmd->GetNumberOfDataValuePairs();
 	std::string modname,paramName;
@@ -1007,7 +1007,7 @@ char* Body_Unit_i::handleGetStreamInputModuleProperties(ves::open::xml::CommandP
 
 }
 ////////////////////////////////////////////////////////////////////////////////
-char* Body_Unit_i::handleGetStreamOutputModuleParamList(ves::open::xml::CommandPtr cmd)
+char* AspenUnit_i::handleGetStreamOutputModuleParamList(ves::open::xml::CommandPtr cmd)
 {
 	size_t num = cmd->GetNumberOfDataValuePairs();
 	std::string modname;
@@ -1033,7 +1033,7 @@ char* Body_Unit_i::handleGetStreamOutputModuleParamList(ves::open::xml::CommandP
 	return CORBA::string_dup(netPak.c_str());
 }
 ////////////////////////////////////////////////////////////////////////////////
-char* Body_Unit_i::handleGetStreamOutputModuleProperties(ves::open::xml::CommandPtr cmd)
+char* AspenUnit_i::handleGetStreamOutputModuleProperties(ves::open::xml::CommandPtr cmd)
 {
 	size_t num = cmd->GetNumberOfDataValuePairs();
 	std::string modname,paramName;
@@ -1060,7 +1060,7 @@ char* Body_Unit_i::handleGetStreamOutputModuleProperties(ves::open::xml::Command
 
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Body_Unit_i::SetParams (CORBA::Long id,
+void AspenUnit_i::SetParams (CORBA::Long id,
     const char * param)
   ACE_THROW_SPEC ((
     ::CORBA::SystemException,
@@ -1105,7 +1105,7 @@ void Body_Unit_i::SetParams (CORBA::Long id,
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Body_Unit_i::SetParam( ves::open::xml::CommandPtr cmd )
+void AspenUnit_i::SetParam( ves::open::xml::CommandPtr cmd )
 {
 	size_t num = cmd->GetNumberOfDataValuePairs();
 	std::string modname,paramName, paramValue;
@@ -1150,7 +1150,7 @@ void Body_Unit_i::SetParam( ves::open::xml::CommandPtr cmd )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Body_Unit_i::SetLinkParam( ves::open::xml::CommandPtr cmd )
+void AspenUnit_i::SetLinkParam( ves::open::xml::CommandPtr cmd )
 {
 	size_t num = cmd->GetNumberOfDataValuePairs();
 	std::string modname,paramName, paramValue;
