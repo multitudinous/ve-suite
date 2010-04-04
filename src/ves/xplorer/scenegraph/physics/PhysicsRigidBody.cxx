@@ -281,8 +281,6 @@ void PhysicsRigidBody::RegisterRigidBody( btRigidBody* rigidBody )
     //rigidBody->setActivationState( DISABLE_DEACTIVATION );
 
     mPhysicsSimulator->GetDynamicsWorld()->addRigidBody( rigidBody );
-    
-    m_physicsMaterial = new Material( Material::FLUBBER );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsRigidBody::StaticConcaveShape()
@@ -479,14 +477,17 @@ void PhysicsRigidBody::CreateRigidBody( const std::string& lod, const std::strin
     if( mesh == "Box" )
     {
         CustomShape( BOX_SHAPE_PROXYTYPE, overall, decimation );
+        m_physicsMaterial = new Material( Material::SILLY_PUTTY );
     }
     else if( mesh == "Sphere" )
     {
         CustomShape( SPHERE_SHAPE_PROXYTYPE, overall, decimation );
+        m_physicsMaterial = new Material( Material::SILLY_PUTTY );
     }
     else if( mesh == "Cylinder" )
     {
         CustomShape( CYLINDER_SHAPE_PROXYTYPE, overall, decimation );
+        m_physicsMaterial = new Material( Material::SILLY_PUTTY );
     }
     else
     {
@@ -495,6 +496,7 @@ void PhysicsRigidBody::CreateRigidBody( const std::string& lod, const std::strin
             CustomShape( TRIANGLE_MESH_SHAPE_PROXYTYPE, overall, decimation );
             //This method runs very slowly
             //CustomShape( CONVEX_HULL_SHAPE_PROXYTYPE, overall, decimation );
+            m_physicsMaterial = new Material( Material::CEMENT );
         }
         else
         {
