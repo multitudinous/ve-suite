@@ -3,10 +3,6 @@
 #ifndef __MATERIAL_H__
 #define __MATERIAL_H__ 1
 
-
-#include <osgAudio/SoundState.h>
-
-
 struct Material
 {
     typedef enum {

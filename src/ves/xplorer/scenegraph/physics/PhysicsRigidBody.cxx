@@ -80,7 +80,8 @@ PhysicsRigidBody::PhysicsRigidBody( osg::Node* node,
     mPhysicsSimulator( physicsSimulator ),
     mOSGToBullet( node ),
     mRB( 0 ),
-    mDebugBoundaries( false )
+    mDebugBoundaries( false ),
+    m_physicsMaterial( 0 )
 {
     std::cout << "|\tPhysicsRigidBody: Just initializing physics variables." 
         << std::endl;
@@ -280,6 +281,8 @@ void PhysicsRigidBody::RegisterRigidBody( btRigidBody* rigidBody )
     //rigidBody->setActivationState( DISABLE_DEACTIVATION );
 
     mPhysicsSimulator->GetDynamicsWorld()->addRigidBody( rigidBody );
+    
+    m_physicsMaterial = new Material( Material::FLUBBER );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsRigidBody::StaticConcaveShape()
@@ -500,3 +503,7 @@ void PhysicsRigidBody::CreateRigidBody( const std::string& lod, const std::strin
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
+Material* PhysicsRigidBody::GetSoundMaterial()
+{
+    return m_physicsMaterial;
+}

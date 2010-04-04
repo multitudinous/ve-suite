@@ -75,6 +75,13 @@ const int maxProxies = 32766;
 
 using namespace ves::xplorer::scenegraph;
 
+#ifdef VE_SOUND
+#include <ves/xplorer/scenegraph/physics/sound/SoundUtilities.h>
+#include <ves/xplorer/scenegraph/physics/sound/SoundTable.h>
+#include <ves/xplorer/scenegraph/physics/sound/Material.h>
+void triggerSounds( const btDynamicsWorld* world, btScalar timeStep );
+#endif
+
 #define MULTITHREADED_OSGBULLET 0
 //vprSingletonImp( PhysicsSimulator );
 vprSingletonImpLifetime( PhysicsSimulator, 1 );
@@ -381,6 +388,10 @@ void PhysicsSimulator::InitializePhysicsSimulation()
     //mDynamicsWorld->getDispatchInfo().m_enableSPU = true;
     mDynamicsWorld->setGravity( btVector3( 0, 0, -32.174 ) );
 
+#ifdef VE_SOUND
+    mDynamicsWorld->
+        setInternalTickCallback( (btInternalTickCallback) triggerSounds);
+#endif
     m_debugDrawerGroup = new osg::Group();
     m_debugDrawerGroup->setName( "osgBullet::DebugDrawer Root" );
     SceneManager::instance()->GetRootNode()->
@@ -789,3 +800,111 @@ void PhysicsSimulator::UnregisterMotionState( osgbBullet::MotionState* motionSta
     SetIdle( currentIdle );
 }
 ////////////////////////////////////////////////////////////////////////////////
+// Collision flags, mainly so that the door doesn't collide with the doorframe.
+/*enum CollisionTypes {
+    COL_DOOR = 0x1 << 0,
+    COL_DOORFRAME = 0x1 << 1,
+    COL_DEFAULT = 0x1 << 2,
+};
+unsigned int doorCollidesWith( COL_DEFAULT );
+unsigned int doorFrameCollidesWith( COL_DEFAULT );
+unsigned int defaultCollidesWith( COL_DOOR | COL_DOORFRAME | COL_DEFAULT );
+
+
+typedef std::set< btCollisionObject* > BulletObjList;
+BulletObjList g_movingList;
+*/
+#ifdef VE_SOUND
+void triggerSounds( const btDynamicsWorld* world, btScalar timeStep )
+{
+    // Loop over all collision ovjects and find the ones that are
+    // moving. Need this for door creak.
+    /*
+    const btCollisionObjectArray& colObjs( world->getCollisionObjectArray() );
+    int idx( world->getNumCollisionObjects() );
+    while( idx-- )
+    {
+        btCollisionObject* co( colObjs[ idx ] );
+        btVector3 v( co->getInterpolationLinearVelocity() );
+        v[0] = osg::absolute< float >( v[0] );
+        v[1] = osg::absolute< float >( v[1] );
+        v[2] = osg::absolute< float >( v[2] );
+        
+        BulletObjList::const_iterator it( g_movingList.find( co ) );
+        if( ( v[0] > .9f ) || ( v[1] > .9f ) || ( v[2] > .9f ) )
+        {
+            // It's moving.
+            if( it == g_movingList.end() )
+            {
+                g_movingList.insert( co );
+                // We didn't already play a sound, so play one now.
+                Material* mc = ( Material* )( co->getUserPointer() );
+                if( mc != NULL )
+                    SoundUtilities::instance()->move( mc->_mat,
+                                                     osgbBullet::asOsgVec3( co->getWorldTransform().getOrigin() ) );
+            }
+        }
+        else
+        {
+            // it's not moving
+            if( it != g_movingList.end() )
+                g_movingList.erase( it );
+        }
+    }
+    */
+    
+    // Loop over all collision points and find impacts.
+    const btCollisionDispatcher* dispatch( static_cast< const btCollisionDispatcher* >( world->getDispatcher() ) );
+    const int numManifolds( dispatch->getNumManifolds() );
+    
+	for( int idx=0; idx < numManifolds; idx++ )
+	{
+		const btPersistentManifold* contactManifold( dispatch->getManifoldByIndexInternal( idx ) );
+		const btCollisionObject* obA( static_cast< const btCollisionObject* >( contactManifold->getBody0() ) );
+		const btCollisionObject* obB( static_cast< const btCollisionObject* >( contactManifold->getBody1() ) );
+        
+        bool collide( false ), slide( false );
+        osg::Vec3 location;
+        
+		const int numContacts( contactManifold->getNumContacts() );
+        int jdx;
+		for( jdx=0; jdx < numContacts; jdx++ )
+		{
+			const btManifoldPoint& pt( contactManifold->getContactPoint( jdx) );
+            location = osgbBullet::asOsgVec3( pt.getPositionWorldOnA() );
+            if( pt.m_lifeTime < 3 )
+            {
+                if( pt.m_appliedImpulse > 5. ) // Kind of a hack.
+                    collide = true;
+            }
+            else
+            {
+                osg::Vec3 vA( osgbBullet::asOsgVec3( obA->getInterpolationLinearVelocity() ) );
+                osg::Vec3 vB( osgbBullet::asOsgVec3( obB->getInterpolationLinearVelocity() ) );
+                if( (vA-vB).length2() > .1 )
+                    slide = true;
+            }
+		}
+        if( collide || slide )
+        {
+            void* tempUserDataA = obA->getUserPointer();
+            void* tempUserDataB = obB->getUserPointer();
+            PhysicsRigidBody* objA =
+                static_cast< PhysicsRigidBody* >( tempUserDataA );
+            PhysicsRigidBody* objB =
+                static_cast< PhysicsRigidBody* >( tempUserDataB );
+            
+            Material* mcA = objA->GetSoundMaterial();
+            Material* mcB = objB->GetSoundMaterial();
+            if( ( mcA != NULL ) && ( mcB != NULL ) )
+            {
+                if( collide )
+                    SoundUtilities::instance()->collide( mcA->_mat, mcB->_mat, location );
+                else
+                    SoundUtilities::instance()->slide( mcA->_mat, mcB->_mat, location );
+            }
+        }
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+#endif

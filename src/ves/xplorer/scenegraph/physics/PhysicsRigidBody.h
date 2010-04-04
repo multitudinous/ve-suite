@@ -36,7 +36,7 @@
 // --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
 
-//#include <ves/xplorer/scenegraph/physics/osgToBullet.h>
+#include <ves/xplorer/scenegraph/physics/sound/Material.h>
 
 // --- OSG Includes --- //
 #include <osg/ref_ptr>
@@ -132,7 +132,13 @@ public:
 
     void UserDefinedShape( btCollisionShape* collisionShape );
 
+    ///Get the bullet rigid body
+    ///\return The bullet rigid body
     btRigidBody* GetbtRigidBody();
+    
+    ///Get the material struct used to tell the sound engine what to do
+    ///\return The material for this rigid body
+    Material* GetSoundMaterial();
     
 private:
     friend class PhysicsSimulator;
@@ -165,6 +171,8 @@ private:
     ///The holder of all physics data for bullet
     btRigidBody* mRB;
 
+    Material* m_physicsMaterial;
+    
     osg::ref_ptr< osg::Node > mOSGToBullet;
 
     std::multimap< PhysicsRigidBody*, btVector3 > mCollisions;
