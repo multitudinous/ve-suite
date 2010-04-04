@@ -346,7 +346,7 @@ void OpcUOPlugin::QueryForAllVariables( wxCommandEvent& event )
         ves::open::xml::DataValuePairPtr pair = cmd->GetDataValuePair( i );
         name = pair->GetDataName( );
         pair->GetData( value );
-        params->SetData( name, value );
+        params->SetData( wxString( name.c_str(), wxConvUTF8 ), wxString( value.c_str(), wxConvUTF8 ) );
     }
     
     //populate dialog
