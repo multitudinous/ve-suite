@@ -310,8 +310,8 @@ apu_options = fp_option.FlagPollBasedOption("Apache Portable Runtime Utils",
 #bullet_options = fp_option.FlagPollBasedOption("Bullet Physics SDK",
 #                                               "bullet", "0.1", True, True, helpText=None, compileTest=True,
 #                                               headerToCheck="btBulletCollisionCommon.h")
-bulletVersion = (int(2), int(75))
-bulletBaseVar = 'bullet-2.75'
+bulletVersion = (int(2), int(76))
+bulletBaseVar = 'bullet-2.76'
 
 #need to do a flagpoll check to see if TAO pc or fpc files are available
 tao_options = fp_option.FlagPollBasedOption("ACE TAO libraries",
