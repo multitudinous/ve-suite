@@ -66,10 +66,10 @@ void OSGVectorStage::createArrow( osg::Geometry& geom, int nInstances, float sca
     float len( 1. ); // length
     float sh( .65 ); // length from base to start of head
 
-	sD = scaleFactor * sD;
-	hD = scaleFactor * hD;
-	len = scaleFactor * len;
-	sh = scaleFactor * sh;
+    sD = scaleFactor * sD;
+    hD = scaleFactor * hD;
+    len = scaleFactor * len;
+    sh = scaleFactor * sh;
 
     osg::Vec3Array* v = new osg::Vec3Array;
     v->resize( 22 );

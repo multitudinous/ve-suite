@@ -7,649 +7,649 @@
 namespace CASI
 {
     CASIObj::CASIObj(Happ::IHNodePtr root, CString nodepath, VARTYPE nodetype)
-		:Variable(root,nodepath, nodetype)
-	{
-		//if (nodeType==STREAM)
-		//	prepStream();
-		//else if (nodeType==BLOCK)
-			//prepBlock();
-			//processBlocks();
-	}
-	
-	CString CASIObj::getInputVarName(int index) //get a varaible name in the input category by index
-	{
-		return  blockInputsWithSubs[index];//(varnodePath.Right(slength-lastDot-1));
-	}
+        :Variable(root,nodepath, nodetype)
+    {
+        //if (nodeType==STREAM)
+        //    prepStream();
+        //else if (nodeType==BLOCK)
+            //prepBlock();
+            //processBlocks();
+    }
+    
+    CString CASIObj::getInputVarName(int index) //get a varaible name in the input category by index
+    {
+        return  blockInputsWithSubs[index];//(varnodePath.Right(slength-lastDot-1));
+    }
 
-	CString CASIObj::getOutputVarName(int index) //get a varaible name in the output category by index
-	{
-		return  blockOutputsWithSubs[index];//(varnodePath.Right(slength-lastDot-1));
-	}
-	
-	int CASIObj::getNumberOfInputVars( ) //get the total number of input variable
-	{
+    CString CASIObj::getOutputVarName(int index) //get a varaible name in the output category by index
+    {
+        return  blockOutputsWithSubs[index];//(varnodePath.Right(slength-lastDot-1));
+    }
+    
+    int CASIObj::getNumberOfInputVars( ) //get the total number of input variable
+    {
         return blockInputsWithSubs.size();
     }
     int CASIObj::getNumberOfOutputVars( ) //get the total number of output variable
-	{
+    {
         return blockOutputsWithSubs.size();
     }
 
-	CString CASIObj::getSIPortName(int index) //get the source or input port name by index
-	{
-		CString siPortPath;
-		CString varnodename;
+    CString CASIObj::getSIPortName(int index) //get the source or input port name by index
+    {
+        CString siPortPath;
+        CString varnodename;
 
-		int slength = nodePath.GetLength();
-		siPortPath=nodePath;
+        int slength = nodePath.GetLength();
+        siPortPath=nodePath;
 
-		if (nodeType==STREAM)
-			siPortPath.Insert(slength, ".Ports.SOURCE");
-		else if (nodeType==BLOCK)
-			siPortPath.Insert(slength, ".Ports");
-		else
-			return CString("");
-			
-		Happ::IHNodePtr node, cnode;
+        if (nodeType==STREAM)
+            siPortPath.Insert(slength, ".Ports.SOURCE");
+        else if (nodeType==BLOCK)
+            siPortPath.Insert(slength, ".Ports");
+        else
+            return CString("");
+            
+        Happ::IHNodePtr node, cnode;
 
-		node=nodeNav(ihRoot,  siPortPath);
+        node=nodeNav(ihRoot,  siPortPath);
 
         Happ::IHNodeColPtr ihcol;
-		int d, i, j, total;
-		long* rc;
-		VARIANTARG arg[5];
-		VARIANTARG force;
+        int d, i, j, total;
+        long* rc;
+        VARIANTARG arg[5];
+        VARIANTARG force;
 
-		::VariantInit(&force);
-		for (i=0; i<5; i++) 
-			::VariantInit(&arg[i]);
+        ::VariantInit(&force);
+        for (i=0; i<5; i++) 
+            ::VariantInit(&arg[i]);
 
-		ihcol=node->GetElements();
-		d = ihcol->GetDimension();
+        ihcol=node->GetElements();
+        d = ihcol->GetDimension();
 
-		rc = new long[d];
-		total=0;
-		for (i=0; i<d; i++) //for each dimention
-		{
-			rc[i] = ihcol->GetRowCount(i);
-			total+=rc[i];
-		}
-		
-		//int lastDot;
-		slength;
-		std::vector< ::CString > results;
-		int cur_ind;
-		for (i=0; i<total; i++)
-		{
-			cur_ind=i;
-			for (j=0; j<d; j++)
-			{
-				arg[j].vt = VT_INT;
-				V_INT(&arg[j])=cur_ind%rc[j];
-				cur_ind = cur_ind/rc[j];
-			}
-			cnode = ihcol->GetItem(arg[0], arg[1], arg[2], arg[3], arg[4]);
-		
+        rc = new long[d];
+        total=0;
+        for (i=0; i<d; i++) //for each dimention
+        {
+            rc[i] = ihcol->GetRowCount(i);
+            total+=rc[i];
+        }
+        
+        //int lastDot;
+        slength;
+        std::vector< ::CString > results;
+        int cur_ind;
+        for (i=0; i<total; i++)
+        {
+            cur_ind=i;
+            for (j=0; j<d; j++)
+            {
+                arg[j].vt = VT_INT;
+                V_INT(&arg[j])=cur_ind%rc[j];
+                cur_ind = cur_ind/rc[j];
+            }
+            cnode = ihcol->GetItem(arg[0], arg[1], arg[2], arg[3], arg[4]);
+        
             varnodename = cnode->GetName(force).GetBSTR();
-			
+            
 
-			if (nodeType==BLOCK)
-			{
-				if (varnodename.Find("(IN)")!=-1)
-					results.push_back(varnodename);
-			}
-			else
-				results.push_back(varnodename);
-		}
-		
-		delete [] rc;
+            if (nodeType==BLOCK)
+            {
+                if (varnodename.Find("(IN)")!=-1)
+                    results.push_back(varnodename);
+            }
+            else
+                results.push_back(varnodename);
+        }
+        
+        delete [] rc;
 
-		if (index<0 || index>=results.size())
-			return CString("");
+        if (index<0 || index>=results.size())
+            return CString("");
 
-		CString vname=results[index];
-		//lastDot=vpath.ReverseFind('.');
+        CString vname=results[index];
+        //lastDot=vpath.ReverseFind('.');
 
-		//slength=vpath.GetLength();
+        //slength=vpath.GetLength();
 
-		return  vname;//vpath.Right(slength-lastDot-1);
-			
-	}
-	
-	CString CASIObj::getDOPortName(int index) //get the destination or output port name by index
-	{
-		CString doPortPath;
-		CString varnodename;
+        return  vname;//vpath.Right(slength-lastDot-1);
+            
+    }
+    
+    CString CASIObj::getDOPortName(int index) //get the destination or output port name by index
+    {
+        CString doPortPath;
+        CString varnodename;
 
-		int slength = nodePath.GetLength();
-		doPortPath=nodePath;
+        int slength = nodePath.GetLength();
+        doPortPath=nodePath;
 
-		if (nodeType==STREAM)
-			doPortPath.Insert(slength,".Ports.DEST");
-		else if (nodeType==BLOCK)
-			doPortPath.Insert(slength,".Ports");
-		else
-			return CString("");
-			
-		Happ::IHNodePtr node, cnode;
+        if (nodeType==STREAM)
+            doPortPath.Insert(slength,".Ports.DEST");
+        else if (nodeType==BLOCK)
+            doPortPath.Insert(slength,".Ports");
+        else
+            return CString("");
+            
+        Happ::IHNodePtr node, cnode;
 
-		node=nodeNav(ihRoot,  doPortPath);
+        node=nodeNav(ihRoot,  doPortPath);
 
-		Happ::IHNodeColPtr ihcol;
-		int d, i, j, total;
-		long* rc;
-		VARIANTARG arg[5];
-		VARIANTARG force;
-		for (i=0; i<5; i++) 
-			::VariantInit(&arg[i]);
-		::VariantInit(&force);
+        Happ::IHNodeColPtr ihcol;
+        int d, i, j, total;
+        long* rc;
+        VARIANTARG arg[5];
+        VARIANTARG force;
+        for (i=0; i<5; i++) 
+            ::VariantInit(&arg[i]);
+        ::VariantInit(&force);
 
-		ihcol=node->GetElements();
-		d = ihcol->GetDimension();
+        ihcol=node->GetElements();
+        d = ihcol->GetDimension();
 
-		rc = new long[d];
-		total=0;
-		for (i=0; i<d; i++) //for each dimention
-		{
-			rc[i] = ihcol->GetRowCount(i);
-			total+=rc[i];
-		}
-		
-//		int lastDot;
-		slength;
-		std::vector<CString> results;
-		int cur_ind;
+        rc = new long[d];
+        total=0;
+        for (i=0; i<d; i++) //for each dimention
+        {
+            rc[i] = ihcol->GetRowCount(i);
+            total+=rc[i];
+        }
+        
+//        int lastDot;
+        slength;
+        std::vector<CString> results;
+        int cur_ind;
 
-		for (i=0; i<total; i++)
-		{
-			cur_ind=i;
-			for (j=0; j<d; j++)
-			{
-				arg[j].vt = VT_INT;
-				V_INT(&arg[j])=cur_ind%rc[j];
-				cur_ind = cur_ind/rc[j];
-			}
-			cnode = ihcol->GetItem(arg[0], arg[1], arg[2], arg[3], arg[4]);
-		
-            varnodename = cnode->GetName(force).GetBSTR();
-
-			if (nodeType==BLOCK)
-			{
-				if (varnodename.Find("(OUT)")!=-1)
-					results.push_back(varnodename);
-			}
-			else
-				results.push_back(varnodename);
-		}
-		
-		delete [] rc;
-
-		if (index<0 || index>=results.size())
-			return CString("");
-
-		//CString vpath=results[index];
-		//lastDot=vpath.ReverseFind('.');
-
-		//slength=vpath.GetLength();
-
-		return  results[index];//vpath.Right(slength-lastDot-1);
-
-					
-	}
-
-	Variable CASIObj::getOutputVarByName(CString vname) //get a pointer to a output variable by name
-	{
-		CString varnodepath;
-		int slength = nodePath.GetLength();
-		varnodepath= nodePath;
-		varnodepath.Insert(slength,".Output.");
-		slength = varnodepath.GetLength();
-		varnodepath.Insert(slength,vname);
-
-		Variable result(ihRoot, varnodepath);
-
-		return result;
-	}
-	
-	Variable CASIObj::getInputVarByName(CString vname)	//get a pointer to a input variable by name
-	{
-		CString varnodepath;
-		int slength = nodePath.GetLength();
-		varnodepath= nodePath;
-		varnodepath.Insert(slength,".Input.");
-		slength = varnodepath.GetLength();
-		varnodepath.Insert(slength,vname);
-
-		Variable result(ihRoot, varnodepath);
-		return result;
-	}
-
-	Variable CASIObj::getInputVarByIndex(int index)  //get a pointer to a input variable by index
-	{
-		CString varname = getInputVarName(index);
-		
-		return getInputVarByName(varname);		
-	}
-	
-	Variable CASIObj::getOutputVarByIndex(int index) //get a pointer to a output variable by index
-	{
-		CString varname = getOutputVarName(index);
-
-		return getOutputVarByName(varname);		
-	}
-	
-
-	int CASIObj::getNumCompOfStream() //get number of the components in Table seciton for a certain stream
-	{
-		return streamComps.size();
-	}
-
-	CString* CASIObj::GetStreamComponentNameList() //get the string list of stream component names
-	{
-		
-		CString *results;
-		std::set<CString>::iterator iter;
-		int i=0;
-
-		results = new CString[streamComps.size()];
-		for (iter=streamComps.begin();iter!=streamComps.end();iter++)
-			results[i++]=*iter;
-
-		return results;
-	}
-	
-	Variable CASIObj::GetStreamComponentVarByName(CString streamName, CString componentName) //get the varialble pointer of a stream component
-	{
-		CString streamnodepath;
-		int slength = nodePath.GetLength();
-
-		streamnodepath= nodePath;
-		
-		//streamnodepath.Insert(slength,".Stream Results.Table.(");
-		streamnodepath.Insert(slength,streamName);
-		slength=streamnodepath.GetLength();
-		streamnodepath.Insert(slength,".Input.FLOW.MIXED.");
-		slength=streamnodepath.GetLength();
-		streamnodepath.Insert(slength,componentName);
-		//slength=streamnodepath.GetLength();
-		//streamnodepath.Insert(slength,",");
-		//slength=streamnodepath.GetLength();
-		//streamnodepath.Insert(slength,streamName);
-		//slength=streamnodepath.GetLength();
-		//streamnodepath.Insert(slength,")");
-
-		Variable resultvar(ihRoot, streamnodepath);
-
-		return resultvar;
-	}
-	
-	CString CASIObj::GetStreamComponentVarValue(CString streamName, CString componentName) //get the value of a stream component
-	{
-		Variable var;
-		CString result;
-
-		var=GetStreamComponentVarByName(streamName, componentName);
-		result=var.getValue();
-
-		return result;
-	}
-
-	bool CASIObj::SetStreamComponentVarValue(CString streamName, CString componentName, CString value) //set the value of a stream component
-	{
-		Variable var;
-		bool result;
-
-		var=GetStreamComponentVarByName(streamName, componentName);
-		result=var.setValue(value);
-
-		return result;
-	}
-
-	int CASIObj::getNumInputVar() //get number of input variable
-	{
-		CString varnodepath;
-
-		int slength = nodePath.GetLength();
-		varnodepath=nodePath;
-
-		varnodepath.Insert(slength,".Input");
-			
-		Happ::IHNodePtr node;
-
-		node=nodeNav(ihRoot,  varnodepath);
-
-		return getChildNum(node);
-	}
-	
-	int CASIObj::getNumOutputVar() //get number of output variable
-	{
-		CString varnodepath;
-
-		int slength = nodePath.GetLength();
-		varnodepath=nodePath;
-
-		varnodepath.Insert(slength,".Output");
-			
-		Happ::IHNodePtr node;
-
-		node=nodeNav(ihRoot,  varnodepath);
-
-		return getChildNum(node);
-	}
-	
-	int CASIObj::getNumSIPort() //get number of source/input port
-	{
-		CString siPortPath;
-		CString varnodename;
-
-		int slength = nodePath.GetLength();
-		siPortPath=nodePath;
-
-		if (nodeType==STREAM)
-			siPortPath.Insert(slength,".Ports.SOURCE");
-		else if (nodeType==BLOCK)
-			siPortPath.Insert(slength,".Ports");
-		else
-			return NULL;
-			
-		Happ::IHNodePtr node, cnode;
-
-		node=nodeNav(ihRoot,  siPortPath);
-
-		Happ::IHNodeColPtr ihcol;
-		int d, i, j, total;
-		long* rc;
-		VARIANTARG arg[5];
-		VARIANTARG force;
-
-		for (i=0; i<5; i++) 
-			::VariantInit(&arg[i]);
-		::VariantInit(&force);
-
-		ihcol=node->GetElements();
-
-		d = ihcol->GetDimension(); 
-
-		rc = new long[d];
-		total=0;
-		for (i=0; i<d; i++) //for each dimention
-		{
-			rc[i] = ihcol->GetRowCount(i);
-			total+=rc[i];
-		}
-		
-		std::vector<CString> results;
-		int cur_ind;
-
-		for (i=0; i<total; i++)
-		{
-			cur_ind=i;
-			for (j=0; j<d; j++)
-			{
-				arg[j].vt = VT_INT;
-				V_INT(&arg[j])=cur_ind%rc[j];
-				cur_ind = cur_ind/rc[j];
-			}
-			cnode = ihcol->GetItem(arg[0], arg[1], arg[2], arg[3], arg[4]);
-		
+        for (i=0; i<total; i++)
+        {
+            cur_ind=i;
+            for (j=0; j<d; j++)
+            {
+                arg[j].vt = VT_INT;
+                V_INT(&arg[j])=cur_ind%rc[j];
+                cur_ind = cur_ind/rc[j];
+            }
+            cnode = ihcol->GetItem(arg[0], arg[1], arg[2], arg[3], arg[4]);
+        
             varnodename = cnode->GetName(force).GetBSTR();
 
-			if (nodeType==BLOCK)
-			{
-				if (varnodename.Find("(IN)")!=-1)
-					results.push_back(varnodename);
-			}
-			else
-				results.push_back(varnodename);
-		}
+            if (nodeType==BLOCK)
+            {
+                if (varnodename.Find("(OUT)")!=-1)
+                    results.push_back(varnodename);
+            }
+            else
+                results.push_back(varnodename);
+        }
+        
+        delete [] rc;
 
-		delete [] rc;
+        if (index<0 || index>=results.size())
+            return CString("");
 
-		return results.size();
-		
-	}
+        //CString vpath=results[index];
+        //lastDot=vpath.ReverseFind('.');
 
-	int CASIObj::getNumDOPort() //get number of destination/output port
-	{
-		CString siPortPath;
-		CString varnodename;
+        //slength=vpath.GetLength();
 
-		int slength = nodePath.GetLength();
-		siPortPath=nodePath;
+        return  results[index];//vpath.Right(slength-lastDot-1);
 
-		if (nodeType==STREAM)
-			siPortPath.Insert(slength,".Ports.DEST");
-		else if (nodeType==BLOCK)
-			siPortPath.Insert(slength,".Ports");
-		else
-			return NULL;
-			
-		Happ::IHNodePtr node, cnode;
+                    
+    }
 
-		node=nodeNav(ihRoot,  siPortPath);
+    Variable CASIObj::getOutputVarByName(CString vname) //get a pointer to a output variable by name
+    {
+        CString varnodepath;
+        int slength = nodePath.GetLength();
+        varnodepath= nodePath;
+        varnodepath.Insert(slength,".Output.");
+        slength = varnodepath.GetLength();
+        varnodepath.Insert(slength,vname);
 
-		Happ::IHNodeColPtr ihcol;
-		int d, i, j, total;
-		long* rc;
-		VARIANTARG arg[5];
-		VARIANTARG force;
+        Variable result(ihRoot, varnodepath);
 
-		for (i=0; i<5; i++) 
-			::VariantInit(&arg[i]);
-		::VariantInit(&force);
+        return result;
+    }
+    
+    Variable CASIObj::getInputVarByName(CString vname)    //get a pointer to a input variable by name
+    {
+        CString varnodepath;
+        int slength = nodePath.GetLength();
+        varnodepath= nodePath;
+        varnodepath.Insert(slength,".Input.");
+        slength = varnodepath.GetLength();
+        varnodepath.Insert(slength,vname);
 
-		ihcol=node->GetElements();
+        Variable result(ihRoot, varnodepath);
+        return result;
+    }
 
-		d = ihcol->GetDimension(); 
+    Variable CASIObj::getInputVarByIndex(int index)  //get a pointer to a input variable by index
+    {
+        CString varname = getInputVarName(index);
+        
+        return getInputVarByName(varname);        
+    }
+    
+    Variable CASIObj::getOutputVarByIndex(int index) //get a pointer to a output variable by index
+    {
+        CString varname = getOutputVarName(index);
 
-		rc = new long[d];
-		total=0;
-		for (i=0; i<d; i++) //for each dimention
-		{
-			rc[i] = ihcol->GetRowCount(i);
-			total+=rc[i];
-		}
-		
-		std::vector<CString> results;
-		int cur_ind;
+        return getOutputVarByName(varname);        
+    }
+    
 
-		for (i=0; i<total; i++)
-		{
-			cur_ind=i;
-			for (j=0; j<d; j++)
-			{
-				arg[j].vt = VT_INT;
-				V_INT(&arg[j])=cur_ind%rc[j];
-				cur_ind = cur_ind/rc[j];
-			}
-			cnode = ihcol->GetItem(arg[0], arg[1], arg[2], arg[3], arg[4]);
-		
+    int CASIObj::getNumCompOfStream() //get number of the components in Table seciton for a certain stream
+    {
+        return streamComps.size();
+    }
+
+    CString* CASIObj::GetStreamComponentNameList() //get the string list of stream component names
+    {
+        
+        CString *results;
+        std::set<CString>::iterator iter;
+        int i=0;
+
+        results = new CString[streamComps.size()];
+        for (iter=streamComps.begin();iter!=streamComps.end();iter++)
+            results[i++]=*iter;
+
+        return results;
+    }
+    
+    Variable CASIObj::GetStreamComponentVarByName(CString streamName, CString componentName) //get the varialble pointer of a stream component
+    {
+        CString streamnodepath;
+        int slength = nodePath.GetLength();
+
+        streamnodepath= nodePath;
+        
+        //streamnodepath.Insert(slength,".Stream Results.Table.(");
+        streamnodepath.Insert(slength,streamName);
+        slength=streamnodepath.GetLength();
+        streamnodepath.Insert(slength,".Input.FLOW.MIXED.");
+        slength=streamnodepath.GetLength();
+        streamnodepath.Insert(slength,componentName);
+        //slength=streamnodepath.GetLength();
+        //streamnodepath.Insert(slength,",");
+        //slength=streamnodepath.GetLength();
+        //streamnodepath.Insert(slength,streamName);
+        //slength=streamnodepath.GetLength();
+        //streamnodepath.Insert(slength,")");
+
+        Variable resultvar(ihRoot, streamnodepath);
+
+        return resultvar;
+    }
+    
+    CString CASIObj::GetStreamComponentVarValue(CString streamName, CString componentName) //get the value of a stream component
+    {
+        Variable var;
+        CString result;
+
+        var=GetStreamComponentVarByName(streamName, componentName);
+        result=var.getValue();
+
+        return result;
+    }
+
+    bool CASIObj::SetStreamComponentVarValue(CString streamName, CString componentName, CString value) //set the value of a stream component
+    {
+        Variable var;
+        bool result;
+
+        var=GetStreamComponentVarByName(streamName, componentName);
+        result=var.setValue(value);
+
+        return result;
+    }
+
+    int CASIObj::getNumInputVar() //get number of input variable
+    {
+        CString varnodepath;
+
+        int slength = nodePath.GetLength();
+        varnodepath=nodePath;
+
+        varnodepath.Insert(slength,".Input");
+            
+        Happ::IHNodePtr node;
+
+        node=nodeNav(ihRoot,  varnodepath);
+
+        return getChildNum(node);
+    }
+    
+    int CASIObj::getNumOutputVar() //get number of output variable
+    {
+        CString varnodepath;
+
+        int slength = nodePath.GetLength();
+        varnodepath=nodePath;
+
+        varnodepath.Insert(slength,".Output");
+            
+        Happ::IHNodePtr node;
+
+        node=nodeNav(ihRoot,  varnodepath);
+
+        return getChildNum(node);
+    }
+    
+    int CASIObj::getNumSIPort() //get number of source/input port
+    {
+        CString siPortPath;
+        CString varnodename;
+
+        int slength = nodePath.GetLength();
+        siPortPath=nodePath;
+
+        if (nodeType==STREAM)
+            siPortPath.Insert(slength,".Ports.SOURCE");
+        else if (nodeType==BLOCK)
+            siPortPath.Insert(slength,".Ports");
+        else
+            return NULL;
+            
+        Happ::IHNodePtr node, cnode;
+
+        node=nodeNav(ihRoot,  siPortPath);
+
+        Happ::IHNodeColPtr ihcol;
+        int d, i, j, total;
+        long* rc;
+        VARIANTARG arg[5];
+        VARIANTARG force;
+
+        for (i=0; i<5; i++) 
+            ::VariantInit(&arg[i]);
+        ::VariantInit(&force);
+
+        ihcol=node->GetElements();
+
+        d = ihcol->GetDimension(); 
+
+        rc = new long[d];
+        total=0;
+        for (i=0; i<d; i++) //for each dimention
+        {
+            rc[i] = ihcol->GetRowCount(i);
+            total+=rc[i];
+        }
+        
+        std::vector<CString> results;
+        int cur_ind;
+
+        for (i=0; i<total; i++)
+        {
+            cur_ind=i;
+            for (j=0; j<d; j++)
+            {
+                arg[j].vt = VT_INT;
+                V_INT(&arg[j])=cur_ind%rc[j];
+                cur_ind = cur_ind/rc[j];
+            }
+            cnode = ihcol->GetItem(arg[0], arg[1], arg[2], arg[3], arg[4]);
+        
             varnodename = cnode->GetName(force).GetBSTR();
 
-			if (nodeType==BLOCK)
-			{
-				if (varnodename.Find("(OUT)")!=-1)
-					results.push_back(varnodename);
-			}
-			else
-				results.push_back(varnodename);
-		}
+            if (nodeType==BLOCK)
+            {
+                if (varnodename.Find("(IN)")!=-1)
+                    results.push_back(varnodename);
+            }
+            else
+                results.push_back(varnodename);
+        }
 
-		delete [] rc;
+        delete [] rc;
 
-		return results.size();
-	
-	}
+        return results.size();
+        
+    }
+
+    int CASIObj::getNumDOPort() //get number of destination/output port
+    {
+        CString siPortPath;
+        CString varnodename;
+
+        int slength = nodePath.GetLength();
+        siPortPath=nodePath;
+
+        if (nodeType==STREAM)
+            siPortPath.Insert(slength,".Ports.DEST");
+        else if (nodeType==BLOCK)
+            siPortPath.Insert(slength,".Ports");
+        else
+            return NULL;
+            
+        Happ::IHNodePtr node, cnode;
+
+        node=nodeNav(ihRoot,  siPortPath);
+
+        Happ::IHNodeColPtr ihcol;
+        int d, i, j, total;
+        long* rc;
+        VARIANTARG arg[5];
+        VARIANTARG force;
+
+        for (i=0; i<5; i++) 
+            ::VariantInit(&arg[i]);
+        ::VariantInit(&force);
+
+        ihcol=node->GetElements();
+
+        d = ihcol->GetDimension(); 
+
+        rc = new long[d];
+        total=0;
+        for (i=0; i<d; i++) //for each dimention
+        {
+            rc[i] = ihcol->GetRowCount(i);
+            total+=rc[i];
+        }
+        
+        std::vector<CString> results;
+        int cur_ind;
+
+        for (i=0; i<total; i++)
+        {
+            cur_ind=i;
+            for (j=0; j<d; j++)
+            {
+                arg[j].vt = VT_INT;
+                V_INT(&arg[j])=cur_ind%rc[j];
+                cur_ind = cur_ind/rc[j];
+            }
+            cnode = ihcol->GetItem(arg[0], arg[1], arg[2], arg[3], arg[4]);
+        
+            varnodename = cnode->GetName(force).GetBSTR();
+
+            if (nodeType==BLOCK)
+            {
+                if (varnodename.Find("(OUT)")!=-1)
+                    results.push_back(varnodename);
+            }
+            else
+                results.push_back(varnodename);
+        }
+
+        delete [] rc;
+
+        return results.size();
+    
+    }
 
 //private functions
 void CASIObj::prepStream() //get the string list of stream component names
-	{
-		CString streamnodepath;
-		int slength = nodePath.GetLength();
-		streamnodepath= nodePath;
-		streamnodepath.Insert(slength,".Input.FLOW.MIXED");
-		
-		Happ::IHNodePtr node, cnode;
+    {
+        CString streamnodepath;
+        int slength = nodePath.GetLength();
+        streamnodepath= nodePath;
+        streamnodepath.Insert(slength,".Input.FLOW.MIXED");
+        
+        Happ::IHNodePtr node, cnode;
 
-		node=nodeNav(ihRoot,  streamnodepath);
-		
-		//if (node->m_lpDispatch==NULL)
-		if ( node == NULL )
-			return;
-		Happ::IHNodeColPtr ihcol;
-		int d, i, j, total;
-		long* rc;
-		VARIANTARG arg[5];
-		VARIANTARG force;
+        node=nodeNav(ihRoot,  streamnodepath);
+        
+        //if (node->m_lpDispatch==NULL)
+        if ( node == NULL )
+            return;
+        Happ::IHNodeColPtr ihcol;
+        int d, i, j, total;
+        long* rc;
+        VARIANTARG arg[5];
+        VARIANTARG force;
 
-		for (i=0; i<5; i++) 
-			::VariantInit(&arg[i]);
-		::VariantInit(&force);
+        for (i=0; i<5; i++) 
+            ::VariantInit(&arg[i]);
+        ::VariantInit(&force);
 
-		ihcol=node->GetElements();
+        ihcol=node->GetElements();
 
-		d = ihcol->GetDimension(); 
+        d = ihcol->GetDimension(); 
 
-		rc = new long[d];
-		total=0;
-		for (i=0; i<d; i++) //for each dimention
-		{
-			rc[i] = ihcol->GetRowCount(i);
-			total+=rc[i];
-		}
+        rc = new long[d];
+        total=0;
+        for (i=0; i<d; i++) //for each dimention
+        {
+            rc[i] = ihcol->GetRowCount(i);
+            total+=rc[i];
+        }
 
-//		int lastComa, lastDot;
-		
-		CString varnodename;
+//        int lastComa, lastDot;
+        
+        CString varnodename;
 
-		//CString* results;
+        //CString* results;
 
-		//results= new CString[total];
-		int cur_ind;
-		for (i=0; i<total; i++)
-		{
-			cur_ind = i;
-			for (j=0; j<d; j++)
-			{
-				arg[j].vt = VT_INT;
-				V_INT(&arg[j])=cur_ind%rc[j];
-				cur_ind = cur_ind/rc[j];
-			}
-			cnode = ihcol->GetItem(arg[0], arg[1], arg[2], arg[3], arg[4]);
-		
+        //results= new CString[total];
+        int cur_ind;
+        for (i=0; i<total; i++)
+        {
+            cur_ind = i;
+            for (j=0; j<d; j++)
+            {
+                arg[j].vt = VT_INT;
+                V_INT(&arg[j])=cur_ind%rc[j];
+                cur_ind = cur_ind/rc[j];
+            }
+            cnode = ihcol->GetItem(arg[0], arg[1], arg[2], arg[3], arg[4]);
+        
             varnodename = cnode->GetName(force).GetBSTR();
-			
-			//lastComa=varnodename.ReverseFind(',');
-			//varnodename=varnodename.Left(lastComa);
-			//lastDot=varnodename.ReverseFind('(');
-			//slength=varnodename.GetLength();
-			//varnodename=varnodename.Right(slength-lastDot-1);
+            
+            //lastComa=varnodename.ReverseFind(',');
+            //varnodename=varnodename.Left(lastComa);
+            //lastDot=varnodename.ReverseFind('(');
+            //slength=varnodename.GetLength();
+            //varnodename=varnodename.Right(slength-lastDot-1);
 
-			streamComps.insert(varnodename);
-		}
+            streamComps.insert(varnodename);
+        }
 
-		return ;
-	
-	}
+        return ;
+    
+    }
 
 //void CASIObj::prepBlock()
-//	{
-		//////get inputs var names
-//		CString inputVarPath;
-//		int slength = nodePath.GetLength();
+//    {
+        //////get inputs var names
+//        CString inputVarPath;
+//        int slength = nodePath.GetLength();
 
-//		inputVarPath=nodePath;
-//		inputVarPath.Insert(slength,".Input");
+//        inputVarPath=nodePath;
+//        inputVarPath.Insert(slength,".Input");
 //
-//		Happ::IHNodePtr node;
+//        Happ::IHNodePtr node;
 //
-//		node=nodeNav(ihRoot, inputVarPath);
+//        node=nodeNav(ihRoot, inputVarPath);
 //
-//		blockInputs.clear();
-//		getChildNames(node, blockInputs);
+//        blockInputs.clear();
+//        getChildNames(node, blockInputs);
 //
-//		///////get outputs var names
+//        ///////get outputs var names
 //
-//		//CString outputVarPath;
-//		//slength = nodePath.GetLength();
+//        //CString outputVarPath;
+//        //slength = nodePath.GetLength();
 //
-//		//outputVarPath=nodePath;
-//		//outputVarPath.Insert(slength,".Output");
+//        //outputVarPath=nodePath;
+//        //outputVarPath.Insert(slength,".Output");
 //
-//		//node=nodeNav(ihRoot,  outputVarPath);
+//        //node=nodeNav(ihRoot,  outputVarPath);
 //
-//		//blockOutputs.clear();
-//		//getChildNames(node, blockOutputs);
+//        //blockOutputs.clear();
+//        //getChildNames(node, blockOutputs);
 //
-//		return;
-//	}
+//        return;
+//    }
 
-	int CASIObj::getFVNVariables()
-	{
-		CASI::Variable fvnvar =getInputVarByName("FVN_VARIABLE");
-		int a;
-		CString tt;
-		for (a=0; a<82; a++)
-		{
-			tt=fvnvar.getVVVV(a);
-		}
-		
-		return 0;
-	}
+    int CASIObj::getFVNVariables()
+    {
+        CASI::Variable fvnvar =getInputVarByName("FVN_VARIABLE");
+        int a;
+        CString tt;
+        for (a=0; a<82; a++)
+        {
+            tt=fvnvar.getVVVV(a);
+        }
+        
+        return 0;
+    }
 
-	//int CASIObj::getNumSubInputVar( CString name ) //get number of input variable
-	//{
-	//	CString varnodepath;
+    //int CASIObj::getNumSubInputVar( CString name ) //get number of input variable
+    //{
+    //    CString varnodepath;
 
-	//	int slength = nodePath.GetLength();
-	//	varnodepath=nodePath;
+    //    int slength = nodePath.GetLength();
+    //    varnodepath=nodePath;
 
-	//	varnodepath.Insert(slength,".Input.");
+    //    varnodepath.Insert(slength,".Input.");
      //   slength = varnodepath.GetLength();
-	//	varnodepath.Insert(slength,name);
-			
-	//	Happ::IHNodePtr node;
+    //    varnodepath.Insert(slength,name);
+            
+    //    Happ::IHNodePtr node;
 
-	//	node=nodeNav(ihRoot,  varnodepath);
+    //    node=nodeNav(ihRoot,  varnodepath);
 
-	//	return getChildNum(node);
-	//}
+    //    return getChildNum(node);
+    //}
 
     /*int CASIObj::getNumSubOutputVar( CString name ) //get number of out variable
-	{
-		CString varnodepath;
+    {
+        CString varnodepath;
 
-		int slength = nodePath.GetLength();
-		varnodepath=nodePath;
+        int slength = nodePath.GetLength();
+        varnodepath=nodePath;
 
-		varnodepath.Insert(slength,".Output.");
+        varnodepath.Insert(slength,".Output.");
         slength = varnodepath.GetLength();
-		varnodepath.Insert(slength,name);
-			
-		Happ::IHNodePtr node;
+        varnodepath.Insert(slength,name);
+            
+        Happ::IHNodePtr node;
 
-		node=nodeNav(ihRoot,  varnodepath);
+        node=nodeNav(ihRoot,  varnodepath);
 
-		return getChildNum(node);
-	}*/
+        return getChildNum(node);
+    }*/
 
     void CASIObj::processBlockInputs()
-	{
-		//////get inputs var names
-		CString inputVarPath;
-		int slength = nodePath.GetLength();
+    {
+        //////get inputs var names
+        CString inputVarPath;
+        int slength = nodePath.GetLength();
 
-		inputVarPath=nodePath;
-		inputVarPath.Insert(slength,".Input");
+        inputVarPath=nodePath;
+        inputVarPath.Insert(slength,".Input");
 
         Happ::IHNodePtr node;
-		node=nodeNav(ihRoot, inputVarPath);
-		blockInputs.clear();
-		getChildNames(node, blockInputs);
-		
+        node=nodeNav(ihRoot, inputVarPath);
+        blockInputs.clear();
+        getChildNames(node, blockInputs);
+        
         //slength = inputVarPath.GetLength();
-		//inputVarPath.Insert(slength,".");
-		//slength = inputVarPath.GetLength();
+        //inputVarPath.Insert(slength,".");
+        //slength = inputVarPath.GetLength();
 
         for( int i = 0; i < blockInputs.size(); i++)
         {
@@ -662,21 +662,21 @@ void CASIObj::prepStream() //get the string list of stream component names
 
     void CASIObj::processBlockOutputs()
     {
-		///////get outputs var names
-		CString outputVarPath;
-		int slength = nodePath.GetLength();
+        ///////get outputs var names
+        CString outputVarPath;
+        int slength = nodePath.GetLength();
 
-		outputVarPath=nodePath;
-		outputVarPath.Insert(slength,".Output");
+        outputVarPath=nodePath;
+        outputVarPath.Insert(slength,".Output");
 
         Happ::IHNodePtr node;
         node=nodeNav(ihRoot,  outputVarPath);
-		blockOutputs.clear();
-		getChildNames(node, blockOutputs);
+        blockOutputs.clear();
+        getChildNames(node, blockOutputs);
 
-		//slength = outputVarPath.GetLength();
-		//outputVarPath.Insert(slength,".");
-		//slength = outputVarPath.GetLength();
+        //slength = outputVarPath.GetLength();
+        //outputVarPath.Insert(slength,".");
+        //slength = outputVarPath.GetLength();
 
         for( int i = 0; i < blockOutputs.size(); i++)
         {
@@ -684,14 +684,14 @@ void CASIObj::prepStream() //get the string list of stream component names
             prepBlockOutputSubs( node, /*outputVarPath,*/ blockOutputs[i] );
         }
 
-		return;
-	}
+        return;
+    }
 
     void CASIObj::prepBlockInputSubs( Happ::IHNodePtr parent, /*CString path,*/ CString block )
     {
-		//int slength = path.GetLength();
+        //int slength = path.GetLength();
         //CString thePath = path;
-		//thePath.Insert( slength, block );
+        //thePath.Insert( slength, block );
         Happ::IHNodePtr node = nodeNav( parent, block );
 
         int size = getChildNum(node);// getNumSubInputVar( block );
@@ -712,9 +712,9 @@ void CASIObj::prepStream() //get the string list of stream component names
 
     void CASIObj::prepBlockOutputSubs( Happ::IHNodePtr parent, /*CString path,*/ CString block )
     {
-		//int slength = path.GetLength();
+        //int slength = path.GetLength();
         //CString thePath = path;
-		//thePath.Insert( slength, block );
+        //thePath.Insert( slength, block );
         Happ::IHNodePtr node = nodeNav( parent, block );
 
         int size = getChildNum(node);//getNumSubOutputVar( block );

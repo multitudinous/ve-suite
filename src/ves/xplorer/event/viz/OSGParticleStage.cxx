@@ -347,11 +347,11 @@ void OSGParticleStage::createStreamLines( vtkPolyData* polyData,
 
         osg::StateSet* ss = geom->getOrCreateStateSet();
 
-    	{
+        {
             osg::ref_ptr< osg::Uniform > particlesizeUniform =
             new osg::Uniform( "particleSize", m_particleDiameter );
             ss->addUniform( particlesizeUniform.get() );
-    	}
+        }
 
         //Apply the shader code here instead of calling it from a file as above
         std::string vertexSource =

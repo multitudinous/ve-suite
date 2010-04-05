@@ -15,33 +15,33 @@ class DynParser
 {
 
 private:
-	std::vector<float> xCoords;
-	std::vector<float> yCoords;
+    std::vector<float> xCoords;
+    std::vector<float> yCoords;
     std::map< std::string, std::map< std::string, std::pair< float, float > > > iconLocations;
-	
-	typedef struct
-	{
-		std::string id;
-		std::string type;
-		std::string icon;
-		float scale;
-		float rotation;
-		int mirror;
-		bool hierarchical;
+    
+    typedef struct
+    {
+        std::string id;
+        std::string type;
+        std::string icon;
+        float scale;
+        float rotation;
+        int mirror;
+        bool hierarchical;
         bool iconHidden;
-	}BlockInfo;
+    }BlockInfo;
 
-	std::map< std::string, std::map< std::string, BlockInfo > > BlockInfoList;
+    std::map< std::string, std::map< std::string, BlockInfo > > BlockInfoList;
 
     typedef struct
-	{	
-		std::string streamId;
-		int streamType;
-		std::vector< std::pair< float, float > > value;	
-	}streamXY;
+    {    
+        std::string streamId;
+        int streamType;
+        std::vector< std::pair< float, float > > value;    
+    }streamXY;
 
-	streamXY xy;
-	streamXY tempXY;
+    streamXY xy;
+    streamXY tempXY;
 
     std::string currentLevelName;
     int levelCount;
@@ -71,11 +71,11 @@ private:
     void FindNextEntry( std::ifstream &file );
 
 public:
-	DynParser();
-	~DynParser();
-	void ParseFile( const char * file);
-    std::string CreateNetwork( void );	
-	void SetWorkingDir( std::string dir );
+    DynParser();
+    ~DynParser();
+    void ParseFile( const char * file);
+    std::string CreateNetwork( void );    
+    void SetWorkingDir( std::string dir );
     void OpenFile( const char * file );
     void CloseFile( );
     void SaveFile( );

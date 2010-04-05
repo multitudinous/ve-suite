@@ -857,20 +857,20 @@ void triggerSounds( const btDynamicsWorld* world, btScalar timeStep )
     const btCollisionDispatcher* dispatch( static_cast< const btCollisionDispatcher* >( world->getDispatcher() ) );
     const int numManifolds( dispatch->getNumManifolds() );
     
-	for( int idx=0; idx < numManifolds; idx++ )
-	{
-		const btPersistentManifold* contactManifold( dispatch->getManifoldByIndexInternal( idx ) );
-		const btCollisionObject* obA( static_cast< const btCollisionObject* >( contactManifold->getBody0() ) );
-		const btCollisionObject* obB( static_cast< const btCollisionObject* >( contactManifold->getBody1() ) );
+    for( int idx=0; idx < numManifolds; idx++ )
+    {
+        const btPersistentManifold* contactManifold( dispatch->getManifoldByIndexInternal( idx ) );
+        const btCollisionObject* obA( static_cast< const btCollisionObject* >( contactManifold->getBody0() ) );
+        const btCollisionObject* obB( static_cast< const btCollisionObject* >( contactManifold->getBody1() ) );
         
         bool collide( false ), slide( false );
         osg::Vec3 location;
         
-		const int numContacts( contactManifold->getNumContacts() );
+        const int numContacts( contactManifold->getNumContacts() );
         int jdx;
-		for( jdx=0; jdx < numContacts; jdx++ )
-		{
-			const btManifoldPoint& pt( contactManifold->getContactPoint( jdx) );
+        for( jdx=0; jdx < numContacts; jdx++ )
+        {
+            const btManifoldPoint& pt( contactManifold->getContactPoint( jdx) );
             location = osgbBullet::asOsgVec3( pt.getPositionWorldOnA() );
             if( pt.m_lifeTime < 3 )
             {
@@ -884,7 +884,7 @@ void triggerSounds( const btDynamicsWorld* world, btScalar timeStep )
                 if( (vA-vB).length2() > .1 )
                     slide = true;
             }
-		}
+        }
         if( collide || slide )
         {
             void* tempUserDataA = obA->getUserPointer();
@@ -904,7 +904,7 @@ void triggerSounds( const btDynamicsWorld* world, btScalar timeStep )
                     SoundUtilities::instance()->slide( mcA->_mat, mcB->_mat, location );
             }
         }
-	}
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 #endif

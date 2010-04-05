@@ -4,10 +4,10 @@
 #pragma once
 
 #ifndef __AFXWIN_H__
-	#error "include 'stdafx.h' before including this file for PCH"
+    #error "include 'stdafx.h' before including this file for PCH"
 #endif
 
-#include "Resource.h"		// main symbols
+#include "Resource.h"        // main symbols
 
 
 // CVE_AspenUnitApp:
@@ -17,15 +17,15 @@
 class CVE_AspenUnitApp : public CWinApp
 {
 public:
-	CVE_AspenUnitApp();
+    CVE_AspenUnitApp();
 
 // Overrides
-	public:
-	virtual BOOL InitInstance();
+    public:
+    virtual BOOL InitInstance();
 
 // Implementation
 
-	DECLARE_MESSAGE_MAP()
+    DECLARE_MESSAGE_MAP()
 };
 
 extern CVE_AspenUnitApp theApp;

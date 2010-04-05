@@ -317,7 +317,7 @@ void APPlugin::HideAspenSimulation( wxCommandEvent& event )
 ////////////////////////////////////////////////////////////////////////////////
 void APPlugin::DisconnectAspenSimulation( void )
 {    
-	//Log( "Close Simulation.\n" );
+    //Log( "Close Simulation.\n" );
     CommandPtr returnState( new Command() );
     returnState->SetCommandName( "closeSimulation" );
     DataValuePairPtr data( new DataValuePair() );
@@ -334,7 +334,7 @@ void APPlugin::DisconnectAspenSimulation( void )
 
     std::string nw_str = serviceList->Query( status ) + "\n";
     //Log( nw_str.c_str() );
-	//AspenSimOpen = false;
+    //AspenSimOpen = false;
 }
 ////////////////////////////////////////////////////////////////////////////////////
 void APPlugin::CloseAspenSimulation( void )
@@ -394,8 +394,8 @@ void APPlugin::RunAspenNetwork( wxCommandEvent& event )
 void APPlugin::ReinitializeAspenSimulation( wxCommandEvent& event )
 {
     UIPLUGIN_CHECKID( event )
-	//Log( "Reinitialize Simulation.\n" );
-	CommandPtr returnState( new Command() );
+    //Log( "Reinitialize Simulation.\n" );
+    CommandPtr returnState( new Command() );
     returnState->SetCommandName( "reinitNetwork" );
     DataValuePairPtr data( new DataValuePair() );
     data->SetData( "NetworkQuery", "reinitNetwork" );
@@ -530,7 +530,7 @@ wxMenu* APPlugin::GetPluginPopupMenu( wxMenu* baseMenu )
     mAspenMenu->Append( APPLUGIN_SHOW_ASPEN_SIMULATION, _( "Show" ) );
     mAspenMenu->Append( APPLUGIN_HIDE_ASPEN_SIMULATION, _( "Hide" ) );
     mAspenMenu->Append( APPLUGIN_RUN_ASPEN_NETWORK, _( "Run" ) );
-	mAspenMenu->Append( APPLUGIN_REINITIALIZE_ASPEN_SIMULATION, _( "Reinitialize" ) );
+    mAspenMenu->Append( APPLUGIN_REINITIALIZE_ASPEN_SIMULATION, _( "Reinitialize" ) );
     mAspenMenu->Append( APPLUGIN_STEP_ASPEN_NETWORK, _( "Step" ) );
     mAspenMenu->Append( APPLUGIN_SAVE_SIMULATION, _( "Save" ) );
     mAspenMenu->Append( APPLUGIN_SAVEAS_SIMULATION, _( "SaveAs" ) );
@@ -546,7 +546,7 @@ wxMenu* APPlugin::GetPluginPopupMenu( wxMenu* baseMenu )
         mAspenMenu->Enable( APPLUGIN_SHOW_ASPEN_SIMULATION, true );
         mAspenMenu->Enable( APPLUGIN_HIDE_ASPEN_SIMULATION, true );
         mAspenMenu->Enable( APPLUGIN_RUN_ASPEN_NETWORK, true );
-	    mAspenMenu->Enable( APPLUGIN_REINITIALIZE_ASPEN_SIMULATION, true );
+        mAspenMenu->Enable( APPLUGIN_REINITIALIZE_ASPEN_SIMULATION, true );
         mAspenMenu->Enable( APPLUGIN_STEP_ASPEN_NETWORK, true );
         mAspenMenu->Enable( APPLUGIN_SAVE_SIMULATION, true );
         mAspenMenu->Enable( APPLUGIN_SAVEAS_SIMULATION, true );
@@ -558,7 +558,7 @@ wxMenu* APPlugin::GetPluginPopupMenu( wxMenu* baseMenu )
         mAspenMenu->Enable( APPLUGIN_SHOW_ASPEN_SIMULATION, false );
         mAspenMenu->Enable( APPLUGIN_HIDE_ASPEN_SIMULATION, false );
         mAspenMenu->Enable( APPLUGIN_RUN_ASPEN_NETWORK, false );
-	    mAspenMenu->Enable( APPLUGIN_REINITIALIZE_ASPEN_SIMULATION, false );
+        mAspenMenu->Enable( APPLUGIN_REINITIALIZE_ASPEN_SIMULATION, false );
         mAspenMenu->Enable( APPLUGIN_STEP_ASPEN_NETWORK, false );
         mAspenMenu->Enable( APPLUGIN_SAVE_SIMULATION, false );
         mAspenMenu->Enable( APPLUGIN_SAVEAS_SIMULATION, false );

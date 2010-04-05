@@ -35,38 +35,38 @@ class BKPParser
 
 private:
     //parses the bkp file
-	void ParseFile(const char *);                                           
-	std::vector<float> xCoords;
-	std::vector<float> yCoords;	
+    void ParseFile(const char *);                                           
+    std::vector<float> xCoords;
+    std::vector<float> yCoords;    
 
     //struct with blocks type and id
-	typedef struct                                                     
-	{
-		std::string id;
-		std::string type;
-		std::string icon;
+    typedef struct                                                     
+    {
+        std::string id;
+        std::string type;
+        std::string icon;
         float width;
         float height;
-		float scale;
-		float rotation;
-		int mirror;
-		bool hierarchical;
+        float scale;
+        float rotation;
+        int mirror;
+        bool hierarchical;
         bool iconHidden;
-	}BlockInfo;
+    }BlockInfo;
 
-	std::map< std::string, std::map< std::string, BlockInfo > > BlockInfoList;
-	//struct that contain the stream id, type & coordinates
-	typedef struct                                                     
-	{	
-		std::string streamId;
-		int streamType;
-		std::vector< std::pair< float, float > > value;	
-	}streamXY;
+    std::map< std::string, std::map< std::string, BlockInfo > > BlockInfoList;
+    //struct that contain the stream id, type & coordinates
+    typedef struct                                                     
+    {    
+        std::string streamId;
+        int streamType;
+        std::vector< std::pair< float, float > > value;    
+    }streamXY;
 
-	streamXY xy;
-	streamXY tempXY;
+    streamXY xy;
+    streamXY tempXY;
      //coordinate list of a given stream
-	std::vector< streamXY > streamCoordList;	                          
+    std::vector< streamXY > streamCoordList;                              
 
    // link name, model name
    std::map< std::string, std::map< std::string, std::string > > inLinkToModel;
@@ -88,50 +88,50 @@ private:
    int redundantID;
 
 public:
-	CASI::CASIDocument * aspendoc;
+    CASI::CASIDocument * aspendoc;
 
     //constructor
-	BKPParser();  
+    BKPParser();  
     //deconstrutor                                                     
-	~BKPParser();                                                     
-	void OpenSimAndParse(const char *);   
+    ~BKPParser();                                                     
+    void OpenSimAndParse(const char *);   
     //opens the given file                                          
-	void OpenSim(const char *);
+    void OpenSim(const char *);
      //close the file
-	void closeFile();                                            
-	void saveFile();  
-	void saveAs(const char *);                
-	void showAspen(bool);    
-	void ReinitAspen();
+    void closeFile();                                            
+    void saveFile();  
+    void saveAs(const char *);                
+    void showAspen(bool);    
+    void ReinitAspen();
     void ReinitBlock( const std::string& modname );
-	void step();
+    void step();
     //returns total components
-	int getNumComponents();
+    int getNumComponents();
     //returns the filename of component
-	std::string getBlockType( const std::string& blockName, const std::string& flowsheetName = NULL); 
+    std::string getBlockType( const std::string& blockName, const std::string& flowsheetName = NULL); 
     //returns the filename of component
-	std::string getBlockID( const std::string& blockName, const std::string& flowsheetName = NULL);     
+    std::string getBlockID( const std::string& blockName, const std::string& flowsheetName = NULL);     
     //returns the x coordinates of component                                 
-	float getXCoord(int);             
+    float getXCoord(int);             
     //returns the y coordinates of component                                 
-	float getYCoord(int);                              
+    float getYCoord(int);                              
     //returns X coord of one point of stream                
-	float getStreamXCoord(int streamIndex, int coordIndex); 
+    float getStreamXCoord(int streamIndex, int coordIndex); 
     //returns y coord of one point of stream
-	float getStreamYCoord(int streamIndex, int coordIndex); 
+    float getStreamYCoord(int streamIndex, int coordIndex); 
     //returns the stream's id
-	std::string getStreamId(int);                         
+    std::string getStreamId(int);                         
     //returns the stream's type  
-	int getStreamType(int);                
+    int getStreamType(int);                
      //returns total number of the streams                 
-	int getNumStream();           
+    int getNumStream();           
     //returns the total number of points for a stream                         
-	int getStreamSize(int index);                           
-	bool isOpen();
+    int getStreamSize(int index);                           
+    bool isOpen();
 
-	void SetWorkingDir( const std::string& dir );
+    void SetWorkingDir( const std::string& dir );
 
-	void CreateNetworkLinks( ves::open::xml::model::NetworkPtr subNetwork, const std::string& hierName );
+    void CreateNetworkLinks( ves::open::xml::model::NetworkPtr subNetwork, const std::string& hierName );
    void CreateNetworkInformation( std::string& networkData );
    void ParseSubSystem(ves::open::xml::model::ModelPtr model, const std::string& networkName );
    std::string CreateNetwork( void );

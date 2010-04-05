@@ -356,7 +356,7 @@ AppFrame::~AppFrame()
     // Clean up the canvas and plugins first because
     // if left to wx, on windows things get messy with unloading plugins
     // and cleaning up memory at the same time
-	//CloseAspenSimulation();
+    //CloseAspenSimulation();
     //Cleanup all the plugins before wx does
     //mDestoryFrame = true;
     canvas->CleanUpNetworks();
@@ -374,10 +374,10 @@ AppFrame::~AppFrame()
     }
     //serviceList->DisconnectFromXplorer();
 
-	//if(AspenSimOpen)
-	//{
-	//	CloseAspenSimulation();
-	//}
+    //if(AspenSimOpen)
+    //{
+    //    CloseAspenSimulation();
+    //}
 
     //Store settings to wxConfig to be written out
     StoreFrameSize( GetRect() );
@@ -736,7 +736,7 @@ void AppFrame::FrameClose( wxCommandEvent& WXUNUSED( event ) )
 /*void AppFrame::OnFrameClose( wxCloseEvent& WXUNUSED( event ) )
 {
     //Close Aspen no matter how conductor us shutdown
-	CloseAspenSimulation();
+    CloseAspenSimulation();
     //Cleanup all the plugins before wx does
     mDestoryFrame = true;
     canvas->CleanUpNetworks();
@@ -800,7 +800,7 @@ void AppFrame::CreateMenu()
     aspenMenu->Append( HIDE_ASPEN_SIMULATION, _( "Hide Simulation" ) );
     aspenMenu->Append( CLOSE_ASPEN_SIMULATION, _( "Close Simulation" ) );
     aspenMenu->Append( RUN_ASPEN_NETWORK, _( "Run" ) );
-	aspenMenu->Append( REINITIALIZE_ASPEN_SIMULATION, _( "Reinitialize" ) );
+    aspenMenu->Append( REINITIALIZE_ASPEN_SIMULATION, _( "Reinitialize" ) );
     aspenMenu->Append( STEP_ASPEN_NETWORK, _( "Step" ) );
     aspenMenu->Append( CONDUCTOR_FIND, _( "Find" ) );
     aspenMenu->Append( SAVE_SIMULATION, _( "Save Simulation" ) );
@@ -1460,7 +1460,7 @@ void AppFrame::OpenSimulation( wxString simName )
     //Get results
     std::string nw_str = serviceList->Query( status );
     Log( nw_str.c_str() );
-	AspenSimOpen = true;
+    AspenSimOpen = true;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::FindBlocks( wxCommandEvent& WXUNUSED( event ) )
@@ -1557,7 +1557,7 @@ void AppFrame::NewCanvas( wxCommandEvent& WXUNUSED( event ) )
         return;
     }
 
-	newCanvas = true;
+    newCanvas = true;
     mVESFileName.Clear();
 
     {
@@ -2368,8 +2368,8 @@ void AppFrame::ChangeXplorerViewSettings( wxCommandEvent& event )
     if( event.GetId() == APPFRAME_CHANGE_XPLORER_VIEW_NETWORK )
     {
         DataValuePairPtr dataValuePair2( new DataValuePair( std::string( "UNSIGNED INT" ) ) );
-		dataValuePair2->SetData( "SUBNET_ID", canvas->GetActiveNetworkID() );
-		veCommand->AddDataValuePair( dataValuePair2 );
+        dataValuePair2->SetData( "SUBNET_ID", canvas->GetActiveNetworkID() );
+        veCommand->AddDataValuePair( dataValuePair2 );
         dataValuePair->SetData( "CHANGE_XPLORER_VIEW", "CHANGE_XPLORER_VIEW_NETWORK" );
     }
     else if( event.GetId() == APPFRAME_CHANGE_XPLORER_VIEW_CAD )
@@ -2449,9 +2449,9 @@ void AppFrame::OnMakeIntoHierarchy( wxCommandEvent& event )
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::OnChangeIcon(wxCommandEvent& event )
 {
-	std::pair <unsigned int, std::string>* data = static_cast< 
-		std::pair <unsigned int, std::string>*>( event.GetClientData() );
-	hierarchyTree->ChangeLeafIcon( data->first, data->second );
+    std::pair <unsigned int, std::string>* data = static_cast< 
+        std::pair <unsigned int, std::string>*>( event.GetClientData() );
+    hierarchyTree->ChangeLeafIcon( data->first, data->second );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::OnShowIconChooser( wxCommandEvent& event )
@@ -2461,7 +2461,7 @@ void AppFrame::OnShowIconChooser( wxCommandEvent& event )
         iconChooser = new IconChooser( canvas );
     }
 
-	UIPluginBase* tempPlugin = static_cast< UIPluginBase* >(event.GetClientData());
+    UIPluginBase* tempPlugin = static_cast< UIPluginBase* >(event.GetClientData());
     iconChooser->AddIconsDir( wxString( "2dicons", wxConvUTF8 ) );
     iconChooser->SetPlugin( tempPlugin );
     iconChooser->Show();

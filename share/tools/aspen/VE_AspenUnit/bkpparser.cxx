@@ -92,12 +92,12 @@ void BKPParser::step()
 ///////////////////////////////////////////////////////////////////////////////
 void BKPParser::ReinitAspen()
 {
-	aspendoc->initializeSolver();
+    aspendoc->initializeSolver();
 }
 ///////////////////////////////////////////////////////////////////////////////
 int BKPParser::getNumComponents()
 {
-	return BlockInfoList.size(); //vectors are all same length
+    return BlockInfoList.size(); //vectors are all same length
 }
 ///////////////////////////////////////////////////////////////////////////////
 std::string BKPParser::getBlockType( const std::string& blockName,
@@ -168,7 +168,7 @@ int BKPParser::getStreamSize( int index )
 ///////////////////////////////////////////////////////////////////////////////
 void BKPParser::ParseFile( const char * bkpFile )
 {
-    //Open file streams	
+    //Open file streams    
     std::ifstream inFile(bkpFile, std::ios::binary);
 
     std::map< std::pair< std::string, std::string >,
@@ -185,17 +185,17 @@ void BKPParser::ParseFile( const char * bkpFile )
 
     //make sure it is a valid file
     if(!inFile.is_open())
-	{
+    {
         return;
     }
-	
-	//
-	// Begin parsing
-	//
+    
+    //
+    // Begin parsing
+    //
 
     std::string discard;
     std::string temp;
-    while(	temp.compare(0 , 7, "NumLibs", 0, 7))
+    while(    temp.compare(0 , 7, "NumLibs", 0, 7))
     {
         getline(inFile, temp);
         if( inFile.eof() )
@@ -214,7 +214,7 @@ void BKPParser::ParseFile( const char * bkpFile )
         {
             getline(inFile, temp);
             i++;
-        }	
+        }    
     }
 
     ///Do something here...
@@ -233,7 +233,7 @@ void BKPParser::ParseFile( const char * bkpFile )
         {
             getline(inFile, temp);
             i++;
-        }	
+        }    
     }
 
 
@@ -269,9 +269,9 @@ void BKPParser::ParseFile( const char * bkpFile )
         tempBlockInfo.type = type;
 
         if(compLibName.find("Hierarchy") == std::string::npos)
-	        tempBlockInfo.hierarchical = false;
+            tempBlockInfo.hierarchical = false;
         else
-	        tempBlockInfo.hierarchical = true;
+            tempBlockInfo.hierarchical = true;
 
         //default hidden value for aspen is false
         tempBlockInfo.iconHidden = 0;
@@ -407,7 +407,7 @@ void BKPParser::ParseFile( const char * bkpFile )
             getline(inFile, temp); //dump next block header Should BE CHANGED
             //- when next entry is important
 
-            //parse id to use for searching		
+            //parse id to use for searching        
             std::stringstream idTokenizer(id);
             idTokenizer >> discard;
             std::string tempBlockId; 
@@ -520,7 +520,7 @@ void BKPParser::ParseFile( const char * bkpFile )
                 heightOffset = abs(right/iconHeight);
             }
 
-            //parse location to create coordinates for blocks		
+            //parse location to create coordinates for blocks        
             std::stringstream atTokenizer(at);
             atTokenizer >> discard;
             float xcoord, ycoord;
@@ -533,7 +533,7 @@ void BKPParser::ParseFile( const char * bkpFile )
             float scaledXCoords = xCoords.back() * 100;
             //invert Y axis - flowsheets are inverted
             float scaledYCoords = -yCoords.back() * 100;
-			
+            
             float width =
                 imageData[ blockInfoIter->second.type+
                 "_"+blockInfoIter->second.type+
@@ -678,7 +678,7 @@ void BKPParser::ParseFile( const char * bkpFile )
                 //add one streams values to vector 
                 streamCoordList.push_back( xy );
                 
-		        linkTypes[sheetIter->first][xy.streamId] = ( xy.streamType );
+                linkTypes[sheetIter->first][xy.streamId] = ( xy.streamType );
                 //Create map of stream names to points
                 for ( size_t k = 0; k < xy.value.size( ); ++k )
                 {
@@ -694,7 +694,7 @@ void BKPParser::ParseFile( const char * bkpFile )
                         minY = scaledY;
 
                     linkPoints[sheetIter->first][xy.streamId].push_back(
-                        std::pair< float, float >( scaledX, scaledY ) );	
+                        std::pair< float, float >( scaledX, scaledY ) );    
                 }
                 // add converted points for wx
                 //empty temporary vector
@@ -870,7 +870,7 @@ void BKPParser::CreateNetworkInformation( std::string& networkData )
                         std::string tempStrem = vectorTokens.at( i+=2 );
                         StripCharacters( tempStrem, "\"" );
 
-                        outLinkToModel[hierName][ tempStrem ] = blockName;					   
+                        outLinkToModel[hierName][ tempStrem ] = blockName;                       
                         ++i;
 
                         while ( vectorTokens.at( i+1 ) != std::string( ")" ) )
@@ -1186,7 +1186,7 @@ void BKPParser::CreateNetworkLinks
          
             xmlLink->SetLinkName(iter->first);
             xmlLink->SetLinkType(linkTypes[hierName][iter->first]);
-    	 
+         
             *(xmlLink->GetFromPort()) = static_cast< long int >( fromPortId );
             *(xmlLink->GetToPort()) = static_cast< long int >( toPortId );
 
@@ -1231,7 +1231,7 @@ void BKPParser::CreateNetworkLinks
             inLinkToModel[hierName][iter->first] =
                 iter->first+"_dummy_connection";
 
-            //add the link		 
+            //add the link         
             subNetwork->AddLink( xmlLink );
         }
     }

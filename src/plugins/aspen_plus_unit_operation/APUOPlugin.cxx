@@ -109,7 +109,7 @@ void  APUOPlugin::OnShowAspenName( wxCommandEvent& event )
     m_iconChooser->SetPlugin( this );
     //chooser->SetSize( dialogSize );
     m_iconChooser->Show();
-	*/
+    */
 //    event.SetClientData( this );
 //    ::wxPostEvent( m_canvas->GetParent(), event );
 //}

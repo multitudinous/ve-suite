@@ -75,8 +75,8 @@ AspenUnit_i::AspenUnit_i( std::string name, CVE_AspenUnitDlg * dialog,
     mQueryCommandNames.insert( "getNetwork");
     mQueryCommandNames.insert( "openSimulation");
     mQueryCommandNames.insert( "runNetwork");
-	mQueryCommandNames.insert( "reinitNetwork");
-	mQueryCommandNames.insert( "reinitBlock");
+    mQueryCommandNames.insert( "reinitNetwork");
+    mQueryCommandNames.insert( "reinitBlock");
     mQueryCommandNames.insert( "stepNetwork");
     mQueryCommandNames.insert( "showSimulation");
     mQueryCommandNames.insert( "hideSimulation");
@@ -118,7 +118,7 @@ void AspenUnit_i::ShowAspen()
 {
     if( bkpFlag )
     {
-	    bkp->showAspen( true );
+        bkp->showAspen( true );
     }
     
     if( dynFlag )
@@ -144,12 +144,12 @@ void AspenUnit_i::CloseAspen()
 {
     if( bkpFlag )
     {
-	    bkp->closeFile();
+        bkp->closeFile();
     }
     
     if( dynFlag )
     {
-	    dyn->CloseFile();
+        dyn->CloseFile();
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -163,7 +163,7 @@ void AspenUnit_i::SaveAspen( std::string filename)
     
     if( dynFlag )
     {
-	    dyn->SaveAs(( mWorkingDir + filename + ".dynf" ).c_str());
+        dyn->SaveAs(( mWorkingDir + filename + ".dynf" ).c_str());
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -171,12 +171,12 @@ void AspenUnit_i::StepSim()
 {
     if( bkpFlag )
     {
-	    bkp->step();
+        bkp->step();
     }
     
     if( dynFlag )
     {
-	    //dyn->Step();
+        //dyn->Step();
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -186,18 +186,18 @@ void AspenUnit_i::ReinitializeAspen()
     {
         if( bkpFlag )
         {
-	        bkp->ReinitAspen();
+            bkp->ReinitAspen();
         }
         
         if( dynFlag )
         {
-	        dyn->ReinitDynamics();
+            dyn->ReinitDynamics();
         }
     }
     catch(...)
     {
-	    AspenLog->SetSel(-1, -1);
-	    AspenLog->ReplaceSel("Reinitialize Failed.\r\n");
+        AspenLog->SetSel(-1, -1);
+        AspenLog->ReplaceSel("Reinitialize Failed.\r\n");
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -209,19 +209,19 @@ void AspenUnit_i::StartCalc (
     ::Error::EUnknown
   ))
 {
-  	if( bkpFlag )
+      if( bkpFlag )
     {
         bkp->aspendoc->runSolver( false );
     }
     
     if( dynFlag )
     {
-	    dyn->dyndoc->RunSolver( );
+        dyn->dyndoc->RunSolver( );
     }
-	AspenLog->SetSel( -1, -1 );
-	AspenLog->ReplaceSel( "Simulation Complete\r\n" );
-	//executive_->SetModuleMessage(cur_id_,"Simulation completed.\n");
-	return_state=0;
+    AspenLog->SetSel( -1, -1 );
+    AspenLog->ReplaceSel( "Simulation Complete\r\n" );
+    //executive_->SetModuleMessage(cur_id_,"Simulation completed.\n");
+    return_state=0;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AspenUnit_i::StopCalc (
@@ -233,7 +233,7 @@ void AspenUnit_i::StopCalc (
   ))
 {
   // Add your implementation here
-	std::string msg;
+    std::string msg;
     msg = UnitName_+" : Instant calculation, already finished\n";
     //executive_->SetModuleMessage(cur_id_,msg.c_str());
 
@@ -248,7 +248,7 @@ void AspenUnit_i::PauseCalc (
   ))
 {
   // Add your implementation here
-	std::string msg;
+    std::string msg;
     msg = UnitName_+" : Instant calculation, already finished\n";
     //executive_->SetModuleMessage(cur_id_,msg.c_str());
 }
@@ -262,7 +262,7 @@ void AspenUnit_i::Resume (
   ))
 {
   // Add your implementation here
-	std::string msg;
+    std::string msg;
     msg = UnitName_+" : Instant calculation, already finished\n";
     //executive_->SetModuleMessage(cur_id_,msg.c_str());
 }
@@ -276,26 +276,26 @@ char * AspenUnit_i::GetStatusMessage (
   ))
 {
   // Add your implementation here
-	ves::open::xml::CommandPtr returnState( new ves::open::xml::Command() );
+    ves::open::xml::CommandPtr returnState( new ves::open::xml::Command() );
 
-	returnState->SetCommandName( "statusmessage" );
-	ves::open::xml::DataValuePairPtr
+    returnState->SetCommandName( "statusmessage" );
+    ves::open::xml::DataValuePairPtr
         data( new ves::open::xml::DataValuePair() );
-	data->SetDataName( "RETURN_STATE" );
-	data->SetDataType( "UNSIGNED INT" );
-	data->SetDataValue( return_state );
+    data->SetDataName( "RETURN_STATE" );
+    data->SetDataType( "UNSIGNED INT" );
+    data->SetDataValue( return_state );
     returnState->AddDataValuePair( data );
     
-	std::vector< std::pair< ves::open::xml::XMLObjectPtr, std::string > >
+    std::vector< std::pair< ves::open::xml::XMLObjectPtr, std::string > >
         nodes;
 
-	nodes.push_back( 
+    nodes.push_back( 
         std::pair< ves::open::xml::XMLObjectPtr, std::string >( 
         returnState, "vecommand" ) );
-	ves::open::xml::XMLReaderWriter commandWriter;
-	std::string status = "returnString";
-	commandWriter.UseStandaloneDOMDocumentManager();
-	commandWriter.WriteXMLDocument( nodes, status, "Command" );
+    ves::open::xml::XMLReaderWriter commandWriter;
+    std::string status = "returnString";
+    commandWriter.UseStandaloneDOMDocumentManager();
+    commandWriter.WriteXMLDocument( nodes, status, "Command" );
     return CORBA::string_dup( status.c_str() );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -308,8 +308,8 @@ char * AspenUnit_i::GetUserData (
   ))
 {
   // Add your implementation here
-	char * result = 0;
-	return result;
+    char * result = 0;
+    return result;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AspenUnit_i::SetID (
@@ -344,7 +344,7 @@ void AspenUnit_i::SetCurID (
     ::Error::EUnknown
   ))
 {
-	return &ids_;
+    return &ids_;
 }
 ////////////////////////////////////////////////////////////////////////////////
 CORBA::Long AspenUnit_i::GetCurID (
@@ -364,7 +364,7 @@ ACE_THROW_SPEC ((
     ::Error::EUnknown
   ))
 {
-	return; //do nothing;
+    return; //do nothing;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AspenUnit_i::SetName (
@@ -376,7 +376,7 @@ void AspenUnit_i::SetName (
   ))
 {
   // Add your implementation here
-	UnitName_ = std::string(name);
+    UnitName_ = std::string(name);
 }
 ////////////////////////////////////////////////////////////////////////////////
 char * AspenUnit_i::GetName (
@@ -398,20 +398,20 @@ char * AspenUnit_i::Query ( const char * query_str
     ::Error::EUnknown
   ))
 {
-	ves::open::xml::XMLReaderWriter networkWriter;
-	networkWriter.UseStandaloneDOMDocumentManager();
-	networkWriter.ReadFromString();
-	networkWriter.ReadXMLData( query_str, "Command", "vecommand" );
+    ves::open::xml::XMLReaderWriter networkWriter;
+    networkWriter.UseStandaloneDOMDocumentManager();
+    networkWriter.ReadFromString();
+    networkWriter.ReadXMLData( query_str, "Command", "vecommand" );
 
-	std::vector< ves::open::xml::XMLObjectPtr > objectVector =
+    std::vector< ves::open::xml::XMLObjectPtr > objectVector =
         networkWriter.GetLoadedXMLObjects();
 
-	ves::open::xml::CommandPtr cmd;	
-	std::string cmdname;
-	
-	cmd = boost::dynamic_pointer_cast<ves::open::xml::Command>
+    ves::open::xml::CommandPtr cmd;    
+    std::string cmdname;
+    
+    cmd = boost::dynamic_pointer_cast<ves::open::xml::Command>
         ( objectVector.at( 0 ) );
-	cmdname = cmd->GetCommandName();
+    cmdname = cmd->GetCommandName();
     
     std::set< std::string >::const_iterator commandItr
         = mQueryCommandNames.find( cmdname );
@@ -422,161 +422,161 @@ char * AspenUnit_i::Query ( const char * query_str
         return CORBA::string_dup("NULL");
     }
     
-	AspenLog->SetSel( -1, -1 );
-	AspenLog->ReplaceSel( ("Command: "+cmdname+"\r\n").c_str() );
-	char* returnValue = "empty";
+    AspenLog->SetSel( -1, -1 );
+    AspenLog->ReplaceSel( ("Command: "+cmdname+"\r\n").c_str() );
+    char* returnValue = "empty";
 
-	if ( cmdname == "getNetwork" )
-	{
-		returnValue = handleGetNetwork( cmd );
-		return returnValue;
-	}
-	else if( cmdname == "openSimulation" )
-	{
-		returnValue = handleOpenSimulation( cmd );
-		return returnValue;
-	}
-	else if ( cmdname == "runNetwork" )
-	{
-		StartCalc();
-		return CORBA::string_dup( "networkRun" );
-	}
-	else if ( cmdname == "stepNetwork" )
-	{
-		StepSim();
-		return CORBA::string_dup( "networkRun" );
-	}
-	else if ( cmdname == "showSimulation" )
-	{
-		ShowAspen();
-		return CORBA::string_dup( "Simulation Shown." );
-	}
-	else if ( cmdname == "hideSimulation" )
-	{
-		HideAspen();
-		return CORBA::string_dup( "Simulation hidden." );
-	}
-	else if ( cmdname == "closeSimulation" )
-	{
-		AspenLog->SetSel( -1, -1 );
-		AspenLog->ReplaceSel( "closing...\r\n" );
-		CloseAspen();
-		AspenLog->SetSel( -1, -1 );
-		AspenLog->ReplaceSel( "closed.\r\n" );
-		return CORBA::string_dup( "Simulation closed." );
-	}
-	else if ( cmdname == "saveSimulation" )
-	{
-		AspenLog->SetSel(-1, -1);
-		AspenLog->ReplaceSel( "saving...\r\n" );
-		try
-		{
-			SaveAspen( mFileName );
-		    AspenLog->SetSel( -1, -1 );
-		    AspenLog->ReplaceSel( "saved.\r\n" );
-		}
-		catch(...)
-		{
-			AspenLog->SetSel(-1, -1);
-			AspenLog->ReplaceSel( "messed up save.\r\n" );
-		}
-		return CORBA::string_dup( "Simulation Saved." );
-	}
-	else if ( cmdname == "saveAsSimulation" )
-	{
-		returnValue = handleSaveAs( cmd );
-		return returnValue;
-	}
-	else if( cmdname == "reinitNetwork" )
-	{
-		ReinitializeAspen();
-		return CORBA::string_dup( "Simulation reinitialized." );
-	}
-	else if( cmdname == "reinitBlock" )
-	{
-		ReinitializeBlock( cmd );
-		return CORBA::string_dup( "Block reinitialized." );
-	}
+    if ( cmdname == "getNetwork" )
+    {
+        returnValue = handleGetNetwork( cmd );
+        return returnValue;
+    }
+    else if( cmdname == "openSimulation" )
+    {
+        returnValue = handleOpenSimulation( cmd );
+        return returnValue;
+    }
+    else if ( cmdname == "runNetwork" )
+    {
+        StartCalc();
+        return CORBA::string_dup( "networkRun" );
+    }
+    else if ( cmdname == "stepNetwork" )
+    {
+        StepSim();
+        return CORBA::string_dup( "networkRun" );
+    }
+    else if ( cmdname == "showSimulation" )
+    {
+        ShowAspen();
+        return CORBA::string_dup( "Simulation Shown." );
+    }
+    else if ( cmdname == "hideSimulation" )
+    {
+        HideAspen();
+        return CORBA::string_dup( "Simulation hidden." );
+    }
+    else if ( cmdname == "closeSimulation" )
+    {
+        AspenLog->SetSel( -1, -1 );
+        AspenLog->ReplaceSel( "closing...\r\n" );
+        CloseAspen();
+        AspenLog->SetSel( -1, -1 );
+        AspenLog->ReplaceSel( "closed.\r\n" );
+        return CORBA::string_dup( "Simulation closed." );
+    }
+    else if ( cmdname == "saveSimulation" )
+    {
+        AspenLog->SetSel(-1, -1);
+        AspenLog->ReplaceSel( "saving...\r\n" );
+        try
+        {
+            SaveAspen( mFileName );
+            AspenLog->SetSel( -1, -1 );
+            AspenLog->ReplaceSel( "saved.\r\n" );
+        }
+        catch(...)
+        {
+            AspenLog->SetSel(-1, -1);
+            AspenLog->ReplaceSel( "messed up save.\r\n" );
+        }
+        return CORBA::string_dup( "Simulation Saved." );
+    }
+    else if ( cmdname == "saveAsSimulation" )
+    {
+        returnValue = handleSaveAs( cmd );
+        return returnValue;
+    }
+    else if( cmdname == "reinitNetwork" )
+    {
+        ReinitializeAspen();
+        return CORBA::string_dup( "Simulation reinitialized." );
+    }
+    else if( cmdname == "reinitBlock" )
+    {
+        ReinitializeBlock( cmd );
+        return CORBA::string_dup( "Block reinitialized." );
+    }
 
-	//Blocks
-	else if ( cmdname == "getModuleParamList" )
-	{
-		//executive_->SetModuleMessage(cur_id_,"Querying inputs...\n");
-		returnValue = handleGetModuleParamList( cmd );
-		//executive_->SetModuleMessage(cur_id_,"Querying completed.\n");
-		return returnValue;
-	}
-	else if ( cmdname == "getInputModuleParamList" )
-	{
-		//executive_->SetModuleMessage(cur_id_,"Querying inputs...\n");
-		returnValue = handleGetInputModuleParamList( cmd );
-		//executive_->SetModuleMessage(cur_id_,"Querying completed.\n");
-		return returnValue;
-	}
-	else if ( cmdname == "getInputModuleProperties" )
-	{
-		returnValue = handleGetInputModuleProperties( cmd );
-		return returnValue;
-	}
-	else if ( cmdname == "getOutputModuleParamList" )
-	{
-		//executive_->SetModuleMessage(cur_id_,"Querying outputs...\n");
-		returnValue = handleGetOutputModuleParamList( cmd );
-		//executive_->SetModuleMessage(cur_id_,"Querying completed.\n");
-		return returnValue;
-	}
-	else if ( cmdname == "getOutputModuleProperties" )
-	{
-		returnValue = handleGetOutputModuleProperties( cmd );
-		return returnValue;
-	}
+    //Blocks
+    else if ( cmdname == "getModuleParamList" )
+    {
+        //executive_->SetModuleMessage(cur_id_,"Querying inputs...\n");
+        returnValue = handleGetModuleParamList( cmd );
+        //executive_->SetModuleMessage(cur_id_,"Querying completed.\n");
+        return returnValue;
+    }
+    else if ( cmdname == "getInputModuleParamList" )
+    {
+        //executive_->SetModuleMessage(cur_id_,"Querying inputs...\n");
+        returnValue = handleGetInputModuleParamList( cmd );
+        //executive_->SetModuleMessage(cur_id_,"Querying completed.\n");
+        return returnValue;
+    }
+    else if ( cmdname == "getInputModuleProperties" )
+    {
+        returnValue = handleGetInputModuleProperties( cmd );
+        return returnValue;
+    }
+    else if ( cmdname == "getOutputModuleParamList" )
+    {
+        //executive_->SetModuleMessage(cur_id_,"Querying outputs...\n");
+        returnValue = handleGetOutputModuleParamList( cmd );
+        //executive_->SetModuleMessage(cur_id_,"Querying completed.\n");
+        return returnValue;
+    }
+    else if ( cmdname == "getOutputModuleProperties" )
+    {
+        returnValue = handleGetOutputModuleProperties( cmd );
+        return returnValue;
+    }
 
-	//Streams
-	else if ( cmdname == "getStreamModuleParamList" )
-	{
-		//executive_->SetModuleMessage(cur_id_,"Querying inputs...\n");
-		returnValue = handleGetStreamModuleParamList( cmd );
-		//executive_->SetModuleMessage(cur_id_,"Querying completed.\n");
-		return returnValue;
-	}
-	else if ( cmdname == "getStreamInputModuleParamList" )
-	{
-		//executive_->SetModuleMessage(cur_id_,"Querying link inputs...\n");
-		returnValue = handleGetStreamInputModuleParamList( cmd );
-		//executive_->SetModuleMessage(cur_id_,"Querying link completed.\n");
-		return returnValue;
-	}
-	else if ( cmdname == "getStreamInputModuleProperties" )
-	{
-		returnValue = handleGetStreamInputModuleProperties( cmd );
-		return returnValue;
-	}
-	else if ( cmdname == "getStreamOutputModuleParamList" )
-	{
-		//executive_->SetModuleMessage(cur_id_,"Querying link outputs...\n");
-		returnValue = handleGetStreamOutputModuleParamList( cmd );
-		//executive_->SetModuleMessage(cur_id_,"Querying link completed.\n");
-		return returnValue;
-	}
-	else if ( cmdname == "getStreamOutputModuleProperties" )
-	{
-		returnValue = handleGetStreamOutputModuleProperties( cmd );
-		return returnValue;
-	}
+    //Streams
+    else if ( cmdname == "getStreamModuleParamList" )
+    {
+        //executive_->SetModuleMessage(cur_id_,"Querying inputs...\n");
+        returnValue = handleGetStreamModuleParamList( cmd );
+        //executive_->SetModuleMessage(cur_id_,"Querying completed.\n");
+        return returnValue;
+    }
+    else if ( cmdname == "getStreamInputModuleParamList" )
+    {
+        //executive_->SetModuleMessage(cur_id_,"Querying link inputs...\n");
+        returnValue = handleGetStreamInputModuleParamList( cmd );
+        //executive_->SetModuleMessage(cur_id_,"Querying link completed.\n");
+        return returnValue;
+    }
+    else if ( cmdname == "getStreamInputModuleProperties" )
+    {
+        returnValue = handleGetStreamInputModuleProperties( cmd );
+        return returnValue;
+    }
+    else if ( cmdname == "getStreamOutputModuleParamList" )
+    {
+        //executive_->SetModuleMessage(cur_id_,"Querying link outputs...\n");
+        returnValue = handleGetStreamOutputModuleParamList( cmd );
+        //executive_->SetModuleMessage(cur_id_,"Querying link completed.\n");
+        return returnValue;
+    }
+    else if ( cmdname == "getStreamOutputModuleProperties" )
+    {
+        returnValue = handleGetStreamOutputModuleProperties( cmd );
+        return returnValue;
+    }
 
-	//Params
-	else if ( cmdname == "setParam" )
-	{
-		SetParam( cmd );
-		return CORBA::string_dup( "Param Set" );
-	}
-	else if ( cmdname == "setLinkParam" )
-	{
-		SetLinkParam( cmd );
-		return CORBA::string_dup( "Param Set" );
-	}
-	else
-		return CORBA::string_dup( "NULL" );
+    //Params
+    else if ( cmdname == "setParam" )
+    {
+        SetParam( cmd );
+        return CORBA::string_dup( "Param Set" );
+    }
+    else if ( cmdname == "setLinkParam" )
+    {
+        SetLinkParam( cmd );
+        return CORBA::string_dup( "Param Set" );
+    }
+    else
+        return CORBA::string_dup( "NULL" );
 }
 ///////////////////////////////////////////////////////////////////////////////
 char* AspenUnit_i::handleGetNetwork(ves::open::xml::CommandPtr cmd)
@@ -584,10 +584,10 @@ char* AspenUnit_i::handleGetNetwork(ves::open::xml::CommandPtr cmd)
     CEdit *Display;
     Display = reinterpret_cast<CEdit *>(theDialog->GetDlgItem(IDC_EDIT2));
 
-	//this command has no params
-	bool firsttime=true;
+    //this command has no params
+    bool firsttime=true;
 
-	std::string filename = cmd->GetDataValuePair(1)->GetDataString();
+    std::string filename = cmd->GetDataValuePair(1)->GetDataString();
 
     std::string extension = filename.substr( filename.size() - 4, 4 );
  
@@ -597,7 +597,7 @@ char* AspenUnit_i::handleGetNetwork(ves::open::xml::CommandPtr cmd)
         dynFlag = false;
         filename.resize( filename.size() - 4 );
         bkp = new BKPParser();
-	    bkp->SetWorkingDir( mWorkingDir );
+        bkp->SetWorkingDir( mWorkingDir );
     }
     else if( extension.find( "dynf" ) != std::string::npos )
     {
@@ -605,22 +605,22 @@ char* AspenUnit_i::handleGetNetwork(ves::open::xml::CommandPtr cmd)
         dynFlag = true;
         filename.resize( filename.size() - 5 );
         dyn = new DynParser();
-	    dyn->SetWorkingDir( mWorkingDir );
+        dyn->SetWorkingDir( mWorkingDir );
     }
     
     if( bkpFlag )
     {
-	    if (firsttime)
-	    {
+        if (firsttime)
+        {
             //make sure bkp file exists
-	        std::ifstream bkpFile( ( mWorkingDir + filename + ".bkp" ).c_str(),
+            std::ifstream bkpFile( ( mWorkingDir + filename + ".bkp" ).c_str(),
                 std::ios::binary);
-	        if( !bkpFile.is_open() )
+            if( !bkpFile.is_open() )
             {
                 //no bkp file
-		        AspenLog->SetSel(-1, -1);
-		        AspenLog->ReplaceSel("BKP File Does NOT exist.\r\n");
-	            return CORBA::string_dup( "BKPDNE" );
+                AspenLog->SetSel(-1, -1);
+                AspenLog->ReplaceSel("BKP File Does NOT exist.\r\n");
+                return CORBA::string_dup( "BKPDNE" );
             }
             bkpFile.close();
 
@@ -630,74 +630,74 @@ char* AspenUnit_i::handleGetNetwork(ves::open::xml::CommandPtr cmd)
             if( !apwFile.is_open() )
             {
                 //no apw file
-		        AspenLog->SetSel(-1, -1);
-		        AspenLog->ReplaceSel("APW File Does NOT exist.\r\n");
-	            return CORBA::string_dup( "APWDNE" );
+                AspenLog->SetSel(-1, -1);
+                AspenLog->ReplaceSel("APW File Does NOT exist.\r\n");
+                return CORBA::string_dup( "APWDNE" );
             }
             apwFile.close();
 
-		    //Display->SetWindowText( ( mWorkingDir + filename ).c_str());
-		    Display->SetWindowText( ( filename ).c_str());
+            //Display->SetWindowText( ( mWorkingDir + filename ).c_str());
+            Display->SetWindowText( ( filename ).c_str());
             //go through bkp parsing procedure
-		    bkp->OpenSimAndParse( filename.c_str() );
+            bkp->OpenSimAndParse( filename.c_str() );
             mFileName = filename;
-		    firsttime=false;
-	    }
-    	   
+            firsttime=false;
+        }
+           
         //Display->SetWindowText(filename.c_str());
 
-	    std::string network;
-	    try
+        std::string network;
+        try
         {
             network = bkp->CreateNetwork( );
-	    }
-	    catch(...)
-	    {
-		    std::cout << "GetNetwork Exception Aspen Unit" << std::endl;
+        }
+        catch(...)
+        {
+            std::cout << "GetNetwork Exception Aspen Unit" << std::endl;
             return NULL;
-	    }
+        }
 
-	    return CORBA::string_dup( network.c_str() );
+        return CORBA::string_dup( network.c_str() );
     }
     
     if( dynFlag )
     {
         if (firsttime)
-	    {
+        {
             //make sure bkp file exists
-	        std::ifstream dynFile( ( mWorkingDir + filename + ".dynf" ).c_str(),
+            std::ifstream dynFile( ( mWorkingDir + filename + ".dynf" ).c_str(),
                 std::ios::binary);
             if( !dynFile.is_open() )
             {
                 //no dyn file
-		        AspenLog->SetSel(-1, -1);
-		        AspenLog->ReplaceSel("Dynf File Does NOT exist.\r\n");
-	            return CORBA::string_dup( "DYNDNE" );
+                AspenLog->SetSel(-1, -1);
+                AspenLog->ReplaceSel("Dynf File Does NOT exist.\r\n");
+                return CORBA::string_dup( "DYNDNE" );
             }
             dynFile.close();
 
-		    //Display->SetWindowText( ( mWorkingDir + filename ).c_str());
-		    Display->SetWindowText( ( filename ).c_str());
+            //Display->SetWindowText( ( mWorkingDir + filename ).c_str());
+            Display->SetWindowText( ( filename ).c_str());
             //go through dyn parsing procedure
-		    dyn->OpenFile( filename.c_str() );
-		    //dyn->ParseFile((mWorkingDir + filename + ".dynf" ).c_str());
+            dyn->OpenFile( filename.c_str() );
+            //dyn->ParseFile((mWorkingDir + filename + ".dynf" ).c_str());
             mFileName = filename;
-		    firsttime=false;
-	    }
-    	   
+            firsttime=false;
+        }
+           
         //Display->SetWindowText(filename.c_str());
 
-	    std::string network;
-	    try
+        std::string network;
+        try
         {
             network = dyn->CreateNetwork();
-	    }
-	    catch(...)
-	    {
-		    std::cout << "GetNetwork Exception Dynamics Unit" << std::endl;
+        }
+        catch(...)
+        {
+            std::cout << "GetNetwork Exception Dynamics Unit" << std::endl;
             return NULL;
-	    }
-	    return CORBA::string_dup(network.c_str());
+        }
+        return CORBA::string_dup(network.c_str());
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -706,8 +706,8 @@ char* AspenUnit_i::handleOpenSimulation(ves::open::xml::CommandPtr cmd)
     CEdit *Display;
     Display = reinterpret_cast<CEdit *>(theDialog->GetDlgItem(IDC_EDIT2));
 
-	//this command has no params
-	std::string filename = cmd->GetDataValuePair(1)->GetDataString();
+    //this command has no params
+    std::string filename = cmd->GetDataValuePair(1)->GetDataString();
 
     std::string extension = filename.substr( filename.size() - 4, 4 );
  
@@ -740,10 +740,10 @@ char* AspenUnit_i::handleOpenSimulation(ves::open::xml::CommandPtr cmd)
 
         bkpFlag = true;
         dynFlag = false;
-	    Display->SetWindowText(filename.c_str());
+        Display->SetWindowText(filename.c_str());
         bkp = new BKPParser();
-	    bkp->SetWorkingDir( mWorkingDir );
-	    bkp->OpenSim(filename.c_str());
+        bkp->SetWorkingDir( mWorkingDir );
+        bkp->OpenSim(filename.c_str());
     }
     else if( extension.find( "dynf" ) != std::string::npos )
     {   
@@ -762,66 +762,66 @@ char* AspenUnit_i::handleOpenSimulation(ves::open::xml::CommandPtr cmd)
         
         bkpFlag = false;
         dynFlag = true;
-	    Display->SetWindowText(filename.c_str());
+        Display->SetWindowText(filename.c_str());
         dyn = new DynParser();
-	    dyn->SetWorkingDir( mWorkingDir );
-	    dyn->OpenFile(filename.c_str());
+        dyn->SetWorkingDir( mWorkingDir );
+        dyn->OpenFile(filename.c_str());
     }
-	return CORBA::string_dup("Simulation Opened.");
+    return CORBA::string_dup("Simulation Opened.");
 }
 ////////////////////////////////////////////////////////////////////////////////
 char* AspenUnit_i::handleSaveAs(ves::open::xml::CommandPtr cmd)
 {
-	AspenLog->SetSel(-1, -1);
-	AspenLog->ReplaceSel("saving...\r\n");
-	std::string filename = cmd->GetDataValuePair(1)->GetDataString();
-	mFileName = filename;
+    AspenLog->SetSel(-1, -1);
+    AspenLog->ReplaceSel("saving...\r\n");
+    std::string filename = cmd->GetDataValuePair(1)->GetDataString();
+    mFileName = filename;
     SaveAspen( mFileName );
-	AspenLog->SetSel(-1, -1);
-	AspenLog->ReplaceSel("saved.\r\n");
-	return CORBA::string_dup("Simulation Saved.");
+    AspenLog->SetSel(-1, -1);
+    AspenLog->ReplaceSel("saved.\r\n");
+    return CORBA::string_dup("Simulation Saved.");
 }
 ////////////////////////////////////////////////////////////////////////////////
 //no reinitialize of block in dynamics
 void AspenUnit_i::ReinitializeBlock(ves::open::xml::CommandPtr cmd)
 {
-	size_t num = cmd->GetNumberOfDataValuePairs();
-	std::string modname;
-	unsigned int modId;
+    size_t num = cmd->GetNumberOfDataValuePairs();
+    std::string modname;
+    unsigned int modId;
 
-	for( size_t i=0; i < num; i++)
-	{
-		ves::open::xml::DataValuePairPtr curPair= cmd->GetDataValuePair(i);
-		
-		if (curPair->GetDataName()=="ModuleName")
-			modname=curPair->GetDataString();
-		else if (curPair->GetDataName()=="ModuleId")
-			curPair->GetData(modId);
-	}
-	bkp->ReinitBlock(modname);
+    for( size_t i=0; i < num; i++)
+    {
+        ves::open::xml::DataValuePairPtr curPair= cmd->GetDataValuePair(i);
+        
+        if (curPair->GetDataName()=="ModuleName")
+            modname=curPair->GetDataString();
+        else if (curPair->GetDataName()=="ModuleId")
+            curPair->GetData(modId);
+    }
+    bkp->ReinitBlock(modname);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 char* AspenUnit_i::handleGetModuleParamList(ves::open::xml::CommandPtr cmd)
 {
-	size_t num = cmd->GetNumberOfDataValuePairs();
-	std::string modname;
-	unsigned int modId;
+    size_t num = cmd->GetNumberOfDataValuePairs();
+    std::string modname;
+    unsigned int modId;
 
-	for( size_t i=0; i < num; i++)
-	{
-		ves::open::xml::DataValuePairPtr curPair= cmd->GetDataValuePair(i);
-		
-		if (curPair->GetDataName()=="ModuleName")
-			modname=curPair->GetDataString();
-		else if (curPair->GetDataName()=="ModuleId")
-			curPair->GetData(modId);
-	}
+    for( size_t i=0; i < num; i++)
+    {
+        ves::open::xml::DataValuePairPtr curPair= cmd->GetDataValuePair(i);
+        
+        if (curPair->GetDataName()=="ModuleName")
+            modname=curPair->GetDataString();
+        else if (curPair->GetDataName()=="ModuleId")
+            curPair->GetData(modId);
+    }
 
-	//There shouldn't be two intances of an Dynamics framework. so discard the 
+    //There shouldn't be two intances of an Dynamics framework. so discard the 
     //moduleId
-	//the returned string will be a well formated XML within "vecommand" element
-	std::string netPak = dyn->GetModuleParams( modname, true );
+    //the returned string will be a well formated XML within "vecommand" element
+    std::string netPak = dyn->GetModuleParams( modname, true );
 
     return CORBA::string_dup(netPak.c_str());
 }
@@ -829,234 +829,234 @@ char* AspenUnit_i::handleGetModuleParamList(ves::open::xml::CommandPtr cmd)
 ////////////////////////////////////////////////////////////////////////////////
 char* AspenUnit_i::handleGetInputModuleParamList(ves::open::xml::CommandPtr cmd)
 {
-	size_t num = cmd->GetNumberOfDataValuePairs();
-	std::string modname;
-	unsigned int modId;
+    size_t num = cmd->GetNumberOfDataValuePairs();
+    std::string modname;
+    unsigned int modId;
 
-	for( size_t i=0; i < num; i++)
-	{
-		ves::open::xml::DataValuePairPtr curPair= cmd->GetDataValuePair(i);
-		
-		if (curPair->GetDataName()=="ModuleName")
-			modname=curPair->GetDataString();
-		else if (curPair->GetDataName()=="ModuleId")
-			curPair->GetData(modId);
-	}
+    for( size_t i=0; i < num; i++)
+    {
+        ves::open::xml::DataValuePairPtr curPair= cmd->GetDataValuePair(i);
+        
+        if (curPair->GetDataName()=="ModuleName")
+            modname=curPair->GetDataString();
+        else if (curPair->GetDataName()=="ModuleId")
+            curPair->GetData(modId);
+    }
 
-	//There shouldn't be two intances of an Aspen framework. so discard the moduleId
-	//the returned string will be a well formated XML within "vecommand" element
-	std::string netPak = bkp->GetInputModuleParams(modname);
+    //There shouldn't be two intances of an Aspen framework. so discard the moduleId
+    //the returned string will be a well formated XML within "vecommand" element
+    std::string netPak = bkp->GetInputModuleParams(modname);
 
     //std::ofstream output("inputList.txt");
     //output<<netPak;
     //output.close();  
 
-	return CORBA::string_dup(netPak.c_str());
+    return CORBA::string_dup(netPak.c_str());
 }
 ////////////////////////////////////////////////////////////////////////////////
 char* AspenUnit_i::handleGetInputModuleProperties(ves::open::xml::CommandPtr cmd)
 {
-	size_t num = cmd->GetNumberOfDataValuePairs();
-	std::string modname,paramName;
-	unsigned int modId;
+    size_t num = cmd->GetNumberOfDataValuePairs();
+    std::string modname,paramName;
+    unsigned int modId;
 
-	for ( size_t i=0; i < num; i++)
-	{
-		ves::open::xml::DataValuePairPtr curPair= cmd->GetDataValuePair(i);
-		if (curPair->GetDataName()=="ModuleName")
-			modname=curPair->GetDataString();
-		else if (curPair->GetDataName()=="moduleId")
-			curPair->GetData(modId); //modId is discarded because of the same reason as before
-		else if (curPair->GetDataName()=="ParamName")
-			paramName=curPair->GetDataString();
-	}
-	std::string netPak = bkp->GetInputModuleParamProperties(modname, paramName);
-	return CORBA::string_dup(netPak.c_str());
+    for ( size_t i=0; i < num; i++)
+    {
+        ves::open::xml::DataValuePairPtr curPair= cmd->GetDataValuePair(i);
+        if (curPair->GetDataName()=="ModuleName")
+            modname=curPair->GetDataString();
+        else if (curPair->GetDataName()=="moduleId")
+            curPair->GetData(modId); //modId is discarded because of the same reason as before
+        else if (curPair->GetDataName()=="ParamName")
+            paramName=curPair->GetDataString();
+    }
+    std::string netPak = bkp->GetInputModuleParamProperties(modname, paramName);
+    return CORBA::string_dup(netPak.c_str());
 
 }
 ////////////////////////////////////////////////////////////////////////////////
 char* AspenUnit_i::handleGetOutputModuleParamList(ves::open::xml::CommandPtr cmd)
 {
-	size_t num = cmd->GetNumberOfDataValuePairs();
-	std::string modname;
-	unsigned int modId;
+    size_t num = cmd->GetNumberOfDataValuePairs();
+    std::string modname;
+    unsigned int modId;
 
-	for( size_t i=0; i < num; i++)
-	{
-		ves::open::xml::DataValuePairPtr curPair= cmd->GetDataValuePair(i);
-		
-		if (curPair->GetDataName()=="ModuleName")
-			modname=curPair->GetDataString();
-		else if (curPair->GetDataName()=="ModuleId")
-			curPair->GetData(modId);
-	}
+    for( size_t i=0; i < num; i++)
+    {
+        ves::open::xml::DataValuePairPtr curPair= cmd->GetDataValuePair(i);
+        
+        if (curPair->GetDataName()=="ModuleName")
+            modname=curPair->GetDataString();
+        else if (curPair->GetDataName()=="ModuleId")
+            curPair->GetData(modId);
+    }
 
-	//There shouldn't be two intances of an Aspen framework. so discard the
+    //There shouldn't be two intances of an Aspen framework. so discard the
     //moduleId
-	//the returned string will be a well formated XML within "vecommand" element
-	std::string netPak = bkp->GetOutputModuleParams(modname);
-	return CORBA::string_dup(netPak.c_str());
+    //the returned string will be a well formated XML within "vecommand" element
+    std::string netPak = bkp->GetOutputModuleParams(modname);
+    return CORBA::string_dup(netPak.c_str());
 }
 ////////////////////////////////////////////////////////////////////////////////
 char* AspenUnit_i::handleGetOutputModuleProperties(ves::open::xml::CommandPtr cmd)
 {
-	size_t num = cmd->GetNumberOfDataValuePairs();
-	std::string modname,paramName;
-	unsigned int modId;
+    size_t num = cmd->GetNumberOfDataValuePairs();
+    std::string modname,paramName;
+    unsigned int modId;
 
-	for ( size_t i=0; i < num; i++)
-	{
-		ves::open::xml::DataValuePairPtr curPair= cmd->GetDataValuePair(i);
-		if (curPair->GetDataName()=="ModuleName")
+    for ( size_t i=0; i < num; i++)
+    {
+        ves::open::xml::DataValuePairPtr curPair= cmd->GetDataValuePair(i);
+        if (curPair->GetDataName()=="ModuleName")
         {
             modname=curPair->GetDataString();
         }
-		else if (curPair->GetDataName()=="moduleId")
+        else if (curPair->GetDataName()=="moduleId")
         {
             //modId is discarded because of the same reason as before
-			curPair->GetData(modId); 
+            curPair->GetData(modId); 
         }
-		else if (curPair->GetDataName()=="ParamName")
+        else if (curPair->GetDataName()=="ParamName")
         {
         paramName=curPair->GetDataString();
         }
-	}
-	std::string netPak = bkp->GetOutputModuleParamProperties(modname, paramName);
-	return CORBA::string_dup(netPak.c_str());
+    }
+    std::string netPak = bkp->GetOutputModuleParamProperties(modname, paramName);
+    return CORBA::string_dup(netPak.c_str());
 
 }
 ////////////////////////////////////////////////////////////////////////////////
 char* AspenUnit_i::handleGetStreamModuleParamList(ves::open::xml::CommandPtr cmd)
-{	
+{    
     size_t num = cmd->GetNumberOfDataValuePairs();
-	std::string modname;
-	unsigned int modId;
+    std::string modname;
+    unsigned int modId;
 
-	for( size_t i=0; i < num; i++)
-	{
-		ves::open::xml::DataValuePairPtr curPair= cmd->GetDataValuePair(i);
-		
-		if (curPair->GetDataName()=="ModuleName")
+    for( size_t i=0; i < num; i++)
+    {
+        ves::open::xml::DataValuePairPtr curPair= cmd->GetDataValuePair(i);
+        
+        if (curPair->GetDataName()=="ModuleName")
         {
-			modname=curPair->GetDataString();
+            modname=curPair->GetDataString();
         }
-		else if (curPair->GetDataName()=="ModuleId")
+        else if (curPair->GetDataName()=="ModuleId")
         {
             curPair->GetData(modId);
         }
-	}
+    }
 
-	//There shouldn't be two intances of an Dynamics framework. so discard the 
+    //There shouldn't be two intances of an Dynamics framework. so discard the 
     //moduleId
-	//the returned string will be a well formated XML within "vecommand" element
-	std::string netPak = dyn->GetModuleParams( modname, false );
+    //the returned string will be a well formated XML within "vecommand" element
+    std::string netPak = dyn->GetModuleParams( modname, false );
 
-	return CORBA::string_dup(netPak.c_str());
+    return CORBA::string_dup(netPak.c_str());
 }
 ////////////////////////////////////////////////////////////////////////////////
 char* AspenUnit_i::handleGetStreamInputModuleParamList(ves::open::xml::CommandPtr cmd)
 {
-	size_t num = cmd->GetNumberOfDataValuePairs();
-	std::string modname;
-	unsigned int modId;
+    size_t num = cmd->GetNumberOfDataValuePairs();
+    std::string modname;
+    unsigned int modId;
 
-	for ( size_t i=0; i < num; i++)
-	{
-		ves::open::xml::DataValuePairPtr curPair= cmd->GetDataValuePair(i);
-		
-		if (curPair->GetDataName()=="ModuleName")
+    for ( size_t i=0; i < num; i++)
+    {
+        ves::open::xml::DataValuePairPtr curPair= cmd->GetDataValuePair(i);
+        
+        if (curPair->GetDataName()=="ModuleName")
         {
             modname=curPair->GetDataString();
         }
-		else if (curPair->GetDataName()=="ModuleId")
+        else if (curPair->GetDataName()=="ModuleId")
         {
             curPair->GetData(modId);
         }
-	}
+    }
 
-	//There shouldn't be two intances of an Aspen framework. so discard the moduleId
-	//the returned string will be a well formated XML within "vecommand" element
-	std::string netPak = bkp->GetStreamInputModuleParams(modname);
-	return CORBA::string_dup(netPak.c_str());
+    //There shouldn't be two intances of an Aspen framework. so discard the moduleId
+    //the returned string will be a well formated XML within "vecommand" element
+    std::string netPak = bkp->GetStreamInputModuleParams(modname);
+    return CORBA::string_dup(netPak.c_str());
 }
 ////////////////////////////////////////////////////////////////////////////////
 char* AspenUnit_i::handleGetStreamInputModuleProperties(ves::open::xml::CommandPtr cmd)
 {
-	size_t num = cmd->GetNumberOfDataValuePairs();
-	std::string modname,paramName;
-	unsigned int modId;
+    size_t num = cmd->GetNumberOfDataValuePairs();
+    std::string modname,paramName;
+    unsigned int modId;
 
-	for ( size_t i=0; i < num; i++)
-	{
-		ves::open::xml::DataValuePairPtr curPair= cmd->GetDataValuePair(i);
-		if (curPair->GetDataName()=="ModuleName")
+    for ( size_t i=0; i < num; i++)
+    {
+        ves::open::xml::DataValuePairPtr curPair= cmd->GetDataValuePair(i);
+        if (curPair->GetDataName()=="ModuleName")
         {
             modname=curPair->GetDataString();
         }
-		else if (curPair->GetDataName()=="moduleId")
+        else if (curPair->GetDataName()=="moduleId")
         {
             curPair->GetData(modId); //modId is discarded because of the same reason as before
         }
-		else if (curPair->GetDataName()=="ParamName")
+        else if (curPair->GetDataName()=="ParamName")
         {
             paramName=curPair->GetDataString();
         }
-	}
-	std::string netPak = bkp->GetStreamInputModuleParamProperties(modname, paramName);
-	return CORBA::string_dup(netPak.c_str());
+    }
+    std::string netPak = bkp->GetStreamInputModuleParamProperties(modname, paramName);
+    return CORBA::string_dup(netPak.c_str());
 
 }
 ////////////////////////////////////////////////////////////////////////////////
 char* AspenUnit_i::handleGetStreamOutputModuleParamList(ves::open::xml::CommandPtr cmd)
 {
-	size_t num = cmd->GetNumberOfDataValuePairs();
-	std::string modname;
-	unsigned int modId;
+    size_t num = cmd->GetNumberOfDataValuePairs();
+    std::string modname;
+    unsigned int modId;
 
-	for( size_t i=0; i < num; i++)
-	{
-		ves::open::xml::DataValuePairPtr curPair= cmd->GetDataValuePair(i);
-		
-		if (curPair->GetDataName()=="ModuleName")
+    for( size_t i=0; i < num; i++)
+    {
+        ves::open::xml::DataValuePairPtr curPair= cmd->GetDataValuePair(i);
+        
+        if (curPair->GetDataName()=="ModuleName")
         {
             modname=curPair->GetDataString();
         }
-		else if (curPair->GetDataName()=="ModuleId")
+        else if (curPair->GetDataName()=="ModuleId")
         {
             curPair->GetData(modId);
         }
-	}
+    }
 
-	//There shouldn't be two intances of an Aspen framework. so discard the moduleId
-	//the returned string will be a well formated XML within "vecommand" element
-	std::string netPak = bkp->GetStreamOutputModuleParams(modname);
-	return CORBA::string_dup(netPak.c_str());
+    //There shouldn't be two intances of an Aspen framework. so discard the moduleId
+    //the returned string will be a well formated XML within "vecommand" element
+    std::string netPak = bkp->GetStreamOutputModuleParams(modname);
+    return CORBA::string_dup(netPak.c_str());
 }
 ////////////////////////////////////////////////////////////////////////////////
 char* AspenUnit_i::handleGetStreamOutputModuleProperties(ves::open::xml::CommandPtr cmd)
 {
-	size_t num = cmd->GetNumberOfDataValuePairs();
-	std::string modname,paramName;
-	unsigned int modId;
+    size_t num = cmd->GetNumberOfDataValuePairs();
+    std::string modname,paramName;
+    unsigned int modId;
 
-	for( size_t i=0; i < num; i++)
-	{
-		ves::open::xml::DataValuePairPtr curPair= cmd->GetDataValuePair(i);
-		if (curPair->GetDataName()=="ModuleName")
+    for( size_t i=0; i < num; i++)
+    {
+        ves::open::xml::DataValuePairPtr curPair= cmd->GetDataValuePair(i);
+        if (curPair->GetDataName()=="ModuleName")
         {
             modname=curPair->GetDataString();
         }
-		else if (curPair->GetDataName()=="moduleId")
+        else if (curPair->GetDataName()=="moduleId")
         {
             curPair->GetData(modId); //modId is discarded because of the same reason as before
         }
-		else if (curPair->GetDataName()=="ParamName")
+        else if (curPair->GetDataName()=="ParamName")
         {
             paramName=curPair->GetDataString();
         }
-	}
-	std::string netPak = bkp->GetStreamOutputModuleParamProperties(modname, paramName);
-	return CORBA::string_dup(netPak.c_str());
+    }
+    std::string netPak = bkp->GetStreamOutputModuleParamProperties(modname, paramName);
+    return CORBA::string_dup(netPak.c_str());
 
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -1107,63 +1107,63 @@ void AspenUnit_i::SetParams (CORBA::Long id,
 ////////////////////////////////////////////////////////////////////////////////
 void AspenUnit_i::SetParam( ves::open::xml::CommandPtr cmd )
 {
-	size_t num = cmd->GetNumberOfDataValuePairs();
-	std::string modname,paramName, paramValue;
+    size_t num = cmd->GetNumberOfDataValuePairs();
+    std::string modname,paramName, paramValue;
 
     if( bkpFlag )
     {
-	    for( size_t i = 0; i < num; i++)
-	    {
-		    ves::open::xml::DataValuePairPtr curPair= cmd->GetDataValuePair(i);
-		    if (curPair->GetDataName()=="ModuleName")
+        for( size_t i = 0; i < num; i++)
+        {
+            ves::open::xml::DataValuePairPtr curPair= cmd->GetDataValuePair(i);
+            if (curPair->GetDataName()=="ModuleName")
             {
                 modname=curPair->GetDataString();
             }
-		    else if (curPair->GetDataName()=="ParamName")
+            else if (curPair->GetDataName()=="ParamName")
             {
                 paramName=curPair->GetDataString();
             }
-		    else if (curPair->GetDataName()=="ParamValue")
+            else if (curPair->GetDataName()=="ParamValue")
             {
                 paramValue=curPair->GetDataString();
             }
-	    }
-    	
-	    CASI::CASIObj cur_block = bkp->aspendoc->getBlockByName(modname.c_str());
-	    CASI::Variable tempvar = cur_block.getInputVarByName(paramName.c_str());
-	    CASI::Variable cur_var = bkp->aspendoc->getVarByNodePath(tempvar.getNodePath());
-	    CString newValue;
-	    newValue = paramValue.c_str();
-	    bool success = cur_var.setValue(newValue);
+        }
+        
+        CASI::CASIObj cur_block = bkp->aspendoc->getBlockByName(modname.c_str());
+        CASI::Variable tempvar = cur_block.getInputVarByName(paramName.c_str());
+        CASI::Variable cur_var = bkp->aspendoc->getVarByNodePath(tempvar.getNodePath());
+        CString newValue;
+        newValue = paramValue.c_str();
+        bool success = cur_var.setValue(newValue);
     }
     
     if( dynFlag )
     {
-	    for( size_t i = 0; i < num; i++)
-	    {
+        for( size_t i = 0; i < num; i++)
+        {
             ves::open::xml::DataValuePairPtr pair = cmd->GetDataValuePair( i );
             std::vector< std::string > temp_vector;
             pair->GetData( temp_vector );
             dyn->SetValue( temp_vector[0].c_str(), temp_vector[1].c_str(),
                 temp_vector[2].c_str(), true );
-	    }
+        }
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AspenUnit_i::SetLinkParam( ves::open::xml::CommandPtr cmd )
 {
-	size_t num = cmd->GetNumberOfDataValuePairs();
-	std::string modname,paramName, paramValue;
+    size_t num = cmd->GetNumberOfDataValuePairs();
+    std::string modname,paramName, paramValue;
 
     if( dynFlag )
     {
-	    for( size_t i = 0; i < num; i++)
-	    {
+        for( size_t i = 0; i < num; i++)
+        {
             ves::open::xml::DataValuePairPtr pair = cmd->GetDataValuePair( i );
             std::vector< std::string > temp_vector;
             pair->GetData( temp_vector );
             dyn->SetValue( temp_vector[0].c_str(), temp_vector[1].c_str(),
                 temp_vector[2].c_str(), false );
-	    }
+        }
     }
 }

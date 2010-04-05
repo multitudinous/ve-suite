@@ -78,11 +78,11 @@ public:
     void SetCommandMap( const std::map< std::string, ves::open::xml::CommandPtr >& tempMap );
     ///Print the current user data buffer map to std out
     void Print( void );
-	void Update( );
-	void Enable( );
-	void Disable( );
-	void PauseUpdate( );
-	void ResumeUpdate( );
+    void Update( );
+    void Enable( );
+    void Disable( );
+    void PauseUpdate( );
+    void ResumeUpdate( );
 
 private:
     ///Mapp to hold all the preference data to be written to the ves file
@@ -90,8 +90,8 @@ private:
     //std::map< std::string, ves::open::xml::CommandPtr > commandMap;
     ///A mutex to protect variables accesses
     vpr::Mutex m_valueLock;
-	vpr::Thread* m_thread;
-	bool m_enabled;
+    vpr::Thread* m_thread;
+    bool m_enabled;
 };
 }
 }

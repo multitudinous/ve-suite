@@ -863,7 +863,7 @@ void WarrantyToolGP::CreateDB()
         }
     }
 
-	//insert << "INSERT INTO Parts VALUES(?, ?, ?, ?, ?, ?, ?)",
+    //insert << "INSERT INTO Parts VALUES(?, ?, ?, ?, ?, ?, ?)",
     //    use(assem), now;
     mCommunicationHandler->SendConductorMessage( "Finished creating DB..." );
 }
@@ -938,9 +938,9 @@ void WarrantyToolGP::CreateDBQuery( ves::open::xml::DataValuePairPtr dvp )
     m_groupedTextTextures = 
         new ves::xplorer::scenegraph::GroupedTextTextures();
         
-	// create a RecordSet 
-	Poco::Data::RecordSet rs(select);
-	std::size_t cols = rs.columnCount();
+    // create a RecordSet 
+    Poco::Data::RecordSet rs(select);
+    std::size_t cols = rs.columnCount();
     size_t numQueries = rs.rowCount();
     std::ostringstream outString;
     outString << "Number of parts found " << numQueries;
@@ -950,8 +950,8 @@ void WarrantyToolGP::CreateDBQuery( ves::open::xml::DataValuePairPtr dvp )
         mCommunicationHandler->SendConductorMessage( "No parts found." );
         return;
     }
-	// iterate over all rows and columns
-	bool more = false;
+    // iterate over all rows and columns
+    bool more = false;
     try
     {
         more = rs.moveFirst();
@@ -966,7 +966,7 @@ void WarrantyToolGP::CreateDBQuery( ves::open::xml::DataValuePairPtr dvp )
     std::string partNumber;
     std::string partNumberHeader;
     while (more)
-	{
+    {
         ves::xplorer::scenegraph::TextTexture* tempText = 0;
         try
         {
@@ -983,8 +983,8 @@ void WarrantyToolGP::CreateDBQuery( ves::open::xml::DataValuePairPtr dvp )
 
         std::ostringstream tempTextData;
         
-		for (std::size_t col = 0; col < cols; ++col)
-		{
+        for (std::size_t col = 0; col < cols; ++col)
+        {
             partNumberHeader = rs.columnName(col);
             if( partNumberHeader == "Part_Number" )
             {
@@ -1002,7 +1002,7 @@ void WarrantyToolGP::CreateDBQuery( ves::open::xml::DataValuePairPtr dvp )
                 tempTextData << rs.columnName(col) << ": " 
                     << rs[col].convert<std::string>() << "\n";
             }
-		}
+        }
         const std::string partText = tempTextData.str();
         tempText->UpdateText( partText );
         m_groupedTextTextures->AddTextTexture( partNumber, tempText );
@@ -1014,8 +1014,8 @@ void WarrantyToolGP::CreateDBQuery( ves::open::xml::DataValuePairPtr dvp )
         //std::vector< osg::ref_ptr< osg::Group > > highlightNodes = 
         //    highlight.GetFoundNodes();
         
-		more = rs.moveNext();
-	}
+        more = rs.moveNext();
+    }
 
     if( !failedLoad )
     {

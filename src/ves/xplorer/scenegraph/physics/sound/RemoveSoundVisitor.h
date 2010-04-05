@@ -17,11 +17,11 @@
 class RemoveSoundVisitor : public osg::NodeVisitor
 {
 public:
-	RemoveSoundVisitor()
+    RemoveSoundVisitor()
       : osg::NodeVisitor( osg::NodeVisitor::TRAVERSE_ALL_CHILDREN )
-	{}
+    {}
 
-	virtual void apply( osg::Node& node )
+    virtual void apply( osg::Node& node )
     {
         osgAudio::SoundNode* sn( dynamic_cast< osgAudio::SoundNode* >( &node ) );
         if( sn != NULL )
@@ -36,7 +36,7 @@ public:
         }
 
         traverse( node );
-	}
+    }
 
 protected:
 };

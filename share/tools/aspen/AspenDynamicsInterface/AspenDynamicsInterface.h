@@ -9,8 +9,8 @@
 #include <afxwin.h>         // MFC core and standard components
 #include <afxext.h>         // MFC extensions
 #include <afxdisp.h>        // MFC Automation classes
-#include <afxdtctl.h>		// MFC support for Internet Explorer 4 Common Controls
-#include <afxcmn.h>			// MFC support for Windows Common Controls
+#include <afxdtctl.h>        // MFC support for Internet Explorer 4 Common Controls
+#include <afxcmn.h>            // MFC support for Windows Common Controls
 
 
 #  ifdef ASPENDYNAMICSINTERFACE_LIBRARY
@@ -23,24 +23,24 @@
 
 namespace AspenDynamicsInterface
 {
-	class ASPENDYNAMICSINTERFACE_EXPORTS AspenDynamicsInterface
-	{
-	
-		public:
-		AspenDynamicsInterface();
-		~AspenDynamicsInterface();
-	
-		//File operating functions
+    class ASPENDYNAMICSINTERFACE_EXPORTS AspenDynamicsInterface
+    {
+    
+        public:
+        AspenDynamicsInterface();
+        ~AspenDynamicsInterface();
+    
+        //File operating functions
         //Open an Aspen Document
-		void Open(CString filename);
+        void Open(CString filename);
         //Close the file, clear up 
-		void Close();
-		void Quit();
+        void Close();
+        void Quit();
         //Save the document back;
-		void Save();
+        void Save();
         //save this as another document
-		void SaveAs(CString filename);
-		void SetVisibility( bool status );
+        void SaveAs(CString filename);
+        void SetVisibility( bool status );
         void RunSolver( );
         void ResetSimulation( );
         std::vector< std::vector< std::string > > GetVariableList( CString itemPath, bool block );
@@ -49,11 +49,11 @@ namespace AspenDynamicsInterface
 
 
         private:
-		bool simOpened;
+        bool simOpened;
         AspenDynamicsLibrary::IAspenModelerPtr ADApplication;
         AspenDynamicsLibrary::IAspenModelerDocumentPtr ADDocument;
         AspenDynamicsLibrary::IAspenModelerPhysicalPropertiesPtr ADProperties;
         AspenDynamicsLibrary::IAspenModelerResultsPtr ADResults;
-	};
+    };
 }
 #endif

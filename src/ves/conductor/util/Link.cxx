@@ -66,7 +66,7 @@ BEGIN_EVENT_TABLE( Link, wxEvtHandler )
     EVT_MENU( LINK_DEL, Link::OnDelLink )
     EVT_MENU( LINK_DEL_CON, Link::OnDelLinkCon )
     EVT_MENU( LINK_SHOW_CONT, Link::OnShowLinkContent )
-	EVT_MENU( LINK_SET_NAME, Link::OnSetLinkName )
+    EVT_MENU( LINK_SET_NAME, Link::OnSetLinkName )
     //Aspen Menu
     EVT_MENU( LINK_ASPEN_PLUS_SHOW_NAME, Link::OnShowAspenName )
     EVT_MENU( LINK_ASPEN_PLUS_INPUTS, Link::OnQueryStreamInputs )
@@ -362,7 +362,7 @@ void Link::DrawLinkLine( wxDC* dc )
     dc->SetPen( *wxGREEN_PEN );
     dc->SetBrush( *wxWHITE_BRUSH );
     }
-	else
+    else
     {
     dc->SetPen( *wxBLACK_PEN );
     dc->SetBrush( *wxWHITE_BRUSH );
@@ -386,7 +386,7 @@ void Link::DrawLinkLine( wxDC* dc )
     dc->SetPen( *wxGREEN_PEN );
     dc->SetBrush( *wxGREEN_BRUSH );
     }
-	else
+    else
     {
     dc->SetPen( *wxBLACK_PEN );
     dc->SetBrush( *wxBLACK_BRUSH );
@@ -466,19 +466,19 @@ void Link::OnShowLinkContent( wxCommandEvent& event )
 ///////////////////////////////////////////////////////////////////////////////
 void Link::OnSetLinkName( wxCommandEvent& event )
 {
-	UILINK_CHECKID( event )
+    UILINK_CHECKID( event )
 
-	wxTextEntryDialog linkNameDlg( networkFrame, 
-		_("Set Link Name"), _("Link Name"), GetName(),
-		wxOK|wxCANCEL|wxCENTRE, wxDefaultPosition );
+    wxTextEntryDialog linkNameDlg( networkFrame, 
+        _("Set Link Name"), _("Link Name"), GetName(),
+        wxOK|wxCANCEL|wxCENTRE, wxDefaultPosition );
 
-	int showLinkDlg = linkNameDlg.ShowModal();
-	if( showLinkDlg != wxID_OK )
-	{
-		return;
-	}
+    int showLinkDlg = linkNameDlg.ShowModal();
+    if( showLinkDlg != wxID_OK )
+    {
+        return;
+    }
 
-	SetName( linkNameDlg.GetValue() );
+    SetName( linkNameDlg.GetValue() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Link::OnShowAspenName( wxCommandEvent& event )
@@ -820,7 +820,7 @@ void Link::OnMRightDown( wxMouseEvent &event )
     wxMenu the_pop_menu( menuName );
 
     the_pop_menu.Append( LINK_SHOW_CONT, _( "Show Link Content" ) );
-	the_pop_menu.Append( LINK_SET_NAME, _( "Set Link Name" ) );
+    the_pop_menu.Append( LINK_SET_NAME, _( "Set Link Name" ) );
     the_pop_menu.Append( LINK_ADD_CON, _( "Add Link Connector" ) );
     the_pop_menu.Append( LINK_DEL_CON, _( "Delete Link Connector" ) );
     the_pop_menu.Append( LINK_DEL, _( "Delete Link" ) );

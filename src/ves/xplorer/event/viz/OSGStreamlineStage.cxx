@@ -329,11 +329,11 @@ void OSGStreamlineStage::createStreamLines( vtkPolyData* polyData,
 
         osg::StateSet* ss = geom->getOrCreateStateSet();
 
-    	{
+        {
             osg::ref_ptr< osg::Uniform > particlesizeUniform =
             new osg::Uniform( "particleSize", m_particleDiameter );
             ss->addUniform( particlesizeUniform.get() );
-    	}
+        }
 
         //osg::ref_ptr< osg::Shader > vertexShader = osg::Shader::readShaderFile(
         //    osg::Shader::VERTEX, osgDB::findDataFile( "streamline.vs" ) );

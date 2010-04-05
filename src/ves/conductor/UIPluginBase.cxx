@@ -598,22 +598,22 @@ ModelPtr UIPluginBase::GetVEModel( void )
         }
     }
 
-	{
+    {
         ///Set the 2d string data
-		std::map<std::string, 
-			std::vector< std::vector<std::string> >* >::iterator iterv2s;
+        std::map<std::string, 
+            std::vector< std::vector<std::string> >* >::iterator iterv2s;
         for( iterv2s = _string2D.begin(); iterv2s != _string2D.end(); iterv2s++ )
-		{
-			std::string temp2d( iterv2s->first );
-			std::vector< std::vector< std::string > > temp2v;
-			temp2v = *(iterv2s->second);
-			CommandPtr tempCommand = CommandPtr( new Command() );
-			tempCommand->SetCommandName( iterv2s->first );
-			ves::open::xml::DataValuePairPtr dataDVP( 
-				new ves::open::xml::DataValuePair() );
-			dataDVP->SetData( iterv2s->first, *( iterv2s->second ) );
-			tempCommand->AddDataValuePair( dataDVP );
-			m_veModel->SetInput( tempCommand );
+        {
+            std::string temp2d( iterv2s->first );
+            std::vector< std::vector< std::string > > temp2v;
+            temp2v = *(iterv2s->second);
+            CommandPtr tempCommand = CommandPtr( new Command() );
+            tempCommand->SetCommandName( iterv2s->first );
+            ves::open::xml::DataValuePairPtr dataDVP( 
+                new ves::open::xml::DataValuePair() );
+            dataDVP->SetData( iterv2s->first, *( iterv2s->second ) );
+            tempCommand->AddDataValuePair( dataDVP );
+            m_veModel->SetInput( tempCommand );
         }
     }
     // EPRI TAG
@@ -716,8 +716,8 @@ void UIPluginBase::SetVEModel( ves::open::xml::model::ModelWeakPtr tempModel )
                 std::map<std::string, std::vector<long>* >::iterator itervi;
                 std::map<std::string, std::vector<double>* >::iterator itervd;
                 std::map<std::string, std::vector<std::string>* >::iterator itervs;
-				std::map<std::string, 
-					std::vector< std::vector<std::string> >* >::iterator iterv2s;
+                std::map<std::string, 
+                    std::vector< std::vector<std::string> >* >::iterator iterv2s;
 
                 if( std::string( "FLOAT" ) == dataType )
                 {
@@ -757,13 +757,13 @@ void UIPluginBase::SetVEModel( ves::open::xml::model::ModelWeakPtr tempModel )
                     if( itervi != _int1D.end() )
                         tempData->GetData( *( itervi->second ) );
                 }
-				else if( std::string( "2DSTRING" ) == dataType )
+                else if( std::string( "2DSTRING" ) == dataType )
                 {
                     iterv2s = _string2D.find( dataName );
                     if( iterv2s != _string2D.end() )
                         tempData->GetData( *( iterv2s->second ) );
                 }
-			
+            
                 /*else if(std::string( "XMLOBJECT" ) == dataType )
                 {
                    iteri = _double.find( dataName );
@@ -854,7 +854,7 @@ void UIPluginBase::RegistVar( std::string vname, std::vector<std::string>* var )
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIPluginBase::RegistVar( std::string vname, 
-							 std::vector< std::vector<std::string> >* var )
+                             std::vector< std::vector<std::string> >* var )
 {
     _string2D[vname] = var;
 }

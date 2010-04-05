@@ -522,21 +522,21 @@ void ParamsDlg::SetButtonClick( wxCommandEvent& event )
     moduleName->SetData( "ModuleName", compName );
     returnState->AddDataValuePair( moduleName );
 
-	ves::open::xml::DataValuePairPtr 
-		paramName( new ves::open::xml::DataValuePair() );
-	if( mParentId == m_rootId )
-	{
-		paramName->SetData( std::string( "ParamName" ), ConvertUnicode( 
-			ParamChoice->GetItemText( 
-			ParamChoice->GetSelection() ) ) );
-	}
-	else
-	{
-		paramName->SetData( std::string( "ParamName" ), 
+    ves::open::xml::DataValuePairPtr 
+        paramName( new ves::open::xml::DataValuePair() );
+    if( mParentId == m_rootId )
+    {
+        paramName->SetData( std::string( "ParamName" ), ConvertUnicode( 
+            ParamChoice->GetItemText( 
+            ParamChoice->GetSelection() ) ) );
+    }
+    else
+    {
+        paramName->SetData( std::string( "ParamName" ), 
             ConvertUnicode( ParamChoice->GetItemText( mParentId ) ) + 
             std::string( "." ) +
-			ConvertUnicode( ParamChoice->GetItemText( ParamChoice->GetSelection() ) ) );
-	}
+            ConvertUnicode( ParamChoice->GetItemText( ParamChoice->GetSelection() ) ) );
+    }
     returnState->AddDataValuePair( paramName );
 
     ves::open::xml::DataValuePairPtr

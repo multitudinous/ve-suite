@@ -183,7 +183,7 @@ void CorbaUnitManager::RunORB()
 }
 /////////////////////////////////////////////////////////////
 void CorbaUnitManager::DestroyORB( void )
-{	  
+{      
     if( !unit_i_instantiated )
     {
         return;
@@ -202,7 +202,7 @@ AspenUnit_i* CorbaUnitManager::GetUnitObject( void )
 /////////////////////////////////////////////////////////////
 void CorbaUnitManager::CheckCORBAWork( void )
 {
-	if ( !CORBA::is_nil( orb ) )
+    if ( !CORBA::is_nil( orb ) )
    {
       if ( orb->work_pending() )
       {
@@ -215,14 +215,14 @@ void CorbaUnitManager::CheckCORBAWork( void )
 BKPParser * CorbaUnitManager::CreateParser( void )
 //void CorbaUnitManager::CreateParser( void )
 {
-	return new BKPParser();
+    return new BKPParser();
 }
 
 /////////////////////////////////////////////////////////////
 //DynParser * CorbaUnitManager::CreateParser( void )
 //void CorbaUnitManager::CreateParser( void )
 //{
-//	return new DynParser();
+//    return new DynParser();
 //}
 
 /////////////////////////////////////////////////////////////

@@ -26,18 +26,18 @@
 ///////////////////////////////////////////////////////////////////////////////
 class DataArrayChoiceDialog : public wxDialog 
 {
-	private:
-	
-	protected:
-		wxCheckListBox* m_checkList1;
-		wxStdDialogButtonSizer* m_sdbSizer1;
-		wxButton* m_sdbSizer1Apply;
-		wxButton* m_sdbSizer1Cancel;
-	
-	public:
-		DataArrayChoiceDialog( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Choose Data Arrays"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxDEFAULT_DIALOG_STYLE );
-		~DataArrayChoiceDialog();
-	
+    private:
+    
+    protected:
+        wxCheckListBox* m_checkList1;
+        wxStdDialogButtonSizer* m_sdbSizer1;
+        wxButton* m_sdbSizer1Apply;
+        wxButton* m_sdbSizer1Cancel;
+    
+    public:
+        DataArrayChoiceDialog( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Choose Data Arrays"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxDEFAULT_DIALOG_STYLE );
+        ~DataArrayChoiceDialog();
+    
 };
 
 #endif //__DataArrayChoiceDialog__

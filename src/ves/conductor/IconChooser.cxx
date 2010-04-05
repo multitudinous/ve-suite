@@ -67,7 +67,7 @@ using namespace ves::conductor;
 
 BEGIN_EVENT_TABLE( IconChooser, wxFrame )
     //EVT_CLOSE( IconChooser::OnClose )
-	EVT_BUTTON( ICONCHOOSER_OK, IconChooser::okButtonClick )
+    EVT_BUTTON( ICONCHOOSER_OK, IconChooser::okButtonClick )
     EVT_BUTTON( ICONCHOOSER_CANCEL, IconChooser::cancelButtonClick )
     EVT_MENU( ICONCHOOSER_CLICK, IconChooser::IconDirectoryClick )
 END_EVENT_TABLE()
@@ -225,7 +225,7 @@ void IconChooser::okButtonClick( wxCommandEvent& event )
     event.SetClientData( &iconInfo );
     ::wxPostEvent( canvas->GetParent(), event);
     this->canvas->Refresh();
-	Show(false);
+    Show(false);
     //Destroy();
 }
 ////////////////////////////////////////////////////////////////////////////////

@@ -1,5 +1,5 @@
 #ifndef _INTERACTIONEVENT_H
-#define	_INTERACTIONEVENT_H
+#define    _INTERACTIONEVENT_H
 
 namespace ves
 {
@@ -57,5 +57,5 @@ private:
 } //end xplorer
 } //end ves
 
-#endif	/* _INTERACTIONEVENT_H */
+#endif    /* _INTERACTIONEVENT_H */
 

@@ -50,18 +50,18 @@ namespace conductor
 class PolyDataScalarControlDialog : public ScalarControlDialog
 {
 protected:
-	// Handlers for ScalarControlDialog events.
-	void OnMinTextInput( wxCommandEvent& event );
-	void OnMinSlider( wxScrollEvent& event );
-	void OnMaxTextInput( wxCommandEvent& event );
-	void OnMaxSlider( wxScrollEvent& event );
-	bool EnsureSliders( int activeSliderID );
+    // Handlers for ScalarControlDialog events.
+    void OnMinTextInput( wxCommandEvent& event );
+    void OnMinSlider( wxScrollEvent& event );
+    void OnMaxTextInput( wxCommandEvent& event );
+    void OnMaxSlider( wxScrollEvent& event );
+    bool EnsureSliders( int activeSliderID );
     void SendData( int activeSliderID );
 
     std::pair< double, double > m_scalarRange;
 public:
-	/** Constructor */
-	PolyDataScalarControlDialog( wxWindow* parent );
+    /** Constructor */
+    PolyDataScalarControlDialog( wxWindow* parent );
 };
 }
 }

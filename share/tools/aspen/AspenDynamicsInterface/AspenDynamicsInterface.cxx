@@ -17,9 +17,9 @@ namespace AspenDynamicsInterface
 //Constructor
 AspenDynamicsInterface::AspenDynamicsInterface()
 {
-	simOpened = false;
-	ADApplication = NULL;
-	ADDocument = NULL;
+    simOpened = false;
+    ADApplication = NULL;
+    ADDocument = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -38,7 +38,7 @@ void AspenDynamicsInterface::Open(CString filename)
     ADApplication = AspenDynamicsLibrary::IAspenModelerPtr( "AD Application 2100" );
     
     VARIANT strVar;
-	::VariantInit(&strVar);
+    ::VariantInit(&strVar);
     strVar.vt = VT_BSTR;
     BSTR bstr = filename.AllocSysString();
     strVar.bstrVal = bstr;
@@ -56,7 +56,7 @@ void AspenDynamicsInterface::Open(CString filename)
     output.close();
 
     VARIANT cv;
-	::VariantInit(&cv);
+    ::VariantInit(&cv);
     cv.vt=VT_BOOL;                      //Type is BOOL
     cv.boolVal=VARIANT_TRUE;      //value is True (VARIANT_TRUE)
 
@@ -65,7 +65,7 @@ void AspenDynamicsInterface::Open(CString filename)
     ::VariantClear(&cv);
     //needs error handling
 
-	simOpened = true;
+    simOpened = true;
     BSTR bstrDesc;
     
     try
@@ -414,23 +414,23 @@ void AspenDynamicsInterface::SetVariableValue( CString itemPath,
 //Close the file, clear up 
 void AspenDynamicsInterface::Close()
 {
-	if (simOpened)
-	{
+    if (simOpened)
+    {
         VARIANTARG reserved;
         ::VariantInit(&reserved);
         reserved.vt=VT_BOOL;
         //reserved.boolVal=VARIANT_TRUE;
         reserved.boolVal=VARIANT_FALSE;
 
-		ADApplication->CloseDocument(reserved);
+        ADApplication->CloseDocument(reserved);
         //delete ihRoot;
         //delete hAPsim;
-		//ihRoot = NULL;
+        //ihRoot = NULL;
         //hAPsim = NULL;
 
-		simOpened = false;
+        simOpened = false;
         ::VariantClear(&reserved);
-	}
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -444,32 +444,32 @@ void AspenDynamicsInterface::Quit()
 //Save the document back;
 void AspenDynamicsInterface::Save()
 {
-	if (simOpened)
+    if (simOpened)
     {
-	    ADApplication->SaveDocument();
+        ADApplication->SaveDocument();
     }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 //save this as another document
 void AspenDynamicsInterface::SaveAs(CString filename)
-{	
-	if (simOpened)
-    {	
-	    VARIANTARG overwrite;
-	    ::VariantInit(&overwrite);
+{    
+    if (simOpened)
+    {    
+        VARIANTARG overwrite;
+        ::VariantInit(&overwrite);
         overwrite.vt=VT_BOOL;
         overwrite.boolVal=VARIANT_TRUE;
 
         VARIANT strVar;
-	    ::VariantInit(&strVar);
+        ::VariantInit(&strVar);
         strVar.vt = VT_BSTR;
         BSTR bstr = filename.AllocSysString();
         strVar.bstrVal = bstr;
 
-	    ADApplication->SaveDocumentAs(strVar, overwrite);
-	    ::VariantClear(&overwrite);	
-	    ::VariantClear(&strVar);
+        ADApplication->SaveDocumentAs(strVar, overwrite);
+        ::VariantClear(&overwrite);    
+        ::VariantClear(&strVar);
     }
 }
 
@@ -477,10 +477,10 @@ void AspenDynamicsInterface::SaveAs(CString filename)
 //hide/show dynamics application
 void AspenDynamicsInterface::SetVisibility(bool status)
 {
-	if (simOpened)
+    if (simOpened)
     {
         VARIANT cv;
-	    ::VariantInit(&cv);
+        ::VariantInit(&cv);
         cv.vt=VT_BOOL;
         if(status == true )
         {
@@ -492,7 +492,7 @@ void AspenDynamicsInterface::SetVisibility(bool status)
         }
         
         ADApplication->PutVisible(cv);
-	    ::VariantClear(&cv);
+        ::VariantClear(&cv);
     }
 }
 
@@ -500,15 +500,15 @@ void AspenDynamicsInterface::SetVisibility(bool status)
 //run the simulation
 void AspenDynamicsInterface::RunSolver( )
 {
-	if (simOpened)
+    if (simOpened)
     {
-	    VARIANTARG flag;
-	    ::VariantInit(&flag);
+        VARIANTARG flag;
+        ::VariantInit(&flag);
         flag.vt=VT_BOOL;
         flag.boolVal=VARIANT_TRUE;
 
         ADDocument->Run(flag);
-	    ::VariantClear(&flag);	
+        ::VariantClear(&flag);    
     }
 }
 

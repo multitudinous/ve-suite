@@ -106,34 +106,34 @@ private:
     void OnDepthHelperWindowResolutionSlider( wxCommandEvent& event );
 
     void OnFieldOfViewSpinCtrl( wxScrollEvent& WXUNUSED( event ) );
-	void OnFieldOfViewText( wxCommandEvent& event );
+    void OnFieldOfViewText( wxCommandEvent& event );
     void OnFieldOfViewSlider( wxCommandEvent& WXUNUSED( event ) );
     void OnAspectRatioSpinCtrl( wxScrollEvent& WXUNUSED( event ) );
     void OnAspectRatioText( wxCommandEvent& event );
     void OnAspectRatioSlider( wxCommandEvent& WXUNUSED( event ) );
-	void OnNearPlaneSpinCtrl( wxScrollEvent& WXUNUSED( event ) );
-	void OnNearPlaneText( wxCommandEvent& event );
-	void OnNearPlaneSlider( wxCommandEvent& WXUNUSED( event ) );
-	void OnFarPlaneSpinCtrl( wxScrollEvent& WXUNUSED( event ) );
-	void OnFarPlaneText( wxCommandEvent& event );
-	void OnFarPlaneSlider( wxCommandEvent& WXUNUSED( event ) );
+    void OnNearPlaneSpinCtrl( wxScrollEvent& WXUNUSED( event ) );
+    void OnNearPlaneText( wxCommandEvent& event );
+    void OnNearPlaneSlider( wxCommandEvent& WXUNUSED( event ) );
+    void OnFarPlaneSpinCtrl( wxScrollEvent& WXUNUSED( event ) );
+    void OnFarPlaneText( wxCommandEvent& event );
+    void OnFarPlaneSlider( wxCommandEvent& WXUNUSED( event ) );
 
     void OnFocalDistanceSpinCtrl( wxScrollEvent& WXUNUSED( event ) );
     void OnFocalDistanceText( wxCommandEvent& event );
     void OnFocalDistanceSlider( wxCommandEvent& WXUNUSED( event ) );
-	void OnFocalRangeSpinCtrl( wxScrollEvent& WXUNUSED( event ) );
-	void OnFocalRangeText( wxCommandEvent& event );
-	void OnFocalRangeSlider( wxCommandEvent& WXUNUSED( event ) );
-	void OnMaxCircleOfConfusionSpinCtrl( wxScrollEvent& WXUNUSED( event ) );
-	void OnMaxCircleOfConfusionText( wxCommandEvent& event );
-	void OnMaxCircleOfConfusionSlider( wxCommandEvent& WXUNUSED( event ) );
+    void OnFocalRangeSpinCtrl( wxScrollEvent& WXUNUSED( event ) );
+    void OnFocalRangeText( wxCommandEvent& event );
+    void OnFocalRangeSlider( wxCommandEvent& WXUNUSED( event ) );
+    void OnMaxCircleOfConfusionSpinCtrl( wxScrollEvent& WXUNUSED( event ) );
+    void OnMaxCircleOfConfusionText( wxCommandEvent& event );
+    void OnMaxCircleOfConfusionSlider( wxCommandEvent& WXUNUSED( event ) );
 
     bool EnsureSliders( int activeSliderID );
 
     void UpdateFieldOfViewControls();
     void UpdateAspectRatioControls();
-	void UpdateNearPlaneControls();
-	void UpdateFarPlaneControls();
+    void UpdateNearPlaneControls();
+    void UpdateFarPlaneControls();
 
     void UpdateFocalDistanceControls();
     void UpdateFocalRangeControls();
