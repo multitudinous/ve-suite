@@ -48,7 +48,7 @@
 #include <iostream>
 
 // Implementation skeleton constructor
-Body_Unit_i::Body_Unit_i( std::string name, CDynSimUnitDlg * dialog, 
+AspenUnit_i::AspenUnit_i( std::string name, CDynSimUnitDlg * dialog, 
                          CorbaUnitManager* parent, std::string dir )
     :
     AspenLog( 0 ),
@@ -82,12 +82,12 @@ Body_Unit_i::Body_Unit_i( std::string name, CDynSimUnitDlg * dialog,
 }
 ////////////////////////////////////////////////////////////////////////////////
 // Implementation skeleton destructor
-Body_Unit_i::~Body_Unit_i( void )
+AspenUnit_i::~AspenUnit_i( void )
 {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Body_Unit_i::StartCalc (
+void AspenUnit_i::StartCalc (
     
   )
   ACE_THROW_SPEC ((
@@ -97,7 +97,7 @@ void Body_Unit_i::StartCalc (
 {
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Body_Unit_i::StopCalc (
+void AspenUnit_i::StopCalc (
     
   )
   ACE_THROW_SPEC ((
@@ -107,7 +107,7 @@ void Body_Unit_i::StopCalc (
 {
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Body_Unit_i::PauseCalc (
+void AspenUnit_i::PauseCalc (
     
   )
   ACE_THROW_SPEC ((
@@ -117,7 +117,7 @@ void Body_Unit_i::PauseCalc (
 {
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Body_Unit_i::Resume (
+void AspenUnit_i::Resume (
     
   )
   ACE_THROW_SPEC ((
@@ -127,19 +127,7 @@ void Body_Unit_i::Resume (
 {
 }
 ////////////////////////////////////////////////////////////////////////////////
-char * Body_Unit_i::GetStatusMessage (
-    
-  )
-  ACE_THROW_SPEC ((
-    ::CORBA::SystemException,
-    ::Error::EUnknown
-  ))
-{
-  // Add your implementation here
-    return NULL;
-}
-////////////////////////////////////////////////////////////////////////////////
-char * Body_Unit_i::GetUserData (
+char * AspenUnit_i::GetStatusMessage (
     
   )
   ACE_THROW_SPEC ((
@@ -151,7 +139,19 @@ char * Body_Unit_i::GetUserData (
     return NULL;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Body_Unit_i::SetID (
+char * AspenUnit_i::GetUserData (
+    
+  )
+  ACE_THROW_SPEC ((
+    ::CORBA::SystemException,
+    ::Error::EUnknown
+  ))
+{
+  // Add your implementation here
+    return NULL;
+}
+////////////////////////////////////////////////////////////////////////////////
+void AspenUnit_i::SetID (
     ::CORBA::Long id
   )
   ACE_THROW_SPEC ((
@@ -163,7 +163,7 @@ void Body_Unit_i::SetID (
   // no need to implement this
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Body_Unit_i::SetCurID (
+void AspenUnit_i::SetCurID (
     ::CORBA::Long id
   )
   ACE_THROW_SPEC ((
@@ -173,7 +173,7 @@ void Body_Unit_i::SetCurID (
 {
 }
 ////////////////////////////////////////////////////////////////////////////////
-::Types::ArrayLong* Body_Unit_i::GetID (
+::Types::ArrayLong* AspenUnit_i::GetID (
     
   )
   ACE_THROW_SPEC ((
@@ -187,7 +187,7 @@ void Body_Unit_i::SetCurID (
     return NULL;
 }
 ////////////////////////////////////////////////////////////////////////////////
-CORBA::Long Body_Unit_i::GetCurID (
+CORBA::Long AspenUnit_i::GetCurID (
     
   )
   ACE_THROW_SPEC ((
@@ -201,7 +201,7 @@ CORBA::Long Body_Unit_i::GetCurID (
     return NULL;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Body_Unit_i::DeleteModuleInstance(CORBA::Long id) 
+void AspenUnit_i::DeleteModuleInstance(CORBA::Long id) 
 ACE_THROW_SPEC ((
     ::CORBA::SystemException,
     ::Error::EUnknown
@@ -212,7 +212,7 @@ ACE_THROW_SPEC ((
     */
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Body_Unit_i::SetName (
+void AspenUnit_i::SetName (
     const char * name
   )
   ACE_THROW_SPEC ((
@@ -223,7 +223,7 @@ void Body_Unit_i::SetName (
   // Add your implementation here
 }
 ////////////////////////////////////////////////////////////////////////////////
-char * Body_Unit_i::GetName (
+char * AspenUnit_i::GetName (
     
   )
   ACE_THROW_SPEC ((
@@ -235,7 +235,7 @@ char * Body_Unit_i::GetName (
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-char * Body_Unit_i::Query ( const char * query_str
+char * AspenUnit_i::Query ( const char * query_str
     
   )
   ACE_THROW_SPEC ((
@@ -307,7 +307,7 @@ char * Body_Unit_i::Query ( const char * query_str
         return CORBA::string_dup( "NULL" );
 }
 ///////////////////////////////////////////////////////////////////////////////
-char* Body_Unit_i::handleGetNetwork(ves::open::xml::CommandPtr cmd)
+char* AspenUnit_i::handleGetNetwork(ves::open::xml::CommandPtr cmd)
 {
     CEdit *Display;
     Display = reinterpret_cast<CEdit *>(theDialog->GetDlgItem(IDC_EDIT2));
@@ -372,7 +372,7 @@ char* Body_Unit_i::handleGetNetwork(ves::open::xml::CommandPtr cmd)
     return CORBA::string_dup( network.c_str() );
     //return NULL;
 }
-void Body_Unit_i::UpdateVars( )
+void AspenUnit_i::UpdateVars( )
 {
     if( connected )
     {
@@ -392,7 +392,7 @@ void Body_Unit_i::UpdateVars( )
     }
 }
 ///////////////////////////////////////////////////////////////////////////////
-/*char* Body_Unit_i::getOPCValue( ves::open::xml::CommandPtr cmd )
+/*char* AspenUnit_i::getOPCValue( ves::open::xml::CommandPtr cmd )
 {
     ves::open::xml::DataValuePairPtr curPair = cmd->GetDataValuePair( 0 );
     std::string modname = curPair->GetDataString( );
@@ -400,13 +400,13 @@ void Body_Unit_i::UpdateVars( )
     return CORBA::string_dup( netPak.c_str( ) );
 }*/
 ///////////////////////////////////////////////////////////////////////////////
-char* Body_Unit_i::getOPCValues( ves::open::xml::CommandPtr cmd )
+char* AspenUnit_i::getOPCValues( ves::open::xml::CommandPtr cmd )
 {
     std::string netPak = dynsim->GetOPCValues( );
     return CORBA::string_dup( netPak.c_str( ) );
 }
 ///////////////////////////////////////////////////////////////////////////////
-void Body_Unit_i::connectWithList( ves::open::xml::CommandPtr cmd )
+void AspenUnit_i::connectWithList( ves::open::xml::CommandPtr cmd )
 {
         //create variable list
         //ves::open::xml::DataValuePairPtr pair = cmd->GetDataValuePair( 0 );
@@ -415,12 +415,12 @@ void Body_Unit_i::connectWithList( ves::open::xml::CommandPtr cmd )
         //dynsim->ConnectWithList( list );
 }
 ///////////////////////////////////////////////////////////////////////////////
-void Body_Unit_i::connectToOPC( ves::open::xml::CommandPtr cmd )
+void AspenUnit_i::connectToOPC( ves::open::xml::CommandPtr cmd )
 {
     connected = dynsim->ConnectToOPCServer();
 }
 ///////////////////////////////////////////////////////////////////////////////
-void Body_Unit_i::addVariable( ves::open::xml::CommandPtr cmd )
+void AspenUnit_i::addVariable( ves::open::xml::CommandPtr cmd )
 {
     ves::open::xml::DataValuePairPtr pair = cmd->GetDataValuePair( 0 );
     std::string var;
@@ -428,7 +428,7 @@ void Body_Unit_i::addVariable( ves::open::xml::CommandPtr cmd )
     dynsim->AddOPCVariable( var.c_str() );
 }
 ///////////////////////////////////////////////////////////////////////////////
-char* Body_Unit_i::getAllOPCVariables( ves::open::xml::CommandPtr cmd )
+char* AspenUnit_i::getAllOPCVariables( ves::open::xml::CommandPtr cmd )
 {
     ves::open::xml::DataValuePairPtr curPair = cmd->GetDataValuePair( 0 );
     std::string modname = curPair->GetDataString( );
@@ -437,11 +437,22 @@ char* Body_Unit_i::getAllOPCVariables( ves::open::xml::CommandPtr cmd )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void Body_Unit_i::SetParams (CORBA::Long id,
+void AspenUnit_i::SetParams (CORBA::Long id,
     const char * param)
   ACE_THROW_SPEC ((
     ::CORBA::SystemException,
     ::Error::EUnknown
   ))
 {
+}
+///////////////////////////////////////////////////////////////////////////////
+void AspenUnit_i::Monitor( )
+{
+    if( connected )
+    {
+        dynsim->AddOPCVariable( "MY_SWITCH" );
+        std::string netPak = dynsim->GetOPCValues( );
+        theParent->GetExecutive()->SetParams(0, 0, CORBA::string_dup( netPak.c_str( ) ) );
+    }
+    return;
 }

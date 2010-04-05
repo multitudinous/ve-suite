@@ -15,19 +15,20 @@ public:
    void SetRunORBFlag( bool run );
    void RunORB( void );
    void DestroyORB( void );
-   Body_Unit_i* GetUnitObject( void );
+   AspenUnit_i* GetUnitObject( void );
    void CheckCORBAWork( void );
    //BKPParser * CreateParser( void );
 
    bool unit_i_instantiated;
    bool CleanUp( );
+   Body::Executive_ptr GetExecutive( void );
 
 private:
    CString workingDir;
    CString computerName;
    CString computerPort;
    CString unitName;
-   Body_Unit_i* unit_i;
+   AspenUnit_i* unit_i;
    CORBA::ORB_var orb;
    PortableServer::POA_var poa;
    CDynSimUnitDlg * parent;

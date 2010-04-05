@@ -6,7 +6,7 @@
 
 #define REFRESH_OPC 1
 
-class Body_Unit_i;
+class AspenUnit_i;
 class CorbaUnitManager;
 class CDialogThread;
 
@@ -38,7 +38,7 @@ protected:
     DECLARE_MESSAGE_MAP()
 
 private:
-    Body_Unit_i* unitObject;
+    AspenUnit_i* unitObject;
     CString moduleName;
     CorbaUnitManager* commManager;
     //CDialogThread* orbThread;

@@ -151,7 +151,7 @@ void CorbaUnitManager::RunORB()
         ACE_TRY_CHECK;
 
         //Create the Servant
-        unit_i = new Body_Unit_i(/*exec.in(),*/ UNITNAME, /*parser,*/ parent, this, std::string(workingDir) );
+        unit_i = new AspenUnit_i(/*exec.in(),*/ UNITNAME, /*parser,*/ parent, this, std::string(workingDir) );
         unit_i_instantiated = true;
         //Activate it to obtain the object reference
 
@@ -202,7 +202,7 @@ void CorbaUnitManager::DestroyORB( void )
     CleanUp();
 }
 /////////////////////////////////////////////////////////////
-Body_Unit_i* CorbaUnitManager::GetUnitObject( void )
+AspenUnit_i* CorbaUnitManager::GetUnitObject( void )
 {
    return unit_i;
 }
@@ -248,4 +248,9 @@ bool CorbaUnitManager::CleanUp( void )
     }
 
     return true;
+}
+///////////////////////////////////////////////////////////////////////////////
+Body::Executive_ptr CorbaUnitManager::GetExecutive( void )
+{
+    return exec;
 }

@@ -123,6 +123,7 @@ BOOL CDynSimUnitDlg::OnIdle( LONG test )
     if(initialized)
     {
         commManager->CheckCORBAWork();
+        commManager->GetUnitObject()->Monitor();
     }
     return FALSE;
 }
