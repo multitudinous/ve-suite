@@ -49,6 +49,9 @@
 // --- OSG Includes --- //
 #include <osg/TexGenNode>
 
+#include <osgDB/ReadFile>
+#include <osgDB/FileUtils>
+
 using namespace cpt;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -390,61 +393,18 @@ void CameraPlacementToolGP::InitializeResources()
 
     //Set up the program for mCameraNode
     {
-        std::string cameraVertexSource =
-        "varying vec4 eyePos; \n"
-        "varying vec3 lightPos; \n"
-        "varying vec3 normal; \n"
+        std::string vsName = osgDB::findDataFile( "phong.vs" );
+        std::string fsName = osgDB::findDataFile( "phong.fs" );
 
-        "void main() \n"
-        "{ \n"
-            "gl_Position = ftransform(); \n"
+        osg::ref_ptr< osg::Shader > vs =
+            osg::Shader::readShaderFile( osg::Shader::VERTEX, vsName );
 
-            "eyePos = gl_ModelViewMatrix * gl_Vertex; \n"
-            "lightPos = gl_LightSource[ 0 ].position.xyz; \n"
-            "normal = vec3( gl_NormalMatrix * gl_Normal ); \n"
-
-            "gl_FrontColor = vec4( 0.7, 0.7, 0.7, 1.0 ); \n"
-        "} \n";
-
-        std::string cameraFragmentSource =
-        "varying vec4 eyePos; \n"
-        "varying vec3 lightPos; \n"
-        "varying vec3 normal; \n"
-
-        "void main() \n"
-        "{ \n"
-            "vec3 N = normalize( normal ); \n"
-            "vec3 L = normalize( lightPos ); \n"
-            "float NDotL = max( dot( N, L ), 0.0 ); \n"
-
-            "vec3 V = normalize( eyePos.xyz ); \n"
-            "vec3 R = reflect( V, N ); \n"
-            "float RDotL = max( dot( R, L ), 0.0 ); \n"
-
-            "vec3 totalAmbient = gl_LightSource[ 0 ].ambient.rgb * \n"
-                                "gl_Color.rgb; \n"
-            "vec3 totalDiffuse = gl_LightSource[ 0 ].diffuse.rgb * \n"
-                                "gl_Color.rgb * NDotL; \n"
-            "vec3 totalSpecular = gl_LightSource[ 0 ].specular.rgb * \n"
-                                 "gl_Color.rgb * pow( RDotL, 15.0 ); \n"
-
-            "vec4 color = \n"
-                "vec4( totalAmbient + totalDiffuse + totalSpecular, 1.0 ); \n"
-
-            "gl_FragColor = color; \n"
-        "} \n";
-
-        osg::ref_ptr< osg::Shader > cameraVertexShader = new osg::Shader();
-        cameraVertexShader->setType( osg::Shader::VERTEX );
-        cameraVertexShader->setShaderSource( cameraVertexSource );
-
-        osg::ref_ptr< osg::Shader > cameraFragmentShader = new osg::Shader();
-        cameraFragmentShader->setType( osg::Shader::FRAGMENT );
-        cameraFragmentShader->setShaderSource( cameraFragmentSource );
+        osg::ref_ptr< osg::Shader > fs =
+            osg::Shader::readShaderFile( osg::Shader::FRAGMENT, fsName );
 
         osg::ref_ptr< osg::Program > cameraProgram = new osg::Program();
-        cameraProgram->addShader( cameraVertexShader.get() );
-        cameraProgram->addShader( cameraFragmentShader.get() );
+        cameraProgram->addShader( vs.get() );
+        cameraProgram->addShader( fs.get() );
         boost::any anyVal = cameraProgram;
         mResourceManager->add( std::string( "CameraProgram" ), anyVal );
     }
@@ -623,97 +583,18 @@ void CameraPlacementToolGP::InitializeResources()
 
     //Set up the camera projection effect
     {
-        std::string projectionVertexSource =
-        "varying float fDepth; \n"
+        std::string vsName = osgDB::findDataFile( "projection.vs" );
+        std::string fsName = osgDB::findDataFile( "projection.fs" );
 
-        "varying vec3 lightPos; \n"
-        "varying vec3 normal; \n"
+        osg::ref_ptr< osg::Shader > vs =
+            osg::Shader::readShaderFile( osg::Shader::VERTEX, vsName );
 
-        "varying vec4 eyePos; \n"
-
-        "void main() \n"
-        "{ \n"
-            "gl_Position = ftransform(); \n"
-
-            "lightPos = gl_LightSource[ 0 ].position.xyz; \n"
-            "normal = vec3( gl_NormalMatrix * gl_Normal ); \n"
-            "eyePos = gl_ModelViewMatrix * gl_Vertex; \n"
-
-            "fDepth = -eyePos.z; \n"
-
-            "gl_FrontColor = gl_Color; \n"
-
-            "gl_TexCoord[ 0 ].s = dot( eyePos, gl_EyePlaneS[ 0 ] ); \n"
-            "gl_TexCoord[ 0 ].t = dot( eyePos, gl_EyePlaneT[ 0 ] ); \n"
-            "gl_TexCoord[ 0 ].q = dot( eyePos, gl_EyePlaneQ[ 0 ] ); \n"
-        "} \n";
-
-        std::string projectionFragmentSource =
-        "uniform float alpha; \n"
-        "uniform float nearPlane; \n"
-        "uniform float farPlane; \n"
-
-        "uniform float focalDistance; \n"
-        "uniform float focalRange; \n"
-
-        "varying float fDepth; \n"
-
-        "varying vec3 lightPos; \n"
-        "varying vec3 normal; \n"
-
-        "varying vec4 eyePos; \n"
-
-        "void main() \n"
-        "{ \n"
-            "vec3 N = normalize( normal ); \n"
-            "vec3 L = normalize( lightPos ); \n"
-            "float NDotL = max( dot( N, L ), 0.0 ); \n"
-
-            "vec3 V = normalize( eyePos.xyz ); \n"
-            "vec3 R = reflect( V, N ); \n"
-            "float RDotL = max( dot( R, L ), 0.0 ); \n"
-
-            "vec3 totalAmbient = gl_LightSource[ 0 ].ambient.rgb * \n"
-                                "gl_Color.rgb; \n"
-            "vec3 totalDiffuse = gl_LightSource[ 0 ].diffuse.rgb * \n"
-                                "gl_Color.rgb * NDotL; \n"
-            "vec3 totalSpecular = gl_LightSource[ 0 ].specular.rgb * \n"
-                                 "gl_Color.rgb * pow( RDotL, 15.0 ); \n"
-
-            "vec2 projectionUV = gl_TexCoord[ 0 ].st / gl_TexCoord[ 0 ].q; \n"
-            "vec4 color0 = \n"
-                "vec4( totalAmbient + totalDiffuse + totalSpecular, alpha ); \n"
-
-            //If in frustum
-            "if( projectionUV.s >= 0.0 && projectionUV.s <= 1.0 && \n"
-                "projectionUV.t >= 0.0 && projectionUV.t <= 1.0 && \n"
-                "gl_TexCoord[ 0 ].q >= nearPlane && \n"
-                "gl_TexCoord[ 0 ].q <= farPlane ) \n"
-            "{ \n"
-                "color0.a = 1.0; \n"
-            "} \n"
-
-            "float tempFocalRange = 2.0 / focalRange; \n"
-            "float tempSat =  abs( fDepth - focalDistance ) * tempFocalRange; \n"
-            //"float blur = saturate( tempSat ); \n"
-            "float blur = clamp( tempSat, 0.0, 1.0 ); \n"
-            "vec4 color1 = vec4( fDepth, blur, 0.0, 1.0 ); \n"
-
-            "gl_FragData[ 0 ] = color0; \n"
-            "gl_FragData[ 1 ] = color1; \n"
-        "} \n";
-
-        osg::ref_ptr< osg::Shader > projectionVertexShader = new osg::Shader();
-        projectionVertexShader->setType( osg::Shader::VERTEX );
-        projectionVertexShader->setShaderSource( projectionVertexSource );
-
-        osg::ref_ptr< osg::Shader > projectionFragmentShader = new osg::Shader();
-        projectionFragmentShader->setType( osg::Shader::FRAGMENT );
-        projectionFragmentShader->setShaderSource( projectionFragmentSource );
+        osg::ref_ptr< osg::Shader > fs =
+            osg::Shader::readShaderFile( osg::Shader::FRAGMENT, fsName );
 
         osg::ref_ptr< osg::Program > projectionProgram = new osg::Program();
-        projectionProgram->addShader( projectionVertexShader.get() );
-        projectionProgram->addShader( projectionFragmentShader.get() );
+        projectionProgram->addShader( vs.get() );
+        projectionProgram->addShader( fs.get() );
         boost::any anyVal = projectionProgram;
         mResourceManager->add( std::string( "ProjectionProgram" ), anyVal );
     }

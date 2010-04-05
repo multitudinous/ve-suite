@@ -55,9 +55,7 @@ CameraPlacementToolUI::CameraPlacementToolUI()
     int iconW = static_cast< int >( ( image.GetWidth() - 1 ) * scale );
     int iconH = static_cast< int >( ( image.GetHeight() - 1 ) * scale );
 
-    image.Scale( iconW, iconH, wxIMAGE_QUALITY_HIGH );
-    
-    SetImage( image );
+    SetImage( image.Rescale( iconW, iconH, wxIMAGE_QUALITY_HIGH ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 CameraPlacementToolUI::~CameraPlacementToolUI()

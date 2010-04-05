@@ -190,7 +190,7 @@ void CameraEntity::Initialize()
     //Initialize this
     setRenderOrder( osg::Camera::PRE_RENDER );
     setClearMask( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
-    setClearColor( osg::Vec4( 0.5, 0.5, 0.5, 1.0 ) );
+    setClearColor( osg::Vec4( 0.0, 0.0, 0.0, 1.0 ) );
     //setComputeNearFarMode( osg::Camera::DO_NOT_COMPUTE_NEAR_FAR );
     setRenderTargetImplementation( osg::Camera::FRAME_BUFFER_OBJECT );
     setReferenceFrame( osg::Camera::ABSOLUTE_RF );
@@ -288,8 +288,8 @@ void CameraEntity::CalculateMatrixMVPT()
     //Multiply the ModelView(MV) by the Projection(P) by the Texture(T) matrix
     mMVPT = getViewMatrix() *
             getProjectionMatrix() *
-            osg::Matrix::translate( 1.0f, 1.0f, 1.0f ) *
-            osg::Matrix::scale( 0.5f, 0.5f, 0.5f );
+            osg::Matrix::translate( 1.0, 1.0, 1.0 ) *
+            osg::Matrix::scale( 0.5, 0.5, 0.5 );
 
     mTexGenNode->getTexGen()->setPlanesFromMatrix( mMVPT );
 }
@@ -398,7 +398,7 @@ void CameraEntity::CustomKeyboardMouseSelection(
 ////////////////////////////////////////////////////////////////////////////////
 void CameraEntity::CreateCameraNode()
 {
-    mCameraNode = osgDB::readNodeFile( "Models/camera.ive" );
+    mCameraNode = osgDB::readNodeFile( "Models/old_camera.ive" );
     
     osg::ref_ptr< osg::StateSet > stateset = new osg::StateSet();
     //Set bin number to 11 so camera does not occlude geometry from scene
