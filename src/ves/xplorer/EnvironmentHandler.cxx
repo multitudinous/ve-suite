@@ -72,6 +72,7 @@
 #include <ves/xplorer/event/environment/CharacterEventHandler.h>
 #include <ves/xplorer/event/environment/PhysicsEventHandler.h>
 #include <ves/xplorer/event/environment/ScreenAlignedNormalsEventHandler.h>
+#include <ves/xplorer/event/environment/CameraPlacementEventHandler.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/Group.h>
@@ -177,6 +178,35 @@ m_lodScale( 0.01 )
         new ves::xplorer::event::SetResetStartPositionEventHandler();
     _eventHandlers[ std::string( "SCENE_STATE_INFORMATION" ) ] =
         new ves::xplorer::event::ScreenAlignedNormalsEventHandler();
+    ///CPT Tool
+    /*_eventHandlers[ "DRUM_ANIMATION_ON_OFF" ] =
+        new ves::xplorer::event::environment::CameraPlacementEventHandler();
+    _eventHandlers[ "CAMERA_GEOMETRY_ON_OFF" ] =
+        new ves::xplorer::event::environment::CameraPlacementEventHandler();
+    _eventHandlers[ "FRUSTUM_GEOMETRY_ON_OFF" ] =
+        new ves::xplorer::event::environment::CameraPlacementEventHandler();
+    _eventHandlers[ "DEPTH_OF_FIELD_EFFECT_ON_OFF" ] =
+        new ves::xplorer::event::environment::CameraPlacementEventHandler();
+    _eventHandlers[ "PROJECTION_EFFECT_ON_OFF" ] =
+        new ves::xplorer::event::environment::CameraPlacementEventHandler();
+    _eventHandlers[ "PROJECTION_EFFECT_OPACITY" ] =
+        new ves::xplorer::event::environment::CameraPlacementEventHandler();
+    _eventHandlers[ "CAMERA_WINDOW_ON_OFF" ] =
+        new ves::xplorer::event::environment::CameraPlacementEventHandler();
+    _eventHandlers[ "CAMERA_WINDOW_RESOLUTION" ] =
+        new ves::xplorer::event::environment::CameraPlacementEventHandler();
+    _eventHandlers[ "DEPTH_HELPER_WINDOW_ON_OFF" ] =
+        new ves::xplorer::event::environment::CameraPlacementEventHandler();
+    _eventHandlers[ "DEPTH_HELPER_WINDOW_RESOLUTION" ] =
+        new ves::xplorer::event::environment::CameraPlacementEventHandler();
+    _eventHandlers[ "PROJECTION_UPDATE" ] =
+        new ves::xplorer::event::environment::CameraPlacementEventHandler();
+    _eventHandlers[ "FOCAL_DISTANCE" ] =
+        new ves::xplorer::event::environment::CameraPlacementEventHandler();
+    _eventHandlers[ "FOCAL_RANGE" ] =
+        new ves::xplorer::event::environment::CameraPlacementEventHandler();
+    _eventHandlers[ "MAX_CIRCLE_OF_CONFUSION" ] =
+        new ves::xplorer::event::environment::CameraPlacementEventHandler();*/
 }
 ////////////////////////////////////////////////////////////////////////////////
 void EnvironmentHandler::Initialize()
