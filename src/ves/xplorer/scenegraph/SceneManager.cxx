@@ -53,8 +53,6 @@
 
 #include <ves/xplorer/scenegraph/physics/character/CharacterController.h>
 
-#include <ves/xplorer/scenegraph/manipulator/ManipulatorManager.h>
-
 // --- OSG Includes --- //
 #include <osg/Node>
 #include <osg/Group>
@@ -95,6 +93,7 @@ SceneManager::SceneManager()
     :
     mRootNode( NULL ),
     mModelRoot( NULL ),
+    m_cameraManager( NULL ),
     m_manipulatorManager( NULL ),
     mLogoNode( NULL ),
     mLogoSwitch( NULL ),
@@ -192,6 +191,10 @@ void SceneManager::InitScene()
     mModelRoot = new osg::Group();
     //mModelRoot = new ves::xplorer::scenegraph::DCS();
     mModelRoot->setName( "Model Root Node" );
+
+    m_cameraManager = new camera::CameraManager();
+    m_cameraManager->setName( "Camera Manager" );
+    mModelRoot->addChild( m_cameraManager.get() );
 
     m_manipulatorManager = new manipulator::ManipulatorManager();
     m_manipulatorManager->setName( "Manipulator Manager" );
@@ -309,6 +312,11 @@ GLTransformInfoPtr const SceneManager::GetGLTransformInfo(
 osg::Group* const SceneManager::GetModelRoot() const
 {
     return mModelRoot.get();
+}
+////////////////////////////////////////////////////////////////////////////////
+camera::CameraManager& SceneManager::GetCameraManager() const
+{
+    return *(m_cameraManager.get());
 }
 ////////////////////////////////////////////////////////////////////////////////
 manipulator::ManipulatorManager* const SceneManager::GetManipulatorManager() const

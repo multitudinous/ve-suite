@@ -42,6 +42,7 @@
 #include <ves/xplorer/scenegraph/Switch.h>
 #include <ves/xplorer/scenegraph/GLTransformInfoPtr.h>
 
+#include <ves/xplorer/scenegraph/camera/CameraManager.h>
 #include <ves/xplorer/scenegraph/manipulator/ManipulatorManager.h>
 
 // --- OSG Includes --- //
@@ -80,6 +81,11 @@ class Sound;
 #endif
 class CharacterController;
 
+namespace camera
+{
+class CameraManager;
+}
+
 namespace manipulator
 {
 class ManipulatorManager;
@@ -116,6 +122,9 @@ public:
     ///Get the inverted world DCS matrix
     ///\return The inverted matrix
     const gmtl::Matrix44d& GetInvertedWorldDCS() const;
+
+    ///Return the camera manager of the scenegraph
+    camera::CameraManager& GetCameraManager() const;
 
     ///Return the manipulator root node of the scenegraph
     manipulator::ManipulatorManager* const GetManipulatorManager() const;
@@ -187,19 +196,22 @@ public:
 
     ///Tell if RTT is on
     bool IsRTTOn();
+
     ///Set the RTT flag on
     void SetRTT( bool isRTTOn );
-    
+
     ///Set if we are in desktop mode
     void SetDesktopMode( bool isDesktopMode );
+
     ///Tell if we are in Desktop mode
     bool IsDesktopMode();
-   
+
     ///Set if we are in desktop mode
     void SetScreenAlignedNormals( bool isScreenAligned );
+
     ///Tell if we are in Desktop mode
     bool IsScreenAligned();
-    
+
 protected:
     ///Create the model for the logo
     void _createLogo();
@@ -225,6 +237,9 @@ private:
     ///The root model node of our scenegraph
     osg::ref_ptr< osg::Group > mModelRoot;
     //osg::ref_ptr< DCS > mModelRoot;
+
+    ///
+    osg::ref_ptr< camera::CameraManager > m_cameraManager;
 
     ///The root manipulator node of our scenegraph
     ///If we add all manipulators under this node,
@@ -260,16 +275,16 @@ private:
 
     ///The logo
     CADEntity* m_blueArrow;
-    
+
     ///
     CADEntity* m_greyArrow;
-    
+
     ///
     CADEntity* m_orangeArrow;
-    
+
     ///
     CADEntity* m_veText;
-    
+
     ///
     CADEntity* m_suiteText;
 
@@ -281,7 +296,7 @@ private:
 
     ///
     CharacterController* mCharacterController;
-    
+
     ///Flag to tell if RTT is off or on
     bool m_isRTTOn;
 

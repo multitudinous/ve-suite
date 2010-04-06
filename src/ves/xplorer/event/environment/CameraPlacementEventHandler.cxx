@@ -31,10 +31,9 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
-// --- CPT Includes --- //
+// --- VE-Suite Includes --- //
 #include <ves/xplorer/event/environment/CameraPlacementEventHandler.h>
 
-// --- VE-Suite Includes --- //
 #include <ves/open/xml/model/Model.h>
 #include <ves/open/xml/DataValuePair.h>
 #include <ves/open/xml/Command.h>
@@ -44,9 +43,10 @@
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/ResourceManager.h>
 
-using namespace ves::xplorer::event::environment;
+#include <ves/xplorer/scenegraph/camera/CameraManager.h>
+
 using namespace ves::xplorer::event;
-using namespace ves::xplorer;
+using namespace ves::xplorer::event::environment;
 
 ////////////////////////////////////////////////////////////////////////////////
 CameraPlacementEventHandler::CameraPlacementEventHandler()
