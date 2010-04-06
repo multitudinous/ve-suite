@@ -874,6 +874,7 @@ void triggerSounds( const btDynamicsWorld* world, btScalar timeStep )
             location = osgbBullet::asOsgVec3( pt.getPositionWorldOnA() );
             if( pt.m_lifeTime < 3 )
             {
+                //Need to tie this impulse to gain 
                 if( pt.m_appliedImpulse > 5. ) // Kind of a hack.
                     collide = true;
             }
