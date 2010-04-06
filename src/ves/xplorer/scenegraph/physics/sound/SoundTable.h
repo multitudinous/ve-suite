@@ -77,19 +77,19 @@ template< class T > void
 SoundTable< T >::addSound( const T& mat0, const T& mat1, std::string& soundFile )
 {
     const bool addToCache( true );
-    osg::ref_ptr< osgAudio::Sample > sample(
-        osgAudio::SoundManager::instance()->getSample( soundFile, addToCache ) );
+    osg::ref_ptr< osgAudio::Sample > sample = 
+        osgAudio::SoundManager::instance()->getSample( soundFile, addToCache );
 
     SoundData& sd0( _table[ mat0 ][ mat1 ] );
     sd0._default = false;
     sd0._fileName = soundFile;
-    sd0._sample = sample;
+    sd0._sample = sample.get();
 
     // Mirror
     SoundData& sd1( _table[ mat1 ][ mat0 ] );
     sd1._default = false;
     sd1._fileName = soundFile;
-    sd1._sample = sample;
+    sd1._sample = sample.get();
 }
 
 template< class T > osgAudio::Sample*

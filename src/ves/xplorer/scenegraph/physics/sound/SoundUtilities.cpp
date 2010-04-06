@@ -67,6 +67,12 @@ SoundUtilities::playSound( const osg::Vec3& pos, const std::string& soundFile, f
 void
 SoundUtilities::playSound( const osg::Vec3& pos, osgAudio::Sample* sample, float gain )
 {
+    if( !sample )
+    {
+        osg::notify( osg::WARN ) << "SoundUtilities: playSound does not have a valid sample to play." << std::endl;
+        return;
+    }
+
     _soundState->setPosition( pos );
     _soundState->setSample( sample );
     _soundState->setPlay( true );
@@ -74,8 +80,6 @@ SoundUtilities::playSound( const osg::Vec3& pos, osgAudio::Sample* sample, float
     _soundState->setGain( gain );
 
 	osgAudio::SoundManager::instance()->pushSoundEvent( _soundState.get() );
-
-    return;
 }
 
 void
