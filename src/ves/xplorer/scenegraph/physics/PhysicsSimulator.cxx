@@ -862,10 +862,19 @@ void triggerSounds( const btDynamicsWorld* world, btScalar timeStep )
         const btPersistentManifold* contactManifold( dispatch->getManifoldByIndexInternal( idx ) );
         const btCollisionObject* obA( static_cast< const btCollisionObject* >( contactManifold->getBody0() ) );
         const btCollisionObject* obB( static_cast< const btCollisionObject* >( contactManifold->getBody1() ) );
-        
+
+        //Character controller is not a PhysicsRigidBody,
+        //so does not have function GetSoundMaterial()
+        //Need a better solution for this scenario in the future
+        if( obA->getCollisionFlags() & btCollisionObject::CF_CHARACTER_OBJECT ||
+            obB->getCollisionFlags() & btCollisionObject::CF_CHARACTER_OBJECT )
+        {
+            return;
+        }
+
         bool collide( false ), slide( false );
         osg::Vec3 location;
-        
+
         const int numContacts( contactManifold->getNumContacts() );
         int jdx;
         for( jdx=0; jdx < numContacts; jdx++ )
@@ -894,7 +903,7 @@ void triggerSounds( const btDynamicsWorld* world, btScalar timeStep )
                 static_cast< PhysicsRigidBody* >( tempUserDataA );
             PhysicsRigidBody* objB =
                 static_cast< PhysicsRigidBody* >( tempUserDataB );
-            
+
             Material* mcA = objA->GetSoundMaterial();
             Material* mcB = objB->GetSoundMaterial();
             if( ( mcA != NULL ) && ( mcB != NULL ) )
