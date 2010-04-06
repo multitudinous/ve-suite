@@ -217,7 +217,7 @@ KinematicCharacterController::KinematicCharacterController()
     m_maxSlopeCosine( 0.0 ),
     m_gravity( -m_dynamicsWorld.getGravity().z() ),
     //m_turnAngle( 0.0 ),
-    m_stepHeight( 1.0 ),
+    m_stepHeight( 2.0 ),
     m_addedMargin( 0.02 ),
     m_currentStepOffset( 0.0 ),
     m_velocityTimeInterval( 0.0 ),
