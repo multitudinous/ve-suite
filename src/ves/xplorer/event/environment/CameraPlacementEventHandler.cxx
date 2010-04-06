@@ -104,17 +104,19 @@ CameraPlacementEventHandler::CameraPlacementEventHandler()
 ////////////////////////////////////////////////////////////////////////////////
 CameraPlacementEventHandler::~CameraPlacementEventHandler()
 {
-
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-CameraPlacementEventHandler::CameraPlacementEventHandler( const CameraPlacementEventHandler& ceh )
-:
-ves::xplorer::event::EventHandler()
+CameraPlacementEventHandler::CameraPlacementEventHandler(
+    const CameraPlacementEventHandler& ceh )
+    :
+    ves::xplorer::event::EventHandler()
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-CameraPlacementEventHandler& CameraPlacementEventHandler::operator=( const CameraPlacementEventHandler& rhs )
+CameraPlacementEventHandler& CameraPlacementEventHandler::operator=(
+    const CameraPlacementEventHandler& rhs )
 {
     if( this != &rhs )
     {
@@ -299,7 +301,9 @@ void CameraPlacementEventHandler::Execute(
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CameraPlacementEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* modelHandler )
+void CameraPlacementEventHandler::SetGlobalBaseObject(
+    ves::xplorer::GlobalBase* modelHandler )
 {
     ;
 }
+////////////////////////////////////////////////////////////////////////////////

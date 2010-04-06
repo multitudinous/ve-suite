@@ -37,19 +37,9 @@
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/event/EventHandler.h>
 
+// --- STL Includes --- //
 #include <map>
 #include <string>
-
-/*!\file CameraPlacementEventHandler.h
- */
-
-/*!\class CameraPlacementEventHandler
- * Class for 
- */
-
-/*!\namespace ves::xplorer::event::environment
- *
- */
 
 namespace ves
 {
@@ -59,8 +49,18 @@ namespace event
 {
 namespace environment
 {
-class VE_USER_PLUGIN_EXPORTS CameraPlacementEventHandler :
-    public ves::xplorer::event::EventHandler
+/*!\file CameraPlacementEventHandler.h
+ *
+ */
+
+/*!\class CameraPlacementEventHandler
+ * Class for
+ */
+
+/*!\namespace ves::xplorer::event::environment
+ *
+ */
+class CameraPlacementEventHandler : public ves::xplorer::event::EventHandler
 {
 public:
     ///
@@ -69,8 +69,10 @@ public:
     ///
     virtual ~CameraPlacementEventHandler();
 
+    ///
     CameraPlacementEventHandler( const CameraPlacementEventHandler& ceh );
 
+    ///
     CameraPlacementEventHandler& operator=( const CameraPlacementEventHandler& rhs );
 
     ///
@@ -104,7 +106,7 @@ public:
     ///Exectute the event
     ///\param xmlObject The current xmlObject event.
     void Execute( const ves::open::xml::XMLObjectPtr& veXMLObject );
-    
+
 protected:
 
 private:
@@ -112,9 +114,9 @@ private:
     std::map< const std::string, STRING_TO_INT_IDS > mCommandNameToInt;
 
 };
-}
-}
-}
-}
+} //end environment
+} //end event
+} //end xplorer
+} //end ves
 
 #endif //CAMERA_PLACEMENT_TOOL_EH_H
