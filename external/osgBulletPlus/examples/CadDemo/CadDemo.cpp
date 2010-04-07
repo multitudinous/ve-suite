@@ -327,6 +327,7 @@ public:
         short filterWith( 0 );
         std::string node, dae, daeModel;
         bool matchAllNodes = true;
+        float mass = 1.0f;
         char bufCh[ 1024 ];
         in.getline( bufCh, 1024 );
         std::string buf( bufCh );
@@ -380,6 +381,10 @@ public:
             {
                 istr >> node;
             }
+            else if( key == std::string( "Mass:" ) )
+            {
+                istr >> mass;
+            }
             else if( key == std::string( "MatchAllNodes:" ) )
             {
                 istr >> matchAllNodes;
@@ -387,6 +392,7 @@ public:
             else if( key == std::string( "DAE:" ) )
             {
                 NodeInfo ni;
+                ni._mass = mass;
                 ni._name = node;
                 ni._daeModel = daeModel;
                 ni._matchAllNodes = matchAllNodes;
@@ -399,11 +405,13 @@ public:
                 node = "";
                 daeModel = "";
                 matchAllNodes = true;
+                mass = 1.0f;            
             }
             else if( key == std::string( "CreateDAE:" ) )
             {
-                istr >> node;
+                istr >> daeModel;
                 NodeInfo ni;
+                ni._mass = mass;
                 ni._name = node;
                 ni._daeModel = daeModel;
                 ni._matchAllNodes = matchAllNodes;
@@ -414,12 +422,14 @@ public:
                 //Reset all variables
                 node = "";
                 daeModel = "";
-                matchAllNodes = true;                
+                matchAllNodes = true;
+                mass = 1.0f;            
             }
             else if( key == std::string( "CreateDAE-tm:" ) )
             {
-                istr >> node;
+                istr >> daeModel;
                 NodeInfo ni;
+                ni._mass = mass;
                 ni._name = node;
                 ni._daeModel = daeModel;
                 ni._matchAllNodes = matchAllNodes;
@@ -430,7 +440,8 @@ public:
                 //Reset all variables
                 node = "";
                 daeModel = "";
-                matchAllNodes = true;                
+                matchAllNodes = true;
+                mass = 1.0f;
             }
 
             else if( key == std::string( "Hinge:" ) )
@@ -490,6 +501,7 @@ public:
         std::string _name;
         std::string _daeModel;
         bool _matchAllNodes;
+        float _mass;
         short _filterGroup, _filterWith;
 
         bool operator<( const NodeInfo& rhs ) const
@@ -677,16 +689,38 @@ main( int argc,
     for( vitr = crw->_nodeCreateList.begin(); vitr != crw->_nodeCreateList.end(); vitr++ )
     {
         const ConfigReaderWriter::NodeInfo& ni( *vitr );
-        osgwTools::FindNamedNode fnn( ni._name );
-        orient->accept( fnn );
-        osg::Node* subgraph = fnn._napl[ 0 ].first;
-        osg::ref_ptr< osg::Group > dispose = new osg::Group( *(subgraph->asGroup()), osg::CopyOp::DEEP_COPY_ALL );
-        osg::NodePath& np = fnn._napl[ 0 ].second;
+        //First lets see if the user has loaded a specific model with the 
+        //CreateDAE: tag to be associated with this dae file. If so then use 
+        //this to match the dae model and not the Model: file
+        osg::ref_ptr< osg::Node > daeSearchNode = orient.get();
+        
+        if( !ni._daeModel.empty() )
+        {
+            osg::ref_ptr< osg::Node > daeOsgModel;
+            osg::ref_ptr< osg::Group > parentNode = new osg::Group();
+            daeOsgModel = osgDB::readNodeFile( ni._daeModel );
+            parentNode->addChild( daeOsgModel.get() );
+            orient->addChild( parentNode.get() );
+            daeSearchNode = parentNode.get();
+        }        
 
+        osgwTools::FindNamedNode fnn( ni._name );
+        daeSearchNode->accept( fnn );
+        osg::Node* subgraph = fnn._napl[ 0 ].first;
+        //Add a group so that we do not remove a top level PAT if it is present
+        osg::ref_ptr< osg::Group > tempGroup = new osg::Group();
+        tempGroup->addChild( subgraph );
+        osg::ref_ptr< osg::Group > dispose = 
+            new osg::Group( *(tempGroup), osg::CopyOp::DEEP_COPY_ALL );
+        tempGroup->removeChild( subgraph );
+        osg::NodePath& np = fnn._napl[ 0 ].second;
+        //We need to remove the transform since it is already in the bt type
+        np.erase( np.end() - 1 );
+        
         osgbBullet::OSGToCollada converter;
         converter.setSceneGraph( dispose.get() );
         converter.setShapeType( BOX_SHAPE_PROXYTYPE );
-        converter.setMass( 1.0 );
+        converter.setMass( ni._mass );
         converter.setOverall( false );
         converter.convert();
 
@@ -718,16 +752,38 @@ main( int argc,
     for( vitr = crw->_nodeCreateTMList.begin(); vitr != crw->_nodeCreateTMList.end(); vitr++ )
     {
         const ConfigReaderWriter::NodeInfo& ni( *vitr );
+        //First lets see if the user has loaded a specific model with the 
+        //CreateDAE-tm: tag to be associated with this dae file. If so then use 
+        //this to match the dae model and not the Model: file
+        osg::ref_ptr< osg::Node > daeSearchNode = orient.get();
+        
+        if( !ni._daeModel.empty() )
+        {
+            osg::ref_ptr< osg::Node > daeOsgModel;
+            osg::ref_ptr< osg::Group > parentNode = new osg::Group();
+            daeOsgModel = osgDB::readNodeFile( ni._daeModel );
+            parentNode->addChild( daeOsgModel.get() );
+            orient->addChild( parentNode.get() );
+            daeSearchNode = parentNode.get();
+        }        
+        
         osgwTools::FindNamedNode fnn( ni._name );
-        orient->accept( fnn );
+        daeSearchNode->accept( fnn );
         osg::Node* subgraph = fnn._napl[ 0 ].first;
-        osg::ref_ptr< osg::Group > dispose = new osg::Group( *(subgraph->asGroup()), osg::CopyOp::DEEP_COPY_ALL );
+        //Add a group so that we do not remove a top level PAT if it is present
+        osg::ref_ptr< osg::Group > tempGroup = new osg::Group();
+        tempGroup->addChild( subgraph );
+        osg::ref_ptr< osg::Group > dispose = 
+            new osg::Group( *(tempGroup), osg::CopyOp::DEEP_COPY_ALL );
+        tempGroup->removeChild( subgraph );
         osg::NodePath& np = fnn._napl[ 0 ].second;
-
+        //We need to remove the transform since it is already in the bt type
+        np.erase( np.end() - 1 );
+        
         osgbBullet::OSGToCollada converter;
         converter.setSceneGraph( dispose.get() );
         converter.setShapeType( TRIANGLE_MESH_SHAPE_PROXYTYPE );
-        converter.setMass( 1.0 );
+        converter.setMass( ni._mass );
         converter.setOverall( false );
         converter.convert();
 
