@@ -93,10 +93,10 @@ void OpcUOVarDialog::CreateGUIControls()
     //this should be done dynamically
     WxGrid->SetRowLabelSize( 500 );
 
-    wxGridCellAttr * readOnly = new wxGridCellAttr();
-    readOnly->SetReadOnly(true);
-    WxGrid->SetColAttr( 0, readOnly );
-    WxGrid->SetColAttr( 2, readOnly );
+    //wxGridCellAttr * readOnly = new wxGridCellAttr();
+    //readOnly->SetReadOnly(true);
+    //WxGrid->SetColAttr( 0, readOnly );
+    //WxGrid->SetColAttr( 2, readOnly );
     WxFlexGridSizer->SetFlexibleDirection(wxBOTH);
     WxFlexGridSizer->AddGrowableCol(0);
     WxFlexGridSizer->AddGrowableRow(0);
@@ -119,7 +119,7 @@ void OpcUOVarDialog::SetButtonClick(wxCommandEvent& event)
 {  
     ves::open::xml::CommandPtr params( new ves::open::xml::Command() );
     //input variables;
-    params->SetCommandName( "setParam" );
+    params->SetCommandName( "setOPCValues" );
 
     int numOfChanges = rowsChanged.size();
     for(int i = 0; i < numOfChanges; i++)
@@ -127,22 +127,22 @@ void OpcUOVarDialog::SetButtonClick(wxCommandEvent& event)
         std::vector<std::string> paramList;
         
         //component name
-        paramList.push_back( ConvertUnicode( CompName.c_str() ) );
+        //paramList.push_back( ConvertUnicode( CompName.c_str() ) );
 
         //variable name
         wxString varName = WxGrid->GetRowLabelValue( rowsChanged[i] );
-        //reinsert the prefix
-        varName = prefix.Append( varName.c_str() );
-        paramList.push_back( ConvertUnicode( varName.c_str() ) );
+        std::string temp = CompName + "." + varName.c_str();
+        //paramList.push_back( ConvertUnicode( varName.c_str() ) );
 
         //value
-        wxString value = WxGrid->GetCellValue( rowsChanged[i], 1 );
-        paramList.push_back( ConvertUnicode( value.c_str() ) );
+        wxString value = WxGrid->GetCellValue( rowsChanged[i], 0 );
+        //paramList.push_back( ConvertUnicode( value.c_str() ) );
 
         //add list to DVP
         ves::open::xml::DataValuePairPtr
             inpParams( new ves::open::xml::DataValuePair() );
-        inpParams->SetData("params",paramList);
+        inpParams->SetDataName( temp );
+        inpParams->SetDataString( value.c_str() );
         params->AddDataValuePair( inpParams );
     }
 

@@ -205,6 +205,7 @@ public:
   char* handleGetNetwork(ves::open::xml::CommandPtr cmd);
   //char* getOPCValue( ves::open::xml::CommandPtr cmd );
   char* getOPCValues( ves::open::xml::CommandPtr cmd );
+  char* setOPCValues( ves::open::xml::CommandPtr cmd );
   //void monitorValues( ves::open::xml::CommandPtr cmd );
   void connectWithList( ves::open::xml::CommandPtr cmd );
   void connectToOPC( ves::open::xml::CommandPtr cmd );

@@ -336,6 +336,8 @@ void OpcUOPlugin::QueryForAllVariables( wxCommandEvent& event )
         ( objectVector.at( 0 ) );
 
     OpcUOVarDialog* params = new OpcUOVarDialog( GetPluginParent() );
+    params->SetComponentName( mPluginName );
+    params->SetServiceList( serviceList );
 
     //loop over all pairs
     int numdvps = cmd->GetNumberOfDataValuePairs();
@@ -358,8 +360,9 @@ void OpcUOPlugin::QueryForAllVariables( wxCommandEvent& event )
 void OpcUOPlugin::OnShowAllVar( wxCommandEvent& event )
 {
     OpcUOVarDialog* params = new OpcUOVarDialog( GetPluginParent() );
+    params->SetComponentName( mPluginName );
     //params->SetComponentName( wxString( compName.c_str(), wxConvUTF8 ) );
-    //params->SetServiceList( serviceList );
+    params->SetServiceList( serviceList );
     //int numdvps = cmd->GetNumberOfDataValuePairs();
     //for( size_t i = 0; i < numdvps; i++ )
     //{

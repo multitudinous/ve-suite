@@ -57,6 +57,7 @@ public:
     std::vector< std::pair< std::string, std::string > > ReadVars();
     //std::string GetOPCValue( const std::string& );
     std::string GetOPCValues( );
+    void SetOPCValues( std::vector< std::pair < std::string, std::string > > );
     //void ConnectWithList( std::vector< std::string > list );
     bool ConnectToOPCServer( );
     std::string GetAllOPCVariables( const std::string& );
@@ -141,5 +142,6 @@ private:
     OPCItemsPtr items;
     IOPCGroupPtr group;
     IOPCGroupsPtr groups;
+    OPCBrowserPtr browser;
 };
 #endif

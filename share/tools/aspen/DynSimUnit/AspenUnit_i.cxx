@@ -75,6 +75,7 @@ AspenUnit_i::AspenUnit_i( std::string name, CDynSimUnitDlg * dialog,
     mQueryCommandNames.insert( "getNetwork");
     mQueryCommandNames.insert( "getOPCValue");
     mQueryCommandNames.insert( "getOPCValues");
+    mQueryCommandNames.insert( "setOPCValues");
     //mQueryCommandNames.insert( "connectWithList");
     mQueryCommandNames.insert( "connectToOPC");
     mQueryCommandNames.insert( "addVariable");
@@ -281,6 +282,11 @@ char * AspenUnit_i::Query ( const char * query_str
         returnValue = getOPCValues( cmd );
         return returnValue;
     }
+    else if ( cmdname == "setOPCValues" )
+    {
+        returnValue = setOPCValues( cmd );
+        return returnValue;
+    }
     //else if ( cmdname == "connectWithList" )
     //{
     //    //returnValue = monitorValues( cmd );
@@ -404,6 +410,23 @@ char* AspenUnit_i::getOPCValues( ves::open::xml::CommandPtr cmd )
 {
     std::string netPak = dynsim->GetOPCValues( );
     return CORBA::string_dup( netPak.c_str( ) );
+}
+///////////////////////////////////////////////////////////////////////////////
+char* AspenUnit_i::setOPCValues( ves::open::xml::CommandPtr cmd )
+{
+    //read and parse command into map of var name and value
+    size_t num = cmd->GetNumberOfDataValuePairs();
+    std::vector< std::pair< std::string, std::string > > varsAndValues;
+    for ( size_t i=0; i < num; i++ )
+    {
+        ves::open::xml::DataValuePairPtr curPair= cmd->GetDataValuePair(i);
+        std::pair< std::string, std::string > temp;
+        temp.first = curPair->GetDataName();
+        temp.second = curPair->GetDataString();
+        varsAndValues.push_back( temp );
+    }
+    dynsim->SetOPCValues( varsAndValues );
+    return CORBA::string_dup( "NULL" );
 }
 ///////////////////////////////////////////////////////////////////////////////
 void AspenUnit_i::connectWithList( ves::open::xml::CommandPtr cmd )

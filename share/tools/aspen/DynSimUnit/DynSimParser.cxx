@@ -1198,7 +1198,7 @@ bool DynSimParser::ConnectToOPCServer()
 std::string DynSimParser::GetAllOPCVariables( const std::string& modname )
 {
     //Get a list of the available OPC variables for a given unit op
-    OPCBrowserPtr browser = m_server->CreateBrowser();
+    browser = m_server->CreateBrowser();
     browser.AddRef();
     browser->ShowLeafs();
     long browserCount = browser->GetCount();
@@ -1316,9 +1316,9 @@ void DynSimParser::UpdateOPCList( )
     //group.AddRef();
     //group->UpdateRate = 100;
 
-    OPCBrowserPtr browser = m_server->CreateBrowser();
-    browser.AddRef();
-    browser->ShowLeafs();
+    //OPCBrowserPtr browser = m_server->CreateBrowser();
+    //browser.AddRef();
+    //browser->ShowLeafs();
 
     //items = group->GetOPCItems();
     //items.AddRef();
@@ -1353,6 +1353,7 @@ void DynSimParser::UpdateOPCList( )
     group->IsSubscribed = true;
     group->IsActive = true;
 }
+
 ///////////////////////////////////////////////////////////////////////////////
 std::vector< std::pair< std::string, std::string > > DynSimParser::ReadVars()
 {
@@ -1397,6 +1398,7 @@ std::vector< std::pair< std::string, std::string > > DynSimParser::ReadVars()
 
     return nameAndValues;
 }
+
 ///////////////////////////////////////////////////////////////////////////////
 /*std::string DynSimParser::GetOPCValue( const std::string& modname )
 {
@@ -1470,4 +1472,77 @@ std::string DynSimParser::GetOPCValues( )
     commandWriter.UseStandaloneDOMDocumentManager();
     commandWriter.WriteXMLDocument( nodes, status, "Command" );
     return status;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+void DynSimParser::SetOPCValues( std::vector< std::pair < std::string, std::string > > varAndValues )
+{
+    long count = varAndValues.size();
+
+    browser = m_server->CreateBrowser();
+    browser.AddRef();
+    browser->ShowLeafs();
+
+    CComSafeArray<VARIANT> * values;
+    values = new CComSafeArray<VARIANT>( count + 1 );
+    values->Create();
+
+    CComSafeArray<long> * errors;
+    errors = new CComSafeArray<long>();
+    errors->Create();
+
+    IOPCGroupPtr setGroup;
+    setGroup = groups->Add( _T( "SetGroup" ) );
+    setGroup.AddRef();
+    
+    OPCItemsPtr setItems;
+    setItems = setGroup->GetOPCItems();
+    setItems.AddRef();
+    setItems->DefaultIsActive = true;
+    
+    CComSafeArray<BSTR> * setItemIDs;
+    setItemIDs= new CComSafeArray<BSTR>( count + 1 );
+    CComSafeArray<long> * setClientID;
+    setClientID = new CComSafeArray<long>( count + 1 );
+    
+    CComSafeArray<long> * setServerID;
+    setServerID= new CComSafeArray<long>( );
+    setServerID->Create();
+
+    //base 1 for safearray
+    for( long i = 0; i < count; i++)
+    {
+        //add all the new variables to the itemIDs for reading values
+        std::string temp = m_opcFlowsheetName + "_" +  varAndValues[i].first;
+        setItemIDs->SetAt( i + 1, browser->GetItemID( temp.c_str() ) );
+        setClientID->SetAt( i + 1, i + 1 );
+    }
+
+    //HRESULT hr = items->AddItems(opcVariables.size(), itemIDs->GetSafeArrayPtr(),
+    //    clientID->GetSafeArrayPtr(), serverID->GetSafeArrayPtr(),
+    //    errors->GetSafeArrayPtr());
+    HRESULT hr = setItems->AddItems( count, setItemIDs->GetSafeArrayPtr(),
+        setClientID->GetSafeArrayPtr(), setServerID->GetSafeArrayPtr(),
+        errors->GetSafeArrayPtr());
+    
+    VARIANT tempValue;
+    VariantInit( &tempValue );
+
+    for( int i = 1; i <= count; i++)
+    {
+        tempValue.vt = VT_BSTR;
+        _bstr_t bstrValue = varAndValues[i-1].second.c_str();
+        tempValue.bstrVal = bstrValue;
+
+        //NEED TO ADD CONVERSION TO THE PROPER TYPE using ChangeType()
+
+        values->SetAt( i, tempValue );
+    }
+
+    //This function reads the value, quality and timestamp information for one
+    //or more items in a group.
+    setGroup->SyncWrite( count, setServerID->GetSafeArrayPtr(),
+        values->GetSafeArrayPtr(), errors->GetSafeArrayPtr() );
+
+    groups->Remove( _T( "SetGroup" ) );
 }
