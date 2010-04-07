@@ -62,31 +62,34 @@ namespace ves
 {
 namespace xplorer
 {
-class HeadsUpDisplay;
+//class HeadsUpDisplay;
 
 namespace scenegraph
 {
 class DCS;
-class ResourceManager;
+//class ResourceManager;
 
 namespace camera
 {
+class CameraPAT;
 //class CameraEntityCallback;
 //class DepthOfFieldTechnique;
 //class DepthHelperTechnique;
 //class ProjectionTechnique;
 
-class Camera : public osg::Camera
+class VE_SCENEGRAPH_EXPORTS Camera : public osg::Camera
 {
 public:
     ///Constructor
     Camera();
 
     ///
+    /*
     Camera(
         ves::xplorer::scenegraph::DCS* pluginDCS,
         ves::xplorer::HeadsUpDisplay* headsUpDisplay,
         ves::xplorer::scenegraph::ResourceManager* resourceManager );
+    */
 
     ///
     Camera( const Camera& cameraEntity,
@@ -95,14 +98,13 @@ public:
     ///
     META_Node( ves::xplorer::scenegraph::camera, Camera );
 
-    /*
     ///
-    void CalculateMatrixMVPT();
+    //void CalculateMatrixMVPT();
 
     ///
-    void CustomKeyboardMouseSelection(
-        std::pair< unsigned int, unsigned int > mousePosition,
-        gmtl::Matrix44d localToWorldMatrix );
+    //void CustomKeyboardMouseSelection(
+        //std::pair< unsigned int, unsigned int > mousePosition,
+        //gmtl::Matrix44d localToWorldMatrix );
 
     ///
     void DisplayCamera( bool onOff );
@@ -111,92 +113,87 @@ public:
     void DisplayViewFrustum( bool onOff );
 
     ///
-    void DisplayDepthOfFieldEffect( bool onOff );
+    //void DisplayDepthOfFieldEffect( bool onOff );
 
     ///
-    void DisplayProjectionEffect( bool onOff );
+    //void DisplayProjectionEffect( bool onOff );
 
     ///
-    void DisplayCameraViewQuad( bool onOff );
+    //void DisplayCameraViewQuad( bool onOff );
 
     ///
-    void DisplayDepthHelperQuad( bool onOff );
+    //void DisplayDepthHelperQuad( bool onOff );
 
     ///
-    ves::xplorer::scenegraph::DCS* GetDCS();
+    //ves::xplorer::scenegraph::DCS* GetDCS();
 
     ///
-    ves::xplorer::scenegraph::DCS* GetCameraDCS();
+    //ves::xplorer::scenegraph::DCS* GetCameraDCS();
 
     ///
-    ves::xplorer::scenegraph::DCS* GetPluginDCS();
+    //ves::xplorer::scenegraph::DCS* GetPluginDCS();
 
     ///
-    ves::xplorer::scenegraph::DCS* GetQuadDCS();
+    //ves::xplorer::scenegraph::DCS* GetQuadDCS();
 
     ///
-    const osg::Matrixd& GetInitialViewMatrix();
+    //const osg::Matrixd& GetInitialViewMatrix();
 
     ///
-    osg::TexGenNode* GetTexGenNode();
+    //osg::TexGenNode* GetTexGenNode();
 
     ///
-    void SetNamesAndDescriptions();
+    //void SetNamesAndDescriptions();
 
     ///
-    void SetProjectionEffectOpacity( double value );
+    //void SetProjectionEffectOpacity( double value );
 
     ///
-    void SetFocalDistance( double value );
+    //void SetFocalDistance( double value );
 
     ///
-    void SetFocalRange( double value );
+    //void SetFocalRange( double value );
 
     ///
-    void SetMaxCircleOfConfusion( double value );
+    //void SetMaxCircleOfConfusion( double value );
 
     ///
-    void SetCameraViewQuadResolution( unsigned int value );
+    //void SetCameraViewQuadResolution( unsigned int value );
 
     ///
-    void SetDepthHelperQuadResolution( unsigned int value );
+    //void SetDepthHelperQuadResolution( unsigned int value );
 
     ///
-    void Update();
-    */
+    //void Update();
 
 protected:
     ///Destructor
     virtual ~Camera();
 
 private:
-    /*
     ///
     void Initialize();
 
     ///
-    void CreateCameraNode();
+    void CreateGeometry();
 
     ///
-    void CreateViewFrustumGeode();
+    //void CreateHitQuadGeode();
 
     ///
-    void CreateHitQuadGeode();
+    //void CreateCameraViewQuad();
 
     ///
-    void CreateCameraViewQuad();
-
-    ///
-    void CreateDepthHelperQuad();
+    //void CreateDepthHelperQuad();
 
     ///The initial view matrix of the camera
-    osg::Matrixd mInitialViewMatrix;
+    //osg::Matrixd mInitialViewMatrix;
 
     ///The matrix that takes a vertex from local coords into tex coords
-    osg::Matrixd mMVPT;
+    //osg::Matrixd mMVPT;
 
     ///Used to generate texture coordinates for camera projection
-    osg::ref_ptr< osg::TexGenNode > mTexGenNode;
+    //osg::ref_ptr< osg::TexGenNode > mTexGenNode;
 
     ///
     //cpt::DepthOfFieldTechnique* mDepthOfFieldTechnique;
@@ -208,71 +205,70 @@ private:
     //cpt::ProjectionTechnique* mProjectionTechnique;
 
     ///A callback to update Camera relative to its DCS
-    osg::ref_ptr< cpt::CameraEntityCallback > mCameraEntityCallback;
+    //osg::ref_ptr< cpt::CameraEntityCallback > mCameraEntityCallback;
 
     ///Pointer to the HeadsUpDisplay for xplorer window
-    ves::xplorer::HeadsUpDisplay* mHeadsUpDisplay;
+    //ves::xplorer::HeadsUpDisplay* mHeadsUpDisplay;
 
     ///
-    ves::xplorer::scenegraph::ResourceManager* mResourceManager;
+    //ves::xplorer::scenegraph::ResourceManager* mResourceManager;
 
     ///
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > mPluginDCS;
+    //osg::ref_ptr< ves::xplorer::scenegraph::DCS > mPluginDCS;
 
     ///
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > mDCS;
+    osg::ref_ptr< CameraPAT > m_cameraPAT;
 
     ///The loaded camera geometry node and frustum geometry lines
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > mCameraDCS;
+    //osg::ref_ptr< ves::xplorer::scenegraph::DCS > mCameraDCS;
 
     ///
-    osg::ref_ptr< osg::Node > mCameraNode;
+    osg::ref_ptr< osg::Node > m_cameraNode;
 
     ///
-    osg::ref_ptr< osg::Geode > mFrustumGeode;
+    osg::ref_ptr< osg::Geode > m_frustumGeode;
 
     ///
-    osg::ref_ptr< osg::Geometry > mFrustumGeometry;
+    osg::ref_ptr< osg::Geometry > m_frustumGeometry;
 
     ///
-    osg::ref_ptr< osg::Vec3Array > mFrustumVertices;
+    osg::ref_ptr< osg::Vec3Array > m_frustumVertices;
 
     ///The quad to show the intersection hit
-    osg::ref_ptr< osg::Geode > mHitQuadGeode;
+    //osg::ref_ptr< osg::Geode > mHitQuadGeode;
 
     ///
-    osg::ref_ptr< osg::Geometry > mHitQuadGeometry;
+    //osg::ref_ptr< osg::Geometry > mHitQuadGeometry;
 
     ///
-    osg::ref_ptr< osg::Vec3Array > mHitQuadVertices;
+    //osg::ref_ptr< osg::Vec3Array > mHitQuadVertices;
 
     ///The screen aligned quad to show the camera view
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > mCameraViewQuadDCS;
+    //osg::ref_ptr< ves::xplorer::scenegraph::DCS > mCameraViewQuadDCS;
 
     ///
-    osg::ref_ptr< osg::Geode > mCameraViewQuadGeode;
+    //osg::ref_ptr< osg::Geode > mCameraViewQuadGeode;
 
     ///
-    osg::ref_ptr< osg::Geometry > mCameraViewQuadGeometry;
+    //osg::ref_ptr< osg::Geometry > mCameraViewQuadGeometry;
 
     ///
-    osg::ref_ptr< osg::Vec3Array > mCameraViewQuadVertices;
+    //osg::ref_ptr< osg::Vec3Array > mCameraViewQuadVertices;
 
     ///
-    osg::ref_ptr< osgText::Text > mDistanceText;
+    //osg::ref_ptr< osgText::Text > mDistanceText;
 
     ///The screen aligned quad to show the depth of field helper view
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > mDepthHelperQuadDCS;
+    //osg::ref_ptr< ves::xplorer::scenegraph::DCS > mDepthHelperQuadDCS;
 
     ///
-    osg::ref_ptr< osg::Geode > mDepthHelperQuadGeode;
+    //osg::ref_ptr< osg::Geode > mDepthHelperQuadGeode;
 
     ///
-    osg::ref_ptr< osg::Geometry > mDepthHelperQuadGeometry;
+    //osg::ref_ptr< osg::Geometry > mDepthHelperQuadGeometry;
 
     ///
-    osg::ref_ptr< osg::Vec3Array > mDepthHelperQuadVertices;
-    */
+    //osg::ref_ptr< osg::Vec3Array > mDepthHelperQuadVertices;
 
 };
 } //end camera

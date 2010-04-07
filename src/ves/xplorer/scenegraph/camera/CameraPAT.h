@@ -31,14 +31,17 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
-#ifndef VES_XPLORER_SCENEGRAPH_CAMERA_CAMERAMANAGER_H
-#define VES_XPLORER_SCENEGRAPH_CAMERA_CAMERAMANAGER_H
+#ifndef VES_XPLORER_SCENEGRAPH_CAMERA_CAMERAPAT_H
+#define VES_XPLORER_SCENEGRAPH_CAMERA_CAMERAPAT_H
 
 // --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
 
 // --- OSG Includes --- //
-#include <osg/Group>
+#include <osg/ref_ptr>
+#include <osg/Quat>
+#include <osg/Vec3d>
+#include <osg/PositionAttitudeTransform>
 
 namespace ves
 {
@@ -50,70 +53,60 @@ namespace camera
 {
 class Camera;
 
-/*!\file CameraManager.h
- * CameraManager API
- */
-
-/*!\class ves::xplorer::scenegraph::camera::CameraManager
+/*!\file CameraPAT.h
  *
  */
-class VE_SCENEGRAPH_EXPORTS CameraManager : public osg::Group
+
+/*!\class CameraPAT
+ * Class for
+ */
+
+/*!\namespace ves::xplorer::scenegraph::camera
+ *
+ */
+class VE_SCENEGRAPH_EXPORTS CameraPAT : public osg::PositionAttitudeTransform
 {
 public:
     ///Constructor
-    CameraManager();
-
-    ///Copy constructor using CopyOp to manage deep vs shallow copy
-    CameraManager(
-        const CameraManager& cameraManager,
-        const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
+    CameraPAT( Camera& camera );
 
     ///
-    META_Node( ves::xplorer::scenegraph::camera, CameraManager );
-
-    ///Override the addChild function to only accept Cameras
-    virtual bool addChild( Camera* child );
-
-    ///Override the computeBound function to return an empty bounding sphere
-    //virtual osg::BoundingSphere computeBound() const;
+    CameraPAT( const CameraPAT& cameraPAT,
+               const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
 
     ///
-    void CreateCamera();
+    ///\param nv
+    virtual void accept( osg::NodeVisitor& nv );
 
     ///
-    void Enable( const bool& enable = true );
-
-    ///Can't override the getChild function, so create our own
-    Camera* GetChild( unsigned int i );
-
-    ///Override the insertChild function to only accept Cameras
-    virtual bool insertChild( unsigned int index, Camera* child );
+    ///\return
+    virtual const char* className() const;
 
     ///
-    const bool IsEnabled() const;
+    ///\param obj
+    ///\return
+    virtual bool isSameKindAs( const osg::Object* obj ) const;
 
-    ///Override the replaceChild function to only accept Cameras
-    virtual bool replaceChild( Camera* origChild, Camera* newChild );
+    ///
+    ///\return
+    virtual const char* libraryName() const;
 
-    ///Override the setChild function to only accept Cameras
-    virtual bool setChild( unsigned int i, Camera* node );
+    ///
+    void setPosition( const osg::Vec3d& pos );
+
+    ///
+    void setAttitude( const osg::Quat& quat );
+
+    ///
+    void setScale( const osg::Vec3d& scale );
 
 protected:
     ///Destructor
-    virtual ~CameraManager();
+    virtual ~CameraPAT();
 
 private:
     ///
-    Camera* ConvertNodeToCamera( osg::Node* node );
-
-    ///
-    bool m_enabled;
-
-    ///
-    unsigned int m_nodeMask;
-
-    ///
-    Camera* m_activeCamera;
+    Camera& m_camera;
 
 };
 } //end camera
@@ -121,4 +114,4 @@ private:
 } //end xplorer
 } //end ves
 
-#endif //VES_XPLORER_SCENEGRAPH_CAMERA_CAMERAMANAGER_H
+#endif //VES_XPLORER_SCENEGRAPH_CAMERA_CAMERAPAT_H

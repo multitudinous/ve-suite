@@ -32,107 +32,73 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
 // --- VE-Suite Includes --- //
-#include <ves/xplorer/scenegraph/camera/CameraManager.h>
+#include <ves/xplorer/scenegraph/camera/CameraPAT.h>
 #include <ves/xplorer/scenegraph/camera/Camera.h>
-
-#include <ves/xplorer/scenegraph/SceneManager.h>
-
-#include <ves/xplorer/Debug.h>
-
-// --- OSG Includes --- //
-
 
 using namespace ves::xplorer::scenegraph::camera;
 
 ////////////////////////////////////////////////////////////////////////////////
-CameraManager::CameraManager()
+CameraPAT::CameraPAT( Camera& camera )
     :
-    osg::Group(),
-    m_enabled( false ),
-    //NodeMask is an unsigned int
-    m_nodeMask( 0xfffffffe ),
-    m_activeCamera( NULL )
-{
-    Enable();
-}
-////////////////////////////////////////////////////////////////////////////////
-CameraManager::CameraManager(
-    const CameraManager& cameraManager, const osg::CopyOp& copyop )
-    :
-    osg::Group( cameraManager, copyop ),
-    m_enabled( cameraManager.m_enabled ),
-    m_nodeMask( cameraManager.m_nodeMask ),
-    m_activeCamera( cameraManager.m_activeCamera )
+    osg::PositionAttitudeTransform(),
+    m_camera( camera )
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-CameraManager::~CameraManager()
+CameraPAT::CameraPAT(
+    const CameraPAT& cameraPAT,
+    const osg::CopyOp& copyop )
+    :
+    osg::PositionAttitudeTransform( cameraPAT, copyop ),
+    m_camera( cameraPAT.m_camera )
+{
+    if( &cameraPAT != this )
+    {
+        ;
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+CameraPAT::~CameraPAT()
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool CameraManager::addChild( Camera* child )
+void CameraPAT::accept( osg::NodeVisitor& nv )
 {
-    return osg::Group::addChild( child );
+    PositionAttitudeTransform::accept( nv );
 }
 ////////////////////////////////////////////////////////////////////////////////
-/*
-osg::BoundingSphere CameraManager::computeBound() const
+bool CameraPAT::isSameKindAs( const osg::Object* obj ) const
 {
-    osg::BoundingSphere bsphere;
-
-    return bsphere;
-}
-*/
-////////////////////////////////////////////////////////////////////////////////
-void CameraManager::CreateCamera()
-{
-    osg::ref_ptr< Camera > camera = new Camera();
-    addChild( camera.get() );
+    return dynamic_cast< const CameraPAT* >( obj ) != NULL;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CameraManager::Enable( const bool& enable )
+const char* CameraPAT::className() const
 {
-    m_enabled = enable;
-
-    if( m_enabled )
-    {
-        setNodeMask( m_nodeMask );
-    }
-    else
-    {
-        setNodeMask( 0 );
-    }
+    return "CameraPAT";
 }
 ////////////////////////////////////////////////////////////////////////////////
-Camera* CameraManager::ConvertNodeToCamera( osg::Node* node )
+const char* CameraPAT::libraryName() const
 {
-    return dynamic_cast< Camera* >( node );
+    return "ves::xplorer::scenegraph::camera";
 }
 ////////////////////////////////////////////////////////////////////////////////
-Camera* CameraManager::GetChild( unsigned int i )
+void CameraPAT::setPosition( const osg::Vec3d& pos )
 {
-    return dynamic_cast< Camera* >( osg::Group::getChild( i ) );
+    _position = pos;
+    dirtyBound();
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool CameraManager::insertChild( unsigned int index, Camera* child )
+void CameraPAT::setAttitude( const osg::Quat& quat )
 {
-    return osg::Group::insertChild( index, child );
+    _attitude = quat;
+    dirtyBound();
 }
 ////////////////////////////////////////////////////////////////////////////////
-const bool CameraManager::IsEnabled() const
+void CameraPAT::setScale( const osg::Vec3d& scale )
 {
-    return m_enabled;
-}
-////////////////////////////////////////////////////////////////////////////////
-bool CameraManager::replaceChild( Camera* origChild, Camera* newChild )
-{
-    return osg::Group::replaceChild( origChild, newChild );
-}
-////////////////////////////////////////////////////////////////////////////////
-bool CameraManager::setChild( unsigned int i, Camera* node )
-{
-    return osg::Group::setChild( i, node );
+    _scale = scale;
+    dirtyBound();
 }
 ////////////////////////////////////////////////////////////////////////////////
