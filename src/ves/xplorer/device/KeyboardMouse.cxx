@@ -61,6 +61,8 @@
 #include <ves/xplorer/scenegraph/physics/PhysicsRigidBody.h>
 #include <ves/xplorer/scenegraph/physics/character/CharacterController.h>
 
+#include <ves/xplorer/scenegraph/camera/Camera.h>
+
 #include <ves/xplorer/scenegraph/manipulator/RotateTwist.h>
 #include <ves/xplorer/scenegraph/manipulator/TransformManipulator.h>
 
@@ -850,7 +852,18 @@ void KeyboardMouse::OnKeyPress()
 
         break;
     }
-        
+
+    case gadget::KEY_P:
+    {
+        osg::ref_ptr< scenegraph::camera::Camera > camera =
+            new scenegraph::camera::Camera();
+
+        m_cameraManager.addChild( camera.get() );
+        m_cameraManager.SetActiveCamera( camera.get() );
+
+        break;
+    }
+
     case gadget::KEY_UP:
     {
         Zoom45( 0.05 );

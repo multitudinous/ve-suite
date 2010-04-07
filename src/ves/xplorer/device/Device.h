@@ -31,8 +31,8 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
-#ifndef DEVICE_H
-#define DEVICE_H
+#ifndef VES_XPLORER_DEVICE_DEVICE_H
+#define VES_XPLORER_DEVICE_DEVICE_H
 
 // --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
@@ -43,7 +43,7 @@
 
 #include <ves/open/xml/CommandPtr.h>
 
-// --- vrJugglerIncludes --- //
+// --- VR Juggler Includes --- //
 #include <gmtl/Point.h>
 
 // --- OSG Includes --- //
@@ -74,6 +74,7 @@ namespace conductor
 class UIManager;
 }
 #endif
+
 namespace xplorer
 {
 
@@ -82,6 +83,11 @@ namespace scenegraph
 class PhysicsSimulator;
 class SceneManager;
 class CharacterController;
+
+namespace camera
+{
+class CameraManager;
+}
 
 namespace manipulator
 {
@@ -151,7 +157,7 @@ public:
 
     ///This is a pure virtual function from GlobalBase
     virtual void UpdateCommand();
-    
+
     ///Initialize the device if needed
     virtual void Initialize(){;}
 
@@ -232,7 +238,10 @@ protected:
 
     ///
     scenegraph::manipulator::ManipulatorManager& m_manipulatorManager;
-    
+
+    ///
+    scenegraph::camera::CameraManager& m_cameraManager;
+
 #ifdef QT_ON
     ves::conductor::UIManager& m_uiManager;
 #endif
@@ -241,4 +250,4 @@ protected:
 } //end xplorer
 } //end ves
 
-#endif //DEVICE_H
+#endif //VES_XPLORER_DEVICE_DEVICE_H

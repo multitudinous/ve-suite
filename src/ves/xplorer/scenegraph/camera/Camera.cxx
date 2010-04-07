@@ -33,7 +33,7 @@
 
 // --- My Includes --- //
 #include <ves/xplorer/scenegraph/camera/Camera.h>
-#include <ves/xplorer/scenegraph/camera/CameraPAT.h>
+#include <ves/xplorer/scenegraph/camera/CameraModel.h>
 //#include "CameraEntityCallback.h"
 //#include "DepthOfFieldTechnique.h"
 //#include "DepthHelperTechnique.h"
@@ -42,13 +42,14 @@
 // --- VE-Suite Includes --- //
 //#include <ves/xplorer/environment/HeadsUpDisplay.h>
 
-#include <ves/xplorer/scenegraph/DCS.h>
-//#include <ves/xplorer/scenegraph/ResourceManager.h>
+//#include <ves/xplorer/scenegraph/DCS.h>
+#include <ves/xplorer/scenegraph/SceneManager.h>
 
 // --- vrJuggler Includes --- //
 //#include <gmtl/Xforms.h>
 
 // --- OSG Includes --- //
+#include <osg/Camera>
 #include <osg/Geode>
 #include <osg/Geometry>
 #include <osg/Texture2D>
@@ -64,7 +65,7 @@
 #include <osgDB/ReadFile>
 
 // --- STL Includes --- //
-//#include <iostream>
+#include <iostream>
 //#include <sstream>
 
 using namespace ves::xplorer::scenegraph::camera;
@@ -72,7 +73,8 @@ using namespace ves::xplorer::scenegraph::camera;
 ////////////////////////////////////////////////////////////////////////////////
 Camera::Camera()
     :
-    osg::Camera(),
+    osg::PositionAttitudeTransform(),
+    m_initialViewMatrix(),
     //mTexGenNode( NULL ),
     //mDepthOfFieldTechnique( NULL ),
     //mDepthHelperTechnique( NULL ),
@@ -81,8 +83,9 @@ Camera::Camera()
     //mHeadsUpDisplay( NULL ),
     //mResourceManager( NULL ),
     //mPluginDCS( NULL ),
-    m_cameraPAT( NULL ),
+    //m_cameraPAT( NULL ),
     //mCameraDCS( NULL ),
+    m_camera( NULL ),
     m_cameraNode( NULL ),
     m_frustumGeode( NULL ),
     m_frustumGeometry( NULL ),
@@ -97,49 +100,15 @@ Camera::Camera()
     //mDepthHelperQuadGeometry( NULL ),
     //mDepthHelperQuadVertices( NULL )
 {
-    ;
+    Initialize();
 }
-////////////////////////////////////////////////////////////////////////////////
-/*
-Camera::Camera(
-    ves::xplorer::scenegraph::DCS* pluginDCS,
-    ves::xplorer::HeadsUpDisplay* headsUpDisplay,
-    ves::xplorer::scenegraph::ResourceManager* resourceManager )
-    :
-    osg::Camera(),
-    mTexGenNode( NULL ),
-    mDepthOfFieldTechnique( NULL ),
-    mDepthHelperTechnique( NULL ),
-    mProjectionTechnique( NULL ),
-    mCameraEntityCallback( NULL ),
-    mHeadsUpDisplay( headsUpDisplay ),
-    mResourceManager( resourceManager ),
-    mPluginDCS( pluginDCS ),
-    m_cameraPAT( NULL ),
-    mCameraDCS( NULL ),
-    m_cameraNode( NULL ),
-    m_frustumGeode( NULL ),
-    m_frustumGeometry( NULL ),
-    m_frustumVertices( NULL ),
-    mCameraViewQuadDCS( NULL ),
-    mCameraViewQuadGeode( NULL ),
-    mCameraViewQuadGeometry( NULL ),
-    mCameraViewQuadVertices( NULL ),
-    mDistanceText( NULL ),
-    mDepthHelperQuadDCS( NULL ),
-    mDepthHelperQuadGeode( NULL ),
-    mDepthHelperQuadGeometry( NULL ),
-    mDepthHelperQuadVertices( NULL )
-{
-    //Initialize();
-}
-*/
 ////////////////////////////////////////////////////////////////////////////////
 Camera::Camera(
     const Camera& cameraEntity,
     const osg::CopyOp& copyop )
     :
-    osg::Camera( cameraEntity, copyop ),
+    osg::PositionAttitudeTransform( cameraEntity, copyop ),
+    m_initialViewMatrix( cameraEntity.m_initialViewMatrix ),
     //mTexGenNode( cameraEntity.mTexGenNode.get() ),
     //mDepthOfFieldTechnique( cameraEntity.mDepthOfFieldTechnique ),
     //mDepthHelperTechnique( cameraEntity.mDepthHelperTechnique ),
@@ -148,8 +117,9 @@ Camera::Camera(
     //mHeadsUpDisplay( cameraEntity.mHeadsUpDisplay ),
     //mResourceManager( cameraEntity.mResourceManager ),
     //mPluginDCS( cameraEntity.mPluginDCS.get() ),
-    m_cameraPAT( cameraEntity.m_cameraPAT.get() ),
+    //m_cameraPAT( cameraEntity.m_cameraPAT.get() ),
     //mCameraDCS( cameraEntity.mCameraDCS.get() ),
+    m_camera( cameraEntity.m_camera.get() ),
     m_cameraNode( cameraEntity.m_cameraNode.get() ),
     m_frustumGeode( cameraEntity.m_frustumGeode.get() ),
     m_frustumGeometry( cameraEntity.m_frustumGeometry.get() ),
@@ -192,14 +162,14 @@ Camera::~Camera()
 ////////////////////////////////////////////////////////////////////////////////
 void Camera::Initialize()
 {
-    //Initialize this
-    setRenderOrder( osg::Camera::PRE_RENDER );
-    setClearMask( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
-    setClearColor( osg::Vec4( 0.5, 0.5, 0.5, 1.0 ) );
+    m_camera = new osg::Camera();
+    m_camera->setRenderOrder( osg::Camera::PRE_RENDER );
+    m_camera->setClearMask( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
+    m_camera->setClearColor( osg::Vec4( 0.5, 0.5, 0.5, 1.0 ) );
     //setComputeNearFarMode( osg::Camera::DO_NOT_COMPUTE_NEAR_FAR );
-    setRenderTargetImplementation( osg::Camera::FRAME_BUFFER_OBJECT );
-    setReferenceFrame( osg::Camera::ABSOLUTE_RF );
-    //setViewport( 0, 0, 1024, 1024 );
+    m_camera->setRenderTargetImplementation( osg::Camera::FRAME_BUFFER_OBJECT );
+    m_camera->setReferenceFrame( osg::Camera::ABSOLUTE_RF );
+    m_camera->setViewport( 0, 0, 1024, 1024 );
 
     //Attach the camera view texture and use it as the first render target
     //attach( osg::Camera::BufferComponent( osg::Camera::COLOR_BUFFER0 ),
@@ -211,18 +181,24 @@ void Camera::Initialize()
             //< osg::Texture2D, osg::ref_ptr >( "DepthTexture" ) ).get() );
 
     //
-    m_cameraPAT = new CameraPAT( *this );
+    m_initialViewMatrix.makeLookAt(
+        osg::Vec3d( 0.0, 0.0, 0.0 ),
+        osg::Vec3d( 0.0, 1.0, 0.0 ),
+        osg::Vec3d( 0.0, 0.0, 1.0 ) );
+    m_camera->setViewMatrix( m_initialViewMatrix );
+    m_camera->setProjectionMatrixAsPerspective( 20.0, 1.0, 0.1, 2.0 );
+
+    //
+    //m_camera->addChild(
+        //ves::xplorer::scenegraph::SceneManager::instance()->GetModelRoot() );
+    addChild( m_camera.get() );
+
+    //
+    //m_cameraPAT = new CameraPAT( *this );
 
     //Add the subgraph to render
     //addChild( m_cameraPAT.get() );
     //addChild( mPluginDCS.get() );
-
-    //Initialize mInitialViewMatrix
-    //mInitialViewMatrix.makeLookAt( osg::Vec3( 0, 0, 0 ),
-                                   //osg::Vec3( 0, 1, 0 ),
-                                   //osg::Vec3( 0, 0, 1 ) );
-    //setViewMatrix(  );
-    //setProjectionMatrixAsPerspective( 20.0, 1.0, 0.1, 2.0 );
 
     //Initialize mMVPT
     //mMVPT = osg::Matrix::identity();
@@ -283,7 +259,7 @@ void Camera::Initialize()
 
     //SetNamesAndDescriptions();
 
-    //Update();
+    Update();
 }
 ////////////////////////////////////////////////////////////////////////////////
 /*
@@ -418,8 +394,16 @@ void Camera::CreateGeometry()
     */
 
     //Add the geometric model for the camera
-    m_cameraNode = osgDB::readNodeFile( "Models/IVEs/old_camera.ive" );
-    m_cameraPAT->addChild( m_cameraNode.get() );
+    m_cameraNode = osgDB::Registry::instance()->getReaderWriterForExtension(
+        "osg" )->readNode( GetCameraModel() ).getNode();
+    if( m_cameraNode.valid() )
+    {
+        addChild( m_cameraNode.get() );
+    }
+    else
+    {
+        ;
+    }
 
     //Create the geometric lines for the frustum
     m_frustumGeode = new osg::Geode();
@@ -463,7 +447,7 @@ void Camera::CreateGeometry()
     m_frustumGeode->setStateSet( stateset.get() );
     */
 
-    m_cameraPAT->addChild( m_frustumGeode.get() );
+    addChild( m_frustumGeode.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 /*
@@ -578,84 +562,6 @@ void Camera::CreateDepthHelperQuad()
 */
 ////////////////////////////////////////////////////////////////////////////////
 /*
-void Camera::Update()
-{
-    //Update the MVPT matrix
-    CalculateMatrixMVPT();
-
-    //Update the frustum geode
-    osg::Matrixd projectionMatrix = getProjectionMatrix();
-
-    const double nearPlane = projectionMatrix( 3, 2 ) /
-                           ( projectionMatrix( 2, 2 ) - 1.0 );
-    const double farPlane = projectionMatrix( 3, 2 ) /
-                          ( projectionMatrix( 2, 2 ) + 1.0 );
-
-    const double nLeft =   nearPlane * ( projectionMatrix( 2, 0 ) - 1.0 ) /
-                                         projectionMatrix( 0, 0 );
-    const double nRight =  nearPlane * ( projectionMatrix( 2, 0 ) + 1.0 ) /
-                                         projectionMatrix( 0, 0 );
-    const double nTop =    nearPlane * ( projectionMatrix( 2, 1 ) + 1.0 ) /
-                                         projectionMatrix( 1, 1 );
-    const double nBottom = nearPlane * ( projectionMatrix( 2, 1 ) - 1.0 ) /
-                                         projectionMatrix( 1, 1 );
-
-    const double fLeft =   farPlane * ( projectionMatrix( 2, 0 ) - 1.0 ) /
-                                        projectionMatrix( 0, 0 );
-    const double fRight =  farPlane * ( projectionMatrix( 2, 0 ) + 1.0 ) /
-                                        projectionMatrix( 0, 0 );
-    const double fTop =    farPlane * ( projectionMatrix( 2, 1 ) + 1.0 ) /
-                                        projectionMatrix( 1, 1 );
-    const double fBottom = farPlane * ( projectionMatrix( 2, 1 ) - 1.0 ) /
-                                        projectionMatrix( 1, 1 );
-
-    (*m_frustumVertices)[ 0 ].set( 0.0, 0.0, 0.0 );
-    (*m_frustumVertices)[ 1 ].set( nLeft, nearPlane, nBottom );
-    (*m_frustumVertices)[ 2 ].set( nRight, nearPlane, nBottom );
-    (*m_frustumVertices)[ 3 ].set( nRight, nearPlane, nTop );
-    (*m_frustumVertices)[ 4 ].set( nLeft, nearPlane, nTop );
-    (*m_frustumVertices)[ 5 ].set( fLeft, farPlane, fBottom );
-    (*m_frustumVertices)[ 6 ].set( fRight, farPlane, fBottom );
-    (*m_frustumVertices)[ 7 ].set( fRight, farPlane, fTop );
-    (*m_frustumVertices)[ 8 ].set( fLeft, farPlane, fTop );
-    m_frustumGeometry->dirtyDisplayList();
-    m_frustumGeometry->dirtyBound();
-
-    const double aspectRatio = fabs( fRight - fLeft ) / fabs( fTop - fBottom );
-
-    (*mCameraViewQuadVertices)[ 0 ].set( 0.0,         0.0, -1.0 );
-    (*mCameraViewQuadVertices)[ 1 ].set( aspectRatio, 0.0, -1.0 );
-    (*mCameraViewQuadVertices)[ 2 ].set( aspectRatio, 1.0, -1.0 );
-    (*mCameraViewQuadVertices)[ 3 ].set( 0.0,         1.0, -1.0 );
-    mCameraViewQuadGeometry->dirtyDisplayList();
-    mCameraViewQuadGeometry->dirtyBound();
-
-    (*mDepthHelperQuadVertices)[ 0 ].set( 0.0,         0.0, -1.0 );
-    (*mDepthHelperQuadVertices)[ 1 ].set( aspectRatio, 0.0, -1.0 );
-    (*mDepthHelperQuadVertices)[ 2 ].set( aspectRatio, 1.0, -1.0 );
-    (*mDepthHelperQuadVertices)[ 3 ].set( 0.0,         1.0, -1.0 );
-    mDepthHelperQuadGeometry->dirtyDisplayList();
-    mDepthHelperQuadGeometry->dirtyBound();
-
-    //Update the uniforms
-    mProjectionTechnique->GetNearPlaneUniform()->set(
-        static_cast< float >( nearPlane ) );
-    mProjectionTechnique->GetFarPlaneUniform()->set(
-        static_cast< float >( farPlane ) );
-}
-*/
-////////////////////////////////////////////////////////////////////////////////
-void Camera::DisplayCamera( bool onOff )
-{
-    m_cameraNode->setNodeMask( onOff );
-}
-////////////////////////////////////////////////////////////////////////////////
-void Camera::DisplayViewFrustum( bool onOff )
-{
-    m_frustumGeode->setNodeMask( onOff );
-}
-////////////////////////////////////////////////////////////////////////////////
-/*
 void Camera::DisplayProjectionEffect( bool onOff )
 {
     if( onOff )
@@ -704,12 +610,10 @@ ves::xplorer::scenegraph::DCS* Camera::GetDCS()
 }
 */
 ////////////////////////////////////////////////////////////////////////////////
-/*
-ves::xplorer::scenegraph::DCS* Camera::GetCameraDCS()
+osg::Camera& Camera::GetCamera()
 {
-    return mCameraDCS.get();
+    return *(m_camera.get());
 }
-*/
 ////////////////////////////////////////////////////////////////////////////////
 /*
 ves::xplorer::scenegraph::DCS* Camera::GetPluginDCS()
@@ -721,7 +625,7 @@ ves::xplorer::scenegraph::DCS* Camera::GetPluginDCS()
 /*
 const osg::Matrixd& Camera::GetInitialViewMatrix()
 {
-    return mInitialViewMatrix;
+    return m_initialViewMatrix;
 }
 */
 ////////////////////////////////////////////////////////////////////////////////
@@ -731,6 +635,14 @@ osg::TexGenNode* Camera::GetTexGenNode()
     return mTexGenNode.get();
 }
 */
+////////////////////////////////////////////////////////////////////////////////
+void Camera::setAttitude( const osg::Quat& quat )
+{
+    _attitude = quat;
+    dirtyBound();
+
+    osg::Matrixd& viewMatrix = m_camera->getViewMatrix();
+}
 ////////////////////////////////////////////////////////////////////////////////
 /*
 void Camera::SetNamesAndDescriptions()
@@ -794,4 +706,99 @@ void Camera::SetDepthHelperQuadResolution( unsigned int value )
     mDepthHelperQuadDCS->setScale( osg::Vec3( value, value, 1 ) );
 }
 */
+////////////////////////////////////////////////////////////////////////////////
+void Camera::setPosition( const osg::Vec3d& pos )
+{
+    _position = pos;
+    dirtyBound();
+
+    osg::Matrixd& viewMatrix = m_camera->getViewMatrix();
+    viewMatrix.preMultTranslate( pos );
+}
+////////////////////////////////////////////////////////////////////////////////
+void Camera::setScale( const osg::Vec3d& scale )
+{
+    _scale = scale;
+    dirtyBound();
+
+    osg::Matrixd& viewMatrix = m_camera->getViewMatrix();
+}
+////////////////////////////////////////////////////////////////////////////////
+void Camera::ShowCameraGeometry( const bool& show )
+{
+    m_cameraNode->setNodeMask( show );
+}
+////////////////////////////////////////////////////////////////////////////////
+void Camera::ShowFrustumGeometry( const bool& show )
+{
+    m_frustumGeode->setNodeMask( show );
+}
+////////////////////////////////////////////////////////////////////////////////
+void Camera::Update()
+{
+    //Update the MVPT matrix
+    //CalculateMatrixMVPT();
+
+    //Update the frustum geode
+    osg::Matrixd projectionMatrix = m_camera->getProjectionMatrix();
+
+    const double nearPlane = projectionMatrix( 3, 2 ) /
+                           ( projectionMatrix( 2, 2 ) - 1.0 );
+    const double farPlane = projectionMatrix( 3, 2 ) /
+                          ( projectionMatrix( 2, 2 ) + 1.0 );
+
+    const double nLeft =   nearPlane * ( projectionMatrix( 2, 0 ) - 1.0 ) /
+                                         projectionMatrix( 0, 0 );
+    const double nRight =  nearPlane * ( projectionMatrix( 2, 0 ) + 1.0 ) /
+                                         projectionMatrix( 0, 0 );
+    const double nTop =    nearPlane * ( projectionMatrix( 2, 1 ) + 1.0 ) /
+                                         projectionMatrix( 1, 1 );
+    const double nBottom = nearPlane * ( projectionMatrix( 2, 1 ) - 1.0 ) /
+                                         projectionMatrix( 1, 1 );
+
+    const double fLeft =   farPlane * ( projectionMatrix( 2, 0 ) - 1.0 ) /
+                                        projectionMatrix( 0, 0 );
+    const double fRight =  farPlane * ( projectionMatrix( 2, 0 ) + 1.0 ) /
+                                        projectionMatrix( 0, 0 );
+    const double fTop =    farPlane * ( projectionMatrix( 2, 1 ) + 1.0 ) /
+                                        projectionMatrix( 1, 1 );
+    const double fBottom = farPlane * ( projectionMatrix( 2, 1 ) - 1.0 ) /
+                                        projectionMatrix( 1, 1 );
+
+    (*m_frustumVertices)[ 0 ].set( 0.0, 0.0, 0.0 );
+    (*m_frustumVertices)[ 1 ].set( nLeft, nearPlane, nBottom );
+    (*m_frustumVertices)[ 2 ].set( nRight, nearPlane, nBottom );
+    (*m_frustumVertices)[ 3 ].set( nRight, nearPlane, nTop );
+    (*m_frustumVertices)[ 4 ].set( nLeft, nearPlane, nTop );
+    (*m_frustumVertices)[ 5 ].set( fLeft, farPlane, fBottom );
+    (*m_frustumVertices)[ 6 ].set( fRight, farPlane, fBottom );
+    (*m_frustumVertices)[ 7 ].set( fRight, farPlane, fTop );
+    (*m_frustumVertices)[ 8 ].set( fLeft, farPlane, fTop );
+    m_frustumGeometry->dirtyDisplayList();
+    m_frustumGeometry->dirtyBound();
+
+    const double aspectRatio = fabs( fRight - fLeft ) / fabs( fTop - fBottom );
+
+    /*
+    (*mCameraViewQuadVertices)[ 0 ].set( 0.0,         0.0, -1.0 );
+    (*mCameraViewQuadVertices)[ 1 ].set( aspectRatio, 0.0, -1.0 );
+    (*mCameraViewQuadVertices)[ 2 ].set( aspectRatio, 1.0, -1.0 );
+    (*mCameraViewQuadVertices)[ 3 ].set( 0.0,         1.0, -1.0 );
+    mCameraViewQuadGeometry->dirtyDisplayList();
+    mCameraViewQuadGeometry->dirtyBound();
+
+    (*mDepthHelperQuadVertices)[ 0 ].set( 0.0,         0.0, -1.0 );
+    (*mDepthHelperQuadVertices)[ 1 ].set( aspectRatio, 0.0, -1.0 );
+    (*mDepthHelperQuadVertices)[ 2 ].set( aspectRatio, 1.0, -1.0 );
+    (*mDepthHelperQuadVertices)[ 3 ].set( 0.0,         1.0, -1.0 );
+    mDepthHelperQuadGeometry->dirtyDisplayList();
+    mDepthHelperQuadGeometry->dirtyBound();
+
+    //Update the uniforms
+    mProjectionTechnique->GetNearPlaneUniform()->set(
+        static_cast< float >( nearPlane ) );
+    mProjectionTechnique->GetFarPlaneUniform()->set(
+        static_cast< float >( farPlane ) );
+    */
+}
 ////////////////////////////////////////////////////////////////////////////////

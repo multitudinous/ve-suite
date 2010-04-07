@@ -157,7 +157,7 @@ public:
 
     ///Unselect all currently selected objects
     void UnselectObjects();
-    
+
 protected:
 
 private:
@@ -194,7 +194,7 @@ private:
 
     ///The current selected DCS
     osg::ref_ptr< scenegraph::DCS > mSelectedDCS;
-    
+
     ///
     device::Device* m_deviceBeingProcessed;
 

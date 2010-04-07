@@ -86,12 +86,6 @@ osg::BoundingSphere CameraManager::computeBound() const
 }
 */
 ////////////////////////////////////////////////////////////////////////////////
-void CameraManager::CreateCamera()
-{
-    osg::ref_ptr< Camera > camera = new Camera();
-    addChild( camera.get() );
-}
-////////////////////////////////////////////////////////////////////////////////
 void CameraManager::Enable( const bool& enable )
 {
     m_enabled = enable;
@@ -106,14 +100,9 @@ void CameraManager::Enable( const bool& enable )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-Camera* CameraManager::ConvertNodeToCamera( osg::Node* node )
+Camera* const CameraManager::GetActiveCamera() const
 {
-    return dynamic_cast< Camera* >( node );
-}
-////////////////////////////////////////////////////////////////////////////////
-Camera* CameraManager::GetChild( unsigned int i )
-{
-    return dynamic_cast< Camera* >( osg::Group::getChild( i ) );
+    return m_activeCamera;
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool CameraManager::insertChild( unsigned int index, Camera* child )
@@ -129,6 +118,11 @@ const bool CameraManager::IsEnabled() const
 bool CameraManager::replaceChild( Camera* origChild, Camera* newChild )
 {
     return osg::Group::replaceChild( origChild, newChild );
+}
+////////////////////////////////////////////////////////////////////////////////
+void CameraManager::SetActiveCamera( Camera* const camera )
+{
+    m_activeCamera = camera;
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool CameraManager::setChild( unsigned int i, Camera* node )

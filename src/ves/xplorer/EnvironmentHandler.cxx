@@ -179,8 +179,6 @@ m_lodScale( 0.01 )
     _eventHandlers[ std::string( "SCENE_STATE_INFORMATION" ) ] =
         new ves::xplorer::event::ScreenAlignedNormalsEventHandler();
     ///CPT Tool
-    /*_eventHandlers[ "DRUM_ANIMATION_ON_OFF" ] =
-        new ves::xplorer::event::environment::CameraPlacementEventHandler();
     _eventHandlers[ "CAMERA_GEOMETRY_ON_OFF" ] =
         new ves::xplorer::event::environment::CameraPlacementEventHandler();
     _eventHandlers[ "FRUSTUM_GEOMETRY_ON_OFF" ] =
@@ -206,7 +204,7 @@ m_lodScale( 0.01 )
     _eventHandlers[ "FOCAL_RANGE" ] =
         new ves::xplorer::event::environment::CameraPlacementEventHandler();
     _eventHandlers[ "MAX_CIRCLE_OF_CONFUSION" ] =
-        new ves::xplorer::event::environment::CameraPlacementEventHandler();*/
+        new ves::xplorer::event::environment::CameraPlacementEventHandler();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void EnvironmentHandler::Initialize()

@@ -37,59 +37,44 @@
 // --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
 
-// --- vrJuggler Includes --- //
-#include <gmtl/Matrix.h>
-
 // --- OSG Includes --- //
 #include <osg/ref_ptr>
-#include <osg/Camera>
+#include <osg/Quat>
+#include <osg/Vec3d>
+#include <osg/PositionAttitudeTransform>
 
 namespace osg
 {
+class Camera;
 class Geode;
 class Geometry;
 }
-
-namespace osgText
-{
-class Text;
-}
-
-// --- STL Includes --- //
-#include <string>
 
 namespace ves
 {
 namespace xplorer
 {
-//class HeadsUpDisplay;
-
 namespace scenegraph
 {
-class DCS;
-//class ResourceManager;
-
 namespace camera
 {
-class CameraPAT;
-//class CameraEntityCallback;
-//class DepthOfFieldTechnique;
-//class DepthHelperTechnique;
-//class ProjectionTechnique;
 
-class VE_SCENEGRAPH_EXPORTS Camera : public osg::Camera
+/*!\file Camera.h
+ *
+ */
+
+/*!\class Camera
+ * Class for
+ */
+
+/*!\namespace ves::xplorer::scenegraph::camera
+ *
+ */
+class VE_SCENEGRAPH_EXPORTS Camera : public osg::PositionAttitudeTransform
 {
 public:
     ///Constructor
     Camera();
-
-    ///
-    /*
-    Camera(
-        ves::xplorer::scenegraph::DCS* pluginDCS,
-        ves::xplorer::HeadsUpDisplay* headsUpDisplay,
-        ves::xplorer::scenegraph::ResourceManager* resourceManager );
-    */
 
     ///
     Camera( const Camera& cameraEntity,
@@ -107,12 +92,6 @@ public:
         //gmtl::Matrix44d localToWorldMatrix );
 
     ///
-    void DisplayCamera( bool onOff );
-
-    ///
-    void DisplayViewFrustum( bool onOff );
-
-    ///
     //void DisplayDepthOfFieldEffect( bool onOff );
 
     ///
@@ -128,7 +107,7 @@ public:
     //ves::xplorer::scenegraph::DCS* GetDCS();
 
     ///
-    //ves::xplorer::scenegraph::DCS* GetCameraDCS();
+    osg::Camera& GetCamera();
 
     ///
     //ves::xplorer::scenegraph::DCS* GetPluginDCS();
@@ -143,10 +122,13 @@ public:
     //osg::TexGenNode* GetTexGenNode();
 
     ///
-    //void SetNamesAndDescriptions();
+    void setAttitude( const osg::Quat& quat );
 
     ///
-    //void SetProjectionEffectOpacity( double value );
+    //void SetCameraViewQuadResolution( unsigned int value );
+
+    ///
+    //void SetDepthHelperQuadResolution( unsigned int value );
 
     ///
     //void SetFocalDistance( double value );
@@ -158,13 +140,25 @@ public:
     //void SetMaxCircleOfConfusion( double value );
 
     ///
-    //void SetCameraViewQuadResolution( unsigned int value );
+    //void SetNamesAndDescriptions();
 
     ///
-    //void SetDepthHelperQuadResolution( unsigned int value );
+    void setPosition( const osg::Vec3d& pos );
 
     ///
-    //void Update();
+    //void SetProjectionEffectOpacity( double value );
+
+    ///
+    void setScale( const osg::Vec3d& scale );
+
+    ///
+    void ShowCameraGeometry( const bool& show = true );
+
+    ///
+    void ShowFrustumGeometry( const bool& show = true );
+
+    ///
+    void Update();
 
 protected:
     ///Destructor
@@ -187,7 +181,7 @@ private:
     //void CreateDepthHelperQuad();
 
     ///The initial view matrix of the camera
-    //osg::Matrixd mInitialViewMatrix;
+    osg::Matrixd m_initialViewMatrix;
 
     ///The matrix that takes a vertex from local coords into tex coords
     //osg::Matrixd mMVPT;
@@ -217,10 +211,13 @@ private:
     //osg::ref_ptr< ves::xplorer::scenegraph::DCS > mPluginDCS;
 
     ///
-    osg::ref_ptr< CameraPAT > m_cameraPAT;
+    //osg::ref_ptr< CameraPAT > m_cameraPAT;
 
     ///The loaded camera geometry node and frustum geometry lines
     //osg::ref_ptr< ves::xplorer::scenegraph::DCS > mCameraDCS;
+
+    ///
+    osg::ref_ptr< osg::Camera > m_camera;
 
     ///
     osg::ref_ptr< osg::Node > m_cameraNode;

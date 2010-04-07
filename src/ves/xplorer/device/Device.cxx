@@ -39,11 +39,14 @@
 #include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
 #include <ves/xplorer/scenegraph/physics/character/CharacterController.h>
 
+#include <ves/xplorer/scenegraph/camera/CameraManager.h>
+
 #include <ves/xplorer/scenegraph/manipulator/ManipulatorManager.h>
 
 #ifdef QT_ON
 #include <ves/conductor/qt/UIManager.h>
 #endif
+
 // --- OSG Includes --- //
 #include <osg/Polytope>
 #include <osg/LineSegment>
@@ -70,6 +73,7 @@ Device::Device( const Device::Type& type )
     m_physicsSimulator( *scenegraph::PhysicsSimulator::instance() ),
     m_sceneManager( *scenegraph::SceneManager::instance() ),
     m_characterController( *(m_sceneManager.GetCharacterController()) ),
+    m_cameraManager( m_sceneManager.GetCameraManager() ),
     m_manipulatorManager( *(m_sceneManager.GetManipulatorManager()) )
 #ifdef QT_ON
     ,
@@ -86,6 +90,7 @@ Device::Device( const Device& device )
     m_physicsSimulator( device.m_physicsSimulator ),
     m_sceneManager( device.m_sceneManager ),
     m_characterController( device.m_characterController ),
+    m_cameraManager( device.m_cameraManager ),
     m_manipulatorManager( device.m_manipulatorManager )
 #ifdef QT_ON
     ,
@@ -158,7 +163,7 @@ void Device::ProcessSelection()
     intersect_visitor.addLineSegment( line_segment.get() );
 
     //Add IntersectVisitor to RootNode so that all geometry is checked and no transforms are applied to LineSegment
-    scenegraph::SceneManager::instance()->GetRootNode()->accept( intersect_visitor );
+    m_sceneManager.GetRootNode()->accept( intersect_visitor );
 
     osgUtil::IntersectVisitor::HitList hit_list;
     hit_list = intersect_visitor.getHitList( line_segment.get() );
@@ -227,7 +232,7 @@ bool Device::CheckCollisionsWithHead( osg::Vec3 headPositionInWorld )
                          new osgUtil::PolytopeIntersector( polytope );
     osgUtil::IntersectionVisitor intersectionVisitor( headCollider.get() );
 
-    scenegraph::SceneManager::instance()->GetActiveSwitchNode()->accept( intersectionVisitor );
+    m_sceneManager.GetActiveSwitchNode()->accept( intersectionVisitor );
     if ( headCollider->containsIntersections() )
     {
         return true;

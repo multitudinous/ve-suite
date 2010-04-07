@@ -44,6 +44,7 @@
 #include <ves/xplorer/scenegraph/ResourceManager.h>
 
 #include <ves/xplorer/scenegraph/camera/CameraManager.h>
+#include <ves/xplorer/scenegraph/camera/Camera.h>
 
 using namespace ves::xplorer::event;
 using namespace ves::xplorer::event::environment;
@@ -53,9 +54,6 @@ CameraPlacementEventHandler::CameraPlacementEventHandler()
     :
     EventHandler()
 {
-    //mEventHandlerMap[ "DRUM_ANIMATION_ON_OFF" ] = this;
-    mCommandNameToInt[ "DRUM_ANIMATION_ON_OFF" ] =
-        DRUM_ANIMATION_ON_OFF;
     //mEventHandlerMap[ "CAMERA_GEOMETRY_ON_OFF" ] = this;
     mCommandNameToInt[ "CAMERA_GEOMETRY_ON_OFF" ] =
         CAMERA_GEOMETRY_ON_OFF;
@@ -86,7 +84,7 @@ CameraPlacementEventHandler::CameraPlacementEventHandler()
     //mEventHandlerMap[ "DEPTH_HELPER_WINDOW_RESOLUTION" ] = this;
     mCommandNameToInt[ "DEPTH_HELPER_WINDOW_RESOLUTION" ] =
         DEPTH_HELPER_WINDOW_RESOLUTION;
-    
+
     //mEventHandlerMap[ "PROJECTION_UPDATE" ] = this;
     mCommandNameToInt[ "PROJECTION_UPDATE" ] =
         PROJECTION_UPDATE;
@@ -140,164 +138,164 @@ void CameraPlacementEventHandler::Execute(
     const int commandName =
         mCommandNameToInt.find( command->GetCommandName() )->second;
 
+    scenegraph::SceneManager& sceneManager =
+        *scenegraph::SceneManager::instance();
+    scenegraph::camera::Camera* const camera =
+        sceneManager.GetCameraManager().GetActiveCamera();
+
+    if( !camera )
+    {
+        return;
+    }
+
     switch( commandName )
     {
-        case DRUM_ANIMATION_ON_OFF:
-        {
-            unsigned int selection = 0;
-            command->GetDataValuePair(
-                "drumAnimationOnOff" )->GetData( selection );
+    case CAMERA_GEOMETRY_ON_OFF:
+    {
+        unsigned int selection = 0;
+        command->GetDataValuePair(
+            "cameraGeometryOnOff" )->GetData( selection );
 
-            bool onOff = ( selection != 0 );
-            //mCameraEntity->DrumAnimation( onOff );
-        }
+        bool show = ( selection != 0 );
+        camera->ShowCameraGeometry( show );
+
         break;
+    }
+    case FRUSTUM_GEOMETRY_ON_OFF:
+    {
+        unsigned int selection = 0;
+        command->GetDataValuePair(
+            "frustumGeometryOnOff" )->GetData( selection );
 
-        case CAMERA_GEOMETRY_ON_OFF:
-        {
-            unsigned int selection = 0;
-            command->GetDataValuePair(
-                "cameraGeometryOnOff" )->GetData( selection );
+        bool show = ( selection != 0 );
+        camera->ShowFrustumGeometry( show );
 
-            bool onOff = ( selection != 0 );
-            //mCameraEntity->DisplayCamera( onOff );
-        }
         break;
+    }
+    case DEPTH_OF_FIELD_EFFECT_ON_OFF:
+    {
+        unsigned int selection = 0;
+        command->GetDataValuePair(
+            "depthOfFieldEffectOnOff" )->GetData( selection );
 
-        case FRUSTUM_GEOMETRY_ON_OFF:
-        {
-            unsigned int selection = 0;
-            command->GetDataValuePair(
-                "frustumGeometryOnOff" )->GetData( selection );
+        bool onOff = ( selection != 0 );
+        //mCameraEntity->DisplayDepthOfFieldEffect( onOff );
 
-            bool onOff = ( selection != 0 );
-            //mCameraEntity->DisplayViewFrustum( onOff );
-        }
         break;
+    }
+    case PROJECTION_EFFECT_ON_OFF:
+    {
+        unsigned int selection = 0;
+        command->GetDataValuePair(
+            "projectionEffectOnOff" )->GetData( selection );
 
-        case DEPTH_OF_FIELD_EFFECT_ON_OFF:
-        {
-            unsigned int selection = 0;
-            command->GetDataValuePair(
-                "depthOfFieldEffectOnOff" )->GetData( selection );
+        bool onOff = ( selection != 0 );
+        //mCameraEntity->DisplayProjectionEffect( onOff );
 
-            bool onOff = ( selection != 0 );
-            //mCameraEntity->DisplayDepthOfFieldEffect( onOff );
-        }
         break;
+    }
+    case PROJECTION_EFFECT_OPACITY:
+    {
+        double value = 0;
+        command->GetDataValuePair(
+            "projectionEffectOpacity" )->GetData( value );
 
-        case PROJECTION_EFFECT_ON_OFF:
-        {
-            unsigned int selection = 0;
-            command->GetDataValuePair(
-                "projectionEffectOnOff" )->GetData( selection );
+        //mCameraEntity->SetProjectionEffectOpacity( value );
 
-            bool onOff = ( selection != 0 );
-            //mCameraEntity->DisplayProjectionEffect( onOff );
-        }
         break;
+    }
+    case CAMERA_WINDOW_ON_OFF:
+    {
+        unsigned int selection = 0;
+        command->GetDataValuePair(
+            "cameraWindowOnOff" )->GetData( selection );
 
-        case PROJECTION_EFFECT_OPACITY:
-        {
-            double value = 0;
-            command->GetDataValuePair(
-                "projectionEffectOpacity" )->GetData( value );
+        bool onOff = ( selection != 0 );
+        //mCameraEntity->DisplayCameraViewQuad( onOff );
 
-            //mCameraEntity->SetProjectionEffectOpacity( value );
-        }
         break;
+    }
+    case CAMERA_WINDOW_RESOLUTION:
+    {
+        unsigned int value = 0;
+        command->GetDataValuePair(
+            "cameraWindowResolution" )->GetData( value );
 
-        case CAMERA_WINDOW_ON_OFF:
-        {
-            unsigned int selection = 0;
-            command->GetDataValuePair(
-                "cameraWindowOnOff" )->GetData( selection );
+        //mCameraEntity->SetCameraViewQuadResolution( value );
 
-            bool onOff = ( selection != 0 );
-            //mCameraEntity->DisplayCameraViewQuad( onOff );
-        }
         break;
+    }
+    case DEPTH_HELPER_WINDOW_ON_OFF:
+    {
+        unsigned int selection = 0;
+        command->GetDataValuePair(
+            "depthHelperWindowOnOff" )->GetData( selection );
 
-        case CAMERA_WINDOW_RESOLUTION:
-        {
-            unsigned int value = 0;
-            command->GetDataValuePair(
-                "cameraWindowResolution" )->GetData( value );
+        bool onOff = ( selection != 0 );
+        //mCameraEntity->DisplayDepthHelperQuad( onOff );
 
-            //mCameraEntity->SetCameraViewQuadResolution( value );
-        }
         break;
+    }
+    case DEPTH_HELPER_WINDOW_RESOLUTION:
+    {
+        unsigned int value = 0;
+        command->GetDataValuePair(
+            "depthHelperWindowResolution" )->GetData( value );
 
-        case DEPTH_HELPER_WINDOW_ON_OFF:
-        {
-            unsigned int selection = 0;
-            command->GetDataValuePair(
-                "depthHelperWindowOnOff" )->GetData( selection );
+        //mCameraEntity->SetDepthHelperQuadResolution( value );
 
-            bool onOff = ( selection != 0 );
-            //mCameraEntity->DisplayDepthHelperQuad( onOff );
-        }
         break;
+    }
+    case PROJECTION_UPDATE:
+    {
+        double projectionData[ 4 ] = { 0, 0, 0, 0 };
+        command->GetDataValuePair(
+            "projectionFieldOfView" )->GetData( projectionData[ 0 ] );
+        command->GetDataValuePair(
+            "projectionAspectRatio" )->GetData( projectionData[ 1 ] );
+        command->GetDataValuePair(
+            "projectionNearPlane" )->GetData( projectionData[ 2 ] );
+        command->GetDataValuePair(
+            "projectionFarPlane" )->GetData( projectionData[ 3 ] );
 
-        case DEPTH_HELPER_WINDOW_RESOLUTION:
-        {
-            unsigned int value = 0;
-            command->GetDataValuePair(
-                "depthHelperWindowResolution" )->GetData( value );
+        camera->GetCamera().setProjectionMatrixAsPerspective(
+            projectionData[ 0 ], projectionData[ 1 ],
+            projectionData[ 2 ], projectionData[ 3 ] );
 
-            //mCameraEntity->SetDepthHelperQuadResolution( value );
-        }
+        camera->Update();
+
         break;
+    }
+    case FOCAL_DISTANCE:
+    {
+        double value = 0;
+        command->GetDataValuePair(
+            "focalDistance" )->GetData( value );
 
-        case PROJECTION_UPDATE:
-        {
-            double projectionData[ 4 ] = { 0, 0, 0, 0 };
-            command->GetDataValuePair(
-                "projectionFieldOfView" )->GetData( projectionData[ 0 ] );
-            command->GetDataValuePair(
-                "projectionAspectRatio" )->GetData( projectionData[ 1 ] );
-            command->GetDataValuePair(
-                "projectionNearPlane" )->GetData( projectionData[ 2 ] );
-            command->GetDataValuePair(
-                "projectionFarPlane" )->GetData( projectionData[ 3 ] );
+        //mCameraEntity->SetFocalDistance( value );
 
-            //mCameraEntity->setProjectionMatrixAsPerspective(
-            //    projectionData[ 0 ], projectionData[ 1 ],
-            //    projectionData[ 2 ], projectionData[ 3 ] );
-
-            //mCameraEntity->Update();
-        }
         break;
+    }
+    case FOCAL_RANGE:
+    {
+        double value = 0;
+        command->GetDataValuePair(
+            "focalRange" )->GetData( value );
 
-        case FOCAL_DISTANCE:
-        {
-            double value = 0;
-            command->GetDataValuePair(
-                "focalDistance" )->GetData( value );
+        //mCameraEntity->SetFocalRange( value );
 
-            //mCameraEntity->SetFocalDistance( value );
-        }
         break;
+    }
+    case MAX_CIRCLE_OF_CONFUSION:
+    {
+        double value = 0;
+        command->GetDataValuePair(
+            "maxCircleOfConfusion" )->GetData( value );
 
-        case FOCAL_RANGE:
-        {
-            double value = 0;
-            command->GetDataValuePair(
-                "focalRange" )->GetData( value );
+        //mCameraEntity->SetMaxCircleOfConfusion( value );
 
-            //mCameraEntity->SetFocalRange( value );
-        }
         break;
-
-        case MAX_CIRCLE_OF_CONFUSION:
-        {
-            double value = 0;
-            command->GetDataValuePair(
-                "maxCircleOfConfusion" )->GetData( value );
-
-            //mCameraEntity->SetMaxCircleOfConfusion( value );
-        }
-        break;
+    }
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

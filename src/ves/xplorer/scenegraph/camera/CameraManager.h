@@ -78,13 +78,10 @@ public:
     //virtual osg::BoundingSphere computeBound() const;
 
     ///
-    void CreateCamera();
-
-    ///
     void Enable( const bool& enable = true );
 
-    ///Can't override the getChild function, so create our own
-    Camera* GetChild( unsigned int i );
+    ///
+    Camera* const GetActiveCamera() const;
 
     ///Override the insertChild function to only accept Cameras
     virtual bool insertChild( unsigned int index, Camera* child );
@@ -95,6 +92,9 @@ public:
     ///Override the replaceChild function to only accept Cameras
     virtual bool replaceChild( Camera* origChild, Camera* newChild );
 
+    ///
+    void SetActiveCamera( Camera* const camera );
+
     ///Override the setChild function to only accept Cameras
     virtual bool setChild( unsigned int i, Camera* node );
 
@@ -103,9 +103,6 @@ protected:
     virtual ~CameraManager();
 
 private:
-    ///
-    Camera* ConvertNodeToCamera( osg::Node* node );
-
     ///
     bool m_enabled;
 
