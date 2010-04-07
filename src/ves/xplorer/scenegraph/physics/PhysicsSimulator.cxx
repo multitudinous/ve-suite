@@ -869,7 +869,7 @@ void triggerSounds( const btDynamicsWorld* world, btScalar timeStep )
         if( obA->getCollisionFlags() & btCollisionObject::CF_CHARACTER_OBJECT ||
             obB->getCollisionFlags() & btCollisionObject::CF_CHARACTER_OBJECT )
         {
-            return;
+            continue;
         }
 
         bool collide( false ), slide( false );
@@ -899,6 +899,11 @@ void triggerSounds( const btDynamicsWorld* world, btScalar timeStep )
         {
             void* tempUserDataA = obA->getUserPointer();
             void* tempUserDataB = obB->getUserPointer();
+            if( !tempUserDataB || !tempUserDataA )
+            {
+                continue;
+            }
+
             PhysicsRigidBody* objA =
                 static_cast< PhysicsRigidBody* >( tempUserDataA );
             PhysicsRigidBody* objB =
