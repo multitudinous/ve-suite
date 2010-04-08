@@ -157,17 +157,19 @@ def CreateConfig(target, source, env):
    return 0
 ################################################################################
 ## Bullet vars
-bulletVersion = (int(2), int(75))
-bulletBaseVar = 'bullet-2.75'
-
-#osgbulletVersion = 1.1
+bulletVersion = (int(2), int(76))
+bulletBaseVar = 'bullet-2.76'
 osgbulletBaseVar = 'osgBullet-1.1'
+
 ## Apply Bullet vars
 def ApplyBulletVars(env, bulletOnly = False ):
     "apply bullet library info"
 
     # Bullet defines
     env.AppendUnique(CPPPATH = [pj(RootDir,'external', bulletBaseVar,'src')])
+    env.AppendUnique(LIBS = ['bullet'])
+    env.AppendUnique(LIBPATH = [ pj('#', buildDir, 'external', bulletBaseVar)])
+
     if env[ 'ARCH' ] == 'x64':
         env.AppendUnique( CPPDEFINES = ['USE_ADDR64=1'] )
 
@@ -177,6 +179,9 @@ def ApplyBulletVars(env, bulletOnly = False ):
     #              'BULLET_MINOR_VERSION=%i' %bulletVersion[ 1 ] ] )  
     env.AppendUnique(CPPPATH = [pj(RootDir,'external', osgbulletBaseVar,'include')])
     env.AppendUnique(CPPPATH = [pj(RootDir,'external','osgBulletPlus','include')])
+    env.AppendUnique(LIBS = ['osgBulletPlus','osgBullet'])
+    env.AppendUnique(LIBPATH = [pj('#', buildDir, 'external', 'osgBulletPlus'),
+                          pj('#', buildDir, 'external', osgbulletBaseVar)])
 
 Export('ApplyBulletVars','osgbulletBaseVar')
 
