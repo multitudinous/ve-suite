@@ -884,7 +884,7 @@ void triggerSounds( const btDynamicsWorld* world, btScalar timeStep )
             if( pt.m_lifeTime < 3 )
             {
                 //Need to tie this impulse to gain 
-                if( pt.m_appliedImpulse > 5. ) // Kind of a hack.
+                if( pt.m_appliedImpulse > 0.3 ) // Kind of a hack.
                     collide = true;
             }
             else
