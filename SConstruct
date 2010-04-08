@@ -156,6 +156,12 @@ def CreateConfig(target, source, env):
       os.chmod(targets[0], 0755)
    return 0
 ################################################################################
+## Bullet vars
+bulletVersion = (int(2), int(75))
+bulletBaseVar = 'bullet-2.75'
+
+#osgbulletVersion = 1.1
+osgbulletBaseVar = 'osgBullet-1.1'
 ## Apply Bullet vars
 def ApplyBulletVars(env, bulletOnly = False ):
     "apply bullet library info"
@@ -169,10 +175,10 @@ def ApplyBulletVars(env, bulletOnly = False ):
         return 0
     #env.AppendUnique( CPPDEFINES = ['BULLET_MAJOR_VERSION=%i' %bulletVersion[ 0 ],
     #              'BULLET_MINOR_VERSION=%i' %bulletVersion[ 1 ] ] )  
-    env.AppendUnique(CPPPATH = [pj(RootDir,'external','osgBullet','include')])
+    env.AppendUnique(CPPPATH = [pj(RootDir,'external', osgbulletBaseVar,'include')])
     env.AppendUnique(CPPPATH = [pj(RootDir,'external','osgBulletPlus','include')])
 
-Export('ApplyBulletVars')
+Export('ApplyBulletVars','osgbulletBaseVar')
 
 ##See scons users guide section 15 on variant builds
 ##Setup some project defaults
@@ -310,8 +316,6 @@ apu_options = fp_option.FlagPollBasedOption("Apache Portable Runtime Utils",
 #bullet_options = fp_option.FlagPollBasedOption("Bullet Physics SDK",
 #                                               "bullet", "0.1", True, True, helpText=None, compileTest=True,
 #                                               headerToCheck="btBulletCollisionCommon.h")
-bulletVersion = (int(2), int(75))
-bulletBaseVar = 'bullet-2.75'
 
 #need to do a flagpoll check to see if TAO pc or fpc files are available
 tao_options = fp_option.FlagPollBasedOption("ACE TAO libraries",
@@ -660,7 +664,7 @@ if not SConsAddons.Util.hasHelpFlag():
     minervaDataSubdirs = pj( buildDir, 'external', 'gdal_data')
     #osgPPUSubdirs = pj( buildDir, 'external', 'osgPPU')
     osgEphemerisSubdirs = pj( buildDir, 'external', 'osgEphemeris')
-    osgBulletSubdirs = pj( buildDir, 'external', 'osgBullet')
+    osgBulletSubdirs = pj( buildDir, 'external', osgbulletBaseVar)
     osgBulletPlusSubdirs = pj( buildDir, 'external', 'osgBulletPlus')
     bullet = pj( buildDir, 'external', bulletBaseVar)
     test = pj( buildDir, 'test', 'osg')
