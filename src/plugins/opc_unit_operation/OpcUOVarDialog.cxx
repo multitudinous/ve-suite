@@ -131,7 +131,7 @@ void OpcUOVarDialog::SetButtonClick(wxCommandEvent& event)
 
         //variable name
         wxString varName = WxGrid->GetRowLabelValue( rowsChanged[i] );
-        std::string temp = CompName + "." + varName.c_str();
+        std::string temp = ConvertUnicode( CompName.c_str() ) + "." + ConvertUnicode( varName.c_str() );
         //paramList.push_back( ConvertUnicode( varName.c_str() ) );
 
         //value
@@ -142,7 +142,7 @@ void OpcUOVarDialog::SetButtonClick(wxCommandEvent& event)
         ves::open::xml::DataValuePairPtr
             inpParams( new ves::open::xml::DataValuePair() );
         inpParams->SetDataName( temp );
-        inpParams->SetDataString( value.c_str() );
+        inpParams->SetDataString( ConvertUnicode( value.c_str() ) );
         params->AddDataValuePair( inpParams );
     }
 
