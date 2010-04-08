@@ -1099,15 +1099,12 @@ void KeyboardMouse::OnMouseRelease()
 
         if( m_cameraManager.IsEnabled() )
         {
-            /*
-            UpdateSelectionLine();
             if( m_cameraManager.Handle(
                     scenegraph::camera::Event::RELEASE,
                     *mLineSegmentIntersector.get() ) )
             {
                 break;
             }
-            */
         }
 
         if( m_manipulatorManager.IsEnabled() )
