@@ -1,0 +1,137 @@
+Up: 0 0 1
+HandNode: -2 6 -3 0 1 0 6.12323e-017 1.75 1
+Model: Surface0.75.stl.(0,0,-15).trans
+GroupPlane: 0
+
+# Additional data used by this config file can be found here:
+# http://www.vrac.iastate.edu/~mccdo/bullet_profile_demo/
+
+# demo data
+Node: terrain
+DAEModel: terrain_new.osg
+MatchAllNodes: 0
+DAE: terrain.dae	
+
+Node: usmc23_5000
+DAEModel: usmc23_5000_new.osg
+MatchAllNodes: 0
+DAE: usmc23_5000.dae	
+
+Node: usmc23_5134
+DAEModel: usmc23_5134_new.osg
+DAE: usmc23_5134.dae	
+
+Node: usmc23_5149
+DAEModel: usmc23_5149_new.osg
+MatchAllNodes: 0
+DAE: usmc23_5149.dae	
+
+Node: usmc23_5159
+DAEModel: usmc23_5159_new.osg
+MatchAllNodes: 0
+DAE: usmc23_5159.dae	
+
+Node: usmc23_5168
+DAEModel: usmc23_5168_new.osg
+MatchAllNodes: 0
+DAE: usmc23_5168.dae	
+
+# Node: usmc30_4000
+# DAEModel: usmc30_4000_new.osg
+# MatchAllNodes: 0
+# DAE: usmc30_4000.dae	
+
+Node: usmc34_3500
+DAEModel: usmc34_3500_new.osg
+MatchAllNodes: 0
+DAE: usmc34_3500.dae	
+
+Node: usmc34_5004
+DAEModel: usmc34_5004_new.osg
+MatchAllNodes: 0
+DAE: usmc34_5004.dae
+
+Node: usmc23_1100
+DAEModel: usmc23_1100_new.osg
+MatchAllNodes: 0
+DAE: usmc23_1100.dae	
+
+Node: usmc23_5001
+DAEModel: usmc23_5001_new.osg
+MatchAllNodes: 0
+DAE: usmc23_5001.dae	
+
+Node: usmc23_5147
+DAEModel: usmc23_5147_new.osg
+MatchAllNodes: 0
+DAE: usmc23_5147.dae	
+
+Node: usmc23_5157
+DAEModel: usmc23_5157_new.osg
+MatchAllNodes: 0
+DAE: usmc23_5157.dae	
+
+Node: usmc23_5161
+DAEModel: usmc23_5161_new.osg
+MatchAllNodes: 0
+DAE: usmc23_5161.dae	
+
+Node: usmc23_5336
+DAEModel: usmc23_5336_new.osg
+MatchAllNodes: 0
+DAE: usmc23_5336.dae	
+
+Node: usmc34_1100
+DAEModel: usmc34_1100_new.osg
+MatchAllNodes: 0
+DAE: usmc34_1100.dae	
+
+Node: usmc34_3501
+DAEModel: usmc34_3501_new.osg
+MatchAllNodes: 0
+DAE: usmc34_3501.dae	
+
+Node: usmc_frs
+DAEModel: usmc_frs_new.osg
+MatchAllNodes: 0
+DAE: usmc_frs.dae
+
+Node: usmc23_4105
+DAEModel: usmc23_4105_new.osg
+MatchAllNodes: 0
+DAE: usmc23_4105.dae	
+
+Node: usmc23_5002
+DAEModel: usmc23_5002_new.osg
+MatchAllNodes: 0
+DAE: usmc23_5002.dae	
+
+Node: usmc23_5148
+DAEModel: usmc23_5148_new.osg
+MatchAllNodes: 0
+DAE: usmc23_5148.dae	
+
+Node: usmc23_5158
+DAEModel: usmc23_5158_new.osg
+MatchAllNodes: 0
+DAE: usmc23_5158.dae	
+
+Node: usmc23_5162
+DAEModel: usmc23_5162_new.osg
+MatchAllNodes: 0
+DAE: usmc23_5162.dae	
+
+Node: usmc24_rev2
+DAEModel: usmc24_rev2_new.osg
+MatchAllNodes: 0
+DAE: usmc24_rev2.dae	
+
+Node: usmc34_1101
+DAEModel: usmc34_1101_new.osg
+MatchAllNodes: 0
+DAE: usmc34_1101.dae	
+
+Node: usmc34_5003
+DAEModel: usmc34_5003_new.osg
+MatchAllNodes: 0
+DAE: usmc34_5003.dae

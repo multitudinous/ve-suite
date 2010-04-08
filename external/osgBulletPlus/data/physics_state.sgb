@@ -1,0 +1,235 @@
+Physics data entries 6
+osgTools::RefID {
+  String "id0"
+}
+osgBullet::PhysicsData {
+  Version 1
+  osgBullet::CreationRecord {
+    Version 1
+    COM 0.776125 -0.43866 0
+    Use COM false
+    Scale 1 1 1
+    Collision shape 4
+    Mass 1
+    Decimator percent 1
+    Decimator max error 3.40282e+038
+    Decimator ignore boundaries true
+    Simplify percent 1
+    VertexAgg max verts 0
+    VertexAgg min cell size 0 0 0
+    Reducer group threshold 360
+    Reducer max edge error 360
+    Overall true
+    Cylinder axis 2
+  }
+  OSGTransform {
+    -0.416147 0 -0.909297 0
+    0 1 0 0
+    0.909297 0 -0.416147 0
+    -7 7 10.0825 1
+  }
+  BodyWorldTransform {
+    -0.416147 0 -0.909297 0
+    0 1 0 0
+    0.909297 0 -0.416147 0
+    -7.32298 6.56134 9.47677 1
+  }
+  Linear velocity 0 0 -7.35
+  Angular velocity 0 0 0
+  FileName "cow.osg"
+}
+osgTools::RefID {
+  String "id1"
+}
+osgBullet::PhysicsData {
+  Version 1
+  osgBullet::CreationRecord {
+    Version 1
+    COM -6.40034 1.96225 0.000795364
+    Use COM false
+    Scale 0.3 0.3 0.3
+    Collision shape 4
+    Mass 1
+    Decimator percent 1
+    Decimator max error 3.40282e+038
+    Decimator ignore boundaries true
+    Simplify percent 1
+    VertexAgg max verts 0
+    VertexAgg min cell size 0 0 0
+    Reducer group threshold 360
+    Reducer max edge error 360
+    Overall true
+    Cylinder axis 2
+  }
+  OSGTransform {
+    0.186483 0 -0.234998 0
+    0 0.3 0 0
+    0.234998 0 0.186483 0
+    7 7 10.0825 1
+  }
+  BodyWorldTransform {
+    0.62161 0 -0.783327 0
+    0 1 0 0
+    0.783327 0 0.62161 0
+    5.80663 7.58867 11.6867 1
+  }
+  Linear velocity 0 0 -7.35
+  Angular velocity 0 0 0
+  FileName "dumptruck.osg"
+}
+osgTools::RefID {
+  String "id2"
+}
+osgBullet::PhysicsData {
+  Version 1
+  osgBullet::CreationRecord {
+    Version 1
+    COM 2 2 2
+    Use COM false
+    Scale 3.5 3.5 3.5
+    Collision shape 4
+    Mass 1
+    Decimator percent 1
+    Decimator max error 3.40282e+038
+    Decimator ignore boundaries true
+    Simplify percent 1
+    VertexAgg max verts 0
+    VertexAgg min cell size 0 0 0
+    Reducer group threshold 360
+    Reducer max edge error 360
+    Overall true
+    Cylinder axis 2
+  }
+  OSGTransform {
+    2.88867 0 1.97625 0
+    0 3.5 0 0
+    -1.97625 0 2.88867 0
+    5.96046e-008 8 6.0825 1
+  }
+  BodyWorldTransform {
+    0.825336 0 0.564642 0
+    -0 1 0 0
+    -0.564642 -0 0.825336 0
+    1.82485 15 15.9123 1
+  }
+  Linear velocity 0 0 -7.35
+  Angular velocity 0 0 0
+  FileName "offcube.osg"
+}
+osgTools::RefID {
+  String "id3"
+}
+osgBullet::PhysicsData {
+  Version 1
+  osgBullet::CreationRecord {
+    Version 1
+    COM -6.40034 1.96225 0.000795364
+    Use COM false
+    Scale 0.25 0.25 0.25
+    Collision shape 4
+    Mass 1
+    Decimator percent 1
+    Decimator max error 3.40282e+038
+    Decimator ignore boundaries true
+    Simplify percent 1
+    VertexAgg max verts 0
+    VertexAgg min cell size 0 0 0
+    Reducer group threshold 360
+    Reducer max edge error 360
+    Overall true
+    Cylinder axis 2
+  }
+  OSGTransform {
+    0.155402 0 0.195832 0
+    0 0.25 0 0
+    -0.195832 0 0.155402 0
+    -7.5 -5.25 6.8325 1
+  }
+  BodyWorldTransform {
+    0.62161 0 0.783327 0
+    -0 1 0 0
+    -0.783327 -0 0.62161 0
+    -8.49478 -4.75944 5.67924 1
+  }
+  Linear velocity 0 0 -7.35
+  Angular velocity 0 0 0
+  FileName "dumptruck.osg"
+}
+osgTools::RefID {
+  String "id4"
+}
+osgBullet::PhysicsData {
+  Version 1
+  osgBullet::CreationRecord {
+    Version 1
+    COM 0 0 0
+    Use COM false
+    Scale 0.5 0.5 0.5
+    Collision shape 4
+    Mass 1
+    Decimator percent 1
+    Decimator max error 3.40282e+038
+    Decimator ignore boundaries true
+    Simplify percent 1
+    VertexAgg max verts 0
+    VertexAgg min cell size 0 0 0
+    Reducer group threshold 360
+    Reducer max edge error 360
+    Overall true
+    Cylinder axis 2
+  }
+  OSGTransform {
+    0.412668 0 -0.282321 0
+    0 0.5 0 0
+    0.282321 0 0.412668 0
+    9 -7 10.0825 1
+  }
+  BodyWorldTransform {
+    0.825336 0 -0.564642 0
+    0 1 0 0
+    0.564642 0 0.825336 0
+    9 -7 10.1825 1
+  }
+  Linear velocity 0 0 -7.35
+  Angular velocity 0 0 0
+  FileName "block.osg"
+}
+osgTools::RefID {
+  String "id5"
+}
+osgBullet::PhysicsData {
+  Version 1
+  osgBullet::CreationRecord {
+    Version 1
+    COM 3 0 0
+    Use COM true
+    Scale 0.5 0.5 0.5
+    Collision shape 4
+    Mass 1
+    Decimator percent 1
+    Decimator max error 3.40282e+038
+    Decimator ignore boundaries true
+    Simplify percent 1
+    VertexAgg max verts 0
+    VertexAgg min cell size 0 0 0
+    Reducer group threshold 360
+    Reducer max edge error 360
+    Overall true
+    Cylinder axis 2
+  }
+  OSGTransform {
+    0.5 0 0 0
+    0 0.5 0 0
+    0 0 0.5 0
+    5 0 7.0825 1
+  }
+  BodyWorldTransform {
+    1 0 0 0
+    0 1 0 0
+    0 0 1 0
+    6.5 0 7.1825 1
+  }
+  Linear velocity 0 0 -7.35
+  Angular velocity 0 0 0
+  FileName "block.osg"
+}

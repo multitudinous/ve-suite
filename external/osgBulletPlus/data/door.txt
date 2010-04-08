@@ -1,0 +1,10 @@
+HandNode: -2 6 -3 0 1 0 6.12323e-017 1.75 1
+Model: USMC23_1021.ASM.ive.(0,0,-.25).trans
+
+# doorframe
+Node: USMC23_1019.ASM
+DAE: USMC23_1019.ASM1.dae
+
+# door
+Node: USMC23_1020.ASM
+DAE: USMC23_1020.ASM1.dae
