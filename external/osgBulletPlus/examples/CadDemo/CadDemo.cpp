@@ -68,7 +68,7 @@
 
 
 
-//#define DO_DEBUG_DRAW
+#define DO_DEBUG_DRAW
 #ifdef DO_DEBUG_DRAW
 #include <osgbBullet/GLDebugDrawer.h>
 #endif
@@ -443,7 +443,6 @@ public:
                 matchAllNodes = true;
                 mass = 1.0f;
             }
-
             else if( key == std::string( "Hinge:" ) )
             {
                 HingeInfo hi;
@@ -735,7 +734,7 @@ main( int argc,
         osgbBullet::MotionState* motion = new osgbBullet::MotionState;
         motion->setTransform( amt.get() );
         osg::BoundingSphere bs = subgraph->getBound();
-        rb->setActivationState( DISABLE_DEACTIVATION );
+        //rb->setActivationState( DISABLE_DEACTIVATION );
 
         osg::Matrix m = osg::computeLocalToWorld( np );
         motion->setParentTransform( m );
@@ -798,7 +797,7 @@ main( int argc,
         osgbBullet::MotionState* motion = new osgbBullet::MotionState;
         motion->setTransform( amt.get() );
         osg::BoundingSphere bs = subgraph->getBound();
-        rb->setActivationState( DISABLE_DEACTIVATION );
+        //rb->setActivationState( DISABLE_DEACTIVATION );
 
         osg::Matrix m = osg::computeLocalToWorld( np );
         motion->setParentTransform( m );
