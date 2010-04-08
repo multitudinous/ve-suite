@@ -33,7 +33,6 @@
 
 // --- My Includes --- //
 #include <ves/xplorer/scenegraph/camera/Camera.h>
-#include <ves/xplorer/scenegraph/camera/CameraModel.h>
 //#include "CameraEntityCallback.h"
 //#include "DepthOfFieldTechnique.h"
 //#include "DepthHelperTechnique.h"
@@ -189,8 +188,15 @@ void Camera::Initialize()
     m_camera->setProjectionMatrixAsPerspective( 20.0, 1.0, 0.1, 2.0 );
 
     //
-    //m_camera->addChild(
-        //ves::xplorer::scenegraph::SceneManager::instance()->GetModelRoot() );
+    osg::Group& modelRoot = *SceneManager::instance()->GetModelRoot();
+    for( unsigned int i = 0; i < modelRoot.getNumChildren(); ++i )
+    {
+        osg::Node* node = modelRoot.getChild( i );
+        if( node->getName() == "cfdExecutive_Node" )
+        {
+            m_camera->addChild( node );
+        }
+    }
     addChild( m_camera.get() );
 
     //
@@ -394,16 +400,8 @@ void Camera::CreateGeometry()
     */
 
     //Add the geometric model for the camera
-    m_cameraNode = osgDB::Registry::instance()->getReaderWriterForExtension(
-        "osg" )->readNode( GetCameraModel() ).getNode();
-    if( m_cameraNode.valid() )
-    {
-        addChild( m_cameraNode.get() );
-    }
-    else
-    {
-        ;
-    }
+    m_cameraNode = osgDB::readNodeFile( "osg-data/camera.ive" );
+    addChild( m_cameraNode.get() );
 
     //Create the geometric lines for the frustum
     m_frustumGeode = new osg::Geode();
