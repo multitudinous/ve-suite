@@ -142,6 +142,8 @@ public:
         rb->setWorldTransform( osgbBullet::asBtTransform( _pd->_bodyWorldTransform ) );
         rb->setLinearVelocity( osgbBullet::asBtVector3( _pd->_linearVelocity ) );
         rb->setAngularVelocity( osgbBullet::asBtVector3( _pd->_angularVelocity ) );
+        rb->setFriction( _pd->_friction );
+        rb->setRestitution( _pd->_restitution );
 
         // Lock while modifying the phsics sim.
         _rp->lockPhysics( true );

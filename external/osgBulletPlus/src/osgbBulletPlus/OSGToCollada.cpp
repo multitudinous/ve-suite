@@ -661,6 +661,14 @@ OSGToCollada::createRigidBody( btScalar mass,
     }
 
     btRigidBody::btRigidBodyConstructionInfo rbInfo( mass, motion, shape, localInertia );
+    //These are the default values for the sleeping parameters for island 
+    //creation by the solver. By making these larger an object will go to 
+    //sleep sooner. This can have a negative affect on the fidelity of the sim.
+    //rbInfo.m_linearSleepingThreshold = btScalar(0.8);
+    //rbInfo.m_angularSleepingThreshold = btScalar(1.f);
+    //rbInfo.m_linearSleepingThreshold = 10.;
+    //rbInfo.m_angularSleepingThreshold = 12.;
+    
     rbInfo.m_friction = btScalar( 1. );
 	return( new btRigidBody( rbInfo ) );
 }
