@@ -31,18 +31,38 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
+// --- VE-Suite Includes --- //
 #include <ves/xplorer/network/VE_i.h>
 #include <ves/xplorer/network/cfdVEAvailModules.h>
 #include <ves/xplorer/network/cfdVEPluginLoader.h>
 #include <ves/xplorer/network/UpdateNetworkEventHandler.h>
-#include <ves/xplorer/plugin/PluginBase.h>
-#include <ves/xplorer/ModelHandler.h>
-#include <ves/xplorer/communication/CommunicationHandler.h>
-#include <ves/xplorer/EnvironmentHandler.h>
-#include <ves/xplorer/Model.h>
 #include <ves/xplorer/network/NetworkSystemView.h>
+#include <ves/xplorer/network/cfdExecutive.h>
+#include <ves/xplorer/network/DeleteObjectFromNetworkEventHandler.h>
+#include <ves/xplorer/network/DeleteNetworkViewEventHandler.h>
+#include <ves/xplorer/network/SwitchXplorerViewEventHandler.h>
+#include <ves/xplorer/network/ReloadPluginsEventHandler.h>
+
+#include <ves/xplorer/Debug.h>
+#include <ves/xplorer/Model.h>
+#include <ves/xplorer/ModelHandler.h>
+#include <ves/xplorer/DeviceHandler.h>
+#include <ves/xplorer/EnvironmentHandler.h>
+
+#include <ves/xplorer/plugin/PluginBase.h>
 
 #include <ves/xplorer/command/CommandManager.h>
+
+#include <ves/xplorer/communication/CommunicationHandler.h>
+
+#include <ves/xplorer/scenegraph/SceneManager.h>
+#include <ves/xplorer/scenegraph/ResourceManager.h>
+
+#include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
+
+#ifdef MINERVA_GIS_SUPPORT
+#include <ves/xplorer/minerva/MinervaManager.h>
+#endif
 
 #include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/XMLReaderWriter.h>
@@ -51,41 +71,26 @@
 #include <ves/open/xml/DataValuePair.h>
 #include <ves/open/xml/model/System.h>
 
-#include <ves/xplorer/scenegraph/SceneManager.h>
-#include <ves/xplorer/scenegraph/ResourceManager.h>
-
-#include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
-
-#include <ves/xplorer/DeviceHandler.h>
-
-#include <ves/xplorer/network/DeleteObjectFromNetworkEventHandler.h>
-#include <ves/xplorer/network/DeleteNetworkViewEventHandler.h>
-#include <ves/xplorer/network/SwitchXplorerViewEventHandler.h>
-#include <ves/xplorer/network/ReloadPluginsEventHandler.h>
-
-#ifdef MINERVA_GIS_SUPPORT
-#include <ves/xplorer/minerva/MinervaManager.h>
-#endif
-
 #ifdef VE_SOUND
-// --- osgAL Includes --- //
+// --- osgAudio Includes --- //
 #include <osgAudio/SoundManager.h>
 #endif
 
-#include <iostream>
-#include <fstream>
-#include <string>
-#include <sstream>
-
+// --- VR Juggler Includes --- //
 #include <vpr/System.h>
 #include <vpr/Util/GUID.h>
+
+// --- ACE-TAO Includes --- //
 #include <orbsvcs/CosNamingC.h>
 
+// --- Xercesc Includes --- //
 #include <xercesc/dom/DOM.hpp>
 XERCES_CPP_NAMESPACE_USE
 
-#include <ves/xplorer/network/cfdExecutive.h>
-#include <ves/xplorer/Debug.h>
+// --- STL Includes --- //
+#include <iostream>
+#include <fstream>
+#include <sstream>
 
 using namespace ves::xplorer;
 using namespace ves::xplorer::scenegraph;
@@ -159,7 +164,7 @@ void cfdExecutive::Initialize( CosNaming::NamingContext* inputNameContext,
 }
 ////////////////////////////////////////////////////////////////////////////////
 std::map< std::string, ves::xplorer::plugin::PluginBase* >* 
-    cfdExecutive::GetTheCurrentPlugins( void )
+    cfdExecutive::GetTheCurrentPlugins()
 {
     return &mPluginsMap;
 }
@@ -246,8 +251,8 @@ void cfdExecutive::UnbindORB()
             << ex._info().c_str() << std::endl << vprDEBUG_FLUSH;
     }
 }
-///////////////////////////////////////////////////////////////////
-void cfdExecutive::GetNetwork( void )
+////////////////////////////////////////////////////////////////////////////////
+void cfdExecutive::GetNetwork()
 {
     // Get buffer value from Body_UI implementation
     std::string temp( ui_i->GetNetworkString() );
@@ -294,8 +299,8 @@ void cfdExecutive::GetNetwork( void )
     //create network system view
     netSystemView = new NetworkSystemView( veNetwork );
 }
-///////////////////////////////////////////////////////////////////
-void cfdExecutive::GetEverything( void )
+////////////////////////////////////////////////////////////////////////////////
+void cfdExecutive::GetEverything()
 {
     if( CORBA::is_nil( this->_exec ) )
     {
@@ -355,13 +360,18 @@ void cfdExecutive::GetEverything( void )
     vprDEBUG( vesDBG, 0 ) << "|\t\tDone Getting Network From Executive"
         << std::endl << vprDEBUG_FLUSH;
 }
-///////////////////////////////////////////////////////////////////
-void cfdExecutive::InitModules( void )
+////////////////////////////////////////////////////////////////////////////////
+scenegraph::Group* const cfdExecutive::GetExecutiveNode() const
+{
+    return mExecutiveNode.get();
+}
+////////////////////////////////////////////////////////////////////////////////
+void cfdExecutive::InitModules()
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdExecutive::PreFrameUpdate( void )
+void cfdExecutive::PreFrameUpdate()
 {
     vprDEBUG( vesDBG, 3 ) << "|\tcfdExecutive::PreFrameUpdate"
         << std::endl << vprDEBUG_FLUSH;
@@ -442,13 +452,13 @@ void cfdExecutive::PreFrameUpdate( void )
         << std::endl << vprDEBUG_FLUSH;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdExecutive::PostFrameUpdate( void )
+void cfdExecutive::PostFrameUpdate()
 {
     vprDEBUG( vesDBG, 3 ) << "|\tcfdExecutive::PostFrameUpdate"
         << std::endl << vprDEBUG_FLUSH;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdExecutive::LoadDataFromCE( void )
+void cfdExecutive::LoadDataFromCE()
 {
     if( CORBA::is_nil( this->_exec ) )
     {
@@ -745,12 +755,13 @@ void cfdExecutive::ParseSystem( ves::open::xml::model::SystemPtr system,
         vprDEBUG( vesDBG, 1 ) << "|\t\tPlugin [ " << modelID
             << " ]-> " << newPlugin << " is updated."
             << std::endl << vprDEBUG_FLUSH;
-        
+
         //Now lets find systems
         if( system->GetModel( i )->GetSubSystem() )
         {
-            ParseSystem( system->GetModel( i )->GetSubSystem(), 
+            ParseSystem( system->GetModel( i )->GetSubSystem(),
                 !parentResultsFailed, newPlugin->GetPluginDCS() );
         }
-    }    
+    }
 }
+////////////////////////////////////////////////////////////////////////////////

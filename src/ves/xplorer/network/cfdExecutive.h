@@ -30,70 +30,30 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#ifndef CFD_EXECUTIVE_H
-#define CFD_EXECUTIVE_H
+
+#ifndef VES_XPLORER_NETWORK_CFDEXECUTIVE_H
+#define VES_XPLORER_NETWORK_CFDEXECUTIVE_H
+
 /*!\file cfdExecutive.h
-cfdExecutive API
-*/
+ * cfdExecutive API
+ */
+
 /*!\class ves::xplorer::cfdExecutive
-*
-*/
+ *
+ */
 
+// --- VE-Suite Includes --- //
 #include <ves/xplorer/GlobalBase.h>
-
-#include <vpr/Util/Singleton.h>
 
 #include <ves/xplorer/scenegraph/Group.h>
 
 #include <ves/open/xml/model/ModelPtr.h>
 #include <ves/open/xml/model/SystemPtr.h>
 
-#include <map>
-#include <string>
-#include <vector>
+// --- VR Juggler Includes --- //
+#include <vpr/Util/Singleton.h>
 
-namespace ves
-{
-namespace xplorer
-{
-namespace scenegraph
-{
-class Group;
-class DCS;
-}
-}
-}
-
-namespace ves
-{
-namespace xplorer
-{
-class cfdVjObsWrapper;
-}
-}
-
-namespace ves
-{
-namespace xplorer
-{
-namespace plugin
-{
-class PluginBase;
-}
-}
-}
-
-namespace ves
-{
-namespace xplorer
-{
-namespace event
-{
-class EventHandler;
-}
-}
-}
-
+// --- ACE+TAO Includes --- //
 namespace Body
 {
 class Executive;
@@ -107,115 +67,182 @@ namespace PortableServer
 class POA;
 }
 
+// --- STL Includes --- //
+#include <map>
+#include <string>
+#include <vector>
+
 namespace ves
 {
 namespace xplorer
 {
+class cfdVjObsWrapper;
+
+namespace event
+{
+class EventHandler;
+}
+
+namespace plugin
+{
+class PluginBase;
+}
+
+namespace scenegraph
+{
+class Group;
+class DCS;
+}
+
 namespace network
 {
 class cfdVEAvailModules;
 class Body_UI_i;
 class NetworkSystemView;
+
 class VE_XPLORER_NETWORK_EXPORTS cfdExecutive : public ves::xplorer::GlobalBase
 {
 private:
-    // Required so that vpr::Singleton can instantiate this class.
+    //Required so that vpr::Singleton can instantiate this class.
     //friend class vpr::Singleton< cfdExecutive >;
     //cfdExecutive(const cfdExecutive& o) { ; }
     //cfdExecutive& operator=(const cfdExecutive& o) { ; }
-    // this class should be a singleton
-    // constructor
+    //this class should be a singleton
+    ///Constructor
     cfdExecutive();
     
-    // destructor
-    virtual ~cfdExecutive( void );
+    ///Destructor
+    virtual ~cfdExecutive();
+
+    ///
     vprSingletonHeader( cfdExecutive );
+
 public:
+    ///
     void Initialize( CosNaming::NamingContext*, PortableServer::POA* );
 
     ///Functions that operate on the Executive
-    void GetNetwork( void );
+    void GetNetwork();
+
+    ///
     void GetOutput( std::string name );
-    void GetEverything( void );
+
+    ///
+    void GetEverything();
+
+    ///
+    scenegraph::Group* const GetExecutiveNode() const;
+
+    ///
     void HowToUse( std::string name );
+
     ///Get intial module information from the executive
-    void InitModules( void );
+    void InitModules();
+
     ///Update function called from within latePreFrame
-    void UpdateModules( void );
+    void UpdateModules();
+
     ///Update function called from within latePreFrame
-    void PreFrameUpdate( void );
+    void PreFrameUpdate();
+
     ///Update function called from within latePreFrame
-    void PostFrameUpdate( void );
+    void PostFrameUpdate();
+
     ///Function called within preFrame to allow cfdExecutive
     ///to have access to scalar information
-    void UnbindORB( void );
+    void UnbindORB();
+
     ///in future, multi-threaded apps will make a copy of VjObs_i commandArray
-    virtual void UpdateCommand()
-    {
-        ;
-    }
+    virtual void UpdateCommand(){;}
+
     ///This function returns the map of the current plugins
     ///so that evehenthandlers can manipulate the plugins while
     ///with commands from the gui
-    std::map< std::string, ves::xplorer::plugin::PluginBase* >* GetTheCurrentPlugins( void );
+    std::map< std::string, ves::xplorer::plugin::PluginBase* >* GetTheCurrentPlugins();
+
     ///Get available plugins object
-    cfdVEAvailModules* GetAvailablePlugins( void );
+    cfdVEAvailModules* GetAvailablePlugins();
+
     ///Accessor for ehs to use
     Body_UI_i* GetCORBAInterface();
+
     ///Laod data from CE
-    void LoadDataFromCE( void );
+    void LoadDataFromCE();
+
     ///Get the current network string being used by cfdExecutive
     std::string GetCurrentNetwork();
+
     ///Get the current network system view being used by cfdExecutive
     NetworkSystemView* GetNetworkSystemView();
+
     ///Delete the network system view
     void DeleteNetworkSystemView();
+
     ///Unregister in the executive from the ce. This should be called before the
     /// destrucutor is called.
     void UnRegisterExecutive();
+
     ///Clean up plugins
     void UnloadPlugins();
 
 private:
     ///Connect function so that we can connect at run time if needed
     void ConnectToCE();
+
     ///Recusive function to find all sub-systems
-    void ParseSystem( ves::open::xml::model::SystemPtr system, 
-        bool getResults = false, 
+    void ParseSystem(
+        ves::open::xml::model::SystemPtr system,
+        bool getResults = false,
         osg::Group* parentNode = 0 );
+
     ///Loading the Available Modules
     cfdVEAvailModules* mAvailableModules;
+
     ///The raw xml network data from ce
     std::string veNetwork;
 
+    ///
     osg::ref_ptr< ves::xplorer::scenegraph::Group > mExecutiveNode;
 
     ///_name_map : maps a module id to it's module name.
     std::map< std::string, std::string> _id_map;
+
     ///map of all the systems
     std::map< std::string, ves::open::xml::model::SystemPtr > mIDToSystem;
+
     ///id of the top most system
     std::string mTopSystemID;
+
     ///_name_map : maps a module name to it's module id.
     std::map< std::string, ves::xplorer::plugin::PluginBase* > mPluginsMap;
+
     ///map to hold unique plugin command names and associated plugin pointers
     std::map< std::string, std::map< std::string, ves::xplorer::plugin::PluginBase* > > pluginEHMap;
+
     ///Network View
     NetworkSystemView* netSystemView;
+
     ///The event handler for commands.
     std::map< std::string, ves::xplorer::event::EventHandler*> _eventHandlers;
+
     ///the Computational Engine
     CosNaming::NamingContext* naming_context;
+
     ///The executive interface in veopen
     Body::Executive* _exec;
+
     ///The UI interface in veopen
     Body_UI_i* ui_i;
+
     ///The GUID for the executive
     std::string m_UINAME;
+
     ///The POA interface from the main vexplorer app
     PortableServer::POA* m_ChildPOA;
+
 };
-}
-}
-}
-#endif
+} //end network
+} //end xplorer
+} //end ves
+
+#endif //VES_XPLORER_NETWORK_CFDEXECUTIVE_H
