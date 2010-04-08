@@ -8,7 +8,7 @@ pj = os.path.join
 
 host_type = distutils.util.get_platform()
 
-Import( 'baseEnv ves_pkg buildDir RootDir GetPlatform bulletBaseVar osgworks_options' )
+Import( 'baseEnv ves_pkg buildDir RootDir GetPlatform bulletBaseVar osgworks_options ApplyBulletVars' )
 Import( 'xerces_options vtk_options gmtl_options vrjuggler_options osg_options osgal_options' )
 openDir = os.path.abspath( pj( RootDir, 'share', 'examples', 'CoinFunnel', 'CoinFunnelGP' ) )
 sources = sca_util.getSourcesRecursive( openDir )
@@ -16,17 +16,13 @@ headers = sca_util.getHeadersRecursive( openDir )
 
 lib_env = ves_pkg.getEnv().Clone()
 lib_env.Append( LIBS = [ 'ves_xplorer',
-                         'ves_xplorer_scenegraph',
-                         'bullet',
-                         'osgBullet' ] )
+                         'ves_xplorer_scenegraph'] )
 lib_env.Append( LIBPATH = [ pj( '#', buildDir, 'src', 'ves', 'xplorer' ),
-		            pj( '#', buildDir, 'src', 'ves', 'xplorer', 'scenegraph' ),
-                            pj( '#', buildDir, 'external', bulletBaseVar ),
-                            pj( '#', buildDir, 'external', 'osgBullet' ) ] )
-lib_env.Append( CPPPATH = [ pj( '#', 'external', 'osgBullet', 'include' ),
-                            pj( '#', 'external', bulletBaseVar, 'Extras' ),
-                            pj( '#', 'external', bulletBaseVar, 'src' ) ] )
+		            pj( '#', buildDir, 'src', 'ves', 'xplorer', 'scenegraph' ) ] )
+
 lib_env.Append( CPPDEFINES = [ 'VE_USER_PLUGIN_LIBRARY' ] )
+
+ApplyBulletVars( lib_env )
 
 xerces_options.apply( lib_env )
 vtk_options.apply( lib_env )

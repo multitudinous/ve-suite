@@ -53,7 +53,7 @@
 #include <osgbBullet/MotionState.h>
 #include <osgwTools/AbsoluteModelTransform.h>
 #include <osgbBulletPlus/OSGToCollada.h>
-#include <osgbBullet/ColladaUtils.h>
+//#include <osgbBullet/ColladaUtils.h>
 #include <osgbBullet/Utils.h>
 #include <osgbBullet/RefRigidBody.h>
 #include <osgbBullet/PhysicsState.h>
@@ -501,6 +501,7 @@ void PhysicsRigidBody::CreateRigidBody( const std::string& lod, const std::strin
         else
         {
             CustomShape( CONVEX_TRIANGLEMESH_SHAPE_PROXYTYPE, overall, decimation );
+            m_physicsMaterial = new Material( Material::SILLY_PUTTY );
         }
     }
 }

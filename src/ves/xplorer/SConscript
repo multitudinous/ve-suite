@@ -4,7 +4,7 @@ pj = os.path.join
 import glob
 import SConsAddons.Util as sca_util
 
-Import('baseEnv buildDir RootDir ves_pkg vtk_options osg_options xerces_options LIBDIR bulletBaseVar')
+Import('baseEnv buildDir RootDir ves_pkg vtk_options osg_options xerces_options LIBDIR osgbulletBaseVar bulletBaseVar')
 Import('tao_options boost_options vrjuggler_options osgal_options GetPlatform osgworks_options ApplyBulletVars')
 Import('minerva_options')
 
@@ -113,9 +113,9 @@ lib_env.AppendUnique(LIBS = ['osgEphemeris'])
 lib_env.AppendUnique(LIBPATH = [pj('#',buildDir,'external','osgEphemeris')])
 
 # New Physics work
-#lib_env.Append(CPPPATH = [pj(RootDir,'external','osgBullet','include')])
+#lib_env.Append(CPPPATH = [pj(RootDir,'external', osgbulletBaseVar,'include')])
 lib_env.Append(LIBS = ['osgBullet'])
-lib_env.Append(LIBPATH = [pj('#',buildDir,'external','osgBullet')])
+lib_env.Append(LIBPATH = [pj('#',buildDir,'external', osgbulletBaseVar)])
 
 lib_env.Append(LIBS = ['osgBulletPlus'])
 lib_env.Append(LIBPATH = [pj('#',buildDir,'external','osgBulletPlus')])

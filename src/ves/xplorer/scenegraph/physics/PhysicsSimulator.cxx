@@ -53,7 +53,7 @@
 #include <LinearMath/btQuickprof.h>
 
 #include <osgbBullet/RefRigidBody.h>
-#include <osgbBullet/OSGToCollada.h>
+#include <osgbBulletPlus/OSGToCollada.h>
 #include <osgbBullet/MotionState.h>
 #include <osgbBullet/Utils.h>
 #include <osgbBullet/GLDebugDrawer.h>
@@ -740,7 +740,7 @@ osg::Node* PhysicsSimulator::CreateGround( float w, float h, const osg::Vec3& ce
 {
     osg::Transform* ground = CreateOSGBox( osg::Vec3( w, h, 1.01 ) );
     //TRIANGLE_MESH_SHAPE_PROXYTYPE
-    osgbBullet::OSGToCollada converter;
+    osgbBulletPlus::OSGToCollada converter;
     converter.setSceneGraph( ground );
     converter.setShapeType( BOX_SHAPE_PROXYTYPE );
     converter.setMass( 0.f );
@@ -856,7 +856,8 @@ void triggerSounds( const btDynamicsWorld* world, btScalar timeStep )
     // Loop over all collision points and find impacts.
     const btCollisionDispatcher* dispatch( static_cast< const btCollisionDispatcher* >( world->getDispatcher() ) );
     const int numManifolds( dispatch->getNumManifolds() );
-    
+    //std::cout << " num manifolds " << numManifolds << std::endl;
+
     for( int idx=0; idx < numManifolds; idx++ )
     {
         const btPersistentManifold* contactManifold( dispatch->getManifoldByIndexInternal( idx ) );
@@ -877,14 +878,20 @@ void triggerSounds( const btDynamicsWorld* world, btScalar timeStep )
 
         const int numContacts( contactManifold->getNumContacts() );
         int jdx;
+        //std::cout << "num contacts " << numContacts << std::endl;
         for( jdx=0; jdx < numContacts; jdx++ )
         {
+            //std::cout << " here 1 " << std::endl;
+            
             const btManifoldPoint& pt( contactManifold->getContactPoint( jdx) );
             location = osgbBullet::asOsgVec3( pt.getPositionWorldOnA() );
+            std::cout << pt.m_lifeTime << std::endl;
+            std::cout << pt.m_appliedImpulse << std::endl;
+
             if( pt.m_lifeTime < 3 )
             {
                 //Need to tie this impulse to gain 
-                if( pt.m_appliedImpulse > 0.3 ) // Kind of a hack.
+                //if( pt.m_appliedImpulse > 0.3 ) // Kind of a hack.
                     collide = true;
             }
             else
@@ -911,10 +918,15 @@ void triggerSounds( const btDynamicsWorld* world, btScalar timeStep )
 
             Material* mcA = objA->GetSoundMaterial();
             Material* mcB = objB->GetSoundMaterial();
+            //std::cout << "get material sounds " << std::endl;
+
             if( ( mcA != NULL ) && ( mcB != NULL ) )
             {
                 if( collide )
+                {   
+                    //std::cout << "play sounds " << std::endl;
                     SoundUtilities::instance()->collide( mcA->_mat, mcB->_mat, location );
+                }
                 else
                     SoundUtilities::instance()->slide( mcA->_mat, mcB->_mat, location );
             }

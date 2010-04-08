@@ -4,14 +4,14 @@ import os, sys, string
 pj = os.path.join
 import SConsAddons.Util as sca_util
 
-Import('baseEnv ves_pkg LIBDIR RootDir buildDir osg_options GetPlatform bulletBaseVar')
+Import('baseEnv ves_pkg LIBDIR RootDir buildDir osg_options osgbulletBaseVar  GetPlatform bulletBaseVar')
 Import('wxwidgets_options')
-openDir = os.path.abspath( pj(RootDir, 'external', 'osgBullet') )
-sources = sca_util.getSourcesRecursive( pj( openDir, 'src', 'osgBullet' ) )
-headers = sca_util.getHeadersRecursive( pj( openDir, 'include','osgBullet')  )
-headers = map(lambda s: pj('include','osgBullet', s), 
+openDir = os.path.abspath( pj(RootDir, 'external', osgbulletBaseVar) )
+sources = sca_util.getSourcesRecursive( pj( openDir, 'src', 'osgbBullet' ) )
+headers = sca_util.getHeadersRecursive( pj( openDir, 'include','osgbBullet')  )
+headers = map(lambda s: pj('include','osgbBullet', s), 
                 headers)
-sources = map(lambda s: pj('src', 'osgBullet', s), 
+sources = map(lambda s: pj('src', 'osgbBullet', s), 
                 sources)
 
 lib_env = ves_pkg.getEnv().Clone()
@@ -52,7 +52,7 @@ handFile.addFiles( pj( openDir, 'data','handR.ive'), useRelPath=False )
 
 ################################################################################
 ##Builds osgbpp
-openDir = os.path.abspath( pj(RootDir, 'external', 'osgBullet') )
+openDir = os.path.abspath( pj(RootDir, 'external', osgbulletBaseVar) )
 sources2 = sca_util.getSourcesRecursive( pj( openDir, 'applications','osgbpp' ) )
 sources2 = map(lambda s: pj('applications','osgbpp', s), sources2)
 
@@ -62,7 +62,7 @@ lib_env2.Append( CPPPATH = [pj(RootDir, 'external', bulletBaseVar,'src' ) ] )
 lib_env2.Append( CPPPATH = [pj(RootDir, 'external', bulletBaseVar,'Extras') ] )
 lib_env2.Append( LIBS = ['osgBullet','BulletColladaConverter','bullet','COLLADA_DOM','XML'] )
 lib_env2.Append( LIBPATH = [pj('#', buildDir,'external', bulletBaseVar)] )
-lib_env2.Append( LIBPATH = [pj('#', buildDir,'external', 'osgBullet')] )
+lib_env2.Append( LIBPATH = [pj('#', buildDir,'external', osgbulletBaseVar)] )
 
 osg_options.apply( lib_env2 )
 
@@ -75,7 +75,7 @@ multiblock.build()
 
 ###############################################################
 ##Builds caddemo
-openDir = os.path.abspath( pj(RootDir, 'external', 'osgBullet') )
+openDir = os.path.abspath( pj(RootDir, 'external', osgbulletBaseVar) )
 sources2 = sca_util.getSourcesRecursive( pj( openDir, 'examples','CadDemo' ) )
 sources2 = map(lambda s: pj('examples','CadDemo', s), sources2)
 
@@ -85,7 +85,7 @@ lib_env2.Append( CPPPATH = [pj(RootDir, 'external', bulletBaseVar,'src' ) ] )
 lib_env2.Append( CPPPATH = [pj(RootDir, 'external', bulletBaseVar,'Extras') ] )
 lib_env2.Append( LIBS = ['osgBullet','BulletColladaConverter','bullet','COLLADA_DOM','XML'] )
 lib_env2.Append( LIBPATH = [pj('#', buildDir,'external', bulletBaseVar)] )
-lib_env2.Append( LIBPATH = [pj('#', buildDir,'external', 'osgBullet')] )
+lib_env2.Append( LIBPATH = [pj('#', buildDir,'external', osgbulletBaseVar)] )
 
 osg_options.apply( lib_env2 )
 
@@ -98,7 +98,7 @@ multiblock.build()
 
 ###############################################################
 ##Builds solver
-openDir = os.path.abspath( pj(RootDir, 'external', 'osgBullet') )
+openDir = os.path.abspath( pj(RootDir, 'external', osgbulletBaseVar) )
 sources2 = sca_util.getSourcesRecursive( pj( openDir, 'examples','solver' ) )
 sources2 = map(lambda s: pj('examples','solver', s), sources2)
 
@@ -108,7 +108,7 @@ lib_env2.Append( CPPPATH = [pj(RootDir, 'external', bulletBaseVar,'src' ) ] )
 lib_env2.Append( CPPPATH = [pj(RootDir, 'external', bulletBaseVar,'Extras') ] )
 lib_env2.Append( LIBS = ['osgBullet','BulletColladaConverter','bullet','COLLADA_DOM','XML'] )
 lib_env2.Append( LIBPATH = [pj('#', buildDir,'external', bulletBaseVar)] )
-lib_env2.Append( LIBPATH = [pj('#', buildDir,'external', 'osgBullet')] )
+lib_env2.Append( LIBPATH = [pj('#', buildDir,'external', osgbulletBaseVar)] )
 
 osg_options.apply( lib_env2 )
 
@@ -121,7 +121,7 @@ multiblock.build()
 
 ###############################################################
 ##Builds hinge
-openDir = os.path.abspath( pj(RootDir, 'external', 'osgBullet') )
+openDir = os.path.abspath( pj(RootDir, 'external', osgbulletBaseVar) )
 sources2 = sca_util.getSourcesRecursive( pj( openDir, 'tests','hinge' ) )
 sources2 = map(lambda s: pj('tests','hinge', s), sources2)
 
@@ -131,7 +131,7 @@ lib_env2.Append( CPPPATH = [pj(RootDir, 'external', bulletBaseVar,'src' ) ] )
 lib_env2.Append( CPPPATH = [pj(RootDir, 'external', bulletBaseVar,'Extras') ] )
 lib_env2.Append( LIBS = ['osgBullet','BulletColladaConverter','bullet','COLLADA_DOM','XML'] )
 lib_env2.Append( LIBPATH = [pj('#', buildDir,'external', bulletBaseVar)] )
-lib_env2.Append( LIBPATH = [pj('#', buildDir,'external', 'osgBullet')] )
+lib_env2.Append( LIBPATH = [pj('#', buildDir,'external', osgbulletBaseVar)] )
 
 osg_options.apply( lib_env2 )
 
@@ -144,7 +144,7 @@ multiblock.build()
 
 ###############################################################
 ##Builds hinge2
-openDir = os.path.abspath( pj(RootDir, 'external', 'osgBullet') )
+openDir = os.path.abspath( pj(RootDir, 'external', osgbulletBaseVar) )
 sources2 = sca_util.getSourcesRecursive( pj( openDir, 'tests','hinge2' ) )
 sources2 = map(lambda s: pj('tests','hinge2', s), sources2)
 
@@ -154,7 +154,7 @@ lib_env2.Append( CPPPATH = [pj(RootDir, 'external', bulletBaseVar,'src' ) ] )
 lib_env2.Append( CPPPATH = [pj(RootDir, 'external', bulletBaseVar,'Extras') ] )
 lib_env2.Append( LIBS = ['osgBullet','BulletColladaConverter','bullet','COLLADA_DOM','XML'] )
 lib_env2.Append( LIBPATH = [pj('#', buildDir,'external', bulletBaseVar)] )
-lib_env2.Append( LIBPATH = [pj('#', buildDir,'external', 'osgBullet')] )
+lib_env2.Append( LIBPATH = [pj('#', buildDir,'external', osgbulletBaseVar)] )
 
 osg_options.apply( lib_env2 )
 
@@ -167,7 +167,7 @@ multiblock.build()
 
 ###############################################################
 ##Builds slider
-openDir = os.path.abspath( pj(RootDir, 'external', 'osgBullet') )
+openDir = os.path.abspath( pj(RootDir, 'external', osgbulletBaseVar) )
 sources2 = sca_util.getSourcesRecursive( pj( openDir, 'tests','slider' ) )
 sources2 = map(lambda s: pj('tests','slider', s), sources2)
 
@@ -177,7 +177,7 @@ lib_env2.Append( CPPPATH = [pj(RootDir, 'external', bulletBaseVar,'src' ) ] )
 lib_env2.Append( CPPPATH = [pj(RootDir, 'external', bulletBaseVar,'Extras') ] )
 lib_env2.Append( LIBS = ['osgBullet','BulletColladaConverter','bullet','COLLADA_DOM','XML'] )
 lib_env2.Append( LIBPATH = [pj('#', buildDir,'external', bulletBaseVar)] )
-lib_env2.Append( LIBPATH = [pj('#', buildDir,'external', 'osgBullet')] )
+lib_env2.Append( LIBPATH = [pj('#', buildDir,'external', osgbulletBaseVar)] )
 
 osg_options.apply( lib_env2 )
 
@@ -190,7 +190,7 @@ multiblock.build()
 
 ###############################################################
 ##Builds xform
-openDir = os.path.abspath( pj(RootDir, 'external', 'osgBullet') )
+openDir = os.path.abspath( pj(RootDir, 'external', osgbulletBaseVar) )
 sources2 = sca_util.getSourcesRecursive( pj( openDir, 'tests','xform' ) )
 sources2 = map(lambda s: pj('tests','xform', s), sources2)
 
@@ -200,7 +200,7 @@ lib_env2.Append( CPPPATH = [pj(RootDir, 'external', bulletBaseVar,'src' ) ] )
 lib_env2.Append( CPPPATH = [pj(RootDir, 'external', bulletBaseVar,'Extras') ] )
 lib_env2.Append( LIBS = ['osgBullet','BulletColladaConverter','bullet','COLLADA_DOM','XML'] )
 lib_env2.Append( LIBPATH = [pj('#', buildDir,'external', bulletBaseVar)] )
-lib_env2.Append( LIBPATH = [pj('#', buildDir,'external', 'osgBullet')] )
+lib_env2.Append( LIBPATH = [pj('#', buildDir,'external', osgbulletBaseVar)] )
 
 osg_options.apply( lib_env2 )
 
