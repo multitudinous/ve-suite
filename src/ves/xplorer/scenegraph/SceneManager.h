@@ -123,6 +123,9 @@ public:
     ///\return The inverted matrix
     const gmtl::Matrix44d& GetInvertedWorldDCS() const;
 
+    ///Return the graphical plugin manager
+    Group& GetGraphicalPluginManager() const;
+
     ///Return the camera manager of the scenegraph
     camera::CameraManager& GetCameraManager() const;
 
@@ -237,6 +240,9 @@ private:
     ///The root model node of our scenegraph
     osg::ref_ptr< osg::Group > mModelRoot;
     //osg::ref_ptr< DCS > mModelRoot;
+
+    ///
+    osg::ref_ptr< Group > m_graphicalPluginManager;
 
     ///
     osg::ref_ptr< camera::CameraManager > m_cameraManager;

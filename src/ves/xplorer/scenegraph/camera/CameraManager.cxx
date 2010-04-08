@@ -40,7 +40,8 @@
 #include <ves/xplorer/Debug.h>
 
 // --- OSG Includes --- //
-
+#include <osgUtil/IntersectionVisitor>
+#include <osgUtil/LineSegmentIntersector>
 
 using namespace ves::xplorer::scenegraph::camera;
 
@@ -50,7 +51,7 @@ CameraManager::CameraManager()
     osg::Group(),
     m_enabled( false ),
     //NodeMask is an unsigned int
-    m_nodeMask( 0xfffffffe ),
+    m_nodeMask( 0xffffffef ),
     m_activeCamera( NULL )
 {
     Enable();
@@ -86,6 +87,11 @@ osg::BoundingSphere CameraManager::computeBound() const
 }
 */
 ////////////////////////////////////////////////////////////////////////////////
+Camera* const CameraManager::ConvertNodeToCamera( osg::Node* const node )
+{
+    return dynamic_cast< Camera* >( node );
+}
+////////////////////////////////////////////////////////////////////////////////
 void CameraManager::Enable( const bool& enable )
 {
     m_enabled = enable;
@@ -103,6 +109,42 @@ void CameraManager::Enable( const bool& enable )
 Camera* const CameraManager::GetActiveCamera() const
 {
     return m_activeCamera;
+}
+////////////////////////////////////////////////////////////////////////////////
+bool CameraManager::Handle(
+    Event::Enum event,
+    osgUtil::LineSegmentIntersector& deviceInput )
+{
+    Camera* camera = TestForIntersections( deviceInput );
+
+    switch( event )
+    {
+    case Event::FOCUS:
+    {
+        if( camera )
+        {
+            //camera->DoSomething();
+            std::cout<< "Just focused on a camera in the scene!!!" << std::endl;
+        }
+
+        break;
+    }
+    case Event::RELEASE:
+    {
+        m_activeCamera = camera;
+        std::cout<< "Just selected a camera in the scene!!!" << std::endl;
+
+        break;
+    }
+    default:
+    {
+        m_activeCamera = NULL;
+
+        break;
+    }
+    } //end switch( event )
+
+    return camera;
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool CameraManager::insertChild( unsigned int index, Camera* child )
@@ -128,5 +170,31 @@ void CameraManager::SetActiveCamera( Camera* const camera )
 bool CameraManager::setChild( unsigned int i, Camera* node )
 {
     return osg::Group::setChild( i, node );
+}
+////////////////////////////////////////////////////////////////////////////////
+Camera* const CameraManager::TestForIntersections(
+    osgUtil::LineSegmentIntersector& deviceInput )
+{
+    osgUtil::IntersectionVisitor intersectionVisitor( &deviceInput );
+
+    //Use bitwise NOT operator to get opposite of osg::Cameras NodeMask
+    //Need to fix this to a more stable implementation
+    unsigned int traversalMask = ~0xffffffdf;
+    intersectionVisitor.setTraversalMask( traversalMask );
+
+    accept( intersectionVisitor );
+
+    osgUtil::LineSegmentIntersector::Intersections& intersections =
+        deviceInput.getIntersections();
+    if( intersections.empty() )
+    {
+        return NULL;
+    }
+
+    osg::NodePath nodePath = intersections.begin()->nodePath;
+    osg::NodePath::iterator nodePathItr = nodePath.begin();
+    ++nodePathItr;
+
+    return ConvertNodeToCamera( *nodePathItr );
 }
 ////////////////////////////////////////////////////////////////////////////////

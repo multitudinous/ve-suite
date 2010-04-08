@@ -37,8 +37,15 @@
 // --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
 
+#include <ves/xplorer/scenegraph/camera/Definitions.h>
+
 // --- OSG Includes --- //
 #include <osg/Group>
+
+namespace osgUtil
+{
+class LineSegmentIntersector;
+}
 
 namespace ves
 {
@@ -83,6 +90,11 @@ public:
     ///
     Camera* const GetActiveCamera() const;
 
+    ///
+    bool Handle(
+        Event::Enum event,
+        osgUtil::LineSegmentIntersector& deviceInput );
+
     ///Override the insertChild function to only accept Cameras
     virtual bool insertChild( unsigned int index, Camera* child );
 
@@ -103,6 +115,13 @@ protected:
     virtual ~CameraManager();
 
 private:
+    ///
+    Camera* const ConvertNodeToCamera( osg::Node* const node );
+
+    ///
+    Camera* const TestForIntersections(
+        osgUtil::LineSegmentIntersector& deviceInput );
+
     ///
     bool m_enabled;
 

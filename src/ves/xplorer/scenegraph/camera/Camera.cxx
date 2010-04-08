@@ -169,6 +169,7 @@ void Camera::Initialize()
     m_camera->setRenderTargetImplementation( osg::Camera::FRAME_BUFFER_OBJECT );
     m_camera->setReferenceFrame( osg::Camera::ABSOLUTE_RF );
     m_camera->setViewport( 0, 0, 1024, 1024 );
+    m_camera->setNodeMask( 0xffffffdf );
 
     //Attach the camera view texture and use it as the first render target
     //attach( osg::Camera::BufferComponent( osg::Camera::COLOR_BUFFER0 ),
@@ -188,16 +189,7 @@ void Camera::Initialize()
     m_camera->setProjectionMatrixAsPerspective( 20.0, 1.0, 0.1, 2.0 );
 
     //
-    osg::Group& modelRoot = *SceneManager::instance()->GetModelRoot();
-    for( unsigned int i = 0; i < modelRoot.getNumChildren(); ++i )
-    {
-        osg::Node* node = modelRoot.getChild( i );
-        if( node->getName() == "cfdExecutive_Node" )
-        {
-            m_camera->addChild( node );
-        }
-    }
-    addChild( m_camera.get() );
+    addChild( &SceneManager::instance()->GetGraphicalPluginManager() );
 
     //
     //m_cameraPAT = new CameraPAT( *this );

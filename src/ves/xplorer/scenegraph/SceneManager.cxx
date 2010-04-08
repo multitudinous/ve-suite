@@ -84,7 +84,6 @@
 #include <sstream>
 
 using namespace ves::xplorer::scenegraph;
-namespace vxs = ves::xplorer::scenegraph;
 
 vprSingletonImpLifetime( SceneManager, 1 );
 
@@ -93,6 +92,7 @@ SceneManager::SceneManager()
     :
     mRootNode( NULL ),
     mModelRoot( NULL ),
+    m_graphicalPluginManager( NULL ),
     m_cameraManager( NULL ),
     m_manipulatorManager( NULL ),
     mLogoNode( NULL ),
@@ -192,6 +192,10 @@ void SceneManager::InitScene()
     //mModelRoot = new ves::xplorer::scenegraph::DCS();
     mModelRoot->setName( "Model Root Node" );
 
+    m_graphicalPluginManager = new Group();
+    m_graphicalPluginManager->setName( "Graphical Plugin Manager" );
+    mModelRoot->addChild( m_graphicalPluginManager.get() );
+
     m_cameraManager = new camera::CameraManager();
     m_cameraManager->setName( "Camera Manager" );
     mModelRoot->addChild( m_cameraManager.get() );
@@ -274,7 +278,7 @@ void SceneManager::InitScene()
     SetActiveSwitchNode( 1 );
 
     //Create the character controller
-    mCharacterController = new vxs::CharacterController();
+    mCharacterController = new CharacterController();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SceneManager::SetRootNode( osg::Group* rootNode )
@@ -314,9 +318,14 @@ osg::Group* const SceneManager::GetModelRoot() const
     return mModelRoot.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
+Group& SceneManager::GetGraphicalPluginManager() const
+{
+    return *m_graphicalPluginManager.get();
+}
+////////////////////////////////////////////////////////////////////////////////
 camera::CameraManager& SceneManager::GetCameraManager() const
 {
-    return *(m_cameraManager.get());
+    return *m_cameraManager.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
 manipulator::ManipulatorManager* const SceneManager::GetManipulatorManager() const

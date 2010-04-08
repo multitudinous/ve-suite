@@ -45,13 +45,17 @@
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/GlobalBase.h>
 
-#include <ves/xplorer/scenegraph/Group.h>
-
 #include <ves/open/xml/model/ModelPtr.h>
 #include <ves/open/xml/model/SystemPtr.h>
 
 // --- VR Juggler Includes --- //
 #include <vpr/Util/Singleton.h>
+
+// --- OSG Includes --- //
+namespace osg
+{
+class Group;
+}
 
 // --- ACE+TAO Includes --- //
 namespace Body
@@ -110,7 +114,7 @@ private:
     //this class should be a singleton
     ///Constructor
     cfdExecutive();
-    
+
     ///Destructor
     virtual ~cfdExecutive();
 
@@ -129,9 +133,6 @@ public:
 
     ///
     void GetEverything();
-
-    ///
-    scenegraph::Group* const GetExecutiveNode() const;
 
     ///
     void HowToUse( std::string name );
@@ -200,9 +201,6 @@ private:
 
     ///The raw xml network data from ce
     std::string veNetwork;
-
-    ///
-    osg::ref_ptr< ves::xplorer::scenegraph::Group > mExecutiveNode;
 
     ///_name_map : maps a module id to it's module name.
     std::map< std::string, std::string> _id_map;

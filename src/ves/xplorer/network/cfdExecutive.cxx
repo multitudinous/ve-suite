@@ -55,6 +55,7 @@
 
 #include <ves/xplorer/communication/CommunicationHandler.h>
 
+#include <ves/xplorer/scenegraph/Group.h>
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/ResourceManager.h>
 
@@ -99,8 +100,8 @@ using namespace ves::xplorer::plugin;
 using namespace ves::xplorer::network;
 using namespace ves::xplorer::command;
 
-////////////////////////////////////////////////////////////////////////////////
 vprSingletonImpLifetime( ves::xplorer::network::cfdExecutive, 0 );
+
 ////////////////////////////////////////////////////////////////////////////////
 cfdExecutive::cfdExecutive()
     :
@@ -131,11 +132,6 @@ void cfdExecutive::Initialize( CosNaming::NamingContext* inputNameContext,
             << XMLString::transcode( toCatch.getMessage() ) << std::endl;
         return;
     }
-
-    mExecutiveNode = new ves::xplorer::scenegraph::Group();
-    mExecutiveNode->SetName( "cfdExecutive_Node" );
-    ves::xplorer::scenegraph::SceneManager::instance()->GetModelRoot()->
-        addChild( mExecutiveNode.get() );
 
     mAvailableModules = new cfdVEAvailModules();
 
@@ -294,7 +290,9 @@ void cfdExecutive::GetNetwork()
     mTopSystemID = tempSystem->GetID();
     //Construct map of systems
     //Loop over all systems and get all models on the map
-    ParseSystem( tempSystem, true, mExecutiveNode.get() );
+    scenegraph::Group* graphicalPluginManager =
+        &scenegraph::SceneManager::instance()->GetGraphicalPluginManager();
+    ParseSystem( tempSystem, true, graphicalPluginManager );
 
     //create network system view
     netSystemView = new NetworkSystemView( veNetwork );
@@ -359,11 +357,6 @@ void cfdExecutive::GetEverything()
         ->SendConductorMessage( "Finished loading data in VE-Xplorer." );
     vprDEBUG( vesDBG, 0 ) << "|\t\tDone Getting Network From Executive"
         << std::endl << vprDEBUG_FLUSH;
-}
-////////////////////////////////////////////////////////////////////////////////
-scenegraph::Group* const cfdExecutive::GetExecutiveNode() const
-{
-    return mExecutiveNode.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdExecutive::InitModules()

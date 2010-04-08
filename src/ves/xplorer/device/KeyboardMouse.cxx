@@ -871,7 +871,7 @@ void KeyboardMouse::OnKeyPress()
 
         break;
     }
-    case gadget::KEY_DOWN: 
+    case gadget::KEY_DOWN:
     {
         Zoom45( -0.05 );
         ProcessNavigation();
@@ -1096,7 +1096,20 @@ void KeyboardMouse::OnMouseRelease()
     {
         //Do not require mod key depending on what the user did
         ClearPointConstraint();
-        
+
+        if( m_cameraManager.IsEnabled() )
+        {
+            /*
+            UpdateSelectionLine();
+            if( m_cameraManager.Handle(
+                    scenegraph::camera::Event::RELEASE,
+                    *mLineSegmentIntersector.get() ) )
+            {
+                break;
+            }
+            */
+        }
+
         if( m_manipulatorManager.IsEnabled() )
         {
             if( m_manipulatorManager.Handle(
@@ -1300,6 +1313,17 @@ void KeyboardMouse::OnMouseMotionDown( double dx, double dy )
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::OnMouseMotionUp()
 {
+    if( m_cameraManager.IsEnabled() )
+    {
+        UpdateSelectionLine();
+        if( m_cameraManager.Handle(
+                scenegraph::camera::Event::FOCUS,
+                *mLineSegmentIntersector.get() ) )
+        {
+            ;
+        }
+    }
+
     if( m_manipulatorManager.IsEnabled() )
     {
         UpdateSelectionLine();
