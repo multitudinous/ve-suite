@@ -1,12 +1,14 @@
-##sets up jconf files for stereo_desktop
+#
 import os, sys, string
-pj = os.path.join
 import SConsAddons.Util as sca_util
+pj = os.path.join
 
-Import('ves_pkg buildDir RootDir GetPlatform')
+Import( 'ves_pkg buildDir RootDir GetPlatform' )
 
-handBundle = ves_pkg.createFileBundle( pj('share','vesuite','osg-data') )
-handFile = sca_util.getFilesRecursiveByExt( pj(RootDir, 'share', 'osg-data'), ['.osg'] )
-#handFileTex = sca_util.getFilesRecursiveByExt( pj(RootDir, 'share', 'osg-data'), ['.rgb'] )
-handBundle.addFiles( handFile )
-#handBundle.addFiles( handFileTex )
+fileBundle = ves_pkg.createFileBundle( pj( 'share','vesuite','osg-data' ) )
+
+osgFile = sca_util.getFilesRecursiveByExt( pj( RootDir, 'share', 'osg-data' ), [ '.osg' ] )
+iveFile = sca_util.getFilesRecursiveByExt( pj( RootDir, 'share', 'osg-data' ), [ '.ive' ] )
+
+fileBundle.addFiles( osgFile )
+fileBundle.addFiles( iveFile )
