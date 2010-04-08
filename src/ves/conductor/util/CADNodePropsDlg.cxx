@@ -1106,36 +1106,40 @@ void CADNodePropertiesDlg::_updatePhysicsProperties( wxSpinEvent& event )
     {
         _commandName = std::string( "PHYSICS_PROPERTIES" );
 
-        ves::open::xml::DataValuePairPtr nodeID( new ves::open::xml::DataValuePair() );
+        ves::open::xml::DataValuePairPtr 
+            nodeID( new ves::open::xml::DataValuePair() );
         nodeID->SetDataType( "STRING" );
         nodeID->SetData( std::string( "Node ID" ), _cadNode->GetID() );
         _instructions.push_back( nodeID );
 
-        ves::open::xml::DataValuePairPtr nodeType( new ves::open::xml::DataValuePair() );
+        ves::open::xml::DataValuePairPtr 
+            nodeType( new ves::open::xml::DataValuePair() );
         nodeType->SetDataType( "STRING" );
         nodeType->SetDataName( std::string( "Node Type" ) );
         nodeType->SetDataString( _cadNode->GetNodeType() );
         _instructions.push_back( nodeType );
 
-        ves::open::xml::DataValuePairPtr physicsPropertyValue( new ves::open::xml::DataValuePair() );
-        physicsPropertyValue->SetDataType( "DOUBLE" );
+        ves::open::xml::DataValuePairPtr 
+            physicsPropertyValue( new ves::open::xml::DataValuePair() );
 
         if( event.GetId() == PHYSICS_MASS_ID )
         {
-            physicsPropertyValue->SetData( "Mass", _physicsMassCtrl->GetValue() );
+            physicsPropertyValue->SetData( "Mass",
+                static_cast< double >( _physicsMassCtrl->GetValue() ) );
             _cadNode->SetMass( _physicsMassCtrl->GetValue() );
         }
         else if( event.GetId() == PHYSICS_FRICTION_ID )
         {
-            physicsPropertyValue->SetData( "Friction", _physicsFrictionCtrl->GetValue() );
+            physicsPropertyValue->SetData( "Friction", 
+                static_cast< double >( _physicsFrictionCtrl->GetValue() ) );
             _cadNode->SetFriction( _physicsFrictionCtrl->GetValue() );
         }
         else if( event.GetId() == PHYSICS_RESTITUTION_ID )
         {
-            physicsPropertyValue->SetData( "Restitution", _physicsRestitutionCtrl->GetValue() );
+            physicsPropertyValue->SetData( "Restitution", 
+                static_cast< double >( _physicsRestitutionCtrl->GetValue() ) );
             _cadNode->SetRestitution( _physicsRestitutionCtrl->GetValue() );
         }
-
         _instructions.push_back( physicsPropertyValue );
 
         _sendCommandsToXplorer();
