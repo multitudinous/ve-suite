@@ -1335,7 +1335,7 @@ void DynSimParser::UpdateOPCList( )
     for( int i = 1; i <= m_opcVariables.size(); i++)
     {
         std::string modnameOPC =
-            m_opcFlowsheetName + "_" + m_opcVariables[i-1]+".POS";
+            m_opcFlowsheetName + "_" + m_opcVariables[i-1];//+".POS";
         _bstr_t itemName = modnameOPC.c_str();
         itemIDs->SetAt( i, browser->GetItemID( modnameOPC.c_str() ) );
         clientID->SetAt( i, i );
@@ -1446,12 +1446,22 @@ std::vector< std::pair< std::string, std::string > > DynSimParser::ReadVars()
 //depending on the end desires for the code this function can be combine with ReadVars()
 std::string DynSimParser::GetOPCValues( )
 {
+    if( m_opcVariables.empty() )
+    {
+        return "NULL";
+    }
+
     ReadVars();
+
+    if( nameAndValues.empty() )
+    {
+        return "NULL";
+    }
 
     //append the flowsheet name
     ves::open::xml::CommandPtr varAndValues( new ves::open::xml::Command() );
     varAndValues->SetCommandName("OPCData");
-    
+
     //loop over the variables and add as dvps
     for( int i = 0; i < nameAndValues.size(); i++ )
     {

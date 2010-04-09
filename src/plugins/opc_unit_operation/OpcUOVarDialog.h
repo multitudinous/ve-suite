@@ -47,6 +47,8 @@
 
 #include <vector>
 
+#include "OpcUOPlugin.h"
+
 #undef OpcUOVarDialog_STYLE
 #if wxCHECK_VERSION( 2, 9, 0 )
 #define OpcUOVarDialog_STYLE wxCAPTION | wxRESIZE_BORDER | wxSYSTEM_MENU | wxDIALOG_NO_PARENT | wxMINIMIZE_BOX | wxMAXIMIZE_BOX | wxCLOSE_BOX
@@ -65,14 +67,14 @@ class OpcUOVarDialog : public wxDialog
         
     public:
         OpcUOVarDialog(wxWindow *parent, wxWindowID id = 1,
-            const wxString &title = wxT("OpcUOVarDialog"),
+            const wxString &title = wxT( "OpcUOVarDialog" ),
             const wxPoint& pos = wxDefaultPosition,
             const wxSize& size = wxDefaultSize,
-            long style = OpcUOVarDialog_STYLE);
+            long style = OpcUOVarDialog_STYLE );
 
         virtual ~OpcUOVarDialog();
-        void CancelButtonClick(wxCommandEvent& event);
-        void SetButtonClick(wxCommandEvent& event);
+        void CancelButtonClick( wxCommandEvent& event );
+        void SetButtonClick( wxCommandEvent& event );
         //void SetData( wxString name = wxT(""), wxString description = wxT(""),
         //    wxString value = wxT(""), wxString units = wxT("") );
         void SetData( wxString name = wxT(""), wxString value = wxT("") );
@@ -80,16 +82,19 @@ class OpcUOVarDialog : public wxDialog
         void SetComponentName( wxString name );
         void SetServiceList(
             ves::conductor::util::CORBAServiceList * serviceList );
-        wxString CompName;
-        ves::conductor::util::CORBAServiceList * ServiceList;
+        wxString mCompName;
+        ves::conductor::util::CORBAServiceList * mServiceList;
     
     private:
         wxButton *CancelButton;
         wxButton *SetButton;
+        wxButton *MonitorButton;
         wxBoxSizer *WxBoxSizer1;
         wxGrid *WxGrid;
         wxFlexGridSizer *WxFlexGridSizer;
         std::vector< int > rowsChanged;
+        int monitorRow;
+        //OpcUOPlugin * mParent;
         
         std::string ConvertUnicode( const wxChar* data )
         {
@@ -101,6 +106,7 @@ class OpcUOVarDialog : public wxDialog
     private:
         enum
         {
+            ID_MONITORBUTTON = 1006,
             ID_CANCELBUTTON = 1005,
             ID_SETBUTTON = 1004,
             ID_WXGRID = 1002,
@@ -108,9 +114,11 @@ class OpcUOVarDialog : public wxDialog
         };
     
     private:
-        void OnClose(wxCloseEvent& event);
-        void CreateGUIControls();
-        void WxGridCellChange(wxGridEvent& event);
+        void OnClose( wxCloseEvent& event );
+        void CreateGUIControls( );
+        void OnCellChange( wxGridEvent& event );
+        void OnSelectCell( wxGridEvent& event );
+        void OnMonitorVariable( wxCommandEvent& event );
 };
 }
 }

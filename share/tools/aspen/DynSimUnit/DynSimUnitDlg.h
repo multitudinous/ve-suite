@@ -25,7 +25,6 @@ public:
     virtual LRESULT WindowProc(UINT message, WPARAM wParam, LPARAM lParam);
     BOOL OnIdle( LONG lCount );
 
-
 // Implementation
 protected:
     HICON m_hIcon;

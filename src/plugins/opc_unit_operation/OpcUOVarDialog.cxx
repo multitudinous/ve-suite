@@ -37,27 +37,37 @@ BEGIN_EVENT_TABLE( OpcUOVarDialog, wxDialog )
     EVT_CLOSE( OpcUOVarDialog::OnClose )
     EVT_BUTTON( ID_CANCELBUTTON, OpcUOVarDialog::CancelButtonClick )
     EVT_BUTTON( ID_SETBUTTON, OpcUOVarDialog::SetButtonClick )
-    EVT_GRID_CELL_CHANGE( OpcUOVarDialog::WxGridCellChange )
+    EVT_BUTTON( ID_MONITORBUTTON, OpcUOVarDialog::OnMonitorVariable )
+    EVT_GRID_CELL_CHANGE( OpcUOVarDialog::OnCellChange )
+    EVT_GRID_SELECT_CELL( OpcUOVarDialog::OnSelectCell )
 END_EVENT_TABLE()
 
-OpcUOVarDialog::OpcUOVarDialog(wxWindow *parent, wxWindowID id, const wxString &title, const wxPoint &position, const wxSize& size, long style)
+///////////////////////////////////////////////////////////////////////////////
+OpcUOVarDialog::OpcUOVarDialog(wxWindow *parent, wxWindowID id,
+                               const wxString &title, const wxPoint &position,
+                               const wxSize& size, long style)
 : wxDialog(parent, id, title, position, size, style)
 {
     CreateGUIControls();
+    //mParent = (OpcUOPlugin *)parent;
 }
 
+///////////////////////////////////////////////////////////////////////////////
 OpcUOVarDialog::~OpcUOVarDialog()
 {
-} 
+}
 
+///////////////////////////////////////////////////////////////////////////////
 void OpcUOVarDialog::CreateGUIControls()
 {
     WxFlexGridSizer = new wxFlexGridSizer(0, 1, 0, 0);
     this->SetSizer(WxFlexGridSizer);
     this->SetAutoLayout(true);
 
-    WxGrid = new wxGrid(this, ID_WXGRID, wxPoint(5,5), wxSize(320,120), wxVSCROLL | wxHSCROLL);
-    WxGrid->SetFont(wxFont(12, wxSWISS, wxNORMAL,wxNORMAL, false, wxT("Tahoma")));
+    WxGrid = new wxGrid(this, ID_WXGRID, wxPoint(5,5), wxSize(320,120),
+        wxVSCROLL | wxHSCROLL);
+    WxGrid->SetFont(wxFont(12, wxSWISS, wxNORMAL,wxNORMAL, false,
+        wxT("Tahoma")));
     WxGrid->SetDefaultColSize(50);
     WxGrid->SetDefaultRowSize(25);
     WxGrid->SetRowLabelSize(50);
@@ -69,13 +79,25 @@ void OpcUOVarDialog::CreateGUIControls()
     WxBoxSizer1 = new wxBoxSizer(wxHORIZONTAL);
     WxFlexGridSizer->Add(WxBoxSizer1, 0, wxALIGN_CENTER | wxALL, 5);
 
-    SetButton = new wxButton(this, ID_SETBUTTON, wxT("Set"), wxPoint(5,5), wxSize(75,25), 0, wxDefaultValidator, wxT("SetButton"));
-    SetButton->SetFont(wxFont(12, wxSWISS, wxNORMAL,wxNORMAL, false, wxT("Tahoma")));
+    SetButton = new wxButton(this, ID_SETBUTTON, wxT("Set"), wxPoint(5,5),
+        wxSize(75,25), 0, wxDefaultValidator, wxT("SetButton"));
+    SetButton->SetFont(wxFont(12, wxSWISS, wxNORMAL,wxNORMAL, false,
+        wxT("Tahoma")));
     WxBoxSizer1->Add(SetButton,0,wxALIGN_CENTER | wxALL,5);
 
-    CancelButton = new wxButton(this, ID_CANCELBUTTON, wxT("Close"), wxPoint(90,5), wxSize(75,25), 0, wxDefaultValidator, wxT("CancelButton"));
-    CancelButton->SetFont(wxFont(12, wxSWISS, wxNORMAL,wxNORMAL, false, wxT("Tahoma")));
+    CancelButton = new wxButton(this, ID_CANCELBUTTON, wxT("Close"),
+        wxPoint(90,5), wxSize(75,25), 0, wxDefaultValidator,
+        wxT("CancelButton"));
+    CancelButton->SetFont(wxFont(12, wxSWISS, wxNORMAL,wxNORMAL, false,
+        wxT("Tahoma")));
     WxBoxSizer1->Add(CancelButton,0,wxALIGN_CENTER | wxALL,5);
+
+    MonitorButton = new wxButton(this, ID_MONITORBUTTON, wxT("Monitor"),
+        wxPoint(115,5), wxSize(75,25), 0, wxDefaultValidator,
+        wxT("MonitorButton"));
+    MonitorButton->SetFont(wxFont(12, wxSWISS, wxNORMAL,wxNORMAL, false,
+        wxT("Tahoma")));
+    WxBoxSizer1->Add(MonitorButton,0,wxALIGN_CENTER | wxALL,5);
 
     SetTitle(wxT("OpcUOVarDialog"));
     SetIcon(wxNullIcon);
@@ -102,19 +124,19 @@ void OpcUOVarDialog::CreateGUIControls()
     WxFlexGridSizer->AddGrowableRow(0);
 }
 
-//for closing
+///////////////////////////////////////////////////////////////////////////////
 void OpcUOVarDialog::OnClose(wxCloseEvent& /*event*/)
 {
     this->Destroy();
 }
 
-//CancelButtonClick
+///////////////////////////////////////////////////////////////////////////////
 void OpcUOVarDialog::CancelButtonClick(wxCommandEvent& event)
 {
     this->Destroy();
 }
 
-// SetButtonClick
+///////////////////////////////////////////////////////////////////////////////
 void OpcUOVarDialog::SetButtonClick(wxCommandEvent& event)
 {  
     ves::open::xml::CommandPtr params( new ves::open::xml::Command() );
@@ -131,7 +153,8 @@ void OpcUOVarDialog::SetButtonClick(wxCommandEvent& event)
 
         //variable name
         wxString varName = WxGrid->GetRowLabelValue( rowsChanged[i] );
-        std::string temp = ConvertUnicode( CompName.c_str() ) + "." + ConvertUnicode( varName.c_str() );
+        std::string temp = ConvertUnicode( mCompName.c_str() ) + "." +
+            ConvertUnicode( varName.c_str() );
         //paramList.push_back( ConvertUnicode( varName.c_str() ) );
 
         //value
@@ -155,7 +178,7 @@ void OpcUOVarDialog::SetButtonClick(wxCommandEvent& event)
     std::string status="returnString";
     commandWriter.UseStandaloneDOMDocumentManager();
     commandWriter.WriteXMLDocument( nodes, status, "Command" );
-    ServiceList->Query( status );
+    mServiceList->Query( status );
 
     wxMessageDialog popup( this, _("Data has been sent to Aspen Dynamics") );
     popup.ShowModal(); 
@@ -180,6 +203,8 @@ void OpcUOVarDialog::SetButtonClick(wxCommandEvent& event)
     WxGrid->SetCellValue( index, 1, value );
     WxGrid->SetCellValue( index, 2, units );
 }*/
+
+///////////////////////////////////////////////////////////////////////////////
 void OpcUOVarDialog::SetData( wxString name, wxString value )
 {
     //add a new row
@@ -191,27 +216,66 @@ void OpcUOVarDialog::SetData( wxString name, wxString value )
     WxGrid->SetCellValue( index, 0, value );
 }
 
-//Update the grid size to match data size
+///////////////////////////////////////////////////////////////////////////////
 void OpcUOVarDialog::UpdateSizes()
 {
     WxGrid->AutoSize();
     WxGrid->SetRowLabelAlignment( wxALIGN_LEFT, wxALIGN_CENTRE );
 }
 
-//WxGridCellChange
-void OpcUOVarDialog::WxGridCellChange(wxGridEvent& event)
+///////////////////////////////////////////////////////////////////////////////
+void OpcUOVarDialog::OnCellChange(wxGridEvent& event)
 {
     rowsChanged.push_back( event.GetRow() );
 }
 
-//WxGridCellChange
-void OpcUOVarDialog::SetComponentName( wxString name )
+///////////////////////////////////////////////////////////////////////////////
+void OpcUOVarDialog::OnSelectCell(wxGridEvent& event)
 {
-    CompName = name;
+    monitorRow =  event.GetRow();
 }
 
+///////////////////////////////////////////////////////////////////////////////
+void OpcUOVarDialog::SetComponentName( wxString name )
+{
+    mCompName = name;
+}
+
+///////////////////////////////////////////////////////////////////////////////
 void OpcUOVarDialog::SetServiceList(
     ves::conductor::util::CORBAServiceList * serviceList )
 {
-    this->ServiceList = serviceList;
+    mServiceList = serviceList;
 }
+////////////////////////////////////////////////////////////////////////////////
+void OpcUOVarDialog::OnMonitorVariable( wxCommandEvent& event )
+{
+    ves::open::xml::CommandPtr monitor( new ves::open::xml::Command() );
+    monitor->SetCommandName("addVariable");
+    
+    wxString varName = WxGrid->GetRowLabelValue( monitorRow );
+    std::string temp = mCompName + "." +
+        ConvertUnicode( varName.c_str() );
+
+    ves::open::xml::DataValuePairPtr
+        variables( new ves::open::xml::DataValuePair() );
+    variables->SetData( "variable", temp.c_str() );
+    monitor->AddDataValuePair( variables );
+
+    std::vector< std::pair< ves::open::xml::XMLObjectPtr, std::string > >
+        nodes;
+    nodes.push_back( std::pair< ves::open::xml::XMLObjectPtr,
+        std::string >( monitor, "vecommand" ) );
+
+    ves::open::xml::XMLReaderWriter commandWriter;
+    std::string status="returnString";
+    commandWriter.UseStandaloneDOMDocumentManager();
+    commandWriter.WriteXMLDocument( nodes, status, "Command" );
+
+    std::string nw_str = mServiceList->Query( status );
+    //DynamicsDataBuffer::instance()->Enable();
+}
+
+//NEED TO KEEP TRACK OF WHICH VARIABLES ARE ALREADY ADDED
+//SO YOU CAN REMOVE THAT VALUE FROM BEING MONITORED AND ADD THE
+//NEW VARIABLE YOU WANT TO MONITOR

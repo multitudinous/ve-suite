@@ -249,9 +249,10 @@ void OpcUOPlugin::ReadValue( )
             return;
         }
 
-        std::string compName = GetVEModel()->GetPluginName();
+        //std::string compName = GetVEModel()->GetPluginName();
         std::string tempData;
-        DataValuePairPtr tempDVP = opcData->GetDataValuePair( compName );
+        //DataValuePairPtr tempDVP = opcData->GetDataValuePair( compName );
+        DataValuePairPtr tempDVP = opcData->GetDataValuePair( mPluginName.c_str() );
         dynValue = "NA";
         if( tempDVP )
         {
@@ -310,11 +311,12 @@ void OpcUOPlugin::StopTimer( wxCommandEvent& event )
 void OpcUOPlugin::QueryForAllVariables( wxCommandEvent& event )
 {
     //Query Unit for all opc variables available
-    std::string compName = GetVEModel()->GetPluginName();
+    //std::string compName = GetVEModel()->GetPluginName();
+    //mPluginName = GetVEModel()->GetPluginName().c_str();
     ves::open::xml::CommandPtr returnState( new ves::open::xml::Command() );
     returnState->SetCommandName( "getAllOPCVariables" );
     ves::open::xml::DataValuePairPtr data( new ves::open::xml::DataValuePair() );
-    data->SetData( std::string( "ModuleName" ), compName );
+    data->SetData( std::string( "ModuleName" ), mPluginName.c_str() );
     returnState->AddDataValuePair( data );
     std::vector< std::pair< XMLObjectPtr, std::string > > nodes;
     nodes.push_back( std::pair< XMLObjectPtr, std::string >( returnState, "vecommand" ) );
@@ -354,7 +356,6 @@ void OpcUOPlugin::QueryForAllVariables( wxCommandEvent& event )
     //populate dialog
     params->ShowModal();
     params->Destroy();
-
 }
 ///////////////////////////////////////////////////////////////////////////////
 void OpcUOPlugin::OnShowAllVar( wxCommandEvent& event )

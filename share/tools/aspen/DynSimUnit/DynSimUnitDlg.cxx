@@ -123,7 +123,7 @@ BOOL CDynSimUnitDlg::OnIdle( LONG test )
     if(initialized)
     {
         commManager->CheckCORBAWork();
-        commManager->GetUnitObject()->Monitor();
+        //commManager->GetUnitObject()->Monitor();
     }
     return FALSE;
 }
@@ -151,6 +151,7 @@ LRESULT CDynSimUnitDlg::WindowProc(UINT message,
 
     return resValue;
 }
+
 void CDynSimUnitDlg::OnBnClickedCancel()
 {   
     if( initialized )

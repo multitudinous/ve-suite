@@ -155,6 +155,8 @@ private:
     
     ACE_Time_Value mTimeOutValue;
     ACE_Time_Value mTimeZero;
+    
+    vpr::Mutex mLock;  ///< A mutex to protect thread
 };
 }
 }

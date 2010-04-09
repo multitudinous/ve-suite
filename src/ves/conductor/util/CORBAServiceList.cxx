@@ -665,6 +665,7 @@ void CORBAServiceList::Resume( void )
 ////////////////////////////////////////////////////////////////////////////////
 const std::string CORBAServiceList::Query( const std::string& command )
 {
+    vpr::Guard< vpr::Mutex > guard( mLock );
     ::wxBusyCursor wait;
     if( !CORBAServiceList::IsConnectedToCE() )
     {

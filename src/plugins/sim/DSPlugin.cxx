@@ -253,12 +253,12 @@ wxMenu* DSPlugin::GetPluginPopupMenu( wxMenu* baseMenu )
     mDynSimMenu = new wxMenu();
     mDynSimMenu->Append( DSPLUGIN_OPEN_SIM, _( "Open" ) );
     mDynSimMenu->Enable( DSPLUGIN_OPEN_SIM, true );
-    mDynSimMenu->Append( DSPLUGIN_CREATE_OPC_LIST, _( "Create List") );
-    mDynSimMenu->Enable( DSPLUGIN_CREATE_OPC_LIST, true );
+    //mDynSimMenu->Append( DSPLUGIN_CREATE_OPC_LIST, _( "Create List") );
+    //mDynSimMenu->Enable( DSPLUGIN_CREATE_OPC_LIST, true );
     mDynSimMenu->Append( DSPLUGIN_CONNECT, _( "Connect to OPC") );
     mDynSimMenu->Enable( DSPLUGIN_CONNECT, true );
-    mDynSimMenu->Append( DSPLUGIN_ADDVAR, _( "ADD VAR") );
-    mDynSimMenu->Enable( DSPLUGIN_ADDVAR, true );
+    //mDynSimMenu->Append( DSPLUGIN_ADDVAR, _( "ADD VAR") );
+    //mDynSimMenu->Enable( DSPLUGIN_ADDVAR, true );
     baseMenu->Insert( 0, DSPLUGIN_DYNSIM_MENU,   _( "DynSim" ), mDynSimMenu,
                     _( "Used in conjunction with DynSim" ) );
     baseMenu->Enable( DSPLUGIN_DYNSIM_MENU, true );
@@ -280,7 +280,6 @@ void DSPlugin::OnCreateOPCList( wxCommandEvent& event )
 ////////////////////////////////////////////////////////////////////////////////
 void DSPlugin::OnConnect( wxCommandEvent& event )
 {
-    std::string compName = GetVEModel()->GetPluginName();
     ves::open::xml::CommandPtr monitor( new ves::open::xml::Command() );
     monitor->SetCommandName("connectToOPC");
 
@@ -301,14 +300,13 @@ void DSPlugin::OnConnect( wxCommandEvent& event )
 
     std::string nw_str = serviceList->Query( status );
 
-    //DynamicsDataBuffer::instance()->Enable();
+    DynamicsDataBuffer::instance()->Enable();
 
     //m_timer->Start( 4000 );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DSPlugin::OnAddVariable( wxCommandEvent& event )
 {
-    std::string compName = GetVEModel()->GetPluginName();
     ves::open::xml::CommandPtr monitor( new ves::open::xml::Command() );
     monitor->SetCommandName("addVariable");
 

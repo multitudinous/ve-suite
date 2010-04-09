@@ -81,8 +81,12 @@ public:
     void Update( );
     void Enable( );
     void Disable( );
-    void PauseUpdate( );
-    void ResumeUpdate( );
+    //void StartThread( );
+    //void Resume( );
+    //void Pause( );
+    //void RemoveThread( );
+    //void PauseUpdate( );
+    //void ResumeUpdate( );
 
 private:
     ///Mapp to hold all the preference data to be written to the ves file

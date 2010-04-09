@@ -154,18 +154,42 @@ void DynamicsDataBuffer::Print( void )
     for( std::map< std::string, ves::open::xml::CommandPtr >::iterator
         iter = commandMap.begin(); iter != commandMap.end(); ++iter )
     {
-        std::cout << iter->first << " " << iter->second->GetCommandName() << std::endl;
+        std::cout << iter->first << " " << iter->second->GetCommandName()
+            << std::endl;
     }
 }
 ///////////////////////////////////////////////////////////////////////////////
 void DynamicsDataBuffer::Enable( )
 {
-    if( !m_enabled )
+   if( !m_enabled )
     {
-    m_enabled = true;
-        m_thread = new vpr::Thread( boost::bind( &DynamicsDataBuffer::Update, this ) );
+        m_enabled = true;
+        m_thread = new vpr::Thread( boost::bind( &DynamicsDataBuffer::Update,
+            this ) );
     }
 }
+
+///////////////////////////////////////////////////////////////////////////////
+//void DynamicsDataBuffer::Enable( )
+//{
+//    m_enabled = true;
+//}
+///////////////////////////////////////////////////////////////////////////////
+//void DynamicsDataBuffer::Disable( )
+//{
+//    m_enabled = false;
+//
+//}
+///////////////////////////////////////////////////////////////////////////////
+//void DynamicsDataBuffer::Pause( )
+//{
+//    m_thread->suspend();
+//}
+///////////////////////////////////////////////////////////////////////////////
+//void DynamicsDataBuffer::Resume( )
+//{
+//    m_thread->resume();
+//}
 ///////////////////////////////////////////////////////////////////////////////
 void DynamicsDataBuffer::Disable( )
 {
@@ -177,18 +201,20 @@ void DynamicsDataBuffer::Disable( )
     }
 }
 ///////////////////////////////////////////////////////////////////////////////
-void DynamicsDataBuffer::PauseUpdate( )
-{
-    m_thread->suspend();
-}
+//void DynamicsDataBuffer::PauseUpdate( )
+//{
+//    m_thread->suspend();
+//}
 ///////////////////////////////////////////////////////////////////////////////
-void DynamicsDataBuffer::ResumeUpdate( )
-{
-    m_thread->resume();
-}
+//void DynamicsDataBuffer::ResumeUpdate( )
+//{
+//    m_thread->resume();
+//}
 ////////////////////////////////////////////////////////////////////////////////
 void DynamicsDataBuffer::Update( )
 {
+    //we should be checking that there are values that need to be monitored
+    //if not skip over
     while( m_enabled )
     {
         //need check - if not return false
@@ -210,18 +236,21 @@ void DynamicsDataBuffer::Update( )
         std::string nw_str =
             ves::conductor::util::CORBAServiceList::instance()->Query( status );
 
-        //populate the class with the new values
-        ves::open::xml::XMLReaderWriter networkReader;
-        networkReader.UseStandaloneDOMDocumentManager();
-        networkReader.ReadFromString();
-        networkReader.ReadXMLData( nw_str, "Command", "vecommand" );
-        std::vector< ves::open::xml::XMLObjectPtr > objectVector =
-            networkReader.GetLoadedXMLObjects();
-        ves::open::xml::CommandPtr cmd =
-            boost::dynamic_pointer_cast<ves::open::xml::Command>
-            ( objectVector.at( 0 ) );
+        if( nw_str.compare("NULL") != 0 )
+        {
+            //populate the class with the new values
+            ves::open::xml::XMLReaderWriter networkReader;
+            networkReader.UseStandaloneDOMDocumentManager();
+            networkReader.ReadFromString();
+            networkReader.ReadXMLData( nw_str, "Command", "vecommand" );
+            std::vector< ves::open::xml::XMLObjectPtr > objectVector =
+                networkReader.GetLoadedXMLObjects();
+            ves::open::xml::CommandPtr cmd =
+                boost::dynamic_pointer_cast<ves::open::xml::Command>
+                ( objectVector.at( 0 ) );
 
-        commandMap["OPC_Data"] = cmd;
+            commandMap["OPC_Data"] = cmd;
+        }
 
         vpr::System::msleep( 10 );
     }
