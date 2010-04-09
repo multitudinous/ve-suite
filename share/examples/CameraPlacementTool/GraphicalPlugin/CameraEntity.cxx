@@ -39,7 +39,7 @@
 #include "ProjectionTechnique.h"
 
 // --- VE-Suite Includes --- //
-#include <ves/xplorer/environment/HeadsUpDisplay.h>
+#include <ves/xplorer/scenegraph/HeadsUpDisplay.h>
 
 #include <ves/xplorer/scenegraph/DCS.h>
 #include <ves/xplorer/scenegraph/ResourceManager.h>
@@ -101,7 +101,7 @@ CameraEntity::CameraEntity()
 ////////////////////////////////////////////////////////////////////////////////
 CameraEntity::CameraEntity(
     ves::xplorer::scenegraph::DCS* pluginDCS,
-    ves::xplorer::HeadsUpDisplay* headsUpDisplay,
+    ves::xplorer::scenegraph::HeadsUpDisplay* headsUpDisplay,
     ves::xplorer::scenegraph::ResourceManager* resourceManager )
     :
     osg::Camera(),

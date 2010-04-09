@@ -99,8 +99,8 @@ DeviceHandler::DeviceHandler()
     device = NULL;
 
     //Set properties in Devices
-    DeviceMap::const_iterator itr = m_deviceMap.begin();
-    for( itr; itr != m_deviceMap.end(); ++itr )
+    for( DeviceMap::const_iterator itr = m_deviceMap.begin(); 
+        itr != m_deviceMap.end(); ++itr )
     {
         device::Device* device = itr->second;
         device->SetCenterPoint( &mCenterPoint );
@@ -128,8 +128,8 @@ DeviceHandler::DeviceHandler()
 DeviceHandler::~DeviceHandler()
 {
     //Delete m_deviceMap in map
-    DeviceMap::iterator itr = m_deviceMap.begin();
-    for( itr; itr != m_deviceMap.end(); ++itr )
+    for( DeviceMap::iterator itr = m_deviceMap.begin(); 
+        itr != m_deviceMap.end(); ++itr )
     {
         delete itr->second;
     }
@@ -165,8 +165,8 @@ void DeviceHandler::ExecuteCommands()
     }
 
     event::EventHandler* tempEvent = ehItr->second;
-    DeviceMap::const_iterator itr = m_deviceMap.begin();
-    for( itr; itr != m_deviceMap.end(); ++itr )
+    for( DeviceMap::const_iterator itr = m_deviceMap.begin(); 
+        itr != m_deviceMap.end(); ++itr )
     {
         device::Device* device = itr->second;
         if( device->IsEnabled() )
@@ -218,8 +218,8 @@ void DeviceHandler::ProcessDeviceEvents()
     ExecuteCommands();
 
     //Process device events
-    DeviceMap::const_iterator itr = m_deviceMap.begin();
-    for( itr; itr != m_deviceMap.end(); ++itr )
+    for( DeviceMap::const_iterator itr = m_deviceMap.begin(); 
+        itr != m_deviceMap.end(); ++itr )
     {
         m_deviceBeingProcessed = itr->second;
         if( m_deviceBeingProcessed->IsEnabled() )

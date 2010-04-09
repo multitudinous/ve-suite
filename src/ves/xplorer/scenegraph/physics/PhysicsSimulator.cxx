@@ -588,10 +588,10 @@ void PhysicsSimulator::ResetScene()
             mDynamicsWorld->getCollisionObjectArray()[ i ];
         btRigidBody* body = btRigidBody::upcast( colObj );
 
-        if( body && body->isStaticObject() )
-        {
-            continue;
-        }
+        //if( body && body->isStaticObject() )
+        //{
+        //    continue;
+        //}
 
         if( body && body->getMotionState() )
         {
@@ -617,6 +617,11 @@ void PhysicsSimulator::ResetScene()
             }
         }
     }
+    
+    ///reset some internal cached data in the broadphase
+    mDynamicsWorld->getBroadphase()->resetPool(mDynamicsWorld->getDispatcher());
+    mDynamicsWorld->getConstraintSolver()->reset();
+    
 
     CharacterController* characterController =
         SceneManager::instance()->GetCharacterController();

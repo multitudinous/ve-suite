@@ -36,7 +36,7 @@
 
 #include <ves/xplorer/GlobalBase.h>
 #include <ves/xplorer/EnvironmentHandler.h>
-#include <ves/xplorer/environment/HeadsUpDisplay.h>
+#include <ves/xplorer/scenegraph/HeadsUpDisplay.h>
 
 #include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/Command.h>

@@ -32,10 +32,8 @@
  *************** <auto-copyright.rb END do not edit this line> **************/
 
 // --- VE-Suite Includes --- //
-#include <ves/xplorer/environment/HeadsUpDisplay.h>
-#include <ves/xplorer/environment/WCS.h>
-
-#include <ves/xplorer/EnvironmentHandler.h>
+#include <ves/xplorer/scenegraph/HeadsUpDisplay.h>
+#include <ves/xplorer/scenegraph/WCS.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/CADEntity.h>
@@ -47,6 +45,7 @@
 
 #include <osgText/Text>
 
+using namespace ves::xplorer::scenegraph;
 using namespace ves::xplorer;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -60,7 +59,8 @@ HeadsUpDisplay::HeadsUpDisplay(
     mFramerateText( 0 ),
     mWCSxText( 0 ),
     mWCSyText( 0 ),
-    mWCSzText( 0 )
+    mWCSzText( 0 ),
+    m_framerate( 0 )
 {
     Initialize();
 }
@@ -169,7 +169,7 @@ void HeadsUpDisplay::LatePreFrame()
     if( mFramerateTextGeode->getNodeMask() != 0 )
     {
         mFps.str( "" );
-        mFps << ves::xplorer::EnvironmentHandler::instance()->GetFrameRate();
+        mFps << m_framerate;
         mFps << " fps";
 
         mFramerateText->setText( mFps.str() );
@@ -232,3 +232,7 @@ void HeadsUpDisplay::SetTextColor( std::vector< double > color )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
+void HeadsUpDisplay::SetFrameRate( const float frameRate )
+{
+    m_framerate = frameRate;
+}

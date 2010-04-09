@@ -74,7 +74,10 @@ class cfdTeacher;
 class cfdQuatCamHandler;
 class cfdDisplaySettings;
 
+namespace scenegraph
+{
 class HeadsUpDisplay;
+}
 
 namespace device
 {
@@ -107,16 +110,13 @@ public:
     ///Initialize environment.
     void Initialize();
 
-    ///Clean up environment.
-    //void CleanUp();
-
     ///Initialize scene.
     void InitScene();
 
     ///Pre frame update.
     void PreFrameUpdate();
 
-    ///Late pre-frame update ???
+    ///Late pre-frame update
     void LatePreFrameUpdate();
 
     ///Accessor for cfdCursor
@@ -124,9 +124,6 @@ public:
 
     ///Accessor for cfdTeacher
     cfdTeacher* GetTeacher();
-
-    ///Accessor for cfdQuatCamHandler
-    //cfdQuatCamHandler* GetQuatCamHandler();
 
     ///Accessor for cfdDisplaySettings
     cfdDisplaySettings* GetDisplaySettings();
@@ -169,7 +166,7 @@ public:
     ///Post frame update (look this up)
     void PostFrameUpdate();
     ///Accessor for HeadsUpDisplay
-    HeadsUpDisplay* GetHeadsUpDisplay();
+    ves::xplorer::scenegraph::HeadsUpDisplay* GetHeadsUpDisplay();
 
     ///Activate geometry picking functionality.
     void ActivateGeometryPicking();
@@ -200,17 +197,14 @@ private:
     osg::ref_ptr<ves::xplorer::SeedPoints> _seedPoints;///<The seed points for this dataset
     osg::ref_ptr<ves::xplorer::scenegraph::DCS> _seedPointsDCS;///<The DCS for the seed points
     cfdTeacher* _teacher;///<Handle teacher functionality.
-    //cfdSoundHandler* _soundHandler;///<Handle the sound.
     cfdQuatCamHandler* _camHandler;///<Handle quat cam functionality.
 
-    HeadsUpDisplay* mHeadsUpDisplay;///<???
+    ves::xplorer::scenegraph::HeadsUpDisplay* mHeadsUpDisplay;///<???
 
     ///Flag for active geometry picking.
     bool _activeGeomPicking;
 
     ves::xplorer::device::cfdCursor* cursor;///<The cursor.
-
-    std::string _param;///<Store parameters.
 
     // cur_box will eventually be used to define bounding box
     // for data interagation

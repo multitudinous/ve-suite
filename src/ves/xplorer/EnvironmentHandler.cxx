@@ -49,7 +49,7 @@
 #include <ves/xplorer/environment/cfdQuatCamHandler.h>
 #include <ves/xplorer/environment/NavigationAnimationEngine.h>
 #include <ves/xplorer/environment/cfdDisplaySettings.h>
-#include <ves/xplorer/environment/HeadsUpDisplay.h>
+#include <ves/xplorer/scenegraph/HeadsUpDisplay.h>
 
 #include <ves/xplorer/event/EventHandler.h>
 #include <ves/xplorer/event/data/SeedPointActivateEH.h>
@@ -103,23 +103,23 @@ namespace ves
 namespace xplorer
 {
 EnvironmentHandler::EnvironmentHandler()
-:
-_teacher( 0 ),
-cursor( 0 ),
-arrow( 0 ),
-displaySettings( 0 ),
-mHeadsUpDisplay( 0 ),
-_activeGeomPicking( false ),
-desktopWidth( 0 ),
-desktopHeight( 0 ),
-
-_frustumLeft( 0 ),
-_frustumRight( 0 ),
-_frustumTop( 0 ),
-_frustumBottom( 0 ),
-_frustumNear( 0 ),
-_frustumFar( 0 ),
-m_lodScale( 0.01 )
+    :
+    _teacher( 0 ),
+    mHeadsUpDisplay( 0 ),
+    _activeGeomPicking( false ),
+    cursor( 0 ),
+    arrow( 0 ),
+    displaySettings( 0 ),
+    desktopWidth( 0 ),
+    desktopHeight( 0 ),
+    _frustumLeft( 0 ),
+    _frustumRight( 0 ),
+    _frustumTop( 0 ),
+    _frustumBottom( 0 ),
+    _frustumNear( 0 ),
+    _frustumFar( 0 ),
+    m_lodScale( 0.01 ),
+    framerate( 0 )
 {
     for( unsigned int i = 0; i < 3; i++ )
     {
@@ -346,7 +346,7 @@ void EnvironmentHandler::InitScene()
 
     std::cout 
         << "| Initializing.................................... Heads Up Display |" << std::endl;
-    mHeadsUpDisplay = new ves::xplorer::HeadsUpDisplay( screenDims );
+    mHeadsUpDisplay = new ves::xplorer::scenegraph::HeadsUpDisplay( screenDims );
 
     device::KeyboardMouse* keyboardMouse =
         DeviceHandler::instance()->GetDevice(
@@ -393,6 +393,7 @@ void EnvironmentHandler::LatePreFrameUpdate()
         }
     }
 
+    mHeadsUpDisplay->SetFrameRate( framerate );
     mHeadsUpDisplay->LatePreFrame();
     vprDEBUG( vesDBG, 3 ) << "|\tEnd EnvironmentHandler::PreFrameUpdate " << std::endl << vprDEBUG_FLUSH;
 }
@@ -493,41 +494,5 @@ osgEphemeris::EphemerisModel* EnvironmentHandler::GetEphemerisModel( bool create
     return m_ephemerisModel.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
-/*
-void EnvironmentHandler::CreateObjects()
-{
-    int numObjects;
-    char text[ 256 ];
-    std::ifstream input;
-    input.open( _param.c_str() );
-    input >> numObjects;
-    input.getline( text, 256 );   //Skip past remainder of line
-
-    vprDEBUG( vesDBG, 1 ) << " Number of Obejcts in Interactive Geometry : "
-                          << numObjects << std::endl  << vprDEBUG_FLUSH;
-    for( int i = 0; i < numObjects; i++ )
-    {
-        int id;
-        input >> id;
-        vprDEBUG( vesDBG, 1 ) << "Id of object in Interactive Geometry : "
-                              << id << std::endl << vprDEBUG_FLUSH;
-        input.getline( text, 256 );     //skip past remainder of line
-        if( id == 0 )
-        {
-            vprDEBUG( vesDBG, 0 ) << "|\tWorld DCS parameters : "
-                                  << std::endl << vprDEBUG_FLUSH;
-            _readParam->read_pf_DCS_parameters(
-                input, worldScale, worldTrans, worldRot );
-        }
-        else
-        {
-            //Skip past block
-            _readParam->ContinueRead( input, id );
-        }
-    }
-}
-*/
-////////////////////////////////////////////////////////////////////////////////
-
 } // end xplorer
 } // end ves

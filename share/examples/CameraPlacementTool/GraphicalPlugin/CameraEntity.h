@@ -39,10 +39,9 @@ namespace ves
 {
 namespace xplorer
 {
-class HeadsUpDisplay;
-
 namespace scenegraph
 {
+class HeadsUpDisplay;
 class DCS;
 class ResourceManager;
 }
@@ -83,7 +82,7 @@ public:
     CameraEntity();
     CameraEntity(
         ves::xplorer::scenegraph::DCS* pluginDCS,
-        ves::xplorer::HeadsUpDisplay* headsUpDisplay,
+        ves::xplorer::scenegraph::HeadsUpDisplay* headsUpDisplay,
         ves::xplorer::scenegraph::ResourceManager* resourceManager );
 
     CameraEntity( const CameraEntity& cameraEntity,
@@ -148,7 +147,7 @@ private:
     osg::ref_ptr< cpt::CameraEntityCallback > mCameraEntityCallback;
 
     //Pointer to the HeadsUpDisplay for xplorer window
-    ves::xplorer::HeadsUpDisplay* mHeadsUpDisplay;
+    ves::xplorer::scenegraph::HeadsUpDisplay* mHeadsUpDisplay;
 
     ves::xplorer::scenegraph::ResourceManager* mResourceManager;
 

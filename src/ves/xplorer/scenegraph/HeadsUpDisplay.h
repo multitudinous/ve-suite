@@ -60,19 +60,17 @@ namespace ves
 {
 namespace xplorer
 {
-
-// --- VE-Suite Forward Declarations --- //
 namespace scenegraph
 {
+// --- VE-Suite Forward Declarations --- //
 class Switch;
 class CADEntity;
-}
 
 /*!\file HeadsUpDisplay.h
  * HeadsUpDisplay API
  */
 
-/*!\class ves::xplorer::HeadsUpDisplay
+/*!\class ves::xplorer::scenegraph::HeadsUpDisplay
  *
  */
 class VE_XPLORER_EXPORTS HeadsUpDisplay
@@ -106,6 +104,9 @@ public:
     ///\param color A double pointer containing color properties
     void SetTextColor( std::vector< double > color );
 
+    ///Set the framerate
+    void SetFrameRate( const float frameRate );
+
 private:
     void Initialize();
 
@@ -131,8 +132,10 @@ private:
     osg::ref_ptr< osgText::Text > mWCSzText;
     ///Used for print fps to the screen
     std::stringstream mFps;
+    ///Frame rate
+    float m_framerate;
 };
 }
 }
-
+}
 #endif //VES_XPLORER_HEADS_UP_DISPLAY_H
