@@ -131,8 +131,10 @@ bool CameraManager::Handle(
     }
     case Event::RELEASE:
     {
-        m_activeCamera = camera;
-        std::cout<< "Just selected a camera in the scene!!!" << std::endl;
+        if( camera != m_activeCamera )
+        {
+            m_activeCamera = camera;
+        }
 
         break;
     }
