@@ -44,14 +44,13 @@
 #include <ves/open/xml/shader/Program.h>
 #include <ves/open/xml/shader/ShaderCreator.h>
 
-#include <ctime>
-
-#include <apr_uuid.h>
+#include <boost/uuid/uuid.hpp>
+#include <boost/uuid/uuid_generators.hpp>
+#include <boost/uuid/uuid_io.hpp>
 
 using namespace ves::open::xml::cad;
 using namespace ves::open::xml::shader;
 using namespace ves::open::xml;
-
 
 //////////////////////////////////
 ///Constructor                  //
@@ -669,12 +668,13 @@ CADNode::CADNode( const CADNode& rhs, bool clone )
     //maintain a unique ID
     if( clone )
     {
-        apr_uuid_t tempuuid;
-        apr_uuid_get( &tempuuid );
-        char* buffer = new char[ APR_UUID_FORMATTED_LENGTH + 1 ];
-        apr_uuid_format( buffer, &tempuuid );
-        mUuid.assign( buffer );
-        delete [] buffer;
+        boost::uuids::random_generator generator;
+        boost::uuids::uuid u( generator() );
+        
+        std::stringstream ss;
+        ss << u;
+        
+        mUuid.assign( ss.str() );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

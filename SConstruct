@@ -282,7 +282,7 @@ else:
    wxwidgets_options = SConsAddons.Options.WxWidgets.WxWidgets("wxwidgets","2.8", True, True)
 opts.AddOption( wxwidgets_options )
 
-opts.Add('AprVersion', 'Set the APR version so that the proper apr pkg-config files can be found', '1.0')
+#opts.Add('AprVersion', 'Set the APR version so that the proper apr pkg-config files can be found', '1.0')
 opts.Add('VRJugglerVersion', 'Set the VRJuggler version so that the proper flagpoll files can be found', '2.0.2')
 opts.Add('VPRVersion', 'Set the VPR version so that the proper VPR flagpoll files can be found', '1.0.2')
 opts.Add('VPRProfile', 'If "yes", build applications with VPR profiling enabled', 'no')
@@ -312,11 +312,11 @@ if GetPlatform() == 'win32':
 #opts.Add( 'CharacterController', 'If "yes", then integrate CharacterController into the build', 'no' )
 #opts.Add( 'TransformManipulator', 'If "yes", then integrate TransformManipulator into the build', 'no' )
 
-apr_options = fp_option.FlagPollBasedOption("Apache Portable Runtime",
-                                            "apr-1", "1.0", True, True, helpText=None, compileTest=True, headerToCheck="apr.h")
+#apr_options = fp_option.FlagPollBasedOption("Apache Portable Runtime",
+#                                            "apr-1", "1.0", True, True, helpText=None, compileTest=True, headerToCheck="apr.h")
 
-apu_options = fp_option.FlagPollBasedOption("Apache Portable Runtime Utils",
-                                             "apr-util-1", "1.0", True, True, helpText=None, compileTest=True, headerToCheck="apu.h")
+#apu_options = fp_option.FlagPollBasedOption("Apache Portable Runtime Utils",
+#                                             "apr-util-1", "1.0", True, True, helpText=None, compileTest=True, headerToCheck="apu.h")
 
 #bullet_options = fp_option.FlagPollBasedOption("Bullet Physics SDK",
 #                                               "bullet", "0.1", True, True, helpText=None, compileTest=True,
@@ -383,8 +383,8 @@ if GetPlatform() == 'linux':
    opts.AddOption( qt_options )
    Export('qt_options')			
 						  
-opts.AddOption( apr_options )
-opts.AddOption( apu_options )
+#opts.AddOption( apr_options )
+#opts.AddOption( apu_options )
 #opts.AddOption( bullet_options )
 opts.AddOption( tao_options )
 opts.AddOption( boost_options )
@@ -403,7 +403,7 @@ Export( 'opts', 'vtk_options', 'osg_options',
         'hdf5_options',
         'hdf4_options',
         'VE_SUITE_VERSION',
-        'apr_options', 'apu_options',
+        #'apr_options', 'apu_options',
         #'bullet_options', 
         'bulletVersion',
         'tao_options',
@@ -459,10 +459,8 @@ Targets:
    Make sure that:
       vrjuggler, 
       gmtl, 
-      cppdom, 
-      ACE/TAO, 
-      bullet, and 
-      apr/apr-util 
+      cppdom, and
+      ACE/TAO 
    are in your FLAGPOLL_PATH or PKGCONFIG_PATH or (DY)LD_LIBRARY_PATH. 
    This is necessaary to auto-detect the dependencies.
 

@@ -4,7 +4,7 @@ import SConsAddons.Util as sca_util
 ##import practice
 pj = os.path.join
 
-Import('baseEnv ves_pkg LIBDIR xerces_options apr_options apu_options RootDir GetPlatform boost_options')
+Import('baseEnv ves_pkg LIBDIR xerces_options RootDir GetPlatform boost_options')
 openDir = os.path.abspath( pj(RootDir, 'src', 'ves', 'open', 'xml') )
 sources = sca_util.getSourcesRecursive( openDir )
 headers = sca_util.getHeadersRecursive( openDir )
@@ -12,8 +12,6 @@ headers = sca_util.getHeadersRecursive( openDir )
 lib_env = ves_pkg.getEnv().Clone()
 
 xerces_options.apply( lib_env )
-apr_options.apply( lib_env )
-apu_options.apply( lib_env )
 
 lib_env.Append( CPPDEFINES = ['VE_XML_LIBRARY'])
 

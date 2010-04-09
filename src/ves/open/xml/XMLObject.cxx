@@ -38,7 +38,9 @@
 #include <sstream>
 #include <iomanip>
 
-#include <apr_uuid.h>
+#include <boost/uuid/uuid.hpp>
+#include <boost/uuid/uuid_generators.hpp>
+#include <boost/uuid/uuid_io.hpp>
 
 XERCES_CPP_NAMESPACE_USE
 
@@ -53,12 +55,14 @@ XMLObject::XMLObject()
     mObjectType = std::string( "XMLObject" );
     mObjectNamespace = std::string( "XML" );
 
-    apr_uuid_t tempUUID;
-    apr_uuid_get( &tempUUID );
-    char* buffer = new char[ APR_UUID_FORMATTED_LENGTH + 1 ];
-    apr_uuid_format( buffer, &tempUUID );
-    mUuid.assign( buffer );
-    delete [] buffer;
+    boost::uuids::random_generator generator;
+    boost::uuids::uuid u( generator() );
+    
+    std::stringstream ss;
+    ss << u;
+    
+    mUuid.assign( ss.str() );
+    
     //This may need to be somewhere else
     /*if(!XMLObjectFactory::Instance()->ObjectCreatorIsRegistered("XML"))
     {
