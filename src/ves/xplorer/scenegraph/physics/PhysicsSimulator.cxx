@@ -885,8 +885,8 @@ void triggerSounds( const btDynamicsWorld* world, btScalar timeStep )
             
             const btManifoldPoint& pt( contactManifold->getContactPoint( jdx) );
             location = osgbBullet::asOsgVec3( pt.getPositionWorldOnA() );
-            std::cout << pt.m_lifeTime << std::endl;
-            std::cout << pt.m_appliedImpulse << std::endl;
+            //std::cout << pt.m_lifeTime << std::endl;
+            //std::cout << pt.m_appliedImpulse << std::endl;
 
             if( pt.m_lifeTime < 3 )
             {
