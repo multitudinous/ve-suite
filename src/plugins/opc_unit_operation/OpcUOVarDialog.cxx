@@ -254,7 +254,7 @@ void OpcUOVarDialog::OnMonitorVariable( wxCommandEvent& event )
     monitor->SetCommandName("addVariable");
     
     wxString varName = WxGrid->GetRowLabelValue( monitorRow );
-    std::string temp = mCompName + "." +
+    std::string temp = ConvertUnicode( mCompName.c_str() ) + "." +
         ConvertUnicode( varName.c_str() );
 
     ves::open::xml::DataValuePairPtr

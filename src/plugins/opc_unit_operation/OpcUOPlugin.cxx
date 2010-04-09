@@ -252,7 +252,7 @@ void OpcUOPlugin::ReadValue( )
         //std::string compName = GetVEModel()->GetPluginName();
         std::string tempData;
         //DataValuePairPtr tempDVP = opcData->GetDataValuePair( compName );
-        DataValuePairPtr tempDVP = opcData->GetDataValuePair( mPluginName.c_str() );
+        DataValuePairPtr tempDVP = opcData->GetDataValuePair( ConvertUnicode( mPluginName.c_str() ) );
         dynValue = "NA";
         if( tempDVP )
         {
@@ -316,7 +316,7 @@ void OpcUOPlugin::QueryForAllVariables( wxCommandEvent& event )
     ves::open::xml::CommandPtr returnState( new ves::open::xml::Command() );
     returnState->SetCommandName( "getAllOPCVariables" );
     ves::open::xml::DataValuePairPtr data( new ves::open::xml::DataValuePair() );
-    data->SetData( std::string( "ModuleName" ), mPluginName.c_str() );
+    data->SetData( std::string( "ModuleName" ), ConvertUnicode( mPluginName.c_str() ) );
     returnState->AddDataValuePair( data );
     std::vector< std::pair< XMLObjectPtr, std::string > > nodes;
     nodes.push_back( std::pair< XMLObjectPtr, std::string >( returnState, "vecommand" ) );
