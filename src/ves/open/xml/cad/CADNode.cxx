@@ -30,6 +30,11 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
+#include <boost/uuid/uuid.hpp>
+#include <boost/uuid/uuid_generators.hpp>
+#include <boost/uuid/uuid_io.hpp>
+#include <boost/concept_check.hpp>
+
 #include <ves/open/xml/Transform.h>
 #include <ves/open/xml/shader/Program.h>
 #include <ves/open/xml/cad/CADAssembly.h>
@@ -44,9 +49,7 @@
 #include <ves/open/xml/shader/Program.h>
 #include <ves/open/xml/shader/ShaderCreator.h>
 
-#include <boost/uuid/uuid.hpp>
-#include <boost/uuid/uuid_generators.hpp>
-#include <boost/uuid/uuid_io.hpp>
+#include <sstream>
 
 using namespace ves::open::xml::cad;
 using namespace ves::open::xml::shader;
@@ -292,7 +295,6 @@ ves::open::xml::cad::CADAttributePtr CADNode::GetAttribute( unsigned int index )
         std::cout << "CADNode::GetAttribute(): " << index << std::endl;
         return m_attributeList.at( 0 );
     }
-    return m_attributeList.at( 0 );
 }
 /////////////////////////////////////////////////////////////////////
 ves::open::xml::cad::CADAttributePtr CADNode::GetAttribute( const std::string& name )
@@ -305,6 +307,7 @@ ves::open::xml::cad::CADAttributePtr CADNode::GetAttribute( const std::string& n
             return m_attributeList.at( i );
         }
     }
+    return ves::open::xml::cad::CADAttributePtr();
 }
 ///////////////////////////////////////////////////////////
 ves::open::xml::cad::CADAttributePtr CADNode::GetActiveAttribute()
@@ -314,6 +317,8 @@ ves::open::xml::cad::CADAttributePtr CADNode::GetActiveAttribute()
 /////////////////////////////////////////////////
 void CADNode::_updateVEElement( const std::string& input )
 {
+    boost::ignore_unused_variable_warning( input );
+
     _updateNodeType();
     _updateNodeName();
 
@@ -605,6 +610,7 @@ ves::open::xml::cad::CADNodeAnimationPtr CADNode::GetAnimation( unsigned int ind
     {
         std::cout << "Invalid animation index: " << index << std::endl;
         std::cout << "CADNode::GetAnimation()" << std::endl;
+        return ves::open::xml::cad::CADNodeAnimationPtr();
     }
 }
 /////////////////////////////////////////////////////////
@@ -618,6 +624,7 @@ CADNodeAnimationPtr CADNode::GetAnimation( const std::string& name )
             return m_animations.at( i );
         }
     }
+    return ves::open::xml::cad::CADNodeAnimationPtr();
 }
 ////////////////////////////////////////////////////////////////////////////////
 size_t CADNode::GetNumberOfAnimations()
