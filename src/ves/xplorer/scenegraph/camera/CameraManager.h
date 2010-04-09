@@ -122,6 +122,10 @@ private:
     Camera* const TestForIntersections(
         osgUtil::LineSegmentIntersector& deviceInput );
 
+    ///Create the quad to be used by the rtt cameras that this class manages
+    ///\return The geode the holds the drawable with the rtt quad
+    osg::Geode* CreateMasterCameraQuad();
+    
     ///
     bool m_enabled;
 

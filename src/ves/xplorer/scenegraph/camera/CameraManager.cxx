@@ -37,11 +37,16 @@
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
 
+#include <ves/xplorer/scenegraph/HeadsUpDisplay.h>
+
 #include <ves/xplorer/Debug.h>
 
 // --- OSG Includes --- //
 #include <osgUtil/IntersectionVisitor>
 #include <osgUtil/LineSegmentIntersector>
+
+#include <osg/Geode>
+#include <osg/Geometry>
 
 using namespace ves::xplorer::scenegraph::camera;
 
@@ -198,5 +203,75 @@ Camera* const CameraManager::TestForIntersections(
     ++nodePathItr;
 
     return ConvertNodeToCamera( *nodePathItr );
+}
+////////////////////////////////////////////////////////////////////////////////
+osg::Geode* CameraManager::CreateMasterCameraQuad()
+{
+    /*
+    float lx, ly, ux, uy;
+    //Straight mapping from ( 0 to 1 ) viewport space to
+    //                      ( 0 to 1 ) ortho projection space
+    lx = viewportOriginX;
+    ly = viewportOriginY;
+    ux = viewportOriginX + viewportWidth;
+    uy = viewportOriginY + viewportHeight;
+    
+    //Transform ( 0 to 1 ) viewport space into
+    //          ( -1 to 1 ) identity projection space
+    //lx = ( viewportOriginX * 2.0 ) - 1.0;
+    //ly = ( viewportOriginY * 2.0 ) - 1.0;
+    //ux = ( ( viewportOriginX + viewportWidth ) * 2.0 ) - 1.0;
+    //uy = ( ( viewportOriginY + viewportHeight )* 2.0 ) - 1.0;
+    
+    //std::cout << lx << " " << ly << " " << ux << " " << uy << std::endl;
+    
+    //Get the vertex coordinates for the quad
+    osg::ref_ptr< osg::Vec3Array > quadVertices = new osg::Vec3Array();
+    quadVertices->resize( 4 );
+    
+    (*quadVertices)[ 0 ].set( lx, ly, 0.0 );
+    (*quadVertices)[ 1 ].set( ux, ly, 0.0 );
+    (*quadVertices)[ 2 ].set( ux, uy, 0.0 );
+    (*quadVertices)[ 3 ].set( lx, uy, 0.0 );
+    */
+    osg::ref_ptr< osg::Vec3Array > cameraViewQuadVertices = 
+        new osg::Vec3Array();
+    cameraViewQuadVertices->resize( 4 );
+    (*cameraViewQuadVertices)[ 0 ].set( 0.0, 0.0, -1.0 );
+    (*cameraViewQuadVertices)[ 1 ].set( 1.0, 0.0, -1.0 );
+    (*cameraViewQuadVertices)[ 2 ].set( 1.0, 1.0, -1.0 );
+    (*cameraViewQuadVertices)[ 3 ].set( 0.0, 1.0, -1.0 );
+    
+    //Get the texture coordinates for the quad
+    osg::ref_ptr< osg::Vec2Array > quadTexCoords = new osg::Vec2Array();
+    quadTexCoords->resize( 4 );
+    (*quadTexCoords)[ 0 ].set( 0.0, 0.0 );
+    (*quadTexCoords)[ 1 ].set( 1.0, 0.0 );
+    (*quadTexCoords)[ 2 ].set( 1.0, 1.0 );
+    (*quadTexCoords)[ 3 ].set( 0.0, 1.0 );
+    
+    //Create the quad geometry
+    osg::ref_ptr< osg::Geometry > quadGeometry = new osg::Geometry();
+    quadGeometry->setVertexArray( cameraViewQuadVertices.get() );
+    quadGeometry->addPrimitiveSet( new osg::DrawArrays( 
+        osg::PrimitiveSet::QUADS, 0, cameraViewQuadVertices->size() ) );
+    quadGeometry->setTexCoordArray( 0, quadTexCoords.get() );
+    quadGeometry->setUseDisplayList( true );
+    quadGeometry->setColorBinding( osg::Geometry::BIND_OFF );
+    quadGeometry->dirtyDisplayList();
+    quadGeometry->dirtyBound();
+
+    //Set the stateset for the quad
+    osg::ref_ptr< osg::StateSet > stateset =
+        quadGeometry->getOrCreateStateSet();
+    stateset->setMode( GL_LIGHTING, osg::StateAttribute::OFF );
+    
+    osg::Geode* quadGeode = new osg::Geode();
+    quadGeode->setCullingActive( false );
+    quadGeode->addDrawable( quadGeometry.get() );
+    quadGeode->getOrCreateStateSet()->
+        setMode( GL_LIGHTING, osg::StateAttribute::OFF );
+    
+    return quadGeode;
 }
 ////////////////////////////////////////////////////////////////////////////////
