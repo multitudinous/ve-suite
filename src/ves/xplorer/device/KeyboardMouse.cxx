@@ -45,6 +45,8 @@
 
 #include <ves/xplorer/network/cfdExecutive.h>
 
+#include <ves/xplorer/environment/NavigationAnimationEngine.h>
+
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/FindParentsVisitor.h>
 #include <ves/xplorer/scenegraph/CoordinateSystemTransform.h>
@@ -66,11 +68,10 @@
 #include <ves/xplorer/scenegraph/manipulator/RotateTwist.h>
 #include <ves/xplorer/scenegraph/manipulator/TransformManipulator.h>
 
-#include <ves/xplorer/environment/NavigationAnimationEngine.h>
-
 #ifdef QT_ON
 #include <ves/conductor/qt/UIManager.h>
 #endif
+
 // --- Bullet Includes --- //
 #include <LinearMath/btVector3.h>
 
@@ -81,24 +82,21 @@
 // --- vrJuggler Includes --- //
 #include <vrj/vrjParam.h>
 
-#include <gadget/Devices/KeyboardMouseDevice/InputArea.h>
-#if __VJ_version >= 2003000
 #include <vrj/Draw/OpenGL/Window.h>
-#if defined VPR_OS_Darwin
+
+#if defined( VPR_OS_Darwin )
 #include <vrj/Draw/OpenGL/WindowCocoa.h>
 #include <gadget/Devices/KeyboardMouseDevice/InputWindowCocoa.h>
 #include <gadget/Devices/KeyboardMouseDevice/InputAreaCocoa.h>
-#elif defined VPR_OS_Windows
+#elif defined( VPR_OS_Windows )
 #include <vrj/Draw/OpenGL/WindowWin32.h>
 #include <gadget/Devices/KeyboardMouseDevice/InputWindowWin32.h>
 #include <gadget/Devices/KeyboardMouseDevice/InputAreaWin32.h>
-#elif defined VPR_OS_Linux
+#elif defined( VPR_OS_Linux )
 #include <vrj/Draw/OpenGL/WindowXWin.h>
 #include <gadget/Devices/KeyboardMouseDevice/InputWindowXWin.h>
 #include <gadget/Devices/KeyboardMouseDevice/InputAreaXWin.h>
 #endif
-#else
-#endif //__VJ_version >= 2003000
 
 #include <gadget/Type/KeyboardMouse/KeyEvent.h>
 #include <gadget/Type/KeyboardMouse/MouseEvent.h>
@@ -122,7 +120,7 @@
 #include <osgwTools/AbsoluteModelTransform.h>
 #include <osgbBullet/RefRigidBody.h>
 
-// --- C/C++ Libraries --- //
+// --- STL Includes --- //
 #include <iostream>
 #include <cmath>
 
@@ -151,7 +149,7 @@ KeyboardMouse::KeyboardMouse()
 
     m_currX( 0 ),
     m_currY( 0 ),
-#ifndef JUGGLER_DELTA
+#if !defined( VPR_OS_Windows )
     m_prevX( 0 ),
     m_prevY( 0 ),
 #endif
@@ -207,7 +205,6 @@ KeyboardMouse* KeyboardMouse::AsKeyboardMouse()
 void KeyboardMouse::SetStartEndPoint(
     osg::Vec3d& startPoint, osg::Vec3d& endPoint )
 {
-#if __GADGET_version >= 1003023
     osg::Matrixd inverseVPW = m_currentGLTransformInfo->GetVPWMatrixOSG();
     inverseVPW.invert( inverseVPW );
 
@@ -216,78 +213,6 @@ void KeyboardMouse::SetStartEndPoint(
 
     //std::cout << "startPoint: " << startPoint << std::endl;
     //std::cout << "endPoint: " << endPoint << std::endl;
-
-#else
-    //Meters to feet conversion
-    double m2ft = 3.2808399;
-
-    //Set the start point to be the head position in osg space
-    {
-        //Note: for osg we are in z up land
-        gmtl::Matrix44d vjHeadMat =
-            gmtl::convertTo< double >( mHead->getData() );
-        gmtl::Point3d jugglerHeadPoint =
-            gmtl::makeTrans< gmtl::Point3d >( vjHeadMat );
-
-        //We have to offset negative m_currX because the
-        //view and frustum are drawn for the left eye
-        startPoint.set(
-            jugglerHeadPoint.mData[ 0 ] - ( 0.0345 * m2ft ),
-           -jugglerHeadPoint.mData[ 2 ],
-            jugglerHeadPoint.mData[ 1 ] );
-    }
-
-    //Set the end point
-    {
-        //Be sure m_windowWidth and m_windowHeight are set before calling this function
-        double xScreenRatio =
-            ( mXMaxScreen - mXMinScreen ) / static_cast< double >( m_windowWidth );
-        double yScreenRatio =
-            ( mYMaxScreen - mYMinScreen ) / static_cast< double >( m_windowHeight );
-
-        //Get the mouse position in juggler world coordinates
-        osg::Vec3d jugglerMousePosition(
-            mXMinScreen + ( m_currX * xScreenRatio ),
-#if __VJ_version >= 2003000
-            mYMinScreen + ( m_currY * yScreenRatio ),
-#else
-            mYMinScreen - ( m_currY * yScreenRatio ),
-#endif
-            mZValScreen );
-
-        //Convert meters to feet
-        jugglerMousePosition *= m2ft;
-
-        //Get the mouse position in osg world coordinates
-        osg::Vec3d mousePosition(
-            jugglerMousePosition.x(),
-           -jugglerMousePosition.z(),
-            jugglerMousePosition.y() );
-
-        //Find where the end point lands on the far plane
-        osg::Vec3d vecNear = mousePosition - startPoint;
-        osg::Vec3d vecFar = -startPoint;
-        vecFar.y() += mFarFrustum;
-
-        double distance = vecFar.y() / vecNear.y();
-        endPoint.set(
-            startPoint.x() + ( vecNear.x() * distance ),
-            mFarFrustum,
-            startPoint.z() + ( vecNear.z() * distance ) );
-    }
-
-    //Need to negate the the camera transform that is multiplied into the view
-    {
-        osg::Matrixd inverseCameraTransform(
-            m_sceneManager.GetInvertedWorldDCS().getData() );
-
-        startPoint = startPoint * inverseCameraTransform;
-        endPoint = endPoint * inverseCameraTransform;
-    }
-
-    //std::cout << "startPoint: " << startPoint << std::endl;
-    //std::cout << "endPoint: " << endPoint << std::endl;
-#endif //__GADGET_version >= 1003023
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::DrawLine( osg::Vec3d startPoint, osg::Vec3d endPoint )
@@ -367,13 +292,8 @@ void KeyboardMouse::ProcessEvents( ves::open::xml::CommandPtr command )
         const gadget::EventType eventType = event->type();
 
         //Get the current display from the input area
-#if __GADGET_version >= 1003026
         gadget::InputArea& inputArea = event->getSource();
         vrj::DisplayPtr currentDisplay = GetCurrentDisplay( &inputArea );
-#elif __GADGET_version >= 1003023
-        const gadget::InputArea* inputArea = event->getSource();
-        vrj::DisplayPtr currentDisplay = GetCurrentDisplay( inputArea );
-#endif //__GADGET_version
 
         switch( eventType )
         {
@@ -393,13 +313,11 @@ void KeyboardMouse::ProcessEvents( ves::open::xml::CommandPtr command )
             {
                 m_keys.set( m_currKey );
 
-#if __GADGET_version >= 1003023
                 //Set the current GLTransfromInfo from the event
                 if( !SetCurrentGLTransformInfo( currentDisplay, true ) )
                 {
                     return;
                 }
-#endif //__GADGET_version >= 1003023
 
                 OnKeyPress();
             }
@@ -418,13 +336,11 @@ void KeyboardMouse::ProcessEvents( ves::open::xml::CommandPtr command )
 
             m_uiManager.SendInteractionEvent( ie );
 #endif
-#if __GADGET_version >= 1003023
             //Set the current GLTransfromInfo from the event
             if( !SetCurrentGLTransformInfo( currentDisplay, true ) )
             {
                 return;
             }
-#endif //__GADGET_version >= 1003023
 
             OnKeyRelease();
 
@@ -444,19 +360,13 @@ void KeyboardMouse::ProcessEvents( ves::open::xml::CommandPtr command )
 
             m_uiManager.SendInteractionEvent( ie );
 #endif
-#if __GADGET_version >= 1003023
             //Set the current GLTransfromInfo from the event
             if( !SetCurrentGLTransformInfo( currentDisplay, false ) )
             {
                 return;
             }
-#endif //__GADGET_version >= 1003023
 
             OnMousePress();
-
-#if __GADGET_version >= 1003027
-            //inputArea.lockMouse();
-#endif //__GADGET_version >= 1003027
 
             break;
         }
@@ -474,19 +384,13 @@ void KeyboardMouse::ProcessEvents( ves::open::xml::CommandPtr command )
 
             m_uiManager.SendInteractionEvent( ie );
 #endif
-#if __GADGET_version >= 1003023
             //Set the current GLTransfromInfo from the event
             if( !SetCurrentGLTransformInfo( currentDisplay, false ) )
             {
                 return;
             }
-#endif //__GADGET_version >= 1003023
 
             OnMouseRelease();
-
-#if __GADGET_version >= 1003027
-            //inputArea.unlockMouse();
-#endif //__GADGET_version >= 1003027
 
             break;
         }
@@ -498,13 +402,11 @@ void KeyboardMouse::ProcessEvents( ves::open::xml::CommandPtr command )
             m_currX = mouse_evt->getX();
             m_currY = mouse_evt->getY();
 
-#if __GADGET_version >= 1003023
             //Set the current GLTransfromInfo from the event
             if( !SetCurrentGLTransformInfo( currentDisplay, false ) )
             {
                 return;
             }
-#endif //__GADGET_version >= 1003023
 
             if( !m_keys[ m_currMouse ] )
             {
@@ -528,21 +430,21 @@ void KeyboardMouse::ProcessEvents( ves::open::xml::CommandPtr command )
 
                 m_uiManager.SendInteractionEvent( ie );
 #endif
-#ifdef JUGGLER_DELTA
+
+#if defined( VPR_OS_Windows )
                 double dx = mouse_evt->getScrollDeltaX();
                 double dy = mouse_evt->getScrollDeltaY();
 #else
                 double dx = m_currX - m_prevX;
                 double dy = m_currY - m_prevY;
 #endif
-
                 if( dx != 0.0 || dy != 0.0 )
                 {
                     OnMouseMotionDown( dx, dy );
                 }
             }
 
-#ifndef JUGGLER_DELTA
+#if !defined( VPR_OS_Windows )
             m_prevX = m_currX;
             m_prevY = m_currY;
 #endif
@@ -1245,11 +1147,7 @@ void KeyboardMouse::OnMouseMotionDown( double dx, double dy )
                     ( m_currY < 0.9 * m_windowHeight ) )
                 {
                     double angle = mMagnitude * 7.0;
-#if __VJ_version >= 2003000
                     Rotate( angle, gmtl::Vec3d( -dy, 0.0, dx ) );
-#else
-                    Rotate( angle, gmtl::Vec3d(  dy, 0.0, dx ) );
-#endif
                 }
                 else
                 {
@@ -1333,105 +1231,6 @@ void KeyboardMouse::OnMouseMotionUp()
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-/*
-//This stuff is used for the old NURBS selection events
-//In the future, NURBS should be selectable in the scene like manipulators
-//A button in the toolbar could turn NURBS points on/off like manipulators
-
-void KeyboardMouse::SelOnKeyboardPress()
-{
-    return;
-}
-////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::SelOnMousePress()
-{
-    UpdateSelectionLine();
-
-    switch( m_currKey )
-    {
-        //Left mouse button
-        case gadget::MBUTTON1:
-        {
-            if( mKeyNone )
-            {
-                ProcessNURBSSelectionEvents();
-            }
-
-            ProcessSelection();
-
-            break;
-        }
-        //Middle mouse button
-        case gadget::MBUTTON2:
-        {
-            break;
-        }
-        //Right mouse button
-        case gadget::MBUTTON3:
-        {
-            break;
-        }
-    }
-}
-////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::SelOnMouseRelease()
-{
-    UpdateSelectionLine();
-
-    switch( m_currKey )
-    {
-        //Left mouse button
-        case gadget::MBUTTON1:
-        {
-            if( mKeyNone )
-            {
-                scenegraph::SetStateOnNURBSNodeVisitor(
-                    m_sceneManager.GetActiveSwitchNode(), false,
-                    false, m_currMousePos, std::pair< double, double >( 0.0, 0.0 ) );
-            }
-
-            break;
-        }
-        //Middle mouse button
-        case gadget::MBUTTON2:
-        {
-            break;
-        }
-        //Right mouse button
-        case gadget::MBUTTON3:
-        {
-            break;
-        }
-    }
-}
-////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::SelOnMouseMotion( std::pair< double, double > delta )
-{
-    switch( m_currKey )
-    {
-        //Left mouse button
-        case gadget::MBUTTON1:
-        {
-            scenegraph::SetStateOnNURBSNodeVisitor(
-                m_sceneManager.GetActiveSwitchNode(),
-                true, true, m_currMousePos, delta );
-
-            break;
-        }
-        //Middle mouse button
-        case gadget::MBUTTON2:
-        {
-            break;
-        }
-        //Right mouse button
-        case gadget::MBUTTON3:
-        {
-            break;
-        }
-    }
-}
-*/
-////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::ResetTransforms()
 {
     DeviceHandler::instance()->ResetCenterPoint();
@@ -1452,12 +1251,7 @@ void KeyboardMouse::Twist( double dx, double dy )
     double currTheta = atan2( m_currX * tempX - 0.5, m_currY * tempY - 0.5 );
     double prevTheta =
         atan2( m_currX * tempX - dx - 0.5, m_currY * tempY - dy - 0.5 );
-
-#if __VJ_version >= 2003000
     double angle = currTheta - prevTheta;
-#else
-    double angle = prevTheta - currTheta;
-#endif
 
     //Twist about the y-axis
     Rotate( angle, gmtl::Vec3d( 0.0, 1.0, 0.0 ) );
@@ -1466,7 +1260,6 @@ void KeyboardMouse::Twist( double dx, double dy )
 void KeyboardMouse::Zoom( double dy )
 {
 /*
-#if __GADGET_version >= 1003023
     gmtl::Matrix44d vpwMatrix = m_currentGLTransformInfo->GetVPWMatrix();
 
     double viewlength = mCenterPoint->mData[ 1 ];
@@ -1497,14 +1290,11 @@ void KeyboardMouse::Zoom( double dy )
     }
 
     *mCenterPoint = position;
-#else
 */
+
     double viewlength = mCenterPoint->mData[ 1 ];
-#if __VJ_version >= 2003000
     double d = ( viewlength * ( 1 / ( 1 - dy * 2 ) ) ) - viewlength;
-#else
-    double d = ( viewlength * ( 1 / ( 1 + dy * 2 ) ) ) - viewlength;
-#endif
+
     mDeltaTranslation.mData[ 1 ] = d;
     mCenterPoint->mData[ 1 ] += d;
 
@@ -1525,18 +1315,13 @@ void KeyboardMouse::Zoom( double dy )
             mCenterPoint->mData[ 1 ] -= d;
         }
     }
-//#endif //__GADGET_version >= 1003023
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::Zoom45( double dy )
 {
     //needed for sky cam control
     double viewlength = mCenterPoint->mData[ 1 ];
-#if __VJ_version >= 2003000
     double d = ( viewlength * ( 1 / ( 1 - dy * 2 ) ) ) - viewlength;
-#else
-    double d = ( viewlength * ( 1 / ( 1 + dy * 2 ) ) ) - viewlength;
-#endif
 
     mDeltaTranslation.mData[ 1 ] = d;
     mDeltaTranslation.mData[ 2 ] = d;
@@ -1565,7 +1350,6 @@ void KeyboardMouse::Zoom45( double dy )
 void KeyboardMouse::Pan( double dx, double dz )
 {
     /*
-#if __GADGET_version >= 1003023
     gmtl::Matrix44d vpwMatrix = m_currentGLTransformInfo->GetVPWMatrix();
 
     //std::cout << "mCenterPoint: " << *mCenterPoint << std::endl;
@@ -1580,17 +1364,13 @@ void KeyboardMouse::Pan( double dx, double dz )
     *mCenterPoint = position;
 
     //std::cout << std::endl;
-#else
     */
+
     double d = mCenterPoint->mData[ 1 ];
     double theta = mFoVZ * 0.5 ;
     double b = 2.0 * d * tan( theta );
     double dwx = dx * b;
-#if __VJ_version >= 2003000
     double dwz =  dz * b;
-#else
-    double dwz = -dz * b;
-#endif
 
     if( mAspectRatio > 1.0 )
     {
@@ -1602,7 +1382,6 @@ void KeyboardMouse::Pan( double dx, double dz )
 
     mCenterPoint->mData[ 0 ] += dwx;
     mCenterPoint->mData[ 2 ] += dwz;
-//#endif //__GADGET_version >= 1003023
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::Rotate( double angle, gmtl::Vec3d axis )
@@ -1610,62 +1389,6 @@ void KeyboardMouse::Rotate( double angle, gmtl::Vec3d axis )
     gmtl::normalize( axis );
     gmtl::AxisAngled axisAngle( angle, axis );
     mDeltaRotation = gmtl::makeRot< gmtl::Quatd >( axisAngle );
-
-    //Old way of manually computing above calculations
-    /*
-    void RotateView( double dx, double dy )
-    {
-        double tbAxis[ 3 ];
-        double angle = mMagnitude * 400.0;
-
-        gmtl::Matrix44d matrix;
-        gmtl::identity( matrix );
-
-        dy *= -1.0;
-        tbAxis[ 0 ] = matrix.mData[ 0 ] * dy + matrix.mData[  2 ] * dx;
-        tbAxis[ 1 ] = matrix.mData[ 4 ] * dy + matrix.mData[  6 ] * dx;
-        tbAxis[ 2 ] = matrix.mData[ 8 ] * dy + matrix.mData[ 10 ] * dx;
-
-        Rotate( tbAxis[ 0 ], tbAxis[ 1 ], tbAxis[ 2 ], angle );
-    }
-
-    void Rotate( double x, double y, double z, double angle )
-    {
-        double temp = ::sqrtf( x * x + y * y + z * z );
-        if( temp != 0.0 )
-        {
-            double tempRatio = 1 / temp;
-            x *= tempRatio;
-            y *= tempRatio;
-            z *= tempRatio;
-        }
-
-        double rad = angle;
-        double cosAng = cos( rad );
-        double sinAng = sin( rad );
-
-        gmtl::zero( mDeltaTransform );
-        mDeltaTransform.mData[ 0 ]  = ( x * x ) +
-                                      ( cosAng * ( 1 - ( x * x ) ) );
-        mDeltaTransform.mData[ 1 ]  = ( y * x ) -
-                                      ( cosAng * ( y * x ) ) + ( sinAng * z );
-        mDeltaTransform.mData[ 2 ]  = ( z * x ) -
-                                      ( cosAng * ( z * x ) ) - ( sinAng * y );
-        mDeltaTransform.mData[ 4 ]  = ( x * y ) -
-                                      ( cosAng * ( x * y ) ) - ( sinAng * z );
-        mDeltaTransform.mData[ 5 ]  = ( y * y ) +
-                                      ( cosAng * ( 1 - ( y * y ) ) );
-        mDeltaTransform.mData[ 6 ]  = ( z * y ) -
-                                      ( cosAng * ( z * y ) ) + ( sinAng * x );
-        mDeltaTransform.mData[ 8 ]  = ( x * z ) -
-                                      ( cosAng * ( x * z ) ) + ( sinAng * y );
-        mDeltaTransform.mData[ 9 ]  = ( y * z ) -
-                                      ( cosAng * ( y * z ) ) - ( sinAng * x );
-        mDeltaTransform.mData[ 10 ] = ( z * z ) +
-                                      ( cosAng * ( 1 - ( z * z ) ) );
-        mDeltaTransform.mData[ 15 ] = 1.0;
-    }
-    */
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::UpdateSelectionLine()
@@ -1680,50 +1403,6 @@ void KeyboardMouse::UpdateSelectionLine()
     //If working correctly, the line should show up as 1 red pixel where picked
     //DrawLine( startPoint, endPoint );
 }
-////////////////////////////////////////////////////////////////////////////////
-/*
-void KeyboardMouse::ProcessNURBSSelectionEvents()
-{
-    osg::ref_ptr< osgUtil::IntersectorGroup > intersectorGroup =
-        new osgUtil::IntersectorGroup();
-    osg::ref_ptr< scenegraph::nurbs::PointLineSegmentIntersector > intersector =
-        new scenegraph::nurbs::PointLineSegmentIntersector(
-            mLineSegmentIntersector->getStart(),
-            mLineSegmentIntersector->getEnd() );
-    intersectorGroup->addIntersector( intersector.get() );
-
-    osgUtil::IntersectionVisitor controlMeshPointIntersectVisitor;
-
-    controlMeshPointIntersectVisitor.setIntersector( intersectorGroup.get() );
-
-    //Add the IntersectVisitor to the root Node so that all geometry will be
-    //checked and no transforms are done to the line segement
-    m_sceneManager.GetRootNode()->accept( controlMeshPointIntersectVisitor );
-
-    if( intersectorGroup->containsIntersections() )
-    {
-         //std::cout<<"Found intersections "<<std::endl;
-         ///only want the first one
-         scenegraph::nurbs::PointLineSegmentIntersector::Intersections& intersections =
-             intersector->getIntersections();
-         scenegraph::nurbs::PointLineSegmentIntersector::Intersection closestControlPoint =
-             (*intersections.begin());
-         osg::ref_ptr<scenegraph::nurbs::NURBSControlMesh> ctMesh =
-            dynamic_cast< scenegraph::nurbs::NURBSControlMesh* >(
-                closestControlPoint.drawable.get() );
-         if( ctMesh.valid() )
-         {
-             osg::ref_ptr<scenegraph::nurbs::NURBS> nurbs = 
-                dynamic_cast<scenegraph::nurbs::NURBS*>( ctMesh->getParent( 0 ) );
-             if( nurbs.valid() )
-             {
-                 nurbs->SetSelectedControlPoint(
-                     closestControlPoint.primitiveIndex );
-             }
-         }
-    }
-}
-*/
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::ProcessSelection()
 {
@@ -1867,12 +1546,11 @@ gadget::KeyboardMousePtr KeyboardMouse::GetKeyboardMouseVRJDevice()
     return mKeyboardMouse->getKeyboardMousePtr();
 }
 ////////////////////////////////////////////////////////////////////////////////
-#if __GADGET_version >= 1003023
 vrj::DisplayPtr const KeyboardMouse::GetCurrentDisplay(
     const gadget::InputArea* inputArea )
 {
     const vrj::opengl::Window* window( NULL );
-#if defined VPR_OS_Darwin
+#if defined( VPR_OS_Darwin )
     const gadget::InputWindowCocoa* inputWindowCocoa =
         dynamic_cast< const gadget::InputWindowCocoa* >( inputArea );
     if( inputWindowCocoa )
@@ -1884,7 +1562,7 @@ vrj::DisplayPtr const KeyboardMouse::GetCurrentDisplay(
         static_cast< const vrj::opengl::WindowCocoa* >( inputArea );
     //upcast
     window = static_cast< const vrj::opengl::Window* >( windowCocoa );
-#elif defined VPR_OS_Windows
+#elif defined( VPR_OS_Windows )
     const gadget::InputWindowWin32* inputWindowWin32 =
         dynamic_cast< const gadget::InputWindowWin32* >( inputArea );
     if( inputWindowWin32 )
@@ -1896,7 +1574,7 @@ vrj::DisplayPtr const KeyboardMouse::GetCurrentDisplay(
         static_cast< const vrj::opengl::WindowWin32* >( inputArea );
     //upcast
     window = dynamic_cast< const vrj::opengl::Window* >( windowWin32 );
-#elif defined VPR_OS_Linux
+#elif defined( VPR_OS_Linux )
     const gadget::InputWindowXWin* inputWindowXWin =
         dynamic_cast< const gadget::InputWindowXWin* >( inputArea );
     if( inputWindowXWin )
@@ -1979,7 +1657,6 @@ bool KeyboardMouse::SetCurrentGLTransformInfo(
 
     return false;
 }
-#endif //__GADGET_version >= 1003023
 ////////////////////////////////////////////////////////////////////////////////
 osgUtil::LineSegmentIntersector* KeyboardMouse::GetLineSegmentIntersector()
 {
@@ -2095,3 +1772,146 @@ bool KeyboardMouse::GetMousePickEvent()
     return m_mousePickEvent;
 }
 ////////////////////////////////////////////////////////////////////////////////
+
+/*
+////////////////////////////////////////////////////////////////////////////////
+//This stuff is used for the old NURBS selection events
+//In the future, NURBS should be selectable in the scene like manipulators
+//A button in the toolbar could turn NURBS points on/off like manipulators
+
+void KeyboardMouse::ProcessNURBSSelectionEvents()
+{
+    osg::ref_ptr< osgUtil::IntersectorGroup > intersectorGroup =
+        new osgUtil::IntersectorGroup();
+    osg::ref_ptr< scenegraph::nurbs::PointLineSegmentIntersector > intersector =
+        new scenegraph::nurbs::PointLineSegmentIntersector(
+            mLineSegmentIntersector->getStart(),
+            mLineSegmentIntersector->getEnd() );
+    intersectorGroup->addIntersector( intersector.get() );
+
+    osgUtil::IntersectionVisitor controlMeshPointIntersectVisitor;
+
+    controlMeshPointIntersectVisitor.setIntersector( intersectorGroup.get() );
+
+    //Add the IntersectVisitor to the root Node so that all geometry will be
+    //checked and no transforms are done to the line segement
+    m_sceneManager.GetRootNode()->accept( controlMeshPointIntersectVisitor );
+
+    if( intersectorGroup->containsIntersections() )
+    {
+         //std::cout<<"Found intersections "<<std::endl;
+         ///only want the first one
+         scenegraph::nurbs::PointLineSegmentIntersector::Intersections& intersections =
+             intersector->getIntersections();
+         scenegraph::nurbs::PointLineSegmentIntersector::Intersection closestControlPoint =
+             (*intersections.begin());
+         osg::ref_ptr<scenegraph::nurbs::NURBSControlMesh> ctMesh =
+            dynamic_cast< scenegraph::nurbs::NURBSControlMesh* >(
+                closestControlPoint.drawable.get() );
+         if( ctMesh.valid() )
+         {
+             osg::ref_ptr<scenegraph::nurbs::NURBS> nurbs = 
+                dynamic_cast<scenegraph::nurbs::NURBS*>( ctMesh->getParent( 0 ) );
+             if( nurbs.valid() )
+             {
+                 nurbs->SetSelectedControlPoint(
+                     closestControlPoint.primitiveIndex );
+             }
+         }
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void KeyboardMouse::SelOnKeyboardPress()
+{
+    return;
+}
+////////////////////////////////////////////////////////////////////////////////
+void KeyboardMouse::SelOnMousePress()
+{
+    UpdateSelectionLine();
+
+    switch( m_currKey )
+    {
+        //Left mouse button
+        case gadget::MBUTTON1:
+        {
+            if( mKeyNone )
+            {
+                ProcessNURBSSelectionEvents();
+            }
+
+            ProcessSelection();
+
+            break;
+        }
+        //Middle mouse button
+        case gadget::MBUTTON2:
+        {
+            break;
+        }
+        //Right mouse button
+        case gadget::MBUTTON3:
+        {
+            break;
+        }
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void KeyboardMouse::SelOnMouseRelease()
+{
+    UpdateSelectionLine();
+
+    switch( m_currKey )
+    {
+        //Left mouse button
+        case gadget::MBUTTON1:
+        {
+            if( mKeyNone )
+            {
+                scenegraph::SetStateOnNURBSNodeVisitor(
+                    m_sceneManager.GetActiveSwitchNode(), false,
+                    false, m_currMousePos, std::pair< double, double >( 0.0, 0.0 ) );
+            }
+
+            break;
+        }
+        //Middle mouse button
+        case gadget::MBUTTON2:
+        {
+            break;
+        }
+        //Right mouse button
+        case gadget::MBUTTON3:
+        {
+            break;
+        }
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void KeyboardMouse::SelOnMouseMotion( std::pair< double, double > delta )
+{
+    switch( m_currKey )
+    {
+        //Left mouse button
+        case gadget::MBUTTON1:
+        {
+            scenegraph::SetStateOnNURBSNodeVisitor(
+                m_sceneManager.GetActiveSwitchNode(),
+                true, true, m_currMousePos, delta );
+
+            break;
+        }
+        //Middle mouse button
+        case gadget::MBUTTON2:
+        {
+            break;
+        }
+        //Right mouse button
+        case gadget::MBUTTON3:
+        {
+            break;
+        }
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+*/

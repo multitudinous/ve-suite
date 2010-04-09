@@ -73,14 +73,6 @@ class btTypedConstraint;
 // --- STL Includes --- //
 #include <bitset>
 
-
-//For testing new delta scroll in juggler on windows
-#if __GADGET_version >= 1003028
-#ifdef VPR_OS_Windows
-#define JUGGLER_DELTA
-#endif
-#endif
-
 namespace ves
 {
 namespace xplorer
@@ -198,26 +190,6 @@ private:
     ///Processes the selection events
     virtual void ProcessSelection();
 
-    //This stuff is used for the old NURBS selection events
-    //In the future, NURBS should be selectable in the scene like manipulators
-    //A button in the toolbar could turn NURBS points on/off like manipulators
-    /*
-    ///Process the NURBS selection events
-    void ProcessNURBSSelectionEvents();
-
-    ///Currently this does nothing
-    void SelOnKeyboardPress();
-
-    ///Selection functions called on mouse press events
-    void SelOnMousePress();
-
-    ///Selection functions called on mouse release events
-    void SelOnMouseRelease();
-
-    ///Currently this does nothing
-    void SelOnMouseMotion( std::pair< double, double > delta );
-    */
-
     ///Rotates an object about the y-axis
     void Twist( double dx, double dy );
 
@@ -239,7 +211,6 @@ private:
     ///\param axis
     void Rotate( double angle, gmtl::Vec3d axis );
 
-#if __GADGET_version >= 1003023
     ///
     ///\param
     ///\return
@@ -252,7 +223,6 @@ private:
     ///\return
     bool SetCurrentGLTransformInfo(
         const vrj::DisplayPtr display, bool isKeyEvent );
-#endif //__GADGET_version >= 1003023
 
     ///Create physics point constraint
     ///\return
@@ -306,8 +276,8 @@ private:
     ///The current Y mouse position
     int m_currY;
 
-    //Need following variables to calculate a mouse delta for ver 1003027 or <
-#ifndef JUGGLER_DELTA
+    //These variables are needed on linux and mac to calculate mouse dx and dy
+#if !defined( VPR_OS_Windows )
     ///The previous X mouse position
     int m_prevX;
 
@@ -409,3 +379,23 @@ private:
 } //end ves
 
 #endif //KEYBOARD_MOUSE_H
+
+//This stuff is used for the old NURBS selection events
+//In the future, NURBS should be selectable in the scene like manipulators
+//A button in the toolbar could turn NURBS points on/off like manipulators
+/*
+///Process the NURBS selection events
+void ProcessNURBSSelectionEvents();
+
+///Currently this does nothing
+void SelOnKeyboardPress();
+
+///Selection functions called on mouse press events
+void SelOnMousePress();
+
+///Selection functions called on mouse release events
+void SelOnMouseRelease();
+
+///Currently this does nothing
+void SelOnMouseMotion( std::pair< double, double > delta );
+*/
