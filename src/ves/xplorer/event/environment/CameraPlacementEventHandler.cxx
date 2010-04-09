@@ -212,7 +212,18 @@ void CameraPlacementEventHandler::Execute(
 
         bool onOff = ( selection != 0 );
         //mCameraEntity->DisplayCameraViewQuad( onOff );
-
+        if( onOff )
+        {
+            ves::xplorer::EnvironmentHandler::instance()->GetHeadsUpDisplay()->
+                GetCamera()->addChild( 
+                sceneManager.GetCameraManager().GetCameraManagerQuad() );
+        }
+        else
+        {
+            ves::xplorer::EnvironmentHandler::instance()->GetHeadsUpDisplay()->
+                GetCamera()->removeChild( 
+                sceneManager.GetCameraManager().GetCameraManagerQuad() );
+        }
         break;
     }
     case CAMERA_WINDOW_RESOLUTION:

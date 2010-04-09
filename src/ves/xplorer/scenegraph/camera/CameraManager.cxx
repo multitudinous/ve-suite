@@ -37,8 +37,6 @@
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
 
-#include <ves/xplorer/scenegraph/HeadsUpDisplay.h>
-
 #include <ves/xplorer/Debug.h>
 
 // --- OSG Includes --- //
@@ -60,6 +58,7 @@ CameraManager::CameraManager()
     m_activeCamera( NULL )
 {
     Enable();
+    m_rttQuad = CreateMasterCameraQuad();
 }
 ////////////////////////////////////////////////////////////////////////////////
 CameraManager::CameraManager(
@@ -273,5 +272,10 @@ osg::Geode* CameraManager::CreateMasterCameraQuad()
         setMode( GL_LIGHTING, osg::StateAttribute::OFF );
     
     return quadGeode;
+}
+////////////////////////////////////////////////////////////////////////////////
+osg::Geode* CameraManager::GetCameraManagerQuad()
+{
+    return m_rttQuad.get();
 }
 ////////////////////////////////////////////////////////////////////////////////

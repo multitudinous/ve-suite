@@ -41,6 +41,7 @@
 
 // --- OSG Includes --- //
 #include <osg/Group>
+#include <osg/Geode>
 
 namespace osgUtil
 {
@@ -110,6 +111,10 @@ public:
     ///Override the setChild function to only accept Cameras
     virtual bool setChild( unsigned int i, Camera* node );
 
+    ///Get the RTT quad
+    ///\return The geode with the RTT quad
+    osg::Geode* GetCameraManagerQuad();
+    
 protected:
     ///Destructor
     virtual ~CameraManager();
@@ -126,14 +131,17 @@ private:
     ///\return The geode the holds the drawable with the rtt quad
     osg::Geode* CreateMasterCameraQuad();
     
-    ///
+    ///Is the camera manager turned on
     bool m_enabled;
 
     ///
     unsigned int m_nodeMask;
 
-    ///
+    ///The active rtt view camera
     Camera* m_activeCamera;
+
+    ///The rtt quad geode
+    osg::ref_ptr< osg::Geode > m_rttQuad;
 
 };
 } //end camera

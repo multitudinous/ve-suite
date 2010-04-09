@@ -95,8 +95,8 @@ namespace vxsr = ves::xplorer::scenegraph::rtt;
 ////////////////////////////////////////////////////////////////////////////////
 SceneRenderToTexture::SceneRenderToTexture()
     :
-    mRootGroup( new osg::Group() ),
-    mScaleFactor( 1 )
+    mScaleFactor( 1 ),
+    mRootGroup( new osg::Group() )
 {
     osg::ref_ptr< osgDB::ReaderWriter::Options > vertexOptions =
         new osgDB::ReaderWriter::Options( "vertex" );
