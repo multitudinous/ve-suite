@@ -42,6 +42,7 @@
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/ResourceManager.h>
+#include <ves/xplorer/scenegraph/HeadsUpDisplay.h>
 
 #include <ves/xplorer/scenegraph/camera/CameraManager.h>
 #include <ves/xplorer/scenegraph/camera/Camera.h>
