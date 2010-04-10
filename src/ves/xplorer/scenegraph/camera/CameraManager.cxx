@@ -256,7 +256,11 @@ osg::Geode* CameraManager::CreateMasterCameraQuad()
         osg::PrimitiveSet::QUADS, 0, cameraViewQuadVertices->size() ) );
     quadGeometry->setTexCoordArray( 0, quadTexCoords.get() );
     quadGeometry->setUseDisplayList( true );
-    quadGeometry->setColorBinding( osg::Geometry::BIND_OFF );
+    //quadGeometry->setColorBinding( osg::Geometry::BIND_OFF );
+    osg::ref_ptr< osg::Vec4Array > c = new osg::Vec4Array();
+    c->push_back( osg::Vec4( 1.0, 1.0, 0., 1. ) );
+    quadGeometry->setColorArray( c.get() );
+    quadGeometry->setColorBinding( osg::Geometry::BIND_OVERALL );
     quadGeometry->dirtyDisplayList();
     quadGeometry->dirtyBound();
 

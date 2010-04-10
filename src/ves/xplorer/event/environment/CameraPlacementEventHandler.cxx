@@ -215,12 +215,15 @@ void CameraPlacementEventHandler::Execute(
         //mCameraEntity->DisplayCameraViewQuad( onOff );
         if( onOff )
         {
+            //std::cout << "Add the CPT quad to the HUD" << std::endl;
             ves::xplorer::EnvironmentHandler::instance()->GetHeadsUpDisplay()->
                 GetCamera()->addChild( 
                 sceneManager.GetCameraManager().GetCameraManagerQuad() );
         }
         else
         {
+            //std::cout << "Remove the CPT quad to the HUD" << std::endl;
+
             ves::xplorer::EnvironmentHandler::instance()->GetHeadsUpDisplay()->
                 GetCamera()->removeChild( 
                 sceneManager.GetCameraManager().GetCameraManagerQuad() );
