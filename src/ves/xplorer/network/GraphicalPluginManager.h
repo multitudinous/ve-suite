@@ -31,14 +31,14 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
-#ifndef VES_XPLORER_NETWORK_CFDEXECUTIVE_H
-#define VES_XPLORER_NETWORK_CFDEXECUTIVE_H
+#ifndef VES_XPLORER_NETWORK_GraphicalPluginManager_H
+#define VES_XPLORER_NETWORK_GraphicalPluginManager_H
 
-/*!\file cfdExecutive.h
- * cfdExecutive API
+/*!\file GraphicalPluginManager.h
+ * GraphicalPluginManager API
  */
 
-/*!\class ves::xplorer::cfdExecutive
+/*!\class ves::xplorer::GraphicalPluginManager
  *
  */
 
@@ -104,22 +104,22 @@ class cfdVEAvailModules;
 class Body_UI_i;
 class NetworkSystemView;
 
-class VE_XPLORER_NETWORK_EXPORTS cfdExecutive : public ves::xplorer::GlobalBase
+class VE_XPLORER_NETWORK_EXPORTS GraphicalPluginManager : public ves::xplorer::GlobalBase
 {
 private:
     //Required so that vpr::Singleton can instantiate this class.
-    //friend class vpr::Singleton< cfdExecutive >;
-    //cfdExecutive(const cfdExecutive& o) { ; }
-    //cfdExecutive& operator=(const cfdExecutive& o) { ; }
+    //friend class vpr::Singleton< GraphicalPluginManager >;
+    //GraphicalPluginManager(const GraphicalPluginManager& o) { ; }
+    //GraphicalPluginManager& operator=(const GraphicalPluginManager& o) { ; }
     //this class should be a singleton
     ///Constructor
-    cfdExecutive();
+    GraphicalPluginManager();
 
     ///Destructor
-    virtual ~cfdExecutive();
+    virtual ~GraphicalPluginManager();
 
     ///
-    vprSingletonHeader( cfdExecutive );
+    vprSingletonHeader( GraphicalPluginManager );
 
 public:
     ///
@@ -149,7 +149,7 @@ public:
     ///Update function called from within latePreFrame
     void PostFrameUpdate();
 
-    ///Function called within preFrame to allow cfdExecutive
+    ///Function called within preFrame to allow GraphicalPluginManager
     ///to have access to scalar information
     void UnbindORB();
 
@@ -170,10 +170,10 @@ public:
     ///Laod data from CE
     void LoadDataFromCE();
 
-    ///Get the current network string being used by cfdExecutive
+    ///Get the current network string being used by GraphicalPluginManager
     std::string GetCurrentNetwork();
 
-    ///Get the current network system view being used by cfdExecutive
+    ///Get the current network system view being used by GraphicalPluginManager
     NetworkSystemView* GetNetworkSystemView();
 
     ///Delete the network system view
@@ -243,4 +243,4 @@ private:
 } //end xplorer
 } //end ves
 
-#endif //VES_XPLORER_NETWORK_CFDEXECUTIVE_H
+#endif //VES_XPLORER_NETWORK_GraphicalPluginManager_H

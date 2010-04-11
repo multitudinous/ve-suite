@@ -43,7 +43,7 @@
 
 #include <ves/xplorer/plugin/PluginBase.h>
 
-#include <ves/xplorer/network/cfdExecutive.h>
+#include <ves/xplorer/network/GraphicalPluginManager.h>
 
 #include <ves/xplorer/environment/NavigationAnimationEngine.h>
 
@@ -1041,7 +1041,7 @@ void KeyboardMouse::OnMouseRelease()
 
             std::map< std::string,
                       ves::xplorer::plugin::PluginBase* >* tempPlugins =
-                ves::xplorer::network::cfdExecutive::instance()->
+                ves::xplorer::network::GraphicalPluginManager::instance()->
                     GetTheCurrentPlugins();
 
             std::map< std::string, 

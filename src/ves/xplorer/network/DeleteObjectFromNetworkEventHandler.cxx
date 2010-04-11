@@ -33,7 +33,7 @@
 #include <ves/xplorer/network/DeleteObjectFromNetworkEventHandler.h>
 #include <ves/xplorer/Model.h>
 #include <ves/xplorer/ModelHandler.h>
-#include <ves/xplorer/network/cfdExecutive.h>
+#include <ves/xplorer/network/GraphicalPluginManager.h>
 #include <ves/xplorer/plugin/PluginBase.h>
 
 
@@ -102,7 +102,7 @@ void DeleteObjectFromNetworkEventHandler::Execute( const ves::open::xml::XMLObje
     activeModelDVP->GetData( id );
 
     std::map< std::string, ves::xplorer::plugin::PluginBase* >* _plugins;
-    _plugins = cfdExecutive::instance()->GetTheCurrentPlugins();
+    _plugins = GraphicalPluginManager::instance()->GetTheCurrentPlugins();
 
     // Remove any plugins that aren't present in the current network
     std::map< std::string, PluginBase* >::iterator foundPlugin;

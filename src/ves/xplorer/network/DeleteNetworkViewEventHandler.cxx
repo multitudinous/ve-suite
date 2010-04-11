@@ -33,7 +33,7 @@
 #include <ves/xplorer/network/DeleteNetworkViewEventHandler.h>
 #include <ves/xplorer/Model.h>
 #include <ves/xplorer/ModelHandler.h>
-#include <ves/xplorer/network/cfdExecutive.h>
+#include <ves/xplorer/network/GraphicalPluginManager.h>
 #include <ves/xplorer/plugin/PluginBase.h>
 
 
@@ -95,5 +95,5 @@ void DeleteNetworkViewEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBas
 //////////////////////////////////////////////////////////////////////////
 void DeleteNetworkViewEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xmlObject )
 {
-    cfdExecutive::instance()->DeleteNetworkSystemView();
+    GraphicalPluginManager::instance()->DeleteNetworkSystemView();
 }

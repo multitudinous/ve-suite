@@ -32,7 +32,7 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/xplorer/network/VE_i.h>
 #include <ves/xplorer/network/UpdateNetworkEventHandler.h>
-#include <ves/xplorer/network/cfdExecutive.h>
+#include <ves/xplorer/network/GraphicalPluginManager.h>
 
 #include <ves/xplorer/Debug.h>
 #include <ves/xplorer/DeviceHandler.h>
@@ -94,8 +94,8 @@ void UpdateNetworkEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xml
     CommandPtr cmd = boost::dynamic_pointer_cast<ves::open::xml::Command>( xmlObject );
     if( cmd->GetDataValuePair( "Load Data" ) )
     {
-        cfdExecutive::instance()->GetCORBAInterface()->GetNetworkFromCE();
-        cfdExecutive::instance()->LoadDataFromCE();
+        GraphicalPluginManager::instance()->GetCORBAInterface()->GetNetworkFromCE();
+        GraphicalPluginManager::instance()->LoadDataFromCE();
     }
 
     ves::xplorer::DeviceHandler::instance()->SetActiveDCS(

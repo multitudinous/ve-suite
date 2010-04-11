@@ -31,7 +31,7 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/xplorer/network/ReloadPluginsEventHandler.h>
-#include <ves/xplorer/network/cfdExecutive.h>
+#include <ves/xplorer/network/GraphicalPluginManager.h>
 #include <ves/xplorer/network/cfdVEAvailModules.h>
 #include <ves/xplorer/ModelHandler.h>
 #include <ves/xplorer/plugin/PluginBase.h>
@@ -92,7 +92,7 @@ void ReloadPluginsEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* m
 void ReloadPluginsEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xmlObject )
 {
     std::map< std::string, ves::xplorer::plugin::PluginBase* >* plugins;
-    plugins = cfdExecutive::instance()->GetTheCurrentPlugins();
+    plugins = GraphicalPluginManager::instance()->GetTheCurrentPlugins();
 
     for( std::map< std::string, ves::xplorer::plugin::PluginBase* >::iterator iter = 
         plugins->begin(); iter != plugins->end(); )
@@ -106,7 +106,7 @@ void ReloadPluginsEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xml
     }
     plugins->clear();
 
-    cfdVEAvailModules* modules = cfdExecutive::instance()->GetAvailablePlugins();
+    cfdVEAvailModules* modules = GraphicalPluginManager::instance()->GetAvailablePlugins();
     modules->ResetPluginLoader();
     //Set active model to null so that if the previous active model is deleted
     //that we don't get errors in our code other places.

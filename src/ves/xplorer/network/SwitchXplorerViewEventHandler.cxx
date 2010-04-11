@@ -38,7 +38,7 @@
 #include <ves/xplorer/device/Device.h>
 #include <ves/xplorer/device/KeyboardMouse.h>
 
-#include <ves/xplorer/network/cfdExecutive.h>
+#include <ves/xplorer/network/GraphicalPluginManager.h>
 #include <ves/xplorer/network/NetworkSystemView.h>
 
 #include <ves/xplorer/plugin/PluginBase.h>
@@ -107,7 +107,7 @@ void SwitchXplorerViewEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBas
 void SwitchXplorerViewEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xmlObject )
 {
     //If the job is not submitted return
-    if( !cfdExecutive::instance()->GetNetworkSystemView() )
+    if( !GraphicalPluginManager::instance()->GetNetworkSystemView() )
     {
         return;
     }
@@ -165,7 +165,7 @@ void SwitchXplorerViewEventHandler::UpdateNetworkView( const ves::open::xml::Com
     std::string netId; 
     dvp->GetData(netId);
     //osg::ref_ptr< osg::Group > tempGroup = networkLayout.DrawNetwork();
-    osg::ref_ptr< osg::Group > tempGroup = cfdExecutive::instance()->
+    osg::ref_ptr< osg::Group > tempGroup = GraphicalPluginManager::instance()->
         GetNetworkSystemView()->DrawNetwork( netId );
     if( tempGroup.valid() )
     {

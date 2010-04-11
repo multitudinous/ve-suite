@@ -56,7 +56,7 @@
 #include <ves/xplorer/environment/cfdQuatCamHandler.h>
 #include <ves/xplorer/environment/cfdDisplaySettings.h>
 
-#include <ves/xplorer/network/cfdExecutive.h>
+#include <ves/xplorer/network/GraphicalPluginManager.h>
 
 #include <ves/xplorer/command/CommandManager.h>
 
@@ -250,7 +250,7 @@ void App::exit()
     ves::xplorer::minerva::MinervaManager::instance()->Clear();
 #endif
     ves::xplorer::scenegraph::SceneManager::instance()->Shutdown();
-    ves::xplorer::network::cfdExecutive::instance()->UnRegisterExecutive();
+    ves::xplorer::network::GraphicalPluginManager::instance()->UnRegisterExecutive();
 }
 ////////////////////////////////////////////////////////////////////////////////
 osg::Group* App::getScene()
@@ -512,8 +512,8 @@ void App::initScene()
     _tbvHandler = ves::xplorer::TextureBasedVizHandler::instance();
     _tbvHandler->SetMasterNode( m_vjobsWrapper->IsMaster() );
 
-    std::cout << "|  2. Initializing.................................... cfdExecutive |" << std::endl;
-    cfdExecutive::instance()->Initialize(
+    std::cout << "|  2. Initializing.................................... GraphicalPluginManager |" << std::endl;
+    GraphicalPluginManager::instance()->Initialize(
         m_vjobsWrapper->naming_context, m_vjobsWrapper->child_poa );
 
     // This may need to be fixed
@@ -589,7 +589,7 @@ void App::latePreFrame()
             VPR_PROFILE_RESULTS();
             vxs::PhysicsSimulator::instance()->SetIdle( true );
             m_vjobsWrapper->Cleanup();
-            cfdExecutive::instance()->UnloadPlugins();
+            GraphicalPluginManager::instance()->UnloadPlugins();
             ves::xplorer::scenegraph::SceneManager::instance()->Shutdown();
             
             // Stopping kernel
@@ -733,8 +733,8 @@ void App::latePreFrame()
     }
     ///////////////////////
     {
-        VPR_PROFILE_GUARD_HISTORY( "App::latePreFrame cfdExecutive", 20 );
-        cfdExecutive::instance()->PreFrameUpdate();
+        VPR_PROFILE_GUARD_HISTORY( "App::latePreFrame GraphicalPluginManager", 20 );
+        GraphicalPluginManager::instance()->PreFrameUpdate();
     }
     ///////////////////////
 #ifdef MINERVA_GIS_SUPPORT
@@ -790,7 +790,7 @@ void App::postFrame()
 
     ///update the transient frame number on the master
     _tbvHandler->UpdateTransientFrame();
-    cfdExecutive::instance()->PostFrameUpdate();
+    GraphicalPluginManager::instance()->PostFrameUpdate();
 
     this->m_vjobsWrapper->GetCfdStateVariables();
     

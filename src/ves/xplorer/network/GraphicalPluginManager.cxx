@@ -37,7 +37,7 @@
 #include <ves/xplorer/network/cfdVEPluginLoader.h>
 #include <ves/xplorer/network/UpdateNetworkEventHandler.h>
 #include <ves/xplorer/network/NetworkSystemView.h>
-#include <ves/xplorer/network/cfdExecutive.h>
+#include <ves/xplorer/network/GraphicalPluginManager.h>
 #include <ves/xplorer/network/DeleteObjectFromNetworkEventHandler.h>
 #include <ves/xplorer/network/DeleteNetworkViewEventHandler.h>
 #include <ves/xplorer/network/SwitchXplorerViewEventHandler.h>
@@ -100,10 +100,10 @@ using namespace ves::xplorer::plugin;
 using namespace ves::xplorer::network;
 using namespace ves::xplorer::command;
 
-vprSingletonImpLifetime( ves::xplorer::network::cfdExecutive, 0 );
+vprSingletonImpLifetime( ves::xplorer::network::GraphicalPluginManager, 0 );
 
 ////////////////////////////////////////////////////////////////////////////////
-cfdExecutive::cfdExecutive()
+GraphicalPluginManager::GraphicalPluginManager()
     :
     mAvailableModules( 0 ),
     ui_i( 0 ),
@@ -115,7 +115,7 @@ cfdExecutive::cfdExecutive()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdExecutive::Initialize( CosNaming::NamingContext* inputNameContext,
+void GraphicalPluginManager::Initialize( CosNaming::NamingContext* inputNameContext,
                                PortableServer::POA* child_poa )
 {
     this->naming_context = inputNameContext;
@@ -160,12 +160,12 @@ void cfdExecutive::Initialize( CosNaming::NamingContext* inputNameContext,
 }
 ////////////////////////////////////////////////////////////////////////////////
 std::map< std::string, ves::xplorer::plugin::PluginBase* >* 
-    cfdExecutive::GetTheCurrentPlugins()
+    GraphicalPluginManager::GetTheCurrentPlugins()
 {
     return &mPluginsMap;
 }
 ////////////////////////////////////////////////////////////////////////////////
-cfdExecutive::~cfdExecutive()
+GraphicalPluginManager::~GraphicalPluginManager()
 {
     if( mAvailableModules )
     {
@@ -188,7 +188,7 @@ cfdExecutive::~cfdExecutive()
     ui_i = 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdExecutive::UnloadPlugins()
+void GraphicalPluginManager::UnloadPlugins()
 {
     delete mAvailableModules;
     mAvailableModules = 0;
@@ -200,7 +200,7 @@ void cfdExecutive::UnloadPlugins()
     _eventHandlers.clear();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdExecutive::UnRegisterExecutive()
+void GraphicalPluginManager::UnRegisterExecutive()
 {
     try
     {
@@ -216,7 +216,7 @@ void cfdExecutive::UnRegisterExecutive()
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdExecutive::UnbindORB()
+void GraphicalPluginManager::UnbindORB()
 {
     if( !ui_i )
     {
@@ -233,22 +233,22 @@ void cfdExecutive::UnbindORB()
     }
     catch ( CosNaming::NamingContext::InvalidName& ex )
     {
-        vprDEBUG( vesDBG, 1 ) << "|\t\tcfdExecutive : Invalid Name! "
+        vprDEBUG( vesDBG, 1 ) << "|\t\tGraphicalPluginManager : Invalid Name! "
             << ex._info().c_str() << std::endl << vprDEBUG_FLUSH;
     }
     catch ( CosNaming::NamingContext::NotFound& ex )
     {
-        vprDEBUG( vesDBG, 1 ) << "|\t\tcfdExecutive : Not Found! "
+        vprDEBUG( vesDBG, 1 ) << "|\t\tGraphicalPluginManager : Not Found! "
             << ex._info().c_str() << std::endl << vprDEBUG_FLUSH;
     }
     catch ( CosNaming::NamingContext::CannotProceed& ex )
     {
-        vprDEBUG( vesDBG, 1 ) << "|\t\tcfdExecutive : Cannot Proceed! "
+        vprDEBUG( vesDBG, 1 ) << "|\t\tGraphicalPluginManager : Cannot Proceed! "
             << ex._info().c_str() << std::endl << vprDEBUG_FLUSH;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdExecutive::GetNetwork()
+void GraphicalPluginManager::GetNetwork()
 {
     // Get buffer value from Body_UI implementation
     std::string temp( ui_i->GetNetworkString() );
@@ -298,7 +298,7 @@ void cfdExecutive::GetNetwork()
     netSystemView = new NetworkSystemView( veNetwork );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdExecutive::GetEverything()
+void GraphicalPluginManager::GetEverything()
 {
     if( CORBA::is_nil( this->_exec ) )
     {
@@ -359,14 +359,14 @@ void cfdExecutive::GetEverything()
         << std::endl << vprDEBUG_FLUSH;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdExecutive::InitModules()
+void GraphicalPluginManager::InitModules()
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdExecutive::PreFrameUpdate()
+void GraphicalPluginManager::PreFrameUpdate()
 {
-    vprDEBUG( vesDBG, 3 ) << "|\tcfdExecutive::PreFrameUpdate"
+    vprDEBUG( vesDBG, 3 ) << "|\tGraphicalPluginManager::PreFrameUpdate"
         << std::endl << vprDEBUG_FLUSH;
     if( !ui_i )
     {
@@ -441,17 +441,17 @@ void cfdExecutive::PreFrameUpdate()
             foundPlugin->second->CreateCustomVizFeature( dummyVar );
         }
     }
-    vprDEBUG( vesDBG, 3 ) << "|\tcfdExecutive::PreFrameUpdate End"
+    vprDEBUG( vesDBG, 3 ) << "|\tGraphicalPluginManager::PreFrameUpdate End"
         << std::endl << vprDEBUG_FLUSH;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdExecutive::PostFrameUpdate()
+void GraphicalPluginManager::PostFrameUpdate()
 {
-    vprDEBUG( vesDBG, 3 ) << "|\tcfdExecutive::PostFrameUpdate"
+    vprDEBUG( vesDBG, 3 ) << "|\tGraphicalPluginManager::PostFrameUpdate"
         << std::endl << vprDEBUG_FLUSH;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdExecutive::LoadDataFromCE()
+void GraphicalPluginManager::LoadDataFromCE()
 {
     if( CORBA::is_nil( this->_exec ) )
     {
@@ -474,7 +474,7 @@ void cfdExecutive::LoadDataFromCE()
     return;
     // store the statusString in order to perform multiple operations on it...
     //std::string statusString = ui_i->GetStatusString();
-    //vprDEBUG(vesDBG,3) << "|\tcfdExecutive::PreFrameUpdate statusString = " << statusString
+    //vprDEBUG(vesDBG,3) << "|\tGraphicalPluginManager::PreFrameUpdate statusString = " << statusString
     //   << std::endl << vprDEBUG_FLUSH;
 
     // record position of some key phrases...
@@ -544,7 +544,7 @@ void cfdExecutive::LoadDataFromCE()
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-/*bool cfdExecutive::RegisterEHForGEPlugin( std::string commandName, PluginBase* baseClass )
+/*bool GraphicalPluginManager::RegisterEHForGEPlugin( std::string commandName, PluginBase* baseClass )
 {
    std::map< std::string, PluginBase* >::iterator iter;
    iter = pluginEHMap.find( commandName );
@@ -558,17 +558,17 @@ void cfdExecutive::LoadDataFromCE()
    return true;
 }*/
 ////////////////////////////////////////////////////////////////////////////////
-cfdVEAvailModules* cfdExecutive::GetAvailablePlugins()
+cfdVEAvailModules* GraphicalPluginManager::GetAvailablePlugins()
 {
     return mAvailableModules;
 }
 ////////////////////////////////////////////////////////////////////////////////
-Body_UI_i* cfdExecutive::GetCORBAInterface()
+Body_UI_i* GraphicalPluginManager::GetCORBAInterface()
 {
     return ui_i;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdExecutive::ConnectToCE()
+void GraphicalPluginManager::ConnectToCE()
 {
     try
     {
@@ -586,7 +586,7 @@ void cfdExecutive::ConnectToCE()
         //Body_UI_i ui_i( UINAME);
         
         PortableServer::ObjectId_var id =
-        PortableServer::string_to_ObjectId( "cfdExecutive" );
+        PortableServer::string_to_ObjectId( "GraphicalPluginManager" );
         
         //activate it with this child POA
         m_ChildPOA->activate_object_with_id( id.in(), &( *ui_i ) );
@@ -614,17 +614,17 @@ void cfdExecutive::ConnectToCE()
     }
 }    
 ////////////////////////////////////////////////////////////////////////////////
-std::string cfdExecutive::GetCurrentNetwork()
+std::string GraphicalPluginManager::GetCurrentNetwork()
 {
     return veNetwork;
 }
 ////////////////////////////////////////////////////////////////////////////////
-NetworkSystemView* cfdExecutive::GetNetworkSystemView()
+NetworkSystemView* GraphicalPluginManager::GetNetworkSystemView()
 {
     return netSystemView;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdExecutive::DeleteNetworkSystemView()
+void GraphicalPluginManager::DeleteNetworkSystemView()
 {
     if(netSystemView)
     {
@@ -633,7 +633,7 @@ void cfdExecutive::DeleteNetworkSystemView()
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdExecutive::ParseSystem( ves::open::xml::model::SystemPtr system, 
+void GraphicalPluginManager::ParseSystem( ves::open::xml::model::SystemPtr system, 
     bool getResults, osg::Group* parentNode )
 {
     //add the system to the map
