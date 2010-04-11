@@ -206,40 +206,14 @@ Camera* const CameraManager::TestForIntersections(
 ////////////////////////////////////////////////////////////////////////////////
 osg::Geode* CameraManager::CreateMasterCameraQuad()
 {
-    /*
-    float lx, ly, ux, uy;
-    //Straight mapping from ( 0 to 1 ) viewport space to
-    //                      ( 0 to 1 ) ortho projection space
-    lx = viewportOriginX;
-    ly = viewportOriginY;
-    ux = viewportOriginX + viewportWidth;
-    uy = viewportOriginY + viewportHeight;
-    
-    //Transform ( 0 to 1 ) viewport space into
-    //          ( -1 to 1 ) identity projection space
-    //lx = ( viewportOriginX * 2.0 ) - 1.0;
-    //ly = ( viewportOriginY * 2.0 ) - 1.0;
-    //ux = ( ( viewportOriginX + viewportWidth ) * 2.0 ) - 1.0;
-    //uy = ( ( viewportOriginY + viewportHeight )* 2.0 ) - 1.0;
-    
-    //std::cout << lx << " " << ly << " " << ux << " " << uy << std::endl;
-    
-    //Get the vertex coordinates for the quad
-    osg::ref_ptr< osg::Vec3Array > quadVertices = new osg::Vec3Array();
-    quadVertices->resize( 4 );
-    
-    (*quadVertices)[ 0 ].set( lx, ly, 0.0 );
-    (*quadVertices)[ 1 ].set( ux, ly, 0.0 );
-    (*quadVertices)[ 2 ].set( ux, uy, 0.0 );
-    (*quadVertices)[ 3 ].set( lx, uy, 0.0 );
-    */
+    ///These are in pixel space
     osg::ref_ptr< osg::Vec3Array > cameraViewQuadVertices = 
         new osg::Vec3Array();
     cameraViewQuadVertices->resize( 4 );
     (*cameraViewQuadVertices)[ 0 ].set( 0.0, 0.0, -1.0 );
-    (*cameraViewQuadVertices)[ 1 ].set( 1.0, 0.0, -1.0 );
-    (*cameraViewQuadVertices)[ 2 ].set( 1.0, 1.0, -1.0 );
-    (*cameraViewQuadVertices)[ 3 ].set( 0.0, 1.0, -1.0 );
+    (*cameraViewQuadVertices)[ 1 ].set( 100.0, 0.0, -1.0 );
+    (*cameraViewQuadVertices)[ 2 ].set( 100.0, 100.0, -1.0 );
+    (*cameraViewQuadVertices)[ 3 ].set( 0.0, 100.0, -1.0 );
     
     //Get the texture coordinates for the quad
     osg::ref_ptr< osg::Vec2Array > quadTexCoords = new osg::Vec2Array();
