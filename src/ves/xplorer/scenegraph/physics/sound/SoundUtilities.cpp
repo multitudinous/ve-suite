@@ -69,24 +69,37 @@ SoundUtilities::playSound( const osg::Vec3& pos, osgAudio::Sample* sample, float
 {
     if( !sample )
     {
-        osg::notify( osg::WARN ) << "SoundUtilities: playSound does not have a valid sample to play." << std::endl;
+        osg::notify( osg::WARN ) 
+            << "SoundUtilities: playSound does not have a valid sample to play." 
+            << std::endl;
         return;
     }
 
-    _soundState->setPosition( pos );
-    _soundState->setSample( sample );
-    _soundState->setPlay( true );
-	_soundState->setPitch( 1 );
-    _soundState->setGain( gain );
+    osg::ref_ptr< osgAudio::SoundState > ss = new osgAudio::SoundState("");
+    ss->setSample( sample );
+    ss->setPitch( 1 );
+    ss->setPosition( pos );
+    ss->setPlay( true );
+    ss->setEnable( true );
+    ss->setGain( gain );
+    ss->setReferenceDistance( 60 );
+    ss->setRolloffFactor( 3 );
+    ss->setLooping( false );
 
-	osgAudio::SoundManager::instance()->pushSoundEvent( _soundState.get() );
+	bool success = osgAudio::SoundManager::instance()->pushSoundEvent( ss.get() );
+    if( !success )
+    {
+        osg::notify( osg::WARN ) 
+            << "SoundUtilities: playSound could not push the SoundState." 
+            << std::endl;
+    }
 }
 
 void
-SoundUtilities::collide( const Material::MaterialType& matA, const Material::MaterialType& matB, const osg::Vec3& pos )
+SoundUtilities::collide( const Material::MaterialType& matA, const Material::MaterialType& matB, const osg::Vec3& pos, float gain )
 {
     osgAudio::Sample* sample( _collideTable.getSound( matA, matB ) );
-    playSound( pos, sample );
+    playSound( pos, sample, gain );
 }
 
 void
@@ -124,7 +137,7 @@ SoundUtilities::addSound( osg::Node* node, const std::string& soundFile, float g
 void
 SoundUtilities::addSound( osg::Node* node, osgAudio::Sample* sample, float gain )
 {
-    osg::ref_ptr< osgAudio::SoundState > ss( new osgAudio::SoundState );
+    osg::ref_ptr< osgAudio::SoundState > ss( new osgAudio::SoundState() );
     if( !ss.valid() )
     {
         osg::notify( osg::WARN ) << "SoundUtilities: Can't allocate _soundState in addSound()." << std::endl;

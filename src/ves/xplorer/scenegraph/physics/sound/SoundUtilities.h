@@ -22,7 +22,7 @@ public:
     void playSound( const osg::Vec3& pos, osgAudio::Sample* sample, float gain=1.f );
 
     // Collision between two materials.
-    void collide( const Material::MaterialType& matA, const Material::MaterialType& matB, const osg::Vec3& pos );
+    void collide( const Material::MaterialType& matA, const Material::MaterialType& matB, const osg::Vec3& pos, float gain=1.f );
 
     // One material sliding against the other.
     void slide( const Material::MaterialType& matA, const Material::MaterialType& matB, const osg::Vec3& pos );

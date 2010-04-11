@@ -417,7 +417,7 @@ void PhysicsSimulator::InitializePhysicsSimulation()
     //http://bulletphysics.org/Bullet/phpBB3/viewtopic.php?f=9&t=16
     //http://bulletphysics.org/Bullet/phpBB3/viewtopic.php?f=4&t=2124
     //http://www.cs.cornell.edu/Courses/cs211/2006sp/Lectures/L26-MoreGraphs/lec26.html
-    gDeactivationTime = btScalar(0.5);
+    gDeactivationTime = btScalar(0.7);
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsSimulator::UpdatePhysics( float dt )
@@ -567,6 +567,10 @@ void PhysicsSimulator::ResetScene()
     gNumGjkChecks = 0;
     #endif
     */
+    //osgAudio::SoundManager::instance()->stopAllSources();
+    //osgAudio::SoundManager::instance()->clearSampleCache();
+    //osgAudio::SoundManager::instance()->update();
+
     bool currentIdle = GetIdle();
     SetIdle( true );
 
@@ -595,33 +599,31 @@ void PhysicsSimulator::ResetScene()
 
         if( body && body->getMotionState() )
         {
-            osgbBullet::MotionState* motionState =
-                static_cast< osgbBullet::MotionState* >(
-                    body->getMotionState() );
-            motionState->resetTransform();
-            motionState->getWorldTransform( tempTransform );
-
-            colObj->setWorldTransform( tempTransform );
-            colObj->setInterpolationWorldTransform( tempTransform );
-            colObj->activate();
-
-            //Removed cached contact points
-            mDynamicsWorld->getBroadphase()->getOverlappingPairCache()->
-                cleanProxyFromPairs( colObj->getBroadphaseHandle(),
-                                     mDynamicsWorld->getDispatcher() );
-
-            if( body && !body->isStaticObject() )
+            if( !body->isStaticObject() )
             {
+                osgbBullet::MotionState* motionState =
+                    static_cast< osgbBullet::MotionState* >(
+                        body->getMotionState() );
+                motionState->resetTransform();
+                motionState->getWorldTransform( tempTransform );
+
+                colObj->setWorldTransform( tempTransform );
+                colObj->setInterpolationWorldTransform( tempTransform );
+                colObj->activate();
+
                 body->setLinearVelocity( btVector3( 0, 0, 0 ) );
                 body->setAngularVelocity( btVector3( 0, 0, 0 ) );
             }
+            //Removed cached contact points
+            mDynamicsWorld->getBroadphase()->getOverlappingPairCache()->
+                cleanProxyFromPairs( colObj->getBroadphaseHandle(),
+                                mDynamicsWorld->getDispatcher() );            
         }
     }
     
     ///reset some internal cached data in the broadphase
     mDynamicsWorld->getBroadphase()->resetPool(mDynamicsWorld->getDispatcher());
     mDynamicsWorld->getConstraintSolver()->reset();
-    
 
     CharacterController* characterController =
         SceneManager::instance()->GetCharacterController();
@@ -861,7 +863,9 @@ void triggerSounds( const btDynamicsWorld* world, btScalar timeStep )
     // Loop over all collision points and find impacts.
     const btCollisionDispatcher* dispatch( static_cast< const btCollisionDispatcher* >( world->getDispatcher() ) );
     const int numManifolds( dispatch->getNumManifolds() );
-    //std::cout << " num manifolds " << numManifolds << std::endl;
+    //std::cout << "num manifolds " << numManifolds << std::endl;
+    bool collide( false ), slide( false );
+    osg::Vec3 location;
 
     for( int idx=0; idx < numManifolds; idx++ )
     {
@@ -878,26 +882,36 @@ void triggerSounds( const btDynamicsWorld* world, btScalar timeStep )
             continue;
         }
 
-        bool collide( false ), slide( false );
-        osg::Vec3 location;
-
         const int numContacts( contactManifold->getNumContacts() );
         int jdx;
         //std::cout << "num contacts " << numContacts << std::endl;
         for( jdx=0; jdx < numContacts; jdx++ )
-        {
-            //std::cout << " here 1 " << std::endl;
-            
+        {            
             const btManifoldPoint& pt( contactManifold->getContactPoint( jdx) );
             location = osgbBullet::asOsgVec3( pt.getPositionWorldOnA() );
-            //std::cout << pt.m_lifeTime << std::endl;
-            //std::cout << pt.m_appliedImpulse << std::endl;
+            //std::cout << " life " << pt.m_lifeTime << std::endl;
+            //std::cout << " impulse " << pt.m_appliedImpulse << std::endl;
 
             if( pt.m_lifeTime < 3 )
             {
+                /*btRigidBody* rbA = btRigidBody::upcast(obA);
+                btRigidBody* rbB = btRigidBody::upcast(obB);
+                if( rbA && rbA )
+                {
+                    const btVector3 &v1 = rbA->getLinearVelocity();
+                    const btVector3 &a1 = rbA->getAngularVelocity();
+                    float vel1 = v1.x() * v1.x() + v1.y() * v1.y() + v1.z() * v1.z();
+                    float ang1 = a1.x() * a1.x() + a1.y() * a1.y() + a1.z() * a1.z();
+                    if( (vel1 + ang1) > 2. )
+                    {
+                        collide = true;
+                    }
+                }
                 //Need to tie this impulse to gain 
-                //if( pt.m_appliedImpulse > 0.3 ) // Kind of a hack.
+                else */if( pt.m_appliedImpulse > 2. ) // Kind of a hack.
+                {    
                     collide = true;
+                }
             }
             else
             {
@@ -906,35 +920,37 @@ void triggerSounds( const btDynamicsWorld* world, btScalar timeStep )
                 if( (vA-vB).length2() > .1 )
                     slide = true;
             }
-        }
-        if( collide || slide )
-        {
-            void* tempUserDataA = obA->getUserPointer();
-            void* tempUserDataB = obB->getUserPointer();
-            if( !tempUserDataB || !tempUserDataA )
+
+            if( collide || slide )
             {
-                continue;
-            }
-
-            PhysicsRigidBody* objA =
-                static_cast< PhysicsRigidBody* >( tempUserDataA );
-            PhysicsRigidBody* objB =
-                static_cast< PhysicsRigidBody* >( tempUserDataB );
-
-            Material* mcA = objA->GetSoundMaterial();
-            Material* mcB = objB->GetSoundMaterial();
-            //std::cout << "get material sounds " << std::endl;
-
-            if( ( mcA != NULL ) && ( mcB != NULL ) )
-            {
-                if( collide )
-                {   
-                    //std::cout << "play sounds " << std::endl;
-                    SoundUtilities::instance()->collide( mcA->_mat, mcB->_mat, location );
+                void* tempUserDataA = obA->getUserPointer();
+                void* tempUserDataB = obB->getUserPointer();
+                if( !tempUserDataB || !tempUserDataA )
+                {
+                    continue;
                 }
-                else
-                    SoundUtilities::instance()->slide( mcA->_mat, mcB->_mat, location );
+                
+                PhysicsRigidBody* objA =
+                static_cast< PhysicsRigidBody* >( tempUserDataA );
+                PhysicsRigidBody* objB =
+                static_cast< PhysicsRigidBody* >( tempUserDataB );
+                
+                Material* mcA = objA->GetSoundMaterial();
+                Material* mcB = objB->GetSoundMaterial();
+                //std::cout << "get material sounds " << std::endl;
+                
+                if( ( mcA != NULL ) && ( mcB != NULL ) )
+                {
+                    if( collide )
+                    {   
+                        SoundUtilities::instance()->collide( mcA->_mat, mcB->_mat, location, pt.m_appliedImpulse );
+                    }
+                    else
+                        SoundUtilities::instance()->slide( mcA->_mat, mcB->_mat, location );
+                }
             }
+            collide = false;
+            slide = false;
         }
     }
 }

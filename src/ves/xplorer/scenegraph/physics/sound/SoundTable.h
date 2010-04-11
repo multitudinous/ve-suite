@@ -97,9 +97,17 @@ SoundTable< T >::getSound( const T& mat0, const T& mat1 )
 {
     SoundData& sd( _table[ mat0 ][ mat1 ] );
     if( sd._default )
-        return( _defaultSample.get() );
+    {
+        osg::ref_ptr< osgAudio::Sample > sample = new osgAudio::Sample( *_defaultSample.get() );
+        return sample.release();
+        //return( _defaultSample.get() );
+    }
     else
-        return( sd._sample.get() );
+    {    
+        osg::ref_ptr< osgAudio::Sample > sample = new osgAudio::Sample( *sd._sample.get() );
+        return sample.release();
+        //return( sd._sample.get() );
+    }
 }
 
 
