@@ -521,6 +521,8 @@ void Tablet::ProcessEvents( ves::open::xml::CommandPtr command )
         }
     }
 
+    world_quat *= rot_quat;
+
 #ifdef MINERVA_GIS_SUPPORT
     Minerva::Core::TileEngine::Body* tileEngineBody = 
         ves::xplorer::minerva::MinervaManager::instance()->GetTileEngineBody();
@@ -528,21 +530,29 @@ void Tablet::ProcessEvents( ves::open::xml::CommandPtr command )
     {
         Minerva::Core::TileEngine::LandModel* landModel = 
             tileEngineBody->landModel();
+
+        osg::Vec3d t ( -worldTrans[0], -worldTrans[1], -worldTrans[2] );
+        osg::Vec3d position ( world_quat.inverse() * t );
+
         double lat, lon, elevation;
-        landModel->xyzToLatLonHeight( worldTrans[0], worldTrans[1], 
-            worldTrans[2], lat, lon, elevation  );
+        landModel->xyzToLatLonHeight( position[0], position[1], 
+            position[2], lat, lon, elevation  );
+        //vprDEBUG( vesDBG, 0 ) << "X: " << position[0] << " Y: " << position[1] << " Z: " << position[2] << std::endl << vprDEBUG_FLUSH;
+        //vprDEBUG( vesDBG, 0 ) << "Lat: " << lat << " lon: " << lon << std::endl << vprDEBUG_FLUSH;
         double earthElevation = tileEngineBody->elevationAtLatLong( lat, lon );
         
         if( earthElevation > elevation )
         {
             elevation = earthElevation;
-            landModel->latLonHeightToXYZ( lat, lon, elevation, worldTrans[0], 
-                                         worldTrans[1], worldTrans[2] );
+            landModel->latLonHeightToXYZ( lat, lon, elevation, position[0], 
+                                         position[1], position[2] );
+            position = world_quat * position;
+            worldTrans[0] = -position[0];
+            worldTrans[1] = -position[1];
+            worldTrans[2] = -position[2];
         }
     }
 #endif
-
-    world_quat *= rot_quat;
 
     world->SetTranslationArray( worldTrans );
     world->SetQuat( world_quat );
@@ -558,7 +568,7 @@ void Tablet::ProcessEvents( ves::open::xml::CommandPtr command )
             m_characterController.Rotate( 0., osg::DegreesToRadians( rotationStepSize ) );
         }        
     }
-    
+	
     vprDEBUG( vesDBG, 3 ) << "|\tEnd Tablet Navigate" << std::endl << vprDEBUG_FLUSH;
 }
 ////////////////////////////////////////////////////////////////////////////////
