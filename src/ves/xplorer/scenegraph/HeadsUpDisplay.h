@@ -73,7 +73,7 @@ class CADEntity;
 /*!\class ves::xplorer::scenegraph::HeadsUpDisplay
  *
  */
-class VE_XPLORER_EXPORTS HeadsUpDisplay
+class VE_SCENEGRAPH_EXPORTS HeadsUpDisplay
 {
 public:
     ///Constructor
