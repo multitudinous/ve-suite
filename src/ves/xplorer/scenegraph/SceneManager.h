@@ -223,9 +223,6 @@ private:
     ///The root node of our scenegraph
     osg::ref_ptr< osg::Group > mRootNode;
 
-    ///
-    CenterPointManager m_centerPointManager;
-
     ///The root model node of our scenegraph
     osg::ref_ptr< osg::Group > mModelRoot;
     //osg::ref_ptr< DCS > mModelRoot;
