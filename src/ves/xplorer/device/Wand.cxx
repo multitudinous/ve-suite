@@ -308,14 +308,7 @@ void Wand::ProcessEvents( ves::open::xml::CommandPtr command )
             m_worldTrans[ i ] = -m_worldTrans[ i ];
         }
 
-        //Do not allow translation below z = 0 plane
-        if( subzeroFlag )
-        {
-            if( m_worldTrans[ 2 ] > 0 )
-            {
-                m_worldTrans[ 2 ] = 0;
-            }
-        }
+        world_quat *= m_rotIncrement;
 
 #ifdef MINERVA_GIS_SUPPORT
         Minerva::Core::TileEngine::Body* tileEngineBody = 
@@ -324,21 +317,41 @@ void Wand::ProcessEvents( ves::open::xml::CommandPtr command )
         {
             Minerva::Core::TileEngine::LandModel* landModel = 
             tileEngineBody->landModel();
-            double lat, lon, elevation;
-            landModel->xyzToLatLonHeight( m_worldTrans[0], m_worldTrans[1], 
-                                         m_worldTrans[2], lat, lon, elevation  );
-            double earthElevation = tileEngineBody->elevationAtLatLong( lat, lon );
             
+            osg::Vec3d t ( -worldTrans[0], -worldTrans[1], -worldTrans[2] );
+            osg::Vec3d position ( world_quat.inverse() * t );
+            
+            double lat, lon, elevation;
+            landModel->xyzToLatLonHeight( position[0], position[1], 
+                                         position[2], lat, lon, elevation  );
+            double earthElevation = tileEngineBody->elevationAtLatLong( lat, lon );
+            Matrix44d vjHeadMat = gmtl::convertTo< double >( head->getData() );
+            gmtl::Point3d jugglerHeadPoint;
+            jugglerHeadPoint = gmtl::makeTrans< gmtl::Point3d >( vjHeadMat );
+            earthElevation += jugglerHeadPoint[ 1 ];
             if( earthElevation > elevation )
             {
                 elevation = earthElevation;
-                landModel->latLonHeightToXYZ( lat, lon, elevation, m_worldTrans[0], 
-                                             m_worldTrans[1], m_worldTrans[2] );
+                landModel->latLonHeightToXYZ( lat, lon, elevation, position[0], 
+                                             position[1], position[2] );
+                position = world_quat * position;
+                worldTrans[0] = -position[0];
+                worldTrans[1] = -position[1];
+                worldTrans[2] = -position[2];
             }
         }
+        else 
 #endif
+        //If the GIS rendering engine is on then we do not want to lock to z > 0
+        if( subzeroFlag )
+        {
+            if( worldTrans[ 2 ] > 0 )
+            {
+                worldTrans[ 2 ] = 0;
+            }
+        }
+
         activeDCS->SetTranslationArray( m_worldTrans );
-        world_quat *= m_rotIncrement;
         activeDCS->SetQuat( world_quat );
     }
     else if( m_characterController.IsEnabled() && m_buttonPushed )
@@ -350,17 +363,50 @@ void Wand::ProcessEvents( ves::open::xml::CommandPtr command )
             m_worldTrans[ i ] = -m_worldTrans[ i ];
         }
         
-        //Do not allow translation below z = 0 plane
-        if( subzeroFlag )
+        world_quat *= m_rotIncrement;
+        
+#ifdef MINERVA_GIS_SUPPORT
+        Minerva::Core::TileEngine::Body* tileEngineBody = 
+        ves::xplorer::minerva::MinervaManager::instance()->GetTileEngineBody();
+        if( tileEngineBody )
         {
-            if( m_worldTrans[ 2 ] > 0 )
+            Minerva::Core::TileEngine::LandModel* landModel = 
+            tileEngineBody->landModel();
+            
+            osg::Vec3d t ( -worldTrans[0], -worldTrans[1], -worldTrans[2] );
+            osg::Vec3d position ( world_quat.inverse() * t );
+            
+            double lat, lon, elevation;
+            landModel->xyzToLatLonHeight( position[0], position[1], 
+                                         position[2], lat, lon, elevation  );
+            double earthElevation = tileEngineBody->elevationAtLatLong( lat, lon );
+            Matrix44d vjHeadMat = gmtl::convertTo< double >( head->getData() );
+            gmtl::Point3d jugglerHeadPoint;
+            jugglerHeadPoint = gmtl::makeTrans< gmtl::Point3d >( vjHeadMat );
+            earthElevation += jugglerHeadPoint[ 1 ];
+            if( earthElevation > elevation )
             {
-                m_worldTrans[ 2 ] = 0;
+                elevation = earthElevation;
+                landModel->latLonHeightToXYZ( lat, lon, elevation, position[0], 
+                                             position[1], position[2] );
+                position = world_quat * position;
+                worldTrans[0] = -position[0];
+                worldTrans[1] = -position[1];
+                worldTrans[2] = -position[2];
             }
         }
-        
+        else 
+#endif
+        //If the GIS rendering engine is on then we do not want to lock to z > 0
+        if( subzeroFlag )
+        {
+            if( worldTrans[ 2 ] > 0 )
+            {
+                worldTrans[ 2 ] = 0;
+            }
+        }
+
         activeDCS->SetTranslationArray( m_worldTrans );
-        world_quat *= m_rotIncrement;
         activeDCS->SetQuat( world_quat );
         //If the z axis is positive then rotate by a specific dz
         if( m_rotIncrement[ 3 ] > 0 )
