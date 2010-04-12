@@ -31,10 +31,10 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
-#ifndef SCENE_MANAGER_H
-#define SCENE_MANAGER_H
+#ifndef VES_XPLORER_SCENEGRAPH_SCENEMANAGER_H
+#define VES_XPLORER_SCENEGRAPH_SCENEMANAGER_H
 
-// --- VE-Suite Includes --- //
+// --- VES Includes --- //
 #include <ves/VEConfig.h>
 
 #include <ves/xplorer/scenegraph/DCS.h>
@@ -53,14 +53,7 @@
 // --- VR Juggler Includes --- //
 #include <vrj/vrjParam.h>
 
-#if __VJ_version >= 2003000
 #include <vrj/Display/ViewportPtr.h>
-#else
-namespace vrj
-{
-    class Viewport;
-}
-#endif
 
 #include <vpr/Util/Singleton.h>
 
@@ -92,15 +85,16 @@ class ManipulatorManager;
 }
 
 /*!\file SceneManager.h
-*/
+ *
+ */
 
 /*!\class ves::xplorer::scenegraph::SceneManager
-*
-*/
+ *
+ */
 
 /*!\namespace ves::xplorer::scenegraph
-*
-*/
+ *
+ */
 class VE_SCENEGRAPH_EXPORTS SceneManager
 {
 public:
@@ -135,11 +129,7 @@ public:
     ///
     ///\return
     GLTransformInfoPtr const GetGLTransformInfo(
-#if __VJ_version >= 2003000
         vrj::ViewportPtr const viewport );
-#else
-        vrj::Viewport* const viewport );
-#endif
 
     ///Return the model root node of the scenegraph
     ///\return
@@ -167,11 +157,7 @@ public:
 
     ///
     void PushBackGLTransformInfo(
-#if __VJ_version >= 2003000
         vrj::ViewportPtr viewport,
-#else
-        vrj::Viewport* viewport,
-#endif
         GLTransformInfoPtr glTransformInfo );
 
     ///Set the node on the switch node that is active
@@ -236,6 +222,9 @@ private:
 
     ///The root node of our scenegraph
     osg::ref_ptr< osg::Group > mRootNode;
+
+    ///
+    CenterPointManager m_centerPointManager;
 
     ///The root model node of our scenegraph
     osg::ref_ptr< osg::Group > mModelRoot;
@@ -315,17 +304,12 @@ private:
     ///This containes a map to context specific data given a viewport
     ///This map should never be returned to the user as the map
     ///can have more viewports than active at a given time
-#if __VJ_version >= 2003000
     typedef std::map< vrj::ViewportPtr, GLTransformInfoPtr > GLTransformInfoMap;
     GLTransformInfoMap m_glTransformInfoMap;
-#else
-    typedef std::map< vrj::Viewport*, GLTransformInfoPtr > GLTransformInfoMap;
-    GLTransformInfoMap m_glTransformInfoMap;
-#endif
 
 };
 } //end scenegraph
 } //end xplorer
 } //end ves
 
-#endif //SCENE_MANAGER_H
+#endif //VES_XPLORER_SCENEGRAPH_SCENEMANAGER_H

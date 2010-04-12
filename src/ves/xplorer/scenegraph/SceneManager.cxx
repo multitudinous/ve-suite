@@ -292,11 +292,7 @@ osg::Group* const SceneManager::GetRootNode() const
 }
 ////////////////////////////////////////////////////////////////////////////////
 GLTransformInfoPtr const SceneManager::GetGLTransformInfo(
-#if __VJ_version >= 2003000
     vrj::ViewportPtr const viewport )
-#else
-    vrj::Viewport* const viewport )
-#endif
 {
     GLTransformInfoMap::const_iterator itr =
         m_glTransformInfoMap.find( viewport );
@@ -473,11 +469,7 @@ void SceneManager::PreFrameUpdate()
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SceneManager::PushBackGLTransformInfo(
-#if __VJ_version >= 2003000
     vrj::ViewportPtr viewport,
-#else
-    vrj::Viewport* viewport,
-#endif
     GLTransformInfoPtr glTransformInfo )
 {
     m_glTransformInfoMap[ viewport ] = glTransformInfo;
