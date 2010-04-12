@@ -512,15 +512,6 @@ void Tablet::ProcessEvents( ves::open::xml::CommandPtr command )
         worldTrans[ i ] = -worldTrans[ i ];
     }
 
-    //Do not allow translation below z = 0 plane
-    if( subzeroFlag )
-    {
-        if( worldTrans[ 2 ] > 0 )
-        {
-            worldTrans[ 2 ] = 0;
-        }
-    }
-
     world_quat *= rot_quat;
 
 #ifdef MINERVA_GIS_SUPPORT
@@ -537,10 +528,11 @@ void Tablet::ProcessEvents( ves::open::xml::CommandPtr command )
         double lat, lon, elevation;
         landModel->xyzToLatLonHeight( position[0], position[1], 
             position[2], lat, lon, elevation  );
-        //vprDEBUG( vesDBG, 0 ) << "X: " << position[0] << " Y: " << position[1] << " Z: " << position[2] << std::endl << vprDEBUG_FLUSH;
-        //vprDEBUG( vesDBG, 0 ) << "Lat: " << lat << " lon: " << lon << std::endl << vprDEBUG_FLUSH;
         double earthElevation = tileEngineBody->elevationAtLatLong( lat, lon );
-        
+        Matrix44d vjHeadMat = gmtl::convertTo< double >( head->getData() );
+        gmtl::Point3d jugglerHeadPoint;
+        jugglerHeadPoint = gmtl::makeTrans< gmtl::Point3d >( vjHeadMat );
+        earthElevation += jugglerHeadPoint[ 1 ];
         if( earthElevation > elevation )
         {
             elevation = earthElevation;
@@ -552,7 +544,16 @@ void Tablet::ProcessEvents( ves::open::xml::CommandPtr command )
             worldTrans[2] = -position[2];
         }
     }
+    else 
 #endif
+    //If the GIS rendering engine is on then we do not want to lock to z > 0
+    if( subzeroFlag )
+    {
+        if( worldTrans[ 2 ] > 0 )
+        {
+            worldTrans[ 2 ] = 0;
+        }
+    }
 
     world->SetTranslationArray( worldTrans );
     world->SetQuat( world_quat );
