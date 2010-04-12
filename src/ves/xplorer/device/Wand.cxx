@@ -318,7 +318,7 @@ void Wand::ProcessEvents( ves::open::xml::CommandPtr command )
             Minerva::Core::TileEngine::LandModel* landModel = 
             tileEngineBody->landModel();
             
-            osg::Vec3d t ( -worldTrans[0], -worldTrans[1], -worldTrans[2] );
+            osg::Vec3d t ( -m_worldTrans[0], -m_worldTrans[1], -m_worldTrans[2] );
             osg::Vec3d position ( world_quat.inverse() * t );
             
             double lat, lon, elevation;
@@ -335,9 +335,9 @@ void Wand::ProcessEvents( ves::open::xml::CommandPtr command )
                 landModel->latLonHeightToXYZ( lat, lon, elevation, position[0], 
                                              position[1], position[2] );
                 position = world_quat * position;
-                worldTrans[0] = -position[0];
-                worldTrans[1] = -position[1];
-                worldTrans[2] = -position[2];
+                m_worldTrans[0] = -position[0];
+                m_worldTrans[1] = -position[1];
+                m_worldTrans[2] = -position[2];
             }
         }
         else 
@@ -345,9 +345,9 @@ void Wand::ProcessEvents( ves::open::xml::CommandPtr command )
         //If the GIS rendering engine is on then we do not want to lock to z > 0
         if( subzeroFlag )
         {
-            if( worldTrans[ 2 ] > 0 )
+            if( m_worldTrans[ 2 ] > 0 )
             {
-                worldTrans[ 2 ] = 0;
+                m_worldTrans[ 2 ] = 0;
             }
         }
 
@@ -373,7 +373,7 @@ void Wand::ProcessEvents( ves::open::xml::CommandPtr command )
             Minerva::Core::TileEngine::LandModel* landModel = 
             tileEngineBody->landModel();
             
-            osg::Vec3d t ( -worldTrans[0], -worldTrans[1], -worldTrans[2] );
+            osg::Vec3d t ( -m_worldTrans[0], -m_worldTrans[1], -m_worldTrans[2] );
             osg::Vec3d position ( world_quat.inverse() * t );
             
             double lat, lon, elevation;
@@ -390,9 +390,9 @@ void Wand::ProcessEvents( ves::open::xml::CommandPtr command )
                 landModel->latLonHeightToXYZ( lat, lon, elevation, position[0], 
                                              position[1], position[2] );
                 position = world_quat * position;
-                worldTrans[0] = -position[0];
-                worldTrans[1] = -position[1];
-                worldTrans[2] = -position[2];
+                m_worldTrans[0] = -position[0];
+                m_worldTrans[1] = -position[1];
+                m_worldTrans[2] = -position[2];
             }
         }
         else 
@@ -400,9 +400,9 @@ void Wand::ProcessEvents( ves::open::xml::CommandPtr command )
         //If the GIS rendering engine is on then we do not want to lock to z > 0
         if( subzeroFlag )
         {
-            if( worldTrans[ 2 ] > 0 )
+            if( m_worldTrans[ 2 ] > 0 )
             {
-                worldTrans[ 2 ] = 0;
+                m_worldTrans[ 2 ] = 0;
             }
         }
 
