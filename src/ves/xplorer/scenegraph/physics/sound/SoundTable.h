@@ -95,7 +95,18 @@ SoundTable< T >::addSound( const T& mat0, const T& mat1, std::string& soundFile 
 template< class T > osgAudio::Sample*
 SoundTable< T >::getSound( const T& mat0, const T& mat1 )
 {
+    if( !_defaultSample.valid() )
+    {
+        return 0;
+    }
+    
     SoundData& sd( _table[ mat0 ][ mat1 ] );
+    
+    if( !sd._sample.valid() )
+    {
+        return 0;
+    }
+    
     if( sd._default )
     {
         osg::ref_ptr< osgAudio::Sample > sample = new osgAudio::Sample( *_defaultSample.get() );
