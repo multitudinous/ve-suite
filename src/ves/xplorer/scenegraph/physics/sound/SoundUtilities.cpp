@@ -234,12 +234,23 @@ SoundUtilities::init()
 
     std::string sound("hit_with_frying_pan_y.wav");
     _collideTable.setDefaultSound( sound );
+    _collideTable.addSound( Material::CEMENT,
+        Material::CEMENT, sound );
+
     sound = "blip.wav";
     _collideTable.addSound( Material::CEMENT,
         Material::FLUBBER, sound );
     sound = "boing.wav";
+    _collideTable.addSound( Material::FLUBBER,
+        Material::FLUBBER, sound );
+
+    sound = "boing.wav";
     _collideTable.addSound( Material::CEMENT,
         Material::SILLY_PUTTY, sound );
+    sound = "blip.wav";
+    _collideTable.addSound( Material::SILLY_PUTTY,
+        Material::SILLY_PUTTY, sound );
+
     sound = "car_skid.wav";
     _slideTable.setDefaultSound( sound );
     sound = "";
