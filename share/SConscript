@@ -5,16 +5,20 @@ import SConsAddons.Util as sca_util
 
 Import('ves_pkg buildDir RootDir GetPlatform')
 
-fontBundle = ves_pkg.createFileBundle( pj('share','vesuite') )
-fontFile = sca_util.getFilesRecursiveByExt( pj(RootDir, 'share'), ['.ttf'] )
-fontBundle.addFiles( fontFile )
+shareBundle = ves_pkg.createFileBundle( pj('share','vesuite') )
 
-ptConfigFile = ves_pkg.createFileBundle( pj('share','vesuite') )
-ptConfigFile.addFiles( ['ptconfigfile.txt'] )
-ptConfigFile.addFiles( ['Draft2.png'] )
-ptConfigFile.addFiles( ['Info_Panel.png'] )
-ptConfigFile.addFiles( ['Info_Panel-No_Title.png'] )
-ptConfigFile.addFiles( ['splotch.png'] )
+fontFile = sca_util.getFilesRecursiveByExt( pj(RootDir, 'share'), ['.ttf'] )
+shareBundle.addFiles( fontFile )
+
+shareBundle.addFiles( ['ptconfigfile.txt'] )
+shareBundle.addFiles( ['Draft2.png'] )
+shareBundle.addFiles( ['Info_Panel.png'] )
+shareBundle.addFiles( ['Info_Panel-No_Title.png'] )
+shareBundle.addFiles( ['splotch.png'] )
+
+wavFiles = sca_util.getFilesRecursiveByExt( pj(sca_util.getFullRootPath(), 'share','audio'), ['.wav'] )
+wavFiles = map(lambda s: pj('audio', s), wavFiles)
+shareBundle.addFiles(wavFiles,"",False)
 
 shareSubdirs = Split("""
     glsl
