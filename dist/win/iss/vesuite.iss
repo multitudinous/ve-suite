@@ -40,6 +40,12 @@ BackColor2=$1b84f7
 SetupIconFile={#VEDEVHOME}\dist\installerImages\{#VesIcon}
 PrivilegesRequired=none
 UsePreviousGroup=false
+VersionInfoVersion=1.0.0
+VersionInfoCompany=SMDS
+VersionInfoProductVersion=1.0.0
+AppVersion=1.0.0
+UninstallDisplayIcon={#VEDEVHOME}\dist\installerImages\ve_icon.bmp
+UninstallDisplayName={#MyAppName}_{#MyAppVer}_{#MSVCVERSION}
 
 [Types]
 Name: full; Description: Full installation
@@ -66,12 +72,12 @@ Root: HKCR; Subkey: VESNetworkfile\shell\OpenWithVELauncher\command; ValueType: 
 Name: desktopVELauncherIcon; Description: VE-Launcher; GroupDescription: Create Desktop Icon
 
 [Files]
-Source: {#VEINSTALLHOME}\lib\*.dll; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: {#VEINSTALLHOME}\{#LIBDIR}\*.dll; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: {#VEINSTALLHOME}\bin\*; DestDir: {app}\bin; Flags: ignoreversion uninsremovereadonly
 
 Source: {#VEINSTALLHOME}\share\*; DestDir: {app}\share\; Components: examples; Flags: recursesubdirs createallsubdirs
 Source: {#VEINSTALLHOME}\include\*; DestDir: {app}\include\; Attribs: readonly; Flags: replacesameversion uninsremovereadonly recursesubdirs createallsubdirs; Components: vebuildenv
-Source: {#VEINSTALLHOME}\lib\*.lib; DestDir: {app}\lib; Attribs: readonly; Flags: uninsremovereadonly replacesameversion; Components: vebuildenv
+Source: {#VEINSTALLHOME}\{#LIBDIR}\*.lib; DestDir: {app}\lib; Attribs: readonly; Flags: uninsremovereadonly replacesameversion; Components: vebuildenv
 Source: {#VEINSTALLHOME}\bin\installerImages\*; DestDir: {app}\bin\installerImages; Flags: replacesameversion
 Source: {#SKEWMATRIXHOME}\*.dll; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs skipifsourcedoesntexist
 Source: {#VEINSTALLHOME}\bin\velauncher.exe; DestDir: {app}\bin
@@ -83,7 +89,7 @@ Name: {group}\VE-Suite-{#VEVERSION}; Filename: {app}\bin\{#VELauncher}; WorkingD
 Name: {commondesktop}\VE-Suite-{#VEVERSION}; Filename: {app}\bin\velauncher.exe; WorkingDir: {app}; IconFilename: {app}\bin\installerImages\{#VesIcon}; Tasks: desktopVELauncherIcon
 
 [Run]
-Filename: {tmp}\vcredist_x86.exe; Description: Install Microsoft Runtime Redistributable for SP1 (NOTE: This is REQIURED to run VE-Suite if Microsoft Visual Studio SP1 compatible runtime libraries are not already installed); StatusMsg: Installing Microsoft Runtime Redistributable for SP1...; Flags: postinstall unchecked; Components: 
+Filename: {tmp}\vcredist_x64.exe; Description: Install Microsoft Runtime Redistributable for SP1 (NOTE: This is REQIURED to run VE-Suite if Microsoft Visual Studio SP1 compatible runtime libraries are not already installed); StatusMsg: Installing Microsoft Runtime Redistributable for SP1...; Flags: postinstall unchecked; Components: 
 [_ISToolPreCompile]
 ;Name: D:\devEnv\VES\share\scripts\win\buildVELauncher.exe.bat; Parameters: ; Flags: abortonerror
 [_ISTool]

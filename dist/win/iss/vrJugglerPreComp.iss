@@ -39,6 +39,12 @@ TimeStampsInUTC=true
 DisableProgramGroupPage=false
 Uninstallable=true
 UsePreviousAppDir=false
+VersionInfoVersion=1.0.0
+VersionInfoCompany=SMDS
+VersionInfoProductVersion=1.0.0
+AppVersion=1.0.0
+UninstallDisplayIcon={#VEDEVHOME}\dist\installerImages\ve_icon.bmp
+UninstallDisplayName={#MyAppName}_{#MyAppVer}_{#MSVCVERSION}
 
 [Languages]
 Name: eng; MessagesFile: compiler:Default.isl

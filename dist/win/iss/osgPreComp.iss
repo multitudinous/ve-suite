@@ -39,6 +39,12 @@ TimeStampsInUTC=true
 DisableProgramGroupPage=false
 Uninstallable=true
 UsePreviousAppDir=false
+VersionInfoVersion=1.0.0
+VersionInfoCompany=SMDS
+VersionInfoProductVersion=1.0.0
+AppVersion=1.0.0
+UninstallDisplayIcon={#VEDEVHOME}\dist\installerImages\ve_icon.bmp
+UninstallDisplayName={#MyAppName}_{#MyAppVer}_{#MSVCVERSION}
 
 [Languages]
 Name: eng; MessagesFile: compiler:Default.isl
@@ -49,6 +55,7 @@ Source: {#OSGSRCHOME}\include\*; DestDir: {app}\include; Flags: ignoreversion re
 Source: {#OSGSRCHOME}\bin\*.exe; DestDir: {app}\bin; Flags: ignoreversion recursesubdirs
 Source: {#OSGSRCHOME}\lib\*.lib; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: {#OSGSRCHOME}\bin\*.dll; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: {#OSGSRCHOME}\share\*; DestDir: {app}\share; Flags: ignoreversion recursesubdirs createallsubdirs skipifsourcedoesntexist
 
 Source: {#OSGSRCHOME}\bin\osgPlugins-{#MyAppVer}\osgdb_qt.dll; DestDir: {app}\lib\osgPlugins-{#MyAppVer}\; Flags: ignoreversion recursesubdirs createallsubdirs skipifsourcedoesntexist; DestName: osgdb_qt.dll
 Source: {#OSGSRCHOME}\bin\osgPlugins-{#MyAppVer}\osgdb_qt.dll; DestDir: {app}\lib\osgPlugins-{#MyAppVer}\; Flags: ignoreversion recursesubdirs createallsubdirs skipifsourcedoesntexist; DestName: osgdb_avi.dll

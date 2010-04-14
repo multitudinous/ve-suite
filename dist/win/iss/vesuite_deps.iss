@@ -97,7 +97,7 @@ Source: {#DEPENDSINSTALLHOME}\{#APRICONVHOME}\lib\*.dll; DestDir: {app}\lib; Com
 ; ACE/TAO Files
 Source: {#DEPENDSINSTALLHOME}\{#ACETAOHOME}\lib\*.dll; DestDir: {app}\lib; Flags: ignoreversion; Components: acetao
 Source: {#DEPENDSINSTALLHOME}\{#ACETAOHOME}\bin\tao_idl.exe; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
-Source: {#DEPENDSINSTALLHOME}\{#ACETAOHOME}\TAO\orbsvcs\Naming_Service\Naming_Service.exe; DestDir: {app}\bin; Components: acetao
+Source: {#DEPENDSINSTALLHOME}\{#ACETAOHOME}\bin\Naming_Service.exe; DestDir: {app}\bin; Components: acetao
 Source: {#DEPENDSINSTALLHOME}\{#ACETAOHOME}\include\ace\*.h; DestDir: {app}\include\ace; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion; Components: depsbuildenv
 Source: {#DEPENDSINSTALLHOME}\{#ACETAOHOME}\include\tao\utils\*.h; DestDir: {app}\include\tao\utils; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion createallsubdirs; Components: depsbuildenv
 Source: {#DEPENDSINSTALLHOME}\{#ACETAOHOME}\lib\*.lib; DestDir: {app}\lib; Attribs: readonly; Flags: recursesubdirs overwritereadonly uninsremovereadonly ignoreversion; Components: depsbuildenv
@@ -134,7 +134,7 @@ Source: {#DEPENDSINSTALLHOME}\{#OSGWORKSHOME}\lib\*.dll; DestDir: {app}\lib; Fla
 Source: {#DEPENDSINSTALLHOME}\{#OSGWORKSHOME}\bin\*; DestDir: {app}\bin; Flags: ignoreversion; Components: osgworks; Languages: 
 
 ; README setup for depends info
-Source: {#VEDEVHOME}\dist\win\iss\dependencies.txt; DestDir: {app}; Flags: isreadme; DestName: README.txt; Components: ; Languages: 
+; Source: {#VEDEVHOME}\dist\win\iss\dependencies.txt; DestDir: {app}; Flags: isreadme; DestName: README.txt
 
 ; Old installer files
 ;Source: {#DEPENDSINSTALLHOME}\{#APRUTILHOME}\include\*; DestDir: {app}\include; Attribs: readonly; Flags: recursesubdirs uninsremovereadonly ignoreversion createallsubdirs; Components: depsbuildenv
@@ -167,7 +167,7 @@ Source: {#VEDEVHOME}\dist\win\iss\dependencies.txt; DestDir: {app}; Flags: isrea
 ;Source: {#DEPENDSINSTALLHOME}\{#WXHOME}\lib\vc_dll\*.lib; DestDir: {app}\lib; Components: wxwidgets; Flags: ignoreversion
 ;Source: {#DEPENDSINSTALLHOME}\{#ACETAOHOME}\TAO\orbsvcs\Naming_Service\Naming_Service_d.exe; DestDir: {app}\bin; Components: acetao
 
-Source: {#DEPENDSINSTALLHOME}\{#OSGALHOME}\share\oalinst.exe; DestDir: {tmp}
+Source: {#DEPENDSINSTALLHOME}\{#OSGALHOME}\share\oalinst.exe; DestDir: {tmp}; Flags: skipifsourcedoesntexist
 [Run]
 Filename: {tmp}\oalinst.exe; Flags: runascurrentuser
 

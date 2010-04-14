@@ -1,6 +1,6 @@
 ; osgAL iss installer
 #include <vesenv.iss>
-#define MyAppVer "2.0"
+#define MyAppVer "2.0.0"
 #define MyAppName "osgAudio Pre-Compile"
 #define MyAppVerName "osgAudio"
 #define MyAppPublisher "VERG"
@@ -56,30 +56,18 @@ Source: {#OPENALHOME}\include\*.h; DestDir: {app}\include; Flags: ignoreversion 
 Source: {#OSGALSRCHOME}\include\*; DestDir: {app}\include; Flags: ignoreversion recursesubdirs
 Source: {#ALUTSRCINSTALL}\include\*; DestDir: {app}\include; Flags: ignoreversion recursesubdirs
 ; libs
-;Source: {#LIBOGGHOME}\win32\Dynamic_Debug\*.lib; DestDir: {app}\lib; Flags: ignoreversion
-Source: {#LIBOGGHOME}\win32\VS2008\Win32\Release\*.lib; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs; Languages: 
-;Source: {#LIBVORBISHOME}\win32\Vorbis_Dynamic_Debug\*.lib; DestDir: {app}\lib; Flags: ignoreversion
-Source: {#LIBVORBISHOME}\win32\VS2008\Win32\Release\*.lib; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs
-;Source: {#LIBVORBISHOME}\win32\VorbisEnc_Dynamic_Debug\*.lib; DestDir: {app}\lib; Flags: ignoreversion
-; Source: {#LIBVORBISHOME}\win32\*.lib; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs
-;Source: {#LIBVORBISHOME}\win32\VorbisFile_Dynamic_Debug\*.lib; DestDir: {app}\lib; Flags: ignoreversion
-; Source: {#LIBVORBISHOME}\win32\*.lib; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs
-Source: {#OPENALHOME}\libs\Win32\*.lib; DestDir: {app}\lib; Flags: ignoreversion
-;Source: {#OPENALHOME}\lib\*.lib; DestDir: {app}\lib; Flags: ignoreversion
+Source: {#LIBOGGHOME}\win32\VS2008\{#BUILDDIR}\Release\*.lib; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs; Languages: 
+Source: {#LIBVORBISHOME}\win32\VS2008\{#BUILDDIR}\Release\*.lib; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs
+Source: {#OPENALHOME}\libs\{#DISTDIR}\*.lib; DestDir: {app}\lib; Flags: ignoreversion
 Source: {#OSGALSRCHOME}\lib\*.lib; DestDir: {app}\lib; Flags: ignoreversion
-Source: {#ALUTSRCINSTALL}\lib\*.lib; DestDir: {app}\lib; Flags: ignoreversion
+;Source: {#ALUTSRCINSTALL}\lib\*.lib; DestDir: {app}\lib; Flags: ignoreversion
+Source: {#ALUTSRCINSTALL}\admin\VisualStudioDotNET\alut\x64\Release\*.lib; DestDir: {app}\lib; Flags: ignoreversion
 ; dlls
-;Source: {#LIBOGGHOME}\win32\Dynamic_Debug\*.dll; DestDir: {app}\lib; Flags: ignoreversion
-Source: {#LIBOGGHOME}\win32\VS2008\Win32\Release\*.dll; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs
-;Source: {#LIBVORBISHOME}\win32\Vorbis_Dynamic_Debug\*.dll; DestDir: {app}\lib; Flags: ignoreversion
-Source: {#LIBVORBISHOME}\win32\VS2008\Win32\Release\*.dll; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs
-;Source: {#LIBVORBISHOME}\win32\VorbisEnc_Dynamic_Debug\*.dll; DestDir: {app}\lib; Flags: ignoreversion
-; Source: {#LIBVORBISHOME}\win32\*.dll; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs
-;Source: {#LIBVORBISHOME}\win32\VorbisFile_Dynamic_Debug\*.dll; DestDir: {app}\lib; Flags: ignoreversion
-; Source: {#LIBVORBISHOME}\win32\*.dll; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs
-; Source: {#OPENALHOME}\libs\Win32\*.dll; DestDir: {app}\lib; Flags: ignoreversion
+Source: {#LIBOGGHOME}\win32\VS2008\{#BUILDDIR}\Release\*.dll; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs
+Source: {#LIBVORBISHOME}\win32\VS2008\{#BUILDDIR}\Release\*.dll; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs
 Source: {#OSGALSRCHOME}\bin\*.dll; DestDir: {app}\lib; Flags: ignoreversion
-Source: {#ALUTSRCINSTALL}\lib\*.dll; DestDir: {app}\lib; Flags: ignoreversion
+;Source: {#ALUTSRCINSTALL}\lib\*.dll; DestDir: {app}\lib; Flags: ignoreversion
+Source: {#ALUTSRCINSTALL}\admin\VisualStudioDotNET\alut\x64\Release\*.dll; DestDir: {app}\lib; Flags: ignoreversion
 ; exe
 Source: {#OPENALHOME}\redist\oalinst.exe; DestDir: {app}\share; Flags: ignoreversion
 Source: {#OSGALSRCHOME}\bin\*.exe; DestDir: {app}\bin; Flags: ignoreversion
