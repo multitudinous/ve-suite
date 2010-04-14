@@ -1,6 +1,6 @@
 ; osgAL iss installer
 #include <vesenv.iss>
-#define MyAppVer "0.6.1-14274"
+#define MyAppVer "2.0"
 #define MyAppName "osgAudio Pre-Compile"
 #define MyAppVerName "osgAudio"
 #define MyAppPublisher "VERG"
