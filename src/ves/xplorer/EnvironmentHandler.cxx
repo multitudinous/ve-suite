@@ -378,15 +378,16 @@ void EnvironmentHandler::LatePreFrameUpdate()
     const ves::open::xml::CommandPtr tempCommand = CommandManager::instance()->GetXMLCommand();
     if( tempCommand )
     {
+        const std::string commandName = tempCommand->GetCommandName();
         vprDEBUG( vesDBG, 3 ) << "|\tEnvironmentHandler::LatePreFrameUpdate Command Name : "
-            << tempCommand->GetCommandName()
+            << commandName
             << std::endl << vprDEBUG_FLUSH;
         std::map<std::string, ves::xplorer::event::EventHandler*>::iterator currentEventHandler;
-        currentEventHandler = _eventHandlers.find( tempCommand->GetCommandName() );
+        currentEventHandler = _eventHandlers.find( commandName );
         if( currentEventHandler != _eventHandlers.end() )
         {
             vprDEBUG( vesDBG, 1 ) << "|\tEnvironmentHandler::LatePreFrameUpdate Executing: "
-                << tempCommand->GetCommandName()
+                << commandName
                 << std::endl << vprDEBUG_FLUSH;
             currentEventHandler->second->SetGlobalBaseObject();
             currentEventHandler->second->Execute( tempCommand );
