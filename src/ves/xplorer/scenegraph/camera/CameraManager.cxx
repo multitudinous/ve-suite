@@ -36,6 +36,7 @@
 #include <ves/xplorer/scenegraph/camera/CameraObject.h>
 
 #include <ves/xplorer/scenegraph/Masks.h>
+#include <ves/xplorer/scenegraph/Select.h>
 #include <ves/xplorer/scenegraph/SceneManager.h>
 
 #include <ves/xplorer/Debug.h>
@@ -118,7 +119,17 @@ bool CameraManager::Handle(
     Event::Enum event,
     osgUtil::LineSegmentIntersector& deviceInput )
 {
-    CameraObject* cameraObject = TestForIntersections( deviceInput );
+    osgUtil::LineSegmentIntersector::Intersections& intersections =
+        scenegraph::TestForIntersections(
+            deviceInput, *this, TraversalMask::CAMERA );
+    if( intersections.empty() )
+    {
+        return NULL;
+    }
+
+    osg::NodePath nodePath = intersections.begin()->nodePath;
+    CameraObject* cameraObject =
+        ConvertNodeToCameraObject( scenegraph::FindVESObject( nodePath ) );
 
     switch( event )
     {
@@ -172,46 +183,11 @@ void CameraManager::SetActiveCameraObject( CameraObject* cameraObject )
     }
 
     m_activeCamera = cameraObject;
-
-    if( m_activeCamera )
-    {
-        //Update UI
-
-        //Set selected object
-
-        //Connect Dragger
-    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool CameraManager::setChild( unsigned int i, CameraObject* node )
 {
     return osg::Group::setChild( i, node );
-}
-////////////////////////////////////////////////////////////////////////////////
-CameraObject* const CameraManager::TestForIntersections(
-    osgUtil::LineSegmentIntersector& deviceInput )
-{
-    osgUtil::IntersectionVisitor intersectionVisitor( &deviceInput );
-
-    //Use bitwise NOT operator to get opposite of osg::Cameras NodeMask
-    //Need to fix this to a more stable implementation
-    unsigned int traversalMask = ~0xffffffdf;
-    intersectionVisitor.setTraversalMask( traversalMask );
-
-    accept( intersectionVisitor );
-
-    osgUtil::LineSegmentIntersector::Intersections& intersections =
-        deviceInput.getIntersections();
-    if( intersections.empty() )
-    {
-        return NULL;
-    }
-
-    osg::NodePath nodePath = intersections.begin()->nodePath;
-    osg::NodePath::iterator nodePathItr = nodePath.begin();
-    ++nodePathItr;
-
-    return ConvertNodeToCameraObject( *nodePathItr );
 }
 ////////////////////////////////////////////////////////////////////////////////
 osg::Geode* CameraManager::CreateMasterCameraQuad()

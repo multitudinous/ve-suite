@@ -41,7 +41,7 @@
 // --- VE-Suite Includes --- //
 //#include <ves/xplorer/environment/HeadsUpDisplay.h>
 
-//#include <ves/xplorer/scenegraph/DCS.h>
+#include <ves/xplorer/scenegraph/Masks.h>
 #include <ves/xplorer/scenegraph/SceneManager.h>
 
 // --- vrJuggler Includes --- //
@@ -171,7 +171,7 @@ void CameraObject::Initialize()
     m_camera->setRenderTargetImplementation( osg::Camera::FRAME_BUFFER_OBJECT );
     m_camera->setReferenceFrame( osg::Camera::ABSOLUTE_RF );
     m_camera->setViewport( 0, 0, 1024, 1024 );
-    m_camera->setNodeMask( 0xffffffdf );
+    m_camera->setNodeMask( NodeMask::CAMERA );
 
     //Attach the camera view texture and use it as the first render target
     //attach( osg::Camera::BufferComponent( osg::Camera::COLOR_BUFFER0 ),

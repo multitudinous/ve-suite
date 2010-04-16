@@ -52,7 +52,7 @@ enum Enum
     NONE                              = 0x00000000,
 
     CAMERA_MANAGER                    = 0xefffffff,
-    CAMERA_PAT                        = 0xdfffffff,
+    CAMERA_OBJECT                     = 0xdfffffff,
     CAMERA                            = 0xcfffffff,
 
     CHARACTER                         = 0xfeffffff,
@@ -76,7 +76,7 @@ enum Enum
     NONE                              = ~NodeMask::NONE,
 
     CAMERA_MANAGER                    = ~NodeMask::CAMERA_MANAGER,
-    CAMERA_PAT                        = ~NodeMask::CAMERA_PAT,
+    CAMERA_OBJECT                     = ~NodeMask::CAMERA_OBJECT,
     CAMERA                            = ~NodeMask::CAMERA,
 
     CHARACTER                         = ~NodeMask::CHARACTER,
@@ -84,7 +84,7 @@ enum Enum
     GRAPHICAL_PLUGIN_MANAGER          = ~NodeMask::GRAPHICAL_PLUGIN_MANAGER,
 
     MANIPULATOR_MANAGER               = ~NodeMask::MANIPULATOR_MANAGER,
-        DRAGGER                       = ~NodeMask::DRAGGER,
+    DRAGGER                           = ~NodeMask::DRAGGER,
 
     TERRAIN                           = ~NodeMask::TERRAIN,
 
