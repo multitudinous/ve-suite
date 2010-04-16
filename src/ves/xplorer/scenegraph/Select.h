@@ -67,7 +67,8 @@ TestForIntersections(
     osg::Node& root,
     unsigned int traversalMask = TraversalMask::NONE );
 
- VE_SCENEGRAPH_EXPORTS osg::Node* FindVESObject( osg::NodePath& nodePath );
+///This function also trims the node path from root to the ves object
+VE_SCENEGRAPH_EXPORTS osg::Node* FindVESObject( osg::NodePath& nodePath );
 
 
 } //end scenegraph

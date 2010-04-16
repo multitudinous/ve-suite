@@ -72,6 +72,7 @@ osg::Node* FindVESObject( osg::NodePath& nodePath )
                 return *itr;
             }
         }
+        //Trim the node path
         nodePath.pop_back();
     }
 
