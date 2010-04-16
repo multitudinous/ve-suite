@@ -56,7 +56,7 @@ namespace scenegraph
 {
 namespace camera
 {
-class Camera;
+class CameraObject;
 
 /*!\file CameraManager.h
  * CameraManager API
@@ -80,7 +80,7 @@ public:
     META_Node( ves::xplorer::scenegraph::camera, CameraManager );
 
     ///Override the addChild function to only accept Cameras
-    virtual bool addChild( Camera* child );
+    virtual bool addChild( CameraObject* child );
 
     ///Override the computeBound function to return an empty bounding sphere
     //virtual osg::BoundingSphere computeBound() const;
@@ -89,7 +89,7 @@ public:
     void Enable( const bool& enable = true );
 
     ///
-    Camera* const GetActiveCamera() const;
+    CameraObject* const GetActiveCameraObject() const;
 
     ///
     bool Handle(
@@ -97,34 +97,34 @@ public:
         osgUtil::LineSegmentIntersector& deviceInput );
 
     ///Override the insertChild function to only accept Cameras
-    virtual bool insertChild( unsigned int index, Camera* child );
+    virtual bool insertChild( unsigned int index, CameraObject* child );
 
     ///
     const bool IsEnabled() const;
 
     ///Override the replaceChild function to only accept Cameras
-    virtual bool replaceChild( Camera* origChild, Camera* newChild );
+    virtual bool replaceChild( CameraObject* origChild, CameraObject* newChild );
 
     ///
-    void SetActiveCamera( Camera* const camera );
+    void SetActiveCameraObject( CameraObject* cameraObject );
 
     ///Override the setChild function to only accept Cameras
-    virtual bool setChild( unsigned int i, Camera* node );
+    virtual bool setChild( unsigned int i, CameraObject* node );
 
     ///Get the RTT quad
     ///\return The geode with the RTT quad
     osg::Geode* GetCameraManagerQuad();
-    
+
 protected:
     ///Destructor
     virtual ~CameraManager();
 
 private:
     ///
-    Camera* const ConvertNodeToCamera( osg::Node* const node );
+    CameraObject* const ConvertNodeToCameraObject( osg::Node* const node );
 
     ///
-    Camera* const TestForIntersections(
+    CameraObject* const TestForIntersections(
         osgUtil::LineSegmentIntersector& deviceInput );
 
     ///Create the quad to be used by the rtt cameras that this class manages
@@ -134,11 +134,8 @@ private:
     ///Is the camera manager turned on
     bool m_enabled;
 
-    ///
-    unsigned int m_nodeMask;
-
     ///The active rtt view camera
-    Camera* m_activeCamera;
+    CameraObject* m_activeCamera;
 
     ///The rtt quad geode
     osg::ref_ptr< osg::Geode > m_rttQuad;

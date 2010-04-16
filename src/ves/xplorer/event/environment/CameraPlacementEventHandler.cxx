@@ -45,7 +45,7 @@
 #include <ves/xplorer/scenegraph/HeadsUpDisplay.h>
 
 #include <ves/xplorer/scenegraph/camera/CameraManager.h>
-#include <ves/xplorer/scenegraph/camera/Camera.h>
+#include <ves/xplorer/scenegraph/camera/CameraObject.h>
 
 using namespace ves::xplorer::event;
 using namespace ves::xplorer::event::environment;
@@ -135,16 +135,16 @@ void CameraPlacementEventHandler::Execute(
         return;
     }
 
-    //Set the active camera once the manager is created
+    //Set the active cameraObject once the manager is created
     const int commandName =
         mCommandNameToInt.find( command->GetCommandName() )->second;
 
     scenegraph::SceneManager& sceneManager =
         *scenegraph::SceneManager::instance();
-    scenegraph::camera::Camera* const camera =
-        sceneManager.GetCameraManager().GetActiveCamera();
+    scenegraph::camera::CameraObject* const cameraObject =
+        sceneManager.GetCameraManager().GetActiveCameraObject();
 
-    if( !camera )
+    if( !cameraObject )
     {
         return;
     }
@@ -158,7 +158,7 @@ void CameraPlacementEventHandler::Execute(
             "cameraGeometryOnOff" )->GetData( selection );
 
         bool show = ( selection != 0 );
-        camera->ShowCameraGeometry( show );
+        cameraObject->ShowCameraGeometry( show );
 
         break;
     }
@@ -169,7 +169,7 @@ void CameraPlacementEventHandler::Execute(
             "frustumGeometryOnOff" )->GetData( selection );
 
         bool show = ( selection != 0 );
-        camera->ShowFrustumGeometry( show );
+        cameraObject->ShowFrustumGeometry( show );
 
         break;
     }
@@ -273,11 +273,11 @@ void CameraPlacementEventHandler::Execute(
         command->GetDataValuePair(
             "projectionFarPlane" )->GetData( projectionData[ 3 ] );
 
-        camera->GetCamera().setProjectionMatrixAsPerspective(
+        cameraObject->GetCamera().setProjectionMatrixAsPerspective(
             projectionData[ 0 ], projectionData[ 1 ],
             projectionData[ 2 ], projectionData[ 3 ] );
 
-        camera->Update();
+        cameraObject->Update();
 
         break;
     }

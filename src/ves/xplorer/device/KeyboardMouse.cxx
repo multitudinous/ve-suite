@@ -47,6 +47,7 @@
 
 #include <ves/xplorer/environment/NavigationAnimationEngine.h>
 
+#include <ves/xplorer/scenegraph/Select.h>
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/FindParentsVisitor.h>
 #include <ves/xplorer/scenegraph/CoordinateSystemTransform.h>
@@ -63,9 +64,8 @@
 #include <ves/xplorer/scenegraph/physics/PhysicsRigidBody.h>
 #include <ves/xplorer/scenegraph/physics/character/CharacterController.h>
 
-#include <ves/xplorer/scenegraph/camera/Camera.h>
+#include <ves/xplorer/scenegraph/camera/CameraObject.h>
 
-#include <ves/xplorer/scenegraph/manipulator/RotateTwist.h>
 #include <ves/xplorer/scenegraph/manipulator/TransformManipulator.h>
 
 #ifdef QT_ON
@@ -249,7 +249,7 @@ void KeyboardMouse::DrawLine( osg::Vec3d startPoint, osg::Vec3d endPoint )
         osg::PrimitiveSet::LINES, 0, vertices->size() ) );
 
     mBeamGeode->addDrawable( line.get() );
-    
+
     rootNode->addChild( mBeamGeode.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -757,11 +757,11 @@ void KeyboardMouse::OnKeyPress()
 
     case gadget::KEY_P:
     {
-        osg::ref_ptr< scenegraph::camera::Camera > camera =
-            new scenegraph::camera::Camera();
+        osg::ref_ptr< scenegraph::camera::CameraObject > cameraObject =
+            new scenegraph::camera::CameraObject();
 
-        m_cameraManager.addChild( camera.get() );
-        m_cameraManager.SetActiveCamera( camera.get() );
+        m_cameraManager.addChild( cameraObject.get() );
+        m_cameraManager.SetActiveCameraObject( cameraObject.get() );
 
         break;
     }
@@ -1001,6 +1001,7 @@ void KeyboardMouse::OnMouseRelease()
 
         if( m_cameraManager.IsEnabled() )
         {
+            UpdateSelectionLine();
             if( m_cameraManager.Handle(
                     scenegraph::camera::Event::RELEASE,
                     *mLineSegmentIntersector.get() ) )
@@ -1406,20 +1407,13 @@ void KeyboardMouse::UpdateSelectionLine()
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::ProcessSelection()
 {
-    osgUtil::IntersectionVisitor intersectionVisitor(
-        mLineSegmentIntersector.get() );
-
-    //Add the IntersectVisitor to the root Node so that all geometry will be
-    //checked and no transforms are done to the line segement
-    m_sceneManager.GetModelRoot()->accept( intersectionVisitor );
-
     //Unselect the previous selected DCS
     DeviceHandler::instance()->UnselectObjects();
 
+    //Test for intersections
     osgUtil::LineSegmentIntersector::Intersections& intersections =
-        mLineSegmentIntersector->getIntersections();
-
-    //Now find the new selected DCS
+        scenegraph::TestForIntersections(
+            *mLineSegmentIntersector.get(), *m_sceneManager.GetModelRoot() );
     if( intersections.empty() )
     {
         vprDEBUG( vesDBG, 1 )
@@ -1429,22 +1423,10 @@ void KeyboardMouse::ProcessSelection()
         return;
     }
 
-    //Search for first item that is not the laser
-    osg::Node* objectHit( NULL );
-    osgUtil::LineSegmentIntersector::Intersections::iterator itr =
-        intersections.begin();
-    for( itr; itr != intersections.end(); ++itr )
-    {
-        objectHit = *( itr->nodePath.rbegin() );
-        if( objectHit->getName() != "Laser" &&
-            objectHit->getName() != "Root Node" )
-        {
-            break;
-        }
-    }
-
-    //Make sure it is good
-    if( !objectHit )
+    //Now find the new selected object
+    osg::NodePath nodePath = intersections.begin()->nodePath;
+    osg::Node* vesObject = scenegraph::FindVESObject( nodePath );
+    if( !vesObject )
     {
         vprDEBUG( vesDBG, 1 )
             << "|\tKeyboardMouse::ProcessHit Invalid object selected"
@@ -1453,92 +1435,73 @@ void KeyboardMouse::ProcessSelection()
         return;
     }
 
-    //Now find the id for the cad
-    scenegraph::FindParentsVisitor parentVisitor( objectHit );
-    osg::ref_ptr< osg::Node > parentNode = parentVisitor.GetParentNode();
-    if( !parentNode.valid() )
+    //Right now we are saying you must have a DCS
+    scenegraph::DCS* newSelectedDCS = static_cast< scenegraph::DCS* >( vesObject );
+    if( !newSelectedDCS )
     {
-        vprDEBUG( vesDBG, 1 )
-            << "|\tObject does not have name parent name"
-            << objectHit->getParents().front()->getName()
-            << std::endl << vprDEBUG_FLUSH;
-
         return;
     }
 
-    vprDEBUG( vesDBG, 1 ) << "|\tObjects has name "
-                          << parentNode->getName()
-                          << std::endl << vprDEBUG_FLUSH;
-    vprDEBUG( vesDBG, 1 ) << "|\tObjects descriptors "
-                          << parentNode->getDescriptions().at( 1 )
-                          << std::endl << vprDEBUG_FLUSH;
-
-    scenegraph::DCS* newSelectedDCS =
-        static_cast< scenegraph::DCS* >( parentNode.get() );
-    if( m_sceneManager.IsRTTOn() )
-    {
-        newSelectedDCS->SetTechnique( "Glow" );
-    }
-    else
-    {
-        newSelectedDCS->SetTechnique( "Select" );
-    }
+    //Set the selected DCS
     DeviceHandler::instance()->SetSelectedDCS( newSelectedDCS );
 
-    //Move the center point to the center of the selected object
-    osg::ref_ptr< scenegraph::CoordinateSystemTransform > cst =
-        new scenegraph::CoordinateSystemTransform(
-            m_sceneManager.GetActiveSwitchNode(), newSelectedDCS, true );
-    gmtl::Matrix44d localToWorldMatrix = cst->GetTransformationMatrix( false );
+    vprDEBUG( vesDBG, 1 ) << "|\tObjects has name "
+                          << vesObject->getName()
+                          << std::endl << vprDEBUG_FLUSH;
+    vprDEBUG( vesDBG, 1 ) << "|\tObjects descriptors "
+                          << vesObject->getDescriptions().at( 1 )
+                          << std::endl << vprDEBUG_FLUSH;
 
-    //Multiplying by the new local matrix mCenterPoint
-    osg::Matrixd tempMatrix;
-    tempMatrix.set( localToWorldMatrix.getData() );
-    osg::Vec3d center = newSelectedDCS->getBound().center() * tempMatrix;
-    mCenterPoint->set( center.x(), center.y(), center.z() );
+    //Need to do this for multi-pass techniques
+    scenegraph::SceneNode* selectedNode =
+        dynamic_cast< scenegraph::SceneNode* >( vesObject );
+    if( selectedNode )
+    {
+        if( m_sceneManager.IsRTTOn() )
+        {
+            selectedNode->SetTechnique( "Glow" );
+        }
+        else
+        {
+            selectedNode->SetTechnique( "Select" );
+        }
+    }
 
     //Set the connection between the scene manipulator and the selected dcs
     scenegraph::manipulator::TransformManipulator* sceneManipulator =
         m_manipulatorManager.GetSceneManipulator();
-    scenegraph::manipulator::RotateTwist* rotateTwist =
-        m_manipulatorManager.GetTwistManipulator();
 
     //Check and see if the selected node has an attached physics mesh
-    bool hasAPhysicsMesh( false );
     osg::ref_ptr< osgwTools::AbsoluteModelTransform > tempAMT = 
-        dynamic_cast< osgwTools::AbsoluteModelTransform* >( 
-            newSelectedDCS->getParent( 0 ) );
+        dynamic_cast< osgwTools::AbsoluteModelTransform* >( vesObject->getParent( 0 ) );
+    osgbBullet::RefRigidBody* tempRB( NULL );
     if( tempAMT )
     {
-        osgbBullet::RefRigidBody* tempRB = 
+        tempRB =
             dynamic_cast< osgbBullet::RefRigidBody* >( tempAMT->getUserData() );
-        if( tempRB )
-        {
-            hasAPhysicsMesh = true;
-        }
     }
 
-    if( hasAPhysicsMesh )
+    if( tempRB )
     {
-        //rotateTwist->Connect( tempAMT.get() );
         sceneManipulator->Connect( tempAMT.get() );
     }
     else
     {
-        //rotateTwist->Connect( newSelectedDCS );
         sceneManipulator->Connect( newSelectedDCS );
     }
 
-    //Move the scene manipulator to the center point
-    scenegraph::LocalToWorldNodePath nodePath(
-        newSelectedDCS, m_sceneManager.GetModelRoot() );
-    scenegraph::LocalToWorldNodePath::NodeAndPathList npl =
-        nodePath.GetLocalToWorldNodePath();
-    scenegraph::LocalToWorldNodePath::NodeAndPath nap = npl.at( 0 );
-    osg::Matrixd localToWorld = osg::computeLocalToWorld( nap.second );
-    osg::Vec3d newCenter = newSelectedDCS->getBound().center() * localToWorld;
-    //rotateTwist->SetPosition( newCenter );
-    sceneManipulator->SetPosition( newCenter );
+    //Remove local node from nodePath
+    nodePath.pop_back();
+
+    osg::Matrixd localToWorldMatrix = osg::computeLocalToWorld( nodePath );
+    osg::Vec3d center = vesObject->getBound().center() * localToWorldMatrix;
+    sceneManipulator->SetPosition( center );
+
+    //We need to transform center point into camera space
+    //In the future the center point will be in world coordinates
+    center = center * osg::Matrixd( m_sceneManager.GetWorldDCS()->GetMat().mData );
+    //center = center * m_currentGLTransformInfo->GetViewMatrixOSG();
+    mCenterPoint->set( center.x(), center.y(), center.z() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 gadget::KeyboardMousePtr KeyboardMouse::GetKeyboardMouseVRJDevice()

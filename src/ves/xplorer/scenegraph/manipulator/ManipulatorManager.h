@@ -31,8 +31,8 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
-#ifndef VES_XPLORER_SCENEGRAPH_MANIPULATOR_MANIPULATOR_MANAGER_H
-#define VES_XPLORER_SCENEGRAPH_MANIPULATOR_MANIPULATOR_MANAGER_H
+#ifndef VES_XPLORER_SCENEGRAPH_MANIPULATOR_MANIPULATORMANAGER_H
+#define VES_XPLORER_SCENEGRAPH_MANIPULATOR_MANIPULATORMANAGER_H
 
 // --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
@@ -139,9 +139,6 @@ private:
     bool m_enabled;
 
     ///
-    unsigned int m_nodeMask;
-
-    ///
     osg::NodePath m_nodePath;
 
     ///
@@ -161,7 +158,7 @@ private:
 
     ///
     osg::ref_ptr< TransformManipulator > m_sceneManipulator;
-    
+
     ///Scale the dragger size
     double m_draggerSize;
 
@@ -174,4 +171,4 @@ public:
 } //end xplorer
 } //end ves
 
-#endif //VES_XPLORER_SCENEGRAPH_MANIPULATOR_MANIPULATOR_MANAGER_H
+#endif //VES_XPLORER_SCENEGRAPH_MANIPULATOR_MANIPULATORMANAGER_H

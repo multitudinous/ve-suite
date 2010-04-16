@@ -39,6 +39,7 @@
 #include <ves/xplorer/scenegraph/manipulator/Rotate.h>
 #include <ves/xplorer/scenegraph/manipulator/HelpCircle.h>
 
+#include <ves/xplorer/scenegraph/Masks.h>
 #include <ves/xplorer/scenegraph/SceneManager.h>
 
 #include <ves/xplorer/Debug.h>
@@ -53,8 +54,6 @@ ManipulatorManager::ManipulatorManager()
     :
     osg::Group(),
     m_enabled( false ),
-    //NodeMask is an unsigned int
-    m_nodeMask( 0xfffffffe ),
     m_rootDragger( NULL ),
     m_leafDragger( NULL ),
     m_sceneManipulator( NULL ),
@@ -92,7 +91,6 @@ ManipulatorManager::ManipulatorManager(
     :
     osg::Group( manipulatorManager, copyop ),
     m_enabled( manipulatorManager.m_enabled ),
-    m_nodeMask( manipulatorManager.m_nodeMask ),
     m_nodePath( manipulatorManager.m_nodePath ),
     m_nodePathItr( manipulatorManager.m_nodePathItr ),
     m_rootDragger( manipulatorManager.m_rootDragger ),
@@ -174,11 +172,11 @@ void ManipulatorManager::Enable( const bool& enable )
 
     if( m_enabled )
     {
-        setNodeMask( m_nodeMask );
+        setNodeMask( NodeMask::MANIPULATOR_MANAGER );
     }
     else
     {
-        setNodeMask( 0 );
+        setNodeMask( NodeMask::NONE );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

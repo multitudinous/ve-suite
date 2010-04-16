@@ -33,8 +33,9 @@
 
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/camera/CameraManager.h>
-#include <ves/xplorer/scenegraph/camera/Camera.h>
+#include <ves/xplorer/scenegraph/camera/CameraObject.h>
 
+#include <ves/xplorer/scenegraph/Masks.h>
 #include <ves/xplorer/scenegraph/SceneManager.h>
 
 #include <ves/xplorer/Debug.h>
@@ -53,8 +54,6 @@ CameraManager::CameraManager()
     :
     osg::Group(),
     m_enabled( false ),
-    //NodeMask is an unsigned int
-    m_nodeMask( 0xffffffef ),
     m_activeCamera( NULL )
 {
     Enable();
@@ -66,7 +65,6 @@ CameraManager::CameraManager(
     :
     osg::Group( cameraManager, copyop ),
     m_enabled( cameraManager.m_enabled ),
-    m_nodeMask( cameraManager.m_nodeMask ),
     m_activeCamera( cameraManager.m_activeCamera )
 {
     ;
@@ -77,7 +75,7 @@ CameraManager::~CameraManager()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool CameraManager::addChild( Camera* child )
+bool CameraManager::addChild( CameraObject* child )
 {
     return osg::Group::addChild( child );
 }
@@ -91,9 +89,10 @@ osg::BoundingSphere CameraManager::computeBound() const
 }
 */
 ////////////////////////////////////////////////////////////////////////////////
-Camera* const CameraManager::ConvertNodeToCamera( osg::Node* const node )
+CameraObject* const CameraManager::ConvertNodeToCameraObject(
+    osg::Node* const node )
 {
-    return dynamic_cast< Camera* >( node );
+    return dynamic_cast< CameraObject* >( node );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraManager::Enable( const bool& enable )
@@ -102,15 +101,15 @@ void CameraManager::Enable( const bool& enable )
 
     if( m_enabled )
     {
-        setNodeMask( m_nodeMask );
+        setNodeMask( NodeMask::CAMERA_MANAGER );
     }
     else
     {
-        setNodeMask( 0 );
+        setNodeMask( NodeMask::NONE );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-Camera* const CameraManager::GetActiveCamera() const
+CameraObject* const CameraManager::GetActiveCameraObject() const
 {
     return m_activeCamera;
 }
@@ -119,13 +118,13 @@ bool CameraManager::Handle(
     Event::Enum event,
     osgUtil::LineSegmentIntersector& deviceInput )
 {
-    Camera* camera = TestForIntersections( deviceInput );
+    CameraObject* cameraObject = TestForIntersections( deviceInput );
 
     switch( event )
     {
     case Event::FOCUS:
     {
-        if( camera )
+        if( cameraObject )
         {
             //camera->DoSomething();
             std::cout<< "Just focused on a camera in the scene!!!" << std::endl;
@@ -135,10 +134,7 @@ bool CameraManager::Handle(
     }
     case Event::RELEASE:
     {
-        if( camera != m_activeCamera )
-        {
-            m_activeCamera = camera;
-        }
+        SetActiveCameraObject( cameraObject );
 
         break;
     }
@@ -150,10 +146,10 @@ bool CameraManager::Handle(
     }
     } //end switch( event )
 
-    return camera;
+    return cameraObject;
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool CameraManager::insertChild( unsigned int index, Camera* child )
+bool CameraManager::insertChild( unsigned int index, CameraObject* child )
 {
     return osg::Group::insertChild( index, child );
 }
@@ -163,22 +159,36 @@ const bool CameraManager::IsEnabled() const
     return m_enabled;
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool CameraManager::replaceChild( Camera* origChild, Camera* newChild )
+bool CameraManager::replaceChild( CameraObject* origChild, CameraObject* newChild )
 {
     return osg::Group::replaceChild( origChild, newChild );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CameraManager::SetActiveCamera( Camera* const camera )
+void CameraManager::SetActiveCameraObject( CameraObject* cameraObject )
 {
-    m_activeCamera = camera;
+    if( cameraObject == m_activeCamera )
+    {
+        return;
+    }
+
+    m_activeCamera = cameraObject;
+
+    if( m_activeCamera )
+    {
+        //Update UI
+
+        //Set selected object
+
+        //Connect Dragger
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool CameraManager::setChild( unsigned int i, Camera* node )
+bool CameraManager::setChild( unsigned int i, CameraObject* node )
 {
     return osg::Group::setChild( i, node );
 }
 ////////////////////////////////////////////////////////////////////////////////
-Camera* const CameraManager::TestForIntersections(
+CameraObject* const CameraManager::TestForIntersections(
     osgUtil::LineSegmentIntersector& deviceInput )
 {
     osgUtil::IntersectionVisitor intersectionVisitor( &deviceInput );
@@ -201,7 +211,7 @@ Camera* const CameraManager::TestForIntersections(
     osg::NodePath::iterator nodePathItr = nodePath.begin();
     ++nodePathItr;
 
-    return ConvertNodeToCamera( *nodePathItr );
+    return ConvertNodeToCameraObject( *nodePathItr );
 }
 ////////////////////////////////////////////////////////////////////////////////
 osg::Geode* CameraManager::CreateMasterCameraQuad()
@@ -214,7 +224,7 @@ osg::Geode* CameraManager::CreateMasterCameraQuad()
     (*cameraViewQuadVertices)[ 1 ].set( 100.0, 0.0, -1.0 );
     (*cameraViewQuadVertices)[ 2 ].set( 100.0, 100.0, -1.0 );
     (*cameraViewQuadVertices)[ 3 ].set( 0.0, 100.0, -1.0 );
-    
+
     //Get the texture coordinates for the quad
     osg::ref_ptr< osg::Vec2Array > quadTexCoords = new osg::Vec2Array();
     quadTexCoords->resize( 4 );
@@ -222,7 +232,7 @@ osg::Geode* CameraManager::CreateMasterCameraQuad()
     (*quadTexCoords)[ 1 ].set( 1.0, 0.0 );
     (*quadTexCoords)[ 2 ].set( 1.0, 1.0 );
     (*quadTexCoords)[ 3 ].set( 0.0, 1.0 );
-    
+
     //Create the quad geometry
     osg::ref_ptr< osg::Geometry > quadGeometry = new osg::Geometry();
     quadGeometry->setVertexArray( cameraViewQuadVertices.get() );
@@ -242,13 +252,13 @@ osg::Geode* CameraManager::CreateMasterCameraQuad()
     osg::ref_ptr< osg::StateSet > stateset =
         quadGeometry->getOrCreateStateSet();
     stateset->setMode( GL_LIGHTING, osg::StateAttribute::OFF );
-    
+
     osg::Geode* quadGeode = new osg::Geode();
     quadGeode->setCullingActive( false );
     quadGeode->addDrawable( quadGeometry.get() );
     quadGeode->getOrCreateStateSet()->
         setMode( GL_LIGHTING, osg::StateAttribute::OFF );
-    
+
     return quadGeode;
 }
 ////////////////////////////////////////////////////////////////////////////////

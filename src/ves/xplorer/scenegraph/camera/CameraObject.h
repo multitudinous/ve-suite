@@ -31,17 +31,19 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
-#ifndef VES_XPLORER_SCENEGRAPH_CAMERA_CAMERA_H
-#define VES_XPLORER_SCENEGRAPH_CAMERA_CAMERA_H
+#ifndef VES_XPLORER_SCENEGRAPH_CAMERA_CAMERAOBJECT_H
+#define VES_XPLORER_SCENEGRAPH_CAMERA_CAMERAOBJECT_H
 
 // --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
+
+#include <ves/xplorer/scenegraph/DCS.h>
 
 // --- OSG Includes --- //
 #include <osg/ref_ptr>
 #include <osg/Quat>
 #include <osg/Vec3d>
-#include <osg/PositionAttitudeTransform>
+#include <osg/Transform>
 
 namespace osg
 {
@@ -59,29 +61,30 @@ namespace scenegraph
 namespace camera
 {
 
-/*!\file Camera.h
+/*!\file CameraObject.h
  *
  */
 
-/*!\class Camera
+/*!\class CameraObject
  * Class for
  */
 
 /*!\namespace ves::xplorer::scenegraph::camera
  *
  */
-class VE_SCENEGRAPH_EXPORTS Camera : public osg::PositionAttitudeTransform
+class VE_SCENEGRAPH_EXPORTS CameraObject : public DCS
 {
 public:
     ///Constructor
-    Camera();
+    CameraObject();
 
     ///
-    Camera( const Camera& cameraEntity,
-            const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
+    CameraObject(
+        const CameraObject& cameraObject,
+        const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
 
     ///
-    META_Node( ves::xplorer::scenegraph::camera, Camera );
+    META_Node( ves::xplorer::scenegraph::camera, CameraObject );
 
     ///
     //void CalculateMatrixMVPT();
@@ -122,7 +125,7 @@ public:
     //osg::TexGenNode* GetTexGenNode();
 
     ///
-    void setAttitude( const osg::Quat& quat );
+    //void setAttitude( const osg::Quat& quat );
 
     ///
     //void SetCameraViewQuadResolution( unsigned int value );
@@ -140,16 +143,13 @@ public:
     //void SetMaxCircleOfConfusion( double value );
 
     ///
-    //void SetNamesAndDescriptions();
-
-    ///
-    void setPosition( const osg::Vec3d& pos );
+    //void setPosition( const osg::Vec3d& pos );
 
     ///
     //void SetProjectionEffectOpacity( double value );
 
     ///
-    void setScale( const osg::Vec3d& scale );
+    //void setScale( const osg::Vec3d& scale );
 
     ///
     void ShowCameraGeometry( const bool& show = true );
@@ -162,7 +162,7 @@ public:
 
 protected:
     ///Destructor
-    virtual ~Camera();
+    virtual ~CameraObject();
 
 private:
     ///
@@ -179,6 +179,9 @@ private:
 
     ///
     //void CreateDepthHelperQuad();
+
+    ///Temporary function to allow selection of cameras
+    void SetNamesAndDescriptions();
 
     ///The initial view matrix of the camera
     osg::Matrixd m_initialViewMatrix;
@@ -198,7 +201,7 @@ private:
     ///
     //cpt::ProjectionTechnique* mProjectionTechnique;
 
-    ///A callback to update Camera relative to its DCS
+    ///A callback to update CameraObject relative to its DCS
     //osg::ref_ptr< cpt::CameraEntityCallback > mCameraEntityCallback;
 
     ///Pointer to the HeadsUpDisplay for xplorer window
@@ -273,4 +276,4 @@ private:
 } //end xplorer
 } //end ves
 
-#endif //VES_XPLORER_SCENEGRAPH_CAMERA_CAMERA_H
+#endif //VES_XPLORER_SCENEGRAPH_CAMERA_CAMERAOBJECT_H
