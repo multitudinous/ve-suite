@@ -261,7 +261,7 @@ void cfdPBufferQuad::_drawAutoTexCoords() const
     glMatrixMode( GL_MODELVIEW );
     glPushMatrix();
     glLoadIdentity();
-    osg::RefMatrix* matrix = new osg::RefMatrix;
+    osg::RefMatrixd* matrix = new osg::RefMatrixd;
     matrix->set( osg::Matrix::identity() );
     matrix->makeLookAt( osg::Vec3( _eye[0], _eye[1], _eye[2] ),
                         osg::Vec3( _lookAt[0], _lookAt[1], _lookAt[2] ),
