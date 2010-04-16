@@ -1099,7 +1099,7 @@ void Gloves::UpdateRightHandGlove()
     //                     osg::DegreesToRadians( 0.0 ), roll );
     
     double rotArray[ 3 ] = { 0.0, -90.0, 0.0 };
-    osg::Matrix rotateMat = CreateQuat( rotArray );
+    osg::Matrixd rotateMat = CreateQuat( rotArray );
     
     gmtl::Matrix44d naVRot;
     naVRot.set( rotateMat.ptr() );
@@ -1191,7 +1191,7 @@ void Gloves::UpdateLeftHandGlove()
     //                     osg::DegreesToRadians( 0.0 ), roll );
     
     double rotArray[ 3 ] = { 0.0, -90.0, 0.0 };
-    osg::Matrix rotateMat = CreateQuat( rotArray );
+    osg::Matrixd rotateMat = CreateQuat( rotArray );
 
     gmtl::Matrix44d naVRot;
     naVRot.set( rotateMat.ptr() );
