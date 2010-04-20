@@ -35,6 +35,7 @@
 #include <ves/xplorer/scenegraph/physics/character/CharacterController.h>
 #include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
 
+#include <ves/xplorer/scenegraph/Select.h>
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/FindParentWithNameVisitor.h>
 
@@ -116,6 +117,8 @@ CharacterController::CharacterController()
     wand.init( "VJWand" );
 
     Initialize();
+
+    Enable( false );
 }
 ////////////////////////////////////////////////////////////////////////////////
 CharacterController::~CharacterController()
@@ -189,8 +192,6 @@ void CharacterController::Initialize()
     mMatrixTransform->setUpdateCallback(
         new CharacterTransformCallback( m_ghostObject ) );
 
-    mMatrixTransform->setNodeMask( 0 );
-
     //Used for center to eye occluder test per frame
     mLineSegmentIntersector =
         new osgUtil::LineSegmentIntersector(
@@ -213,7 +214,7 @@ void CharacterController::Enable( const bool& enable )
 
     if( m_enabled )
     {
-        mMatrixTransform->setNodeMask( 1 );
+        mMatrixTransform->setNodeMask( NodeMask::CHARACTER );
 
         m_dynamicsWorld.addCollisionObject(
             m_ghostObject, btBroadphaseProxy::CharacterFilter,
@@ -597,77 +598,45 @@ void CharacterController::EyeToCenterRayTest(
 
     //OSG implementation: works for all geometry regardless
     ///Need to fix center to be at the head position for the character
-    osg::Vec3d startPoint( center.x(), center.y(), center.z() );
-    osg::Vec3d endPoint( eye.x(), eye.y(), eye.z() );
+    osg::Vec3d startPoint( eye.x(), eye.y(), eye.z() );
+    osg::Vec3d endPoint( center.x(), center.y(), center.z() );
     mLineSegmentIntersector->reset();
     mLineSegmentIntersector->setStart( startPoint );
     mLineSegmentIntersector->setEnd( endPoint );
 
-    osgUtil::IntersectionVisitor intersectionVisitor(
-        mLineSegmentIntersector.get() );
-    //Use bitwise NOT operator to get opposite of ManipulatorManager NodeMask
-    //function validNodeMask in NodeVisitor:
-    //return ( getTraversalMask() & ( getNodeMaskOverride() | node.getNodeMask() ) ) != 0
-    unsigned int traversalMask =
-        ~SceneManager::instance()->GetManipulatorManager()->getNodeMask();
-    intersectionVisitor.setTraversalMask( traversalMask );
-
-    SceneManager::instance()->GetModelRoot()->accept( intersectionVisitor );
-
     osgUtil::LineSegmentIntersector::Intersections& intersections =
-        mLineSegmentIntersector->getIntersections();
+        TestForIntersections(
+            *mLineSegmentIntersector.get(),
+            SceneManager::instance()->GetGraphicalPluginManager() );
 
-    osg::Drawable* objectHit( NULL );
-    osgUtil::LineSegmentIntersector::Intersections::iterator itr =
-        intersections.begin();
-    for( osgUtil::LineSegmentIntersector::Intersections::iterator itr =
-        intersections.begin(); itr != intersections.end(); ++itr )
+    if( !intersections.empty() )
     {
-        objectHit = itr->drawable.get();
+        osgUtil::LineSegmentIntersector::Intersections::reverse_iterator itr =
+            intersections.rbegin();
 
-        bool notTheCharacter = false;
-#ifndef VES_USE_ANIMATED_CHARACTER 
-        if( objectHit->getName() != "Character Switch Control" )
+        mToOccludeDistance =
+            osg::Vec3d( itr->getWorldIntersectPoint() - endPoint ).length();
+
+        if( mToCameraDistance < mMinCameraDistance )
         {
-            notTheCharacter = true;
+            mToCameraDistance = mMinCameraDistance;
         }
-#else
-        osg::Node* tempCharacter = objectHit->getParent( 0 );
-        FindParentWithNameVisitor findParent(
-            tempCharacter, "Character Switch Control" );
-        osg::ref_ptr< osg::Node > tempParent = findParent.GetParentNode();
-        if( !tempParent.valid() )
+
+        if( mToOccludeDistance > mOccludeDistance )
         {
-            notTheCharacter = true;
+            mOccludeDistanceLERPdt = 0.0;
         }
-#endif
-
-        if( notTheCharacter )
+        else
         {
-            mToOccludeDistance = osg::Vec3(
-                itr->getWorldIntersectPoint() - startPoint ).length();
-
-            if( mToCameraDistance < mMinCameraDistance )
-            {
-                mToCameraDistance = mMinCameraDistance;
-            }
-
-            if( mToOccludeDistance > mOccludeDistance )
-            {
-                mOccludeDistanceLERPdt = 0.0;
-            }
-            else
-            {
-                mOccludeDistanceLERPdt = 1.0;
-            }
-
-            mFromOccludeDistance = mOccludeDistance;
-
-            mOccludeDistanceLERP = true;
-            mPreviousOccluder = true;
-
-            return;
+            mOccludeDistanceLERPdt = 1.0;
         }
+
+        mFromOccludeDistance = mOccludeDistance;
+
+        mOccludeDistanceLERP = true;
+        mPreviousOccluder = true;
+
+        return;
     }
 
     if( mPreviousOccluder )
