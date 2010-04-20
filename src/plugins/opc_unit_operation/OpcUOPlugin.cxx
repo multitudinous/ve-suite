@@ -310,6 +310,7 @@ void OpcUOPlugin::StopTimer( wxCommandEvent& event )
 ///////////////////////////////////////////////////////////////////////////////
 void OpcUOPlugin::QueryForAllVariables( wxCommandEvent& event )
 {
+    UIPLUGIN_CHECKID( event )
     //Query Unit for all opc variables available
     //std::string compName = GetVEModel()->GetPluginName();
     //mPluginName = GetVEModel()->GetPluginName().c_str();

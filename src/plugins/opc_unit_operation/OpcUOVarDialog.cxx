@@ -180,7 +180,7 @@ void OpcUOVarDialog::SetButtonClick(wxCommandEvent& event)
     commandWriter.WriteXMLDocument( nodes, status, "Command" );
     mServiceList->Query( status );
 
-    wxMessageDialog popup( this, _("Data has been sent to Aspen Dynamics") );
+    wxMessageDialog popup( this, _("Data has been sent to DynSim") );
     popup.ShowModal(); 
 }
 

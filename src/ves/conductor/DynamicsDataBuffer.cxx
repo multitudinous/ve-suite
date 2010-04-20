@@ -49,7 +49,7 @@ using namespace ves::open::xml;
 using namespace ves::conductor;
 
 //vprSingletonImp( DynamicsDataBuffer );
-vprSingletonImpLifetime(DynamicsDataBuffer, 999);
+vprSingletonImpLifetime(DynamicsDataBuffer, 1);
 ////////////////////////////////////////////////////////////////////////////////
 DynamicsDataBuffer::DynamicsDataBuffer( void )
 {
@@ -193,10 +193,10 @@ void DynamicsDataBuffer::Enable( )
 ///////////////////////////////////////////////////////////////////////////////
 void DynamicsDataBuffer::Disable( )
 {
-    m_thread->join();
     if( m_enabled )
     {
         m_enabled = false;
+        m_thread->join();
         delete m_thread;
     }
 }

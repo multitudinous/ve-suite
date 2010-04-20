@@ -49,6 +49,7 @@
 #include <ves/conductor/SummaryResultDialog.h>
 #include <ves/conductor/FindDialog.h>
 #include <ves/conductor/UserPreferencesDataBuffer.h>
+#include <ves/conductor/DynamicsDataBuffer.h>
 #include <ves/conductor/XMLDataBufferEngine.h>
 #include <ves/conductor/Network.h>
 #include <ves/conductor/Canvas.h>
@@ -356,7 +357,7 @@ AppFrame::~AppFrame()
     // Clean up the canvas and plugins first because
     // if left to wx, on windows things get messy with unloading plugins
     // and cleaning up memory at the same time
-    //CloseAspenSimulation();
+
     //Cleanup all the plugins before wx does
     //mDestoryFrame = true;
     canvas->CleanUpNetworks();
@@ -373,11 +374,6 @@ AppFrame::~AppFrame()
         ExitXplorer();
     }
     //serviceList->DisconnectFromXplorer();
-
-    //if(AspenSimOpen)
-    //{
-    //    CloseAspenSimulation();
-    //}
 
     //Store settings to wxConfig to be written out
     StoreFrameSize( GetRect() );
@@ -729,18 +725,10 @@ void AppFrame::StoreRecentFile()
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::FrameClose( wxCommandEvent& WXUNUSED( event ) )
 {
+    DynamicsDataBuffer::instance()->CleanUp();
     Close( true );
     serviceList->DisconnectFromCE();
 }
-////////////////////////////////////////////////////////////////////////////////
-/*void AppFrame::OnFrameClose( wxCloseEvent& WXUNUSED( event ) )
-{
-    //Close Aspen no matter how conductor us shutdown
-    CloseAspenSimulation();
-    //Cleanup all the plugins before wx does
-    mDestoryFrame = true;
-    canvas->CleanUpNetworks();
-}*/
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::CreateMenu()
 {

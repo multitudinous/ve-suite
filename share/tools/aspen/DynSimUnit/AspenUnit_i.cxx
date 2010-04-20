@@ -471,11 +471,11 @@ void AspenUnit_i::SetParams (CORBA::Long id,
 ///////////////////////////////////////////////////////////////////////////////
 void AspenUnit_i::Monitor( )
 {
-    if( connected )
-    {
-        dynsim->AddOPCVariable( "MY_SWITCH" );
-        std::string netPak = dynsim->GetOPCValues( );
-        theParent->GetExecutive()->SetParams(0, 0, CORBA::string_dup( netPak.c_str( ) ) );
-    }
-    return;
+    //if( connected )
+    //{
+    //    dynsim->AddOPCVariable( "MY_SWITCH" );
+    //    std::string netPak = dynsim->GetOPCValues( );
+    //    theParent->GetExecutive()->SetParams(0, 0, CORBA::string_dup( netPak.c_str( ) ) );
+    //}
+    //return;
 }
