@@ -565,9 +565,9 @@ bool MinervaManager::_removeLayer ( Minerva::Core::Layers::RasterGroup *group, c
 
 void MinervaManager::_loadPlugins()
 {
-#ifdef __APPLE__
+//#ifdef __APPLE__
   Usul::Components::Manager::instance().load( Usul::Interfaces::IUnknown::IID, std::string("GDALReadImage.plug") );
-#endif
+//#endif
   // this causes huge problems because the output is never flushed.
   //This can probably be corrected but I am not sure how.
   if( vpr::Debug::instance()->isDebugEnabled() && vpr::Debug::instance()->isCategoryAllowed( vesDBG ) )
