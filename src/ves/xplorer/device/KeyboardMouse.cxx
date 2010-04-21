@@ -1442,46 +1442,28 @@ void KeyboardMouse::ProcessSelection()
         return;
     }
 
-    //Set the selected DCS
-    DeviceHandler::instance()->SetSelectedDCS( newSelectedDCS );
-
-    vprDEBUG( vesDBG, 1 ) << "|\tObjects has name "
-                          << vesObject->getName()
-                          << std::endl << vprDEBUG_FLUSH;
-    vprDEBUG( vesDBG, 1 ) << "|\tObjects descriptors "
-                          << vesObject->getDescriptions().at( 1 )
-                          << std::endl << vprDEBUG_FLUSH;
-
-    //Need to do this for multi-pass techniques
-    scenegraph::SceneNode* selectedNode =
-        dynamic_cast< scenegraph::SceneNode* >( vesObject );
-    if( selectedNode )
+    //Check and see if the selected node has an attached physics mesh
+    bool hasPhysicsMesh( false );
+    osg::ref_ptr< osgwTools::AbsoluteModelTransform > tempAMT = 
+        dynamic_cast< osgwTools::AbsoluteModelTransform* >( vesObject->getParent( 0 ) );
+    if( tempAMT.valid() )
     {
-        if( m_sceneManager.IsRTTOn() )
+        osgbBullet::RefRigidBody* tempRB =
+            dynamic_cast< osgbBullet::RefRigidBody* >( tempAMT->getUserData() );
+        if( tempRB )
         {
-            selectedNode->SetTechnique( "Glow" );
-        }
-        else
-        {
-            selectedNode->SetTechnique( "Select" );
+            if( tempRB->getRigidBody()->isStaticOrKinematicObject() )
+            {
+                //return;
+            }
+            hasPhysicsMesh = true;
         }
     }
 
     //Set the connection between the scene manipulator and the selected dcs
     scenegraph::manipulator::TransformManipulator* sceneManipulator =
         m_manipulatorManager.GetSceneManipulator();
-
-    //Check and see if the selected node has an attached physics mesh
-    osg::ref_ptr< osgwTools::AbsoluteModelTransform > tempAMT = 
-        dynamic_cast< osgwTools::AbsoluteModelTransform* >( vesObject->getParent( 0 ) );
-    osgbBullet::RefRigidBody* tempRB( NULL );
-    if( tempAMT )
-    {
-        tempRB =
-            dynamic_cast< osgbBullet::RefRigidBody* >( tempAMT->getUserData() );
-    }
-
-    if( tempRB )
+    if( hasPhysicsMesh )
     {
         sceneManipulator->Connect( tempAMT.get() );
     }
@@ -1502,6 +1484,26 @@ void KeyboardMouse::ProcessSelection()
     center = center * osg::Matrixd( m_sceneManager.GetWorldDCS()->GetMat().mData );
     //center = center * m_currentGLTransformInfo->GetViewMatrixOSG();
     mCenterPoint->set( center.x(), center.y(), center.z() );
+
+    //Set the selected DCS
+    DeviceHandler::instance()->SetSelectedDCS( newSelectedDCS );
+
+    //Need to do this for multi-pass techniques
+    if( m_sceneManager.IsRTTOn() )
+    {
+        newSelectedDCS->SetTechnique( "Glow" );
+    }
+    else
+    {
+        newSelectedDCS->SetTechnique( "Select" );
+    }
+
+    vprDEBUG( vesDBG, 1 ) << "|\tObjects has name "
+                          << vesObject->getName()
+                          << std::endl << vprDEBUG_FLUSH;
+    vprDEBUG( vesDBG, 1 ) << "|\tObjects descriptors "
+                          << vesObject->getDescriptions().at( 1 )
+                          << std::endl << vprDEBUG_FLUSH;
 }
 ////////////////////////////////////////////////////////////////////////////////
 gadget::KeyboardMousePtr KeyboardMouse::GetKeyboardMouseVRJDevice()

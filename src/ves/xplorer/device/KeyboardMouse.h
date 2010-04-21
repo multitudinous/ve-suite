@@ -31,8 +31,8 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
-#ifndef KEYBOARD_MOUSE_H
-#define KEYBOARD_MOUSE_H
+#ifndef VES_XPLORER_DEVICE_KEYBOARDMOUSE_H
+#define VES_XPLORER_DEVICE_KEYBOARDMOUSE_H
 
 // --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
@@ -83,7 +83,10 @@ namespace device
 /*!\file KeyboardMouse.h
  *
  */
-/*!\class VE_XPlorer::KeyboardMouse
+/*!\class ves::xplorer::device::KeyboardMouse
+ *
+ */
+/*!\namespace ves::xplorer::device
  *
  */
 class VE_XPLORER_EXPORTS KeyboardMouse : public Device
@@ -378,7 +381,7 @@ private:
 } //end xplorer
 } //end ves
 
-#endif //KEYBOARD_MOUSE_H
+#endif //VES_XPLORER_DEVICE_KEYBOARDMOUSE_H
 
 //This stuff is used for the old NURBS selection events
 //In the future, NURBS should be selectable in the scene like manipulators
