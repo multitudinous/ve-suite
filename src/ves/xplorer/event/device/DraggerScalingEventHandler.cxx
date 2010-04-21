@@ -81,11 +81,11 @@ void DraggerScalingEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xm
                 geometryLODScaleCmd->GetDataValuePair( "Dragger Scaling Toggle Value" );
             double alpha = 0;
             scaleValue->GetData( alpha );
-            
-            ves::xplorer::scenegraph::SceneManager::instance()->
-                GetManipulatorManager()->SetDraggerScale( alpha );
-            ves::xplorer::scenegraph::SceneManager::instance()->
-                GetManipulatorManager()->GetSceneManipulator()->SetScale( alpha );
+
+            scenegraph::SceneManager::instance()->
+                GetManipulatorManager().SetDraggerScale( alpha );
+            scenegraph::SceneManager::instance()->
+                GetManipulatorManager().GetSceneManipulator()->SetScale( alpha );
         }
     }
     catch ( ... )

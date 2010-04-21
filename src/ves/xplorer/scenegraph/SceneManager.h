@@ -107,7 +107,7 @@ public:
 
     ///
     ///\return
-    CharacterController* const GetCharacterController() const;
+    CharacterController& GetCharacterController() const;
 
     ///Get the framestamp used by SceneView
     ///\return The osg::FrameStamp for the osg::SceneView
@@ -124,7 +124,7 @@ public:
     camera::CameraManager& GetCameraManager() const;
 
     ///Return the manipulator root node of the scenegraph
-    manipulator::ManipulatorManager* const GetManipulatorManager() const;
+    manipulator::ManipulatorManager& GetManipulatorManager() const;
 
     ///
     ///\return

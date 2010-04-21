@@ -142,16 +142,15 @@
 #endif // QT_ON
 
 
-// --- C/C++ Libraries --- //
+// --- STL Includes --- //
 #include <iostream>
 
+using namespace ves::open::xml;
 using namespace ves::xplorer;
 using namespace ves::xplorer::util;
 using namespace ves::xplorer::volume;
-using namespace ves::open::xml;
 using namespace ves::xplorer::network;
-namespace vx = ves::xplorer;
-namespace vxs = ves::xplorer::scenegraph;
+using namespace ves::xplorer::scenegraph;
 
 ////////////////////////////////////////////////////////////////////////////////
 App::App( int argc, char* argv[], bool enableRTT )
@@ -587,7 +586,7 @@ void App::latePreFrame()
             // exit App was selected
             std::cout << "|\tShutting down xplorer." << std::endl;
             VPR_PROFILE_RESULTS();
-            vxs::PhysicsSimulator::instance()->SetIdle( true );
+            PhysicsSimulator::instance()->SetIdle( true );
             m_vjobsWrapper->Cleanup();
             GraphicalPluginManager::instance()->UnloadPlugins();
             ves::xplorer::scenegraph::SceneManager::instance()->Shutdown();
@@ -671,20 +670,20 @@ void App::latePreFrame()
         }
     }
     ///////////////////////
-    vxs::CharacterController* characterController =
-        vxs::SceneManager::instance()->GetCharacterController();
+    CharacterController& characterController =
+        SceneManager::instance()->GetCharacterController();
     {
         VPR_PROFILE_GUARD_HISTORY(
             "App::latePreFrame CharacterController::Move", 20 );
         //If the character controller is being used - manipulate the character
         //by the keyboard, head, or wand first. This should affect the 
         //character bullet matrix directly
-        characterController->Move( mFrameDT );
+        characterController.Move( mFrameDT );
     }
     ///////////////////////
     {
         VPR_PROFILE_GUARD_HISTORY( "App::latePreFrame PhysicsSimulator", 20 );
-        vxs::PhysicsSimulator::instance()->UpdatePhysics( mFrameDT );
+        PhysicsSimulator::instance()->UpdatePhysics( mFrameDT );
     }
     ///////////////////////
     {
@@ -693,7 +692,7 @@ void App::latePreFrame()
         //Now that the character has been moved AND the simulation has calculated
         //the new position update the camera matrix with the new view data
         //based on what the character has done
-        characterController->UpdateCamera();
+        characterController.UpdateCamera();
         //Now that we are finished updating the view on the character and controller
         //the update callback on the character will be called to update the 
         //OSG rep for the character

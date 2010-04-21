@@ -72,9 +72,9 @@ Device::Device( const Device::Type& type )
     mResetAxis( NULL ),
     m_physicsSimulator( *scenegraph::PhysicsSimulator::instance() ),
     m_sceneManager( *scenegraph::SceneManager::instance() ),
-    m_characterController( *(m_sceneManager.GetCharacterController()) ),
+    m_characterController( m_sceneManager.GetCharacterController() ),
     m_cameraManager( m_sceneManager.GetCameraManager() ),
-    m_manipulatorManager( *(m_sceneManager.GetManipulatorManager()) )
+    m_manipulatorManager( m_sceneManager.GetManipulatorManager() )
 #ifdef QT_ON
     ,
     m_uiManager( *ves::conductor::UIManager::instance() )

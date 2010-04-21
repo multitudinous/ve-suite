@@ -109,26 +109,26 @@ void CharacterEventHandler::Execute(
         return;
     }
 
-    scenegraph::CharacterController* characterController =
+    scenegraph::CharacterController& characterController =
         scenegraph::SceneManager::instance()->GetCharacterController();
 
     std::string data;
     characterDVP->GetData( data );
     if( data == "ENABLE" )
     {
-        characterController->Enable();
+        characterController.Enable();
     }
     else if( data == "DISABLE" )
     {
-        characterController->Enable( false );
+        characterController.Enable( false );
     }
     else if( data == "ENABLE_FLY" )
     {
-        characterController->EnableFlying();
+        characterController.EnableFlying();
     }
     else if( data == "DISABLE_FLY" )
     {
-        characterController->EnableFlying( false );
+        characterController.EnableFlying( false );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

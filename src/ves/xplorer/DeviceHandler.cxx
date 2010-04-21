@@ -308,10 +308,10 @@ void DeviceHandler::SetSelectedDCS( scenegraph::DCS* selectedDCS )
 {
     mSelectedDCS = selectedDCS;
 
-    scenegraph::manipulator::ManipulatorManager* manipulatorManager =
+    scenegraph::manipulator::ManipulatorManager& manipulatorManager =
         scenegraph::SceneManager::instance()->GetManipulatorManager();
     scenegraph::manipulator::TransformManipulator* sceneManipulator =
-        manipulatorManager->GetSceneManipulator();
+        manipulatorManager.GetSceneManipulator();
 
     if( sceneManipulator->IsEnabled() && !sceneManipulator->getNodeMask() )
     {
@@ -328,10 +328,10 @@ void DeviceHandler::UnselectObjects()
         mSelectedDCS->SetTechnique( "Default" );
         mSelectedDCS = NULL;
 
-        scenegraph::manipulator::ManipulatorManager* manipulatorManager =
+        scenegraph::manipulator::ManipulatorManager& manipulatorManager =
             scenegraph::SceneManager::instance()->GetManipulatorManager();
         scenegraph::manipulator::TransformManipulator* sceneManipulator =
-            manipulatorManager->GetSceneManipulator();
+            manipulatorManager.GetSceneManipulator();
 
         if( sceneManipulator->IsEnabled() )
         {

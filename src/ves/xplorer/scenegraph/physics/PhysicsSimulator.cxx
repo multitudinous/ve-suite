@@ -552,7 +552,7 @@ void PhysicsSimulator::ResetScene()
             //Removed cached contact points
             mDynamicsWorld->getBroadphase()->getOverlappingPairCache()->
                 cleanProxyFromPairs( colObj->getBroadphaseHandle(),
-                                mDynamicsWorld->getDispatcher() );            
+                                mDynamicsWorld->getDispatcher() );
         }
     }
     
@@ -560,11 +560,11 @@ void PhysicsSimulator::ResetScene()
     mDynamicsWorld->getBroadphase()->resetPool(mDynamicsWorld->getDispatcher());
     mDynamicsWorld->getConstraintSolver()->reset();
 
-    CharacterController* characterController =
+    CharacterController& characterController =
         SceneManager::instance()->GetCharacterController();
-    if( characterController->IsEnabled() )
+    if( characterController.IsEnabled() )
     {
-        characterController->Reset();
+        characterController.Reset();
     }
     SetIdle( currentIdle );
 }

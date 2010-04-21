@@ -60,8 +60,6 @@
 #endif
 
 using namespace ves::xplorer::event;
-namespace vxs = ves::xplorer::scenegraph;
-namespace vxsm = vxs::manipulator;
 
 ////////////////////////////////////////////////////////////////////////////////
 ManipulatorEventHandler::ManipulatorEventHandler()
@@ -103,10 +101,10 @@ void ManipulatorEventHandler::Execute(
         return;
     }
 
-    vxsm::ManipulatorManager* manipulatorManager =
-        vxs::SceneManager::instance()->GetManipulatorManager();
-    vxsm::TransformManipulator* sceneManipulator =
-        manipulatorManager->GetSceneManipulator();
+    scenegraph::manipulator::ManipulatorManager& manipulatorManager =
+        scenegraph::SceneManager::instance()->GetManipulatorManager();
+    scenegraph::manipulator::TransformManipulator* sceneManipulator =
+        manipulatorManager.GetSceneManipulator();
 
     std::string data;
     manipulatorDVP->GetData( data );
@@ -127,24 +125,25 @@ void ManipulatorEventHandler::Execute(
     else if( data == "TRANSLATE" )
     {
         sceneManipulator->SetEnabledModes(
-            vxsm::TransformationType::TRANSLATE_COMPOUND );
+            scenegraph::manipulator::TransformationType::TRANSLATE_COMPOUND );
         sceneManipulator->DefaultForm();
     }
     else if( data == "ROTATE" )
     {
         sceneManipulator->SetEnabledModes(
-            vxsm::TransformationType::ROTATE_COMPOUND );
+            scenegraph::manipulator::TransformationType::ROTATE_COMPOUND );
         sceneManipulator->DefaultForm();
     }
     else if( data == "SCALE" )
     {
         sceneManipulator->SetEnabledModes(
-            vxsm::TransformationType::SCALE_COMPOUND );
+            scenegraph::manipulator::TransformationType::SCALE_COMPOUND );
         sceneManipulator->DefaultForm();
     }
     else if( data == "COMBO" )
     {
-        sceneManipulator->SetEnabledModes( vxsm::TransformationType::ALL );
+        sceneManipulator->SetEnabledModes(
+            scenegraph::manipulator::TransformationType::ALL );
         sceneManipulator->ComboForm();
     }
 }

@@ -324,9 +324,9 @@ camera::CameraManager& SceneManager::GetCameraManager() const
     return *m_cameraManager.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
-manipulator::ManipulatorManager* const SceneManager::GetManipulatorManager() const
+manipulator::ManipulatorManager& SceneManager::GetManipulatorManager() const
 {
-    return m_manipulatorManager.get();
+    return *m_manipulatorManager.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
 DCS* const SceneManager::GetWorldDCS() const
@@ -527,9 +527,9 @@ osg::FrameStamp* const SceneManager::GetFrameStamp() const
     return mFrameStamp.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
-CharacterController* const SceneManager::GetCharacterController() const
+CharacterController& SceneManager::GetCharacterController() const
 {
-    return mCharacterController;
+    return *mCharacterController;
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool SceneManager::IsRTTOn()
