@@ -57,7 +57,8 @@ namespace scenegraph
 /*!\namespace ves::xplorer::scenegraph
  *
  */
-class VE_SCENEGRAPH_EXPORTS DiscreteDynamicsWorld : btDiscreteDynamicsWorld
+class VE_SCENEGRAPH_EXPORTS DiscreteDynamicsWorld :
+    public btDiscreteDynamicsWorld
 {
 public:
     ///Constructor
@@ -71,6 +72,8 @@ public:
     virtual ~DiscreteDynamicsWorld();
 
 protected:
+    ///
+    virtual void internalSingleStepSimulation( btScalar timeStep );
 
 private:
 
