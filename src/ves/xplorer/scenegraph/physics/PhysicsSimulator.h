@@ -122,9 +122,6 @@ public:
     ///\param state State on or idle
     void SetIdle( bool state );
 
-    ///Do we store collision information
-    void SetCollisionInformation( bool collisionInformation );
-
     ///Set the shoot speed
     ///\param speed
     void SetShootSpeed( float speed );
@@ -186,9 +183,6 @@ private:
 
     ///Determines whether the physics simulation is idle or not
     bool mIdle;
-
-    ///
-    bool mCollisionInformation;
 
     ///Speed of shooting boxes
     float shoot_speed;

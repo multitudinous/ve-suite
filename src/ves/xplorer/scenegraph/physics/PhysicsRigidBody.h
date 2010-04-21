@@ -30,8 +30,9 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#ifndef VES_PHYSICS_RIGID_BODY_H
-#define VES_PHYSICS_RIGID_BODY_H
+
+#ifndef VES_XPLORER_SCENEGRAPH_PHYSICSRIGIDBODY_H
+#define VES_XPLORER_SCENEGRAPH_PHYSICSRIGIDBODY_H
 
 // --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
@@ -44,7 +45,6 @@
 
 namespace osg
 {
-//class Node;
 class Geode;
 }
 
@@ -60,7 +60,8 @@ namespace osgbBullet
 {
 class MotionState;
 }
-// --- C/C++ Libraries --- //
+
+// --- STL Includes --- //
 #include <map>
 
 namespace ves
@@ -69,9 +70,8 @@ namespace xplorer
 {
 namespace scenegraph
 {
-class PhysicsSimulator;
-//class vesMotionState;
 class osgToBullet;
+class PhysicsSimulator;
 
 /*!\file PhysicsRigidBody.h
  *
@@ -82,14 +82,13 @@ class osgToBullet;
 /*!\namespace ves::xplorer::scenegraph
  *
  */
-class VE_SCENEGRAPH_EXPORTS PhysicsRigidBody // : public btRigidBody
+class VE_SCENEGRAPH_EXPORTS PhysicsRigidBody
 {
 public:
     ///Constructor
     ///\param node The node to create a physics mesh from
     ///\param physicsSimulator Sets a pointer to the PhysicsSimulator singleton
-    PhysicsRigidBody( osg::Node* node,
-                      PhysicsSimulator* physicsSimulator );
+    PhysicsRigidBody( osg::Node* node, PhysicsSimulator* physicsSimulator );
 
     ///Destructor
     ~PhysicsRigidBody();
@@ -97,32 +96,30 @@ public:
     ///Creates a box shape from the osg::BoundingBox of the mesh shape
     void BoundingBoxShape();
 
-    bool CollisionInquiry( PhysicsRigidBody* physicsRigidBody );
-
     ///Creates a convex hull shape from a triangle mesh - mesh can be concave or convex
     void ConvexShape();
-
-    const std::multimap< PhysicsRigidBody*, btVector3 >& GetCollisions();
-
-    bool HasCollisions();
-    bool IsStoringCollisions();
 
     ///Set the mass for the rigid body
     ///\param mass The mass value
     void SetMass( float mass );
+
     ///Set the mass for the rigid body
     ///\param mass The mass value
     void SetFriction( float friction );
+
     ///Set the mass for the rigid body
     ///\param mass The mass value
     void SetRestitution( float restitution );
+
     ///Create a rigid body with new enums
     ///\param lod Can be Overall or Compound
     ///\param motion Can be Dynamic or Static
     ///\param mesh Cane be Box, Sphere, Cylinder, Mesh
-    void CreateRigidBody( const std::string& lod, const std::string& motion, const std::string& mesh, const std::string& decimation = std::string( "Exact" ) );
-    
-    void SetStoreCollisions( bool storeCollisions );
+    void CreateRigidBody(
+        const std::string& lod,
+        const std::string& motion,
+        const std::string& mesh,
+        const std::string& decimation = std::string( "Exact" ) );
 
     ///Creates a sphere shape from the osg::BoundingSphere of the mesh shape
     void SphereShape( double radius = 0 );
@@ -135,52 +132,58 @@ public:
     ///Get the bullet rigid body
     ///\return The bullet rigid body
     btRigidBody* GetbtRigidBody();
-    
+
     ///Get the material struct used to tell the sound engine what to do
     ///\return The material for this rigid body
     Material* GetSoundMaterial();
-    
+
+protected:
+
 private:
-    friend class PhysicsSimulator;
-    ///Clean up the memory associated with collisions vector
-    void ClearCollisions();
     ///Clean up the memory associated with a btRigidBody
     void CleanRigidBody();
 
-    void PushBackCollision( PhysicsRigidBody* physicsRigidBody, const btVector3& location );
     ///Modify the mass, friction, restitution, and inertia for the rigidbody
     void SetMassProps( bool dynamic = true );
+
     ///Create a btRigidBody with different shape types
-    void CustomShape( const BroadphaseNativeTypes shapeType, const bool overall, const std::string& decimation = std::string( "Exact" ) );
+    void CustomShape(
+        const BroadphaseNativeTypes shapeType,
+        const bool overall,
+        const std::string& decimation = std::string( "Exact" ) );
+
     ///Register the rigid body with the ves engine and perform other uniform
     ///operations on the rigidbody
     ///\param rigidBody The btRigidBody to register with ves
     void RegisterRigidBody( btRigidBody* rigidBody );
-    ///Store bodies currently in collision with this body, yes or no
-    bool mStoreCollisions;
+
     ///The mass of the rigid body
     float mMass;
+
     ///The mass of the rigid body
     float mFriction;
+
     ///The mass of the rigid body
     float mRestitution;
+
     ///A pointer to the PhysicsSimulator singleton
     PhysicsSimulator* mPhysicsSimulator;
+
     ///Tell wether we need to register osgBullets debug capability
     bool mDebugBoundaries;
+
     ///The holder of all physics data for bullet
     btRigidBody* mRB;
 
+    ///
     Material* m_physicsMaterial;
-    
+
+    ///
     osg::ref_ptr< osg::Node > mOSGToBullet;
 
-    std::multimap< PhysicsRigidBody*, btVector3 > mCollisions;
-
 };
+} //end scenegraph
+} //end xplorer
+} //end ves
 
-} // end scenegraph
-} // end xplorer
-} // end ves
-
-#endif //VES_PHYSICS_RIGID_BODY_H
+#endif //VES_XPLORER_SCENEGRAPH_PHYSICSRIGIDBODY_H

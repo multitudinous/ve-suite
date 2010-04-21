@@ -33,6 +33,7 @@
 
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
+#include <ves/xplorer/scenegraph/physics/DiscreteDynamicsWorld.h>
 #include <ves/xplorer/scenegraph/physics/vesMotionState.h>
 #include <ves/xplorer/scenegraph/physics/PhysicsRigidBody.h>
 #include <ves/xplorer/scenegraph/physics/character/CharacterController.h>
@@ -96,7 +97,6 @@ PhysicsSimulator::PhysicsSimulator()
     mSolver( NULL ),
     mDebugMode( 0 ),
     mIdle( true ),
-    mCollisionInformation( false ),
     shoot_speed( 50.0 ),
     mCreatedGroundPlane( false ),
     mDebugBulletFlag( false ),
@@ -145,10 +145,8 @@ void PhysicsSimulator::ExitPhysics()
         delete mDynamicsWorld;
     }
 
-    //************************************************************************//
     //Don't know if btDynamicsWorld's destructor will clean these up
     //But, it looks like they are still hanging around, so delete them for now
-
     if( mCollisionConfiguration )
     {
         delete mCollisionConfiguration;
@@ -171,22 +169,22 @@ void PhysicsSimulator::ExitPhysics()
     {
         delete mSolver;
     }
-    //************************************************************************//
 }
 ////////////////////////////////////////////////////////////////////////////////
 //By default, Bullet will use its own nearcallback
 //But, you can override it using mDispatcher->setNearCallback()
-void customNearCallback( btBroadphasePair& collisionPair,
-                         btCollisionDispatcher& mDispatcher,
-                         const btDispatcherInfo& dispatchInfo )
+void customNearCallback(
+    btBroadphasePair& collisionPair,
+    btCollisionDispatcher& mDispatcher,
+    const btDispatcherInfo& dispatchInfo )
 {
-    BT_PROFILE("::customNearCallback");
+    BT_PROFILE( "::customNearCallback" );
 
     btCollisionObject* colObj0 =
         ( btCollisionObject* )collisionPair.m_pProxy0->m_clientObject;
     btCollisionObject* colObj1 =
         ( btCollisionObject* )collisionPair.m_pProxy1->m_clientObject;
-    
+
     if( mDispatcher.needsCollision( colObj0, colObj1 ) )
     {
         /*if( colObj0->getCollisionShape()->isCompound() && !colObj0->isStaticObject() && (static_cast< btRigidBody* >( colObj0 )->getInvMass() < 1.0f) )
@@ -258,7 +256,7 @@ void customNearCallback( btBroadphasePair& collisionPair,
 struct YourOwnFilterCallback : public btOverlapFilterCallback
 {
     btDynamicsWorld* mDynamicsWorld;
-    
+
     void SetDynamicsWorld( btDynamicsWorld* dynamicsWorld )
     {
         mDynamicsWorld = dynamicsWorld;
@@ -311,7 +309,7 @@ struct YourOwnFilterCallback : public btOverlapFilterCallback
         }
 
         if( colObj1 )
-        {         
+        {
         btRigidBody* tempRB1 = btRigidBody::upcast(colObj1);
 
         if( colObj1->getCollisionShape()->isCompound() && !colObj1->isStaticObject() && (tempRB1->getInvMass() < 1.0f) )
@@ -389,13 +387,13 @@ void PhysicsSimulator::InitializePhysicsSimulation()
     mDynamicsWorld->setGravity( btVector3( 0, 0, -32.174 ) );
 
 #ifdef VE_SOUND
-    mDynamicsWorld->
-        setInternalTickCallback( (btInternalTickCallback) triggerSounds);
+    mDynamicsWorld->setInternalTickCallback(
+        (btInternalTickCallback) triggerSounds );
 #endif
     m_debugDrawerGroup = new osg::Group();
     m_debugDrawerGroup->setName( "osgBullet::DebugDrawer Root" );
-    SceneManager::instance()->GetRootNode()->
-        addChild( m_debugDrawerGroup.get() );
+    SceneManager::instance()->GetRootNode()->addChild(
+        m_debugDrawerGroup.get() );
     m_debugDrawer = new osgbBullet::GLDebugDrawer();
     m_debugDrawerGroup->addChild( m_debugDrawer->getSceneGraph() );
     m_debugDrawerGroup->setNodeMask( 0 );
@@ -412,7 +410,7 @@ void PhysicsSimulator::InitializePhysicsSimulation()
     //This is the default value for the island deactivation time. The smaller this
     //value is the sooner the island will be put to sleep. I believe this number is
     //in seconds.
-    //btScalar    gDeactivationTime = btScalar(2.);
+    //btScalar gDeactivationTime = btScalar(2.);
     //For more information on how the islands work please see these links
     //http://bulletphysics.org/Bullet/phpBB3/viewtopic.php?f=9&t=16
     //http://bulletphysics.org/Bullet/phpBB3/viewtopic.php?f=4&t=2124
@@ -442,8 +440,8 @@ void PhysicsSimulator::UpdatePhysics( float dt )
 #if !MULTITHREADED_OSGBULLET
     mDynamicsWorld->stepSimulation( dt );
 #else
-    osgbBullet::TripleBufferMotionStateUpdate( m_motionStateList, 
-                                             &m_tripleDataBuffer );
+    osgbBullet::TripleBufferMotionStateUpdate(
+        m_motionStateList, &m_tripleDataBuffer );
 #endif
 
 #ifndef BT_NO_PROFILE
@@ -459,12 +457,12 @@ void PhysicsSimulator::UpdatePhysics( float dt )
         mDispatcher->getManifoldByIndexInternal( i );
         //contactManifold->refreshContactPoints(
         //bodyA->getWorldTransform(), bodyB->getWorldTransform() );
-        
+
         int numContacts = contactManifold->getNumContacts();
         for (int p=0;p<contactManifold->getNumContacts();p++)
         {
             const btManifoldPoint& pt = contactManifold->getContactPoint(p);
-            
+
             btVector3 posWorldB = pt.getPositionWorldOnB();
             btVector3 posWorldA = pt.m_normalWorldOnB;
             std::cout << "Position = " << posWorldB.x() << " " << posWorldB.y() << " " << posWorldB.z() << std::endl;
@@ -472,7 +470,8 @@ void PhysicsSimulator::UpdatePhysics( float dt )
             std::cout << "Distance = " << pt.getDistance() << std::endl;
             std::cout << "Lifetime = " << pt.getLifeTime() << std::endl;
         }
-    }*/
+    }
+    */
 
     if( mDebugBulletFlag )
     {
@@ -481,70 +480,6 @@ void PhysicsSimulator::UpdatePhysics( float dt )
             mDynamicsWorld->getDebugDrawer() )->EndDraw();
     }
 
-    if( !mCollisionInformation )
-    {
-#if MULTITHREADED_OSGBULLET
-        SetIdle( currentIdle );
-#endif
-        return;
-    }
-
-    for( int i = 0; i < mDynamicsWorld->getNumCollisionObjects(); ++i )
-    {
-        void* tempUserData =
-            mDynamicsWorld->getCollisionObjectArray()[ i ]->getUserPointer();
-        if( tempUserData )
-        {
-            PhysicsRigidBody* obj =
-                static_cast< PhysicsRigidBody* >( tempUserData );
-            obj->ClearCollisions();
-        }
-    }
-
-    int numManifolds = mDispatcher->getNumManifolds();
-    for( int i = 0; i < numManifolds; ++i )
-    {
-        btPersistentManifold* contactManifold =
-            mDispatcher->getManifoldByIndexInternal( i );
-        //contactManifold->refreshContactPoints(
-            //bodyA->getWorldTransform(), bodyB->getWorldTransform() );
-
-        int numContacts = contactManifold->getNumContacts();
-        for( int j = 0; j < numContacts; ++j )
-        {
-            btManifoldPoint& pt = contactManifold->getContactPoint( j );
-            PhysicsRigidBody* bodyA = 0;
-            PhysicsRigidBody* bodyB = 0;
-            
-            void* tempBodyA = static_cast< btRigidBody* >( 
-                contactManifold->getBody0() )->getUserPointer();
-            if( tempBodyA )
-            {
-                bodyA = static_cast< PhysicsRigidBody* >( tempBodyA );
-                continue;
-            }
-
-            void* tempBodyB = static_cast< btRigidBody* >( 
-                contactManifold->getBody1() )->getUserPointer();
-            if( tempBodyB )
-            {
-                bodyB = static_cast< PhysicsRigidBody* >( tempBodyB );
-                continue;
-            }
-
-            if( bodyA->IsStoringCollisions() )
-            {
-                btVector3 ptA = pt.getPositionWorldOnA();
-                bodyA->PushBackCollision( bodyB, ptA );
-            }
-
-            if( bodyB->IsStoringCollisions() )
-            {
-                btVector3 ptB = pt.getPositionWorldOnB();
-                bodyB->PushBackCollision( bodyA, ptB );
-            }
-        }
-    }
 #if MULTITHREADED_OSGBULLET
     SetIdle( currentIdle );
 #endif
@@ -654,11 +589,6 @@ void PhysicsSimulator::SetIdle( bool state )
 #endif
 }
 ////////////////////////////////////////////////////////////////////////////////
-void PhysicsSimulator::SetCollisionInformation( bool collisionInformation )
-{
-    mCollisionInformation = collisionInformation;
-}
-////////////////////////////////////////////////////////////////////////////////
 void PhysicsSimulator::SetShootSpeed( float speed )
 {
     shoot_speed = speed;
@@ -719,9 +649,10 @@ void PhysicsSimulator::CreateGroundPlane()
     //cen[ 2 ] -= dim;
     cen[ 2 ] -= 1.5;
     osg::ref_ptr< osg::Node > ground = CreateGround( dim, dim, cen );
-    ves::xplorer::scenegraph::SceneManager::instance()->GetModelRoot()->addChild( ground.get() );
-    osgbBullet::RefRigidBody* body = dynamic_cast< osgbBullet::RefRigidBody* >( ground->getUserData() );
-    mDynamicsWorld->addRigidBody( body->getRigidBody() );    
+    SceneManager::instance()->GetModelRoot()->addChild( ground.get() );
+    osgbBullet::RefRigidBody* body =
+        dynamic_cast< osgbBullet::RefRigidBody* >( ground->getUserData() );
+    mDynamicsWorld->addRigidBody( body->getRigidBody() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 osg::Transform* PhysicsSimulator::CreateOSGBox( osg::Vec3 size )
@@ -743,7 +674,8 @@ osg::Transform* PhysicsSimulator::CreateOSGBox( osg::Vec3 size )
     return( mt );
 }
 ////////////////////////////////////////////////////////////////////////////////
-osg::Node* PhysicsSimulator::CreateGround( float w, float h, const osg::Vec3& center )
+osg::Node* PhysicsSimulator::CreateGround(
+    float w, float h, const osg::Vec3& center )
 {
     osg::Transform* ground = CreateOSGBox( osg::Vec3( w, h, 1.01 ) );
     //TRIANGLE_MESH_SHAPE_PROXYTYPE
@@ -757,7 +689,8 @@ osg::Node* PhysicsSimulator::CreateGround( float w, float h, const osg::Vec3& ce
     // OSGToCollada flattens transformation to transform all
     // verts, but that doesn't work with ShapeDrawables, so we must
     // transform the box explicitly.
-    osgbBullet::MotionState* motion = dynamic_cast< osgbBullet::MotionState* >( body->getMotionState() );
+    osgbBullet::MotionState* motion =
+        dynamic_cast< osgbBullet::MotionState* >( body->getMotionState() );
     osg::Matrix m( osg::Matrix::translate( center ) );
     motion->setParentTransform( m );
     body->setWorldTransform( osgbBullet::asBtTransform( m ) );
@@ -789,7 +722,8 @@ void PhysicsSimulator::SetDebuggingOn( bool toggle )
     SetIdle( currentIdle );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void PhysicsSimulator::RegisterMotionState( osgbBullet::MotionState* motionState )
+void PhysicsSimulator::RegisterMotionState(
+    osgbBullet::MotionState* motionState )
 {
     bool currentIdle = GetIdle();
     SetIdle( true );
@@ -797,7 +731,8 @@ void PhysicsSimulator::RegisterMotionState( osgbBullet::MotionState* motionState
     SetIdle( currentIdle );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void PhysicsSimulator::UnregisterMotionState( osgbBullet::MotionState* motionState )
+void PhysicsSimulator::UnregisterMotionState(
+    osgbBullet::MotionState* motionState )
 {
     bool currentIdle = GetIdle();
     SetIdle( true );
@@ -859,7 +794,7 @@ void triggerSounds( const btDynamicsWorld* world, btScalar timeStep )
         }
     }
     */
-    
+
     // Loop over all collision points and find impacts.
     const btCollisionDispatcher* dispatch( static_cast< const btCollisionDispatcher* >( world->getDispatcher() ) );
     const int numManifolds( dispatch->getNumManifolds() );
@@ -929,20 +864,20 @@ void triggerSounds( const btDynamicsWorld* world, btScalar timeStep )
                 {
                     continue;
                 }
-                
+
                 PhysicsRigidBody* objA =
                 static_cast< PhysicsRigidBody* >( tempUserDataA );
                 PhysicsRigidBody* objB =
                 static_cast< PhysicsRigidBody* >( tempUserDataB );
-                
+
                 Material* mcA = objA->GetSoundMaterial();
                 Material* mcB = objB->GetSoundMaterial();
                 //std::cout << "get material sounds " << std::endl;
-                
+
                 if( ( mcA != NULL ) && ( mcB != NULL ) )
                 {
                     if( collide )
-                    {   
+                    {
                         SoundUtilities::instance()->collide( mcA->_mat, mcB->_mat, location, pt.m_appliedImpulse );
                     }
                     else

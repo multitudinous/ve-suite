@@ -30,10 +30,10 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
+
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/physics/PhysicsRigidBody.h>
 #include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
-//#include <ves/xplorer/scenegraph/physics/vesMotionState.h>
 #include <ves/xplorer/scenegraph/SceneManager.h>
 
 #include <ves/xplorer/scenegraph/LocalToWorldNodePath.h>
@@ -64,41 +64,32 @@
 #include <osg/PositionAttitudeTransform>
 #include <osgDB/WriteFile>
 
-// --- C/C++ Libraries --- //
+// --- STL Includes --- //
 #include <iostream>
 
 using namespace ves::xplorer::scenegraph;
 
 ////////////////////////////////////////////////////////////////////////////////
-PhysicsRigidBody::PhysicsRigidBody( osg::Node* node,
-                                    PhysicsSimulator* physicsSimulator )
+PhysicsRigidBody::PhysicsRigidBody(
+    osg::Node* node, PhysicsSimulator* physicsSimulator )
     :
-    mStoreCollisions( false ),
     mMass( 1.0 ),
     mFriction( 0.5 ),
     mRestitution( 0.5 ),
     mPhysicsSimulator( physicsSimulator ),
     mOSGToBullet( node ),
-    mRB( 0 ),
+    mRB( NULL ),
     mDebugBoundaries( false ),
-    m_physicsMaterial( 0 )
+    m_physicsMaterial( NULL )
 {
-    std::cout << "|\tPhysicsRigidBody: Just initializing physics variables." 
-        << std::endl;
+    std::cout << "|\tPhysicsRigidBody: Just initializing physics variables."
+              << std::endl;
     std::cout << "|\t\tNode name: " << mOSGToBullet->getName() << std::endl;
 }
 ////////////////////////////////////////////////////////////////////////////////
 PhysicsRigidBody::~PhysicsRigidBody()
 {
-    ClearCollisions();
-    //delete m_collisionShape;
     CleanRigidBody();
-}
-////////////////////////////////////////////////////////////////////////////////
-const std::multimap< PhysicsRigidBody*, btVector3 >& PhysicsRigidBody::
-    GetCollisions()
-{
-    return mCollisions;
 }
 ////////////////////////////////////////////////////////////////////////////////
 btRigidBody* PhysicsRigidBody::GetbtRigidBody()
@@ -122,37 +113,6 @@ void PhysicsRigidBody::SetRestitution( float restitution )
 {
     mRestitution = restitution;
     SetMassProps();
-}
-////////////////////////////////////////////////////////////////////////////////
-void PhysicsRigidBody::SetStoreCollisions( bool storeCollisions )
-{
-    if( storeCollisions == false )
-    {
-        ClearCollisions();
-    }
-
-    mStoreCollisions = storeCollisions;
-}
-////////////////////////////////////////////////////////////////////////////////
-bool PhysicsRigidBody::HasCollisions()
-{
-    return !mCollisions.empty();
-}
-////////////////////////////////////////////////////////////////////////////////
-bool PhysicsRigidBody::IsStoringCollisions()
-{
-    return mStoreCollisions;
-}
-////////////////////////////////////////////////////////////////////////////////
-bool PhysicsRigidBody::CollisionInquiry( PhysicsRigidBody* physicsRigidBody )
-{
-    int count = mCollisions.count( physicsRigidBody );
-    if( count > 0 )
-    {
-        return true;
-    }
-
-    return false;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsRigidBody::SetMassProps( bool dynamic )
@@ -183,41 +143,31 @@ void PhysicsRigidBody::SetMassProps( bool dynamic )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void PhysicsRigidBody::PushBackCollision(
-    PhysicsRigidBody* physicsRigidBody, const btVector3& location )
-{
-    mCollisions.insert( std::make_pair( physicsRigidBody, location ) );
-}
-////////////////////////////////////////////////////////////////////////////////
-void PhysicsRigidBody::ClearCollisions()
-{
-    mCollisions.clear();
-}
-////////////////////////////////////////////////////////////////////////////////
 void PhysicsRigidBody::CleanRigidBody()
 {
     if( mRB )
     {
         //cleanup in the reverse order of creation/initialization
         btDynamicsWorld* dw = mPhysicsSimulator->GetDynamicsWorld();
+
         //remove the rigidbodies from the dynamics world and delete them
         dw->removeRigidBody( mRB );
-        
+
         {
             btCollisionShape* tempShape = mRB->getCollisionShape();
             delete tempShape;
             std::cout << "|\tDeleting collision shape. " << std::endl;
         }
-        
+
         {
             btMotionState* tempMS = mRB->getMotionState();
             delete tempMS;
             std::cout << "|\tDeleting motion state. " << std::endl;
         }
-        
-        std::cout << "|\tNumber of constraints " 
-            << mRB->getNumConstraintRefs() << std::endl;
-        
+
+        std::cout << "|\tNumber of constraints "
+                  << mRB->getNumConstraintRefs() << std::endl;
+
         delete mRB;
         mRB = 0;
     }
@@ -245,8 +195,8 @@ void PhysicsRigidBody::UserDefinedShape( btCollisionShape* collisionShape )
 {
     CleanRigidBody();
 
-    bool dynamic = ( mMass != 0.0f );
-    
+    bool dynamic = ( mMass != 0.0 );
+
     btVector3 localInertia( 0.0, 0.0, 0.0 );
     if( dynamic )
     {
@@ -260,9 +210,9 @@ void PhysicsRigidBody::UserDefinedShape( btCollisionShape* collisionShape )
             new osgbBullet::MotionState(),                   //motionState
             collisionShape,                                 //collisionShape
             localInertia ) );                               //localInertia
-                                                          
+
     mRB->setMassProps( mMass, localInertia );
-    
+
     RegisterRigidBody( mRB );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -277,7 +227,7 @@ void PhysicsRigidBody::RegisterRigidBody( btRigidBody* rigidBody )
 
     //Experimental: better estimation of CCD Time of Impact:
     //rigidBody->setCcdSweptSphereRadius( 0.2*bs.radius() );
-    
+
     //rigidBody->setActivationState( DISABLE_DEACTIVATION );
 
     mPhysicsSimulator->GetDynamicsWorld()->addRigidBody( rigidBody );
@@ -285,7 +235,7 @@ void PhysicsRigidBody::RegisterRigidBody( btRigidBody* rigidBody )
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsRigidBody::StaticConcaveShape()
 {
-    mMass = 0.0f;
+    mMass = 0.0;
     CustomShape( TRIANGLE_MESH_SHAPE_PROXYTYPE, false );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -310,7 +260,7 @@ void PhysicsRigidBody::CustomShape( const BroadphaseNativeTypes shapeType, const
             << std::endl;
         return;
     }
-    
+
     osg::ref_ptr< osgbBullet::CreationRecord > record;
     osg::Group* stopNode;
     osg::NodePath np;
@@ -331,9 +281,9 @@ void PhysicsRigidBody::CustomShape( const BroadphaseNativeTypes shapeType, const
         converter.setShapeType( shapeType );
         converter.setMass( mMass );
         converter.setOverall( overall );
-        if( (shapeType == CONVEX_TRIANGLEMESH_SHAPE_PROXYTYPE) || 
-            (shapeType == TRIANGLE_MESH_SHAPE_PROXYTYPE) ||
-            (shapeType == CONVEX_HULL_SHAPE_PROXYTYPE) )
+        if( shapeType == CONVEX_TRIANGLEMESH_SHAPE_PROXYTYPE ||
+            shapeType == TRIANGLE_MESH_SHAPE_PROXYTYPE ||
+            shapeType == CONVEX_HULL_SHAPE_PROXYTYPE )
         {
             //If decimation is exact we do nothing
             if( decimation == "High" )
@@ -358,9 +308,9 @@ void PhysicsRigidBody::CustomShape( const BroadphaseNativeTypes shapeType, const
         record = converter.getOrCreateCreationRecord();
         std::cout << "|\tJust finished creating a new btRigidBody." << std::endl;
     }
-    
+
     osg::Group* parent = stopNode->getParent( 0 );
-    osg::ref_ptr< osgwTools::AbsoluteModelTransform > amt = 
+    osg::ref_ptr< osgwTools::AbsoluteModelTransform > amt =
         dynamic_cast< osgwTools::AbsoluteModelTransform* >( parent );
     if( !amt.valid() )
     {
@@ -368,7 +318,7 @@ void PhysicsRigidBody::CustomShape( const BroadphaseNativeTypes shapeType, const
         amt->setName( "Physics AMT" );
         amt->setDataVariance( osg::Object::DYNAMIC );
         amt->addChild( mOSGToBullet.get() );
-        
+
         parent->addChild( amt.get() );
         parent->removeChild( mOSGToBullet.get() );
     }
@@ -377,7 +327,8 @@ void PhysicsRigidBody::CustomShape( const BroadphaseNativeTypes shapeType, const
     {
         amt->setName( "AMT_" + dcsName );
     }
-    osg::ref_ptr< osgbBullet::RefRigidBody > tempRB = new osgbBullet::RefRigidBody( mRB );
+    osg::ref_ptr< osgbBullet::RefRigidBody > tempRB =
+        new osgbBullet::RefRigidBody( mRB );
     amt->setUserData( tempRB.get() );
 
     mRB->setRestitution( mRestitution );
@@ -388,7 +339,7 @@ void PhysicsRigidBody::CustomShape( const BroadphaseNativeTypes shapeType, const
     //rbInfo.m_linearSleepingThreshold = btScalar(0.8);
     //rbInfo.m_angularSleepingThreshold = btScalar(1.f);
     mRB->setSleepingThresholds( 1.6, 2.0 );
-    
+
     osgbBullet::MotionState* motion = new osgbBullet::MotionState();
     //osgbBullet::MotionState* motion = dynamic_cast< osgbBullet::MotionState* >( mRB->getMotionState() );
     motion->setTransform( amt.get() );
@@ -412,7 +363,7 @@ void PhysicsRigidBody::CustomShape( const BroadphaseNativeTypes shapeType, const
     motion->setDebugTransform( dmt );
     _debugBullet.addDynamic( dmt );
     }*/
-    
+
     osg::Matrix m;
     if( np.size() > 0 )
     { 
@@ -430,18 +381,22 @@ void PhysicsRigidBody::CustomShape( const BroadphaseNativeTypes shapeType, const
     }
 
     mRB->setMotionState( motion );
-    //mRB->getCollisionShape()->setLocalScaling( 
-    //    btVector3( tempScale.x(), tempScale.y(), tempScale.z() ) );
+    //mRB->getCollisionShape()->setLocalScaling(
+        //btVector3( tempScale.x(), tempScale.y(), tempScale.z() ) );
     //std::cout << tempScale << std::endl;
-    /*std::cout << " center " << bs.center() << std::endl;
+    /*
+    std::cout << " center " << bs.center() << std::endl;
     std::cout << " center " << bs.radius() << std::endl;
-    std::cout << " matrix " << m << std::endl;*/
-    
-    /*if( mMass != 0 )
+    std::cout << " matrix " << m << std::endl;
+    */
+
+    /*
+    if( mMass != 0 )
     {
         setActivationState( DISABLE_DEACTIVATION );
-    }*/
-    
+    }
+    */
+
     {
         std::string pname = mOSGToBullet->getName() + "_cr.osg";
         osg::ref_ptr< osgbBullet::PhysicsData > pd = new osgbBullet::PhysicsData();
@@ -457,7 +412,11 @@ void PhysicsRigidBody::CustomShape( const BroadphaseNativeTypes shapeType, const
     RegisterRigidBody( mRB );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void PhysicsRigidBody::CreateRigidBody( const std::string& lod, const std::string& motion, const std::string& mesh, const std::string& decimation )
+void PhysicsRigidBody::CreateRigidBody(
+    const std::string& lod,
+    const std::string& motion,
+    const std::string& mesh,
+    const std::string& decimation )
 {
     std::cout << "|\tPhysics parameters : " 
         << lod << " " << motion << " " << mesh << " " << decimation << std::endl;
@@ -467,13 +426,13 @@ void PhysicsRigidBody::CreateRigidBody( const std::string& lod, const std::strin
     {
         overall = true;
     }
-    
+
     if( motion == "Static" )
     {
         mMass = 0.0f;
     }
     std::cout << "|\t\tMesh " << mesh << " Overall " << overall << std::endl;
-    
+
     if( mesh == "Box" )
     {
         CustomShape( BOX_SHAPE_PROXYTYPE, overall, decimation );
@@ -510,3 +469,4 @@ Material* PhysicsRigidBody::GetSoundMaterial()
 {
     return m_physicsMaterial;
 }
+////////////////////////////////////////////////////////////////////////////////

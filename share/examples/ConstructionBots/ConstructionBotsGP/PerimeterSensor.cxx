@@ -202,8 +202,7 @@ const bool PerimeterSensor::CollisionTest()
             mAgentEntity->GetTargetDCS()->GetName() );
     if( itr != mAgentEntity->mBlockEntityMap->end() )
     {
-        collision = mAgentEntity->GetPhysicsRigidBody()->CollisionInquiry(
-            itr->second->GetPhysicsRigidBody() );
+        //collision = mAgentEntity->GetPhysicsRigidBody()->CollisionInquiry( itr->second->GetPhysicsRigidBody() );
         if( collision )
         {
             mAgentEntity->mBuildMode = false;

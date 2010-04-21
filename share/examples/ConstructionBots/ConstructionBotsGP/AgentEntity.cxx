@@ -362,8 +362,7 @@ void AgentEntity::PickUpBlock()
     }
 
     targetEntity = itr->second;
-    bool collision = mPhysicsRigidBody->CollisionInquiry(
-        targetEntity->GetPhysicsRigidBody() );
+    bool collision( false );// = mPhysicsRigidBody->CollisionInquiry( targetEntity->GetPhysicsRigidBody() );
     if( collision )
     {
 #ifdef VE_SOUND

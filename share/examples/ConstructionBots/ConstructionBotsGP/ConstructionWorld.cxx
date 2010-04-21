@@ -201,7 +201,7 @@ void ConstructionWorld::InitializeFramework()
 #endif //VE_SOUND
 
     //Tell PhysicsSimulator to store collision information
-    mPhysicsSimulator->SetCollisionInformation( true );
+    //mPhysicsSimulator->SetCollisionInformation( true );
 
     //Initialize the occupancy matrix
     {
@@ -384,7 +384,7 @@ void ConstructionWorld::CreateAgentEntity()
     agentEntity->SetConstraints( mGridSize );
 
     //Store collisions for the agents
-    agentEntity->GetPhysicsRigidBody()->SetStoreCollisions( true );
+    //agentEntity->GetPhysicsRigidBody()->SetStoreCollisions( true );
 
     //Set the sensor range for the agents
     agentEntity->GetBlockSensor()->SetRange( mBlockSensorRange );
