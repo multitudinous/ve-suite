@@ -218,6 +218,8 @@ protected:
     float scale;///<store scale factor.
     ///Used to control wether GPU tools are used
     bool m_gpuTools;
+    ///Used to control wether SURF tools are used
+    unsigned int m_surfTools;
 private:
 };
 }

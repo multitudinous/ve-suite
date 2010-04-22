@@ -34,6 +34,8 @@
 #define CFD_STREAMERS_H
 
 #include <ves/xplorer/event/viz/cfdObjects.h>
+#include <ves/xplorer/Model.h>
+#include <ves/xplorer/ModelHandler.h>
 
 class vtkStreamTracer;
 class vtkTubeFilter;
@@ -91,6 +93,7 @@ public:
 private:
     ///Create seed points to be used by streamline algorithms
     void CreateSeedPoints();
+    void CreateArbSurface();
 
     vtkStreamTracer* streamTracer;
     vtkTubeFilter* tubeFilter;

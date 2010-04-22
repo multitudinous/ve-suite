@@ -34,6 +34,8 @@
 #define CFD_CONTOUR_BASE_H
 
 #include <ves/xplorer/event/viz/cfdObjects.h>
+#include <ves/xplorer/Model.h>
+#include <ves/xplorer/ModelHandler.h>
 
 class vtkPolyData;
 class vtkPolyDataMapper;
@@ -91,8 +93,13 @@ public:
     ///\param fillType
     void SetFillType( const int fillType );
 
+    void Selectscalarorvolflux( int );
+
     ///Create the Plane
     void CreatePlane();
+
+    ///Create the Arb surface
+    void CreateArbSurface();
 
 protected:
     vtkPolyDataMapper* mapper;///<mapper.
@@ -107,6 +114,7 @@ protected:
     
     cfdCuttingPlane* cuttingPlane;///<cutting plane
 
+    unsigned int m_selectvolfluxorscalr;
     int fillType;///<Representation of contour line.
     double warpedContourScale;///<Scale of warped contour
     double contourOpacity;///<Level of Opacity.

@@ -65,12 +65,14 @@ using namespace ves::conductor::util;
 BEGIN_EVENT_TABLE( Contours, wxDialog )
     ////@begin Contours event table entries
     EVT_RADIOBOX( CONTOURS_DIR_RBOX,            Contours::_onDirection )
+    EVT_RADIOBOX( CONTOURS_VECORSCALR_RBOX,     Contours::_selectVecorScalr )
     //EVT_RADIOBOX      (CONTOUR_TYPE_RBOX,           Contours::_onContourType)
     EVT_RADIOBUTTON( CONTOURS_MULTIPLE_PRECONTOUR_RBUTTON, Contours::_onMultiplePlanes )
     EVT_CHECKBOX( CONTOURS_MULTIPLE_PRECONTOUR_CHK,     Contours::_onCyclePlanes )
     EVT_RADIOBUTTON( CONTOURS_SINGLE_PRECONTOUR_RBUTTON,   Contours::_onSinglePlane )
     EVT_CHECKBOX( CONTOURS_SINGLE_PRECONTOUR_CHK,       Contours::_onPrecomputedPlane )
     EVT_CHECKBOX( CONTOURS_GPU_TOOLS_CHK, Contours::OnGPUCheckTools )
+	EVT_CHECKBOX( CONTOURS_SURF_TOOLS_CHK, Contours::OnSURFCheckTools )
     EVT_SLIDER( CONTOURS_PLANE_SLIDER,        Contours::_onPlane )
     EVT_BUTTON( CONTOURS_ADD_CONTOUR_PLANE_BUTTON,    Contours::_onAddPlane )
     EVT_BUTTON( CONTOURS_ADVANCED_CONTOUR_BUTTON,     Contours::_onAdvanced )
@@ -95,7 +97,9 @@ bool Contours::Create( wxWindow* parent, wxWindowID id, const wxString& caption,
                        long style )
 {
     _directionRBox = 0;
+	_selectvecorscalrRBox = 0;
     m_gpuToolsChkBox = 0;
+    m_surfToolsChkBox = 0;
     //_contourTypeRBox = 0;
     _allPrecomputedRButton = 0;
     _cyclePrecomputedCBox = 0;
@@ -106,6 +110,7 @@ bool Contours::Create( wxWindow* parent, wxWindowID id, const wxString& caption,
     itemButton17 = 0;
     m_positionSpinner = 0;
     _planeDirection = "x";
+    _displayvecorscalr = "scalarviz";
     _planeType = "Graduated";
     _numberOfPlanesOption = "Single";
     _planeOption = "";
@@ -168,6 +173,16 @@ void Contours::CreateControls()
         _directionRBox = new wxRadioBox( itemDialog1, CONTOURS_DIR_RBOX, 
             _T( "Direction" ), wxDefaultPosition, wxDefaultSize, 4, 
             itemRadioBox5Strings, 1, wxRA_SPECIFY_COLS );
+	    itemBoxSizer4->Add( _directionRBox, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
+		
+        wxString itemRadioBox2Strings[] = {
+            _T( "scalarviz" ),
+            _T( "volumefluxviz" ),
+        };
+        _selectvecorscalrRBox = new wxRadioBox( itemDialog1, CONTOURS_VECORSCALR_RBOX, 
+            _T( "select viz quantity" ), wxDefaultPosition, wxDefaultSize, 2, 
+            itemRadioBox2Strings, 1, wxRA_SPECIFY_COLS );
+ 	    itemBoxSizer4->Add( _selectvecorscalrRBox, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
     }
     else if( _dataType == "VECTOR" )
     {
@@ -181,8 +196,8 @@ void Contours::CreateControls()
         _directionRBox = new wxRadioBox( itemDialog1, CONTOURS_DIR_RBOX, 
             _T( "Direction" ), wxDefaultPosition, wxDefaultSize, 5, 
             itemRadioBox5Strings, 1, wxRA_SPECIFY_COLS );
+	    itemBoxSizer4->Add( _directionRBox, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
     }
-    itemBoxSizer4->Add( _directionRBox, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
     //////////////////////////
 
@@ -222,6 +237,13 @@ void Contours::CreateControls()
     //Setup GPU tools
     if( _dataType == "SCALAR" )
     {
+        wxStaticBox* surfToolsStaticSizer = new wxStaticBox( itemDialog1, wxID_ANY, _T( "SURF Tools" ) );
+        wxStaticBoxSizer* itemStaticBoxSizer10 = new wxStaticBoxSizer( surfToolsStaticSizer, wxVERTICAL );
+        itemBoxSizer4->Add( itemStaticBoxSizer10, 0, wxGROW | wxALL, 5 );
+        
+        m_surfToolsChkBox = new wxCheckBox( itemDialog1, CONTOURS_SURF_TOOLS_CHK, _T( "Use SURF Tools" ), wxDefaultPosition, wxDefaultSize, 0 );
+        m_surfToolsChkBox->SetValue( false );
+        itemStaticBoxSizer10->Add( m_surfToolsChkBox, 0, wxALIGN_LEFT | wxALL, 5 );
         ;//Nothing yet for scalars
     }
     else if( _dataType == "VECTOR" )
@@ -377,6 +399,11 @@ void Contours::_onDirection( wxCommandEvent& WXUNUSED( event ) )
     _planeDirection = ConvertUnicode( _directionRBox->GetStringSelection() );
 }
 ///////////////////////////////////////////////////////
+void Contours::_selectVecorScalr( wxCommandEvent& WXUNUSED( event ) )
+{
+    _displayvecorscalr = ConvertUnicode( _selectvecorscalrRBox->GetStringSelection() );
+}
+///////////////////////////////////////////////////////
 /*void Contours::_onContourType( wxCommandEvent& WXUNUSED(event) )
 {
    _planeType = _contourTypeRBox->GetStringSelection();
@@ -470,6 +497,14 @@ void Contours::_updateAdvancedSettings()
             warpOptionFlag->SetDataValue( static_cast<unsigned int>( 0 ) );
         }
         _advancedSettings.push_back( warpOptionFlag );
+
+    	{
+		    unsigned int checkBox2 = m_surfToolsChkBox->IsChecked();
+		    ves::open::xml::DataValuePairPtr surfToolsDVP( new ves::open::xml::DataValuePair() );
+		    surfToolsDVP->SetData( "SURF Tools", checkBox2 );
+		    _advancedSettings.push_back( surfToolsDVP );
+    	}
+
     }
     else if( _dataType == "VECTOR" )
     {
@@ -527,6 +562,13 @@ void Contours::_updateContourInformation()
     contourType->SetDataString(_planeType);
 
     _contourInformation.push_back(contourType);*/
+
+    ves::open::xml::DataValuePairPtr selectvecorscalrDisp( new ves::open::xml::DataValuePair() );
+    selectvecorscalrDisp->SetDataType( "STRING" );
+    selectvecorscalrDisp->SetDataName( std::string( "select viz quantity" ) );
+    selectvecorscalrDisp->SetDataString( _displayvecorscalr );
+
+    _contourInformation.push_back( selectvecorscalrDisp );
 
     ves::open::xml::DataValuePairPtr numberOfPlanes( new ves::open::xml::DataValuePair() );
     numberOfPlanes->SetDataType( "STRING" );
@@ -614,6 +656,11 @@ void Contours::UpdatePlaneSlider( wxCommandEvent& WXUNUSED( event ) )
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Contours::OnGPUCheckTools( wxCommandEvent& WXUNUSED( event ) )
+{
+    ;
+}
+////////////////////////////////////////////////////////////////////////////////
+void Contours::OnSURFCheckTools( wxCommandEvent& WXUNUSED( event ) )
 {
     ;
 }

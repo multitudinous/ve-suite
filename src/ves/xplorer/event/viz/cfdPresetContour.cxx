@@ -114,7 +114,16 @@ void cfdPresetContour::Update( void )
             this->cuttingPlane = NULL;
         }
 
-        CreatePlane();
+		/////////////////////
+    	if( m_surfTools != 1 )
+    	{
+    	    CreatePlane();
+    	}
+    	else
+    	{ 
+    	    CreateArbSurface();
+    	}
+        
     }
 
     vtkActor* temp = vtkActor::New();

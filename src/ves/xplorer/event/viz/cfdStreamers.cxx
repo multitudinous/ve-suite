@@ -607,7 +607,23 @@ void cfdStreamers::UpdateCommand()
         m_gpuTools = false;
     }    
 
-    CreateSeedPoints();
+    //Extract the surface flag
+    activeModelDVP = objectCommand->GetDataValuePair( "SURF Tools" );
+    unsigned int surfFlag;
+    if( activeModelDVP )
+	{
+    	activeModelDVP->GetData( surfFlag );
+	}
+	/////////////////////
+    if( surfFlag != 1 )
+    {
+        CreateSeedPoints();
+    }
+    else
+    { 
+        CreateArbSurface();
+    }
+
 }
 //////////////////////////////////////////////////////////////////////////////////
 void cfdStreamers::CreateSeedPoints()
@@ -665,5 +681,35 @@ void cfdStreamers::CreateSeedPoints()
     seedPoints = vtkPolyData::New();
     seedPoints->SetPoints( points );
     points->Delete();
+}
+//////////////////////////////////////////////////////////////////////////////////
+void cfdStreamers::CreateArbSurface()
+{   
+    Model* activeModel = ModelHandler::instance()->GetActiveModel();
+    unsigned int i = activeModel->GetNumberOfCfdDataSets();
+    vprDEBUG( vesDBG, 1 )
+        << "|\tstreamlines source GET_SURFACE_DATASET " << i
+        << std::endl << vprDEBUG_FLUSH;
+    vprDEBUG( vesDBG, 0 ) << "|\tStreamlines source::SetActiveDataSet dataset = "
+        << activeModel->GetCfdDataSet( i-1 )->GetFileName()
+        << ", dcs = " << activeModel->GetCfdDataSet( i-1 )->GetDCS()
+        << std::endl << vprDEBUG_FLUSH;
+
+    int cfdType = activeModel->GetCfdDataSet( i-1 )->GetType();
+    vprDEBUG( vesDBG, 1 ) << "|\tStreamlines source::SetActiveDataSet cfdType: " << cfdType
+        << std::endl << vprDEBUG_FLUSH;
+
+    DataSet* surfDataset = activeModel->GetCfdDataSet( i-1 );
+    vtkPolyData * pd = surfDataset->GetPolyData();
+   
+    points = pd->GetPoints();
+
+    if( seedPoints )
+    {
+        seedPoints->Delete();
+    }
+    seedPoints = vtkPolyData::New();
+    seedPoints->SetPoints( points );
+
 }
 //////////////////////////////////////////////////////////////////////////////////

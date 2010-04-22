@@ -71,6 +71,7 @@ BEGIN_EVENT_TABLE( Streamlines, wxDialog )
     EVT_BUTTON( STREAMLINES_SET_SEED_POINTS_BUTTON, Streamlines::SetSeedPoints )
     EVT_BUTTON( wxID_OK, Streamlines::OnClose )
     EVT_CHECKBOX( STREAMLINES_GPU_TOOLS_CHK, Streamlines::OnGPUCheckTools )
+	EVT_CHECKBOX( STREAMLINES_SURF_TOOLS_CHK, Streamlines::OnSURFCheckTools )
 END_EVENT_TABLE()
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -96,6 +97,7 @@ bool Streamlines::Create( wxWindow* parent,
 {
     _cursorRBox = 0;
     m_gpuToolsChkBox = 0;
+    m_surfToolsChkBox = 0;
     _directionRBox = 0;
     _integrationRBox = 0;
     _sizeSlider = 0;
@@ -215,9 +217,19 @@ void Streamlines::CreateControls()
         wxStaticBoxSizer* itemStaticBoxSizer10 = new wxStaticBoxSizer( gpuToolsStaticSizer, wxVERTICAL );
         itemBoxSizer4->Add( itemStaticBoxSizer10, 0, wxGROW | wxALL, 5 );
         
-        m_gpuToolsChkBox = new wxCheckBox( itemDialog1, CONTOURS_GPU_TOOLS_CHK, _T( "Use GPU Tools" ), wxDefaultPosition, wxDefaultSize, 0 );
+        m_gpuToolsChkBox = new wxCheckBox( itemDialog1, STREAMLINES_GPU_TOOLS_CHK, _T( "Use GPU Tools" ), wxDefaultPosition, wxDefaultSize, 0 );
         m_gpuToolsChkBox->SetValue( false );
         itemStaticBoxSizer10->Add( m_gpuToolsChkBox, 0, wxALIGN_LEFT | wxALL, 5 );
+    }
+
+    {
+        wxStaticBox* surfToolsStaticSizer = new wxStaticBox( itemDialog1, wxID_ANY, _T( "SURF Tools" ) );
+        wxStaticBoxSizer* itemStaticBoxSizer11 = new wxStaticBoxSizer( surfToolsStaticSizer, wxVERTICAL );
+        itemBoxSizer4->Add( itemStaticBoxSizer11, 0, wxGROW | wxALL, 5 );
+        
+        m_surfToolsChkBox = new wxCheckBox( itemDialog1, STREAMLINES_SURF_TOOLS_CHK, _T( "Use SURF Tools" ), wxDefaultPosition, wxDefaultSize, 0 );
+        m_surfToolsChkBox->SetValue( false );
+        itemStaticBoxSizer11->Add( m_surfToolsChkBox, 0, wxALIGN_LEFT | wxALL, 5 );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -306,6 +318,13 @@ void Streamlines::_updateAdvancedSettings()
         ves::open::xml::DataValuePairPtr gpuToolsDVP( new ves::open::xml::DataValuePair() );
         gpuToolsDVP->SetData( "GPU Tools", checkBox );
         _advancedSettings.push_back( gpuToolsDVP );
+    }
+
+    {
+	    unsigned int checkBox2 = m_surfToolsChkBox->IsChecked();
+	    ves::open::xml::DataValuePairPtr surfToolsDVP( new ves::open::xml::DataValuePair() );
+	    surfToolsDVP->SetData( "SURF Tools", checkBox2 );
+	    _advancedSettings.push_back( surfToolsDVP );
     }
 
 }
@@ -592,6 +611,11 @@ void Streamlines::SetActiveDataSetName( std::string name )
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Streamlines::OnGPUCheckTools( wxCommandEvent& WXUNUSED( event ) )
+{
+    ;
+}
+////////////////////////////////////////////////////////////////////////////////
+void Streamlines::OnSURFCheckTools( wxCommandEvent& WXUNUSED( event ) )
 {
     ;
 }

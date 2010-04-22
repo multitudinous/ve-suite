@@ -134,6 +134,8 @@ protected:
     /// wxEVT_COMMAND_RADIOBOX_SELECTED event handler for ID_RADIOBOX
     void _onDirection( wxCommandEvent& event );
 
+    void _selectVecorScalr( wxCommandEvent& event );
+
     /// wxEVT_COMMAND_RADIOBOX_SELECTED event handler for ID_RADIOBOX1
     void _onContourType( wxCommandEvent& event );
 
@@ -161,17 +163,21 @@ protected:
     void UpdatePlaneSlider( wxCommandEvent& event );
     ///Turn GPU tools off and on
     void OnGPUCheckTools( wxCommandEvent& event );
+    ///Turn SURF source off and on
+    void OnSURFCheckTools( wxCommandEvent& event );
     
     std::string _dataType;///<Scalar or vector data
     std::string _activeScalar;///Active scalar name
 
     wxRadioBox*    _directionRBox;
+    wxRadioBox*    _selectvecorscalrRBox;
     //wxRadioBox*    _contourTypeRBox;
     wxRadioButton* _allPrecomputedRButton;
     wxCheckBox*    _cyclePrecomputedCBox;
     wxRadioButton* _singlePlaneRButton;
     wxCheckBox*    _nearestPrecomputedCBox;
     wxCheckBox* m_gpuToolsChkBox;
+    wxCheckBox* m_surfToolsChkBox;
     wxSlider*      _planePositonSlider;
     wxButton*      itemButton16;
     wxButton*      itemButton17;
@@ -181,6 +187,7 @@ protected:
     std::vector<ves::open::xml::DataValuePairPtr> _contourInformation;///<The countour setting data
 
     std::string _planeDirection;///<Store the value of the direction.
+    std::string _displayvecorscalr;///<Single or Multiple planes.
     std::string _planeType;///<The contour type.
     std::string _numberOfPlanesOption;///<Single or Multiple planes.
     std::string _planeOption;///<Once single or multiple is selected, the plane option corresponds to the checkbox.

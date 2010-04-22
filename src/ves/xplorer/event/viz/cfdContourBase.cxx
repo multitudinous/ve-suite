@@ -57,6 +57,11 @@
 #include <vtkCutter.h>
 #include <vtkPlane.h>
 #include <vtkAlgorithmOutput.h>
+#include <vtkProbeFilter.h>
+#include <vtkCompositeDataProbeFilter.h>
+#include <vtkPointData.h>
+#include <vtkPoints.h>
+#include <vtkDoubleArray.h>
 
 #include <vtkCellDataToPointData.h>
 #include <vtkPCellDataToPointData.h>
@@ -65,6 +70,7 @@
 #include <vtkMultiBlockDataSet.h>
 
 #include <vtkPassThroughFilter.h>
+#include <vtkXMLPolyDataWriter.h>
 
 using namespace ves::xplorer;
 using namespace ves::xplorer::scenegraph;
@@ -223,7 +229,7 @@ void cfdContourBase::SetMapperInput( vtkAlgorithmOutput* polydata )
     }
     vtkAlgorithmOutput* tempPolydata = 0;
     tempPolydata = ApplyGeometryFilterNew( normals->GetOutputPort() );
-    
+
     mapper->SetInputConnection( tempPolydata );
     //mapper->SetScalarModeToDefault();
     //mapper->SetColorModeToDefault();
@@ -235,7 +241,8 @@ void cfdContourBase::SetMapperInput( vtkAlgorithmOutput* polydata )
         GetActiveScalarName().c_str() );
     mapper->SetLookupTable( GetActiveDataSet()->GetLookupTable() );
     mapper->Update();
-}
+
+}	
 ////////////////////////////////////////////////////////////////////////////////
 void cfdContourBase::UpdateCommand()
 {
@@ -245,6 +252,29 @@ void cfdContourBase::UpdateCommand()
     //Extract the specific commands from the overall command
     ves::open::xml::DataValuePairPtr activeModelDVP = veCommand->GetDataValuePair( "Sub-Dialog Settings" );
     ves::open::xml::CommandPtr objectCommand = boost::dynamic_pointer_cast<ves::open::xml::Command>(  activeModelDVP->GetDataXMLObject() );
+
+    //Extract the integration direction
+    activeModelDVP = objectCommand->GetDataValuePair( "select viz quantity" );
+    std::string intvecorscalr;
+    activeModelDVP->GetData( intvecorscalr );
+    
+    vprDEBUG( vesDBG, 0 ) << "|\tselect scalar or volume flux for contour display"
+        << std::endl << vprDEBUG_FLUSH;
+
+    if( !intvecorscalr.compare( "scalarviz" ) )
+    {
+        vprDEBUG( vesDBG, 0 ) << "|\t\tVISUALIZE SCALARS"
+            << std::endl << vprDEBUG_FLUSH;
+
+        Selectscalarorvolflux( 0 );
+    }
+    else if( !intvecorscalr.compare( "volumefluxviz" ) )
+    {
+        vprDEBUG( vesDBG, 0 ) << "|\t\tVISUALIZE VOLUME FLUX"
+            << std::endl << vprDEBUG_FLUSH;
+
+        Selectscalarorvolflux( 1 );
+    }
 
     //Extract the plane position
     activeModelDVP = objectCommand->GetDataValuePair( "Position" );
@@ -317,6 +347,21 @@ void cfdContourBase::UpdateCommand()
     {
         SetFillType( 2 );
     }
+
+	//Extract the surface flag
+    activeModelDVP = objectCommand->GetDataValuePair( "SURF Tools" );
+    if( activeModelDVP )
+	{
+    	unsigned int surfFlag;
+    	activeModelDVP->GetData( surfFlag );
+		m_surfTools = surfFlag;
+	}
+
+}
+//////////////////////////////////////////////////////////////////////////////////
+void cfdContourBase::Selectscalarorvolflux( int value )
+{
+    m_selectvolfluxorscalr = value;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdContourBase::SetFillType( const int type )
@@ -346,17 +391,314 @@ void cfdContourBase::CreatePlane( void )
     cuttingPlane->SetBounds(
         GetActiveDataSet()->GetBounds() );
     cuttingPlane->Advance( requestedValue );
-    
+    	
     vtkCutter* tempCutter = vtkCutter::New();
     tempCutter->SetCutFunction( cuttingPlane->GetPlane() );
     tempCutter->SetInput( GetActiveDataSet()->GetDataSet() );
     tempCutter->Update();
     
-    SetMapperInput( tempCutter->GetOutputPort(0) );
-    
-    delete cuttingPlane;
-    cuttingPlane = NULL;
+    SetMapperInput( tempCutter->GetOutputPort(0) );	
+	
+	// code commented here prints out the vtp file for GUI
+	// selected contour plane.
+/*	
+    vtkPolyData* originalContour = NULL; 
+	if ( !tempCutter->GetOutput() ) vprDEBUG( vesDBG, 0 )
+        << " tempCutter->GetOutput() is NULL " 
+        << std::endl << vprDEBUG_FLUSH;
+    originalContour = dynamic_cast< vtkPolyData* >( mapper->GetInput() );
+	vtkXMLPolyDataWriter* writer = vtkXMLPolyDataWriter::New();
+    writer->SetInput( originalContour );
+    writer->SetDataModeToAscii();
+    writer->SetFileName( "testsurf1.vtp" );
+    writer->Write();
+    writer->Delete();
+*/	
 
-    tempCutter->Delete();
+	// The code below computes volume flux on the specified contour plane
+	// and allows for display of vector direction (in or out) by using only
+	// two colors for mapping
+
+	if( m_selectvolfluxorscalr == 1 )
+    {
+
+		vtkPolyData * pd = dynamic_cast< vtkPolyData* >( mapper->GetInput() );
+
+	    vtkPolyDataNormals* normalGen = vtkPolyDataNormals::New();
+    	normalGen->SetInput( pd );
+    	normalGen->Update();
+
+		pd = normalGen->GetOutput();
+
+    	vtkDataArray *normalsArray = pd->GetPointData()->GetNormals();
+    	unsigned int n_points = pd->GetNumberOfPoints();
+
+    	vtkDoubleArray* vol_flux_array = vtkDoubleArray::New();
+    	vol_flux_array->SetNumberOfTuples(n_points);
+    	vol_flux_array->SetName("VolumeFlux");
+	
+    	pd->Update();
+	
+    	vtkPointData *pointData = pd->GetPointData();
+    	if (pointData==NULL)
+    	{
+    	    std::cout << " pd point data is null " << std::endl;
+    	}
+	
+    	vtkPoints *points = pd->GetPoints();    
+    	if (points==NULL)
+    	{
+    	    std::cout << " points are null " << std::endl;
+    	}
+	
+    	vtkDataArray *vectorArray = pointData->GetVectors( GetActiveDataSet()->GetActiveVectorName().c_str() );
+	
+    	if (vectorArray==NULL)
+    	{
+    	    std::cout << " vectors are null " << std::endl;
+    	}
+	
+    	if (normalsArray==NULL)
+    	{
+    	    std::cout << " normals are null " << std::endl;
+    	}
+	
+		double normalVec[3], vectorVec[3], volume_flux;
+	
+		for(unsigned int i = 0; i < n_points; i++)
+    	{
+    	    vectorArray->GetTuple(i, vectorVec);
+    	    normalsArray->GetTuple(i, normalVec);
+    	    volume_flux = vectorVec[0]*normalVec[0]+vectorVec[1]*normalVec[1]+vectorVec[2]*normalVec[2];
+    	    vol_flux_array->SetTuple1(i, volume_flux);
+    	}
+    	
+    	pd->GetPointData()->SetScalars(vol_flux_array);
+
+    	normalGen->Update();
+	
+		pd = normalGen->GetOutput();
+
+	    vtkPointData * poind = pd->GetPointData();
+		unsigned int numberofarrays = poind->GetNumberOfArrays();	
+
+		// commented out the 'print out' of array info in the vtp file
+		//    	std::cout
+		//    	    << "|\tNum Arrays: " << numberofarrays
+		//    	    << std::endl;
+		//	
+		//		std::vector<std::string> arrayNames1;
+		//		for(unsigned int ii = 0; ii < numberofarrays; ii++)
+		//		{
+		//			arrayNames1.push_back(poind->GetArray(ii)->GetName());
+		//			int dataTypeID1 = poind->GetArray(ii)->GetDataType();
+		//			std::cout << "|\tArray" << ii << ": " << arrayNames1[ii] 
+		//					  << " (type: " << dataTypeID1 << ")" << std::endl;
+		//		}
+			
+    	mapper->SetInput( pd );
+	
+    	double range[ 2 ];
+    	pd->GetPointData()->GetScalars( "VolumeFlux" )->GetRange( range );
+	
+    	vtkLookupTable* lut2;
+    	lut2 = vtkLookupTable::New();
+    	lut2->SetNumberOfColors( 2 );            //default is 256
+    	lut2->SetHueRange( 2.0f / 3.0f, 0.0f );    //a blue-to-red scale
+    	lut2->SetTableRange( range );
+    	lut2->Build();
+	
+    	mapper->SetColorModeToMapScalars();
+    	mapper->SetScalarRange( range );
+    	mapper->SetLookupTable( lut2 );
+    	mapper->SetScalarModeToUsePointFieldData();
+    	mapper->UseLookupTableScalarRangeOn();
+    	mapper->SelectColorArray( "VolumeFlux" );
+		mapper->Update();
+    	normalGen->Delete();
+    	lut2->Delete();
+	
+    }
+
+	delete cuttingPlane;
+	cuttingPlane = NULL;
+	
+	tempCutter->Delete();	
+
 }
 ////////////////////////////////////////////////////////////////////////////////
+void cfdContourBase::CreateArbSurface()
+{   
+    //Need to set the active datasetname and get the position of the dataset
+    Model* activeModel = ModelHandler::instance()->GetActiveModel();
+    unsigned int i = activeModel->GetNumberOfCfdDataSets();
+    vprDEBUG( vesDBG, 1 )
+        << "|\tContour source GET_SURFACE_DATASET " << i
+        << std::endl << vprDEBUG_FLUSH;
+    vprDEBUG( vesDBG, 0 ) << "|\tContour source::SetActiveDataSet dataset = "
+        << activeModel->GetCfdDataSet( i-1 )->GetFileName()
+        << ", dcs = " << activeModel->GetCfdDataSet( i-1 )->GetDCS()
+        << std::endl << vprDEBUG_FLUSH;
+
+    int cfdType = activeModel->GetCfdDataSet( i-1 )->GetType();
+    vprDEBUG( vesDBG, 1 ) << "|\tContour source::SetActiveDataSet cfdType: " << cfdType
+        << std::endl << vprDEBUG_FLUSH;
+
+    // set the dataset as the appropriate dastaset type
+    // (and the active dataset as well)
+    DataSet* surfDataset = activeModel->GetCfdDataSet( i-1 );
+    vtkPolyData * pd = surfDataset->GetPolyData();
+
+    vtkPointData * poind = pd->GetPointData();
+	unsigned int numberofarrays = poind->GetNumberOfArrays();
+
+	// commented out the 'print out' of array info in the vtp file
+	//    std::cout
+	//        << "|\tNum Arrays: " << numberofarrays
+	//        << std::endl << vprDEBUG_FLUSH;
+
+	//	std::cout << "|\tkey: \n";
+	//	std::cout << VTK_UNSIGNED_CHAR << " unsigned char\n";
+	//	std::cout << VTK_UNSIGNED_INT << " unsigned int\n";
+	//	std::cout << VTK_FLOAT << " float\n";
+	//	std::cout << VTK_DOUBLE << " double\n";
+
+	//	std::vector<std::string> arrayNames;
+	//	for(unsigned int i = 0; i < numberofarrays; i++)
+	//	{
+	//		arrayNames.push_back(poind->GetArray(i)->GetName());
+	//		int dataTypeID = poind->GetArray(i)->GetDataType();
+	//		std::cout << "|\tArray" << i << ": " << arrayNames[i] 
+	//				  << " (type: " << dataTypeID << ")" << std::endl;
+	//	}
+
+	vtkProbeFilter *surfProbe= vtkCompositeDataProbeFilter::New();
+    surfProbe->SetInput( pd );
+    surfProbe->SetSource(GetActiveDataSet()->GetDataSet());
+  
+    surfProbe->Update(); 
+  
+    assert(surfProbe->GetPolyDataOutput()!=0);
+
+ 	pd = surfProbe->GetPolyDataOutput();
+
+    if( m_selectvolfluxorscalr != 1 )
+    {
+    	normals->SetInput( pd );
+    	normals->NonManifoldTraversalOn();
+    	normals->AutoOrientNormalsOn();
+    	normals->ConsistencyOn();
+    	normals->SplittingOn();
+    	normals->Update();
+	
+    	mapper->SetColorModeToMapScalars();
+    	mapper->SetInput( normals->GetOutput() );
+	
+   		mapper->SetScalarModeToUsePointFieldData();
+    	mapper->UseLookupTableScalarRangeOn();
+    	mapper->SelectColorArray( GetActiveDataSet()->
+    	    	GetActiveScalarName().c_str() );
+    	mapper->SetLookupTable( GetActiveDataSet()->GetLookupTable() );
+		mapper->Update();
+	}
+    else
+    { 
+
+	// The code below computes volume flux on the specified contour plane
+
+	    normals->SetInput( pd );
+	    normals->Update();
+	
+		pd = normals->GetOutput();
+
+    	vtkDataArray *normalsArray = pd->GetPointData()->GetNormals();
+    	unsigned int n_points = pd->GetNumberOfPoints();
+	
+    	vtkDoubleArray* vol_flux_array = vtkDoubleArray::New();
+    	vol_flux_array->SetNumberOfTuples(n_points);
+    	vol_flux_array->SetName("VolumeFlux");
+	
+    	pd->Update();
+	
+    	vtkPointData *pointData = pd->GetPointData();
+    	if (pointData==NULL)
+    	{
+    	    std::cout << " pd point data is null " << std::endl;
+    	}
+	
+    	vtkPoints *points = pd->GetPoints();    
+    	if (points==NULL)
+    	{
+    	    std::cout << " points are null " << std::endl;
+    	}
+	
+    	vtkDataArray *vectorArray = pointData->GetVectors( GetActiveDataSet()->GetActiveVectorName().c_str() );
+	
+    	if (vectorArray==NULL)
+    	{
+    	    std::cout << " vectors are null " << std::endl;
+    	}
+	
+    	if (normalsArray==NULL)
+    	{
+    	    std::cout << " normals are null " << std::endl;
+    	}
+	
+		double normalVec[3], vectorVec[3], volume_flux;
+	
+		for(i = 0; i < n_points; i++)
+    	{
+    	    vectorArray->GetTuple(i, vectorVec);
+    	    normalsArray->GetTuple(i, normalVec);
+    	    volume_flux = vectorVec[0]*normalVec[0]+vectorVec[1]*normalVec[1]+vectorVec[2]*normalVec[2];
+    	    vol_flux_array->SetTuple1(i, volume_flux);
+    	}
+    	
+    	pd->GetPointData()->SetScalars(vol_flux_array);
+
+    	normals->Update();
+		pd = normals->GetOutput();
+	
+    	poind = pd->GetPointData();
+		numberofarrays = poind->GetNumberOfArrays();
+
+		// commented out the 'print out' of array info in the vtp file
+		//    	std::cout
+		//    	    << "|\tNum Arrays: " << numberofarrays
+		//    	    << std::endl;
+		//	
+		//		std::vector<std::string> arrayNames1;
+		//		for(unsigned int ii = 0; ii < numberofarrays; ii++)
+		//		{
+		//			arrayNames1.push_back(poind->GetArray(ii)->GetName());
+		//			int dataTypeID1 = poind->GetArray(ii)->GetDataType();
+		//			std::cout << "|\tArray" << ii << ": " << arrayNames1[ii] 
+		//					  << " (type: " << dataTypeID1 << ")" << std::endl;
+		//		}
+			
+	
+    	mapper->SetInput( pd );
+	
+    	double range[ 2 ];
+    	pd->GetPointData()->GetScalars( "VolumeFlux" )->GetRange( range );
+	
+    	vtkLookupTable* lut1;
+    	lut1 = vtkLookupTable::New();
+    	lut1->SetNumberOfColors( 256 );            //default is 256
+    	lut1->SetHueRange( 2.0f / 3.0f, 0.0f );    //a blue-to-red scale
+    	lut1->SetTableRange( range );
+    	lut1->Build();
+	
+    	mapper->SetColorModeToMapScalars();
+    	mapper->SetScalarRange( range );
+    	mapper->SetLookupTable( lut1 );
+    	mapper->SetScalarModeToUsePointFieldData();
+    	mapper->UseLookupTableScalarRangeOn();
+    	mapper->SelectColorArray( "VolumeFlux" );
+		mapper->Update();
+    	lut1->Delete();
+	
+	}
+
+}
+//////////////////////////////////////////////////////////////////////////////////
