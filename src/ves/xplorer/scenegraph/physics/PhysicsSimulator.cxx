@@ -80,7 +80,6 @@ using namespace ves::xplorer::scenegraph;
 #include <ves/xplorer/scenegraph/physics/sound/SoundUtilities.h>
 #include <ves/xplorer/scenegraph/physics/sound/SoundTable.h>
 #include <ves/xplorer/scenegraph/physics/sound/Material.h>
-void triggerSounds( const btDynamicsWorld* world, btScalar timeStep );
 #endif
 
 #define MULTITHREADED_OSGBULLET 0
@@ -386,10 +385,10 @@ void PhysicsSimulator::InitializePhysicsSimulation()
     //mDynamicsWorld->getDispatchInfo().m_enableSPU = true;
     mDynamicsWorld->setGravity( btVector3( 0, 0, -32.174 ) );
 
-#ifdef VE_SOUND
-    mDynamicsWorld->setInternalTickCallback(
-        (btInternalTickCallback) triggerSounds );
-#endif
+//#ifdef VE_SOUND
+//    mDynamicsWorld->setInternalTickCallback(
+//        (btInternalTickCallback) triggerSounds );
+//#endif
     m_debugDrawerGroup = new osg::Group();
     m_debugDrawerGroup->setName( "osgBullet::DebugDrawer Root" );
     SceneManager::instance()->GetRootNode()->addChild(
@@ -444,6 +443,8 @@ void PhysicsSimulator::UpdatePhysics( float dt )
         m_motionStateList, &m_tripleDataBuffer );
 #endif
 
+    triggerSounds( mDynamicsWorld );
+
 #ifndef BT_NO_PROFILE
     CProfileManager::dumpAll();
 #endif
@@ -491,6 +492,7 @@ void PhysicsSimulator::StepSimulation()
     {
         //no need to pause simulation since the simulation is alreayd paused
         mDynamicsWorld->stepSimulation( 1.0f / 60.0f, 0 );
+        triggerSounds( mDynamicsWorld );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -757,7 +759,7 @@ typedef std::set< btCollisionObject* > BulletObjList;
 BulletObjList g_movingList;
 */
 #ifdef VE_SOUND
-void triggerSounds( const btDynamicsWorld* world, btScalar timeStep )
+void PhysicsSimulator::triggerSounds( const btDynamicsWorld* world, btScalar timeStep )
 {
     // Loop over all collision ovjects and find the ones that are
     // moving. Need this for door creak.

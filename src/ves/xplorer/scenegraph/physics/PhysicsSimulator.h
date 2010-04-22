@@ -227,6 +227,9 @@ private:
 
     ///Physics thread for running solver
     osgbBullet::PhysicsThread* m_physicsThread;
+#ifdef VE_SOUND
+    void triggerSounds( const btDynamicsWorld* world, btScalar timeStep = 0 );
+#endif
 };
 
 } //end scenegraph
