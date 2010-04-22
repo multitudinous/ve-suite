@@ -115,6 +115,7 @@
 #include <osg/Geometry>
 #include <osg/LineWidth>
 #include <osg/AutoTransform>
+#include <osg/io_utils>
 
 // --- osgBullet Includes --- //
 #include <osgwTools/AbsoluteModelTransform.h>
@@ -207,7 +208,7 @@ void KeyboardMouse::SetStartEndPoint(
 {
     osg::Matrixd inverseVPW = m_currentGLTransformInfo->GetVPWMatrixOSG();
     inverseVPW.invert( inverseVPW );
-
+    //std::cout << m_currX << " " << m_currY << std::endl;
     startPoint = osg::Vec3d( m_currX, m_currY, 0.0 ) * inverseVPW;
     endPoint = osg::Vec3d( m_currX, m_currY, 1.0 ) * inverseVPW;
 
@@ -367,7 +368,7 @@ void KeyboardMouse::ProcessEvents( ves::open::xml::CommandPtr command )
             }
 
             OnMousePress();
-
+            //inputArea.lockMouse();
             break;
         }
         case gadget::MouseButtonReleaseEvent:
@@ -391,7 +392,7 @@ void KeyboardMouse::ProcessEvents( ves::open::xml::CommandPtr command )
             }
 
             OnMouseRelease();
-
+            //inputArea.unlockMouse();
             break;
         }
         case gadget::MouseMoveEvent:
@@ -1394,6 +1395,7 @@ void KeyboardMouse::Rotate( double angle, gmtl::Vec3d axis )
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::UpdateSelectionLine()
 {
+    //std::cout << "update selection line " << std::endl;
     osg::Vec3d startPoint, endPoint;
     SetStartEndPoint( startPoint, endPoint );
     mLineSegmentIntersector->reset();
