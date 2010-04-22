@@ -34,7 +34,6 @@
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
 #include <ves/xplorer/scenegraph/physics/DiscreteDynamicsWorld.h>
-#include <ves/xplorer/scenegraph/physics/vesMotionState.h>
 #include <ves/xplorer/scenegraph/physics/PhysicsRigidBody.h>
 #include <ves/xplorer/scenegraph/physics/character/CharacterController.h>
 
@@ -75,12 +74,6 @@ const int maxProxies = 32766;
 //#define REGISTER_CUSTOM_COLLISION_ALGORITHM 1
 
 using namespace ves::xplorer::scenegraph;
-
-#ifdef VE_SOUND
-#include <ves/xplorer/scenegraph/physics/sound/SoundUtilities.h>
-#include <ves/xplorer/scenegraph/physics/sound/SoundTable.h>
-#include <ves/xplorer/scenegraph/physics/sound/Material.h>
-#endif
 
 #define MULTITHREADED_OSGBULLET 0
 //vprSingletonImp( PhysicsSimulator );
@@ -373,7 +366,7 @@ void PhysicsSimulator::InitializePhysicsSimulation()
     mSolver->setRandSeed( 20090108 );
 #endif
 
-    mDynamicsWorld = new btDiscreteDynamicsWorld(
+    mDynamicsWorld = new DiscreteDynamicsWorld(
         mDispatcher, mBroadphase, mSolver, mCollisionConfiguration );
     //mDynamicsWorld->getDispatchInfo().m_useConvexConservativeDistanceUtil = true;
     //mDynamicsWorld->getDispatchInfo().m_convexConservativeDistanceThreshold = 0.0001f;
@@ -385,10 +378,6 @@ void PhysicsSimulator::InitializePhysicsSimulation()
     //mDynamicsWorld->getDispatchInfo().m_enableSPU = true;
     mDynamicsWorld->setGravity( btVector3( 0, 0, -32.174 ) );
 
-//#ifdef VE_SOUND
-//    mDynamicsWorld->setInternalTickCallback(
-//        (btInternalTickCallback) triggerSounds );
-//#endif
     m_debugDrawerGroup = new osg::Group();
     m_debugDrawerGroup->setName( "osgBullet::DebugDrawer Root" );
     SceneManager::instance()->GetRootNode()->addChild(
@@ -443,8 +432,6 @@ void PhysicsSimulator::UpdatePhysics( float dt )
         m_motionStateList, &m_tripleDataBuffer );
 #endif
 
-    triggerSounds( mDynamicsWorld );
-
 #ifndef BT_NO_PROFILE
     CProfileManager::dumpAll();
 #endif
@@ -492,7 +479,6 @@ void PhysicsSimulator::StepSimulation()
     {
         //no need to pause simulation since the simulation is alreayd paused
         mDynamicsWorld->stepSimulation( 1.0f / 60.0f, 0 );
-        triggerSounds( mDynamicsWorld );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -744,152 +730,3 @@ void PhysicsSimulator::UnregisterMotionState(
     SetIdle( currentIdle );
 }
 ////////////////////////////////////////////////////////////////////////////////
-// Collision flags, mainly so that the door doesn't collide with the doorframe.
-/*enum CollisionTypes {
-    COL_DOOR = 0x1 << 0,
-    COL_DOORFRAME = 0x1 << 1,
-    COL_DEFAULT = 0x1 << 2,
-};
-unsigned int doorCollidesWith( COL_DEFAULT );
-unsigned int doorFrameCollidesWith( COL_DEFAULT );
-unsigned int defaultCollidesWith( COL_DOOR | COL_DOORFRAME | COL_DEFAULT );
-
-
-typedef std::set< btCollisionObject* > BulletObjList;
-BulletObjList g_movingList;
-*/
-#ifdef VE_SOUND
-void PhysicsSimulator::triggerSounds( const btDynamicsWorld* world, btScalar timeStep )
-{
-    // Loop over all collision ovjects and find the ones that are
-    // moving. Need this for door creak.
-    /*
-    const btCollisionObjectArray& colObjs( world->getCollisionObjectArray() );
-    int idx( world->getNumCollisionObjects() );
-    while( idx-- )
-    {
-        btCollisionObject* co( colObjs[ idx ] );
-        btVector3 v( co->getInterpolationLinearVelocity() );
-        v[0] = osg::absolute< float >( v[0] );
-        v[1] = osg::absolute< float >( v[1] );
-        v[2] = osg::absolute< float >( v[2] );
-        
-        BulletObjList::const_iterator it( g_movingList.find( co ) );
-        if( ( v[0] > .9f ) || ( v[1] > .9f ) || ( v[2] > .9f ) )
-        {
-            // It's moving.
-            if( it == g_movingList.end() )
-            {
-                g_movingList.insert( co );
-                // We didn't already play a sound, so play one now.
-                Material* mc = ( Material* )( co->getUserPointer() );
-                if( mc != NULL )
-                    SoundUtilities::instance()->move( mc->_mat,
-                                                     osgbBullet::asOsgVec3( co->getWorldTransform().getOrigin() ) );
-            }
-        }
-        else
-        {
-            // it's not moving
-            if( it != g_movingList.end() )
-                g_movingList.erase( it );
-        }
-    }
-    */
-
-    // Loop over all collision points and find impacts.
-    const btCollisionDispatcher* dispatch( static_cast< const btCollisionDispatcher* >( world->getDispatcher() ) );
-    const int numManifolds( dispatch->getNumManifolds() );
-    //std::cout << "num manifolds " << numManifolds << std::endl;
-    bool collide( false ), slide( false );
-    osg::Vec3 location;
-
-    for( int idx=0; idx < numManifolds; idx++ )
-    {
-        const btPersistentManifold* contactManifold( dispatch->getManifoldByIndexInternal( idx ) );
-        const btCollisionObject* obA( static_cast< const btCollisionObject* >( contactManifold->getBody0() ) );
-        const btCollisionObject* obB( static_cast< const btCollisionObject* >( contactManifold->getBody1() ) );
-
-        //Character controller is not a PhysicsRigidBody,
-        //so does not have function GetSoundMaterial()
-        //Need a better solution for this scenario in the future
-        if( obA->getCollisionFlags() & btCollisionObject::CF_CHARACTER_OBJECT ||
-            obB->getCollisionFlags() & btCollisionObject::CF_CHARACTER_OBJECT )
-        {
-            continue;
-        }
-
-        const int numContacts( contactManifold->getNumContacts() );
-        int jdx;
-        //std::cout << "num contacts " << numContacts << std::endl;
-        for( jdx=0; jdx < numContacts; jdx++ )
-        {            
-            const btManifoldPoint& pt( contactManifold->getContactPoint( jdx) );
-            location = osgbBullet::asOsgVec3( pt.getPositionWorldOnA() );
-            //std::cout << " life " << pt.m_lifeTime << std::endl;
-            //std::cout << " impulse " << pt.m_appliedImpulse << std::endl;
-
-            if( pt.m_lifeTime < 3 )
-            {
-                /*btRigidBody* rbA = btRigidBody::upcast(obA);
-                btRigidBody* rbB = btRigidBody::upcast(obB);
-                if( rbA && rbA )
-                {
-                    const btVector3 &v1 = rbA->getLinearVelocity();
-                    const btVector3 &a1 = rbA->getAngularVelocity();
-                    float vel1 = v1.x() * v1.x() + v1.y() * v1.y() + v1.z() * v1.z();
-                    float ang1 = a1.x() * a1.x() + a1.y() * a1.y() + a1.z() * a1.z();
-                    if( (vel1 + ang1) > 2. )
-                    {
-                        collide = true;
-                    }
-                }
-                //Need to tie this impulse to gain 
-                else */if( pt.m_appliedImpulse > 2. ) // Kind of a hack.
-                {    
-                    collide = true;
-                }
-            }
-            else
-            {
-                osg::Vec3 vA( osgbBullet::asOsgVec3( obA->getInterpolationLinearVelocity() ) );
-                osg::Vec3 vB( osgbBullet::asOsgVec3( obB->getInterpolationLinearVelocity() ) );
-                if( (vA-vB).length2() > .1 )
-                    slide = true;
-            }
-
-            if( collide || slide )
-            {
-                void* tempUserDataA = obA->getUserPointer();
-                void* tempUserDataB = obB->getUserPointer();
-                if( !tempUserDataB || !tempUserDataA )
-                {
-                    continue;
-                }
-
-                PhysicsRigidBody* objA =
-                static_cast< PhysicsRigidBody* >( tempUserDataA );
-                PhysicsRigidBody* objB =
-                static_cast< PhysicsRigidBody* >( tempUserDataB );
-
-                Material* mcA = objA->GetSoundMaterial();
-                Material* mcB = objB->GetSoundMaterial();
-                //std::cout << "get material sounds " << std::endl;
-
-                if( ( mcA != NULL ) && ( mcB != NULL ) )
-                {
-                    if( collide )
-                    {
-                        SoundUtilities::instance()->collide( mcA->_mat, mcB->_mat, location, pt.m_appliedImpulse );
-                    }
-                    else
-                        SoundUtilities::instance()->slide( mcA->_mat, mcB->_mat, location );
-                }
-            }
-            collide = false;
-            slide = false;
-        }
-    }
-}
-////////////////////////////////////////////////////////////////////////////////
-#endif

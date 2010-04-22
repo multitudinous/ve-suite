@@ -71,6 +71,12 @@ public:
     ///Destructor
     virtual ~DiscreteDynamicsWorld();
 
+    ///If maxSubSteps > 0, it will interpolate motion between fixedTimeStep's
+    virtual int stepSimulation(
+        btScalar timeStep,
+        int maxSubSteps = 1,
+        btScalar fixedTimeStep = btScalar( 1.0 ) / btScalar( 60.0 ) );
+
 protected:
     ///
     virtual void internalSingleStepSimulation( btScalar timeStep );

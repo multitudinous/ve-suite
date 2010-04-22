@@ -31,8 +31,8 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
-#ifndef VES_XPLORER_SCENEGRAPH_PHYSICS_SIMULATOR_H
-#define VES_XPLORER_SCENEGRAPH_PHYSICS_SIMULATOR_H
+#ifndef VES_XPLORER_SCENEGRAPH_PHYSICSSIMULATOR_H
+#define VES_XPLORER_SCENEGRAPH_PHYSICSSIMULATOR_H
 
 // --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
@@ -85,16 +85,15 @@ namespace scenegraph
 {
 class CADEntity;
 
-/*!\class ves::xplorer::scenegraph::PhysicsSimulator PhysicsSimulator.h ves/xplorer/scenegraph/physics/PhysicsSimulator.h
- * Runs the bullet simulator
- * \namespace ves::xplorer::scenegraph
- * The sg
- * \namespace ves::xplorer
- * The sg
- * \file PhysicsSimulator.h
- * Runs the bullet simulator 
+/*!\file PhysicsSimulator.h
+ *
  */
-
+/*!\class ves::xplorer::scenegraph::PhysicsSimulator
+ *
+ */
+/*!\namespace ves::xplorer::scenegraph
+ *
+ */
 class VE_SCENEGRAPH_EXPORTS PhysicsSimulator
 {
 public:
@@ -227,13 +226,10 @@ private:
 
     ///Physics thread for running solver
     osgbBullet::PhysicsThread* m_physicsThread;
-#ifdef VE_SOUND
-    void triggerSounds( const btDynamicsWorld* world, btScalar timeStep = 0 );
-#endif
-};
 
+};
 } //end scenegraph
 } //end xplorer
 } //end ves
 
-#endif //VES_XPLORER_SCENEGRAPH_PHYSICS_SIMULATOR_H
+#endif //VES_XPLORER_SCENEGRAPH_PHYSICSSIMULATOR_H
