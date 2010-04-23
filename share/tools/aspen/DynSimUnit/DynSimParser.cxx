@@ -1276,7 +1276,7 @@ std::string DynSimParser::GetAllOPCVariables( const std::string& modname )
 
     //append the flowsheet name
     ves::open::xml::CommandPtr varsAndValues( new ves::open::xml::Command() );
-    varsAndValues->SetCommandName("OPCData");
+    varsAndValues->SetCommandName("AllOPCData");
     //compose return packet
     //loop over the variables and add as dvps
     for( int i = 0; i < varsAndVals.size(); i++ )
@@ -1555,4 +1555,10 @@ void DynSimParser::SetOPCValues( std::vector< std::pair < std::string, std::stri
         values->GetSafeArrayPtr(), errors->GetSafeArrayPtr() );
 
     groups->Remove( _T( "SetGroup" ) );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+bool DynSimParser::IsOPCVarsEmpty()
+{
+    return m_opcVariables.empty();
 }

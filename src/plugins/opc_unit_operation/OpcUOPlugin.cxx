@@ -243,7 +243,7 @@ void OpcUOPlugin::ReadValue( )
     if( m_canvas->GetActiveNetworkID() == m_network->GetNetworkID() )
     {        
         const CommandPtr opcData =
-            DynamicsDataBuffer::instance()->GetCommand( "OPC_Data" );
+            DynamicsDataBuffer::instance()->GetCommand( "OPCData" );
         if( opcData->GetCommandName() == "NULL" )
         {
             return;

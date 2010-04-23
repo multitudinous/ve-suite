@@ -5,6 +5,7 @@
 #include "AspenUnit_i.h"
 #include "DynSimUnit.h"
 #include "DynSimUnitDlg.h"
+#include <vpr/Thread/Thread.h>
 
 class CorbaUnitManager
 {
@@ -13,15 +14,16 @@ public:
    ~CorbaUnitManager();
    void SetComputerNameUnitNameAndPort( CString dir, CString name, CString port, CString uname );
    void SetRunORBFlag( bool run );
-   void RunORB( void );
-   void DestroyORB( void );
-   AspenUnit_i* GetUnitObject( void );
-   void CheckCORBAWork( void );
+   void RunORB();
+   void DestroyORB(  );
+   AspenUnit_i* GetUnitObject(  );
+   void CheckCORBAWorkThread(  );
+   void CheckCORBAWork(  );
    //BKPParser * CreateParser( void );
 
    bool unit_i_instantiated;
    bool CleanUp( );
-   Body::Executive_ptr GetExecutive( void );
+   Body::Executive_ptr GetExecutive(  );
 
 private:
    CString workingDir;
@@ -33,5 +35,6 @@ private:
    PortableServer::POA_var poa;
    CDynSimUnitDlg * parent;
    Body::Executive_var exec;
+    vpr::Thread* m_thread;
 };
 #endif

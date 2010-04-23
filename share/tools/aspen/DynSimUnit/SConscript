@@ -2,7 +2,7 @@
 import os, sys, string
 pj = os.path.join
 
-Import('baseEnv ves_pkg LIBDIR xerces_options tao_options RootDir buildDir GetPlatform')
+Import('baseEnv ves_pkg LIBDIR xerces_options tao_options RootDir vpr_options buildDir GetPlatform')
 
 srcs = Split("""
    AspenUnit_i.cxx
@@ -71,6 +71,7 @@ for res in ves_res:
   
 xerces_options.apply( env )
 tao_options.apply( env )
+vpr_options.apply( env )
 
 prog = ves_pkg.createProgram('ves_dynsim' + env["PROGSUFFIX"], env, 'bin')
 prog.addSources( srcs )

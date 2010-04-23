@@ -13,6 +13,10 @@
 #include <fstream>
 #include <iostream>
 
+#include <vpr/vpr.h>
+#include <vpr/System.h>
+#include <boost/bind.hpp>
+
 XERCES_CPP_NAMESPACE_USE
 
 
@@ -41,6 +45,12 @@ void CorbaUnitManager::SetRunORBFlag( bool run )
 {
    //runORB = run;
 }
+///////////////////////////////////////////////////////////////////////////////
+void CorbaUnitManager::CheckCORBAWorkThread( )
+{
+    m_thread = new vpr::Thread( boost::bind( &CorbaUnitManager::CheckCORBAWork,
+            this ) );
+}
 /////////////////////////////////////////////////////////////////
 void CorbaUnitManager::RunORB()
 {
@@ -64,7 +74,8 @@ void CorbaUnitManager::RunORB()
     ves::open::xml::XMLObjectFactory::Instance()->RegisterObjectCreator( "CAD",new ves::open::xml::cad::CADCreator() );
 
     //initialize OLE
-    CoInitialize(NULL);
+    //CoInitialize(NULL);
+    //HRESULT hr = CoInitializeEx(NULL, COINIT_MULTITHREADED);
 
     int argc = 5;
     char** argv;
@@ -196,6 +207,9 @@ void CorbaUnitManager::DestroyORB( void )
         return;
     }
     
+    m_thread->join();
+    delete m_thread;
+
     //unit_i->CloseAspen();
     //Sleep(5000);
     
@@ -209,13 +223,17 @@ AspenUnit_i* CorbaUnitManager::GetUnitObject( void )
 /////////////////////////////////////////////////////////////
 void CorbaUnitManager::CheckCORBAWork( void )
 {
-    if ( !CORBA::is_nil( orb ) )
-   {
-      if ( orb->work_pending() )
-      {
-         orb->perform_work();
-      }
-   }
+    while(true)
+    {
+        if ( !CORBA::is_nil( orb ) )
+        {
+            if ( orb->work_pending() )
+            {
+                orb->perform_work();
+            }
+        }
+        vpr::System::msleep( 10 );
+    }
 }
 
 /////////////////////////////////////////////////////////////

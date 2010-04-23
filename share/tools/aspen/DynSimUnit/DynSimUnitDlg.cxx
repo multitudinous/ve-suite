@@ -119,12 +119,12 @@ HCURSOR CDynSimUnitDlg::OnQueryDragIcon()
 
 BOOL CDynSimUnitDlg::OnIdle( LONG test )
 {
-    Sleep( 100 );
-    if(initialized)
-    {
-        commManager->CheckCORBAWork();
+    Sleep( 10 );
+    //if(initialized)
+    //{
         //commManager->GetUnitObject()->Monitor();
-    }
+        //commManager->CheckCORBAWork();
+    //}
     return FALSE;
 }
 
@@ -220,6 +220,7 @@ void CDynSimUnitDlg::OnBnClickedOk()
             SetTimer (REFRESH_OPC, 5000, NULL);
 
         }
+        commManager->CheckCORBAWorkThread();
     }
 }
 

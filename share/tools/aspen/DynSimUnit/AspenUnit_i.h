@@ -38,6 +38,7 @@
 #include "DynSimUnit.h"
 #include "DynSimUnitDlg.h"
 #include "CorbaUnitManager.h"
+#include <vpr/Thread/Thread.h>
 
 #include <set>
 
@@ -67,6 +68,8 @@ protected:
     std::set< std::string > mQueryCommandNames;
     std::string mWorkingDir;
     std::string mFileName;
+    ACE_Thread_Mutex _mutex;
+    bool mQuerying;
 
 public:
     DynSimParser* dynsim;
@@ -212,8 +215,12 @@ public:
   void addVariable( ves::open::xml::CommandPtr cmd );
   char* getAllOPCVariables( ves::open::xml::CommandPtr cmd );
   void UpdateVars( );
-  void Monitor();
+  void Monitor( );
   bool connected;
+
+  
+    vpr::Thread* m_thread;
+    //CWinThread *m_Thread;
 
 private:
   //bool bkpFlag;

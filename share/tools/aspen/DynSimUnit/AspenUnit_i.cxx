@@ -47,6 +47,10 @@
 #include <fstream>
 #include <iostream>
 
+#include <vpr/vpr.h>
+#include <vpr/System.h>
+#include <boost/bind.hpp>
+
 // Implementation skeleton constructor
 AspenUnit_i::AspenUnit_i( std::string name, CDynSimUnitDlg * dialog, 
                          CorbaUnitManager* parent, std::string dir )
@@ -57,7 +61,9 @@ AspenUnit_i::AspenUnit_i( std::string name, CDynSimUnitDlg * dialog,
     return_state( 0 ),
     cur_id_( 0 ),
     UnitName_( name ),
-    mWorkingDir( dir )
+    mWorkingDir( dir ),
+    dynsim ( NULL ),
+    mQuerying(false)
 {
     ves::open::xml::XMLObjectFactory::Instance()->
         RegisterObjectCreator( "XML",new ves::open::xml::XMLCreator() );
@@ -244,6 +250,12 @@ char * AspenUnit_i::Query ( const char * query_str
     ::Error::EUnknown
   ))
 {
+    mQuerying = true;
+
+    AspenLog->SetSel( -1, -1 );
+    AspenLog->ReplaceSel( "Query\r\n" );
+    _mutex.acquire();
+
     ves::open::xml::XMLReaderWriter networkWriter;
     networkWriter.UseStandaloneDOMDocumentManager();
     networkWriter.ReadFromString();
@@ -265,6 +277,8 @@ char * AspenUnit_i::Query ( const char * query_str
     //If the command is not processed here - do not bother doing anything more
     if( commandItr == mQueryCommandNames.end() )
     {
+        _mutex.release();
+        mQuerying = false;
         return CORBA::string_dup("NULL");
     }
     
@@ -275,16 +289,22 @@ char * AspenUnit_i::Query ( const char * query_str
     if ( cmdname == "getNetwork" )
     {
         returnValue = handleGetNetwork( cmd );
+        _mutex.release();
+        mQuerying = false;
         return returnValue;
     }
     else if ( cmdname == "getOPCValues" )
     {
         returnValue = getOPCValues( cmd );
+        _mutex.release();
+        mQuerying = false;
         return returnValue;
     }
     else if ( cmdname == "setOPCValues" )
     {
         returnValue = setOPCValues( cmd );
+        _mutex.release();
+        mQuerying = false;
         return returnValue;
     }
     //else if ( cmdname == "connectWithList" )
@@ -297,20 +317,30 @@ char * AspenUnit_i::Query ( const char * query_str
     else if ( cmdname == "connectToOPC" )
     {
         connectToOPC( cmd );
+        _mutex.release();
+        mQuerying = false;
         return( "NULL" );
     }
     else if ( cmdname == "addVariable" )
     {
         addVariable( cmd );
+        _mutex.release();
+        mQuerying = false;
         return( "NULL" );
     }
     else if ( cmdname == "getAllOPCVariables" )
     {
         returnValue = getAllOPCVariables( cmd );
+        _mutex.release();
+        mQuerying = false;
         return returnValue;
     }
     else
+    {
+        _mutex.release();
+        mQuerying = false;
         return CORBA::string_dup( "NULL" );
+    }
 }
 ///////////////////////////////////////////////////////////////////////////////
 char* AspenUnit_i::handleGetNetwork(ves::open::xml::CommandPtr cmd)
@@ -437,10 +467,23 @@ void AspenUnit_i::connectWithList( ves::open::xml::CommandPtr cmd )
         //pair->GetData( list );
         //dynsim->ConnectWithList( list );
 }
+
+UINT ThreadFunc ( LPVOID empty );
+
+UINT ThreadFunc ( LPVOID empty )
+{
+    AspenUnit_i * temp = (AspenUnit_i *) empty;
+    temp->Monitor();
+    return 0;
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 void AspenUnit_i::connectToOPC( ves::open::xml::CommandPtr cmd )
 {
     connected = dynsim->ConnectToOPCServer();
+    m_thread = new vpr::Thread( boost::bind( &AspenUnit_i::Monitor,
+            this ) );
+    //m_Thread = AfxBeginThread( ThreadFunc, this);
 }
 ///////////////////////////////////////////////////////////////////////////////
 void AspenUnit_i::addVariable( ves::open::xml::CommandPtr cmd )
@@ -468,14 +511,26 @@ void AspenUnit_i::SetParams (CORBA::Long id,
   ))
 {
 }
+
 ///////////////////////////////////////////////////////////////////////////////
-void AspenUnit_i::Monitor( )
+void AspenUnit_i::Monitor(  )
 {
-    //if( connected )
-    //{
-    //    dynsim->AddOPCVariable( "MY_SWITCH" );
-    //    std::string netPak = dynsim->GetOPCValues( );
-    //    theParent->GetExecutive()->SetParams(0, 0, CORBA::string_dup( netPak.c_str( ) ) );
-    //}
-    //return;
+    HRESULT hr = CoInitializeEx(NULL, COINIT_MULTITHREADED);
+    while (true)
+    {
+    AspenLog->SetSel( -1, -1 );
+    AspenLog->ReplaceSel( "Update\r\n" );
+        if( connected && !dynsim->IsOPCVarsEmpty()&& !mQuerying && dynsim )
+        {
+            
+        _mutex.acquire();
+            //dynsim->AddOPCVariable( "MY_SWITCH" );
+            std::string netPak = dynsim->GetOPCValues( );
+            theParent->GetExecutive()->SetParams(0, 0, CORBA::string_dup( netPak.c_str( ) ) );
+            
+        _mutex.release();
+        }
+        vpr::System::msleep( 10 );
+    }
+    CoUninitialize();
 }

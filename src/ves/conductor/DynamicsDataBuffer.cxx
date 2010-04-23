@@ -62,7 +62,7 @@ DynamicsDataBuffer::DynamicsDataBuffer( void )
 ////////////////////////////////////////////////////////////////////////////////
 DynamicsDataBuffer::~DynamicsDataBuffer()
 {
-    m_enabled = false;
+    CleanUp();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DynamicsDataBuffer::CleanUp( void )
@@ -161,35 +161,15 @@ void DynamicsDataBuffer::Print( void )
 ///////////////////////////////////////////////////////////////////////////////
 void DynamicsDataBuffer::Enable( )
 {
-   if( !m_enabled )
+    /*if( !m_enabled )
     {
         m_enabled = true;
         m_thread = new vpr::Thread( boost::bind( &DynamicsDataBuffer::Update,
             this ) );
     }
+    */
 }
 
-///////////////////////////////////////////////////////////////////////////////
-//void DynamicsDataBuffer::Enable( )
-//{
-//    m_enabled = true;
-//}
-///////////////////////////////////////////////////////////////////////////////
-//void DynamicsDataBuffer::Disable( )
-//{
-//    m_enabled = false;
-//
-//}
-///////////////////////////////////////////////////////////////////////////////
-//void DynamicsDataBuffer::Pause( )
-//{
-//    m_thread->suspend();
-//}
-///////////////////////////////////////////////////////////////////////////////
-//void DynamicsDataBuffer::Resume( )
-//{
-//    m_thread->resume();
-//}
 ///////////////////////////////////////////////////////////////////////////////
 void DynamicsDataBuffer::Disable( )
 {
@@ -200,16 +180,7 @@ void DynamicsDataBuffer::Disable( )
         delete m_thread;
     }
 }
-///////////////////////////////////////////////////////////////////////////////
-//void DynamicsDataBuffer::PauseUpdate( )
-//{
-//    m_thread->suspend();
-//}
-///////////////////////////////////////////////////////////////////////////////
-//void DynamicsDataBuffer::ResumeUpdate( )
-//{
-//    m_thread->resume();
-//}
+
 ////////////////////////////////////////////////////////////////////////////////
 void DynamicsDataBuffer::Update( )
 {
@@ -249,7 +220,7 @@ void DynamicsDataBuffer::Update( )
                 boost::dynamic_pointer_cast<ves::open::xml::Command>
                 ( objectVector.at( 0 ) );
 
-            commandMap["OPC_Data"] = cmd;
+            commandMap["OPCData"] = cmd;
         }
 
         vpr::System::msleep( 10 );

@@ -34,6 +34,7 @@
 #include <ves/conductor/util/OrbThread.h>
 
 #include <ves/conductor/util/DataLoggerEngine.h>
+#include <ves/conductor/DynamicsDataBuffer.h>
 
 #include <ves/open/xml/XMLReaderWriter.h>
 #include <ves/open/xml/DataValuePair.h>
@@ -234,11 +235,13 @@ ACE_THROW_SPEC((
     if( !temp )
     {
         wxLogMessage( wxString( "NULL Command", wxConvUTF8 ) );
+        return;
     }
     
     ///Pass data off to dynamic data buffer engine if the command is one from
     ///ce about data
     //m_commandNameMap[ temp->GetCommandName()] = temp;
+    DynamicsDataBuffer::instance()->SetCommand( temp->GetCommandName(), temp );
     xmlObjects.clear();
 }
 ////////////////////////////////////////////////////////////////////////////////

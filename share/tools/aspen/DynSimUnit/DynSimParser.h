@@ -62,6 +62,7 @@ public:
     bool ConnectToOPCServer( );
     std::string GetAllOPCVariables( const std::string& );
     void AddOPCVariable( const std::string& );
+    bool IsOPCVarsEmpty();
 
 private:
     void ParseTreeFile( std::string );
