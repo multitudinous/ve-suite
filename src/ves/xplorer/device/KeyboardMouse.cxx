@@ -451,6 +451,10 @@ void KeyboardMouse::ProcessEvents( ves::open::xml::CommandPtr command )
 #endif
             break;
         }
+        default:
+        {
+            break;
+        }
         } //end switch( eventType )
     }
 }
@@ -795,6 +799,10 @@ void KeyboardMouse::OnKeyPress()
 
         break;
     }
+    default:
+    {
+        break;
+    }
     } //end switch( m_currKey )
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -891,6 +899,10 @@ void KeyboardMouse::OnKeyRelease()
 
         break;
     }
+    default:
+    {
+        break;
+    }
     } //end switch( m_currKey )
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -985,6 +997,10 @@ void KeyboardMouse::OnMousePress()
             m_characterController.Zoom( false );
         }
 
+        break;
+    }
+    default:
+    {
         break;
     }
     } //end switch( m_currKey )
@@ -1089,6 +1105,10 @@ void KeyboardMouse::OnMouseRelease()
     }
     //Right mouse button
     case gadget::MBUTTON3:
+    {
+        break;
+    }
+    default:
     {
         break;
     }
@@ -1198,6 +1218,10 @@ void KeyboardMouse::OnMouseMotionDown( double dx, double dy )
 
         break;
     }
+    default:
+    {
+        break;
+    }            
     } //end switch( m_currKey )
 
     //If delta mouse motion is less than m_pickCushion, do selection
