@@ -728,7 +728,9 @@ void WarrantyToolGP::CreateDB()
 
     // create a session
     Poco::Data::Session session("SQLite", m_dbFilename );
-    
+    //manage open and closing the session our self so that the population of the
+    //db is faster
+    session.begin();
     // drop sample table, if it exists
     session << "DROP TABLE IF EXISTS Parts", now;
 
@@ -771,7 +773,7 @@ void WarrantyToolGP::CreateDB()
             //in sqlite
             //createCommand << "'" << tempData.at( i ).first << "' DATE";
             createCommand << "'" << tempData.at( i ).first << "' VARCHAR";
-       }
+        }
         else
         {
             createCommand << "'" << tempData.at( i ).first << "' DOUBLE";
@@ -862,6 +864,9 @@ void WarrantyToolGP::CreateDB()
             insertCommand.str("");
         }
     }
+
+    //Now close the session to match the previous being statement
+    session.commit();
 
     //insert << "INSERT INTO Parts VALUES(?, ?, ?, ?, ?, ?, ?)",
     //    use(assem), now;
