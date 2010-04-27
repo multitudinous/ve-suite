@@ -42,13 +42,13 @@ class QueryThread : public ACE_Task_Base
 {
 public:
     QueryThread( Body::Unit_var m );
-    ~QueryThread( void );
+    virtual ~QueryThread();
 
-    virtual int svc( void );
+    virtual int svc();
 
     void QueryData( std::string command, CORBA::Long modId );
-    bool GettingData( void );
-    std::string GetQueryData( void );
+    bool GettingData();
+    std::string GetQueryData();
 
 private:
     Body::Unit_var _mod;

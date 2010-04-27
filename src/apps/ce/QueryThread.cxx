@@ -94,9 +94,11 @@ bool QueryThread::GettingData( void )
 ////////////////////////////////////////////////////////////////////////////////
 std::string QueryThread::GetQueryData( void )
 {
-    _mutex.acquire();
-    std::string tempData = queryData;
-    _mutex.release();
+    std::string tempData;
+    if( isComplete )
+    {
+        tempData = queryData;
+    }
     return tempData;
 }
 

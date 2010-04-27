@@ -1018,7 +1018,8 @@ ACE_THROW_SPEC(( CORBA::SystemException, Error::EUnknown ) )
     queryIter->second->QueryData( status, moduleId );
 
     std::string returnString;
-    while (( returnString != "NULL" ) && returnString.empty() )
+    //( returnString != "NULL" ) && 
+    while( returnString.empty() )
     {
         ACE_OS::sleep( 1 );
         returnString = queryIter->second->GetQueryData();
