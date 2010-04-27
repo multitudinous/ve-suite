@@ -100,7 +100,7 @@ Wand::Wand()
 {
     wand.init( "VJWand" );
     head.init( "VJHead" );
-    // trigger (and top right button) TODO: I think this is unused ?
+    // trigger (and top right button) used for the selection line
     digital[ 0 ].init( "VJButton0" );
     // top left button -- toggle cursor mode: laser, streamlines, box, & arrow
     digital[ 1 ].init( "VJButton1" );
@@ -170,6 +170,7 @@ void Wand::ProcessEvents( ves::open::xml::CommandPtr command )
     buttonData[ 2 ] = digital[ 2 ]->getData();
     buttonData[ 3 ] = digital[ 3 ]->getData();
     buttonData[ 4 ] = digital[ 4 ]->getData();
+    buttonData[ 5 ] = digital[ 5 ]->getData();
 
     m_rotIncrement.set( 0, 0, 0, 1 );
     osg::Quat world_quat = activeDCS->getAttitude();
@@ -237,16 +238,17 @@ void Wand::ProcessEvents( ves::open::xml::CommandPtr command )
         rotationStepSize = 0.001333f * powf(( cfdIso_value * 0.5f ), 2.2f );
     }
 
-    //Process a selection event from a toggle off event just like in KM
-    //if( buttonData[ 0 ] == gadget::Digital::TOGGLE_OFF ) //&&
-       //( buttonData[ 2 ] == gadget::Digital::TOGGLE_ON ||
-       // buttonData[ 2 ] == gadget::Digital::ON )
-   {
-       UpdateObjectHandler();
-   }
+    UpdateObjectHandler();
 
+    //Process a selection event from a toggle off event just like in KM
     //Free rotation
-    if(( buttonData[ 1 ] == gadget::Digital::TOGGLE_ON ) ||
+    if( ( buttonData[ 5 ] == gadget::Digital::TOGGLE_ON ) ||
+        ( buttonData[ 5 ] == gadget::Digital::ON ) )
+    {
+        DeviceHandler::instance()->UnselectObjects();
+    }
+    //Free rotation
+    else if(( buttonData[ 1 ] == gadget::Digital::TOGGLE_ON ) ||
             ( buttonData[ 1 ] == gadget::Digital::ON ) )
     {
         m_buttonPushed = true;
