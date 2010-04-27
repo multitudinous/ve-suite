@@ -33,10 +33,10 @@
 #ifndef VE_I_H_
 #define VE_I_H_
 
-/*!\file Body_UI_i.h
-Body_UI_i API
+/*!\file VE_i.h
+VE_i API
 */
-/*!\class ves::xplorer::Body_UI_i
+/*!\class ves::xplorer::VE_i
 *
 */
 #include <ves/open/moduleS.h>
@@ -57,14 +57,14 @@ namespace xplorer
 {
 namespace network
 {
-class  Body_UI_i : public virtual POA_Body::UI
+class  VE_i : public virtual POA_Body::UI
 {
 public:
     //Constructor
-    Body_UI_i( Body::Executive_ptr exec, std::string name );
+    VE_i( Body::Executive_ptr exec, std::string name );
 
     //Destructor
-    virtual ~Body_UI_i( void );
+    virtual ~VE_i( void );
 
     std::string UIName_;
     std::string GetNetworkString( void );

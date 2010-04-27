@@ -44,20 +44,20 @@
 using namespace ves::xplorer::network;
 
 // Implementation skeleton constructor
-Body_UI_i::Body_UI_i( Body::Executive_ptr exec, std::string name )
+VE_i::VE_i( Body::Executive_ptr exec, std::string name )
         : executive_( Body::Executive::_duplicate( exec ) )
 {
     UIName_ = name;
 }
 
 // Implementation skeleton destructor
-Body_UI_i::~Body_UI_i( void )
+VE_i::~VE_i( void )
 {}
 
 // This returns the latest network string
 // This is here so that the drawing sequence in vrjuggler
 // doesn't thread lock with executive CORBA calls
-std::string Body_UI_i::GetNetworkString( void )
+std::string VE_i::GetNetworkString( void )
 {
     vpr::Guard<vpr::Mutex> val_guard( stringBufferLock );
     std::string temp;
@@ -73,13 +73,13 @@ std::string Body_UI_i::GetNetworkString( void )
 }
 
 // Complimentary function to the above function
-void Body_UI_i::SetNetworkString( std::string tempString )
+void VE_i::SetNetworkString( std::string tempString )
 {
     vpr::Guard<vpr::Mutex> val_guard( stringBufferLock );
     networkStringBuffer.push_back( tempString );
 }
 
-bool Body_UI_i::GetNetworkFlag( void )
+bool VE_i::GetNetworkFlag( void )
 {
     vpr::Guard<vpr::Mutex> val_guard( stringBufferLock );
     if( networkStringBuffer.empty() )
@@ -92,7 +92,7 @@ bool Body_UI_i::GetNetworkFlag( void )
     }
 }
 
-std::string Body_UI_i::GetStatusString( void )
+std::string VE_i::GetStatusString( void )
 {
     vpr::Guard<vpr::Mutex> val_guard( statusBufferLock );
     std::string temp;
@@ -107,7 +107,7 @@ std::string Body_UI_i::GetStatusString( void )
     return temp;
 }
 
-void Body_UI_i::UpdateNetwork(
+void VE_i::UpdateNetwork(
     const char * network
     ACE_ENV_ARG_DECL
 )
@@ -122,7 +122,7 @@ ACE_THROW_SPEC((
     std::cout << UIName_ << " :UpdateNetwork called" << std::endl;
 }
 
-void Body_UI_i::UpdateModuleUI(
+void VE_i::UpdateModuleUI(
     CORBA::Long module_id,
     const char * msg
     ACE_ENV_ARG_DECL
@@ -138,7 +138,7 @@ ACE_THROW_SPEC((
     std::cout << UIName_ << " :UpdateModuleUI called" << std::endl;
 }
 
-void Body_UI_i::UpdateModuleResult(
+void VE_i::UpdateModuleResult(
     CORBA::Long module_id,
     const char * msg
     ACE_ENV_ARG_DECL
@@ -154,7 +154,7 @@ ACE_THROW_SPEC((
     std::cout << UIName_ << " :UpdateModuleResult called" << std::endl;
 }
 
-void Body_UI_i::UpdateLinkContent(
+void VE_i::UpdateLinkContent(
     CORBA::Long id,
     const char * msg
     ACE_ENV_ARG_DECL
@@ -172,7 +172,7 @@ ACE_THROW_SPEC((
     std::cout << UIName_ << " :UpdateLinkContent called" << std::endl;
 }
 
-void Body_UI_i::Raise(
+void VE_i::Raise(
     const char * notification
     ACE_ENV_ARG_DECL
 )
@@ -212,7 +212,7 @@ ACE_THROW_SPEC((
     std::cout << "|\tEnd Raise " << std::endl;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Body_UI_i::GetNetworkFromCE( void )
+void VE_i::GetNetworkFromCE( void )
 {
     try
     {
@@ -231,7 +231,7 @@ void Body_UI_i::GetNetworkFromCE( void )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Body_UI_i::SetCommand( const char* openXMLCommand )
+void VE_i::SetCommand( const char* openXMLCommand )
     ACE_THROW_SPEC((
                    CORBA::SystemException
                    , Error::EUnknown

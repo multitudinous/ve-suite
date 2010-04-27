@@ -101,7 +101,7 @@ class DCS;
 namespace network
 {
 class cfdVEAvailModules;
-class Body_UI_i;
+class VE_i;
 class NetworkSystemView;
 
 class VE_XPLORER_NETWORK_EXPORTS GraphicalPluginManager : public ves::xplorer::GlobalBase
@@ -165,7 +165,7 @@ public:
     cfdVEAvailModules* GetAvailablePlugins();
 
     ///Accessor for ehs to use
-    Body_UI_i* GetCORBAInterface();
+    VE_i* GetCORBAInterface();
 
     ///Laod data from CE
     void LoadDataFromCE();
@@ -230,7 +230,7 @@ private:
     Body::Executive* _exec;
 
     ///The UI interface in veopen
-    Body_UI_i* ui_i;
+    VE_i* ui_i;
 
     ///The GUID for the executive
     std::string m_UINAME;

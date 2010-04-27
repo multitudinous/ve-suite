@@ -44,6 +44,8 @@
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>
 
+#include <boost/concept_check.hpp>
+
 #include <iostream>
 
 using namespace ves::xplorer::event;
@@ -86,7 +88,7 @@ UpdateNetworkEventHandler& UpdateNetworkEventHandler::operator=( const UpdateNet
 ////////////////////////////////////////////////////////////////////////////////
 void UpdateNetworkEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* model )
 {
-    ;
+    boost::ignore_unused_variable_warning( model ); 
 }
 //////////////////////////////////////////////////////////////////////////
 void UpdateNetworkEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xmlObject )

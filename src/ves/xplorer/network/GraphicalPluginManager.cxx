@@ -563,7 +563,7 @@ cfdVEAvailModules* GraphicalPluginManager::GetAvailablePlugins()
     return mAvailableModules;
 }
 ////////////////////////////////////////////////////////////////////////////////
-Body_UI_i* GraphicalPluginManager::GetCORBAInterface()
+VE_i* GraphicalPluginManager::GetCORBAInterface()
 {
     return ui_i;
 }
@@ -582,8 +582,8 @@ void GraphicalPluginManager::ConnectToCE()
         _exec = Body::Executive::_narrow( exec_object.in() );
         
         //Create the Servant
-        ui_i = new Body_UI_i( _exec, m_UINAME );
-        //Body_UI_i ui_i( UINAME);
+        ui_i = new VE_i( _exec, m_UINAME );
+        //VE_i ui_i( UINAME);
         
         PortableServer::ObjectId_var id =
         PortableServer::string_to_ObjectId( "GraphicalPluginManager" );
