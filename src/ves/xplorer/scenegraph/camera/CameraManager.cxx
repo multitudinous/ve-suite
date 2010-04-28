@@ -138,6 +138,7 @@ bool CameraManager::Handle(
         if( cameraObject )
         {
             //camera->DoSomething();
+            cameraObject->SetRenderQuad( GetCameraManagerQuad() );
             std::cout<< "Just focused on a camera in the scene!!!" << std::endl;
         }
 
@@ -183,6 +184,7 @@ void CameraManager::SetActiveCameraObject( CameraObject* cameraObject )
     }
 
     m_activeCamera = cameraObject;
+    m_activeCamera->SetRenderQuad( GetCameraManagerQuad() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool CameraManager::setChild( unsigned int i, CameraObject* node )

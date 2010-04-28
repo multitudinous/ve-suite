@@ -44,6 +44,7 @@
 #include <osg/Quat>
 #include <osg/Vec3d>
 #include <osg/Transform>
+#include <osg/Texture2D>
 
 namespace osg
 {
@@ -86,8 +87,23 @@ public:
     ///
     META_Node( ves::xplorer::scenegraph::camera, CameraObject );
 
-    ///
-    //void CalculateMatrixMVPT();
+    ///Set the quad that this rtt camera should render into
+    void SetRenderQuad( osg::Geode* geode );
+
+    ///Helper function to create a 2D texture for OSG
+    osg::Texture2D* CreateViewportTexture(
+        GLenum internalFormat,
+        GLenum sourceFormat,
+        GLenum sourceType,
+        osg::Texture2D::FilterMode filterMode,
+        osg::Texture2D::WrapMode wrapMode,
+        std::pair< int, int >& viewportDimensions );
+    
+    ///Get this DCS
+    ves::xplorer::scenegraph::DCS& GetCameraDCS();
+
+    ///Have no earthly idea what this does
+    void CalculateMatrixMVPT();
 
     ///
     //void CustomKeyboardMouseSelection(
@@ -112,14 +128,14 @@ public:
     ///
     osg::Camera& GetCamera();
 
-    ///
-    //ves::xplorer::scenegraph::DCS* GetPluginDCS();
+    ///Get the parent DCS of this camera class
+    osg::Group& GetPluginDCS();
 
     ///
     //ves::xplorer::scenegraph::DCS* GetQuadDCS();
 
     ///
-    //const osg::Matrixd& GetInitialViewMatrix();
+    const osg::Matrixd& GetInitialViewMatrix();
 
     ///
     //osg::TexGenNode* GetTexGenNode();
@@ -187,7 +203,7 @@ private:
     osg::Matrixd m_initialViewMatrix;
 
     ///The matrix that takes a vertex from local coords into tex coords
-    //osg::Matrixd mMVPT;
+    osg::Matrixd mMVPT;
 
     ///Used to generate texture coordinates for camera projection
     //osg::ref_ptr< osg::TexGenNode > mTexGenNode;
@@ -217,7 +233,7 @@ private:
     //osg::ref_ptr< CameraPAT > m_cameraPAT;
 
     ///The loaded camera geometry node and frustum geometry lines
-    //osg::ref_ptr< ves::xplorer::scenegraph::DCS > mCameraDCS;
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > mCameraDCS;
 
     ///
     osg::ref_ptr< osg::Camera > m_camera;
@@ -234,6 +250,10 @@ private:
     ///
     osg::ref_ptr< osg::Vec3Array > m_frustumVertices;
 
+    ///RTT render quad
+    osg::ref_ptr< osg::Geode > m_renderQuad;
+    ///RTT texture for the rtt quad
+    osg::ref_ptr< osg::Texture2D > m_colorMap;
     ///The quad to show the intersection hit
     //osg::ref_ptr< osg::Geode > mHitQuadGeode;
 

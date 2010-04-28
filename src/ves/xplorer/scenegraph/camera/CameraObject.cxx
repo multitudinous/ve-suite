@@ -33,7 +33,7 @@
 
 // --- My Includes --- //
 #include <ves/xplorer/scenegraph/camera/CameraObject.h>
-//#include "CameraEntityCallback.h"
+#include <ves/xplorer/scenegraph/camera/CameraObjectCallback.h>
 //#include "DepthOfFieldTechnique.h"
 //#include "DepthHelperTechnique.h"
 //#include "ProjectionTechnique.h"
@@ -51,7 +51,6 @@
 #include <osg/Camera>
 #include <osg/Geode>
 #include <osg/Geometry>
-#include <osg/Texture2D>
 #include <osg/TexGenNode>
 //Needed for FBO GL extensions
 #include <osg/FrameBufferObject>
@@ -84,7 +83,7 @@ CameraObject::CameraObject()
     //mResourceManager( NULL ),
     //mPluginDCS( NULL ),
     //m_cameraPAT( NULL ),
-    //mCameraDCS( NULL ),
+    mCameraDCS( NULL ),
     m_camera( NULL ),
     m_cameraNode( NULL ),
     m_frustumGeode( NULL ),
@@ -119,7 +118,7 @@ CameraObject::CameraObject(
     //mResourceManager( camera.mResourceManager ),
     //mPluginDCS( camera.mPluginDCS.get() ),
     //m_cameraPAT( camera.m_cameraPAT.get() ),
-    //mCameraDCS( camera.mCameraDCS.get() ),
+    mCameraDCS( cameraObject.mCameraDCS.get() ),
     m_camera( cameraObject.m_camera.get() ),
     m_cameraNode( cameraObject.m_cameraNode.get() ),
     m_frustumGeode( cameraObject.m_frustumGeode.get() ),
@@ -173,16 +172,21 @@ void CameraObject::Initialize()
     m_camera->setViewport( 0, 0, 1024, 1024 );
     m_camera->setNodeMask( NodeMask::CAMERA );
 
+    std::pair< int, int > textureRes = std::make_pair< int, int >( 1024, 1024 );
+    m_colorMap = CreateViewportTexture(
+        GL_RGBA16F_ARB, GL_RGBA, GL_FLOAT,
+        osg::Texture2D::LINEAR, osg::Texture2D::CLAMP_TO_EDGE,
+        textureRes );
+    
     //Attach the camera view texture and use it as the first render target
-    //attach( osg::Camera::BufferComponent( osg::Camera::COLOR_BUFFER0 ),
-            //( ves::xplorer::scenegraph::ResourceManager::instance()->get
-            //< osg::Texture2D, osg::ref_ptr >( "CameraViewTexture" ) ).get() );
+    m_camera->attach( 
+        osg::Camera::BufferComponent( osg::Camera::COLOR_BUFFER0 ), 
+        m_colorMap.get() );
     //Attach the depth texture and use it as the second render target
     //attach( osg::Camera::BufferComponent( osg::Camera::COLOR_BUFFER1 ),
             //( ves::xplorer::scenegraph::ResourceManager::instance()->get
             //< osg::Texture2D, osg::ref_ptr >( "DepthTexture" ) ).get() );
 
-    //
     m_initialViewMatrix.makeLookAt(
         osg::Vec3d( 0.0, 0.0, 0.0 ),
         osg::Vec3d( 0.0, 1.0, 0.0 ),
@@ -190,9 +194,11 @@ void CameraObject::Initialize()
     m_camera->setViewMatrix( m_initialViewMatrix );
     m_camera->setProjectionMatrixAsPerspective( 20.0, 1.0, 0.1, 2.0 );
 
-    //
     m_camera->addChild( &SceneManager::instance()->GetGraphicalPluginManager() );
 
+    //Initialize update callback
+    m_camera->setUpdateCallback( new CameraObjectCallback() );
+    
     //
     //m_cameraPAT = new CameraPAT( *this );
 
@@ -214,7 +220,7 @@ void CameraObject::Initialize()
     //setUpdateCallback( mCameraEntityCallback.get() );
 
     //Initialize mCameraDCS
-    //mCameraDCS = new ves::xplorer::scenegraph::DCS();
+    mCameraDCS = this;
     //mPluginDCS->addChild( mCameraDCS.get() );
 
     //Create visual representation of this camera
@@ -262,19 +268,17 @@ void CameraObject::Initialize()
     Update();
 }
 ////////////////////////////////////////////////////////////////////////////////
-/*
 void CameraObject::CalculateMatrixMVPT()
 {
     //Compute the matrix which takes a vertex from local coords into tex coords
     //Multiply the ModelView(MV) by the Projection(P) by the Texture(T) matrix
-    mMVPT = getViewMatrix() *
-            getProjectionMatrix() *
+    mMVPT = m_camera->getViewMatrix() *
+            m_camera->getProjectionMatrix() *
             osg::Matrix::translate( 1.0f, 1.0f, 1.0f ) *
             osg::Matrix::scale( 0.5f, 0.5f, 0.5f );
 
-    mTexGenNode->getTexGen()->setPlanesFromMatrix( mMVPT );
+    //mTexGenNode->getTexGen()->setPlanesFromMatrix( mMVPT );
 }
-*/
 ////////////////////////////////////////////////////////////////////////////////
 /*
 void CameraObject::CustomKeyboardMouseSelection(
@@ -607,19 +611,15 @@ osg::Camera& CameraObject::GetCamera()
     return *(m_camera.get());
 }
 ////////////////////////////////////////////////////////////////////////////////
-/*
-ves::xplorer::scenegraph::DCS* CameraObject::GetPluginDCS()
+osg::Group& CameraObject::GetPluginDCS()
 {
-    return mPluginDCS.get();
+    return *(getParent(0));
 }
-*/
 ////////////////////////////////////////////////////////////////////////////////
-/*
 const osg::Matrixd& CameraObject::GetInitialViewMatrix()
 {
     return m_initialViewMatrix;
 }
-*/
 ////////////////////////////////////////////////////////////////////////////////
 /*
 osg::TexGenNode* CameraObject::GetTexGenNode()
@@ -788,5 +788,44 @@ void CameraObject::Update()
     mProjectionTechnique->GetFarPlaneUniform()->set(
         static_cast< float >( farPlane ) );
     */
+}
+////////////////////////////////////////////////////////////////////////////////
+void CameraObject::SetRenderQuad( osg::Geode* geode )
+{
+    m_renderQuad = geode;
+    osg::ref_ptr< osg::StateSet > stateset = 
+        m_renderQuad->getDrawable( 0 )->getStateSet();
+    stateset->setTextureAttributeAndModes(
+        0, m_colorMap.get(), osg::StateAttribute::ON );
+    m_renderQuad->dirtyBound();
+}
+////////////////////////////////////////////////////////////////////////////////
+osg::Texture2D* CameraObject::CreateViewportTexture(
+    GLenum internalFormat,
+    GLenum sourceFormat,
+    GLenum sourceType,
+    osg::Texture2D::FilterMode filterMode,
+    osg::Texture2D::WrapMode wrapMode,
+    std::pair< int, int >& viewportDimensions )
+{
+    osg::Texture2D* tempTexture = new osg::Texture2D();
+    //GL_RGBA8/GL_UNSIGNED_INT - GL_RGBA16F_ARB/GL_FLOAT 
+    
+    tempTexture->setInternalFormat( GL_RGBA16F_ARB );
+    tempTexture->setSourceFormat( GL_RGBA );
+    tempTexture->setSourceType( GL_FLOAT );
+    tempTexture->setFilter( osg::Texture2D::MIN_FILTER, filterMode );
+    tempTexture->setFilter( osg::Texture2D::MAG_FILTER, filterMode );
+    tempTexture->setWrap( osg::Texture2D::WRAP_S, wrapMode );
+    tempTexture->setWrap( osg::Texture2D::WRAP_T, wrapMode );
+    tempTexture->setTextureSize(
+                                viewportDimensions.first, viewportDimensions.second );
+    
+    return tempTexture;
+}
+////////////////////////////////////////////////////////////////////////////////
+ves::xplorer::scenegraph::DCS& CameraObject::GetCameraDCS()
+{
+    return *(mCameraDCS.get());
 }
 ////////////////////////////////////////////////////////////////////////////////
