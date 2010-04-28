@@ -130,8 +130,7 @@ SteadyStateVizHandler::SteadyStateVizHandler()
 ////////////////////////////////////////////////////////////////////////////////
 void SteadyStateVizHandler::Initialize( std::string param )
 {
-    _param = param;
-    //cursor = EnvironmentHandler::instance()->GetCursor();
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 SteadyStateVizHandler::~SteadyStateVizHandler()
@@ -203,14 +202,13 @@ void SteadyStateVizHandler::ClearVisObjects()
     vprDEBUG( vesDBG, 2 ) << "|\tClear All Graphics Objects From Scene Graph"
     << std::endl << vprDEBUG_FLUSH;
 
-    std::multimap< int, cfdGraphicsObject* >::iterator pos;
-    for( pos = graphicsObjects.begin(); pos != graphicsObjects.end(); )
+    for( std::multimap< int, cfdGraphicsObject* >::iterator 
+        pos = graphicsObjects.begin(); pos != graphicsObjects.end(); ++pos )
     {
         pos->second->RemoveGeodeFromDCS();
         delete pos->second;
-
-        graphicsObjects.erase( pos++ );
     }
+    graphicsObjects.clear();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SteadyStateVizHandler::InitScene()

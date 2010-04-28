@@ -164,36 +164,6 @@ public:
     std::vector< cfdGraphicsObject* > GetGraphicsObjectsOfType( cfdGeodeEnum type );
 
 private:
-    /*cfdPolyData* surface;
-    cfdIsosurface* isosurface;
-    cfdContour* contour;
-    cfdPresetContour* x_contour;
-    cfdPresetContour* y_contour;
-    cfdPresetContour* z_contour;
-    cfdContours* x_contours;
-    cfdContours* y_contours;
-    cfdContours* z_contours;
-    cfdMomentum* momentum;
-    cfdPresetMomentum* x_momentum;
-    cfdPresetMomentum* y_momentum;
-    cfdPresetMomentum* z_momentum;
-    cfdMomentums* x_momentums;
-    cfdMomentums* y_momentums;
-    cfdMomentums* z_momentums;
-    cfdVector* vector;
-    cfdPresetVector* x_vector;
-    cfdPresetVector* y_vector;
-    cfdPresetVector* z_vector;
-    cfdVectors* x_vectors;
-    cfdVectors* y_vectors;
-    cfdVectors* z_vectors;*/
-    //cfdStreamers* streamlines;
-    /*cfdPolyData* particles;
-    cfdImage* image;
-    cfdAnimatedImage* animImg;
-    cfdAnimatedStreamlineCone* animStreamer;
-    cfdTextOutput* textOutput;*/
-
     //Common objects for all functions
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > _activeDataSetDCS;
     cfdObjects* _activeObject;
@@ -206,12 +176,6 @@ private:
     //Classes and variables for multithreading.
     vpr::Thread* vjTh[ 1 ];
 
-    //Vectors that will eventually be stored as maps
-    //these hold all the objectsa for easy access and management
-    //std::vector< cfdObjects* > dataList;
-    std::vector< GlobalBase* > commandList;
-
-    std::string _param;
     bool actorsAreReady;
     bool computeActorsAndGeodes;
     bool changeGeometry;
@@ -225,9 +189,6 @@ private:
     double cur_box[ 6 ];
 
     //Need to get rid of this bool fix
-    //bool inter_activeObject;
-    //bool chgMod;
-    //bool runStreamersThread;
     bool runIntraParallelThread;
     bool useLastSource;
     bool transientBusy;
