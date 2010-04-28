@@ -224,7 +224,7 @@ AspenUnit_i* CorbaUnitManager::GetUnitObject( void )
 ////////////////////////////////////////////////////////////////////////////////
 void CorbaUnitManager::CheckCORBAWork( void )
 {
-    while(true)
+    /*while(true)
     {
         if ( !CORBA::is_nil( orb ) )
         {
@@ -234,8 +234,8 @@ void CorbaUnitManager::CheckCORBAWork( void )
             }
         }
         vpr::System::msleep( 10 );
-    }
-    //orb->run();
+    }*/
+    orb->run();
 }
 ////////////////////////////////////////////////////////////////////////////////
 //BKPParser * CorbaUnitManager::CreateParser( void )

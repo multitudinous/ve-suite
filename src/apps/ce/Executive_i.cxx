@@ -1288,27 +1288,31 @@ ACE_THROW_SPEC((
     for( std::map<std::string, Body::UI_var>::iterator
         iter = m_uiMap.begin(); iter != m_uiMap.end(); )
     {
-        try
+        if( iter->first.compare(0,2, "UI", 0, 2) == 0 )
         {
-            iter->second->_non_existent();
-            //iter->second->SetCommand( param );
-            iter->second->sendc_SetCommand( uiComAMIHandler.in(), param );
-            ++iter;
+            try
+            {
+                iter->second->_non_existent();
+                //iter->second->SetCommand( param );
+                iter->second->sendc_SetCommand( uiComAMIHandler.in(), param );
+                //++iter;
+            }
+            catch( CORBA::Exception&  ex )
+            {
+                std::cout << "VE-CE::SetParams : " << iter->first 
+                    << " is obsolete." << std::endl
+                    << ex._info().c_str() << std::endl;
+                // it seems this call should be blocked as we are messing with
+                // a map that is used everywhere
+                m_uiMap.erase( iter++ );
+            }
+            catch( std::exception& ex )
+            {
+                std::cout << "VE-CE::SetParams : another kind of exception " 
+                << std::endl << ex.what() << std::endl;
+            }
         }
-        catch( CORBA::Exception&  ex )
-        {
-            std::cout << "VE-CE::SetParams : " << iter->first 
-                << " is obsolete." << std::endl
-                << ex._info().c_str() << std::endl;
-            // it seems this call should be blocked as we are messing with
-            // a map that is used everywhere
-            m_uiMap.erase( iter++ );
-        }
-        catch( std::exception& ex )
-        {
-            std::cout << "VE-CE::SetParams : another kind of exception " 
-            << std::endl << ex.what() << std::endl;
-        }
+        ++iter;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

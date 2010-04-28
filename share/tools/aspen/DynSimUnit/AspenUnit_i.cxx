@@ -518,19 +518,15 @@ void AspenUnit_i::Monitor(  )
     HRESULT hr = CoInitializeEx(NULL, COINIT_MULTITHREADED);
     while (true)
     {
-    AspenLog->SetSel( -1, -1 );
-    AspenLog->ReplaceSel( "Update\r\n" );
         if( connected && !dynsim->IsOPCVarsEmpty()&& !mQuerying && dynsim )
         {
-            
-        _mutex.acquire();
+            _mutex.acquire();
             //dynsim->AddOPCVariable( "MY_SWITCH" );
             std::string netPak = dynsim->GetOPCValues( );
-            theParent->GetExecutive()->SetParams(0, 0, CORBA::string_dup( netPak.c_str( ) ) );
-            
-        _mutex.release();
+            theParent->GetExecutive()->SetParams(0, 0, CORBA::string_dup( netPak.c_str( ) ) );            
+            _mutex.release();
         }
-        vpr::System::msleep( 10 );
+        vpr::System::msleep( 5 );
     }
     CoUninitialize();
 }
