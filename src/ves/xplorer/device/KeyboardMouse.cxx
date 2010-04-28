@@ -766,7 +766,6 @@ void KeyboardMouse::OnKeyPress()
             new scenegraph::camera::CameraObject();
 
         m_cameraManager.addChild( cameraObject.get() );
-        m_cameraManager.SetActiveCameraObject( cameraObject.get() );
 
         break;
     }
