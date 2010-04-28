@@ -367,7 +367,7 @@ void KeyboardMouse::ProcessEvents( ves::open::xml::CommandPtr command )
                 return;
             }
 
-            OnMousePress();
+            OnMousePress( inputArea );
             //inputArea.lockMouse();
             break;
         }
@@ -391,7 +391,7 @@ void KeyboardMouse::ProcessEvents( ves::open::xml::CommandPtr command )
                 return;
             }
 
-            OnMouseRelease();
+            OnMouseRelease( inputArea );
             //inputArea.unlockMouse();
             break;
         }
@@ -906,7 +906,7 @@ void KeyboardMouse::OnKeyRelease()
     } //end switch( m_currKey )
 }
 ////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::OnMousePress()
+void KeyboardMouse::OnMousePress( gadget::InputArea& inputArea )
 {
     m_xMotionPixels = 0;
     m_yMotionPixels = 0;
@@ -938,6 +938,7 @@ void KeyboardMouse::OnMousePress()
 
             if( m_characterController.IsEnabled() )
             {
+                //inputArea.lockMouse();
                 m_characterController.SetCameraRotationSLERP( false );
             }
         }
@@ -970,6 +971,7 @@ void KeyboardMouse::OnMousePress()
     {
         if( m_characterController.IsEnabled() )
         {
+            //inputArea.lockMouse();
             m_characterController.FirstPersonMode( true );
             m_characterController.SetCameraRotationSLERP( false );
             m_characterController.SetRotationFromCamera();
@@ -1006,7 +1008,7 @@ void KeyboardMouse::OnMousePress()
     } //end switch( m_currKey )
 }
 ////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::OnMouseRelease()
+void KeyboardMouse::OnMouseRelease( gadget::InputArea& inputArea )
 {
     switch( m_currMouse )
     {
@@ -1016,7 +1018,13 @@ void KeyboardMouse::OnMouseRelease()
         //Do not require mod key depending on what the user did
         ClearPointConstraint();
 
-        if( m_cameraManager.IsEnabled() )
+        if( m_characterController.IsEnabled() )
+        {
+            //inputArea.unlockMouse();
+            m_characterController.SetCameraRotationSLERP( true );
+        }
+
+        if( m_cameraManager.IsEnabled() && m_mousePickEvent )
         {
             UpdateSelectionLine();
             if( m_cameraManager.Handle(
@@ -1034,11 +1042,6 @@ void KeyboardMouse::OnMouseRelease()
             {
                 break;
             }
-        }
-
-        if( m_characterController.IsEnabled() )
-        {
-            m_characterController.SetCameraRotationSLERP( true );
         }
 
         //No modifier key
@@ -1088,7 +1091,7 @@ void KeyboardMouse::OnMouseRelease()
                     break;
                 }
             }
-                            
+
             pluginIter = tempPlugins->find( modelIdStr );
             if( pluginIter != tempPlugins->end() )
             {
@@ -1101,11 +1104,36 @@ void KeyboardMouse::OnMouseRelease()
     //Middle mouse button
     case gadget::MBUTTON2:
     {
+        if( m_cameraManager.IsEnabled() && m_mousePickEvent )
+        {
+            UpdateSelectionLine();
+            if( m_cameraManager.Handle(
+                    scenegraph::camera::Event::RELEASE,
+                    *mLineSegmentIntersector.get() ) )
+            {
+                break;
+            }
+        }
         break;
     }
     //Right mouse button
     case gadget::MBUTTON3:
     {
+        if( m_characterController.IsEnabled() )
+        {
+            //inputArea.unlockMouse();
+        }
+
+        if( m_cameraManager.IsEnabled() && m_mousePickEvent )
+        {
+            UpdateSelectionLine();
+            if( m_cameraManager.Handle(
+                    scenegraph::camera::Event::RELEASE,
+                    *mLineSegmentIntersector.get() ) )
+            {
+                break;
+            }
+        }
         break;
     }
     default:

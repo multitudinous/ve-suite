@@ -37,13 +37,9 @@
 // --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
 
-#include <ves/xplorer/scenegraph/DCS.h>
-
 // --- OSG Includes --- //
 #include <osg/ref_ptr>
-#include <osg/Quat>
-#include <osg/Vec3d>
-#include <osg/Transform>
+#include <osg/Group>
 #include <osg/Texture2D>
 
 namespace osg
@@ -59,6 +55,8 @@ namespace xplorer
 {
 namespace scenegraph
 {
+class DCS;
+
 namespace camera
 {
 
@@ -73,7 +71,7 @@ namespace camera
 /*!\namespace ves::xplorer::scenegraph::camera
  *
  */
-class VE_SCENEGRAPH_EXPORTS CameraObject : public DCS
+class VE_SCENEGRAPH_EXPORTS CameraObject : public osg::Group
 {
 public:
     ///Constructor
@@ -88,7 +86,7 @@ public:
     META_Node( ves::xplorer::scenegraph::camera, CameraObject );
 
     ///Set the quad that this rtt camera should render into
-    void SetRenderQuad( osg::Geode* geode );
+    void SetRenderQuadTexture( osg::Geode& geode );
 
     ///Helper function to create a 2D texture for OSG
     osg::Texture2D* CreateViewportTexture(
@@ -98,9 +96,6 @@ public:
         osg::Texture2D::FilterMode filterMode,
         osg::Texture2D::WrapMode wrapMode,
         std::pair< int, int >& viewportDimensions );
-    
-    ///Get this DCS
-    ves::xplorer::scenegraph::DCS& GetCameraDCS();
 
     ///Have no earthly idea what this does
     void CalculateMatrixMVPT();
@@ -123,19 +118,16 @@ public:
     //void DisplayDepthHelperQuad( bool onOff );
 
     ///
-    //ves::xplorer::scenegraph::DCS* GetDCS();
-
-    ///
     osg::Camera& GetCamera();
 
-    ///Get the parent DCS of this camera class
-    osg::Group& GetPluginDCS();
+    ///
+    DCS& GetDCS();
 
     ///
     //ves::xplorer::scenegraph::DCS* GetQuadDCS();
 
     ///
-    const osg::Matrixd& GetInitialViewMatrix();
+    osg::Matrixd const& GetInitialViewMatrix();
 
     ///
     //osg::TexGenNode* GetTexGenNode();
@@ -168,10 +160,10 @@ public:
     //void setScale( const osg::Vec3d& scale );
 
     ///
-    void ShowCameraGeometry( const bool& show = true );
+    void ShowCameraGeometry( bool const& show = true );
 
     ///
-    void ShowFrustumGeometry( const bool& show = true );
+    void ShowFrustumGeometry( bool const& show = true );
 
     ///
     void Update();
@@ -203,10 +195,10 @@ private:
     osg::Matrixd m_initialViewMatrix;
 
     ///The matrix that takes a vertex from local coords into tex coords
-    osg::Matrixd mMVPT;
+    osg::Matrixd m_mvpt;
 
     ///Used to generate texture coordinates for camera projection
-    //osg::ref_ptr< osg::TexGenNode > mTexGenNode;
+    osg::ref_ptr< osg::TexGenNode > m_texGenNode;
 
     ///
     //cpt::DepthOfFieldTechnique* mDepthOfFieldTechnique;
@@ -217,26 +209,14 @@ private:
     ///
     //cpt::ProjectionTechnique* mProjectionTechnique;
 
-    ///A callback to update CameraObject relative to its DCS
-    //osg::ref_ptr< cpt::CameraEntityCallback > mCameraEntityCallback;
-
     ///Pointer to the HeadsUpDisplay for xplorer window
     //ves::xplorer::HeadsUpDisplay* mHeadsUpDisplay;
 
     ///
-    //ves::xplorer::scenegraph::ResourceManager* mResourceManager;
-
-    ///
-    //osg::ref_ptr< ves::xplorer::scenegraph::DCS > mPluginDCS;
-
-    ///
-    //osg::ref_ptr< CameraPAT > m_cameraPAT;
-
-    ///The loaded camera geometry node and frustum geometry lines
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > mCameraDCS;
-
-    ///
     osg::ref_ptr< osg::Camera > m_camera;
+
+    ///
+    osg::ref_ptr< DCS > m_dcs;
 
     ///
     osg::ref_ptr< osg::Node > m_cameraNode;
@@ -252,8 +232,10 @@ private:
 
     ///RTT render quad
     osg::ref_ptr< osg::Geode > m_renderQuad;
+
     ///RTT texture for the rtt quad
     osg::ref_ptr< osg::Texture2D > m_colorMap;
+
     ///The quad to show the intersection hit
     //osg::ref_ptr< osg::Geode > mHitQuadGeode;
 

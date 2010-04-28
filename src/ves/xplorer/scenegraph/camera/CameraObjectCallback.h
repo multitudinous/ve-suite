@@ -31,9 +31,10 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
-#ifndef CAMERA_OBJECT_CALLBACK_H
-#define CAMERA_OBJECT_CALLBACK_H
+#ifndef VES_XPLORER_SCENEGRAPH_CAMERA_CAMERAOBJECTCALLBACK_H
+#define VES_XPLORER_SCENEGRAPH_CAMERA_CAMERAOBJECTCALLBACK_H
 
+// --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
 
 // --- OSG Includes --- //
@@ -47,6 +48,7 @@ namespace scenegraph
 {
 namespace camera
 {
+
 class VE_SCENEGRAPH_EXPORTS CameraObjectCallback : public osg::NodeCallback
 {
 public:
@@ -59,10 +61,11 @@ protected:
     virtual ~CameraObjectCallback();
 
 private:
+
 };
-    
-}
-}
-}
-}
-#endif //CAMERA_OBJECT_CALLBACK_H
+} //end camera
+} //end scenegraph
+} //end xplorer
+} //end ves
+
+#endif //VES_XPLORER_SCENEGRAPH_CAMERA_CAMERAOBJECTCALLBACK_H

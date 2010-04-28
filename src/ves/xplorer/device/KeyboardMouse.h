@@ -176,10 +176,10 @@ private:
     void OnKeyRelease();
 
     ///Functions called on mouse press events
-    void OnMousePress();
+    void OnMousePress( gadget::InputArea& inputArea );
 
     ///Functions called on mouse release events
-    void OnMouseRelease();
+    void OnMouseRelease( gadget::InputArea& inputArea );
 
     ///Functions called on mouse move events
     void OnMouseMotionDown( double dx, double dy );

@@ -43,6 +43,7 @@
 
 #include <ves/xplorer/scenegraph/Masks.h>
 #include <ves/xplorer/scenegraph/SceneManager.h>
+#include <ves/xplorer/scenegraph/DCS.h>
 
 // --- vrJuggler Includes --- //
 //#include <gmtl/Xforms.h>
@@ -64,27 +65,30 @@
 
 // --- STL Includes --- //
 #include <iostream>
-//#include <sstream>
 
-using namespace ves::xplorer::scenegraph::camera;
+namespace ves
+{
+namespace xplorer
+{
+namespace scenegraph
+{
+namespace camera
+{
 
 ////////////////////////////////////////////////////////////////////////////////
 CameraObject::CameraObject()
     :
-    DCS(),
+    osg::Group(),
     //osg::PositionAttitudeTransform(),
     m_initialViewMatrix(),
-    //mTexGenNode( NULL ),
+    m_mvpt(),
+    m_texGenNode( NULL ),
     //mDepthOfFieldTechnique( NULL ),
     //mDepthHelperTechnique( NULL ),
     //mProjectionTechnique( NULL ),
-    //mCameraEntityCallback( NULL ),
     //mHeadsUpDisplay( NULL ),
-    //mResourceManager( NULL ),
-    //mPluginDCS( NULL ),
-    //m_cameraPAT( NULL ),
-    mCameraDCS( NULL ),
     m_camera( NULL ),
+    m_dcs( NULL ),
     m_cameraNode( NULL ),
     m_frustumGeode( NULL ),
     m_frustumGeometry( NULL ),
@@ -106,20 +110,17 @@ CameraObject::CameraObject(
     const CameraObject& cameraObject,
     const osg::CopyOp& copyop )
     :
-    DCS( cameraObject, copyop ),
+    osg::Group( cameraObject, copyop ),
     //osg::PositionAttitudeTransform( camera, copyop ),
     m_initialViewMatrix( cameraObject.m_initialViewMatrix ),
-    //mTexGenNode( camera.mTexGenNode.get() ),
+    m_mvpt( cameraObject.m_mvpt ),
+    m_texGenNode( cameraObject.m_texGenNode.get() ),
     //mDepthOfFieldTechnique( camera.mDepthOfFieldTechnique ),
     //mDepthHelperTechnique( camera.mDepthHelperTechnique ),
     //mProjectionTechnique( camera.mProjectionTechnique ),
-    //mCameraEntityCallback( camera.mCameraEntityCallback.get() ),
     //mHeadsUpDisplay( camera.mHeadsUpDisplay ),
-    //mResourceManager( camera.mResourceManager ),
-    //mPluginDCS( camera.mPluginDCS.get() ),
-    //m_cameraPAT( camera.m_cameraPAT.get() ),
-    mCameraDCS( cameraObject.mCameraDCS.get() ),
     m_camera( cameraObject.m_camera.get() ),
+    m_dcs( cameraObject.m_dcs.get() ),
     m_cameraNode( cameraObject.m_cameraNode.get() ),
     m_frustumGeode( cameraObject.m_frustumGeode.get() ),
     m_frustumGeometry( cameraObject.m_frustumGeometry.get() ),
@@ -162,10 +163,11 @@ CameraObject::~CameraObject()
 ////////////////////////////////////////////////////////////////////////////////
 void CameraObject::Initialize()
 {
+    //Create osg camera for rendering
     m_camera = new osg::Camera();
-    m_camera->setRenderOrder( osg::Camera::PRE_RENDER );
+    m_camera->setRenderOrder( osg::Camera::POST_RENDER );
     m_camera->setClearMask( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
-    m_camera->setClearColor( osg::Vec4( 0.5, 0.5, 0.5, 1.0 ) );
+    m_camera->setClearColor( osg::Vec4( 0.0, 0.0, 0.0, 1.0 ) );
     //setComputeNearFarMode( osg::Camera::DO_NOT_COMPUTE_NEAR_FAR );
     m_camera->setRenderTargetImplementation( osg::Camera::FRAME_BUFFER_OBJECT );
     m_camera->setReferenceFrame( osg::Camera::ABSOLUTE_RF );
@@ -177,10 +179,10 @@ void CameraObject::Initialize()
         GL_RGBA16F_ARB, GL_RGBA, GL_FLOAT,
         osg::Texture2D::LINEAR, osg::Texture2D::CLAMP_TO_EDGE,
         textureRes );
-    
+
     //Attach the camera view texture and use it as the first render target
-    m_camera->attach( 
-        osg::Camera::BufferComponent( osg::Camera::COLOR_BUFFER0 ), 
+    m_camera->attach(
+        osg::Camera::BufferComponent( osg::Camera::COLOR_BUFFER0 ),
         m_colorMap.get() );
     //Attach the depth texture and use it as the second render target
     //attach( osg::Camera::BufferComponent( osg::Camera::COLOR_BUFFER1 ),
@@ -194,34 +196,25 @@ void CameraObject::Initialize()
     m_camera->setViewMatrix( m_initialViewMatrix );
     m_camera->setProjectionMatrixAsPerspective( 20.0, 1.0, 0.1, 2.0 );
 
+    //Add the subgraph to render
     m_camera->addChild( &SceneManager::instance()->GetGraphicalPluginManager() );
+    addChild( m_camera.get() );
+
+    //Create DCS
+    m_dcs = new DCS();
+    addChild( m_dcs.get() );
 
     //Initialize update callback
-    m_camera->setUpdateCallback( new CameraObjectCallback() );
-    
-    //
-    //m_cameraPAT = new CameraPAT( *this );
+    setUpdateCallback( new CameraObjectCallback() );
 
-    //Add the subgraph to render
-    //addChild( m_cameraPAT.get() );
-    //addChild( mPluginDCS.get() );
+    //Initialize m_mvpt
+    m_mvpt = osg::Matrix::identity();
 
-    //Initialize mMVPT
-    //mMVPT = osg::Matrix::identity();
-
-    //Initialize mTexGenNode
-    //mTexGenNode = new osg::TexGenNode();
-    //mTexGenNode->getTexGen()->setMode( osg::TexGen::EYE_LINEAR );
-    //mTexGenNode->setTextureUnit( 0 );
-    //mPluginDCS->addChild( mTexGenNode.get() );
-
-    //Initialize mCameraEntityCallback
-    //mCameraEntityCallback = new cpt::CameraEntityCallback();
-    //setUpdateCallback( mCameraEntityCallback.get() );
-
-    //Initialize mCameraDCS
-    mCameraDCS = this;
-    //mPluginDCS->addChild( mCameraDCS.get() );
+    //Initialize m_texGenNode
+    m_texGenNode = new osg::TexGenNode();
+    m_texGenNode->getTexGen()->setMode( osg::TexGen::EYE_LINEAR );
+    //m_texGenNode->setTextureUnit( 0 );
+    //addChild( m_texGenNode.get() );
 
     //Create visual representation of this camera
     CreateGeometry();
@@ -272,12 +265,12 @@ void CameraObject::CalculateMatrixMVPT()
 {
     //Compute the matrix which takes a vertex from local coords into tex coords
     //Multiply the ModelView(MV) by the Projection(P) by the Texture(T) matrix
-    mMVPT = m_camera->getViewMatrix() *
-            m_camera->getProjectionMatrix() *
-            osg::Matrix::translate( 1.0f, 1.0f, 1.0f ) *
-            osg::Matrix::scale( 0.5f, 0.5f, 0.5f );
+    m_mvpt = m_camera->getViewMatrix() *
+             m_camera->getProjectionMatrix() *
+             osg::Matrixd::translate( 1.0, 1.0, 1.0 ) *
+             osg::Matrixd::scale( 0.5, 0.5, 0.5 );
 
-    //mTexGenNode->getTexGen()->setPlanesFromMatrix( mMVPT );
+    m_texGenNode->getTexGen()->setPlanesFromMatrix( m_mvpt );
 }
 ////////////////////////////////////////////////////////////////////////////////
 /*
@@ -399,7 +392,7 @@ void CameraObject::CreateGeometry()
 
     //Add the geometric model for the camera
     m_cameraNode = osgDB::readNodeFile( "osg-data/camera.ive" );
-    addChild( m_cameraNode.get() );
+    m_dcs->addChild( m_cameraNode.get() );
 
     //Create the geometric lines for the frustum
     m_frustumGeode = new osg::Geode();
@@ -430,20 +423,18 @@ void CameraObject::CreateGeometry()
         osg::PrimitiveSet::LINE_LOOP, 4, idxLoops1 ) );
     m_frustumGeode->addDrawable( m_frustumGeometry.get() );
 
-    /*
     osg::ref_ptr< osg::StateSet > stateset = new osg::StateSet();
-    stateset->setRenderBinDetails( 0, "RenderBin" );
+    //stateset->setRenderBinDetails( 0, "RenderBin" );
     stateset->setMode(
         GL_LIGHTING,
         osg::StateAttribute::OFF | osg::StateAttribute::PROTECTED );
-    stateset->setAttribute(
-        ( mResourceManager->get
-        < osg::Program, osg::ref_ptr >( "FrustumProgram" ) ).get(),
-        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+    //stateset->setAttribute(
+        //( mResourceManager->get
+        //< osg::Program, osg::ref_ptr >( "FrustumProgram" ) ).get(),
+        //osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
     m_frustumGeode->setStateSet( stateset.get() );
-    */
 
-    addChild( m_frustumGeode.get() );
+    m_dcs->addChild( m_frustumGeode.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 /*
@@ -599,24 +590,17 @@ void CameraObject::DisplayDepthHelperQuad( bool onOff )
 }
 */
 ////////////////////////////////////////////////////////////////////////////////
-/*
-ves::xplorer::scenegraph::DCS* CameraObject::GetDCS()
-{
-    return m_cameraPAT.get();
-}
-*/
-////////////////////////////////////////////////////////////////////////////////
 osg::Camera& CameraObject::GetCamera()
 {
-    return *(m_camera.get());
+    return *m_camera.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
-osg::Group& CameraObject::GetPluginDCS()
+DCS& CameraObject::GetDCS()
 {
-    return *(getParent(0));
+    return *m_dcs.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
-const osg::Matrixd& CameraObject::GetInitialViewMatrix()
+osg::Matrixd const& CameraObject::GetInitialViewMatrix()
 {
     return m_initialViewMatrix;
 }
@@ -624,7 +608,7 @@ const osg::Matrixd& CameraObject::GetInitialViewMatrix()
 /*
 osg::TexGenNode* CameraObject::GetTexGenNode()
 {
-    return mTexGenNode.get();
+    return m_texGenNode.get();
 }
 */
 ////////////////////////////////////////////////////////////////////////////////
@@ -643,8 +627,8 @@ void CameraObject::SetNamesAndDescriptions()
     descriptorsList.push_back( "VE_XML_ID" );
     descriptorsList.push_back( "" );
 
-    setDescriptions( descriptorsList );
-    setName( "CameraObject" );
+    m_dcs->setDescriptions( descriptorsList );
+    m_dcs->setName( "CameraDCS" );
 }
 ////////////////////////////////////////////////////////////////////////////////
 /*
@@ -712,12 +696,12 @@ void CameraObject::setScale( const osg::Vec3d& scale )
 }
 */
 ////////////////////////////////////////////////////////////////////////////////
-void CameraObject::ShowCameraGeometry( const bool& show )
+void CameraObject::ShowCameraGeometry( bool const& show )
 {
     m_cameraNode->setNodeMask( show );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CameraObject::ShowFrustumGeometry( const bool& show )
+void CameraObject::ShowFrustumGeometry( bool const& show )
 {
     m_frustumGeode->setNodeMask( show );
 }
@@ -725,7 +709,7 @@ void CameraObject::ShowFrustumGeometry( const bool& show )
 void CameraObject::Update()
 {
     //Update the MVPT matrix
-    //CalculateMatrixMVPT();
+    CalculateMatrixMVPT();
 
     //Update the frustum geode
     osg::Matrixd projectionMatrix = m_camera->getProjectionMatrix();
@@ -790,14 +774,10 @@ void CameraObject::Update()
     */
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CameraObject::SetRenderQuad( osg::Geode* geode )
+void CameraObject::SetRenderQuadTexture( osg::Geode& geode )
 {
-    m_renderQuad = geode;
-    osg::ref_ptr< osg::StateSet > stateset = 
-        m_renderQuad->getDrawable( 0 )->getStateSet();
-    stateset->setTextureAttributeAndModes(
+    geode.getStateSet()->setTextureAttributeAndModes(
         0, m_colorMap.get(), osg::StateAttribute::ON );
-    m_renderQuad->dirtyBound();
 }
 ////////////////////////////////////////////////////////////////////////////////
 osg::Texture2D* CameraObject::CreateViewportTexture(
@@ -808,24 +788,23 @@ osg::Texture2D* CameraObject::CreateViewportTexture(
     osg::Texture2D::WrapMode wrapMode,
     std::pair< int, int >& viewportDimensions )
 {
+    //GL_RGBA8/GL_UNSIGNED_INT - GL_RGBA16F_ARB/GL_FLOAT
     osg::Texture2D* tempTexture = new osg::Texture2D();
-    //GL_RGBA8/GL_UNSIGNED_INT - GL_RGBA16F_ARB/GL_FLOAT 
-    
-    tempTexture->setInternalFormat( GL_RGBA16F_ARB );
-    tempTexture->setSourceFormat( GL_RGBA );
-    tempTexture->setSourceType( GL_FLOAT );
+    tempTexture->setInternalFormat( internalFormat );
+    tempTexture->setSourceFormat( sourceFormat );
+    tempTexture->setSourceType( sourceType );
     tempTexture->setFilter( osg::Texture2D::MIN_FILTER, filterMode );
     tempTexture->setFilter( osg::Texture2D::MAG_FILTER, filterMode );
     tempTexture->setWrap( osg::Texture2D::WRAP_S, wrapMode );
     tempTexture->setWrap( osg::Texture2D::WRAP_T, wrapMode );
     tempTexture->setTextureSize(
-                                viewportDimensions.first, viewportDimensions.second );
-    
+        viewportDimensions.first, viewportDimensions.second );
+
     return tempTexture;
 }
 ////////////////////////////////////////////////////////////////////////////////
-ves::xplorer::scenegraph::DCS& CameraObject::GetCameraDCS()
-{
-    return *(mCameraDCS.get());
-}
-////////////////////////////////////////////////////////////////////////////////
+
+} //end camera
+} //end scenegraph
+} //end xplorer
+} //end ves

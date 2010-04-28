@@ -93,7 +93,7 @@ osg::BoundingSphere CameraManager::computeBound() const
 CameraObject* const CameraManager::ConvertNodeToCameraObject(
     osg::Node* const node )
 {
-    return dynamic_cast< CameraObject* >( node );
+    return static_cast< CameraObject* >( node );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraManager::Enable( const bool& enable )
@@ -122,14 +122,15 @@ bool CameraManager::Handle(
     osgUtil::LineSegmentIntersector::Intersections& intersections =
         scenegraph::TestForIntersections(
             deviceInput, *this, TraversalMask::CAMERA );
-    if( intersections.empty() )
-    {
-        return NULL;
-    }
 
-    osg::NodePath nodePath = intersections.begin()->nodePath;
-    CameraObject* cameraObject =
-        ConvertNodeToCameraObject( scenegraph::FindVESObject( nodePath ) );
+    CameraObject* cameraObject( NULL );
+    if( !intersections.empty() )
+    {
+        osg::NodePath nodePath = intersections.begin()->nodePath;
+        cameraObject =
+            ConvertNodeToCameraObject(
+                scenegraph::FindVESObject( nodePath )->getParent( 0 ) );
+    }
 
     switch( event )
     {
@@ -137,9 +138,7 @@ bool CameraManager::Handle(
     {
         if( cameraObject )
         {
-            //camera->DoSomething();
-            cameraObject->SetRenderQuad( GetCameraManagerQuad() );
-            std::cout<< "Just focused on a camera in the scene!!!" << std::endl;
+            //camera->DoSomething(); like change color or something
         }
 
         break;
@@ -183,8 +182,17 @@ void CameraManager::SetActiveCameraObject( CameraObject* cameraObject )
         return;
     }
 
+    if( cameraObject )
+    {
+        m_rttQuad->setNodeMask( 1 );
+        cameraObject->SetRenderQuadTexture( *m_rttQuad.get() );
+    }
+    else
+    {
+        m_rttQuad->setNodeMask( 0 );
+    }
+
     m_activeCamera = cameraObject;
-    m_activeCamera->SetRenderQuad( GetCameraManagerQuad() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool CameraManager::setChild( unsigned int i, CameraObject* node )
@@ -199,9 +207,9 @@ osg::Geode* CameraManager::CreateMasterCameraQuad()
         new osg::Vec3Array();
     cameraViewQuadVertices->resize( 4 );
     (*cameraViewQuadVertices)[ 0 ].set( 0.0, 0.0, -1.0 );
-    (*cameraViewQuadVertices)[ 1 ].set( 100.0, 0.0, -1.0 );
-    (*cameraViewQuadVertices)[ 2 ].set( 100.0, 100.0, -1.0 );
-    (*cameraViewQuadVertices)[ 3 ].set( 0.0, 100.0, -1.0 );
+    (*cameraViewQuadVertices)[ 1 ].set( 200.0, 0.0, -1.0 );
+    (*cameraViewQuadVertices)[ 2 ].set( 200.0, 200.0, -1.0 );
+    (*cameraViewQuadVertices)[ 3 ].set( 0.0, 200.0, -1.0 );
 
     //Get the texture coordinates for the quad
     osg::ref_ptr< osg::Vec2Array > quadTexCoords = new osg::Vec2Array();
@@ -217,25 +225,15 @@ osg::Geode* CameraManager::CreateMasterCameraQuad()
     quadGeometry->addPrimitiveSet( new osg::DrawArrays( 
         osg::PrimitiveSet::QUADS, 0, cameraViewQuadVertices->size() ) );
     quadGeometry->setTexCoordArray( 0, quadTexCoords.get() );
-    quadGeometry->setUseDisplayList( true );
-    //quadGeometry->setColorBinding( osg::Geometry::BIND_OFF );
-    osg::ref_ptr< osg::Vec4Array > c = new osg::Vec4Array();
-    c->push_back( osg::Vec4( 1.0, 1.0, 0., 1. ) );
-    quadGeometry->setColorArray( c.get() );
-    quadGeometry->setColorBinding( osg::Geometry::BIND_OVERALL );
-    quadGeometry->dirtyDisplayList();
-    quadGeometry->dirtyBound();
 
     //Set the stateset for the quad
-    osg::ref_ptr< osg::StateSet > stateset =
-        quadGeometry->getOrCreateStateSet();
+    osg::ref_ptr< osg::StateSet > stateset = new osg::StateSet();
     stateset->setMode( GL_LIGHTING, osg::StateAttribute::OFF );
 
     osg::Geode* quadGeode = new osg::Geode();
     quadGeode->setCullingActive( false );
     quadGeode->addDrawable( quadGeometry.get() );
-    quadGeode->getOrCreateStateSet()->
-        setMode( GL_LIGHTING, osg::StateAttribute::OFF );
+    quadGeode->setStateSet( stateset.get() );
 
     return quadGeode;
 }

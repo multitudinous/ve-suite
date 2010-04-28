@@ -31,35 +31,30 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
-// --- My Includes --- //
+// --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/camera/CameraObjectCallback.h>
 #include <ves/xplorer/scenegraph/camera/CameraObject.h>
 
-// --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/DCS.h>
-#include <ves/xplorer/scenegraph/Group.h>
-#include <ves/xplorer/scenegraph/CoordinateSystemTransform.h>
 
+// --- OSG Includes --- //
 #include <osg/Camera>
-
-// --- vrJuggler Includes --- //
-#include <gmtl/Xforms.h>
 
 using namespace ves::xplorer::scenegraph::camera;
 
 ////////////////////////////////////////////////////////////////////////////////
 CameraObjectCallback::CameraObjectCallback()
-:
-osg::Object(),
-osg::NodeCallback()
+    :
+    osg::Object(),
+    osg::NodeCallback()
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 CameraObjectCallback::CameraObjectCallback( const CameraObjectCallback& input )
-:
-osg::Object( input ),
-osg::NodeCallback( input )
+    :
+    osg::Object( input ),
+    osg::NodeCallback( input )
 {
     if( &input != this )
     {
@@ -69,30 +64,25 @@ osg::NodeCallback( input )
 ////////////////////////////////////////////////////////////////////////////////
 CameraObjectCallback::~CameraObjectCallback()
 {
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraObjectCallback::operator()( osg::Node* node, osg::NodeVisitor* nv )
 {
-    osg::ref_ptr< CameraObject > cameraEntity =
+    osg::ref_ptr< CameraObject > cameraObject =
         static_cast< CameraObject* >( node );
 
-    if( cameraEntity.valid() )
+    if( cameraObject.valid() )
     {
-        osg::ref_ptr< ves::xplorer::scenegraph::CoordinateSystemTransform >
-            coordinateSystemTransform =
-                new ves::xplorer::scenegraph::CoordinateSystemTransform(
-                    &(cameraEntity->GetPluginDCS()),
-                    &(cameraEntity->GetCameraDCS()) );
+        osg::Matrixd tempMatrix( cameraObject->GetDCS().GetMat().getData() );
+        tempMatrix =
+            osg::Matrixd::inverse( tempMatrix ) *
+            cameraObject->GetInitialViewMatrix();
 
-        gmtl::Matrix44d localToWorldMatrix =
-            coordinateSystemTransform->GetTransformationMatrix();
+        cameraObject->GetCamera().setViewMatrix( tempMatrix );
+        cameraObject->CalculateMatrixMVPT();
 
-        osg::Matrixd tempMatrix( localToWorldMatrix.getData() );
-        tempMatrix = osg::Matrix::inverse( tempMatrix ) *
-                     cameraEntity->GetInitialViewMatrix();
-        
-        cameraEntity->GetCamera().setViewMatrix( tempMatrix );
-        cameraEntity->CalculateMatrixMVPT();
+        return;
     }
 
     traverse( node, nv );
