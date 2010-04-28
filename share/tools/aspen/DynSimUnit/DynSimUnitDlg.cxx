@@ -140,8 +140,7 @@ LRESULT CDynSimUnitDlg::WindowProc(UINT message,
         if(!OnIdleRetVal)
             wParam = 0;
     } else
-        resValue = CDialog::WindowProc(message, 
-        wParam, lParam);
+        resValue = CDialog::WindowProc(message, wParam, lParam);
 
     QueueStatus = GetQueueStatus(QS_ALLINPUT);
 
