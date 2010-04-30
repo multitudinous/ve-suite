@@ -75,6 +75,7 @@ static btVector3 getNormalizedVector( const btVector3& v )
 /// -> Should integrate falling velocity manually and use that in stepDown()
 ///Support jumping
 ///Support ducking
+//Use ray cast to test for geometry that is not representative of its collision shape
 class btKinematicClosestNotMeRayResultCallback :
     public btCollisionWorld::ClosestRayResultCallback
 {
@@ -197,13 +198,11 @@ KinematicCharacterController::KinematicCharacterController()
 
     m_touchingContact( false ),
     m_wasOnGround( false ),
-    m_useGhostObjectSweepTest( true ),
     //Use walk direction by default, legacy behavior
     m_useWalkDirection( true ),
 
     m_fly( false ),
     m_jump( false ),
-    //m_supported( false ),
 
     m_upAxis( 2 ),
 
@@ -249,7 +248,7 @@ KinematicCharacterController::KinematicCharacterController()
     m_lineGeode( NULL )
 {
     //Set max slope for character climbing
-    setMaxSlope( btRadians( 50.0 ) );
+    setMaxSlope( btRadians( 45.0 ) );
 
     btBroadphaseInterface* broadphase = m_dynamicsWorld.getBroadphase();
     broadphase->getOverlappingPairCache()->setInternalGhostPairCallback(
@@ -286,7 +285,7 @@ KinematicCharacterController::KinematicCharacterController()
 
     osg::Group* modelRoot =
         ves::xplorer::scenegraph::SceneManager::instance()->GetModelRoot();
-    modelRoot->addChild( m_lineGeode.get() );
+    //modelRoot->addChild( m_lineGeode.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 KinematicCharacterController::~KinematicCharacterController()
@@ -351,7 +350,7 @@ bool KinematicCharacterController::recoverFromPenetration(
                         m_touchingNormal = pt.m_normalWorldOnB * directionSign;
                     }
 
-                    m_currentPosition += pt.m_normalWorldOnB * directionSign * dist * btScalar(0.2);
+                    m_currentPosition += pt.m_normalWorldOnB * directionSign * dist * btScalar( 0.2 );
                     penetration = true;
                 }
                 else
@@ -377,7 +376,10 @@ void KinematicCharacterController::stepUp( btCollisionWorld* world )
     //Phase 1: up
     m_targetPosition =
         m_currentPosition + getUpAxisDirections()[ m_upAxis ] *
-        ( m_stepHeight + ( m_verticalOffset > btScalar( 0.0 ) ? m_verticalOffset : btScalar( 0.0 ) ) );
+        ( m_stepHeight +
+        ( m_verticalOffset > btScalar( 0.0 )
+            ? m_verticalOffset
+            : btScalar( 0.0 ) ) );
 
     /* FIXME: Handle penetration properly */
     //this would be offset for character height from center
@@ -396,16 +398,10 @@ void KinematicCharacterController::stepUp( btCollisionWorld* world )
         m_ghostObject->getBroadphaseHandle()->m_collisionFilterGroup;
     callback.m_collisionFilterMask =
         m_ghostObject->getBroadphaseHandle()->m_collisionFilterMask;
-    if( m_useGhostObjectSweepTest )
-    {
-        m_ghostObject->convexSweepTest(
-            m_convexShape, start, end, callback,
-            world->getDispatchInfo().m_allowedCcdPenetration );
-    }
-    else
-    {
-        world->convexSweepTest( m_convexShape, start, end, callback );
-    }
+
+    m_ghostObject->convexSweepTest(
+        m_convexShape, start, end, callback,
+        world->getDispatchInfo().m_allowedCcdPenetration );
 
     if( callback.hasHit() )
     {
@@ -467,6 +463,11 @@ void KinematicCharacterController::updateTargetPositionBasedOnCollision(
 void KinematicCharacterController::stepForwardAndStrafe(
     btCollisionWorld* collisionWorld, const btVector3& walkMove )
 {
+    if( !m_wasOnGround )
+    {
+        //return;
+    }
+
     //printf( "m_normalizedDirection = %f, %f, %f\n", m_normalizedDirection[ 0 ], m_normalizedDirection[ 1 ], m_normalizedDirection[ 2 ] );
     //Phase 2: forward and strafe
     m_targetPosition = m_currentPosition + walkMove;
@@ -504,18 +505,9 @@ void KinematicCharacterController::stepForwardAndStrafe(
         btScalar margin = m_convexShape->getMargin();
         m_convexShape->setMargin( margin + m_addedMargin );
 
-        if( m_useGhostObjectSweepTest )
-        {
-            m_ghostObject->convexSweepTest(
-                m_convexShape, start, end, callback,
-                collisionWorld->getDispatchInfo().m_allowedCcdPenetration );
-        }
-        else
-        {
-            collisionWorld->convexSweepTest(
-                m_convexShape, start, end, callback,
-                collisionWorld->getDispatchInfo().m_allowedCcdPenetration );
-        }
+        m_ghostObject->convexSweepTest(
+            m_convexShape, start, end, callback,
+            collisionWorld->getDispatchInfo().m_allowedCcdPenetration );
 
         m_convexShape->setMargin( margin );
 
@@ -527,15 +519,8 @@ void KinematicCharacterController::stepForwardAndStrafe(
             //btScalar hitDistance =
                 //( callback.m_hitPointWorld - m_currentPosition ).length();
 
-            /*
-            //If the distance is farther than the collision margin, move
-            if( hitDistance > m_addedMargin )
-            {
-                //printf( "callback.m_closestHitFraction = %f\n", callback.m_closestHitFraction );
-                m_currentPosition.setInterpolate3(
-                    m_currentPosition, m_targetPosition, callback.m_closestHitFraction );
-            }
-            */
+            //m_currentPosition.setInterpolate3(
+                //m_currentPosition, m_targetPosition, callback.m_closestHitFraction );
 
             updateTargetPositionBasedOnCollision( callback.m_hitNormalWorld );
             btVector3 currentDir = m_targetPosition - m_currentPosition;
@@ -571,11 +556,28 @@ void KinematicCharacterController::stepDown(
     btCollisionWorld* collisionWorld, btScalar dt )
 {
     //Phase 3: down
-    btScalar additionalDownStep = ( m_wasOnGround /*&& !onGround()*/ ) ? m_stepHeight : btScalar( 0.0 );
-    btVector3 step_drop = getUpAxisDirections()[ m_upAxis ] * ( m_currentStepOffset + additionalDownStep );
-    btScalar downVelocity = ( additionalDownStep == btScalar( 0.0 ) && m_verticalVelocity<btScalar( 0.0 ) ? -m_verticalVelocity:btScalar( 0.0 ) ) * dt;
-    btVector3 gravity_drop = getUpAxisDirections()[ m_upAxis ] * downVelocity; 
-    m_targetPosition -= ( step_drop + gravity_drop );
+    //btScalar additionalDownStep = ( m_wasOnGround /*&& !onGround()*/ ) ? m_stepHeight : btScalar( 0.0 );
+    //btVector3 step_drop =
+        //getUpAxisDirections()[ m_upAxis ] * ( m_currentStepOffset + additionalDownStep );
+    //btScalar downVelocity =
+        //( additionalDownStep == btScalar( 0.0 ) && m_verticalVelocity < btScalar( 0.0 )
+            //? -m_verticalVelocity
+            //: btScalar( 0.0 ) ) * dt;
+    //btVector3 gravity_drop = getUpAxisDirections()[ m_upAxis ] * downVelocity; 
+    //m_targetPosition -= ( step_drop + gravity_drop );
+
+    btScalar downVelocity =
+        ( m_verticalVelocity < 0.0 ? -m_verticalVelocity : 0.0 ) * dt;
+    if( downVelocity > 0.0 &&
+        downVelocity < m_stepHeight &&
+        ( m_wasOnGround /*|| !m_wasJumping*/ ) )
+    {
+        downVelocity = m_stepHeight;
+    }
+
+    btVector3 step_drop = getUpAxisDirections()[ m_upAxis ] *
+                          ( m_currentStepOffset + downVelocity );
+    m_targetPosition -= step_drop;
 
     btTransform start( btMatrix3x3::getIdentity() );
     btTransform end( btMatrix3x3::getIdentity() );
@@ -590,18 +592,10 @@ void KinematicCharacterController::stepDown(
         m_ghostObject->getBroadphaseHandle()->m_collisionFilterGroup;
     callback.m_collisionFilterMask =
         m_ghostObject->getBroadphaseHandle()->m_collisionFilterMask;
-    if( m_useGhostObjectSweepTest )
-    {
-        m_ghostObject->convexSweepTest(
-            m_convexShape, start, end, callback,
-            collisionWorld->getDispatchInfo().m_allowedCcdPenetration );
-    }
-    else
-    {
-        collisionWorld->convexSweepTest(
-            m_convexShape, start, end, callback,
-            collisionWorld->getDispatchInfo().m_allowedCcdPenetration );
-    }
+
+    m_ghostObject->convexSweepTest(
+        m_convexShape, start, end, callback,
+        collisionWorld->getDispatchInfo().m_allowedCcdPenetration );
 
     //
     if( callback.hasHit() )
@@ -611,22 +605,12 @@ void KinematicCharacterController::stepDown(
             m_currentPosition, m_targetPosition, callback.m_closestHitFraction );
         m_verticalVelocity = 0.0;
         m_verticalOffset = 0.0;
-
-        //btVector3 hpw = callback.m_hitPointWorld;
-        //osg::Vec3d hitPointWorld( hpw.x(), hpw.y(), hpw.z() );
-        //btVector3 hnw = callback.m_hitNormalWorld;
-        //osg::Vec3d hitNormalWorld( hnw.x(), hnw.y(), hnw.z() );
-        //DrawLine( hitPointWorld, hitPointWorld + ( hitNormalWorld * 4.0 ) );
-        //m_supported = true;
-        //m_elapsedFallTime = 0.0;
+        //m_wasJumping = false;
     }
     else
     {
         //We dropped the full height
         m_currentPosition = m_targetPosition;
-
-        //m_supported = false;
-        //m_elapsedFallTime += dt;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -678,7 +662,7 @@ void KinematicCharacterController::Reset()
     warp( btVector3( 0.0, 0.0, m_characterHeight ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void KinematicCharacterController::EnableFlying( const bool& canFly )
+void KinematicCharacterController::EnableFlying( bool const& canFly )
 {
     m_fly = canFly;
     if( m_fly )
@@ -686,6 +670,8 @@ void KinematicCharacterController::EnableFlying( const bool& canFly )
         m_forwardBackwardSpeedModifier *= m_flySpeedModifier;
         m_leftRightSpeedModifier *= m_flySpeedModifier;
         m_upDownSpeedModifier *= m_flySpeedModifier;
+        m_verticalVelocity = 0.0;
+        m_verticalOffset = 0.0;
     }
     else
     {
@@ -740,6 +726,8 @@ void KinematicCharacterController::playerStep(
 
     m_wasOnGround = onGround();
 
+    if( !m_fly )
+    {
     //Update fall velocity
     m_verticalVelocity -= m_gravity * dt;
     if( m_verticalVelocity > 0.0 && m_verticalVelocity > m_jumpSpeed )
@@ -751,6 +739,7 @@ void KinematicCharacterController::playerStep(
         m_verticalVelocity = -btFabs( m_fallSpeed );
     }
     m_verticalOffset = m_verticalVelocity * dt;
+    }
 
     btTransform xform;
     xform = m_ghostObject->getWorldTransform();
@@ -759,7 +748,7 @@ void KinematicCharacterController::playerStep(
     //printf( "walkSpeed = %f\n", walkSpeed );
 
     //Do sweep test above character
-    if( !m_fly && !m_jump )
+    if( !m_fly )
     {
         stepUp( collisionWorld );
     }
@@ -787,12 +776,10 @@ void KinematicCharacterController::playerStep(
     }
 
     //Do sweep test below the character
-    if( !m_fly && !m_jump )
+    if( !m_fly )
     {
         stepDown( collisionWorld, dt );
     }
-
-    //printf( "\n" );
 
     xform.setOrigin( m_currentPosition );
     m_ghostObject->setWorldTransform( xform );
@@ -831,6 +818,7 @@ void KinematicCharacterController::jump()
     }
 
     m_verticalVelocity = m_jumpSpeed;
+    //m_wasJumping = true;
 
 #if 0
     //Currently no jumping

@@ -246,8 +246,7 @@ void CharacterController::StepForward( bool onOff )
     else if( m_translateType & TranslateType::STEP_FORWARD )
     {
         m_translateType = m_translateType ^ TranslateType::STEP_FORWARD;
-        //Need to look at this!!!
-        SetRotationFromCamera();
+
 #ifdef VES_USE_ANIMATED_CHARACTER
         mCharacterAnimations->setSingleChildOn( 0 );
 #endif
@@ -266,8 +265,7 @@ void CharacterController::StepBackward( bool onOff )
     else if( m_translateType & TranslateType::STEP_BACKWARD )
     {
         m_translateType = m_translateType ^ TranslateType::STEP_BACKWARD;
-        //Need to look at this!!!
-        SetRotationFromCamera();
+
 #ifdef VES_USE_ANIMATED_CHARACTER
         mCharacterAnimations->setSingleChildOn( 0 );
 #endif
@@ -380,7 +378,7 @@ void CharacterController::SetCameraRotationSLERP( bool onOff )
 void CharacterController::SetRotationFromCamera()
 {
     //Get current character transform
-    btTransform xform = m_ghostObject->getWorldTransform();
+    btTransform& xform = m_ghostObject->getWorldTransform();
     if( m_fly && ( m_translateType & TranslateType::STEP_FORWARD_BACKWARD ) )
     {
         xform.setRotation( mCameraRotation.inverse() );
@@ -389,7 +387,6 @@ void CharacterController::SetRotationFromCamera()
     {
         xform.setRotation( mCameraRotationZ.inverse() );
     }
-    m_ghostObject->setWorldTransform( xform );
 
     mToTurnAngleZ = mTurnAngleZ;
 }
@@ -469,21 +466,19 @@ void CharacterController::UpdateCamera()
         CameraDistanceLERP();
     }
 
-    //Get the current character transform
-    btTransform characterWorldTrans = m_ghostObject->getWorldTransform();
-    //Set the rotation with the camera's rotation
-    characterWorldTrans.setRotation( mCameraRotation );
+    //Get the current camera's rotation
+    btMatrix3x3 basis( mCameraRotation );
 
     //Get the up vector of the camera
-    btVector3 up = characterWorldTrans.getBasis()[ 2 ];
-    up.normalize();
-    
+    btVector3 up = basis[ 2 ].normalize();
+
     //Get the backward direction of the camera
-    btVector3 backward = -characterWorldTrans.getBasis()[ 1 ];
-    backward.normalize();
+    btVector3 backward = -basis[ 1 ].normalize();
 
     //Get the center of the character
-    btVector3 center = characterWorldTrans.getOrigin() + mLookAtOffsetZ;
+    btVector3 center =
+        m_ghostObject->getWorldTransform().getOrigin() + mLookAtOffsetZ;
+
     //Calculate where the position of the eye is w/ no occluders
     btVector3 eye = center + backward * mCameraDistance;
 
@@ -809,72 +804,56 @@ void CharacterController::UpdateRotation()
 ////////////////////////////////////////////////////////////////////////////////
 void CharacterController::UpdateTranslation( btScalar dt )
 {
-    btVector3 displacement( 0.0, 0.0, 0.0 );
+    btVector3 velocity( 0.0, 0.0, 0.0 );
 
     //Calculate character translation
     if( !m_translateType )
     {
-        setDisplacement( displacement );
+        setVelocityForTimeInterval( velocity, dt );
         return;
     }
 
-    btTransform xform = m_ghostObject->getWorldTransform();
-    xform.setRotation( xform.getRotation().inverse() );
+    btMatrix3x3 basis(
+        m_ghostObject->getWorldTransform().getRotation().inverse() );
 
     if( m_translateType & TranslateType::STEP_FORWARD_BACKWARD )
     {
-        btVector3 forwardBackwardDisplacement( 0.0, 0.0, 0.0 );
-        btVector3 forwardDir = xform.getBasis()[ 1 ];
-        forwardDir.normalize();
+        btVector3 forwardVel = basis[ 1 ].normalize() * m_forwardBackwardSpeedModifier;
         if( m_translateType & TranslateType::STEP_FORWARD )
         {
-            forwardBackwardDisplacement += forwardDir;
+            velocity += forwardVel;
         }
         if( m_translateType & TranslateType::STEP_BACKWARD )
         {
-            forwardBackwardDisplacement -= forwardDir;
+            velocity -= forwardVel;
         }
-
-        forwardBackwardDisplacement *= m_forwardBackwardSpeedModifier;
-        displacement += forwardBackwardDisplacement;
     }
 
     if( m_translateType & TranslateType::STRAFE_LEFT_RIGHT )
     {
-        btVector3 leftRightDisplacement( 0.0, 0.0, 0.0 );
-        btVector3 strafeDir = xform.getBasis()[ 0 ];
-        strafeDir.normalize();
+        btVector3 strafeVel = basis[ 0 ].normalize() * m_leftRightSpeedModifier;
         if( m_translateType & TranslateType::STRAFE_LEFT )
         {
-            leftRightDisplacement -= strafeDir;
+            velocity -= strafeVel;
         }
         if( m_translateType & TranslateType::STRAFE_RIGHT )
         {
-            leftRightDisplacement += strafeDir;
+            velocity += strafeVel;
         }
-
-        leftRightDisplacement *= m_leftRightSpeedModifier;
-        displacement += leftRightDisplacement;
     }
 
     if( m_translateType & TranslateType::STEP_UP_DOWN )
     {
-        btVector3 upDownDisplacement( 0.0, 0.0, 0.0 );
-        btVector3 upDir( 0.0, 0.0, 1.0 );
+        btVector3 upVel = btVector3( 0.0, 0.0, 1.0 ) * m_upDownSpeedModifier;
         if( m_translateType & TranslateType::STEP_UP )
         {
-            upDownDisplacement += upDir;
+            velocity += upVel;
         }
         if( m_translateType & TranslateType::STEP_DOWN )
         {
-            upDownDisplacement -= upDir;
+            velocity -= upVel;
         }
-
-        upDownDisplacement *= m_upDownSpeedModifier;
-        displacement += upDownDisplacement;
     }
-
-    displacement *= dt;
 
     //slerp mCameraRotation if necessary
     if( mCameraRotationSLERP )
@@ -884,19 +863,18 @@ void CharacterController::UpdateTranslation( btScalar dt )
 
     if( m_physicsSimulator.GetIdle() )
     {
-        xform.setRotation( xform.getRotation().inverse() );
-        xform.setOrigin( xform.getOrigin() + displacement );
-        m_ghostObject->setWorldTransform( xform );
+        btTransform& xform = m_ghostObject->getWorldTransform();
+        xform.setOrigin( xform.getOrigin() + ( velocity * dt ) );
     }
     else
     {
-        setDisplacement( displacement );
+        setVelocityForTimeInterval( velocity, dt );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CharacterController::UpdateRotationTrackedHead()
 {
-    //Set the new delta turn angles based on the current 
+    //Set the new delta turn angles based on the current
     //and previous head locations
     gmtl::Quatd jugglerHeadRot1 =
         gmtl::make< gmtl::Quatd >( m_vjHeadMat1 );
@@ -959,8 +937,6 @@ void CharacterController::UpdateTranslationTrackedHead()
     //tracker VJHead position
     btVector3 displacement( 0.0, 0.0, 0.0 );
 
-    btTransform xform = m_ghostObject->getWorldTransform();
-    xform.setRotation( xform.getRotation().inverse() );
     //std::cout << " UpdateTranslationTrackedHead " << std::endl;
     if( m_translateType & TranslateType::STEP_FORWARD_BACKWARD )
     {
@@ -1022,9 +998,8 @@ void CharacterController::UpdateTranslationTrackedHead()
 
     if( m_physicsSimulator.GetIdle() )
     {
-        xform.setRotation( xform.getRotation().inverse() );
+        btTransform& xform = m_ghostObject->getWorldTransform();
         xform.setOrigin( xform.getOrigin() + displacement );
-        m_ghostObject->setWorldTransform( xform );
     }
     else
     {

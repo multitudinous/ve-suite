@@ -31,8 +31,8 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
-#ifndef VES_XPLORER_SCENEGRAPH_KINEMATIC_CHARACTER_CONTROLLER_H
-#define VES_XPLORER_SCENEGRAPH_KINEMATIC_CHARACTER_CONTROLLER_H
+#ifndef VES_XPLORER_SCENEGRAPH_KINEMATICCHARACTERCONTROLLER_H
+#define VES_XPLORER_SCENEGRAPH_KINEMATICCHARACTERCONTROLLER_H
 
 // --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
@@ -97,7 +97,7 @@ public:
     virtual void debugDraw( btIDebugDraw* debugDrawer );
 
     ///
-    void EnableFlying( const bool& canFly = true );
+    void EnableFlying( bool const& canFly = true );
 
     ///
     btPairCachingGhostObject* const GetGhostObject() const;
@@ -181,22 +181,17 @@ public:
         m_upAxis = axis;
     }
 
-    ///
-    void setUseGhostSweepTest( bool useGhostObjectSweepTest )
-    {
-        m_useGhostObjectSweepTest = useGhostObjectSweepTest;
-    }
-
     ///btActionInterface interface
     virtual void updateAction(
         btCollisionWorld* collisionWorld, btScalar deltaTime )
     {
         //Recover from penetrations
         preStep( collisionWorld );
+
         playerStep( collisionWorld, deltaTime );
     }
 
-    ///
+    ///This is bad for ghost objects
     void warp( const btVector3& origin );
 
 protected:
@@ -216,15 +211,15 @@ protected:
     ///
     bool recoverFromPenetration( btCollisionWorld* collisionWorld );
 
-    ///
-    void stepDown( btCollisionWorld* collisionWorld, btScalar dt );
+    ///Do sweep test above character
+    void stepUp( btCollisionWorld* collisionWorld );
 
-    ///
+    ///Do sweep test to side character is moving
     void stepForwardAndStrafe(
         btCollisionWorld* collisionWorld, const btVector3& walkMove );
 
-    ///
-    void stepUp( btCollisionWorld* collisionWorld );
+    ///Do sweep test below character
+    void stepDown( btCollisionWorld* collisionWorld, btScalar dt );
 
     ///
     void updateTargetPositionBasedOnCollision(
@@ -245,9 +240,6 @@ protected:
     bool m_wasOnGround;
 
     ///
-    bool m_useGhostObjectSweepTest;
-
-    ///
     bool m_useWalkDirection;
 
     ///Is the character flying?
@@ -255,9 +247,6 @@ protected:
 
     ///Is the character jumping?
     bool m_jump;
-
-    ///Is the character supported by object?
-    //bool m_supported;
 
     ///
     unsigned int m_upAxis;
@@ -369,4 +358,4 @@ private:
 } // end xplorer
 } // end ves
 
-#endif //VES_XPLORER_SCENEGRAPH_KINEMATIC_CHARACTER_CONTROLLER_H
+#endif //VES_XPLORER_SCENEGRAPH_KINEMATICCHARACTERCONTROLLER_H
