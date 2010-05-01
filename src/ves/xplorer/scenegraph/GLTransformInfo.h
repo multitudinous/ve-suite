@@ -62,7 +62,14 @@ namespace scenegraph
  * 3) Eye Coordinates - [ vertex ] [ M ] [ V ]
  * 4) Clip Coordinates - [ vertex ] [ M ] [ V ] [ P ]
  * 5) Normalized Device Coordinates - Perspective Division
+ *    Perspective division performed on the Clip Coordinates produces
+ *    Normalized Device Coordinates, ranging from -1 to 1 in all three axes
  * 6) Window Coordinates - [ vertex ] [ M ] [ V ] [ P ] [ W ]
+ *    Normalized Device Coordinates are scaled and translated
+ *    by the viewport parameters to produce Window Coordinates
+ *    x: 0 to viewport width
+ *    y: 0 to viewport height
+ *    z: 0 to 1
  */
 
 /*!\class ves::xplorer::scenegraph::GLTransformInfo
