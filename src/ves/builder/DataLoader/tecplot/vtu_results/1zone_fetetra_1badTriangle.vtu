@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<VTKFile type="UnstructuredGrid" version="0.1" byte_order="LittleEndian" compressor="vtkZLibDataCompressor">
+  <UnstructuredGrid>
+    <Piece NumberOfPoints="14" NumberOfCells="16">
+      <PointData>
+        <DataArray type="Float32" Name="Temperature" format="ascii" RangeMin="9.5" RangeMax="20">
+          9.5 14.5 15 16 15.5 17
+          17 17.5 18.5 20 17.5 18
+          17.5 16.5
+        </DataArray>
+      </PointData>
+      <CellData>
+      </CellData>
+      <Points>
+        <DataArray type="Float32" Name="Points" NumberOfComponents="3" format="ascii" RangeMin="0" RangeMax="3.4641016151">
+          0 0 0 1 1 0
+          1 0 0 1 1 1
+          1 0 1 2 2 0
+          2 1 0 2 0 0
+          2 2 1 2 1 1
+          2 0 1 2 2 2
+          2 1 2 2 0 2
+        </DataArray>
+      </Points>
+      <Cells>
+        <DataArray type="Int32" Name="connectivity" format="ascii" RangeMin="0" RangeMax="13">
+          0 2 1 4 0 1
+          4 3 2 6 10 7
+          2 6 10 9 1 5
+          6 9 1 5 8 9
+          1 3 8 9 3 8
+          9 12 3 8 11 12
+          4 13 9 12 4 9
+          10 13 6 4 1 2
+          6 4 1 3 2 4
+          9 10 3 4 9 12
+          3 4 6 9
+        </DataArray>
+        <DataArray type="Int32" Name="offsets" format="ascii" RangeMin="4" RangeMax="64">
+          4 8 12 16 20 24
+          28 32 36 40 44 48
+          52 56 60 64
+        </DataArray>
+        <DataArray type="UInt8" Name="types" format="ascii" RangeMin="10" RangeMax="10">
+          10 10 10 10 10 10
+          10 10 10 10 10 10
+          10 10 10 10
+        </DataArray>
+      </Cells>
+    </Piece>
+  </UnstructuredGrid>
+</VTKFile>
