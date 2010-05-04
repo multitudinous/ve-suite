@@ -71,12 +71,13 @@ tecplotReader::tecplotReader( std::string inputFileNameAndPath )
 
     //Before anything can be run the manager must have been started
 
-    std::string extension = getExtension( this->inputFileNameAndPath );
-    if( extension.compare("dat") != 0 && extension.compare("tec") != 0 && extension.compare("plt") != 0 )
+    std::string ext = getExtension( this->inputFileNameAndPath );
+    if( ext.compare("dat") != 0 && ext.compare("tec") != 0 && ext.compare("plt") != 0 )
     {
-        std::cerr << "\nWarning: Different extension than expected on input file '" << this->inputFileNameAndPath << "'.  ";
+        std::cerr << "\nWarning: Different extension than expected on input file '"
+                  << this->inputFileNameAndPath << "'.  ";
         std::cerr << "Ascii tecplot files typically have extensions '.dat' or '.tec', ";
-        std::cerr << "while binary tecplot files typically with extension '.plt'." << std::endl;
+        std::cerr << "while binary tecplot files typically have extension '.plt'." << std::endl;
     }
 
     if( isFileReadable( this->inputFileNameAndPath ) )
@@ -106,6 +107,7 @@ tecplotReader::~tecplotReader()
     if( this->ugrid )
     {
         this->ugrid->Delete();
+        this->ugrid = NULL;
     }
 
     for( int i = 0; i < this->numVars; i++ )
@@ -165,7 +167,7 @@ vtkUnstructuredGrid * tecplotReader::GetOutputFile( const int fileNum )
         this->ReadNodeAndCellData( currentZone, numElementsInZone, numNodalPointsInZone );
 
         // Look at next zone to determine whether to attach points and point & cell data.
-        // If the grid is complete, then attcah data and return the ugrid...
+        // If the grid is complete, then attach data and return the ugrid...
         if( this->timeToInitVtk[ currentZone ] )
         {
             this->AttachPointsAndDataToGrid( numNodalPointsInZone );
@@ -250,7 +252,7 @@ int tecplotReader::isFileReadable( const std::string filename )
     return 1;
 }
 
-void tecplotReader::ReadVariable( EntIndex_t currentZone, int varNumber, const char* varName, vtkFloatArray* scalarData )
+void tecplotReader::ReadVariable( const EntIndex_t currentZone, int varNumber, const char* varName, vtkFloatArray* scalarData )
 {
     // Read a single variable from the current zone...
     if( varNumber )
@@ -308,22 +310,24 @@ vtkFloatArray * tecplotReader::ZeroArray( std::string varName, int numTuples )
 
 void tecplotReader::ReadVectorNameAndUpdateIndex( int currentIndex, int currentVar, std::string s, std::string & vecName, int * vectorIndex )
 {
+    // if all vectorIndexes are zero, then store candidate vector name and index...
     if( ( vectorIndex[ 0 ] + vectorIndex[ 1 ] + vectorIndex[ 2 ] ) == 0 )
     {
-        vecName = s.substr( 2, s.length() );
+        vecName = s.substr( 2, s.length() );        // use the end part of string s as the vector name
         vectorIndex[ currentIndex ] = currentVar + 1;
     }
     else
     {
+        // if end of parameter name agrees with that of candidate vector name, then store vector index...
         if( vecName == s.substr( 2, s.length() ) )
         {
             vectorIndex[ currentIndex ] = currentVar + 1;
         }
         else
         {
-            // reset vectorIndex
+            // reset vectorIndex, then store vector name and index...
             vectorIndex[ 0 ] = vectorIndex[ 1 ] = vectorIndex[ 2 ] = 0;
-            vecName = s.substr( 2, s.length() );
+            vecName = s.substr( 2, s.length() );    // use the end part of string s as the vector name
             vectorIndex[ currentIndex ] = currentVar + 1;
         }
     }
@@ -411,15 +415,15 @@ void tecplotReader::ComputeNumberOfOutputFiles()
         PlotType_Automatic,        // InitialPlotType
         TRUE, TRUE, TRUE, TRUE,    // IncludeText, IncludeGeom, IncludeCustomLabels, IncludeData
         FALSE,                     // CollapseZonesAndVars = TRUE to renumber zones and variables if any are disabled
-        NULL,                      // ZonesToRead 	Use NULL to load all zones
+        NULL,                      // ZonesToRead, Use NULL to load all zones
         VarLoadMode_ByName,        // VarLoadMode is either ByName or ByPosition
         NULL,                      // VarPositionList is used only if VarLoadMode is ByPosition. Use NULL to load all variables.
-        NULL,                      // VarNameList 	 Use NULL to load only variable names common to all data files.
+        NULL,                      // VarNameList, Use NULL to load only variable names common to all data files.
         1, 1, 1 );                 // Set to 1 to load every data point in the I-direction, J-direction, & K-direction.
 
     if( ! IsOk )
     {
-        std::cerr << "The dataset could not be read." << std::endl;
+        std::cerr << "Error: The dataset could not be read." << std::endl;
         this->numberOfOutputFiles = 0;
         return;
     }
@@ -439,8 +443,11 @@ void tecplotReader::ComputeNumberOfOutputFiles()
     std::cout << "Connectivity share count of zone 1 is " << this->connectivityShareCount << std::endl;
 #endif // PRINT_HEADERS
 
+    // Allocate memory for array that correlates zones to output files...
+    // The size of this array is one larger than numZones: last index is used to 'terminate' the list...
     this->timeToInitVtk = new int [ this->numZones + 1 ];
 
+    // Use tecplot's StrandId and Solution Time to determine corelation between zones and output files...
     this->CountNumberOfFilesUsingSolnTime();
 
     // Look at a special case where StrandId is not used...
@@ -555,7 +562,7 @@ void tecplotReader::SeeIfDataSharedAcrossZones()
     }
 }
 
-void tecplotReader::InitializeVtkData( EntIndex_t currentZone )
+void tecplotReader::InitializeVtkData( const EntIndex_t currentZone )
 {
     // Initialize the ugrid
     if( this->ugrid )
@@ -635,7 +642,7 @@ void tecplotReader::CountNumberOfFilesUsingSolnTime()
 
         // We want to know the number of files that we will output.
         // For transient data, we will have one file for each timestep. Each timestep may include multiple zones.
-        // In tecplot files are not just static or transient -- There may be static zones interspersed with transient zones.
+        // In tecplot, files are not just static or transient -- There may be static zones interspersed with transient zones.
         // When go from static to transient (or vice versa) or when solution time changes between zones, increment number...
         if( strandIdShowsChangeFromStaticToTransientOrViceVersa || previousSolutionTime != currentSolutionTime )
         {
@@ -647,10 +654,11 @@ void tecplotReader::CountNumberOfFilesUsingSolnTime()
         previousStrandID = currentStrandID;
         previousSolutionTime = currentSolutionTime;
     }
+    // The last index is set to one to 'terminate' the list...
     this->timeToInitVtk[ this->numZones ] = 1;
 }
 
-void tecplotReader::ReadElementInfoInZone( EntIndex_t currentZone, ZoneType_e& zoneType, LgIndex_t& numElementsInZone,
+void tecplotReader::ReadElementInfoInZone( const EntIndex_t currentZone, ZoneType_e& zoneType, LgIndex_t& numElementsInZone,
                           int& numNodesPerElement, int& numFacesPerCell, int& numNodalPointsInZone )
 {
 #ifdef PRINT_HEADERS
@@ -828,7 +836,7 @@ void tecplotReader::ReadElementInfoInZone( EntIndex_t currentZone, ZoneType_e& z
     }
 }
 
-void tecplotReader::ReadZoneName( EntIndex_t currentZone )
+void tecplotReader::ReadZoneName( const EntIndex_t currentZone )
 {
     VarName_t* zoneName = new VarName_t [ this->numZones ];
     zoneName[ currentZone - 1 ] = 0;
@@ -869,15 +877,15 @@ void tecplotReader::AddCellsToGrid( const EntIndex_t currentZone, const ZoneType
         {
             // Node information (connectivity)
             // NOTE - You could use the "RawPtr" functions if speed is a critical issue
-            //cout << "For element " << elemNum << ", nodes =";
+            //std::cout << "For element " << elemNum << ", nodes =";
             for( int i = 0; i < numNodesPerElement; i++ )
             {
                 // node numbers in tecplot are 1-based, 0-based in VTK
                 nodeValue = TecUtilDataNodeGetByRef( nm, elemNum, i+1 ) - 1 + this->nodeOffset;
-                //cout << " " << nodeValue;
+                //std::cout << " " << nodeValue;
                 tempIdList->SetId( i, nodeValue );
             }
-            //cout << std::endl;
+            //std::cout << std::endl;
 
             if( zoneType == ZoneType_FETriangle )
             {
@@ -889,7 +897,35 @@ void tecplotReader::AddCellsToGrid( const EntIndex_t currentZone, const ZoneType
             }
             else if( zoneType == ZoneType_FETetra )
             {
-                this->ugrid->InsertNextCell( VTK_TETRA, tempIdList );
+                // Some files such as ansys11_washer end up with "invisible" cells.
+                // It appears to be because some "tetrahedrons" are actually points, lines, or triangles.
+                // Check for repeating indexes in the nodeList...
+                int noRepeatingIndexes = 1;
+                for( int i = 0; i < numNodesPerElement && noRepeatingIndexes == 1; i++ )
+                {
+                    int firstIndex = tempIdList->GetId( i );
+                    for( int j = i+1; j < numNodesPerElement && noRepeatingIndexes == 1; j++ )
+                    {
+                        int secondIndex = tempIdList->GetId( j );
+                        if( firstIndex == secondIndex )
+                        {
+#ifdef PRINT_HEADERS
+                            std::cout << "bad element found!!!!!   ";
+                            for( int k = 0; k < numNodesPerElement; k++ )
+                            {
+                                std::cout << " " << tempIdList->GetId( k );
+                            }
+                            std::cout << std::endl;
+#endif // PRINT_HEADERS
+                            noRepeatingIndexes = 0;
+                        }
+                    }
+                }
+
+                if( noRepeatingIndexes )
+                {
+                    this->ugrid->InsertNextCell( VTK_TETRA, tempIdList );
+                }
             }
             else if( zoneType == ZoneType_FEBrick )
             {

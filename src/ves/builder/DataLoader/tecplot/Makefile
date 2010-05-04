@@ -4,14 +4,14 @@ VES_BASE_DIR=${HOME}/vr
 VTK_LIB_HOME = ${HOME}/vr/lib64/vtk-5.4
 VTK_INCLUDE_HOME = ${HOME}/vr/dependencies/include/vtk-5.4
 
-# boost is in the macports install
-MACPORTS_HOME=/opt/local
+# where is the boost include directory?
+BOOST_HOME=${HOME}/vr/dependencies
 
 # C++ compiler 
 CXX = g++
 
 # Standard flags for C++ 
-CXXFLAGS ?= -arch x86_64 -isysroot /Developer/SDKs/MacOSX10.5.sdk -g -Wno-deprecated
+CXXFLAGS ?= -arch x86_64 -isysroot /Developer/SDKs/MacOSX10.5.sdk -g -Wno-deprecated -Wall
 
 # Standard preprocessor flags (common for CC and CXX)
 # ENGINE is for TecUtilParentLockXXX
@@ -28,7 +28,7 @@ LDFLAGS ?= -arch x86_64 -isysroot /Developer/SDKs/MacOSX10.5.sdk -g \
 
 ### Variables: ###
 
-SOURCES=tecplotReader.cxx Manager.cxx ApplicationEventMonitor.cxx 
+SOURCES=tecplotReader.cxx Manager.cxx ApplicationEventMonitor.cxx
 OBJECTS=$(SOURCES:.cxx=.o) main.o
 HEADERS=$(SOURCES:.cxx=.h)
 EXECUTABLE=tecplotReader
@@ -40,7 +40,7 @@ COMPILE_CXXFLAGS =  -I. \
                     -I${TECSDKHOME}/include/sdk/integrationmanager/services \
                     -I${TECSDKHOME}/include/toolbox \
                     -I${VTK_INCLUDE_HOME} \
-                    -I${MACPORTS_HOME}/include \
+                    -I${BOOST_HOME}/include \
                     -I${VES_BASE_DIR}/VE_Suite/src \
                      $(CPPFLAGS) $(CXXFLAGS)
 CPPDEPS = -MT$@ -MF$(shell echo $@ | sed -e 's,\.o$$,.d,') -MD -MP

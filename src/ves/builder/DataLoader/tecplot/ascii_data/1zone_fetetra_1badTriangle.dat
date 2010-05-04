@@ -1,0 +1,34 @@
+TITLE = "Example: FE-Volume Brick Data-- ported to 16 fe-tetras for testing. The last element is a triangle will cause problems in paraview/VE-Suite if written as a tet" 
+VARIABLES = "X", "Y", "Z", "Temperature" 
+ZONE NODES=14, ELEMENTS=17, DATAPACKING=POINT, ZONETYPE=FETETRAHEDRON
+0.0 0.0 0.0 9.5 
+1.0 1.0 0.0 14.5 
+1.0 0.0 0.0 15.0 
+1.0 1.0 1.0 16.0 
+1.0 0.0 1.0 15.5 
+2.0 2.0 0.0 17.0 
+2.0 1.0 0.0 17.0 
+2.0 0.0 0.0 17.5 
+2.0 2.0 1.0 18.5 
+2.0 1.0 1.0 20.0 
+2.0 0.0 1.0 17.5 
+2.0 2.0 2.0 18.0 
+2.0 1.0 2.0 17.5 
+2.0 0.0 2.0 16.5 
+1 3 2 5
+1 2 5 4
+3 7 11 8
+3 7 11 10
+2 6 7 10
+2 6 9 10
+2 4 9 10
+4 9 10 13
+4 9 12 13
+5 14 10 13
+5 10 11 14
+7 5 2 3
+7 5 2 4
+3 5 10 11
+4 5 10 13
+4 5 7 10
+8 7 11 11

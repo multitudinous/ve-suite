@@ -86,7 +86,7 @@ private:
 
     int isFileReadable( const std::string filename );
 
-    void ReadVariable( EntIndex_t currentZone, int varNumber, const char* varName, vtkFloatArray* scalarData );
+    void ReadVariable( const EntIndex_t currentZone, int varNumber, const char* varName, vtkFloatArray* scalarData );
 
     vtkFloatArray* ZeroArray( std::string varName, int numTuples );
 
@@ -100,12 +100,12 @@ private:
 
     void SeeIfDataSharedAcrossZones();
 
-    void InitializeVtkData( EntIndex_t currentZone );
+    void InitializeVtkData( const EntIndex_t currentZone );
 
-    void ReadElementInfoInZone( EntIndex_t currentZone, ZoneType_e & zoneType, LgIndex_t & numElementsInZone,
+    void ReadElementInfoInZone( const EntIndex_t currentZone, ZoneType_e & zoneType, LgIndex_t & numElementsInZone,
                                 int & numNodesPerElement, int & numFacesPerCell, int & numNodalPointsInZone );
 
-    void ReadZoneName( EntIndex_t currentZone );
+    void ReadZoneName( const EntIndex_t currentZone );
 
     void AddCellsToGrid( const EntIndex_t currentZone, const ZoneType_e zoneType, const LgIndex_t numElementsInZone,
                          const int numNodesPerElement, const int numNodalPointsInZone );
