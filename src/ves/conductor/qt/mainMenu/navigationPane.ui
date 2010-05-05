@@ -283,7 +283,7 @@
            </widget>
           </item>
           <item row="1" column="1">
-           <widget class="QPushButton" name="navigationUpY_2">
+           <widget class="QPushButton" name="navigationUpZ">
             <property name="text">
              <string/>
             </property>
@@ -300,7 +300,7 @@
            </widget>
           </item>
           <item row="2" column="0" rowspan="2">
-           <widget class="QPushButton" name="navigationRollCCW_2">
+           <widget class="QPushButton" name="navigationYawCCW">
             <property name="text">
              <string/>
             </property>
@@ -330,7 +330,7 @@
            </spacer>
           </item>
           <item row="2" column="2" rowspan="2">
-           <widget class="QPushButton" name="navigationRollCW_2">
+           <widget class="QPushButton" name="navigationYawCW">
             <property name="text">
              <string/>
             </property>
@@ -347,7 +347,7 @@
            </widget>
           </item>
           <item row="4" column="1">
-           <widget class="QPushButton" name="navigationDownY_2">
+           <widget class="QPushButton" name="navigationDownZ">
             <property name="text">
              <string/>
             </property>
