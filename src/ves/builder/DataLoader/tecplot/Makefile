@@ -4,8 +4,8 @@ VES_BASE_DIR=${HOME}/vr
 VTK_LIB_HOME = ${HOME}/vr/lib64/vtk-5.4
 VTK_INCLUDE_HOME = ${HOME}/vr/dependencies/include/vtk-5.4
 
-# where is the boost include directory?
-BOOST_HOME=${HOME}/vr/dependencies
+# where is the include directory that contains the boost headers?
+BOOST_HOME=/opt/local
 
 # C++ compiler 
 CXX = g++
