@@ -46,7 +46,7 @@ Name: wxwidgets; Description: wxWidgets; Types: full
 Name: xercesc; Description: Apache Xerces-C++; Types: full
 Name: osg; Description: OpenSceneGraph; Types: full
 Name: juggler; Description: VR Juggler; Types: full
-Name: apr; Description: Apache APR; Types: full
+;Name: apr; Description: Apache APR; Types: full
 Name: osgal; Description: osgAL; Types: full
 Name: minerva; Description: Minerva; Types: full
 Name: poco; Description: POCO; Types: full
@@ -86,13 +86,13 @@ Source: {#DEPENDSINSTALLHOME}\{#XERCESHOME}\lib\*.lib; DestDir: {app}\lib; Attri
 Source: {#DEPENDSINSTALLHOME}\{#XERCESHOME}\lib\*.dll; DestDir: {app}\lib; Components: xercesc; Flags: ignoreversion
 
 ; APR Files
-Source: {#DEPENDSINSTALLHOME}\{#APRHOME}\include\*; DestDir: {app}\include; Attribs: readonly; Flags: recursesubdirs uninsremovereadonly ignoreversion createallsubdirs; Components: depsbuildenv
-Source: {#DEPENDSINSTALLHOME}\{#APRHOME}\lib\libapr*.lib; DestDir: {app}\lib; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion skipifsourcedoesntexist; Components: depsbuildenv
-Source: {#DEPENDSINSTALLHOME}\{#APRUTILHOME}\lib\libaprutil*.lib; DestDir: {app}\lib; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion skipifsourcedoesntexist; Components: depsbuildenv
-Source: {#DEPENDSINSTALLHOME}\{#APRICONVHOME}\lib\libapriconv*.lib; DestDir: {app}\lib; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion skipifsourcedoesntexist; Components: depsbuildenv
-Source: {#DEPENDSINSTALLHOME}\{#APRHOME}\lib\*.dll; DestDir: {app}\lib; Components: apr; Flags: ignoreversion skipifsourcedoesntexist
-Source: {#DEPENDSINSTALLHOME}\{#APRUTILHOME}\lib\*.dll; DestDir: {app}\lib; Components: apr; Flags: ignoreversion skipifsourcedoesntexist
-Source: {#DEPENDSINSTALLHOME}\{#APRICONVHOME}\lib\*.dll; DestDir: {app}\lib; Components: apr; Flags: ignoreversion skipifsourcedoesntexist
+;Source: {#DEPENDSINSTALLHOME}\{#APRHOME}\include\*; DestDir: {app}\include; Attribs: readonly; Flags: recursesubdirs uninsremovereadonly ignoreversion createallsubdirs; Components: depsbuildenv
+;Source: {#DEPENDSINSTALLHOME}\{#APRHOME}\lib\libapr*.lib; DestDir: {app}\lib; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion skipifsourcedoesntexist; Components: depsbuildenv
+;Source: {#DEPENDSINSTALLHOME}\{#APRUTILHOME}\lib\libaprutil*.lib; DestDir: {app}\lib; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion skipifsourcedoesntexist; Components: depsbuildenv
+;Source: {#DEPENDSINSTALLHOME}\{#APRICONVHOME}\lib\libapriconv*.lib; DestDir: {app}\lib; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion skipifsourcedoesntexist; Components: depsbuildenv
+;Source: {#DEPENDSINSTALLHOME}\{#APRHOME}\lib\*.dll; DestDir: {app}\lib; Components: apr; Flags: ignoreversion skipifsourcedoesntexist
+;Source: {#DEPENDSINSTALLHOME}\{#APRUTILHOME}\lib\*.dll; DestDir: {app}\lib; Components: apr; Flags: ignoreversion skipifsourcedoesntexist
+;Source: {#DEPENDSINSTALLHOME}\{#APRICONVHOME}\lib\*.dll; DestDir: {app}\lib; Components: apr; Flags: ignoreversion skipifsourcedoesntexist
 
 ; ACE/TAO Files
 Source: {#DEPENDSINSTALLHOME}\{#ACETAOHOME}\lib\*.dll; DestDir: {app}\lib; Flags: ignoreversion; Components: acetao
