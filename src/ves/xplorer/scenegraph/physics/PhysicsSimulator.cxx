@@ -50,8 +50,13 @@
 // --- Bullet Includes --- //
 #include <btBulletDynamicsCommon.h>
 #include <btBulletCollisionCommon.h>
+
 #include <LinearMath/btQuickprof.h>
 
+#include <BulletCollision/CollisionDispatch/btGhostObject.h>
+#include <BulletCollision/CollisionDispatch/btInternalEdgeUtility.h>
+
+// --- osgBullet Includes --- //
 #include <osgbBullet/RefRigidBody.h>
 #include <osgbBulletPlus/OSGToCollada.h>
 #include <osgbBullet/MotionState.h>
@@ -82,20 +87,24 @@ vprSingletonImpLifetime( PhysicsSimulator, 1 );
 ////////////////////////////////////////////////////////////////////////////////
 PhysicsSimulator::PhysicsSimulator()
     :
+    mIdle( true ),
+    mCreatedGroundPlane( false ),
+    mDebugBulletFlag( false ),
+    mDebugMode( 0 ),
+    shoot_speed( 50.0 ),
+    head( NULL ),
     mDynamicsWorld( NULL ),
     mCollisionConfiguration( NULL ),
     mDispatcher( NULL ),
     mBroadphase( NULL ),
     mSolver( NULL ),
-    mDebugMode( 0 ),
-    mIdle( true ),
-    shoot_speed( 50.0 ),
-    mCreatedGroundPlane( false ),
-    mDebugBulletFlag( false ),
-    m_debugDrawer( 0 ),
-    m_physicsThread( 0 )
+    m_debugDrawer( NULL ),
+    m_debugDrawerGroup( NULL ),
+    m_tripleDataBuffer(),
+    m_motionStateList(),
+    m_physicsThread( NULL )
 {
-    head = new gadget::DeviceInterface<class gadget::PositionProxy>;
+    head = new gadget::DeviceInterface< class gadget::PositionProxy >;
     head->init( "VJHead" );
 
     InitializePhysicsSimulation();
@@ -107,7 +116,7 @@ PhysicsSimulator::~PhysicsSimulator()
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsSimulator::ExitPhysics()
-{    
+{
 #if MULTITHREADED_OSGBULLET
     if( m_physicsThread )
     {
@@ -120,7 +129,7 @@ void PhysicsSimulator::ExitPhysics()
 
     delete m_debugDrawer;
     m_debugDrawer = 0;
-    
+
     if( mDynamicsWorld )
     {
         //Remove the rigidbodies from the dynamics world and delete them
@@ -340,10 +349,25 @@ struct YourOwnFilterCallback : public btOverlapFilterCallback
     }
 };
 ////////////////////////////////////////////////////////////////////////////////
+static bool CustomMaterialCombinerCallback(
+    btManifoldPoint& cp,
+    const btCollisionObject* colObj0, int partId0, int index0,
+    const btCollisionObject* colObj1, int partId1, int index1 )
+{
+    btAdjustInternalEdgeContacts( cp,colObj1, colObj0, partId1, index1 );
+    //btAdjustInternalEdgeContacts(
+        //cp, colObj1, colObj0, partId1, index1, BT_TRIANGLE_CONVEX_BACKFACE_MODE );
+    //btAdjustInternalEdgeContacts(
+        //cp, colObj1, colObj0, partId1, index1, BT_TRIANGLE_CONVEX_DOUBLE_SIDED+BT_TRIANGLE_CONCAVE_DOUBLE_SIDED );
+
+    return false;
+}
+////////////////////////////////////////////////////////////////////////////////
 void PhysicsSimulator::InitializePhysicsSimulation()
 {
     ///collision configuration contains default setup for memory, collision setup
     mCollisionConfiguration = new btDefaultCollisionConfiguration();
+    //mCollisionConfiguration->setConvexConvexMultipointIterations( 10, 5 );
     ///use the default collision dispatcher. For parallel processing 
     ///you can use a diffent dispatcher (see Extras/BulletMultiThreaded)
     mDispatcher = new btCollisionDispatcher( mCollisionConfiguration );
@@ -358,6 +382,8 @@ void PhysicsSimulator::InitializePhysicsSimulation()
 
     mBroadphase = new btAxisSweep3( worldAabbMin, worldAabbMax, maxProxies );
     //mBroadphase = new btDbvtBroadphase();
+    mBroadphase->getOverlappingPairCache()->setInternalGhostPairCallback(
+        new btGhostPairCallback() );
 
 #ifdef REGISTER_CUSTOM_COLLISION_ALGORITHM
 #else
@@ -369,7 +395,14 @@ void PhysicsSimulator::InitializePhysicsSimulation()
     mDynamicsWorld = new DiscreteDynamicsWorld(
         mDispatcher, mBroadphase, mSolver, mCollisionConfiguration );
     //mDynamicsWorld->getDispatchInfo().m_useConvexConservativeDistanceUtil = true;
-    //mDynamicsWorld->getDispatchInfo().m_convexConservativeDistanceThreshold = 0.0001f;
+    //mDynamicsWorld->getDispatchInfo().m_convexConservativeDistanceThreshold = 0.0001;
+
+    //http://bulletphysics.org/mediawiki-1.5.8/index.php/BtContactSolverInfo
+    //mDynamicsWorld->getSolverInfo().m_splitImpulse = true;
+    //mDynamicsWorld->getSolverInfo().m_splitImpulsePenetrationThreshold = 1e30;
+    //mDynamicsWorld->getSolverInfo().m_maxErrorReduction = 1e30;
+    //mDynamicsWorld->getSolverInfo().m_erp = 1.0;
+    //mDynamicsWorld->getSolverInfo().m_erp2 = 1.0;
 
     //YourOwnFilterCallback* filterCallback = new YourOwnFilterCallback();
     //filterCallback->SetDynamicsWorld( mDynamicsWorld );
@@ -403,7 +436,11 @@ void PhysicsSimulator::InitializePhysicsSimulation()
     //http://bulletphysics.org/Bullet/phpBB3/viewtopic.php?f=9&t=16
     //http://bulletphysics.org/Bullet/phpBB3/viewtopic.php?f=4&t=2124
     //http://www.cs.cornell.edu/Courses/cs211/2006sp/Lectures/L26-MoreGraphs/lec26.html
-    gDeactivationTime = btScalar(0.7);
+    gDeactivationTime = btScalar( 0.7 );
+
+    //Provide solution to filter out unwanted collisions with internal edges of a triangle mesh
+    //http://code.google.com/p/bullet/issues/detail?id=27#c8
+    gContactAddedCallback = CustomMaterialCombinerCallback;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsSimulator::UpdatePhysics( float dt )
@@ -426,7 +463,10 @@ void PhysicsSimulator::UpdatePhysics( float dt )
 
     //Now update the simulation by all bullet objects new positions
 #if !MULTITHREADED_OSGBULLET
-    mDynamicsWorld->stepSimulation( dt );
+    //Setting max substeps to 10 gives us frame independent physics simulation
+    //for frame rates above 6fps, anything below this will result in slowed
+    //physics simulation clamped to 6fps
+    mDynamicsWorld->stepSimulation( dt, 10 );//, btScalar( 1.0 ) / btScalar( 120.0 ) );
 #else
     osgbBullet::TripleBufferMotionStateUpdate(
         m_motionStateList, &m_tripleDataBuffer );

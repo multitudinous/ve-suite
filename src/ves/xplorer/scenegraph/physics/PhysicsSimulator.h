@@ -177,17 +177,20 @@ private:
     ///\return OSG node for the plane
     osg::Node* CreateGround( float w, float h, const osg::Vec3& center );
 
-    ///The debug level for bullet physics
-    int mDebugMode;
-
     ///Determines whether the physics simulation is idle or not
     bool mIdle;
 
-    ///Speed of shooting boxes
-    float shoot_speed;
-
     ///Is the ground plane created
     bool mCreatedGroundPlane;
+
+    ///Debug bullet
+    bool mDebugBulletFlag;
+
+    ///The debug level for bullet physics
+    int mDebugMode;
+
+    ///Speed of shooting boxes
+    float shoot_speed;
 
     ///The head in vr juggler
     gadget::PositionInterface* head;
@@ -207,9 +210,6 @@ private:
 
     ///A physics solver which sequentially applies impulses
     btSequentialImpulseConstraintSolver* mSolver;
-
-    ///Debug bullet
-    bool mDebugBulletFlag;
 
     ///THe debug drawer for the bullet physics simulator
     osgbBullet::GLDebugDrawer* m_debugDrawer;
