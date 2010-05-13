@@ -48,8 +48,6 @@
 
 // --- Bullet Includes --- //
 class btRigidBody;
-class btTypedConstraint;
-class btPoint2PointConstraint;
 
 // --- STL Includes --- //
 #include <set>
@@ -78,8 +76,6 @@ class RotateTwist;
 class ScaleAxis;
 class ScaleUniform;
 class CompoundDragger;
-
-typedef std::map< btRigidBody*, btPoint2PointConstraint* > ConstraintMap;
 
 /*!\file Dragger.h
  * Dragger API
@@ -243,10 +239,6 @@ public:
         Color::Enum colorTag, osg::Vec4 newColor, bool use = false );
 
     ///
-    ///\param constraintMap
-    virtual void SetConstraintMap( ConstraintMap& constraintMap );
-
-    ///
     ///\param rootDragger
     virtual void SetRootDragger( Dragger* rootDragger );
 
@@ -260,9 +252,6 @@ public:
     ///
     ///\param colorTag
     virtual void UseColor( Color::Enum colorTag );
-
-    ///
-    //void ResetPhysics();
 
 protected:
     ///
@@ -346,24 +335,17 @@ protected:
     osg::Matrixd m_worldToLocal;
 
     ///
-    ves::xplorer::scenegraph::PhysicsSimulator& m_physicsSimulator;
+    PhysicsSimulator& m_physicsSimulator;
 
     ///
-    ves::xplorer::scenegraph::SceneManager& m_sceneManager;
+    SceneManager& m_sceneManager;
 
 private:
-    ///Clear point constraint
-    void ClearPointConstraint();
-
     ///
     void ComputeAssociationMatrices();
 
     ///
     void CreateDefaultShader();
-
-    ///Create physics point constraint
-    ///\param btRB
-    const bool CreatePointConstraint( btRigidBody& btRB );
 
     ///
     void UpdateAssociations();
@@ -395,9 +377,6 @@ private:
 
     ///
     osg::ref_ptr< osg::Uniform > m_color;
-
-    ///
-    ConstraintMap* m_constraintMap;
 
 };
 

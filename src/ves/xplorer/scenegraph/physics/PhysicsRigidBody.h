@@ -49,13 +49,17 @@ class Geode;
 }
 
 // --- Bullet Includes --- //
-#include <BulletDynamics/Dynamics/btRigidBody.h>
-#include <BulletCollision/BroadphaseCollision/btBroadphaseProxy.h>
 #include <LinearMath/btVector3.h>
+
+#include <BulletDynamics/Dynamics/btRigidBody.h>
+
+#include <BulletCollision/BroadphaseCollision/btBroadphaseProxy.h>
 
 class btCompoundShape;
 class btCollisionShape;
+class btDynamicsWorld;
 
+// --- osgBullet Includes --- //
 namespace osgbBullet
 {
 class MotionState;
@@ -72,6 +76,7 @@ namespace scenegraph
 {
 class osgToBullet;
 class PhysicsSimulator;
+class GhostController;
 
 /*!\file PhysicsRigidBody.h
  *
@@ -137,6 +142,12 @@ public:
     ///\return The material for this rigid body
     Material* GetSoundMaterial();
 
+    ///
+    GhostController& GetGhostController() const;
+
+    ///
+    void EnableGhostControl( bool const& enable = true );
+
 protected:
 
 private:
@@ -157,6 +168,9 @@ private:
     ///\param rigidBody The btRigidBody to register with ves
     void RegisterRigidBody( btRigidBody* rigidBody );
 
+    ///
+    bool m_ghostControl;
+
     ///The mass of the rigid body
     float mMass;
 
@@ -165,9 +179,6 @@ private:
 
     ///The mass of the rigid body
     float mRestitution;
-
-    ///A pointer to the PhysicsSimulator singleton
-    PhysicsSimulator* mPhysicsSimulator;
 
     ///Tell wether we need to register osgBullets debug capability
     bool mDebugBoundaries;
@@ -180,6 +191,15 @@ private:
 
     ///
     osg::ref_ptr< osg::Node > mOSGToBullet;
+
+    ///
+    GhostController* m_ghostController;
+
+    ///A pointer to the PhysicsSimulator singleton
+    PhysicsSimulator& m_physicsSimulator;
+
+    ///
+    btDynamicsWorld& m_dynamicsWorld;
 
 };
 } //end scenegraph

@@ -33,14 +33,25 @@
 
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/communication/CommunicationHandler.h>
-
 #include <ves/xplorer/scenegraph/manipulator/Dragger.h>
+
+#include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
+#include <ves/xplorer/scenegraph/physics/PhysicsRigidBody.h>
+#include <ves/xplorer/scenegraph/physics/GhostController.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/LocalToWorldNodePath.h>
 #include <ves/xplorer/scenegraph/GLTransformInfo.h>
 
-#include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
+#include <ves/open/xml/XMLObject.h>
+#include <ves/open/xml/Command.h>
+#include <ves/open/xml/DataValuePair.h>
+#include <ves/open/xml/model/Model.h>
+#include <ves/open/xml/cad/CADNode.h>
+#include <ves/open/xml/cad/CADPart.h>
+#include <ves/open/xml/cad/CADAssembly.h>
+#include <ves/open/xml/model/System.h>
+#include <ves/open/xml/Transform.h>
 
 // --- OSG Includes --- //
 #include <osg/io_utils>
@@ -54,25 +65,20 @@
 
 #include <BulletDynamics/Dynamics/btDynamicsWorld.h>
 
-#include <BulletDynamics/ConstraintSolver/btPoint2PointConstraint.h>
-
 // --- osgBullet Includes --- //
 #include <osgwTools/AbsoluteModelTransform.h>
 #include <osgbBullet/MotionState.h>
 #include <osgbBullet/RefRigidBody.h>
 #include <osgbBullet/Utils.h>
 
-#include <ves/open/xml/XMLObject.h>
-#include <ves/open/xml/Command.h>
-#include <ves/open/xml/DataValuePair.h>
-#include <ves/open/xml/model/Model.h>
-#include <ves/open/xml/cad/CADNode.h>
-#include <ves/open/xml/cad/CADPart.h>
-#include <ves/open/xml/cad/CADAssembly.h>
-#include <ves/open/xml/model/System.h>
-#include <ves/open/xml/Transform.h>
-
-using namespace ves::xplorer::scenegraph::manipulator;
+namespace ves
+{
+namespace xplorer
+{
+namespace scenegraph
+{
+namespace manipulator
+{
 
 ////////////////////////////////////////////////////////////////////////////////
 Dragger::Dragger( const TransformationType::Enum& transformationType )
@@ -213,35 +219,43 @@ void Dragger::ComboForm()
 ////////////////////////////////////////////////////////////////////////////////
 bool Dragger::Connect( osg::Transform* activeAssociation )
 {
+    //Check and see if the selected transform has an attached physics mesh
+    osgwTools::AbsoluteModelTransform* amt =
+        dynamic_cast< osgwTools::AbsoluteModelTransform* >(
+            activeAssociation->getParent( 0 ) );
+    if( amt )
+    {
+        activeAssociation = amt;
+        //This is hacky
+        if( m_isRootDragger )
+        {
+            osgbBullet::RefRigidBody* refRB =
+                static_cast< osgbBullet::RefRigidBody* >( amt->getUserData() );
+            if( !refRB )
+            {
+                return false;
+            }
+
+            btRigidBody* btRB = refRB->getRigidBody();
+            if( !btRB )
+            {
+                return false;
+            }
+
+            PhysicsRigidBody* phyRB =
+                static_cast< PhysicsRigidBody* >( btRB->getUserPointer() );
+            if( !phyRB )
+            {
+                return false;
+            }
+            phyRB->EnableGhostControl();
+        }
+    }
+
     //Store the active association
     m_activeAssociation = activeAssociation;
 
-    //If we have a physics enabled transform then we need to add a 
-    //constraint for non static objects
-    osgwTools::AbsoluteModelTransform* amt =
-        dynamic_cast< osgwTools::AbsoluteModelTransform* >( activeAssociation );
-    if( !amt )
-    {
-        //Associate transform with this dragger
-        m_associationSet.insert( activeAssociation );
-
-        return true;
-    }
-
-    //If this is the root dragger, create point constraint
-    if( m_isRootDragger )
-    {
-        osgbBullet::RefRigidBody* rb =
-            static_cast< osgbBullet::RefRigidBody* >( amt->getUserData() );
-        btRigidBody* btRB = rb->getRigidBody();
-        if( !btRB )
-        {
-            //Error output
-            return false;
-        }
-
-        CreatePointConstraint( *btRB );
-    }
+    m_associationSet.insert( m_activeAssociation );
 
     return true;
 }
@@ -258,12 +272,43 @@ void Dragger::DefaultForm()
 ////////////////////////////////////////////////////////////////////////////////
 void Dragger::Disconnect()
 {
+    m_activeAssociation = NULL;
+
+    //This is hacky
     if( m_isRootDragger )
     {
-        ClearPointConstraint();
-    }
+        AssociationSet::const_iterator itr = m_associationSet.begin();
+        for( itr; itr != m_associationSet.end(); ++itr )
+        {
+            osgwTools::AbsoluteModelTransform* amt =
+                dynamic_cast< osgwTools::AbsoluteModelTransform* >( *itr );
+            if( !amt )
+            {
+                continue;
+            }
 
-    m_activeAssociation = NULL;
+            osgbBullet::RefRigidBody* refRB =
+                static_cast< osgbBullet::RefRigidBody* >( amt->getUserData() );
+            if( !refRB )
+            {
+                continue;
+            }
+
+            btRigidBody* btRB = refRB->getRigidBody();
+            if( !btRB )
+            {
+                continue;
+            }
+
+            PhysicsRigidBody* phyRB =
+                static_cast< PhysicsRigidBody* >( btRB->getUserPointer() );
+            if( !phyRB )
+            {
+                continue;
+            }
+            phyRB->EnableGhostControl( false );
+        }
+    }
 
     m_associationSet.clear();
 }
@@ -442,56 +487,6 @@ void Dragger::CreateDefaultShader()
 ////////////////////////////////////////////////////////////////////////////////
 void Dragger::UpdateAssociations()
 {
-    //Update physics first
-    ConstraintMap::const_iterator cmItr = (*m_constraintMap).begin();
-    for( cmItr; cmItr != (*m_constraintMap).end(); ++cmItr )
-    {
-        btRigidBody* btRB = cmItr->first;
-        if( btRB->isStaticObject() || btRB->isKinematicObject() )
-        {
-            continue;
-        }
-        bool currentIdle = m_physicsSimulator.GetIdle();
-        m_physicsSimulator.SetIdle( true );
-
-        osgbBullet::MotionState* ms = static_cast< osgbBullet::MotionState* >(
-            btRB->getMotionState() );
-        btTransform currentMatrix;
-        ms->getWorldTransform( currentMatrix );
-        if( m_transformationType & TransformationType::TRANSLATE_COMPOUND )
-        {
-            btVector3 deltaTranslation(
-                m_deltaTranslation.x(),
-                m_deltaTranslation.y(),
-                m_deltaTranslation.z() );
-
-            currentMatrix.setOrigin(
-                deltaTranslation + currentMatrix.getOrigin() );
-
-            btPoint2PointConstraint* p2p = cmItr->second;
-            if( p2p )
-            {
-                //Move the constraint pivot
-                const btVector3& currentLocation = p2p->getPivotInB();
-                btVector3 newPos = currentLocation + deltaTranslation;
-                p2p->setPivotB( newPos );
-            }
-        }
-        else if( m_transformationType & TransformationType::ROTATE_COMPOUND )
-        {
-            btQuaternion deltaRotation(
-                m_deltaRotation.x(), m_deltaRotation.y(),
-                m_deltaRotation.z(), m_deltaRotation.w() );
-            currentMatrix.setRotation(
-                deltaRotation * currentMatrix.getRotation() );
-        }
-
-        ms->setWorldTransform( currentMatrix );
-        btRB->setWorldTransform( currentMatrix );
-        btRB->setInterpolationWorldTransform( currentMatrix );
-        m_physicsSimulator.SetIdle( currentIdle );
-    }
-
     //Set all associated transforms
     AssociationSet::const_iterator asItr = m_associationSet.begin();
     for( asItr; asItr != m_associationSet.end(); ++asItr )
@@ -504,9 +499,58 @@ void Dragger::UpdateAssociations()
             //Error output
             continue;
         }
-        const std::pair< osg::Matrixd, osg::Matrixd >& matrices = ammItr->second;
+        std::pair< osg::Matrixd, osg::Matrixd > const& matrices = ammItr->second;
 
-        //Test for PATs 1st
+        //Test for physics transforms 1st
+        osgwTools::AbsoluteModelTransform* amt =
+            dynamic_cast< osgwTools::AbsoluteModelTransform* >( transform );
+        if( amt )
+        {
+            osgbBullet::RefRigidBody* refRB =
+                static_cast< osgbBullet::RefRigidBody* >( amt->getUserData() );
+            if( !refRB )
+            {
+                continue;
+            }
+
+            btRigidBody* btRB = refRB->getRigidBody();
+            if( !btRB )
+            {
+                continue;
+            }
+
+            PhysicsRigidBody* phyRB =
+                static_cast< PhysicsRigidBody* >( btRB->getUserPointer() );
+            if( !phyRB )
+            {
+                continue;
+            }
+
+            GhostController& ghostController = phyRB->GetGhostController();
+
+            bool currentIdle = m_physicsSimulator.GetIdle();
+            m_physicsSimulator.SetIdle( true );
+
+            if( m_transformationType & TransformationType::TRANSLATE_COMPOUND )
+            {
+                btVector3 deltaTranslation =
+                    osgbBullet::asBtVector3( m_deltaTranslation );
+                ghostController.Translate( deltaTranslation, currentIdle );
+            }
+            else if( m_transformationType & TransformationType::ROTATE_COMPOUND )
+            {
+                btQuaternion deltaRotation(
+                    m_deltaRotation.x(), m_deltaRotation.y(),
+                    m_deltaRotation.z(), m_deltaRotation.w() );
+                ghostController.Rotate( deltaRotation, currentIdle );
+            }
+
+            m_physicsSimulator.SetIdle( currentIdle );
+
+            continue;
+        }
+
+        //Test for PATs 2nd
         osg::PositionAttitudeTransform* pat =
             transform->asPositionAttitudeTransform();
         if( pat )
@@ -545,7 +589,7 @@ void Dragger::UpdateAssociations()
                 pat->setScale( scale );
             }
 
-            scenegraph::DCS* tempDCS = dynamic_cast< scenegraph::DCS* >( pat );
+            scenegraph::DCS* tempDCS = static_cast< scenegraph::DCS* >( pat );
             if( tempDCS )
             {
                 UpdateConductorData( tempDCS );
@@ -554,7 +598,7 @@ void Dragger::UpdateAssociations()
             continue;
         }
 
-        //Test for MTs 2nd
+        //Test for MTs 3rd
         osg::MatrixTransform* mt = transform->asMatrixTransform();
         if( mt )
         {
@@ -575,7 +619,7 @@ void Dragger::UpdateAssociations()
             continue;
         }
 
-        //Test for ATs 3rd
+        //Test for ATs 4th
         osg::AutoTransform* at =
             dynamic_cast< osg::AutoTransform* >( transform );
         if( at )
@@ -713,11 +757,6 @@ void Dragger::SetColor( Color::Enum colorTag, osg::Vec4 newColor, bool use )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Dragger::SetConstraintMap( ConstraintMap& constraintMap )
-{
-    m_constraintMap = &constraintMap;
-}
-////////////////////////////////////////////////////////////////////////////////
 void Dragger::SetRootDragger( Dragger* rootDragger )
 {
     if( this != rootDragger )
@@ -745,111 +784,6 @@ void Dragger::Show()
 void Dragger::UseColor( Color::Enum colorTag )
 {
     m_color->set( GetColor( colorTag ) );
-}
-////////////////////////////////////////////////////////////////////////////////
-/*
-void Dragger::ResetPhysics()
-{
-    AssociationSet::const_iterator itr = m_associationSet.begin();
-    for( itr; itr != m_associationSet.end(); ++itr )
-    {
-        osg::Transform* transform = *itr;
-        
-        //Test for PATs 1st
-        osg::PositionAttitudeTransform* pat =
-            transform->asPositionAttitudeTransform();
-        if( pat )
-        {
-            continue;
-        }
-        
-        //Test for AMTs 2nd
-        osgbBullet::AbsoluteModelTransform* amt =
-            dynamic_cast< osgbBullet::AbsoluteModelTransform* >( transform );
-        if( amt )
-        {
-            osgbBullet::RigidBody* rb = 
-            static_cast< osgbBullet::RigidBody* >( amt->getUserData() );
-            btRigidBody* btRB = rb->getRigidBody();
-            if( btRB->isStaticObject() )
-            {
-                continue;
-            }
-            
-            btRB->setGravity( btVector3( 0, 0, -32.174 ) );
-            //btRB->setGravity( btVector3( 0, 0, 0 ) );
-            continue;
-        }
-        
-        //Test for MTs 3rd
-        osg::MatrixTransform* mt = transform->asMatrixTransform();
-        if( mt )
-        {
-            continue;
-        }
-        
-        //Test for ATs 4th
-        osg::AutoTransform* at =
-            dynamic_cast< osg::AutoTransform* >( transform );
-        if( at )
-        {
-            continue;
-        }
-    }
-}
-*/
-////////////////////////////////////////////////////////////////////////////////
-const bool Dragger::CreatePointConstraint( btRigidBody& btRB )
-{
-    bool currentIdle = m_physicsSimulator.GetIdle();
-    m_physicsSimulator.SetIdle( true );
-
-    //I am not sure why this is needed - mccdo
-    btRB.setActivationState( DISABLE_DEACTIVATION );
-
-    btPoint2PointConstraint* p2p =
-        new btPoint2PointConstraint( btRB, btVector3( 0.0, 0.0, 0.0 ) );
-    //Very weak constraint for picking
-    p2p->m_setting.m_tau = 0.1;
-
-    m_physicsSimulator.GetDynamicsWorld()->addConstraint( p2p );
-    (*m_constraintMap)[ &btRB ] = p2p;
-    m_physicsSimulator.SetIdle( currentIdle );
-    return true;
-}
-////////////////////////////////////////////////////////////////////////////////
-void Dragger::ClearPointConstraint()
-{
-    ConstraintMap::const_iterator itr = (*m_constraintMap).begin();
-    if( itr == (*m_constraintMap).end() )
-    {
-        return;
-    }
-    bool currentIdle = m_physicsSimulator.GetIdle();
-    m_physicsSimulator.SetIdle( true );
-
-    for( itr; itr != (*m_constraintMap).end(); ++itr )
-    {
-        btPoint2PointConstraint* p2p = itr->second;
-        if( p2p )
-        {
-            m_physicsSimulator.GetDynamicsWorld()->removeConstraint( p2p );
-            delete p2p;
-            p2p = NULL;
-
-            btRigidBody* btRB = itr->first;
-            //It does not seem we should be messing with these states
-            //If we need to we will need to figure out some other methods
-            //for getting the result we are after. - mccdo
-            btRB->forceActivationState( ACTIVE_TAG );
-            //This is needed to reactivate the body after release
-            btRB->setDeactivationTime( 0.0 );
-            btRB = NULL;
-        }
-    }
-
-    (*m_constraintMap).clear();
-    m_physicsSimulator.SetIdle( currentIdle );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Dragger::UpdateConductorData( ves::xplorer::scenegraph::DCS* dcs )
@@ -908,3 +842,8 @@ void Dragger::UpdateConductorData( ves::xplorer::scenegraph::DCS* dcs )
         SetXMLCommand( modelUpdateData );
 }
 ////////////////////////////////////////////////////////////////////////////////
+
+} //end manipulator
+} //end scenegraph
+} //end xplorer
+} //end ves

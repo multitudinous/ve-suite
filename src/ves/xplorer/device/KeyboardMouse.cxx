@@ -368,7 +368,7 @@ void KeyboardMouse::ProcessEvents( ves::open::xml::CommandPtr command )
             }
 
             OnMousePress( inputArea );
-            //inputArea.lockMouse();
+
             break;
         }
         case gadget::MouseButtonReleaseEvent:
@@ -392,7 +392,7 @@ void KeyboardMouse::ProcessEvents( ves::open::xml::CommandPtr command )
             }
 
             OnMouseRelease( inputArea );
-            //inputArea.unlockMouse();
+
             break;
         }
         case gadget::MouseMoveEvent:
@@ -907,6 +907,16 @@ void KeyboardMouse::OnKeyRelease()
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::OnMousePress( gadget::InputArea& inputArea )
 {
+    //If we are manipulating something, release the dragger
+    if( m_manipulatorManager.IsEnabled() )
+    {
+        if( m_manipulatorManager.LeafDraggerIsActive() )
+        {
+            m_manipulatorManager.Handle(
+                scenegraph::manipulator::Event::RELEASE );
+        }
+    }
+
     m_xMotionPixels = 0;
     m_yMotionPixels = 0;
 
@@ -937,7 +947,6 @@ void KeyboardMouse::OnMousePress( gadget::InputArea& inputArea )
 
             if( m_characterController.IsEnabled() )
             {
-                //inputArea.lockMouse();
                 m_characterController.SetCameraRotationSLERP( false );
             }
         }
@@ -970,7 +979,6 @@ void KeyboardMouse::OnMousePress( gadget::InputArea& inputArea )
     {
         if( m_characterController.IsEnabled() )
         {
-            //inputArea.lockMouse();
             m_characterController.FirstPersonMode( true );
             m_characterController.SetCameraRotationSLERP( false );
             m_characterController.SetRotationFromCamera();
@@ -1002,7 +1010,7 @@ void KeyboardMouse::OnMousePress( gadget::InputArea& inputArea )
     }
     default:
     {
-        break;
+        ;
     }
     } //end switch( m_currKey )
 }
@@ -1019,7 +1027,6 @@ void KeyboardMouse::OnMouseRelease( gadget::InputArea& inputArea )
 
         if( m_characterController.IsEnabled() )
         {
-            //inputArea.unlockMouse();
             m_characterController.SetCameraRotationSLERP( true );
         }
 
@@ -1118,11 +1125,6 @@ void KeyboardMouse::OnMouseRelease( gadget::InputArea& inputArea )
     //Right mouse button
     case gadget::MBUTTON3:
     {
-        if( m_characterController.IsEnabled() )
-        {
-            //inputArea.unlockMouse();
-        }
-
         if( m_cameraManager.IsEnabled() && m_mousePickEvent )
         {
             UpdateSelectionLine();
@@ -1137,7 +1139,7 @@ void KeyboardMouse::OnMouseRelease( gadget::InputArea& inputArea )
     }
     default:
     {
-        break;
+        ;
     }
     } //end switch( m_currKey )
 
@@ -1274,12 +1276,15 @@ void KeyboardMouse::OnMouseMotionUp()
 
     if( m_manipulatorManager.IsEnabled() )
     {
-        UpdateSelectionLine();
-        if( m_manipulatorManager.Handle(
-                scenegraph::manipulator::Event::FOCUS,
-                mLineSegmentIntersector.get() ) )
+        if( !m_manipulatorManager.LeafDraggerIsActive() )
         {
-            ;
+            UpdateSelectionLine();
+            if( m_manipulatorManager.Handle(
+                    scenegraph::manipulator::Event::FOCUS,
+                    mLineSegmentIntersector.get() ) )
+            {
+                ;
+            }
         }
     }
 }
@@ -1495,35 +1500,10 @@ void KeyboardMouse::ProcessSelection()
         return;
     }
 
-    //Check and see if the selected node has an attached physics mesh
-    bool hasPhysicsMesh( false );
-    osg::ref_ptr< osgwTools::AbsoluteModelTransform > tempAMT = 
-        dynamic_cast< osgwTools::AbsoluteModelTransform* >( vesObject->getParent( 0 ) );
-    if( tempAMT.valid() )
-    {
-        osgbBullet::RefRigidBody* tempRB =
-            dynamic_cast< osgbBullet::RefRigidBody* >( tempAMT->getUserData() );
-        if( tempRB )
-        {
-            if( tempRB->getRigidBody()->isStaticOrKinematicObject() )
-            {
-                //return;
-            }
-            hasPhysicsMesh = true;
-        }
-    }
-
     //Set the connection between the scene manipulator and the selected dcs
     scenegraph::manipulator::TransformManipulator* sceneManipulator =
         m_manipulatorManager.GetSceneManipulator();
-    if( hasPhysicsMesh )
-    {
-        sceneManipulator->Connect( tempAMT.get() );
-    }
-    else
-    {
-        sceneManipulator->Connect( newSelectedDCS );
-    }
+    sceneManipulator->Connect( newSelectedDCS );
 
     //Remove local node from nodePath
     nodePath.pop_back();

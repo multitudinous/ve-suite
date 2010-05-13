@@ -137,9 +137,6 @@ public:
         Color::Enum colorTag, osg::Vec4& newColor, bool use = false );
 
     ///
-    virtual void SetConstraintMap( ConstraintMap& constraintMap );
-
-    ///
     ///\param
     virtual void SetCurrentGLTransformInfo(
         GLTransformInfoPtr currentGLTransformInfo );

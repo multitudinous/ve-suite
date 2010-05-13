@@ -34,9 +34,18 @@
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/physics/PhysicsRigidBody.h>
 #include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
-#include <ves/xplorer/scenegraph/SceneManager.h>
+#include <ves/xplorer/scenegraph/physics/GhostController.h>
 
+#include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/LocalToWorldNodePath.h>
+
+// --- OSG Includes --- //
+#include <osg/io_utils>
+#include <osg/ComputeBoundsVisitor>
+#include <osg/BoundingBox>
+#include <osg/PositionAttitudeTransform>
+
+#include <osgDB/WriteFile>
 
 // --- Bullet Includes --- //
 #include <BulletDynamics/Dynamics/btDiscreteDynamicsWorld.h>
@@ -49,20 +58,19 @@
 #include <BulletCollision/CollisionShapes/btBvhTriangleMeshShape.h>
 #include <BulletCollision/CollisionShapes/btConvexTriangleMeshShape.h>
 
+#include <BulletCollision/CollisionDispatch/btGhostObject.h>
+#include <BulletCollision/CollisionDispatch/btInternalEdgeUtility.h>
+
+// --- osgBullet Includes --- //
 #include <osgbBullet/CollisionShapes.h>
 #include <osgbBullet/MotionState.h>
-#include <osgwTools/AbsoluteModelTransform.h>
 #include <osgbBulletPlus/OSGToCollada.h>
 //#include <osgbBullet/ColladaUtils.h>
 #include <osgbBullet/Utils.h>
 #include <osgbBullet/RefRigidBody.h>
 #include <osgbBullet/PhysicsState.h>
 
-#include <osg/io_utils>
-#include <osg/ComputeBoundsVisitor>
-#include <osg/BoundingBox>
-#include <osg/PositionAttitudeTransform>
-#include <osgDB/WriteFile>
+#include <osgwTools/AbsoluteModelTransform.h>
 
 // --- STL Includes --- //
 #include <iostream>
@@ -73,14 +81,17 @@ using namespace ves::xplorer::scenegraph;
 PhysicsRigidBody::PhysicsRigidBody(
     osg::Node* node, PhysicsSimulator* physicsSimulator )
     :
+    m_ghostControl( false ),
     mMass( 1.0 ),
     mFriction( 0.5 ),
     mRestitution( 0.5 ),
-    mPhysicsSimulator( physicsSimulator ),
     mOSGToBullet( node ),
     mRB( NULL ),
     mDebugBoundaries( false ),
-    m_physicsMaterial( NULL )
+    m_physicsMaterial( NULL ),
+    m_ghostController( new GhostController() ),
+    m_physicsSimulator( *physicsSimulator ),
+    m_dynamicsWorld( *(m_physicsSimulator.GetDynamicsWorld()) )
 {
     std::cout << "|\tPhysicsRigidBody: Just initializing physics variables."
               << std::endl;
@@ -148,10 +159,9 @@ void PhysicsRigidBody::CleanRigidBody()
     if( mRB )
     {
         //cleanup in the reverse order of creation/initialization
-        btDynamicsWorld* dw = mPhysicsSimulator->GetDynamicsWorld();
 
         //remove the rigidbodies from the dynamics world and delete them
-        dw->removeRigidBody( mRB );
+        m_dynamicsWorld.removeRigidBody( mRB );
 
         {
             btCollisionShape* tempShape = mRB->getCollisionShape();
@@ -230,7 +240,16 @@ void PhysicsRigidBody::RegisterRigidBody( btRigidBody* rigidBody )
 
     //rigidBody->setActivationState( DISABLE_DEACTIVATION );
 
-    mPhysicsSimulator->GetDynamicsWorld()->addRigidBody( rigidBody );
+    m_dynamicsWorld.addRigidBody( rigidBody );
+
+    //In the future make static objects act like kinematic by interpolating the
+    //transform
+    //The drawback of this solution is we can't accurately detect static-static
+    //collisions because static objects are not always convex
+    //So we might have to live with static-static penetration
+    m_ghostController->SetCollisionShape( rigidBody->getCollisionShape() );
+    //Set the ms for the ghost object to update
+    m_ghostController->SetMotionState( rigidBody->getMotionState() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsRigidBody::StaticConcaveShape()
@@ -308,6 +327,28 @@ void PhysicsRigidBody::CustomShape( const BroadphaseNativeTypes shapeType, const
         record = converter.getOrCreateCreationRecord();
         std::cout << "|\tJust finished creating a new btRigidBody." << std::endl;
     }
+
+/*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*/
+    //This should probably go in CollisionShapes.cpp
+    //The btInternalEdgeUtility helps to avoid or reduce artifacts
+    //due to wrong collision normals caused by internal edges
+    if( shapeType == TRIANGLE_MESH_SHAPE_PROXYTYPE )
+    {
+        //Avoid static_cast here, as it will always succeed
+        btBvhTriangleMeshShape* bvhTriMeshShape =
+            dynamic_cast< btBvhTriangleMeshShape* >( mRB->getCollisionShape() );
+        if( bvhTriMeshShape )
+        {
+            btTriangleInfoMap* triangleInfoMap = new btTriangleInfoMap();
+            btGenerateInternalEdgeInfo( bvhTriMeshShape, triangleInfoMap );
+        }
+
+        //Enable custom material callback
+        mRB->setCollisionFlags(
+            mRB->getCollisionFlags() |
+            btCollisionObject::CF_CUSTOM_MATERIAL_CALLBACK );
+    }
+/*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*/
 
     osg::Group* parent = stopNode->getParent( 0 );
     osg::ref_ptr< osgwTools::AbsoluteModelTransform > amt =
@@ -468,5 +509,82 @@ void PhysicsRigidBody::CreateRigidBody(
 Material* PhysicsRigidBody::GetSoundMaterial()
 {
     return m_physicsMaterial;
+}
+////////////////////////////////////////////////////////////////////////////////
+GhostController& PhysicsRigidBody::GetGhostController() const
+{
+    return *m_ghostController;
+}
+////////////////////////////////////////////////////////////////////////////////
+void PhysicsRigidBody::EnableGhostControl( bool const& enable )
+{
+    if( m_ghostControl == enable )
+    {
+        return;
+    }
+    m_ghostControl = enable;
+
+    btMotionState* ms( NULL );
+    btGhostObject& ghostObject = m_ghostController->GetGhostObject();
+
+    bool currentIdle = m_physicsSimulator.GetIdle();
+    m_physicsSimulator.SetIdle( true );
+
+    if( m_ghostControl )
+    {
+        //Add the ghost object and have static objects ignore it
+        m_dynamicsWorld.addCollisionObject( &ghostObject );//,
+            //btBroadphaseProxy::DefaultFilter,
+            //btBroadphaseProxy::AllFilter ^ btBroadphaseProxy::StaticFilter );
+        m_dynamicsWorld.addAction( m_ghostController );
+
+        //Must move the ghost object to the current rigid body location
+        ms = m_ghostController->GetMotionState();
+        if( ms )
+        {
+            ms->getWorldTransform( ghostObject.getWorldTransform() );
+        }
+
+        //Remove the rigid body
+        if( mRB )
+        {
+            //Clear forces and velocities
+            mRB->clearForces();
+            mRB->setAngularVelocity( btVector3( 0.0, 0.0, 0.0 ) );
+            mRB->setLinearVelocity( btVector3( 0.0, 0.0, 0.0 ) );
+            m_dynamicsWorld.removeRigidBody( mRB );
+        }
+    }
+    else
+    {
+        //Add back the rigid body
+        if( mRB )
+        {
+            m_dynamicsWorld.addRigidBody( mRB );
+            //Need to do this to force rigid body to wake and test itself
+            mRB->forceActivationState( ACTIVE_TAG );
+            mRB->setDeactivationTime( 0.0 );
+
+            //Update the rigid body and motion state transforms w/ the current
+            //ghost object transform
+            //We know the ghost transform is guaranteed to be free from collisions
+            //because the ghost object has already tested and recovered from
+            //penetrations
+            ms = mRB->getMotionState();
+            if( ms )
+            {
+                ms->getWorldTransform( mRB->getWorldTransform() );
+            }
+        }
+
+        //Clean proxy from pairs for ghost object
+        m_ghostController->Reset();
+
+        //Remove the ghost object
+        m_dynamicsWorld.removeCollisionObject( &ghostObject );
+        m_dynamicsWorld.removeAction( m_ghostController );
+    }
+
+    m_physicsSimulator.SetIdle( currentIdle );
 }
 ////////////////////////////////////////////////////////////////////////////////

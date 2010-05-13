@@ -54,6 +54,7 @@ ManipulatorManager::ManipulatorManager()
     :
     osg::Group(),
     m_enabled( false ),
+    m_leafDraggerIsActive( false ),
     m_rootDragger( NULL ),
     m_leafDragger( NULL ),
     m_sceneManipulator( NULL ),
@@ -151,8 +152,6 @@ bool ManipulatorManager::addChild( Dragger* child )
         //If cave mode
         child->SetAutoScaleToScreen( false );
     }
-    ConstraintMap* constraintMap = new ConstraintMap();
-    child->SetConstraintMap( *constraintMap );
 
     return osg::Group::addChild( child );
 }
@@ -229,9 +228,17 @@ bool ManipulatorManager::Handle(
     }
     case Event::PUSH:
     {
+        //Protect against multiple pushes from multiple devices
+        bool returnTemp( false );
+        if( m_leafDraggerIsActive )
+        {
+            returnTemp = Handle( Event::RELEASE );
+        }
+
         m_leafDragger =
             m_rootDragger->Push( *m_deviceInput, m_nodePath, m_nodePathItr );
-        return m_leafDragger;
+        m_leafDraggerIsActive = true;
+        return m_leafDragger && returnTemp;
     }
     case Event::DRAG:
     {
@@ -246,7 +253,7 @@ bool ManipulatorManager::Handle(
     case Event::RELEASE:
     {
         m_leafDragger = NULL;
-
+        m_leafDraggerIsActive = false;
         return m_rootDragger->Release( m_nodePathItr );
     }
     default:
@@ -263,9 +270,14 @@ bool ManipulatorManager::insertChild( unsigned int index, Dragger* child )
     return osg::Group::insertChild( index, child );
 }
 ////////////////////////////////////////////////////////////////////////////////
-const bool ManipulatorManager::IsEnabled() const
+bool const& ManipulatorManager::IsEnabled() const
 {
     return m_enabled;
+}
+////////////////////////////////////////////////////////////////////////////////
+bool const& ManipulatorManager::LeafDraggerIsActive() const
+{
+    return m_leafDraggerIsActive;
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool ManipulatorManager::replaceChild( Dragger* origChild, Dragger* newChild )

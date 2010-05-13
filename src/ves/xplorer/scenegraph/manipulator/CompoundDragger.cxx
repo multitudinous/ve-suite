@@ -272,16 +272,6 @@ void CompoundDragger::SetColor(
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CompoundDragger::SetConstraintMap( ConstraintMap& constraintMap )
-{
-    for( unsigned int i = 0; i < getNumChildren(); ++i )
-    {
-        GetChild( i )->SetConstraintMap( constraintMap );
-    }
-
-    Dragger::SetConstraintMap( constraintMap );
-}
-////////////////////////////////////////////////////////////////////////////////
 void CompoundDragger::SetCurrentGLTransformInfo(
     ves::xplorer::scenegraph::GLTransformInfoPtr currentGLTransformInfo )
 {

@@ -112,7 +112,10 @@ public:
     virtual bool insertChild( unsigned int index, Dragger* child );
 
     ///
-    const bool IsEnabled() const;
+    bool const& IsEnabled() const;
+
+    ///
+    bool const& LeafDraggerIsActive() const;
 
     ///Override the replaceChild function to only accept Manipulators
     virtual bool replaceChild( Dragger* origChild, Dragger* newChild );
@@ -122,7 +125,7 @@ public:
 
     ///
     void SetDraggerScale( double draggerScale );
-    
+
 protected:
     ///Destructor
     virtual ~ManipulatorManager();
@@ -137,6 +140,9 @@ private:
 
     ///
     bool m_enabled;
+
+    ///
+    bool m_leafDraggerIsActive;
 
     ///
     osg::NodePath m_nodePath;
@@ -161,9 +167,6 @@ private:
 
     ///Scale the dragger size
     double m_draggerSize;
-
-public:
-    //friend class Dragger;
 
 };
 } //end manipulator
