@@ -66,9 +66,6 @@ DiscreteDynamicsWorld::~DiscreteDynamicsWorld()
 ////////////////////////////////////////////////////////////////////////////////
 void DiscreteDynamicsWorld::internalSingleStepSimulation( btScalar timeStep )
 {
-    //Update all kinematic objects here
-    //saveKinematicState( timeStep );
-
     //Call base class step function
     btDiscreteDynamicsWorld::internalSingleStepSimulation( timeStep );
 }
