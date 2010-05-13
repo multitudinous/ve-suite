@@ -213,7 +213,7 @@ void TranslateAxis::ComputeDeltaTransform()
 {
     //Calculate the delta transform
     m_deltaTranslation = m_endProjectedPoint - m_startProjectedPoint;
-    
+
     //Set the transform
     osg::Vec3d newTranslation =
         m_rootDragger->GetPosition() + m_deltaTranslation;
