@@ -250,10 +250,6 @@ KinematicCharacterController::KinematicCharacterController()
     //Set max slope for character climbing
     setMaxSlope( btRadians( 45.0 ) );
 
-    btBroadphaseInterface* broadphase = m_dynamicsWorld.getBroadphase();
-    broadphase->getOverlappingPairCache()->setInternalGhostPairCallback(
-        new btGhostPairCallback() );
-
     m_ghostObject->setWorldTransform( btTransform::getIdentity() );
 
     btCapsuleShapeZ* convexShape =
