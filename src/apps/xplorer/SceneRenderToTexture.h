@@ -41,11 +41,7 @@
 
 // ---  VR Juggler Includes --- //
 #include <vrj/vrjParam.h>
-#if __VJ_version >= 2003000
 #include <vrj/Draw/OpenGL/ContextData.h>
-#else
-#include <vrj/Draw/OGL/GlContextData.h>
-#endif
 
 // --- OSG Includes --- //
 #include <osg/ref_ptr>
@@ -70,7 +66,7 @@ namespace osgwTools
 class ScreenCapture;
 }
 
-// --- C/C++ Libraries --- //
+// --- STL Includes --- //
 #include <map>
 #include <string>
 
@@ -78,8 +74,6 @@ namespace ves
 {
 namespace xplorer
 {
-
-// --- VE-Suite Includes --- //
 namespace scenegraph
 {
 namespace rtt
@@ -99,7 +93,6 @@ class Processor;
 /*!\namespace ves::xplorer
  *
  */
-
 class SceneRenderToTexture
 {
 public:
@@ -117,11 +110,7 @@ public:
     
     ///Get the camera with specified vrj::Viewport
     ///\return The camera with specified vrj::Viewport
-#if __VJ_version >= 2003000
     osg::Camera* const GetCamera( vrj::ViewportPtr const viewport );
-#else
-    osg::Camera* const GetCamera( vrj::Viewport* const viewport );
-#endif
 
     ///Get the root node for all children in the scene to be added to
     ///\return The root osg::Group node
@@ -151,11 +140,14 @@ public:
     void WriteLowResImageFile(
         osg::Group* root, osgUtil::SceneView* sv, std::string& filename );
 
-    //Update function to traverse 
-    void Update( osg::NodeVisitor* updateVisitor, ves::open::xml::CommandPtr tempCommand );
+    ///Update function to traverse
+    void Update(
+        osg::NodeVisitor* updateVisitor,
+        ves::open::xml::CommandPtr tempCommand );
 
     ///capture image callback
     void SetImageCameraCallback( bool capture, const std::string& filename );
+
 protected:
 
 private:
@@ -163,14 +155,9 @@ private:
     osg::Camera* CreatePipelineCamera( osg::Viewport* viewport );
 
     ///
-#if __VJ_version >= 2003000
     scenegraph::rtt::Processor* CreatePipelineProcessor(
-        vrj::ViewportPtr viewport, osg::Camera* camera, osg::Camera* svCamera  );
-#else
-    scenegraph::rtt::Processor* CreatePipelineProcessor(
-        vrj::Viewport* viewport, osg::Camera* camera, osg::Camera* svCamera  );
-#endif
-    
+        vrj::ViewportPtr viewport, osg::Camera* camera, osg::Camera* svCamera );
+
     ///
     osg::Texture2D* CreateViewportTexture(
         GLenum internalFormat,
@@ -179,25 +166,16 @@ private:
         osg::Texture2D::FilterMode filterMode,
         osg::Texture2D::WrapMode wrapMode,
         std::pair< int, int >& viewportDimensions );
-    
+
     ///
-#if __VJ_version >= 2003000
     osg::Geode* CreateTexturedQuad(
         vrj::ViewportPtr viewport, osg::Texture2D* texture );
-#else
-    osg::Geode* CreateTexturedQuad(
-        vrj::Viewport* viewport, osg::Texture2D* texture );
-#endif
 
     ///Set the number of super samples
     int mScaleFactor;
 
     ///Let the object know all cameras are configured
-#if __VJ_version >= 2003000
     vrj::opengl::ContextData< bool > mCamerasConfigured;
-#else
-    vrj::GlContextData< bool > mCamerasConfigured;
-#endif
 
     ///A typedef to make it easier to define iterators
     typedef std::pair<
@@ -206,13 +184,12 @@ private:
 
     ///The render to texture cameras
     ///A context locked map to hold post-process pipelines for each viewport per context
-#if __VJ_version >= 2003000
     typedef std::map< vrj::ViewportPtr, PipelinePair > PipelineMap;
+
+    ///
     vrj::opengl::ContextData< PipelineMap > mPipelines;
-#else
-    typedef std::map< vrj::Viewport*, PipelinePair > PipelineMap;
-    vrj::GlContextData< PipelineMap > mPipelines;
-#endif
+
+    ///
     std::vector< osg::Camera* > m_updateList;
 
     ///
@@ -221,6 +198,7 @@ private:
     ///The root group that everything gets added to
     ///Is the same for all contexts
     osg::ref_ptr< osg::Group > mRootGroup;
+
     ///Shader pointers
     osg::ref_ptr< osg::Shader > m_finalShader;
     osg::ref_ptr< osg::Shader > m_1dxVP;

@@ -876,7 +876,7 @@ void App::draw()
             return;
         }*/
     }
-    
+
     //std::cout << "----------Draw-----------" << std::endl;
     VPR_PROFILE_GUARD_HISTORY( "App::draw", 20 );
     glClear( GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT );
@@ -985,7 +985,7 @@ void App::draw()
         sv->setProjectionMatrix( identityMatrixOSG );
         sv->setViewMatrix( identityMatrixOSG );
     }
-    
+
     //Draw the scene
     //NOTE: It is not safe to call osgUtil::SceneView::update() here; it
     //should only be called by a single thread. The equivalent of calling
