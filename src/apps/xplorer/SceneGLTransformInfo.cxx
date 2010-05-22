@@ -58,6 +58,10 @@
 
 #include <vrj/Kernel/User.h>
 
+#include <gmtl/MatrixOps.h>
+#include <gmtl/Generate.h>
+#include <gmtl/Xforms.h>
+
 // --- OSG Includes --- //
 
 //#include <osgUtil/SceneView>
@@ -220,7 +224,10 @@ void SceneGLTransformInfo::CalculateCenterViewMatrix()
             gmtl::Matrix44f cur_head_pos = 
                 viewport->getUser()->getHeadPosProxy()->getData(positionScale);
 
-            proj->calcViewMatrix(cur_head_pos, positionScale);
+            const gmtl::Point3f left_eye_pos(
+                cur_head_pos * gmtl::Point3f(0, 0, 0) );
+            
+            proj->calcViewMatrix(left_eye_pos, positionScale);
             const gmtl::Matrix44f& projMatrix = proj->getViewMatrix();
         }
     }
