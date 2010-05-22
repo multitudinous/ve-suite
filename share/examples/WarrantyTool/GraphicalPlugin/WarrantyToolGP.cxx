@@ -52,13 +52,17 @@
 
 #include <ves/xplorer/scenegraph/HighlightNodeByNameVisitor.h>
 #include <ves/xplorer/scenegraph/FindParentWithNameVisitor.h>
+#include <ves/xplorer/scenegraph/SceneManager.h>
 
 #include <ves/xplorer/scenegraph/CADEntity.h>
 #include <ves/xplorer/scenegraph/TextTexture.h>
 #include <ves/xplorer/scenegraph/GroupedTextTextures.h>
+#include <ves/xplorer/scenegraph/HeadPositionCallback.h>
+#include <ves/xplorer/scenegraph/HeadsUpDisplay.h>
 
 #include <ves/xplorer/environment/TextTextureCallback.h>
-#include <ves/xplorer/environment/HeadPositionCallback.h>
+
+#include <ves/xplorer/EnvironmentHandler.h>
 
 #include <ves/xplorer/device/KeyboardMouse.h>
 
@@ -875,20 +879,28 @@ void WarrantyToolGP::CreateDB()
 ////////////////////////////////////////////////////////////////////////////////
 void WarrantyToolGP::CreateTextTextures()
 {
-
     m_textTrans = 
         new ves::xplorer::scenegraph::DCS();
     m_textTrans->getOrCreateStateSet()->addUniform(
         new osg::Uniform( "glowColor", osg::Vec4( 0.0, 0.0, 0.0, 1.0 ) ) );
-        
-    mDCS->addChild( m_textTrans.get() );
-
-    //mModelText->setUpdateCallback( 
-    //    new ves::xplorer::environment::TextTextureCallback( mModelText.get() ) );
-    m_textTrans->setUpdateCallback( 
-        new ves::xplorer::environment::HeadPositionCallback() );
-    //static_cast< osg::PositionAttitudeTransform* >( 
-    //    mModelText->getParent( 0 ) )->setPosition( osg::Vec3d( 0, 0, 0 ) );
+    
+    osg::ref_ptr< osg::Group > viewCameraGroup;
+    /*if( mSceneManager->IsDesktopMode() )
+    {
+        viewCameraGroup = mEnvironmentHandler->GetHeadsUpDisplay()->GetCamera();
+    }
+    else*/
+    {
+        viewCameraGroup = mDCS.get();
+        //mModelText->setUpdateCallback( 
+        //    new ves::xplorer::environment::TextTextureCallback( mModelText.get() ) );
+        m_textTrans->setUpdateCallback( 
+            new ves::xplorer::scenegraph::HeadPositionCallback() );
+        //static_cast< osg::PositionAttitudeTransform* >( 
+        //    mModelText->getParent( 0 ) )->setPosition( osg::Vec3d( 0, 0, 0 ) );        
+    }
+    
+    viewCameraGroup->addChild( m_textTrans.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void WarrantyToolGP::CreateDBQuery( ves::open::xml::DataValuePairPtr dvp )
@@ -1024,6 +1036,8 @@ void WarrantyToolGP::CreateDBQuery( ves::open::xml::DataValuePairPtr dvp )
 
     if( !failedLoad )
     {
+        m_groupedTextTextures->UpdateListPositions();
+        
         m_textTrans->addChild( m_groupedTextTextures.get() );
     
         ves::xplorer::scenegraph::HighlightNodeByNameVisitor
