@@ -583,10 +583,9 @@ void GraphicalPluginManager::ConnectToCE()
         
         //Create the Servant
         ui_i = new VE_i( _exec, m_UINAME );
-        //VE_i ui_i( UINAME);
         
         PortableServer::ObjectId_var id =
-        PortableServer::string_to_ObjectId( "GraphicalPluginManager" );
+            PortableServer::string_to_ObjectId( "GraphicalPluginManager" );
         
         //activate it with this child POA
         m_ChildPOA->activate_object_with_id( id.in(), &( *ui_i ) );
