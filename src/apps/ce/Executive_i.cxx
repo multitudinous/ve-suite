@@ -1171,7 +1171,8 @@ ACE_THROW_SPEC((
 
     std::map<std::string, Execute_Thread*>::iterator iter;
     iter = _exec_thread.find( std::string( UnitName ) );
-    std::string message =  std::string( "Going to unregister unit " ) + UnitName + std::string( "\n" );
+    std::string message =  std::string( "Going to unregister unit " ) + 
+        UnitName + std::string( "\n" );
     ClientMessage( message.c_str() );
     if( iter != _exec_thread.end() )
     {
@@ -1288,31 +1289,34 @@ ACE_THROW_SPEC((
     for( std::map<std::string, Body::UI_var>::iterator
         iter = m_uiMap.begin(); iter != m_uiMap.end(); )
     {
-        if( iter->first.compare(0,2, "UI", 0, 2) == 0 )
+        if( iter->first.compare(0,2, "UI", 0, 2) != 0 )
         {
-            try
-            {
-                iter->second->_non_existent();
-                //iter->second->SetCommand( param );
-                iter->second->sendc_SetCommand( uiComAMIHandler.in(), param );
-                //++iter;
-            }
-            catch( CORBA::Exception&  ex )
-            {
-                std::cout << "VE-CE::SetParams : " << iter->first 
-                    << " is obsolete." << std::endl
-                    << ex._info().c_str() << std::endl;
-                // it seems this call should be blocked as we are messing with
-                // a map that is used everywhere
-                m_uiMap.erase( iter++ );
-            }
-            catch( std::exception& ex )
-            {
-                std::cout << "VE-CE::SetParams : another kind of exception " 
-                << std::endl << ex.what() << std::endl;
-            }
+            ++iter;
+            continue;
         }
-        ++iter;
+
+        try
+        {
+            iter->second->_non_existent();
+            //iter->second->SetCommand( param );
+            iter->second->sendc_SetCommand( uiComAMIHandler.in(), param );
+            ++iter;
+        }
+        catch( CORBA::Exception&  ex )
+        {
+            std::cout << "VE-CE::SetParams : " << iter->first 
+                << " is obsolete." << std::endl
+                << ex._info().c_str() << std::endl;
+            // it seems this call should be blocked as we are messing with
+            // a map that is used everywhere
+            m_uiMap.erase( iter++ );
+        }
+        catch( std::exception& ex )
+        {
+            std::cout << "VE-CE::SetParams : another kind of exception " 
+                << std::endl << ex.what() << std::endl;
+            ++iter;
+        }
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -1345,3 +1349,4 @@ void Body_Executive_i::ClientMessage( const char *msg )
         }
     }
 }
+////////////////////////////////////////////////////////////////////////////////
