@@ -76,7 +76,7 @@ int main( int argc, char* argv[] )
     std::cout
         << "|-----------------------------------------------------------------|"
         << std::endl
-        << "| Be sure that the JCCL_CFG_PATH is set properply by VR Juggler."
+        << "| Be sure that the JCCL_CFG_PATH is set properly by VR Juggler."
         << std::endl
         << "|-----------------------------------------------------------------|"
         << std::endl;
@@ -132,7 +132,7 @@ int main( int argc, char* argv[] )
         "CORBA name server reference");
     //-ORBInitRef', 'NameService=corbaloc:iiop:localhost:1239/NameService'
 
-    // jconf files can be given as postion arguments.
+    // jconf files can be given as positional arguments.
     //po::positional_options_description pos_desc;
     //pos_desc.add("jconf", -1);
     
