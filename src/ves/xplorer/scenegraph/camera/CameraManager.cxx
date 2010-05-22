@@ -38,6 +38,7 @@
 #include <ves/xplorer/scenegraph/Masks.h>
 #include <ves/xplorer/scenegraph/Select.h>
 #include <ves/xplorer/scenegraph/SceneManager.h>
+#include <ves/xplorer/scenegraph/HeadPositionCallback.h>
 
 #include <ves/xplorer/Debug.h>
 
@@ -49,6 +50,7 @@
 #include <osg/Geometry>
 
 using namespace ves::xplorer::scenegraph::camera;
+using namespace ves::xplorer::scenegraph;
 
 ////////////////////////////////////////////////////////////////////////////////
 CameraManager::CameraManager()
@@ -59,6 +61,12 @@ CameraManager::CameraManager()
 {
     Enable();
     m_rttQuad = CreateMasterCameraQuad();
+    if( !SceneManager::instance()->IsDesktopMode() )
+    {
+        m_rttQuadTransform = new osg::PositionAttitudeTransform();
+        m_rttQuadTransform->setUpdateCallback( new HeadPositionCallback() );
+        m_rttQuadTransform->addChild( m_rttQuad.get() );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 CameraManager::CameraManager(
@@ -139,6 +147,7 @@ bool CameraManager::Handle(
         if( cameraObject )
         {
             //camera->DoSomething(); like change color or something
+            SetActiveCameraObject( cameraObject );
         }
 
         break;
@@ -152,7 +161,7 @@ bool CameraManager::Handle(
     default:
     {
         m_activeCamera = NULL;
-
+        SetActiveCameraObject( m_activeCamera );
         break;
     }
     } //end switch( event )
@@ -184,12 +193,12 @@ void CameraManager::SetActiveCameraObject( CameraObject* cameraObject )
 
     if( cameraObject )
     {
-        m_rttQuad->setNodeMask( 1 );
-        cameraObject->SetRenderQuadTexture( *m_rttQuad.get() );
+        GetCameraManagerQuad()->setNodeMask( 1 );
+        cameraObject->SetRenderQuadTexture( *(m_rttQuad.get()) );
     }
     else
     {
-        m_rttQuad->setNodeMask( 0 );
+        GetCameraManagerQuad()->setNodeMask( 0 );
     }
 
     m_activeCamera = cameraObject;
@@ -206,11 +215,21 @@ osg::Geode* CameraManager::CreateMasterCameraQuad()
     osg::ref_ptr< osg::Vec3Array > cameraViewQuadVertices = 
         new osg::Vec3Array();
     cameraViewQuadVertices->resize( 4 );
-    (*cameraViewQuadVertices)[ 0 ].set( 0.0, 0.0, -1.0 );
-    (*cameraViewQuadVertices)[ 1 ].set( 200.0, 0.0, -1.0 );
-    (*cameraViewQuadVertices)[ 2 ].set( 200.0, 200.0, -1.0 );
-    (*cameraViewQuadVertices)[ 3 ].set( 0.0, 200.0, -1.0 );
-
+    if( SceneManager::instance()->IsDesktopMode() )
+    {
+        (*cameraViewQuadVertices)[ 0 ].set( 0.0, 0.0, -1.0 );
+        (*cameraViewQuadVertices)[ 1 ].set( 200.0, 0.0, -1.0 );
+        (*cameraViewQuadVertices)[ 2 ].set( 200.0, 200.0, -1.0 );
+        (*cameraViewQuadVertices)[ 3 ].set( 0.0, 200.0, -1.0 );
+    }
+    else
+    {
+        (*cameraViewQuadVertices)[ 0 ].set( -1.0,  0.01, -1.0 );
+        (*cameraViewQuadVertices)[ 1 ].set(  1.0,  0.01, -1.0 );
+        (*cameraViewQuadVertices)[ 2 ].set(  1.0,  0.01,  1.0 );
+        (*cameraViewQuadVertices)[ 3 ].set( -1.0,  0.01,  1.0 );
+    }
+    
     //Get the texture coordinates for the quad
     osg::ref_ptr< osg::Vec2Array > quadTexCoords = new osg::Vec2Array();
     quadTexCoords->resize( 4 );
@@ -225,6 +244,11 @@ osg::Geode* CameraManager::CreateMasterCameraQuad()
     quadGeometry->addPrimitiveSet( new osg::DrawArrays( 
         osg::PrimitiveSet::QUADS, 0, cameraViewQuadVertices->size() ) );
     quadGeometry->setTexCoordArray( 0, quadTexCoords.get() );
+    //quadGeometry->setUseDisplayList( true );
+    //osg::ref_ptr< osg::Vec4Array > c = new osg::Vec4Array();
+    //c->push_back( osg::Vec4( 1.0, 1.0, 0., 1. ) );
+    //quadGeometry->setColorArray( c.get() );
+    //quadGeometry->setColorBinding( osg::Geometry::BIND_OVERALL );
 
     //Set the stateset for the quad
     osg::ref_ptr< osg::StateSet > stateset = new osg::StateSet();
@@ -238,8 +262,13 @@ osg::Geode* CameraManager::CreateMasterCameraQuad()
     return quadGeode;
 }
 ////////////////////////////////////////////////////////////////////////////////
-osg::Geode* CameraManager::GetCameraManagerQuad()
+osg::Node* CameraManager::GetCameraManagerQuad()
 {
+    if( m_rttQuadTransform.valid() )
+    {
+        return m_rttQuadTransform.get();
+    }
+
     return m_rttQuad.get();
 }
 ////////////////////////////////////////////////////////////////////////////////

@@ -50,26 +50,26 @@ namespace ves
 {
 namespace xplorer
 {
-namespace environment
+namespace scenegraph
 {
 
 /*!\file HeadPositionCallback.h
  *
  */
-/*!\class ves::xplorer::environment::HeadPositionCallback
+/*!\class ves::xplorer::scenegraph::HeadPositionCallback
  *
  */
-/*!\namespace ves::xplorer::environment
+/*!\namespace ves::xplorer::scenegraph
  *
  */
 ///
-class VE_XPLORER_EXPORTS HeadPositionCallback : public osg::NodeCallback
+class VE_SCENEGRAPH_EXPORTS HeadPositionCallback : public osg::NodeCallback
 {
 public:
     ///Constructor
     HeadPositionCallback();
 
-    META_Object(ves::xplorer::environment, HeadPositionCallback);
+    META_Object(ves::xplorer::scenegraph, HeadPositionCallback);
     
     ///Copy Constructor
     HeadPositionCallback( const HeadPositionCallback& ctc, const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY );
@@ -85,7 +85,7 @@ private:
     ///
     gadget::PositionInterface mHead;    
 };
-} // end environment
+} // end scenegraph
 } // end xplorer
 } // end ves
 

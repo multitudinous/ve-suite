@@ -131,6 +131,9 @@ protected:
     ///The font file
     std::string _font;
 
+    ///NULL string
+    std::string m_nullString;
+    
     std::map< std::string, osg::ref_ptr< DCS > > m_groupedTextures;
     
     osg::ref_ptr< DCS > m_activeDCS;

@@ -300,13 +300,16 @@ GLTransformInfoPtr const SceneManager::GetGLTransformInfo(
     {
         return itr->second;
     }
-    else
+    
+    if( IsDesktopMode() )
     {
-        std::cout << "SceneManager::GetGLTransformInfo - "
+        return m_glTransformInfoMap.begin()->second;
+    }
+
+    std::cout << "SceneManager::GetGLTransformInfo - "
                   << "GLTransformInfo not found!" << std::endl;
 
-        return GLTransformInfoPtr();
-    }
+    return GLTransformInfoPtr();
 }
 ////////////////////////////////////////////////////////////////////////////////
 osg::Group* const SceneManager::GetModelRoot() const

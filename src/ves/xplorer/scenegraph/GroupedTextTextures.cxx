@@ -33,6 +33,16 @@
 #include <ves/xplorer/scenegraph/GroupedTextTextures.h>
 
 #include <ves/xplorer/scenegraph/TextTexture.h>
+#include <ves/xplorer/scenegraph/SceneManager.h>
+#include <ves/xplorer/scenegraph/GLTransformInfo.h>
+
+#include <vrj/Display/ViewportPtr.h>
+
+#include <gmtl/Matrix.h>
+#include <gmtl/Point.h>
+#include <gmtl/Output.h>
+#include <gmtl/MatrixOps.h>
+#include <gmtl/Generate.h>
 
 // --- OSG Includes --- //
 #include <osg/Geometry>
@@ -40,13 +50,12 @@
 #include <osg/BlendFunc>
 #include <osg/Depth>
 #include <osg/Group>
+#include <osg/Array>
 
 #include <osgText/Text>
 
 #include <osgDB/ReadFile>
 #include <osgDB/FileUtils>
-
-//#include <osgbBullet/Chart.h>
 
 #include <iostream>
 
@@ -233,7 +242,7 @@ void GroupedTextTextures::AddTextTexture( const std::string& tempKey, TextTextur
     m_transformList.push_front( tempDCS );
     m_activeDCS = tempDCS;
 
-    UpdateListPositions();
+    //UpdateListPositions();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void GroupedTextTextures::UpdateListPositions()
@@ -249,7 +258,6 @@ void GroupedTextTextures::UpdateListPositions()
 void GroupedTextTextures::UpdateDCSPosition( DCS* tempDCS, size_t i )
 {
     //y = ax + b
-    
     double b = 0.0f;
     double a = 0.4f;
     double x = 0.0f;
@@ -263,9 +271,35 @@ void GroupedTextTextures::UpdateDCSPosition( DCS* tempDCS, size_t i )
     z = (a * y) + b;
     
     double pos[ 3 ];
-    pos[ 0 ] = x;
-    pos[ 1 ] = y;
-    pos[ 2 ] = z;
+    /*if( SceneManager::instance()->IsDesktopMode() )
+    {
+        GLTransformInfoPtr tempContextInfo = 
+            SceneManager::instance()->GetGLTransformInfo( vrj::ViewportPtr() );
+        //const gmtl::Matrix44d vpw = tempContextInfo->GetVPWMatrix();
+        //gmtl::Point3d worldPoint( x, y, z );
+        //gmtl::Point3d screenPoint = vpw * worldPoint;
+        
+        //double farPlane = tempContextInfo->GetFarFrustum();
+        //double nearPlane = tempContextInfo->GetNearFrustum();
+        z = double(i) / double(m_transformList.size());//(z - nearPlane)/(farPlane - nearPlane);
+        //z = 0.0;
+        std::cout << z << std::endl;// << screenPoint << std::endl;
+        //(*quadVertices)[ 0 ].set(  50.0,   50.0 + i, z );
+        //(*quadVertices)[ 1 ].set( 250.0,   50.0+ i, z );
+        //(*quadVertices)[ 2 ].set( 250.0,  450.0+ i, z );
+        //(*quadVertices)[ 3 ].set(  50.0,  450.0+ i, z );
+        //textureDraw->dirtyBound();
+        //textureDraw->dirtyBound();
+        pos[ 0 ] = 0.0f;
+        pos[ 1 ] = 0.0f + i;
+        pos[ 2 ] = -z;        
+    }
+    else*/
+    {
+        pos[ 0 ] = x;
+        pos[ 1 ] = y;
+        pos[ 2 ] = z;
+    }
 
     tempDCS->SetTranslationArray( pos );
 }
@@ -294,7 +328,7 @@ const std::string& GroupedTextTextures::GetKeyForTexture( const ves::xplorer::sc
         }
     }
 
-    return std::string();
+    return m_nullString;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void GroupedTextTextures::AnimateTextureMovement()

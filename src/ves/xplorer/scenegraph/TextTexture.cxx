@@ -32,6 +32,8 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/xplorer/scenegraph/TextTexture.h>
 
+#include <ves/xplorer/scenegraph/SceneManager.h>
+
 // --- OSG Includes --- //
 #include <osg/Geometry>
 #include <osg/Texture2D>
@@ -137,11 +139,21 @@ void TextTexture::CreateTexturedQuad()
     osg::ref_ptr< osg::Vec3Array > quadVertices = new osg::Vec3Array();
     quadVertices->resize( 4 );
 
-    (*quadVertices)[ 0 ].set( -1.0,  0.01, -2.0 );
-    (*quadVertices)[ 1 ].set(  1.0,  0.01, -2.0 );
-    (*quadVertices)[ 2 ].set(  1.0,  0.01,  2.0 );
-    (*quadVertices)[ 3 ].set( -1.0,  0.01,  2.0 );
-
+    /*if( SceneManager::instance()->IsDesktopMode() )
+    {
+        (*quadVertices)[ 0 ].set(  50.0,   50.0, -1.0 );
+        (*quadVertices)[ 1 ].set( 250.0,   50.0, -1.0 );
+        (*quadVertices)[ 2 ].set( 250.0,  450.0, -1.0 );
+        (*quadVertices)[ 3 ].set(  50.0,  450.0, -1.0 );
+    }
+    else*/
+    {
+        (*quadVertices)[ 0 ].set( -1.0,  0.01, -2.0 );
+        (*quadVertices)[ 1 ].set(  1.0,  0.01, -2.0 );
+        (*quadVertices)[ 2 ].set(  1.0,  0.01,  2.0 );
+        (*quadVertices)[ 3 ].set( -1.0,  0.01,  2.0 );
+    }
+    
     //Get the texture coordinates for the quad
     osg::ref_ptr< osg::Vec2Array > quadTexCoords = new osg::Vec2Array();
     quadTexCoords->resize( 4 );
@@ -187,6 +199,7 @@ void TextTexture::CreateTexturedQuad()
 
     //Set the stateset for the quad
     m_textureGeode = new osg::Geode();
+    m_textureGeode->setName( "Texture Geode" );
     m_textureGeode->setCullingActive( false );
     m_textureGeode->addDrawable( quadGeometry.get() );
     
@@ -229,18 +242,30 @@ void TextTexture::CreateText()
     /////////////////////////////
     //Set the title text
     m_titleText = new osgText::Text();
-    m_titleText->setMaximumHeight( 1.5f );
-    m_titleText->setMaximumWidth( 1.75f );
-    m_titleText->setAxisAlignment( osgText::TextBase::XZ_PLANE );
-    m_titleText->setAlignment( osgText::Text::LEFT_TOP );
-    m_titleText->setPosition(    osg::Vec3( -0.44f, -0.01f, 1.85f ) );
+    /*if( SceneManager::instance()->IsDesktopMode() )
+    {
+        m_titleText->setMaximumHeight( 25 );
+        m_titleText->setMaximumWidth( 200 );
+        m_titleText->setAxisAlignment( osgText::TextBase::XY_PLANE );
+        m_titleText->setAlignment( osgText::Text::LEFT_TOP );
+        m_titleText->setPosition(    osg::Vec3( 105, 435, 0 ) );
+        m_titleText->setCharacterSize( 20 );
+    }
+    else*/
+    {
+        m_titleText->setMaximumHeight( 1.5f );
+        m_titleText->setMaximumWidth( 1.75f );
+        m_titleText->setAxisAlignment( osgText::TextBase::XZ_PLANE );
+        m_titleText->setAlignment( osgText::Text::LEFT_TOP );
+        m_titleText->setPosition(    osg::Vec3( -0.44f, -0.01f, 1.85f ) );
+        m_titleText->setCharacterSize( 0.2 );
+    }
     
     m_titleText->setFont( _font );
     m_titleText->setColor( osg::Vec4( _textColor[ 0 ],
                                _textColor[ 1 ],
                                _textColor[ 2 ],
                                _textColor[ 3 ] ) );
-    m_titleText->setCharacterSize( 0.2 );
     m_titleText->setLayout( osgText::Text::LEFT_TO_RIGHT );
     //m_titleText->setAutoRotateToScreen( true );
     {
@@ -284,18 +309,30 @@ void TextTexture::CreateText()
     /////////////////////////////
     //Set the body text
     m_bodyText = new osgText::Text();
-    m_bodyText->setMaximumHeight( 3.3f );
-    m_bodyText->setMaximumWidth( 1.75f );
-    m_bodyText->setAxisAlignment( osgText::TextBase::XZ_PLANE );
-    m_bodyText->setAlignment( osgText::Text::LEFT_TOP );
-    m_bodyText->setPosition(    osg::Vec3( -0.86f, -0.01f, 1.5f ) );
-
+    /*if( SceneManager::instance()->IsDesktopMode() )
+    {
+        m_bodyText->setMaximumHeight( 375 );
+        m_bodyText->setMaximumWidth( 170 );
+        m_bodyText->setAxisAlignment( osgText::TextBase::XY_PLANE );
+        m_bodyText->setAlignment( osgText::Text::LEFT_TOP );
+        m_bodyText->setPosition(    osg::Vec3( 60, 400, 0 ) );
+        m_bodyText->setCharacterSize( 12 );
+    }
+    else*/
+    {
+        m_bodyText->setMaximumHeight( 3.3f );
+        m_bodyText->setMaximumWidth( 1.75f );
+        m_bodyText->setAxisAlignment( osgText::TextBase::XZ_PLANE );
+        m_bodyText->setAlignment( osgText::Text::LEFT_TOP );
+        m_bodyText->setPosition(    osg::Vec3( -0.86f, -0.01f, 1.5f ) );
+        m_bodyText->setCharacterSize( 0.13 );
+    }
+    
     m_bodyText->setFont( _font );
     m_bodyText->setColor( osg::Vec4( _textColor[ 0 ],
                                 _textColor[ 1 ],
                                 _textColor[ 2 ],
                                 _textColor[ 3 ] ) );
-    m_bodyText->setCharacterSize( 0.13 );
     m_bodyText->setLayout( osgText::Text::LEFT_TO_RIGHT );
     //m_bodyText->setAutoRotateToScreen( true );
     {

@@ -198,8 +198,8 @@ void CameraPlacementEventHandler::Execute(
     case PROJECTION_EFFECT_OPACITY:
     {
         double value = 0;
-        command->GetDataValuePair(
-            "projectionEffectOpacity" )->GetData( value );
+        command->
+            GetDataValuePair( "projectionEffectOpacity" )->GetData( value );
 
         //mCameraEntity->SetProjectionEffectOpacity( value );
 
@@ -208,24 +208,29 @@ void CameraPlacementEventHandler::Execute(
     case CAMERA_WINDOW_ON_OFF:
     {
         unsigned int selection = 0;
-        command->GetDataValuePair(
-            "cameraWindowOnOff" )->GetData( selection );
+        command->GetDataValuePair( "cameraWindowOnOff" )->GetData( selection );
 
         bool onOff = ( selection != 0 );
         //mCameraEntity->DisplayCameraViewQuad( onOff );
+        osg::ref_ptr< osg::Group > viewCameraGroup;
+        if( sceneManager.IsDesktopMode() )
+        {
+            viewCameraGroup = ves::xplorer::EnvironmentHandler::instance()->
+                GetHeadsUpDisplay()->GetCamera();
+        }
+        else
+        {
+            viewCameraGroup = sceneManager.GetModelRoot();
+        }
+
         if( onOff )
         {
-            //std::cout << "Add the CPT quad to the HUD" << std::endl;
-            ves::xplorer::EnvironmentHandler::instance()->GetHeadsUpDisplay()->
-                GetCamera()->addChild( 
+            viewCameraGroup->addChild( 
                 sceneManager.GetCameraManager().GetCameraManagerQuad() );
         }
         else
         {
-            //std::cout << "Remove the CPT quad to the HUD" << std::endl;
-
-            ves::xplorer::EnvironmentHandler::instance()->GetHeadsUpDisplay()->
-                GetCamera()->removeChild( 
+            viewCameraGroup->removeChild( 
                 sceneManager.GetCameraManager().GetCameraManagerQuad() );
         }
         break;

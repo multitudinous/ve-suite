@@ -42,6 +42,7 @@
 // --- OSG Includes --- //
 #include <osg/Group>
 #include <osg/Geode>
+#include <osg/PositionAttitudeTransform>
 
 namespace osgUtil
 {
@@ -113,7 +114,7 @@ public:
 
     ///Get the RTT quad
     ///\return The geode with the RTT quad
-    osg::Geode* GetCameraManagerQuad();
+    osg::Node* GetCameraManagerQuad();
 
 protected:
     ///Destructor
@@ -136,6 +137,8 @@ private:
     ///The rtt quad geode
     osg::ref_ptr< osg::Geode > m_rttQuad;
 
+    ///PAT node for non desktop mode
+    osg::ref_ptr< osg::PositionAttitudeTransform > m_rttQuadTransform;
 };
 } //end camera
 } //end scenegraph

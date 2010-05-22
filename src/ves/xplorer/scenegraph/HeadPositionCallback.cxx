@@ -31,7 +31,7 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 // --- VE-Suite Includes --- //
-#include <ves/xplorer/environment/HeadPositionCallback.h>
+#include <ves/xplorer/scenegraph/HeadPositionCallback.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
 
@@ -48,8 +48,6 @@
 
 using namespace ves::xplorer::scenegraph;
 namespace vxs = ves::xplorer::scenegraph;
-
-using namespace ves::xplorer::environment;
 
 ////////////////////////////////////////////////////////////////////////////////
 HeadPositionCallback::HeadPositionCallback()

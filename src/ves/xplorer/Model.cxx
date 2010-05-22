@@ -37,8 +37,7 @@
 #include <ves/xplorer/ModelCADHandler.h>
 #include <ves/xplorer/ModelDatasetHandler.h>
 
-//#include <ves/xplorer/environment/cfdSound.h>
-#include <ves/xplorer/environment/HeadPositionCallback.h>
+#include <ves/xplorer/scenegraph/HeadPositionCallback.h>
 #include <ves/xplorer/environment/TextTextureCallback.h>
 
 #include <ves/xplorer/scenegraph/util/Attribute.h>
@@ -740,9 +739,9 @@ void Model::RenderTextualDisplay( bool onOff )
             _worldDCS->addChild( textTrans.get() );
             
             mModelText->setUpdateCallback( 
-                                          new ves::xplorer::environment::TextTextureCallback( mModelText.get() ) );
+                new ves::xplorer::environment::TextTextureCallback( mModelText.get() ) );
             textTrans->setUpdateCallback( 
-                                         new ves::xplorer::environment::HeadPositionCallback() );
+                new ves::xplorer::scenegraph::HeadPositionCallback() );
             static_cast< osg::PositionAttitudeTransform* >( 
                 mModelText->getParent( 0 ) )->setPosition(
                 osg::Vec3d( 0, 0, 0 ) );
