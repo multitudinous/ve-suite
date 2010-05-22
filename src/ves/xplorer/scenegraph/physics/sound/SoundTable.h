@@ -112,15 +112,15 @@ SoundTable< T >::getSound( const T& mat0, const T& mat1 )
             return 0;
         }
         
-        osg::ref_ptr< osgAudio::Sample > sample = new osgAudio::Sample( *_defaultSample.get() );
-        return sample.release();
-        //return( _defaultSample.get() );
+        //osg::ref_ptr< osgAudio::Sample > sample = new osgAudio::Sample( *_defaultSample.get() );
+        //return sample.release();
+        return( _defaultSample.get() );
     }
     else
     {
-        osg::ref_ptr< osgAudio::Sample > sample = new osgAudio::Sample( *sd._sample.get() );
-        return sample.release();
-        //return( sd._sample.get() );
+        //osg::ref_ptr< osgAudio::Sample > sample = new osgAudio::Sample( *sd._sample.get() );
+        //return sample.release();
+        return( sd._sample.get() );
     }
 }
 
