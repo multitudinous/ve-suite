@@ -7,10 +7,10 @@
 #define MyAppVerName "tecplot2VTK"
 #define MyAppPublisher "Virtural Engineering Research Group"
 #define MyAppURL "www.vesuite.org"
-#define VEVERSION "0.5.0"
-#define SVNVERSION "14230"
+#define VEVERSION "0.6.0"
+#define SVNVERSION "14502"
 #define VesIcon "ves_icon.ico"
-#define LIBDIR "win32"
+#define LIBDIR "x64"
 
 [Setup]
 AppName={#MyAppName}
@@ -68,9 +68,9 @@ Name: desktopVELauncherIcon; Description: tecplot2VTK; GroupDescription: Create 
 
 [Icons]
 Name: {group}\Uninstallers\{cm:UninstallProgram,{#MyAppName}}; Filename: {uninstallexe}
-Name: {group}\{#MyAppName}; Filename: {app}\bin\tecplotReader.exe; WorkingDir: {app}\bin; IconFilename: {app}\bin\installerImages\{#VesIcon}
-Name: {commondesktop}\{#MyAppName}; Filename: {app}\bin\tecplotReader.exe; WorkingDir: {app}\bin; IconFilename: {app}\bin\installerImages\{#VesIcon}; Tasks: desktopVELauncherIcon
-Name: {group}\{#MyAppName} About & Help; Filename: {app}\bin\tecplotReader.exe; WorkingDir: {app}\bin; IconFilename: {app}\bin\installerImages\{#VesIcon}; Parameters: --help; Flags: dontcloseonexit; Components: ; Tasks: 
+Name: {group}\{#MyAppName}; Filename: {app}\bin\tecplot2VTK.exe; WorkingDir: {app}\bin; IconFilename: {app}\bin\installerImages\{#VesIcon}
+Name: {commondesktop}\{#MyAppName}; Filename: {app}\bin\tecplot2VTK.exe; WorkingDir: {app}\bin; IconFilename: {app}\bin\installerImages\{#VesIcon}; Tasks: desktopVELauncherIcon
+Name: {group}\{#MyAppName} About & Help; Filename: {app}\bin\tecplot2VTK.exe; WorkingDir: {app}\bin; IconFilename: {app}\bin\installerImages\{#VesIcon}; Parameters: --help; Flags: dontcloseonexit; Components: ; Tasks: 
 
 [Run]
 Filename: {tmp}\vcredist_x64.exe; Description: Install Microsoft Runtime Redistributable; StatusMsg: Installing Microsoft Runtime Redistributable...; Flags: postinstall unchecked; Tasks: 
@@ -101,6 +101,6 @@ Source: {#TECPLOTSDKHOME}\tecplot.cfg; DestDir: {app}\bin; Components: ; Flags: 
 Source: {#TECPLOTSDKHOME}\pub\*; DestDir: {app}\pub; Components: ; Flags: overwritereadonly ignoreversion recursesubdirs
 
 Source: {#VEINSTALLHOME}\bin\installerImages\*; DestDir: {app}\bin\installerImages; Flags: replacesameversion
-Source: {#VEINSTALLHOME}\bin\tecplotReader.exe; DestDir: {app}\bin; Flags: replacesameversion
+Source: {#VEINSTALLHOME}\bin\tecplot2VTK.exe; DestDir: {app}\bin; Flags: replacesameversion
 
 Source: E:\dev\ves_deps\msvc_redist_vc8\vcredist_x64.exe; DestDir: {tmp}

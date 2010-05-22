@@ -15,7 +15,7 @@ AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
 DefaultDirName=C:\{#MyAppName}_{#VEVERSION}_{#MSVCVERSION}
-DefaultGroupName={#VESGROUPNAME}\Uninstallers_{#MSVCVERSION}
+DefaultGroupName={#VESGROUPNAME}
 AllowNoIcons=true
 OutputBaseFilename={#MyAppName}_{#VEVERSION}_{#MSVCVERSION}
 Compression=lzma
@@ -172,4 +172,4 @@ Source: {#DEPENDSINSTALLHOME}\{#OSGALHOME}\share\oalinst.exe; DestDir: {tmp}; Fl
 Filename: {tmp}\oalinst.exe; Flags: runascurrentuser
 
 [Icons]
-Name: {group}\{cm:UninstallProgram,{#MyAppName}}; Filename: {uninstallexe}
+Name: {group}\Uninstallers\{cm:UninstallProgram,{#MyAppName}}; Filename: {uninstallexe}
