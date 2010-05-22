@@ -115,9 +115,12 @@ public:
     /// Retrieves active scalar
     void SetActiveScalar( std::string activeScalarName );
 
-
     /// Should we show tooltips?
     static bool ShowToolTips();
+    
+    ///Set the available datasets so that they can be selected for surface mapping
+    void SetAvailableDatasets( wxArrayString tempNames );
+
 protected:
     ///Set the data type\n
     ///\param type The type of data\n
@@ -169,18 +172,21 @@ protected:
     std::string _dataType;///<Scalar or vector data
     std::string _activeScalar;///Active scalar name
 
-    wxRadioBox*    _directionRBox;
-    wxRadioBox*    _selectvecorscalrRBox;
+    wxRadioBox*     _directionRBox;
+    wxRadioBox*     m_selectDataMapRBox;
     //wxRadioBox*    _contourTypeRBox;
-    wxRadioButton* _allPrecomputedRButton;
-    wxCheckBox*    _cyclePrecomputedCBox;
-    wxRadioButton* _singlePlaneRButton;
-    wxCheckBox*    _nearestPrecomputedCBox;
-    wxCheckBox* m_gpuToolsChkBox;
-    wxCheckBox* m_surfToolsChkBox;
-    wxSlider*      _planePositonSlider;
-    wxButton*      itemButton16;
-    wxButton*      itemButton17;
+    wxRadioButton*  _allPrecomputedRButton;
+    wxCheckBox*     _cyclePrecomputedCBox;
+    wxRadioButton*  _singlePlaneRButton;
+    wxCheckBox*     _nearestPrecomputedCBox;
+    wxCheckBox*     m_gpuToolsChkBox;
+    wxSlider*       _planePositonSlider;
+    wxButton*       itemButton16;
+    wxButton*       itemButton17;
+    wxArrayString   m_availableDatasets;
+    ///The box listing the available datasets.
+    wxComboBox*     m_datasetSelection;
+
     ves::conductor::util::wxSpinCtrlDbl* m_positionSpinner;
     
     std::vector<ves::open::xml::DataValuePairPtr> _advancedSettings;///<The advanced settings.

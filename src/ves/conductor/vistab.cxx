@@ -455,6 +455,7 @@ void Vistab::_onContour( wxCommandEvent& WXUNUSED( event ) )
 
     scalarContour->SetSize( this->GetRect() );
     scalarContour->Show();
+    scalarContour->SetAvailableDatasets( _availableDatasets );
 }
 /////////////////////////////////////////////////////////
 void Vistab::_onVector( wxCommandEvent& WXUNUSED( event ) )

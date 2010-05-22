@@ -254,26 +254,26 @@ void cfdContourBase::UpdateCommand()
     ves::open::xml::CommandPtr objectCommand = boost::dynamic_pointer_cast<ves::open::xml::Command>(  activeModelDVP->GetDataXMLObject() );
 
     //Extract the integration direction
-    activeModelDVP = objectCommand->GetDataValuePair( "select viz quantity" );
-    std::string intvecorscalr;
-    activeModelDVP->GetData( intvecorscalr );
+    activeModelDVP = objectCommand->GetDataValuePair( "Select Data Mapping" );
+    std::string dataMapping;
+    activeModelDVP->GetData( dataMapping );
     
-    vprDEBUG( vesDBG, 0 ) << "|\tselect scalar or volume flux for contour display"
+    vprDEBUG( vesDBG, 0 ) << "|\tSelect scalar or volume flux for contour display"
         << std::endl << vprDEBUG_FLUSH;
 
-    if( !intvecorscalr.compare( "scalarviz" ) )
+    if( !dataMapping.compare( "Map Scalar Data" ) )
     {
         vprDEBUG( vesDBG, 0 ) << "|\t\tVISUALIZE SCALARS"
             << std::endl << vprDEBUG_FLUSH;
 
-        Selectscalarorvolflux( 0 );
+        SelectDataMapping( 0 );
     }
-    else if( !intvecorscalr.compare( "volumefluxviz" ) )
+    else if( !dataMapping.compare( "Map Volume Flux Data" ) )
     {
         vprDEBUG( vesDBG, 0 ) << "|\t\tVISUALIZE VOLUME FLUX"
             << std::endl << vprDEBUG_FLUSH;
 
-        Selectscalarorvolflux( 1 );
+        SelectDataMapping( 1 );
     }
 
     //Extract the plane position
@@ -352,16 +352,14 @@ void cfdContourBase::UpdateCommand()
     activeModelDVP = objectCommand->GetDataValuePair( "SURF Tools" );
     if( activeModelDVP )
 	{
-    	unsigned int surfFlag;
-    	activeModelDVP->GetData( surfFlag );
-		m_surfTools = surfFlag;
+    	activeModelDVP->GetData( m_surfDataset );
 	}
 
 }
 //////////////////////////////////////////////////////////////////////////////////
-void cfdContourBase::Selectscalarorvolflux( int value )
+void cfdContourBase::SelectDataMapping( int value )
 {
-    m_selectvolfluxorscalr = value;
+    m_selectDataMapping = value;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdContourBase::SetFillType( const int type )
@@ -419,7 +417,7 @@ void cfdContourBase::CreatePlane( void )
 	// and allows for display of vector direction (in or out) by using only
 	// two colors for mapping
 
-	if( m_selectvolfluxorscalr == 1 )
+	if( m_selectDataMapping == 1 )
     {
 
 		vtkPolyData * pd = dynamic_cast< vtkPolyData* >( mapper->GetInput() );
@@ -531,25 +529,18 @@ void cfdContourBase::CreateArbSurface()
 {   
     //Need to set the active datasetname and get the position of the dataset
     Model* activeModel = ModelHandler::instance()->GetActiveModel();
-    unsigned int i = activeModel->GetNumberOfCfdDataSets();
-    vprDEBUG( vesDBG, 1 )
-        << "|\tContour source GET_SURFACE_DATASET " << i
-        << std::endl << vprDEBUG_FLUSH;
-    vprDEBUG( vesDBG, 0 ) << "|\tContour source::SetActiveDataSet dataset = "
-        << activeModel->GetCfdDataSet( i-1 )->GetFileName()
-        << ", dcs = " << activeModel->GetCfdDataSet( i-1 )->GetDCS()
-        << std::endl << vprDEBUG_FLUSH;
-
-    int cfdType = activeModel->GetCfdDataSet( i-1 )->GetType();
-    vprDEBUG( vesDBG, 1 ) << "|\tContour source::SetActiveDataSet cfdType: " << cfdType
-        << std::endl << vprDEBUG_FLUSH;
-
     // set the dataset as the appropriate dastaset type
     // (and the active dataset as well)
-    DataSet* surfDataset = activeModel->GetCfdDataSet( i-1 );
-    vtkPolyData * pd = surfDataset->GetPolyData();
+    DataSet* surfDataset = activeModel->GetCfdDataSet( activeModel->GetIndexOfDataSet( m_surfDataset ) );
+    vtkPolyData* pd = surfDataset->GetPolyData();
 
-    vtkPointData * poind = pd->GetPointData();
+    if( !pd )
+    {
+        std::cerr << "ERROR: Activate a polydata file to use this function"
+            << std::endl;
+        return;
+    }
+    vtkPointData* poind = pd->GetPointData();
 	unsigned int numberofarrays = poind->GetNumberOfArrays();
 
 	// commented out the 'print out' of array info in the vtp file
@@ -582,7 +573,7 @@ void cfdContourBase::CreateArbSurface()
 
  	pd = surfProbe->GetPolyDataOutput();
 
-    if( m_selectvolfluxorscalr != 1 )
+    if( m_selectDataMapping != 1 )
     {
     	normals->SetInput( pd );
     	normals->NonManifoldTraversalOn();
@@ -612,7 +603,7 @@ void cfdContourBase::CreateArbSurface()
 		pd = normals->GetOutput();
 
     	vtkDataArray *normalsArray = pd->GetPointData()->GetNormals();
-    	unsigned int n_points = pd->GetNumberOfPoints();
+    	vtkIdType n_points = pd->GetNumberOfPoints();
 	
     	vtkDoubleArray* vol_flux_array = vtkDoubleArray::New();
     	vol_flux_array->SetNumberOfTuples(n_points);
@@ -646,7 +637,7 @@ void cfdContourBase::CreateArbSurface()
 	
 		double normalVec[3], vectorVec[3], volume_flux;
 	
-		for(i = 0; i < n_points; i++)
+		for( vtkIdType i = 0; i < n_points; ++i )
     	{
     	    vectorArray->GetTuple(i, vectorVec);
     	    normalsArray->GetTuple(i, normalVec);

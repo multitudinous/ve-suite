@@ -209,6 +209,18 @@ CreateVisObjectEventHandler::CreateVisObjectEventHandler()
     visObjectMap[ objectType ] = this->z_contour;
 
     //
+    // Initiate the surface contour.
+    //
+    objectType.first = std::string( "UPDATE_SCALAR_SETTINGS" );
+    objectType.second.first = std::string( "By Surface" );
+    objectType.second.second = std::string( "Single" );
+    //std::cout << "| 21. Initializing................................ Preset z Contour |" << std::endl;
+    ves::xplorer::cfdPresetContour* surface_contour = 
+        new cfdPresetContour( 2, 10 );
+    surface_contour->SetObjectType( BY_SURFACE );
+    visObjectMap[ objectType ] = surface_contour;
+    
+    //
     // Initiate the preset x momentum.
     //
     objectType.first = std::string( "UPDATE_SCALAR_SETTINGS" );

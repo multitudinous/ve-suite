@@ -225,8 +225,7 @@ public:
     void SetModelData( ves::open::xml::model::ModelPtr tempModelData );
     ///////////////////////////////////////////////////
 
-//Dynamically load data from unit
-public:
+    //Dynamically load data from unit
     void ActiveLoadingThread();
 #if __VJ_version > 2000003
     void GetDataFromUnit( void );
@@ -238,9 +237,6 @@ public:
     void DynamicLoadingGeom( std::string, double*, double*, double*, double*, int, int );
     void AddVTKDataSet( vtkDataSet* );
     std::vector<vtkDataSet* >GetWaitingDataList();
-
-    ///The current graph
-    /*std::string GetRootCADNodeID();*/
 
     ///Get the dataset handler for this model
     ves::xplorer::ModelDatasetHandler* GetModelDatasetHandler();

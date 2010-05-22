@@ -93,7 +93,7 @@ public:
     ///\param fillType
     void SetFillType( const int fillType );
 
-    void Selectscalarorvolflux( int );
+    void SelectDataMapping( int );
 
     ///Create the Plane
     void CreatePlane();
@@ -114,7 +114,7 @@ protected:
     
     cfdCuttingPlane* cuttingPlane;///<cutting plane
 
-    unsigned int m_selectvolfluxorscalr;
+    unsigned int m_selectDataMapping;
     int fillType;///<Representation of contour line.
     double warpedContourScale;///<Scale of warped contour
     double contourOpacity;///<Level of Opacity.

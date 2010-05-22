@@ -47,6 +47,7 @@
 #include <wx/slider.h>
 #include <wx/icon.h>
 #include <wx/msgdlg.h>
+#include <wx/combobox.h>
 
 #include <wx/stattext.h>
 #include <wx/statbox.h>
@@ -97,10 +98,8 @@ bool Contours::Create( wxWindow* parent, wxWindowID id, const wxString& caption,
                        long style )
 {
     _directionRBox = 0;
-	_selectvecorscalrRBox = 0;
+	m_selectDataMapRBox = 0;
     m_gpuToolsChkBox = 0;
-    m_surfToolsChkBox = 0;
-    //_contourTypeRBox = 0;
     _allPrecomputedRButton = 0;
     _cyclePrecomputedCBox = 0;
     _singlePlaneRButton = 0;
@@ -110,7 +109,7 @@ bool Contours::Create( wxWindow* parent, wxWindowID id, const wxString& caption,
     itemButton17 = 0;
     m_positionSpinner = 0;
     _planeDirection = "x";
-    _displayvecorscalr = "scalarviz";
+    _displayvecorscalr = "Map Scalar Data";
     _planeType = "Graduated";
     _numberOfPlanesOption = "Single";
     _planeOption = "";
@@ -124,6 +123,7 @@ bool Contours::Create( wxWindow* parent, wxWindowID id, const wxString& caption,
     _lastVectorThreshold.push_back( 1.0f );
     _lastVectorThreshold.push_back( 100.0f );
     _warpOption = false;
+    m_datasetSelection = 0;
 
     SetExtraStyle( GetExtraStyle() | wxWS_EX_BLOCK_EVENTS );
     wxDialog::Create( parent, id, caption, pos, size, style );
@@ -168,21 +168,29 @@ void Contours::CreateControls()
             _T( "x" ),
             _T( "y" ),
             _T( "z" ),
-            _T( "By Wand" )
+            _T( "By Wand" ),
+            _T( "By Surface" )
         };
         _directionRBox = new wxRadioBox( itemDialog1, CONTOURS_DIR_RBOX, 
-            _T( "Direction" ), wxDefaultPosition, wxDefaultSize, 4, 
+            _T( "Direction" ), wxDefaultPosition, wxDefaultSize, 5, 
             itemRadioBox5Strings, 1, wxRA_SPECIFY_COLS );
 	    itemBoxSizer4->Add( _directionRBox, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 		
         wxString itemRadioBox2Strings[] = {
-            _T( "scalarviz" ),
-            _T( "volumefluxviz" ),
+            _T( "Map Scalar Data" ),
+            _T( "Map Volume Flux Data" ),
         };
-        _selectvecorscalrRBox = new wxRadioBox( itemDialog1, CONTOURS_VECORSCALR_RBOX, 
-            _T( "select viz quantity" ), wxDefaultPosition, wxDefaultSize, 2, 
+        m_selectDataMapRBox = new wxRadioBox( itemDialog1, CONTOURS_VECORSCALR_RBOX, 
+            _T( "Select Color Mapping Data" ), wxDefaultPosition, wxDefaultSize, 2, 
             itemRadioBox2Strings, 1, wxRA_SPECIFY_COLS );
- 	    itemBoxSizer4->Add( _selectvecorscalrRBox, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
+        wxBoxSizer* dataMapBoxSizer = new wxBoxSizer( wxHORIZONTAL );
+ 	    dataMapBoxSizer->Add( m_selectDataMapRBox, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
+        itemStaticBoxSizer3->Add( dataMapBoxSizer, 0, wxGROW | wxALL, 5 );
+        
+        m_datasetSelection = new wxComboBox( itemDialog1, wxID_ANY, _T( "" ), 
+            wxDefaultPosition, wxDefaultSize, m_availableDatasets, wxCB_DROPDOWN );
+        m_datasetSelection->Disable();
+        itemStaticBoxSizer3->Add( m_datasetSelection, 0, wxGROW | wxALL, 5 );
     }
     else if( _dataType == "VECTOR" )
     {
@@ -235,18 +243,7 @@ void Contours::CreateControls()
 
     //////////////////////////
     //Setup GPU tools
-    if( _dataType == "SCALAR" )
-    {
-        wxStaticBox* surfToolsStaticSizer = new wxStaticBox( itemDialog1, wxID_ANY, _T( "SURF Tools" ) );
-        wxStaticBoxSizer* itemStaticBoxSizer10 = new wxStaticBoxSizer( surfToolsStaticSizer, wxVERTICAL );
-        itemBoxSizer4->Add( itemStaticBoxSizer10, 0, wxGROW | wxALL, 5 );
-        
-        m_surfToolsChkBox = new wxCheckBox( itemDialog1, CONTOURS_SURF_TOOLS_CHK, _T( "Use SURF Tools" ), wxDefaultPosition, wxDefaultSize, 0 );
-        m_surfToolsChkBox->SetValue( false );
-        itemStaticBoxSizer10->Add( m_surfToolsChkBox, 0, wxALIGN_LEFT | wxALL, 5 );
-        ;//Nothing yet for scalars
-    }
-    else if( _dataType == "VECTOR" )
+    if( _dataType == "VECTOR" )
     {
         wxStaticBox* gpuToolsStaticSizer = new wxStaticBox( itemDialog1, wxID_ANY, _T( "GPU Tools" ) );
         wxStaticBoxSizer* itemStaticBoxSizer10 = new wxStaticBoxSizer( gpuToolsStaticSizer, wxVERTICAL );
@@ -397,11 +394,24 @@ void Contours::_onAdvanced( wxCommandEvent& WXUNUSED( event ) )
 void Contours::_onDirection( wxCommandEvent& WXUNUSED( event ) )
 {
     _planeDirection = ConvertUnicode( _directionRBox->GetStringSelection() );
+    if( !m_datasetSelection )
+    {
+        return;
+    }
+
+    if( _planeDirection == "By Surface" )
+    {
+        m_datasetSelection->Enable();
+    }
+    else
+    {
+        m_datasetSelection->Disable();
+    }
 }
 ///////////////////////////////////////////////////////
 void Contours::_selectVecorScalr( wxCommandEvent& WXUNUSED( event ) )
 {
-    _displayvecorscalr = ConvertUnicode( _selectvecorscalrRBox->GetStringSelection() );
+    _displayvecorscalr = ConvertUnicode( m_selectDataMapRBox->GetStringSelection() );
 }
 ///////////////////////////////////////////////////////
 /*void Contours::_onContourType( wxCommandEvent& WXUNUSED(event) )
@@ -498,13 +508,12 @@ void Contours::_updateAdvancedSettings()
         }
         _advancedSettings.push_back( warpOptionFlag );
 
+        if( m_datasetSelection->IsEnabled() )
     	{
-		    unsigned int checkBox2 = m_surfToolsChkBox->IsChecked();
 		    ves::open::xml::DataValuePairPtr surfToolsDVP( new ves::open::xml::DataValuePair() );
-		    surfToolsDVP->SetData( "SURF Tools", checkBox2 );
+		    surfToolsDVP->SetData( "SURF Tools", ConvertUnicode( m_datasetSelection->GetValue().c_str() ) );
 		    _advancedSettings.push_back( surfToolsDVP );
     	}
-
     }
     else if( _dataType == "VECTOR" )
     {
@@ -550,9 +559,7 @@ void Contours::_updateContourInformation()
 {
     _contourInformation.clear();
     ves::open::xml::DataValuePairPtr contourDirection( new ves::open::xml::DataValuePair() );
-    contourDirection->SetDataType( "STRING" );
-    contourDirection->SetDataName( std::string( "Direction" ) );
-    contourDirection->SetDataString( _planeDirection );
+    contourDirection->SetData( "Direction", _planeDirection );
 
     _contourInformation.push_back( contourDirection );
 
@@ -565,7 +572,7 @@ void Contours::_updateContourInformation()
 
     ves::open::xml::DataValuePairPtr selectvecorscalrDisp( new ves::open::xml::DataValuePair() );
     selectvecorscalrDisp->SetDataType( "STRING" );
-    selectvecorscalrDisp->SetDataName( std::string( "select viz quantity" ) );
+    selectvecorscalrDisp->SetDataName( "Select Data Mapping" );
     selectvecorscalrDisp->SetDataString( _displayvecorscalr );
 
     _contourInformation.push_back( selectvecorscalrDisp );
@@ -664,3 +671,18 @@ void Contours::OnSURFCheckTools( wxCommandEvent& WXUNUSED( event ) )
 {
     ;
 }
+////////////////////////////////////////////////////////////////////////////////
+void Contours::SetAvailableDatasets( wxArrayString tempNames )
+{
+    m_availableDatasets = tempNames;
+    
+    if( m_datasetSelection )
+    {
+        m_datasetSelection->Clear();
+        for( size_t i = 0; i < m_availableDatasets.GetCount(); i++ )
+        {
+            m_datasetSelection->Append( m_availableDatasets[i] );
+        }
+    }
+}
+////////////////////////////////////////////////////////////////////////////////

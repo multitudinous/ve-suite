@@ -38,6 +38,8 @@
 #include <ves/xplorer/event/viz/cfdPlanes.h>
 #include <ves/xplorer/util/readWriteVtkThings.h>
 
+#include <ves/xplorer/environment/cfdEnum.h>
+
 #include <ves/open/xml/Command.h>
 
 #include <vtkLookupTable.h>
@@ -115,7 +117,7 @@ void cfdPresetContour::Update( void )
         }
 
 		/////////////////////
-    	if( m_surfTools != 1 )
+    	if( GetObjectType() != BY_SURFACE )
     	{
     	    CreatePlane();
     	}

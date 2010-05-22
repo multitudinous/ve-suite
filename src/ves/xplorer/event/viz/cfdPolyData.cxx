@@ -89,27 +89,26 @@ cfdPolyData::~cfdPolyData()
 
 void cfdPolyData::Update()
 {
-    if( this->GetActiveDataSet() == NULL )
+    if( GetActiveDataSet() == NULL )
     {
         vprDEBUG( vesDBG, 0 )
-        << "cfdPolyData has no data so setting updateFlag to false"
-        << std::endl << vprDEBUG_FLUSH;
+            << "cfdPolyData has no data so setting updateFlag to false"
+            << std::endl << vprDEBUG_FLUSH;
         this->updateFlag = false;
         return;
     }
-    else if( ! this->GetActiveDataSet()->GetDataSet()->IsA( "vtkPolyData" ) )
+    
+    if( !GetActiveDataSet()->GetDataSet()->IsA( "vtkPolyData" ) )
     {
         std::cerr << "ERROR: Activate a polydata file to use this function"
-        << std::endl;
+            << std::endl;
         this->updateFlag = false;
         return;
     }
-    else
-    {
-        vprDEBUG( vesDBG, 1 )
+
+    vprDEBUG( vesDBG, 1 )
         << "cfdPolyData: this->GetActiveDataSet() = "
-        << this->GetActiveDataSet() << std::endl << vprDEBUG_FLUSH;
-    }
+        << GetActiveDataSet() << std::endl << vprDEBUG_FLUSH;
 
     vtkActor* temp = vtkActor::New();
     vtkPolyData * pd = this->GetActiveDataSet()->GetPolyData();

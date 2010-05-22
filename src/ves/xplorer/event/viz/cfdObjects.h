@@ -219,7 +219,7 @@ protected:
     ///Used to control wether GPU tools are used
     bool m_gpuTools;
     ///Used to control wether SURF tools are used
-    unsigned int m_surfTools;
+    std::string m_surfDataset;
 private:
 };
 }

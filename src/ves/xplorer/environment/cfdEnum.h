@@ -57,7 +57,7 @@ enum cfdGeodeEnum
 {
     // Everything below has to be mirrored exactly in
     // VE_Suite/VE_Xplorer/UMI/hello/config/mapping.config
-    CONTOUR, X_CONTOUR, Y_CONTOUR, Z_CONTOUR,
+    CONTOUR, X_CONTOUR, Y_CONTOUR, Z_CONTOUR, BY_SURFACE,
     X_CONTOURS, Y_CONTOURS, Z_CONTOURS,
     MOMENTUM, X_MOMENTUM, Y_MOMENTUM, Z_MOMENTUM,
     X_MOMENTUMS, Y_MOMENTUMS, Z_MOMENTUMS,
