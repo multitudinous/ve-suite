@@ -116,7 +116,20 @@ bool MetaNode_readLocalData( osg::Object& obj, osgDB::Input& fr )
         
         osg::notify( osg::INFO ) << "uves: ves uuid " << tempString << std::endl;
     }
-
+    
+    if( fr.matchSequence( "ves reference " ) )
+    {
+        //pd._fileName = fr[1].getStr();
+        std::string tempString = fr[1].getStr();
+        boost::any uuidString = tempString;
+        std::string uuid("ves reference ");
+        pd.add( uuid, uuidString );
+        fr+=2;
+        advance = true;
+        
+        osg::notify( osg::INFO ) << "uves: ves reference " << tempString << std::endl;
+    }
+    
     /*if( fr.matchSequence( "Version %i" ) )
     {
         fr[1].getUInt( pd._version );
