@@ -81,7 +81,6 @@ protected Q_SLOTS:
 private:
     Ui::Visualization* ui;
     PropertyBrowser* mFeatureBrowser;
-    std::string mDbName;
 
     xplorer::data::PropertySet* mTempSet;
     ContourFeatureMaker mContourFeatureMaker;

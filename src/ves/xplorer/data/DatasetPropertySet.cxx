@@ -37,6 +37,7 @@ using namespace ves::xplorer::data;
 
 DatasetPropertySet::DatasetPropertySet( )
 {
+    mTableName = "Dataset";
     _createSkeleton( );
 }
 
@@ -59,10 +60,40 @@ void DatasetPropertySet::_createSkeleton( )
     AddProperty( "Axes", false, "Axes" );
     SetPropertyAttribute( "Axes", "setExpanded", false );
 
-    AddProperty( "Axes.XLabel", std::string( "X Axis" ), "X axis label" );
+    AddProperty( "Axes_XLabel", std::string( "X Axis" ), "X axis label" );
 
-    AddProperty( "Axes.YLabel", std::string( "Y Axis" ), "Y axis label" );
+    AddProperty( "Axes_YLabel", std::string( "Y Axis" ), "Y axis label" );
 
-    AddProperty( "Axes.ZLabel", std::string( "Z Axis" ), "Z axis label" );
+    AddProperty( "Axes_ZLabel", std::string( "Z Axis" ), "Z axis label" );
+
+
+
+    //***** The following properties should all eventually make use of
+    // of userVisibile = false to hide them from the user. They are intended
+    // to provide persistence and access mechanisms to dataset info without
+    // having to go through xplorer directly.
+
+    AddProperty( "Filename", std::string(""), "File name");
+
+    std::vector< std::string > stringVector;
+    AddProperty( "ScalarNames", stringVector, "Scalar Names" );
+
+    AddProperty( "VectorNames", stringVector, "Vector Names" );
+
+    std::vector< double > doubleVector;
+    AddProperty( "ScalarMins", doubleVector, "Scalar Mins" );
+    AddProperty( "ScalarMaxes", doubleVector, "Scalar Maxes" );
+
+    AddProperty( "StepLength", 0.0f, "Integration Step Length");
+
+    AddProperty( "TimeStep", 0.0f, "Integration Time Step");
+
+    AddProperty( "MaxTime", 0.0f, "Max Integration Time" );
+
+    AddProperty( "Type", 0, "Type" );
+
+    AddProperty( "PrecomputedDataSliceDir", std::string(""), "Precomputed Data Slice Dir" );
+
+    AddProperty( "PrecomputedSurfaceDir", std::string(""), "Precomputed Surface Dir" );
 }
 

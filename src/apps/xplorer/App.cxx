@@ -124,6 +124,7 @@
 
 #ifdef QT_ON
 
+#include <ves/xplorer/data/DatabaseManager.h>
 #include <ves/conductor/qt/UIManager.h>
 
 //// --- Qt Includes --- //
@@ -233,6 +234,10 @@ App::App( int argc, char* argv[], bool enableRTT )
     gmtl::Vec3d x_axis( 1.0, 0.0, 0.0 );
     mZUp = gmtl::makeRot< gmtl::Matrix44d >( 
         gmtl::AxisAngled( gmtl::Math::deg2Rad( -90.0 ), x_axis ) );
+
+#ifdef QT_ON
+    ves::xplorer::data::DatabaseManager::instance()->SetDatabasePath("/tmp/ves.db");
+#endif // QT_ON
 }
 ////////////////////////////////////////////////////////////////////////////////
 App::~App()
@@ -1092,7 +1097,7 @@ void App::LoadUI()
             ves::conductor::UIManager::instance();
 
     // Wrap the widget in a UIElement
-    ves::conductor::UIElement *element = new ves::conductor::UIElementQt();
+    ves::conductor::UIElement* element = new ves::conductor::UIElementQt();
     QWidget* mainUIWidget = new MainWindow(0);
     
     // Since we're using an mdi-able MainWindow as the main widget, we make both 

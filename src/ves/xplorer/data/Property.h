@@ -207,6 +207,11 @@ public:
     bool IsDouble( ) const;
     bool IsString( ) const;
     bool IsEnum( );
+    bool IsIntVector( ) const;
+    bool IsFloatVector( ) const;
+    bool IsDoubleVector( ) const;
+    bool IsStringVector( ) const;
+    bool IsVectorized( ) const;
 
     ///
     /// Convenience versions of the typechecking methods
@@ -218,6 +223,11 @@ public:
     bool IsFloat( const boost::any& value ) const;
     bool IsDouble( const boost::any& value ) const;
     bool IsString( const boost::any& value ) const;
+    bool IsIntVector( const boost::any& value ) const;
+    bool IsFloatVector( const boost::any& value ) const;
+    bool IsDoubleVector( const boost::any& value ) const;
+    bool IsStringVector( const boost::any& value ) const;
+    bool IsVectorized( const boost::any& value ) const;
 
 private:
 

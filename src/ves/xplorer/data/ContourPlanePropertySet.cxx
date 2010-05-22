@@ -31,19 +31,25 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/xplorer/data/ContourPlanePropertySet.h>
+#include <ves/xplorer/data/DatasetPropertySet.h>
 #include <ves/xplorer/data/Property.h>
 
-#include <ves/xplorer/ModelHandler.h>
-#include <ves/xplorer/Model.h>
-#include <ves/xplorer/DataSet.h>
+#include <Poco/Data/RecordSet.h>
+#include <Poco/Data/Session.h>
+#include <Poco/Data/SQLite/Connector.h>
+#include <Poco/Data/DataException.h>
+#include <Poco/Data/SessionPool.h>
 
 #include <boost/bind.hpp>
+
+#include <iostream>
+#include <ves/xplorer/data/DatabaseManager.h>
 
 using namespace ves::xplorer::data;
 
 ContourPlanePropertySet::ContourPlanePropertySet( )
 {
-    mTableName = "Contour_Plane";
+    mTableName = "ContourPlane";
     _createSkeleton( );
 }
 
@@ -85,24 +91,46 @@ void ContourPlanePropertySet::_createSkeleton( )
     // connections between DataSet and its subproperties would have been in
     // place yet.
     enumValues.clear( );
-    Model* model = NULL;
-    model = ModelHandler::instance( )->GetActiveModel( );
+    //    std::list<std::string> listOfDatasets =
+    //            data::DatabaseManager::instance( )->GetStringList( "Dataset", "Filename" );
+    // Below is a temporary solution to getting Dataset filenames loaded as choices
+    // in the DataSet enum value. We oughtn't be making direct SQL calls
+    // in a class like this unless we need to do something really fancy with a
+    // lot of JOIN and ORDER BY commands. A better eventual solution is
+    // to be able to do something similar to the above call to GetStringList,
+    // which would simply take in the name of a table and a column value and return
+    // a list of matches. There could also be a GetPropertySetList call that would do
+    // a similar thing with PropertySets rather than just Strings in a table.
+    
+    Poco::Data::Session session( ves::xplorer::data::DatabaseManager::instance()->GetPool()->get() );
+    Poco::Data::Statement statement( session );
+    statement << "SELECT DISTINCT Filename FROM Dataset";
 
-    if( model )
+    try
     {
-        int numSets = model->GetNumberOfCfdDataSets( );
-        for ( int index = 0; index < numSets; index++ )
+        statement.execute( );
+        Poco::Data::RecordSet recordset( statement );
+        if( recordset.rowCount( ) != 0 )
         {
-            enumValues.push_back( model->GetCfdDataSet( index )->GetFileName( ) );
+            for( int rowIndex = 0; rowIndex < recordset.rowCount( ); rowIndex++ )
+            {
+                enumValues.push_back( recordset.value( 0, rowIndex ).convert<std::string > ( ) );
+            }
+        }
+        else
+        {
+            enumValues.push_back( "No datasets loaded" );
         }
     }
-    else
+    catch( Poco::Data::DataException &e )
     {
-        std::cout << "No active model." << std::endl;
+        std::cout << e.displayText( ) << std::endl;
         enumValues.push_back( "No datasets loaded" );
     }
+
     SetPropertyAttribute( "DataSet", "enumValues", enumValues );
     UpdateScalarDataOptions( 0 );
+
 
     AddProperty( "Direction", 0, "Direction" );
     enumValues.clear( );
@@ -174,20 +202,13 @@ void ContourPlanePropertySet::_createSkeleton( )
 void ContourPlanePropertySet::UpdateScalarDataOptions( Property* property )
 {
     PSVectorOfStrings enumValues;
-    Model* model = NULL;
-    model = ModelHandler::instance( )->GetActiveModel( );
-    if( model )
+    std::string selectedDataset = boost::any_cast<std::string > ( GetPropertyAttribute( "DataSet", "enumCurrentString" ) );
+    DatasetPropertySet dataset;
+    dataset.LoadByKey( "Filename", selectedDataset );
+    enumValues = boost::any_cast< std::vector<std::string> >( dataset.GetPropertyValue( "ScalarNames" ) );
+    if( enumValues.empty( ) )
     {
-        int setNum = boost::any_cast<int>( GetPropertyValue( "DataSet" ) );
-        DataSet* dSet = model->GetCfdDataSet( setNum );
-        for ( int index = 0; index < dSet->GetNumberOfScalars( ); index++ )
-        {
-            enumValues.push_back( dSet->GetScalarName( index ) );
-        }
-    }
-    else
-    {
-        enumValues.push_back( "No dataset loaded" );
+        enumValues.push_back( "No datasets loaded" );
     }
     SetPropertyAttribute( "DataSet_ScalarData", "enumValues", enumValues );
     UpdateScalarDataRange( 0 );
@@ -195,28 +216,36 @@ void ContourPlanePropertySet::UpdateScalarDataOptions( Property* property )
 
 void ContourPlanePropertySet::UpdateScalarDataRange( Property* property )
 {
-    Model* model = NULL;
-    model = ModelHandler::instance( )->GetActiveModel( );
-    if( model )
-    {
-        mPropertyMap["DataSet_ScalarRange_Min"]->SetEnabled( );
-        mPropertyMap["DataSet_ScalarRange_Max"]->SetEnabled( );
+    mPropertyMap["DataSet_ScalarRange_Min"]->SetEnabled( );
+    mPropertyMap["DataSet_ScalarRange_Max"]->SetEnabled( );
 
-        int index = boost::any_cast<int>( GetPropertyValue( "DataSet" ) );
-        DataSet* dSet = model->GetCfdDataSet( index );
-        index = boost::any_cast<int>( GetPropertyValue( "DataSet_ScalarData" ) );
-        double * range = dSet->GetActualScalarRange( index );
-        
-        // Update the upper and lower bounds of Min and Max first so that 
+    // Load the current Dataset and get the list of min and max values for its scalars
+    std::string selectedDataset = boost::any_cast<std::string > ( GetPropertyAttribute( "DataSet", "enumCurrentString" ) );
+    DatasetPropertySet dataset;
+    dataset.LoadByKey( "Filename", selectedDataset );
+    std::vector<double> mins = boost::any_cast< std::vector<double> >( dataset.GetPropertyValue( "ScalarMins" ) );
+    std::vector<double> maxes = boost::any_cast< std::vector<double> >( dataset.GetPropertyValue( "ScalarMaxes" ) );
+
+    // DataSet_ScalarData is an exact copy of the ScalarNames property of the Dataset,
+    // so its number in the enum will be the same as the index into the min and max
+    // lists
+    int index = boost::any_cast<int>( GetPropertyValue( "DataSet_ScalarData" ) );
+
+    if( ( !mins.empty( ) ) && ( !maxes.empty( ) ) )
+    {
+        double min = mins.at( index );
+        double max = maxes.at( index );
+
+        // Update the upper and lower bounds of Min and Max first so that
         // boundary values will be allowed!
-        SetPropertyAttribute( "DataSet_ScalarRange_Min", "minimumValue", range[0] );
-        SetPropertyAttribute( "DataSet_ScalarRange_Min", "maximumValue", range[1] );
-        SetPropertyAttribute( "DataSet_ScalarRange_Max", "minimumValue", range[0] );
-        SetPropertyAttribute( "DataSet_ScalarRange_Max", "maximumValue", range[1] );
+        SetPropertyAttribute( "DataSet_ScalarRange_Min", "minimumValue", min );
+        SetPropertyAttribute( "DataSet_ScalarRange_Min", "maximumValue", max );
+        SetPropertyAttribute( "DataSet_ScalarRange_Max", "minimumValue", min );
+        SetPropertyAttribute( "DataSet_ScalarRange_Max", "maximumValue", max );
 
         // Set min and max to the lower and upper boundary values, respectively
-        SetPropertyValue( "DataSet_ScalarRange_Min", range[0] );
-        SetPropertyValue( "DataSet_ScalarRange_Max", range[1] );
+        SetPropertyValue( "DataSet_ScalarRange_Min", min );
+        SetPropertyValue( "DataSet_ScalarRange_Max", max );
     }
 }
 

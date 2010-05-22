@@ -331,6 +331,11 @@ public:
     ///\return The vector of datasets associated with this transient series
     const std::vector< DataSet* >& GetTransientDataSets();
 
+protected:
+#ifdef QT_ON
+    void WriteDatabaseEntry();
+#endif // QT_ON
+
 private:
     ///Model pointer to the model that is holding this dataset
     ves::xplorer::Model* m_tempModel;

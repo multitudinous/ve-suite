@@ -38,6 +38,7 @@ namespace xplorer
 {
 namespace data
 {
+
 Property::Property( boost::any value, bool enabled )
 {
     mValue = value;
@@ -277,8 +278,8 @@ boost::any Property::GetAttribute( const std::string& attributeName ) const
 
 const Property::PSVectorOfStrings& Property::GetAttributeList( ) const
 {
-    mAttributeList.clear();
-    for ( AttributeMap::const_iterator iterator = mAttributeMap.begin( );
+    mAttributeList.clear( );
+    for( AttributeMap::const_iterator iterator = mAttributeMap.begin( );
             iterator != mAttributeMap.end( );
             iterator++ )
     {
@@ -345,6 +346,36 @@ bool Property::IsEnum( )
 
 ////////////////////////////////////////////////////////////////////////////////
 
+bool Property::IsIntVector( ) const
+{
+    return IsIntVector( mValue );
+}
+////////////////////////////////////////////////////////////////////////////////
+
+bool Property::IsFloatVector( ) const
+{
+    return IsFloatVector( mValue );
+}
+////////////////////////////////////////////////////////////////////////////////
+
+bool Property::IsDoubleVector( ) const
+{
+    return IsDoubleVector( mValue );
+}
+////////////////////////////////////////////////////////////////////////////////
+
+bool Property::IsStringVector( ) const
+{
+    return IsStringVector( mValue );
+}
+////////////////////////////////////////////////////////////////////////////////
+
+bool Property::IsVectorized( ) const
+{
+    return IsVectorized( mValue );
+}
+////////////////////////////////////////////////////////////////////////////////
+
 bool Property::IsBool( const boost::any& value ) const
 {
     return value.type( ) == typeid ( bool );
@@ -378,6 +409,47 @@ bool Property::IsString( const boost::any& value ) const
     return boost::any_cast<std::string > ( &value );
 }
 
+////////////////////////////////////////////////////////////////////////////////
+
+bool Property::IsIntVector( const boost::any& value ) const
+{
+    return boost::any_cast< std::vector< int > >( &value );
+}
+////////////////////////////////////////////////////////////////////////////////
+
+bool Property::IsFloatVector( const boost::any& value ) const
+{
+    return boost::any_cast< std::vector< float > >( &value );
+}
+////////////////////////////////////////////////////////////////////////////////
+
+bool Property::IsDoubleVector( const boost::any& value ) const
+{
+    return boost::any_cast< std::vector< double > >( &value );
+}
+////////////////////////////////////////////////////////////////////////////////
+
+bool Property::IsStringVector( const boost::any& value ) const
+{
+    return boost::any_cast< std::vector< std::string > >( &value );
+}
+////////////////////////////////////////////////////////////////////////////////
+
+bool Property::IsVectorized( const boost::any& value ) const
+{
+    if( ( IsIntVector( value ) ) ||
+            ( IsFloatVector( value ) ) ||
+            ( IsDoubleVector( value ) ) ||
+            ( IsStringVector( value ) )
+            )
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
 ////////////////////////////////////////////////////////////////////////////////
 
 void Property::_cacheDoubleValue( double* store, boost::any value )
@@ -480,7 +552,7 @@ bool Property::_checkEnumValue( boost::any value )
             PSVectorOfStrings::const_iterator iterator = castEnumValues.begin( );
             PSVectorOfStrings::const_iterator end = castEnumValues.end( );
             bool found = false;
-            while ( ( !found ) && ( iterator != end ) )
+            while( ( !found ) && ( iterator != end ) )
             {
                 if( ( *iterator ) == castValue )
                 {
@@ -515,7 +587,7 @@ void Property::_doExtraEnumSetValueProcessing( boost::any value )
         max -= 1;
         bool found = false;
         int count = -1;
-        while ( ( !found ) && ( count < max ) )
+        while( ( !found ) && ( count < max ) )
         {
             count++;
             if( castEnumValues[count] == castValue )

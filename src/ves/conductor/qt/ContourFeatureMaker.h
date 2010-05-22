@@ -51,7 +51,7 @@ public:
     ContourFeatureMaker( );
     ContourFeatureMaker( const ContourFeatureMaker& orig );
     virtual ~ContourFeatureMaker( );
-    void update( const std::string& dbFile, unsigned int recordID );
+    void update( unsigned int recordID );
 
 protected:
     void _addPlane( xplorer::data::PropertySet& set );

@@ -32,8 +32,7 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #define QT_NO_KEYWORDS
 // THIS HEADER MUST COME FIRST
-// Header dynamically generated during build process by uic. DO NOT INSERT PATH
-// INFORMATION!
+// Header dynamically generated during build process by uic.
 #include <ves/conductor/qt/propertyBrowser/ui_Visualization.h>
 
 #include <ves/conductor/qt/propertyBrowser/Visualization.h>
@@ -51,10 +50,7 @@ ui( new Ui::Visualization )
     ui->setupUi( this );
 
     mFeatureBrowser = new PropertyBrowser( this );
-    mTempSet = NULL;
-
-    // !!! This is just for testing purposes!!!
-    mDbName = "/home/penn/vestTest.db";
+    mTempSet = 0;
 }
 
 Visualization::~Visualization( )
@@ -81,20 +77,20 @@ void Visualization::on_WritePropertiesButton_clicked( )
 {
     if( mTempSet )
     {
-        mTempSet->WriteToDatabase( mDbName );
+        mTempSet->WriteToDatabase(  );
     }
 
     // featureType will be the list position of the currently-selected feature
     //VisFeatureManager::instance()->update( featureType, id );
 
-    mContourFeatureMaker.update( mDbName, mTempSet->GetRecordID() );
+    mContourFeatureMaker.update( mTempSet->GetRecordID() );
 }
 
 void Visualization::on_RefreshPropertiesButton_clicked( )
 {
     if( mTempSet )
     {
-        mTempSet->LoadFromDatabase( mDbName );
+        mTempSet->LoadFromDatabase( );
         mFeatureBrowser->RefreshAll( );
     }
 }
@@ -105,7 +101,8 @@ void Visualization::on_NewFeatureButton_clicked( )
 
     if( mTempSet )
     {
-        mTempSet->WriteToDatabase( mDbName );
+        mTempSet->WriteToDatabase(  );
+
         mFeatureBrowser->ParsePropertySet( mTempSet );
 
         // ui.vfpb is an instance of GenericPropertyBrowser, which knows how
@@ -121,9 +118,9 @@ void Visualization::on_DeleteFeatureButton_clicked( )
 {
     if( mTempSet )
     {
-        mTempSet->DeleteFromDatabase( mDbName );
+        mTempSet->DeleteFromDatabase(  );
         mFeatureBrowser->ParsePropertySet( NULL );
         delete mTempSet;
-        mTempSet = NULL;
+        mTempSet = 0;
     }
 }

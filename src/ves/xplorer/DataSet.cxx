@@ -55,6 +55,8 @@
 #include <ves/xplorer/util/CreateDataObjectBBoxActorsCallback.h>
 #include <ves/xplorer/util/ComputeVectorMagnitudeAndScalarsCallback.h>
 
+#include <ves/xplorer/data/DatasetPropertySet.h>
+
 #include <ves/builder/DataLoader/DataLoader.h>
 #include <ves/builder/cfdTranslatorToVTK/cfdTranslatorToVTK.h>
 
@@ -85,6 +87,7 @@
 
 #include <iostream>
 #include <sstream>
+#include <vector>
 
 //Used for strcpy to setup the data translator code
 #include <cstring>
@@ -727,6 +730,10 @@ void DataSet::LoadData()
         ->SendConductorMessage( "Loaded file: " + fileName );
     //Register this dataset with the modeldatahandler
     CreateCompositeDataSets();
+
+#ifdef QT_ON
+    WriteDatabaseEntry();
+#endif // QT_ON
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DataSet::LoadData( vtkDataSet* tempDataset, bool isPartOfCompositeDataset )
@@ -2019,6 +2026,41 @@ const std::vector< DataSet* >& DataSet::GetTransientDataSets()
 {
     return m_transientDataSets;
 }
+////////////////////////////////////////////////////////////////////////////////
+#ifdef QT_ON
+void DataSet::WriteDatabaseEntry()
+{
+    std::cout << "DataSet::WriteDatabaseEntry" << std::endl << std::flush;
+    xplorer::data::DatasetPropertySet set;
+
+    set.LoadByKey( "Filename", fileName );
+
+    std::cout << "Set " << fileName << " ID = " << set.GetRecordID() << std::endl;
+
+    set.SetPropertyValue( "Filename", fileName );
+    set.SetPropertyValue( "StepLength", stepLength );
+    set.SetPropertyValue( "MaxTime", maxTime );
+    set.SetPropertyValue( "TimeStep", timeStep );
+    set.SetPropertyValue( "Type", datasetType );
+    set.SetPropertyValue( "PrecomputedDataSliceDir", precomputedDataSliceDir );
+    set.SetPropertyValue( "PrecomputedSurfaceDir", precomputedSurfaceDir );
+    set.SetPropertyValue( "ScalarNames", scalarName );
+    set.SetPropertyValue( "VectorNames", vectorName );
+
+    std::vector< double > ScalarMins;
+    std::vector< double > ScalarMaxes;
+    for( int index = 0; index < GetNumberOfScalars(); index++ )
+    {
+        double* range = GetActualScalarRange( index );
+        ScalarMins.push_back( range[0] );
+        ScalarMaxes.push_back( range[1] );
+    }
+    set.SetPropertyValue( "ScalarMins", ScalarMins );
+    set.SetPropertyValue( "ScalarMaxes", ScalarMaxes );
+    
+    set.WriteToDatabase();
+}
+#endif //QT_ON
 ////////////////////////////////////////////////////////////////////////////////
 } // end xplorer
 } // end ves

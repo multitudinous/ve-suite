@@ -45,6 +45,7 @@ namespace Poco
 namespace Data
 {
 class Session;
+class Statement;
 } // namespace Data
 } // namespace Poco
 
@@ -176,6 +177,7 @@ public:
     /// database.
     virtual unsigned int GetRecordID() const;
 
+    virtual bool LoadFromDatabase();
     virtual bool LoadFromDatabase( Poco::Data::Session* session );
     virtual bool LoadFromDatabase( Poco::Data::Session* session, const std::string& TableName );
     virtual bool LoadFromDatabase( Poco::Data::Session* session, const std::string& TableName, Poco::UInt32 ID );
@@ -183,11 +185,18 @@ public:
     virtual bool LoadFromDatabase( const std::string& DatabaseName, const std::string& TableName );
     virtual bool LoadFromDatabase( const std::string& DatabaseName, const std::string& TableName, unsigned int ID );
 
+    virtual bool LoadByKey( const std::string& KeyName, boost::any KeyValue );
+    virtual bool LoadByKey( Poco::Data::Session* session, const std::string& KeyName, boost::any KeyValue );
+    virtual bool LoadByKey( const std::string& DatabaseName, const std::string& KeyName, boost::any KeyValue );
+
+    virtual bool WriteToDatabase();
     virtual bool WriteToDatabase( Poco::Data::Session* session );
     virtual bool WriteToDatabase( Poco::Data::Session* session, const std::string& TableName );
+    virtual bool WriteToDatabase( Poco::Data::Session* session, const std::string& TableName, Poco::Data::Statement& statement );
     virtual bool WriteToDatabase( const std::string& DatabaseName );
     virtual bool WriteToDatabase( const std::string& DatabaseName, const std::string& TableName );
 
+    virtual bool DeleteFromDatabase();
     virtual bool DeleteFromDatabase( Poco::Data::Session* session );
     virtual bool DeleteFromDatabase( Poco::Data::Session* session, const std::string& TableName );
     virtual bool DeleteFromDatabase( const std::string& DatabaseName );
@@ -207,6 +216,8 @@ protected:
     /// ClearAccumulatedChanges
     virtual void ChangeAccumulator( Property* property );
 
+    unsigned int GetBoostAnyVectorSize( const boost::any& value );
+
     ///
     /// Internal function that connects default signals to the change accumulator
     virtual void _connectChanges( Property* property );
@@ -217,6 +228,16 @@ protected:
     /// contained in this property set. If the default function is not doing
     /// what you need, override this function to create a custom table.
     virtual std::string _buildColumnHeaderString();
+
+    ///
+    /// Tests for presence of characters disallowed in database column names in
+    /// string value. For sqlite, allowed characters are digits 0-9, lower- and
+    /// upper-case letters, and the underscore. All other characters are illegal.
+    bool _containsIllegalCharacter( const std::string& value );
+
+    ///
+    /// Helper function to determine whether a given TableName exists in the db.
+    bool _tableExists( Poco::Data::Session* session, const std::string& TableName );
 
     PropertyMap mPropertyMap; /// Map holding the collection of properties.
     PSVectorOfStrings mAccumulatedChanges;
