@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?org-vrjuggler-jccl-settings configuration.version="3.0"?>
-<configuration xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="abbott config" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration.xsd">
+<configuration xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" name="abbott config" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration.xsd">
    <elements>
       <cluster_node name="Node(abbott)" version="1">
          <display_system>
@@ -12,14 +12,14 @@
             </display_system>
          </display_system>
          <display_windows>
-            <display_window name="Front Screen (Right Eye)" version="5">
+            <display_window name="Front Screen (Right Eye)" version="6">
                <origin>1024</origin>
                <origin>768</origin>
                <size>1024</size>
                <size>768</size>
                <pipe>0</pipe>
                <frame_buffer_config>
-                  <opengl_frame_buffer_config name="GL Frame Buffer" version="3">
+                  <opengl_frame_buffer_config name="GL Frame Buffer" version="4">
                      <visual_id>-1</visual_id>
                      <red_size>8</red_size>
                      <green_size>8</green_size>
@@ -34,6 +34,10 @@
                      <accum_alpha_size>1</accum_alpha_size>
                      <num_sample_buffers>0</num_sample_buffers>
                      <num_samples>0</num_samples>
+                     <use_create_context_attribs>false</use_create_context_attribs>
+                     <gl_context_major_version>3</gl_context_major_version>
+                     <gl_context_minor_version>0</gl_context_minor_version>
+                     <gl_context_flags>0</gl_context_flags>
                   </opengl_frame_buffer_config>
                </frame_buffer_config>
                <stereo>false</stereo>
@@ -43,7 +47,7 @@
                <always_on_top>false</always_on_top>
                <active>true</active>
                <surface_viewports>
-                  <surface_viewport name="Contained Surface Viewport" version="2">
+                  <surface_viewport name="Contained Surface Viewport" version="3">
                      <origin>0.0</origin>
                      <origin>0.0</origin>
                      <size>1.0</size>
@@ -65,9 +69,11 @@
                      <active>true</active>
                      <tracked>false</tracked>
                      <tracker_proxy>SimCamera Proxy</tracker_proxy>
+                     <auto_corner_update>0</auto_corner_update>
                   </surface_viewport>
                </surface_viewports>
-               <keyboard_mouse_device_name/>
+               <keyboard_mouse_device_name />
+               <allow_mouse_locking>true</allow_mouse_locking>
                <lock_key>KEY_NONE</lock_key>
                <start_locked>false</start_locked>
                <sleep_time>75</sleep_time>
@@ -78,3 +84,4 @@
       </cluster_node>
    </elements>
 </configuration>
+

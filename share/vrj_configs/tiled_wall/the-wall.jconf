@@ -8,7 +8,7 @@
          <cluster_node>the-wall</cluster_node>
          <cluster_node>the-wall2</cluster_node>
          <cluster_node>the-wall3</cluster_node>
-         <use_software_swap_lock>false</use_software_swap_lock>
+         <use_software_swap_lock>true</use_software_swap_lock>
       </cluster_manager>
    </elements>
 </configuration>

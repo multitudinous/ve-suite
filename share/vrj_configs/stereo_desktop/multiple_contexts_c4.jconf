@@ -46,7 +46,7 @@
          <always_on_top>false</always_on_top>
          <active>true</active>
          <surface_viewports>
-            <surface_viewport name="Front Wall" version="2">
+            <surface_viewport name="Front Wall" version="3">
                <origin>0.0</origin>
                <origin>0.0</origin>
                <size>1.0</size>
@@ -68,6 +68,7 @@
                <active>true</active>
                <tracked>false</tracked>
                <tracker_proxy />
+               <auto_corner_update>0</auto_corner_update>
             </surface_viewport>
          </surface_viewports>
          <keyboard_mouse_device_name>Keyboard KM Dev</keyboard_mouse_device_name>
@@ -481,7 +482,7 @@
          <always_on_top>false</always_on_top>
          <active>true</active>
          <surface_viewports>
-            <surface_viewport name="Right Wall" version="2">
+            <surface_viewport name="Right Wall" version="3">
                <origin>0.0</origin>
                <origin>0.0</origin>
                <size>1.0</size>
@@ -503,6 +504,7 @@
                <active>true</active>
                <tracked>false</tracked>
                <tracker_proxy />
+               <auto_corner_update>0</auto_corner_update>
             </surface_viewport>
          </surface_viewports>
          <keyboard_mouse_device_name>Keyboard KM Dev</keyboard_mouse_device_name>
@@ -546,7 +548,7 @@
          <always_on_top>false</always_on_top>
          <active>true</active>
          <surface_viewports>
-            <surface_viewport name="Left Wall" version="2">
+            <surface_viewport name="Left Wall" version="3">
                <origin>0.0</origin>
                <origin>0.0</origin>
                <size>1.0</size>
@@ -568,6 +570,7 @@
                <active>true</active>
                <tracked>false</tracked>
                <tracker_proxy />
+               <auto_corner_update>0</auto_corner_update>
             </surface_viewport>
          </surface_viewports>
          <keyboard_mouse_device_name>Keyboard KM Dev</keyboard_mouse_device_name>
@@ -611,7 +614,7 @@
          <always_on_top>false</always_on_top>
          <active>true</active>
          <surface_viewports>
-            <surface_viewport name="Floor" version="2">
+            <surface_viewport name="Floor" version="3">
                <origin>0.0</origin>
                <origin>0.0</origin>
                <size>1.0</size>
@@ -619,10 +622,10 @@
                <view>Right Eye</view>
                <lower_left_corner>-1.2192</lower_left_corner>
                <lower_left_corner>0.1524</lower_left_corner>
-               <lower_left_corner>0.610</lower_left_corner>
+               <lower_left_corner>0.61</lower_left_corner>
                <lower_right_corner>1.2192</lower_right_corner>
                <lower_right_corner>0.1524</lower_right_corner>
-               <lower_right_corner>0.610</lower_right_corner>
+               <lower_right_corner>0.61</lower_right_corner>
                <upper_right_corner>1.2192</upper_right_corner>
                <upper_right_corner>0.1524</upper_right_corner>
                <upper_right_corner>-1.8288</upper_right_corner>
@@ -633,6 +636,7 @@
                <active>true</active>
                <tracked>false</tracked>
                <tracker_proxy />
+               <auto_corner_update>0</auto_corner_update>
             </surface_viewport>
          </surface_viewports>
          <keyboard_mouse_device_name>Keyboard KM Dev</keyboard_mouse_device_name>

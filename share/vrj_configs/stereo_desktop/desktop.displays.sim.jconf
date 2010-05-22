@@ -43,7 +43,7 @@
          <always_on_top>false</always_on_top>
          <active>true</active>
          <surface_viewports>
-            <surface_viewport name="Desktop Display" version="2">
+            <surface_viewport name="Desktop Display" version="3">
                <origin>0.0</origin>
                <origin>0.0</origin>
                <size>1.0</size>
@@ -65,6 +65,7 @@
                <active>true</active>
                <tracked>false</tracked>
                <tracker_proxy />
+               <auto_corner_update>0</auto_corner_update>
             </surface_viewport>
          </surface_viewports>
          <keyboard_mouse_device_name>Keyboard KM Dev</keyboard_mouse_device_name>
