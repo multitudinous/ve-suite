@@ -127,7 +127,6 @@
                <post_rotation>0.0</post_rotation>
             </position_transform_filter>
          </position_filters>
-         <device_host>Node(master)</device_host>
       </intersense_api>
    </elements>
 </configuration>
