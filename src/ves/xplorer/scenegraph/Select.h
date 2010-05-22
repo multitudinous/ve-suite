@@ -53,6 +53,8 @@ namespace osgUtil
 class IntersectionVisitor;
 }
 
+#include <string>
+
 namespace ves
 {
 namespace xplorer
@@ -70,7 +72,11 @@ TestForIntersections(
 ///This function also trims the node path from root to the ves object
 VE_SCENEGRAPH_EXPORTS osg::Node* FindVESObject( osg::NodePath& nodePath );
 
-
+///This function places a highlight circle around a given node based on the 
+///bounding circle of the node.
+VE_SCENEGRAPH_EXPORTS osg::Node* CreateCircleHighlight( 
+    const osg::Vec3 eyePoint, const osg::NodePath& nodePath, 
+    const osg::Node& pickedNode, const std::string& labelText );
 } //end scenegraph
 } //end xplorer
 } //end ves
