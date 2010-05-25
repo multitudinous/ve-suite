@@ -66,6 +66,7 @@
 // --- OSG Includes --- //
 #include <osg/Group>
 #include <osg/Camera>
+#include <osg/Depth>
 #include <osg/ClearNode>
 #include <osg/FrameBufferObject>
 
@@ -91,7 +92,14 @@ namespace vxsr = ves::xplorer::scenegraph::rtt;
 SceneRenderToTexture::SceneRenderToTexture()
     :
     mScaleFactor( 1 ),
-    mRootGroup( new osg::Group() )
+    mRootGroup( new osg::Group() ),
+    m_topLevelGlow( NULL ),
+    m_glowAlphaPreprocessFP( NULL ),
+    m_1dxVP( NULL ),
+    m_1dxFP( NULL ),
+    m_1dyVP( NULL ),
+    m_1dyFP( NULL ),
+    m_finalShader( NULL )
 {
     osg::ref_ptr< osgDB::ReaderWriter::Options > vertexOptions =
         new osgDB::ReaderWriter::Options( "vertex" );
@@ -100,8 +108,8 @@ SceneRenderToTexture::SceneRenderToTexture()
 
     try
     {
-        m_finalShader = 
-            osgDB::readShaderFile( "glsl/final_fp.glsl", fragmentOptions.get() );
+        m_glowAlphaPreprocessFP = osgDB::readShaderFile(
+            "glsl/glow_alpha_preprocess.glsl", fragmentOptions.get() );
     }
     catch( ... )
     {
@@ -132,17 +140,25 @@ SceneRenderToTexture::SceneRenderToTexture()
         std::cerr << "Could not load shader files!" << std::endl;
     }
 
+    try
+    {
+        m_finalShader = 
+            osgDB::readShaderFile( "glsl/final_fp.glsl", fragmentOptions.get() );
+    }
+    catch( ... )
+    {
+        std::cerr << "Could not load shader files!" << std::endl;
+    }
+
     //Setup the MRT shader to make glow work correctly
     m_topLevelGlow = new osg::Shader();
     std::string fragmentSource =
-    "uniform vec4 glowColor; \n"
+    "uniform vec3 glowColor; \n"
 
     "void main() \n"
     "{ \n"
-        "glowColor.a = gl_Color.a; \n"
-
         "gl_FragData[ 0 ] = gl_Color; \n"
-        "gl_FragData[ 1 ] = glowColor; \n"
+        "gl_FragData[ 1 ] = vec4( glowColor, gl_FragData[ 0 ].a ); \n"
     "} \n";
 
     m_topLevelGlow->setType( osg::Shader::FRAGMENT );
@@ -229,6 +245,8 @@ void SceneRenderToTexture::InitScene( osg::Camera* const sceneViewCamera )
         processor->getOrCreateStateSet()->setRenderBinDetails(
             100, std::string( "RenderBin" ) );
 
+        //Add the clear color quad first so it renders before
+        camera->addChild( CreateClearColorQuad() );
         //Add the scenegraph to the camera
         camera->addChild( mRootGroup.get() );
         rttPipelines->addChild( processor.get() );
@@ -265,9 +283,9 @@ osg::Camera* SceneRenderToTexture::CreatePipelineCamera(
     tempCamera->setClearStencil( 0 );
     tempCamera->setReferenceFrame( osg::Camera::ABSOLUTE_RF );
     tempCamera->setRenderOrder( osg::Camera::PRE_RENDER, 0 );
-    tempCamera->setClearMask( 
+    tempCamera->setClearMask(
         GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT );
-    tempCamera->setClearColor( osg::Vec4( 0.0, 0.0, 1.0, 1.0 ) );
+    tempCamera->setClearColor( osg::Vec4( 0.0, 0.0, 1.0, 0.0 ) );
     tempCamera->setRenderTargetImplementation(
         osg::Camera::FRAME_BUFFER_OBJECT, osg::Camera::FRAME_BUFFER );
     tempCamera->setViewport( viewport );
@@ -338,7 +356,7 @@ osg::Camera* SceneRenderToTexture::CreatePipelineCamera(
 
     //Default glow color for any children that don't explicitly set it.
     stateset->addUniform(
-        new osg::Uniform( "glowColor", osg::Vec4( 0.0, 0.0, 0.0, 1.0 ) ) );
+        new osg::Uniform( "glowColor", osg::Vec3( 0.0, 0.0, 0.0 ) ) );
 
     return tempCamera;
 }
@@ -395,6 +413,29 @@ vxsr::Processor* SceneRenderToTexture::CreatePipelineProcessor(
     tempProcessor->addChild( colorBuffer1.get() );
     colorBuffer1->Update();
 
+    //Correct the alpha values for the glow texture
+    osg::ref_ptr< vxsr::UnitInOut > glowAlphaPreprocess = new vxsr::UnitInOut();
+    {
+        glowAlphaPreprocess->setName( "GlowAlphaPreprocess" );
+
+        osg::ref_ptr< osg::Program > program = new osg::Program();
+
+        //Setup shaders
+        program->addShader( m_glowAlphaPreprocessFP.get() );
+        program->setName( "GlowAlphaPreprocessShader" );
+
+        osg::ref_ptr< osg::StateSet > stateSet =
+            glowAlphaPreprocess->getOrCreateStateSet();
+        stateSet->setAttribute(
+            program.get(),
+            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+        glowAlphaPreprocess->SetInputToUniform(
+            colorBuffer1.get(), "glowMap", true );
+        glowAlphaPreprocess->SetInputTextureIndexForViewportReference( 0 );
+    }
+    //colorBuffer1->addChild( colorBuffer1.get() );
+    glowAlphaPreprocess->Update();
+
     //Downsample by 1/2 original size
     osg::Vec2 quadScreenSize(
         camera->getViewport()->width(), camera->getViewport()->height() );
@@ -403,13 +444,13 @@ vxsr::Processor* SceneRenderToTexture::CreatePipelineProcessor(
     {
         float downsample = 0.5;
         quadScreenSize *= downsample;
-        
+
         glowDownSample->setName( "GlowDownSample" );
         glowDownSample->SetFactorX( downsample );
         glowDownSample->SetFactorY( downsample );
         //glowDownSample->SetInputTextureIndexForViewportReference( 0 );
     }
-    colorBuffer1->addChild( glowDownSample.get() );
+    glowAlphaPreprocess->addChild( glowDownSample.get() );
     glowDownSample->Update();
 
     //Perform horizontal 1D gauss convolution
@@ -551,7 +592,7 @@ vxsr::Processor* SceneRenderToTexture::CreatePipelineProcessor(
         //finalShader->set( "glowStrength", static_cast< float >( 6.0 ) );
 
         osg::ref_ptr< osg::Uniform > glowStrengthUniform =
-            new osg::Uniform( "glowStrength", static_cast< float >( 6.0 ) );
+            new osg::Uniform( "glowStrength", static_cast< float >( 4.0 ) );
 
         //final->getOrCreateStateSet()->setAttributeAndModes( finalShader.get() );
         osg::ref_ptr< osg::StateSet > stateSet = final->getOrCreateStateSet();
@@ -560,7 +601,8 @@ vxsr::Processor* SceneRenderToTexture::CreatePipelineProcessor(
             osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
         stateSet->addUniform( glowStrengthUniform.get() );
         final->SetInputToUniform( colorBuffer0.get(), "baseMap", false );
-        final->SetInputToUniform( colorBuffer1.get(), "stencilMap", false );
+        final->SetInputToUniform(
+            glowAlphaPreprocess.get(), "stencilMap", false );
         final->SetInputToUniform( blurY.get(), "glowMap", true );
         final->SetInputTextureIndexForViewportReference( 0 );
     }
@@ -572,6 +614,84 @@ vxsr::Processor* SceneRenderToTexture::CreatePipelineProcessor(
             final->GetOutputTexture() ) ) );
 
     return tempProcessor;
+}
+////////////////////////////////////////////////////////////////////////////////
+osg::Geode* SceneRenderToTexture::CreateClearColorQuad()
+{
+    //Get the vertex coordinates for the quad
+    osg::ref_ptr< osg::Vec3Array > quadVertices = new osg::Vec3Array();
+    quadVertices->resize( 4 );
+    (*quadVertices)[ 0 ].set( -1.0, -1.0, -1.0 );
+    (*quadVertices)[ 1 ].set(  1.0, -1.0, -1.0 );
+    (*quadVertices)[ 2 ].set(  1.0,  1.0, -1.0 );
+    (*quadVertices)[ 3 ].set( -1.0,  1.0, -1.0 );
+
+    //Create the quad geometry
+    osg::ref_ptr< osg::Geometry > quadGeometry = new osg::Geometry();
+    quadGeometry->setVertexArray( quadVertices.get() );
+    quadGeometry->addPrimitiveSet( new osg::DrawArrays(
+        osg::PrimitiveSet::QUADS, 0, quadVertices->size() ) );
+    quadGeometry->setUseDisplayList( true );
+    quadGeometry->setColorBinding( osg::Geometry::BIND_OFF );
+
+    //Create geode for quad
+    osg::Geode* quadGeode = new osg::Geode();
+    quadGeode->setName( "Clear Color Quad" );
+    quadGeode->addDrawable( quadGeometry.get() );
+    //Don't cull
+    quadGeode->setCullingActive( false );
+
+    //Set stateset for quad
+    osg::ref_ptr< osg::StateSet > stateset = quadGeode->getOrCreateStateSet();
+    //Render first
+    stateset->setRenderBinDetails( -1, "RenderBin" );
+    stateset->setMode( GL_LIGHTING, osg::StateAttribute::OFF );
+
+    //Set depth test to always pass and don't write to the depth buffer
+    osg::ref_ptr< osg::Depth > depth = new osg::Depth();
+    depth->setFunction( osg::Depth::ALWAYS );
+    depth->setWriteMask( false );
+    stateset->setAttributeAndModes(
+        depth.get(), osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+
+    osg::ref_ptr< osg::Shader > vertexShader = new osg::Shader();
+    std::string vertexSource =
+    "void main() \n"
+    "{ \n"
+        //Ignore MVP transformation so vertices are in Normalized Device Coord.
+        "gl_Position = gl_Vertex; \n"
+    "} \n";
+
+    vertexShader->setType( osg::Shader::VERTEX );
+    vertexShader->setShaderSource( vertexSource );
+    vertexShader->setName( "VS Quad Vertex Shader" );
+
+    osg::ref_ptr< osg::Shader > fragmentShader = new osg::Shader();
+    std::string fragmentSource =
+    "uniform vec4 clearColor; \n"
+
+    "void main() \n"
+    "{ \n"
+        "gl_FragData[ 0 ] = clearColor; \n"
+        "gl_FragData[ 1 ] = vec4( 0.0, 0.0, 0.0, 0.0 ); \n"
+    "} \n";
+
+    fragmentShader->setType( osg::Shader::FRAGMENT );
+    fragmentShader->setShaderSource( fragmentSource );
+    fragmentShader->setName( "VS Quad Fragment Shader" );
+
+    osg::ref_ptr< osg::Program > program = new osg::Program();
+    program->addShader( vertexShader.get() );
+    program->addShader( fragmentShader.get() );
+    program->setName( "VS Quad Program" );
+
+    stateset->setAttributeAndModes(
+        program.get(),
+        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+    stateset->addUniform(
+        &scenegraph::SceneManager::instance()->GetClearColorUniform() );
+
+    return quadGeode;
 }
 ////////////////////////////////////////////////////////////////////////////////
 osg::Geode* SceneRenderToTexture::CreateTexturedQuad(
@@ -679,7 +799,6 @@ osg::Geode* SceneRenderToTexture::CreateTexturedQuad(
     stateset->setTextureAttributeAndModes( 0, texture, osg::StateAttribute::ON );
 #endif
 
-    //This doesn't make sense? !jbkoch
 #ifdef VES_SRTT_DEBUG
     quadGeode->setNodeMask( 0 );
 #endif

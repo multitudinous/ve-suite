@@ -105,31 +105,34 @@ public:
     ///Return the active switch node of the scenegraph
     osg::Group* const GetActiveSwitchNode() const;
 
+    ///Return the camera manager of the scenegraph
+    camera::CameraManager& GetCameraManager() const;
+
     ///
     ///\return
     CharacterController& GetCharacterController() const;
+
+    ///
+    osg::Uniform& GetClearColorUniform() const;
 
     ///Get the framestamp used by SceneView
     ///\return The osg::FrameStamp for the osg::SceneView
     osg::FrameStamp* const GetFrameStamp() const;
 
-    ///Get the inverted world DCS matrix
-    ///\return The inverted matrix
-    const gmtl::Matrix44d& GetInvertedWorldDCS() const;
-
-    ///Return the graphical plugin manager
-    Group& GetGraphicalPluginManager() const;
-
-    ///Return the camera manager of the scenegraph
-    camera::CameraManager& GetCameraManager() const;
-
-    ///Return the manipulator root node of the scenegraph
-    manipulator::ManipulatorManager& GetManipulatorManager() const;
-
     ///
     ///\return
     GLTransformInfoPtr const GetGLTransformInfo(
         vrj::ViewportPtr const viewport );
+
+    ///Return the graphical plugin manager
+    Group& GetGraphicalPluginManager() const;
+
+    ///Get the inverted world DCS matrix
+    ///\return The inverted matrix
+    const gmtl::Matrix44d& GetInvertedWorldDCS() const;
+
+    ///Return the manipulator root node of the scenegraph
+    manipulator::ManipulatorManager& GetManipulatorManager() const;
 
     ///Return the model root node of the scenegraph
     ///\return
@@ -282,6 +285,9 @@ private:
 
     ///Clear node to control the background color
     osg::ref_ptr< osg::ClearNode > m_clrNode;
+
+    ///
+    osg::ref_ptr< osg::Uniform > m_clearColorUniform;
 
     ///FrameStamp to control sequence nodes and other osg animations
     osg::ref_ptr< osg::FrameStamp > mFrameStamp;

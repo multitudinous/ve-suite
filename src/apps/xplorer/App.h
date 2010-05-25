@@ -44,21 +44,14 @@
 #include <vrj/vrjParam.h>
 #include <vpr/Sync/Mutex.h>
 
-#if __VJ_version >= 2003000
 #include <vrj/Draw/OSG/App.h>
 #include <vrj/Draw/OpenGL/ContextData.h>
-#else
-#include <vrj/Draw/OSG/OsgApp.h>
-#include <vrj/Draw/OGL/GlContextData.h>
-#endif
 
 // --- OSG Includes --- //
 #include <osg/Version>
-#if ( ( OSG_VERSION_MAJOR >= 1 ) && ( OSG_VERSION_MINOR >= 2 ) || ( OSG_VERSION_MAJOR >= 2 ) )
 #include <osg/ref_ptr>
 #include <osg/Timer>
 #include <osg/LightModel>
-#endif
 
 namespace osg
 {
@@ -97,11 +90,7 @@ class cfdPBufferManager;
 /*!\class ves::xplorer::App
  *
  */
-#if __VJ_version >= 2003000
 class App : public vrj::osg::App
-#else
-class App : public vrj::OsgApp
-#endif
 {
 public:
     ///Contructor
@@ -276,13 +265,8 @@ private:
     ///
     ves::xplorer::SceneGLTransformInfoPtr m_sceneGLTransformInfo;
 
-#if __VJ_version >= 2003000
     vrj::opengl::ContextData< bool > mViewportsChanged;
     vrj::opengl::ContextData< bool > m_skipDraw;
-#else
-    vrj::GlContextData< bool > mViewportsChanged;
-    vrj::GlContextData< bool > m_skipDraw;
-#endif
 
 };
 } //end xplorer

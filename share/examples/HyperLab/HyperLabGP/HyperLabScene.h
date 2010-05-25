@@ -37,7 +37,7 @@
 // --- My Includes --- ///
 namespace hyperlab
 {
-    class Shaders;
+class Shaders;
 }
 
 // --- VE-Suite Includes --- //
@@ -47,9 +47,9 @@ namespace xplorer
 {
 namespace scenegraph
 {
-    class DCS;
-    class CADEntity;
-    class PhysicsSimulator;
+class DCS;
+class CADEntity;
+class PhysicsSimulator;
 }
 }
 }
@@ -57,16 +57,16 @@ namespace scenegraph
 // --- OSG Includes --- //
 namespace osg
 {
-    class Node;
-    class Group;
-    class Geode;
-    class MatrixTransform;
-    class Texture2D;
-    class Texture3D;
-    class Camera;
-    class TexGenNode;
-    class Light;
-    class LightSource;
+class Node;
+class Group;
+class Geode;
+class MatrixTransform;
+class Texture2D;
+class Texture3D;
+class Camera;
+class TexGenNode;
+class Light;
+class LightSource;
 }
 
 namespace hyperlab
@@ -117,6 +117,7 @@ private:
 
     //The room geometry nodes
     ves::xplorer::scenegraph::CADEntity* mRoom;
+    ves::xplorer::scenegraph::CADEntity* mHyper;
     osg::ref_ptr< osg::Node > mAluminumParts;
     osg::ref_ptr< osg::Node > mAluminumPipes;
     osg::ref_ptr< osg::Node > mBlack;

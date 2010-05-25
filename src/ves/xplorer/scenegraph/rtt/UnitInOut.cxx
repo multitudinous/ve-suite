@@ -311,7 +311,7 @@ void UnitInOut::AssignOutputTexture()
                 osg::Matrix::ortho( 0.0, 1.0, 0.0, 1.0, 0.0, 1.0 ) );
             m_fboCamera->setClearMask( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT );
             m_fboCamera->setRenderTargetImplementation( osg::Camera::FRAME_BUFFER_OBJECT );
-            m_fboCamera->setClearColor( osg::Vec4( 0.0, 1.0, 1.0, 1.0 ) );
+            m_fboCamera->setClearColor( osg::Vec4( 0.0, 1.0, 1.0, 0.0 ) );
             m_fboCamera->attach( osg::Camera::COLOR_BUFFER0, texture2D );
             m_fboCamera->setViewport( mViewport );
             //m_fboCamera->setComputeNearFarMode(

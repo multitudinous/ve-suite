@@ -86,6 +86,7 @@ HyperLabScene::HyperLabScene(
     mShadowedScene( 0 ),
 
     mRoom( 0 ),
+    mHyper( 0 ),
     mAluminumParts( 0 ),
     mAluminumPipes( 0 ),
     mBlack( 0 ),
@@ -140,6 +141,11 @@ HyperLabScene::~HyperLabScene()
     if( mRoom )
     {
         delete mRoom;
+    }
+
+    if( mHyper )
+    {
+        delete mHyper;
     }
 
     if( shader )
@@ -373,7 +379,7 @@ void HyperLabScene::CreateLights()
     vertices->push_back( osg::Vec3( -1.0, -1.0, 0.0 ) );
     vertices->push_back( osg::Vec3(  1.0, -1.0, 0.0 ) );
     vertices->push_back( osg::Vec3(  1.0,  1.0, 0.0 ) );
-    
+
     //positions->push_back( osg::Vec3( 1.0, 1.0, 500.0 ) );
 
     geometry->setVertexArray( vertices.get() );
@@ -381,7 +387,7 @@ void HyperLabScene::CreateLights()
 
     geometry->addPrimitiveSet(
         new osg::DrawArrays( osg::PrimitiveSet::QUADS, 0, vertices->size() ) );
-    
+
     //mCoronas->addDrawable( geometry.get() );
     //mPluginDCS->addChild( mCoronas.get() );
 }
@@ -392,67 +398,80 @@ void HyperLabScene::CreateNodes()
     osg::ref_ptr< osg::StateSet > stateset;
 
     //Set up the collision detection nodes for the room
-    osg::ref_ptr< osg::Group > roomPhysics = new osg::Group();
-    mRoom = new ves::xplorer::scenegraph::CADEntity( roomPhysics.get(),
-                                                      mPluginDCS.get(),
-                                                      mPhysicsSimulator );
+    osg::ref_ptr< osg::Node > blankNode = new osg::Node();
+    mRoom = new ves::xplorer::scenegraph::CADEntity(
+        blankNode.get(), mPluginDCS.get(), mPhysicsSimulator );
+
+    mHyper = new ves::xplorer::scenegraph::CADEntity(
+        blankNode.get(), mPluginDCS.get(), mPhysicsSimulator );
+
+    osg::Vec3d scale( 0.15, 0.15, 0.15 );
+    osg::ref_ptr< osg::PositionAttitudeTransform > roomPAT =
+        new osg::PositionAttitudeTransform();
+    roomPAT->setScale( scale );
+    mRoom->GetDCS()->addChild( roomPAT.get() );
+
+    osg::ref_ptr< osg::PositionAttitudeTransform > hyperPAT =
+        new osg::PositionAttitudeTransform();
+    hyperPAT->setScale( scale );
+    mHyper->GetDCS()->addChild( hyperPAT.get() );
 
     //Load in the geometry for the room
     {
         mAluminumParts =
             osgDB::readNodeFile( "./Models/IVEs/Room/AluminumParts.ive" );
-        mRoom->GetDCS()->addChild( mAluminumParts.get() );
+        roomPAT->addChild( mAluminumParts.get() );
         mAluminumPipes =
             osgDB::readNodeFile( "./Models/IVEs/Room/AluminumPipes.ive" );
-        mRoom->GetDCS()->addChild( mAluminumPipes.get() );
+        roomPAT->addChild( mAluminumPipes.get() );
         mBlack =
             osgDB::readNodeFile( "./Models/IVEs/Room/Black.ive" );
-        mRoom->GetDCS()->addChild( mBlack.get() );
+        roomPAT->addChild( mBlack.get() );
         mBrown =
             osgDB::readNodeFile( "./Models/IVEs/Room/Brown.ive" );
-        mRoom->GetDCS()->addChild( mBrown.get() );
+        roomPAT->addChild( mBrown.get() );
         mCeiling =
             osgDB::readNodeFile( "./Models/IVEs/Room/Ceiling.ive" );
-        mRoom->GetDCS()->addChild( mCeiling.get() );
+        roomPAT->addChild( mCeiling.get() );
         mDetails =
             osgDB::readNodeFile( "./Models/IVEs/Room/Details.ive" );
-        mRoom->GetDCS()->addChild( mDetails.get() );
+        roomPAT->addChild( mDetails.get() );
         mFloor =
             osgDB::readNodeFile( "./Models/IVEs/Room/Floor.ive" );
-        mRoom->GetDCS()->addChild( mFloor.get() );
+        roomPAT->addChild( mFloor.get() );
         mGlass =
             osgDB::readNodeFile( "./Models/IVEs/Room/Glass.ive" );
-        mRoom->GetDCS()->addChild( mGlass.get() );
+        roomPAT->addChild( mGlass.get() );
         mLights =
             osgDB::readNodeFile( "./Models/IVEs/Room/Lights.ive" );
-        mRoom->GetDCS()->addChild( mLights.get() );
+        roomPAT->addChild( mLights.get() );
         mLtGreen =
             osgDB::readNodeFile( "./Models/IVEs/Room/LtGreen.ive" );
-        mRoom->GetDCS()->addChild( mLtGreen.get() );
+        roomPAT->addChild( mLtGreen.get() );
         mLtGrey =
             osgDB::readNodeFile( "./Models/IVEs/Room/LtGrey.ive" );
-        mRoom->GetDCS()->addChild( mLtGrey.get() );
+        roomPAT->addChild( mLtGrey.get() );
         mOrange =
             osgDB::readNodeFile( "./Models/IVEs/Room/Orange.ive" );
-        mRoom->GetDCS()->addChild( mOrange.get() );
+        roomPAT->addChild( mOrange.get() );
         mRed =
             osgDB::readNodeFile( "./Models/IVEs/Room/Red.ive" );
-        mRoom->GetDCS()->addChild( mRed.get() );
+        roomPAT->addChild( mRed.get() );
         mRedBrown =
             osgDB::readNodeFile( "./Models/IVEs/Room/RedBrown.ive" );
-        mRoom->GetDCS()->addChild( mRedBrown.get() );
+        roomPAT->addChild( mRedBrown.get() );
         mWalls =
             osgDB::readNodeFile( "./Models/IVEs/Room/Walls.ive" );
-        mRoom->GetDCS()->addChild( mWalls.get() );
+        roomPAT->addChild( mWalls.get() );
         mWhiteDucts =
             osgDB::readNodeFile( "./Models/IVEs/Room/WhiteDucts.ive" );
-        mRoom->GetDCS()->addChild( mWhiteDucts.get() );
+        roomPAT->addChild( mWhiteDucts.get() );
         mWhitePipes =
             osgDB::readNodeFile( "./Models/IVEs/Room/WhitePipes.ive" );
-        mRoom->GetDCS()->addChild( mWhitePipes.get() );
+        roomPAT->addChild( mWhitePipes.get() );
         mYellow =
             osgDB::readNodeFile( "./Models/IVEs/Room/Yellow.ive" );
-        mRoom->GetDCS()->addChild( mYellow.get() );
+        roomPAT->addChild( mYellow.get() );
 
         //Set up material properties for the room geometry
         osg::ref_ptr< osg::Material > aluminumPartsMaterial =
@@ -621,73 +640,73 @@ void HyperLabScene::CreateNodes()
 
     mBlowerComponents =
         osgDB::readNodeFile( "./Models/IVEs/BlowerComponents.ive" );
-    mPluginDCS->addChild( mBlowerComponents.get() );
+    hyperPAT->addChild( mBlowerComponents.get() );
     mBrackets =
         osgDB::readNodeFile( "./Models/IVEs/Brackets.ive" );
-    mPluginDCS->addChild( mBrackets.get() );
+    hyperPAT->addChild( mBrackets.get() );
     mCableTray =
         osgDB::readNodeFile( "./Models/IVEs/CableTray.ive" );
-    mPluginDCS->addChild( mCableTray.get() );
+    hyperPAT->addChild( mCableTray.get() );
     mCementBase =
         osgDB::readNodeFile( "./Models/IVEs/CementBase.ive" );
-    mPluginDCS->addChild( mCementBase.get() );
+    hyperPAT->addChild( mCementBase.get() );
     //mCombustorInternals =
         //osgDB::readNodeFile( "./Models/IVEs/CombustorInternals.ive" );
-    //mPluginDCS->addChild( mCombustorInternals.get() );
+    //hyperPAT->addChild( mCombustorInternals.get() );
     mCombustorPiping =
         osgDB::readNodeFile( "./Models/IVEs/CombustorPiping.ive" );
-    mPluginDCS->addChild( mCombustorPiping.get() );
+    hyperPAT->addChild( mCombustorPiping.get() );
     mCompressorInlet =
         osgDB::readNodeFile( "./Models/IVEs/CompressorInlet.ive" );
-    mPluginDCS->addChild( mCompressorInlet.get() );
+    hyperPAT->addChild( mCompressorInlet.get() );
     mFrame =
         osgDB::readNodeFile( "./Models/IVEs/Frame.ive" );
-    mPluginDCS->addChild( mFrame.get() );
+    hyperPAT->addChild( mFrame.get() );
     mGroundBolts =
         osgDB::readNodeFile( "./Models/IVEs/GroundBolts.ive" );
-    mPluginDCS->addChild( mGroundBolts.get() );
+    hyperPAT->addChild( mGroundBolts.get() );
     mHeatExchanger =
         osgDB::readNodeFile( "./Models/IVEs/HeatExchanger.ive" );
-    mPluginDCS->addChild( mHeatExchanger.get() );
+    hyperPAT->addChild( mHeatExchanger.get() );
     mHeatExchangerSweep =
         osgDB::readNodeFile( "./Models/IVEs/HeatExchangerSweep.ive" );
-    mPluginDCS->addChild( mHeatExchangerSweep.get() );
+    hyperPAT->addChild( mHeatExchangerSweep.get() );
     mInstrumentation =
         osgDB::readNodeFile( "./Models/IVEs/Instrumentation.ive" );
-    mPluginDCS->addChild( mInstrumentation.get() );
+    hyperPAT->addChild( mInstrumentation.get() );
     mLoad =
         osgDB::readNodeFile( "./Models/IVEs/Load.ive" );
-    mPluginDCS->addChild( mLoad.get() );
+    hyperPAT->addChild( mLoad.get() );
     mPlenumPiping =
         osgDB::readNodeFile( "./Models/IVEs/PlenumPiping.ive" );
-    mPluginDCS->addChild( mPlenumPiping.get() );
+    hyperPAT->addChild( mPlenumPiping.get() );
     mPlenumSystem =
         osgDB::readNodeFile( "./Models/IVEs/PlenumSystem.ive" );
-    mPluginDCS->addChild( mPlenumSystem.get() );
+    hyperPAT->addChild( mPlenumSystem.get() );
     mRailing =
         osgDB::readNodeFile( "./Models/IVEs/Railing.ive" );
-    mPluginDCS->addChild( mRailing.get() );
+    hyperPAT->addChild( mRailing.get() );
     mReliefPiping =
         osgDB::readNodeFile( "./Models/IVEs/ReliefPiping.ive" );
-    mPluginDCS->addChild( mReliefPiping.get() );
+    hyperPAT->addChild( mReliefPiping.get() );
     mReliefPipingAM =
         osgDB::readNodeFile( "./Models/IVEs/ReliefPipingAM.ive" );
-    mPluginDCS->addChild( mReliefPipingAM.get() );
+    hyperPAT->addChild( mReliefPipingAM.get() );
     mShell =
         osgDB::readNodeFile( "./Models/IVEs/Shell.ive" );
-    mPluginDCS->addChild( mShell.get() );
+    hyperPAT->addChild( mShell.get() );
     mStack =
         osgDB::readNodeFile( "./Models/IVEs/Stack.ive" );
-    mPluginDCS->addChild( mStack.get() );
+    hyperPAT->addChild( mStack.get() );
     mTurbineExhaust =
         osgDB::readNodeFile( "./Models/IVEs/TurbineExhaust.ive" );
-    mPluginDCS->addChild( mTurbineExhaust.get() );
+    hyperPAT->addChild( mTurbineExhaust.get() );
     mTurbinePostCombustor =
         osgDB::readNodeFile( "./Models/IVEs/TurbinePostCombustor.ive" );
-    mPluginDCS->addChild( mTurbinePostCombustor.get() );
+    hyperPAT->addChild( mTurbinePostCombustor.get() );
     mTurbineSupport =
         osgDB::readNodeFile( "./Models/IVEs/TurbineSupport.ive" );
-    mPluginDCS->addChild( mTurbineSupport.get() );
+    hyperPAT->addChild( mTurbineSupport.get() );
 
     osg::ref_ptr< osg::Material > blowerComponentsMaterial = new osg::Material();
     blowerComponentsMaterial->setEmission( osg::Material::FRONT_AND_BACK, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
@@ -896,53 +915,57 @@ void HyperLabScene::CreateNodes()
     stateset = mTurbineSupport->getOrCreateStateSet();
     stateset->setAttributeAndModes( turbineSupportMaterial.get(), osg::StateAttribute::ON );
 
-    //Create physics mesh for room
-    //mRoom->InitPhysics();
-    //mRoom->GetPhysicsRigidBody()->SetMass( 0.0 );
-    //mRoom->GetPhysicsRigidBody()->setFriction( 0.5 );
-    //mRoom->GetPhysicsRigidBody()->setRestitution( 0.0 );
-    //mRoom->GetPhysicsRigidBody()->StaticConcaveShape();
-
     //Collect the shadowed nodes into a group for easy reference
     mShadowedScene = new osg::Group();
-    mShadowedScene->addChild( mAluminumParts.get() );
-    mShadowedScene->addChild( mAluminumPipes.get() );
-    mShadowedScene->addChild( mBlack.get() );
-    mShadowedScene->addChild( mBrown.get() );
-    mShadowedScene->addChild( mDetails.get() );
-    mShadowedScene->addChild( mFloor.get() );
-    mShadowedScene->addChild( mLtGreen.get() );
-    mShadowedScene->addChild( mLtGrey.get() );
-    mShadowedScene->addChild( mOrange.get() );
-    mShadowedScene->addChild( mRed.get() );
-    mShadowedScene->addChild( mRedBrown.get() );
-    mShadowedScene->addChild( mWalls.get() );
-    mShadowedScene->addChild( mWhiteDucts.get() );
-    mShadowedScene->addChild( mWhitePipes.get() );
-    mShadowedScene->addChild( mYellow.get() );
+    osg::ref_ptr< osg::PositionAttitudeTransform > shadowedPAT =
+        new osg::PositionAttitudeTransform();
+    shadowedPAT->setScale( scale );
+    mShadowedScene->addChild( shadowedPAT.get() );
 
-    mShadowedScene->addChild( mBlowerComponents.get() );
-    mShadowedScene->addChild( mBrackets.get() );
-    mShadowedScene->addChild( mCableTray.get() );
-    mShadowedScene->addChild( mCementBase.get() );
-    //mShadowedScene->addChild( mCombustorInternals.get() );
-    mShadowedScene->addChild( mCombustorPiping.get() );
-    mShadowedScene->addChild( mCompressorInlet.get() );
-    mShadowedScene->addChild( mFrame.get() );
-    mShadowedScene->addChild( mGroundBolts.get() );
-    mShadowedScene->addChild( mHeatExchanger.get() );
-    mShadowedScene->addChild( mHeatExchangerSweep.get() );
-    mShadowedScene->addChild( mInstrumentation.get() );
-    mShadowedScene->addChild( mLoad.get() );
-    mShadowedScene->addChild( mPlenumPiping.get() );
-    mShadowedScene->addChild( mPlenumSystem.get() );
-    mShadowedScene->addChild( mRailing.get() );
-    mShadowedScene->addChild( mReliefPiping.get() );
-    mShadowedScene->addChild( mReliefPipingAM.get() );
-    mShadowedScene->addChild( mShell.get() );
-    mShadowedScene->addChild( mTurbineExhaust.get() );
-    mShadowedScene->addChild( mTurbinePostCombustor.get() );
-    mShadowedScene->addChild( mTurbineSupport.get() );
+    shadowedPAT->addChild( mAluminumParts.get() );
+    shadowedPAT->addChild( mAluminumPipes.get() );
+    shadowedPAT->addChild( mBlack.get() );
+    shadowedPAT->addChild( mBrown.get() );
+    shadowedPAT->addChild( mDetails.get() );
+    shadowedPAT->addChild( mFloor.get() );
+    shadowedPAT->addChild( mLtGreen.get() );
+    shadowedPAT->addChild( mLtGrey.get() );
+    shadowedPAT->addChild( mOrange.get() );
+    shadowedPAT->addChild( mRed.get() );
+    shadowedPAT->addChild( mRedBrown.get() );
+    shadowedPAT->addChild( mWalls.get() );
+    shadowedPAT->addChild( mWhiteDucts.get() );
+    shadowedPAT->addChild( mWhitePipes.get() );
+    shadowedPAT->addChild( mYellow.get() );
+
+    shadowedPAT->addChild( mBlowerComponents.get() );
+    shadowedPAT->addChild( mBrackets.get() );
+    shadowedPAT->addChild( mCableTray.get() );
+    shadowedPAT->addChild( mCementBase.get() );
+    //shadowedPAT->addChild( mCombustorInternals.get() );
+    shadowedPAT->addChild( mCombustorPiping.get() );
+    shadowedPAT->addChild( mCompressorInlet.get() );
+    shadowedPAT->addChild( mFrame.get() );
+    shadowedPAT->addChild( mGroundBolts.get() );
+    shadowedPAT->addChild( mHeatExchanger.get() );
+    shadowedPAT->addChild( mHeatExchangerSweep.get() );
+    shadowedPAT->addChild( mInstrumentation.get() );
+    shadowedPAT->addChild( mLoad.get() );
+    shadowedPAT->addChild( mPlenumPiping.get() );
+    shadowedPAT->addChild( mPlenumSystem.get() );
+    shadowedPAT->addChild( mRailing.get() );
+    shadowedPAT->addChild( mReliefPiping.get() );
+    shadowedPAT->addChild( mReliefPipingAM.get() );
+    shadowedPAT->addChild( mShell.get() );
+    shadowedPAT->addChild( mTurbineExhaust.get() );
+    shadowedPAT->addChild( mTurbinePostCombustor.get() );
+    shadowedPAT->addChild( mTurbineSupport.get() );
+
+    //Create Physics Meshes
+    mRoom->GetPhysicsRigidBody()->CreateRigidBody(
+        "Compound", "Static", "Mesh", "Low" );
+    mHyper->GetPhysicsRigidBody()->CreateRigidBody(
+        "Compound", "Static", "Mesh", "High" );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void HyperLabScene::CreateShadowTexture()
@@ -972,7 +995,7 @@ void HyperLabScene::CreateShadowTexture()
     {
         //Create the camera
         mCamera->setClearMask( GL_DEPTH_BUFFER_BIT );
-        mCamera->setClearColor( osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
+        mCamera->setClearColor( osg::Vec4( 1.0, 1.0, 1.0, 0.0 ) );
         mCamera->setComputeNearFarMode( osg::Camera::DO_NOT_COMPUTE_NEAR_FAR );
 
         //Set viewport

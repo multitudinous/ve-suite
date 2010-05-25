@@ -37,13 +37,26 @@
 // --- OSG Includes --- //
 #include <osg/Depth>
 
-using namespace ves::xplorer::scenegraph::technique;
+namespace ves
+{
+namespace xplorer
+{
+namespace scenegraph
+{
+namespace technique
+{
 
 ////////////////////////////////////////////////////////////////////////////////
 GlowTechnique::GlowTechnique( osg::ref_ptr< osg::StateSet > stateSet )
     :
     Technique(),
-    m_stateSet( stateSet )
+    m_stateSet( stateSet ),
+    //Nice colors
+    //GreenYellow( 0.57255, 1.0, 0.34118, 1.0 );
+    //GreenBlue( 0.34118, 1.0, 0.57255, 1.0 );
+    //Blue( 0.34118, 0.57255, 1.0, 1.0 );
+    m_glowColor(
+        new osg::Uniform( "glowColor", osg::Vec3( 1.0, 0.0, 1.0 ) ) )
 {
     DefinePasses();
 }
@@ -55,54 +68,21 @@ GlowTechnique::~GlowTechnique()
 ////////////////////////////////////////////////////////////////////////////////
 void GlowTechnique::DefinePasses()
 {
-    //GreenYellow
-    //osg::Vec4 glowColor( 0.57255, 1.0, 0.34118, 1.0 );
-    //GreenBlue
-    //osg::Vec4 glowColor( 0.34118, 1.0, 0.57255, 1.0 );
-    //Blue
-    osg::Vec4 glowColor( 0.34118, 0.57255, 1.0, 1.0 );
     //Pass 1
     {
-        //m_stateSet->setRenderBinDetails( -1, "RenderBin" );
-
-        m_stateSet->addUniform( new osg::Uniform( "glowColor", glowColor ) );
+        m_stateSet->addUniform( m_glowColor.get() );
 
         AddPass( m_stateSet.get() );
     }
-    /*
-    //Pass 2
-    {
-        std::string fragmentSource =
-        "uniform vec4 glowColor; \n"
-
-        "void main() \n"
-        "{ \n"
-            "gl_FragData[ 2 ] = glowColor; \n"
-        "} \n";
-
-        osg::ref_ptr< osg::StateSet > stateset = new osg::StateSet();
-
-        osg::ref_ptr< osg::Shader > fragmentShader = new osg::Shader();
-        fragmentShader->setType( osg::Shader::FRAGMENT );
-        fragmentShader->setShaderSource( fragmentSource );
-
-        osg::ref_ptr< osg::Program > program = new osg::Program();
-        program->addShader( fragmentShader.get() );
-
-        stateset->setAttributeAndModes( program.get(),
-            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
-
-        osg::ref_ptr< osg::Depth > depth = new osg::Depth();
-        depth->setFunction( osg::Depth::ALWAYS );
-        depth->setWriteMask( false );
-
-        stateset->setAttributeAndModes( depth.get(),
-            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
-
-        stateset->addUniform( new osg::Uniform( "glowColor", glowColor ) );
-
-        AddPass( stateset.get() );
-    }
-    */
 }
 ////////////////////////////////////////////////////////////////////////////////
+void GlowTechnique::SetColor( osg::Vec3 const& glowColor )
+{
+    m_glowColor->set( glowColor );
+}
+////////////////////////////////////////////////////////////////////////////////
+
+} //end technique
+} //end scenegraph
+} //end xplorer
+} //end ves

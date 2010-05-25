@@ -167,7 +167,7 @@ void CameraObject::Initialize()
     m_camera = new osg::Camera();
     m_camera->setRenderOrder( osg::Camera::POST_RENDER );
     m_camera->setClearMask( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
-    m_camera->setClearColor( osg::Vec4( 0.0, 0.0, 0.0, 1.0 ) );
+    m_camera->setClearColor( osg::Vec4( 0.0, 0.0, 0.0, 0.0 ) );
     //setComputeNearFarMode( osg::Camera::DO_NOT_COMPUTE_NEAR_FAR );
     m_camera->setRenderTargetImplementation( osg::Camera::FRAME_BUFFER_OBJECT );
     m_camera->setReferenceFrame( osg::Camera::ABSOLUTE_RF );

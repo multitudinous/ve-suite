@@ -110,6 +110,8 @@ SceneManager::SceneManager()
     m_veText( NULL ),
     m_suiteText( NULL ),
     m_clrNode( NULL ),
+    m_clearColorUniform(
+        new osg::Uniform( "clearColor", osg::Vec4( 0.0, 0.0, 0.0, 0.0 ) ) ),
     mFrameStamp( NULL ),
     mCharacterController( NULL ),
     m_isRTTOn( false ),
@@ -241,7 +243,7 @@ void SceneManager::InitScene()
 
     m_clrNode = new osg::ClearNode();
     m_clrNode->setRequiresClear( true );
-    m_clrNode->setClearColor( osg::Vec4( 0.0f, 0.0f, 0.0f, 1.0f ) );
+    m_clrNode->setClearColor( osg::Vec4( 0.0, 0.0, 0.0, 0.0 ) );
     m_clrNode->setName( "Clear Node - Control ClearColor" );
 
     //Create the switch for our logo
@@ -300,14 +302,14 @@ GLTransformInfoPtr const SceneManager::GetGLTransformInfo(
     {
         return itr->second;
     }
-    
+
     if( IsDesktopMode() )
     {
         return m_glTransformInfoMap.begin()->second;
     }
 
     std::cout << "SceneManager::GetGLTransformInfo - "
-                  << "GLTransformInfo not found!" << std::endl;
+              << "GLTransformInfo not found!" << std::endl;
 
     return GLTransformInfoPtr();
 }
@@ -405,7 +407,7 @@ void SceneManager::_createLogo()
             "} \n";
 
         char phong_fragment[] =
-            "uniform vec4 glowColor; \n"
+            "uniform vec3 glowColor; \n"
 
             "varying vec4 color; \n"
             "varying vec3 eyePos; \n"
@@ -429,7 +431,7 @@ void SceneManager::_createLogo()
             "vec3 temp=TotalAmbient+TotalDiffuse+TotalSpecular; \n"
 
             "gl_FragData[ 0 ] = vec4( temp, 1.0 ); \n"
-            "gl_FragData[ 1 ] = glowColor; \n"
+            "gl_FragData[ 1 ] = vec4( glowColor, gl_FragData[ 0 ].a ); \n"
             "} \n";
 
         osg::ref_ptr< osg::StateSet > stateset = mLogoNode->getOrCreateStateSet();
@@ -509,8 +511,9 @@ DCS* const SceneManager::GetActiveNavSwitchNode() const
 ////////////////////////////////////////////////////////////////////////////////
 void SceneManager::SetBackgroundColor( std::vector< double > color )
 {
-    m_clrNode->setClearColor(
-        osg::Vec4( color.at( 0 ), color.at( 1 ), color.at( 2 ), 1.0f ) );
+    osg::Vec4 clearColor( color.at( 0 ), color.at( 1 ), color.at( 2 ), 0.0 );
+    m_clrNode->setClearColor( clearColor );
+    m_clearColorUniform->set( clearColor );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SceneManager::Shutdown()
@@ -533,6 +536,11 @@ osg::FrameStamp* const SceneManager::GetFrameStamp() const
 CharacterController& SceneManager::GetCharacterController() const
 {
     return *mCharacterController;
+}
+////////////////////////////////////////////////////////////////////////////////
+osg::Uniform& SceneManager::GetClearColorUniform() const
+{
+    return *m_clearColorUniform.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool SceneManager::IsRTTOn()

@@ -1,6 +1,6 @@
 uniform sampler2D tex;
 uniform float opacityVal;
-uniform vec4 glowColor;
+uniform vec3 glowColor;
 uniform bool ignoreWhite;
 
 //This shader is specifically setup to ignore the white part of the texture
@@ -17,14 +17,8 @@ void main()
             texColor.a = 1.0;
         }
     }
-	gl_FragData[ 0 ] = texColor;
+    gl_FragData[ 0 ] = texColor;
 
-    //To handle the glow 
-    vec4 color = glowColor;
-    if( gl_Color.a < 1.0 )
-    { 
-        color.a = gl_Color.a;
-    }
-
-    gl_FragData[ 1 ] = color;
+    //To handle the glow
+    gl_FragData[ 1 ] = vec4( glowColor, gl_Color.a );
 }

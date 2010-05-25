@@ -107,7 +107,7 @@ public:
 
     ///Initialized
     void InitializeRTT();
-    
+
     ///Get the camera with specified vrj::Viewport
     ///\return The camera with specified vrj::Viewport
     osg::Camera* const GetCamera( vrj::ViewportPtr const viewport );
@@ -168,6 +168,9 @@ private:
         std::pair< int, int >& viewportDimensions );
 
     ///
+    osg::Geode* CreateClearColorQuad();
+
+    ///
     osg::Geode* CreateTexturedQuad(
         vrj::ViewportPtr viewport, osg::Texture2D* texture );
 
@@ -200,12 +203,13 @@ private:
     osg::ref_ptr< osg::Group > mRootGroup;
 
     ///Shader pointers
-    osg::ref_ptr< osg::Shader > m_finalShader;
+    osg::ref_ptr< osg::Shader > m_topLevelGlow;
+    osg::ref_ptr< osg::Shader > m_glowAlphaPreprocessFP;
     osg::ref_ptr< osg::Shader > m_1dxVP;
     osg::ref_ptr< osg::Shader > m_1dxFP;
     osg::ref_ptr< osg::Shader > m_1dyVP;
     osg::ref_ptr< osg::Shader > m_1dyFP;
-    osg::ref_ptr< osg::Shader > m_topLevelGlow;
+    osg::ref_ptr< osg::Shader > m_finalShader;
 };
 } //end xplorer
 } //end ves

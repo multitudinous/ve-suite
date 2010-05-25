@@ -39,7 +39,7 @@
 
 #include <ves/xplorer/scenegraph/technique/Technique.h>
 
-// --- C/C++ Includes --- //
+// --- STL Includes --- //
 #include <string>
 
 namespace ves
@@ -67,6 +67,9 @@ public:
     ///Destructor
     virtual ~GlowTechnique();
 
+    ///
+    void SetColor( osg::Vec3 const& glowColor );
+
 protected:
     ///
     virtual void DefinePasses();
@@ -76,7 +79,11 @@ private:
     ///so it should have its own memory location as to not affect the original
     osg::ref_ptr< osg::StateSet > m_stateSet;
 
+    ///
+    osg::ref_ptr< osg::Uniform > m_glowColor;
+
 };
+
 } //end technique
 } //end scenegraph
 } //end xplorer

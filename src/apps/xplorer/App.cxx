@@ -108,11 +108,9 @@
 #include <gmtl/Xforms.h>
 
 #include <vrj/Kernel/Kernel.h>
-#if __VJ_version >= 2003000
+
 #include <vrj/Draw/OpenGL/DrawManager.h>
-#else
-#include <vrj/Draw/OGL/GlDrawManager.h>
-#endif
+
 #include <vrj/Display/DisplayManager.h>
 #include <vrj/Display/Viewport.h>
 
@@ -156,11 +154,7 @@ using namespace ves::xplorer::scenegraph;
 ////////////////////////////////////////////////////////////////////////////////
 App::App( int argc, char* argv[], bool enableRTT )
     :
-#if __VJ_version >= 2003000
     vrj::osg::App( vrj::Kernel::instance() ),
-#else
-    vrj::OsgApp( vrj::Kernel::instance() ),
-#endif
     isCluster( false ),
     m_captureNextFrame( false ),
     m_captureMovie( false ),
@@ -270,11 +264,7 @@ void App::contextInit()
     //vrj::OsgApp::contextInit();
     std::cout << "|\tContext initialized" << std::endl;
     const unsigned int unique_context_id =
-#if __VJ_version >= 2003000
         vrj::opengl::DrawManager::instance()->getCurrentContext();
-#else
-        vrj::GlDrawManager::instance()->getCurrentContext();
-#endif
 
     //Create new context specific scene viewer
     osg::ref_ptr< osgUtil::SceneView > new_sv( new osgUtil::SceneView() );
@@ -348,7 +338,7 @@ void App::configSceneView( osgUtil::SceneView* newSceneViewer )
     newSceneViewer->setFrameStamp( mFrameStamp.get() );
 
     newSceneViewer->init();
-    newSceneViewer->setClearColor( osg::Vec4( 1.0, 0.0, 0.0, 1.0 ) );
+    newSceneViewer->setClearColor( osg::Vec4( 1.0, 0.0, 0.0, 0.0 ) );
 
     {
         vpr::Guard<vpr::Mutex> val_guard( mValueLock );
@@ -907,21 +897,12 @@ void App::draw()
 
     //The OpenGL Draw Manager that we are rendering for
     //Get the view matrix and the frustum from the draw manager
-#if __VJ_version >= 2003000
     vrj::opengl::DrawManager* glDrawManager =
         static_cast< vrj::opengl::DrawManager* >( getDrawManager() );
     //vprASSERT( glDrawManager != NULL );
     const vrj::opengl::UserData* userData = glDrawManager->currentUserData();
     const vrj::ViewportPtr viewport = userData->getViewport();
     const vrj::ProjectionPtr project = userData->getProjection();
-#else
-    vrj::GlDrawManager* glDrawManager =
-        static_cast< vrj::opengl::DrawManager* >( getDrawManager() );
-    //vprASSERT( glDrawManager != NULL );
-    const vrj::GlUserData* userData = glDrawManager->currentUserData();
-    const vrj::Viewport* viewport = userData->getViewport();
-    const vrj::Projection* project = userData->getProjection();
-#endif
     const vrj::Frustum frustum = project->getFrustum();
 
     //Get the frustum values

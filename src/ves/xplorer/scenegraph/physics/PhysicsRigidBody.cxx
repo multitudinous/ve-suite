@@ -328,7 +328,8 @@ void PhysicsRigidBody::CustomShape( const BroadphaseNativeTypes shapeType, const
         std::cout << "|\tJust finished creating a new btRigidBody." << std::endl;
     }
 
-/*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*/
+    //Comment this code out because it crashes with very large triangle meshes
+/*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*
     //This should probably go in CollisionShapes.cpp
     //The btInternalEdgeUtility helps to avoid or reduce artifacts
     //due to wrong collision normals caused by internal edges
@@ -348,7 +349,7 @@ void PhysicsRigidBody::CustomShape( const BroadphaseNativeTypes shapeType, const
             mRB->getCollisionFlags() |
             btCollisionObject::CF_CUSTOM_MATERIAL_CALLBACK );
     }
-/*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*/
+ *!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*/
 
     osg::Group* parent = stopNode->getParent( 0 );
     osg::ref_ptr< osgwTools::AbsoluteModelTransform > amt =

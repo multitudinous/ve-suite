@@ -1,3 +1,5 @@
+uniform vec3 glowColor;
+
 uniform sampler2D skyMap;
 uniform sampler2D sunMap;
 uniform sampler2D colorMap;
@@ -64,7 +66,9 @@ void main()
     vec4 sunlight =
         vec4( pow( max( 0.0, dot( -sunColor.xyz, norm ) ), 2048.0 ) );
 
-    gl_FragColor = skyColor + cCoverPercentage * sunlight;
+    gl_FragData[ 0 ] = skyColor + cCoverPercentage * sunlight;
 
-    //gl_FragColor = vec4( vTexCoords.x, vTexCoords.y, 0.0, 1.0 );
+    //gl_FragData[ 0 ] = vec4( vTexCoords.x, vTexCoords.y, 0.0, 1.0 );
+
+    gl_FragData[ 1 ] = vec4( glowColor, gl_FragData[ 0 ].a );
 }
