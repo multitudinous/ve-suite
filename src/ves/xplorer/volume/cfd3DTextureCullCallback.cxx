@@ -159,7 +159,7 @@ void cfd3DTextureCullCallback::preRender( osg::Node& node,
     osg::ref_ptr<osgUtil::RenderStage> previous_stage = cv.getCurrentRenderBin()->getStage();
 
     // set up the background color and clear mask.
-    rtts->setClearColor( osg::Vec4( 0.0f, 0.0, 0.0f, 1.0f ) );
+    rtts->setClearColor( osg::Vec4( 0.0, 0.0, 0.0, 0.0 ) );
     rtts->setClearMask( previous_stage->getClearMask() );
 #ifdef _PBUFFER
     rtts->setPBuffer( _pbuffer );
