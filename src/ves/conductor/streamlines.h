@@ -44,6 +44,7 @@
 class wxRadioBox;
 class wxSlider;
 class wxButton;
+class wxComboBox;
 
 // --- C/C++ Libraries --- //
 #include <vector>
@@ -110,6 +111,9 @@ public:
     ///Set the active dataset name
     void SetActiveDataSetName( std::string name );
 
+    ///Set the available datasets so that they can be selected for surface mapping
+    void SetAvailableDatasets( wxArrayString tempNames );
+
     wxButton* itemButton14;
 
 protected:
@@ -140,7 +144,11 @@ protected:
     wxButton* itemButton13;
     wxCheckBox* m_gpuToolsChkBox;
     wxCheckBox* m_surfToolsChkBox;
-
+    ///The array containing all of the datasets used for the surface tools
+    wxArrayString   m_availableDatasets;
+    ///The box listing the available datasets.
+    wxComboBox*     m_datasetSelection;
+    
     std::vector< ves::open::xml::DataValuePairPtr > _advancedSettings;///<The advanced settings.
     std::vector< ves::open::xml::DataValuePairPtr > _streamlineInformation;///<The streamline setting data
     std::vector< ves::open::xml::DataValuePairPtr > seedPointInformation;///<The streamline setting data

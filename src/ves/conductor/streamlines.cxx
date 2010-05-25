@@ -54,6 +54,7 @@
 #include <wx/button.h>
 #include <wx/stattext.h>
 #include <wx/statbox.h>
+#include <wx/combobox.h>
 
 // --- C/C++ Libraries --- //
 #include <iostream>
@@ -185,6 +186,32 @@ void Streamlines::CreateControls()
     itemBoxSizer4->Add( _integrationRBox, 0, wxALIGN_TOP | wxALL, 5 );
     _integrationRBox->SetStringSelection( _( "both directions" ) );
 
+    {
+        wxStaticBox* gpuToolsStaticSizer = new wxStaticBox( itemDialog1, wxID_ANY, _T( "GPU Tools" ) );
+        wxStaticBoxSizer* itemStaticBoxSizer10 = new wxStaticBoxSizer( gpuToolsStaticSizer, wxVERTICAL );
+        itemStaticBoxSizer3->Add( itemStaticBoxSizer10, 0, wxGROW | wxALL, 5 );
+        
+        m_gpuToolsChkBox = new wxCheckBox( itemDialog1, STREAMLINES_GPU_TOOLS_CHK, _T( "Use GPU Tools" ), wxDefaultPosition, wxDefaultSize, 0 );
+        m_gpuToolsChkBox->SetValue( false );
+        itemStaticBoxSizer10->Add( m_gpuToolsChkBox, 0, wxALIGN_LEFT | wxALL, 5 );
+    }
+    
+    {
+        wxStaticBox* surfToolsStaticSizer = new wxStaticBox( itemDialog1, wxID_ANY, _T( "Surface Seed Point Tools" ) );
+        wxStaticBoxSizer* itemStaticBoxSizer11 = new wxStaticBoxSizer( surfToolsStaticSizer, wxVERTICAL );
+        itemStaticBoxSizer3->Add( itemStaticBoxSizer11, 0, wxGROW | wxALL, 5 );
+        
+        m_surfToolsChkBox = new wxCheckBox( itemDialog1, STREAMLINES_SURF_TOOLS_CHK, _T( "Use Surface Seed Point Tools" ), wxDefaultPosition, wxDefaultSize, 0 );
+        m_surfToolsChkBox->SetValue( false );
+        itemStaticBoxSizer11->Add( m_surfToolsChkBox, 0, wxALIGN_LEFT | wxALL, 5 );
+        
+        m_datasetSelection = new wxComboBox( itemDialog1, wxID_ANY, _T( "" ), 
+            wxDefaultPosition, wxDefaultSize, m_availableDatasets, wxCB_DROPDOWN );
+        m_datasetSelection->Disable();
+        itemStaticBoxSizer11->Add( m_datasetSelection, 0, wxGROW | wxALL, 5 );
+        
+    }
+    
     //wxStaticText* itemStaticText8 = new wxStaticText( itemDialog1, wxID_STATIC, _T("Size(%)"), wxDefaultPosition, wxDefaultSize, 0 );
     //itemStaticBoxSizer3->Add(itemStaticText8, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE, 5);
 
@@ -211,26 +238,6 @@ void Streamlines::CreateControls()
 
     wxButton* _closeButton = new wxButton( itemDialog1, wxID_OK, _T( "Close" ), wxDefaultPosition, wxDefaultSize, 0 );
     itemBoxSizer12->Add( _closeButton, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
-    
-    {
-        wxStaticBox* gpuToolsStaticSizer = new wxStaticBox( itemDialog1, wxID_ANY, _T( "GPU Tools" ) );
-        wxStaticBoxSizer* itemStaticBoxSizer10 = new wxStaticBoxSizer( gpuToolsStaticSizer, wxVERTICAL );
-        itemBoxSizer4->Add( itemStaticBoxSizer10, 0, wxGROW | wxALL, 5 );
-        
-        m_gpuToolsChkBox = new wxCheckBox( itemDialog1, STREAMLINES_GPU_TOOLS_CHK, _T( "Use GPU Tools" ), wxDefaultPosition, wxDefaultSize, 0 );
-        m_gpuToolsChkBox->SetValue( false );
-        itemStaticBoxSizer10->Add( m_gpuToolsChkBox, 0, wxALIGN_LEFT | wxALL, 5 );
-    }
-
-    {
-        wxStaticBox* surfToolsStaticSizer = new wxStaticBox( itemDialog1, wxID_ANY, _T( "SURF Tools" ) );
-        wxStaticBoxSizer* itemStaticBoxSizer11 = new wxStaticBoxSizer( surfToolsStaticSizer, wxVERTICAL );
-        itemBoxSizer4->Add( itemStaticBoxSizer11, 0, wxGROW | wxALL, 5 );
-        
-        m_surfToolsChkBox = new wxCheckBox( itemDialog1, STREAMLINES_SURF_TOOLS_CHK, _T( "Use SURF Tools" ), wxDefaultPosition, wxDefaultSize, 0 );
-        m_surfToolsChkBox->SetValue( false );
-        itemStaticBoxSizer11->Add( m_surfToolsChkBox, 0, wxALIGN_LEFT | wxALL, 5 );
-    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool Streamlines::ShowToolTips()
@@ -320,10 +327,12 @@ void Streamlines::_updateAdvancedSettings()
         _advancedSettings.push_back( gpuToolsDVP );
     }
 
+    if( m_surfToolsChkBox->IsChecked() )
     {
-	    unsigned int checkBox2 = m_surfToolsChkBox->IsChecked();
-	    ves::open::xml::DataValuePairPtr surfToolsDVP( new ves::open::xml::DataValuePair() );
-	    surfToolsDVP->SetData( "SURF Tools", checkBox2 );
+	    ves::open::xml::DataValuePairPtr 
+            surfToolsDVP( new ves::open::xml::DataValuePair() );
+	    surfToolsDVP->SetData( "SURF Tools", 
+            ConvertUnicode( m_datasetSelection->GetValue().c_str() ) );
 	    _advancedSettings.push_back( surfToolsDVP );
     }
 
@@ -617,5 +626,27 @@ void Streamlines::OnGPUCheckTools( wxCommandEvent& WXUNUSED( event ) )
 ////////////////////////////////////////////////////////////////////////////////
 void Streamlines::OnSURFCheckTools( wxCommandEvent& WXUNUSED( event ) )
 {
-    ;
+    if( m_surfToolsChkBox->IsChecked() )
+    {
+        m_datasetSelection->Enable();
+    }
+    else
+    {
+        m_datasetSelection->Disable();
+    }
 }
+////////////////////////////////////////////////////////////////////////////////
+void Streamlines::SetAvailableDatasets( wxArrayString tempNames )
+{
+    m_availableDatasets = tempNames;
+    
+    if( m_datasetSelection )
+    {
+        m_datasetSelection->Clear();
+        for( size_t i = 0; i < m_availableDatasets.GetCount(); i++ )
+        {
+            m_datasetSelection->Append( m_availableDatasets[i] );
+        }
+    }
+}
+////////////////////////////////////////////////////////////////////////////////

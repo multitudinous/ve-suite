@@ -20,6 +20,7 @@ sources = Split("""
     ansysReader.cxx
     FluentTranslator.cxx
     MFIXTranslator.cxx
+    STLTranslator.cxx
 """)
 
 headers = Split("""
@@ -37,9 +38,8 @@ headers = Split("""
     ansysReader.h
     FluentTranslator.h
     MFIXTranslator.h
+    STLTranslator.h
 """)
-
-##srcs = map(lambda s: pj('#', 'VE_Builder', 'Translator', 'DataLoader', s), srcs)
 
 lib_env = ves_pkg.getEnv().Clone()
 lib_env.Append(LIBPATH = [pj('#', buildDir,'src','ves','xplorer','util'),

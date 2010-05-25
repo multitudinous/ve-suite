@@ -510,6 +510,7 @@ void Vistab::_onStreamline( wxCommandEvent& WXUNUSED( event ) )
     streamline->SetSize( this->GetRect() );
     streamline->SetActiveDataSetName( GetActiveDatasetName() );
     streamline->Show();
+    streamline->SetAvailableDatasets( _availableDatasets );
 }
 ////////////////////////////////////////////////////////////
 void Vistab::_onIsosurface( wxCommandEvent& WXUNUSED( event ) )

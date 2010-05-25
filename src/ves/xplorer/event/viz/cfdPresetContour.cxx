@@ -56,7 +56,7 @@
 
 using namespace ves::xplorer;
 using namespace ves::xplorer::scenegraph;
-
+////////////////////////////////////////////////////////////////////////////////
 cfdPresetContour::cfdPresetContour( const int xyz, const int numSteps )
         : cfdContourBase()
 {
@@ -64,13 +64,13 @@ cfdPresetContour::cfdPresetContour( const int xyz, const int numSteps )
     this->numSteps = numSteps;
     cuttingPlane = 0;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 cfdPresetContour::~cfdPresetContour()
 {}
-
+////////////////////////////////////////////////////////////////////////////////
 void cfdPresetContour::Update( void )
 {
-    vprDEBUG( vesDBG, 1 ) << "cfdPresetContour::Update, usePreCalcData = "
+    vprDEBUG( vesDBG, 1 ) << "|\tcfdPresetContour::Update, usePreCalcData = "
         << this->usePreCalcData << std::endl << vprDEBUG_FLUSH;
 
     if( this->usePreCalcData )
@@ -80,8 +80,8 @@ void cfdPresetContour::Update( void )
         if( !precomputedPlanes )
         {
             vprDEBUG( vesDBG, 0 )
-            << "Dataset contains no precomputed contour planes."
-            << std::endl << vprDEBUG_FLUSH;
+                << "|\tDataset contains no precomputed contour planes."
+                << std::endl << vprDEBUG_FLUSH;
             ves::xplorer::communication::CommunicationHandler::instance()
             ->SendConductorMessage( "Dataset contains no precomputed contour planes.\n" );
             return;
@@ -92,8 +92,9 @@ void cfdPresetContour::Update( void )
 
         if( preCalcData == NULL )
         {
-            vprDEBUG( vesDBG, 0 ) << "cfdPresetContour: no precalculated data"
-            << std::endl << vprDEBUG_FLUSH;
+            vprDEBUG( vesDBG, 0 ) 
+                << "|\tcfdPresetContour: no precalculated data"
+                << std::endl << vprDEBUG_FLUSH;
 
             this->updateFlag = false;
             return;
@@ -116,7 +117,6 @@ void cfdPresetContour::Update( void )
             this->cuttingPlane = NULL;
         }
 
-		/////////////////////
     	if( GetObjectType() != BY_SURFACE )
     	{
     	    CreatePlane();
@@ -124,8 +124,12 @@ void cfdPresetContour::Update( void )
     	else
     	{ 
     	    CreateArbSurface();
+            if( !mapper->GetInput() )
+            {
+                this->updateFlag = false;
+                return;
+            }
     	}
-        
     }
 
     vtkActor* temp = vtkActor::New();
@@ -133,7 +137,8 @@ void cfdPresetContour::Update( void )
     temp->GetProperty()->SetSpecularPower( 20.0f );
     try
     {
-        osg::ref_ptr< ves::xplorer::scenegraph::Geode > tempGeode = new ves::xplorer::scenegraph::Geode();
+        osg::ref_ptr< ves::xplorer::scenegraph::Geode > tempGeode = 
+            new ves::xplorer::scenegraph::Geode();
         tempGeode->TranslateToGeode( temp );
         geodes.push_back( tempGeode.get() );
         this->updateFlag = true;
@@ -143,8 +148,10 @@ void cfdPresetContour::Update( void )
         mapper->Delete();
         mapper = vtkPolyDataMapper::New();
 
-        vprDEBUG( vesDBG, 0 ) << "|\tMemory allocation failure : cfdPresetContour"
-        << std::endl << vprDEBUG_FLUSH;
+        vprDEBUG( vesDBG, 0 ) 
+            << "|\tMemory allocation failure : cfdPresetContour"
+            << std::endl << vprDEBUG_FLUSH;
     }
     temp->Delete();
 }
+////////////////////////////////////////////////////////////////////////////////

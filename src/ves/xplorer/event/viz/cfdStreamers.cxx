@@ -74,26 +74,26 @@ using namespace ves::xplorer::scenegraph;
 
 //////////////////////////////////////////////////////////////////////////////////
 cfdStreamers::cfdStreamers()
-        :
-        seedPoints( 0 ),
-        points( 0 ),
-        integrationDirection( 0 ),
-        streamArrows( 0 ),
-        m_streamRibbons( 0 ),
-        propagationTime( -1 ),
-        integrationStepLength( -1 ),
-        lineDiameter( 1.0f ),
-        arrowDiameter( 1 ),
-        particleDiameter( 1.0f ),
-        xValue( 4 ),
-        yValue( 4 ),
-        zValue( 4 ),
-        xMinBB( 0 ),
-        yMinBB( 0 ),
-        zMinBB( 0 ),
-        xMaxBB( 1 ),
-        yMaxBB( 1 ),
-        zMaxBB( 1 )
+    :
+    seedPoints( 0 ),
+    points( 0 ),
+    integrationDirection( 0 ),
+    streamArrows( 0 ),
+    m_streamRibbons( 0 ),
+    propagationTime( -1 ),
+    integrationStepLength( -1 ),
+    lineDiameter( 1.0f ),
+    arrowDiameter( 1 ),
+    particleDiameter( 1.0f ),
+    xValue( 4 ),
+    yValue( 4 ),
+    zValue( 4 ),
+    xMinBB( 0 ),
+    yMinBB( 0 ),
+    zMinBB( 0 ),
+    xMaxBB( 1 ),
+    yMaxBB( 1 ),
+    zMaxBB( 1 )
 {
     streamTracer = vtkStreamTracer::New();
     integ = vtkRungeKutta4::New();
@@ -609,13 +609,14 @@ void cfdStreamers::UpdateCommand()
 
     //Extract the surface flag
     activeModelDVP = objectCommand->GetDataValuePair( "SURF Tools" );
-    unsigned int surfFlag;
+    bool hasSurface = false;
     if( activeModelDVP )
 	{
-    	activeModelDVP->GetData( surfFlag );
+        hasSurface = true;
+    	activeModelDVP->GetData( m_surfDataset );
 	}
 	/////////////////////
-    if( surfFlag != 1 )
+    if( !hasSurface )
     {
         CreateSeedPoints();
     }
@@ -685,31 +686,32 @@ void cfdStreamers::CreateSeedPoints()
 //////////////////////////////////////////////////////////////////////////////////
 void cfdStreamers::CreateArbSurface()
 {   
-    Model* activeModel = ModelHandler::instance()->GetActiveModel();
-    unsigned int i = activeModel->GetNumberOfCfdDataSets();
-    vprDEBUG( vesDBG, 1 )
-        << "|\tstreamlines source GET_SURFACE_DATASET " << i
-        << std::endl << vprDEBUG_FLUSH;
-    vprDEBUG( vesDBG, 0 ) << "|\tStreamlines source::SetActiveDataSet dataset = "
-        << activeModel->GetCfdDataSet( i-1 )->GetFileName()
-        << ", dcs = " << activeModel->GetCfdDataSet( i-1 )->GetDCS()
-        << std::endl << vprDEBUG_FLUSH;
-
-    int cfdType = activeModel->GetCfdDataSet( i-1 )->GetType();
-    vprDEBUG( vesDBG, 1 ) << "|\tStreamlines source::SetActiveDataSet cfdType: " << cfdType
-        << std::endl << vprDEBUG_FLUSH;
-
-    DataSet* surfDataset = activeModel->GetCfdDataSet( i-1 );
-    vtkPolyData * pd = surfDataset->GetPolyData();
-   
-    points = pd->GetPoints();
-
+    //First reset seed points so that if the polydata call fails we do not 
+    //pass along bad seed point information
     if( seedPoints )
     {
         seedPoints->Delete();
+        seedPoints = 0;
     }
+    
+    //Need to set the active datasetname and get the position of the dataset
+    Model* activeModel = ModelHandler::instance()->GetActiveModel();
+    // set the dataset as the appropriate dastaset type
+    // (and the active dataset as well)
+    DataSet* surfDataset = activeModel->GetCfdDataSet( 
+        activeModel->GetIndexOfDataSet( m_surfDataset ) );
+    vtkPolyData* pd = surfDataset->GetPolyData();
+    
+    if( !pd )
+    {
+        std::cerr << "ERROR: Activate a polydata file to use this function"
+            << std::endl;
+        return;
+    }
+    
+    points = pd->GetPoints();
+
     seedPoints = vtkPolyData::New();
     seedPoints->SetPoints( points );
-
 }
 //////////////////////////////////////////////////////////////////////////////////

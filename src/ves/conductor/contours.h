@@ -183,6 +183,7 @@ protected:
     wxSlider*       _planePositonSlider;
     wxButton*       itemButton16;
     wxButton*       itemButton17;
+    ///The array containing all of the datasets used for the surface tools
     wxArrayString   m_availableDatasets;
     ///The box listing the available datasets.
     wxComboBox*     m_datasetSelection;
