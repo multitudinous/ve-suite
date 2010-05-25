@@ -32,9 +32,9 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #pragma once
 
-//#include "UIElement.h"
-
 #include <osg/ref_ptr>
+
+#include <ves/xplorer/eventmanager/ScopedConnectionList.h>
 
 // --- VR Juggler includes --- //
 #include <vpr/Util/Singleton.h>
@@ -67,10 +67,10 @@ namespace ves
 {
 namespace xplorer
 {
-namespace util
+namespace eventmanager
 {
 class InteractionEvent;
-} // namespace util
+} // namespace eventmanager
 } // namespace xplorer
 
 namespace conductor
@@ -174,7 +174,7 @@ public:
     ////////////////////////////////////////////////////////////////////////////////
     virtual void operator( )( osg::Node* node, osg::NodeVisitor* nv );
 
-    void SendInteractionEvent( xplorer::util::InteractionEvent &event );
+    void SendInteractionEvent( xplorer::eventmanager::InteractionEvent& event );
 
     void SetProjectionMatrix( osg::Matrixd& matrix );
 
@@ -262,6 +262,8 @@ private:
 
     /// Helper function to show elements
     void _showAll();
+
+    xplorer::eventmanager::ScopedConnectionList mConnections;
 };
 
 } // namespace conductor 

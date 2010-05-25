@@ -49,7 +49,9 @@
 #include <ves/conductor/qt/UIManager.h>
 #include <ves/conductor/qt/UIElement.h>
 
-#include <ves/xplorer/util/InteractionEvent.h>
+#include <ves/xplorer/eventmanager/InteractionEvent.h>
+#include <ves/xplorer/eventmanager/SlotWrapper.h>
+#include <ves/xplorer/eventmanager/EventManager.h>
 
 using namespace ves::conductor;
 
@@ -67,6 +69,11 @@ UIManager::UIManager( )
     mToggleVisibility = false;
     mHide = false;
     mShow = false;
+    typedef boost::signals2::signal< void (xplorer::eventmanager::InteractionEvent&) > InteractionSignal_type;
+    InteractionSignal_type::slot_type
+    slotFunctor( boost::bind( &UIManager::SendInteractionEvent, this, _1 ) );
+    xplorer::eventmanager::SlotWrapper< InteractionSignal_type > slotWrapper( slotFunctor );
+    xplorer::eventmanager::EventManager::instance()->ConnectSignal( "KeyboardMouseInteractionSignal", &slotWrapper, mConnections, xplorer::eventmanager::EventManager::highest_Priority );
 }
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -360,7 +367,7 @@ void UIManager::operator( )( osg::Node* node, osg::NodeVisitor* nv )
 }
 ////////////////////////////////////////////////////////////////////////////////
 
-void UIManager::SendInteractionEvent( xplorer::util::InteractionEvent &event )
+void UIManager::SendInteractionEvent( xplorer::eventmanager::InteractionEvent &event )
 {
     // Check visibility of UI branch before bothering with events
     if( !mUIGroup->getValue( 0 ) )

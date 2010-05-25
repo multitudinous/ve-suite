@@ -2032,12 +2032,9 @@ const std::vector< DataSet* >& DataSet::GetTransientDataSets()
 #ifdef QT_ON
 void DataSet::WriteDatabaseEntry()
 {
-    std::cout << "DataSet::WriteDatabaseEntry" << std::endl << std::flush;
     xplorer::data::DatasetPropertySet set;
 
     set.LoadByKey( "Filename", fileName );
-
-    std::cout << "Set " << fileName << " ID = " << set.GetRecordID() << std::endl;
 
     set.SetPropertyValue( "Filename", fileName );
     set.SetPropertyValue( "StepLength", stepLength );

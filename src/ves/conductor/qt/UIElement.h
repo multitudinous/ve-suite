@@ -40,10 +40,10 @@ namespace ves
 {
 namespace xplorer
 {
-namespace util
+namespace eventmanager
 {
 class InteractionEvent;
-} // namespace util
+} // namespace eventmanager
 } // namespace xplorer
 namespace conductor
 {
@@ -94,7 +94,7 @@ public:
 ///
 /// Required override.
 ////////////////////////////////////////////////////////////////////////////////
-    virtual void SendInteractionEvent( xplorer::util::InteractionEvent &event ) = 0;
+    virtual void SendInteractionEvent( xplorer::eventmanager::InteractionEvent &event ) = 0;
 ////////////////////////////////////////////////////////////////////////////////
 /// Tell this element to render to an image and return a pointer to the data.
 ///

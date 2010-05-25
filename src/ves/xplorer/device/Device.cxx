@@ -43,10 +43,6 @@
 
 #include <ves/xplorer/scenegraph/manipulator/ManipulatorManager.h>
 
-#ifdef QT_ON
-#include <ves/conductor/qt/UIManager.h>
-#endif
-
 // --- OSG Includes --- //
 #include <osg/Polytope>
 #include <osg/LineSegment>
@@ -75,10 +71,6 @@ Device::Device( const Device::Type& type )
     m_characterController( m_sceneManager.GetCharacterController() ),
     m_cameraManager( m_sceneManager.GetCameraManager() ),
     m_manipulatorManager( m_sceneManager.GetManipulatorManager() )
-#ifdef QT_ON
-    ,
-    m_uiManager( *ves::conductor::UIManager::instance() )
-#endif
 {
     ;
 }
@@ -92,10 +84,6 @@ Device::Device( const Device& device )
     m_characterController( device.m_characterController ),
     m_cameraManager( device.m_cameraManager ),
     m_manipulatorManager( device.m_manipulatorManager )
-#ifdef QT_ON
-    ,
-    m_uiManager( device.m_uiManager )
-#endif
 {
     ;
 }

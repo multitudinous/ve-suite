@@ -30,72 +30,41 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#pragma once
-
-// --- VR Juggler includes --- //
-#include <vpr/Util/Singleton.h>
-
-// --- Boost includes --- //
-#include <boost/noncopyable.hpp>
-
-// --- C++ headers --- //
-#include <string>
-
-// Forward declarations
-namespace Poco
-{
-namespace Data
-{
-class Session;
-class SessionPool;
-}
-}
+#include <ves/xplorer/eventmanager/InteractionEvent.h>
 
 namespace ves
 {
 namespace xplorer
 {
-namespace data
+namespace eventmanager
 {
 
-///
-///@class DatabaseManager
-/// Simple singleton that maintains a pool of SQLite sessions connected to
-/// the application's main database. This allows an easy, centralized way to
-/// manage connections to the database and to change the path of the database
-/// file in a single place.
-class DatabaseManager
+InteractionEvent::InteractionEvent( eventType eType,
+                                    char key,
+                                    buttonType button,
+                                    int buttons,
+                                    float scrollDeltaX,
+                                    float scrollDeltaZ,
+                                    double x,
+                                    double y,
+                                    double z )
 {
-public:
-    ///
-    /// Sets the path (including filename) of the database file.
-    /// @param path Path of the database file
-    void SetDatabasePath( const std::string& path );
+   EventType = eType;
+    Key = key;
+    Button = button;
+    Buttons = buttons;
+    ScrollDeltaX = scrollDeltaX;
+    ScrollDeltaZ = scrollDeltaZ;
+    X = x;
+    Y = y;
+    Z = z;
+}
 
-    ///
-    /// Returns a pointer to the session pool. Callers can get a valid session
-    /// like so:
-    /// @code
-    /// Poco::Data::Session mySession( GetPool()->get() );
-    /// @endcode
-    /// The session created in this way will be automatically returned to the
-    /// SessionPool when mySession goes out of scope.
-    Poco::Data::SessionPool* GetPool();
-    
-private:
-    /// ctor
-    DatabaseManager( );
+InteractionEvent::~InteractionEvent( )
+{
+}
 
-    /// dtor
-    virtual ~DatabaseManager( );
+} // namespace eventmanager
+} // namespace xplorer
+} // namespace ves
 
-    /// Singleton declarations
-    vprSingletonHeader( DatabaseManager );
-
-    /// Holds the session pool
-    Poco::Data::SessionPool* mPool;
-};
-
-}// namespace data
-}// namespace xplorer
-}// namespace ves

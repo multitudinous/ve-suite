@@ -69,7 +69,8 @@
 #include <ves/xplorer/scenegraph/manipulator/TransformManipulator.h>
 
 #ifdef QT_ON
-#include <ves/conductor/qt/UIManager.h>
+#include <ves/xplorer/eventmanager/EventManager.h>
+#include <ves/xplorer/eventmanager/SignalWrapper.h>
 #endif
 
 // --- Bullet Includes --- //
@@ -191,6 +192,13 @@ KeyboardMouse::KeyboardMouse()
 {
     mKeyboardMouse.init( "VJKeyboard" );
     mHead.init( "VJHead" );
+
+#ifdef QT_ON
+    eventmanager::EventManager::instance()->RegisterSignal(
+        new eventmanager::SignalWrapper< InteractionSignal_type >( &mInteractionSignal ),
+        "KeyboardMouseInteractionSignal",
+        eventmanager::EventManager::input_SignalType);
+#endif // QT_ON
 }
 ////////////////////////////////////////////////////////////////////////////////
 KeyboardMouse::~KeyboardMouse()
@@ -303,10 +311,10 @@ void KeyboardMouse::ProcessEvents( ves::open::xml::CommandPtr command )
             const gadget::KeyEventPtr keyEvt =
                 boost::static_pointer_cast< gadget::KeyEvent >( event );
 #ifdef QT_ON
-            util::InteractionEvent ie( util::InteractionEvent::keyPress,
+            eventmanager::InteractionEvent ie( eventmanager::InteractionEvent::keyPress,
                                 keyEvt->getKey() );
 
-            m_uiManager.SendInteractionEvent( ie );
+            mInteractionSignal( ie );
 #endif
             //Protect against rapid key press events when key is held down
             m_currKey = keyEvt->getKey();
@@ -332,10 +340,10 @@ void KeyboardMouse::ProcessEvents( ves::open::xml::CommandPtr command )
             m_currKey = keyEvt->getKey();
             m_keys.reset( m_currKey );
 #ifdef QT_ON
-            util::InteractionEvent ie( util::InteractionEvent::keyRelease,
+            eventmanager::InteractionEvent ie( eventmanager::InteractionEvent::keyRelease,
                                 keyEvt->getKey() );
 
-            m_uiManager.SendInteractionEvent( ie );
+            mInteractionSignal( ie );
 #endif
             //Set the current GLTransfromInfo from the event
             if( !SetCurrentGLTransformInfo( currentDisplay, true ) )
@@ -354,12 +362,12 @@ void KeyboardMouse::ProcessEvents( ves::open::xml::CommandPtr command )
             m_currMouse = mouse_evt->getButton();
             m_keys.set( m_currMouse );
 #ifdef QT_ON
-            util::InteractionEvent ie( util::InteractionEvent::buttonPress,
-                                0, util::InteractionEvent::button_1,
-                                util::InteractionEvent::button_1, 0.0, 0.0, 
+            eventmanager::InteractionEvent ie( eventmanager::InteractionEvent::buttonPress,
+                                0, eventmanager::InteractionEvent::button_1,
+                                eventmanager::InteractionEvent::button_1, 0.0, 0.0,
                                 mouse_evt->getX(), mouse_evt->getY() );
 
-            m_uiManager.SendInteractionEvent( ie );
+            mInteractionSignal( ie );
 #endif
             //Set the current GLTransfromInfo from the event
             if( !SetCurrentGLTransformInfo( currentDisplay, false ) )
@@ -378,12 +386,12 @@ void KeyboardMouse::ProcessEvents( ves::open::xml::CommandPtr command )
             m_currMouse = mouse_evt->getButton();
             m_keys.reset( m_currMouse );
 #ifdef QT_ON
-            util::InteractionEvent ie( util::InteractionEvent::buttonRelease,
-                                0, util::InteractionEvent::button_1,
-                                util::InteractionEvent::button_1, 0.0, 0.0,
+            eventmanager::InteractionEvent ie( eventmanager::InteractionEvent::buttonRelease,
+                                0, eventmanager::InteractionEvent::button_1,
+                                eventmanager::InteractionEvent::button_1, 0.0, 0.0,
                                 mouse_evt->getX(), mouse_evt->getY() );
 
-            m_uiManager.SendInteractionEvent( ie );
+            mInteractionSignal( ie );
 #endif
             //Set the current GLTransfromInfo from the event
             if( !SetCurrentGLTransformInfo( currentDisplay, false ) )
@@ -412,24 +420,24 @@ void KeyboardMouse::ProcessEvents( ves::open::xml::CommandPtr command )
             if( !m_keys[ m_currMouse ] )
             {
 #ifdef QT_ON
-                util::InteractionEvent ie( util::InteractionEvent::pointerMotion,
-                                0, util::InteractionEvent::none,
-                                util::InteractionEvent::none, 0.0, 0.0, 
+                eventmanager::InteractionEvent ie( eventmanager::InteractionEvent::pointerMotion,
+                                0, eventmanager::InteractionEvent::none,
+                                eventmanager::InteractionEvent::none, 0.0, 0.0,
                                 m_currX, m_currY );
 
-                m_uiManager.SendInteractionEvent( ie );
+                mInteractionSignal( ie );
 #endif
                 OnMouseMotionUp();
             }
             else
             {
 #ifdef QT_ON
-                util::InteractionEvent ie( util::InteractionEvent::pointerMotion,
-                                0, util::InteractionEvent::none,
-                                util::InteractionEvent::button_1, 0.0, 0.0, 
+                eventmanager::InteractionEvent ie( eventmanager::InteractionEvent::pointerMotion,
+                                0, eventmanager::InteractionEvent::none,
+                                eventmanager::InteractionEvent::button_1, 0.0, 0.0,
                                 m_currX, m_currY );
 
-                m_uiManager.SendInteractionEvent( ie );
+                mInteractionSignal( ie );
 #endif
 
 #if defined( VPR_OS_Windows )
@@ -834,27 +842,6 @@ void KeyboardMouse::OnKeyRelease()
             m_characterController.StrafeRight( false );
         }
 
-        break;
-    }
-    case gadget::KEY_E:
-    {
-#ifdef QT_ON
-        m_uiManager.EmbedAll();
-#endif
-        break;
-    }
-    case gadget::KEY_H:
-    {
-#ifdef QT_ON
-        m_uiManager.ToggleVisibility();
-#endif
-        break;
-    }
-    case gadget::KEY_U:
-    {
-#ifdef QT_ON
-        m_uiManager.UnembedAll();
-#endif
         break;
     }
     case gadget::KEY_W:

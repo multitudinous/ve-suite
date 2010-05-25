@@ -30,72 +30,64 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
+
 #pragma once
 
-// --- VR Juggler includes --- //
-#include <vpr/Util/Singleton.h>
-
-// --- Boost includes --- //
-#include <boost/noncopyable.hpp>
-
-// --- C++ headers --- //
-#include <string>
-
-// Forward declarations
-namespace Poco
-{
-namespace Data
-{
-class Session;
-class SessionPool;
-}
-}
+#include <ves/xplorer/eventmanager/SlotWrapperBase.h>
 
 namespace ves
 {
 namespace xplorer
 {
-namespace data
+namespace eventmanager
 {
 
-///
-///@class DatabaseManager
-/// Simple singleton that maintains a pool of SQLite sessions connected to
-/// the application's main database. This allows an easy, centralized way to
-/// manage connections to the database and to change the path of the database
-/// file in a single place.
-class DatabaseManager
+/**
+ * SlotWrapper provides a wrapper around a slot, allowing slots with different
+ * types (signatures) to be passed into the same function and to be held in
+ * containers (via SignalWrapperBase).
+ *
+ * SlotWrapper holds a reference to a boost::signals2::signal<T>::slot_type.
+ **/
+template <typename T>
+class SlotWrapper : public SlotWrapperBase
 {
 public:
-    ///
-    /// Sets the path (including filename) of the database file.
-    /// @param path Path of the database file
-    void SetDatabasePath( const std::string& path );
 
-    ///
-    /// Returns a pointer to the session pool. Callers can get a valid session
-    /// like so:
-    /// @code
-    /// Poco::Data::Session mySession( GetPool()->get() );
-    /// @endcode
-    /// The session created in this way will be automatically returned to the
-    /// SessionPool when mySession goes out of scope.
-    Poco::Data::SessionPool* GetPool();
-    
+    /**
+     * Constructs a SlotWrapper.
+     * Notice that the template parameter and the type
+     * passed in to the constructor differ slightly: the template parameter should
+     * be a boost::signals2::signal<> type, whereas the argument to the constructor
+     * is a boost::signals2::signal<>::slot_type&.
+     *
+     * For a usage example, please
+     * see EventManager::ConnectSignal, and pay attention to the template
+     * parameter when instantiating the wrapper.
+     * @param slot A reference to the slot.
+     * 
+     * @see EventManager::ConnectSignal
+     **/
+    SlotWrapper( const typename T::slot_type& slot ) :
+    mSlot( slot )
+    {
+        ;
+    }
+
+    virtual ~SlotWrapper( )
+    {
+
+    }
+
+    const typename T::slot_type& GetSlot( )
+    {
+        return mSlot;
+    }
 private:
-    /// ctor
-    DatabaseManager( );
+    const typename T::slot_type& mSlot;
 
-    /// dtor
-    virtual ~DatabaseManager( );
-
-    /// Singleton declarations
-    vprSingletonHeader( DatabaseManager );
-
-    /// Holds the session pool
-    Poco::Data::SessionPool* mPool;
 };
 
-}// namespace data
-}// namespace xplorer
-}// namespace ves
+}
+}
+}

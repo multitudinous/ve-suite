@@ -623,7 +623,6 @@ bool PropertySet::LoadByKey( Poco::Data::Session* session, const std::string& Ke
     {
         std::cout << "PropertySet::LoadByKey: Unknown error accessing database." << std::endl;
     }
-    std::cout << "statement done..." << std::flush;
 
     if( result != 0 )
     {

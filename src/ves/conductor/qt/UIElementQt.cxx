@@ -33,7 +33,7 @@
 
 // --- VES includes --- //
 #include <ves/conductor/qt/UIElementQt.h>
-#include <ves/xplorer/util/InteractionEvent.h>
+#include <ves/xplorer/eventmanager/InteractionEvent.h>
 
 
 
@@ -90,7 +90,7 @@ UIElementQt::UIElementQt( QWidget *parent ) : QGraphicsView( parent )
     brush.setStyle( Qt::SolidPattern );
     this->setBackgroundBrush( brush );
     mImageMutex = new QMutex( );
-    Initialize();
+    Initialize( );
 }
 
 UIElementQt::~UIElementQt( )
@@ -110,8 +110,8 @@ void UIElementQt::Initialize( )
         // of mode Qt::QueuedConnection so that the slot will only be processed
         // when the thread that created this object has execution.
         //QObject::connect( this, SIGNAL( RequestRender( ) ), this, SLOT( _render( ) ), Qt::QueuedConnection );
-        QObject::connect( this, SIGNAL( PutSendEvent( xplorer::util::InteractionEvent* ) ),
-                          this, SLOT( _sendEvent( xplorer::util::InteractionEvent* ) ), Qt::QueuedConnection );
+        QObject::connect( this, SIGNAL( PutSendEvent( xplorer::eventmanager::InteractionEvent* ) ),
+                          this, SLOT( _sendEvent( xplorer::eventmanager::InteractionEvent* ) ), Qt::QueuedConnection );
         QObject::connect( this, SIGNAL( RequestEmbed( bool ) ), this, SLOT( _embed( bool ) ), Qt::QueuedConnection );
 
         // Start up the timer that causes repaints at a set interval -- assuming
@@ -154,11 +154,11 @@ const osg::Vec4f UIElementQt::GetTextureCoordinates( )
     return m_coordinates;
 }
 
-void UIElementQt::SendInteractionEvent( xplorer::util::InteractionEvent
-                                        &event )
+void UIElementQt::SendInteractionEvent( xplorer::eventmanager::InteractionEvent&
+                                        event )
 {
-    xplorer::util::InteractionEvent* m_event =
-            new xplorer::util::InteractionEvent( event );
+    xplorer::eventmanager::InteractionEvent* m_event =
+            new xplorer::eventmanager::InteractionEvent( event );
 
     Q_EMIT PutSendEvent( m_event );
 }
@@ -204,7 +204,7 @@ unsigned char* UIElementQt::RenderElementToImage( )
     return mImageFlipped->bits( );
 }
 
-bool UIElementQt::IsDirty()
+bool UIElementQt::IsDirty( )
 {
     return mDirty;
 }
@@ -406,7 +406,7 @@ void UIElementQt::_calculateTextureCoordinates( )
 
 void UIElementQt::_debug( const std::string text )
 {
-//#define UIELEMENTQT_DEBUG
+    //#define UIELEMENTQT_DEBUG
 #ifdef UIELEMENTQT_DEBUG
     std::cout << "UIElementQt::" << text << std::endl << std::flush;
 #endif
@@ -419,16 +419,19 @@ void UIElementQt::paintEvent( QPaintEvent* event )
     QGraphicsView::paintEvent( event );
 }
 
-void UIElementQt::_sendEvent( xplorer::util::InteractionEvent* event )
+void UIElementQt::_sendEvent( xplorer::eventmanager::InteractionEvent* event )
 {
+    using xplorer::eventmanager::InteractionEvent;
     int x = static_cast < int > ( event->X );
     int y = static_cast < int > ( event->Y );
 
     QPoint globalPos = this->viewport( )->mapToGlobal( QPoint( x, y ) );
     QWidget *vw = this->childAt( x, y );
 
-    // May not want to do this line if keyboard event...
-    if( vw == NULL ) return;
+    if( ( event->EventType != InteractionEvent::keyPress ) && ( event->EventType != InteractionEvent::keyRelease ) )
+    {
+        if( vw == NULL ) return;
+    }
 
     // keyPress, keyRelease, scroll
     // This is incomplete.
@@ -437,23 +440,23 @@ void UIElementQt::_sendEvent( xplorer::util::InteractionEvent* event )
     // 3. Does not look at modifier keys.
     switch( event->EventType )
     {
-    case xplorer::util::InteractionEvent::buttonPress:
+    case InteractionEvent::buttonPress:
     {
         QMouseEvent e( QEvent::MouseButtonPress, QPoint( x, y ), globalPos, Qt::LeftButton,
                        Qt::LeftButton, Qt::NoModifier );
         qt_sendSpontaneousEvent( this->viewport( ), &e );
     }
         break;
-    case xplorer::util::InteractionEvent::buttonRelease:
+    case InteractionEvent::buttonRelease:
     {
         QMouseEvent e( QEvent::MouseButtonRelease, QPoint( x, y ), globalPos, Qt::LeftButton,
                        Qt::LeftButton, Qt::NoModifier );
         qt_sendSpontaneousEvent( this->viewport( ), &e );
     }
         break;
-    case xplorer::util::InteractionEvent::pointerMotion:
+    case InteractionEvent::pointerMotion:
     {
-        if( event->Buttons == xplorer::util::InteractionEvent::none )
+        if( event->Buttons == InteractionEvent::none )
         {
             QMouseEvent e( QEvent::MouseMove, QPoint( x, y ), globalPos, Qt::NoButton,
                            Qt::NoButton, Qt::NoModifier );
@@ -465,6 +468,18 @@ void UIElementQt::_sendEvent( xplorer::util::InteractionEvent* event )
                            Qt::LeftButton, Qt::NoModifier );
             qt_sendSpontaneousEvent( this->viewport( ), &e );
         }
+    }
+        break;
+    case InteractionEvent::keyPress:
+    {
+        //QKeyEvent e( QEvent::KeyPress, event->Key, Qt::NoModifier, event->Key );
+        //qt_sendSpontaneousEvent( this->viewport( ), &e );
+    }
+        break;
+    case InteractionEvent::keyRelease:
+    {
+        //QKeyEvent e( QEvent::KeyRelease, event->Key, Qt::NoModifier, event->Key );
+        //qt_sendSpontaneousEvent( this->viewport( ), &e );;
     }
         break;
     }

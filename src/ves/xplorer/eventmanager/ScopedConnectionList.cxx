@@ -30,58 +30,66 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-// --- Poco includes --- //
-#include <Poco/Data/SessionPool.h>
-#include <Poco/Data/SQLite/Connector.h>
 
-#include <boost/shared_ptr.hpp>
-
-#include <iostream>
-#include <boost/smart_ptr/shared_array.hpp>
-
-#include "DatabaseManager.h"
+#include <ves/xplorer/eventmanager/ScopedConnectionList.h>
 
 namespace ves
 {
 namespace xplorer
 {
-namespace data
+namespace eventmanager
 {
 
-vprSingletonImp( DatabaseManager );
-
-DatabaseManager::DatabaseManager( ) :
-mPool( 0 )
+ScopedConnectionList::ScopedConnectionList( )
 {
-
 }
 
-DatabaseManager::~DatabaseManager( )
+ScopedConnectionList::ScopedConnectionList( const ScopedConnectionList& orig )
 {
-    if( mPool )
+}
+
+ScopedConnectionList::~ScopedConnectionList( )
+{
+}
+
+void ScopedConnectionList::AddConnection( boost::shared_ptr< boost::signals2::scoped_connection > connection )
+{
+    mConnections.push_back( connection );
+}
+
+void ScopedConnectionList::DropConnections( )
+{
+    // Since shared pointers automatically delete when they go out of scope,
+    // we can simply clear the list to cause the connections to autodelete
+    mConnections.clear( );
+}
+
+ScopedConnectionList::ConnectionList_type::iterator ScopedConnectionList::GetBegin( )
+{
+    return mConnections.begin();
+}
+
+ScopedConnectionList::ConnectionList_type::iterator ScopedConnectionList::GetEnd( )
+{
+    return mConnections.end();
+}
+
+boost::shared_ptr< boost::signals2::scoped_connection > ScopedConnectionList::GetLastConnection( )
+{
+    ConnectionList_type::iterator iter = mConnections.end( );
+    if( iter != mConnections.begin( ) )
     {
-        delete mPool;
+        iter--; // Decrement because mConnections.end() returns one position *past* the last element
+        return (*iter );
     }
-    Poco::Data::SQLite::Connector::unregisterConnector( );
-}
-
-void DatabaseManager::SetDatabasePath( const std::string& path )
-{
-    if( mPool )
+    else
     {
-        delete mPool;
-        Poco::Data::SQLite::Connector::unregisterConnector( );
+        // If there are no existing connections, return an empty one.
+        boost::shared_ptr< boost::signals2::scoped_connection > emptyConnection( new boost::signals2::scoped_connection );
+        return emptyConnection;
     }
-
-    Poco::Data::SQLite::Connector::registerConnector( );
-    mPool = new Poco::Data::SessionPool( "SQLite", path );
 }
 
-Poco::Data::SessionPool* DatabaseManager::GetPool( )
-{
-    return mPool;
 }
-
-}// namespace data
-}// namespace xplorer
-}// namespace ves
+}
+}

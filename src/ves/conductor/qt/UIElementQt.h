@@ -30,8 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#ifndef UIELEMENTQT_H
-#define UIELEMENTQT_H
+#pragma once
 
 #define QT_NO_KEYWORDS
 
@@ -50,13 +49,6 @@
 
 namespace ves
 {
-namespace xplorer
-{
-namespace util
-{
-class InteractionEvent;
-} // namespace util
-} // namespace xplorer
 namespace conductor
 {
 /// @file UIElementQt.h
@@ -66,9 +58,9 @@ namespace conductor
 /// Qt widget and converts it to use off-screen rendering to render to a 
 /// texture. This class also propagates mouse and keyboard events down into the
 /// widget so that it behaves as though it is being displayed on-screen.
-class UIElementQt :  public QGraphicsView, public UIElement
-{
 
+class UIElementQt : public QGraphicsView, public UIElement
+{
     Q_OBJECT
 
 public:
@@ -81,22 +73,23 @@ public:
     virtual int GetElementWidth( );
     virtual int GetElementHeight( );
     const virtual osg::Vec4f GetTextureCoordinates( );
-    virtual void SendInteractionEvent( xplorer::util::InteractionEvent &event );
+    virtual void SendInteractionEvent( xplorer::eventmanager::InteractionEvent &event );
     virtual unsigned char* RenderElementToImage( );
-    virtual bool IsDirty();
+    virtual bool IsDirty( );
     virtual void Initialize( );
     virtual void Unembed( );
-    virtual void Embed();
+    virtual void Embed( );
 
     // Functions unique to this derived class
-    ////////////////////////////////////////////////////////////////////////////////
-    /// Sets the Qt widget associated with this element
-    /// UIElementQt takes ownership of the widget and is responsible for its
-    /// eventual destruction. DO NOT CALL widget's destructor externally after you
-    /// have passed it to SetWidget!
-    ///
-    /// @param widget The Qt widget to associate with this element
-    ////////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * Sets the Qt widget associated with this element
+     * UIElementQt takes ownership of the widget and is responsible for its
+     * eventual destruction. DO NOT CALL widget's destructor externally after you
+     * have passed it to SetWidget!
+     *
+     * @param widget Pointer to the Qt widget to associate with this element
+     **/
     void SetWidget( QWidget* widget );
 
     ////////////////////////////////////////////////////////////////////////////////
@@ -106,13 +99,13 @@ public:
     /// usually the recommended route.
     ////////////////////////////////////////////////////////////////////////////////
     void UpdateSize( );
-    
+
 protected:
-    void paintEvent ( QPaintEvent* event );
+    void paintEvent( QPaintEvent* event );
 
 Q_SIGNALS:
     void RequestRender( );
-    void PutSendEvent( xplorer::util::InteractionEvent* event );
+    void PutSendEvent( xplorer::eventmanager::InteractionEvent* event );
     void RequestEmbed( bool embed );
 
 private:
@@ -136,20 +129,19 @@ private:
     QTimer* mTimer; /// Timer that causes UI to render at set intervals
     QMutex* mImageMutex; /// Mutex that is used to avoid access collisions on rendered image
     bool mDirty; /// Flag telling outside world whether image has changed; holds
-                 /// slightly different state from mImageDirty
+    /// slightly different state from mImageDirty
 
     void _calculatePower2ImageDimensions( );
     void _calculateTextureCoordinates( );
     void _debug( const std::string text );
 
-protected Q_SLOTS:
+    protected
+Q_SLOTS:
     void _render( );
-    void _sendEvent( xplorer::util::InteractionEvent* event );
+    void _sendEvent( xplorer::eventmanager::InteractionEvent* event );
     void _embed( bool embed );
 
 };
 
 } // namespace conductor
 } // namespace ves
-
-#endif // UIELEMENTQT_H

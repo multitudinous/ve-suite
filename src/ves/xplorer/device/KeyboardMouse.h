@@ -70,6 +70,12 @@ class InputArea;
 class btRigidBody;
 class btTypedConstraint;
 
+// --- Boost includes --- //
+#ifdef QT_ON
+#include <boost/signals2/signal.hpp>
+#include <ves/xplorer/eventmanager/InteractionEvent.h>
+#endif // QT_ON
+
 // --- STL Includes --- //
 #include <bitset>
 
@@ -375,6 +381,11 @@ private:
 
     ///
     std::bitset< gadget::LAST_KEY > m_keys;
+
+#ifdef QT_ON
+    typedef boost::signals2::signal<void (ves::xplorer::eventmanager::InteractionEvent&)> InteractionSignal_type;
+    InteractionSignal_type mInteractionSignal;
+#endif // QT_ON
 
 };
 } //end device

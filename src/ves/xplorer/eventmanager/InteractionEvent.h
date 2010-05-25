@@ -32,70 +32,59 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #pragma once
 
-// --- VR Juggler includes --- //
-#include <vpr/Util/Singleton.h>
-
-// --- Boost includes --- //
-#include <boost/noncopyable.hpp>
-
-// --- C++ headers --- //
-#include <string>
-
-// Forward declarations
-namespace Poco
-{
-namespace Data
-{
-class Session;
-class SessionPool;
-}
-}
-
 namespace ves
 {
 namespace xplorer
 {
-namespace data
+namespace eventmanager
 {
 
-///
-///@class DatabaseManager
-/// Simple singleton that maintains a pool of SQLite sessions connected to
-/// the application's main database. This allows an easy, centralized way to
-/// manage connections to the database and to change the path of the database
-/// file in a single place.
-class DatabaseManager
+class InteractionEvent
 {
 public:
-    ///
-    /// Sets the path (including filename) of the database file.
-    /// @param path Path of the database file
-    void SetDatabasePath( const std::string& path );
 
-    ///
-    /// Returns a pointer to the session pool. Callers can get a valid session
-    /// like so:
-    /// @code
-    /// Poco::Data::Session mySession( GetPool()->get() );
-    /// @endcode
-    /// The session created in this way will be automatically returned to the
-    /// SessionPool when mySession goes out of scope.
-    Poco::Data::SessionPool* GetPool();
-    
+    enum eventType
+    {
+        keyPress, keyRelease, buttonPress, buttonRelease, pointerMotion, scroll
+    };
+
+    enum buttonType
+    {
+        none = 0x0000, button_1 = 0x0001, button_2 = 0x0002, button_3 = 0x0004,
+        button_4 = 0x0008, button_5 = 0x0010, button_6 = 0x0020,
+        button_7 = 0x0040, button_8 = 0x0080, button_9 = 0x0100,
+        button_10 = 0x0200, button_11 = 0x0400, button_12 = 0x0800,
+        button_13 = 0x1000, button_14 = 0x2000, button_15 = 0x4000,
+        button_16 = 0x8000
+    };
+
+    InteractionEvent( eventType eType,
+                      char key,
+                      buttonType button = none,
+                      int buttons = none,
+                      float scrollDeltaX = 0.0,
+                      float scrollDeltaZ = 0.0,
+                      double x = 0.0,
+                      double y = 0.0,
+                      double z = 0.0 );
+
+    virtual ~InteractionEvent( );
+
+    eventType EventType;
+    char Key;
+    buttonType Button;
+    int Buttons;
+    float ScrollDeltaX;
+    float ScrollDeltaZ;
+    double X;
+    double Y;
+    double Z;
+
+
 private:
-    /// ctor
-    DatabaseManager( );
 
-    /// dtor
-    virtual ~DatabaseManager( );
-
-    /// Singleton declarations
-    vprSingletonHeader( DatabaseManager );
-
-    /// Holds the session pool
-    Poco::Data::SessionPool* mPool;
 };
+} //end eventmanager
+} //end xplorer
+} //end ves
 
-}// namespace data
-}// namespace xplorer
-}// namespace ves
