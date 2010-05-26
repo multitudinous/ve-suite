@@ -641,7 +641,7 @@ void DataSet::LoadData()
         }
     }
 
-    std::cout << translatedDataObject->IsA( "vtkTemporalDataSet" ) << std::endl;
+    //Now initialize the data based on the type of dataset
     if( translatedDataObject->IsA( "vtkTemporalDataSet" ) )
     {
         LoadTemporalDataSet( translatedDataObject );
