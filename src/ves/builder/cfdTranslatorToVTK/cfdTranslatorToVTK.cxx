@@ -52,7 +52,8 @@ cfdTranslatorToVTK::cfdTranslatorToVTK()
     _translateCbk( 0 ),
     isTransient( false ),
     _outputDataset( 0 ),
-    m_extractGeometry( false )
+    m_extractGeometry( false ),
+    m_writeOption("")
 {
 
     _baseFileName = "flowdata";
@@ -333,6 +334,12 @@ void cfdTranslatorToVTK::PreTranslateCallback::Preprocess( int argc, char** argv
         {
             toVTK->SetExtractGeometry( true );
         }
+        
+        std::string writeOption;
+        if( toVTK->_extractOptionFromCmdLine( argc, argv, std::string( "-w" ), writeOption ) )
+        {
+            toVTK->SetWriteOption( writeOption );
+        }
     }
 }
 //////////////////////////////////////////////////////////////
@@ -423,5 +430,15 @@ void cfdTranslatorToVTK::SetExtractGeometry( bool extractGeometry )
 bool cfdTranslatorToVTK::GetExtractGeometry()
 {
     return m_extractGeometry;
+}
+////////////////////////////////////////////////////////////////////////////////
+void cfdTranslatorToVTK::SetWriteOption( std::string writeOption )
+{
+    m_writeOption = writeOption;
+}
+////////////////////////////////////////////////////////////////////////////////
+std::string cfdTranslatorToVTK::GetWriteOption()
+{
+    return m_writeOption;
 }
 ////////////////////////////////////////////////////////////////////////////////

@@ -31,7 +31,11 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <iostream>
+
 #include <ves/builder/DataLoader/DataLoader.h>
+
+#include <vtkDataObject.h>
+
 using namespace ves::builder::DataLoader;
 using namespace ves::builder::cfdTranslatorToVTK;
 ///////////////////////////////////////////////////////////////////
@@ -43,5 +47,9 @@ int main( int argc, char** argv )
     DataLoader loader;
     loader.SetInputData( "something", "somedir" );
     vtkDataObject* tempData = loader.GetVTKDataSet( argc, argv );
+    if( tempData )
+    {
+        tempData->Delete();
+    }
     return 0;
 }

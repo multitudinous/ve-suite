@@ -59,7 +59,8 @@ public:
     void SetBaseFileName( std::string baseFileName );
     void SetExtractGeometry( bool extractGeometry );
     bool GetExtractGeometry();
-
+    void SetWriteOption( std::string writeOption );
+    
     ///Function to list all the features of a respective translator
     ///when the -h option is specified
     virtual void DisplayHelp( void ) = 0;
@@ -157,7 +158,8 @@ public:
     std::string GetOutputDirectory();
     std::string GetBaseFileName();
     std::string GetOutputFileName();
-
+    std::string GetWriteOption();
+    
     unsigned int GetNumberOfFoundFiles();
     std::string GetFile( unsigned int fileNumber );
 
@@ -185,7 +187,8 @@ protected:
 
     std::vector<std::string> _outfileNames;
     std::string _outputFile;
-
+    std::string m_writeOption;
+    
     PreTranslateCallback* _preTCbk;
     PostTranslateCallback* _postTCbk;
     TranslateCallback* _translateCbk;

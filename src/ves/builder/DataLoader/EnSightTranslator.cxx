@@ -53,6 +53,7 @@
 #include <vtkTriangleFilter.h>
 #include <vtkCompositeDataGeometryFilter.h>
 #include <vtkPolyDataNormals.h>
+#include <vtkTemporalDataSet.h>
 
 #include <iostream>
 #include <iomanip>
@@ -127,78 +128,36 @@ void EnSightTranslator::EnSightTranslateCbk::Translate( vtkDataObject*& outputDa
     //this must be an int because i goes negative
     if( tempArray->GetNumberOfItems() == 0 )
     {
-        //necessary for ensight files that do not have timesteps
-        /*int numberOfOutputs = reader->GetNumberOfOutputs();
-        vtkAppendFilter* appendFilter = vtkAppendFilter::New();
-        for(int i = 0; i < numberOfOutputs; ++i )
+        if( !outputDataset )
         {
-           appendFilter->AddInput( reader->GetOutput( i ) );
+            outputDataset = vtkMultiBlockDataSet::New();
         }
-        appendFilter->Update();
-
-        if(!outputDataset )
-        {
-           outputDataset = vtkUnstructuredGrid::New();
-        }
-        vtkDataSet* tmpDSet = vtkUnstructuredGrid::New();
-        tmpDSet->DeepCopy( appendFilter->GetOutput() );
-        appendFilter->Delete();
-
-        //get the info about the data in the data set
-        if(tmpDSet->GetPointData()->GetNumberOfArrays() == 0 )
-        {
-           vtkCellDataToPointData* dataConvertCellToPoint = vtkCellDataToPointData::New();      
-           dataConvertCellToPoint->SetInput(tmpDSet);
-           dataConvertCellToPoint->PassCellDataOff();
-           dataConvertCellToPoint->Update();
-           outputDataset->DeepCopy(dataConvertCellToPoint->GetOutput());
-           dataConvertCellToPoint->Delete();
-        }
-        else*/
-        {
-            if( !outputDataset )
-            {
-                outputDataset = vtkMultiBlockDataSet::New();
-            }
-            outputDataset->ShallowCopy( reader->GetOutput() );
-        }
+        outputDataset->ShallowCopy( reader->GetOutput() );
         outputDataset->Update();
-    
-        //tmpDSet->Delete();
-        //AddScalarsFromVectors( outputDataset );
     }
     else
     {
         //can still work with new datasets where there is only one timestep
         for( int i = tempArray->GetNumberOfItems() - 1; i >= 0; --i )
         {
-            std::cout << "Number of Timesteps = " << tempArray->GetItem( i )->GetNumberOfTuples() << std::endl;
+            int numTimeSteps = 
+                tempArray->GetItem( i )->GetNumberOfTuples();
+            std::cout << "Number of Timesteps = " << numTimeSteps << std::endl;
 
-            //this must be an int because j goes negative
-            // for( int j = tempArray->GetItem( i )->GetNumberOfTuples() - 5; j >= 0; --j )
-            //  unsure why the previous line has a - 5
+            //This should only ever be executed once.
+            if( toVTK->GetWriteOption() != "file" )
+            {
+                outputDataset = vtkTemporalDataSet::New();
+                vtkTemporalDataSet::SafeDownCast( outputDataset )->
+                    SetNumberOfTimeSteps( numTimeSteps );
+            }
 
             // This allows the timesteps to go through the loop with positive values.
-            for( int j = tempArray->GetItem( i )->GetNumberOfTuples(); j >= 0; --j )
+            for( int j = numTimeSteps-1; j >= 0; --j )
             {
                 std::cout << "Translating Timestep = " << tempArray->GetItem( i )->GetTuple1( j ) << std::endl;
                 reader->SetTimeValue( tempArray->GetItem( i )->GetTuple1( j ) );
                 reader->Update();
-                // used for multiple part ensight files
-                /*int numberOfOutputs = reader->GetNumberOfOutputs();
-                vtkAppendFilter* appendFilter = vtkAppendFilter::New();
-                for(int i = 0; i < numberOfOutputs; ++i )
-                {
-                   appendFilter->AddInput( reader->GetOutput( i ) );
-                }
-                appendFilter->Update();*/
-
-                if( !outputDataset )
-                {
-                    outputDataset = vtkMultiBlockDataSet::New();
-                }
-                //vtkDataSet* tmpDSet = vtkUnstructuredGrid::New();
-                outputDataset->ShallowCopy( reader->GetOutput() );
                 
                 //Now dump geometry if it is available
                 if( toVTK->GetExtractGeometry() )
@@ -243,41 +202,41 @@ void EnSightTranslator::EnSightTranslateCbk::Translate( vtkDataObject*& outputDa
                     geomFilter->Delete();
                 }
                 
-                 //appendFilter->Delete();
-
-                //get the info about the data in the data set
-                /*if ( outputDataset->GetPointData()->GetNumberOfArrays() == 0 )
+                if( toVTK->GetWriteOption() == "file" )
                 {
-                   vtkCellDataToPointData* dataConvertCellToPoint = vtkCellDataToPointData::New();      
-                   dataConvertCellToPoint->SetInput(outputDataset);
-                   dataConvertCellToPoint->PassCellDataOff();
-                   dataConvertCellToPoint->Update();
-                   outputDataset->DeepCopy(dataConvertCellToPoint->GetOutput());
-                   dataConvertCellToPoint->Delete();
+                    if( !outputDataset )
+                    {
+                        outputDataset = vtkMultiBlockDataSet::New();
+                    }
+                    outputDataset->ShallowCopy( reader->GetOutput() );
+                    outputDataset->Update();
+                    //Remember that this is a reverse iterator loop so time step
+                    //0 is the last time step to be addressed.
+                    if( j > 0 )
+                    {
+                        std::ostringstream strm;
+                        strm << EnSightToVTK->GetOutputFileName()
+                            << "_"
+                            << std::setfill( '0' )
+                            << std::setw( 6 )
+                            << j << ".vtu";
+                        
+                        ves::xplorer::util::cfdVTKFileHandler* trans = new ves::xplorer::util::cfdVTKFileHandler();
+                        trans->WriteDataSet( outputDataset, strm.str() );
+                        delete trans;
+                        outputDataset->Delete();
+                        outputDataset = 0;
+                        EnSightToVTK->SetIsTransient();
+                    }
                 }
                 else
                 {
-                   //outputDataset->DeepCopy(tmpDSet);
-                }*/
-                outputDataset->Update();
-                //tmpDSet->Delete();
-                //AddScalarsFromVectors( outputDataset );
-
-                if( j > 0 )
-                {
-                    std::ostringstream strm;
-                    strm << EnSightToVTK->GetOutputFileName()
-                    << "_"
-                    << std::setfill( '0' )
-                    << std::setw( 6 )
-                    << j << ".vtu";
-
-                    ves::xplorer::util::cfdVTKFileHandler* trans = new ves::xplorer::util::cfdVTKFileHandler();
-                    trans->WriteDataSet( outputDataset, strm.str() );
-                    delete trans;
-                    outputDataset->Delete();
-                    outputDataset = 0;
-                    EnSightToVTK->SetIsTransient();
+                    vtkMultiBlockDataSet* tempDataSet = vtkMultiBlockDataSet::New();
+                    tempDataSet->ShallowCopy( reader->GetOutput() );
+                    tempDataSet->Update();
+                    vtkTemporalDataSet::SafeDownCast( outputDataset )->
+                        SetTimeStep( j, tempDataSet );
+                    tempDataSet->Delete();
                 }
             }
         }

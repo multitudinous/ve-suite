@@ -84,8 +84,10 @@
 #include <vtkCompositeDataGeometryFilter.h>
 #include <vtkCompositeDataSet.h>
 #include <vtkCompositeDataIterator.h>
+#include <vtkTemporalDataSet.h>
 #include <vtkAlgorithm.h>
 #include <vtkCharArray.h>
+#include <vtkMultiBlockDataSet.h>
 
 #include <iostream>
 #include <sstream>
@@ -578,6 +580,7 @@ void DataSet::LoadData()
         extension = "ens";
     }
 
+    vtkDataObject* translatedDataObject = 0;
     if( ( extension.find( "vtk" ) != std::string::npos ) ||
         ( extension.find( "vtu" ) != std::string::npos ) ||
         ( extension.find( "vtp" ) != std::string::npos ) ||
@@ -589,7 +592,7 @@ void DataSet::LoadData()
             _vtkFHndlr = new cfdVTKFileHandler();
         }
         _vtkFHndlr->SetScalarsAndVectorsToRead( m_activeDataArrays );
-        m_dataSet = _vtkFHndlr->GetDataSetFromFile( fileName );
+        translatedDataObject = _vtkFHndlr->GetDataSetFromFile( fileName );
     }
     else
     {
@@ -620,14 +623,15 @@ void DataSet::LoadData()
         parameters[8] = new char[strlen( "stream" ) + 1];
         strcpy(parameters[8], "stream" );*/
 
-        m_dataSet = m_externalFileLoader->GetVTKDataSet( nParams, parameters );
+        translatedDataObject = 
+            m_externalFileLoader->GetVTKDataSet( nParams, parameters );
 
         for( unsigned int i = 0; i < nParams; ++i )
         {
             delete [] parameters[i];
         }
         delete parameters;
-        if( !m_dataSet )
+        if( !translatedDataObject )
         {
             vprDEBUG( vesDBG, 1 ) << "|\tInvalid input file: " << fileName
                 << std::endl << vprDEBUG_FLUSH;
@@ -637,105 +641,15 @@ void DataSet::LoadData()
         }
     }
 
-    if( !m_dataObjectHandler )
+    std::cout << translatedDataObject->IsA( "vtkTemporalDataSet" ) << std::endl;
+    if( translatedDataObject->IsA( "vtkTemporalDataSet" ) )
     {
-        m_dataObjectHandler = new ves::xplorer::util::DataObjectHandler();
-    }
-    //m_dataObjectHandler->OperateOnAllDatasetsInObject( m_dataSet );
-
-    //Now create vector mag and vector scalars
-    m_dataObjectHandler->SetDatasetOperatorCallback( m_dataObjectOps["Compute Vector Mag and Scalars"] );
-    m_dataObjectHandler->OperateOnAllDatasetsInObject( m_dataSet );
-    
-    //Need to get number of pda
-    m_dataObjectHandler->SetDatasetOperatorCallback( 0 );
-    m_dataObjectHandler->OperateOnAllDatasetsInObject( m_dataSet );
-    this->numPtDataArrays = m_dataObjectHandler->GetNumberOfDataArrays();
-
-#ifdef USE_OMP
-    char label[100];
-    vtkUnstructuredGridReader * tableReader = vtkUnstructuredGridReader::New();
-    tableReader->SetFileName( "./POST_DATA/octreeTable.vtk" );
-    tableReader->Update();
-    vtkUnstructuredGrid * table = ( vtkUnstructuredGrid * ) tableReader->GetOutput();
-    if( this->noOfData == 0 )
-    {
-        this->noOfData = table->GetNumberOfCells();
-    }
-
-    vprDEBUG( vesDBG, 1 ) << "noOfData:" << this->noOfData
-    << std::endl << vprDEBUG_FLUSH;
-    tableReader->Delete();
-
-# pragma omp parallel for private(label,i)
-    for( int i = 0; i < noOfData; i++ )
-    {
-        this->dataReader[i] = vtkUnstructuredGridReader::New();
-        std::ostringstream dirStringStream;
-        dirStringStream << "./POST_DATA/octant" << i << ".vtk";
-        std::string dirString = dirStringStream.str();
-
-        this->dataReader[i]->SetFileName( dirString.c_str() );
-        this->dataReader[i]->Update();
-        this->data[i] = ( vtkUnstructuredGrid * ) this->dataReader[i]->GetOutput();
-    }
-#endif
-
-    // Compute the geometrical properties of the mesh
-    //this->UpdatePropertiesForNewMesh();
-
-    /// Load the precomputed data
-    LoadPrecomputedDataSlices();
-
-    // count the number of scalars and store names and ranges...
-    this->StoreScalarInfo();
-
-    // count the number of vectors and store names ...
-    this->numVectors = dynamic_cast<ves::xplorer::util::CountNumberOfParametersCallback*>
-                       ( m_dataObjectOps["Count Number Of Vectors And Scalars"] )->GetNumberOfParameters( true );
-    if( this->numVectors )
-    {
-        this->vectorName = dynamic_cast<ves::xplorer::util::CountNumberOfParametersCallback*>
-                           ( m_dataObjectOps["Count Number Of Vectors And Scalars"] )->GetParameterNames( true );
-    }
-
-    // if there are point data, set the first scalar and vector as active...
-    if( this->numPtDataArrays )
-    {
-        // set the first scalar and vector as active
-        if( this->numScalars )
-            this->SetActiveScalar( 0 );
-
-        if( this->numVectors )
-        {
-            this->SetActiveVector( 0 );
-            if( !this->vectorMagRange )
-            {
-                this->vectorMagRange = new double[2];
-            }
-            ves::xplorer::util::ComputeVectorMagnitudeRangeCallback* vecMagRangeCbk =
-                dynamic_cast<ves::xplorer::util::ComputeVectorMagnitudeRangeCallback*>
-                ( m_dataObjectOps["Compute Vector Magnitude Range"] );
-            m_dataObjectHandler->SetDatasetOperatorCallback( vecMagRangeCbk );
-            m_dataObjectHandler->OperateOnAllDatasetsInObject( this->m_dataSet );
-            vecMagRangeCbk->GetVectorMagnitudeRange( this->vectorMagRange );
-        }
+        LoadTemporalDataSet( translatedDataObject );
     }
     else
     {
-        vprDEBUG( vesDBG, 0 ) << "\tWARNING: No Point Data"
-        << std::endl << vprDEBUG_FLUSH;
+        InitializeVTKDataObject( translatedDataObject );
     }
-
-    SetType();
-    ves::xplorer::communication::CommunicationHandler::instance()
-        ->SendConductorMessage( "Loaded file: " + fileName );
-    //Register this dataset with the modeldatahandler
-    CreateCompositeDataSets();
-
-#ifdef QT_ON
-    WriteDatabaseEntry();
-#endif // QT_ON
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DataSet::LoadData( vtkDataSet* tempDataset, bool isPartOfCompositeDataset )
@@ -2060,6 +1974,162 @@ void DataSet::WriteDatabaseEntry()
     set.WriteToDatabase();
 }
 #endif //QT_ON
+////////////////////////////////////////////////////////////////////////////////
+void DataSet::LoadTemporalDataSet( vtkDataObject* temporalDataSet )
+{
+    vtkTemporalDataSet* tempVtkDataSet = 
+        vtkTemporalDataSet::SafeDownCast( temporalDataSet );
+    //Set the first time step to this dataset
+    vtkMultiBlockDataSet* firstTimeStep = vtkMultiBlockDataSet::New();
+    firstTimeStep->ShallowCopy( tempVtkDataSet->GetTimeStep( 0 ) );
+    firstTimeStep->Update();
+    
+    InitializeVTKDataObject( firstTimeStep );
+    SetAsPartOfTransientSeries();
+    m_transientDataSets.push_back( this );
+
+    unsigned int numTimeSteps = tempVtkDataSet->GetNumberOfTimeSteps();
+    //Loop over all the other time steps    
+    for( size_t i = 1; i < numTimeSteps; ++i )
+    {
+        //This could be a multi block dataset
+        //Load in the dataset        
+        //Do work
+        //new dataset
+        m_tempModel->CreateCfdDataSet();
+        ves::xplorer::DataSet* tempDataset = m_tempModel->GetCfdDataSet( -1 );
+        //set dcs
+        tempDataset->SetDCS( GetDCS() );
+        //set filename
+        std::ostringstream strm;
+        strm << fileName
+            << "_"
+            << std::setfill( '0' )
+            << std::setw( 6 )
+            << i << ".vtm";
+        
+        tempDataset->SetFileName( strm.str() );
+        //set the vector arrow
+        tempDataset->SetArrow( arrow );
+        //Load Data sort of
+        vtkMultiBlockDataSet* timeStep = vtkMultiBlockDataSet::New();
+        timeStep->ShallowCopy( tempVtkDataSet->GetTimeStep( i ) );
+        timeStep->Update();
+        tempDataset->InitializeVTKDataObject( timeStep );
+        tempDataset->SetAsPartOfTransientSeries();
+        
+        m_transientDataSets.push_back( tempDataset );
+    }
+    tempVtkDataSet->Delete();
+}
+////////////////////////////////////////////////////////////////////////////////
+void DataSet::InitializeVTKDataObject( vtkDataObject* tempDataObject )
+{
+    //Initialize the VTK dataset member variable
+    m_dataSet = tempDataObject;
+    
+    if( !m_dataObjectHandler )
+    {
+        m_dataObjectHandler = new ves::xplorer::util::DataObjectHandler();
+    }
+    //m_dataObjectHandler->OperateOnAllDatasetsInObject( m_dataSet );
+    
+    //Now create vector mag and vector scalars
+    m_dataObjectHandler->SetDatasetOperatorCallback( m_dataObjectOps["Compute Vector Mag and Scalars"] );
+    m_dataObjectHandler->OperateOnAllDatasetsInObject( m_dataSet );
+    
+    //Need to get number of pda
+    m_dataObjectHandler->SetDatasetOperatorCallback( 0 );
+    m_dataObjectHandler->OperateOnAllDatasetsInObject( m_dataSet );
+    this->numPtDataArrays = m_dataObjectHandler->GetNumberOfDataArrays();
+    
+#ifdef USE_OMP
+    char label[100];
+    vtkUnstructuredGridReader * tableReader = vtkUnstructuredGridReader::New();
+    tableReader->SetFileName( "./POST_DATA/octreeTable.vtk" );
+    tableReader->Update();
+    vtkUnstructuredGrid * table = ( vtkUnstructuredGrid * ) tableReader->GetOutput();
+    if( this->noOfData == 0 )
+    {
+        this->noOfData = table->GetNumberOfCells();
+    }
+    
+    vprDEBUG( vesDBG, 1 ) << "noOfData:" << this->noOfData
+    << std::endl << vprDEBUG_FLUSH;
+    tableReader->Delete();
+    
+# pragma omp parallel for private(label,i)
+    for( int i = 0; i < noOfData; i++ )
+    {
+        this->dataReader[i] = vtkUnstructuredGridReader::New();
+        std::ostringstream dirStringStream;
+        dirStringStream << "./POST_DATA/octant" << i << ".vtk";
+        std::string dirString = dirStringStream.str();
+        
+        this->dataReader[i]->SetFileName( dirString.c_str() );
+        this->dataReader[i]->Update();
+        this->data[i] = ( vtkUnstructuredGrid * ) this->dataReader[i]->GetOutput();
+    }
+#endif
+    
+    // Compute the geometrical properties of the mesh
+    //this->UpdatePropertiesForNewMesh();
+    
+    /// Load the precomputed data
+    LoadPrecomputedDataSlices();
+    
+    // count the number of scalars and store names and ranges...
+    this->StoreScalarInfo();
+    
+    // count the number of vectors and store names ...
+    this->numVectors = dynamic_cast<ves::xplorer::util::CountNumberOfParametersCallback*>
+        ( m_dataObjectOps["Count Number Of Vectors And Scalars"] )->GetNumberOfParameters( true );
+    if( this->numVectors )
+    {
+        this->vectorName = dynamic_cast<ves::xplorer::util::CountNumberOfParametersCallback*>
+            ( m_dataObjectOps["Count Number Of Vectors And Scalars"] )->GetParameterNames( true );
+    }
+    
+    // if there are point data, set the first scalar and vector as active...
+    if( this->numPtDataArrays )
+    {
+        // set the first scalar and vector as active
+        if( this->numScalars )
+            this->SetActiveScalar( 0 );
+        
+        if( this->numVectors )
+        {
+            this->SetActiveVector( 0 );
+            if( !this->vectorMagRange )
+            {
+                this->vectorMagRange = new double[2];
+            }
+            ves::xplorer::util::ComputeVectorMagnitudeRangeCallback* vecMagRangeCbk =
+                dynamic_cast<ves::xplorer::util::ComputeVectorMagnitudeRangeCallback*>
+                ( m_dataObjectOps["Compute Vector Magnitude Range"] );
+            m_dataObjectHandler->SetDatasetOperatorCallback( vecMagRangeCbk );
+            m_dataObjectHandler->OperateOnAllDatasetsInObject( m_dataSet );
+            vecMagRangeCbk->GetVectorMagnitudeRange( this->vectorMagRange );
+        }
+    }
+    else
+    {
+        vprDEBUG( vesDBG, 0 ) << "\tWARNING: No Point Data"
+        << std::endl << vprDEBUG_FLUSH;
+    }
+    
+    SetType();
+    ves::xplorer::communication::CommunicationHandler::instance()
+        ->SendConductorMessage( "Loaded file: " + fileName );
+    //Register this dataset with the modeldatahandler
+    //This assumes that the m_dataSet pointer is pointing to the correct
+    //dataset.
+    CreateCompositeDataSets();
+    
+#ifdef QT_ON
+    WriteDatabaseEntry();
+#endif // QT_ON
+}
 ////////////////////////////////////////////////////////////////////////////////
 } // end xplorer
 } // end ves

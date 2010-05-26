@@ -327,6 +327,7 @@ public:
     void SetActiveDataArrays( std::vector< std::string > activeArrays );
     ///Load transient data based on a file prefix or directory scan.
     void LoadTransientData( const std::string& dirName );
+
     ///Get Transient vectors for dataset
     ///\return The vector of datasets associated with this transient series
     const std::vector< DataSet* >& GetTransientDataSets();
@@ -337,6 +338,15 @@ protected:
 #endif // QT_ON
 
 private:
+    ///Load a VTK Temporal data set
+    ///\param temporalDataSet The temporal data object
+    void LoadTemporalDataSet( vtkDataObject* temporalDataSet );
+    
+    ///Initialize a VTK data object and run all of our preprocessing filters
+    ///on the data object.
+    ///\param tempDataObject The data set to initialize
+    void InitializeVTKDataObject( vtkDataObject* tempDataObject );
+    
     ///Model pointer to the model that is holding this dataset
     ves::xplorer::Model* m_tempModel;
     
