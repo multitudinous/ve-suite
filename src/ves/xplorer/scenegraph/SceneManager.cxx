@@ -303,10 +303,12 @@ GLTransformInfoPtr const SceneManager::GetGLTransformInfo(
         return itr->second;
     }
 
+    /*
     if( IsDesktopMode() )
     {
         return m_glTransformInfoMap.begin()->second;
     }
+    */
 
     std::cout << "SceneManager::GetGLTransformInfo - "
               << "GLTransformInfo not found!" << std::endl;
