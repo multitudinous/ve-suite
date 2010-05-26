@@ -1,14 +1,14 @@
 ##Builds idl skeleton files for veopen
 import os, sys, string
 pj = os.path.join
-import SConsAddons.Util as sca_util
+#import SConsAddons.Util as sca_util
 
-Import('ves_pkg', 'RootDir')
-env = ves_pkg.getEnv().Clone()
+#Import('ves_pkg', 'RootDir')
+#env = ves_pkg.getEnv().Clone()
 
 #launcherBundle = ves_pkg.createFileBundle( pj('share','vesuite') )
 ##Move Docbook files to PREFIX(Install Directory) if it exists.
-docbookDirectory = pj(RootDir, 'share','docs','docbook','vesuite_docs')
+#docbookDirectory = pj(RootDir, 'share','docs','docbook','vesuite_docs')
 
 #docsFile = sca_util.getFilesRecursiveByExt( '.', ['.pdf'] )
 #docsFile += sca_util.getFilesRecursiveByExt( '.', ['.html'] )

@@ -35,7 +35,7 @@
 /*!\file XMLDataBufferEngine.h
 XMLDataBufferEngine API
 */
-/*!\class VE_Conductor::XMLDataBufferEngine
+/*!\class ves::conductor::XMLDataBufferEngine
 *
 */
 
