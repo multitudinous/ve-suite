@@ -479,6 +479,7 @@ void Vistab::_onVector( wxCommandEvent& WXUNUSED( event ) )
 
     vectorContour->SetSize( this->GetRect() );
     vectorContour->Show();
+    vectorContour->SetAvailableDatasets( _availableDatasets );
 }
 ////////////////////////////////////////////////////////////
 void Vistab::_onStreamline( wxCommandEvent& WXUNUSED( event ) )
