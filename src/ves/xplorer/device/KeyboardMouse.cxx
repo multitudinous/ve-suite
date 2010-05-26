@@ -33,7 +33,6 @@
 
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/device/KeyboardMouse.h>
-#include <ves/xplorer/util/InteractionEvent.h>
 
 #include <ves/xplorer/Debug.h>
 #include <ves/xplorer/Model.h>
@@ -71,6 +70,7 @@
 #ifdef QT_ON
 #include <ves/xplorer/eventmanager/EventManager.h>
 #include <ves/xplorer/eventmanager/SignalWrapper.h>
+#include <ves/xplorer/eventmanager/InteractionEvent.h>
 #endif
 
 // --- Bullet Includes --- //
