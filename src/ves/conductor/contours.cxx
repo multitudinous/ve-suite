@@ -511,13 +511,6 @@ void Contours::_updateAdvancedSettings()
             warpOptionFlag->SetDataValue( static_cast<unsigned int>( 0 ) );
         }
         _advancedSettings.push_back( warpOptionFlag );
-
-        if( m_datasetSelection->IsEnabled() )
-    	{
-		    ves::open::xml::DataValuePairPtr surfToolsDVP( new ves::open::xml::DataValuePair() );
-		    surfToolsDVP->SetData( "SURF Tools", ConvertUnicode( m_datasetSelection->GetValue().c_str() ) );
-		    _advancedSettings.push_back( surfToolsDVP );
-    	}
     }
     else if( _dataType == "VECTOR" )
     {
@@ -557,6 +550,13 @@ void Contours::_updateAdvancedSettings()
                       _( "Unknown Data Type" ),
                       wxOK | wxICON_INFORMATION );
     }
+    
+    if( m_datasetSelection->IsEnabled() )
+    {
+        ves::open::xml::DataValuePairPtr surfToolsDVP( new ves::open::xml::DataValuePair() );
+        surfToolsDVP->SetData( "SURF Tools", ConvertUnicode( m_datasetSelection->GetValue().c_str() ) );
+        _advancedSettings.push_back( surfToolsDVP );
+    }    
 }
 //////////////////////////////////////////
 void Contours::_updateContourInformation()
