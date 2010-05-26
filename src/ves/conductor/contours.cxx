@@ -175,22 +175,6 @@ void Contours::CreateControls()
             _T( "Direction" ), wxDefaultPosition, wxDefaultSize, 5, 
             itemRadioBox5Strings, 1, wxRA_SPECIFY_COLS );
 	    itemBoxSizer4->Add( _directionRBox, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
-		
-        wxString itemRadioBox2Strings[] = {
-            _T( "Map Scalar Data" ),
-            _T( "Map Volume Flux Data" ),
-        };
-        m_selectDataMapRBox = new wxRadioBox( itemDialog1, CONTOURS_VECORSCALR_RBOX, 
-            _T( "Select Color Mapping Data" ), wxDefaultPosition, wxDefaultSize, 2, 
-            itemRadioBox2Strings, 1, wxRA_SPECIFY_COLS );
-        wxBoxSizer* dataMapBoxSizer = new wxBoxSizer( wxHORIZONTAL );
- 	    dataMapBoxSizer->Add( m_selectDataMapRBox, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
-        itemStaticBoxSizer3->Add( dataMapBoxSizer, 0, wxGROW | wxALL, 5 );
-        
-        m_datasetSelection = new wxComboBox( itemDialog1, wxID_ANY, _T( "" ), 
-            wxDefaultPosition, wxDefaultSize, m_availableDatasets, wxCB_DROPDOWN );
-        m_datasetSelection->Disable();
-        itemStaticBoxSizer3->Add( m_datasetSelection, 0, wxGROW | wxALL, 5 );
     }
     else if( _dataType == "VECTOR" )
     {
@@ -199,12 +183,32 @@ void Contours::CreateControls()
             _T( "y" ),
             _T( "z" ),
             _T( "By Wand" ),
-            _T( "All" )
+            _T( "All" ),
+            _T( "By Surface" )
         };
         _directionRBox = new wxRadioBox( itemDialog1, CONTOURS_DIR_RBOX, 
-            _T( "Direction" ), wxDefaultPosition, wxDefaultSize, 5, 
+            _T( "Direction" ), wxDefaultPosition, wxDefaultSize, 6, 
             itemRadioBox5Strings, 1, wxRA_SPECIFY_COLS );
 	    itemBoxSizer4->Add( _directionRBox, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
+    }
+    
+    {
+        //Setup the surface tools
+        wxString itemRadioBox2Strings[] = {
+            _T( "Map Scalar Data" ),
+            _T( "Map Volume Flux Data" ),
+        };
+        m_selectDataMapRBox = new wxRadioBox( itemDialog1, CONTOURS_VECORSCALR_RBOX, 
+                                             _T( "Select Color Mapping Data" ), wxDefaultPosition, wxDefaultSize, 2, 
+                                             itemRadioBox2Strings, 1, wxRA_SPECIFY_COLS );
+        wxBoxSizer* dataMapBoxSizer = new wxBoxSizer( wxHORIZONTAL );
+ 	    dataMapBoxSizer->Add( m_selectDataMapRBox, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
+        itemStaticBoxSizer3->Add( dataMapBoxSizer, 0, wxGROW | wxALL, 5 );
+        
+        m_datasetSelection = new wxComboBox( itemDialog1, wxID_ANY, _T( "" ), 
+                                            wxDefaultPosition, wxDefaultSize, m_availableDatasets, wxCB_DROPDOWN );
+        m_datasetSelection->Disable();
+        itemStaticBoxSizer3->Add( m_datasetSelection, 0, wxGROW | wxALL, 5 );        
     }
 
     //////////////////////////
