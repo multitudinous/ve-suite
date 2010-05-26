@@ -303,6 +303,8 @@ GLTransformInfoPtr const SceneManager::GetGLTransformInfo(
         return itr->second;
     }
 
+    //I am not sure why this is needed. It seems this should be addressed
+    //in other locations within our context initialization procedures.
     /*
     if( IsDesktopMode() )
     {
