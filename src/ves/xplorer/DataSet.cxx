@@ -1045,6 +1045,12 @@ void DataSet::SetActiveVector( const std::string& tempVectorName )
         return;
     }
 
+    if( vectorName.size() == 0 )
+    {
+        activeVector = -1;
+        return;
+    }
+
     int vector = -1;
     for( int i = 0; i < numVectors; ++i )
     {
