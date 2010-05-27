@@ -42,11 +42,7 @@
 // ---  VR Juggler Includes --- //
 #include <vrj/vrjParam.h>
 
-#if __VJ_version >= 2003000
 #include <vrj/Draw/OpenGL/ContextData.h>
-#else
-#include <vrj/Draw/OGL/GlContextData.h>
-#endif
 
 #include <gmtl/Matrix.h>
 
@@ -89,8 +85,9 @@ class SceneGLTransformInfo
 public:
     ///Constructor
     SceneGLTransformInfo(
-        const gmtl::Matrix44d& ortho2DMatrix,
-        const gmtl::Matrix44d& identityMatrix );
+        gmtl::Matrix44d const& ortho2DMatrix,
+        gmtl::Matrix44d const& identityMatrix,
+        gmtl::Matrix44d const& zUpMatrix );
 
     ///Destructor
     ~SceneGLTransformInfo();
@@ -98,23 +95,25 @@ public:
     ///
     ///\return
     scenegraph::GLTransformInfoPtr const GetGLTransformInfo(
-#if __VJ_version >= 2003000
         vrj::ViewportPtr const viewport );
-#else
-        vrj::Viewport* const viewport );
-#endif
 
     ///
-    const gmtl::Matrix44d& GetOrtho2DMatrix() const;
+    gmtl::Matrix44d const& GetOrtho2DMatrix() const;
 
     ///
-    const osg::Matrixd& GetOrtho2DMatrixOSG() const;
+    osg::Matrixd const& GetOrtho2DMatrixOSG() const;
 
     ///
-    const gmtl::Matrix44d& GetIdentityMatrix() const;
+    gmtl::Matrix44d const& GetIdentityMatrix() const;
 
     ///
-    const osg::Matrixd& GetIdentityMatrixOSG() const;
+    osg::Matrixd const& GetIdentityMatrixOSG() const;
+
+    ///
+    gmtl::Matrix44d const& GetZUpMatrix() const;
+
+    ///
+    osg::Matrixd const& GetZUpMatrixOSG() const;
 
     ///Initialize transform info for the scene w.r.t each viewport
     ///NOTE: MUST be called AFTER EnvironmentHandler::InitScene
@@ -127,24 +126,30 @@ private:
     ///This is needed because vr juggler is always calculating a 
     ///Left/Right combo for the view
     void CalculateCenterViewMatrix();
+
     ///
     const gmtl::Matrix44d m_ortho2DMatrix;
+
     ///
     const osg::Matrixd m_ortho2DMatrixOSG;
+
     ///
     const gmtl::Matrix44d m_identityMatrix;
+
     ///
     const osg::Matrixd m_identityMatrixOSG;
 
-#if __VJ_version >= 2003000
+    ///
+    const gmtl::Matrix44d m_zUpMatrix;
+
+    ///
+    const osg::Matrixd m_zUpMatrixOSG;
+
+    ///
     typedef std::map<
         vrj::ViewportPtr, scenegraph::GLTransformInfoPtr > GLTransformInfoMap;
+    ///
     vrj::opengl::ContextData< GLTransformInfoMap > m_glTransformInfoMap;
-#else
-    typedef std::map<
-        vrj::Viewport*, scenegraph::GLTransformInfoPtr > GLTransformInfoMap;
-    vrj::GlContextData< GLTransformInfoMap > m_glTransformInfoMap;
-#endif
 
 };
 } //end xplorer

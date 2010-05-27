@@ -220,14 +220,13 @@ App::App( int argc, char* argv[], bool enableRTT )
     gmtl::Matrix44d identityMatrix;
     identityMatrix.mState = gmtl::Matrix44d::IDENTITY;
 
-    m_sceneGLTransformInfo =
-        SceneGLTransformInfoPtr(
-            new SceneGLTransformInfo( ortho2DMatrix, identityMatrix ) );
-
     //Set the zUp transformation matrix
     gmtl::Vec3d x_axis( 1.0, 0.0, 0.0 );
-    mZUp = gmtl::makeRot< gmtl::Matrix44d >( 
+    gmtl::Matrix44d zUpMatrix = gmtl::makeRot< gmtl::Matrix44d >(
         gmtl::AxisAngled( gmtl::Math::deg2Rad( -90.0 ), x_axis ) );
+
+    m_sceneGLTransformInfo = SceneGLTransformInfoPtr( new SceneGLTransformInfo(
+        ortho2DMatrix, identityMatrix, zUpMatrix ) );
 
 #ifdef QT_ON
     ves::xplorer::data::DatabaseManager::instance()->SetDatabasePath("/tmp/ves.db");
@@ -381,6 +380,13 @@ void App::configSceneView( osgUtil::SceneView* newSceneViewer )
         newSceneViewer->setComputeNearFarMode(
             osgUtil::CullVisitor::COMPUTE_NEAR_FAR_USING_BOUNDING_VOLUMES );
     }
+
+    //Set default viewport, projection matrix, and view matrix for each scene view
+    newSceneViewer->setViewport( 0.0, 0.0, 1.0, 1.0 );
+    newSceneViewer->setProjectionMatrix(
+        m_sceneGLTransformInfo->GetIdentityMatrixOSG() );
+    newSceneViewer->setViewMatrix( 
+        m_sceneGLTransformInfo->GetIdentityMatrixOSG() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 ///Remember that this is called in parrallel in a multiple context situation
@@ -864,7 +870,7 @@ void App::draw()
         {
             return;
         }
-        
+
         /*if( *m_skipDraw )
         {
             *m_skipDraw = false;
@@ -913,12 +919,9 @@ void App::draw()
     double n = frustum[ vrj::Frustum::VJ_NEAR ];
     double f = frustum[ vrj::Frustum::VJ_FAR ];
 
-    //Get the GLTransformInfo associated w/ this viewport and context
+    //Get and set the GLTransformInfo associated w/ this viewport and context
     scenegraph::GLTransformInfoPtr glTI =
         m_sceneGLTransformInfo->GetGLTransformInfo( viewport );
-    const osg::Matrixd identityMatrixOSG =
-        m_sceneGLTransformInfo->GetIdentityMatrixOSG();
-    //Set scene info associated w/ this viewport and context
     if( glTI )
     {
 #ifdef QT_ON
@@ -935,23 +938,20 @@ void App::draw()
 
         //Get the view matrix from vrj and transform into z-up land
         const gmtl::Matrix44d vrjViewMatrix =
-            gmtl::convertTo< double >( project->getViewMatrix() ) * mZUp;
+            gmtl::convertTo< double >( project->getViewMatrix() ) *
+            m_sceneGLTransformInfo->GetZUpMatrix();
         //Multiply by the camera matrix (mNavPosition)
         glTI->UpdateViewMatrix( vrjViewMatrix, mNavPosition );
         const osg::Matrixd viewMatrixOSG = glTI->GetViewMatrixOSG();
 
         if( mRTT )
         {
-            sv->setViewport(
-                0, 0, glTI->GetWindowWidth(), glTI->GetWindowHeight() );
-            sv->setProjectionMatrix(
-                m_sceneGLTransformInfo->GetOrtho2DMatrixOSG() );
-            sv->setViewMatrix( identityMatrixOSG );
-
             osg::ref_ptr< osg::Camera > camera =
                 mSceneRenderToTexture->GetCamera( viewport );
             if( camera.valid() )
             {
+                sv->setViewport(
+                    0.0, 0.0, glTI->GetWindowWidth(), glTI->GetWindowHeight() );
                 camera->setProjectionMatrix( projectionMatrixOSG );
                 camera->setViewMatrix( viewMatrixOSG );
             }
@@ -967,9 +967,9 @@ void App::draw()
     }
     else
     {
-        sv->setViewport( 0, 0, 1, 1 );
-        sv->setProjectionMatrix( identityMatrixOSG );
-        sv->setViewMatrix( identityMatrixOSG );
+        //error output
+        vprDEBUG( vesDBG, 1 ) << "App::draw(): invalid transfom info!!!"
+                              << std::endl << vprDEBUG_FLUSH;
     }
 
     //Draw the scene

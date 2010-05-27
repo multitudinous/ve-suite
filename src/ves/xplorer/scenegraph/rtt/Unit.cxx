@@ -402,9 +402,9 @@ void Unit::AssignInputTexture()
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Unit::CreateTexturedQuadDrawable(
-    const osg::Vec3& corner,
-    const osg::Vec3& widthVec,
-    const osg::Vec3& heightVec,
+    osg::Vec3 const& corner,
+    osg::Vec3 const& widthVec,
+    osg::Vec3 const& heightVec,
     float l, float b, float r, float t )
 {
     //Get the vertex coordinates for the quad

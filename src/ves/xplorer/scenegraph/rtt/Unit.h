@@ -144,11 +144,11 @@ public:
     ///\return
     osg::Geode* const GetGeode() const;
 
-    ///Helper function to create screen sized quads
+    ///Helper function to create viewport sized quads
     void CreateTexturedQuadDrawable(
-        const osg::Vec3& corner = osg::Vec3( 0, 0, 0 ),
-        const osg::Vec3& widthVec = osg::Vec3( 1, 0, 0 ),
-        const osg::Vec3& heightVec = osg::Vec3( 0, 1, 0 ),
+        osg::Vec3 const& corner = osg::Vec3( -1.0, -1.0, -1.0 ),
+        osg::Vec3 const& widthVec = osg::Vec3( 2.0, 0.0, 0.0 ),
+        osg::Vec3 const& heightVec = osg::Vec3( 0.0, 2.0, 0.0 ),
         float l = 0.0, float b = 0.0, float r = 1.0, float t = 1.0 );
 
 protected:

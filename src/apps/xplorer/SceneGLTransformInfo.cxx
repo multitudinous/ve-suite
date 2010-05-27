@@ -40,17 +40,11 @@
 #include <ves/xplorer/Debug.h>
 
 // ---  VR Juggler Includes --- //
-#if __VJ_version >= 2003000
 #include <vrj/Draw/OpenGL/App.h>
 #include <vrj/Draw/OpenGL/Window.h>
 #include <vrj/Draw/OpenGL/DrawManager.h>
 #include <vrj/Draw/OpenGL/ContextData.h>
-#else
-#include <vrj/Draw/OGL/App.h>
-#include <vrj/Draw/OGL/GlWindow.h>
-#include <vrj/Draw/OGL/GlDrawManager.h>
-#include <vrj/Draw/OGL/GlContextData.h>
-#endif
+
 #include <vrj/Display/SurfaceViewport.h>
 #include <vrj/Display/Frustum.h>
 #include <vrj/Display/Projection.h>
@@ -74,13 +68,16 @@ using namespace ves::xplorer;
 
 ////////////////////////////////////////////////////////////////////////////////
 SceneGLTransformInfo::SceneGLTransformInfo(
-    const gmtl::Matrix44d& ortho2DMatrix,
-    const gmtl::Matrix44d& identityMatrix )
+    gmtl::Matrix44d const& ortho2DMatrix,
+    gmtl::Matrix44d const& identityMatrix,
+    gmtl::Matrix44d const& zUpMatrix )
     :
     m_ortho2DMatrix( ortho2DMatrix ),
     m_ortho2DMatrixOSG( m_ortho2DMatrix.mData ),
     m_identityMatrix( identityMatrix ),
-    m_identityMatrixOSG( m_identityMatrix.mData )
+    m_identityMatrixOSG( m_identityMatrix.mData ),
+    m_zUpMatrix( zUpMatrix ),
+    m_zUpMatrixOSG( m_zUpMatrix.mData )
 {
     ;
 }
@@ -91,11 +88,7 @@ SceneGLTransformInfo::~SceneGLTransformInfo()
 }
 ////////////////////////////////////////////////////////////////////////////////
 scenegraph::GLTransformInfoPtr const SceneGLTransformInfo::GetGLTransformInfo(
-#if __VJ_version >= 2003000
     vrj::ViewportPtr const viewport )
-#else
-    vrj::Viewport* const viewport )
-#endif
 {
     GLTransformInfoMap::const_iterator itr =
         (*m_glTransformInfoMap).find( viewport );
@@ -112,39 +105,43 @@ scenegraph::GLTransformInfoPtr const SceneGLTransformInfo::GetGLTransformInfo(
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-const gmtl::Matrix44d& SceneGLTransformInfo::GetOrtho2DMatrix() const
+gmtl::Matrix44d const& SceneGLTransformInfo::GetOrtho2DMatrix() const
 {
     return m_ortho2DMatrix;
 }
 ////////////////////////////////////////////////////////////////////////////////
-const osg::Matrixd& SceneGLTransformInfo::GetOrtho2DMatrixOSG() const
+osg::Matrixd const& SceneGLTransformInfo::GetOrtho2DMatrixOSG() const
 {
     return m_ortho2DMatrixOSG;
 }
 ////////////////////////////////////////////////////////////////////////////////
-const gmtl::Matrix44d& SceneGLTransformInfo::GetIdentityMatrix() const
+gmtl::Matrix44d const& SceneGLTransformInfo::GetIdentityMatrix() const
 {
     return m_identityMatrix;
 }
 ////////////////////////////////////////////////////////////////////////////////
-const osg::Matrixd& SceneGLTransformInfo::GetIdentityMatrixOSG() const
+osg::Matrixd const& SceneGLTransformInfo::GetIdentityMatrixOSG() const
 {
     return m_identityMatrixOSG;
+}
+////////////////////////////////////////////////////////////////////////////////
+gmtl::Matrix44d const& SceneGLTransformInfo::GetZUpMatrix() const
+{
+    return m_zUpMatrix;
+}
+////////////////////////////////////////////////////////////////////////////////
+osg::Matrixd const& SceneGLTransformInfo::GetZUpMatrixOSG() const
+{
+    return m_zUpMatrixOSG;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SceneGLTransformInfo::Initialize()
 {
     //Get window and viewport information
-#if __VJ_version >= 2003000
     vrj::opengl::DrawManager* glDrawManager =
         vrj::opengl::DrawManager::instance();
     vrj::opengl::UserData* userData = glDrawManager->currentUserData();
     vrj::opengl::WindowPtr glWindow = userData->getGlWindow();
-#else
-    vrj::GlDrawManager* glDrawManager = vrj::GlDrawManager::instance();
-    vrj::GlUserData* userData = glDrawManager->currentUserData();
-    vrj::GlWindowPtr glWindow = userData->getGlWindow();
-#endif
     vrj::DisplayPtr display = glWindow->getDisplay();
 
     //Get state info about the screen
@@ -158,11 +155,7 @@ void SceneGLTransformInfo::Initialize()
     unsigned int numViewports = display->getNumViewports();
     for( unsigned int i = 0; i < numViewports; ++i )
     {
-#if __VJ_version >= 2003000
         vrj::ViewportPtr viewport = display->getViewport( i );
-#else
-        vrj::Viewport* viewport = display->getViewport( i );
-#endif
 
         //Get state info about the viewport
         float vp_ox, vp_oy, vp_sx, vp_sy;
@@ -183,7 +176,8 @@ void SceneGLTransformInfo::Initialize()
         windowMatrix.mData[ 13 ] = ( 0.5 * viewportHeight ) + viewportOriginY;
         windowMatrix.mData[ 14 ] = 0.5;
 
-        scenegraph::GLTransformInfoPtr glTransformInfo( new scenegraph::GLTransformInfo(
+        scenegraph::GLTransformInfoPtr glTransformInfo(
+            new scenegraph::GLTransformInfo(
                 viewportOriginX, viewportOriginY, viewportWidth, viewportHeight,
                 0, 0, windowWidth, windowHeight,
                 windowMatrix ) );
@@ -200,13 +194,8 @@ void SceneGLTransformInfo::CalculateCenterViewMatrix()
         vrj::DisplayManager::instance();
     const std::vector< vrj::DisplayPtr >& displays = 
         displayManager->getActiveDisplays();
-#if __VJ_version >= 2003000
     vrj::opengl::DrawManager* glDrawManager =
         vrj::opengl::DrawManager::instance();
-#else
-    vrj::GlDrawManager* glDrawManager = 
-        vrj::GlDrawManager::instance();
-#endif
     const float positionScale = glDrawManager->getApp()->getDrawScaleFactor();
     for( size_t i = 0; i < displays.size(); ++i )
     {
@@ -214,20 +203,16 @@ void SceneGLTransformInfo::CalculateCenterViewMatrix()
         unsigned int numViewports = displays.at( i )->getNumViewports();
         for( unsigned int j = 0; j < numViewports; ++j )
         {
-#if __VJ_version >= 2003000
             vrj::ViewportPtr viewport = display->getViewport( j );
             vrj::ProjectionPtr proj = viewport->getLeftProj();
-#else
-            vrj::Viewport* viewport = display->getViewport( j );
-            vrj::Projection* proj = viewport->getLeftProj();
-#endif
+
             gmtl::Matrix44f cur_head_pos = 
-                viewport->getUser()->getHeadPosProxy()->getData(positionScale);
+                viewport->getUser()->getHeadPosProxy()->getData( positionScale );
 
             const gmtl::Point3f left_eye_pos(
-                cur_head_pos * gmtl::Point3f(0, 0, 0) );
-            
-            proj->calcViewMatrix(left_eye_pos, positionScale);
+                cur_head_pos * gmtl::Point3f( 0, 0, 0 ) );
+
+            proj->calcViewMatrix( left_eye_pos, positionScale );
             const gmtl::Matrix44f& projMatrix = proj->getViewMatrix();
         }
     }

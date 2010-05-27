@@ -314,6 +314,8 @@ osg::Camera* SceneRenderToTexture::CreatePipelineCamera(
         viewportDimensions );
 
     //Attach a texture and use it as the render target
+    //If you set one buffer to multisample, they all get set to multisample
+    //see RenderStage.cpp
     tempCamera->attach(
         osg::Camera::COLOR_BUFFER0, colorMap.get() );//, 0, 0, false, 4, 4 );
     tempCamera->attach(
@@ -369,7 +371,9 @@ osg::Texture2D* SceneRenderToTexture::CreateViewportTexture(
     osg::Texture2D::WrapMode wrapMode,
     std::pair< int, int >& viewportDimensions )
 {
-    //GL_RGBA8/GL_UNSIGNED_INT - GL_RGBA16F_ARB/GL_FLOAT
+    //GL_RGBA8/GL_UNSIGNED_INT: 8 bits per channel,  32 bits total
+    //GL_RGBA16F_ARB/GL_FLOAT: 16 bits per channel,  64 bits total
+    //GL_RGBA32F_ARB/GL_FLOAT: 32 bits per channel, 128 bits total
     osg::Texture2D* tempTexture = new osg::Texture2D();
     tempTexture->setInternalFormat( internalFormat );
     tempTexture->setSourceFormat( sourceFormat );
@@ -658,7 +662,7 @@ osg::Geode* SceneRenderToTexture::CreateClearColorQuad()
     std::string vertexSource =
     "void main() \n"
     "{ \n"
-        //Ignore MVP transformation so vertices are in Normalized Device Coord.
+        //Ignore MVP transformation as vertices are already in Normalized Device Coord.
         "gl_Position = gl_Vertex; \n"
     "} \n";
 
@@ -704,38 +708,21 @@ osg::Geode* SceneRenderToTexture::CreateTexturedQuad(
     tempView->getOriginAndSize(
         viewportOriginX, viewportOriginY, viewportWidth, viewportHeight );
 
-    /*
-    std::cout << viewportOriginX << " "
-              << viewportOriginY << " " 
-              << viewportWidth << " "
-              << viewportHeight << std::endl;
-    */
-
-    float lx, ly, ux, uy;
-    //Straight mapping from ( 0 to 1 ) viewport space to
-    //                      ( 0 to 1 ) ortho projection space
-    lx = viewportOriginX;
-    ly = viewportOriginY;
-    ux = viewportOriginX + viewportWidth;
-    uy = viewportOriginY + viewportHeight;
-
-    //Transform ( 0 to 1 ) viewport space into
+    //Transform (  0 to 1 ) viewport space into
     //          ( -1 to 1 ) identity projection space
-    //lx = ( viewportOriginX * 2.0 ) - 1.0;
-    //ly = ( viewportOriginY * 2.0 ) - 1.0;
-    //ux = ( ( viewportOriginX + viewportWidth ) * 2.0 ) - 1.0;
-    //uy = ( ( viewportOriginY + viewportHeight )* 2.0 ) - 1.0;
-
-    //std::cout << lx << " " << ly << " " << ux << " " << uy << std::endl;
+    float lx = ( viewportOriginX * 2.0 ) - 1.0;
+    float ly = ( viewportOriginY * 2.0 ) - 1.0;
+    float ux = ( ( viewportOriginX + viewportWidth ) * 2.0 ) - 1.0;
+    float uy = ( ( viewportOriginY + viewportHeight )* 2.0 ) - 1.0;
 
     //Get the vertex coordinates for the quad
     osg::ref_ptr< osg::Vec3Array > quadVertices = new osg::Vec3Array();
     quadVertices->resize( 4 );
 
-    (*quadVertices)[ 0 ].set( lx, ly, 0.0 );
-    (*quadVertices)[ 1 ].set( ux, ly, 0.0 );
-    (*quadVertices)[ 2 ].set( ux, uy, 0.0 );
-    (*quadVertices)[ 3 ].set( lx, uy, 0.0 );
+    (*quadVertices)[ 0 ].set( lx, ly, -1.0 );
+    (*quadVertices)[ 1 ].set( ux, ly, -1.0 );
+    (*quadVertices)[ 2 ].set( ux, uy, -1.0 );
+    (*quadVertices)[ 3 ].set( lx, uy, -1.0 );
 
     //Get the texture coordinates for the quad
     osg::ref_ptr< osg::Vec2Array > quadTexCoords = new osg::Vec2Array();
@@ -753,15 +740,7 @@ osg::Geode* SceneRenderToTexture::CreateTexturedQuad(
         osg::PrimitiveSet::QUADS, 0, quadVertices->size() ) );
     quadGeometry->setTexCoordArray( 0, quadTexCoords.get() );
     quadGeometry->setUseDisplayList( true );
-
-#ifndef VES_SRTT_DEBUG
     quadGeometry->setColorBinding( osg::Geometry::BIND_OFF );
-#else
-    osg::ref_ptr< osg::Vec4Array > colorArray = new osg::Vec4Array();
-    colorArray->push_back( osg::Vec4f( 1.0, 1.0, 0.0, 1.0 ) );
-    quadGeometry->setColorArray( colorArray.get() );
-    quadGeometry->setColorBinding( osg::Geometry::BIND_OVERALL );
-#endif
 
     //Create geode for quad
     osg::Geode* quadGeode = new osg::Geode();
@@ -772,16 +751,31 @@ osg::Geode* SceneRenderToTexture::CreateTexturedQuad(
     osg::ref_ptr< osg::StateSet > stateset = quadGeode->getOrCreateStateSet();
     stateset->setMode( GL_LIGHTING, osg::StateAttribute::OFF );
 
-#ifndef VES_SRTT_DEBUG
+    osg::ref_ptr< osg::Shader > vertexShader = new osg::Shader();
+    std::string vertexSource =
+    "void main() \n"
+    "{ \n"
+        //Ignore MVP transformation as vertices are already in Normalized Device Coord.
+        "gl_Position = gl_Vertex; \n"
+        "gl_TexCoord[ 0 ].st = gl_MultiTexCoord0.st; \n"
+    "} \n";
+
+    vertexShader->setType( osg::Shader::VERTEX );
+    vertexShader->setShaderSource( vertexSource );
+    vertexShader->setName( "VS Quad Vertex Shader" );
+
     osg::ref_ptr< osg::Shader > fragmentShader = new osg::Shader();
     std::string fragmentSource =
     "uniform sampler2D baseMap; \n"
 
     "void main() \n"
     "{ \n"
-        "vec3 base = texture2D( baseMap, gl_TexCoord[ 0 ].xy ).rgb; \n"
-
+        "vec3 base = texture2D( baseMap, gl_TexCoord[ 0 ].st ).rgb; \n"
+#ifdef VES_SRTT_DEBUG
+        "gl_FragData[ 0 ] = vec4( 1.0, 1.0, 0.0, 1.0 ); \n"
+#else
         "gl_FragData[ 0 ] = vec4( base, 1.0 ); \n"
+#endif
     "} \n";
 
     fragmentShader->setType( osg::Shader::FRAGMENT );
@@ -789,6 +783,7 @@ osg::Geode* SceneRenderToTexture::CreateTexturedQuad(
     fragmentShader->setName( "VS Quad Fragment Shader" );
 
     osg::ref_ptr< osg::Program > program = new osg::Program();
+    program->addShader( vertexShader.get() );
     program->addShader( fragmentShader.get() );
     program->setName( "VS Quad Program" );
 
@@ -797,7 +792,6 @@ osg::Geode* SceneRenderToTexture::CreateTexturedQuad(
         osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
     stateset->addUniform( new osg::Uniform( "baseMap", 0 ) );
     stateset->setTextureAttributeAndModes( 0, texture, osg::StateAttribute::ON );
-#endif
 
 #ifdef VES_SRTT_DEBUG
     quadGeode->setNodeMask( 0 );
