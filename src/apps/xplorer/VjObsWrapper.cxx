@@ -161,11 +161,7 @@ void VjObsWrapper::init( CosNaming::NamingContext* input,
         std::string name;
         vpr::InetAddr masterAddress;
         std::vector< vpr::InetAddr > tempAddrVec;
-#if __VJ_version > 2000003
         tempAddrVec = vpr::InetAddr::getAllLocalAddrs( false );
-#elif __VJ_version == 2000003
-        masterAddress.getAllLocalAddrs( tempAddrVec, false );
-#endif
 
         ///Convert master hostname to lower case to do string compares
         boost::algorithm::to_lower( masterhost );
@@ -174,7 +170,6 @@ void VjObsWrapper::init( CosNaming::NamingContext* input,
         std::string tempHostname;
         for( size_t i = 0; i < tempAddrVec.size(); ++i )
         {
-#if __VJ_version > 2000003
             try
             {
                 tempHostname = tempAddrVec.at( i ).getHostname();
@@ -186,9 +181,7 @@ void VjObsWrapper::init( CosNaming::NamingContext* input,
                     << e.what() << std::endl;
                 continue;
             }
-#elif __VJ_version == 2000003
-            tempAddrVec.at( i ).getHostname( tempHostname );
-#endif
+
             ///Convert complete computer name to lower case to do name compares
             boost::algorithm::to_lower( tempHostname );
 

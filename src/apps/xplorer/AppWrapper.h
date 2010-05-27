@@ -70,11 +70,7 @@ public:
     bool JugglerIsRunning();
 
     ///Initilize things in a seperate thread
-#if __VJ_version > 2000003
     void init();
-#elif __VJ_version == 2000003
-    void init( void* );
-#endif
 
 private:
     ///The app that is running

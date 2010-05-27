@@ -444,11 +444,7 @@ std::vector<vtkDataSet*> Model::GetWaitingDataList()
     return this->waitingdatalist;
 }
 ////////////////////////////////////////////////////////////////////////////////
-#if __VJ_version > 2000003
-void Model::GetDataFromUnit( void )
-#elif __VJ_version == 2000003
-void Model::GetDataFromUnit( void* unused )
-#endif
+void Model::GetDataFromUnit()
 {
 
 //std::vector<VTKSmartPtr<vtkUnstructuredGrid> > _gridList;
@@ -607,13 +603,7 @@ void Model::GetDataFromUnit( void* unused )
 ////////////////////////////////////////////////////////////////////////////////
 void Model::ActiveLoadingThread()
 {
-#if __VJ_version > 2000003
     this->loadDataTh = new vpr::Thread( boost::bind( &Model::GetDataFromUnit, this ) );
-#elif __VJ_version == 2000003
-    this->loadDataTh = new vpr::Thread(
-                           new vpr::ThreadMemberFunctor< Model >(
-                               this, &Model::GetDataFromUnit ) );
-#endif
 }
 ////////////////////////////////////////////////////////////////////////////////
 const std::string Model::MakeSurfaceFile( vtkDataSet* ugrid, int datasetindex )

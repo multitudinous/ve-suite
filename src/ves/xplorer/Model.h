@@ -227,11 +227,9 @@ public:
 
     //Dynamically load data from unit
     void ActiveLoadingThread();
-#if __VJ_version > 2000003
+
     void GetDataFromUnit( void );
-#elif __VJ_version == 2000003
-    void GetDataFromUnit( void* unused );
-#endif
+
     const std::string MakeSurfaceFile( vtkDataSet*, int );
     void DynamicLoadingData( vtkUnstructuredGrid*, int, double*, double*, double* );
     void DynamicLoadingGeom( std::string, double*, double*, double*, double*, int, int );

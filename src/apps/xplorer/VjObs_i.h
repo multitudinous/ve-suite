@@ -50,9 +50,6 @@ VjObs_i API
 #include <cluster/ClusterNetwork.h>
 
 #include <vrj/vrjParam.h>
-#if __VJ_version <= 2000003
-#include <cluster/ClusterNode.h>
-#endif
 
 #include <plugins/ApplicationDataManager/UserData.h>
 

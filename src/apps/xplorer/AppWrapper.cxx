@@ -79,13 +79,8 @@ AppWrapper::AppWrapper( int argc,  char* argv[], VjObsWrapper* input )
     kernel->setApplication( m_cfdApp );    // Give application to kernel
 
     /*m_thread = new Thread();
-    #if __VJ_version > 2000003
     m_thread->new_thread = 
         new vpr::Thread( boost::bind(&AppWrapper::init, this) );
-    #elif __VJ_version == 2000003
-    m_thread->new_thread = 
-        new vpr::Thread( new vpr::ThreadMemberFunctor< AppWrapper >( this, &AppWrapper::init ) );
-    #endif
     m_jugglerIsRunning = true;*/
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -104,11 +99,7 @@ bool AppWrapper::JugglerIsRunning()
     return m_jugglerIsRunning;
 }
 ////////////////////////////////////////////////////////////////////////////////
-#if __VJ_version > 2000003
 void AppWrapper::init()
-#elif __VJ_version == 2000003
-void AppWrapper::init( void* )
-#endif
 {
     //vrj::Kernel::instance()->doWaitForKernelStop();// Block until kernel stops
 

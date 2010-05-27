@@ -223,11 +223,9 @@ int main( int argc, char* argv[] )
         VjObsWrapper* vjobsWrapper = new VjObsWrapper();
         vjobsWrapper->init( naming_context.in(), orb.in(), 
             child_poa.in(), NULL, argc, argv );
-        
-#if __VJ_version >= 2003000
+
         kernel->init( vm );
-#elif __VJ_version == 2000003
-#endif
+
         // If we have configuration files, load them.
         if ( vm.count("jconf") > 0 )
         {
