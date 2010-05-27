@@ -312,7 +312,7 @@ void KeyboardMouse::ProcessEvents( ves::open::xml::CommandPtr command )
                 boost::static_pointer_cast< gadget::KeyEvent >( event );
 #ifdef QT_ON
             eventmanager::InteractionEvent ie( eventmanager::InteractionEvent::keyPress,
-                                keyEvt->getKey() );
+                                keyEvt->getKey(), keyEvt->getKeyChar(), keyEvt->getKeyUnicode(), keyEvt->getModifierMask() );
 
             mInteractionSignal( ie );
 #endif
@@ -341,7 +341,7 @@ void KeyboardMouse::ProcessEvents( ves::open::xml::CommandPtr command )
             m_keys.reset( m_currKey );
 #ifdef QT_ON
             eventmanager::InteractionEvent ie( eventmanager::InteractionEvent::keyRelease,
-                                keyEvt->getKey() );
+                                keyEvt->getKey(), keyEvt->getKeyChar(), keyEvt->getKeyUnicode(), keyEvt->getModifierMask() );
 
             mInteractionSignal( ie );
 #endif
@@ -363,7 +363,7 @@ void KeyboardMouse::ProcessEvents( ves::open::xml::CommandPtr command )
             m_keys.set( m_currMouse );
 #ifdef QT_ON
             eventmanager::InteractionEvent ie( eventmanager::InteractionEvent::buttonPress,
-                                0, eventmanager::InteractionEvent::button_1,
+                                0, 0, 0, mouse_evt->getState(), eventmanager::InteractionEvent::button_1,
                                 eventmanager::InteractionEvent::button_1, 0.0, 0.0,
                                 mouse_evt->getX(), mouse_evt->getY() );
 
@@ -387,7 +387,7 @@ void KeyboardMouse::ProcessEvents( ves::open::xml::CommandPtr command )
             m_keys.reset( m_currMouse );
 #ifdef QT_ON
             eventmanager::InteractionEvent ie( eventmanager::InteractionEvent::buttonRelease,
-                                0, eventmanager::InteractionEvent::button_1,
+                                0, 0, 0, mouse_evt->getState(), eventmanager::InteractionEvent::button_1,
                                 eventmanager::InteractionEvent::button_1, 0.0, 0.0,
                                 mouse_evt->getX(), mouse_evt->getY() );
 
@@ -421,8 +421,8 @@ void KeyboardMouse::ProcessEvents( ves::open::xml::CommandPtr command )
             {
 #ifdef QT_ON
                 eventmanager::InteractionEvent ie( eventmanager::InteractionEvent::pointerMotion,
-                                0, eventmanager::InteractionEvent::none,
-                                eventmanager::InteractionEvent::none, 0.0, 0.0,
+                                0, 0, 0, mouse_evt->getState(), eventmanager::InteractionEvent::button_none,
+                                eventmanager::InteractionEvent::button_none, 0.0, 0.0,
                                 m_currX, m_currY );
 
                 mInteractionSignal( ie );
@@ -433,7 +433,7 @@ void KeyboardMouse::ProcessEvents( ves::open::xml::CommandPtr command )
             {
 #ifdef QT_ON
                 eventmanager::InteractionEvent ie( eventmanager::InteractionEvent::pointerMotion,
-                                0, eventmanager::InteractionEvent::none,
+                                0, 0, 0, mouse_evt->getState(), eventmanager::InteractionEvent::button_none,
                                 eventmanager::InteractionEvent::button_1, 0.0, 0.0,
                                 m_currX, m_currY );
 

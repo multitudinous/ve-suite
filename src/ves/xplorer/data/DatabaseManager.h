@@ -40,6 +40,7 @@
 
 // --- C++ headers --- //
 #include <string>
+#include <vector>
 
 // Forward declarations
 namespace Poco
@@ -81,6 +82,26 @@ public:
     /// The session created in this way will be automatically returned to the
     /// SessionPool when mySession goes out of scope.
     Poco::Data::SessionPool* GetPool();
+
+    /**
+     * Returns a vector of strings of the data contained in
+     * column @c columnName in table @c tableName. If the data in the column is
+     * not string data, this method attempts a lexical cast to string. If the cast
+     * fails, an empty vector is returned.
+     * @param tableName The name of the table in the database
+     * @param columnName The name of the column containing the desired data
+     * @param distinct If true, no duplicate values will appear in the returned vector.
+     * Defualt value is false.
+     * @return Vector of strings
+     */
+    std::vector< std::string > GetStringVector( const std::string& tableName, const std::string& columnName, bool distinct = false );
+
+    /**
+     * Checks whether table with @c tableName exists in the current database.
+     * @param tableName Name of table to check for
+     * @return @c true if table exists, @c false otherwise.
+     */
+    bool TableExists( const std::string& tableName );
     
 private:
     /// ctor

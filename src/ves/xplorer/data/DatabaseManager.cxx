@@ -33,6 +33,9 @@
 // --- Poco includes --- //
 #include <Poco/Data/SessionPool.h>
 #include <Poco/Data/SQLite/Connector.h>
+#include <Poco/Data/RecordSet.h>
+#include <Poco/Data/Session.h>
+#include <Poco/Data/DataException.h>
 
 #include <boost/shared_ptr.hpp>
 
@@ -80,6 +83,65 @@ void DatabaseManager::SetDatabasePath( const std::string& path )
 Poco::Data::SessionPool* DatabaseManager::GetPool( )
 {
     return mPool;
+}
+
+std::vector< std::string > DatabaseManager::GetStringVector( const std::string& tableName, const std::string& columnName, bool distinct )
+{
+    std::vector< std::string > returnValue;
+
+    // If table doesn't exist, return an empty vector
+    if( !TableExists( tableName ) )
+    {
+        return returnValue;
+    }
+
+    Poco::Data::Session session( mPool->get( ) );
+    Poco::Data::Statement statement( session );
+
+    // Build the following query: "SELECT [DISTINCT] columnName FROM tableName"
+    statement << "SELECT ";
+    if( distinct )
+    {
+        statement << "DISTINCT ";
+    }
+    statement << columnName << " FROM " << tableName;
+
+    try
+    {
+        statement.execute( );
+        Poco::Data::RecordSet recordset( statement );
+        if( recordset.rowCount( ) != 0 )
+        {
+            for( int rowIndex = 0; rowIndex < recordset.rowCount( ); rowIndex++ )
+            {
+                returnValue.push_back( recordset.value( 0, rowIndex ).convert<std::string > ( ) );
+            }
+        }
+    }
+    catch( Poco::Data::DataException &e )
+    {
+        std::cout << e.displayText( ) << std::endl;
+    }
+
+    return returnValue;
+}
+
+bool DatabaseManager::TableExists( const std::string& tableName )
+{
+    bool exists = false;
+    Poco::Data::Session session( mPool->get( ) );
+    try
+    {
+        session << "SELECT 1 FROM sqlite_master WHERE name='" << tableName << "'",
+                Poco::Data::into( exists ),
+                Poco::Data::now;
+    }
+    catch( Poco::Data::DataException &e )
+    {
+        std::cout << e.displayText( ) << std::endl;
+        exists = false;
+    }
+    return exists;
 }
 
 }// namespace data

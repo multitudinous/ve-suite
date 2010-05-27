@@ -110,30 +110,32 @@ Q_SIGNALS:
 
 private:
     void FreeOldWidgets( );
-    QWidget* mWidget; /// Widget associated with this element
-    QImage* mImage; /// Rendered image of element
-    QImage* mImageFlipped; /// Vertically flipped image of element
-    QGraphicsScene* mGraphicsScene; /// Scene to hold widget
-    QGraphicsProxyWidget* mGraphicsProxyWidget; /// Proxy widget that handles internal event forwarding
-    QGraphicsView* mGraphicsView; /// View to display scene and allow interaction
-    int mImageWidth; /// Width of rendered image
-    int mImageHeight; /// Height of rendered image
-    int mWidth; /// Width of widget
-    int mHeight; /// Height of widget
-    float mTextureLeft; /// Left-most texture coordinate, on interval [0,1]
-    float mTextureRight; /// Right-most texture coordinate, on interval [0,1]
-    float mTextureBottom; /// Bottom-most texture coordinate, on interval [0,1]
-    float mTextureTop; /// Top-most texture coordinate, on interval [0,1]
-    bool mInitialized; /// Flag telling whether this element has been initialized
-    bool mImageDirty; /// Flag telling whether the rendered image has changed
-    QTimer* mTimer; /// Timer that causes UI to render at set intervals
-    QMutex* mImageMutex; /// Mutex that is used to avoid access collisions on rendered image
-    bool mDirty; /// Flag telling outside world whether image has changed; holds
-    /// slightly different state from mImageDirty
+    QWidget* mWidget; ///< Widget associated with this element
+    QImage* mImage; ///< Rendered image of element
+    QImage* mImageFlipped; ///< Vertically flipped image of element
+    QGraphicsScene* mGraphicsScene; ///< Scene to hold widget
+    QGraphicsProxyWidget* mGraphicsProxyWidget; ///< Proxy widget that handles internal event forwarding
+    QGraphicsView* mGraphicsView; ///< View to display scene and allow interaction
+    int mImageWidth; ///< Width of rendered image
+    int mImageHeight; ///< Height of rendered image
+    int mWidth; ///< Width of widget
+    int mHeight; ///< Height of widget
+    float mTextureLeft; ///< Left-most texture coordinate, on interval [0,1]
+    float mTextureRight; ///< Right-most texture coordinate, on interval [0,1]
+    float mTextureBottom; ///< Bottom-most texture coordinate, on interval [0,1]
+    float mTextureTop; ///< Top-most texture coordinate, on interval [0,1]
+    bool mInitialized; ///< Flag telling whether this element has been initialized
+    bool mImageDirty; ///< Flag telling whether the rendered image has changed
+    QTimer* mTimer; ///< Timer that causes UI to render at set intervals
+    QMutex* mImageMutex; ///< Mutex that is used to avoid access collisions on rendered image
+    bool mDirty; ///< Flag telling outside world whether image has changed; holds
+    ///< slightly different state from mImageDirty
+    std::map<int,int> mKeyMap; ///< Map to convert juggler keycodes to Qt keycodes
 
     void _calculatePower2ImageDimensions( );
     void _calculateTextureCoordinates( );
     void _debug( const std::string text );
+    void _setupKeyMap( );
 
     protected
 Q_SLOTS:

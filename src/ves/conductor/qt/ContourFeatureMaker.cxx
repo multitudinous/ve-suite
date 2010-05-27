@@ -62,6 +62,7 @@ ContourFeatureMaker::~ContourFeatureMaker( )
 
 void ContourFeatureMaker::update( unsigned int recordID )
 {
+    std::cout << "ContourFeatureMaker::update" << std::endl << std::flush;
     // For now we won't worry about how to discover an existing plane that needs
     // to be deleted, moved, etc. We will just create a new one
     xplorer::data::ContourPlanePropertySet contourSet;
@@ -73,6 +74,7 @@ void ContourFeatureMaker::update( unsigned int recordID )
 
 void ContourFeatureMaker::_updateContourInformation( xplorer::data::PropertySet& set )
 {
+    std::cout << "ContourFeatureMaker::updateContourInformation" << std::endl << std::flush;
     _contourInformation.clear( );
 
     // Plane direction
@@ -82,6 +84,12 @@ void ContourFeatureMaker::_updateContourInformation( xplorer::data::PropertySet&
     std::string value = boost::any_cast<std::string > ( set.GetPropertyAttribute( "Direction", "enumCurrentString" ) );
     contourDirection->SetDataString( value );
     _contourInformation.push_back( contourDirection );
+
+    ves::open::xml::DataValuePairPtr selectvecorscalrDisp( new ves::open::xml::DataValuePair() );
+    selectvecorscalrDisp->SetDataType( "STRING" );
+    selectvecorscalrDisp->SetDataName( "Select Data Mapping" );
+    selectvecorscalrDisp->SetDataString( boost::any_cast<std::string > ( set.GetPropertyAttribute( "DataMapping", "enumCurrentString" ) ));
+    _contourInformation.push_back( selectvecorscalrDisp );
 
     // Mode: Single or Multiple
     ves::open::xml::DataValuePairPtr numberOfPlanes( new ves::open::xml::DataValuePair( ) );
@@ -132,6 +140,7 @@ void ContourFeatureMaker::_updateContourInformation( xplorer::data::PropertySet&
 // and makes all the appropriate settings
 void ContourFeatureMaker::_updateAdvancedSettings( xplorer::data::PropertySet& set )
 {
+    std::cout << "ContourFeatureMaker::updateAdvancedSettings" << std::endl << std::flush;
     _advancedSettings.clear( );
 
     ves::open::xml::DataValuePairPtr contourOpacity( new ves::open::xml::DataValuePair( ) );
@@ -179,6 +188,7 @@ void ContourFeatureMaker::_updateAdvancedSettings( xplorer::data::PropertySet& s
 
 void ContourFeatureMaker::_addPlane( xplorer::data::PropertySet& set )
 {
+    std::cout << "ContourFeatureMaker::addPlane" << std::endl << std::flush;
     _updateContourInformation( set );
     _updateAdvancedSettings( set );
 
@@ -224,6 +234,7 @@ void ContourFeatureMaker::_addPlane( xplorer::data::PropertySet& set )
 void ContourFeatureMaker::SendUpdatedSettingsToXplorer( ves::open::xml::CommandPtr subDialogCommand,
                                                         xplorer::data::PropertySet& set )
 {
+    std::cout << "ContourFeatureMaker::SendUpdatedSettingsToXplorer" << std::endl << std::flush;
     _updateBaseInformation( set );
     ves::open::xml::CommandPtr newCommand( new ves::open::xml::Command( ) );
 
@@ -247,6 +258,7 @@ void ContourFeatureMaker::SendUpdatedSettingsToXplorer( ves::open::xml::CommandP
 // about axes and bounding boxes and such.
 void ContourFeatureMaker::_updateBaseInformation( xplorer::data::PropertySet& set )
 {
+    std::cout << "ContourFeatureMaker::updateBaseInformation" << std::endl << std::flush;
     _vistabBaseInformation.clear( );
     _commandName.clear( );
 
@@ -262,12 +274,14 @@ void ContourFeatureMaker::_updateBaseInformation( xplorer::data::PropertySet& se
                                  ) );
     _vistabBaseInformation.push_back( activeScalar );
 
-
-//    ves::open::xml::DataValuePairPtr activeVector( new ves::open::xml::DataValuePair() );
-//    activeVector->SetDataType( "STRING" );
-//    activeVector->SetDataName( std::string( "Active Vector" ) );
-//    activeVector->SetDataString( _activeVectorName );
-//    _vistabBaseInformation.push_back( activeVector );
+    ves::open::xml::DataValuePairPtr activeVector( new ves::open::xml::DataValuePair() );
+    activeVector->SetDataType( "STRING" );
+    activeVector->SetDataName( std::string( "Active Vector" ) );
+    activeVector->SetDataString( boost::any_cast<std::string >
+                                 ( set.GetPropertyAttribute
+                                 ( "DataSet_VectorData", "enumCurrentString" )
+                                 ) );
+    _vistabBaseInformation.push_back( activeVector );
 
     ves::open::xml::DataValuePairPtr activeDataset( new ves::open::xml::DataValuePair( ) );
     activeDataset->SetDataType( "STRING" );

@@ -4,7 +4,7 @@ import SConsAddons.Util as sca_util
 import qt46
 pj = os.path.join
 
-Import('baseEnv ves_pkg LIBDIR buildDir RootDir osg_options vpr_options')
+Import('baseEnv ves_pkg LIBDIR buildDir RootDir osg_options vpr_options vrjuggler_options')
 
 srcDir = os.path.abspath( pj(RootDir, 'src', 'ves', 'conductor', 'qt') )
 buildSrcDir = pj('#',buildDir,'src','ves','conductor','qt')
@@ -64,6 +64,7 @@ lib_env.Append(LIBPATH = [
 qt46.applyQtBuildFlags( lib_env )
 osg_options.apply( lib_env )
 vpr_options.apply( lib_env )
+vrjuggler_options.apply( lib_env )
 
 lib_env.Append( CPPDEFINES = ['VE_CONDUCTOR_UTILS_LIBRARY'])
 lib_env.AppendUnique( CPPPATH = [ pj(RootDir,'external','qtpropertybrowser-2.5_1-opensource','src') ] )

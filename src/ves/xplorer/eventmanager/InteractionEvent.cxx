@@ -40,24 +40,31 @@ namespace eventmanager
 {
 
 InteractionEvent::InteractionEvent( eventType eType,
-                                    char key,
+                                    int key,
+                                    const char keyChar,
+                                    const wchar_t keyUnicode,
+                                    int modifiers,
                                     buttonType button,
                                     int buttons,
                                     float scrollDeltaX,
                                     float scrollDeltaZ,
                                     double x,
                                     double y,
-                                    double z )
+                                    double z ):
+    EventType( eType ),
+    Key( key ),
+    KeyChar( keyChar ),
+    KeyUnicode( keyUnicode ),
+    Modifiers( modifiers ),
+    Button( button ),
+    Buttons( buttons ),
+    ScrollDeltaX( scrollDeltaX ),
+    ScrollDeltaZ( scrollDeltaZ ),
+    X( x ),
+    Y( y ),
+    Z( z )
 {
-   EventType = eType;
-    Key = key;
-    Button = button;
-    Buttons = buttons;
-    ScrollDeltaX = scrollDeltaX;
-    ScrollDeltaZ = scrollDeltaZ;
-    X = x;
-    Y = y;
-    Z = z;
+   ;
 }
 
 InteractionEvent::~InteractionEvent( )

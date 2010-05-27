@@ -34,12 +34,6 @@
 #include <ves/xplorer/data/DatasetPropertySet.h>
 #include <ves/xplorer/data/Property.h>
 
-#include <Poco/Data/RecordSet.h>
-#include <Poco/Data/Session.h>
-#include <Poco/Data/SQLite/Connector.h>
-#include <Poco/Data/DataException.h>
-#include <Poco/Data/SessionPool.h>
-
 #include <boost/bind.hpp>
 
 #include <iostream>
@@ -86,50 +80,28 @@ void ContourPlanePropertySet::_createSkeleton( )
     mPropertyMap["DataSet_ScalarRange_Min"]->SignalRequestValidation.connect( boost::bind( &ContourPlanePropertySet::ValidateScalarMinMax, this, _1, _2 ) );
     mPropertyMap["DataSet_ScalarRange_Max"]->SignalRequestValidation.connect( boost::bind( &ContourPlanePropertySet::ValidateScalarMinMax, this, _1, _2 ) );
 
+    AddProperty( "DataSet_VectorData", 0, "Vector Data" );
+    enumValues.clear();
+    enumValues.push_back( "Select Vector Data" );
+    SetPropertyAttribute( "DataSet_VectorData", "enumValues", enumValues );
+    mPropertyMap["DataSet"]->SignalValueChanged.connect( boost::bind( &ContourPlanePropertySet::UpdateVectorDataOptions, this, _1 ) );
+    
     // Now that DataSet subproperties exist, we can initialize the values in
     // the dataset enum. If we had tried to do this beforehand, none of the
     // connections between DataSet and its subproperties would have been in
     // place yet.
     enumValues.clear( );
-    //    std::list<std::string> listOfDatasets =
-    //            data::DatabaseManager::instance( )->GetStringList( "Dataset", "Filename" );
-    // Below is a temporary solution to getting Dataset filenames loaded as choices
-    // in the DataSet enum value. We oughtn't be making direct SQL calls
-    // in a class like this unless we need to do something really fancy with a
-    // lot of JOIN and ORDER BY commands. A better eventual solution is
-    // to be able to do something similar to the above call to GetStringList,
-    // which would simply take in the name of a table and a column value and return
-    // a list of matches. There could also be a GetPropertySetList call that would do
-    // a similar thing with PropertySets rather than just Strings in a table.
-    
-    Poco::Data::Session session( ves::xplorer::data::DatabaseManager::instance()->GetPool()->get() );
-    Poco::Data::Statement statement( session );
-    statement << "SELECT DISTINCT Filename FROM Dataset";
-
-    try
+    enumValues = ves::xplorer::data::DatabaseManager::instance()->GetStringVector( "Dataset", "Filename" );
+    if( enumValues.empty() )
     {
-        statement.execute( );
-        Poco::Data::RecordSet recordset( statement );
-        if( recordset.rowCount( ) != 0 )
-        {
-            for( int rowIndex = 0; rowIndex < recordset.rowCount( ); rowIndex++ )
-            {
-                enumValues.push_back( recordset.value( 0, rowIndex ).convert<std::string > ( ) );
-            }
-        }
-        else
-        {
-            enumValues.push_back( "No datasets loaded" );
-        }
-    }
-    catch( Poco::Data::DataException &e )
-    {
-        std::cout << e.displayText( ) << std::endl;
         enumValues.push_back( "No datasets loaded" );
     }
 
     SetPropertyAttribute( "DataSet", "enumValues", enumValues );
+    // Now that DataSet has choices loaded, force an update on the available
+    // scalar and vector data
     UpdateScalarDataOptions( 0 );
+    UpdateVectorDataOptions( 0 );
 
 
     AddProperty( "Direction", 0, "Direction" );
@@ -138,7 +110,14 @@ void ContourPlanePropertySet::_createSkeleton( )
     enumValues.push_back( "y" );
     enumValues.push_back( "z" );
     enumValues.push_back( "By Wand" );
+    enumValues.push_back( "By Surface" );
     SetPropertyAttribute( "Direction", "enumValues", enumValues );
+
+    AddProperty( "DataMapping", 0, "Data Mapping");
+    enumValues.clear();
+    enumValues.push_back( "Map Scalar Data" );
+    enumValues.push_back( "Map Volume Flux Data" );
+    SetPropertyAttribute( "DataMapping", "enumValues", enumValues );
 
     AddProperty( "Mode", 0, "Mode" );
     enumValues.clear( );
@@ -179,15 +158,6 @@ void ContourPlanePropertySet::_createSkeleton( )
     AddProperty( "Advanced_ContourLOD", 100, "Contour LOD" );
     SetPropertyAttribute( "Advanced_ContourLOD", "minimumValue", 0 );
     SetPropertyAttribute( "Advanced_ContourLOD", "maximumValue", 100 );
-
-    // This demonstrates doing extra processing when a value is
-    // changed. Similar operations could also occur inside a validator. In this
-    // case, the value is initially allowed to change but is then forcibly reset
-    //Property* temp = mPropertyMap["Advanced_ContourLOD"];
-    //if( temp )
-    //{
-    //  temp->SignalValueChanged.connect( boost::bind( &ContourPlanePropertySet::LockIntToZero, this, _1 ) );
-    //}
 
     AddProperty( "Advanced_ContourType", 0, "Contour Type" );
     enumValues.clear( );
@@ -249,9 +219,18 @@ void ContourPlanePropertySet::UpdateScalarDataRange( Property* property )
     }
 }
 
-void ContourPlanePropertySet::LockIntToZero( Property* property )
+void ContourPlanePropertySet::UpdateVectorDataOptions( Property* property )
 {
-    property->SetValue( 0 );
+    PSVectorOfStrings enumValues;
+    std::string selectedDataset = boost::any_cast<std::string > ( GetPropertyAttribute( "DataSet", "enumCurrentString" ) );
+    DatasetPropertySet dataset;
+    dataset.LoadByKey( "Filename", selectedDataset );
+    enumValues = boost::any_cast< std::vector<std::string> >( dataset.GetPropertyValue( "VectorNames" ) );
+    if( enumValues.empty( ) )
+    {
+        enumValues.push_back( "No vectors available" );
+    }
+    SetPropertyAttribute( "DataSet_VectorData", "enumValues", enumValues );
 }
 
 void ContourPlanePropertySet::UpdateModeOptions( Property* property )

@@ -50,7 +50,7 @@ public:
 
     enum buttonType
     {
-        none = 0x0000, button_1 = 0x0001, button_2 = 0x0002, button_3 = 0x0004,
+        button_none = 0x0000, button_1 = 0x0001, button_2 = 0x0002, button_3 = 0x0004,
         button_4 = 0x0008, button_5 = 0x0010, button_6 = 0x0020,
         button_7 = 0x0040, button_8 = 0x0080, button_9 = 0x0100,
         button_10 = 0x0200, button_11 = 0x0400, button_12 = 0x0800,
@@ -58,10 +58,22 @@ public:
         button_16 = 0x8000
     };
 
+    enum modifierType
+    {
+        NONE_MASK    = 0,
+        SHIFT_MASK   = (1 << 0),
+        ALT_MASK     = (1 << 1),
+        CTRL_MASK    = (1 << 2),
+        COMMAND_MASK = (1 << 3)
+    };
+
     InteractionEvent( eventType eType,
-                      char key,
-                      buttonType button = none,
-                      int buttons = none,
+                      int key,
+                      const char keyChar,
+                      const wchar_t keyUnicode,
+                      int modifiers,
+                      buttonType button = button_none,
+                      int buttons = button_none,
                       float scrollDeltaX = 0.0,
                       float scrollDeltaZ = 0.0,
                       double x = 0.0,
@@ -71,7 +83,10 @@ public:
     virtual ~InteractionEvent( );
 
     eventType EventType;
-    char Key;
+    int Key;
+    char KeyChar;
+    wchar_t KeyUnicode;
+    int Modifiers;
     buttonType Button;
     int Buttons;
     float ScrollDeltaX;
