@@ -84,11 +84,12 @@ cfdPresetVector::~cfdPresetVector()
 ////////////////////////////////////////////////////////////////////////////////
 void cfdPresetVector::Update( void )
 {
+    vprDEBUG( vesDBG, 1 ) << "|\tcfdPresetVector::ActiveDataSet = "
+        << this->GetActiveDataSet()
+        << std::endl << vprDEBUG_FLUSH;
+
     if( GetObjectType() != BY_SURFACE )
     {
-        vprDEBUG( vesDBG, 1 ) << "|\tcfdPresetVector::ActiveDataSet = "
-            << this->GetActiveDataSet()
-            << std::endl << vprDEBUG_FLUSH;
         vprDEBUG( vesDBG, 1 ) << "|\t\tcfdPresetVector "<< this->cursorType
             << " : " << usePreCalcData
             << std::endl << vprDEBUG_FLUSH;
@@ -209,6 +210,11 @@ void cfdPresetVector::Update( void )
     else
     {
         CreateArbSurface();
+        if( !mapper->GetInput() )
+        {
+            this->updateFlag = false;
+            return;
+        }
     }
 
 
