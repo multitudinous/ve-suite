@@ -294,7 +294,7 @@ CreateVisObjectEventHandler::CreateVisObjectEventHandler()
     objectType.second.second = std::string( "Single" );
     ves::xplorer::cfdPresetVector* surface_vector = 
         new cfdPresetVector( 2, 10 );
-    surface_contour->SetObjectType( BY_SURFACE );
+    surface_vector->SetObjectType( BY_SURFACE );
     visObjectMap[ objectType ] = surface_vector;
     
     //
