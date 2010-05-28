@@ -177,6 +177,14 @@ void cfdVectorBase::UpdateCommand()
     {
         m_gpuTools = false;
     }    
+
+	//Extract the surface flag
+    activeModelDVP = objectCommand->GetDataValuePair( "SURF Tools" );
+    if( activeModelDVP )
+	{
+    	activeModelDVP->GetData( m_surfDataset );
+	}
+
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdVectorBase::SetVectorScale( float x )

@@ -36,6 +36,8 @@
 #include <ves/xplorer/event/viz/cfdPlanes.h>
 #include <ves/xplorer/event/viz/cfdCuttingPlane.h>
 
+#include <ves/xplorer/environment/cfdEnum.h>
+
 #include <ves/xplorer/event/viz/OSGVectorStage.h>
 
 #include <ves/xplorer/Debug.h>
@@ -55,6 +57,9 @@
 #include <vtkCellDataToPointData.h>
 #include <vtkPassThroughFilter.h>
 #include <vtkXMLPolyDataWriter.h>
+#include <vtkProbeFilter.h>
+#include <vtkCompositeDataProbeFilter.h>
+#include <vtkPolyDataNormals.h>
 
 #define WRITE_IMAGE_DATA 0
 #if WRITE_IMAGE_DATA
@@ -79,125 +84,133 @@ cfdPresetVector::~cfdPresetVector()
 ////////////////////////////////////////////////////////////////////////////////
 void cfdPresetVector::Update( void )
 {
-    vprDEBUG( vesDBG, 1 ) << "|\tcfdPresetVector::ActiveDataSet = "
-        << this->GetActiveDataSet()
-        << std::endl << vprDEBUG_FLUSH;
-    vprDEBUG( vesDBG, 1 ) << "|\t\tcfdPresetVector "<< this->cursorType
-        << " : " << usePreCalcData
-        << std::endl << vprDEBUG_FLUSH;
-
-    if( this->usePreCalcData && ( xyz < 3 ) )
+    if( GetObjectType() != BY_SURFACE )
     {
-
-        cfdPlanes* precomputedPlanes =
-            this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz );
-        if( !precomputedPlanes )
-        {
-            vprDEBUG( vesDBG, 0 )
-            << "|\tDataset contains no precomputed vector planes."
+        vprDEBUG( vesDBG, 1 ) << "|\tcfdPresetVector::ActiveDataSet = "
+            << this->GetActiveDataSet()
             << std::endl << vprDEBUG_FLUSH;
-            ves::xplorer::communication::CommunicationHandler::instance()
-            ->SendConductorMessage( "Dataset contains no precomputed vector planes.\n" );
-            return;
-        }
-
-        vtkPolyData * preCalcData = 
-            precomputedPlanes->GetClosestPlane( requestedValue );
-
-        if( preCalcData == NULL )
-        {
-            vprDEBUG( vesDBG, 0 )
-            << "|\t\tcfdPresetVector: no precalculated data available"
+        vprDEBUG( vesDBG, 1 ) << "|\t\tcfdPresetVector "<< this->cursorType
+            << " : " << usePreCalcData
             << std::endl << vprDEBUG_FLUSH;
-            this->updateFlag = false;
-            return;
-        }
-        //vtkPassThroughFilter* tempPipe = vtkPassThroughFilter::New();
-        //tempPipe->SetInput( preCalcData );
 
-        // get every nth point from the dataSet data
-        this->ptmask->SetInput( preCalcData );
-        this->ptmask->SetOnRatio( this->GetVectorRatioFactor() );
-        this->ptmask->Update();
+        if( this->usePreCalcData && ( xyz < 3 ) )
+        {
 
-        this->SetGlyphWithThreshold();
-        this->SetGlyphAttributes();
-        this->glyph->Update();
+            cfdPlanes* precomputedPlanes =
+                this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz );
+            if( !precomputedPlanes )
+            {
+                vprDEBUG( vesDBG, 0 )
+                << "|\tDataset contains no precomputed vector planes."
+                << std::endl << vprDEBUG_FLUSH;
+                ves::xplorer::communication::CommunicationHandler::instance()
+                ->SendConductorMessage( "Dataset contains no precomputed vector planes.\n" );
+                return;
+            }
 
-        mapper->SetInputConnection( glyph->GetOutputPort() );
-        mapper->SetScalarModeToUsePointFieldData();
-        mapper->UseLookupTableScalarRangeOn();
-        mapper->SelectColorArray( GetActiveDataSet()->
-            GetActiveScalarName().c_str() );
-        mapper->SetLookupTable( GetActiveDataSet()->GetLookupTable() );
-        mapper->Update();
+            vtkPolyData * preCalcData = 
+                precomputedPlanes->GetClosestPlane( requestedValue );
+
+            if( preCalcData == NULL )
+            {
+                vprDEBUG( vesDBG, 0 )
+                << "|\t\tcfdPresetVector: no precalculated data available"
+                << std::endl << vprDEBUG_FLUSH;
+                this->updateFlag = false;
+                return;
+            }
+            //vtkPassThroughFilter* tempPipe = vtkPassThroughFilter::New();
+            //tempPipe->SetInput( preCalcData );
+
+            // get every nth point from the dataSet data
+            this->ptmask->SetInput( preCalcData );
+            this->ptmask->SetOnRatio( this->GetVectorRatioFactor() );
+            this->ptmask->Update();
+
+            this->SetGlyphWithThreshold();
+            this->SetGlyphAttributes();
+            this->glyph->Update();
+
+            mapper->SetInputConnection( glyph->GetOutputPort() );
+            mapper->SetScalarModeToUsePointFieldData();
+            mapper->UseLookupTableScalarRangeOn();
+            mapper->SelectColorArray( GetActiveDataSet()->
+                GetActiveScalarName().c_str() );
+            mapper->SetLookupTable( GetActiveDataSet()->GetLookupTable() );
+            mapper->Update();
         
-        //tempPipe->Delete();
-        vprDEBUG( vesDBG, 1 ) << "|\t\tcfdPresetVector::Update Yes Precalc : "
-            << this->cursorType << " : " << usePreCalcData
-            << std::endl << vprDEBUG_FLUSH;
+            //tempPipe->Delete();
+            vprDEBUG( vesDBG, 1 ) << "|\t\tcfdPresetVector::Update Yes Precalc : "
+                << this->cursorType << " : " << usePreCalcData
+                << std::endl << vprDEBUG_FLUSH;
+        }
+        else
+        {
+            vtkCellDataToPointData* c2p = vtkCellDataToPointData::New();
+            if( xyz < 3 )
+            {
+                this->cuttingPlane = 
+                    new cfdCuttingPlane( GetActiveDataSet()->GetBounds(), 
+                    xyz, numSteps );
+                // insure that we are using correct bounds for the given data set...
+                this->cuttingPlane->SetBounds(
+                                              this->GetActiveDataSet()->GetBounds() );
+                this->cuttingPlane->Advance( requestedValue );
+                vtkCutter* cutter = vtkCutter::New();
+                cutter->SetInput( GetActiveDataSet()->GetDataSet() );
+                cutter->SetCutFunction( this->cuttingPlane->GetPlane() );
+                cutter->Update();
+                delete this->cuttingPlane;
+                this->cuttingPlane = NULL;
+                c2p->SetInputConnection( cutter->GetOutputPort() );
+                c2p->Update();
+                cutter->Delete();
+            }
+            else if( xyz == 3 )
+            {
+                c2p->SetInput( GetActiveDataSet()->GetDataSet() );
+                c2p->Update();
+            }
+
+            // get every nth point from the dataSet data
+            this->ptmask->SetInputConnection( ApplyGeometryFilterNew( c2p->GetOutputPort() ) );
+            this->ptmask->SetOnRatio( this->GetVectorRatioFactor() );
+            this->ptmask->Update();
+
+
+            this->SetGlyphWithThreshold();
+            this->SetGlyphAttributes();
+            //this->glyph->Update();
+
+            /*{
+                vtkXMLPolyDataWriter* writer = vtkXMLPolyDataWriter::New();
+                writer->SetInput( ptmask->GetOutput() );
+                writer->SetDataModeToAscii();
+                writer->SetFileName( "testvecglyphs.vtp" );
+                writer->Write();
+                writer->Delete();
+            }*/      
+        
+            mapper->SetInputConnection( glyph->GetOutputPort() );
+            mapper->SetScalarModeToUsePointFieldData();
+            mapper->UseLookupTableScalarRangeOn();
+            mapper->SelectColorArray( GetActiveDataSet()->
+                GetActiveScalarName().c_str() );
+            mapper->SetLookupTable( GetActiveDataSet()->GetLookupTable() );
+            mapper->Update();
+
+
+            c2p->Delete();
+            vprDEBUG( vesDBG, 1 )
+                << "|\t\tNo Precalc : " << this->cursorType << " : " << usePreCalcData
+                << " : " << GetVectorRatioFactor() << std::endl << vprDEBUG_FLUSH;
+        }
     }
     else
     {
-        vtkCellDataToPointData* c2p = vtkCellDataToPointData::New();
-        if( xyz < 3 )
-        {
-            this->cuttingPlane = 
-                new cfdCuttingPlane( GetActiveDataSet()->GetBounds(), 
-                xyz, numSteps );
-            // insure that we are using correct bounds for the given data set...
-            this->cuttingPlane->SetBounds(
-                                          this->GetActiveDataSet()->GetBounds() );
-            this->cuttingPlane->Advance( requestedValue );
-            vtkCutter* cutter = vtkCutter::New();
-            cutter->SetInput( GetActiveDataSet()->GetDataSet() );
-            cutter->SetCutFunction( this->cuttingPlane->GetPlane() );
-            cutter->Update();
-            delete this->cuttingPlane;
-            this->cuttingPlane = NULL;
-            c2p->SetInputConnection( cutter->GetOutputPort() );
-            c2p->Update();
-            cutter->Delete();
-        }
-        else if( xyz == 3 )
-        {
-            c2p->SetInput( GetActiveDataSet()->GetDataSet() );
-            c2p->Update();
-        }
-
-        // get every nth point from the dataSet data
-        this->ptmask->SetInputConnection( ApplyGeometryFilterNew( c2p->GetOutputPort() ) );
-        this->ptmask->SetOnRatio( this->GetVectorRatioFactor() );
-        this->ptmask->Update();
-
-
-        this->SetGlyphWithThreshold();
-        this->SetGlyphAttributes();
-        //this->glyph->Update();
-
-        /*{
-            vtkXMLPolyDataWriter* writer = vtkXMLPolyDataWriter::New();
-            writer->SetInput( ptmask->GetOutput() );
-            writer->SetDataModeToAscii();
-            writer->SetFileName( "testvecglyphs.vtp" );
-            writer->Write();
-            writer->Delete();
-        }*/      
-        
-        mapper->SetInputConnection( glyph->GetOutputPort() );
-        mapper->SetScalarModeToUsePointFieldData();
-        mapper->UseLookupTableScalarRangeOn();
-        mapper->SelectColorArray( GetActiveDataSet()->
-            GetActiveScalarName().c_str() );
-        mapper->SetLookupTable( GetActiveDataSet()->GetLookupTable() );
-        mapper->Update();
-
-
-        c2p->Delete();
-        vprDEBUG( vesDBG, 1 )
-            << "|\t\tNo Precalc : " << this->cursorType << " : " << usePreCalcData
-            << " : " << GetVectorRatioFactor() << std::endl << vprDEBUG_FLUSH;
+        CreateArbSurface();
     }
+
 
     if( !m_gpuTools )
     {
@@ -250,5 +263,61 @@ void cfdPresetVector::Update( void )
                 << std::endl << vprDEBUG_FLUSH;
         }        
     }
+}
+////////////////////////////////////////////////////////////////////////////////
+void cfdPresetVector::CreateArbSurface()
+{   
+    //Need to set the active datasetname and get the position of the dataset
+    Model* activeModel = ModelHandler::instance()->GetActiveModel();
+    // set the dataset as the appropriate dastaset type
+    // (and the active dataset as well)
+    DataSet* surfDataset = 
+        activeModel->GetCfdDataSet( 
+        activeModel->GetIndexOfDataSet( m_surfDataset ) );
+    vtkPolyData* pd = surfDataset->GetPolyData();
+
+    if( !pd )
+    {
+        std::cerr << "ERROR: Activate a polydata file to use this function"
+            << std::endl;
+        return;
+    }
+
+	vtkProbeFilter* surfProbe = vtkCompositeDataProbeFilter::New();
+    surfProbe->SetInput( pd );
+    surfProbe->SetSource( GetActiveDataSet()->GetDataSet() );
+    surfProbe->Update(); 
+  
+   	vtkPolyData* surfProbeOutput = surfProbe->GetPolyDataOutput();
+
+    if( !surfProbeOutput )
+    {
+        return;
+    }
+
+	vtkPolyDataNormals* normalGen = vtkPolyDataNormals::New();
+    normalGen->SetInput( surfProbeOutput );
+    normalGen->Update();
+
+	vtkPolyData* normalsOutputPD = normalGen->GetOutput();
+
+    // get every nth point from the dataSet data
+    this->ptmask->SetInput( normalsOutputPD );
+    this->ptmask->SetOnRatio( this->GetVectorRatioFactor() );
+    this->ptmask->Update();
+
+    this->SetGlyphWithThreshold();
+    this->SetGlyphAttributes();
+    //this->glyph->Update();
+
+    mapper->SetInputConnection( glyph->GetOutputPort() );
+    mapper->SetScalarModeToUsePointFieldData();
+    mapper->UseLookupTableScalarRangeOn();
+    mapper->SelectColorArray( GetActiveDataSet()->
+        GetActiveScalarName().c_str() );
+    mapper->SetLookupTable( GetActiveDataSet()->GetLookupTable() );
+    mapper->Update();
+
+    surfProbe->Delete();
 }
 ////////////////////////////////////////////////////////////////////////////////
