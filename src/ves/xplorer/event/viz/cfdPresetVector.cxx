@@ -96,7 +96,6 @@ void cfdPresetVector::Update( void )
 
         if( this->usePreCalcData && ( xyz < 3 ) )
         {
-
             cfdPlanes* precomputedPlanes =
                 this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz );
             if( !precomputedPlanes )
@@ -325,5 +324,6 @@ void cfdPresetVector::CreateArbSurface()
     mapper->Update();
 
     surfProbe->Delete();
+    normalGen->Delete();
 }
 ////////////////////////////////////////////////////////////////////////////////
