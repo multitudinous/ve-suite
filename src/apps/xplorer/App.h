@@ -248,7 +248,9 @@ private:
     osg::ref_ptr< osg::LightModel > light_model_0;
     ///User nav position for camera
     gmtl::Matrix44d mNavPosition;
-
+    ///Sound listener position matrix
+    osg::Matrixd m_listenerPosition;
+    
     ///The vjobs wrapper
     VjObsWrapper* m_vjobsWrapper;
 #ifdef _PBUFFER

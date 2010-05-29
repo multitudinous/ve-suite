@@ -140,6 +140,10 @@
 
 #endif // QT_ON
 
+#ifdef VE_SOUND
+// --- osgAL Includes --- //
+#include <osgAudio/SoundManager.h>
+#endif //VE_SOUND
 
 // --- STL Includes --- //
 #include <iostream>
@@ -744,21 +748,25 @@ void App::latePreFrame()
     }
 #endif
     ///////////////////////
+    ///Grab nav data
+    {
+        mNavPosition = gmtl::convertTo< double >( 
+            ves::xplorer::scenegraph::SceneManager::instance()->
+            GetActiveNavSwitchNode()->GetMat() );
+    }
+    ///////////////////////
+    
+    ///////////////////////
     //profile the update call
     {
         VPR_PROFILE_GUARD_HISTORY( "App::latePreFrame update", 20 );
         update();
     }
+    ///////////////////////
 
     ///Increment framenumber now that we are done using it everywhere
     _frameNumber += 1;
     mProfileCounter += 1;
-
-    ///Grab nav data
-    mNavPosition = 
-        gmtl::convertTo< double >( 
-            ves::xplorer::scenegraph::SceneManager::instance()->
-                GetActiveNavSwitchNode()->GetMat() );
 
     vprDEBUG( vesDBG, 3 ) << "|End App::latePreFrame" 
         << std::endl << vprDEBUG_FLUSH;
@@ -1060,6 +1068,11 @@ void App::update()
     // the bounding volumes from within the cull traversal which may be
     // multi-threaded.
     getScene()->getBound();
+    
+#ifdef VE_SOUND
+    m_listenerPosition.set( mNavPosition.getData() );
+    osgAudio::SoundManager::instance()->setListenerMatrix( listenerPosition );    
+#endif
     vprDEBUG( vesDBG, 3 ) <<  "|\tEnd App LatePreframe Update" 
         << std::endl << vprDEBUG_FLUSH;
 }
