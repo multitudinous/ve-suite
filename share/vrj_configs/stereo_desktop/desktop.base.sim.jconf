@@ -372,6 +372,190 @@
          <device>SimWandButtons</device>
          <unit>6</unit>
       </digital_proxy>
+      <simulated_positional_device name="SimRHGlovePos" version="3">
+         <keyboard_mouse_proxy>SimKeyboard Proxy</keyboard_mouse_proxy>
+         <key_pair>
+            <key_modifier_pair name="Forward" version="1">
+               <modifier_key>COMMAND</modifier_key>
+               <key>KEY_W</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Back" version="1">
+               <modifier_key>COMMAND</modifier_key>
+               <key>KEY_S</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Left" version="1">
+               <modifier_key>COMMAND</modifier_key>
+               <key>KEY_A</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Right" version="1">
+               <modifier_key>COMMAND</modifier_key>
+               <key>KEY_D</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Up" version="1">
+               <modifier_key>COMMAND</modifier_key>
+               <key>KEY_C</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Down" version="1">
+               <modifier_key>COMMAND</modifier_key>
+               <key>KEY_Z</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Rot Right" version="1">
+               <modifier_key>-1</modifier_key>
+               <key>0</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Rot Left" version="1">
+               <modifier_key>-1</modifier_key>
+               <key>0</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Rot Up" version="1">
+               <modifier_key>-1</modifier_key>
+               <key>0</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Rot Down" version="1">
+               <modifier_key>-1</modifier_key>
+               <key>0</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="key_pair 10" version="1">
+               <modifier_key>-1</modifier_key>
+               <key>0</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="key_pair 11" version="1">
+               <modifier_key>-1</modifier_key>
+               <key>0</key>
+            </key_modifier_pair>
+         </key_pair>
+         <initial_position>0.0</initial_position>
+         <initial_position>0.0</initial_position>
+         <initial_position>0.0</initial_position>
+         <initial_rotation>0.0</initial_rotation>
+         <initial_rotation>0.0</initial_rotation>
+         <initial_rotation>0.0</initial_rotation>
+         <translation_delta>0.1</translation_delta>
+         <rotation_delta>1.0</rotation_delta>
+         <translation_coordinate_system>Global</translation_coordinate_system>
+         <rotation_coordinate_system>Global</rotation_coordinate_system>
+      </simulated_positional_device>
+      <simulated_positional_device name="SimLHGlovePos" version="3">
+         <keyboard_mouse_proxy>SimKeyboard Proxy</keyboard_mouse_proxy>
+         <key_pair>
+            <key_modifier_pair name="Forward" version="1">
+               <modifier_key>-1</modifier_key>
+               <key>0</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Back" version="1">
+               <modifier_key>-1</modifier_key>
+               <key>0</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="key_pair 2" version="1">
+               <modifier_key>-1</modifier_key>
+               <key>0</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="key_pair 3" version="1">
+               <modifier_key>-1</modifier_key>
+               <key>0</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="key_pair 4" version="1">
+               <modifier_key>-1</modifier_key>
+               <key>0</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="key_pair 5" version="1">
+               <modifier_key>-1</modifier_key>
+               <key>0</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="key_pair 6" version="1">
+               <modifier_key>-1</modifier_key>
+               <key>0</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="key_pair 7" version="1">
+               <modifier_key>-1</modifier_key>
+               <key>0</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="key_pair 8" version="1">
+               <modifier_key>-1</modifier_key>
+               <key>0</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="key_pair 9" version="1">
+               <modifier_key>-1</modifier_key>
+               <key>0</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="key_pair 10" version="1">
+               <modifier_key>-1</modifier_key>
+               <key>0</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="key_pair 11" version="1">
+               <modifier_key>-1</modifier_key>
+               <key>0</key>
+            </key_modifier_pair>
+         </key_pair>
+         <initial_position>0.0</initial_position>
+         <initial_position>0.0</initial_position>
+         <initial_position>0.0</initial_position>
+         <initial_rotation>0.0</initial_rotation>
+         <initial_rotation>0.0</initial_rotation>
+         <initial_rotation>0.0</initial_rotation>
+         <translation_delta>0.1</translation_delta>
+         <rotation_delta>1.0</rotation_delta>
+         <translation_coordinate_system>Global</translation_coordinate_system>
+         <rotation_coordinate_system>Global</rotation_coordinate_system>
+      </simulated_positional_device>
+      <position_proxy name="RH Glove Proxy" version="1">
+         <device>SimRHGlovePos</device>
+         <unit>0</unit>
+      </position_proxy>
+      <position_proxy name="LH Glove Proxy" version="1">
+         <device>SimLHGlovePos</device>
+         <unit>0</unit>
+      </position_proxy>
+      <alias name="GloveB-RightHand" version="1">
+         <proxy>RH Glove Proxy</proxy>
+      </alias>
+      <alias name="GloveA-LeftHand" version="1">
+         <proxy>LH Glove Proxy</proxy>
+      </alias>
    </elements>
 </configuration>
 
