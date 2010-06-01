@@ -1941,12 +1941,23 @@ void DataSet::LoadTransientData( const std::string& dirName )
         tempDataset->SetAsPartOfTransientSeries();
 
         m_transientDataSets.push_back( tempDataset );
-    }    
+    }
+    
+    for( size_t i = 0; i < m_transientDataSets.size(); ++i )
+    {
+        m_transientDataSets.at( i )->
+            SetTransientDataSetsList( m_transientDataSets );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 const std::vector< DataSet* >& DataSet::GetTransientDataSets()
 {
     return m_transientDataSets;
+}
+////////////////////////////////////////////////////////////////////////////////
+void DataSet::SetTransientDataSetsList( std::vector< DataSet* >& tempTransientData )
+{
+    m_transientDataSets = tempTransientData;
 }
 ////////////////////////////////////////////////////////////////////////////////
 #ifdef QT_ON
@@ -2027,6 +2038,12 @@ void DataSet::LoadTemporalDataSet( vtkDataObject* temporalDataSet )
         m_transientDataSets.push_back( tempDataset );
     }
     tempVtkDataSet->Delete();
+
+    for( size_t i = 1; i < m_transientDataSets.size(); ++i )
+    {
+        m_transientDataSets.at( i )->
+            SetTransientDataSetsList( m_transientDataSets );
+    }    
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DataSet::InitializeVTKDataObject( vtkDataObject* tempDataObject )

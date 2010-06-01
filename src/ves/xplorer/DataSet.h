@@ -331,6 +331,10 @@ public:
     ///Get Transient vectors for dataset
     ///\return The vector of datasets associated with this transient series
     const std::vector< DataSet* >& GetTransientDataSets();
+    
+    ///Set the transient dataset vector so that sub transient datasets
+    ///can tell other pipelines what the other datasets in the series are.
+    void SetTransientDataSetsList( std::vector< DataSet* >& tempTransientData );
 
 protected:
 #ifdef QT_ON
