@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-//TAO headers need to be first or else windows complains
+///TAO headers need to be first or else windows complains
 #include <orbsvcs/CosNamingC.h>
 #include <tao/ORB.h>
 #include <tao/BiDir_GIOP/BiDirGIOP.h>
@@ -38,8 +38,10 @@
 #include <ace/Countdown_Time.h>
 //End TAO headers
 
+///added for corba stuff
+#include "VjObs_i.h"
+
 #include "VjObsWrapper.h"
-#include "VjObs_i.h"     //added for corba stuff
 
 #include <ves/xplorer/communication/Xplorer_i.h>
 #include <ves/xplorer/EnvironmentHandler.h>
@@ -54,6 +56,11 @@
 
 #include <boost/concept_check.hpp>
 #include <boost/algorithm/string/case_conv.hpp>
+#include <boost/bind.hpp>
+
+// --- Juggler Includes --- //
+#include <vpr/vpr.h>
+#include <vpr/System.h>
 
 #include <vpr/IO/Socket/InetAddr.h>
 #include <jccl/RTRC/ConfigManager.h>
@@ -133,6 +140,8 @@ void VjObsWrapper::init( CosNaming::NamingContext* input,
     //boost::ignore_unused_variable_warning( argc );
     //boost::ignore_unused_variable_warning( argv );
     m_orbPtr = orbPtr;
+    m_orbThread = new vpr::Thread( boost::bind( &VjObsWrapper::OrbRun, this ) );
+
     bool isCluster = false;
     std::string masterhost;
     for( int i = 1;i < argc;++i )
@@ -322,7 +331,13 @@ int VjObsWrapper::getStringTokens( const char* buffer, char* delim,
     return i;
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool VjObsWrapper::IsMaster( void )
+bool VjObsWrapper::IsMaster()
 {
     return isMaster;
 }
+////////////////////////////////////////////////////////////////////////////////
+void VjObsWrapper::OrbRun()
+{
+    m_orbPtr->run();
+}
+////////////////////////////////////////////////////////////////////////////////

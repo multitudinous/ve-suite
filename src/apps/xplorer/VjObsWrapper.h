@@ -42,6 +42,8 @@ VjObsWrapper API
 
 #include <ves/open/xml/CommandPtr.h>
 
+#include <vpr/Thread/Thread.h>
+
 namespace ves
 {
 namespace xplorer
@@ -70,7 +72,6 @@ class ACE_Countdown_Time;
 
 #include <vector>
 #include <string>
-
 
 namespace ves
 {
@@ -106,6 +107,8 @@ public:
     void CheckORBWorkLoad();
     ///Cleanup
     void Cleanup();
+    ///Function for the ORB thread to run the ORB
+    void OrbRun();
 
     CosNaming::NamingContext* naming_context;///< holds the naming context for tao
     PortableServer::POA* child_poa;///< holds the poa server for tao
@@ -123,6 +126,8 @@ private:
     CORBA::ORB* m_orbPtr;
     ///is the master should be removed
     bool isMaster;
+    //Classes and variables for multithreading.
+    vpr::Thread* m_orbThread;
 };
 }
 }
