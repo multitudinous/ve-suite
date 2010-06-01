@@ -48,6 +48,7 @@ CORBAServiceList API
 //do this to remove compile warning from linux platforms
 #undef _REENTRANT
 #include <vpr/Util/Singleton.h>
+#include <vpr/Thread/Thread.h>
 
 #include <vector>
 #include <string>
@@ -122,13 +123,21 @@ public:
 
     ///Excutive wrapper functions
     const std::string GetNetwork( void );
+    ///
     void SetNetwork( const std::string& command );
+    ///
     void StopCalc( void );
+    ///
     void StartCalc( void );
+    ///
     void PauseCalc( void );
+    ///
     void Resume( void );
+    ///Query thread
     const std::string Query( const std::string& command );
-
+    ///Thread to run the ORB
+    void OrbRun();
+    
 private:
     void CreateCORBAModule( void );
 
@@ -137,7 +146,7 @@ private:
     CosNaming::BindingList_var bindList;
     CosNaming::Name_var nameList;
     CosNaming::NamingContext_var namingContext;
-    CORBA::ORB_var orb;
+    CORBA::ORB_var m_orb;
     PortableServer::POA_var poa;
     PortableServer::POA_var poa_root;
     CosNaming::NamingContext_var naming_context;
@@ -156,7 +165,10 @@ private:
     ACE_Time_Value mTimeOutValue;
     ACE_Time_Value mTimeZero;
     
-    vpr::Mutex mLock;  ///< A mutex to protect thread
+    ///A mutex to protect thread
+    vpr::Mutex mLock;  
+    ///Thread for running the orb
+    vpr::Thread* m_orbThread;
 };
 }
 }

@@ -49,6 +49,8 @@
 #include <wx/utils.h>
 #include <wx/log.h>
 
+#include <boost/bind.hpp>
+
 //Used for strcpy to setup the char arrays to be handled by TAO
 #include <cstring>
 
@@ -207,7 +209,7 @@ bool CORBAServiceList::ConnectToXplorer( void )
         name[0].id   = CORBA::string_dup( "Master" );
         name[0].kind = CORBA::string_dup( "VE_Xplorer" );
         CORBA::Object_var naming_context_object =
-            orb->resolve_initial_references( "NameService" );
+            m_orb->resolve_initial_references( "NameService" );
         CosNaming::NamingContext_var naming_context1 =
             CosNaming::NamingContext::_narrow( naming_context_object.in() );
         CORBA::Object_var ve_object = naming_context1->resolve( name );
@@ -244,7 +246,7 @@ bool CORBAServiceList::ConnectToXplorer( void )
         xplorerCom[0].id   = CORBA::string_dup( "Test" );
         xplorerCom[0].kind = CORBA::string_dup( "VE_Xplorer" );
         CORBA::Object_var naming_context_object =
-            orb->resolve_initial_references( "NameService" );
+            m_orb->resolve_initial_references( "NameService" );
         CosNaming::NamingContext_var naming_context1 =
             CosNaming::NamingContext::_narrow( naming_context_object.in() );
         CORBA::Object_var ve_object = naming_context1->resolve( xplorerCom );
@@ -294,7 +296,7 @@ bool CORBAServiceList::ConnectToNamingService( void )
         //resource factory args, server strategy factory args, client args
         //TAO::ORB::default_svc_conf_entries( 0, Server_Strategy_Factory.c_str(), 0 );
         // First initialize the ORB,
-        orb = CORBA::ORB_init( argc, argv, "" ); // the ORB name, it can be anything!
+        m_orb = CORBA::ORB_init( argc, argv, "" ); // the ORB name, it can be anything!
         //delete the left over char*
         for( int i = 0; i < argc; ++ i )
         {
@@ -306,15 +308,17 @@ bool CORBAServiceList::ConnectToNamingService( void )
 
         //Here is the part to contact the naming service and get the reference for the executive
         CORBA::Object_var naming_context_object =
-            orb->resolve_initial_references( "NameService" );
+            m_orb->resolve_initial_references( "NameService" );
         naming_context = CosNaming::NamingContext::_narrow( naming_context_object.in() );
         MessageLog( "Initialized ORB and connection to the Naming Service." );
+        //m_orbThread = 
+        //    new vpr::Thread( boost::bind( &CORBAServiceList::OrbRun, this ) );
 
         return true;
     }
     catch ( CORBA::Exception& ex )
     {
-        orb->destroy();
+        m_orb->destroy();
         std::string tempMessage =
             "Cannot init ORB or can't connect to the Naming Service: CORBA Exception " +
             std::string( ex._info().c_str() );
@@ -355,7 +359,7 @@ void CORBAServiceList::CheckORBWorkLoad( void )
 {
     try
     {
-        if( CORBA::is_nil( orb.in() ) )
+        if( CORBA::is_nil( m_orb.in() ) )
         {
             return;
         }
@@ -365,10 +369,10 @@ void CORBAServiceList::CheckORBWorkLoad( void )
         // event loop and does not reduce the resources on the computer and
         // only frustrates the user.
         //::wxMilliSleep( 500 );
-        if( orb->work_pending( mTimeOutValue ) )
+        /*if( m_orb->work_pending( mTimeOutValue ) )
         {
-            orb->perform_work( mTimeOutValue );
-        }
+            m_orb->perform_work( mTimeOutValue );
+        }*/
 
         const ves::open::xml::CommandPtr textOutput = GetGUIUpdateCommands( "TEXT_FEEDBACK" );
         if( textOutput->GetCommandName() != "NULL" )
@@ -376,7 +380,7 @@ void CORBAServiceList::CheckORBWorkLoad( void )
             MessageLog( textOutput->GetDataValuePair( "TEXT_OUTPUT" )->GetDataString().c_str() );
         }
     }
-    catch ( ... )
+    catch( ... )
     {
         ;
     }
@@ -393,18 +397,18 @@ void CORBAServiceList::CreateCORBAModule( void )
         CosNaming::Name name( 1 );
         name.length( 1 );
         name[0].id = CORBA::string_dup( "Executive" );
-        CORBA::Object_var naming_context_object = orb->resolve_initial_references( "NameService" );
+        CORBA::Object_var naming_context_object = m_orb->resolve_initial_references( "NameService" );
         naming_context = CosNaming::NamingContext::_narrow( naming_context_object.in() );
 
         CORBA::Object_var exec_object = naming_context->resolve( name );
         veCE = Body::Executive::_narrow( exec_object.in() );
         //Create the Servant
-        if( p_ui_i == NULL )
+        if( !p_ui_i )
         {
             p_ui_i = new Body_UI_i( veCE.in(), UINAME );
 
             //Here is the code to set up the ROOT POA
-            CORBA::Object_var poa_object = orb->resolve_initial_references( "RootPOA" ); // get the root poa
+            CORBA::Object_var poa_object = m_orb->resolve_initial_references( "RootPOA" ); // get the root poa
             poa_root = PortableServer::POA::_narrow( poa_object.in() );
             PortableServer::POAManager_var poa_manager = poa_root->the_POAManager();
 
@@ -414,7 +418,7 @@ void CORBAServiceList::CreateCORBAModule( void )
             CORBA::Any pol;
             pol <<= BiDirPolicy::BOTH;
             policies[0] =
-                orb->create_policy( BiDirPolicy::BIDIRECTIONAL_POLICY_TYPE, pol );
+                m_orb->create_policy( BiDirPolicy::BIDIRECTIONAL_POLICY_TYPE, pol );
 
             // Create POA as child of RootPOA with the above policies.  This POA
             // will receive request in the same connection in which it sent
@@ -448,7 +452,7 @@ void CORBAServiceList::CreateCORBAModule( void )
             {
                 veCE->RegisterUI( p_ui_i->UIName_.c_str(), m_ui.in() );
             }
-            catch ( CORBA::Exception& ex )
+            catch( CORBA::Exception& ex )
             {
                 std::string tempMessage =
                     "Cannot find VE-CE or VE-Conductor registration problem: CORBA Exception " +
@@ -460,15 +464,17 @@ void CORBAServiceList::CreateCORBAModule( void )
         {
             try
             {
-                PortableServer::ObjectId_var idObject = PortableServer::string_to_ObjectId( UINAME.c_str() );
+                PortableServer::ObjectId_var idObject = 
+                    PortableServer::string_to_ObjectId( UINAME.c_str() );
 
                 //Activate it to obtain the object reference
-                CORBA::Object_var objectRef = poa->id_to_reference( idObject.in() );
+                CORBA::Object_var objectRef = 
+                    poa->id_to_reference( idObject.in() );
                 m_ui = Body::UI::_narrow( objectRef.in() );
 
                 veCE->RegisterUI( p_ui_i->UIName_.c_str(), m_ui.in() );
             }
-            catch ( CORBA::Exception& ex )
+            catch( CORBA::Exception& ex )
             {
                 std::string tempMessage =
                     "Cannot find VE-CE or VE-Conductor registration problem: CORBA Exception " +
@@ -517,7 +523,7 @@ bool CORBAServiceList::SendCommandStringToXplorer( const ves::open::xml::Command
         // CORBA releases the allocated memory so we do not have to
         vjobs->SetCommandString( xmlDocument.c_str() );
     }
-    catch ( ... )
+    catch( ... )
     {
         return false;
     }
@@ -556,7 +562,7 @@ bool CORBAServiceList::SetID( int moduleId, std::string moduleName )
     {
         veCE->SetID( moduleName.c_str(), moduleId );
     }
-    catch ( ... )
+    catch( ... )
     {
         return false;
     }
@@ -565,7 +571,7 @@ bool CORBAServiceList::SetID( int moduleId, std::string moduleName )
 ///////////////////////////////////////////////////////////////////////
 const ves::open::xml::CommandPtr CORBAServiceList::GetGUIUpdateCommands( const std::string& commandName )
 {
-    if( p_ui_i == 0 )
+    if( !p_ui_i )
     {
         return nullTextPtr;
     }
@@ -585,7 +591,7 @@ const std::string CORBAServiceList::GetNetwork( void )
         std::string network = veCE->GetNetwork( p_ui_i->UIName_.c_str() );
         return network;
     }
-    catch ( ... )
+    catch( ... )
     {
         return std::string();
     }
@@ -603,7 +609,7 @@ void CORBAServiceList::StopCalc( void )
     {
         veCE->StopCalc();
     }
-    catch ( ... )
+    catch( ... )
     {
         return;
     }
@@ -657,7 +663,7 @@ void CORBAServiceList::Resume( void )
     {
         veCE->Resume();
     }
-    catch ( ... )
+    catch( ... )
     {
         return;
     }
@@ -677,7 +683,7 @@ const std::string CORBAServiceList::Query( const std::string& command )
         std::string network = veCE->Query( command.c_str() );
         return network;
     }
-    catch ( ... )
+    catch( ... )
     {
         return std::string( "Error" );
     }
@@ -697,9 +703,14 @@ void CORBAServiceList::SetNetwork( const std::string& command )
     {
         veCE->SetNetwork( command.c_str() );
     }
-    catch ( ... )
+    catch( ... )
     {
         return;
     }
+}
+////////////////////////////////////////////////////////////////////////////////
+void CORBAServiceList::OrbRun()
+{
+    m_orb->run();
 }
 ////////////////////////////////////////////////////////////////////////////////
