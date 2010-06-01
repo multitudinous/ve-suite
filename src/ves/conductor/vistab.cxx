@@ -1368,7 +1368,25 @@ void Vistab::InitialScalarVector()
 void Vistab::UpdateSpinControls()
 {
     _activeScalarName = ConvertUnicode( _scalarSelection->GetStringSelection() );
+    if( _activeScalarName.empty() )
+    {
+        wxMessageBox( _( "Select a scalar or vector" ), _( "Dataset Failure" ),
+                     wxOK | wxICON_INFORMATION );
+        _minSpinner->SetValue( 0 );
+        _maxSpinner->SetValue( 100 );
+        return;
+    }
+    
     _activeScalarRange = _originalScalarRanges[_activeScalarName];
+    if( _activeScalarRange.empty() )
+    {
+        wxString errorMsg = _("Scalar ") + _scalarSelection->GetStringSelection() + _(" does not have a data range.");
+        wxMessageBox( errorMsg, _( "Dataset Failure" ),
+                     wxOK | wxICON_INFORMATION );
+        _minSpinner->SetValue( 0 );
+        _maxSpinner->SetValue( 100 );
+        return;
+    }
 
     _minSpinner->SetRange( _activeScalarRange.at( 0 ), _activeScalarRange.at( 1 ) );
     _maxSpinner->SetRange( _activeScalarRange.at( 0 ), _activeScalarRange.at( 1 ) );
@@ -1390,15 +1408,6 @@ void Vistab::UpdateSpinControls()
     _maxSlider->SetValue( 100 );
     //double minValue = 0;
     //double maxValue = 100;
-
-    if( _activeScalarName.empty() )
-    {
-        wxMessageBox( _( "Select a scalar or vector" ), _( "Dataset Failure" ),
-                      wxOK | wxICON_INFORMATION );
-        _minSpinner->SetValue( 0 );
-        _maxSpinner->SetValue( 100 );
-        return;
-    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Vistab::SetButtonStatus( std::string buttonName, bool onOff )
