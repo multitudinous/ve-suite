@@ -467,35 +467,37 @@ void DataSetLoaderUI::OnLoadFile( wxCommandEvent& WXUNUSED( event ) )
                 wxConvCurrent->cWX2MB( relativeDataSetPath.c_str() ) );
             tempDVP->SetData( "VTK_DATA_FILE", tempStr );
             
-            std::string transDir =
+            if( ves::xplorer::util::fileIO::getExtension( tempStr ) == "vtm" )
+            {
+                std::string transDir =
                 ConvertUnicode( datasetFilename.GetPath().c_str() );
-            if( transDir.empty() )
-            {
-                transDir = ".";
-            }
-            std::vector<std::string> transientFile = 
-                ves::xplorer::util::fileIO::GetFilesInDirectory( 
-                transDir, ".vtm" );
-            std::cout << transientFile.size() << " " << transDir << std::endl;
-            if( transientFile.size() > 0 )
-            {
-                wxMessageDialog promptDlg( this,
-                    _( "Is this file part of a transient series?" ),
-                    _( "Transient Data Chooser" ),
-                    wxYES_NO | wxNO_DEFAULT | wxICON_QUESTION,
-                    wxDefaultPosition );
-                int answer = promptDlg.ShowModal();
-                if( answer == wxID_YES )
+                if( transDir.empty() )
                 {
-                    tempDVP =
-                    mParamBlock->GetProperty( "VTK_TRANSIENT_SERIES" );
-                    if( !tempDVP )
+                    transDir = ".";
+                }
+                std::vector<std::string> transientFile = 
+                    ves::xplorer::util::fileIO::GetFilesInDirectory( 
+                    transDir, ".vtm" );
+                if( transientFile.size() > 0 )
+                {
+                    wxMessageDialog promptDlg( this,
+                        _( "Is this file part of a transient series?" ),
+                        _( "Transient Data Chooser" ),
+                        wxYES_NO | wxNO_DEFAULT | wxICON_QUESTION,
+                        wxDefaultPosition );
+                    int answer = promptDlg.ShowModal();
+                    if( answer == wxID_YES )
                     {
-                        tempDVP = mParamBlock->GetProperty( -1 );
-                    }
-                    //unsigned int translfag = 1;
-                    tempDVP->SetData( "VTK_TRANSIENT_SERIES", transDir );
-                }            
+                        tempDVP =
+                            mParamBlock->GetProperty( "VTK_TRANSIENT_SERIES" );
+                        if( !tempDVP )
+                        {
+                            tempDVP = mParamBlock->GetProperty( -1 );
+                        }
+                        //unsigned int translfag = 1;
+                        tempDVP->SetData( "VTK_TRANSIENT_SERIES", transDir );
+                    }            
+                }
             }
         }
 
