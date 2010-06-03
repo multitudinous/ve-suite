@@ -862,7 +862,6 @@ void DataSetLoaderUI::OnInformationPacketChangeName( wxCommandEvent& WXUNUSED( e
         dataSetList->SetString( selection, dataSetList->GetValue() );
         std::string tempStr = ConvertUnicode( dataSetList->GetValue().c_str() );
         mParamBlock->SetName( tempStr );
-        //std::cout << "OnInformationPacketChangeName " << mParamBlock->GetName() << std::endl;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
