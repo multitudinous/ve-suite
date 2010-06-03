@@ -232,6 +232,7 @@ public:
     }
 
 protected:
+    void OnSpin( wxSpinEvent &event );
     void OnSpinUp( wxSpinEvent &event );
     void OnSpinDown( wxSpinEvent &event );
     void OnTextEnter( wxCommandEvent &event );

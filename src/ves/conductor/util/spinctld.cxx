@@ -35,6 +35,8 @@
 #include <wx/textctrl.h>
 #endif // WX_PRECOMP
 
+#include <iostream>
+
 #include <ves/conductor/util/spinctld.h>
 using namespace ves::conductor::util;
 #include <math.h>
@@ -144,6 +146,7 @@ void wxSpinCtrlDblTextCtrl::OnKillFocus( wxFocusEvent &event )
 //IMPLEMENT_DYNAMIC_CLASS( wxSpinCtrlDbl, wxControl )
 
 BEGIN_EVENT_TABLE( wxSpinCtrlDbl, wxControl )
+    EVT_SPIN( wxID_ANY, wxSpinCtrlDbl::OnSpin)
     EVT_SPIN_UP( wxID_ANY, wxSpinCtrlDbl::OnSpinUp )
     EVT_SPIN_DOWN( wxID_ANY, wxSpinCtrlDbl::OnSpinDown )
     EVT_TEXT_ENTER( wxID_ANY, wxSpinCtrlDbl::OnTextEnter )
@@ -186,7 +189,7 @@ bool wxSpinCtrlDbl::Create( wxWindow *parent, wxWindowID id,
     if( height == -1 ) height = best_size.GetHeight();
 
     m_spinButton = new wxSpinButton( this, id, wxPoint( 0, 0 ), wxSize( -1, height ),
-                                     wxSP_ARROW_KEYS | wxSP_VERTICAL | wxSP_WRAP );
+                                     wxSP_ARROW_KEYS | wxSP_VERTICAL );
     m_textCtrl = new wxSpinCtrlDblTextCtrl( this, id, value, wxPoint( 0, 0 ),
                                             wxSize( width - m_spinButton->GetSize().GetWidth(), height ) );
 
@@ -199,7 +202,8 @@ bool wxSpinCtrlDbl::Create( wxWindow *parent, wxWindowID id,
     m_default_value = initial;
     m_increment = increment;
     SetDigits( digits );
-
+    m_spinButton->SetRange( int( m_min ), int( m_max ) );
+    m_spinButton->SetValue( int( m_value ) );
     // set the value here without generating an event (also don't use virutal
     //  SetValue functions)
     if( !value.IsEmpty() )
@@ -279,6 +283,11 @@ void wxSpinCtrlDbl::DoSendEvent()
     event.SetInt(( int )( m_value + 0.5 ) );
     if( m_textCtrl ) event.SetString( m_textCtrl->GetValue() );
     GetEventHandler()->ProcessEvent( event );
+}
+
+void wxSpinCtrlDbl::OnSpin( wxSpinEvent& event )
+{
+    event.Skip();
 }
 
 void wxSpinCtrlDbl::OnSpinUp( wxSpinEvent &WXUNUSED( event ) )
@@ -407,13 +416,13 @@ void wxSpinCtrlDbl::SetValue( double value )
     }
 
     wxString str( wxString::Format( m_textFormat.c_str(), value ) );
-
     if (( value != m_value ) || ( str != m_textCtrl->GetValue() ) )
     {
         m_textCtrl->ChangeValue( str );
         m_textCtrl->DiscardEdits();
         m_value = value;
         str.ToDouble( &m_value );    // wysiwyg for textctrl
+        m_spinButton->SetValue( int( m_value ) );
     }
 }
 
@@ -436,6 +445,7 @@ void wxSpinCtrlDbl::SetRange( double min_val, double max_val )
     //wxCHECK_RET(max_val > min_val, wxT("invalid spinctrl range"));
     m_min = min_val;
     m_max = max_val;
+    m_spinButton->SetRange( int( m_min ), int( m_max ) );
 
     if( HasRange() )
     {
