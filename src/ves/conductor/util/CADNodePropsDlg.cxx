@@ -268,21 +268,24 @@ void CADNodePropertiesDlg::_buildTransformPanel()
     wxStaticBox* translation = new wxStaticBox( _transformPanel, -1, wxT( "Translation (ft)" ) );
     wxStaticBoxSizer* transSizer = new wxStaticBoxSizer( translation, wxHORIZONTAL );
     _xTransformCtrl =  new wxSpinCtrlDbl( _transformPanel, TRANSFORM_PANEL_ID );
-    _xTransformCtrl->SetValue( 0 );
     _xTransformCtrl->SetRange( -30000.0, 30000.0 );
     _xTransformCtrl->SetIncrement( 1.0 );
+    _xTransformCtrl->SetDefaultValue( 0 );
+    _xTransformCtrl->SetValue( 0 );
     _xTransformCtrl->Raise();
 
     _yTransformCtrl =  new wxSpinCtrlDbl( _transformPanel, TRANSFORM_PANEL_ID );
-    _yTransformCtrl->SetValue( 0 );
     _yTransformCtrl->SetRange( -30000.0, 30000.0 );
     _yTransformCtrl->SetIncrement( 1.0 );
+    _yTransformCtrl->SetDefaultValue( 0 );
+    _yTransformCtrl->SetValue( 0 );
     _yTransformCtrl->Raise();
 
     _zTransformCtrl =  new wxSpinCtrlDbl( _transformPanel, TRANSFORM_PANEL_ID );
-    _zTransformCtrl->SetValue( 0 );
     _zTransformCtrl->SetRange( -30000.0, 30000.0 );
     _zTransformCtrl->SetIncrement( 1.0 );
+    _zTransformCtrl->SetDefaultValue( 0 );
+    _zTransformCtrl->SetValue( 0 );
     _zTransformCtrl->Raise();
 
     transSizer->Add( _xTransformCtrl, 1, wxALIGN_CENTER_HORIZONTAL );
