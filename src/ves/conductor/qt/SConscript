@@ -48,13 +48,14 @@ headers += sca_util.getHeadersRecursive( srcDir )
 sources = cppSources1
 sources += sca_util.getSourcesRecursive( srcDir )
 
-lib_env.Append(LIBS = [
+lib_env.Append(LIBS = ['ves_open_xml',
                        'ves_xplorer_data',
                        'ves_xplorer_command',
                        'ves_xplorer_eventmanager',
                        'QtSolutions_PropertyBrowser-2.5'
                       ])
 lib_env.Append(LIBPATH = [
+                           pj('#', buildDir, 'src', 'ves', 'open', 'xml'),
                            pj('#', buildDir, 'src', 'ves', 'xplorer', 'data'),
                            pj('#', buildDir, 'src', 'ves', 'xplorer', 'command'),
                            pj('#', buildDir, 'src', 'ves', 'xplorer', 'eventmanager'),
