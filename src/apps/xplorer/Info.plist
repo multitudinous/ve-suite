@@ -2,34 +2,36 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>LSUIPresentationMode</key>
+	<real>4</real>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>English</string>
 	<key>CFBundleExecutable</key>
 	<string>ves_xplorer</string>
 	<key>CFBundleGetInfoString</key>
-	<string>VR Juggler v2.2.0. Copyright © 1998-2007 Iowa State University</string>
+	<string>VE-Suite v2.1.0. Copyright © 1998-2010 Iowa State University</string>
 	<key>CFBundleIconFile</key>
 	<string>ve_icon128x128.icns</string>
 	<key>CFBundleIdentifier</key>
-	<string>org.vrjuggler.ves_xplorer</string>
+	<string>org.vesuite.ves_xplorer</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleLongVersionString</key>
-	<string>2.2.0, © 1998-2007 Iowa State University</string>
+	<string>2.1.0, © 1998-2010 Iowa State University</string>
 	<key>CFBundleName</key>
 	<string>ves_xplorer</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>2.2</string>
+	<string>2.1</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>2.2.0</string>
+	<string>2.1.0</string>
 	<key>CSResourcesFileMapped</key>
 	<true/>
 	<key>NSHumanReadableCopyright</key>
-	<string>Copyright © 1998-2007 Iowa State University</string>
+	<string>Copyright © 1998-2010 Iowa State University</string>
 	<key>NSMainNibFile</key>
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
