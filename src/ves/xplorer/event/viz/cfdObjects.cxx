@@ -45,6 +45,8 @@
 #include <vtkCompositeDataGeometryFilter.h>
 #include <vtkGeometryFilter.h>
 #include <vtkAlgorithmOutput.h>
+#include <vtkPointData.h>
+#include <vtkDoubleArray.h>
 
 using namespace ves::xplorer::scenegraph;
 using namespace ves::xplorer;
@@ -194,3 +196,58 @@ bool cfdObjects::IsGPUTools()
     return m_gpuTools;
 }
 ////////////////////////////////////////////////////////////////////////////////
+vtkPolyData* cfdObjects::ComputeVolumeFlux( vtkPolyData* inputPD )
+{
+    vtkPolyData* normalsOutputPD = inputPD;
+    
+    vtkDataArray* normalsArray = 
+        normalsOutputPD->GetPointData()->GetNormals();
+    vtkIdType n_points = normalsOutputPD->GetNumberOfPoints();
+	
+    vtkDoubleArray* vol_flux_array = vtkDoubleArray::New();
+    vol_flux_array->SetNumberOfTuples(n_points);
+    vol_flux_array->SetName("VolumeFlux");
+	
+    normalsOutputPD->Update();
+	
+    vtkPointData* pointData = normalsOutputPD->GetPointData();
+    if( pointData == NULL )
+    {
+        std::cout << " pd point data is null " << std::endl;
+        return 0;
+    }
+
+    vtkDataArray* vectorArray = 
+        pointData->GetVectors( 
+        GetActiveDataSet()->GetActiveVectorName().c_str() );
+	
+    if( vectorArray == NULL )
+    {
+        std::cout << " vectors are null " << std::endl;
+        return 0;
+    }
+	
+    if( normalsArray == NULL )
+    {
+        std::cout << " normals are null " << std::endl;
+        return 0;
+    }
+	
+    double normalVec[3], vectorVec[3], volume_flux;
+	
+    for( vtkIdType i = 0; i < n_points; ++i )
+    {
+        vectorArray->GetTuple( i, vectorVec );
+        normalsArray->GetTuple( i, normalVec );
+        volume_flux = 
+            vectorVec[0]*normalVec[0]+
+            vectorVec[1]*normalVec[1]+
+            vectorVec[2]*normalVec[2];
+        vol_flux_array->SetTuple1(i, volume_flux);
+    }
+    
+    normalsOutputPD->GetPointData()->SetScalars( vol_flux_array );
+    vol_flux_array->Delete();
+    
+    return normalsOutputPD;
+}

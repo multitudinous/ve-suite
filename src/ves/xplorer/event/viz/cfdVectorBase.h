@@ -98,6 +98,8 @@ public:
     float GetVectorScale();
 
 protected:
+    void CreateArbSurface();
+    
     vtkGlyph3D* glyph;
     vtkPolyDataMapper*   mapper;
     vtkMaskPoints*       ptmask;
@@ -115,6 +117,7 @@ protected:
     int _vectorRatioFactor;
     int _scaleByVector;
     float _vectorScale;
+    unsigned int m_selectDataMapping;
 };
 }
 }

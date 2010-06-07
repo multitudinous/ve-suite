@@ -195,6 +195,8 @@ public:
     bool IsGPUTools();
 
 protected:
+    vtkPolyData* ComputeVolumeFlux( vtkPolyData* inputPD );
+
     DataSet* activeDataSet;///<active dataset.
 
     std::vector< osg::ref_ptr< ves::xplorer::scenegraph::Geode > > geodes;///<geode vector.

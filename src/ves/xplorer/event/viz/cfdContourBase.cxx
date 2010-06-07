@@ -38,6 +38,9 @@
 #include <ves/xplorer/event/viz/cfdPlanes.h>
 #include <ves/xplorer/Debug.h>
 
+#include <ves/xplorer/Model.h>
+#include <ves/xplorer/ModelHandler.h>
+
 #include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>
@@ -407,62 +410,7 @@ void cfdContourBase::CreatePlane()
     	normalGen->SetInput( pd );
     	normalGen->Update();
 
-		vtkPolyData* normalsOutputPD = normalGen->GetOutput();
-
-    	vtkDataArray *normalsArray = 
-            normalsOutputPD->GetPointData()->GetNormals();
-    	unsigned int n_points = normalsOutputPD->GetNumberOfPoints();
-
-    	vtkDoubleArray* vol_flux_array = vtkDoubleArray::New();
-    	vol_flux_array->SetNumberOfTuples(n_points);
-    	vol_flux_array->SetName("VolumeFlux");
-	
-    	normalsOutputPD->Update();
-	
-    	vtkPointData* pointData = normalsOutputPD->GetPointData();
-    	if( pointData == NULL )
-    	{
-    	    std::cout << " pd point data is null " << std::endl;
-    	}
-	
-    	vtkPoints* points = normalsOutputPD->GetPoints();    
-    	if( points == NULL )
-    	{
-    	    std::cout << " points are null " << std::endl;
-    	}
-	
-    	vtkDataArray* vectorArray = 
-            pointData->GetVectors( 
-            GetActiveDataSet()->GetActiveVectorName().c_str() );
-	
-    	if( vectorArray == NULL )
-    	{
-    	    std::cout << " vectors are null " << std::endl;
-    	}
-	
-    	if( normalsArray == NULL )
-    	{
-    	    std::cout << " normals are null " << std::endl;
-    	}
-	
-		double normalVec[3], vectorVec[3], volume_flux;
-	
-		for(unsigned int i = 0; i < n_points; i++)
-    	{
-    	    vectorArray->GetTuple(i, vectorVec);
-    	    normalsArray->GetTuple(i, normalVec);
-    	    volume_flux = vectorVec[0]*normalVec[0]+
-                          vectorVec[1]*normalVec[1]+
-                          vectorVec[2]*normalVec[2];
-    	    vol_flux_array->SetTuple1(i, volume_flux);
-    	}
-    	
-    	normalsOutputPD->GetPointData()->SetScalars(vol_flux_array);
-        vol_flux_array->Delete();
-
-    	normalGen->Update();
-	
-		normalsOutputPD = normalGen->GetOutput();
+		vtkPolyData* normalsOutputPD = ComputeVolumeFlux( normalGen->GetOutput() );
 			
     	mapper->SetInput( normalsOutputPD );
 	
@@ -549,61 +497,8 @@ void cfdContourBase::CreateArbSurface()
 	    normals->SetInput( surfProbeOutput );
 	    normals->Update();
 	
-		vtkPolyData* normalsOutputPD = normals->GetOutput();
-
-    	vtkDataArray* normalsArray = 
-            normalsOutputPD->GetPointData()->GetNormals();
-    	vtkIdType n_points = normalsOutputPD->GetNumberOfPoints();
-	
-    	vtkDoubleArray* vol_flux_array = vtkDoubleArray::New();
-    	vol_flux_array->SetNumberOfTuples(n_points);
-    	vol_flux_array->SetName("VolumeFlux");
-	
-    	normalsOutputPD->Update();
-	
-    	vtkPointData* pointData = normalsOutputPD->GetPointData();
-    	if( pointData == NULL )
-    	{
-    	    std::cout << " pd point data is null " << std::endl;
-    	}
-	
-    	vtkPoints* points = normalsOutputPD->GetPoints();    
-    	if( points == NULL )
-    	{
-    	    std::cout << " points are null " << std::endl;
-    	}
-	
-    	vtkDataArray* vectorArray = 
-            pointData->GetVectors( GetActiveDataSet()->
-            GetActiveVectorName().c_str() );
-	
-    	if( vectorArray == NULL )
-    	{
-    	    std::cout << " vectors are null " << std::endl;
-    	}
-	
-    	if( normalsArray == NULL )
-    	{
-    	    std::cout << " normals are null " << std::endl;
-    	}
-	
-		double normalVec[3], vectorVec[3], volume_flux;
-	
-		for( vtkIdType i = 0; i < n_points; ++i )
-    	{
-    	    vectorArray->GetTuple( i, vectorVec );
-    	    normalsArray->GetTuple( i, normalVec );
-    	    volume_flux = vectorVec[0]*normalVec[0]+
-                          vectorVec[1]*normalVec[1]+
-                          vectorVec[2]*normalVec[2];
-    	    vol_flux_array->SetTuple1(i, volume_flux);
-    	}
-    	
-    	normalsOutputPD->GetPointData()->SetScalars( vol_flux_array );
-        vol_flux_array->Delete();
-
-    	normals->Update();
-		normalsOutputPD = normals->GetOutput();
+        vtkPolyData* normalsOutputPD = 
+            ComputeVolumeFlux( normals->GetOutput() );
 		
     	mapper->SetInput( normalsOutputPD );
 	
@@ -612,7 +507,7 @@ void cfdContourBase::CreateArbSurface()
             GetScalars( "VolumeFlux" )->GetRange( range );
 	
     	vtkLookupTable* lut1 = vtkLookupTable::New();
-    	lut1->SetNumberOfColors( 256 );            //default is 256
+    	lut1->SetNumberOfColors( 2 );            //default is 256
     	lut1->SetHueRange( 2.0f / 3.0f, 0.0f );    //a blue-to-red scale
     	lut1->SetTableRange( range );
     	lut1->Build();

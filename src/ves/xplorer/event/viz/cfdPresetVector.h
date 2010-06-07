@@ -34,9 +34,6 @@
 #define CFD_PRESET_VECTOR_H
 
 #include <ves/xplorer/event/viz/cfdVectorBase.h>
-#include <ves/xplorer/Model.h>
-#include <ves/xplorer/ModelHandler.h>
-
 
 namespace ves
 {
@@ -70,9 +67,6 @@ public:
     virtual ~cfdPresetVector();
     ///Update the preset vectors
     virtual void Update( void );
-
-    ///Create the Arb surface
-    void CreateArbSurface();
 
 private:
     int xyz;///<value of location

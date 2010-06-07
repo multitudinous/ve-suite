@@ -57,9 +57,6 @@
 #include <vtkCellDataToPointData.h>
 #include <vtkPassThroughFilter.h>
 #include <vtkXMLPolyDataWriter.h>
-#include <vtkProbeFilter.h>
-#include <vtkCompositeDataProbeFilter.h>
-#include <vtkPolyDataNormals.h>
 
 #define WRITE_IMAGE_DATA 0
 #if WRITE_IMAGE_DATA
@@ -268,62 +265,5 @@ void cfdPresetVector::Update( void )
                 << std::endl << vprDEBUG_FLUSH;
         }        
     }
-}
-////////////////////////////////////////////////////////////////////////////////
-void cfdPresetVector::CreateArbSurface()
-{   
-    //Need to set the active datasetname and get the position of the dataset
-    Model* activeModel = ModelHandler::instance()->GetActiveModel();
-    // set the dataset as the appropriate dastaset type
-    // (and the active dataset as well)
-    DataSet* surfDataset = 
-        activeModel->GetCfdDataSet( 
-        activeModel->GetIndexOfDataSet( m_surfDataset ) );
-    vtkPolyData* pd = surfDataset->GetPolyData();
-
-    if( !pd )
-    {
-        std::cerr << "ERROR: Activate a polydata file to use this function"
-            << std::endl;
-        return;
-    }
-
-	vtkProbeFilter* surfProbe = vtkCompositeDataProbeFilter::New();
-    surfProbe->SetInput( pd );
-    surfProbe->SetSource( GetActiveDataSet()->GetDataSet() );
-    surfProbe->Update(); 
-  
-   	vtkPolyData* surfProbeOutput = surfProbe->GetPolyDataOutput();
-
-    if( !surfProbeOutput )
-    {
-        return;
-    }
-
-	vtkPolyDataNormals* normalGen = vtkPolyDataNormals::New();
-    normalGen->SetInput( surfProbeOutput );
-    normalGen->Update();
-
-	vtkPolyData* normalsOutputPD = normalGen->GetOutput();
-
-    // get every nth point from the dataSet data
-    this->ptmask->SetInput( normalsOutputPD );
-    this->ptmask->SetOnRatio( this->GetVectorRatioFactor() );
-    this->ptmask->Update();
-
-    this->SetGlyphWithThreshold();
-    this->SetGlyphAttributes();
-    //this->glyph->Update();
-
-    mapper->SetInputConnection( glyph->GetOutputPort() );
-    mapper->SetScalarModeToUsePointFieldData();
-    mapper->UseLookupTableScalarRangeOn();
-    mapper->SelectColorArray( GetActiveDataSet()->
-        GetActiveScalarName().c_str() );
-    mapper->SetLookupTable( GetActiveDataSet()->GetLookupTable() );
-    mapper->Update();
-
-    surfProbe->Delete();
-    normalGen->Delete();
 }
 ////////////////////////////////////////////////////////////////////////////////

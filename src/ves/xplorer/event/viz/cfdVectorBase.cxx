@@ -33,6 +33,8 @@
 #include <ves/xplorer/event/viz/cfdVectorBase.h>
 #include <ves/xplorer/DataSet.h>
 #include <ves/xplorer/environment/cfdEnum.h>
+#include <ves/xplorer/Model.h>
+#include <ves/xplorer/ModelHandler.h>
 
 #include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/Command.h>
@@ -51,6 +53,12 @@
 #include <vtkProperty.h>
 #include <vtkTriangleFilter.h>
 #include <vtkStripper.h>
+#include <vtkProbeFilter.h>
+#include <vtkCompositeDataProbeFilter.h>
+#include <vtkPolyDataNormals.h>
+#include <vtkLookupTable.h>
+#include <vtkPointData.h>
+#include <vtkXMLPolyDataWriter.h>
 
 using namespace ves::xplorer;
 ////////////////////////////////////////////////////////////////////////////////
@@ -118,6 +126,30 @@ void cfdVectorBase::UpdateCommand()
     ves::open::xml::DataValuePairPtr activeModelDVP = veCommand->GetDataValuePair( "Sub-Dialog Settings" );
     ves::open::xml::CommandPtr objectCommand = boost::dynamic_pointer_cast<ves::open::xml::Command>(  activeModelDVP->GetDataXMLObject() );
 
+    //Extract the integration direction
+    activeModelDVP = objectCommand->GetDataValuePair( "Select Data Mapping" );
+    std::string dataMapping;
+    activeModelDVP->GetData( dataMapping );
+    
+    vprDEBUG( vesDBG, 0 ) 
+        << "|\tSelect scalar or volume flux for contour display"
+        << std::endl << vprDEBUG_FLUSH;
+    
+    if( !dataMapping.compare( "Map Scalar Data" ) )
+    {
+        vprDEBUG( vesDBG, 0 ) << "|\t\tVISUALIZE SCALARS"
+        << std::endl << vprDEBUG_FLUSH;
+        
+        m_selectDataMapping = 0;
+    }
+    else if( !dataMapping.compare( "Map Volume Flux Data" ) )
+    {
+        vprDEBUG( vesDBG, 0 ) << "|\t\tVISUALIZE VOLUME FLUX"
+        << std::endl << vprDEBUG_FLUSH;
+        
+        m_selectDataMapping = 1;
+    }
+    
     //Extract the plane position
     activeModelDVP = objectCommand->GetDataValuePair( "Position" );
     double planePosition;
@@ -420,4 +452,99 @@ int cfdVectorBase::GetScaleByVectorFlag( void )
     return _scaleByVector;
 }
 ////////////////////////////////////////////////////////////////////////////////
-
+void cfdVectorBase::CreateArbSurface()
+{   
+    //Need to set the active datasetname and get the position of the dataset
+    Model* activeModel = ModelHandler::instance()->GetActiveModel();
+    // set the dataset as the appropriate dastaset type
+    // (and the active dataset as well)
+    DataSet* surfDataset = 
+    activeModel->GetCfdDataSet( 
+                               activeModel->GetIndexOfDataSet( m_surfDataset ) );
+    vtkPolyData* pd = surfDataset->GetPolyData();
+    
+    if( !pd )
+    {
+        std::cerr << "ERROR: Activate a polydata file to use this function"
+        << std::endl;
+        return;
+    }
+    
+	vtkProbeFilter* surfProbe = vtkCompositeDataProbeFilter::New();
+    surfProbe->SetInput( pd );
+    surfProbe->SetSource( GetActiveDataSet()->GetDataSet() );
+    surfProbe->Update(); 
+    
+   	vtkPolyData* surfProbeOutput = surfProbe->GetPolyDataOutput();
+    
+    if( !surfProbeOutput )
+    {
+        return;
+    }
+    
+    vtkPolyDataNormals* normalGen = 0;
+    vtkPolyData* normalsOutputPD = surfProbeOutput;
+    if( m_selectDataMapping == 1 )
+    { 
+        // The code below computes volume flux on the specified contour plane
+        normalGen = vtkPolyDataNormals::New();
+        normalGen->SetInput( surfProbeOutput );
+        normalGen->Update();
+        
+        normalsOutputPD = ComputeVolumeFlux( normalGen->GetOutput() );
+        /*{
+        vtkXMLPolyDataWriter* writer = vtkXMLPolyDataWriter::New();
+        writer->SetInput( normalsOutputPD );
+        writer->SetDataModeToAscii();
+        writer->SetFileName( "testvecglyphs.vtp" );
+        writer->Write();
+        writer->Delete();
+        }*/
+	}
+    
+    // get every nth point from the dataSet data
+    this->ptmask->SetInput( normalsOutputPD );
+    this->ptmask->SetOnRatio( this->GetVectorRatioFactor() );
+    this->ptmask->Update();
+    
+    SetGlyphWithThreshold();
+    SetGlyphAttributes();
+    
+    if( m_selectDataMapping != 1 )
+    {
+        mapper->SetInputConnection( glyph->GetOutputPort() );
+        mapper->SetScalarModeToUsePointFieldData();
+        mapper->UseLookupTableScalarRangeOn();
+        mapper->SelectColorArray( GetActiveDataSet()->
+                                 GetActiveScalarName().c_str() );
+        mapper->SetLookupTable( GetActiveDataSet()->GetLookupTable() );
+        mapper->Update();
+    }
+    else
+    {
+    	double range[ 2 ];
+    	normalsOutputPD->GetPointData()->
+            GetScalars( "VolumeFlux" )->GetRange( range );
+        
+    	vtkLookupTable* lut1 = vtkLookupTable::New();
+    	lut1->SetNumberOfColors( 2 );            //default is 256
+    	lut1->SetHueRange( 2.0f / 3.0f, 0.0f );    //a blue-to-red scale
+    	lut1->SetTableRange( range );
+    	lut1->Build();
+        
+    	mapper->SetInputConnection( glyph->GetOutputPort() );
+    	mapper->SetColorModeToMapScalars();
+    	mapper->SetScalarRange( range );
+    	mapper->SetLookupTable( lut1 );
+    	mapper->SetScalarModeToUsePointFieldData();
+    	mapper->UseLookupTableScalarRangeOn();
+    	mapper->SelectColorArray( "VolumeFlux" );
+		mapper->Update();
+        
+    	lut1->Delete();
+        normalGen->Delete();
+    }
+    
+    surfProbe->Delete();
+}
+////////////////////////////////////////////////////////////////////////////////
