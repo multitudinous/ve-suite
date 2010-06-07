@@ -435,9 +435,9 @@ void UIElementQt::_debug( const std::string text )
 
 void UIElementQt::paintEvent( QPaintEvent* event )
 {
-    _debug( "paintEvent" );
-    _render( );
-    QGraphicsView::paintEvent( event );
+//    _debug( "paintEvent" );
+//    _render( );
+//    QGraphicsView::paintEvent( event );
 }
 
 void UIElementQt::_sendEvent( xplorer::eventmanager::InteractionEvent* event )
