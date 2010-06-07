@@ -147,17 +147,17 @@ void ContourPlanePropertySet::_createSkeleton( )
     AddProperty( "Advanced", boost::any( ), "Advanced" );
     SetPropertyAttribute( "Advanced", "isUIGroupOnly", true );
 
-    AddProperty( "Advanced_Opacity", 100, "Opacity" );
-    SetPropertyAttribute( "Advanced_Opacity", "minimumValue", 0 );
-    SetPropertyAttribute( "Advanced_Opacity", "maximumValue", 100 );
+    AddProperty( "Advanced_Opacity", 1.0, "Opacity" );
+    SetPropertyAttribute( "Advanced_Opacity", "minimumValue", 0.0 );
+    SetPropertyAttribute( "Advanced_Opacity", "maximumValue", 1.0 );
 
-    AddProperty( "Advanced_WarpedContourScale", 100, "Warped Contour Scale" );
-    SetPropertyAttribute( "Advanced_WarpedContourScale", "minimumValue", 0 );
-    SetPropertyAttribute( "Advanced_WarpedContourScale", "maximumValue", 100 );
+    AddProperty( "Advanced_WarpedContourScale", 1.0, "Warped Contour Scale" );
+    SetPropertyAttribute( "Advanced_WarpedContourScale", "minimumValue", 0.0 );
+    SetPropertyAttribute( "Advanced_WarpedContourScale", "maximumValue", 1.0 );
 
-    AddProperty( "Advanced_ContourLOD", 100, "Contour LOD" );
-    SetPropertyAttribute( "Advanced_ContourLOD", "minimumValue", 0 );
-    SetPropertyAttribute( "Advanced_ContourLOD", "maximumValue", 100 );
+    AddProperty( "Advanced_ContourLOD", 1.0, "Contour LOD" );
+    SetPropertyAttribute( "Advanced_ContourLOD", "minimumValue", 0.0 );
+    SetPropertyAttribute( "Advanced_ContourLOD", "maximumValue", 1.0 );
 
     AddProperty( "Advanced_ContourType", 0, "Contour Type" );
     enumValues.clear( );
