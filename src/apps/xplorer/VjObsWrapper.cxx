@@ -338,6 +338,13 @@ bool VjObsWrapper::IsMaster()
 ////////////////////////////////////////////////////////////////////////////////
 void VjObsWrapper::OrbRun()
 {
+    //If juggler still has to do some work then wait
+    // to process CORBA calls
+    while( !jccl::ConfigManager::instance()->isPendingStale() )
+    {
+        vpr::System::msleep( 200 );  // thenth-second delay
+    }
+
     m_orbPtr->run();
 }
 ////////////////////////////////////////////////////////////////////////////////
