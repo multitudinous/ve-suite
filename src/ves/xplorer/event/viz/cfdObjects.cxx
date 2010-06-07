@@ -246,7 +246,7 @@ vtkPolyData* cfdObjects::ComputeVolumeFlux( vtkPolyData* inputPD )
         vol_flux_array->SetTuple1(i, volume_flux);
     }
     
-    normalsOutputPD->GetPointData()->SetScalars( vol_flux_array );
+    normalsOutputPD->GetPointData()->AddArray( vol_flux_array );
     vol_flux_array->Delete();
     
     return normalsOutputPD;
