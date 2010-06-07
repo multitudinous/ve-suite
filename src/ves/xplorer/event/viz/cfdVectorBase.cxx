@@ -492,14 +492,6 @@ void cfdVectorBase::CreateArbSurface()
         normalGen->Update();
         
         normalsOutputPD = ComputeVolumeFlux( normalGen->GetOutput() );
-        /*{
-        vtkXMLPolyDataWriter* writer = vtkXMLPolyDataWriter::New();
-        writer->SetInput( normalsOutputPD );
-        writer->SetDataModeToAscii();
-        writer->SetFileName( "testvecglyphs.vtp" );
-        writer->Write();
-        writer->Delete();
-        }*/
 	}
     
     // get every nth point from the dataSet data
