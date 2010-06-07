@@ -52,7 +52,6 @@ UninstallDisplayName={#MyAppName}_{#MyAppVer}_{#MSVCVERSION}
 Name: full; Description: Full installation
 Name: custom; Description: Custom installation; Flags: iscustom
 
-
 [Components]
 Name: nameserver; Description: Name Server; Types: full
 Name: vexplorer; Description: VE-Xplorer; Types: full
@@ -60,6 +59,7 @@ Name: veconductor; Description: VE-Conductor (GUI); Types: full
 Name: vebuildenv; Description: Headers and Libs
 Name: examples; Description: Example datasets; Types: full
 ;Name: buildertools; Description: VE-Suite BuilderTools; Types: full
+
 [Registry]
 Root: HKCU; Subkey: Software\VE-Suite-Launcher; ValueType: none; Flags: uninsdeletekeyifempty
 Root: HKCU; Subkey: Software\VE-Conductor; ValueType: none; Components: " examples vebuildenv veconductor vexplorer nameserver"; Tasks: " desktopVELauncherIcon"; Flags: uninsdeletekeyifempty
@@ -83,6 +83,7 @@ Source: {#VEINSTALLHOME}\bin\installerImages\*; DestDir: {app}\bin\installerImag
 Source: {#SKEWMATRIXHOME}\*.dll; DestDir: {app}\{#LIBDIR}; Flags: ignoreversion recursesubdirs skipifsourcedoesntexist
 Source: {#VEINSTALLHOME}\bin\velauncher.exe; DestDir: {app}\bin
 Source: {#MSREDISTRIBUTABLE}; DestDir: {tmp}
+Source: {#INSTALLERINSTALLLOCATION}\VE-Suite_Dependencies_{#VEVERSION}_{#MSVCVERSION}.exe; DestDir: {tmp}; Flags: ignoreversion
 
 [Icons]
 Name: {group}\Uninstallers\{cm:UninstallProgram,{#MyAppName}}; Filename: {uninstallexe}
@@ -90,12 +91,16 @@ Name: {group}\VE-Suite-{#VEVERSION}; Filename: {app}\bin\{#VELauncher}; WorkingD
 Name: {commondesktop}\VE-Suite-{#VEVERSION}; Filename: {app}\bin\velauncher.exe; WorkingDir: {app}; IconFilename: {app}\bin\installerImages\{#VesIcon}; Tasks: desktopVELauncherIcon
 
 [Run]
-Filename: {tmp}\vcredist_x64.exe; Description: Install Microsoft Runtime Redistributable for SP1 (NOTE: This is REQIURED to run VE-Suite if Microsoft Visual Studio SP1 compatible runtime libraries are not already installed); StatusMsg: Installing Microsoft Runtime Redistributable for SP1...; Flags: postinstall unchecked; Components: 
+Filename: {tmp}\vcredist_x64.exe; Description: Install Microsoft Runtime Redistributable for SP1 (NOTE: This is REQIURED to run VE-Suite if Microsoft Visual Studio SP1 compatible runtime libraries are not already installed); StatusMsg: Installing Microsoft Runtime Redistributable for SP1...; Flags: postinstall unchecked; Tasks: 
+Filename: {tmp}\VE-Suite_Dependencies_{#VEVERSION}_{#MSVCVERSION}; Flags: postinstall runascurrentuser; Description: VE-Suite Dependency Installer; StatusMsg: Installing VE-Suite dependencies
+
 [_ISToolPreCompile]
 ;Name: D:\devEnv\VES\share\scripts\win\buildVELauncher.exe.bat; Parameters: ; Flags: abortonerror
+
 [_ISTool]
 UseAbsolutePaths=false
 LogFile={#VEDEVHOME}\compile.log
 LogFileAppend=false
+
 [UninstallDelete]
 Name: {app}; Type: filesandordirs
