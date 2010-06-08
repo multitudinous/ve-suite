@@ -126,13 +126,20 @@ VjObsWrapper::~VjObsWrapper( void )
     }
     
     //delete _vjObs;
-    m_orbPtr->shutdown();
+    try
+    {
+        m_orbPtr->shutdown( true );
+    }
+    catch( ... )
+    {
+        ;
+    }
 
     try
     {
         m_orbThread->join();
     }
-    catch ( ... )
+    catch( ... )
     {
         ;//do nothing
     }
