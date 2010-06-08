@@ -85,6 +85,8 @@ public:
     Body* GetTileEngineBody();
     ///Clear the earth from the scenegraph mode root
     void Clear();
+    ///Clear all of the model wrappers from the manager
+    void ClearModels();
 
     Minerva::Core::Layers::RasterLayer* GetLayer( const std::string& guid ) const;
 

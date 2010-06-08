@@ -464,6 +464,7 @@ void GraphicalPluginManager::LoadDataFromCE()
     if( ui_i->GetNetworkFlag() )
     {
 #ifdef MINERVA_GIS_SUPPORT
+        ves::xplorer::minerva::MinervaManager::instance()->ClearModels();
         //If we have an earth we need to clear it when we load a new model
         ves::xplorer::minerva::MinervaManager::instance()->Clear();
 #endif

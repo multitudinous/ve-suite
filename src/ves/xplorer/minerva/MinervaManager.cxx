@@ -261,11 +261,14 @@ void MinervaManager::AddEarthToScene()
 
   for ( Models::iterator iter = _models.begin(); iter != _models.end(); ++iter )
   {
+std::cout << " models 1 " << std::endl;
     ModelWrapper::RefPtr model ( iter->second );
     if ( model.valid() )
     {
+std::cout << " models 2 " << std::endl;
       _body->vectorData()->add ( Usul::Interfaces::IUnknown::QueryPtr ( model.get() ) );
       this->UpdateModel ( model );
+std::cout << " models 3 " << std::endl;
     }
   }
 }
@@ -315,6 +318,15 @@ void MinervaManager::Clear()
     }
 }
 
+void MinervaManager::ClearModels()
+{
+    for ( Models::iterator iter = _models.begin(); iter != _models.end(); ++iter )
+    {
+        Usul::Pointers::unreference ( iter->second );
+        iter->second = 0x0;
+    }
+    _models.clear();
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 //
