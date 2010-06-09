@@ -199,10 +199,10 @@ void DataSetLoaderUI::CreateControls()
 
     itemStaticBoxSizer4->Add( dataButtonsSizer, 0, wxALIGN_CENTER_HORIZONTAL | wxALL, 5 );
     wxButton* loadButton = new wxButton( itemDialog1, ID_ADD_DATASET, _( "Add DataSet" ), wxDefaultPosition, wxDefaultSize, 0 );
-    dataButtonsSizer->Add( loadButton );
+    dataButtonsSizer->Add( loadButton, 0, wxALL, 5 );
 
     wxButton* deleteButton = new wxButton( itemDialog1, ID_DELETE_DATASET, _( "Delete DataSet" ), wxDefaultPosition, wxDefaultSize, 0 );
-    dataButtonsSizer->Add( deleteButton );
+    dataButtonsSizer->Add( deleteButton, 0, wxALL, 5 );
 
     ///////////////////////////////////////////////////////
     itemStaticBoxSizer6Static = new wxStaticBox( itemDialog1, wxID_ANY,

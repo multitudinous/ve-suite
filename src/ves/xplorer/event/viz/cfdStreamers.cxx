@@ -286,7 +286,6 @@ void cfdStreamers::Update()
         {
             append->AddInput( cleanPD->GetOutput() );
         }
-        cleanPD->Delete();
 
         /*{
             vtkXMLPolyDataWriter* writer = vtkXMLPolyDataWriter::New();
