@@ -76,8 +76,12 @@ vrjuggler_options.apply( env )
 osgworks_options.apply( env )
 
 if baseEnv['MakeQtSupport'] == "yes":
-    import qt46
-    qt46.applyQtBuildFlags( env )
+    if GetPlatform() == 'linux':
+        Import('qt_options')
+        qt_options.apply(env)
+    else:
+        import qt46
+        qt46.applyQtBuildFlags(env)
 
 resources = [ pj( RootDir, 'dist', 'installerImages', 've_icon128x128.icns'), 
     pj( RootDir, 'src', 'apps', 'xplorer','vrjuggler.plist')]

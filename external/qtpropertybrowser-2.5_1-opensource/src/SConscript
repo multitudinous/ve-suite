@@ -2,7 +2,6 @@
 ##Builds qtpropertybrowser
 #!python
 import os, sys, string, glob
-import qt46
 pj = os.path.join
 import SConsAddons.Util as sca_util
 Import('baseEnv ves_pkg LIBDIR RootDir buildDir GetPlatform')
@@ -71,7 +70,12 @@ lib_env.AppendUnique( CPPDEFINES = [ 'QT_GUI_LIB', 'QT_CORE_LIB', 'QT_SHARED' ] 
 if GetPlatform() == 'linux':
     lib_env.Append( CCFLAGS=['-fPIC'])
 
-qt46.applyQtBuildFlags( lib_env )
+if GetPlatform() == 'linux':
+    Import('qt_options')
+    qt_options.apply(lib_env)
+else:
+    import qt46
+    qt46.applyQtBuildFlags(lib_env)
 
 #if baseEnv['StaticLibs'] == "yes":
 #lib = ves_pkg.createStaticLibrary('QtSolutions_PropertyBrowser-2.5', lib_env,

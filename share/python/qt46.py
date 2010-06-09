@@ -11,9 +11,6 @@ pj = os.path.join
 import SConsAddons.Util as sca_util
 from SCons.Script import *  # the usual scons stuff you get in a SConscript
 
-if sca_util.GetPlatform() == 'linux':
-    Import('qt_options')
-
 def qtTargetBuilder( target, source, env ):
     #print target.path
     #print source.abspath
@@ -99,5 +96,4 @@ def applyQtBuildFlags(env):
         env.Append( LINKFLAGS = ['-framework','QtCore', '-framework','QtGui','-framework','QtOpenGL','-framework','OpenGL'])
         env.AppendUnique( CXXFLAGS =['-F/Library/Frameworks/QtOpenGL.framework','-F/Library/Frameworks/QtCore.framework','-F/Library/Frameworks/QtGui.framework'] )
     else:
-        qt_options.appley( env )
-        #env.AppendUnique( LIBS= ['QtCore','QtGui'] )
+        print "Please use the flagpoll based method for compiling against Qt on Linux."

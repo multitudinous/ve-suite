@@ -1,10 +1,9 @@
 ##Builds QtUILib
 import os, sys, string
 import SConsAddons.Util as sca_util
-import qt46
 pj = os.path.join
 
-Import('baseEnv ves_pkg LIBDIR buildDir RootDir osg_options vpr_options vrjuggler_options')
+Import('baseEnv ves_pkg LIBDIR buildDir RootDir osg_options vpr_options vrjuggler_options GetPlatform')
 
 srcDir = os.path.abspath( pj(RootDir, 'src', 'ves', 'conductor', 'qt') )
 buildSrcDir = pj('#',buildDir,'src','ves','conductor','qt')
@@ -62,7 +61,13 @@ lib_env.Append(LIBPATH = [
                            pj('#', buildDir, 'external', 'qtpropertybrowser-2.5_1-opensource', 'src')
                          ])
 
-qt46.applyQtBuildFlags( lib_env )
+if GetPlatform() == 'linux':
+    Import('qt_options')
+    qt_options.apply(lib_env)
+else:
+    import qt46
+    qt46.applyQtBuildFlags(lib_env)
+
 osg_options.apply( lib_env )
 vpr_options.apply( lib_env )
 vrjuggler_options.apply( lib_env )
