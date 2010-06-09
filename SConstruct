@@ -377,7 +377,7 @@ minerva_options = fp_option.FlagPollBasedOption( "Minerva", "Minerva", "1.0", Fa
 #Setup qt on linux
 if GetPlatform() == 'linux':
    qt_options = fp_option.FlagPollBasedOption("Qt libraries",
-      "QtGui QtCore",
+      "QtGui QtCore QtOpenGL",
       "4.0", False, True, helpText=None, compileTest=True,
       headerToCheck="QtCore/qglobal.h")
    opts.AddOption( qt_options )

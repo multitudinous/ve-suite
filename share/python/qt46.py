@@ -11,6 +11,8 @@ pj = os.path.join
 import SConsAddons.Util as sca_util
 from SCons.Script import *  # the usual scons stuff you get in a SConscript
 
+Import('qt_options')
+
 def qtTargetBuilder( target, source, env ):
     #print target.path
     #print source.abspath
@@ -41,6 +43,7 @@ def generate(env,**kw):
         return None
     else:
         sys.stdout.write("Found uic %s\n" % taoidl_cmd )
+    uic = taoidl_cmd
 
     # Find tao_idl exectuable
     sys.stdout.write("Searching for moc...\n")
@@ -51,6 +54,7 @@ def generate(env,**kw):
         return None
     else:
         sys.stdout.write("Found moc %s\n" % taoidl_cmd )
+    moc = taoidl_cmd
 
     # Find tao_idl exectuable
     sys.stdout.write("Searching for rcc...\n")
@@ -61,14 +65,15 @@ def generate(env,**kw):
         return None
     else:
         sys.stdout.write("Found rcc %s\n" % taoidl_cmd )
+    rcc = taoidl_cmd
 
-    uic ='uic'
+    #uic ='uic'
     # Setup uic
     uicCmd = '%s ${SOURCES} -o ${TARGET}' %(uic) 
     bld = Builder(action = uicCmd, prefix = "ui_", suffix = ".h", single_source = True )
     env.Append(BUILDERS = {'qt_uic': bld})
 
-    moc ='moc'
+    #moc ='moc'
     # setup moc
     mocCmd = '%s ${SOURCES} -o ${TARGET}' %(moc) 
     bld = Builder(action = mocCmd, prefix = "moc_", suffix = ".cpp", single_source = True)
@@ -77,7 +82,7 @@ def generate(env,**kw):
     bld = Builder(action = mocCmd, prefix = "", suffix = ".moc", single_source = True)
     env.Append(BUILDERS = {'qt_cxxmoc': bld})
 
-    rcc ='rcc'
+    #rcc ='rcc'
     # Setup rcc
     rccCmd = '%s ${SOURCES} -o ${TARGET}' %(rcc) 
     bld = Builder(action = rccCmd, prefix = "qrc_", suffix = ".cxx", single_source = True )
@@ -93,4 +98,5 @@ def applyQtBuildFlags(env):
         env.Append( LINKFLAGS = ['-framework','QtCore', '-framework','QtGui','-framework','QtOpenGL','-framework','OpenGL'])
         env.AppendUnique( CXXFLAGS =['-F/Library/Frameworks/QtOpenGL.framework','-F/Library/Frameworks/QtCore.framework','-F/Library/Frameworks/QtGui.framework'] )
     else:
-        env.AppendUnique( LIBS= ['QtCore','QtGui'] )
+        qt_options.appley( env )
+        #env.AppendUnique( LIBS= ['QtCore','QtGui'] )
