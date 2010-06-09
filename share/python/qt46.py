@@ -11,7 +11,8 @@ pj = os.path.join
 import SConsAddons.Util as sca_util
 from SCons.Script import *  # the usual scons stuff you get in a SConscript
 
-Import('qt_options')
+if sca_util.GetPlatform() == 'linux':
+    Import('qt_options')
 
 def qtTargetBuilder( target, source, env ):
     #print target.path
