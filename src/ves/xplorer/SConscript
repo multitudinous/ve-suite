@@ -6,7 +6,7 @@ import SConsAddons.Util as sca_util
 
 Import('baseEnv buildDir RootDir ves_pkg vtk_options osg_options xerces_options LIBDIR osgbulletBaseVar bulletBaseVar')
 Import('tao_options boost_options vrjuggler_options osgal_options GetPlatform osgworks_options ApplyBulletVars')
-Import('minerva_options')
+Import('poco_options minerva_options')
 
 xplorerSubdirs = Split("""
     scenegraph
@@ -103,6 +103,7 @@ xerces_options.apply( lib_env )
 
 # Needed since Device and KeyboardMouse send events to new UI
 if baseEnv['MakeQtSupport'] == "yes":
+    poco_options.apply(lib_env)
     lib_env.AppendUnique( CPPDEFINES = [ 'QT_ON' ] )
     lib_env.AppendUnique(LIBS = ['ves_xplorer_eventmanager','ves_xplorer_data'])
     lib_env.AppendUnique(LIBPATH = [pj('#',buildDir,'src','ves','xplorer','eventmanager'),
