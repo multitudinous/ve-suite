@@ -56,6 +56,11 @@ CreateDataObjectBBoxActorsCallback::~CreateDataObjectBBoxActorsCallback()
 /////////////////////////////////////////////////////////////////////////////
 void CreateDataObjectBBoxActorsCallback::OperateOnDataset( vtkDataSet* dataset )
 {
+    if( dataset->GetNumberOfCells() == 0 )
+    {
+        return;
+    }
+
     vtkOutlineFilter* outlineData = vtkOutlineFilter::New();
 
     outlineData->SetInput( dataset );
@@ -70,7 +75,6 @@ void CreateDataObjectBBoxActorsCallback::OperateOnDataset( vtkDataSet* dataset )
 
     outlineData->Delete();
     mapOutline->Delete();
-
 }
 ////////////////////////////////////////////////////////////////////////////
 std::vector< vtkActor* >& CreateDataObjectBBoxActorsCallback::GetBBoxActors()
