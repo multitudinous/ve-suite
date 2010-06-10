@@ -134,7 +134,6 @@ private:
 
     void _calculatePower2ImageDimensions( );
     void _calculateTextureCoordinates( );
-    void _debug( const std::string text );
     void _setupKeyMap( );
 
     protected

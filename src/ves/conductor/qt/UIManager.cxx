@@ -369,6 +369,12 @@ void UIManager::operator( )( osg::Node* node, osg::NodeVisitor* nv )
 
 void UIManager::SendInteractionEvent( xplorer::eventmanager::InteractionEvent &event )
 {
+    // Ignore events if we're not initialized
+    if ( !mInitialized )
+    {
+        return;
+    }
+
     // Check visibility of UI branch before bothering with events
     if( !mUIGroup->getValue( 0 ) )
     {
@@ -497,6 +503,11 @@ void UIManager::SetProjectionMatrix( osg::Matrixd& matrix )
 
 void UIManager::UnembedAll( )
 {
+    if( !mInitialized )
+    {
+        return;
+    }
+
     HideAllElements( );
     std::map< osg::ref_ptr< osg::Geode >, UIElement* >::iterator map_iterator;
     for ( map_iterator = mElements.begin( ); map_iterator != mElements.end( );
@@ -510,6 +521,11 @@ void UIManager::UnembedAll( )
 
 void UIManager::EmbedAll( )
 {
+    if( !mInitialized )
+    {
+        return;
+    }
+
     std::map< osg::ref_ptr< osg::Geode >, UIElement* >::iterator map_iterator;
     for ( map_iterator = mElements.begin( ); map_iterator != mElements.end( );
             ++map_iterator )

@@ -52,6 +52,9 @@
 #include <QtCore/QMutexLocker>
 #include <QtGui/QApplication>
 
+//#define _debug(text) std::cout << "UIElementQt::" << text << std::endl << std::flush
+#define _debug(text)
+
 // qt_sendSpontaneousEvent is a friend method of QCoreApplication and thus
 // gives us access to the private method sendSpontaneousEvent, which is required
 // to propagate mouse and keyboard events to the off-screen Qt element as though
@@ -86,24 +89,6 @@ mWidget( NULL ),
     mDirty( true )
 {
     _debug( "ctor" );
-//    mWidget = NULL;
-//    mImage = NULL;
-//    mImageFlipped = NULL;
-//    mGraphicsScene = NULL;
-//    mGraphicsProxyWidget = NULL;
-//    mGraphicsView = NULL;
-//    mTimer = NULL;
-//    mImageWidth = 0;
-//    mImageHeight = 0;
-//    mWidth = 0;
-//    mHeight = 0;
-//    mTextureLeft = 0.0f;
-//    mTextureRight = 0.0f;
-//    mTextureBottom = 0.0f;
-//    mTextureTop = 0.0f;
-//    mInitialized = false;
-//    mImageDirty = true;
-//    mDirty = true;
     this->setCacheMode( QGraphicsView::CacheNone );
     setRenderHints( QPainter::NonCosmeticDefaultPen );
     QBrush brush( QColor( 0, 0, 0, 0 ) );
@@ -288,7 +273,7 @@ void UIElementQt::SetWidget( QWidget* widget )
     _render( );
 
     // Force the scene to activate. Failure to do this results in lack of
-    // tab-focus feedback and odd cursor behavior on Qt 4.6.0. Unfortunately,
+    // tab-focus feedback and odd cursor behavior on Qt 4.6.x. Unfortunately,
     // doing the activate on the scene causes comboboxes in the property browser
     // to stop showing choices on pulldown. Ugh.
     //QEvent ev( QEvent::WindowActivate );
@@ -425,19 +410,11 @@ void UIElementQt::_calculateTextureCoordinates( )
     }
 }
 
-void UIElementQt::_debug( const std::string text )
-{
-    //#define UIELEMENTQT_DEBUG
-#ifdef UIELEMENTQT_DEBUG
-    std::cout << "UIElementQt::" << text << std::endl << std::flush;
-#endif
-}
-
 void UIElementQt::paintEvent( QPaintEvent* event )
 {
-//    _debug( "paintEvent" );
-//    _render( );
-//    QGraphicsView::paintEvent( event );
+    _debug( "paintEvent" );
+    _render( );
+    QGraphicsView::paintEvent( event );
 }
 
 void UIElementQt::_sendEvent( xplorer::eventmanager::InteractionEvent* event )
