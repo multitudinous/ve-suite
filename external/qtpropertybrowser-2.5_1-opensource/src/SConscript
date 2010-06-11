@@ -73,6 +73,7 @@ if GetPlatform() == 'linux':
 if GetPlatform() == 'linux':
     Import('qt_options')
     qt_options.apply(lib_env)
+    lib_env.AppendUnique( CPPDEFINES = [ 'QT_ON' ] )
 else:
     import qt46
     qt46.applyQtBuildFlags(lib_env)

@@ -79,6 +79,7 @@ if baseEnv['MakeQtSupport'] == "yes":
     if GetPlatform() == 'linux':
         Import('qt_options')
         qt_options.apply(env)
+        env.AppendUnique( CPPDEFINES = [ 'QT_ON' ] )
         env.Append(LIBS = ['QtSolutions_PropertyBrowser-2.5'])
         env.Append(LIBPATH = [pj('#', buildDir, 'external', 'qtpropertybrowser-2.5_1-opensource', 'src')])
     else:
