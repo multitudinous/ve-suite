@@ -189,6 +189,25 @@
 #  else
 #    define VE_XPLORER_COMMAND_EXPORTS __declspec(dllimport)
 #  endif /* VE_XPLORER_COMMAND_LIBRARY */
+
+#  ifdef VE_EVENTMANAGER_LIBRARY
+#    define VE_EVENTMANAGER_EXPORTS   __declspec(dllexport)
+#  else
+#    define VE_EVENTMANAGER_EXPORTS   __declspec(dllimport)
+#  endif /* VE_EVENTMANAGER_LIBRARY */
+
+#  ifdef VE_DATA_LIBRARY
+#    define VE_DATA_EXPORTS   __declspec(dllexport)
+#  else
+#    define VE_DATA_EXPORTS   __declspec(dllimport)
+#  endif /* VE_DATA_LIBRARY */
+
+#  ifdef VE_CONDUCTOR_QTUI_LIBRARY
+#    define VE_CONDUCTOR_QTUI_EXPORTS   __declspec(dllexport)
+#  else
+#    define VE_CONDUCTOR_QTUI_EXPORTS   __declspec(dllimport)
+#  endif /* VE_CONDUCTOR_QTUI_LIBRARY */
+
 #else
 #  define VE_SCENEGRAPH_EXPORTS
 #  define VE_UTIL_EXPORTS
@@ -215,6 +234,9 @@
 #  define VE_NURBS_EXPORTS
 #  define VE_NURBS_UTILS_EXPORTS
 #  define VE_XPLORER_COMMAND_EXPORTS
+#  define VE_EVENTMANAGER_EXPORTS
+#  define VE_DATA_EXPORTS
+#  define VE_CONDUCTOR_QTUI_EXPORTS
 #endif
 
 ///This is ripped straight from wxWidgets

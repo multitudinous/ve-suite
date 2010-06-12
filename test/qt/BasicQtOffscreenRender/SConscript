@@ -25,13 +25,15 @@ headers2 += sca_util.getHeadersRecursive( pj(RootDir,'test','qt','BasicQtOffscre
 sources2 = sca_util.getSourcesRecursive( pj(RootDir,'test','qt','BasicQtOffscreenRender') )
 sources2+=cppSources1
 
-if GetPlatform() == 'linux':
+if GetPlatform() != 'darwin':
     Import('qt_options')
-    lib_env2.Append( CXXFLAGS=['-fPIC'])
     qt_options.apply(lib_env2)
 else:
     import qt46
     qt46.applyQtBuildFlags( lib_env2 )
+
+if GetPlatform() == 'linux':
+    lib_env2.AppendUnique( CXXFLAGS=['-fPIC'])
 
 lib_env2.AppendUnique( CPPPATH = [pj(openDir)] )
 

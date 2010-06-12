@@ -67,7 +67,7 @@ class PropertyBrowser : public QObject
     Q_OBJECT
 
 public:
-    typedef std::vector< xplorer::data::Property* > PropertyVector;
+    typedef std::vector< ves::xplorer::data::Property* > PropertyVector;
     typedef std::vector< QtProperty* > ItemVector;
 
     ///
@@ -87,7 +87,7 @@ public:
     /// This will set up everything that an instance of GenericPropertyBrowser
     /// needs to create an interface and interact with the underlying
     /// PropertySet.
-    void ParsePropertySet( xplorer::data::PropertySet* set );
+    void ParsePropertySet( ves::xplorer::data::PropertySet* set );
 
     ///
     /// Tells the browser to request a list of changes (values, enabled state,
@@ -164,7 +164,7 @@ private:
     ItemVector mTreedItems; // Holds only top-level instances of QtProperty
     // (ie. does not explictly hold sub-properties)
 
-    xplorer::data::PropertySet* mSet; // Pointer to underlying PropertySet ( the real data )
+    ves::xplorer::data::PropertySet* mSet; // Pointer to underlying PropertySet ( the real data )
 
     QtDoublePropertyManager* mDoubleManager;
     QtStringPropertyManager* mStringManager;
@@ -174,7 +174,7 @@ private:
     QtIntPropertyManager* mIntManager;
 
     // Helper functions to find things in the triad of synchronized vectors
-    int _getPropertyIndex( xplorer::data::Property* property );
+    int _getPropertyIndex( ves::xplorer::data::Property* property );
     int _getItemIndex( QtProperty* item );
     int _getPropertyIndexByName( std::string name );
 
@@ -182,7 +182,7 @@ private:
     void _setPropertyValue( QtProperty* item, boost::any value );
 
     // Set the QtProperty to the value of the underlying Property
-    void _setItemValue( QtProperty* item, xplorer::data::Property* property );
+    void _setItemValue( QtProperty* item, ves::xplorer::data::Property* property );
 
     // Helper function to do the dirty work of finding out if a Property has
     // min and max values

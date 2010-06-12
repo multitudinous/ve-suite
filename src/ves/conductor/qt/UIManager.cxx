@@ -54,6 +54,7 @@
 #include <ves/xplorer/eventmanager/EventManager.h>
 
 using namespace ves::conductor;
+using namespace ves;
 
 vprSingletonImp( UIManager );
 ////////////////////////////////////////////////////////////////////////////////
@@ -367,7 +368,7 @@ void UIManager::operator( )( osg::Node* node, osg::NodeVisitor* nv )
 }
 ////////////////////////////////////////////////////////////////////////////////
 
-void UIManager::SendInteractionEvent( xplorer::eventmanager::InteractionEvent &event )
+void UIManager::SendInteractionEvent( ves::xplorer::eventmanager::InteractionEvent &event )
 {
     // Ignore events if we're not initialized
     if ( !mInitialized )

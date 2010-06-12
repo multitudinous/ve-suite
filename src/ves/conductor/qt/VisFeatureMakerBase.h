@@ -19,9 +19,9 @@ public:
     virtual ~VisFeatureMakerBase( );
 
 protected:
-    void _updateAdvancedSettings( xplorer::data::PropertySet& set );
-    void _updateBaseInformation( xplorer::data::PropertySet& set );
-    void SendUpdatedSettingsToXplorer( ves::open::xml::CommandPtr subDialogCommand, xplorer::data::PropertySet& set );
+    void _updateAdvancedSettings( ves::xplorer::data::PropertySet& set );
+    void _updateBaseInformation( ves::xplorer::data::PropertySet& set );
+    void SendUpdatedSettingsToXplorer( ves::open::xml::CommandPtr subDialogCommand, ves::xplorer::data::PropertySet& set );
 
     std::string _commandName;///<The name of the command to send back
     std::vector<ves::open::xml::DataValuePairPtr> _advancedSettings;///<The advanced settings.

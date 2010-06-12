@@ -48,8 +48,8 @@ public:
     void update( unsigned int recordID );
 
 protected:
-    void _addPlane( xplorer::data::PropertySet& set );
-    void _updateContourInformation( xplorer::data::PropertySet& set );
+    void _addPlane( ves::xplorer::data::PropertySet& set );
+    void _updateContourInformation( ves::xplorer::data::PropertySet& set );
 
 private:
     

@@ -44,6 +44,7 @@
 #include <boost/any.hpp>
 
 using namespace ves::conductor;
+using namespace ves;
 
 ContourFeatureMaker::ContourFeatureMaker( )
 {

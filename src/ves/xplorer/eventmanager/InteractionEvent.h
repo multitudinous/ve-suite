@@ -32,6 +32,8 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #pragma once
 
+#include <ves/VEConfig.h>
+
 namespace ves
 {
 namespace xplorer
@@ -39,7 +41,7 @@ namespace xplorer
 namespace eventmanager
 {
 
-class InteractionEvent
+class VE_EVENTMANAGER_EXPORTS InteractionEvent
 {
 public:
 

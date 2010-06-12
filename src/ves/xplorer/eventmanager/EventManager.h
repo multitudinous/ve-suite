@@ -48,6 +48,8 @@
 #include <ves/xplorer/eventmanager/ScopedConnectionList.h>
 #include <ves/xplorer/eventmanager/ConnectionMonopoly.h>
 
+#include <ves/VEConfig.h>
+
 namespace Poco
 {
 namespace Data
@@ -73,7 +75,7 @@ namespace eventmanager
  * would like to connect (or some other valid search criterion) and should
  * provide a slot of the appropriate type.
 **/
-class EventManager
+class VE_EVENTMANAGER_EXPORTS EventManager
 {
 public:
 

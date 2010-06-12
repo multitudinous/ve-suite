@@ -375,7 +375,7 @@ else:
 minerva_options = fp_option.FlagPollBasedOption( "Minerva", "Minerva", "1.0", False, True, None, 
 									  compileTest = True, headerToCheck = "Minerva/Core/Data/Object.h" )
 #Setup qt on linux
-if GetPlatform() == 'linux':
+if GetPlatform() != 'darwin':
    qt_options = fp_option.FlagPollBasedOption("Qt libraries",
       "QtGui QtCore QtOpenGL",
       "4.0", False, True, helpText=None, compileTest=True,
@@ -679,10 +679,9 @@ if not SConsAddons.Util.hasHelpFlag():
                shareSubdirs, lokiSubdirs, osgBulletPlusSubdirs,
                osgBulletSubdirs, bullet, minervaDataSubdirs]
 
-    if GetPlatform() != 'win32':
-        if baseEnv[ 'MakeQtSupport' ] == 'yes':
-            ves_dirs.append( qtTestBuilder )
-            ves_dirs.append( qtpropertybrowserSubdirs )
+    if baseEnv[ 'MakeQtSupport' ] == 'yes':
+        #ves_dirs.append( qtTestBuilder )
+        ves_dirs.append( qtpropertybrowserSubdirs )
     
     #build applications in test/ directory
     if baseEnv[ 'buildTests' ] == 'yes':

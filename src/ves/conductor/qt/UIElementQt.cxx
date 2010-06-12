@@ -37,8 +37,6 @@
 #include <ves/conductor/qt/UIElementQt.h>
 #include <ves/xplorer/eventmanager/InteractionEvent.h>
 
-
-
 // --- C++ includes --- //
 #include <cassert>
 #include <iostream>
@@ -67,6 +65,7 @@ bool qt_sendSpontaneousEvent( QObject* recv, QEvent* e )
 }
 
 using namespace ves::conductor;
+using namespace ves;
 
 UIElementQt::UIElementQt( QWidget *parent ) : QGraphicsView( parent ),
 mWidget( NULL ),
@@ -116,8 +115,8 @@ void UIElementQt::Initialize( )
         // of mode Qt::QueuedConnection so that the slot will only be processed
         // when the thread that created this object has execution.
         //QObject::connect( this, SIGNAL( RequestRender( ) ), this, SLOT( _render( ) ), Qt::QueuedConnection );
-        QObject::connect( this, SIGNAL( PutSendEvent( xplorer::eventmanager::InteractionEvent* ) ),
-                          this, SLOT( _sendEvent( xplorer::eventmanager::InteractionEvent* ) ), Qt::QueuedConnection );
+        QObject::connect( this, SIGNAL( PutSendEvent( ves::xplorer::eventmanager::InteractionEvent* ) ),
+            this, SLOT( _sendEvent( ves::xplorer::eventmanager::InteractionEvent* ) ), Qt::QueuedConnection );
         QObject::connect( this, SIGNAL( RequestEmbed( bool ) ), this, SLOT( _embed( bool ) ), Qt::QueuedConnection );
 
         // Start up the timer that causes repaints at a set interval -- assuming
@@ -160,11 +159,11 @@ const osg::Vec4f UIElementQt::GetTextureCoordinates( )
     return m_coordinates;
 }
 
-void UIElementQt::SendInteractionEvent( xplorer::eventmanager::InteractionEvent&
+void UIElementQt::SendInteractionEvent( ves::xplorer::eventmanager::InteractionEvent&
                                         event )
 {
-    xplorer::eventmanager::InteractionEvent* m_event =
-            new xplorer::eventmanager::InteractionEvent( event );
+    ves::xplorer::eventmanager::InteractionEvent* m_event =
+        new ves::xplorer::eventmanager::InteractionEvent( event );
 
     Q_EMIT PutSendEvent( m_event );
 }
@@ -382,8 +381,8 @@ void UIElementQt::_render( )
 
 void UIElementQt::_calculatePower2ImageDimensions( )
 {
-    mImageWidth = int( pow( 2, ceil( log( mWidth ) / log( 2 ) ) ) );
-    mImageHeight = int( pow( 2, ceil( log( mHeight ) / log( 2 ) ) ) );
+    mImageWidth = int( pow( 2, ceil( log( double(mWidth) ) / log( double(2) ) ) ) );
+    mImageHeight = int( pow( 2, ceil( log( double(mHeight) ) / log( double(2) ) ) ) );
 
     // If either dimension is zero, force the other dimension to zero too
     if( ( mImageWidth == 0 ) || ( mImageHeight == 0 ) )
@@ -417,7 +416,7 @@ void UIElementQt::paintEvent( QPaintEvent* event )
     QGraphicsView::paintEvent( event );
 }
 
-void UIElementQt::_sendEvent( xplorer::eventmanager::InteractionEvent* event )
+void UIElementQt::_sendEvent( ves::xplorer::eventmanager::InteractionEvent* event )
 {
     using xplorer::eventmanager::InteractionEvent;
     int x = static_cast < int > ( event->X );

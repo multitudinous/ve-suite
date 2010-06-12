@@ -38,6 +38,8 @@
 
 #include<list>
 
+#include <ves/VEConfig.h>
+
 namespace ves
 {
 namespace xplorer
@@ -80,7 +82,7 @@ namespace eventmanager
  * ScopedConnectionList was inspired by the similarly-named class used by the
  * ardour project. See http://www.ardour.org
  **/
-class ScopedConnectionList
+class VE_EVENTMANAGER_EXPORTS ScopedConnectionList
 {
 public:
     /// Easy way to refer to the internal list type.

@@ -35,6 +35,7 @@
 #include <osg/ref_ptr>
 
 #include <ves/xplorer/eventmanager/ScopedConnectionList.h>
+#include <ves/VEConfig.h>
 
 // --- VR Juggler includes --- //
 #include <vpr/Util/Singleton.h>
@@ -86,7 +87,7 @@ class UIElement;
 /// NOTE: State of scenegraph and traversal is only important during call to
 /// Update.
 ////////////////////////////////////////////////////////////////////////////////
-class UIManager : public osg::NodeCallback, boost::noncopyable
+class VE_CONDUCTOR_QTUI_EXPORTS UIManager : public osg::NodeCallback, boost::noncopyable
 {
 public:
     /**

@@ -35,11 +35,13 @@
 
 #include <QtGui/QMainWindow>
 
+#include <ves/VEConfig.h>
+
 namespace Ui {
     class MainWindow;
 }
 
-class MainWindow : public QMainWindow {
+class VE_CONDUCTOR_QTUI_EXPORTS MainWindow : public QMainWindow {
     Q_OBJECT
 public:
     MainWindow(QWidget* parent = 0);

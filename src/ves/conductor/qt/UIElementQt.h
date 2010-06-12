@@ -36,7 +36,7 @@
 
 // Base class header
 #include <ves/conductor/qt/UIElement.h>
-
+#include <ves/VEConfig.h>
 
 #include <QtCore/QObject>
 #include <QtGui/QWidget>
@@ -59,7 +59,7 @@ namespace conductor
 /// texture. This class also propagates mouse and keyboard events down into the
 /// widget so that it behaves as though it is being displayed on-screen.
 
-class UIElementQt : public QGraphicsView, public UIElement
+class VE_CONDUCTOR_QTUI_EXPORTS UIElementQt : public QGraphicsView, public UIElement
 {
     Q_OBJECT
 
@@ -73,7 +73,7 @@ public:
     virtual int GetElementWidth( );
     virtual int GetElementHeight( );
     const virtual osg::Vec4f GetTextureCoordinates( );
-    virtual void SendInteractionEvent( xplorer::eventmanager::InteractionEvent &event );
+    virtual void SendInteractionEvent( ves::xplorer::eventmanager::InteractionEvent &event );
     virtual unsigned char* RenderElementToImage( );
     virtual bool IsDirty( );
     virtual void Initialize( );
@@ -105,7 +105,7 @@ protected:
 
 Q_SIGNALS:
     void RequestRender( );
-    void PutSendEvent( xplorer::eventmanager::InteractionEvent* event );
+    void PutSendEvent( ves::xplorer::eventmanager::InteractionEvent* event );
     void RequestEmbed( bool embed );
 
 private:
@@ -139,7 +139,7 @@ private:
     protected
 Q_SLOTS:
     void _render( );
-    void _sendEvent( xplorer::eventmanager::InteractionEvent* event );
+    void _sendEvent( ves::xplorer::eventmanager::InteractionEvent* event );
     void _embed( bool embed );
 
 };

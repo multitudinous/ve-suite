@@ -39,6 +39,8 @@
 #include <boost/any.hpp>
 #include <Poco/Types.h>
 
+#include <ves/VEConfig.h>
+
 // Forward declarations
 namespace Poco
 {
@@ -64,7 +66,7 @@ class Property;
 /// containing methods to read and write values and attributes of
 /// properties, as well as to get information about changes to other properties
 /// that may occur when a property value or attribute is changed.
-class PropertySet
+class VE_DATA_EXPORTS PropertySet
 {
 public:
     typedef std::map< std::string, Property* > PropertyMap;

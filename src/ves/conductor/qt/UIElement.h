@@ -36,6 +36,8 @@
 
 #include <osg/Vec4f>
 
+#include <ves/VEConfig.h>
+
 namespace ves
 {
 namespace xplorer
@@ -53,7 +55,7 @@ namespace conductor
 /// @class ves::conductor::UIElement
 /// Abstract class that defines interaction with GL-embedded user interfaces
 ////////////////////////////////////////////////////////////////////////////////
-class UIElement
+class VE_CONDUCTOR_QTUI_EXPORTS UIElement
 {
 public:
 ////////////////////////////////////////////////////////////////////////////////

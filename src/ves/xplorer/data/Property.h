@@ -38,6 +38,8 @@
 #include <boost/any.hpp>
 #include <boost/signal.hpp>
 
+#include <ves/VEConfig.h>
+
 // TODO: Check through const status everywhere
 // TODO: Add in DB read/write functionality
 // TODO: Finish doxygen comments
@@ -101,7 +103,7 @@ namespace data
 {
 
 
-class Property : public boost::signals::trackable
+class VE_DATA_EXPORTS Property : public boost::signals::trackable
 {
 public:
 

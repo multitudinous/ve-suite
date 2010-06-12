@@ -35,6 +35,7 @@
 #include <iostream>
 
 using namespace ves::conductor;
+using namespace ves;
 
 PropertyBrowser::PropertyBrowser( QObject* parent ) : QObject( parent )
 {

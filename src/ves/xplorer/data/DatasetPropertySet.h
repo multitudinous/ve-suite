@@ -35,6 +35,8 @@
 
 #include <ves/xplorer/data/PropertySet.h>
 
+#include <ves/VEConfig.h>
+
 namespace ves
 {
 namespace xplorer
@@ -44,7 +46,7 @@ namespace data
 class Property;
 
 
-class DatasetPropertySet : public PropertySet
+class VE_DATA_EXPORTS DatasetPropertySet : public PropertySet
 {
 public:
     DatasetPropertySet( );

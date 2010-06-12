@@ -30,8 +30,8 @@ def qtTargetBuilder( target, source, env ):
     #return targets
 
 def generate(env,**kw):
-    if sca_util.GetPlatform() == 'win32':
-        return None
+    #if sca_util.GetPlatform() == 'win32':
+    #    return None
     # Find qt tools exectuable
     sys.stdout.write("Searching for uic...\n")
     taoidl_cmd = WhereIs('uic')
@@ -88,11 +88,7 @@ def generate(env,**kw):
 
 def applyQtBuildFlags(env):
     env.AppendUnique( CPPDEFINES = ['QT_ON'] )
-    if sca_util.GetPlatform() == 'win32':
-        env['no_import_lib'] = 1
-        env['WINDOWS_INSERT_MANIFEST'] = "True"
-        #lib_env2.AppendUnique( LIBS = ['opengl'])
-    elif sca_util.GetPlatform() == 'darwin':
+    if sca_util.GetPlatform() == 'darwin':
         env.Append( LINKFLAGS = ['-framework','QtCore', '-framework','QtGui','-framework','QtOpenGL','-framework','OpenGL'])
         env.AppendUnique( CXXFLAGS =['-F/Library/Frameworks/QtOpenGL.framework','-F/Library/Frameworks/QtCore.framework','-F/Library/Frameworks/QtGui.framework'] )
     else:

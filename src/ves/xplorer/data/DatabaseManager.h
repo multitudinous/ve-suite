@@ -42,6 +42,8 @@
 #include <string>
 #include <vector>
 
+#include <ves/VEConfig.h>
+
 // Forward declarations
 namespace Poco
 {
@@ -65,7 +67,7 @@ namespace data
 /// the application's main database. This allows an easy, centralized way to
 /// manage connections to the database and to change the path of the database
 /// file in a single place.
-class DatabaseManager
+class VE_DATA_EXPORTS DatabaseManager
 {
 public:
     ///
