@@ -233,7 +233,7 @@ App::App( int argc, char* argv[], bool enableRTT )
         ortho2DMatrix, identityMatrix, zUpMatrix ) );
 
 #ifdef QT_ON
-    ves::xplorer::data::DatabaseManager::instance()->SetDatabasePath("/tmp/ves.db");
+    ves::xplorer::data::DatabaseManager::instance()->SetDatabasePath("ves.db");
 #endif // QT_ON
 }
 ////////////////////////////////////////////////////////////////////////////////

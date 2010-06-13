@@ -64,7 +64,7 @@ sources += cppSources1
 #headers = map(lambda s: pj('src', s), headers)
 #sources = map(lambda s: pj('src', s), sources)
 
-lib_env.AppendUnique( CPPDEFINES = [ 'QT_GUI_LIB', 'QT_CORE_LIB', 'QT_SHARED', 'QT_QTPROPERTYBROWSER_EXPORT' ] )
+lib_env.AppendUnique( CPPDEFINES = [ 'QT_QTPROPERTYBROWSER_EXPORT' ] )
 
 
 if GetPlatform() == 'linux':
