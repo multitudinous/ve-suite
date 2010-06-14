@@ -76,7 +76,7 @@ GroupedTextTextures::GroupedTextTextures( std::string fontFile )
     //    new osg::Depth( osg::Depth::ALWAYS ), 
     //    osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
     getOrCreateStateSet()->addUniform(
-        new osg::Uniform( "glowColor", osg::Vec4( 0.0, 0.0, 0.0, 1.0) ) );
+        new osg::Uniform( "glowColor", osg::Vec4( 0.0, 0.0, 0.0 ) ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 GroupedTextTextures::GroupedTextTextures(

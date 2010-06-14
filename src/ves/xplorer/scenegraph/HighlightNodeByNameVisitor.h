@@ -67,7 +67,7 @@ public:
     ///\param opaqueParent The hack to get around osg transparency issues
     HighlightNodeByNameVisitor( osg::Node* node, std::string nodeName, 
         bool addGlow = true, bool ignoreCase = false, 
-        osg::Vec4 glowColor = osg::Vec4( 1.0, 0.0, 0.0, 1.0 ) );
+        osg::Vec3 glowColor = osg::Vec3( 1.0, 0.0, 0.0 ) );
     
     ///Default Constructor
     HighlightNodeByNameVisitor();
@@ -91,7 +91,7 @@ private:
     ///Add the glow to parts, if false then remove all glow
     bool mAddGlow;
     ///The color to set the glow
-    osg::Vec4 m_glowColor;
+    osg::Vec3 m_glowColor;
     ///Ignore the case of the node name
     bool m_ignoreCase;
 };

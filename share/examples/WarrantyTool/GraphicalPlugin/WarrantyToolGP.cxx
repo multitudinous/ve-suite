@@ -241,17 +241,17 @@ void WarrantyToolGP::PreFrameUpdate()
                 //std::string tempKey = "test_" + it->get<0>();
                 //boost::lexical_cast<std::string>( std::distance( assem.begin(), it) );
                 //std::string partText = tempTextData.str();
-                //std::cout << " here 1 " << partText << std::endl;
+                //std::cout << " here 1 " << (*it) << std::endl;
                 //tempText->UpdateText( partText );
                 //m_groupedTextTextures->AddTextTexture( it->get<0>(), tempText );
 
                 ves::xplorer::scenegraph::HighlightNodeByNameVisitor
-                    highlight( tempModelNodes, (*it), true, true, osg::Vec4( 0.57255, 0.34118, 1.0, 1.0 ) );
+                    highlight( tempModelNodes, (*it), true, true, osg::Vec3( 0.57255, 0.34118, 1.0 ) );
             }
 
             ves::xplorer::scenegraph::HighlightNodeByNameVisitor
                 highlight( tempModelNodes, partName, true, true );//,
-                          //osg::Vec4( 0.34118, 1.0, 0.57255, 1.0 ) );
+                          //osg::Vec3( 0.34118, 1.0, 0.57255, 1.0 ) );
         }
     }
     //If we are in interactive mode to mouse over things
@@ -696,7 +696,7 @@ void WarrantyToolGP::RenderTextualDisplay( bool onOff )
                 
                 //ves::xplorer::scenegraph::HighlightNodeByNameVisitor 
                 //highlight( tempModelNodes, partNumber, true, true, 
-                //          osg::Vec4( 0.57255, 0.34118, 1.0, 1.0 ) );
+                //          osg::Vec3( 0.57255, 0.34118, 1.0 ) );
                 
                 //std::vector< osg::ref_ptr< osg::Group > > highlightNodes = 
                 //    highlight.GetFoundNodes();
@@ -705,7 +705,7 @@ void WarrantyToolGP::RenderTextualDisplay( bool onOff )
             //}            
             //ves::xplorer::scenegraph::HighlightNodeByNameVisitor
             //    highlight( tempModelNodes, m_assemblyPartNumbers.at( 0 ), true, true );//,
-            //osg::Vec4( 0.34118, 1.0, 0.57255, 1.0 ) );
+            //osg::Vec3( 0.34118, 1.0, 0.57255 ) );
             
             mCommunicationHandler->SendConductorMessage( "Finished DB query..." );
             
@@ -882,7 +882,7 @@ void WarrantyToolGP::CreateTextTextures()
     m_textTrans = 
         new ves::xplorer::scenegraph::DCS();
     m_textTrans->getOrCreateStateSet()->addUniform(
-        new osg::Uniform( "glowColor", osg::Vec4( 0.0, 0.0, 0.0, 1.0 ) ) );
+        new osg::Uniform( "glowColor", osg::Vec3( 0.0, 0.0, 0.0 ) ) );
     
     osg::ref_ptr< osg::Group > viewCameraGroup;
     /*if( mSceneManager->IsDesktopMode() )
@@ -1026,7 +1026,7 @@ void WarrantyToolGP::CreateDBQuery( ves::open::xml::DataValuePairPtr dvp )
 
         ves::xplorer::scenegraph::HighlightNodeByNameVisitor 
             highlight( m_cadRootNode, partNumber, true, true, 
-            osg::Vec4( 0.57255, 0.34118, 1.0, 1.0 ) );
+            osg::Vec3( 0.57255, 0.34118, 1.0 ) );
         
         //std::vector< osg::ref_ptr< osg::Group > > highlightNodes = 
         //    highlight.GetFoundNodes();
@@ -1042,7 +1042,7 @@ void WarrantyToolGP::CreateDBQuery( ves::open::xml::DataValuePairPtr dvp )
     
         ves::xplorer::scenegraph::HighlightNodeByNameVisitor
             highlight( m_cadRootNode, m_assemblyPartNumbers.at( 0 ), true, true );//,
-            //osg::Vec4( 0.34118, 1.0, 0.57255, 1.0 ) );
+            //osg::Vec3( 0.34118, 1.0, 0.57255 ) );
     }
 
     
@@ -1088,7 +1088,7 @@ void WarrantyToolGP::CreateDBQuery( ves::open::xml::DataValuePairPtr dvp )
         m_groupedTextTextures->AddTextTexture( it->get<0>(), tempText );
         
         ves::xplorer::scenegraph::HighlightNodeByNameVisitor 
-            highlight( mDCS.get(), it->get<0>(), true, osg::Vec4( 0.57255, 0.34118, 1.0, 1.0 ) );
+            highlight( mDCS.get(), it->get<0>(), true, osg::Vec3( 0.57255, 0.34118, 1.0 ) );
     }
     m_textTrans->addChild( m_groupedTextTextures.get() );
     //m_textTrans->getOrCreateStateSet()->setAttributeAndModes(

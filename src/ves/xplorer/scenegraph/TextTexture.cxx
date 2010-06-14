@@ -214,7 +214,7 @@ void TextTexture::CreateTexturedQuad()
     addChild( m_textureGeode.get() );
 
     getOrCreateStateSet()->addUniform(
-        new osg::Uniform( "glowColor", osg::Vec4( 0.0, 0.0, 0.0, 1.0) ) );
+        new osg::Uniform( "glowColor", osg::Vec4( 0.0, 0.0, 0.0 ) ) );
     
     std::string shaderName = osgDB::findDataFile( "opacity-ignore-white.fs" );
     osg::ref_ptr< osg::Shader > fragShader = 
