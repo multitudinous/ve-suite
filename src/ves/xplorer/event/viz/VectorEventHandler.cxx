@@ -81,34 +81,30 @@ void VectorEventHandler::Execute( const ves::open::xml::XMLObjectPtr& veXMLObjec
     std::vector< ves::xplorer::cfdGraphicsObject* > graphicsObject =
         ves::xplorer::SteadyStateVizHandler::instance()->
         GetGraphicsObjectsOfType( Z_VECTOR );
-    
-    if( graphicsObject.empty() )
+    if( !graphicsObject.empty() )
     {
-        return;
+        ProcessVectorCommand( graphicsObject, veXMLObject );
     }
 
-    ves::open::xml::CommandPtr command = 
-        boost::dynamic_pointer_cast<ves::open::xml::Command>( veXMLObject );
-    ves::open::xml::DataValuePairPtr scaleDVP = 
-        command->GetDataValuePair( "Vector Scale" );
-    ves::open::xml::DataValuePairPtr ratioDVP = 
-        command->GetDataValuePair( "Vector Ratio" );
-    
-    if( scaleDVP )
+    graphicsObject = ves::xplorer::SteadyStateVizHandler::instance()->
+        GetGraphicsObjectsOfType( Y_VECTOR );
+    if( !graphicsObject.empty() )
     {
-        double size;
-        scaleDVP->GetData( size );
-        int diameter = static_cast< int >( size );
-        float range = 2.5;
-        double scaleFactor = ( exp( diameter / ( 100.0 / range ) ) ) * 0.01f;
-        UpdateGeodeUniform( graphicsObject, scaleDVP, "userScale", scaleFactor );
+        ProcessVectorCommand( graphicsObject, veXMLObject );
     }
 
-    if( ratioDVP )
+    graphicsObject = ves::xplorer::SteadyStateVizHandler::instance()->
+        GetGraphicsObjectsOfType( X_VECTOR );
+    if( !graphicsObject.empty() )
     {
-        double uniformVal = 1.0;
-        ratioDVP->GetData( uniformVal );
-        UpdateGeodeUniform( graphicsObject, ratioDVP, "modulo", uniformVal );
+        ProcessVectorCommand( graphicsObject, veXMLObject );
+    }
+
+    graphicsObject = ves::xplorer::SteadyStateVizHandler::instance()->
+        GetGraphicsObjectsOfType( BY_SURFACE );
+    if( !graphicsObject.empty() )
+    {
+        ProcessVectorCommand( graphicsObject, veXMLObject );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -149,5 +145,34 @@ void VectorEventHandler::UpdateGeodeUniform(
                 }
             }
         }
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void VectorEventHandler::ProcessVectorCommand(
+    const std::vector< ves::xplorer::cfdGraphicsObject* >& graphicsObject,
+    const ves::open::xml::XMLObjectPtr& veXMLObject )
+{
+    ves::open::xml::CommandPtr command = 
+        boost::dynamic_pointer_cast<ves::open::xml::Command>( veXMLObject );
+    ves::open::xml::DataValuePairPtr scaleDVP = 
+        command->GetDataValuePair( "Vector Scale" );
+    ves::open::xml::DataValuePairPtr ratioDVP = 
+        command->GetDataValuePair( "Vector Ratio" );
+    
+    if( scaleDVP )
+    {
+        double size;
+        scaleDVP->GetData( size );
+        int diameter = static_cast< int >( size );
+        float range = 2.5;
+        double scaleFactor = ( exp( diameter / ( 100.0 / range ) ) ) * 0.01f;
+        UpdateGeodeUniform( graphicsObject, scaleDVP, "userScale", scaleFactor );
+    }
+
+    if( ratioDVP )
+    {
+        double uniformVal = 1.0;
+        ratioDVP->GetData( uniformVal );
+        UpdateGeodeUniform( graphicsObject, ratioDVP, "modulo", uniformVal );
     }
 }

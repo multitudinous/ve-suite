@@ -84,6 +84,10 @@ protected:
         const std::vector< ves::xplorer::cfdGraphicsObject* >& graphicsObject, 
         ves::open::xml::DataValuePairPtr dvp, 
         const std::string& uniformName, double valueFactor );
+
+    void ProcessVectorCommand(
+        const std::vector< ves::xplorer::cfdGraphicsObject* >& graphicsObject,
+        const ves::open::xml::XMLObjectPtr& veXMLObject );
 };
 }
 }
