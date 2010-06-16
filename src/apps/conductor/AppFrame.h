@@ -324,7 +324,7 @@ private:
     HierarchyTree* hierarchyTree;
     wxNotebook* side_pane;
     ves::conductor::Canvas* canvas;
-      ves::conductor::IconChooser* iconChooser;
+    ves::conductor::IconChooser* iconChooser;
     AvailableModules* av_modules;
     wxString mVESFileName;
     wxString directory;
@@ -334,11 +334,6 @@ private:
     Splitter* wx_nw_splitter;
     wxMenuBar* menubar;
     AppToolBar* appToolBar;///<The app toolbar
-    
-    //Configuration flags
-    bool f_financial;
-    bool f_geometry;
-    bool f_visualization;
         
     DECLARE_EVENT_TABLE()
 };

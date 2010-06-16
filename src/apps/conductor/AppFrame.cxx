@@ -238,29 +238,30 @@ AppFrame::AppFrame()
 AppFrame::AppFrame( wxWindow* parent, wxWindowID id, const wxString& title )
     :
     wxFrame( parent, id, title ),
-    xplorerMenu( 0 ),
-    recordScenes( 0 ),
-    canvas( 0 ),
-    hierarchyTree(),
-    _treeView( 0 ),
-    deviceProperties( 0 ),
     navPane( 0 ),
+    deviceProperties( 0 ),
     viewlocPane( 0 ),
+    recordScenes( 0 ),
+    m_cptDialog( 0 ),
+    _treeView( 0 ),
+    newCanvas( false ),
     m_ephemeris( 0 ),
+    serviceList( CORBAServiceList::instance() ),
+    preferences( 0 ),
+    xplorerWxColor( 0 ),
+    m_recentVESFiles( 0 ),
+    mDestoryFrame( false ),
+    mTimer( this, APPFRAME_TIMER_ID ),
+    _minervaDialog ( 0 ),
+    xplorerMenu( 0 ),
+    hierarchyTree( 0 ),
+    canvas( 0 ),
     iconChooser( 0 ),
     wx_log_splitter( 0 ),
     wx_ve_splitter( 0 ),
     wx_nw_splitter( 0 ),
     menubar( 0 ),
-    appToolBar( 0 ),
-    serviceList( CORBAServiceList::instance() ),
-    newCanvas( false ),
-    mTimer( this, APPFRAME_TIMER_ID ),
-    _minervaDialog ( 0x0 ),
-    mDestoryFrame( false ),
-    f_financial( true ),
-    f_geometry( true ),
-    f_visualization( true )
+    appToolBar( 0 )
 {
     char** tempArray = new char*[ ::wxGetApp().argc ];
     for( int i = 0; i < ::wxGetApp().argc; ++i )
@@ -393,7 +394,7 @@ AppFrame::~AppFrame()
     
     delete m_recentVESFiles;
     m_recentVESFiles = 0;
-    for( int i = 0; i < pids.size(); ++i )
+    for( size_t i = 0; i < pids.size(); ++i )
     {
         wxProcess::Kill( pids[ i ] );
     }
@@ -623,33 +624,12 @@ void AppFrame::GetConfig()
     cfg->DontCreateOnDemand();
     wxConfig::Set( cfg );
 
-    bool exist = false;
-
-    wxString key = FEATURE;
-    if( cfg->Exists( key ) )
-    {
-        cfg->Read( key + _T( "/" ) + F_FINANCIAL, &f_financial );
-        cfg->Read( key + _T( "/" ) + F_GEOMETRY, &f_geometry );
-        cfg->Read( key + _T( "/" ) + F_VISUALIZATION, &f_visualization );
-    }
-    else
-    {
-        f_financial = true;
-        f_geometry = true;
-        f_visualization = true;
-    }
-
     m_recentVESFiles->Load( *cfg );
 }
 ////////////////////////////////////////////////////////////////////////////////
 wxRect AppFrame::DetermineTabletFrameSize()
 {
-    const int minFrameWidth = 600;
-    const int minFrameHight = 400;
-
     wxRect rect;
-    //wxSize scr = wxGetDisplaySize();
-
     wxConfig* cfg = static_cast<wxConfig*>( wxConfig::Get() );
     wxString key = LOCATION + wxString::Format( _( "%d" ), 0 );
     if( cfg->Exists( key ) )
@@ -661,7 +641,11 @@ wxRect AppFrame::DetermineTabletFrameSize()
     }
 
     ///check for reasonable values (within screen)
-    /*rect.x = wxMin( abs(rect.x), (scr.x - minFrameWidth));
+    //wxSize scr = wxGetDisplaySize();
+    /*
+    const int minFrameWidth = 600;
+    const int minFrameHight = 400;
+    rect.x = wxMin( abs(rect.x), (scr.x - minFrameWidth));
     rect.y = wxMin( abs(rect.y), (scr.y - minFrameHight));
     rect.width = wxMax( abs(rect.width), (minFrameWidth));
     rect.width = wxMin( abs(rect.width), (scr.x - rect.x));
@@ -702,10 +686,6 @@ void AppFrame::StoreConfig()
     {
         return;
     }
-    wxString key = FEATURE;
-    cfg->Write( key + _T( "/" ) + F_FINANCIAL, f_financial );
-    cfg->Write( key + _T( "/" ) + F_GEOMETRY, f_geometry );
-    cfg->Write( key + _T( "/" ) + F_VISUALIZATION, f_visualization );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::StoreRecentFile()
@@ -1142,15 +1122,16 @@ void AppFrame::SaveAs( wxCommandEvent& WXUNUSED( event ) )
     }
     while( answer == wxID_NO );
 
-    if( vesFileName.FileExists() && !wxFileName::IsFileWritable( vesFileName.GetFullPath() ) )
+    if( !wxFileName::IsFileWritable( vesFileName.GetFullPath() ) )
     {
         wxString tempMessage = _( "Cannot write file " ) + vesFileName.GetFullName() + _( "?" );
         wxMessageDialog promptDlg( this,
                                    tempMessage,
                                    _( "Overwrite File Warning" ),
-                                   wxYES_NO | wxNO_DEFAULT | wxICON_QUESTION,
+                                   wxOK | wxNO_DEFAULT | wxICON_QUESTION,
                                    wxDefaultPosition );
         promptDlg.ShowModal();
+        Log( "Unable to save ves file." );
         return;
     }
 
@@ -1309,7 +1290,6 @@ void AppFrame::OpenRecentFile( wxCommandEvent& event )
         return;
     }
 
-    int placeChosen = event.GetId();
     wxFileName vesFileName( fileToOpen );
     bool success = vesFileName.MakeRelativeTo( ::wxGetCwd() );
     if( !success )
@@ -1367,7 +1347,7 @@ void AppFrame::OpenRecentFile( wxCommandEvent& event )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AppFrame::OnClearRecentFiles( wxCommandEvent& event )
+void AppFrame::OnClearRecentFiles( wxCommandEvent& WXUNUSED( event ) )
 {
     wxMessageDialog confirm( this,
                              _( "Are you sure you want to clear the recent files list?" ),
@@ -2469,9 +2449,9 @@ void AppFrame::OnChildCreate( wxWindowCreateEvent& event )
     } 
 } 
 ////////////////////////////////////////////////////////////////////////////////
-void AppFrame::OnChildDestroy( wxWindowDestroyEvent& event ) 
+void AppFrame::OnChildDestroy( wxWindowDestroyEvent& WXUNUSED( event ) )
 { 
-    wxWindow* w = event.GetWindow(); 
+    //wxWindow* w = event.GetWindow(); 
     /*std::cout << ConvertUnicode( event.GetEventObject()->GetClassInfo()->GetClassName() ) << std::endl;
     wxLogMessage( _("destroyed") );
    */
@@ -2677,12 +2657,12 @@ void AppFrame::OnKeyPress( wxKeyEvent &event )
     }
 }
 ///////////////////////////////////////////////////////////////////////////////
-void AppFrame::UpdateHierarchyTree( wxCommandEvent& event )
+void AppFrame::UpdateHierarchyTree( wxCommandEvent& WXUNUSED( event ) )
 {
     hierarchyTree->PopulateTree();
 }
 ///////////////////////////////////////////////////////////////////////////////
-void AppFrame::OnAddPlanet ( wxCommandEvent& event )
+void AppFrame::OnAddPlanet( wxCommandEvent& WXUNUSED( event ) )
 {
   CommandPtr veCommand ( new Command );
   veCommand->SetCommandName ( ves::util::commands::ADD_EARTH_COMMAND_NAME );
@@ -2696,13 +2676,13 @@ void AppFrame::OnAddPlanet ( wxCommandEvent& event )
 
   serviceList->SendCommandStringToXplorer ( veCommand );
 
-  MinervaDialog *dialog ( this->GetMinervaDialog() );
+  MinervaDialog* dialog ( this->GetMinervaDialog() );
   dialog->AddDefaultLayers();
 }
 ///////////////////////////////////////////////////////////////////////////////
-void AppFrame::OnRemovePlanet ( wxCommandEvent& event )
+void AppFrame::OnRemovePlanet( wxCommandEvent& WXUNUSED( event ) )
 {
-  CommandPtr veCommand ( new Command );
+  CommandPtr veCommand( new Command );
   veCommand->SetCommandName ( ves::util::commands::REMOVE_EARTH_COMMAND_NAME );
 
   // Add a dummy data value pair.
@@ -2715,9 +2695,9 @@ void AppFrame::OnRemovePlanet ( wxCommandEvent& event )
   serviceList->SendCommandStringToXplorer ( veCommand );
 }
 ///////////////////////////////////////////////////////////////////////////////
-void AppFrame::ShowMinervaDialog ( wxCommandEvent& event )
+void AppFrame::ShowMinervaDialog( wxCommandEvent& WXUNUSED( event ) )
 {
-  MinervaDialog *dialog ( this->GetMinervaDialog() );
+  MinervaDialog* dialog( this->GetMinervaDialog() );
   dialog->Show();
 }
 ///////////////////////////////////////////////////////////////////////////////
@@ -2773,15 +2753,16 @@ void AppFrame::OnDataLogging( wxCommandEvent& event )
         }
         while( answer == wxID_NO );
         
-        if( vesFileName.FileExists() && !wxFileName::IsFileWritable( vesFileName.GetFullPath() ) )
+        if( !wxFileName::IsFileWritable( vesFileName.GetFullPath() ) )
         {
             wxString tempMessage = _( "Cannot write file " ) + vesFileName.GetFullName() + _( "?" );
             wxMessageDialog promptDlg( this,
                                       tempMessage,
                                       _( "Overwrite File Warning" ),
-                                      wxYES_NO | wxNO_DEFAULT | wxICON_QUESTION,
+                                      wxOK | wxNO_DEFAULT | wxICON_QUESTION,
                                       wxDefaultPosition );
             promptDlg.ShowModal();
+            Log( "Unable to save ves file." );
             return;
         }
         
