@@ -1,0 +1,283 @@
+#!/bin/sh
+# Copyright: Glen Galvin <galvin@iastate.edu> and the Virtual Reality Applications Center
+#
+# Developed to control cluster of 48 nodes broken into 12 swap groups of 4 nodes each due to nVidia bugs
+#  - Rewrote to control 48 nodes from 1 frame lock master. 
+#  - Sequence was suggested from nVidia
+#
+
+# Each wall is defined as front1-front8, etc.  Define which node id's are master and slave
+#MASTERS="1 5"
+#SLAVES="2 3 4 6 7 8"
+MASTERS="rockarwkviz1"
+SLAVES="rockarwkviz2 rockarwkviz3 rockarwkviz4"
+
+# If you want some simple debug output set this variable to anything
+DEBUG=""
+DEBUG="enable"
+
+function GetDeviceID {
+   #WALL=$1
+   GPU=$2
+   # - Set the master display device to CRT-0.  The desired Display
+   #   device(s) to be set are passed in as a hexadecimal number
+   #   in which specific bits denote which display devices to set.
+   #   examples:
+   #
+   #   0x00000001 - CRT-0
+   #   0x00000002 - CRT-1
+   #   0x00000003 - CRT-0 and CRT-1
+   #
+   #   0x00000100 - TV-0
+   #   0x00000200 - TV-1
+   #
+   #   0x00010000 - DFP-0
+   #   0x00020000 - DFP-1
+   #
+   #   0x00010101 - CRT-0, TV-0 and DFP-0
+   #
+   #   0x000000FF - All CRTs
+   #   0x0000FF00 - All TVs
+   #   0x00FF0000 - All DFPs
+   DeviceID=` nvidia-settings --ctrl-display ${NODE}:0[gpu:${GPU}] -q ${NODE}:0[gpu:${GPU}]/EnabledDisplays | grep Attribute | cut -f4 -d":"  | sed -s 's/\.//'  | sed -s 's/ //' `
+   if [ $DEBUG ] ; then echo "DEBUG: GetDeviceID: wall=,node=${NODE},gpu=${GPU},DeviceID=${DeviceID}" ; fi
+}
+
+function DisableFramelock {
+   echo "DisablingFramelock"
+   for NODE in $MASTERS $SLAVES
+   #for NODE in $MASTERS 
+   do
+      if [ $DEBUG ] ; then  
+         #090209 nvidia-settings --ctrl-display ${NODE}:0[gpu:0] -a ${NODE}:0[gpu:0]/FrameLockEnable=0 | grep Attri 
+         #090209 nvidia-settings --ctrl-display ${NODE}:0[gpu:1] -a ${NODE}:0[gpu:1]/FrameLockEnable=0 | grep Attri 
+         nvidia-settings -a ${NODE}:0[gpu:0]/FrameLockEnable=0 | grep Attri 
+         #nvidia-settings -a ${NODE}:0[gpu:1]/FrameLockEnable=0 | grep Attri 
+      else
+         #090209 nvidia-settings --ctrl-display ${NODE}:0[gpu:0] -a ${NODE}:0[gpu:0]/FrameLockEnable=0 > /dev/null &
+         #090209 nvidia-settings --ctrl-display ${NODE}:0[gpu:1] -a ${NODE}:0[gpu:1]/FrameLockEnable=0 > /dev/null &
+         nvidia-settings -a ${NODE}:0[gpu:0]/FrameLockEnable=0 > /dev/null &
+         #nvidia-settings -a ${NODE}:0[gpu:1]/FrameLockEnable=0 > /dev/null &
+      fi
+   done
+}
+
+function QueryDisplays {
+   echo "QueryDisplays on ${NODE}"
+   for NODE in $MASTERS $SLAVES
+   do
+       nvidia-settings --ctrl-display ${NODE}:0 -q EnabledDisplays  | grep Attri
+   done
+}
+
+function QuerySyncToVBlank {
+   echo "QuerySyncToVBlank "
+   for NODE in $MASTERS $SLAVES
+   do
+       nvidia-settings --ctrl-display ${NODE}:0 -q ${NODE}:0/SyncToVBlank  | grep Attri
+   done
+}
+
+
+function CheckRefreshRate {
+   echo "CheckRefreshRate on ${NODE}"
+   for NODE in $MASTERS $SLAVES
+   do
+       nvidia-settings --ctrl-display ${NODE}:0 -q RefreshRate | grep Attri
+   done
+}
+
+function EnableSyncToVBlank {
+   echo "EnableSyncToVBlank"
+   for NODE in $MASTERS $SLAVES
+   do
+      if [ $DEBUG ] ; then  
+         #echo "EnableSyncToVBlank on ${NODE}"
+         nvidia-settings --ctrl-display ${NODE}:0.0 -a ${NODE}:0.0/SyncToVBlank=1 | grep Attri
+         #nvidia-settings --ctrl-display ${NODE}:0.1 -a ${NODE}:0.1/SyncToVBlank=1 | grep Attri
+      else
+         nvidia-settings --ctrl-display ${NODE}:0.0 -a ${NODE}:0.0/SyncToVBlank=1 > /dev/null &
+         #nvidia-settings --ctrl-display ${NODE}:0.1 -a ${NODE}:0.1/SyncToVBlank=1 > /dev/null &
+      fi
+       #nvidia-settings --ctrl-display ${NODE}:0[gpu:0] -a ${NODE}:0[gpu:0]/SyncToVBlank=1
+       #nvidia-settings --ctrl-display ${NODE}:0.0 -q SyncToVBlank
+       #nvidia-settings --ctrl-display ${NODE}:0.1 -q SyncToVBlank
+   done
+}
+
+
+function CheckMasterable {
+   if [ $DEBUG ] ; then  echo "DEBUG: CheckMasterable on ${NODE}"; fi
+   #for NODE in $MASTERS 
+   for NODE in $MASTERS $SLAVES
+   do
+      if [ $DEBUG ] ; then  
+         nvidia-settings --ctrl-display ${NODE}:0[gpu:0] -q ${NODE}:0[gpu:0]/FrameLockMasterable | grep Attri
+         #nvidia-settings --ctrl-display ${NODE}:0[gpu:1] -q ${NODE}:0[gpu:1]/FrameLockMasterable | grep Attri
+      else
+         nvidia-settings --ctrl-display ${NODE}:0[gpu:0] -q ${NODE}:0[gpu:0]/FrameLockMasterable  | grep Attri
+      fi
+   done
+}
+
+
+function SetMaster {
+   echo "SetMaster: $MASTERS"
+   if [ $DEBUG ] ; then  echo "DEBUG: SetMaster "; fi
+   for NODE in $MASTERS 
+   do
+       GetDeviceID "${NODE}" 0
+      if [ $DEBUG ] ; then  
+       #echo "DEBUG: SetMaster: DeviceID=${DeviceID}, Display=${NODE}:0[gpu:0] and ? is $?" 
+       nvidia-settings -a ${NODE}:0[gpu:0]/FrameLockMaster=${DeviceID}  | grep Attribute
+      else
+       nvidia-settings -a ${NODE}:0[gpu:0]/FrameLockMaster=${DeviceID} > /dev/null
+      fi
+       #if [ $DEBUG ] ; then echo "DEBUG: SetMaster: DeviceID=${DeviceID}, Display=${NODE}:0[gpu:0] and ? is $?" ; fi
+       #nvidia-settings --ctrl-display ${NODE}:0[gpu:0] -a ${NODE}:0[gpu:0]/FrameLockMaster=${DeviceID} 
+   done
+}
+
+function DisableHouseSync {
+   if [ $DEBUG ] ; then echo "DEBUG: DisableHouseSync";fi
+   for NODE in $MASTERS 
+   do
+      if [ $DEBUG ] ; then  
+         echo "DEBUG: DisableHouseSync on $NODE"
+          nvidia-settings -a :0[framelock:0]/FrameLockUseHouseSync=0  | grep Attri
+      else
+          nvidia-settings -a :0[framelock:0]/FrameLockUseHouseSync=0 > /dev/null
+      fi
+   done
+}
+
+function SetSlaves {
+   echo -e "SetSlaves \c"
+   #for NODE in $MASTERS 
+   #do
+   #   GetDeviceID ${NODE} 1
+   #   if [ $DEBUG ] ; then  
+   #      nvidia-settings -a ${NODE}:0[gpu:1]/FrameLockSlaves=${DeviceID} | grep Attri
+   #   else
+   #      nvidia-settings -a ${NODE}:0[gpu:1]/FrameLockSlaves=${DeviceID} > /dev/null &
+   #   fi
+   #done
+   for NODE in $SLAVES 
+   do
+       GetDeviceID ${NODE} 0
+       if [ $DEBUG ] ; then  
+          nvidia-settings -a ${NODE}:0[gpu:0]/FrameLockSlaves=${DeviceID}  | grep Attri
+       else
+          nvidia-settings -a ${NODE}:0[gpu:0]/FrameLockSlaves=${DeviceID}   > /dev/null &
+       fi
+       #GetDeviceID ${NODE} 1
+       #if [ $DEBUG ] ; then  
+       #   nvidia-settings -a ${NODE}:0[gpu:1]/FrameLockSlaves=${DeviceID} | grep Attri
+       #else
+       #   nvidia-settings -a ${NODE}:0[gpu:1]/FrameLockSlaves=${DeviceID}  > /dev/null &
+       #fi
+   done
+   echo
+}
+
+function EnableFramelock {
+   echo "EnableFramelock on "
+   for NODE in $MASTERS $SLAVES
+   do
+       if [ $DEBUG ] ; then  
+          echo "Node: $NODE"
+          nvidia-settings -a ${NODE}:0[gpu:0]/FrameLockEnable=1  | grep Attri
+          #nvidia-settings -a ${NODE}:0[gpu:1]/FrameLockEnable=1  | grep Attri
+       else
+          nvidia-settings -a ${NODE}:0[gpu:0]/FrameLockEnable=1 > /dev/null &
+          #nvidia-settings -a ${NODE}:0[gpu:1]/FrameLockEnable=1 > /dev/null &
+          #sleep 0.1
+       fi
+   done
+}
+
+function ToggleTestSignal {
+   if [ $DEBUG ] ; then echo "DEBUG: ToggleTestSignal on ";fi
+   for NODE in $MASTERS 
+   do
+      if [ $DEBUG ] ; then  
+         nvidia-settings -a ${NODE}:0[gpu:0]/FrameLockTestSignal=1  | grep Attri
+         nvidia-settings -a ${NODE}:0[gpu:0]/FrameLockTestSignal=0  | grep Attri
+      else
+         nvidia-settings -a ${NODE}:0[gpu:0]/FrameLockTestSignal=1 > /dev/null
+         nvidia-settings -a ${NODE}:0[gpu:0]/FrameLockTestSignal=0 > /dev/null
+      fi
+   done
+}
+
+
+function LoopIt {
+   ########################################################################
+   # - Make sure frame lock sync is disabled
+   DisableFramelock 
+   #
+   ########################################################################
+   # - Query the enabled displays on the gpus (info only)
+   #QueryDisplays 
+   #
+   ########################################################################
+   # - Enable SyncToVBlank per nVidia suggestion
+   if [ $ENABLE ] ; then EnableSyncToVBlank ; fi
+   ########################################################################
+   # - Check the refresh rate is the same for all displays (info only)
+#   if [ $DEBUG ] ; then CheckRefreshRate  ; fi
+   ########################################################################
+   # - Make sure the display device we want as master is masterable (info only)
+#   if [ $DEBUG ] ; then  CheckMasterable  ; fi
+   #
+   ########################################################################
+   # - Set the master display device 
+   if [ $ENABLE ] ; then SetMaster  ; fi
+   #
+   ########################################################################
+   # - Disable the house sync signal on the master device
+   if [ $ENABLE ] ; then DisableHouseSync ; fi
+   # 
+   ########################################################################
+   # - Set the slave display devices 
+   if [ $ENABLE ] ; then SetSlaves  ; fi
+   ########################################################################
+   # - Re-Enable SyncToVBlank per nVidia suggestion
+   #if [ $ENABLE ] ; then EnableSyncToVBlank ; fi
+   ########################################################################
+   # - Enable framelocking on server and then on slave devices
+   sleep 0.2
+   if [ $ENABLE ] ; then EnableFramelock ; fi
+   # 
+   ########################################################################
+   # - Toggle the test signal
+   if [ $ENABLE ] ; then ToggleTestSignal ; fi
+   ########################################################################
+   # - Re-Re-Enable SyncToVBlank per nVidia suggestion
+   #if [ $ENABLE ] ; then EnableSyncToVBlank ; fi
+   ########################################################################
+}
+
+case $1 in
+   --on|on) ENABLE=1;;
+   --off|off) ENABLE="";;
+   --EnableFramelock) EnableFramelock;exit;;
+   --ToggleTestSignal) ToggleTestSignal;exit;;
+   --CheckRefreshRate) CheckRefreshRate;exit;;
+   --CheckMasterable) CheckMasterable;exit;;
+   --QueryDisplays) QueryDisplays;exit;;
+   --QueryRefreshRate) CheckRefreshRate;exit;;
+   --QuerySyncToVBlank) QuerySyncToVBlank;exit;;
+   * ) echo "Usage: framelock [ --on | --off ] " ;
+       echo "Advanced usage:"; 
+       echo "--EnableFramelock";
+       echo "--ToggleTestSignal";
+       echo "--CheckRefreshRate";
+       echo "--CheckMasterable";
+       echo "--QueryDisplays";
+       echo "--QueryRefreshRate";
+       echo "--QuerySyncToVBlank";
+       exit ;;
+esac
+
+LoopIt
