@@ -77,6 +77,26 @@ CORBAServiceList::~CORBAServiceList()
         delete p_ui_i;
         p_ui_i = 0;
     }
+    m_orb->destroy();
+
+    /*try
+    {
+        m_orb->shutdown( true );
+    }
+    catch( ... )
+    {
+        ;
+    }
+    
+    try
+    {
+        m_orbThread->join();
+    }
+    catch( ... )
+    {
+        ;//do nothing
+    }
+    delete m_orbThread;    */
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CORBAServiceList::SetArgcArgv( int argc, char** argv )
@@ -364,15 +384,10 @@ void CORBAServiceList::CheckORBWorkLoad( void )
             return;
         }
 
-        //This sleep is not needed in this use case since the ord work is in
-        // the main wx event thread. Therefore a sleep just slows down the 
-        // event loop and does not reduce the resources on the computer and
-        // only frustrates the user.
-        //::wxMilliSleep( 500 );
-        /*if( m_orb->work_pending( mTimeOutValue ) )
+        if( m_orb->work_pending( mTimeOutValue ) )
         {
             m_orb->perform_work( mTimeOutValue );
-        }*/
+        }
 
         const ves::open::xml::CommandPtr textOutput = GetGUIUpdateCommands( "TEXT_FEEDBACK" );
         if( textOutput->GetCommandName() != "NULL" )
