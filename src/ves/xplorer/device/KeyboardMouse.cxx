@@ -70,7 +70,6 @@
 #ifdef QT_ON
 #include <ves/xplorer/eventmanager/EventManager.h>
 #include <ves/xplorer/eventmanager/SignalWrapper.h>
-#include <ves/xplorer/eventmanager/InteractionEvent.h>
 #endif
 
 // --- Bullet Includes --- //
