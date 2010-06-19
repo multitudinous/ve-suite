@@ -57,6 +57,8 @@ namespace fs = boost::filesystem;
 
 using namespace ves::xplorer;
 
+//#define VES_QT_DEBUG 1
+#ifndef VES_QT_DEBUG
 int main( int argc, char* argv[] )
 {
     std::cout
@@ -331,3 +333,22 @@ int main( int argc, char* argv[] )
 
     return 0;
 }
+#else
+//// --- Qt Includes --- //
+#include <QtGui/QApplication>
+#include <QtGui/QPushButton>
+#include <QtCore/QThread>
+#include "NonQtMainThread.h"
+
+int main( int argc, char* argv[] )
+{
+    std::cout << "#### Starting up test Qt App ####" << std::endl << std::flush;
+    QApplication a( argc, argv );
+    QPushButton aButton("Test");
+    nonQtMainThread everythingElse( argc, argv );
+    everythingElse.start();
+    aButton.show();
+    a.exec();
+    return 0;
+}
+#endif

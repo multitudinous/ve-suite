@@ -525,6 +525,7 @@ void App::initScene()
     this->m_vjobsWrapper->GetCfdStateVariables();
 #ifdef QT_ON
     // Get or create UIManager
+/*
     ves::conductor::UIManager* m_UIManager = ves::conductor::UIManager::instance();
 
     // UIManager needs to know how big in pixels its projection area is
@@ -538,6 +539,7 @@ void App::initScene()
     // Start up the UI thread
     std::cout << "Starting UI thread" << std::endl;
     m_qtUIThread = new vpr::Thread(boost::bind(&App::LoadUI, this));
+*/
 #endif
 }
 ////////////////////////////////////////////////////////////////////////////////

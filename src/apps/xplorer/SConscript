@@ -44,10 +44,6 @@ if minerva_options.isAvailable():
    env.Append( CPPDEFINES = ['MINERVA_GIS_SUPPORT'] )
    minerva_options.apply( env )
 
-#see if we need to compile Qt in
-if env[ 'MakeQtSupport' ] != 'no':
-    env.Append( CPPDEFINES = ['QT_UI_SUPPORT'] )
-
 env.Append( CPPDEFINES = [ GetSVNVersion( srcDir ) ] )
 env.Append(CPPPATH = [pj('#','external','osgEphemeris','include')])
 if GetPlatform() == 'darwin':
