@@ -267,7 +267,8 @@ private:
 
     vrj::opengl::ContextData< bool > mViewportsChanged;
     vrj::opengl::ContextData< bool > m_skipDraw;
-
+    ///Thread to run the Qt ui
+    vpr::Thread* m_qtUIThread;
 };
 } //end xplorer
 } //end ves

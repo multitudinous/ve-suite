@@ -216,6 +216,16 @@ const osg::Matrixd& GLTransformInfo::GetViewMatrixOSG() const
     return m_viewMatrixOSG;
 }
 ////////////////////////////////////////////////////////////////////////////////
+const gmtl::Matrix44d& GLTransformInfo::GetCenterViewMatrix() const
+{
+    return m_centerViewMatrix;
+}
+////////////////////////////////////////////////////////////////////////////////
+const osg::Matrixd& GLTransformInfo::GetCenterViewMatrixOSG() const
+{
+    return m_centerViewMatrixOSG;
+}
+////////////////////////////////////////////////////////////////////////////////
 const gmtl::Matrix44d& GLTransformInfo::GetProjectionMatrix() const
 {
     return m_projectionMatrix;
@@ -244,6 +254,16 @@ const gmtl::Matrix44d GLTransformInfo::GetVPWMatrix() const
 const osg::Matrixd GLTransformInfo::GetVPWMatrixOSG() const
 {
     return m_viewMatrixOSG * m_projectionMatrixOSG * m_windowMatrixOSG;
+}
+////////////////////////////////////////////////////////////////////////////////
+const gmtl::Matrix44d GLTransformInfo::GetCenterVPWMatrix() const
+{
+    return m_windowMatrix * m_projectionMatrix * m_centerViewMatrix;
+}
+////////////////////////////////////////////////////////////////////////////////
+const osg::Matrixd GLTransformInfo::GetCenterVPWMatrixOSG() const
+{
+    return m_centerViewMatrixOSG * m_projectionMatrixOSG * m_windowMatrixOSG;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void GLTransformInfo::UpdateFrustumValues(
@@ -295,5 +315,14 @@ void GLTransformInfo::UpdateProjectionMatrix()
                ( m_farFrustum - m_nearFrustum );
 
     m_projectionMatrixOSG.set( m_projectionMatrix.mData );
+}
+////////////////////////////////////////////////////////////////////////////////
+void  GLTransformInfo::UpdateCenterViewMatrix( const gmtl::Matrix44d& vrjViewMatrix )
+{
+    m_vrjCenterViewMatrix = vrjViewMatrix;
+    m_vrjCenterViewMatrixOSG.set( m_vrjCenterViewMatrix.mData );
+    
+    m_centerViewMatrix = m_vrjCenterViewMatrix * m_cameraMatrix;
+    m_centerViewMatrixOSG.set( m_centerViewMatrix.mData );
 }
 ////////////////////////////////////////////////////////////////////////////////

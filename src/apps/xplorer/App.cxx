@@ -165,7 +165,8 @@ App::App( int argc, char* argv[], bool enableRTT )
     mRTT( enableRTT ),
     mProfileCounter( 0 ),
     mLastFrame( 0 ),
-    mLastTime( 0 )
+    mLastTime( 0 ),
+    m_qtUIThread( 0 )
 {
     osg::Referenced::setThreadSafeReferenceCounting( true );
     osg::DisplaySettings::instance()->setMaxNumberOfGraphicsContexts( 20 );
@@ -536,8 +537,7 @@ void App::initScene()
 
     // Start up the UI thread
     std::cout << "Starting UI thread" << std::endl;
-    vpr::Thread* thread;
-    thread = new vpr::Thread(boost::bind(&App::LoadUI, this));
+    m_qtUIThread = new vpr::Thread(boost::bind(&App::LoadUI, this));
 #endif
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -952,6 +952,9 @@ void App::draw()
         glTI->UpdateViewMatrix( vrjViewMatrix, mNavPosition );
         const osg::Matrixd viewMatrixOSG = glTI->GetViewMatrixOSG();
 
+        //Get the view matrix from a centered eye position
+        m_sceneGLTransformInfo->CalculateCenterViewMatrix( project );
+
         if( mRTT )
         {
             osg::ref_ptr< osg::Camera > camera =
@@ -1079,13 +1082,15 @@ void App::update()
 ////////////////////////////////////////////////////////////////////////////////
 void App::LoadUI()
 {
-    // This entire method should be run in its own thread since it blocks
-
+    // This entire method is run on its own thread since it blocks
 #ifdef QT_ON
+    while( !jccl::ConfigManager::instance()->isPendingStale() )
+    {            
+        vpr::System::msleep( 200 );  // thenth-second delay
+    }
     // Create the Qt application event subsystem
     QApplication::setDesktopSettingsAware(true);
     QApplication a( argc, argv );
-
     // Get or create UIManager
     ves::conductor::UIManager* m_UIManager =
             ves::conductor::UIManager::instance();
@@ -1093,7 +1098,7 @@ void App::LoadUI()
     // Wrap the widget in a UIElement
     ves::conductor::UIElement* element = new ves::conductor::UIElementQt();
     QWidget* mainUIWidget = new MainWindow(0);
-    
+
     // Since we're using an mdi-able MainWindow as the main widget, we make both 
     // it and the UIManager's projection take up the entire viewable area of
     // the GL window

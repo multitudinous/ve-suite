@@ -157,6 +157,12 @@ public:
     const osg::Matrixd& GetViewMatrixOSG() const;
 
     ///
+    const gmtl::Matrix44d& GetCenterViewMatrix() const;
+    
+    ///
+    const osg::Matrixd& GetCenterViewMatrixOSG() const;
+    
+    ///
     const gmtl::Matrix44d& GetProjectionMatrix() const;
 
     ///
@@ -175,6 +181,12 @@ public:
     const osg::Matrixd GetVPWMatrixOSG() const;
 
     ///
+    const gmtl::Matrix44d GetCenterVPWMatrix() const;
+    
+    ///
+    const osg::Matrixd GetCenterVPWMatrixOSG() const;
+    
+    ///
     void UpdateFrustumValues(
         const double& l, const double& r,
         const double& b, const double& t,
@@ -185,6 +197,10 @@ public:
         const gmtl::Matrix44d& vrjViewMatrix,
         const gmtl::Matrix44d& cameraMatrix );
 
+    ///Update the center view matrix from VR Juggler
+    ///Note: This must be called AFTER UpdateViewMatrix
+    void UpdateCenterViewMatrix( const gmtl::Matrix44d& vrjViewMatrix );
+    
 protected:
 
 private:
@@ -252,6 +268,18 @@ private:
     ///
     const osg::Matrixd m_windowMatrixOSG;
 
+    ///
+    gmtl::Matrix44d m_vrjCenterViewMatrix;
+    
+    ///
+    osg::Matrixd m_vrjCenterViewMatrixOSG;
+    
+    ///
+    gmtl::Matrix44d m_centerViewMatrix;
+    
+    ///
+    osg::Matrixd m_centerViewMatrixOSG;
+    
 };
 } //end scenegraph
 } //end xplorer

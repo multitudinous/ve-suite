@@ -56,10 +56,7 @@
 #include <gmtl/Generate.h>
 #include <gmtl/Xforms.h>
 
-// --- OSG Includes --- //
-
-//#include <osgUtil/SceneView>
-
+#include <gmtl/Misc/MatrixConvert.h>
 
 // --- C/C++ Libraries --- //
 #include <iostream>
@@ -188,8 +185,9 @@ void SceneGLTransformInfo::Initialize()
         << "GLTransformInfo is initialized." << std::endl << vprDEBUG_FLUSH;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void SceneGLTransformInfo::CalculateCenterViewMatrix()
+void SceneGLTransformInfo::CalculateCenterViewMatrix( vrj::ProjectionPtr const projection )
 {
+    /*
     vrj::DisplayManager* displayManager =
         vrj::DisplayManager::instance();
     const std::vector< vrj::DisplayPtr >& displays = 
@@ -216,5 +214,19 @@ void SceneGLTransformInfo::CalculateCenterViewMatrix()
             const gmtl::Matrix44f& projMatrix = proj->getViewMatrix();
         }
     }
+    */
+    //vrj::ProjectionPtr proj = viewport->getLeftProj();
+    vrj::ViewportPtr viewport = projection->getViewport();
+    const float positionScale = 
+        vrj::opengl::DrawManager::instance()->getApp()->getDrawScaleFactor();
+    gmtl::Matrix44f cur_head_pos = 
+        viewport->getUser()->getHeadPosProxy()->getData( positionScale );
+    
+    const gmtl::Point3f center_pos( cur_head_pos * gmtl::Point3f( 0, 0, 0 ) );
+    projection->calcViewMatrix( center_pos, positionScale );
+    const gmtl::Matrix44d& viewMatrix = 
+        gmtl::convertTo< double >( projection->getViewMatrix() ) * GetZUpMatrix();
+    scenegraph::GLTransformInfoPtr glTI = GetGLTransformInfo( viewport );
+    glTI->UpdateCenterViewMatrix( viewMatrix );
 }
 ////////////////////////////////////////////////////////////////////////////////

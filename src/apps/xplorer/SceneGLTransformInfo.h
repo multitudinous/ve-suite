@@ -118,15 +118,14 @@ public:
     ///Initialize transform info for the scene w.r.t each viewport
     ///NOTE: MUST be called AFTER EnvironmentHandler::InitScene
     void Initialize();
-
-protected:
-
-private:
     ///Calculate the projection for the center view of the of the view matrix
     ///This is needed because vr juggler is always calculating a 
     ///Left/Right combo for the view
-    void CalculateCenterViewMatrix();
+    void CalculateCenterViewMatrix( vrj::ProjectionPtr const projection );
+    
+protected:
 
+private:    
     ///
     const gmtl::Matrix44d m_ortho2DMatrix;
 

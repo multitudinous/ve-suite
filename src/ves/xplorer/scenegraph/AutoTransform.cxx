@@ -141,7 +141,15 @@ bool AutoTransform::computeLocalToWorldMatrix(
             //dynamic_cast< osgUtil::IntersectionVisitor* >( nv );
         if( m_currentGLTransformInfo != GLTransformInfoPtr() )
         {
-            view = &(m_currentGLTransformInfo->GetViewMatrixOSG());
+            if( m_autoScaleToScreen )
+            {
+                view = &(m_currentGLTransformInfo->GetViewMatrixOSG());
+            }
+            else
+            {
+                view = &(m_currentGLTransformInfo->GetCenterViewMatrixOSG());                
+            }
+
             projection = &(m_currentGLTransformInfo->GetProjectionMatrixOSG());
             window = m_currentGLTransformInfo->GetWindowMatrixOSG();
         }

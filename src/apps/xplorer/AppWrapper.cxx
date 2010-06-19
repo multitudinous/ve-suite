@@ -41,7 +41,7 @@
 
 #include <vpr/System.h>
 
-//#include <boost/bind.hpp>
+#include <boost/bind.hpp>
 
 // --- C/C++ Includes --- //
 #include <iostream>
@@ -78,10 +78,9 @@ AppWrapper::AppWrapper( int argc,  char* argv[], VjObsWrapper* input )
 
     kernel->setApplication( m_cfdApp );    // Give application to kernel
 
-    /*m_thread = new Thread();
-    m_thread->new_thread = 
-        new vpr::Thread( boost::bind(&AppWrapper::init, this) );
-    m_jugglerIsRunning = true;*/
+    //vpr::Thread* thread = 
+    //    new vpr::Thread( boost::bind(&AppWrapper::init, this) );
+    //m_jugglerIsRunning = true;
 }
 ////////////////////////////////////////////////////////////////////////////////
 AppWrapper::~AppWrapper()
@@ -101,13 +100,13 @@ bool AppWrapper::JugglerIsRunning()
 ////////////////////////////////////////////////////////////////////////////////
 void AppWrapper::init()
 {
-    //vrj::Kernel::instance()->doWaitForKernelStop();// Block until kernel stops
-
+    vrj::Kernel::instance()->waitForKernelStop();// Block until kernel stops
+/*
     delete m_cfdApp;
     m_cfdApp = NULL;
 
     delete m_vjObsWrapper;
     m_vjObsWrapper = NULL;
-    m_jugglerIsRunning = false;
+    m_jugglerIsRunning = false;*/
 }
 ////////////////////////////////////////////////////////////////////////////////

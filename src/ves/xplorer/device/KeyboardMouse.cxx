@@ -214,7 +214,17 @@ KeyboardMouse* KeyboardMouse::AsKeyboardMouse()
 void KeyboardMouse::SetStartEndPoint(
     osg::Vec3d& startPoint, osg::Vec3d& endPoint )
 {
-    osg::Matrixd inverseVPW = m_currentGLTransformInfo->GetVPWMatrixOSG();
+    //if not desktop mode and active stereo
+    osg::Matrixd inverseVPW;
+    //if( m_sceneManager.IsDesktopMode() )
+    {
+        inverseVPW = m_currentGLTransformInfo->GetVPWMatrixOSG();
+    }
+    /*else
+    {
+        inverseVPW = m_currentGLTransformInfo->GetCenterVPWMatrixOSG();
+    }*/
+
     inverseVPW.invert( inverseVPW );
     //std::cout << m_currX << " " << m_currY << std::endl;
     startPoint = osg::Vec3d( m_currX, m_currY, 0.0 ) * inverseVPW;
