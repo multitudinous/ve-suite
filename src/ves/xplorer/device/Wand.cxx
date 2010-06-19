@@ -51,6 +51,11 @@
 
 #include <ves/xplorer/scenegraph/physics/character/CharacterController.h>
 
+#ifdef QT_ON
+#include <ves/xplorer/eventmanager/EventManager.h>
+#include <ves/xplorer/eventmanager/SignalWrapper.h>
+#endif
+
 // --- osgBullet Includes --- //
 #include <osgwTools/AbsoluteModelTransform.h>
 #include <osgbBullet/RefRigidBody.h>
@@ -115,6 +120,14 @@ Wand::Wand()
 
     m_beamLineSegment = new osgUtil::LineSegmentIntersector(
         osg::Vec3( 0.0, 0.0, 0.0 ), osg::Vec3( 0.0, 0.0, 0.0 ) );
+
+#ifdef QT_ON
+    eventmanager::EventManager::instance()->RegisterSignal(
+       new eventmanager::SignalWrapper< InteractionSignal_type >( &m_interactionSignal ),
+       "WandInteractionSignal",
+       eventmanager::EventManager::input_SignalType);
+#endif // QT_ON
+    
     Initialize();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -300,6 +313,14 @@ void Wand::ProcessEvents( ves::open::xml::CommandPtr command )
         }
     }
     
+    if( 0 )
+    {
+#ifdef QT_ON
+        ves::xplorer::eventmanager::InteractionEvent 
+            ie( ves::xplorer::eventmanager::InteractionEvent::keyPress, 0, 0, 0, 0 );
+        m_interactionSignal( ie );
+#endif        
+    }
     ///If we actually pushed a button then move things
     if( m_buttonPushed && !m_characterController.IsEnabled() )
     {

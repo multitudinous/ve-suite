@@ -43,6 +43,11 @@
 
 #include <ves/open/xml/CommandPtr.h>
 
+#ifdef QT_ON
+#include <boost/signals2/signal.hpp>
+#include <ves/xplorer/eventmanager/InteractionEvent.h>
+#endif // QT_ON
+
 // --- VR Juggler Includes --- //
 #include <gmtl/Vec.h>
 #include <gmtl/Matrix.h>
@@ -212,6 +217,11 @@ private:
     ///
     bool m_manipulatorSelected;
 
+#ifdef QT_ON
+    typedef boost::signals2::signal<void (ves::xplorer::eventmanager::InteractionEvent&)> InteractionSignal_type;
+    InteractionSignal_type m_interactionSignal;
+#endif // QT_ON
+    
 };
 } //end device
 } //end xplorer
