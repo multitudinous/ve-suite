@@ -81,6 +81,9 @@ if baseEnv['MakeQtSupport'] == "yes":
     env.AppendUnique(LIBPATH = [pj('#',buildDir,'src','ves','conductor','qt'),
                                 pj('#', buildDir, 'src', 'ves', 'xplorer', 'data'),
                                 pj('#', buildDir, 'src','ves','xplorer','eventmanager')])
+else:
+   headers.remove( pj( 'NonQtMainThread.h') )
+   srcs.remove( pj( 'NonQtMainThread.cxx') )
 
 resources = [ pj( RootDir, 'dist', 'installerImages', 've_icon128x128.icns'), 
     pj( RootDir, 'src', 'apps', 'xplorer','vrjuggler.plist')]
