@@ -77,7 +77,7 @@ CORBAServiceList::~CORBAServiceList()
         delete p_ui_i;
         p_ui_i = 0;
     }
-    m_orb->destroy();
+    //m_orb->destroy();
 
     /*try
     {
