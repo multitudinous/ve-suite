@@ -65,10 +65,13 @@ void GenericPropertyBrowser::setPropertyBrowser( PropertyBrowser* browser )
 
 void GenericPropertyBrowser::RefreshContents()
 {
+    // Clear out anything currently in the browser
     this->clear();
 
+    // Tell the browser to auto-resize column widths
     this->setResizeMode(QtTreePropertyBrowser::ResizeToContents);
 
+    // Get all the QItems from underlying propertybrowser and add to this view
     PropertyBrowser::ItemVector* items = mBrowser->GetItems();
     PropertyBrowser::ItemVector::iterator iterator;
     PropertyBrowser::ItemVector::iterator end = items->end();
@@ -76,5 +79,9 @@ void GenericPropertyBrowser::RefreshContents()
     {
         this->addProperty( (*iterator) );
     }
+
+    mBrowser->RefreshAll( );
+
+    // Auto-sizing of columns should be complete; allow user to control widths
     this->setResizeMode(QtTreePropertyBrowser::Interactive);
 }

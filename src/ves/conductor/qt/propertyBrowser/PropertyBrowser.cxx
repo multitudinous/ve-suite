@@ -65,7 +65,7 @@ PropertyBrowser::~PropertyBrowser( )
 {
     // Delete items
     size_t max = mItems.size( );
-    for ( size_t index = 0; index < max; index++ )
+    for( size_t index = 0; index < max; index++ )
     {
         delete mItems[index];
     }
@@ -138,7 +138,7 @@ void PropertyBrowser::ParsePropertySet( xplorer::data::PropertySet* set )
 
     // Delete old items, etc. before adding new
     size_t max = mItems.size( );
-    for ( size_t index = 0; index < max; index++ )
+    for( size_t index = 0; index < max; index++ )
     {
         delete mItems[index];
     }
@@ -167,7 +167,7 @@ void PropertyBrowser::ParsePropertySet( xplorer::data::PropertySet* set )
     { // Bracket used to scope iterator and end
         PropertySet::PSVectorOfStrings::iterator iterator;
         PropertySet::PSVectorOfStrings::iterator end = mPropertyNames.end( );
-        for ( iterator = mPropertyNames.begin( ); iterator != end; iterator++ )
+        for( iterator = mPropertyNames.begin( ); iterator != end; iterator++ )
         {
             mProperties.push_back( set->GetProperty( ( *iterator ) ) );
         }
@@ -178,7 +178,7 @@ void PropertyBrowser::ParsePropertySet( xplorer::data::PropertySet* set )
     PropertyVector::iterator iterator;
     PropertyVector::iterator end = mProperties.end( );
     Property* property;
-    for ( iterator = mProperties.begin( ); iterator != end; iterator++ )
+    for( iterator = mProperties.begin( ); iterator != end; iterator++ )
     {
         property = ( *iterator );
         QtProperty* item = NULL;
@@ -192,49 +192,62 @@ void PropertyBrowser::ParsePropertySet( xplorer::data::PropertySet* set )
 
         boost::any value = property->GetValue( );
 
-        // Do type-specific item creation operations
-        if( value.empty( ) )
+        // Check whether this property should be visible to users
+        bool show = true;
+        if( property->AttributeExists( "userVisible" ) )
         {
-            // Empty value...is this property intended to be a group?
-            if( property->AttributeExists( "isUIGroupOnly" ) )
-            {
-                item = mGroupManager->addProperty( label );
-            }
-        }
-        else if( property->IsBool( ) )
-        {
-            item = mBooleanManager->addProperty( label );
-        }
-            // We must be careful to ask about Enum status *BEFORE* Int status,
-            // since enums *ARE* Ints. But not all Ints are Enums....
-        else if( property->IsEnum( ) )
-        {
-            item = mEnumManager->addProperty( label );
-        }
-        else if( property->IsInt( ) )
-        {
-            item = mIntManager->addProperty( label );
-        }
-        else if( property->IsFloat( ) )
-        {
-            // Qt's property browser doesn't handle floats directly,
-            // so all floats must be cast to double. We cast back and forth
-            // in gets and sets to make sure that the underlying data type
-            // remains float.
-            item = mDoubleManager->addProperty( label );
-        }
-        else if( property->IsDouble( ) )
-        {
-            item = mDoubleManager->addProperty( label );
-        }
-        else if( property->IsString( ) )
-        {
-            item = mStringManager->addProperty( label );
+            show = boost::any_cast<bool>( property->GetAttribute( "userVisible" ) );
         }
 
-        // These are done for all items
-        mItems.push_back( item );
-        _refreshItem( _getItemIndex( item ) );
+        // Do type-specific item creation operations
+        if( show )
+        {
+            if( value.empty( ) )
+            {
+                // Empty value...is this property intended to be a group?
+                if( property->AttributeExists( "isUIGroupOnly" ) )
+                {
+                    item = mGroupManager->addProperty( label );
+                }
+            }
+            else if( property->IsBool( ) )
+            {
+                item = mBooleanManager->addProperty( label );
+            }
+                // We must be careful to ask about Enum status *BEFORE* Int status,
+                // since enums *ARE* Ints. But not all Ints are Enums....
+            else if( property->IsEnum( ) )
+            {
+                item = mEnumManager->addProperty( label );
+            }
+            else if( property->IsInt( ) )
+            {
+                item = mIntManager->addProperty( label );
+            }
+            else if( property->IsFloat( ) )
+            {
+                // Qt's property browser doesn't handle floats directly,
+                // so all floats must be cast to double. We cast back and forth
+                // in gets and sets to make sure that the underlying data type
+                // remains float.
+                item = mDoubleManager->addProperty( label );
+            }
+            else if( property->IsDouble( ) )
+            {
+                item = mDoubleManager->addProperty( label );
+            }
+            else if( property->IsString( ) )
+            {
+                item = mStringManager->addProperty( label );
+            }
+
+            // These are done for all items
+            if( item )
+            {
+                mItems.push_back( item );
+                _refreshItem( _getItemIndex( item ) );
+            }
+        }
     }
 
     // Set up specified hierarchy of elements
@@ -244,8 +257,8 @@ void PropertyBrowser::ParsePropertySet( xplorer::data::PropertySet* set )
 
 void PropertyBrowser::RefreshAll( )
 {
-    int max = static_cast< int >( mProperties.size( ) );
-    for ( int index = 0; index < max; index++ )
+    int max = static_cast < int > ( mProperties.size( ) );
+    for( int index = 0; index < max; index++ )
     {
         _refreshItem( index );
     }
@@ -279,10 +292,10 @@ void PropertyBrowser::_refreshItem( int index )
         QStringList qEnumNames;
         Property::PSVectorOfStrings enumNames =
                 boost::any_cast< Property::PSVectorOfStrings > (
-                property->GetAttribute( std::string("enumValues") ) );
+                property->GetAttribute( std::string( "enumValues" ) ) );
         Property::PSVectorOfStrings::iterator iterator;
         Property::PSVectorOfStrings::iterator end = enumNames.end( );
-        for ( iterator = enumNames.begin( ); iterator != end; iterator++ )
+        for( iterator = enumNames.begin( ); iterator != end; iterator++ )
         {
             qEnumNames << QString::fromStdString( ( *iterator ) );
         }
@@ -342,7 +355,7 @@ void PropertyBrowser::_refreshItem( int index )
 }
 ////////////////////////////////////////////////////////////////////////////////
 
-void PropertyBrowser::_extractMinMaxValues( xplorer::data::Property* property, 
+void PropertyBrowser::_extractMinMaxValues( xplorer::data::Property* property,
                                             double* min, double* max,
                                             bool* hasMin, bool* hasMax )
 {
@@ -388,7 +401,7 @@ void PropertyBrowser::_createHierarchy( )
     xplorer::data::Property* property;
     int index;
     int max = static_cast < int > ( mProperties.size( ) );
-    for ( index = 0; index < max; index++ )
+    for( index = 0; index < max; index++ )
     {
         QtProperty* item = mItems[index];
         bool subItem = false;
@@ -479,7 +492,7 @@ void PropertyBrowser::Refresh( )
     xplorer::data::PropertySet::PSVectorOfStrings::iterator end = changes.end( );
 
     // Walk through list and update the UI items
-    for ( iterator = changes.begin( ); iterator != end; iterator++ )
+    for( iterator = changes.begin( ); iterator != end; iterator++ )
     {
         int index = _getPropertyIndexByName( ( *iterator ) );
         if( index > -1 )
@@ -498,7 +511,7 @@ int PropertyBrowser::_getPropertyIndex( xplorer::data::Property* property )
     int index = -1;
     int max = static_cast < int > ( mProperties.size( ) );
     max--;
-    while ( ( !found ) && ( index < max ) )
+    while( ( !found ) && ( index < max ) )
     {
         index++;
         if( mProperties[ index ] == property )
@@ -526,7 +539,7 @@ int PropertyBrowser::_getPropertyIndexByName( std::string name )
     int index = -1;
     int max = static_cast < int > ( mPropertyNames.size( ) );
     max--;
-    while ( ( !found ) && ( index < max ) )
+    while( ( !found ) && ( index < max ) )
     {
         index++;
         if( mPropertyNames[ index ] == name )
@@ -553,7 +566,7 @@ int PropertyBrowser::_getItemIndex( QtProperty* item )
     int index = -1;
     int max = static_cast < int > ( mItems.size( ) );
     max--;
-    while ( ( !found ) && ( index < max ) )
+    while( ( !found ) && ( index < max ) )
     {
         index++;
         if( mItems[ index ] == item )
