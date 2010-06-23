@@ -18,7 +18,6 @@ source = [pj(buildSrcDir,'propertyBrowser','Visualization.ui')]
 cppHeaders += lib_env.qt_uic(source)
 ####
 
-
 ### moc files
 source = [pj(buildSrcDir,'MainWindow.h')]
 cppSources = lib_env.qt_moc(source)
@@ -34,6 +33,11 @@ cppSources += lib_env.qt_moc(source)
 
 source = [pj(buildSrcDir,'propertyBrowser','GenericPropertyBrowser.h')]
 cppSources += lib_env.qt_moc(source)
+###
+
+### rcc files
+source = [pj(buildSrcDir,'propertyBrowser','icons.qrc')]
+cppSources += lib_env.qt_rcc(source)
 ###
 
 lib_env.Depends( cppSources, cppHeaders)
