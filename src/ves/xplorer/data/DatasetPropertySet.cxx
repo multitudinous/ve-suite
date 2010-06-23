@@ -74,26 +74,37 @@ void DatasetPropertySet::_createSkeleton( )
     // having to go through xplorer directly.
 
     AddProperty( "Filename", std::string(""), "File name");
+    SetPropertyAttribute( "Filename", "userVisible", false );
 
     std::vector< std::string > stringVector;
     AddProperty( "ScalarNames", stringVector, "Scalar Names" );
+    SetPropertyAttribute( "ScalarNames", "userVisible", false );
 
     AddProperty( "VectorNames", stringVector, "Vector Names" );
+    SetPropertyAttribute( "VectorNames", "userVisible", false );
 
     std::vector< double > doubleVector;
     AddProperty( "ScalarMins", doubleVector, "Scalar Mins" );
+    SetPropertyAttribute( "ScalarMins", "userVisible", false );
     AddProperty( "ScalarMaxes", doubleVector, "Scalar Maxes" );
+    SetPropertyAttribute( "ScalarMaxes", "userVisible", false );
 
     AddProperty( "StepLength", 0.0f, "Integration Step Length");
+    SetPropertyAttribute( "StepLength", "userVisible", false );
 
     AddProperty( "TimeStep", 0.0f, "Integration Time Step");
+    SetPropertyAttribute( "TimeStep", "userVisible", false );
 
     AddProperty( "MaxTime", 0.0f, "Max Integration Time" );
+    SetPropertyAttribute( "MaxTime", "userVisible", false );
 
     AddProperty( "Type", 0, "Type" );
+    SetPropertyAttribute( "Type", "userVisible", false );
 
     AddProperty( "PrecomputedDataSliceDir", std::string(""), "Precomputed Data Slice Dir" );
+    SetPropertyAttribute( "PrecomputedDataSliceDir", "userVisible", false );
 
     AddProperty( "PrecomputedSurfaceDir", std::string(""), "Precomputed Surface Dir" );
+    SetPropertyAttribute( "PrecomputedSurfaceDir", "userVisible", false );
 }
 
