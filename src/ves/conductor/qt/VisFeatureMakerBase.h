@@ -18,6 +18,8 @@ public:
     VisFeatureMakerBase( const VisFeatureMakerBase& orig );
     virtual ~VisFeatureMakerBase( );
 
+    virtual void update( unsigned int recordID );
+
 protected:
     void _updateAdvancedSettings( ves::xplorer::data::PropertySet& set );
     void _updateBaseInformation( ves::xplorer::data::PropertySet& set );

@@ -64,8 +64,10 @@ bool qt_sendSpontaneousEvent( QObject* recv, QEvent* e )
     return QCoreApplication::sendSpontaneousEvent( recv, e );
 }
 
-using namespace ves::conductor;
-using namespace ves;
+namespace ves
+{
+namespace conductor
+{
 
 UIElementQt::UIElementQt( QWidget *parent ) : QGraphicsView( parent ),
 mWidget( NULL ),
@@ -123,7 +125,7 @@ void UIElementQt::Initialize( )
         // thread is given execution sometime during this interval.
         mTimer = new QTimer( this );
         QObject::connect( mTimer, SIGNAL( timeout( ) ), this, SLOT( _render( ) ) );
-        mTimer->start( 30 );
+        mTimer->start( 100 );
 
         mInitialized = true;
     }
@@ -180,7 +182,7 @@ unsigned char* UIElementQt::RenderElementToImage( )
     // Qt's event and paint system behaves poorly if initiated directly from
     // another thread, so we do a little trickery here. This method doesn't
     // actually ask the element to update; instead, we keep an internal timer
-    // that causes a repaint of this element every 30ms. Any time the present
+    // that causes a repaint of this element every 100ms. Any time the present
     // method is called, we simply return the most recently painted image of
     // this window. Attempts to cause this method to ask the element to update,
     // which could be done via:
@@ -418,7 +420,7 @@ void UIElementQt::paintEvent( QPaintEvent* event )
 
 void UIElementQt::_sendEvent( ves::xplorer::eventmanager::InteractionEvent* event )
 {
-    using xplorer::eventmanager::InteractionEvent;
+    using ves::xplorer::eventmanager::InteractionEvent;
     int x = static_cast < int > ( event->X );
     int y = static_cast < int > ( event->Y );
 
@@ -661,3 +663,6 @@ void UIElementQt::_setupKeyMap( )
    mKeyMap[ gadget::KEY_ASCII_TILDE ] = Qt::Key_AsciiTilde;
    mKeyMap[ gadget::KEY_UNKNOWN ] = Qt::Key_unknown;
 }
+
+} // namespace conductor
+} // namespace ves

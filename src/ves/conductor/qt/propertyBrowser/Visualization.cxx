@@ -39,9 +39,16 @@
 #include <ves/conductor/qt/propertyBrowser/PropertyBrowser.h>
 #include <ves/xplorer/data/ContourPlanePropertySet.h>
 
+#include <ves/conductor/qt/VisFeatureManager.h>
+
+#include <QtCore/qstring.h>
+
 #include <iostream>
 
-using namespace ves::conductor;
+namespace ves
+{
+namespace conductor
+{
 
 Visualization::Visualization( QWidget* parent ) :
 QDialog( parent ),
@@ -51,6 +58,9 @@ ui( new Ui::Visualization )
 
     mFeatureBrowser = new PropertyBrowser( this );
     mTempSet = 0;
+
+    // Force FeatureIDSelector to update itself based on the database.
+    UpdateFeatureIDSelectorChoices();
 }
 
 Visualization::~Visualization( )
@@ -77,13 +87,10 @@ void Visualization::on_WritePropertiesButton_clicked( )
 {
     if( mTempSet )
     {
-        mTempSet->WriteToDatabase(  );
+        mTempSet->WriteToDatabase( );
+        std::string featureName = ui->FeaturesList->currentItem( )->text( ).toStdString( );
+        VisFeatureManager::instance( )->UpdateFeature( featureName, mTempSet->GetRecordID( ) );
     }
-
-    // featureType will be the list position of the currently-selected feature
-    //VisFeatureManager::instance()->update( featureType, id );
-
-    mContourFeatureMaker.update( mTempSet->GetRecordID() );
 }
 
 void Visualization::on_RefreshPropertiesButton_clicked( )
@@ -97,30 +104,106 @@ void Visualization::on_RefreshPropertiesButton_clicked( )
 
 void Visualization::on_NewFeatureButton_clicked( )
 {
-    mTempSet = new xplorer::data::ContourPlanePropertySet( );
+    QString featureName = ui->FeaturesList->currentItem( )->text( );
+    mTempSet = VisFeatureManager::instance( )->
+            CreateNewFeature( featureName.toStdString( ) );
 
     if( mTempSet )
     {
-        mTempSet->WriteToDatabase(  );
-
-        mFeatureBrowser->ParsePropertySet( mTempSet );
-
-        // ui.vfpb is an instance of GenericPropertyBrowser, which knows how
-        // to take the Qt-ized data from a PropertyBrowser such as
-        // mFeatureBrowser and display it in the GUI.
-        ui->vfpb->setPropertyBrowser( mFeatureBrowser );
-        ui->vfpb->RefreshContents( );
-        ui->vfpb->show( );
+        mTempSet->WriteToDatabase( );
     }
+
+    mFeatureBrowser->ParsePropertySet( mTempSet );
+
+    // ui.vfpb is an instance of GenericPropertyBrowser, which knows how
+    // to take the Qt-ized data from a PropertyBrowser such as
+    // mFeatureBrowser and display it in the GUI.
+    ui->vfpb->setPropertyBrowser( mFeatureBrowser );
+    ui->vfpb->RefreshContents( );
+    ui->vfpb->show( );
+
+    // Re-read available feature IDs from database, and select the last one added,
+    // which by definition corresponds to the "new" one
+    UpdateFeatureIDSelectorChoices( );
+    ui->FeatureIDSelector->setCurrentIndex( ui->FeatureIDSelector->count( ) - 1 );
 }
 
 void Visualization::on_DeleteFeatureButton_clicked( )
 {
     if( mTempSet )
     {
-        mTempSet->DeleteFromDatabase(  );
-        mFeatureBrowser->ParsePropertySet( NULL );
+        mTempSet->DeleteFromDatabase( );
+        mFeatureBrowser->ParsePropertySet( 0 );
+        delete mTempSet;
+        mTempSet = 0;
+        UpdateFeatureIDSelectorChoices( );
+        ui->FeatureIDSelector->setCurrentIndex( ui->FeatureIDSelector->count( ) - 1 );
+    }
+}
+
+void Visualization::on_FeaturesList_currentTextChanged( const QString& currentText )
+{
+    UpdateFeatureIDSelectorChoices( );
+}
+
+void Visualization::UpdateFeatureIDSelectorChoices( )
+{
+    // Remove all entries from feature id selection combobox
+    ui->FeatureIDSelector->clear( );
+
+    // Get all available IDs for current feature type
+    QString featureName = ui->FeaturesList->currentItem( )->text( );
+    std::vector<std::string> ids = VisFeatureManager::instance( )->GetIDsForFeature( featureName.toStdString( ) );
+
+    // Convert IDs to format needed by QComboBox and add them as choices
+    QStringList idList;
+    QString qCurrentID;
+    for( size_t index = 0; index < ids.size( ); index++ )
+    {
+        qCurrentID = qCurrentID.fromStdString( ids.at( index ) );
+        idList.append( qCurrentID );
+    }
+
+    ui->FeatureIDSelector->addItems( idList );
+
+    ui->FeatureIDSelector->setCurrentIndex( ui->FeatureIDSelector->count( ) - 1 );
+}
+
+void Visualization::on_FeatureIDSelector_currentIndexChanged( const QString & text )
+{
+    if( text.isEmpty( ) )
+    {
+        // If null selection was made, we want to remove any visible PropertySet
+        mFeatureBrowser->ParsePropertySet( 0 );
         delete mTempSet;
         mTempSet = 0;
     }
+    else
+    {
+        delete mTempSet;
+        mTempSet = 0;
+        QString featureName = ui->FeaturesList->currentItem( )->text( );
+        mTempSet = VisFeatureManager::instance( )->
+                CreateNewFeature( featureName.toStdString( ) );
+
+        if( mTempSet )
+        {
+            mTempSet->SetRecordID( text.toInt( ) );
+            mTempSet->LoadFromDatabase( );
+            mFeatureBrowser->ParsePropertySet( mTempSet );
+
+            // ui.vfpb is an instance of GenericPropertyBrowser, which knows how
+            // to take the Qt-ized data from a PropertyBrowser such as
+            // mFeatureBrowser and display it in the GUI.
+            ui->vfpb->setPropertyBrowser( mFeatureBrowser );
+            ui->vfpb->RefreshContents( );
+            ui->vfpb->show( );
+            mTempSet->LoadFromDatabase( );
+            mFeatureBrowser->RefreshAll( );
+        }
+    }
+
 }
+
+}// namespace conductor
+}// namespace ves

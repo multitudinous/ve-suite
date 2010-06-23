@@ -45,7 +45,7 @@ public:
     ContourFeatureMaker( );
     ContourFeatureMaker( const ContourFeatureMaker& orig );
     virtual ~ContourFeatureMaker( );
-    void update( unsigned int recordID );
+    virtual void update( unsigned int recordID );
 
 protected:
     void _addPlane( ves::xplorer::data::PropertySet& set );

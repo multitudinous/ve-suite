@@ -1,5 +1,6 @@
 #include <ves/conductor/qt/VisFeatureMakerBase.h>
 #include <ves/xplorer/command/CommandManager.h>
+#include <ves/xplorer/data/DatasetPropertySet.h>
 
 #include <ves/open/xml/DataValuePair.h>
 #include <ves/open/xml/Command.h>
@@ -21,6 +22,12 @@ VisFeatureMakerBase::VisFeatureMakerBase( const VisFeatureMakerBase& orig )
 
 VisFeatureMakerBase::~VisFeatureMakerBase( )
 {
+}
+
+void VisFeatureMakerBase::update( unsigned int recordID )
+{
+    ; // Does nothing, but don't want pure virtual f'n so that this class *can*
+    // be instantiated alone.
 }
 
 void VisFeatureMakerBase::_updateBaseInformation( xplorer::data::PropertySet& set )
@@ -68,28 +75,36 @@ void VisFeatureMakerBase::_updateBaseInformation( xplorer::data::PropertySet& se
     scalarMax->SetData( "Scalar Max", maximumValue );
     _vistabBaseInformation.push_back( scalarMax );
 
-    //Store the axes display value
-    /*VE_XML::DataValuePair* axes= new VE_XML::DataValuePair();
-    axes->SetData( std::string("Show Axes"), static_cast< unsigned int >( axesCB->GetValue() ) );
-    _vistabBaseInformation.push_back( axes );*/
+    // Load instance of selected DataSet from database and get relevant properties
+    // from it.
+    xplorer::data::DatasetPropertySet dataset;
+    dataset.LoadByKey( "Filename", boost::any_cast<std::string >
+                       ( set.GetPropertyAttribute
+                       ( "DataSet", "enumCurrentString" )
+                       ) );
 
-    // Temporarily code-set:
-    //Store the axes display value
+    //Bounding box display value
     ves::open::xml::DataValuePairPtr bbox( new ves::open::xml::DataValuePair( ) );
-    //bbox->SetData( std::string( "Show Bounding Box" ), static_cast < unsigned int > ( bboxCB->GetValue( ) ) );
-    bbox->SetData( std::string( "Show Bounding Box" ), static_cast < unsigned int > ( 0 ) );
+    bbox->SetData( std::string( "Show Bounding Box" ), static_cast < unsigned int > (
+                   boost::any_cast<bool>( dataset.GetPropertyValue( "BoundingBox" ) )
+                   ) );
+    //bbox->SetData( std::string( "Show Bounding Box" ), static_cast < unsigned int > ( 0 ) );
     _vistabBaseInformation.push_back( bbox );
 
-    //Store the axes display value
+    //Surface wrap display value
     ves::open::xml::DataValuePairPtr wireMesh( new ves::open::xml::DataValuePair( ) );
-    //wireMesh->SetData( std::string( "Show Wire Mesh" ), static_cast < unsigned int > ( wireFrameCB->GetValue( ) ) );
-    wireMesh->SetData( std::string( "Show Wire Mesh" ), static_cast < unsigned int > ( 0 ) );
+    wireMesh->SetData( std::string( "Show Wire Mesh" ), static_cast < unsigned int > (
+                       boost::any_cast<bool>( dataset.GetPropertyValue( "SurfaceWrap" ) )
+                       ) );
+    //wireMesh->SetData( std::string( "Show Wire Mesh" ), static_cast < unsigned int > ( 0 ) );
     _vistabBaseInformation.push_back( wireMesh );
 
     //set scalar bar state
     ves::open::xml::DataValuePairPtr scalarBarDVP( new ves::open::xml::DataValuePair( ) );
-    //scalarBarDVP->SetData( "Scalar Bar State", static_cast < unsigned int > ( scalarBarCB->GetValue( ) ) );
-    scalarBarDVP->SetData( "Scalar Bar State", static_cast < unsigned int > ( 0 ) );
+    scalarBarDVP->SetData( "Scalar Bar State", static_cast < unsigned int > (
+                           boost::any_cast<bool>( dataset.GetPropertyValue( "ScalarBar" ) )
+                           ) );
+    //scalarBarDVP->SetData( "Scalar Bar State", static_cast < unsigned int > ( 0 ) );
     _vistabBaseInformation.push_back( scalarBarDVP );
 }
 
@@ -139,7 +154,7 @@ void VisFeatureMakerBase::_updateAdvancedSettings( xplorer::data::PropertySet& s
     {
         ves::open::xml::DataValuePairPtr contourOpacity( new ves::open::xml::DataValuePair( ) );
         contourOpacity->SetData( "Contour Opacity",
-                                  boost::any_cast<double>
+                                 boost::any_cast<double>
                                  ( set.GetPropertyValue( "Advanced_Opacity" ) ) );
         _advancedSettings.push_back( contourOpacity );
     }
@@ -190,12 +205,12 @@ void VisFeatureMakerBase::_updateAdvancedSettings( xplorer::data::PropertySet& s
         _advancedSettings.push_back( warpOptionFlag );
     }
 
-//    if( m_datasetSelection->IsEnabled() )
-//    {
-//        ves::open::xml::DataValuePairPtr surfToolsDVP( new ves::open::xml::DataValuePair() );
-//        surfToolsDVP->SetData( "SURF Tools", ConvertUnicode( m_datasetSelection->GetValue().c_str() ) );
-//        _advancedSettings.push_back( surfToolsDVP );
-//    }
+    //    if( m_datasetSelection->IsEnabled() )
+    //    {
+    //        ves::open::xml::DataValuePairPtr surfToolsDVP( new ves::open::xml::DataValuePair() );
+    //        surfToolsDVP->SetData( "SURF Tools", ConvertUnicode( m_datasetSelection->GetValue().c_str() ) );
+    //        _advancedSettings.push_back( surfToolsDVP );
+    //    }
 
 }
 

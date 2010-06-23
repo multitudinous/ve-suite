@@ -30,14 +30,17 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#ifndef VISUALIZATION_H
-#define VISUALIZATION_H
+#pragma once
+#include <ves/VEConfig.h>
 
-#define QT_NO_KEYWORDS
+// --- VR Juggler includes --- //
+#include <vpr/Util/Singleton.h>
 
-#include <QtGui/QDialog>
+// --- Boost includes --- //
+#include <boost/noncopyable.hpp>
 
-#include <ves/conductor/qt/ContourFeatureMaker.h>
+#include <string>
+#include <vector>
 
 // Forward declarations
 namespace ves
@@ -47,50 +50,51 @@ namespace xplorer
 namespace data
 {
 class PropertySet;
-} // namespace data
-} // namespace xplorer
+} // data
+} // xplorer
+} // ves
 
+namespace ves
+{
 namespace conductor
 {
-class PropertyBrowser;
 
-
-
-namespace Ui
+class VE_CONDUCTOR_QTUI_EXPORTS VisFeatureManager : boost::noncopyable
 {
-class Visualization;
-}
-
-class Visualization : public QDialog
-{
-    Q_OBJECT
 public:
-    Visualization( QWidget* parent = 0 );
-    ~Visualization( );
+    /**
+     * Factory function to create feature property sets by name. If you add a new
+     * feature type, add a new branch to the big if/else statement in this method.
+     *
+     * @param featureName Unique name associated with the class to create. This
+     * will generally be a human-readable name rather than directly a class name; eg.
+     * passing "Contours" will create an instance of ContourPlanePropertySet.
+     *
+     * @exception none Does not throw.
+     *
+     * @return Pointer to the created PropertySet. If no matching feature exists,
+     * the returned pointer will be a null pointer. The caller is expected to
+     * manage the lifetime of the created object.
+     **/
+    ves::xplorer::data::PropertySet* CreateNewFeature( std::string featureName );
 
-protected:
-    void changeEvent( QEvent* e );
-    void UpdateFeatureIDSelectorChoices( );
+    void UpdateFeature( std::string featureName, unsigned int ID );
 
-protected Q_SLOTS:
-    // For info on Automatic connection of signals and slots, see
-    // http://doc.trolltech.com/4.6/designer-using-a-ui-file.html#automatic-connections
-    void on_WritePropertiesButton_clicked( ); // Automatic connection
-    void on_RefreshPropertiesButton_clicked( ); // Automatic connection
-    void on_NewFeatureButton_clicked( ); // Automatic connection
-    void on_DeleteFeatureButton_clicked( ); // Automatic connection
-    void on_FeaturesList_currentTextChanged( const QString& currentText ); // Automatic connection
-    void on_FeatureIDSelector_currentIndexChanged ( const QString & text ); // Automatic connection
-
+    std::vector<std::string> GetIDsForFeature( std::string featureName );
 
 private:
-    Ui::Visualization* ui;
-    PropertyBrowser* mFeatureBrowser;
 
-    xplorer::data::PropertySet* mTempSet;
+    // Set this class up as a singleton
+    /// Constructor
+    VisFeatureManager( );
+
+    /// Destructor
+    virtual ~VisFeatureManager( );
+
+    /// Singleton declarations
+    vprSingletonHeader( VisFeatureManager );
+
 };
 
 } // namespace conductor
 } // namespace ves
-
-#endif // VISUALIZATION_H
