@@ -53,6 +53,10 @@
 #include <osg/Timer>
 #include <osg/LightModel>
 
+#ifdef QT_ON
+class QApplication;
+#endif
+
 namespace osg
 {
 class Group;
@@ -269,6 +273,10 @@ private:
     vrj::opengl::ContextData< bool > m_skipDraw;
     ///Thread to run the Qt ui
     vpr::Thread* m_qtUIThread;
+#ifdef QT_ON
+    bool m_uiInitialized;
+    QApplication* mQtApp;
+#endif // QT_ON
 };
 } //end xplorer
 } //end ves

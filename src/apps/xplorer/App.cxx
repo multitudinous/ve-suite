@@ -130,7 +130,7 @@
 #include <QtGui/QPushButton>
 #include <QtGui/QDialog>
 #include <QtGui/QVBoxLayout>
-#include <QtGui/QPlastiqueStyle>
+#include <QtCore/QDir>
 
 #include <ves/conductor/qt/UIElementQt.h>
 #include <ves/conductor/qt/MainWindow.h>
@@ -235,6 +235,7 @@ App::App( int argc, char* argv[], bool enableRTT )
 
 #ifdef QT_ON
     ves::xplorer::data::DatabaseManager::instance()->SetDatabasePath("ves.db");
+    m_uiInitialized = false;
 #endif // QT_ON
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -525,21 +526,22 @@ void App::initScene()
     this->m_vjobsWrapper->GetCfdStateVariables();
 #ifdef QT_ON
     // Get or create UIManager
-/*
+
     ves::conductor::UIManager* m_UIManager = ves::conductor::UIManager::instance();
 
     // UIManager needs to know how big in pixels its projection area is
-    cfdDisplaySettings* cDS = EnvironmentHandler::instance()->GetDisplaySettings();
-    std::pair<int, int> res = cDS->GetScreenResolution();
-    m_UIManager->SetRectangle( 0, res.first, 0, res.second );
+//    cfdDisplaySettings* cDS = EnvironmentHandler::instance()->GetDisplaySettings();
+//    std::pair<int, int> res = cDS->GetScreenResolution();
+//    m_UIManager->SetRectangle( 0, res.first, 0, res.second );
 
     // Hand current root node UIManager so it can create UI subgraph
     m_UIManager->Initialize( getScene() );
 
     // Start up the UI thread
-    std::cout << "Starting UI thread" << std::endl;
-    m_qtUIThread = new vpr::Thread(boost::bind(&App::LoadUI, this));
-*/
+//    std::cout << "Starting UI thread" << std::endl;
+//    m_qtUIThread = new vpr::Thread(boost::bind(&App::LoadUI, this));
+    LoadUI();
+
 #endif
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -765,6 +767,17 @@ void App::latePreFrame()
         update();
     }
     ///////////////////////
+
+#ifdef QT_ON
+    if( m_uiInitialized )
+    {
+        mQtApp->processEvents();
+        // Just using sendPostedEvents without processEvents does not push mouse
+        // and keyboard events through. Using processEvents alone without sendPostedEvents
+        // appears to work fine.
+        //mQtApp->sendPostedEvents();
+    }
+#endif // QT_ON
 
     ///Increment framenumber now that we are done using it everywhere
     _frameNumber += 1;
@@ -1084,15 +1097,18 @@ void App::update()
 ////////////////////////////////////////////////////////////////////////////////
 void App::LoadUI()
 {
-    // This entire method is run on its own thread since it blocks
 #ifdef QT_ON
-    while( !jccl::ConfigManager::instance()->isPendingStale() )
-    {            
-        vpr::System::msleep( 200 );  // thenth-second delay
-    }
+    // Uncomment following block if we return to running this method in a separate thread.
+//    while( !jccl::ConfigManager::instance()->isPendingStale() )
+//    {
+//        vpr::System::msleep( 200 );  // tenth-second delay
+//    }
+    
     // Create the Qt application event subsystem
     QApplication::setDesktopSettingsAware(true);
-    QApplication a( argc, argv );
+    //QApplication a( argc, argv );
+    mQtApp = new QApplication ( argc, argv );
+    
     // Get or create UIManager
     ves::conductor::UIManager* m_UIManager =
             ves::conductor::UIManager::instance();
@@ -1115,10 +1131,12 @@ void App::LoadUI()
    
     m_UIManager->AddElement( element );
 
+    m_uiInitialized = true;
+
     // Begin running the Qt subsystem
-    std::cout << "...Run Qt application" << std::endl;
-    a.exec();
-    std::cout << "...Ended Qt application" << std::endl;
+//    std::cout << "...Run Qt application" << std::endl;
+//    a.exec();
+//    std::cout << "...Ended Qt application" << std::endl;
 #endif // QT_ON
 }
 ////////////////////////////////////////////////////////////////////////////////
