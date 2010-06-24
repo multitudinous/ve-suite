@@ -680,7 +680,7 @@ if not SConsAddons.Util.hasHelpFlag():
                osgBulletSubdirs, bullet, minervaDataSubdirs]
 
     if baseEnv[ 'MakeQtSupport' ] == 'yes':
-        #ves_dirs.append( qtTestBuilder )
+        ves_dirs.append( qtTestBuilder )
         ves_dirs.append( qtpropertybrowserSubdirs )
     
     #build applications in test/ directory

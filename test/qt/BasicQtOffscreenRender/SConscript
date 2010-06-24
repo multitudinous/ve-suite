@@ -25,12 +25,15 @@ headers2 += sca_util.getHeadersRecursive( pj(RootDir,'test','qt','BasicQtOffscre
 sources2 = sca_util.getSourcesRecursive( pj(RootDir,'test','qt','BasicQtOffscreenRender') )
 sources2+=cppSources1
 
+sources2.append( pj('CocoaHelper.mm'))
+
 if GetPlatform() != 'darwin':
     Import('qt_options')
     qt_options.apply(lib_env2)
 else:
     import qt46
     qt46.applyQtBuildFlags( lib_env2 )
+    lib_env2.Append( LINKFLAGS = ['-framework','AppKit'])
 
 if GetPlatform() == 'linux':
     lib_env2.AppendUnique( CXXFLAGS=['-fPIC'])
