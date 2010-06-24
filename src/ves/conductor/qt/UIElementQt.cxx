@@ -340,7 +340,11 @@ void UIElementQt::FreeOldWidgets( )
 
     //delete mWidget;
     delete mGraphicsScene;
-    delete mGraphicsView;
+    if( mGraphicsView )
+    {
+        delete mGraphicsView;
+    }
+    
     delete mGraphicsProxyWidget;
 
     { // Enter critical section

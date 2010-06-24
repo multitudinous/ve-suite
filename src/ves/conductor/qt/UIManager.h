@@ -107,7 +107,7 @@ public:
      *    |-- MatrixTransform
      *              |-- Geode
      **//////////////////////////////////////////////////////////////////////////////
-    osg::ref_ptr<osg::Geode> AddElement( UIElement* element );
+    osg::Geode* AddElement( UIElement* element );
 
     ////////////////////////////////////////////////////////////////////////////////
     /// Removes element associated with geode from our management.
@@ -137,12 +137,12 @@ public:
     /// scenegraph. Calling it any other time may cause ref_ptrs to go out of scope
     /// at the wrong time and result in loss of geometry.
     ////////////////////////////////////////////////////////////////////////////////
-    void Update( );
+    void Update();
 
     ////////////////////////////////////////////////////////////////////////////////
     /// Hide all UI elements
     ////////////////////////////////////////////////////////////////////////////////
-    void HideAllElements( );
+    void HideAllElements();
 
     ////////////////////////////////////////////////////////////////////////////////
     /// Show all UI elements
@@ -168,12 +168,12 @@ public:
     /// This method *must* be called during an update traversal, since nodes
     /// are added to the scenegraph inside this method.
     ////////////////////////////////////////////////////////////////////////////////
-    void Initialize( osg::ref_ptr< osg::Group > parentNode );
+    void Initialize( osg::Group* parentNode );
 
     ////////////////////////////////////////////////////////////////////////////////
     /// Update callback for osg. Override of osg::NodeCallback method.
     ////////////////////////////////////////////////////////////////////////////////
-    virtual void operator( )( osg::Node* node, osg::NodeVisitor* nv );
+    virtual void operator()( osg::Node* node, osg::NodeVisitor* nv );
 
     void SendInteractionEvent( xplorer::eventmanager::InteractionEvent& event );
 
@@ -190,7 +190,7 @@ private:
     UIManager();
 
     /// Destructor
-    virtual ~UIManager( );
+    virtual ~UIManager();
 
     /// Singleton declarations
     vprSingletonHeader( UIManager );
@@ -250,10 +250,10 @@ private:
     osg::ref_ptr< osg::Material > mOverallOpacity;
 
     /// Helper function to add in nodes during update if necessary
-    void _insertNodesToAdd( );
+    void _insertNodesToAdd();
 
     /// Helper function to get new texture images for elements when needed
-    void _repaintChildren( );
+    void _repaintChildren();
 
     /// Helper function to send out events to elements
     void _sendEvent();

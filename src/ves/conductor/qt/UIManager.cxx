@@ -78,24 +78,31 @@ UIManager::UIManager( )
 }
 ////////////////////////////////////////////////////////////////////////////////
 
-UIManager::~UIManager( )
+UIManager::~UIManager()
 {
+    if( mUIGroup.valid() )
+    {
+        mUIGroup->removeUpdateCallback( this );
+    }
+
+    //std::cout << this->referenceCount() << std::endl;
     // Delete all UIElements of which we've taken charge
     // Note that these were not allocated inside this class, but the class
     // interface specifies that it takes ownership of these objects
     std::map< osg::ref_ptr< osg::Geode >, UIElement* >::iterator map_iterator;
-    for ( map_iterator = mElements.begin( ); map_iterator != mElements.end( );
+    for ( map_iterator = mElements.begin(); map_iterator != mElements.end();
             ++map_iterator )
     {
         delete ( *map_iterator ).second;
     }
-
+    mElements.clear();
     // All other memory allocated on the heap by this class should be attached
     // to an osg::ref_ptr and so should automatically manage its lifetime
+    //std::cout << " UI manager destructor" << std::endl;
 }
 ////////////////////////////////////////////////////////////////////////////////
 
-osg::ref_ptr<osg::Geode> UIManager::AddElement( UIElement* element )
+osg::Geode* UIManager::AddElement( UIElement* element )
 {
     osg::ref_ptr<osg::Switch> switch_node = new osg::Switch( );
     osg::ref_ptr<osg::MatrixTransform> transform = new osg::MatrixTransform( );
@@ -308,7 +315,7 @@ void UIManager::SetRectangle( int left, int right, int bottom, int top )
 }
 ////////////////////////////////////////////////////////////////////////////////
 
-void UIManager::Initialize( osg::ref_ptr< osg::Group > parentNode )
+void UIManager::Initialize( osg::Group* parentNode )
 {
     //std::cout << "UIManager::Initialize" << std::endl;
     // Only allow initialization to happen once.
