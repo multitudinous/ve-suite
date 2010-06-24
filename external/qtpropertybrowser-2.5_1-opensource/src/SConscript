@@ -64,9 +64,6 @@ sources += cppSources1
 #headers = map(lambda s: pj('src', s), headers)
 #sources = map(lambda s: pj('src', s), sources)
 
-lib_env.AppendUnique( CPPDEFINES = [ 'QT_QTPROPERTYBROWSER_EXPORT' ] )
-
-
 if GetPlatform() == 'linux':
     lib_env.Append( CCFLAGS=['-fPIC'])
 
@@ -74,6 +71,7 @@ if GetPlatform() != 'darwin':
     Import('qt_options')
     qt_options.apply(lib_env)
     lib_env.AppendUnique( CPPDEFINES = ['QT_ON'] )
+    lib_env.AppendUnique( CPPDEFINES = [ 'QT_QTPROPERTYBROWSER_EXPORT' ] )
 else:
     import qt46
     qt46.applyQtBuildFlags(lib_env)
