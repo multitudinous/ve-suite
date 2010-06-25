@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-//#define QT_RENDER_DEBUG
+//#define VES_QT_RENDER_DEBUG
 
 #include <gadget/Type/KeyboardMouse/Keys.h>
 
@@ -274,7 +274,7 @@ void UIElementQt::SetWidget( QWidget* widget )
     // to the first call to RenderElementToImage()
     _render( );
 
-#ifdef QT_RENDER_DEBUG
+#ifdef VES_QT_RENDER_DEBUG
     // Dump the image from the initial render pass into a file
     mImage->save( "QtRenderDebugImage.png" );
 #endif

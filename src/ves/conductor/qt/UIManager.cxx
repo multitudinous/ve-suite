@@ -30,6 +30,8 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
+//#define VES_QT_RENDER_DEBUG
+
 #include <iostream>
 
 // --- OpenSceneGraph includes --- //
@@ -143,7 +145,11 @@ osg::Geode* UIManager::AddElement( UIElement* element )
 
     // FIXME: Why must the normal be set > 1, even in ortho mode with no xform above?
     // Normal if in x-y plane
+#ifdef VES_QT_RENDER_DEBUG
+    normal->push_back( osg::Vec3( 0.0f, 0.0f, 1.0f ) );
+#else
     normal->push_back( osg::Vec3( 0.0f, 0.0f, 2.0f ) );
+#endif
 
     // Draw a four-vertex quad from the stored data.
     geometry->addPrimitiveSet(
@@ -355,7 +361,11 @@ void UIManager::Initialize( osg::Group* parentNode )
     // all UI elements at once
     osg::StateSet* m_UIGroupStateSet = mUIGroup->getOrCreateStateSet( );
     mOverallOpacity = new osg::Material;
+#ifdef VES_QT_RENDER_DEBUG
+    mOverallOpacity->setAlpha( osg::Material::FRONT_AND_BACK, 0.85f );
+#else
     mOverallOpacity->setAlpha( osg::Material::FRONT_AND_BACK, 1.0f );
+#endif
     m_UIGroupStateSet->setAttributeAndModes( mOverallOpacity.get( ), osg::StateAttribute::ON );
 
     mUIGroup->setDataVariance( osg::Object::DYNAMIC );
