@@ -30,6 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
+//#define QT_RENDER_DEBUG
 
 #include <gadget/Type/KeyboardMouse/Keys.h>
 
@@ -272,6 +273,11 @@ void UIElementQt::SetWidget( QWidget* widget )
     // Render this widget immediately so that there will be an image to return
     // to the first call to RenderElementToImage()
     _render( );
+
+#ifdef QT_RENDER_DEBUG
+    // Dump the image from the initial render pass into a file
+    mImage->save( "QtRenderDebugImage.png" );
+#endif
 
     // Force the scene to activate. Failure to do this results in lack of
     // tab-focus feedback and odd cursor behavior on Qt 4.6.x. Unfortunately,
