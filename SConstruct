@@ -587,6 +587,7 @@ if not SConsAddons.Util.hasHelpFlag():
 
     if GetPlatform() == 'darwin':
         baseEnv.AppendUnique( CPPDEFINES = ['_DARWIN'] )
+        #baseEnv.AppendUnique( CXXFLAGS = ['-fno-objc-call-cxx-cdtors'] )
         baseEnv.AppendUnique( LINKFLAGS = ['-Wl,-bind_at_load'] )
         #Needed for mac osx 10.6.2 and wxWidgets-2.9.0 w/ cocoa support
         #baseEnv.AppendUnique( LINKFLAGS = ['-framework', 'CoreFoundation'] )
@@ -680,8 +681,9 @@ if not SConsAddons.Util.hasHelpFlag():
                osgBulletSubdirs, bullet, minervaDataSubdirs]
 
     if baseEnv[ 'MakeQtSupport' ] == 'yes':
-        ves_dirs.append( qtTestBuilder )
         ves_dirs.append( qtpropertybrowserSubdirs )
+        if GetPlatform() != 'win32':
+            ves_dirs.append( qtTestBuilder )
     
     #build applications in test/ directory
     if baseEnv[ 'buildTests' ] == 'yes':
