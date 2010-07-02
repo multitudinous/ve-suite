@@ -36,7 +36,7 @@
 #include "App.h"
 #include "VjObsWrapper.h"
 
-#ifdef QT_ON && _DARWIN
+#if defined QT_ON && defined _DARWIN
 #include "CocoaHelper.h"
 #endif
 
