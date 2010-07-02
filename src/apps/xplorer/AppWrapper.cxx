@@ -79,7 +79,7 @@ AppWrapper::AppWrapper( int argc,  char* argv[], VjObsWrapper* input )
     m_cfdApp->SetWrapper( m_vjObsWrapper );
     
     vrj::Kernel* kernel = vrj::Kernel::instance(); // Declare a new Kernel
-#ifdef QT_ON && _DARWIN
+#if defined QT_ON && defined _DARWIN
     CocoaInit( m_cfdApp );
 #endif
     kernel->start();                          // Start the kernel thread
