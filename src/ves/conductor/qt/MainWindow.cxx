@@ -41,10 +41,22 @@
 #include <iostream>
 #include <QtGui/QPaintEvent>
 
+#ifdef VES_QT_ICON_DEBUG
+//#include <QtCore/QDir>
+//inline void initMyResource() { do { extern int QT_MANGLE_NAMESPACE(qInitResources) ();       \
+//        QT_MANGLE_NAMESPACE(qInitResources) (); } while (0); }
+#endif // VES_QT_ICON_DEBU
+
 MainWindow::MainWindow(QWidget* parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
+#ifdef VES_QT_ICON_DEBUG
+//    initMyResource();
+    QPixmap testImg(":/images/add.png");
+    if( testImg.isNull() )
+        std::cout << "$$$$$$$$$$$$$$$ Resources are unavailable" << std::endl << std::flush;
+#endif // VES_QT_ICON_DEBUG
     ui->setupUi(this);
     ui->mainToolBar->addAction(ui->action_New);
     ui->mainToolBar->addAction(ui->action_Open);
@@ -53,6 +65,7 @@ MainWindow::MainWindow(QWidget* parent) :
     // Make the background of this window translucent since we want to be able
     // to see through the empty parts of the mdi area.
     this->setAttribute(Qt::WA_TranslucentBackground);
+    this->setWindowFlags( Qt::FramelessWindowHint  );
 
     ui->mdiArea->setMouseTracking( true );
     
