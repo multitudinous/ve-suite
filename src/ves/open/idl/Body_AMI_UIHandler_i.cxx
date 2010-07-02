@@ -174,7 +174,11 @@ ACE_THROW_SPEC((
                    ::Error::EUnknown
                ) )
 { 
-    throw CORBA::NO_IMPLEMENT();
+    /*this->response_handler_->SetCommand();
+    
+    std::cout << "inner_callback_i deactivating self" << std::endl;
+    PortableServer::ObjectId_var oid = this->poa_->servant_to_id(this);
+    this->poa_->deactivate_object (oid.in());*/
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Body_AMI_UIHandler_i::SetCommand_excep( 

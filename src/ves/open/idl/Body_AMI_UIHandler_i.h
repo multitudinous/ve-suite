@@ -50,6 +50,9 @@ public:
     ///Constructor
     Body_AMI_UIHandler_i( void );
 
+    Body_AMI_UIHandler_i(PortableServer::POA_ptr p,
+                      Body::AMH_ExecutiveResponseHandler_ptr rh);
+
     ///Destructor
     virtual ~Body_AMI_UIHandler_i( void );
 
