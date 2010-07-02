@@ -51,8 +51,11 @@
 #include <QtCore/QMutexLocker>
 #include <QtGui/QApplication>
 
-//#define _debug(text) std::cout << "UIElementQt::" << text << std::endl << std::flush
-#define _debug(text)
+#ifdef VES_QT_RENDER_DEBUG
+#   define _debug(text) std::cout << "UIElementQt::" << text << std::endl << std::flush
+#else
+#   define _debug(text)
+#endif
 
 // qt_sendSpontaneousEvent is a friend method of QCoreApplication and thus
 // gives us access to the private method sendSpontaneousEvent, which is required

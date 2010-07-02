@@ -73,6 +73,8 @@ else:
     import qt46
     qt46.applyQtBuildFlags(lib_env)
 
+#lib_env.AppendUnique( CPPDEFINES = ['QT_RENDER_DEBUG'])
+
 if GetPlatform() == 'win32':
     lib_env.AppendUnique(CXXFLAGS = ['/Zc:wchar_t-'])
 
