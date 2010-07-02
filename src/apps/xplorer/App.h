@@ -182,8 +182,14 @@ public:
     void update();
 
     ///Start up in-process user interface thread
-    void LoadUI( );
-
+    void LoadUI();
+    
+    ///Calls LoadUI and other Qt initialization tools
+    void preRun();
+    
+    ///Calls the Qt event loop
+    void runLoop();
+    
 protected:
 
 private:
@@ -272,10 +278,10 @@ private:
     vrj::opengl::ContextData< bool > mViewportsChanged;
     vrj::opengl::ContextData< bool > m_skipDraw;
     ///Thread to run the Qt ui
-    vpr::Thread* m_qtUIThread;
+    //vpr::Thread* m_qtUIThread;
 #ifdef QT_ON
     bool m_uiInitialized;
-    QApplication* mQtApp;
+    QApplication* m_qtApp;
 #endif // QT_ON
 };
 } //end xplorer

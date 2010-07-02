@@ -57,10 +57,10 @@ namespace fs = boost::filesystem;
 
 using namespace ves::xplorer;
 
-//#define VES_QT_DEBUG 1
-#ifndef VES_QT_DEBUG
+//#define VES_QT_RENDER_DEBUG 1
+#ifndef VES_QT_RENDER_DEBUG
 int main( int argc, char* argv[] )
-{
+{    
     std::cout
         << "|-----------------------------------------------------------------|"
         << std::endl
@@ -71,7 +71,7 @@ int main( int argc, char* argv[] )
         << SVN_VES_REVISION << std::endl
         << "|-----------------------------------------------------------------|"
         << std::endl;
-
+    
     //Start the juggler kernel here so that we can run on darwin
     vrj::Kernel* kernel = vrj::Kernel::instance();
     //Check to make sure the jccl env var is defined properly
@@ -284,7 +284,6 @@ int main( int argc, char* argv[] )
                 kernel->loadConfigFile( argv[i] );
             }
         }*/
-
         AppWrapper* appWrapper = new AppWrapper( argc, argv, vjobsWrapper );
 
         kernel->waitForKernelStop();              // Block until kernel stops

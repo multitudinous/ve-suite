@@ -121,7 +121,6 @@
 #include <jccl/RTRC/ConfigManager.h>
 
 #ifdef QT_ON
-
 #include <ves/xplorer/data/DatabaseManager.h>
 #include <ves/conductor/qt/UIManager.h>
 
@@ -165,8 +164,7 @@ App::App( int argc, char* argv[], bool enableRTT )
     mRTT( enableRTT ),
     mProfileCounter( 0 ),
     mLastFrame( 0 ),
-    mLastTime( 0 ),
-    m_qtUIThread( 0 )
+    mLastTime( 0 )
 {
     osg::Referenced::setThreadSafeReferenceCounting( true );
     osg::DisplaySettings::instance()->setMaxNumberOfGraphicsContexts( 20 );
@@ -526,7 +524,6 @@ void App::initScene()
     this->m_vjobsWrapper->GetCfdStateVariables();
 #ifdef QT_ON
     // Get or create UIManager
-
     ves::conductor::UIManager* m_UIManager = ves::conductor::UIManager::instance();
 
     // UIManager needs to know how big in pixels its projection area is
@@ -540,8 +537,9 @@ void App::initScene()
     // Start up the UI thread
 //    std::cout << "Starting UI thread" << std::endl;
 //    m_qtUIThread = new vpr::Thread(boost::bind(&App::LoadUI, this));
-    LoadUI();
-
+#   ifndef _DARWIN
+    preRun();
+#   endif
 #endif
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -553,7 +551,7 @@ void App::preFrame()
     {
         //Check and see if the orb has any work to do
         VPR_PROFILE_GUARD_HISTORY( "App::preFrame CheckORBWorkLoad", 20 );
-        //m_vjobsWrapper->CheckORBWorkLoad();
+        m_vjobsWrapper->CheckORBWorkLoad();
     }
     ///////////////////////
     {
@@ -768,15 +766,8 @@ void App::latePreFrame()
     }
     ///////////////////////
 
-#ifdef QT_ON
-    if( m_uiInitialized )
-    {
-        mQtApp->processEvents();
-        // Just using sendPostedEvents without processEvents does not push mouse
-        // and keyboard events through. Using processEvents alone without sendPostedEvents
-        // appears to work fine.
-        //mQtApp->sendPostedEvents();
-    }
+#if defined( QT_ON ) && !defined( _DARWIN )
+    runLoop();
 #endif // QT_ON
 
     ///Increment framenumber now that we are done using it everywhere
@@ -1097,6 +1088,7 @@ void App::update()
 ////////////////////////////////////////////////////////////////////////////////
 void App::LoadUI()
 {
+    vprDEBUG( vesDBG, 2 ) << "|\tApp LoadUI" << std::endl << vprDEBUG_FLUSH;
 #ifdef QT_ON
     // Uncomment following block if we return to running this method in a separate thread.
 //    while( !jccl::ConfigManager::instance()->isPendingStale() )
@@ -1106,9 +1098,15 @@ void App::LoadUI()
     
     // Create the Qt application event subsystem
     QApplication::setDesktopSettingsAware(true);
-    //QApplication a( argc, argv );
-    mQtApp = new QApplication ( argc, argv );
-    
+    QApplication::setAttribute(Qt::AA_MacPluginApplication);
+    m_qtApp = new QApplication ( argc, argv, 1 );
+
+#ifdef VES_QT_RENDER_DEBUG   
+    QPushButton*  button = new QPushButton("Test");
+    button->show();
+    m_uiInitialized = true;
+    return;
+#endif
     // Get or create UIManager
     ves::conductor::UIManager* m_UIManager =
             ves::conductor::UIManager::instance();
@@ -1121,7 +1119,7 @@ void App::LoadUI()
     // it and the UIManager's projection take up the entire viewable area of
     // the GL window
     cfdDisplaySettings* cDS =
-                           EnvironmentHandler::instance()->GetDisplaySettings();
+        EnvironmentHandler::instance()->GetDisplaySettings();
     std::pair<int, int> res = cDS->GetScreenResolution();
     m_UIManager->SetRectangle( 0, res.first, 0, res.second );
 
@@ -1137,6 +1135,25 @@ void App::LoadUI()
 //    std::cout << "...Run Qt application" << std::endl;
 //    a.exec();
 //    std::cout << "...Ended Qt application" << std::endl;
+#endif // QT_ON
+}
+////////////////////////////////////////////////////////////////////////////////
+void App::preRun()
+{
+    LoadUI();
+}
+////////////////////////////////////////////////////////////////////////////////
+void App::runLoop()
+{
+#ifdef QT_ON
+    if( m_uiInitialized )
+    {
+        m_qtApp->processEvents();
+        // Just using sendPostedEvents without processEvents does not push mouse
+        // and keyboard events through. Using processEvents alone without sendPostedEvents
+        // appears to work fine.
+        //m_qtApp->sendPostedEvents();
+    }
 #endif // QT_ON
 }
 ////////////////////////////////////////////////////////////////////////////////

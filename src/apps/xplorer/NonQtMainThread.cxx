@@ -28,7 +28,7 @@ namespace po = boost::program_options;
 namespace fs = boost::filesystem;
 
 using namespace ves::xplorer;
-
+#ifdef VES_QT_RENDER_DEBUG
 nonQtMainThread::nonQtMainThread( int argc, char* argv[] ):
 mArgc( argc ),
 mArgv( argv )
@@ -317,3 +317,4 @@ void nonQtMainThread::run()
     
     return;// 0;
 }
+#endif

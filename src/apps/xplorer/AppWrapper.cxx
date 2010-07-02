@@ -36,6 +36,10 @@
 #include "App.h"
 #include "VjObsWrapper.h"
 
+#ifdef QT_ON && _DARWIN
+#include "CocoaHelper.h"
+#endif
+
 // --- VR Juggler Includes --- //
 #include <vrj/Kernel/Kernel.h>
 
@@ -67,13 +71,17 @@ AppWrapper::AppWrapper( int argc,  char* argv[], VjObsWrapper* input )
             break;
         }
     }
+
     //Setup the juggler kernel now
     // block it on another thread
     // Delcare an instance of my application
     m_cfdApp = new App( m_argc, m_argv, enableRTT );
     m_cfdApp->SetWrapper( m_vjObsWrapper );
-
+    
     vrj::Kernel* kernel = vrj::Kernel::instance(); // Declare a new Kernel
+#ifdef QT_ON && _DARWIN
+    CocoaInit( m_cfdApp );
+#endif
     kernel->start();                          // Start the kernel thread
 
     kernel->setApplication( m_cfdApp );    // Give application to kernel
