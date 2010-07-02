@@ -50,6 +50,7 @@
 
 #include <ves/conductor/qt/UIManager.h>
 #include <ves/conductor/qt/UIElement.h>
+#include <ves/conductor/qt/UIUpdateCallback.h>
 
 #include <ves/xplorer/eventmanager/InteractionEvent.h>
 #include <ves/xplorer/eventmanager/SlotWrapper.h>
@@ -72,6 +73,7 @@ UIManager::UIManager( )
     mToggleVisibility = false;
     mHide = false;
     mShow = false;
+    mUIUpdateCallback = new UIUpdateCallback;
     typedef boost::signals2::signal< void (xplorer::eventmanager::InteractionEvent&) > InteractionSignal_type;
     InteractionSignal_type::slot_type
     slotFunctor( boost::bind( &UIManager::SendInteractionEvent, this, _1 ) );
@@ -84,8 +86,10 @@ UIManager::~UIManager()
 {
     if( mUIGroup.valid() )
     {
-        mUIGroup->removeUpdateCallback( this );
+        mUIGroup->removeUpdateCallback( mUIUpdateCallback );
     }
+
+    //delete mUIUpdateCallback;
 
     //std::cout << this->referenceCount() << std::endl;
     // Delete all UIElements of which we've taken charge
@@ -95,7 +99,7 @@ UIManager::~UIManager()
     for ( map_iterator = mElements.begin(); map_iterator != mElements.end();
             ++map_iterator )
     {
-        delete ( *map_iterator ).second;
+        //delete ( *map_iterator ).second;
     }
     mElements.clear();
     // All other memory allocated on the heap by this class should be attached
@@ -369,20 +373,20 @@ void UIManager::Initialize( osg::Group* parentNode )
     m_UIGroupStateSet->setAttributeAndModes( mOverallOpacity.get( ), osg::StateAttribute::ON );
 
     mUIGroup->setDataVariance( osg::Object::DYNAMIC );
-    mUIGroup->setUpdateCallback( this );
+    mUIGroup->setUpdateCallback( mUIUpdateCallback );
 
     mInitialized = true;
 }
 ////////////////////////////////////////////////////////////////////////////////
 
-void UIManager::operator( )( osg::Node* node, osg::NodeVisitor* nv )
-{
-    // Request element repaints and so forth
-    Update( );
-
-    // Allow update traversal to continue
-    traverse( node, nv );
-}
+//void UIManager::operator( )( osg::Node* node, osg::NodeVisitor* nv )
+//{
+//    // Request element repaints and so forth
+//    Update( );
+//
+//    // Allow update traversal to continue
+//    traverse( node, nv );
+//}
 ////////////////////////////////////////////////////////////////////////////////
 
 void UIManager::SendInteractionEvent( ves::xplorer::eventmanager::InteractionEvent &event )

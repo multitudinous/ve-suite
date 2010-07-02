@@ -77,6 +77,7 @@ class InteractionEvent;
 namespace conductor
 {
 class UIElement;
+class UIUpdateCallback;
 ///
 ///@file UIManager.h
 
@@ -87,7 +88,7 @@ class UIElement;
 /// NOTE: State of scenegraph and traversal is only important during call to
 /// Update.
 ////////////////////////////////////////////////////////////////////////////////
-class VE_CONDUCTOR_QTUI_EXPORTS UIManager : public osg::NodeCallback, boost::noncopyable
+class VE_CONDUCTOR_QTUI_EXPORTS UIManager : public boost::noncopyable
 {
 public:
     /**
@@ -173,7 +174,7 @@ public:
     ////////////////////////////////////////////////////////////////////////////////
     /// Update callback for osg. Override of osg::NodeCallback method.
     ////////////////////////////////////////////////////////////////////////////////
-    virtual void operator()( osg::Node* node, osg::NodeVisitor* nv );
+    //virtual void operator()( osg::Node* node, osg::NodeVisitor* nv );
 
     void SendInteractionEvent( xplorer::eventmanager::InteractionEvent& event );
 
@@ -194,6 +195,8 @@ private:
 
     /// Singleton declarations
     vprSingletonHeader( UIManager );
+
+    UIUpdateCallback* mUIUpdateCallback;
 
     ////////////////////////////////////////////////////////////////////////////////
     /// Stores the UIElements in key/pair form.
