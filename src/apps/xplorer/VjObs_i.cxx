@@ -42,7 +42,6 @@
 #include <ves/xplorer/EnvironmentHandler.h>
 #include <ves/xplorer/SteadyStateVizHandler.h>
 #include <ves/xplorer/Model.h>
-#include <ves/xplorer/environment/cfdDisplaySettings.h>
 #include <ves/xplorer/Debug.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
