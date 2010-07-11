@@ -52,11 +52,12 @@ using namespace ves::xplorer::scenegraph::util;
 
 ////////////////////////////////////////////////////////////////////////////////
 OpacityVisitor::OpacityVisitor( osg::Node* osg_node, bool storeState, 
-    bool state, float alpha )
+    bool state, float alpha, bool uniqueStateSet )
         :NodeVisitor( TRAVERSE_ALL_CHILDREN ),
          transparent( state ),
          m_alpha( alpha ),
-         mStoreState( storeState )
+         mStoreState( storeState ),
+         m_uniqueStateSet( uniqueStateSet )
 {
     osg_node->accept( *this );
 }
@@ -111,7 +112,15 @@ void OpacityVisitor::apply( osg::Geode& node )
             //have a stateset then lets continue
             continue;
         }
-
+        
+        if( (drawable_stateset->getNumParents() > 1) && m_uniqueStateSet )
+        {
+            //std::cout << drawable_stateset->getNumParents() << std::endl;
+            osg::ref_ptr< osg::StateSet > temp_drawable_stateset = 
+                new osg::StateSet( *(drawable_stateset.get()), osg::CopyOp::DEEP_COPY_ALL );
+            node.getDrawable( i )->setStateSet( temp_drawable_stateset.get() );
+            drawable_stateset = temp_drawable_stateset.get();
+        }
         //Material from the stateset
         osg::ref_ptr< osg::Material > drawable_material = 
             static_cast< osg::Material* >( 
