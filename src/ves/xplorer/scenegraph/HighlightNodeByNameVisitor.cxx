@@ -92,7 +92,7 @@ void HighlightNodeByNameVisitor::apply( osg::Node& node )
             }
             //Now highlight the node
             ves::xplorer::scenegraph::util::OpacityVisitor 
-                opVisitor( &node, false, false, 1.0f );
+                opVisitor( &node, false, false, 1.0f, true );
 
             //Add shader code to have code highlighted
             //osg::Vec4 enableGlow( 1.0, 0.0, 0.0, 1.0 );
