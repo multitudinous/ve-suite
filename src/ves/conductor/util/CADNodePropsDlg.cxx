@@ -183,6 +183,7 @@ void CADNodePropertiesDlg::_buildTabs()
     }
 
     _propertyTabs->AddPage( GetTransformPanel(), _T( "Transform" ), true );
+    _propertyTabs->AddPage(GetAnimationPanel(),_T("Animation"), false);
     _propertyTabs->AddPage( GetAttributePanel(), _T( "Attributes" ), false );
     if( _cadNode->GetNodeType() == "Part" )
     {
@@ -625,6 +626,12 @@ void CADNodePropertiesDlg::_addAnimation( wxCommandEvent& event )
                     nodeID->SetDataType( "STRING" );
                     nodeID->SetData( std::string( "Node ID" ), _cadNode->GetID() );
                     _instructions.push_back( nodeID );
+
+                    ves::open::xml::DataValuePairPtr nodeType( new ves::open::xml::DataValuePair() );
+                    nodeType->SetDataType( "STRING" );
+                    nodeType->SetDataName( std::string( "Node Type" ) );
+                    nodeType->SetDataString( _cadNode->GetNodeType() );
+                    _instructions.push_back( nodeType );
 
                     ves::open::xml::DataValuePairPtr addAnimation( new ves::open::xml::DataValuePair() );
                     addAnimation->SetDataType( "XMLOBJECT" );

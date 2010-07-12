@@ -51,6 +51,7 @@
 #include <ves/xplorer/event/ActiveModelEventHandler.h>
 
 #include <ves/xplorer/event/cad/CADAddNodeEH.h>
+#include <ves/xplorer/event/cad/CADAnimationEH.h>
 #include <ves/xplorer/event/cad/CADAddAttributeEH.h>
 #include <ves/xplorer/event/cad/CADDeleteNodeEH.h>
 #include <ves/xplorer/event/cad/CADInitializePhysicsEventHandler.h>
@@ -125,6 +126,7 @@ ModelHandler::ModelHandler( void )
 
     _eventHandlers[ std::string( "SET_ROOT_CAD_NODE" )] = new ves::xplorer::event::CADSetRootNodeEventHandler();
     _eventHandlers[ std::string( "CAD_TRANSFORM_UPDATE" )] = new ves::xplorer::event::CADTransformEventHandler();
+    _eventHandlers[ std::string( "CAD_ADD_ANIMATION_TO_NODE" )] = new ves::xplorer::event::CADAnimationEventHandler();
     _eventHandlers[ std::string( "CAD_ADD_NODE" )] = new ves::xplorer::event::CADAddNodeEventHandler();
     _eventHandlers[ std::string( "CAD_DELETE_NODE" )] = new ves::xplorer::event::CADDeleteNodeEventHandler();
     _eventHandlers[ std::string( "CAD_ADD_ATTRIBUTE_TO_NODE" )] = new ves::xplorer::event::CADAddAttributeEventHandler();
