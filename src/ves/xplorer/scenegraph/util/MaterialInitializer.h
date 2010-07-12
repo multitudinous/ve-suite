@@ -64,7 +64,7 @@ public:
 
 private:
     bool mFileHasMaterial;
-
+    bool CheckStateSet( osg::StateSet* stateSet );
 };
 }
 }
