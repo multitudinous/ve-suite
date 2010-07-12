@@ -137,6 +137,7 @@ void cfdDisplaySettings::ProcessCommand()
 #else
             ySize = static_cast< int >( configYValue - 155 );
 #endif
+            std::cout << xSize << " " << ySize << std::endl;
             elements.at( i )->setProperty( "size", 1, ySize );
             elements.at( i )->setProperty( "origin", 0, 0 );
             elements.at( i )->setProperty( "origin", 1, 0 );

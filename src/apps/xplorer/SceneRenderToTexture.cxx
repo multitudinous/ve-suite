@@ -596,7 +596,7 @@ vxsr::Processor* SceneRenderToTexture::CreatePipelineProcessor(
         //finalShader->set( "glowStrength", static_cast< float >( 6.0 ) );
 
         osg::ref_ptr< osg::Uniform > glowStrengthUniform =
-            new osg::Uniform( "glowStrength", static_cast< float >( 4.0 ) );
+            new osg::Uniform( "glowStrength", static_cast< float >( 8.0 ) );
 
         //final->getOrCreateStateSet()->setAttributeAndModes( finalShader.get() );
         osg::ref_ptr< osg::StateSet > stateSet = final->getOrCreateStateSet();

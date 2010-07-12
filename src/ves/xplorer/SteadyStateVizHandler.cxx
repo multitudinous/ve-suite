@@ -230,7 +230,7 @@ void SteadyStateVizHandler::PreFrameUpdate()
         currentEventHandler = _eventHandlers.find( tempCommand->GetCommandName() );
         if( currentEventHandler != _eventHandlers.end() )
         {
-            vprDEBUG( vesDBG, 0 ) << "|\tExecuting: " 
+            vprDEBUG( vesDBG, 1 ) << "|\tExecuting: " 
                 << tempCommand->GetCommandName()
                 << std::endl << vprDEBUG_FLUSH;
             currentEventHandler->second->SetGlobalBaseObject();
