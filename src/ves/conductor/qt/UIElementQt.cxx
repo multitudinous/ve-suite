@@ -73,14 +73,15 @@ namespace ves
 namespace conductor
 {
 
-UIElementQt::UIElementQt( QWidget *parent ) : QGraphicsView( parent ),
-mWidget( NULL ),
-    mImage( NULL ),
-    mImageFlipped( NULL ),
-    mGraphicsScene( NULL ),
-    mGraphicsProxyWidget( NULL ),
-    mGraphicsView( NULL ),
-    mTimer( NULL ),
+UIElementQt::UIElementQt( QWidget *parent ) :
+    QGraphicsView( parent ),
+    mWidget( 0 ),
+    mImage( 0 ),
+    mImageFlipped( 0 ),
+    mGraphicsScene( 0 ),
+    mGraphicsProxyWidget( 0 ),
+    mGraphicsView( 0 ),
+    mTimer( 0 ),
     mImageWidth( 0 ),
     mImageHeight( 0 ),
     mWidth( 0 ),
@@ -109,6 +110,7 @@ UIElementQt::~UIElementQt( )
     _debug( "dtor" );
     FreeOldWidgets( );
     delete mTimer;
+    delete mImageMutex;
 }
 
 void UIElementQt::Initialize( )
@@ -129,10 +131,11 @@ void UIElementQt::Initialize( )
         // thread is given execution sometime during this interval.
         mTimer = new QTimer( this );
         QObject::connect( mTimer, SIGNAL( timeout( ) ), this, SLOT( _render( ) ) );
-        mTimer->start( 100 );
+        mTimer->start( 30 );
 
         mInitialized = true;
     }
+    _debug( "Initialize Ended" );
 }
 
 int UIElementQt::GetImageWidth( )
@@ -267,6 +270,8 @@ void UIElementQt::SetWidget( QWidget* widget )
     this->setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
     this->setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
 
+    this->setViewportUpdateMode( QGraphicsView::NoViewportUpdate );
+
     // Make the view and the scene coincident.
     this->setSceneRect( mGraphicsScene->sceneRect( ) );
 
@@ -286,8 +291,8 @@ void UIElementQt::SetWidget( QWidget* widget )
     // tab-focus feedback and odd cursor behavior on Qt 4.6.x. Unfortunately,
     // doing the activate on the scene causes comboboxes in the property browser
     // to stop showing choices on pulldown. Ugh.
-    //QEvent ev( QEvent::WindowActivate );
-    //QApplication::sendEvent( mGraphicsScene, &ev );
+//    QEvent ev( QEvent::WindowActivate );
+//    QApplication::sendEvent( mGraphicsScene, &ev );
 }
 
 void UIElementQt::UpdateSize( )
@@ -321,10 +326,14 @@ void UIElementQt::UpdateSize( )
     }
 
     // Determine the texture size needed to ensure power-of-two width and height
-    _calculatePower2ImageDimensions( );
+    //_calculatePower2ImageDimensions( );
+    mImageWidth = mWidth;
+    mImageHeight = mHeight;
 
     // Calculate the texture coordinates of the rendered widget in the texture
     _calculateTextureCoordinates( );
+
+
 
     // If image doesn't exist, create one of the proper size.
     { // Enter critical section
@@ -394,17 +403,17 @@ void UIElementQt::_render( )
     mImageDirty = true;
 }
 
-void UIElementQt::_calculatePower2ImageDimensions( )
-{
-    mImageWidth = int( pow( 2, ceil( log( double(mWidth) ) / log( double(2) ) ) ) );
-    mImageHeight = int( pow( 2, ceil( log( double(mHeight) ) / log( double(2) ) ) ) );
-
-    // If either dimension is zero, force the other dimension to zero too
-    if( ( mImageWidth == 0 ) || ( mImageHeight == 0 ) )
-    {
-        mImageWidth = mImageHeight = 0;
-    }
-}
+//void UIElementQt::_calculatePower2ImageDimensions( )
+//{
+//    mImageWidth = int( pow( 2, ceil( log( double(mWidth) ) / log( double(2) ) ) ) );
+//    mImageHeight = int( pow( 2, ceil( log( double(mHeight) ) / log( double(2) ) ) ) );
+//
+//    // If either dimension is zero, force the other dimension to zero too
+//    if( ( mImageWidth == 0 ) || ( mImageHeight == 0 ) )
+//    {
+//        mImageWidth = mImageHeight = 0;
+//    }
+//}
 
 void UIElementQt::_calculateTextureCoordinates( )
 {
@@ -416,10 +425,12 @@ void UIElementQt::_calculateTextureCoordinates( )
     else
     {
         mTextureLeft = 0.0f;
-        mTextureRight = static_cast < float > ( mWidth ) /
-                static_cast < float > ( mImageWidth );
-        mTextureBottom = 1.0f - ( static_cast < float > ( mHeight ) /
-                static_cast < float > ( mImageHeight ) );
+//        mTextureRight = static_cast < float > ( mWidth ) /
+//                static_cast < float > ( mImageWidth );
+//        mTextureBottom = 1.0f - ( static_cast < float > ( mHeight ) /
+//                static_cast < float > ( mImageHeight ) );
+        mTextureRight = 1.0f;
+        mTextureBottom = 0.0f;
         mTextureTop = 1.0f;
     }
 }

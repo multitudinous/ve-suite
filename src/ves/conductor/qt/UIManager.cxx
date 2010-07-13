@@ -86,10 +86,8 @@ UIManager::~UIManager()
 {
     if( mUIGroup.valid() )
     {
-        mUIGroup->removeUpdateCallback( mUIUpdateCallback );
+        mUIGroup->removeUpdateCallback( mUIUpdateCallback.get() );
     }
-
-    //delete mUIUpdateCallback;
 
     //std::cout << this->referenceCount() << std::endl;
     // Delete all UIElements of which we've taken charge
@@ -180,6 +178,8 @@ osg::Geode* UIManager::AddElement( UIElement* element )
 
     // Attach the image in a Texture2D object
     osg::ref_ptr<osg::Texture2D> texture = new osg::Texture2D;
+    // Don't rescale texture to power of two if hardware supports non-power of two
+    texture->setResizeNonPowerOfTwoHint( false );
     texture->setImage( image.get( ) );
     texture->setDataVariance( osg::Object::DYNAMIC );
 
@@ -373,7 +373,7 @@ void UIManager::Initialize( osg::Group* parentNode )
     m_UIGroupStateSet->setAttributeAndModes( mOverallOpacity.get( ), osg::StateAttribute::ON );
 
     mUIGroup->setDataVariance( osg::Object::DYNAMIC );
-    mUIGroup->setUpdateCallback( mUIUpdateCallback );
+    mUIGroup->setUpdateCallback( mUIUpdateCallback.get() );
 
     mInitialized = true;
 }

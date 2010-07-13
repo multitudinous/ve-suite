@@ -196,7 +196,8 @@ private:
     /// Singleton declarations
     vprSingletonHeader( UIManager );
 
-    UIUpdateCallback* mUIUpdateCallback;
+    //UIUpdateCallback* mUIUpdateCallback;
+    osg::ref_ptr< osg::NodeCallback > mUIUpdateCallback;
 
     ////////////////////////////////////////////////////////////////////////////////
     /// Stores the UIElements in key/pair form.

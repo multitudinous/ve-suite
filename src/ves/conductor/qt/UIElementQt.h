@@ -132,7 +132,7 @@ private:
     ///< slightly different state from mImageDirty
     std::map<int,int> mKeyMap; ///< Map to convert juggler keycodes to Qt keycodes
 
-    void _calculatePower2ImageDimensions( );
+    //void _calculatePower2ImageDimensions( );
     void _calculateTextureCoordinates( );
     void _setupKeyMap( );
 
