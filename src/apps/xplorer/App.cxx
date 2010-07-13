@@ -247,10 +247,12 @@ void App::exit()
     //Profiling guard used by vrjuggler
     VPR_PROFILE_RESULTS();
     std::cout << "|\tApp is now exiting." << std::endl;
+    m_vjobsWrapper->Cleanup();
+    GraphicalPluginManager::instance()->UnloadPlugins();
+    ves::xplorer::scenegraph::SceneManager::instance()->Shutdown();
 #ifdef MINERVA_GIS_SUPPORT
     ves::xplorer::minerva::MinervaManager::instance()->Clear();
 #endif
-    ves::xplorer::scenegraph::SceneManager::instance()->Shutdown();
     ves::xplorer::network::GraphicalPluginManager::instance()->UnRegisterExecutive();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -593,13 +595,9 @@ void App::latePreFrame()
             // exit App was selected
             std::cout << "|\tShutting down xplorer." << std::endl;
             VPR_PROFILE_RESULTS();
-            PhysicsSimulator::instance()->SetIdle( true );
-            m_vjobsWrapper->Cleanup();
-            GraphicalPluginManager::instance()->UnloadPlugins();
-            ves::xplorer::scenegraph::SceneManager::instance()->Shutdown();
-            
             // Stopping kernel
-            vrj::Kernel::instance()->stop(); 
+            vrj::Kernel::instance()->stop();
+            PhysicsSimulator::instance()->SetIdle( true );
         }
         else if( !tempCommandName.compare( "SCREEN_SHOT" ) )
         {
@@ -884,12 +882,6 @@ void App::draw()
         {
             return;
         }
-
-        /*if( *m_skipDraw )
-        {
-            *m_skipDraw = false;
-            return;
-        }*/
     }
 
     //std::cout << "----------Draw-----------" << std::endl;

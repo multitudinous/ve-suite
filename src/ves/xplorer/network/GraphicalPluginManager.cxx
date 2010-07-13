@@ -167,17 +167,21 @@ std::map< std::string, ves::xplorer::plugin::PluginBase* >*
 ////////////////////////////////////////////////////////////////////////////////
 GraphicalPluginManager::~GraphicalPluginManager()
 {
+    
+    mPluginsMap.clear();
+    _id_map.clear();
+    pluginEHMap.clear();
+    for( std::map< std::string, ves::xplorer::event::EventHandler* >::iterator iter = _eventHandlers.begin(); iter != _eventHandlers.end(); ++iter )
+    {
+        delete iter->second;
+    }
+    _eventHandlers.clear();
+
     if( mAvailableModules )
     {
         delete mAvailableModules;
         mAvailableModules = 0;
     }
-
-    mPluginsMap.clear();
-    _id_map.clear();
-    //idToModel.clear();
-    pluginEHMap.clear();
-    _eventHandlers.clear();
 
     if(netSystemView)
     {
@@ -190,14 +194,14 @@ GraphicalPluginManager::~GraphicalPluginManager()
 ////////////////////////////////////////////////////////////////////////////////
 void GraphicalPluginManager::UnloadPlugins()
 {
-    delete mAvailableModules;
-    mAvailableModules = 0;
-
     mPluginsMap.clear();
     _id_map.clear();
     //idToModel.clear();
     pluginEHMap.clear();
     _eventHandlers.clear();
+
+    delete mAvailableModules;
+    mAvailableModules = 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void GraphicalPluginManager::UnRegisterExecutive()
