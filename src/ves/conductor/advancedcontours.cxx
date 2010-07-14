@@ -161,13 +161,13 @@ void AdvancedContours::CreateControls()
 
     wxString itemRadioBox6Strings[] = {
                                           _T( "Graduated" ),
-                                          _T( "Banded" ),
+                                          //_T( "Banded" ),
                                           _T( "Lined" )
                                       };
 
     wxBoxSizer* _misc = new wxBoxSizer( wxHORIZONTAL );
 
-    _contourTypeRBox = new wxRadioBox( itemDialog1, ADVANCEDCONTOURS_CONTOUR_TYPE_RBOX, _T( "Contour Type" ), wxDefaultPosition, wxDefaultSize, 3, itemRadioBox6Strings, 1, wxRA_SPECIFY_ROWS );
+    _contourTypeRBox = new wxRadioBox( itemDialog1, ADVANCEDCONTOURS_CONTOUR_TYPE_RBOX, _T( "Contour Type" ), wxDefaultPosition, wxDefaultSize, 2, itemRadioBox6Strings, 1, wxRA_SPECIFY_ROWS );
     _warpOptionCBox = new wxCheckBox( itemDialog1, ADVANCEDCONTOURS_WARP_OPTION_CHK, _T( "Warp Option" ), wxDefaultPosition, wxDefaultSize, 0 );
     _warpOptionCBox->SetValue( false );
 
