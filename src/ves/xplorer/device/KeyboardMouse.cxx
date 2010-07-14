@@ -213,22 +213,14 @@ KeyboardMouse* KeyboardMouse::AsKeyboardMouse()
 void KeyboardMouse::SetStartEndPoint(
     osg::Vec3d& startPoint, osg::Vec3d& endPoint )
 {
-    //if not desktop mode and active stereo
-    osg::Matrixd inverseVPW;
-    //if( m_sceneManager.IsDesktopMode() )
-    {
-        inverseVPW = m_currentGLTransformInfo->GetVPWMatrixOSG();
-    }
-    /*else
-    {
-        inverseVPW = m_currentGLTransformInfo->GetCenterVPWMatrixOSG();
-    }*/
-
+    ///In quad buffered stereo this call returns a VPW matrix from a centered
+    ///view rather than from one of the eye positions.
+    osg::Matrixd inverseVPW( m_currentGLTransformInfo->GetVPWMatrixOSG() );
     inverseVPW.invert( inverseVPW );
-    //std::cout << m_currX << " " << m_currY << std::endl;
     startPoint = osg::Vec3d( m_currX, m_currY, 0.0 ) * inverseVPW;
     endPoint = osg::Vec3d( m_currX, m_currY, 1.0 ) * inverseVPW;
 
+    //std::cout << m_currX << " " << m_currY << std::endl;
     //std::cout << "startPoint: " << startPoint << std::endl;
     //std::cout << "endPoint: " << endPoint << std::endl;
 }
