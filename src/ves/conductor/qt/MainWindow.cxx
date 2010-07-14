@@ -62,16 +62,20 @@ MainWindow::MainWindow(QWidget* parent) :
     ui->mainToolBar->addAction(ui->action_Open);
     ui->mainToolBar->addAction(ui->action_Save);
 
-    // Make the background of this window translucent since we want to be able
-    // to see through the empty parts of the mdi area.
-    this->setAttribute(Qt::WA_TranslucentBackground);
-    this->setWindowFlags( Qt::FramelessWindowHint  );
+    setStatusBar(0);
 
-    ui->mdiArea->setMouseTracking( true );
+    // Make the background of this window translucent since we want to be able
+    // to see through the empty parts of the mdi area. These are no longer
+    // needed since we're not using mdi.
+    //this->setAttribute(Qt::WA_TranslucentBackground);
+    //this->setWindowFlags( Qt::FramelessWindowHint  );
     
-    ves::conductor::Visualization* visWindow = new ves::conductor::Visualization( this );
-    QMdiSubWindow* subWin = ui->mdiArea->addSubWindow( visWindow );
-    subWin->resize( 590, 489 );
+    ves::conductor::Visualization* visWindow = new ves::conductor::Visualization( 0 );
+    ui->tabWidget->addTab( visWindow, "Visualization" );
+    
+    // Obsolete mdi code
+    //QMdiSubWindow* subWin = ui->mdiArea->addSubWindow( visWindow );
+    //subWin->resize( 590, 489 );
 }
 
 MainWindow::~MainWindow()

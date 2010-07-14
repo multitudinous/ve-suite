@@ -40,6 +40,11 @@
 #include <ves/conductor/qt/ContourFeatureMaker.h>
 
 // Forward declarations
+namespace Ui
+{
+class Visualization;
+}
+
 namespace ves
 {
 namespace xplorer
@@ -54,12 +59,6 @@ namespace conductor
 {
 class PropertyBrowser;
 
-
-
-namespace Ui
-{
-class Visualization;
-}
 
 class Visualization : public QDialog
 {
@@ -87,7 +86,7 @@ private:
     Ui::Visualization* ui;
     PropertyBrowser* mFeatureBrowser;
 
-    xplorer::data::PropertySet* mTempSet;
+    ves::xplorer::data::PropertySet* mTempSet;
 };
 
 } // namespace conductor
