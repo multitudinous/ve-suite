@@ -104,6 +104,8 @@ public:
      * @return @c true if table exists, @c false otherwise.
      */
     bool TableExists( const std::string& tableName );
+
+    void ResetAll();
     
 private:
     /// ctor

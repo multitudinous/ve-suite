@@ -42,6 +42,9 @@
 #include <ves/xplorer/network/DeleteNetworkViewEventHandler.h>
 #include <ves/xplorer/network/SwitchXplorerViewEventHandler.h>
 #include <ves/xplorer/network/ReloadPluginsEventHandler.h>
+#ifdef QT_ON
+#include <ves/xplorer/network/LoadVesFileEventHandler.h>
+#endif // QT_ON
 
 #include <ves/xplorer/Debug.h>
 #include <ves/xplorer/Model.h>
@@ -157,6 +160,10 @@ void GraphicalPluginManager::Initialize( CosNaming::NamingContext* inputNameCont
         new ReloadPluginsEventHandler();
     _eventHandlers[std::string( "veNetwork Update" )] = 
         new UpdateNetworkEventHandler();
+#ifdef QT_ON
+    _eventHandlers[std::string( "LOAD_VES_FILE" )]=
+        new LoadVesFileEventHandler();
+#endif // QT_ON
 }
 ////////////////////////////////////////////////////////////////////////////////
 std::map< std::string, ves::xplorer::plugin::PluginBase* >* 

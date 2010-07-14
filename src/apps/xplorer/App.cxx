@@ -232,7 +232,10 @@ App::App( int argc, char* argv[], bool enableRTT )
         ortho2DMatrix, identityMatrix, zUpMatrix ) );
 
 #ifdef QT_ON
+    // Set the current database file and clear it out in case it contains data
+    // from a previous session
     ves::xplorer::data::DatabaseManager::instance()->SetDatabasePath("ves.db");
+    ves::xplorer::data::DatabaseManager::instance()->ResetAll();
     m_uiInitialized = false;
 #endif // QT_ON
 }
@@ -932,11 +935,14 @@ void App::draw()
     {
 #ifdef QT_ON
         //FIXME: This is probably dangerous in a multi-context enviroment
-        {
-            osg::Matrixd inverseVPW = glTI->GetVPWMatrixOSG();
-            inverseVPW.invert( inverseVPW );
-            ves::conductor::UIManager::instance()->SetProjectionMatrix( inverseVPW );
-        }
+        // This block is commented out because we are currently using an ortho2D
+        // projection for the uimanager and don't need this to undo the world
+        // transform at the root node
+//        {
+//            osg::Matrixd inverseVPW = glTI->GetVPWMatrixOSG();
+//            inverseVPW.invert( inverseVPW );
+//            ves::conductor::UIManager::instance()->SetProjectionMatrix( inverseVPW );
+//        }
 #endif
         //Get the projection matrix
         glTI->UpdateFrustumValues( l, r, b, t, n, f );
@@ -1115,13 +1121,16 @@ void App::LoadUI()
     std::pair<int, int> res = cDS->GetScreenResolution();
     m_UIManager->SetRectangle( 0, res.first, 0, res.second );
 
-    mainUIWidget->resize( res.first, res.second );
+    //mainUIWidget->resize( res.first, res.second );
+    mainUIWidget->resize( 600, res.second );
     static_cast< ves::conductor::UIElementQt* >
                                            (element)->SetWidget( mainUIWidget );
    
     m_UIManager->AddElement( element );
 
     m_uiInitialized = true;
+
+    vprDEBUG( vesDBG, 2 ) << "|\tEnd App LoadUI" << std::endl << vprDEBUG_FLUSH;
 
     // Begin running the Qt subsystem
 //    std::cout << "...Run Qt application" << std::endl;

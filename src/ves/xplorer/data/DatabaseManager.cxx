@@ -144,6 +144,39 @@ bool DatabaseManager::TableExists( const std::string& tableName )
     return exists;
 }
 
+void DatabaseManager::ResetAll( )
+{
+    Poco::Data::Session session( mPool->get( ) );
+    Poco::Data::Statement statement( session );
+    statement << "select name from sqlite_master where type = 'table'";
+
+    try
+    {
+        statement.execute( );
+        Poco::Data::RecordSet recordset( statement );
+
+        // Walk through list of all tables and delete data in each
+        if( recordset.rowCount( ) != 0 )
+        {
+            // Wrap operations into a single transaction for speed
+            session.begin();
+            for( int rowIndex = 0; rowIndex < recordset.rowCount( ); rowIndex++ )
+            {
+                std::string tableName = recordset.value( 0, rowIndex ).convert< std::string > ( );
+                if( tableName != "sqlite_sequence" )
+                {
+                    session << "DROP TABLE " << tableName, Poco::Data::now;
+                }
+            }
+            session.commit();
+        }
+    }
+    catch( Poco::Data::DataException &e )
+    {
+        std::cout << e.displayText( ) << std::endl;
+    }
+}
+
 }// namespace data
 }// namespace xplorer
 }// namespace ves

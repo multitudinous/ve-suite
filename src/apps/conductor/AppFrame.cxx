@@ -2460,6 +2460,12 @@ void AppFrame::OnChildDestroy( wxWindowDestroyEvent& WXUNUSED( event ) )
 void AppFrame::LoadNewNetwork( wxUpdateUIEvent& WXUNUSED( event )  )
 {
     {
+        // Let xplorer know we are loading a new ves file so that it can do any
+        // necessary cleanup, such as resetting the database
+        CommandPtr loadVesFile( new Command() );
+        loadVesFile->SetCommandName( "LOAD_VES_FILE" );
+        serviceList->SendCommandStringToXplorer( loadVesFile );
+
         //Send a new start position for all apps
         //do this before loading the ves data
         // so in case a file has a start position it will be used
