@@ -48,7 +48,7 @@ GLTransformInfo::GLTransformInfo(
     const int& viewportWidth, const int& viewportHeight,
     const int& windowOriginX, const int& windowOriginY,
     const int& windowWidth, const int& windowHeight,
-    const gmtl::Matrix44d& windowMatrix )
+    const gmtl::Matrix44d& windowMatrix, const bool inStereo )
     :
     m_viewportOriginX( viewportOriginX ),
     m_viewportOriginY( viewportOriginY ),
@@ -68,7 +68,9 @@ GLTransformInfo::GLTransformInfo(
     m_farFrustum( 0.0 ),
 
     m_windowMatrix( windowMatrix ),
-    m_windowMatrixOSG( m_windowMatrix.mData )
+    m_windowMatrixOSG( m_windowMatrix.mData ),
+    
+    m_inStereo( inStereo )
 {
     m_vrjViewMatrix.mState = gmtl::Matrix44d::FULL;
     m_cameraMatrix.mState = gmtl::Matrix44d::FULL;
@@ -248,12 +250,26 @@ const osg::Matrixd& GLTransformInfo::GetWindowMatrixOSG() const
 ////////////////////////////////////////////////////////////////////////////////
 const gmtl::Matrix44d GLTransformInfo::GetVPWMatrix() const
 {
-    return m_windowMatrix * m_projectionMatrix * m_viewMatrix;
+    if( m_inStereo )
+    {
+        return GetCenterVPWMatrix();
+    }
+    else
+    {
+        return m_windowMatrix * m_projectionMatrix * m_viewMatrix;
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 const osg::Matrixd GLTransformInfo::GetVPWMatrixOSG() const
 {
-    return m_viewMatrixOSG * m_projectionMatrixOSG * m_windowMatrixOSG;
+    if( m_inStereo )
+    {
+        return GetCenterVPWMatrixOSG();
+    }
+    else
+    {
+        return m_viewMatrixOSG * m_projectionMatrixOSG * m_windowMatrixOSG;
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 const gmtl::Matrix44d GLTransformInfo::GetCenterVPWMatrix() const

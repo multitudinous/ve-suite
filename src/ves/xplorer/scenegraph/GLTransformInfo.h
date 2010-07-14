@@ -88,7 +88,7 @@ public:
         const int& viewportWidth, const int& viewportHeight,
         const int& windowOriginX, const int& windowOriginY,
         const int& windowWidth, const int& windowHeight,
-        const gmtl::Matrix44d& windowMatrix );
+        const gmtl::Matrix44d& windowMatrix, const bool inStereo );
 
     ///Copy Constructor
     GLTransformInfo( const GLTransformInfo& glTransformInfo );
@@ -279,6 +279,10 @@ private:
     
     ///
     osg::Matrixd m_centerViewMatrixOSG;
+    
+    ///Flag to tell if the viewport associated with this matrix stack is for a
+    ///stereo viewport
+    bool m_inStereo;
     
 };
 } //end scenegraph
