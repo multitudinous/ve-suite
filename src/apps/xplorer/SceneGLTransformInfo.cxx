@@ -177,7 +177,7 @@ void SceneGLTransformInfo::Initialize()
             new scenegraph::GLTransformInfo(
                 viewportOriginX, viewportOriginY, viewportWidth, viewportHeight,
                 0, 0, windowWidth, windowHeight,
-                windowMatrix ) );
+                windowMatrix, viewport->inStereo() ) );
         (*m_glTransformInfoMap)[ viewport ] = glTransformInfo;
         sceneManager->PushBackGLTransformInfo( viewport, glTransformInfo );
     }
