@@ -74,11 +74,17 @@ UIManager::UIManager( )
     mHide = false;
     mShow = false;
     mUIUpdateCallback = new UIUpdateCallback;
-    typedef boost::signals2::signal< void (xplorer::eventmanager::InteractionEvent&) > InteractionSignal_type;
+
+    typedef boost::signals2::signal< bool (xplorer::eventmanager::InteractionEvent&) > InteractionSignal_type;
     InteractionSignal_type::slot_type
     slotFunctor( boost::bind( &UIManager::SendInteractionEvent, this, _1 ) );
     xplorer::eventmanager::SlotWrapper< InteractionSignal_type > slotWrapper( slotFunctor );
     xplorer::eventmanager::EventManager::instance()->ConnectSignal( "KeyboardMouseInteractionSignal", &slotWrapper, mConnections, xplorer::eventmanager::EventManager::highest_Priority );
+
+    typedef boost::signals2::signal< void () > HideShowUISignal_type;
+    HideShowUISignal_type::slot_type hsSlotFunctor( boost::bind (&UIManager::ToggleVisibility, this) );
+    xplorer::eventmanager::SlotWrapper< HideShowUISignal_type > hsSlotWrapper( hsSlotFunctor );
+    xplorer::eventmanager::EventManager::instance()->ConnectSignal( "KeyboardMouse.HideShowUISignal", &hsSlotWrapper, mConnections, xplorer::eventmanager::EventManager::highest_Priority );
 }
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -126,8 +132,10 @@ osg::Geode* UIManager::AddElement( UIElement* element )
     // Create an array of four vertices.
     osg::ref_ptr<osg::Vec3Array> vertices = new osg::Vec3Array;
     geometry->setVertexArray( vertices.get( ) );
-    float m_width = element->GetElementWidth( );
-    float m_height = element->GetElementHeight( );
+    float q_right = element->GetElementWidth( );
+    float q_top = element->GetElementHeight( );
+    float q_left = 0.0f;
+    float q_bottom = 0.0f;
     // 4------3
     // |      |
     // 1------2
@@ -135,10 +143,14 @@ osg::Geode* UIManager::AddElement( UIElement* element )
     // because OSG treats ortho projection matrices as x-y plane by default.
     // Which, honestly, is a bit confounding, since ortho osg::camera views
     // are in the x-z plane by default. Grumble, grumble.
-    vertices->push_back( osg::Vec3( 0.f, 0.f, 0.f ) ); // 1
-    vertices->push_back( osg::Vec3( m_width, 0.f, 0.f ) ); // 2
-    vertices->push_back( osg::Vec3( m_width, m_height, 0.f ) ); // 3
-    vertices->push_back( osg::Vec3( 0.f, m_height, 0.f ) ); // 4
+    vertices->push_back( osg::Vec3( q_left, q_bottom, 0.f ) ); // 1
+    vertices->push_back( osg::Vec3( q_right, q_bottom, 0.f ) ); // 2
+    vertices->push_back( osg::Vec3( q_right, q_top, 0.f ) ); // 3
+    vertices->push_back( osg::Vec3( q_left, q_top, 0.f ) ); // 4
+
+    // Left, right, bottom, top ortho position of quad formed from above vertices
+    osg::Vec4 ortho2DQuadPosition( q_left, q_right, q_bottom, q_top );
+    mElementPositionsOrtho2D.push_back( ortho2DQuadPosition );
 
     // Create an array for the single normal.
     osg::ref_ptr<osg::Vec3Array> normal = new osg::Vec3Array;
@@ -389,18 +401,30 @@ void UIManager::Initialize( osg::Group* parentNode )
 //}
 ////////////////////////////////////////////////////////////////////////////////
 
-void UIManager::SendInteractionEvent( ves::xplorer::eventmanager::InteractionEvent &event )
+bool UIManager::SendInteractionEvent( ves::xplorer::eventmanager::InteractionEvent &event )
 {
     // Ignore events if we're not initialized
     if ( !mInitialized )
     {
-        return;
+        return false;
     }
 
     // Check visibility of UI branch before bothering with events
     if( !mUIGroup->getValue( 0 ) )
     {
-        return;
+        return false;
+    }
+
+    // If we're dealing with a mouse event, see if it's over one of our managed
+    // quads. If it isn't, we ignore the event.
+    if( (event.EventType == ves::xplorer::eventmanager::InteractionEvent::pointerMotion) ||
+        (event.EventType == ves::xplorer::eventmanager::InteractionEvent::buttonPress) ||
+        (event.EventType == ves::xplorer::eventmanager::InteractionEvent::buttonRelease) )
+    {
+        if( !Ortho2DTestPointerCoordinates( event.X, event.Y ) )
+        {
+            return false;
+        }
     }
 
     // Currently we have no logic in place to determine *which* element should
@@ -428,7 +452,7 @@ void UIManager::SendInteractionEvent( ves::xplorer::eventmanager::InteractionEve
             element->SendInteractionEvent( event );
         }
     }
-
+    return true;
 }
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -558,3 +582,19 @@ void UIManager::EmbedAll( )
     ShowAllElements( );
 }
 ////////////////////////////////////////////////////////////////////////////////
+bool UIManager::Ortho2DTestPointerCoordinates( int x, int y )
+{   
+    // Walk through every quad we own and see if the point lies on it
+    osg::Vec4 quadPos;
+    for( size_t index = 0; index < mElementPositionsOrtho2D.size(); index++)
+    {
+        quadPos = mElementPositionsOrtho2D.at( index );
+        if( ( x >= quadPos.x()  ) && ( x <= quadPos.y() ) &&
+                ( y >= quadPos.z() ) && ( y <= quadPos.w() ) )
+        {
+            return true;
+        }
+    }
+
+    return false;
+}

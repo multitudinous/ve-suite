@@ -197,6 +197,10 @@ KeyboardMouse::KeyboardMouse()
         new eventmanager::SignalWrapper< InteractionSignal_type >( &mInteractionSignal ),
         "KeyboardMouseInteractionSignal",
         eventmanager::EventManager::input_SignalType);
+
+    eventmanager::EventManager::instance()->RegisterSignal(
+        new eventmanager::SignalWrapper< HideShowUISignal_type >( &mHideShowUISignal ),
+        "KeyboardMouse.HideShowUISignal");
 #endif // QT_ON
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -368,7 +372,11 @@ void KeyboardMouse::ProcessEvents( ves::open::xml::CommandPtr command )
                                 eventmanager::InteractionEvent::button_1, 0.0, 0.0,
                                 mouse_evt->getX(), mouse_evt->getY() );
 
-            mInteractionSignal( ie );
+            // Signal returns true if this event should not be propagated on
+            if ( *mInteractionSignal( ie ) )
+            {
+                return;
+            }
 #endif
             //Set the current GLTransfromInfo from the event
             if( !SetCurrentGLTransformInfo( currentDisplay, false ) )
@@ -392,7 +400,10 @@ void KeyboardMouse::ProcessEvents( ves::open::xml::CommandPtr command )
                                 eventmanager::InteractionEvent::button_1, 0.0, 0.0,
                                 mouse_evt->getX(), mouse_evt->getY() );
 
-            mInteractionSignal( ie );
+            if( *mInteractionSignal( ie ) )
+            {
+                return;
+            }
 #endif
             //Set the current GLTransfromInfo from the event
             if( !SetCurrentGLTransformInfo( currentDisplay, false ) )
@@ -426,7 +437,10 @@ void KeyboardMouse::ProcessEvents( ves::open::xml::CommandPtr command )
                                 eventmanager::InteractionEvent::button_none, 0.0, 0.0,
                                 m_currX, m_currY );
 
-                mInteractionSignal( ie );
+                if( *mInteractionSignal( ie ) )
+                {
+                    return;
+                }
 #endif
                 OnMouseMotionUp();
             }
@@ -438,7 +452,10 @@ void KeyboardMouse::ProcessEvents( ves::open::xml::CommandPtr command )
                                 eventmanager::InteractionEvent::button_1, 0.0, 0.0,
                                 m_currX, m_currY );
 
-                mInteractionSignal( ie );
+                if( *mInteractionSignal( ie ) )
+                {
+                    return;
+                }
 #endif
 
 #if defined( VPR_OS_Windows )
@@ -886,6 +903,12 @@ void KeyboardMouse::OnKeyRelease()
 
         break;
     }
+#ifdef QT_ON
+    case gadget::KEY_F1:
+    {
+        mHideShowUISignal();
+    }
+#endif
     default:
     {
         break;

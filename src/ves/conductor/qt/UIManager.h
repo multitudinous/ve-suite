@@ -172,17 +172,24 @@ public:
     void Initialize( osg::Group* parentNode );
 
     ////////////////////////////////////////////////////////////////////////////////
-    /// Update callback for osg. Override of osg::NodeCallback method.
+    // Propagates mouse and keyboard events to elements
     ////////////////////////////////////////////////////////////////////////////////
-    //virtual void operator()( osg::Node* node, osg::NodeVisitor* nv );
+    bool SendInteractionEvent( xplorer::eventmanager::InteractionEvent& event );
 
-    void SendInteractionEvent( xplorer::eventmanager::InteractionEvent& event );
-
+    ////////////////////////////////////////////////////////////////////////////////
+    // Sets the projection matrix when not in Ortho2D mode
+    ////////////////////////////////////////////////////////////////////////////////
     void SetProjectionMatrix( osg::Matrixd& matrix );
 
     void UnembedAll();
 
     void EmbedAll();
+
+    ////////////////////////////////////////////////////////////////////////////////
+    // Returns true if the point (x,y) is over a quad associated with a UIElement,
+    // false otherwise.
+    ////////////////////////////////////////////////////////////////////////////////
+    bool Ortho2DTestPointerCoordinates( int x, int y );
 
 private:
 
@@ -196,7 +203,8 @@ private:
     /// Singleton declarations
     vprSingletonHeader( UIManager );
 
-    //UIUpdateCallback* mUIUpdateCallback;
+    // NodeCallback as a member object rather than via inheritance so as not to
+    // break singleton pattern.
     osg::ref_ptr< osg::NodeCallback > mUIUpdateCallback;
 
     ////////////////////////////////////////////////////////////////////////////////
@@ -268,7 +276,9 @@ private:
     /// Helper function to show elements
     void _showAll();
 
-    xplorer::eventmanager::ScopedConnectionList mConnections;
+    ves::xplorer::eventmanager::ScopedConnectionList mConnections;
+
+    std::vector< osg::Vec4 > mElementPositionsOrtho2D;
 };
 
 } // namespace conductor 

@@ -383,8 +383,11 @@ private:
     std::bitset< gadget::LAST_KEY > m_keys;
 
 #ifdef QT_ON
-    typedef boost::signals2::signal<void (ves::xplorer::eventmanager::InteractionEvent&)> InteractionSignal_type;
+    typedef boost::signals2::signal<bool (ves::xplorer::eventmanager::InteractionEvent&)> InteractionSignal_type;
     InteractionSignal_type mInteractionSignal;
+
+    typedef boost::signals2::signal<void ( )> HideShowUISignal_type;
+    HideShowUISignal_type mHideShowUISignal;
 #endif // QT_ON
 
 };
