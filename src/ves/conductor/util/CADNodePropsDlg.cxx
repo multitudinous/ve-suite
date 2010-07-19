@@ -610,6 +610,24 @@ void CADNodePropertiesDlg::_addAnimation( wxCommandEvent& event )
 
                     animationNameDlg.CentreOnParent();
                     animationNameDlg.ShowModal();
+                    
+                    wxArrayString choices;
+                    choices.Add(wxT("X"));
+                    choices.Add(wxT("Y"));
+                    choices.Add(wxT("Z"));
+                    wxSingleChoiceDialog turnOffDirnDlg( this, wxT( "choose the direction coordinate" ),
+                                                         wxT( "Turn off translation" ),
+                                                         choices);
+                    turnOffDirnDlg.SetSelection(1);
+                    turnOffDirnDlg.ShowModal();
+                    int intsel = turnOffDirnDlg.GetSelection();
+                    std::vector< double > activeSel(3);
+                    activeSel[0] = 1.0;
+                    activeSel[1] = 1.0;
+                    activeSel[2] = 1.0;
+                    if(intsel == 0) activeSel[0] = 0.0;
+                    if(intsel == 1) activeSel[1] = 0.0;
+                    if(intsel == 2) activeSel[2] = 0.0;
 
                     while( AnimationExists( animationNameDlg.GetValue().GetData() ) )
                     {
@@ -638,6 +656,11 @@ void CADNodePropertiesDlg::_addAnimation( wxCommandEvent& event )
                     addAnimation->SetData( "Animation Info",
                                            _cadNode->GetAnimation( ConvertUnicode( animationNameDlg.GetValue().GetData() ) ) );
                     _instructions.push_back( addAnimation );
+
+                    ves::open::xml::DataValuePairPtr dirSelArray( new ves::open::xml::DataValuePair() );
+                    dirSelArray->SetDataType( "XMLOBJECT" );
+                    dirSelArray->SetData( "Direction Info", activeSel );
+                    _instructions.push_back( dirSelArray );
 
                     _sendCommandsToXplorer();
                 }

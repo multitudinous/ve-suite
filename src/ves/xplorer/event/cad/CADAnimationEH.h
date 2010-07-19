@@ -82,6 +82,7 @@ public:
 
     osg::ref_ptr< osg::AnimationPath > createAnimationPath( std::string component );
     
+    std::vector< double > offDirx;
     std::map< std::string, std::vector< float > > objectOne;
 
 protected:

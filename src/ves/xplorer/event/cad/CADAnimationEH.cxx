@@ -106,6 +106,9 @@ void CADAnimationEventHandler::_operateOnNode( XMLObjectPtr xmlObject )
         DataValuePairPtr nodeType = command->GetDataValuePair( "Node Type" );
         DataValuePairPtr cadAnim = command->GetDataValuePair( "Animation Info" );
 
+        DataValuePairPtr dirSel = command->GetDataValuePair( "Direction Info" );
+        dirSel->GetData( offDirx );
+
         CADNodeAnimationPtr newAnim;
         std::string animationFile;
         newAnim = boost::dynamic_pointer_cast<CADNodeAnimation>( cadAnim->GetDataXMLObject() );
@@ -201,23 +204,23 @@ void CADAnimationEventHandler::_readData( std::string animFile )
 
 	    time.push_back( tempData[0] );
 
-	    seatX.push_back( tempData[1] * scale );
-	    seatY.push_back( tempData[2] * scale );
-	    seatZ.push_back( tempData[3] * scale );
+	    seatX.push_back( tempData[1] * scale * offDirx.at(0) );
+	    seatY.push_back( tempData[2] * scale * offDirx.at(1) );
+	    seatZ.push_back( tempData[3] * scale * offDirx.at(2) );
 	    seatRoll.push_back( tempData[4] * roationConv );
 	    seatPitch.push_back( tempData[5] * roationConv );
 	    seatYaw.push_back( tempData[6] * roationConv );
 
-	    cabX.push_back( tempData[7] * scale );
-	    cabY.push_back( tempData[8] * scale );
-	    cabZ.push_back( tempData[9] * scale );
+	    cabX.push_back( tempData[7] * scale * offDirx.at(0) );
+	    cabY.push_back( tempData[8] * scale * offDirx.at(1) );
+	    cabZ.push_back( tempData[9] * scale * offDirx.at(2) );
 	    cabRoll.push_back( tempData[10] * roationConv );
 	    cabPitch.push_back( tempData[11] * roationConv );
 	    cabYaw.push_back( tempData[12] * roationConv );
 
-	    chassisX.push_back( tempData[13] * scale );
-	    chassisY.push_back( tempData[14] * scale );
-	    chassisZ.push_back( tempData[15] * scale );
+	    chassisX.push_back( tempData[13] * scale * offDirx.at(0) );
+	    chassisY.push_back( tempData[14] * scale * offDirx.at(1) );
+	    chassisZ.push_back( tempData[15] * scale * offDirx.at(2) );
 	    chassisRoll.push_back( tempData[16] * roationConv );
 	    chassisPitch.push_back( tempData[17] * roationConv );
 	    chassisYaw.push_back( tempData[18] * roationConv );
@@ -262,7 +265,7 @@ osg::ref_ptr< osg::AnimationPath > CADAnimationEventHandler::createAnimationPath
    for(unsigned int i=0;i< numTimeSteps;i++)
    {
       trans = osg::Vec3( -activeObj[ x ].at( i ),
-                         0,
+                         activeObj[ y ].at( i ),
                          activeObj[ z ].at( i ));
       
       quat = osg::Quat( -activeObj[ roll ].at( i ),  xaxis,

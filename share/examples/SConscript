@@ -19,6 +19,7 @@ exampleSubdirs = Split("""
     SimpleNetwork
     simple_physics
     input_animation
+    VirtualLab
 """)
 #VascularSimViewer
 #sensor_overlay
