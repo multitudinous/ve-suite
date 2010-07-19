@@ -1,0 +1,74 @@
+Language="VBSCRIPT"
+
+Sub CATMain()
+
+Set documents1 = CATIA.Documents
+
+Set analysisDocument1 = documents1.Add("Analysis")
+
+Set analysisManager1 = analysisDocument1.Analysis
+
+Set analysisModels1 = analysisManager1.AnalysisModels
+
+Set analysisModel1 = analysisModels1.Item(1)
+
+analysisModel1.RunTransition "LMSMotionDynamics"
+
+Set analysisDocument1 = CATIA.ActiveDocument
+
+analysisDocument1.Close 
+
+Set documents1 = CATIA.Documents
+
+Set analysisDocument2 = documents1.Open("D:\VehicleCon\DADS8000\tractor_main\tractor_main.CATAnalysis")
+
+Set analysisManager2 = analysisDocument2.Analysis
+
+Set analysisModels2 = analysisManager2.AnalysisModels
+
+Set analysisModel2 = analysisModels2.Item(1)
+
+Set analysisCases1 = analysisModel2.AnalysisCases
+
+Set analysisCase1 = analysisCases1.Item(1)
+
+Set analysisSets1 = analysisCase1.AnalysisSets
+
+Set dynSolutionSet1 = analysisSets1.ItemByType("LMSDynSolutionSet")
+
+dynSolutionSet1.Compute 
+
+Set dynPlotsManager1 = CATIA.GetItem("LMSDynGraphPlotsManager")
+
+Dim arrayOfVariantOfObject1(5)
+Set analysisSet1 = analysisSets1.ItemByType("LMSDynGraphPlots")
+
+Set analysisEntities1 = analysisSet1.AnalysisEntities
+
+Set dynSolutionPlot1 = analysisEntities1.Item("SYSTEM:Time_Veh_SIP:vehicle.acc.x")
+
+Set arrayOfVariantOfObject1(0) = dynSolutionPlot1
+Set dynSolutionPlot2 = analysisEntities1.Item("SYSTEM:Time_Veh_SIP:vehicle.acc.y")
+
+Set arrayOfVariantOfObject1(1) = dynSolutionPlot2
+Set dynSolutionPlot3 = analysisEntities1.Item("SYSTEM:Time_Veh_SIP:vehicle.acc.z")
+
+Set arrayOfVariantOfObject1(2) = dynSolutionPlot3
+Set dynSolutionPlot4 = analysisEntities1.Item("SYSTEM:Time_Veh_SIP:vehicle.x")
+
+Set arrayOfVariantOfObject1(3) = dynSolutionPlot4
+Set dynSolutionPlot5 = analysisEntities1.Item("SYSTEM:Time_Veh_SIP:vehicle.y")
+
+Set arrayOfVariantOfObject1(4) = dynSolutionPlot5
+Set dynSolutionPlot6 = analysisEntities1.Item("SYSTEM:Time_Veh_SIP:vehicle.z")
+
+Set arrayOfVariantOfObject1(5) = dynSolutionPlot6
+dynPlotsManager1.WritePlotsToFile arrayOfVariantOfObject1, "D:\VehicleCon\DADS8000\acc_data.txt", False
+
+Set analysisDocument2 = CATIA.ActiveDocument
+
+analysisDocument2.Close 
+
+CATIA.Quit 
+
+End Sub
