@@ -19,10 +19,10 @@ exampleSubdirs = Split("""
     SimpleNetwork
     simple_physics
     input_animation
-    VirtualLab
 """)
 #VascularSimViewer
 #sensor_overlay
+#VirtualLab
 
 if poco_options.isAvailable():
     exampleSubdirs.append( 'WarrantyTool' )
