@@ -30,10 +30,11 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#pragma once
 
-#include <osg/ref_ptr>
+#ifndef VES_CONDUCTOR_UI_MANAGER_H
+#define VES_CONDUCTOR_UI_MANAGER_H
 
+// --- VES Includes --- //
 #include <ves/xplorer/eventmanager/ScopedConnectionList.h>
 #include <ves/VEConfig.h>
 
@@ -43,10 +44,8 @@
 // --- Boost includes --- //
 #include <boost/noncopyable.hpp>
 
-// --- C/C++ includes --- //
-#include <string>
-#include <map>
-
+// --- OSG Includes --- //
+#include <osg/ref_ptr>
 #include <osg/Node>
 #include <osg/NodeVisitor>
 #include <osg/Matrixd>
@@ -62,7 +61,11 @@ class Texture2D;
 class Projection;
 class NodeCallback;
 class Material;
-} // namespace osg
+}
+
+// --- STL includes --- //
+#include <string>
+#include <map>
 
 namespace ves
 {
@@ -71,23 +74,29 @@ namespace xplorer
 namespace eventmanager
 {
 class InteractionEvent;
-} // namespace eventmanager
-} // namespace xplorer
+}
+}
 
 namespace conductor
 {
 class UIElement;
 class UIUpdateCallback;
-///
-///@file UIManager.h
 
-////////////////////////////////////////////////////////////////////////////////
-/// @class ves::conductor::UIManager
+/*!\file UIManager.h
+ *
+ */
+
+/*!\class ves::conductor::UIManager
+ *
+ */
+
+/*!\namespace ves::conductor
+ *
+ */
 /// Manages UIElements by controlling element focus, passing interaction events,
 /// requesting element repaints, toggling drawing of elements, ?? MORE ??
 /// NOTE: State of scenegraph and traversal is only important during call to
 /// Update.
-////////////////////////////////////////////////////////////////////////////////
 class VE_CONDUCTOR_QTUI_EXPORTS UIManager : public boost::noncopyable
 {
 public:
@@ -107,20 +116,18 @@ public:
      * Switch
      *    |-- MatrixTransform
      *              |-- Geode
-     **//////////////////////////////////////////////////////////////////////////////
+     **/
     osg::Geode* AddElement( UIElement* element );
 
-    ////////////////////////////////////////////////////////////////////////////////
     /// Removes element associated with geode from our management.
     /// Discards UIManager's ref_ptr(s) to everything associated with this geode,
     /// and calls delete on the associated UIElement.
-    ////////////////////////////////////////////////////////////////////////////////
     bool RemoveElement( osg::ref_ptr<osg::Geode> geode );
 
     // TODO document RemoveAllElements
+    ///
     void RemoveAllElements( );
 
-    ////////////////////////////////////////////////////////////////////////////////
     /// Do all needed updates on the scenegraph.
     /// Any UIElements added to the manager since the last call to update will
     /// be added to the scenegraph, and all UIElements that are currently enabled
@@ -137,67 +144,51 @@ public:
     /// This function should *only* be called during the update traversal of the
     /// scenegraph. Calling it any other time may cause ref_ptrs to go out of scope
     /// at the wrong time and result in loss of geometry.
-    ////////////////////////////////////////////////////////////////////////////////
     void Update();
 
-    ////////////////////////////////////////////////////////////////////////////////
-    /// Hide all UI elements
-    ////////////////////////////////////////////////////////////////////////////////
+    ///Hide all UI elements
     void HideAllElements();
 
-    ////////////////////////////////////////////////////////////////////////////////
-    /// Show all UI elements
-    ////////////////////////////////////////////////////////////////////////////////
+    ///Show all UI elements
     void ShowAllElements( bool showOnlyActive = true );
 
-    ////////////////////////////////////////////////////////////////////////////////
     /// Toggle visibility of all UI elements; that is, hide the entire UI branch
     /// if it is currently visible, and show it if it is currently hidden.
-    ////////////////////////////////////////////////////////////////////////////////
     void ToggleVisibility();
 
-    ////////////////////////////////////////////////////////////////////////////////
-    /// Set the bounds of the projection rectangle for Ortho2D mode
-    ////////////////////////////////////////////////////////////////////////////////
+    ///Set the bounds of the projection rectangle for Ortho2D mode
     void SetRectangle( int left, int right, int bottom, int top );
 
-    ////////////////////////////////////////////////////////////////////////////////
     /// Tell UIManager to set up its initial subtree in the scenegraph and
     /// register its update callback with OSG.
     ///
     /// !!! CRITICAL !!!
     /// This method *must* be called during an update traversal, since nodes
     /// are added to the scenegraph inside this method.
-    ////////////////////////////////////////////////////////////////////////////////
     void Initialize( osg::Group* parentNode );
 
-    ////////////////////////////////////////////////////////////////////////////////
-    // Propagates mouse and keyboard events to elements
-    ////////////////////////////////////////////////////////////////////////////////
+    ///Propagates mouse and keyboard events to elements
     bool SendInteractionEvent( xplorer::eventmanager::InteractionEvent& event );
 
-    ////////////////////////////////////////////////////////////////////////////////
-    // Sets the projection matrix when not in Ortho2D mode
-    ////////////////////////////////////////////////////////////////////////////////
+    ///Sets the projection matrix when not in Ortho2D mode
     void SetProjectionMatrix( osg::Matrixd& matrix );
 
+    ///
     void UnembedAll();
 
+    ///
     void EmbedAll();
 
-    ////////////////////////////////////////////////////////////////////////////////
     // Returns true if the point (x,y) is over a quad associated with a UIElement,
     // false otherwise.
-    ////////////////////////////////////////////////////////////////////////////////
     bool Ortho2DTestPointerCoordinates( int x, int y );
 
 private:
-
     // Set this class up as a singleton
-    /// Constructor
+    ///Constructor
     UIManager();
 
-    /// Destructor
+    ///Destructor
     virtual ~UIManager();
 
     /// Singleton declarations
@@ -207,14 +198,12 @@ private:
     // break singleton pattern.
     osg::ref_ptr< osg::NodeCallback > mUIUpdateCallback;
 
-    ////////////////////////////////////////////////////////////////////////////////
     /// Stores the UIElements in key/pair form.
     /// The key is an osg::Geode node that is the child of an underlying
     /// osg::MatrixTransform and an osg::Switch. The switch allows an easy way to
     /// "enable" and "disable" a UIElement by simply hiding the node during the
     /// draw traversal.
     /// The pair is a pointer to the actual UIElement.
-    ////////////////////////////////////////////////////////////////////////////////
     std::map< osg::ref_ptr< osg::Geode >, UIElement* > mElements;
 
     /// Stores nodes that should be added to scenegraph during next update
@@ -276,10 +265,14 @@ private:
     /// Helper function to show elements
     void _showAll();
 
+    ///
     ves::xplorer::eventmanager::ScopedConnectionList mConnections;
 
+    ///
     std::vector< osg::Vec4 > mElementPositionsOrtho2D;
 };
 
-} // namespace conductor 
-} // namespace ves
+} //end conductor
+} //end ves
+
+#endif //VES_CONDUCTOR_UI_MANAGER_H

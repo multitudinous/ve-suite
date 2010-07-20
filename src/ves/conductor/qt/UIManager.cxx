@@ -30,24 +30,8 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-//#define VES_QT_RENDER_DEBUG
 
-#include <iostream>
-
-// --- OpenSceneGraph includes --- //
-#include <osg/Geometry>
-#include <osg/ShadeModel>
-#include <osg/Group>
-#include <osg/Camera>
-#include <osg/Switch>
-#include <osg/MatrixTransform>
-#include <osg/Geode>
-#include <osg/StateAttribute>
-#include <osg/Texture2D>
-#include <osg/Projection>
-#include <osg/NodeCallback>
-#include <osg/Material>
-
+// --- VES Includes --- //
 #include <ves/conductor/qt/UIManager.h>
 #include <ves/conductor/qt/UIElement.h>
 #include <ves/conductor/qt/UIUpdateCallback.h>
@@ -56,13 +40,30 @@
 #include <ves/xplorer/eventmanager/SlotWrapper.h>
 #include <ves/xplorer/eventmanager/EventManager.h>
 
+// --- OSG Includes --- //
+#include <osg/Geometry>
+#include <osg/Group>
+#include <osg/Switch>
+#include <osg/MatrixTransform>
+#include <osg/Geode>
+#include <osg/StateAttribute>
+#include <osg/Texture2D>
+#include <osg/Projection>
+#include <osg/NodeCallback>
+#include <osg/Material>
+#include <osg/Depth>
+
+// --- STL Includes --- //
+#include <iostream>
+
+//#define VES_QT_RENDER_DEBUG
+
 using namespace ves::conductor;
-using namespace ves;
 
 vprSingletonImp( UIManager );
-////////////////////////////////////////////////////////////////////////////////
 
-UIManager::UIManager( )
+////////////////////////////////////////////////////////////////////////////////
+UIManager::UIManager()
 {
     mInitialized = false;
     mLeft = 0;
@@ -87,7 +88,6 @@ UIManager::UIManager( )
     xplorer::eventmanager::EventManager::instance()->ConnectSignal( "KeyboardMouse.HideShowUISignal", &hsSlotWrapper, mConnections, xplorer::eventmanager::EventManager::highest_Priority );
 }
 ////////////////////////////////////////////////////////////////////////////////
-
 UIManager::~UIManager()
 {
     if( mUIGroup.valid() )
@@ -111,118 +111,120 @@ UIManager::~UIManager()
     //std::cout << " UI manager destructor" << std::endl;
 }
 ////////////////////////////////////////////////////////////////////////////////
-
 osg::Geode* UIManager::AddElement( UIElement* element )
 {
-    osg::ref_ptr<osg::Switch> switch_node = new osg::Switch( );
-    osg::ref_ptr<osg::MatrixTransform> transform = new osg::MatrixTransform( );
-    osg::ref_ptr<osg::Geode> geode = new osg::Geode( );
-
-    switch_node->addChild( transform.get( ) );
-    transform->addChild( geode.get( ) );
-
-    // Store the switch node so that it can be added to mUIGroup during the
-    // next update traversal.
-    mNodesToAdd.push_back( switch_node.get( ) );
-
-    // Create a quad and a texture stateset for this UIElement
-    // ********************* Begin Modified code taken from Paul Martz's book **
-    // Create an object to store geometry in.
-    osg::ref_ptr<osg::Geometry> geometry = new osg::Geometry;
-    // Create an array of four vertices.
-    osg::ref_ptr<osg::Vec3Array> vertices = new osg::Vec3Array;
-    geometry->setVertexArray( vertices.get( ) );
-    float q_right = element->GetElementWidth( );
-    float q_top = element->GetElementHeight( );
-    float q_left = 0.0f;
-    float q_bottom = 0.0f;
-    // 4------3
-    // |      |
-    // 1------2
-    // We are in the x-y plane, NOT the x-z plane, as we should be. This is
-    // because OSG treats ortho projection matrices as x-y plane by default.
-    // Which, honestly, is a bit confounding, since ortho osg::camera views
-    // are in the x-z plane by default. Grumble, grumble.
-    vertices->push_back( osg::Vec3( q_left, q_bottom, 0.f ) ); // 1
-    vertices->push_back( osg::Vec3( q_right, q_bottom, 0.f ) ); // 2
-    vertices->push_back( osg::Vec3( q_right, q_top, 0.f ) ); // 3
-    vertices->push_back( osg::Vec3( q_left, q_top, 0.f ) ); // 4
-
-    // Left, right, bottom, top ortho position of quad formed from above vertices
+    //
+    float q_right = element->GetElementWidth();
+    float q_top = element->GetElementHeight();
+    float q_left = 0.0;
+    float q_bottom = 0.0;
     osg::Vec4 ortho2DQuadPosition( q_left, q_right, q_bottom, q_top );
     mElementPositionsOrtho2D.push_back( ortho2DQuadPosition );
 
-    // Create an array for the single normal.
-    osg::ref_ptr<osg::Vec3Array> normal = new osg::Vec3Array;
-    geometry->setNormalArray( normal.get( ) );
-    geometry->setNormalBinding( osg::Geometry::BIND_OVERALL );
+    osg::ref_ptr< osg::Vec3Array > vertices = new osg::Vec3Array;
+    vertices->push_back( osg::Vec3( q_left, q_bottom, 0.0 ) );
+    vertices->push_back( osg::Vec3( q_right, q_bottom, 0.0 ) );
+    vertices->push_back( osg::Vec3( q_right, q_top, 0.0 ) );
+    vertices->push_back( osg::Vec3( q_left, q_top, 0.0 ) );
 
-    // FIXME: Why must the normal be set > 1, even in ortho mode with no xform above?
-    // Normal if in x-y plane
-#ifdef VES_QT_RENDER_DEBUG
-    normal->push_back( osg::Vec3( 0.0f, 0.0f, 1.0f ) );
-#else
-    normal->push_back( osg::Vec3( 0.0f, 0.0f, 2.0f ) );
-#endif
+    //
+    osg::Vec4f coordinates = element->GetTextureCoordinates();
+    float m_left = coordinates.w();
+    float m_right = coordinates.x();
+    float m_bottom = coordinates.y();
+    float m_top = coordinates.z();
 
-    // Draw a four-vertex quad from the stored data.
-    geometry->addPrimitiveSet(
-                               new osg::DrawArrays( osg::PrimitiveSet::QUADS, 0, 4 ) );
-
-    geode->addDrawable( geometry.get( ) );
-
-    // Create a Vec2Array of texture coordinates for texture unit 0
-    //   and attach it to the geometry.
-    osg::ref_ptr<osg::Vec2Array> texture_coordinates = new osg::Vec2Array;
-    geometry->setTexCoordArray( 0, texture_coordinates.get( ) );
-    osg::Vec4f coordinates = element->GetTextureCoordinates( );
-    float m_left = coordinates.w( );
-    float m_right = coordinates.x( );
-    float m_bottom = coordinates.y( );
-    float m_top = coordinates.z( );
+    osg::ref_ptr< osg::Vec2Array > texture_coordinates = new osg::Vec2Array();
     texture_coordinates->push_back( osg::Vec2( m_left, m_bottom ) );
     texture_coordinates->push_back( osg::Vec2( m_right, m_bottom ) );
     texture_coordinates->push_back( osg::Vec2( m_right, m_top ) );
     texture_coordinates->push_back( osg::Vec2( m_left, m_top ) );
 
-    // Create an empty image
-    osg::ref_ptr<osg::Image> image = new osg::Image( );
+    //
+    osg::ref_ptr< osg::Geometry > geometry = new osg::Geometry();
+    geometry->setVertexArray( vertices.get() );
+    geometry->addPrimitiveSet(
+        new osg::DrawArrays( osg::PrimitiveSet::QUADS, 0, 4 ) );
+    geometry->setTexCoordArray( 0, texture_coordinates.get() );
 
-    // Attach the image in a Texture2D object
-    osg::ref_ptr<osg::Texture2D> texture = new osg::Texture2D;
-    // Don't rescale texture to power of two if hardware supports non-power of two
+    //
+    osg::ref_ptr< osg::Geode > geode = new osg::Geode();
+    geode->setCullingActive( false );
+    geode->setDataVariance( osg::Object::DYNAMIC );
+    geode->addDrawable( geometry.get() );
+    mElements[ geode.get() ] = element;
+
+    //Create an empty image
+    osg::ref_ptr< osg::Image > image = new osg::Image();
+
+    //Attach the image in a Texture2D object
+    osg::ref_ptr< osg::Texture2D > texture = new osg::Texture2D();
     texture->setResizeNonPowerOfTwoHint( false );
-    texture->setImage( image.get( ) );
+    texture->setImage( image.get() );
     texture->setDataVariance( osg::Object::DYNAMIC );
 
-    // Create stateset for adding texture
-    osg::StateSet* m_State = geode->getOrCreateStateSet( );
+    //Vertex shader not used yet
+    osg::ref_ptr< osg::Shader > vertexShader = new osg::Shader();
+    std::string vertexSource =
+    "void main() \n"
+    "{ \n"
+        //Ignore MVP transformation as vertices are already in Normalized Device Coord.
+        "gl_Position = gl_Vertex; \n"
+        "gl_TexCoord[ 0 ].st = gl_MultiTexCoord0.st; \n"
+    "} \n";
 
-    // Attach the 2D texture attribute and enable GL_TEXTURE_2D,
-    //   both on texture unit 0.
-    m_State->setTextureAttributeAndModes( 0, texture );
-    // ********************** End Modified code taken from Paul Martz's book **
+    vertexShader->setType( osg::Shader::VERTEX );
+    vertexShader->setShaderSource( vertexSource );
+    vertexShader->setName( "VS Quad Vertex Shader" );
 
-    // Make sure that alpha blending is on for the UI elements
-    m_State->setMode( GL_BLEND, osg::StateAttribute::ON );
-    m_State->setRenderingHint( osg::StateSet::TRANSPARENT_BIN );
+    osg::ref_ptr< osg::Shader > fragmentShader = new osg::Shader();
+    std::string fragmentSource =
+    "uniform sampler2D baseMap; \n"
 
-    // Attach a material that will allow changes to the element's opacity
-    //    osg::Material *m_material = new osg::Material;
-    //    m_material->setAlpha(osg::Material::FRONT_AND_BACK, 1.0f);
-    //    m_State->setAttributeAndModes(m_material, osg::StateAttribute::ON );
+    "uniform vec3 glowColor; \n"
 
-    //m_State->setMode( GL_NORMALIZE, osg::StateAttribute::ON );
-    //m_State->setMode( GL_LIGHTING, osg::StateAttribute::OFF );
+    "void main() \n"
+    "{ \n"
+        "vec4 baseColor = texture2D( baseMap, gl_TexCoord[ 0 ].st ); \n"
 
-    // Make sure osg doesn't optimize the UI element into oblivion
-    geode->setDataVariance( osg::Object::DYNAMIC );
+        "gl_FragData[ 0 ] = baseColor; \n"
+        "gl_FragData[ 1 ] = vec4( glowColor, gl_FragData[ 0 ].a ); \n"
+    "} \n";
 
-    mElements[ geode.get( ) ] = element;
-    return geode.get( );
+    fragmentShader->setType( osg::Shader::FRAGMENT );
+    fragmentShader->setShaderSource( fragmentSource );
+    fragmentShader->setName( "VS Quad Fragment Shader" );
+
+    //
+    osg::ref_ptr< osg::Program > program = new osg::Program();
+    //program->addShader( vertexShader.get() );
+    program->addShader( fragmentShader.get() );
+    program->setName( "VS Quad Program" );
+
+    //Create stateset for adding texture
+    osg::ref_ptr< osg::StateSet > stateset = geode->getOrCreateStateSet();
+    stateset->setMode( GL_LIGHTING, osg::StateAttribute::OFF );
+    stateset->setAttributeAndModes(
+        program.get(),
+        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+    stateset->addUniform( new osg::Uniform( "baseMap", 0 ) );
+    stateset->setTextureAttributeAndModes(
+        0, texture.get(), osg::StateAttribute::ON );
+
+    //
+    osg::ref_ptr< osg::MatrixTransform > transform = new osg::MatrixTransform();
+    transform->addChild( geode.get() );
+
+    //
+    osg::ref_ptr< osg::Switch > switch_node = new osg::Switch();
+    switch_node->addChild( transform.get() );
+    //Store the switch node so that it can be added to mUIGroup during the
+    //next update traversal.
+    mNodesToAdd.push_back( switch_node.get() );
+
+    return geode.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
-
 bool UIManager::RemoveElement( osg::ref_ptr<osg::Geode> geode )
 {
     // Search through to find geode, then delete UIElement and geode, then erase
@@ -230,22 +232,20 @@ bool UIManager::RemoveElement( osg::ref_ptr<osg::Geode> geode )
     return true;
 }
 ////////////////////////////////////////////////////////////////////////////////
-
-void UIManager::RemoveAllElements( )
+void UIManager::RemoveAllElements()
 {
     std::map< osg::ref_ptr< osg::Geode >, UIElement* >::iterator map_iterator;
-    for ( map_iterator = mElements.begin( ); map_iterator != mElements.end( );
+    for ( map_iterator = mElements.begin(); map_iterator != mElements.end();
             ++map_iterator )
     {
         delete map_iterator->second;
         //map_iterator->first.release();
     }
 
-    mElements.clear( );
+    mElements.clear();
 }
 ////////////////////////////////////////////////////////////////////////////////
-
-void UIManager::Update( )
+void UIManager::Update()
 {
     // Ensure that initialization has already happened
     if( !mInitialized )
@@ -255,9 +255,9 @@ void UIManager::Update( )
     }
 
     // Insert any new elements added since last update into the scenegraph
-    if( mNodesToAdd.size( ) > 0 )
+    if( mNodesToAdd.size() > 0 )
     {
-        _insertNodesToAdd( );
+        _insertNodesToAdd();
     }
 
     // Update the UI's rectangle if it has been dirtied.
@@ -272,7 +272,7 @@ void UIManager::Update( )
     // Do hide/show operations
     if( mToggleVisibility )
     {
-        if( mUIGroup->asSwitch( )->getValue( 0 ) )
+        if( mUIGroup->asSwitch()->getValue( 0 ) )
         {
             mShow = false;
             mHide = true;
@@ -288,29 +288,27 @@ void UIManager::Update( )
 
     if( mShow )
     {
-        _showAll( );
+        _showAll();
     }
     else if( mHide )
     {
-        _hideAll( );
+        _hideAll();
     }
 
     // Check visibility of UI branch before bothering with repaints
     if( mUIGroup->getValue( 0 ) )
     {
-        _repaintChildren( );
+        _repaintChildren();
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-
-void UIManager::HideAllElements( )
+void UIManager::HideAllElements()
 {
     // May not be able to touch scenegraph directly at the moment;
     // Set hide flag to be discovered during update
     mHide = true;
 }
 ////////////////////////////////////////////////////////////////////////////////
-
 void UIManager::ShowAllElements( bool showOnlyActive )
 {
     // May not be able to touch scenegraph directly at the moment;
@@ -318,15 +316,13 @@ void UIManager::ShowAllElements( bool showOnlyActive )
     mShow = true;
 }
 ////////////////////////////////////////////////////////////////////////////////
-
-void UIManager::ToggleVisibility( )
+void UIManager::ToggleVisibility()
 {
     // May not be able to touch scenegraph directly at the moment;
     // Set visibility flag to be discovered during update
     mToggleVisibility = true;
 }
 ////////////////////////////////////////////////////////////////////////////////
-
 void UIManager::SetRectangle( int left, int right, int bottom, int top )
 {
     mRectangleDirty = true;
@@ -336,7 +332,6 @@ void UIManager::SetRectangle( int left, int right, int bottom, int top )
     mTop = top;
 }
 ////////////////////////////////////////////////////////////////////////////////
-
 void UIManager::Initialize( osg::Group* parentNode )
 {
     //std::cout << "UIManager::Initialize" << std::endl;
@@ -346,43 +341,43 @@ void UIManager::Initialize( osg::Group* parentNode )
         return;
     }
 
-    mProjection = new osg::Projection;
-    //mProjection = new osg::MatrixTransform;
+    mProjection = new osg::Projection();
     mProjection->setMatrix( osg::Matrix::ortho2D( mLeft, mRight,
                                                   mBottom, mTop ) );
 
     osg::MatrixTransform* modelViewMatrix = new osg::MatrixTransform;
-    modelViewMatrix->setMatrix( osg::Matrix::identity( ) );
+    modelViewMatrix->setMatrix( osg::Matrix::identity() );
     modelViewMatrix->setReferenceFrame( osg::Transform::ABSOLUTE_RF );
 
     mProjection->addChild( modelViewMatrix );
 
-    osg::StateSet* projectionStateSet = new osg::StateSet( );
-    mProjection->setStateSet( projectionStateSet );
-    projectionStateSet->setMode( GL_BLEND, osg::StateAttribute::ON );
-    projectionStateSet->setMode( GL_DEPTH_TEST, osg::StateAttribute::OFF );
-    projectionStateSet->setRenderingHint( osg::StateSet::TRANSPARENT_BIN );
-    // Need to make sure this geometry is drawn last. RenderBins are handled
-    // in numerical order so set bin number to 11
-    // FIXME: Why RenderBin "11"? Does OSG only support 12 renderbins?
-    projectionStateSet->setRenderBinDetails( 11, "RenderBin" );
+    //Set depth test to always pass and don't write to the depth buffer
+    osg::ref_ptr< osg::Depth > depth = new osg::Depth();
+    depth->setFunction( osg::Depth::ALWAYS );
+    depth->setWriteMask( false );
 
-    mUIGroup = new osg::Switch( );
-    modelViewMatrix->addChild( mUIGroup.get( ) );
+    //
+    osg::ref_ptr< osg::StateSet > stateset = mProjection->getOrCreateStateSet();
+    stateset->setRenderBinDetails( 99, "RenderBin" );
+    stateset->setAttributeAndModes(
+        depth.get(), osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+    //stateset->setMode( GL_DEPTH_TEST, osg::StateAttribute::OFF );
 
-    parentNode->addChild( mProjection.get( ) );
-    //parentNode->addChild( mUIGroup.get( ) );
+    mUIGroup = new osg::Switch();
+    modelViewMatrix->addChild( mUIGroup.get() );
+
+    parentNode->addChild( mProjection.get() );
 
     // Attach a material to the UIGroup that allows us to affect the opacity of
     // all UI elements at once
-    osg::StateSet* m_UIGroupStateSet = mUIGroup->getOrCreateStateSet( );
-    mOverallOpacity = new osg::Material;
+    //osg::StateSet* m_UIGroupStateSet = mUIGroup->getOrCreateStateSet();
+    //mOverallOpacity = new osg::Material;
 #ifdef VES_QT_RENDER_DEBUG
     mOverallOpacity->setAlpha( osg::Material::FRONT_AND_BACK, 0.85f );
 #else
-    mOverallOpacity->setAlpha( osg::Material::FRONT_AND_BACK, 1.0f );
+    //mOverallOpacity->setAlpha( osg::Material::FRONT_AND_BACK, 1.0f );
 #endif
-    m_UIGroupStateSet->setAttributeAndModes( mOverallOpacity.get( ), osg::StateAttribute::ON );
+    //m_UIGroupStateSet->setAttributeAndModes( mOverallOpacity.get(), osg::StateAttribute::ON );
 
     mUIGroup->setDataVariance( osg::Object::DYNAMIC );
     mUIGroup->setUpdateCallback( mUIUpdateCallback.get() );
@@ -390,17 +385,15 @@ void UIManager::Initialize( osg::Group* parentNode )
     mInitialized = true;
 }
 ////////////////////////////////////////////////////////////////////////////////
-
-//void UIManager::operator( )( osg::Node* node, osg::NodeVisitor* nv )
+//void UIManager::operator()( osg::Node* node, osg::NodeVisitor* nv )
 //{
 //    // Request element repaints and so forth
-//    Update( );
+//    Update();
 //
 //    // Allow update traversal to continue
 //    traverse( node, nv );
 //}
 ////////////////////////////////////////////////////////////////////////////////
-
 bool UIManager::SendInteractionEvent( ves::xplorer::eventmanager::InteractionEvent &event )
 {
     // Ignore events if we're not initialized
@@ -438,12 +431,12 @@ bool UIManager::SendInteractionEvent( ves::xplorer::eventmanager::InteractionEve
     // through "all" the elements below, just in case.
 
     std::map< osg::ref_ptr< osg::Geode >, UIElement* >::iterator map_iterator;
-    for ( map_iterator = mElements.begin( ); map_iterator != mElements.end( );
+    for ( map_iterator = mElements.begin(); map_iterator != mElements.end();
             ++map_iterator )
     {
         // Check whether this element is currently switched as visible. If not,
         // should not send events to it.
-        if( map_iterator->first->getParent( 0 )->getParent( 0 )->asSwitch( )
+        if( map_iterator->first->getParent( 0 )->getParent( 0 )->asSwitch()
                 ->getValue( 0 ) )
         {
             UIElement* element = ( *map_iterator ).second;
@@ -455,88 +448,82 @@ bool UIManager::SendInteractionEvent( ves::xplorer::eventmanager::InteractionEve
     return true;
 }
 ////////////////////////////////////////////////////////////////////////////////
-
-void UIManager::_insertNodesToAdd( )
+void UIManager::_insertNodesToAdd()
 {
     std::vector< osg::ref_ptr<osg::Switch> >::iterator vec_iterator;
-    for ( vec_iterator = mNodesToAdd.begin( );
-            vec_iterator != mNodesToAdd.end( );
+    for ( vec_iterator = mNodesToAdd.begin();
+            vec_iterator != mNodesToAdd.end();
             ++vec_iterator )
     {
-        mUIGroup->addChild( ( *vec_iterator ).get( ) );
-        ( *vec_iterator ).release( );
+        mUIGroup->addChild( ( *vec_iterator ).get() );
+        ( *vec_iterator ).release();
     }
 
-    mNodesToAdd.clear( );
+    mNodesToAdd.clear();
 }
 ////////////////////////////////////////////////////////////////////////////////
-
-void UIManager::_repaintChildren( )
+void UIManager::_repaintChildren()
 {
     std::map< osg::ref_ptr< osg::Geode >, UIElement* >::iterator map_iterator;
-    for ( map_iterator = mElements.begin( ); map_iterator != mElements.end( );
+    for ( map_iterator = mElements.begin(); map_iterator != mElements.end();
             ++map_iterator )
     {
         // Check whether this element is currently switched as visible. If not,
         // no need to waste time rendering it.
         // FIXME: should only render *active*, visible element
-        if( map_iterator->first->getParent( 0 )->getParent( 0 )->asSwitch( )
+        if( map_iterator->first->getParent( 0 )->getParent( 0 )->asSwitch()
                 ->getValue( 0 ) )
         {
             UIElement* element = ( *map_iterator ).second;
-            unsigned char* image_Data = element->RenderElementToImage( );
+            unsigned char* image_Data = element->RenderElementToImage();
 
             // Only reset the image if element tells us it has changed since 
             // last time
-            if( element->IsDirty( ) )
+            if( element->IsDirty() )
             {
                 osg::StateSet* state = ( *map_iterator ).first
-                        ->getOrCreateStateSet( );
+                        ->getOrCreateStateSet();
                 osg::Image* image =
                         state->getTextureAttribute( 0, osg::StateAttribute::TEXTURE )
-                        ->asTexture( )->getImage( 0 );
-                image->setImage( element->GetImageWidth( ),
-                                 element->GetImageHeight( ), 1, 4,
+                        ->asTexture()->getImage( 0 );
+                image->setImage( element->GetImageWidth(),
+                                 element->GetImageHeight(), 1, 4,
                                  GL_BGRA, GL_UNSIGNED_BYTE,
                                  image_Data, osg::Image::NO_DELETE );
-                image->dirty( );
+                image->dirty();
             }
         }
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-
-void UIManager::_sendEvent( )
+void UIManager::_sendEvent()
 {
-
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-
-void UIManager::_hideAll( )
+void UIManager::_hideAll()
 {
-    mUIGroup->setAllChildrenOff( );
+    mUIGroup->setAllChildrenOff();
     mHide = false;
 }
 ////////////////////////////////////////////////////////////////////////////////
-
-void UIManager::_showAll( )
+void UIManager::_showAll()
 {
     //if( !showOnlyActive )
     {
         std::map< osg::ref_ptr< osg::Geode >, UIElement* >::iterator map_iterator;
-        for ( map_iterator = mElements.begin( ); map_iterator != mElements.end( );
+        for ( map_iterator = mElements.begin(); map_iterator != mElements.end();
                 ++map_iterator )
         {
-            map_iterator->first->getParent( 0 )->getParent( 0 )->asSwitch( )
-                    ->setAllChildrenOn( );
+            map_iterator->first->getParent( 0 )->getParent( 0 )->asSwitch()
+                    ->setAllChildrenOn();
         }
     }
 
-    mUIGroup->setAllChildrenOn( );
+    mUIGroup->setAllChildrenOn();
     mShow = false;
 }
 ////////////////////////////////////////////////////////////////////////////////
-
 void UIManager::SetProjectionMatrix( osg::Matrixd& matrix )
 {
     if( matrix != mTempProj )
@@ -546,26 +533,24 @@ void UIManager::SetProjectionMatrix( osg::Matrixd& matrix )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-
-void UIManager::UnembedAll( )
+void UIManager::UnembedAll()
 {
     if( !mInitialized )
     {
         return;
     }
 
-    HideAllElements( );
+    HideAllElements();
     std::map< osg::ref_ptr< osg::Geode >, UIElement* >::iterator map_iterator;
-    for ( map_iterator = mElements.begin( ); map_iterator != mElements.end( );
+    for ( map_iterator = mElements.begin(); map_iterator != mElements.end();
             ++map_iterator )
     {
         UIElement* element = ( *map_iterator ).second;
-        element->Unembed( );
+        element->Unembed();
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-
-void UIManager::EmbedAll( )
+void UIManager::EmbedAll()
 {
     if( !mInitialized )
     {
@@ -573,17 +558,17 @@ void UIManager::EmbedAll( )
     }
 
     std::map< osg::ref_ptr< osg::Geode >, UIElement* >::iterator map_iterator;
-    for ( map_iterator = mElements.begin( ); map_iterator != mElements.end( );
+    for ( map_iterator = mElements.begin(); map_iterator != mElements.end();
             ++map_iterator )
     {
         UIElement* element = ( *map_iterator ).second;
-        element->Embed( );
+        element->Embed();
     }
-    ShowAllElements( );
+    ShowAllElements();
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool UIManager::Ortho2DTestPointerCoordinates( int x, int y )
-{   
+{
     // Walk through every quad we own and see if the point lies on it
     osg::Vec4 quadPos;
     for( size_t index = 0; index < mElementPositionsOrtho2D.size(); index++)
@@ -598,3 +583,4 @@ bool UIManager::Ortho2DTestPointerCoordinates( int x, int y )
 
     return false;
 }
+////////////////////////////////////////////////////////////////////////////////
