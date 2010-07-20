@@ -1043,7 +1043,8 @@ void AppFrame::Save( wxCommandEvent& event )
         canvas->Update();
         wxFileName vesFileName( mVESFileName );
 
-        if( !wxFileName::IsFileWritable( vesFileName.GetFullPath() ) )
+        //if( !wxFileName::IsFileWritable( vesFileName.GetFullPath() ) )
+        if( !::wxFileName::IsDirWritable( ::wxGetCwd() ) )
         {
             wxString tempMessage = 
                 _( "Cannot write file " ) + 
@@ -1122,7 +1123,7 @@ void AppFrame::SaveAs( wxCommandEvent& WXUNUSED( event ) )
     }
     while( answer == wxID_NO );
 
-    if( !wxFileName::IsFileWritable( vesFileName.GetFullPath() ) )
+    if( !::wxFileName::IsDirWritable( ::wxGetCwd() ) )
     {
         wxString tempMessage = _( "Cannot write file " ) + vesFileName.GetFullName() + _( "?" );
         wxMessageDialog promptDlg( this,
@@ -1134,6 +1135,19 @@ void AppFrame::SaveAs( wxCommandEvent& WXUNUSED( event ) )
         Log( "Unable to save ves file." );
         return;
     }
+
+    /*if( !wxFileName::IsFileWritable( vesFileName.GetFullPath() ) )
+    {
+        wxString tempMessage = _( "Cannot write file " ) + vesFileName.GetFullName() + _( "?" );
+        wxMessageDialog promptDlg( this,
+                                   tempMessage,
+                                   _( "Overwrite File Warning" ),
+                                   wxOK | wxNO_DEFAULT | wxICON_QUESTION,
+                                   wxDefaultPosition );
+        promptDlg.ShowModal();
+        Log( "Unable to save ves file." );
+        return;
+    }*/
 
     if( vesFileName.HasName() )
     {
@@ -2759,7 +2773,8 @@ void AppFrame::OnDataLogging( wxCommandEvent& event )
         }
         while( answer == wxID_NO );
         
-        if( !wxFileName::IsFileWritable( vesFileName.GetFullPath() ) )
+        //if( !wxFileName::IsFileWritable( vesFileName.GetFullPath() ) )
+        if( !::wxFileName::IsDirWritable( ::wxGetCwd() ) )
         {
             wxString tempMessage = _( "Cannot write file " ) + vesFileName.GetFullName() + _( "?" );
             wxMessageDialog promptDlg( this,
