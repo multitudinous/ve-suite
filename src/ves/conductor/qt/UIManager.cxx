@@ -163,51 +163,8 @@ osg::Geode* UIManager::AddElement( UIElement* element )
     texture->setImage( image.get() );
     texture->setDataVariance( osg::Object::DYNAMIC );
 
-    //Vertex shader not used yet
-    osg::ref_ptr< osg::Shader > vertexShader = new osg::Shader();
-    std::string vertexSource =
-    "void main() \n"
-    "{ \n"
-        //Ignore MVP transformation as vertices are already in Normalized Device Coord.
-        "gl_Position = gl_Vertex; \n"
-        "gl_TexCoord[ 0 ].st = gl_MultiTexCoord0.st; \n"
-    "} \n";
-
-    vertexShader->setType( osg::Shader::VERTEX );
-    vertexShader->setShaderSource( vertexSource );
-    vertexShader->setName( "VS Quad Vertex Shader" );
-
-    osg::ref_ptr< osg::Shader > fragmentShader = new osg::Shader();
-    std::string fragmentSource =
-    "uniform sampler2D baseMap; \n"
-
-    "uniform vec3 glowColor; \n"
-
-    "void main() \n"
-    "{ \n"
-        "vec4 baseColor = texture2D( baseMap, gl_TexCoord[ 0 ].st ); \n"
-
-        "gl_FragData[ 0 ] = baseColor; \n"
-        "gl_FragData[ 1 ] = vec4( glowColor, gl_FragData[ 0 ].a ); \n"
-    "} \n";
-
-    fragmentShader->setType( osg::Shader::FRAGMENT );
-    fragmentShader->setShaderSource( fragmentSource );
-    fragmentShader->setName( "VS Quad Fragment Shader" );
-
-    //
-    osg::ref_ptr< osg::Program > program = new osg::Program();
-    //program->addShader( vertexShader.get() );
-    program->addShader( fragmentShader.get() );
-    program->setName( "VS Quad Program" );
-
     //Create stateset for adding texture
     osg::ref_ptr< osg::StateSet > stateset = geode->getOrCreateStateSet();
-    stateset->setMode( GL_LIGHTING, osg::StateAttribute::OFF );
-    stateset->setAttributeAndModes(
-        program.get(),
-        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
-    stateset->addUniform( new osg::Uniform( "baseMap", 0 ) );
     stateset->setTextureAttributeAndModes(
         0, texture.get(), osg::StateAttribute::ON );
 
@@ -351,36 +308,73 @@ void UIManager::Initialize( osg::Group* parentNode )
 
     mProjection->addChild( modelViewMatrix );
 
-    //Set depth test to always pass and don't write to the depth buffer
-    osg::ref_ptr< osg::Depth > depth = new osg::Depth();
-    depth->setFunction( osg::Depth::ALWAYS );
-    depth->setWriteMask( false );
-
-    //
-    osg::ref_ptr< osg::StateSet > stateset = mProjection->getOrCreateStateSet();
-    stateset->setRenderBinDetails( 99, "RenderBin" );
-    stateset->setAttributeAndModes(
-        depth.get(), osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
-    //stateset->setMode( GL_DEPTH_TEST, osg::StateAttribute::OFF );
-
     mUIGroup = new osg::Switch();
+    mUIGroup->setDataVariance( osg::Object::DYNAMIC );
+    mUIGroup->setUpdateCallback( mUIUpdateCallback.get() );
     modelViewMatrix->addChild( mUIGroup.get() );
 
     parentNode->addChild( mProjection.get() );
 
-    // Attach a material to the UIGroup that allows us to affect the opacity of
-    // all UI elements at once
-    //osg::StateSet* m_UIGroupStateSet = mUIGroup->getOrCreateStateSet();
-    //mOverallOpacity = new osg::Material;
-#ifdef VES_QT_RENDER_DEBUG
-    mOverallOpacity->setAlpha( osg::Material::FRONT_AND_BACK, 0.85f );
-#else
-    //mOverallOpacity->setAlpha( osg::Material::FRONT_AND_BACK, 1.0f );
-#endif
-    //m_UIGroupStateSet->setAttributeAndModes( mOverallOpacity.get(), osg::StateAttribute::ON );
+    //Vertex shader not used yet
+    osg::ref_ptr< osg::Shader > vertexShader = new osg::Shader();
+    std::string vertexSource =
+    "void main() \n"
+    "{ \n"
+        //Ignore MVP transformation as vertices are already in Normalized Device Coord.
+        "gl_Position = gl_Vertex; \n"
+        "gl_TexCoord[ 0 ].st = gl_MultiTexCoord0.st; \n"
+    "} \n";
 
-    mUIGroup->setDataVariance( osg::Object::DYNAMIC );
-    mUIGroup->setUpdateCallback( mUIUpdateCallback.get() );
+    vertexShader->setType( osg::Shader::VERTEX );
+    vertexShader->setShaderSource( vertexSource );
+    vertexShader->setName( "VS Quad Vertex Shader" );
+
+    osg::ref_ptr< osg::Shader > fragmentShader = new osg::Shader();
+    std::string fragmentSource =
+    "uniform sampler2D baseMap; \n"
+
+    "uniform vec3 glowColor; \n"
+
+    "void main() \n"
+    "{ \n"
+        "vec4 baseColor = texture2D( baseMap, gl_TexCoord[ 0 ].st ); \n"
+
+        "gl_FragData[ 0 ] = baseColor; \n"
+        "gl_FragData[ 1 ] = vec4( glowColor, gl_FragData[ 0 ].a ); \n"
+    "} \n";
+
+    fragmentShader->setType( osg::Shader::FRAGMENT );
+    fragmentShader->setShaderSource( fragmentSource );
+    fragmentShader->setName( "VS Quad Fragment Shader" );
+
+    //
+    osg::ref_ptr< osg::Program > program = new osg::Program();
+    //program->addShader( vertexShader.get() );
+    program->addShader( fragmentShader.get() );
+    program->setName( "VS Quad Program" );
+
+    //Set depth test to always pass and don't write to the depth buffer
+    osg::ref_ptr< osg::Depth > depth = new osg::Depth();
+    //depth->setFunction( osg::Depth::ALWAYS );
+    depth->setWriteMask( false );
+
+    //Create stateset for adding texture
+    osg::ref_ptr< osg::StateSet > stateset = mUIGroup->getOrCreateStateSet();
+    stateset->setRenderBinDetails( 99, "RenderBin" );
+    stateset->setAttributeAndModes(
+        depth.get(),
+        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED |
+        osg::StateAttribute::OVERRIDE );
+    stateset->setMode( GL_DEPTH_TEST, osg::StateAttribute::OFF );
+    stateset->setMode(
+        GL_LIGHTING,
+        osg::StateAttribute::OFF | osg::StateAttribute::PROTECTED |
+        osg::StateAttribute::OVERRIDE );
+    stateset->setAttributeAndModes(
+        program.get(),
+        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED |
+        osg::StateAttribute::OVERRIDE );
+    stateset->addUniform( new osg::Uniform( "baseMap", 0 ) );
 
     mInitialized = true;
 }
