@@ -396,9 +396,6 @@ void CameraObject::CreateGeometry()
 
     //Create the geometric lines for the frustum
     m_frustumGeode = new osg::Geode();
-    osg::ref_ptr< osg::Node::ComputeBoundingSphereCallback > cbsc =
-        new osg::Node::ComputeBoundingSphereCallback();
-    m_frustumGeode->setComputeBoundingSphereCallback( cbsc.get() );
     m_frustumGeometry = new osg::Geometry();
     m_frustumVertices = new osg::Vec3Array();
     osg::ref_ptr< osg::Vec4Array > frustumColors = new osg::Vec4Array();

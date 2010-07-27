@@ -1540,7 +1540,13 @@ void KeyboardMouse::ProcessSelection()
     nodePath.pop_back();
 
     osg::Matrixd localToWorldMatrix = osg::computeLocalToWorld( nodePath );
-    osg::Vec3d center = vesObject->getBound().center() * localToWorldMatrix;
+    osg::Vec3d center( 0.0, 0.0, 0.0 );
+    //If dcs is from a camera object, we want to rotate about local zero point
+    if( newSelectedDCS->getName() != "CameraDCS" )
+    {
+        center= vesObject->getBound().center();
+    }
+    center = center * localToWorldMatrix;
     sceneManipulator->SetPosition( center );
 
     //We need to transform center point into camera space

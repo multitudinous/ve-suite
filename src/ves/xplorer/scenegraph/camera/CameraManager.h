@@ -83,9 +83,6 @@ public:
     ///Override the addChild function to only accept Cameras
     virtual bool addChild( CameraObject* child );
 
-    ///Override the computeBound function to return an empty bounding sphere
-    //virtual osg::BoundingSphere computeBound() const;
-
     ///
     void Enable( const bool& enable = true );
 

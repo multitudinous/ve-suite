@@ -89,15 +89,6 @@ bool CameraManager::addChild( CameraObject* child )
     return osg::Group::addChild( child );
 }
 ////////////////////////////////////////////////////////////////////////////////
-/*
-osg::BoundingSphere CameraManager::computeBound() const
-{
-    osg::BoundingSphere bsphere;
-
-    return bsphere;
-}
-*/
-////////////////////////////////////////////////////////////////////////////////
 CameraObject* const CameraManager::ConvertNodeToCameraObject(
     osg::Node* const node )
 {
