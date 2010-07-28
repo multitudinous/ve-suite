@@ -57,10 +57,10 @@ class Switch;
 class MatrixTransform;
 class Geode;
 class StateAttribute;
-class Texture2D;
+//class Texture2D;
 class Projection;
 class NodeCallback;
-class Material;
+//class Material;
 }
 
 // --- STL includes --- //
@@ -173,15 +173,40 @@ public:
     ///Sets the projection matrix when not in Ortho2D mode
     void SetProjectionMatrix( osg::Matrixd& matrix );
 
-    ///
+    /// Unimplemented
     void UnembedAll();
 
-    ///
+    /// Unimplemented
     void EmbedAll();
 
     // Returns true if the point (x,y) is over a quad associated with a UIElement,
     // false otherwise.
     bool Ortho2DTestPointerCoordinates( int x, int y );
+
+    /// Set the overall UI opacity
+    void SetOpacity( float opacity );
+
+    /// Minimize all elements to bottom of screen
+    void MinimizeAllElements();
+
+    /// Let UIManager know that we should begin moving element. This will usually
+    /// be called after a click on an element's titlebar or some similar operation.
+    void InitiateMoveElement( UIElement* element );
+
+    /// Minimize only the specific element passed as the argument
+    void MinimizeElement( UIElement* element );
+
+    /// Unminimize the element passed as the argument
+    void UnminimizeElement( UIElement* element );
+
+    /// Hide only the element passed as the argument
+    void HideElement( UIElement* element );
+
+    /// Unhide the element passed as the argument
+    void ShowElement( UIElement* element );
+
+    /// Hide if shown or show is hidden the element passed as the argument
+    void ToggleElementVisibility( UIElement* element );
 
 private:
     // Set this class up as a singleton
@@ -199,12 +224,10 @@ private:
     osg::ref_ptr< osg::NodeCallback > mUIUpdateCallback;
 
     /// Stores the UIElements in key/pair form.
-    /// The key is an osg::Geode node that is the child of an underlying
-    /// osg::MatrixTransform and an osg::Switch. The switch allows an easy way to
-    /// "enable" and "disable" a UIElement by simply hiding the node during the
-    /// draw traversal.
+    /// The key is an osg::Geode node containing the geometry used to display the element
     /// The pair is a pointer to the actual UIElement.
-    std::map< osg::ref_ptr< osg::Geode >, UIElement* > mElements;
+    typedef std::map< osg::ref_ptr< osg::Geode >, UIElement* > ElementMap_type;
+    ElementMap_type mElements;
 
     /// Stores nodes that should be added to scenegraph during next update
     std::vector< osg::ref_ptr< osg::Switch > > mNodesToAdd;
@@ -246,9 +269,30 @@ private:
     /// Flag set when ShowAllElements has been called
     bool mShow;
 
+    bool mMinimize;
+
+    bool mUnminimize;
+
     /// Pointer directly to the material controlling overall opacity of all
     /// UI Elements
-    osg::ref_ptr< osg::Material > mOverallOpacity;
+    //osg::ref_ptr< osg::Material > mOverallOpacity;
+
+    /// Current value of overall opacity
+    float mOpacity;
+
+    int mDxPointer;
+    int mDyPointer;
+    int mDzPointer;
+
+    int mCurrentXPointer;
+    int mCurrentYPointer;
+    int mCurrentZPointer;
+
+    float mMinimizeXOffset;
+
+    UIElement* mMoveElement;
+    UIElement* mMinimizeElement;
+    UIElement* mUnminimizeElement;
 
     /// Helper function to add in nodes during update if necessary
     void _insertNodesToAdd();
@@ -265,11 +309,19 @@ private:
     /// Helper function to show elements
     void _showAll();
 
+    void _doMinimize();
+
+    void _doUnminimize();
+
+    void _doMinMaxElement( UIElement* element, bool minimize );
+
+    osg::Vec4 _computeMouseBoundsForElement( UIElement* element );
+
     ///
     ves::xplorer::eventmanager::ScopedConnectionList mConnections;
 
     ///
-    std::vector< osg::Vec4 > mElementPositionsOrtho2D;
+    std::map< UIElement*, osg::Vec4 > mElementPositionsOrtho2D;
 };
 
 } //end conductor

@@ -10,17 +10,15 @@ buildSrcDir = pj('#',buildDir,'src','ves','conductor','qt')
 
 lib_env = ves_pkg.getEnv().Clone()
 
-### uic files
-source = [pj(buildSrcDir,'MainWindow.ui')]
-cppHeaders = lib_env.qt_uic(source)
-
-source = [pj(buildSrcDir,'propertyBrowser','Visualization.ui')]
-cppHeaders += lib_env.qt_uic(source)
-####
-
+##### Moc section must come before uic section to prevent issues with undefined
+##### symbols and vtables
 ### moc files
-source = [pj(buildSrcDir,'MainWindow.h')]
+
+source = [pj(buildSrcDir,'MoveFrame.h')]
 cppSources = lib_env.qt_moc(source)
+
+source = [pj(buildSrcDir,'MainWindow.h')]
+cppSources += lib_env.qt_moc(source)
 
 source = [pj(buildSrcDir,'UIElementQt.h')]
 cppSources += lib_env.qt_moc(source)
@@ -39,6 +37,17 @@ cppSources += lib_env.qt_moc(source)
 source = [pj(buildSrcDir,'propertyBrowser','icons.qrc')]
 cppSources += lib_env.qt_rcc(source)
 ###
+
+### uic files
+source = [pj(buildSrcDir,'titlebar.ui')]
+cppHeaders = lib_env.qt_uic(source)
+
+source = [pj(buildSrcDir,'MainWindow.ui')]
+cppHeaders += lib_env.qt_uic(source)
+
+source = [pj(buildSrcDir,'propertyBrowser','Visualization.ui')]
+cppHeaders += lib_env.qt_uic(source)
+####
 
 lib_env.Depends( cppSources, cppHeaders)
 

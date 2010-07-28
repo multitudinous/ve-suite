@@ -31,12 +31,22 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef UIELEMENT_H
-#define UIELEMENT_H
-
-#include <osg/Vec4f>
+#pragma once
 
 #include <ves/VEConfig.h>
+
+#include <vector>
+
+#include <osg/Matrixf>
+#include <osg/Switch>
+#include <osg/Geode>
+
+namespace osg
+{
+class Vec4f;
+class MatrixTransform;
+class AnimationPath;
+}
 
 namespace ves
 {
@@ -54,34 +64,39 @@ namespace conductor
 ////////////////////////////////////////////////////////////////////////////////
 /// @class ves::conductor::UIElement
 /// Abstract class that defines interaction with GL-embedded user interfaces
+/// Derived classes must call the PostConstructor method at the very end
+/// of their constructor to ensure that the scenegraph for the element is
+/// set up properly.
 ////////////////////////////////////////////////////////////////////////////////
 class VE_CONDUCTOR_QTUI_EXPORTS UIElement
 {
 public:
+    UIElement();
+    ~UIElement();
 ////////////////////////////////////////////////////////////////////////////////
 /// Returns the pixel width of the element's rendered image.
 ///
 /// Required override.
 ////////////////////////////////////////////////////////////////////////////////
-    virtual int GetImageWidth() = 0;
+    virtual int GetImageWidth();
 ////////////////////////////////////////////////////////////////////////////////
 /// Returns the pixel height of the element's rendered image.
 ///
 /// Required override.
 ////////////////////////////////////////////////////////////////////////////////
-    virtual int GetImageHeight() = 0;
+    virtual int GetImageHeight();
 ////////////////////////////////////////////////////////////////////////////////
 /// Returns the pixel width of the element itself.
 ///
 /// Required override.
 ////////////////////////////////////////////////////////////////////////////////
-    virtual int GetElementWidth() = 0;
+    virtual int GetElementWidth();
 ////////////////////////////////////////////////////////////////////////////////
 /// Returns the pixel height of the element itself.
 ///
 /// Required override.
 ////////////////////////////////////////////////////////////////////////////////
-    virtual int GetElementHeight() = 0;
+    virtual int GetElementHeight();
 ////////////////////////////////////////////////////////////////////////////////
 /// Returns the texture coordinates of the element inside its texture image.
 /// Four components of return value are w = left, x = right, y = bottom,
@@ -89,14 +104,14 @@ public:
 ///
 /// Required override.
 ////////////////////////////////////////////////////////////////////////////////
-    virtual const osg::Vec4f GetTextureCoordinates() = 0;
+    virtual const osg::Vec4f GetTextureCoordinates();
 ////////////////////////////////////////////////////////////////////////////////
 /// Used to send generic interaction events (mouse, keyboard, wand, etc.) to
 /// this element.
 ///
 /// Required override.
 ////////////////////////////////////////////////////////////////////////////////
-    virtual void SendInteractionEvent( xplorer::eventmanager::InteractionEvent &event ) = 0;
+    virtual void SendInteractionEvent( xplorer::eventmanager::InteractionEvent &event );
 ////////////////////////////////////////////////////////////////////////////////
 /// Tell this element to render to an image and return a pointer to the data.
 ///
@@ -106,15 +121,15 @@ public:
 /// @return Pointer to the image data.
 /// Required override.
 ////////////////////////////////////////////////////////////////////////////////
-    virtual unsigned char* RenderElementToImage() = 0;
+    virtual unsigned char* RenderElementToImage();
 ////////////////////////////////////////////////////////////////////////////////
-// Should return true rendered image changed in the most recent call to 
+// Should return true if rendered image changed in the most recent call to
 // RenderElementToImage; otherwise false. This is intended as a way to allow
 // callers to determine whether they can use a stored copy of the previously-
 // rendered image or must update to the new one pointed to by 
 // RenderElementToImage
 ////////////////////////////////////////////////////////////////////////////////
-    virtual bool IsDirty() = 0;
+    virtual bool IsDirty();
 ////////////////////////////////////////////////////////////////////////////////
 /// Give the element a chance to do any needed initialization before we show it
 /// and begin interacting with it. Elements might use this as an opportunity to
@@ -123,14 +138,74 @@ public:
 ///
 /// Required override.
 ////////////////////////////////////////////////////////////////////////////////
-    virtual void Initialize(  ) = 0;
+    virtual void Initialize(  );
 ////////////////////////////////////////////////////////////////////////////////
-    virtual void Unembed(  ) = 0;
-    virtual void Embed(  ) = 0;
 
+    ///
+    virtual void SetMinimized( bool state );
+    
+    ///
+    virtual bool IsMinimized();
+
+    ///
+    virtual osg::Matrixf GetUIMatrix();
+
+    ///
+    virtual void PushUIMatrix( osg::Matrixf matrix );
+
+    ///
+    virtual osg::Matrixf PopUIMatrix();
+
+    ///
+    virtual void PushElementMatrix( osg::Matrixf matrix );
+
+    ///
+    virtual osg::Matrixf GetElementMatrix();
+
+    ///
+    virtual void MoveCanvas( float dx, float dy, float dz = 0.0f );
+
+    ///
+    virtual void Update();
+
+    ///
+    virtual osg::MatrixTransform* GetUITransform();
+
+    ///
+    virtual osg::MatrixTransform* GetElementTransform();
+
+    ///
+    virtual bool IsVisible();
+
+    ///
+    virtual void SetVisible( bool visible );
+
+    ///
+    virtual void SetAnimationPath( osg::AnimationPath* path );
+
+    ///
+    virtual osg::Switch* GetVisibilitySwitch();
+
+    ///
+    virtual osg::Geode* GetGeode();
+
+protected:
+    /// Sets up the sub-branch for the scenegraph. Derived classes must call this
+    /// at the very end of their constructor.
+    void PostConstructor();
+    
+    bool mIsMinimized;
+    bool mUIMatrixDirty;
+    std::vector< osg::Matrixf > mUIMatrices;
+    //std::vector< osg::Matrixf > mElementMatrices;
+    osg::MatrixTransform* mUITransform;
+    osg::MatrixTransform* mElementTransform;
+    osg::Matrixf mElementMatrix;
+    bool mElementMatrixDirty;
+    bool mAnimationOn;
+    osg::ref_ptr< osg::Switch > mVisibilitySwitch;
+    osg::Geode* mGeode;
 };
 
 } // namepsace conductor
 } // namespace ves
-
-#endif // UIELEMENT_H

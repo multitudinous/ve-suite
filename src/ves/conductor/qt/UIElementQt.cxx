@@ -37,6 +37,8 @@
 // --- VES includes --- //
 #include <ves/conductor/qt/UIElementQt.h>
 #include <ves/xplorer/eventmanager/InteractionEvent.h>
+#include <ves/conductor/qt/ui_titlebar.h>
+//#include <ves/conductor/qt/MoveFrame.h>
 
 // --- C++ includes --- //
 #include <cassert>
@@ -50,11 +52,12 @@
 #include <QtCore/QCoreApplication>
 #include <QtCore/QMutexLocker>
 #include <QtGui/QApplication>
+#include <ves/conductor/qt/UIManager.h>
 
 #ifdef VES_QT_RENDER_DEBUG
-#   define _debug(text) std::cout << "UIElementQt::" << text << std::endl << std::flush
+#define _debug(text) std::cout << "UIElementQt::" << text << std::endl << std::flush
 #else
-#   define _debug(text)
+#define _debug(text)
 #endif
 
 // qt_sendSpontaneousEvent is a friend method of QCoreApplication and thus
@@ -74,35 +77,47 @@ namespace conductor
 {
 
 UIElementQt::UIElementQt( QWidget *parent ) :
-    QGraphicsView( parent ),
-    mWidget( 0 ),
-    mImage( 0 ),
-    mImageFlipped( 0 ),
-    mGraphicsScene( 0 ),
-    mGraphicsProxyWidget( 0 ),
-    mGraphicsView( 0 ),
-    mTimer( 0 ),
-    mImageWidth( 0 ),
-    mImageHeight( 0 ),
-    mWidth( 0 ),
-    mHeight( 0 ),
-    mTextureLeft( 0.0f ),
-    mTextureRight( 0.0f ),
-    mTextureBottom( 0.0f ),
-    mTextureTop( 0.0f ),
-    mInitialized( false ),
-    mImageDirty( true ),
-    mDirty( true )
+QGraphicsView( parent ),
+UIElement(),
+mWidget( 0 ),
+mImage( 0 ),
+mImageFlipped( 0 ),
+mGraphicsScene( 0 ),
+mGraphicsProxyWidget( 0 ),
+mGraphicsView( 0 ),
+mTimer( 0 ),
+mImageWidth( 0 ),
+mImageHeight( 0 ),
+mWidth( 0 ),
+mHeight( 0 ),
+mTextureLeft( 0.0f ),
+mTextureRight( 1.0f ),
+mTextureBottom( 0.0f ),
+mTextureTop( 1.0f ),
+mInitialized( false ),
+mImageDirty( true ),
+mDirty( true ),
+mTitlebar( 0 ),
+mQTitlebar( 0 )
 {
     _debug( "ctor" );
+
+    SetMinimized( false );
+
     this->setCacheMode( QGraphicsView::CacheNone );
     setRenderHints( QPainter::NonCosmeticDefaultPen );
     QBrush brush( QColor( 0, 0, 0, 0 ) );
     brush.setStyle( Qt::SolidPattern );
     this->setBackgroundBrush( brush );
     mImageMutex = new QMutex( );
-    _setupKeyMap();
+    _setupKeyMap( );
+    
+    mQTitlebar = new Ui::titlebar;
+    mTitlebar = new QWidget( 0 );
+    mQTitlebar->setupUi( mTitlebar );
+
     Initialize( );
+    PostConstructor();
 }
 
 UIElementQt::~UIElementQt( )
@@ -111,6 +126,7 @@ UIElementQt::~UIElementQt( )
     FreeOldWidgets( );
     delete mTimer;
     delete mImageMutex;
+    delete mQTitlebar;
 }
 
 void UIElementQt::Initialize( )
@@ -124,14 +140,18 @@ void UIElementQt::Initialize( )
         // when the thread that created this object has execution.
         //QObject::connect( this, SIGNAL( RequestRender( ) ), this, SLOT( _render( ) ), Qt::QueuedConnection );
         QObject::connect( this, SIGNAL( PutSendEvent( ves::xplorer::eventmanager::InteractionEvent* ) ),
-            this, SLOT( _sendEvent( ves::xplorer::eventmanager::InteractionEvent* ) ), Qt::QueuedConnection );
-        QObject::connect( this, SIGNAL( RequestEmbed( bool ) ), this, SLOT( _embed( bool ) ), Qt::QueuedConnection );
+                          this, SLOT( _sendEvent( ves::xplorer::eventmanager::InteractionEvent* ) ), Qt::QueuedConnection );
 
         // Start up the timer that causes repaints at a set interval -- assuming
         // thread is given execution sometime during this interval.
         mTimer = new QTimer( this );
         QObject::connect( mTimer, SIGNAL( timeout( ) ), this, SLOT( _render( ) ) );
         mTimer->start( 30 );
+
+        QObject::connect( mQTitlebar->OpacitySlider, SIGNAL( valueChanged( int ) ), this, SLOT( _onOpacitySliderValueChanged( int ) ) );
+        QObject::connect( mQTitlebar->HideButton, SIGNAL( clicked( ) ), this, SLOT( _onHideButtonClicked() ) );
+        QObject::connect( mQTitlebar->MinimizeButton, SIGNAL( clicked( ) ), this, SLOT( _onMinimizeButtonClicked() ) );
+        QObject::connect( mQTitlebar->TitleFrame, SIGNAL( pressed( ) ), this, SLOT( _onTitlebarPressed() ) );
 
         mInitialized = true;
     }
@@ -172,7 +192,7 @@ void UIElementQt::SendInteractionEvent( ves::xplorer::eventmanager::InteractionE
                                         event )
 {
     ves::xplorer::eventmanager::InteractionEvent* m_event =
-        new ves::xplorer::eventmanager::InteractionEvent( event );
+            new ves::xplorer::eventmanager::InteractionEvent( event );
 
     Q_EMIT PutSendEvent( m_event );
 }
@@ -249,6 +269,11 @@ void UIElementQt::SetWidget( QWidget* widget )
     // The default is centered, which can result in odd alignment
     this->setAlignment( Qt::AlignLeft | Qt::AlignTop );
 
+    QGraphicsProxyWidget* titlebar = mGraphicsScene->addWidget( mTitlebar );
+    mTitlebar->resize( mWidth, mTitlebar->height() );
+    titlebar->show();
+    mTitlebar->move( 0, 0 );
+
     // Add the widget to the scene.
     // NB: We don't have to explicitly create mGraphicsProxyWidget since
     // it is created and returned by call to QGraphicsScene::addWidget
@@ -256,7 +281,8 @@ void UIElementQt::SetWidget( QWidget* widget )
     mGraphicsProxyWidget->show( );
 
     // Ensure that mWidget is in the top left-hand corner of mGraphicsScene.
-    mWidget->move( 0, 0 );
+    //mWidget->move( 0, 0 );
+    mWidget->move( 0, mTitlebar->height() );
 
     // Should we be responsible for this here? What if widget designer
     // doesn't want it to have mouseTracking?
@@ -276,7 +302,7 @@ void UIElementQt::SetWidget( QWidget* widget )
     this->setSceneRect( mGraphicsScene->sceneRect( ) );
 
     // Forcibly resize view to contain mWidget
-    this->resize( mWidth, mHeight );
+    this->resize( mWidth, mHeight + mTitlebar->height() );
 
     // Render this widget immediately so that there will be an image to return
     // to the first call to RenderElementToImage()
@@ -291,8 +317,8 @@ void UIElementQt::SetWidget( QWidget* widget )
     // tab-focus feedback and odd cursor behavior on Qt 4.6.x. Unfortunately,
     // doing the activate on the scene causes comboboxes in the property browser
     // to stop showing choices on pulldown. Ugh.
-//    QEvent ev( QEvent::WindowActivate );
-//    QApplication::sendEvent( mGraphicsScene, &ev );
+    //    QEvent ev( QEvent::WindowActivate );
+    //    QApplication::sendEvent( mGraphicsScene, &ev );
 }
 
 void UIElementQt::UpdateSize( )
@@ -303,6 +329,9 @@ void UIElementQt::UpdateSize( )
 
     mWidth = mWidget->width( );
     mHeight = mWidget->height( );
+
+    mElementMatrix.makeScale( mWidth, mHeight, 1);
+    mElementMatrixDirty = true;
 
     //Line for debugging
     //std::cout << mWidth << ", " << mHeight << std::endl;
@@ -333,7 +362,7 @@ void UIElementQt::UpdateSize( )
     // Calculate the texture coordinates of the rendered widget in the texture
     _calculateTextureCoordinates( );
 
-
+    // FIXME: Need to update coordinates on texture attribute
 
     // If image doesn't exist, create one of the proper size.
     { // Enter critical section
@@ -362,7 +391,7 @@ void UIElementQt::FreeOldWidgets( )
     {
         delete mGraphicsView;
     }
-    
+
     delete mGraphicsProxyWidget;
 
     { // Enter critical section
@@ -425,10 +454,10 @@ void UIElementQt::_calculateTextureCoordinates( )
     else
     {
         mTextureLeft = 0.0f;
-//        mTextureRight = static_cast < float > ( mWidth ) /
-//                static_cast < float > ( mImageWidth );
-//        mTextureBottom = 1.0f - ( static_cast < float > ( mHeight ) /
-//                static_cast < float > ( mImageHeight ) );
+        //        mTextureRight = static_cast < float > ( mWidth ) /
+        //                static_cast < float > ( mImageWidth );
+        //        mTextureBottom = 1.0f - ( static_cast < float > ( mHeight ) /
+        //                static_cast < float > ( mImageHeight ) );
         mTextureRight = 1.0f;
         mTextureBottom = 0.0f;
         mTextureTop = 1.0f;
@@ -506,7 +535,8 @@ void UIElementQt::_sendEvent( ves::xplorer::eventmanager::InteractionEvent* even
         wchar_t uniKey = event->KeyUnicode;
         QString qUniKey = QString::fromWCharArray( &uniKey, 1 );
         QKeyEvent e( QEvent::KeyRelease, mKeyMap[event->Key], Qt::NoModifier, qUniKey );
-        qt_sendSpontaneousEvent( this->viewport( ), &e );;
+        qt_sendSpontaneousEvent( this->viewport( ), &e );
+        ;
     }
         break;
     }
@@ -515,177 +545,167 @@ void UIElementQt::_sendEvent( ves::xplorer::eventmanager::InteractionEvent* even
     delete event;
 }
 
-void UIElementQt::Unembed( )
-{
-    Q_EMIT RequestEmbed( false );
-}
-
-void UIElementQt::Embed( )
-{
-    Q_EMIT RequestEmbed( true );
-}
-
-void UIElementQt::_embed( bool embed )
-{
-    if( embed )
-    {
-        this->hide( );
-        if( !mTimer->isActive( ) )
-        {
-            mTimer->start( 30 );
-        }
-    }
-    else
-    {
-        if( mTimer->isActive( ) )
-        {
-            mTimer->stop( );
-        }
-        this->show( );
-    }
-}
-
 void UIElementQt::_setupKeyMap( )
 {
-   mKeyMap[ gadget::KEY_NONE ] = 0;
-   mKeyMap[ gadget::KEY_UP ] = Qt::Key_Up;
-   mKeyMap[ gadget::KEY_DOWN ] = Qt::Key_Down;
-   mKeyMap[ gadget::KEY_LEFT ] = Qt::Key_Left;
-   mKeyMap[ gadget::KEY_RIGHT ] = Qt::Key_Right;
-   mKeyMap[ gadget::KEY_SHIFT ] = Qt::Key_Shift;
-   mKeyMap[ gadget::KEY_CTRL ] = Qt::Key_Control;
-   mKeyMap[ gadget::KEY_ALT ] = Qt::Key_Alt;
-   mKeyMap[ gadget::KEY_COMMAND ] = Qt::Key_Control;
-   mKeyMap[ gadget::KEY_1 ] = Qt::Key_1;
-   mKeyMap[ gadget::KEY_2 ] = Qt::Key_2;
-   mKeyMap[ gadget::KEY_3 ] = Qt::Key_3;
-   mKeyMap[ gadget::KEY_4 ] = Qt::Key_4;
-   mKeyMap[ gadget::KEY_5 ] = Qt::Key_5;
-   mKeyMap[ gadget::KEY_6 ] = Qt::Key_6;
-   mKeyMap[ gadget::KEY_7 ] = Qt::Key_7;
-   mKeyMap[ gadget::KEY_8 ] = Qt::Key_8;
-   mKeyMap[ gadget::KEY_9 ] = Qt::Key_9;
-   mKeyMap[ gadget::KEY_0 ] = Qt::Key_0;
-   mKeyMap[ gadget::KEY_A ] = Qt::Key_A;
-   mKeyMap[ gadget::KEY_B ] = Qt::Key_B;
-   mKeyMap[ gadget::KEY_C ] = Qt::Key_C;
-   mKeyMap[ gadget::KEY_D ] = Qt::Key_D;
-   mKeyMap[ gadget::KEY_E ] = Qt::Key_E;
-   mKeyMap[ gadget::KEY_F ] = Qt::Key_F;
-   mKeyMap[ gadget::KEY_G ] = Qt::Key_G;
-   mKeyMap[ gadget::KEY_H ] = Qt::Key_H;
-   mKeyMap[ gadget::KEY_I ] = Qt::Key_I;
-   mKeyMap[ gadget::KEY_J ] = Qt::Key_J;
-   mKeyMap[ gadget::KEY_K ] = Qt::Key_K;
-   mKeyMap[ gadget::KEY_L ] = Qt::Key_L;
-   mKeyMap[ gadget::KEY_M ] = Qt::Key_M;
-   mKeyMap[ gadget::KEY_N ] = Qt::Key_N;
-   mKeyMap[ gadget::KEY_O ] = Qt::Key_O;
-   mKeyMap[ gadget::KEY_P ] = Qt::Key_P;
-   mKeyMap[ gadget::KEY_Q ] = Qt::Key_Q;
-   mKeyMap[ gadget::KEY_R ] = Qt::Key_R;
-   mKeyMap[ gadget::KEY_S ] = Qt::Key_S;
-   mKeyMap[ gadget::KEY_T ] = Qt::Key_T;
-   mKeyMap[ gadget::KEY_U ] = Qt::Key_U;
-   mKeyMap[ gadget::KEY_V ] = Qt::Key_V;
-   mKeyMap[ gadget::KEY_W ] = Qt::Key_W;
-   mKeyMap[ gadget::KEY_X ] = Qt::Key_X;
-   mKeyMap[ gadget::KEY_Y ] = Qt::Key_Y;
-   mKeyMap[ gadget::KEY_Z ] = Qt::Key_Z;
-   mKeyMap[ gadget::KEY_ESC ] = Qt::Key_Escape;
-   mKeyMap[ gadget::KEY_TAB ] = Qt::Key_Tab;
-   mKeyMap[ gadget::KEY_BACKTAB ] = Qt::Key_Backtab;
-   mKeyMap[ gadget::KEY_BACKSPACE ] = Qt::Key_Backspace;
-   mKeyMap[ gadget::KEY_RETURN ] = Qt::Key_Return;
-   mKeyMap[ gadget::KEY_ENTER ] = Qt::Key_Enter;
-   mKeyMap[ gadget::KEY_INSERT ] = Qt::Key_Insert;
-   mKeyMap[ gadget::KEY_DELETE ] = Qt::Key_Delete;
-   mKeyMap[ gadget::KEY_PAUSE ] = Qt::Key_Pause;
-   mKeyMap[ gadget::KEY_PRINT ] = Qt::Key_Print;
-   mKeyMap[ gadget::KEY_SYSREQ ] = Qt::Key_SysReq;
-   mKeyMap[ gadget::KEY_HOME ] = Qt::Key_Home;
-   mKeyMap[ gadget::KEY_END ] = Qt::Key_End;
-   mKeyMap[ gadget::KEY_PRIOR ] = Qt::Key_PageUp;
-   mKeyMap[ gadget::KEY_NEXT ] = Qt::Key_PageDown;
-   mKeyMap[ gadget::KEY_CAPS_LOCK ] = Qt::Key_CapsLock;
-   mKeyMap[ gadget::KEY_NUM_LOCK ] = Qt::Key_NumLock;
-   mKeyMap[ gadget::KEY_SCROLL_LOCK ] = Qt::Key_ScrollLock;
-   mKeyMap[ gadget::KEY_F1 ] = Qt::Key_F1;
-   mKeyMap[ gadget::KEY_F2 ] = Qt::Key_F2;
-   mKeyMap[ gadget::KEY_F3 ] = Qt::Key_F3;
-   mKeyMap[ gadget::KEY_F4 ] = Qt::Key_F4;
-   mKeyMap[ gadget::KEY_F5 ] = Qt::Key_F5;
-   mKeyMap[ gadget::KEY_F6 ] = Qt::Key_F6;
-   mKeyMap[ gadget::KEY_F7 ] = Qt::Key_F7;
-   mKeyMap[ gadget::KEY_F8 ] = Qt::Key_F8;
-   mKeyMap[ gadget::KEY_F9 ] = Qt::Key_F9;
-   mKeyMap[ gadget::KEY_F10 ] = Qt::Key_F10;
-   mKeyMap[ gadget::KEY_F11 ] = Qt::Key_F11;
-   mKeyMap[ gadget::KEY_F12 ] = Qt::Key_F12;
-   mKeyMap[ gadget::KEY_F13 ] = Qt::Key_F13;
-   mKeyMap[ gadget::KEY_F14 ] = Qt::Key_F14;
-   mKeyMap[ gadget::KEY_F15 ] = Qt::Key_F15;
-   mKeyMap[ gadget::KEY_F16 ] = Qt::Key_F16;
-   mKeyMap[ gadget::KEY_F17 ] = Qt::Key_F17;
-   mKeyMap[ gadget::KEY_F18 ] = Qt::Key_F18;
-   mKeyMap[ gadget::KEY_F19 ] = Qt::Key_F19;
-   mKeyMap[ gadget::KEY_F20 ] = Qt::Key_F20;
-   mKeyMap[ gadget::KEY_F21 ] = Qt::Key_F21;
-   mKeyMap[ gadget::KEY_F22 ] = Qt::Key_F22;
-   mKeyMap[ gadget::KEY_F23 ] = Qt::Key_F23;
-   mKeyMap[ gadget::KEY_F24 ] = Qt::Key_F24;
-   mKeyMap[ gadget::KEY_F25 ] = Qt::Key_F25;
-   mKeyMap[ gadget::KEY_F26 ] = Qt::Key_F26;
-   mKeyMap[ gadget::KEY_F27 ] = Qt::Key_F27;
-   mKeyMap[ gadget::KEY_F28 ] = Qt::Key_F28;
-   mKeyMap[ gadget::KEY_F29 ] = Qt::Key_F29;
-   mKeyMap[ gadget::KEY_F30 ] = Qt::Key_F30;
-   mKeyMap[ gadget::KEY_F31 ] = Qt::Key_F31;
-   mKeyMap[ gadget::KEY_F32 ] = Qt::Key_F32;
-   mKeyMap[ gadget::KEY_F33 ] = Qt::Key_F33;
-   mKeyMap[ gadget::KEY_F34 ] = Qt::Key_F34;
-   mKeyMap[ gadget::KEY_F35 ] = Qt::Key_F35;
-   mKeyMap[ gadget::KEY_SUPER_L ] = Qt::Key_Super_L;
-   mKeyMap[ gadget::KEY_SUPER_R ] = Qt::Key_Super_R;
-   mKeyMap[ gadget::KEY_MENU ] = Qt::Key_Menu;
-   mKeyMap[ gadget::KEY_HYPER_L ] = Qt::Key_Hyper_L;
-   mKeyMap[ gadget::KEY_HYPER_R ] = Qt::Key_Hyper_R;
-   mKeyMap[ gadget::KEY_HELP ] = Qt::Key_Help;
-   mKeyMap[ gadget::KEY_SPACE ] = Qt::Key_Space;
-   mKeyMap[ gadget::KEY_ANY ] = Qt::Key_Any;
-   mKeyMap[ gadget::KEY_EXCLAM ] = Qt::Key_Exclam;
-   mKeyMap[ gadget::KEY_QUOTE_DBL ] = Qt::Key_QuoteDbl;
-   mKeyMap[ gadget::KEY_NUMBER_SIGN ] = Qt::Key_NumberSign;
-   mKeyMap[ gadget::KEY_DOLLAR ] = Qt::Key_Dollar;
-   mKeyMap[ gadget::KEY_PERCENT ] = Qt::Key_Percent;
-   mKeyMap[ gadget::KEY_AMPERSAND ] = Qt::Key_Ampersand;
-   mKeyMap[ gadget::KEY_APOSTROPHE ] = Qt::Key_Apostrophe;
-   mKeyMap[ gadget::KEY_PAREN_LEFT ] = Qt::Key_ParenLeft;
-   mKeyMap[ gadget::KEY_PAREN_RIGHT ] = Qt::Key_ParenRight;
-   mKeyMap[ gadget::KEY_ASTERISK ] = Qt::Key_Asterisk;
-   mKeyMap[ gadget::KEY_PLUS ] = Qt::Key_Plus;
-   mKeyMap[ gadget::KEY_COMMA ] = Qt::Key_Comma;
-   mKeyMap[ gadget::KEY_MINUS ] = Qt::Key_Minus;
-   mKeyMap[ gadget::KEY_PERIOD ] = Qt::Key_Period;
-   mKeyMap[ gadget::KEY_SLASH ] = Qt::Key_Slash;
-   mKeyMap[ gadget::KEY_COLON ] = Qt::Key_Colon;
-   mKeyMap[ gadget::KEY_SEMICOLON ] = Qt::Key_Semicolon;
-   mKeyMap[ gadget::KEY_LESS ] = Qt::Key_Less;
-   mKeyMap[ gadget::KEY_EQUAL ] = Qt::Key_Equal;
-   mKeyMap[ gadget::KEY_GREATER ] = Qt::Key_Greater;
-   mKeyMap[ gadget::KEY_QUESTION ] = Qt::Key_Question;
-   mKeyMap[ gadget::KEY_AT ] = Qt::Key_At;
-   mKeyMap[ gadget::KEY_BRACKET_LEFT ] = Qt::Key_BracketLeft;
-   mKeyMap[ gadget::KEY_BACKSLASH ] = Qt::Key_Backslash;
-   mKeyMap[ gadget::KEY_BRACKET_RIGHT ] = Qt::Key_BracketRight;
-   mKeyMap[ gadget::KEY_ASCII_CIRCUM ] = Qt::Key_AsciiCircum;
-   mKeyMap[ gadget::KEY_UNDERSCORE ] = Qt::Key_Underscore;
-   mKeyMap[ gadget::KEY_QUOTE_LEFT ] = Qt::Key_QuoteLeft;
-   mKeyMap[ gadget::KEY_BRACE_LEFT ] = Qt::Key_BraceLeft;
-   mKeyMap[ gadget::KEY_BAR ] = Qt::Key_Bar;
-   mKeyMap[ gadget::KEY_BRACE_RIGHT ] = Qt::Key_BraceRight;
-   mKeyMap[ gadget::KEY_ASCII_TILDE ] = Qt::Key_AsciiTilde;
-   mKeyMap[ gadget::KEY_UNKNOWN ] = Qt::Key_unknown;
+    mKeyMap[ gadget::KEY_NONE ] = 0;
+    mKeyMap[ gadget::KEY_UP ] = Qt::Key_Up;
+    mKeyMap[ gadget::KEY_DOWN ] = Qt::Key_Down;
+    mKeyMap[ gadget::KEY_LEFT ] = Qt::Key_Left;
+    mKeyMap[ gadget::KEY_RIGHT ] = Qt::Key_Right;
+    mKeyMap[ gadget::KEY_SHIFT ] = Qt::Key_Shift;
+    mKeyMap[ gadget::KEY_CTRL ] = Qt::Key_Control;
+    mKeyMap[ gadget::KEY_ALT ] = Qt::Key_Alt;
+    mKeyMap[ gadget::KEY_COMMAND ] = Qt::Key_Control;
+    mKeyMap[ gadget::KEY_1 ] = Qt::Key_1;
+    mKeyMap[ gadget::KEY_2 ] = Qt::Key_2;
+    mKeyMap[ gadget::KEY_3 ] = Qt::Key_3;
+    mKeyMap[ gadget::KEY_4 ] = Qt::Key_4;
+    mKeyMap[ gadget::KEY_5 ] = Qt::Key_5;
+    mKeyMap[ gadget::KEY_6 ] = Qt::Key_6;
+    mKeyMap[ gadget::KEY_7 ] = Qt::Key_7;
+    mKeyMap[ gadget::KEY_8 ] = Qt::Key_8;
+    mKeyMap[ gadget::KEY_9 ] = Qt::Key_9;
+    mKeyMap[ gadget::KEY_0 ] = Qt::Key_0;
+    mKeyMap[ gadget::KEY_A ] = Qt::Key_A;
+    mKeyMap[ gadget::KEY_B ] = Qt::Key_B;
+    mKeyMap[ gadget::KEY_C ] = Qt::Key_C;
+    mKeyMap[ gadget::KEY_D ] = Qt::Key_D;
+    mKeyMap[ gadget::KEY_E ] = Qt::Key_E;
+    mKeyMap[ gadget::KEY_F ] = Qt::Key_F;
+    mKeyMap[ gadget::KEY_G ] = Qt::Key_G;
+    mKeyMap[ gadget::KEY_H ] = Qt::Key_H;
+    mKeyMap[ gadget::KEY_I ] = Qt::Key_I;
+    mKeyMap[ gadget::KEY_J ] = Qt::Key_J;
+    mKeyMap[ gadget::KEY_K ] = Qt::Key_K;
+    mKeyMap[ gadget::KEY_L ] = Qt::Key_L;
+    mKeyMap[ gadget::KEY_M ] = Qt::Key_M;
+    mKeyMap[ gadget::KEY_N ] = Qt::Key_N;
+    mKeyMap[ gadget::KEY_O ] = Qt::Key_O;
+    mKeyMap[ gadget::KEY_P ] = Qt::Key_P;
+    mKeyMap[ gadget::KEY_Q ] = Qt::Key_Q;
+    mKeyMap[ gadget::KEY_R ] = Qt::Key_R;
+    mKeyMap[ gadget::KEY_S ] = Qt::Key_S;
+    mKeyMap[ gadget::KEY_T ] = Qt::Key_T;
+    mKeyMap[ gadget::KEY_U ] = Qt::Key_U;
+    mKeyMap[ gadget::KEY_V ] = Qt::Key_V;
+    mKeyMap[ gadget::KEY_W ] = Qt::Key_W;
+    mKeyMap[ gadget::KEY_X ] = Qt::Key_X;
+    mKeyMap[ gadget::KEY_Y ] = Qt::Key_Y;
+    mKeyMap[ gadget::KEY_Z ] = Qt::Key_Z;
+    mKeyMap[ gadget::KEY_ESC ] = Qt::Key_Escape;
+    mKeyMap[ gadget::KEY_TAB ] = Qt::Key_Tab;
+    mKeyMap[ gadget::KEY_BACKTAB ] = Qt::Key_Backtab;
+    mKeyMap[ gadget::KEY_BACKSPACE ] = Qt::Key_Backspace;
+    mKeyMap[ gadget::KEY_RETURN ] = Qt::Key_Return;
+    mKeyMap[ gadget::KEY_ENTER ] = Qt::Key_Enter;
+    mKeyMap[ gadget::KEY_INSERT ] = Qt::Key_Insert;
+    mKeyMap[ gadget::KEY_DELETE ] = Qt::Key_Delete;
+    mKeyMap[ gadget::KEY_PAUSE ] = Qt::Key_Pause;
+    mKeyMap[ gadget::KEY_PRINT ] = Qt::Key_Print;
+    mKeyMap[ gadget::KEY_SYSREQ ] = Qt::Key_SysReq;
+    mKeyMap[ gadget::KEY_HOME ] = Qt::Key_Home;
+    mKeyMap[ gadget::KEY_END ] = Qt::Key_End;
+    mKeyMap[ gadget::KEY_PRIOR ] = Qt::Key_PageUp;
+    mKeyMap[ gadget::KEY_NEXT ] = Qt::Key_PageDown;
+    mKeyMap[ gadget::KEY_CAPS_LOCK ] = Qt::Key_CapsLock;
+    mKeyMap[ gadget::KEY_NUM_LOCK ] = Qt::Key_NumLock;
+    mKeyMap[ gadget::KEY_SCROLL_LOCK ] = Qt::Key_ScrollLock;
+    mKeyMap[ gadget::KEY_F1 ] = Qt::Key_F1;
+    mKeyMap[ gadget::KEY_F2 ] = Qt::Key_F2;
+    mKeyMap[ gadget::KEY_F3 ] = Qt::Key_F3;
+    mKeyMap[ gadget::KEY_F4 ] = Qt::Key_F4;
+    mKeyMap[ gadget::KEY_F5 ] = Qt::Key_F5;
+    mKeyMap[ gadget::KEY_F6 ] = Qt::Key_F6;
+    mKeyMap[ gadget::KEY_F7 ] = Qt::Key_F7;
+    mKeyMap[ gadget::KEY_F8 ] = Qt::Key_F8;
+    mKeyMap[ gadget::KEY_F9 ] = Qt::Key_F9;
+    mKeyMap[ gadget::KEY_F10 ] = Qt::Key_F10;
+    mKeyMap[ gadget::KEY_F11 ] = Qt::Key_F11;
+    mKeyMap[ gadget::KEY_F12 ] = Qt::Key_F12;
+    mKeyMap[ gadget::KEY_F13 ] = Qt::Key_F13;
+    mKeyMap[ gadget::KEY_F14 ] = Qt::Key_F14;
+    mKeyMap[ gadget::KEY_F15 ] = Qt::Key_F15;
+    mKeyMap[ gadget::KEY_F16 ] = Qt::Key_F16;
+    mKeyMap[ gadget::KEY_F17 ] = Qt::Key_F17;
+    mKeyMap[ gadget::KEY_F18 ] = Qt::Key_F18;
+    mKeyMap[ gadget::KEY_F19 ] = Qt::Key_F19;
+    mKeyMap[ gadget::KEY_F20 ] = Qt::Key_F20;
+    mKeyMap[ gadget::KEY_F21 ] = Qt::Key_F21;
+    mKeyMap[ gadget::KEY_F22 ] = Qt::Key_F22;
+    mKeyMap[ gadget::KEY_F23 ] = Qt::Key_F23;
+    mKeyMap[ gadget::KEY_F24 ] = Qt::Key_F24;
+    mKeyMap[ gadget::KEY_F25 ] = Qt::Key_F25;
+    mKeyMap[ gadget::KEY_F26 ] = Qt::Key_F26;
+    mKeyMap[ gadget::KEY_F27 ] = Qt::Key_F27;
+    mKeyMap[ gadget::KEY_F28 ] = Qt::Key_F28;
+    mKeyMap[ gadget::KEY_F29 ] = Qt::Key_F29;
+    mKeyMap[ gadget::KEY_F30 ] = Qt::Key_F30;
+    mKeyMap[ gadget::KEY_F31 ] = Qt::Key_F31;
+    mKeyMap[ gadget::KEY_F32 ] = Qt::Key_F32;
+    mKeyMap[ gadget::KEY_F33 ] = Qt::Key_F33;
+    mKeyMap[ gadget::KEY_F34 ] = Qt::Key_F34;
+    mKeyMap[ gadget::KEY_F35 ] = Qt::Key_F35;
+    mKeyMap[ gadget::KEY_SUPER_L ] = Qt::Key_Super_L;
+    mKeyMap[ gadget::KEY_SUPER_R ] = Qt::Key_Super_R;
+    mKeyMap[ gadget::KEY_MENU ] = Qt::Key_Menu;
+    mKeyMap[ gadget::KEY_HYPER_L ] = Qt::Key_Hyper_L;
+    mKeyMap[ gadget::KEY_HYPER_R ] = Qt::Key_Hyper_R;
+    mKeyMap[ gadget::KEY_HELP ] = Qt::Key_Help;
+    mKeyMap[ gadget::KEY_SPACE ] = Qt::Key_Space;
+    mKeyMap[ gadget::KEY_ANY ] = Qt::Key_Any;
+    mKeyMap[ gadget::KEY_EXCLAM ] = Qt::Key_Exclam;
+    mKeyMap[ gadget::KEY_QUOTE_DBL ] = Qt::Key_QuoteDbl;
+    mKeyMap[ gadget::KEY_NUMBER_SIGN ] = Qt::Key_NumberSign;
+    mKeyMap[ gadget::KEY_DOLLAR ] = Qt::Key_Dollar;
+    mKeyMap[ gadget::KEY_PERCENT ] = Qt::Key_Percent;
+    mKeyMap[ gadget::KEY_AMPERSAND ] = Qt::Key_Ampersand;
+    mKeyMap[ gadget::KEY_APOSTROPHE ] = Qt::Key_Apostrophe;
+    mKeyMap[ gadget::KEY_PAREN_LEFT ] = Qt::Key_ParenLeft;
+    mKeyMap[ gadget::KEY_PAREN_RIGHT ] = Qt::Key_ParenRight;
+    mKeyMap[ gadget::KEY_ASTERISK ] = Qt::Key_Asterisk;
+    mKeyMap[ gadget::KEY_PLUS ] = Qt::Key_Plus;
+    mKeyMap[ gadget::KEY_COMMA ] = Qt::Key_Comma;
+    mKeyMap[ gadget::KEY_MINUS ] = Qt::Key_Minus;
+    mKeyMap[ gadget::KEY_PERIOD ] = Qt::Key_Period;
+    mKeyMap[ gadget::KEY_SLASH ] = Qt::Key_Slash;
+    mKeyMap[ gadget::KEY_COLON ] = Qt::Key_Colon;
+    mKeyMap[ gadget::KEY_SEMICOLON ] = Qt::Key_Semicolon;
+    mKeyMap[ gadget::KEY_LESS ] = Qt::Key_Less;
+    mKeyMap[ gadget::KEY_EQUAL ] = Qt::Key_Equal;
+    mKeyMap[ gadget::KEY_GREATER ] = Qt::Key_Greater;
+    mKeyMap[ gadget::KEY_QUESTION ] = Qt::Key_Question;
+    mKeyMap[ gadget::KEY_AT ] = Qt::Key_At;
+    mKeyMap[ gadget::KEY_BRACKET_LEFT ] = Qt::Key_BracketLeft;
+    mKeyMap[ gadget::KEY_BACKSLASH ] = Qt::Key_Backslash;
+    mKeyMap[ gadget::KEY_BRACKET_RIGHT ] = Qt::Key_BracketRight;
+    mKeyMap[ gadget::KEY_ASCII_CIRCUM ] = Qt::Key_AsciiCircum;
+    mKeyMap[ gadget::KEY_UNDERSCORE ] = Qt::Key_Underscore;
+    mKeyMap[ gadget::KEY_QUOTE_LEFT ] = Qt::Key_QuoteLeft;
+    mKeyMap[ gadget::KEY_BRACE_LEFT ] = Qt::Key_BraceLeft;
+    mKeyMap[ gadget::KEY_BAR ] = Qt::Key_Bar;
+    mKeyMap[ gadget::KEY_BRACE_RIGHT ] = Qt::Key_BraceRight;
+    mKeyMap[ gadget::KEY_ASCII_TILDE ] = Qt::Key_AsciiTilde;
+    mKeyMap[ gadget::KEY_UNKNOWN ] = Qt::Key_unknown;
+}
+
+void UIElementQt::_onHideButtonClicked( )
+{
+    ves::conductor::UIManager::instance()->HideElement( this );
+}
+
+void UIElementQt::_onMinimizeButtonClicked( )
+{
+    ves::conductor::UIManager::instance()->MinimizeElement( this );
+}
+
+void UIElementQt::_onTitlebarPressed( )
+{
+    ves::conductor::UIManager::instance()->InitiateMoveElement( this );
+}
+
+void UIElementQt::_onOpacitySliderValueChanged( int opacity )
+{
+    ves::conductor::UIManager::instance()->SetOpacity( opacity/100.0f );
 }
 
 } // namespace conductor

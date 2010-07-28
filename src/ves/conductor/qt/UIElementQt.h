@@ -46,6 +46,11 @@
 #include <QtGui/QGraphicsProxyWidget>
 #include <QtCore/QTimer>
 #include <QtCore/QMutex>
+#include <QtCore/qobjectdefs.h>
+
+namespace Ui {
+    class titlebar;
+}
 
 namespace ves
 {
@@ -77,8 +82,6 @@ public:
     virtual unsigned char* RenderElementToImage( );
     virtual bool IsDirty( );
     virtual void Initialize( );
-    virtual void Unembed( );
-    virtual void Embed( );
 
     // Functions unique to this derived class
 
@@ -103,10 +106,10 @@ public:
 protected:
     void paintEvent( QPaintEvent* event );
 
-Q_SIGNALS:
-    void RequestRender( );
-    void PutSendEvent( ves::xplorer::eventmanager::InteractionEvent* event );
-    void RequestEmbed( bool embed );
+//Q_SIGNALS:
+//    void RequestRender( );
+//    void PutSendEvent( ves::xplorer::eventmanager::InteractionEvent* event );
+//    void RequestEmbed( bool embed );
 
 private:
     void FreeOldWidgets( );
@@ -132,15 +135,24 @@ private:
     ///< slightly different state from mImageDirty
     std::map<int,int> mKeyMap; ///< Map to convert juggler keycodes to Qt keycodes
 
-    //void _calculatePower2ImageDimensions( );
     void _calculateTextureCoordinates( );
     void _setupKeyMap( );
 
-    protected
-Q_SLOTS:
+    QWidget* mTitlebar;
+    Ui::titlebar* mQTitlebar;
+
+protected Q_SLOTS:
     void _render( );
     void _sendEvent( ves::xplorer::eventmanager::InteractionEvent* event );
-    void _embed( bool embed );
+    void _onHideButtonClicked();
+    void _onMinimizeButtonClicked();
+    void _onTitlebarPressed();
+    void _onOpacitySliderValueChanged( int opacity );
+
+    Q_SIGNALS:
+    void RequestRender( );
+    void PutSendEvent( ves::xplorer::eventmanager::InteractionEvent* event );
+
 
 };
 
