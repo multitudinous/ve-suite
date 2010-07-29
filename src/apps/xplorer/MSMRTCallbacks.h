@@ -197,8 +197,8 @@ public:
 
         //Should only see this message once
         //(or twice, for osgViewer) per cull thread
-        osg::notify( osg::ALWAYS ) << "In KeepFBOsBoundCallback, cull traversal"
-                                   << std::endl;
+        //osg::notify( osg::ALWAYS ) << "In KeepFBOsBoundCallback, cull traversal"
+                                   //<< std::endl;
 
         //Get the current RenderStage and prevent it from unbinding
         //the FBOs just before our post-draw MSMRTCallback is executed
