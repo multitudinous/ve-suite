@@ -2476,9 +2476,16 @@ void AppFrame::LoadNewNetwork( wxUpdateUIEvent& WXUNUSED( event )  )
     {
         // Let xplorer know we are loading a new ves file so that it can do any
         // necessary cleanup, such as resetting the database
+#ifdef QT_ON
         CommandPtr loadVesFile( new Command() );
         loadVesFile->SetCommandName( "LOAD_VES_FILE" );
+        // Dummy DVP to prevent crashes since xplorer assumes existence of 
+        // valid DVP without testing.
+        DataValuePairPtr nullDVP( new DataValuePair() );
+        nullDVP->SetData( "LOAD_VES_FILE", "NULL" );
+        loadVesFile->AddDataValuePair( nullDVP );
         serviceList->SendCommandStringToXplorer( loadVesFile );
+#endif // QT_ON
 
         //Send a new start position for all apps
         //do this before loading the ves data

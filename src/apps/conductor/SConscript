@@ -36,6 +36,9 @@ tao_options.apply( env )
 vpr_options.apply( env )
 vtk_options.apply( env )
 
+if baseEnv['MakeQtSupport'] == "yes":
+    env.AppendUnique( CPPDEFINES = ['QT_ON'] )
+
 resources = [ pj( RootDir, 'dist', 'installerImages', 've_icon128x128.icns')]
    
 prog = ves_pkg.createProgram('ves_conductor' + env["PROGSUFFIX"], env, 'bin',
