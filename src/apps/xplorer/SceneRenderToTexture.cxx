@@ -33,6 +33,7 @@
 
 // --- VE-Suite Includes --- //
 #include "SceneRenderToTexture.h"
+#include "MSMRTCallbacks.h"
 
 #include <ves/xplorer/EnvironmentHandler.h>
 
@@ -175,6 +176,9 @@ SceneRenderToTexture::SceneRenderToTexture()
     //Default glow color for any children that don't explicitly set it.
     stateset->addUniform(
         new osg::Uniform( "glowColor", osg::Vec3( 0.0, 0.0, 0.0 ) ) );
+
+    //Do not unbind the FBOs after the BlitFramebuffer call
+    m_rootGroup->setCullCallback( new KeepFBOsBoundCallback() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 SceneRenderToTexture::~SceneRenderToTexture()
@@ -306,6 +310,11 @@ osg::Camera* SceneRenderToTexture::CreatePipelineCamera(
         osg::CullSettings::COMPUTE_NEAR_FAR_USING_BOUNDING_VOLUMES );
     tempCamera->setCullingActive( false );
 
+    //Post-draw callback on root camera handles resolving
+    //multisampling for the MRT case
+    MSMRTCallback* msmrt = new MSMRTCallback( tempCamera );
+    tempCamera->setPostDrawCallback( msmrt );
+
     std::pair< int, int > viewportDimensions = std::make_pair< int, int >( 
         static_cast< int >( viewport->width() ),
         static_cast< int >( viewport->height() ) );
@@ -328,11 +337,11 @@ osg::Camera* SceneRenderToTexture::CreatePipelineCamera(
     //If you set one buffer to multisample, they all get set to multisample
     //see RenderStage.cpp
     tempCamera->attach(
-        osg::Camera::COLOR_BUFFER0, colorMap.get() );//, 0, 0, false, 4, 4 );
+        osg::Camera::COLOR_BUFFER0, colorMap.get(), 0, 0, false, 8, 8 );
     tempCamera->attach(
-        osg::Camera::COLOR_BUFFER1, glowMap.get() );//, 0, 0, false, 0, 0 );
+        osg::Camera::COLOR_BUFFER1, glowMap.get(), 0, 0, false, 8, 8 );
     //tempCamera->attach(
-        //osg::Camera::COLOR_BUFFER2, mGlowStencil.get() );//, 0, 0, false, 0, 0 );
+        //osg::Camera::COLOR_BUFFER2, mGlowStencil.get(), 0, 0, false, 8, 8 );
 
     /*
     //Set up the depth buffer
