@@ -468,7 +468,7 @@ void App::initScene()
 
     //Define the rootNode, worldDCS, and lighting
     ves::xplorer::scenegraph::SceneManager::instance()->SetRootNode(
-            mSceneRenderToTexture->GetGroup() );
+            mSceneRenderToTexture->GetRootGroup() );
     ves::xplorer::scenegraph::SceneManager::instance()->InitScene();
     ves::xplorer::scenegraph::SceneManager::instance()->ViewLogo( true );
     ves::xplorer::scenegraph::SceneManager::instance()->

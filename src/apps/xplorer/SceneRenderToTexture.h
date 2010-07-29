@@ -114,7 +114,7 @@ public:
 
     ///Get the root node for all children in the scene to be added to
     ///\return The root osg::Group node
-    osg::Group* const GetGroup() const;
+    osg::Group* const GetRootGroup() const;
 
     ///Initialize correct screen info for the texture and quad
     ///NOTE: MUST be called AFTER EnvironmentHandler::InitScene
@@ -200,7 +200,7 @@ private:
 
     ///The root group that everything gets added to
     ///Is the same for all contexts
-    osg::ref_ptr< osg::Group > mRootGroup;
+    osg::ref_ptr< osg::Group > m_rootGroup;
 
     ///Shader pointers
     osg::ref_ptr< osg::Shader > m_topLevelGlow;

@@ -92,7 +92,7 @@ namespace vxsr = ves::xplorer::scenegraph::rtt;
 SceneRenderToTexture::SceneRenderToTexture()
     :
     mScaleFactor( 1 ),
-    mRootGroup( new osg::Group() ),
+    m_rootGroup( new osg::Group() ),
     m_topLevelGlow( NULL ),
     m_glowAlphaPreprocessFP( NULL ),
     m_1dxVP( NULL ),
@@ -164,6 +164,17 @@ SceneRenderToTexture::SceneRenderToTexture()
     m_topLevelGlow->setType( osg::Shader::FRAGMENT );
     m_topLevelGlow->setShaderSource( fragmentSource );
     m_topLevelGlow->setName( "Top Level Glow" );
+
+    osg::ref_ptr< osg::Program > program = new osg::Program();
+    program->addShader( m_topLevelGlow.get() );
+    program->setName( "Top Level Glow" );
+
+    osg::ref_ptr< osg::StateSet > stateset = m_rootGroup->getOrCreateStateSet();
+    stateset->setAttributeAndModes( program.get(),
+        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+    //Default glow color for any children that don't explicitly set it.
+    stateset->addUniform(
+        new osg::Uniform( "glowColor", osg::Vec3( 0.0, 0.0, 0.0 ) ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 SceneRenderToTexture::~SceneRenderToTexture()
@@ -248,7 +259,7 @@ void SceneRenderToTexture::InitScene( osg::Camera* const sceneViewCamera )
         //Add the clear color quad first so it renders before
         camera->addChild( CreateClearColorQuad() );
         //Add the scenegraph to the camera
-        camera->addChild( mRootGroup.get() );
+        camera->addChild( m_rootGroup.get() );
         rttPipelines->addChild( processor.get() );
 
         //Setup a post-processing pipeline for each viewport per context
@@ -346,19 +357,6 @@ osg::Camera* SceneRenderToTexture::CreatePipelineCamera(
     //osg::ref_ptr< osg::ClearNode > clearNode = new osg::ClearNode();
     //clearNode->setClearMask( GL_STENCIL_BUFFER_BIT );
     //tempCamera->addChild( clearNode.get() );
-
-    osg::ref_ptr< osg::StateSet > stateset = tempCamera->getOrCreateStateSet();
-
-    osg::ref_ptr< osg::Program > program = new osg::Program();
-    program->addShader( m_topLevelGlow.get() );
-    program->setName( "Top Level Glow" );
-
-    stateset->setAttributeAndModes( program.get(),
-        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
-
-    //Default glow color for any children that don't explicitly set it.
-    stateset->addUniform(
-        new osg::Uniform( "glowColor", osg::Vec3( 0.0, 0.0, 0.0 ) ) );
 
     return tempCamera;
 }
@@ -800,9 +798,9 @@ osg::Geode* SceneRenderToTexture::CreateTexturedQuad(
     return quadGeode;
 }
 ////////////////////////////////////////////////////////////////////////////////
-osg::Group* const SceneRenderToTexture::GetGroup() const
+osg::Group* const SceneRenderToTexture::GetRootGroup() const
 {
-    return mRootGroup.get();
+    return m_rootGroup.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
 osg::Camera* const SceneRenderToTexture::GetCamera(
