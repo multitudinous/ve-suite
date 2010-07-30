@@ -84,6 +84,9 @@
 #include <iostream>
 
 //#define VES_SRTT_DEBUG
+#define VES_USE_MSMRT_CALLBACK
+#define VES_USE_KEEP_FBOS_BOUND_CALLBACK
+#define VES_USE_MULTISAMPLING
 
 using namespace ves::xplorer;
 
@@ -176,9 +179,6 @@ SceneRenderToTexture::SceneRenderToTexture()
     //Default glow color for any children that don't explicitly set it.
     stateset->addUniform(
         new osg::Uniform( "glowColor", osg::Vec3( 0.0, 0.0, 0.0 ) ) );
-
-    //Do not unbind the FBOs after the BlitFramebuffer call
-    m_rootGroup->setCullCallback( new KeepFBOsBoundCallback() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 SceneRenderToTexture::~SceneRenderToTexture()
@@ -309,12 +309,16 @@ osg::Camera* SceneRenderToTexture::CreatePipelineCamera(
     tempCamera->setComputeNearFarMode(
         osg::CullSettings::COMPUTE_NEAR_FAR_USING_BOUNDING_VOLUMES );
     tempCamera->setCullingActive( false );
-
+#ifdef VES_USE_MSMRT_CALLBACK
     //Post-draw callback on root camera handles resolving
     //multisampling for the MRT case
     MSMRTCallback* msmrt = new MSMRTCallback( tempCamera );
     tempCamera->setPostDrawCallback( msmrt );
-
+#endif
+#ifdef VES_USE_KEEP_FBOS_BOUND_CALLBACK
+    //Do not unbind the FBOs after the BlitFramebuffer call
+    m_rootGroup->setCullCallback( new KeepFBOsBoundCallback() );
+#endif
     std::pair< int, int > viewportDimensions = std::make_pair< int, int >( 
         static_cast< int >( viewport->width() ),
         static_cast< int >( viewport->height() ) );
@@ -336,13 +340,19 @@ osg::Camera* SceneRenderToTexture::CreatePipelineCamera(
     //Attach a texture and use it as the render target
     //If you set one buffer to multisample, they all get set to multisample
     //see RenderStage.cpp
+#ifdef VES_USE_MULTISAMPLING
     tempCamera->attach(
         osg::Camera::COLOR_BUFFER0, colorMap.get(), 0, 0, false, 8, 8 );
     tempCamera->attach(
         osg::Camera::COLOR_BUFFER1, glowMap.get(), 0, 0, false, 8, 8 );
     //tempCamera->attach(
         //osg::Camera::COLOR_BUFFER2, mGlowStencil.get(), 0, 0, false, 8, 8 );
-
+#else
+    tempCamera->attach(
+        osg::Camera::COLOR_BUFFER0, colorMap.get() );
+    tempCamera->attach(
+        osg::Camera::COLOR_BUFFER1, glowMap.get() );
+#endif
     /*
     //Set up the depth buffer
     osg::ref_ptr< osg::Texture2D > depthMap = CreateViewportTexture(
