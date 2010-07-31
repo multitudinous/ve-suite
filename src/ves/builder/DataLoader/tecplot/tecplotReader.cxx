@@ -153,16 +153,26 @@ vtkUnstructuredGrid * tecplotReader::GetOutputFile( const int fileNum )
             this->InitializeVtkData( currentZone );
         }
 
+        this->ReadZoneName( currentZone );
+
         // Declare some variables to be passed among the next group of functions...
         // (Perhaps make these member variables and then argument lists will disappear)
-        LgIndex_t numElementsInZone;
-        int numNodesPerElement, numFacesPerCell, numNodalPointsInZone;
         ZoneType_e zoneType;
-
+        LgIndex_t numElementsInZone;
+        int numNodesPerElement, numFaces, numNodalPointsInZone;
         this->ReadElementInfoInZone( currentZone, zoneType, numElementsInZone, numNodesPerElement,
-                                     numFacesPerCell, numNodalPointsInZone );
-        this->ReadZoneName( currentZone );
-        this->AddCellsToGrid( currentZone, zoneType, numElementsInZone, numNodesPerElement, numNodalPointsInZone );
+                                     numFaces, numNodalPointsInZone );
+
+        if( numFaces == 0 )
+        {
+            this->AddCellsToGrid( currentZone, zoneType, numElementsInZone, numNodesPerElement, numNodalPointsInZone );
+        }
+        else
+        {
+            // face-based FE-data
+            this->AddFaceCellsToGrid( currentZone, zoneType, numElementsInZone );
+        }
+
         this->ReadNodalCoordinates( currentZone, numNodalPointsInZone );
         this->ReadNodeAndCellData( currentZone, numElementsInZone, numNodalPointsInZone );
 
@@ -466,7 +476,7 @@ void tecplotReader::ComputeNumberOfOutputFiles()
     std::cout << "NumberOfFiles = " << this->numberOfOutputFiles << std::endl;
     for( int j = 0; j < this->numZones + 1; j++ )
     {
-        std::cout << "timeToInitVtk = " << this->timeToInitVtk[ j ] << std::endl;
+        std::cout << "timeToInitVtk[ " << j << " ] = " << this->timeToInitVtk[ j ] << std::endl;
     }
 #endif // PRINT_HEADERS
 }
@@ -659,7 +669,7 @@ void tecplotReader::CountNumberOfFilesUsingSolnTime()
 }
 
 void tecplotReader::ReadElementInfoInZone( const EntIndex_t currentZone, ZoneType_e& zoneType, LgIndex_t& numElementsInZone,
-                          int& numNodesPerElement, int& numFacesPerCell, int& numNodalPointsInZone )
+                          int& numNodesPerElement, int& numFaces, int& numNodalPointsInZone )
 {
 #ifdef PRINT_HEADERS
     std::cout << "zoneType is ";
@@ -722,9 +732,7 @@ void tecplotReader::ReadElementInfoInZone( const EntIndex_t currentZone, ZoneTyp
 #endif // PRINT_HEADERS
             break;
         default:
-#ifdef PRINT_HEADERS
-            std::cout << "ZoneType not recognized. Not supposed to get here." << std::endl;
-#endif // PRINT_HEADERS
+            std::cerr << "ZoneType not recognized. Not supposed to get here." << std::endl;
             break;
     }
 
@@ -751,7 +759,7 @@ void tecplotReader::ReadElementInfoInZone( const EntIndex_t currentZone, ZoneTyp
         NULL );         // Receives the handle to a writable field data for the scatter sizing variable.
 
     numNodesPerElement = 0;
-    numFacesPerCell = 0;
+    numFaces = 0;
     numNodalPointsInZone = 0;
 
     if( zoneType == ZoneType_Ordered )
@@ -761,13 +769,13 @@ void tecplotReader::ReadElementInfoInZone( const EntIndex_t currentZone, ZoneTyp
         std::cout << "   The J-dimension for ordered data is " << JMax << std::endl;
         std::cout << "   The K-dimension for ordered data is " << KMax << std::endl;
 #endif // PRINT_HEADERS
-        if( IMax > 0  && JMax > 0 && KMax > 0 )
+        if( IMax > 0 && JMax > 0 && KMax > 0 )
         {
             numNodesPerElement = 8;
         }
-        else if( ( IMax > 0  && JMax > 0 ) ||
-                 ( IMax > 0  && KMax > 0 ) ||
-                 ( JMax > 0  && KMax > 0 )  )
+        else if( ( IMax > 0 && JMax > 0 ) ||
+                 ( IMax > 0 && KMax > 0 ) ||
+                 ( JMax > 0 && KMax > 0 )  )
         {
             numNodesPerElement = 4;
         }
@@ -798,9 +806,9 @@ void tecplotReader::ReadElementInfoInZone( const EntIndex_t currentZone, ZoneTyp
         if( zoneType == ZoneType_FEPolygon || zoneType == ZoneType_FEPolyhedron )
         {
             // face-based FE-data
-            numFacesPerCell = KMax;
+            numFaces = KMax;
 #ifdef PRINT_HEADERS
-            std::cout << "   The number of faces per cell is " << numFacesPerCell << std::endl;
+            std::cout << "   The number of faces is " << numFaces << std::endl;
 #endif // PRINT_HEADERS
         }
         else
@@ -826,13 +834,6 @@ void tecplotReader::ReadElementInfoInZone( const EntIndex_t currentZone, ZoneTyp
     {
         this->totalNumberOfNodalPoints = numNodalPointsInZone;
         this->totalNumberOfElements = numElementsInZone;
-    }
-
-    if( numNodesPerElement == 0 )
-    {
-#ifdef PRINT_HEADERS
-        std::cout << "!!! The number of nodes per element is " << numNodesPerElement << std::endl;
-#endif // PRINT_HEADERS
     }
 }
 
@@ -948,6 +949,132 @@ void tecplotReader::AddCellsToGrid( const EntIndex_t currentZone, const ZoneType
     else
     {
         std::cerr << "Error: Unable to get node map" << std::endl;
+    }
+}
+
+void tecplotReader::AddFaceCellsToGrid( const EntIndex_t currentZone, const ZoneType_e zoneType, const LgIndex_t numElementsInZone )
+{
+    ElemToFaceMap_pa ElemToFaceMap = TecUtilDataElemGetReadableRef( currentZone );
+    if( ! ElemToFaceMap ) 
+    {
+        std::cerr << "Warning: ElemToFaceMap came back null for zone " << currentZone << std::endl;
+        return;
+    }
+
+    FaceMap_pa FaceMap = TecUtilDataFaceMapGetReadableRef( currentZone );
+    if( ! FaceMap ) 
+    {
+        std::cerr << "Warning: FaceMap came back null for zone " << currentZone << std::endl;
+        return;
+    }
+
+    if( zoneType == ZoneType_FEPolygon )
+    {
+        for( LgIndex_t elemNum = 1; elemNum < numElementsInZone+1; elemNum++ ) // element numbers are 1-based
+        {
+            int numberOfMatches = 0;
+
+            LgIndex_t numFacesPerElement = TecUtilDataElemGetNumFaces( ElemToFaceMap, elemNum ); 	
+#ifdef PRINT_HEADERS
+            if( elemNum < 10 ) { std::cout << "For elem " << elemNum << ", numFacesPerElement = " << numFacesPerElement << std::endl; }
+#endif // PRINT_HEADERS
+
+            vtkIdList* tempIdList = vtkIdList::New();
+
+            for( LgIndex_t faceOffset = 1; faceOffset < numFacesPerElement+1; faceOffset++ ) // numbers are 1-based
+            {
+                LgIndex_t faceNumber = TecUtilDataElemGetFace( ElemToFaceMap,  elemNum, faceOffset );
+
+                // how many nodes comprise the specified face? (will return 2 for polygonal zones)
+                LgIndex_t numNodesOnFace = TecUtilDataFaceMapGetNFaceNodes( FaceMap, faceNumber ); 	
+#ifdef PRINT_HEADERS
+                if( elemNum < 10 ) { std::cout << "   For face " << faceNumber << ", numNodesOnFace = " << numNodesOnFace << ". node list = " ; }
+#endif // PRINT_HEADERS
+
+                for( LgIndex_t node = 1; node < numNodesOnFace+1; node++ ) // numbers are 1-based
+                {
+                    // node numbers in tecplot are 1-based, 0-based in VTK
+                    vtkIdType nodeValue = TecUtilDataFaceMapGetFaceNode( FaceMap, faceNumber, node ) - 1 + this->nodeOffset; 	
+#ifdef PRINT_HEADERS
+                    if( elemNum < 10 ) { std::cout << "  " << nodeValue; }
+#endif // PRINT_HEADERS
+                    tempIdList->InsertUniqueId( nodeValue );
+
+                    // see if the second face contains the same node that ended the face one description:
+                    if( faceOffset == 2 && nodeValue == tempIdList->GetId( 1 ) )
+                    {
+                        numberOfMatches++;
+                    }
+                }
+#ifdef PRINT_HEADERS
+                if( elemNum < 10 ) { std::cout << std::endl; }
+#endif // PRINT_HEADERS
+            }
+
+            // If nodal order causes twisted element, then fix now:
+            if( numberOfMatches == 0 )
+            {
+                vtkIdType ID[ 2 ];
+                ID[ 0 ] = tempIdList->GetId( 0 );
+                ID[ 1 ] = tempIdList->GetId( 1 );
+                tempIdList->SetId( 0, ID[ 1 ] );
+                tempIdList->SetId( 1, ID[ 0 ] );
+            }
+            else if( numberOfMatches > 1 )
+            {
+                std::cerr << "Error: numberOfMatches = " << numberOfMatches << std::endl;
+            }
+
+            this->ugrid->InsertNextCell( VTK_POLYGON, tempIdList );
+            tempIdList->Delete();
+        }
+    }
+    else if( zoneType == ZoneType_FEPolyhedron )
+    {
+        for( LgIndex_t elemNum = 1; elemNum < numElementsInZone+1; elemNum++ ) // element numbers are 1-based
+        {
+            LgIndex_t numFacesPerElement = TecUtilDataElemGetNumFaces( ElemToFaceMap, elemNum ); 	
+#ifdef PRINT_HEADERS
+            if( elemNum < 10 ) { std::cout << "For elem " << elemNum << ", numFacesPerElement = " << numFacesPerElement << std::endl; }
+#endif // PRINT_HEADERS
+
+            // Begin setting up the tempIdList. 
+            // For polyhedron cell, a special format is required: (numCellFaces, numFace0Pts, id1, id2, id3, numFace1Pts,id1, id2, id3, ...) 
+            vtkIdList* tempIdList = vtkIdList::New();
+            tempIdList->InsertNextId( numFacesPerElement );
+
+            for( LgIndex_t faceOffset = 1; faceOffset < numFacesPerElement+1; faceOffset++ ) // numbers are 1-based
+            {
+                LgIndex_t faceNumber = TecUtilDataElemGetFace( ElemToFaceMap,  elemNum, faceOffset );
+
+                // how many nodes comprise the specified face?
+                LgIndex_t numNodesOnFace = TecUtilDataFaceMapGetNFaceNodes( FaceMap, faceNumber ); 	
+#ifdef PRINT_HEADERS
+                if( elemNum < 10 ) { std::cout << "   For face " << faceNumber << ", numNodesOnFace = " << numNodesOnFace << ". node list = " ; }
+#endif // PRINT_HEADERS
+                tempIdList->InsertNextId( numNodesOnFace );
+
+                for( LgIndex_t node = 1; node < numNodesOnFace+1; node++ ) // numbers are 1-based
+                {
+                    // node numbers in tecplot are 1-based, 0-based in VTK
+                    vtkIdType nodeValue = TecUtilDataFaceMapGetFaceNode( FaceMap, faceNumber, node ) - 1 + this->nodeOffset; 	
+#ifdef PRINT_HEADERS
+                    if( elemNum < 10 ) { std::cout << "  " << nodeValue; }
+#endif // PRINT_HEADERS
+                    tempIdList->InsertNextId( nodeValue );
+                }
+#ifdef PRINT_HEADERS
+                if( elemNum < 10 ) { std::cout << std::endl; }
+#endif // PRINT_HEADERS
+            }
+
+            this->ugrid->InsertNextCell( VTK_POLYHEDRON, tempIdList );
+            tempIdList->Delete();
+        }
+    }
+    else
+    {
+        std::cerr << "Error: Can not yet handle zone type " << zoneType << std::endl;
     }
 }
 

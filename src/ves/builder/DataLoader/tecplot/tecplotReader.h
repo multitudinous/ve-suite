@@ -110,6 +110,8 @@ private:
     void AddCellsToGrid( const EntIndex_t currentZone, const ZoneType_e zoneType, const LgIndex_t numElementsInZone,
                          const int numNodesPerElement, const int numNodalPointsInZone );
 
+    void AddFaceCellsToGrid( const EntIndex_t currentZone, const ZoneType_e zoneType, const LgIndex_t numElementsInZone );
+
     void ReadNodalCoordinates( const EntIndex_t currentZone, const int numNodalPointsInZone );
 
     void ReadNodeAndCellData( const EntIndex_t currentZone, const LgIndex_t numElementsInZone, const int numNodalPointsInZone );

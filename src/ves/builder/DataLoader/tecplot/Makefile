@@ -1,8 +1,9 @@
 VES_BASE_DIR=${HOME}/vr
 
 # need to point to home of 64-bit vtk install
-VTK_LIB_HOME = ${HOME}/vr/lib64/vtk-5.4
-VTK_INCLUDE_HOME = ${HOME}/vr/dependencies/include/vtk-5.4
+# must use VTK 5.7 or higher for polyhedron data
+VTK_LIB_HOME = ${HOME}/vr/64bitdeps/lib/vtk-5.7
+VTK_INCLUDE_HOME = ${HOME}/vr/64bitdeps/include/vtk-5.7
 
 # where is the include directory that contains the boost headers?
 BOOST_HOME=/opt/local
