@@ -1,9 +1,11 @@
 VES_BASE_DIR=${HOME}/vr
 
-# need to point to home of 64-bit vtk install
-# must use VTK 5.7 or higher for polyhedron data
+# Tecplot sdk requires 64-bit libraries, including vtk.
+# VTK must be 5.7 or higher for polyhedron data.
 VTK_LIB_HOME = ${HOME}/vr/64bitdeps/lib/vtk-5.7
 VTK_INCLUDE_HOME = ${HOME}/vr/64bitdeps/include/vtk-5.7
+#VTK_LIB_HOME = ${HOME}/vr/64bit_VTK-5.4.2
+#VTK_INCLUDE_HOME = ${HOME}/vr/dependencies/include/vtk-5.4
 
 # where is the include directory that contains the boost headers?
 BOOST_HOME=/opt/local

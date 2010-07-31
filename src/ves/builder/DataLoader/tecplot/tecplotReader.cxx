@@ -1031,6 +1031,7 @@ void tecplotReader::AddFaceCellsToGrid( const EntIndex_t currentZone, const Zone
     }
     else if( zoneType == ZoneType_FEPolyhedron )
     {
+#if ((VTK_MAJOR_VERSION == 5)&&(VTK_MINOR_VERSION > 6))
         for( LgIndex_t elemNum = 1; elemNum < numElementsInZone+1; elemNum++ ) // element numbers are 1-based
         {
             LgIndex_t numFacesPerElement = TecUtilDataElemGetNumFaces( ElemToFaceMap, elemNum ); 	
@@ -1071,6 +1072,9 @@ void tecplotReader::AddFaceCellsToGrid( const EntIndex_t currentZone, const Zone
             this->ugrid->InsertNextCell( VTK_POLYHEDRON, tempIdList );
             tempIdList->Delete();
         }
+#else // VTK_VERSION
+            std::cout << "Warning: VTK version " << VTK_VERSION << " can not handle polyhedron cells in zone " << currentZone << std::endl;
+#endif // VTK_VERSION
     }
     else
     {
