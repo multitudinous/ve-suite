@@ -84,9 +84,9 @@
 #include <iostream>
 
 //#define VES_SRTT_DEBUG
-#define VES_USE_MSMRT_CALLBACK
-#define VES_USE_KEEP_FBOS_BOUND_CALLBACK
-#define VES_USE_MULTISAMPLING
+//#define VES_USE_MSMRT_CALLBACK
+//#define VES_USE_KEEP_FBOS_BOUND_CALLBACK
+//#define VES_USE_MULTISAMPLING
 
 using namespace ves::xplorer;
 
@@ -342,11 +342,11 @@ osg::Camera* SceneRenderToTexture::CreatePipelineCamera(
     //see RenderStage.cpp
 #ifdef VES_USE_MULTISAMPLING
     tempCamera->attach(
-        osg::Camera::COLOR_BUFFER0, colorMap.get(), 0, 0, false, 8, 8 );
+        osg::Camera::COLOR_BUFFER0, colorMap.get(), 0, 0, false, 4, 4 );
     tempCamera->attach(
-        osg::Camera::COLOR_BUFFER1, glowMap.get(), 0, 0, false, 8, 8 );
+        osg::Camera::COLOR_BUFFER1, glowMap.get(), 0, 0, false, 4, 4 );
     //tempCamera->attach(
-        //osg::Camera::COLOR_BUFFER2, mGlowStencil.get(), 0, 0, false, 8, 8 );
+        //osg::Camera::COLOR_BUFFER2, mGlowStencil.get(), 0, 0, false, 4, 4 );
 #else
     tempCamera->attach(
         osg::Camera::COLOR_BUFFER0, colorMap.get() );
