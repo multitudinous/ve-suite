@@ -2,7 +2,7 @@ uniform vec2 quadScreenSize;
 
 void main()
 {
-    gl_Position = ftransform();
+    gl_Position = gl_Vertex;
 
     float texelIncrement = 1.0 / quadScreenSize.s;
     gl_TexCoord[ 0 ] = vec4( gl_MultiTexCoord0.st, 1.0, 1.0 );
