@@ -127,7 +127,7 @@ void UnitInResampleOut::SetInputTexturesFromParents()
                         << " has invalid output texture!"
                         << std::endl;
                  }
-             }                 
+             }
          }
      }
 }

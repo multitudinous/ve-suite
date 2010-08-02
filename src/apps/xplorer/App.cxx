@@ -204,8 +204,8 @@ App::App( int argc, char* argv[], bool enableRTT )
     _frameNumber = 0;
     this->argc = argc;
     this->argv = argv;
-    
-    mSceneRenderToTexture = 
+
+    mSceneRenderToTexture =
         SceneRenderToTexturePtr( new SceneRenderToTexture() );
 
     //Set the ortho2D( 0, 1, 0, 1, 0, 1 ) matrix
@@ -875,7 +875,7 @@ void App::contextPreDraw()
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-///Remember that this is called in parrallel in a multiple context situation
+///Remember that this is called in parallel in a multiple context situation
 ///so setting variables should not be done here
 void App::draw()
 {
@@ -892,8 +892,8 @@ void App::draw()
     glClear( GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT );
 
     //Users have reported problems with OpenGL reporting stack underflow
-    //problems when the texture attribute bit is pushed here, so we push all
-    //attributes *except* GL_TEXTURE_BIT.
+    //problems when the texture attribute bit is pushed here,
+    //so we push all attributes *except* GL_TEXTURE_BIT
     glPushAttrib( GL_ALL_ATTRIB_BITS & ~GL_TEXTURE_BIT );
     glPushAttrib( GL_TRANSFORM_BIT );
     glPushAttrib( GL_VIEWPORT_BIT );
@@ -933,17 +933,6 @@ void App::draw()
         m_sceneGLTransformInfo->GetGLTransformInfo( viewport );
     if( glTI )
     {
-#ifdef QT_ON
-        //FIXME: This is probably dangerous in a multi-context enviroment
-        // This block is commented out because we are currently using an ortho2D
-        // projection for the uimanager and don't need this to undo the world
-        // transform at the root node
-//        {
-//            osg::Matrixd inverseVPW = glTI->GetVPWMatrixOSG();
-//            inverseVPW.invert( inverseVPW );
-//            ves::conductor::UIManager::instance()->SetProjectionMatrix( inverseVPW );
-//        }
-#endif
         //Get the projection matrix
         glTI->UpdateFrustumValues( l, r, b, t, n, f );
         const osg::Matrixd projectionMatrixOSG = glTI->GetProjectionMatrixOSG();
@@ -959,26 +948,12 @@ void App::draw()
         //Get the view matrix from a centered eye position
         m_sceneGLTransformInfo->CalculateCenterViewMatrix( project );
 
-        if( mRTT )
-        {
-            osg::ref_ptr< osg::Camera > camera =
-                mSceneRenderToTexture->GetCamera( viewport );
-            if( camera.valid() )
-            {
-                sv->setViewport(
-                    0.0, 0.0, glTI->GetWindowWidth(), glTI->GetWindowHeight() );
-                camera->setProjectionMatrix( projectionMatrixOSG );
-                camera->setViewMatrix( viewMatrixOSG );
-            }
-        }
-        else
-        {
-            sv->setViewport(
-                glTI->GetViewportOriginX(), glTI->GetViewportOriginY(),
-                glTI->GetViewportWidth(), glTI->GetViewportHeight() );
-            sv->setProjectionMatrix( projectionMatrixOSG );
-            sv->setViewMatrix( viewMatrixOSG );
-        }
+        //
+        sv->setViewport(
+            glTI->GetViewportOriginX(), glTI->GetViewportOriginY(),
+            glTI->GetViewportWidth(), glTI->GetViewportHeight() );
+        sv->setProjectionMatrix( projectionMatrixOSG );
+        sv->setViewMatrix( viewMatrixOSG );
     }
     else
     {

@@ -60,7 +60,7 @@ class Unit;
 
 class VE_SCENEGRAPH_EXPORTS Processor : public osg::Group
 {
-public:    
+public:
     ///Constructor
     Processor();
 

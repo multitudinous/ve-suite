@@ -34,7 +34,7 @@
 #ifndef SCENE_RENDER_TO_TEXTURE
 #define SCENE_RENDER_TO_TEXTURE
 
-// --- VE-Suite Includes --- //
+// --- VES Includes --- //
 #include "SceneRenderToTexturePtr.h"
 
 #include <ves/open/xml/CommandPtr.h>
@@ -74,6 +74,7 @@ namespace ves
 {
 namespace xplorer
 {
+
 namespace scenegraph
 {
 namespace rtt
@@ -108,23 +109,21 @@ public:
     ///Initialized
     void InitializeRTT();
 
-    ///Get the camera with specified vrj::Viewport
-    ///\return The camera with specified vrj::Viewport
-    osg::Camera* const GetCamera( vrj::ViewportPtr const viewport );
-
     ///Get the root node for all children in the scene to be added to
     ///\return The root osg::Group node
     osg::Group* const GetRootGroup() const;
 
+    ///Get the rtt camera for this context
+    ///\return The rtt camera for this context
+    osg::Camera* GetRTTCamera();
+
+    ///Get the post process pipeline for this context
+    ///\return The post process pipeline for this context
+    scenegraph::rtt::Processor* GetPostProcessPipeline();
+
     ///Initialize correct screen info for the texture and quad
     ///NOTE: MUST be called AFTER EnvironmentHandler::InitScene
-    void InitScene( osg::Camera* const sceneViewCamera );
-
-    /*
-    ///Update something
-    ///NOTE: Must have an active context to call
-    void UpdateRTTQuadAndViewport();
-    */
+    void InitScene( osg::Camera* const svCamera );
 
     ///Take a high resolution screen capture of the render window for SceneView
     ///\param root The osg::Group to be rendered
@@ -152,11 +151,16 @@ protected:
 
 private:
     ///
-    osg::Camera* CreatePipelineCamera( osg::Viewport* viewport );
+    void InitRootGroup();
 
     ///
-    scenegraph::rtt::Processor* CreatePipelineProcessor(
-        vrj::ViewportPtr viewport, osg::Camera* camera, osg::Camera* svCamera );
+    osg::Camera* CreateRTTCamera(
+        std::pair< int, int > const& viewportDimensions );
+
+    ///
+    scenegraph::rtt::Processor* CreatePostProcessPipeline(
+        osg::Camera* rttCamera,
+        std::pair< int, int > const& viewportDimensions );
 
     ///
     osg::Texture2D* CreateViewportTexture(
@@ -165,51 +169,42 @@ private:
         GLenum sourceType,
         osg::Texture2D::FilterMode filterMode,
         osg::Texture2D::WrapMode wrapMode,
-        std::pair< int, int >& viewportDimensions );
+        std::pair< int, int > const& viewportDimensions );
 
     ///
-    osg::Geode* CreateClearColorQuad();
+    osg::Geode* CreateClearColorQuad( unsigned int const& numViewports );
 
     ///
-    osg::Geode* CreateTexturedQuad(
-        vrj::ViewportPtr viewport, osg::Texture2D* texture );
-
-    ///Set the number of super samples
-    int mScaleFactor;
-
-    ///Let the object know all cameras are configured
-    vrj::opengl::ContextData< bool > mCamerasConfigured;
-
-    ///A typedef to make it easier to define iterators
-    typedef std::pair<
-        osg::ref_ptr< osg::Camera >,
-        osg::ref_ptr< scenegraph::rtt::Processor > > PipelinePair;
-
-    ///The render to texture cameras
-    ///A context locked map to hold post-process pipelines for each viewport per context
-    typedef std::map< vrj::ViewportPtr, PipelinePair > PipelineMap;
-
-    ///
-    vrj::opengl::ContextData< PipelineMap > mPipelines;
+    osg::Geode* CreateTexturedQuad( osg::Texture2D* texture );
 
     ///
     std::vector< osg::Camera* > m_updateList;
 
     ///
-    std::map< osg::Camera*, osg::ref_ptr< osgwTools::ScreenCapture > > m_captureTools;
+    std::map< osg::Camera*,
+              osg::ref_ptr< osgwTools::ScreenCapture > > m_captureTools;
 
     ///The root group that everything gets added to
     ///Is the same for all contexts
     osg::ref_ptr< osg::Group > m_rootGroup;
 
     ///Shader pointers
-    osg::ref_ptr< osg::Shader > m_topLevelGlow;
-    osg::ref_ptr< osg::Shader > m_glowAlphaPreprocessFP;
     osg::ref_ptr< osg::Shader > m_1dxVP;
     osg::ref_ptr< osg::Shader > m_1dxFP;
     osg::ref_ptr< osg::Shader > m_1dyVP;
     osg::ref_ptr< osg::Shader > m_1dyFP;
     osg::ref_ptr< osg::Shader > m_finalShader;
+
+    ///Let the object know all cameras are configured
+    vrj::opengl::ContextData< bool > m_camerasConfigured;
+
+    ///
+    vrj::opengl::ContextData< osg::ref_ptr< osg::Camera > > m_rttCamera;
+
+    ///
+    vrj::opengl::ContextData<
+        osg::ref_ptr< scenegraph::rtt::Processor > > m_postProcessPipeline;
+
 };
 } //end xplorer
 } //end ves

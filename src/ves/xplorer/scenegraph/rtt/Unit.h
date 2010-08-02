@@ -70,10 +70,10 @@ public:
     //typedef std::map< unsigned int, osg::ref_ptr< osg::Texture > > TextureMap;
     //typedef std::map< osg::ref_ptr< Unit >,
     //    std::pair< std::string, unsigned int > > InputToUniformMap;
-    
+
     typedef std::vector< osg::ref_ptr< osg::Texture > > TextureMap;
     typedef std::vector< std::pair< std::string, osg::ref_ptr< Unit > > > InputToUniformMap;
-    
+
     ///Constructor
     Unit();
 

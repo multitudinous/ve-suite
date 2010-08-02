@@ -181,7 +181,9 @@ class KeepFBOsBoundCallback : public osg::NodeCallback
 {
 public:
     ///
-    KeepFBOsBoundCallback()
+    KeepFBOsBoundCallback( unsigned int const& numViewports )
+        :
+        m_numViewports( numViewports )
     {
         ;
     }
@@ -197,8 +199,8 @@ public:
 
         //Should only see this message once
         //(or twice, for osgViewer) per cull thread
-        //osg::notify( osg::ALWAYS ) << "In KeepFBOsBoundCallback, cull traversal"
-                                   //<< std::endl;
+        osg::notify( osg::ALWAYS ) << "In KeepFBOsBoundCallback, cull traversal"
+                                   << std::endl;
 
         //Get the current RenderStage and prevent it from unbinding
         //the FBOs just before our post-draw MSMRTCallback is executed
@@ -212,7 +214,23 @@ public:
         rs->setDisableFboAfterRender( false );
 
         traverse( node, nv );
+
+        --m_numViewports;
+
+        //The cull visitor only needs to execute once to tell the RenderStage
+        //to keep the FBOs bound, so remove the cull callback now
+        if( m_numViewports == 0 )
+        {
+            node->setCullCallback( NULL );
+        }
     }
+
+protected:
+
+private:
+    ///
+    unsigned int m_numViewports;
+
 };
 
 #endif //MSMRT_CALLBACKS_H

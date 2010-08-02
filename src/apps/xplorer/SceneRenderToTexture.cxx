@@ -47,7 +47,6 @@
 #include <ves/xplorer/scenegraph/rtt/UnitInOut.h>
 #include <ves/xplorer/scenegraph/rtt/UnitInResampleOut.h>
 #include <ves/xplorer/scenegraph/rtt/UnitOut.h>
-//#include <ves/xplorer/scenegraph/rtt/ShaderAttribute.h>
 #include <ves/xplorer/Debug.h>
 
 #include <ves/open/xml/Command.h>
@@ -90,15 +89,10 @@
 
 using namespace ves::xplorer;
 
-namespace vxsr = ves::xplorer::scenegraph::rtt;
-
 ////////////////////////////////////////////////////////////////////////////////
 SceneRenderToTexture::SceneRenderToTexture()
     :
-    mScaleFactor( 1 ),
     m_rootGroup( new osg::Group() ),
-    m_topLevelGlow( NULL ),
-    m_glowAlphaPreprocessFP( NULL ),
     m_1dxVP( NULL ),
     m_1dxFP( NULL ),
     m_1dyVP( NULL ),
@@ -109,16 +103,6 @@ SceneRenderToTexture::SceneRenderToTexture()
         new osgDB::ReaderWriter::Options( "vertex" );
     osg::ref_ptr< osgDB::ReaderWriter::Options > fragmentOptions =
         new osgDB::ReaderWriter::Options( "fragment" );
-
-    try
-    {
-        m_glowAlphaPreprocessFP = osgDB::readShaderFile(
-            "glsl/glow_alpha_preprocess.glsl", fragmentOptions.get() );
-    }
-    catch( ... )
-    {
-        std::cerr << "Could not load shader files!" << std::endl;
-    }
 
     try
     {
@@ -154,31 +138,8 @@ SceneRenderToTexture::SceneRenderToTexture()
         std::cerr << "Could not load shader files!" << std::endl;
     }
 
-    //Setup the MRT shader to make glow work correctly
-    m_topLevelGlow = new osg::Shader();
-    std::string fragmentSource =
-    "uniform vec3 glowColor; \n"
-
-    "void main() \n"
-    "{ \n"
-        "gl_FragData[ 0 ] = gl_Color; \n"
-        "gl_FragData[ 1 ] = vec4( glowColor, gl_FragData[ 0 ].a ); \n"
-    "} \n";
-
-    m_topLevelGlow->setType( osg::Shader::FRAGMENT );
-    m_topLevelGlow->setShaderSource( fragmentSource );
-    m_topLevelGlow->setName( "Top Level Glow" );
-
-    osg::ref_ptr< osg::Program > program = new osg::Program();
-    program->addShader( m_topLevelGlow.get() );
-    program->setName( "Top Level Glow" );
-
-    osg::ref_ptr< osg::StateSet > stateset = m_rootGroup->getOrCreateStateSet();
-    stateset->setAttributeAndModes( program.get(),
-        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
-    //Default glow color for any children that don't explicitly set it.
-    stateset->addUniform(
-        new osg::Uniform( "glowColor", osg::Vec3( 0.0, 0.0, 0.0 ) ) );
+    //This needs to be moved out of this function
+    InitRootGroup();
 }
 ////////////////////////////////////////////////////////////////////////////////
 SceneRenderToTexture::~SceneRenderToTexture()
@@ -186,20 +147,22 @@ SceneRenderToTexture::~SceneRenderToTexture()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void SceneRenderToTexture::InitScene( osg::Camera* const sceneViewCamera )
+void SceneRenderToTexture::InitScene( osg::Camera* const svCamera )
 {
-    if( !ves::xplorer::scenegraph::SceneManager::instance()->IsRTTOn() )
+    //
+    if( !scenegraph::SceneManager::instance()->IsRTTOn() )
     {
-        m_updateList.push_back( sceneViewCamera );
-        m_captureTools[ sceneViewCamera ] = 
+        m_updateList.push_back( svCamera );
+        m_captureTools[ svCamera ] = 
             new osgwTools::ScreenCapture( "test_image", ".png", true );
         return;
     }
 
     //Get window and viewport information
-    vrj::opengl::DrawManager* glDrawManager = vrj::opengl::DrawManager::instance();
-    vrj::opengl::UserData* glUserData = glDrawManager->currentUserData();
-    vrj::opengl::WindowPtr glWindow = glUserData->getGlWindow();
+    vrj::opengl::DrawManager* glDrawManager =
+        vrj::opengl::DrawManager::instance();
+    vrj::opengl::UserData* userData = glDrawManager->currentUserData();
+    vrj::opengl::WindowPtr glWindow = userData->getGlWindow();
     vrj::DisplayPtr display = glWindow->getDisplay();
 
     //Get state info about the screen
@@ -212,116 +175,110 @@ void SceneRenderToTexture::InitScene( osg::Camera* const sceneViewCamera )
               << ", "  << contextHeight << " )"
               << std::endl;
 
-    size_t numViewports = display->getNumViewports();
+    unsigned int const numViewports =
+        static_cast< unsigned int >( display->getNumViewports() );
 
     std::cout << "|\tNumber of Viewports: " << numViewports << std::endl;
     std::cout << "|\t" << std::endl;
 
-    ///The root group that all RTT pipelines are added on
-    osg::ref_ptr< osg::Group > rttPipelines = new osg::Group();
-    rttPipelines->setCullingActive( false );
+    //This assumes that all viewports for this context are the same size
+    vrj::ViewportPtr viewport = display->getViewport( 0 );
 
-    for( size_t i = 0; i < numViewports; ++i )
-    {
-        std::cout << "|\tViewport " << i + 1 << ": " << std::endl;
+    //Get state info about the viewport
+    float vp_ox, vp_oy, vp_sx, vp_sy;
+    viewport->getOriginAndSize( vp_ox, vp_oy, vp_sx, vp_sy );
 
-        vrj::ViewportPtr viewport = display->getViewport( i );
+    //
+    const std::pair< int, int > viewportDimensions(
+        static_cast< int >( vp_sx * contextWidth ),
+        static_cast< int >( vp_sy * contextHeight ) );
 
-        //Get state info about the viewport
-        float viewportOriginX, viewportOriginY, viewportWidth, viewportHeight;
-        viewport->getOriginAndSize(
-            viewportOriginX, viewportOriginY, viewportWidth, viewportHeight );
+    //
+    (*m_rttCamera) = CreateRTTCamera( viewportDimensions );
+    (*m_rttCamera)->addChild( CreateClearColorQuad( numViewports ) );
+    (*m_rttCamera)->addChild( m_rootGroup.get() );
 
-        const unsigned int ll_x = static_cast< unsigned int >(
-            viewportOriginX * static_cast< float >( contextWidth ) );
-        const unsigned int ll_y = static_cast< unsigned int >(
-            viewportOriginY * static_cast< float >( contextHeight ) );
-        const unsigned int x_size = static_cast< unsigned int >(
-            viewportWidth * static_cast< float >( contextWidth ) );
-        const unsigned int y_size = static_cast< unsigned int >(
-            viewportHeight * static_cast< float >( contextHeight ) );
+    //
+    (*m_postProcessPipeline) =
+        CreatePostProcessPipeline( (*m_rttCamera).get(), viewportDimensions );
 
-        std::cout << "|\tll_x: " << ll_x << std::endl
-                  << "|\tll_y: " << ll_y << std::endl
-                  << "|\tx_size: " << x_size << std::endl
-                  << "|\ty_size: " << y_size << std::endl
-                  << "|\t" << std::endl;
+    //Add the rtt camera to the sv camera
+    svCamera->addChild( (*m_rttCamera).get() );
 
-        osg::ref_ptr< osg::Viewport > osgViewport = new osg::Viewport();
-        osgViewport->setViewport( 0, 0, x_size, y_size );
+    //Add the post process pipeline to the sv camera
+    svCamera->addChild( (*m_postProcessPipeline).get() );
 
-        osg::ref_ptr< osg::Camera > camera =
-            CreatePipelineCamera( osgViewport.get() );
-        osg::ref_ptr< vxsr::Processor > processor =
-            CreatePipelineProcessor( viewport, camera.get(), sceneViewCamera );
+    //Make sure that existing scene graph objects are
+    //allocated with thread safe ref/unref
+    svCamera->setThreadSafeRefUnref( true );
 
-        //Set the bin # to be a large number
-        //This allows the transparent geometry to be rendered first
-        processor->getOrCreateStateSet()->setRenderBinDetails(
-            100, std::string( "RenderBin" ) );
-
-        //Add the clear color quad first so it renders before
-        camera->addChild( CreateClearColorQuad() );
-        //Add the scenegraph to the camera
-        camera->addChild( m_rootGroup.get() );
-        rttPipelines->addChild( processor.get() );
-
-        //Setup a post-processing pipeline for each viewport per context
-        //Each pipeline consists of a osg::Camera and vxsr::Processor
-        (*mPipelines)[ viewport ] =
-            std::make_pair( camera.get(), processor.get() );
-
-        sceneViewCamera->addChild( camera.get() );
-    }
-    sceneViewCamera->addChild( rttPipelines.get() );
-
-    // make sure that existing scene graph objects are 
-    // allocated with thread safe ref/unref
-    sceneViewCamera->setThreadSafeRefUnref( true );
-
-    // update the scene graph so that it has enough GL object buffer 
-    // memory for the graphics contexts that will be using it.
-    sceneViewCamera->resizeGLObjectBuffers(
+    //Update the scene graph so that it has enough GL object buffer
+    //memory for the graphics contexts that will be using it
+    svCamera->resizeGLObjectBuffers(
         osg::DisplaySettings::instance()->getMaxNumberOfGraphicsContexts() );
 
-    m_updateList.push_back( sceneViewCamera );
-    m_captureTools[ sceneViewCamera ] =
+    m_updateList.push_back( svCamera );
+    m_captureTools[ svCamera ] =
         new osgwTools::ScreenCapture( "test_image", ".png", true );
 
-    *mCamerasConfigured = true;
+    (*m_camerasConfigured) = true;
 }
 ////////////////////////////////////////////////////////////////////////////////
-osg::Camera* SceneRenderToTexture::CreatePipelineCamera(
-    osg::Viewport* viewport )
+void SceneRenderToTexture::InitRootGroup()
 {
-    osg::Camera* tempCamera = new osg::Camera();
-    tempCamera->setClearStencil( 0 );
-    tempCamera->setReferenceFrame( osg::Camera::ABSOLUTE_RF );
-    tempCamera->setRenderOrder( osg::Camera::PRE_RENDER, 0 );
-    tempCamera->setClearMask(
-        GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT );
-    tempCamera->setClearColor( osg::Vec4( 0.0, 0.0, 1.0, 0.0 ) );
-    tempCamera->setRenderTargetImplementation(
-        osg::Camera::FRAME_BUFFER_OBJECT, osg::Camera::FRAME_BUFFER );
-    tempCamera->setViewport( viewport );
-    tempCamera->setViewMatrix( osg::Matrix::identity() );
-    tempCamera->setProjectionMatrix( osg::Matrix::identity() );
-    tempCamera->setComputeNearFarMode(
-        osg::CullSettings::COMPUTE_NEAR_FAR_USING_BOUNDING_VOLUMES );
-    tempCamera->setCullingActive( false );
+    //Setup the MRT shader to make glow work correctly
+    osg::ref_ptr< osg::Shader > fragmentShader = new osg::Shader();
+    std::string fragmentSource =
+    "uniform vec3 glowColor; \n"
+
+    "void main() \n"
+    "{ \n"
+        "gl_FragData[ 0 ] = gl_Color; \n"
+        "gl_FragData[ 1 ] = vec4( glowColor, gl_FragData[ 0 ].a ); \n"
+    "} \n";
+
+    fragmentShader->setType( osg::Shader::FRAGMENT );
+    fragmentShader->setShaderSource( fragmentSource );
+    fragmentShader->setName( "Root Group Fragment Shader" );
+
+    osg::ref_ptr< osg::Program > program = new osg::Program();
+    program->addShader( fragmentShader.get() );
+    program->setName( "Root Group Program" );
+
+    osg::ref_ptr< osg::StateSet > stateset = m_rootGroup->getOrCreateStateSet();
+    stateset->setAttributeAndModes(
+        program.get(),
+        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+
+    //Default glow color for any children that don't explicitly set it
+    stateset->addUniform(
+        new osg::Uniform( "glowColor", osg::Vec3( 0.0, 0.0, 0.0 ) ) );
+}
+////////////////////////////////////////////////////////////////////////////////
+osg::Camera* SceneRenderToTexture::CreateRTTCamera(
+    std::pair< int, int > const& viewportDimensions )
+{
+    osg::Camera* rttCamera = new osg::Camera();
+
 #ifdef VES_USE_MSMRT_CALLBACK
     //Post-draw callback on root camera handles resolving
     //multisampling for the MRT case
-    MSMRTCallback* msmrt = new MSMRTCallback( tempCamera );
-    tempCamera->setPostDrawCallback( msmrt );
+    MSMRTCallback* msmrt = new MSMRTCallback( rttCamera );
+    rttCamera->setPostDrawCallback( msmrt );
 #endif
-#ifdef VES_USE_KEEP_FBOS_BOUND_CALLBACK
-    //Do not unbind the FBOs after the BlitFramebuffer call
-    m_rootGroup->setCullCallback( new KeepFBOsBoundCallback() );
-#endif
-    std::pair< int, int > viewportDimensions = std::make_pair< int, int >( 
-        static_cast< int >( viewport->width() ),
-        static_cast< int >( viewport->height() ) );
+
+    rttCamera->setReferenceFrame( osg::Camera::RELATIVE_RF );
+    rttCamera->setRenderOrder( osg::Camera::PRE_RENDER );
+    rttCamera->setClearMask(
+        GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT );
+    rttCamera->setClearColor( osg::Vec4( 0.0, 0.0, 1.0, 0.0 ) );
+    rttCamera->setClearStencil( 0 );
+    rttCamera->setRenderTargetImplementation(
+        osg::Camera::FRAME_BUFFER_OBJECT, osg::Camera::FRAME_BUFFER );
+    rttCamera->setComputeNearFarMode(
+        osg::CullSettings::COMPUTE_NEAR_FAR_USING_BOUNDING_VOLUMES );
+    rttCamera->setViewport(
+        0, 0, viewportDimensions.first, viewportDimensions.second );
 
     //Set up the color map
     //Most GPUs prefer the BGRA format
@@ -334,25 +291,26 @@ osg::Camera* SceneRenderToTexture::CreatePipelineCamera(
     //Set up the glow map
     osg::ref_ptr< osg::Texture2D > glowMap = CreateViewportTexture(
         GL_RGBA8, GL_BGRA, GL_UNSIGNED_BYTE,
-        osg::Texture2D::LINEAR, osg::Texture2D::REPEAT,
+        osg::Texture2D::LINEAR, osg::Texture2D::CLAMP_TO_EDGE,
         viewportDimensions );
 
     //Attach a texture and use it as the render target
     //If you set one buffer to multisample, they all get set to multisample
     //see RenderStage.cpp
 #ifdef VES_USE_MULTISAMPLING
-    tempCamera->attach(
+    rttCamera->attach(
         osg::Camera::COLOR_BUFFER0, colorMap.get(), 0, 0, false, 4, 4 );
-    tempCamera->attach(
+    rttCamera->attach(
         osg::Camera::COLOR_BUFFER1, glowMap.get(), 0, 0, false, 4, 4 );
-    //tempCamera->attach(
+    //rttCamera->attach(
         //osg::Camera::COLOR_BUFFER2, mGlowStencil.get(), 0, 0, false, 4, 4 );
 #else
-    tempCamera->attach(
+    rttCamera->attach(
         osg::Camera::COLOR_BUFFER0, colorMap.get() );
-    tempCamera->attach(
+    rttCamera->attach(
         osg::Camera::COLOR_BUFFER1, glowMap.get() );
 #endif
+
     /*
     //Set up the depth buffer
     osg::ref_ptr< osg::Texture2D > depthMap = CreateViewportTexture(
@@ -370,14 +328,207 @@ osg::Camera* SceneRenderToTexture::CreatePipelineCamera(
     */
 
     //Use interleaved depth/stencil renderbuffer
-    tempCamera->attach(
+    rttCamera->attach(
         osg::Camera::PACKED_DEPTH_STENCIL_BUFFER, GL_DEPTH_STENCIL_EXT );
 
     //osg::ref_ptr< osg::ClearNode > clearNode = new osg::ClearNode();
     //clearNode->setClearMask( GL_STENCIL_BUFFER_BIT );
-    //tempCamera->addChild( clearNode.get() );
+    //rttCamera->addChild( clearNode.get() );
 
-    return tempCamera;
+    return rttCamera;
+}
+////////////////////////////////////////////////////////////////////////////////
+scenegraph::rtt::Processor* SceneRenderToTexture::CreatePostProcessPipeline(
+    osg::Camera* rttCamera,
+    std::pair< int, int > const& viewportDimensions )
+{
+    //This is the code for the post-processing pipeline
+    scenegraph::rtt::Processor* postProcessPipeline =
+        new scenegraph::rtt::Processor();
+    postProcessPipeline->SetCamera( rttCamera );
+
+    //COLOR_BUFFER0 bypass
+    osg::ref_ptr< scenegraph::rtt::UnitCameraAttachmentBypass > colorBuffer0 =
+        new scenegraph::rtt::UnitCameraAttachmentBypass();
+    {
+        colorBuffer0->setName( "ColorBuffer0Bypass" );
+        colorBuffer0->SetBufferComponent( osg::Camera::COLOR_BUFFER0 );
+        colorBuffer0->SetInputTextureIndexForViewportReference( 0 );
+    }
+    postProcessPipeline->addChild( colorBuffer0.get() );
+    colorBuffer0->Update();
+
+    //COLOR_BUFFER1 bypass
+    osg::ref_ptr< scenegraph::rtt::UnitCameraAttachmentBypass > colorBuffer1 =
+         new scenegraph::rtt::UnitCameraAttachmentBypass();
+    {
+        colorBuffer1->setName( "ColorBuffer1Bypass" );
+        colorBuffer1->SetBufferComponent( osg::Camera::COLOR_BUFFER1 );
+        colorBuffer1->SetInputTextureIndexForViewportReference( 0 );
+    }
+    postProcessPipeline->addChild( colorBuffer1.get() );
+    colorBuffer1->Update();
+
+    osg::ref_ptr< osg::Shader > vertexShader = new osg::Shader();
+    std::string vertexSource =
+    "void main() \n"
+    "{ \n"
+        //Ignore MVP transformation as vertices are already in Normalized Device Coord.
+        "gl_Position = gl_Vertex; \n"
+        "gl_TexCoord[ 0 ].st = gl_MultiTexCoord0.st; \n"
+    "} \n";
+
+    vertexShader->setType( osg::Shader::VERTEX );
+    vertexShader->setShaderSource( vertexSource );
+    vertexShader->setName( "VS Quad Vertex Shader" );
+
+    //Downsample by 1/2 original size
+    osg::Vec2 quadScreenSize(
+        viewportDimensions.first, viewportDimensions.second );
+    /*
+    osg::ref_ptr< scenegraph::rtt::UnitInResampleOut > glowDownSample =
+        new scenegraph::rtt::UnitInResampleOut();
+    {
+
+        osg::ref_ptr< osg::Program > program = new osg::Program();
+
+        //
+        program->addShader( vertexShader.get() );
+        program->setName( "GlowDownSampleShader" );
+
+        float downsample = 0.5;
+        quadScreenSize *= downsample;
+
+        osg::ref_ptr< osg::StateSet > stateSet =
+            glowDownSample->getOrCreateStateSet();
+        stateSet->setAttribute(
+            program.get(),
+            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+
+        glowDownSample->setName( "GlowDownSample" );
+        glowDownSample->SetFactorX( downsample );
+        glowDownSample->SetFactorY( downsample );
+        //glowDownSample->SetInputTextureIndexForViewportReference( 0 );
+    }
+    //colorBuffer1->addChild( glowDownSample.get() );
+    glowDownSample->Update();*/
+
+    //Perform horizontal 1D gauss convolution
+    osg::ref_ptr< scenegraph::rtt::UnitInOut > blurX =
+        new scenegraph::rtt::UnitInOut();
+    {
+        osg::ref_ptr< osg::Program > gaussX = new osg::Program();
+
+        //Setup horizontal blur shaders
+        gaussX->addShader( m_1dxVP.get() );
+        gaussX->addShader( m_1dxFP.get() );
+        gaussX->setName( "BlurHorizontalShader" );
+
+        osg::ref_ptr< osg::Uniform > quadScreenSizeUniform =
+            new osg::Uniform( "quadScreenSize", quadScreenSize );
+        osg::ref_ptr< osg::Uniform > WT9_0Uniform =
+            new osg::Uniform( "WT9_0", static_cast< float >( 0.5 ) );
+        osg::ref_ptr< osg::Uniform > WT9_1Uniform =
+            new osg::Uniform( "WT9_1", static_cast< float >( 0.4 ) );
+        osg::ref_ptr< osg::Uniform > WT9_2Uniform =
+            new osg::Uniform( "WT9_2", static_cast< float >( 0.3 ) );
+        osg::ref_ptr< osg::Uniform > WT9_3Uniform =
+            new osg::Uniform( "WT9_3", static_cast< float >( 0.2 ) );
+        osg::ref_ptr< osg::Uniform > WT9_4Uniform =
+            new osg::Uniform( "WT9_4", static_cast< float >( 0.1 ) );
+
+        osg::ref_ptr< osg::StateSet > stateSet = blurX->getOrCreateStateSet();
+        stateSet->setAttribute(
+            gaussX.get(),
+            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+        stateSet->addUniform( quadScreenSizeUniform.get() );
+        stateSet->addUniform( WT9_0Uniform.get() );
+        stateSet->addUniform( WT9_1Uniform.get() );
+        stateSet->addUniform( WT9_2Uniform.get() );
+        stateSet->addUniform( WT9_3Uniform.get() );
+        stateSet->addUniform( WT9_4Uniform.get() );
+
+        blurX->setName( "BlurHorizontal" );
+        blurX->SetInputToUniform( colorBuffer1.get(), "glowMap", true );
+        blurX->SetInputTextureIndexForViewportReference( 0 );
+    }
+    blurX->Update();
+
+    //Perform vertical 1D gauss convolution
+    osg::ref_ptr< scenegraph::rtt::UnitInOut > blurY =
+        new scenegraph::rtt::UnitInOut();
+    {
+        osg::ref_ptr< osg::Program > gaussY = new osg::Program();
+
+        //Setup vertical blur shaders
+        gaussY->addShader( m_1dyVP.get() );
+        gaussY->addShader( m_1dyFP.get() );
+        gaussY->setName( "BlurVerticalShader" );
+
+        osg::ref_ptr< osg::Uniform > quadScreenSizeUniform =
+            new osg::Uniform( "quadScreenSize", quadScreenSize );
+        osg::ref_ptr< osg::Uniform > WT9_0Uniform =
+            new osg::Uniform( "WT9_0", static_cast< float >( 0.5 ) );
+        osg::ref_ptr< osg::Uniform > WT9_1Uniform =
+            new osg::Uniform( "WT9_1", static_cast< float >( 0.4 ) );
+        osg::ref_ptr< osg::Uniform > WT9_2Uniform =
+            new osg::Uniform( "WT9_2", static_cast< float >( 0.3 ) );
+        osg::ref_ptr< osg::Uniform > WT9_3Uniform =
+            new osg::Uniform( "WT9_3", static_cast< float >( 0.2 ) );
+        osg::ref_ptr< osg::Uniform > WT9_4Uniform =
+            new osg::Uniform( "WT9_4", static_cast< float >( 0.1 ) );
+
+        osg::ref_ptr< osg::StateSet > stateSet = blurY->getOrCreateStateSet();
+        stateSet->setAttribute(
+            gaussY.get(),
+            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+        stateSet->addUniform( quadScreenSizeUniform.get() );
+        stateSet->addUniform( WT9_0Uniform.get() );
+        stateSet->addUniform( WT9_1Uniform.get() );
+        stateSet->addUniform( WT9_2Uniform.get() );
+        stateSet->addUniform( WT9_3Uniform.get() );
+        stateSet->addUniform( WT9_4Uniform.get() );
+
+        blurY->setName( "BlurVertical" );
+        blurY->SetInputToUniform( blurX.get(), "glowMap", true );
+        blurY->SetInputTextureIndexForViewportReference( 0 );
+    }
+    blurY->Update();
+
+    //Perform final color operations and blends
+    osg::ref_ptr< scenegraph::rtt::UnitInOut > final =
+        new scenegraph::rtt::UnitInOut();
+    {
+        osg::ref_ptr< osg::Program > finalShader = new osg::Program();
+
+        //Setup vertical blur shaders
+        finalShader->addShader( vertexShader.get() );
+        finalShader->addShader( m_finalShader.get() );
+        finalShader->setName( "FinalShader" );
+
+        osg::ref_ptr< osg::Uniform > glowStrengthUniform =
+            new osg::Uniform( "glowStrength", static_cast< float >( 8.0 ) );
+
+        osg::ref_ptr< osg::StateSet > stateSet = final->getOrCreateStateSet();
+        stateSet->setAttribute(
+            finalShader.get(),
+            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+        stateSet->addUniform( glowStrengthUniform.get() );
+
+        final->setName( "Final" );
+        final->SetInputToUniform( colorBuffer0.get(), "baseMap", false );
+        final->SetInputToUniform(
+            colorBuffer1.get(), "stencilMap", false );
+        final->SetInputToUniform( blurY.get(), "glowMap", true );
+        final->SetInputTextureIndexForViewportReference( 0 );
+    }
+    final->Update();
+
+    //Render to the Frame Buffer
+    postProcessPipeline->addChild( CreateTexturedQuad(
+        static_cast< osg::Texture2D* >( final->GetOutputTexture() ) ) );
+
+    return postProcessPipeline;
 }
 ////////////////////////////////////////////////////////////////////////////////
 osg::Texture2D* SceneRenderToTexture::CreateViewportTexture(
@@ -386,7 +537,7 @@ osg::Texture2D* SceneRenderToTexture::CreateViewportTexture(
     GLenum sourceType,
     osg::Texture2D::FilterMode filterMode,
     osg::Texture2D::WrapMode wrapMode,
-    std::pair< int, int >& viewportDimensions )
+    std::pair< int, int > const& viewportDimensions )
 {
     //GL_RGBA8/GL_UNSIGNED_INT: 8 bits per channel,  32 bits total
     //GL_RGBA16F_ARB/GL_FLOAT: 16 bits per channel,  64 bits total
@@ -405,239 +556,8 @@ osg::Texture2D* SceneRenderToTexture::CreateViewportTexture(
     return tempTexture;
 }
 ////////////////////////////////////////////////////////////////////////////////
-vxsr::Processor* SceneRenderToTexture::CreatePipelineProcessor(
-    vrj::ViewportPtr viewport, osg::Camera* camera, osg::Camera* svCamera )
-{
-    //This is the code for the post-processing pipeline
-    vxsr::Processor* tempProcessor = new vxsr::Processor();
-    tempProcessor->SetCamera( camera );
-
-    //COLOR_BUFFER0 bypass
-    osg::ref_ptr< vxsr::UnitCameraAttachmentBypass > colorBuffer0 =
-        new vxsr::UnitCameraAttachmentBypass();
-    {
-        colorBuffer0->setName( "ColorBuffer0Bypass" );
-        colorBuffer0->SetBufferComponent( osg::Camera::COLOR_BUFFER0 );
-        colorBuffer0->SetInputTextureIndexForViewportReference( 0 );
-    }
-    tempProcessor->addChild( colorBuffer0.get() );
-    colorBuffer0->Update();
-
-    //COLOR_BUFFER1 bypass
-    osg::ref_ptr< vxsr::UnitCameraAttachmentBypass > colorBuffer1 =
-         new vxsr::UnitCameraAttachmentBypass();
-    {
-        colorBuffer1->setName( "ColorBuffer1Bypass" );
-        colorBuffer1->SetBufferComponent( osg::Camera::COLOR_BUFFER1 );
-        colorBuffer1->SetInputTextureIndexForViewportReference( 0 );
-    }
-    tempProcessor->addChild( colorBuffer1.get() );
-    colorBuffer1->Update();
-
-    //Correct the alpha values for the glow texture
-    osg::ref_ptr< vxsr::UnitInOut > glowAlphaPreprocess = new vxsr::UnitInOut();
-    {
-        glowAlphaPreprocess->setName( "GlowAlphaPreprocess" );
-
-        osg::ref_ptr< osg::Program > program = new osg::Program();
-
-        //Setup shaders
-        program->addShader( m_glowAlphaPreprocessFP.get() );
-        program->setName( "GlowAlphaPreprocessShader" );
-
-        osg::ref_ptr< osg::StateSet > stateSet =
-            glowAlphaPreprocess->getOrCreateStateSet();
-        stateSet->setAttribute(
-            program.get(),
-            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
-        glowAlphaPreprocess->SetInputToUniform(
-            colorBuffer1.get(), "glowMap", true );
-        glowAlphaPreprocess->SetInputTextureIndexForViewportReference( 0 );
-    }
-    //colorBuffer1->addChild( colorBuffer1.get() );
-    glowAlphaPreprocess->Update();
-
-    //Downsample by 1/2 original size
-    osg::Vec2 quadScreenSize(
-        camera->getViewport()->width(), camera->getViewport()->height() );
-    osg::ref_ptr< vxsr::UnitInResampleOut > glowDownSample =
-        new vxsr::UnitInResampleOut();
-    {
-        float downsample = 0.5;
-        quadScreenSize *= downsample;
-
-        glowDownSample->setName( "GlowDownSample" );
-        glowDownSample->SetFactorX( downsample );
-        glowDownSample->SetFactorY( downsample );
-        //glowDownSample->SetInputTextureIndexForViewportReference( 0 );
-    }
-    glowAlphaPreprocess->addChild( glowDownSample.get() );
-    glowDownSample->Update();
-
-    //Perform horizontal 1D gauss convolution
-    osg::ref_ptr< vxsr::UnitInOut > blurX = new vxsr::UnitInOut();
-    {
-        //Set name and indicies
-        blurX->setName( "BlurHorizontal" );
-
-        //osg::ref_ptr< vxsr::ShaderAttribute > gaussX =
-            //new vxsr::ShaderAttribute();
-        osg::ref_ptr< osg::Program > gaussX = new osg::Program();
-
-        //Setup horizontal blur shaders
-        gaussX->addShader( m_1dxVP.get() );
-        gaussX->addShader( m_1dxFP.get() );
-        gaussX->setName( "BlurHorizontalShader" );
-
-        //gaussX->add( "quadScreenSize", osg::Uniform::FLOAT_VEC2 );
-        //gaussX->add( "WT9_0", osg::Uniform::FLOAT );
-        //gaussX->add( "WT9_1", osg::Uniform::FLOAT );
-        //gaussX->add( "WT9_2", osg::Uniform::FLOAT );
-        //gaussX->add( "WT9_3", osg::Uniform::FLOAT );
-        //gaussX->add( "WT9_4", osg::Uniform::FLOAT );
-        //gaussX->add( "glowMap", osg::Uniform::SAMPLER_2D );
-        osg::ref_ptr< osg::Uniform > quadScreenSizeUniform =
-            new osg::Uniform( "quadScreenSize", quadScreenSize );
-        osg::ref_ptr< osg::Uniform > WT9_0Uniform =
-            new osg::Uniform( "WT9_0", static_cast< float >( 0.5 ) );
-        osg::ref_ptr< osg::Uniform > WT9_1Uniform =
-            new osg::Uniform( "WT9_1", static_cast< float >( 0.4 ) );
-        osg::ref_ptr< osg::Uniform > WT9_2Uniform =
-            new osg::Uniform( "WT9_2", static_cast< float >( 0.3 ) );
-        osg::ref_ptr< osg::Uniform > WT9_3Uniform =
-            new osg::Uniform( "WT9_3", static_cast< float >( 0.2 ) );
-        osg::ref_ptr< osg::Uniform > WT9_4Uniform =
-            new osg::Uniform( "WT9_4", static_cast< float >( 0.1 ) );
-
-        //gaussX->set( "quadScreenSize", quadScreenSize );
-        //gaussX->set( "WT9_0", static_cast< float >( 0.5 ) );
-        //gaussX->set( "WT9_1", static_cast< float >( 0.4 ) );
-        //gaussX->set( "WT9_2", static_cast< float >( 0.3 ) );
-        //gaussX->set( "WT9_3", static_cast< float >( 0.2 ) );
-        //gaussX->set( "WT9_4", static_cast< float >( 0.1 ) );
-        //gaussX->set( "glowMap", 0 );
-
-        //blurX->getOrCreateStateSet()->setAttributeAndModes( gaussX.get() );
-        osg::ref_ptr< osg::StateSet > stateSet = blurX->getOrCreateStateSet();
-        stateSet->setAttribute(
-            gaussX.get(),
-            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
-        stateSet->addUniform( quadScreenSizeUniform.get() );
-        stateSet->addUniform( WT9_0Uniform.get() );
-        stateSet->addUniform( WT9_1Uniform.get() );
-        stateSet->addUniform( WT9_2Uniform.get() );
-        stateSet->addUniform( WT9_3Uniform.get() );
-        stateSet->addUniform( WT9_4Uniform.get() );
-        blurX->SetInputToUniform( glowDownSample.get(), "glowMap", true );
-        blurX->SetInputTextureIndexForViewportReference( 0 );
-    }
-    //glowDownSample->addChild( blurX.get() );
-    blurX->Update();
-
-    //Perform vertical 1D gauss convolution
-    osg::ref_ptr< vxsr::UnitInOut > blurY = new vxsr::UnitInOut();
-    {
-        //Set name and indicies
-        blurY->setName( "BlurVertical" );
-
-        //osg::ref_ptr< vxsr::ShaderAttribute > gaussY =
-            //new vxsr::ShaderAttribute();
-        osg::ref_ptr< osg::Program > gaussY = new osg::Program();
-
-        //Setup vertical blur shaders
-        gaussY->addShader( m_1dyVP.get() );
-        gaussY->addShader( m_1dyFP.get() );
-        gaussY->setName( "BlurVerticalShader" );
-
-        //gaussY->add( "quadScreenSize", osg::Uniform::FLOAT_VEC2 );
-        //gaussY->add( "WT9_0", osg::Uniform::FLOAT );
-        //gaussY->add( "WT9_1", osg::Uniform::FLOAT );
-        //gaussY->add( "WT9_2", osg::Uniform::FLOAT );
-        //gaussY->add( "WT9_3", osg::Uniform::FLOAT );
-        //gaussY->add( "WT9_4", osg::Uniform::FLOAT );
-        //gaussY->add( "glowMap", osg::Uniform::SAMPLER_2D );
-        osg::ref_ptr< osg::Uniform > quadScreenSizeUniform =
-            new osg::Uniform( "quadScreenSize", quadScreenSize );
-        osg::ref_ptr< osg::Uniform > WT9_0Uniform =
-            new osg::Uniform( "WT9_0", static_cast< float >( 0.5 ) );
-        osg::ref_ptr< osg::Uniform > WT9_1Uniform =
-            new osg::Uniform( "WT9_1", static_cast< float >( 0.4 ) );
-        osg::ref_ptr< osg::Uniform > WT9_2Uniform =
-            new osg::Uniform( "WT9_2", static_cast< float >( 0.3 ) );
-        osg::ref_ptr< osg::Uniform > WT9_3Uniform =
-            new osg::Uniform( "WT9_3", static_cast< float >( 0.2 ) );
-        osg::ref_ptr< osg::Uniform > WT9_4Uniform =
-            new osg::Uniform( "WT9_4", static_cast< float >( 0.1 ) );
-
-        //gaussY->set( "quadScreenSize", quadScreenSize );
-        //gaussY->set( "WT9_0", static_cast< float >( 0.5 ) );
-        //gaussY->set( "WT9_1", static_cast< float >( 0.4 ) );
-        //gaussY->set( "WT9_2", static_cast< float >( 0.3 ) );
-        //gaussY->set( "WT9_3", static_cast< float >( 0.2 ) );
-        //gaussY->set( "WT9_4", static_cast< float >( 0.1 ) );
-        //gaussY->set( "glowMap", 0 );
-
-        //blurY->getOrCreateStateSet()->setAttributeAndModes( gaussY.get() );
-        osg::ref_ptr< osg::StateSet > stateSet = blurY->getOrCreateStateSet();
-        stateSet->setAttribute(
-            gaussY.get(),
-            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
-        stateSet->addUniform( quadScreenSizeUniform.get() );
-        stateSet->addUniform( WT9_0Uniform.get() );
-        stateSet->addUniform( WT9_1Uniform.get() );
-        stateSet->addUniform( WT9_2Uniform.get() );
-        stateSet->addUniform( WT9_3Uniform.get() );
-        stateSet->addUniform( WT9_4Uniform.get() );
-        blurY->SetInputToUniform( blurX.get(), "glowMap", true );
-        blurY->SetInputTextureIndexForViewportReference( 0 );
-    }
-    //blurX->addChild( blurY.get() );
-    blurY->Update();
-
-    //Perform final color operations and blends
-    osg::ref_ptr< vxsr::UnitInOut > final = new vxsr::UnitInOut();
-    //vxsr::UnitInOut* final = new vxsr::UnitInOut();
-    {
-        //Set name and indicies
-        final->setName( "Final" );
-
-        //osg::ref_ptr< vxsr::ShaderAttribute > finalShader =
-            //new vxsr::ShaderAttribute();
-        osg::ref_ptr< osg::Program > finalShader = new osg::Program();
-
-        //Setup vertical blur shaders
-        finalShader->addShader( m_finalShader.get() );
-        finalShader->setName( "FinalShader" );
-
-        //finalShader->add( "glowStrength", osg::Uniform::FLOAT );
-        //finalShader->set( "glowStrength", static_cast< float >( 6.0 ) );
-
-        osg::ref_ptr< osg::Uniform > glowStrengthUniform =
-            new osg::Uniform( "glowStrength", static_cast< float >( 8.0 ) );
-
-        //final->getOrCreateStateSet()->setAttributeAndModes( finalShader.get() );
-        osg::ref_ptr< osg::StateSet > stateSet = final->getOrCreateStateSet();
-        stateSet->setAttribute(
-            finalShader.get(),
-            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
-        stateSet->addUniform( glowStrengthUniform.get() );
-        final->SetInputToUniform( colorBuffer0.get(), "baseMap", false );
-        final->SetInputToUniform(
-            glowAlphaPreprocess.get(), "stencilMap", false );
-        final->SetInputToUniform( blurY.get(), "glowMap", true );
-        final->SetInputTextureIndexForViewportReference( 0 );
-    }
-    final->Update();
-
-    //Render to the Frame Buffer
-    svCamera->addChild( CreateTexturedQuad(
-        viewport, static_cast< osg::Texture2D* const >(
-            final->GetOutputTexture() ) ) );
-
-    return tempProcessor;
-}
-////////////////////////////////////////////////////////////////////////////////
-osg::Geode* SceneRenderToTexture::CreateClearColorQuad()
+osg::Geode* SceneRenderToTexture::CreateClearColorQuad(
+    unsigned int const& numViewports )
 {
     //Get the vertex coordinates for the quad
     osg::ref_ptr< osg::Vec3Array > quadVertices = new osg::Vec3Array();
@@ -659,8 +579,12 @@ osg::Geode* SceneRenderToTexture::CreateClearColorQuad()
     osg::Geode* quadGeode = new osg::Geode();
     quadGeode->setName( "Clear Color Quad" );
     quadGeode->addDrawable( quadGeometry.get() );
-    //Don't cull
     quadGeode->setCullingActive( false );
+
+#ifdef VES_USE_KEEP_FBOS_BOUND_CALLBACK
+    //Do not unbind the FBOs after the BlitFramebuffer call
+    quadGeode->setCullCallback( new KeepFBOsBoundCallback( numViewports ) );
+#endif
 
     //Set stateset for quad
     osg::ref_ptr< osg::StateSet > stateset = quadGeode->getOrCreateStateSet();
@@ -679,7 +603,7 @@ osg::Geode* SceneRenderToTexture::CreateClearColorQuad()
     std::string vertexSource =
     "void main() \n"
     "{ \n"
-        //Ignore MVP transformation as vertices are already in Normalized Device Coord.
+        //Ignore MVP transformation as vertices are already in Normalized Device Coord
         "gl_Position = gl_Vertex; \n"
     "} \n";
 
@@ -715,31 +639,15 @@ osg::Geode* SceneRenderToTexture::CreateClearColorQuad()
     return quadGeode;
 }
 ////////////////////////////////////////////////////////////////////////////////
-osg::Geode* SceneRenderToTexture::CreateTexturedQuad(
-    vrj::ViewportPtr viewport, osg::Texture2D* texture )
+osg::Geode* SceneRenderToTexture::CreateTexturedQuad( osg::Texture2D* texture )
 {
-    vrj::SurfaceViewportPtr tempView =
-        boost::dynamic_pointer_cast< vrj::SurfaceViewport >( viewport );
-
-    float viewportOriginX, viewportOriginY, viewportWidth, viewportHeight;
-    tempView->getOriginAndSize(
-        viewportOriginX, viewportOriginY, viewportWidth, viewportHeight );
-
-    //Transform (  0 to 1 ) viewport space into
-    //          ( -1 to 1 ) identity projection space
-    float lx = ( viewportOriginX * 2.0 ) - 1.0;
-    float ly = ( viewportOriginY * 2.0 ) - 1.0;
-    float ux = ( ( viewportOriginX + viewportWidth ) * 2.0 ) - 1.0;
-    float uy = ( ( viewportOriginY + viewportHeight )* 2.0 ) - 1.0;
-
     //Get the vertex coordinates for the quad
     osg::ref_ptr< osg::Vec3Array > quadVertices = new osg::Vec3Array();
     quadVertices->resize( 4 );
-
-    (*quadVertices)[ 0 ].set( lx, ly, -1.0 );
-    (*quadVertices)[ 1 ].set( ux, ly, -1.0 );
-    (*quadVertices)[ 2 ].set( ux, uy, -1.0 );
-    (*quadVertices)[ 3 ].set( lx, uy, -1.0 );
+    (*quadVertices)[ 0 ].set( -1.0, -1.0, -1.0 );
+    (*quadVertices)[ 1 ].set(  1.0, -1.0, -1.0 );
+    (*quadVertices)[ 2 ].set(  1.0,  1.0, -1.0 );
+    (*quadVertices)[ 3 ].set( -1.0,  1.0, -1.0 );
 
     //Get the texture coordinates for the quad
     osg::ref_ptr< osg::Vec2Array > quadTexCoords = new osg::Vec2Array();
@@ -822,21 +730,14 @@ osg::Group* const SceneRenderToTexture::GetRootGroup() const
     return m_rootGroup.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
-osg::Camera* const SceneRenderToTexture::GetCamera(
-    vrj::ViewportPtr const viewport )
+osg::Camera* SceneRenderToTexture::GetRTTCamera()
 {
-    PipelineMap::const_iterator itr = (*mPipelines).find( viewport );
-    if( itr != (*mPipelines).end() )
-    {
-        return itr->second.first.get();
-    }
-    else
-    {
-        std::cout << "SceneRenderToTexture::GetCamera: camera not found!"
-                  << std::endl;
-
-        return NULL;
-    }
+    return (*m_rttCamera).get();
+}
+////////////////////////////////////////////////////////////////////////////////
+scenegraph::rtt::Processor* SceneRenderToTexture::GetPostProcessPipeline()
+{
+    return (*m_postProcessPipeline).get();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SceneRenderToTexture::WriteImageFileForWeb(
@@ -950,7 +851,7 @@ void SceneRenderToTexture::WriteImageFileForWeb(
             osg::Camera::COLOR_BUFFER, rttList.back().get() );
         screenShotRoot->addChild( rttCameraList.back().get() );
     }
-    
+
     std::vector< osg::ref_ptr<osg::Camera> >::iterator activeCamera;
     ///
     {
@@ -1164,12 +1065,12 @@ void SceneRenderToTexture::WriteImageFileForWeb(
 ////////////////////////////////////////////////////////////////////////////////
 bool SceneRenderToTexture::CameraConfigured()
 {
-    return *mCamerasConfigured;
+    return (*m_camerasConfigured);
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SceneRenderToTexture::InitializeRTT()
 {
-    *mCamerasConfigured = false;
+    (*m_camerasConfigured) = false;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SceneRenderToTexture::Update(
@@ -1329,7 +1230,7 @@ void SceneRenderToTexture::SetImageCameraCallback(
         {
             std::ostringstream ostr;
             ostr << *iter;
-            
+
             std::string name = filename;
             name += "_";
             name += ostr.str();
@@ -1344,117 +1245,4 @@ void SceneRenderToTexture::SetImageCameraCallback(
         }
     }
 }
-////////////////////////////////////////////////////////////////////////////////
-/*
-void SceneRenderToTexture::ConfigureRTTCameras()
-{
-    if( !(*mCamerasConfigured) )
-    {
-        return;
-    }
-
-    vrj::opengl::DrawManager* glDrawManager =
-        vrj::opengl::DrawManager::instance();
-    vrj::opengl::UserData* glUserData = glDrawManager->currentUserData();
-    vrj::opengl::WindowPtr glWindow = glUserData->getGlWindow();
-
-    vrj::DisplayPtr display = glWindow->getDisplay();
-    const size_t numViewports = display->getNumViewports();
-
-    // --- FOR EACH VIEWPORT -- //
-    vrj::Viewport::View view;
-    float vp_ox, vp_oy, vp_sx, vp_sy; //Viewport origin and size
-    for( size_t i = 0; i < numViewports; ++i )
-    {
-        vrj::ViewportPtr viewport = display->getViewport( i );
-
-        //Should viewport be rendered???
-        if( viewport->isActive() )
-        {            
-            //Set the glViewport to draw within
-            viewport->getOriginAndSize( vp_ox, vp_oy, vp_sx, vp_sy );
-            glWindow->setViewport( vp_ox, vp_oy, vp_sx, vp_sy );
-            
-            //Set user information
-            glUserData->setUser( viewport->getUser() );       //Set user data
-            glUserData->setViewport( viewport );              //Set the viewport
-            //std::cout << view << std::endl;
-            // ---- SURFACE & Simulator --- //
-            {
-                //The view for the active viewport
-                view = viewport->getView();
-                if( ( vrj::Viewport::STEREO == view ) ||
-                    ( vrj::Viewport::LEFT_EYE == view ) )     //LEFT EYE
-                {
-                    glWindow->setViewBuffer( vrj::Viewport::LEFT_EYE );
-                    glWindow->setProjection( viewport->getLeftProj() );
-                    glUserData->setProjection( viewport->getLeftProj() );
-
-                    //Update rtt camera
-                    UpdateRTTQuadAndViewport();
-                }
-
-                if( ( vrj::Viewport::STEREO == view ) ||
-                    ( vrj::Viewport::RIGHT_EYE == view ) )    //RIGHT EYE
-                {
-                    glWindow->setViewBuffer( vrj::Viewport::RIGHT_EYE );
-                    glWindow->setProjection( viewport->getRightProj() );
-                    glUserData->setProjection( viewport->getRightProj() );
-
-                    //Update rtt camera
-                    UpdateRTTQuadAndViewport();
-                }
-            }
-        }
-    }
-}
-*/
-////////////////////////////////////////////////////////////////////////////////
-/*
-void SceneRenderToTexture::UpdateRTTQuadAndViewport()
-{
-    vrj::ViewportPtr viewport = vrj::opengl::DrawManager::instance()->
-        currentUserData()->getViewport();
-
-    PipelineMap::iterator itr = (*mPipelines).find( viewport );
-    if( itr != (*mPipelines).end() )
-    {
-        PipelinePair* activePipeline = &(itr->second);
-
-        //Get the frustrum
-        vrj::ProjectionPtr project = vrj::opengl::DrawManager::instance()->
-            currentUserData()->getProjection();
-
-        vrj::Frustum frustum = project->getFrustum();
-
-        activePipeline->first->setProjectionMatrixAsFrustum(
-            frustum[ vrj::Frustum::VJ_LEFT ], frustum[ vrj::Frustum::VJ_RIGHT ],
-            frustum[ vrj::Frustum::VJ_BOTTOM ], frustum[ vrj::Frustum::VJ_TOP ],
-            frustum[ vrj::Frustum::VJ_NEAR ], frustum[ vrj::Frustum::VJ_FAR ] );
-
-        gmtl::Vec3f x_axis( 1.0f, 0.0f, 0.0f );
-        gmtl::Matrix44f mZUp = gmtl::makeRot< gmtl::Matrix44f >( 
-            gmtl::AxisAnglef( gmtl::Math::deg2Rad( -90.0f ), x_axis ) );
-        gmtl::Matrix44f vjMatrixLeft( project->getViewMatrix() );
-        gmtl::Matrix44f mNavPosition =  gmtl::convertTo< float >( 
-            ves::xplorer::scenegraph::SceneManager::instance()->
-                GetActiveNavSwitchNode()->GetMat() );
-
-        //Transform into z-up land
-        vjMatrixLeft = vjMatrixLeft * mZUp * mNavPosition;
-        osg::ref_ptr< osg::RefMatrix > osg_proj_xform_mat =
-            new osg::RefMatrix();
-        osg_proj_xform_mat->set( vjMatrixLeft.mData );
-        activePipeline->first->setViewMatrix( *(osg_proj_xform_mat.get()) );
-        //vprDEBUG( vesDBG, 1 )
-            //<< vjMatrixLeft << mZUp << mNavPosition << std::endl
-            //<< frustum << std::endl << std::endl << vprDEBUG_FLUSH;
-    }
-    else
-    {
-        std::cout << "SceneRenderToTexture::UpdateRTTQuadAndViewport: "
-                  << viewport->getName() << "viewport not found!" << std::endl;
-    }
-}
-*/
 ////////////////////////////////////////////////////////////////////////////////
