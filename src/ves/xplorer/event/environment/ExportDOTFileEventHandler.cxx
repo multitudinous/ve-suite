@@ -31,6 +31,7 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
+// --- VES Includes --- //
 #include <ves/xplorer/event/environment/ExportDOTFileEventHandler.h>
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/CreateGraphDOTVisitor.h>
@@ -42,45 +43,55 @@ using namespace ves::xplorer::event;
 using namespace ves::xplorer;
 using namespace ves::open::xml;
 
-////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 ExportDOTFileEventHandler::ExportDOTFileEventHandler()
-{}
-///////////////////////////////////////////////////////////////////
-ExportDOTFileEventHandler
-::ExportDOTFileEventHandler( const ExportDOTFileEventHandler& ceh )
-{}
-/////////////////////////////////////////////////////////////////////
+{
+    ;
+}
+////////////////////////////////////////////////////////////////////////////////
+ExportDOTFileEventHandler::ExportDOTFileEventHandler(
+    const ExportDOTFileEventHandler& ceh )
+{
+    ;
+}
+////////////////////////////////////////////////////////////////////////////////
 ExportDOTFileEventHandler::~ExportDOTFileEventHandler()
 {
     ;
 }
-///////////////////////////////////////////////////////////////////////////////////////
-ExportDOTFileEventHandler&
-ExportDOTFileEventHandler::operator=( const ExportDOTFileEventHandler& rhs )
+////////////////////////////////////////////////////////////////////////////////
+ExportDOTFileEventHandler& ExportDOTFileEventHandler::operator=(
+    const ExportDOTFileEventHandler& rhs )
 {
     if( &rhs != this )
     {
         ves::xplorer::event::EventHandler::operator=( rhs );
     }
+
     return *this;
 }
-///////////////////////////////////////////////////////////////
-void ExportDOTFileEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* baseObject )
+////////////////////////////////////////////////////////////////////////////////
+void ExportDOTFileEventHandler::SetGlobalBaseObject( GlobalBase* baseObject )
 {
     ;
 }
-//////////////////////////////////////////////////////////////////////////
-void ExportDOTFileEventHandler::Execute( const ves::open::xml::XMLObjectPtr& veXMLObject )
+////////////////////////////////////////////////////////////////////////////////
+void ExportDOTFileEventHandler::Execute(
+    const ves::open::xml::XMLObjectPtr& veXMLObject )
 {
     try
     {
-        ves::open::xml::CommandPtr command = boost::dynamic_pointer_cast<ves::open::xml::Command>( veXMLObject );
+        ves::open::xml::CommandPtr command =
+            boost::dynamic_pointer_cast< ves::open::xml::Command >(
+                veXMLObject );
         std::string filename;
         command->GetDataValuePair( "Filename" )->GetData( filename );
-        // store the active geometry and viz objects as a pfb
-        // (but not the sun, menu, laser, or text)
-        ves::xplorer::scenegraph::CreateGraphDOTVisitor dotCreator(
-            ves::xplorer::scenegraph::SceneManager::instance()->GetRootNode(), filename );
+        //Store the active geometry and viz objects as a pfb
+        //(but not the sun, menu, laser, or text)
+        scenegraph::CreateGraphDOTVisitor dotCreator(
+            scenegraph::SceneManager::instance()->
+                GetRootNode()->getParent( 0 )->getParent( 0 ), //SceneView Cam
+            filename );
     }
     catch ( ... )
     {
@@ -88,3 +99,4 @@ void ExportDOTFileEventHandler::Execute( const ves::open::xml::XMLObjectPtr& veX
         std::cout << "StoredSceneEventHandler::_operateOnNode()" << std::endl;
     }
 }
+////////////////////////////////////////////////////////////////////////////////

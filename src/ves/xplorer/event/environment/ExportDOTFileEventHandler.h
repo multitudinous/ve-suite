@@ -30,9 +30,11 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
+
 #ifndef EXPORT_DOT_FILE_EVENT_HANDLER_H
 #define EXPORT_DOT_FILE_EVENT_HANDLER_H
 
+// --- VES Includes --- //
 #include <ves/xplorer/event/EventHandler.h>
 
 namespace ves
@@ -41,9 +43,11 @@ namespace xplorer
 {
 namespace event
 {
+
 /*!\file ExportDOTfileEventHandler.h
   ExportDOTfileEventHandler API
-  */
+ */
+
 /*!\class ExportDOTfileEventHandler
  * load a stored scene.
  */
@@ -55,23 +59,29 @@ public:
 
     ///Copy Constructor
     ExportDOTFileEventHandler( const ExportDOTFileEventHandler& ceh );
+
     ///Destructor
     virtual ~ExportDOTFileEventHandler();
 
     ///Equal operator
-    ExportDOTFileEventHandler& operator=( const ExportDOTFileEventHandler& rhs );
-    ///\param baseObject The GlobalBase object to apply the command to.
-    virtual void SetGlobalBaseObject( ves::xplorer::GlobalBase* baseObject = 0 );
+    ExportDOTFileEventHandler& operator=(
+        const ExportDOTFileEventHandler& rhs );
 
-    ///The internal operation on the CADNode.
-    ///\param veXMLObject The veXMLObject to execute.
+    ///\param baseObject The GlobalBase object to apply the command to
+    virtual void SetGlobalBaseObject( GlobalBase* baseObject = 0 );
+
+    ///The internal operation on the CADNode
+    ///\param veXMLObject The veXMLObject to execute
     virtual void Execute( const ves::open::xml::XMLObjectPtr& veXMLObject );
+
 protected:
+
+private:
 
 };
 
-}
-}
-}
+} //end event
+} //end xplorer
+} //end ves
 
 #endif// EXPORT_DOT_FILE_EVENT_HANDLER_H
