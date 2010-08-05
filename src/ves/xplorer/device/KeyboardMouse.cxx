@@ -1536,16 +1536,17 @@ void KeyboardMouse::ProcessSelection()
         m_manipulatorManager.GetSceneManipulator();
     sceneManipulator->Connect( newSelectedDCS );
 
-    //Remove local node from nodePath
-    nodePath.pop_back();
-
-    osg::Matrixd localToWorldMatrix = osg::computeLocalToWorld( nodePath );
+    //
     osg::Vec3d center( 0.0, 0.0, 0.0 );
     //If dcs is from a camera object, we want to rotate about local zero point
     if( newSelectedDCS->getName() != "CameraDCS" )
     {
         center= vesObject->getBound().center();
+
+        //Remove local node from nodePath
+        nodePath.pop_back();
     }
+    osg::Matrixd localToWorldMatrix = osg::computeLocalToWorld( nodePath );
     center = center * localToWorldMatrix;
     sceneManipulator->SetPosition( center );
 
