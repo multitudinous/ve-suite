@@ -47,6 +47,7 @@
 #include <ves/xplorer/scenegraph/rtt/UnitInOut.h>
 #include <ves/xplorer/scenegraph/rtt/UnitInResampleOut.h>
 #include <ves/xplorer/scenegraph/rtt/UnitOut.h>
+
 #include <ves/xplorer/Debug.h>
 
 #include <ves/open/xml/Command.h>
@@ -83,16 +84,16 @@
 #include <iostream>
 
 //#define VES_SRTT_DEBUG
-//#define VES_USE_MSMRT_CALLBACK
-//#define VES_USE_KEEP_FBOS_BOUND_CALLBACK
-//#define VES_USE_MULTISAMPLING
+#define VES_USE_MSMRT_CALLBACK
+#define VES_USE_KEEP_FBOS_BOUND_CALLBACK
+#define VES_USE_MULTISAMPLING
 
 using namespace ves::xplorer;
 
 ////////////////////////////////////////////////////////////////////////////////
 SceneRenderToTexture::SceneRenderToTexture()
     :
-    m_rootGroup( new osg::Group() ),
+    m_rootGroup( NULL ),
     m_1dxVP( NULL ),
     m_1dxFP( NULL ),
     m_1dyVP( NULL ),
@@ -138,13 +139,48 @@ SceneRenderToTexture::SceneRenderToTexture()
         std::cerr << "Could not load shader files!" << std::endl;
     }
 
-    //This needs to be moved out of this function
+    //
     InitRootGroup();
 }
 ////////////////////////////////////////////////////////////////////////////////
 SceneRenderToTexture::~SceneRenderToTexture()
 {
     ;
+}
+////////////////////////////////////////////////////////////////////////////////
+void SceneRenderToTexture::InitRootGroup()
+{
+    m_rootGroup = new osg::Group();
+
+    //Setup the MRT shader to make glow work correctly
+    osg::ref_ptr< osg::Shader > fragmentShader = new osg::Shader();
+    std::string fragmentSource =
+    "uniform vec3 glowColor; \n"
+
+    "void main() \n"
+    "{ \n"
+        "gl_FragData[ 0 ] = gl_Color; \n"
+        "gl_FragData[ 1 ] = vec4( glowColor, gl_FragData[ 0 ].a ); \n"
+    "} \n";
+
+    fragmentShader->setType( osg::Shader::FRAGMENT );
+    fragmentShader->setShaderSource( fragmentSource );
+    fragmentShader->setName( "Root Group Fragment Shader" );
+
+    osg::ref_ptr< osg::Program > program = new osg::Program();
+    program->addShader( fragmentShader.get() );
+    program->setName( "Root Group Program" );
+
+    osg::ref_ptr< osg::StateSet > stateset = m_rootGroup->getOrCreateStateSet();
+    stateset->setAttributeAndModes(
+        program.get(),
+        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+
+    //Default glow color for any children that don't explicitly set it
+    stateset->addUniform(
+        new osg::Uniform( "glowColor", osg::Vec3( 0.0, 0.0, 0.0 ) ) );
+
+    scenegraph::SceneManager::instance()->SetRootNode( m_rootGroup.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SceneRenderToTexture::InitScene( osg::Camera* const svCamera )
@@ -194,19 +230,23 @@ void SceneRenderToTexture::InitScene( osg::Camera* const svCamera )
         static_cast< int >( vp_sy * contextHeight ) );
 
     //
-    (*m_rttCamera) = CreateRTTCamera( viewportDimensions );
-    (*m_rttCamera)->addChild( CreateClearColorQuad( numViewports ) );
-    (*m_rttCamera)->addChild( m_rootGroup.get() );
+    InitRTTCamera( svCamera, viewportDimensions );
 
     //
-    (*m_postProcessPipeline) =
-        CreatePostProcessPipeline( (*m_rttCamera).get(), viewportDimensions );
+    svCamera->addChild( CreateClearColorQuad( numViewports ) );
 
-    //Add the rtt camera to the sv camera
-    svCamera->addChild( (*m_rttCamera).get() );
+    //
+    svCamera->addChild( m_rootGroup.get() );
+
+    //
+    (*m_postProcessCamera) = CreatePostProcessCamera();
+
+    //
+    (*m_postProcessCamera)->addChild(
+        CreatePostProcessPipeline( svCamera, viewportDimensions ) );
 
     //Add the post process pipeline to the sv camera
-    svCamera->addChild( (*m_postProcessPipeline).get() );
+    svCamera->addChild( (*m_postProcessCamera).get() );
 
     //Make sure that existing scene graph objects are
     //allocated with thread safe ref/unref
@@ -224,42 +264,10 @@ void SceneRenderToTexture::InitScene( osg::Camera* const svCamera )
     (*m_camerasConfigured) = true;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void SceneRenderToTexture::InitRootGroup()
-{
-    //Setup the MRT shader to make glow work correctly
-    osg::ref_ptr< osg::Shader > fragmentShader = new osg::Shader();
-    std::string fragmentSource =
-    "uniform vec3 glowColor; \n"
-
-    "void main() \n"
-    "{ \n"
-        "gl_FragData[ 0 ] = gl_Color; \n"
-        "gl_FragData[ 1 ] = vec4( glowColor, gl_FragData[ 0 ].a ); \n"
-    "} \n";
-
-    fragmentShader->setType( osg::Shader::FRAGMENT );
-    fragmentShader->setShaderSource( fragmentSource );
-    fragmentShader->setName( "Root Group Fragment Shader" );
-
-    osg::ref_ptr< osg::Program > program = new osg::Program();
-    program->addShader( fragmentShader.get() );
-    program->setName( "Root Group Program" );
-
-    osg::ref_ptr< osg::StateSet > stateset = m_rootGroup->getOrCreateStateSet();
-    stateset->setAttributeAndModes(
-        program.get(),
-        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
-
-    //Default glow color for any children that don't explicitly set it
-    stateset->addUniform(
-        new osg::Uniform( "glowColor", osg::Vec3( 0.0, 0.0, 0.0 ) ) );
-}
-////////////////////////////////////////////////////////////////////////////////
-osg::Camera* SceneRenderToTexture::CreateRTTCamera(
+void SceneRenderToTexture::InitRTTCamera(
+    osg::Camera* const rttCamera,
     std::pair< int, int > const& viewportDimensions )
 {
-    osg::Camera* rttCamera = new osg::Camera();
-
 #ifdef VES_USE_MSMRT_CALLBACK
     //Post-draw callback on root camera handles resolving
     //multisampling for the MRT case
@@ -267,16 +275,15 @@ osg::Camera* SceneRenderToTexture::CreateRTTCamera(
     rttCamera->setPostDrawCallback( msmrt );
 #endif
 
-    rttCamera->setReferenceFrame( osg::Camera::RELATIVE_RF );
-    rttCamera->setRenderOrder( osg::Camera::PRE_RENDER );
-    rttCamera->setClearMask(
-        GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT );
-    rttCamera->setClearColor( osg::Vec4( 0.0, 0.0, 1.0, 0.0 ) );
+    //Clear color quad will clear color and depth buffers for us
+    rttCamera->setClearMask( 0x00000000 );
+    rttCamera->setClearColor( osg::Vec4( 0.0, 1.0, 0.0, 0.0 ) );
     rttCamera->setClearStencil( 0 );
     rttCamera->setRenderTargetImplementation(
-        osg::Camera::FRAME_BUFFER_OBJECT, osg::Camera::FRAME_BUFFER );
+        osg::Camera::FRAME_BUFFER_OBJECT, osg::Camera::FRAME_BUFFER_OBJECT );
     rttCamera->setComputeNearFarMode(
         osg::CullSettings::COMPUTE_NEAR_FAR_USING_BOUNDING_VOLUMES );
+    //Viewport cannot be outside the buffer (texture)
     rttCamera->setViewport(
         0, 0, viewportDimensions.first, viewportDimensions.second );
 
@@ -297,45 +304,60 @@ osg::Camera* SceneRenderToTexture::CreateRTTCamera(
     //Attach a texture and use it as the render target
     //If you set one buffer to multisample, they all get set to multisample
     //see RenderStage.cpp
+    int maxSamples( 0 );
 #ifdef VES_USE_MULTISAMPLING
-    rttCamera->attach(
-        osg::Camera::COLOR_BUFFER0, colorMap.get(), 0, 0, false, 4, 4 );
-    rttCamera->attach(
-        osg::Camera::COLOR_BUFFER1, glowMap.get(), 0, 0, false, 4, 4 );
-    //rttCamera->attach(
-        //osg::Camera::COLOR_BUFFER2, mGlowStencil.get(), 0, 0, false, 4, 4 );
-#else
-    rttCamera->attach(
-        osg::Camera::COLOR_BUFFER0, colorMap.get() );
-    rttCamera->attach(
-        osg::Camera::COLOR_BUFFER1, glowMap.get() );
+    glGetIntegerv( GL_MAX_SAMPLES_EXT, &maxSamples );
+    if( maxSamples > 4 )
+    {
+        maxSamples = 4;
+    }
 #endif
 
-    /*
-    //Set up the depth buffer
-    osg::ref_ptr< osg::Texture2D > depthMap = CreateViewportTexture(
-        GL_DEPTH_COMPONENT24, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE,
-        osg::Texture2D::NEAREST, osg::Texture2D::CLAMP_TO_EDGE,
-        viewportDimensions );
-    */
-
-    /*
-    //Set up interleaved depth/stencil buffer
-    osg::ref_ptr< osg::Texture2D > depthStencilMap = CreateViewportTexture(
-        GL_DEPTH24_STENCIL8_EXT, GL_DEPTH_STENCIL_EXT, GL_UNSIGNED_INT_24_8_EXT,
-        osg::Texture2D::NEAREST, osg::Texture2D::CLAMP_TO_EDGE,
-        viewportDimensions );
-    */
-
+    rttCamera->attach(
+        osg::Camera::COLOR_BUFFER0, colorMap.get(),
+        0, 0, false, maxSamples, maxSamples );
+    rttCamera->attach(
+        osg::Camera::COLOR_BUFFER1, glowMap.get(),
+        0, 0, false, maxSamples, maxSamples );
     //Use interleaved depth/stencil renderbuffer
     rttCamera->attach(
         osg::Camera::PACKED_DEPTH_STENCIL_BUFFER, GL_DEPTH_STENCIL_EXT );
 
+    //Set up the depth buffer
+    //osg::ref_ptr< osg::Texture2D > depthMap = CreateViewportTexture(
+        //GL_DEPTH_COMPONENT24, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE,
+        //osg::Texture2D::NEAREST, osg::Texture2D::CLAMP_TO_EDGE,
+        //viewportDimensions );
+
+    //Set up interleaved depth/stencil buffer
+    //osg::ref_ptr< osg::Texture2D > depthStencilMap = CreateViewportTexture(
+        //GL_DEPTH24_STENCIL8_EXT, GL_DEPTH_STENCIL_EXT, GL_UNSIGNED_INT_24_8_EXT,
+        //osg::Texture2D::NEAREST, osg::Texture2D::CLAMP_TO_EDGE,
+        //viewportDimensions );
+
     //osg::ref_ptr< osg::ClearNode > clearNode = new osg::ClearNode();
     //clearNode->setClearMask( GL_STENCIL_BUFFER_BIT );
     //rttCamera->addChild( clearNode.get() );
+}
+////////////////////////////////////////////////////////////////////////////////
+osg::Camera* SceneRenderToTexture::CreatePostProcessCamera()
+{
+    osg::Camera* postProcessCamera = new osg::Camera();
+    postProcessCamera->setName( "Post Process Camera" );
+    postProcessCamera->setReferenceFrame( osg::Camera::ABSOLUTE_RF );
+    postProcessCamera->setRenderOrder( osg::Camera::POST_RENDER, 0 );
+    postProcessCamera->setRenderTargetImplementation(
+        osg::Camera::FRAME_BUFFER, osg::Camera::FRAME_BUFFER );
+    //RTT quad will clear color and depth buffers for us
+    postProcessCamera->setClearMask( 0x00000000 );
+    postProcessCamera->setComputeNearFarMode(
+        osgUtil::CullVisitor::DO_NOT_COMPUTE_NEAR_FAR );
+    postProcessCamera->setCullingActive( false );
+    postProcessCamera->setThreadSafeRefUnref( true );
+    postProcessCamera->setViewMatrix( osg::Matrix::identity() );
+    postProcessCamera->setProjectionMatrix( osg::Matrix::identity() );
 
-    return rttCamera;
+    return postProcessCamera;
 }
 ////////////////////////////////////////////////////////////////////////////////
 scenegraph::rtt::Processor* SceneRenderToTexture::CreatePostProcessPipeline(
@@ -369,49 +391,22 @@ scenegraph::rtt::Processor* SceneRenderToTexture::CreatePostProcessPipeline(
     postProcessPipeline->addChild( colorBuffer1.get() );
     colorBuffer1->Update();
 
-    osg::ref_ptr< osg::Shader > vertexShader = new osg::Shader();
-    std::string vertexSource =
-    "void main() \n"
-    "{ \n"
-        //Ignore MVP transformation as vertices are already in Normalized Device Coord.
-        "gl_Position = gl_Vertex; \n"
-        "gl_TexCoord[ 0 ].st = gl_MultiTexCoord0.st; \n"
-    "} \n";
-
-    vertexShader->setType( osg::Shader::VERTEX );
-    vertexShader->setShaderSource( vertexSource );
-    vertexShader->setName( "VS Quad Vertex Shader" );
-
     //Downsample by 1/2 original size
     osg::Vec2 quadScreenSize(
         viewportDimensions.first, viewportDimensions.second );
-    /*
     osg::ref_ptr< scenegraph::rtt::UnitInResampleOut > glowDownSample =
         new scenegraph::rtt::UnitInResampleOut();
     {
-
-        osg::ref_ptr< osg::Program > program = new osg::Program();
-
-        //
-        program->addShader( vertexShader.get() );
-        program->setName( "GlowDownSampleShader" );
-
         float downsample = 0.5;
         quadScreenSize *= downsample;
-
-        osg::ref_ptr< osg::StateSet > stateSet =
-            glowDownSample->getOrCreateStateSet();
-        stateSet->setAttribute(
-            program.get(),
-            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
 
         glowDownSample->setName( "GlowDownSample" );
         glowDownSample->SetFactorX( downsample );
         glowDownSample->SetFactorY( downsample );
         //glowDownSample->SetInputTextureIndexForViewportReference( 0 );
     }
-    //colorBuffer1->addChild( glowDownSample.get() );
-    glowDownSample->Update();*/
+    colorBuffer1->addChild( glowDownSample.get() );
+    glowDownSample->Update();
 
     //Perform horizontal 1D gauss convolution
     osg::ref_ptr< scenegraph::rtt::UnitInOut > blurX =
@@ -449,7 +444,7 @@ scenegraph::rtt::Processor* SceneRenderToTexture::CreatePostProcessPipeline(
         stateSet->addUniform( WT9_4Uniform.get() );
 
         blurX->setName( "BlurHorizontal" );
-        blurX->SetInputToUniform( colorBuffer1.get(), "glowMap", true );
+        blurX->SetInputToUniform( glowDownSample.get(), "glowMap", true );
         blurX->SetInputTextureIndexForViewportReference( 0 );
     }
     blurX->Update();
@@ -502,7 +497,6 @@ scenegraph::rtt::Processor* SceneRenderToTexture::CreatePostProcessPipeline(
         osg::ref_ptr< osg::Program > finalShader = new osg::Program();
 
         //Setup vertical blur shaders
-        finalShader->addShader( vertexShader.get() );
         finalShader->addShader( m_finalShader.get() );
         finalShader->setName( "FinalShader" );
 
@@ -525,7 +519,7 @@ scenegraph::rtt::Processor* SceneRenderToTexture::CreatePostProcessPipeline(
     final->Update();
 
     //Render to the Frame Buffer
-    postProcessPipeline->addChild( CreateTexturedQuad(
+    postProcessPipeline->addChild( CreateRTTQuad(
         static_cast< osg::Texture2D* >( final->GetOutputTexture() ) ) );
 
     return postProcessPipeline;
@@ -562,10 +556,10 @@ osg::Geode* SceneRenderToTexture::CreateClearColorQuad(
     //Get the vertex coordinates for the quad
     osg::ref_ptr< osg::Vec3Array > quadVertices = new osg::Vec3Array();
     quadVertices->resize( 4 );
-    (*quadVertices)[ 0 ].set( -1.0, -1.0, -1.0 );
-    (*quadVertices)[ 1 ].set(  1.0, -1.0, -1.0 );
-    (*quadVertices)[ 2 ].set(  1.0,  1.0, -1.0 );
-    (*quadVertices)[ 3 ].set( -1.0,  1.0, -1.0 );
+    (*quadVertices)[ 0 ].set( -1.0, -1.0, 1.0 );
+    (*quadVertices)[ 1 ].set(  1.0, -1.0, 1.0 );
+    (*quadVertices)[ 2 ].set(  1.0,  1.0, 1.0 );
+    (*quadVertices)[ 3 ].set( -1.0,  1.0, 1.0 );
 
     //Create the quad geometry
     osg::ref_ptr< osg::Geometry > quadGeometry = new osg::Geometry();
@@ -586,19 +580,7 @@ osg::Geode* SceneRenderToTexture::CreateClearColorQuad(
     quadGeode->setCullCallback( new KeepFBOsBoundCallback( numViewports ) );
 #endif
 
-    //Set stateset for quad
-    osg::ref_ptr< osg::StateSet > stateset = quadGeode->getOrCreateStateSet();
-    //Render first
-    stateset->setRenderBinDetails( -1, "RenderBin" );
-    stateset->setMode( GL_LIGHTING, osg::StateAttribute::OFF );
-
-    //Set depth test to always pass and don't write to the depth buffer
-    osg::ref_ptr< osg::Depth > depth = new osg::Depth();
-    depth->setFunction( osg::Depth::ALWAYS );
-    depth->setWriteMask( false );
-    stateset->setAttributeAndModes(
-        depth.get(), osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
-
+    //
     osg::ref_ptr< osg::Shader > vertexShader = new osg::Shader();
     std::string vertexSource =
     "void main() \n"
@@ -630,29 +612,45 @@ osg::Geode* SceneRenderToTexture::CreateClearColorQuad(
     program->addShader( fragmentShader.get() );
     program->setName( "VS Quad Program" );
 
+    //Don't write to the depth buffer
+    //osg::ref_ptr< osg::Depth > depth = new osg::Depth();
+    //depth->setWriteMask( false );
+
+    //Set stateset for quad
+    osg::ref_ptr< osg::StateSet > stateset = quadGeode->getOrCreateStateSet();
+    //Render first
+    stateset->setRenderBinDetails( -1, "RenderBin" );
+    stateset->setMode( GL_LIGHTING, osg::StateAttribute::OFF );
+    stateset->setMode( GL_DEPTH_TEST, osg::StateAttribute::OFF );
     stateset->setAttributeAndModes(
         program.get(),
         osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+    //stateset->setAttributeAndModes(
+        //depth.get(), osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
     stateset->addUniform(
         &scenegraph::SceneManager::instance()->GetClearColorUniform() );
 
     return quadGeode;
 }
 ////////////////////////////////////////////////////////////////////////////////
-osg::Geode* SceneRenderToTexture::CreateTexturedQuad( osg::Texture2D* texture )
+osg::Geode* SceneRenderToTexture::CreateRTTQuad( osg::Texture2D* texture )
 {
+    //Create geode for quad
+    osg::Geode* rttQuad = new osg::Geode();
+    rttQuad->setName( "RTT Quad" );
+    rttQuad->setCullingActive( false );
+
     //Get the vertex coordinates for the quad
     osg::ref_ptr< osg::Vec3Array > quadVertices = new osg::Vec3Array();
     quadVertices->resize( 4 );
-    (*quadVertices)[ 0 ].set( -1.0, -1.0, -1.0 );
-    (*quadVertices)[ 1 ].set(  1.0, -1.0, -1.0 );
-    (*quadVertices)[ 2 ].set(  1.0,  1.0, -1.0 );
-    (*quadVertices)[ 3 ].set( -1.0,  1.0, -1.0 );
+    (*quadVertices)[ 0 ].set( -1.0, -1.0, 1.0 );
+    (*quadVertices)[ 1 ].set(  1.0, -1.0, 1.0 );
+    (*quadVertices)[ 2 ].set(  1.0,  1.0, 1.0 );
+    (*quadVertices)[ 3 ].set( -1.0,  1.0, 1.0 );
 
     //Get the texture coordinates for the quad
     osg::ref_ptr< osg::Vec2Array > quadTexCoords = new osg::Vec2Array();
     quadTexCoords->resize( 4 );
-
     (*quadTexCoords)[ 0 ].set( 0.0, 0.0 );
     (*quadTexCoords)[ 1 ].set( 1.0, 0.0 );
     (*quadTexCoords)[ 2 ].set( 1.0, 1.0 );
@@ -666,15 +664,7 @@ osg::Geode* SceneRenderToTexture::CreateTexturedQuad( osg::Texture2D* texture )
     quadGeometry->setTexCoordArray( 0, quadTexCoords.get() );
     quadGeometry->setUseDisplayList( true );
     quadGeometry->setColorBinding( osg::Geometry::BIND_OFF );
-
-    //Create geode for quad
-    osg::Geode* quadGeode = new osg::Geode();
-    quadGeode->setCullingActive( false );
-    quadGeode->addDrawable( quadGeometry.get() );
-
-    //Set stateset for quad
-    osg::ref_ptr< osg::StateSet > stateset = quadGeode->getOrCreateStateSet();
-    stateset->setMode( GL_LIGHTING, osg::StateAttribute::OFF );
+    rttQuad->addDrawable( quadGeometry.get() );
 
     osg::ref_ptr< osg::Shader > vertexShader = new osg::Shader();
     std::string vertexSource =
@@ -712,17 +702,29 @@ osg::Geode* SceneRenderToTexture::CreateTexturedQuad( osg::Texture2D* texture )
     program->addShader( fragmentShader.get() );
     program->setName( "VS Quad Program" );
 
+    //Don't write to the depth buffer
+    //osg::ref_ptr< osg::Depth > depth = new osg::Depth();
+    //depth->setWriteMask( false );
+
+    //Set stateset for quad
+    osg::ref_ptr< osg::StateSet > stateset = rttQuad->getOrCreateStateSet();
+    stateset->setMode( GL_LIGHTING, osg::StateAttribute::OFF );
+    stateset->setMode( GL_DEPTH_TEST, osg::StateAttribute::OFF );
+    //stateset->setAttributeAndModes(
+        //depth.get(), osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
     stateset->setAttributeAndModes(
         program.get(),
         osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
     stateset->addUniform( new osg::Uniform( "baseMap", 0 ) );
-    stateset->setTextureAttributeAndModes( 0, texture, osg::StateAttribute::ON );
+    stateset->setTextureAttributeAndModes(
+        0, texture,
+        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
 
 #ifdef VES_SRTT_DEBUG
-    quadGeode->setNodeMask( 0 );
+    rttQuad->setNodeMask( 0 );
 #endif
 
-    return quadGeode;
+    return rttQuad;
 }
 ////////////////////////////////////////////////////////////////////////////////
 osg::Group* const SceneRenderToTexture::GetRootGroup() const
@@ -730,14 +732,9 @@ osg::Group* const SceneRenderToTexture::GetRootGroup() const
     return m_rootGroup.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
-osg::Camera* SceneRenderToTexture::GetRTTCamera()
+osg::Camera* SceneRenderToTexture::GetPostProcessCamera()
 {
-    return (*m_rttCamera).get();
-}
-////////////////////////////////////////////////////////////////////////////////
-scenegraph::rtt::Processor* SceneRenderToTexture::GetPostProcessPipeline()
-{
-    return (*m_postProcessPipeline).get();
+    return (*m_postProcessCamera).get();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SceneRenderToTexture::WriteImageFileForWeb(

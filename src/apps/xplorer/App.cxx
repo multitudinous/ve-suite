@@ -168,15 +168,15 @@ App::App( int argc, char* argv[], bool enableRTT )
 {
     osg::Referenced::setThreadSafeReferenceCounting( true );
     osg::DisplaySettings::instance()->setMaxNumberOfGraphicsContexts( 20 );
-    mFrameStamp = new osg::FrameStamp;
+    mFrameStamp = new osg::FrameStamp();
     mUpdateVisitor = new osgUtil::UpdateVisitor();
     mFrameStamp->setReferenceTime( 0.0 );
     mFrameStamp->setFrameNumber( 0 );
     svUpdate = false;
 
-    light_0 = new osg::Light;
-    light_source_0 = new osg::LightSource;
-    light_model_0 = new osg::LightModel;
+    light_0 = new osg::Light();
+    light_source_0 = new osg::LightSource();
+    light_model_0 = new osg::LightModel();
 
     light_0->setLightNum( 0 );
     light_0->setAmbient( osg::Vec4d( 0.36862, 0.36842, 0.36842, 1.0 ) );
@@ -288,7 +288,6 @@ void App::contextInit()
         new_sv->getCamera()->setName( "SV Camera" );
         if( !mRTT )
         {
-            //new_sv->setSceneData( getScene() );
             new_sv->getCamera()->addChild( getScene() );
         }
         else
@@ -380,9 +379,9 @@ void App::configSceneView( osgUtil::SceneView* newSceneViewer )
     //bounding volume.
     if( mRTT )
     {
-        newSceneViewer->setComputeNearFarMode(
-            osgUtil::CullVisitor::DO_NOT_COMPUTE_NEAR_FAR );
-        newSceneViewer->getCamera()->setCullingActive( false );
+        //newSceneViewer->setComputeNearFarMode(
+            //osgUtil::CullVisitor::DO_NOT_COMPUTE_NEAR_FAR );
+        //newSceneViewer->getCamera()->setCullingActive( false );
     }
     else
     {
@@ -467,8 +466,8 @@ void App::initScene()
     }
 
     //Define the rootNode, worldDCS, and lighting
-    ves::xplorer::scenegraph::SceneManager::instance()->SetRootNode(
-            mSceneRenderToTexture->GetRootGroup() );
+    //ves::xplorer::scenegraph::SceneManager::instance()->SetRootNode(
+        //mSceneRenderToTexture->GetRootGroup() );
     ves::xplorer::scenegraph::SceneManager::instance()->InitScene();
     ves::xplorer::scenegraph::SceneManager::instance()->ViewLogo( true );
     ves::xplorer::scenegraph::SceneManager::instance()->
@@ -478,14 +477,14 @@ void App::initScene()
     osg::ref_ptr< osg::StateSet > lightStateSet = 
         getScene()->getOrCreateStateSet();
     lightStateSet->setAssociatedModes( light_0.get(), osg::StateAttribute::ON );
-    
+
     lightStateSet->setMode( GL_LIGHTING, osg::StateAttribute::ON );
-    
-    lightStateSet->
-        setAttributeAndModes( light_model_0.get(), osg::StateAttribute::ON );
-    
+
+    lightStateSet->setAttributeAndModes(
+        light_model_0.get(), osg::StateAttribute::ON );
+
     getScene()->addChild( light_source_0.get() );
-    
+
     // modelHandler stores the arrow and holds all data and geometry
     ModelHandler::instance()->InitScene();
 
@@ -508,10 +507,10 @@ void App::initScene()
     }
     EnvironmentHandler::instance()->InitScene();
     cfdQuatCamHandler::instance()->SetMasterNode( m_vjobsWrapper->IsMaster() );
-    
+
     //Set rtt mode for devices
     ves::xplorer::scenegraph::SceneManager::instance()->SetRTT( mRTT );
-    
+
     // create steady state visualization objects
     SteadyStateVizHandler::instance()->Initialize( std::string() );
     SteadyStateVizHandler::instance()->InitScene();
@@ -525,26 +524,27 @@ void App::initScene()
     GraphicalPluginManager::instance()->Initialize(
         m_vjobsWrapper->naming_context, m_vjobsWrapper->child_poa );
 
-    // This may need to be fixed
-    this->m_vjobsWrapper->GetCfdStateVariables();
+    //This may need to be fixed
+    m_vjobsWrapper->GetCfdStateVariables();
 #ifdef QT_ON
-    // Get or create UIManager
+    //Get or create UIManager
     ves::conductor::UIManager* m_UIManager = ves::conductor::UIManager::instance();
 
-    // UIManager needs to know how big in pixels its projection area is
-//    cfdDisplaySettings* cDS = EnvironmentHandler::instance()->GetDisplaySettings();
-//    std::pair<int, int> res = cDS->GetScreenResolution();
-//    m_UIManager->SetRectangle( 0, res.first, 0, res.second );
+    //UIManager needs to know how big in pixels its projection area is
+    //cfdDisplaySettings* cDS =
+        //EnvironmentHandler::instance()->GetDisplaySettings();
+    //std::pair<int, int> res = cDS->GetScreenResolution();
+    //m_UIManager->SetRectangle( 0, res.first, 0, res.second );
 
-    // Hand current root node UIManager so it can create UI subgraph
+    //Hand current root node UIManager so it can create UI subgraph
     m_UIManager->Initialize( getScene() );
 
-    // Start up the UI thread
-//    std::cout << "Starting UI thread" << std::endl;
-//    m_qtUIThread = new vpr::Thread(boost::bind(&App::LoadUI, this));
-#   ifndef _DARWIN
+    //Start up the UI thread
+    //std::cout << "Starting UI thread" << std::endl;
+    //m_qtUIThread = new vpr::Thread( boost::bind( &App::LoadUI, this ) );
+#ifndef _DARWIN
     preRun();
-#   endif
+#endif
 #endif
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -552,19 +552,19 @@ void App::preFrame()
 {
     VPR_PROFILE_GUARD_HISTORY( "App::preFrame", 20 );
     vprDEBUG( vesDBG, 3 ) << "|App::preFrame" << std::endl << vprDEBUG_FLUSH;
-    ///////////////////////
+
     {
         //Check and see if the orb has any work to do
         VPR_PROFILE_GUARD_HISTORY( "App::preFrame CheckORBWorkLoad", 20 );
         m_vjobsWrapper->CheckORBWorkLoad();
     }
-    ///////////////////////
+
     {
         VPR_PROFILE_GUARD_HISTORY( "App::preFrame EnvironmentHandler", 20 );
         //Sets the worldDCS before it is synced
         EnvironmentHandler::instance()->PreFrameUpdate();
     }
-    ///////////////////////
+
     vprDEBUG( vesDBG, 3 ) << "|End App::preFrame" << std::endl << vprDEBUG_FLUSH;
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -758,7 +758,7 @@ void App::latePreFrame()
             GetActiveNavSwitchNode()->GetMat() );
     }
     ///////////////////////
-    
+
     ///////////////////////
     //profile the update call
     {
@@ -769,21 +769,21 @@ void App::latePreFrame()
 
 #if defined( QT_ON ) && !defined( _DARWIN )
     runLoop();
-#endif // QT_ON
+#endif //QT_ON
 
     ///Increment framenumber now that we are done using it everywhere
     _frameNumber += 1;
     mProfileCounter += 1;
 
-    vprDEBUG( vesDBG, 3 ) << "|End App::latePreFrame" 
-        << std::endl << vprDEBUG_FLUSH;
+    vprDEBUG( vesDBG, 3 ) << "|End App::latePreFrame"
+                          << std::endl << vprDEBUG_FLUSH;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void App::intraFrame()
 {
     vprDEBUG( vesDBG, 3 ) << "|App::intraFrame" << std::endl << vprDEBUG_FLUSH;
-    // Do nothing here
-    // Usually slows things down
+
+    //Do nothing here, usually slows things down
 }
 ////////////////////////////////////////////////////////////////////////////////
 void App::contextPostDraw()
@@ -799,7 +799,7 @@ void App::postFrame()
 
     time_since_start = _timer.delta_s( _start_tick, _timer.tick() );
 
-    this->m_vjobsWrapper->GetSetAppTime( time_since_start );
+    m_vjobsWrapper->GetSetAppTime( time_since_start );
     EnvironmentHandler::instance()->PostFrameUpdate();
     //this->m_vjobsWrapper->GetSetFrameNumber( _frameNumber++ );
 
@@ -807,15 +807,16 @@ void App::postFrame()
     _tbvHandler->UpdateTransientFrame();
     GraphicalPluginManager::instance()->PostFrameUpdate();
 
-    this->m_vjobsWrapper->GetCfdStateVariables();
-    
+    m_vjobsWrapper->GetCfdStateVariables();
+
     if( m_captureNextFrame )
     {
         mSceneRenderToTexture->SetImageCameraCallback( false, "" );
         m_captureNextFrame = false;
     }
 
-    vprDEBUG( vesDBG, 3 ) << "|End App::postFrame" << std::endl << vprDEBUG_FLUSH;
+    vprDEBUG( vesDBG, 3 ) << "|End App::postFrame"
+                          << std::endl << vprDEBUG_FLUSH;
 }
 ////////////////////////////////////////////////////////////////////////////////
 ///Remember that this is called in parrallel in a multiple context situation
@@ -828,7 +829,7 @@ void App::contextPreDraw()
     if( !(*mViewportsChanged) && (_frameNumber > 3) )
     {
         if( jccl::ConfigManager::instance()->isPendingStale() )
-        {            
+        {
             vpr::Guard< vpr::Mutex > val_guard( mValueLock );
             mSceneRenderToTexture->InitScene( (*sceneViewer)->getCamera() );
             update();
@@ -841,7 +842,7 @@ void App::contextPreDraw()
             *mViewportsChanged = true;
         }
     }
-    
+
     ///Context specific updates for models that are loaded
     ves::xplorer::ModelHandler::instance()->ContextPreDrawUpdate();
 
@@ -948,12 +949,28 @@ void App::draw()
         //Get the view matrix from a centered eye position
         m_sceneGLTransformInfo->CalculateCenterViewMatrix( project );
 
-        //
-        sv->setViewport(
-            glTI->GetViewportOriginX(), glTI->GetViewportOriginY(),
-            glTI->GetViewportWidth(), glTI->GetViewportHeight() );
+        //Can't set viewport larger than fbo texture for rtt camera
+        //We have to set the viewport for the frame buffer
+        //Would like to inherit viewport from sv all way down but not possible
+        //The rtt camera must be ABSOLUTE_RF because of implementation of
+        //AutoTransform::computeLocalToWorldMatrix() and
+        //AbsoluteModelTransform::computeLocalToWorldMatrix()
+        //If it is not absolute, Physics and Manipulators will be broken
         sv->setProjectionMatrix( projectionMatrixOSG );
         sv->setViewMatrix( viewMatrixOSG );
+        if( mRTT )
+        {
+            osg::Camera* camera = mSceneRenderToTexture->GetPostProcessCamera();
+            camera->setViewport(
+                glTI->GetViewportOriginX(), glTI->GetViewportOriginY(),
+                glTI->GetViewportWidth(), glTI->GetViewportHeight() );
+        }
+        else
+        {
+            sv->setViewport(
+                glTI->GetViewportOriginX(), glTI->GetViewportOriginY(),
+                glTI->GetViewportWidth(), glTI->GetViewportHeight() );
+        }
     }
     else
     {
@@ -1003,14 +1020,14 @@ void App::draw()
     glPopAttrib();
 
     //GLenum errorEnum = glGetError();
-    //vprDEBUG( vesDBG, 3 ) <<  << errorEnum & GL_NO_ERROR 
-    //    << std::endl << vprDEBUG_FLUSH;
+    //vprDEBUG( vesDBG, 3 ) <<  << errorEnum & GL_NO_ERROR
+                          //<< std::endl << vprDEBUG_FLUSH;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void App::update()
 {
-    vprDEBUG( vesDBG, 3 ) <<  "|\tApp LatePreframe Update" 
-        << std::endl << vprDEBUG_FLUSH;
+    vprDEBUG( vesDBG, 3 ) <<  "|\tApp LatePreframe Update"
+                          << std::endl << vprDEBUG_FLUSH;
     /*const std::string tempCommandName = 
         m_vjobsWrapper->GetXMLCommand()->GetCommandName();
     // This code came from osgViewer::Viewer::setSceneData
@@ -1074,19 +1091,19 @@ void App::LoadUI()
     QApplication::setAttribute(Qt::AA_MacPluginApplication);
     m_qtApp = new QApplication ( argc, argv, 1 );
 
-#ifdef VES_QT_RENDER_DEBUG   
+#ifdef VES_QT_RENDER_DEBUG
     QPushButton*  button = new QPushButton("Test");
     button->show();
     m_uiInitialized = true;
     return;
 #endif
-    // Get or create UIManager
+    //Get or create UIManager
     ves::conductor::UIManager* m_UIManager =
-            ves::conductor::UIManager::instance();
+        ves::conductor::UIManager::instance();
 
     // Wrap the widget in a UIElement
     ves::conductor::UIElement* element = new ves::conductor::UIElementQt();
-    QWidget* mainUIWidget = new MainWindow(0);
+    QWidget* mainUIWidget = new MainWindow( 0 );
 
     // Since we're using an mdi-able MainWindow as the main widget, we make both 
     // it and the UIManager's projection take up the entire viewable area of
@@ -1100,7 +1117,7 @@ void App::LoadUI()
     mainUIWidget->resize( 600, res.second );
     static_cast< ves::conductor::UIElementQt* >
                                            (element)->SetWidget( mainUIWidget );
-   
+
     m_UIManager->AddElement( element );
 
     m_uiInitialized = true;

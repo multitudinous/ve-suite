@@ -113,13 +113,9 @@ public:
     ///\return The root osg::Group node
     osg::Group* const GetRootGroup() const;
 
-    ///Get the rtt camera for this context
-    ///\return The rtt camera for this context
-    osg::Camera* GetRTTCamera();
-
-    ///Get the post process pipeline for this context
-    ///\return The post process pipeline for this context
-    scenegraph::rtt::Processor* GetPostProcessPipeline();
+    ///Get the post process camera for this context
+    ///\return The post process camera for this context
+    osg::Camera* GetPostProcessCamera();
 
     ///Initialize correct screen info for the texture and quad
     ///NOTE: MUST be called AFTER EnvironmentHandler::InitScene
@@ -154,13 +150,17 @@ private:
     void InitRootGroup();
 
     ///
-    osg::Camera* CreateRTTCamera(
+    void InitRTTCamera(
+        osg::Camera* const rttCamera,
         std::pair< int, int > const& viewportDimensions );
 
     ///
     scenegraph::rtt::Processor* CreatePostProcessPipeline(
         osg::Camera* rttCamera,
         std::pair< int, int > const& viewportDimensions );
+
+    ///
+    osg::Camera* CreatePostProcessCamera();
 
     ///
     osg::Texture2D* CreateViewportTexture(
@@ -175,7 +175,7 @@ private:
     osg::Geode* CreateClearColorQuad( unsigned int const& numViewports );
 
     ///
-    osg::Geode* CreateTexturedQuad( osg::Texture2D* texture );
+    osg::Geode* CreateRTTQuad( osg::Texture2D* texture );
 
     ///
     std::vector< osg::Camera* > m_updateList;
@@ -199,11 +199,7 @@ private:
     vrj::opengl::ContextData< bool > m_camerasConfigured;
 
     ///
-    vrj::opengl::ContextData< osg::ref_ptr< osg::Camera > > m_rttCamera;
-
-    ///
-    vrj::opengl::ContextData<
-        osg::ref_ptr< scenegraph::rtt::Processor > > m_postProcessPipeline;
+    vrj::opengl::ContextData< osg::ref_ptr< osg::Camera > > m_postProcessCamera;
 
 };
 } //end xplorer

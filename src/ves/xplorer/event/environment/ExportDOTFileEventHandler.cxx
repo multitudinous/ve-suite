@@ -90,7 +90,7 @@ void ExportDOTFileEventHandler::Execute(
         //(but not the sun, menu, laser, or text)
         scenegraph::CreateGraphDOTVisitor dotCreator(
             scenegraph::SceneManager::instance()->
-                GetRootNode()->getParent( 0 )->getParent( 0 ), //SceneView Cam
+                GetRootNode()->getParent( 0 ), //SceneView Cam
             filename );
     }
     catch ( ... )
