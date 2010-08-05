@@ -94,17 +94,14 @@ bool TransformManipulator::isSameKindAs( const osg::Object* obj ) const
 ////////////////////////////////////////////////////////////////////////////////
 void TransformManipulator::SetupDefaultGeometry()
 {
-    osg::ref_ptr< manipulator::TranslateCompound > translateCompound =
-        new manipulator::TranslateCompound();
-    addChild( translateCompound.get() );
+    m_translateCompound = new manipulator::TranslateCompound();
+    addChild( m_translateCompound.get() );
 
-    osg::ref_ptr< manipulator::RotateCompound > rotateCompound =
-        new manipulator::RotateCompound();
-    addChild( rotateCompound.get() );
+    m_rotateCompound = new manipulator::RotateCompound();
+    addChild( m_rotateCompound.get() );
 
-    osg::ref_ptr< manipulator::ScaleCompound > scaleCompound =
-        new manipulator::ScaleCompound();
-    addChild( scaleCompound.get() );
+    m_scaleCompound = new manipulator::ScaleCompound();
+    addChild( m_scaleCompound.get() );
 
     SetEnabledModes( TransformationType::TRANSLATE_COMPOUND );
 }
