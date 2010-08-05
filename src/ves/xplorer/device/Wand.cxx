@@ -550,9 +550,6 @@ void Wand::ProcessHit()
         //Set the connection between the scene manipulator and the selected dcs
         scenegraph::manipulator::TransformManipulator* sceneManipulator =
             m_manipulatorManager.GetSceneManipulator();
-        //scenegraph::manipulator::RotateTwist* rotateTwist =
-        //    m_manipulatorManager.GetTwistManipulator();
-        //rotateTwist->Disconnect();
         //sceneManipulator->Disconnect();
         //Check and see if the selected node has an attached physics mesh
         bool hasAPhysicsMesh( false );
@@ -571,12 +568,10 @@ void Wand::ProcessHit()
         
         if( hasAPhysicsMesh )
         {
-            //rotateTwist->Connect( tempAMT.get() );
             sceneManipulator->Connect( tempAMT.get() );
         }
         else
         {
-            //rotateTwist->Connect( newSelectedDCS );
             sceneManipulator->Connect( newSelectedDCS );
         }
         
@@ -588,8 +583,7 @@ void Wand::ProcessHit()
         scenegraph::LocalToWorldNodePath::NodeAndPath nap = npl.at( 0 );
         osg::Matrixd localToWorld = osg::computeLocalToWorld( nap.second );
         osg::Vec3d newCenter = newSelectedDCS->getBound().center() * localToWorld;
-        //rotateTwist->setPosition( newCenter );
-        sceneManipulator->SetPosition( newCenter );        
+        sceneManipulator->SetPosition( newCenter );
         vprDEBUG( vesDBG, 1 ) << "|\tEnd Selection "
             << std::endl << vprDEBUG_FLUSH;
     }
