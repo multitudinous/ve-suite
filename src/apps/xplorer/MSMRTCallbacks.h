@@ -95,6 +95,21 @@ public:
             osg::setGLExtensionFuncPtr(
                 ctxInfo.__glGetFramebufferAttachmentParameteriv,
                 "glGetFramebufferAttachmentParameteriv" );
+            if( ctxInfo.__glGetFramebufferAttachmentParameteriv == NULL )
+            {
+                osg::setGLExtensionFuncPtr(
+                    ctxInfo.__glGetFramebufferAttachmentParameteriv,
+                    "glGetFramebufferAttachmentParameterivEXT" );
+            }
+            if( ctxInfo.__glGetFramebufferAttachmentParameteriv == NULL )
+            {
+                osg::notify( osg::ALWAYS )
+                    << "Can't get function pointer "
+                    << "glGetFramebufferAttachmentParameteriv"
+                    << std::endl;
+
+                return;
+            }
         }
 
         const GLint width = _cam->getViewport()->width();
