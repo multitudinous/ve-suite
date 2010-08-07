@@ -41,9 +41,16 @@
 
 // --- OSG Includes --- //
 #include <osg/Geode>
+#include <osg/Depth>
 #include <osg/Camera>
 
+#include <osg/Light>
+#include <osg/LightSource>
+#include <osg/LightModel>
+
 #include <osgText/Text>
+
+#include <osgUtil/CullVisitor>
 
 using namespace ves::xplorer::scenegraph;
 using namespace ves::xplorer;
@@ -80,13 +87,51 @@ void HeadsUpDisplay::Initialize()
 
     mCamera = new osg::Camera();
     mCamera->setName( "Heads Up Display Camera" );
-    mCamera->setClearMask( GL_DEPTH_BUFFER_BIT );
-    mCamera->setRenderOrder( osg::Camera::POST_RENDER );
     mCamera->setReferenceFrame( osg::Transform::ABSOLUTE_RF );
+    mCamera->setRenderOrder( osg::Camera::POST_RENDER, 1 );
+    mCamera->setRenderTargetImplementation(
+        osg::Camera::FRAME_BUFFER, osg::Camera::FRAME_BUFFER );
+    mCamera->setClearMask( 0x00000000 );
+    mCamera->setComputeNearFarMode(
+        osgUtil::CullVisitor::DO_NOT_COMPUTE_NEAR_FAR );
+    mCamera->setCullingActive( false );
+    mCamera->setViewport(
+        0, 0, mWindowResolution.first, mWindowResolution.second );
     mCamera->setViewMatrix( osg::Matrix::identity() );
-    mCamera->setProjectionMatrix( osg::Matrix::ortho2D(
-        0, mWindowResolution.first, 0, mWindowResolution.second ) );
+    mCamera->setProjectionMatrix( osg::Matrix::ortho(
+        0, mWindowResolution.first, 0, mWindowResolution.second, -50, 50 ) );
     rootNode->addChild( mCamera.get() );
+
+    osg::ref_ptr< osg::Light > light = new osg::Light();
+    light->setLightNum( 0 );
+    light->setAmbient( osg::Vec4( 0.36862, 0.36842, 0.36842, 1.0 ) );
+    light->setDiffuse( osg::Vec4( 0.88627, 0.88500, 0.88500, 1.0 ) );
+    light->setSpecular( osg::Vec4( 0.49019, 0.48872, 0.48872, 1.0 ) );
+    //We are in openGL space
+    light->setPosition( osg::Vec4( 0.0, 10000.0, 10000.0, 0.0 ) );
+
+    osg::ref_ptr< osg::LightSource > lightSource = new osg::LightSource();
+    lightSource->setLight( light.get() );
+    lightSource->setReferenceFrame( osg::LightSource::RELATIVE_RF );
+    mCamera->addChild( lightSource.get() );
+
+    osg::ref_ptr< osg::LightModel > lightModel = new osg::LightModel();
+    lightModel->setAmbientIntensity( osg::Vec4( 0.1, 0.1, 0.1, 1.0 ) );
+    //Get correct specular lighting across pipes
+    //See http://www.ds.arch.tue.nl/General/Staff/Joran/osg/osg_specular_problem.htm
+    lightModel->setLocalViewer( true );
+
+    //Setup the light
+    osg::ref_ptr< osg::StateSet > stateset = mCamera->getOrCreateStateSet();
+    stateset->setAssociatedModes(
+        light.get(),
+        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+    stateset->setMode(
+        GL_LIGHTING,
+        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+    stateset->setAttributeAndModes(
+        lightModel.get(),
+        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
 
     std::string headsUpDisplayFont( "fonts/arial.ttf" );
 
@@ -99,8 +144,8 @@ void HeadsUpDisplay::Initialize()
     mGeometryWCS = new ves::xplorer::scenegraph::CADEntity(
         GetVESuite_WCS(), wcsDCS.get(), true, "Off" );
     mGeometryWCS->GetDCS()->setScale( osg::Vec3( 0.7, 0.7, 0.7 ) );
-    mGeometryWCS->GetDCS()->setPosition(
-        osg::Vec3( mWindowResolution.first - 50, mWindowResolution.second - 50, -40.0 ) );
+    mGeometryWCS->GetDCS()->setPosition( osg::Vec3(
+        mWindowResolution.first - 50, mWindowResolution.second - 50, 0 ) );
     mGeometryWCS->GetDCS()->setNodeMask( false );
     mCamera->addChild( mGeometryWCS->GetDCS() );
 
@@ -142,6 +187,37 @@ void HeadsUpDisplay::Initialize()
     wcsTextGeode->addDrawable( mWCSyText.get() );
     wcsTextGeode->addDrawable( mWCSzText.get() );
     mGeometryWCS->GetDCS()->addChild( wcsTextGeode.get() );
+
+    {
+        osg::ref_ptr< osg::Shader > fragmentShader = new osg::Shader();
+        std::string fragmentSource =
+        "uniform sampler2D baseMap; \n"
+
+        "void main() \n"
+        "{ \n"
+            "vec4 texture = texture2D( baseMap, gl_TexCoord[ 0 ].xy ); \n"
+            "gl_FragColor = mix( texture, gl_Color, texture.a ); \n"
+        "} \n";
+
+        fragmentShader->setType( osg::Shader::FRAGMENT );
+        fragmentShader->setShaderSource( fragmentSource );
+        fragmentShader->setName( "HUD Text Fragment Shader" );
+
+        osg::ref_ptr< osg::Program > program = new osg::Program();
+        program->addShader( fragmentShader.get() );
+        program->setName( "HUD Text Program" );
+
+        osg::ref_ptr< osg::StateSet > stateset = new osg::StateSet();
+        stateset->setAttributeAndModes(
+            program.get(),
+            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+
+        //Here we attach the texture for the text
+        stateset->addUniform( new osg::Uniform( "baseMap", 0 ) );
+
+        mFramerateTextGeode->setStateSet( stateset.get() );
+        wcsTextGeode->setStateSet( stateset.get() );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void HeadsUpDisplay::LatePreFrame()

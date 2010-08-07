@@ -46,7 +46,8 @@ using namespace ves::xplorer::scenegraph::camera;
 CameraObjectCallback::CameraObjectCallback()
     :
     osg::Object(),
-    osg::NodeCallback()
+    osg::NodeCallback(),
+    m_dcsMatrix()
 {
     ;
 }
@@ -54,7 +55,8 @@ CameraObjectCallback::CameraObjectCallback()
 CameraObjectCallback::CameraObjectCallback( const CameraObjectCallback& input )
     :
     osg::Object( input ),
-    osg::NodeCallback( input )
+    osg::NodeCallback( input ),
+    m_dcsMatrix( input.m_dcsMatrix )
 {
     if( &input != this )
     {
@@ -72,19 +74,21 @@ void CameraObjectCallback::operator()( osg::Node* node, osg::NodeVisitor* nv )
     osg::ref_ptr< CameraObject > cameraObject =
         static_cast< CameraObject* >( node );
 
-    if( cameraObject.valid() )
+    if( !cameraObject.valid() )
     {
-        osg::Matrixd tempMatrix( cameraObject->GetDCS().GetMat().getData() );
+        traverse( node, nv );
+    }
+
+    osg::Matrixd tempMatrix( cameraObject->GetDCS().GetMat().getData() );
+    if( tempMatrix != m_dcsMatrix )
+    {
+        m_dcsMatrix = tempMatrix;
         tempMatrix =
             osg::Matrixd::inverse( tempMatrix ) *
             cameraObject->GetInitialViewMatrix();
 
         cameraObject->GetCamera().setViewMatrix( tempMatrix );
         cameraObject->CalculateMatrixMVPT();
-
-        return;
     }
-
-    traverse( node, nv );
 }
 ////////////////////////////////////////////////////////////////////////////////

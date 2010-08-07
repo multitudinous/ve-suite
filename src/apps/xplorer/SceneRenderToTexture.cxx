@@ -91,8 +91,9 @@
 using namespace ves::xplorer;
 
 ////////////////////////////////////////////////////////////////////////////////
-SceneRenderToTexture::SceneRenderToTexture()
+SceneRenderToTexture::SceneRenderToTexture( bool const& enableRTT )
     :
+    m_enableRTT( enableRTT ),
     m_rootGroup( NULL ),
     m_1dxVP( NULL ),
     m_1dxFP( NULL ),
@@ -152,33 +153,38 @@ void SceneRenderToTexture::InitRootGroup()
 {
     m_rootGroup = new osg::Group();
 
-    //Setup the MRT shader to make glow work correctly
-    osg::ref_ptr< osg::Shader > fragmentShader = new osg::Shader();
-    std::string fragmentSource =
-    "uniform vec3 glowColor; \n"
+    //If we are in rtt mode, set the main shader
+    if( m_enableRTT )
+    {
+        //Setup the MRT shader to make glow work correctly
+        osg::ref_ptr< osg::Shader > fragmentShader = new osg::Shader();
+        std::string fragmentSource =
+        "uniform vec3 glowColor; \n"
 
-    "void main() \n"
-    "{ \n"
-        "gl_FragData[ 0 ] = gl_Color; \n"
-        "gl_FragData[ 1 ] = vec4( glowColor, gl_FragData[ 0 ].a ); \n"
-    "} \n";
+        "void main() \n"
+        "{ \n"
+            "gl_FragData[ 0 ] = gl_Color; \n"
+            "gl_FragData[ 1 ] = vec4( glowColor, gl_FragData[ 0 ].a ); \n"
+        "} \n";
 
-    fragmentShader->setType( osg::Shader::FRAGMENT );
-    fragmentShader->setShaderSource( fragmentSource );
-    fragmentShader->setName( "Root Group Fragment Shader" );
+        fragmentShader->setType( osg::Shader::FRAGMENT );
+        fragmentShader->setShaderSource( fragmentSource );
+        fragmentShader->setName( "Root Group Fragment Shader" );
 
-    osg::ref_ptr< osg::Program > program = new osg::Program();
-    program->addShader( fragmentShader.get() );
-    program->setName( "Root Group Program" );
+        osg::ref_ptr< osg::Program > program = new osg::Program();
+        program->addShader( fragmentShader.get() );
+        program->setName( "Root Group Program" );
 
-    osg::ref_ptr< osg::StateSet > stateset = m_rootGroup->getOrCreateStateSet();
-    stateset->setAttributeAndModes(
-        program.get(),
-        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+        osg::ref_ptr< osg::StateSet > stateset =
+            m_rootGroup->getOrCreateStateSet();
+        stateset->setAttributeAndModes(
+            program.get(),
+            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
 
-    //Default glow color for any children that don't explicitly set it
-    stateset->addUniform(
-        new osg::Uniform( "glowColor", osg::Vec3( 0.0, 0.0, 0.0 ) ) );
+        //Default glow color for any children that don't explicitly set it
+        stateset->addUniform(
+            new osg::Uniform( "glowColor", osg::Vec3( 0.0, 0.0, 0.0 ) ) );
+    }
 
     scenegraph::SceneManager::instance()->SetRootNode( m_rootGroup.get() );
 }
@@ -620,13 +626,18 @@ osg::Geode* SceneRenderToTexture::CreateClearColorQuad(
     osg::ref_ptr< osg::StateSet > stateset = quadGeode->getOrCreateStateSet();
     //Render first
     stateset->setRenderBinDetails( -1, "RenderBin" );
-    stateset->setMode( GL_LIGHTING, osg::StateAttribute::OFF );
-    stateset->setMode( GL_DEPTH_TEST, osg::StateAttribute::OFF );
+    stateset->setMode(
+        GL_LIGHTING,
+        osg::StateAttribute::OFF | osg::StateAttribute::PROTECTED );
+    stateset->setMode(
+        GL_DEPTH_TEST,
+        osg::StateAttribute::OFF | osg::StateAttribute::PROTECTED );
     stateset->setAttributeAndModes(
         program.get(),
         osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
     //stateset->setAttributeAndModes(
-        //depth.get(), osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+        //depth.get(),
+        //osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
     stateset->addUniform(
         &scenegraph::SceneManager::instance()->GetClearColorUniform() );
 
@@ -708,10 +719,15 @@ osg::Geode* SceneRenderToTexture::CreateRTTQuad( osg::Texture2D* texture )
 
     //Set stateset for quad
     osg::ref_ptr< osg::StateSet > stateset = rttQuad->getOrCreateStateSet();
-    stateset->setMode( GL_LIGHTING, osg::StateAttribute::OFF );
-    stateset->setMode( GL_DEPTH_TEST, osg::StateAttribute::OFF );
+    stateset->setMode(
+        GL_LIGHTING,
+        osg::StateAttribute::OFF | osg::StateAttribute::PROTECTED );
+    stateset->setMode(
+        GL_DEPTH_TEST,
+        osg::StateAttribute::OFF | osg::StateAttribute::PROTECTED );
     //stateset->setAttributeAndModes(
-        //depth.get(), osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+        //depth.get(),
+        //osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
     stateset->setAttributeAndModes(
         program.get(),
         osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );

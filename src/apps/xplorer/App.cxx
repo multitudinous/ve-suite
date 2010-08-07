@@ -206,7 +206,7 @@ App::App( int argc, char* argv[], bool enableRTT )
     this->argv = argv;
 
     mSceneRenderToTexture =
-        SceneRenderToTexturePtr( new SceneRenderToTexture() );
+        SceneRenderToTexturePtr( new SceneRenderToTexture( mRTT ) );
 
     //Set the ortho2D( 0, 1, 0, 1, 0, 1 ) matrix
     gmtl::Matrix44d ortho2DMatrix;

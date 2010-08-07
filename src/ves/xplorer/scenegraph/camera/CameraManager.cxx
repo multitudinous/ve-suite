@@ -138,7 +138,7 @@ bool CameraManager::Handle(
         if( cameraObject )
         {
             //camera->DoSomething(); like change color or something
-            SetActiveCameraObject( cameraObject );
+            //SetActiveCameraObject( cameraObject );
         }
 
         break;
@@ -152,7 +152,7 @@ bool CameraManager::Handle(
     default:
     {
         m_activeCamera = NULL;
-        SetActiveCameraObject( m_activeCamera );
+        //SetActiveCameraObject( m_activeCamera );
         break;
     }
     } //end switch( event )
@@ -208,10 +208,10 @@ osg::Geode* CameraManager::CreateMasterCameraQuad()
     cameraViewQuadVertices->resize( 4 );
     if( SceneManager::instance()->IsDesktopMode() )
     {
-        (*cameraViewQuadVertices)[ 0 ].set( 0.0, 0.0, -1.0 );
-        (*cameraViewQuadVertices)[ 1 ].set( 200.0, 0.0, -1.0 );
-        (*cameraViewQuadVertices)[ 2 ].set( 200.0, 200.0, -1.0 );
-        (*cameraViewQuadVertices)[ 3 ].set( 0.0, 200.0, -1.0 );
+        (*cameraViewQuadVertices)[ 0 ].set( 0.0, 0.0, 0.0 );
+        (*cameraViewQuadVertices)[ 1 ].set( 200.0, 0.0, 0.0 );
+        (*cameraViewQuadVertices)[ 2 ].set( 200.0, 200.0, 0.0 );
+        (*cameraViewQuadVertices)[ 3 ].set( 0.0, 200.0, 0.0 );
     }
     else
     {
@@ -220,7 +220,7 @@ osg::Geode* CameraManager::CreateMasterCameraQuad()
         (*cameraViewQuadVertices)[ 2 ].set(  1.0,  0.01,  1.0 );
         (*cameraViewQuadVertices)[ 3 ].set( -1.0,  0.01,  1.0 );
     }
-    
+
     //Get the texture coordinates for the quad
     osg::ref_ptr< osg::Vec2Array > quadTexCoords = new osg::Vec2Array();
     quadTexCoords->resize( 4 );
@@ -235,20 +235,39 @@ osg::Geode* CameraManager::CreateMasterCameraQuad()
     quadGeometry->addPrimitiveSet( new osg::DrawArrays( 
         osg::PrimitiveSet::QUADS, 0, cameraViewQuadVertices->size() ) );
     quadGeometry->setTexCoordArray( 0, quadTexCoords.get() );
-    //quadGeometry->setUseDisplayList( true );
-    //osg::ref_ptr< osg::Vec4Array > c = new osg::Vec4Array();
-    //c->push_back( osg::Vec4( 1.0, 1.0, 0., 1. ) );
-    //quadGeometry->setColorArray( c.get() );
-    //quadGeometry->setColorBinding( osg::Geometry::BIND_OVERALL );
-
-    //Set the stateset for the quad
-    osg::ref_ptr< osg::StateSet > stateset = new osg::StateSet();
-    stateset->setMode( GL_LIGHTING, osg::StateAttribute::OFF );
 
     osg::Geode* quadGeode = new osg::Geode();
     quadGeode->setCullingActive( false );
     quadGeode->addDrawable( quadGeometry.get() );
-    quadGeode->setStateSet( stateset.get() );
+
+    //
+    osg::ref_ptr< osg::Shader > fragmentShader = new osg::Shader();
+    std::string fragmentSource =
+    "uniform sampler2D baseMap; \n"
+
+    "void main() \n"
+    "{ \n"
+        "gl_FragColor = texture2D( baseMap, gl_TexCoord[ 0 ].xy ); \n"
+    "} \n";
+
+    fragmentShader->setType( osg::Shader::FRAGMENT );
+    fragmentShader->setShaderSource( fragmentSource );
+    fragmentShader->setName( "Camera Quad Fragment Shader" );
+
+    osg::ref_ptr< osg::Program > program = new osg::Program();
+    program->addShader( fragmentShader.get() );
+    program->setName( "Camera Quad Program" );
+
+    osg::ref_ptr< osg::StateSet > stateset = quadGeode->getOrCreateStateSet();
+    stateset->setMode(
+        GL_LIGHTING,
+        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+    stateset->setAttributeAndModes(
+        program.get(),
+        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+
+    //Here we attach the texture for the text
+    stateset->addUniform( new osg::Uniform( "baseMap", 0 ) );
 
     return quadGeode;
 }

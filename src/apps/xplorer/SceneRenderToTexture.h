@@ -98,7 +98,7 @@ class SceneRenderToTexture
 {
 public:
     ///Constructor
-    SceneRenderToTexture();
+    SceneRenderToTexture( bool const& enableRTT );
 
     ///Destructor
     ~SceneRenderToTexture();
@@ -176,6 +176,9 @@ private:
 
     ///
     osg::Geode* CreateRTTQuad( osg::Texture2D* texture );
+
+    ///
+    bool m_enableRTT;
 
     ///
     std::vector< osg::Camera* > m_updateList;

@@ -39,6 +39,7 @@
 
 // --- OSG Includes --- //
 #include <osg/NodeCallback>
+#include <osg/Matrix>
 
 namespace ves
 {
@@ -52,15 +53,22 @@ namespace camera
 class VE_SCENEGRAPH_EXPORTS CameraObjectCallback : public osg::NodeCallback
 {
 public:
+    ///
     CameraObjectCallback();
+
+    ///
     CameraObjectCallback( const CameraObjectCallback& input );
 
+    ///
     virtual void operator()( osg::Node* node, osg::NodeVisitor* nv );
 
 protected:
+    ///
     virtual ~CameraObjectCallback();
 
 private:
+    ///
+    osg::Matrixd m_dcsMatrix;
 
 };
 } //end camera
