@@ -81,13 +81,17 @@ public:
     META_Node( ves::xplorer::scenegraph::camera, CameraManager );
 
     ///Override the addChild function to only accept Cameras
-    virtual bool addChild( CameraObject* child );
+    virtual bool addChild();
 
     ///
     void Enable( const bool& enable = true );
 
     ///
     CameraObject* const GetActiveCameraObject() const;
+
+    ///Get the RTT quad
+    ///\return The geode with the RTT quad
+    osg::Node* GetCameraManagerQuad();
 
     ///
     bool Handle(
@@ -100,18 +104,24 @@ public:
     ///
     const bool IsEnabled() const;
 
+    ///
+    void RemoveAllCameraObjects();
+
     ///Override the replaceChild function to only accept Cameras
-    virtual bool replaceChild( CameraObject* origChild, CameraObject* newChild );
+    virtual bool replaceChild(
+        CameraObject* origChild, CameraObject* newChild );
 
     ///
     void SetActiveCameraObject( CameraObject* cameraObject );
 
+    ///
+    void SetCameraViewQuadResolution( unsigned int const& scale );
+
     ///Override the setChild function to only accept Cameras
     virtual bool setChild( unsigned int i, CameraObject* node );
 
-    ///Get the RTT quad
-    ///\return The geode with the RTT quad
-    osg::Node* GetCameraManagerQuad();
+    ///
+    void WriteAllImageFiles( std::string const& filename );
 
 protected:
     ///Destructor
@@ -124,18 +134,19 @@ private:
     ///Create the quad to be used by the rtt cameras that this class manages
     ///\return The geode the holds the drawable with the rtt quad
     osg::Geode* CreateMasterCameraQuad();
-    
+
     ///Is the camera manager turned on
     bool m_enabled;
 
     ///The active rtt view camera
-    CameraObject* m_activeCamera;
+    CameraObject* m_activeCameraObject;
 
     ///The rtt quad geode
     osg::ref_ptr< osg::Geode > m_rttQuad;
 
     ///PAT node for non desktop mode
     osg::ref_ptr< osg::PositionAttitudeTransform > m_rttQuadTransform;
+
 };
 } //end camera
 } //end scenegraph

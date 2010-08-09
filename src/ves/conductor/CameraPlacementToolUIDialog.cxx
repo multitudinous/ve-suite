@@ -173,10 +173,10 @@ CameraPlacementToolUIDialog::CameraPlacementToolUIDialog(
     :
     UIDialog( parent, id, wxT( "CameraPlacementTool" ) )
 {
-    mProjectionData[ 0 ] = 20.0;
+    mProjectionData[ 0 ] = 40.0;
     mProjectionData[ 1 ] = 1.0;
     mProjectionData[ 2 ] = 0.1;
-    mProjectionData[ 3 ] = 2.0;
+    mProjectionData[ 3 ] = 5.0;
 
     mDepthOfFieldData[ 0 ] = 1.5;
     mDepthOfFieldData[ 1 ] = 5.0;

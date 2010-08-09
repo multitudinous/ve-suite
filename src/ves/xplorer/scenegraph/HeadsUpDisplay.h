@@ -52,7 +52,7 @@ namespace osgText
 class Text;
 }
 
-// --- C/C++ Libraries --- //
+// --- STL Includes --- //
 #include <vector>
 #include <sstream>
 
@@ -124,18 +124,25 @@ private:
 
     ///<Text for the frame rate
     osg::ref_ptr< osgText::Text > mFramerateText;
+
     ///<Text for the x world coordinate system
     osg::ref_ptr< osgText::Text > mWCSxText;
+
     ///<Text for the y world coordinate system
     osg::ref_ptr< osgText::Text > mWCSyText;
+
     ///<Text for the z world coordinate system
     osg::ref_ptr< osgText::Text > mWCSzText;
+
     ///Used for print fps to the screen
     std::stringstream mFps;
+
     ///Frame rate
     float m_framerate;
+
 };
-}
-}
-}
+} //end scenegraph
+} //end xplorer
+} //end ves
+
 #endif //VES_XPLORER_HEADS_UP_DISPLAY_H

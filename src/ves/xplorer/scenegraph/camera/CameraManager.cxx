@@ -43,11 +43,12 @@
 #include <ves/xplorer/Debug.h>
 
 // --- OSG Includes --- //
-#include <osgUtil/IntersectionVisitor>
-#include <osgUtil/LineSegmentIntersector>
-
 #include <osg/Geode>
 #include <osg/Geometry>
+#include <osg/LineWidth>
+
+#include <osgUtil/IntersectionVisitor>
+#include <osgUtil/LineSegmentIntersector>
 
 using namespace ves::xplorer::scenegraph::camera;
 using namespace ves::xplorer::scenegraph;
@@ -57,16 +58,18 @@ CameraManager::CameraManager()
     :
     osg::Group(),
     m_enabled( false ),
-    m_activeCamera( NULL )
+    m_activeCameraObject( NULL )
 {
     Enable();
-    m_rttQuad = CreateMasterCameraQuad();
+
+    m_rttQuadTransform = new osg::PositionAttitudeTransform();
     if( !SceneManager::instance()->IsDesktopMode() )
     {
-        m_rttQuadTransform = new osg::PositionAttitudeTransform();
         m_rttQuadTransform->setUpdateCallback( new HeadPositionCallback() );
-        m_rttQuadTransform->addChild( m_rttQuad.get() );
     }
+
+    m_rttQuad = CreateMasterCameraQuad();
+    m_rttQuadTransform->addChild( m_rttQuad.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 CameraManager::CameraManager(
@@ -74,7 +77,7 @@ CameraManager::CameraManager(
     :
     osg::Group( cameraManager, copyop ),
     m_enabled( cameraManager.m_enabled ),
-    m_activeCamera( cameraManager.m_activeCamera )
+    m_activeCameraObject( cameraManager.m_activeCameraObject )
 {
     ;
 }
@@ -84,9 +87,16 @@ CameraManager::~CameraManager()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool CameraManager::addChild( CameraObject* child )
+bool CameraManager::addChild()
 {
-    return osg::Group::addChild( child );
+    DCS* worldDCS = SceneManager::instance()->GetWorldDCS();
+    osg::ref_ptr< CameraObject > cameraObject = new CameraObject();
+    DCS& dcs = cameraObject->GetDCS();
+    dcs.SetMat( gmtl::invert( worldDCS->GetMat() ) );
+
+    SetActiveCameraObject( cameraObject.get() );
+
+    return osg::Group::addChild( cameraObject.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 CameraObject* const CameraManager::ConvertNodeToCameraObject(
@@ -111,7 +121,7 @@ void CameraManager::Enable( const bool& enable )
 ////////////////////////////////////////////////////////////////////////////////
 CameraObject* const CameraManager::GetActiveCameraObject() const
 {
-    return m_activeCamera;
+    return m_activeCameraObject;
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool CameraManager::Handle(
@@ -138,7 +148,6 @@ bool CameraManager::Handle(
         if( cameraObject )
         {
             //camera->DoSomething(); like change color or something
-            //SetActiveCameraObject( cameraObject );
         }
 
         break;
@@ -151,8 +160,8 @@ bool CameraManager::Handle(
     }
     default:
     {
-        m_activeCamera = NULL;
-        //SetActiveCameraObject( m_activeCamera );
+        SetActiveCameraObject( NULL );
+
         break;
     }
     } //end switch( event )
@@ -170,6 +179,16 @@ const bool CameraManager::IsEnabled() const
     return m_enabled;
 }
 ////////////////////////////////////////////////////////////////////////////////
+void CameraManager::RemoveAllCameraObjects()
+{
+    m_rttQuad->getStateSet()->setTextureAttributeAndModes(
+        0, NULL, osg::StateAttribute::OFF );
+
+    SetActiveCameraObject( NULL );
+
+    _children.clear();
+}
+////////////////////////////////////////////////////////////////////////////////
 bool CameraManager::replaceChild( CameraObject* origChild, CameraObject* newChild )
 {
     return osg::Group::replaceChild( origChild, newChild );
@@ -177,22 +196,38 @@ bool CameraManager::replaceChild( CameraObject* origChild, CameraObject* newChil
 ////////////////////////////////////////////////////////////////////////////////
 void CameraManager::SetActiveCameraObject( CameraObject* cameraObject )
 {
-    if( cameraObject == m_activeCamera )
+    if( cameraObject == m_activeCameraObject )
     {
         return;
     }
 
+    //Turn off rendering for previously active camera
+    if( m_activeCameraObject )
+    {
+        m_activeCameraObject->EnableCamera( false );
+    }
+
     if( cameraObject )
     {
-        GetCameraManagerQuad()->setNodeMask( 1 );
         cameraObject->SetRenderQuadTexture( *(m_rttQuad.get()) );
+        cameraObject->EnableCamera();
+        m_rttQuadTransform->setNodeMask( 1 );
     }
     else
     {
-        GetCameraManagerQuad()->setNodeMask( 0 );
+        m_rttQuadTransform->setNodeMask( 0 );
     }
 
-    m_activeCamera = cameraObject;
+    //Set the active camera
+    m_activeCameraObject = cameraObject;
+}
+////////////////////////////////////////////////////////////////////////////////
+void CameraManager::SetCameraViewQuadResolution( unsigned int const& scale )
+{
+    //if( SceneManager::instance()->IsDesktopMode() )
+    {
+        m_rttQuadTransform->setScale( osg::Vec3( scale, scale, 1.0 ) );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool CameraManager::setChild( unsigned int i, CameraObject* node )
@@ -203,15 +238,18 @@ bool CameraManager::setChild( unsigned int i, CameraObject* node )
 osg::Geode* CameraManager::CreateMasterCameraQuad()
 {
     ///These are in pixel space
-    osg::ref_ptr< osg::Vec3Array > cameraViewQuadVertices = 
+    osg::ref_ptr< osg::Vec3Array > cameraViewQuadVertices =
         new osg::Vec3Array();
     cameraViewQuadVertices->resize( 4 );
     if( SceneManager::instance()->IsDesktopMode() )
     {
         (*cameraViewQuadVertices)[ 0 ].set( 0.0, 0.0, 0.0 );
-        (*cameraViewQuadVertices)[ 1 ].set( 200.0, 0.0, 0.0 );
-        (*cameraViewQuadVertices)[ 2 ].set( 200.0, 200.0, 0.0 );
-        (*cameraViewQuadVertices)[ 3 ].set( 0.0, 200.0, 0.0 );
+        (*cameraViewQuadVertices)[ 1 ].set( 1.0, 0.0, 0.0 );
+        (*cameraViewQuadVertices)[ 2 ].set( 1.0, 1.0, 0.0 );
+        (*cameraViewQuadVertices)[ 3 ].set( 0.0, 1.0, 0.0 );
+
+        //Set initial scale to match quad size in UI
+        m_rttQuadTransform->setScale( osg::Vec3( 300.0, 300.0, 1.0 ) );
     }
     else
     {
@@ -236,49 +274,96 @@ osg::Geode* CameraManager::CreateMasterCameraQuad()
         osg::PrimitiveSet::QUADS, 0, cameraViewQuadVertices->size() ) );
     quadGeometry->setTexCoordArray( 0, quadTexCoords.get() );
 
+    //
+    {
+        osg::ref_ptr< osg::Shader > fragmentShader = new osg::Shader();
+        std::string fragmentSource =
+        "uniform sampler2D baseMap; \n"
+
+        "void main() \n"
+        "{ \n"
+            "gl_FragData[ 0 ] = texture2D( baseMap, gl_TexCoord[ 0 ].xy ); \n"
+        "} \n";
+
+        fragmentShader->setType( osg::Shader::FRAGMENT );
+        fragmentShader->setShaderSource( fragmentSource );
+        fragmentShader->setName( "Camera Quad Fragment Shader" );
+
+        osg::ref_ptr< osg::Program > program = new osg::Program();
+        program->addShader( fragmentShader.get() );
+        program->setName( "Camera Quad Program" );
+
+        osg::ref_ptr< osg::StateSet > stateset =
+            quadGeometry->getOrCreateStateSet();
+        stateset->setAttributeAndModes(
+            program.get(),
+            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+
+        //Here we attach the texture for the text
+        stateset->addUniform( new osg::Uniform( "baseMap", 0 ) );
+    }
+
+    //Create the outline geometry
+    GLushort idxLoops[ 4 ] = { 0, 1, 2, 3 };
+    osg::ref_ptr< osg::Geometry > lineGeometry = new osg::Geometry();
+    lineGeometry->addPrimitiveSet( new osg::DrawElementsUShort(
+        osg::PrimitiveSet::LINE_LOOP, 4, idxLoops ) );
+
+    osg::ref_ptr< osg::Vec4Array > colorArray = new osg::Vec4Array();
+    colorArray->push_back( osg::Vec4( 0.33, 0.87, 0.56, 1.0 ) );
+    lineGeometry->setColorArray( colorArray.get() );
+    lineGeometry->setColorBinding( osg::Geometry::BIND_OVERALL );
+
+    //
+    {
+        //Set line width
+        osg::ref_ptr< osg::LineWidth > lineWidth = new osg::LineWidth();
+        lineWidth->setWidth( 2.0 );
+
+        osg::ref_ptr< osg::StateSet > stateset =
+            lineGeometry->getOrCreateStateSet();
+        stateset->setAttributeAndModes(
+            lineWidth.get(), osg::StateAttribute::ON );
+    }
+
+    //
     osg::Geode* quadGeode = new osg::Geode();
     quadGeode->setCullingActive( false );
     quadGeode->addDrawable( quadGeometry.get() );
+    quadGeode->addDrawable( lineGeometry.get() );
 
     //
-    osg::ref_ptr< osg::Shader > fragmentShader = new osg::Shader();
-    std::string fragmentSource =
-    "uniform sampler2D baseMap; \n"
-
-    "void main() \n"
-    "{ \n"
-        "gl_FragColor = texture2D( baseMap, gl_TexCoord[ 0 ].xy ); \n"
-    "} \n";
-
-    fragmentShader->setType( osg::Shader::FRAGMENT );
-    fragmentShader->setShaderSource( fragmentSource );
-    fragmentShader->setName( "Camera Quad Fragment Shader" );
-
-    osg::ref_ptr< osg::Program > program = new osg::Program();
-    program->addShader( fragmentShader.get() );
-    program->setName( "Camera Quad Program" );
-
-    osg::ref_ptr< osg::StateSet > stateset = quadGeode->getOrCreateStateSet();
-    stateset->setMode(
-        GL_LIGHTING,
-        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
-    stateset->setAttributeAndModes(
-        program.get(),
-        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
-
-    //Here we attach the texture for the text
-    stateset->addUniform( new osg::Uniform( "baseMap", 0 ) );
+    {
+        osg::ref_ptr< osg::StateSet > stateset =
+            quadGeode->getOrCreateStateSet();
+        stateset->setMode(
+            GL_LIGHTING,
+            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+    }
 
     return quadGeode;
 }
 ////////////////////////////////////////////////////////////////////////////////
 osg::Node* CameraManager::GetCameraManagerQuad()
 {
-    if( m_rttQuadTransform.valid() )
+    if( !m_rttQuadTransform.valid() )
     {
-        return m_rttQuadTransform.get();
+        return NULL;
     }
 
-    return m_rttQuad.get();
+    return m_rttQuadTransform.get();
+}
+////////////////////////////////////////////////////////////////////////////////
+void CameraManager::WriteAllImageFiles( std::string const& filename )
+{
+    CameraObject* cameraObject( NULL );
+    for( unsigned int i = 0; i < getNumChildren(); ++i )
+    {
+        cameraObject = ConvertNodeToCameraObject( getChild( i ) );
+        if( cameraObject )
+        {
+            cameraObject->WriteImageFile( filename );
+        }
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////

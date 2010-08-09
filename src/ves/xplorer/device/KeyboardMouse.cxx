@@ -788,10 +788,7 @@ void KeyboardMouse::OnKeyPress()
 
     case gadget::KEY_P:
     {
-        osg::ref_ptr< scenegraph::camera::CameraObject > cameraObject =
-            new scenegraph::camera::CameraObject();
-
-        m_cameraManager.addChild( cameraObject.get() );
+        m_cameraManager.addChild();
 
         break;
     }
@@ -1539,12 +1536,17 @@ void KeyboardMouse::ProcessSelection()
     //
     osg::Vec3d center( 0.0, 0.0, 0.0 );
     //If dcs is from a camera object, we want to rotate about local zero point
+    //We really need a selection callback for selectable objects -_-
     if( newSelectedDCS->getName() != "CameraDCS" )
     {
         center= vesObject->getBound().center();
 
         //Remove local node from nodePath
         nodePath.pop_back();
+    }
+    else
+    {
+        ;
     }
     osg::Matrixd localToWorldMatrix = osg::computeLocalToWorld( nodePath );
     center = center * localToWorldMatrix;

@@ -141,8 +141,10 @@ void CameraPlacementEventHandler::Execute(
 
     scenegraph::SceneManager& sceneManager =
         *scenegraph::SceneManager::instance();
+    scenegraph::camera::CameraManager& cameraManager =
+        sceneManager.GetCameraManager();
     scenegraph::camera::CameraObject* const cameraObject =
-        sceneManager.GetCameraManager().GetActiveCameraObject();
+        cameraManager.GetActiveCameraObject();
 
     if( !cameraObject )
     {
@@ -225,13 +227,12 @@ void CameraPlacementEventHandler::Execute(
 
         if( onOff )
         {
-            viewCameraGroup->addChild( 
-                sceneManager.GetCameraManager().GetCameraManagerQuad() );
+            viewCameraGroup->addChild( cameraManager.GetCameraManagerQuad() );
         }
         else
         {
-            viewCameraGroup->removeChild( 
-                sceneManager.GetCameraManager().GetCameraManagerQuad() );
+            viewCameraGroup->removeChild(
+                cameraManager.GetCameraManagerQuad() );
         }
         break;
     }
@@ -241,7 +242,7 @@ void CameraPlacementEventHandler::Execute(
         command->GetDataValuePair(
             "cameraWindowResolution" )->GetData( value );
 
-        //mCameraEntity->SetCameraViewQuadResolution( value );
+        cameraManager.SetCameraViewQuadResolution( value );
 
         break;
     }

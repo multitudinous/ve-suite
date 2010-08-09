@@ -91,7 +91,9 @@ void HeadsUpDisplay::Initialize()
     mCamera->setRenderOrder( osg::Camera::POST_RENDER, 1 );
     mCamera->setRenderTargetImplementation(
         osg::Camera::FRAME_BUFFER, osg::Camera::FRAME_BUFFER );
-    mCamera->setClearMask( 0x00000000 );
+    //Need to do this for non RTT mode
+    mCamera->setClearMask( GL_DEPTH_BUFFER_BIT );
+    //mCamera->setClearMask( 0x00000000 );
     mCamera->setComputeNearFarMode(
         osgUtil::CullVisitor::DO_NOT_COMPUTE_NEAR_FAR );
     mCamera->setCullingActive( false );

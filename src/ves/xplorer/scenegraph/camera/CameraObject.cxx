@@ -66,10 +66,14 @@
 #include <osgUtil/IntersectionVisitor>
 #include <osgUtil/LineSegmentIntersector>
 
+#include <osgDB/WriteFile>
+#include <osgDB/ReaderWriter>
 #include <osgDB/ReadFile>
 
 // --- STL Includes --- //
 #include <iostream>
+
+#define VES_USE_MULTISAMPLING
 
 namespace ves
 {
@@ -97,7 +101,7 @@ CameraObject::CameraObject()
     m_cameraNode( NULL ),
     m_frustumGeode( NULL ),
     m_frustumGeometry( NULL ),
-    m_frustumVertices( NULL )//,
+    m_frustumVertices( NULL ),
     //mCameraViewQuadDCS( NULL ),
     //mCameraViewQuadGeode( NULL ),
     //mCameraViewQuadGeometry( NULL ),
@@ -106,7 +110,8 @@ CameraObject::CameraObject()
     //mDepthHelperQuadDCS( NULL ),
     //mDepthHelperQuadGeode( NULL ),
     //mDepthHelperQuadGeometry( NULL ),
-    //mDepthHelperQuadVertices( NULL )
+    //mDepthHelperQuadVertices( NULL ),
+    m_light( NULL )
 {
     Initialize();
 }
@@ -166,6 +171,25 @@ CameraObject::~CameraObject()
     */
 }
 ////////////////////////////////////////////////////////////////////////////////
+void CameraObject::ComputeNearFarPlanes( bool const& enable )
+{
+    if( !m_camera.valid() )
+    {
+        return;
+    }
+
+    if( enable )
+    {
+        m_camera->setComputeNearFarMode(
+            osgUtil::CullVisitor::COMPUTE_NEAR_FAR_USING_BOUNDING_VOLUMES );
+    }
+    else
+    {
+        m_camera->setComputeNearFarMode(
+            osgUtil::CullVisitor::DO_NOT_COMPUTE_NEAR_FAR );
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
 void CameraObject::Initialize()
 {
     //Create osg camera for rendering
@@ -181,7 +205,6 @@ void CameraObject::Initialize()
         osgUtil::CullVisitor::DO_NOT_COMPUTE_NEAR_FAR );
     m_camera->setClearColor( osg::Vec4( 0.0, 0.0, 0.0, 0.0 ) );
     m_camera->setViewport( 0, 0, 1024, 1024 );
-    m_camera->setNodeMask( NodeMask::CAMERA );
 
     std::pair< int, int > textureRes = std::make_pair< int, int >( 1024, 1024 );
     m_colorMap = CreateViewportTexture(
@@ -189,12 +212,21 @@ void CameraObject::Initialize()
         osg::Texture2D::LINEAR, osg::Texture2D::CLAMP_TO_EDGE,
         textureRes );
 
-    //Attach the camera view texture and use it as the first render target
+    //Attach a texture and use it as the render target
+    int maxSamples( 0 );
+#ifdef VES_USE_MULTISAMPLING
+    glGetIntegerv( GL_MAX_SAMPLES_EXT, &maxSamples );
+    if( maxSamples > 4 )
+    {
+        maxSamples = 4;
+    }
+#endif
+
     m_camera->attach(
-        osg::Camera::BufferComponent( osg::Camera::COLOR_BUFFER0 ),
-        m_colorMap.get() );
+        osg::Camera::COLOR_BUFFER0, m_colorMap.get(),
+        0, 0, false, 4, 4 );
     //Attach the depth texture and use it as the second render target
-    //attach( osg::Camera::BufferComponent( osg::Camera::COLOR_BUFFER1 ),
+    //attach( osg::Camera::COLOR_BUFFER1,
             //( ves::xplorer::scenegraph::ResourceManager::instance()->get
             //< osg::Texture2D, osg::ref_ptr >( "DepthTexture" ) ).get() );
 
@@ -203,19 +235,19 @@ void CameraObject::Initialize()
         osg::Vec3d( 0.0, 1.0, 0.0 ),
         osg::Vec3d( 0.0, 0.0, 1.0 ) );
     m_camera->setViewMatrix( m_initialViewMatrix );
-    m_camera->setProjectionMatrixAsPerspective( 20.0, 1.0, 0.1, 2.0 );
+    m_camera->setProjectionMatrixAsPerspective( 40.0, 1.0, 0.1, 5.0 );
 
-    osg::ref_ptr< osg::Light > light = new osg::Light();
-    light->setLightNum( 0 );
-    light->setAmbient( osg::Vec4( 0.36862, 0.36842, 0.36842, 1.0 ) );
-    light->setDiffuse( osg::Vec4( 0.88627, 0.88500, 0.88500, 1.0 ) );
-    light->setSpecular( osg::Vec4( 0.49019, 0.48872, 0.48872, 1.0 ) );
+    m_light = new osg::Light();
+    m_light->setLightNum( 0 );
+    m_light->setAmbient( osg::Vec4( 0.36862, 0.36842, 0.36842, 1.0 ) );
+    m_light->setDiffuse( osg::Vec4( 0.88627, 0.88500, 0.88500, 1.0 ) );
+    m_light->setSpecular( osg::Vec4( 0.49019, 0.48872, 0.48872, 1.0 ) );
     //We are in openGL space
-    light->setPosition( osg::Vec4( 0.0, 10000.0, 10000.0, 0.0 ) );
+    m_light->setPosition( osg::Vec4( 0.0, 10000.0, 10000.0, 0.0 ) );
 
     osg::ref_ptr< osg::LightSource > lightSource = new osg::LightSource();
-    lightSource->setLight( light.get() );
-    lightSource->setReferenceFrame( osg::LightSource::RELATIVE_RF );
+    lightSource->setLight( m_light.get() );
+    lightSource->setReferenceFrame( osg::LightSource::ABSOLUTE_RF );
 
     osg::ref_ptr< osg::LightModel > lightModel = new osg::LightModel();
     lightModel->setAmbientIntensity( osg::Vec4( 0.1, 0.1, 0.1, 1.0 ) );
@@ -226,7 +258,7 @@ void CameraObject::Initialize()
     //Setup the light
     osg::ref_ptr< osg::StateSet > stateset = m_camera->getOrCreateStateSet();
     stateset->setAssociatedModes(
-        light.get(),
+        m_light.get(),
         osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
     stateset->setMode(
         GL_LIGHTING,
@@ -445,7 +477,7 @@ void CameraObject::CreateGeometry()
     m_frustumVertices->resize( 9 );
     m_frustumGeometry->setVertexArray( m_frustumVertices.get() );
 
-    frustumColors->push_back( osg::Vec4( 1.0, 1.0, 1.0, 1.0 ) );
+    frustumColors->push_back( osg::Vec4( 0.33, 0.87, 0.56, 1.0 ) );
     m_frustumGeometry->setColorArray( frustumColors.get() );
     m_frustumGeometry->setColorBinding( osg::Geometry::BIND_OVERALL );
 
@@ -627,6 +659,23 @@ void CameraObject::DisplayDepthHelperQuad( bool onOff )
 }
 */
 ////////////////////////////////////////////////////////////////////////////////
+void CameraObject::EnableCamera( bool const& enable )
+{
+    if( !m_camera.valid() )
+    {
+        return;
+    }
+
+    if( enable )
+    {
+        m_camera->setNodeMask( NodeMask::CAMERA );
+    }
+    else
+    {
+        m_camera->setNodeMask( 0 );
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
 osg::Camera& CameraObject::GetCamera()
 {
     return *m_camera.get();
@@ -640,6 +689,11 @@ DCS& CameraObject::GetDCS()
 osg::Matrixd const& CameraObject::GetInitialViewMatrix()
 {
     return m_initialViewMatrix;
+}
+////////////////////////////////////////////////////////////////////////////////
+osg::Light& CameraObject::GetLight() const
+{
+    return *m_light.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
 /*
@@ -838,6 +892,11 @@ osg::Texture2D* CameraObject::CreateViewportTexture(
         viewportDimensions.first, viewportDimensions.second );
 
     return tempTexture;
+}
+////////////////////////////////////////////////////////////////////////////////
+void CameraObject::WriteImageFile( std::string const& filename )
+{
+    osgDB::writeImageFile( *(m_colorMap->getImage()), filename );
 }
 ////////////////////////////////////////////////////////////////////////////////
 

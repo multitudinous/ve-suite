@@ -47,6 +47,7 @@ namespace osg
 class Camera;
 class Geode;
 class Geometry;
+class Light;
 }
 
 namespace ves
@@ -101,6 +102,9 @@ public:
     void CalculateMatrixMVPT();
 
     ///
+    void ComputeNearFarPlanes( bool const& enable = true );
+
+    ///
     //void CustomKeyboardMouseSelection(
         //std::pair< unsigned int, unsigned int > mousePosition,
         //gmtl::Matrix44d localToWorldMatrix );
@@ -118,6 +122,9 @@ public:
     //void DisplayDepthHelperQuad( bool onOff );
 
     ///
+    void EnableCamera( bool const& enable = true );
+
+    ///
     osg::Camera& GetCamera();
 
     ///
@@ -128,6 +135,9 @@ public:
 
     ///
     osg::Matrixd const& GetInitialViewMatrix();
+
+    ///
+    osg::Light& GetLight() const;
 
     ///
     //osg::TexGenNode* GetTexGenNode();
@@ -167,6 +177,9 @@ public:
 
     ///
     void Update();
+
+    ///
+    void WriteImageFile( std::string const& filename );
 
 protected:
     ///Destructor
@@ -271,6 +284,9 @@ private:
 
     ///
     //osg::ref_ptr< osg::Vec3Array > mDepthHelperQuadVertices;
+
+    ///
+    osg::ref_ptr< osg::Light > m_light;
 
 };
 } //end camera

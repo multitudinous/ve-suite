@@ -39,6 +39,7 @@
 
 // --- OSG Includes --- //
 #include <osg/Camera>
+#include <osg/Light>
 
 using namespace ves::xplorer::scenegraph::camera;
 
@@ -83,6 +84,13 @@ void CameraObjectCallback::operator()( osg::Node* node, osg::NodeVisitor* nv )
     if( tempMatrix != m_dcsMatrix )
     {
         m_dcsMatrix = tempMatrix;
+
+        osg::Light& light = cameraObject->GetLight();
+        osg::Vec4 position = light.getPosition() * tempMatrix;
+        osg::Vec3 direction = light.getDirection() * tempMatrix;
+        light.setPosition( position );
+        light.setDirection( direction );
+
         tempMatrix =
             osg::Matrixd::inverse( tempMatrix ) *
             cameraObject->GetInitialViewMatrix();
