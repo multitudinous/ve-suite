@@ -57,8 +57,11 @@ class wxSpinCtrlDbl;
 class wxRadioBox;
 class wxSlider;
 class wxSpinCtrl;
+class wxButton;
+class wxComboBox;
+class wxBitmapButton;
 
-// --- C/C++ Libraries --- //
+// --- STL Includes --- //
 #include <vector>
 #include <string>
 
@@ -91,9 +94,12 @@ private:
     void SendCommandsToXplorer();
     void ClearInstructions();
 
-    void OnDrumAnimationOnOffRadioBox( wxCommandEvent& event );
-    void OnCameraGeometryOnOffRadioBox( wxCommandEvent& event );
-    void OnFrustumGeometryOnOffRadioBox( wxCommandEvent& event );
+    void OnAddCameraButton( wxCommandEvent& event );
+    //void OnCameraComboBox( wxCommandEvent& event );
+    void OnPrevCameraButton( wxCommandEvent& event );
+    void OnNextCameraButton( wxCommandEvent& event );
+    void OnDeleteCameraButton( wxCommandEvent& event );
+    void OnRemoveAllButton( wxCommandEvent& event );
 
     void OnDepthOfFieldEffectOnOffRadioBox( wxCommandEvent& event );
     void OnProjectionEffectOnOffRadioBox( wxCommandEvent& event );
@@ -104,6 +110,9 @@ private:
 
     void OnDepthHelperWindowOnOffRadioBox( wxCommandEvent& event );
     void OnDepthHelperWindowResolutionSlider( wxCommandEvent& event );
+
+    void OnCameraGeometryOnOffRadioBox( wxCommandEvent& event );
+    void OnFrustumGeometryOnOffRadioBox( wxCommandEvent& event );
 
     void OnFieldOfViewSpinCtrl( wxScrollEvent& WXUNUSED( event ) );
     void OnFieldOfViewText( wxCommandEvent& event );
@@ -147,9 +156,12 @@ private:
     double mProjectionData[ 4 ];
     double mDepthOfFieldData[ 3 ];
 
-    wxRadioBox* mDrumAnimationOnOff;
-    wxRadioBox* mCameraGeometryOnOff;
-    wxRadioBox* mFrustumGeometryOnOff;
+    wxButton* m_addCameraButton;
+    wxComboBox* m_cameraComboBox;
+    wxBitmapButton* m_prevCameraButton;
+    wxBitmapButton* m_nextCameraButton;
+    wxButton* m_deleteCameraButton;
+    wxButton* m_removeAllButton;
 
     wxRadioBox* mDepthOfFieldEffectOnOff;
     wxRadioBox* mProjectionEffectOnOff;
@@ -159,6 +171,9 @@ private:
     wxSlider* mCameraWindowResolution;
     wxRadioBox* mDepthHelperWindowOnOff;
     wxSlider* mDepthHelperWindowResolution;
+
+    wxRadioBox* mCameraGeometryOnOff;
+    wxRadioBox* mFrustumGeometryOnOff;
 
     ves::conductor::util::wxSpinCtrlDbl* mFieldOfViewSpinCtrl;
     wxSlider* mFieldOfViewSlider;

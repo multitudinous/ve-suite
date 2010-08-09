@@ -58,11 +58,12 @@ CameraManager::CameraManager()
     :
     osg::Group(),
     m_enabled( false ),
-    m_activeCameraObject( NULL )
+    m_activeCameraObject( NULL ),
+    m_rttQuad( NULL ),
+    m_rttQuadTransform( new osg::PositionAttitudeTransform() )
 {
     Enable();
 
-    m_rttQuadTransform = new osg::PositionAttitudeTransform();
     if( !SceneManager::instance()->IsDesktopMode() )
     {
         m_rttQuadTransform->setUpdateCallback( new HeadPositionCallback() );
