@@ -88,10 +88,11 @@ CameraManager::~CameraManager()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool CameraManager::addChild()
+bool CameraManager::addChild( std::string const& name )
 {
     DCS* worldDCS = SceneManager::instance()->GetWorldDCS();
     osg::ref_ptr< CameraObject > cameraObject = new CameraObject();
+    cameraObject->setName( name );
     DCS& dcs = cameraObject->GetDCS();
     dcs.SetMat( gmtl::invert( worldDCS->GetMat() ) );
 

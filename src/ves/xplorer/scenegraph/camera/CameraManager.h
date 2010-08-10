@@ -34,7 +34,7 @@
 #ifndef VES_XPLORER_SCENEGRAPH_CAMERA_CAMERAMANAGER_H
 #define VES_XPLORER_SCENEGRAPH_CAMERA_CAMERAMANAGER_H
 
-// --- VE-Suite Includes --- //
+// --- VES Includes --- //
 #include <ves/VEConfig.h>
 
 #include <ves/xplorer/scenegraph/camera/Definitions.h>
@@ -48,6 +48,9 @@ namespace osgUtil
 {
 class LineSegmentIntersector;
 }
+
+// --- STL Includes --- //
+#include <string>
 
 namespace ves
 {
@@ -81,7 +84,7 @@ public:
     META_Node( ves::xplorer::scenegraph::camera, CameraManager );
 
     ///Override the addChild function to only accept Cameras
-    virtual bool addChild();
+    virtual bool addChild( std::string const& name );
 
     ///
     void Enable( const bool& enable = true );

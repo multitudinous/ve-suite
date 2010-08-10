@@ -55,48 +55,44 @@ CameraPlacementEventHandler::CameraPlacementEventHandler()
     :
     EventHandler()
 {
-    //mEventHandlerMap[ "CAMERA_GEOMETRY_ON_OFF" ] = this;
-    mCommandNameToInt[ "CAMERA_GEOMETRY_ON_OFF" ] =
-        CAMERA_GEOMETRY_ON_OFF;
-    //mEventHandlerMap[ "FRUSTUM_GEOMETRY_ON_OFF" ] = this;
-    mCommandNameToInt[ "FRUSTUM_GEOMETRY_ON_OFF" ] =
-        FRUSTUM_GEOMETRY_ON_OFF;
+    mCommandNameToInt[ "ADD_CAMERA_OBJECT" ] =
+        ADD_CAMERA_OBJECT;
+    mCommandNameToInt[ "PREV_NEXT_CAMERA_OBJECT" ] =
+        PREV_NEXT_CAMERA_OBJECT;
+    mCommandNameToInt[ "DELETE_CAMERA_OBJECT" ] =
+        DELETE_CAMERA_OBJECT;
+    mCommandNameToInt[ "REMOVE_ALL_CAMERA_OBJECTS" ] =
+        REMOVE_ALL_CAMERA_OBJECTS;
 
-    //mEventHandlerMap[ "DEPTH_OF_FIELD_EFFECT_ON_OFF" ] = this;
     mCommandNameToInt[ "DEPTH_OF_FIELD_EFFECT_ON_OFF" ] =
         DEPTH_OF_FIELD_EFFECT_ON_OFF;
-    //mEventHandlerMap[ "PROJECTION_EFFECT_ON_OFF" ] = this;
     mCommandNameToInt[ "PROJECTION_EFFECT_ON_OFF" ] =
         PROJECTION_EFFECT_ON_OFF;
-    //mEventHandlerMap[ "PROJECTION_EFFECT_OPACITY" ] = this;
     mCommandNameToInt[ "PROJECTION_EFFECT_OPACITY" ] =
         PROJECTION_EFFECT_OPACITY;
 
-    //mEventHandlerMap[ "CAMERA_WINDOW_ON_OFF" ] = this;
     mCommandNameToInt[ "CAMERA_WINDOW_ON_OFF" ] =
         CAMERA_WINDOW_ON_OFF;
-    //mEventHandlerMap[ "CAMERA_WINDOW_RESOLUTION" ] = this;
     mCommandNameToInt[ "CAMERA_WINDOW_RESOLUTION" ] =
         CAMERA_WINDOW_RESOLUTION;
 
-    //mEventHandlerMap[ "DEPTH_HELPER_WINDOW_ON_OFF" ] = this;
     mCommandNameToInt[ "DEPTH_HELPER_WINDOW_ON_OFF" ] =
         DEPTH_HELPER_WINDOW_ON_OFF;
-    //mEventHandlerMap[ "DEPTH_HELPER_WINDOW_RESOLUTION" ] = this;
     mCommandNameToInt[ "DEPTH_HELPER_WINDOW_RESOLUTION" ] =
         DEPTH_HELPER_WINDOW_RESOLUTION;
 
-    //mEventHandlerMap[ "PROJECTION_UPDATE" ] = this;
+    mCommandNameToInt[ "CAMERA_GEOMETRY_ON_OFF" ] =
+        CAMERA_GEOMETRY_ON_OFF;
+    mCommandNameToInt[ "FRUSTUM_GEOMETRY_ON_OFF" ] =
+        FRUSTUM_GEOMETRY_ON_OFF;
+
     mCommandNameToInt[ "PROJECTION_UPDATE" ] =
         PROJECTION_UPDATE;
 
-    //mEventHandlerMap[ "FOCAL_DISTANCE" ] = this;
     mCommandNameToInt[ "FOCAL_DISTANCE" ] =
         FOCAL_DISTANCE;
-    //mEventHandlerMap[ "FOCAL_RANGE" ] = this;
     mCommandNameToInt[ "FOCAL_RANGE" ] =
         FOCAL_RANGE;
-    //mEventHandlerMap[ "MAX_CIRCLE_OF_CONFUSION" ] = this;
     mCommandNameToInt[ "MAX_CIRCLE_OF_CONFUSION" ] =
         MAX_CIRCLE_OF_CONFUSION;
 }
@@ -153,25 +149,31 @@ void CameraPlacementEventHandler::Execute(
 
     switch( commandName )
     {
-    case CAMERA_GEOMETRY_ON_OFF:
+    case ADD_CAMERA_OBJECT:
     {
-        unsigned int selection = 0;
-        command->GetDataValuePair(
-            "cameraGeometryOnOff" )->GetData( selection );
-
-        bool show = ( selection != 0 );
-        cameraObject->ShowCameraGeometry( show );
+        std::string name;
+        command->GetDataValuePair( "addCameraObject" )->GetData( name );
+        cameraManager.addChild( name );
 
         break;
     }
-    case FRUSTUM_GEOMETRY_ON_OFF:
+    case PREV_NEXT_CAMERA_OBJECT:
     {
-        unsigned int selection = 0;
-        command->GetDataValuePair(
-            "frustumGeometryOnOff" )->GetData( selection );
+        //Make sure to lerp to new node
 
-        bool show = ( selection != 0 );
-        cameraObject->ShowFrustumGeometry( show );
+        break;
+    }
+    case DELETE_CAMERA_OBJECT:
+    {
+        std::string name;
+        command->GetDataValuePair( "deleteCameraObject" )->GetData( name );
+        //cameraManager.getChild(
+
+        break;
+    }
+    case REMOVE_ALL_CAMERA_OBJECTS:
+    {
+        cameraManager.removeChildren( 0, cameraManager.getNumChildren() );
 
         break;
     }
@@ -264,6 +266,28 @@ void CameraPlacementEventHandler::Execute(
             "depthHelperWindowResolution" )->GetData( value );
 
         //mCameraEntity->SetDepthHelperQuadResolution( value );
+
+        break;
+    }
+    case CAMERA_GEOMETRY_ON_OFF:
+    {
+        unsigned int selection = 0;
+        command->GetDataValuePair(
+            "cameraGeometryOnOff" )->GetData( selection );
+
+        bool show = ( selection != 0 );
+        cameraObject->ShowCameraGeometry( show );
+
+        break;
+    }
+    case FRUSTUM_GEOMETRY_ON_OFF:
+    {
+        unsigned int selection = 0;
+        command->GetDataValuePair(
+            "frustumGeometryOnOff" )->GetData( selection );
+
+        bool show = ( selection != 0 );
+        cameraObject->ShowFrustumGeometry( show );
 
         break;
     }

@@ -34,24 +34,12 @@
 #ifndef CAMERA_PLACEMENT_TOOL_UI_DIALOG_H
 #define CAMERA_PLACEMENT_TOOL_UI_DIALOG_H
 
-// --- VE-Suite Includes --- //
+// --- VES Includes --- //
 #include <ves/conductor/UIDialog.h>
 
 #include <ves/conductor/util/DualSlider.h>
 
 #include <ves/open/xml/DataValuePairPtr.h>
-
-namespace ves
-{
-namespace conductor
-{
-namespace util
-{
-class CORBAServiceList;
-class wxSpinCtrlDbl;
-}
-}
-}
 
 // --- wxWidgets Includes --- //
 class wxRadioBox;
@@ -62,6 +50,7 @@ class wxComboBox;
 class wxBitmapButton;
 
 // --- STL Includes --- //
+#include <map>
 #include <vector>
 #include <string>
 
@@ -69,6 +58,13 @@ namespace ves
 {
 namespace conductor
 {
+
+namespace util
+{
+class CORBAServiceList;
+class wxSpinCtrlDbl;
+}
+
 class VE_GUIPLUGINS_EXPORTS CameraPlacementToolUIDialog
     :
     public ves::conductor::UIDialog
@@ -94,12 +90,16 @@ private:
     void SendCommandsToXplorer();
     void ClearInstructions();
 
-    void OnAddCameraButton( wxCommandEvent& event );
-    //void OnCameraComboBox( wxCommandEvent& event );
-    void OnPrevCameraButton( wxCommandEvent& event );
-    void OnNextCameraButton( wxCommandEvent& event );
-    void OnDeleteCameraButton( wxCommandEvent& event );
-    void OnRemoveAllButton( wxCommandEvent& event );
+    void OnAddCameraButton( wxCommandEvent& WXUNUSED( wxCommandEvent& event ) );
+    void OnPrevCameraButton(
+        wxCommandEvent& WXUNUSED( wxCommandEvent& event ) );
+    void OnCameraComboBox( wxCommandEvent& event );
+    void OnCameraComboBoxTextEnter( wxCommandEvent& event );
+    void OnNextCameraButton(
+        wxCommandEvent& WXUNUSED( wxCommandEvent& event ) );
+    void OnDeleteCameraButton(
+        wxCommandEvent& WXUNUSED( wxCommandEvent& event ) );
+    void OnRemoveAllButton( wxCommandEvent& WXUNUSED( wxCommandEvent& event ) );
 
     void OnDepthOfFieldEffectOnOffRadioBox( wxCommandEvent& event );
     void OnProjectionEffectOnOffRadioBox( wxCommandEvent& event );
@@ -157,8 +157,10 @@ private:
     double mDepthOfFieldData[ 3 ];
 
     wxButton* m_addCameraButton;
-    wxComboBox* m_cameraComboBox;
     wxBitmapButton* m_prevCameraButton;
+    wxComboBox* m_cameraComboBox;
+    typedef std::map< unsigned int, wxString > CCBM;
+    CCBM m_cameraComboBoxMap;
     wxBitmapButton* m_nextCameraButton;
     wxButton* m_deleteCameraButton;
     wxButton* m_removeAllButton;

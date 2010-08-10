@@ -179,9 +179,13 @@ EnvironmentHandler::EnvironmentHandler()
     _eventHandlers[ std::string( "SCENE_STATE_INFORMATION" ) ] =
         new ves::xplorer::event::ScreenAlignedNormalsEventHandler();
     ///CPT Tool
-    _eventHandlers[ "CAMERA_GEOMETRY_ON_OFF" ] =
+    _eventHandlers[ "ADD_CAMERA_OBJECT" ] =
         new ves::xplorer::event::environment::CameraPlacementEventHandler();
-    _eventHandlers[ "FRUSTUM_GEOMETRY_ON_OFF" ] =
+    _eventHandlers[ "PREV_NEXT_CAMERA_OBJECT" ] =
+        new ves::xplorer::event::environment::CameraPlacementEventHandler();
+    _eventHandlers[ "DELETE_CAMERA_OBJECT" ] =
+        new ves::xplorer::event::environment::CameraPlacementEventHandler();
+    _eventHandlers[ "REMOVE_ALL_CAMERA_OBJECTS" ] =
         new ves::xplorer::event::environment::CameraPlacementEventHandler();
     _eventHandlers[ "DEPTH_OF_FIELD_EFFECT_ON_OFF" ] =
         new ves::xplorer::event::environment::CameraPlacementEventHandler();
@@ -196,6 +200,10 @@ EnvironmentHandler::EnvironmentHandler()
     _eventHandlers[ "DEPTH_HELPER_WINDOW_ON_OFF" ] =
         new ves::xplorer::event::environment::CameraPlacementEventHandler();
     _eventHandlers[ "DEPTH_HELPER_WINDOW_RESOLUTION" ] =
+        new ves::xplorer::event::environment::CameraPlacementEventHandler();
+    _eventHandlers[ "CAMERA_GEOMETRY_ON_OFF" ] =
+        new ves::xplorer::event::environment::CameraPlacementEventHandler();
+    _eventHandlers[ "FRUSTUM_GEOMETRY_ON_OFF" ] =
         new ves::xplorer::event::environment::CameraPlacementEventHandler();
     _eventHandlers[ "PROJECTION_UPDATE" ] =
         new ves::xplorer::event::environment::CameraPlacementEventHandler();

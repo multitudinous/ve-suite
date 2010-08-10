@@ -66,12 +66,16 @@ BEGIN_EVENT_TABLE( CameraPlacementToolUIDialog, wxDialog )
     EVT_BUTTON(
         CPT_ADD_CAMERA_BUTTON,
         CameraPlacementToolUIDialog::OnAddCameraButton )
-    //EVT_BUTTON(
-        //CPT_CAMERA_COMBO_BOX,
-        //CameraPlacementToolUIDialog::OnCameraComboBox )
     EVT_BUTTON(
         CPT_PREV_CAMERA_BUTTON,
         CameraPlacementToolUIDialog::OnPrevCameraButton )
+    EVT_COMBOBOX(
+        CPT_CAMERA_COMBO_BOX,
+        CameraPlacementToolUIDialog::OnCameraComboBox )
+    //When return is pressed in the combobox
+    EVT_TEXT_ENTER(
+        CPT_CAMERA_COMBO_BOX,
+        CameraPlacementToolUIDialog::OnCameraComboBoxTextEnter )
     EVT_BUTTON(
         CPT_NEXT_CAMERA_BUTTON,
         CameraPlacementToolUIDialog::OnNextCameraButton )
@@ -249,19 +253,20 @@ void CameraPlacementToolUIDialog::BuildGUI()
         mainPanel, CPT_ADD_CAMERA_BUTTON, wxT("Add Camera"),
         wxDefaultPosition, wxDefaultSize, 0 );
     managementSettingsSizer->Add(
-        m_addCameraButton, 0, wxALIGN_CENTER_VERTICAL|wxALL|wxEXPAND, 5 );
-
-    m_cameraComboBox = new wxComboBox(
-        mainPanel, CPT_CAMERA_COMBO_BOX, wxEmptyString,
-        wxDefaultPosition, wxDefaultSize, 0, NULL, 0 );
-    managementSettingsSizer->Add(
-        m_cameraComboBox, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+        m_addCameraButton, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 
     m_prevCameraButton = new wxBitmapButton(
         mainPanel, CPT_PREV_CAMERA_BUTTON, wxBitmap( PrevCameraButton_xpm ),
         wxDefaultPosition, wxDefaultSize, wxBU_AUTODRAW );
     managementSettingsSizer->Add(
         m_prevCameraButton, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+
+    m_cameraComboBox = new wxComboBox(
+        mainPanel, CPT_CAMERA_COMBO_BOX, wxEmptyString,
+        wxDefaultPosition, wxDefaultSize, 0, NULL, wxTE_PROCESS_ENTER );
+    m_cameraComboBox->SetValue( wxT( "Select a Camera" ) );
+    managementSettingsSizer->Add(
+        m_cameraComboBox, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
     m_nextCameraButton = new wxBitmapButton(
         mainPanel, CPT_NEXT_CAMERA_BUTTON, wxBitmap( NextCameraButton_xpm ),
@@ -273,13 +278,13 @@ void CameraPlacementToolUIDialog::BuildGUI()
         mainPanel, CPT_DELETE_CAMERA_BUTTON, wxT("Delete Camera"),
         wxDefaultPosition, wxDefaultSize, 0 );
     managementSettingsSizer->Add(
-        m_deleteCameraButton, 0, wxALIGN_CENTER_VERTICAL|wxALL|wxEXPAND, 5 );
+        m_deleteCameraButton, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 
     m_removeAllButton = new wxButton(
         mainPanel, CPT_REMOVE_ALL_BUTTON, wxT("Remove All"),
         wxDefaultPosition, wxDefaultSize, 0 );
     managementSettingsSizer->Add(
-        m_removeAllButton, 0, wxALIGN_CENTER_VERTICAL|wxALL|wxEXPAND, 5 );
+        m_removeAllButton, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 
     mainPanelSizer->Add( managementSettingsSizer, 0, wxALL|wxEXPAND, 10 );
 
@@ -906,34 +911,153 @@ void CameraPlacementToolUIDialog::OnFrustumGeometryOnOffRadioBox(
     ClearInstructions();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CameraPlacementToolUIDialog::OnAddCameraButton( wxCommandEvent& event )
+void CameraPlacementToolUIDialog::OnAddCameraButton(
+    wxCommandEvent& WXUNUSED( wxCommandEvent& event ) )
 {
+    unsigned int cameraNum( 0 );
+    CCBM::const_reverse_iterator itr = m_cameraComboBoxMap.rbegin();
+    if( itr != m_cameraComboBoxMap.rend() )
+    {
+        cameraNum = itr->first + 1;
+    }
 
+    wxString cameraName(
+        "Camera" +
+        wxString::Format( wxT( "%i" ), cameraNum ) );
+    m_cameraComboBoxMap.insert( std::make_pair(
+        m_cameraComboBox->Append( cameraName ), cameraName ) );
+    m_cameraComboBox->SetStringSelection( cameraName );
+
+    mCommandName = "ADD_CAMERA_OBJECT";
+
+    ves::open::xml::DataValuePairSharedPtr dvp(
+        new ves::open::xml::DataValuePair() );
+    dvp->SetData( "addCameraObject", cameraName.mb_str() );
+    mInstructions.push_back( dvp );
+
+    SendCommandsToXplorer();
+    ClearInstructions();
 }
 ////////////////////////////////////////////////////////////////////////////////
-/*void CameraPlacementToolUIDialog::OnCameraComboBox( wxCommandEvent& event )
+void CameraPlacementToolUIDialog::OnPrevCameraButton(
+    wxCommandEvent& WXUNUSED( wxCommandEvent& event ) )
 {
+    unsigned int count( m_cameraComboBox->GetCount() );
+    if( count < 1 )
+    {
+        return;
+    }
 
-}*/
-////////////////////////////////////////////////////////////////////////////////
-void CameraPlacementToolUIDialog::OnPrevCameraButton( wxCommandEvent& event )
-{
+    int selection( m_cameraComboBox->GetSelection() );
+    CCBM::const_iterator itr( m_cameraComboBoxMap.find( selection ) );
+    if( selection == -1 || itr == m_cameraComboBoxMap.begin() )
+    {
+        m_cameraComboBox->SetSelection( m_cameraComboBoxMap.rbegin()->first );
+    }
+    else
+    {
+        --itr;
+        m_cameraComboBox->SetSelection( itr->first );
+    }
 
+    wxString cameraName = m_cameraComboBox->GetStringSelection();
+
+    mCommandName = "PREV_NEXT_CAMERA_OBJECT";
+
+    ves::open::xml::DataValuePairSharedPtr dvp(
+        new ves::open::xml::DataValuePair() );
+    dvp->SetData( "prevNextCameraObject", cameraName.mb_str() );
+    mInstructions.push_back( dvp );
+
+    SendCommandsToXplorer();
+    ClearInstructions();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CameraPlacementToolUIDialog::OnNextCameraButton( wxCommandEvent& event )
+void CameraPlacementToolUIDialog::OnCameraComboBox( wxCommandEvent& event )
 {
-
+    m_cameraComboBox->SetSelection( event.GetInt() );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CameraPlacementToolUIDialog::OnDeleteCameraButton( wxCommandEvent& event )
+void CameraPlacementToolUIDialog::OnCameraComboBoxTextEnter(
+    wxCommandEvent& event )
 {
-
+    m_cameraComboBox->SetString( event.GetInt(), event.GetString() );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CameraPlacementToolUIDialog::OnRemoveAllButton( wxCommandEvent& event )
+void CameraPlacementToolUIDialog::OnNextCameraButton(
+    wxCommandEvent& WXUNUSED( wxCommandEvent& event ) )
 {
+    unsigned int count( m_cameraComboBox->GetCount() );
+    if( count < 1 )
+    {
+        return;
+    }
 
+    int selection( m_cameraComboBox->GetSelection() );
+    CCBM::const_reverse_iterator itr( m_cameraComboBoxMap.find( selection ) );
+    if( selection == -1 || itr == m_cameraComboBoxMap.rbegin() )
+    {
+        m_cameraComboBox->SetSelection( m_cameraComboBoxMap.begin()->first );
+    }
+    else
+    {
+        --itr;
+        m_cameraComboBox->SetSelection( itr->first );
+    }
+
+    wxString cameraName = m_cameraComboBox->GetStringSelection();
+
+    mCommandName = "PREV_NEXT_CAMERA_OBJECT";
+
+    ves::open::xml::DataValuePairSharedPtr dvp(
+        new ves::open::xml::DataValuePair() );
+    dvp->SetData( "prevNextCameraObject", cameraName.mb_str() );
+    mInstructions.push_back( dvp );
+
+    SendCommandsToXplorer();
+    ClearInstructions();
+}
+////////////////////////////////////////////////////////////////////////////////
+void CameraPlacementToolUIDialog::OnDeleteCameraButton(
+    wxCommandEvent& WXUNUSED( wxCommandEvent& event ) )
+{
+    int selection( m_cameraComboBox->GetSelection() );
+    if( selection == -1 )
+    {
+        return;
+    }
+
+    wxString cameraName( m_cameraComboBox->GetStringSelection() );
+
+    m_cameraComboBox->Delete( selection );
+    m_cameraComboBoxMap.erase( m_cameraComboBoxMap.find( selection ) );
+
+    m_cameraComboBox->SetSelection( -1 );
+    m_cameraComboBox->SetValue( wxT( "Select a Camera" ) );
+
+    mCommandName = "DELETE_CAMERA_OBJECT";
+
+    ves::open::xml::DataValuePairSharedPtr dvp(
+        new ves::open::xml::DataValuePair() );
+    dvp->SetData( "deleteCameraObject", cameraName.mb_str() );
+    mInstructions.push_back( dvp );
+
+    SendCommandsToXplorer();
+    ClearInstructions();
+}
+////////////////////////////////////////////////////////////////////////////////
+void CameraPlacementToolUIDialog::OnRemoveAllButton(
+    wxCommandEvent& WXUNUSED( wxCommandEvent& event ) )
+{
+    m_cameraComboBox->Clear();
+    m_cameraComboBoxMap.clear();
+
+    m_cameraComboBox->SetValue( wxT( "Select a Camera" ) );
+
+    mCommandName = "REMOVE_ALL_CAMERA_OBJECTS";
+
+    SendCommandsToXplorer();
+    ClearInstructions();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraPlacementToolUIDialog::OnDepthOfFieldEffectOnOffRadioBox(

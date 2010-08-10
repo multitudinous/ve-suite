@@ -786,13 +786,6 @@ void KeyboardMouse::OnKeyPress()
         break;
     }
 
-    case gadget::KEY_P:
-    {
-        m_cameraManager.addChild();
-
-        break;
-    }
-
     case gadget::KEY_UP:
     {
         Zoom45( 0.05 );
