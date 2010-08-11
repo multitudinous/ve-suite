@@ -181,7 +181,7 @@ const bool CameraManager::IsEnabled() const
     return m_enabled;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CameraManager::RemoveAllCameraObjects()
+void CameraManager::removeChildren()
 {
     m_rttQuad->getStateSet()->setTextureAttributeAndModes(
         0, NULL, osg::StateAttribute::OFF );

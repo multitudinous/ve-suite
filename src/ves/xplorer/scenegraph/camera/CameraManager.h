@@ -108,7 +108,7 @@ public:
     const bool IsEnabled() const;
 
     ///
-    void RemoveAllCameraObjects();
+    virtual void removeChildren();
 
     ///Override the replaceChild function to only accept Cameras
     virtual bool replaceChild(

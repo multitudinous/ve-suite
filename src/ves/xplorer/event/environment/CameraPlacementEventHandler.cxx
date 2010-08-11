@@ -142,7 +142,7 @@ void CameraPlacementEventHandler::Execute(
     scenegraph::camera::CameraObject* const cameraObject =
         cameraManager.GetActiveCameraObject();
 
-    if( !cameraObject )
+    if( !cameraObject && commandName != ADD_CAMERA_OBJECT )
     {
         return;
     }
@@ -165,15 +165,15 @@ void CameraPlacementEventHandler::Execute(
     }
     case DELETE_CAMERA_OBJECT:
     {
-        std::string name;
-        command->GetDataValuePair( "deleteCameraObject" )->GetData( name );
-        //cameraManager.getChild(
+        unsigned int selection;
+        command->GetDataValuePair( "deleteCameraObject" )->GetData( selection );
+        cameraManager.removeChild( cameraManager.getChild( selection ) );
 
         break;
     }
     case REMOVE_ALL_CAMERA_OBJECTS:
     {
-        cameraManager.removeChildren( 0, cameraManager.getNumChildren() );
+        cameraManager.removeChildren();
 
         break;
     }

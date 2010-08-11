@@ -412,7 +412,7 @@ void EnvironmentHandler::SetWindowDimensions( unsigned int w, unsigned int h )
     _windowWidth = w;
     _windowHeight = h;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void EnvironmentHandler::SetFrustumValues(
     float _left, float _right, float _bottom, float _top, float _near, float _far )
 {
