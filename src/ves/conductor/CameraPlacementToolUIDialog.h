@@ -159,8 +159,7 @@ private:
     wxButton* m_addCameraButton;
     wxBitmapButton* m_prevCameraButton;
     wxComboBox* m_cameraComboBox;
-    typedef std::map< unsigned int, wxString > CCBM;
-    CCBM m_cameraComboBoxMap;
+    unsigned int m_cameraNameNum;
     wxBitmapButton* m_nextCameraButton;
     wxButton* m_deleteCameraButton;
     wxButton* m_removeAllButton;
