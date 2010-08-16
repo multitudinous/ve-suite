@@ -69,8 +69,8 @@ osgUtil::LineSegmentIntersector::Intersections& TestForIntersections(
 ////////////////////////////////////////////////////////////////////////////////
 osg::Node* FindVESObject( osg::NodePath& nodePath )
 {
-    for( osg::NodePath::reverse_iterator itr = nodePath.rbegin(); 
-        itr != nodePath.rend(); ++itr )
+    osg::NodePath::reverse_iterator itr = nodePath.rbegin();
+    for( itr; itr != nodePath.rend(); ++itr )
     {
         osg::Node::DescriptionList descList = (*itr)->getDescriptions();
         for( size_t i = 0; i < descList.size(); ++i )

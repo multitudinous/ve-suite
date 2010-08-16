@@ -206,7 +206,7 @@ void NavigationAnimationEngine::PreFrameUpdate()
         {
             curVec[ i ] = temp[ i ];
         }
-        
+
         //convert osg quat to gmtl quat
         osg::Quat tempWorldQuat = _worldDCS->GetQuat();
         gmtl::Quatd tempQuat( tempWorldQuat[0], tempWorldQuat[1],
@@ -215,7 +215,7 @@ void NavigationAnimationEngine::PreFrameUpdate()
         //interpolate the rotation and translation
         gmtl::lerp( tempVec, t, curVec, mEndVec );
         gmtl::slerp( tempResQuat, t, tempQuat, mEndQuat );
-        
+
         //convert gmtl vec to double *
         double tempConvVec[3] ;
         tempConvVec[0] = tempVec[0];

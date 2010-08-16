@@ -181,7 +181,7 @@ EnvironmentHandler::EnvironmentHandler()
     ///CPT Tool
     _eventHandlers[ "ADD_CAMERA_OBJECT" ] =
         new ves::xplorer::event::environment::CameraPlacementEventHandler();
-    _eventHandlers[ "PREV_NEXT_CAMERA_OBJECT" ] =
+    _eventHandlers[ "SELECT_CAMERA_OBJECT" ] =
         new ves::xplorer::event::environment::CameraPlacementEventHandler();
     _eventHandlers[ "DELETE_CAMERA_OBJECT" ] =
         new ves::xplorer::event::environment::CameraPlacementEventHandler();

@@ -918,7 +918,7 @@ void CameraPlacementToolUIDialog::OnAddCameraButton(
     wxString cameraName(
         "Camera" +
         wxString::Format( wxT( "%i" ), m_cameraNameNum ) );
-    m_cameraComboBox->Append( cameraName );
+    unsigned int selection = m_cameraComboBox->Append( cameraName );
     m_cameraComboBox->SetStringSelection( cameraName );
 
     ++m_cameraNameNum;
@@ -930,6 +930,11 @@ void CameraPlacementToolUIDialog::OnAddCameraButton(
     dvp->SetData( "addCameraObject", cameraName.mb_str() );
     mInstructions.push_back( dvp );
 
+    ves::open::xml::DataValuePairSharedPtr dvpII(
+        new ves::open::xml::DataValuePair() );
+    dvpII->SetData( "selectCameraObject", selection );
+    mInstructions.push_back( dvpII );
+
     SendCommandsToXplorer();
     ClearInstructions();
 }
@@ -938,28 +943,28 @@ void CameraPlacementToolUIDialog::OnPrevCameraButton(
     wxCommandEvent& WXUNUSED( wxCommandEvent& event ) )
 {
     unsigned int count( m_cameraComboBox->GetCount() );
-    if( count < 2 )
+    if( count < 1 )
     {
         return;
     }
 
-    int selection( m_cameraComboBox->GetSelection() );
+    unsigned int selection( m_cameraComboBox->GetSelection() );
     if( selection == -1 || selection == 0 )
     {
-        m_cameraComboBox->SetSelection( count - 1 );
+        selection = count - 1;
     }
     else
     {
-        m_cameraComboBox->SetSelection( selection - 1 );
+        --selection;
     }
 
-    wxString cameraName = m_cameraComboBox->GetStringSelection();
+    m_cameraComboBox->SetSelection( selection );
 
-    mCommandName = "PREV_NEXT_CAMERA_OBJECT";
+    mCommandName = "SELECT_CAMERA_OBJECT";
 
     ves::open::xml::DataValuePairSharedPtr dvp(
         new ves::open::xml::DataValuePair() );
-    dvp->SetData( "prevNextCameraObject", cameraName.mb_str() );
+    dvp->SetData( "selectCameraObject", selection );
     mInstructions.push_back( dvp );
 
     SendCommandsToXplorer();
@@ -968,13 +973,23 @@ void CameraPlacementToolUIDialog::OnPrevCameraButton(
 ////////////////////////////////////////////////////////////////////////////////
 void CameraPlacementToolUIDialog::OnCameraComboBox( wxCommandEvent& event )
 {
-    
+    unsigned int selection( event.GetSelection() );
+
+    mCommandName = "SELECT_CAMERA_OBJECT";
+
+    ves::open::xml::DataValuePairSharedPtr dvp(
+        new ves::open::xml::DataValuePair() );
+    dvp->SetData( "selectCameraObject", selection );
+    mInstructions.push_back( dvp );
+
+    SendCommandsToXplorer();
+    ClearInstructions();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraPlacementToolUIDialog::OnCameraComboBoxTextEnter(
     wxCommandEvent& event )
 {
-    unsigned int selection( m_cameraComboBox->GetSelection() );
+    unsigned int selection( event.GetSelection() );
     if( selection == -1 )
     {
         m_cameraComboBox->SetValue( wxT( "Select a Camera" ) );
@@ -1001,7 +1016,7 @@ void CameraPlacementToolUIDialog::OnNextCameraButton(
     wxCommandEvent& WXUNUSED( wxCommandEvent& event ) )
 {
     unsigned int count( m_cameraComboBox->GetCount() );
-    if( count < 2 )
+    if( count < 1 )
     {
         return;
     }
@@ -1009,20 +1024,20 @@ void CameraPlacementToolUIDialog::OnNextCameraButton(
     unsigned int selection( m_cameraComboBox->GetSelection() );
     if( selection == -1 || selection == count - 1 )
     {
-        m_cameraComboBox->SetSelection( 0 );
+        selection = 0;
     }
     else
     {
-        m_cameraComboBox->SetSelection( selection + 1 );
+        ++selection;
     }
 
-    wxString cameraName = m_cameraComboBox->GetStringSelection();
+    m_cameraComboBox->SetSelection( selection );
 
-    mCommandName = "PREV_NEXT_CAMERA_OBJECT";
+    mCommandName = "SELECT_CAMERA_OBJECT";
 
     ves::open::xml::DataValuePairSharedPtr dvp(
         new ves::open::xml::DataValuePair() );
-    dvp->SetData( "prevNextCameraObject", cameraName.mb_str() );
+    dvp->SetData( "selectCameraObject", selection );
     mInstructions.push_back( dvp );
 
     SendCommandsToXplorer();
@@ -1063,6 +1078,8 @@ void CameraPlacementToolUIDialog::OnRemoveAllButton(
         return;
     }
 
+    unsigned int selection( m_cameraComboBox->GetSelection() );
+
     m_cameraComboBox->Clear();
 
     m_cameraComboBox->SetSelection( -1 );
@@ -1071,6 +1088,10 @@ void CameraPlacementToolUIDialog::OnRemoveAllButton(
     m_cameraNameNum = 0;
 
     mCommandName = "REMOVE_ALL_CAMERA_OBJECTS";
+    ves::open::xml::DataValuePairSharedPtr dvp(
+        new ves::open::xml::DataValuePair() );
+    dvp->SetData( "deleteCameraObject", selection );
+    mInstructions.push_back( dvp );
 
     SendCommandsToXplorer();
     ClearInstructions();

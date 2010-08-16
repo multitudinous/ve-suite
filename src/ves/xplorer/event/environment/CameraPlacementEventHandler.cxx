@@ -31,7 +31,7 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
-// --- VE-Suite Includes --- //
+// --- VES Includes --- //
 #include <ves/xplorer/event/environment/CameraPlacementEventHandler.h>
 
 #include <ves/open/xml/model/Model.h>
@@ -39,6 +39,9 @@
 #include <ves/open/xml/Command.h>
 
 #include <ves/xplorer/EnvironmentHandler.h>
+#include <ves/xplorer/DeviceHandler.h>
+
+#include <ves/xplorer/environment/NavigationAnimationEngine.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/ResourceManager.h>
@@ -46,6 +49,14 @@
 
 #include <ves/xplorer/scenegraph/camera/CameraManager.h>
 #include <ves/xplorer/scenegraph/camera/CameraObject.h>
+
+#include <ves/xplorer/scenegraph/manipulator/TransformManipulator.h>
+
+// --- VRJ Includes --- //
+#include <gmtl/Matrix.h>
+#include <gmtl/AxisAngle.h>
+#include <gmtl/Generate.h>
+#include <gmtl/Misc/MatrixConvert.h>
 
 using namespace ves::xplorer::event;
 using namespace ves::xplorer::event::environment;
@@ -57,8 +68,8 @@ CameraPlacementEventHandler::CameraPlacementEventHandler()
 {
     mCommandNameToInt[ "ADD_CAMERA_OBJECT" ] =
         ADD_CAMERA_OBJECT;
-    mCommandNameToInt[ "PREV_NEXT_CAMERA_OBJECT" ] =
-        PREV_NEXT_CAMERA_OBJECT;
+    mCommandNameToInt[ "SELECT_CAMERA_OBJECT" ] =
+        SELECT_CAMERA_OBJECT;
     mCommandNameToInt[ "DELETE_CAMERA_OBJECT" ] =
         DELETE_CAMERA_OBJECT;
     mCommandNameToInt[ "REMOVE_ALL_CAMERA_OBJECTS" ] =
@@ -121,7 +132,7 @@ CameraPlacementEventHandler& CameraPlacementEventHandler::operator=(
     return *this;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CameraPlacementEventHandler::Execute( 
+void CameraPlacementEventHandler::Execute(
     const ves::open::xml::XMLObjectPtr& veXMLObject )
 {
     ves::open::xml::CommandPtr command =
@@ -132,11 +143,14 @@ void CameraPlacementEventHandler::Execute(
     }
 
     //Set the active cameraObject once the manager is created
-    const int commandName =
-        mCommandNameToInt.find( command->GetCommandName() )->second;
+     int commandName =
+         mCommandNameToInt.find( command->GetCommandName() )->second;
 
+    DeviceHandler& deviceHandler = *(DeviceHandler::instance());
     scenegraph::SceneManager& sceneManager =
         *scenegraph::SceneManager::instance();
+    scenegraph::manipulator::TransformManipulator* sceneManipulator =
+        sceneManager.GetManipulatorManager().GetSceneManipulator();
     scenegraph::camera::CameraManager& cameraManager =
         sceneManager.GetCameraManager();
     scenegraph::camera::CameraObject* const cameraObject =
@@ -153,27 +167,93 @@ void CameraPlacementEventHandler::Execute(
     {
         std::string name;
         command->GetDataValuePair( "addCameraObject" )->GetData( name );
+
         cameraManager.addChild( name );
 
-        break;
+        //break;
     }
-    case PREV_NEXT_CAMERA_OBJECT:
-    {
-        //Make sure to lerp to new node
-
-        break;
-    }
-    case DELETE_CAMERA_OBJECT:
+    case SELECT_CAMERA_OBJECT:
     {
         unsigned int selection;
-        command->GetDataValuePair( "deleteCameraObject" )->GetData( selection );
-        cameraManager.removeChild( cameraManager.getChild( selection ) );
+        command->GetDataValuePair(
+            "selectCameraObject" )->GetData( selection );
+
+        deviceHandler.UnselectObjects();
+
+        scenegraph::camera::CameraObject* cameraObject =
+            cameraManager.ConvertNodeToCameraObject(
+                cameraManager.getChild( selection ) );
+
+        cameraManager.SetActiveCameraObject( cameraObject );
+
+        //Right now we are saying you must have a DCS
+        scenegraph::DCS& selectedDCS = cameraObject->GetDCS();
+        gmtl::Matrix44d selectedMatrix = selectedDCS.GetMat();
+
+        //Set the connection between the scene manipulator and the selected dcs
+        sceneManipulator->Connect( &selectedDCS );
+
+        //If dcs is from a camera object, we want to rotate about local zero point
+        osg::Vec3d center( 0.0, 0.0, 0.0 );
+        center = center * osg::Matrixd( selectedMatrix.mData );
+        sceneManipulator->SetPosition( center );
+
+        //We need to transform center point into camera space
+        //In the future the center point will be in world coordinates
+        center = center * osg::Matrixd( sceneManager.GetWorldDCS()->GetMat().mData );
+        gmtl::Point3d tempCenter( center.x(), center.y(), center.z() );
+        deviceHandler.SetCenterPoint( &tempCenter );
+
+        //Set the selected DCS
+        deviceHandler.SetSelectedDCS( &selectedDCS );
+
+        //Need to do this for multi-pass techniques
+        if( sceneManager.IsRTTOn() )
+        {
+            selectedDCS.SetTechnique( "Glow" );
+        }
+        else
+        {
+            selectedDCS.SetTechnique( "Select" );
+        }
+
+        //Hand the node we are interested in off to the animation engine
+        NavigationAnimationEngine& nae =
+            *(NavigationAnimationEngine::instance());
+        nae.SetDCS( sceneManager.GetWorldDCS() );
+
+        //Hand our created end points off to the animation engine
+        selectedMatrix = gmtl::invert( selectedMatrix );
+        gmtl::Vec3d navToPoint =
+            gmtl::makeTrans< gmtl::Vec3d >( selectedMatrix );
+        gmtl::Quatd rotationPoint =
+            gmtl::makeRot< gmtl::Quatd >( selectedMatrix );
+        nae.SetAnimationEndPoints( navToPoint, rotationPoint );
 
         break;
     }
     case REMOVE_ALL_CAMERA_OBJECTS:
     {
         cameraManager.removeChildren();
+
+        //break;
+    }
+    case DELETE_CAMERA_OBJECT:
+    {
+        unsigned int selection;
+        command->GetDataValuePair( "deleteCameraObject" )->GetData( selection );
+
+        //
+        DeviceHandler& deviceHandler = *(DeviceHandler::instance());
+
+        scenegraph::camera::CameraObject* cameraObject =
+            cameraManager.ConvertNodeToCameraObject(
+                cameraManager.getChild( selection ) );
+        if( deviceHandler.GetSelectedDCS() == &(cameraObject->GetDCS()) )
+        {
+            deviceHandler.UnselectObjects();
+            cameraManager.removeChild( cameraObject );
+        }
 
         break;
     }
