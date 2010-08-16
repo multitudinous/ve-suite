@@ -42,12 +42,15 @@
 #include <ves/open/xml/DataValuePairPtr.h>
 
 // --- wxWidgets Includes --- //
+#include <wx/filepicker.h>
+
 class wxRadioBox;
 class wxSlider;
 class wxSpinCtrl;
 class wxButton;
 class wxComboBox;
 class wxBitmapButton;
+class wxToggleButton;
 
 // --- STL Includes --- //
 #include <map>
@@ -90,7 +93,8 @@ private:
     void SendCommandsToXplorer();
     void ClearInstructions();
 
-    void OnAddCameraButton( wxCommandEvent& WXUNUSED( wxCommandEvent& event ) );
+    void OnAddCameraButton(
+        wxCommandEvent& WXUNUSED( wxCommandEvent& event ) );
     void OnPrevCameraButton(
         wxCommandEvent& WXUNUSED( wxCommandEvent& event ) );
     void OnCameraComboBox( wxCommandEvent& event );
@@ -99,7 +103,27 @@ private:
         wxCommandEvent& WXUNUSED( wxCommandEvent& event ) );
     void OnDeleteCameraButton(
         wxCommandEvent& WXUNUSED( wxCommandEvent& event ) );
-    void OnRemoveAllButton( wxCommandEvent& WXUNUSED( wxCommandEvent& event ) );
+    void OnRemoveAllCamerasButton(
+        wxCommandEvent& WXUNUSED( wxCommandEvent& event ) );
+
+    void OnSaveImageButton(
+        wxCommandEvent& WXUNUSED( wxCommandEvent& event ) );
+    void OnSaveAllImagesButton(
+        wxCommandEvent& WXUNUSED( wxCommandEvent& event ) );
+    void OnImageDirPickerCtrl( wxFileDirPickerEvent& event );
+
+    void OnToggleHighlightToolButton(
+        wxCommandEvent& WXUNUSED( wxCommandEvent& event ) );
+    void OnPrevMarkerButton(
+        wxCommandEvent& WXUNUSED( wxCommandEvent& event ) );
+    void OnMarkerComboBox( wxCommandEvent& event );
+    void OnMarkerComboBoxTextEnter( wxCommandEvent& event );
+    void OnNextMarkerButton(
+        wxCommandEvent& WXUNUSED( wxCommandEvent& event ) );
+    void OnDeleteMarkerButton(
+        wxCommandEvent& WXUNUSED( wxCommandEvent& event ) );
+    void OnRemoveAllMarkersButton(
+        wxCommandEvent& WXUNUSED( wxCommandEvent& event ) );
 
     void OnDepthOfFieldEffectOnOffRadioBox( wxCommandEvent& event );
     void OnProjectionEffectOnOffRadioBox( wxCommandEvent& event );
@@ -162,7 +186,18 @@ private:
     unsigned int m_cameraNameNum;
     wxBitmapButton* m_nextCameraButton;
     wxButton* m_deleteCameraButton;
-    wxButton* m_removeAllButton;
+    wxButton* m_removeAllCamerasButton;
+
+    wxButton* m_saveImageButton;
+    wxButton* m_saveAllImagesButton;
+    wxDirPickerCtrl* m_imageDirPickerCtrl;
+
+    wxToggleButton* m_toggleHighlightToolButton;
+    wxBitmapButton* m_prevMarkerButton;
+    wxComboBox* m_markerComboBox;
+    wxBitmapButton* m_nextMarkerButton;
+    wxButton* m_deleteMarkerButton;
+    wxButton* m_removeAllMarkersButton;
 
     wxRadioBox* mDepthOfFieldEffectOnOff;
     wxRadioBox* mProjectionEffectOnOff;

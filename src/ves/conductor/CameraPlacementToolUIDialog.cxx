@@ -41,6 +41,8 @@
 
 #include <ves/conductor/xpm/CPT/PrevCameraButton.xpm>
 #include <ves/conductor/xpm/CPT/NextCameraButton.xpm>
+#include <ves/conductor/xpm/CPT/PrevMarkerButton.xpm>
+#include <ves/conductor/xpm/CPT/NextMarkerButton.xpm>
 
 #include <ves/open/xml/DataValuePair.h>
 #include <ves/open/xml/Command.h>
@@ -59,6 +61,7 @@
 #include <wx/notebook.h>
 #include <wx/combobox.h>
 #include <wx/bmpbuttn.h>
+#include <wx/tglbtn.h>
 
 using namespace ves::conductor;
 
@@ -83,8 +86,39 @@ BEGIN_EVENT_TABLE( CameraPlacementToolUIDialog, wxDialog )
         CPT_DELETE_CAMERA_BUTTON,
         CameraPlacementToolUIDialog::OnDeleteCameraButton )
     EVT_BUTTON(
-        CPT_REMOVE_ALL_BUTTON,
-        CameraPlacementToolUIDialog::OnRemoveAllButton )
+        CPT_REMOVE_ALL_CAMERAS_BUTTON,
+        CameraPlacementToolUIDialog::OnRemoveAllCamerasButton )
+    EVT_BUTTON(
+        CPT_SAVE_IMAGE_BUTTON,
+        CameraPlacementToolUIDialog::OnSaveImageButton )
+    EVT_BUTTON(
+        CPT_SAVE_ALL_IMAGES_BUTTON,
+        CameraPlacementToolUIDialog::OnSaveAllImagesButton )
+    EVT_DIRPICKER_CHANGED(
+        CPT_IMAGE_DIR_PICKER_CTRL,
+        CameraPlacementToolUIDialog::OnImageDirPickerCtrl )
+    EVT_BUTTON(
+        CPT_TOGGLE_HIGHLIGHT_TOOL_BUTTON,
+        CameraPlacementToolUIDialog::OnToggleHighlightToolButton )
+    EVT_BUTTON(
+        CPT_PREV_MARKER_BUTTON,
+        CameraPlacementToolUIDialog::OnPrevMarkerButton )
+    EVT_COMBOBOX(
+        CPT_MARKER_COMBO_BOX,
+        CameraPlacementToolUIDialog::OnMarkerComboBox )
+    //When return is pressed in the combobox
+    EVT_TEXT_ENTER(
+        CPT_MARKER_COMBO_BOX,
+        CameraPlacementToolUIDialog::OnMarkerComboBoxTextEnter )
+    EVT_BUTTON(
+        CPT_NEXT_MARKER_BUTTON,
+        CameraPlacementToolUIDialog::OnNextMarkerButton )
+    EVT_BUTTON(
+        CPT_DELETE_MARKER_BUTTON,
+        CameraPlacementToolUIDialog::OnDeleteMarkerButton )
+    EVT_BUTTON(
+        CPT_REMOVE_ALL_MARKERS_BUTTON,
+        CameraPlacementToolUIDialog::OnRemoveAllMarkersButton )
     EVT_RADIOBOX(
         CPT_DEPTH_OF_FIELD_EFFECT_ON_OFF,
         CameraPlacementToolUIDialog::OnDepthOfFieldEffectOnOffRadioBox )
@@ -247,47 +281,81 @@ void CameraPlacementToolUIDialog::BuildGUI()
     mainPanelSizer = new wxBoxSizer( wxVERTICAL );
 
     wxStaticBoxSizer* managementSettingsSizer;
-    managementSettingsSizer = new wxStaticBoxSizer( new wxStaticBox(
-        mainPanel, wxID_ANY, wxT( "Management Settings" ) ), wxHORIZONTAL );
+    managementSettingsSizer = new wxStaticBoxSizer( new wxStaticBox( mainPanel, wxID_ANY, wxT("Management Settings") ), wxVERTICAL );
 
-    m_addCameraButton = new wxButton(
-        mainPanel, CPT_ADD_CAMERA_BUTTON, wxT("Add Camera"),
-        wxDefaultPosition, wxDefaultSize, 0 );
-    managementSettingsSizer->Add(
-        m_addCameraButton, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+    wxBoxSizer* cameraManagmentSizer;
+    cameraManagmentSizer = new wxBoxSizer( wxHORIZONTAL );
+
+    m_addCameraButton = new wxButton( mainPanel, CPT_ADD_CAMERA_BUTTON, wxT("Add Camera"), wxDefaultPosition, wxDefaultSize, 0 );
+    cameraManagmentSizer->Add( m_addCameraButton, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 
     m_prevCameraButton = new wxBitmapButton(
         mainPanel, CPT_PREV_CAMERA_BUTTON, wxBitmap( PrevCameraButton_xpm ),
         wxDefaultPosition, wxDefaultSize, wxBU_AUTODRAW );
-    managementSettingsSizer->Add(
-        m_prevCameraButton, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+    cameraManagmentSizer->Add( m_prevCameraButton, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 
-    m_cameraComboBox = new wxComboBox(
-        mainPanel, CPT_CAMERA_COMBO_BOX, wxEmptyString,
-        wxDefaultPosition, wxDefaultSize, 0, NULL, wxTE_PROCESS_ENTER );
-    m_cameraComboBox->SetValue( wxT( "Select a Camera" ) );
-    managementSettingsSizer->Add(
-        m_cameraComboBox, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
+    m_cameraComboBox = new wxComboBox( mainPanel, CPT_CAMERA_COMBO_BOX, wxT("Select a Camera"), wxDefaultPosition, wxDefaultSize, 0, NULL, 0 ); 
+    cameraManagmentSizer->Add( m_cameraComboBox, 1, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 
     m_nextCameraButton = new wxBitmapButton(
         mainPanel, CPT_NEXT_CAMERA_BUTTON, wxBitmap( NextCameraButton_xpm ),
         wxDefaultPosition, wxDefaultSize, wxBU_AUTODRAW );
-    managementSettingsSizer->Add(
-        m_nextCameraButton, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+    cameraManagmentSizer->Add( m_nextCameraButton, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 
-    m_deleteCameraButton = new wxButton(
-        mainPanel, CPT_DELETE_CAMERA_BUTTON, wxT("Delete Camera"),
-        wxDefaultPosition, wxDefaultSize, 0 );
-    managementSettingsSizer->Add(
-        m_deleteCameraButton, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+    m_deleteCameraButton = new wxButton( mainPanel, CPT_DELETE_CAMERA_BUTTON, wxT("Delete Camera"), wxDefaultPosition, wxDefaultSize, 0 );
+    cameraManagmentSizer->Add( m_deleteCameraButton, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 
-    m_removeAllButton = new wxButton(
-        mainPanel, CPT_REMOVE_ALL_BUTTON, wxT("Remove All"),
-        wxDefaultPosition, wxDefaultSize, 0 );
-    managementSettingsSizer->Add(
-        m_removeAllButton, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+    m_removeAllCamerasButton = new wxButton( mainPanel, CPT_REMOVE_ALL_CAMERAS_BUTTON, wxT("Remove All"), wxDefaultPosition, wxDefaultSize, 0 );
+    cameraManagmentSizer->Add( m_removeAllCamerasButton, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+
+    managementSettingsSizer->Add( cameraManagmentSizer, 0, wxEXPAND, 5 );
+
+    wxStaticLine* managementSettingsSeparator = new wxStaticLine( mainPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
+    managementSettingsSizer->Add( managementSettingsSeparator, 0, wxEXPAND | wxALL, 10 );
+
+    wxBoxSizer* imageManagementSizer;
+    imageManagementSizer = new wxBoxSizer( wxHORIZONTAL );
+
+    m_saveImageButton = new wxButton( mainPanel, CPT_SAVE_IMAGE_BUTTON, wxT("Save Image"), wxDefaultPosition, wxDefaultSize, 0 );
+    imageManagementSizer->Add( m_saveImageButton, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+
+    m_saveAllImagesButton = new wxButton( mainPanel, CPT_SAVE_ALL_IMAGES_BUTTON, wxT("Save All Images"), wxDefaultPosition, wxDefaultSize, 0 );
+    imageManagementSizer->Add( m_saveAllImagesButton, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+
+    wxStaticText* imageDirectoryText;
+    imageDirectoryText = new wxStaticText( mainPanel, wxID_ANY, wxT("Directory:"), wxDefaultPosition, wxDefaultSize, 0 );
+    imageDirectoryText->Wrap( -1 );
+    imageManagementSizer->Add( imageDirectoryText, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+
+    m_imageDirPickerCtrl = new wxDirPickerCtrl( mainPanel, CPT_IMAGE_DIR_PICKER_CTRL, wxT(""), wxT("Select a folder"), wxDefaultPosition, wxDefaultSize, wxDIRP_DEFAULT_STYLE );
+    imageManagementSizer->Add( m_imageDirPickerCtrl, 1, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+
+    managementSettingsSizer->Add( imageManagementSizer, 0, wxEXPAND, 5 );
 
     mainPanelSizer->Add( managementSettingsSizer, 0, wxALL|wxEXPAND, 10 );
+
+    wxStaticBoxSizer* highlightToolSettingsSizer;
+    highlightToolSettingsSizer = new wxStaticBoxSizer( new wxStaticBox( mainPanel, wxID_ANY, wxT("Highlight Tool Settings") ), wxHORIZONTAL );
+
+    m_toggleHighlightToolButton = new wxToggleButton( mainPanel, CPT_TOGGLE_HIGHLIGHT_TOOL_BUTTON, wxT("Toggle On/Off"), wxDefaultPosition, wxDefaultSize, 0 );
+    highlightToolSettingsSizer->Add( m_toggleHighlightToolButton, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+
+    m_prevMarkerButton = new wxBitmapButton( mainPanel, CPT_PREV_MARKER_BUTTON, wxBitmap( PrevMarkerButton_xpm ), wxDefaultPosition, wxDefaultSize, wxBU_AUTODRAW );
+    highlightToolSettingsSizer->Add( m_prevMarkerButton, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+
+    m_markerComboBox = new wxComboBox( mainPanel, CPT_MARKER_COMBO_BOX, wxT("Select a Marker"), wxDefaultPosition, wxDefaultSize, 0, NULL, 0 ); 
+    highlightToolSettingsSizer->Add( m_markerComboBox, 1, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+
+    m_nextMarkerButton = new wxBitmapButton( mainPanel, CPT_NEXT_MARKER_BUTTON, wxBitmap( NextMarkerButton_xpm ), wxDefaultPosition, wxDefaultSize, wxBU_AUTODRAW );
+    highlightToolSettingsSizer->Add( m_nextMarkerButton, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+
+    m_deleteMarkerButton = new wxButton( mainPanel, CPT_DELETE_MARKER_BUTTON, wxT("Delete Marker"), wxDefaultPosition, wxDefaultSize, 0 );
+    highlightToolSettingsSizer->Add( m_deleteMarkerButton, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+
+    m_removeAllMarkersButton = new wxButton( mainPanel, CPT_REMOVE_ALL_MARKERS_BUTTON, wxT("Remove All"), wxDefaultPosition, wxDefaultSize, 0 );
+    highlightToolSettingsSizer->Add( m_removeAllMarkersButton, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+
+    mainPanelSizer->Add( highlightToolSettingsSizer, 0, wxALL|wxEXPAND, 10 );
 
     wxStaticBoxSizer* displaySettingsSizer;
     displaySettingsSizer = new wxStaticBoxSizer( new wxStaticBox(
@@ -360,7 +428,7 @@ void CameraPlacementToolUIDialog::BuildGUI()
         mainPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize,
         wxLI_HORIZONTAL );
     displaySettingsSizer->Add(
-        displaySettingsSeparator, 0, wxEXPAND | wxALL, 5 );
+        displaySettingsSeparator, 0, wxEXPAND | wxALL, 10 );
 
     wxBoxSizer* cameraWindowSizer;
     cameraWindowSizer = new wxBoxSizer( wxHORIZONTAL );
@@ -989,7 +1057,7 @@ void CameraPlacementToolUIDialog::OnCameraComboBox( wxCommandEvent& event )
 void CameraPlacementToolUIDialog::OnCameraComboBoxTextEnter(
     wxCommandEvent& event )
 {
-    unsigned int selection( event.GetSelection() );
+    unsigned int selection( m_cameraComboBox->GetSelection() );
     if( selection == -1 )
     {
         m_cameraComboBox->SetValue( wxT( "Select a Camera" ) );
@@ -1069,7 +1137,7 @@ void CameraPlacementToolUIDialog::OnDeleteCameraButton(
     ClearInstructions();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CameraPlacementToolUIDialog::OnRemoveAllButton(
+void CameraPlacementToolUIDialog::OnRemoveAllCamerasButton(
     wxCommandEvent& WXUNUSED( wxCommandEvent& event ) )
 {
     unsigned int count( m_cameraComboBox->GetCount() );
@@ -1095,6 +1163,65 @@ void CameraPlacementToolUIDialog::OnRemoveAllButton(
 
     SendCommandsToXplorer();
     ClearInstructions();
+}
+////////////////////////////////////////////////////////////////////////////////
+void CameraPlacementToolUIDialog::OnSaveImageButton(
+    wxCommandEvent& WXUNUSED( wxCommandEvent& event ) )
+{
+
+}
+////////////////////////////////////////////////////////////////////////////////
+void CameraPlacementToolUIDialog::OnSaveAllImagesButton(
+    wxCommandEvent& WXUNUSED( wxCommandEvent& event ) )
+{
+
+}
+////////////////////////////////////////////////////////////////////////////////
+void CameraPlacementToolUIDialog::OnImageDirPickerCtrl(
+    wxFileDirPickerEvent& event )
+{
+
+}
+////////////////////////////////////////////////////////////////////////////////
+void CameraPlacementToolUIDialog::OnToggleHighlightToolButton(
+    wxCommandEvent& WXUNUSED( wxCommandEvent& event ) )
+{
+
+}
+////////////////////////////////////////////////////////////////////////////////
+void CameraPlacementToolUIDialog::OnPrevMarkerButton(
+    wxCommandEvent& WXUNUSED( wxCommandEvent& event ) )
+{
+
+}
+////////////////////////////////////////////////////////////////////////////////
+void CameraPlacementToolUIDialog::OnMarkerComboBox( wxCommandEvent& event )
+{
+
+}
+////////////////////////////////////////////////////////////////////////////////
+void CameraPlacementToolUIDialog::OnMarkerComboBoxTextEnter(
+    wxCommandEvent& event )
+{
+
+}
+////////////////////////////////////////////////////////////////////////////////
+void CameraPlacementToolUIDialog::OnNextMarkerButton(
+    wxCommandEvent& WXUNUSED( wxCommandEvent& event ) )
+{
+
+}
+////////////////////////////////////////////////////////////////////////////////
+void CameraPlacementToolUIDialog::OnDeleteMarkerButton(
+    wxCommandEvent& WXUNUSED( wxCommandEvent& event ) )
+{
+
+}
+////////////////////////////////////////////////////////////////////////////////
+void CameraPlacementToolUIDialog::OnRemoveAllMarkersButton(
+    wxCommandEvent& WXUNUSED( wxCommandEvent& event ) )
+{
+
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraPlacementToolUIDialog::OnDepthOfFieldEffectOnOffRadioBox(
