@@ -34,6 +34,9 @@
 #define MAINWINDOW_H
 
 #include <QtGui/QMainWindow>
+#include <QtGui/QFileDialog>
+
+#include <ves/conductor/qt/IconStack.h>
 
 #include <ves/VEConfig.h>
 
@@ -49,10 +52,17 @@ public:
 
 protected:
     void changeEvent(QEvent* e);
-    void paintEvent ( QPaintEvent* event );
+    
+protected Q_SLOTS:
+    void on_actionFile_triggered(); ///< Autoconnected slot
+    void on_actionOpen_triggered(); ///< Autoconnected slot
+    void onFileSelected( QString fileName );
+    void onFileCancelled();
 
 private:
     Ui::MainWindow* ui;
+    QFileDialog* mFileDialog;
+    IconStack* tb;
 };
 
 #endif // MAINWINDOW_H

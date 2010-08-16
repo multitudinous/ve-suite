@@ -30,24 +30,46 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#pragma once
+#ifndef ICONSTACK_H
+#define ICONSTACK_H
 
-#include <QtGui/QFrame>
+#include <QtGui/QToolBar>
 
-/**
- * MoveFrame provides a derived QFrame which supports a (mouse) pressed signal
- */
-
-class MoveFrame : public QFrame
+class IconStack : public QToolBar
 {
 Q_OBJECT
 public:
-    explicit MoveFrame(QWidget *parent = 0);
+    explicit IconStack( QWidget* positionParent, QWidget* parent = 0 );
 
-protected:
-    void mousePressEvent ( QMouseEvent* event );
+    /// Sets the position of the toolbar based on the positionParent,
+    /// auto-adjusts the size, and shows the toolbar. If you want simple show/hide
+    /// functionality, use QToolBar::show() <-- Notice lowercase.
+    void Show();
+
+    /// Controls whether the toolbar disappears when one of its buttons is pressed
+    /// or whether it stays visible. Default is false, meaning the toolbar
+    /// disappears.
+    void SetPersistence( bool persistence );
+
+    /// "Overrides" of the similarly-named methods of QToolBar. Please use these
+    /// instead of QToolBar::addAction( ... ) methods.
+    void AddAction ( QAction* action );
+    QAction* AddAction ( const QString& text );
+    QAction* AddAction ( const QIcon& icon, const QString& text );
+    QAction* AddAction ( const QString& text, const QObject* receiver, const char* member );
+    QAction* AddAction ( const QIcon& icon, const QString& text, const QObject* receiver, const char* member );
+
 
 Q_SIGNALS:
-    void pressed();
+
+public Q_SLOTS:
+
+private:
+    QWidget* mPositionParent;
+    bool mPersistent;
+
+    QAction* _connectAction( QAction* action );
 
 };
+
+#endif // ICONSTACK_H

@@ -206,17 +206,10 @@ unsigned char* UIElementQt::RenderElementToImage( )
         return NULL;
     }
 
-    // Qt's event and paint system behaves poorly if initiated directly from
-    // another thread, so we do a little trickery here. This method doesn't
-    // actually ask the element to update; instead, we keep an internal timer
-    // that causes a repaint of this element every 100ms. Any time the present
-    // method is called, we simply return the most recently painted image of
-    // this window. Attempts to cause this method to ask the element to update,
-    // which could be done via:
-    //Q_EMIT RequestRender( );
-    // do not seem to work well. It appears that the Qt thread is not given
-    // execution time frequently enough, and the end effect is that the painting
-    // lags far behind juggler's event queue.
+    // This method doesn't cause the element to repaint;
+    // instead, we keep an internal timer that causes a repaint of this element
+    // every 30ms. Any time the present method is called, we simply return the
+    // most recently painted image of this window.
 
     // Flip mImage vertically and store in mImageFlipped. OpenGL treats textures
     // as scanning from bottom up, but Qt renders images top down, so we have to
@@ -269,6 +262,7 @@ void UIElementQt::SetWidget( QWidget* widget )
     // The default is centered, which can result in odd alignment
     this->setAlignment( Qt::AlignLeft | Qt::AlignTop );
 
+    // Add our internal titlebar to the top of the widget.
     QGraphicsProxyWidget* titlebar = mGraphicsScene->addWidget( mTitlebar );
     mTitlebar->resize( mWidth, mTitlebar->height() );
     titlebar->show();
@@ -298,11 +292,13 @@ void UIElementQt::SetWidget( QWidget* widget )
 
     this->setViewportUpdateMode( QGraphicsView::NoViewportUpdate );
 
+    mGraphicsScene->setSceneRect( 0, 0, mWidth, mHeight );
+
     // Make the view and the scene coincident.
     this->setSceneRect( mGraphicsScene->sceneRect( ) );
 
     // Forcibly resize view to contain mWidget
-    this->resize( mWidth, mHeight + mTitlebar->height() );
+    this->resize( mWidth, mHeight );
 
     // Render this widget immediately so that there will be an image to return
     // to the first call to RenderElementToImage()
@@ -324,21 +320,18 @@ void UIElementQt::SetWidget( QWidget* widget )
 void UIElementQt::UpdateSize( )
 {
     _debug( "UpdateSize" );
-    int temp_Width = mWidth;
-    int temp_Height = mHeight;
+    int old_Width = mWidth;
+    int old_Height = mHeight;
 
     mWidth = mWidget->width( );
-    mHeight = mWidget->height( );
+    mHeight = mWidget->height( ) + mTitlebar->height();
 
     mElementMatrix.makeScale( mWidth, mHeight, 1);
     mElementMatrixDirty = true;
 
-    //Line for debugging
-    //std::cout << mWidth << ", " << mHeight << std::endl;
-
     // Delete the image and flipped image object if the required texture size
     // has changed.
-    if( ( temp_Width != mWidth ) || ( temp_Height != mHeight ) )
+    if( ( mWidth != old_Width ) || ( mHeight != old_Height ) )
     {
         { // Enter critical section
             QMutexLocker locker( mImageMutex );
@@ -354,15 +347,8 @@ void UIElementQt::UpdateSize( )
         }
     }
 
-    // Determine the texture size needed to ensure power-of-two width and height
-    //_calculatePower2ImageDimensions( );
     mImageWidth = mWidth;
     mImageHeight = mHeight;
-
-    // Calculate the texture coordinates of the rendered widget in the texture
-    _calculateTextureCoordinates( );
-
-    // FIXME: Need to update coordinates on texture attribute
 
     // If image doesn't exist, create one of the proper size.
     { // Enter critical section
@@ -430,38 +416,6 @@ void UIElementQt::_render( )
     } // Leave critical section
 
     mImageDirty = true;
-}
-
-//void UIElementQt::_calculatePower2ImageDimensions( )
-//{
-//    mImageWidth = int( pow( 2, ceil( log( double(mWidth) ) / log( double(2) ) ) ) );
-//    mImageHeight = int( pow( 2, ceil( log( double(mHeight) ) / log( double(2) ) ) ) );
-//
-//    // If either dimension is zero, force the other dimension to zero too
-//    if( ( mImageWidth == 0 ) || ( mImageHeight == 0 ) )
-//    {
-//        mImageWidth = mImageHeight = 0;
-//    }
-//}
-
-void UIElementQt::_calculateTextureCoordinates( )
-{
-    // Save ourselves from divide-by-zero
-    if( mImageWidth == 0 )
-    {
-        mTextureLeft = mTextureRight = mTextureBottom = mTextureTop = 0.0f;
-    }
-    else
-    {
-        mTextureLeft = 0.0f;
-        //        mTextureRight = static_cast < float > ( mWidth ) /
-        //                static_cast < float > ( mImageWidth );
-        //        mTextureBottom = 1.0f - ( static_cast < float > ( mHeight ) /
-        //                static_cast < float > ( mImageHeight ) );
-        mTextureRight = 1.0f;
-        mTextureBottom = 0.0f;
-        mTextureTop = 1.0f;
-    }
 }
 
 void UIElementQt::paintEvent( QPaintEvent* event )

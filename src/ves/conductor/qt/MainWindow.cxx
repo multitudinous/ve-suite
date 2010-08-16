@@ -34,48 +34,33 @@
 
 #include "MainWindow.h"
 #include <ves/conductor/qt/ui_MainWindow.h>
-#include <QtGui/QMdiSubWindow>
+
 
 #include <ves/conductor/qt/propertyBrowser/Visualization.h>
 
 #include <iostream>
 #include <QtGui/QPaintEvent>
 
-#ifdef VES_QT_ICON_DEBUG
-//#include <QtCore/QDir>
-//inline void initMyResource() { do { extern int QT_MANGLE_NAMESPACE(qInitResources) ();       \
-//        QT_MANGLE_NAMESPACE(qInitResources) (); } while (0); }
-#endif // VES_QT_ICON_DEBU
-
 MainWindow::MainWindow(QWidget* parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
-#ifdef VES_QT_ICON_DEBUG
-//    initMyResource();
-    QPixmap testImg(":/images/add.png");
-    if( testImg.isNull() )
-        std::cout << "$$$$$$$$$$$$$$$ Resources are unavailable" << std::endl << std::flush;
-#endif // VES_QT_ICON_DEBUG
     ui->setupUi(this);
-    ui->mainToolBar->addAction(ui->action_New);
-    ui->mainToolBar->addAction(ui->action_Open);
-    ui->mainToolBar->addAction(ui->action_Save);
+    
+    ui->mainToolBar->addAction(ui->actionFile);
+    
+    ui->menuBar->close();
+    
+    tb = new IconStack( ui->mainToolBar->widgetForAction( ui->actionFile ), this );
+    tb->AddAction( ui->actionNew );
+    tb->AddAction( ui->actionOpen);
+    tb->AddAction( ui->actionSave );
 
+    // Make sure there is no statusbar on this widget.
     setStatusBar(0);
-
-    // Make the background of this window translucent since we want to be able
-    // to see through the empty parts of the mdi area. These are no longer
-    // needed since we're not using mdi.
-    //this->setAttribute(Qt::WA_TranslucentBackground);
-    //this->setWindowFlags( Qt::FramelessWindowHint  );
     
     ves::conductor::Visualization* visWindow = new ves::conductor::Visualization( 0 );
     ui->tabWidget->addTab( visWindow, "Visualization" );
-    
-    // Obsolete mdi code
-    //QMdiSubWindow* subWin = ui->mdiArea->addSubWindow( visWindow );
-    //subWin->resize( 590, 489 );
 }
 
 MainWindow::~MainWindow()
@@ -95,8 +80,53 @@ void MainWindow::changeEvent(QEvent* e)
     }
 }
 
-void MainWindow::paintEvent ( QPaintEvent* event )
+void MainWindow::on_actionFile_triggered()
 {
-    //std::cout << "MainWindow::paintEvent\n" << std::flush;
-    QWidget::paintEvent( event );
+    tb->Show();
 }
+
+void MainWindow::on_actionOpen_triggered()
+{
+    // Don't allow multiple file dialogs to be opened.
+    if( mFileDialog )
+    {
+        return;
+    }
+    
+    mFileDialog = new QFileDialog( 0 );
+    mFileDialog->setAttribute( Qt::WA_DeleteOnClose );
+    mFileDialog->setFileMode( QFileDialog::AnyFile );
+    QObject::connect( mFileDialog, SIGNAL(fileSelected(const QString &)), 
+                      this, SLOT(onFileSelected(QString)) );
+    QObject::connect( mFileDialog, SIGNAL(rejected()), this,
+                      SLOT( onFileCancelled() ) );
+
+    ui->tabWidget->setCurrentIndex( ui->tabWidget->addTab( mFileDialog, 
+                                                           "Open File" ) );
+}
+
+void MainWindow::onFileSelected( QString fileName )
+{
+    std::cout << "File selected: " << fileName.toStdString() << std::endl;
+    int index = ui->tabWidget->indexOf( mFileDialog );
+    ui->tabWidget->removeTab( index );
+    if (mFileDialog)
+    {
+        mFileDialog->close();
+        //delete mFileDialog;
+        mFileDialog = 0;
+    }
+}
+
+void MainWindow::onFileCancelled()
+{
+    int index = ui->tabWidget->indexOf( mFileDialog );
+    ui->tabWidget->removeTab( index );
+    if (mFileDialog)
+    {
+        mFileDialog->close();
+        //delete mFileDialog;
+        mFileDialog = 0;
+    }
+}
+    

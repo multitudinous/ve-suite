@@ -17,6 +17,9 @@ lib_env = ves_pkg.getEnv().Clone()
 source = [pj(buildSrcDir,'MoveFrame.h')]
 cppSources = lib_env.qt_moc(source)
 
+source = [pj(buildSrcDir,'IconStack.h')]
+cppSources += lib_env.qt_moc(source)
+
 source = [pj(buildSrcDir,'MainWindow.h')]
 cppSources += lib_env.qt_moc(source)
 

@@ -13,6 +13,29 @@
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">/*
+QToolBar
+{
+	background: qlineargradient(spread:pad, x1:0, y1:1, x2:0, y2:0, stop:0 rgba(50, 50, 50, 220), stop:1 rgba(150, 150, 150, 220));
+background: qlineargradient(spread:pad, x1:0, y1:1, x2:0, y2:0, stop:0 rgba(75, 75, 75, 255), stop: 0.60 rgba(100,100,100,255), stop:0.61 rgba(110,110,110,255), stop:1 rgba(130, 130, 130, 255));
+	border-radius: 1px;
+}
+
+QToolBar[orientation=&quot;2&quot;]
+{
+	background:qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(0, 0, 0, 220), stop:1 rgba(100, 100, 100, 220));
+background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(75, 75, 75, 220), stop: 0.5 rgba(100,100,100,220), stop:0.51 rgba(125,125,125,220), stop:1 rgba(150, 150, 150, 220));
+	border-radius: 6px;
+}
+
+QToolButton:hover
+{
+	background: rgba(255,255,255,30);
+	border: none;
+}
+*/</string>
+  </property>
   <property name="iconSize">
    <size>
     <width>32</width>
@@ -51,7 +74,7 @@
      <x>0</x>
      <y>0</y>
      <width>600</width>
-     <height>21</height>
+     <height>19</height>
     </rect>
    </property>
    <property name="nativeMenuBar">
@@ -61,21 +84,21 @@
     <property name="title">
      <string>&amp;File</string>
     </property>
-    <addaction name="action_New"/>
-    <addaction name="action_Open"/>
-    <addaction name="action_Run"/>
+    <addaction name="actionNew"/>
+    <addaction name="actionOpen"/>
+    <addaction name="actionRun"/>
     <addaction name="separator"/>
-    <addaction name="action_Save"/>
-    <addaction name="actionSave_As"/>
+    <addaction name="actionSave"/>
+    <addaction name="actionSaveAs"/>
    </widget>
    <widget class="QMenu" name="menu_Edit">
     <property name="title">
      <string>&amp;Edit</string>
     </property>
-    <addaction name="actionZoom_In"/>
-    <addaction name="actionZoom_Out"/>
-    <addaction name="actionZoom_All"/>
-    <addaction name="action_Find"/>
+    <addaction name="actionZoomIn"/>
+    <addaction name="actionZoomOut"/>
+    <addaction name="actionZoomAll"/>
+    <addaction name="actionFind"/>
    </widget>
    <widget class="QMenu" name="menu_Connection">
     <property name="title">
@@ -118,7 +141,7 @@
     <bool>false</bool>
    </attribute>
   </widget>
-  <action name="action_New">
+  <action name="actionNew">
    <property name="icon">
     <iconset resource="propertyBrowser/icons.qrc">
      <normaloff>:/xpm/ToolBar/NewDocumentButton.xpm</normaloff>:/xpm/ToolBar/NewDocumentButton.xpm</iconset>
@@ -130,7 +153,7 @@
     <bool>false</bool>
    </property>
   </action>
-  <action name="action_Open">
+  <action name="actionOpen">
    <property name="icon">
     <iconset resource="propertyBrowser/icons.qrc">
      <normaloff>:/xpm/ToolBar/OpenButton.xpm</normaloff>:/xpm/ToolBar/OpenButton.xpm</iconset>
@@ -139,12 +162,12 @@
     <string>&amp;Open...</string>
    </property>
   </action>
-  <action name="action_Run">
+  <action name="actionRun">
    <property name="text">
     <string>&amp;Run...</string>
    </property>
   </action>
-  <action name="action_Save">
+  <action name="actionSave">
    <property name="icon">
     <iconset resource="propertyBrowser/icons.qrc">
      <normaloff>:/xpm/ToolBar/SaveButton.xpm</normaloff>:/xpm/ToolBar/SaveButton.xpm</iconset>
@@ -153,29 +176,41 @@
     <string>&amp;Save</string>
    </property>
   </action>
-  <action name="actionSave_As">
+  <action name="actionSaveAs">
    <property name="text">
     <string>Save &amp;As...</string>
    </property>
   </action>
-  <action name="actionZoom_In">
+  <action name="actionZoomIn">
    <property name="text">
     <string>Zoom &amp;In</string>
    </property>
   </action>
-  <action name="actionZoom_Out">
+  <action name="actionZoomOut">
    <property name="text">
     <string>Zoom &amp;Out</string>
    </property>
   </action>
-  <action name="actionZoom_All">
+  <action name="actionZoomAll">
    <property name="text">
     <string>Zoom &amp;All</string>
    </property>
   </action>
-  <action name="action_Find">
+  <action name="actionFind">
    <property name="text">
     <string>&amp;Find</string>
+   </property>
+  </action>
+  <action name="actionFile">
+   <property name="icon">
+    <iconset resource="propertyBrowser/icons.qrc">
+     <normaloff>:/xpm/ToolBar/NewDocumentButton.xpm</normaloff>:/xpm/ToolBar/NewDocumentButton.xpm</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;File</string>
+   </property>
+   <property name="toolTip">
+    <string>Open and save files</string>
    </property>
   </action>
  </widget>

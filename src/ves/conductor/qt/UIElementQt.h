@@ -106,11 +106,6 @@ public:
 protected:
     void paintEvent( QPaintEvent* event );
 
-//Q_SIGNALS:
-//    void RequestRender( );
-//    void PutSendEvent( ves::xplorer::eventmanager::InteractionEvent* event );
-//    void RequestEmbed( bool embed );
-
 private:
     void FreeOldWidgets( );
     QWidget* mWidget; ///< Widget associated with this element
@@ -135,7 +130,6 @@ private:
     ///< slightly different state from mImageDirty
     std::map<int,int> mKeyMap; ///< Map to convert juggler keycodes to Qt keycodes
 
-    void _calculateTextureCoordinates( );
     void _setupKeyMap( );
 
     QWidget* mTitlebar;

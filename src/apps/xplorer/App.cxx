@@ -1105,16 +1105,16 @@ void App::LoadUI()
     ves::conductor::UIElement* element = new ves::conductor::UIElementQt();
     QWidget* mainUIWidget = new MainWindow( 0 );
 
-    // Since we're using an mdi-able MainWindow as the main widget, we make both 
-    // it and the UIManager's projection take up the entire viewable area of
+    // Make UIManager's projection take up the entire viewable area of
     // the GL window
     cfdDisplaySettings* cDS =
         EnvironmentHandler::instance()->GetDisplaySettings();
     std::pair<int, int> res = cDS->GetScreenResolution();
     m_UIManager->SetRectangle( 0, res.first, 0, res.second );
 
-    //mainUIWidget->resize( res.first, res.second );
-    mainUIWidget->resize( 600, res.second );
+    // Give the widget an initial size of 600 x window height. Subtract 15 from
+    // height to account for internal titlebar.
+    mainUIWidget->resize( 600, res.second - 15 );
     static_cast< ves::conductor::UIElementQt* >
                                            (element)->SetWidget( mainUIWidget );
 
