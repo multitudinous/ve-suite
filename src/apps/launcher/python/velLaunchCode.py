@@ -64,6 +64,9 @@ if string.find(sys.platform, 'darwin' ) != -1:
 class Launch:
     """Prepares the environment and launches the chosen programs.
 
+    Look here for options on how to run CORBA services:
+        http://www.dre.vanderbilt.edu/~schmidt/DOC_ROOT/TAO/docs/Options.html#CDI
+
     Order of steps:
         Change directory to chosen working directory.
         EnvSetup [sets environmental variables]
@@ -406,7 +409,7 @@ class Launch:
                 except OSError:
                     print "Naming Service call error, \"%s\" not found on your environment." % exe
 
-        c = [exe, "-ORBEndPoint", "iiop://%s" %self.TaoPair()]
+        c = [exe, "-ORBListenEndpoints", "iiop://%s" %self.TaoPair()]
         return c
 
 
@@ -418,7 +421,7 @@ class Launch:
             exe = "ves_ce" + self.windowsSuffix
         else:
             exe = "Error"
-        c = [exe, "-ORBInitRef", self.ServiceArg()]
+        c = [exe, "-ORBInitRef", self.ServiceArg(), "-ORBNoServerSideNameLookups", "1"]
         if windows:
             c[len(c):] = ["-ORBDottedDecimalAddresses", "1"]
         return c
@@ -441,7 +444,7 @@ class Launch:
         else:
             desktop = []
         ##Construct the call.
-        s = [exe, "-ORBInitRef", self.ServiceArg()]
+        s = [exe, "-ORBInitRef", self.ServiceArg(), "-ORBNoServerSideNameLookups", "1"]
         s[len(s):] = desktop
         s[len(s):] = ves
         if windows:
@@ -466,12 +469,12 @@ class Launch:
         ##Construct the call
         #support for vrj 3.0
         if computerType.lower() == "master":
-            s = [exe, "--vrjmaster", "--jconf", "%s" %self.settings["JconfPath"], "-ORBInitRef", self.ServiceArg() ]
+            s = [exe, "--vrjmaster", "--jconf", "%s" %self.settings["JconfPath"], "-ORBInitRef", self.ServiceArg(), "-ORBNoServerSideNameLookups", "1" ]
         elif computerType.lower() == "slave":
-            s = [exe, "--vrjslave", "-ORBInitRef", self.ServiceArg() ]
+            s = [exe, "--vrjslave", "-ORBInitRef", self.ServiceArg(), "-ORBNoServerSideNameLookups", "1" ]
         else:
             # running in desktop mode or have an error in cluster mode
-            s = [exe, "-ORBInitRef", self.ServiceArg(), "--jconf", "%s" %self.settings["JconfPath"]]
+            s = [exe, "-ORBInitRef", self.ServiceArg(), "-ORBNoServerSideNameLookups", "1", "--jconf", "%s" %self.settings["JconfPath"]]
         ##Comment this out for vrj 3.0 support
         #s = [exe, "-ORBInitRef", self.ServiceArg(), "%s" %self.settings["JconfPath"]]
         if self.settings["XplorerType"] == "OSG-VEPC": ##OSG VEPC selection
