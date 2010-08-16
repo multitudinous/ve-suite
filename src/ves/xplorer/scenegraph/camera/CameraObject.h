@@ -179,7 +179,7 @@ public:
     void Update();
 
     ///
-    void WriteImageFile( std::string const& filename );
+    void WriteImageFile( std::string const& saveImageDir );
 
 protected:
     ///Destructor
@@ -248,6 +248,9 @@ private:
 
     ///RTT texture for the rtt quad
     osg::ref_ptr< osg::Texture2D > m_colorMap;
+
+    ///RTT Image for the camera; makes it easy to write image to file
+    osg::ref_ptr< osg::Image > m_colorImage;
 
     ///The quad to show the intersection hit
     //osg::ref_ptr< osg::Geode > mHitQuadGeode;

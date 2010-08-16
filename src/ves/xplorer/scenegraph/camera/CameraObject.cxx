@@ -230,6 +230,10 @@ void CameraObject::Initialize()
             //( ves::xplorer::scenegraph::ResourceManager::instance()->get
             //< osg::Texture2D, osg::ref_ptr >( "DepthTexture" ) ).get() );
 
+    //Do this for easy image capture capability
+    m_colorImage = new osg::Image();
+    m_camera->attach( osg::Camera::COLOR_BUFFER0, m_colorImage.get(), 4, 4 );
+
     m_initialViewMatrix.makeLookAt(
         osg::Vec3d( 0.0, 0.0, 0.0 ),
         osg::Vec3d( 0.0, 1.0, 0.0 ),
@@ -894,9 +898,10 @@ osg::Texture2D* CameraObject::CreateViewportTexture(
     return tempTexture;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CameraObject::WriteImageFile( std::string const& filename )
+void CameraObject::WriteImageFile( std::string const& saveImageDir )
 {
-    osgDB::writeImageFile( *(m_colorMap->getImage()), filename );
+    std::string filename = saveImageDir + "\\" + getName() + ".png";
+    osgDB::writeImageFile( *(m_colorImage.get()), filename );
 }
 ////////////////////////////////////////////////////////////////////////////////
 

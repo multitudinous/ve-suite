@@ -177,13 +177,15 @@ private:
     void FocalRangeUpdate();
     void MaxCircleOfConfusionUpdate();
 
+    unsigned int m_currentCameraSelection;
+    unsigned int m_cameraNameNum;
+
     double mProjectionData[ 4 ];
     double mDepthOfFieldData[ 3 ];
 
     wxButton* m_addCameraButton;
     wxBitmapButton* m_prevCameraButton;
     wxComboBox* m_cameraComboBox;
-    unsigned int m_cameraNameNum;
     wxBitmapButton* m_nextCameraButton;
     wxButton* m_deleteCameraButton;
     wxButton* m_removeAllCamerasButton;

@@ -127,7 +127,7 @@ public:
     virtual bool setChild( unsigned int i, CameraObject* node );
 
     ///
-    void WriteAllImageFiles( std::string const& filename );
+    void WriteAllImageFiles( std::string const& saveImageDir );
 
 protected:
     ///Destructor

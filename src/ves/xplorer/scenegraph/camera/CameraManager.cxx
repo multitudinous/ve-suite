@@ -354,7 +354,7 @@ osg::Node* CameraManager::GetCameraManagerQuad()
     return m_rttQuadTransform.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CameraManager::WriteAllImageFiles( std::string const& filename )
+void CameraManager::WriteAllImageFiles( std::string const& saveImageDir )
 {
     CameraObject* cameraObject( NULL );
     for( unsigned int i = 0; i < getNumChildren(); ++i )
@@ -362,7 +362,11 @@ void CameraManager::WriteAllImageFiles( std::string const& filename )
         cameraObject = ConvertNodeToCameraObject( getChild( i ) );
         if( cameraObject )
         {
-            cameraObject->WriteImageFile( filename );
+            cameraObject->WriteImageFile( saveImageDir );
+        }
+        else
+        {
+            //error output!
         }
     }
 }

@@ -187,6 +187,18 @@ EnvironmentHandler::EnvironmentHandler()
         new ves::xplorer::event::environment::CameraPlacementEventHandler();
     _eventHandlers[ "REMOVE_ALL_CAMERA_OBJECTS" ] =
         new ves::xplorer::event::environment::CameraPlacementEventHandler();
+    _eventHandlers[ "SAVE_CAMERA_IMAGE" ] =
+        new ves::xplorer::event::environment::CameraPlacementEventHandler();
+    _eventHandlers[ "SAVE_ALL_CAMERA_IMAGES" ] =
+        new ves::xplorer::event::environment::CameraPlacementEventHandler();
+    _eventHandlers[ "ADD_MARKER_OBJECT" ] =
+        new ves::xplorer::event::environment::CameraPlacementEventHandler();
+    _eventHandlers[ "SELECT_MARKER_OBJECT" ] =
+        new ves::xplorer::event::environment::CameraPlacementEventHandler();
+    _eventHandlers[ "DELETE_MARKER_OBJECT" ] =
+        new ves::xplorer::event::environment::CameraPlacementEventHandler();
+    _eventHandlers[ "REMOVE_ALL_MARKER_OBJECTS" ] =
+        new ves::xplorer::event::environment::CameraPlacementEventHandler();
     _eventHandlers[ "DEPTH_OF_FIELD_EFFECT_ON_OFF" ] =
         new ves::xplorer::event::environment::CameraPlacementEventHandler();
     _eventHandlers[ "PROJECTION_EFFECT_ON_OFF" ] =

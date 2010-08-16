@@ -75,6 +75,11 @@ CameraPlacementEventHandler::CameraPlacementEventHandler()
     mCommandNameToInt[ "REMOVE_ALL_CAMERA_OBJECTS" ] =
         REMOVE_ALL_CAMERA_OBJECTS;
 
+    mCommandNameToInt[ "SAVE_CAMERA_IMAGE" ] =
+        SAVE_CAMERA_IMAGE;
+    mCommandNameToInt[ "SAVE_ALL_CAMERA_IMAGES" ] =
+        SAVE_ALL_CAMERA_IMAGES;
+
     mCommandNameToInt[ "DEPTH_OF_FIELD_EFFECT_ON_OFF" ] =
         DEPTH_OF_FIELD_EFFECT_ON_OFF;
     mCommandNameToInt[ "PROJECTION_EFFECT_ON_OFF" ] =
@@ -254,6 +259,126 @@ void CameraPlacementEventHandler::Execute(
             deviceHandler.UnselectObjects();
             cameraManager.removeChild( cameraObject );
         }
+
+        break;
+    }
+    case SAVE_CAMERA_IMAGE:
+    {
+        std::string saveImageDir;
+        command->GetDataValuePair(
+            "saveImageDirectory" )->GetData( saveImageDir );
+
+        cameraObject->WriteImageFile( saveImageDir );
+
+        break;
+    }
+    case SAVE_ALL_CAMERA_IMAGES:
+    {
+        std::string saveImageDir;
+        command->GetDataValuePair(
+            "saveImageDirectory" )->GetData( saveImageDir );
+
+        cameraManager.WriteAllImageFiles( saveImageDir );
+
+        break;
+    }
+    case ADD_MARKER_OBJECT:
+    {
+        /*
+        std::string name;
+        command->GetDataValuePair( "addCameraObject" )->GetData( name );
+
+        cameraManager.addChild( name );
+        */
+
+        //break;
+    }
+    case SELECT_MARKER_OBJECT:
+    {
+        /*
+        unsigned int selection;
+        command->GetDataValuePair(
+            "selectCameraObject" )->GetData( selection );
+
+        deviceHandler.UnselectObjects();
+
+        scenegraph::camera::CameraObject* cameraObject =
+            cameraManager.ConvertNodeToCameraObject(
+                cameraManager.getChild( selection ) );
+
+        cameraManager.SetActiveCameraObject( cameraObject );
+
+        //Right now we are saying you must have a DCS
+        scenegraph::DCS& selectedDCS = cameraObject->GetDCS();
+        gmtl::Matrix44d selectedMatrix = selectedDCS.GetMat();
+
+        //Set the connection between the scene manipulator and the selected dcs
+        sceneManipulator->Connect( &selectedDCS );
+
+        //If dcs is from a camera object, we want to rotate about local zero point
+        osg::Vec3d center( 0.0, 0.0, 0.0 );
+        center = center * osg::Matrixd( selectedMatrix.mData );
+        sceneManipulator->SetPosition( center );
+
+        //We need to transform center point into camera space
+        //In the future the center point will be in world coordinates
+        center = center * osg::Matrixd( sceneManager.GetWorldDCS()->GetMat().mData );
+        gmtl::Point3d tempCenter( center.x(), center.y(), center.z() );
+        deviceHandler.SetCenterPoint( &tempCenter );
+
+        //Set the selected DCS
+        deviceHandler.SetSelectedDCS( &selectedDCS );
+
+        //Need to do this for multi-pass techniques
+        if( sceneManager.IsRTTOn() )
+        {
+            selectedDCS.SetTechnique( "Glow" );
+        }
+        else
+        {
+            selectedDCS.SetTechnique( "Select" );
+        }
+
+        //Hand the node we are interested in off to the animation engine
+        NavigationAnimationEngine& nae =
+            *(NavigationAnimationEngine::instance());
+        nae.SetDCS( sceneManager.GetWorldDCS() );
+
+        //Hand our created end points off to the animation engine
+        selectedMatrix = gmtl::invert( selectedMatrix );
+        gmtl::Vec3d navToPoint =
+            gmtl::makeTrans< gmtl::Vec3d >( selectedMatrix );
+        gmtl::Quatd rotationPoint =
+            gmtl::makeRot< gmtl::Quatd >( selectedMatrix );
+        nae.SetAnimationEndPoints( navToPoint, rotationPoint );
+        */
+
+        break;
+    }
+    case REMOVE_ALL_MARKER_OBJECTS:
+    {
+        //cameraManager.removeChildren();
+
+        //break;
+    }
+    case DELETE_MARKER_OBJECT:
+    {
+        /*
+        unsigned int selection;
+        command->GetDataValuePair( "deleteCameraObject" )->GetData( selection );
+
+        //
+        DeviceHandler& deviceHandler = *(DeviceHandler::instance());
+
+        scenegraph::camera::CameraObject* cameraObject =
+            cameraManager.ConvertNodeToCameraObject(
+                cameraManager.getChild( selection ) );
+        if( deviceHandler.GetSelectedDCS() == &(cameraObject->GetDCS()) )
+        {
+            deviceHandler.UnselectObjects();
+            cameraManager.removeChild( cameraObject );
+        }
+        */
 
         break;
     }
