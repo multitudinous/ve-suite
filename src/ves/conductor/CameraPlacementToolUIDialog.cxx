@@ -951,7 +951,7 @@ void CameraPlacementToolUIDialog::SendCommandsToXplorer()
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraPlacementToolUIDialog::OnCameraGeometryOnOffRadioBox(
-    wxCommandEvent& event )
+    wxCommandEvent& WXUNUSED( event ) )
 {
     unsigned int selection = mCameraGeometryOnOff->GetSelection();
 
@@ -967,7 +967,7 @@ void CameraPlacementToolUIDialog::OnCameraGeometryOnOffRadioBox(
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraPlacementToolUIDialog::OnFrustumGeometryOnOffRadioBox(
-    wxCommandEvent& event )
+    wxCommandEvent& WXUNUSED( event ) )
 {
     unsigned int selection = mFrustumGeometryOnOff->GetSelection();
 
@@ -986,7 +986,7 @@ void CameraPlacementToolUIDialog::OnAddCameraButton(
     wxCommandEvent& WXUNUSED( wxCommandEvent& event ) )
 {
     wxString cameraName(
-        "Camera" +
+        _("Camera") +
         wxString::Format( wxT( "%i" ), m_cameraNameNum ) );
     m_currentCameraSelection = m_cameraComboBox->Append( cameraName );
     m_cameraComboBox->SetStringSelection( cameraName );
@@ -997,7 +997,7 @@ void CameraPlacementToolUIDialog::OnAddCameraButton(
 
     ves::open::xml::DataValuePairSharedPtr dvp(
         new ves::open::xml::DataValuePair() );
-    dvp->SetData( "addCameraObject", cameraName.mb_str() );
+    dvp->SetData( "addCameraObject", ConvertUnicode( cameraName.c_str() ) );
     mInstructions.push_back( dvp );
 
     ves::open::xml::DataValuePairSharedPtr dvpII(
@@ -1074,7 +1074,7 @@ void CameraPlacementToolUIDialog::OnCameraComboBoxTextEnter(
 
     ves::open::xml::DataValuePairSharedPtr dvp(
         new ves::open::xml::DataValuePair() );
-    dvp->SetData( "changeCameraObjectName", cameraName.mb_str() );
+    dvp->SetData( "changeCameraObjectName", ConvertUnicode( cameraName.c_str() ) );
     mInstructions.push_back( dvp );
 
     SendCommandsToXplorer();
@@ -1188,7 +1188,7 @@ void CameraPlacementToolUIDialog::OnSaveImageButton(
     mCommandName = "SAVE_CAMERA_IMAGE";
     ves::open::xml::DataValuePairSharedPtr dvp(
         new ves::open::xml::DataValuePair() );
-    dvp->SetData( "saveImageDirectory", saveImageDir.mb_str() );
+    dvp->SetData( "saveImageDirectory", ConvertUnicode( saveImageDir.c_str() ) );
     mInstructions.push_back( dvp );
 
     SendCommandsToXplorer();
@@ -1214,7 +1214,7 @@ void CameraPlacementToolUIDialog::OnSaveAllImagesButton(
     mCommandName = "SAVE_ALL_CAMERA_IMAGES";
     ves::open::xml::DataValuePairSharedPtr dvp(
         new ves::open::xml::DataValuePair() );
-    dvp->SetData( "saveImageDirectory", saveImageDir.mb_str() );
+    dvp->SetData( "saveImageDirectory", ConvertUnicode( saveImageDir.c_str() ) );
     mInstructions.push_back( dvp );
 
     SendCommandsToXplorer();
@@ -1222,7 +1222,7 @@ void CameraPlacementToolUIDialog::OnSaveAllImagesButton(
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraPlacementToolUIDialog::OnImageDirPickerCtrl(
-    wxFileDirPickerEvent& event )
+    wxFileDirPickerEvent& WXUNUSED( event ) )
 {
 
 }
@@ -1239,13 +1239,13 @@ void CameraPlacementToolUIDialog::OnPrevMarkerButton(
 
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CameraPlacementToolUIDialog::OnMarkerComboBox( wxCommandEvent& event )
+void CameraPlacementToolUIDialog::OnMarkerComboBox( wxCommandEvent& WXUNUSED( event ) )
 {
 
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraPlacementToolUIDialog::OnMarkerComboBoxTextEnter(
-    wxCommandEvent& event )
+    wxCommandEvent& WXUNUSED( event ) )
 {
 
 }
@@ -1269,7 +1269,7 @@ void CameraPlacementToolUIDialog::OnRemoveAllMarkersButton(
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraPlacementToolUIDialog::OnDepthOfFieldEffectOnOffRadioBox(
-    wxCommandEvent& event )
+    wxCommandEvent& WXUNUSED( event ) )
 {
     unsigned int selection = mProjectionEffectOnOff->GetSelection();
 
@@ -1285,7 +1285,7 @@ void CameraPlacementToolUIDialog::OnDepthOfFieldEffectOnOffRadioBox(
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraPlacementToolUIDialog::OnProjectionEffectOnOffRadioBox(
-    wxCommandEvent& event )
+    wxCommandEvent& WXUNUSED( event ) )
 {
     unsigned int selection = mProjectionEffectOnOff->GetSelection();
 
@@ -1319,7 +1319,7 @@ void CameraPlacementToolUIDialog::OnProjectionEffectOpacitySlider(
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraPlacementToolUIDialog::OnCameraWindowOnOffRadioBox(
-    wxCommandEvent& event )
+    wxCommandEvent& WXUNUSED( event ) )
 {
     unsigned int selection = mCameraWindowOnOff->GetSelection();
 
@@ -1351,7 +1351,7 @@ void CameraPlacementToolUIDialog::OnCameraWindowResolutionSlider(
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraPlacementToolUIDialog::OnDepthHelperWindowOnOffRadioBox(
-    wxCommandEvent& event )
+    wxCommandEvent& WXUNUSED( event ) )
 {
     unsigned int selection = mDepthHelperWindowOnOff->GetSelection();
 
@@ -1367,7 +1367,7 @@ void CameraPlacementToolUIDialog::OnDepthHelperWindowOnOffRadioBox(
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraPlacementToolUIDialog::OnDepthHelperWindowResolutionSlider(
-    wxCommandEvent& event )
+    wxCommandEvent& WXUNUSED( event ) )
 {
     unsigned int value = mDepthHelperWindowResolution->GetValue();
 
@@ -1389,7 +1389,7 @@ void CameraPlacementToolUIDialog::OnFieldOfViewSpinCtrl(
     UpdateFieldOfViewControls();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CameraPlacementToolUIDialog::OnFieldOfViewText( wxCommandEvent& event )
+void CameraPlacementToolUIDialog::OnFieldOfViewText( wxCommandEvent& WXUNUSED( event ) )
 {
     UpdateFieldOfViewControls();
 }
@@ -1410,7 +1410,7 @@ void CameraPlacementToolUIDialog::OnAspectRatioSpinCtrl(
     UpdateAspectRatioControls();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CameraPlacementToolUIDialog::OnAspectRatioText( wxCommandEvent& event )
+void CameraPlacementToolUIDialog::OnAspectRatioText( wxCommandEvent& WXUNUSED( event ) )
 {
     UpdateAspectRatioControls();
 }
@@ -1431,7 +1431,7 @@ void CameraPlacementToolUIDialog::OnNearPlaneSpinCtrl(
     UpdateNearPlaneControls();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CameraPlacementToolUIDialog::OnNearPlaneText( wxCommandEvent& event )
+void CameraPlacementToolUIDialog::OnNearPlaneText( wxCommandEvent& WXUNUSED( event ) )
 {
     UpdateNearPlaneControls();
 }
@@ -1461,7 +1461,7 @@ void CameraPlacementToolUIDialog::OnFarPlaneSpinCtrl(
     UpdateFarPlaneControls();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CameraPlacementToolUIDialog::OnFarPlaneText( wxCommandEvent& event )
+void CameraPlacementToolUIDialog::OnFarPlaneText( wxCommandEvent& WXUNUSED( event ) )
 {
     UpdateFarPlaneControls();
 }
@@ -1491,7 +1491,7 @@ void CameraPlacementToolUIDialog::OnFocalDistanceSpinCtrl(
     UpdateFocalDistanceControls();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CameraPlacementToolUIDialog::OnFocalDistanceText( wxCommandEvent& event )
+void CameraPlacementToolUIDialog::OnFocalDistanceText( wxCommandEvent& WXUNUSED( event ) )
 {
     UpdateFocalDistanceControls();
 }
@@ -1512,7 +1512,7 @@ void CameraPlacementToolUIDialog::OnFocalRangeSpinCtrl(
     UpdateFocalRangeControls();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CameraPlacementToolUIDialog::OnFocalRangeText( wxCommandEvent& event )
+void CameraPlacementToolUIDialog::OnFocalRangeText( wxCommandEvent& WXUNUSED( event ) )
 {
     UpdateFocalRangeControls();
 }
@@ -1534,7 +1534,7 @@ void CameraPlacementToolUIDialog::OnMaxCircleOfConfusionSpinCtrl(
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraPlacementToolUIDialog::OnMaxCircleOfConfusionText(
-    wxCommandEvent& event )
+    wxCommandEvent& WXUNUSED( event ) )
 {
     UpdateMaxCircleOfConfusionControls();
 }

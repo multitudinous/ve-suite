@@ -94,7 +94,8 @@ bool CameraManager::addChild( std::string const& name )
     osg::ref_ptr< CameraObject > cameraObject = new CameraObject();
     cameraObject->setName( name );
     DCS& dcs = cameraObject->GetDCS();
-    dcs.SetMat( gmtl::invert( worldDCS->GetMat() ) );
+    gmtl::Matrix44d tempMat( worldDCS->GetMat() );
+    dcs.SetMat( gmtl::invert( tempMat ) );
 
     return osg::Group::addChild( cameraObject.get() );
 }
