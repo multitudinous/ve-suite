@@ -11,6 +11,8 @@ pj = os.path.join
 import SConsAddons.Util as sca_util
 from SCons.Script import *  # the usual scons stuff you get in a SConscript
 
+rcc="rcc" #global variable; gets reset to fully pathed version in generate()
+
 def qtTargetBuilder( target, source, env ):
     #print target.path
     #print source.abspath
@@ -28,6 +30,18 @@ def qtTargetBuilder( target, source, env ):
         #targets.append( pj( basedir, prefix + basename + suffix ) )
     return (target + targets, source )
     #return targets
+    
+def __qrc_generator(source, target, env, for_signature):
+    qrc_suffix = ".qrc"
+    src = str(source[0])
+    head, tail = os.path.split(src)
+    if tail:
+        src = tail
+    if src.endswith(qrc_suffix):
+        qrc_stem = src[:-len(qrc_suffix)]
+    else:
+        qrc_stem = src
+    return '%s -name %s ${SOURCES} -o ${TARGET}' %(rcc, qrc_stem)
 
 def generate(env,**kw):
     #if sca_util.GetPlatform() == 'win32':
@@ -82,8 +96,8 @@ def generate(env,**kw):
 
     #rcc ='rcc'
     # Setup rcc
-    rccCmd = '%s ${SOURCES} -o ${TARGET}' %(rcc) 
-    bld = Builder(action = rccCmd, prefix = "qrc_", suffix = ".cxx", single_source = True )
+    #rccCmd = '%s ${SOURCES} -o ${TARGET}' %(rcc)    
+    bld = Builder(action = SCons.Action.CommandGeneratorAction(__qrc_generator, {}), prefix = "qrc_", suffix = ".cxx", single_source = True )
     env.Append(BUILDERS = {'qt_rcc': bld})
 
 def applyQtBuildFlags(env):
