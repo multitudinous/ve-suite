@@ -123,8 +123,9 @@ osg::Node* CreateCircleHighlight( const osg::Vec3 eyePoint,
     osg::Vec3 position(0., 0., 0.);
     osg::Matrix matrix = osg::computeLocalToWorld(nodePath);
     position = nodePath[nodePath.size()-1]->getBound().center();
-    
+
     circlegeode = new osg::Geode();
+
     osg::Geometry* circleGeom( osgwTools::makeWireCircle( radius, subdivisions ) );
     circlegeode->addDrawable( circleGeom );
     circleat = new AutoTransform();
@@ -173,16 +174,44 @@ osg::Node* CreateCircleHighlight( const osg::Vec3 eyePoint,
         osg::notify( osg::DEBUG_FP ) << "    Using char size " 
             << size << std::endl;
         text->setCharacterSize( size );
-        
+
+        //Add shader to make text work in rtt and non-rtt mode
+        osg::ref_ptr< osg::Shader > fragmentShader = new osg::Shader();
+        std::string fragmentSource =
+        "uniform sampler2D baseMap; \n"
+
+        "void main() \n"
+        "{ \n"
+            "vec4 texture = texture2D( baseMap, gl_TexCoord[ 0 ].xy ); \n"
+            "gl_FragData[ 0 ] = mix( texture, gl_Color, texture.a ); \n"
+            "gl_FragData[ 1 ] = vec4( 0.0, 0.0, 0.0, 1.0 ); \n"
+        "} \n";
+
+        fragmentShader->setType( osg::Shader::FRAGMENT );
+        fragmentShader->setShaderSource( fragmentSource );
+        fragmentShader->setName( "Circle Highlight Text Fragment Shader" );
+
+        osg::ref_ptr< osg::Program > program = new osg::Program();
+        program->addShader( fragmentShader.get() );
+        program->setName( "Circle Highlight Text Program" );
+
+        osg::ref_ptr< osg::StateSet > stateset = text->getOrCreateStateSet();
+        stateset->setAttributeAndModes(
+            program.get(),
+            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+
+        //Here we attach the texture for the text
+        stateset->addUniform( new osg::Uniform( "baseMap", 0 ) );
+
         circlegeode->addDrawable( text.get() );
     } // if
-    
+
     // TBD application responsibility?
     // turn off depth testing on our subgraph
     amt->getOrCreateStateSet()->setMode(GL_DEPTH_TEST, osg::StateAttribute::OFF | osg::StateAttribute::OVERRIDE );
     amt->getOrCreateStateSet()->setRenderBinDetails( 1000, "RenderBin" );
     amt->getOrCreateStateSet()->setMode(GL_LIGHTING, osg::StateAttribute::OFF | osg::StateAttribute::OVERRIDE );
-    
+
     return( amt.release() );
 }
 ////////////////////////////////////////////////////////////////////////////////
