@@ -203,7 +203,9 @@ void CameraObject::Initialize()
     //Keep visibility within user defined near and far planes
     m_camera->setComputeNearFarMode(
         osgUtil::CullVisitor::DO_NOT_COMPUTE_NEAR_FAR );
-    m_camera->setClearColor( osg::Vec4( 0.0, 0.0, 0.0, 0.0 ) );
+    //Don't set transparency to zero because of image save as .png
+    //If we do post processing on this camera we can get rid of that requirement
+    m_camera->setClearColor( osg::Vec4( 0.0, 0.0, 0.0, 1.0 ) );
     m_camera->setViewport( 0, 0, 1024, 1024 );
 
     std::pair< int, int > textureRes = std::make_pair< int, int >( 1024, 1024 );

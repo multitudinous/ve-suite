@@ -74,11 +74,12 @@ public:
     ///
     META_Node( ves::xplorer::scenegraph::highlight, HighlightManager );
 
-    ///Override the addChild function to only accept Cameras
+    ///Override the addChild function to only accept Highlights
     virtual bool addChild( std::string const& name );
 
     ///
-    CircleHighlight* const ConvertNodeToCircleHighlight( osg::Node* const node );
+    CircleHighlight* const ConvertNodeToCircleHighlight(
+        osg::Node* const node );
 
     ///
     void Enable( const bool& enable = true );
@@ -86,7 +87,7 @@ public:
     ///
     CircleHighlight* const GetActiveCircleHighlight() const;
 
-    ///Override the insertChild function to only accept Cameras
+    ///Override the insertChild function to only accept Highlights
     virtual bool insertChild( unsigned int index, CircleHighlight* child );
 
     ///
@@ -95,14 +96,14 @@ public:
     ///
     virtual void removeChildren();
 
-    ///Override the replaceChild function to only accept Cameras
+    ///Override the replaceChild function to only accept Highlights
     virtual bool replaceChild(
         CircleHighlight* origChild, CircleHighlight* newChild );
 
     ///
     void SetActiveCircleHighlight( CircleHighlight* circleHighlight );
 
-    ///Override the setChild function to only accept Cameras
+    ///Override the setChild function to only accept Highlights
     virtual bool setChild( unsigned int i, CircleHighlight* node );
 
 protected:
