@@ -154,6 +154,8 @@ void CameraPlacementEventHandler::Execute(
     DeviceHandler& deviceHandler = *(DeviceHandler::instance());
     scenegraph::SceneManager& sceneManager =
         *scenegraph::SceneManager::instance();
+    scenegraph::highlight::HighlightManager& highlightManager =
+        sceneManager.GetHighlightManager();
     scenegraph::manipulator::TransformManipulator* sceneManipulator =
         sceneManager.GetManipulatorManager().GetSceneManipulator();
     scenegraph::camera::CameraManager& cameraManager =

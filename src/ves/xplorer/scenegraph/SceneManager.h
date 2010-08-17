@@ -43,6 +43,7 @@
 #include <ves/xplorer/scenegraph/GLTransformInfoPtr.h>
 
 #include <ves/xplorer/scenegraph/camera/CameraManager.h>
+#include <ves/xplorer/scenegraph/highlight/HighlightManager.h>
 #include <ves/xplorer/scenegraph/manipulator/ManipulatorManager.h>
 
 // --- OSG Includes --- //
@@ -77,6 +78,11 @@ class CharacterController;
 namespace camera
 {
 class CameraManager;
+}
+
+namespace highlight
+{
+class HighlightManager;
 }
 
 namespace manipulator
@@ -126,6 +132,9 @@ public:
 
     ///Return the graphical plugin manager
     Group& GetGraphicalPluginManager() const;
+
+    ///
+    highlight::HighlightManager& GetHighlightManager() const;
 
     ///Get the inverted world DCS matrix
     ///\return The inverted matrix
@@ -235,6 +244,9 @@ private:
 
     ///
     osg::ref_ptr< camera::CameraManager > m_cameraManager;
+
+    ///
+    osg::ref_ptr< highlight::HighlightManager > m_highlightManager;
 
     ///The root manipulator node of our scenegraph
     ///If we add all manipulators under this node,

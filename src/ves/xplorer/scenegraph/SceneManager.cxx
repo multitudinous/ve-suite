@@ -94,6 +94,7 @@ SceneManager::SceneManager()
     mModelRoot( NULL ),
     m_graphicalPluginManager( NULL ),
     m_cameraManager( NULL ),
+    m_highlightManager( NULL ),
     m_manipulatorManager( NULL ),
     mLogoNode( NULL ),
     mLogoSwitch( NULL ),
@@ -201,6 +202,10 @@ void SceneManager::InitScene()
     m_cameraManager = new camera::CameraManager();
     m_cameraManager->setName( "Camera Manager" );
     mModelRoot->addChild( m_cameraManager.get() );
+
+    m_highlightManager = new highlight::HighlightManager();
+    m_highlightManager->setName( "Highlight Manager" );
+    mModelRoot->addChild( m_highlightManager.get() );
 
     m_manipulatorManager = new manipulator::ManipulatorManager();
     m_manipulatorManager->setName( "Manipulator Manager" );
@@ -331,6 +336,11 @@ Group& SceneManager::GetGraphicalPluginManager() const
 camera::CameraManager& SceneManager::GetCameraManager() const
 {
     return *m_cameraManager.get();
+}
+////////////////////////////////////////////////////////////////////////////////
+highlight::HighlightManager& SceneManager::GetHighlightManager() const
+{
+    return *m_highlightManager.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
 manipulator::ManipulatorManager& SceneManager::GetManipulatorManager() const
